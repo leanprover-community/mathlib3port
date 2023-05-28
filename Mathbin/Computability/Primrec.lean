@@ -1399,12 +1399,12 @@ instance array {n} : Primcodable (Array' n α) :=
   ofEquiv _ (Equiv.arrayEquivFin _ _)
 #align primcodable.array Primcodable.array
 
-section Ulower
+section ULower
 
 attribute [local instance 100] Encodable.decidableRangeEncode Encodable.decidableEqOfEncodable
 
 #print Primcodable.ulower /-
-instance ulower : Primcodable (Ulower α) :=
+instance ulower : Primcodable (ULower α) :=
   have : PrimrecPred fun n => Encodable.decode₂ α n ≠ none :=
     PrimrecPred.not
       (Primrec.eq.comp
@@ -1416,7 +1416,7 @@ instance ulower : Primcodable (Ulower α) :=
 #align primcodable.ulower Primcodable.ulower
 -/
 
-end Ulower
+end ULower
 
 end Primcodable
 
@@ -1471,14 +1471,14 @@ theorem option_get {f : α → Option β} {h : ∀ a, (f a).isSome} :
 -/
 
 #print Primrec.ulower_down /-
-theorem ulower_down : Primrec (Ulower.down : α → Ulower α) :=
+theorem ulower_down : Primrec (ULower.down : α → ULower α) :=
   letI : ∀ a, Decidable (a ∈ Set.range (encode : α → ℕ)) := decidable_range_encode _
   subtype_mk Primrec.encode
 #align primrec.ulower_down Primrec.ulower_down
 -/
 
 #print Primrec.ulower_up /-
-theorem ulower_up : Primrec (Ulower.up : Ulower α → α) :=
+theorem ulower_up : Primrec (ULower.up : ULower α → α) :=
   letI : ∀ a, Decidable (a ∈ Set.range (encode : α → ℕ)) := decidable_range_encode _
   option_get (primrec.decode₂.comp subtype_val)
 #align primrec.ulower_up Primrec.ulower_up

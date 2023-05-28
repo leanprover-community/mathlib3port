@@ -592,85 +592,85 @@ instance : Countable ℕ+ :=
   Subtype.countable
 
 -- short-circuit instance search
-section Ulower
+section ULower
 
 attribute [local instance 100] Encodable.decidableRangeEncode
 
-#print Ulower /-
+#print ULower /-
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/
-def Ulower (α : Type _) [Encodable α] : Type :=
+def ULower (α : Type _) [Encodable α] : Type :=
   Set.range (Encodable.encode : α → ℕ)deriving DecidableEq, Encodable
-#align ulower Ulower
+#align ulower ULower
 -/
 
-end Ulower
+end ULower
 
-namespace Ulower
+namespace ULower
 
 variable (α : Type _) [Encodable α]
 
-#print Ulower.equiv /-
+#print ULower.equiv /-
 /-- The equivalence between the encodable type `α` and `ulower α : Type`. -/
-def equiv : α ≃ Ulower α :=
+def equiv : α ≃ ULower α :=
   Encodable.equivRangeEncode α
-#align ulower.equiv Ulower.equiv
+#align ulower.equiv ULower.equiv
 -/
 
 variable {α}
 
-#print Ulower.down /-
+#print ULower.down /-
 /-- Lowers an `a : α` into `ulower α`. -/
-def down (a : α) : Ulower α :=
+def down (a : α) : ULower α :=
   equiv α a
-#align ulower.down Ulower.down
+#align ulower.down ULower.down
 -/
 
-instance [Inhabited α] : Inhabited (Ulower α) :=
+instance [Inhabited α] : Inhabited (ULower α) :=
   ⟨down default⟩
 
-#print Ulower.up /-
+#print ULower.up /-
 /-- Lifts an `a : ulower α` into `α`. -/
-def up (a : Ulower α) : α :=
+def up (a : ULower α) : α :=
   (equiv α).symm a
-#align ulower.up Ulower.up
+#align ulower.up ULower.up
 -/
 
-#print Ulower.down_up /-
+#print ULower.down_up /-
 @[simp]
-theorem down_up {a : Ulower α} : down a.up = a :=
+theorem down_up {a : ULower α} : down a.up = a :=
   Equiv.right_inv _ _
-#align ulower.down_up Ulower.down_up
+#align ulower.down_up ULower.down_up
 -/
 
-#print Ulower.up_down /-
+#print ULower.up_down /-
 @[simp]
 theorem up_down {a : α} : (down a).up = a :=
   Equiv.left_inv _ _
-#align ulower.up_down Ulower.up_down
+#align ulower.up_down ULower.up_down
 -/
 
-#print Ulower.up_eq_up /-
+#print ULower.up_eq_up /-
 @[simp]
-theorem up_eq_up {a b : Ulower α} : a.up = b.up ↔ a = b :=
+theorem up_eq_up {a b : ULower α} : a.up = b.up ↔ a = b :=
   Equiv.apply_eq_iff_eq _
-#align ulower.up_eq_up Ulower.up_eq_up
+#align ulower.up_eq_up ULower.up_eq_up
 -/
 
-#print Ulower.down_eq_down /-
+#print ULower.down_eq_down /-
 @[simp]
 theorem down_eq_down {a b : α} : down a = down b ↔ a = b :=
   Equiv.apply_eq_iff_eq _
-#align ulower.down_eq_down Ulower.down_eq_down
+#align ulower.down_eq_down ULower.down_eq_down
 -/
 
-#print Ulower.ext /-
+#print ULower.ext /-
 @[ext]
-protected theorem ext {a b : Ulower α} : a.up = b.up → a = b :=
+protected theorem ext {a b : ULower α} : a.up = b.up → a = b :=
   up_eq_up.1
-#align ulower.ext Ulower.ext
+#align ulower.ext ULower.ext
 -/
 
-end Ulower
+end ULower
 
 /-
 Choice function for encodable types and decidable predicates.

@@ -317,16 +317,16 @@ theorem OneOneEquiv.congr_right {α β γ} [Primcodable α] [Primcodable β] [Pr
   and_congr h.le_congr_right h.le_congr_left
 #align one_one_equiv.congr_right OneOneEquiv.congr_right
 
-#print Ulower.down_computable /-
+#print ULower.down_computable /-
 @[simp]
-theorem Ulower.down_computable {α} [Primcodable α] : (Ulower.equiv α).Computable :=
+theorem ULower.down_computable {α} [Primcodable α] : (ULower.equiv α).Computable :=
   ⟨Primrec.ulower_down.to_comp, Primrec.ulower_up.to_comp⟩
-#align ulower.down_computable Ulower.down_computable
+#align ulower.down_computable ULower.down_computable
 -/
 
 #print manyOneEquiv_up /-
-theorem manyOneEquiv_up {α} [Primcodable α] {p : α → Prop} : ManyOneEquiv (p ∘ Ulower.up) p :=
-  ManyOneEquiv.of_equiv Ulower.down_computable.symm
+theorem manyOneEquiv_up {α} [Primcodable α] {p : α → Prop} : ManyOneEquiv (p ∘ ULower.up) p :=
+  ManyOneEquiv.of_equiv ULower.down_computable.symm
 #align many_one_equiv_up manyOneEquiv_up
 -/
 
