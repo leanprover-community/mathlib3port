@@ -164,9 +164,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sigma_preimage_
 theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) (t : Finset α) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
       s.filterₓ fun a => a.1 ∈ t :=
-  by
-  ext x
-  simp [and_comm']
+  by ext x; simp [and_comm']
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
 
 /- warning: finset.sigma_preimage_mk_of_subset -> Finset.sigma_preimage_mk_of_subset is a dubious translation:

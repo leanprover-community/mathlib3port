@@ -180,34 +180,22 @@ theorem isClosedMap_toAdd : IsClosedMap (toAdd : Multiplicative α → α) :=
 -/
 
 #print nhds_ofMul /-
-theorem nhds_ofMul (a : α) : 𝓝 (ofMul a) = map ofMul (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_ofMul (a : α) : 𝓝 (ofMul a) = map ofMul (𝓝 a) := by unfold nhds; rfl
 #align nhds_of_mul nhds_ofMul
 -/
 
 #print nhds_ofAdd /-
-theorem nhds_ofAdd (a : α) : 𝓝 (ofAdd a) = map ofAdd (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_ofAdd (a : α) : 𝓝 (ofAdd a) = map ofAdd (𝓝 a) := by unfold nhds; rfl
 #align nhds_of_add nhds_ofAdd
 -/
 
 #print nhds_toMul /-
-theorem nhds_toMul (a : Additive α) : 𝓝 (toMul a) = map toMul (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_toMul (a : Additive α) : 𝓝 (toMul a) = map toMul (𝓝 a) := by unfold nhds; rfl
 #align nhds_to_mul nhds_toMul
 -/
 
 #print nhds_toAdd /-
-theorem nhds_toAdd (a : Multiplicative α) : 𝓝 (toAdd a) = map toAdd (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_toAdd (a : Multiplicative α) : 𝓝 (toAdd a) = map toAdd (𝓝 a) := by unfold nhds; rfl
 #align nhds_to_add nhds_toAdd
 -/
 
@@ -269,18 +257,12 @@ theorem isClosedMap_ofDual : IsClosedMap (ofDual : αᵒᵈ → α) :=
 -/
 
 #print nhds_toDual /-
-theorem nhds_toDual (a : α) : 𝓝 (toDual a) = map toDual (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_toDual (a : α) : 𝓝 (toDual a) = map toDual (𝓝 a) := by unfold nhds; rfl
 #align nhds_to_dual nhds_toDual
 -/
 
 #print nhds_ofDual /-
-theorem nhds_ofDual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) :=
-  by
-  unfold nhds
-  rfl
+theorem nhds_ofDual (a : α) : 𝓝 (ofDual a) = map ofDual (𝓝 a) := by unfold nhds; rfl
 #align nhds_of_dual nhds_ofDual
 -/
 
@@ -332,9 +314,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sigma.discrete_topology Sigma.discreteTopologyₓ'. -/
 instance Sigma.discreteTopology {β : α → Type v} [∀ a, TopologicalSpace (β a)]
     [h : ∀ a, DiscreteTopology (β a)] : DiscreteTopology (Sigma β) :=
-  ⟨by
-    unfold Sigma.topologicalSpace
-    simp [fun a => (h a).eq_bot]⟩
+  ⟨by unfold Sigma.topologicalSpace; simp [fun a => (h a).eq_bot]⟩
 #align sigma.discrete_topology Sigma.discreteTopology
 
 section Topα
@@ -964,9 +944,7 @@ Case conversion may be inaccurate. Consider using '#align prod.tendsto_iff Prod.
 theorem Prod.tendsto_iff {α} (seq : α → β × γ) {f : Filter α} (x : β × γ) :
     Tendsto seq f (𝓝 x) ↔
       Tendsto (fun n => (seq n).fst) f (𝓝 x.fst) ∧ Tendsto (fun n => (seq n).snd) f (𝓝 x.snd) :=
-  by
-  cases x
-  rw [nhds_prod_eq, Filter.tendsto_prod_iff']
+  by cases x; rw [nhds_prod_eq, Filter.tendsto_prod_iff']
 #align prod.tendsto_iff Prod.tendsto_iff
 
 /- warning: filter.has_basis.prod_nhds -> Filter.HasBasis.prod_nhds is a dubious translation:
@@ -979,10 +957,8 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.prod_
 theorem Filter.HasBasis.prod_nhds {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop}
     {sa : ιa → Set α} {sb : ιb → Set β} {a : α} {b : β} (ha : (𝓝 a).HasBasis pa sa)
     (hb : (𝓝 b).HasBasis pb sb) :
-    (𝓝 (a, b)).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
-  by
-  rw [nhds_prod_eq]
-  exact ha.prod hb
+    (𝓝 (a, b)).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 := by
+  rw [nhds_prod_eq]; exact ha.prod hb
 #align filter.has_basis.prod_nhds Filter.HasBasis.prod_nhds
 
 /- warning: filter.has_basis.prod_nhds' -> Filter.HasBasis.prod_nhds' is a dubious translation:
@@ -995,9 +971,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.prod_
 theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop}
     {sa : ιa → Set α} {sb : ιb → Set β} {ab : α × β} (ha : (𝓝 ab.1).HasBasis pa sa)
     (hb : (𝓝 ab.2).HasBasis pb sb) :
-    (𝓝 ab).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 :=
-  by
-  cases ab
+    (𝓝 ab).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => sa i.1 ×ˢ sb i.2 := by cases ab;
   exact ha.prod_nhds hb
 #align filter.has_basis.prod_nhds' Filter.HasBasis.prod_nhds'
 
@@ -1068,10 +1042,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {p : (Prod.{u1, u2} α β) -> Prop} {x : α} {y : β}, (Filter.Eventually.{max u1 u2} (Prod.{u1, u2} α β) (fun (x : Prod.{u1, u2} α β) => p x) (nhds.{max u1 u2} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Prod.mk.{u1, u2} α β x y))) -> (Filter.Eventually.{u1} α (fun (x' : α) => Filter.Eventually.{u2} β (fun (y' : β) => p (Prod.mk.{u1, u2} α β x' y')) (nhds.{u2} β _inst_2 y)) (nhds.{u1} α _inst_1 x))
 Case conversion may be inaccurate. Consider using '#align filter.eventually.curry_nhds Filter.Eventually.curry_nhdsₓ'. -/
 theorem Filter.Eventually.curry_nhds {p : α × β → Prop} {x : α} {y : β}
-    (h : ∀ᶠ x in 𝓝 (x, y), p x) : ∀ᶠ x' in 𝓝 x, ∀ᶠ y' in 𝓝 y, p (x', y') :=
-  by
-  rw [nhds_prod_eq] at h
-  exact h.curry
+    (h : ∀ᶠ x in 𝓝 (x, y), p x) : ∀ᶠ x' in 𝓝 x, ∀ᶠ y' in 𝓝 y, p (x', y') := by
+  rw [nhds_prod_eq] at h; exact h.curry
 #align filter.eventually.curry_nhds Filter.Eventually.curry_nhds
 
 /- warning: continuous_at.prod -> ContinuousAt.prod is a dubious translation:
@@ -1132,8 +1104,7 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
         le_generateFrom fun u hu =>
           have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u := by
             simp_rw [← prod_Union, ← sUnion_eq_bUnion, ht, prod_univ]
-          show G.IsOpen (Prod.fst ⁻¹' u) by
-            rw [← this]
+          show G.IsOpen (Prod.fst ⁻¹' u) by rw [← this];
             exact
               isOpen_iUnion fun v =>
                 isOpen_iUnion fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
@@ -1141,8 +1112,7 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
         le_generateFrom fun v hv =>
           have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v := by
             simp_rw [← Union_prod_const, ← sUnion_eq_bUnion, hs, univ_prod]
-          show G.IsOpen (Prod.snd ⁻¹' v) by
-            rw [← this]
+          show G.IsOpen (Prod.snd ⁻¹' v) by rw [← this];
             exact
               isOpen_iUnion fun u =>
                 isOpen_iUnion fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
@@ -1441,9 +1411,7 @@ Case conversion may be inaccurate. Consider using '#align dense.prod Dense.prod�
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two dense sets is a dense set. -/
 theorem Dense.prod {s : Set α} {t : Set β} (hs : Dense s) (ht : Dense t) : Dense (s ×ˢ t) :=
-  fun x => by
-  rw [closure_prod_eq]
-  exact ⟨hs x.1, ht x.2⟩
+  fun x => by rw [closure_prod_eq]; exact ⟨hs x.1, ht x.2⟩
 #align dense.prod Dense.prod
 
 /- warning: dense_range.prod_map -> DenseRange.prod_map is a dubious translation:
@@ -1645,10 +1613,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β], IsClosed.{max u1 u2} (Sum.{u1, u2} α β) (instTopologicalSpaceSum.{u1, u2} α β _inst_1 _inst_2) (Set.range.{max u1 u2, succ u1} (Sum.{u1, u2} α β) α (Sum.inl.{u1, u2} α β))
 Case conversion may be inaccurate. Consider using '#align is_closed_range_inl isClosed_range_inlₓ'. -/
-theorem isClosed_range_inl : IsClosed (range (inl : α → Sum α β)) :=
-  by
-  rw [← isOpen_compl_iff, compl_range_inl]
-  exact isOpen_range_inr
+theorem isClosed_range_inl : IsClosed (range (inl : α → Sum α β)) := by
+  rw [← isOpen_compl_iff, compl_range_inl]; exact isOpen_range_inr
 #align is_closed_range_inl isClosed_range_inl
 
 /- warning: is_closed_range_inr -> isClosed_range_inr is a dubious translation:
@@ -1657,10 +1623,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β], IsClosed.{max u1 u2} (Sum.{u1, u2} α β) (instTopologicalSpaceSum.{u1, u2} α β _inst_1 _inst_2) (Set.range.{max u1 u2, succ u2} (Sum.{u1, u2} α β) β (Sum.inr.{u1, u2} α β))
 Case conversion may be inaccurate. Consider using '#align is_closed_range_inr isClosed_range_inrₓ'. -/
-theorem isClosed_range_inr : IsClosed (range (inr : β → Sum α β)) :=
-  by
-  rw [← isOpen_compl_iff, compl_range_inr]
-  exact isOpen_range_inl
+theorem isClosed_range_inr : IsClosed (range (inr : β → Sum α β)) := by
+  rw [← isOpen_compl_iff, compl_range_inr]; exact isOpen_range_inl
 #align is_closed_range_inr isClosed_range_inr
 
 /- warning: closed_embedding_inl -> closedEmbedding_inl is a dubious translation:
@@ -1910,10 +1874,8 @@ theorem continuousAt_subtype_val {p : α → Prop} {a : Subtype p} :
 -/
 
 #print Subtype.dense_iff /-
-theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ closure (coe '' t) :=
-  by
-  rw [inducing_coe.dense_iff, SetCoe.forall]
-  rfl
+theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ closure (coe '' t) := by
+  rw [inducing_coe.dense_iff, SetCoe.forall]; rfl
 #align subtype.dense_iff Subtype.dense_iff
 -/
 
@@ -2356,10 +2318,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {I : Set.{u2} ι} {s : forall (i : ι), Set.{u1} (π i)} (a : forall (i : ι), π i), (Membership.mem.{max u2 u1, max u2 u1} (Set.{max u2 u1} (forall (i : ι), π i)) (Filter.{max u2 u1} (forall (i : ι), π i)) (instMembershipSetFilter.{max u2 u1} (forall (i : ι), π i)) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) I s) (nhds.{max u2 u1} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) a)) -> (forall {i : ι}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) -> (Membership.mem.{u1, u1} (Set.{u1} (π i)) (Filter.{u1} (π i)) (instMembershipSetFilter.{u1} (π i)) (s i) (nhds.{u1} (π i) (_inst_2 i) (a i))))
 Case conversion may be inaccurate. Consider using '#align mem_nhds_of_pi_mem_nhds mem_nhds_of_pi_mem_nhdsₓ'. -/
 theorem mem_nhds_of_pi_mem_nhds {I : Set ι} {s : ∀ i, Set (π i)} (a : ∀ i, π i) (hs : I.pi s ∈ 𝓝 a)
-    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) :=
-  by
-  rw [nhds_pi] at hs
-  exact mem_of_pi_mem_pi hs hi
+    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by rw [nhds_pi] at hs; exact mem_of_pi_mem_pi hs hi
 #align mem_nhds_of_pi_mem_nhds mem_nhds_of_pi_mem_nhds
 
 /- warning: set_pi_mem_nhds -> set_pi_mem_nhds is a dubious translation:
@@ -2369,9 +2328,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {i : Set.{u2} ι} {s : forall (a : ι), Set.{u1} (π a)} {x : forall (a : ι), π a}, (Set.Finite.{u2} ι i) -> (forall (a : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) a i) -> (Membership.mem.{u1, u1} (Set.{u1} (π a)) (Filter.{u1} (π a)) (instMembershipSetFilter.{u1} (π a)) (s a) (nhds.{u1} (π a) (_inst_2 a) (x a)))) -> (Membership.mem.{max u1 u2, max u2 u1} (Set.{max u2 u1} (forall (i : ι), π i)) (Filter.{max u2 u1} (forall (a : ι), π a)) (instMembershipSetFilter.{max u2 u1} (forall (a : ι), π a)) (Set.pi.{u2, u1} ι (fun (a : ι) => π a) i s) (nhds.{max u2 u1} (forall (a : ι), π a) (Pi.topologicalSpace.{u2, u1} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_2 a)) x))
 Case conversion may be inaccurate. Consider using '#align set_pi_mem_nhds set_pi_mem_nhdsₓ'. -/
 theorem set_pi_mem_nhds {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : i.Finite)
-    (hs : ∀ a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
-  by
-  rw [pi_def, bInter_mem hi]
+    (hs : ∀ a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x := by rw [pi_def, bInter_mem hi];
   exact fun a ha => (continuous_apply a).ContinuousAt (hs a ha)
 #align set_pi_mem_nhds set_pi_mem_nhds
 
@@ -2382,9 +2339,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall {s : forall (i : ι), Set.{u1} (π i)} (a : forall (i : ι), π i), Iff (Membership.mem.{max u2 u1, max u2 u1} (Set.{max u2 u1} (forall (i : ι), π i)) (Filter.{max u2 u1} (forall (i : ι), π i)) (instMembershipSetFilter.{max u2 u1} (forall (i : ι), π i)) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) I s) (nhds.{max u2 u1} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) a)) (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i I) -> (Membership.mem.{u1, u1} (Set.{u1} (π i)) (Filter.{u1} (π i)) (instMembershipSetFilter.{u1} (π i)) (s i) (nhds.{u1} (π i) (_inst_2 i) (a i)))))
 Case conversion may be inaccurate. Consider using '#align set_pi_mem_nhds_iff set_pi_mem_nhds_iffₓ'. -/
 theorem set_pi_mem_nhds_iff {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)} (a : ∀ i, π i) :
-    I.pi s ∈ 𝓝 a ↔ ∀ i : ι, i ∈ I → s i ∈ 𝓝 (a i) :=
-  by
-  rw [nhds_pi, pi_mem_pi_iff hI]
+    I.pi s ∈ 𝓝 a ↔ ∀ i : ι, i ∈ I → s i ∈ 𝓝 (a i) := by rw [nhds_pi, pi_mem_pi_iff hI];
   infer_instance
 #align set_pi_mem_nhds_iff set_pi_mem_nhds_iff
 
@@ -2395,9 +2350,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {I : Set.{u2} ι}, (Set.Finite.{u2} ι I) -> (forall {s : forall (i : ι), Set.{u1} (π i)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (forall (i : ι), π i)) (interior.{max u1 u2} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) I s)) (Set.pi.{u2, u1} ι (fun (i : ι) => π i) I (fun (i : ι) => interior.{u1} (π i) (_inst_2 i) (s i))))
 Case conversion may be inaccurate. Consider using '#align interior_pi_set interior_pi_setₓ'. -/
 theorem interior_pi_set {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)} :
-    interior (pi I s) = I.pi fun i => interior (s i) :=
-  by
-  ext a
+    interior (pi I s) = I.pi fun i => interior (s i) := by ext a;
   simp only [Set.mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff hI]
 #align interior_pi_set interior_pi_set
 
@@ -2442,8 +2395,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
     apply isOpen_biInter (Finset.finite_toSet _)
-    intro a ha
-    show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
+    intro a ha; show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)
     exact fun s hs => generate_open.basic _ ⟨update (fun a => univ) a s, {a}, by simp [hs]⟩
 #align pi_generate_from_eq pi_generateFrom_eq
@@ -2458,18 +2410,13 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
   cases nonempty_fintype ι
   rw [pi_generateFrom_eq]
   refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
-  · rintro s ⟨t, ht, rfl⟩
-    exact ⟨t, Finset.univ, by simp [ht]⟩
+  · rintro s ⟨t, ht, rfl⟩; exact ⟨t, Finset.univ, by simp [ht]⟩
   · rintro s ⟨t, i, ht, rfl⟩
     apply isOpen_iff_forall_mem_open.2 _
     intro f hf
     choose c hc using
-      show ∀ a, ∃ s, s ∈ g a ∧ f a ∈ s by
-        intro a
-        have : f a ∈ ⋃₀ g a := by
-          rw [hg]
-          apply mem_univ
-        simpa
+      show ∀ a, ∃ s, s ∈ g a ∧ f a ∈ s by intro a;
+        have : f a ∈ ⋃₀ g a := by rw [hg]; apply mem_univ; simpa
     refine' ⟨pi univ fun a => if a ∈ i then t a else (c : ∀ a, Set (π a)) a, _, _, _⟩
     · simp [pi_if]
     · refine' generate_open.basic _ ⟨_, fun a => _, rfl⟩
@@ -2652,9 +2599,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {σ : ι -> Type.{u1}} [_inst_1 : forall (i : ι), TopologicalSpace.{u1} (σ i)] (x : Sigma.{u2, u1} ι σ), Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (Sigma.{u2, u1} ι σ)) (nhds.{max u2 u1} (Sigma.{u2, u1} ι σ) (instTopologicalSpaceSigma.{u2, u1} ι σ (fun (a : ι) => _inst_1 a)) x) (Filter.map.{u1, max u2 u1} (σ (Sigma.fst.{u2, u1} ι σ x)) (Sigma.{u2, u1} ι σ) (Sigma.mk.{u2, u1} ι σ (Sigma.fst.{u2, u1} ι σ x)) (nhds.{u1} (σ (Sigma.fst.{u2, u1} ι σ x)) (_inst_1 (Sigma.fst.{u2, u1} ι σ x)) (Sigma.snd.{u2, u1} ι σ x)))
 Case conversion may be inaccurate. Consider using '#align sigma.nhds_eq Sigma.nhds_eqₓ'. -/
-theorem Sigma.nhds_eq (x : Sigma σ) : 𝓝 x = map (Sigma.mk x.1) (𝓝 x.2) :=
-  by
-  cases x
+theorem Sigma.nhds_eq (x : Sigma σ) : 𝓝 x = map (Sigma.mk x.1) (𝓝 x.2) := by cases x;
   apply Sigma.nhds_mk
 #align sigma.nhds_eq Sigma.nhds_eq
 

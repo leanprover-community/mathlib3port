@@ -101,11 +101,7 @@ theorem [anonymous] {x : m} : x.1 = x :=
 
 #print Multiset.coe_eq /-
 @[simp]
-theorem Multiset.coe_eq {x y : m} : (x : α) = (y : α) ↔ x.1 = y.1 :=
-  by
-  cases x
-  cases y
-  rfl
+theorem Multiset.coe_eq {x y : m} : (x : α) = (y : α) ↔ x.1 = y.1 := by cases x; cases y; rfl
 #align multiset.coe_eq Multiset.coe_eq
 -/
 
@@ -231,20 +227,10 @@ that `finset` to a type. -/
 @[simps]
 def Multiset.coeEquiv (m : Multiset α) : m ≃ m.toEnumFinset
     where
-  toFun x :=
-    ⟨m.coeEmbedding x, by
-      rw [Multiset.mem_toEnumFinset]
-      exact x.2.2⟩
-  invFun x :=
-    ⟨x.1.1, x.1.2, by
-      rw [← Multiset.mem_toEnumFinset]
-      exact x.2⟩
-  left_inv := by
-    rintro ⟨x, i, h⟩
-    rfl
-  right_inv := by
-    rintro ⟨⟨x, i⟩, h⟩
-    rfl
+  toFun x := ⟨m.coeEmbedding x, by rw [Multiset.mem_toEnumFinset]; exact x.2.2⟩
+  invFun x := ⟨x.1.1, x.1.2, by rw [← Multiset.mem_toEnumFinset]; exact x.2⟩
+  left_inv := by rintro ⟨x, i, h⟩; rfl
+  right_inv := by rintro ⟨⟨x, i⟩, h⟩; rfl
 #align multiset.coe_equiv Multiset.coeEquiv
 -/
 
@@ -263,9 +249,7 @@ instance Multiset.fintypeCoe : Fintype m :=
 
 #print Multiset.map_univ_coeEmbedding /-
 theorem Multiset.map_univ_coeEmbedding (m : Multiset α) :
-    (Finset.univ : Finset m).map m.coeEmbedding = m.toEnumFinset :=
-  by
-  ext ⟨x, i⟩
+    (Finset.univ : Finset m).map m.coeEmbedding = m.toEnumFinset := by ext ⟨x, i⟩;
   simp only [Fin.exists_iff, Finset.mem_map, Finset.mem_univ, Multiset.coeEmbedding_apply,
     Prod.mk.inj_iff, exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Fin.val_mk,
     exists_prop, exists_eq_right_right, exists_eq_right, Multiset.mem_toEnumFinset, iff_self_iff,
@@ -346,18 +330,14 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (m : Multiset.{u1} α), Eq.{1} Nat (Fintype.card.{u1} (Multiset.ToType.{u1} α (fun (a : α) (b : α) => (fun (a : α) (b : α) => _inst_1 a b) a b) m) (Multiset.fintypeCoe.{u1} α (fun (a : α) (b : α) => _inst_1 a b) m)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) m)
 Case conversion may be inaccurate. Consider using '#align multiset.card_coe Multiset.card_coeₓ'. -/
 @[simp]
-theorem Multiset.card_coe (m : Multiset α) : Fintype.card m = m.card :=
-  by
-  rw [Fintype.card_congr m.coe_equiv]
-  simp
+theorem Multiset.card_coe (m : Multiset α) : Fintype.card m = m.card := by
+  rw [Fintype.card_congr m.coe_equiv]; simp
 #align multiset.card_coe Multiset.card_coe
 
 #print Multiset.prod_eq_prod_coe /-
 @[to_additive]
-theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x : m, x :=
-  by
-  congr
-  simp
+theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x : m, x := by
+  congr ; simp
 #align multiset.prod_eq_prod_coe Multiset.prod_eq_prod_coe
 #align multiset.sum_eq_sum_coe Multiset.sum_eq_sum_coe
 -/
@@ -365,9 +345,7 @@ theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = �
 #print Multiset.prod_eq_prod_toEnumFinset /-
 @[to_additive]
 theorem Multiset.prod_eq_prod_toEnumFinset [CommMonoid α] (m : Multiset α) :
-    m.Prod = ∏ x in m.toEnumFinset, x.1 := by
-  congr
-  simp
+    m.Prod = ∏ x in m.toEnumFinset, x.1 := by congr ; simp
 #align multiset.prod_eq_prod_to_enum_finset Multiset.prod_eq_prod_toEnumFinset
 #align multiset.sum_eq_sum_to_enum_finset Multiset.sum_eq_sum_toEnumFinset
 -/

@@ -379,9 +379,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
             ∑ i in range (max N M + 1),
               abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) <
         ε / (2 * P) * P + ε / (4 * Q) * (2 * Q)
-      by
-      rw [hε] at this
-      simpa [abv_mul abv]
+      by rw [hε] at this; simpa [abv_mul abv]
     refine'
       add_lt_add
         (lt_of_le_of_lt hsumlesum
@@ -1189,11 +1187,7 @@ theorem cos_mul_I : cos (x * I) = cosh x := by rw [← cosh_mul_I] <;> ring_nf <
 #print Complex.sin_mul_I /-
 theorem sin_mul_I : sin (x * I) = sinh x * I :=
   by
-  have h : I * sin (x * I) = -sinh x :=
-    by
-    rw [mul_comm, ← sinh_mul_I]
-    ring_nf
-    simp
+  have h : I * sin (x * I) = -sinh x := by rw [mul_comm, ← sinh_mul_I]; ring_nf; simp
   simpa only [neg_mul, div_I, neg_neg] using CancelDenoms.cancel_factors_eq_div h I_ne_zero
 #align complex.sin_mul_I Complex.sin_mul_I
 -/
@@ -1642,10 +1636,8 @@ lean 3 declaration is
 but is expected to have type
   forall (x : Complex), Eq.{1} Real (Complex.re (Complex.exp x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Real.exp (Complex.re x)) (Real.cos (Complex.im x)))
 Case conversion may be inaccurate. Consider using '#align complex.exp_re Complex.exp_reₓ'. -/
-theorem exp_re : (exp x).re = Real.exp x.re * Real.cos x.im :=
-  by
-  rw [exp_eq_exp_re_mul_sin_add_cos]
-  simp [exp_of_real_re, cos_of_real_re]
+theorem exp_re : (exp x).re = Real.exp x.re * Real.cos x.im := by
+  rw [exp_eq_exp_re_mul_sin_add_cos]; simp [exp_of_real_re, cos_of_real_re]
 #align complex.exp_re Complex.exp_re
 
 /- warning: complex.exp_im -> Complex.exp_im is a dubious translation:
@@ -1654,10 +1646,8 @@ lean 3 declaration is
 but is expected to have type
   forall (x : Complex), Eq.{1} Real (Complex.im (Complex.exp x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Real.exp (Complex.re x)) (Real.sin (Complex.im x)))
 Case conversion may be inaccurate. Consider using '#align complex.exp_im Complex.exp_imₓ'. -/
-theorem exp_im : (exp x).im = Real.exp x.re * Real.sin x.im :=
-  by
-  rw [exp_eq_exp_re_mul_sin_add_cos]
-  simp [exp_of_real_re, sin_of_real_re]
+theorem exp_im : (exp x).im = Real.exp x.re * Real.sin x.im := by
+  rw [exp_eq_exp_re_mul_sin_add_cos]; simp [exp_of_real_re, sin_of_real_re]
 #align complex.exp_im Complex.exp_im
 
 /- warning: complex.exp_of_real_mul_I_re -> Complex.exp_ofReal_mul_I_re is a dubious translation:
@@ -2291,10 +2281,7 @@ but is expected to have type
   forall (x : Real), Eq.{1} Real (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Real.cosh x) (Real.sinh x)) (Real.exp (Neg.neg.{0} Real Real.instNegReal x))
 Case conversion may be inaccurate. Consider using '#align real.cosh_sub_sinh Real.cosh_sub_sinhₓ'. -/
 @[simp]
-theorem cosh_sub_sinh : cosh x - sinh x = exp (-x) :=
-  by
-  rw [← of_real_inj]
-  simp
+theorem cosh_sub_sinh : cosh x - sinh x = exp (-x) := by rw [← of_real_inj]; simp
 #align real.cosh_sub_sinh Real.cosh_sub_sinh
 
 /- warning: real.sinh_sub_cosh -> Real.sinh_sub_cosh is a dubious translation:
@@ -2875,12 +2862,8 @@ but is expected to have type
   forall (n : Nat) (m : Nat) (x : Real), (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) m) -> (LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Real.exp x) (Real.expNear m x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) x) m) (Nat.cast.{0} Real Real.natCast (Nat.factorial m))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast m) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (Nat.cast.{0} Real Real.natCast m))))
 Case conversion may be inaccurate. Consider using '#align real.exp_approx_end Real.exp_approx_endₓ'. -/
 theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : |x| ≤ 1) :
-    |exp x - expNear m x 0| ≤ |x| ^ m / m ! * ((m + 1) / m) :=
-  by
-  simp [exp_near]
-  convert exp_bound h _ using 1
-  field_simp [mul_comm]
-  linarith
+    |exp x - expNear m x 0| ≤ |x| ^ m / m ! * ((m + 1) / m) := by simp [exp_near];
+  convert exp_bound h _ using 1; field_simp [mul_comm] ; linarith
 #align real.exp_approx_end Real.exp_approx_end
 
 /- warning: real.exp_approx_succ -> Real.exp_approx_succ is a dubious translation:
@@ -3134,9 +3117,7 @@ theorem cos_two_neg : cos 2 < 0 :=
     _ ≤ 2 * (2 / 3) ^ 2 - 1 :=
       (sub_le_sub_right
         (mul_le_mul_of_nonneg_left
-          (by
-            rw [sq, sq]
-            exact mul_self_le_mul_self (le_of_lt cos_one_pos) cos_one_le)
+          (by rw [sq, sq]; exact mul_self_le_mul_self (le_of_lt cos_one_pos) cos_one_le)
           zero_le_two)
         _)
     _ < 0 := by norm_num
@@ -3253,14 +3234,11 @@ Case conversion may be inaccurate. Consider using '#align real.one_sub_div_pow_l
 theorem one_sub_div_pow_le_exp_neg {n : ℕ} {t : ℝ} (ht' : t ≤ n) : (1 - t / n) ^ n ≤ exp (-t) :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-    rwa [Nat.cast_zero] at ht'
+  · simp; rwa [Nat.cast_zero] at ht'
   convert pow_le_pow_of_le_left _ (add_one_le_exp (-(t / n))) n
   · abel
-  · rw [← Real.exp_nat_mul]
-    congr 1
-    field_simp [nat.cast_ne_zero.mpr hn]
-    ring
+  · rw [← Real.exp_nat_mul]; congr 1
+    field_simp [nat.cast_ne_zero.mpr hn] ; ring
   · rwa [add_comm, ← sub_eq_add_neg, sub_nonneg, div_le_one]
     positivity
 #align real.one_sub_div_pow_le_exp_neg Real.one_sub_div_pow_le_exp_neg

@@ -380,10 +380,8 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2807 : α) (x._@.Mathlib.Order.Antichain._hyg.2809 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.2807 x._@.Mathlib.Order.Antichain._hyg.2809) s) (IsLeast.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align is_antichain_and_least_iff isAntichain_and_least_iffₓ'. -/
 theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩,
-    by
-    rintro rfl
-    exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩, by
+    rintro rfl; exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩
 #align is_antichain_and_least_iff isAntichain_and_least_iff
 
 /- warning: is_antichain_and_greatest_iff -> isAntichain_and_greatest_iff is a dubious translation:
@@ -393,10 +391,8 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {a : α} [_inst_1 : Preorder.{u1} α], Iff (And (IsAntichain.{u1} α (fun (x._@.Mathlib.Order.Antichain._hyg.2938 : α) (x._@.Mathlib.Order.Antichain._hyg.2940 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Antichain._hyg.2938 x._@.Mathlib.Order.Antichain._hyg.2940) s) (IsGreatest.{u1} α _inst_1 s a)) (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align is_antichain_and_greatest_iff isAntichain_and_greatest_iffₓ'. -/
 theorem isAntichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩,
-    by
-    rintro rfl
-    exact ⟨isAntichain_singleton _ _, isGreatest_singleton⟩⟩
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩, by
+    rintro rfl; exact ⟨isAntichain_singleton _ _, isGreatest_singleton⟩⟩
 #align is_antichain_and_greatest_iff isAntichain_and_greatest_iff
 
 /- warning: is_antichain.least_iff -> IsAntichain.least_iff is a dubious translation:

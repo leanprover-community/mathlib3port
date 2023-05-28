@@ -147,10 +147,7 @@ theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
 #print CategoryTheory.Idempotents.isIdempotentComplete_of_abelian /-
 /-- An abelian category is idempotent complete. -/
 instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Category D] [Abelian D] :
-    IsIdempotentComplete D :=
-  by
-  rw [is_idempotent_complete_iff_idempotents_have_kernels]
-  intros
+    IsIdempotentComplete D := by rw [is_idempotent_complete_iff_idempotents_have_kernels]; intros ;
   infer_instance
 #align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.isIdempotentComplete_of_abelian
 -/
@@ -201,9 +198,7 @@ theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D
   intro X' p hp
   let φ := ε.counit_iso.symm.app X'
   erw [split_iff_of_iso φ p (φ.inv ≫ p ≫ φ.hom)
-      (by
-        slice_rhs 1 2 => rw [φ.hom_inv_id]
-        rw [id_comp])]
+      (by slice_rhs 1 2 => rw [φ.hom_inv_id]; rw [id_comp])]
   rcases is_idempotent_complete.idempotents_split (ε.inverse.obj X') (ε.inverse.map p)
       (by rw [← ε.inverse.map_comp, hp]) with
     ⟨Y, i, e, ⟨h₁, h₂⟩⟩

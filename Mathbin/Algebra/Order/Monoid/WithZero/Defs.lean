@@ -187,8 +187,7 @@ protected theorem covariantClass_add_le [AddZeroClass α] [Preorder α]
   induction b using WithZero.recZeroCoe
   · rw [add_zero]
     induction c using WithZero.recZeroCoe
-    · rw [add_zero]
-      exact le_rfl
+    · rw [add_zero]; exact le_rfl
     · rw [← coe_add, coe_le_coe]
       exact le_add_of_nonneg_right (h _)
   · rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩

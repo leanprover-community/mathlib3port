@@ -93,10 +93,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : ContinuousMul.{u1} G _inst_1 (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))] (a : G), Eq.{succ u1} (Homeomorph.{u1, u1} G G _inst_1 _inst_1) (Homeomorph.symm.{u1, u1} G G _inst_1 _inst_1 (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 a)) (Homeomorph.mulLeft.{u1} G _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_2)))) a))
 Case conversion may be inaccurate. Consider using '#align homeomorph.mul_left_symm Homeomorph.mulLeft_symmₓ'. -/
 @[to_additive]
-theorem Homeomorph.mulLeft_symm (a : G) : (Homeomorph.mulLeft a).symm = Homeomorph.mulLeft a⁻¹ :=
-  by
-  ext
-  rfl
+theorem Homeomorph.mulLeft_symm (a : G) : (Homeomorph.mulLeft a).symm = Homeomorph.mulLeft a⁻¹ := by
+  ext; rfl
 #align homeomorph.mul_left_symm Homeomorph.mulLeft_symm
 #align homeomorph.add_left_symm Homeomorph.addLeft_symm
 
@@ -183,9 +181,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.mul_right_symm Homeomorph.mulRight_symmₓ'. -/
 @[to_additive]
 theorem Homeomorph.mulRight_symm (a : G) : (Homeomorph.mulRight a).symm = Homeomorph.mulRight a⁻¹ :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align homeomorph.mul_right_symm Homeomorph.mulRight_symm
 #align homeomorph.add_right_symm Homeomorph.addRight_symm
 
@@ -248,9 +244,7 @@ theorem discreteTopology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : Disc
   by
   rw [← singletons_open_iff_discrete]
   intro g
-  suffices {g} = (fun x : G => g⁻¹ * x) ⁻¹' {1}
-    by
-    rw [this]
+  suffices {g} = (fun x : G => g⁻¹ * x) ⁻¹' {1} by rw [this];
     exact (continuous_mul_left g⁻¹).isOpen_preimage _ h
   simp only [mul_one, Set.preimage_mul_left_singleton, eq_self_iff_true, inv_inv,
     Set.singleton_eq_singleton_iff]
@@ -459,9 +453,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : InvolutiveInv.{u1} G] [_inst_3 : ContinuousInv.{u1} G _inst_1 (InvolutiveInv.toInv.{u1} G _inst_2)] {s : Set.{u1} G}, (IsCompact.{u1} G _inst_1 s) -> (IsCompact.{u1} G _inst_1 (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvolutiveInv.toInv.{u1} G _inst_2)) s))
 Case conversion may be inaccurate. Consider using '#align is_compact.inv IsCompact.invₓ'. -/
 @[to_additive]
-theorem IsCompact.inv (hs : IsCompact s) : IsCompact s⁻¹ :=
-  by
-  rw [← image_inv]
+theorem IsCompact.inv (hs : IsCompact s) : IsCompact s⁻¹ := by rw [← image_inv];
   exact hs.image continuous_inv
 #align is_compact.inv IsCompact.inv
 #align is_compact.neg IsCompact.neg
@@ -576,8 +568,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_continuous_inv_infi continuousInv_iInfₓ'. -/
 @[to_additive]
 theorem continuousInv_iInf {ts' : ι' → TopologicalSpace G} (h' : ∀ i, @ContinuousInv G (ts' i) _) :
-    @ContinuousInv G (⨅ i, ts' i) _ := by
-  rw [← sInf_range]
+    @ContinuousInv G (⨅ i, ts' i) _ := by rw [← sInf_range];
   exact continuousInv_sInf (set.forall_range_iff.mpr h')
 #align has_continuous_inv_infi continuousInv_iInf
 #align has_continuous_neg_infi continuousNeg_iInf
@@ -590,11 +581,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_continuous_inv_inf continuousInv_infₓ'. -/
 @[to_additive]
 theorem continuousInv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @ContinuousInv G t₁ _)
-    (h₂ : @ContinuousInv G t₂ _) : @ContinuousInv G (t₁ ⊓ t₂) _ :=
-  by
-  rw [inf_eq_iInf]
-  refine' continuousInv_iInf fun b => _
-  cases b <;> assumption
+    (h₂ : @ContinuousInv G t₂ _) : @ContinuousInv G (t₁ ⊓ t₂) _ := by rw [inf_eq_iInf];
+  refine' continuousInv_iInf fun b => _; cases b <;> assumption
 #align has_continuous_inv_inf continuousInv_inf
 #align has_continuous_neg_inf continuousNeg_inf
 
@@ -1416,11 +1404,7 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Group G] [TopologicalSpace G]
   refine' TopologicalGroup.of_nhds_one' hmul hinv hleft fun x₀ => _
   replace hconj : ∀ x₀ : G, map (fun x => x₀ * x * x₀⁻¹) (𝓝 1) = 𝓝 1
   exact fun x₀ =>
-    map_eq_of_inverse (fun x => x₀⁻¹ * x * x₀⁻¹⁻¹)
-      (by
-        ext
-        simp [mul_assoc])
-      (hconj _) (hconj _)
+    map_eq_of_inverse (fun x => x₀⁻¹ * x * x₀⁻¹⁻¹) (by ext; simp [mul_assoc]) (hconj _) (hconj _)
   rw [← hconj x₀]
   simpa [(· ∘ ·)] using hleft _
 #align topological_group.of_nhds_one TopologicalGroup.of_nhds_one
@@ -1582,9 +1566,7 @@ Case conversion may be inaccurate. Consider using '#align topological_group.to_h
 @[to_additive]
 instance (priority := 100) TopologicalGroup.to_continuousDiv [TopologicalSpace G] [Group G]
     [TopologicalGroup G] : ContinuousDiv G :=
-  ⟨by
-    simp only [div_eq_mul_inv]
-    exact continuous_fst.mul continuous_snd.inv⟩
+  ⟨by simp only [div_eq_mul_inv]; exact continuous_fst.mul continuous_snd.inv⟩
 #align topological_group.to_has_continuous_div TopologicalGroup.to_continuousDiv
 #align topological_add_group.to_has_continuous_sub TopologicalAddGroup.to_continuousSub
 
@@ -1797,9 +1779,7 @@ variable [TopologicalSpace β] [Group α] [MulAction α β] [ContinuousConstSMul
 
 #print IsOpen.smul_left /-
 @[to_additive]
-theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) :=
-  by
-  rw [← bUnion_smul_set]
+theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) := by rw [← bUnion_smul_set];
   exact isOpen_biUnion fun a _ => ht.smul _
 #align is_open.smul_left IsOpen.smul_left
 #align is_open.vadd_left IsOpen.vadd_left
@@ -1882,10 +1862,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))] {s : Set.{u1} α} (a : α) {b : α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhds.{u1} α _inst_1 b)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a) s) (nhds.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) a b)))
 Case conversion may be inaccurate. Consider using '#align singleton_mul_mem_nhds singleton_mul_mem_nhdsₓ'. -/
 @[to_additive]
-theorem singleton_mul_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : {a} * s ∈ 𝓝 (a * b) :=
-  by
-  have := smul_mem_nhds a h
-  rwa [← singleton_smul] at this
+theorem singleton_mul_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : {a} * s ∈ 𝓝 (a * b) := by
+  have := smul_mem_nhds a h; rwa [← singleton_smul] at this
 #align singleton_mul_mem_nhds singleton_mul_mem_nhds
 #align singleton_add_mem_nhds singleton_add_mem_nhds
 
@@ -1914,9 +1892,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : ContinuousConstSMul.{u1, u1} (MulOpposite.{u1} α) α _inst_1 (Mul.toHasOppositeSMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) s t))
 Case conversion may be inaccurate. Consider using '#align is_open.mul_right IsOpen.mul_rightₓ'. -/
 @[to_additive]
-theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) :=
-  by
-  rw [← bUnion_op_smul_set]
+theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) := by rw [← bUnion_op_smul_set];
   exact isOpen_biUnion fun a _ => hs.smul _
 #align is_open.mul_right IsOpen.mul_right
 #align is_open.add_right IsOpen.add_right
@@ -1984,9 +1960,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 t) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
 Case conversion may be inaccurate. Consider using '#align is_open.div_left IsOpen.div_leftₓ'. -/
 @[to_additive]
-theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) :=
-  by
-  rw [← Union_div_left_image]
+theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) := by rw [← Union_div_left_image];
   exact isOpen_biUnion fun a ha => isOpenMap_div_left a t ht
 #align is_open.div_left IsOpen.div_left
 #align is_open.sub_left IsOpen.sub_left
@@ -1998,9 +1972,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : TopologicalGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))) s t))
 Case conversion may be inaccurate. Consider using '#align is_open.div_right IsOpen.div_rightₓ'. -/
 @[to_additive]
-theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) :=
-  by
-  rw [← Union_div_right_image]
+theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) := by rw [← Union_div_right_image];
   exact isOpen_biUnion fun a ha => isOpenMap_div_right a s hs
 #align is_open.div_right IsOpen.div_right
 #align is_open.sub_right IsOpen.sub_right
@@ -2126,9 +2098,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_group.t1_space TopologicalGroup.t1Spaceₓ'. -/
 @[to_additive]
 theorem TopologicalGroup.t1Space (h : @IsClosed G _ {1}) : T1Space G :=
-  ⟨fun x => by
-    convert isClosedMap_mul_right x _ h
-    simp⟩
+  ⟨fun x => by convert isClosedMap_mul_right x _ h; simp⟩
 #align topological_group.t1_space TopologicalGroup.t1Space
 #align topological_add_group.t1_space TopologicalAddGroup.t1Space
 
@@ -2168,9 +2138,7 @@ theorem TopologicalGroup.t3Space [T0Space G] : T3Space G :=
 
 #print TopologicalGroup.t2Space /-
 @[to_additive]
-theorem TopologicalGroup.t2Space [T0Space G] : T2Space G :=
-  by
-  haveI := TopologicalGroup.t3Space G
+theorem TopologicalGroup.t2Space [T0Space G] : T2Space G := by haveI := TopologicalGroup.t3Space G;
   infer_instance
 #align topological_group.t2_space TopologicalGroup.t2Space
 #align topological_add_group.t2_space TopologicalAddGroup.t2Space
@@ -2349,8 +2317,7 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [Separ
   by
   obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
   refine' ⟨⟨fun n => (fun x => x * dense_seq G n) ⁻¹' L, _, _⟩⟩
-  · intro n
-    exact (Homeomorph.mulRight _).isCompact_preimage.mpr hLc
+  · intro n; exact (Homeomorph.mulRight _).isCompact_preimage.mpr hLc
   · refine' Union_eq_univ_iff.2 fun x => _
     obtain ⟨_, ⟨n, rfl⟩, hn⟩ : (range (dense_seq G) ∩ (fun y => x * y) ⁻¹' L).Nonempty :=
       by
@@ -2377,9 +2344,7 @@ theorem exists_disjoint_smul_of_isCompact [NoncompactSpace G] {K L : Set G} (hK 
     (hL : IsCompact L) : ∃ g : G, Disjoint K (g • L) :=
   by
   have A : ¬K * L⁻¹ = univ := (hK.mul hL.inv).ne_univ
-  obtain ⟨g, hg⟩ : ∃ g, g ∉ K * L⁻¹ := by
-    contrapose! A
-    exact eq_univ_iff_forall.2 A
+  obtain ⟨g, hg⟩ : ∃ g, g ∉ K * L⁻¹ := by contrapose! A; exact eq_univ_iff_forall.2 A
   refine' ⟨g, _⟩
   apply disjoint_left.2 fun a ha h'a => hg _
   rcases h'a with ⟨b, bL, rfl⟩
@@ -2418,9 +2383,7 @@ theorem local_isCompact_isClosed_nhds_of_group [LocallyCompactSpace G] {U : Set 
           (by simpa only [singleton_subset_iff] using mem_interior_iff_mem_nhds.2 Vnhds))
       _ = interior V * V := (is_open_interior.mul_closure _)
       _ ⊆ V * V := (mul_subset_mul_right interior_subset)
-      _ ⊆ L := by
-        rintro x ⟨y, z, yv, zv, rfl⟩
-        exact hV _ yv _ zv
+      _ ⊆ L := by rintro x ⟨y, z, yv, zv, rfl⟩; exact hV _ yv _ zv
       
   exact
     ⟨closure V, isCompact_of_isClosed_subset Lcomp isClosed_closure VL, isClosed_closure,
@@ -2607,10 +2570,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_group_infi topologicalGroup_iInfₓ'. -/
 @[to_additive]
 theorem topologicalGroup_iInf {ts' : ι → TopologicalSpace G}
-    (h' : ∀ i, @TopologicalGroup G (ts' i) _) : @TopologicalGroup G (⨅ i, ts' i) _ :=
-  by
-  rw [← sInf_range]
-  exact topologicalGroup_sInf (set.forall_range_iff.mpr h')
+    (h' : ∀ i, @TopologicalGroup G (ts' i) _) : @TopologicalGroup G (⨅ i, ts' i) _ := by
+  rw [← sInf_range]; exact topologicalGroup_sInf (set.forall_range_iff.mpr h')
 #align topological_group_infi topologicalGroup_iInf
 #align topological_add_group_infi topologicalAddGroup_iInf
 
@@ -2622,11 +2583,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_group_inf topologicalGroup_infₓ'. -/
 @[to_additive]
 theorem topologicalGroup_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @TopologicalGroup G t₁ _)
-    (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ :=
-  by
-  rw [inf_eq_iInf]
-  refine' topologicalGroup_iInf fun b => _
-  cases b <;> assumption
+    (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ := by rw [inf_eq_iInf];
+  refine' topologicalGroup_iInf fun b => _; cases b <;> assumption
 #align topological_group_inf topologicalGroup_inf
 #align topological_add_group_inf topologicalAddGroup_inf
 
@@ -2709,10 +2667,7 @@ theorem continuous_inv' (g : GroupTopology α) :
 @[to_additive]
 theorem toTopologicalSpace_injective :
     Function.Injective (toTopologicalSpace : GroupTopology α → TopologicalSpace α) := fun f g h =>
-  by
-  cases f
-  cases g
-  congr
+  by cases f; cases g; congr
 #align group_topology.to_topological_space_injective GroupTopology.toTopologicalSpace_injective
 #align add_group_topology.to_topological_space_injective AddGroupTopology.toTopologicalSpace_injective
 -/
@@ -2766,9 +2721,7 @@ theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = �
 @[to_additive]
 instance : Bot (GroupTopology α) :=
   ⟨{  toTopologicalSpace := ⊥
-      continuous_mul := by
-        letI : TopologicalSpace α := ⊥
-        haveI := discreteTopology_bot α
+      continuous_mul := by letI : TopologicalSpace α := ⊥; haveI := discreteTopology_bot α;
         continuity
       continuous_inv := continuous_bot }⟩
 

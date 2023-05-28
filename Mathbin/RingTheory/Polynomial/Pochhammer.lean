@@ -236,8 +236,7 @@ Case conversion may be inaccurate. Consider using '#align pochhammer_pos pochham
 theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s :=
   by
   induction' n with n ih
-  · simp only [Nat.zero_eq, pochhammer_zero, eval_one]
-    exact zero_lt_one
+  · simp only [Nat.zero_eq, pochhammer_zero, eval_one]; exact zero_lt_one
   · rw [pochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X,
       Nat.cast_comm, ← mul_add]
     exact mul_pos ih (lt_of_lt_of_le h ((le_add_iff_nonneg_right _).mpr (Nat.cast_nonneg n)))

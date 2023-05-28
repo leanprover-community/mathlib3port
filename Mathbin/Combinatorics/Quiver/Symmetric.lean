@@ -98,11 +98,8 @@ Case conversion may be inaccurate. Consider using '#align quiver.reverse_inj Qui
 theorem reverse_inj [HasInvolutiveReverse V] {a b : V} (f g : a ⟶ b) :
     reverse f = reverse g ↔ f = g := by
   constructor
-  · rintro h
-    simpa using congr_arg Quiver.reverse h
-  · rintro h
-    congr
-    assumption
+  · rintro h; simpa using congr_arg Quiver.reverse h
+  · rintro h; congr ; assumption
 #align quiver.reverse_inj Quiver.reverse_inj
 
 /- warning: quiver.eq_reverse_iff -> Quiver.eq_reverse_iff is a dubious translation:
@@ -214,11 +211,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.path.reverse_comp Quiver.Path.reverse_compₓ'. -/
 @[simp]
 theorem Path.reverse_comp [HasReverse V] {a b c : V} (p : Path a b) (q : Path b c) :
-    (p.comp q).reverse = q.reverse.comp p.reverse :=
-  by
-  induction q
-  · simp
-  · simp [q_ih]
+    (p.comp q).reverse = q.reverse.comp p.reverse := by induction q; · simp; · simp [q_ih]
 #align quiver.path.reverse_comp Quiver.Path.reverse_comp
 
 /- warning: quiver.path.reverse_reverse -> Quiver.Path.reverse_reverse is a dubious translation:
@@ -268,10 +261,8 @@ Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift
 theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : of ⋙q lift φ = φ :=
   by
   fapply Prefunctor.ext
-  · rintro X
-    rfl
-  · rintro X Y f
-    rfl
+  · rintro X; rfl
+  · rintro X Y f; rfl
 #align quiver.symmetrify.lift_spec Quiver.Symmetrify.lift_spec
 
 /- warning: quiver.symmetrify.lift_reverse -> Quiver.Symmetrify.lift_reverse is a dubious translation:
@@ -284,10 +275,8 @@ theorem lift_reverse [h : HasInvolutiveReverse V'] (φ : V ⥤q V') {X Y : Symme
     (lift φ).map (Quiver.reverse f) = Quiver.reverse ((lift φ).map f) :=
   by
   dsimp [lift]; cases f
-  · simp only
-    rfl
-  · simp only [reverse_reverse]
-    rfl
+  · simp only; rfl
+  · simp only [reverse_reverse]; rfl
 #align quiver.symmetrify.lift_reverse Quiver.Symmetrify.lift_reverse
 
 /- warning: quiver.symmetrify.lift_unique -> Quiver.Symmetrify.lift_unique is a dubious translation:
@@ -301,8 +290,7 @@ theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V')
     [hΦrev : Φ.MapReverse] : Φ = lift φ := by
   subst_vars
   fapply Prefunctor.ext
-  · rintro X
-    rfl
+  · rintro X; rfl
   · rintro X Y f
     cases f
     · rfl
@@ -329,24 +317,12 @@ namespace Push
 variable {V' : Type _} (σ : V → V')
 
 instance [HasReverse V] : HasReverse (Push σ)
-    where reverse' a b F := by
-    cases F
-    constructor
-    apply reverse
-    exact F_f
+    where reverse' a b F := by cases F; constructor; apply reverse; exact F_f
 
 instance [HasInvolutiveReverse V] : HasInvolutiveReverse (Push σ)
     where
-  reverse' a b F := by
-    cases F
-    constructor
-    apply reverse
-    exact F_f
-  inv' a b F := by
-    cases F
-    dsimp [reverse]
-    congr
-    apply reverse_reverse
+  reverse' a b F := by cases F; constructor; apply reverse; exact F_f
+  inv' a b F := by cases F; dsimp [reverse]; congr ; apply reverse_reverse
 
 /- warning: quiver.push.of_reverse -> Quiver.Push.of_reverse is a dubious translation:
 lean 3 declaration is

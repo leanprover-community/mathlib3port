@@ -99,15 +99,11 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   exact this _
   induction k generalizing z <;> intro
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
-    congr
-    ext : 1
-    rw [assert_neg]
-    rfl
+    congr ; ext : 1; rw [assert_neg]; rfl
     rw [Nat.zero_add] at this
     simpa only [Classical.not_not, Subtype.val_eq_coe]
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
-    congr
-    ext : 1
+    congr ; ext : 1
     have hh : ¬(fix.approx f z.val x).Dom :=
       by
       apply Nat.find_min h'

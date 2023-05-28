@@ -119,9 +119,7 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
     (J : InjectiveResolution Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι :=
   by
   ext n
-  rcases n with (_ | _ | n) <;>
-    · dsimp [desc, desc_f_one, desc_f_zero]
-      simp
+  rcases n with (_ | _ | n) <;> · dsimp [desc, desc_f_one, desc_f_zero]; simp
 #align category_theory.InjectiveResolution.desc_commutes CategoryTheory.InjectiveResolution.desc_commutes
 
 /- warning: category_theory.InjectiveResolution.desc_homotopy_zero_zero -> CategoryTheory.InjectiveResolution.descHomotopyZeroZero is a dubious translation:
@@ -161,10 +159,8 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolution Y} {J : InjectiveRes
     (I.cocomplex.d (n + 2) (n + 3)) (Abelian.Exact.op _ _ (I.exact _))
     (by
       simp [preadditive.comp_sub, ← category.assoc, preadditive.sub_comp,
-        show I.cocomplex.d (n + 1) (n + 2) ≫ g' = f.f (n + 1) - g ≫ J.cocomplex.d n (n + 1)
-          by
-          rw [w]
-          simp only [add_sub_cancel]])
+        show I.cocomplex.d (n + 1) (n + 2) ≫ g' = f.f (n + 1) - g ≫ J.cocomplex.d n (n + 1) by
+          rw [w]; simp only [add_sub_cancel]])
 #align category_theory.InjectiveResolution.desc_homotopy_zero_succ CategoryTheory.InjectiveResolution.descHomotopyZeroSucc
 
 /- warning: category_theory.InjectiveResolution.desc_homotopy_zero -> CategoryTheory.InjectiveResolution.descHomotopyZero is a dubious translation:
@@ -351,10 +347,7 @@ irreducible_def of (Z : C) : InjectiveResolution Z :=
         fun n _ => ⟨0, by ext⟩
     Injective := by rintro (_ | _ | _ | n) <;> · apply injective.injective_under
     exact₀ := by simpa using exact_f_d (injective.ι Z)
-    exact := by
-      rintro (_ | n) <;>
-        · simp
-          apply exact_f_d
+    exact := by rintro (_ | n) <;> · simp; apply exact_f_d
     Mono := Injective.ι_mono Z }
 #align category_theory.InjectiveResolution.of CategoryTheory.InjectiveResolution.of
 

@@ -104,10 +104,8 @@ it to every n axis. -/
 def torusMap (c : ℂⁿ) (R : ℝⁿ) : ℝⁿ → ℂⁿ := fun θ i => c i + R i * exp (θ i * I)
 #align torus_map torusMap
 
-theorem torusMap_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ :=
-  by
-  ext1 i
-  simp [torusMap]
+theorem torusMap_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ := by
+  ext1 i; simp [torusMap]
 #align torus_map_sub_center torusMap_sub_center
 
 theorem torusMap_eq_center_iff {c : ℂⁿ} {R : ℝⁿ} {θ : ℝⁿ} : torusMap c R θ = c ↔ R = 0 := by
@@ -115,9 +113,7 @@ theorem torusMap_eq_center_iff {c : ℂⁿ} {R : ℝⁿ} {θ : ℝⁿ} : torusMa
 #align torus_map_eq_center_iff torusMap_eq_center_iff
 
 @[simp]
-theorem torusMap_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c :=
-  by
-  ext1
+theorem torusMap_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c := by ext1;
   rw [torusMap_eq_center_iff.2 rfl]
 #align torus_map_zero_radius torusMap_zero_radius
 

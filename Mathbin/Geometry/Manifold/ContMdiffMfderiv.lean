@@ -158,8 +158,7 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
     simp_rw [Function.comp, uncurry, extChartAt_prod, LocalEquiv.prod_coe_symm,
       ModelWithCorners.range_prod] at hf⊢
     refine' ContDiffWithinAt.fderivWithin _ hg.2 I.unique_diff hmn (mem_range_self _) _
-    · simp_rw [extChartAt_to_inv]
-      exact hf.2
+    · simp_rw [extChartAt_to_inv]; exact hf.2
     · rw [← image_subset_iff]
       rintro _ ⟨x, hx, rfl⟩
       exact mem_range_self _
@@ -297,15 +296,12 @@ theorem ContMdiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
     have :
       univ ∩ ⇑(tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) =
         π (TangentSpace I) ⁻¹' s :=
-      by
-      ext ⟨x, v⟩
-      simp only [mfld_simps]
+      by ext ⟨x, v⟩; simp only [mfld_simps]
     rw [this] at B
     apply B.congr
     rintro ⟨x, v⟩ hx
     dsimp [tangentMapWithin]
-    ext
-    · rfl
+    ext; · rfl
     simp only [mfld_simps]
     apply congr_fun
     apply congr_arg
@@ -380,9 +376,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
         ((Equiv.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹'
           (π (TangentSpace I) ⁻¹' s) =
       (range I ∩ I.symm ⁻¹' s) ×ˢ univ :=
-    by
-    ext ⟨x, v⟩
-    simp only [mfld_simps]
+    by ext ⟨x, v⟩; simp only [mfld_simps]
   suffices h :
     ContDiffOn 𝕜 m
       (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equiv.sigmaEquivProd H' E') ∘
@@ -471,18 +465,15 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
   rcases continuousOn_iff'.1 hf'.1 r.source r.open_source with ⟨o, o_open, ho⟩
   suffices h : ContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) s'_lift
   · refine' ⟨π (TangentSpace I) ⁻¹' (o ∩ l.source), _, _, _⟩
-    show IsOpen (π (TangentSpace I) ⁻¹' (o ∩ l.source))
+    show IsOpen (π (TangentSpace I) ⁻¹' (o ∩ l.source));
     exact (IsOpen.inter o_open l.open_source).Preimage (continuous_proj E _)
     show p ∈ π (TangentSpace I) ⁻¹' (o ∩ l.source)
     · simp
       have : p.proj ∈ f ⁻¹' r.source ∩ s := by simp [hp]
       rw [ho] at this
       exact this.1
-    · have : π (TangentSpace I) ⁻¹' s ∩ π (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift :=
-        by
-        dsimp only [s'_lift, s']
-        rw [ho]
-        mfld_set_tac
+    · have : π (TangentSpace I) ⁻¹' s ∩ π (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
+        dsimp only [s'_lift, s']; rw [ho]; mfld_set_tac
       rw [this]
       exact h
   /- Second step: check that all functions are smooth, and use the chain rule to write the bundled
@@ -500,8 +491,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
   have diff_rf : ContMdiffOn I I' n (r ∘ f) s' :=
     by
     apply ContMdiffOn.comp diff_r diff_f fun x hx => _
-    simp only [s', mfld_simps] at hx
-    simp only [hx, mfld_simps]
+    simp only [s', mfld_simps] at hx; simp only [hx, mfld_simps]
   have diff_l : ContMdiffOn I I n l.symm s'l :=
     haveI A : ContMdiffOn I I n l.symm l.target := contMdiffOn_chart_symm
     A.mono (by mfld_set_tac)
@@ -550,13 +540,8 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
     by
     intro q hq
     simp only [s'_lift, mfld_simps] at hq
-    have U'q : UniqueMdiffWithinAt I s' q.1 := by
-      apply U'
-      simp only [hq, s', mfld_simps]
-    have U'lq : UniqueMdiffWithinAt I s'l (Dl q).1 :=
-      by
-      apply U'l
-      simp only [hq, s'l, mfld_simps]
+    have U'q : UniqueMdiffWithinAt I s' q.1 := by apply U'; simp only [hq, s', mfld_simps]
+    have U'lq : UniqueMdiffWithinAt I s'l (Dl q).1 := by apply U'l; simp only [hq, s'l, mfld_simps]
     have A :
       tangentMapWithin I I' ((r ∘ f) ∘ l.symm) s'l (il.symm (Dl q)) =
         tangentMapWithin I I' (r ∘ f) s' (tangentMapWithin I I l.symm s'l (il.symm (Dl q))) :=
@@ -566,8 +551,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
         simp only [hq, mfld_simps]
       · apply diff_l.mdifferentiable_on one_le_n
         simp only [s'l, hq, mfld_simps]
-      · simp only [mfld_simps] at hp
-        simp only [hp, mfld_simps]
+      · simp only [mfld_simps] at hp; simp only [hp, mfld_simps]
     have B : tangentMapWithin I I l.symm s'l (il.symm (Dl q)) = q :=
       by
       have :
@@ -601,8 +585,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
           tangentMap I' I' r (tangentMapWithin I I' f s' q) :=
         by
         apply tangentMapWithin_eq_tangentMap
-        · apply IsOpen.uniqueMdiffWithinAt _ r.open_source
-          simp [hq]
+        · apply IsOpen.uniqueMdiffWithinAt _ r.open_source; simp [hq]
         · refine' mdifferentiableAt_atlas _ (chart_mem_atlas _ _) _
           simp only [hq, mfld_simps]
       have : f p.proj = (tangentMapWithin I I' f s p).1 := rfl

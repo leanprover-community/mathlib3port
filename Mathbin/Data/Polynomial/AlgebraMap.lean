@@ -78,10 +78,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.to_finsupp_algebra_map Polynomial.toFinsupp_algebraMapₓ'. -/
 @[simp]
 theorem toFinsupp_algebraMap (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
-  show toFinsupp (C (algebraMap _ _ r)) = _
-    by
-    rw [to_finsupp_C]
-    rfl
+  show toFinsupp (C (algebraMap _ _ r)) = _ by rw [to_finsupp_C]; rfl
 #align polynomial.to_finsupp_algebra_map Polynomial.toFinsupp_algebraMap
 
 /- warning: polynomial.of_finsupp_algebra_map -> Polynomial.ofFinsupp_algebraMap is a dubious translation:
@@ -472,18 +469,14 @@ variable [Semiring S] {f : R →+* S}
 
 #print Polynomial.aeval_eq_sum_range /-
 theorem aeval_eq_sum_range [Algebra R S] {p : R[X]} (x : S) :
-    aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i :=
-  by
-  simp_rw [Algebra.smul_def]
-  exact eval₂_eq_sum_range (algebraMap R S) x
+    aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i := by
+  simp_rw [Algebra.smul_def]; exact eval₂_eq_sum_range (algebraMap R S) x
 #align polynomial.aeval_eq_sum_range Polynomial.aeval_eq_sum_range
 -/
 
 #print Polynomial.aeval_eq_sum_range' /-
 theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree < n) (x : S) :
-    aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i :=
-  by
-  simp_rw [Algebra.smul_def]
+    aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i := by simp_rw [Algebra.smul_def];
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
 #align polynomial.aeval_eq_sum_range' Polynomial.aeval_eq_sum_range'
 -/
@@ -588,9 +581,7 @@ theorem aevalTower_comp_toAlgHom : (aevalTower g y).comp (IsScalarTower.toAlgHom
 
 #print Polynomial.aevalTower_id /-
 @[simp]
-theorem aevalTower_id : aevalTower (AlgHom.id S S) = aeval :=
-  by
-  ext
+theorem aevalTower_id : aevalTower (AlgHom.id S S) = aeval := by ext;
   simp only [eval_X, aeval_tower_X, coe_aeval_eq_eval]
 #align polynomial.aeval_tower_id Polynomial.aevalTower_id
 -/
@@ -602,9 +593,7 @@ but is expected to have type
   forall {S : Type.{u2}} {A' : Type.{u1}} [_inst_1 : CommSemiring.{u1} A'] [_inst_8 : CommSemiring.{u2} S] [_inst_10 : Algebra.{u2, u1} S A' _inst_8 (CommSemiring.toSemiring.{u1} A' _inst_1)], Eq.{max (succ u2) (succ u1)} (A' -> (AlgHom.{u2, u2, u1} S (Polynomial.{u2} S (CommSemiring.toSemiring.{u2} S _inst_8)) A' _inst_8 (Polynomial.semiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_8)) (CommSemiring.toSemiring.{u1} A' _inst_1) (Polynomial.algebraOfAlgebra.{u2, u2} S S _inst_8 (CommSemiring.toSemiring.{u2} S _inst_8) (Algebra.id.{u2} S _inst_8)) _inst_10)) (Polynomial.aevalTower.{u2, u2, u1} S S A' _inst_1 _inst_8 _inst_8 (Algebra.id.{u2} S _inst_8) _inst_10 (Algebra.ofId.{u2, u1} S A' _inst_8 (CommSemiring.toSemiring.{u1} A' _inst_1) _inst_10)) (Polynomial.aeval.{u2, u1} S A' _inst_8 (CommSemiring.toSemiring.{u1} A' _inst_1) _inst_10)
 Case conversion may be inaccurate. Consider using '#align polynomial.aeval_tower_of_id Polynomial.aevalTower_ofIdₓ'. -/
 @[simp]
-theorem aevalTower_ofId : aevalTower (Algebra.ofId S A') = aeval :=
-  by
-  ext
+theorem aevalTower_ofId : aevalTower (Algebra.ofId S A') = aeval := by ext;
   simp only [aeval_X, aeval_tower_X]
 #align polynomial.aeval_tower_of_id Polynomial.aevalTower_ofId
 

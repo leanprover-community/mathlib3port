@@ -60,9 +60,7 @@ theorem coe_nodupKeys {l : List (Sigma β)} : @NodupKeys α β l ↔ l.NodupKeys
 -/
 
 #print Multiset.nodup_keys /-
-theorem nodup_keys {m : Multiset (Σa, β a)} : m.keys.Nodup ↔ m.NodupKeys :=
-  by
-  rcases m with ⟨l⟩
+theorem nodup_keys {m : Multiset (Σa, β a)} : m.keys.Nodup ↔ m.NodupKeys := by rcases m with ⟨l⟩;
   rfl
 #align multiset.nodup_keys Multiset.nodup_keys
 -/
@@ -146,9 +144,7 @@ def liftOn {γ} (s : Finmap β) (f : AList β → γ)
           Part γ).get
       _
   · exact fun h₁ h₂ => H _ _ p
-  · have := s.nodupkeys
-    rcases s.entries with ⟨l⟩
-    exact id
+  · have := s.nodupkeys; rcases s.entries with ⟨l⟩; exact id
 #align finmap.lift_on Finmap.liftOn
 -/
 
@@ -398,9 +394,7 @@ theorem lookup_eq_none {a} {s : Finmap β} : lookup a s = none ↔ a ∉ s :=
 
 #print Finmap.mem_lookup_iff /-
 theorem mem_lookup_iff {f : Finmap β} {a : α} {b : β a} :
-    b ∈ f.dlookup a ↔ Sigma.mk a b ∈ f.entries :=
-  by
-  rcases f with ⟨⟨l⟩, hl⟩
+    b ∈ f.dlookup a ↔ Sigma.mk a b ∈ f.entries := by rcases f with ⟨⟨l⟩, hl⟩;
   exact List.mem_dlookup_iff hl
 #align finmap.mem_lookup_iff Finmap.mem_lookup_iff
 -/
@@ -556,22 +550,14 @@ def foldl {δ : Type w} (f : δ → ∀ a, β a → δ)
 #print Finmap.any /-
 /-- `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
 def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x || f y z)
-    (by
-      intros
-      simp_rw [Bool.or_assoc, Bool.or_comm])
-    false
+  s.foldl (fun x y z => x || f y z) (by intros ; simp_rw [Bool.or_assoc, Bool.or_comm]) false
 #align finmap.any Finmap.any
 -/
 
 #print Finmap.all /-
 /-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
 def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x && f y z)
-    (by
-      intros
-      simp_rw [Bool.and_assoc, Bool.and_comm])
-    true
+  s.foldl (fun x y z => x && f y z) (by intros ; simp_rw [Bool.and_assoc, Bool.and_comm]) true
 #align finmap.all Finmap.all
 -/
 
@@ -737,9 +723,7 @@ theorem mem_list_toFinmap (a : α) (xs : List (Sigma β)) :
   conv =>
     lhs
     rw [← and_true_iff (a = x_fst)]
-  apply and_congr_right
-  rintro ⟨⟩
-  simp only [exists_eq, heq_iff_eq]
+  apply and_congr_right; rintro ⟨⟩; simp only [exists_eq, heq_iff_eq]
 #align finmap.mem_list_to_finmap Finmap.mem_list_toFinmap
 -/
 
@@ -877,8 +861,7 @@ theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.dlookup
     s.eraseₓ a ∪ singleton a b = s :=
   ext_lookup fun x => by
     by_cases h' : x = a
-    · subst a
-      rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
+    · subst a; rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
     · have : x ∉ singleton a b := by rwa [mem_singleton]
       rw [lookup_union_left_of_not_in this, lookup_erase_ne h']
 #align finmap.erase_union_singleton Finmap.erase_union_singleton
@@ -935,8 +918,7 @@ theorem disjoint_union_right (x y z : Finmap β) :
 
 #print Finmap.union_comm_of_disjoint /-
 theorem union_comm_of_disjoint {s₁ s₂ : Finmap β} : Disjoint s₁ s₂ → s₁ ∪ s₂ = s₂ ∪ s₁ :=
-  induction_on₂ s₁ s₂ fun s₁ s₂ => by
-    intro h
+  induction_on₂ s₁ s₂ fun s₁ s₂ => by intro h;
     simp only [AList.toFinmap_eq, union_to_finmap, AList.union_comm_of_disjoint h]
 #align finmap.union_comm_of_disjoint Finmap.union_comm_of_disjoint
 -/
@@ -945,8 +927,7 @@ theorem union_comm_of_disjoint {s₁ s₂ : Finmap β} : Disjoint s₁ s₂ → 
 theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' : Disjoint s₂ s₃) :
     s₁ ∪ s₃ = s₂ ∪ s₃ ↔ s₁ = s₂ :=
   ⟨fun h'' => by
-    apply ext_lookup
-    intro x
+    apply ext_lookup; intro x
     have : (s₁ ∪ s₃).dlookup x = (s₂ ∪ s₃).dlookup x := h'' ▸ rfl
     by_cases hs₁ : x ∈ s₁
     · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this

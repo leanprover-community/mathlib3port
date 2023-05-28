@@ -59,9 +59,7 @@ theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x :=
   use 2
   refine' ((eventually_gt_at_top 0).mono fun n hn => _).Frequently
   have hn' : (0 : ℝ) < n := by simpa
-  have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n :=
-    by
-    rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
+  have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n := by rw [lt_div_iff hn', Int.cast_add, Int.cast_one];
     exact Int.lt_floor_add_one _
   refine' ⟨⌊x * n⌋ + 1, this.ne, _⟩
   rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add',
@@ -124,8 +122,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
     simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
   refine' ⟨r.num * m, _, _⟩
-  · rw [A]
-    simp [hne, hr]
+  · rw [A]; simp [hne, hr]
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
     refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
@@ -180,9 +177,7 @@ theorem nat_mul_iff (hn : n ≠ 0) : LiouvilleWith p (n * x) ↔ LiouvilleWith p
   rw [mul_comm, mul_nat_iff hn]
 #align liouville_with.nat_mul_iff LiouvilleWith.nat_mul_iff
 
-theorem nat_mul (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (n * x) :=
-  by
-  rw [mul_comm]
+theorem nat_mul (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (n * x) := by rw [mul_comm];
   exact h.mul_nat hn
 #align liouville_with.nat_mul LiouvilleWith.nat_mul
 
@@ -195,8 +190,7 @@ theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) :=
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne'
   have : (↑(r.denom * m + r.num * n : ℤ) / ↑(r.denom • id n) : ℝ) = m / n + r := by
     simp [add_div, hr.ne', mul_div_mul_left, mul_div_mul_right, hn', ← Rat.cast_def]
-  refine' ⟨r.denom * m + r.num * n, _⟩
-  rw [this, add_sub_add_right_eq_sub]
+  refine' ⟨r.denom * m + r.num * n, _⟩; rw [this, add_sub_add_right_eq_sub]
   refine' ⟨by simpa, hlt.trans_le (le_of_eq _)⟩
   have : (r.denom ^ p : ℝ) ≠ 0 := (rpow_pos_of_pos hr _).ne'
   simp [mul_rpow, Nat.cast_nonneg, mul_div_mul_left, this]
@@ -315,8 +309,7 @@ theorem nat_sub (h : LiouvilleWith p x) (n : ℕ) : LiouvilleWith p (n - x) :=
 
 theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m :=
   by
-  rintro rfl
-  rename' m => M
+  rintro rfl; rename' m => M
   rcases((eventually_gt_at_top 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
     ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : |(M - m / n : ℝ)| < n ^ (-1 : ℝ)⟩
   refine' hlt.not_le _
@@ -333,8 +326,7 @@ protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x
   by
   rintro ⟨r, rfl⟩
   rcases eq_or_ne r 0 with (rfl | h0)
-  · refine' h.ne_cast_int hp 0 _
-    rw [Rat.cast_zero, Int.cast_zero]
+  · refine' h.ne_cast_int hp 0 _; rw [Rat.cast_zero, Int.cast_zero]
   · refine' (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 _
     simp [Rat.cast_ne_zero.2 h0]
 #align liouville_with.irrational LiouvilleWith.irrational
@@ -368,9 +360,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
   rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
-  lift b to ℕ using zero_le_one.trans hb.le
-  norm_cast  at hb
-  push_cast at hne hlt
+  lift b to ℕ using zero_le_one.trans hb.le; norm_cast  at hb; push_cast at hne hlt
   cases le_or_lt N b
   · refine' (hN b h a hne).not_lt (hlt.trans_le _)
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb

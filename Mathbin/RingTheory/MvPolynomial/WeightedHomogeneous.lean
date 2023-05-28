@@ -196,10 +196,7 @@ def weightedHomogeneousSubmodule (w : σ → M) (m : M) : Submodule R (MvPolynom
   zero_mem' d hd := False.elim (hd <| coeff_zero _)
   add_mem' a b ha hb c hc := by
     rw [coeff_add] at hc
-    obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 :=
-      by
-      contrapose! hc
-      simp only [hc, add_zero]
+    obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 := by contrapose! hc; simp only [hc, add_zero]
     · exact ha h
     · exact hb h
 #align mv_polynomial.weighted_homogeneous_submodule MvPolynomial.weightedHomogeneousSubmodule
@@ -273,8 +270,7 @@ theorem isWeightedHomogeneous_monomial (w : σ → M) (d : σ →₀ ℕ) (r : R
     intro c hc
     rw [coeff_monomial] at hc
     split_ifs  at hc with h
-    · subst c
-      exact hm
+    · subst c; exact hm
     · contradiction
 #align mv_polynomial.is_weighted_homogeneous_monomial MvPolynomial.isWeightedHomogeneous_monomial
 
@@ -358,9 +354,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.is_weighted_homogeneous.coeff_eq_zero MvPolynomial.IsWeightedHomogeneous.coeff_eq_zeroₓ'. -/
 /-- The weighted degree of a weighted homogeneous polynomial controls its support. -/
 theorem coeff_eq_zero {w : σ → M} (hφ : IsWeightedHomogeneous w φ n) (d : σ →₀ ℕ)
-    (hd : weightedDegree' w d ≠ n) : coeff d φ = 0 :=
-  by
-  have aux := mt (@hφ d) hd
+    (hd : weightedDegree' w d ≠ n) : coeff d φ = 0 := by have aux := mt (@hφ d) hd;
   rwa [Classical.not_not] at aux
 #align mv_polynomial.is_weighted_homogeneous.coeff_eq_zero MvPolynomial.IsWeightedHomogeneous.coeff_eq_zero
 
@@ -431,8 +425,7 @@ theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : 
   by
   classical
     apply Finset.induction_on s
-    · intro
-      simp only [is_weighted_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
+    · intro ; simp only [is_weighted_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
     · intro i s his IH h
       simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
       apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
@@ -576,8 +569,7 @@ theorem weightedHomogeneousComponent_finsupp :
     by
     exact finite.subset ((fun d : σ →₀ ℕ => (weighted_degree' w) d) '' ↑(support φ)).toFinite this
   intro m hm
-  by_contra hm'
-  apply hm
+  by_contra hm'; apply hm
   simp only [mem_support, Ne.def] at hm
   simp only [Set.mem_image, not_exists, not_and] at hm'
   exact weighted_homogeneous_component_eq_zero' m φ hm'
@@ -600,10 +592,8 @@ theorem sum_weightedHomogeneousComponent :
     simp only [coeff_sum, coeff_weighted_homogeneous_component]
     rw [Finset.sum_eq_single (weighted_degree' w d)]
     · rw [if_pos rfl]
-    · intro m hm hm'
-      rw [if_neg hm'.symm]
-    · intro hm
-      rw [if_pos rfl]
+    · intro m hm hm'; rw [if_neg hm'.symm]
+    · intro hm; rw [if_pos rfl]
       simp only [finite.mem_to_finset, mem_support, Ne.def, Classical.not_not] at hm
       have := coeff_weighted_homogeneous_component (_ : M) φ d
       rw [hm, if_pos rfl, coeff_zero] at this

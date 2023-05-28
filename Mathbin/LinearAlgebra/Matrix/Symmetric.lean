@@ -224,9 +224,7 @@ theorem IsSymm.fromBlocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n 
     {D : Matrix n n α} (hA : A.IsSymm) (hBC : Bᵀ = C) (hD : D.IsSymm) :
     (A.fromBlocks B C D).IsSymm :=
   by
-  have hCB : Cᵀ = B := by
-    rw [← hBC]
-    simp
+  have hCB : Cᵀ = B := by rw [← hBC]; simp
   unfold Matrix.IsSymm
   rw [from_blocks_transpose]
   congr <;> assumption

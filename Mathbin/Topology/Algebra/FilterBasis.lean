@@ -264,8 +264,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
     · rintro y ⟨t, tW, rfl⟩
       rw [(B.has_basis _).mem_iff]
       use W, W_in
-      apply subset.trans _ H
-      clear H
+      apply subset.trans _ H; clear H
       rintro z ⟨w, wW, rfl⟩
       exact ⟨t * w, hW (mul_mem_mul tW wW), by simp [mul_assoc]⟩
 #align group_filter_basis.nhds_eq GroupFilterBasis.nhds_eq
@@ -280,11 +279,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eqₓ'. -/
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) :
-    @nhds G B.topology (1 : G) = B.toFilterBasis.filterₓ :=
-  by
-  rw [B.nhds_eq]
-  simp only [N, one_mul]
-  exact map_id
+    @nhds G B.topology (1 : G) = B.toFilterBasis.filterₓ := by rw [B.nhds_eq];
+  simp only [N, one_mul]; exact map_id
 #align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eq
 #align add_group_filter_basis.nhds_zero_eq AddGroupFilterBasis.nhds_zero_eq
 
@@ -296,10 +292,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_hasBasisₓ'. -/
 @[to_additive]
 theorem nhds_hasBasis (B : GroupFilterBasis G) (x₀ : G) :
-    HasBasis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀ * y) '' V :=
-  by
-  rw [B.nhds_eq]
-  apply B.has_basis
+    HasBasis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀ * y) '' V := by
+  rw [B.nhds_eq]; apply B.has_basis
 #align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_hasBasis
 #align add_group_filter_basis.nhds_has_basis AddGroupFilterBasis.nhds_hasBasis
 
@@ -311,9 +305,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_hasBasisₓ'. -/
 @[to_additive]
 theorem nhds_one_hasBasis (B : GroupFilterBasis G) :
-    HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id :=
-  by
-  rw [B.nhds_one_eq]
+    HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by rw [B.nhds_one_eq];
   exact B.to_filter_basis.has_basis
 #align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_hasBasis
 #align add_group_filter_basis.nhds_zero_has_basis AddGroupFilterBasis.nhds_zero_hasBasis

@@ -89,11 +89,8 @@ theorem mem_classes (r : Setoid α) (y) : { x | r.Rel x y } ∈ r.classes :=
 
 #print Setoid.classes_ker_subset_fiber_set /-
 theorem classes_ker_subset_fiber_set {β : Type _} (f : α → β) :
-    (Setoid.ker f).classes ⊆ Set.range fun y => { x | f x = y } :=
-  by
-  rintro s ⟨x, rfl⟩
-  rw [Set.mem_range]
-  exact ⟨f x, rfl⟩
+    (Setoid.ker f).classes ⊆ Set.range fun y => { x | f x = y } := by rintro s ⟨x, rfl⟩;
+  rw [Set.mem_range]; exact ⟨f x, rfl⟩
 #align setoid.classes_ker_subset_fiber_set Setoid.classes_ker_subset_fiber_set
 -/
 
@@ -134,9 +131,7 @@ but is expected to have type
   forall {α : Type.{u1}} (r : Setoid.{succ u1} α) {x : α} {y : α}, Iff (Setoid.Rel.{u1} α r x y) (Exists.{succ u1} (Set.{u1} α) (fun (c : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) c (Setoid.classes.{u1} α r)) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x c) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c))))
 Case conversion may be inaccurate. Consider using '#align setoid.rel_iff_exists_classes Setoid.rel_iff_exists_classesₓ'. -/
 theorem rel_iff_exists_classes (r : Setoid α) {x y} : r.Rel x y ↔ ∃ c ∈ r.classes, x ∈ c ∧ y ∈ c :=
-  ⟨fun h => ⟨_, r.mem_classes y, h, r.refl' y⟩, fun ⟨c, ⟨z, hz⟩, hx, hy⟩ =>
-    by
-    subst c
+  ⟨fun h => ⟨_, r.mem_classes y, h, r.refl' y⟩, fun ⟨c, ⟨z, hz⟩, hx, hy⟩ => by subst c;
     exact r.trans' hx (r.symm' hy)⟩
 #align setoid.rel_iff_exists_classes Setoid.rel_iff_exists_classes
 
@@ -201,10 +196,7 @@ theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_class_mem' /-
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
-    { y : α | (mkClasses c H).Rel x y } ∈ c :=
-  by
-  convert Setoid.eqv_class_mem H
-  ext
+    { y : α | (mkClasses c H).Rel x y } ∈ c := by convert Setoid.eqv_class_mem H; ext;
   rw [Setoid.comm']
 #align setoid.eqv_class_mem' Setoid.eqv_class_mem'
 -/
@@ -307,9 +299,7 @@ theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃
   Set.eq_univ_of_forall fun x =>
     Set.mem_sUnion.2 <|
       let ⟨t, ht⟩ := hc.2 x
-      ⟨t, by
-        simp only [exists_unique_iff_exists] at ht
-        tauto⟩
+      ⟨t, by simp only [exists_unique_iff_exists] at ht; tauto⟩
 #align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.sUnion_eq_univ
 -/
 
@@ -372,10 +362,7 @@ protected def Partition.orderIso : Setoid α ≃o { C : Set (Set α) // IsPartit
   invFun C := mkClasses C.1 C.2.2
   left_inv := mkClasses_classes
   right_inv C := by rw [Subtype.ext_iff_val, ← classes_mk_classes C.1 C.2]
-  map_rel_iff' r s :=
-    by
-    conv_rhs => rw [← mk_classes_classes r, ← mk_classes_classes s]
-    rfl
+  map_rel_iff' r s := by conv_rhs => rw [← mk_classes_classes r, ← mk_classes_classes s]; rfl
 #align setoid.partition.order_iso Setoid.Partition.orderIso
 -/
 
@@ -490,9 +477,7 @@ theorem exists_mem (x : α) : ∃ i, x ∈ s i :=
 #align indexed_partition.exists_mem IndexedPartition.exists_mem
 
 #print IndexedPartition.iUnion /-
-theorem iUnion : (⋃ i, s i) = univ := by
-  ext x
-  simp [hs.exists_mem x]
+theorem iUnion : (⋃ i, s i) = univ := by ext x; simp [hs.exists_mem x]
 #align indexed_partition.Union IndexedPartition.iUnion
 -/
 

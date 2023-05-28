@@ -426,18 +426,14 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
         MeasurableSet i ∧
           0 ≤[i] μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ∧
             μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[iᶜ] 0 :=
-    by
-    intro
-    exact exists_compl_positive_negative _
+    by intro ; exact exists_compl_positive_negative _
   choose f hf₁ hf₂ hf₃ using this
   -- set `A` to be the intersection of all the negative parts of obtained Hahn decompositions
   -- and we show that `μ A = 0`
   set A := ⋂ n, f nᶜ with hA₁
   have hAmeas : MeasurableSet A := MeasurableSet.iInter fun n => (hf₁ n).compl
-  have hA₂ : ∀ n : ℕ, μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0 :=
-    by
-    intro n
-    exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (Inter_subset _ _)
+  have hA₂ : ∀ n : ℕ, μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0 := by
+    intro n; exact restrict_le_restrict_subset _ _ (hf₁ n).compl (hf₃ n) (Inter_subset _ _)
   have hA₃ : ∀ n : ℕ, μ A ≤ (1 / (n + 1) : ℝ≥0) * ν A :=
     by
     intro n
@@ -456,15 +452,11 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
         rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
         exact h' (not_le.2 (NNReal.half_lt_self h))
       intro c hc
-      have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * νA⁻¹
-      refine' exists_nat_one_div_lt _
+      have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * νA⁻¹; refine' exists_nat_one_div_lt _
       · refine' mul_pos hc _
-        rw [_root_.inv_pos]
-        exact hb
+        rw [_root_.inv_pos]; exact hb
       rcases this with ⟨n, hn⟩
-      have hb₁ : (0 : ℝ) < νA⁻¹ := by
-        rw [_root_.inv_pos]
-        exact hb
+      have hb₁ : (0 : ℝ) < νA⁻¹ := by rw [_root_.inv_pos]; exact hb
       have h' : 1 / (↑n + 1) * νA < c :=
         by
         rw [← NNReal.coe_lt_coe, ← mul_lt_mul_right hb₁, NNReal.coe_mul, mul_assoc, ←
@@ -480,7 +472,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
       simp [hb, le_zero_iff] at hA₃
       assumption
   -- since `μ` and `ν` are not mutually singular, `μ A = 0` implies `ν Aᶜ > 0`
-  rw [mutually_singular] at h
+  rw [mutually_singular] at h;
   push_neg  at h
   have := h _ hAmeas hμ
   simp_rw [hA₁, compl_Inter, compl_compl] at this
@@ -544,15 +536,13 @@ theorem iSup_mem_measurableLe (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n �
   induction' n with m hm
   · refine' ⟨_, _⟩
     · simp [(hf 0).1]
-    · intro A hA
-      simp [(hf 0).2 A hA]
+    · intro A hA; simp [(hf 0).2 A hA]
   · have :
       (fun a : α => ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = fun a =>
         f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a :=
       funext fun _ => supr_succ_eq_sup _ _ _
     refine' ⟨measurable_iSup fun n => Measurable.iSup_Prop _ (hf n).1, fun A hA => _⟩
-    rw [this]
-    exact (sup_mem_measurable_le (hf m.succ) hm).2 A hA
+    rw [this]; exact (sup_mem_measurable_le (hf m.succ) hm).2 A hA
 #align measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.iSup_mem_measurableLe
 
 theorem iSup_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
@@ -616,8 +606,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
           (⨆ (n) (k) (hk : k ≤ n), f k) _ _ _
       · refine' tendsto_nhds_unique _ this
         refine' tendsto_of_tendsto_of_tendsto_of_le_of_le hg₂ tendsto_const_nhds _ _
-        · intro n
-          rw [← hf₂ n]
+        · intro n; rw [← hf₂ n]
           apply lintegral_mono
           simp only [iSup_apply, supr_le_le f n n le_rfl]
         · intro n
@@ -625,8 +614,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
       · intro n
         refine' Measurable.aemeasurable _
         convert(supr_mem_measurable_le _ hf₁ n).1
-        ext
-        simp
+        ext; simp
       · refine' Filter.eventually_of_forall fun a => _
         simp [supr_monotone' f _]
       · refine' Filter.eventually_of_forall fun a => _
@@ -634,8 +622,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
     have hξm : Measurable ξ :=
       by
       convert measurable_iSup fun n => (supr_mem_measurable_le _ hf₁ n).1
-      ext
-      simp [hξ]
+      ext; simp [hξ]
     -- `ξ` is the `f` in the theorem statement and we set `μ₁` to be `μ - ν.with_density ξ`
     -- since we need `μ₁ + ν.with_density ξ = μ`
     set μ₁ := μ - ν.with_density ξ with hμ₁
@@ -660,8 +647,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
       simp_rw [hμ₁] at hE₃
       have hξle : ∀ A, MeasurableSet A → (∫⁻ a in A, ξ a ∂ν) ≤ μ A :=
         by
-        intro A hA
-        rw [hξ]
+        intro A hA; rw [hξ]
         simp_rw [iSup_apply]
         rw [lintegral_supr (fun n => (supr_mem_measurable_le _ hf₁ n).1) (supr_monotone _)]
         exact iSup_le fun n => (supr_mem_measurable_le _ hf₁ n).2 A hA
@@ -708,8 +694,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
       have := measure_ne_top (ν.with_density ξ) univ
       rwa [with_density_apply _ MeasurableSet.univ, measure.restrict_univ] at this
     -- since `ν.with_density ξ ≤ μ`, it is clear that `μ = μ₁ + ν.with_density ξ`
-    · rw [hμ₁]
-      ext1 A hA
+    · rw [hμ₁]; ext1 A hA
       rw [measure.coe_add, Pi.add_apply, measure.sub_apply hA hle, add_comm,
         add_tsub_cancel_of_le (hle A hA)]⟩
 #align measure_theory.measure.have_lebesgue_decomposition_of_finite_measure MeasureTheory.Measure.haveLebesgueDecomposition_of_finite_measure
@@ -718,9 +703,7 @@ attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
 instance {S : μ.FiniteSpanningSetsIn { s : Set α | MeasurableSet s }} (n : ℕ) :
     FiniteMeasure (μ.restrict <| S.Set n) :=
-  ⟨by
-    rw [restrict_apply MeasurableSet.univ, univ_inter]
-    exact S.finite _⟩
+  ⟨by rw [restrict_apply MeasurableSet.univ, univ_inter]; exact S.finite _⟩
 
 -- see Note [lower instance priority]
 /-- **The Lebesgue decomposition theorem**: Any pair of σ-finite measures `μ` and `ν`
@@ -770,8 +753,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
               (Sum fun n => (μn n).singularPart (νn n)) (S.set i ∩ A i) =
                 (μn i).singularPart (νn i) (S.set i ∩ A i) :=
             by
-            intro i
-            rw [sum_apply _ ((S.set_mem i).inter (hA₁ i)), tsum_eq_single i]
+            intro i; rw [sum_apply _ ((S.set_mem i).inter (hA₁ i)), tsum_eq_single i]
             · intro j hij
               rw [hμn, ← nonpos_iff_eq_zero]
               refine' le_trans ((singular_part_le _ _) _ ((S.set_mem i).inter (hA₁ i))) (le_of_eq _)
@@ -781,8 +763,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
               rw [this, empty_inter, measure_empty]
             · infer_instance
           simp_rw [this, tsum_eq_zero_iff ENNReal.summable]
-          intro n
-          exact measure_mono_null (inter_subset_right _ _) (hA₂ n)
+          intro n; exact measure_mono_null (inter_subset_right _ _) (hA₂ n)
         · exact h₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left
         · exact fun n => (S.set_mem n).inter (hA₁ n)
       -- We will now show `ν Bᶜ = 0`. This follows since `Bᶜ = ⋃ n, S.set n ∩ (A n)ᶜ` and thus,
@@ -791,25 +772,20 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
           by
           constructor
           · rw [disjoint_iff_inf_le]
-            rintro x ⟨hx₁, hx₂⟩
-            rw [mem_Union] at hx₁ hx₂
+            rintro x ⟨hx₁, hx₂⟩; rw [mem_Union] at hx₁ hx₂
             obtain ⟨⟨i, hi₁, hi₂⟩, ⟨j, hj₁, hj₂⟩⟩ := hx₁, hx₂
-            have : i = j := by
-              by_contra hij
-              exact (h₂ hij).le_bot ⟨hi₁, hj₁⟩
+            have : i = j := by by_contra hij; exact (h₂ hij).le_bot ⟨hi₁, hj₁⟩
             exact hj₂ (this ▸ hi₂)
           · rw [codisjoint_iff_le_sup]
             intro x hx
             simp only [mem_Union, sup_eq_union, mem_inter_iff, mem_union, mem_compl_iff,
               or_iff_not_imp_left]
-            intro h
-            push_neg  at h
+            intro h; push_neg  at h
             rw [top_eq_univ, ← S.spanning, mem_Union] at hx
             obtain ⟨i, hi⟩ := hx
             exact ⟨i, hi, h i hi⟩
         rw [hcompl.compl_eq, measure_Union, tsum_eq_zero_iff ENNReal.summable]
-        · intro n
-          rw [inter_comm, ← restrict_apply (hA₁ n).compl, ← hA₃ n, hνn, h₁]
+        · intro n; rw [inter_comm, ← restrict_apply (hA₁ n).compl, ← hA₃ n, hνn, h₁]
         · exact h₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left
         · exact fun n => (S.set_mem n).inter (hA₁ n).compl
     -- Finally, it remains to show `μ = ξ + ν.with_density f`. Since `μ = sum μn`, and
@@ -990,8 +966,7 @@ theorem measurable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Measurable
 theorem integrable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Integrable (rnDeriv s μ) μ := by
   refine' integrable.sub _ _ <;>
     · constructor
-      · apply Measurable.aestronglyMeasurable
-        measurability
+      · apply Measurable.aestronglyMeasurable; measurability
       exact has_finite_integral_to_real_of_lintegral_ne_top (lintegral_rn_deriv_lt_top _ μ).Ne
 #align measure_theory.signed_measure.integrable_rn_deriv MeasureTheory.SignedMeasure.integrable_rnDeriv
 
@@ -1049,12 +1024,8 @@ theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Me
       @JordanDecomposition.mk α _
         (t.toJordanDecomposition.posPart + μ.withDensity fun x => ENNReal.ofReal (f x))
         (t.toJordanDecomposition.negPart + μ.withDensity fun x => ENNReal.ofReal (-f x))
-        (by
-          haveI := is_finite_measure_with_density_of_real hfi.2
-          infer_instance)
-        (by
-          haveI := is_finite_measure_with_density_of_real hfi.neg.2
-          infer_instance)
+        (by haveI := is_finite_measure_with_density_of_real hfi.2; infer_instance)
+        (by haveI := is_finite_measure_with_density_of_real hfi.neg.2; infer_instance)
         (jordan_decomposition_add_withDensity_mutuallySingular hf htμ) :=
   by
   haveI := is_finite_measure_with_density_of_real hfi.2

@@ -97,16 +97,8 @@ Generally you should just use `limit.is_limit F`, unless you need the actual def
 -/
 def limitConeIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitCone F)
     where
-  lift S :=
-    {
-      toFun := fun x =>
-        ⟨fun j => S.π.app _ x, fun i j f => by
-          dsimp
-          erw [← S.w f]
-          rfl⟩ }
-  uniq S m h := by
-    ext : 3
-    simpa [← h]
+  lift S := { toFun := fun x => ⟨fun j => S.π.app _ x, fun i j f => by dsimp; erw [← S.w f]; rfl⟩ }
+  uniq S m h := by ext : 3; simpa [← h]
 #align Top.limit_cone_is_limit TopCat.limitConeIsLimit
 
 /- warning: Top.limit_cone_infi_is_limit -> TopCat.limitConeInfiIsLimit is a dubious translation:

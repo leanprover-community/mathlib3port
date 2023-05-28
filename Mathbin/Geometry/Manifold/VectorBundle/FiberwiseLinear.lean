@@ -88,9 +88,7 @@ theorem source_trans_localHomeomorph (hU : IsOpen U)
     (FiberwiseLinear.localHomeomorph φ hU hφ h2φ ≫ₕ
           FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').source =
       (U ∩ U') ×ˢ univ :=
-  by
-  dsimp only [FiberwiseLinear.localHomeomorph]
-  mfld_set_tac
+  by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
 #align fiberwise_linear.source_trans_local_homeomorph FiberwiseLinear.source_trans_localHomeomorph
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -104,9 +102,7 @@ theorem target_trans_localHomeomorph (hU : IsOpen U)
     (FiberwiseLinear.localHomeomorph φ hU hφ h2φ ≫ₕ
           FiberwiseLinear.localHomeomorph φ' hU' hφ' h2φ').target =
       (U ∩ U') ×ˢ univ :=
-  by
-  dsimp only [FiberwiseLinear.localHomeomorph]
-  mfld_set_tac
+  by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
 #align fiberwise_linear.target_trans_local_homeomorph FiberwiseLinear.target_trans_localHomeomorph
 
 end FiberwiseLinear
@@ -177,10 +173,8 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
   refine' ⟨Prod.fst '' e.source, he, _⟩
   rintro x ⟨p, hp, rfl⟩
   refine' ⟨φ ⟨p, hp⟩, u ⟨p, hp⟩, hu ⟨p, hp⟩, _, hu' _, hφ ⟨p, hp⟩, h2φ ⟨p, hp⟩, _⟩
-  · intro y hy
-    refine' ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
-  · rw [← hesu, e.restr_source_inter]
-    exact heφ ⟨p, hp⟩
+  · intro y hy; refine' ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
+  · rw [← hesu, e.restr_source_inter]; exact heφ ⟨p, hp⟩
 #align smooth_fiberwise_linear.locality_aux₁ SmoothFiberwiseLinear.locality_aux₁
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -300,8 +294,7 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
           (U ∩ U')
       exact (h2φ.mono <| inter_subset_left _ _).clm_comp (h2φ'.mono <| inter_subset_right _ _)
     · apply FiberwiseLinear.source_trans_localHomeomorph
-    · rintro ⟨b, v⟩ hb
-      apply FiberwiseLinear.trans_localHomeomorph_apply
+    · rintro ⟨b, v⟩ hb; apply FiberwiseLinear.trans_localHomeomorph_apply
   symm' := by
     simp_rw [mem_Union]
     rintro e ⟨φ, U, hU, hφ, h2φ, heφ⟩
@@ -339,8 +332,6 @@ theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U)(h2φ :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x).symm : B → F →L[𝕜] F) U),
         e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
-  show e ∈ Set.iUnion _ ↔ _ by
-    simp only [mem_Union]
-    rfl
+  show e ∈ Set.iUnion _ ↔ _ by simp only [mem_Union]; rfl
 #align mem_smooth_fiberwise_linear_iff mem_smoothFiberwiseLinear_iff
 

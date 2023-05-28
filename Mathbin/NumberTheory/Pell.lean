@@ -119,17 +119,11 @@ theorem prop (a : Solution₁ d) : a.x ^ 2 - d * a.y ^ 2 = 1 :=
 #align pell.solution₁.prop Pell.Solution₁.prop
 
 /-- An alternative form of the equation, suitable for rewriting `x^2`. -/
-theorem prop_x (a : Solution₁ d) : a.x ^ 2 = 1 + d * a.y ^ 2 :=
-  by
-  rw [← a.prop]
-  ring
+theorem prop_x (a : Solution₁ d) : a.x ^ 2 = 1 + d * a.y ^ 2 := by rw [← a.prop]; ring
 #align pell.solution₁.prop_x Pell.Solution₁.prop_x
 
 /-- An alternative form of the equation, suitable for rewriting `d * y^2`. -/
-theorem prop_y (a : Solution₁ d) : d * a.y ^ 2 = a.x ^ 2 - 1 :=
-  by
-  rw [← a.prop]
-  ring
+theorem prop_y (a : Solution₁ d) : d * a.y ^ 2 = a.x ^ 2 - 1 := by rw [← a.prop]; ring
 #align pell.solution₁.prop_y Pell.Solution₁.prop_y
 
 /-- Two solutions are equal if their `x` and `y` components are equal. -/
@@ -171,9 +165,7 @@ theorem y_one : (1 : Solution₁ d).y = 0 :=
 #align pell.solution₁.y_one Pell.Solution₁.y_one
 
 @[simp]
-theorem x_mul (a b : Solution₁ d) : (a * b).x = a.x * b.x + d * (a.y * b.y) :=
-  by
-  rw [← mul_assoc]
+theorem x_mul (a b : Solution₁ d) : (a * b).x = a.x * b.x + d * (a.y * b.y) := by rw [← mul_assoc];
   rfl
 #align pell.solution₁.x_mul Pell.Solution₁.x_mul
 
@@ -541,10 +533,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     -- to avoid having to show that the predicate is decidable
     let x₁ := Nat.find P
     obtain ⟨hx, y₁, hy₀, hy₁⟩ := Nat.find_spec P
-    refine'
-      ⟨mk x₁ y₁ hy₁, by
-        rw [x_mk]
-        exact_mod_cast hx, hy₀, fun b hb => _⟩
+    refine' ⟨mk x₁ y₁ hy₁, by rw [x_mk]; exact_mod_cast hx, hy₀, fun b hb => _⟩
     rw [x_mk]
     have hb' := (Int.toNat_of_nonneg <| zero_le_one.trans hb.le).symm
     have hb'' := hb
@@ -566,10 +555,7 @@ theorem y_strictMono {a : Solution₁ d} (h : IsFundamental a) : StrictMono fun 
     rw [show (a ^ n).y * a.x - (a ^ n).y = (a ^ n).y * (a.x - 1) by ring]
     refine'
       add_pos_of_pos_of_nonneg (mul_pos (x_zpow_pos h.x_pos _) h.2.1)
-        (mul_nonneg _
-          (by
-            rw [sub_nonneg]
-            exact h.1.le))
+        (mul_nonneg _ (by rw [sub_nonneg]; exact h.1.le))
     rcases hn.eq_or_lt with (rfl | hn)
     · simp only [zpow_zero, y_one]
     · exact (y_zpow_pos h.x_pos h.2.1 hn).le
@@ -621,10 +607,7 @@ of any positive solution. -/
 theorem y_le_y {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solution₁ d} (hax : 1 < a.x)
     (hay : 0 < a.y) : a₁.y ≤ a.y :=
   by
-  have H : d * (a₁.y ^ 2 - a.y ^ 2) = a₁.x ^ 2 - a.x ^ 2 :=
-    by
-    rw [a.prop_x, a₁.prop_x]
-    ring
+  have H : d * (a₁.y ^ 2 - a.y ^ 2) = a₁.x ^ 2 - a.x ^ 2 := by rw [a.prop_x, a₁.prop_x]; ring
   rw [← abs_of_pos hay, ← abs_of_pos h.2.1, ← sq_le_sq, ← mul_le_mul_left h.d_pos, ← sub_nonpos, ←
     mul_sub, H, sub_nonpos, sq_le_sq, abs_of_pos (zero_lt_one.trans h.1),
     abs_of_pos (zero_lt_one.trans hax)]
@@ -685,11 +668,7 @@ theorem mul_inv_x_lt_x {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solu
     _ < d * a.y ^ 2 + 1 := (lt_add_one _)
     _ = (1 + d * a.y ^ 2) * 1 := by rw [add_comm, mul_one]
     _ ≤ (1 + d * a.y ^ 2) * a₁.y ^ 2 :=
-      (mul_le_mul_left
-            (by
-              have := h.d_pos
-              positivity)).mpr
-        (sq_pos_of_pos h.2.1)
+      (mul_le_mul_left (by have := h.d_pos; positivity)).mpr (sq_pos_of_pos h.2.1)
     
 #align pell.is_fundamental.mul_inv_x_lt_x Pell.IsFundamental.mul_inv_x_lt_x
 

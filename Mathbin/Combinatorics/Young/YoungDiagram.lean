@@ -288,27 +288,20 @@ theorem mem_transpose {μ : YoungDiagram} {c : ℕ × ℕ} : c ∈ μ.transpose 
 
 #print YoungDiagram.transpose_transpose /-
 @[simp]
-theorem transpose_transpose (μ : YoungDiagram) : μ.transpose.transpose = μ :=
-  by
-  ext
-  simp
+theorem transpose_transpose (μ : YoungDiagram) : μ.transpose.transpose = μ := by ext; simp
 #align young_diagram.transpose_transpose YoungDiagram.transpose_transpose
 -/
 
 #print YoungDiagram.transpose_eq_iff_eq_transpose /-
 theorem transpose_eq_iff_eq_transpose {μ ν : YoungDiagram} : μ.transpose = ν ↔ μ = ν.transpose := by
-  constructor <;>
-    · rintro rfl
-      simp
+  constructor <;> · rintro rfl; simp
 #align young_diagram.transpose_eq_iff_eq_transpose YoungDiagram.transpose_eq_iff_eq_transpose
 -/
 
 #print YoungDiagram.transpose_eq_iff /-
 @[simp]
-theorem transpose_eq_iff {μ ν : YoungDiagram} : μ.transpose = ν.transpose ↔ μ = ν :=
-  by
-  rw [transpose_eq_iff_eq_transpose]
-  simp
+theorem transpose_eq_iff {μ ν : YoungDiagram} : μ.transpose = ν.transpose ↔ μ = ν := by
+  rw [transpose_eq_iff_eq_transpose]; simp
 #align young_diagram.transpose_eq_iff YoungDiagram.transpose_eq_iff
 -/
 
@@ -320,10 +313,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align young_diagram.le_of_transpose_le YoungDiagram.le_of_transpose_leₓ'. -/
 -- This is effectively both directions of `transpose_le_iff` below.
 protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose ≤ ν) :
-    μ ≤ ν.transpose := fun c hc => by
-  simp only [mem_transpose]
-  apply h_le
-  simpa
+    μ ≤ ν.transpose := fun c hc => by simp only [mem_transpose]; apply h_le; simpa
 #align young_diagram.le_of_transpose_le YoungDiagram.le_of_transpose_le
 
 /- warning: young_diagram.transpose_le_iff -> YoungDiagram.transpose_le_iff is a dubious translation:
@@ -334,11 +324,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iffₓ'. -/
 @[simp]
 theorem transpose_le_iff {μ ν : YoungDiagram} : μ.transpose ≤ ν.transpose ↔ μ ≤ ν :=
-  ⟨fun h => by
-    convert YoungDiagram.le_of_transpose_le h
-    simp, fun h => by
-    convert@YoungDiagram.le_of_transpose_le _ _ _
-    simpa⟩
+  ⟨fun h => by convert YoungDiagram.le_of_transpose_le h; simp, fun h => by
+    convert@YoungDiagram.le_of_transpose_le _ _ _; simpa⟩
 #align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iff
 
 /- warning: young_diagram.transpose_mono -> YoungDiagram.transpose_mono is a dubious translation:
@@ -402,11 +389,7 @@ theorem mk_mem_row_iff {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ.row i ↔
 protected theorem exists_not_mem_row (μ : YoungDiagram) (i : ℕ) : ∃ j, (i, j) ∉ μ :=
   by
   obtain ⟨j, hj⟩ :=
-    Infinite.exists_not_mem_finset
-      (μ.cells.Preimage (Prod.mk i) fun _ _ _ _ h =>
-        by
-        cases h
-        rfl)
+    Infinite.exists_not_mem_finset (μ.cells.Preimage (Prod.mk i) fun _ _ _ _ h => by cases h; rfl)
   rw [Finset.mem_preimage] at hj
   exact ⟨j, hj⟩
 #align young_diagram.exists_not_mem_row YoungDiagram.exists_not_mem_row
@@ -422,8 +405,7 @@ def rowLen (μ : YoungDiagram) (i : ℕ) : ℕ :=
 #print YoungDiagram.mem_iff_lt_rowLen /-
 theorem mem_iff_lt_rowLen {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ j < μ.rowLen i :=
   by
-  rw [row_len, Nat.lt_find_iff]
-  push_neg
+  rw [row_len, Nat.lt_find_iff]; push_neg
   exact ⟨fun h _ hmj => μ.up_left_mem (by rfl) hmj h, fun h => h _ (by rfl)⟩
 #align young_diagram.mem_iff_lt_row_len YoungDiagram.mem_iff_lt_rowLen
 -/
@@ -435,8 +417,7 @@ theorem row_eq_prod {μ : YoungDiagram} {i : ℕ} : μ.row i = {i} ×ˢ Finset.r
   ext ⟨a, b⟩
   simp only [Finset.mem_product, Finset.mem_singleton, Finset.mem_range, mem_row_iff,
     mem_iff_lt_row_len, and_comm', and_congr_right_iff]
-  rintro rfl
-  rfl
+  rintro rfl; rfl
 #align young_diagram.row_eq_prod YoungDiagram.row_eq_prod
 -/
 
@@ -450,8 +431,7 @@ theorem rowLen_eq_card (μ : YoungDiagram) {i : ℕ} : μ.rowLen i = (μ.row i).
 @[mono]
 theorem rowLen_anti (μ : YoungDiagram) (i1 i2 : ℕ) (hi : i1 ≤ i2) : μ.rowLen i2 ≤ μ.rowLen i1 :=
   by
-  by_contra' h_lt
-  rw [← lt_self_iff_false (μ.row_len i1)]
+  by_contra' h_lt; rw [← lt_self_iff_false (μ.row_len i1)]
   rw [← mem_iff_lt_row_len] at h_lt⊢
   exact μ.up_left_mem hi (by rfl) h_lt
 #align young_diagram.row_len_anti YoungDiagram.rowLen_anti
@@ -485,10 +465,8 @@ theorem mk_mem_col_iff {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ.col j ↔
 -/
 
 #print YoungDiagram.exists_not_mem_col /-
-protected theorem exists_not_mem_col (μ : YoungDiagram) (j : ℕ) : ∃ i, (i, j) ∉ μ.cells :=
-  by
-  convert μ.transpose.exists_not_mem_row j
-  simp
+protected theorem exists_not_mem_col (μ : YoungDiagram) (j : ℕ) : ∃ i, (i, j) ∉ μ.cells := by
+  convert μ.transpose.exists_not_mem_row j; simp
 #align young_diagram.exists_not_mem_col YoungDiagram.exists_not_mem_col
 -/
 
@@ -514,10 +492,8 @@ theorem rowLen_transpose (μ : YoungDiagram) (i : ℕ) : μ.transpose.rowLen i =
 -/
 
 #print YoungDiagram.mem_iff_lt_colLen /-
-theorem mem_iff_lt_colLen {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ i < μ.colLen j :=
-  by
-  rw [← row_len_transpose, ← mem_iff_lt_row_len]
-  simp
+theorem mem_iff_lt_colLen {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ i < μ.colLen j := by
+  rw [← row_len_transpose, ← mem_iff_lt_row_len]; simp
 #align young_diagram.mem_iff_lt_col_len YoungDiagram.mem_iff_lt_colLen
 -/
 
@@ -528,8 +504,7 @@ theorem col_eq_prod {μ : YoungDiagram} {j : ℕ} : μ.col j = Finset.range (μ.
   ext ⟨a, b⟩
   simp only [Finset.mem_product, Finset.mem_singleton, Finset.mem_range, mem_col_iff,
     mem_iff_lt_col_len, and_comm', and_congr_right_iff]
-  rintro rfl
-  rfl
+  rintro rfl; rfl
 #align young_diagram.col_eq_prod YoungDiagram.col_eq_prod
 -/
 

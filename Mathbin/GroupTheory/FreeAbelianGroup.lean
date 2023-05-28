@@ -437,10 +437,7 @@ theorem sub_seq (f g : FreeAbelianGroup (α → β)) (x : FreeAbelianGroup α) :
 `free_abelian_group α →+ free_abelian_group β`. -/
 def seqAddGroupHom (f : FreeAbelianGroup (α → β)) : FreeAbelianGroup α →+ FreeAbelianGroup β :=
   AddMonoidHom.mk' ((· <*> ·) f) fun x y =>
-    show lift (· <$> (x + y)) _ = _
-      by
-      simp only [FreeAbelianGroup.map_add]
-      exact lift.add' f _ _
+    show lift (· <$> (x + y)) _ = _ by simp only [FreeAbelianGroup.map_add]; exact lift.add' f _ _
 #align free_abelian_group.seq_add_group_hom FreeAbelianGroup.seqAddGroupHom
 -/
 
@@ -539,12 +536,9 @@ theorem lift_comp {α} {β} {γ} [AddCommGroup γ] (f : α → β) (g : β → �
   by
   apply FreeAbelianGroup.induction_on x
   · exact AddMonoidHom.map_zero _
-  · intro y
-    rfl
-  · intro x h
-    simp only [h, AddMonoidHom.map_neg]
-  · intro x y h₁ h₂
-    simp only [h₁, h₂, AddMonoidHom.map_add]
+  · intro y; rfl
+  · intro x h; simp only [h, AddMonoidHom.map_neg]
+  · intro x y h₁ h₂; simp only [h₁, h₂, AddMonoidHom.map_add]
 #align free_abelian_group.lift_comp FreeAbelianGroup.lift_comp
 
 #print FreeAbelianGroup.map_id /-
@@ -560,10 +554,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (x : FreeAbelianGroup.{u1} α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : FreeAbelianGroup.{u1} α) => FreeAbelianGroup.{u1} α) x) (FunLike.coe.{succ u1, succ u1, succ u1} (AddMonoidHom.{u1, u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))) (FreeAbelianGroup.{u1} α) (fun (_x : FreeAbelianGroup.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : FreeAbelianGroup.{u1} α) => FreeAbelianGroup.{u1} α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoidHom.{u1, u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))) (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddZeroClass.toAdd.{u1} (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))) (AddZeroClass.toAdd.{u1} (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoidHom.{u1, u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))) (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoidHom.addMonoidHomClass.{u1, u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.{u1} α) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α))))) (AddMonoid.toAddZeroClass.{u1} (FreeAbelianGroup.{u1} α) (SubNegMonoid.toAddMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddGroup.toSubNegMonoid.{u1} (FreeAbelianGroup.{u1} α) (AddCommGroup.toAddGroup.{u1} (FreeAbelianGroup.{u1} α) (FreeAbelianGroup.addCommGroup.{u1} α)))))))) (FreeAbelianGroup.map.{u1, u1} α α (id.{succ u1} α)) x) x
 Case conversion may be inaccurate. Consider using '#align free_abelian_group.map_id_apply FreeAbelianGroup.map_id_applyₓ'. -/
-theorem map_id_apply (x : FreeAbelianGroup α) : map id x = x :=
-  by
-  rw [map_id]
-  rfl
+theorem map_id_apply (x : FreeAbelianGroup α) : map id x = x := by rw [map_id]; rfl
 #align free_abelian_group.map_id_apply FreeAbelianGroup.map_id_apply
 
 #print FreeAbelianGroup.map_comp /-
@@ -576,9 +567,7 @@ theorem map_comp {f : α → β} {g : β → γ} : map (g ∘ f) = (map g).comp 
 <too large>
 Case conversion may be inaccurate. Consider using '#align free_abelian_group.map_comp_apply FreeAbelianGroup.map_comp_applyₓ'. -/
 theorem map_comp_apply {f : α → β} {g : β → γ} (x : FreeAbelianGroup α) :
-    map (g ∘ f) x = (map g) ((map f) x) := by
-  rw [map_comp]
-  rfl
+    map (g ∘ f) x = (map g) ((map f) x) := by rw [map_comp]; rfl
 #align free_abelian_group.map_comp_apply FreeAbelianGroup.map_comp_apply
 
 /- warning: free_abelian_group.map_of_apply -> FreeAbelianGroup.map_of_apply is a dubious translation:
@@ -643,9 +632,7 @@ instance : NonUnitalNonAssocRing (FreeAbelianGroup α) :=
   { FreeAbelianGroup.distrib,
     FreeAbelianGroup.addCommGroup
       _ with
-    zero_mul := fun a => by
-      have h : 0 * a + 0 * a = 0 * a := by simp [← add_mul]
-      simpa using h
+    zero_mul := fun a => by have h : 0 * a + 0 * a = 0 * a := by simp [← add_mul]; simpa using h
     mul_zero := fun a => rfl }
 
 end Mul
@@ -689,22 +676,15 @@ instance : Ring (FreeAbelianGroup α) :=
       rw [lift.of]
       refine'
         FreeAbelianGroup.induction_on x rfl (fun L => _) (fun L ih => _) fun x1 x2 ih1 ih2 => _
-      · erw [lift.of]
-        congr 1
-        exact mul_one L
+      · erw [lift.of]; congr 1; exact mul_one L
       · rw [map_neg, ih]
       · rw [map_add, ih1, ih2]
     one_mul := fun x => by
       unfold Mul.mul Semigroup.mul One.one
       refine' FreeAbelianGroup.induction_on x rfl _ _ _
-      · intro L
-        rw [lift.of, lift.of]
-        congr 1
-        exact one_mul L
-      · intro L ih
-        rw [map_neg, ih]
-      · intro x1 x2 ih1 ih2
-        rw [map_add, ih1, ih2] }
+      · intro L; rw [lift.of, lift.of]; congr 1; exact one_mul L
+      · intro L ih; rw [map_neg, ih]
+      · intro x1 x2 ih1 ih2; rw [map_add, ih1, ih2] }
 
 variable {α}
 
@@ -811,21 +791,13 @@ instance [CommMonoid α] : CommRing (FreeAbelianGroup α) :=
     mul_comm := fun x y =>
       by
       refine' FreeAbelianGroup.induction_on x (MulZeroClass.zero_mul y) _ _ _
-      · intro s
-        refine' FreeAbelianGroup.induction_on y (MulZeroClass.zero_mul _).symm _ _ _
-        · intro t
-          unfold Mul.mul Semigroup.mul Ring.mul
-          iterate 4 rw [lift.of]
-          congr 1
-          exact mul_comm _ _
-        · intro t ih
-          rw [mul_neg, ih, neg_mul_eq_neg_mul]
-        · intro y1 y2 ih1 ih2
-          rw [mul_add, add_mul, ih1, ih2]
-      · intro s ih
-        rw [neg_mul, ih, neg_mul_eq_mul_neg]
-      · intro x1 x2 ih1 ih2
-        rw [add_mul, mul_add, ih1, ih2] }
+      · intro s; refine' FreeAbelianGroup.induction_on y (MulZeroClass.zero_mul _).symm _ _ _
+        · intro t; unfold Mul.mul Semigroup.mul Ring.mul
+          iterate 4 rw [lift.of]; congr 1; exact mul_comm _ _
+        · intro t ih; rw [mul_neg, ih, neg_mul_eq_neg_mul]
+        · intro y1 y2 ih1 ih2; rw [mul_add, add_mul, ih1, ih2]
+      · intro s ih; rw [neg_mul, ih, neg_mul_eq_mul_neg]
+      · intro x1 x2 ih1 ih2; rw [add_mul, mul_add, ih1, ih2] }
 
 #print FreeAbelianGroup.pemptyUnique /-
 instance pemptyUnique : Unique (FreeAbelianGroup PEmpty)
@@ -833,9 +805,7 @@ instance pemptyUnique : Unique (FreeAbelianGroup PEmpty)
   default := 0
   uniq x :=
     FreeAbelianGroup.induction_on x rfl (fun x => PEmpty.elim x) (fun x => PEmpty.elim x)
-      (by
-        rintro - - rfl rfl
-        simp)
+      (by rintro - - rfl rfl; simp)
 #align free_abelian_group.pempty_unique FreeAbelianGroup.pemptyUnique
 -/
 
@@ -853,9 +823,7 @@ def punitEquiv (T : Type _) [Unique T] : FreeAbelianGroup T ≃+ ℤ
   left_inv z :=
     FreeAbelianGroup.induction_on z (by simp only [zero_smul, AddMonoidHom.map_zero])
       (Unique.forall_iff.2 <| by simp only [one_smul, lift.of]) (Unique.forall_iff.2 <| by simp)
-      fun x y hx hy => by
-      simp only [AddMonoidHom.map_add, add_smul] at *
-      rw [hx, hy]
+      fun x y hx hy => by simp only [AddMonoidHom.map_add, add_smul] at *; rw [hx, hy]
   right_inv n := by
     rw [AddMonoidHom.map_zsmul, lift.of]
     exact zsmul_int_one n

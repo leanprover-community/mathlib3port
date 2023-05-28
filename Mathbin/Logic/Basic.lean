@@ -66,11 +66,7 @@ instance : Subsingleton Empty :=
 
 instance Subsingleton.prod {α β : Type _} [Subsingleton α] [Subsingleton β] :
     Subsingleton (α × β) :=
-  ⟨by
-    intro a b
-    cases a
-    cases b
-    congr ⟩
+  ⟨by intro a b; cases a; cases b; congr ⟩
 #align subsingleton.prod Subsingleton.prod
 
 instance : DecidableEq Empty := fun a => a.elim
@@ -227,10 +223,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u2 u1} (α -> γ) f (β -> γ) g) -> (HEq.{u2} α x β y) -> (Eq.{u1} γ (f x) (g y))
 Case conversion may be inaccurate. Consider using '#align congr_heq congr_heqₓ'. -/
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g)
-    (h₂ : HEq x y) : f x = g y := by
-  cases h₂
-  cases h₁
-  rfl
+    (h₂ : HEq x y) : f x = g y := by cases h₂; cases h₁; rfl
 #align congr_heq congr_heq
 
 /- warning: congr_arg_heq -> congr_arg_heq is a dubious translation:
@@ -434,8 +427,7 @@ theorem Iff.imp (h₁ : a ↔ b) (h₂ : c ↔ d) : a → c ↔ b → d :=
 
 #print eq_true_eq_id /-
 @[simp]
-theorem eq_true_eq_id : Eq True = id := by
-  funext
+theorem eq_true_eq_id : Eq True = id := by funext;
   simp only [true_iff_iff, id.def, iff_self_iff, eq_iff_iff]
 #align eq_true_eq_id eq_true_eq_id
 -/
@@ -735,9 +727,7 @@ theorem imp_not_self : a → ¬a ↔ ¬a :=
 -/
 
 #print Decidable.not_imp_self /-
-theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a :=
-  by
-  have := @imp_not_self ¬a
+theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a := by have := @imp_not_self ¬a;
   rwa [Decidable.not_not] at this
 #align decidable.not_imp_self Decidable.not_imp_self
 -/
@@ -1219,10 +1209,8 @@ but is expected to have type
   forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable a], ((Not a) -> (Iff b c)) -> (Iff (Or b a) (Or c a))
 Case conversion may be inaccurate. Consider using '#align decidable.or_congr_left Decidable.or_congr_left'ₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
-  by
-  rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
-  exact imp_congr_right h
+protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
+  rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]; exact imp_congr_right h
 #align decidable.or_congr_left Decidable.or_congr_left'
 
 /- warning: or_congr_left -> or_congr_left' is a dubious translation:
@@ -1237,10 +1225,8 @@ theorem or_congr_left' (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
 
 #print Decidable.or_congr_right' /-
 -- See Note [decidable namespace]
-protected theorem Decidable.or_congr_right' [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
-  by
-  rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]
-  exact imp_congr_right h
+protected theorem Decidable.or_congr_right' [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c := by
+  rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]; exact imp_congr_right h
 #align decidable.or_congr_right Decidable.or_congr_right'
 -/
 
@@ -1803,9 +1789,7 @@ Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec
 /-- Transport through trivial families is the identity. -/
 @[simp]
 theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
-    @Eq.ndrec α a (fun a => β) y a' h = y := by
-  cases h
-  rfl
+    @Eq.ndrec α a (fun a => β) y a' h = y := by cases h; rfl
 #align eq_rec_constant eq_rec_constant
 
 #print eq_mp_eq_cast /-
@@ -1943,10 +1927,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u1} α x₁ x₂) -> (Eq.{u1} α y₁ y₂) -> (Iff (Eq.{u1} α x₁ y₁) (Eq.{u1} α x₂ y₂))
 Case conversion may be inaccurate. Consider using '#align eq.congr Eq.congrₓ'. -/
-protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ :=
-  by
-  subst h₁
-  subst h₂
+protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ := by
+  subst h₁; subst h₂
 #align eq.congr Eq.congr
 
 #print Eq.congr_left /-
@@ -1966,9 +1948,7 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u3} α x x') -> (Eq.{u2} β y y') -> (Eq.{u1} γ (f x y) (f x' y'))
 Case conversion may be inaccurate. Consider using '#align congr_arg2 congr_arg₂ₓ'. -/
 theorem congr_arg₂ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x')
-    (hy : y = y') : f x y = f x' y' := by
-  subst hx
-  subst hy
+    (hy : y = y') : f x y = f x' y' := by subst hx; subst hy
 #align congr_arg2 congr_arg₂
 
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _}
@@ -2619,10 +2599,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align forall_apply_eq_imp_iff' forall_apply_eq_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_apply_eq_imp_iff' {f : α → β} {p : β → Prop} :
-    (∀ b, ∀ a, f a = b → p b) ↔ ∀ a, p (f a) :=
-  by
-  rw [forall_swap]
-  simp
+    (∀ b, ∀ a, f a = b → p b) ↔ ∀ a, p (f a) := by rw [forall_swap]; simp
 #align forall_apply_eq_imp_iff' forall_apply_eq_imp_iff'
 
 /- warning: forall_eq_apply_imp_iff -> forall_eq_apply_imp_iff is a dubious translation:
@@ -2644,10 +2621,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align forall_eq_apply_imp_iff' forall_eq_apply_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_eq_apply_imp_iff' {f : α → β} {p : β → Prop} :
-    (∀ b, ∀ a, b = f a → p b) ↔ ∀ a, p (f a) :=
-  by
-  rw [forall_swap]
-  simp
+    (∀ b, ∀ a, b = f a → p b) ↔ ∀ a, p (f a) := by rw [forall_swap]; simp
 #align forall_eq_apply_imp_iff' forall_eq_apply_imp_iff'
 
 /- warning: forall_apply_eq_imp_iff₂ -> forall_apply_eq_imp_iff₂ is a dubious translation:
@@ -3247,10 +3221,8 @@ theorem ite_eq_right_iff : ite P a b = b ↔ P → a = b :=
 -/
 
 #print dite_ne_left_iff /-
-theorem dite_ne_left_iff : dite P (fun _ => a) B ≠ a ↔ ∃ h, a ≠ B h :=
-  by
-  rw [Ne.def, dite_eq_left_iff, not_forall]
-  exact exists_congr fun h => by rw [ne_comm]
+theorem dite_ne_left_iff : dite P (fun _ => a) B ≠ a ↔ ∃ h, a ≠ B h := by
+  rw [Ne.def, dite_eq_left_iff, not_forall]; exact exists_congr fun h => by rw [ne_comm]
 #align dite_ne_left_iff dite_ne_left_iff
 -/
 
@@ -3434,11 +3406,7 @@ theorem dite_dite_comm {B : Q → α} {C : ¬P → ¬Q → α} (h : P → ¬Q) :
     (if p : P then A p else if q : Q then B q else C p q) =
       if q : Q then B q else if p : P then A p else C p q :=
   dite_eq_iff'.2
-    ⟨fun p => by rw [dif_neg (h p), dif_pos p], fun np =>
-      by
-      congr
-      funext
-      rw [dif_neg np]⟩
+    ⟨fun p => by rw [dif_neg (h p), dif_pos p], fun np => by congr ; funext; rw [dif_neg np]⟩
 #align dite_dite_comm dite_dite_comm
 -/
 

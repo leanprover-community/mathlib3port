@@ -164,14 +164,12 @@ theorem applyComposition_update (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ}
     suffices B : Function.update v j z ∘ r = Function.update (v ∘ r) j' z
     · rw [B]
     suffices C : Function.update v (r j') z ∘ r = Function.update (v ∘ r) j' z
-    · convert C
-      exact (c.embedding_comp_inv j).symm
+    · convert C; exact (c.embedding_comp_inv j).symm
     exact Function.update_comp_eq_of_injective _ (c.embedding _).Injective _ _
   · simp only [h, Function.update_eq_self, Function.update_noteq, Ne.def, not_false_iff]
     let r : Fin (c.blocks_fun k) → Fin n := c.embedding k
     change p (c.blocks_fun k) (Function.update v j z ∘ r) = p (c.blocks_fun k) (v ∘ r)
-    suffices B : Function.update v j z ∘ r = v ∘ r
-    · rw [B]
+    suffices B : Function.update v j z ∘ r = v ∘ r; · rw [B]
     apply Function.update_comp_eq_of_not_mem_range
     rwa [c.mem_range_embedding_iff']
 #align formal_multilinear_series.apply_composition_update FormalMultilinearSeries.applyComposition_update
@@ -271,8 +269,7 @@ theorem comp_coeff_zero (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultil
   have : {c} = (Finset.univ : Finset (Composition 0)) := by
     apply Finset.eq_of_subset_of_card_le <;> simp [Finset.card_univ, composition_card 0]
   rw [← this, Finset.sum_singleton, comp_along_composition_apply]
-  symm
-  congr
+  symm; congr
 #align formal_multilinear_series.comp_coeff_zero FormalMultilinearSeries.comp_coeff_zero
 
 @[simp]
@@ -284,9 +281,7 @@ theorem comp_coeff_zero' (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMulti
 /-- The `0`-th coefficient of `q.comp p` is `q 0`. When `p` goes from `E` to `E`, this can be
 expressed as a direct equality -/
 theorem comp_coeff_zero'' (q : FormalMultilinearSeries 𝕜 E F) (p : FormalMultilinearSeries 𝕜 E E) :
-    (q.comp p) 0 = q 0 := by
-  ext v
-  exact q.comp_coeff_zero p _ _
+    (q.comp p) 0 = q 0 := by ext v; exact q.comp_coeff_zero p _ _
 #align formal_multilinear_series.comp_coeff_zero'' FormalMultilinearSeries.comp_coeff_zero''
 
 /-- The first coefficient of a composition of formal multilinear series is the composition of the
@@ -316,9 +311,7 @@ theorem removeZero_comp_of_pos (q : FormalMultilinearSeries 𝕜 F G)
 
 @[simp]
 theorem comp_removeZero (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) :
-    q.comp p.removeZero = q.comp p := by
-  ext n
-  simp [FormalMultilinearSeries.comp]
+    q.comp p.removeZero = q.comp p := by ext n; simp [FormalMultilinearSeries.comp]
 #align formal_multilinear_series.comp_remove_zero FormalMultilinearSeries.comp_removeZero
 
 end FormalMultilinearSeries
@@ -367,11 +360,8 @@ theorem compAlongComposition_norm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F 
 
 theorem compAlongComposition_nnnorm {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G)
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) :
-    ‖q.compAlongComposition p c‖₊ ≤ ‖q c.length‖₊ * ∏ i, ‖p (c.blocksFun i)‖₊ :=
-  by
-  rw [← NNReal.coe_le_coe]
-  push_cast
-  exact q.comp_along_composition_norm p c
+    ‖q.compAlongComposition p c‖₊ ≤ ‖q c.length‖₊ * ∏ i, ‖p (c.blocksFun i)‖₊ := by
+  rw [← NNReal.coe_le_coe]; push_cast ; exact q.comp_along_composition_norm p c
 #align formal_multilinear_series.comp_along_composition_nnnorm FormalMultilinearSeries.compAlongComposition_nnnorm
 
 /-!
@@ -417,13 +407,8 @@ theorem id_apply_one' {n : ℕ} (h : n = 1) (v : Fin n → E) :
 
 /-- For `n ≠ 1`, the `n`-th coefficient of `id 𝕜 E` is zero, by definition. -/
 @[simp]
-theorem id_apply_ne_one {n : ℕ} (h : n ≠ 1) : (FormalMultilinearSeries.id 𝕜 E) n = 0 :=
-  by
-  cases n
-  · rfl
-  cases n
-  · contradiction
-  rfl
+theorem id_apply_ne_one {n : ℕ} (h : n ≠ 1) : (FormalMultilinearSeries.id 𝕜 E) n = 0 := by cases n;
+  · rfl; cases n; · contradiction; rfl
 #align formal_multilinear_series.id_apply_ne_one FormalMultilinearSeries.id_apply_ne_one
 
 end
@@ -478,8 +463,7 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
       rw [comp_along_composition_apply, id_apply_one' _ _ (Composition.single_length n_pos)]
       dsimp [apply_composition]
       refine' p.congr rfl fun i him hin => congr_arg v <| _
-      ext
-      simp
+      ext; simp
     show
       ∀ b : Composition n,
         b ∈ Finset.univ → b ≠ Composition.single n n_pos → comp_along_composition (id 𝕜 F) p b = 0
@@ -542,10 +526,8 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
       ‖q.comp_along_composition p c‖₊ * r ^ n ≤
           (‖q c.length‖₊ * ∏ i, ‖p (c.blocks_fun i)‖₊) * r ^ n :=
         mul_le_mul' (q.comp_along_composition_nnnorm p c) le_rfl
-      _ = ‖q c.length‖₊ * rq ^ n * ((∏ i, ‖p (c.blocks_fun i)‖₊) * rp ^ n) * r0 ^ n :=
-        by
-        simp only [r, mul_pow]
-        ring
+      _ = ‖q c.length‖₊ * rq ^ n * ((∏ i, ‖p (c.blocks_fun i)‖₊) * rp ^ n) * r0 ^ n := by
+        simp only [r, mul_pow]; ring
       _ ≤ Cq * Cp ^ n * r0 ^ n := (mul_le_mul' (mul_le_mul' A B) le_rfl)
       _ = Cq / 4 ^ n := by
         simp only [r0]
@@ -999,13 +981,8 @@ theorem sigma_composition_eq_iff (i j : Σa : Composition n, Composition a.lengt
   rcases i with ⟨a, b⟩
   rcases j with ⟨a', b'⟩
   rintro ⟨h, h'⟩
-  have H : a = a' := by
-    ext1
-    exact h
-  induction H
-  congr
-  ext1
-  exact h'
+  have H : a = a' := by ext1; exact h
+  induction H; congr ; ext1; exact h'
 #align composition.sigma_composition_eq_iff Composition.sigma_composition_eq_iff
 
 /-- Rewriting equality in the dependent type
@@ -1079,9 +1056,7 @@ def sigmaCompositionAux (a : Composition n) (b : Composition a.length)
     where
   blocks :=
     nthLe (a.blocks.splitWrtComposition b) i
-      (by
-        rw [length_split_wrt_composition, ← length_gather]
-        exact i.2)
+      (by rw [length_split_wrt_composition, ← length_gather]; exact i.2)
   blocks_pos i hi :=
     a.blocks_pos
       (by
@@ -1094,10 +1069,8 @@ theorem length_sigmaCompositionAux (a : Composition n) (b : Composition a.length
     (i : Fin b.length) :
     Composition.length (Composition.sigmaCompositionAux a b ⟨i, (length_gather a b).symm ▸ i.2⟩) =
       Composition.blocksFun b i :=
-  show List.length (nthLe (splitWrtComposition a.blocks b) i _) = blocksFun b i
-    by
-    rw [nth_le_map_rev List.length, nth_le_of_eq (map_length_split_wrt_composition _ _)]
-    rfl
+  show List.length (nthLe (splitWrtComposition a.blocks b) i _) = blocksFun b i by
+    rw [nth_le_map_rev List.length, nth_le_of_eq (map_length_split_wrt_composition _ _)]; rfl
 #align composition.length_sigma_composition_aux Composition.length_sigmaCompositionAux
 
 theorem blocksFun_sigmaCompositionAux (a : Composition n) (b : Composition a.length)
@@ -1105,10 +1078,8 @@ theorem blocksFun_sigmaCompositionAux (a : Composition n) (b : Composition a.len
     blocksFun (sigmaCompositionAux a b ⟨i, (length_gather a b).symm ▸ i.2⟩)
         ⟨j, (length_sigmaCompositionAux a b i).symm ▸ j.2⟩ =
       blocksFun a (embedding b i j) :=
-  show nthLe (nthLe _ _ _) _ _ = nthLe a.blocks _ _
-    by
-    rw [nth_le_of_eq (nth_le_split_wrt_composition _ _ _), nth_le_drop', nth_le_take']
-    rfl
+  show nthLe (nthLe _ _ _) _ _ = nthLe a.blocks _ _ by
+    rw [nth_le_of_eq (nth_le_split_wrt_composition _ _ _), nth_le_drop', nth_le_take']; rfl
 #align composition.blocks_fun_sigma_composition_aux Composition.blocksFun_sigmaCompositionAux
 
 /-- Auxiliary lemma to prove that the composition of formal multilinear series is associative.
@@ -1147,11 +1118,8 @@ theorem sizeUpTo_sizeUpTo_add (a : Composition n) (b : Composition a.length) {i 
       congr
       rw [take_append_drop]
   · have A : j < blocks_fun b ⟨i, hi⟩ := lt_trans (lt_add_one j) hj
-    have B : j < length (sigma_composition_aux a b ⟨i, (length_gather a b).symm ▸ hi⟩) :=
-      by
-      convert A
-      rw [← length_sigma_composition_aux]
-      rfl
+    have B : j < length (sigma_composition_aux a b ⟨i, (length_gather a b).symm ▸ hi⟩) := by
+      convert A; rw [← length_sigma_composition_aux]; rfl
     have C : size_up_to b i + j < size_up_to b (i + 1) :=
       by
       simp only [size_up_to_succ b hi, add_lt_add_iff_left]
@@ -1193,9 +1161,7 @@ def sigmaEquivSigmaPi (n : ℕ) :
         blocks_pos :=
           forall_mem_ofFn_iff.2 fun j =>
             Composition.length_pos_of_pos _ (Composition.blocks_pos' _ _ _)
-        blocks_sum := by
-          dsimp only [Composition.length]
-          simp [sum_of_fn] }⟩
+        blocks_sum := by dsimp only [Composition.length]; simp [sum_of_fn] }⟩
   left_inv :=
     by
     -- the fact that we have a left inverse is essentially `join_split_wrt_composition`,

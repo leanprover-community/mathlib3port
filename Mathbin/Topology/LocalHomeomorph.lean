@@ -331,12 +331,8 @@ def Homeomorph.toLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α β :=
   { e.toEquiv.toLocalEquiv with
     open_source := isOpen_univ
     open_target := isOpen_univ
-    continuous_toFun := by
-      erw [← continuous_iff_continuousOn_univ]
-      exact e.continuous_to_fun
-    continuous_invFun := by
-      erw [← continuous_iff_continuousOn_univ]
-      exact e.continuous_inv_fun }
+    continuous_toFun := by erw [← continuous_iff_continuousOn_univ]; exact e.continuous_to_fun
+    continuous_invFun := by erw [← continuous_iff_continuousOn_univ]; exact e.continuous_inv_fun }
 #align homeomorph.to_local_homeomorph Homeomorph.toLocalHomeomorph
 -/
 
@@ -359,11 +355,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (e : LocalHomeomorph.{u2, u1} α β _inst_1 _inst_2) (e' : LocalEquiv.{u2, u1} α β) (h : Eq.{max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} α β) (LocalHomeomorph.toLocalEquiv.{u2, u1} α β _inst_1 _inst_2 e) e'), Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} α β _inst_1 _inst_2) (LocalHomeomorph.replaceEquiv.{u2, u1} α β _inst_1 _inst_2 e e' h) e
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.replace_equiv_eq_self LocalHomeomorph.replaceEquiv_eq_selfₓ'. -/
 theorem replaceEquiv_eq_self (e : LocalHomeomorph α β) (e' : LocalEquiv α β)
-    (h : e.toLocalEquiv = e') : e.replaceEquiv e' h = e :=
-  by
-  cases e
-  subst e'
-  rfl
+    (h : e.toLocalEquiv = e') : e.replaceEquiv e' h = e := by cases e; subst e'; rfl
 #align local_homeomorph.replace_equiv_eq_self LocalHomeomorph.replaceEquiv_eq_self
 
 /- warning: local_homeomorph.source_preimage_target -> LocalHomeomorph.source_preimage_target is a dubious translation:
@@ -383,11 +375,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {e : LocalHomeomorph.{u2, u1} α β _inst_1 _inst_2} {e' : LocalHomeomorph.{u2, u1} α β _inst_1 _inst_2}, (Eq.{max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} α β) (LocalHomeomorph.toLocalEquiv.{u2, u1} α β _inst_1 _inst_2 e) (LocalHomeomorph.toLocalEquiv.{u2, u1} α β _inst_1 _inst_2 e')) -> (Eq.{max (succ u2) (succ u1)} (LocalHomeomorph.{u2, u1} α β _inst_1 _inst_2) e e')
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.eq_of_local_equiv_eq LocalHomeomorph.eq_of_localEquiv_eqₓ'. -/
 theorem eq_of_localEquiv_eq {e e' : LocalHomeomorph α β} (h : e.toLocalEquiv = e'.toLocalEquiv) :
-    e = e' := by
-  cases e
-  cases e'
-  cases h
-  rfl
+    e = e' := by cases e; cases e'; cases h; rfl
 #align local_homeomorph.eq_of_local_equiv_eq LocalHomeomorph.eq_of_localEquiv_eq
 
 /- warning: local_homeomorph.eventually_left_inverse -> LocalHomeomorph.eventually_left_inverse is a dubious translation:
@@ -598,9 +586,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.ext_iff LocalHomeomorph.ext_iffₓ'. -/
 protected theorem ext_iff {e e' : LocalHomeomorph α β} :
     e = e' ↔ (∀ x, e x = e' x) ∧ (∀ x, e.symm x = e'.symm x) ∧ e.source = e'.source :=
-  ⟨by
-    rintro rfl
-    exact ⟨fun x => rfl, fun x => rfl, rfl⟩, fun h => e.ext e' h.1 h.2.1 h.2.2⟩
+  ⟨by rintro rfl; exact ⟨fun x => rfl, fun x => rfl, rfl⟩, fun h => e.ext e' h.1 h.2.1 h.2.2⟩
 #align local_homeomorph.ext_iff LocalHomeomorph.ext_iff
 
 /- warning: local_homeomorph.symm_to_local_equiv -> LocalHomeomorph.symm_toLocalEquiv is a dubious translation:
@@ -2010,13 +1996,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.refl_prod_refl LocalHomeomorph.refl_prod_reflₓ'. -/
 @[simp]
 theorem refl_prod_refl {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] :
-    (LocalHomeomorph.refl α).Prod (LocalHomeomorph.refl β) = LocalHomeomorph.refl (α × β) :=
-  by
-  ext1 ⟨x, y⟩
-  · rfl
-  · rintro ⟨x, y⟩
-    rfl
-  exact univ_prod_univ
+    (LocalHomeomorph.refl α).Prod (LocalHomeomorph.refl β) = LocalHomeomorph.refl (α × β) := by
+  ext1 ⟨x, y⟩; · rfl; · rintro ⟨x, y⟩; rfl; exact univ_prod_univ
 #align local_homeomorph.refl_prod_refl LocalHomeomorph.refl_prod_refl
 
 /- warning: local_homeomorph.prod_trans -> LocalHomeomorph.prod_trans is a dubious translation:
@@ -2128,9 +2109,7 @@ def disjointUnion (e e' : LocalHomeomorph α β) [∀ x, Decidable (x ∈ e.sour
   (e.piecewise e' e.source e.target e.isImage_source_target
         (e'.isImage_source_target_of_disjoint e Hs.symm Ht.symm)
         (by rw [e.open_source.inter_frontier_eq, (Hs.symm.frontier_right e'.open_source).inter_eq])
-        (by
-          rw [e.open_source.inter_frontier_eq]
-          exact eq_on_empty _ _)).replaceEquiv
+        (by rw [e.open_source.inter_frontier_eq]; exact eq_on_empty _ _)).replaceEquiv
     (e.toLocalEquiv.disjointUnion e'.toLocalEquiv Hs Ht)
     (LocalEquiv.disjointUnion_eq_piecewise _ _ _ _).symm
 #align local_homeomorph.disjoint_union LocalHomeomorph.disjointUnion
@@ -2328,14 +2307,8 @@ def toHomeomorphOfSourceEqUnivTargetEqUniv (h : e.source = (univ : Set α)) (h' 
     α ≃ₜ β where
   toFun := e
   invFun := e.symm
-  left_inv x :=
-    e.left_inv <| by
-      rw [h]
-      exact mem_univ _
-  right_inv x :=
-    e.right_inv <| by
-      rw [h']
-      exact mem_univ _
+  left_inv x := e.left_inv <| by rw [h]; exact mem_univ _
+  right_inv x := e.right_inv <| by rw [h']; exact mem_univ _
   continuous_toFun := by
     rw [continuous_iff_continuousOn_univ]
     convert e.continuous_to_fun
@@ -2470,10 +2443,8 @@ theorem localHomeomorphSubtypeCoe_source : s.localHomeomorphSubtypeCoe.source = 
 
 #print TopologicalSpace.Opens.localHomeomorphSubtypeCoe_target /-
 @[simp, mfld_simps]
-theorem localHomeomorphSubtypeCoe_target : s.localHomeomorphSubtypeCoe.target = s :=
-  by
-  simp only [local_homeomorph_subtype_coe, Subtype.range_coe_subtype, mfld_simps]
-  rfl
+theorem localHomeomorphSubtypeCoe_target : s.localHomeomorphSubtypeCoe.target = s := by
+  simp only [local_homeomorph_subtype_coe, Subtype.range_coe_subtype, mfld_simps]; rfl
 #align topological_space.opens.local_homeomorph_subtype_coe_target TopologicalSpace.Opens.localHomeomorphSubtypeCoe_target
 -/
 

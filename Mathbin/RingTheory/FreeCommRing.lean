@@ -117,9 +117,7 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
     { toFun := fun s => (s.toAdd.map f).Prod
       map_mul' := fun x y =>
         calc
-          _ = Multiset.prod (Multiset.map f x + Multiset.map f y) :=
-            by
-            congr 1
+          _ = Multiset.prod (Multiset.map f x + Multiset.map f y) := by congr 1;
             exact Multiset.map_add _ _ _
           _ = _ := Multiset.prod_add _ _
           
@@ -318,29 +316,16 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
       is_supported x s →
         ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.X) x = n :=
     by
-    intro x hx
-    refine' Subring.InClosure.recOn hx _ _ _ _
-    · use 1
-      rw [RingHom.map_one]
-      norm_cast
-    · use -1
-      rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
-    · rintro _ ⟨z, hzs, rfl⟩ _ _
-      use 0
+    intro x hx; refine' Subring.InClosure.recOn hx _ _ _ _
+    · use 1; rw [RingHom.map_one]; norm_cast
+    · use -1; rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
+    · rintro _ ⟨z, hzs, rfl⟩ _ _; use 0;
       rw [RingHom.map_mul, lift_of, if_pos hzs, MulZeroClass.zero_mul]
       norm_cast
-    · rintro x y ⟨q, hq⟩ ⟨r, hr⟩
-      refine' ⟨q + r, _⟩
-      rw [RingHom.map_add, hq, hr]
-      norm_cast
-  specialize this (of p) hps
-  rw [lift_of] at this
-  split_ifs  at this
-  · exact h
-  exfalso
-  apply Ne.symm Int.zero_ne_one
-  rcases this with ⟨w, H⟩
-  rw [← Polynomial.C_eq_int_cast] at H
+    · rintro x y ⟨q, hq⟩ ⟨r, hr⟩; refine' ⟨q + r, _⟩; rw [RingHom.map_add, hq, hr]; norm_cast
+  specialize this (of p) hps; rw [lift_of] at this; split_ifs  at this; · exact h
+  exfalso; apply Ne.symm Int.zero_ne_one
+  rcases this with ⟨w, H⟩; rw [← Polynomial.C_eq_int_cast] at H
   have : polynomial.X.coeff 1 = (Polynomial.C ↑w).coeff 1 := by rw [H]
   rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
 #align free_comm_ring.is_supported_of FreeCommRing.isSupported_of
@@ -353,14 +338,11 @@ theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
     (hxs : IsSupported x s) : map (Subtype.val : s → α) (restriction s x) = x :=
   by
   refine' Subring.InClosure.recOn hxs _ _ _ _
-  · rw [RingHom.map_one]
-    rfl
-  · rw [RingHom.map_neg, RingHom.map_neg, RingHom.map_one]
-    rfl
+  · rw [RingHom.map_one]; rfl
+  · rw [RingHom.map_neg, RingHom.map_neg, RingHom.map_one]; rfl
   · rintro _ ⟨p, hps, rfl⟩ n ih
     rw [RingHom.map_mul, restriction_of, dif_pos hps, RingHom.map_mul, map_of, ih]
-  · intro x y ihx ihy
-    rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
+  · intro x y ihx ihy; rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
 #align free_comm_ring.map_subtype_val_restriction FreeCommRing.map_subtype_val_restriction
 
 #print FreeCommRing.exists_finite_support /-
@@ -492,17 +474,10 @@ variable (α)
 protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRing α) := fun x =>
   by
   apply FreeCommRing.induction_on x
-  · use -1
-    rfl
-  · intro x
-    use FreeRing.of x
-    rfl
-  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    use x + y
-    exact (FreeRing.lift _).map_add _ _
-  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    use x * y
-    exact (FreeRing.lift _).map_mul _ _
+  · use -1; rfl
+  · intro x; use FreeRing.of x; rfl
+  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x + y; exact (FreeRing.lift _).map_add _ _
+  · rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; use x * y; exact (FreeRing.lift _).map_mul _ _
 #align free_ring.coe_surjective FreeRing.coe_surjective
 -/
 
@@ -516,14 +491,10 @@ theorem coe_eq :
     (coe : FreeRing α → FreeCommRing α) =
       @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
   funext fun x =>
-    FreeAbelianGroup.lift.unique _ _ fun L =>
-      by
-      simp_rw [FreeAbelianGroup.lift.of, (· ∘ ·)]
+    FreeAbelianGroup.lift.unique _ _ fun L => by simp_rw [FreeAbelianGroup.lift.of, (· ∘ ·)];
       exact
-        FreeMonoid.recOn L rfl fun hd tl ih =>
-          by
-          rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]
-          rfl
+        FreeMonoid.recOn L rfl fun hd tl ih => by
+          rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]; rfl
 #align free_ring.coe_eq FreeRing.coe_eq
 
 /- warning: free_ring.subsingleton_equiv_free_comm_ring -> FreeRing.subsingletonEquivFreeCommRing is a dubious translation:
@@ -565,10 +536,7 @@ Case conversion may be inaccurate. Consider using '#align free_comm_ring_equiv_m
     variables in `α` -/
 def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ :=
   RingEquiv.ofHomInv (FreeCommRing.lift <| (fun a => MvPolynomial.X a : α → MvPolynomial α ℤ))
-    (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
-    (by
-      ext
-      simp)
+    (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of) (by ext; simp)
     (by ext <;> simp)
 #align free_comm_ring_equiv_mv_polynomial_int freeCommRingEquivMvPolynomialInt
 

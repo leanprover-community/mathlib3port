@@ -161,8 +161,7 @@ theorem isExtreme_iInter {ι : Sort _} [Nonempty ι] {F : ι → Set E}
 
 #print isExtreme_biInter /-
 theorem isExtreme_biInter {F : Set (Set E)} (hF : F.Nonempty) (hA : ∀ B ∈ F, IsExtreme 𝕜 A B) :
-    IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
-  haveI := hF.to_subtype
+    IsExtreme 𝕜 A (⋂ B ∈ F, B) := by haveI := hF.to_subtype;
   simpa only [Inter_subtype] using isExtreme_iInter fun i : F => hA _ i.2
 #align is_extreme_bInter isExtreme_biInter
 -/

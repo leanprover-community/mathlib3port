@@ -108,9 +108,7 @@ but is expected to have type
   forall {k : Type.{u2}} {G : Type.{u1}} [_inst_1 : Semiring.{u2} k] [_inst_2 : AddCancelCommMonoid.{u1} G] (x : AddMonoidAlgebra.{u2, u1} k G _inst_1), Eq.{max (succ u2) (succ u1)} (AddMonoidAlgebra.{u2, u1} k G _inst_1) (AddMonoidAlgebra.divOf.{u2, u1} k G _inst_1 _inst_2 x (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (AddRightCancelMonoid.toZero.{u1} G (AddCancelMonoid.toAddRightCancelMonoid.{u1} G (AddCancelCommMonoid.toAddCancelMonoid.{u1} G _inst_2)))))) x
 Case conversion may be inaccurate. Consider using '#align add_monoid_algebra.div_of_zero AddMonoidAlgebra.divOf_zeroₓ'. -/
 @[simp]
-theorem divOf_zero (x : AddMonoidAlgebra k G) : x /ᵒᶠ 0 = x :=
-  by
-  ext
+theorem divOf_zero (x : AddMonoidAlgebra k G) : x /ᵒᶠ 0 = x := by ext;
   simp only [AddMonoidAlgebra.divOf_apply, zero_add]
 #align add_monoid_algebra.div_of_zero AddMonoidAlgebra.divOf_zero
 
@@ -130,9 +128,7 @@ lean 3 declaration is
 but is expected to have type
   forall {k : Type.{u2}} {G : Type.{u1}} [_inst_1 : Semiring.{u2} k] [_inst_2 : AddCancelCommMonoid.{u1} G] (x : AddMonoidAlgebra.{u2, u1} k G _inst_1) (a : G) (b : G), Eq.{max (succ u2) (succ u1)} (AddMonoidAlgebra.{u2, u1} k G _inst_1) (AddMonoidAlgebra.divOf.{u2, u1} k G _inst_1 _inst_2 x (HAdd.hAdd.{u1, u1, u1} G G G (instHAdd.{u1} G (AddZeroClass.toAdd.{u1} G (AddMonoid.toAddZeroClass.{u1} G (AddRightCancelMonoid.toAddMonoid.{u1} G (AddCancelMonoid.toAddRightCancelMonoid.{u1} G (AddCancelCommMonoid.toAddCancelMonoid.{u1} G _inst_2)))))) a b)) (AddMonoidAlgebra.divOf.{u2, u1} k G _inst_1 _inst_2 (AddMonoidAlgebra.divOf.{u2, u1} k G _inst_1 _inst_2 x a) b)
 Case conversion may be inaccurate. Consider using '#align add_monoid_algebra.div_of_add AddMonoidAlgebra.divOf_addₓ'. -/
-theorem divOf_add (x : AddMonoidAlgebra k G) (a b : G) : x /ᵒᶠ (a + b) = x /ᵒᶠ a /ᵒᶠ b :=
-  by
-  ext
+theorem divOf_add (x : AddMonoidAlgebra k G) (a b : G) : x /ᵒᶠ (a + b) = x /ᵒᶠ a /ᵒᶠ b := by ext;
   simp only [AddMonoidAlgebra.divOf_apply, add_assoc]
 #align add_monoid_algebra.div_of_add AddMonoidAlgebra.divOf_add
 

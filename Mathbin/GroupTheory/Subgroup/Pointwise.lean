@@ -62,10 +62,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (Inv.inv.{u1} (Set.{u1} G) (Set.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1))))) S) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S))
 Case conversion may be inaccurate. Consider using '#align subgroup.inv_subset_closure Subgroup.inv_subset_closureₓ'. -/
 @[simp, to_additive]
-theorem inv_subset_closure (S : Set G) : S⁻¹ ⊆ closure S := fun s hs =>
-  by
-  rw [SetLike.mem_coe, ← Subgroup.inv_mem_iff]
-  exact subset_closure (mem_inv.mp hs)
+theorem inv_subset_closure (S : Set G) : S⁻¹ ⊆ closure S := fun s hs => by
+  rw [SetLike.mem_coe, ← Subgroup.inv_mem_iff]; exact subset_closure (mem_inv.mp hs)
 #align subgroup.inv_subset_closure Subgroup.inv_subset_closure
 #align add_subgroup.neg_subset_closure AddSubgroup.neg_subset_closure
 
@@ -251,11 +249,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.mul_normal Su
       "The carrier of `H ⊔ N` is just `↑H + ↑N` (pointwise set addition)\nwhen `N` is normal."]
 theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H ⊔ N) : Set G) = H * N :=
   Set.Subset.antisymm
-    (show H ⊔ N ≤ mulNormalAux H N by
-      rw [sup_eq_closure]
-      apply sInf_le _
-      dsimp
-      rfl)
+    (show H ⊔ N ≤ mulNormalAux H N by rw [sup_eq_closure]; apply sInf_le _; dsimp; rfl)
     ((sup_eq_closure H N).symm ▸ subset_closure)
 #align subgroup.mul_normal Subgroup.mul_normal
 #align add_subgroup.add_normal AddSubgroup.add_normal
@@ -283,11 +277,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.normal_mul Su
       "The carrier of `N ⊔ H` is just `↑N + ↑H` (pointwise set addition)\nwhen `N` is normal."]
 theorem normal_mul (N H : Subgroup G) [N.Normal] : (↑(N ⊔ H) : Set G) = N * H :=
   Set.Subset.antisymm
-    (show N ⊔ H ≤ normalMulAux N H by
-      rw [sup_eq_closure]
-      apply sInf_le _
-      dsimp
-      rfl)
+    (show N ⊔ H ≤ normalMulAux N H by rw [sup_eq_closure]; apply sInf_le _; dsimp; rfl)
     ((sup_eq_closure N H).symm ▸ subset_closure)
 #align subgroup.normal_mul Subgroup.normal_mul
 #align add_subgroup.normal_add AddSubgroup.normal_add
@@ -358,11 +348,8 @@ instance sup_normal (H K : Subgroup G) [hH : H.Normal] [hK : K.Normal] : (H ⊔ 
 Case conversion may be inaccurate. Consider using '#align subgroup.smul_opposite_image_mul_preimage Subgroup.smul_opposite_image_mul_preimageₓ'. -/
 @[to_additive]
 theorem smul_opposite_image_mul_preimage {H : Subgroup G} (g : G) (h : H.opposite) (s : Set G) :
-    (fun y => h • y) '' (Mul.mul g ⁻¹' s) = Mul.mul g ⁻¹' ((fun y => h • y) '' s) :=
-  by
-  ext x
-  cases h
-  simp [(· • ·), mul_assoc]
+    (fun y => h • y) '' (Mul.mul g ⁻¹' s) = Mul.mul g ⁻¹' ((fun y => h • y) '' s) := by ext x;
+  cases h; simp [(· • ·), mul_assoc]
 #align subgroup.smul_opposite_image_mul_preimage Subgroup.smul_opposite_image_mul_preimage
 #align add_subgroup.vadd_opposite_image_add_preimage AddSubgroup.vadd_opposite_image_add_preimage
 

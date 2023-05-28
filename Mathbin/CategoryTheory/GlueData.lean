@@ -95,18 +95,14 @@ theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom :=
 -/
 
 #print CategoryTheory.GlueData.t'_jii /-
-theorem t'_jii (i j : D.J) : D.t' j i i = pullback.fst ≫ D.t j i ≫ inv pullback.snd :=
-  by
-  rw [← category.assoc, ← D.t_fac]
-  simp
+theorem t'_jii (i j : D.J) : D.t' j i i = pullback.fst ≫ D.t j i ≫ inv pullback.snd := by
+  rw [← category.assoc, ← D.t_fac]; simp
 #align category_theory.glue_data.t'_jii CategoryTheory.GlueData.t'_jii
 -/
 
 #print CategoryTheory.GlueData.t'_iji /-
-theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullback.snd :=
-  by
-  rw [← category.assoc, ← D.t_fac]
-  simp
+theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullback.snd := by
+  rw [← category.assoc, ← D.t_fac]; simp
 #align category_theory.glue_data.t'_iji CategoryTheory.GlueData.t'_iji
 -/
 
@@ -277,9 +273,7 @@ def π : D.sigmaOpens ⟶ D.glued :=
 -/
 
 #print CategoryTheory.GlueData.π_epi /-
-instance π_epi : Epi D.π := by
-  unfold π
-  infer_instance
+instance π_epi : Epi D.π := by unfold π; infer_instance
 #align category_theory.glue_data.π_epi CategoryTheory.GlueData.π_epi
 -/
 
@@ -326,9 +320,7 @@ def mapGlueData : GlueData C' where
   f_mono i j := preserves_mono_of_preservesLimit _ _
   f_id i := inferInstance
   t i j := F.map (D.t i j)
-  t_id i := by
-    rw [D.t_id i]
-    simp
+  t_id i := by rw [D.t_id i]; simp
   t' i j k :=
     (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
@@ -351,14 +343,10 @@ def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multisp
       | walking_multispan.right b => Iso.refl _)
     (by
       rintro (⟨_, _⟩ | _) _ (_ | _ | _)
-      · erw [category.comp_id, category.id_comp, Functor.map_id]
-        rfl
-      · erw [category.comp_id, category.id_comp]
-        rfl
-      · erw [category.comp_id, category.id_comp, functor.map_comp]
-        rfl
-      · erw [category.comp_id, category.id_comp, Functor.map_id]
-        rfl)
+      · erw [category.comp_id, category.id_comp, Functor.map_id]; rfl
+      · erw [category.comp_id, category.id_comp]; rfl
+      · erw [category.comp_id, category.id_comp, functor.map_comp]; rfl
+      · erw [category.comp_id, category.id_comp, Functor.map_id]; rfl)
 #align category_theory.glue_data.diagram_iso CategoryTheory.GlueData.diagramIso
 -/
 
@@ -455,10 +443,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.glue_d
 @[simp, reassoc]
 theorem ι_gluedIso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i :=
   by
-  erw [ι_preserves_colimits_iso_hom_assoc]
-  rw [has_colimit.iso_of_nat_iso_ι_hom]
-  erw [category.id_comp]
-  rfl
+  erw [ι_preserves_colimits_iso_hom_assoc]; rw [has_colimit.iso_of_nat_iso_ι_hom]
+  erw [category.id_comp]; rfl
 #align category_theory.glue_data.ι_glued_iso_hom CategoryTheory.GlueData.ι_gluedIso_hom
 
 /- warning: category_theory.glue_data.ι_glued_iso_inv -> CategoryTheory.GlueData.ι_gluedIso_inv is a dubious translation:
@@ -481,10 +467,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
     cospan (F.map (D.ι i)) (F.map (D.ι j)) ≅
       cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
   exact
-    nat_iso.of_components
-      (fun x => by
-        cases x
-        exacts[D.glued_iso F, iso.refl _])
+    nat_iso.of_components (fun x => by cases x; exacts[D.glued_iso F, iso.refl _])
       (by rintro (_ | _) (_ | _) (_ | _ | _) <;> simp)
   apply is_limit.postcompose_hom_equiv e _ _
   apply hc.of_iso_limit

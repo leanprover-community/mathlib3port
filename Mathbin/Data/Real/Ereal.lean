@@ -239,20 +239,16 @@ theorem induction₂ {P : EReal → EReal → Prop} (top_top : P ⊤ ⊤) (top_p
     (neg_bot : ∀ x : ℝ, x < 0 → P x ⊥) (bot_top : P ⊥ ⊤) (bot_pos : ∀ x : ℝ, 0 < x → P ⊥ x)
     (bot_zero : P ⊥ 0) (bot_neg : ∀ x : ℝ, x < 0 → P ⊥ x) (bot_bot : P ⊥ ⊥) : ∀ x y, P x y
   | ⊥, ⊥ => bot_bot
-  | ⊥, (y : ℝ) => by
-    rcases lt_trichotomy 0 y with (hy | rfl | hy)
+  | ⊥, (y : ℝ) => by rcases lt_trichotomy 0 y with (hy | rfl | hy);
     exacts[bot_pos y hy, bot_zero, bot_neg y hy]
   | ⊥, ⊤ => bot_top
-  | (x : ℝ), ⊥ => by
-    rcases lt_trichotomy 0 x with (hx | rfl | hx)
+  | (x : ℝ), ⊥ => by rcases lt_trichotomy 0 x with (hx | rfl | hx);
     exacts[pos_bot x hx, zero_bot, neg_bot x hx]
   | (x : ℝ), (y : ℝ) => coe_coe _ _
-  | (x : ℝ), ⊤ => by
-    rcases lt_trichotomy 0 x with (hx | rfl | hx)
+  | (x : ℝ), ⊤ => by rcases lt_trichotomy 0 x with (hx | rfl | hx);
     exacts[pos_top x hx, zero_top, neg_top x hx]
   | ⊤, ⊥ => top_bot
-  | ⊤, (y : ℝ) => by
-    rcases lt_trichotomy 0 y with (hy | rfl | hy)
+  | ⊤, (y : ℝ) => by rcases lt_trichotomy 0 y with (hy | rfl | hy);
     exacts[top_pos y hy, top_zero, top_neg y hy]
   | ⊤, ⊤ => top_top
 #align ereal.induction₂ EReal.induction₂
@@ -270,20 +266,20 @@ instance : MulZeroOneClass EReal :=
     EReal.hasZero with
     one_mul := fun x => by
       induction x using EReal.rec <;>
-        · dsimp only [(· * ·)]
+        · dsimp only [(· * ·)];
           simp only [EReal.mul, ← EReal.coe_one, zero_lt_one, if_true, one_mul]
     mul_one := fun x => by
       induction x using EReal.rec <;>
-        · dsimp only [(· * ·)]
+        · dsimp only [(· * ·)];
           simp only [EReal.mul, ← EReal.coe_one, zero_lt_one, if_true, mul_one]
     zero_mul := fun x => by
       induction x using EReal.rec <;>
-        · simp only [(· * ·)]
+        · simp only [(· * ·)];
           simp only [EReal.mul, ← EReal.coe_zero, zero_lt_one, if_true, if_false, lt_irrefl (0 : ℝ),
             eq_self_iff_true, MulZeroClass.zero_mul]
     mul_zero := fun x => by
       induction x using EReal.rec <;>
-        · simp only [(· * ·)]
+        · simp only [(· * ·)];
           simp only [EReal.mul, ← EReal.coe_zero, zero_lt_one, if_true, if_false, lt_irrefl (0 : ℝ),
             eq_self_iff_true, MulZeroClass.mul_zero] }
 
@@ -392,9 +388,7 @@ but is expected to have type
   forall (x : Real), LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (Real.toEReal x) (Top.top.{0} EReal EReal.instTopEReal)
 Case conversion may be inaccurate. Consider using '#align ereal.coe_lt_top EReal.coe_lt_topₓ'. -/
 @[simp]
-theorem coe_lt_top (x : ℝ) : (x : EReal) < ⊤ :=
-  by
-  apply WithBot.coe_lt_coe.2
+theorem coe_lt_top (x : ℝ) : (x : EReal) < ⊤ := by apply WithBot.coe_lt_coe.2;
   exact WithTop.coe_lt_top _
 #align ereal.coe_lt_top EReal.coe_lt_top
 
@@ -681,8 +675,7 @@ Case conversion may be inaccurate. Consider using '#align ereal.eq_top_iff_foral
 theorem eq_top_iff_forall_lt (x : EReal) : x = ⊤ ↔ ∀ y : ℝ, (y : EReal) < x :=
   by
   constructor
-  · rintro rfl
-    exact EReal.coe_lt_top
+  · rintro rfl; exact EReal.coe_lt_top
   · contrapose!
     intro h
     exact ⟨x.to_real, le_coe_to_real h⟩
@@ -697,8 +690,7 @@ Case conversion may be inaccurate. Consider using '#align ereal.eq_bot_iff_foral
 theorem eq_bot_iff_forall_lt (x : EReal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : EReal) :=
   by
   constructor
-  · rintro rfl
-    exact bot_lt_coe
+  · rintro rfl; exact bot_lt_coe
   · contrapose!
     intro h
     exact ⟨x.to_real, coe_to_real_le h⟩
@@ -778,9 +770,7 @@ Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_eq_t
 @[simp]
 theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : EReal) = ⊤ ↔ x = ⊤
   | ⊤ => by simp
-  | some x => by
-    simp only [ENNReal.coe_ne_top, iff_false_iff, ENNReal.some_eq_coe]
-    decide
+  | some x => by simp only [ENNReal.coe_ne_top, iff_false_iff, ENNReal.some_eq_coe]; decide
 #align ereal.coe_ennreal_eq_top_iff EReal.coe_ennreal_eq_top_iff
 
 #print EReal.coe_nnreal_ne_top /-
@@ -1162,8 +1152,7 @@ theorem add_lt_add_right_coe {x y : EReal} (h : x < y) (z : ℝ) : x + z < y + z
   · simp only [← coe_add, bot_add, bot_lt_coe]
   · simp
   · exact (lt_irrefl _ (h.trans (bot_lt_coe x))).elim
-  · norm_cast  at h⊢
-    exact add_lt_add_right h _
+  · norm_cast  at h⊢; exact add_lt_add_right h _
   · simp only [← coe_add, top_add_coe, coe_lt_top]
   · exact (lt_irrefl _ (h.trans_le le_top)).elim
   · exact (lt_irrefl _ (h.trans_le le_top)).elim
@@ -1244,10 +1233,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : EReal} {y : EReal}, (Ne.{1} EReal x (Top.top.{0} EReal EReal.instTopEReal)) -> (Ne.{1} EReal y (Top.top.{0} EReal EReal.instTopEReal)) -> (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (HAdd.hAdd.{0, 0, 0} EReal EReal EReal (instHAdd.{0} EReal (AddZeroClass.toAdd.{0} EReal (AddMonoid.toAddZeroClass.{0} EReal instERealAddMonoid))) x y) (Top.top.{0} EReal EReal.instTopEReal))
 Case conversion may be inaccurate. Consider using '#align ereal.add_lt_top EReal.add_lt_topₓ'. -/
-theorem add_lt_top {x y : EReal} (hx : x ≠ ⊤) (hy : y ≠ ⊤) : x + y < ⊤ :=
-  by
-  rw [← EReal.top_add_top]
-  exact EReal.add_lt_add hx.lt_top hy.lt_top
+theorem add_lt_top {x y : EReal} (hx : x ≠ ⊤) (hy : y ≠ ⊤) : x + y < ⊤ := by
+  rw [← EReal.top_add_top]; exact EReal.add_lt_add hx.lt_top hy.lt_top
 #align ereal.add_lt_top EReal.add_lt_top
 
 /-! ### Negation -/
@@ -1266,10 +1253,7 @@ instance : Neg EReal :=
   ⟨EReal.neg⟩
 
 instance : SubNegZeroMonoid EReal :=
-  { EReal.addMonoid, EReal.hasNeg with
-    neg_zero := by
-      change ((-0 : ℝ) : EReal) = 0
-      simp }
+  { EReal.addMonoid, EReal.hasNeg with neg_zero := by change ((-0 : ℝ) : EReal) = 0; simp }
 
 /- warning: ereal.neg_def clashes with ereal.coe_neg -> EReal.coe_neg
 warning: ereal.neg_def -> EReal.coe_neg is a dubious translation:
@@ -1336,9 +1320,7 @@ instance : InvolutiveNeg EReal where
     match a with
     | ⊥ => rfl
     | ⊤ => rfl
-    | (a : ℝ) => by
-      norm_cast
-      simp [neg_neg a]
+    | (a : ℝ) => by norm_cast; simp [neg_neg a]
 
 /- warning: ereal.to_real_neg -> EReal.toReal_neg is a dubious translation:
 lean 3 declaration is
@@ -1391,8 +1373,7 @@ protected theorem neg_le_of_neg_le {a b : EReal} (h : -a ≤ b) : -b ≤ a :=
   · simpa only [coe_ne_top, neg_bot, top_le_iff] using h
   · exact bot_le
   · simpa only [coe_ne_top, le_bot_iff] using h
-  · norm_cast  at h⊢
-    exact neg_le.1 h
+  · norm_cast  at h⊢; exact neg_le.1 h
   · exact bot_le
   · exact le_top
   · exact le_top
@@ -1564,18 +1545,13 @@ theorem coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (x : ℝ) :
     (x : EReal) = Real.toNNReal x - Real.toNNReal (-x) :=
   by
   rcases le_or_lt 0 x with (h | h)
-  · have : Real.toNNReal x = ⟨x, h⟩ := by
-      ext
-      simp [h]
+  · have : Real.toNNReal x = ⟨x, h⟩ := by ext; simp [h]
     simp only [Real.toNNReal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, ENNReal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
   · have : (x : EReal) = -(-x : ℝ) := by simp
     conv_lhs => rw [this]
-    have : Real.toNNReal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩ :=
-      by
-      ext
-      simp [neg_nonneg.mpr h.le]
+    have : Real.toNNReal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩ := by ext; simp [neg_nonneg.mpr h.le]
     simp only [Real.toNNReal_of_nonpos h.le, this, zero_sub, neg_inj, coe_neg, ENNReal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
@@ -1671,9 +1647,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) x) (Top.top.{0} EReal EReal.instTopEReal))
 Case conversion may be inaccurate. Consider using '#align ereal.top_mul_of_pos EReal.top_mul_of_posₓ'. -/
-theorem top_mul_of_pos {x : EReal} (h : 0 < x) : ⊤ * x = ⊤ :=
-  by
-  rw [EReal.mul_comm]
+theorem top_mul_of_pos {x : EReal} (h : 0 < x) : ⊤ * x = ⊤ := by rw [EReal.mul_comm];
   exact mul_top_of_pos h
 #align ereal.top_mul_of_pos EReal.top_mul_of_pos
 
@@ -1683,9 +1657,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Top.top.{0} EReal EReal.instTopEReal) x) (Bot.bot.{0} EReal instERealBot))
 Case conversion may be inaccurate. Consider using '#align ereal.top_mul_of_neg EReal.top_mul_of_negₓ'. -/
-theorem top_mul_of_neg {x : EReal} (h : x < 0) : ⊤ * x = ⊥ :=
-  by
-  rw [EReal.mul_comm]
+theorem top_mul_of_neg {x : EReal} (h : x < 0) : ⊤ * x = ⊥ := by rw [EReal.mul_comm];
   exact mul_top_of_neg h
 #align ereal.top_mul_of_neg EReal.top_mul_of_neg
 
@@ -1764,9 +1736,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero)) x) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) x) (Bot.bot.{0} EReal instERealBot))
 Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_of_pos EReal.bot_mul_of_posₓ'. -/
-theorem bot_mul_of_pos {x : EReal} (h : 0 < x) : ⊥ * x = ⊥ :=
-  by
-  rw [EReal.mul_comm]
+theorem bot_mul_of_pos {x : EReal} (h : 0 < x) : ⊥ * x = ⊥ := by rw [EReal.mul_comm];
   exact mul_bot_of_pos h
 #align ereal.bot_mul_of_pos EReal.bot_mul_of_pos
 
@@ -1776,9 +1746,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : EReal}, (LT.lt.{0} EReal (Preorder.toLT.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder)) x (OfNat.ofNat.{0} EReal 0 (Zero.toOfNat0.{0} EReal instERealZero))) -> (Eq.{1} EReal (HMul.hMul.{0, 0, 0} EReal EReal EReal (instHMul.{0} EReal EReal.instMulEReal) (Bot.bot.{0} EReal instERealBot) x) (Top.top.{0} EReal EReal.instTopEReal))
 Case conversion may be inaccurate. Consider using '#align ereal.bot_mul_of_neg EReal.bot_mul_of_negₓ'. -/
-theorem bot_mul_of_neg {x : EReal} (h : x < 0) : ⊥ * x = ⊤ :=
-  by
-  rw [EReal.mul_comm]
+theorem bot_mul_of_neg {x : EReal} (h : x < 0) : ⊥ * x = ⊤ := by rw [EReal.mul_comm];
   exact mul_bot_of_neg h
 #align ereal.bot_mul_of_neg EReal.bot_mul_of_neg
 
@@ -1888,9 +1856,7 @@ protected theorem neg_mul (x y : EReal) : -x * y = -(x * y) :=
 instance : HasDistribNeg EReal :=
   { EReal.hasInvolutiveNeg with
     neg_mul := EReal.neg_mul
-    mul_neg := fun x y => by
-      rw [x.mul_comm, x.mul_comm]
-      exact y.neg_mul x }
+    mul_neg := fun x y => by rw [x.mul_comm, x.mul_comm]; exact y.neg_mul x }
 
 /-! ### Absolute value -/
 
@@ -2112,10 +2078,8 @@ theorem sign_eq_and_abs_eq_iff_eq {x y : EReal} :
     x.abs = y.abs ∧ SignType.sign x = SignType.sign y ↔ x = y :=
   by
   constructor
-  · rintro ⟨habs, hsign⟩
-    rw [← x.sign_mul_abs, ← y.sign_mul_abs, habs, hsign]
-  · rintro rfl
-    simp only [eq_self_iff_true, and_self_iff]
+  · rintro ⟨habs, hsign⟩; rw [← x.sign_mul_abs, ← y.sign_mul_abs, habs, hsign]
+  · rintro rfl; simp only [eq_self_iff_true, and_self_iff]
 #align ereal.sign_eq_and_abs_eq_iff_eq EReal.sign_eq_and_abs_eq_iff_eq
 
 /- warning: ereal.le_iff_sign -> EReal.le_iff_sign is a dubious translation:
@@ -2135,11 +2099,9 @@ theorem le_iff_sign {x y : EReal} :
     · rw [← x.sign_mul_abs, ← y.sign_mul_abs] at h
       cases SignType.sign y <;> rw [hs] at *
       · simp
-      · simp at h⊢
-        exact Or.inl h
+      · simp at h⊢; exact Or.inl h
       · simpa using h
-  · rintro (h | h | h | h)
-    · exact (sign.monotone.reflect_lt h).le
+  · rintro (h | h | h | h); · exact (sign.monotone.reflect_lt h).le
     all_goals rw [← x.sign_mul_abs, ← y.sign_mul_abs]; simp [h]
 #align ereal.le_iff_sign EReal.le_iff_sign
 
@@ -2156,9 +2118,7 @@ instance : PosMulMono EReal :=
     ⟨by
       rintro ⟨x, x0⟩ a b h; dsimp
       rcases le_iff_sign.mp h with (h | h | h | h)
-      · rw [le_iff_sign]
-        left
-        simp [sign_pos x0, h]
+      · rw [le_iff_sign]; left; simp [sign_pos x0, h]
       all_goals
         rw [← x.sign_mul_abs, ← a.sign_mul_abs, ← b.sign_mul_abs, sign_pos x0]
         simp only [h]; dsimp

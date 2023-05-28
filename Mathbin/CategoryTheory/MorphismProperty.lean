@@ -202,10 +202,8 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {P : CategoryTheory.MorphismProperty.{u1, u2} C _inst_1}, (CategoryTheory.MorphismProperty.RespectsIso.{u1, u2} C _inst_1 P) -> (forall {f : CategoryTheory.Arrow.{u1, u2} C _inst_1} {g : CategoryTheory.Arrow.{u1, u2} C _inst_1}, (CategoryTheory.Iso.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1) f g) -> (Iff (P (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)) (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)) (CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) f)) (P (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) g)) (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) g)) (CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.id.{u1, u2} C _inst_1) g))))
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.respects_iso.arrow_iso_iff CategoryTheory.MorphismProperty.RespectsIso.arrow_iso_iffₓ'. -/
 theorem RespectsIso.arrow_iso_iff {P : MorphismProperty C} (hP : RespectsIso P) {f g : Arrow C}
-    (e : f ≅ g) : P f.Hom ↔ P g.Hom :=
-  by
-  rw [← arrow.inv_left_hom_right e.hom, hP.cancel_left_is_iso, hP.cancel_right_is_iso]
-  rfl
+    (e : f ≅ g) : P f.Hom ↔ P g.Hom := by
+  rw [← arrow.inv_left_hom_right e.hom, hP.cancel_left_is_iso, hP.cancel_right_is_iso]; rfl
 #align category_theory.morphism_property.respects_iso.arrow_iso_iff CategoryTheory.MorphismProperty.RespectsIso.arrow_iso_iff
 
 #print CategoryTheory.MorphismProperty.RespectsIso.arrow_mk_iso_iff /-
@@ -397,11 +395,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.is_inverted_by.of_comp CategoryTheory.MorphismProperty.IsInvertedBy.of_compₓ'. -/
 theorem of_comp {C₁ C₂ C₃ : Type _} [Category C₁] [Category C₂] [Category C₃]
     (W : MorphismProperty C₁) (F : C₁ ⥤ C₂) (hF : W.IsInvertedBy F) (G : C₂ ⥤ C₃) :
-    W.IsInvertedBy (F ⋙ G) := fun X Y f hf =>
-  by
-  haveI := hF f hf
-  dsimp
-  infer_instance
+    W.IsInvertedBy (F ⋙ G) := fun X Y f hf => by haveI := hF f hf; dsimp; infer_instance
 #align category_theory.morphism_property.is_inverted_by.of_comp CategoryTheory.MorphismProperty.IsInvertedBy.of_comp
 
 /- warning: category_theory.morphism_property.is_inverted_by.op -> CategoryTheory.MorphismProperty.IsInvertedBy.op is a dubious translation:
@@ -411,10 +405,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {W : CategoryTheory.MorphismProperty.{u3, u4} C _inst_1} {L : CategoryTheory.Functor.{u3, u2, u4, u1} C _inst_1 D _inst_2}, (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} C _inst_1 D _inst_2 W L) -> (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2) (CategoryTheory.MorphismProperty.op.{u3, u4} C _inst_1 W) (CategoryTheory.Functor.op.{u3, u2, u4, u1} C _inst_1 D _inst_2 L))
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.is_inverted_by.op CategoryTheory.MorphismProperty.IsInvertedBy.opₓ'. -/
 theorem op {W : MorphismProperty C} {L : C ⥤ D} (h : W.IsInvertedBy L) : W.op.IsInvertedBy L.op :=
-  fun X Y f hf => by
-  haveI := h f.unop hf
-  dsimp
-  infer_instance
+  fun X Y f hf => by haveI := h f.unop hf; dsimp; infer_instance
 #align category_theory.morphism_property.is_inverted_by.op CategoryTheory.MorphismProperty.IsInvertedBy.op
 
 /- warning: category_theory.morphism_property.is_inverted_by.right_op -> CategoryTheory.MorphismProperty.IsInvertedBy.rightOp is a dubious translation:
@@ -424,11 +415,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {W : CategoryTheory.MorphismProperty.{u3, u4} C _inst_1} {L : CategoryTheory.Functor.{u3, u2, u4, u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) D _inst_2}, (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) D _inst_2 (CategoryTheory.MorphismProperty.op.{u3, u4} C _inst_1 W) L) -> (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} C _inst_1 (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2) W (CategoryTheory.Functor.rightOp.{u3, u2, u4, u1} C _inst_1 D _inst_2 L))
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.is_inverted_by.right_op CategoryTheory.MorphismProperty.IsInvertedBy.rightOpₓ'. -/
 theorem rightOp {W : MorphismProperty C} {L : Cᵒᵖ ⥤ D} (h : W.op.IsInvertedBy L) :
-    W.IsInvertedBy L.rightOp := fun X Y f hf =>
-  by
-  haveI := h f.op hf
-  dsimp
-  infer_instance
+    W.IsInvertedBy L.rightOp := fun X Y f hf => by haveI := h f.op hf; dsimp; infer_instance
 #align category_theory.morphism_property.is_inverted_by.right_op CategoryTheory.MorphismProperty.IsInvertedBy.rightOp
 
 /- warning: category_theory.morphism_property.is_inverted_by.left_op -> CategoryTheory.MorphismProperty.IsInvertedBy.leftOp is a dubious translation:
@@ -438,11 +425,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {W : CategoryTheory.MorphismProperty.{u3, u4} C _inst_1} {L : CategoryTheory.Functor.{u3, u2, u4, u1} C _inst_1 (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2)}, (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} C _inst_1 (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2) W L) -> (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) D _inst_2 (CategoryTheory.MorphismProperty.op.{u3, u4} C _inst_1 W) (CategoryTheory.Functor.leftOp.{u3, u2, u4, u1} C _inst_1 D _inst_2 L))
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.is_inverted_by.left_op CategoryTheory.MorphismProperty.IsInvertedBy.leftOpₓ'. -/
 theorem leftOp {W : MorphismProperty C} {L : C ⥤ Dᵒᵖ} (h : W.IsInvertedBy L) :
-    W.op.IsInvertedBy L.leftOp := fun X Y f hf =>
-  by
-  haveI := h f.unop hf
-  dsimp
-  infer_instance
+    W.op.IsInvertedBy L.leftOp := fun X Y f hf => by haveI := h f.unop hf; dsimp; infer_instance
 #align category_theory.morphism_property.is_inverted_by.left_op CategoryTheory.MorphismProperty.IsInvertedBy.leftOp
 
 /- warning: category_theory.morphism_property.is_inverted_by.unop -> CategoryTheory.MorphismProperty.IsInvertedBy.unop is a dubious translation:
@@ -452,11 +435,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {W : CategoryTheory.MorphismProperty.{u3, u4} C _inst_1} {L : CategoryTheory.Functor.{u3, u2, u4, u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2)}, (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u3, u4} C _inst_1) (Opposite.{succ u1} D) (CategoryTheory.Category.opposite.{u2, u1} D _inst_2) (CategoryTheory.MorphismProperty.op.{u3, u4} C _inst_1 W) L) -> (CategoryTheory.MorphismProperty.IsInvertedBy.{u3, u4, u1, u2} C _inst_1 D _inst_2 W (CategoryTheory.Functor.unop.{u3, u2, u4, u1} C _inst_1 D _inst_2 L))
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.is_inverted_by.unop CategoryTheory.MorphismProperty.IsInvertedBy.unopₓ'. -/
 theorem unop {W : MorphismProperty C} {L : Cᵒᵖ ⥤ Dᵒᵖ} (h : W.op.IsInvertedBy L) :
-    W.IsInvertedBy L.unop := fun X Y f hf =>
-  by
-  haveI := h f.op hf
-  dsimp
-  infer_instance
+    W.IsInvertedBy L.unop := fun X Y f hf => by haveI := h f.op hf; dsimp; infer_instance
 #align category_theory.morphism_property.is_inverted_by.unop CategoryTheory.MorphismProperty.IsInvertedBy.unop
 
 end IsInvertedBy
@@ -601,31 +580,19 @@ end
 
 #print CategoryTheory.MorphismProperty.RespectsIso.monomorphisms /-
 theorem RespectsIso.monomorphisms : RespectsIso (monomorphisms C) := by
-  constructor <;>
-    · intro X Y Z e f
-      simp only [monomorphisms.iff]
-      intro
-      apply mono_comp
+  constructor <;> · intro X Y Z e f; simp only [monomorphisms.iff]; intro ; apply mono_comp
 #align category_theory.morphism_property.respects_iso.monomorphisms CategoryTheory.MorphismProperty.RespectsIso.monomorphisms
 -/
 
 #print CategoryTheory.MorphismProperty.RespectsIso.epimorphisms /-
 theorem RespectsIso.epimorphisms : RespectsIso (epimorphisms C) := by
-  constructor <;>
-    · intro X Y Z e f
-      simp only [epimorphisms.iff]
-      intro
-      apply epi_comp
+  constructor <;> · intro X Y Z e f; simp only [epimorphisms.iff]; intro ; apply epi_comp
 #align category_theory.morphism_property.respects_iso.epimorphisms CategoryTheory.MorphismProperty.RespectsIso.epimorphisms
 -/
 
 #print CategoryTheory.MorphismProperty.RespectsIso.isomorphisms /-
 theorem RespectsIso.isomorphisms : RespectsIso (isomorphisms C) := by
-  constructor <;>
-    · intro X Y Z e f
-      simp only [isomorphisms.iff]
-      intro
-      infer_instance
+  constructor <;> · intro X Y Z e f; simp only [isomorphisms.iff]; intro ; infer_instance
 #align category_theory.morphism_property.respects_iso.isomorphisms CategoryTheory.MorphismProperty.RespectsIso.isomorphisms
 -/
 
@@ -689,12 +656,8 @@ theorem IsInvertedBy.iff_of_iso (W : MorphismProperty C) {F₁ F₂ : C ⥤ D} (
   suffices ∀ (X Y : C) (f : X ⟶ Y), is_iso (F₁.map f) ↔ is_iso (F₂.map f)
     by
     constructor
-    exact fun h X Y f hf => by
-      rw [← this]
-      exact h f hf
-    exact fun h X Y f hf => by
-      rw [this]
-      exact h f hf
+    exact fun h X Y f hf => by rw [← this]; exact h f hf
+    exact fun h X Y f hf => by rw [this]; exact h f hf
   intro X Y f
   exact (respects_iso.isomorphisms D).arrow_mk_iso_iff (arrow.iso_mk (e.app X) (e.app Y) (by simp))
 #align category_theory.morphism_property.is_inverted_by.iff_of_iso CategoryTheory.MorphismProperty.IsInvertedBy.iff_of_iso
@@ -877,10 +840,7 @@ but is expected to have type
   forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.ConcreteCategory.{u1, u2, u3} C _inst_1], CategoryTheory.MorphismProperty.StableUnderComposition.{u2, u3} C _inst_1 (CategoryTheory.MorphismProperty.injective.{u2, u3, u1} C _inst_1 _inst_3)
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.injective_stable_under_composition CategoryTheory.MorphismProperty.injective_stableUnderCompositionₓ'. -/
 theorem injective_stableUnderComposition : (MorphismProperty.injective C).StableUnderComposition :=
-  fun X Y Z f g hf hg => by
-  delta morphism_property.injective
-  rw [coe_comp]
-  exact hg.comp hf
+  fun X Y Z f g hf hg => by delta morphism_property.injective; rw [coe_comp]; exact hg.comp hf
 #align category_theory.morphism_property.injective_stable_under_composition CategoryTheory.MorphismProperty.injective_stableUnderComposition
 
 /- warning: category_theory.morphism_property.surjective_stable_under_composition -> CategoryTheory.MorphismProperty.surjective_stableUnderComposition is a dubious translation:
@@ -890,11 +850,8 @@ but is expected to have type
   forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.ConcreteCategory.{u1, u2, u3} C _inst_1], CategoryTheory.MorphismProperty.StableUnderComposition.{u2, u3} C _inst_1 (CategoryTheory.MorphismProperty.surjective.{u2, u3, u1} C _inst_1 _inst_3)
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.surjective_stable_under_composition CategoryTheory.MorphismProperty.surjective_stableUnderCompositionₓ'. -/
 theorem surjective_stableUnderComposition :
-    (MorphismProperty.surjective C).StableUnderComposition := fun X Y Z f g hf hg =>
-  by
-  delta morphism_property.surjective
-  rw [coe_comp]
-  exact hg.comp hf
+    (MorphismProperty.surjective C).StableUnderComposition := fun X Y Z f g hf hg => by
+  delta morphism_property.surjective; rw [coe_comp]; exact hg.comp hf
 #align category_theory.morphism_property.surjective_stable_under_composition CategoryTheory.MorphismProperty.surjective_stableUnderComposition
 
 /- warning: category_theory.morphism_property.bijective_stable_under_composition -> CategoryTheory.MorphismProperty.bijective_stableUnderComposition is a dubious translation:
@@ -904,10 +861,7 @@ but is expected to have type
   forall (C : Type.{u3}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_3 : CategoryTheory.ConcreteCategory.{u1, u2, u3} C _inst_1], CategoryTheory.MorphismProperty.StableUnderComposition.{u2, u3} C _inst_1 (CategoryTheory.MorphismProperty.bijective.{u2, u3, u1} C _inst_1 _inst_3)
 Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.bijective_stable_under_composition CategoryTheory.MorphismProperty.bijective_stableUnderCompositionₓ'. -/
 theorem bijective_stableUnderComposition : (MorphismProperty.bijective C).StableUnderComposition :=
-  fun X Y Z f g hf hg => by
-  delta morphism_property.bijective
-  rw [coe_comp]
-  exact hg.comp hf
+  fun X Y Z f g hf hg => by delta morphism_property.bijective; rw [coe_comp]; exact hg.comp hf
 #align category_theory.morphism_property.bijective_stable_under_composition CategoryTheory.MorphismProperty.bijective_stableUnderComposition
 
 /- warning: category_theory.morphism_property.injective_respects_iso -> CategoryTheory.MorphismProperty.injective_respectsIso is a dubious translation:

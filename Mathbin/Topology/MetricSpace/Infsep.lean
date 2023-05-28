@@ -90,9 +90,7 @@ Case conversion may be inaccurate. Consider using '#align set.einfsep_pos Set.ei
 theorem einfsep_pos :
     0 < s.einfsep ↔
       ∃ (C : _)(hC : 0 < C), ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y :=
-  by
-  rw [pos_iff_ne_zero, Ne.def, einfsep_zero]
-  simp only [not_forall, not_exists, not_lt]
+  by rw [pos_iff_ne_zero, Ne.def, einfsep_zero]; simp only [not_forall, not_exists, not_lt]
 #align set.einfsep_pos Set.einfsep_pos
 
 /- warning: set.einfsep_top -> Set.einfsep_top is a dubious translation:
@@ -149,10 +147,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EDist.{u1} α] {s : Set.{u1} α}, (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (Set.einfsep.{u1} α _inst_1 s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Set.Nontrivial.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.nontrivial_of_einfsep_lt_top Set.nontrivial_of_einfsep_lt_topₓ'. -/
-theorem nontrivial_of_einfsep_lt_top (hs : s.einfsep < ∞) : s.Nontrivial :=
-  by
-  rcases einfsep_lt_top.1 hs with ⟨_, hx, _, hy, hxy, _⟩
-  exact ⟨_, hx, _, hy, hxy⟩
+theorem nontrivial_of_einfsep_lt_top (hs : s.einfsep < ∞) : s.Nontrivial := by
+  rcases einfsep_lt_top.1 hs with ⟨_, hx, _, hy, hxy, _⟩; exact ⟨_, hx, _, hy, hxy⟩
 #align set.nontrivial_of_einfsep_lt_top Set.nontrivial_of_einfsep_lt_top
 
 /- warning: set.nontrivial_of_einfsep_ne_top -> Set.nontrivial_of_einfsep_ne_top is a dubious translation:
@@ -171,9 +167,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EDist.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Eq.{1} ENNReal (Set.einfsep.{u1} α _inst_1 s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.einfsep Set.Subsingleton.einfsepₓ'. -/
-theorem Subsingleton.einfsep (hs : s.Subsingleton) : s.einfsep = ∞ :=
-  by
-  rw [einfsep_top]
+theorem Subsingleton.einfsep (hs : s.Subsingleton) : s.einfsep = ∞ := by rw [einfsep_top];
   exact fun _ hx _ hy hxy => (hxy <| hs hx hy).elim
 #align set.subsingleton.einfsep Set.Subsingleton.einfsep
 
@@ -432,8 +426,7 @@ theorem einfsep_insert : einfsep (insert x s) = (⨅ (y ∈ s) (hxy : x ≠ y), 
   rintro y (rfl | hy) z (rfl | hz) hyz
   · exact False.elim (hyz rfl)
   · exact Or.inl (iInf_le_of_le _ (iInf₂_le hz hyz))
-  · rw [edist_comm]
-    exact Or.inl (iInf_le_of_le _ (iInf₂_le hy hyz.symm))
+  · rw [edist_comm]; exact Or.inl (iInf_le_of_le _ (iInf₂_le hy hyz.symm))
   · exact Or.inr (einfsep_le_edist_of_mem hy hz hyz)
 #align set.einfsep_insert Set.einfsep_insert
 
@@ -499,11 +492,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Nontrivial.{u1} α s) -> (Ne.{1} ENNReal (Set.einfsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
 Case conversion may be inaccurate. Consider using '#align set.nontrivial.einfsep_ne_top Set.Nontrivial.einfsep_ne_topₓ'. -/
-theorem Nontrivial.einfsep_ne_top (hs : s.Nontrivial) : s.einfsep ≠ ∞ :=
-  by
-  contrapose! hs
-  rw [not_nontrivial_iff]
-  exact subsingleton_of_einfsep_eq_top hs
+theorem Nontrivial.einfsep_ne_top (hs : s.Nontrivial) : s.einfsep ≠ ∞ := by contrapose! hs;
+  rw [not_nontrivial_iff]; exact subsingleton_of_einfsep_eq_top hs
 #align set.nontrivial.einfsep_ne_top Set.Nontrivial.einfsep_ne_top
 
 /- warning: set.nontrivial.einfsep_lt_top -> Set.Nontrivial.einfsep_lt_top is a dubious translation:
@@ -512,9 +502,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α}, (Set.Nontrivial.{u1} α s) -> (LT.lt.{0} ENNReal (Preorder.toLT.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (Set.einfsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))
 Case conversion may be inaccurate. Consider using '#align set.nontrivial.einfsep_lt_top Set.Nontrivial.einfsep_lt_topₓ'. -/
-theorem Nontrivial.einfsep_lt_top (hs : s.Nontrivial) : s.einfsep < ∞ :=
-  by
-  rw [lt_top_iff_ne_top]
+theorem Nontrivial.einfsep_lt_top (hs : s.Nontrivial) : s.einfsep < ∞ := by rw [lt_top_iff_ne_top];
   exact hs.einfsep_ne_top
 #align set.nontrivial.einfsep_lt_top Set.Nontrivial.einfsep_lt_top
 
@@ -581,10 +569,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.relatively_discrete_of_finite Set.relatively_discrete_of_finiteₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem relatively_discrete_of_finite [Finite s] :
-    ∃ (C : _)(hC : 0 < C), ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y :=
-  by
-  rw [← einfsep_pos]
-  exact einfsep_pos_of_finite
+    ∃ (C : _)(hC : 0 < C), ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), C ≤ edist x y := by
+  rw [← einfsep_pos]; exact einfsep_pos_of_finite
 #align set.relatively_discrete_of_finite Set.relatively_discrete_of_finite
 
 /- warning: set.finite.einfsep_pos -> Set.Finite.einfsep_pos is a dubious translation:
@@ -668,11 +654,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EDist.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Eq.{1} Real (Set.infsep.{u1} α _inst_1 s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.infsep_zero Set.Subsingleton.infsep_zeroₓ'. -/
-theorem Subsingleton.infsep_zero (hs : s.Subsingleton) : s.infsep = 0 :=
-  by
-  rw [infsep_zero, hs.einfsep]
-  right
-  rfl
+theorem Subsingleton.infsep_zero (hs : s.Subsingleton) : s.infsep = 0 := by
+  rw [infsep_zero, hs.einfsep]; right; rfl
 #align set.subsingleton.infsep_zero Set.Subsingleton.infsep_zero
 
 /- warning: set.nontrivial_of_infsep_pos -> Set.nontrivial_of_infsep_pos is a dubious translation:
@@ -681,11 +664,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EDist.{u1} α] {s : Set.{u1} α}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Set.infsep.{u1} α _inst_1 s)) -> (Set.Nontrivial.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.nontrivial_of_infsep_pos Set.nontrivial_of_infsep_posₓ'. -/
-theorem nontrivial_of_infsep_pos (hs : 0 < s.infsep) : s.Nontrivial :=
-  by
-  contrapose hs
-  rw [not_nontrivial_iff] at hs
-  exact hs.infsep_zero ▸ lt_irrefl _
+theorem nontrivial_of_infsep_pos (hs : 0 < s.infsep) : s.Nontrivial := by contrapose hs;
+  rw [not_nontrivial_iff] at hs; exact hs.infsep_zero ▸ lt_irrefl _
 #align set.nontrivial_of_infsep_pos Set.nontrivial_of_infsep_pos
 
 /- warning: set.infsep_empty -> Set.infsep_empty is a dubious translation:
@@ -729,8 +709,7 @@ variable [PseudoEMetricSpace α] {x y : α} {s : Set α}
 theorem infsep_pair_eq_toReal : ({x, y} : Set α).infsep = (edist x y).toReal :=
   by
   by_cases hxy : x = y
-  · rw [hxy]
-    simp only [infsep_singleton, pair_eq_singleton, edist_self, ENNReal.zero_toReal]
+  · rw [hxy]; simp only [infsep_singleton, pair_eq_singleton, edist_self, ENNReal.zero_toReal]
   · rw [infsep, einfsep_pair hxy]
 #align set.infsep_pair_eq_to_real Set.infsep_pair_eq_toReal
 -/
@@ -762,11 +741,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.nontrivial.infsep_lt_iff Set.Nontrivial.infsep_lt_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.infsep_lt_iff {d} (hs : s.Nontrivial) :
-    s.infsep < d ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s)(hxy : x ≠ y), dist x y < d :=
-  by
-  rw [← not_iff_not]
-  push_neg
-  exact hs.le_infsep_iff
+    s.infsep < d ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s)(hxy : x ≠ y), dist x y < d := by
+  rw [← not_iff_not]; push_neg; exact hs.le_infsep_iff
 #align set.nontrivial.infsep_lt_iff Set.Nontrivial.infsep_lt_iff
 
 /- warning: set.nontrivial.le_infsep -> Set.Nontrivial.le_infsep is a dubious translation:
@@ -819,10 +795,8 @@ theorem infsep_le_of_mem_of_edist_le {d x} (hx : x ∈ s) {y} (hy : y ∈ s) (hx
 #align set.infsep_le_of_mem_of_edist_le Set.infsep_le_of_mem_of_edist_le
 
 #print Set.infsep_pair /-
-theorem infsep_pair : ({x, y} : Set α).infsep = dist x y :=
-  by
-  rw [infsep_pair_eq_to_real, edist_dist]
-  exact ENNReal.toReal_ofReal dist_nonneg
+theorem infsep_pair : ({x, y} : Set α).infsep = dist x y := by
+  rw [infsep_pair_eq_to_real, edist_dist]; exact ENNReal.toReal_ofReal dist_nonneg
 #align set.infsep_pair Set.infsep_pair
 -/
 
@@ -895,8 +869,7 @@ theorem infsep_of_fintype [Decidable s.Nontrivial] [DecidableEq α] [Fintype s] 
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, mem_to_finset, mem_off_diag,
       Prod.forall, uncurry_apply_pair, and_imp]
-  · rw [not_nontrivial_iff] at hs
-    exact hs.infsep_zero
+  · rw [not_nontrivial_iff] at hs; exact hs.infsep_zero
 #align set.infsep_of_fintype Set.infsep_of_fintype
 
 #print Set.Nontrivial.infsep_of_fintype /-
@@ -920,8 +893,7 @@ theorem Finite.infsep [Decidable s.Nontrivial] (hsf : s.Finite) :
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, finite.mem_to_finset,
       mem_off_diag, Prod.forall, uncurry_apply_pair, and_imp]
-  · rw [not_nontrivial_iff] at hs
-    exact hs.infsep_zero
+  · rw [not_nontrivial_iff] at hs; exact hs.infsep_zero
 #align set.finite.infsep Set.Finite.infsep
 
 #print Set.Finite.infsep_of_nontrivial /-
@@ -961,9 +933,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] {s : Finset.{u1} α}, (Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.instEmptyCollectionFinset.{u1} (Prod.{u1, u1} α α)))) -> (Eq.{1} Real (Set.infsep.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) (Finset.toSet.{u1} α s)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
 Case conversion may be inaccurate. Consider using '#align finset.coe_infsep_of_off_diag_empty Finset.coe_infsep_of_offDiag_emptyₓ'. -/
 theorem Finset.coe_infsep_of_offDiag_empty [DecidableEq α] {s : Finset α} (hs : s.offDiag = ∅) :
-    (s : Set α).infsep = 0 :=
-  by
-  rw [← Finset.not_nonempty_iff_eq_empty] at hs
+    (s : Set α).infsep = 0 := by rw [← Finset.not_nonempty_iff_eq_empty] at hs;
   rw [Finset.coe_infsep, dif_neg hs]
 #align finset.coe_infsep_of_off_diag_empty Finset.coe_infsep_of_offDiag_empty
 

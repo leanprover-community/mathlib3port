@@ -96,9 +96,7 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 #print UniformSpace.to_regularSpace /-
 instance (priority := 100) UniformSpace.to_regularSpace : RegularSpace α :=
   RegularSpace.ofBasis
-    (fun a => by
-      rw [nhds_eq_comap_uniformity]
-      exact uniformity_has_basis_closed.comap _)
+    (fun a => by rw [nhds_eq_comap_uniformity]; exact uniformity_has_basis_closed.comap _)
     fun a V hV => hV.2.Preimage <| continuous_const.prod_mk continuous_id
 #align uniform_space.to_regular_space UniformSpace.to_regularSpace
 -/
@@ -253,9 +251,7 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (Eq.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (separationRel.{u2} α _inst_1) (Set.iInter.{u2, u1} (Prod.{u2, u2} α α) ι (fun (i : ι) => Set.iInter.{u2, 0} (Prod.{u2, u2} α α) (p i) (fun (hi : p i) => s i))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.separation_rel Filter.HasBasis.separationRelₓ'. -/
 protected theorem Filter.HasBasis.separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
-    (h : HasBasis (𝓤 α) p s) : 𝓢 α = ⋂ (i) (hi : p i), s i :=
-  by
-  unfold separationRel
+    (h : HasBasis (𝓤 α) p s) : 𝓢 α = ⋂ (i) (hi : p i), s i := by unfold separationRel;
   rw [h.sInter_sets]
 #align filter.has_basis.separation_rel Filter.HasBasis.separationRel
 
@@ -339,9 +335,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_closed_range_of_spaced_out isClosed_range_of_spaced_outₓ'. -/
 theorem isClosed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
     {f : ι → α} (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
-  isClosed_of_spaced_out V₀_in <| by
-    rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h
-    exact hf (ne_of_apply_ne f h)
+  isClosed_of_spaced_out V₀_in <| by rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h; exact hf (ne_of_apply_ne f h)
 #align is_closed_range_of_spaced_out isClosed_range_of_spaced_out
 
 /-!
@@ -555,10 +549,8 @@ theorem lift_mk [SeparatedSpace β] {f : α → β} (h : UniformContinuous f) (a
 theorem uniformContinuous_lift [SeparatedSpace β] (f : α → β) : UniformContinuous (lift f) :=
   by
   by_cases hf : UniformContinuous f
-  · rw [lift, dif_pos hf]
-    exact uniform_continuous_quotient_lift hf
-  · rw [lift, dif_neg hf]
-    exact uniformContinuous_of_const fun a b => rfl
+  · rw [lift, dif_pos hf]; exact uniform_continuous_quotient_lift hf
+  · rw [lift, dif_neg hf]; exact uniformContinuous_of_const fun a b => rfl
 #align uniform_space.separation_quotient.uniform_continuous_lift UniformSpace.SeparationQuotient.uniformContinuous_lift
 -/
 

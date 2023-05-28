@@ -83,10 +83,8 @@ def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
   { (mkAlgHom R L).toLinearMap.comp ιₜ with
     map_lie' := fun x y =>
       by
-      suffices mk_alg_hom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y)
-        by
-        rw [AlgHom.map_mul] at this
-        simp [LieRing.of_associative_ring_bracket, ← this]
+      suffices mk_alg_hom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y) by
+        rw [AlgHom.map_mul] at this; simp [LieRing.of_associative_ring_bracket, ← this]
       exact RingQuot.mkAlgHom_rel _ (rel.lie_compat x y) }
 #align universal_enveloping_algebra.ι UniversalEnvelopingAlgebra.ι
 
@@ -103,14 +101,12 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A)
         simp only [LieRing.of_associative_ring_bracket, map_add, TensorAlgebra.lift_ι_apply,
           LieHom.coe_toLinearMap, LieHom.map_lie, map_mul, sub_add_cancel]⟩
   invFun F := (F : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)
-  left_inv f := by
-    ext
+  left_inv f := by ext;
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_toLinearMap,
       LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lieHom,
       LieHom.coe_mk, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply]
-  right_inv F := by
-    ext
+  right_inv F := by ext;
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_toLinearMap,
       LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_linearMap_comp,
       AlgHom.comp_toLinearMap, Function.comp_apply, AlgHom.toLinearMap_apply,
@@ -136,10 +132,7 @@ theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x := by
 theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι R = f ↔ g = lift R f :=
   by
   refine' Iff.trans _ (lift R).symm_apply_eq
-  constructor <;>
-    · intro h
-      ext
-      simp [← h]
+  constructor <;> · intro h; ext; simp [← h]
 #align universal_enveloping_algebra.lift_unique UniversalEnvelopingAlgebra.lift_unique
 
 /-- See note [partially-applied ext lemmas]. -/

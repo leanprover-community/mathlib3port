@@ -348,10 +348,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.iso_limit_cone_hom_π CategoryTheory.Limits.limit.isoLimitCone_hom_πₓ'. -/
 @[simp, reassoc]
 theorem limit.isoLimitCone_hom_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
-    (limit.isoLimitCone t).Hom ≫ t.Cone.π.app j = limit.π F j :=
-  by
-  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
-  tidy
+    (limit.isoLimitCone t).Hom ≫ t.Cone.π.app j = limit.π F j := by
+  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]; tidy
 #align category_theory.limits.limit.iso_limit_cone_hom_π CategoryTheory.Limits.limit.isoLimitCone_hom_π
 
 /- warning: category_theory.limits.limit.iso_limit_cone_inv_π -> CategoryTheory.Limits.limit.isoLimitCone_inv_π is a dubious translation:
@@ -362,10 +360,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.iso_limit_cone_inv_π CategoryTheory.Limits.limit.isoLimitCone_inv_πₓ'. -/
 @[simp, reassoc]
 theorem limit.isoLimitCone_inv_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
-    (limit.isoLimitCone t).inv ≫ limit.π F j = t.Cone.π.app j :=
-  by
-  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
-  tidy
+    (limit.isoLimitCone t).inv ≫ limit.π F j = t.Cone.π.app j := by
+  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]; tidy
 #align category_theory.limits.limit.iso_limit_cone_inv_π CategoryTheory.Limits.limit.isoLimitCone_inv_π
 
 /- warning: category_theory.limits.limit.hom_ext -> CategoryTheory.Limits.limit.hom_ext is a dubious translation:
@@ -388,11 +384,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.lift_map CategoryTheory.Limits.limit.lift_mapₓ'. -/
 @[simp]
 theorem limit.lift_map {F G : J ⥤ C} [HasLimit F] [HasLimit G] (c : Cone F) (α : F ⟶ G) :
-    limit.lift F c ≫ limMap α = limit.lift G ((Cones.postcompose α).obj c) :=
-  by
-  ext
-  rw [assoc, lim_map_π, limit.lift_π_assoc, limit.lift_π]
-  rfl
+    limit.lift F c ≫ limMap α = limit.lift G ((Cones.postcompose α).obj c) := by ext;
+  rw [assoc, lim_map_π, limit.lift_π_assoc, limit.lift_π]; rfl
 #align category_theory.limits.limit.lift_map CategoryTheory.Limits.limit.lift_map
 
 #print CategoryTheory.Limits.limit.lift_cone /-
@@ -604,10 +597,8 @@ but is expected to have type
   forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} K] {C : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u5, u6} C] (F : CategoryTheory.Functor.{u1, u5, u2, u6} J _inst_1 C _inst_3) [_inst_4 : CategoryTheory.Limits.HasLimit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F] (E : CategoryTheory.Functor.{u3, u1, u4, u2} K _inst_2 J _inst_1) [_inst_5 : CategoryTheory.Limits.HasLimit.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)] (k : K), Eq.{succ u5} (Quiver.Hom.{succ u5, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (CategoryTheory.Limits.limit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4) (Prefunctor.obj.{succ u3, succ u5, u4, u6} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u5, u4, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)) k)) (CategoryTheory.CategoryStruct.comp.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3) (CategoryTheory.Limits.limit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4) (CategoryTheory.Limits.limit.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F) _inst_5) (Prefunctor.obj.{succ u3, succ u5, u4, u6} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u5, u4, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)) k) (CategoryTheory.Limits.limit.pre.{u1, u2, u3, u4, u5, u6} J _inst_1 K _inst_2 C _inst_3 F _inst_4 E _inst_5) (CategoryTheory.Limits.limit.π.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F) _inst_5 k)) (CategoryTheory.Limits.limit.π.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4 (Prefunctor.obj.{succ u3, succ u1, u4, u2} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} K _inst_2 J _inst_1 E) k))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.pre_π CategoryTheory.Limits.limit.pre_πₓ'. -/
 @[simp, reassoc]
-theorem limit.pre_π (k : K) : limit.pre F E ≫ limit.π (E ⋙ F) k = limit.π F (E.obj k) :=
-  by
-  erw [is_limit.fac]
-  rfl
+theorem limit.pre_π (k : K) : limit.pre F E ≫ limit.π (E ⋙ F) k = limit.π F (E.obj k) := by
+  erw [is_limit.fac]; rfl
 #align category_theory.limits.limit.pre_π CategoryTheory.Limits.limit.pre_π
 
 #print CategoryTheory.Limits.limit.lift_pre /-
@@ -669,10 +660,8 @@ but is expected to have type
   forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {C : Type.{u5}} [_inst_3 : CategoryTheory.Category.{u3, u5} C] (F : CategoryTheory.Functor.{u1, u3, u2, u5} J _inst_1 C _inst_3) {D : Type.{u6}} [_inst_4 : CategoryTheory.Category.{u4, u6} D] [_inst_5 : CategoryTheory.Limits.HasLimit.{u1, u2, u3, u5} J _inst_1 C _inst_3 F] (G : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_3 D _inst_4) [_inst_6 : CategoryTheory.Limits.HasLimit.{u1, u2, u4, u6} J _inst_1 D _inst_4 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_1 C _inst_3 D _inst_4 F G)] (j : J), Eq.{succ u4} (Quiver.Hom.{succ u4, u6} D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (Prefunctor.obj.{succ u3, succ u4, u5, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} C (CategoryTheory.Category.toCategoryStruct.{u3, u5} C _inst_3)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (CategoryTheory.Functor.toPrefunctor.{u3, u4, u5, u6} C _inst_3 D _inst_4 G) (CategoryTheory.Limits.limit.{u1, u2, u3, u5} J _inst_1 C _inst_3 F _inst_5)) (Prefunctor.obj.{succ u1, succ u4, u2, u6} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u6} J _inst_1 D _inst_4 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_1 C _inst_3 D _inst_4 F G)) j)) (CategoryTheory.CategoryStruct.comp.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4) (Prefunctor.obj.{succ u3, succ u4, u5, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} C (CategoryTheory.Category.toCategoryStruct.{u3, u5} C _inst_3)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (CategoryTheory.Functor.toPrefunctor.{u3, u4, u5, u6} C _inst_3 D _inst_4 G) (CategoryTheory.Limits.limit.{u1, u2, u3, u5} J _inst_1 C _inst_3 F _inst_5)) (CategoryTheory.Limits.limit.{u1, u2, u4, u6} J _inst_1 D _inst_4 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_1 C _inst_3 D _inst_4 F G) _inst_6) (Prefunctor.obj.{succ u1, succ u4, u2, u6} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u6} J _inst_1 D _inst_4 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_1 C _inst_3 D _inst_4 F G)) j) (CategoryTheory.Limits.limit.post.{u1, u2, u3, u4, u5, u6} J _inst_1 C _inst_3 F D _inst_4 _inst_5 G _inst_6) (CategoryTheory.Limits.limit.π.{u1, u2, u4, u6} J _inst_1 D _inst_4 (CategoryTheory.Functor.comp.{u1, u3, u4, u2, u5, u6} J _inst_1 C _inst_3 D _inst_4 F G) _inst_6 j)) (Prefunctor.map.{succ u3, succ u4, u5, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} C (CategoryTheory.Category.toCategoryStruct.{u3, u5} C _inst_3)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u6} D (CategoryTheory.Category.toCategoryStruct.{u4, u6} D _inst_4)) (CategoryTheory.Functor.toPrefunctor.{u3, u4, u5, u6} C _inst_3 D _inst_4 G) (CategoryTheory.Limits.limit.{u1, u2, u3, u5} J _inst_1 C _inst_3 F _inst_5) (Prefunctor.obj.{succ u1, succ u3, u2, u5} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} C (CategoryTheory.Category.toCategoryStruct.{u3, u5} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u2, u5} J _inst_1 C _inst_3 F) j) (CategoryTheory.Limits.limit.π.{u1, u2, u3, u5} J _inst_1 C _inst_3 F _inst_5 j))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.post_π CategoryTheory.Limits.limit.post_πₓ'. -/
 @[simp, reassoc]
-theorem limit.post_π (j : J) : limit.post F G ≫ limit.π (F ⋙ G) j = G.map (limit.π F j) :=
-  by
-  erw [is_limit.fac]
-  rfl
+theorem limit.post_π (j : J) : limit.post F G ≫ limit.π (F ⋙ G) j = G.map (limit.π F j) := by
+  erw [is_limit.fac]; rfl
 #align category_theory.limits.limit.post_π CategoryTheory.Limits.limit.post_π
 
 /- warning: category_theory.limits.limit.lift_post -> CategoryTheory.Limits.limit.lift_post is a dubious translation:
@@ -683,11 +672,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.lift_post CategoryTheory.Limits.limit.lift_postₓ'. -/
 @[simp]
 theorem limit.lift_post (c : Cone F) :
-    G.map (limit.lift F c) ≫ limit.post F G = limit.lift (F ⋙ G) (G.mapCone c) :=
-  by
-  ext
-  rw [assoc, limit.post_π, ← G.map_comp, limit.lift_π, limit.lift_π]
-  rfl
+    G.map (limit.lift F c) ≫ limit.post F G = limit.lift (F ⋙ G) (G.mapCone c) := by ext;
+  rw [assoc, limit.post_π, ← G.map_comp, limit.lift_π, limit.lift_π]; rfl
 #align category_theory.limits.limit.lift_post CategoryTheory.Limits.limit.lift_post
 
 /- warning: category_theory.limits.limit.post_post -> CategoryTheory.Limits.limit.post_post is a dubious translation:
@@ -767,9 +753,7 @@ section
 def lim : (J ⥤ C) ⥤ C where
   obj F := limit F
   map F G α := limMap α
-  map_id' F := by
-    ext
-    erw [lim_map_π, category.id_comp, category.comp_id]
+  map_id' F := by ext; erw [lim_map_π, category.id_comp, category.comp_id]
   map_comp' F G H α β := by
     ext <;> erw [assoc, is_limit.fac, is_limit.fac, ← assoc, is_limit.fac, assoc] <;> rfl
 #align category_theory.limits.lim CategoryTheory.Limits.lim
@@ -795,10 +779,7 @@ theorem lim_map : lim.map α = limMap α :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.limit.map_pre CategoryTheory.Limits.limit.map_preₓ'. -/
 theorem limit.map_pre [HasLimitsOfShape K C] (E : K ⥤ J) :
-    lim.map α ≫ limit.pre G E = limit.pre F E ≫ lim.map (whiskerLeft E α) :=
-  by
-  ext
-  simp
+    lim.map α ≫ limit.pre G E = limit.pre F E ≫ lim.map (whiskerLeft E α) := by ext; simp
 #align category_theory.limits.limit.map_pre CategoryTheory.Limits.limit.map_pre
 
 /- warning: category_theory.limits.limit.map_pre' -> CategoryTheory.Limits.limit.map_pre' is a dubious translation:
@@ -906,12 +887,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 /-- We can transport limits of shape `J` along an equivalence `J ≌ J'`.
 -/
 theorem hasLimitsOfShape_of_equivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
-    [HasLimitsOfShape J C] : HasLimitsOfShape J' C :=
-  by
-  constructor
-  intro F
-  apply has_limit_of_equivalence_comp e
-  infer_instance
+    [HasLimitsOfShape J C] : HasLimitsOfShape J' C := by constructor; intro F;
+  apply has_limit_of_equivalence_comp e; infer_instance
 #align category_theory.limits.has_limits_of_shape_of_equivalence CategoryTheory.Limits.hasLimitsOfShape_of_equivalence
 
 variable (C)
@@ -1222,10 +1199,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit.iso_colimit_cocone_ι_hom CategoryTheory.Limits.colimit.isoColimitCocone_ι_homₓ'. -/
 @[simp, reassoc]
 theorem colimit.isoColimitCocone_ι_hom {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
-    colimit.ι F j ≫ (colimit.isoColimitCocone t).Hom = t.Cocone.ι.app j :=
-  by
-  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
-  tidy
+    colimit.ι F j ≫ (colimit.isoColimitCocone t).Hom = t.Cocone.ι.app j := by
+  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]; tidy
 #align category_theory.limits.colimit.iso_colimit_cocone_ι_hom CategoryTheory.Limits.colimit.isoColimitCocone_ι_hom
 
 /- warning: category_theory.limits.colimit.iso_colimit_cocone_ι_inv -> CategoryTheory.Limits.colimit.isoColimitCocone_ι_inv is a dubious translation:
@@ -1236,10 +1211,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit.iso_colimit_cocone_ι_inv CategoryTheory.Limits.colimit.isoColimitCocone_ι_invₓ'. -/
 @[simp, reassoc]
 theorem colimit.isoColimitCocone_ι_inv {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
-    t.Cocone.ι.app j ≫ (colimit.isoColimitCocone t).inv = colimit.ι F j :=
-  by
-  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
-  tidy
+    t.Cocone.ι.app j ≫ (colimit.isoColimitCocone t).inv = colimit.ι F j := by
+  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]; tidy
 #align category_theory.limits.colimit.iso_colimit_cocone_ι_inv CategoryTheory.Limits.colimit.isoColimitCocone_ι_inv
 
 /- warning: category_theory.limits.colimit.hom_ext -> CategoryTheory.Limits.colimit.hom_ext is a dubious translation:
@@ -1465,10 +1438,8 @@ but is expected to have type
   forall {J : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} J] {K : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u3, u4} K] {C : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u5, u6} C] (F : CategoryTheory.Functor.{u1, u5, u2, u6} J _inst_1 C _inst_3) [_inst_4 : CategoryTheory.Limits.HasColimit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F] (E : CategoryTheory.Functor.{u3, u1, u4, u2} K _inst_2 J _inst_1) [_inst_5 : CategoryTheory.Limits.HasColimit.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)] (k : K), Eq.{succ u5} (Quiver.Hom.{succ u5, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (Prefunctor.obj.{succ u3, succ u5, u4, u6} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u5, u4, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)) k) (CategoryTheory.Limits.colimit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4)) (CategoryTheory.CategoryStruct.comp.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3) (Prefunctor.obj.{succ u3, succ u5, u4, u6} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) C (CategoryTheory.CategoryStruct.toQuiver.{u5, u6} C (CategoryTheory.Category.toCategoryStruct.{u5, u6} C _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u3, u5, u4, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F)) k) (CategoryTheory.Limits.colimit.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F) _inst_5) (CategoryTheory.Limits.colimit.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4) (CategoryTheory.Limits.colimit.ι.{u3, u4, u5, u6} K _inst_2 C _inst_3 (CategoryTheory.Functor.comp.{u3, u1, u5, u4, u2, u6} K _inst_2 J _inst_1 C _inst_3 E F) _inst_5 k) (CategoryTheory.Limits.colimit.pre.{u1, u2, u3, u4, u5, u6} J _inst_1 K _inst_2 C _inst_3 F _inst_4 E _inst_5)) (CategoryTheory.Limits.colimit.ι.{u1, u2, u5, u6} J _inst_1 C _inst_3 F _inst_4 (Prefunctor.obj.{succ u3, succ u1, u4, u2} K (CategoryTheory.CategoryStruct.toQuiver.{u3, u4} K (CategoryTheory.Category.toCategoryStruct.{u3, u4} K _inst_2)) J (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} J (CategoryTheory.Category.toCategoryStruct.{u1, u2} J _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u4, u2} K _inst_2 J _inst_1 E) k))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit.ι_pre CategoryTheory.Limits.colimit.ι_preₓ'. -/
 @[simp, reassoc]
-theorem colimit.ι_pre (k : K) : colimit.ι (E ⋙ F) k ≫ colimit.pre F E = colimit.ι F (E.obj k) :=
-  by
-  erw [is_colimit.fac]
-  rfl
+theorem colimit.ι_pre (k : K) : colimit.ι (E ⋙ F) k ≫ colimit.pre F E = colimit.ι F (E.obj k) := by
+  erw [is_colimit.fac]; rfl
 #align category_theory.limits.colimit.ι_pre CategoryTheory.Limits.colimit.ι_pre
 
 #print CategoryTheory.Limits.colimit.pre_desc /-
@@ -1538,9 +1509,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit.ι_post CategoryTheory.Limits.colimit.ι_postₓ'. -/
 @[simp, reassoc]
 theorem colimit.ι_post (j : J) : colimit.ι (F ⋙ G) j ≫ colimit.post F G = G.map (colimit.ι F j) :=
-  by
-  erw [is_colimit.fac]
-  rfl
+  by erw [is_colimit.fac]; rfl
 #align category_theory.limits.colimit.ι_post CategoryTheory.Limits.colimit.ι_post
 
 /- warning: category_theory.limits.colimit.post_desc -> CategoryTheory.Limits.colimit.post_desc is a dubious translation:
@@ -1551,11 +1520,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.colimit.post_desc CategoryTheory.Limits.colimit.post_descₓ'. -/
 @[simp]
 theorem colimit.post_desc (c : Cocone F) :
-    colimit.post F G ≫ G.map (colimit.desc F c) = colimit.desc (F ⋙ G) (G.mapCocone c) :=
-  by
-  ext
-  rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_desc, colimit.ι_desc]
-  rfl
+    colimit.post F G ≫ G.map (colimit.desc F c) = colimit.desc (F ⋙ G) (G.mapCocone c) := by ext;
+  rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_desc, colimit.ι_desc]; rfl
 #align category_theory.limits.colimit.post_desc CategoryTheory.Limits.colimit.post_desc
 
 /- warning: category_theory.limits.colimit.post_post -> CategoryTheory.Limits.colimit.post_post is a dubious translation:
@@ -1639,13 +1605,9 @@ attribute [local simp] colim_map
 def colim : (J ⥤ C) ⥤ C where
   obj F := colimit F
   map F G α := colimMap α
-  map_id' F := by
-    ext
-    erw [ι_colim_map, id_comp, comp_id]
-  map_comp' F G H α β := by
-    ext
-    erw [← assoc, is_colimit.fac, is_colimit.fac, assoc, is_colimit.fac, ← assoc]
-    rfl
+  map_id' F := by ext; erw [ι_colim_map, id_comp, comp_id]
+  map_comp' F G H α β := by ext;
+    erw [← assoc, is_colimit.fac, is_colimit.fac, assoc, is_colimit.fac, ← assoc]; rfl
 #align category_theory.limits.colim CategoryTheory.Limits.colim
 -/
 
@@ -1793,12 +1755,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 /-- We can transport colimits of shape `J` along an equivalence `J ≌ J'`.
 -/
 theorem hasColimitsOfShape_of_equivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
-    [HasColimitsOfShape J C] : HasColimitsOfShape J' C :=
-  by
-  constructor
-  intro F
-  apply has_colimit_of_equivalence_comp e
-  infer_instance
+    [HasColimitsOfShape J C] : HasColimitsOfShape J' C := by constructor; intro F;
+  apply has_colimit_of_equivalence_comp e; infer_instance
 #align category_theory.limits.has_colimits_of_shape_of_equivalence CategoryTheory.Limits.hasColimitsOfShape_of_equivalence
 
 variable (C)
@@ -1834,10 +1792,7 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op
   uniq s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
-    · dsimp
-      intro j
-      rw [← w]
-      rfl
+    · dsimp; intro j; rw [← w]; rfl
 #align category_theory.limits.is_limit.op CategoryTheory.Limits.IsLimit.op
 -/
 
@@ -1851,10 +1806,7 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op
   uniq s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
-    · dsimp
-      intro j
-      rw [← w]
-      rfl
+    · dsimp; intro j; rw [← w]; rfl
 #align category_theory.limits.is_colimit.op CategoryTheory.Limits.IsColimit.op
 -/
 
@@ -1868,10 +1820,7 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop
   uniq s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
-    · dsimp
-      intro j
-      rw [← w]
-      rfl
+    · dsimp; intro j; rw [← w]; rfl
 #align category_theory.limits.is_limit.unop CategoryTheory.Limits.IsLimit.unop
 -/
 
@@ -1885,10 +1834,7 @@ def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop
   uniq s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
-    · dsimp
-      intro j
-      rw [← w]
-      rfl
+    · dsimp; intro j; rw [← w]; rfl
 #align category_theory.limits.is_colimit.unop CategoryTheory.Limits.IsColimit.unop
 -/
 

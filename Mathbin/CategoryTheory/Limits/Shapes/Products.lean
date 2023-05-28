@@ -232,10 +232,7 @@ abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶
 #print CategoryTheory.Limits.Pi.map_mono /-
 instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Mono (p i)] : Mono <| Pi.map p :=
-  @Limits.limMap_mono _ _ _ _ _
-    (by
-      dsimp
-      infer_instance)
+  @Limits.limMap_mono _ _ _ _ _ (by dsimp; infer_instance)
 #align category_theory.limits.pi.map_mono CategoryTheory.Limits.Pi.map_mono
 -/
 
@@ -260,10 +257,7 @@ abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, 
 #print CategoryTheory.Limits.Sigma.map_epi /-
 instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Epi (p i)] : Epi <| Sigma.map p :=
-  @Limits.colimMap_epi _ _ _ _ _
-    (by
-      dsimp
-      infer_instance)
+  @Limits.colimMap_epi _ _ _ _ _ (by dsimp; infer_instance)
 #align category_theory.limits.sigma.map_epi CategoryTheory.Limits.Sigma.map_epi
 -/
 
@@ -316,11 +310,10 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
 theorem map_lift_piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C)
-    (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) :=
-  by
-  ext
+    (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
+  ext;
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp [← G.map_comp]
 #align category_theory.limits.map_lift_pi_comparison CategoryTheory.Limits.map_lift_piComparison
 
@@ -359,11 +352,9 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 @[simp, reassoc]
 theorem sigmaComparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, f j ⟶ P) :
-    sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) :=
-  by
-  ext
+    sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by ext;
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp [← G.map_comp]
 #align category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigmaComparison_map_desc
 
@@ -428,13 +419,7 @@ def limitConeOfUnique : LimitCone (Discrete.functor f)
     where
   Cone :=
     { pt := f default
-      π :=
-        {
-          app := fun j =>
-            eqToHom
-              (by
-                dsimp
-                congr ) } }
+      π := { app := fun j => eqToHom (by dsimp; congr ) } }
   IsLimit :=
     { lift := fun s => s.π.app default
       fac := fun s j =>
@@ -477,9 +462,8 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
             eqToHom
               (by
                 trace
-                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
-                dsimp
-                congr ) } }
+                  "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
+                dsimp; congr ) } }
   IsColimit :=
     { desc := fun s => s.ι.app default
       fac := fun s j =>

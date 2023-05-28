@@ -195,9 +195,7 @@ theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅) :
 
 @[simp]
 theorem mk_coe (f : A →⋆ₙₐ[R] B) (h₁ h₂ h₃ h₄ h₅) : (⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) = f :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align non_unital_star_alg_hom.mk_coe NonUnitalStarAlgHom.mk_coeₓ
 
 section
@@ -491,10 +489,7 @@ theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅ h₆) :
 
 @[simp]
 theorem mk_coe (f : A →⋆ₐ[R] B) (h₁ h₂ h₃ h₄ h₅ h₆) :
-    (⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) = f :=
-  by
-  ext
-  rfl
+    (⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) = f := by ext; rfl
 #align star_alg_hom.mk_coe StarAlgHom.mk_coeₓ
 
 section
@@ -968,10 +963,7 @@ instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' f g h₁ h₂ := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h₁ h₂ := by cases f; cases g; congr
   map_mul := map_mul'
   map_add := map_add'
   map_star := map_star'
@@ -1068,10 +1060,7 @@ but is expected to have type
   forall {R : Type.{u3}} {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : Add.{u2} A] [_inst_2 : Add.{u1} B] [_inst_3 : Mul.{u2} A] [_inst_4 : Mul.{u1} B] [_inst_5 : SMul.{u3, u2} R A] [_inst_6 : SMul.{u3, u1} R B] [_inst_7 : Star.{u2} A] [_inst_8 : Star.{u1} B] (e : StarAlgEquiv.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8), Eq.{max (succ u2) (succ u1)} (StarAlgEquiv.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8) (StarAlgEquiv.symm.{u3, u1, u2} R B A _inst_2 _inst_1 _inst_4 _inst_3 _inst_6 _inst_5 _inst_8 _inst_7 (StarAlgEquiv.symm.{u3, u2, u1} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 _inst_8 e)) e
 Case conversion may be inaccurate. Consider using '#align star_alg_equiv.symm_symm StarAlgEquiv.symm_symmₓ'. -/
 @[simp]
-theorem symm_symm (e : A ≃⋆ₐ[R] B) : e.symm.symm = e :=
-  by
-  ext
-  rfl
+theorem symm_symm (e : A ≃⋆ₐ[R] B) : e.symm.symm = e := by ext; rfl
 #align star_alg_equiv.symm_symm StarAlgEquiv.symm_symm
 
 /- warning: star_alg_equiv.symm_bijective -> StarAlgEquiv.symm_bijective is a dubious translation:

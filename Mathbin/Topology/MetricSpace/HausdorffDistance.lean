@@ -177,10 +177,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {x : α} {y : α} {s : Set.{u1} α}, LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EMetric.infEdist.{u1} α _inst_1 x s) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_1) x y) (EMetric.infEdist.{u1} α _inst_1 y s))
 Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_le_edist_add_inf_edist EMetric.infEdist_le_edist_add_infEdistₓ'. -/
-theorem infEdist_le_edist_add_infEdist : infEdist x s ≤ edist x y + infEdist y s :=
-  by
-  rw [add_comm]
-  exact inf_edist_le_inf_edist_add_edist
+theorem infEdist_le_edist_add_infEdist : infEdist x s ≤ edist x y + infEdist y s := by
+  rw [add_comm]; exact inf_edist_le_inf_edist_add_edist
 #align emetric.inf_edist_le_edist_add_inf_edist EMetric.infEdist_le_edist_add_infEdist
 
 /- warning: emetric.edist_le_inf_edist_add_ediam -> EMetric.edist_le_infEdist_add_ediam is a dubious translation:
@@ -242,9 +240,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.mem_closure_iff_inf_edist_zero EMetric.mem_closure_iff_infEdist_zeroₓ'. -/
 /-- A point belongs to the closure of `s` iff its infimum edistance to this set vanishes -/
 theorem mem_closure_iff_infEdist_zero : x ∈ closure s ↔ infEdist x s = 0 :=
-  ⟨fun h => by
-    rw [← inf_edist_closure]
-    exact inf_edist_zero_of_mem h, fun h =>
+  ⟨fun h => by rw [← inf_edist_closure]; exact inf_edist_zero_of_mem h, fun h =>
     EMetric.mem_closure_iff.2 fun ε εpos => infEdist_lt_iff.mp <| by rwa [h]⟩
 #align emetric.mem_closure_iff_inf_edist_zero EMetric.mem_closure_iff_infEdist_zero
 
@@ -393,9 +389,7 @@ Case conversion may be inaccurate. Consider using '#align emetric.exists_pos_for
 theorem exists_pos_forall_lt_edist (hs : IsCompact s) (ht : IsClosed t) (hst : Disjoint s t) :
     ∃ r : ℝ≥0, 0 < r ∧ ∀ x ∈ s, ∀ y ∈ t, (r : ℝ≥0∞) < edist x y :=
   by
-  rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · use 1
-    simp
+  rcases s.eq_empty_or_nonempty with (rfl | hne); · use 1; simp
   obtain ⟨x, hx, h⟩ : ∃ x ∈ s, ∀ y ∈ s, inf_edist x t ≤ inf_edist y t :=
     hs.exists_forall_le hne continuous_inf_edist.continuous_on
   have : 0 < inf_edist x t :=
@@ -955,8 +949,7 @@ theorem dist_le_infDist_add_diam (hs : Bounded s) (hy : y ∈ s) : dist x y ≤ 
   rw [inf_dist, diam, ← ENNReal.toReal_add A B, dist_edist]
   apply (ENNReal.toReal_le_toReal _ _).2
   · exact edist_le_inf_edist_add_ediam hy
-  · rw [edist_dist]
-    exact ENNReal.ofReal_ne_top
+  · rw [edist_dist]; exact ENNReal.ofReal_ne_top
   · exact ENNReal.add_ne_top.2 ⟨A, B⟩
 #align metric.dist_le_inf_dist_add_diam Metric.dist_le_infDist_add_diam
 
@@ -1001,10 +994,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.inf_dist_zero_of_mem_closure Metric.infDist_zero_of_mem_closureₓ'. -/
 /-- If a point belongs to the closure of `s`, then its infimum distance to `s` equals zero.
 The converse is true provided that `s` is nonempty, see `mem_closure_iff_inf_dist_zero`. -/
-theorem infDist_zero_of_mem_closure (hx : x ∈ closure s) : infDist x s = 0 :=
-  by
-  rw [← inf_dist_eq_closure]
-  exact inf_dist_zero_of_mem hx
+theorem infDist_zero_of_mem_closure (hx : x ∈ closure s) : infDist x s = 0 := by
+  rw [← inf_dist_eq_closure]; exact inf_dist_zero_of_mem hx
 #align metric.inf_dist_zero_of_mem_closure Metric.infDist_zero_of_mem_closure
 
 /- warning: metric.mem_closure_iff_inf_dist_zero -> Metric.mem_closure_iff_infDist_zero is a dubious translation:
@@ -1668,9 +1659,7 @@ theorem mem_thickening_iff {E : Set X} {x : X} : x ∈ thickening δ E ↔ ∃ z
 
 #print Metric.thickening_singleton /-
 @[simp]
-theorem thickening_singleton (δ : ℝ) (x : X) : thickening δ ({x} : Set X) = ball x δ :=
-  by
-  ext
+theorem thickening_singleton (δ : ℝ) (x : X) : thickening δ ({x} : Set X) = ball x δ := by ext;
   simp [mem_thickening_iff]
 #align metric.thickening_singleton Metric.thickening_singleton
 -/
@@ -1685,11 +1674,8 @@ theorem ball_subset_thickening {x : X} {E : Set X} (hx : x ∈ E) (δ : ℝ) :
 #print Metric.thickening_eq_biUnion_ball /-
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
-theorem thickening_eq_biUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ :=
-  by
-  ext x
-  rw [mem_Union₂]
-  exact mem_thickening_iff
+theorem thickening_eq_biUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ := by
+  ext x; rw [mem_Union₂]; exact mem_thickening_iff
 #align metric.thickening_eq_bUnion_ball Metric.thickening_eq_biUnion_ball
 -/
 
@@ -1702,9 +1688,7 @@ theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thi
   intro y hy
   rcases mem_thickening_iff.1 hy with ⟨z, zE, hz⟩
   calc
-    dist y x ≤ dist z x + dist y z := by
-      rw [add_comm]
-      exact dist_triangle _ _ _
+    dist y x ≤ dist z x + dist y z := by rw [add_comm]; exact dist_triangle _ _ _
     _ ≤ R + δ := add_le_add (hR zE) hz.le
     
 #align metric.bounded.thickening Metric.Bounded.thickening
@@ -1795,10 +1779,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.instLEReal δ (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E))
 Case conversion may be inaccurate. Consider using '#align metric.cthickening_of_nonpos Metric.cthickening_of_nonposₓ'. -/
-theorem cthickening_of_nonpos {δ : ℝ} (hδ : δ ≤ 0) (E : Set α) : cthickening δ E = closure E :=
-  by
-  ext x
-  simp [mem_closure_iff_inf_edist_zero, cthickening, ENNReal.ofReal_eq_zero.2 hδ]
+theorem cthickening_of_nonpos {δ : ℝ} (hδ : δ ≤ 0) (E : Set α) : cthickening δ E = closure E := by
+  ext x; simp [mem_closure_iff_inf_edist_zero, cthickening, ENNReal.ofReal_eq_zero.2 hδ]
 #align metric.cthickening_of_nonpos Metric.cthickening_of_nonpos
 
 /- warning: metric.cthickening_zero -> Metric.cthickening_zero is a dubious translation:
@@ -1844,9 +1826,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.cthickening_singleton Metric.cthickening_singletonₓ'. -/
 @[simp]
 theorem cthickening_singleton {α : Type _} [PseudoMetricSpace α] (x : α) {δ : ℝ} (hδ : 0 ≤ δ) :
-    cthickening δ ({x} : Set α) = closedBall x δ :=
-  by
-  ext y
+    cthickening δ ({x} : Set α) = closedBall x δ := by ext y;
   simp [cthickening, edist_dist, ENNReal.ofReal_le_ofReal_iff hδ]
 #align metric.cthickening_singleton Metric.cthickening_singleton
 
@@ -1895,11 +1875,8 @@ theorem cthickening_subset_thickening' {δ₁ δ₂ : ℝ} (δ₂_pos : 0 < δ�
 #print Metric.thickening_subset_cthickening /-
 /-- The open thickening `thickening δ E` is contained in the closed thickening `cthickening δ E`
 with the same radius. -/
-theorem thickening_subset_cthickening (δ : ℝ) (E : Set α) : thickening δ E ⊆ cthickening δ E :=
-  by
-  intro x hx
-  rw [thickening, mem_set_of_eq] at hx
-  exact hx.le
+theorem thickening_subset_cthickening (δ : ℝ) (E : Set α) : thickening δ E ⊆ cthickening δ E := by
+  intro x hx; rw [thickening, mem_set_of_eq] at hx; exact hx.le
 #align metric.thickening_subset_cthickening Metric.thickening_subset_cthickening
 -/
 
@@ -1943,10 +1920,8 @@ theorem closure_thickening_subset_cthickening (δ : ℝ) (E : Set α) :
 
 #print Metric.closure_subset_cthickening /-
 /-- The closed thickening of a set contains the closure of the set. -/
-theorem closure_subset_cthickening (δ : ℝ) (E : Set α) : closure E ⊆ cthickening δ E :=
-  by
-  rw [← cthickening_of_nonpos (min_le_right δ 0)]
-  exact cthickening_mono (min_le_left δ 0) E
+theorem closure_subset_cthickening (δ : ℝ) (E : Set α) : closure E ⊆ cthickening δ E := by
+  rw [← cthickening_of_nonpos (min_le_right δ 0)]; exact cthickening_mono (min_le_left δ 0) E
 #align metric.closure_subset_cthickening Metric.closure_subset_cthickening
 -/
 
@@ -1958,8 +1933,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.closure_subset_thickening Metric.closure_subset_thickeningₓ'. -/
 /-- The (open) thickening of a set contains the closure of the set. -/
 theorem closure_subset_thickening {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
-    closure E ⊆ thickening δ E := by
-  rw [← cthickening_zero]
+    closure E ⊆ thickening δ E := by rw [← cthickening_zero];
   exact cthickening_subset_thickening' δ_pos δ_pos E
 #align metric.closure_subset_thickening Metric.closure_subset_thickening
 
@@ -2288,10 +2262,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) (fun (h : LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) => Metric.thickening.{u1} α _inst_1 ε E)))
 Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_iInter_thickening''ₓ'. -/
 theorem cthickening_eq_iInter_thickening'' (δ : ℝ) (E : Set α) :
-    cthickening δ E = ⋂ (ε : ℝ) (h : max 0 δ < ε), thickening ε E :=
-  by
-  rw [← cthickening_max_zero, cthickening_eq_Inter_thickening]
-  exact le_max_left _ _
+    cthickening δ E = ⋂ (ε : ℝ) (h : max 0 δ < ε), thickening ε E := by
+  rw [← cthickening_max_zero, cthickening_eq_Inter_thickening]; exact le_max_left _ _
 #align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_iInter_thickening''
 
 /- warning: metric.closure_eq_Inter_cthickening' -> Metric.closure_eq_iInter_cthickening' is a dubious translation:
@@ -2306,8 +2278,7 @@ theorem closure_eq_iInter_cthickening' (E : Set α) (s : Set ℝ)
     (hs : ∀ ε, 0 < ε → (s ∩ Ioc 0 ε).Nonempty) : closure E = ⋂ δ ∈ s, cthickening δ E :=
   by
   by_cases hs₀ : s ⊆ Ioi 0
-  · rw [← cthickening_zero]
-    apply cthickening_eq_Inter_cthickening' _ hs₀ hs
+  · rw [← cthickening_zero]; apply cthickening_eq_Inter_cthickening' _ hs₀ hs
   obtain ⟨δ, hδs, δ_nonpos⟩ := not_subset.mp hs₀
   rw [Set.mem_Ioi, not_lt] at δ_nonpos
   apply subset.antisymm
@@ -2324,9 +2295,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_cthickening Metric.closure_eq_iInter_cthickeningₓ'. -/
 /-- The closure of a set equals the intersection of its closed thickenings of positive radii. -/
 theorem closure_eq_iInter_cthickening (E : Set α) :
-    closure E = ⋂ (δ : ℝ) (h : 0 < δ), cthickening δ E :=
-  by
-  rw [← cthickening_zero]
+    closure E = ⋂ (δ : ℝ) (h : 0 < δ), cthickening δ E := by rw [← cthickening_zero];
   exact cthickening_eq_Inter_cthickening E
 #align metric.closure_eq_Inter_cthickening Metric.closure_eq_iInter_cthickening
 
@@ -2339,10 +2308,8 @@ Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inte
 /-- The closure of a set equals the intersection of its open thickenings of positive radii
 accumulating at zero. -/
 theorem closure_eq_iInter_thickening' (E : Set α) (s : Set ℝ) (hs₀ : s ⊆ Ioi 0)
-    (hs : ∀ ε, 0 < ε → (s ∩ Ioc 0 ε).Nonempty) : closure E = ⋂ δ ∈ s, thickening δ E :=
-  by
-  rw [← cthickening_zero]
-  apply cthickening_eq_Inter_thickening' le_rfl _ hs₀ hs
+    (hs : ∀ ε, 0 < ε → (s ∩ Ioc 0 ε).Nonempty) : closure E = ⋂ δ ∈ s, thickening δ E := by
+  rw [← cthickening_zero]; apply cthickening_eq_Inter_thickening' le_rfl _ hs₀ hs
 #align metric.closure_eq_Inter_thickening' Metric.closure_eq_iInter_thickening'
 
 /- warning: metric.closure_eq_Inter_thickening -> Metric.closure_eq_iInter_thickening is a dubious translation:
@@ -2353,9 +2320,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_thickening Metric.closure_eq_iInter_thickeningₓ'. -/
 /-- The closure of a set equals the intersection of its (open) thickenings of positive radii. -/
 theorem closure_eq_iInter_thickening (E : Set α) :
-    closure E = ⋂ (δ : ℝ) (h : 0 < δ), thickening δ E :=
-  by
-  rw [← cthickening_zero]
+    closure E = ⋂ (δ : ℝ) (h : 0 < δ), thickening δ E := by rw [← cthickening_zero];
   exact cthickening_eq_Inter_thickening rfl.ge E
 #align metric.closure_eq_Inter_thickening Metric.closure_eq_iInter_thickening
 

@@ -127,10 +127,8 @@ theorem intrinsicClosure_empty : intrinsicClosure 𝕜 (∅ : Set P) = ∅ := by
 
 @[simp]
 theorem intrinsicClosure_nonempty : (intrinsicClosure 𝕜 s).Nonempty ↔ s.Nonempty :=
-  ⟨by
-    simp_rw [nonempty_iff_ne_empty]
-    rintro h rfl
-    exact h intrinsicClosure_empty, Nonempty.mono subset_intrinsicClosure⟩
+  ⟨by simp_rw [nonempty_iff_ne_empty]; rintro h rfl; exact h intrinsicClosure_empty,
+    Nonempty.mono subset_intrinsicClosure⟩
 #align intrinsic_closure_nonempty intrinsicClosure_nonempty
 
 alias intrinsicClosure_nonempty ↔ Set.Nonempty.of_intrinsicClosure Set.Nonempty.intrinsicClosure
@@ -374,9 +372,7 @@ protected theorem Set.Nonempty.intrinsicInterior (hscv : Convex ℝ s) (hsne : s
 
 theorem intrinsicInterior_nonempty (hs : Convex ℝ s) :
     (intrinsicInterior ℝ s).Nonempty ↔ s.Nonempty :=
-  ⟨by
-    simp_rw [nonempty_iff_ne_empty]
-    rintro h rfl
-    exact h intrinsicInterior_empty, Set.Nonempty.intrinsicInterior hs⟩
+  ⟨by simp_rw [nonempty_iff_ne_empty]; rintro h rfl; exact h intrinsicInterior_empty,
+    Set.Nonempty.intrinsicInterior hs⟩
 #align intrinsic_interior_nonempty intrinsicInterior_nonempty
 

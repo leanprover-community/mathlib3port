@@ -169,9 +169,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- And that result follows from manipulating the result from `exists_approx_polynomial_aux`
   -- to turn the `-⌈-stuff⌉₊` into `+ stuff`.
   refine' lt_of_lt_of_le (nat.cast_lt.mpr (with_bot.coe_lt_coe.mp _)) _
-  swap
-  · convert deg_lt
-    rw [degree_eq_nat_degree h']
+  swap; · convert deg_lt; rw [degree_eq_nat_degree h']
   rw [← sub_neg_eq_add, neg_div]
   refine' le_trans _ (sub_le_sub_left (Nat.le_ceil _) (b.nat_degree : ℝ))
   rw [← neg_div]
@@ -254,8 +252,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       ∀ i : Fin n,
         t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε :=
     by
-    by_contra this
-    push_neg  at this
+    by_contra this; push_neg  at this
     obtain ⟨j₀, j₁, j_ne, approx⟩ :=
       exists_approx_polynomial hb hε
         (Fin.cons (A 0) fun j => A (Fin.succ (Classical.choose (this j))))

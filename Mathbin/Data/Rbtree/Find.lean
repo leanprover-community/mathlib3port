@@ -49,41 +49,25 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
     -- red and black cases are identical
     · cases hs
       apply Iff.intro
-      · intro hm
-        cases_type*or.1
+      · intro hm; cases_type*or.1
         · exact Iff.mp (ih hs_hs₁) hm
-        · simp at h
-          cases hm
-          contradiction
+        · simp at h; cases hm; contradiction
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ hm).1
           simp [lift] at hyx
-          have hxy : lt x y := by
-            simp [cmpUsing] at h
-            assumption
+          have hxy : lt x y := by simp [cmpUsing] at h; assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-      · intro hc
-        left
-        exact Iff.mpr (ih hs_hs₁) hc
-    · simp at h
-      simp [h, StrictWeakOrder.Equiv]
+      · intro hc; left; exact Iff.mpr (ih hs_hs₁) hc
+    · simp at h; simp [h, StrictWeakOrder.Equiv]
     · cases hs
       apply Iff.intro
-      · intro hm
-        cases_type*or.1
+      · intro hm; cases_type*or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ hm).2
           simp [lift] at hxy
-          have hyx : lt y x := by
-            simp [cmpUsing] at h
-            exact h.2
+          have hyx : lt y x := by simp [cmpUsing] at h; exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-        · simp at h
-          cases hm
-          contradiction
+        · simp at h; cases hm; contradiction
         · exact Iff.mp (ih hs_hs₂) hm
-      · intro hc
-        right
-        right
-        exact Iff.mpr (ih hs_hs₂) hc
+      · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
 #align rbnode.find_correct Rbnode.find_correct
 
 theorem mem_of_memExact {lt} [IsIrrefl α lt] {x t} : MemExact x t → Mem lt x t :=
@@ -102,26 +86,18 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
     
     · cases hs
       apply Iff.intro
-      · intro hm
-        cases_type*or.1
+      · intro hm; cases_type*or.1
         · exact Iff.mp (ih hs_hs₁) hm
-        · simp at h
-          subst x
-          exact absurd h (irrefl y)
+        · simp at h; subst x; exact absurd h (irrefl y)
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
           simp [lift] at hyx
-          have hxy : lt x y := by
-            simp [cmpUsing] at h
-            assumption
+          have hxy : lt x y := by simp [cmpUsing] at h; assumption
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-      · intro hc
-        left
-        exact Iff.mpr (ih hs_hs₁) hc
+      · intro hc; left; exact Iff.mpr (ih hs_hs₁) hc
     · simp at h
       cases hs
       apply Iff.intro
-      · intro hm
-        cases_type*or.1
+      · intro hm; cases_type*or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
           simp [lift] at hxy
           exact absurd hxy h.1
@@ -129,41 +105,27 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
         · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
           simp [lift] at hyx
           exact absurd hyx h.2
-      · intro hm
-        simp [*]
+      · intro hm; simp [*]
     · cases hs
       apply Iff.intro
-      · intro hm
-        cases_type*or.1
+      · intro hm; cases_type*or.1
         · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
           simp [lift] at hxy
-          have hyx : lt y x := by
-            simp [cmpUsing] at h
-            exact h.2
+          have hyx : lt y x := by simp [cmpUsing] at h; exact h.2
           exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
-        · simp at h
-          subst x
-          exact absurd h (irrefl y)
+        · simp at h; subst x; exact absurd h (irrefl y)
         · exact Iff.mp (ih hs_hs₂) hm
-      · intro hc
-        right
-        right
-        exact Iff.mpr (ih hs_hs₂) hc
+      · intro hc; right; right; exact Iff.mpr (ih hs_hs₂) hc
 #align rbnode.find_correct_exact Rbnode.find_correct_exact
 
 theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
     ∀ {lo hi} (hs : IsSearchable lt t lo hi) (he : find lt t x = some y), x ≈[lt]y :=
   by
   apply find.induction lt t x <;> intros <;> simp_all only [mem, find]
-  iterate 2
-    
-    · cases hs
-      exact ih hs_hs₁ rfl
-    · subst y
-      simp at h
-      exact h
-    · cases hs
-      exact ih hs_hs₂ rfl
+  iterate 2 
+    · cases hs; exact ih hs_hs₁ rfl
+    · subst y; simp at h; exact h
+    · cases hs; exact ih hs_hs₂ rfl
 #align rbnode.eqv_of_find_some Rbnode.eqv_of_find_some
 
 theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} :
@@ -174,16 +136,11 @@ theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt]
   iterate 2
     
     · have : lt b y := lt_of_incomp_of_lt heqv.swap h
-      simp [cmpUsing, find, *]
-      cases hs
-      apply ih hs_hs₁
-    · have := incomp_trans_of lt heqv.swap h
-      simp [cmpUsing, find, *]
+      simp [cmpUsing, find, *]; cases hs; apply ih hs_hs₁
+    · have := incomp_trans_of lt heqv.swap h; simp [cmpUsing, find, *]
     · have := lt_of_lt_of_incomp h heqv
       have := not_lt_of_lt this
-      simp [cmpUsing, find, *]
-      cases hs
-      apply ih hs_hs₂
+      simp [cmpUsing, find, *]; cases hs; apply ih hs_hs₂
 #align rbnode.find_eq_find_of_eqv Rbnode.find_eq_find_of_eqv
 
 end Rbnode

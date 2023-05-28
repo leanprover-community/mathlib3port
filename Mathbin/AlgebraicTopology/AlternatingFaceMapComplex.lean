@@ -95,9 +95,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   let d_l := fun j : Fin (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
   let d_r := fun i : Fin (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
   rw [show (fun i => (∑ j : Fin (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Fin (n + 3), d_l j ≫ d_r i
-      by
-      ext i
-      rw [sum_comp]]
+      by ext i; rw [sum_comp]]
   rw [← Finset.sum_product']
   -- then, we decompose the index set P into a subet S and its complement Sᶜ
   let P := Fin (n + 2) × Fin (n + 3)
@@ -122,9 +120,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul,
       mul_one, Fin.coe_castLT, Fin.val_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
-    have ineq : jj ≤ i := by
-      rw [← Fin.val_fin_le]
-      simpa using hij
+    have ineq : jj ≤ i := by rw [← Fin.val_fin_le]; simpa using hij
     rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSucc_castLT, mul_comm]
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
@@ -301,9 +297,7 @@ def ε [Limits.HasZeroObject C] :
     simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.val_zero, pow_zero,
       one_zsmul, Fin.val_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
     apply add_right_neg
-  naturality' X Y f := by
-    ext
-    exact congr_app f.w _
+  naturality' X Y f := by ext; exact congr_app f.w _
 #align algebraic_topology.alternating_face_map_complex.ε AlgebraicTopology.AlternatingFaceMapComplex.ε
 -/
 
@@ -335,9 +329,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     have def_t :
       ∀ j : Fin (n + 2),
         t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) :=
-      by
-      intro j
-      rfl
+      by intro j; rfl
     rw [Fin.sum_univ_succ t]
     have null : ∀ j : Fin (n + 1), t j.succ = 0 :=
       by

@@ -78,10 +78,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.struct
 theorem projectSubobject_factors [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.Hom :=
   Subobject.ind _ fun P f hf =>
-    ⟨P.Hom ≫ T.map (Subobject.underlyingIso _).inv,
-      by
-      dsimp
-      simp [← T.map_comp]⟩
+    ⟨P.Hom ≫ T.map (Subobject.underlyingIso _).inv, by dsimp; simp [← T.map_comp]⟩
 #align category_theory.structured_arrow.project_subobject_factors CategoryTheory.StructuredArrow.projectSubobject_factors
 
 /- warning: category_theory.structured_arrow.lift_subobject -> CategoryTheory.StructuredArrow.liftSubobject is a dubious translation:
@@ -110,18 +107,8 @@ theorem lift_projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredA
       fapply subobject.mk_eq_mk_of_comm
       · fapply iso_mk
         · exact subobject.underlying_iso _
-        ·
-          exact
-            (cancel_mono (T.map f.right)).1
-              (by
-                dsimp
-                simpa [← T.map_comp] using hq)
-      ·
-        exact
-          ext _ _
-            (by
-              dsimp
-              simp))
+        · exact (cancel_mono (T.map f.right)).1 (by dsimp; simpa [← T.map_comp] using hq)
+      · exact ext _ _ (by dsimp; simp))
 #align category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_projectSubobject
 
 /- warning: category_theory.structured_arrow.subobject_equiv -> CategoryTheory.StructuredArrow.subobjectEquiv is a dubious translation:
@@ -196,11 +183,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.costru
 theorem projectQuotient_factors [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T} :
     ∀ P : Subobject (op A), ∃ q, S.map (projectQuotient P).arrow.unop ≫ q = A.Hom :=
   Subobject.ind _ fun P f hf =>
-    ⟨S.map (Subobject.underlyingIso _).unop.inv ≫ P.unop.Hom,
-      by
-      dsimp
-      rw [← category.assoc, ← S.map_comp, ← unop_comp]
-      simp⟩
+    ⟨S.map (Subobject.underlyingIso _).unop.inv ≫ P.unop.Hom, by dsimp;
+      rw [← category.assoc, ← S.map_comp, ← unop_comp]; simp⟩
 #align category_theory.costructured_arrow.project_quotient_factors CategoryTheory.CostructuredArrow.projectQuotient_factors
 
 /- warning: category_theory.costructured_arrow.lift_quotient -> CategoryTheory.CostructuredArrow.liftQuotient is a dubious translation:
@@ -247,13 +231,7 @@ theorem lift_projectQuotient [HasColimits C] [PreservesColimits S] {A : Costruct
         · exact (subobject.underlying_iso f.unop.left.op).unop
         · refine' (cancel_epi (S.map f.unop.left)).1 _
           simpa [← category.assoc, ← S.map_comp] using hq
-      ·
-        exact
-          Quiver.Hom.unop_inj
-            (ext _ _
-              (by
-                dsimp
-                simp)))
+      · exact Quiver.Hom.unop_inj (ext _ _ (by dsimp; simp)))
 #align category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_projectQuotient
 
 /- warning: category_theory.costructured_arrow.unop_left_comp_of_mk_le_mk_unop -> CategoryTheory.CostructuredArrow.unop_left_comp_ofMkLEMk_unop is a dubious translation:

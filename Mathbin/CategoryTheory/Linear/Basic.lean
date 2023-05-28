@@ -102,10 +102,7 @@ section End
 
 variable {R : Type w}
 
-instance [Semiring R] [Linear R C] (X : C) : Module R (End X) :=
-  by
-  dsimp [End]
-  infer_instance
+instance [Semiring R] [Linear R C] (X : C) : Module R (End X) := by dsimp [End]; infer_instance
 
 instance [CommSemiring R] [Linear R C] (X : C) : Algebra R (End X) :=
   Algebra.ofModule (fun r f g => comp_smul _ _ _ _ _ _) fun r f g => smul_comp _ _ _ _ _ _
@@ -233,14 +230,8 @@ variable {S : Type w} [CommSemiring S] [Linear S C]
 def comp (X Y Z : C) : (X ⟶ Y) →ₗ[S] (Y ⟶ Z) →ₗ[S] X ⟶ Z
     where
   toFun f := leftComp S Z f
-  map_add' := by
-    intros
-    ext
-    simp
-  map_smul' := by
-    intros
-    ext
-    simp
+  map_add' := by intros ; ext; simp
+  map_smul' := by intros ; ext; simp
 #align category_theory.linear.comp CategoryTheory.Linear.comp
 -/
 

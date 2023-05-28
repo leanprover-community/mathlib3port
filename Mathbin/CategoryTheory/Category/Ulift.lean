@@ -89,25 +89,13 @@ def ULift.equivalence : C ≌ ULift.{u₂} C
   counitIso :=
     { Hom :=
         { app := fun X => 𝟙 _
-          naturality' := fun X Y f => by
-            change f ≫ 𝟙 _ = 𝟙 _ ≫ f
-            simp }
+          naturality' := fun X Y f => by change f ≫ 𝟙 _ = 𝟙 _ ≫ f; simp }
       inv :=
         { app := fun X => 𝟙 _
-          naturality' := fun X Y f => by
-            change f ≫ 𝟙 _ = 𝟙 _ ≫ f
-            simp }
-      hom_inv_id' := by
-        ext
-        change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-        simp
-      inv_hom_id' := by
-        ext
-        change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
-        simp }
-  functor_unitIso_comp' X := by
-    change 𝟙 X ≫ 𝟙 X = 𝟙 X
-    simp
+          naturality' := fun X Y f => by change f ≫ 𝟙 _ = 𝟙 _ ≫ f; simp }
+      hom_inv_id' := by ext; change 𝟙 _ ≫ 𝟙 _ = 𝟙 _; simp
+      inv_hom_id' := by ext; change 𝟙 _ ≫ 𝟙 _ = 𝟙 _; simp }
+  functor_unitIso_comp' X := by change 𝟙 X ≫ 𝟙 X = 𝟙 X; simp
 #align category_theory.ulift.equivalence CategoryTheory.ULift.equivalence
 
 section UliftHom
@@ -254,13 +242,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
   Functor := AsSmall.up
   inverse := AsSmall.down
   unitIso := NatIso.ofComponents (fun X => eqToIso rfl) (by tidy)
-  counitIso :=
-    NatIso.ofComponents
-      (fun X =>
-        eqToIso <| by
-          ext
-          rfl)
-      (by tidy)
+  counitIso := NatIso.ofComponents (fun X => eqToIso <| by ext; rfl) (by tidy)
 #align category_theory.as_small.equiv CategoryTheory.AsSmall.equiv
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=

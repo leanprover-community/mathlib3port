@@ -41,9 +41,7 @@ variable {α β γ : Type _} [LinearOrderedRing α] [FloorRing α]
 #print tendsto_floor_atTop /-
 theorem tendsto_floor_atTop : Tendsto (floor : α → ℤ) atTop atTop :=
   floor_mono.tendsto_atTop_atTop fun b =>
-    ⟨(b + 1 : ℤ), by
-      rw [floor_int_cast]
-      exact (lt_add_one _).le⟩
+    ⟨(b + 1 : ℤ), by rw [floor_int_cast]; exact (lt_add_one _).le⟩
 #align tendsto_floor_at_top tendsto_floor_atTop
 -/
 
@@ -62,9 +60,7 @@ theorem tendsto_ceil_atTop : Tendsto (ceil : α → ℤ) atTop atTop :=
 #print tendsto_ceil_atBot /-
 theorem tendsto_ceil_atBot : Tendsto (ceil : α → ℤ) atBot atBot :=
   ceil_mono.tendsto_atBot_atBot fun b =>
-    ⟨(b - 1 : ℤ), by
-      rw [ceil_int_cast]
-      exact (sub_one_lt _).le⟩
+    ⟨(b - 1 : ℤ), by rw [ceil_int_cast]; exact (sub_one_lt _).le⟩
 #align tendsto_ceil_at_bot tendsto_ceil_atBot
 -/
 
@@ -236,9 +232,7 @@ Case conversion may be inaccurate. Consider using '#align tendsto_fract_left' te
 theorem tendsto_fract_left' [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
     Tendsto (fract : α → α) (𝓝[<] n) (𝓝 1) := by
   convert(tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_left' n) <;>
-    [·
-      norm_cast
-      ring;infer_instance;infer_instance]
+    [· norm_cast; ring;infer_instance;infer_instance]
 #align tendsto_fract_left' tendsto_fract_left'
 
 /- warning: tendsto_fract_left -> tendsto_fract_left is a dubious translation:

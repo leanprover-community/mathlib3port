@@ -41,19 +41,16 @@ variable {α 𝕜 E : Type _} {m m0 : MeasurableSpace α} [NormedAddCommGroup E]
 theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restrict s] 0) :
     μ[f|m] =ᵐ[μ.restrict s] 0 := by
   by_cases hm : m ≤ m0
-  swap
-  · simp_rw [condexp_of_not_le hm]
+  swap; · simp_rw [condexp_of_not_le hm]
   by_cases hμm : sigma_finite (μ.trim hm)
-  swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm]
+  swap; · simp_rw [condexp_of_not_sigma_finite hm hμm]
   haveI : sigma_finite (μ.trim hm) := hμm
   have : sigma_finite ((μ.restrict s).trim hm) :=
     by
     rw [← restrict_trim hm _ hs]
     exact restrict.sigma_finite _ s
   by_cases hf_int : integrable f μ
-  swap
-  · rw [condexp_undef hf_int]
+  swap; · rw [condexp_undef hf_int]
   refine' ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm _ _ _ _ _
   · exact fun t ht hμt => integrable_condexp.integrable_on.integrable_on
   · exact fun t ht hμt => (integrable_zero _ _ _).IntegrableOn
@@ -71,8 +68,7 @@ theorem condexp_indicator_aux (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restric
     μ[s.indicator f|m] =ᵐ[μ] s.indicator (μ[f|m]) :=
   by
   by_cases hm : m ≤ m0
-  swap
-  · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
+  swap; · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
   have hsf_zero : ∀ g : α → E, g =ᵐ[μ.restrict (sᶜ)] 0 → s.indicator g =ᵐ[μ] g := fun g =>
     indicator_ae_eq_of_restrict_compl_ae_eq_zero (hm _ hs)
   refine' ((hsf_zero (μ[f|m]) (condexp_ae_eq_restrict_zero hs.compl hf)).trans _).symm
@@ -85,11 +81,9 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
     μ[s.indicator f|m] =ᵐ[μ] s.indicator (μ[f|m]) :=
   by
   by_cases hm : m ≤ m0
-  swap
-  · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
+  swap; · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
   by_cases hμm : sigma_finite (μ.trim hm)
-  swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm, Set.indicator_zero']
+  swap; · simp_rw [condexp_of_not_sigma_finite hm hμm, Set.indicator_zero']
   haveI : sigma_finite (μ.trim hm) := hμm
   -- use `have` to perform what should be the first calc step because of an error I don't
   -- understand
@@ -132,13 +126,9 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
     (hs_m : measurable_set[m] s) (hf_int : Integrable f μ) :
     μ.restrict s[f|m] =ᵐ[μ.restrict s] μ[f|m] :=
   by
-  have : sigma_finite ((μ.restrict s).trim hm) :=
-    by
-    rw [← restrict_trim hm _ hs_m]
-    infer_instance
+  have : sigma_finite ((μ.restrict s).trim hm) := by rw [← restrict_trim hm _ hs_m]; infer_instance
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
-  swap
-  · infer_instance
+  swap; · infer_instance
   refine' eventually_eq.trans _ (condexp_indicator hf_int hs_m)
   refine' ae_eq_condexp_of_forall_set_integral_eq hm (hf_int.indicator (hm _ hs_m)) _ _ _
   · intro t ht hμt
@@ -175,8 +165,7 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
   by_cases hf_int : integrable f μ
-  swap
-  · simp_rw [condexp_undef hf_int]
+  swap; · simp_rw [condexp_undef hf_int]
   refine' ((condexp_indicator hf_int hs_m).symm.trans _).trans (condexp_indicator hf_int hs_m₂)
   refine'
     ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm₂

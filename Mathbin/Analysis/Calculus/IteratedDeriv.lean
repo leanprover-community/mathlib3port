@@ -71,9 +71,7 @@ def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F
 
 variable {n : ℕ} {f : 𝕜 → F} {s : Set 𝕜} {x : 𝕜}
 
-theorem iteratedDerivWithin_univ : iteratedDerivWithin n f univ = iteratedDeriv n f :=
-  by
-  ext x
+theorem iteratedDerivWithin_univ : iteratedDerivWithin n f univ = iteratedDeriv n f := by ext x;
   rw [iteratedDerivWithin, iteratedDeriv, iteratedFderivWithin_univ]
 #align iterated_deriv_within_univ iteratedDerivWithin_univ
 
@@ -91,9 +89,7 @@ Fréchet derivative -/
 theorem iteratedDerivWithin_eq_equiv_comp :
     iteratedDerivWithin n f s =
       (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderivWithin 𝕜 n f s :=
-  by
-  ext x
-  rfl
+  by ext x; rfl
 #align iterated_deriv_within_eq_equiv_comp iteratedDerivWithin_eq_equiv_comp
 
 /-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
@@ -122,18 +118,14 @@ theorem norm_iteratedFderivWithin_eq_norm_iteratedDerivWithin :
 #align norm_iterated_fderiv_within_eq_norm_iterated_deriv_within norm_iteratedFderivWithin_eq_norm_iteratedDerivWithin
 
 @[simp]
-theorem iteratedDerivWithin_zero : iteratedDerivWithin 0 f s = f :=
-  by
-  ext x
+theorem iteratedDerivWithin_zero : iteratedDerivWithin 0 f s = f := by ext x;
   simp [iteratedDerivWithin]
 #align iterated_deriv_within_zero iteratedDerivWithin_zero
 
 @[simp]
 theorem iteratedDerivWithin_one {x : 𝕜} (h : UniqueDiffWithinAt 𝕜 s x) :
-    iteratedDerivWithin 1 f s x = derivWithin f s x :=
-  by
-  simp only [iteratedDerivWithin, iteratedFderivWithin_one_apply h]
-  rfl
+    iteratedDerivWithin 1 f s x = derivWithin f s x := by
+  simp only [iteratedDerivWithin, iteratedFderivWithin_one_apply h]; rfl
 #align iterated_deriv_within_one iteratedDerivWithin_one
 
 /-- If the first `n` derivatives within a set of a function are continuous, and its first `n-1`
@@ -227,10 +219,8 @@ theorem iteratedDerivWithin_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (hx
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 taking the `n`-th derivative of the derivative. -/
 theorem iteratedDerivWithin_succ' {x : 𝕜} (hxs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
-    iteratedDerivWithin (n + 1) f s x = (iteratedDerivWithin n (derivWithin f s) s) x :=
-  by
-  rw [iteratedDerivWithin_eq_iterate hxs hx, iteratedDerivWithin_eq_iterate hxs hx]
-  rfl
+    iteratedDerivWithin (n + 1) f s x = (iteratedDerivWithin n (derivWithin f s) s) x := by
+  rw [iteratedDerivWithin_eq_iterate hxs hx, iteratedDerivWithin_eq_iterate hxs hx]; rfl
 #align iterated_deriv_within_succ' iteratedDerivWithin_succ'
 
 /-! ### Properties of the iterated derivative on the whole space -/
@@ -246,9 +236,7 @@ Fréchet derivative -/
 theorem iteratedDeriv_eq_equiv_comp :
     iteratedDeriv n f =
       (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderiv 𝕜 n f :=
-  by
-  ext x
-  rfl
+  by ext x; rfl
 #align iterated_deriv_eq_equiv_comp iteratedDeriv_eq_equiv_comp
 
 /-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
@@ -263,10 +251,8 @@ theorem iteratedFderiv_eq_equiv_comp :
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iteratedFderiv_apply_eq_iteratedDeriv_mul_prod {m : Fin n → 𝕜} :
-    (iteratedFderiv 𝕜 n f x : (Fin n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x :=
-  by
-  rw [iteratedDeriv_eq_iteratedFderiv, ← ContinuousMultilinearMap.map_smul_univ]
-  simp
+    (iteratedFderiv 𝕜 n f x : (Fin n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x := by
+  rw [iteratedDeriv_eq_iteratedFderiv, ← ContinuousMultilinearMap.map_smul_univ]; simp
 #align iterated_fderiv_apply_eq_iterated_deriv_mul_prod iteratedFderiv_apply_eq_iteratedDeriv_mul_prod
 
 theorem norm_iteratedFderiv_eq_norm_iteratedDeriv :
@@ -275,18 +261,11 @@ theorem norm_iteratedFderiv_eq_norm_iteratedDeriv :
 #align norm_iterated_fderiv_eq_norm_iterated_deriv norm_iteratedFderiv_eq_norm_iteratedDeriv
 
 @[simp]
-theorem iteratedDeriv_zero : iteratedDeriv 0 f = f :=
-  by
-  ext x
-  simp [iteratedDeriv]
+theorem iteratedDeriv_zero : iteratedDeriv 0 f = f := by ext x; simp [iteratedDeriv]
 #align iterated_deriv_zero iteratedDeriv_zero
 
 @[simp]
-theorem iteratedDeriv_one : iteratedDeriv 1 f = deriv f :=
-  by
-  ext x
-  simp [iteratedDeriv]
-  rfl
+theorem iteratedDeriv_one : iteratedDeriv 1 f = deriv f := by ext x; simp [iteratedDeriv]; rfl
 #align iterated_deriv_one iteratedDeriv_one
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
@@ -341,9 +320,7 @@ theorem iteratedDeriv_eq_iterate : iteratedDeriv n f = (deriv^[n]) f :=
 
 /-- The `n+1`-th iterated derivative can be obtained by taking the `n`-th derivative of the
 derivative. -/
-theorem iteratedDeriv_succ' : iteratedDeriv (n + 1) f = iteratedDeriv n (deriv f) :=
-  by
-  rw [iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate]
-  rfl
+theorem iteratedDeriv_succ' : iteratedDeriv (n + 1) f = iteratedDeriv n (deriv f) := by
+  rw [iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate]; rfl
 #align iterated_deriv_succ' iteratedDeriv_succ'
 

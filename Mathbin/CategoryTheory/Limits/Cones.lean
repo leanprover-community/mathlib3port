@@ -157,10 +157,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cone.w CategoryTheory.Limits.Cone.wₓ'. -/
 @[simp, reassoc]
 theorem Cone.w {F : J ⥤ C} (c : Cone F) {j j' : J} (f : j ⟶ j') :
-    c.π.app j ≫ F.map f = c.π.app j' :=
-  by
-  rw [← c.π.naturality f]
-  apply id_comp
+    c.π.app j ≫ F.map f = c.π.app j' := by rw [← c.π.naturality f]; apply id_comp
 #align category_theory.limits.cone.w CategoryTheory.Limits.Cone.w
 
 #print CategoryTheory.Limits.Cocone /-
@@ -188,10 +185,7 @@ instance inhabitedCocone (F : Discrete PUnit ⥤ C) : Inhabited (Cocone F) :=
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cocone.w CategoryTheory.Limits.Cocone.wₓ'. -/
 @[simp, reassoc]
 theorem Cocone.w {F : J ⥤ C} (c : Cocone F) {j j' : J} (f : j ⟶ j') :
-    F.map f ≫ c.ι.app j' = c.ι.app j :=
-  by
-  rw [c.ι.naturality f]
-  apply comp_id
+    F.map f ≫ c.ι.app j' = c.ι.app j := by rw [c.ι.naturality f]; apply comp_id
 #align category_theory.limits.cocone.w CategoryTheory.Limits.Cocone.w
 
 end
@@ -214,14 +208,8 @@ def equiv (F : J ⥤ C) : Cone F ≅ ΣX, F.cones.obj X
   inv c :=
     { pt := c.1.unop
       π := c.2 }
-  hom_inv_id' := by
-    ext1
-    cases x
-    rfl
-  inv_hom_id' := by
-    ext1
-    cases x
-    rfl
+  hom_inv_id' := by ext1; cases x; rfl
+  inv_hom_id' := by ext1; cases x; rfl
 #align category_theory.limits.cone.equiv CategoryTheory.Limits.Cone.equiv
 
 /- warning: category_theory.limits.cone.extensions -> CategoryTheory.Limits.Cone.extensions is a dubious translation:
@@ -272,14 +260,8 @@ def equiv (F : J ⥤ C) : Cocone F ≅ ΣX, F.cocones.obj X
   inv c :=
     { pt := c.1
       ι := c.2 }
-  hom_inv_id' := by
-    ext1
-    cases x
-    rfl
-  inv_hom_id' := by
-    ext1
-    cases x
-    rfl
+  hom_inv_id' := by ext1; cases x; rfl
+  inv_hom_id' := by ext1; cases x; rfl
 #align category_theory.limits.cocone.equiv CategoryTheory.Limits.Cocone.equiv
 
 /- warning: category_theory.limits.cocone.extensions -> CategoryTheory.Limits.Cocone.extensions is a dubious translation:
@@ -528,10 +510,7 @@ instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G)
 
 #print CategoryTheory.Limits.Cones.functorialityFaithful /-
 instance functorialityFaithful [Faithful G] : Faithful (Cones.functoriality F G)
-    where map_injective' X Y f g e := by
-    ext1
-    injection e
-    apply G.map_injective h_1
+    where map_injective' X Y f g e := by ext1; injection e; apply G.map_injective h_1
 #align category_theory.limits.cones.functoriality_faithful CategoryTheory.Limits.Cones.functorialityFaithful
 -/
 
@@ -785,10 +764,7 @@ instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G)
 
 #print CategoryTheory.Limits.Cocones.functoriality_faithful /-
 instance functoriality_faithful [Faithful G] : Faithful (functoriality F G)
-    where map_injective' X Y f g e := by
-    ext1
-    injection e
-    apply G.map_injective h_1
+    where map_injective' X Y f g e := by ext1; injection e; apply G.map_injective h_1
 #align category_theory.limits.cocones.functoriality_faithful CategoryTheory.Limits.Cocones.functoriality_faithful
 -/
 
@@ -820,12 +796,7 @@ def functorialityEquivalence (e : C ≌ D) : Cocone F ≌ Cocone (F ⋙ e.Functo
               simp only [← equivalence.counit_inv_app_functor, iso.inv_hom_id_app, map_comp,
                 equivalence.fun_inv_map, assoc, id_comp, iso.inv_hom_id_app_assoc]
               dsimp; simp))-- See note [dsimp, simp].
-      fun c c' f => by
-        ext
-        dsimp
-        simp
-        dsimp
-        simp }
+      fun c c' f => by ext; dsimp; simp; dsimp; simp }
 #align category_theory.limits.cocones.functoriality_equivalence CategoryTheory.Limits.Cocones.functorialityEquivalence
 
 #print CategoryTheory.Limits.Cocones.reflects_cocone_isomorphism /-
@@ -1181,50 +1152,22 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ
       map := fun X Y f =>
         Quiver.Hom.op
           { Hom := f.Hom.op
-            w' := fun j => by
-              apply Quiver.Hom.unop_inj
-              dsimp
-              apply cocone_morphism.w } }
+            w' := fun j => by apply Quiver.Hom.unop_inj; dsimp; apply cocone_morphism.w } }
   inverse :=
     { obj := fun c => Cone.unop (unop c)
       map := fun X Y f =>
         { Hom := f.unop.Hom.unop
-          w' := fun j => by
-            apply Quiver.Hom.op_inj
-            dsimp
-            apply cone_morphism.w } }
+          w' := fun j => by apply Quiver.Hom.op_inj; dsimp; apply cone_morphism.w } }
   unitIso :=
-    NatIso.ofComponents
-      (fun c =>
-        Cocones.ext (Iso.refl _)
-          (by
-            dsimp
-            simp))
-      fun X Y f => by
-      ext
+    NatIso.ofComponents (fun c => Cocones.ext (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext;
       simp
   counitIso :=
     NatIso.ofComponents
       (fun c => by
         induction c using Opposite.rec'
-        dsimp
-        apply iso.op
-        exact
-          cones.ext (iso.refl _)
-            (by
-              dsimp
-              simp))
-      fun X Y f =>
-      Quiver.Hom.unop_inj
-        (ConeMorphism.ext _ _
-          (by
-            dsimp
-            simp))
-  functor_unitIso_comp' c := by
-    apply Quiver.Hom.unop_inj
-    ext
-    dsimp
-    apply comp_id
+        dsimp; apply iso.op; exact cones.ext (iso.refl _) (by dsimp; simp))
+      fun X Y f => Quiver.Hom.unop_inj (ConeMorphism.ext _ _ (by dsimp; simp))
+  functor_unitIso_comp' c := by apply Quiver.Hom.unop_inj; ext; dsimp; apply comp_id
 #align category_theory.limits.cocone_equivalence_op_cone_op CategoryTheory.Limits.coconeEquivalenceOpConeOp
 
 attribute [simps] cocone_equivalence_op_cone_op
@@ -1279,9 +1222,7 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cocone_of_cone_left_op_ι_app CategoryTheory.Limits.coconeOfConeLeftOp_ι_appₓ'. -/
 @[simp]
 theorem coconeOfConeLeftOp_ι_app (c : Cone F.leftOp) (j) :
-    (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op :=
-  by
-  dsimp only [cocone_of_cone_left_op]
+    (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op := by dsimp only [cocone_of_cone_left_op];
   simp
 #align category_theory.limits.cocone_of_cone_left_op_ι_app CategoryTheory.Limits.coconeOfConeLeftOp_ι_app
 

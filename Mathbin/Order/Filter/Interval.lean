@@ -324,10 +324,8 @@ section PartialOrder
 variable [PartialOrder α]
 
 #print Filter.tendsto_Icc_pure_pure /-
-instance tendsto_Icc_pure_pure {a : α} : TendstoIxxClass Icc (pure a) (pure a : Filter α) :=
-  by
-  rw [← principal_singleton]
-  exact tendsto_Ixx_class_principal.2 ord_connected_singleton.out
+instance tendsto_Icc_pure_pure {a : α} : TendstoIxxClass Icc (pure a) (pure a : Filter α) := by
+  rw [← principal_singleton]; exact tendsto_Ixx_class_principal.2 ord_connected_singleton.out
 #align filter.tendsto_Icc_pure_pure Filter.tendsto_Icc_pure_pure
 -/
 
@@ -376,10 +374,8 @@ instance tendsto_uIcc_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : Tendsto
   exact mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine' ⟨t, htl, fun p hp => _⟩
   cases le_total p.1 p.2
-  · rw [mem_preimage, uIcc_of_le h]
-    exact hts p hp
-  · rw [mem_preimage, uIcc_of_ge h]
-    exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
+  · rw [mem_preimage, uIcc_of_le h]; exact hts p hp
+  · rw [mem_preimage, uIcc_of_ge h]; exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
 #align filter.tendsto_uIcc_of_Icc Filter.tendsto_uIcc_of_Icc
 -/
 

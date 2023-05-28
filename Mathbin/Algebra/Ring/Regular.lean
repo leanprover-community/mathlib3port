@@ -73,9 +73,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular_iff_ne_zero' isRegular_iff_ne_zero'ₓ'. -/
 theorem isRegular_iff_ne_zero' [Nontrivial α] [NonUnitalNonAssocRing α] [NoZeroDivisors α] {k : α} :
     IsRegular k ↔ k ≠ 0 :=
-  ⟨fun h => by
-    rintro rfl
-    exact not_not.mpr h.left not_isLeftRegular_zero, isRegular_of_ne_zero'⟩
+  ⟨fun h => by rintro rfl; exact not_not.mpr h.left not_isLeftRegular_zero, isRegular_of_ne_zero'⟩
 #align is_regular_iff_ne_zero' isRegular_iff_ne_zero'
 
 /- warning: no_zero_divisors.to_cancel_monoid_with_zero -> NoZeroDivisors.toCancelMonoidWithZero is a dubious translation:

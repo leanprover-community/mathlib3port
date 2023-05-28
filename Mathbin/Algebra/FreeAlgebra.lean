@@ -217,43 +217,23 @@ attribute [local instance]
 instance : Semiring (FreeAlgebra R X)
     where
   add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_compat_right) fun _ _ _ => Rel.add_compat_left
-  add_assoc := by
-    rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.add_assoc
+  add_assoc := by rintro ⟨⟩ ⟨⟩ ⟨⟩; exact Quot.sound rel.add_assoc
   zero := Quot.mk _ 0
-  zero_add := by
-    rintro ⟨⟩
-    exact Quot.sound rel.zero_add
+  zero_add := by rintro ⟨⟩; exact Quot.sound rel.zero_add
   add_zero := by
     rintro ⟨⟩
     change Quot.mk _ _ = _
     rw [Quot.sound rel.add_comm, Quot.sound rel.zero_add]
-  add_comm := by
-    rintro ⟨⟩ ⟨⟩
-    exact Quot.sound rel.add_comm
+  add_comm := by rintro ⟨⟩ ⟨⟩; exact Quot.sound rel.add_comm
   mul := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_compat_right) fun _ _ _ => Rel.mul_compat_left
-  mul_assoc := by
-    rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.mul_assoc
+  mul_assoc := by rintro ⟨⟩ ⟨⟩ ⟨⟩; exact Quot.sound rel.mul_assoc
   one := Quot.mk _ 1
-  one_mul := by
-    rintro ⟨⟩
-    exact Quot.sound rel.one_mul
-  mul_one := by
-    rintro ⟨⟩
-    exact Quot.sound rel.mul_one
-  left_distrib := by
-    rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.left_distrib
-  right_distrib := by
-    rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.right_distrib
-  zero_mul := by
-    rintro ⟨⟩
-    exact Quot.sound rel.zero_mul
-  mul_zero := by
-    rintro ⟨⟩
-    exact Quot.sound rel.mul_zero
+  one_mul := by rintro ⟨⟩; exact Quot.sound rel.one_mul
+  mul_one := by rintro ⟨⟩; exact Quot.sound rel.mul_one
+  left_distrib := by rintro ⟨⟩ ⟨⟩ ⟨⟩; exact Quot.sound rel.left_distrib
+  right_distrib := by rintro ⟨⟩ ⟨⟩ ⟨⟩; exact Quot.sound rel.right_distrib
+  zero_mul := by rintro ⟨⟩; exact Quot.sound rel.zero_mul
+  mul_zero := by rintro ⟨⟩; exact Quot.sound rel.mul_zero
 
 instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
@@ -268,9 +248,7 @@ instance : Algebra R (FreeAlgebra R X)
   map_mul' _ _ := Quot.sound Rel.mul_scalar
   map_zero' := rfl
   map_add' _ _ := Quot.sound Rel.add_scalar
-  commutes' _ := by
-    rintro ⟨⟩
-    exact Quot.sound rel.central_scalar
+  commutes' _ := by rintro ⟨⟩; exact Quot.sound rel.central_scalar
   smul_def' _ _ := rfl
 
 instance {S : Type _} [CommRing S] : Ring (FreeAlgebra S X) :=
@@ -335,18 +313,10 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
         change lift_fun R X f _ * lift_fun R X f _ = _
         rw [h_ih]
         rfl
-  map_one' := by
-    change algebraMap _ _ _ = _
-    simp
-  map_mul' := by
-    rintro ⟨⟩ ⟨⟩
-    rfl
-  map_zero' := by
-    change algebraMap _ _ _ = _
-    simp
-  map_add' := by
-    rintro ⟨⟩ ⟨⟩
-    rfl
+  map_one' := by change algebraMap _ _ _ = _; simp
+  map_mul' := by rintro ⟨⟩ ⟨⟩; rfl
+  map_zero' := by change algebraMap _ _ _ = _; simp
+  map_add' := by rintro ⟨⟩ ⟨⟩; rfl
   commutes' := by tauto
 
 /- warning: free_algebra.lift -> FreeAlgebra.lift is a dubious translation:
@@ -361,10 +331,7 @@ of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
   { toFun := liftAux R
     invFun := fun F => F ∘ ι R
-    left_inv := fun f => by
-      ext
-      rw [ι]
-      rfl
+    left_inv := fun f => by ext; rw [ι]; rfl
     right_inv := fun F => by
       ext x
       rcases x with ⟨⟩
@@ -393,19 +360,14 @@ but is expected to have type
   forall (R : Type.{u3}) [_inst_1 : CommSemiring.{u3} R] {X : Type.{u2}} {A : Type.{u1}} [_inst_2 : Semiring.{u1} A] [_inst_3 : Algebra.{u3, u1} R A _inst_1 _inst_2] (f : X -> A), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3) (_private.Mathlib.Algebra.FreeAlgebra.0.FreeAlgebra.liftAux.{u3, u2, u1} R _inst_1 X A _inst_2 _inst_3 f) (FunLike.coe.{max (max (succ u3) (succ u1)) (succ u2), max (succ u1) (succ u2), max (max (succ u3) (succ u1)) (succ u2)} (Equiv.{max (succ u2) (succ u1), max (succ u1) (succ (max u2 u3))} (X -> A) (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3)) (X -> A) (fun (_x : X -> A) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : X -> A) => AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (max (succ u3) (succ u1)) (succ u2)} (X -> A) (AlgHom.{u3, max u2 u3, u1} R (FreeAlgebra.{u3, u2} R _inst_1 X) A _inst_1 (FreeAlgebra.instSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_2 (FreeAlgebra.instAlgebraFreeAlgebraInstSemiringFreeAlgebra.{u3, u2} R _inst_1 X) _inst_3)) (FreeAlgebra.lift.{u3, u2, u1} R _inst_1 X A _inst_2 _inst_3) f)
 Case conversion may be inaccurate. Consider using '#align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eqₓ'. -/
 @[simp]
-theorem liftAux_eq (f : X → A) : liftAux R f = lift R f :=
-  by
-  rw [lift]
-  rfl
+theorem liftAux_eq (f : X → A) : liftAux R f = lift R f := by rw [lift]; rfl
 #align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eq
 
 /- warning: free_algebra.lift_symm_apply -> FreeAlgebra.lift_symm_apply is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align free_algebra.lift_symm_apply FreeAlgebra.lift_symm_applyₓ'. -/
 @[simp]
-theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R :=
-  by
-  rw [lift]
+theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R := by rw [lift];
   rfl
 #align free_algebra.lift_symm_apply FreeAlgebra.lift_symm_apply
 
@@ -415,21 +377,15 @@ variable {R X}
 <too large>
 Case conversion may be inaccurate. Consider using '#align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_liftₓ'. -/
 @[simp]
-theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f :=
-  by
-  ext
-  rw [ι, lift]
-  rfl
+theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f := by ext;
+  rw [ι, lift]; rfl
 #align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_lift
 
 /- warning: free_algebra.lift_ι_apply -> FreeAlgebra.lift_ι_apply is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_applyₓ'. -/
 @[simp]
-theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x :=
-  by
-  rw [ι, lift]
-  rfl
+theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x := by rw [ι, lift]; rfl
 #align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_apply
 
 /- warning: free_algebra.lift_unique -> FreeAlgebra.lift_unique is a dubious translation:
@@ -437,9 +393,7 @@ theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x :=
 Case conversion may be inaccurate. Consider using '#align free_algebra.lift_unique FreeAlgebra.lift_uniqueₓ'. -/
 @[simp]
 theorem lift_unique (f : X → A) (g : FreeAlgebra R X →ₐ[R] A) :
-    (g : FreeAlgebra R X → A) ∘ ι R = f ↔ g = lift R f :=
-  by
-  rw [← (lift R).symm_apply_eq, lift]
+    (g : FreeAlgebra R X → A) ∘ ι R = f ↔ g = lift R f := by rw [← (lift R).symm_apply_eq, lift];
   rfl
 #align free_algebra.lift_unique FreeAlgebra.lift_unique
 
@@ -457,9 +411,7 @@ Case conversion may be inaccurate. Consider using '#align free_algebra.lift_comp
 -- For now, we avoid this by not marking it irreducible.
 @[simp]
 theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebra R X → A) ∘ ι R) = g :=
-  by
-  rw [← lift_symm_apply]
-  exact (lift R).apply_symm_apply g
+  by rw [← lift_symm_apply]; exact (lift R).apply_symm_apply g
 #align free_algebra.lift_comp_ι FreeAlgebra.lift_comp_ι
 
 /- warning: free_algebra.hom_ext -> FreeAlgebra.hom_ext is a dubious translation:
@@ -492,14 +444,9 @@ noncomputable def equivMonoidAlgebraFreeMonoid :
     (by
       apply MonoidAlgebra.algHom_ext; intro x
       apply FreeMonoid.recOn x
-      · simp
-        rfl
-      · intro x y ih
-        simp at ih
-        simp [ih])
-    (by
-      ext
-      simp)
+      · simp; rfl
+      · intro x y ih; simp at ih; simp [ih])
+    (by ext; simp)
 #align free_algebra.equiv_monoid_algebra_free_monoid FreeAlgebra.equivMonoidAlgebraFreeMonoid
 
 instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=

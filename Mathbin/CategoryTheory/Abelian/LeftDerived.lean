@@ -85,11 +85,7 @@ def leftDerivedZeroToSelfAppInv [EnoughProjectives C] [PreservesFiniteColimits F
   refine'
     (as_iso (cokernel.desc _ _ (exact_of_map_projective_resolution F P).w)).inv ≫
       _ ≫ (homologyIsoCokernelLift _ _ _).inv ≫ (left_derived_obj_iso F 0 P).inv
-  exact
-    cokernel.map _ _ (𝟙 _) (kernel.lift _ (𝟙 _) (by simp))
-      (by
-        ext
-        simp)
+  exact cokernel.map _ _ (𝟙 _) (kernel.lift _ (𝟙 _) (by simp)) (by ext; simp)
 #align category_theory.abelian.functor.left_derived_zero_to_self_app_inv CategoryTheory.Abelian.Functor.leftDerivedZeroToSelfAppInv
 
 theorem leftDerivedZeroToSelfApp_comp_inv [EnoughProjectives C] [PreservesFiniteColimits F] {X : C}

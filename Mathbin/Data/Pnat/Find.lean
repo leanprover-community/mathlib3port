@@ -110,8 +110,7 @@ Case conversion may be inaccurate. Consider using '#align pnat.find_eq_iff PNat.
 theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n :=
   by
   constructor
-  · rintro rfl
-    exact ⟨PNat.find_spec h, fun _ => PNat.find_min h⟩
+  · rintro rfl; exact ⟨PNat.find_spec h, fun _ => PNat.find_min h⟩
   · rintro ⟨hm, hlt⟩
     exact le_antisymm (PNat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| PNat.find_spec h)
 #align pnat.find_eq_iff PNat.find_eq_iff

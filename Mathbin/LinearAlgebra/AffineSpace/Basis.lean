@@ -129,9 +129,7 @@ protected theorem nonempty : Nonempty ι :=
 #print AffineBasis.reindex /-
 /-- Composition of an affine basis and an equivalence of index types. -/
 def reindex (e : ι ≃ ι') : AffineBasis ι' k P :=
-  ⟨b ∘ e.symm, b.ind.comp_embedding e.symm.toEmbedding,
-    by
-    rw [e.symm.surjective.range_comp]
+  ⟨b ∘ e.symm, b.ind.comp_embedding e.symm.toEmbedding, by rw [e.symm.surjective.range_comp];
     exact b.3⟩
 #align affine_basis.reindex AffineBasis.reindex
 -/
@@ -179,10 +177,8 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
   Basis.mk ((affineIndependent_iff_linearIndependent_vsub k b i).mp b.ind)
     (by
       suffices
-        Submodule.span k (range fun j : { x // x ≠ i } => b ↑j -ᵥ b i) = vectorSpan k (range b)
-        by
-        rw [this, ← direction_affineSpan, b.tot, AffineSubspace.direction_top]
-        exact le_rfl
+        Submodule.span k (range fun j : { x // x ≠ i } => b ↑j -ᵥ b i) = vectorSpan k (range b) by
+        rw [this, ← direction_affineSpan, b.tot, AffineSubspace.direction_top]; exact le_rfl
       conv_rhs => rw [← image_univ]
       rw [vectorSpan_image_eq_span_vsub_set_right_ne k b (mem_univ i)]
       congr
@@ -206,9 +202,7 @@ Case conversion may be inaccurate. Consider using '#align affine_basis.basis_of_
 theorem basisOf_reindex (i : ι') :
     (b.reindex e).basisOf i =
       (b.basisOf <| e.symm i).reindex (e.subtypeEquiv fun _ => e.eq_symm_apply.Not) :=
-  by
-  ext j
-  simp
+  by ext j; simp
 #align affine_basis.basis_of_reindex AffineBasis.basisOf_reindex
 
 /- warning: affine_basis.coord -> AffineBasis.coord is a dubious translation:
@@ -304,9 +298,7 @@ Case conversion may be inaccurate. Consider using '#align affine_basis.sum_coord
 @[simp]
 theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=
   by
-  have hq : q ∈ affineSpan k (range b) := by
-    rw [b.tot]
-    exact AffineSubspace.mem_top k V q
+  have hq : q ∈ affineSpan k (range b) := by rw [b.tot]; exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
   convert hw
   ext i
@@ -320,9 +312,7 @@ Case conversion may be inaccurate. Consider using '#align affine_basis.affine_co
 theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
     (Finset.univ.affineCombination k b fun i => b.Coord i q) = q :=
   by
-  have hq : q ∈ affineSpan k (range b) := by
-    rw [b.tot]
-    exact AffineSubspace.mem_top k V q
+  have hq : q ∈ affineSpan k (range b) := by rw [b.tot]; exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
   congr
   ext i
@@ -405,12 +395,8 @@ noncomputable def coords : P →ᵃ[k] ι → k
   toFun q i := b.Coord i q
   linear :=
     { toFun := fun v i => -(b.basisOf i).sumCoords v
-      map_add' := fun v w => by
-        ext i
-        simp only [LinearMap.map_add, Pi.add_apply, neg_add]
-      map_smul' := fun t v => by
-        ext i
-        simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
+      map_add' := fun v w => by ext i; simp only [LinearMap.map_add, Pi.add_apply, neg_add]
+      map_smul' := fun t v => by ext i; simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
   map_vadd' p v := by
     ext i
     simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply',

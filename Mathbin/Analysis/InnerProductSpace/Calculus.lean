@@ -143,10 +143,8 @@ theorem Differentiable.inner (hf : Differentiable ℝ f) (hg : Differentiable �
 #align differentiable.inner Differentiable.inner
 
 theorem fderiv_inner_apply (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (y : G) :
-    fderiv ℝ (fun t => ⟪f t, g t⟫) x y = ⟪f x, fderiv ℝ g x y⟫ + ⟪fderiv ℝ f x y, g x⟫ :=
-  by
-  rw [(hf.has_fderiv_at.inner 𝕜 hg.has_fderiv_at).fderiv]
-  rfl
+    fderiv ℝ (fun t => ⟪f t, g t⟫) x y = ⟪f x, fderiv ℝ g x y⟫ + ⟪fderiv ℝ f x y, g x⟫ := by
+  rw [(hf.has_fderiv_at.inner 𝕜 hg.has_fderiv_at).fderiv]; rfl
 #align fderiv_inner_apply fderiv_inner_apply
 
 theorem deriv_inner_apply {f g : ℝ → E} {x : ℝ} (hf : DifferentiableAt ℝ f x)
@@ -186,9 +184,7 @@ theorem ContDiffAt.norm (hf : ContDiffAt ℝ n f x) (h0 : f x ≠ 0) :
 #align cont_diff_at.norm ContDiffAt.norm
 
 theorem ContDiffAt.dist (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) (hne : f x ≠ g x) :
-    ContDiffAt ℝ n (fun y => dist (f y) (g y)) x :=
-  by
-  simp only [dist_eq_norm]
+    ContDiffAt ℝ n (fun y => dist (f y) (g y)) x := by simp only [dist_eq_norm];
   exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
 #align cont_diff_at.dist ContDiffAt.dist
 
@@ -198,10 +194,8 @@ theorem ContDiffWithinAt.norm (hf : ContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 
 #align cont_diff_within_at.norm ContDiffWithinAt.norm
 
 theorem ContDiffWithinAt.dist (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x)
-    (hne : f x ≠ g x) : ContDiffWithinAt ℝ n (fun y => dist (f y) (g y)) s x :=
-  by
-  simp only [dist_eq_norm]
-  exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
+    (hne : f x ≠ g x) : ContDiffWithinAt ℝ n (fun y => dist (f y) (g y)) s x := by
+  simp only [dist_eq_norm]; exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
 #align cont_diff_within_at.dist ContDiffWithinAt.dist
 
 theorem ContDiffOn.norm_sq (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun y => ‖f y‖ ^ 2) s :=
@@ -250,10 +244,8 @@ theorem DifferentiableAt.norm (hf : DifferentiableAt ℝ f x) (h0 : f x ≠ 0) :
 #align differentiable_at.norm DifferentiableAt.norm
 
 theorem DifferentiableAt.dist (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x)
-    (hne : f x ≠ g x) : DifferentiableAt ℝ (fun y => dist (f y) (g y)) x :=
-  by
-  simp only [dist_eq_norm]
-  exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
+    (hne : f x ≠ g x) : DifferentiableAt ℝ (fun y => dist (f y) (g y)) x := by
+  simp only [dist_eq_norm]; exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
 #align differentiable_at.dist DifferentiableAt.dist
 
 theorem Differentiable.norm_sq (hf : Differentiable ℝ f) : Differentiable ℝ fun y => ‖f y‖ ^ 2 :=
@@ -281,9 +273,7 @@ theorem DifferentiableWithinAt.norm (hf : DifferentiableWithinAt ℝ f s x) (h0 
 
 theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x)
     (hg : DifferentiableWithinAt ℝ g s x) (hne : f x ≠ g x) :
-    DifferentiableWithinAt ℝ (fun y => dist (f y) (g y)) s x :=
-  by
-  simp only [dist_eq_norm]
+    DifferentiableWithinAt ℝ (fun y => dist (f y) (g y)) s x := by simp only [dist_eq_norm];
   exact (hf.sub hg).norm 𝕜 (sub_ne_zero.2 hne)
 #align differentiable_within_at.dist DifferentiableWithinAt.dist
 

@@ -83,10 +83,7 @@ theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) 
 The converse of `is_subterminal.mono_is_terminal_from`.
 -/
 theorem isSubterminal_of_mono_isTerminal_from {T : C} (hT : IsTerminal T) [Mono (hT.from A)] :
-    IsSubterminal A := fun Z f g =>
-  by
-  rw [← cancel_mono (hT.from A)]
-  apply hT.hom_ext
+    IsSubterminal A := fun Z f g => by rw [← cancel_mono (hT.from A)]; apply hT.hom_ext
 #align category_theory.is_subterminal_of_mono_is_terminal_from CategoryTheory.isSubterminal_of_mono_isTerminal_from
 -/
 
@@ -95,10 +92,7 @@ theorem isSubterminal_of_mono_isTerminal_from {T : C} (hT : IsTerminal T) [Mono 
 The converse of `is_subterminal.mono_terminal_from`.
 -/
 theorem isSubterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] :
-    IsSubterminal A := fun Z f g =>
-  by
-  rw [← cancel_mono (terminal.from A)]
-  apply Subsingleton.elim
+    IsSubterminal A := fun Z f g => by rw [← cancel_mono (terminal.from A)]; apply Subsingleton.elim
 #align category_theory.is_subterminal_of_mono_terminal_from CategoryTheory.isSubterminal_of_mono_terminal_from
 -/
 
@@ -119,10 +113,7 @@ theorem isSubterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fu
 The converse of `is_subterminal_of_is_iso_diag`.
 -/
 theorem IsSubterminal.isIso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
-  ⟨⟨Limits.prod.fst,
-      ⟨by simp, by
-        rw [is_subterminal.def] at hA
-        tidy⟩⟩⟩
+  ⟨⟨Limits.prod.fst, ⟨by simp, by rw [is_subterminal.def] at hA; tidy⟩⟩⟩
 #align category_theory.is_subterminal.is_iso_diag CategoryTheory.IsSubterminal.isIso_diag
 -/
 
@@ -196,9 +187,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
       map := fun X Y f => MonoOver.homMk f (by ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
-        ⟨X.obj.left, fun Z f g => by
-          rw [← cancel_mono X.arrow]
-          apply Subsingleton.elim⟩
+        ⟨X.obj.left, fun Z f g => by rw [← cancel_mono X.arrow]; apply Subsingleton.elim⟩
       map := fun X Y f => f.1 }
   unitIso :=
     { Hom := { app := fun X => 𝟙 _ }

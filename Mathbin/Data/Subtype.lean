@@ -109,11 +109,8 @@ theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x //
 
 #print Subtype.heq_iff_coe_heq /-
 theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }}
-    {b : { y // q y }} (h : α = β) (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) :=
-  by
-  subst h
-  subst h'
-  rw [heq_iff_eq, heq_iff_eq, ext_iff]
+    {b : { y // q y }} (h : α = β) (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) := by subst h;
+  subst h'; rw [heq_iff_eq, heq_iff_eq, ext_iff]
 #align subtype.heq_iff_coe_heq Subtype.heq_iff_coe_heq
 -/
 

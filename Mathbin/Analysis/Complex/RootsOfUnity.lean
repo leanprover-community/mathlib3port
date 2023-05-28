@@ -45,9 +45,7 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprim
       mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
     norm_cast
     rintro l k hk
-    have : n ∣ i * l := by
-      rw [← Int.coe_nat_dvd, hk]
-      apply dvd_mul_left
+    have : n ∣ i * l := by rw [← Int.coe_nat_dvd, hk]; apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
 #align complex.is_primitive_root_exp_of_coprime Complex.isPrimitiveRoot_exp_of_coprime
 
@@ -61,8 +59,7 @@ theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   by
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
   constructor; swap
-  · rintro ⟨i, -, hi, rfl⟩
-    exact is_primitive_root_exp_of_coprime i n hn hi
+  · rintro ⟨i, -, hi, rfl⟩; exact is_primitive_root_exp_of_coprime i n hn hi
   intro h
   obtain ⟨i, hi, rfl⟩ :=
     (is_primitive_root_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)

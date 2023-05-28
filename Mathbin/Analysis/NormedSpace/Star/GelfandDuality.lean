@@ -154,10 +154,8 @@ theorem gelfandTransform_isometry : Isometry (gelfandTransform ℂ A) :=
     `gelfand_transform` coincide. Therefore, so do their spectral radii, and since they are
     self-adjoint, so also do their norms. Applying the C⋆-property of the norm and taking square
     roots shows that the norm is preserved. -/
-  have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) :=
-    by
-    unfold spectralRadius
-    rw [spectrum.gelfandTransform_eq]
+  have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) := by
+    unfold spectralRadius; rw [spectrum.gelfandTransform_eq]
   simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectralRadius_eq_nnnorm,
     gelfandTransform_map_star a, ENNReal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this
   simpa only [Function.comp_apply, NNReal.sqrt_sq] using

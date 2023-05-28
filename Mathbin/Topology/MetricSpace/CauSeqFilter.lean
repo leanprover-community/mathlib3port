@@ -47,8 +47,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       exists N
       intro b hb
       apply hεs
-      dsimp [Metric.ball]
-      rw [dist_comm, dist_eq_norm]
+      dsimp [Metric.ball]; rw [dist_comm, dist_eq_norm]
       solve_by_elim)
 #align cau_seq.tendsto_limit CauSeq.tendsto_limit
 
@@ -96,10 +95,7 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
   exists { n | n ≥ N }.image f
   simp only [exists_prop, mem_at_top_sets, mem_map, mem_image, ge_iff_le, mem_set_of_eq]
   constructor
-  · exists N
-    intro b hb
-    exists b
-    simp [hb]
+  · exists N; intro b hb; exists b; simp [hb]
   · rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
     dsimp at ha'1 ha'2 hb'1 hb'2
     rw [← ha'2, ← hb'2]

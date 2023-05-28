@@ -158,7 +158,7 @@ theorem Memℒp.exists_hasCompactSupport_snorm_sub_le [LocallyCompactSpace α] [
   -- It suffices to check that the set of functions we consider approximates characteristic
   -- functions, is stable under addition and consists of ae strongly measurable functions.
   -- First check the latter easy facts.
-  apply hf.induction_dense hp _ _ _ _ hε
+  apply hf.induction_dense hp _ _ _ _ hε;
   rotate_left
   -- stability under addition
   · rintro f g ⟨f_cont, f_mem, hf⟩ ⟨g_cont, g_mem, hg⟩
@@ -259,7 +259,7 @@ theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : 
   -- It suffices to check that the set of functions we consider approximates characteristic
   -- functions, is stable under addition and made of ae strongly measurable functions.
   -- First check the latter easy facts.
-  apply hf.induction_dense hp _ _ _ _ hε
+  apply hf.induction_dense hp _ _ _ _ hε;
   rotate_left
   -- stability under addition
   · rintro f g ⟨f_cont, f_mem, f_bd⟩ ⟨g_cont, g_mem, g_bd⟩

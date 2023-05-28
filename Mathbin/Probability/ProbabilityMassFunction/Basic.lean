@@ -197,9 +197,7 @@ theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} :=
     _ < p a + ∑' b, ite (b = a) 0 (p b) :=
       (ENNReal.add_lt_add_of_le_of_lt ENNReal.one_ne_top (le_of_eq h.symm) this)
     _ = ite (a = a) (p a) 0 + ∑' b, ite (b = a) 0 (p b) := by rw [eq_self_iff_true, if_true]
-    _ = (∑' b, ite (b = a) (p b) 0) + ∑' b, ite (b = a) 0 (p b) :=
-      by
-      congr
+    _ = (∑' b, ite (b = a) (p b) 0) + ∑' b, ite (b = a) 0 (p b) := by congr ;
       exact symm (tsum_eq_single a fun b hb => if_neg hb)
     _ = ∑' b, ite (b = a) (p b) 0 + ite (b = a) 0 (p b) := ennreal.tsum_add.symm
     _ = ∑' b, p b := tsum_congr fun b => by split_ifs <;> simp only [zero_add, add_zero, le_rfl]
@@ -214,11 +212,8 @@ but is expected to have type
   forall {α : Type.{u1}} (p : Pmf.{u1} α) (a : α), LE.le.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (Preorder.toLE.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (PartialOrder.toPreorder.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (OmegaCompletePartialOrder.toPartialOrder.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (CompleteLattice.instOmegaCompletePartialOrder.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (CompleteLinearOrder.toCompleteLattice.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) ENNReal.instCompleteLinearOrderENNReal))))) (FunLike.coe.{succ u1, succ u1, 1} (Pmf.{u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) _x) (Pmf.funLike.{u1} α) p a) (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) 1 (One.toOfNat1.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) (CanonicallyOrderedCommSemiring.toOne.{0} ((fun (x._@.Mathlib.Probability.ProbabilityMassFunction.Basic._hyg.47 : α) => ENNReal) a) ENNReal.instCanonicallyOrderedCommSemiringENNReal)))
 Case conversion may be inaccurate. Consider using '#align pmf.coe_le_one Pmf.coe_le_oneₓ'. -/
 theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
-  hasSum_le
-    (by
-      intro b
-      split_ifs <;> simp only [h, zero_le', le_rfl])
-    (hasSum_ite_eq a (p a)) (hasSum_coe_one p)
+  hasSum_le (by intro b; split_ifs <;> simp only [h, zero_le', le_rfl]) (hasSum_ite_eq a (p a))
+    (hasSum_coe_one p)
 #align pmf.coe_le_one Pmf.coe_le_one
 
 /- warning: pmf.apply_ne_top -> Pmf.apply_ne_top is a dubious translation:

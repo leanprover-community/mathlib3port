@@ -144,10 +144,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_limit.of_exists_unique CategoryTheory.Limits.IsLimit.ofExistsUniqueₓ'. -/
 /-- Noncomputably make a colimit cocone from the existence of unique factorizations. -/
 def ofExistsUnique {t : Cone F}
-    (ht : ∀ s : Cone F, ∃! l : s.pt ⟶ t.pt, ∀ j, l ≫ t.π.app j = s.π.app j) : IsLimit t :=
-  by
-  choose s hs hs' using ht
-  exact ⟨s, hs, hs'⟩
+    (ht : ∀ s : Cone F, ∃! l : s.pt ⟶ t.pt, ∀ j, l ≫ t.π.app j = s.π.app j) : IsLimit t := by
+  choose s hs hs' using ht; exact ⟨s, hs, hs'⟩
 #align category_theory.limits.is_limit.of_exists_unique CategoryTheory.Limits.IsLimit.ofExistsUnique
 
 #print CategoryTheory.Limits.IsLimit.mkConeMorphism /-
@@ -534,9 +532,7 @@ def conePointsIsoOfEquivalence {F : J ⥤ C} {s : Cone F} {G : K ⥤ C} {t : Con
         assoc, id_comp, inv_fun_id_assoc_hom_app, fac_assoc, nat_trans.comp_app]
       rw [counit_app_functor, ← functor.comp_map, w.hom.naturality]
       simp
-    inv_hom_id' := by
-      apply hom_ext Q
-      tidy }
+    inv_hom_id' := by apply hom_ext Q; tidy }
 #align category_theory.limits.is_limit.cone_points_iso_of_equivalence CategoryTheory.Limits.IsLimit.conePointsIsoOfEquivalence
 
 end Equivalence
@@ -878,10 +874,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_colimit.of_exists_unique CategoryTheory.Limits.IsColimit.ofExistsUniqueₓ'. -/
 /-- Noncomputably make a colimit cocone from the existence of unique factorizations. -/
 def ofExistsUnique {t : Cocone F}
-    (ht : ∀ s : Cocone F, ∃! d : t.pt ⟶ s.pt, ∀ j, t.ι.app j ≫ d = s.ι.app j) : IsColimit t :=
-  by
-  choose s hs hs' using ht
-  exact ⟨s, hs, hs'⟩
+    (ht : ∀ s : Cocone F, ∃! d : t.pt ⟶ s.pt, ∀ j, t.ι.app j ≫ d = s.ι.app j) : IsColimit t := by
+  choose s hs hs' using ht; exact ⟨s, hs, hs'⟩
 #align category_theory.limits.is_colimit.of_exists_unique CategoryTheory.Limits.IsColimit.ofExistsUnique
 
 #print CategoryTheory.Limits.IsColimit.mkCoconeMorphism /-
@@ -1275,9 +1269,7 @@ def coconePointsIsoOfEquivalence {F : J ⥤ C} {s : Cocone F} {G : K ⥤ C} {t :
       rw [counit_inv_app_functor, ← functor.comp_map, ← w.inv.naturality_assoc]
       dsimp
       simp
-    inv_hom_id' := by
-      apply hom_ext Q
-      tidy }
+    inv_hom_id' := by apply hom_ext Q; tidy }
 #align category_theory.limits.is_colimit.cocone_points_iso_of_equivalence CategoryTheory.Limits.IsColimit.coconePointsIsoOfEquivalence
 
 end Equivalence

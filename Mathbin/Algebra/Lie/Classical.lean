@@ -132,10 +132,7 @@ theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) :
   let A := Eb R i j hij
   let B := Eb R j i hij.symm
   intro c
-  have c' : A.val ⬝ B.val = B.val ⬝ A.val :=
-    by
-    rw [← sub_eq_zero, ← sl_bracket, c.trivial]
-    rfl
+  have c' : A.val ⬝ B.val = B.val ⬝ A.val := by rw [← sub_eq_zero, ← sl_bracket, c.trivial]; rfl
   simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_fun (congr_fun c' i) i
 #align lie_algebra.special_linear.sl_non_abelian LieAlgebra.SpecialLinear.sl_non_abelian
 

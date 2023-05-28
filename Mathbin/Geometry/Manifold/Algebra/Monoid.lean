@@ -200,17 +200,13 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 
 @[simp]
 theorem L_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
-    (g h : G) : 𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) :=
-  by
-  ext
+    (g h : G) : 𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by ext;
   simp only [ContMdiffMap.comp_apply, L_apply, mul_assoc]
 #align L_mul L_mul
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
-    (g h : G) : 𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) :=
-  by
-  ext
+    (g h : G) : 𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by ext;
   simp only [ContMdiffMap.comp_apply, R_apply, mul_assoc]
 #align R_mul R_mul
 
@@ -255,9 +251,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
   {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G'] [HasSmoothMul I' G']
 
 theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
-  | 0 => by
-    simp only [pow_zero]
-    exact smooth_const
+  | 0 => by simp only [pow_zero]; exact smooth_const
   | k + 1 => by simpa [pow_succ] using smooth_id.mul (smooth_pow _)
 #align smooth_pow smooth_pow
 
@@ -334,9 +328,7 @@ theorem contMdiff_finset_prod' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
 
 @[to_additive]
 theorem contMdiffWithinAt_finset_prod (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
-    ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x :=
-  by
-  simp only [← Finset.prod_apply]
+    ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x := by simp only [← Finset.prod_apply];
   exact contMdiffWithinAt_finset_prod' h
 #align cont_mdiff_within_at_finset_prod contMdiffWithinAt_finset_prod
 #align cont_mdiff_within_at_finset_sum cont_mdiff_within_at_finset_sum

@@ -47,18 +47,11 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
   { pt := (M : C ⥤ C)
     one := M.η
     mul := M.μ
-    one_mul' := by
-      ext
-      simp
+    one_mul' := by ext; simp
     -- `obviously` provides this, but slowly
-    mul_one' := by
-      ext
-      simp
+    mul_one' := by ext; simp
     -- `obviously` provides this, but slowly
-    mul_assoc' := by
-      ext
-      dsimp
-      simp [M.assoc] }
+    mul_assoc' := by ext; dsimp; simp [M.assoc] }
 #align category_theory.Monad.to_Mon CategoryTheory.Monad.toMon
 
 variable (C)
@@ -68,13 +61,9 @@ variable (C)
 def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where
   obj := toMon
   map _ _ f := { Hom := f.toNatTrans }
-  map_id' := by
-    intro X
-    rfl
+  map_id' := by intro X; rfl
   -- `obviously` provides this, but slowly
-  map_comp' := by
-    intro X Y Z f g
-    rfl
+  map_comp' := by intro X Y Z f g; rfl
 #align category_theory.Monad.Monad_to_Mon CategoryTheory.Monad.monadToMon
 
 variable {C}
@@ -85,17 +74,9 @@ def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
   { toFunctor := M.pt
     η' := M.one
     μ' := M.mul
-    left_unit' := fun X =>
-      by
-      rw [← M.one.id_hcomp_app, ← nat_trans.comp_app, M.mul_one]
-      rfl
-    right_unit' := fun X =>
-      by
-      rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]
-      rfl
-    assoc' := fun X => by
-      rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]
-      simp }
+    left_unit' := fun X => by rw [← M.one.id_hcomp_app, ← nat_trans.comp_app, M.mul_one]; rfl
+    right_unit' := fun X => by rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]; rfl
+    assoc' := fun X => by rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]; simp }
 #align category_theory.Monad.of_Mon CategoryTheory.Monad.ofMon
 
 variable (C)
@@ -128,13 +109,9 @@ def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _
     where
   Hom := { app := fun _ => { Hom := 𝟙 _ } }
   inv := { app := fun _ => { Hom := 𝟙 _ } }
-  hom_inv_id' := by
-    ext
-    simp
+  hom_inv_id' := by ext; simp
   -- `obviously` provides these, but slowly
-  inv_hom_id' := by
-    ext
-    simp
+  inv_hom_id' := by ext; simp
 #align category_theory.Monad.Monad_Mon_equiv.counit_iso CategoryTheory.Monad.MonadMonEquiv.counitIso
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
@@ -153,13 +130,9 @@ def unitIso : 𝟭 _ ≅ monadToMon C ⋙ monToMonad C
     where
   Hom := unitIsoHom
   inv := unitIsoInv
-  hom_inv_id' := by
-    ext
-    simp
+  hom_inv_id' := by ext; simp
   -- `obviously` provides these, but slowly
-  inv_hom_id' := by
-    ext
-    simp
+  inv_hom_id' := by ext; simp
 #align category_theory.Monad.Monad_Mon_equiv.unit_iso CategoryTheory.Monad.MonadMonEquiv.unitIso
 
 end MonadMonEquiv
@@ -174,11 +147,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
   inverse := monToMonad _
   unitIso := unitIso
   counitIso := counitIso
-  functor_unitIso_comp' := by
-    intro X
-    ext
-    dsimp
-    simp
+  functor_unitIso_comp' := by intro X; ext; dsimp; simp
 #align category_theory.Monad.Monad_Mon_equiv CategoryTheory.Monad.monadMonEquiv
 
 -- `obviously`, slowly

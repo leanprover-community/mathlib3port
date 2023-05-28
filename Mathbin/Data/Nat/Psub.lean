@@ -93,13 +93,10 @@ theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
 theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n :=
   by
   cases s : psub m n <;> simp [eq_comm]
-  · show m < n
-    refine' lt_of_not_ge fun h => _
+  · show m < n; refine' lt_of_not_ge fun h => _
     cases' le.dest h with k e
     injection s.symm.trans (psub_eq_some.2 <| (add_comm _ _).trans e)
-  · show n ≤ m
-    rw [← psub_eq_some.1 s]
-    apply Nat.le_add_left
+  · show n ≤ m; rw [← psub_eq_some.1 s]; apply Nat.le_add_left
 #align nat.psub_eq_none Nat.psub_eq_none
 -/
 

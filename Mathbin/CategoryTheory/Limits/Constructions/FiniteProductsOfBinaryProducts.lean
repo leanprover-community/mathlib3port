@@ -64,8 +64,7 @@ def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i
     (by
       refine' Fin.cases _ _
       · apply c₂.fst
-      · intro i
-        apply c₂.snd ≫ c₁.π.app ⟨i⟩)
+      · intro i; apply c₂.snd ≫ c₁.π.app ⟨i⟩)
 #align category_theory.extend_fan CategoryTheory.extendFan
 
 /- warning: category_theory.extend_fan_is_limit -> CategoryTheory.extendFanIsLimit is a dubious translation:

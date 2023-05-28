@@ -141,9 +141,7 @@ theorem disjiUnion_map_sigma_mk :
 
 #print Finset.sigma_eq_biUnion /-
 theorem sigma_eq_biUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    s.Sigma t = s.biUnion fun i => (t i).map <| Embedding.sigmaMk i :=
-  by
-  ext ⟨x, y⟩
+    s.Sigma t = s.biUnion fun i => (t i).map <| Embedding.sigmaMk i := by ext ⟨x, y⟩;
   simp [and_left_comm]
 #align finset.sigma_eq_bUnion Finset.sigma_eq_biUnion
 -/
@@ -237,9 +235,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : ι -> Type.{u2}} {β : ι -> Type.{u1}} {γ : ι -> Type.{u4}} [_inst_1 : DecidableEq.{succ u3} ι] (f : forall {{i : ι}}, (α i) -> (β i) -> (Finset.{u4} (γ i))) (a : Sigma.{u3, u2} ι α) (b : Sigma.{u3, u1} ι β) (x : Sigma.{u3, u4} ι γ), (Ne.{succ u3} ι (Sigma.fst.{u3, u2} ι α a) (Sigma.fst.{u3, u4} ι γ x)) -> (Not (Membership.mem.{max u3 u4, max u4 u3} (Sigma.{u3, u4} ι γ) (Finset.{max u4 u3} (Sigma.{u3, u4} ι (fun (i : ι) => γ i))) (Finset.instMembershipFinset.{max u3 u4} (Sigma.{u3, u4} ι (fun (i : ι) => γ i))) x (Finset.sigmaLift.{u3, u2, u1, u4} ι (fun (i : ι) => α i) (fun (i : ι) => β i) (fun (i : ι) => γ i) (fun (a : ι) (b : ι) => _inst_1 a b) f a b)))
 Case conversion may be inaccurate. Consider using '#align finset.not_mem_sigma_lift_of_ne_left Finset.not_mem_sigmaLift_of_ne_leftₓ'. -/
 theorem not_mem_sigmaLift_of_ne_left (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α)
-    (b : Sigma β) (x : Sigma γ) (h : a.1 ≠ x.1) : x ∉ sigmaLift f a b :=
-  by
-  rw [mem_sigma_lift]
+    (b : Sigma β) (x : Sigma γ) (h : a.1 ≠ x.1) : x ∉ sigmaLift f a b := by rw [mem_sigma_lift];
   exact fun H => h H.fst
 #align finset.not_mem_sigma_lift_of_ne_left Finset.not_mem_sigmaLift_of_ne_left
 
@@ -250,9 +246,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : ι -> Type.{u2}} {β : ι -> Type.{u1}} {γ : ι -> Type.{u4}} [_inst_1 : DecidableEq.{succ u3} ι] (f : forall {{i : ι}}, (α i) -> (β i) -> (Finset.{u4} (γ i))) {a : Sigma.{u3, u2} ι α} (b : Sigma.{u3, u1} ι β) {x : Sigma.{u3, u4} ι γ}, (Ne.{succ u3} ι (Sigma.fst.{u3, u1} ι β b) (Sigma.fst.{u3, u4} ι γ x)) -> (Not (Membership.mem.{max u3 u4, max u4 u3} (Sigma.{u3, u4} ι γ) (Finset.{max u4 u3} (Sigma.{u3, u4} ι (fun (i : ι) => γ i))) (Finset.instMembershipFinset.{max u3 u4} (Sigma.{u3, u4} ι (fun (i : ι) => γ i))) x (Finset.sigmaLift.{u3, u2, u1, u4} ι (fun (i : ι) => α i) (fun (i : ι) => β i) (fun (i : ι) => γ i) (fun (a : ι) (b : ι) => _inst_1 a b) f a b)))
 Case conversion may be inaccurate. Consider using '#align finset.not_mem_sigma_lift_of_ne_right Finset.not_mem_sigmaLift_of_ne_rightₓ'. -/
 theorem not_mem_sigmaLift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) {a : Sigma α}
-    (b : Sigma β) {x : Sigma γ} (h : b.1 ≠ x.1) : x ∉ sigmaLift f a b :=
-  by
-  rw [mem_sigma_lift]
+    (b : Sigma β) {x : Sigma γ} (h : b.1 ≠ x.1) : x ∉ sigmaLift f a b := by rw [mem_sigma_lift];
   exact fun H => h H.snd.fst
 #align finset.not_mem_sigma_lift_of_ne_right Finset.not_mem_sigmaLift_of_ne_right
 
@@ -309,11 +303,8 @@ but is expected to have type
   forall {ι : Type.{u4}} {α : ι -> Type.{u2}} {β : ι -> Type.{u1}} {γ : ι -> Type.{u3}} [_inst_1 : DecidableEq.{succ u4} ι] (f : forall {{i : ι}}, (α i) -> (β i) -> (Finset.{u3} (γ i))) (a : Sigma.{u4, u2} ι (fun (i : ι) => α i)) (b : Sigma.{u4, u1} ι (fun (i : ι) => β i)), Eq.{1} Nat (Finset.card.{max u4 u3} (Sigma.{u4, u3} ι (fun (i : ι) => γ i)) (Finset.sigmaLift.{u4, u2, u1, u3} ι (fun (i : ι) => α i) (fun (i : ι) => β i) (fun (i : ι) => γ i) (fun (a : ι) (b : ι) => _inst_1 a b) f a b)) (dite.{1} Nat (Eq.{succ u4} ι (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b)) (_inst_1 (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b)) (fun (h : Eq.{succ u4} ι (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b)) => Finset.card.{u3} (γ (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b)) (f (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b) (Eq.rec.{succ u2, succ u4} ι (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Finset.Sigma._hyg.2353 : ι) (h._@.Mathlib.Data.Finset.Sigma._hyg.2354 : Eq.{succ u4} ι (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Finset.Sigma._hyg.2353) => α x._@.Mathlib.Data.Finset.Sigma._hyg.2353) (Sigma.snd.{u4, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b) h) (Sigma.snd.{u4, u1} ι (fun (i : ι) => β i) b))) (fun (_x : Not (Eq.{succ u4} ι (Sigma.fst.{u4, u2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u4, u1} ι (fun (i : ι) => β i) b))) => OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
 Case conversion may be inaccurate. Consider using '#align finset.card_sigma_lift Finset.card_sigmaLiftₓ'. -/
 theorem card_sigmaLift :
-    (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 :=
-  by
-  convert apply_dite _ _ _ _
-  ext h
-  exact (card_map _).symm
+    (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 := by
+  convert apply_dite _ _ _ _; ext h; exact (card_map _).symm
 #align finset.card_sigma_lift Finset.card_sigmaLift
 
 end SigmaLift

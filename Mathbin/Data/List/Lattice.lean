@@ -109,18 +109,14 @@ theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil
 
 #print List.disjoint_nil_right /-
 @[simp]
-theorem disjoint_nil_right (l : List α) : Disjoint l [] :=
-  by
-  rw [disjoint_comm]
+theorem disjoint_nil_right (l : List α) : Disjoint l [] := by rw [disjoint_comm];
   exact disjoint_nil_left _
 #align list.disjoint_nil_right List.disjoint_nil_right
 -/
 
 @[simp]
-theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l :=
-  by
-  simp only [Disjoint, mem_singleton, forall_eq]
-  rfl
+theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
+  simp only [Disjoint, mem_singleton, forall_eq]; rfl
 #align list.singleton_disjoint List.singleton_disjointₓ
 
 #print List.disjoint_singleton /-
@@ -188,8 +184,7 @@ theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (
         eq_self_iff_true, not_true, false_and_iff, disjoint_nil_left, take]
     · cases h
     cases' hl with _ _ h₀ h₁; constructor
-    · intro h
-      exact h₀ _ (mem_of_mem_drop h) rfl
+    · intro h; exact h₀ _ (mem_of_mem_drop h) rfl
     solve_by_elim (config := { max_depth := 4 }) [le_of_succ_le_succ]
 #align list.disjoint_take_drop List.disjoint_take_dropₓ
 
@@ -350,10 +345,8 @@ theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l
 -/
 
 #print List.inter_eq_nil_iff_disjoint /-
-theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ :=
-  by
-  simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
-  rfl
+theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ := by
+  simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]; rfl
 #align list.inter_eq_nil_iff_disjoint List.inter_eq_nil_iff_disjoint
 -/
 
@@ -446,10 +439,8 @@ theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter�
       · simp only [ba, h, eq_self_iff_true, true_or_iff, true_and_iff]
       · simp only [mem_erase_of_ne ba, ba, false_or_iff]
     · rw [cons_bag_inter_of_neg _ h, mem_bag_inter, mem_cons_iff, or_and_right]
-      symm
-      apply or_iff_right_of_imp
-      rintro ⟨rfl, h'⟩
-      exact h.elim h'
+      symm; apply or_iff_right_of_imp
+      rintro ⟨rfl, h'⟩; exact h.elim h'
 #align list.mem_bag_inter List.mem_bagInter
 
 #print List.count_bagInter /-
@@ -468,8 +459,7 @@ theorem count_bagInter {a : α} :
       · rw [if_neg ab, tsub_zero, add_zero, add_zero]
     · rw [cons_bag_inter_of_neg _ hb, count_bag_inter]
       by_cases ab : a = b
-      · rw [← ab] at hb
-        rw [count_eq_zero.2 hb, min_zero, min_zero]
+      · rw [← ab] at hb; rw [count_eq_zero.2 hb, min_zero, min_zero]
       · rw [count_cons_of_ne ab]
 #align list.count_bag_inter List.count_bagInter
 -/
@@ -486,8 +476,7 @@ theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ <
     by
     by_cases b ∈ l₂ <;> simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff]
     · exact (bag_inter_sublist_left _ _).cons_cons _
-    · apply sublist_cons_of_sublist
-      apply bag_inter_sublist_left
+    · apply sublist_cons_of_sublist; apply bag_inter_sublist_left
 #align list.bag_inter_sublist_left List.bagInter_sublist_left
 
 /- warning: list.bag_inter_nil_iff_inter_nil -> List.bagInter_nil_iff_inter_nil is a dubious translation:

@@ -386,8 +386,7 @@ theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     infEdist x (thickening δ s) = infEdist x s - ENNReal.ofReal δ :=
   by
   obtain hs | hs := lt_or_le (inf_edist x s) (ENNReal.ofReal δ)
-  · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
-    exact hs
+  · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]; exact hs
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
   refine' le_sub_of_add_le_right of_real_ne_top _
   refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
@@ -454,9 +453,7 @@ Case conversion may be inaccurate. Consider using '#align closure_thickening clo
 -- Note: `interior (cthickening δ s) ≠ thickening δ s` in general
 @[simp]
 theorem closure_thickening (hδ : 0 < δ) (s : Set E) : closure (thickening δ s) = cthickening δ s :=
-  by
-  rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_add]
-  infer_instance
+  by rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_add]; infer_instance
 #align closure_thickening closure_thickening
 
 /- warning: inf_edist_cthickening -> infEdist_cthickening is a dubious translation:

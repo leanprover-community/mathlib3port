@@ -91,10 +91,8 @@ theorem powersetAux'_cons (a : α) (l : List α) :
 theorem powerset_aux'_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux' l₁ ~ powersetAux' l₂ :=
   by
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
-  · simp
-    exact IH.append (IH.map _)
-  · simp
-    apply perm.append_left
+  · simp; exact IH.append (IH.map _)
+  · simp; apply perm.append_left
     rw [← append_assoc, ← append_assoc,
       (by funext s <;> simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
     exact perm_append_comm.append_right _
@@ -206,10 +204,8 @@ theorem revzip_powersetAux_lemma [DecidableEq α] (l : List α) {l' : List (Mult
     by
     rw [forall₂_map_right_iff, forall₂_same]
     rintro ⟨s, t⟩ h
-    dsimp
-    rw [← H h, add_tsub_cancel_left]
-  rw [← forall₂_eq_eq_eq, forall₂_map_right_iff]
-  simpa
+    dsimp; rw [← H h, add_tsub_cancel_left]
+  rw [← forall₂_eq_eq_eq, forall₂_map_right_iff]; simpa
 #align multiset.revzip_powerset_aux_lemma Multiset.revzip_powersetAux_lemma
 -/
 
@@ -296,13 +292,9 @@ theorem powersetLenAux_perm {n} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
   by
   induction' n with n IHn generalizing l₁ l₂; · simp
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · rfl
-  · simp
-    exact IH.append ((IHn p).map _)
-  · simp
-    apply perm.append_left
-    cases n
-    · simp
-      apply perm.swap
+  · simp; exact IH.append ((IHn p).map _)
+  · simp; apply perm.append_left
+    cases n; · simp; apply perm.swap
     simp
     rw [← append_assoc, ← append_assoc,
       (by funext s <;> simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]

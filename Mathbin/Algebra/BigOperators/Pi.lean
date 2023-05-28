@@ -124,9 +124,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.univ_prod_mul_single Finset.univ_prod_mulSingleₓ'. -/
 @[to_additive]
 theorem Finset.univ_prod_mulSingle [Fintype I] (f : ∀ i, Z i) : (∏ i, Pi.mulSingle i (f i)) = f :=
-  by
-  ext a
-  simp
+  by ext a; simp
 #align finset.univ_prod_mul_single Finset.univ_prod_mulSingle
 #align finset.univ_sum_single Finset.univ_sum_single
 

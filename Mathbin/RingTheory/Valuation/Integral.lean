@@ -48,9 +48,7 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
       one_mul (v x ^ p.nat_degree)]
     cases' (hv.2 <| p.coeff i).lt_or_eq with hvpi hvpi
     · exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx <| Finset.mem_range.1 hi)
-    · erw [hvpi]
-      rw [one_mul, one_mul]
-      exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
+    · erw [hvpi]; rw [one_mul, one_mul]; exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
 #align valuation.integers.mem_of_integral Valuation.Integers.mem_of_integral
 
 protected theorem integralClosure : integralClosure O R = ⊥ :=

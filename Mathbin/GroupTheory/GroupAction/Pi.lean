@@ -188,10 +188,7 @@ instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SMulZeroClass α <|
 #print Pi.smulZeroClass' /-
 instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SMulZeroClass (f i) (g i)] :
     @SMulZeroClass (∀ i, f i) (∀ i : I, g i) (@Pi.instZero I g n)
-    where smul_zero := by
-    intros
-    ext x
-    apply smul_zero
+    where smul_zero := by intros ; ext x; apply smul_zero
 #align pi.smul_zero_class' Pi.smulZeroClass'
 -/
 
@@ -205,10 +202,7 @@ instance distribSMul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSMul �
 #print Pi.distribSMul' /-
 instance distribSMul' {g : I → Type _} {n : ∀ i, AddZeroClass <| g i}
     [∀ i, DistribSMul (f i) (g i)] : @DistribSMul (∀ i, f i) (∀ i : I, g i) (@Pi.addZeroClass I g n)
-    where smul_add := by
-    intros
-    ext x
-    apply smul_add
+    where smul_add := by intros ; ext x; apply smul_add
 #align pi.distrib_smul' Pi.distribSMul'
 -/
 
@@ -278,14 +272,8 @@ instance mulDistribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : 
     [∀ i, MulDistribMulAction (f i) (g i)] :
     @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n)
     where
-  smul_mul := by
-    intros
-    ext x
-    apply smul_mul'
-  smul_one := by
-    intros
-    ext x
-    apply smul_one
+  smul_mul := by intros ; ext x; apply smul_mul'
+  smul_one := by intros ; ext x; apply smul_one
 #align pi.mul_distrib_mul_action' Pi.mulDistribMulAction'
 -/
 

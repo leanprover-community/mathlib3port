@@ -208,14 +208,8 @@ instance : LawfulMonad ULift
     where
   bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
   bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
-  pure_bind α β x f := by
-    dsimp only [bind, pure, ULift.pure, ULift.bind]
-    cases f x
-    rfl
-  bind_assoc := fun α β γ ⟨x⟩ f g =>
-    by
-    dsimp only [bind, pure, ULift.pure, ULift.bind]
-    cases f x
+  pure_bind α β x f := by dsimp only [bind, pure, ULift.pure, ULift.bind]; cases f x; rfl
+  bind_assoc := fun α β γ ⟨x⟩ f g => by dsimp only [bind, pure, ULift.pure, ULift.bind]; cases f x;
     rfl
 
 /- warning: ulift.rec.constant -> ULift.rec.constant is a dubious translation:

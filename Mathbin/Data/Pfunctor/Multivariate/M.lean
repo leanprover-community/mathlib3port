@@ -143,21 +143,12 @@ def M.corecContents {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
     (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α) (g₂ : ∀ b : β, P.getLast.B (g₀ b) → β) :
     ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
-    have : a = g₀ b := by
-      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
-      cases h'
-      rfl
+    have : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
     g₁ b i (P.castDropB this i c)
   | _, b, h, _, M.path.child x a f h' j i c =>
-    have h₀ : a = g₀ b := by
-      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
-      cases h'
-      rfl
-    have h₁ : f j = M.corecShape P g₀ g₂ (g₂ b (castLastB P h₀ j)) :=
-      by
-      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'
-      cases h'
-      rfl
+    have h₀ : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
+    have h₁ : f j = M.corecShape P g₀ g₂ (g₂ b (castLastB P h₀ j)) := by
+      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
     M.corec_contents (f j) (g₂ b (P.castLastB h₀ j)) h₁ i c
 #align mvpfunctor.M.corec_contents MvPFunctor.M.corecContents
 -/
@@ -292,8 +283,7 @@ theorem M.bisim {α : TypeVec n} (R : P.M α → P.M α → Prop)
     rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', _, rfl⟩
     rw [e₁', e₂']
     exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
-  subst this
-  congr with (i p)
+  subst this; congr with (i p)
   induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;>
     try
       rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
@@ -312,27 +302,18 @@ theorem M.bisim {α : TypeVec n} (R : P.M α → P.M α → Prop)
 theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalence R)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
     (x y) (r : R x y) : x = y := by
-  apply M.bisim P R _ _ _ r
-  clear r x y
-  introv Hr
-  specialize h _ _ Hr
-  clear Hr
-  rcases M.dest P x with ⟨ax, fx⟩
-  rcases M.dest P y with ⟨ay, fy⟩
-  intro h
-  rw [map_eq, map_eq] at h
-  injection h with h₀ h₁
-  subst ay
-  simp at h₁
-  clear h
+  apply M.bisim P R _ _ _ r; clear r x y
+  introv Hr; specialize h _ _ Hr; clear Hr
+  rcases M.dest P x with ⟨ax, fx⟩; rcases M.dest P y with ⟨ay, fy⟩
+  intro h; rw [map_eq, map_eq] at h; injection h with h₀ h₁; subst ay
+  simp at h₁; clear h
   have Hdrop : drop_fun fx = drop_fun fy :=
     by
     replace h₁ := congr_arg drop_fun h₁
     simpa using h₁
   exists ax, drop_fun fx, last_fun fx, last_fun fy
   rw [split_drop_fun_last_fun, Hdrop, split_drop_fun_last_fun]
-  simp
-  intro i
+  simp; intro i
   replace h₁ := congr_fun (congr_fun h₁ Fin2.fz) i
   simp [(· ⊚ ·), append_fun, split_fun] at h₁
   replace h₁ := Quot.exact _ h₁
@@ -350,8 +331,7 @@ theorem M.bisim' {α : TypeVec n} (R : P.M α → P.M α → Prop)
   have := M.bisim₀ P (EqvGen R) _ _
   · solve_by_elim [EqvGen.rel]
   · apply EqvGen.is_equivalence
-  · clear r x y
-    introv Hr
+  · clear r x y; introv Hr
     have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
     induction Hr
     · rw [← Quot.factor_mk_eq R (EqvGen R) this]

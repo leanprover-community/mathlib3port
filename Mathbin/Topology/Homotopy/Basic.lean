@@ -114,10 +114,7 @@ variable {f₀ f₁ : C(X, Y)}
 instance : HomotopyLike (Homotopy f₀ f₁) f₀ f₁
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_continuous f := f.continuous_toFun
   map_zero_left f := f.map_zero_left'
   map_one_left f := f.map_one_left'
@@ -313,10 +310,7 @@ def symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : Homotopy f₁ f₀
 
 #print ContinuousMap.Homotopy.symm_symm /-
 @[simp]
-theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm = F :=
-  by
-  ext
-  simp
+theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm = F := by ext; simp
 #align continuous_map.homotopy.symm_symm ContinuousMap.Homotopy.symm_symm
 -/
 
@@ -351,9 +345,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
       else
         G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
   show ite _ _ _ = _ by
-    split_ifs <;>
-      · rw [extend, ContinuousMap.coe_IccExtend, Set.IccExtend_of_mem]
-        rfl
+    split_ifs <;> · rw [extend, ContinuousMap.coe_IccExtend, Set.IccExtend_of_mem]; rfl
 #align continuous_map.homotopy.trans_apply ContinuousMap.Homotopy.trans_apply
 
 #print ContinuousMap.Homotopy.symm_trans /-
@@ -376,8 +368,7 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
     linarith
   · change ¬(x.1 : ℝ) ≤ _ at h
     change ¬(1 : ℝ) - x.1 ≤ _ at h₁
-    exfalso
-    linarith
+    exfalso; linarith
 #align continuous_map.homotopy.symm_trans ContinuousMap.Homotopy.symm_trans
 -/
 
@@ -611,11 +602,7 @@ variable {P : C(X, Y) → Prop}
 -/
 @[simps]
 def refl (f : C(X, Y)) (hf : P f) : HomotopyWith f f P :=
-  { Homotopy.refl f with
-    prop' := fun t => by
-      convert hf
-      cases f
-      rfl }
+  { Homotopy.refl f with prop' := fun t => by convert hf; cases f; rfl }
 #align continuous_map.homotopy_with.refl ContinuousMap.HomotopyWith.refl
 -/
 

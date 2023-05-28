@@ -90,10 +90,7 @@ theorem martingale_const_fun [OrderBot ι] (ℱ : Filtration ι m0) (μ : Measur
 variable (E)
 
 theorem martingale_zero (ℱ : Filtration ι m0) (μ : Measure Ω) : Martingale (0 : ι → Ω → E) ℱ μ :=
-  ⟨adapted_zero E ℱ, fun i j hij =>
-    by
-    rw [Pi.zero_apply, condexp_zero]
-    simp⟩
+  ⟨adapted_zero E ℱ, fun i j hij => by rw [Pi.zero_apply, condexp_zero]; simp⟩
 #align measure_theory.martingale_zero MeasureTheory.martingale_zero
 
 variable {E}
@@ -137,10 +134,8 @@ theorem neg (hf : Martingale f ℱ μ) : Martingale (-f) ℱ μ :=
   ⟨hf.Adapted.neg, fun i j hij => (condexp_neg (f j)).trans (hf.2 i j hij).neg⟩
 #align measure_theory.martingale.neg MeasureTheory.Martingale.neg
 
-theorem sub (hf : Martingale f ℱ μ) (hg : Martingale g ℱ μ) : Martingale (f - g) ℱ μ :=
-  by
-  rw [sub_eq_add_neg]
-  exact hf.add hg.neg
+theorem sub (hf : Martingale f ℱ μ) (hg : Martingale g ℱ μ) : Martingale (f - g) ℱ μ := by
+  rw [sub_eq_add_neg]; exact hf.add hg.neg
 #align measure_theory.martingale.sub MeasureTheory.Martingale.sub
 
 theorem smul (c : ℝ) (hf : Martingale f ℱ μ) : Martingale (c • f) ℱ μ :=
@@ -285,10 +280,8 @@ theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (
 #align measure_theory.submartingale.set_integral_le MeasureTheory.Submartingale.set_integral_le
 
 theorem sub_supermartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
-    (hf : Submartingale f ℱ μ) (hg : Supermartingale g ℱ μ) : Submartingale (f - g) ℱ μ :=
-  by
-  rw [sub_eq_add_neg]
-  exact hf.add hg.neg
+    (hf : Submartingale f ℱ μ) (hg : Supermartingale g ℱ μ) : Submartingale (f - g) ℱ μ := by
+  rw [sub_eq_add_neg]; exact hf.add hg.neg
 #align measure_theory.submartingale.sub_supermartingale MeasureTheory.Submartingale.sub_supermartingale
 
 theorem sub_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
@@ -378,10 +371,8 @@ end Submartingale
 namespace Supermartingale
 
 theorem sub_submartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
-    (hf : Supermartingale f ℱ μ) (hg : Submartingale g ℱ μ) : Supermartingale (f - g) ℱ μ :=
-  by
-  rw [sub_eq_add_neg]
-  exact hf.add hg.neg
+    (hf : Supermartingale f ℱ μ) (hg : Submartingale g ℱ μ) : Supermartingale (f - g) ℱ μ := by
+  rw [sub_eq_add_neg]; exact hf.add hg.neg
 #align measure_theory.supermartingale.sub_submartingale MeasureTheory.Supermartingale.sub_submartingale
 
 theorem sub_martingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
@@ -407,10 +398,7 @@ theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Superma
 theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c,
-    (by
-      ext (i x)
-      simp : - -c • f = -(-c • f))]
+  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.supermartingale.smul_nonpos MeasureTheory.Supermartingale.smul_nonpos
 
@@ -428,20 +416,14 @@ variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [Complet
 theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c,
-    (by
-      ext (i x)
-      simp : - -c • f = -(c • -f))]
+  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(c • -f))]
   exact supermartingale.neg (hf.neg.smul_nonneg hc)
 #align measure_theory.submartingale.smul_nonneg MeasureTheory.Submartingale.smul_nonneg
 
 theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submartingale f ℱ μ) :
     Supermartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c,
-    (by
-      ext (i x)
-      simp : - -c • f = -(-c • f))]
+  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.submartingale.smul_nonpos MeasureTheory.Submartingale.smul_nonpos
 

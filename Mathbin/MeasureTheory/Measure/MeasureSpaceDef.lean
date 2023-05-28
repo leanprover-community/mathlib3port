@@ -152,9 +152,7 @@ theorem ofMeasurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
 
 #print MeasureTheory.Measure.toOuterMeasure_injective /-
 theorem toOuterMeasure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
-  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by
-  congr
-  exact h
+  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by congr ; exact h
 #align measure_theory.measure.to_outer_measure_injective MeasureTheory.Measure.toOuterMeasure_injective
 -/
 
@@ -167,9 +165,7 @@ theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :
 
 #print MeasureTheory.Measure.ext_iff /-
 theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s :=
-  ⟨by
-    rintro rfl s hs
-    rfl, Measure.ext⟩
+  ⟨by rintro rfl s hs; rfl, Measure.ext⟩
 #align measure_theory.measure.ext_iff MeasureTheory.Measure.ext_iff
 -/
 
@@ -363,10 +359,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (f : β -> (Set.{u1} α)), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (Set.iUnion.{u1, succ u2} α β (fun (b : β) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b s) => f b)))) (tsum.{0, u2} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal (Set.Elem.{u2} β s) (fun (p : Set.Elem.{u2} β s) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (f (Subtype.val.{succ u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) p)))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure_bUnion_le MeasureTheory.measure_biUnion_leₓ'. -/
 theorem measure_biUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) :
-    μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) :=
-  by
-  haveI := hs.to_subtype
-  rw [bUnion_eq_Union]
+    μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) := by haveI := hs.to_subtype; rw [bUnion_eq_Union];
   apply measure_Union_le
 #align measure_theory.measure_bUnion_le MeasureTheory.measure_biUnion_le
 
@@ -389,10 +382,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} [_inst_2 : Fintype.{u2} β] (f : β -> (Set.{u1} α)), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (Set.iUnion.{u1, succ u2} α β (fun (b : β) => f b))) (Finset.sum.{0, u2} ENNReal β (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) (Finset.univ.{u2} β _inst_2) (fun (p : β) => MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α _inst_1 μ) (f p)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure_Union_fintype_le MeasureTheory.measure_iUnion_fintype_leₓ'. -/
-theorem measure_iUnion_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) :=
-  by
-  convert measure_bUnion_finset_le Finset.univ f
-  simp
+theorem measure_iUnion_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f b) ≤ ∑ p, μ (f p) := by
+  convert measure_bUnion_finset_le Finset.univ f; simp
 #align measure_theory.measure_Union_fintype_le MeasureTheory.measure_iUnion_fintype_le
 
 /- warning: measure_theory.measure_bUnion_lt_top -> MeasureTheory.measure_biUnion_lt_top is a dubious translation:
@@ -405,8 +396,7 @@ theorem measure_biUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
     (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) : μ (⋃ i ∈ s, f i) < ∞ :=
   by
   convert(measure_bUnion_finset_le hs.to_finset f).trans_lt _
-  · ext
-    rw [finite.mem_to_finset]
+  · ext; rw [finite.mem_to_finset]
   apply ENNReal.sum_lt_top; simpa only [finite.mem_to_finset]
 #align measure_theory.measure_bUnion_lt_top MeasureTheory.measure_biUnion_lt_top
 
@@ -909,10 +899,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) s (Set.univ.{u1} α)) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) (Set.univ.{u1} α))
 Case conversion may be inaccurate. Consider using '#align measure_theory.union_ae_eq_univ_of_ae_eq_univ_left MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_leftₓ'. -/
-theorem union_ae_eq_univ_of_ae_eq_univ_left (h : s =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ :=
-  by
-  convert ae_eq_set_union h (ae_eq_refl t)
-  rw [univ_union]
+theorem union_ae_eq_univ_of_ae_eq_univ_left (h : s =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ := by
+  convert ae_eq_set_union h (ae_eq_refl t); rw [univ_union]
 #align measure_theory.union_ae_eq_univ_of_ae_eq_univ_left MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_left
 
 /- warning: measure_theory.union_ae_eq_univ_of_ae_eq_univ_right -> MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_right is a dubious translation:
@@ -921,10 +909,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) t (Set.univ.{u1} α)) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) (Set.univ.{u1} α))
 Case conversion may be inaccurate. Consider using '#align measure_theory.union_ae_eq_univ_of_ae_eq_univ_right MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_rightₓ'. -/
-theorem union_ae_eq_univ_of_ae_eq_univ_right (h : t =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ :=
-  by
-  convert ae_eq_set_union (ae_eq_refl s) h
-  rw [union_univ]
+theorem union_ae_eq_univ_of_ae_eq_univ_right (h : t =ᵐ[μ] univ) : (s ∪ t : Set α) =ᵐ[μ] univ := by
+  convert ae_eq_set_union (ae_eq_refl s) h; rw [union_univ]
 #align measure_theory.union_ae_eq_univ_of_ae_eq_univ_right MeasureTheory.union_ae_eq_univ_of_ae_eq_univ_right
 
 /- warning: measure_theory.union_ae_eq_right_of_ae_eq_empty -> MeasureTheory.union_ae_eq_right_of_ae_eq_empty is a dubious translation:
@@ -933,10 +919,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) t)
 Case conversion may be inaccurate. Consider using '#align measure_theory.union_ae_eq_right_of_ae_eq_empty MeasureTheory.union_ae_eq_right_of_ae_eq_emptyₓ'. -/
-theorem union_ae_eq_right_of_ae_eq_empty (h : s =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] t :=
-  by
-  convert ae_eq_set_union h (ae_eq_refl t)
-  rw [empty_union]
+theorem union_ae_eq_right_of_ae_eq_empty (h : s =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] t := by
+  convert ae_eq_set_union h (ae_eq_refl t); rw [empty_union]
 #align measure_theory.union_ae_eq_right_of_ae_eq_empty MeasureTheory.union_ae_eq_right_of_ae_eq_empty
 
 /- warning: measure_theory.union_ae_eq_left_of_ae_eq_empty -> MeasureTheory.union_ae_eq_left_of_ae_eq_empty is a dubious translation:
@@ -945,10 +929,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) t (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) s)
 Case conversion may be inaccurate. Consider using '#align measure_theory.union_ae_eq_left_of_ae_eq_empty MeasureTheory.union_ae_eq_left_of_ae_eq_emptyₓ'. -/
-theorem union_ae_eq_left_of_ae_eq_empty (h : t =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] s :=
-  by
-  convert ae_eq_set_union (ae_eq_refl s) h
-  rw [union_empty]
+theorem union_ae_eq_left_of_ae_eq_empty (h : t =ᵐ[μ] (∅ : Set α)) : (s ∪ t : Set α) =ᵐ[μ] s := by
+  convert ae_eq_set_union (ae_eq_refl s) h; rw [union_empty]
 #align measure_theory.union_ae_eq_left_of_ae_eq_empty MeasureTheory.union_ae_eq_left_of_ae_eq_empty
 
 /- warning: measure_theory.inter_ae_eq_right_of_ae_eq_univ -> MeasureTheory.inter_ae_eq_right_of_ae_eq_univ is a dubious translation:
@@ -957,10 +939,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) s (Set.univ.{u1} α)) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) t)
 Case conversion may be inaccurate. Consider using '#align measure_theory.inter_ae_eq_right_of_ae_eq_univ MeasureTheory.inter_ae_eq_right_of_ae_eq_univₓ'. -/
-theorem inter_ae_eq_right_of_ae_eq_univ (h : s =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] t :=
-  by
-  convert ae_eq_set_inter h (ae_eq_refl t)
-  rw [univ_inter]
+theorem inter_ae_eq_right_of_ae_eq_univ (h : s =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] t := by
+  convert ae_eq_set_inter h (ae_eq_refl t); rw [univ_inter]
 #align measure_theory.inter_ae_eq_right_of_ae_eq_univ MeasureTheory.inter_ae_eq_right_of_ae_eq_univ
 
 /- warning: measure_theory.inter_ae_eq_left_of_ae_eq_univ -> MeasureTheory.inter_ae_eq_left_of_ae_eq_univ is a dubious translation:
@@ -969,10 +949,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) t (Set.univ.{u1} α)) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) s)
 Case conversion may be inaccurate. Consider using '#align measure_theory.inter_ae_eq_left_of_ae_eq_univ MeasureTheory.inter_ae_eq_left_of_ae_eq_univₓ'. -/
-theorem inter_ae_eq_left_of_ae_eq_univ (h : t =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] s :=
-  by
-  convert ae_eq_set_inter (ae_eq_refl s) h
-  rw [inter_univ]
+theorem inter_ae_eq_left_of_ae_eq_univ (h : t =ᵐ[μ] univ) : (s ∩ t : Set α) =ᵐ[μ] s := by
+  convert ae_eq_set_inter (ae_eq_refl s) h; rw [inter_univ]
 #align measure_theory.inter_ae_eq_left_of_ae_eq_univ MeasureTheory.inter_ae_eq_left_of_ae_eq_univ
 
 /- warning: measure_theory.inter_ae_eq_empty_of_ae_eq_empty_left -> MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_left is a dubious translation:
@@ -982,9 +960,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_left MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_leftₓ'. -/
 theorem inter_ae_eq_empty_of_ae_eq_empty_left (h : s =ᵐ[μ] (∅ : Set α)) :
-    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) :=
-  by
-  convert ae_eq_set_inter h (ae_eq_refl t)
+    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) := by convert ae_eq_set_inter h (ae_eq_refl t);
   rw [empty_inter]
 #align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_left MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_left
 
@@ -995,9 +971,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} {s : Set.{u1} α} {t : Set.{u1} α}, (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) t (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Filter.EventuallyEq.{u1, 0} α Prop (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_right MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_rightₓ'. -/
 theorem inter_ae_eq_empty_of_ae_eq_empty_right (h : t =ᵐ[μ] (∅ : Set α)) :
-    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) :=
-  by
-  convert ae_eq_set_inter (ae_eq_refl s) h
+    (s ∩ t : Set α) =ᵐ[μ] (∅ : Set α) := by convert ae_eq_set_inter (ae_eq_refl s) h;
   rw [inter_empty]
 #align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_right MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_right
 

@@ -64,9 +64,7 @@ def traverse : Multiset α' → F (Multiset β') :=
             (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
           by
           rw [CommApplicative.commutative_map]
-          congr
-          funext a b l
-          simpa [flip] using perm.swap b a l
+          congr ; funext a b l; simpa [flip] using perm.swap b a l
         simp [(· ∘ ·), this, functor_norm]
       case trans => simp [*])
 #align multiset.traverse Multiset.traverse

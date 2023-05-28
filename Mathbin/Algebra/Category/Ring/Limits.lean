@@ -52,10 +52,7 @@ but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 SemiRingCatMax.{u1, u2} instSemiRingCatLargeCategory.{max u2 u1}) (j : J), Semiring.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 SemiRingCatMax.{u1, u2} instSemiRingCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} SemiRingCat.{max u2 u1} instSemiRingCatLargeCategory.{max u2 u1} SemiRingCat.instConcreteCategorySemiRingCatInstSemiRingCatLargeCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align SemiRing.semiring_obj SemiRingCat.semiringObjₓ'. -/
 instance semiringObj (F : J ⥤ SemiRingCat.{max v u}) (j) :
-    Semiring ((F ⋙ forget SemiRingCat).obj j) :=
-  by
-  change Semiring (F.obj j)
-  infer_instance
+    Semiring ((F ⋙ forget SemiRingCat).obj j) := by change Semiring (F.obj j); infer_instance
 #align SemiRing.semiring_obj SemiRingCat.semiringObj
 
 /- warning: SemiRing.sections_subsemiring -> SemiRingCat.sectionsSubsemiring is a dubious translation:
@@ -249,9 +246,7 @@ but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 CommSemiRingCatMax.{u1, u2} instCommSemiRingCatLargeCategory.{max u2 u1}) (j : J), CommSemiring.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 CommSemiRingCatMax.{u1, u2} instCommSemiRingCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} CommSemiRingCat.{max u2 u1} instCommSemiRingCatLargeCategory.{max u2 u1} CommSemiRing.instConcreteCategoryCommSemiRingCatInstCommSemiRingCatLargeCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align CommSemiRing.comm_semiring_obj CommSemiRingCat.commSemiringObjₓ'. -/
 instance commSemiringObj (F : J ⥤ CommSemiRingCat.{max v u}) (j) :
-    CommSemiring ((F ⋙ forget CommSemiRingCat).obj j) :=
-  by
-  change CommSemiring (F.obj j)
+    CommSemiring ((F ⋙ forget CommSemiRingCat).obj j) := by change CommSemiring (F.obj j);
   infer_instance
 #align CommSemiRing.comm_semiring_obj CommSemiRingCat.commSemiringObj
 
@@ -370,10 +365,8 @@ lean 3 declaration is
 but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 RingCatMax.{u1, u2} instRingCatLargeCategory.{max u2 u1}) (j : J), Ring.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 RingCatMax.{u1, u2} instRingCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} RingCat.{max u2 u1} instRingCatLargeCategory.{max u2 u1} RingCat.instConcreteCategoryRingCatInstRingCatLargeCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align Ring.ring_obj RingCat.ringObjₓ'. -/
-instance ringObj (F : J ⥤ RingCat.{max v u}) (j) : Ring ((F ⋙ forget RingCat).obj j) :=
-  by
-  change Ring (F.obj j)
-  infer_instance
+instance ringObj (F : J ⥤ RingCat.{max v u}) (j) : Ring ((F ⋙ forget RingCat).obj j) := by
+  change Ring (F.obj j); infer_instance
 #align Ring.ring_obj RingCat.ringObj
 
 /- warning: Ring.sections_subring -> RingCat.sectionsSubring is a dubious translation:
@@ -532,10 +525,7 @@ but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 CommRingCatMax.{u1, u2} instCommRingCatLargeCategory.{max u2 u1}) (j : J), CommRing.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 CommRingCatMax.{u1, u2} instCommRingCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} CommRingCat.{max u2 u1} instCommRingCatLargeCategory.{max u2 u1} CommRingCat.instConcreteCategoryCommRingCatInstCommRingCatLargeCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align CommRing.comm_ring_obj CommRingCat.commRingObjₓ'. -/
 instance commRingObj (F : J ⥤ CommRingCat.{max v u}) (j) :
-    CommRing ((F ⋙ forget CommRingCat).obj j) :=
-  by
-  change CommRing (F.obj j)
-  infer_instance
+    CommRing ((F ⋙ forget CommRingCat).obj j) := by change CommRing (F.obj j); infer_instance
 #align CommRing.comm_ring_obj CommRingCat.commRingObj
 
 #print CommRingCat.limitCommRing /-

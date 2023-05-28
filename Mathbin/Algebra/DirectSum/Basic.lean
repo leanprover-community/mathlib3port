@@ -288,11 +288,8 @@ theorem toAddMonoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
 /- warning: direct_sum.to_add_monoid.unique -> DirectSum.toAddMonoid.unique is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align direct_sum.to_add_monoid.unique DirectSum.toAddMonoid.uniqueₓ'. -/
-theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f :=
-  by
-  congr
-  ext
-  simp [to_add_monoid, of]
+theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
+  congr ; ext; simp [to_add_monoid, of]
 #align direct_sum.to_add_monoid.unique DirectSum.toAddMonoid.unique
 
 end ToAddMonoid
@@ -317,10 +314,8 @@ def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align direct_sum.from_add_monoid_of DirectSum.fromAddMonoid_ofₓ'. -/
 @[simp]
-theorem fromAddMonoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f :=
-  by
-  rw [from_add_monoid, to_add_monoid_of]
-  rfl
+theorem fromAddMonoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f := by
+  rw [from_add_monoid, to_add_monoid_of]; rfl
 #align direct_sum.from_add_monoid_of DirectSum.fromAddMonoid_of
 
 /- warning: direct_sum.from_add_monoid_of_apply -> DirectSum.fromAddMonoid_of_apply is a dubious translation:

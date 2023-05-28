@@ -72,14 +72,10 @@ instance : StarRing (FreeAlgebra R X)
     unfold Star.star
     simp only [Function.comp_apply]
     refine' FreeAlgebra.induction R X _ _ _ _ x
-    · intros
-      simp only [AlgHom.commutes, MulOpposite.algebraMap_apply, MulOpposite.unop_op]
-    · intros
-      simp only [lift_ι_apply, MulOpposite.unop_op]
-    · intros
-      simp only [*, map_mul, MulOpposite.unop_mul]
-    · intros
-      simp only [*, map_add, MulOpposite.unop_add]
+    · intros ; simp only [AlgHom.commutes, MulOpposite.algebraMap_apply, MulOpposite.unop_op]
+    · intros ; simp only [lift_ι_apply, MulOpposite.unop_op]
+    · intros ; simp only [*, map_mul, MulOpposite.unop_mul]
+    · intros ; simp only [*, map_add, MulOpposite.unop_add]
   star_mul a b := by simp only [Function.comp_apply, map_mul, MulOpposite.unop_mul]
   star_add a b := by simp only [Function.comp_apply, map_add, MulOpposite.unop_add]
 

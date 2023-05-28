@@ -182,9 +182,7 @@ theorem addOrderOf_coe' {a : ℕ} (n : ℕ) (a0 : a ≠ 0) : addOrderOf (a : ZMo
 
 #print ZMod.ringChar_zmod_n /-
 /-- We have that `ring_char (zmod n) = n`. -/
-theorem ringChar_zmod_n (n : ℕ) : ringChar (ZMod n) = n :=
-  by
-  rw [ringChar.eq_iff]
+theorem ringChar_zmod_n (n : ℕ) : ringChar (ZMod n) = n := by rw [ringChar.eq_iff];
   exact ZMod.charP n
 #align zmod.ring_char_zmod_n ZMod.ringChar_zmod_n
 -/
@@ -399,8 +397,7 @@ theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : ZMod n → ℤ) = coe 
   by
   cases n
   · exact congr_arg ((· ∘ ·) Int.cast) ZMod.cast_id'
-  · ext
-    simp
+  · ext; simp
 #align zmod.int_cast_comp_cast ZMod.int_cast_comp_cast
 
 variable {R}
@@ -463,10 +460,7 @@ theorem cast_one (h : m ∣ n) : ((1 : ZMod n) : R) = 1 :=
   cases n
   · exact Int.cast_one
   show ((1 % (n + 1) : ℕ) : R) = 1
-  cases n;
-  · rw [Nat.dvd_one] at h
-    subst m
-    apply Subsingleton.elim
+  cases n; · rw [Nat.dvd_one] at h; subst m; apply Subsingleton.elim
   rw [Nat.mod_eq_of_lt]
   · exact Nat.cast_one
   exact Nat.lt_of_sub_eq_succ rfl
@@ -735,10 +729,8 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : ZMod m ≃+* ZMod n :=
   by
   cases m <;> cases n
   · exact RingEquiv.refl _
-  · exfalso
-    exact n.succ_ne_zero h.symm
-  · exfalso
-    exact m.succ_ne_zero h
+  · exfalso; exact n.succ_ne_zero h.symm
+  · exfalso; exact m.succ_ne_zero h
   ·
     exact
       {
@@ -954,9 +946,8 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat), Eq.{1} (AddSubgroup.{0} Int Int.instAddGroupInt) (AddMonoidHom.ker.{0, 0} Int Int.instAddGroupInt (ZMod n) (AddMonoid.toAddZeroClass.{0} (ZMod n) (AddMonoidWithOne.toAddMonoid.{0} (ZMod n) (AddGroupWithOne.toAddMonoidWithOne.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n)))))) (Int.castAddHom.{0} (ZMod n) (Ring.toAddGroupWithOne.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (AddSubgroup.zmultiples.{0} Int Int.instAddGroupInt (Nat.cast.{0} Int instNatCastInt n))
 Case conversion may be inaccurate. Consider using '#align zmod.ker_int_cast_add_hom ZMod.ker_int_castAddHomₓ'. -/
-theorem ker_int_castAddHom (n : ℕ) : (Int.castAddHom (ZMod n)).ker = AddSubgroup.zmultiples n :=
-  by
-  ext
+theorem ker_int_castAddHom (n : ℕ) : (Int.castAddHom (ZMod n)).ker = AddSubgroup.zmultiples n := by
+  ext;
   rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_castAddHom,
     int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_add_hom ZMod.ker_int_castAddHom
@@ -968,8 +959,7 @@ but is expected to have type
   forall (n : Nat), Eq.{1} (Ideal.{0} Int Int.instSemiringInt) (RingHom.ker.{0, 0, 0} Int (ZMod n) (RingHom.{0, 0} Int (ZMod n) (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) Int.instSemiringInt (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))) (RingHom.instRingHomClassRingHom.{0, 0} Int (ZMod n) (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt) (NonAssocRing.toNonAssocSemiring.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Int.castRingHom.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (Ideal.span.{0} Int Int.instSemiringInt (Singleton.singleton.{0, 0} Int (Set.{0} Int) (Set.instSingletonSet.{0} Int) (Nat.cast.{0} Int instNatCastInt n)))
 Case conversion may be inaccurate. Consider using '#align zmod.ker_int_cast_ring_hom ZMod.ker_int_castRingHomₓ'. -/
 theorem ker_int_castRingHom (n : ℕ) : (Int.castRingHom (ZMod n)).ker = Ideal.span ({n} : Set ℤ) :=
-  by
-  ext
+  by ext;
   rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_castRingHom, int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_ring_hom ZMod.ker_int_castRingHom
 
@@ -1014,9 +1004,7 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat) [_inst_1 : Fact (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n)], Eq.{1} Nat (ZMod.val n (OfNat.ofNat.{0} (ZMod n) 1 (One.toOfNat1.{0} (ZMod n) (Semiring.toOne.{0} (ZMod n) (CommSemiring.toSemiring.{0} (ZMod n) (CommRing.toCommSemiring.{0} (ZMod n) (ZMod.commRing n))))))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))
 Case conversion may be inaccurate. Consider using '#align zmod.val_one ZMod.val_oneₓ'. -/
-theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : ZMod n).val = 1 :=
-  by
-  rw [val_one_eq_one_mod]
+theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : ZMod n).val = 1 := by rw [val_one_eq_one_mod];
   exact Nat.mod_eq_of_lt (Fact.out _)
 #align zmod.val_one ZMod.val_one
 
@@ -1042,8 +1030,7 @@ Case conversion may be inaccurate. Consider using '#align zmod.val_mul ZMod.val_
 theorem val_mul {n : ℕ} (a b : ZMod n) : (a * b).val = a.val * b.val % n :=
   by
   cases n
-  · rw [Nat.mod_zero]
-    apply Int.natAbs_mul
+  · rw [Nat.mod_zero]; apply Int.natAbs_mul
   · apply Fin.val_mul
 #align zmod.val_mul ZMod.val_mul
 
@@ -1087,11 +1074,8 @@ Case conversion may be inaccurate. Consider using '#align zmod.inv_zero ZMod.inv
 theorem inv_zero : ∀ n : ℕ, (0 : ZMod n)⁻¹ = 0
   | 0 => Int.sign_zero
   | n + 1 =>
-    show (Nat.gcdA _ (n + 1) : ZMod (n + 1)) = 0
-      by
-      rw [val_zero]
-      unfold Nat.gcdA Nat.xgcd Nat.xgcdAux
-      rfl
+    show (Nat.gcdA _ (n + 1) : ZMod (n + 1)) = 0 by rw [val_zero];
+      unfold Nat.gcdA Nat.xgcd Nat.xgcdAux; rfl
 #align zmod.inv_zero ZMod.inv_zero
 
 /- warning: zmod.mul_inv_eq_gcd -> ZMod.mul_inv_eq_gcd is a dubious translation:
@@ -1113,11 +1097,8 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
     calc
       a * a⁻¹ = a * a⁻¹ + k * Nat.gcdB (val a) k := by
         rw [nat_cast_self, MulZeroClass.zero_mul, add_zero]
-      _ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) :=
-        by
-        push_cast
-        rw [nat_cast_zmod_val]
-        rfl
+      _ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by push_cast ;
+        rw [nat_cast_zmod_val]; rfl
       _ = Nat.gcd a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
       
 #align zmod.mul_inv_eq_gcd ZMod.mul_inv_eq_gcd
@@ -1146,8 +1127,7 @@ theorem eq_iff_modEq_nat (n : ℕ) {a b : ℕ} : (a : ZMod n) = b ↔ a ≡ b [M
   by
   cases n
   · simp only [Nat.ModEq, Int.coe_nat_inj', Nat.mod_zero]
-  · rw [Fin.ext_iff, Nat.ModEq, ← val_nat_cast, ← val_nat_cast]
-    exact Iff.rfl
+  · rw [Fin.ext_iff, Nat.ModEq, ← val_nat_cast, ← val_nat_cast]; exact Iff.rfl
 #align zmod.eq_iff_modeq_nat ZMod.eq_iff_modEq_nat
 
 /- warning: zmod.coe_mul_inv_eq_one -> ZMod.coe_mul_inv_eq_one is a dubious translation:
@@ -1216,9 +1196,7 @@ theorem inv_coe_unit {n : ℕ} (u : (ZMod n)ˣ) : (u : ZMod n)⁻¹ = (u⁻¹ : 
   have := congr_arg (coe : ℕ → ZMod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_one] at this
   let u' : (ZMod n)ˣ := ⟨u, (u : ZMod n)⁻¹, this, by rwa [mul_comm]⟩
-  have h : u = u' := by
-    apply Units.ext
-    rfl
+  have h : u = u' := by apply Units.ext; rfl
   rw [h]
   rfl
 #align zmod.inv_coe_unit ZMod.inv_coe_unit
@@ -1411,9 +1389,7 @@ Case conversion may be inaccurate. Consider using '#align zmod.val_eq_zero ZMod.
 @[simp]
 theorem val_eq_zero : ∀ {n : ℕ} (a : ZMod n), a.val = 0 ↔ a = 0
   | 0, a => Int.natAbs_eq_zero
-  | n + 1, a => by
-    rw [Fin.ext_iff]
-    exact Iff.rfl
+  | n + 1, a => by rw [Fin.ext_iff]; exact Iff.rfl
 #align zmod.val_eq_zero ZMod.val_eq_zero
 
 /- warning: zmod.neg_eq_self_iff -> ZMod.neg_eq_self_iff is a dubious translation:
@@ -1433,22 +1409,14 @@ theorem neg_eq_self_iff {n : ℕ} (a : ZMod n) : -a = a ↔ a = 0 ∨ 2 * a.val 
   conv_lhs =>
     rw [← a.nat_cast_zmod_val, ← Nat.cast_two, ← Nat.cast_mul, nat_coe_zmod_eq_zero_iff_dvd]
   constructor
-  · rintro ⟨m, he⟩
-    cases m
+  · rintro ⟨m, he⟩; cases m
     · rw [MulZeroClass.mul_zero, mul_eq_zero] at he
       rcases he with (⟨⟨⟩⟩ | he)
       exact Or.inl (a.val_eq_zero.1 he)
-    cases m
-    · right
-      rwa [mul_one] at he
+    cases m; · right; rwa [mul_one] at he
     refine' (a.val_lt.not_le <| Nat.le_of_mul_le_mul_left _ zero_lt_two).elim
-    rw [he, mul_comm]
-    apply Nat.mul_le_mul_left
-    decide
-  · rintro (rfl | h)
-    · rw [val_zero, MulZeroClass.mul_zero]
-      apply dvd_zero
-    · rw [h]
+    rw [he, mul_comm]; apply Nat.mul_le_mul_left; decide
+  · rintro (rfl | h); · rw [val_zero, MulZeroClass.mul_zero]; apply dvd_zero; · rw [h]
 #align zmod.neg_eq_self_iff ZMod.neg_eq_self_iff
 
 /- warning: zmod.val_cast_of_lt -> ZMod.val_cast_of_lt is a dubious translation:
@@ -1571,8 +1539,7 @@ theorem valMinAbs_mul_two_eq_iff {n : ℕ} (a : ZMod n) : a.valMinAbs * 2 = n �
   apply iff_of_false (fun he => _) (mt _ h)
   · rw [← a.val_min_abs_nonneg_iff, ← mul_nonneg_iff_left_nonneg_of_pos, he] at h
     exacts[h (Nat.cast_nonneg _), zero_lt_two]
-  · rw [mul_comm]
-    exact fun h => (Nat.le_div_iff_mul_le zero_lt_two).2 h.le
+  · rw [mul_comm]; exact fun h => (Nat.le_div_iff_mul_le zero_lt_two).2 h.le
 #align zmod.val_min_abs_mul_two_eq_iff ZMod.valMinAbs_mul_two_eq_iff
 -/
 
@@ -1584,8 +1551,7 @@ theorem valMinAbs_mem_Ioc {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs * 2 �
     exacts[Nat.cast_nonneg _, zero_le_two]
   · refine' ⟨_, trans (mul_nonpos_of_nonpos_of_nonneg _ zero_le_two) <| Nat.cast_nonneg _⟩
     · linarith only [h]
-    · rw [sub_nonpos, Int.ofNat_le]
-      exact x.val_lt.le
+    · rw [sub_nonpos, Int.ofNat_le]; exact x.val_lt.le
 #align zmod.val_min_abs_mem_Ioc ZMod.valMinAbs_mem_Ioc
 -/
 
@@ -1597,9 +1563,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_spec ZMod.valMinAbs_specₓ'. -/
 theorem valMinAbs_spec {n : ℕ} [NeZero n] (x : ZMod n) (y : ℤ) :
     x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.Ioc (-n : ℤ) n :=
-  ⟨by
-    rintro rfl
-    exact ⟨x.coe_val_min_abs.symm, x.val_min_abs_mem_Ioc⟩, fun h =>
+  ⟨by rintro rfl; exact ⟨x.coe_val_min_abs.symm, x.val_min_abs_mem_Ioc⟩, fun h =>
     by
     rw [← sub_eq_zero]
     apply @Int.eq_zero_of_abs_lt_dvd n
@@ -1615,10 +1579,8 @@ theorem natAbs_valMinAbs_le {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs.natA
   by
   rw [Nat.le_div_two_iff_mul_two_le]
   cases x.val_min_abs.nat_abs_eq
-  · rw [← h]
-    exact x.val_min_abs_mem_Ioc.2
-  · rw [← neg_le_neg_iff, ← neg_mul, ← h]
-    exact x.val_min_abs_mem_Ioc.1.le
+  · rw [← h]; exact x.val_min_abs_mem_Ioc.2
+  · rw [← neg_le_neg_iff, ← neg_mul, ← h]; exact x.val_min_abs_mem_Ioc.1.le
 #align zmod.nat_abs_val_min_abs_le ZMod.natAbs_valMinAbs_le
 -/
 
@@ -1657,9 +1619,7 @@ Case conversion may be inaccurate. Consider using '#align zmod.nat_cast_nat_abs_
 theorem nat_cast_natAbs_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
     (a.valMinAbs.natAbs : ZMod n) = if a.val ≤ (n : ℕ) / 2 then a else -a :=
   by
-  have : (a.val : ℤ) - n ≤ 0 := by
-    erw [sub_nonpos, Int.ofNat_le]
-    exact a.val_le
+  have : (a.val : ℤ) - n ≤ 0 := by erw [sub_nonpos, Int.ofNat_le]; exact a.val_le
   rw [val_min_abs_def_pos]
   split_ifs
   · rw [Int.natAbs_ofNat, nat_cast_zmod_val]
@@ -1677,9 +1637,7 @@ Case conversion may be inaccurate. Consider using '#align zmod.val_min_abs_neg_o
 theorem valMinAbs_neg_of_ne_half {n : ℕ} {a : ZMod n} (ha : 2 * a.val ≠ n) :
     (-a).valMinAbs = -a.valMinAbs :=
   by
-  cases eq_zero_or_neZero n;
-  · subst h
-    rfl
+  cases eq_zero_or_neZero n; · subst h; rfl
   refine' (val_min_abs_spec _ _).2 ⟨_, _, _⟩
   · rw [Int.cast_neg, coe_val_min_abs]
   · rw [neg_mul, neg_lt_neg_iff]
@@ -1708,9 +1666,7 @@ but is expected to have type
   forall {n : Nat} [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) n] (a : ZMod n), Eq.{1} Int (Nat.cast.{0} Int instNatCastInt (ZMod.val n a)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (ZMod.valMinAbs n a) (Nat.cast.{0} Int instNatCastInt (ite.{1} Nat (LE.le.{0} Nat instLENat (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Nat.decLe (ZMod.val n a) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n)))
 Case conversion may be inaccurate. Consider using '#align zmod.val_eq_ite_val_min_abs ZMod.val_eq_ite_valMinAbsₓ'. -/
 theorem val_eq_ite_valMinAbs {n : ℕ} [NeZero n] (a : ZMod n) :
-    (a.val : ℤ) = a.valMinAbs + if a.val ≤ n / 2 then 0 else n :=
-  by
-  rw [val_min_abs_def_pos]
+    (a.val : ℤ) = a.valMinAbs + if a.val ≤ n / 2 then 0 else n := by rw [val_min_abs_def_pos];
   split_ifs <;> simp only [add_zero, sub_add_cancel]
 #align zmod.val_eq_ite_val_min_abs ZMod.val_eq_ite_valMinAbs
 
@@ -1739,13 +1695,11 @@ theorem valMinAbs_natAbs_eq_min {n : ℕ} [hpos : NeZero n] (a : ZMod n) :
   by
   rw [val_min_abs_def_pos]
   split_ifs with h h
-  · rw [Int.natAbs_ofNat]
-    symm
+  · rw [Int.natAbs_ofNat]; symm
     apply
       min_eq_left (le_trans h (le_trans (Nat.half_le_of_sub_le_half _) (Nat.sub_le_sub_left n h)))
     rw [Nat.sub_sub_self (Nat.div_le_self _ _)]
-  · rw [← Int.natAbs_neg, neg_sub, ← Nat.cast_sub a.val_le]
-    symm
+  · rw [← Int.natAbs_neg, neg_sub, ← Nat.cast_sub a.val_le]; symm
     apply
       min_eq_right
         (le_trans (le_trans (Nat.sub_le_sub_left n (lt_of_not_ge h)) (Nat.le_half_of_half_lt_sub _))
@@ -1853,7 +1807,7 @@ instance : Field (ZMod p) :=
 instance (p : ℕ) [hp : Fact p.Prime] : IsDomain (ZMod p) :=
   by
   -- We need `cases p` here in order to resolve which `comm_ring` instance is being used.
-  cases p
+  cases p;
   · exact (Nat.not_prime_zero hp.out).elim
   exact @Field.isDomain (ZMod _) (ZMod.field _)
 
@@ -1888,9 +1842,7 @@ but is expected to have type
   forall {n : Nat} {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Subsingleton.{succ u1} (RingEquiv.{0, u1} (ZMod n) R (NonUnitalNonAssocRing.toMul.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Distrib.toAdd.{0} (ZMod n) (NonUnitalNonAssocSemiring.toDistrib.{0} (ZMod n) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} (ZMod n) (NonAssocRing.toNonUnitalNonAssocRing.{0} (ZMod n) (Ring.toNonAssocRing.{0} (ZMod n) (CommRing.toRing.{0} (ZMod n) (ZMod.commRing n))))))) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align zmod.subsingleton_ring_equiv ZMod.subsingleton_ringEquivₓ'. -/
 instance subsingleton_ringEquiv [Semiring R] : Subsingleton (ZMod n ≃+* R) :=
-  ⟨fun f g => by
-    rw [RingEquiv.coe_ringHom_inj_iff]
-    apply RingHom.ext_zmod _ _⟩
+  ⟨fun f g => by rw [RingEquiv.coe_ringHom_inj_iff]; apply RingHom.ext_zmod _ _⟩
 #align zmod.subsingleton_ring_equiv ZMod.subsingleton_ringEquiv
 
 /- warning: zmod.ring_hom_map_cast -> ZMod.ringHom_map_cast is a dubious translation:

@@ -693,12 +693,8 @@ theorem Pi.mulSingle_commute [∀ i, MulOneClass <| f i] :
     Pairwise fun i j => ∀ (x : f i) (y : f j), Commute (mulSingle i x) (mulSingle j y) :=
   by
   intro i j hij x y; ext k
-  by_cases h1 : i = k;
-  · subst h1
-    simp [hij]
-  by_cases h2 : j = k;
-  · subst h2
-    simp [hij]
+  by_cases h1 : i = k; · subst h1; simp [hij]
+  by_cases h2 : j = k; · subst h2; simp [hij]
   simp [h1, h2]
 #align pi.mul_single_commute Pi.mulSingle_commute
 #align pi.single_commute Pi.single_commute

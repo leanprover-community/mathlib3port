@@ -47,9 +47,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (forall (a : α), Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionRing.toDivInvMonoid.{u1} α _inst_1))) (Neg.neg.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) a) n) (Neg.neg.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionRing.toDivInvMonoid.{u1} α _inst_1))) a n)))
 Case conversion may be inaccurate. Consider using '#align odd.neg_zpow Odd.neg_zpowₓ'. -/
-theorem Odd.neg_zpow (h : Odd n) (a : α) : (-a) ^ n = -a ^ n :=
-  by
-  obtain ⟨k, rfl⟩ := h.exists_bit1
+theorem Odd.neg_zpow (h : Odd n) (a : α) : (-a) ^ n = -a ^ n := by obtain ⟨k, rfl⟩ := h.exists_bit1;
   exact zpow_bit1_neg _ _
 #align odd.neg_zpow Odd.neg_zpow
 

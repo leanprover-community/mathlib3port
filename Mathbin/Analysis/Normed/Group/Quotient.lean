@@ -700,8 +700,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
       _ = c * _ + ε := _
       
     · exact_mod_cast hc
-    · rw [mul_add, mul_div_cancel']
-      exact_mod_cast hc.ne'
+    · rw [mul_add, mul_div_cancel']; exact_mod_cast hc.ne'
 #align normed_add_group_hom.lift_norm_le NormedAddGroupHom.lift_norm_le
 
 /- warning: normed_add_group_hom.lift_norm_noninc -> NormedAddGroupHom.lift_normNoninc is a dubious translation:

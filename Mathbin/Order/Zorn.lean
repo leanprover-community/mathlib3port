@@ -87,9 +87,7 @@ theorem exists_maximal_of_chains_bounded (h : ∀ c, IsChain r c → ∃ ub, ∀
   ⟨ub, fun a ha =>
     have : IsChain r (insert a <| maxChain r) :=
       maxChain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
-    hub a <| by
-      rw [max_chain_spec.right this (subset_insert _ _)]
-      exact mem_insert _ _⟩
+    hub a <| by rw [max_chain_spec.right this (subset_insert _ _)]; exact mem_insert _ _⟩
 #align exists_maximal_of_chains_bounded exists_maximal_of_chains_bounded
 -/
 

@@ -189,10 +189,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.sup'_coe ContinuousMap.sup'_coeₓ'. -/
 @[simp, norm_cast]
 theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
-    ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) :=
-  by
-  ext
-  simp [sup'_apply]
+    ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) := by ext; simp [sup'_apply]
 #align continuous_map.sup'_coe ContinuousMap.sup'_coe
 
 end Sup'

@@ -48,9 +48,7 @@ theorem simply_connected_def (X : Type _) [TopologicalSpace X] :
 theorem simply_connected_iff_unique_homotopic (X : Type _) [TopologicalSpace X] :
     SimplyConnectedSpace X ↔
       Nonempty X ∧ ∀ x y : X, Nonempty (Unique (Path.Homotopic.Quotient x y)) :=
-  by
-  rw [simply_connected_def, equiv_punit_iff_unique]
-  rfl
+  by rw [simply_connected_def, equiv_punit_iff_unique]; rfl
 #align simply_connected_iff_unique_homotopic simply_connected_iff_unique_homotopic
 
 namespace SimplyConnectedSpace
@@ -58,11 +56,7 @@ namespace SimplyConnectedSpace
 variable {X : Type _} [TopologicalSpace X] [SimplyConnectedSpace X]
 
 instance (x y : X) : Subsingleton (Path.Homotopic.Quotient x y) :=
-  @Unique.subsingleton _
-    (Nonempty.some
-      (by
-        rw [simply_connected_iff_unique_homotopic] at *
-        tauto))
+  @Unique.subsingleton _ (Nonempty.some (by rw [simply_connected_iff_unique_homotopic] at *; tauto))
 
 attribute [local instance] Path.Homotopic.setoid
 
@@ -93,9 +87,8 @@ attribute [local instance] Path.Homotopic.setoid
 theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
     SimplyConnectedSpace Y ↔
       PathConnectedSpace Y ∧ ∀ x y : Y, Subsingleton (Path.Homotopic.Quotient x y) :=
-  ⟨by
-    intro
-    constructor <;> infer_instance, fun h => by
+  ⟨by intro ; constructor <;> infer_instance, fun h =>
+    by
     cases h; rw [simply_connected_iff_unique_homotopic]
     exact ⟨inferInstance, fun x y => ⟨uniqueOfSubsingleton ⟦PathConnectedSpace.somePath x y⟧⟩⟩⟩
 #align simply_connected_iff_paths_homotopic simply_connected_iff_paths_homotopic

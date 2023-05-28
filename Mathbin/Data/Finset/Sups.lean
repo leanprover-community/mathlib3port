@@ -796,10 +796,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disjSups_leftₓ'. -/
-theorem Nonempty.of_disjSups_left : (s ○ t).Nonempty → s.Nonempty :=
-  by
-  simp_rw [Finset.Nonempty, mem_disj_sups]
-  exact fun ⟨_, a, ha, _⟩ => ⟨a, ha⟩
+theorem Nonempty.of_disjSups_left : (s ○ t).Nonempty → s.Nonempty := by
+  simp_rw [Finset.Nonempty, mem_disj_sups]; exact fun ⟨_, a, ha, _⟩ => ⟨a, ha⟩
 #align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disjSups_left
 
 /- warning: finset.nonempty.of_disj_sups_right -> Finset.Nonempty.of_disjSups_right is a dubious translation:
@@ -808,10 +806,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α t)
 Case conversion may be inaccurate. Consider using '#align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disjSups_rightₓ'. -/
-theorem Nonempty.of_disjSups_right : (s ○ t).Nonempty → t.Nonempty :=
-  by
-  simp_rw [Finset.Nonempty, mem_disj_sups]
-  exact fun ⟨_, _, _, b, hb, _⟩ => ⟨b, hb⟩
+theorem Nonempty.of_disjSups_right : (s ○ t).Nonempty → t.Nonempty := by
+  simp_rw [Finset.Nonempty, mem_disj_sups]; exact fun ⟨_, _, _, b, hb, _⟩ => ⟨b, hb⟩
 #align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disjSups_right
 
 /- warning: finset.disj_sups_empty_left -> Finset.disjSups_empty_left is a dubious translation:
@@ -892,9 +888,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t s)
 Case conversion may be inaccurate. Consider using '#align finset.disj_sups_comm Finset.disjSups_commₓ'. -/
-theorem disjSups_comm : s ○ t = t ○ s := by
-  ext
-  rw [mem_disj_sups, exists₂_comm]
+theorem disjSups_comm : s ○ t = t ○ s := by ext; rw [mem_disj_sups, exists₂_comm];
   simp [sup_comm, disjoint_comm]
 #align finset.disj_sups_comm Finset.disjSups_comm
 

@@ -140,10 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prime_spectrum.prime_spectrum_prod_symm_inl_as_ideal PrimeSpectrum.primeSpectrumProd_symm_inl_asIdealₓ'. -/
 @[simp]
 theorem primeSpectrumProd_symm_inl_asIdeal (x : PrimeSpectrum R) :
-    ((primeSpectrumProd R S).symm <| Sum.inl x).asIdeal = Ideal.prod x.asIdeal ⊤ :=
-  by
-  cases x
-  rfl
+    ((primeSpectrumProd R S).symm <| Sum.inl x).asIdeal = Ideal.prod x.asIdeal ⊤ := by cases x; rfl
 #align prime_spectrum.prime_spectrum_prod_symm_inl_as_ideal PrimeSpectrum.primeSpectrumProd_symm_inl_asIdeal
 
 /- warning: prime_spectrum.prime_spectrum_prod_symm_inr_as_ideal -> PrimeSpectrum.primeSpectrumProd_symm_inr_asIdeal is a dubious translation:
@@ -154,10 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prime_spectrum.prime_spectrum_prod_symm_inr_as_ideal PrimeSpectrum.primeSpectrumProd_symm_inr_asIdealₓ'. -/
 @[simp]
 theorem primeSpectrumProd_symm_inr_asIdeal (x : PrimeSpectrum S) :
-    ((primeSpectrumProd R S).symm <| Sum.inr x).asIdeal = Ideal.prod ⊤ x.asIdeal :=
-  by
-  cases x
-  rfl
+    ((primeSpectrumProd R S).symm <| Sum.inr x).asIdeal = Ideal.prod ⊤ x.asIdeal := by cases x; rfl
 #align prime_spectrum.prime_spectrum_prod_symm_inr_as_ideal PrimeSpectrum.primeSpectrumProd_symm_inr_asIdeal
 
 #print PrimeSpectrum.zeroLocus /-
@@ -183,9 +177,7 @@ theorem mem_zeroLocus (x : PrimeSpectrum R) (s : Set R) : x ∈ zeroLocus s ↔ 
 
 #print PrimeSpectrum.zeroLocus_span /-
 @[simp]
-theorem zeroLocus_span (s : Set R) : zeroLocus (Ideal.span s : Set R) = zeroLocus s :=
-  by
-  ext x
+theorem zeroLocus_span (s : Set R) : zeroLocus (Ideal.span s : Set R) = zeroLocus s := by ext x;
   exact (Submodule.gi R R).gc s x.as_ideal
 #align prime_spectrum.zero_locus_span PrimeSpectrum.zeroLocus_span
 -/
@@ -425,9 +417,7 @@ theorem zeroLocus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : zeroLocus s
   intro x hx
   rw [mem_zero_locus] at hx
   have x_prime : x.as_ideal.is_prime := by infer_instance
-  have eq_top : x.as_ideal = ⊤ := by
-    rw [Ideal.eq_top_iff_one]
-    exact hx h
+  have eq_top : x.as_ideal = ⊤ := by rw [Ideal.eq_top_iff_one]; exact hx h
   apply x_prime.ne_top eq_top
 #align prime_spectrum.zero_locus_empty_of_one_mem PrimeSpectrum.zeroLocus_empty_of_one_mem
 
@@ -455,9 +445,7 @@ theorem zeroLocus_empty_iff_eq_top {I : Ideal R} : zeroLocus (I : Set R) = ∅ �
     intro h
     rcases Ideal.exists_le_maximal I h with ⟨M, hM, hIM⟩
     exact Set.Nonempty.ne_empty ⟨⟨M, hM.is_prime⟩, hIM⟩
-  · rintro rfl
-    apply zero_locus_empty_of_one_mem
-    trivial
+  · rintro rfl; apply zero_locus_empty_of_one_mem; trivial
 #align prime_spectrum.zero_locus_empty_iff_eq_top PrimeSpectrum.zeroLocus_empty_iff_eq_top
 
 #print PrimeSpectrum.zeroLocus_univ /-
@@ -563,10 +551,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (s : Set.{u1} R) (s' : Set.{u1} R), Eq.{succ u1} (Set.{u1} (PrimeSpectrum.{u1} R _inst_1)) (Union.union.{u1} (Set.{u1} (PrimeSpectrum.{u1} R _inst_1)) (Set.instUnionSet.{u1} (PrimeSpectrum.{u1} R _inst_1)) (PrimeSpectrum.zeroLocus.{u1} R _inst_1 s) (PrimeSpectrum.zeroLocus.{u1} R _inst_1 s')) (PrimeSpectrum.zeroLocus.{u1} R _inst_1 (SetLike.coe.{u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) R (Submodule.setLike.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Inf.inf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instInfSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) s) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) s'))))
 Case conversion may be inaccurate. Consider using '#align prime_spectrum.union_zero_locus PrimeSpectrum.union_zeroLocusₓ'. -/
 theorem union_zeroLocus (s s' : Set R) :
-    zeroLocus s ∪ zeroLocus s' = zeroLocus (Ideal.span s ⊓ Ideal.span s' : Ideal R) :=
-  by
-  rw [zero_locus_inf]
-  simp
+    zeroLocus s ∪ zeroLocus s' = zeroLocus (Ideal.span s ⊓ Ideal.span s' : Ideal R) := by
+  rw [zero_locus_inf]; simp
 #align prime_spectrum.union_zero_locus PrimeSpectrum.union_zeroLocus
 
 /- warning: prime_spectrum.zero_locus_mul -> PrimeSpectrum.zeroLocus_mul is a dubious translation:
@@ -649,9 +635,7 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
       choose f hf using fun i : Zs => h i.Prop
       simp only [← hf]
       exact ⟨_, zero_locus_Union _⟩)
-    (by
-      rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
-      exact ⟨_, (union_zero_locus s t).symm⟩)
+    (by rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩; exact ⟨_, (union_zero_locus s t).symm⟩)
 #align prime_spectrum.zariski_topology PrimeSpectrum.zariskiTopology
 -/
 
@@ -689,9 +673,7 @@ theorem isClosed_iff_zeroLocus_radical_ideal (Z : Set (PrimeSpectrum R)) :
 -/
 
 #print PrimeSpectrum.isClosed_zeroLocus /-
-theorem isClosed_zeroLocus (s : Set R) : IsClosed (zeroLocus s) :=
-  by
-  rw [is_closed_iff_zero_locus]
+theorem isClosed_zeroLocus (s : Set R) : IsClosed (zeroLocus s) := by rw [is_closed_iff_zero_locus];
   exact ⟨s, rfl⟩
 #align prime_spectrum.is_closed_zero_locus PrimeSpectrum.isClosed_zeroLocus
 -/
@@ -807,8 +789,7 @@ theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField
           (Classical.not_not.2 rfl))
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases hx : x.as_ideal = ⊥
-    · letI := h.to_field
-      exact hx.symm ▸ Ideal.bot_isMaximal
+    · letI := h.to_field; exact hx.symm ▸ Ideal.bot_isMaximal
     · exact absurd h (Ring.not_isField_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
 #align prime_spectrum.t1_space_iff_is_field PrimeSpectrum.t1Space_iff_isField
 -/
@@ -826,10 +807,8 @@ theorem isIrreducible_zeroLocus_iff_of_radical (I : Ideal R) (hI : I.IsRadical) 
   · trans ∀ x y : Ideal R, Z(I) ⊆ Z(x) ∪ Z(y) → Z(I) ⊆ Z(x) ∨ Z(I) ⊆ Z(y)
     · simp_rw [isPreirreducible_iff_closed_union_closed, is_closed_iff_zero_locus_ideal]
       constructor
-      · rintro h x y
-        exact h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-      · rintro h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-        exact h x y
+      · rintro h x y; exact h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
+      · rintro h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩; exact h x y
     · simp_rw [← zero_locus_inf, subset_zero_locus_iff_le_vanishing_ideal,
         vanishing_ideal_zero_locus_eq_radical, hI.radical]
       constructor
@@ -918,10 +897,7 @@ theorem comap_asIdeal (y : PrimeSpectrum S) : (comap f y).asIdeal = Ideal.comap 
 
 #print PrimeSpectrum.comap_id /-
 @[simp]
-theorem comap_id : comap (RingHom.id R) = ContinuousMap.id _ :=
-  by
-  ext
-  rfl
+theorem comap_id : comap (RingHom.id R) = ContinuousMap.id _ := by ext; rfl
 #align prime_spectrum.comap_id PrimeSpectrum.comap_id
 -/
 
@@ -1020,8 +996,7 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
     rw [preimage_comap_zero_locus, ← zero_locus_span, ← zero_locus_span s]
     congr 1
     exact congr_arg Submodule.carrier (IsLocalization.map_comap M S (Ideal.span s))
-  · rintro ⟨_, ⟨t, rfl⟩, rfl⟩
-    simp
+  · rintro ⟨_, ⟨t, rfl⟩, rfl⟩; simp
 #align prime_spectrum.localization_comap_inducing PrimeSpectrum.localization_comap_inducing
 
 /- warning: prime_spectrum.localization_comap_injective -> PrimeSpectrum.localization_comap_injective is a dubious translation:
@@ -1251,10 +1226,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (f : R) (g : R), LE.le.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (Preorder.toLE.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)))))) (PrimeSpectrum.basicOpen.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) f g)) (PrimeSpectrum.basicOpen.{u1} R _inst_1 f)
 Case conversion may be inaccurate. Consider using '#align prime_spectrum.basic_open_mul_le_left PrimeSpectrum.basicOpen_mul_le_leftₓ'. -/
-theorem basicOpen_mul_le_left (f g : R) : basicOpen (f * g) ≤ basicOpen f :=
-  by
-  rw [basic_open_mul f g]
-  exact inf_le_left
+theorem basicOpen_mul_le_left (f g : R) : basicOpen (f * g) ≤ basicOpen f := by
+  rw [basic_open_mul f g]; exact inf_le_left
 #align prime_spectrum.basic_open_mul_le_left PrimeSpectrum.basicOpen_mul_le_left
 
 /- warning: prime_spectrum.basic_open_mul_le_right -> PrimeSpectrum.basicOpen_mul_le_right is a dubious translation:
@@ -1263,10 +1236,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (f : R) (g : R), LE.le.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (Preorder.toLE.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (TopologicalSpace.Opens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)))))) (PrimeSpectrum.basicOpen.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) f g)) (PrimeSpectrum.basicOpen.{u1} R _inst_1 g)
 Case conversion may be inaccurate. Consider using '#align prime_spectrum.basic_open_mul_le_right PrimeSpectrum.basicOpen_mul_le_rightₓ'. -/
-theorem basicOpen_mul_le_right (f g : R) : basicOpen (f * g) ≤ basicOpen g :=
-  by
-  rw [basic_open_mul f g]
-  exact inf_le_right
+theorem basicOpen_mul_le_right (f g : R) : basicOpen (f * g) ≤ basicOpen g := by
+  rw [basic_open_mul f g]; exact inf_le_right
 #align prime_spectrum.basic_open_mul_le_right PrimeSpectrum.basicOpen_mul_le_right
 
 /- warning: prime_spectrum.basic_open_pow -> PrimeSpectrum.basicOpen_pow is a dubious translation:
@@ -1377,19 +1348,14 @@ Case conversion may be inaccurate. Consider using '#align prime_spectrum.localiz
 theorem localization_away_openEmbedding (S : Type v) [CommRing S] [Algebra R S] (r : R)
     [IsLocalization.Away r S] : OpenEmbedding (comap (algebraMap R S)) :=
   { toEmbedding := localization_comap_embedding S (Submonoid.powers r)
-    open_range := by
-      rw [localization_away_comap_range S r]
-      exact is_open_basic_open }
+    open_range := by rw [localization_away_comap_range S r]; exact is_open_basic_open }
 #align prime_spectrum.localization_away_open_embedding PrimeSpectrum.localization_away_openEmbedding
 
 end BasicOpen
 
 /-- The prime spectrum of a commutative ring is a compact topological space. -/
 instance : CompactSpace (PrimeSpectrum R)
-    where isCompact_univ := by
-    convert is_compact_basic_open (1 : R)
-    rw [basic_open_one]
-    rfl
+    where isCompact_univ := by convert is_compact_basic_open (1 : R); rw [basic_open_one]; rfl
 
 section Order
 
@@ -1515,10 +1481,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_3 : LocalRing.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] {S : Type.{u2}} [_inst_4 : CommRing.{u2} S] [_inst_5 : LocalRing.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_4))] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_4)))), Iff (IsLocalRingHom.{u1, u2} R S (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_4)) f) (Eq.{succ u1} ((fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : PrimeSpectrum.{u2} S _inst_4) => PrimeSpectrum.{u1} R _inst_1) (LocalRing.closedPoint.{u2} S _inst_4 _inst_5)) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (ContinuousMap.{u2, u1} (PrimeSpectrum.{u2} S _inst_4) (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u2} S _inst_4) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (PrimeSpectrum.{u2} S _inst_4) (fun (_x : PrimeSpectrum.{u2} S _inst_4) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : PrimeSpectrum.{u2} S _inst_4) => PrimeSpectrum.{u1} R _inst_1) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u2, u1} (ContinuousMap.{u2, u1} (PrimeSpectrum.{u2} S _inst_4) (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u2} S _inst_4) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1)) (PrimeSpectrum.{u2} S _inst_4) (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u2} S _inst_4) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1) (ContinuousMap.instContinuousMapClassContinuousMap.{u2, u1} (PrimeSpectrum.{u2} S _inst_4) (PrimeSpectrum.{u1} R _inst_1) (PrimeSpectrum.zariskiTopology.{u2} S _inst_4) (PrimeSpectrum.zariskiTopology.{u1} R _inst_1))) (PrimeSpectrum.comap.{u1, u2} R S _inst_1 _inst_4 f) (LocalRing.closedPoint.{u2} S _inst_4 _inst_5)) (LocalRing.closedPoint.{u1} R _inst_1 _inst_3))
 Case conversion may be inaccurate. Consider using '#align local_ring.is_local_ring_hom_iff_comap_closed_point LocalRing.isLocalRingHom_iff_comap_closedPointₓ'. -/
 theorem isLocalRingHom_iff_comap_closedPoint {S : Type v} [CommRing S] [LocalRing S] (f : R →+* S) :
-    IsLocalRingHom f ↔ PrimeSpectrum.comap f (closedPoint S) = closedPoint R :=
-  by
-  rw [(local_hom_tfae f).out 0 4, PrimeSpectrum.ext_iff]
-  rfl
+    IsLocalRingHom f ↔ PrimeSpectrum.comap f (closedPoint S) = closedPoint R := by
+  rw [(local_hom_tfae f).out 0 4, PrimeSpectrum.ext_iff]; rfl
 #align local_ring.is_local_ring_hom_iff_comap_closed_point LocalRing.isLocalRingHom_iff_comap_closedPoint
 
 /- warning: local_ring.comap_closed_point -> LocalRing.comap_closedPoint is a dubious translation:
@@ -1548,10 +1512,8 @@ Case conversion may be inaccurate. Consider using '#align local_ring.closed_poin
 theorem closedPoint_mem_iff (U : TopologicalSpace.Opens <| PrimeSpectrum R) :
     closedPoint R ∈ U ↔ U = ⊤ := by
   constructor
-  · rw [eq_top_iff]
-    exact fun h x _ => (specializes_closed_point x).mem_open U.2 h
-  · rintro rfl
-    trivial
+  · rw [eq_top_iff]; exact fun h x _ => (specializes_closed_point x).mem_open U.2 h
+  · rintro rfl; trivial
 #align local_ring.closed_point_mem_iff LocalRing.closedPoint_mem_iff
 
 @[simp]

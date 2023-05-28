@@ -64,21 +64,15 @@ theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
 
 @[to_additive]
 instance [SMul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
-  ⟨fun a b x => by
-    cases x
-    rw [smul_mk, smul_mk, smul_mk, smul_assoc]⟩
+  ⟨fun a b x => by cases x; rw [smul_mk, smul_mk, smul_mk, smul_assoc]⟩
 
 @[to_additive]
 instance [∀ i, SMulCommClass M N (α i)] : SMulCommClass M N (Σi, α i) :=
-  ⟨fun a b x => by
-    cases x
-    rw [smul_mk, smul_mk, smul_mk, smul_mk, smul_comm]⟩
+  ⟨fun a b x => by cases x; rw [smul_mk, smul_mk, smul_mk, smul_mk, smul_comm]⟩
 
 @[to_additive]
 instance [∀ i, SMul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σi, α i) :=
-  ⟨fun a x => by
-    cases x
-    rw [smul_mk, smul_mk, op_smul_eq_smul]⟩
+  ⟨fun a x => by cases x; rw [smul_mk, smul_mk, op_smul_eq_smul]⟩
 
 /- warning: sigma.has_faithful_smul' -> Sigma.FaithfulSMul' is a dubious translation:
 lean 3 declaration is
@@ -102,12 +96,8 @@ end SMul
 @[to_additive]
 instance {m : Monoid M} [∀ i, MulAction M (α i)] : MulAction M (Σi, α i)
     where
-  mul_smul a b x := by
-    cases x
-    rw [smul_mk, smul_mk, smul_mk, mul_smul]
-  one_smul x := by
-    cases x
-    rw [smul_mk, one_smul]
+  mul_smul a b x := by cases x; rw [smul_mk, smul_mk, smul_mk, mul_smul]
+  one_smul x := by cases x; rw [smul_mk, one_smul]
 
 end Sigma
 

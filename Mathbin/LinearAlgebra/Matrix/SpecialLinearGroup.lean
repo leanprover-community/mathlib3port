@@ -193,9 +193,7 @@ theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
 /- warning: matrix.special_linear_group.det_ne_zero -> Matrix.SpecialLinearGroup.det_ne_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align matrix.special_linear_group.det_ne_zero Matrix.SpecialLinearGroup.det_ne_zeroₓ'. -/
-theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 :=
-  by
-  rw [g.det_coe]
+theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 := by rw [g.det_coe];
   norm_num
 #align matrix.special_linear_group.det_ne_zero Matrix.SpecialLinearGroup.det_ne_zero
 
@@ -213,9 +211,7 @@ instance : Monoid (SpecialLinearGroup n R) :=
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
-    mul_left_inv := fun A => by
-      ext1
-      simp [adjugate_mul] }
+    mul_left_inv := fun A => by ext1; simp [adjugate_mul] }
 
 #print Matrix.SpecialLinearGroup.toLin' /-
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
@@ -296,10 +292,7 @@ variable {S : Type _} [CommRing S]
 @[simps]
 def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S
     where
-  toFun g :=
-    ⟨f.mapMatrix ↑g, by
-      rw [← f.map_det]
-      simp [g.2]⟩
+  toFun g := ⟨f.mapMatrix ↑g, by rw [← f.map_det]; simp [g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
   map_mul' x y := Subtype.ext <| f.mapMatrix.map_mul x y
 #align matrix.special_linear_group.map Matrix.SpecialLinearGroup.map

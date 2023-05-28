@@ -152,11 +152,8 @@ instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] :
       R := fun i => 1
       rpos := fun i => zero_lt_one
       h := fun i j hij => (hij (Subsingleton.elim i j)).elim
-      hlast := fun i hi => by
-        rw [Subsingleton.elim i (last 0)] at hi
-        exact (lt_irrefl _ hi).elim
-      inter := fun i hi => by
-        rw [Subsingleton.elim i (last 0)] at hi
+      hlast := fun i hi => by rw [Subsingleton.elim i (last 0)] at hi; exact (lt_irrefl _ hi).elim
+      inter := fun i hi => by rw [Subsingleton.elim i (last 0)] at hi;
         exact (lt_irrefl _ hi).elim }⟩
 
 namespace Besicovitch
@@ -289,23 +286,19 @@ theorem last_step_nonempty :
     { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty :=
   by
   by_contra
-  suffices H : Function.Injective p.index
-  exact not_injective_of_ordinal p.index H
+  suffices H : Function.Injective p.index; exact not_injective_of_ordinal p.index H
   intro x y hxy
   wlog x_le_y : x ≤ y generalizing x y
   · exact (this hxy.symm (le_of_not_le x_le_y)).symm
-  rcases eq_or_lt_of_le x_le_y with (rfl | H)
-  · rfl
+  rcases eq_or_lt_of_le x_le_y with (rfl | H); · rfl
   simp only [nonempty_def, not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq,
     not_forall] at h
   specialize h y
   have A : p.c (p.index y) ∉ p.Union_up_to y :=
     by
     have :
-      p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b :=
-      by
-      rw [tau_package.index]
-      rfl
+      p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b := by
+      rw [tau_package.index]; rfl
     rw [this]
     exact (Classical.epsilon_spec h).1
   simp only [Union_up_to, not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_le,
@@ -324,8 +317,7 @@ theorem mem_unionUpTo_lastStep (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
       csInf_mem p.last_step_nonempty
     simpa only [not_exists, mem_set_of_eq, not_and_or, not_le, not_not_mem]
   by_contra
-  rcases A x with (H | H)
-  · exact h H
+  rcases A x with (H | H); · exact h H
   have Rpos : 0 < p.R p.last_step := by
     apply lt_trans (mul_pos (_root_.zero_lt_one.trans p.one_lt_tau) (p.rpos _)) H
   have B : p.τ⁻¹ * p.R p.last_step < p.R p.last_step :=
@@ -401,18 +393,14 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     by
     intro n hn
     rcases hn.eq_or_lt with (rfl | H)
-    · simp only [G]
-      simp only [color_i, Inf_eq_N, if_true, eq_self_iff_true]
-    · simp only [G]
-      simp only [H.ne, (hg n H).right.right.symm, if_false]
+    · simp only [G]; simp only [color_i, Inf_eq_N, if_true, eq_self_iff_true]
+    · simp only [G]; simp only [H.ne, (hg n H).right.right.symm, if_false]
   have G_lt_last : ∀ n, n ≤ N → G n < p.last_step :=
     by
     intro n hn
     rcases hn.eq_or_lt with (rfl | H)
-    · simp only [G]
-      simp only [hi, if_true, eq_self_iff_true]
-    · simp only [G]
-      simp only [H.ne, (hg n H).left.trans hi, if_false]
+    · simp only [G]; simp only [hi, if_true, eq_self_iff_true]
+    · simp only [G]; simp only [H.ne, (hg n H).left.trans hi, if_false]
   have fGn :
     ∀ n,
       n ≤ N → p.c (p.index (G n)) ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r (p.index (G n)) :=
@@ -421,9 +409,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     have :
       p.index (G n) =
         Classical.epsilon fun t => p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t :=
-      by
-      rw [index]
-      rfl
+      by rw [index]; rfl
     rw [this]
     have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
       simpa only [not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq, not_forall] using
@@ -445,9 +431,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
         Subtype.exists, Subtype.coe_mk] at this
       simpa only [dist_comm, mem_ball, not_lt] using this (G a) G_lt
     · apply le_trans _ (fGn a ha).2
-      have B : p.c (p.index (G b)) ∉ p.Union_up_to (G a) :=
-        by
-        intro H
+      have B : p.c (p.index (G b)) ∉ p.Union_up_to (G a) := by intro H;
         exact (fGn b hb).1 (p.monotone_Union_up_to G_lt.le H)
       let b' : { t // p.c t ∉ p.Union_up_to (G a) } := ⟨p.index (G b), B⟩
       apply @le_ciSup _ _ _ (fun t : { t // p.c t ∉ p.Union_up_to (G a) } => p.r t) _ b'
@@ -466,8 +450,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
         wlog G_le : G a ≤ G b generalizing a b
         · exact (this b a a_ne_b.symm (le_of_not_le G_le)).symm
         have G_lt : G a < G b := by
-          rcases G_le.lt_or_eq with (H | H)
-          · exact H
+          rcases G_le.lt_or_eq with (H | H); · exact H
           have A : (a : ℕ) ≠ b := fin.coe_injective.ne a_ne_b
           rw [← color_G a (Nat.lt_succ_iff.1 a.2), ← color_G b (Nat.lt_succ_iff.1 b.2), H] at A
           exact (A rfl).elim
@@ -475,19 +458,13 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       hlast := by
         intro a ha
         have I : (a : ℕ) < N := ha
-        have : G a < G (Fin.last N) := by
-          dsimp [G]
-          simp [I.ne, (hg a I).1]
+        have : G a < G (Fin.last N) := by dsimp [G]; simp [I.ne, (hg a I).1]
         exact Gab _ _ this
       inter := by
         intro a ha
         have I : (a : ℕ) < N := ha
-        have J : G (Fin.last N) = i := by
-          dsimp [G]
-          simp only [if_true, eq_self_iff_true]
-        have K : G a = g a := by
-          dsimp [G]
-          simp [I.ne, (hg a I).1]
+        have J : G (Fin.last N) = i := by dsimp [G]; simp only [if_true, eq_self_iff_true]
+        have K : G a = g a := by dsimp [G]; simp [I.ne, (hg a I).1]
         convert dist_le_add_of_nonempty_closed_ball_inter_closed_ball (hg _ I).2.1 }
   -- this is a contradiction
   exact (hN.false : _) sc
@@ -532,9 +509,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     wlog jxy : jx ≤ jy generalizing jx jy
     · exact (this jy jy_lt jyi hy jx jx_lt jxi hx x_ne_y.symm (le_of_not_le jxy)).symm
     replace jxy : jx < jy
-    · rcases lt_or_eq_of_le jxy with (H | rfl)
-      · exact H
-      · exact (x_ne_y rfl).elim
+    · rcases lt_or_eq_of_le jxy with (H | rfl); · exact H; · exact (x_ne_y rfl).elim
     let A : Set ℕ :=
       ⋃ (j : { j // j < jy }) (hj :
         (closed_ball (p.c (p.index j)) (p.r (p.index j)) ∩
@@ -641,9 +616,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [FiniteMeasu
         rw [ENNReal.mul_div_cancel']
         · simp only [Npos, Ne.def, Nat.cast_eq_zero, not_false_iff]
         · exact ENNReal.nat_ne_top _
-      _ ≤ ∑ i, μ (s ∩ v i) := by
-        conv_lhs => rw [A]
-        apply measure_Union_fintype_le
+      _ ≤ ∑ i, μ (s ∩ v i) := by conv_lhs => rw [A]; apply measure_Union_fintype_le
       
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
   obtain ⟨i, -, hi⟩ : ∃ (i : Fin N)(hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) :=
@@ -668,9 +641,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [FiniteMeasu
   obtain ⟨w, hw⟩ :
     ∃ w : Finset (u i), μ s / (N + 1) < ∑ x : u i in w, μ (o ∩ closed_ball (x : α) (r (x : α))) :=
     by
-    have C : HasSum (fun x : u i => μ (o ∩ closed_ball x (r x))) (μ (o ∩ v i)) :=
-      by
-      rw [B]
+    have C : HasSum (fun x : u i => μ (o ∩ closed_ball x (r x))) (μ (o ∩ v i)) := by rw [B];
       exact ennreal.summable.has_sum
     have : μ s / (N + 1) < μ (o ∩ v i) := hi.trans_le (measure_mono (inter_subset_inter_left _ so))
     exact ((tendsto_order.1 C).1 _ this).exists
@@ -703,9 +674,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [FiniteMeasu
         rw [← Finset.set_biUnion_coe, inter_comm _ o, inter_Union₂, Finset.set_biUnion_coe,
           measure_bUnion_finset]
         · have : (w : Set (u i)).PairwiseDisjoint fun b : u i => closed_ball (b : α) (r (b : α)) :=
-            by
-            intro k hk l hl hkl
-            exact hu i k.2 l.2 (subtype.coe_injective.ne hkl)
+            by intro k hk l hl hkl; exact hu i k.2 l.2 (subtype.coe_injective.ne hkl)
           exact this.mono fun k => inter_subset_right _ _
         · intro b hb
           apply omeas.inter measurableSet_closedBall
@@ -716,10 +685,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [FiniteMeasu
       simpa only [mem_image, Finset.mem_coe, coe_coe, Finset.coe_image] using hk
     obtain ⟨l', l'w, rfl⟩ : ∃ l' : u i, l' ∈ w ∧ ↑↑l' = l := by
       simpa only [mem_image, Finset.mem_coe, coe_coe, Finset.coe_image] using hl
-    have k'nel' : (k' : s) ≠ l' := by
-      intro h
-      rw [h] at hkl
-      exact hkl rfl
+    have k'nel' : (k' : s) ≠ l' := by intro h; rw [h] at hkl; exact hkl rfl
     exact hu i k'.2 l'.2 k'nel'
 #align besicovitch.exist_finset_disjoint_balls_large_measure Besicovitch.exist_finset_disjoint_balls_large_measure
 
@@ -861,13 +827,8 @@ theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measu
       calc
         μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n.succ), closed_ball p.fst p.snd) ≤
             N / (N + 1) * μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) :=
-          by
-          rw [u_succ]
-          exact (hF (u n) (Pu n)).2.2
-        _ ≤ (N / (N + 1)) ^ n.succ * μ s :=
-          by
-          rw [pow_succ, mul_assoc]
-          exact mul_le_mul_left' IH _
+          by rw [u_succ]; exact (hF (u n) (Pu n)).2.2
+        _ ≤ (N / (N + 1)) ^ n.succ * μ s := by rw [pow_succ, mul_assoc]; exact mul_le_mul_left' IH _
         
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
       by
@@ -1114,11 +1075,8 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
   · -- the sets in the first step have measure at most `μ s + ε / 2`
     have A : (∑' x : t0, μ (closed_ball x (r x))) ≤ μ s + ε / 2 :=
       calc
-        (∑' x : t0, μ (closed_ball x (r x))) = ∑' x : t0, μ (closed_ball x (r0 x)) :=
-          by
-          congr 1
-          ext x
-          rw [r_t0 x x.2]
+        (∑' x : t0, μ (closed_ball x (r x))) = ∑' x : t0, μ (closed_ball x (r0 x)) := by congr 1;
+          ext x; rw [r_t0 x x.2]
         _ = μ (⋃ x : t0, closed_ball x (r0 x)) :=
           by
           haveI : Encodable t0 := t0_count.to_encodable
@@ -1142,11 +1100,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
           have : inj_on (coe : s' → α) (S i) := subtype.coe_injective.inj_on _
           let F : S i ≃ (coe : s' → α) '' S i := this.bij_on_image.equiv _
           exact (F.tsum_eq fun x => μ (closed_ball x (r x))).symm
-        _ = ∑' x : S i, μ (closed_ball x (r1 x)) :=
-          by
-          congr 1
-          ext x
-          have : (x : α) ∈ s' := x.1.2
+        _ = ∑' x : S i, μ (closed_ball x (r1 x)) := by congr 1; ext x; have : (x : α) ∈ s' := x.1.2;
           simp only [r, if_pos this]
         _ = μ (⋃ x : S i, closed_ball x (r1 x)) :=
           by
@@ -1159,9 +1113,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
           simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
           intro x xs' xSi
           exact (hr1 x xs').2
-        _ ≤ ε / 2 / N := by
-          have : μ s' = 0 := μt0
-          rwa [this, zero_add] at μv
+        _ ≤ ε / 2 / N := by have : μ s' = 0 := μt0; rwa [this, zero_add] at μv
         
     -- add up all these to prove the desired estimate
     calc
@@ -1230,12 +1182,10 @@ protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ
       exists_disjoint_closed_ball_covering_ae μ g s A (fun _ => 1) fun _ _ => zero_lt_one
     let F : α → α × Set α := fun x => (x, closed_ball x (r x))
     refine' ⟨F '' t, _, _, _, _⟩
-    · rintro - ⟨x, hx, rfl⟩
-      exact ts hx
+    · rintro - ⟨x, hx, rfl⟩; exact ts hx
     · rintro p ⟨x, hx, rfl⟩ q ⟨y, hy, rfl⟩ hxy
       exact tdisj hx hy (ne_of_apply_ne F hxy)
-    · rintro - ⟨x, hx, rfl⟩
-      exact (tg x hx).1.2
+    · rintro - ⟨x, hx, rfl⟩; exact (tg x hx).1.2
     · rwa [bUnion_image]
 #align besicovitch.vitali_family Besicovitch.vitaliFamily
 

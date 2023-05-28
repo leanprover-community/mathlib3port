@@ -273,10 +273,8 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
   f ⊗≫ 𝟙 _
 
 @[simp]
-theorem monoidalComp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g :=
-  by
-  dsimp [monoidal_comp]
-  simp
+theorem monoidalComp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
+  dsimp [monoidal_comp]; simp
 #align category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidalComp_refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

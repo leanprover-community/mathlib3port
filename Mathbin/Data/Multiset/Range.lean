@@ -110,10 +110,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Multiset.{0} Nat) (Multiset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a b)) (Union.union.{0} (Multiset.{0} Nat) (Multiset.instUnionMultiset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Multiset.range a) (Multiset.map.{0, 0} Nat Nat (fun (x : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a x) (Multiset.range b)))
 Case conversion may be inaccurate. Consider using '#align multiset.range_add_eq_union Multiset.range_add_eq_unionₓ'. -/
-theorem range_add_eq_union (a b : ℕ) : range (a + b) = range a ∪ (range b).map fun x => a + x :=
-  by
-  rw [range_add, add_eq_union_iff_disjoint]
-  apply range_disjoint_map_add
+theorem range_add_eq_union (a b : ℕ) : range (a + b) = range a ∪ (range b).map fun x => a + x := by
+  rw [range_add, add_eq_union_iff_disjoint]; apply range_disjoint_map_add
 #align multiset.range_add_eq_union Multiset.range_add_eq_union
 
 end Multiset

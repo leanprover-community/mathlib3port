@@ -94,9 +94,7 @@ theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p :=
   by
   by_cases hp0 : p = 0
   · simp only [hp0, dvd_zero]
-  have hx : IsIntegral A x := by
-    rw [← isAlgebraic_iff_isIntegral]
-    exact ⟨p, hp0, hp⟩
+  have hx : IsIntegral A x := by rw [← isAlgebraic_iff_isIntegral]; exact ⟨p, hp0, hp⟩
   rw [← dvd_iff_mod_by_monic_eq_zero (monic hx)]
   by_contra hnz
   have := degree_le_of_ne_zero A x hnz _
@@ -111,9 +109,7 @@ theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p :=
 Case conversion may be inaccurate. Consider using '#align minpoly.dvd_map_of_is_scalar_tower minpoly.dvd_map_of_isScalarTowerₓ'. -/
 theorem dvd_map_of_isScalarTower (A K : Type _) {R : Type _} [CommRing A] [Field K] [CommRing R]
     [Algebra A K] [Algebra A R] [Algebra K R] [IsScalarTower A K R] (x : R) :
-    minpoly K x ∣ (minpoly A x).map (algebraMap A K) :=
-  by
-  refine' minpoly.dvd K x _
+    minpoly K x ∣ (minpoly A x).map (algebraMap A K) := by refine' minpoly.dvd K x _;
   rw [aeval_map_algebra_map, minpoly.aeval]
 #align minpoly.dvd_map_of_is_scalar_tower minpoly.dvd_map_of_isScalarTower
 
@@ -375,8 +371,7 @@ theorem coeff_zero_eq_zero (hx : IsIntegral A x) : coeff (minpoly A x) 0 = 0 ↔
     have zero_root := zero_is_root_of_coeff_zero_eq_zero h
     rw [← root hx zero_root]
     exact RingHom.map_zero _
-  · rintro rfl
-    simp
+  · rintro rfl; simp
 #align minpoly.coeff_zero_eq_zero minpoly.coeff_zero_eq_zero
 
 /- warning: minpoly.coeff_zero_ne_zero -> minpoly.coeff_zero_ne_zero is a dubious translation:
@@ -386,10 +381,8 @@ but is expected to have type
   forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : Field.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_3 : IsDomain.{u1} B (Ring.toSemiring.{u1} B _inst_2)] [_inst_4 : Algebra.{u2, u1} A B (Semifield.toCommSemiring.{u2} A (Field.toSemifield.{u2} A _inst_1)) (Ring.toSemiring.{u1} B _inst_2)] {x : B}, (IsIntegral.{u2, u1} A B (EuclideanDomain.toCommRing.{u2} A (Field.toEuclideanDomain.{u2} A _inst_1)) _inst_2 _inst_4 x) -> (Ne.{succ u1} B x (OfNat.ofNat.{u1} B 0 (Zero.toOfNat0.{u1} B (MonoidWithZero.toZero.{u1} B (Semiring.toMonoidWithZero.{u1} B (Ring.toSemiring.{u1} B _inst_2)))))) -> (Ne.{succ u2} A (Polynomial.coeff.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A (EuclideanDomain.toCommRing.{u2} A (Field.toEuclideanDomain.{u2} A _inst_1)))) (minpoly.{u2, u1} A B (EuclideanDomain.toCommRing.{u2} A (Field.toEuclideanDomain.{u2} A _inst_1)) _inst_2 _inst_4 x) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{u2} A 0 (Zero.toOfNat0.{u2} A (CommMonoidWithZero.toZero.{u2} A (CommGroupWithZero.toCommMonoidWithZero.{u2} A (Semifield.toCommGroupWithZero.{u2} A (Field.toSemifield.{u2} A _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align minpoly.coeff_zero_ne_zero minpoly.coeff_zero_ne_zeroₓ'. -/
 /-- The minimal polynomial of a nonzero element has nonzero constant coefficient. -/
-theorem coeff_zero_ne_zero (hx : IsIntegral A x) (h : x ≠ 0) : coeff (minpoly A x) 0 ≠ 0 :=
-  by
-  contrapose! h
-  simpa only [hx, coeff_zero_eq_zero] using h
+theorem coeff_zero_ne_zero (hx : IsIntegral A x) (h : x ≠ 0) : coeff (minpoly A x) 0 ≠ 0 := by
+  contrapose! h; simpa only [hx, coeff_zero_eq_zero] using h
 #align minpoly.coeff_zero_ne_zero minpoly.coeff_zero_ne_zero
 
 end IsDomain

@@ -70,10 +70,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.CNF_rec_zero Ordinal.CNFRec_zeroₓ'. -/
 @[simp]
 theorem CNFRec_zero {C : Ordinal → Sort _} (b : Ordinal) (H0 : C 0)
-    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @CNFRec b C H0 H 0 = H0 :=
-  by
-  rw [CNF_rec, dif_pos rfl]
-  rfl
+    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @CNFRec b C H0 H 0 = H0 := by
+  rw [CNF_rec, dif_pos rfl]; rfl
 #align ordinal.CNF_rec_zero Ordinal.CNFRec_zero
 
 /- warning: ordinal.CNF_rec_pos -> Ordinal.CNFRec_pos is a dubious translation:
@@ -166,10 +164,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.CNF_foldr Ordinal.CNF_foldrₓ'. -/
 /-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
 theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
-  CNFRec b
-    (by
-      rw [CNF_zero]
-      rfl)
+  CNFRec b (by rw [CNF_zero]; rfl)
     (fun o ho IH => by rw [CNF_ne_zero ho, foldr_cons, IH, div_add_mod]) o
 #align ordinal.CNF_foldr Ordinal.CNF_foldr
 

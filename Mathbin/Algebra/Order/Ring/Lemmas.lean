@@ -591,9 +591,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zero_lt_mul_left zero_lt_mul_leftₓ'. -/
 @[simp]
 theorem zero_lt_mul_left [PosMulStrictMono α] [PosMulReflectLT α] (h : 0 < c) : 0 < c * b ↔ 0 < b :=
-  by
-  convert mul_lt_mul_left h
-  simp
+  by convert mul_lt_mul_left h; simp
 #align zero_lt_mul_left zero_lt_mul_left
 
 /- warning: right.mul_pos -> Right.mul_pos is a dubious translation:
@@ -625,9 +623,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zero_lt_mul_right zero_lt_mul_rightₓ'. -/
 @[simp]
 theorem zero_lt_mul_right [MulPosStrictMono α] [MulPosReflectLT α] (h : 0 < c) :
-    0 < b * c ↔ 0 < b := by
-  convert mul_lt_mul_right h
-  simp
+    0 < b * c ↔ 0 < b := by convert mul_lt_mul_right h; simp
 #align zero_lt_mul_right zero_lt_mul_right
 
 /- warning: left.mul_nonneg -> Left.mul_nonneg is a dubious translation:
@@ -889,10 +885,7 @@ Case conversion may be inaccurate. Consider using '#align pos_mul_mono_rev.to_po
 instance (priority := 100) PosMulMonoRev.toPosMulReflectLT [PosMulMonoRev α] : PosMulReflectLT α :=
   posMulReflectLT_iff_contravariant_pos.2
     ⟨fun a b c h =>
-      (le_of_mul_le_mul_of_pos_left h.le a.2).lt_of_ne <|
-        by
-        rintro rfl
-        simpa using h⟩
+      (le_of_mul_le_mul_of_pos_left h.le a.2).lt_of_ne <| by rintro rfl; simpa using h⟩
 #align pos_mul_mono_rev.to_pos_mul_reflect_lt PosMulMonoRev.toPosMulReflectLT
 
 /- warning: mul_pos_mono_rev.to_mul_pos_reflect_lt -> MulPosMonoRev.toMulPosReflectLT is a dubious translation:
@@ -905,10 +898,7 @@ Case conversion may be inaccurate. Consider using '#align mul_pos_mono_rev.to_mu
 instance (priority := 100) MulPosMonoRev.toMulPosReflectLT [MulPosMonoRev α] : MulPosReflectLT α :=
   mulPosReflectLT_iff_contravariant_pos.2
     ⟨fun a b c h =>
-      (le_of_mul_le_mul_of_pos_right h.le a.2).lt_of_ne <|
-        by
-        rintro rfl
-        simpa using h⟩
+      (le_of_mul_le_mul_of_pos_right h.le a.2).lt_of_ne <| by rintro rfl; simpa using h⟩
 #align mul_pos_mono_rev.to_mul_pos_reflect_lt MulPosMonoRev.toMulPosReflectLT
 
 /- warning: mul_left_cancel_iff_of_pos -> mul_left_cancel_iff_of_pos is a dubious translation:
@@ -988,8 +978,7 @@ theorem pos_and_pos_or_neg_and_neg_of_mul_pos [PosMulMono α] [MulPosMono α] (h
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   · refine' Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
-  · rw [MulZeroClass.zero_mul] at hab
-    exact hab.false.elim
+  · rw [MulZeroClass.zero_mul] at hab; exact hab.false.elim
   · refine' Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => _) hab⟩
     exact mul_nonpos_of_nonpos_of_nonneg ha.le hb
 #align pos_and_pos_or_neg_and_neg_of_mul_pos pos_and_pos_or_neg_and_neg_of_mul_pos

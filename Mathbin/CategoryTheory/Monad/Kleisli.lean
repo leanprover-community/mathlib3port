@@ -76,9 +76,7 @@ namespace Adjunction
 def toKleisli : C ⥤ Kleisli T where
   obj X := (X : Kleisli T)
   map X Y f := (f ≫ T.η.app Y : _)
-  map_comp' X Y Z f g := by
-    unfold_projs
-    simp [← T.η.naturality g]
+  map_comp' X Y Z f g := by unfold_projs; simp [← T.η.naturality g]
 #align category_theory.kleisli.adjunction.to_kleisli CategoryTheory.Kleisli.Adjunction.toKleisli
 -/
 
@@ -116,10 +114,7 @@ def adj : toKleisli T ⊣ fromKleisli T :=
 #print CategoryTheory.Kleisli.Adjunction.toKleisliCompFromKleisliIsoSelf /-
 /-- The composition of the adjunction gives the original functor. -/
 def toKleisliCompFromKleisliIsoSelf : toKleisli T ⋙ fromKleisli T ≅ T :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f =>
-    by
-    dsimp
-    simp
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by dsimp; simp
 #align category_theory.kleisli.adjunction.to_kleisli_comp_from_kleisli_iso_self CategoryTheory.Kleisli.Adjunction.toKleisliCompFromKleisliIsoSelf
 -/
 
@@ -168,9 +163,7 @@ def toCokleisli : C ⥤ Cokleisli U
     where
   obj X := (X : Cokleisli U)
   map X Y f := (U.ε.app X ≫ f : _)
-  map_comp' X Y Z f g := by
-    unfold_projs
-    simp [← U.ε.naturality g]
+  map_comp' X Y Z f g := by unfold_projs; simp [← U.ε.naturality g]
 #align category_theory.cokleisli.adjunction.to_cokleisli CategoryTheory.Cokleisli.Adjunction.toCokleisli
 -/
 
@@ -205,10 +198,7 @@ def adj : fromCokleisli U ⊣ toCokleisli U :=
 #print CategoryTheory.Cokleisli.Adjunction.toCokleisliCompFromCokleisliIsoSelf /-
 /-- The composition of the adjunction gives the original functor. -/
 def toCokleisliCompFromCokleisliIsoSelf : toCokleisli U ⋙ fromCokleisli U ≅ U :=
-  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f =>
-    by
-    dsimp
-    simp
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by dsimp; simp
 #align category_theory.cokleisli.adjunction.to_cokleisli_comp_from_cokleisli_iso_self CategoryTheory.Cokleisli.Adjunction.toCokleisliCompFromCokleisliIsoSelf
 -/
 

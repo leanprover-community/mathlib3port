@@ -66,23 +66,13 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
     ε := (rightUnitorNatIso C).inv
     μ := fun X Y =>
       { app := fun Z => (α_ Z X Y).Hom
-        naturality' := fun Z Z' f => by
-          dsimp
-          rw [associator_naturality]
-          simp }
+        naturality' := fun Z Z' f => by dsimp; rw [associator_naturality]; simp }
     μ_natural' := fun X Y X' Y' f g => by
-      ext Z
-      dsimp
+      ext Z; dsimp
       simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc,
         associator_naturality, associator_naturality_assoc]
-    associativity' := fun X Y Z => by
-      ext W
-      dsimp
-      simp [pentagon]
-    left_unitality' := fun X => by
-      ext Y
-      dsimp
-      rw [category.id_comp, triangle, ← tensor_comp]
+    associativity' := fun X Y Z => by ext W; dsimp; simp [pentagon]
+    left_unitality' := fun X => by ext Y; dsimp; rw [category.id_comp, triangle, ← tensor_comp];
       simp
     right_unitality' := fun X => by
       ext Y; dsimp
@@ -91,11 +81,8 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
     ε_isIso := by infer_instance
     μ_isIso := fun X Y =>
       ⟨⟨{   app := fun Z => (α_ Z X Y).inv
-            naturality' := fun Z Z' f => by
-              dsimp
-              rw [← associator_inv_naturality]
-              simp },
-          by tidy⟩⟩ }
+            naturality' := fun Z Z' f => by dsimp; rw [← associator_inv_naturality]; simp }, by
+          tidy⟩⟩ }
 #align category_theory.tensoring_right_monoidal CategoryTheory.tensoringRightMonoidal
 -/
 
@@ -262,8 +249,7 @@ theorem obj_ε_app (n : M) (X : C) :
   rw [← category.assoc, ← is_iso.comp_inv_eq, ← is_iso.comp_inv_eq, category.assoc]
   convert left_unitality_app F n X
   · simp
-  · ext
-    simpa
+  · ext; simpa
 #align category_theory.obj_ε_app CategoryTheory.obj_ε_app
 
 /- warning: category_theory.obj_ε_inv_app -> CategoryTheory.obj_ε_inv_app is a dubious translation:
@@ -300,8 +286,7 @@ theorem ε_app_obj (n : M) (X : C) :
   rw [← category.assoc, ← is_iso.comp_inv_eq, ← is_iso.comp_inv_eq, category.assoc]
   convert right_unitality_app F n X
   · simp
-  · ext
-    simpa
+  · ext; simpa
 #align category_theory.ε_app_obj CategoryTheory.ε_app_obj
 
 /- warning: category_theory.ε_inv_app_obj -> CategoryTheory.ε_inv_app_obj is a dubious translation:
@@ -364,15 +349,11 @@ theorem obj_μ_inv_app (m₁ m₂ m₃ : M) (X : C) :
   by
   rw [← is_iso.inv_eq_inv]
   convert obj_μ_app F m₁ m₂ m₃ X using 1
-  · ext
-    rw [← functor.map_comp]
-    simp
+  · ext; rw [← functor.map_comp]; simp
   · simp only [monoidal_functor.μ_iso_hom, category.assoc, nat_iso.inv_inv_app, is_iso.inv_comp]
     congr
-    · ext
-      simp
-    · ext
-      simpa
+    · ext; simp
+    · ext; simpa
 #align category_theory.obj_μ_inv_app CategoryTheory.obj_μ_inv_app
 
 /- warning: category_theory.obj_zero_map_μ_app -> CategoryTheory.obj_zero_map_μ_app is a dubious translation:

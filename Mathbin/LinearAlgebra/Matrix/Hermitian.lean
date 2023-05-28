@@ -56,11 +56,8 @@ protected theorem IsHermitian.isSelfAdjoint {A : Matrix n n α} (h : A.IsHermiti
 #align matrix.is_hermitian.is_self_adjoint Matrix.IsHermitian.isSelfAdjoint
 
 @[ext]
-theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian :=
-  by
-  intro h
-  ext (i j)
-  exact h i j
+theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian := by
+  intro h; ext (i j); exact h i j
 #align matrix.is_hermitian.ext Matrix.IsHermitian.ext
 
 theorem IsHermitian.apply {A : Matrix n n α} (h : A.IsHermitian) (i j : n) : star (A j i) = A i j :=
@@ -77,19 +74,13 @@ theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β)
   (conjTranspose_map f hf).symm.trans <| h.Eq.symm ▸ rfl
 #align matrix.is_hermitian.map Matrix.IsHermitian.map
 
-theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian :=
-  by
-  rw [is_hermitian, conj_transpose, transpose_map]
-  congr
-  exact h
+theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
+  rw [is_hermitian, conj_transpose, transpose_map]; congr ; exact h
 #align matrix.is_hermitian.transpose Matrix.IsHermitian.transpose
 
 @[simp]
 theorem isHermitian_transpose_iff (A : Matrix n n α) : Aᵀ.IsHermitian ↔ A.IsHermitian :=
-  ⟨by
-    intro h
-    rw [← transpose_transpose A]
-    exact is_hermitian.transpose h, IsHermitian.transpose⟩
+  ⟨by intro h; rw [← transpose_transpose A]; exact is_hermitian.transpose h, IsHermitian.transpose⟩
 #align matrix.is_hermitian_transpose_iff Matrix.isHermitian_transpose_iff
 
 theorem IsHermitian.conjTranspose {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ.IsHermitian :=
@@ -262,9 +253,7 @@ theorem IsHermitian.inv [Fintype m] [DecidableEq m] {A : Matrix m m α} (hA : A.
 @[simp]
 theorem isHermitian_inv [Fintype m] [DecidableEq m] (A : Matrix m m α) [Invertible A] :
     A⁻¹.IsHermitian ↔ A.IsHermitian :=
-  ⟨fun h => by
-    rw [← inv_inv_of_invertible A]
-    exact is_hermitian.inv h, IsHermitian.inv⟩
+  ⟨fun h => by rw [← inv_inv_of_invertible A]; exact is_hermitian.inv h, IsHermitian.inv⟩
 #align matrix.is_hermitian_inv Matrix.isHermitian_inv
 
 theorem IsHermitian.adjugate [Fintype m] [DecidableEq m] {A : Matrix m m α} (hA : A.IsHermitian) :

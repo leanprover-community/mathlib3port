@@ -139,8 +139,7 @@ theorem cos_lt_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx
     rcases lt_or_lt_iff_ne.mpr hx3.symm with ⟨⟩
     · exact this h hx2
     · convert this (by linarith : 0 < -x) (by linarith) using 1
-      · rw [cos_neg]
-      · rw [neg_sq]
+      · rw [cos_neg]; · rw [neg_sq]
   intro y hy1 hy2
   have hy3 : 0 < y ^ 2 + 1 := by linarith [sq_nonneg y]
   rcases lt_or_le y (π / 2) with (hy2' | hy1')

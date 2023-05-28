@@ -162,9 +162,7 @@ each subcategory.
 def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G
     where
   app := fun ⟨j, X⟩ => (h j).app X
-  naturality' := by
-    rintro ⟨j, X⟩ ⟨_, _⟩ ⟨f⟩
-    apply (h j).naturality
+  naturality' := by rintro ⟨j, X⟩ ⟨_, _⟩ ⟨f⟩; apply (h j).naturality
 #align category_theory.sigma.nat_trans CategoryTheory.Sigma.natTrans
 -/
 
@@ -204,12 +202,8 @@ This witnesses that the sigma-type is the coproduct in Cat.
 def desc : (Σi, C i) ⥤ D where
   obj X := (F X.1).obj X.2
   map X Y g := descMap F X Y g
-  map_id' := by
-    rintro ⟨i, X⟩
-    apply (F i).map_id
-  map_comp' := by
-    rintro ⟨i, X⟩ ⟨_, Y⟩ ⟨_, Z⟩ ⟨f⟩ ⟨g⟩
-    apply (F i).map_comp
+  map_id' := by rintro ⟨i, X⟩; apply (F i).map_id
+  map_comp' := by rintro ⟨i, X⟩ ⟨_, Y⟩ ⟨_, Z⟩ ⟨f⟩ ⟨g⟩; apply (F i).map_comp
 #align category_theory.sigma.desc CategoryTheory.Sigma.desc
 -/
 
@@ -261,9 +255,7 @@ theorem inclDesc_inv_app (i : I) (X : C i) : (inclDesc F i).inv.app X = 𝟙 ((F
 `desc F`.
 -/
 def descUniq (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ desc F :=
-  (NatIso.ofComponents fun ⟨i, X⟩ => (h i).app X) <|
-    by
-    rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩
+  (NatIso.ofComponents fun ⟨i, X⟩ => (h i).app X) <| by rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩;
     apply (h i).Hom.naturality f
 #align category_theory.sigma.desc_uniq CategoryTheory.Sigma.descUniq
 -/

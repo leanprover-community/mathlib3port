@@ -129,9 +129,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ =
         diam (univ : Set X) + (dist default default + 1 + dist default default) +
           diam (univ : Set Y) :=
-      by
-      rw [isometry_inl.diam_range, isometry_inr.diam_range]
-      rfl
+      by rw [isometry_inl.diam_range, isometry_inr.diam_range]; rfl
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
       by
@@ -176,9 +174,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inl x, inl y =>
     calc
       f (inl x, inl y) = dist x y := candidates_dist_inl fA x y
-      _ = dist (inl x) (inl y) := by
-        rw [@sum.dist_eq X Y]
-        rfl
+      _ = dist (inl x) (inl y) := by rw [@sum.dist_eq X Y]; rfl
       _ = 1 * dist (inl x) (inl y) := by simp
       _ ≤ maxVar X Y * dist (inl x) (inl y) :=
         mul_le_mul_of_nonneg_right (one_le_maxVar X Y) dist_nonneg
@@ -200,9 +196,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inr x, inr y =>
     calc
       f (inr x, inr y) = dist x y := candidates_dist_inr fA x y
-      _ = dist (inr x) (inr y) := by
-        rw [@sum.dist_eq X Y]
-        rfl
+      _ = dist (inr x) (inr y) := by rw [@sum.dist_eq X Y]; rfl
       _ = 1 * dist (inr x) (inr y) := by simp
       _ ≤ maxVar X Y * dist (inr x) (inr y) :=
         mul_le_mul_of_nonneg_right (one_le_maxVar X Y) dist_nonneg
@@ -228,10 +222,7 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
       apply
         mul_le_mul_of_nonneg_left (le_max_right (dist x z) (dist t y))
           (zero_le_one.trans (one_le_max_var X Y))
-    _ = 2 * maxVar X Y * max (dist x z) (dist y t) :=
-      by
-      simp [dist_comm]
-      ring
+    _ = 2 * maxVar X Y * max (dist x z) (dist y t) := by simp [dist_comm]; ring
     _ = 2 * maxVar X Y * dist (x, y) (z, t) := by rfl
     
 
@@ -332,9 +323,7 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
             ⋂ (x) (y) (z), { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) }) ∩
           ⋂ x, { f : Cb X Y | f (x, x) = 0 }) ∩
         ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
-    by
-    ext
-    simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
+    by ext; simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
   rw [this]
   repeat'
     first
@@ -479,15 +468,13 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
     by
     intro x
     refine' Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
-    · intro x y hx
-      simpa
+    · intro x y hx; simpa
     · show BddBelow (range fun y : Y => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g :=
     by
     refine' Monotone.map_ciSup_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
-    · intro x y hx
-      simpa
+    · intro x y hx; simpa
     · simpa using HD_bound_aux1 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1, Function.comp]
@@ -510,15 +497,13 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     by
     intro y
     refine' Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
-    · intro x y hx
-      simpa
+    · intro x y hx; simpa
     · show BddBelow (range fun x : X => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g :=
     by
     refine' Monotone.map_ciSup_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
-    · intro x y hx
-      simpa
+    · intro x y hx; simpa
     · simpa using HD_bound_aux2 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1]

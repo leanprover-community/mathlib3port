@@ -129,9 +129,7 @@ def mapMono (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ)
 variable (Δ)
 
 #print AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_id /-
-theorem mapMono_id : mapMono K (𝟙 Δ) = 𝟙 _ :=
-  by
-  unfold map_mono
+theorem mapMono_id : mapMono K (𝟙 Δ) = 𝟙 _ := by unfold map_mono;
   simp only [eq_self_iff_true, eq_to_hom_refl, dite_eq_ite, if_true]
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_id AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_id
 -/
@@ -167,12 +165,8 @@ theorem mapMono_δ₀ {n : ℕ} : mapMono K (δ (0 : Fin (n + 2))) = K.d (n + 1)
 /- warning: algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero -> AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zeroₓ'. -/
-theorem mapMono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 :=
-  by
-  unfold map_mono
-  rw [Ne.def] at h₁
-  split_ifs
-  rfl
+theorem mapMono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 := by unfold map_mono;
+  rw [Ne.def] at h₁; split_ifs; rfl
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_eq_zero AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_eq_zero
 
 variable {K K'}
@@ -369,9 +363,7 @@ Case conversion may be inaccurate. Consider using '#align algebraic_topology.dol
 theorem Obj.map_on_summand' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
     (splitting K).ιSummand A ≫ (obj K).map θ =
       Obj.Termwise.mapMono K (image.ι (θ.unop ≫ A.e)) ≫ (splitting K).ιSummand (A.pull θ) :=
-  by
-  apply obj.map_on_summand
-  apply image.fac
+  by apply obj.map_on_summand; apply image.fac
 #align algebraic_topology.dold_kan.Γ₀.obj.map_on_summand' AlgebraicTopology.DoldKan.Γ₀.Obj.map_on_summand'
 
 /- warning: algebraic_topology.dold_kan.Γ₀.obj.map_mono_on_summand_id -> AlgebraicTopology.DoldKan.Γ₀.Obj.mapMono_on_summand_id is a dubious translation:
@@ -433,9 +425,7 @@ def Γ₀' : ChainComplex C ℕ ⥤ SimplicialObject.Split C
   map K K' f :=
     { f := Γ₀.map f
       f := f.f
-      comm' := fun n => by
-        dsimp
-        simpa only [← splitting.ι_summand_id, (Γ₀.splitting K).ι_desc] }
+      comm' := fun n => by dsimp; simpa only [← splitting.ι_summand_id, (Γ₀.splitting K).ι_desc] }
 #align algebraic_topology.dold_kan.Γ₀' AlgebraicTopology.DoldKan.Γ₀'
 
 #print AlgebraicTopology.DoldKan.Γ₀ /-

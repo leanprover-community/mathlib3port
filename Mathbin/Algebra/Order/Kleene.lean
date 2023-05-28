@@ -68,9 +68,7 @@ variable {α β ι : Type _} {π : ι → Type _}
 @[protect_proj]
 class IdemSemiring (α : Type u) extends Semiring α, SemilatticeSup α where
   sup := (· + ·)
-  add_eq_sup : ∀ a b : α, a + b = a ⊔ b := by
-    intros
-    rfl
+  add_eq_sup : ∀ a b : α, a + b = a ⊔ b := by intros ; rfl
   bot : α := 0
   bot_le : ∀ a, bot ≤ a
 #align idem_semiring IdemSemiring
@@ -137,21 +135,13 @@ def IdemSemiring.ofSemiring [Semiring α] (h : ∀ a : α, a + a = a) : IdemSemi
   { ‹Semiring α› with
     le := fun a b => a + b = b
     le_refl := h
-    le_trans := fun a b c (hab : _ = _) (hbc : _ = _) =>
-      by
-      change _ = _
+    le_trans := fun a b c (hab : _ = _) (hbc : _ = _) => by change _ = _;
       rw [← hbc, ← add_assoc, hab]
     le_antisymm := fun a b (hab : _ = _) (hba : _ = _) => by rwa [← hba, add_comm]
     sup := (· + ·)
-    le_sup_left := fun a b => by
-      change _ = _
-      rw [← add_assoc, h]
-    le_sup_right := fun a b => by
-      change _ = _
-      rw [add_comm, add_assoc, h]
-    sup_le := fun a b c hab (hbc : _ = _) => by
-      change _ = _
-      rwa [add_assoc, hbc]
+    le_sup_left := fun a b => by change _ = _; rw [← add_assoc, h]
+    le_sup_right := fun a b => by change _ = _; rw [add_comm, add_assoc, h]
+    sup_le := fun a b c hab (hbc : _ = _) => by change _ = _; rwa [add_assoc, hbc]
     bot := 0
     bot_le := zero_add }
 #align idem_semiring.of_semiring IdemSemiring.ofSemiring
@@ -250,9 +240,7 @@ instance (priority := 100) IdemSemiring.toCanonicallyOrderedAddMonoid :
   {
     ‹IdemSemiring
         α› with
-    add_le_add_left := fun a b hbc c => by
-      simp_rw [add_eq_sup]
-      exact sup_le_sup_left hbc _
+    add_le_add_left := fun a b hbc c => by simp_rw [add_eq_sup]; exact sup_le_sup_left hbc _
     exists_add_of_le := fun a b h => ⟨b, h.add_eq_right.symm⟩
     le_self_add := fun a b => add_eq_right_iff_le.1 <| by rw [← add_assoc, add_idem] }
 #align idem_semiring.to_canonically_ordered_add_monoid IdemSemiring.toCanonicallyOrderedAddMonoid
@@ -476,9 +464,7 @@ Case conversion may be inaccurate. Consider using '#align pow_le_kstar pow_le_ks
 @[simp]
 theorem pow_le_kstar : ∀ {n : ℕ}, a ^ n ≤ a∗
   | 0 => (pow_zero _).trans_le one_le_kstar
-  | n + 1 => by
-    rw [pow_succ]
-    exact (mul_le_mul_left' pow_le_kstar _).trans mul_kstar_le_kstar
+  | n + 1 => by rw [pow_succ]; exact (mul_le_mul_left' pow_le_kstar _).trans mul_kstar_le_kstar
 #align pow_le_kstar pow_le_kstar
 
 end KleeneAlgebra
@@ -632,30 +618,13 @@ protected def kleeneAlgebra [KleeneAlgebra α] [Zero β] [One β] [Add β] [Mul 
   { hf.IdemSemiring f zero one add mul nsmul npow nat_cast sup bot,
     ‹KStar
         β› with
-    one_le_kstar := fun a =>
-      one.trans_le <| by
-        erw [kstar]
-        exact one_le_kstar
-    mul_kstar_le_kstar := fun a => by
-      change f _ ≤ _
-      erw [mul, kstar]
-      exact mul_kstar_le_kstar
-    kstar_mul_le_kstar := fun a => by
-      change f _ ≤ _
-      erw [mul, kstar]
-      exact kstar_mul_le_kstar
-    mul_kstar_le_self := fun a b (h : f _ ≤ _) =>
-      by
-      change f _ ≤ _
-      erw [mul, kstar]
-      erw [mul] at h
-      exact mul_kstar_le_self h
-    kstar_mul_le_self := fun a b (h : f _ ≤ _) =>
-      by
-      change f _ ≤ _
-      erw [mul, kstar]
-      erw [mul] at h
-      exact kstar_mul_le_self h }
+    one_le_kstar := fun a => one.trans_le <| by erw [kstar]; exact one_le_kstar
+    mul_kstar_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact mul_kstar_le_kstar
+    kstar_mul_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact kstar_mul_le_kstar
+    mul_kstar_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
+      erw [mul] at h; exact mul_kstar_le_self h
+    kstar_mul_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
+      erw [mul] at h; exact kstar_mul_le_self h }
 #align function.injective.kleene_algebra Function.Injective.kleeneAlgebra
 
 end Function.Injective

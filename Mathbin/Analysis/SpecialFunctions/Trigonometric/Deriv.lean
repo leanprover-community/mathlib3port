@@ -684,9 +684,7 @@ theorem deriv_cosh : deriv cosh = sinh :=
 
 /-- `sinh` is strictly monotone. -/
 theorem sinh_strictMono : StrictMono sinh :=
-  strictMono_of_deriv_pos <| by
-    rw [Real.deriv_sinh]
-    exact cosh_pos
+  strictMono_of_deriv_pos <| by rw [Real.deriv_sinh]; exact cosh_pos
 #align real.sinh_strict_mono Real.sinh_strictMono
 
 /-- `sinh` is injective, `∀ a b, sinh a = sinh b → a = b`. -/
@@ -730,10 +728,8 @@ theorem abs_sinh (x : ℝ) : |sinh x| = sinh (|x|) := by
 #align real.abs_sinh Real.abs_sinh
 
 theorem cosh_strictMonoOn : StrictMonoOn cosh (Ici 0) :=
-  (convex_Ici _).strictMonoOn_of_deriv_pos continuous_cosh.ContinuousOn fun x hx =>
-    by
-    rw [interior_Ici, mem_Ioi] at hx
-    rwa [deriv_cosh, sinh_pos_iff]
+  (convex_Ici _).strictMonoOn_of_deriv_pos continuous_cosh.ContinuousOn fun x hx => by
+    rw [interior_Ici, mem_Ioi] at hx; rwa [deriv_cosh, sinh_pos_iff]
 #align real.cosh_strict_mono_on Real.cosh_strictMonoOn
 
 @[simp]

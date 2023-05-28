@@ -46,10 +46,7 @@ variable {k : Type v} [Field k]
 
 instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimensional k (Z j)] :
     FiniteDimensional k (∏ fun j => Z j : ModuleCat.{v} k) :=
-  haveI : FiniteDimensional k (ModuleCat.of k (∀ j, Z j)) :=
-    by
-    dsimp
-    infer_instance
+  haveI : FiniteDimensional k (ModuleCat.of k (∀ j, Z j)) := by dsimp; infer_instance
   FiniteDimensional.of_injective (ModuleCat.piIsoPi _).Hom
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
@@ -57,11 +54,8 @@ instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimens
 because we can realise them as subobjects of a finite product. -/
 instance (F : J ⥤ FgModule k) :
     FiniteDimensional k (limit (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)) : ModuleCat.{v} k) :=
-  haveI : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)).obj j) :=
-    by
-    intro j
-    change FiniteDimensional k (F.obj j).obj
-    infer_instance
+  haveI : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)).obj j) := by
+    intro j; change FiniteDimensional k (F.obj j).obj; infer_instance
   FiniteDimensional.of_injective
     (limit_subobject_product (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)))
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))

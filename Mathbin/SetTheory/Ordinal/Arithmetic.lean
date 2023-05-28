@@ -94,10 +94,8 @@ but is expected to have type
   forall (a : Ordinal.{u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (Ordinal.lift.{u1, u2} (Order.succ.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2}) Ordinal.succOrder.{u2} a)) (Order.succ.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2}) Ordinal.succOrder.{max u1 u2} (Ordinal.lift.{u1, u2} a))
 Case conversion may be inaccurate. Consider using '#align ordinal.lift_succ Ordinal.lift_succₓ'. -/
 @[simp]
-theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
-  by
-  rw [← add_one_eq_succ, lift_add, lift_one]
-  rfl
+theorem lift_succ (a) : lift (succ a) = succ (lift a) := by
+  rw [← add_one_eq_succ, lift_add, lift_one]; rfl
 #align ordinal.lift_succ Ordinal.lift_succ
 
 /- warning: ordinal.add_contravariant_class_le -> Ordinal.add_contravariantClass_le is a dubious translation:
@@ -118,9 +116,7 @@ instance add_contravariantClass_le : ContravariantClass Ordinal.{u} Ordinal.{u} 
             have : ∀ b, { b' // f (Sum.inr b) = Sum.inr b' } :=
               by
               intro b; cases e : f (Sum.inr b)
-              · rw [← fl] at e
-                have := f.inj' e
-                contradiction
+              · rw [← fl] at e; have := f.inj' e; contradiction
               · exact ⟨_, rfl⟩
             let g (b) := (this b).1
             have fr : ∀ b, f (Sum.inr b) = Sum.inr (g b) := fun b => (this b).2
@@ -133,10 +129,8 @@ instance add_contravariantClass_le : ContravariantClass Ordinal.{u} Ordinal.{u} 
               fun a b H =>
               by
               rcases f.init (by rw [fr] <;> exact Sum.lex_inr_inr.2 H) with ⟨a' | a', h⟩
-              · rw [fl] at h
-                cases h
-              · rw [fr] at h
-                exact ⟨a', Sum.inr.inj h⟩⟩⟩⟩
+              · rw [fl] at h; cases h
+              · rw [fr] at h; exact ⟨a', Sum.inr.inj h⟩⟩⟩⟩
 #align ordinal.add_contravariant_class_le Ordinal.add_contravariantClass_le
 
 #print Ordinal.add_left_cancel /-
@@ -556,11 +550,7 @@ instance orderTopOutSucc (o : Ordinal) : OrderTop (succ o).out.α :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_succ_eq_top Ordinal.enum_succ_eq_topₓ'. -/
 theorem enum_succ_eq_top {o : Ordinal} :
-    enum (· < ·) o
-        (by
-          rw [type_lt]
-          exact lt_succ o) =
-      (⊤ : (succ o).out.α) :=
+    enum (· < ·) o (by rw [type_lt]; exact lt_succ o) = (⊤ : (succ o).out.α) :=
   rfl
 #align ordinal.enum_succ_eq_top Ordinal.enum_succ_eq_top
 
@@ -750,8 +740,7 @@ theorem IsNormal.le_set {f o} (H : IsNormal f) (p : Set Ordinal) (p0 : p.Nonempt
       limit_rec_on b (fun H₂ => _) (fun S _ H₂ => _) fun S L _ H₂ => (H.2 _ L _).2 fun a h' => _
     · cases' p0 with x px
       have := Ordinal.le_zero.1 ((H₂ _).1 (Ordinal.zero_le _) _ px)
-      rw [this] at px
-      exact h _ px
+      rw [this] at px; exact h _ px
     · rcases not_ball.1 (mt (H₂ S).2 <| (lt_succ S).not_le) with ⟨a, h₁, h₂⟩
       exact (H.le_iff.2 <| succ_le_of_lt <| not_le.1 h₂).trans (h _ h₁)
     · rcases not_ball.1 (mt (H₂ a).2 h'.not_le) with ⟨b, h₁, h₂⟩
@@ -947,8 +936,7 @@ protected theorem add_sub_cancel_of_le {a b : Ordinal} (h : b ≤ a) : b + (a - 
     (by
       rcases zero_or_succ_or_limit (a - b) with (e | ⟨c, e⟩ | l)
       · simp only [e, add_zero, h]
-      · rw [e, add_succ, succ_le_iff, ← lt_sub, e]
-        exact lt_succ c
+      · rw [e, add_succ, succ_le_iff, ← lt_sub, e]; exact lt_succ c
       · exact (add_le_of_limit l).2 fun c l => (lt_sub.1 l).le)
 #align ordinal.add_sub_cancel_of_le Ordinal.add_sub_cancel_of_le
 
@@ -1060,10 +1048,8 @@ theorem one_add_omega : 1 + ω = ω :=
   refine' le_antisymm _ (le_add_left _ _)
   rw [omega, ← lift_one.{0}, ← lift_add, lift_le, ← type_unit, ← type_sum_lex]
   refine' ⟨RelEmbedding.collapse (RelEmbedding.ofMonotone _ _)⟩
-  · apply Sum.rec
-    exact fun _ => 0
-    exact Nat.succ
-  · intro a b
+  · apply Sum.rec; exact fun _ => 0; exact Nat.succ
+  · intro a b;
     cases a <;> cases b <;> intro H <;> cases' H with _ _ H _ _ H <;>
       [cases H;exact Nat.succ_pos _;exact Nat.succ_lt_succ H]
 #align ordinal.one_add_omega Ordinal.one_add_omega
@@ -1236,10 +1222,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_mul_left Ordinal.le_mul_leftₓ'. -/
-theorem le_mul_left (a : Ordinal) {b : Ordinal} (hb : 0 < b) : a ≤ a * b :=
-  by
-  convert mul_le_mul_left' (one_le_iff_pos.2 hb) a
-  rw [mul_one a]
+theorem le_mul_left (a : Ordinal) {b : Ordinal} (hb : 0 < b) : a ≤ a * b := by
+  convert mul_le_mul_left' (one_le_iff_pos.2 hb) a; rw [mul_one a]
 #align ordinal.le_mul_left Ordinal.le_mul_left
 
 /- warning: ordinal.le_mul_right -> Ordinal.le_mul_right is a dubious translation:
@@ -1248,18 +1232,14 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b a))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_mul_right Ordinal.le_mul_rightₓ'. -/
-theorem le_mul_right (a : Ordinal) {b : Ordinal} (hb : 0 < b) : a ≤ b * a :=
-  by
-  convert mul_le_mul_right' (one_le_iff_pos.2 hb) a
-  rw [one_mul a]
+theorem le_mul_right (a : Ordinal) {b : Ordinal} (hb : 0 < b) : a ≤ b * a := by
+  convert mul_le_mul_right' (one_le_iff_pos.2 hb) a; rw [one_mul a]
 #align ordinal.le_mul_right Ordinal.le_mul_right
 
 private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder β s] {c}
     (h : IsLimit (type s)) (H : ∀ b' < type s, type r * b' ≤ c) (l : c < type r * type s) : False :=
   by
-  suffices ∀ a b, Prod.Lex s r (b, a) (enum _ _ l)
-    by
-    cases' enum _ _ l with b a
+  suffices ∀ a b, Prod.Lex s r (b, a) (enum _ _ l) by cases' enum _ _ l with b a;
     exact irrefl _ (this _ _)
   intro a b
   rw [← typein_lt_typein (Prod.Lex s r), typein_enum]
@@ -1270,18 +1250,15 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
   · rcases a with ⟨⟨b', a'⟩, h⟩
     by_cases e : b = b'
     · refine' Sum.inr ⟨a', _⟩
-      subst e
-      cases' h with _ _ _ _ h _ _ _ h
+      subst e; cases' h with _ _ _ _ h _ _ _ h
       · exact (irrefl _ h).elim
       · exact h
     · refine' Sum.inl (⟨b', _⟩, a')
       cases' h with _ _ _ _ h _ _ _ h
-      · exact h
-      · exact (e rfl).elim
+      · exact h; · exact (e rfl).elim
   · rcases a with ⟨⟨b₁, a₁⟩, h₁⟩
     rcases b with ⟨⟨b₂, a₂⟩, h₂⟩
-    intro h
-    by_cases e₁ : b = b₁ <;> by_cases e₂ : b = b₂
+    intro h; by_cases e₁ : b = b₁ <;> by_cases e₂ : b = b₂
     · substs b₁ b₂
       simpa only [subrel_val, Prod.lex_def, @irrefl _ s _ b, true_and_iff, false_or_iff,
         eq_self_iff_true, dif_pos, Sum.lex_inr_inr] using h
@@ -1416,8 +1393,7 @@ theorem mul_isLimit_left {a b : Ordinal} (l : IsLimit a) (b0 : 0 < b) : IsLimit 
   by
   rcases zero_or_succ_or_limit b with (rfl | ⟨b, rfl⟩ | lb)
   · exact b0.false.elim
-  · rw [mul_succ]
-    exact add_is_limit _ l
+  · rw [mul_succ]; exact add_is_limit _ l
   · exact mul_is_limit l.pos lb
 #align ordinal.mul_is_limit_left Ordinal.mul_isLimit_left
 
@@ -1534,8 +1510,7 @@ theorem le_div {a b c : Ordinal} (c0 : c ≠ 0) : a ≤ b / c ↔ c * a ≤ b :=
   by
   apply limit_rec_on a
   · simp only [MulZeroClass.mul_zero, Ordinal.zero_le]
-  · intros
-    rw [succ_le_iff, lt_div c0]
+  · intros ; rw [succ_le_iff, lt_div c0]
   ·
     simp (config := { contextual := true }) only [mul_le_of_limit, limit_le, iff_self_iff,
       forall_true_iff]
@@ -1673,14 +1648,9 @@ theorem isLimit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsLi
   by
   constructor <;> intro h
   · by_cases h' : b = 0
-    · rw [h', add_zero] at h
-      right
-      exact ⟨h', h⟩
-    left
-    rw [← add_sub_cancel a b]
-    apply sub_is_limit h
-    suffices : a + 0 < a + b
-    simpa only [add_zero]
+    · rw [h', add_zero] at h; right; exact ⟨h', h⟩
+    left; rw [← add_sub_cancel a b]; apply sub_is_limit h
+    suffices : a + 0 < a + b; simpa only [add_zero]
     rwa [add_lt_add_iff_left, Ordinal.pos_iff_ne_zero]
   rcases h with (h | ⟨rfl, h⟩); exact add_is_limit a h; simpa only [add_zero]
 #align ordinal.is_limit_add_iff Ordinal.isLimit_add_iff
@@ -1689,10 +1659,8 @@ theorem isLimit_add_iff {a b} : IsLimit (a + b) ↔ IsLimit b ∨ b = 0 ∧ IsLi
 #print Ordinal.dvd_add_iff /-
 theorem dvd_add_iff : ∀ {a b c : Ordinal}, a ∣ b → (a ∣ b + c ↔ a ∣ c)
   | a, _, c, ⟨b, rfl⟩ =>
-    ⟨fun ⟨d, e⟩ => ⟨d - b, by rw [mul_sub, ← e, add_sub_cancel]⟩, fun ⟨d, e⟩ =>
-      by
-      rw [e, ← mul_add]
-      apply dvd_mul_right⟩
+    ⟨fun ⟨d, e⟩ => ⟨d - b, by rw [mul_sub, ← e, add_sub_cancel]⟩, fun ⟨d, e⟩ => by
+      rw [e, ← mul_add]; apply dvd_mul_right⟩
 #align ordinal.dvd_add_iff Ordinal.dvd_add_iff
 -/
 
@@ -1955,11 +1923,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.family_of_bfam
 /-- Converts a family indexed by an `ordinal.{u}` to one indexed by an `Type u` using a specified
 well-ordering. -/
 def familyOfBFamily' {ι : Type u} (r : ι → ι → Prop) [IsWellOrder ι r] {o} (ho : type r = o)
-    (f : ∀ a < o, α) : ι → α := fun i =>
-  f (typein r i)
-    (by
-      rw [← ho]
-      exact typein_lt_type r i)
+    (f : ∀ a < o, α) : ι → α := fun i => f (typein r i) (by rw [← ho]; exact typein_lt_type r i)
 #align ordinal.family_of_bfamily' Ordinal.familyOfBFamily'
 
 /- warning: ordinal.family_of_bfamily -> Ordinal.familyOfBFamily is a dubious translation:
@@ -2008,12 +1972,7 @@ theorem familyOfBFamily'_enum {ι : Type u} (r : ι → ι → Prop) [IsWellOrde
 Case conversion may be inaccurate. Consider using '#align ordinal.family_of_bfamily_enum Ordinal.familyOfBFamily_enumₓ'. -/
 @[simp]
 theorem familyOfBFamily_enum (o : Ordinal) (f : ∀ a < o, α) (i hi) :
-    familyOfBFamily o f
-        (enum (· < ·) i
-          (by
-            convert hi
-            exact type_lt _)) =
-      f i hi :=
+    familyOfBFamily o f (enum (· < ·) i (by convert hi; exact type_lt _)) = f i hi :=
   familyOfBFamily'_enum _ (type_lt o) f _ _
 #align ordinal.family_of_bfamily_enum Ordinal.familyOfBFamily_enum
 
@@ -2368,30 +2327,21 @@ but is expected to have type
   forall {s : Set.{succ u1} Ordinal.{u1}} (hs : Small.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s)) (a : Ordinal.{u1}), (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a s) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.sup.{u1, u1} (Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) (fun (x : Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) => Subtype.val.{succ (succ u1)} Ordinal.{u1} (fun (x : Ordinal.{u1}) => Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) x s) (FunLike.coe.{succ (succ u1), succ u1, succ (succ u1)} (Equiv.{succ u1, succ (succ u1)} (Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) (Set.Elem.{succ u1} Ordinal.{u1} s)) (Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) (fun (_x : Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) => Set.Elem.{succ u1} Ordinal.{u1} s) _x) (Equiv.instFunLikeEquiv.{succ u1, succ (succ u1)} (Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) (Set.Elem.{succ u1} Ordinal.{u1} s)) (Equiv.symm.{succ (succ u1), succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) (Shrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs) (equivShrink.{u1, succ u1} (Set.Elem.{succ u1} Ordinal.{u1} s) hs)) x))))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_sup_shrink_equiv Ordinal.le_sup_shrink_equivₓ'. -/
 theorem le_sup_shrink_equiv {s : Set Ordinal.{u}} (hs : Small.{u} s) (a) (ha : a ∈ s) :
-    a ≤ sup.{u, u} fun x => ((@equivShrink s hs).symm x).val :=
-  by
-  convert le_sup.{u, u} _ ((@equivShrink s hs) ⟨a, ha⟩)
-  rw [symm_apply_apply]
+    a ≤ sup.{u, u} fun x => ((@equivShrink s hs).symm x).val := by
+  convert le_sup.{u, u} _ ((@equivShrink s hs) ⟨a, ha⟩); rw [symm_apply_apply]
 #align ordinal.le_sup_shrink_equiv Ordinal.le_sup_shrink_equiv
 
 #print Ordinal.small_Iio /-
 instance small_Iio (o : Ordinal.{u}) : Small.{u} (Set.Iio o) :=
   let f : o.out.α → Set.Iio o := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
   let hf : Surjective f := fun b =>
-    ⟨enum (· < ·) b.val
-        (by
-          rw [type_lt]
-          exact b.prop),
-      Subtype.ext (typein_enum _ _)⟩
+    ⟨enum (· < ·) b.val (by rw [type_lt]; exact b.prop), Subtype.ext (typein_enum _ _)⟩
   small_of_surjective hf
 #align ordinal.small_Iio Ordinal.small_Iio
 -/
 
 #print Ordinal.small_Iic /-
-instance small_Iic (o : Ordinal.{u}) : Small.{u} (Set.Iic o) :=
-  by
-  rw [← Iio_succ]
-  infer_instance
+instance small_Iic (o : Ordinal.{u}) : Small.{u} (Set.Iic o) := by rw [← Iio_succ]; infer_instance
 #align ordinal.small_Iic Ordinal.small_Iic
 -/
 
@@ -2439,10 +2389,7 @@ but is expected to have type
   forall {ι : Sort.{u2}} {f : ι -> Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (Set.range.{succ u1, u2} Cardinal.{u1} ι f)) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (iSup.{succ u1, u2} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f)) (iSup.{succ u1, u2} Ordinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) ι (fun (i : ι) => Cardinal.ord.{u1} (f i))))
 Case conversion may be inaccurate. Consider using '#align ordinal.supr_ord Ordinal.iSup_ordₓ'. -/
 theorem iSup_ord {ι} {f : ι → Cardinal} (hf : BddAbove (range f)) : (iSup f).ord = ⨆ i, (f i).ord :=
-  by
-  unfold iSup
-  convert Sup_ord hf
-  rw [range_comp]
+  by unfold iSup; convert Sup_ord hf; rw [range_comp]
 #align ordinal.supr_ord Ordinal.iSup_ord
 
 private theorem sup_le_sup {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' → ι' → Prop)
@@ -2450,12 +2397,7 @@ private theorem sup_le_sup {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' 
     (f : ∀ a < o, Ordinal) : sup (familyOfBFamily' r ho f) ≤ sup (familyOfBFamily' r' ho' f) :=
   sup_le fun i =>
     by
-    cases'
-      typein_surj r'
-        (by
-          rw [ho', ← ho]
-          exact typein_lt_type r i) with
-      j hj
+    cases' typein_surj r' (by rw [ho', ← ho]; exact typein_lt_type r i) with j hj
     simp_rw [family_of_bfamily', ← hj]
     apply le_sup
 
@@ -2515,9 +2457,7 @@ but is expected to have type
   forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (SupSet.sSup.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{max u1 u2}))) (Ordinal.brange.{max (succ u1) (succ u2), u1} Ordinal.{max u1 u2} o f)) (Ordinal.bsup.{u1, u2} o f)
 Case conversion may be inaccurate. Consider using '#align ordinal.Sup_eq_bsup Ordinal.sSup_eq_bsupₓ'. -/
 @[simp]
-theorem sSup_eq_bsup {o} (f : ∀ a < o, Ordinal) : sSup (brange o f) = bsup o f :=
-  by
-  congr
+theorem sSup_eq_bsup {o} (f : ∀ a < o, Ordinal) : sSup (brange o f) = bsup o f := by congr ;
   rw [range_family_of_bfamily]
 #align ordinal.Sup_eq_bsup Ordinal.sSup_eq_bsup
 
@@ -2561,10 +2501,7 @@ but is expected to have type
   forall {o : Ordinal.{u1}} {f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, Iff (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.bsup.{u1, u2} o f) a) (forall (i : Ordinal.{u1}) (h : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i h) a)
 Case conversion may be inaccurate. Consider using '#align ordinal.bsup_le_iff Ordinal.bsup_le_iffₓ'. -/
 theorem bsup_le_iff {o f a} : bsup.{u, v} o f ≤ a ↔ ∀ i h, f i h ≤ a :=
-  sup_le_iff.trans
-    ⟨fun h i hi => by
-      rw [← family_of_bfamily_enum o f]
-      exact h _, fun h i => h _ _⟩
+  sup_le_iff.trans ⟨fun h i hi => by rw [← family_of_bfamily_enum o f]; exact h _, fun h i => h _ _⟩
 #align ordinal.bsup_le_iff Ordinal.bsup_le_iff
 
 /- warning: ordinal.bsup_le -> Ordinal.bsup_le is a dubious translation:
@@ -2631,9 +2568,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.bsup_not_succ_of_ne_bsup Ordinal.bsup_not_succ_of_ne_bsupₓ'. -/
 theorem bsup_not_succ_of_ne_bsup {o} {f : ∀ a < o, Ordinal}
     (hf : ∀ {i : Ordinal} (h : i < o), f i h ≠ o.bsup f) (a) : a < bsup o f → succ a < bsup o f :=
-  by
-  rw [← sup_eq_bsup] at *
-  exact sup_not_succ_of_ne_sup fun i => hf _
+  by rw [← sup_eq_bsup] at *; exact sup_not_succ_of_ne_sup fun i => hf _
 #align ordinal.bsup_not_succ_of_ne_bsup Ordinal.bsup_not_succ_of_ne_bsup
 
 /- warning: ordinal.bsup_eq_zero_iff -> Ordinal.bsup_eq_zero_iff is a dubious translation:
@@ -2748,9 +2683,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2}} {a : Ordinal.{max u2 u1}}, Iff (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.lsub.{u1, u2} ι f) a) (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i) a)
 Case conversion may be inaccurate. Consider using '#align ordinal.lsub_le_iff Ordinal.lsub_le_iffₓ'. -/
-theorem lsub_le_iff {ι} {f : ι → Ordinal} {a} : lsub f ≤ a ↔ ∀ i, f i < a :=
-  by
-  convert sup_le_iff
+theorem lsub_le_iff {ι} {f : ι → Ordinal} {a} : lsub f ≤ a ↔ ∀ i, f i < a := by convert sup_le_iff;
   simp only [succ_le_iff]
 #align ordinal.lsub_le_iff Ordinal.lsub_le_iff
 
@@ -2850,11 +2783,7 @@ theorem sup_eq_lsub_iff_succ {ι} (f : ι → Ordinal) :
     exact fun a => sup_not_succ_of_ne_sup fun i => (lsub_le_iff.1 (le_of_eq h.symm) i).Ne
   by_contra' hle
   have heq := (sup_succ_eq_lsub f).2 ⟨i, le_antisymm (le_sup _ _) hle⟩
-  have :=
-    hf _
-      (by
-        rw [← HEq]
-        exact lt_succ (sup f))
+  have := hf _ (by rw [← HEq]; exact lt_succ (sup f))
   rw [HEq] at this
   exact this.false
 #align ordinal.sup_eq_lsub_iff_succ Ordinal.sup_eq_lsub_iff_succ
@@ -2866,9 +2795,7 @@ but is expected to have type
   forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2}), Iff (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Ordinal.sup.{u1, u2} ι f) (Ordinal.lsub.{u1, u2} ι f)) (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i) (Ordinal.sup.{u1, u2} ι f))
 Case conversion may be inaccurate. Consider using '#align ordinal.sup_eq_lsub_iff_lt_sup Ordinal.sup_eq_lsub_iff_lt_supₓ'. -/
 theorem sup_eq_lsub_iff_lt_sup {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀ i, f i < sup f :=
-  ⟨fun h i => by
-    rw [h]
-    apply lt_lsub, fun h => le_antisymm (sup_le_lsub f) (lsub_le h)⟩
+  ⟨fun h i => by rw [h]; apply lt_lsub, fun h => le_antisymm (sup_le_lsub f) (lsub_le h)⟩
 #align ordinal.sup_eq_lsub_iff_lt_sup Ordinal.sup_eq_lsub_iff_lt_sup
 
 /- warning: ordinal.lsub_empty -> Ordinal.lsub_empty is a dubious translation:
@@ -2878,10 +2805,8 @@ but is expected to have type
   forall {ι : Type.{u2}} [h : IsEmpty.{succ u2} ι] (f : ι -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Ordinal.lsub.{u2, u1} ι f) (OfNat.ofNat.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} 0 (Zero.toOfNat0.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.zero.{max u1 u2}))
 Case conversion may be inaccurate. Consider using '#align ordinal.lsub_empty Ordinal.lsub_emptyₓ'. -/
 @[simp]
-theorem lsub_empty {ι} [h : IsEmpty ι] (f : ι → Ordinal) : lsub f = 0 :=
-  by
-  rw [← Ordinal.le_zero, lsub_le_iff]
-  exact h.elim
+theorem lsub_empty {ι} [h : IsEmpty ι] (f : ι → Ordinal) : lsub f = 0 := by
+  rw [← Ordinal.le_zero, lsub_le_iff]; exact h.elim
 #align ordinal.lsub_empty Ordinal.lsub_empty
 
 /- warning: ordinal.lsub_pos -> Ordinal.lsub_pos is a dubious translation:
@@ -3120,9 +3045,7 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u1}} {f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, Iff (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.blsub.{u1, u2} o f) a) (forall (i : Ordinal.{u1}) (h : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i h) a)
 Case conversion may be inaccurate. Consider using '#align ordinal.blsub_le_iff Ordinal.blsub_le_iffₓ'. -/
-theorem blsub_le_iff {o f a} : blsub o f ≤ a ↔ ∀ i h, f i h < a :=
-  by
-  convert bsup_le_iff
+theorem blsub_le_iff {o f a} : blsub o f ≤ a ↔ ∀ i h, f i h < a := by convert bsup_le_iff;
   simp [succ_le_iff]
 #align ordinal.blsub_le_iff Ordinal.blsub_le_iff
 
@@ -3183,9 +3106,7 @@ but is expected to have type
   forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Or (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Ordinal.bsup.{u1, u2} o f) (Ordinal.blsub.{u1, u2} o f)) (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Order.succ.{max (succ u2) (succ u1)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) Ordinal.succOrder.{max u1 u2} (Ordinal.bsup.{u1, u2} o f)) (Ordinal.blsub.{u1, u2} o f))
 Case conversion may be inaccurate. Consider using '#align ordinal.bsup_eq_blsub_or_succ_bsup_eq_blsub Ordinal.bsup_eq_blsub_or_succ_bsup_eq_blsubₓ'. -/
 theorem bsup_eq_blsub_or_succ_bsup_eq_blsub {o} (f : ∀ a < o, Ordinal) :
-    bsup o f = blsub o f ∨ succ (bsup o f) = blsub o f :=
-  by
-  rw [← sup_eq_bsup, ← lsub_eq_blsub]
+    bsup o f = blsub o f ∨ succ (bsup o f) = blsub o f := by rw [← sup_eq_bsup, ← lsub_eq_blsub];
   exact sup_eq_lsub_or_sup_succ_eq_lsub _
 #align ordinal.bsup_eq_blsub_or_succ_bsup_eq_blsub Ordinal.bsup_eq_blsub_or_succ_bsup_eq_blsub
 
@@ -3226,10 +3147,8 @@ but is expected to have type
   forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Iff (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Ordinal.bsup.{u1, u2} o f) (Ordinal.blsub.{u1, u2} o f)) (forall (a : Ordinal.{max u1 u2}), (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.blsub.{u1, u2} o f)) -> (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Order.succ.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) Ordinal.succOrder.{max u1 u2} a) (Ordinal.blsub.{u1, u2} o f)))
 Case conversion may be inaccurate. Consider using '#align ordinal.bsup_eq_blsub_iff_succ Ordinal.bsup_eq_blsub_iff_succₓ'. -/
 theorem bsup_eq_blsub_iff_succ {o} (f : ∀ a < o, Ordinal) :
-    bsup o f = blsub o f ↔ ∀ a < blsub o f, succ a < blsub o f :=
-  by
-  rw [← sup_eq_bsup, ← lsub_eq_blsub]
-  apply sup_eq_lsub_iff_succ
+    bsup o f = blsub o f ↔ ∀ a < blsub o f, succ a < blsub o f := by
+  rw [← sup_eq_bsup, ← lsub_eq_blsub]; apply sup_eq_lsub_iff_succ
 #align ordinal.bsup_eq_blsub_iff_succ Ordinal.bsup_eq_blsub_iff_succ
 
 /- warning: ordinal.bsup_eq_blsub_iff_lt_bsup -> Ordinal.bsup_eq_blsub_iff_lt_bsup is a dubious translation:
@@ -3240,9 +3159,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.bsup_eq_blsub_iff_lt_bsup Ordinal.bsup_eq_blsub_iff_lt_bsupₓ'. -/
 theorem bsup_eq_blsub_iff_lt_bsup {o} (f : ∀ a < o, Ordinal) :
     bsup o f = blsub o f ↔ ∀ i hi, f i hi < bsup o f :=
-  ⟨fun h i => by
-    rw [h]
-    apply lt_blsub, fun h => le_antisymm (bsup_le_blsub f) (blsub_le h)⟩
+  ⟨fun h i => by rw [h]; apply lt_blsub, fun h => le_antisymm (bsup_le_blsub f) (blsub_le h)⟩
 #align ordinal.bsup_eq_blsub_iff_lt_bsup Ordinal.bsup_eq_blsub_iff_lt_bsup
 
 /- warning: ordinal.bsup_eq_blsub_of_lt_succ_limit -> Ordinal.bsup_eq_blsub_of_lt_succ_limit is a dubious translation:
@@ -3276,10 +3193,8 @@ but is expected to have type
   forall {o : Ordinal.{u2}} {f : forall (a : Ordinal.{u2}), (LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) a o) -> Ordinal.{max u1 u2}}, Iff (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (Ordinal.blsub.{u2, u1} o f) (OfNat.ofNat.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} 0 (Zero.toOfNat0.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.zero.{max u1 u2}))) (Eq.{succ (succ u2)} Ordinal.{u2} o (OfNat.ofNat.{succ u2} Ordinal.{u2} 0 (Zero.toOfNat0.{succ u2} Ordinal.{u2} Ordinal.zero.{u2})))
 Case conversion may be inaccurate. Consider using '#align ordinal.blsub_eq_zero_iff Ordinal.blsub_eq_zero_iffₓ'. -/
 @[simp]
-theorem blsub_eq_zero_iff {o} {f : ∀ a < o, Ordinal} : blsub o f = 0 ↔ o = 0 :=
-  by
-  rw [← lsub_eq_blsub, lsub_eq_zero_iff]
-  exact out_empty_iff_eq_zero
+theorem blsub_eq_zero_iff {o} {f : ∀ a < o, Ordinal} : blsub o f = 0 ↔ o = 0 := by
+  rw [← lsub_eq_blsub, lsub_eq_zero_iff]; exact out_empty_iff_eq_zero
 #align ordinal.blsub_eq_zero_iff Ordinal.blsub_eq_zero_iff
 
 /- warning: ordinal.blsub_zero -> Ordinal.blsub_zero is a dubious translation:
@@ -3393,12 +3308,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.bsup_comp Ordi
 theorem bsup_comp {o o' : Ordinal} {f : ∀ a < o, Ordinal}
     (hf : ∀ {i j} (hi) (hj), i ≤ j → f i hi ≤ f j hj) {g : ∀ a < o', Ordinal}
     (hg : blsub o' g = o) :
-    (bsup o' fun a ha =>
-        f (g a ha)
-          (by
-            rw [← hg]
-            apply lt_blsub)) =
-      bsup o f :=
+    (bsup o' fun a ha => f (g a ha) (by rw [← hg]; apply lt_blsub)) = bsup o f :=
   by
   apply le_antisymm <;> refine' bsup_le fun i hi => _
   · apply le_bsup
@@ -3416,12 +3326,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.blsub_comp Ord
 theorem blsub_comp {o o' : Ordinal} {f : ∀ a < o, Ordinal}
     (hf : ∀ {i j} (hi) (hj), i ≤ j → f i hi ≤ f j hj) {g : ∀ a < o', Ordinal}
     (hg : blsub o' g = o) :
-    (blsub o' fun a ha =>
-        f (g a ha)
-          (by
-            rw [← hg]
-            apply lt_blsub)) =
-      blsub o f :=
+    (blsub o' fun a ha => f (g a ha) (by rw [← hg]; apply lt_blsub)) = blsub o f :=
   @bsup_comp o _ (fun a ha => succ (f a ha)) (fun i j _ _ h => succ_le_succ_iff.2 (hf _ _ h)) g hg
 #align ordinal.blsub_comp Ordinal.blsub_comp
 
@@ -3434,9 +3339,7 @@ theorem IsNormal.bsup_eq {f} (H : IsNormal f) {o : Ordinal} (h : IsLimit o) :
 
 #print Ordinal.IsNormal.blsub_eq /-
 theorem IsNormal.blsub_eq {f} (H : IsNormal f) {o : Ordinal} (h : IsLimit o) :
-    (blsub.{u} o fun x _ => f x) = f o :=
-  by
-  rw [← H.bsup_eq h, bsup_eq_blsub_of_lt_succ_limit h]
+    (blsub.{u} o fun x _ => f x) = f o := by rw [← H.bsup_eq h, bsup_eq_blsub_of_lt_succ_limit h];
   exact fun a _ => H.1 a
 #align ordinal.is_normal.blsub_eq Ordinal.IsNormal.blsub_eq
 -/
@@ -3450,9 +3353,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.is_normal_iff_
 theorem isNormal_iff_lt_succ_and_bsup_eq {f} :
     IsNormal f ↔ (∀ a, f a < f (succ a)) ∧ ∀ o, IsLimit o → (bsup o fun x _ => f x) = f o :=
   ⟨fun h => ⟨h.1, @IsNormal.bsup_eq f h⟩, fun ⟨h₁, h₂⟩ =>
-    ⟨h₁, fun o ho a => by
-      rw [← h₂ o ho]
-      exact bsup_le_iff⟩⟩
+    ⟨h₁, fun o ho a => by rw [← h₂ o ho]; exact bsup_le_iff⟩⟩
 #align ordinal.is_normal_iff_lt_succ_and_bsup_eq Ordinal.isNormal_iff_lt_succ_and_bsup_eq
 
 /- warning: ordinal.is_normal_iff_lt_succ_and_blsub_eq -> Ordinal.isNormal_iff_lt_succ_and_blsub_eq is a dubious translation:
@@ -3508,10 +3409,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, (forall (b : Ordinal.{max u1 u2}), (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b a) -> (Exists.{succ u1} ι (fun (i : ι) => Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i) b))) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.mex.{u1, u2} ι f))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_mex_of_forall Ordinal.le_mex_of_forallₓ'. -/
 theorem le_mex_of_forall {ι : Type u} {f : ι → Ordinal.{max u v}} {a : Ordinal}
-    (H : ∀ b < a, ∃ i, f i = b) : a ≤ mex f :=
-  by
-  by_contra' h
-  exact mex_not_mem_range f (H _ h)
+    (H : ∀ b < a, ∃ i, f i = b) : a ≤ mex f := by by_contra' h; exact mex_not_mem_range f (H _ h)
 #align ordinal.le_mex_of_forall Ordinal.le_mex_of_forall
 
 #print Ordinal.ne_mex /-
@@ -3535,10 +3433,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {f : ι -> Ordinal.{max u1 u2}} {a : Ordinal.{max u2 u1}}, (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.mex.{u2, u1} ι f)) -> (Exists.{succ u2} ι (fun (i : ι) => Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i) a))
 Case conversion may be inaccurate. Consider using '#align ordinal.exists_of_lt_mex Ordinal.exists_of_lt_mexₓ'. -/
-theorem exists_of_lt_mex {ι} {f : ι → Ordinal} {a} (ha : a < mex f) : ∃ i, f i = a :=
-  by
-  by_contra' ha'
-  exact ha.not_le (mex_le_of_ne ha')
+theorem exists_of_lt_mex {ι} {f : ι → Ordinal} {a} (ha : a < mex f) : ∃ i, f i = a := by
+  by_contra' ha'; exact ha.not_le (mex_le_of_ne ha')
 #align ordinal.exists_of_lt_mex Ordinal.exists_of_lt_mex
 
 /- warning: ordinal.mex_le_lsub -> Ordinal.mex_le_lsub is a dubious translation:
@@ -3607,10 +3503,8 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u2}} (f : forall (a : Ordinal.{u2}), (LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) a o) -> Ordinal.{max u2 u1}), Not (Membership.mem.{max (succ u1) (succ u2), max (succ u2) (succ u1)} Ordinal.{max u1 u2} (Set.{max (succ u2) (succ u1)} Ordinal.{max u2 u1}) (Set.instMembershipSet.{max (succ u2) (succ u1)} Ordinal.{max u2 u1}) (Ordinal.bmex.{u2, u1} o f) (Ordinal.brange.{max (succ u2) (succ u1), u2} Ordinal.{max u2 u1} o f))
 Case conversion may be inaccurate. Consider using '#align ordinal.bmex_not_mem_brange Ordinal.bmex_not_mem_brangeₓ'. -/
-theorem bmex_not_mem_brange {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f ∉ brange o f :=
-  by
-  rw [← range_family_of_bfamily]
-  apply mex_not_mem_range
+theorem bmex_not_mem_brange {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f ∉ brange o f := by
+  rw [← range_family_of_bfamily]; apply mex_not_mem_range
 #align ordinal.bmex_not_mem_brange Ordinal.bmex_not_mem_brange
 
 /- warning: ordinal.le_bmex_of_forall -> Ordinal.le_bmex_of_forall is a dubious translation:
@@ -3620,9 +3514,7 @@ but is expected to have type
   forall {o : Ordinal.{u2}} (f : forall (a : Ordinal.{u2}), (LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) a o) -> Ordinal.{max u2 u1}) {a : Ordinal.{max u2 u1}}, (forall (b : Ordinal.{max u2 u1}), (LT.lt.{succ (max u2 u1)} Ordinal.{max u2 u1} (Preorder.toLT.{succ (max u2 u1)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{succ (max u2 u1)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u2 u1})) b a) -> (Exists.{succ (succ u2)} Ordinal.{u2} (fun (i : Ordinal.{u2}) => Exists.{0} (LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) i o) (fun (hi : LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) i o) => Eq.{succ (succ (max u2 u1))} Ordinal.{max u2 u1} (f i hi) b)))) -> (LE.le.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u2 u1})) a (Ordinal.bmex.{u2, u1} o f))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_bmex_of_forall Ordinal.le_bmex_of_forallₓ'. -/
 theorem le_bmex_of_forall {o : Ordinal} (f : ∀ a < o, Ordinal) {a : Ordinal}
-    (H : ∀ b < a, ∃ i hi, f i hi = b) : a ≤ bmex o f :=
-  by
-  by_contra' h
+    (H : ∀ b < a, ∃ i hi, f i hi = b) : a ≤ bmex o f := by by_contra' h;
   exact bmex_not_mem_brange f (H _ h)
 #align ordinal.le_bmex_of_forall Ordinal.le_bmex_of_forall
 
@@ -3689,9 +3581,7 @@ but is expected to have type
   forall {o : Ordinal.{u}} (f : forall (a : Ordinal.{u}), (LT.lt.{succ u} Ordinal.{u} (Preorder.toLT.{succ u} Ordinal.{u} (PartialOrder.toPreorder.{succ u} Ordinal.{u} Ordinal.partialOrder.{u})) a o) -> Ordinal.{u}), LT.lt.{succ u} Ordinal.{u} (Preorder.toLT.{succ u} Ordinal.{u} (PartialOrder.toPreorder.{succ u} Ordinal.{u} Ordinal.partialOrder.{u})) (Ordinal.bmex.{u, u} o f) (Cardinal.ord.{u} (Order.succ.{succ u} Cardinal.{u} (PartialOrder.toPreorder.{succ u} Cardinal.{u} Cardinal.partialOrder.{u}) Cardinal.instSuccOrderCardinalToPreorderPartialOrder.{u} (Ordinal.card.{u} o)))
 Case conversion may be inaccurate. Consider using '#align ordinal.bmex_lt_ord_succ_card Ordinal.bmex_lt_ord_succ_cardₓ'. -/
 theorem bmex_lt_ord_succ_card {o : Ordinal} (f : ∀ a < o, Ordinal) : bmex o f < (succ o.card).ord :=
-  by
-  rw [← mk_ordinal_out]
-  exact mex_lt_ord_succ_mk (family_of_bfamily o f)
+  by rw [← mk_ordinal_out]; exact mex_lt_ord_succ_mk (family_of_bfamily o f)
 #align ordinal.bmex_lt_ord_succ_card Ordinal.bmex_lt_ord_succ_card
 
 end Ordinal
@@ -3773,9 +3663,7 @@ theorem enumOrd_def'_nonempty (hS : Unbounded (· < ·) S) (a) : (S ∩ Set.Ici 
 #align ordinal.enum_ord_def'_nonempty Ordinal.enumOrd_def'_nonempty
 
 private theorem enum_ord_mem_aux (hS : Unbounded (· < ·) S) (o) :
-    enumOrd S o ∈ S ∩ Set.Ici (blsub.{u, u} o fun c _ => enumOrd S c) :=
-  by
-  rw [enum_ord_def']
+    enumOrd S o ∈ S ∩ Set.Ici (blsub.{u, u} o fun c _ => enumOrd S c) := by rw [enum_ord_def'];
   exact csInf_mem (enum_ord_def'_nonempty hS _)
 
 /- warning: ordinal.enum_ord_mem -> Ordinal.enumOrd_mem is a dubious translation:
@@ -3843,9 +3731,7 @@ theorem enumOrd_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (r
     intro a H
     rw [enum_ord_def a]
     have Hfa : f a ∈ range f ∩ { b | ∀ c, c < a → enum_ord (range f) c < b } :=
-      ⟨mem_range_self a, fun b hb => by
-        rw [H b hb]
-        exact hf hb⟩
+      ⟨mem_range_self a, fun b hb => by rw [H b hb]; exact hf hb⟩
     refine' (csInf_le' Hfa).antisymm ((le_csInf_iff'' ⟨_, Hfa⟩).2 _)
     rintro _ ⟨⟨c, rfl⟩, hc : ∀ b < a, enum_ord (range f) b < f c⟩
     rw [hf.le_iff_le]
@@ -3856,9 +3742,7 @@ theorem enumOrd_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (r
 
 #print Ordinal.enumOrd_univ /-
 @[simp]
-theorem enumOrd_univ : enumOrd Set.univ = id :=
-  by
-  rw [← range_id]
+theorem enumOrd_univ : enumOrd Set.univ = id := by rw [← range_id];
   exact enum_ord_range strictMono_id
 #align ordinal.enum_ord_univ Ordinal.enumOrd_univ
 -/
@@ -3870,10 +3754,7 @@ but is expected to have type
   forall {S : Set.{succ u1} Ordinal.{u1}}, Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) S)
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_zero Ordinal.enumOrd_zeroₓ'. -/
 @[simp]
-theorem enumOrd_zero : enumOrd S 0 = sInf S :=
-  by
-  rw [enum_ord_def]
-  simp [Ordinal.not_lt_zero]
+theorem enumOrd_zero : enumOrd S 0 = sInf S := by rw [enum_ord_def]; simp [Ordinal.not_lt_zero]
 #align ordinal.enum_ord_zero Ordinal.enumOrd_zero
 
 /- warning: ordinal.enum_ord_succ_le -> Ordinal.enumOrd_succ_le is a dubious translation:
@@ -3914,9 +3795,7 @@ theorem enumOrd_surjective (hS : Unbounded (· < ·) S) : ∀ s ∈ S, ∃ a, en
     apply le_antisymm
     · rw [enum_ord_def]
       refine' csInf_le' ⟨hs, fun a ha => _⟩
-      have : enum_ord S 0 ≤ s := by
-        rw [enum_ord_zero]
-        exact csInf_le' hs
+      have : enum_ord S 0 ≤ s := by rw [enum_ord_zero]; exact csInf_le' hs
       rcases exists_lt_of_lt_csSup ⟨0, this⟩ ha with ⟨b, hb, hab⟩
       exact (enum_ord_strict_mono hS hab).trans_le hb
     · by_contra' h
@@ -3945,9 +3824,7 @@ lean 3 declaration is
 but is expected to have type
   forall {S : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.30157 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.30159 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.30157 x._@.Mathlib.SetTheory.Ordinal.Arithmetic._hyg.30159) S) -> (Eq.{succ (succ u1)} (Set.{succ u1} Ordinal.{u1}) (Set.range.{succ u1, succ (succ u1)} Ordinal.{u1} Ordinal.{u1} (Ordinal.enumOrd.{u1} S)) S)
 Case conversion may be inaccurate. Consider using '#align ordinal.range_enum_ord Ordinal.range_enumOrdₓ'. -/
-theorem range_enumOrd (hS : Unbounded (· < ·) S) : range (enumOrd S) = S :=
-  by
-  rw [range_eq_iff]
+theorem range_enumOrd (hS : Unbounded (· < ·) S) : range (enumOrd S) = S := by rw [range_eq_iff];
   exact ⟨enum_ord_mem hS, enum_ord_surjective hS⟩
 #align ordinal.range_enum_ord Ordinal.range_enumOrd
 
@@ -3980,10 +3857,8 @@ but is expected to have type
   forall (m : Nat), Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})) (Nat.cast.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) m)) (Nat.cast.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) (Order.succ.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.instSuccOrderNatToPreorderToPartialOrderStrictOrderedSemiring m))
 Case conversion may be inaccurate. Consider using '#align ordinal.one_add_nat_cast Ordinal.one_add_nat_castₓ'. -/
 @[simp]
-theorem one_add_nat_cast (m : ℕ) : 1 + (m : Ordinal) = succ m :=
-  by
-  rw [← Nat.cast_one, ← Nat.cast_add, add_comm]
-  rfl
+theorem one_add_nat_cast (m : ℕ) : 1 + (m : Ordinal) = succ m := by
+  rw [← Nat.cast_one, ← Nat.cast_add, add_comm]; rfl
 #align ordinal.one_add_nat_cast Ordinal.one_add_nat_cast
 
 /- warning: ordinal.nat_cast_mul -> Ordinal.nat_cast_mul is a dubious translation:
@@ -4263,8 +4138,7 @@ theorem isLimit_iff_omega_dvd {a : Ordinal} : IsLimit a ↔ a ≠ 0 ∧ ω ∣ a
         (lt_sub.1 <| nat_lt_limit (sub_is_limit l hx) _).le
   · rcases h with ⟨a0, b, rfl⟩
     refine' mul_is_limit_left omega_is_limit (Ordinal.pos_iff_ne_zero.2 <| mt _ a0)
-    intro e
-    simp only [e, MulZeroClass.mul_zero]
+    intro e; simp only [e, MulZeroClass.mul_zero]
 #align ordinal.is_limit_iff_omega_dvd Ordinal.isLimit_iff_omega_dvd
 -/
 
@@ -4282,11 +4156,9 @@ theorem add_mul_limit_aux {a b c : Ordinal} (ba : b + a = a) (l : IsLimit c)
       apply (mul_le_mul_left' (le_succ c') _).trans
       rw [IH _ h]
       apply (add_le_add_left _ _).trans
-      · rw [← mul_succ]
-        exact mul_le_mul_left' (succ_le_of_lt <| l.2 _ h) _
+      · rw [← mul_succ]; exact mul_le_mul_left' (succ_le_of_lt <| l.2 _ h) _
       · infer_instance
-      · rw [← ba]
-        exact le_add_right _ _)
+      · rw [← ba]; exact le_add_right _ _)
     (mul_le_mul_right' (le_add_right _ _) _)
 #align ordinal.add_mul_limit_aux Ordinal.add_mul_limit_aux
 
@@ -4326,11 +4198,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.add_le_of_fora
 theorem add_le_of_forall_add_lt {a b c : Ordinal} (hb : 0 < b) (h : ∀ d < b, a + d < c) :
     a + b ≤ c :=
   by
-  have H : a + (c - a) = c :=
-    Ordinal.add_sub_cancel_of_le
-      (by
-        rw [← add_zero a]
-        exact (h _ hb).le)
+  have H : a + (c - a) = c := Ordinal.add_sub_cancel_of_le (by rw [← add_zero a]; exact (h _ hb).le)
   rw [← H]
   apply add_le_add_left _ a
   by_contra' hb
@@ -4360,8 +4228,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.sup_mul_nat Or
 theorem sup_mul_nat (o : Ordinal) : (sup fun n : ℕ => o * n) = o * ω :=
   by
   rcases eq_zero_or_pos o with (rfl | ho)
-  · rw [MulZeroClass.zero_mul]
-    exact sup_eq_zero_iff.2 fun n => MulZeroClass.zero_mul n
+  · rw [MulZeroClass.zero_mul]; exact sup_eq_zero_iff.2 fun n => MulZeroClass.zero_mul n
   · exact (mul_is_normal ho).apply_omega
 #align ordinal.sup_mul_nat Ordinal.sup_mul_nat
 
@@ -4382,10 +4249,8 @@ noncomputable def rank (h : Acc r a) : Ordinal.{u} :=
 
 #print Acc.rank_eq /-
 theorem rank_eq (h : Acc r a) :
-    h.rank = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ (h.inv b.2).rank :=
-  by
-  change (Acc.intro a fun _ => h.inv).rank = _
-  rfl
+    h.rank = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ (h.inv b.2).rank := by
+  change (Acc.intro a fun _ => h.inv).rank = _; rfl
 #align acc.rank_eq Acc.rank_eq
 -/
 
@@ -4397,9 +4262,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align acc.rank_lt_of_rel Acc.rank_lt_of_relₓ'. -/
 /-- if `r a b` then the rank of `a` is less than the rank of `b`. -/
 theorem rank_lt_of_rel (hb : Acc r b) (h : r a b) : (hb.inv h).rank < hb.rank :=
-  (Order.lt_succ _).trans_le <| by
-    rw [hb.rank_eq]
-    refine' le_trans _ (Ordinal.le_sup _ ⟨a, h⟩)
+  (Order.lt_succ _).trans_le <| by rw [hb.rank_eq]; refine' le_trans _ (Ordinal.le_sup _ ⟨a, h⟩);
     rfl
 #align acc.rank_lt_of_rel Acc.rank_lt_of_rel
 
@@ -4422,10 +4285,8 @@ noncomputable def rank (a : α) : Ordinal.{u} :=
 
 #print WellFounded.rank_eq /-
 theorem rank_eq :
-    hwf.rank a = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ <| hwf.rank b :=
-  by
-  rw [rank, Acc.rank_eq]
-  rfl
+    hwf.rank a = Ordinal.sup.{u, u} fun b : { b // r b a } => Order.succ <| hwf.rank b := by
+  rw [rank, Acc.rank_eq]; rfl
 #align well_founded.rank_eq WellFounded.rank_eq
 -/
 

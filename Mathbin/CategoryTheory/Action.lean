@@ -266,10 +266,7 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
   have F_map_eq : ∀ {a b} {f : a ⟶ b}, F.map f = (F.map (homOfPair b.back f.val) : H) :=
     ActionCategory.cases fun _ _ => rfl
   { toFun := fun g => ⟨fun b => F.map (homOfPair b g), g⟩
-    map_one' := by
-      congr
-      funext
-      exact F_map_eq.symm.trans (F.map_id b)
+    map_one' := by congr ; funext; exact F_map_eq.symm.trans (F.map_id b)
     map_mul' := by
       intro g h
       congr ; funext
@@ -285,10 +282,7 @@ def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right
     ActionCategory G X ⥤ SingleObj H where
   obj _ := ()
   map a b f := (F f.val).left b.back
-  map_id' := by
-    intro x
-    rw [action_category.id_val, F.map_one]
-    rfl
+  map_id' := by intro x; rw [action_category.id_val, F.map_one]; rfl
   map_comp' := by
     intro x y z f g; revert y z g
     refine' action_category.cases _

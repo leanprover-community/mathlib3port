@@ -240,16 +240,12 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
   by
   rw [isAdic_iff] at h⊢
   constructor
-  · intro m
-    rw [← pow_mul]
-    apply h.left
+  · intro m; rw [← pow_mul]; apply h.left
   · intro V hV
     cases' h.right V hV with m hm
     use m
     refine' Set.Subset.trans _ hm
-    cases n
-    · exfalso
-      exact Nat.not_succ_le_zero 0 hn
+    cases n; · exfalso; exact Nat.not_succ_le_zero 0 hn
     rw [← pow_mul, Nat.succ_mul]
     apply Ideal.pow_le_pow
     apply Nat.le_add_left

@@ -23,11 +23,8 @@ theorem isSearchable_of_wellFormed {t : Rbnode α} [IsStrictWeakOrder α lt] :
     t.WellFormed lt → IsSearchable lt t none none :=
   by
   intro h; induction h
-  · constructor
-    simp [lift]
-  · subst h_n'
-    apply is_searchable_insert
-    assumption
+  · constructor; simp [lift]
+  · subst h_n'; apply is_searchable_insert; assumption
 #align rbnode.is_searchable_of_well_formed Rbnode.isSearchable_of_wellFormed
 
 open Color
@@ -35,14 +32,8 @@ open Color
 theorem isRedBlack_of_wellFormed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n :=
   by
   intro h; induction h
-  · exists black
-    exists 0
-    constructor
-  · cases' h_ih with c ih
-    cases' ih with n ih
-    subst h_n'
-    apply insert_is_red_black
-    assumption
+  · exists black; exists 0; constructor
+  · cases' h_ih with c ih; cases' ih with n ih; subst h_n'; apply insert_is_red_black; assumption
 #align rbnode.is_red_black_of_well_formed Rbnode.isRedBlack_of_wellFormed
 
 end Rbnode
@@ -75,13 +66,10 @@ theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α
         simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_imp_iff] <;>
       intro h₁ h₂ <;>
     cases_type*or.1
-  iterate 2
-    
-    · have : Rbnode.Mem lt b n_lchild := n_ih_lchild h₁ h₂
-      simp [this]
+  iterate 2 
+    · have : Rbnode.Mem lt b n_lchild := n_ih_lchild h₁ h₂; simp [this]
     · simp [incomp_trans_of lt h₂.swap h₁]
-    · have : Rbnode.Mem lt b n_rchild := n_ih_rchild h₁ h₂
-      simp [this]
+    · have : Rbnode.Mem lt b n_rchild := n_ih_rchild h₁ h₂; simp [this]
 #align rbtree.mem_of_mem_of_eqv Rbtree.mem_of_mem_of_eqv
 
 section Dec
@@ -181,18 +169,10 @@ theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
     a ∈ t ↔ t.contains a = true := by
   have h := find_correct a t
   simp [h, contains]; apply Iff.intro
+  · intro h'; cases' h' with _ h'; cases h'; simp [*]; simp [Option.isSome]
   · intro h'
-    cases' h' with _ h'
-    cases h'
-    simp [*]
-    simp [Option.isSome]
-  · intro h'
-    cases' heq : find t a with v
-    simp [HEq, Option.isSome] at h'
-    contradiction
-    exists v
-    simp
-    apply eqv_of_find_some HEq
+    cases' heq : find t a with v; simp [HEq, Option.isSome] at h'; contradiction
+    exists v; simp; apply eqv_of_find_some HEq
 #align rbtree.contains_correct Rbtree.contains_correct
 
 theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b a → a ∈ t.insert b := by
@@ -254,12 +234,8 @@ theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
 #align rbtree.min_is_minimal Rbtree.min_is_minimal
 
 theorem max_is_maximal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
-    t.max = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt b a :=
-  by
-  cases t
-  apply Rbnode.max_is_maximal
-  apply Rbnode.isSearchable_of_wellFormed
-  assumption
+    t.max = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt b a := by cases t; apply Rbnode.max_is_maximal;
+  apply Rbnode.isSearchable_of_wellFormed; assumption
 #align rbtree.max_is_maximal Rbtree.max_is_maximal
 
 end Rbtree

@@ -200,9 +200,7 @@ dimension at most `n`. -/
 theorem finrank_vectorSpan_image_finset_le (p : ι → P) (s : Finset ι) {n : ℕ}
     (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.image p : Set P)) ≤ n :=
   by
-  have hn : (s.image p).Nonempty :=
-    by
-    rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
+  have hn : (s.image p).Nonempty := by rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc];
     apply Nat.succ_pos
   rcases hn with ⟨p₁, hp₁⟩
   rw [vectorSpan_eq_span_vsub_finset_right_ne k hp₁]
@@ -322,9 +320,7 @@ theorem AffineIndependent.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_ad
     [FiniteDimensional k sp.direction] (hle : affineSpan k (s.image p : Set P) ≤ sp)
     (hc : Finset.card s = finrank k sp.direction + 1) : affineSpan k (s.image p : Set P) = sp :=
   by
-  have hn : s.nonempty := by
-    rw [← Finset.card_pos, hc]
-    apply Nat.succ_pos
+  have hn : s.nonempty := by rw [← Finset.card_pos, hc]; apply Nat.succ_pos
   refine' eq_of_direction_eq_of_nonempty_of_le _ ((hn.image _).to_set.affineSpan _) hle
   have hd := direction_le hle
   rw [direction_affineSpan] at hd⊢
@@ -711,9 +707,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne₁₂_of_not_collinear ne₁₂_of_not_collinearₓ'. -/
 /-- If three points are not collinear, the first and second are different. -/
 theorem ne₁₂_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₁ ≠ p₂ :=
-  by
-  rintro rfl
-  simpa [collinear_pair] using h
+  by rintro rfl; simpa [collinear_pair] using h
 #align ne₁₂_of_not_collinear ne₁₂_of_not_collinear
 
 /- warning: ne₁₃_of_not_collinear -> ne₁₃_of_not_collinear is a dubious translation:
@@ -724,9 +718,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne₁₃_of_not_collinear ne₁₃_of_not_collinearₓ'. -/
 /-- If three points are not collinear, the first and third are different. -/
 theorem ne₁₃_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₁ ≠ p₃ :=
-  by
-  rintro rfl
-  simpa [collinear_pair] using h
+  by rintro rfl; simpa [collinear_pair] using h
 #align ne₁₃_of_not_collinear ne₁₃_of_not_collinear
 
 /- warning: ne₂₃_of_not_collinear -> ne₂₃_of_not_collinear is a dubious translation:
@@ -737,9 +729,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne₂₃_of_not_collinear ne₂₃_of_not_collinearₓ'. -/
 /-- If three points are not collinear, the second and third are different. -/
 theorem ne₂₃_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear k ({p₁, p₂, p₃} : Set P)) : p₂ ≠ p₃ :=
-  by
-  rintro rfl
-  simpa [collinear_pair] using h
+  by rintro rfl; simpa [collinear_pair] using h
 #align ne₂₃_of_not_collinear ne₂₃_of_not_collinear
 
 /- warning: collinear.mem_affine_span_of_mem_of_ne -> Collinear.mem_affineSpan_of_mem_of_ne is a dubious translation:

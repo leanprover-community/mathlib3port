@@ -66,9 +66,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
     [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α] :
     CompactIccSpace α := by
   refine' ⟨fun a b => _⟩
-  cases' le_or_lt a b with hab hab
-  swap
-  · simp [hab]
+  cases' le_or_lt a b with hab hab; swap; · simp [hab]
   refine' isCompact_iff_ultrafilter_le_nhds.2 fun f hf => _
   contrapose! hf
   rw [le_principal_iff]
@@ -78,15 +76,13 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
   have ha : a ∈ s := by simp [hpt, hab]
-  rcases hab.eq_or_lt with (rfl | hlt)
-  · exact ha.2
+  rcases hab.eq_or_lt with (rfl | hlt); · exact ha.2
   set c := Sup s
   have hsc : IsLUB s c := isLUB_csSup ⟨a, ha⟩ sbd
   have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
   specialize hf c hc
   have hcs : c ∈ s := by
-    cases' hc.1.eq_or_lt with heq hlt
-    · rwa [← HEq]
+    cases' hc.1.eq_or_lt with heq hlt; · rwa [← HEq]
     refine' ⟨hc, fun hcf => hf fun U hU => _⟩
     rcases(mem_nhdsWithin_Iic_iff_exists_Ioc_subset' hlt).1 (mem_nhdsWithin_of_mem_nhds hU) with
       ⟨x, hxc, hxU⟩
@@ -98,16 +94,13 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
     exact
       subset.trans Icc_subset_Icc_union_Ioc
         (union_subset_union subset.rfl <| Ioc_subset_Ioc_left hy.1.le)
-  cases' hc.2.eq_or_lt with heq hlt
-  · rw [← HEq]
-    exact hcs.2
+  cases' hc.2.eq_or_lt with heq hlt; · rw [← HEq]; exact hcs.2
   contrapose! hf
   intro U hU
   rcases(mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
       (mem_nhdsWithin_of_mem_nhds hU) with
     ⟨y, hxy, hyU⟩
-  refine' mem_of_superset _ hyU
-  clear! U
+  refine' mem_of_superset _ hyU; clear! U
   have hy : y ∈ Icc a b := ⟨hc.1.trans hxy.1.le, hxy.2⟩
   by_cases hay : Icc a y ∈ f
   · refine' mem_of_superset (f.diff_mem_iff.2 ⟨f.diff_mem_iff.2 ⟨hay, hcs.2⟩, hpt y hy⟩) _
@@ -437,9 +430,7 @@ Case conversion may be inaccurate. Consider using '#align continuous.exists_fora
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
 sets, then it has a global minimum. -/
 theorem Continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuous f)
-    (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y :=
-  by
-  inhabit β
+    (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y := by inhabit β;
   exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_at_top _)
 #align continuous.exists_forall_le Continuous.exists_forall_le
 
@@ -528,8 +519,7 @@ theorem IsCompact.continuous_sSup {f : γ → β → α} {K : Set β} (hK : IsCo
     (hf : Continuous ↿f) : Continuous fun x => sSup (f x '' K) :=
   by
   rcases eq_empty_or_nonempty K with (rfl | h0K)
-  · simp_rw [image_empty]
-    exact continuous_const
+  · simp_rw [image_empty]; exact continuous_const
   rw [continuous_iff_continuousAt]
   intro x
   obtain ⟨y, hyK, h2y, hy⟩ :=
@@ -545,10 +535,7 @@ theorem IsCompact.continuous_sSup {f : γ → β → α} {K : Set β} (hK : IsCo
   · refine'
       (this.1 z hz).mono fun x' hx' => hx'.trans_le <| le_csSup _ <| mem_image_of_mem (f x') hyK
     exact hK.bdd_above_image (hf.comp <| Continuous.Prod.mk x').ContinuousOn
-  · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z :=
-      by
-      rintro ⟨x', y'⟩ ⟨hx', hy'⟩
-      cases hx'
+  · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z := by rintro ⟨x', y'⟩ ⟨hx', hy'⟩; cases hx';
       exact (hy y' hy').trans_lt hz
     obtain ⟨u, v, hu, hv, hxu, hKv, huv⟩ :=
       generalized_tube_lemma isCompact_singleton hK (is_open_Iio.preimage hf) h
@@ -603,10 +590,8 @@ theorem image_uIcc_eq_Icc (h : ContinuousOn f <| [a, b]) :
     f '' [a, b] = Icc (sInf (f '' [a, b])) (sSup (f '' [a, b])) :=
   by
   cases' le_total a b with h2 h2
-  · simp_rw [uIcc_of_le h2] at h⊢
-    exact h.image_Icc h2
-  · simp_rw [uIcc_of_ge h2] at h⊢
-    exact h.image_Icc h2
+  · simp_rw [uIcc_of_le h2] at h⊢; exact h.image_Icc h2
+  · simp_rw [uIcc_of_ge h2] at h⊢; exact h.image_Icc h2
 #align continuous_on.image_uIcc_eq_Icc ContinuousOn.image_uIcc_eq_Icc
 
 /- warning: continuous_on.image_uIcc -> ContinuousOn.image_uIcc is a dubious translation:

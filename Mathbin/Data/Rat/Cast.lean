@@ -129,17 +129,14 @@ Case conversion may be inaccurate. Consider using '#align rat.cast_mk_of_ne_zero
 @[norm_cast]
 theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a / b :=
   by
-  have b0' : b ≠ 0 := by
-    refine' mt _ b0
-    simp (config := { contextual := true })
+  have b0' : b ≠ 0 := by refine' mt _ b0; simp (config := { contextual := true })
   cases' e : a /. b with n d h c
   have d0 : (d : α) ≠ 0 := by
     intro d0
     have dd := denom_dvd a b
     cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
     have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_ofNat]
-    rw [d0, MulZeroClass.zero_mul] at this
-    contradiction
+    rw [d0, MulZeroClass.zero_mul] at this; contradiction
   rw [num_denom'] at e
   have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_ofNat] at this
@@ -633,10 +630,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat) (b : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Icc.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) b))) (Set.Icc.{0} Rat Rat.instPreorderRat a b)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Icc Rat.preimage_cast_Iccₓ'. -/
 @[simp]
-theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' Icc (a : K) b = Icc a b :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' Icc (a : K) b = Icc a b := by ext x; simp
 #align rat.preimage_cast_Icc Rat.preimage_cast_Icc
 
 /- warning: rat.preimage_cast_Ico -> Rat.preimage_cast_Ico is a dubious translation:
@@ -646,10 +640,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat) (b : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Ico.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) b))) (Set.Ico.{0} Rat Rat.instPreorderRat a b)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Ico Rat.preimage_cast_Icoₓ'. -/
 @[simp]
-theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' Ico (a : K) b = Ico a b :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' Ico (a : K) b = Ico a b := by ext x; simp
 #align rat.preimage_cast_Ico Rat.preimage_cast_Ico
 
 /- warning: rat.preimage_cast_Ioc -> Rat.preimage_cast_Ioc is a dubious translation:
@@ -659,10 +650,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat) (b : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Ioc.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) b))) (Set.Ioc.{0} Rat Rat.instPreorderRat a b)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Ioc Rat.preimage_cast_Iocₓ'. -/
 @[simp]
-theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' Ioc (a : K) b = Ioc a b :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' Ioc (a : K) b = Ioc a b := by ext x; simp
 #align rat.preimage_cast_Ioc Rat.preimage_cast_Ioc
 
 /- warning: rat.preimage_cast_Ioo -> Rat.preimage_cast_Ioo is a dubious translation:
@@ -672,10 +660,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat) (b : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Ioo.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) b))) (Set.Ioo.{0} Rat Rat.instPreorderRat a b)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Ioo Rat.preimage_cast_Iooₓ'. -/
 @[simp]
-theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' Ioo (a : K) b = Ioo a b :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' Ioo (a : K) b = Ioo a b := by ext x; simp
 #align rat.preimage_cast_Ioo Rat.preimage_cast_Ioo
 
 /- warning: rat.preimage_cast_Ici -> Rat.preimage_cast_Ici is a dubious translation:
@@ -685,10 +670,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Ici.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a))) (Set.Ici.{0} Rat Rat.instPreorderRat a)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Ici Rat.preimage_cast_Iciₓ'. -/
 @[simp]
-theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' Ici (a : K) = Ici a :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' Ici (a : K) = Ici a := by ext x; simp
 #align rat.preimage_cast_Ici Rat.preimage_cast_Ici
 
 /- warning: rat.preimage_cast_Iic -> Rat.preimage_cast_Iic is a dubious translation:
@@ -698,10 +680,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Iic.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a))) (Set.Iic.{0} Rat Rat.instPreorderRat a)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Iic Rat.preimage_cast_Iicₓ'. -/
 @[simp]
-theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' Iic (a : K) = Iic a :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' Iic (a : K) = Iic a := by ext x; simp
 #align rat.preimage_cast_Iic Rat.preimage_cast_Iic
 
 /- warning: rat.preimage_cast_Ioi -> Rat.preimage_cast_Ioi is a dubious translation:
@@ -711,10 +690,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Ioi.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a))) (Set.Ioi.{0} Rat Rat.instPreorderRat a)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Ioi Rat.preimage_cast_Ioiₓ'. -/
 @[simp]
-theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' Ioi (a : K) = Ioi a :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' Ioi (a : K) = Ioi a := by ext x; simp
 #align rat.preimage_cast_Ioi Rat.preimage_cast_Ioi
 
 /- warning: rat.preimage_cast_Iio -> Rat.preimage_cast_Iio is a dubious translation:
@@ -724,10 +700,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] (a : Rat), Eq.{1} (Set.{0} Rat) (Set.preimage.{0, u1} Rat K (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1)) (Set.Iio.{u1} K (PartialOrder.toPreorder.{u1} K (StrictOrderedRing.toPartialOrder.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Rat.cast.{u1} K (LinearOrderedField.toRatCast.{u1} K _inst_1) a))) (Set.Iio.{0} Rat Rat.instPreorderRat a)
 Case conversion may be inaccurate. Consider using '#align rat.preimage_cast_Iio Rat.preimage_cast_Iioₓ'. -/
 @[simp]
-theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' Iio (a : K) = Iio a :=
-  by
-  ext x
-  simp
+theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' Iio (a : K) = Iio a := by ext x; simp
 #align rat.preimage_cast_Iio Rat.preimage_cast_Iio
 
 end LinearOrderedField

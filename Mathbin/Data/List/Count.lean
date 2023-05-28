@@ -152,10 +152,8 @@ but is expected to have type
   forall {α : Type.{u1}} {p : List.{u1} α} (_inst_1 : α -> Bool), Iff (Eq.{1} Nat (List.countp.{u1} α _inst_1 p) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (forall (a : α), (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a p) -> (Not (Eq.{1} Bool (_inst_1 a) Bool.true)))
 Case conversion may be inaccurate. Consider using '#align list.countp_eq_zero List.countp_eq_zeroₓ'. -/
 @[simp]
-theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀ a ∈ l, ¬p a :=
-  by
-  rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, countp_pos]
-  simp
+theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀ a ∈ l, ¬p a := by
+  rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, countp_pos]; simp
 #align list.countp_eq_zero List.countp_eq_zero
 
 /- warning: list.countp_eq_length -> List.countp_eq_length is a dubious translation:
@@ -301,9 +299,7 @@ theorem count_cons_of_ne {a b : α} (h : a ≠ b) (l : List α) : count a (b :: 
 theorem count_tail :
     ∀ (l : List α) (a : α) (h : 0 < l.length),
       l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
-  | _ :: _, a, h => by
-    rw [count_cons]
-    split_ifs <;> simp
+  | _ :: _, a, h => by rw [count_cons]; split_ifs <;> simp
 #align list.count_tail List.count_tail
 -/
 
@@ -478,10 +474,7 @@ Case conversion may be inaccurate. Consider using '#align list.count_filter List
 @[simp]
 theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) :
     count a (filter p l) = count a l := by
-  simp only [count, countp_filter,
-    show (fun b => a = b ∧ p b) = Eq a by
-      ext b
-      constructor <;> cc]
+  simp only [count, countp_filter, show (fun b => a = b ∧ p b) = Eq a by ext b; constructor <;> cc]
 #align list.count_filter List.count_filter
 
 /- warning: list.count_bind -> List.count_bind is a dubious translation:

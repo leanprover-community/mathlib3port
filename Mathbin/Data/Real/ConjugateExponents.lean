@@ -179,9 +179,7 @@ theorem mul_eq_add : p * q = p + q := by
 #print Real.IsConjugateExponent.symm /-
 @[symm]
 protected theorem symm : q.IsConjugateExponent p :=
-  { one_lt := by
-      rw [h.conj_eq]
-      exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p)
+  { one_lt := by rw [h.conj_eq]; exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p)
     inv_add_inv_conj := by simpa [add_comm] using h.inv_add_inv_conj }
 #align real.is_conjugate_exponent.symm Real.IsConjugateExponent.symm
 -/
@@ -264,11 +262,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.is_conjugate_exponent_one_div Real.isConjugateExponent_one_divₓ'. -/
 theorem isConjugateExponent_one_div {a b : ℝ} (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) :
     (1 / a).IsConjugateExponent (1 / b) :=
-  ⟨by
-    rw [lt_div_iff ha, one_mul]
-    linarith, by
-    simp_rw [one_div_one_div]
-    exact hab⟩
+  ⟨by rw [lt_div_iff ha, one_mul]; linarith, by simp_rw [one_div_one_div]; exact hab⟩
 #align real.is_conjugate_exponent_one_div Real.isConjugateExponent_one_div
 
 end Real

@@ -103,8 +103,7 @@ theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segmen
     refine' ⟨(c n)⁻¹, ⟨_, _⟩, rfl⟩
     exacts[inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
-  · convert tendsto_const_nhds
-    ext n
+  · convert tendsto_const_nhds; ext n
     simp only [d, smul_smul]
     rw [mul_inv_cancel, one_smul]
     exact pow_ne_zero _ two_ne_zero
@@ -133,10 +132,8 @@ theorem IsLocalMaxOn.hasFDerivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s 
     tendsto_inf.2
       ⟨tendsto_const_nhds.add (tangentConeAt.lim_zero _ hc' hcd), by rwa [tendsto_principal]⟩
   rw [add_zero] at hd
-  replace h : ∀ᶠ n in at_top, f (a + d n) ≤ f a
-  exact mem_map.1 (hd h)
-  replace hc : ∀ᶠ n in at_top, 0 ≤ c n
-  exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
+  replace h : ∀ᶠ n in at_top, f (a + d n) ≤ f a; exact mem_map.1 (hd h)
+  replace hc : ∀ᶠ n in at_top, 0 ≤ c n; exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
   filter_upwards [h, hc]
   simp only [smul_eq_mul, mem_preimage, subset_def]
   intro n hnf hn
@@ -148,9 +145,7 @@ of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.fderivWithin_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (fderivWithin ℝ f s a : E → ℝ) y ≤ 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then h.hasFDerivWithinAt_nonpos hf.HasFDerivWithinAt hy
-  else by
-    rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
-    rfl
+  else by rw [fderivWithin_zero_of_not_differentiableWithinAt hf]; rfl
 #align is_local_max_on.fderiv_within_nonpos IsLocalMaxOn.fderivWithin_nonpos
 
 /-- If `f` has a local max on `s` at `a`, `f'` is a derivative of `f` at `a` within `s`, and
@@ -169,9 +164,7 @@ theorem IsLocalMaxOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) {
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
     h.hasFDerivWithinAt_eq_zero hf.HasFDerivWithinAt hy hy'
-  else by
-    rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
-    rfl
+  else by rw [fderivWithin_zero_of_not_differentiableWithinAt hf]; rfl
 #align is_local_max_on.fderiv_within_eq_zero IsLocalMaxOn.fderivWithin_eq_zero
 
 /-- If `f` has a local min on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
@@ -186,9 +179,7 @@ of `s` at `a`, then `0 ≤ f' y`. -/
 theorem IsLocalMinOn.fderivWithin_nonneg {s : Set E} (h : IsLocalMinOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (0 : ℝ) ≤ (fderivWithin ℝ f s a : E → ℝ) y :=
   if hf : DifferentiableWithinAt ℝ f s a then h.hasFDerivWithinAt_nonneg hf.HasFDerivWithinAt hy
-  else by
-    rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
-    rfl
+  else by rw [fderivWithin_zero_of_not_differentiableWithinAt hf]; rfl
 #align is_local_min_on.fderiv_within_nonneg IsLocalMinOn.fderivWithin_nonneg
 
 /-- If `f` has a local max on `s` at `a`, `f'` is a derivative of `f` at `a` within `s`, and
@@ -206,9 +197,7 @@ theorem IsLocalMinOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMinOn f s a) {
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
     h.hasFDerivWithinAt_eq_zero hf.HasFDerivWithinAt hy hy'
-  else by
-    rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
-    rfl
+  else by rw [fderivWithin_zero_of_not_differentiableWithinAt hf]; rfl
 #align is_local_min_on.fderiv_within_eq_zero IsLocalMinOn.fderivWithin_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
@@ -373,10 +362,7 @@ theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l
       show ∃ c ∈ Ioo a b, deriv f c = 0 from
         exists_hasDerivAt_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
     fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x :=
-      by
-      push_neg  at h
-      exact h
+    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by push_neg  at h; exact h
     let ⟨c, hc, hcdiff⟩ := h
     ⟨c, hc, deriv_zero_of_not_differentiableAt hcdiff⟩
 #align exists_deriv_eq_zero' exists_deriv_eq_zero'

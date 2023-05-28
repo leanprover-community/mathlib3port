@@ -82,12 +82,8 @@ instance : FloorSemiring ℕ where
   floor := id
   ceil := id
   floor_of_neg a ha := (a.not_lt_zero ha).elim
-  gc_floor n a ha := by
-    rw [Nat.cast_id]
-    rfl
-  gc_ceil n a := by
-    rw [Nat.cast_id]
-    rfl
+  gc_floor n a ha := by rw [Nat.cast_id]; rfl
+  gc_ceil n a := by rw [Nat.cast_id]; rfl
 
 namespace Nat
 
@@ -234,9 +230,7 @@ theorem lt_floor_add_one (a : α) : a < ⌊a⌋₊ + 1 := by simpa using lt_succ
 #print Nat.floor_coe /-
 @[simp]
 theorem floor_coe (n : ℕ) : ⌊(n : α)⌋₊ = n :=
-  eq_of_forall_le_iff fun a => by
-    rw [le_floor_iff, Nat.cast_le]
-    exact n.cast_nonneg
+  eq_of_forall_le_iff fun a => by rw [le_floor_iff, Nat.cast_le]; exact n.cast_nonneg
 #align nat.floor_coe Nat.floor_coe
 -/
 
@@ -263,10 +257,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) -> (Eq.{1} Nat (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
 Case conversion may be inaccurate. Consider using '#align nat.floor_of_nonpos Nat.floor_of_nonposₓ'. -/
 theorem floor_of_nonpos (ha : a ≤ 0) : ⌊a⌋₊ = 0 :=
-  ha.lt_or_eq.elim FloorSemiring.floor_of_neg <|
-    by
-    rintro rfl
-    exact floor_zero
+  ha.lt_or_eq.elim FloorSemiring.floor_of_neg <| by rintro rfl; exact floor_zero
 #align nat.floor_of_nonpos Nat.floor_of_nonpos
 
 #print Nat.floor_mono /-
@@ -322,9 +313,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, Iff (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))) a)
 Case conversion may be inaccurate. Consider using '#align nat.floor_pos Nat.floor_posₓ'. -/
-theorem floor_pos : 0 < ⌊a⌋₊ ↔ 1 ≤ a :=
-  by
-  convert le_floor_iff' Nat.one_ne_zero
+theorem floor_pos : 0 < ⌊a⌋₊ ↔ 1 ≤ a := by convert le_floor_iff' Nat.one_ne_zero;
   exact cast_one.symm
 #align nat.floor_pos Nat.floor_pos
 
@@ -375,9 +364,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, Iff (Eq.{1} Nat (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align nat.floor_eq_zero Nat.floor_eq_zeroₓ'. -/
 @[simp]
-theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 :=
-  by
-  rw [← lt_one_iff, ← @cast_one α]
+theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 := by rw [← lt_one_iff, ← @cast_one α];
   exact floor_lt' Nat.one_ne_zero
 #align nat.floor_eq_zero Nat.floor_eq_zero
 
@@ -493,10 +480,8 @@ theorem one_le_ceil_iff : 1 ≤ ⌈a⌉₊ ↔ 0 < a := by
 #align nat.one_le_ceil_iff Nat.one_le_ceil_iff
 
 #print Nat.ceil_le_floor_add_one /-
-theorem ceil_le_floor_add_one (a : α) : ⌈a⌉₊ ≤ ⌊a⌋₊ + 1 :=
-  by
-  rw [ceil_le, Nat.cast_add, Nat.cast_one]
-  exact (lt_floor_add_one a).le
+theorem ceil_le_floor_add_one (a : α) : ⌈a⌉₊ ≤ ⌊a⌋₊ + 1 := by
+  rw [ceil_le, Nat.cast_add, Nat.cast_one]; exact (lt_floor_add_one a).le
 #align nat.ceil_le_floor_add_one Nat.ceil_le_floor_add_one
 -/
 
@@ -519,9 +504,7 @@ Case conversion may be inaccurate. Consider using '#align nat.ceil_int_cast Nat.
 @[simp]
 theorem ceil_intCast {α : Type _} [LinearOrderedRing α] [FloorSemiring α] (z : ℤ) :
     ⌈(z : α)⌉₊ = z.toNat :=
-  eq_of_forall_ge_iff fun a => by
-    simp
-    norm_cast
+  eq_of_forall_ge_iff fun a => by simp; norm_cast
 #align nat.ceil_int_cast Nat.ceil_intCast
 
 #print Nat.ceil_natCast /-
@@ -612,8 +595,7 @@ Case conversion may be inaccurate. Consider using '#align nat.floor_lt_ceil_of_l
 theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋₊ < ⌈b⌉₊ :=
   by
   rcases le_or_lt 0 a with (ha | ha)
-  · rw [floor_lt ha]
-    exact h.trans_le (le_ceil _)
+  · rw [floor_lt ha]; exact h.trans_le (le_ceil _)
   · rwa [floor_of_nonpos ha.le, lt_ceil, Nat.cast_zero]
 #align nat.floor_lt_ceil_of_lt_of_pos Nat.floor_lt_ceil_of_lt_of_pos
 
@@ -657,16 +639,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.preimage_Ioo Nat.preimage_Iooₓ'. -/
 @[simp]
 theorem preimage_Ioo {a b : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋₊ ⌈b⌉₊ :=
-  by
-  ext
-  simp [floor_lt, lt_ceil, ha]
+  by ext; simp [floor_lt, lt_ceil, ha]
 #align nat.preimage_Ioo Nat.preimage_Ioo
 
 #print Nat.preimage_Ico /-
 @[simp]
-theorem preimage_Ico {a b : α} : (coe : ℕ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉₊ ⌈b⌉₊ :=
-  by
-  ext
+theorem preimage_Ico {a b : α} : (coe : ℕ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉₊ ⌈b⌉₊ := by ext;
   simp [ceil_le, lt_ceil]
 #align nat.preimage_Ico Nat.preimage_Ico
 -/
@@ -679,9 +657,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.preimage_Ioc Nat.preimage_Iocₓ'. -/
 @[simp]
 theorem preimage_Ioc {a b : α} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    (coe : ℕ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋₊ ⌊b⌋₊ :=
-  by
-  ext
+    (coe : ℕ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋₊ ⌊b⌋₊ := by ext;
   simp [floor_lt, le_floor_iff, hb, ha]
 #align nat.preimage_Ioc Nat.preimage_Ioc
 
@@ -693,9 +669,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.preimage_Icc Nat.preimage_Iccₓ'. -/
 @[simp]
 theorem preimage_Icc {a b : α} (hb : 0 ≤ b) : (coe : ℕ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉₊ ⌊b⌋₊ :=
-  by
-  ext
-  simp [ceil_le, hb, le_floor_iff]
+  by ext; simp [ceil_le, hb, le_floor_iff]
 #align nat.preimage_Icc Nat.preimage_Icc
 
 /- warning: nat.preimage_Ioi -> Nat.preimage_Ioi is a dubious translation:
@@ -705,27 +679,19 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) a) -> (Eq.{1} (Set.{0} Nat) (Set.preimage.{0, u1} Nat α (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))) a)) (Set.Ioi.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align nat.preimage_Ioi Nat.preimage_Ioiₓ'. -/
 @[simp]
-theorem preimage_Ioi {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋₊ :=
-  by
-  ext
+theorem preimage_Ioi {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋₊ := by ext;
   simp [floor_lt, ha]
 #align nat.preimage_Ioi Nat.preimage_Ioi
 
 #print Nat.preimage_Ici /-
 @[simp]
-theorem preimage_Ici {a : α} : (coe : ℕ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉₊ :=
-  by
-  ext
-  simp [ceil_le]
+theorem preimage_Ici {a : α} : (coe : ℕ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉₊ := by ext; simp [ceil_le]
 #align nat.preimage_Ici Nat.preimage_Ici
 -/
 
 #print Nat.preimage_Iio /-
 @[simp]
-theorem preimage_Iio {a : α} : (coe : ℕ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉₊ :=
-  by
-  ext
-  simp [lt_ceil]
+theorem preimage_Iio {a : α} : (coe : ℕ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉₊ := by ext; simp [lt_ceil]
 #align nat.preimage_Iio Nat.preimage_Iio
 -/
 
@@ -736,9 +702,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) a) -> (Eq.{1} (Set.{0} Nat) (Set.preimage.{0, u1} Nat α (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))) a)) (Set.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align nat.preimage_Iic Nat.preimage_Iicₓ'. -/
 @[simp]
-theorem preimage_Iic {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋₊ :=
-  by
-  ext
+theorem preimage_Iic {a : α} (ha : 0 ≤ a) : (coe : ℕ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋₊ := by ext;
   simp [le_floor_iff, ha]
 #align nat.preimage_Iic Nat.preimage_Iic
 
@@ -768,9 +732,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) a) -> (Eq.{1} Nat (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align nat.floor_add_one Nat.floor_add_oneₓ'. -/
-theorem floor_add_one (ha : 0 ≤ a) : ⌊a + 1⌋₊ = ⌊a⌋₊ + 1 :=
-  by
-  convert floor_add_nat ha 1
+theorem floor_add_one (ha : 0 ≤ a) : ⌊a + 1⌋₊ = ⌊a⌋₊ + 1 := by convert floor_add_nat ha 1;
   exact cast_one.symm
 #align nat.floor_add_one Nat.floor_add_one
 
@@ -814,9 +776,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) a) -> (Eq.{1} Nat (Nat.ceil.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Nat.ceil.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align nat.ceil_add_one Nat.ceil_add_oneₓ'. -/
-theorem ceil_add_one (ha : 0 ≤ a) : ⌈a + 1⌉₊ = ⌈a⌉₊ + 1 :=
-  by
-  convert ceil_add_nat ha 1
+theorem ceil_add_one (ha : 0 ≤ a) : ⌈a + 1⌉₊ = ⌈a⌉₊ + 1 := by convert ceil_add_nat ha 1;
   exact cast_one.symm
 #align nat.ceil_add_one Nat.ceil_add_one
 
@@ -894,9 +854,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemifield.{u1} α] [_inst_2 : FloorSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1))))] (m : Nat) (n : Nat), Eq.{1} Nat (Nat.floor.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1)))) _inst_2 (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (LinearOrderedSemifield.toDiv.{u1} α _inst_1)) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1))))) m) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1))))) n))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) m n)
 Case conversion may be inaccurate. Consider using '#align nat.floor_div_eq_div Nat.floor_div_eq_divₓ'. -/
 /-- Natural division is the floor of field division. -/
-theorem floor_div_eq_div (m n : ℕ) : ⌊(m : α) / n⌋₊ = m / n :=
-  by
-  convert floor_div_nat (m : α) n
+theorem floor_div_eq_div (m n : ℕ) : ⌊(m : α) / n⌋₊ = m / n := by convert floor_div_nat (m : α) n;
   rw [m.floor_coe]
 #align nat.floor_div_eq_div Nat.floor_div_eq_div
 
@@ -916,9 +874,7 @@ theorem subsingleton_floorSemiring {α} [LinearOrderedSemiring α] : Subsingleto
     · rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
     · refine' eq_of_forall_le_iff fun n => _
       rw [H₁.gc_floor, H₂.gc_floor] <;> exact h
-  cases H₁
-  cases H₂
-  congr <;> assumption
+  cases H₁; cases H₂; congr <;> assumption
 #align subsingleton_floor_semiring subsingleton_floorSemiring
 -/
 
@@ -940,12 +896,8 @@ class FloorRing (α) [LinearOrderedRing α] where
 instance : FloorRing ℤ where
   floor := id
   ceil := id
-  gc_coe_floor a b := by
-    rw [Int.cast_id]
-    rfl
-  gc_ceil_coe a b := by
-    rw [Int.cast_id]
-    rfl
+  gc_coe_floor a b := by rw [Int.cast_id]; rfl
+  gc_ceil_coe a b := by rw [Int.cast_id]; rfl
 
 /- warning: floor_ring.of_floor -> FloorRing.ofFloor is a dubious translation:
 lean 3 declaration is
@@ -1228,9 +1180,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Iff (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Int.floor.{u1} α _inst_1 _inst_2 a)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))) a)
 Case conversion may be inaccurate. Consider using '#align int.floor_pos Int.floor_posₓ'. -/
-theorem floor_pos : 0 < ⌊a⌋ ↔ 1 ≤ a := by
-  convert le_floor
-  exact cast_one.symm
+theorem floor_pos : 0 < ⌊a⌋ ↔ 1 ≤ a := by convert le_floor; exact cast_one.symm
 #align int.floor_pos Int.floor_pos
 
 /- warning: int.floor_add_int -> Int.floor_add_int is a dubious translation:
@@ -1251,9 +1201,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (Int.floor.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.floor_add_one Int.floor_add_oneₓ'. -/
-theorem floor_add_one (a : α) : ⌊a + 1⌋ = ⌊a⌋ + 1 :=
-  by
-  convert floor_add_int a 1
+theorem floor_add_one (a : α) : ⌊a + 1⌋ = ⌊a⌋ + 1 := by convert floor_add_int a 1;
   exact cast_one.symm
 #align int.floor_add_one Int.floor_add_one
 
@@ -1448,10 +1396,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α) (m : Int), Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) m))) (Int.fract.{u1} α _inst_1 _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align int.fract_add_int Int.fract_add_intₓ'. -/
 @[simp]
-theorem fract_add_int (a : α) (m : ℤ) : fract (a + m) = fract a :=
-  by
-  rw [fract]
-  simp
+theorem fract_add_int (a : α) (m : ℤ) : fract (a + m) = fract a := by rw [fract]; simp
 #align int.fract_add_int Int.fract_add_int
 
 /- warning: int.fract_add_nat -> Int.fract_add_nat is a dubious translation:
@@ -1461,10 +1406,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α) (m : Nat), Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))) m))) (Int.fract.{u1} α _inst_1 _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align int.fract_add_nat Int.fract_add_natₓ'. -/
 @[simp]
-theorem fract_add_nat (a : α) (m : ℕ) : fract (a + m) = fract a :=
-  by
-  rw [fract]
-  simp
+theorem fract_add_nat (a : α) (m : ℕ) : fract (a + m) = fract a := by rw [fract]; simp
 #align int.fract_add_nat Int.fract_add_nat
 
 /- warning: int.fract_sub_int -> Int.fract_sub_int is a dubious translation:
@@ -1474,10 +1416,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α) (m : Int), Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) a (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) m))) (Int.fract.{u1} α _inst_1 _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align int.fract_sub_int Int.fract_sub_intₓ'. -/
 @[simp]
-theorem fract_sub_int (a : α) (m : ℤ) : fract (a - m) = fract a :=
-  by
-  rw [fract]
-  simp
+theorem fract_sub_int (a : α) (m : ℤ) : fract (a - m) = fract a := by rw [fract]; simp
 #align int.fract_sub_int Int.fract_sub_int
 
 /- warning: int.fract_int_add -> Int.fract_int_add is a dubious translation:
@@ -1497,10 +1436,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α) (n : Nat), Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) a (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))) n))) (Int.fract.{u1} α _inst_1 _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align int.fract_sub_nat Int.fract_sub_natₓ'. -/
 @[simp]
-theorem fract_sub_nat (a : α) (n : ℕ) : fract (a - n) = fract a :=
-  by
-  rw [fract]
-  simp
+theorem fract_sub_nat (a : α) (n : ℕ) : fract (a - n) = fract a := by rw [fract]; simp
 #align int.fract_sub_nat Int.fract_sub_nat
 
 /- warning: int.fract_int_nat -> Int.fract_int_nat is a dubious translation:
@@ -1639,10 +1575,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (z : Int), Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) z)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align int.fract_int_cast Int.fract_intCastₓ'. -/
 @[simp]
-theorem fract_intCast (z : ℤ) : fract (z : α) = 0 :=
-  by
-  unfold fract
-  rw [floor_int_cast]
+theorem fract_intCast (z : ℤ) : fract (z : α) = 0 := by unfold fract; rw [floor_int_cast];
   exact sub_self _
 #align int.fract_int_cast Int.fract_intCast
 
@@ -1681,9 +1614,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α} {b : α}, Iff (Eq.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 a) b) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) b) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) b (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) (Exists.{1} Int (fun (z : Int) => Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) a b) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) z)))))
 Case conversion may be inaccurate. Consider using '#align int.fract_eq_iff Int.fract_eq_iffₓ'. -/
 theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : ℤ, a - b = z :=
-  ⟨fun h => by
-    rw [← h]
-    exact ⟨fract_nonneg _, fract_lt_one _, ⟨⌊a⌋, sub_sub_cancel _ _⟩⟩,
+  ⟨fun h => by rw [← h]; exact ⟨fract_nonneg _, fract_lt_one _, ⟨⌊a⌋, sub_sub_cancel _ _⟩⟩,
     by
     rintro ⟨h₀, h₁, z, hz⟩
     show a - ⌊a⌋ = b; apply Eq.symm
@@ -1732,10 +1663,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α) (b : α), Exists.{1} Int (fun (z : Int) => Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Int.fract.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a b)) (Int.fract.{u1} α _inst_1 _inst_2 a)) (Int.fract.{u1} α _inst_1 _inst_2 b)) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) z))
 Case conversion may be inaccurate. Consider using '#align int.fract_add Int.fract_addₓ'. -/
 theorem fract_add (a b : α) : ∃ z : ℤ, fract (a + b) - fract a - fract b = z :=
-  ⟨⌊a⌋ + ⌊b⌋ - ⌊a + b⌋, by
-    unfold fract
-    simp [sub_eq_add_neg]
-    abel⟩
+  ⟨⌊a⌋ + ⌊b⌋ - ⌊a + b⌋, by unfold fract; simp [sub_eq_add_neg]; abel⟩
 #align int.fract_add Int.fract_add
 
 /- warning: int.fract_neg -> Int.fract_neg is a dubious translation:
@@ -1817,8 +1745,7 @@ theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) ''
   · rintro ⟨y, hy, rfl⟩
     exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
   · rintro ⟨m, ⟨y, hys, rfl⟩, h0, h1⟩
-    obtain rfl : ⌊y⌋ = m
-    exact floor_eq_iff.2 ⟨sub_nonneg.1 h0, sub_lt_iff_lt_add'.1 h1⟩
+    obtain rfl : ⌊y⌋ = m; exact floor_eq_iff.2 ⟨sub_nonneg.1 h0, sub_lt_iff_lt_add'.1 h1⟩
     exact ⟨y, hys, rfl⟩
 #align int.image_fract Int.image_fract
 
@@ -1865,9 +1792,7 @@ but is expected to have type
   forall {k : Type.{u1}} [_inst_3 : LinearOrderedField.{u1} k] [_inst_4 : FloorRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3))] {b : k} (a : k), (LT.lt.{u1} k (Preorder.toLT.{u1} k (PartialOrder.toPreorder.{u1} k (StrictOrderedRing.toPartialOrder.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3)))))) (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (CommMonoidWithZero.toZero.{u1} k (CommGroupWithZero.toCommMonoidWithZero.{u1} k (Semifield.toCommGroupWithZero.{u1} k (LinearOrderedSemifield.toSemifield.{u1} k (LinearOrderedField.toLinearOrderedSemifield.{u1} k _inst_3))))))) b) -> (LT.lt.{u1} k (Preorder.toLT.{u1} k (PartialOrder.toPreorder.{u1} k (StrictOrderedRing.toPartialOrder.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3)))))) (HSub.hSub.{u1, u1, u1} k k k (instHSub.{u1} k (Ring.toSub.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3)))))) a (HMul.hMul.{u1, u1, u1} k k k (instHMul.{u1} k (NonUnitalNonAssocRing.toMul.{u1} k (NonAssocRing.toNonUnitalNonAssocRing.{u1} k (Ring.toNonAssocRing.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3)))))))) (Int.cast.{u1} k (Ring.toIntCast.{u1} k (StrictOrderedRing.toRing.{u1} k (LinearOrderedRing.toStrictOrderedRing.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3))))) (Int.floor.{u1} k (LinearOrderedCommRing.toLinearOrderedRing.{u1} k (LinearOrderedField.toLinearOrderedCommRing.{u1} k _inst_3)) _inst_4 (HDiv.hDiv.{u1, u1, u1} k k k (instHDiv.{u1} k (LinearOrderedField.toDiv.{u1} k _inst_3)) a b))) b)) b)
 Case conversion may be inaccurate. Consider using '#align int.sub_floor_div_mul_lt Int.sub_floor_div_mul_ltₓ'. -/
 theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
-  sub_lt_iff_lt_add.2 <| by
-    rw [← one_add_mul, ← div_lt_iff hb, add_comm]
-    exact lt_floor_add_one _
+  sub_lt_iff_lt_add.2 <| by rw [← one_add_mul, ← div_lt_iff hb, add_comm]; exact lt_floor_add_one _
 #align int.sub_floor_div_mul_lt Int.sub_floor_div_mul_lt
 
 /- warning: int.fract_div_nat_cast_eq_div_nat_cast_mod -> Int.fract_div_natCast_eq_div_natCast_mod is a dubious translation:
@@ -1878,11 +1803,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.fract_div_nat_cast_eq_div_nat_cast_mod Int.fract_div_natCast_eq_div_natCast_modₓ'. -/
 theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n :=
   by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
-  have hn' : 0 < (n : k) := by
-    norm_cast
-    assumption
+  rcases n.eq_zero_or_pos with (rfl | hn); · simp
+  have hn' : 0 < (n : k) := by norm_cast; assumption
   refine' fract_eq_iff.mpr ⟨by positivity, _, m / n, _⟩
   · simpa only [div_lt_one hn', Nat.cast_lt] using m.mod_lt hn
   · rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne.symm, mul_div_cancel' _ hn'.ne.symm, mul_add,
@@ -1900,20 +1822,15 @@ Case conversion may be inaccurate. Consider using '#align int.fract_div_int_cast
 -- TODO Generalise this to allow `n : ℤ` using `int.fmod` instead of `int.mod`.
 theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n :=
   by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
-  replace hn : 0 < (n : k)
-  · norm_cast
-    assumption
+  rcases n.eq_zero_or_pos with (rfl | hn); · simp
+  replace hn : 0 < (n : k); · norm_cast; assumption
   have : ∀ {l : ℤ} (hl : 0 ≤ l), fract ((l : k) / n) = ↑(l % n) / n :=
     by
     intros
     obtain ⟨l₀, rfl | rfl⟩ := l.eq_coe_or_neg
     · rw [cast_coe_nat, ← coe_nat_mod, cast_coe_nat, fract_div_nat_cast_eq_div_nat_cast_mod]
-    · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl
-      simp [hl, zero_mod]
-  obtain ⟨m₀, rfl | rfl⟩ := m.eq_coe_or_neg
-  · exact this (of_nat_nonneg m₀)
+    · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl; simp [hl, zero_mod]
+  obtain ⟨m₀, rfl | rfl⟩ := m.eq_coe_or_neg; · exact this (of_nat_nonneg m₀)
   let q := ⌈↑m₀ / (n : k)⌉
   let m₁ := q * ↑n - (↑m₀ : ℤ)
   have hm₁ : 0 ≤ m₁ := by
@@ -2008,10 +1925,8 @@ theorem one_le_ceil_iff : 1 ≤ ⌈a⌉ ↔ 0 < a := by
 #align int.one_le_ceil_iff Int.one_le_ceil_iff
 
 #print Int.ceil_le_floor_add_one /-
-theorem ceil_le_floor_add_one (a : α) : ⌈a⌉ ≤ ⌊a⌋ + 1 :=
-  by
-  rw [ceil_le, Int.cast_add, Int.cast_one]
-  exact (lt_floor_add_one a).le
+theorem ceil_le_floor_add_one (a : α) : ⌈a⌉ ≤ ⌊a⌋ + 1 := by
+  rw [ceil_le, Int.cast_add, Int.cast_one]; exact (lt_floor_add_one a).le
 #align int.ceil_le_floor_add_one Int.ceil_le_floor_add_one
 -/
 
@@ -2081,9 +1996,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (Int.ceil.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.ceil_add_one Int.ceil_add_oneₓ'. -/
 @[simp]
-theorem ceil_add_one (a : α) : ⌈a + 1⌉ = ⌈a⌉ + 1 :=
-  by
-  convert ceil_add_int a (1 : ℤ)
+theorem ceil_add_one (a : α) : ⌈a + 1⌉ = ⌈a⌉ + 1 := by convert ceil_add_int a (1 : ℤ);
   exact cast_one.symm
 #align int.ceil_add_one Int.ceil_add_one
 
@@ -2126,10 +2039,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) (Int.ceil.{u1} α _inst_1 _inst_2 a)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align int.ceil_lt_add_one Int.ceil_lt_add_oneₓ'. -/
-theorem ceil_lt_add_one (a : α) : (⌈a⌉ : α) < a + 1 :=
-  by
-  rw [← lt_ceil, ← Int.cast_one, ceil_add_int]
-  apply lt_add_one
+theorem ceil_lt_add_one (a : α) : (⌈a⌉ : α) < a + 1 := by
+  rw [← lt_ceil, ← Int.cast_one, ceil_add_int]; apply lt_add_one
 #align int.ceil_lt_add_one Int.ceil_lt_add_one
 
 /- warning: int.ceil_add_le -> Int.ceil_add_le is a dubious translation:
@@ -2273,12 +2184,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.fract_eq_zero_or_add_one_sub_ceil Int.fract_eq_zero_or_add_one_sub_ceilₓ'. -/
 theorem fract_eq_zero_or_add_one_sub_ceil (a : α) : fract a = 0 ∨ fract a = a + 1 - (⌈a⌉ : α) :=
   by
-  cases' eq_or_ne (fract a) 0 with ha ha
-  · exact Or.inl ha
-  right
-  suffices (⌈a⌉ : α) = ⌊a⌋ + 1 by
-    rw [this, ← self_sub_fract]
-    abel
+  cases' eq_or_ne (fract a) 0 with ha ha; · exact Or.inl ha; right
+  suffices (⌈a⌉ : α) = ⌊a⌋ + 1 by rw [this, ← self_sub_fract]; abel
   norm_cast
   rw [ceil_eq_iff]
   refine' ⟨_, _root_.le_of_lt <| by simp⟩
@@ -2292,10 +2199,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, (Ne.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) -> (Eq.{succ u1} α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) (Int.ceil.{u1} α _inst_1 _inst_2 a)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) (Int.fract.{u1} α _inst_1 _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align int.ceil_eq_add_one_sub_fract Int.ceil_eq_add_one_sub_fractₓ'. -/
-theorem ceil_eq_add_one_sub_fract (ha : fract a ≠ 0) : (⌈a⌉ : α) = a + 1 - fract a :=
-  by
-  rw [(or_iff_right ha).mp (fract_eq_zero_or_add_one_sub_ceil a)]
-  abel
+theorem ceil_eq_add_one_sub_fract (ha : fract a ≠ 0) : (⌈a⌉ : α) = a + 1 - fract a := by
+  rw [(or_iff_right ha).mp (fract_eq_zero_or_add_one_sub_ceil a)]; abel
 #align int.ceil_eq_add_one_sub_fract Int.ceil_eq_add_one_sub_fract
 
 /- warning: int.ceil_sub_self_eq -> Int.ceil_sub_self_eq is a dubious translation:
@@ -2304,10 +2209,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, (Ne.{succ u1} α (Int.fract.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) -> (Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) (Int.ceil.{u1} α _inst_1 _inst_2 a)) a) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))) (Int.fract.{u1} α _inst_1 _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align int.ceil_sub_self_eq Int.ceil_sub_self_eqₓ'. -/
-theorem ceil_sub_self_eq (ha : fract a ≠ 0) : (⌈a⌉ : α) - a = 1 - fract a :=
-  by
-  rw [(or_iff_right ha).mp (fract_eq_zero_or_add_one_sub_ceil a)]
-  abel
+theorem ceil_sub_self_eq (ha : fract a ≠ 0) : (⌈a⌉ : α) - a = 1 - fract a := by
+  rw [(or_iff_right ha).mp (fract_eq_zero_or_add_one_sub_ceil a)]; abel
 #align int.ceil_sub_self_eq Int.ceil_sub_self_eq
 
 /-! #### Intervals -/
@@ -2320,9 +2223,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α} {b : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a b)) (Set.Ioo.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.floor.{u1} α _inst_1 _inst_2 a) (Int.ceil.{u1} α _inst_1 _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Ioo Int.preimage_Iooₓ'. -/
 @[simp]
-theorem preimage_Ioo {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋ ⌈b⌉ :=
-  by
-  ext
+theorem preimage_Ioo {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioo a b = Set.Ioo ⌊a⌋ ⌈b⌉ := by ext;
   simp [floor_lt, lt_ceil]
 #align int.preimage_Ioo Int.preimage_Ioo
 
@@ -2333,9 +2234,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α} {b : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a b)) (Set.Ico.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.ceil.{u1} α _inst_1 _inst_2 a) (Int.ceil.{u1} α _inst_1 _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Ico Int.preimage_Icoₓ'. -/
 @[simp]
-theorem preimage_Ico {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉ ⌈b⌉ :=
-  by
-  ext
+theorem preimage_Ico {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ico a b = Set.Ico ⌈a⌉ ⌈b⌉ := by ext;
   simp [ceil_le, lt_ceil]
 #align int.preimage_Ico Int.preimage_Ico
 
@@ -2346,9 +2245,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α} {b : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a b)) (Set.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.floor.{u1} α _inst_1 _inst_2 a) (Int.floor.{u1} α _inst_1 _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Ioc Int.preimage_Iocₓ'. -/
 @[simp]
-theorem preimage_Ioc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋ ⌊b⌋ :=
-  by
-  ext
+theorem preimage_Ioc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Ioc a b = Set.Ioc ⌊a⌋ ⌊b⌋ := by ext;
   simp [floor_lt, le_floor]
 #align int.preimage_Ioc Int.preimage_Ioc
 
@@ -2359,9 +2256,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α} {b : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a b)) (Set.Icc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.ceil.{u1} α _inst_1 _inst_2 a) (Int.floor.{u1} α _inst_1 _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Icc Int.preimage_Iccₓ'. -/
 @[simp]
-theorem preimage_Icc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉ ⌊b⌋ :=
-  by
-  ext
+theorem preimage_Icc {a b : α} : (coe : ℤ → α) ⁻¹' Set.Icc a b = Set.Icc ⌈a⌉ ⌊b⌋ := by ext;
   simp [ceil_le, le_floor]
 #align int.preimage_Icc Int.preimage_Icc
 
@@ -2372,10 +2267,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a)) (Set.Ioi.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.floor.{u1} α _inst_1 _inst_2 a))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Ioi Int.preimage_Ioiₓ'. -/
 @[simp]
-theorem preimage_Ioi : (coe : ℤ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋ :=
-  by
-  ext
-  simp [floor_lt]
+theorem preimage_Ioi : (coe : ℤ → α) ⁻¹' Set.Ioi a = Set.Ioi ⌊a⌋ := by ext; simp [floor_lt]
 #align int.preimage_Ioi Int.preimage_Ioi
 
 /- warning: int.preimage_Ici -> Int.preimage_Ici is a dubious translation:
@@ -2385,10 +2277,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a)) (Set.Ici.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.ceil.{u1} α _inst_1 _inst_2 a))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Ici Int.preimage_Iciₓ'. -/
 @[simp]
-theorem preimage_Ici : (coe : ℤ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉ :=
-  by
-  ext
-  simp [ceil_le]
+theorem preimage_Ici : (coe : ℤ → α) ⁻¹' Set.Ici a = Set.Ici ⌈a⌉ := by ext; simp [ceil_le]
 #align int.preimage_Ici Int.preimage_Ici
 
 /- warning: int.preimage_Iio -> Int.preimage_Iio is a dubious translation:
@@ -2398,10 +2287,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a)) (Set.Iio.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.ceil.{u1} α _inst_1 _inst_2 a))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Iio Int.preimage_Iioₓ'. -/
 @[simp]
-theorem preimage_Iio : (coe : ℤ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉ :=
-  by
-  ext
-  simp [lt_ceil]
+theorem preimage_Iio : (coe : ℤ → α) ⁻¹' Set.Iio a = Set.Iio ⌈a⌉ := by ext; simp [lt_ceil]
 #align int.preimage_Iio Int.preimage_Iio
 
 /- warning: int.preimage_Iic -> Int.preimage_Iic is a dubious translation:
@@ -2411,10 +2297,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Eq.{1} (Set.{0} Int) (Set.preimage.{0, u1} Int α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) a)) (Set.Iic.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) (Int.floor.{u1} α _inst_1 _inst_2 a))
 Case conversion may be inaccurate. Consider using '#align int.preimage_Iic Int.preimage_Iicₓ'. -/
 @[simp]
-theorem preimage_Iic : (coe : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ :=
-  by
-  ext
-  simp [le_floor]
+theorem preimage_Iic : (coe : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ := by ext; simp [le_floor]
 #align int.preimage_Iic Int.preimage_Iic
 
 end Int
@@ -2495,9 +2378,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (round.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align round_add_one round_add_oneₓ'. -/
 @[simp]
-theorem round_add_one (a : α) : round (a + 1) = round a + 1 :=
-  by
-  convert round_add_int a 1
+theorem round_add_one (a : α) : round (a + 1) = round a + 1 := by convert round_add_int a 1;
   exact int.cast_one.symm
 #align round_add_one round_add_one
 
@@ -2508,11 +2389,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (x : α) (y : Int), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) x (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) y))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (round.{u1} α _inst_1 _inst_2 x) y)
 Case conversion may be inaccurate. Consider using '#align round_sub_int round_sub_intₓ'. -/
 @[simp]
-theorem round_sub_int (x : α) (y : ℤ) : round (x - y) = round x - y :=
-  by
-  rw [sub_eq_add_neg]
-  norm_cast
-  rw [round_add_int, sub_eq_add_neg]
+theorem round_sub_int (x : α) (y : ℤ) : round (x - y) = round x - y := by rw [sub_eq_add_neg];
+  norm_cast; rw [round_add_int, sub_eq_add_neg]
 #align round_sub_int round_sub_int
 
 /- warning: round_sub_one -> round_sub_one is a dubious translation:
@@ -2522,9 +2400,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (a : α), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (round.{u1} α _inst_1 _inst_2 a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align round_sub_one round_sub_oneₓ'. -/
 @[simp]
-theorem round_sub_one (a : α) : round (a - 1) = round a - 1 :=
-  by
-  convert round_sub_int a 1
+theorem round_sub_one (a : α) : round (a - 1) = round a - 1 := by convert round_sub_int a 1;
   exact int.cast_one.symm
 #align round_sub_one round_sub_one
 
@@ -2546,11 +2422,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] (x : α) (y : Nat), Eq.{1} Int (round.{u1} α _inst_1 _inst_2 (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) x (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))) y))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (round.{u1} α _inst_1 _inst_2 x) (Nat.cast.{0} Int instNatCastInt y))
 Case conversion may be inaccurate. Consider using '#align round_sub_nat round_sub_natₓ'. -/
 @[simp]
-theorem round_sub_nat (x : α) (y : ℕ) : round (x - y) = round x - y :=
-  by
-  rw [sub_eq_add_neg, ← Int.cast_ofNat]
-  norm_cast
-  rw [round_add_int, sub_eq_add_neg]
+theorem round_sub_nat (x : α) (y : ℕ) : round (x - y) = round x - y := by
+  rw [sub_eq_add_neg, ← Int.cast_ofNat]; norm_cast; rw [round_add_int, sub_eq_add_neg]
 #align round_sub_nat round_sub_nat
 
 /- warning: round_int_add -> round_int_add is a dubious translation:
@@ -2633,8 +2506,7 @@ theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ :=
   · conv_rhs => rw [← fract_add_floor x, add_assoc, add_left_comm, floor_int_add]
     rw [if_pos hx, self_eq_add_right, floor_eq_iff, cast_zero, zero_add]
     constructor <;> linarith [fract_nonneg x]
-  · have : ⌊fract x + 1 / 2⌋ = 1 := by
-      rw [floor_eq_iff]
+  · have : ⌊fract x + 1 / 2⌋ = 1 := by rw [floor_eq_iff];
       constructor <;> norm_num <;> linarith [fract_lt_one x]
     rw [if_neg (not_lt.mpr hx), ← fract_add_floor x, add_assoc, add_left_comm, floor_int_add,
       ceil_add_int, add_comm _ ⌊x⌋, add_right_inj, ceil_eq_iff, this, cast_one, sub_self]
@@ -2699,11 +2571,8 @@ Case conversion may be inaccurate. Consider using '#align abs_sub_round_div_nat_
 theorem abs_sub_round_div_natCast_eq {m n : ℕ} :
     |(m : α) / n - round ((m : α) / n)| = ↑(min (m % n) (n - m % n)) / n :=
   by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
-  have hn' : 0 < (n : α) := by
-    norm_cast
-    assumption
+  rcases n.eq_zero_or_pos with (rfl | hn); · simp
+  have hn' : 0 < (n : α) := by norm_cast; assumption
   rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le,
     fract_div_nat_cast_eq_div_nat_cast_mod, Nat.cast_sub (m.mod_lt hn).le, sub_div,
     div_self hn'.ne.symm]

@@ -294,9 +294,7 @@ Case conversion may be inaccurate. Consider using '#align representation.smul_of
 theorem smul_ofModule_asModule (r : MonoidAlgebra k G) (m : (ofModule k G M).asModule) :
     (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv (r • m)) =
       r • (RestrictScalars.addEquiv _ _ _) ((ofModule k G M).asModuleEquiv m) :=
-  by
-  dsimp
-  simp only [AddEquiv.apply_symm_apply, of_module_as_algebra_hom_apply_apply]
+  by dsimp; simp only [AddEquiv.apply_symm_apply, of_module_as_algebra_hom_apply_apply]
 #align representation.smul_of_module_as_module Representation.smul_ofModule_asModule
 
 end
@@ -328,13 +326,8 @@ Case conversion may be inaccurate. Consider using '#align representation.of_mul_
 noncomputable def ofMulAction : Representation k G (H →₀ k)
     where
   toFun g := Finsupp.lmapDomain k k ((· • ·) g)
-  map_one' := by
-    ext (x y)
-    dsimp
-    simp
-  map_mul' x y := by
-    ext (z w)
-    simp [mul_smul]
+  map_one' := by ext (x y); dsimp; simp
+  map_mul' x y := by ext (z w); simp [mul_smul]
 #align representation.of_mul_action Representation.ofMulAction
 
 variable {k G H}
@@ -372,10 +365,7 @@ theorem ofMulAction_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k) 
   conv_lhs => rw [← smul_inv_smul g h]
   let h' := g⁻¹ • h
   change of_mul_action k G H g f (g • h') = f h'
-  have hg : Function.Injective ((· • ·) g : H → H) :=
-    by
-    intro h₁ h₂
-    simp
+  have hg : Function.Injective ((· • ·) g : H → H) := by intro h₁ h₂; simp
   simp only [of_mul_action_def, Finsupp.lmapDomain_apply, Finsupp.mapDomain_apply, hg]
 #align representation.of_mul_action_apply Representation.ofMulAction_apply
 
@@ -531,14 +521,10 @@ def dual : Representation k G (Module.Dual k V)
   toFun g :=
     { toFun := fun f => f ∘ₗ ρV g⁻¹
       map_add' := fun f₁ f₂ => by simp only [add_comp]
-      map_smul' := fun r f => by
-        ext
+      map_smul' := fun r f => by ext;
         simp only [coe_comp, Function.comp_apply, smul_apply, RingHom.id_apply] }
-  map_one' := by
-    ext
-    simp only [coe_comp, Function.comp_apply, map_one, inv_one, coe_mk, one_apply]
-  map_mul' g h := by
-    ext
+  map_one' := by ext; simp only [coe_comp, Function.comp_apply, map_one, inv_one, coe_mk, one_apply]
+  map_mul' g h := by ext;
     simp only [coe_comp, Function.comp_apply, mul_inv_rev, map_mul, coe_mk, mul_apply]
 #align representation.dual Representation.dual
 -/

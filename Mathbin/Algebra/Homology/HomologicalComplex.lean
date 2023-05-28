@@ -316,9 +316,7 @@ Case conversion may be inaccurate. Consider using '#align homological_complex.eq
 theorem eqToHom_f {C₁ C₂ : HomologicalComplex V c} (h : C₁ = C₂) (n : ι) :
     HomologicalComplex.Hom.f (eqToHom h) n =
       eqToHom (congr_fun (congr_arg HomologicalComplex.x h) n) :=
-  by
-  subst h
-  rfl
+  by subst h; rfl
 #align homological_complex.eq_to_hom_f HomologicalComplex.eqToHom_f
 
 /- warning: homological_complex.hom_f_injective -> HomologicalComplex.hom_f_injective is a dubious translation:
@@ -435,10 +433,7 @@ and so the differentials only differ by an `eq_to_hom`.
 theorem d_comp_eqToHom {i j j' : ι} (rij : c.Rel i j) (rij' : c.Rel i j') :
     C.d i j' ≫ eqToHom (congr_arg C.pt (c.next_eq rij' rij)) = C.d i j :=
   by
-  have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_arg C.X h) = C.d i j :=
-    by
-    rintro rfl
-    simp
+  have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_arg C.X h) = C.d i j := by rintro rfl; simp
   apply P
 #align homological_complex.d_comp_eq_to_hom HomologicalComplex.d_comp_eqToHom
 
@@ -455,10 +450,7 @@ and so the differentials only differ by an `eq_to_hom`.
 theorem eqToHom_comp_d {i i' j : ι} (rij : c.Rel i j) (rij' : c.Rel i' j) :
     eqToHom (congr_arg C.pt (c.prev_eq rij rij')) ≫ C.d i' j = C.d i j :=
   by
-  have P : ∀ h : i = i', eq_to_hom (congr_arg C.X h) ≫ C.d i' j = C.d i j :=
-    by
-    rintro rfl
-    simp
+  have P : ∀ h : i = i', eq_to_hom (congr_arg C.X h) ≫ C.d i' j = C.d i j := by rintro rfl; simp
   apply P
 #align homological_complex.eq_to_hom_comp_d HomologicalComplex.eqToHom_comp_d
 
@@ -719,12 +711,8 @@ def isoOfComponents (f : ∀ i, C₁.pt i ≅ C₂.pt i)
           _ = (f i).inv ≫ ((f i).Hom ≫ C₂.d i j) ≫ (f j).inv := by rw [hf i j hij]
           _ = C₂.d i j ≫ (f j).inv := by simp
            }
-  hom_inv_id' := by
-    ext i
-    exact (f i).hom_inv_id
-  inv_hom_id' := by
-    ext i
-    exact (f i).inv_hom_id
+  hom_inv_id' := by ext i; exact (f i).hom_inv_id
+  inv_hom_id' := by ext i; exact (f i).inv_hom_id
 #align homological_complex.hom.iso_of_components HomologicalComplex.Hom.isoOfComponents
 -/
 
@@ -737,9 +725,7 @@ Case conversion may be inaccurate. Consider using '#align homological_complex.ho
 @[simp]
 theorem isoOfComponents_app (f : ∀ i, C₁.pt i ≅ C₂.pt i)
     (hf : ∀ i j, c.Rel i j → (f i).Hom ≫ C₂.d i j = C₁.d i j ≫ (f j).Hom) (i : ι) :
-    isoApp (isoOfComponents f hf) i = f i := by
-  ext
-  simp
+    isoApp (isoOfComponents f hf) i = f i := by ext; simp
 #align homological_complex.hom.iso_of_components_app HomologicalComplex.Hom.isoOfComponents_app
 
 /- warning: homological_complex.hom.is_iso_of_components -> HomologicalComplex.Hom.isIso_of_components is a dubious translation:
@@ -950,19 +936,14 @@ theorem of_x (n : α) : (of X d sq).pt n = X n :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align chain_complex.of_d ChainComplex.of_dₓ'. -/
 @[simp]
-theorem of_d (j : α) : (of X d sq).d (j + 1) j = d j :=
-  by
-  dsimp [of]
+theorem of_d (j : α) : (of X d sq).d (j + 1) j = d j := by dsimp [of];
   rw [if_pos rfl, category.id_comp]
 #align chain_complex.of_d ChainComplex.of_d
 
 /- warning: chain_complex.of_d_ne -> ChainComplex.of_d_ne is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align chain_complex.of_d_ne ChainComplex.of_d_neₓ'. -/
-theorem of_d_ne {i j : α} (h : i ≠ j + 1) : (of X d sq).d i j = 0 :=
-  by
-  dsimp [of]
-  rw [dif_neg h]
+theorem of_d_ne {i j : α} (h : i ≠ j + 1) : (of X d sq).d i j = 0 := by dsimp [of]; rw [dif_neg h]
 #align chain_complex.of_d_ne ChainComplex.of_d_ne
 
 end Of
@@ -988,8 +969,7 @@ def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i + 1) ≫ d_Y i 
       by_cases h : n = m + 1
       · subst h
         simpa using comm m
-      · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]
-        simp }
+      · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]; simp }
 #align chain_complex.of_hom ChainComplex.ofHom
 
 end OfHom
@@ -1072,19 +1052,15 @@ theorem mk_X_2 : (mk X₀ X₁ X₂ d₀ d₁ s succ).pt 2 = X₂ :=
 
 #print ChainComplex.mk_d_1_0 /-
 @[simp]
-theorem mk_d_1_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 0 = d₀ :=
-  by
-  change ite (1 = 0 + 1) (𝟙 X₁ ≫ d₀) 0 = d₀
-  rw [if_pos rfl, category.id_comp]
+theorem mk_d_1_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 0 = d₀ := by
+  change ite (1 = 0 + 1) (𝟙 X₁ ≫ d₀) 0 = d₀; rw [if_pos rfl, category.id_comp]
 #align chain_complex.mk_d_1_0 ChainComplex.mk_d_1_0
 -/
 
 #print ChainComplex.mk_d_2_0 /-
 @[simp]
-theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 2 1 = d₁ :=
-  by
-  change ite (2 = 1 + 1) (𝟙 X₂ ≫ d₁) 0 = d₁
-  rw [if_pos rfl, category.id_comp]
+theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 2 1 = d₁ := by
+  change ite (2 = 1 + 1) (𝟙 X₂ ≫ d₁) 0 = d₁; rw [if_pos rfl, category.id_comp]
 #align chain_complex.mk_d_2_0 ChainComplex.mk_d_2_0
 -/
 
@@ -1122,9 +1098,7 @@ theorem mk'_X_1 : (mk' X₀ X₁ d₀ succ').pt 1 = X₁ :=
 
 #print ChainComplex.mk'_d_1_0 /-
 @[simp]
-theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 1 0 = d₀ :=
-  by
-  change ite (1 = 0 + 1) (𝟙 X₁ ≫ d₀) 0 = d₀
+theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 1 0 = d₀ := by change ite (1 = 0 + 1) (𝟙 X₁ ≫ d₀) 0 = d₀;
   rw [if_pos rfl, category.id_comp]
 #align chain_complex.mk'_d_1_0 ChainComplex.mk'_d_1_0
 -/
@@ -1229,9 +1203,7 @@ def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n +
     CochainComplex V α :=
   { pt
     d := fun i j => if h : i + 1 = j then d _ ≫ eqToHom (by subst h) else 0
-    shape' := fun i j w => by
-      rw [dif_neg]
-      exact w
+    shape' := fun i j w => by rw [dif_neg]; exact w
     d_comp_d' := fun i j k => by
       split_ifs with h h' h'
       · substs h h'
@@ -1256,19 +1228,14 @@ theorem of_x (n : α) : (of X d sq).pt n = X n :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align cochain_complex.of_d CochainComplex.of_dₓ'. -/
 @[simp]
-theorem of_d (j : α) : (of X d sq).d j (j + 1) = d j :=
-  by
-  dsimp [of]
+theorem of_d (j : α) : (of X d sq).d j (j + 1) = d j := by dsimp [of];
   rw [if_pos rfl, category.comp_id]
 #align cochain_complex.of_d CochainComplex.of_d
 
 /- warning: cochain_complex.of_d_ne -> CochainComplex.of_d_ne is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align cochain_complex.of_d_ne CochainComplex.of_d_neₓ'. -/
-theorem of_d_ne {i j : α} (h : i + 1 ≠ j) : (of X d sq).d i j = 0 :=
-  by
-  dsimp [of]
-  rw [dif_neg h]
+theorem of_d_ne {i j : α} (h : i + 1 ≠ j) : (of X d sq).d i j = 0 := by dsimp [of]; rw [dif_neg h]
 #align cochain_complex.of_d_ne CochainComplex.of_d_ne
 
 end Of
@@ -1295,8 +1262,7 @@ def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X 
       by_cases h : n + 1 = m
       · subst h
         simpa using comm n
-      · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]
-        simp }
+      · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]; simp }
 #align cochain_complex.of_hom CochainComplex.ofHom
 
 end OfHom
@@ -1379,19 +1345,15 @@ theorem mk_X_2 : (mk X₀ X₁ X₂ d₀ d₁ s succ).pt 2 = X₂ :=
 
 #print CochainComplex.mk_d_1_0 /-
 @[simp]
-theorem mk_d_1_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 0 1 = d₀ :=
-  by
-  change ite (1 = 0 + 1) (d₀ ≫ 𝟙 X₁) 0 = d₀
-  rw [if_pos rfl, category.comp_id]
+theorem mk_d_1_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 0 1 = d₀ := by
+  change ite (1 = 0 + 1) (d₀ ≫ 𝟙 X₁) 0 = d₀; rw [if_pos rfl, category.comp_id]
 #align cochain_complex.mk_d_1_0 CochainComplex.mk_d_1_0
 -/
 
 #print CochainComplex.mk_d_2_0 /-
 @[simp]
-theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 2 = d₁ :=
-  by
-  change ite (2 = 1 + 1) (d₁ ≫ 𝟙 X₂) 0 = d₁
-  rw [if_pos rfl, category.comp_id]
+theorem mk_d_2_0 : (mk X₀ X₁ X₂ d₀ d₁ s succ).d 1 2 = d₁ := by
+  change ite (2 = 1 + 1) (d₁ ≫ 𝟙 X₂) 0 = d₁; rw [if_pos rfl, category.comp_id]
 #align cochain_complex.mk_d_2_0 CochainComplex.mk_d_2_0
 -/
 
@@ -1429,9 +1391,7 @@ theorem mk'_X_1 : (mk' X₀ X₁ d₀ succ').pt 1 = X₁ :=
 
 #print CochainComplex.mk'_d_1_0 /-
 @[simp]
-theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 0 1 = d₀ :=
-  by
-  change ite (1 = 0 + 1) (d₀ ≫ 𝟙 X₁) 0 = d₀
+theorem mk'_d_1_0 : (mk' X₀ X₁ d₀ succ').d 0 1 = d₀ := by change ite (1 = 0 + 1) (d₀ ≫ 𝟙 X₁) 0 = d₀;
   rw [if_pos rfl, category.comp_id]
 #align cochain_complex.mk'_d_1_0 CochainComplex.mk'_d_1_0
 -/

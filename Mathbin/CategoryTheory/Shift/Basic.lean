@@ -145,12 +145,8 @@ def hasShiftMk (h : ShiftMkCore C A) : HasShift C A :=
       ε := h.zero.inv
       μ := fun m n => (h.add m.as n.as).inv
       μ_natural' := by
-        rintro ⟨X⟩ ⟨Y⟩ ⟨X'⟩ ⟨Y'⟩ ⟨⟨⟨rfl⟩⟩⟩ ⟨⟨⟨rfl⟩⟩⟩
-        ext
-        dsimp
-        simp only [discrete.functor_map_id, category.assoc]
-        dsimp
-        simp
+        rintro ⟨X⟩ ⟨Y⟩ ⟨X'⟩ ⟨Y'⟩ ⟨⟨⟨rfl⟩⟩⟩ ⟨⟨⟨rfl⟩⟩⟩; ext
+        dsimp; simp only [discrete.functor_map_id, category.assoc]; dsimp; simp
       associativity' := by
         rintro ⟨m₁⟩ ⟨m₂⟩ ⟨m₃⟩
         ext X
@@ -229,10 +225,7 @@ but is expected to have type
   forall (C : Type.{u3}) {A : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : AddMonoid.{u1} A] [_inst_3 : CategoryTheory.HasShift.{u2, u3, u1} C A _inst_1 _inst_2] (i : A) (j : A), Eq.{max (succ u3) (succ u2)} (CategoryTheory.Iso.{max u3 u2, max u3 u2} (CategoryTheory.Functor.{u2, u2, u3, u3} C _inst_1 C _inst_1) (CategoryTheory.Functor.category.{u2, u2, u3, u3} C _inst_1 C _inst_1) (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (HAdd.hAdd.{u1, u1, u1} A A A (instHAdd.{u1} A (AddZeroClass.toAdd.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2))) i j)) (CategoryTheory.Functor.comp.{u2, u2, u2, u3, u3, u3} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 i) (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 j))) (CategoryTheory.shiftFunctorAdd'.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 i j (HAdd.hAdd.{u1, u1, u1} A A A (instHAdd.{u1} A (AddZeroClass.toAdd.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2))) i j) (rfl.{succ u1} A (HAdd.hAdd.{u1, u1, u1} A A A (instHAdd.{u1} A (AddZeroClass.toAdd.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2))) i j))) (CategoryTheory.shiftFunctorAdd.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 i j)
 Case conversion may be inaccurate. Consider using '#align category_theory.shift_functor_add'_eq_shift_functor_add CategoryTheory.shiftFunctorAdd'_eq_shiftFunctorAddₓ'. -/
 theorem shiftFunctorAdd'_eq_shiftFunctorAdd (i j : A) :
-    shiftFunctorAdd' C i j (i + j) rfl = shiftFunctorAdd C i j :=
-  by
-  ext1
-  apply category.id_comp
+    shiftFunctorAdd' C i j (i + j) rfl = shiftFunctorAdd C i j := by ext1; apply category.id_comp
 #align category_theory.shift_functor_add'_eq_shift_functor_add CategoryTheory.shiftFunctorAdd'_eq_shiftFunctorAdd
 
 variable (A)
@@ -567,9 +560,7 @@ abbrev shiftAdd (i j : A) : X⟦i + j⟧ ≅ X⟦i⟧⟦j⟧ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.shift_shift' CategoryTheory.shift_shift'ₓ'. -/
 theorem shift_shift' (i j : A) :
-    f⟦i⟧'⟦j⟧' = (shiftAdd X i j).inv ≫ f⟦i + j⟧' ≫ (shiftAdd Y i j).Hom :=
-  by
-  symm
+    f⟦i⟧'⟦j⟧' = (shiftAdd X i j).inv ≫ f⟦i + j⟧' ≫ (shiftAdd Y i j).Hom := by symm;
   apply nat_iso.naturality_1
 #align category_theory.shift_shift' CategoryTheory.shift_shift'
 
@@ -592,9 +583,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u3}} (A : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u3} C] [_inst_2 : AddMonoid.{u1} A] [_inst_3 : CategoryTheory.HasShift.{u2, u3, u1} C A _inst_1 _inst_2] (X : C) (Y : C) (f : Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) X Y), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) X) (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) Y)) (Prefunctor.map.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) X Y f) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) X) X (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) Y) (CategoryTheory.Iso.hom.{u2, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) X) X (CategoryTheory.shiftZero.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 X)) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) X Y (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) Y) f (CategoryTheory.Iso.inv.{u2, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u3, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u3, u3} C _inst_1 C _inst_1 (CategoryTheory.shiftFunctor.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} A 0 (Zero.toOfNat0.{u1} A (AddMonoid.toZero.{u1} A _inst_2))))) Y) Y (CategoryTheory.shiftZero.{u2, u3, u1} C A _inst_1 _inst_2 _inst_3 Y))))
 Case conversion may be inaccurate. Consider using '#align category_theory.shift_zero' CategoryTheory.shiftZero'ₓ'. -/
-theorem shiftZero' : f⟦(0 : A)⟧' = (shiftZero A X).Hom ≫ f ≫ (shiftZero A Y).inv :=
-  by
-  symm
+theorem shiftZero' : f⟦(0 : A)⟧' = (shiftZero A X).Hom ≫ f ≫ (shiftZero A Y).inv := by symm;
   apply nat_iso.naturality_2
 #align category_theory.shift_zero' CategoryTheory.shiftZero'
 
@@ -999,9 +988,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.map_ha
 theorem map_hasShiftOfFullyFaithful_zero_hom_app (X : C) :
     F.map ((hasShiftOfFullyFaithful_zero F s i).Hom.app X) =
       (i 0).Hom.app X ≫ (shiftFunctorZero D A).Hom.app (F.obj X) :=
-  by
-  dsimp [has_shift_of_fully_faithful_zero]
-  simp
+  by dsimp [has_shift_of_fully_faithful_zero]; simp
 #align category_theory.map_has_shift_of_fully_faithful_zero_hom_app CategoryTheory.map_hasShiftOfFullyFaithful_zero_hom_app
 
 /- warning: category_theory.map_has_shift_of_fully_faithful_zero_inv_app -> CategoryTheory.map_hasShiftOfFullyFaithful_zero_inv_app is a dubious translation:
@@ -1011,9 +998,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.map_ha
 theorem map_hasShiftOfFullyFaithful_zero_inv_app (X : C) :
     F.map ((hasShiftOfFullyFaithful_zero F s i).inv.app X) =
       (shiftFunctorZero D A).inv.app (F.obj X) ≫ (i 0).inv.app X :=
-  by
-  dsimp [has_shift_of_fully_faithful_zero]
-  simp
+  by dsimp [has_shift_of_fully_faithful_zero]; simp
 #align category_theory.map_has_shift_of_fully_faithful_zero_inv_app CategoryTheory.map_hasShiftOfFullyFaithful_zero_inv_app
 
 /- warning: category_theory.has_shift_of_fully_faithful_add -> CategoryTheory.hasShiftOfFullyFaithful_add is a dubious translation:
@@ -1042,9 +1027,7 @@ theorem map_hasShiftOfFullyFaithful_add_hom_app (a b : A) (X : C) :
       (i (a + b)).Hom.app X ≫
         (shiftFunctorAdd D a b).Hom.app (F.obj X) ≫
           (i a).inv.app X⟦b⟧' ≫ (i b).inv.app ((s a).obj X) :=
-  by
-  dsimp [has_shift_of_fully_faithful_add]
-  simp
+  by dsimp [has_shift_of_fully_faithful_add]; simp
 #align category_theory.map_has_shift_of_fully_faithful_add_hom_app CategoryTheory.map_hasShiftOfFullyFaithful_add_hom_app
 
 /- warning: category_theory.map_has_shift_of_fully_faithful_add_inv_app -> CategoryTheory.map_hasShiftOfFullyFaithful_add_inv_app is a dubious translation:
@@ -1055,9 +1038,7 @@ theorem map_hasShiftOfFullyFaithful_add_inv_app (a b : A) (X : C) :
     F.map ((hasShiftOfFullyFaithful_add F s i a b).inv.app X) =
       (i b).Hom.app ((s a).obj X) ≫
         (i a).Hom.app X⟦b⟧' ≫ (shiftFunctorAdd D a b).inv.app (F.obj X) ≫ (i (a + b)).inv.app X :=
-  by
-  dsimp [has_shift_of_fully_faithful_add]
-  simp
+  by dsimp [has_shift_of_fully_faithful_add]; simp
 #align category_theory.map_has_shift_of_fully_faithful_add_inv_app CategoryTheory.map_hasShiftOfFullyFaithful_add_inv_app
 
 #print CategoryTheory.hasShiftOfFullyFaithful /-

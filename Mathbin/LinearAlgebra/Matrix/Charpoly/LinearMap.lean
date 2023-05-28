@@ -101,9 +101,7 @@ theorem PiToModule.fromEnd_injective (hb : Submodule.span R (Set.range b) = ⊤)
   by
   intro x y e
   ext m
-  obtain ⟨m, rfl⟩ : m ∈ (Fintype.total R R b).range :=
-    by
-    rw [(Fintype.range_total R b).trans hb]
+  obtain ⟨m, rfl⟩ : m ∈ (Fintype.total R R b).range := by rw [(Fintype.range_total R b).trans hb];
     trivial
   exact (LinearMap.congr_fun e m : _)
 #align pi_to_module.from_End_injective PiToModule.fromEnd_injective
@@ -281,9 +279,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.is_representati
 theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I : Ideal R)
     (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
   by
-  have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range :=
-    by
-    rw [Ideal.range_finsuppTotal, hb]
+  have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range := by rw [Ideal.range_finsuppTotal, hb];
     exact fun x => hI (f.mem_range_self x)
   choose bM' hbM'
   let A : Matrix ι ι R := fun i j => bM' (b j) i

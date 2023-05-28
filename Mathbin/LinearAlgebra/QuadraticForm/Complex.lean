@@ -55,8 +55,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     rw [Pi.basisFun_apply, LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply,
       Function.update_noteq hij.symm, Pi.zero_apply, smul_eq_mul, smul_eq_mul,
       MulZeroClass.mul_zero, MulZeroClass.mul_zero]
-    intro hj'
-    exact False.elim (hj' hj)
+    intro hj'; exact False.elim (hj' hj)
   simp_rw [Basis.unitsSMul_apply]
   erw [hsum, smul_eq_mul]
   split_ifs
@@ -64,9 +63,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   have hww' : w' j = w j := by simp only [w, dif_neg h, Units.val_mk0]
   simp only [hww', one_mul]
   change v j * v j = ↑(w j) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ)) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ))))
-  suffices v j * v j = w j ^ (-(1 / 2 : ℂ)) * w j ^ (-(1 / 2 : ℂ)) * w j * v j * v j
-    by
-    rw [this]
+  suffices v j * v j = w j ^ (-(1 / 2 : ℂ)) * w j ^ (-(1 / 2 : ℂ)) * w j * v j * v j by rw [this];
     ring
   rw [← Complex.cpow_add _ _ (w j).NeZero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul],
     Complex.cpow_neg_one, inv_mul_cancel (w j).NeZero, one_mul]
@@ -77,9 +74,7 @@ sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
 noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ) :
     Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) :=
   by
-  have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 :=
-    by
-    ext i : 1
+  have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by ext i : 1;
     exact dif_neg (w i).NeZero
   have := isometry_sum_squares (coe ∘ w)
   rw [hw1] at this

@@ -157,9 +157,7 @@ variable [Algebra R A] [Algebra R B]
 protected def compLeft (f : A →ₐ[R] B) (I : Type _) : (I → A) →ₐ[R] I → B :=
   { f.toRingHom.compLeft I with
     toFun := fun h => f ∘ h
-    commutes' := fun c => by
-      ext
-      exact f.commutes' c }
+    commutes' := fun c => by ext; exact f.commutes' c }
 #align alg_hom.comp_left AlgHom.compLeft
 -/
 
@@ -183,9 +181,7 @@ def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R] [�
       (e i).toRingEquiv with
     toFun := fun x j => e j (x j)
     invFun := fun x j => (e j).symm (x j)
-    commutes' := fun r => by
-      ext i
-      simp }
+    commutes' := fun r => by ext i; simp }
 #align alg_equiv.Pi_congr_right AlgEquiv.piCongrRight
 -/
 

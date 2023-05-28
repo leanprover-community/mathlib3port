@@ -162,10 +162,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_3 : AddCommMonoid.{u1} M] [_inst_4 : Module.{u2, u1} R M _inst_1 _inst_3] (p : Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4), Iff (Ne.{succ u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) p (Bot.bot.{u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (Submodule.instBotSubmodule.{u2, u1} R M _inst_1 _inst_3 _inst_4))) (Exists.{succ u1} M (fun (x : M) => And (Membership.mem.{u1, u1} M (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (SetLike.instMembership.{u1, u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) M (Submodule.setLike.{u2, u1} R M _inst_1 _inst_3 _inst_4)) x p) (Ne.{succ u1} M x (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_3)))))))
 Case conversion may be inaccurate. Consider using '#align submodule.ne_bot_iff Submodule.ne_bot_iffₓ'. -/
-protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) :=
-  by
-  haveI := Classical.propDecidable
-  simp_rw [Ne.def, p.eq_bot_iff, not_forall]
+protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) := by
+  haveI := Classical.propDecidable; simp_rw [Ne.def, p.eq_bot_iff, not_forall]
 #align submodule.ne_bot_iff Submodule.ne_bot_iff
 
 /- warning: submodule.nonzero_mem_of_bot_lt -> Submodule.nonzero_mem_of_bot_lt is a dubious translation:
@@ -202,18 +200,10 @@ def botEquivPUnit : (⊥ : Submodule R M) ≃ₗ[R] PUnit
     where
   toFun x := PUnit.unit
   invFun x := 0
-  map_add' := by
-    intros
-    ext
-  map_smul' := by
-    intros
-    ext
-  left_inv := by
-    intro x
-    ext
-  right_inv := by
-    intro x
-    ext
+  map_add' := by intros ; ext
+  map_smul' := by intros ; ext
+  left_inv := by intro x; ext
+  right_inv := by intro x; ext
 #align submodule.bot_equiv_punit Submodule.botEquivPUnit
 
 /- warning: submodule.eq_bot_of_subsingleton -> Submodule.eq_bot_of_subsingleton is a dubious translation:
@@ -324,19 +314,10 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M
     where
   toFun x := x
   invFun x := ⟨x, by simp⟩
-  map_add' := by
-    intros
-    rfl
-  map_smul' := by
-    intros
-    rfl
-  left_inv := by
-    intro x
-    ext
-    rfl
-  right_inv := by
-    intro x
-    rfl
+  map_add' := by intros ; rfl
+  map_smul' := by intros ; rfl
+  left_inv := by intro x; ext; rfl
+  right_inv := by intro x; rfl
 #align submodule.top_equiv Submodule.topEquiv
 
 instance : InfSet (Submodule R M) :=

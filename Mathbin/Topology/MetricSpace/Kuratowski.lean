@@ -77,10 +77,7 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
   have :=
     calc
       dist a b ≤ dist a (x n) + dist (x n) b := dist_triangle _ _ _
-      _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) :=
-        by
-        simp [dist_comm]
-        ring
+      _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) := by simp [dist_comm]; ring
       _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
         apply_rules [add_le_add_left, le_abs_self]
       _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by rw [C];
@@ -105,9 +102,7 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     ∃ f : α → ℓ_infty_ℝ, Isometry f :=
   by
   cases' (univ : Set α).eq_empty_or_nonempty with h h
-  · use fun _ => 0
-    intro x
-    exact absurd h (nonempty.ne_empty ⟨x, mem_univ x⟩)
+  · use fun _ => 0; intro x; exact absurd h (nonempty.ne_empty ⟨x, mem_univ x⟩)
   · -- We construct a map x : ℕ → α with dense image
     rcases h with ⟨basepoint⟩
     haveI : Inhabited α := ⟨basepoint⟩

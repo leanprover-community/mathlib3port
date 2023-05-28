@@ -36,17 +36,11 @@ variable {R : Type u} [CommRing R]
 variable {J : Type v} [SmallCategory J]
 
 instance semiringObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
-    Semiring ((F ⋙ forget (AlgebraCat R)).obj j) :=
-  by
-  change Semiring (F.obj j)
-  infer_instance
+    Semiring ((F ⋙ forget (AlgebraCat R)).obj j) := by change Semiring (F.obj j); infer_instance
 #align Algebra.semiring_obj AlgebraCat.semiringObj
 
 instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
-    Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) :=
-  by
-  change Algebra R (F.obj j)
-  infer_instance
+    Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) := by change Algebra R (F.obj j); infer_instance
 #align Algebra.algebra_obj AlgebraCat.algebraObj
 
 /-- The flat sections of a functor into `Algebra R` form a submodule of all sections.
@@ -111,19 +105,11 @@ def limitConeIsLimit (F : J ⥤ AlgebraCat.{max v w} R) : IsLimit (limitCone F) 
   refine'
     is_limit.of_faithful (forget (AlgebraCat R)) (types.limit_cone_is_limit _) (fun s => { .. })
       fun s => rfl
-  · simp only [forget_map_eq_coe, AlgHom.map_one, functor.map_cone_π_app]
-    rfl
-  · intro x y
-    simp only [forget_map_eq_coe, AlgHom.map_mul, functor.map_cone_π_app]
-    rfl
-  · simp only [forget_map_eq_coe, AlgHom.map_zero, functor.map_cone_π_app]
-    rfl
-  · intro x y
-    simp only [forget_map_eq_coe, AlgHom.map_add, functor.map_cone_π_app]
-    rfl
-  · intro r
-    ext j
-    exact (s.π.app j).commutes r
+  · simp only [forget_map_eq_coe, AlgHom.map_one, functor.map_cone_π_app]; rfl
+  · intro x y; simp only [forget_map_eq_coe, AlgHom.map_mul, functor.map_cone_π_app]; rfl
+  · simp only [forget_map_eq_coe, AlgHom.map_zero, functor.map_cone_π_app]; rfl
+  · intro x y; simp only [forget_map_eq_coe, AlgHom.map_add, functor.map_cone_π_app]; rfl
+  · intro r; ext j; exact (s.π.app j).commutes r
 #align Algebra.has_limits.limit_cone_is_limit AlgebraCat.HasLimits.limitConeIsLimit
 
 end HasLimits

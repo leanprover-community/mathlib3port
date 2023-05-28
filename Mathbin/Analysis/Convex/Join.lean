@@ -133,10 +133,8 @@ theorem convexJoin_union_right (s t₁ t₂ : Set E) :
 #print convexJoin_iUnion_left /-
 @[simp]
 theorem convexJoin_iUnion_left (s : ι → Set E) (t : Set E) :
-    convexJoin 𝕜 (⋃ i, s i) t = ⋃ i, convexJoin 𝕜 (s i) t :=
-  by
-  simp_rw [convexJoin, mem_Union, Union_exists]
-  exact Union_comm _
+    convexJoin 𝕜 (⋃ i, s i) t = ⋃ i, convexJoin 𝕜 (s i) t := by
+  simp_rw [convexJoin, mem_Union, Union_exists]; exact Union_comm _
 #align convex_join_Union_left convexJoin_iUnion_left
 -/
 

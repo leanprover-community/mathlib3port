@@ -86,11 +86,7 @@ def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V
   toFun H := { e | e.Hom ∈ H e.left e.right }
   invFun S a b := { e | Total.mk a b e ∈ S }
   left_inv H := rfl
-  right_inv := by
-    intro S
-    ext
-    cases x
-    rfl
+  right_inv := by intro S; ext; cases x; rfl
 #align quiver.wide_subquiver_equiv_set_total Quiver.wideSubquiverEquivSetTotal
 -/
 

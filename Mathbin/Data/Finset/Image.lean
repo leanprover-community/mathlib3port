@@ -100,13 +100,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Finset.{u2} α} {f : Equiv.{succ u2, succ u1} α β} {b : β}, Iff (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b (Finset.map.{u2, u1} α β (Equiv.toEmbedding.{succ u2, succ u1} α β f) s)) (Membership.mem.{u2, u2} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) b) (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} β α) (Equiv.symm.{succ u2, succ u1} α β f) b) s)
 Case conversion may be inaccurate. Consider using '#align finset.mem_map_equiv Finset.mem_map_equivₓ'. -/
 @[simp]
-theorem mem_map_equiv {f : α ≃ β} {b : β} : b ∈ s.map f.toEmbedding ↔ f.symm b ∈ s :=
-  by
-  rw [mem_map]
-  exact
-    ⟨by
-      rintro ⟨a, H, rfl⟩
-      simpa, fun h => ⟨_, h, by simp⟩⟩
+theorem mem_map_equiv {f : α ≃ β} {b : β} : b ∈ s.map f.toEmbedding ↔ f.symm b ∈ s := by
+  rw [mem_map]; exact ⟨by rintro ⟨a, H, rfl⟩; simpa, fun h => ⟨_, h, by simp⟩⟩
 #align finset.mem_map_equiv Finset.mem_map_equiv
 
 /- warning: finset.mem_map' -> Finset.mem_map' is a dubious translation:
@@ -137,10 +132,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.forall_mem_map Finset.forall_mem_mapₓ'. -/
 theorem forall_mem_map {f : α ↪ β} {s : Finset α} {p : ∀ a, a ∈ s.map f → Prop} :
     (∀ y ∈ s.map f, p y H) ↔ ∀ x ∈ s, p (f x) (mem_map_of_mem _ H) :=
-  ⟨fun h y hy => h (f y) (mem_map_of_mem _ hy), fun h x hx =>
-    by
-    obtain ⟨y, hy, rfl⟩ := mem_map.1 hx
-    exact h _ hy⟩
+  ⟨fun h y hy => h (f y) (mem_map_of_mem _ hy), fun h x hx => by
+    obtain ⟨y, hy, rfl⟩ := mem_map.1 hx; exact h _ hy⟩
 #align finset.forall_mem_map Finset.forall_mem_map
 
 /- warning: finset.apply_coe_mem_map -> Finset.apply_coe_mem_map is a dubious translation:
@@ -206,9 +199,7 @@ theorem map_refl : s.map (Embedding.refl _) = s :=
 #print Finset.map_cast_heq /-
 @[simp]
 theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equiv.cast h).toEmbedding) s :=
-  by
-  subst h
-  simp
+  by subst h; simp
 #align finset.map_cast_heq Finset.map_cast_heq
 -/
 
@@ -577,11 +568,8 @@ theorem forall_image {p : β → Prop} : (∀ b ∈ s.image f, p b) ↔ ∀ a �
 
 #print Finset.mem_image_const /-
 @[simp]
-theorem mem_image_const : c ∈ s.image (const α b) ↔ s.Nonempty ∧ b = c :=
-  by
-  rw [mem_image]
-  simp only [exists_prop, const_apply, exists_and_right]
-  rfl
+theorem mem_image_const : c ∈ s.image (const α b) ↔ s.Nonempty ∧ b = c := by rw [mem_image];
+  simp only [exists_prop, const_apply, exists_and_right]; rfl
 #align finset.mem_image_const Finset.mem_image_const
 -/
 
@@ -607,11 +595,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} {g : α -> β} {s : Finset.{u2} α}, (Set.EqOn.{u2, u1} α β f g (Finset.toSet.{u2} α s)) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) g s))
 Case conversion may be inaccurate. Consider using '#align finset.image_congr Finset.image_congrₓ'. -/
-theorem image_congr (h : (s : Set α).EqOn f g) : Finset.image f s = Finset.image g s :=
-  by
-  ext
-  simp_rw [mem_image]
-  exact bex_congr fun x hx => by rw [h hx]
+theorem image_congr (h : (s : Set α).EqOn f g) : Finset.image f s = Finset.image g s := by ext;
+  simp_rw [mem_image]; exact bex_congr fun x hx => by rw [h hx]
 #align finset.image_congr Finset.image_congr
 
 /- warning: function.injective.mem_finset_image -> Function.Injective.mem_finset_image is a dubious translation:
@@ -636,11 +621,9 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_mem_imag
 theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β) (h : ∀ x ∈ s, f x ∈ t) :
     (t.filterₓ fun y => y ∈ s.image f) = s.image f :=
   by
-  ext
-  rw [mem_filter, mem_image]
+  ext; rw [mem_filter, mem_image]
   simp only [and_imp, exists_prop, and_iff_right_iff_imp, exists_imp]
-  rintro x xel rfl
-  exact h _ xel
+  rintro x xel rfl; exact h _ xel
 #align finset.filter_mem_image_eq_image Finset.filter_mem_image_eq_image
 
 /- warning: finset.fiber_nonempty_iff_mem_image -> Finset.fiber_nonempty_iff_mem_image is a dubious translation:
@@ -781,10 +764,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} {s : Finset.{u2} α} {t : Finset.{u2} α}, (Function.Injective.{succ u2, succ u1} α β f) -> (Iff (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f t)) (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) s t))
 Case conversion may be inaccurate. Consider using '#align finset.image_subset_image_iff Finset.image_subset_image_iffₓ'. -/
 theorem image_subset_image_iff {t : Finset α} (hf : Injective f) : s.image f ⊆ t.image f ↔ s ⊆ t :=
-  by
-  simp_rw [← coe_subset]
-  push_cast
-  exact Set.image_subset_image_iff hf
+  by simp_rw [← coe_subset]; push_cast ; exact Set.image_subset_image_iff hf
 #align finset.image_subset_image_iff Finset.image_subset_image_iff
 
 #print Finset.coe_image_subset_range /-
@@ -838,8 +818,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_inter_of_inj_on Finset.image_inter_of_injOnₓ'. -/
 theorem image_inter_of_injOn [DecidableEq α] {f : α → β} (s t : Finset α)
     (hf : Set.InjOn f (s ∪ t)) : (s ∩ t).image f = s.image f ∩ t.image f :=
-  coe_injective <| by
-    push_cast
+  coe_injective <| by push_cast ;
     exact Set.image_inter_on fun a ha b hb => hf (Or.inr ha) <| Or.inl hb
 #align finset.image_inter_of_inj_on Finset.image_inter_of_injOn
 
@@ -919,9 +898,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_sdiff Finset.image_sdiffₓ'. -/
 theorem image_sdiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s \ t).image f = s.image f \ t.image f :=
-  coe_injective <| by
-    push_cast
-    exact Set.image_diff hf _ _
+  coe_injective <| by push_cast ; exact Set.image_diff hf _ _
 #align finset.image_sdiff Finset.image_sdiff
 
 /- warning: finset.image_symm_diff -> Finset.image_symmDiff is a dubious translation:
@@ -932,9 +909,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_symm_diff Finset.image_symmDiffₓ'. -/
 theorem image_symmDiff [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Injective f) :
     (s ∆ t).image f = s.image f ∆ t.image f :=
-  coe_injective <| by
-    push_cast
-    exact Set.image_symm_diff hf _ _
+  coe_injective <| by push_cast ; exact Set.image_symm_diff hf _ _
 #align finset.image_symm_diff Finset.image_symmDiff
 
 /- warning: disjoint.of_image_finset -> Disjoint.of_image_finset is a dubious translation:
@@ -988,10 +963,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a b)) (Union.union.{0} (Finset.{0} Nat) (Finset.instUnionFinset.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b)) (Finset.range a) (Finset.map.{0, 0} Nat Nat (addLeftEmbedding.{0} Nat (AddLeftCancelMonoid.toAddLeftCancelSemigroup.{0} Nat (AddCancelCommMonoid.toAddLeftCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) a) (Finset.range b)))
 Case conversion may be inaccurate. Consider using '#align finset.range_add Finset.range_addₓ'. -/
-theorem range_add (a b : ℕ) : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) :=
-  by
-  rw [← val_inj, union_val]
-  exact Multiset.range_add_eq_union a b
+theorem range_add (a b : ℕ) : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) := by
+  rw [← val_inj, union_val]; exact Multiset.range_add_eq_union a b
 #align finset.range_add Finset.range_add
 
 #print Finset.attach_image_val /-
@@ -1070,9 +1043,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.map_erase Finset.map_eraseₓ'. -/
 @[simp]
 theorem map_erase [DecidableEq α] (f : α ↪ β) (s : Finset α) (a : α) :
-    (s.eraseₓ a).map f = (s.map f).eraseₓ (f a) :=
-  by
-  simp_rw [map_eq_image]
+    (s.eraseₓ a).map f = (s.map f).eraseₓ (f a) := by simp_rw [map_eq_image];
   exact s.image_erase f.2 a
 #align finset.map_erase Finset.map_erase
 
@@ -1251,9 +1222,7 @@ theorem subset_image_iff [DecidableEq β] {s : Set α} {t : Finset β} {f : α �
     ↑t ⊆ f '' s ↔ ∃ s' : Finset α, ↑s' ⊆ s ∧ s'.image f = t :=
   by
   constructor; swap
-  · rintro ⟨t, ht, rfl⟩
-    rw [coe_image]
-    exact Set.image_subset f ht
+  · rintro ⟨t, ht, rfl⟩; rw [coe_image]; exact Set.image_subset f ht
   intro h
   letI : CanLift β s (f ∘ coe) fun y => y ∈ f '' s := ⟨fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
   lift t to Finset s using h
@@ -1316,10 +1285,7 @@ theorem finsetCongr_apply (e : α ≃ β) (s : Finset α) : e.finsetCongr s = s.
 
 #print Equiv.finsetCongr_refl /-
 @[simp]
-theorem finsetCongr_refl : (Equiv.refl α).finsetCongr = Equiv.refl _ :=
-  by
-  ext
-  simp
+theorem finsetCongr_refl : (Equiv.refl α).finsetCongr = Equiv.refl _ := by ext; simp
 #align equiv.finset_congr_refl Equiv.finsetCongr_refl
 -/
 
@@ -1342,9 +1308,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.finset_congr_trans Equiv.finsetCongr_transₓ'. -/
 @[simp]
 theorem finsetCongr_trans (e : α ≃ β) (e' : β ≃ γ) :
-    e.finsetCongr.trans e'.finsetCongr = (e.trans e').finsetCongr :=
-  by
-  ext
+    e.finsetCongr.trans e'.finsetCongr = (e.trans e').finsetCongr := by ext;
   simp [-Finset.mem_map, -Equiv.trans_toEmbedding]
 #align equiv.finset_congr_trans Equiv.finsetCongr_trans
 

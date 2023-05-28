@@ -102,10 +102,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
   intro h0 h1
   let a_n := get n as
   let m := a_n + 1
-  have h3 : m ≠ 0 := by
-    apply ne_of_gt
-    apply lt_trans h0
-    simp [a_n, m]
+  have h3 : m ≠ 0 := by apply ne_of_gt; apply lt_trans h0; simp [a_n, m]
   have h2 : m * sgm v b as n = symmod b m + coeffs.val v (as.map fun x => symmod x m) :=
     by
     simp only [sgm, mul_comm m]
@@ -115,15 +112,11 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         m * c + (symmod b (get n as + 1) + coeffs.val v (as.map fun x : ℤ => symmod x m)) =
           term.val v (b, as) :=
       by
-      have h5 : ∃ d, m * d + coeffs.val v (as.map fun x => symmod x m) = coeffs.val v as :=
-        by
-        simp only [coeffs.val, List.length_map]
-        apply rhs_correct_aux
-      cases' h5 with d h5
-      rw [symmod_eq]
+      have h5 : ∃ d, m * d + coeffs.val v (as.map fun x => symmod x m) = coeffs.val v as := by
+        simp only [coeffs.val, List.length_map]; apply rhs_correct_aux
+      cases' h5 with d h5; rw [symmod_eq]
       exists symdiv b m + d
-      unfold term.val
-      rw [← h5]
+      unfold term.val; rw [← h5]
       simp only [term.val, mul_add, add_mul, m, a_n]
       ring
     cases' h4 with c h4
@@ -135,8 +128,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         by
         rw [h2, ← coeffs.val_except_add_eq n]
         have hn : n < as.length := by
-          by_contra hc
-          rw [not_lt] at hc
+          by_contra hc; rw [not_lt] at hc
           rw [get_eq_default_of_le n hc] at h0
           cases h0
         rw [get_map hn]
@@ -147,16 +139,12 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         by
         unfold rhs; unfold term.val
         rw [← coeffs.val_except_add_eq n, get_set, update_eq]
-        have h2 : ∀ a b c : Int, a + b + c = b + (c + a) :=
-          by
-          intros
-          ring
+        have h2 : ∀ a b c : Int, a + b + c = b + (c + a) := by intros ; ring
         rw [h2 (-_)]
         apply fun_mono_2 rfl
         apply fun_mono_2
         · rw [coeffs.val_except_update_set]
-        · simp only [m, a_n]
-          ring
+        · simp only [m, a_n]; ring
       
 #align omega.rhs_correct Omega.rhs_correct
 
@@ -214,15 +202,10 @@ theorem coeffsReduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Na
           by
           rw [List.map_map, ← map_add_map]
           apply fun_mono_2
-          · have h5 : (fun x : Int => x) = id :=
-              by
-              rw [Function.funext_iff]
-              intro x
-              rfl
+          · have h5 : (fun x : Int => x) = id := by rw [Function.funext_iff]; intro x; rfl
             rw [h5, List.map_id]
           · apply fun_mono_2 _ rfl
-            rw [Function.funext_iff]
-            intro x
+            rw [Function.funext_iff]; intro x
             simp only [m]
         simp only [List.length_map]
         repeat' rw [← coeffs.val_between_add, h5]
@@ -230,21 +213,18 @@ theorem coeffsReduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Na
           -(m * a_n * sgm v b as n) + m * sym_sym m b +
             coeffs.val_except n v (as.map fun a_i => m * sym_sym m a_i) :=
         by
-        repeat' rw [add_assoc]
-        apply fun_mono_2
-        rfl
+        repeat' rw [add_assoc]; apply fun_mono_2; rfl
         rw [← add_assoc]
         have h4 : ∀ x : ℤ, x + a_n * symmod x m = m * sym_sym m x :=
           by
-          intro x
+          intro x;
           have h5 : a_n = m - 1 := by
             simp only [m]
             rw [add_sub_cancel]
           rw [h5, sub_mul, one_mul, add_sub, add_comm, add_sub_assoc, ← mul_symdiv_eq]
           simp only [sym_sym, mul_add, add_comm]
         apply fun_mono_2 (h4 _)
-        apply coeffs.val_except_eq_val_except <;> intro x h5
-        rfl
+        apply coeffs.val_except_eq_val_except <;> intro x h5; rfl
         apply congr_arg
         apply fun_mono_2 _ rfl
         rw [Function.funext_iff]
@@ -290,8 +270,7 @@ theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n 
   have h3 : coeffs.val (v ⟨n ↦ sgm v b as n⟩) (as' {n ↦ 0}) = coeffs.val_except n v as' := by
     rw [← coeffs.val_except_add_eq n, get_set, MulZeroClass.zero_mul, add_zero,
       coeffs.val_except_update_set]
-  rw [h3, ← coeffs.val_except_add_eq n]
-  ring
+  rw [h3, ← coeffs.val_except_add_eq n]; ring
 #align omega.subst_correct Omega.subst_correct
 
 /-- The type of equality elimination rules. -/
@@ -380,40 +359,29 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     by
     unfold eq_elim
     by_cases h2 : ¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
-    · exfalso
-      cases' h1 with v h1
+    · exfalso; cases' h1 with v h1
       have h3 : 0 = b + coeffs.val v as := h1.left _ (Or.inl rfl)
       have h4 : i ∣ coeffs.val v as := coeffs.dvd_val h2.right
-      have h5 : i ∣ b + coeffs.val v as := by
-        rw [← h3]
-        apply dvd_zero
-      rw [dvd_add_left h4] at h5
-      apply h2.left h5
+      have h5 : i ∣ b + coeffs.val v as := by rw [← h3]; apply dvd_zero
+      rw [dvd_add_left h4] at h5; apply h2.left h5
     rw [if_neg h2]; apply sat_empty
   | ee.factor i :: es, ((b, as) :: eqs, les), h1 =>
     by
     simp only [eq_elim]
     by_cases h2 : i ∣ b ∧ ∀ x ∈ as, i ∣ x
-    · rw [if_pos h2]
-      apply sat_eq_elim
-      cases' h1 with v h1
-      exists v
-      cases' h1 with h3 h4
-      apply And.intro _ h4
-      rw [List.forall_mem_cons] at *
-      cases' h3 with h5 h6
+    · rw [if_pos h2]; apply sat_eq_elim; cases' h1 with v h1
+      exists v; cases' h1 with h3 h4; apply And.intro _ h4
+      rw [List.forall_mem_cons] at *; cases' h3 with h5 h6
       apply And.intro _ h6
       rw [term.val_div h2.left h2.right, ← h5, Int.zero_div]
-    · rw [if_neg h2]
-      apply sat_empty
+    · rw [if_neg h2]; apply sat_empty
   | ee.reduce n :: es, ((b, as) :: eqs, les), h1 =>
     by
     simp only [eq_elim]
     by_cases h2 : 0 < get n as
     run_tac
       tactic.rotate 1
-    · rw [if_neg h2]
-      apply sat_empty
+    · rw [if_neg h2]; apply sat_empty
     rw [if_pos h2]
     apply sat_eq_elim
     cases' h1 with v h1
@@ -425,18 +393,12 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     · rw [List.forall_mem_cons]
       constructor
       · apply coeffs_reduce_correct h2 h4
-      · intro x h6
-        rw [List.mem_map] at h6
-        cases' h6 with t h6
-        cases' h6 with h6 h7
-        rw [← h7, ← subst_correct h2 h4]
-        apply h5 _ h6
-    · intro x h6
-      rw [List.mem_map] at h6
-      cases' h6 with t h6
-      cases' h6 with h6 h7
-      rw [← h7, ← subst_correct h2 h4]
-      apply h3 _ h6
+      · intro x h6; rw [List.mem_map] at h6
+        cases' h6 with t h6; cases' h6 with h6 h7
+        rw [← h7, ← subst_correct h2 h4]; apply h5 _ h6
+    · intro x h6; rw [List.mem_map] at h6
+      cases' h6 with t h6; cases' h6 with h6 h7
+      rw [← h7, ← subst_correct h2 h4]; apply h3 _ h6
   | ee.cancel m :: es, (Eq :: eqs, les), h1 =>
     by
     unfold eq_elim
@@ -454,11 +416,8 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
 #align omega.sat_eq_elim Omega.sat_eqElim
 
 /-- If the result of equality elimination is unsatisfiable, the original clause is unsatisfiable. -/
-theorem unsat_of_unsat_eqElim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat :=
-  by
-  intro h1 h2
-  apply h1
-  apply sat_eq_elim h2
+theorem unsat_of_unsat_eqElim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat := by
+  intro h1 h2; apply h1; apply sat_eq_elim h2
 #align omega.unsat_of_unsat_eq_elim Omega.unsat_of_unsat_eqElim
 
 end Omega

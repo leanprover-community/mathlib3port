@@ -127,10 +127,7 @@ variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZer
 instance : ValuationClass (Valuation R Γ₀) R Γ₀
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_mul f := f.map_mul'
   map_one f := f.map_one'
   map_zero f := f.map_zero'
@@ -458,8 +455,7 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
   exact or_iff_not_imp_right.1 (le_iff_eq_or_lt.1 (v.map_add x y)) this
   intro h'
   wlog vyx : v y < v x
-  · refine' this v h.symm _ (h.lt_or_lt.resolve_right vyx)
-    rwa [add_comm, max_comm]
+  · refine' this v h.symm _ (h.lt_or_lt.resolve_right vyx); rwa [add_comm, max_comm]
   rw [max_eq_left_of_lt vyx] at h'
   apply lt_irrefl (v x)
   calc
@@ -475,9 +471,7 @@ Case conversion may be inaccurate. Consider using '#align valuation.map_add_eq_o
 theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y :=
   by
   convert v.map_add_of_distinct_val _
-  · symm
-    rw [max_eq_right_iff]
-    exact le_of_lt h
+  · symm; rw [max_eq_right_iff]; exact le_of_lt h
   · exact ne_of_lt h
 #align valuation.map_add_eq_of_lt_right Valuation.map_add_eq_of_lt_right
 
@@ -534,10 +528,7 @@ Case conversion may be inaccurate. Consider using '#align valuation.lt_add_subgr
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R
     where
   carrier := { x | v x < γ }
-  zero_mem' := by
-    have h := Units.ne_zero γ
-    contrapose! h
-    simpa using h
+  zero_mem' := by have h := Units.ne_zero γ; contrapose! h; simpa using h
   add_mem' x y x_in y_in := lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in)
   neg_mem' x x_in := by rwa [Set.mem_setOf_eq, map_neg]
 #align valuation.lt_add_subgroup Valuation.ltAddSubgroup
@@ -698,34 +689,24 @@ theorem isEquiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
   constructor
   · intro h x
     simpa using @is_equiv.val_eq _ _ _ _ _ _ v v' h x 1
-  · intro h
-    apply is_equiv_of_val_le_one
-    intro x
+  · intro h; apply is_equiv_of_val_le_one; intro x
     constructor
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
-      · have : v (1 + x) = 1 := by
-          rw [← v.map_one]
-          apply map_add_eq_of_lt_left
-          simpa
+      · have : v (1 + x) = 1 := by rw [← v.map_one]; apply map_add_eq_of_lt_left; simpa
         rw [h] at this
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v'.map_add _ _) _
         simp [this]
-      · rw [h] at hx'
-        exact le_of_eq hx'
+      · rw [h] at hx'; exact le_of_eq hx'
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
-      · have : v' (1 + x) = 1 := by
-          rw [← v'.map_one]
-          apply map_add_eq_of_lt_left
-          simpa
+      · have : v' (1 + x) = 1 := by rw [← v'.map_one]; apply map_add_eq_of_lt_left; simpa
         rw [← h] at this
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v.map_add _ _) _
         simp [this]
-      · rw [← h] at hx'
-        exact le_of_eq hx'
+      · rw [← h] at hx'; exact le_of_eq hx'
 #align valuation.is_equiv_iff_val_eq_one Valuation.isEquiv_iff_val_eq_one
 
 /- warning: valuation.is_equiv_iff_val_lt_one -> Valuation.isEquiv_iff_val_lt_one is a dubious translation:
@@ -741,8 +722,7 @@ theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
       and_congr ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
   · rw [is_equiv_iff_val_eq_one]
     intro h x
-    by_cases hx : x = 0
-    · simp only [(zero_iff _).2 hx, zero_ne_one]
+    by_cases hx : x = 0; · simp only [(zero_iff _).2 hx, zero_ne_one]
     constructor
     · intro hh
       by_contra h_1
@@ -833,10 +813,7 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
       show (1 : Γ₀) = 0 from
         calc
           1 = v 1 := v.map_one.symm
-          _ = 0 :=
-            show (1 : R) ∈ supp v by
-              rw [h]
-              trivial
+          _ = 0 := show (1 : R) ∈ supp v by rw [h]; trivial
           ,
     fun x y hxy => by
     show v x = 0 ∨ v y = 0
@@ -852,11 +829,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align valuation.map_add_supp Valuation.map_add_suppₓ'. -/
 theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
   by
-  have aux : ∀ a s, v s = 0 → v (a + s) ≤ v a :=
-    by
-    intro a' s' h'
-    refine' le_trans (v.map_add a' s') (max_le le_rfl _)
-    simp [h']
+  have aux : ∀ a s, v s = 0 → v (a + s) ≤ v a := by intro a' s' h';
+    refine' le_trans (v.map_add a' s') (max_le le_rfl _); simp [h']
   apply le_antisymm (aux a s h)
   calc
     v a = v (a + s + -s) := by simp

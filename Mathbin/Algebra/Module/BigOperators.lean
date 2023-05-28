@@ -77,11 +77,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sum_smul_sum Finset.sum_smul_sumₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Finset.sum_smul_sum {f : α → R} {g : β → M} {s : Finset α} {t : Finset β} :
-    ((∑ i in s, f i) • ∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd :=
-  by
-  rw [Finset.sum_product, Finset.sum_smul, Finset.sum_congr rfl]
-  intros
-  rw [Finset.smul_sum]
+    ((∑ i in s, f i) • ∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd := by
+  rw [Finset.sum_product, Finset.sum_smul, Finset.sum_congr rfl]; intros ; rw [Finset.smul_sum]
 #align finset.sum_smul_sum Finset.sum_smul_sum
 
 end AddCommMonoid

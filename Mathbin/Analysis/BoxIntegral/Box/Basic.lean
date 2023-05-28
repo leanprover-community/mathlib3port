@@ -416,12 +416,8 @@ theorem coe_coe : ((I : WithBot (Box ι)) : Set (ι → ℝ)) = I :=
 
 #print BoxIntegral.Box.isSome_iff /-
 theorem isSome_iff : ∀ {I : WithBot (Box ι)}, I.isSome ↔ (I : Set (ι → ℝ)).Nonempty
-  | ⊥ => by
-    erw [Option.isSome]
-    simp
-  | (I : box ι) => by
-    erw [Option.isSome]
-    simp [I.nonempty_coe]
+  | ⊥ => by erw [Option.isSome]; simp
+  | (I : box ι) => by erw [Option.isSome]; simp [I.nonempty_coe]
 #align box_integral.box.is_some_iff BoxIntegral.Box.isSome_iff
 -/
 
@@ -469,9 +465,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {l : ι -> Real} {u : ι -> Real}, Iff (Eq.{succ u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (BoxIntegral.Box.mk'.{u1} ι l u) (Bot.bot.{u1} (WithBot.{u1} (BoxIntegral.Box.{u1} ι)) (WithBot.bot.{u1} (BoxIntegral.Box.{u1} ι)))) (Exists.{succ u1} ι (fun (i : ι) => LE.le.{0} Real Real.instLEReal (u i) (l i)))
 Case conversion may be inaccurate. Consider using '#align box_integral.box.mk'_eq_bot BoxIntegral.Box.mk'_eq_botₓ'. -/
 @[simp]
-theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i :=
-  by
-  rw [mk']
+theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := by rw [mk'];
   split_ifs <;> simpa using h
 #align box_integral.box.mk'_eq_bot BoxIntegral.Box.mk'_eq_bot
 
@@ -482,8 +476,7 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
   cases' I with lI uI hI; rw [mk']; split_ifs
   · simp [WithBot.coe_eq_coe]
   · suffices l = lI → u ≠ uI by simpa
-    rintro rfl rfl
-    exact h hI
+    rintro rfl rfl; exact h hI
 #align box_integral.box.mk'_eq_coe BoxIntegral.Box.mk'_eq_coe
 -/
 
@@ -494,8 +487,7 @@ theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun 
   rw [mk']; split_ifs
   · exact coe_eq_pi _
   · rcases not_forall.mp h with ⟨i, hi⟩
-    rw [coe_bot, univ_pi_eq_empty]
-    exact Ioc_eq_empty hi
+    rw [coe_bot, univ_pi_eq_empty]; exact Ioc_eq_empty hi
 #align box_integral.box.coe_mk' BoxIntegral.Box.coe_mk'
 -/
 
@@ -513,12 +505,8 @@ Case conversion may be inaccurate. Consider using '#align box_integral.box.coe_i
 @[simp]
 theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J :=
   by
-  induction I using WithBot.recBotCoe;
-  · change ∅ = _
-    simp
-  induction J using WithBot.recBotCoe;
-  · change ∅ = _
-    simp
+  induction I using WithBot.recBotCoe; · change ∅ = _; simp
+  induction J using WithBot.recBotCoe; · change ∅ = _; simp
   change ↑(mk' _ _) = _
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk',
     coe_coe]
@@ -546,9 +534,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align box_integral.box.disjoint_with_bot_coe BoxIntegral.Box.disjoint_withBotCoeₓ'. -/
 @[simp, norm_cast]
 theorem disjoint_withBotCoe {I J : WithBot (Box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J :=
-  by
-  simp only [disjoint_iff_inf_le, ← with_bot_coe_subset_iff, coe_inf]
-  rfl
+  by simp only [disjoint_iff_inf_le, ← with_bot_coe_subset_iff, coe_inf]; rfl
 #align box_integral.box.disjoint_with_bot_coe BoxIntegral.Box.disjoint_withBotCoe
 
 /- warning: box_integral.box.disjoint_coe -> BoxIntegral.Box.disjoint_coe is a dubious translation:

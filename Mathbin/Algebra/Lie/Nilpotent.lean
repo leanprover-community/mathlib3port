@@ -144,17 +144,9 @@ theorem antitone_lowerCentralSeries : Antitone <| lowerCentralSeries R L M :=
 theorem trivial_iff_lower_central_eq_bot : IsTrivial L M ↔ lowerCentralSeries R L M 1 = ⊥ :=
   by
   constructor <;> intro h
-  · erw [eq_bot_iff, LieSubmodule.lieSpan_le]
-    rintro m ⟨x, n, hn⟩
-    rw [← hn, h.trivial]
-    simp
-  · rw [LieSubmodule.eq_bot_iff] at h
-    apply is_trivial.mk
-    intro x m
-    apply h
-    apply LieSubmodule.subset_lieSpan
-    use x, m
-    rfl
+  · erw [eq_bot_iff, LieSubmodule.lieSpan_le]; rintro m ⟨x, n, hn⟩; rw [← hn, h.trivial]; simp
+  · rw [LieSubmodule.eq_bot_iff] at h; apply is_trivial.mk; intro x m; apply h
+    apply LieSubmodule.subset_lieSpan; use x, m; rfl
 #align lie_module.trivial_iff_lower_central_eq_bot LieModule.trivial_iff_lower_central_eq_bot
 
 theorem iterate_toEndomorphism_mem_lowerCentralSeries (x : L) (m : M) (k : ℕ) :
@@ -219,10 +211,7 @@ theorem LieSubmodule.isNilpotent_iff_exists_lcs_eq_bot (N : LieSubmodule R L M) 
 variable (R L M)
 
 instance (priority := 100) trivialIsNilpotent [IsTrivial L M] : IsNilpotent R L M :=
-  ⟨by
-    use 1
-    change ⁅⊤, ⊤⁆ = ⊥
-    simp⟩
+  ⟨by use 1; change ⁅⊤, ⊤⁆ = ⊥; simp⟩
 #align lie_module.trivial_is_nilpotent LieModule.trivialIsNilpotent
 
 theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
@@ -409,11 +398,8 @@ theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k :=
   mono
 #align lie_submodule.ucs_mono LieSubmodule.ucs_mono
 
-theorem ucs_eq_self_of_normalizer_eq_self (h : N₁.normalizer = N₁) (k : ℕ) : N₁.ucs k = N₁ :=
-  by
-  induction' k with k ih
-  · simp
-  · rwa [ucs_succ, ih]
+theorem ucs_eq_self_of_normalizer_eq_self (h : N₁.normalizer = N₁) (k : ℕ) : N₁.ucs k = N₁ := by
+  induction' k with k ih; · simp; · rwa [ucs_succ, ih]
 #align lie_submodule.ucs_eq_self_of_normalizer_eq_self LieSubmodule.ucs_eq_self_of_normalizer_eq_self
 
 /-- If a Lie module `M` contains a self-normalizing Lie submodule `N`, then all terms of the upper
@@ -422,10 +408,7 @@ central series of `M` are contained in `N`.
 An important instance of this situation arises from a Cartan subalgebra `H ⊆ L` with the roles of
 `L`, `M`, `N` played by `H`, `L`, `H`, respectively. -/
 theorem ucs_le_of_normalizer_eq_self (h : N₁.normalizer = N₁) (k : ℕ) :
-    (⊥ : LieSubmodule R L M).ucs k ≤ N₁ :=
-  by
-  rw [← ucs_eq_self_of_normalizer_eq_self h k]
-  mono
+    (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by rw [← ucs_eq_self_of_normalizer_eq_self h k]; mono;
   simp
 #align lie_submodule.ucs_le_of_normalizer_eq_self LieSubmodule.ucs_le_of_normalizer_eq_self
 
@@ -437,9 +420,7 @@ theorem lcs_add_le_iff (l k : ℕ) : N₁.lcs (l + k) ≤ N₂ ↔ N₁.lcs l �
   rw [(by abel : l + (k + 1) = l + 1 + k), ih, ucs_succ, lcs_succ, top_lie_le_iff_le_normalizer]
 #align lie_submodule.lcs_add_le_iff LieSubmodule.lcs_add_le_iff
 
-theorem lcs_le_iff (k : ℕ) : N₁.lcs k ≤ N₂ ↔ N₁ ≤ N₂.ucs k :=
-  by
-  convert lcs_add_le_iff 0 k
+theorem lcs_le_iff (k : ℕ) : N₁.lcs k ≤ N₂ ↔ N₁ ≤ N₂.ucs k := by convert lcs_add_le_iff 0 k;
   rw [zero_add]
 #align lie_submodule.lcs_le_iff LieSubmodule.lcs_le_iff
 
@@ -449,25 +430,18 @@ theorem gc_lcs_ucs (k : ℕ) :
   fun N₁ N₂ => lcs_le_iff k
 #align lie_submodule.gc_lcs_ucs LieSubmodule.gc_lcs_ucs
 
-theorem ucs_eq_top_iff (k : ℕ) : N.ucs k = ⊤ ↔ LieModule.lowerCentralSeries R L M k ≤ N :=
-  by
-  rw [eq_top_iff, ← lcs_le_iff]
-  rfl
+theorem ucs_eq_top_iff (k : ℕ) : N.ucs k = ⊤ ↔ LieModule.lowerCentralSeries R L M k ≤ N := by
+  rw [eq_top_iff, ← lcs_le_iff]; rfl
 #align lie_submodule.ucs_eq_top_iff LieSubmodule.ucs_eq_top_iff
 
 theorem LieModule.isNilpotent_iff_exists_ucs_eq_top :
-    LieModule.IsNilpotent R L M ↔ ∃ k, (⊥ : LieSubmodule R L M).ucs k = ⊤ :=
-  by
-  rw [LieModule.isNilpotent_iff]
-  exact exists_congr fun k => by simp [ucs_eq_top_iff]
+    LieModule.IsNilpotent R L M ↔ ∃ k, (⊥ : LieSubmodule R L M).ucs k = ⊤ := by
+  rw [LieModule.isNilpotent_iff]; exact exists_congr fun k => by simp [ucs_eq_top_iff]
 #align lie_module.is_nilpotent_iff_exists_ucs_eq_top LieModule.isNilpotent_iff_exists_ucs_eq_top
 
 theorem ucs_comap_incl (k : ℕ) :
-    ((⊥ : LieSubmodule R L M).ucs k).comap N.incl = (⊥ : LieSubmodule R L N).ucs k :=
-  by
-  induction' k with k ih
-  · exact N.ker_incl
-  · simp [← ih]
+    ((⊥ : LieSubmodule R L M).ucs k).comap N.incl = (⊥ : LieSubmodule R L N).ucs k := by
+  induction' k with k ih; · exact N.ker_incl; · simp [← ih]
 #align lie_submodule.ucs_comap_incl LieSubmodule.ucs_comap_incl
 
 theorem isNilpotent_iff_exists_self_le_ucs :
@@ -653,8 +627,7 @@ theorem LieIdeal.lowerCentralSeries_map_eq (k : ℕ) {f : L →ₗ⁅R⁆ L'} (h
     rw [← f.ideal_range_eq_map]
     exact f.ideal_range_eq_top_of_surjective h
   induction' k with k ih
-  · simp only [LieModule.lowerCentralSeries_zero]
-    exact h'
+  · simp only [LieModule.lowerCentralSeries_zero]; exact h'
   · simp only [LieModule.lowerCentralSeries_succ, LieIdeal.map_bracket_eq f h, ih, h']
 #align lie_ideal.lower_central_series_map_eq LieIdeal.lowerCentralSeries_map_eq
 

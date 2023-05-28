@@ -67,8 +67,7 @@ theorem Convex.integral_mem [ProbabilityMeasure μ] (hs : Convex ℝ s) (hsc : I
     by
     rcases(hf.and hfg).exists with ⟨x₀, h₀⟩
     exact ⟨f x₀, by simp only [h₀.2, mem_range_self], h₀.1⟩
-  rw [integral_congr_ae hfg]
-  rw [integrable_congr hfg] at hfi
+  rw [integral_congr_ae hfg]; rw [integrable_congr hfg] at hfi
   have hg : ∀ᵐ x ∂μ, g x ∈ closure (range g ∩ s) :=
     by
     filter_upwards [hfg.rw (fun x y => y ∈ s) hf]with x hx
@@ -362,9 +361,7 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
     (h_le : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) :
     f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ‖∫ x, f x ∂μ‖ < (μ univ).toReal * C :=
   by
-  cases' eq_or_ne μ 0 with h₀ h₀
-  · left
-    simp [h₀]
+  cases' eq_or_ne μ 0 with h₀ h₀; · left; simp [h₀]
   have hμ : 0 < (μ univ).toReal := by
     simp [ENNReal.toReal_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
   refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _

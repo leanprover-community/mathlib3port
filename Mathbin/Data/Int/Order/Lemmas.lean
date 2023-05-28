@@ -88,9 +88,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_abs_lt_dvd Int.eq_zero_of_abs_lt_dvdₓ'. -/
 theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 :=
   by
-  by_cases hm : m = 0;
-  · subst m
-    exact zero_dvd_iff.mp h1
+  by_cases hm : m = 0; · subst m; exact zero_dvd_iff.mp h1
   rcases h1 with ⟨d, rfl⟩
   apply mul_eq_zero_of_right
   rw [← abs_lt_one_iff, ← mul_lt_iff_lt_one_right (abs_pos.mpr hm), ← abs_mul]

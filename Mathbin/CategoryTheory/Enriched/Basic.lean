@@ -169,15 +169,9 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
   Hom := 𝒞.Hom
   id X p := 𝟙 X
   comp X Y Z p := p.1 ≫ p.2
-  id_comp X Y := by
-    ext
-    simp
-  comp_id X Y := by
-    ext
-    simp
-  and_assoc W X Y Z := by
-    ext ⟨f, g, h⟩
-    simp
+  id_comp X Y := by ext; simp
+  comp_id X Y := by ext; simp
+  and_assoc W X Y Z := by ext ⟨f, g, h⟩; simp
 #align category_theory.enriched_category_Type_of_category CategoryTheory.enrichedCategoryTypeOfCategory
 
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
@@ -190,14 +184,9 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     cases 𝒞
     dsimp [enriched_category_Type_of_category]
     congr
-    · ext (X⟨⟩)
-      rfl
-    · ext (X Y Z⟨f, g⟩)
-      rfl
-  right_inv 𝒞 := by
-    rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩
-    dsimp
-    congr
+    · ext (X⟨⟩); rfl
+    · ext (X Y Z⟨f, g⟩); rfl
+  right_inv 𝒞 := by rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩; dsimp; congr
 #align category_theory.enriched_category_Type_equiv_category CategoryTheory.enrichedCategoryTypeEquivCategory
 
 section
@@ -377,9 +366,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp,
         forget_enrichment.hom_to_hom_of, enriched_functor.map_comp, forget_enrichment_comp]
       rfl
-    · intro f g w
-      apply_fun forget_enrichment.hom_of W  at w
-      simpa using w
+    · intro f g w; apply_fun forget_enrichment.hom_of W  at w; simpa using w
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
 
 end
@@ -493,18 +480,10 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
   invFun F :=
     { obj := fun X => F.obj X
       map := fun X Y f => F.map f
-      map_id' := fun X => by
-        ext ⟨⟩
-        exact F.map_id X
-      map_comp' := fun X Y Z => by
-        ext ⟨f, g⟩
-        exact F.map_comp f g }
-  left_inv F := by
-    cases F
-    simp
-  right_inv F := by
-    cases F
-    simp
+      map_id' := fun X => by ext ⟨⟩; exact F.map_id X
+      map_comp' := fun X Y Z => by ext ⟨f, g⟩; exact F.map_comp f g }
+  left_inv F := by cases F; simp
+  right_inv F := by cases F; simp
 #align category_theory.enriched_functor_Type_equiv_functor CategoryTheory.enrichedFunctorTypeEquivFunctor
 
 /-- We verify that the presheaf representing natural transformations
@@ -522,9 +501,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
             naturality' := fun X Y f => congr_fun (σ.naturality X Y) ⟨x, f⟩ }
         inv := fun σ =>
           { app := fun X x => (σ x).app X
-            naturality := fun X Y => by
-              ext ⟨x, f⟩
-              exact (σ x).naturality f } })
+            naturality := fun X Y => by ext ⟨x, f⟩; exact (σ x).naturality f } })
     (by tidy)
 #align category_theory.enriched_nat_trans_yoneda_Type_iso_yoneda_nat_trans CategoryTheory.enrichedNatTransYonedaTypeIsoYonedaNatTrans
 

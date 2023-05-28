@@ -796,12 +796,8 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set 
       "An additive action of an additive monoid on a type `β` gives an additive action\non `set β`."]
 protected def mulActionSet [Monoid α] [MulAction α β] : MulAction α (Set β)
     where
-  mul_smul := by
-    intros
-    simp only [← image_smul, image_image, ← mul_smul]
-  one_smul := by
-    intros
-    simp only [← image_smul, one_smul, image_id']
+  mul_smul := by intros ; simp only [← image_smul, image_image, ← mul_smul]
+  one_smul := by intros ; simp only [← image_smul, one_smul, image_id']
 #align set.mul_action_set Set.mulActionSet
 #align set.add_action_set Set.addActionSet
 -/
@@ -1246,10 +1242,8 @@ Case conversion may be inaccurate. Consider using '#align set.op_smul_set_smul_e
 -- TODO: replace hypothesis and conclusion with a typeclass
 @[to_additive]
 theorem op_smul_set_smul_eq_smul_smul_set (a : α) (s : Set β) (t : Set γ)
-    (h : ∀ (a : α) (b : β) (c : γ), (op a • b) • c = b • a • c) : (op a • s) • t = s • a • t :=
-  by
-  ext
-  simp [mem_smul, mem_smul_set, h]
+    (h : ∀ (a : α) (b : β) (c : γ), (op a • b) • c = b • a • c) : (op a • s) • t = s • a • t := by
+  ext; simp [mem_smul, mem_smul_set, h]
 #align set.op_smul_set_smul_eq_smul_smul_set Set.op_smul_set_smul_eq_smul_smul_set
 #align set.op_vadd_set_vadd_eq_vadd_vadd_set Set.op_vadd_set_vadd_eq_vadd_vadd_set
 
@@ -1789,9 +1783,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u1} α] [_inst_2 : AddGroup.{u2} β] [_inst_3 : DistribMulAction.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))] (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2)) _inst_3))))) s (Neg.neg.{u2} (Set.{u2} β) (Set.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2))))) t)) (Neg.neg.{u2} (Set.{u2} β) (Set.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2))))) (HSMul.hSMul.{u1, u2, u2} (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2)) _inst_3))))) s t))
 Case conversion may be inaccurate. Consider using '#align set.smul_neg Set.smul_negₓ'. -/
 @[simp]
-protected theorem smul_neg : s • -t = -(s • t) :=
-  by
-  simp_rw [← image_neg]
+protected theorem smul_neg : s • -t = -(s • t) := by simp_rw [← image_neg];
   exact image_image2_right_comm smul_neg
 #align set.smul_neg Set.smul_neg
 
@@ -1819,9 +1811,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Ring.{u1} α] [_inst_2 : AddCommGroup.{u2} β] [_inst_3 : Module.{u1, u2} α β (Ring.toSemiring.{u1} α _inst_1) (AddCommGroup.toAddCommMonoid.{u2} β _inst_2)] (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1))) (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)) (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (Module.toMulActionWithZero.{u1, u2} α β (Ring.toSemiring.{u1} α _inst_1) (AddCommGroup.toAddCommMonoid.{u2} β _inst_2) _inst_3)))))) (Neg.neg.{u1} (Set.{u1} α) (Set.neg.{u1} α (Ring.toNeg.{u1} α _inst_1)) s) t) (Neg.neg.{u2} (Set.{u2} β) (Set.neg.{u2} β (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2)))))) (HSMul.hSMul.{u1, u2, u2} (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1))) (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)) (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (SubtractionCommMonoid.toSubtractionMonoid.{u2} β (AddCommGroup.toDivisionAddCommMonoid.{u2} β _inst_2))))) (Module.toMulActionWithZero.{u1, u2} α β (Ring.toSemiring.{u1} α _inst_1) (AddCommGroup.toAddCommMonoid.{u2} β _inst_2) _inst_3)))))) s t))
 Case conversion may be inaccurate. Consider using '#align set.neg_smul Set.neg_smulₓ'. -/
 @[simp]
-protected theorem neg_smul : -s • t = -(s • t) :=
-  by
-  simp_rw [← image_neg]
+protected theorem neg_smul : -s • t = -(s • t) := by simp_rw [← image_neg];
   exact image2_image_left_comm neg_smul
 #align set.neg_smul Set.neg_smul
 

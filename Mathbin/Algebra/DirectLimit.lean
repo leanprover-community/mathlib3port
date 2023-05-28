@@ -290,13 +290,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
           · intro i0 hi0
             rw [Dfinsupp.mem_support_iff, DirectSum.sub_apply, ← DirectSum.single_eq_lof, ←
               DirectSum.single_eq_lof, Dfinsupp.single_apply, Dfinsupp.single_apply] at hi0
-            split_ifs  at hi0 with hi hj hj
-            · rwa [hi] at hik
-            · rwa [hi] at hik
-            · rwa [hj] at hjk
-            exfalso
-            apply hi0
-            rw [sub_zero]
+            split_ifs  at hi0 with hi hj hj; · rwa [hi] at hik; · rwa [hi] at hik; · rwa [hj] at hjk
+            exfalso; apply hi0; rw [sub_zero]
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map,
             DirectSum.apply_eq_component, DirectSum.component.of]⟩)
       ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
@@ -615,8 +610,7 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
     dsimp only
     have := DirectedSystem.map_map fun i j h => f' i j h
     dsimp only at this
-    rw [this]
-    rfl
+    rw [this]; rfl
   · rintro x y ihx ihy
     rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
       (restriction _).map_add, (FreeCommRing.lift _).map_add]
@@ -639,24 +633,19 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     · refine'
         ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, _,
           is_supported_sub (is_supported_of.2 <| Or.inr rfl) (is_supported_of.2 <| Or.inl rfl), _⟩
-      · rintro k (rfl | ⟨rfl | _⟩)
-        exact hij
-        rfl
+      · rintro k (rfl | ⟨rfl | _⟩); exact hij; rfl
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos,
           restriction_of, dif_pos, lift_of, lift_of]
         dsimp only
         have := DirectedSystem.map_map fun i j h => f' i j h
         dsimp only at this
-        rw [this]
-        exact sub_self _
+        rw [this]; exact sub_self _
         exacts[Or.inr rfl, Or.inl rfl]
     · refine' ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩
-      · rintro k (rfl | h)
-        rfl
+      · rintro k (rfl | h); rfl
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos,
           (restriction _).map_one, lift_of, (FreeCommRing.lift _).map_one]
-        dsimp only
-        rw [(f' i i _).map_one, sub_self]
+        dsimp only; rw [(f' i i _).map_one, sub_self]
         · exact Set.mem_singleton _
     · refine'
         ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
@@ -668,9 +657,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       · rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of,
           restriction_of, dif_pos, dif_pos, dif_pos, (FreeCommRing.lift _).map_sub,
           (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
-        dsimp only
-        rw [(f' i i _).map_add]
-        exact sub_self _
+        dsimp only; rw [(f' i i _).map_add]; exact sub_self _
         exacts[Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
     · refine'
         ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
@@ -682,19 +669,15 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       · rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of,
           restriction_of, dif_pos, dif_pos, dif_pos, (FreeCommRing.lift _).map_sub,
           (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
-        dsimp only
-        rw [(f' i i _).map_mul]
+        dsimp only; rw [(f' i i _).map_mul]
         exacts[sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
   · refine' Nonempty.elim (by infer_instance) fun ind : ι => _
     refine' ⟨ind, ∅, fun _ => False.elim, is_supported_zero, _⟩
     rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k :=
-      by
-      rintro z (hz | hz)
-      exact le_trans (hi z hz) hik
-      exact le_trans (hj z hz) hjk
+    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by rintro z (hz | hz);
+      exact le_trans (hi z hz) hik; exact le_trans (hj z hz) hjk
     refine'
       ⟨k, s ∪ t, this,
         is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
@@ -705,8 +688,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         of.zero_exact_aux2 G f' hxs hi this hik (Set.subset_union_left s t), ←
         of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right s t), ihs,
         (f' i k hik).map_zero, iht, (f' j k hjk).map_zero, zero_add]
-  · rintro x y ⟨j, t, hj, hyt, iht⟩
-    rw [smul_eq_mul]
+  · rintro x y ⟨j, t, hj, hyt, iht⟩; rw [smul_eq_mul]
     rcases exists_finset_support x with ⟨s, hxs⟩
     rcases(s.image Sigma.fst).exists_le with ⟨i, hi⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -752,14 +734,10 @@ theorem of_injective [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => 
   by
   suffices ∀ x, of G (fun i j h => f' i j h) i x = 0 → x = 0
     by
-    intro x y hxy
-    rw [← sub_eq_zero]
-    apply this
+    intro x y hxy; rw [← sub_eq_zero]; apply this
     rw [(of G _ i).map_sub, hxy, sub_self]
-  intro x hx
-  rcases of.zero_exact hx with ⟨j, hij, hfx⟩
-  apply hf i j hij
-  rw [hfx, (f' i j hij).map_zero]
+  intro x hx; rcases of.zero_exact hx with ⟨j, hij, hfx⟩
+  apply hf i j hij; rw [hfx, (f' i j hij).map_zero]
 #align ring.direct_limit.of_injective Ring.DirectLimit.of_injective
 
 variable (P : Type u₁) [CommRing P]
@@ -785,11 +763,8 @@ def lift : DirectLimit G f →+* P :=
   Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σi, G i => g x.1 x.2)
     (by
       suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥
-        by
-        intro x hx
-        exact (mem_bot P).1 (this hx)
-      rw [Ideal.span_le]
-      intro x hx
+        by intro x hx; exact (mem_bot P).1 (this hx)
+      rw [Ideal.span_le]; intro x hx
       rw [SetLike.mem_coe, Ideal.mem_comap, mem_bot]
       rcases hx with (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩) <;>
         simp only [RingHom.map_sub, lift_of, Hg, RingHom.map_one, RingHom.map_add, RingHom.map_mul,

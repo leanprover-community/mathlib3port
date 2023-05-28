@@ -152,10 +152,7 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : Lo
 
 theorem PrelocalPredicate.sheafifyOf {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
     {f : ∀ x : U, T x} (h : P.pred f) : P.sheafify.pred f := fun x =>
-  ⟨U, x.2, 𝟙 _, by
-    convert h
-    ext ⟨y, w⟩
-    rfl⟩
+  ⟨U, x.2, 𝟙 _, by convert h; ext ⟨y, w⟩; rfl⟩
 #align Top.prelocal_predicate.sheafify_of TopCat.PrelocalPredicate.sheafifyOf
 
 /-- The subpresheaf of dependent functions on `X` satisfying the "pre-local" predicate `P`.
@@ -302,18 +299,10 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
     subpresheafToTypes (continuousPrelocal X T) ≅ presheafToTop X T :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := by
-          rintro ⟨f, c⟩
-          exact ⟨f, c⟩
-        inv := by
-          rintro ⟨f, c⟩
-          exact ⟨f, c⟩
-        hom_inv_id' := by
-          ext (⟨f, p⟩x)
-          rfl
-        inv_hom_id' := by
-          ext (⟨f, p⟩x)
-          rfl })
+      { Hom := by rintro ⟨f, c⟩; exact ⟨f, c⟩
+        inv := by rintro ⟨f, c⟩; exact ⟨f, c⟩
+        hom_inv_id' := by ext (⟨f, p⟩x); rfl
+        inv_hom_id' := by ext (⟨f, p⟩x); rfl })
     (by tidy)
 #align Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
 

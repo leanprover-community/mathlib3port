@@ -101,9 +101,7 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
     rcases mem_split this with ⟨u₂, v₂, rfl⟩
     have p' := (perm_cons a).1 (p.trans perm_middle)
     obtain rfl := IH p' (s₂.sublist <| by simp)
-    change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
-    rw [← append_assoc]
-    congr
+    change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂); rw [← append_assoc]; congr
     have : ∀ (x : α) (h : x ∈ u₂), x = a := fun x m =>
       antisymm ((pairwise_append.1 s₂).2.2 _ m a (mem_cons_self _ _)) (h₁ _ (by simp [m]))
     rw [(@eq_replicate _ a (length u₂ + 1) (a :: u₂)).2,
@@ -141,8 +139,7 @@ theorem Sorted.rel_nthLe_of_le [IsRefl α r] {l : List α} (h : l.Sorted r) {a b
     (ha : a < l.length) (hb : b < l.length) (hab : a ≤ b) : r (l.nthLe a ha) (l.nthLe b hb) :=
   by
   cases' eq_or_lt_of_le hab with H H
-  · subst H
-    exact refl _
+  · subst H; exact refl _
   · exact h.rel_nth_le_of_lt _ _ H
 #align list.sorted.rel_nth_le_of_le List.Sorted.rel_nthLe_of_le
 -/
@@ -232,9 +229,7 @@ theorem orderedInsert_nil (a : α) : [].orderedInsert r a = [a] :=
 #print List.orderedInsert_length /-
 theorem orderedInsert_length : ∀ (L : List α) (a : α), (L.orderedInsert r a).length = L.length + 1
   | [], a => rfl
-  | hd :: tl, a => by
-    dsimp [ordered_insert]
-    split_ifs <;> simp [ordered_insert_length]
+  | hd :: tl, a => by dsimp [ordered_insert]; split_ifs <;> simp [ordered_insert_length]
 #align list.ordered_insert_length List.orderedInsert_length
 -/
 
@@ -244,9 +239,7 @@ theorem orderedInsert_eq_take_drop (a : α) :
     ∀ l : List α,
       l.orderedInsert r a = (l.takeWhile fun b => ¬a ≼ b) ++ a :: l.dropWhileₓ fun b => ¬a ≼ b
   | [] => rfl
-  | b :: l => by
-    dsimp only [ordered_insert]
-    split_ifs <;> simp [take_while, drop_while, *]
+  | b :: l => by dsimp only [ordered_insert]; split_ifs <;> simp [take_while, drop_while, *]
 #align list.ordered_insert_eq_take_drop List.orderedInsert_eq_take_drop
 -/
 
@@ -319,8 +312,7 @@ theorem Sorted.orderedInsert (a : α) : ∀ l, Sorted r l → Sorted r (orderedI
         simpa [ordered_insert, h', h.of_cons.ordered_insert l]
       intro b' bm
       cases' show b' = a ∨ b' ∈ l by simpa using (perm_ordered_insert _ _ _).Subset bm with be bm
-      · subst b'
-        exact (total_of r _ _).resolve_left h'
+      · subst b'; exact (total_of r _ _).resolve_left h'
       · exact rel_of_sorted_cons h _ bm
 #align list.sorted.ordered_insert List.Sorted.orderedInsert
 -/
@@ -435,12 +427,8 @@ theorem mergeSort_cons_cons {a b} {l l₁ l₂ : List α} (h : split (a :: b :: 
       @And.ndrec (fun a a (_ : length l₁ < length l + 1 + 1 ∧ length l₂ < length l + 1 + 1) => L) h1
           h1 =
         L
-    by
-    simp [merge_sort, h]
-    apply this
-  intros
-  cases h1
-  rfl
+    by simp [merge_sort, h]; apply this
+  intros ; cases h1; rfl
 #align list.merge_sort_cons_cons List.mergeSort_cons_cons
 -/
 
@@ -498,8 +486,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
       rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by
           simpa [or_left_comm] using (perm_merge _ _ _).Subset bm with
         (be | bl | bl')
-      · subst b'
-        assumption
+      · subst b'; assumption
       · exact rel_of_sorted_cons h₁ _ bl
       · exact trans h (rel_of_sorted_cons h₂ _ bl')
     · suffices ∀ (b' : α) (_ : b' ∈ merge r (a :: l) l'), r b b' by
@@ -508,8 +495,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
       have ba : b ≼ a := (total_of r _ _).resolve_left h
       rcases show b' = a ∨ b' ∈ l ∨ b' ∈ l' by simpa using (perm_merge _ _ _).Subset bm with
         (be | bl | bl')
-      · subst b'
-        assumption
+      · subst b'; assumption
       · exact trans ba (rel_of_sorted_cons h₁ _ bl)
       · exact rel_of_sorted_cons h₂ _ bl'
 #align list.sorted.merge List.Sorted.merge

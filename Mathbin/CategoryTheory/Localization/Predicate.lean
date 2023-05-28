@@ -66,11 +66,8 @@ instance q_isLocalization : W.Q.IsLocalization W
   inverts := W.Q_inverts
   nonempty_isEquivalence :=
     by
-    suffices localization.construction.lift W.Q W.Q_inverts = 𝟭 _
-      by
-      apply Nonempty.intro
-      rw [this]
-      infer_instance
+    suffices localization.construction.lift W.Q W.Q_inverts = 𝟭 _ by apply Nonempty.intro;
+      rw [this]; infer_instance
     apply localization.construction.uniq
     simpa only [localization.construction.fac]
 #align category_theory.functor.Q_is_localization CategoryTheory.Functor.q_isLocalization
@@ -117,13 +114,8 @@ def strictUniversalPropertyFixedTargetId (hW : W ⊆ MorphismProperty.isomorphis
     where
   inverts X Y f hf := hW f hf
   lift F hF := F
-  fac F hF := by
-    cases F
-    rfl
-  uniq F₁ F₂ eq := by
-    cases F₁
-    cases F₂
-    exact Eq
+  fac F hF := by cases F; rfl
+  uniq F₁ F₂ eq := by cases F₁; cases F₂; exact Eq
 #align category_theory.localization.strict_universal_property_fixed_target_id CategoryTheory.Localization.strictUniversalPropertyFixedTargetId
 -/
 
@@ -342,14 +334,10 @@ theorem whiskeringLeftFunctor'_obj (F : D ⥤ E) : (whiskeringLeftFunctor' L W E
   rfl
 #align category_theory.localization.whiskering_left_functor'_obj CategoryTheory.Localization.whiskeringLeftFunctor'_obj
 
-instance : Full (whiskeringLeftFunctor' L W E) :=
-  by
-  rw [whiskering_left_functor'_eq]
+instance : Full (whiskeringLeftFunctor' L W E) := by rw [whiskering_left_functor'_eq];
   infer_instance
 
-instance : Faithful (whiskeringLeftFunctor' L W E) :=
-  by
-  rw [whiskering_left_functor'_eq]
+instance : Faithful (whiskeringLeftFunctor' L W E) := by rw [whiskering_left_functor'_eq];
   infer_instance
 
 /- warning: category_theory.localization.nat_trans_ext -> CategoryTheory.Localization.natTrans_ext is a dubious translation:

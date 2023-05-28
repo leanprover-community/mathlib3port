@@ -95,29 +95,18 @@ def conesEquivSieveCompatibleFamily :
   toFun π :=
     ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ =>
       by
-      intros
-      apply (id_comp _).symm.trans
-      dsimp
+      intros ; apply (id_comp _).symm.trans; dsimp
       convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
   invFun x :=
     { app := fun f => x.1 f.unop.1.Hom f.unop.2
       naturality' := fun f f' g =>
         by
         refine' Eq.trans _ (x.2 f.unop.1.Hom g.unop.left f.unop.2)
-        erw [id_comp]
-        congr
-        rw [over.w g.unop] }
+        erw [id_comp]; congr ; rw [over.w g.unop] }
   left_inv π := by
-    ext
-    dsimp
-    congr
-    rw [op_eq_iff_eq_unop]
-    ext
-    symm
-    apply costructured_arrow.eq_mk
-  right_inv x := by
-    ext
-    rfl
+    ext; dsimp; congr
+    rw [op_eq_iff_eq_unop]; ext; symm; apply costructured_arrow.eq_mk
+  right_inv x := by ext; rfl
 #align category_theory.presheaf.cones_equiv_sieve_compatible_family CategoryTheory.Presheaf.conesEquivSieveCompatibleFamily
 
 variable {P S E} {x : FamilyOfElements (P ⋙ coyoneda.obj E) S} (hx : x.SieveCompatible)
@@ -143,12 +132,8 @@ def homEquivAmalgamation : (hx.Cone ⟶ P.mapCone S.arrows.Cocone.op) ≃ { t //
     where
   toFun l := ⟨l.Hom, fun Y f hf => l.w (op ⟨Over.mk f, hf⟩)⟩
   invFun t := ⟨t.1, fun f => t.2 f.unop.1.Hom f.unop.2⟩
-  left_inv l := by
-    ext
-    rfl
-  right_inv t := by
-    ext
-    rfl
+  left_inv l := by ext; rfl
+  right_inv t := by ext; rfl
 #align category_theory.presheaf.hom_equiv_amalgamation CategoryTheory.Presheaf.homEquivAmalgamation
 
 variable (P S)
@@ -165,16 +150,12 @@ theorem isLimit_iff_isSheafFor :
   dsimp [is_sheaf_for]; simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]; constructor
-  · intro hu E x hx
-    specialize hu hx.cone
+  · intro hu E x hx; specialize hu hx.cone
     erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu
     exact (unique_subtype_iff_exists_unique _).1 hu
-  · rintro h ⟨E, π⟩
-    let eqv := cones_equiv_sieve_compatible_family P S (op E)
-    rw [← eqv.left_inv π]
-    erw [(hom_equiv_amalgamation (eqv π).2).uniqueCongr.nonempty_congr]
-    rw [unique_subtype_iff_exists_unique]
-    exact h _ _ (eqv π).2
+  · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E)
+    rw [← eqv.left_inv π]; erw [(hom_equiv_amalgamation (eqv π).2).uniqueCongr.nonempty_congr]
+    rw [unique_subtype_iff_exists_unique]; exact h _ _ (eqv π).2
 #align category_theory.presheaf.is_limit_iff_is_sheaf_for CategoryTheory.Presheaf.isLimit_iff_isSheafFor
 
 /- warning: category_theory.presheaf.subsingleton_iff_is_separated_for -> CategoryTheory.Presheaf.subsingleton_iff_isSeparatedFor is a dubious translation:
@@ -188,22 +169,13 @@ theorem subsingleton_iff_isSeparatedFor :
       ∀ E : Aᵒᵖ, IsSeparatedFor (P ⋙ coyoneda.obj E) S :=
   by
   constructor
-  · intro hs E x t₁ t₂ h₁ h₂
-    have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
-    rw [compatible_iff_sieve_compatible] at hx
-    specialize hs hx.cone
-    cases hs
+  · intro hs E x t₁ t₂ h₁ h₂; have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
+    rw [compatible_iff_sieve_compatible] at hx; specialize hs hx.cone; cases hs
     have := (hom_equiv_amalgamation hx).symm.Injective
     exact Subtype.ext_iff.1 (@this ⟨t₁, h₁⟩ ⟨t₂, h₂⟩ (hs _ _))
-  · rintro h ⟨E, π⟩
-    let eqv := cones_equiv_sieve_compatible_family P S (op E)
-    constructor
-    rw [← eqv.left_inv π]
-    intro f₁ f₂
-    let eqv' := hom_equiv_amalgamation (eqv π).2
-    apply eqv'.injective
-    ext
-    apply h _ (eqv π).1 <;> exact (eqv' _).2
+  · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E); constructor
+    rw [← eqv.left_inv π]; intro f₁ f₂; let eqv' := hom_equiv_amalgamation (eqv π).2
+    apply eqv'.injective; ext; apply h _ (eqv π).1 <;> exact (eqv' _).2
 #align category_theory.presheaf.subsingleton_iff_is_separated_for CategoryTheory.Presheaf.subsingleton_iff_isSeparatedFor
 
 /- warning: category_theory.presheaf.is_sheaf_iff_is_limit -> CategoryTheory.Presheaf.isSheaf_iff_isLimit is a dubious translation:
@@ -253,9 +225,7 @@ theorem isSheaf_iff_isLimit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
       ∀ ⦃X : C⦄ (R : Presieve X),
         R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).arrows.Cocone.op)) :=
-  by
-  dsimp [is_sheaf]
-  simp_rw [is_sheaf_pretopology]
+  by dsimp [is_sheaf]; simp_rw [is_sheaf_pretopology];
   exact
     ⟨fun h X R hR => (is_limit_iff_is_sheaf_for_presieve P R).2 fun E => h E.unop R hR,
       fun h E X R hR => (is_limit_iff_is_sheaf_for_presieve P R).1 (h R hR) (op E)⟩
@@ -528,23 +498,14 @@ theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.
 
 instance : AddCommGroup (P ⟶ Q) :=
   Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1) (fun _ _ h => Sheaf.Hom.ext _ _ h)
-    rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => by
-      ext
-      simpa [*] )
-    fun _ _ => by
-    ext
-    simpa [*]
+    rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => by ext; simpa [*] ) fun _ _ =>
+    by ext; simpa [*]
 
 instance : Preadditive (Sheaf J A)
     where
   homGroup P Q := inferInstance
-  add_comp P Q R f f' g := by
-    ext
-    simp
-  comp_add P Q R f g g' := by
-    ext
-    simp
+  add_comp P Q R f f' g := by ext; simp
+  comp_add P Q R f g g' := by ext; simp
 
 end Preadditive
 

@@ -173,11 +173,8 @@ protected theorem finset_prod' {γ} [CommMonoid β] [ContinuousMul β] {U : γ �
 @[to_additive]
 protected theorem finset_prod {γ} [CommMonoid β] [ContinuousMul β] {U : γ → ι → Ω → β}
     {s : Finset γ} (h : ∀ c ∈ s, ProgMeasurable f (U c)) :
-    ProgMeasurable f fun i a => ∏ c in s, U c i a :=
-  by
-  convert prog_measurable.finset_prod' h
-  ext (i a)
-  simp only [Finset.prod_apply]
+    ProgMeasurable f fun i a => ∏ c in s, U c i a := by convert prog_measurable.finset_prod' h;
+  ext (i a); simp only [Finset.prod_apply]
 #align measure_theory.prog_measurable.finset_prod MeasureTheory.ProgMeasurable.finset_prod
 #align measure_theory.prog_measurable.finset_sum MeasureTheory.ProgMeasurable.finset_sum
 

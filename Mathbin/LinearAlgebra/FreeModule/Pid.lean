@@ -234,18 +234,13 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   let y' : O := ∑ i, c i • b'M i
   have y'M : y' ∈ M := M.sum_mem fun i _ => M.smul_mem (c i) (b'M i).2
   have mk_y' : (⟨y', y'M⟩ : M) = ∑ i, c i • b'M i :=
-    Subtype.ext
-      (show y' = M.subtype _
-        by
-        simp only [LinearMap.map_sum, LinearMap.map_smul]
-        rfl)
+    Subtype.ext (show y' = M.subtype _ by simp only [LinearMap.map_sum, LinearMap.map_smul]; rfl)
   have a_smul_y' : a • y' = y :=
     by
     refine' congr_arg coe (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
     rw [← b'M.sum_repr ⟨y, N_le_M yN⟩, mk_y', Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i _ => _
-    rw [← mul_smul, ← hc]
-    rfl
+    rw [← mul_smul, ← hc]; rfl
   -- We found an `y` and an `a`!
   refine' ⟨y', y'M, a, a_smul_y'.symm ▸ yN, _⟩
   have ϕy'_eq : ϕ ⟨y', y'M⟩ = 1 :=
@@ -295,8 +290,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
       refine' ⟨-b, submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩
       · refine' linear_map.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from _)
         rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
-      · simp only [sub_eq_add_neg, neg_smul]
-        rfl
+      · simp only [sub_eq_add_neg, neg_smul]; rfl
   -- And extend a basis for `M'` with `y'`
   intro m' hn'm' bM'
   refine' ⟨Nat.succ_le_succ hn'm', _, _⟩
@@ -304,8 +298,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
     intro z zM
     refine' ⟨-ϕ ⟨z, zM⟩, ⟨⟨z, zM⟩ - ϕ ⟨z, zM⟩ • ⟨y', y'M⟩, linear_map.mem_ker.mpr _, _⟩⟩
     · rw [LinearMap.map_sub, LinearMap.map_smul, ϕy'_eq, smul_eq_mul, mul_one, sub_self]
-    · rw [LinearMap.map_sub, LinearMap.map_smul, sub_eq_add_neg, neg_smul]
-      rfl
+    · rw [LinearMap.map_sub, LinearMap.map_smul, sub_eq_add_neg, neg_smul]; rfl
   -- It remains to show the extended bases are compatible with each other.
   intro as h
   refine' ⟨Fin.cons a as, _⟩
@@ -314,8 +307,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   refine' Fin.cases _ (fun i => _) i
   · simp only [Fin.cons_zero, Fin.castLE_zero]
     exact a_smul_y'.symm
-  · rw [Fin.castLE_succ]
-    simp only [Fin.cons_succ, coe_of_le, h i]
+  · rw [Fin.castLE_succ]; simp only [Fin.cons_succ, coe_of_le, h i]
 #align submodule.basis_of_pid_aux Submodule.basis_of_pid_aux
 
 /- warning: submodule.nonempty_basis_of_pid -> Submodule.nonempty_basis_of_pid is a dubious translation:
@@ -338,8 +330,7 @@ theorem Submodule.nonempty_basis_of_pid {ι : Type _} [Finite ι] (b : Basis ι 
   intro N ih
   let b' := (b.reindex (Fintype.equivFin ι)).map (LinearEquiv.ofTop _ rfl).symm
   by_cases N_bot : N = ⊥
-  · subst N_bot
-    exact ⟨0, ⟨Basis.empty _⟩⟩
+  · subst N_bot; exact ⟨0, ⟨Basis.empty _⟩⟩
   obtain ⟨y, -, a, hay, M', -, N', N'_le_N, -, -, ay_ortho, h'⟩ :=
     Submodule.basis_of_pid_aux ⊤ N b' N_bot le_top
   obtain ⟨n', ⟨bN'⟩⟩ := ih N' N'_le_N _ hay ay_ortho
@@ -447,8 +438,7 @@ noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M
       suffices ∀ i, φ (s i) ∈ N
         by
         rw [LinearMap.range_eq_map, ← hs, φ.map_span_le]
-        rintro _ ⟨i, rfl⟩
-        apply this
+        rintro _ ⟨i, rfl⟩; apply this
       intro i
       calc
         (∏ j, a j) • s i = (∏ j in {i}ᶜ, a j) • a i • s i := by

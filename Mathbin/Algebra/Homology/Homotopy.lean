@@ -70,10 +70,7 @@ theorem dNext_eq_dFrom_fromNext (f : ∀ i j, C.pt i ⟶ D.pt j) (i : ι) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align d_next_eq dNext_eqₓ'. -/
 theorem dNext_eq (f : ∀ i j, C.pt i ⟶ D.pt j) {i i' : ι} (w : c.Rel i i') :
-    dNext i f = C.d i i' ≫ f i' i :=
-  by
-  obtain rfl := c.next_eq' w
-  rfl
+    dNext i f = C.d i i' ≫ f i' i := by obtain rfl := c.next_eq' w; rfl
 #align d_next_eq dNext_eq
 
 /- warning: d_next_comp_left -> dNext_comp_left is a dubious translation:
@@ -125,10 +122,7 @@ theorem prevD_eq_toPrev_dTo (f : ∀ i j, C.pt i ⟶ D.pt j) (j : ι) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align prev_d_eq prevD_eqₓ'. -/
 theorem prevD_eq (f : ∀ i j, C.pt i ⟶ D.pt j) {j j' : ι} (w : c.Rel j' j) :
-    prevD j f = f j j' ≫ D.d j' j :=
-  by
-  obtain rfl := c.prev_eq' w
-  rfl
+    prevD j f = f j j' ≫ D.d j' j := by obtain rfl := c.prev_eq' w; rfl
 #align prev_d_eq prevD_eq
 
 /- warning: prev_d_comp_left -> prevD_comp_left is a dubious translation:
@@ -145,9 +139,7 @@ theorem prevD_comp_left (f : C ⟶ D) (g : ∀ i j, D.pt i ⟶ E.pt j) (j : ι) 
 Case conversion may be inaccurate. Consider using '#align prev_d_comp_right prevD_comp_rightₓ'. -/
 @[simp]
 theorem prevD_comp_right (f : ∀ i j, C.pt i ⟶ D.pt j) (g : D ⟶ E) (j : ι) :
-    (prevD j fun i j => f i j ≫ g.f j) = prevD j f ≫ g.f j :=
-  by
-  dsimp [prevD]
+    (prevD j fun i j => f i j ≫ g.f j) = prevD j f ≫ g.f j := by dsimp [prevD];
   simp only [category.assoc, g.comm]
 #align prev_d_comp_right prevD_comp_right
 
@@ -163,10 +155,7 @@ theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.pt i ⟶ 
     simp only [shape, ChainComplex.next_nat_zero, ComplexShape.down_Rel, Nat.one_ne_zero,
       not_false_iff, zero_comp]
   · dsimp only [Nat.succ_eq_add_one]
-    have : (ComplexShape.down ℕ).next (i + 1) = i + 1 - 1 :=
-      by
-      rw [ChainComplex.next_nat_succ]
-      rfl
+    have : (ComplexShape.down ℕ).next (i + 1) = i + 1 - 1 := by rw [ChainComplex.next_nat_succ]; rfl
     congr 2
 #align d_next_nat dNext_nat
 
@@ -182,10 +171,7 @@ theorem prevD_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.pt i �
     simp only [shape, CochainComplex.prev_nat_zero, ComplexShape.up_Rel, Nat.one_ne_zero,
       not_false_iff, comp_zero]
   · dsimp only [Nat.succ_eq_add_one]
-    have : (ComplexShape.up ℕ).prev (i + 1) = i + 1 - 1 :=
-      by
-      rw [CochainComplex.prev_nat_succ]
-      rfl
+    have : (ComplexShape.up ℕ).prev (i + 1) = i + 1 - 1 := by rw [CochainComplex.prev_nat_succ]; rfl
     congr 2
 #align prev_d_nat prevD_nat
 
@@ -267,9 +253,7 @@ def trans {e f g : C ⟶ D} (h : Homotopy e f) (k : Homotopy f g) : Homotopy e g
     where
   Hom := h.Hom + k.Hom
   zero' i j w := by rw [Pi.add_apply, Pi.add_apply, h.zero i j w, k.zero i j w, zero_add]
-  comm i := by
-    rw [AddMonoidHom.map_add, AddMonoidHom.map_add, h.comm, k.comm]
-    abel
+  comm i := by rw [AddMonoidHom.map_add, AddMonoidHom.map_add, h.comm, k.comm]; abel
 #align homotopy.trans Homotopy.trans
 -/
 
@@ -483,10 +467,7 @@ def nullHomotopy (hom : ∀ i j, C.pt i ⟶ D.pt j) (zero' : ∀ i j, ¬c.Rel j 
     Homotopy (nullHomotopicMap hom) 0 :=
   { Hom
     zero'
-    comm := by
-      intro i
-      rw [HomologicalComplex.zero_f_apply, add_zero]
-      rfl }
+    comm := by intro i; rw [HomologicalComplex.zero_f_apply, add_zero]; rfl }
 #align homotopy.null_homotopy Homotopy.nullHomotopy
 -/
 
@@ -516,10 +497,8 @@ Case conversion may be inaccurate. Consider using '#align homotopy.null_homotopi
 @[simp]
 theorem nullHomotopicMap_f {k₂ k₁ k₀ : ι} (r₂₁ : c.Rel k₂ k₁) (r₁₀ : c.Rel k₁ k₀)
     (hom : ∀ i j, C.pt i ⟶ D.pt j) :
-    (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ + hom k₁ k₂ ≫ D.d k₂ k₁ :=
-  by
-  dsimp only [null_homotopic_map]
-  rw [dNext_eq hom r₁₀, prevD_eq hom r₂₁]
+    (nullHomotopicMap hom).f k₁ = C.d k₁ k₀ ≫ hom k₀ k₁ + hom k₁ k₂ ≫ D.d k₂ k₁ := by
+  dsimp only [null_homotopic_map]; rw [dNext_eq hom r₁₀, prevD_eq hom r₂₁]
 #align homotopy.null_homotopic_map_f Homotopy.nullHomotopicMap_f
 
 /- warning: homotopy.null_homotopic_map'_f -> Homotopy.nullHomotopicMap'_f is a dubious translation:
@@ -748,10 +727,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_inductive_
 theorem mkInductiveAux₃ (i j : ℕ) (h : i + 1 = j) :
     (mkInductiveAux₂ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso h).Hom =
       (P.xNextIso h).inv ≫ (mkInductiveAux₂ e zero comm_zero one comm_one succ j).1 :=
-  by
-  subst j <;> rcases i with (_ | _ | i) <;>
-    · dsimp
-      simp
+  by subst j <;> rcases i with (_ | _ | i) <;> · dsimp; simp
 #align homotopy.mk_inductive_aux₃ Homotopy.mkInductiveAux₃
 
 /- warning: homotopy.mk_inductive -> Homotopy.mkInductive is a dubious translation:
@@ -777,24 +753,15 @@ def mkInductive : Homotopy e 0
     dsimp; simp only [add_zero]
     convert(mk_inductive_aux₂ e zero comm_zero one comm_one succ i).2.2
     · cases i
-      · dsimp [fromNext]
-        rw [dif_neg]
+      · dsimp [fromNext]; rw [dif_neg]
         simp only [ChainComplex.next_nat_zero, Nat.one_ne_zero, not_false_iff]
-      · dsimp [fromNext]
-        rw [dif_pos]
-        swap
-        · simp only [ChainComplex.next_nat_succ]
+      · dsimp [fromNext]; rw [dif_pos]; swap; · simp only [ChainComplex.next_nat_succ]
         have aux : (ComplexShape.down ℕ).next i.succ = i := ChainComplex.next_nat_succ i
         rw [mk_inductive_aux₃ e zero comm_zero one comm_one succ ((ComplexShape.down ℕ).next i.succ)
             (i + 1) (by rw [aux])]
-        dsimp [X_next_iso]
-        erw [category.id_comp]
-    · dsimp [toPrev]
-      rw [dif_pos]
-      swap
-      · simp only [ChainComplex.prev]
-      dsimp [X_prev_iso]
-      erw [category.comp_id]
+        dsimp [X_next_iso]; erw [category.id_comp]
+    · dsimp [toPrev]; rw [dif_pos]; swap; · simp only [ChainComplex.prev]
+      dsimp [X_prev_iso]; erw [category.comp_id]
 #align homotopy.mk_inductive Homotopy.mkInductive
 
 end
@@ -906,10 +873,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_coinductiv
 theorem mkCoinductiveAux₃ (i j : ℕ) (h : i + 1 = j) :
     (P.xNextIso h).inv ≫ (mkCoinductiveAux₂ e zero comm_zero one comm_one succ i).2.1 =
       (mkCoinductiveAux₂ e zero comm_zero one comm_one succ j).1 ≫ (Q.xPrevIso h).Hom :=
-  by
-  subst j <;> rcases i with (_ | _ | i) <;>
-    · dsimp
-      simp
+  by subst j <;> rcases i with (_ | _ | i) <;> · dsimp; simp
 #align homotopy.mk_coinductive_aux₃ Homotopy.mkCoinductiveAux₃
 
 /- warning: homotopy.mk_coinductive -> Homotopy.mkCoinductive is a dubious translation:
@@ -936,24 +900,15 @@ def mkCoinductive : Homotopy e 0
     rw [add_zero, add_comm]
     convert(mk_coinductive_aux₂ e zero comm_zero one comm_one succ i).2.2 using 2
     · cases i
-      · dsimp [toPrev]
-        rw [dif_neg]
+      · dsimp [toPrev]; rw [dif_neg]
         simp only [CochainComplex.prev_nat_zero, Nat.one_ne_zero, not_false_iff]
-      · dsimp [toPrev]
-        rw [dif_pos]
-        swap
-        · simp only [CochainComplex.prev_nat_succ]
+      · dsimp [toPrev]; rw [dif_pos]; swap; · simp only [CochainComplex.prev_nat_succ]
         have aux : (ComplexShape.up ℕ).prev i.succ = i := CochainComplex.prev_nat_succ i
         rw [mk_coinductive_aux₃ e zero comm_zero one comm_one succ ((ComplexShape.up ℕ).prev i.succ)
             (i + 1) (by rw [aux])]
-        dsimp [X_prev_iso]
-        erw [category.comp_id]
-    · dsimp [fromNext]
-      rw [dif_pos]
-      swap
-      · simp only [CochainComplex.next]
-      dsimp [X_next_iso]
-      erw [category.id_comp]
+        dsimp [X_prev_iso]; erw [category.comp_id]
+    · dsimp [fromNext]; rw [dif_pos]; swap; · simp only [CochainComplex.next]
+      dsimp [X_next_iso]; erw [category.id_comp]
 #align homotopy.mk_coinductive Homotopy.mkCoinductive
 
 end

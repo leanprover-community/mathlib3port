@@ -131,14 +131,12 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
       ((hf.mem_to_finset.1 hM).ne_top.lt_top.trans_eq (Ideal.sup_iInf_eq_top <| coprime M hM).symm)
   have : ∀ M ∈ s, ∃ a ∈ I, ∃ b ∈ I', a * b ∉ IsLocalization.coeSubmodule A M :=
     by
-    intro M hM
-    by_contra' h
+    intro M hM; by_contra' h
     obtain ⟨x, hx, hxM⟩ :=
       SetLike.exists_of_lt
         ((IsLocalization.coeSubmodule_strictMono hS (hf.mem_to_finset.1 hM).ne_top.lt_top).trans_eq
           hinv.symm)
-    refine' hxM (Submodule.map₂_le.2 _ hx)
-    exact h
+    refine' hxM (Submodule.map₂_le.2 _ hx); exact h
   choose! a ha b hb hm using this
   choose! u hu hum using fun M hM => SetLike.not_le_iff_exists.1 (nle M hM)
   let v := ∑ M in s, u M • b M
@@ -150,8 +148,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
   replace hM := hf.mem_to_finset.2 hM
   have : ∀ a ∈ I, ∀ b ∈ I', ∃ c, algebraMap R _ c = a * b :=
     by
-    intro a ha b hb
-    have hi := hinv.le
+    intro a ha b hb; have hi := hinv.le
     obtain ⟨c, -, hc⟩ := hi (Submodule.mul_mem_mul ha hb)
     exact ⟨c, hc⟩
   have hmem : a M * v ∈ IsLocalization.coeSubmodule A M :=
@@ -197,8 +194,7 @@ theorem IsPrincipalIdealRing.of_finite_primes [IsDomain R] [IsDedekindDomain R]
     obtain rfl | hI := eq_or_ne I ⊥
     · exact bot_isPrincipal
     apply Ideal.IsPrincipal.of_finite_maximals_of_isUnit
-    · apply h.subset
-      exact @Ideal.IsMaximal.isPrime _ _
+    · apply h.subset; exact @Ideal.IsMaximal.isPrime _ _
     · exact isUnit_of_mul_eq_one _ _ (FractionalIdeal.coe_ideal_mul_inv I hI)⟩
 #align is_principal_ideal_ring.of_finite_primes IsPrincipalIdealRing.of_finite_primes
 

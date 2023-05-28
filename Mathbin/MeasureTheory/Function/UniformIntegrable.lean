@@ -128,16 +128,13 @@ protected theorem add (hf : UnifIntegrable f p μ) (hg : UnifIntegrable g p μ) 
       (hgδ₂ i s hs (hμs.trans (ENNReal.ofReal_le_ofReal (min_le_right _ _))))
 #align measure_theory.unif_integrable.add MeasureTheory.UnifIntegrable.add
 
-protected theorem neg (hf : UnifIntegrable f p μ) : UnifIntegrable (-f) p μ :=
-  by
-  simp_rw [unif_integrable, Pi.neg_apply, indicator_neg', snorm_neg]
-  exact hf
+protected theorem neg (hf : UnifIntegrable f p μ) : UnifIntegrable (-f) p μ := by
+  simp_rw [unif_integrable, Pi.neg_apply, indicator_neg', snorm_neg]; exact hf
 #align measure_theory.unif_integrable.neg MeasureTheory.UnifIntegrable.neg
 
 protected theorem sub (hf : UnifIntegrable f p μ) (hg : UnifIntegrable g p μ) (hp : 1 ≤ p)
     (hf_meas : ∀ i, AEStronglyMeasurable (f i) μ) (hg_meas : ∀ i, AEStronglyMeasurable (g i) μ) :
-    UnifIntegrable (f - g) p μ := by
-  rw [sub_eq_add_neg]
+    UnifIntegrable (f - g) p μ := by rw [sub_eq_add_neg];
   exact hf.add hg.neg hp hf_meas fun i => (hg_meas i).neg
 #align measure_theory.unif_integrable.sub MeasureTheory.UnifIntegrable.sub
 
@@ -301,8 +298,7 @@ theorem Memℒp.snorm_indicator_norm_ge_le (hf : Memℒp f p μ) (hmeas : Strong
       ← Real.rpow_mul (norm_nonneg _),
       mul_one_div_cancel (ENNReal.toReal_pos hp_ne_zero hp_ne_top).Ne.symm, Real.rpow_one]
   by_cases hx : x ∈ { x : α | M ^ (1 / p.to_real) ≤ ‖f x‖₊ }
-  · rw [Set.indicator_of_mem hx, Set.indicator_of_mem, Real.nnnorm_of_nonneg]
-    rfl
+  · rw [Set.indicator_of_mem hx, Set.indicator_of_mem, Real.nnnorm_of_nonneg]; rfl
     change _ ≤ _
     rwa [← hiff]
   · rw [Set.indicator_of_not_mem hx, Set.indicator_of_not_mem]
@@ -474,8 +470,7 @@ theorem unifIntegrable_fin (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) {n : ℕ} {f 
   by_cases hi : i.val < n
   · rw [(_ : f i = g ⟨i.val, hi⟩)]
     · exact hδ₁ _ s hs (le_trans hμs <| ENNReal.ofReal_le_ofReal <| min_le_left _ _)
-    · rw [hg]
-      simp
+    · rw [hg]; simp
   · rw [(_ : i = n)]
     · exact hδ₂ _ hs (le_trans hμs <| ENNReal.ofReal_le_ofReal <| min_le_right _ _)
     · have hi' := Fin.is_lt i
@@ -530,8 +525,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [FiniteMeasure μ] (hp : 1 ≤ p) (hp' 
   by
   rw [ENNReal.tendsto_atTop_zero]
   intro ε hε
-  by_cases ε < ∞
-  swap
+  by_cases ε < ∞; swap
   · rw [not_lt, top_le_iff] at h
     exact ⟨0, fun n hn => by simp [h]⟩
   by_cases hμ : μ = 0
@@ -551,8 +545,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [FiniteMeasure μ] (hp : 1 ≤ p) (hp' 
   specialize
     ht₂ (ε.to_real / (3 * measure_univ_nnreal μ ^ (1 / p.to_real)))
       (div_pos (ENNReal.toReal_pos (gt_iff_lt.1 hε).Ne.symm h.ne) (mul_pos (by norm_num) hpow))
-  obtain ⟨N, hN⟩ := eventually_at_top.1 ht₂
-  clear ht₂
+  obtain ⟨N, hN⟩ := eventually_at_top.1 ht₂; clear ht₂
   refine' ⟨N, fun n hn => _⟩
   rw [← t.indicator_self_add_compl (f n - g)]
   refine'
@@ -654,10 +647,7 @@ theorem unifIntegrable_of_tendsto_Lp (hp : 1 ≤ p) (hp' : p ≠ ∞) (hf : ∀ 
     (hg : Memℒp g p μ) (hfg : Tendsto (fun n => snorm (f n - g) p μ) atTop (𝓝 0)) :
     UnifIntegrable f p μ :=
   by
-  have : f = (fun n => g) + fun n => f n - g :=
-    by
-    ext1 n
-    simp
+  have : f = (fun n => g) + fun n => f n - g := by ext1 n; simp
   rw [this]
   refine'
     unif_integrable.add _ _ hp (fun _ => hg.ae_strongly_measurable) fun n =>
@@ -743,9 +733,8 @@ theorem unifIntegrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → �
       rw [← Set.indicator_union_of_disjoint]
       · congr
         rw [← inter_union_distrib_left,
-          (by
-            ext
-            simp [le_or_lt] : { x : α | C ≤ ‖f i x‖₊ } ∪ { x : α | ‖f i x‖₊ < C } = Set.univ),
+          (by ext; simp [le_or_lt] :
+            { x : α | C ≤ ‖f i x‖₊ } ∪ { x : α | ‖f i x‖₊ < C } = Set.univ),
           inter_univ]
       · refine' (Disjoint.inf_right' _ _).inf_left' _
         rw [disjoint_iff_inf_le]
@@ -971,8 +960,7 @@ theorem UniformIntegrable.spec' (hp : p ≠ 0) (hp' : p ≠ ∞) (hf : ∀ i, St
   obtain ⟨δ, hδpos, hδ⟩ := hfu hε
   obtain ⟨C, hC⟩ : ∃ C : ℝ≥0, ∀ i, μ { x | C ≤ ‖f i x‖₊ } ≤ ENNReal.ofReal δ :=
     by
-    by_contra hcon
-    push_neg  at hcon
+    by_contra hcon; push_neg  at hcon
     choose ℐ hℐ using hcon
     lift δ to ℝ≥0 using hδpos.le
     have : ∀ C : ℝ≥0, C • (δ : ℝ≥0∞) ^ (1 / p.to_real) ≤ snorm (f (ℐ C)) p μ :=

@@ -197,9 +197,7 @@ but is expected to have type
   forall {X : Type.{u3}} {Y : Type.{u2}} {Z : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} X] {f : X -> Y}, (IsLocallyConstant.{u3, u2} X Y _inst_1 f) -> (forall (g : Y -> Z), IsLocallyConstant.{u3, u1} X Z _inst_1 (Function.comp.{succ u3, succ u2, succ u1} X Y Z g f))
 Case conversion may be inaccurate. Consider using '#align is_locally_constant.comp IsLocallyConstant.compₓ'. -/
 theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyConstant (g ∘ f) :=
-  fun s => by
-  rw [Set.preimage_comp]
-  exact hf _
+  fun s => by rw [Set.preimage_comp]; exact hf _
 #align is_locally_constant.comp IsLocallyConstant.comp
 
 /- warning: is_locally_constant.prod_mk -> IsLocallyConstant.prod_mk is a dubious translation:
@@ -232,9 +230,7 @@ but is expected to have type
   forall {X : Type.{u1}} {Y : Type.{u3}} {Z : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u3} Y] {g : Y -> Z} {f : X -> Y}, (IsLocallyConstant.{u3, u2} Y Z _inst_2 g) -> (Continuous.{u1, u3} X Y _inst_1 _inst_2 f) -> (IsLocallyConstant.{u1, u2} X Z _inst_1 (Function.comp.{succ u1, succ u3, succ u2} X Y Z g f))
 Case conversion may be inaccurate. Consider using '#align is_locally_constant.comp_continuous IsLocallyConstant.comp_continuousₓ'. -/
 theorem comp_continuous [TopologicalSpace Y] {g : Y → Z} {f : X → Y} (hg : IsLocallyConstant g)
-    (hf : Continuous f) : IsLocallyConstant (g ∘ f) := fun s =>
-  by
-  rw [Set.preimage_comp]
+    (hf : Continuous f) : IsLocallyConstant (g ∘ f) := fun s => by rw [Set.preimage_comp];
   exact hf.is_open_preimage _ (hg _)
 #align is_locally_constant.comp_continuous IsLocallyConstant.comp_continuous
 
@@ -706,9 +702,7 @@ theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant 
 #print LocallyConstant.map /-
 /-- Push forward of locally constant maps under any map, by post-composition. -/
 def map (f : Y → Z) : LocallyConstant X Y → LocallyConstant X Z := fun g =>
-  ⟨f ∘ g, fun s => by
-    rw [Set.preimage_comp]
-    apply g.is_locally_constant⟩
+  ⟨f ∘ g, fun s => by rw [Set.preimage_comp]; apply g.is_locally_constant⟩
 #align locally_constant.map LocallyConstant.map
 -/
 
@@ -730,9 +724,7 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X], Eq.{max (succ u2) (succ u1)} ((LocallyConstant.{u2, u1} X Y _inst_1) -> (LocallyConstant.{u2, u1} X Y _inst_1)) (LocallyConstant.map.{u2, u1, u1} X Y Y _inst_1 (id.{succ u1} Y)) (id.{max (succ u2) (succ u1)} (LocallyConstant.{u2, u1} X Y _inst_1))
 Case conversion may be inaccurate. Consider using '#align locally_constant.map_id LocallyConstant.map_idₓ'. -/
 @[simp]
-theorem map_id : @map X Y Y _ id = id := by
-  ext
-  rfl
+theorem map_id : @map X Y Y _ id = id := by ext; rfl
 #align locally_constant.map_id LocallyConstant.map_id
 
 /- warning: locally_constant.map_comp -> LocallyConstant.map_comp is a dubious translation:
@@ -743,9 +735,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.map_comp LocallyConstant.map_compₓ'. -/
 @[simp]
 theorem map_comp {Y₁ Y₂ Y₃ : Type _} (g : Y₂ → Y₃) (f : Y₁ → Y₂) :
-    @map X _ _ _ g ∘ map f = map (g ∘ f) := by
-  ext
-  rfl
+    @map X _ _ _ g ∘ map f = map (g ∘ f) := by ext; rfl
 #align locally_constant.map_comp LocallyConstant.map_comp
 
 #print LocallyConstant.flip /-
@@ -786,10 +776,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.unflip_flip LocallyConstant.unflip_flipₓ'. -/
 @[simp]
 theorem unflip_flip {X α β : Type _} [Fintype α] [TopologicalSpace X]
-    (f : LocallyConstant X (α → β)) : unflip f.flip = f :=
-  by
-  ext
-  rfl
+    (f : LocallyConstant X (α → β)) : unflip f.flip = f := by ext; rfl
 #align locally_constant.unflip_flip LocallyConstant.unflip_flip
 
 /- warning: locally_constant.flip_unflip -> LocallyConstant.flip_unflip is a dubious translation:
@@ -800,10 +787,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.flip_unflip LocallyConstant.flip_unflipₓ'. -/
 @[simp]
 theorem flip_unflip {X α β : Type _} [Fintype α] [TopologicalSpace X]
-    (f : α → LocallyConstant X β) : (unflip f).flip = f :=
-  by
-  ext
-  rfl
+    (f : α → LocallyConstant X β) : (unflip f).flip = f := by ext; rfl
 #align locally_constant.flip_unflip LocallyConstant.flip_unflip
 
 section Comap
@@ -822,14 +806,9 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
   if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
   else by
     by_cases H : Nonempty X
-    · intro g
-      exact const X (g <| f <| Classical.arbitrary X)
-    · intro g
-      refine' ⟨fun x => (H ⟨x⟩).elim, _⟩
-      intro s
-      rw [isOpen_iff_nhds]
-      intro x
-      exact (H ⟨x⟩).elim
+    · intro g; exact const X (g <| f <| Classical.arbitrary X)
+    · intro g; refine' ⟨fun x => (H ⟨x⟩).elim, _⟩
+      intro s; rw [isOpen_iff_nhds]; intro x; exact (H ⟨x⟩).elim
 #align locally_constant.comap LocallyConstant.comap
 -/
 
@@ -841,9 +820,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.coe_comap LocallyConstant.coe_comapₓ'. -/
 @[simp]
 theorem coe_comap (f : X → Y) (g : LocallyConstant Y Z) (hf : Continuous f) :
-    ⇑(comap f g) = g ∘ f := by
-  rw [comap, dif_pos hf]
-  rfl
+    ⇑(comap f g) = g ∘ f := by rw [comap, dif_pos hf]; rfl
 #align locally_constant.coe_comap LocallyConstant.coe_comap
 
 /- warning: locally_constant.comap_id -> LocallyConstant.comap_id is a dubious translation:
@@ -853,8 +830,7 @@ but is expected to have type
   forall {X : Type.{u2}} {Z : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X], Eq.{max (succ u2) (succ u1)} ((LocallyConstant.{u2, u1} X Z _inst_1) -> (LocallyConstant.{u2, u1} X Z _inst_1)) (LocallyConstant.comap.{u2, u2, u1} X X Z _inst_1 _inst_1 (id.{succ u2} X)) (id.{max (succ u2) (succ u1)} (LocallyConstant.{u2, u1} X Z _inst_1))
 Case conversion may be inaccurate. Consider using '#align locally_constant.comap_id LocallyConstant.comap_idₓ'. -/
 @[simp]
-theorem comap_id : @comap X X Z _ _ id = id := by
-  ext
+theorem comap_id : @comap X X Z _ _ id = id := by ext;
   simp only [continuous_id, id.def, Function.comp.right_id, coe_comap]
 #align locally_constant.comap_id LocallyConstant.comap_id
 
@@ -865,9 +841,7 @@ but is expected to have type
   forall {X : Type.{u3}} {Y : Type.{u2}} {Z : Type.{u4}} {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : TopologicalSpace.{u4} Z] (f : X -> Y) (g : Y -> Z), (Continuous.{u3, u2} X Y _inst_1 _inst_2 f) -> (Continuous.{u2, u4} Y Z _inst_2 _inst_3 g) -> (Eq.{max (max (succ u3) (succ u4)) (succ u1)} ((LocallyConstant.{u4, u1} Z α _inst_3) -> (LocallyConstant.{u3, u1} X α _inst_1)) (Function.comp.{max (succ u1) (succ u4), max (succ u1) (succ u2), max (succ u1) (succ u3)} (LocallyConstant.{u4, u1} Z α _inst_3) (LocallyConstant.{u2, u1} Y α _inst_2) (LocallyConstant.{u3, u1} X α _inst_1) (LocallyConstant.comap.{u3, u2, u1} X Y α _inst_1 _inst_2 f) (LocallyConstant.comap.{u2, u4, u1} Y Z α _inst_2 _inst_3 g)) (LocallyConstant.comap.{u3, u4, u1} X Z α _inst_1 _inst_3 (Function.comp.{succ u3, succ u2, succ u4} X Y Z g f)))
 Case conversion may be inaccurate. Consider using '#align locally_constant.comap_comp LocallyConstant.comap_compₓ'. -/
 theorem comap_comp [TopologicalSpace Z] (f : X → Y) (g : Y → Z) (hf : Continuous f)
-    (hg : Continuous g) : @comap _ _ α _ _ f ∘ comap g = comap (g ∘ f) :=
-  by
-  ext
+    (hg : Continuous g) : @comap _ _ α _ _ f ∘ comap g = comap (g ∘ f) := by ext;
   simp only [hf, hg, hg.comp hf, coe_comap]
 #align locally_constant.comap_comp LocallyConstant.comap_comp
 
@@ -898,12 +872,7 @@ def desc {X α β : Type _} [TopologicalSpace X] {g : α → β} (f : X → α) 
     (cond : g ∘ f = h) (inj : Function.Injective g) : LocallyConstant X α
     where
   toFun := f
-  IsLocallyConstant :=
-    IsLocallyConstant.desc _ g
-      (by
-        rw [cond]
-        exact h.2)
-      inj
+  IsLocallyConstant := IsLocallyConstant.desc _ g (by rw [cond]; exact h.2) inj
 #align locally_constant.desc LocallyConstant.desc
 -/
 
@@ -941,16 +910,11 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R
     rw [IsLocallyConstant.iff_exists_open]; rintro x
     obtain ⟨V, hV, hx, h'⟩ := (IsLocallyConstant.iff_exists_open _).1 f.is_locally_constant x
     by_cases x ∈ U
-    · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩
-      rintro y hy
-      rw [Set.mem_inter_iff] at hy
-      rw [Set.mulIndicator_of_mem hy.1, Set.mulIndicator_of_mem h]
+    · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩; rintro y hy
+      rw [Set.mem_inter_iff] at hy; rw [Set.mulIndicator_of_mem hy.1, Set.mulIndicator_of_mem h]
       apply h' y hy.2
-    · rw [← Set.mem_compl_iff] at h
-      refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
-      rintro y hy
-      rw [Set.mem_compl_iff] at h
-      rw [Set.mem_compl_iff] at hy
+    · rw [← Set.mem_compl_iff] at h; refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
+      rintro y hy; rw [Set.mem_compl_iff] at h; rw [Set.mem_compl_iff] at hy
       simp [h, hy]
 #align locally_constant.mul_indicator LocallyConstant.mulIndicator
 #align locally_constant.indicator LocallyConstant.indicator
@@ -980,10 +944,8 @@ but is expected to have type
   forall {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {R : Type.{u1}} [_inst_2 : One.{u1} R] {U : Set.{u2} X} (f : LocallyConstant.{u2, u1} X R _inst_1) {a : X} (hU : IsClopen.{u2} X _inst_1 U), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) a U) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X R _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X R _inst_1) (LocallyConstant.mulIndicator.{u2, u1} X _inst_1 R _inst_2 U f hU) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X R _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X R _inst_1) f a))
 Case conversion may be inaccurate. Consider using '#align locally_constant.mul_indicator_of_mem LocallyConstant.mulIndicator_of_memₓ'. -/
 @[to_additive]
-theorem mulIndicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a :=
-  by
-  rw [mul_indicator_apply]
-  apply Set.mulIndicator_of_mem h
+theorem mulIndicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a := by
+  rw [mul_indicator_apply]; apply Set.mulIndicator_of_mem h
 #align locally_constant.mul_indicator_of_mem LocallyConstant.mulIndicator_of_mem
 #align locally_constant.indicator_of_mem LocallyConstant.indicator_of_mem
 
@@ -994,10 +956,8 @@ but is expected to have type
   forall {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {R : Type.{u1}} [_inst_2 : One.{u1} R] {U : Set.{u2} X} (f : LocallyConstant.{u2, u1} X R _inst_1) {a : X} (hU : IsClopen.{u2} X _inst_1 U), (Not (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) a U)) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X R _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X R _inst_1) (LocallyConstant.mulIndicator.{u2, u1} X _inst_1 R _inst_2 U f hU) a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) a) 1 (One.toOfNat1.{u1} ((fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => R) a) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align locally_constant.mul_indicator_of_not_mem LocallyConstant.mulIndicator_of_not_memₓ'. -/
 @[to_additive]
-theorem mulIndicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 :=
-  by
-  rw [mul_indicator_apply]
-  apply Set.mulIndicator_of_not_mem h
+theorem mulIndicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 := by
+  rw [mul_indicator_apply]; apply Set.mulIndicator_of_not_mem h
 #align locally_constant.mul_indicator_of_not_mem LocallyConstant.mulIndicator_of_not_mem
 #align locally_constant.indicator_of_not_mem LocallyConstant.indicator_of_not_mem
 

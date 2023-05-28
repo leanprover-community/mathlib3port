@@ -83,9 +83,7 @@ theorem unpair_pair (a b : ℕ) : unpair (pair a b) = (a, b) :=
     have be : sqrt (b * b + a) = b := sqrt_add_eq _ (le_trans (le_of_lt h) (Nat.le_add_left _ _))
     simp [unpair, be, add_tsub_cancel_right, h]
   · show unpair (a * a + a + b) = (a, b)
-    have ae : sqrt (a * a + (a + b)) = a :=
-      by
-      rw [sqrt_add_eq]
+    have ae : sqrt (a * a + (a + b)) = a := by rw [sqrt_add_eq];
       exact add_le_add_left (le_of_not_gt h) _
     simp [unpair, ae, Nat.not_lt_zero, add_assoc]
 #align nat.unpair_mkpair Nat.unpair_pair
@@ -127,9 +125,7 @@ theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n :=
 
 #print Nat.unpair_zero /-
 @[simp]
-theorem unpair_zero : unpair 0 = 0 := by
-  rw [unpair]
-  simp
+theorem unpair_zero : unpair 0 = 0 := by rw [unpair]; simp
 #align nat.unpair_zero Nat.unpair_zero
 -/
 
@@ -223,9 +219,7 @@ theorem max_sq_add_min_le_pair (m n : ℕ) : max m n ^ 2 + min m n ≤ pair m n 
 
 #print Nat.add_le_pair /-
 theorem add_le_pair (m n : ℕ) : m + n ≤ pair m n :=
-  (max_sq_add_min_le_pair _ _).trans' <|
-    by
-    rw [sq, ← min_add_max, add_comm, add_le_add_iff_right]
+  (max_sq_add_min_le_pair _ _).trans' <| by rw [sq, ← min_add_max, add_comm, add_le_add_iff_right];
     exact le_mul_self _
 #align nat.add_le_mkpair Nat.add_le_pair
 -/
@@ -279,11 +273,8 @@ Case conversion may be inaccurate. Consider using '#align set.Union_unpair_prod 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
-    (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n :=
-  by
-  rw [← Union_prod]
-  convert surjective_unpair.Union_comp _
-  rfl
+    (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n := by rw [← Union_prod];
+  convert surjective_unpair.Union_comp _; rfl
 #align set.Union_unpair_prod Set.iUnion_unpair_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/

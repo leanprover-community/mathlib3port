@@ -81,18 +81,11 @@ theorem Applicative.ext {F} :
       seqLeft := sl2
       seqRight := sr2 }, L1, L2, H1, H2 =>
     by
-    obtain rfl : @p1 = @p2 := by
-      funext α x
-      apply H1
-    obtain rfl : @s1 = @s2 := by
-      funext α β f x
-      apply H2
-    cases L1
-    cases L2
+    obtain rfl : @p1 = @p2 := by funext α x; apply H1
+    obtain rfl : @s1 = @s2 := by funext α β f x; apply H2
+    cases L1; cases L2
     obtain rfl : F1 = F2 := by
-      skip
-      apply Functor.ext
-      intros
+      skip; apply Functor.ext; intros
       exact (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)
     congr <;> funext α β x y
     · exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
@@ -193,15 +186,10 @@ instance {f : Type u → Type w} {g : Type v → Type u} [Applicative f] [Applic
     [CommApplicative f] [CommApplicative g] : CommApplicative (Comp f g) :=
   by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
-  intros
-  casesm*comp _ _ _
-  simp! [map, Seq.seq, functor_norm]
+  intros ; casesm*comp _ _ _; simp! [map, Seq.seq, functor_norm]
   rw [commutative_map]
   simp [comp.mk, flip, (· ∘ ·), functor_norm]
-  congr
-  funext
-  rw [commutative_map]
-  congr
+  congr ; funext; rw [commutative_map]; congr
 
 end Comp
 

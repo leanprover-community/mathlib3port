@@ -76,10 +76,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u2} α] [_inst_2 : PseudoMetricSpace.{u1} β] {K : NNReal} {f : α -> β}, Iff (AntilipschitzWith.{u2, u1} α β (PseudoMetricSpace.toPseudoEMetricSpace.{u2} α _inst_1) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) K f) (forall (x : α) (y : α), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (NNDist.nndist.{u2} α (PseudoMetricSpace.toNNDist.{u2} α _inst_1) x y) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) K (NNDist.nndist.{u1} β (PseudoMetricSpace.toNNDist.{u1} β _inst_2) (f x) (f y))))
 Case conversion may be inaccurate. Consider using '#align antilipschitz_with_iff_le_mul_nndist antilipschitzWith_iff_le_mul_nndistₓ'. -/
 theorem antilipschitzWith_iff_le_mul_nndist :
-    AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) :=
-  by
-  simp only [AntilipschitzWith, edist_nndist]
-  norm_cast
+    AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) := by
+  simp only [AntilipschitzWith, edist_nndist]; norm_cast
 #align antilipschitz_with_iff_le_mul_nndist antilipschitzWith_iff_le_mul_nndist
 
 /- warning: antilipschitz_with.le_mul_nndist -> AntilipschitzWith.le_mul_nndist is a dubious translation:
@@ -106,10 +104,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u2} α] [_inst_2 : PseudoMetricSpace.{u1} β] {K : NNReal} {f : α -> β}, Iff (AntilipschitzWith.{u2, u1} α β (PseudoMetricSpace.toPseudoEMetricSpace.{u2} α _inst_1) (PseudoMetricSpace.toPseudoEMetricSpace.{u1} β _inst_2) K f) (forall (x : α) (y : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} α (PseudoMetricSpace.toDist.{u2} α _inst_1) x y) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (NNReal.toReal K) (Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β _inst_2) (f x) (f y))))
 Case conversion may be inaccurate. Consider using '#align antilipschitz_with_iff_le_mul_dist antilipschitzWith_iff_le_mul_distₓ'. -/
 theorem antilipschitzWith_iff_le_mul_dist :
-    AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) :=
-  by
-  simp only [antilipschitzWith_iff_le_mul_nndist, dist_nndist]
-  norm_cast
+    AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) := by
+  simp only [antilipschitzWith_iff_le_mul_nndist, dist_nndist]; norm_cast
 #align antilipschitz_with_iff_le_mul_dist antilipschitzWith_iff_le_mul_dist
 
 /- warning: antilipschitz_with.le_mul_dist -> AntilipschitzWith.le_mul_dist is a dubious translation:

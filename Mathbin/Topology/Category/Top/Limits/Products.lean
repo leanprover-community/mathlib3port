@@ -67,13 +67,8 @@ Case conversion may be inaccurate. Consider using '#align Top.pi_fan_is_limit To
 def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan α)
     where
   lift S := { toFun := fun s i => S.π.app ⟨i⟩ s }
-  uniq := by
-    intro S m h
-    ext (x i)
-    simp [← h ⟨i⟩]
-  fac s j := by
-    cases j
-    tidy
+  uniq := by intro S m h; ext (x i); simp [← h ⟨i⟩]
+  fac s j := by cases j; tidy
 #align Top.pi_fan_is_limit TopCat.piFanIsLimit
 
 /- warning: Top.pi_iso_pi -> TopCat.piIsoPi is a dubious translation:
@@ -156,13 +151,8 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
   desc S :=
     { toFun := fun s => S.ι.app ⟨s.1⟩ s.2
       continuous_toFun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
-  uniq := by
-    intro S m h
-    ext ⟨i, x⟩
-    simp [← h ⟨i⟩]
-  fac s j := by
-    cases j
-    tidy
+  uniq := by intro S m h; ext ⟨i, x⟩; simp [← h ⟨i⟩]
+  fac s j := by cases j; tidy
 #align Top.sigma_cofan_is_colimit TopCat.sigmaCofanIsColimit
 
 /- warning: Top.sigma_iso_sigma -> TopCat.sigmaIsoSigma is a dubious translation:
@@ -202,10 +192,8 @@ theorem sigmaIsoSigma_hom_ι_apply {ι : Type v} (α : ι → TopCat.{max v u}) 
 Case conversion may be inaccurate. Consider using '#align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_applyₓ'. -/
 @[simp]
 theorem sigmaIsoSigma_inv_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) (x : α i) :
-    (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x :=
-  by
-  rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]
-  simp
+    (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x := by
+  rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]; simp
 #align Top.sigma_iso_sigma_inv_apply TopCat.sigmaIsoSigma_inv_apply
 
 /- warning: Top.induced_of_is_limit -> TopCat.induced_of_isLimit is a dubious translation:
@@ -372,12 +360,8 @@ theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
     use (prod_iso_prod W X).inv (x₁, x₂)
     apply concrete.limit_ext
     rintro ⟨⟨⟩⟩
-    · simp only [← comp_apply, category.assoc]
-      erw [limits.prod.map_fst]
-      simp [hx₁]
-    · simp only [← comp_apply, category.assoc]
-      erw [limits.prod.map_snd]
-      simp [hx₂]
+    · simp only [← comp_apply, category.assoc]; erw [limits.prod.map_fst]; simp [hx₁]
+    · simp only [← comp_apply, category.assoc]; erw [limits.prod.map_snd]; simp [hx₂]
 #align Top.range_prod_map TopCat.range_prod_map
 
 /- warning: Top.inducing_prod_map -> TopCat.inducing_prod_map is a dubious translation:
@@ -419,14 +403,9 @@ protected def binaryCofan (X Y : TopCat.{u}) : BinaryCofan X Y :=
 def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y) :=
   by
   refine' limits.binary_cofan.is_colimit_mk (fun s => ⟨Sum.elim s.inl s.inr⟩) _ _ _
-  · intro s
-    ext
-    rfl
-  · intro s
-    ext
-    rfl
-  · intro s m h₁ h₂
-    ext (x | x)
+  · intro s; ext; rfl
+  · intro s; ext; rfl
+  · intro s m h₁ h₂; ext (x | x)
     exacts[(concrete_category.congr_hom h₁ x : _), (concrete_category.congr_hom h₂ x : _)]
 #align Top.binary_cofan_is_colimit TopCat.binaryCofanIsColimit
 -/
@@ -467,10 +446,8 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
       congr 1
       exact set.compl_range_inr.symm
     · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr :=
-        by
-        rw [eq_compl_iff_is_compl.mpr h₃.symm]
-        exact fun _ => or_not
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
+        rw [eq_compl_iff_is_compl.mpr h₃.symm]; exact fun _ => or_not
       refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
       · intro T f g
         refine' ContinuousMap.mk _ _
@@ -485,42 +462,29 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
           apply (IsOpen.continuousOn_iff _).mp
           · rw [continuousOn_iff_continuous_restrict]
             convert_to Continuous (f ∘ (Homeomorph.ofEmbedding _ h₁.to_embedding).symm)
-            · ext ⟨x, hx⟩
-              exact dif_pos hx
+            · ext ⟨x, hx⟩; exact dif_pos hx
             continuity
           · exact h₁.open_range
         · revert h x
           apply (IsOpen.continuousOn_iff _).mp
           · rw [continuousOn_iff_continuous_restrict]
-            have : ∀ a, a ∉ Set.range c.inl → a ∈ Set.range c.inr :=
-              by
-              rintro a (h : a ∈ Set.range c.inlᶜ)
-              rwa [eq_compl_iff_is_compl.mpr h₃.symm]
+            have : ∀ a, a ∉ Set.range c.inl → a ∈ Set.range c.inr := by
+              rintro a (h : a ∈ Set.range c.inlᶜ); rwa [eq_compl_iff_is_compl.mpr h₃.symm]
             convert_to Continuous
                 (g ∘ (Homeomorph.ofEmbedding _ h₂.to_embedding).symm ∘ Subtype.map _ this)
-            · ext ⟨x, hx⟩
-              exact dif_neg hx
+            · ext ⟨x, hx⟩; exact dif_neg hx
             continuity
             rw [embedding_subtype_coe.to_inducing.continuous_iff]
             exact continuous_subtype_val
-          · change IsOpen (Set.range c.inlᶜ)
-            rw [← eq_compl_iff_is_compl.mpr h₃.symm]
+          · change IsOpen (Set.range c.inlᶜ); rw [← eq_compl_iff_is_compl.mpr h₃.symm]
             exact h₂.open_range
-      · intro T f g
-        ext x
-        refine' (dif_pos _).trans _
-        · exact ⟨x, rfl⟩
+      · intro T f g; ext x; refine' (dif_pos _).trans _; · exact ⟨x, rfl⟩
         · rw [Equiv.ofInjective_symm_apply]
-      · intro T f g
-        ext x
-        refine' (dif_neg _).trans _
-        · rintro ⟨y, e⟩
-          have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+      · intro T f g; ext x; refine' (dif_neg _).trans _
+        · rintro ⟨y, e⟩; have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
           rwa [disjoint_iff.mp h₃.1] at this
         · exact congr_arg g (Equiv.ofInjective_symm_apply _ _)
-      · rintro T _ _ m rfl rfl
-        ext x
-        change m x = dite _ _ _
+      · rintro T _ _ m rfl rfl; ext x; change m x = dite _ _ _
         split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 #align Top.binary_cofan_is_colimit_iff TopCat.binaryCofan_isColimit_iff
 

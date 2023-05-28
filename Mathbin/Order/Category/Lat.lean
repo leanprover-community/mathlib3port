@@ -103,12 +103,8 @@ def Iso.mk {α β : LatCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply _
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply _
+  hom_inv_id' := by ext; exact e.symm_apply_apply _
+  inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align Lat.iso.mk LatCat.Iso.mk
 
 /- warning: Lat.dual -> LatCat.dual is a dubious translation:

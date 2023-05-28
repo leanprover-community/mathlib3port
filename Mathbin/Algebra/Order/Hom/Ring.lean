@@ -507,10 +507,7 @@ instance : OrderRingIsoClass (α ≃+*o β) α β
     where
   coe f := f.toFun
   inv f := f.invFun
-  coe_injective' f g h₁ h₂ := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h₁ h₂ := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_add f := f.map_add'
   map_mul f := f.map_mul'
   map_le_map_iff f _ _ := f.map_le_map_iff'

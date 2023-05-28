@@ -73,10 +73,7 @@ namespace Yoneda
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.yoneda.obj_map_id CategoryTheory.Yoneda.obj_map_idₓ'. -/
 theorem obj_map_id {X Y : C} (f : op X ⟶ op Y) :
-    (yoneda.obj X).map f (𝟙 X) = (yoneda.map f.unop).app (op Y) (𝟙 Y) :=
-  by
-  dsimp
-  simp
+    (yoneda.obj X).map f (𝟙 X) = (yoneda.map f.unop).app (op Y) (𝟙 Y) := by dsimp; simp
 #align category_theory.yoneda.obj_map_id CategoryTheory.Yoneda.obj_map_id
 
 /- warning: category_theory.yoneda.naturality -> CategoryTheory.Yoneda.naturality is a dubious translation:

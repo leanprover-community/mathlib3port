@@ -52,12 +52,8 @@ Case conversion may be inaccurate. Consider using '#align Module.product_cone_is
 def productConeIsLimit : IsLimit (productCone Z)
     where
   lift s := (LinearMap.pi fun j => s.π.app ⟨j⟩ : s.pt →ₗ[R] ∀ i : ι, Z i)
-  fac s j := by
-    cases j
-    tidy
-  uniq s m w := by
-    ext (x i)
-    exact LinearMap.congr_fun (w ⟨i⟩) x
+  fac s j := by cases j; tidy
+  uniq s m w := by ext (x i); exact LinearMap.congr_fun (w ⟨i⟩) x
 #align Module.product_cone_is_limit ModuleCat.productConeIsLimit
 
 -- While we could use this to construct a `has_products (Module R)` instance,

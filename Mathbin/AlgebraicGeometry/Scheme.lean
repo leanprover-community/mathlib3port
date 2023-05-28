@@ -96,12 +96,7 @@ theorem id_val_base (X : Scheme) : (𝟙 X : _).1.base = 𝟙 _ :=
 @[simp]
 theorem id_app {X : Scheme} (U : (Opens X.carrier)ᵒᵖ) :
     (𝟙 X : _).val.c.app U =
-      X.Presheaf.map
-        (eqToHom
-          (by
-            induction U using Opposite.rec'
-            cases U
-            rfl)) :=
+      X.Presheaf.map (eqToHom (by induction U using Opposite.rec'; cases U; rfl)) :=
   PresheafedSpace.id_c_app X.toPresheafedSpace U
 #align algebraic_geometry.Scheme.id_app AlgebraicGeometry.Scheme.id_app
 
@@ -129,11 +124,7 @@ theorem comp_val_c_app {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
 #align algebraic_geometry.Scheme.comp_val_c_app AlgebraicGeometry.Scheme.comp_val_c_app
 
 theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) (U) :
-    f.val.c.app U = g.val.c.app U ≫ X.Presheaf.map (eqToHom (by subst e)) :=
-  by
-  subst e
-  dsimp
-  simp
+    f.val.c.app U = g.val.c.app U ≫ X.Presheaf.map (eqToHom (by subst e)) := by subst e; dsimp; simp
 #align algebraic_geometry.Scheme.congr_app AlgebraicGeometry.Scheme.congr_app
 
 theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.carrier} (e : U = V) :
@@ -154,10 +145,7 @@ instance is_locallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] :
 theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
-          (eqToHom <| by
-                rw [is_iso.hom_inv_id]
-                ext1
-                rfl :
+          (eqToHom <| by rw [is_iso.hom_inv_id]; ext1; rfl :
               (Opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
         inv (f.val.c.app (op <| (Opens.map _).obj U)) :=
   by

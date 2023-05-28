@@ -265,9 +265,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Nat -> (Set.{u1} α)) (H : forall (x : α), Exists.{1} Nat (fun (n : Nat) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n))) [_inst_1 : forall (x : α) (n : Nat), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n))] (n : Nat), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, 0} α Nat (fun (x : α) => Nat.find (fun (n : Nat) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (s n)) (fun (a : Nat) => _inst_1 x a) (H x)) (Singleton.singleton.{0, 0} Nat (Set.{0} Nat) (Set.instSingletonSet.{0} Nat) n)) (disjointed.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s n)
 Case conversion may be inaccurate. Consider using '#align preimage_find_eq_disjointed preimage_find_eq_disjointedₓ'. -/
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n)
-    [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n :=
-  by
-  ext x
-  simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
+    [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
+  ext x; simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
 #align preimage_find_eq_disjointed preimage_find_eq_disjointed
 

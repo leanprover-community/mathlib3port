@@ -433,11 +433,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : α} {b : α} {c : α} {d : α} [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2882 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2884 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2882 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2884) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2897 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2899 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2897 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2899)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2919 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2921 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2919 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2921)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2934 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2936 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2934 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2936)], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) c d)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_2) a b) (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_2) c d))
 Case conversion may be inaccurate. Consider using '#align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mulₓ'. -/
 @[to_additive]
-theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d :=
-  by
-  simp_rw [min_le_iff, le_max_iff]
-  contrapose! h
-  exact mul_lt_mul_of_lt_of_lt h.1.1 h.2.2
+theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d := by
+  simp_rw [min_le_iff, le_max_iff]; contrapose! h; exact mul_lt_mul_of_lt_of_lt h.1.1 h.2.2
 #align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mul
 #align min_le_max_of_add_le_add min_le_max_of_add_le_add
 
@@ -1714,10 +1711,7 @@ theorem mul_le_mul_iff_of_ge [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] {a₁ a₂ b₁ b₂ : α} (ha : a₁ ≤ a₂) (hb : b₁ ≤ b₂) :
     a₂ * b₂ ≤ a₁ * b₁ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   by
-  refine'
-    ⟨fun h => _, by
-      rintro ⟨rfl, rfl⟩
-      rfl⟩
+  refine' ⟨fun h => _, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, ha, hb, true_and_iff]
   refine' ⟨fun ha => h.not_lt _, fun hb => h.not_lt _⟩
   · exact mul_lt_mul_of_lt_of_le ha hb

@@ -119,9 +119,7 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Group.{u1} α] {x : CategoryTheory.SingleObj.{u1} α} {y : CategoryTheory.SingleObj.{u1} α} (f : Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y), Eq.{succ u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (CategoryTheory.CategoryStruct.toQuiver.{u1, 0} (CategoryTheory.SingleObj.{u1} α) (CategoryTheory.Category.toCategoryStruct.{u1, 0} (CategoryTheory.SingleObj.{u1} α) (CategoryTheory.SingleObj.category.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) y x) (CategoryTheory.inv.{u1, 0} (CategoryTheory.SingleObj.{u1} α) (CategoryTheory.SingleObj.category.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) x y f (CategoryTheory.IsIso.of_groupoid.{u1, 0} (CategoryTheory.SingleObj.{u1} α) (CategoryTheory.SingleObj.groupoid.{u1} α _inst_1) x y f)) (Inv.inv.{u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y) (InvOneClass.toInv.{u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y) (DivInvOneMonoid.toInvOneClass.{u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y) (DivisionMonoid.toDivInvOneMonoid.{u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y) (Group.toDivisionMonoid.{u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} α) (Quiver.SingleObj.instQuiverSingleObj.{u1} α) x y) _inst_1)))) f)
 Case conversion may be inaccurate. Consider using '#align category_theory.single_obj.inv_as_inv CategoryTheory.SingleObj.inv_as_invₓ'. -/
-theorem inv_as_inv [Group α] {x y : SingleObj α} (f : x ⟶ y) : inv f = f⁻¹ :=
-  by
-  ext
+theorem inv_as_inv [Group α] {x y : SingleObj α} (f : x ⟶ y) : inv f = f⁻¹ := by ext;
   rw [comp_as_mul, inv_mul_self, id_as_one]
 #align category_theory.single_obj.inv_as_inv CategoryTheory.SingleObj.inv_as_inv
 
@@ -201,11 +199,8 @@ def differenceFunctor {C G} [Category C] [Group G] (f : C → G) : C ⥤ SingleO
     where
   obj _ := ()
   map x y _ := f y * (f x)⁻¹
-  map_id' := by
-    intro
-    rw [single_obj.id_as_one, mul_right_inv]
-  map_comp' := by
-    intros
+  map_id' := by intro ; rw [single_obj.id_as_one, mul_right_inv]
+  map_comp' := by intros ;
     rw [single_obj.comp_as_mul, ← mul_assoc, mul_left_inj, mul_assoc, inv_mul_self, mul_one]
 #align category_theory.single_obj.difference_functor CategoryTheory.SingleObj.differenceFunctor
 -/

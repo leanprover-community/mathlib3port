@@ -81,8 +81,7 @@ theorem isCompact_open_iff_eq_finset_affine_union {X : Scheme} (U : Set X.carrie
       ∃ s : Set X.affineOpens, s.Finite ∧ U = ⋃ (i : X.affineOpens) (h : i ∈ s), i :=
   by
   apply opens.is_basis.is_compact_open_iff_eq_finite_Union (coe : X.affine_opens → opens X.carrier)
-  · rw [Subtype.range_coe]
-    exact is_basis_affine_open X
+  · rw [Subtype.range_coe]; exact is_basis_affine_open X
   · exact fun i => i.2.IsCompact
 #align algebraic_geometry.is_compact_open_iff_eq_finset_affine_union AlgebraicGeometry.isCompact_open_iff_eq_finset_affine_union
 
@@ -108,10 +107,8 @@ theorem quasiCompact_iff_forall_affine :
 
 @[simp]
 theorem QuasiCompact.affineProperty_toProperty {X Y : Scheme} (f : X ⟶ Y) :
-    (QuasiCompact.affineProperty : _).toProperty f ↔ IsAffine Y ∧ CompactSpace X.carrier :=
-  by
-  delta affine_target_morphism_property.to_property quasi_compact.affine_property
-  simp
+    (QuasiCompact.affineProperty : _).toProperty f ↔ IsAffine Y ∧ CompactSpace X.carrier := by
+  delta affine_target_morphism_property.to_property quasi_compact.affine_property; simp
 #align algebraic_geometry.quasi_compact.affine_property_to_property AlgebraicGeometry.QuasiCompact.affineProperty_toProperty
 
 theorem quasiCompact_iff_affineProperty :
@@ -125,9 +122,7 @@ theorem quasiCompact_iff_affineProperty :
 #align algebraic_geometry.quasi_compact_iff_affine_property AlgebraicGeometry.quasiCompact_iff_affineProperty
 
 theorem quasiCompact_eq_affineProperty :
-    @QuasiCompact = targetAffineLocally QuasiCompact.affineProperty :=
-  by
-  ext
+    @QuasiCompact = targetAffineLocally QuasiCompact.affineProperty := by ext;
   exact quasi_compact_iff_affine_property _
 #align algebraic_geometry.quasi_compact_eq_affine_property AlgebraicGeometry.quasiCompact_eq_affineProperty
 
@@ -140,9 +135,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
       intro V
       use V.1 ⊓ X.basic_open f
       have : V.1.1 ⟶ U := by
-        apply hom_of_le
-        change _ ⊆ (U : Set X.carrier)
-        rw [e]
+        apply hom_of_le; change _ ⊆ (U : Set X.carrier); rw [e]
         convert@Set.subset_iUnion₂ _ _ _ (fun (U : X.affine_opens) (h : U ∈ s) => ↑U) V V.prop using
           1
         rfl
@@ -263,14 +256,8 @@ theorem QuasiCompact.affineProperty_stableUnderBaseChange :
   rw [quasi_compact.affine_property] at h⊢
   skip
   let 𝒰 := Scheme.pullback.open_cover_of_right Y.affine_cover.finite_subcover f g
-  have : Finite 𝒰.J := by
-    dsimp [𝒰]
-    infer_instance
-  have : ∀ i, CompactSpace (𝒰.obj i).carrier :=
-    by
-    intro i
-    dsimp
-    infer_instance
+  have : Finite 𝒰.J := by dsimp [𝒰]; infer_instance
+  have : ∀ i, CompactSpace (𝒰.obj i).carrier := by intro i; dsimp; infer_instance
   exact 𝒰.compact_space
 #align algebraic_geometry.quasi_compact.affine_property_stable_under_base_change AlgebraicGeometry.QuasiCompact.affineProperty_stableUnderBaseChange
 
@@ -297,21 +284,13 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
     P S := by
   classical
     obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
-    replace hs' : S = iSup fun i : s => (i : opens X.carrier) :=
-      by
-      ext1
-      simpa using hs'
+    replace hs' : S = iSup fun i : s => (i : opens X.carrier) := by ext1; simpa using hs'
     subst hs'
     apply hs.induction_on
-    · convert h₁
-      rw [iSup_eq_bot]
-      rintro ⟨_, h⟩
-      exact h.elim
+    · convert h₁; rw [iSup_eq_bot]; rintro ⟨_, h⟩; exact h.elim
     · intro x s h₃ hs h₄
-      have : IsCompact (⨆ i : s, (i : opens X.carrier)).1 :=
-        by
-        refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1
-        exact ⟨s, hs, by simp⟩
+      have : IsCompact (⨆ i : s, (i : opens X.carrier)).1 := by
+        refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1; exact ⟨s, hs, by simp⟩
       convert h₂ _ this x h₄
       simp only [coe_coe]
       rw [iSup_subtype, sup_comm]
@@ -337,12 +316,8 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   by
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
   replace e : U = iSup fun i : s => (i : opens X.carrier)
-  · ext1
-    simpa using e
-  have h₁ : ∀ i : s, i.1.1 ≤ U := by
-    intro i
-    change (i : opens X.carrier) ≤ U
-    rw [e]
+  · ext1; simpa using e
+  have h₁ : ∀ i : s, i.1.1 ≤ U := by intro i; change (i : opens X.carrier) ≤ U; rw [e];
     exact le_iSup _ _
   have H' := fun i : s =>
     exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open X i.1.2
@@ -350,11 +325,9 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   swap
   · delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at H⊢
     convert congr_arg (X.presheaf.map (hom_of_le _).op) H
-    · simp only [← comp_apply, ← functor.map_comp]
-      congr
+    · simp only [← comp_apply, ← functor.map_comp]; congr
     · rw [map_zero]
-    · rw [X.basic_open_res]
-      exact Set.inter_subset_right _ _
+    · rw [X.basic_open_res]; exact Set.inter_subset_right _ _
   choose n hn using H'
   haveI := hs.to_subtype
   cases nonempty_fintype s

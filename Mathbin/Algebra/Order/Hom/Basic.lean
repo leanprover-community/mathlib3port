@@ -283,9 +283,7 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : OrderedAddCommMonoid.{u3} β] [_inst_3 : GroupSeminormClass.{u1, u2, u3} F α β _inst_1 _inst_2] (f : F) (x : α) (y : α), LE.le.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) (HDiv.hDiv.{u2, u2, u2} α α α (instHDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) x y)) (Preorder.toLE.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) (HDiv.hDiv.{u2, u2, u2} α α α (instHDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) x y)) (PartialOrder.toPreorder.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) (HDiv.hDiv.{u2, u2, u2} α α α (instHDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) x y)) (OrderedAddCommMonoid.toPartialOrder.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) (HDiv.hDiv.{u2, u2, u2} α α α (instHDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) x y)) _inst_2))) (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) _x) (MulLEAddHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (AddZeroClass.toAdd.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β (OrderedAddCommMonoid.toAddCommMonoid.{u3} β _inst_2)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (OrderedAddCommMonoid.toPartialOrder.{u3} β _inst_2))) (GroupSeminormClass.toMulLEAddHomClass.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) f (HDiv.hDiv.{u2, u2, u2} α α α (instHDiv.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) x y)) (HAdd.hAdd.{u3, u3, u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) y) ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) (instHAdd.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) (AddZeroClass.toAdd.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) (AddMonoid.toAddZeroClass.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) (AddCommMonoid.toAddMonoid.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) (OrderedAddCommMonoid.toAddCommMonoid.{u3} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) x) _inst_2))))) (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) _x) (MulLEAddHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (AddZeroClass.toAdd.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β (OrderedAddCommMonoid.toAddCommMonoid.{u3} β _inst_2)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (OrderedAddCommMonoid.toPartialOrder.{u3} β _inst_2))) (GroupSeminormClass.toMulLEAddHomClass.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) f x) (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.229 : α) => β) _x) (MulLEAddHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (AddZeroClass.toAdd.{u3} β (AddMonoid.toAddZeroClass.{u3} β (AddCommMonoid.toAddMonoid.{u3} β (OrderedAddCommMonoid.toAddCommMonoid.{u3} β _inst_2)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (OrderedAddCommMonoid.toPartialOrder.{u3} β _inst_2))) (GroupSeminormClass.toMulLEAddHomClass.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3)) f y))
 Case conversion may be inaccurate. Consider using '#align map_div_le_add map_div_le_addₓ'. -/
 @[to_additive]
-theorem map_div_le_add : f (x / y) ≤ f x + f y :=
-  by
-  rw [div_eq_mul_inv, ← map_inv_eq_map f y]
+theorem map_div_le_add : f (x / y) ≤ f x + f y := by rw [div_eq_mul_inv, ← map_inv_eq_map f y];
   exact map_mul_le_add _ _ _
 #align map_div_le_add map_div_le_add
 #align map_sub_le_add map_sub_le_add
@@ -342,9 +340,7 @@ instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group α]
     [LinearOrderedAddCommMonoid β] [GroupSeminormClass F α β] : NonnegHomClass F α β :=
   { ‹GroupSeminormClass F α β› with
     map_nonneg := fun f a =>
-      (nsmul_nonneg_iff two_ne_zero).1 <|
-        by
-        rw [two_nsmul, ← map_one_eq_zero f, ← div_self' a]
+      (nsmul_nonneg_iff two_ne_zero).1 <| by rw [two_nsmul, ← map_one_eq_zero f, ← div_self' a];
         exact map_div_le_add _ _ _ }
 #align group_seminorm_class.to_nonneg_hom_class GroupSeminormClass.toNonnegHomClass
 #align add_group_seminorm_class.to_nonneg_hom_class AddGroupSeminormClass.toNonnegHomClass
@@ -363,9 +359,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_oneₓ'. -/
 @[simp, to_additive]
 theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
-  ⟨eq_one_of_map_eq_zero _, by
-    rintro rfl
-    exact map_one_eq_zero _⟩
+  ⟨eq_one_of_map_eq_zero _, by rintro rfl; exact map_one_eq_zero _⟩
 #align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_one
 #align map_eq_zero_iff_eq_zero map_eq_zero_iff_eq_zero
 

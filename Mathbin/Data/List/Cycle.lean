@@ -86,8 +86,7 @@ theorem nextOr_eq_nextOr_of_mem_of_ne (xs : List α) (x d d' : α) (x_mem : x �
   induction' xs with y ys IH
   · cases x_mem
   cases' ys with z zs
-  · simp at x_mem x_ne
-    contradiction
+  · simp at x_mem x_ne; contradiction
   by_cases h : x = y
   · rw [h, next_or_self_cons_cons, next_or_self_cons_cons]
   · rw [next_or, next_or, IH] <;> simpa [h] using x_mem
@@ -596,9 +595,7 @@ instance : Inhabited (Cycle α) :=
 @[elab_as_elim]
 theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil)
     (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) : C s :=
-  Quotient.inductionOn' s fun l => by
-    apply List.recOn l <;> simp
-    assumption'
+  Quotient.inductionOn' s fun l => by apply List.recOn l <;> simp; assumption'
 #align cycle.induction_on Cycle.induction_on
 -/
 
@@ -919,10 +916,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 #print Cycle.mem_lists_iff_coe_eq /-
 @[simp]
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
-  Quotient.inductionOn' s fun l =>
-    by
-    rw [Lists, Quotient.liftOn'_mk'']
-    simp
+  Quotient.inductionOn' s fun l => by rw [Lists, Quotient.liftOn'_mk'']; simp
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
 -/
 
@@ -960,9 +954,7 @@ instance {s : Cycle α} : Decidable (Nodup s) :=
 #print Cycle.fintypeNodupCycle /-
 instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
   Fintype.ofSurjective (fun l : { l : List α // l.Nodup } => ⟨l.val, by simpa using l.prop⟩)
-    fun ⟨s, hs⟩ => by
-    induction s using Quotient.inductionOn'
-    exact ⟨⟨s, hs⟩, by simp⟩
+    fun ⟨s, hs⟩ => by induction s using Quotient.inductionOn'; exact ⟨⟨s, hs⟩, by simp⟩
 #align cycle.fintype_nodup_cycle Cycle.fintypeNodupCycle
 -/
 
@@ -1051,18 +1043,14 @@ theorem next_reverse_eq_prev (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ 
 
 #print Cycle.next_mem /-
 @[simp]
-theorem next_mem (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) : s.next hs x hx ∈ s :=
-  by
-  induction s using Quot.inductionOn
-  apply next_mem
+theorem next_mem (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) : s.next hs x hx ∈ s := by
+  induction s using Quot.inductionOn; apply next_mem
 #align cycle.next_mem Cycle.next_mem
 -/
 
 #print Cycle.prev_mem /-
-theorem prev_mem (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) : s.prev hs x hx ∈ s :=
-  by
-  rw [← next_reverse_eq_prev, ← mem_reverse_iff]
-  apply next_mem
+theorem prev_mem (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) : s.prev hs x hx ∈ s := by
+  rw [← next_reverse_eq_prev, ← mem_reverse_iff]; apply next_mem
 #align cycle.prev_mem Cycle.prev_mem
 -/
 
@@ -1259,8 +1247,7 @@ theorem Chain.eq_nil_of_well_founded [IsWellFounded α r] (h : Chain r s) : s = 
 
 #print Cycle.forall_eq_of_chain /-
 theorem forall_eq_of_chain [IsTrans α r] [IsAntisymm α r] (hs : Chain r s) {a b : α} (ha : a ∈ s)
-    (hb : b ∈ s) : a = b := by
-  rw [chain_iff_pairwise] at hs
+    (hb : b ∈ s) : a = b := by rw [chain_iff_pairwise] at hs;
   exact antisymm (hs a ha b hb) (hs b hb a ha)
 #align cycle.forall_eq_of_chain Cycle.forall_eq_of_chain
 -/

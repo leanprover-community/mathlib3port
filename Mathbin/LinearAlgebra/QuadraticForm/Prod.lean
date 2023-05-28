@@ -97,10 +97,8 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
   constructor
   · intro h
     constructor
-    · intro x
-      simpa only [add_zero, map_zero] using h x 0
-    · intro x
-      simpa only [zero_add, map_zero] using h 0 x
+    · intro x; simpa only [add_zero, map_zero] using h x 0
+    · intro x; simpa only [zero_add, map_zero] using h 0 x
   · rintro ⟨h₁, h₂⟩ x₁ x₂
     exact add_nonneg (h₁ x₁) (h₂ x₂)
 #align quadratic_form.nonneg_prod_iff QuadraticForm.nonneg_prod_iff
@@ -169,8 +167,7 @@ theorem anisotropicOfPi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ 
     apply Finset.sum_eq_zero
     intro j _
     by_cases hji : j = i
-    · subst hji
-      rw [Pi.single_eq_same, hx]
+    · subst hji; rw [Pi.single_eq_same, hx]
     · rw [Pi.single_eq_of_ne hji, map_zero]
 #align quadratic_form.anisotropic_of_pi QuadraticForm.anisotropicOfPi
 

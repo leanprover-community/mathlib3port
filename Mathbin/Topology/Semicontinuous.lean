@@ -655,16 +655,12 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
       filter_upwards [hf z₁ z₁lt, hg z₂ z₂lt]with z h₁z h₂z
       have A1 : min (f z) (f x) ∈ u := by
         by_cases H : f z ≤ f x
-        · simp [H]
-          exact h₁ ⟨h₁z, H⟩
-        · simp [le_of_not_le H]
-          exact h₁ ⟨z₁lt, le_rfl⟩
+        · simp [H]; exact h₁ ⟨h₁z, H⟩
+        · simp [le_of_not_le H]; exact h₁ ⟨z₁lt, le_rfl⟩
       have A2 : min (g z) (g x) ∈ v := by
         by_cases H : g z ≤ g x
-        · simp [H]
-          exact h₂ ⟨h₂z, H⟩
-        · simp [le_of_not_le H]
-          exact h₂ ⟨z₂lt, le_rfl⟩
+        · simp [H]; exact h₂ ⟨h₂z, H⟩
+        · simp [le_of_not_le H]; exact h₂ ⟨z₂lt, le_rfl⟩
       have : (min (f z) (f x), min (g z) (g x)) ∈ u ×ˢ v := ⟨A1, A2⟩
       calc
         y < min (f z) (f x) + min (g z) (g x) := h this
@@ -674,10 +670,8 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
       filter_upwards [hf z₁ z₁lt]with z h₁z
       have A1 : min (f z) (f x) ∈ u := by
         by_cases H : f z ≤ f x
-        · simp [H]
-          exact h₁ ⟨h₁z, H⟩
-        · simp [le_of_not_le H]
-          exact h₁ ⟨z₁lt, le_rfl⟩
+        · simp [H]; exact h₁ ⟨h₁z, H⟩
+        · simp [le_of_not_le H]; exact h₁ ⟨z₁lt, le_rfl⟩
       have : (min (f z) (f x), g x) ∈ u ×ˢ v := ⟨A1, xv⟩
       calc
         y < min (f z) (f x) + g x := h this
@@ -690,10 +684,8 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
       filter_upwards [hg z₂ z₂lt]with z h₂z
       have A2 : min (g z) (g x) ∈ v := by
         by_cases H : g z ≤ g x
-        · simp [H]
-          exact h₂ ⟨h₂z, H⟩
-        · simp [le_of_not_le H]
-          exact h₂ ⟨z₂lt, le_rfl⟩
+        · simp [H]; exact h₂ ⟨h₂z, H⟩
+        · simp [le_of_not_le H]; exact h₂ ⟨z₂lt, le_rfl⟩
       have : (f x, min (g z) (g x)) ∈ u ×ˢ v := ⟨xu, A2⟩
       calc
         y < f x + min (g z) (g x) := h this
@@ -721,10 +713,8 @@ the lemma uses `[has_continuous_add]`. -/
 theorem LowerSemicontinuousAt.add' {f g : α → γ} (hf : LowerSemicontinuousAt f x)
     (hg : LowerSemicontinuousAt g x)
     (hcont : ContinuousAt (fun p : γ × γ => p.1 + p.2) (f x, g x)) :
-    LowerSemicontinuousAt (fun z => f z + g z) x :=
-  by
-  simp_rw [← lowerSemicontinuousWithinAt_univ_iff] at *
-  exact hf.add' hg hcont
+    LowerSemicontinuousAt (fun z => f z + g z) x := by
+  simp_rw [← lowerSemicontinuousWithinAt_univ_iff] at *; exact hf.add' hg hcont
 #align lower_semicontinuous_at.add' LowerSemicontinuousAt.add'
 
 /- warning: lower_semicontinuous_on.add' -> LowerSemicontinuousOn.add' is a dubious translation:
@@ -1577,10 +1567,8 @@ the lemma uses `[has_continuous_add]`. -/
 theorem UpperSemicontinuousAt.add' {f g : α → γ} (hf : UpperSemicontinuousAt f x)
     (hg : UpperSemicontinuousAt g x)
     (hcont : ContinuousAt (fun p : γ × γ => p.1 + p.2) (f x, g x)) :
-    UpperSemicontinuousAt (fun z => f z + g z) x :=
-  by
-  simp_rw [← upperSemicontinuousWithinAt_univ_iff] at *
-  exact hf.add' hg hcont
+    UpperSemicontinuousAt (fun z => f z + g z) x := by
+  simp_rw [← upperSemicontinuousWithinAt_univ_iff] at *; exact hf.add' hg hcont
 #align upper_semicontinuous_at.add' UpperSemicontinuousAt.add'
 
 /- warning: upper_semicontinuous_on.add' -> UpperSemicontinuousOn.add' is a dubious translation:

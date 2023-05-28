@@ -284,8 +284,7 @@ theorem essentiallySmall_iff (C : Type u) [Category.{v} C] :
       skip
       refine' ⟨⟨skeleton S, ⟨_⟩⟩⟩
       exact e.skeleton_equiv
-    · skip
-      infer_instance
+    · skip; infer_instance
   · rintro ⟨⟨S, ⟨e⟩⟩, L⟩
     skip
     let e' := (shrink_homs.equivalence C).skeletonEquiv.symm

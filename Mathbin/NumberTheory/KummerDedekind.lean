@@ -173,10 +173,7 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
         simpa [hx₂]
       rwa [← this]
   · -- The converse inclusion is trivial
-    have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>) :=
-      by
-      ext
-      rfl
+    have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>) := by ext; rfl
     rw [this, ← Ideal.map_map]
     apply Ideal.le_comap_map
 #align comap_map_eq_map_adjoin_of_coprime_conductor comap_map_eq_map_adjoin_of_coprime_conductor
@@ -190,10 +187,7 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
     (Ideal.Quotient.lift (I.map (algebraMap R R<x>))
       ((I.map (algebraMap R S)).Quotient.mk.comp (algebraMap R<x> S)) fun r hr =>
       by
-      have : algebraMap R S = (algebraMap R<x> S).comp (algebraMap R R<x>) :=
-        by
-        ext
-        rfl
+      have : algebraMap R S = (algebraMap R<x> S).comp (algebraMap R R<x>) := by ext; rfl
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, this, ← Ideal.map_map]
       exact Ideal.mem_map_of_mem _ hr)
     (by
@@ -269,8 +263,7 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
           rwa [Ne.def, map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S), ←
             Ne.def])
         (--show that the ideal spanned by `(minpoly R pb.gen) mod I` is non-zero
-        by
-          by_contra
+        by by_contra;
           exact
             (show map I.Quotient.mk (minpoly R x) ≠ 0 from
                 Polynomial.map_monic_ne_zero (minpoly.monic hx'))
@@ -306,7 +299,7 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
   by
   ext J
   -- WLOG, assume J is a normalized factor
-  by_cases hJ : J ∈ normalized_factors (I.map (algebraMap R S))
+  by_cases hJ : J ∈ normalized_factors (I.map (algebraMap R S));
   swap
   · rw [multiset.count_eq_zero.mpr hJ, eq_comm, Multiset.count_eq_zero, Multiset.mem_map]
     simp only [Multiset.mem_attach, true_and_iff, not_exists]

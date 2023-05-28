@@ -117,8 +117,7 @@ instance [Countable α] [∀ a, Countable (π a)] : Countable (PSigma π) :=
 instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) :=
   by
   have : ∀ n, Countable (Fin n → ℕ) := by
-    intro n
-    induction' n with n ihn
+    intro n; induction' n with n ihn
     · infer_instance
     · exact Countable.of_equiv _ (Equiv.piFinSucc _ _).symm
   rcases Finite.exists_equiv_fin α with ⟨n, ⟨e⟩⟩

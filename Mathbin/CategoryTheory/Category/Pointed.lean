@@ -154,16 +154,9 @@ def typeToPointedForgetAdjunction : typeToPointed ⊣ forget Pointed :=
     { homEquiv := fun X Y =>
         { toFun := fun f => f.toFun ∘ Option.some
           invFun := fun f => ⟨fun o => o.elim Y.point f, rfl⟩
-          left_inv := fun f => by
-            ext
-            cases x
-            exact f.map_point.symm
-            rfl
+          left_inv := fun f => by ext; cases x; exact f.map_point.symm; rfl
           right_inv := fun f => funext fun _ => rfl }
-      homEquiv_naturality_left_symm := fun X' X Y f g =>
-        by
-        ext
-        cases x <;> rfl }
+      homEquiv_naturality_left_symm := fun X' X Y f g => by ext; cases x <;> rfl }
 #align Type_to_Pointed_forget_adjunction typeToPointedForgetAdjunction
 -/
 

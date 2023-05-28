@@ -109,16 +109,13 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           comp_id, v.comp_Hσ_eq hi', assoc, simplicial_object.δ_comp_σ_succ'_assoc, Fin.eta,
           decomposition_Q n q, sum_comp, sum_comp, Finset.sum_eq_zero, add_zero, add_neg_eq_zero]
         swap
-        · ext
-          simp only [Fin.val_mk, Fin.val_succ]
+        · ext; simp only [Fin.val_mk, Fin.val_succ]
         · intro j hj
           simp only [true_and_iff, Finset.mem_univ, Finset.mem_filter] at hj
           simp only [Nat.succ_eq_add_one] at hi'
           obtain ⟨k, hk⟩ := Nat.le.dest (nat.lt_succ_iff.mp (Fin.is_lt j))
           rw [add_comm] at hk
-          have hi'' : i = Fin.castSucc ⟨i, by linarith⟩ :=
-            by
-            ext
+          have hi'' : i = Fin.castSucc ⟨i, by linarith⟩ := by ext;
             simp only [Fin.castSucc_mk, Fin.eta]
           have eq :=
             hq j.rev.succ

@@ -257,9 +257,7 @@ theorem kroneckerMap_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃ 
     (M : Matrix l m α) (N : Matrix n p β) :
     kroneckerMap f (reindex el em M) (reindex en ep N) =
       reindex (el.prodCongr en) (em.prodCongr ep) (kroneckerMap f M N) :=
-  by
-  ext (⟨i, i'⟩⟨j, j'⟩)
-  rfl
+  by ext (⟨i, i'⟩⟨j, j'⟩); rfl
 #align matrix.kronecker_map_reindex Matrix.kroneckerMap_reindex
 
 /- warning: matrix.kronecker_map_reindex_left -> Matrix.kroneckerMap_reindex_left is a dubious translation:
@@ -613,10 +611,8 @@ theorem det_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [C
   by
   refine' (det_kronecker_map_bilinear (Algebra.lmul ℕ R).toLinearMap mul_mul_mul_comm _ _).trans _
   congr 3
-  · ext (i j)
-    exact mul_one _
-  · ext (i j)
-    exact one_mul _
+  · ext (i j); exact mul_one _
+  · ext (i j); exact one_mul _
 #align matrix.det_kronecker Matrix.det_kronecker
 
 /- warning: matrix.inv_kronecker -> Matrix.inv_kronecker is a dubious translation:

@@ -174,16 +174,13 @@ theorem monomial_smul_apply (i : ℕ) (r : R) (g : PolynomialModule R M) (n : �
   induction' g using PolynomialModule.induction_linear with p q hp hq
   · simp only [smul_zero, Finsupp.zero_apply, if_t_t]
   · simp only [smul_add, Finsupp.add_apply, hp, hq]
-    split_ifs
-    exacts[rfl, zero_add 0]
+    split_ifs; exacts[rfl, zero_add 0]
   · rw [monomial_smul_single, single_apply, single_apply, smul_ite, smul_zero, ← ite_and]
     congr
     rw [eq_iff_iff]
     constructor
-    · rintro rfl
-      simp
-    · rintro ⟨e, rfl⟩
-      rw [add_comm, tsub_add_cancel_of_le e]
+    · rintro rfl; simp
+    · rintro ⟨e, rfl⟩; rw [add_comm, tsub_add_cancel_of_le e]
 #align polynomial_module.monomial_smul_apply PolynomialModule.monomial_smul_apply
 
 /- warning: polynomial_module.smul_single_apply -> PolynomialModule.smul_single_apply is a dubious translation:
@@ -195,15 +192,11 @@ theorem smul_single_apply (i : ℕ) (f : R[X]) (m : M) (n : ℕ) :
   by
   induction' f using Polynomial.induction_on' with p q hp hq
   · rw [add_smul, Finsupp.add_apply, hp, hq, coeff_add, add_smul]
-    split_ifs
-    exacts[rfl, zero_add 0]
+    split_ifs; exacts[rfl, zero_add 0]
   · rw [monomial_smul_single, single_apply, coeff_monomial, ite_smul, zero_smul]
     by_cases h : i ≤ n
     · simp_rw [eq_tsub_iff_add_eq_of_le h, if_pos h]
-    · rw [if_neg h, ite_eq_right_iff]
-      intro e
-      exfalso
-      linarith
+    · rw [if_neg h, ite_eq_right_iff]; intro e; exfalso; linarith
 #align polynomial_module.smul_single_apply PolynomialModule.smul_single_apply
 
 /- warning: polynomial_module.smul_apply -> PolynomialModule.smul_apply is a dubious translation:
@@ -280,12 +273,10 @@ theorem map_smul (f : M →ₗ[R] M') (p : R[X]) (q : PolynomialModule R M) :
   by
   apply induction_linear q
   · rw [smul_zero, map_zero, smul_zero]
-  · intro f g e₁ e₂
-    rw [smul_add, map_add, e₁, e₂, map_add, smul_add]
+  · intro f g e₁ e₂; rw [smul_add, map_add, e₁, e₂, map_add, smul_add]
   intro i m
   apply Polynomial.induction_on' p
-  · intro p q e₁ e₂
-    rw [add_smul, map_add, e₁, e₂, Polynomial.map_add, add_smul]
+  · intro p q e₁ e₂; rw [add_smul, map_add, e₁, e₂, Polynomial.map_add, add_smul]
   · intro j s
     rw [monomial_smul_single, map_single, Polynomial.map_monomial, map_single, monomial_smul_single,
       f.map_smul, algebraMap_smul]
@@ -301,8 +292,7 @@ def eval (r : R) : PolynomialModule R M →ₗ[R] M
   map_smul' s m := by
     refine' (Finsupp.sum_smul_index' _).trans _
     · exact fun i => smul_zero _
-    · simp_rw [← smul_comm s, ← Finsupp.smul_sum]
-      rfl
+    · simp_rw [← smul_comm s, ← Finsupp.smul_sum]; rfl
 #align polynomial_module.eval PolynomialModule.eval
 -/
 
@@ -330,12 +320,10 @@ theorem eval_smul (p : R[X]) (q : PolynomialModule R M) (r : R) :
   by
   apply induction_linear q
   · rw [smul_zero, map_zero, smul_zero]
-  · intro f g e₁ e₂
-    rw [smul_add, map_add, e₁, e₂, map_add, smul_add]
+  · intro f g e₁ e₂; rw [smul_add, map_add, e₁, e₂, map_add, smul_add]
   intro i m
   apply Polynomial.induction_on' p
-  · intro p q e₁ e₂
-    rw [add_smul, map_add, Polynomial.eval_add, e₁, e₂, add_smul]
+  · intro p q e₁ e₂; rw [add_smul, map_add, Polynomial.eval_add, e₁, e₂, add_smul]
   · intro j s
     rw [monomial_smul_single, eval_single, Polynomial.eval_monomial, eval_single, smul_comm, ←
       smul_smul, pow_add, mul_smul]
@@ -350,8 +338,7 @@ theorem eval_map (f : M →ₗ[R] M') (q : PolynomialModule R M) (r : R) :
   by
   apply induction_linear q
   · simp_rw [map_zero]
-  · intro f g e₁ e₂
-    simp_rw [map_add, e₁, e₂]
+  · intro f g e₁ e₂; simp_rw [map_add, e₁, e₂]
   · intro i m
     rw [map_single, eval_single, eval_single, f.map_smul, ← map_pow, algebraMap_smul]
 #align polynomial_module.eval_map PolynomialModule.eval_map
@@ -392,8 +379,7 @@ theorem comp_eval (p : R[X]) (q : PolynomialModule R M) (r : R) :
   rw [← LinearMap.comp_apply]
   apply induction_linear q
   · rw [map_zero, map_zero]
-  · intro _ _ e₁ e₂
-    rw [map_add, map_add, e₁, e₂]
+  · intro _ _ e₁ e₂; rw [map_add, map_add, e₁, e₂]
   · intro i m
     rw [LinearMap.comp_apply, comp_single, eval_single, eval_smul, eval_single, pow_zero, one_smul,
       Polynomial.eval_pow]

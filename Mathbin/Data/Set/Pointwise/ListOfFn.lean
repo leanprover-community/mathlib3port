@@ -61,10 +61,8 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
   simp_rw [List.exists_iff_exists_tuple, List.map_ofFn, List.ofFn_inj', and_left_comm,
     exists_and_left, exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]
   constructor
-  · rintro ⟨fi, rfl⟩
-    exact ⟨fun i => ⟨_, fi i⟩, rfl, rfl⟩
-  · rintro ⟨fi, rfl, rfl⟩
-    exact ⟨fun i => _, rfl⟩
+  · rintro ⟨fi, rfl⟩; exact ⟨fun i => ⟨_, fi i⟩, rfl, rfl⟩
+  · rintro ⟨fi, rfl, rfl⟩; exact ⟨fun i => _, rfl⟩
 #align set.mem_list_prod Set.mem_list_prod
 #align set.mem_list_sum Set.mem_list_sum
 

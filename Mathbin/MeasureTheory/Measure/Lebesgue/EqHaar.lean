@@ -93,10 +93,8 @@ open Measure TopologicalSpace.PositiveCompacts FiniteDimensional
 
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ`. -/
-theorem addHaarMeasure_eq_volume : addHaarMeasure icc01 = volume :=
-  by
-  convert(add_haar_measure_unique volume Icc01).symm
-  simp [Icc01]
+theorem addHaarMeasure_eq_volume : addHaarMeasure icc01 = volume := by
+  convert(add_haar_measure_unique volume Icc01).symm; simp [Icc01]
 #align measure_theory.add_haar_measure_eq_volume MeasureTheory.addHaarMeasure_eq_volume
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
@@ -109,9 +107,7 @@ theorem addHaarMeasure_eq_volume_pi (ι : Type _) [Fintype ι] :
 #align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.addHaarMeasure_eq_volume_pi
 
 instance isAddHaarMeasure_volume_pi (ι : Type _) [Fintype ι] :
-    IsAddHaarMeasure (volume : Measure (ι → ℝ)) :=
-  by
-  rw [← add_haar_measure_eq_volume_pi]
+    IsAddHaarMeasure (volume : Measure (ι → ℝ)) := by rw [← add_haar_measure_eq_volume_pi];
   infer_instance
 #align measure_theory.is_add_haar_measure_volume_pi MeasureTheory.isAddHaarMeasure_volume_pi
 
@@ -133,9 +129,7 @@ theorem add_haar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedAddCommG
   apply lt_irrefl ∞
   calc
     ∞ = ∑' n : ℕ, μ s := (ENNReal.tsum_const_eq_top_of_ne_zero h).symm
-    _ = ∑' n : ℕ, μ ({u n} + s) := by
-      congr 1
-      ext1 n
+    _ = ∑' n : ℕ, μ ({u n} + s) := by congr 1; ext1 n;
       simp only [image_add_left, measure_preimage_add, singleton_add]
     _ = μ (⋃ n, {u n} + s) := by
       rw [measure_Union hs fun n => by
@@ -155,10 +149,8 @@ theorem add_haar_eq_zero_of_disjoint_translates {E : Type _} [NormedAddCommGroup
   suffices H : ∀ R, μ (s ∩ closed_ball 0 R) = 0
   · apply le_antisymm _ (zero_le _)
     calc
-      μ s ≤ ∑' n : ℕ, μ (s ∩ closed_ball 0 n) :=
-        by
-        conv_lhs => rw [← Union_inter_closed_ball_nat s 0]
-        exact measure_Union_le _
+      μ s ≤ ∑' n : ℕ, μ (s ∩ closed_ball 0 n) := by
+        conv_lhs => rw [← Union_inter_closed_ball_nat s 0]; exact measure_Union_le _
       _ = 0 := by simp only [H, tsum_zero]
       
   intro R
@@ -250,9 +242,7 @@ theorem map_linearMap_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.de
   have e : E ≃ₗ[ℝ] ι → ℝ := LinearEquiv.ofFinrankEq E (ι → ℝ) this
   -- next line is to avoid `g` getting reduced by `simp`.
   obtain ⟨g, hg⟩ : ∃ g, g = (e : E →ₗ[ℝ] ι → ℝ).comp (f.comp (e.symm : (ι → ℝ) →ₗ[ℝ] E)) := ⟨_, rfl⟩
-  have gdet : g.det = f.det := by
-    rw [hg]
-    exact LinearMap.det_conj f e
+  have gdet : g.det = f.det := by rw [hg]; exact LinearMap.det_conj f e
   rw [← gdet] at hf⊢
   have fg : f = (e.symm : (ι → ℝ) →ₗ[ℝ] E).comp (g.comp (e : E →ₗ[ℝ] ι → ℝ)) :=
     by
@@ -265,8 +255,7 @@ theorem map_linearMap_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.de
   have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finiteDimensional
   rw [← map_map Cesymm.measurable (Cg.comp Ce).Measurable, ← map_map Cg.measurable Ce.measurable]
   haveI : is_add_haar_measure (map e μ) := (e : E ≃+ (ι → ℝ)).is_add_haar_measure_map μ Ce Cesymm
-  have ecomp : e.symm ∘ e = id := by
-    ext x
+  have ecomp : e.symm ∘ e = id := by ext x;
     simp only [id.def, Function.comp_apply, LinearEquiv.symm_apply_apply]
   rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), measure.map_smul,
     map_map Cesymm.measurable Ce.measurable, ecomp, measure.map_id]
@@ -281,9 +270,7 @@ theorem add_haar_preimage_linearMap {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) (s 
     μ (f ⁻¹' s) = Measure.map f μ s :=
       ((f.equivOfDetNeZero hf).toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv.map_apply
           s).symm
-    _ = ENNReal.ofReal (abs f.det⁻¹) * μ s :=
-      by
-      rw [map_linear_map_add_haar_eq_smul_add_haar μ hf]
+    _ = ENNReal.ofReal (abs f.det⁻¹) * μ s := by rw [map_linear_map_add_haar_eq_smul_add_haar μ hf];
       rfl
     
 #align measure_theory.measure.add_haar_preimage_linear_map MeasureTheory.Measure.add_haar_preimage_linearMap
@@ -376,10 +363,7 @@ theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
   calc
     μ ((· • ·) r ⁻¹' s) = Measure.map ((· • ·) r) μ s :=
       ((Homeomorph.smul (isUnit_iff_ne_zero.2 hr).Unit).toMeasurableEquiv.map_apply s).symm
-    _ = ENNReal.ofReal (abs (r ^ finrank ℝ E)⁻¹) * μ s :=
-      by
-      rw [map_add_haar_smul μ hr]
-      rfl
+    _ = ENNReal.ofReal (abs (r ^ finrank ℝ E)⁻¹) * μ s := by rw [map_add_haar_smul μ hr]; rfl
     
 #align measure_theory.measure.add_haar_preimage_smul MeasureTheory.Measure.add_haar_preimage_smul
 
@@ -430,10 +414,8 @@ variable (μ)
 theorem add_haar_image_homothety (x : E) (r : ℝ) (s : Set E) :
     μ (AffineMap.homothety x r '' s) = ENNReal.ofReal (abs (r ^ finrank ℝ E)) * μ s :=
   calc
-    μ (AffineMap.homothety x r '' s) = μ ((fun y => y + x) '' (r • (fun y => y + -x) '' s)) :=
-      by
-      simp only [← image_smul, image_image, ← sub_eq_add_neg]
-      rfl
+    μ (AffineMap.homothety x r '' s) = μ ((fun y => y + x) '' (r • (fun y => y + -x) '' s)) := by
+      simp only [← image_smul, image_image, ← sub_eq_add_neg]; rfl
     _ = ENNReal.ofReal (abs (r ^ finrank ℝ E)) * μ s := by
       simp only [image_add_right, measure_preimage_add_right, add_haar_smul]
     
@@ -640,15 +622,11 @@ theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fi
     Real.ennnorm_eq_ofReal_abs]
 #align alternating_map.measure_parallelepiped AlternatingMap.measure_parallelepiped
 
-instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsAddLeftInvariant ω.Measure :=
-  by
-  rw [AlternatingMap.measure]
-  infer_instance
+instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : IsAddLeftInvariant ω.Measure := by
+  rw [AlternatingMap.measure]; infer_instance
 
-instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : LocallyFiniteMeasure ω.Measure :=
-  by
-  rw [AlternatingMap.measure]
-  infer_instance
+instance (ω : AlternatingMap ℝ G ℝ (Fin n)) : LocallyFiniteMeasure ω.Measure := by
+  rw [AlternatingMap.measure]; infer_instance
 
 end
 
@@ -726,9 +704,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E
   calc
     μ (s ∩ ({x} + r • t)) / μ (closed_ball x r) * (μ (closed_ball x r) / μ ({x} + r • u)) =
         μ (closed_ball x r) * (μ (closed_ball x r))⁻¹ * (μ (s ∩ ({x} + r • t)) / μ ({x} + r • u)) :=
-      by
-      simp only [div_eq_mul_inv]
-      ring
+      by simp only [div_eq_mul_inv]; ring
     _ = μ (s ∩ ({x} + r • t)) / μ ({x} + r • u) := by
       rw [ENNReal.mul_inv_cancel (measure_closed_ball_pos μ x rpos).ne'
           measure_closed_ball_lt_top.ne,
@@ -784,8 +760,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
   rcases eq_or_ne (μ t) 0 with (h't | h't)
   · apply eventually_of_forall fun r => _
     suffices H : μ (s ∩ ({x} + r • t)) = 0
-    · rw [H]
-      simpa only [ENNReal.zero_div] using εpos
+    · rw [H]; simpa only [ENNReal.zero_div] using εpos
     apply le_antisymm _ (zero_le _)
     calc
       μ (s ∩ ({x} + r • t)) ≤ μ ({x} + r • t) := measure_mono (inter_subset_right _ _)
@@ -852,8 +827,7 @@ theorem tendsto_add_haar_inter_smul_one_of_density_one_aux (s : Set E) (hs : Mea
     by
     intro u v uzero utop vmeas
     simp_rw [div_eq_mul_inv]
-    rw [← ENNReal.sub_mul]
-    swap
+    rw [← ENNReal.sub_mul]; swap
     · simp only [uzero, ENNReal.inv_eq_top, imp_true_iff, Ne.def, not_false_iff]
     congr 1
     apply

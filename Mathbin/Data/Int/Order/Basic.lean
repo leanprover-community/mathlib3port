@@ -254,10 +254,8 @@ protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
     (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) : m ≤ n → P n :=
   by
   apply Int.inductionOn' n m
-  · intro
-    exact h0
-  · intro k hle hi _
-    exact h1 k hle (hi hle)
+  · intro ; exact h0
+  · intro k hle hi _; exact h1 k hle (hi hle)
   · intro _ hle _ hle'
     exfalso
     exact lt_irrefl k (le_sub_one_iff.mp (hle.trans hle'))
@@ -270,8 +268,7 @@ protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m)
     (h1 : ∀ n : ℤ, n ≤ m → P n → P (n - 1)) (n : ℤ) : n ≤ m → P n :=
   by
   apply Int.inductionOn' n m
-  · intro
-    exact h0
+  · intro ; exact h0
   · intro _ hle _ hle'
     exfalso
     exact lt_irrefl k (add_one_le_iff.mp (hle'.trans hle))
@@ -335,15 +332,13 @@ protected theorem add_mul_ediv_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + 
         cases' lt_or_ge m (n * k.succ) with h h
         · rw [← Int.ofNat_sub h, ← Int.ofNat_sub ((Nat.div_lt_iff_lt_mul k.succ_pos).2 h)]
           apply congr_arg of_nat
-          rw [mul_comm, Nat.mul_sub_div]
-          rwa [mul_comm]
+          rw [mul_comm, Nat.mul_sub_div]; rwa [mul_comm]
         · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.ofNat_sub h, ←
             Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← neg_succ_of_nat_coe', ←
             neg_succ_of_nat_coe']
           · apply congr_arg neg_succ_of_nat
-            rw [mul_comm, Nat.sub_mul_div]
-            rwa [mul_comm]
+            rw [mul_comm, Nat.sub_mul_div]; rwa [mul_comm]
   have : ∀ {a b c : ℤ}, 0 < c → (a + b * c) / c = a / c + b := fun a b c H =>
     match c, eq_succ_of_zero_lt H, b with
     | _, ⟨k, rfl⟩, (n : ℕ) => this
@@ -897,17 +892,13 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
     (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m :=
   by
   constructor
-  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
-    rw [mul_lt_mul_left hn] at h1k h2k
-    rw [lt_add_one_iff, ← not_lt] at h2k
-    exact h2k h1k
-  · intro h
-    rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
+  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩; rw [mul_lt_mul_left hn] at h1k h2k
+    rw [lt_add_one_iff, ← not_lt] at h2k; exact h2k h1k
+  · intro h; rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
     have := (mod_nonneg m hn.ne.symm).lt_of_ne h.symm
     simp (config := { singlePass := true }) only [← mod_add_div m n]
     refine' ⟨m / n, lt_add_of_pos_left _ this, _⟩
-    rw [add_comm _ (1 : ℤ), left_distrib, mul_one]
-    exact add_lt_add_right (mod_lt_of_pos _ hn) _
+    rw [add_comm _ (1 : ℤ), left_distrib, mul_one]; exact add_lt_add_right (mod_lt_of_pos _ hn) _
 #align int.exists_lt_and_lt_iff_not_dvd Int.exists_lt_and_lt_iff_not_dvd
 
 attribute [local simp] Int.div_zero

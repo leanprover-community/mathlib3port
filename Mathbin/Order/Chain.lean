@@ -232,9 +232,7 @@ theorem succChain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) : SuperChai
 #print IsChain.succ /-
 theorem IsChain.succ (hs : IsChain r s) : IsChain r (SuccChain r s) :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then (succChain_spec h).1
-  else by
-    simp [SuccChain, dif_neg, h]
-    exact hs
+  else by simp [SuccChain, dif_neg, h]; exact hs
 #align is_chain.succ IsChain.succ
 -/
 
@@ -392,10 +390,7 @@ variable [LE α] {s t : Flag α} {a : α}
 
 instance : SetLike (Flag α) α where
   coe := carrier
-  coe_injective' s t h := by
-    cases s
-    cases t
-    congr
+  coe_injective' s t h := by cases s; cases t; congr
 
 #print Flag.ext /-
 @[ext]

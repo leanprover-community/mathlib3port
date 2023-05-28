@@ -58,9 +58,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
       lt_of_le_of_ne Metric.infDist_nonneg fun heq =>
         hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
     let r' := max r 2⁻¹
-    have hr' : r' < 1 := by
-      simp [r', hr]
-      norm_num
+    have hr' : r' < 1 := by simp [r', hr]; norm_num
     have hlt : 0 < r' := lt_of_lt_of_le (by norm_num) (le_max_right r 2⁻¹)
     have hdlt : d < d / r' := (lt_div_iff hlt).mpr ((mul_lt_iff_lt_one_right hdp).2 hr')
     obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.infDist_lt_iff hFn).mp hdlt
@@ -73,9 +71,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     have hy₀y : y₀ + y ∈ F := F.add_mem hy₀F hy
     calc
       r * ‖x - y₀‖ ≤ r' * ‖x - y₀‖ := mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
-      _ < d := by
-        rw [← dist_eq_norm]
-        exact (lt_div_iff' hlt).1 hxy₀
+      _ < d := by rw [← dist_eq_norm]; exact (lt_div_iff' hlt).1 hxy₀
       _ ≤ dist x (y₀ + y) := (Metric.infDist_le_dist_of_mem hy₀y)
       _ = ‖x - y₀ - y‖ := by rw [sub_sub, dist_eq_norm]
       
@@ -102,9 +98,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
     ∃ x₀ : E, ‖x₀‖ ≤ R ∧ ∀ y ∈ F, 1 ≤ ‖x₀ - y‖ :=
   by
   have Rpos : 0 < R := (norm_nonneg _).trans_lt hR
-  have : ‖c‖ / R < 1 := by
-    rw [div_lt_iff Rpos]
-    simpa using hR
+  have : ‖c‖ / R < 1 := by rw [div_lt_iff Rpos]; simpa using hR
   rcases riesz_lemma hFc hF this with ⟨x, xF, hx⟩
   have x0 : x ≠ 0 := fun H => by simpa [H] using xF
   obtain ⟨d, d0, dxlt, ledx, -⟩ :
@@ -117,9 +111,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
   calc
     1 = ‖c‖ / R * (R / ‖c‖) := by field_simp [Rpos.ne', (zero_lt_one.trans hc).ne']
     _ ≤ ‖c‖ / R * ‖d • x‖ := (mul_le_mul_of_nonneg_left ledx (div_nonneg (norm_nonneg _) Rpos.le))
-    _ = ‖d‖ * (‖c‖ / R * ‖x‖) := by
-      simp [norm_smul]
-      ring
+    _ = ‖d‖ * (‖c‖ / R * ‖x‖) := by simp [norm_smul]; ring
     _ ≤ ‖d‖ * ‖x - y'‖ :=
       (mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _))
     _ = ‖d • x - y‖ := by simp [yy', ← smul_sub, norm_smul]

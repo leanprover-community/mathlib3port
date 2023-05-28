@@ -147,14 +147,11 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
         apply uF'
         intro e
         ext
-        · convert hE _ _ _
-          rfl
+        · convert hE _ _ _; rfl
         · rfl
       apply functor.hext
-      · intro
-        apply Unit.ext
-      · refine' action_category.cases _
-        intros
+      · intro ; apply Unit.ext
+      · refine' action_category.cases _; intros
         simp only [← this, uncurry_map, curry_apply_left, coe_back, hom_of_pair.val]
 #align is_free_groupoid.action_groupoid_is_free IsFreeGroupoid.actionGroupoidIsFree
 -/
@@ -220,8 +217,7 @@ theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetr
   by
   rw [loop_of_hom, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
   cases H
-  · rw [tree_hom_eq T (path.cons default ⟨Sum.inl e, H⟩), hom_of_path]
-    rfl
+  · rw [tree_hom_eq T (path.cons default ⟨Sum.inl e, H⟩), hom_of_path]; rfl
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inr e, H⟩), hom_of_path]
     simp only [is_iso.inv_hom_id, category.comp_id, category.assoc, tree_hom]
 #align is_free_groupoid.spanning_tree.loop_of_hom_eq_id IsFreeGroupoid.SpanningTree.loopOfHom_eq_id
@@ -267,15 +263,12 @@ def endIsFree : IsFreeGroup (End (root' T)) :=
         suffices ∀ {a} (p : Path (root' T) a), F'.map (hom_of_path T p) = 1 by
           simp only [this, tree_hom, comp_as_mul, inv_as_inv, loop_of_hom, inv_one, mul_one,
             one_mul, functor.map_inv, functor.map_comp]
-        intro a p
-        induction' p with b c p e ih
+        intro a p; induction' p with b c p e ih
         · rw [hom_of_path, F'.map_id, id_as_one]
         rw [hom_of_path, F'.map_comp, comp_as_mul, ih, mul_one]
         rcases e with ⟨e | e, eT⟩
-        · rw [hF']
-          exact dif_pos (Or.inl eT)
-        · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
-          exact dif_pos (Or.inr eT)
+        · rw [hF']; exact dif_pos (Or.inl eT)
+        · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']; exact dif_pos (Or.inr eT)
       · intro E hE
         ext
         suffices (functor_of_monoid_hom T E).map x = F'.map x by

@@ -104,10 +104,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.pimage_some Finset.pimage_someₓ'. -/
 @[simp]
 theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
-    (s.pimage fun x => Part.some (f x)) = s.image f :=
-  by
-  ext
-  simp [eq_comm]
+    (s.pimage fun x => Part.some (f x)) = s.image f := by ext; simp [eq_comm]
 #align finset.pimage_some Finset.pimage_some
 
 /- warning: finset.pimage_congr -> Finset.pimage_congr is a dubious translation:
@@ -116,11 +113,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : PFun.{u2, u1} α β} {g : PFun.{u2, u1} α β} [_inst_2 : forall (x : α), Decidable (Part.Dom.{u1} β (f x))] [_inst_3 : forall (x : α), Decidable (Part.Dom.{u1} β (g x))] {s : Finset.{u2} α} {t : Finset.{u2} α}, (Eq.{succ u2} (Finset.{u2} α) s t) -> (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x t) -> (Eq.{succ u1} (Part.{u1} β) (f x) (g x))) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.pimage.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f (fun (x : α) => _inst_2 x) s) (Finset.pimage.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) g (fun (x : α) => _inst_3 x) t))
 Case conversion may be inaccurate. Consider using '#align finset.pimage_congr Finset.pimage_congrₓ'. -/
-theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f = t.pimage g :=
-  by
-  subst s
-  ext y
-  simp (config := { contextual := true }) [h₂]
+theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f = t.pimage g := by subst s;
+  ext y; simp (config := { contextual := true }) [h₂]
 #align finset.pimage_congr Finset.pimage_congr
 
 #print Finset.pimage_eq_image_filter /-
@@ -128,9 +122,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 theorem pimage_eq_image_filter :
     s.pimage f =
       (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 :=
-  by
-  ext x
-  simp [Part.mem_eq, And.exists, -exists_prop]
+  by ext x; simp [Part.mem_eq, And.exists, -exists_prop]
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter
 -/
 
@@ -146,9 +138,7 @@ theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pi
 
 #print Finset.pimage_empty /-
 @[simp]
-theorem pimage_empty : pimage f ∅ = ∅ := by
-  ext
-  simp
+theorem pimage_empty : pimage f ∅ = ∅ := by ext; simp
 #align finset.pimage_empty Finset.pimage_empty
 -/
 

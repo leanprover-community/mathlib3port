@@ -321,52 +321,28 @@ instance isNoetherian_pi {R ι : Type _} {M : ι → Type _} [Ring R] [∀ i, Ad
     exact fun f i =>
       Or.by_cases (Finset.mem_insert.1 i.2) (fun h : i.1 = a => show M i.1 from Eq.recOn h.symm f.1)
         fun h : i.1 ∈ s => show M i.1 from f.2 ⟨i.1, h⟩
-  · intro f g
-    ext i
-    unfold Or.by_cases
-    cases' i with i hi
+  · intro f g; ext i; unfold Or.by_cases; cases' i with i hi
     rcases Finset.mem_insert.1 hi with (rfl | h)
-    · change _ = _ + _
-      simp only [dif_pos]
-      rfl
-    · change _ = _ + _
-      have : ¬i = a := by
-        rintro rfl
-        exact has h
-      simp only [dif_neg this, dif_pos h]
-      rfl
-  · intro c f
-    ext i
-    unfold Or.by_cases
-    cases' i with i hi
+    · change _ = _ + _; simp only [dif_pos]; rfl
+    · change _ = _ + _; have : ¬i = a := by rintro rfl; exact has h
+      simp only [dif_neg this, dif_pos h]; rfl
+  · intro c f; ext i; unfold Or.by_cases; cases' i with i hi
     rcases Finset.mem_insert.1 hi with (rfl | h)
-    · change _ = c • _
-      simp only [dif_pos]
-      rfl
-    · change _ = c • _
-      have : ¬i = a := by
-        rintro rfl
-        exact has h
-      simp only [dif_neg this, dif_pos h]
-      rfl
+    · change _ = c • _; simp only [dif_pos]; rfl
+    · change _ = c • _; have : ¬i = a := by rintro rfl; exact has h
+      simp only [dif_neg this, dif_pos h]; rfl
   ·
     exact fun f =>
       (f ⟨a, Finset.mem_insert_self _ _⟩, fun i => f ⟨i.1, Finset.mem_insert_of_mem i.2⟩)
-  · intro f
-    apply Prod.ext
+  · intro f; apply Prod.ext
     · simp only [Or.by_cases, dif_pos]
     · ext ⟨i, his⟩
-      have : ¬i = a := by
-        rintro rfl
-        exact has his
+      have : ¬i = a := by rintro rfl; exact has his
       simp only [Or.by_cases, this, not_false_iff, dif_neg]
-  · intro f
-    ext ⟨i, hi⟩
+  · intro f; ext ⟨i, hi⟩
     rcases Finset.mem_insert.1 hi with (rfl | h)
     · simp only [Or.by_cases, dif_pos]
-    · have : ¬i = a := by
-        rintro rfl
-        exact has h
+    · have : ¬i = a := by rintro rfl; exact has h
       simp only [Or.by_cases, dif_neg this, dif_pos h]
 #align is_noetherian_pi isNoetherian_pi
 -/
@@ -438,8 +414,7 @@ theorem isNoetherian_iff_fg_wellFounded :
       rw [Eq]
       exact (le_sup_left : (R ∙ x) ≤ (R ∙ x) ⊔ N₀) (Submodule.mem_span_singleton_self _)
     · exact Submodule.FG.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁
-    · show N₀ ≤ (R ∙ x) ⊔ N₀
-      exact le_sup_right
+    · show N₀ ≤ (R ∙ x) ⊔ N₀; exact le_sup_right
     · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
 #align is_noetherian_iff_fg_well_founded isNoetherian_iff_fg_wellFounded
 
@@ -513,10 +488,7 @@ theorem finite_of_linearIndependent [Nontrivial R] [IsNoetherian R M] {s : Set M
     by_contradiction fun hf =>
       (RelEmbedding.wellFounded_iff_no_descending_seq.1 (wellFounded_submodule_gt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
-  have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s :=
-    by
-    rintro n x ⟨y, hy₁, rfl⟩
-    exact (f y).2
+  have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | m ≤ a }) ≤ span R (coe ∘ f '' { m | m ≤ b }) :=
     by
     intro a b
@@ -745,19 +717,15 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
     @isNoetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isNoetherian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
-    · intro f g
-      apply Subtype.eq
+    · intro f g; apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
-      simp only [add_smul, Finset.sum_add_distrib]
-      rfl
-    · intro c f
-      apply Subtype.eq
+      simp only [add_smul, Finset.sum_add_distrib]; rfl
+    · intro c f; apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
   rw [LinearMap.range_eq_top]
-  rintro ⟨n, hn⟩
-  change n ∈ N at hn
+  rintro ⟨n, hn⟩; change n ∈ N at hn
   rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩

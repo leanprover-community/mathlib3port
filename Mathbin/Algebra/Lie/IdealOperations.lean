@@ -73,27 +73,18 @@ theorem lieIdeal_oper_eq_linear_span :
   · let s := { m : M | ∃ (x : ↥I)(n : ↥N), ⁅(x : L), (n : M)⁆ = m }
     have aux : ∀ (y : L), ∀ m' ∈ Submodule.span R s, ⁅y, m'⁆ ∈ Submodule.span R s :=
       by
-      intro y m' hm'
-      apply Submodule.span_induction hm'
-      · rintro m'' ⟨x, n, hm''⟩
-        rw [← hm'', leibniz_lie]
+      intro y m' hm'; apply Submodule.span_induction hm'
+      · rintro m'' ⟨x, n, hm''⟩; rw [← hm'', leibniz_lie]
         refine' Submodule.add_mem _ _ _ <;> apply Submodule.subset_span
-        · use ⟨⁅y, ↑x⁆, I.lie_mem x.property⟩, n
-          rfl
-        · use x, ⟨⁅y, ↑n⁆, N.lie_mem n.property⟩
-          rfl
+        · use ⟨⁅y, ↑x⁆, I.lie_mem x.property⟩, n; rfl
+        · use x, ⟨⁅y, ↑n⁆, N.lie_mem n.property⟩; rfl
       · simp only [lie_zero, Submodule.zero_mem]
-      · intro m₁ m₂ hm₁ hm₂
-        rw [lie_add]
-        exact Submodule.add_mem _ hm₁ hm₂
-      · intro t m'' hm''
-        rw [lie_smul]
-        exact Submodule.smul_mem _ t hm''
+      · intro m₁ m₂ hm₁ hm₂; rw [lie_add]; exact Submodule.add_mem _ hm₁ hm₂
+      · intro t m'' hm''; rw [lie_smul]; exact Submodule.smul_mem _ t hm''
     change _ ≤ ↑({ Submodule.span R s with lie_mem := aux } : LieSubmodule R L M)
     rw [coe_submodule_le_coe_submodule, lie_ideal_oper_eq_span, lie_span_le]
     exact Submodule.subset_span
-  · rw [lie_ideal_oper_eq_span]
-    apply submodule_span_le_lie_span
+  · rw [lie_ideal_oper_eq_span]; apply submodule_span_le_lie_span
 #align lie_submodule.lie_ideal_oper_eq_linear_span LieSubmodule.lieIdeal_oper_eq_linear_span
 
 theorem lieIdeal_oper_eq_linear_span' :
@@ -117,11 +108,8 @@ theorem lie_le_iff : ⁅I, N⁆ ≤ N' ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅x, m⁆ 
   exact h x hx m hm
 #align lie_submodule.lie_le_iff LieSubmodule.lie_le_iff
 
-theorem lie_coe_mem_lie (x : I) (m : N) : ⁅(x : L), (m : M)⁆ ∈ ⁅I, N⁆ :=
-  by
-  rw [lie_ideal_oper_eq_span]
-  apply subset_lie_span
-  use x, m
+theorem lie_coe_mem_lie (x : I) (m : N) : ⁅(x : L), (m : M)⁆ ∈ ⁅I, N⁆ := by
+  rw [lie_ideal_oper_eq_span]; apply subset_lie_span; use x, m
 #align lie_submodule.lie_coe_mem_lie LieSubmodule.lie_coe_mem_lie
 
 theorem lie_mem_lie {x : L} {m : M} (hx : x ∈ I) (hm : m ∈ N) : ⁅x, m⁆ ∈ ⁅I, N⁆ :=
@@ -131,11 +119,8 @@ theorem lie_mem_lie {x : L} {m : M} (hx : x ∈ I) (hm : m ∈ N) : ⁅x, m⁆ �
 theorem lie_comm : ⁅I, J⁆ = ⁅J, I⁆ :=
   by
   suffices ∀ I J : LieIdeal R L, ⁅I, J⁆ ≤ ⁅J, I⁆ by exact le_antisymm (this I J) (this J I)
-  clear I J
-  intro I J
-  rw [lie_ideal_oper_eq_span, lie_span_le]
-  rintro x ⟨y, z, h⟩
-  rw [← h]
+  clear I J; intro I J
+  rw [lie_ideal_oper_eq_span, lie_span_le]; rintro x ⟨y, z, h⟩; rw [← h]
   rw [← lie_skew, ← lie_neg, ← LieSubmodule.coe_neg]
   apply lie_coe_mem_lie
 #align lie_submodule.lie_comm LieSubmodule.lie_comm
@@ -146,33 +131,22 @@ theorem lie_le_right : ⁅I, N⁆ ≤ N :=
   exact N.lie_mem n.property
 #align lie_submodule.lie_le_right LieSubmodule.lie_le_right
 
-theorem lie_le_left : ⁅I, J⁆ ≤ I := by
-  rw [lie_comm]
-  exact lie_le_right I J
+theorem lie_le_left : ⁅I, J⁆ ≤ I := by rw [lie_comm]; exact lie_le_right I J
 #align lie_submodule.lie_le_left LieSubmodule.lie_le_left
 
-theorem lie_le_inf : ⁅I, J⁆ ≤ I ⊓ J := by
-  rw [le_inf_iff]
-  exact ⟨lie_le_left I J, lie_le_right J I⟩
+theorem lie_le_inf : ⁅I, J⁆ ≤ I ⊓ J := by rw [le_inf_iff]; exact ⟨lie_le_left I J, lie_le_right J I⟩
 #align lie_submodule.lie_le_inf LieSubmodule.lie_le_inf
 
 @[simp]
-theorem lie_bot : ⁅I, (⊥ : LieSubmodule R L M)⁆ = ⊥ :=
-  by
-  rw [eq_bot_iff]
-  apply lie_le_right
+theorem lie_bot : ⁅I, (⊥ : LieSubmodule R L M)⁆ = ⊥ := by rw [eq_bot_iff]; apply lie_le_right
 #align lie_submodule.lie_bot LieSubmodule.lie_bot
 
 @[simp]
 theorem bot_lie : ⁅(⊥ : LieIdeal R L), N⁆ = ⊥ :=
   by
   suffices ⁅(⊥ : LieIdeal R L), N⁆ ≤ ⊥ by exact le_bot_iff.mp this
-  rw [lie_ideal_oper_eq_span, lie_span_le]
-  rintro m ⟨⟨x, hx⟩, n, hn⟩
-  rw [← hn]
-  change x ∈ (⊥ : LieIdeal R L) at hx
-  rw [mem_bot] at hx
-  simp [hx]
+  rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨⟨x, hx⟩, n, hn⟩; rw [← hn]
+  change x ∈ (⊥ : LieIdeal R L) at hx; rw [mem_bot] at hx; simp [hx]
 #align lie_submodule.bot_lie LieSubmodule.bot_lie
 
 theorem lie_eq_bot_iff : ⁅I, N⁆ = ⊥ ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅(x : L), m⁆ = 0 :=
@@ -202,59 +176,36 @@ theorem mono_lie_right (h : N ≤ N') : ⁅I, N⁆ ≤ ⁅I, N'⁆ :=
 @[simp]
 theorem lie_sup : ⁅I, N ⊔ N'⁆ = ⁅I, N⁆ ⊔ ⁅I, N'⁆ :=
   by
-  have h : ⁅I, N⁆ ⊔ ⁅I, N'⁆ ≤ ⁅I, N ⊔ N'⁆ :=
-    by
-    rw [sup_le_iff]
+  have h : ⁅I, N⁆ ⊔ ⁅I, N'⁆ ≤ ⁅I, N ⊔ N'⁆ := by rw [sup_le_iff];
     constructor <;> apply mono_lie_right <;> [exact le_sup_left;exact le_sup_right]
-  suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymm this h
-  clear h
-  rw [lie_ideal_oper_eq_span, lie_span_le]
-  rintro m ⟨x, ⟨n, hn⟩, h⟩
-  erw [LieSubmodule.mem_sup]
-  erw [LieSubmodule.mem_sup] at hn
-  rcases hn with ⟨n₁, hn₁, n₂, hn₂, hn'⟩
-  use ⁅(x : L), (⟨n₁, hn₁⟩ : N)⁆
-  constructor
-  · apply lie_coe_mem_lie
-  use ⁅(x : L), (⟨n₂, hn₂⟩ : N')⁆
-  constructor
-  · apply lie_coe_mem_lie
+  suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymm this h; clear h
+  rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨x, ⟨n, hn⟩, h⟩; erw [LieSubmodule.mem_sup]
+  erw [LieSubmodule.mem_sup] at hn; rcases hn with ⟨n₁, hn₁, n₂, hn₂, hn'⟩
+  use ⁅(x : L), (⟨n₁, hn₁⟩ : N)⁆; constructor; · apply lie_coe_mem_lie
+  use ⁅(x : L), (⟨n₂, hn₂⟩ : N')⁆; constructor; · apply lie_coe_mem_lie
   simp [← h, ← hn']
 #align lie_submodule.lie_sup LieSubmodule.lie_sup
 
 @[simp]
 theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ :=
   by
-  have h : ⁅I, N⁆ ⊔ ⁅J, N⁆ ≤ ⁅I ⊔ J, N⁆ := by
-    rw [sup_le_iff]
+  have h : ⁅I, N⁆ ⊔ ⁅J, N⁆ ≤ ⁅I ⊔ J, N⁆ := by rw [sup_le_iff];
     constructor <;> apply mono_lie_left <;> [exact le_sup_left;exact le_sup_right]
-  suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymm this h
-  clear h
-  rw [lie_ideal_oper_eq_span, lie_span_le]
-  rintro m ⟨⟨x, hx⟩, n, h⟩
-  erw [LieSubmodule.mem_sup]
-  erw [LieSubmodule.mem_sup] at hx
-  rcases hx with ⟨x₁, hx₁, x₂, hx₂, hx'⟩
-  use ⁅((⟨x₁, hx₁⟩ : I) : L), (n : N)⁆
-  constructor
-  · apply lie_coe_mem_lie
-  use ⁅((⟨x₂, hx₂⟩ : J) : L), (n : N)⁆
-  constructor
-  · apply lie_coe_mem_lie
+  suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymm this h; clear h
+  rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨⟨x, hx⟩, n, h⟩; erw [LieSubmodule.mem_sup]
+  erw [LieSubmodule.mem_sup] at hx; rcases hx with ⟨x₁, hx₁, x₂, hx₂, hx'⟩
+  use ⁅((⟨x₁, hx₁⟩ : I) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
+  use ⁅((⟨x₂, hx₂⟩ : J) : L), (n : N)⁆; constructor; · apply lie_coe_mem_lie
   simp [← h, ← hx']
 #align lie_submodule.sup_lie LieSubmodule.sup_lie
 
 @[simp]
-theorem lie_inf : ⁅I, N ⊓ N'⁆ ≤ ⁅I, N⁆ ⊓ ⁅I, N'⁆ :=
-  by
-  rw [le_inf_iff]
+theorem lie_inf : ⁅I, N ⊓ N'⁆ ≤ ⁅I, N⁆ ⊓ ⁅I, N'⁆ := by rw [le_inf_iff];
   constructor <;> apply mono_lie_right <;> [exact inf_le_left;exact inf_le_right]
 #align lie_submodule.lie_inf LieSubmodule.lie_inf
 
 @[simp]
-theorem inf_lie : ⁅I ⊓ J, N⁆ ≤ ⁅I, N⁆ ⊓ ⁅J, N⁆ :=
-  by
-  rw [le_inf_iff]
+theorem inf_lie : ⁅I ⊓ J, N⁆ ≤ ⁅I, N⁆ ⊓ ⁅J, N⁆ := by rw [le_inf_iff];
   constructor <;> apply mono_lie_left <;> [exact inf_le_left;exact inf_le_right]
 #align lie_submodule.inf_lie LieSubmodule.inf_lie
 
@@ -359,11 +310,8 @@ theorem comap_bracket_le {J₁ J₂ : LieIdeal R L'} : ⁅comap f J₁, comap f 
 
 variable {f}
 
-theorem map_comap_incl {I₁ I₂ : LieIdeal R L} : map I₁.incl (comap I₁.incl I₂) = I₁ ⊓ I₂ :=
-  by
-  conv_rhs => rw [← I₁.incl_ideal_range]
-  rw [← map_comap_eq]
-  exact I₁.incl_is_ideal_morphism
+theorem map_comap_incl {I₁ I₂ : LieIdeal R L} : map I₁.incl (comap I₁.incl I₂) = I₁ ⊓ I₂ := by
+  conv_rhs => rw [← I₁.incl_ideal_range]; rw [← map_comap_eq]; exact I₁.incl_is_ideal_morphism
 #align lie_ideal.map_comap_incl LieIdeal.map_comap_incl
 
 theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
@@ -375,27 +323,18 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     LinearMap.map_span]
   congr ; simp only [LieHom.coe_toLinearMap, Set.mem_setOf_eq]; ext y
   constructor
-  · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
-    rw [← hy]
+  · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩; rw [← hy]
     erw [LieSubmodule.mem_inf, f.mem_ideal_range_iff h] at hx₁ hx₂
-    obtain ⟨⟨z₁, hz₁⟩, hz₁'⟩ := hx₁
-    rw [← hz₁] at hz₁'
-    obtain ⟨⟨z₂, hz₂⟩, hz₂'⟩ := hx₂
-    rw [← hz₂] at hz₂'
+    obtain ⟨⟨z₁, hz₁⟩, hz₁'⟩ := hx₁; rw [← hz₁] at hz₁'
+    obtain ⟨⟨z₂, hz₂⟩, hz₂'⟩ := hx₂; rw [← hz₂] at hz₂'
     use ⁅z₁, z₂⁆, ⟨z₁, hz₁'⟩, ⟨z₂, hz₂'⟩, rfl
     simp only [hz₁, hz₂, Submodule.coe_mk, LieHom.map_lie]
-  · rintro ⟨x, ⟨⟨z₁, hz₁⟩, ⟨z₂, hz₂⟩, hx⟩, hy⟩
-    rw [← hy, ← hx]
-    have hz₁' : f z₁ ∈ f.ideal_range ⊓ J₁ :=
-      by
-      rw [LieSubmodule.mem_inf]
+  · rintro ⟨x, ⟨⟨z₁, hz₁⟩, ⟨z₂, hz₂⟩, hx⟩, hy⟩; rw [← hy, ← hx]
+    have hz₁' : f z₁ ∈ f.ideal_range ⊓ J₁ := by rw [LieSubmodule.mem_inf];
       exact ⟨f.mem_ideal_range, hz₁⟩
-    have hz₂' : f z₂ ∈ f.ideal_range ⊓ J₂ :=
-      by
-      rw [LieSubmodule.mem_inf]
+    have hz₂' : f z₂ ∈ f.ideal_range ⊓ J₂ := by rw [LieSubmodule.mem_inf];
       exact ⟨f.mem_ideal_range, hz₂⟩
-    use ⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩
-    simp only [Submodule.coe_mk, LieHom.map_lie]
+    use ⟨f z₁, hz₁'⟩, ⟨f z₂, hz₂'⟩; simp only [Submodule.coe_mk, LieHom.map_lie]
 #align lie_ideal.comap_bracket_eq LieIdeal.comap_bracket_eq
 
 theorem map_comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
@@ -419,11 +358,8 @@ theorem comap_bracket_incl {I₁ I₂ : LieIdeal R L} :
 /-- This is a very useful result; it allows us to use the fact that inclusion distributes over the
 Lie bracket operation on ideals, subject to the conditions shown. -/
 theorem comap_bracket_incl_of_le {I₁ I₂ : LieIdeal R L} (h₁ : I₁ ≤ I) (h₂ : I₂ ≤ I) :
-    ⁅comap I.incl I₁, comap I.incl I₂⁆ = comap I.incl ⁅I₁, I₂⁆ :=
-  by
-  rw [comap_bracket_incl]
-  rw [← inf_eq_right] at h₁ h₂
-  rw [h₁, h₂]
+    ⁅comap I.incl I₁, comap I.incl I₂⁆ = comap I.incl ⁅I₁, I₂⁆ := by rw [comap_bracket_incl];
+  rw [← inf_eq_right] at h₁ h₂; rw [h₁, h₂]
 #align lie_ideal.comap_bracket_incl_of_le LieIdeal.comap_bracket_incl_of_le
 
 end LieIdeal

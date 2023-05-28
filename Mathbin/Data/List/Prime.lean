@@ -41,8 +41,7 @@ theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod �
   constructor
   · intro h
     induction' L with L_hd L_tl L_ih
-    · rw [prod_nil] at h
-      exact absurd h pp.not_dvd_one
+    · rw [prod_nil] at h; exact absurd h pp.not_dvd_one
     · rw [prod_cons] at h
       cases' pp.dvd_or_dvd h with hd hd
       · exact ⟨L_hd, mem_cons_self L_hd L_tl, hd⟩

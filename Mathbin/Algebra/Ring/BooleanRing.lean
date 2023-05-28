@@ -267,41 +267,27 @@ BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.sup
 scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.inf
 
 #print BooleanRing.sup_comm /-
-theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a :=
-  by
-  dsimp only [(· ⊔ ·)]
-  ring
+theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a := by dsimp only [(· ⊔ ·)]; ring
 #align boolean_ring.sup_comm BooleanRing.sup_comm
 -/
 
 #print BooleanRing.inf_comm /-
-theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a :=
-  by
-  dsimp only [(· ⊓ ·)]
-  ring
+theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a := by dsimp only [(· ⊓ ·)]; ring
 #align boolean_ring.inf_comm BooleanRing.inf_comm
 -/
 
 #print BooleanRing.sup_assoc /-
-theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
-  by
-  dsimp only [(· ⊔ ·)]
-  ring
+theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) := by dsimp only [(· ⊔ ·)]; ring
 #align boolean_ring.sup_assoc BooleanRing.sup_assoc
 -/
 
 #print BooleanRing.inf_assoc /-
-theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
-  by
-  dsimp only [(· ⊓ ·)]
-  ring
+theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by dsimp only [(· ⊓ ·)]; ring
 #align boolean_ring.inf_assoc BooleanRing.inf_assoc
 -/
 
 #print BooleanRing.sup_inf_self /-
-theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a :=
-  by
-  dsimp only [(· ⊔ ·), (· ⊓ ·)]
+theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by dsimp only [(· ⊔ ·), (· ⊓ ·)];
   assoc_rw [mul_self, add_self, add_zero]
 #align boolean_ring.sup_inf_self BooleanRing.sup_inf_self
 -/
@@ -331,10 +317,8 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
 #align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_aux
 
 #print BooleanRing.le_sup_inf /-
-theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c :=
-  by
-  dsimp only [(· ⊔ ·), (· ⊓ ·)]
-  rw [le_sup_inf_aux, add_self, mul_self, zero_add]
+theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
+  dsimp only [(· ⊔ ·), (· ⊓ ·)]; rw [le_sup_inf_aux, add_self, mul_self, zero_add]
 #align boolean_ring.le_sup_inf BooleanRing.le_sup_inf
 -/
 
@@ -431,10 +415,8 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
 
 #print ofBoolAlg_symmDiff /-
 @[simp]
-theorem ofBoolAlg_symmDiff (a b : AsBoolAlg α) : ofBoolAlg (a ∆ b) = ofBoolAlg a + ofBoolAlg b :=
-  by
-  rw [symmDiff_eq_sup_sdiff_inf]
-  exact of_boolalg_symm_diff_aux _ _
+theorem ofBoolAlg_symmDiff (a b : AsBoolAlg α) : ofBoolAlg (a ∆ b) = ofBoolAlg a + ofBoolAlg b := by
+  rw [symmDiff_eq_sup_sdiff_inf]; exact of_boolalg_symm_diff_aux _ _
 #align of_boolalg_symm_diff ofBoolAlg_symmDiff
 -/
 

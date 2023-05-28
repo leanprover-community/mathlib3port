@@ -268,10 +268,7 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
   toFun := coconeFun F j
-  map_smul' := by
-    intros
-    apply Quot.sound
-    apply relation.smul
+  map_smul' := by intros ; apply Quot.sound; apply relation.smul
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 #align Module.colimits.cocone_morphism ModuleCat.Colimits.coconeMorphism
 
@@ -286,9 +283,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x :=
-  by
-  rw [← cocone_naturality F f]
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align Module.colimits.cocone_naturality_components ModuleCat.Colimits.cocone_naturality_components
 

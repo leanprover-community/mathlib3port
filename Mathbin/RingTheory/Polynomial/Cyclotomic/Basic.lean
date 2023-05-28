@@ -132,9 +132,7 @@ theorem degree_cyclotomic' {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
 
 /-- The roots of `cyclotomic' n R` are the primitive `n`-th roots of unity. -/
 theorem roots_of_cyclotomic (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] :
-    (cyclotomic' n R).roots = (primitiveRoots n R).val :=
-  by
-  rw [cyclotomic']
+    (cyclotomic' n R).roots = (primitiveRoots n R).val := by rw [cyclotomic'];
   exact roots_prod_X_sub_C (primitiveRoots n R)
 #align polynomial.roots_of_cyclotomic Polynomial.roots_of_cyclotomic
 
@@ -377,8 +375,7 @@ theorem natDegree_cyclotomic (n : ℕ) (R : Type _) [Ring R] [Nontrivial R] :
 
 /-- The degree of `cyclotomic n R` is positive. -/
 theorem degree_cyclotomic_pos (n : ℕ) (R : Type _) (hpos : 0 < n) [Ring R] [Nontrivial R] :
-    0 < (cyclotomic n R).degree := by
-  rw [degree_cyclotomic n R]
+    0 < (cyclotomic n R).degree := by rw [degree_cyclotomic n R];
   exact_mod_cast Nat.totient_pos hpos
 #align polynomial.degree_cyclotomic_pos Polynomial.degree_cyclotomic_pos
 
@@ -609,8 +606,7 @@ theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRing R] {p n : ℕ} (
     rw [eq_comm] at this
     rw [this, Nat.prod_properDivisors_prime_pow hp]
   induction' n with n_n n_ih
-  · haveI := Fact.mk hp
-    simp [cyclotomic_prime]
+  · haveI := Fact.mk hp; simp [cyclotomic_prime]
   rw [((eq_cyclotomic_iff (pow_pos hp.pos (n_n.succ + 1)) _).mpr _).symm]
   rw [Nat.prod_properDivisors_prime_pow hp, Finset.prod_range_succ, n_ih]
   rw [this] at n_ih

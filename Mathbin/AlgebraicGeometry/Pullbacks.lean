@@ -100,11 +100,9 @@ theorem t_id (i : 𝒰.J) : t 𝒰 f g i i = 𝟙 _ :=
   by
   apply pullback.hom_ext <;> rw [category.id_comp]
   apply pullback.hom_ext
-  · rw [← cancel_mono (𝒰.map i)]
-    simp only [pullback.condition, category.assoc, t_fst_fst]
+  · rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, category.assoc, t_fst_fst]
   · simp only [category.assoc, t_fst_snd]
-  · rw [← cancel_mono (𝒰.map i)]
-    simp only [pullback.condition, t_snd, category.assoc]
+  · rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, t_snd, category.assoc]
 #align algebraic_geometry.Scheme.pullback.t_id AlgebraicGeometry.Scheme.Pullback.t_id
 
 /-- The inclusion map of `V i j = (Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ Uᵢ ×[Z] Y`-/
@@ -492,33 +490,25 @@ def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullbac
 
 @[simp, reassoc]
 theorem pullbackP1Iso_hom_fst (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.fst = pullback.snd :=
-  by
-  delta pullback_p1_iso
+    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.fst = pullback.snd := by delta pullback_p1_iso;
   simp only [pullback.lift_fst]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_hom_fst AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_hom_fst
 
 @[simp, reassoc]
 theorem pullbackP1Iso_hom_snd (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.snd = pullback.fst ≫ p2 𝒰 f g :=
-  by
-  delta pullback_p1_iso
-  simp only [pullback.lift_snd]
+    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.snd = pullback.fst ≫ p2 𝒰 f g := by
+  delta pullback_p1_iso; simp only [pullback.lift_snd]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_hom_snd AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_hom_snd
 
 @[simp, reassoc]
 theorem pullbackP1Iso_inv_fst (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.fst = (gluing 𝒰 f g).ι i :=
-  by
-  delta pullback_p1_iso
+    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.fst = (gluing 𝒰 f g).ι i := by delta pullback_p1_iso;
   simp only [pullback.lift_fst]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_inv_fst AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_inv_fst
 
 @[simp, reassoc]
 theorem pullbackP1Iso_inv_snd (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.snd = pullback.fst :=
-  by
-  delta pullback_p1_iso
+    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.snd = pullback.fst := by delta pullback_p1_iso;
   simp only [pullback.lift_snd]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_inv_snd AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_inv_snd
 
@@ -548,8 +538,7 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) :=
     iso.trans_hom, category.assoc, pullback.congr_hom_hom, pullback.lift_fst_assoc,
     category.comp_id, pullback_right_pullback_fst_iso_hom_fst_assoc, pullback.condition]
   trans pullback.snd ≫ (pullback_p1_iso 𝒰 f g _).Hom ≫ (gluing 𝒰 f g).ι _
-  · congr 1
-    rw [← pullback_p1_iso_hom_ι]
+  · congr 1; rw [← pullback_p1_iso_hom_ι]
   simp_rw [← category.assoc]
   congr 1
   apply pullback.hom_ext

@@ -799,10 +799,8 @@ theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a
     exacts[Hs x hx y hy, star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy),
       star_star x ▸ Hstar_left _ _ (Hs _ hx _ hy),
       star_star x ▸ star_star y ▸ Hstar _ _ (Hs _ hx _ hy)]
-  · cases hx
-    exacts[Halg_left _ _ hx, star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)]
-  · cases hx
-    exacts[Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
+  · cases hx; exacts[Halg_left _ _ hx, star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)]
+  · cases hx; exacts[Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
 #align star_subalgebra.adjoin_induction₂ StarSubalgebra.adjoin_induction₂
 
 /- warning: star_subalgebra.adjoin_induction' -> StarSubalgebra.adjoin_induction' is a dubious translation:
@@ -884,12 +882,8 @@ Case conversion may be inaccurate. Consider using '#align star_subalgebra.adjoin
 if `x` is normal. -/
 instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
     CommSemiring (adjoin R ({x} : Set A)) :=
-  adjoinCommSemiringOfComm R
-    (fun a ha b hb => by
-      rw [Set.mem_singleton_iff] at ha hb
-      rw [ha, hb])
-    fun a ha b hb => by
-    rw [Set.mem_singleton_iff] at ha hb
+  adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb; rw [ha, hb])
+    fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb;
     simpa only [ha, hb] using (star_comm_self' x).symm
 #align star_subalgebra.adjoin_comm_semiring_of_is_star_normal StarSubalgebra.adjoinCommSemiringOfIsStarNormal
 
@@ -1103,10 +1097,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (CommSemiring.toNonUnitalCommSemiring.{u1} R _inst_1))] [_inst_3 : Semiring.{u2} A] [_inst_4 : Algebra.{u1, u2} R A _inst_1 _inst_3] [_inst_5 : StarRing.{u2} A (Semiring.toNonUnitalSemiring.{u2} A _inst_3)] [_inst_6 : StarModule.{u1, u2} R A (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalCommSemiring.toNonUnitalSemiring.{u1} R (CommSemiring.toNonUnitalCommSemiring.{u1} R _inst_1)) _inst_2))) (InvolutiveStar.toStar.{u2} A (StarAddMonoid.toInvolutiveStar.{u2} A (AddMonoidWithOne.toAddMonoid.{u2} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} A (NonAssocSemiring.toAddCommMonoidWithOne.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_3)))) (StarRing.toStarAddMonoid.{u2} A (Semiring.toNonUnitalSemiring.{u2} A _inst_3) _inst_5))) (Algebra.toSMul.{u1, u2} R A _inst_1 _inst_3 _inst_4)], Eq.{succ u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_3 _inst_4) (StarSubalgebra.toSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_5 _inst_4 _inst_6 (Bot.bot.{u2} (StarSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_5 _inst_4 _inst_6) (CompleteLattice.toBot.{u2} (StarSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_5 _inst_4 _inst_6) (StarSubalgebra.completeLattice.{u1, u2} R A _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6)))) (Bot.bot.{u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_3 _inst_4) (CompleteLattice.toBot.{u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_3 _inst_4) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R A _inst_1 _inst_3 _inst_4)))
 Case conversion may be inaccurate. Consider using '#align star_subalgebra.bot_to_subalgebra StarSubalgebra.bot_toSubalgebraₓ'. -/
-theorem bot_toSubalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ :=
-  by
-  change Algebra.adjoin R (∅ ∪ star ∅) = Algebra.adjoin R ∅
-  simp
+theorem bot_toSubalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ := by
+  change Algebra.adjoin R (∅ ∪ star ∅) = Algebra.adjoin R ∅; simp
 #align star_subalgebra.bot_to_subalgebra StarSubalgebra.bot_toSubalgebra
 
 /- warning: star_subalgebra.mem_bot -> StarSubalgebra.mem_bot is a dubious translation:

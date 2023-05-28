@@ -282,8 +282,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
   have A : 0 < c⁻¹ ^ 2 := sq_pos_of_pos (inv_pos.2 cpos)
   have B : c ^ 2 * (1 - c⁻¹ ^ 2)⁻¹ ≤ c ^ 3 * (c - 1)⁻¹ :=
     by
-    rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]
-    swap
+    rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_le_div_iff _ (sub_pos.2 hc)]; swap
     · exact sub_pos.2 (pow_lt_one (inv_nonneg.2 cpos.le) (inv_lt_one hc) two_ne_zero)
     have : c ^ 3 = c ^ 2 * c := by ring
     simp only [mul_sub, this, mul_one, inv_pow, sub_le_sub_iff_left]
@@ -325,8 +324,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
       have I : (c⁻¹ ^ 2) ^ (Real.log j / Real.log c) = 1 / j ^ 2 :=
         by
         apply Real.log_injOn_pos (Real.rpow_pos_of_pos A _)
-        · rw [one_div]
-          exact inv_pos.2 (sq_pos_of_pos hj)
+        · rw [one_div]; exact inv_pos.2 (sq_pos_of_pos hj)
         rw [Real.log_rpow A]
         simp only [one_div, Real.log_inv, Real.log_pow, Nat.cast_bit0, Nat.cast_one, mul_neg,
           neg_inj]

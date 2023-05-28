@@ -173,9 +173,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
   have hSs : ∀ n, μ (s ∩ t) + μ (S n) ≤ μ s := fun n =>
     calc
       μ (s ∩ t) + μ (S n) = μ (s ∩ t ∪ S n) := Eq.symm <| hm _ _ <| (Ssep' n).symm
-      _ ≤ μ (s ∩ t ∪ s \ t) := by
-        mono*
-        exact le_rfl
+      _ ≤ μ (s ∩ t ∪ s \ t) := by mono*; exact le_rfl
       _ = μ s := by rw [inter_union_diff]
       
   have Union_S : (⋃ n, S n) = s \ t :=
@@ -204,8 +202,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     for details. -/
   have : ∀ n, S n ⊆ S (n + 1) := fun n x hx =>
     ⟨hx.1, le_trans (ENNReal.inv_le_inv.2 <| Nat.cast_le.2 n.le_succ) hx.2⟩
-  refine' (μ.Union_nat_of_monotone_of_tsum_ne_top this _).le
-  clear this
+  refine' (μ.Union_nat_of_monotone_of_tsum_ne_top this _).le; clear this
   /- While the sets `S (k + 1) \ S k` are not pairwise metric separated, the sets in each
     subsequence `S (2 * k + 1) \ S (2 * k)` and `S (2 * k + 2) \ S (2 * k)` are metric separated,
     so `m` is additive on each of those sequences. -/
@@ -223,10 +220,8 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
       (fun h => (this i j h).mono (inter_subset_left _ _) fun x hx => ⟨hx.1.1, hx.2⟩) fun h =>
       (this j i h).symm.mono (fun x hx => ⟨hx.1.1, hx.2⟩) (inter_subset_left _ _)
   intro i j hj
-  have A : ((↑(2 * j + r))⁻¹ : ℝ≥0∞) < (↑(2 * i + 1 + r))⁻¹ :=
-    by
-    rw [ENNReal.inv_lt_inv, Nat.cast_lt]
-    linarith
+  have A : ((↑(2 * j + r))⁻¹ : ℝ≥0∞) < (↑(2 * i + 1 + r))⁻¹ := by
+    rw [ENNReal.inv_lt_inv, Nat.cast_lt]; linarith
   refine' ⟨(↑(2 * i + 1 + r))⁻¹ - (↑(2 * j + r))⁻¹, by simpa using A, fun x hx y hy => _⟩
   have : inf_edist y t < (↑(2 * j + r))⁻¹ := not_le.1 fun hle => hy.2 ⟨hy.1, hle⟩
   rcases inf_edist_lt_iff.mp this with ⟨z, hzt, hyz⟩
@@ -238,9 +233,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
 #align measure_theory.outer_measure.is_metric.borel_le_caratheodory MeasureTheory.OuterMeasure.IsMetric.borel_le_caratheodory
 
 theorem le_caratheodory [MeasurableSpace X] [BorelSpace X] (hm : IsMetric μ) :
-    ‹MeasurableSpace X› ≤ μ.caratheodory :=
-  by
-  rw [@BorelSpace.measurable_eq X _ _]
+    ‹MeasurableSpace X› ≤ μ.caratheodory := by rw [@BorelSpace.measurable_eq X _ _];
   exact hm.borel_le_caratheodory
 #align measure_theory.outer_measure.is_metric.le_caratheodory MeasureTheory.OuterMeasure.IsMetric.le_caratheodory
 
@@ -398,8 +391,7 @@ theorem isometry_comap_mkMetric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (h
   · congr with s : 1
     apply extend_congr
     · simp [hf.ediam_image]
-    · intros
-      simp [hf.injective.subsingleton_image_iff, hf.ediam_image]
+    · intros ; simp [hf.injective.subsingleton_image_iff, hf.ediam_image]
   · intro s t hst
     simp only [extend, le_iInf_iff]
     intro ht
@@ -535,8 +527,7 @@ theorem mkMetric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
       congr 1 with n : 1
       simp only [iInf_eq_if, htr n, id, if_true, iSup_and']
     · rw [iInf_eq_if, if_neg htr]
-      push_neg  at htr
-      rcases htr with ⟨n, hn⟩
+      push_neg  at htr; rcases htr with ⟨n, hn⟩
       refine' ENNReal.tsum_eq_top_of_eq_top ⟨n, _⟩
       rw [iSup_eq_if, if_pos, iInf_eq_if, if_neg]
       exact hn.not_le
@@ -673,10 +664,8 @@ theorem hausdorffMeasure_mono {d₁ d₂ : ℝ} (h : d₁ ≤ d₂) (s : Set X) 
   by
   rcases h.eq_or_lt with (rfl | h); · exact le_rfl
   cases' hausdorff_measure_zero_or_top h s with hs hs
-  · rw [hs]
-    exact zero_le _
-  · rw [hs]
-    exact le_top
+  · rw [hs]; exact zero_le _
+  · rw [hs]; exact le_top
 #align measure_theory.measure.hausdorff_measure_mono MeasureTheory.Measure.hausdorffMeasure_mono
 
 variable (X)
@@ -868,8 +857,7 @@ theorem hausdorffMeasure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d)
   refine' iSup₂_le fun ε ε0 => _
   refine' le_iSup₂_of_le (ε / K) (by simp [ε0.ne']) _
   refine' le_iInf₂ fun t hst => le_iInf fun htε => _
-  replace hst : f ⁻¹' s ⊆ _ := preimage_mono hst
-  rw [preimage_Union] at hst
+  replace hst : f ⁻¹' s ⊆ _ := preimage_mono hst; rw [preimage_Union] at hst
   refine' iInf₂_le_of_le _ hst (iInf_le_of_le (fun n => _) _)
   · exact (hf.ediam_preimage_le _).trans (ENNReal.mul_le_of_le_div' <| htε n)
   · refine' ENNReal.tsum_le_tsum fun n => iSup_le_iff.2 fun hft => _

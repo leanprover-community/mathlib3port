@@ -414,9 +414,7 @@ instance : Lattice (Concept α β r) :=
     sup := (· ⊔ ·)
     le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _
     le_sup_right := fun c d => snd_subset_snd_iff.1 <| inter_subset_right _ _
-    sup_le := fun c d e => by
-      simp_rw [← snd_subset_snd_iff]
-      exact subset_inter }
+    sup_le := fun c d e => by simp_rw [← snd_subset_snd_iff]; exact subset_inter }
 
 instance : BoundedOrder (Concept α β r)
     where

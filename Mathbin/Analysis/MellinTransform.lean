@@ -38,10 +38,8 @@ theorem cpow_mul_of_real_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) (z : ℂ) :
     (x : ℂ) ^ (↑y * z) = (↑(x ^ y) : ℂ) ^ z :=
   by
   rw [cpow_mul, of_real_cpow hx]
-  · rw [← of_real_log hx, ← of_real_mul, of_real_im, neg_lt_zero]
-    exact Real.pi_pos
-  · rw [← of_real_log hx, ← of_real_mul, of_real_im]
-    exact real.pi_pos.le
+  · rw [← of_real_log hx, ← of_real_mul, of_real_im, neg_lt_zero]; exact Real.pi_pos
+  · rw [← of_real_log hx, ← of_real_mul, of_real_im]; exact real.pi_pos.le
 #align complex.cpow_mul_of_real_nonneg Complex.cpow_mul_of_real_nonneg
 
 end Complex
@@ -92,9 +90,7 @@ theorem MellinConvergent.comp_mul_left {f : ℝ → E} {s : ℂ} {a : ℝ} (ha :
     by
     intro t ht
     simp only [of_real_mul, mul_cpow_of_real_nonneg ha.le (le_of_lt ht), mul_smul, Pi.smul_apply]
-  have h2 : (a : ℂ) ^ (s - 1) ≠ 0 :=
-    by
-    rw [Ne.def, cpow_eq_zero_iff, not_and_or, of_real_eq_zero]
+  have h2 : (a : ℂ) ^ (s - 1) ≠ 0 := by rw [Ne.def, cpow_eq_zero_iff, not_and_or, of_real_eq_zero];
     exact Or.inl ha.ne'
   simp_rw [MellinConvergent, ← this, integrable_on_congr_fun h1 measurableSet_Ioi, integrable_on,
     integrable_smul_iff h2]
@@ -150,9 +146,7 @@ theorem mellin_comp_rpow (f : ℝ → E) (s : ℂ) {a : ℝ} (ha : a ≠ 0) :
   refine' set_integral_congr measurableSet_Ioi fun t ht => _
   dsimp only
   rw [← mul_smul, ← mul_assoc, inv_mul_cancel, one_mul, ← smul_assoc, real_smul]
-  show |a| ≠ 0;
-  · contrapose! ha
-    exact abs_eq_zero.mp ha
+  show |a| ≠ 0; · contrapose! ha; exact abs_eq_zero.mp ha
   rw [of_real_cpow (le_of_lt ht), ← cpow_mul_of_real_nonneg (le_of_lt ht), ←
     cpow_add _ _ (of_real_ne_zero.mpr <| ne_of_gt ht), of_real_sub, of_real_one, mul_sub,
     mul_div_cancel' _ (of_real_ne_zero.mpr ha), add_comm, ← add_sub_assoc, mul_one, sub_add_cancel]
@@ -508,9 +502,7 @@ theorem hasMellin_one_Ioc {s : ℂ} (hs : 0 < re s) :
   by
   have aux1 : -1 < (s - 1).re := by
     simpa only [sub_re, one_re, sub_eq_add_neg] using lt_add_of_pos_left _ hs
-  have aux2 : s ≠ 0 := by
-    contrapose! hs
-    rw [hs, zero_re]
+  have aux2 : s ≠ 0 := by contrapose! hs; rw [hs, zero_re]
   have aux3 : MeasurableSet (Ioc (0 : ℝ) 1) := measurableSet_Ioc
   simp_rw [HasMellin, mellin, MellinConvergent, ← indicator_smul, integrable_on,
     integrable_indicator_iff aux3, smul_eq_mul, integral_indicator aux3, mul_one, integrable_on,

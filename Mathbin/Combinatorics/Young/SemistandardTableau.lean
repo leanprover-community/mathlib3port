@@ -71,10 +71,7 @@ namespace Ssyt
 instance funLike {μ : YoungDiagram} : FunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
     where
   coe := Ssyt.entry
-  coe_injective' T T' h := by
-    cases T
-    cases T'
-    congr
+  coe_injective' T T' h := by cases T; cases T'; congr
 #align ssyt.fun_like Ssyt.funLike
 -/
 
@@ -93,9 +90,7 @@ theorem to_fun_eq_coe {μ : YoungDiagram} {T : Ssyt μ} : T.entry = (T : ℕ →
 #print Ssyt.ext /-
 @[ext]
 theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) : T = T' :=
-  FunLike.ext T T' fun x => by
-    funext
-    apply h
+  FunLike.ext T T' fun x => by funext; apply h
 #align ssyt.ext Ssyt.ext
 -/
 
@@ -148,20 +143,14 @@ theorem zeros {μ : YoungDiagram} (T : Ssyt μ) {i j : ℕ} (not_cell : (i, j) �
 
 #print Ssyt.row_weak_of_le /-
 theorem row_weak_of_le {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 ≤ j2)
-    (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 :=
-  by
-  cases eq_or_lt_of_le hj
-  subst h
+    (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 := by cases eq_or_lt_of_le hj; subst h;
   exact T.row_weak h cell
 #align ssyt.row_weak_of_le Ssyt.row_weak_of_le
 -/
 
 #print Ssyt.col_weak /-
 theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2) (cell : (i2, j) ∈ μ) :
-    T i1 j ≤ T i2 j := by
-  cases eq_or_lt_of_le hi
-  subst h
-  exact le_of_lt (T.col_strict h cell)
+    T i1 j ≤ T i2 j := by cases eq_or_lt_of_le hi; subst h; exact le_of_lt (T.col_strict h cell)
 #align ssyt.col_weak Ssyt.col_weak
 -/
 

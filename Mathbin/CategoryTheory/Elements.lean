@@ -103,16 +103,10 @@ noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G �
       calc
         F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by rw [f.2]
         _ = (F.map f.val ≫ F.map (inv f.val)) p.2 := rfl
-        _ = p.2 := by
-          rw [← F.map_comp]
-          simp
+        _ = p.2 := by rw [← F.map_comp]; simp
         ⟩
-  inv_comp' _ _ _ := by
-    ext
-    simp
-  comp_inv' _ _ _ := by
-    ext
-    simp
+  inv_comp' _ _ _ := by ext; simp
+  comp_inv' _ _ _ := by ext; simp
 #align category_theory.groupoid_of_elements CategoryTheory.groupoidOfElements
 -/
 
@@ -259,9 +253,7 @@ def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F
       convert(congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
       simp only [Equiv.toFun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply,
         category.comp_id, yoneda_obj_map]
-      have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom :=
-        by
-        convert f.unop.3
+      have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom := by convert f.unop.3;
         erw [category.comp_id]
       erw [← this]
       simp only [yoneda_map_app, functor_to_types.comp]
@@ -287,14 +279,8 @@ theorem from_toCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
   intro X Y f
   have :
     ∀ {a b : F.elements} (H : a = b),
-      ↑(eq_to_hom H) =
-        eq_to_hom
-          (show a.fst = b.fst by
-            cases H
-            rfl) :=
-    fun _ _ H => by
-    cases H
-    rfl
+      ↑(eq_to_hom H) = eq_to_hom (show a.fst = b.fst by cases H; rfl) :=
+    fun _ _ H => by cases H; rfl
   ext; simp [this]
   tidy
 #align category_theory.category_of_elements.from_to_costructured_arrow_eq CategoryTheory.CategoryOfElements.from_toCostructuredArrow_eq
@@ -306,9 +292,7 @@ theorem to_fromCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (fromCostructuredArrow F).rightOp ⋙ toCostructuredArrow F = 𝟭 _ :=
   by
   apply functor.hext
-  · intro X
-    cases X
-    cases X_right
+  · intro X; cases X; cases X_right
     simp only [functor.id_obj, functor.right_op_obj, to_costructured_arrow_obj, functor.comp_obj,
       costructured_arrow.mk]
     congr
@@ -361,18 +345,11 @@ theorem costructuredArrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ ⥤
     congr
     ext (x f)
     simpa using congr_fun (α.naturality f.op).symm (unop X).snd
-  · intro X Y f
-    ext
+  · intro X Y f; ext
     have :
       ∀ {F : Cᵒᵖ ⥤ Type v} {a b : costructured_arrow yoneda F} (H : a = b),
-        comma_morphism.left (eq_to_hom H) =
-          eq_to_hom
-            (show a.left = b.left by
-              cases H
-              rfl) :=
-      fun _ _ _ H => by
-      cases H
-      rfl
+        comma_morphism.left (eq_to_hom H) = eq_to_hom (show a.left = b.left by cases H; rfl) :=
+      fun _ _ _ H => by cases H; rfl
     simp [this]
 #align category_theory.category_of_elements.costructured_arrow_yoneda_equivalence_naturality CategoryTheory.CategoryOfElements.costructuredArrow_yoneda_equivalence_naturality
 -/

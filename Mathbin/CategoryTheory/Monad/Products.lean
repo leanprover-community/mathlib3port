@@ -64,12 +64,7 @@ category.
 def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X
     where
   obj A := Over.mk (A.a ≫ Limits.prod.fst)
-  map A₁ A₂ f :=
-    Over.homMk f.f
-      (by
-        rw [over.mk_hom, ← f.h_assoc]
-        dsimp
-        simp)
+  map A₁ A₂ f := Over.homMk f.f (by rw [over.mk_hom, ← f.h_assoc]; dsimp; simp)
 #align category_theory.coalgebra_to_over CategoryTheory.coalgebraToOver
 -/
 
@@ -103,16 +98,8 @@ def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X
     NatIso.ofComponents
       (fun A =>
         Coalgebra.isoMk (Iso.refl _)
-          (prod.hom_ext
-            (by
-              dsimp
-              simp)
-            (by
-              dsimp
-              simpa using A.counit)))
-      fun A₁ A₂ f => by
-      ext
-      simp
+          (prod.hom_ext (by dsimp; simp) (by dsimp; simpa using A.counit)))
+      fun A₁ A₂ f => by ext; simp
   counitIso := NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by tidy
 #align category_theory.coalgebra_equiv_over CategoryTheory.coalgebraEquivOver
 
@@ -142,12 +129,7 @@ category.
 def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X
     where
   obj A := Under.mk (coprod.inl ≫ A.a)
-  map A₁ A₂ f :=
-    Under.homMk f.f
-      (by
-        rw [under.mk_hom, assoc, ← f.h]
-        dsimp
-        simp)
+  map A₁ A₂ f := Under.homMk f.f (by rw [under.mk_hom, assoc, ← f.h]; dsimp; simp)
 #align category_theory.algebra_to_under CategoryTheory.algebraToUnder
 -/
 
@@ -182,13 +164,8 @@ def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X
     NatIso.ofComponents
       (fun A =>
         Monad.Algebra.isoMk (Iso.refl _)
-          (coprod.hom_ext (by tidy)
-            (by
-              dsimp
-              simpa using A.unit.symm)))
-      fun A₁ A₂ f => by
-      ext
-      simp
+          (coprod.hom_ext (by tidy) (by dsimp; simpa using A.unit.symm)))
+      fun A₁ A₂ f => by ext; simp
   counitIso :=
     NatIso.ofComponents (fun f => Under.isoMk (Iso.refl _) (by tidy)) fun f g k => by tidy
 #align category_theory.algebra_equiv_under CategoryTheory.algebraEquivUnder

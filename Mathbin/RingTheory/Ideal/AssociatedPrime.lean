@@ -218,20 +218,17 @@ theorem IsAssociatedPrime.eq_radical (hI : I.IsPrimary) (h : IsAssociatedPrime J
     J = I.radical := by
   obtain ⟨hJ, x, e⟩ := h
   have : x ≠ 0 := by
-    rintro rfl
-    apply hJ.1
+    rintro rfl; apply hJ.1
     rwa [submodule.span_singleton_eq_bot.mpr rfl, Submodule.annihilator_bot] at e
   obtain ⟨x, rfl⟩ := Ideal.Quotient.mkₐ_surjective R _ x
   replace e : ∀ {y}, y ∈ J ↔ x * y ∈ I
-  · intro y
+  · intro y;
     rw [e, Submodule.mem_annihilator_span_singleton, ← map_smul, smul_eq_mul, mul_comm,
       Ideal.Quotient.mkₐ_eq_mk, ← Ideal.Quotient.mk_eq_mk, Submodule.Quotient.mk_eq_zero]
   apply le_antisymm
   · intro y hy
     exact (hI.2 <| e.mp hy).resolve_left ((Submodule.Quotient.mk_eq_zero I).Not.mp this)
-  · rw [hJ.radical_le_iff]
-    intro y hy
-    exact e.mpr (I.mul_mem_left x hy)
+  · rw [hJ.radical_le_iff]; intro y hy; exact e.mpr (I.mul_mem_left x hy)
 #align is_associated_prime.eq_radical IsAssociatedPrime.eq_radical
 -/
 

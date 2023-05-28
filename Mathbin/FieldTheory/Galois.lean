@@ -119,13 +119,8 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   cases' Field.exists_primitive_element F E with α hα
   let iso : F⟮⟯ ≃ₐ[F] E :=
     { toFun := fun e => e.val
-      invFun := fun e =>
-        ⟨e, by
-          rw [hα]
-          exact IntermediateField.mem_top⟩
-      left_inv := fun _ => by
-        ext
-        rfl
+      invFun := fun e => ⟨e, by rw [hα]; exact IntermediateField.mem_top⟩
+      left_inv := fun _ => by ext; rfl
       right_inv := fun _ => rfl
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl
@@ -134,9 +129,7 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   have h_sep : (minpoly F α).Separable := IsGalois.separable F α
   have h_splits : (minpoly F α).Splits (algebraMap F E) := IsGalois.splits F α
   replace h_splits : Polynomial.Splits (algebraMap F F⟮⟯) (minpoly F α)
-  · have p : iso.symm.to_alg_hom.to_ring_hom.comp (algebraMap F E) = algebraMap F ↥F⟮⟯ :=
-      by
-      ext
+  · have p : iso.symm.to_alg_hom.to_ring_hom.comp (algebraMap F E) = algebraMap F ↥F⟮⟯ := by ext;
       simp
     simpa [p] using
       Polynomial.splits_comp_of_splits (algebraMap F E) iso.symm.to_alg_hom.to_ring_hom h_splits
@@ -144,12 +137,8 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   rw [← intermediate_field.adjoin_simple.card_aut_eq_finrank F E H h_sep h_splits]
   apply Fintype.card_congr
   apply Equiv.mk (fun ϕ => iso.trans (trans ϕ iso.symm)) fun ϕ => iso.symm.trans (trans ϕ iso)
-  · intro ϕ
-    ext1
-    simp only [trans_apply, apply_symm_apply]
-  · intro ϕ
-    ext1
-    simp only [trans_apply, symm_apply_apply]
+  · intro ϕ; ext1; simp only [trans_apply, apply_symm_apply]
+  · intro ϕ; ext1; simp only [trans_apply, symm_apply_apply]
 #align is_galois.card_aut_eq_finrank IsGalois.card_aut_eq_finrank
 
 end IsGalois
@@ -180,8 +169,7 @@ theorem isGalois_iff_isGalois_bot : IsGalois (⊥ : IntermediateField F E) E ↔
   constructor
   · intro h
     exact IsGalois.tower_top_of_isGalois (⊥ : IntermediateField F E) F E
-  · intro h
-    infer_instance
+  · intro h; infer_instance
 #align is_galois_iff_is_galois_bot isGalois_iff_isGalois_bot
 
 theorem IsGalois.of_algEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
@@ -244,15 +232,9 @@ def fixingSubgroupEquiv : fixingSubgroup K ≃* E ≃ₐ[K] E
     where
   toFun ϕ := { AlgEquiv.toRingEquiv ↑ϕ with commutes' := ϕ.Mem }
   invFun ϕ := ⟨ϕ.restrictScalars _, ϕ.commutes⟩
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
-  map_mul' _ _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
+  map_mul' _ _ := by ext; rfl
 #align intermediate_field.fixing_subgroup_equiv IntermediateField.fixingSubgroupEquiv
 
 theorem fixingSubgroup_fixedField [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H :=
@@ -402,9 +384,7 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E]
       { toFun := fun g => ⟨g, Subgroup.mem_top g⟩
         invFun := coe
         left_inv := fun g => rfl
-        right_inv := fun _ => by
-          ext
-          rfl }
+        right_inv := fun _ => by ext; rfl }
 #align is_galois.of_card_aut_eq_finrank IsGalois.of_card_aut_eq_finrank
 
 variable {F} {E} {p : F[X]}
@@ -447,8 +427,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   apply Finset.sum_const_nat
   intro f hf
   rw [← @IntermediateField.card_algHom_adjoin_integral K _ E _ _ x E _ (RingHom.toAlgebra f) h]
-  · apply Fintype.card_congr
-    rfl
+  · apply Fintype.card_congr; rfl
   · exact Polynomial.Separable.of_dvd ((Polynomial.separable_map (algebraMap F K)).mpr hp) h2
   · refine' Polynomial.splits_of_splits_of_dvd _ (Polynomial.map_ne_zero h1) _ h2
     rw [Polynomial.splits_map_iff, ← IsScalarTower.algebraMap_eq]
@@ -503,18 +482,15 @@ theorem tFAE [FiniteDimensional F E] :
   tfae_have 1 → 2
   · exact fun h => OrderIso.map_bot (@intermediate_field_equiv_subgroup F _ E _ _ _ h).symm
   tfae_have 1 → 3
-  · intro
-    exact card_aut_eq_finrank F E
+  · intro ; exact card_aut_eq_finrank F E
   tfae_have 1 → 4
-  · intro
-    exact is_separable_splitting_field F E
+  · intro ; exact is_separable_splitting_field F E
   tfae_have 2 → 1
   · exact of_fixed_field_eq_bot F E
   tfae_have 3 → 1
   · exact of_card_aut_eq_finrank F E
   tfae_have 4 → 1
-  · rintro ⟨h, hp1, _⟩
-    exact of_separable_splitting_field hp1
+  · rintro ⟨h, hp1, _⟩; exact of_separable_splitting_field hp1
   tfae_finish
 #align is_galois.tfae IsGalois.tFAE
 

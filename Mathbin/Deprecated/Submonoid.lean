@@ -239,9 +239,7 @@ theorem IsSubmonoid.image {γ : Type _} [Monoid γ] {f : M → γ} (hf : IsMonoi
 /-- The image of a monoid hom is a submonoid of the codomain. -/
 @[to_additive "The image of an `add_monoid` hom is an `add_submonoid`\nof the codomain."]
 theorem Range.isSubmonoid {γ : Type _} [Monoid γ] {f : M → γ} (hf : IsMonoidHom f) :
-    IsSubmonoid (Set.range f) := by
-  rw [← Set.image_univ]
-  exact univ.is_submonoid.image hf
+    IsSubmonoid (Set.range f) := by rw [← Set.image_univ]; exact univ.is_submonoid.image hf
 #align range.is_submonoid Range.isSubmonoid
 #align range.is_add_submonoid Range.isAddSubmonoid
 -/
@@ -251,12 +249,8 @@ theorem Range.isSubmonoid {γ : Type _} [Monoid γ] {f : M → γ} (hf : IsMonoi
 @[to_additive IsAddSubmonoid.smul_mem
       "An `add_submonoid` is closed under multiplication by naturals."]
 theorem IsSubmonoid.pow_mem {a : M} (hs : IsSubmonoid s) (h : a ∈ s) : ∀ {n : ℕ}, a ^ n ∈ s
-  | 0 => by
-    rw [pow_zero]
-    exact hs.one_mem
-  | n + 1 => by
-    rw [pow_succ]
-    exact hs.mul_mem h IsSubmonoid.pow_mem
+  | 0 => by rw [pow_zero]; exact hs.one_mem
+  | n + 1 => by rw [pow_succ]; exact hs.mul_mem h IsSubmonoid.pow_mem
 #align is_submonoid.pow_mem IsSubmonoid.pow_mem
 -/
 
@@ -425,10 +419,8 @@ theorem image_closure {A : Type _} [Monoid A] {f : M → A} (hf : IsMonoidHom f)
       rintro _ ⟨x, hx, rfl⟩
       apply in_closure.rec_on hx <;> intros
       · solve_by_elim [subset_closure, Set.mem_image_of_mem]
-      · rw [hf.map_one]
-        apply IsSubmonoid.one_mem (closure.is_submonoid (f '' s))
-      · rw [hf.map_mul]
-        solve_by_elim [(closure.is_submonoid _).mul_mem] )
+      · rw [hf.map_one]; apply IsSubmonoid.one_mem (closure.is_submonoid (f '' s))
+      · rw [hf.map_mul]; solve_by_elim [(closure.is_submonoid _).mul_mem] )
     (closure_subset (IsSubmonoid.image hf (closure.isSubmonoid _)) <|
       Set.image_subset _ subset_closure)
 #align monoid.image_closure Monoid.image_closure

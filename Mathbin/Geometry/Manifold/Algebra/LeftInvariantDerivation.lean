@@ -76,12 +76,8 @@ theorem toDerivation_eq_coe : X.toDerivation = X :=
 #align left_invariant_derivation.to_derivation_eq_coe LeftInvariantDerivation.toDerivation_eq_coe
 
 theorem coe_injective :
-    @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h =>
-  by
-  cases X
-  cases Y
-  congr
-  exact Derivation.coe_injective h
+    @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h => by
+  cases X; cases Y; congr ; exact Derivation.coe_injective h
 #align left_invariant_derivation.coe_injective LeftInvariantDerivation.coe_injective
 
 @[ext]
@@ -99,11 +95,7 @@ theorem coe_derivation :
 theorem coe_derivation_injective :
     Function.Injective
       (coe : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
-  fun X Y h => by
-  cases X
-  cases Y
-  congr
-  exact h
+  fun X Y h => by cases X; cases Y; congr ; exact h
 #align left_invariant_derivation.coe_derivation_injective LeftInvariantDerivation.coe_derivation_injective
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
@@ -250,9 +242,7 @@ theorem left_invariant : 𝒅ₕ (smoothLeftMul_one I g) (evalAt (1 : G) X) = ev
   X.left_invariant'' g
 #align left_invariant_derivation.left_invariant LeftInvariantDerivation.left_invariant
 
-theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
-  by
-  ext f
+theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) := by ext f;
   rw [← left_invariant, apply_hfdifferential, apply_hfdifferential, L_mul, fdifferential_comp,
     apply_fdifferential, LinearMap.comp_apply, apply_fdifferential, ← apply_hfdifferential,
     left_invariant]
@@ -293,27 +283,22 @@ theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
 instance : LieRing (LeftInvariantDerivation I G)
     where
   add_lie X Y Z := by
-    ext1
+    ext1;
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
   lie_add X Y Z := by
-    ext1
+    ext1;
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
-  lie_self X := by
-    ext1
-    simp only [commutator_apply, sub_self]
-    rfl
+  lie_self X := by ext1; simp only [commutator_apply, sub_self]; rfl
   leibniz_lie X Y Z := by
-    ext1
-    simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
+    ext1; simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
     ring
 
 instance : LieAlgebra 𝕜 (LeftInvariantDerivation I G)
-    where lie_smul r Y Z := by
-    ext1
+    where lie_smul r Y Z := by ext1;
     simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 
 end LeftInvariantDerivation

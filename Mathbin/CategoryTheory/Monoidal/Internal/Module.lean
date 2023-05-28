@@ -45,12 +45,8 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Ring A.pt :=
         A.pt) with
     one := A.one (1 : R)
     mul := fun x y => A.mul (x ⊗ₜ y)
-    one_mul := fun x => by
-      convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x)
-      simp
-    mul_one := fun x => by
-      convert LinearMap.congr_fun A.mul_one (x ⊗ₜ (1 : R))
-      simp
+    one_mul := fun x => by convert LinearMap.congr_fun A.one_mul ((1 : R) ⊗ₜ x); simp
+    mul_one := fun x => by convert LinearMap.congr_fun A.mul_one (x ⊗ₜ (1 : R)); simp
     mul_assoc := fun x y z => by convert LinearMap.congr_fun A.mul_assoc (x ⊗ₜ y ⊗ₜ z)
     left_distrib := fun x y z =>
       by
@@ -158,19 +154,13 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
                 { toFun := id
                   map_add' := fun x y => rfl
                   map_smul' := fun r a => rfl }
-              mul_hom' := by
-                ext
-                dsimp at *
-                rfl }
+              mul_hom' := by ext; dsimp at *; rfl }
           inv :=
             { Hom :=
                 { toFun := id
                   map_add' := fun x y => rfl
                   map_smul' := fun r a => rfl }
-              mul_hom' := by
-                ext
-                dsimp at *
-                rfl } })
+              mul_hom' := by ext; dsimp at *; rfl } })
       (by tidy)
   counitIso :=
     NatIso.ofComponents
@@ -189,9 +179,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               map_one' := (algebraMap R A).map_one.symm
               map_mul' := fun x y => (@LinearMap.mul'_apply R _ _ _ _ _ _ x y).symm
               commutes' := fun r => rfl } })
-      (by
-        intros
-        rfl)
+      (by intros ; rfl)
 #align Module.Mon_Module_equivalence_Algebra ModuleCat.monModuleEquivalenceAlgebra
 
 /-- The equivalence `Mon_ (Module R) ≌ Algebra R`

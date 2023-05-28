@@ -37,9 +37,7 @@ theorem hasStrictFDerivAt_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ)
       p :=
   by
-  have A : p.1 ≠ 0 := by
-    intro h
-    simpa [h, lt_irrefl] using hp
+  have A : p.1 ≠ 0 := by intro h; simpa [h, lt_irrefl] using hp
   have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
     ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp =>
       cpow_def_of_ne_zero hp _
@@ -234,8 +232,7 @@ theorem hasDerivAt_of_real_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -
   · -- easy case : `0 < x`
     convert(((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_of_real
     · rw [add_sub_cancel, id.def, mul_one, mul_comm, mul_div_cancel _ hr]
-    · rw [id.def, of_real_re]
-      exact Or.inl hx
+    · rw [id.def, of_real_re]; exact Or.inl hx
   · -- harder case : `x < 0`
     have :
       ∀ᶠ y : ℝ in nhds x,
@@ -254,22 +251,18 @@ theorem hasDerivAt_of_real_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -
     rw [mul_add ((π : ℂ) * _), mul_one, exp_add, exp_pi_mul_I, mul_comm (_ : ℂ) (-1 : ℂ),
       neg_one_mul]
     simp_rw [mul_neg, ← neg_mul, ← of_real_neg]
-    suffices HasDerivAt (fun y : ℝ => ↑(-y) ^ (r + 1)) (-(r + 1) * ↑(-x) ^ r) x
-      by
-      convert this.neg.mul_const _
-      ring
+    suffices HasDerivAt (fun y : ℝ => ↑(-y) ^ (r + 1)) (-(r + 1) * ↑(-x) ^ r) x by
+      convert this.neg.mul_const _; ring
     suffices HasDerivAt (fun y : ℝ => ↑y ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) (-x)
       by
       convert@HasDerivAt.scomp ℝ _ ℂ _ _ x ℝ _ _ _ _ _ _ _ _ this (hasDerivAt_neg x) using 1
-      rw [real_smul, of_real_neg 1, of_real_one]
-      ring
+      rw [real_smul, of_real_neg 1, of_real_one]; ring
     suffices HasDerivAt (fun y : ℂ => y ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) ↑(-x) by
       exact this.comp_of_real
     conv in ↑_ ^ _ => rw [(by ring : r = r + 1 - 1)]
     convert(hasDerivAt_id ((-x : ℝ) : ℂ)).cpow_const _ using 1
     · simp
-    · left
-      rwa [id.def, of_real_re, neg_pos]
+    · left; rwa [id.def, of_real_re, neg_pos]
 #align has_deriv_at_of_real_cpow hasDerivAt_of_real_cpow
 
 end deriv
@@ -309,8 +302,7 @@ theorem hasStrictFDerivAt_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
     1
   simp_rw [rpow_sub_one hp.ne, smul_add, ← add_assoc, smul_smul, ← add_smul, ← mul_assoc,
     mul_comm (cos _), ← rpow_def_of_neg hp]
-  rw [div_eq_mul_inv, add_comm]
-  congr 2 <;> ring
+  rw [div_eq_mul_inv, add_comm]; congr 2 <;> ring
 #align real.has_strict_fderiv_at_rpow_of_neg Real.hasStrictFDerivAt_rpow_of_neg
 
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
@@ -348,8 +340,7 @@ theorem hasStrictDerivAt_rpow_const_of_ne {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
   · have :=
       (has_strict_fderiv_at_rpow_of_neg (x, p) hx).comp_hasStrictDerivAt x
         ((hasStrictDerivAt_id x).Prod (hasStrictDerivAt_const _ _))
-    convert this
-    simp
+    convert this; simp
   · simpa using (hasStrictDerivAt_id x).rpow (hasStrictDerivAt_const x p) hx
 #align real.has_strict_deriv_at_rpow_const_of_ne Real.hasStrictDerivAt_rpow_const_of_ne
 
@@ -578,9 +569,7 @@ theorem ContDiffWithinAt.rpow_const_of_le (hf : ContDiffWithinAt ℝ m f s x) (h
 #align cont_diff_within_at.rpow_const_of_le ContDiffWithinAt.rpow_const_of_le
 
 theorem ContDiffAt.rpow_const_of_le (hf : ContDiffAt ℝ m f x) (h : ↑m ≤ p) :
-    ContDiffAt ℝ m (fun x => f x ^ p) x :=
-  by
-  rw [← contDiffWithinAt_univ] at *
+    ContDiffAt ℝ m (fun x => f x ^ p) x := by rw [← contDiffWithinAt_univ] at *;
   exact hf.rpow_const_of_le h
 #align cont_diff_at.rpow_const_of_le ContDiffAt.rpow_const_of_le
 

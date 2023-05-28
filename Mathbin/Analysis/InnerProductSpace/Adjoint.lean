@@ -151,10 +151,7 @@ theorem adjoint_comp (A : F →L[𝕜] G) (B : E →L[𝕜] F) : (A ∘L B)† =
 theorem apply_norm_sq_eq_inner_adjoint_left (A : E →L[𝕜] E) (x : E) :
     ‖A x‖ ^ 2 = re ⟪(A† * A) x, x⟫ :=
   by
-  have h : ⟪(A† * A) x, x⟫ = ⟪A x, A x⟫ :=
-    by
-    rw [← adjoint_inner_left]
-    rfl
+  have h : ⟪(A† * A) x, x⟫ = ⟪A x, A x⟫ := by rw [← adjoint_inner_left]; rfl
   rw [h, ← inner_self_eq_norm_sq _]
 #align continuous_linear_map.apply_norm_sq_eq_inner_adjoint_left ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left
 
@@ -166,10 +163,7 @@ theorem apply_norm_eq_sqrt_inner_adjoint_left (A : E →L[𝕜] E) (x : E) :
 theorem apply_norm_sq_eq_inner_adjoint_right (A : E →L[𝕜] E) (x : E) :
     ‖A x‖ ^ 2 = re ⟪x, (A† * A) x⟫ :=
   by
-  have h : ⟪x, (A† * A) x⟫ = ⟪A x, A x⟫ :=
-    by
-    rw [← adjoint_inner_right]
-    rfl
+  have h : ⟪x, (A† * A) x⟫ = ⟪A x, A x⟫ := by rw [← adjoint_inner_right]; rfl
   rw [h, ← inner_self_eq_norm_sq _]
 #align continuous_linear_map.apply_norm_sq_eq_inner_adjoint_right ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_right
 
@@ -484,10 +478,8 @@ theorem isSelfAdjoint_iff' {A : E →ₗ[𝕜] E} : IsSelfAdjoint A ↔ A.adjoin
   Iff.rfl
 #align linear_map.is_self_adjoint_iff' LinearMap.isSelfAdjoint_iff'
 
-theorem isSymmetric_iff_isSelfAdjoint (A : E →ₗ[𝕜] E) : IsSymmetric A ↔ IsSelfAdjoint A :=
-  by
-  rw [is_self_adjoint_iff', is_symmetric, ← LinearMap.eq_adjoint_iff]
-  exact eq_comm
+theorem isSymmetric_iff_isSelfAdjoint (A : E →ₗ[𝕜] E) : IsSymmetric A ↔ IsSelfAdjoint A := by
+  rw [is_self_adjoint_iff', is_symmetric, ← LinearMap.eq_adjoint_iff]; exact eq_comm
 #align linear_map.is_symmetric_iff_is_self_adjoint LinearMap.isSymmetric_iff_isSelfAdjoint
 
 section Real
@@ -518,8 +510,7 @@ theorem isSymmetric_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSymmetric (T.adj
 theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ re ⟪x, (T.adjoint * T) x⟫ :=
   by
   simp only [mul_apply, adjoint_inner_right, inner_self_eq_norm_sq_to_K]
-  norm_cast
-  exact sq_nonneg _
+  norm_cast; exact sq_nonneg _
 #align linear_map.re_inner_adjoint_mul_self_nonneg LinearMap.re_inner_adjoint_mul_self_nonneg
 
 @[simp]

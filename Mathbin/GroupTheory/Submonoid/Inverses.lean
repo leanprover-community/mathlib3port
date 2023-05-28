@@ -117,10 +117,7 @@ theorem leftInv_leftInv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_inv
   by
   refine' le_antisymm S.left_inv_left_inv_le _
   intro x hx
-  have : x = ((hS hx).Unit⁻¹⁻¹ : Mˣ) :=
-    by
-    rw [inv_inv (hS hx).Unit]
-    rfl
+  have : x = ((hS hx).Unit⁻¹⁻¹ : Mˣ) := by rw [inv_inv (hS hx).Unit]; rfl
   rw [this]
   exact S.left_inv.unit_mem_left_inv _ (S.unit_mem_left_inv _ hx)
 #align submonoid.left_inv_left_inv_eq Submonoid.leftInv_leftInv_eq
@@ -243,18 +240,13 @@ Case conversion may be inaccurate. Consider using '#align submonoid.left_inv_equ
 noncomputable def leftInvEquiv : S.left_inv ≃* S :=
   {
     S.fromCommLeftInv with
-    invFun := fun x => by
-      choose x' hx using hS x.prop
-      exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩
+    invFun := fun x => by choose x' hx using hS x.prop; exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩
     left_inv := fun x =>
       Subtype.eq <| by
         dsimp; generalize_proofs h; rw [← h.some.mul_left_inj]
         exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec]))
     right_inv := fun x => by
-      dsimp
-      ext
-      rw [from_left_inv_eq_iff]
-      convert(hS x.prop).some.inv_val
+      dsimp; ext; rw [from_left_inv_eq_iff]; convert(hS x.prop).some.inv_val
       exact (hS x.prop).choose_spec.symm }
 #align submonoid.left_inv_equiv Submonoid.leftInvEquiv
 #align add_submonoid.left_neg_equiv AddSubmonoid.leftNegEquiv
@@ -298,10 +290,8 @@ theorem mul_leftInvEquiv (x : S.left_inv) : (x : M) * S.leftInvEquiv hS x = 1 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align submonoid.left_inv_equiv_symm_mul Submonoid.leftInvEquiv_symm_mulₓ'. -/
 @[simp, to_additive]
-theorem leftInvEquiv_symm_mul (x : S) : ((S.leftInvEquiv hS).symm x : M) * x = 1 :=
-  by
-  convert S.mul_left_inv_equiv hS ((S.left_inv_equiv hS).symm x)
-  simp
+theorem leftInvEquiv_symm_mul (x : S) : ((S.leftInvEquiv hS).symm x : M) * x = 1 := by
+  convert S.mul_left_inv_equiv hS ((S.left_inv_equiv hS).symm x); simp
 #align submonoid.left_inv_equiv_symm_mul Submonoid.leftInvEquiv_symm_mul
 #align add_submonoid.left_neg_equiv_symm_add AddSubmonoid.leftNegEquiv_symm_add
 
@@ -309,10 +299,8 @@ theorem leftInvEquiv_symm_mul (x : S) : ((S.leftInvEquiv hS).symm x : M) * x = 1
 <too large>
 Case conversion may be inaccurate. Consider using '#align submonoid.mul_left_inv_equiv_symm Submonoid.mul_leftInvEquiv_symmₓ'. -/
 @[simp, to_additive]
-theorem mul_leftInvEquiv_symm (x : S) : (x : M) * (S.leftInvEquiv hS).symm x = 1 :=
-  by
-  convert S.left_inv_equiv_mul hS ((S.left_inv_equiv hS).symm x)
-  simp
+theorem mul_leftInvEquiv_symm (x : S) : (x : M) * (S.leftInvEquiv hS).symm x = 1 := by
+  convert S.left_inv_equiv_mul hS ((S.left_inv_equiv hS).symm x); simp
 #align submonoid.mul_left_inv_equiv_symm Submonoid.mul_leftInvEquiv_symm
 #align add_submonoid.add_left_neg_equiv_symm AddSubmonoid.add_leftNegEquiv_symm
 

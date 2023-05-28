@@ -164,9 +164,7 @@ instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOne
     map_zero := fun e =>
       calc
         e 0 = e 0 * e (EquivLike.inv e 0) := by rw [← map_mul, MulZeroClass.zero_mul]
-        _ = 0 := by
-          convert MulZeroClass.mul_zero _
-          exact EquivLike.right_inv e _
+        _ = 0 := by convert MulZeroClass.mul_zero _; exact EquivLike.right_inv e _
          }
 #align mul_equiv_class.to_monoid_with_zero_hom_class MulEquivClass.toMonoidWithZeroHomClass
 
@@ -222,10 +220,7 @@ instance [Mul M] [Mul N] : MulEquivClass (M ≃* N) M N
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' f g h₁ h₂ := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h₁ h₂ := by cases f; cases g; congr
   map_mul := map_mul'
 
 variable [Mul M] [Mul N] [Mul P] [Mul Q]
@@ -936,15 +931,9 @@ def arrowCongr {M N P Q : Type _} [Mul P] [Mul Q] (f : M ≃ N) (g : P ≃* Q) :
     where
   toFun h n := g (h (f.symm n))
   invFun k m := g.symm (k (f m))
-  left_inv h := by
-    ext
-    simp
-  right_inv k := by
-    ext
-    simp
-  map_mul' h k := by
-    ext
-    simp
+  left_inv h := by ext; simp
+  right_inv k := by ext; simp
+  map_mul' h k := by ext; simp
 #align mul_equiv.arrow_congr MulEquiv.arrowCongr
 #align add_equiv.arrow_congr AddEquiv.arrowCongr
 -/
@@ -966,15 +955,9 @@ def monoidHomCongr {M N P Q} [MulOneClass M] [MulOneClass N] [CommMonoid P] [Com
     where
   toFun h := g.toMonoidHom.comp (h.comp f.symm.toMonoidHom)
   invFun k := g.symm.toMonoidHom.comp (k.comp f.toMonoidHom)
-  left_inv h := by
-    ext
-    simp
-  right_inv k := by
-    ext
-    simp
-  map_mul' h k := by
-    ext
-    simp
+  left_inv h := by ext; simp
+  right_inv k := by ext; simp
+  map_mul' h k := by ext; simp
 #align mul_equiv.monoid_hom_congr MulEquiv.monoidHomCongr
 #align add_equiv.add_monoid_hom_congr AddEquiv.addMonoidHomCongr
 

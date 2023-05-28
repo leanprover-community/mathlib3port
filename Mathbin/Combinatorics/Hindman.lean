@@ -142,15 +142,8 @@ theorem FP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ FP a) :
   by
   induction' hm with a a m hm ih a m hm ih
   · exact ⟨1, fun m hm => FP.cons a m hm⟩
-  · cases' ih with n hn
-    use n + 1
-    intro m' hm'
-    exact FP.tail _ _ (hn _ hm')
-  · cases' ih with n hn
-    use n + 1
-    intro m' hm'
-    rw [mul_assoc]
-    exact FP.cons _ _ (hn _ hm')
+  · cases' ih with n hn; use n + 1; intro m' hm'; exact FP.tail _ _ (hn _ hm')
+  · cases' ih with n hn; use n + 1; intro m' hm'; rw [mul_assoc]; exact FP.cons _ _ (hn _ hm')
 #align hindman.FP.mul Hindman.FP.mul
 #align hindman.FS.add Hindman.FS.add
 
@@ -166,19 +159,16 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
   by
   let S : Set (Ultrafilter M) := ⋂ n, { U | ∀ᶠ m in U, m ∈ FP (a.drop n) }
   obtain ⟨U, hU, U_idem⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
-  · refine' ⟨U, U_idem, _⟩
-    convert set.mem_Inter.mp hU 0
+  · refine' ⟨U, U_idem, _⟩; convert set.mem_Inter.mp hU 0
   · exact Ultrafilter.continuous_mul_left
   · apply IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
     · intro n U hU
       apply eventually.mono hU
       rw [add_comm, ← Stream'.drop_drop, ← Stream'.tail_eq_drop]
       exact FP.tail _
-    · intro n
-      exact ⟨pure _, mem_pure.mpr <| FP.head _⟩
+    · intro n; exact ⟨pure _, mem_pure.mpr <| FP.head _⟩
     · exact (ultrafilter_isClosed_basic _).IsCompact
-    · intro n
-      apply ultrafilter_isClosed_basic
+    · intro n; apply ultrafilter_isClosed_basic
   · exact IsClosed.isCompact (isClosed_iInter fun i => ultrafilter_isClosed_basic _)
   · intro U hU V hV
     rw [Set.mem_iInter] at *
@@ -210,20 +200,14 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   so we can repeat the argument starting from `s₁`, obtaining `a₁`, `s₂`, etc. This gives the desired
   infinite sequence. -/
   have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty :=
-    fun s hs =>
-    Ultrafilter.nonempty_of_mem
-      (inter_mem hs <| by
-        rw [← U_idem] at hs
-        exact hs)
+    fun s hs => Ultrafilter.nonempty_of_mem (inter_mem hs <| by rw [← U_idem] at hs; exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Stream'.corec elem succ (Subtype.mk s₀ sU)
-  suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val
-    by
-    intro m hm
-    exact this _ m hm ⟨s₀, sU⟩ rfl
+  suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val by
+    intro m hm; exact this _ m hm ⟨s₀, sU⟩ rfl
   clear sU s₀
   intro a m h
   induction' h with b b n h ih b n h ih
@@ -290,12 +274,8 @@ theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : FP (a.dr
 
 #print Hindman.FP.singleton /-
 @[to_additive]
-theorem FP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.get? i ∈ FP a :=
-  by
-  induction' i with i ih generalizing a
-  · apply FP.head
-  · apply FP.tail
-    apply ih
+theorem FP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.get? i ∈ FP a := by
+  induction' i with i ih generalizing a; · apply FP.head; · apply FP.tail; apply ih
 #align hindman.FP.singleton Hindman.FP.singleton
 #align hindman.FS.singleton Hindman.FS.singleton
 -/
@@ -329,10 +309,8 @@ theorem FP.finset_prod {M} [CommMonoid M] (a : Stream' M) (s : Finset ℕ) (hs :
   induction' s using Finset.strongInduction with s ih
   rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Stream'.head_drop]
   cases' (s.erase (s.min' hs)).eq_empty_or_nonempty with h h
-  · rw [h, Finset.prod_empty, mul_one]
-    exact FP.head _
-  · apply FP.cons
-    rw [Stream'.tail_eq_drop, Stream'.drop_drop, add_comm]
+  · rw [h, Finset.prod_empty, mul_one]; exact FP.head _
+  · apply FP.cons; rw [Stream'.tail_eq_drop, Stream'.drop_drop, add_comm]
     refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset <| s.min'_mem hs) h)
     have : s.min' hs + 1 ≤ (s.erase (s.min' hs)).min' h :=
       Nat.succ_le_of_lt (Finset.min'_lt_of_mem_erase_min' _ _ <| Finset.min'_mem _ _)

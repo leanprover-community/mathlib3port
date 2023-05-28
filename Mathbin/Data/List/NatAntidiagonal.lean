@@ -47,13 +47,9 @@ def antidiagonal (n : ℕ) : List (ℕ × ℕ) :=
 theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
   by
   rw [antidiagonal, mem_map]; constructor
-  · rintro ⟨i, hi, rfl⟩
-    rw [mem_range, lt_succ_iff] at hi
-    exact add_tsub_cancel_of_le hi
-  · rintro rfl
-    refine' ⟨x.fst, _, _⟩
-    · rw [mem_range, add_assoc, lt_add_iff_pos_right]
-      exact zero_lt_succ _
+  · rintro ⟨i, hi, rfl⟩; rw [mem_range, lt_succ_iff] at hi; exact add_tsub_cancel_of_le hi
+  · rintro rfl; refine' ⟨x.fst, _, _⟩
+    · rw [mem_range, add_assoc, lt_add_iff_pos_right]; exact zero_lt_succ _
     · exact Prod.ext rfl (add_tsub_cancel_left _ _)
 #align list.nat.mem_antidiagonal List.Nat.mem_antidiagonal
 -/
@@ -109,9 +105,7 @@ theorem antidiagonal_succ' {n : ℕ} :
 theorem antidiagonal_succ_succ' {n : ℕ} :
     antidiagonal (n + 2) =
       (0, n + 2) :: (antidiagonal n).map (Prod.map Nat.succ Nat.succ) ++ [(n + 2, 0)] :=
-  by
-  rw [antidiagonal_succ']
-  simpa
+  by rw [antidiagonal_succ']; simpa
 #align list.nat.antidiagonal_succ_succ' List.Nat.antidiagonal_succ_succ'
 -/
 

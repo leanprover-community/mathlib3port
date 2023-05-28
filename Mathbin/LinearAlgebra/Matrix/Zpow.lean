@@ -124,8 +124,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.zero_zpow Matrix.zero_zpowₓ'. -/
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : M) ^ z = 0
   | (n : ℕ), h => by
-    rw [zpow_ofNat, zero_pow]
-    refine' lt_of_le_of_ne n.zero_le (Ne.symm _)
+    rw [zpow_ofNat, zero_pow]; refine' lt_of_le_of_ne n.zero_le (Ne.symm _)
     simpa using h
   | -[n+1], h => by simp [zero_pow n.zero_lt_succ]
 #align matrix.zero_zpow Matrix.zero_zpow

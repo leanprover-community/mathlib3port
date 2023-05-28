@@ -261,8 +261,7 @@ theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
   dsimp only [multinomial]
   convert Finsupp.multinomial_update a _
   · rw [← Finsupp.card_toMultiset, m.to_finsupp_to_multiset]
-  · ext1 a'
-    rw [to_finsupp_apply, count_filter, Finsupp.coe_update]
+  · ext1 a'; rw [to_finsupp_apply, count_filter, Finsupp.coe_update]
     split_ifs
     · rw [Function.update_noteq h.symm, to_finsupp_apply]
     · rw [not_ne_iff.1 h, Function.update_same]
@@ -297,14 +296,11 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
   · rw [sum_empty]
     rintro (_ | n)
     · rw [pow_zero, Fintype.sum_subsingleton]
-      swap
-      · exact ⟨0, Or.inl rfl⟩
-      convert(one_mul _).symm
-      apply Nat.cast_one
+      swap; · exact ⟨0, Or.inl rfl⟩
+      convert(one_mul _).symm; apply Nat.cast_one
     · rw [pow_succ, MulZeroClass.zero_mul]
       apply (Fintype.sum_empty _).symm
-      rw [sym_empty]
-      infer_instance
+      rw [sym_empty]; infer_instance
   intro n; specialize ih (hc.mono <| s.subset_insert a)
   rw [sum_insert ha, (Commute.sum_right s _ _ fun b hb => _).add_pow, sum_range]; swap
   · exact hc (mem_insert_self a s) (mem_insert_of_mem hb) (ne_of_mem_of_not_mem hb ha).symm

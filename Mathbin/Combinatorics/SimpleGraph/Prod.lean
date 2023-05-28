@@ -265,11 +265,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {G : SimpleGraph.{u2} α} {H : SimpleGraph.{u1} β}, (SimpleGraph.Connected.{u2} α G) -> (SimpleGraph.Connected.{u1} β H) -> (SimpleGraph.Connected.{max u2 u1} (Prod.{u2, u1} α β) (SimpleGraph.boxProd.{u2, u1} α β G H))
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected.box_prod SimpleGraph.Connected.boxProdₓ'. -/
-protected theorem Connected.boxProd (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected :=
-  by
-  haveI := hG.nonempty
-  haveI := hH.nonempty
-  exact ⟨hG.preconnected.box_prod hH.preconnected⟩
+protected theorem Connected.boxProd (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected := by
+  haveI := hG.nonempty; haveI := hH.nonempty; exact ⟨hG.preconnected.box_prod hH.preconnected⟩
 #align simple_graph.connected.box_prod SimpleGraph.Connected.boxProd
 
 /- warning: simple_graph.connected.of_box_prod_left -> SimpleGraph.Connected.ofBoxProdLeft is a dubious translation:
@@ -280,8 +277,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected.of_box_prod_left SimpleGraph.Connected.ofBoxProdLeftₓ'. -/
 protected theorem Connected.ofBoxProdLeft (h : (G □ H).Connected) : G.Connected :=
   by
-  haveI := (nonempty_prod.1 h.nonempty).1
-  haveI := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prod.1 h.nonempty).1; haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_left⟩
 #align simple_graph.connected.of_box_prod_left SimpleGraph.Connected.ofBoxProdLeft
 
@@ -293,8 +289,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.connected.of_box_prod_right SimpleGraph.Connected.ofBoxProdRightₓ'. -/
 protected theorem Connected.ofBoxProdRight (h : (G □ H).Connected) : H.Connected :=
   by
-  haveI := (nonempty_prod.1 h.nonempty).1
-  haveI := (nonempty_prod.1 h.nonempty).2
+  haveI := (nonempty_prod.1 h.nonempty).1; haveI := (nonempty_prod.1 h.nonempty).2
   exact ⟨h.preconnected.of_box_prod_right⟩
 #align simple_graph.connected.of_box_prod_right SimpleGraph.Connected.ofBoxProdRight
 

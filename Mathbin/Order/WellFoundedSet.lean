@@ -135,12 +135,10 @@ theorem acc_iff_wellFoundedOn {α} {r : α → α → Prop} {a : α} :
         { b | TransGen r b a }.WellFoundedOn r].TFAE :=
   by
   tfae_have 1 → 2
-  · refine' fun h => ⟨fun b => _⟩
-    apply InvImage.accessible
+  · refine' fun h => ⟨fun b => _⟩; apply InvImage.accessible
     rw [← acc_transGen_iff] at h⊢
     obtain h' | h' := refl_trans_gen_iff_eq_or_trans_gen.1 b.2
-    · rwa [h'] at h
-    · exact h.inv h'
+    · rwa [h'] at h; · exact h.inv h'
   tfae_have 2 → 3
   · exact fun h => h.Subset fun _ => trans_gen.to_refl
   tfae_have 3 → 1
@@ -1216,8 +1214,7 @@ theorem Pi.isPwo {α : ι → Type _} [∀ i, LinearOrder (α i)] [∀ i, IsWell
     refine' is_pwo_iff_exists_monotone_subseq.2 fun f hf => _
     simpa only [Finset.mem_univ, true_imp_iff] using this Finset.univ f
   refine' Finset.cons_induction _ _
-  · intro f
-    exists RelEmbedding.refl (· ≤ ·)
+  · intro f; exists RelEmbedding.refl (· ≤ ·)
     simp only [IsEmpty.forall_iff, imp_true_iff, forall_const, Finset.not_mem_empty]
   · intro x s hx ih f
     obtain ⟨g, hg⟩ :=

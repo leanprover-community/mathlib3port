@@ -531,7 +531,7 @@ Case conversion may be inaccurate. Consider using '#align trivialization.to_pret
 theorem toPretrivialization_injective :
     Function.Injective fun e : Trivialization F proj => e.toPretrivialization :=
   by
-  intro e e'
+  intro e e';
   rw [Pretrivialization.ext_iff, Trivialization.ext_iff, ←
     local_homeomorph.to_local_equiv_injective.eq_iff]
   exact id
@@ -982,9 +982,7 @@ lean 3 declaration is
 but is expected to have type
   forall {B : Type.{u3}} {F : Type.{u2}} {E : B -> Type.{u1}} [_inst_1 : TopologicalSpace.{u3} B] [_inst_2 : TopologicalSpace.{u2} F] [_inst_4 : TopologicalSpace.{max u1 u3} (Bundle.TotalSpace.{u3, u1} B E)] (e' : Trivialization.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_1 _inst_2 _inst_4 (Bundle.TotalSpace.proj.{u3, u1} B E)), IsOpen.{max u3 u2} (Prod.{u3, u2} B F) (instTopologicalSpaceProd.{u3, u2} B F _inst_1 _inst_2) (LocalEquiv.target.{max u3 u1, max u3 u2} (Bundle.TotalSpace.{u3, u1} B E) (Prod.{u3, u2} B F) (LocalHomeomorph.toLocalEquiv.{max u3 u1, max u3 u2} (Bundle.TotalSpace.{u3, u1} B E) (Prod.{u3, u2} B F) _inst_4 (instTopologicalSpaceProd.{u3, u2} B F _inst_1 _inst_2) (Trivialization.toLocalHomeomorph.{u3, u2, max u3 u1} B F (Bundle.TotalSpace.{u3, u1} B E) _inst_1 _inst_2 _inst_4 (Bundle.TotalSpace.proj.{u3, u1} B E) e')))
 Case conversion may be inaccurate. Consider using '#align trivialization.open_target Trivialization.open_target'ₓ'. -/
-theorem open_target' : IsOpen e'.target :=
-  by
-  rw [e'.target_eq]
+theorem open_target' : IsOpen e'.target := by rw [e'.target_eq];
   exact e'.open_base_set.prod isOpen_univ
 #align trivialization.open_target Trivialization.open_target'
 
@@ -1124,9 +1122,7 @@ theorem continuousOn_symm (e : Trivialization F (π E)) :
   have :
     ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
       total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
-    by
-    rintro x ⟨hx : x.1 ∈ e.base_set, _⟩
-    simp_rw [e.mk_symm hx, Prod.mk.eta]
+    by rintro x ⟨hx : x.1 ∈ e.base_set, _⟩; simp_rw [e.mk_symm hx, Prod.mk.eta]
   refine' ContinuousOn.congr _ this
   rw [← e.target_eq]
   exact e.to_local_homeomorph.continuous_on_symm
@@ -1398,13 +1394,10 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.b
     where
   toLocalHomeomorph :=
     e.toLocalHomeomorph.disjointUnion e'.toLocalHomeomorph
-      (by
-        rw [e.source_eq, e'.source_eq]
-        exact H.preimage _)
+      (by rw [e.source_eq, e'.source_eq]; exact H.preimage _)
       (by
         rw [e.target_eq, e'.target_eq, disjoint_iff_inf_le]
-        intro x hx
-        exact H.le_bot ⟨hx.1.1, hx.2.1⟩)
+        intro x hx; exact H.le_bot ⟨hx.1.1, hx.2.1⟩)
   baseSet := e.baseSet ∪ e'.baseSet
   open_baseSet := IsOpen.union e.open_baseSet e'.open_baseSet
   source_eq := congr_arg₂ (· ∪ ·) e.source_eq e'.source_eq

@@ -224,10 +224,7 @@ theorem zero_divByMonic (p : R[X]) : 0 /ₘ p = 0 :=
 #print Polynomial.modByMonic_zero /-
 @[simp]
 theorem modByMonic_zero (p : R[X]) : p %ₘ 0 = p :=
-  if h : Monic (0 : R[X]) then
-    by
-    haveI := monic_zero_iff_subsingleton.mp h
-    simp
+  if h : Monic (0 : R[X]) then by haveI := monic_zero_iff_subsingleton.mp h; simp
   else by unfold mod_by_monic div_mod_by_monic_aux <;> rw [dif_neg h]
 #align polynomial.mod_by_monic_zero Polynomial.modByMonic_zero
 -/
@@ -235,10 +232,7 @@ theorem modByMonic_zero (p : R[X]) : p %ₘ 0 = p :=
 #print Polynomial.divByMonic_zero /-
 @[simp]
 theorem divByMonic_zero (p : R[X]) : p /ₘ 0 = 0 :=
-  if h : Monic (0 : R[X]) then
-    by
-    haveI := monic_zero_iff_subsingleton.mp h
-    simp
+  if h : Monic (0 : R[X]) then by haveI := monic_zero_iff_subsingleton.mp h; simp
   else by unfold div_by_monic div_mod_by_monic_aux <;> rw [dif_neg h]
 #align polynomial.div_by_monic_zero Polynomial.divByMonic_zero
 -/
@@ -274,10 +268,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) {q : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)}, (Polynomial.Monic.{u1} R (Ring.toSemiring.{u1} R _inst_1) q) -> (LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R (Ring.toSemiring.{u1} R _inst_1) (Polynomial.modByMonic.{u1} R _inst_1 p q)) (Polynomial.degree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q))
 Case conversion may be inaccurate. Consider using '#align polynomial.degree_mod_by_monic_le Polynomial.degree_modByMonic_leₓ'. -/
-theorem degree_modByMonic_le (p : R[X]) {q : R[X]} (hq : Monic q) : degree (p %ₘ q) ≤ degree q :=
-  by
-  nontriviality R
-  exact (degree_mod_by_monic_lt _ hq).le
+theorem degree_modByMonic_le (p : R[X]) {q : R[X]} (hq : Monic q) : degree (p %ₘ q) ≤ degree q := by
+  nontriviality R; exact (degree_mod_by_monic_lt _ hq).le
 #align polynomial.degree_mod_by_monic_le Polynomial.degree_modByMonic_le
 
 end Ring
@@ -406,17 +398,11 @@ theorem natDegree_divByMonic {R : Type u} [CommRing R] (f : R[X]) {g : R[X]} (hg
   by
   nontriviality R
   by_cases hfg : f /ₘ g = 0
-  · rw [hfg, nat_degree_zero]
-    rw [div_by_monic_eq_zero_iff hg] at hfg
+  · rw [hfg, nat_degree_zero]; rw [div_by_monic_eq_zero_iff hg] at hfg
     rw [tsub_eq_zero_iff_le.mpr (nat_degree_le_nat_degree <| le_of_lt hfg)]
-  have hgf := hfg
-  rw [div_by_monic_eq_zero_iff hg] at hgf
-  push_neg  at hgf
+  have hgf := hfg; rw [div_by_monic_eq_zero_iff hg] at hgf; push_neg  at hgf
   have := degree_add_div_by_monic hg hgf
-  have hf : f ≠ 0 := by
-    intro hf
-    apply hfg
-    rw [hf, zero_div_by_monic]
+  have hf : f ≠ 0 := by intro hf; apply hfg; rw [hf, zero_div_by_monic]
   rw [degree_eq_nat_degree hf, degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hfg, ←
     WithBot.coe_add, WithBot.coe_eq_coe] at this
   rw [← this, add_tsub_cancel_left]
@@ -665,9 +651,7 @@ variable {R}
 /- warning: polynomial.ker_eval_ring_hom -> Polynomial.ker_evalRingHom is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align polynomial.ker_eval_ring_hom Polynomial.ker_evalRingHomₓ'. -/
-theorem ker_evalRingHom (x : R) : (evalRingHom x).ker = Ideal.span {X - C x} :=
-  by
-  ext y
+theorem ker_evalRingHom (x : R) : (evalRingHom x).ker = Ideal.span {X - C x} := by ext y;
   simpa only [Ideal.mem_span_singleton, dvd_iff_is_root]
 #align polynomial.ker_eval_ring_hom Polynomial.ker_evalRingHom
 

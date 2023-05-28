@@ -353,10 +353,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sigma.lex.no_max_order Sigma.Lex.noMaxOrderₓ'. -/
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ i, α i) :=
-  ⟨by
-    rintro ⟨i, a⟩
-    obtain ⟨b, h⟩ := exists_gt a
-    exact ⟨⟨i, b⟩, right _ _ h⟩⟩
+  ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_gt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩
 #align sigma.lex.no_max_order Sigma.Lex.noMaxOrder
 
 /- warning: sigma.lex.no_min_order -> Sigma.Lex.noMinOrder is a dubious translation:
@@ -367,10 +364,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sigma.lex.no_min_order Sigma.Lex.noMinOrderₓ'. -/
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ i, α i) :=
-  ⟨by
-    rintro ⟨i, a⟩
-    obtain ⟨b, h⟩ := exists_lt a
-    exact ⟨⟨i, b⟩, right _ _ h⟩⟩
+  ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_lt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩
 #align sigma.lex.no_min_order Sigma.Lex.noMinOrder
 
 end Lex

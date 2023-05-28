@@ -580,10 +580,8 @@ Case conversion may be inaccurate. Consider using '#align perfect_closure.nat_ca
 theorem nat_cast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) :=
   by
   induction' n with n ih
-  · induction' x with x ih
-    · simp
-    rw [Nat.cast_succ, Nat.cast_succ, ih]
-    rfl
+  · induction' x with x ih; · simp
+    rw [Nat.cast_succ, Nat.cast_succ, ih]; rfl
   rw [ih]; apply Quot.sound
   conv =>
     congr
@@ -629,12 +627,9 @@ theorem frobenius_mk (x : ℕ × K) :
     (frobenius (PerfectClosure K p) p : PerfectClosure K p → PerfectClosure K p) (mk K p x) =
       mk _ _ (x.1, x.2 ^ p) :=
   by
-  simp only [frobenius_def]
-  cases' x with n x
-  dsimp only
+  simp only [frobenius_def]; cases' x with n x; dsimp only
   suffices ∀ p' : ℕ, mk K p (n, x) ^ p' = mk K p (n, x ^ p') by apply this
-  intro p
-  induction' p with p ih
+  intro p; induction' p with p ih
   case zero => apply r.sound; rw [(frobenius _ _).iterate_map_one, pow_zero]
   case succ =>
     rw [pow_succ, ih]
@@ -691,10 +686,7 @@ instance : Inv (PerfectClosure K p) :=
   ⟨Quot.lift (fun x : ℕ × K => Quot.mk (R K p) (x.1, x.2⁻¹)) fun x y (H : R K p x y) =>
       match x, y, H with
       | _, _, r.intro n x =>
-        Quot.sound <| by
-          simp only [frobenius_def]
-          rw [← inv_pow]
-          apply r.intro⟩
+        Quot.sound <| by simp only [frobenius_def]; rw [← inv_pow]; apply r.intro⟩
 
 instance : Field (PerfectClosure K p) :=
   { (inferInstance : Inv (PerfectClosure K p)),
@@ -720,12 +712,10 @@ instance : PerfectRing (PerfectClosure K p) p
       match x, y, H with
       | _, _, r.intro n x => Quot.sound (R.intro _ _)
   frobenius_pthRoot' e :=
-    induction_on e fun ⟨n, x⟩ => by
-      simp only [lift_on_mk, frobenius_mk]
+    induction_on e fun ⟨n, x⟩ => by simp only [lift_on_mk, frobenius_mk];
       exact (Quot.sound <| r.intro _ _).symm
   pth_root_frobenius' e :=
-    induction_on e fun ⟨n, x⟩ => by
-      simp only [lift_on_mk, frobenius_mk]
+    induction_on e fun ⟨n, x⟩ => by simp only [lift_on_mk, frobenius_mk];
       exact (Quot.sound <| r.intro _ _).symm
 
 /- warning: perfect_closure.eq_pth_root -> PerfectClosure.eq_pthRoot is a dubious translation:

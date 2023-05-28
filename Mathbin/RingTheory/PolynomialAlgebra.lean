@@ -213,8 +213,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x :=
   by
   apply TensorProduct.induction_on x
   · simp [inv_fun]
-  · intro a p
-    dsimp only [inv_fun]
+  · intro a p; dsimp only [inv_fun]
     rw [to_fun_alg_hom_apply_tmul, eval₂_sum]
     simp_rw [eval₂_monomial, AlgHom.coe_toRingHom, Algebra.TensorProduct.tmul_pow, one_pow,
       Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
@@ -230,8 +229,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x :=
 theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x :=
   by
   apply Polynomial.induction_on' x
-  · intro p q hp hq
-    simp only [inv_fun_add, AlgHom.map_add, hp, hq]
+  · intro p q hp hq; simp only [inv_fun_add, AlgHom.map_add, hp, hq]
   · intro n a
     rw [inv_fun_monomial, Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_pow,
         one_pow, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, to_fun_alg_hom_apply_tmul,
@@ -341,14 +339,11 @@ theorem matPolyEquiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
     coeff (matPolyEquiv (stdBasisMatrix i j p)) k = stdBasisMatrix i j (coeff p k) :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    ext
+  · intro p q hp hq; ext
     simp [hp, hq, coeff_add, add_apply, std_basis_matrix_add]
   · intro k x
     simp only [matPolyEquiv_coeff_apply_aux_1, coeff_monomial]
-    split_ifs <;>
-      · funext
-        simp
+    split_ifs <;> · funext; simp
 #align mat_poly_equiv_coeff_apply_aux_2 matPolyEquiv_coeff_apply_aux_2
 
 /- warning: mat_poly_equiv_coeff_apply -> matPolyEquiv_coeff_apply is a dubious translation:
@@ -360,14 +355,12 @@ theorem matPolyEquiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
   by
   apply Matrix.induction_on' m
   · simp
-  · intro p q hp hq
-    simp [hp, hq]
+  · intro p q hp hq; simp [hp, hq]
   · intro i' j' x
     erw [matPolyEquiv_coeff_apply_aux_2]
     dsimp [std_basis_matrix]
     split_ifs
-    · rcases h with ⟨rfl, rfl⟩
-      simp [std_basis_matrix]
+    · rcases h with ⟨rfl, rfl⟩; simp [std_basis_matrix]
     · simp [std_basis_matrix, h]
 #align mat_poly_equiv_coeff_apply matPolyEquiv_coeff_apply
 

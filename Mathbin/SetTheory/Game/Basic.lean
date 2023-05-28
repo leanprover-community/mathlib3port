@@ -58,21 +58,11 @@ instance : AddCommGroupWithOne Game where
   add :=
     Quotient.lift₂ (fun x y : PGame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy =>
       Quot.sound (PGame.add_congr hx hy)
-  add_zero := by
-    rintro ⟨x⟩
-    exact Quot.sound (add_zero_equiv x)
-  zero_add := by
-    rintro ⟨x⟩
-    exact Quot.sound (zero_add_equiv x)
-  add_assoc := by
-    rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
-    exact Quot.sound add_assoc_equiv
-  add_left_neg := by
-    rintro ⟨x⟩
-    exact Quot.sound (add_left_neg_equiv x)
-  add_comm := by
-    rintro ⟨x⟩ ⟨y⟩
-    exact Quot.sound add_comm_equiv
+  add_zero := by rintro ⟨x⟩; exact Quot.sound (add_zero_equiv x)
+  zero_add := by rintro ⟨x⟩; exact Quot.sound (zero_add_equiv x)
+  add_assoc := by rintro ⟨x⟩ ⟨y⟩ ⟨z⟩; exact Quot.sound add_assoc_equiv
+  add_left_neg := by rintro ⟨x⟩; exact Quot.sound (add_left_neg_equiv x)
+  add_comm := by rintro ⟨x⟩ ⟨y⟩; exact Quot.sound add_comm_equiv
 
 instance : Inhabited Game :=
   ⟨0⟩
@@ -80,20 +70,11 @@ instance : Inhabited Game :=
 instance : PartialOrder Game
     where
   le := Quotient.lift₂ (· ≤ ·) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
-  le_refl := by
-    rintro ⟨x⟩
-    exact le_refl x
-  le_trans := by
-    rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
-    exact @le_trans _ _ x y z
-  le_antisymm := by
-    rintro ⟨x⟩ ⟨y⟩ h₁ h₂
-    apply Quot.sound
-    exact ⟨h₁, h₂⟩
+  le_refl := by rintro ⟨x⟩; exact le_refl x
+  le_trans := by rintro ⟨x⟩ ⟨y⟩ ⟨z⟩; exact @le_trans _ _ x y z
+  le_antisymm := by rintro ⟨x⟩ ⟨y⟩ h₁ h₂; apply Quot.sound; exact ⟨h₁, h₂⟩
   lt := Quotient.lift₂ (· < ·) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)
-  lt_iff_le_not_le := by
-    rintro ⟨x⟩ ⟨y⟩
-    exact @lt_iff_le_not_le _ _ x y
+  lt_iff_le_not_le := by rintro ⟨x⟩ ⟨y⟩; exact @lt_iff_le_not_le _ _ x y
 
 /-- The less or fuzzy relation on games.
 
@@ -107,26 +88,16 @@ local infixl:50 " ⧏ " => Lf
 
 /-- On `game`, simp-normal inequalities should use as few negations as possible. -/
 @[simp]
-theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ y ⧏ x :=
-  by
-  rintro ⟨x⟩ ⟨y⟩
-  exact PGame.not_le
+theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ y ⧏ x := by rintro ⟨x⟩ ⟨y⟩; exact PGame.not_le
 #align game.not_le Game.not_le
 
 /-- On `game`, simp-normal inequalities should use as few negations as possible. -/
 @[simp]
-theorem not_lf : ∀ {x y : Game}, ¬x ⧏ y ↔ y ≤ x :=
-  by
-  rintro ⟨x⟩ ⟨y⟩
-  exact not_lf
+theorem not_lf : ∀ {x y : Game}, ¬x ⧏ y ↔ y ≤ x := by rintro ⟨x⟩ ⟨y⟩; exact not_lf
 #align game.not_lf Game.not_lf
 
 instance : IsTrichotomous Game (· ⧏ ·) :=
-  ⟨by
-    rintro ⟨x⟩ ⟨y⟩
-    change _ ∨ ⟦x⟧ = ⟦y⟧ ∨ _
-    rw [Quotient.eq']
-    apply lf_or_equiv_or_gf⟩
+  ⟨by rintro ⟨x⟩ ⟨y⟩; change _ ∨ ⟦x⟧ = ⟦y⟧ ∨ _; rw [Quotient.eq']; apply lf_or_equiv_or_gf⟩
 
 /-! It can be useful to use these lemmas to turn `pgame` inequalities into `game` inequalities, as
 the `add_comm_group` structure on `game` often simplifies many proofs. -/
@@ -163,38 +134,26 @@ theorem PGame.fuzzy_iff_game_fuzzy {x y : PGame} : PGame.Fuzzy x y ↔ ⟦x⟧ �
 #align pgame.fuzzy_iff_game_fuzzy PGame.fuzzy_iff_game_fuzzy
 
 instance covariantClass_add_le : CovariantClass Game Game (· + ·) (· ≤ ·) :=
-  ⟨by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h
-    exact @add_le_add_left _ _ _ _ b c h a⟩
+  ⟨by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h; exact @add_le_add_left _ _ _ _ b c h a⟩
 #align game.covariant_class_add_le Game.covariantClass_add_le
 
 instance covariantClass_swap_add_le : CovariantClass Game Game (swap (· + ·)) (· ≤ ·) :=
-  ⟨by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h
-    exact @add_le_add_right _ _ _ _ b c h a⟩
+  ⟨by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h; exact @add_le_add_right _ _ _ _ b c h a⟩
 #align game.covariant_class_swap_add_le Game.covariantClass_swap_add_le
 
 instance covariantClass_add_lt : CovariantClass Game Game (· + ·) (· < ·) :=
-  ⟨by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h
-    exact @add_lt_add_left _ _ _ _ b c h a⟩
+  ⟨by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h; exact @add_lt_add_left _ _ _ _ b c h a⟩
 #align game.covariant_class_add_lt Game.covariantClass_add_lt
 
 instance covariantClass_swap_add_lt : CovariantClass Game Game (swap (· + ·)) (· < ·) :=
-  ⟨by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h
-    exact @add_lt_add_right _ _ _ _ b c h a⟩
+  ⟨by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ h; exact @add_lt_add_right _ _ _ _ b c h a⟩
 #align game.covariant_class_swap_add_lt Game.covariantClass_swap_add_lt
 
-theorem add_lf_add_right : ∀ {b c : Game} (h : b ⧏ c) (a), b + a ⧏ c + a :=
-  by
-  rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩
+theorem add_lf_add_right : ∀ {b c : Game} (h : b ⧏ c) (a), b + a ⧏ c + a := by rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩;
   apply add_lf_add_right h
 #align game.add_lf_add_right Game.add_lf_add_right
 
-theorem add_lf_add_left : ∀ {b c : Game} (h : b ⧏ c) (a), a + b ⧏ a + c :=
-  by
-  rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩
+theorem add_lf_add_left : ∀ {b c : Game} (h : b ⧏ c) (a), a + b ⧏ a + c := by rintro ⟨b⟩ ⟨c⟩ h ⟨a⟩;
   apply add_lf_add_left h
 #align game.add_lf_add_left Game.add_lf_add_left
 
@@ -224,10 +183,8 @@ theorem quot_sub (a b : PGame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
 
 theorem quot_eq_of_mk'_quot_eq {x y : PGame} (L : x.LeftMoves ≃ y.LeftMoves)
     (R : x.RightMoves ≃ y.RightMoves) (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
-    (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ :=
-  by
-  simp_rw [Quotient.eq'] at hl hr
-  exact Quot.sound (equiv_of_mk_equiv L R hl hr)
+    (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
+  simp_rw [Quotient.eq'] at hl hr; exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 #align pgame.quot_eq_of_mk_quot_eq PGame.quot_eq_of_mk'_quot_eq
 
 /-! Multiplicative operations can be defined at the level of pre-games,
@@ -289,10 +246,7 @@ theorem mk_mul_moveLeft_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 theorem mul_moveLeft_inl {x y : PGame} {i j} :
     (x * y).moveLeft (toLeftMovesMul (Sum.inl (i, j))) =
       x.moveLeft i * y + x * y.moveLeft j - x.moveLeft i * y.moveLeft j :=
-  by
-  cases x
-  cases y
-  rfl
+  by cases x; cases y; rfl
 #align pgame.mul_move_left_inl PGame.mul_moveLeft_inl
 
 @[simp]
@@ -306,10 +260,7 @@ theorem mk_mul_moveLeft_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 theorem mul_moveLeft_inr {x y : PGame} {i j} :
     (x * y).moveLeft (toLeftMovesMul (Sum.inr (i, j))) =
       x.moveRight i * y + x * y.moveRight j - x.moveRight i * y.moveRight j :=
-  by
-  cases x
-  cases y
-  rfl
+  by cases x; cases y; rfl
 #align pgame.mul_move_left_inr PGame.mul_moveLeft_inr
 
 @[simp]
@@ -323,10 +274,7 @@ theorem mk_mul_moveRight_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 theorem mul_moveRight_inl {x y : PGame} {i j} :
     (x * y).moveRight (toRightMovesMul (Sum.inl (i, j))) =
       x.moveLeft i * y + x * y.moveRight j - x.moveLeft i * y.moveRight j :=
-  by
-  cases x
-  cases y
-  rfl
+  by cases x; cases y; rfl
 #align pgame.mul_move_right_inl PGame.mul_moveRight_inl
 
 @[simp]
@@ -340,10 +288,7 @@ theorem mk_mul_moveRight_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 theorem mul_moveRight_inr {x y : PGame} {i j} :
     (x * y).moveRight (toRightMovesMul (Sum.inr (i, j))) =
       x.moveRight i * y + x * y.moveLeft j - x.moveRight i * y.moveLeft j :=
-  by
-  cases x
-  cases y
-  rfl
+  by cases x; cases y; rfl
 #align pgame.mul_move_right_inr PGame.mul_moveRight_inr
 
 @[simp]
@@ -419,27 +364,19 @@ theorem mul_comm_equiv (x y : PGame) : x * y ≈ y * x :=
   Quotient.exact <| quot_mul_comm _ _
 #align pgame.mul_comm_equiv PGame.mul_comm_equiv
 
-instance isEmpty_mul_zero_leftMoves (x : PGame.{u}) : IsEmpty (x * 0).LeftMoves :=
-  by
-  cases x
+instance isEmpty_mul_zero_leftMoves (x : PGame.{u}) : IsEmpty (x * 0).LeftMoves := by cases x;
   apply Sum.isEmpty
 #align pgame.is_empty_mul_zero_left_moves PGame.isEmpty_mul_zero_leftMoves
 
-instance isEmpty_mul_zero_rightMoves (x : PGame.{u}) : IsEmpty (x * 0).RightMoves :=
-  by
-  cases x
+instance isEmpty_mul_zero_rightMoves (x : PGame.{u}) : IsEmpty (x * 0).RightMoves := by cases x;
   apply Sum.isEmpty
 #align pgame.is_empty_mul_zero_right_moves PGame.isEmpty_mul_zero_rightMoves
 
-instance isEmpty_zero_mul_leftMoves (x : PGame.{u}) : IsEmpty (0 * x).LeftMoves :=
-  by
-  cases x
+instance isEmpty_zero_mul_leftMoves (x : PGame.{u}) : IsEmpty (0 * x).LeftMoves := by cases x;
   apply Sum.isEmpty
 #align pgame.is_empty_zero_mul_left_moves PGame.isEmpty_zero_mul_leftMoves
 
-instance isEmpty_zero_mul_rightMoves (x : PGame.{u}) : IsEmpty (0 * x).RightMoves :=
-  by
-  cases x
+instance isEmpty_zero_mul_rightMoves (x : PGame.{u}) : IsEmpty (0 * x).RightMoves := by cases x;
   apply Sum.isEmpty
 #align pgame.is_empty_zero_mul_right_moves PGame.isEmpty_zero_mul_rightMoves
 
@@ -528,44 +465,36 @@ theorem quot_left_distrib : ∀ x y z : PGame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
       · change
           ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ =
             ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ =
             ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ =
             ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ =
             ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
     · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
       · change
           ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ =
             ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ =
             ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ =
             ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
-        simp [quot_left_distrib]
-        abel
+        simp [quot_left_distrib]; abel
       · change
           ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ =
             ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
-        simp [quot_left_distrib]
-        abel decreasing_by pgame_wf_tac
+        simp [quot_left_distrib]; abel decreasing_by pgame_wf_tac
 #align pgame.quot_left_distrib PGame.quot_left_distrib
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
@@ -574,10 +503,8 @@ theorem left_distrib_equiv (x y z : PGame) : x * (y + z) ≈ x * y + x * z :=
 #align pgame.left_distrib_equiv PGame.left_distrib_equiv
 
 @[simp]
-theorem quot_left_distrib_sub (x y z : PGame) : ⟦x * (y - z)⟧ = ⟦x * y⟧ - ⟦x * z⟧ :=
-  by
-  change ⟦x * (y + -z)⟧ = ⟦x * y⟧ + -⟦x * z⟧
-  rw [quot_left_distrib, quot_mul_neg]
+theorem quot_left_distrib_sub (x y z : PGame) : ⟦x * (y - z)⟧ = ⟦x * y⟧ - ⟦x * z⟧ := by
+  change ⟦x * (y + -z)⟧ = ⟦x * y⟧ + -⟦x * z⟧; rw [quot_left_distrib, quot_mul_neg]
 #align pgame.quot_left_distrib_sub PGame.quot_left_distrib_sub
 
 @[simp]
@@ -591,10 +518,8 @@ theorem right_distrib_equiv (x y z : PGame) : (x + y) * z ≈ x * z + y * z :=
 #align pgame.right_distrib_equiv PGame.right_distrib_equiv
 
 @[simp]
-theorem quot_right_distrib_sub (x y z : PGame) : ⟦(y - z) * x⟧ = ⟦y * x⟧ - ⟦z * x⟧ :=
-  by
-  change ⟦(y + -z) * x⟧ = ⟦y * x⟧ + -⟦z * x⟧
-  rw [quot_right_distrib, quot_neg_mul]
+theorem quot_right_distrib_sub (x y z : PGame) : ⟦(y - z) * x⟧ = ⟦y * x⟧ - ⟦z * x⟧ := by
+  change ⟦(y + -z) * x⟧ = ⟦y * x⟧ + -⟦z * x⟧; rw [quot_right_distrib, quot_neg_mul]
 #align pgame.quot_right_distrib_sub PGame.quot_right_distrib_sub
 
 /-- `x * 1` has the same moves as `x`. -/
@@ -671,58 +596,50 @@ theorem quot_mul_assoc : ∀ x y z : PGame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
                 (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
             ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
                 xL i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k -
                 (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
             ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
                 xR i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k -
                 (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
             ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
                 xL i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k -
                 (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
             ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
                 xR i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
     · rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
       · change
           ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k -
                 (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
             ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
                 xL i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k -
                 (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
             ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
                 xR i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k -
                 (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
             ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
                 xL i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp [quot_mul_assoc]
-        abel
+        simp [quot_mul_assoc]; abel
       · change
           ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k -
                 (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
             ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
                 xR i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp [quot_mul_assoc]
-        abel decreasing_by pgame_wf_tac
+        simp [quot_mul_assoc]; abel decreasing_by pgame_wf_tac
 #align pgame.quot_mul_assoc PGame.quot_mul_assoc
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/
@@ -748,11 +665,7 @@ instance (l r : Type u) : Inhabited (InvTy l r false) :=
   ⟨InvTy.zero⟩
 
 instance uniqueInvTy (l r : Type u) [IsEmpty l] [IsEmpty r] : Unique (InvTy l r false) :=
-  { InvTy.inhabited l r with
-    uniq := by
-      rintro (a | a | a)
-      rfl
-      all_goals exact isEmptyElim a }
+  { InvTy.inhabited l r with uniq := by rintro (a | a | a); rfl; all_goals exact isEmptyElim a }
 #align pgame.unique_inv_ty PGame.uniqueInvTy
 
 /-- Because the two halves of the definition of `inv` produce more elements
@@ -791,9 +704,7 @@ def inv' : PGame → PGame
 #align pgame.inv' PGame.inv'
 
 theorem zero_lf_inv' : ∀ x : PGame, 0 ⧏ inv' x
-  | ⟨xl, xr, xL, xR⟩ => by
-    convert lf_mk _ _ inv_ty.zero
-    rfl
+  | ⟨xl, xr, xL, xR⟩ => by convert lf_mk _ _ inv_ty.zero; rfl
 #align pgame.zero_lf_inv' PGame.zero_lf_inv'
 
 /-- `inv' 0` has exactly the same moves as `1`. -/
@@ -817,9 +728,7 @@ theorem inv'_zero_equiv : inv' 0 ≈ 1 :=
 def inv'One : inv' 1 ≡r (1 : PGame.{u}) :=
   by
   change relabelling (mk _ _ _ _) 1
-  have : IsEmpty { i : PUnit.{u + 1} // (0 : PGame.{u}) < 0 } :=
-    by
-    rw [lt_self_iff_false]
+  have : IsEmpty { i : PUnit.{u + 1} // (0 : PGame.{u}) < 0 } := by rw [lt_self_iff_false];
     infer_instance
   refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩ <;> dsimp
   · apply Equiv.equivPUnit
@@ -856,9 +765,7 @@ theorem inv_eq_of_lf_zero {x : PGame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) := by
 #align pgame.inv_eq_of_lf_zero PGame.inv_eq_of_lf_zero
 
 /-- `1⁻¹` has exactly the same moves as `1`. -/
-def invOne : 1⁻¹ ≡r 1 := by
-  rw [inv_eq_of_pos PGame.zero_lt_one]
-  exact inv'_one
+def invOne : 1⁻¹ ≡r 1 := by rw [inv_eq_of_pos PGame.zero_lt_one]; exact inv'_one
 #align pgame.inv_one PGame.invOne
 
 theorem inv_one_equiv : 1⁻¹ ≈ 1 :=

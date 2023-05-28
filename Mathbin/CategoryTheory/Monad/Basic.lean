@@ -264,15 +264,9 @@ instance : Category (Monad C) where
       toNatTrans :=
         { app := fun X => f.app X ≫ g.app X
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
-  id_comp' _ _ _ := by
-    ext
-    apply id_comp
-  comp_id' _ _ _ := by
-    ext
-    apply comp_id
-  assoc' _ _ _ _ _ _ _ := by
-    ext
-    apply assoc
+  id_comp' _ _ _ := by ext; apply id_comp
+  comp_id' _ _ _ := by ext; apply comp_id
+  assoc' _ _ _ _ _ _ _ := by ext; apply assoc
 
 instance : Category (Comonad C) where
   Hom := ComonadHom
@@ -282,15 +276,9 @@ instance : Category (Comonad C) where
       toNatTrans :=
         { app := fun X => f.app X ≫ g.app X
           naturality' := fun X Y h => by rw [assoc, f.1.naturality_assoc, g.1.naturality] } }
-  id_comp' _ _ _ := by
-    ext
-    apply id_comp
-  comp_id' _ _ _ := by
-    ext
-    apply comp_id
-  assoc' _ _ _ _ _ _ _ := by
-    ext
-    apply assoc
+  id_comp' _ _ _ := by ext; apply id_comp
+  comp_id' _ _ _ := by ext; apply comp_id
+  assoc' _ _ _ _ _ _ _ := by ext; apply assoc
 
 instance {T : Monad C} : Inhabited (MonadHom T T) :=
   ⟨𝟙 T⟩
@@ -402,10 +390,7 @@ instance : Faithful (monadToFunctor C) where
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mkₓ'. -/
 theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
-    (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f :=
-  by
-  ext
-  rfl
+    (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f := by ext; rfl
 #align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mk
 
 instance : ReflectsIsomorphisms (monadToFunctor C)
@@ -434,10 +419,7 @@ instance : Faithful (comonadToFunctor C) where
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mkₓ'. -/
 theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
-    (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f :=
-  by
-  ext
-  rfl
+    (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by ext; rfl
 #align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk
 
 instance : ReflectsIsomorphisms (comonadToFunctor C)

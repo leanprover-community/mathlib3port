@@ -103,11 +103,7 @@ class PseudoEMetricSpace (α : Type u) extends EDist α : Type u where
   edist_comm : ∀ x y : α, edist x y = edist y x
   edist_triangle : ∀ x y z : α, edist x z ≤ edist x y + edist y z
   toUniformSpace : UniformSpace α := uniformSpaceOfEDist edist edist_self edist_comm edist_triangle
-  uniformity_edist :
-    𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α |
-            edist p.1 p.2 < ε } := by
-    intros
-    rfl
+  uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } := by intros ; rfl
 #align pseudo_emetric_space PseudoEMetricSpace
 -/
 
@@ -164,10 +160,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {x : α} {y : α} {z : α}, (Eq.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_1) x y) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Eq.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_1) z x) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_1) z y))
 Case conversion may be inaccurate. Consider using '#align edist_congr_left edist_congr_leftₓ'. -/
-theorem edist_congr_left {x y z : α} (h : edist x y = 0) : edist z x = edist z y :=
-  by
-  rw [edist_comm z x, edist_comm z y]
-  apply edist_congr_right h
+theorem edist_congr_left {x y z : α} (h : edist x y = 0) : edist z x = edist z y := by
+  rw [edist_comm z x, edist_comm z y]; apply edist_congr_right h
 #align edist_congr_left edist_congr_left
 
 /- warning: edist_triangle4 -> edist_triangle4 is a dubious translation:
@@ -1027,10 +1021,8 @@ theorem ordConnected_setOf_ball_subset (x : α) (s : Set α) : OrdConnected { r 
 def edistLtTopSetoid : Setoid α where
   R x y := edist x y < ⊤
   iseqv :=
-    ⟨fun x => by
-      rw [edist_self]
-      exact ENNReal.coe_lt_top, fun x y h => by rwa [edist_comm], fun x y z hxy hyz =>
-      lt_of_le_of_lt (edist_triangle x y z) (ENNReal.add_lt_top.2 ⟨hxy, hyz⟩)⟩
+    ⟨fun x => by rw [edist_self]; exact ENNReal.coe_lt_top, fun x y h => by rwa [edist_comm],
+      fun x y z hxy hyz => lt_of_le_of_lt (edist_triangle x y z) (ENNReal.add_lt_top.2 ⟨hxy, hyz⟩)⟩
 #align emetric.edist_lt_top_setoid EMetric.edistLtTopSetoid
 -/
 
@@ -1141,9 +1133,7 @@ Case conversion may be inaccurate. Consider using '#align emetric.tendsto_nhds_w
 theorem tendsto_nhdsWithin_nhds {a b} :
     Tendsto f (𝓝[s] a) (𝓝 b) ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {x : α}, x ∈ s → edist x a < δ → edist (f x) b < ε :=
-  by
-  rw [← nhdsWithin_univ b, tendsto_nhds_within_nhds_within]
-  simp only [mem_univ, true_and_iff]
+  by rw [← nhdsWithin_univ b, tendsto_nhds_within_nhds_within]; simp only [mem_univ, true_and_iff]
 #align emetric.tendsto_nhds_within_nhds EMetric.tendsto_nhdsWithin_nhds
 
 /- warning: emetric.tendsto_nhds_nhds -> EMetric.tendsto_nhds_nhds is a dubious translation:
@@ -1185,9 +1175,7 @@ theorem isClosed_ball_top : IsClosed (ball x ⊤) :=
   isOpen_compl_iff.1 <|
     isOpen_iff.2 fun y hy =>
       ⟨⊤, ENNReal.coe_lt_top,
-        (ball_disjoint <| by
-            rw [top_add]
-            exact le_of_not_lt hy).subset_compl_right⟩
+        (ball_disjoint <| by rw [top_add]; exact le_of_not_lt hy).subset_compl_right⟩
 #align emetric.is_closed_ball_top EMetric.isClosed_ball_top
 
 /- warning: emetric.ball_mem_nhds -> EMetric.ball_mem_nhds is a dubious translation:
@@ -1362,9 +1350,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     by
     intro r x
     rcases(closed_ball x r ∩ s).eq_empty_or_nonempty with (he | ⟨y, hxy, hys⟩)
-    · refine' ⟨x₀, hx₀, _⟩
-      rw [he]
-      exact empty_subset _
+    · refine' ⟨x₀, hx₀, _⟩; rw [he]; exact empty_subset _
     · refine' ⟨y, hys, fun z hz => _⟩
       calc
         edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
@@ -1620,8 +1606,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
       
   · exact A a h'a b h'b
-  · have Z := A b h'b a h'a
-    rwa [edist_comm] at Z
+  · have Z := A b h'b a h'a; rwa [edist_comm] at Z
   ·
     calc
       edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b

@@ -149,10 +149,8 @@ theorem digits_one_succ (n : ℕ) : digits 1 (n + 1) = 1::digits 1 n :=
 #print Nat.digits_add_two_add_one /-
 @[simp]
 theorem digits_add_two_add_one (b n : ℕ) :
-    digits (b + 2) (n + 1) = ((n + 1) % (b + 2))::digits (b + 2) ((n + 1) / (b + 2)) :=
-  by
-  rw [digits, digits_aux_def]
-  exact succ_pos n
+    digits (b + 2) (n + 1) = ((n + 1) % (b + 2))::digits (b + 2) ((n + 1) / (b + 2)) := by
+  rw [digits, digits_aux_def]; exact succ_pos n
 #align nat.digits_add_two_add_one Nat.digits_add_two_add_one
 -/
 
@@ -218,8 +216,7 @@ theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
   by
   induction' L with d L ih
   · rfl
-  · dsimp [of_digits]
-    rw [ih]
+  · dsimp [of_digits]; rw [ih]
 #align nat.of_digits_eq_foldr Nat.ofDigits_eq_foldr
 
 #print Nat.ofDigits_eq_sum_map_with_index_aux /-
@@ -288,9 +285,7 @@ theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
   by
   induction' L with d L ih
   · simp [of_digits]
-  · dsimp [of_digits]
-    push_cast
-    rw [ih]
+  · dsimp [of_digits]; push_cast ; rw [ih]
 #align nat.coe_of_digits Nat.coe_ofDigits
 -/
 
@@ -305,8 +300,7 @@ theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ)
   by
   induction' L with d L ih
   · rfl
-  · dsimp [of_digits]
-    push_cast
+  · dsimp [of_digits]; push_cast
 #align nat.coe_int_of_digits Nat.coe_int_ofDigits
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -325,15 +319,12 @@ theorem digits_ofDigits (b : ℕ) (h : 1 < b) (L : List ℕ) (w₁ : ∀ l ∈ L
     (w₂ : ∀ h : L ≠ [], L.getLast h ≠ 0) : digits b (ofDigits b L) = L :=
   by
   induction' L with d L ih
-  · dsimp [of_digits]
-    simp
+  · dsimp [of_digits]; simp
   · dsimp [of_digits]
     replace w₂ := w₂ (by simp)
     rw [digits_add b h]
     · rw [ih]
-      · intro l m
-        apply w₁
-        exact List.mem_cons_of_mem _ m
+      · intro l m; apply w₁; exact List.mem_cons_of_mem _ m
       · intro h
         · rw [List.getLast_cons h] at w₂
           convert w₂
@@ -363,12 +354,10 @@ theorem ofDigits_digits (b n : ℕ) : ofDigits b (digits b n) = n :=
     · induction' n with n ih
       · rfl
       · simp only [ih, add_comm 1, of_digits_one_cons, Nat.cast_id, digits_one_succ]
-    · apply Nat.strong_induction_on n _
-      clear n
+    · apply Nat.strong_induction_on n _; clear n
       intro n h
       cases n
-      · rw [digits_zero]
-        rfl
+      · rw [digits_zero]; rfl
       · simp only [Nat.succ_eq_add_one, digits_add_two_add_one]
         dsimp [of_digits]
         rw [h _ (Nat.div_lt_self' n b)]
@@ -474,8 +463,7 @@ theorem getLast_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
   · cases m
     · cases hm rfl
     · simp
-  · cases m
-    · cases hm rfl
+  · cases m; · cases hm rfl
     simpa only [digits_one, List.getLast_replicate_succ m 1] using one_ne_zero
   revert hm
   apply Nat.strong_induction_on m
@@ -496,13 +484,11 @@ theorem digits_lt_base' {b m : ℕ} : ∀ {d}, d ∈ digits (b + 2) m → d < b 
   apply Nat.strong_induction_on m
   intro n IH d hd
   cases' n with n
-  · rw [digits_zero] at hd
-    cases hd
+  · rw [digits_zero] at hd; cases hd
   -- base b+2 expansion of 0 has no digits
   rw [digits_add_two_add_one] at hd
   cases hd
-  · rw [hd]
-    exact n.succ.mod_lt (by linarith)
+  · rw [hd]; exact n.succ.mod_lt (by linarith)
   · exact IH _ (Nat.div_lt_self (Nat.succ_pos _) (by linarith)) hd
 #align nat.digits_lt_base' Nat.digits_lt_base'
 -/
@@ -595,8 +581,7 @@ theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2
   apply Nat.mul_le_mul_left
   refine' le_trans _ (Nat.le_add_left _ _)
   have : 0 < l.last hl := by rwa [pos_iff_ne_zero]
-  convert Nat.mul_le_mul_left _ this
-  rw [mul_one]
+  convert Nat.mul_le_mul_left _ this; rw [mul_one]
 #align nat.pow_length_le_mul_of_digits Nat.pow_length_le_mul_ofDigits
 -/
 
@@ -657,8 +642,7 @@ theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : 
     (L : List ℕ) : k ∣ ofDigits a L - ofDigits b L :=
   by
   induction' L with d L ih
-  · change k ∣ 0 - 0
-    simp
+  · change k ∣ 0 - 0; simp
   · simp only [of_digits, add_sub_add_left_eq_sub]
     exact dvd_mul_sub_mul h ih
 #align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigits

@@ -213,10 +213,7 @@ namespace ThinSkeleton
 
 #print CategoryTheory.ThinSkeleton.thin /-
 /-- The thin skeleton is thin. -/
-instance thin : Quiver.IsThin (ThinSkeleton C) := fun _ _ =>
-  ⟨by
-    rintro ⟨⟨f₁⟩⟩ ⟨⟨f₂⟩⟩
-    rfl⟩
+instance thin : Quiver.IsThin (ThinSkeleton C) := fun _ _ => ⟨by rintro ⟨⟨f₁⟩⟩ ⟨⟨f₂⟩⟩; rfl⟩
 #align category_theory.thin_skeleton.thin CategoryTheory.ThinSkeleton.thin
 -/
 

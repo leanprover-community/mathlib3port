@@ -104,9 +104,7 @@ protected theorem trans {ρ : Measure δ} {h : δ → γ} (h₁ : IdentDistrib f
 protected theorem comp_of_aEMeasurable {u : γ → δ} (h : IdentDistrib f g μ ν)
     (hu : AEMeasurable u (Measure.map f μ)) : IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
   { aEMeasurable_fst := hu.comp_aemeasurable h.aEMeasurable_fst
-    aEMeasurable_snd := by
-      rw [h.map_eq] at hu
-      exact hu.comp_ae_measurable h.ae_measurable_snd
+    aEMeasurable_snd := by rw [h.map_eq] at hu; exact hu.comp_ae_measurable h.ae_measurable_snd
     map_eq :=
       by
       rw [← AEMeasurable.map_map_of_aemeasurable hu h.ae_measurable_fst, ←
@@ -313,9 +311,7 @@ theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ 
 #align probability_theory.ident_distrib.evariance_eq ProbabilityTheory.IdentDistrib.evariance_eq
 
 theorem variance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
-    variance f μ = variance g ν := by
-  rw [variance, h.evariance_eq]
-  rfl
+    variance f μ = variance g ν := by rw [variance, h.evariance_eq]; rfl
 #align probability_theory.ident_distrib.variance_eq ProbabilityTheory.IdentDistrib.variance_eq
 
 end IdentDistrib
@@ -335,8 +331,7 @@ theorem Memℒp.uniformIntegrable_of_identDistrib_aux {ι : Type _} {f : ι → 
   by
   refine' uniform_integrable_of' hp hp' hfmeas fun ε hε => _
   by_cases hι : Nonempty ι
-  swap
-  · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
+  swap; · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
   have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ } := fun i =>
     measurableSet_le measurable_const (hfmeas _).Measurable.nnnorm

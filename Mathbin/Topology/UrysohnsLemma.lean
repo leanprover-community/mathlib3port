@@ -394,14 +394,11 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
       rw [dist_self, add_zero, div_eq_inv_mul]
       exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le
-    · replace hxl : x ∈ c.left.right.Cᶜ
-      exact compl_subset_compl.2 c.left.right.subset hxl
+    · replace hxl : x ∈ c.left.right.Cᶜ; exact compl_subset_compl.2 c.left.right.subset hxl
       filter_upwards [IsOpen.mem_nhds (isOpen_compl_iff.2 c.left.right.closed_C) hxl,
         ihn c.left.right, ihn c.right]with y hyl hydl hydr
-      replace hxl : x ∉ c.left.left.U
-      exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
-      replace hyl : y ∉ c.left.left.U
-      exact compl_subset_compl.2 c.left.left_U_subset_right_C hyl
+      replace hxl : x ∉ c.left.left.U; exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
+      replace hyl : y ∉ c.left.left.U; exact compl_subset_compl.2 c.left.left_U_subset_right_C hyl
       simp only [pow_succ, c.lim_eq_midpoint, c.left.lim_eq_midpoint,
         c.left.left.lim_of_nmem_U _ hxl, c.left.left.lim_of_nmem_U _ hyl]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
@@ -415,8 +412,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
               zero_le_two).trans_eq
           _
       generalize (3 / 4 : ℝ) ^ n = r
-      field_simp [two_ne_zero' ℝ]
-      ring
+      field_simp [two_ne_zero' ℝ] ; ring
 #align urysohns.CU.continuous_lim Urysohns.CU.continuous_lim
 -/
 

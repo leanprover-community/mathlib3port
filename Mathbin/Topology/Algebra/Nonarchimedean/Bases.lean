@@ -86,16 +86,12 @@ Case conversion may be inaccurate. Consider using '#align ring_subgroups_basis.t
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) :
     RingFilterBasis A where
   sets := { U | ∃ i, U = B i }
-  Nonempty := by
-    inhabit ι
-    exact ⟨B default, default, rfl⟩
+  Nonempty := by inhabit ι; exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk
     use B k, k, rfl, hk
-  zero' := by
-    rintro _ ⟨i, rfl⟩
-    exact (B i).zero_mem
+  zero' := by rintro _ ⟨i, rfl⟩; exact (B i).zero_mem
   add' := by
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl
@@ -311,16 +307,12 @@ include hB
 def toModuleFilterBasis : ModuleFilterBasis R M
     where
   sets := { U | ∃ i, U = B i }
-  Nonempty := by
-    inhabit ι
-    exact ⟨B default, default, rfl⟩
+  Nonempty := by inhabit ι; exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
     cases' hB.inter i j with k hk
     use B k, k, rfl, hk
-  zero' := by
-    rintro _ ⟨i, rfl⟩
-    exact (B i).zero_mem
+  zero' := by rintro _ ⟨i, rfl⟩; exact (B i).zero_mem
   add' := by
     rintro _ ⟨i, rfl⟩
     use B i, i, rfl

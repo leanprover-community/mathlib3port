@@ -661,17 +661,13 @@ theorem aequiv_root (h : IsAdjoinRoot S f) (h' : IsAdjoinRoot T f) : h.aequiv h'
 #align is_adjoin_root.aequiv_root IsAdjoinRoot.aequiv_root
 
 @[simp]
-theorem aequiv_self (h : IsAdjoinRoot S f) : h.aequiv h = AlgEquiv.refl :=
-  by
-  ext a
+theorem aequiv_self (h : IsAdjoinRoot S f) : h.aequiv h = AlgEquiv.refl := by ext a;
   exact h.lift_self_apply a
 #align is_adjoin_root.aequiv_self IsAdjoinRoot.aequiv_self
 
 @[simp]
 theorem aequiv_symm (h : IsAdjoinRoot S f) (h' : IsAdjoinRoot T f) :
-    (h.aequiv h').symm = h'.aequiv h := by
-  ext
-  rfl
+    (h.aequiv h').symm = h'.aequiv h := by ext; rfl
 #align is_adjoin_root.aequiv_symm IsAdjoinRoot.aequiv_symm
 
 @[simp]
@@ -696,10 +692,7 @@ theorem aequiv_aequiv {U : Type _} [CommRing U] [Algebra R U] (h : IsAdjoinRoot 
 @[simp]
 theorem aequiv_trans {U : Type _} [CommRing U] [Algebra R U] (h : IsAdjoinRoot S f)
     (h' : IsAdjoinRoot T f) (h'' : IsAdjoinRoot U f) :
-    (h.aequiv h').trans (h'.aequiv h'') = h.aequiv h'' :=
-  by
-  ext z
-  exact h.aequiv_aequiv h' h'' z
+    (h.aequiv h').trans (h'.aequiv h'') = h.aequiv h'' := by ext z; exact h.aequiv_aequiv h' h'' z
 #align is_adjoin_root.aequiv_trans IsAdjoinRoot.aequiv_trans
 
 /-- Transfer `is_adjoin_root` across an algebra isomorphism.

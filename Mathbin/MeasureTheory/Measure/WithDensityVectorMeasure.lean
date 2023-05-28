@@ -51,8 +51,7 @@ def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α �
       m_Union' := fun s hs₁ hs₂ =>
         by
         convert has_sum_integral_Union hs₁ hs₂ hf.integrable_on
-        · ext n
-          rw [if_pos (hs₁ n)]
+        · ext n; rw [if_pos (hs₁ n)]
         · rw [if_pos (MeasurableSet.iUnion hs₁)] }
   else 0
 #align measure_theory.measure.with_densityᵥ MeasureTheory.Measure.withDensityᵥ
@@ -64,18 +63,12 @@ include m
 variable {f g : α → E}
 
 theorem withDensityᵥ_apply (hf : Integrable f μ) {s : Set α} (hs : MeasurableSet s) :
-    μ.withDensityᵥ f s = ∫ x in s, f x ∂μ :=
-  by
-  rw [with_densityᵥ, dif_pos hf]
-  exact dif_pos hs
+    μ.withDensityᵥ f s = ∫ x in s, f x ∂μ := by rw [with_densityᵥ, dif_pos hf]; exact dif_pos hs
 #align measure_theory.with_densityᵥ_apply MeasureTheory.withDensityᵥ_apply
 
 @[simp]
-theorem withDensityᵥ_zero : μ.withDensityᵥ (0 : α → E) = 0 :=
-  by
-  ext1 s hs
-  erw [with_densityᵥ_apply (integrable_zero α E μ) hs]
-  simp
+theorem withDensityᵥ_zero : μ.withDensityᵥ (0 : α → E) = 0 := by ext1 s hs;
+  erw [with_densityᵥ_apply (integrable_zero α E μ) hs]; simp
 #align measure_theory.with_densityᵥ_zero MeasureTheory.withDensityᵥ_zero
 
 @[simp]
@@ -170,9 +163,7 @@ theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
   · ext (i hi)
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
     exact integral_congr_ae (ae_restrict_of_ae h)
-  · have hg : ¬integrable g μ := by
-      intro hg
-      exact hf (hg.congr h.symm)
+  · have hg : ¬integrable g μ := by intro hg; exact hf (hg.congr h.symm)
     rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg hg]
 #align measure_theory.with_densityᵥ_eq.congr_ae MeasureTheory.WithDensityᵥEq.congr_ae
 

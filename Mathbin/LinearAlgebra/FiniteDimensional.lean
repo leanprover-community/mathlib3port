@@ -156,11 +156,8 @@ noncomputable def fintypeOfFintype [Fintype K] [FiniteDimensional K V] : Fintype
 -/
 
 #print FiniteDimensional.finite_of_finite /-
-theorem finite_of_finite [Finite K] [FiniteDimensional K V] : Finite V :=
-  by
-  cases nonempty_fintype K
-  haveI := fintype_of_fintype K V
-  infer_instance
+theorem finite_of_finite [Finite K] [FiniteDimensional K V] : Finite V := by
+  cases nonempty_fintype K; haveI := fintype_of_fintype K V; infer_instance
 #align finite_dimensional.finite_of_finite FiniteDimensional.finite_of_finite
 -/
 
@@ -168,13 +165,8 @@ variable {K V}
 
 #print FiniteDimensional.of_fintype_basis /-
 /-- If a vector space has a finite basis, then it is finite-dimensional. -/
-theorem of_fintype_basis {ι : Type w} [Finite ι] (h : Basis ι K V) : FiniteDimensional K V :=
-  by
-  cases nonempty_fintype ι
-  exact
-    ⟨⟨finset.univ.image h, by
-        convert h.span_eq
-        simp⟩⟩
+theorem of_fintype_basis {ι : Type w} [Finite ι] (h : Basis ι K V) : FiniteDimensional K V := by
+  cases nonempty_fintype ι; exact ⟨⟨finset.univ.image h, by convert h.span_eq; simp⟩⟩
 #align finite_dimensional.of_fintype_basis FiniteDimensional.of_fintype_basis
 -/
 
@@ -248,10 +240,8 @@ theorem finrank_of_infinite_dimensional (h : ¬FiniteDimensional K V) : finrank 
 -/
 
 #print FiniteDimensional.finiteDimensional_of_finrank /-
-theorem finiteDimensional_of_finrank (h : 0 < finrank K V) : FiniteDimensional K V :=
-  by
-  contrapose h
-  simp [finrank_of_infinite_dimensional h]
+theorem finiteDimensional_of_finrank (h : 0 < finrank K V) : FiniteDimensional K V := by
+  contrapose h; simp [finrank_of_infinite_dimensional h]
 #align finite_dimensional.finite_dimensional_of_finrank FiniteDimensional.finiteDimensional_of_finrank
 -/
 
@@ -423,21 +413,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finite_dimensional.finrank_pos_iff_exists_ne_zero FiniteDimensional.finrank_pos_iff_exists_ne_zeroₓ'. -/
 /-- A finite dimensional space has positive `finrank` iff it has a nonzero element. -/
 theorem finrank_pos_iff_exists_ne_zero [FiniteDimensional K V] : 0 < finrank K V ↔ ∃ x : V, x ≠ 0 :=
-  Iff.trans
-    (by
-      rw [← finrank_eq_rank]
-      norm_cast)
-    (@rank_pos_iff_exists_ne_zero K V _ _ _ _ _)
+  Iff.trans (by rw [← finrank_eq_rank]; norm_cast) (@rank_pos_iff_exists_ne_zero K V _ _ _ _ _)
 #align finite_dimensional.finrank_pos_iff_exists_ne_zero FiniteDimensional.finrank_pos_iff_exists_ne_zero
 
 #print FiniteDimensional.finrank_pos_iff /-
 /-- A finite dimensional space has positive `finrank` iff it is nontrivial. -/
 theorem finrank_pos_iff [FiniteDimensional K V] : 0 < finrank K V ↔ Nontrivial V :=
-  Iff.trans
-    (by
-      rw [← finrank_eq_rank]
-      norm_cast)
-    (@rank_pos_iff_nontrivial K V _ _ _ _ _)
+  Iff.trans (by rw [← finrank_eq_rank]; norm_cast) (@rank_pos_iff_nontrivial K V _ _ _ _ _)
 #align finite_dimensional.finrank_pos_iff FiniteDimensional.finrank_pos_iff
 -/
 
@@ -452,11 +434,7 @@ theorem finrank_pos [FiniteDimensional K V] [h : Nontrivial V] : 0 < finrank K V
 /-- A finite dimensional space has zero `finrank` iff it is a subsingleton.
 This is the `finrank` version of `rank_zero_iff`. -/
 theorem finrank_zero_iff [FiniteDimensional K V] : finrank K V = 0 ↔ Subsingleton V :=
-  Iff.trans
-    (by
-      rw [← finrank_eq_rank]
-      norm_cast)
-    (@rank_zero_iff K V _ _ _ _ _)
+  Iff.trans (by rw [← finrank_eq_rank]; norm_cast) (@rank_zero_iff K V _ _ _ _ _)
 #align finite_dimensional.finrank_zero_iff FiniteDimensional.finrank_zero_iff
 -/
 
@@ -614,27 +592,19 @@ theorem exists_nontrivial_relation_of_rank_lt_card [FiniteDimensional K V] {t : 
   · dsimp [f]
     rw [← Sum]
     fapply sum_bij_ne_zero fun v hvt _ => (⟨v, hvt⟩ : { v // v ∈ t })
-    · intro v hvt H
-      dsimp
+    · intro v hvt H; dsimp
       rw [dif_pos hvt] at H
       contrapose! H
       rw [if_neg H, zero_smul]
-    · intro _ _ _ _ _ _
-      exact Subtype.mk.inj
+    · intro _ _ _ _ _ _; exact Subtype.mk.inj
     · intro b hbs hb
       use b
       simpa only [hbs, exists_prop, dif_pos, Finset.mk_coe, and_true_iff, if_true, Finset.coe_mem,
         eq_self_iff_true, exists_prop_of_true, Ne.def] using hb
-    · intro a h₁
-      dsimp
-      rw [dif_pos h₁]
-      intro h₂
-      rw [if_pos]
-      contrapose! h₂
+    · intro a h₁; dsimp; rw [dif_pos h₁]
+      intro h₂; rw [if_pos]; contrapose! h₂
       rw [if_neg h₂, zero_smul]
-  · refine' ⟨z, z.2, _⟩
-    dsimp only [f]
-    erw [dif_pos z.2, if_pos] <;> rwa [Subtype.coe_eta]
+  · refine' ⟨z, z.2, _⟩; dsimp only [f]; erw [dif_pos z.2, if_pos] <;> rwa [Subtype.coe_eta]
 #align finite_dimensional.exists_nontrivial_relation_of_rank_lt_card FiniteDimensional.exists_nontrivial_relation_of_rank_lt_card
 
 /- warning: finite_dimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card -> FiniteDimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card is a dubious translation:
@@ -721,8 +691,7 @@ theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensio
       simp only [x₁_mem, sub_add_cancel, Function.Embedding.coeFn_mk]
     · dsimp only [f]
       rwa [if_neg, add_sub_cancel]
-      rw [add_left_eq_self]
-      rintro rfl
+      rw [add_left_eq_self]; rintro rfl
       simpa only [sub_eq_zero, exists_prop, Finset.mem_map, embedding.coe_fn_mk, eq_self_iff_true,
         mem_erase, not_true, exists_eq_right, Ne.def, false_and_iff] using x₁_mem
 #align finite_dimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card FiniteDimensional.exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card
@@ -790,9 +759,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finite_dimensional.basis_singleton_apply FiniteDimensional.basisSingleton_applyₓ'. -/
 @[simp]
 theorem basisSingleton_apply (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0)
-    (i : ι) : basisSingleton ι h v hv i = v :=
-  by
-  cases Unique.uniq ‹Unique ι› i
+    (i : ι) : basisSingleton ι h v hv i = v := by cases Unique.uniq ‹Unique ι› i;
   simp [basis_singleton]
 #align finite_dimensional.basis_singleton_apply FiniteDimensional.basisSingleton_apply
 
@@ -1050,10 +1017,8 @@ theorem finrank_sup_add_finrank_inf_eq (s t : Submodule K V) [FiniteDimensional 
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_le_finrank_add_finrank Submodule.finrank_add_le_finrank_add_finrankₓ'. -/
 theorem finrank_add_le_finrank_add_finrank (s t : Submodule K V) [FiniteDimensional K s]
-    [FiniteDimensional K t] : finrank K (s ⊔ t : Submodule K V) ≤ finrank K s + finrank K t :=
-  by
-  rw [← finrank_sup_add_finrank_inf_eq]
-  exact self_le_add_right _ _
+    [FiniteDimensional K t] : finrank K (s ⊔ t : Submodule K V) ≤ finrank K s + finrank K t := by
+  rw [← finrank_sup_add_finrank_inf_eq]; exact self_le_add_right _ _
 #align submodule.finrank_add_le_finrank_add_finrank Submodule.finrank_add_le_finrank_add_finrank
 
 /- warning: submodule.eq_top_of_disjoint -> Submodule.eq_top_of_disjoint is a dubious translation:
@@ -1286,10 +1251,8 @@ theorem comp_eq_id_comm [FiniteDimensional K V] {f g : V →ₗ[K] V} : f.comp g
 /-- rank-nullity theorem : the dimensions of the kernel and the range of a linear map add up to
 the dimension of the source space. -/
 theorem finrank_range_add_finrank_ker [FiniteDimensional K V] (f : V →ₗ[K] V₂) :
-    finrank K f.range + finrank K f.ker = finrank K V :=
-  by
-  rw [← f.quot_ker_equiv_range.finrank_eq]
-  exact Submodule.finrank_quotient_add_finrank _
+    finrank K f.range + finrank K f.ker = finrank K V := by
+  rw [← f.quot_ker_equiv_range.finrank_eq]; exact Submodule.finrank_quotient_add_finrank _
 #align linear_map.finrank_range_add_finrank_ker LinearMap.finrank_range_add_finrank_ker
 -/
 
@@ -1360,8 +1323,7 @@ theorem isUnit_iff_ker_eq_bot [FiniteDimensional K V] (f : V →ₗ[K] V) : IsUn
   constructor
   · rintro ⟨u, rfl⟩
     exact LinearMap.ker_eq_bot_of_inverse u.inv_mul
-  · intro h_inj
-    rw [ker_eq_bot] at h_inj
+  · intro h_inj; rw [ker_eq_bot] at h_inj
     exact
       ⟨⟨f, (LinearEquiv.ofInjectiveEndo f h_inj).symm.toLinearMap,
           LinearEquiv.ofInjectiveEndo_right_inv f h_inj,
@@ -1422,10 +1384,8 @@ theorem injective_iff_surjective_of_finrank_eq_finrank [FiniteDimensional K V]
   by
   have := finrank_range_add_finrank_ker f
   rw [← ker_eq_bot, ← range_eq_top]; refine' ⟨fun h => _, fun h => _⟩
-  · rw [h, finrank_bot, add_zero, H] at this
-    exact eq_top_of_finrank_eq this
-  · rw [h, finrank_top, H] at this
-    exact finrank_eq_zero.1 (add_right_injective _ this)
+  · rw [h, finrank_bot, add_zero, H] at this; exact eq_top_of_finrank_eq this
+  · rw [h, finrank_top, H] at this; exact finrank_eq_zero.1 (add_right_injective _ this)
 #align linear_map.injective_iff_surjective_of_finrank_eq_finrank LinearMap.injective_iff_surjective_of_finrank_eq_finrank
 
 /- warning: linear_map.ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank -> LinearMap.ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank is a dubious translation:
@@ -1698,11 +1658,7 @@ Case conversion may be inaccurate. Consider using '#align finrank_eq_one_iff_of_
 theorem finrank_eq_one_iff_of_nonzero (v : V) (nz : v ≠ 0) :
     finrank K V = 1 ↔ span K ({v} : Set V) = ⊤ :=
   ⟨fun h => by simpa using (basis_singleton PUnit h v nz).span_eq, fun s =>
-    finrank_eq_card_basis
-      (Basis.mk (linearIndependent_singleton nz)
-        (by
-          convert s
-          simp))⟩
+    finrank_eq_card_basis (Basis.mk (linearIndependent_singleton nz) (by convert s; simp))⟩
 #align finrank_eq_one_iff_of_nonzero finrank_eq_one_iff_of_nonzero
 
 /- warning: finrank_eq_one_iff_of_nonzero' -> finrank_eq_one_iff_of_nonzero' is a dubious translation:
@@ -1767,13 +1723,8 @@ theorem finrank_le_one_iff [FiniteDimensional K V] :
   fconstructor
   · intro h
     by_cases h' : finrank K V = 0
-    · use 0
-      intro w
-      use 0
-      haveI := finrank_zero_iff.mp h'
-      apply Subsingleton.elim
-    · replace h' := zero_lt_iff.mpr h'
-      have : finrank K V = 1 := by linarith
+    · use 0; intro w; use 0; haveI := finrank_zero_iff.mp h'; apply Subsingleton.elim
+    · replace h' := zero_lt_iff.mpr h'; have : finrank K V = 1 := by linarith
       obtain ⟨v, -, p⟩ := finrank_eq_one_iff'.mp this
       use ⟨v, p⟩
   · rintro ⟨v, p⟩
@@ -1873,10 +1824,8 @@ instance FiniteDimensional.finiteDimensional_subalgebra [FiniteDimensional F E]
 -/
 
 #print Subalgebra.finiteDimensional_bot /-
-instance Subalgebra.finiteDimensional_bot : FiniteDimensional F (⊥ : Subalgebra F E) :=
-  by
-  nontriviality E
-  exact finiteDimensional_of_rank_eq_one Subalgebra.rank_bot
+instance Subalgebra.finiteDimensional_bot : FiniteDimensional F (⊥ : Subalgebra F E) := by
+  nontriviality E; exact finiteDimensional_of_rank_eq_one Subalgebra.rank_bot
 #align subalgebra.finite_dimensional_bot Subalgebra.finiteDimensional_bot
 -/
 
@@ -1905,9 +1854,7 @@ but is expected to have type
   forall {F : Type.{u2}} {E : Type.{u1}} [_inst_1 : Field.{u2} F] [_inst_2 : Ring.{u1} E] [_inst_3 : Algebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2)] {S : Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3}, (Eq.{1} Nat (FiniteDimensional.finrank.{u2, u1} F (Subtype.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) (SetLike.instMembership.{u1, u1} (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) E (Subalgebra.instSetLikeSubalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3)) x S)) (DivisionSemiring.toSemiring.{u2} F (Semifield.toDivisionSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1))) (Ring.toAddCommGroup.{u1} (Subtype.{succ u1} E (fun (x : E) => Membership.mem.{u1, u1} E (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) (SetLike.instMembership.{u1, u1} (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) E (Subalgebra.instSetLikeSubalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3)) x S)) (SubringClass.toRing.{u1, u1} E (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) _inst_2 (Subalgebra.instSetLikeSubalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) (Subalgebra.instSubringClassSubalgebraToCommSemiringToSemiringInstSetLikeSubalgebra.{u2, u1} F E (EuclideanDomain.toCommRing.{u2} F (Field.toEuclideanDomain.{u2} F _inst_1)) _inst_2 _inst_3) S)) (Subalgebra.instModuleSubtypeMemSubalgebraInstMembershipInstSetLikeSubalgebraToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToNonAssocSemiringToSubsemiring.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3 S)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (Eq.{succ u1} (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) S (Bot.bot.{u1} (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) (CompleteLattice.toBot.{u1} (Subalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3) (Algebra.instCompleteLatticeSubalgebra.{u2, u1} F E (Semifield.toCommSemiring.{u2} F (Field.toSemifield.{u2} F _inst_1)) (Ring.toSemiring.{u1} E _inst_2) _inst_3))))
 Case conversion may be inaccurate. Consider using '#align subalgebra.eq_bot_of_finrank_one Subalgebra.eq_bot_of_finrank_oneₓ'. -/
 theorem Subalgebra.eq_bot_of_finrank_one {S : Subalgebra F E} (h : finrank F S = 1) : S = ⊥ :=
-  Subalgebra.eq_bot_of_rank_le_one <|
-    by
-    haveI := finite_dimensional_of_finrank_eq_succ h
+  Subalgebra.eq_bot_of_rank_le_one <| by haveI := finite_dimensional_of_finrank_eq_succ h;
     rw [← finrank_eq_rank, h, Nat.cast_one]
 #align subalgebra.eq_bot_of_finrank_one Subalgebra.eq_bot_of_finrank_one
 
@@ -1988,10 +1935,8 @@ theorem Subalgebra.isSimpleOrder_of_finrank (hr : finrank F E = 2) :
       have : finrank F S ≤ 2 := hr ▸ S.to_submodule.finrank_le
       have : 0 < finrank F S := finrank_pos_iff.mpr inferInstance
       interval_cases
-      · left
-        exact Subalgebra.eq_bot_of_finrank_one h
-      · right
-        rw [← hr] at h
+      · left; exact Subalgebra.eq_bot_of_finrank_one h
+      · right; rw [← hr] at h
         rw [← Algebra.toSubmodule_eq_top]
         exact Submodule.eq_top_of_finrank_eq h }
 #align subalgebra.is_simple_order_of_finrank Subalgebra.isSimpleOrder_of_finrank

@@ -712,10 +712,8 @@ but is expected to have type
   forall {p : Rat} {q : Rat}, Iff (LT.lt.{0} NNRat (Preorder.toLT.{0} NNRat (PartialOrder.toPreorder.{0} NNRat (StrictOrderedSemiring.toPartialOrder.{0} NNRat (LinearOrderedSemiring.toStrictOrderedSemiring.{0} NNRat (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} NNRat (LinearOrderedSemifield.toLinearOrderedCommSemiring.{0} NNRat (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNRat instNNRatCanonicallyLinearOrderedSemifield))))))) (Rat.toNNRat q) (Rat.toNNRat p)) (And (LT.lt.{0} Rat Rat.instLTRat_1 q p) (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) p))
 Case conversion may be inaccurate. Consider using '#align rat.to_nnrat_lt_to_nnrat_iff' Rat.toNNRat_lt_toNNRat_iff'ₓ'. -/
 @[simp]
-theorem toNNRat_lt_toNNRat_iff' : toNNRat q < toNNRat p ↔ q < p ∧ 0 < p :=
-  by
-  simp [← coe_lt_coe, to_nnrat, lt_irrefl]
-  exact lt_trans'
+theorem toNNRat_lt_toNNRat_iff' : toNNRat q < toNNRat p ↔ q < p ∧ 0 < p := by
+  simp [← coe_lt_coe, to_nnrat, lt_irrefl]; exact lt_trans'
 #align rat.to_nnrat_lt_to_nnrat_iff' Rat.toNNRat_lt_toNNRat_iff'
 
 /- warning: rat.to_nnrat_lt_to_nnrat_iff -> Rat.toNNRat_lt_toNNRat_iff is a dubious translation:
@@ -958,9 +956,7 @@ theorem ext_num_den (hn : p.num = q.num) (hd : p.den = q.den) : p = q :=
 
 #print NNRat.ext_num_den_iff /-
 theorem ext_num_den_iff : p = q ↔ p.num = q.num ∧ p.den = q.den :=
-  ⟨by
-    rintro rfl
-    exact ⟨rfl, rfl⟩, fun h => ext_num_den h.1 h.2⟩
+  ⟨by rintro rfl; exact ⟨rfl, rfl⟩, fun h => ext_num_den h.1 h.2⟩
 #align nnrat.ext_num_denom_iff NNRat.ext_num_den_iff
 -/
 

@@ -90,9 +90,7 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
         imageToKernel f g h.1 =
           (is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).Hom ≫
             (kernel_subobject_iso _).inv :=
-        by
-        ext
-        simp
+        by ext; simp
       rw [this]
       infer_instance
     refine' kernel_fork.is_limit.of_ι _ _ _ _ _
@@ -100,8 +98,7 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
         kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv
       rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
     · tidy
-    · intros
-      rw [← cancel_mono (image_subobject f).arrow, w]
+    · intros ; rw [← cancel_mono (image_subobject f).arrow, w]
       simp
 #align category_theory.abelian.exact_iff CategoryTheory.Abelian.exact_iff
 -/
@@ -209,10 +206,7 @@ def isColimitImage (h : Exact f g) :
 -/
 
 #print CategoryTheory.Abelian.exact_cokernel /-
-theorem exact_cokernel : Exact f (cokernel.π f) :=
-  by
-  rw [exact_iff]
-  tidy
+theorem exact_cokernel : Exact f (cokernel.π f) := by rw [exact_iff]; tidy
 #align category_theory.abelian.exact_cokernel CategoryTheory.Abelian.exact_cokernel
 -/
 
@@ -221,9 +215,7 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
     cokernel.desc f g h.w =
       (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫
         Limits.image.ι g
-    from by
-    rw [h]
-    apply mono_comp
+    from by rw [h]; apply mono_comp
   (cancel_epi (cokernel.π f)).1 <| by simp
 
 /-- If `ex : exact f g` and `epi g`, then `cokernel.desc _ _ ex.w` is an isomorphism. -/
@@ -311,8 +303,7 @@ theorem tfae_mono : TFAE [Mono f, kernel.ι f = 0, Exact (0 : Z ⟶ X) f] :=
   tfae_have 3 → 2
   · exact kernel_ι_eq_zero_of_exact_zero_left Z
   tfae_have 1 → 3
-  · intros
-    exact exact_zero_left_of_mono Z
+  · intros ; exact exact_zero_left_of_mono Z
   tfae_have 2 → 1
   · exact mono_of_kernel_ι_eq_zero _
   tfae_finish

@@ -90,10 +90,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {𝕜 : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} 𝕜] {G : SimpleGraph.{u2} α} [_inst_2 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] {ε : 𝕜}, Symmetric.{succ u2} (Finset.{u2} α) (SimpleGraph.IsUniform.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε)
 Case conversion may be inaccurate. Consider using '#align simple_graph.is_uniform.symm SimpleGraph.IsUniform.symmₓ'. -/
-theorem IsUniform.symm : Symmetric (IsUniform G ε) := fun s t h t' ht' s' hs' ht hs =>
-  by
-  rw [edge_density_comm _ t', edge_density_comm _ t]
-  exact h hs' ht' hs ht
+theorem IsUniform.symm : Symmetric (IsUniform G ε) := fun s t h t' ht' s' hs' ht hs => by
+  rw [edge_density_comm _ t', edge_density_comm _ t]; exact h hs' ht' hs ht
 #align simple_graph.is_uniform.symm SimpleGraph.IsUniform.symm
 
 variable (G)
@@ -165,9 +163,7 @@ theorem not_isUniform_iff :
             t' ⊆ t ∧
               ↑s.card * ε ≤ s'.card ∧
                 ↑t.card * ε ≤ t'.card ∧ ε ≤ |G.edgeDensity s' t' - G.edgeDensity s t| :=
-  by
-  unfold is_uniform
-  simp only [not_forall, not_lt, exists_prop]
+  by unfold is_uniform; simp only [not_forall, not_lt, exists_prop]
 #align simple_graph.not_is_uniform_iff SimpleGraph.not_isUniform_iff
 
 open Classical
@@ -192,9 +188,7 @@ but is expected to have type
   forall {α : Type.{u2}} {𝕜 : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} 𝕜] (G : SimpleGraph.{u2} α) [_inst_2 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] {ε : 𝕜} {s : Finset.{u2} α} {t : Finset.{u2} α}, (Not (SimpleGraph.IsUniform.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) -> (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) (Prod.fst.{u2, u2} (Finset.{u2} α) (Finset.{u2} α) (SimpleGraph.nonuniformWitnesses.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) s)
 Case conversion may be inaccurate. Consider using '#align simple_graph.left_nonuniform_witnesses_subset SimpleGraph.left_nonuniformWitnesses_subsetₓ'. -/
 theorem left_nonuniformWitnesses_subset (h : ¬G.IsUniform ε s t) :
-    (G.nonuniformWitnesses ε s t).1 ⊆ s :=
-  by
-  rw [nonuniform_witnesses, dif_pos h]
+    (G.nonuniformWitnesses ε s t).1 ⊆ s := by rw [nonuniform_witnesses, dif_pos h];
   exact (not_is_uniform_iff.1 h).choose_spec.1
 #align simple_graph.left_nonuniform_witnesses_subset SimpleGraph.left_nonuniformWitnesses_subset
 
@@ -218,9 +212,7 @@ but is expected to have type
   forall {α : Type.{u2}} {𝕜 : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} 𝕜] (G : SimpleGraph.{u2} α) [_inst_2 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] {ε : 𝕜} {s : Finset.{u2} α} {t : Finset.{u2} α}, (Not (SimpleGraph.IsUniform.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) -> (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) (Prod.snd.{u2, u2} (Finset.{u2} α) (Finset.{u2} α) (SimpleGraph.nonuniformWitnesses.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) t)
 Case conversion may be inaccurate. Consider using '#align simple_graph.right_nonuniform_witnesses_subset SimpleGraph.right_nonuniformWitnesses_subsetₓ'. -/
 theorem right_nonuniformWitnesses_subset (h : ¬G.IsUniform ε s t) :
-    (G.nonuniformWitnesses ε s t).2 ⊆ t :=
-  by
-  rw [nonuniform_witnesses, dif_pos h]
+    (G.nonuniformWitnesses ε s t).2 ⊆ t := by rw [nonuniform_witnesses, dif_pos h];
   exact (not_is_uniform_iff.1 h).choose_spec.2.choose_spec.1
 #align simple_graph.right_nonuniform_witnesses_subset SimpleGraph.right_nonuniformWitnesses_subset
 

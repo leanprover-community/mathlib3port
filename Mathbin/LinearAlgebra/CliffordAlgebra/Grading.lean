@@ -110,10 +110,8 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
     refine'
       Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
-    · rw [AlgHom.commutes, DirectSum.algebraMap_apply]
-      rfl
-    · rw [AlgHom.map_add, ihx, ihy, ← map_add]
-      rfl
+    · rw [AlgHom.commutes, DirectSum.algebraMap_apply]; rfl
+    · rw [AlgHom.map_add, ihx, ihy, ← map_add]; rfl
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext _ _) <;>
@@ -122,10 +120,8 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
       rfl
   · rw [AlgHom.map_zero]
     apply Eq.symm
-    apply dfinsupp.single_eq_zero.mpr
-    rfl
-  · rw [AlgHom.map_add, ihx, ihy, ← map_add]
-    rfl
+    apply dfinsupp.single_eq_zero.mpr; rfl
+  · rw [AlgHom.map_add, ihx, ihy, ← map_add]; rfl
 #align clifford_algebra.graded_algebra.lift_ι_eq CliffordAlgebra.GradedAlgebra.lift_ι_eq
 
 /-- The clifford algebra is graded by the even and odd parts. -/

@@ -82,10 +82,8 @@ theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x :=
 
 /-- `arsinh` is the right inverse of `sinh`. -/
 @[simp]
-theorem sinh_arsinh (x : ℝ) : sinh (arsinh x) = x :=
-  by
-  rw [sinh_eq, ← arsinh_neg, exp_arsinh, exp_arsinh, neg_sq]
-  field_simp
+theorem sinh_arsinh (x : ℝ) : sinh (arsinh x) = x := by
+  rw [sinh_eq, ← arsinh_neg, exp_arsinh, exp_arsinh, neg_sq]; field_simp
 #align real.sinh_arsinh Real.sinh_arsinh
 
 @[simp]

@@ -80,12 +80,8 @@ def Iso.mk {α β : PartOrdCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply x
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply x
+  hom_inv_id' := by ext; exact e.symm_apply_apply x
+  inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align PartOrd.iso.mk PartOrdCat.Iso.mk
 
 #print PartOrdCat.dual /-
@@ -127,11 +123,8 @@ def preordCatToPartOrdCat : PreordCat.{u} ⥤ PartOrdCat
     where
   obj X := PartOrdCat.of (Antisymmetrization X (· ≤ ·))
   map X Y f := f.Antisymmetrization
-  map_id' X := by
-    ext
-    exact Quotient.inductionOn' x fun x => Quotient.map'_mk'' _ (fun a b => id) _
-  map_comp' X Y Z f g := by
-    ext
+  map_id' X := by ext; exact Quotient.inductionOn' x fun x => Quotient.map'_mk'' _ (fun a b => id) _
+  map_comp' X Y Z f g := by ext;
     exact Quotient.inductionOn' x fun x => OrderHom.antisymmetrization_apply_mk _ _
 #align Preord_to_PartOrd preordCatToPartOrdCat
 -/

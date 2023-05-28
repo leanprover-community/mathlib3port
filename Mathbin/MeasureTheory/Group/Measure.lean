@@ -211,10 +211,8 @@ instance [IsMulLeftInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : Mea
   change map (Prod.map ((· * ·) g) ((· * ·) h)) (μ.prod ν) = μ.prod ν
   rw [← map_prod_map _ _ (measurable_const_mul g) (measurable_const_mul h),
     map_mul_left_eq_self μ g, map_mul_left_eq_self ν h]
-  · rw [map_mul_left_eq_self μ g]
-    infer_instance
-  · rw [map_mul_left_eq_self ν h]
-    infer_instance
+  · rw [map_mul_left_eq_self μ g]; infer_instance
+  · rw [map_mul_left_eq_self ν h]; infer_instance
 
 @[to_additive]
 instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : MeasurableSpace H}
@@ -225,10 +223,8 @@ instance [IsMulRightInvariant μ] [SigmaFinite μ] {H : Type _} [Mul H] {mH : Me
   change map (Prod.map (· * g) (· * h)) (μ.prod ν) = μ.prod ν
   rw [← map_prod_map _ _ (measurable_mul_const g) (measurable_mul_const h),
     map_mul_right_eq_self μ g, map_mul_right_eq_self ν h]
-  · rw [map_mul_right_eq_self μ g]
-    infer_instance
-  · rw [map_mul_right_eq_self ν h]
-    infer_instance
+  · rw [map_mul_right_eq_self μ g]; infer_instance
+  · rw [map_mul_right_eq_self ν h]; infer_instance
 
 @[to_additive]
 theorem isMulLeftInvariant_map {H : Type _} [MeasurableSpace H] [Mul H] [MeasurableMul H]
@@ -321,28 +317,22 @@ theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) :
 
 @[to_additive]
 theorem eventually_mul_left_iff (μ : Measure G) [IsMulLeftInvariant μ] (t : G) {p : G → Prop} :
-    (∀ᵐ x ∂μ, p (t * x)) ↔ ∀ᵐ x ∂μ, p x :=
-  by
-  conv_rhs => rw [Filter.Eventually, ← map_mul_left_ae μ t]
-  rfl
+    (∀ᵐ x ∂μ, p (t * x)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_mul_left_ae μ t]; rfl
 #align measure_theory.eventually_mul_left_iff MeasureTheory.eventually_mul_left_iff
 #align measure_theory.eventually_add_left_iff MeasureTheory.eventually_add_left_iff
 
 @[to_additive]
 theorem eventually_mul_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
-    (∀ᵐ x ∂μ, p (x * t)) ↔ ∀ᵐ x ∂μ, p x :=
-  by
-  conv_rhs => rw [Filter.Eventually, ← map_mul_right_ae μ t]
-  rfl
+    (∀ᵐ x ∂μ, p (x * t)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_mul_right_ae μ t]; rfl
 #align measure_theory.eventually_mul_right_iff MeasureTheory.eventually_mul_right_iff
 #align measure_theory.eventually_add_right_iff MeasureTheory.eventually_add_right_iff
 
 @[to_additive]
 theorem eventually_div_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
-    (∀ᵐ x ∂μ, p (x / t)) ↔ ∀ᵐ x ∂μ, p x :=
-  by
-  conv_rhs => rw [Filter.Eventually, ← map_div_right_ae μ t]
-  rfl
+    (∀ᵐ x ∂μ, p (x / t)) ↔ ∀ᵐ x ∂μ, p x := by
+  conv_rhs => rw [Filter.Eventually, ← map_div_right_ae μ t]; rfl
 #align measure_theory.eventually_div_right_iff MeasureTheory.eventually_div_right_iff
 #align measure_theory.eventually_sub_right_iff MeasureTheory.eventually_sub_right_iff
 
@@ -517,11 +507,8 @@ variable [TopologicalGroup G]
 theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
   by
   constructor
-  · intro h
-    rw [← μ.inv_inv]
-    exact measure.regular.inv
-  · intro h
-    exact measure.regular.inv
+  · intro h; rw [← μ.inv_inv]; exact measure.regular.inv
+  · intro h; exact measure.regular.inv
 #align measure_theory.regular_inv_iff MeasureTheory.regular_inv_iff
 #align measure_theory.regular_neg_iff MeasureTheory.regular_neg_iff
 
@@ -808,9 +795,7 @@ a nontrivial finite-dimensional real vector space has no atom. -/
 instance (priority := 100) IsHaarMeasure.noAtoms [TopologicalGroup G] [BorelSpace G] [T1Space G]
     [LocallyCompactSpace G] [(𝓝[≠] (1 : G)).ne_bot] (μ : Measure G) [μ.IsHaarMeasure] : NoAtoms μ :=
   by
-  suffices H : μ {(1 : G)} ≤ 0
-  · constructor
-    simp [le_bot_iff.1 H]
+  suffices H : μ {(1 : G)} ≤ 0; · constructor; simp [le_bot_iff.1 H]
   obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ interior K :=
     by
     rcases exists_compact_subset isOpen_univ (mem_univ (1 : G)) with ⟨K, hK⟩
@@ -829,8 +814,7 @@ instance (priority := 100) IsHaarMeasure.noAtoms [TopologicalGroup G] [BorelSpac
       · simp only [tn, Finset.sum_const, nsmul_eq_mul, haar_singleton]
       · intro x hx y hy xy
         simp only [on_fun, xy.symm, mem_singleton_iff, not_false_iff, disjoint_singleton_right]
-      · intro b hb
-        exact measurable_set_singleton b
+      · intro b hb; exact measurable_set_singleton b
     rw [B] at A
     rwa [ENNReal.le_div_iff_mul_le _ (Or.inr μKlt), mul_comm]
     right

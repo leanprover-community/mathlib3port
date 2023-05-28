@@ -198,10 +198,7 @@ theorem extensionHom_val {X : UniformSpaceCat} {Y : CpltSepUniformSpace}
 @[simp]
 theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpace}
     (f : toUniformSpace (CpltSepUniformSpace.of (Completion X)) ⟶ toUniformSpace Y) :
-    extensionHom (completionHom X ≫ f) = f :=
-  by
-  apply Subtype.eq
-  funext x
+    extensionHom (completionHom X ≫ f) = f := by apply Subtype.eq; funext x;
   exact congr_fun (completion.extension_comp_coe f.property) x
 #align UniformSpace.extension_comp_coe UniformSpaceCat.extension_comp_coe
 
@@ -211,9 +208,7 @@ noncomputable def adj : completionFunctor ⊣ forget₂ CpltSepUniformSpace Unif
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f
           invFun := fun f => extensionHom f
-          left_inv := fun f => by
-            dsimp
-            erw [extension_comp_coe]
+          left_inv := fun f => by dsimp; erw [extension_comp_coe]
           right_inv := fun f => by
             apply Subtype.eq; funext x; cases f
             exact

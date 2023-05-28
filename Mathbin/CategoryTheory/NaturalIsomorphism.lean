@@ -243,9 +243,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (e : CategoryTheory.Iso.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2) F G) (X : C), Eq.{succ u2} (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X)) (CategoryTheory.inv.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 G F (CategoryTheory.Iso.inv.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2) F G e) X) (CategoryTheory.NatIso.inv_app_isIso.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G e X)) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G (CategoryTheory.Iso.hom.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2) F G e) X)
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_iso.inv_inv_app CategoryTheory.NatIso.inv_inv_appₓ'. -/
 @[simp]
-theorem inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) : inv (e.inv.app X) = e.Hom.app X :=
-  by
-  ext
+theorem inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) : inv (e.inv.app X) = e.Hom.app X := by ext;
   simp
 #align category_theory.nat_iso.inv_inv_app CategoryTheory.NatIso.inv_inv_app
 
@@ -316,11 +314,8 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (α : Quiver.Hom.{max (succ u3) (succ u2), max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2))) F G) [_inst_4 : CategoryTheory.IsIso.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2) F G α] (X : C), Eq.{succ u2} (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X)) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 G F (CategoryTheory.inv.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2) F G α _inst_4) X) (CategoryTheory.inv.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G α X) (CategoryTheory.NatIso.isIso_app_of_isIso.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G α _inst_4 X))
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_iso.is_iso_inv_app CategoryTheory.NatIso.isIso_inv_appₓ'. -/
 @[simp]
-theorem isIso_inv_app (α : F ⟶ G) [IsIso α] (X) : (inv α).app X = inv (α.app X) :=
-  by
-  ext
-  rw [← nat_trans.comp_app]
-  simp
+theorem isIso_inv_app (α : F ⟶ G) [IsIso α] (X) : (inv α).app X = inv (α.app X) := by ext;
+  rw [← nat_trans.comp_app]; simp
 #align category_theory.nat_iso.is_iso_inv_app CategoryTheory.NatIso.isIso_inv_app
 
 /- warning: category_theory.nat_iso.inv_map_inv_app -> CategoryTheory.NatIso.inv_map_inv_app is a dubious translation:
@@ -328,10 +323,7 @@ theorem isIso_inv_app (α : F ⟶ G) [IsIso α] (X) : (inv α).app X = inv (α.a
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_iso.inv_map_inv_app CategoryTheory.NatIso.inv_map_inv_appₓ'. -/
 @[simp]
 theorem inv_map_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    inv ((F.map e.inv).app Z) = (F.map e.Hom).app Z :=
-  by
-  ext
-  simp
+    inv ((F.map e.inv).app Z) = (F.map e.Hom).app Z := by ext; simp
 #align category_theory.nat_iso.inv_map_inv_app CategoryTheory.NatIso.inv_map_inv_app
 
 /- warning: category_theory.nat_iso.of_components -> CategoryTheory.NatIso.ofComponents is a dubious translation:
@@ -384,10 +376,7 @@ theorem isIso_of_isIso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso 
 def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ H ≅ G ⋙ I :=
   by
   refine' ⟨α.hom ◫ β.hom, α.inv ◫ β.inv, _, _⟩
-  · ext
-    rw [← nat_trans.exchange]
-    simp
-    rfl
+  · ext; rw [← nat_trans.exchange]; simp; rfl
   ext; rw [← nat_trans.exchange]; simp; rfl
 #align category_theory.nat_iso.hcomp CategoryTheory.NatIso.hcomp
 -/

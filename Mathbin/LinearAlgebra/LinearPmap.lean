@@ -104,12 +104,7 @@ theorem ext_iff {f g : E →ₗ.[R] F} :
     f = g ↔
       ∃ domain_eq : f.domain = g.domain,
         ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y :=
-  ⟨fun EQ =>
-    EQ ▸
-      ⟨rfl, fun x y h => by
-        congr
-        exact_mod_cast h⟩,
-    fun ⟨deq, feq⟩ => ext deq feq⟩
+  ⟨fun EQ => EQ ▸ ⟨rfl, fun x y h => by congr ; exact_mod_cast h⟩, fun ⟨deq, feq⟩ => ext deq feq⟩
 #align linear_pmap.ext_iff LinearPMap.ext_iff
 
 /- warning: linear_pmap.ext' -> LinearPMap.ext' is a dubious translation:
@@ -372,9 +367,7 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
   le_inf := fun f g h ⟨fg_le, fg_eq⟩ ⟨fh_le, fh_eq⟩ =>
     ⟨fun x hx =>
       ⟨fg_le hx, fh_le hx, by refine' (fg_eq _).symm.trans (fh_eq _) <;> [exact ⟨x, hx⟩;rfl;rfl]⟩,
-      fun x ⟨y, yg, hy⟩ h => by
-      apply fg_eq
-      exact h⟩
+      fun x ⟨y, yg, hy⟩ h => by apply fg_eq; exact h⟩
   inf_le_left f g := ⟨fun x hx => hx.fst, fun x y h => congr_arg f <| Subtype.eq <| h⟩
   inf_le_right f g :=
     ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
@@ -649,9 +642,7 @@ end
 private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) :
     ∃ f : ↥(sSup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ upperBounds c :=
   by
-  cases' c.eq_empty_or_nonempty with ceq cne
-  · subst c
-    simp
+  cases' c.eq_empty_or_nonempty with ceq cne; · subst c; simp
   have hdir : DirectedOn (· ≤ ·) (domain '' c) := directedOn_image.2 (hc.mono domain_mono.monotone)
   have P : ∀ x : Sup (domain '' c), { p : c // (x : E) ∈ p.val.domain } :=
     by
@@ -828,9 +819,7 @@ Case conversion may be inaccurate. Consider using '#align linear_pmap.dom_restri
 theorem domRestrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : S ⊓ f.domain⦄ ⦃y : f.domain⦄
     (h : (x : E) = y) : f.domRestrict S x = f y :=
   by
-  have : Submodule.ofLe (by simp) x = y := by
-    ext
-    simp [h]
+  have : Submodule.ofLe (by simp) x = y := by ext; simp [h]
   rw [← this]
   exact LinearPMap.mk_apply _ _ _
 #align linear_pmap.dom_restrict_apply LinearPMap.domRestrict_apply
@@ -873,9 +862,7 @@ theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃
 Case conversion may be inaccurate. Consider using '#align linear_pmap.mem_graph_iff LinearPMap.mem_graph_iffₓ'. -/
 @[simp]
 theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} :
-    x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 :=
-  by
-  cases x
+    x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 := by cases x;
   simp_rw [mem_graph_iff', Prod.mk.inj_iff]
 #align linear_pmap.mem_graph_iff LinearPMap.mem_graph_iff
 
@@ -974,10 +961,7 @@ but is expected to have type
   forall {R : Type.{u3}} [_inst_1 : Ring.{u3} R] {E : Type.{u2}} [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : AddCommGroup.{u1} F] [_inst_5 : Module.{u3, u1} R F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)] (f : LinearPMap.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) {x : Prod.{u2, u1} E F} {y : Prod.{u2, u1} E F}, (Membership.mem.{max u2 u1, max u2 u1} (Prod.{u2, u1} E F) (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (Prod.{u2, u1} E F) (Submodule.setLike.{u3, max u2 u1} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5))) x (LinearPMap.graph.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> (Membership.mem.{max u2 u1, max u2 u1} (Prod.{u2, u1} E F) (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (Prod.{u2, u1} E F) (Submodule.setLike.{u3, max u2 u1} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5))) y (LinearPMap.graph.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> (Eq.{succ u2} E (Prod.fst.{u2, u1} E F x) (Prod.fst.{u2, u1} E F y)) -> (Eq.{succ u1} F (Prod.snd.{u2, u1} E F x) (Prod.snd.{u2, u1} E F y))
 Case conversion may be inaccurate. Consider using '#align linear_pmap.mem_graph_snd_inj' LinearPMap.mem_graph_snd_inj'ₓ'. -/
 theorem mem_graph_snd_inj' (f : E →ₗ.[R] F) {x y : E × F} (hx : x ∈ f.graph) (hy : y ∈ f.graph)
-    (hxy : x.1 = y.1) : x.2 = y.2 := by
-  cases x
-  cases y
-  exact f.mem_graph_snd_inj hx hy hxy
+    (hxy : x.1 = y.1) : x.2 = y.2 := by cases x; cases y; exact f.mem_graph_snd_inj hx hy hxy
 #align linear_pmap.mem_graph_snd_inj' LinearPMap.mem_graph_snd_inj'
 
 /- warning: linear_pmap.graph_fst_eq_zero_snd -> LinearPMap.graph_fst_eq_zero_snd is a dubious translation:
@@ -1018,9 +1002,7 @@ but is expected to have type
   forall {R : Type.{u3}} [_inst_1 : Ring.{u3} R] {E : Type.{u2}} [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : AddCommGroup.{u1} F] [_inst_5 : Module.{u3, u1} R F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)] {f : LinearPMap.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5} {x : E} {y : F}, (Membership.mem.{max u1 u2, max u2 u1} (Prod.{u2, u1} E F) (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (SetLike.instMembership.{max u2 u1, max u2 u1} (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (Prod.{u2, u1} E F) (Submodule.setLike.{u3, max u2 u1} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5))) (Prod.mk.{u2, u1} E F x y) (LinearPMap.graph.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> (Membership.mem.{u2, u2} E (Submodule.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_3) (SetLike.instMembership.{u2, u2} (Submodule.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_3) E (Submodule.setLike.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_3)) x (LinearPMap.domain.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f))
 Case conversion may be inaccurate. Consider using '#align linear_pmap.mem_domain_of_mem_graph LinearPMap.mem_domain_of_mem_graphₓ'. -/
 theorem mem_domain_of_mem_graph {f : E →ₗ.[R] F} {x : E} {y : F} (h : (x, y) ∈ f.graph) :
-    x ∈ f.domain := by
-  rw [mem_domain_iff]
-  exact ⟨y, h⟩
+    x ∈ f.domain := by rw [mem_domain_iff]; exact ⟨y, h⟩
 #align linear_pmap.mem_domain_of_mem_graph LinearPMap.mem_domain_of_mem_graph
 
 /- warning: linear_pmap.image_iff -> LinearPMap.image_iff is a dubious translation:
@@ -1128,11 +1110,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u3}} [_inst_1 : Ring.{u3} R] {E : Type.{u2}} [_inst_2 : AddCommGroup.{u2} E] [_inst_3 : Module.{u3, u2} R E (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : AddCommGroup.{u1} F] [_inst_5 : Module.{u3, u1} R F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)] {f : LinearPMap.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5} {g : LinearPMap.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5}, (Eq.{max (succ u2) (succ u1)} (Submodule.{u3, max u1 u2} R (Prod.{u2, u1} E F) (Ring.toSemiring.{u3} R _inst_1) (Prod.instAddCommMonoidSum.{u2, u1} E F (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4)) (Prod.module.{u3, u2, u1} R E F (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) (AddCommGroup.toAddCommMonoid.{u1} F _inst_4) _inst_3 _inst_5)) (LinearPMap.graph.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f) (LinearPMap.graph.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) -> (Eq.{max (succ u2) (succ u1)} (LinearPMap.{u3, u2, u1} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) f g)
 Case conversion may be inaccurate. Consider using '#align linear_pmap.eq_of_eq_graph LinearPMap.eq_of_eq_graphₓ'. -/
-theorem eq_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) : f = g :=
-  by
-  ext
-  exact mem_domain_iff_of_eq_graph h
-  exact (le_of_le_graph h.le).2
+theorem eq_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) : f = g := by ext;
+  exact mem_domain_iff_of_eq_graph h; exact (le_of_le_graph h.le).2
 #align linear_pmap.eq_of_eq_graph LinearPMap.eq_of_eq_graph
 
 end Graph
@@ -1151,8 +1130,7 @@ theorem existsUnique_from_graph {g : Submodule R (E × F)}
     (ha : a ∈ g.map (LinearMap.fst R E F)) : ∃! b : F, (a, b) ∈ g :=
   by
   refine' existsUnique_of_exists_of_unique _ _
-  · convert ha
-    simp
+  · convert ha; simp
   intro y₁ y₂ hy₁ hy₂
   have hy : ((0 : E), y₁ - y₂) ∈ g := by
     convert g.sub_mem hy₁ hy₂

@@ -53,21 +53,9 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
         congr 1; rw [category.assoc] }
   map d₁ d₂ f :=
     { app := fun e => Sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h
-      naturality' := by
-        intros
-        ext
-        dsimp
-        simp }
-  map_id' := by
-    intros
-    ext (x⟨j⟩)
-    dsimp
-    simp
-  map_comp' := by
-    intros
-    ext
-    dsimp
-    simp
+      naturality' := by intros ; ext; dsimp; simp }
+  map_id' := by intros ; ext (x⟨j⟩); dsimp; simp
+  map_comp' := by intros ; ext; dsimp; simp
 #align category_theory.evaluation_left_adjoint CategoryTheory.evaluationLeftAdjoint
 -/
 
@@ -85,11 +73,7 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c
           invFun := fun f =>
             { app := fun e => Sigma.desc fun h => f ≫ F.map h
-              naturality' := by
-                intros
-                ext
-                dsimp
-                simp }
+              naturality' := by intros ; ext; dsimp; simp }
           left_inv := by
             intro f
             ext (x⟨g⟩)
@@ -98,18 +82,9 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
             congr 2
             rw [category.id_comp]
-          right_inv := fun f => by
-            dsimp
-            simp }
-      homEquiv_naturality_left_symm := by
-        intros
-        ext
-        dsimp
-        simp
-      homEquiv_naturality_right := by
-        intros
-        dsimp
-        simp }
+          right_inv := fun f => by dsimp; simp }
+      homEquiv_naturality_left_symm := by intros ; ext; dsimp; simp
+      homEquiv_naturality_right := by intros ; dsimp; simp }
 #align category_theory.evaluation_adjunction_right CategoryTheory.evaluationAdjunctionRight
 
 /- warning: category_theory.evaluation_is_right_adjoint -> CategoryTheory.evaluationIsRightAdjoint is a dubious translation:
@@ -161,21 +136,9 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
         congr 1; simp }
   map d₁ d₂ f :=
     { app := fun t => Pi.lift fun g => Pi.π _ g ≫ f
-      naturality' := by
-        intros
-        ext
-        dsimp
-        simp }
-  map_id' := by
-    intros
-    ext (x⟨j⟩)
-    dsimp
-    simp
-  map_comp' := by
-    intros
-    ext
-    dsimp
-    simp
+      naturality' := by intros ; ext; dsimp; simp }
+  map_id' := by intros ; ext (x⟨j⟩); dsimp; simp
+  map_comp' := by intros ; ext; dsimp; simp
 #align category_theory.evaluation_right_adjoint CategoryTheory.evaluationRightAdjoint
 -/
 
@@ -192,15 +155,9 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
     { homEquiv := fun F d =>
         { toFun := fun f =>
             { app := fun t => Pi.lift fun g => F.map g ≫ f
-              naturality' := by
-                intros
-                ext
-                dsimp
-                simp }
+              naturality' := by intros ; ext; dsimp; simp }
           invFun := fun f => f.app _ ≫ Pi.π _ (𝟙 _)
-          left_inv := fun f => by
-            dsimp
-            simp
+          left_inv := fun f => by dsimp; simp
           right_inv := by
             intro f
             ext (x⟨g⟩)
@@ -209,15 +166,8 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               fan.mk_π_app]
             congr
             rw [category.comp_id] }
-      homEquiv_naturality_left_symm := by
-        intros
-        dsimp
-        simp
-      homEquiv_naturality_right := by
-        intros
-        ext
-        dsimp
-        simp }
+      homEquiv_naturality_left_symm := by intros ; dsimp; simp
+      homEquiv_naturality_right := by intros ; ext; dsimp; simp }
 #align category_theory.evaluation_adjunction_left CategoryTheory.evaluationAdjunctionLeft
 
 /- warning: category_theory.evaluation_is_left_adjoint -> CategoryTheory.evaluationIsLeftAdjoint is a dubious translation:

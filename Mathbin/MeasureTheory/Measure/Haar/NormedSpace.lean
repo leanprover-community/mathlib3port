@@ -71,9 +71,7 @@ theorem integral_comp_smul (f : E → F) (R : ℝ) :
   · simp only [zero_smul, integral_const]
     rcases Nat.eq_zero_or_pos (finrank ℝ E) with (hE | hE)
     · have : Subsingleton E := finrank_zero_iff.1 hE
-      have : f = fun x => f 0 := by
-        ext x
-        rw [Subsingleton.elim x 0]
+      have : f = fun x => f 0 := by ext x; rw [Subsingleton.elim x 0]
       conv_rhs => rw [this]
       simp only [hE, pow_zero, inv_one, abs_one, one_smul, integral_const]
     · have : Nontrivial E := finrank_pos_iff.1 hE

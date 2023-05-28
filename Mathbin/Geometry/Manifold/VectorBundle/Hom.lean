@@ -61,8 +61,7 @@ theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
   refine' ((h₁.comp_smooth_on (h₄.mono _)).clm_comp (h₂.comp_smooth_on (h₃.mono _))).congr _
   · mfld_set_tac
   · mfld_set_tac
-  · intro b hb
-    ext (L v)
+  · intro b hb; ext (L v)
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
       ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm]

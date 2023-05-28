@@ -180,10 +180,8 @@ theorem norm (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => �
 
 theorem intervalIntegrable_norm_iff {f : ℝ → E} {μ : Measure ℝ} {a b : ℝ}
     (hf : AEStronglyMeasurable f (μ.restrict (Ι a b))) :
-    IntervalIntegrable (fun t => ‖f t‖) μ a b ↔ IntervalIntegrable f μ a b :=
-  by
-  simp_rw [intervalIntegrable_iff, integrable_on]
-  exact integrable_norm_iff hf
+    IntervalIntegrable (fun t => ‖f t‖) μ a b ↔ IntervalIntegrable f μ a b := by
+  simp_rw [intervalIntegrable_iff, integrable_on]; exact integrable_norm_iff hf
 #align interval_integrable.interval_integrable_norm_iff IntervalIntegrable.intervalIntegrable_norm_iff
 
 theorem abs {f : ℝ → ℝ} (h : IntervalIntegrable f μ a b) :
@@ -298,9 +296,7 @@ theorem div_const {𝕜 : Type _} {f : ℝ → 𝕜} [NormedField 𝕜] (h : Int
 theorem comp_mul_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c * x)) volume (a / c) (b / c) :=
   by
-  rcases eq_or_ne c 0 with (hc | hc);
-  · rw [hc]
-    simp
+  rcases eq_or_ne c 0 with (hc | hc); · rw [hc]; simp
   rw [intervalIntegrable_iff'] at hf⊢
   have A : MeasurableEmbedding fun x => x * c⁻¹ :=
     (Homeomorph.mulRight₀ _ (inv_ne_zero hc)).ClosedEmbedding.MeasurableEmbedding
@@ -308,13 +304,8 @@ theorem comp_mul_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     integrable_smul_measure (by simpa : ENNReal.ofReal (|c⁻¹|) ≠ 0) ENNReal.ofReal_ne_top, ←
     integrable_on, MeasurableEmbedding.integrableOn_map_iff A]
   convert hf using 1
-  · ext
-    simp only [comp_app]
-    congr 1
-    field_simp
-    ring
-  · rw [preimage_mul_const_uIcc (inv_ne_zero hc)]
-    field_simp [hc]
+  · ext; simp only [comp_app]; congr 1; field_simp; ring
+  · rw [preimage_mul_const_uIcc (inv_ne_zero hc)]; field_simp [hc]
 #align interval_integrable.comp_mul_left IntervalIntegrable.comp_mul_left
 
 theorem comp_mul_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
@@ -515,10 +506,8 @@ theorem abs_intervalIntegral_eq (f : ℝ → ℝ) (a b : ℝ) (μ : Measure ℝ)
 #align interval_integral.abs_interval_integral_eq intervalIntegral.abs_intervalIntegral_eq
 
 theorem integral_cases (f : ℝ → E) (a b) :
-    (∫ x in a..b, f x ∂μ) ∈ ({∫ x in Ι a b, f x ∂μ, -∫ x in Ι a b, f x ∂μ} : Set E) :=
-  by
-  rw [interval_integral_eq_integral_uIoc]
-  split_ifs <;> simp
+    (∫ x in a..b, f x ∂μ) ∈ ({∫ x in Ι a b, f x ∂μ, -∫ x in Ι a b, f x ∂μ} : Set E) := by
+  rw [interval_integral_eq_integral_uIoc]; split_ifs <;> simp
 #align interval_integral.integral_cases intervalIntegral.integral_cases
 
 theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x ∂μ) = 0 := by
@@ -530,9 +519,7 @@ theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x
 #align interval_integral.integral_undef intervalIntegral.integral_undef
 
 theorem intervalIntegrable_of_integral_ne_zero {a b : ℝ} {f : ℝ → E} {μ : Measure ℝ}
-    (h : (∫ x in a..b, f x ∂μ) ≠ 0) : IntervalIntegrable f μ a b :=
-  by
-  contrapose! h
+    (h : (∫ x in a..b, f x ∂μ) ≠ 0) : IntervalIntegrable f μ a b := by contrapose! h;
   exact intervalIntegral.integral_undef h
 #align interval_integral.interval_integrable_of_integral_ne_zero intervalIntegral.intervalIntegrable_of_integral_ne_zero
 
@@ -614,10 +601,8 @@ theorem integral_finset_sum {ι} {s : Finset ι} {f : ι → ℝ → E}
 #align interval_integral.integral_finset_sum intervalIntegral.integral_finset_sum
 
 @[simp]
-theorem integral_neg : (∫ x in a..b, -f x ∂μ) = -∫ x in a..b, f x ∂μ :=
-  by
-  simp only [intervalIntegral, integral_neg]
-  abel
+theorem integral_neg : (∫ x in a..b, -f x ∂μ) = -∫ x in a..b, f x ∂μ := by
+  simp only [intervalIntegral, integral_neg]; abel
 #align interval_integral.integral_neg intervalIntegral.integral_neg
 
 @[simp]
@@ -1185,8 +1170,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
         exact
           ⟨min_le_of_left_le (min_le_right _ _),
             le_max_of_le_right (h₁.trans <| h₂.trans (le_max_right a b₂))⟩
-    apply ContinuousWithinAt.congr _ this (this _ h₀)
-    clear this
+    apply ContinuousWithinAt.congr _ this (this _ h₀); clear this
     refine' continuous_within_at_const.add _
     have :
       (fun b => ∫ x in b₁..b, f x ∂μ) =ᶠ[𝓝[Icc b₁ b₂] b₀] fun b =>
@@ -1255,9 +1239,7 @@ theorem continuousOn_primitive [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ
 theorem continuousOn_primitive_Icc [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Icc a x, f t ∂μ) (Icc a b) :=
   by
-  rw [show (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ
-      by
-      ext x
+  rw [show (fun x => ∫ t in Icc a x, f t ∂μ) = fun x => ∫ t in Ioc a x, f t ∂μ by ext x;
       exact integral_Icc_eq_integral_Ioc]
   exact continuous_on_primitive h_int
 #align interval_integral.continuous_on_primitive_Icc intervalIntegral.continuousOn_primitive_Icc

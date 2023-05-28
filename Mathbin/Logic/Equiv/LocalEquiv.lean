@@ -408,10 +408,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.copy_eq LocalEquiv.copy_eqₓ'. -/
 theorem copy_eq (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g : β → α) (hg : ⇑e.symm = g)
     (s : Set α) (hs : e.source = s) (t : Set β) (ht : e.target = t) :
-    e.copy f hf g hg s hs t ht = e := by
-  substs f g s t
-  cases e
-  rfl
+    e.copy f hf g hg s hs t ht = e := by substs f g s t; cases e; rfl
 #align local_equiv.copy_eq LocalEquiv.copy_eq
 
 #print LocalEquiv.toEquiv /-
@@ -450,9 +447,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} α β) (LocalEquiv.symm.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) e
 Case conversion may be inaccurate. Consider using '#align local_equiv.symm_symm LocalEquiv.symm_symmₓ'. -/
 @[simp, mfld_simps]
-theorem symm_symm : e.symm.symm = e := by
-  cases e
-  rfl
+theorem symm_symm : e.symm.symm = e := by cases e; rfl
 #align local_equiv.symm_symm LocalEquiv.symm_symm
 
 #print LocalEquiv.image_source_eq_target /-
@@ -915,12 +910,8 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.ext LocalE
 protected theorem ext {e e' : LocalEquiv α β} (h : ∀ x, e x = e' x)
     (hsymm : ∀ x, e.symm x = e'.symm x) (hs : e.source = e'.source) : e = e' :=
   by
-  have A : (e : α → β) = e' := by
-    ext x
-    exact h x
-  have B : (e.symm : β → α) = e'.symm := by
-    ext x
-    exact hsymm x
+  have A : (e : α → β) = e' := by ext x; exact h x
+  have B : (e.symm : β → α) = e'.symm := by ext x; exact hsymm x
   have I : e '' e.source = e.target := e.image_source_eq_target
   have I' : e' '' e'.source = e'.target := e'.image_source_eq_target
   rw [A, hs, I'] at I
@@ -1044,10 +1035,8 @@ theorem refl_restr_source (s : Set α) : ((LocalEquiv.refl α).restr s).source =
 
 #print LocalEquiv.refl_restr_target /-
 @[simp, mfld_simps]
-theorem refl_restr_target (s : Set α) : ((LocalEquiv.refl α).restr s).target = s :=
-  by
-  change univ ∩ id ⁻¹' s = s
-  simp
+theorem refl_restr_target (s : Set α) : ((LocalEquiv.refl α).restr s).target = s := by
+  change univ ∩ id ⁻¹' s = s; simp
 #align local_equiv.refl_restr_target LocalEquiv.refl_restr_target
 -/
 
@@ -1288,9 +1277,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.trans_refl_restr' LocalEquiv.trans_refl_restr'ₓ'. -/
 theorem trans_refl_restr' (s : Set β) :
     e.trans ((LocalEquiv.refl β).restr s) = e.restr (e.source ∩ e ⁻¹' s) :=
-  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <|
-    by
-    simp [trans_source]
+  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <| by simp [trans_source];
     rw [← inter_assoc, inter_self]
 #align local_equiv.trans_refl_restr' LocalEquiv.trans_refl_restr'
 
@@ -1301,9 +1288,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (e : LocalEquiv.{u3, u1} α β) (e' : LocalEquiv.{u1, u2} β γ) (s : Set.{u3} α), Eq.{max (succ u3) (succ u2)} (LocalEquiv.{u3, u2} α γ) (LocalEquiv.trans.{u3, u1, u2} α β γ (LocalEquiv.restr.{u3, u1} α β e s) e') (LocalEquiv.restr.{u3, u2} α γ (LocalEquiv.trans.{u3, u1, u2} α β γ e e') s)
 Case conversion may be inaccurate. Consider using '#align local_equiv.restr_trans LocalEquiv.restr_transₓ'. -/
 theorem restr_trans (s : Set α) : (e.restr s).trans e' = (e.trans e').restr s :=
-  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <|
-    by
-    simp [trans_source, inter_comm]
+  (LocalEquiv.ext (fun x => rfl) fun x => rfl) <| by simp [trans_source, inter_comm];
     rwa [inter_assoc]
 #align local_equiv.restr_trans LocalEquiv.restr_trans
 
@@ -1374,13 +1359,9 @@ instance eqOnSourceSetoid : Setoid (LocalEquiv α β)
     where
   R := EqOnSource
   iseqv :=
-    ⟨fun e => by simp [eq_on_source], fun e e' h =>
-      by
-      simp [eq_on_source, h.1.symm]
+    ⟨fun e => by simp [eq_on_source], fun e e' h => by simp [eq_on_source, h.1.symm];
       exact fun x hx => (h.2 hx).symm, fun e e' e'' h h' =>
-      ⟨by rwa [← h'.1, ← h.1], fun x hx => by
-        rw [← h'.2, h.2 hx]
-        rwa [← h.1]⟩⟩
+      ⟨by rwa [← h'.1, ← h.1], fun x hx => by rw [← h'.2, h.2 hx]; rwa [← h.1]⟩⟩
 #align local_equiv.eq_on_source_setoid LocalEquiv.eqOnSourceSetoid
 -/
 
@@ -1552,18 +1533,10 @@ def prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) 
   target := e.target ×ˢ e'.target
   toFun p := (e p.1, e' p.2)
   invFun p := (e.symm p.1, e'.symm p.2)
-  map_source' p hp := by
-    simp at hp
-    simp [hp]
-  map_target' p hp := by
-    simp at hp
-    simp [map_target, hp]
-  left_inv' p hp := by
-    simp at hp
-    simp [hp]
-  right_inv' p hp := by
-    simp at hp
-    simp [hp]
+  map_source' p hp := by simp at hp; simp [hp]
+  map_target' p hp := by simp at hp; simp [map_target, hp]
+  left_inv' p hp := by simp at hp; simp [hp]
+  right_inv' p hp := by simp at hp; simp [hp]
 #align local_equiv.prod LocalEquiv.prod
 -/
 
@@ -1635,12 +1608,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.refl_prod_refl LocalEquiv.refl_prod_reflₓ'. -/
 @[simp, mfld_simps]
 theorem refl_prod_refl : (LocalEquiv.refl α).Prod (LocalEquiv.refl β) = LocalEquiv.refl (α × β) :=
-  by
-  ext1 ⟨x, y⟩
-  · rfl
-  · rintro ⟨x, y⟩
-    rfl
-  exact univ_prod_univ
+  by ext1 ⟨x, y⟩; · rfl; · rintro ⟨x, y⟩; rfl; exact univ_prod_univ
 #align local_equiv.refl_prod_refl LocalEquiv.refl_prod_refl
 
 /- warning: local_equiv.prod_trans -> LocalEquiv.prod_trans is a dubious translation:

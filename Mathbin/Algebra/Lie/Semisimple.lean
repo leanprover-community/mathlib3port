@@ -73,21 +73,14 @@ theorem isSemisimple_iff_no_abelian_ideals :
   by
   rw [is_semisimple_iff_no_solvable_ideals]
   constructor <;> intro h₁ I h₂
-  · haveI : IsLieAbelian I := h₂
-    apply h₁
-    exact LieAlgebra.ofAbelianIsSolvable R I
-  · haveI : IsSolvable R I := h₂
-    rw [← abelian_of_solvable_ideal_eq_bot_iff]
-    apply h₁
+  · haveI : IsLieAbelian I := h₂; apply h₁; exact LieAlgebra.ofAbelianIsSolvable R I
+  · haveI : IsSolvable R I := h₂; rw [← abelian_of_solvable_ideal_eq_bot_iff]; apply h₁
     exact abelian_derived_abelian_of_ideal I
 #align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.isSemisimple_iff_no_abelian_ideals
 
 @[simp]
-theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ :=
-  by
-  rw [is_semisimple_iff_no_abelian_ideals] at h
-  apply h
-  infer_instance
+theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ := by
+  rw [is_semisimple_iff_no_abelian_ideals] at h; apply h; infer_instance
 #align lie_algebra.center_eq_bot_of_semisimple LieAlgebra.center_eq_bot_of_semisimple
 
 /-- A simple Lie algebra is semisimple. -/
@@ -109,10 +102,8 @@ theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbel
   exact (LieSubmodule.subsingleton_iff R L L).mp (subsingleton_of_bot_eq_top h)
 #align lie_algebra.subsingleton_of_semisimple_lie_abelian LieAlgebra.subsingleton_of_semisimple_lie_abelian
 
-theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) :=
-  by
-  rw [is_semisimple.semisimple]
-  exact is_lie_abelian_bot R L
+theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) := by
+  rw [is_semisimple.semisimple]; exact is_lie_abelian_bot R L
 #align lie_algebra.abelian_radical_of_semisimple LieAlgebra.abelian_radical_of_semisimple
 
 /-- The two properties shown to be equivalent here are possible definitions for a Lie algebra
@@ -127,9 +118,7 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
   · rintro h₁ I h₂
     rw [lie_ideal.solvable_iff_le_radical] at h₂
     exact (LieIdeal.homOfLe_injective h₂).IsLieAbelian h₁
-  · intro h
-    apply h
-    infer_instance
+  · intro h; apply h; infer_instance
 #align lie_algebra.abelian_radical_iff_solvable_is_abelian LieAlgebra.abelian_radical_iff_solvable_is_abelian
 
 theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by simp

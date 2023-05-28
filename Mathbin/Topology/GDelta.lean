@@ -127,10 +127,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsGδ.{u1} α _inst_1 s) -> (IsGδ.{u1} α _inst_1 t) -> (IsGδ.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align is_Gδ.inter IsGδ.interₓ'. -/
-theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) :=
-  by
-  rw [inter_eq_Inter]
-  exact isGδ_iInter (Bool.forall_bool.2 ⟨ht, hs⟩)
+theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) := by
+  rw [inter_eq_Inter]; exact isGδ_iInter (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
 
 /- warning: is_Gδ.union -> IsGδ.union is a dubious translation:

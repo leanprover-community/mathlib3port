@@ -51,32 +51,17 @@ theorem CategoryTheory.DifferentialObject.xEqToHom_refl
 
 @[simp, reassoc]
 theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : β} (h : x = y) :
-    X.xEqToHom h ≫ X.d y =
-      X.d x ≫
-        X.xEqToHom
-          (by
-            cases h
-            rfl) :=
-  by
-  cases h
-  dsimp
-  simp
+    X.xEqToHom h ≫ X.d y = X.d x ≫ X.xEqToHom (by cases h; rfl) := by cases h; dsimp; simp
 #align homological_complex.eq_to_hom_d HomologicalComplex.eq_to_hom_d
 
 @[simp, reassoc]
 theorem d_eqToHom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
-    X.d x y ≫ eqToHom (congr_arg X.pt h) = X.d x z :=
-  by
-  cases h
-  simp
+    X.d x y ≫ eqToHom (congr_arg X.pt h) = X.d x z := by cases h; simp
 #align homological_complex.d_eq_to_hom HomologicalComplex.d_eqToHom
 
 @[simp, reassoc]
 theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β}
-    (h : x = y) : X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h :=
-  by
-  cases h
-  simp
+    (h : x = y) : X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h := by cases h; simp
 #align homological_complex.eq_to_hom_f' HomologicalComplex.eq_to_hom_f'
 
 variable (b V)
@@ -93,9 +78,7 @@ def dgoToHomologicalComplex :
     { pt := fun i => X.pt i
       d := fun i j =>
         if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0
-      shape' := fun i j w => by
-        dsimp at w
-        convert dif_neg w
+      shape' := fun i j w => by dsimp at w; convert dif_neg w
       d_comp_d' := fun i j k hij hjk => by
         dsimp at hij hjk; substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
@@ -121,16 +104,10 @@ def homologicalComplexToDgo :
   obj X :=
     { pt := fun i => X.pt i
       d := fun i => X.d i (i + 1 • b)
-      d_squared' := by
-        ext i
-        dsimp
-        simp }
+      d_squared' := by ext i; dsimp; simp }
   map X Y f :=
     { f := f.f
-      comm' := by
-        ext i
-        dsimp
-        simp }
+      comm' := by ext i; dsimp; simp }
 #align homological_complex.homological_complex_to_dgo HomologicalComplex.homologicalComplexToDgo
 
 /-- The unit isomorphism for `dgo_equiv_homological_complex`.

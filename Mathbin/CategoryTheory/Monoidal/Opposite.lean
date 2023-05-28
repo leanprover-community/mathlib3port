@@ -181,26 +181,11 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ
   associator X Y Z := (α_ (unop X) (unop Y) (unop Z)).symm.op
   leftUnitor X := (λ_ (unop X)).symm.op
   rightUnitor X := (ρ_ (unop X)).symm.op
-  associator_naturality' := by
-    intros
-    apply Quiver.Hom.unop_inj
-    simp
-  leftUnitor_naturality' := by
-    intros
-    apply Quiver.Hom.unop_inj
-    simp
-  rightUnitor_naturality' := by
-    intros
-    apply Quiver.Hom.unop_inj
-    simp
-  triangle' := by
-    intros
-    apply Quiver.Hom.unop_inj
-    coherence
-  pentagon' := by
-    intros
-    apply Quiver.Hom.unop_inj
-    coherence
+  associator_naturality' := by intros ; apply Quiver.Hom.unop_inj; simp
+  leftUnitor_naturality' := by intros ; apply Quiver.Hom.unop_inj; simp
+  rightUnitor_naturality' := by intros ; apply Quiver.Hom.unop_inj; simp
+  triangle' := by intros ; apply Quiver.Hom.unop_inj; coherence
+  pentagon' := by intros ; apply Quiver.Hom.unop_inj; coherence
 #align category_theory.monoidal_category_op CategoryTheory.monoidalCategoryOp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -223,26 +208,11 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ
   associator X Y Z := (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop
   leftUnitor X := (ρ_ (unmop X)).mop
   rightUnitor X := (λ_ (unmop X)).mop
-  associator_naturality' := by
-    intros
-    apply unmop_inj
-    simp
-  leftUnitor_naturality' := by
-    intros
-    apply unmop_inj
-    simp
-  rightUnitor_naturality' := by
-    intros
-    apply unmop_inj
-    simp
-  triangle' := by
-    intros
-    apply unmop_inj
-    coherence
-  pentagon' := by
-    intros
-    apply unmop_inj
-    coherence
+  associator_naturality' := by intros ; apply unmop_inj; simp
+  leftUnitor_naturality' := by intros ; apply unmop_inj; simp
+  rightUnitor_naturality' := by intros ; apply unmop_inj; simp
+  triangle' := by intros ; apply unmop_inj; coherence
+  pentagon' := by intros ; apply unmop_inj; coherence
 #align category_theory.monoidal_category_mop CategoryTheory.monoidalCategoryMop
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

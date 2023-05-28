@@ -24,9 +24,7 @@ namespace RingHom
 
 open Pointwise
 
-theorem finiteType_stableUnderComposition : StableUnderComposition @FiniteType :=
-  by
-  introv R hf hg
+theorem finiteType_stableUnderComposition : StableUnderComposition @FiniteType := by introv R hf hg;
   exact hg.comp hf
 #align ring_hom.finite_type_stable_under_composition RingHom.finiteType_stableUnderComposition
 
@@ -34,12 +32,8 @@ theorem finiteType_holdsForLocalizationAway : HoldsForLocalizationAway @FiniteTy
   by
   introv R _
   skip
-  suffices Algebra.FiniteType R S by
-    change Algebra.FiniteType _ _
-    convert this
-    ext
-    rw [Algebra.smul_def]
-    rfl
+  suffices Algebra.FiniteType R S by change Algebra.FiniteType _ _; convert this; ext;
+    rw [Algebra.smul_def]; rfl
   exact IsLocalization.finiteType_of_monoid_fg (Submonoid.powers r) S
 #align ring_hom.finite_type_holds_for_localization_away RingHom.finiteType_holdsForLocalizationAway
 
@@ -52,11 +46,7 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
   classical
     letI := f.to_algebra
     replace H : ∀ r : s, Algebra.FiniteType R (Localization.Away (r : S))
-    · intro r
-      convert H r
-      ext
-      rw [Algebra.smul_def]
-      rfl
+    · intro r; convert H r; ext; rw [Algebra.smul_def]; rfl
     replace H := fun r => (H r).1
     constructor
     -- Suppose `s : finset S` spans `S`, and each `Sᵣ` is finitely generated as an `R`-algebra.
@@ -65,9 +55,7 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
     choose t ht using H
     obtain ⟨l, hl⟩ :=
       (Finsupp.mem_span_iff_total S (s : Set S) 1).mp
-        (show (1 : S) ∈ Ideal.span (s : Set S) by
-          rw [hs]
-          trivial)
+        (show (1 : S) ∈ Ideal.span (s : Set S) by rw [hs]; trivial)
     let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (x : S)) (t x)
     use s.attach.bUnion sf ∪ s ∪ l.support.image l
     rw [eq_top_iff]
@@ -81,9 +69,7 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
       rw [Finset.coe_union, Finset.coe_union]
       exact Or.inl (Or.inr hx)
     · intro i
-      by_cases h : l i = 0
-      · rw [h]
-        exact zero_mem _
+      by_cases h : l i = 0; · rw [h]; exact zero_mem _
       apply Algebra.subset_adjoin
       rw [Finset.coe_union, Finset.coe_image]
       exact Or.inr (Set.mem_image_of_mem _ (finsupp.mem_support_iff.mpr h))
@@ -101,8 +87,7 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
       · rw [Submonoid.powers_eq_closure, Submonoid.closure_le, Set.singleton_subset_iff]
         apply Algebra.subset_adjoin
         exact Or.inl (Or.inr r.2)
-      · rw [ht]
-        trivial
+      · rw [ht]; trivial
 #align ring_hom.finite_type_of_localization_span_target RingHom.finiteType_ofLocalizationSpanTarget
 
 theorem finiteType_is_local : PropertyIsLocal @FiniteType :=

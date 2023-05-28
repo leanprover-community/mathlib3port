@@ -74,16 +74,8 @@ def Subpresheaf.toPresheaf : Cᵒᵖ ⥤ Type w
     where
   obj U := G.obj U
   map U V i x := ⟨F.map i x, G.map i x.Prop⟩
-  map_id' X := by
-    ext ⟨x, _⟩
-    dsimp
-    rw [F.map_id]
-    rfl
-  map_comp' X Y Z i j := by
-    ext ⟨x, _⟩
-    dsimp
-    rw [F.map_comp]
-    rfl
+  map_id' X := by ext ⟨x, _⟩; dsimp; rw [F.map_id]; rfl
+  map_comp' X Y Z i j := by ext ⟨x, _⟩; dsimp; rw [F.map_comp]; rfl
 #align category_theory.grothendieck_topology.subpresheaf.to_presheaf CategoryTheory.GrothendieckTopology.Subpresheaf.toPresheaf
 -/
 
@@ -129,16 +121,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.subpresheaf.hom_of_le_ι CategoryTheory.GrothendieckTopology.Subpresheaf.homOfLe_ιₓ'. -/
 @[simp, reassoc]
 theorem Subpresheaf.homOfLe_ι {G G' : Subpresheaf F} (h : G ≤ G') :
-    Subpresheaf.homOfLe h ≫ G'.ι = G.ι := by
-  ext
-  rfl
+    Subpresheaf.homOfLe h ≫ G'.ι = G.ι := by ext; rfl
 #align category_theory.grothendieck_topology.subpresheaf.hom_of_le_ι CategoryTheory.GrothendieckTopology.Subpresheaf.homOfLe_ι
 
 instance : IsIso (Subpresheaf.ι (⊤ : Subpresheaf F)) :=
   by
   apply (config := { instances := false }) nat_iso.is_iso_of_is_iso_app
-  · intro X
-    rw [is_iso_iff_bijective]
+  · intro X; rw [is_iso_iff_bijective]
     exact ⟨Subtype.coe_injective, fun x => ⟨⟨x, _root_.trivial⟩, rfl⟩⟩
 
 /- warning: category_theory.grothendieck_topology.subpresheaf.eq_top_iff_is_iso -> CategoryTheory.GrothendieckTopology.Subpresheaf.eq_top_iff_isIso is a dubious translation:
@@ -150,12 +139,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.grothe
 theorem Subpresheaf.eq_top_iff_isIso : G = ⊤ ↔ IsIso G.ι :=
   by
   constructor
-  · rintro rfl
-    infer_instance
-  · intro H
-    ext (U x)
-    apply (iff_true_iff _).mpr
-    rw [← is_iso.inv_hom_id_apply (G.ι.app U) x]
+  · rintro rfl; infer_instance
+  · intro H; ext (U x); apply (iff_true_iff _).mpr; rw [← is_iso.inv_hom_id_apply (G.ι.app U) x]
     exact ((inv (G.ι.app U)) x).2
 #align category_theory.grothendieck_topology.subpresheaf.eq_top_iff_is_iso CategoryTheory.GrothendieckTopology.Subpresheaf.eq_top_iff_isIso
 
@@ -170,11 +155,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.grothe
 def Subpresheaf.lift (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : F' ⟶ G.toPresheaf
     where
   app U x := ⟨f.app U x, hf U x⟩
-  naturality' := by
-    have := elementwise_of f.naturality
-    intros
-    ext
-    simp [this]
+  naturality' := by have := elementwise_of f.naturality; intros ; ext; simp [this]
 #align category_theory.grothendieck_topology.subpresheaf.lift CategoryTheory.GrothendieckTopology.Subpresheaf.lift
 
 /- warning: category_theory.grothendieck_topology.subpresheaf.lift_ι -> CategoryTheory.GrothendieckTopology.Subpresheaf.lift_ι is a dubious translation:
@@ -182,9 +163,7 @@ def Subpresheaf.lift (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : F' �
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.subpresheaf.lift_ι CategoryTheory.GrothendieckTopology.Subpresheaf.lift_ιₓ'. -/
 @[simp, reassoc]
 theorem Subpresheaf.lift_ι (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : G.lift f hf ≫ G.ι = f :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align category_theory.grothendieck_topology.subpresheaf.lift_ι CategoryTheory.GrothendieckTopology.Subpresheaf.lift_ι
 
 /- warning: category_theory.grothendieck_topology.subpresheaf.sieve_of_section -> CategoryTheory.GrothendieckTopology.Subpresheaf.sieveOfSection is a dubious translation:
@@ -199,10 +178,7 @@ consisting of all `f : V ⟶ U` such that the restriction of `s` along `f` is in
 def Subpresheaf.sieveOfSection {U : Cᵒᵖ} (s : F.obj U) : Sieve (unop U)
     where
   arrows V f := F.map f.op s ∈ G.obj (op V)
-  downward_closed' V W i hi j :=
-    by
-    rw [op_comp, functor_to_types.map_comp_apply]
-    exact G.map _ hi
+  downward_closed' V W i hi j := by rw [op_comp, functor_to_types.map_comp_apply]; exact G.map _ hi
 #align category_theory.grothendieck_topology.subpresheaf.sieve_of_section CategoryTheory.GrothendieckTopology.Subpresheaf.sieveOfSection
 
 /- warning: category_theory.grothendieck_topology.subpresheaf.family_of_elements_of_section -> CategoryTheory.GrothendieckTopology.Subpresheaf.familyOfElementsOfSection is a dubious translation:
@@ -280,9 +256,7 @@ theorem Subpresheaf.eq_sheafify (h : Presieve.IsSheaf J F) (hG : Presieve.IsShea
     G = G.sheafify J := by
   apply (G.le_sheafify J).antisymm
   intro U s hs
-  suffices ((hG _ hs).amalgamate _ (G.family_of_elements_compatible s)).1 = s
-    by
-    rw [← this]
+  suffices ((hG _ hs).amalgamate _ (G.family_of_elements_compatible s)).1 = s by rw [← this];
     exact ((hG _ hs).amalgamate _ (G.family_of_elements_compatible s)).2
   apply (h _ hs).IsSeparatedFor.ext
   intro V i hi
@@ -379,8 +353,7 @@ noncomputable def Subpresheaf.sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presie
     conv_rhs => rw [← functor_to_types.map_comp_apply]
     change _ = F'.map (j ≫ i.unop).op _
     refine' Eq.trans _ (presieve.is_sheaf_for.valid_glue _ _ _ _).symm
-    · dsimp at hj⊢
-      rwa [functor_to_types.map_comp_apply]
+    · dsimp at hj⊢; rwa [functor_to_types.map_comp_apply]
     · dsimp [presieve.family_of_elements.comp_presheaf_map]
       congr 1
       ext1
@@ -445,10 +418,7 @@ section Image
 def imagePresheaf (f : F' ⟶ F) : Subpresheaf F
     where
   obj U := Set.range (f.app U)
-  map U V i := by
-    rintro _ ⟨x, rfl⟩
-    have := elementwise_of f.naturality
-    exact ⟨_, this i x⟩
+  map U V i := by rintro _ ⟨x, rfl⟩; have := elementwise_of f.naturality; exact ⟨_, this i x⟩
 #align category_theory.grothendieck_topology.image_presheaf CategoryTheory.GrothendieckTopology.imagePresheaf
 -/
 
@@ -470,10 +440,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {F : CategoryTheory.Functor.{u2, u1, u3, succ u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) Type.{u1} CategoryTheory.types.{u1}}, Eq.{max (succ u3) (succ u1)} (CategoryTheory.GrothendieckTopology.Subpresheaf.{u1, u2, u3} C _inst_1 F) (CategoryTheory.GrothendieckTopology.imagePresheaf.{u1, u2, u3} C _inst_1 F F (CategoryTheory.CategoryStruct.id.{max u3 u1, max (max u3 u2) (succ u1)} (CategoryTheory.Functor.{u2, u1, u3, succ u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Category.toCategoryStruct.{max u3 u1, max (max u3 u2) (succ u1)} (CategoryTheory.Functor.{u2, u1, u3, succ u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) Type.{u1} CategoryTheory.types.{u1}) (CategoryTheory.Functor.category.{u2, u1, u3, succ u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) Type.{u1} CategoryTheory.types.{u1})) F)) (Top.top.{max u3 u1} (CategoryTheory.GrothendieckTopology.Subpresheaf.{u1, u2, u3} C _inst_1 F) (CategoryTheory.GrothendieckTopology.instTopSubpresheaf.{u1, u2, u3} C _inst_1 F))
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.image_presheaf_id CategoryTheory.GrothendieckTopology.imagePresheaf_idₓ'. -/
 @[simp]
-theorem imagePresheaf_id : imagePresheaf (𝟙 F) = ⊤ :=
-  by
-  ext
-  simp
+theorem imagePresheaf_id : imagePresheaf (𝟙 F) = ⊤ := by ext; simp
 #align category_theory.grothendieck_topology.image_presheaf_id CategoryTheory.GrothendieckTopology.imagePresheaf_id
 
 #print CategoryTheory.GrothendieckTopology.toImagePresheaf /-
@@ -523,8 +490,7 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
     have := (nat_trans.mono_iff_mono_app _ _).mp hf X
     rw [mono_iff_injective] at this
     exact this (congr_arg Subtype.val e : _)
-  · rintro ⟨_, ⟨x, rfl⟩⟩
-    exact ⟨x, rfl⟩
+  · rintro ⟨_, ⟨x, rfl⟩⟩; exact ⟨x, rfl⟩
 
 #print CategoryTheory.GrothendieckTopology.imageSheaf /-
 /-- The image sheaf of a morphism between sheaves, defined to be the sheafification of
@@ -533,10 +499,8 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
 def imageSheaf {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Sheaf J (Type w) :=
   ⟨((imagePresheaf f.1).sheafify J).toPresheaf,
     by
-    rw [is_sheaf_iff_is_sheaf_of_type]
-    apply subpresheaf.sheafify_is_sheaf
-    rw [← is_sheaf_iff_is_sheaf_of_type]
-    exact F'.2⟩
+    rw [is_sheaf_iff_is_sheaf_of_type]; apply subpresheaf.sheafify_is_sheaf
+    rw [← is_sheaf_iff_is_sheaf_of_type]; exact F'.2⟩
 #align category_theory.grothendieck_topology.image_sheaf CategoryTheory.GrothendieckTopology.imageSheaf
 -/
 
@@ -559,17 +523,12 @@ def imageSheafι {F F' : Sheaf J (Type w)} (f : F ⟶ F') : imageSheaf f ⟶ F' 
 #print CategoryTheory.GrothendieckTopology.toImageSheaf_ι /-
 @[simp, reassoc]
 theorem toImageSheaf_ι {F F' : Sheaf J (Type w)} (f : F ⟶ F') :
-    toImageSheaf f ≫ imageSheafι f = f := by
-  ext1
-  simp [to_image_presheaf_sheafify]
+    toImageSheaf f ≫ imageSheafι f = f := by ext1; simp [to_image_presheaf_sheafify]
 #align category_theory.grothendieck_topology.to_image_sheaf_ι CategoryTheory.GrothendieckTopology.toImageSheaf_ι
 -/
 
 instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Mono (imageSheafι f) :=
-  (sheafToPresheaf J _).mono_of_mono_map
-    (by
-      dsimp
-      infer_instance)
+  (sheafToPresheaf J _).mono_of_mono_map (by dsimp; infer_instance)
 
 instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) :=
   by
@@ -606,13 +565,10 @@ noncomputable def imageFactorization {F F' : Sheaf J (Type max v u)} (f : F ⟶ 
         haveI := (Sheaf.hom.mono_iff_presheaf_mono J _ _).mp I.m_mono
         refine' ⟨subpresheaf.hom_of_le _ ≫ inv (to_image_presheaf I.m.1)⟩
         apply subpresheaf.sheafify_le
-        · conv_lhs => rw [← I.fac]
-          apply image_presheaf_comp_le
-        · rw [← is_sheaf_iff_is_sheaf_of_type]
-          exact F'.2
+        · conv_lhs => rw [← I.fac]; apply image_presheaf_comp_le
+        · rw [← is_sheaf_iff_is_sheaf_of_type]; exact F'.2
         · apply presieve.is_sheaf_iso J (as_iso <| to_image_presheaf I.m.1)
-          rw [← is_sheaf_iff_is_sheaf_of_type]
-          exact I.I.2
+          rw [← is_sheaf_iff_is_sheaf_of_type]; exact I.I.2
       lift_fac := fun I => by
         ext1
         dsimp [image_mono_factorization]

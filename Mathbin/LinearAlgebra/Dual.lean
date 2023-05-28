@@ -245,10 +245,7 @@ theorem LinearMap.dualMap_apply (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) (x :
 
 #print LinearMap.dualMap_id /-
 @[simp]
-theorem LinearMap.dualMap_id : (LinearMap.id : M₁ →ₗ[R] M₁).dualMap = LinearMap.id :=
-  by
-  ext
-  rfl
+theorem LinearMap.dualMap_id : (LinearMap.id : M₁ →ₗ[R] M₁).dualMap = LinearMap.id := by ext; rfl
 #align linear_map.dual_map_id LinearMap.dualMap_id
 -/
 
@@ -300,10 +297,7 @@ theorem LinearEquiv.dualMap_apply (f : M₁ ≃ₗ[R] M₂) (g : Dual R M₂) (x
 #print LinearEquiv.dualMap_refl /-
 @[simp]
 theorem LinearEquiv.dualMap_refl :
-    (LinearEquiv.refl R M₁).dualMap = LinearEquiv.refl R (Dual R M₁) :=
-  by
-  ext
-  rfl
+    (LinearEquiv.refl R M₁).dualMap = LinearEquiv.refl R (Dual R M₁) := by ext; rfl
 #align linear_equiv.dual_map_refl LinearEquiv.dualMap_refl
 -/
 
@@ -352,10 +346,8 @@ def toDual : M →ₗ[R] Module.Dual R M :=
 /- warning: basis.to_dual_apply -> Basis.toDual_apply is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.to_dual_apply Basis.toDual_applyₓ'. -/
-theorem toDual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 :=
-  by
-  erw [constr_basis b, constr_basis b]
-  ac_rfl
+theorem toDual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 := by
+  erw [constr_basis b, constr_basis b]; ac_rfl
 #align basis.to_dual_apply Basis.toDual_apply
 
 /- warning: basis.to_dual_total_left -> Basis.toDual_total_left is a dubious translation:
@@ -402,10 +394,7 @@ theorem toDual_apply_right (i : ι) (m : M) : b.toDual (b i) m = b.repr m i := b
 /- warning: basis.coe_to_dual_self -> Basis.coe_toDual_self is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.coe_to_dual_self Basis.coe_toDual_selfₓ'. -/
-theorem coe_toDual_self (i : ι) : b.toDual (b i) = b.Coord i :=
-  by
-  ext
-  apply to_dual_apply_right
+theorem coe_toDual_self (i : ι) : b.toDual (b i) = b.Coord i := by ext; apply to_dual_apply_right
 #align basis.coe_to_dual_self Basis.coe_toDual_self
 
 #print Basis.toDualFlip /-
@@ -524,10 +513,8 @@ def dualBasis : Basis ι R (Dual R M) :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.dual_basis_apply_self Basis.dualBasis_apply_selfₓ'. -/
 -- We use `j = i` to match `basis.repr_self`
-theorem dualBasis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 :=
-  by
-  convert b.to_dual_apply i j using 2
-  rw [@eq_comm _ j i]
+theorem dualBasis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1 else 0 := by
+  convert b.to_dual_apply i j using 2; rw [@eq_comm _ j i]
 #align basis.dual_basis_apply_self Basis.dualBasis_apply_self
 
 /- warning: basis.total_dual_basis -> Basis.total_dualBasis is a dubious translation:
@@ -541,8 +528,7 @@ theorem total_dualBasis (f : ι →₀ R) (i : ι) :
   ·
     simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
       if_pos (Finset.mem_univ i)]
-  · intro
-    rw [zero_smul]
+  · intro ; rw [zero_smul]
 #align basis.total_dual_basis Basis.total_dualBasis
 
 /- warning: basis.dual_basis_repr -> Basis.dualBasis_repr is a dubious translation:
@@ -561,10 +547,7 @@ theorem dualBasis_apply (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
 
 #print Basis.coe_dualBasis /-
 @[simp]
-theorem coe_dualBasis : ⇑b.dualBasis = b.Coord :=
-  by
-  ext (i x)
-  apply dual_basis_apply
+theorem coe_dualBasis : ⇑b.dualBasis = b.Coord := by ext (i x); apply dual_basis_apply
 #align basis.coe_dual_basis Basis.coe_dualBasis
 -/
 
@@ -652,10 +635,8 @@ Case conversion may be inaccurate. Consider using '#align basis.total_coord Basi
 /-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
 theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : Basis ι R M)
-    (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i :=
-  by
-  haveI := Classical.decEq ι
-  rw [← coe_dual_basis, total_dual_basis]
+    (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i := by
+  haveI := Classical.decEq ι; rw [← coe_dual_basis, total_dual_basis]
 #align basis.total_coord Basis.total_coord
 
 /- warning: basis.dual_rank_eq -> Basis.dual_rank_eq is a dubious translation:
@@ -737,10 +718,8 @@ lean 3 declaration is
 but is expected to have type
   forall (K : Type.{u1}) {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] (v : V), Iff (forall (φ : Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3), Eq.{succ u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Module.Dual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) V (fun (_x : V) => (fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) _x) (Module.Dual.instFunLikeDual.{u1, u2} K V (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) φ v) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (CommMonoidWithZero.toZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (CommGroupWithZero.toCommMonoidWithZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (Semifield.toCommGroupWithZero.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) (Field.toSemifield.{u1} ((fun (x._@.Mathlib.LinearAlgebra.Dual._hyg.172 : V) => K) v) _inst_1))))))) (Eq.{succ u2} V v (OfNat.ofNat.{u2} V 0 (Zero.toOfNat0.{u2} V (NegZeroClass.toZero.{u2} V (SubNegZeroMonoid.toNegZeroClass.{u2} V (SubtractionMonoid.toSubNegZeroMonoid.{u2} V (SubtractionCommMonoid.toSubtractionMonoid.{u2} V (AddCommGroup.toDivisionAddCommMonoid.{u2} V _inst_2))))))))
 Case conversion may be inaccurate. Consider using '#align module.forall_dual_apply_eq_zero_iff Module.forall_dual_apply_eq_zero_iffₓ'. -/
-theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v = 0) ↔ v = 0 :=
-  by
-  rw [← eval_apply_eq_zero_iff K v, LinearMap.ext_iff]
-  rfl
+theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v = 0) ↔ v = 0 := by
+  rw [← eval_apply_eq_zero_iff K v, LinearMap.ext_iff]; rfl
 #align module.forall_dual_apply_eq_zero_iff Module.forall_dual_apply_eq_zero_iff
 
 end
@@ -767,9 +746,7 @@ variable (K V)
 def evalEquiv [FiniteDimensional K V] : V ≃ₗ[K] Dual K (Dual K V) :=
   LinearEquiv.ofBijective
     (eval K V)-- 60x faster elaboration than using `ker_eq_bot.mp eval_ker` directly:
-    ⟨by
-      rw [← ker_eq_bot]
-      apply eval_ker K V, range_eq_top.mp erange_coe⟩
+    ⟨by rw [← ker_eq_bot]; apply eval_ker K V, range_eq_top.mp erange_coe⟩
 #align module.eval_equiv Module.evalEquiv
 -/
 
@@ -860,9 +837,7 @@ def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R
     where
   toFun i := ε i m
   support := (h.Finite m).toFinset
-  mem_support_toFun := by
-    intro i
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  mem_support_toFun := by intro i; rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
 #align module.dual_bases.coeffs Module.DualBases.coeffs
 
 /- warning: module.dual_bases.coeffs_apply -> Module.DualBases.coeffs_apply is a dubious translation:
@@ -929,9 +904,7 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {ι : Type.{u3}} [_inst_1 : CommRing.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {e : ι -> M} {ε : ι -> (Module.Dual.{u2, u1} R M (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3)} [_inst_4 : DecidableEq.{succ u3} ι] (h : Module.DualBases.{u2, u1, u3} R M ι (CommRing.toCommSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3 (fun (a : ι) (b : ι) => _inst_4 a b) e ε) (l : Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))), Eq.{max (succ u2) (succ u3)} (Finsupp.{u3, u2} ι R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (Module.DualBases.coeffs.{u2, u1, u3} R M ι _inst_1 _inst_2 _inst_3 e ε (fun (a : ι) (b : ι) => _inst_4 a b) h (Module.DualBases.lc.{u2, u1, u3} R M _inst_1 _inst_2 _inst_3 ι e l)) l
 Case conversion may be inaccurate. Consider using '#align module.dual_bases.coeffs_lc Module.DualBases.coeffs_lcₓ'. -/
 @[simp]
-theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualBases.lc e l) = l :=
-  by
-  ext i
+theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualBases.lc e l) = l := by ext i;
   rw [h.coeffs_apply, h.dual_lc]
 #align module.dual_bases.coeffs_lc Module.DualBases.coeffs_lc
 
@@ -959,12 +932,8 @@ def basis : Basis ι R M :=
       invFun := lc e
       left_inv := lc_coeffs h
       right_inv := coeffs_lc h
-      map_add' := fun v w => by
-        ext i
-        exact (ε i).map_add v w
-      map_smul' := fun c v => by
-        ext i
-        exact (ε i).map_smul c v }
+      map_add' := fun v w => by ext i; exact (ε i).map_add v w
+      map_smul' := fun c v => by ext i; exact (ε i).map_smul c v }
 #align module.dual_bases.basis Module.DualBases.basis
 -/
 
@@ -976,9 +945,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align module.dual_bases.coe_basis Module.DualBases.coe_basisₓ'. -/
 @[simp]
 theorem coe_basis : ⇑h.Basis = e := by
-  ext i
-  rw [Basis.apply_eq_iff]
-  ext j
+  ext i; rw [Basis.apply_eq_iff]; ext j
   rw [h.basis_repr_apply, coeffs_apply, h.eval, Finsupp.single_apply]
   convert if_congr eq_comm rfl rfl
 #align module.dual_bases.coe_basis Module.DualBases.coe_basis
@@ -1269,12 +1236,8 @@ theorem dualAnnihilator_dualCoannihilator_eq {W : Subspace K V} :
   intro hv
   obtain ⟨W', hW⟩ := Submodule.exists_isCompl W
   obtain ⟨⟨w, w'⟩, rfl, -⟩ := exists_unique_add_of_is_compl_prod hW v
-  have hw'n : (w' : V) ∉ W := by
-    contrapose! hv
-    exact Submodule.add_mem W w.2 hv
-  have hw'nz : w' ≠ 0 := by
-    rintro rfl
-    exact hw'n (Submodule.zero_mem W)
+  have hw'n : (w' : V) ∉ W := by contrapose! hv; exact Submodule.add_mem W w.2 hv
+  have hw'nz : w' ≠ 0 := by rintro rfl; exact hw'n (Submodule.zero_mem W)
   rw [Ne.def, ← Module.forall_dual_apply_eq_zero_iff K w'] at hw'nz
   push_neg  at hw'nz
   obtain ⟨φ, hφ⟩ := hw'nz
@@ -1324,8 +1287,7 @@ theorem dualAnnihilator_inj {W W' : Subspace K V} :
   by
   constructor
   · apply (dual_annihilator_gci K V).l_injective
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align subspace.dual_annihilator_inj Subspace.dualAnnihilator_inj
 -/
 
@@ -1345,10 +1307,8 @@ variable {W : Subspace K V}
 <too large>
 Case conversion may be inaccurate. Consider using '#align subspace.dual_lift_of_subtype Subspace.dualLift_of_subtypeₓ'. -/
 @[simp]
-theorem dualLift_of_subtype {φ : Module.Dual K W} (w : W) : W.dualLift φ (w : V) = φ w :=
-  by
-  erw [of_is_compl_left_apply _ w]
-  rfl
+theorem dualLift_of_subtype {φ : Module.Dual K W} (w : W) : W.dualLift φ (w : V) = φ w := by
+  erw [of_is_compl_left_apply _ w]; rfl
 #align subspace.dual_lift_of_subtype Subspace.dualLift_of_subtype
 
 /- warning: subspace.dual_lift_of_mem -> Subspace.dualLift_of_mem is a dubious translation:
@@ -1360,10 +1320,8 @@ theorem dualLift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLi
 
 #print Subspace.dualRestrict_comp_dualLift /-
 @[simp]
-theorem dualRestrict_comp_dualLift (W : Subspace K V) : W.dualRestrict.comp W.dualLift = 1 :=
-  by
-  ext (φ x)
-  simp
+theorem dualRestrict_comp_dualLift (W : Subspace K V) : W.dualRestrict.comp W.dualLift = 1 := by
+  ext (φ x); simp
 #align subspace.dual_restrict_comp_dual_lift Subspace.dualRestrict_comp_dualLift
 -/
 
@@ -1372,10 +1330,7 @@ theorem dualRestrict_comp_dualLift (W : Subspace K V) : W.dualRestrict.comp W.du
 Case conversion may be inaccurate. Consider using '#align subspace.dual_restrict_left_inverse Subspace.dualRestrict_leftInverseₓ'. -/
 theorem dualRestrict_leftInverse (W : Subspace K V) :
     Function.LeftInverse W.dualRestrict W.dualLift := fun x =>
-  show W.dualRestrict.comp W.dualLift x = x
-    by
-    rw [dual_restrict_comp_dual_lift]
-    rfl
+  show W.dualRestrict.comp W.dualLift x = x by rw [dual_restrict_comp_dual_lift]; rfl
 #align subspace.dual_restrict_left_inverse Subspace.dualRestrict_leftInverse
 
 /- warning: subspace.dual_lift_right_inverse -> Subspace.dualLift_rightInverse is a dubious translation:
@@ -1415,10 +1370,7 @@ noncomputable def quotAnnihilatorEquiv (W : Subspace K V) :
 Case conversion may be inaccurate. Consider using '#align subspace.quot_annihilator_equiv_apply Subspace.quotAnnihilatorEquiv_applyₓ'. -/
 @[simp]
 theorem quotAnnihilatorEquiv_apply (W : Subspace K V) (φ : Module.Dual K V) :
-    W.quotAnnihilatorEquiv (Submodule.Quotient.mk φ) = W.dualRestrict φ :=
-  by
-  ext
-  rfl
+    W.quotAnnihilatorEquiv (Submodule.Quotient.mk φ) = W.dualRestrict φ := by ext; rfl
 #align subspace.quot_annihilator_equiv_apply Subspace.quotAnnihilatorEquiv_apply
 
 #print Subspace.dualEquivDual /-
@@ -1570,10 +1522,7 @@ See `subspace.dual_copairing_nondegenerate`. -/
 def dualCopairing (W : Submodule R M) : W.dualAnnihilator →ₗ[R] M ⧸ W →ₗ[R] R :=
   LinearMap.flip <|
     W.liftQ ((Module.dualPairing R M).domRestrict W.dualAnnihilator).flip
-      (by
-        intro w hw
-        ext ⟨φ, hφ⟩
-        exact (mem_dual_annihilator φ).mp hφ w hw)
+      (by intro w hw; ext ⟨φ, hφ⟩; exact (mem_dual_annihilator φ).mp hφ w hw)
 #align submodule.dual_copairing Submodule.dualCopairing
 -/
 
@@ -1636,13 +1585,7 @@ def dualQuotEquivDualAnnihilator (W : Submodule R M) :
   LinearEquiv.ofLinear
     (W.mkQ.dualMap.codRestrict W.dualAnnihilator fun φ =>
       W.range_dualMap_mkQ_eq ▸ W.mkQ.dualMap.mem_range_self φ)
-    W.dualCopairing
-    (by
-      ext
-      rfl)
-    (by
-      ext
-      rfl)
+    W.dualCopairing (by ext; rfl) (by ext; rfl)
 #align submodule.dual_quot_equiv_dual_annihilator Submodule.dualQuotEquivDualAnnihilator
 -/
 
@@ -1776,9 +1719,7 @@ open Submodule
 
 #print Subspace.dualPairing_eq /-
 theorem dualPairing_eq (W : Subspace K V₁) : W.dualPairing = W.quotAnnihilatorEquiv.toLinearMap :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align subspace.dual_pairing_eq Subspace.dualPairing_eq
 -/
 

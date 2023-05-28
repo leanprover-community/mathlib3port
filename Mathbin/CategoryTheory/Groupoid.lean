@@ -108,9 +108,7 @@ def Groupoid.invEquiv : (X ⟶ Y) ≃ (Y ⟶ X) :=
 instance (priority := 100) groupoidHasInvolutiveReverse : Quiver.HasInvolutiveReverse C
     where
   reverse' X Y f := Groupoid.inv f
-  inv' X Y f := by
-    dsimp [Quiver.reverse]
-    simp
+  inv' X Y f := by dsimp [Quiver.reverse]; simp
 #align category_theory.groupoid_has_involutive_reverse CategoryTheory.groupoidHasInvolutiveReverse
 -/
 

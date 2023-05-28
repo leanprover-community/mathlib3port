@@ -47,8 +47,7 @@ noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (P q : K[X] ⟶ _) (𝟙
         (Homotopy.trans
           (Homotopy.add (homotopy_P_to_id q) (Homotopy.compLeft (homotopy_Hσ_to_zero q) (P q)))
           (Homotopy.ofEq _))
-    · unfold P
-      simp only [comp_add, comp_id]
+    · unfold P; simp only [comp_add, comp_id]
     · simp only [add_zero, comp_zero]
 #align algebraic_topology.dold_kan.homotopy_P_to_id AlgebraicTopology.DoldKan.homotopyPToId
 -/

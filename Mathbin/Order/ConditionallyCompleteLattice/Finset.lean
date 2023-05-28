@@ -82,10 +82,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α s) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.toSet.{u1} α s)) s)
 Case conversion may be inaccurate. Consider using '#align finset.nonempty.cSup_mem Finset.Nonempty.cSup_memₓ'. -/
-theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : sSup (s : Set α) ∈ s :=
-  by
-  rw [h.cSup_eq_max']
-  exact s.max'_mem _
+theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : sSup (s : Set α) ∈ s := by
+  rw [h.cSup_eq_max']; exact s.max'_mem _
 #align finset.nonempty.cSup_mem Finset.Nonempty.cSup_mem
 
 /- warning: finset.nonempty.cInf_mem -> Finset.Nonempty.cInf_mem is a dubious translation:
@@ -104,10 +102,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (Set.Finite.{u1} α s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s) s)
 Case conversion may be inaccurate. Consider using '#align set.nonempty.cSup_mem Set.Nonempty.cSup_memₓ'. -/
-theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : sSup s ∈ s :=
-  by
-  lift s to Finset α using hs
-  exact Finset.Nonempty.cSup_mem h
+theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : sSup s ∈ s := by
+  lift s to Finset α using hs; exact Finset.Nonempty.cSup_mem h
 #align set.nonempty.cSup_mem Set.Nonempty.cSup_mem
 
 /- warning: set.nonempty.cInf_mem -> Set.Nonempty.cInf_mem is a dubious translation:

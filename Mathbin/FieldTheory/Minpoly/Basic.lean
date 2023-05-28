@@ -65,10 +65,7 @@ but is expected to have type
   forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : Ring.{u1} B] [_inst_4 : Algebra.{u2, u1} A B (CommRing.toCommSemiring.{u2} A _inst_1) (Ring.toSemiring.{u1} B _inst_2)] {x : B}, (IsIntegral.{u2, u1} A B _inst_1 _inst_2 _inst_4 x) -> (Polynomial.Monic.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)) (minpoly.{u2, u1} A B _inst_1 _inst_2 _inst_4 x))
 Case conversion may be inaccurate. Consider using '#align minpoly.monic minpoly.monicₓ'. -/
 /-- A minimal polynomial is monic. -/
-theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) :=
-  by
-  delta minpoly
-  rw [dif_pos hx]
+theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) := by delta minpoly; rw [dif_pos hx];
   exact (degree_lt_wf.min_mem _ hx).1
 #align minpoly.monic minpoly.monic
 
@@ -144,8 +141,7 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : 
     (minpoly A x).map f ≠ 1 := by
   by_cases hx : IsIntegral A x
   · exact mt ((monic hx).eq_one_of_map_eq_one f) (ne_one A x)
-  · rw [eq_zero hx, Polynomial.map_zero]
-    exact zero_ne_one
+  · rw [eq_zero hx, Polynomial.map_zero]; exact zero_ne_one
 #align minpoly.map_ne_one minpoly.map_ne_one
 
 /- warning: minpoly.not_is_unit -> minpoly.not_isUnit is a dubious translation:
@@ -160,8 +156,7 @@ theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases hx : IsIntegral A x
   · exact mt (monic hx).eq_one_of_isUnit (ne_one A x)
-  · rw [eq_zero hx]
-    exact not_isUnit_zero
+  · rw [eq_zero hx]; exact not_isUnit_zero
 #align minpoly.not_is_unit minpoly.not_isUnit
 
 /- warning: minpoly.mem_range_of_degree_eq_one -> minpoly.mem_range_of_degree_eq_one is a dubious translation:
@@ -202,18 +197,14 @@ theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
   by
   nontriviality A
   have hx : IsIntegral A x := ⟨p, hm, hp⟩
-  obtain h | h := hl _ ((minpoly A x).degree_modByMonic_lt hm)
-  swap
+  obtain h | h := hl _ ((minpoly A x).degree_modByMonic_lt hm); swap
   · exact (h <| (aeval_mod_by_monic_eq_self_of_root hm hp).trans <| aeval A x).elim
   obtain ⟨r, hr⟩ := (dvd_iff_mod_by_monic_eq_zero hm).1 h
-  rw [hr]
-  have hlead := congr_arg leading_coeff hr
+  rw [hr]; have hlead := congr_arg leading_coeff hr
   rw [mul_comm, leading_coeff_mul_monic hm, (monic hx).leadingCoeff] at hlead
   have : nat_degree r ≤ 0 :=
     by
-    have hr0 : r ≠ 0 := by
-      rintro rfl
-      exact NeZero hx (MulZeroClass.mul_zero p ▸ hr)
+    have hr0 : r ≠ 0 := by rintro rfl; exact NeZero hx (MulZeroClass.mul_zero p ▸ hr)
     apply_fun nat_degree  at hr
     rw [hm.nat_degree_mul' hr0] at hr
     apply Nat.le_of_add_le_add_left
@@ -256,8 +247,7 @@ theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minp
   intro ndeg_eq_zero
   have eq_one : minpoly A x = 1 :=
     by
-    rw [eq_C_of_nat_degree_eq_zero ndeg_eq_zero]
-    convert C_1
+    rw [eq_C_of_nat_degree_eq_zero ndeg_eq_zero]; convert C_1
     simpa only [ndeg_eq_zero.symm] using (monic hx).leadingCoeff
   simpa only [eq_one, AlgHom.map_one, one_ne_zero] using aeval A x
 #align minpoly.nat_degree_pos minpoly.natDegree_pos

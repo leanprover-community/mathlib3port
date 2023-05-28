@@ -1002,15 +1002,13 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
     iInf_sup_le_sup_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [bot_sup_eq, ← sInf_eq_iInf]
-        exact le_rfl
+      · simp only [bot_sup_eq, ← sInf_eq_iInf]; exact le_rfl
       · simp only [top_sup_eq, le_top]
     inf_sup_le_iSup_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
-      · simp only [top_inf_eq, ← sSup_eq_iSup]
-        exact le_rfl }
+      · simp only [top_inf_eq, ← sSup_eq_iSup]; exact le_rfl }
 #align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebra
 
 end IsSimpleOrder
@@ -1102,9 +1100,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] (f : OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))), (Eq.{succ u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) f (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Bot.bot.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (OrderBot.toBot.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) b) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) b) _inst_1) _inst_3 (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) f b)) -> (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align order_embedding.is_atom_of_map_bot_of_image OrderEmbedding.isAtom_of_map_bot_of_imageₓ'. -/
 theorem isAtom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) (hbot : f ⊥ = ⊥) {b : β}
-    (hb : IsAtom (f b)) : IsAtom b :=
-  by
-  simp only [← bot_covby_iff] at hb⊢
+    (hb : IsAtom (f b)) : IsAtom b := by simp only [← bot_covby_iff] at hb⊢;
   exact Covby.of_image f (hbot.symm ▸ hb)
 #align order_embedding.is_atom_of_map_bot_of_image OrderEmbedding.isAtom_of_map_bot_of_image
 
@@ -1440,10 +1436,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.is_atom_iff Set.isAtom_iffₓ'. -/
 theorem isAtom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} :=
   by
-  refine'
-    ⟨_, by
-      rintro ⟨x, rfl⟩
-      exact is_atom_singleton x⟩
+  refine' ⟨_, by rintro ⟨x, rfl⟩; exact is_atom_singleton x⟩
   rw [isAtom_iff, bot_eq_empty, ← nonempty_iff_ne_empty]
   rintro ⟨⟨x, hx⟩, hs⟩
   exact
@@ -1474,18 +1467,14 @@ theorem isCoatom_singleton_compl (x : α) : IsCoatom ({x}ᶜ : Set α) :=
 
 instance : IsAtomistic (Set α)
     where eq_sSup_atoms s :=
-    ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton],
-      by
-      rintro - ⟨x, hx, rfl⟩
-      exact is_atom_singleton x⟩
+    ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton], by
+      rintro - ⟨x, hx, rfl⟩; exact is_atom_singleton x⟩
 
 instance : IsCoatomistic (Set α)
     where eq_sInf_coatoms s :=
     ⟨(fun x => {x}ᶜ) '' sᶜ, by
-      rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl],
-      by
-      rintro - ⟨x, hx, rfl⟩
-      exact is_coatom_singleton_compl x⟩
+      rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl], by
+      rintro - ⟨x, hx, rfl⟩; exact is_coatom_singleton_compl x⟩
 
 end Set
 

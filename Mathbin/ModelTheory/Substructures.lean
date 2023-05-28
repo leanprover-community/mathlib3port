@@ -1219,9 +1219,7 @@ theorem coe_withConstants : (S.withConstants h : Set M) = ↑S :=
 Case conversion may be inaccurate. Consider using '#align first_order.language.substructure.reduct_with_constants FirstOrder.Language.Substructure.reduct_withConstantsₓ'. -/
 @[simp]
 theorem reduct_withConstants : (L.lhomWithConstants A).substructureReduct (S.withConstants h) = S :=
-  by
-  ext
-  simp
+  by ext; simp
 #align first_order.language.substructure.reduct_with_constants FirstOrder.Language.Substructure.reduct_withConstants
 
 #print FirstOrder.Language.Substructure.subset_closure_withConstants /-
@@ -1334,10 +1332,7 @@ lean 3 declaration is
 but is expected to have type
   forall {L : FirstOrder.Language.{u2, u3}} {M : Type.{u4}} {N : Type.{u1}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] [_inst_2 : FirstOrder.Language.Structure.{u2, u3, u1} L N] (f : FirstOrder.Language.Hom.{u2, u3, u4, u1} L M N _inst_1 _inst_2), Eq.{succ u1} (FirstOrder.Language.Substructure.{u2, u3, u1} L N _inst_2) (FirstOrder.Language.Hom.range.{u2, u3, u4, u1} L M N _inst_1 _inst_2 f) (FirstOrder.Language.Substructure.map.{u2, u3, u4, u1} L M N _inst_1 _inst_2 f (Top.top.{u4} (FirstOrder.Language.Substructure.{u2, u3, u4} L M _inst_1) (FirstOrder.Language.Substructure.instTop.{u2, u3, u4} L M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align first_order.language.hom.range_eq_map FirstOrder.Language.Hom.range_eq_mapₓ'. -/
-theorem range_eq_map (f : M →[L] N) : f.range = map f ⊤ :=
-  by
-  ext
-  simp
+theorem range_eq_map (f : M →[L] N) : f.range = map f ⊤ := by ext; simp
 #align first_order.language.hom.range_eq_map FirstOrder.Language.Hom.range_eq_map
 
 /- warning: first_order.language.hom.mem_range_self -> FirstOrder.Language.Hom.mem_range_self is a dubious translation:
@@ -1414,10 +1409,7 @@ def eqLocus (f g : M →[L] N) : Substructure L M
   carrier := { x : M | f x = g x }
   fun_mem n fn x hx :=
     by
-    have h : f ∘ x = g ∘ x := by
-      ext
-      repeat' rw [Function.comp_apply]
-      apply hx
+    have h : f ∘ x = g ∘ x := by ext; repeat' rw [Function.comp_apply]; apply hx
     simp [h]
 #align first_order.language.hom.eq_locus FirstOrder.Language.Hom.eqLocus
 -/

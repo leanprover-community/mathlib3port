@@ -58,18 +58,13 @@ theorem char_one (V : FdRep k G) : V.character 1 = FiniteDimensional.finrank k V
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The character is multiplicative under the tensor product. -/
 @[simp]
-theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character :=
-  by
-  ext g
+theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character := by ext g;
   convert trace_tensor_product' (V.ρ g) (W.ρ g)
 #align fdRep.char_tensor FdRep.char_tensor
 
 /-- The character of isomorphic representations is the same. -/
-theorem char_iso {V W : FdRep k G} (i : V ≅ W) : V.character = W.character :=
-  by
-  ext g
-  simp only [character, FdRep.Iso.conj_ρ i]
-  exact (trace_conj' (V.ρ g) _).symm
+theorem char_iso {V W : FdRep k G} (i : V ≅ W) : V.character = W.character := by ext g;
+  simp only [character, FdRep.Iso.conj_ρ i]; exact (trace_conj' (V.ρ g) _).symm
 #align fdRep.char_iso FdRep.char_iso
 
 end Monoid
@@ -98,10 +93,8 @@ theorem char_linHom (V W : FdRep k G) (g : G) :
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) :=
-  by
-  rw [← (is_proj_average_map V.ρ).trace]
-  simp [character, GroupAlgebra.average, _root_.map_sum]
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+  rw [← (is_proj_average_map V.ρ).trace]; simp [character, GroupAlgebra.average, _root_.map_sum]
 #align fdRep.average_char_eq_finrank_invariants FdRep.average_char_eq_finrank_invariants
 
 end Group

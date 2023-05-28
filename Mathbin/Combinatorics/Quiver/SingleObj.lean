@@ -159,20 +159,13 @@ def listToPath : List α → Path (star α) (star α)
 
 #print Quiver.SingleObj.listToPath_pathToList /-
 theorem listToPath_pathToList {x : SingleObj α} (p : Path (star α) x) :
-    listToPath (pathToList p) = p.cast rfl Unit.ext :=
-  by
-  induction' p with y z p a ih
-  rfl
-  tidy
+    listToPath (pathToList p) = p.cast rfl Unit.ext := by induction' p with y z p a ih; rfl; tidy
 #align quiver.single_obj.path_to_list_to_path Quiver.SingleObj.listToPath_pathToList
 -/
 
 #print Quiver.SingleObj.pathToList_listToPath /-
-theorem pathToList_listToPath (l : List α) : pathToList (listToPath l) = l :=
-  by
-  induction' l with a l ih
-  rfl
-  simp [ih]
+theorem pathToList_listToPath (l : List α) : pathToList (listToPath l) = l := by
+  induction' l with a l ih; rfl; simp [ih]
 #align quiver.single_obj.list_to_path_to_list Quiver.SingleObj.pathToList_listToPath
 -/
 

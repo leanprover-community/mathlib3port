@@ -134,10 +134,7 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
   by
   obtain ⟨ev, bi, bu, hF⟩ :=
     @denomsClearable_natDegree _ _ _ _ b _ (algebraMap ℤ K) f a
-      (by
-        rw [eq_intCast, one_div_mul_cancel]
-        rw [Int.cast_ne_zero]
-        exact b0.ne.symm)
+      (by rw [eq_intCast, one_div_mul_cancel]; rw [Int.cast_ne_zero]; exact b0.ne.symm)
   obtain Fa := congr_arg abs hF
   rw [eq_one_div_of_mul_eq_one_left bu, eq_intCast, eq_intCast, abs_mul] at Fa
   rw [abs_of_pos (pow_pos (int.cast_pos.mpr b0) _ : 0 < (b : K) ^ _), one_div, eq_intCast] at Fa

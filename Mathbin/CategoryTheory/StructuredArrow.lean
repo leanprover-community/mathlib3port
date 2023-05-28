@@ -122,9 +122,7 @@ def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫
     f ⟶ f' where
   left := eqToHom (by ext)
   right := g
-  w' := by
-    dsimp
-    simpa using w.symm
+  w' := by dsimp; simpa using w.symm
 #align category_theory.structured_arrow.hom_mk CategoryTheory.StructuredArrow.homMk
 
 /- warning: category_theory.structured_arrow.hom_mk' -> CategoryTheory.StructuredArrow.homMk' is a dubious translation:
@@ -204,11 +202,7 @@ instance epi_homMk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h 
 #print CategoryTheory.StructuredArrow.eq_mk /-
 /-- Eta rule for structured arrows. Prefer `structured_arrow.eta`, since equality of objects tends
     to cause problems. -/
-theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom :=
-  by
-  cases f
-  congr
-  ext
+theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by cases f; congr ; ext
 #align category_theory.structured_arrow.eq_mk CategoryTheory.StructuredArrow.eq_mk
 -/
 
@@ -253,10 +247,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {S : D} {T : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {f : CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T}, Eq.{max (succ u3) (succ u2)} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (Prefunctor.obj.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u2 u3, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryStructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T))) (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryStructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u2 u3, max u2 u3} (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryStructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.StructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryStructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.StructuredArrow.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 S S T (CategoryTheory.CategoryStruct.id.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2) S))) f) f
 Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.map_id CategoryTheory.StructuredArrow.map_idₓ'. -/
 @[simp]
-theorem map_id {f : StructuredArrow S T} : (map (𝟙 S)).obj f = f :=
-  by
-  rw [eq_mk f]
-  simp
+theorem map_id {f : StructuredArrow S T} : (map (𝟙 S)).obj f = f := by rw [eq_mk f]; simp
 #align category_theory.structured_arrow.map_id CategoryTheory.StructuredArrow.map_id
 
 /- warning: category_theory.structured_arrow.map_comp -> CategoryTheory.StructuredArrow.map_comp is a dubious translation:
@@ -267,10 +258,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.structured_arrow.map_comp CategoryTheory.StructuredArrow.map_compₓ'. -/
 @[simp]
 theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
-    (map (f ≫ f')).obj h = (map f).obj ((map f').obj h) :=
-  by
-  rw [eq_mk h]
-  simp
+    (map (f ≫ f')).obj h = (map f).obj ((map f').obj h) := by rw [eq_mk h]; simp
 #align category_theory.structured_arrow.map_comp CategoryTheory.StructuredArrow.map_comp
 
 #print CategoryTheory.StructuredArrow.proj_reflectsIsomorphisms /-
@@ -293,11 +281,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.struct
 /-- The identity structured arrow is initial. -/
 def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y)))
     where
-  desc c :=
-    homMk (T.preimage c.pt.Hom)
-      (by
-        dsimp
-        simp)
+  desc c := homMk (T.preimage c.pt.Hom) (by dsimp; simp)
   uniq c m _ := by
     ext
     apply T.map_injective
@@ -337,9 +321,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.struct
 instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2
-    by
-    rw [this]
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2 by rw [this];
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 #align category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locallySmall
@@ -497,11 +479,7 @@ instance epi_homMk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h 
 #print CategoryTheory.CostructuredArrow.eq_mk /-
 /-- Eta rule for costructured arrows. Prefer `costructured_arrow.eta`, as equality of objects tends
     to cause problems. -/
-theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom :=
-  by
-  cases f
-  congr
-  ext
+theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by cases f; congr ; ext
 #align category_theory.costructured_arrow.eq_mk CategoryTheory.CostructuredArrow.eq_mk
 -/
 
@@ -546,10 +524,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {T : D} {S : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {f : CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T}, Eq.{max (succ u3) (succ u2)} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (Prefunctor.obj.{max (succ u2) (succ u1), max (succ u2) (succ u1), max u2 u3, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryCostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T))) (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryCostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T))) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, max u2 u1, max u2 u3, max u2 u3} (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryCostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.instCategoryCostructuredArrow.{u1, u2, u3, u4} C _inst_1 D _inst_2 S T) (CategoryTheory.CostructuredArrow.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 T T S (CategoryTheory.CategoryStruct.id.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2) T))) f) f
 Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.map_id CategoryTheory.CostructuredArrow.map_idₓ'. -/
 @[simp]
-theorem map_id {f : CostructuredArrow S T} : (map (𝟙 T)).obj f = f :=
-  by
-  rw [eq_mk f]
-  simp
+theorem map_id {f : CostructuredArrow S T} : (map (𝟙 T)).obj f = f := by rw [eq_mk f]; simp
 #align category_theory.costructured_arrow.map_id CategoryTheory.CostructuredArrow.map_id
 
 /- warning: category_theory.costructured_arrow.map_comp -> CategoryTheory.CostructuredArrow.map_comp is a dubious translation:
@@ -560,10 +535,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.costructured_arrow.map_comp CategoryTheory.CostructuredArrow.map_compₓ'. -/
 @[simp]
 theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
-    (map (f ≫ f')).obj h = (map f').obj ((map f).obj h) :=
-  by
-  rw [eq_mk h]
-  simp
+    (map (f ≫ f')).obj h = (map f').obj ((map f).obj h) := by rw [eq_mk h]; simp
 #align category_theory.costructured_arrow.map_comp CategoryTheory.CostructuredArrow.map_comp
 
 #print CategoryTheory.CostructuredArrow.proj_reflectsIsomorphisms /-
@@ -586,11 +558,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.costru
 /-- The identity costructured arrow is terminal. -/
 def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y)))
     where
-  lift c :=
-    homMk (S.preimage c.pt.Hom)
-      (by
-        dsimp
-        simp)
+  lift c := homMk (S.preimage c.pt.Hom) (by dsimp; simp)
   uniq := by
     rintro c m -
     ext
@@ -632,9 +600,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.costru
 instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2
-    by
-    rw [this]
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2 by rw [this];
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 #align category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locallySmall

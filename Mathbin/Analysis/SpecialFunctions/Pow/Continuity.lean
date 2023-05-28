@@ -47,10 +47,7 @@ Case conversion may be inaccurate. Consider using '#align zero_cpow_eq_nhds zero
 theorem zero_cpow_eq_nhds {b : ℂ} (hb : b ≠ 0) : (fun x : ℂ => (0 : ℂ) ^ x) =ᶠ[𝓝 b] 0 :=
   by
   suffices : ∀ᶠ x : ℂ in 𝓝 b, x ≠ 0
-  exact
-    this.mono fun x hx => by
-      dsimp only
-      rw [zero_cpow hx, Pi.zero_apply]
+  exact this.mono fun x hx => by dsimp only; rw [zero_cpow hx, Pi.zero_apply]
   exact IsOpen.eventually_mem isOpen_ne hb
 #align zero_cpow_eq_nhds zero_cpow_eq_nhds
 
@@ -63,10 +60,7 @@ Case conversion may be inaccurate. Consider using '#align cpow_eq_nhds cpow_eq_n
 theorem cpow_eq_nhds {a b : ℂ} (ha : a ≠ 0) : (fun x => x ^ b) =ᶠ[𝓝 a] fun x => exp (log x * b) :=
   by
   suffices : ∀ᶠ x : ℂ in 𝓝 a, x ≠ 0
-  exact
-    this.mono fun x hx => by
-      dsimp only
-      rw [cpow_def_of_ne_zero hx]
+  exact this.mono fun x hx => by dsimp only; rw [cpow_def_of_ne_zero hx]
   exact IsOpen.eventually_mem isOpen_ne ha
 #align cpow_eq_nhds cpow_eq_nhds
 
@@ -80,10 +74,7 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) :
     (fun x => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
   by
   suffices : ∀ᶠ x : ℂ × ℂ in 𝓝 p, x.1 ≠ 0
-  exact
-    this.mono fun x hx => by
-      dsimp only
-      rw [cpow_def_of_ne_zero hx]
+  exact this.mono fun x hx => by dsimp only; rw [cpow_def_of_ne_zero hx]
   refine' IsOpen.eventually_mem _ hp_fst
   change IsOpen ({ x : ℂ × ℂ | x.1 = 0 }ᶜ)
   rw [isOpen_compl_iff]
@@ -99,9 +90,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_at_const_cp
 -- Continuity of `λ x, a ^ x`: union of these two lemmas is optimal.
 theorem continuousAt_const_cpow {a b : ℂ} (ha : a ≠ 0) : ContinuousAt (fun x => a ^ x) b :=
   by
-  have cpow_eq : (fun x : ℂ => a ^ x) = fun x => exp (log a * x) :=
-    by
-    ext1 b
+  have cpow_eq : (fun x : ℂ => a ^ x) = fun x => exp (log a * x) := by ext1 b;
     rw [cpow_def_of_ne_zero ha]
   rw [cpow_eq]
   exact continuous_exp.continuous_at.comp (ContinuousAt.mul continuousAt_const continuousAt_id)
@@ -116,8 +105,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_at_const_cp
 theorem continuousAt_const_cpow' {a b : ℂ} (h : b ≠ 0) : ContinuousAt (fun x => a ^ x) b :=
   by
   by_cases ha : a = 0
-  · rw [ha, continuousAt_congr (zero_cpow_eq_nhds h)]
-    exact continuousAt_const
+  · rw [ha, continuousAt_congr (zero_cpow_eq_nhds h)]; exact continuousAt_const
   · exact continuousAt_const_cpow ha
 #align continuous_at_const_cpow' continuousAt_const_cpow'
 
@@ -133,11 +121,8 @@ works for `z = 0` but assumes `0 < re w`. -/
 theorem continuousAt_cpow {p : ℂ × ℂ} (hp_fst : 0 < p.fst.re ∨ p.fst.im ≠ 0) :
     ContinuousAt (fun x : ℂ × ℂ => x.1 ^ x.2) p :=
   by
-  have hp_fst_ne_zero : p.fst ≠ 0 := by
-    intro h
-    cases hp_fst <;>
-      · rw [h] at hp_fst
-        simpa using hp_fst
+  have hp_fst_ne_zero : p.fst ≠ 0 := by intro h;
+    cases hp_fst <;> · rw [h] at hp_fst; simpa using hp_fst
   rw [continuousAt_congr (cpow_eq_nhds' hp_fst_ne_zero)]
   refine' continuous_exp.continuous_at.comp _
   refine'
@@ -301,10 +286,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.continuous_at_const_rpow Real.continuousAt_const_rpowₓ'. -/
 theorem continuousAt_const_rpow {a b : ℝ} (h : a ≠ 0) : ContinuousAt (rpow a) b :=
   by
-  have : rpow a = fun x : ℝ => ((a : ℂ) ^ (x : ℂ)).re :=
-    by
-    ext1 x
-    rw [rpow_eq_pow, rpow_def]
+  have : rpow a = fun x : ℝ => ((a : ℂ) ^ (x : ℂ)).re := by ext1 x; rw [rpow_eq_pow, rpow_def]
   rw [this]
   refine' complex.continuous_re.continuous_at.comp _
   refine' (continuousAt_const_cpow _).comp complex.continuous_of_real.continuous_at
@@ -320,10 +302,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.continuous_at_const_rpow' Real.continuousAt_const_rpow'ₓ'. -/
 theorem continuousAt_const_rpow' {a b : ℝ} (h : b ≠ 0) : ContinuousAt (rpow a) b :=
   by
-  have : rpow a = fun x : ℝ => ((a : ℂ) ^ (x : ℂ)).re :=
-    by
-    ext1 x
-    rw [rpow_eq_pow, rpow_def]
+  have : rpow a = fun x : ℝ => ((a : ℂ) ^ (x : ℂ)).re := by ext1 x; rw [rpow_eq_pow, rpow_def]
   rw [this]
   refine' complex.continuous_re.continuous_at.comp _
   refine' (continuousAt_const_cpow' _).comp complex.continuous_of_real.continuous_at
@@ -341,10 +320,7 @@ theorem rpow_eq_nhds_of_neg {p : ℝ × ℝ} (hp_fst : p.fst < 0) :
     (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) * cos (x.2 * π) :=
   by
   suffices : ∀ᶠ x : ℝ × ℝ in 𝓝 p, x.1 < 0
-  exact
-    this.mono fun x hx => by
-      dsimp only
-      rw [rpow_def_of_neg hx]
+  exact this.mono fun x hx => by dsimp only; rw [rpow_def_of_neg hx]
   exact IsOpen.eventually_mem (isOpen_lt continuous_fst continuous_const) hp_fst
 #align real.rpow_eq_nhds_of_neg Real.rpow_eq_nhds_of_neg
 
@@ -358,10 +334,7 @@ theorem rpow_eq_nhds_of_pos {p : ℝ × ℝ} (hp_fst : 0 < p.fst) :
     (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
   by
   suffices : ∀ᶠ x : ℝ × ℝ in 𝓝 p, 0 < x.1
-  exact
-    this.mono fun x hx => by
-      dsimp only
-      rw [rpow_def_of_pos hx]
+  exact this.mono fun x hx => by dsimp only; rw [rpow_def_of_pos hx]
   exact IsOpen.eventually_mem (isOpen_lt continuous_const continuous_fst) hp_fst
 #align real.rpow_eq_nhds_of_pos Real.rpow_eq_nhds_of_pos
 
@@ -835,8 +808,7 @@ theorem continuous_rpow_const {y : ℝ} : Continuous fun a : ℝ≥0∞ => a ^ y
   apply continuous_iff_continuousAt.2 fun x => _
   rcases lt_trichotomy 0 y with (hy | rfl | hy)
   · exact continuous_at_rpow_const_of_pos hy
-  · simp only [rpow_zero]
-    exact continuousAt_const
+  · simp only [rpow_zero]; exact continuousAt_const
   · obtain ⟨z, hz⟩ : ∃ z, y = -z := ⟨-y, (neg_neg _).symm⟩
     have z_pos : 0 < z := by simpa [hz] using hy
     simp_rw [hz, rpow_neg]

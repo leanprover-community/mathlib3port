@@ -268,9 +268,7 @@ theorem hasSum_fintype [Fintype β] (f : β → α) : HasSum f (∑ b, f b) :=
 
 #print Finset.hasSum /-
 protected theorem Finset.hasSum (s : Finset β) (f : β → α) :
-    HasSum (f ∘ coe : (↑s : Set β) → α) (∑ b in s, f b) :=
-  by
-  rw [← sum_attach]
+    HasSum (f ∘ coe : (↑s : Set β) → α) (∑ b in s, f b) := by rw [← sum_attach];
   exact hasSum_fintype _
 #align finset.has_sum Finset.hasSum
 -/
@@ -1152,9 +1150,7 @@ theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update 
       tsum_congr fun n => by split_ifs <;> simp [Function.update_apply, h]
     _ = (∑' x, ite (x = b) (f x) 0) + ∑' x, f.update b 0 x :=
       (tsum_add ⟨ite (b = b) (f b) 0, hasSum_single b fun b hb => if_neg hb⟩ hf)
-    _ = ite (b = b) (f b) 0 + ∑' x, f.update b 0 x :=
-      by
-      congr
+    _ = ite (b = b) (f b) 0 + ∑' x, f.update b 0 x := by congr ;
       exact tsum_eq_single b fun b' hb' => if_neg hb'
     _ = f b + ∑' x, ite (x = b) 0 (f x) := by
       simp only [Function.update, eq_self_iff_true, if_true, eq_rec_constant, dite_eq_ite]
@@ -1227,24 +1223,18 @@ theorem tsum_iSup_decode₂ [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0
     cases' decode₂ γ n with b
     · refine' (h <| by simp [m0]).elim
     · exact rfl
-  symm
-  refine' tsum_eq_tsum_of_ne_zero_bij (fun a => Option.get (H a.1 a.2)) _ _ _
+  symm; refine' tsum_eq_tsum_of_ne_zero_bij (fun a => Option.get (H a.1 a.2)) _ _ _
   · rintro ⟨m, hm⟩ ⟨n, hn⟩ e
     have := mem_decode₂.1 (Option.get_mem (H n hn))
     rwa [← e, mem_decode₂.1 (Option.get_mem (H m hm))] at this
   · intro b h
     refine' ⟨⟨encode b, _⟩, _⟩
-    · simp only [mem_support, encodek₂] at h⊢
-      convert h
-      simp [Set.ext_iff, encodek₂]
+    · simp only [mem_support, encodek₂] at h⊢; convert h; simp [Set.ext_iff, encodek₂]
     · exact Option.get_of_mem _ (encodek₂ _)
-  · rintro ⟨n, h⟩
-    dsimp only [Subtype.coe_mk]
-    trans
-    swap
+  · rintro ⟨n, h⟩; dsimp only [Subtype.coe_mk]
+    trans; swap
     rw [show decode₂ γ n = _ from Option.get_mem (H n h)]
-    congr
-    simp [ext_iff, -Option.some_get]
+    congr ; simp [ext_iff, -Option.some_get]
 #align tsum_supr_decode₂ tsum_iSup_decode₂
 
 /- warning: tsum_Union_decode₂ -> tsum_iUnion_decode₂ is a dubious translation:
@@ -1281,11 +1271,8 @@ Case conversion may be inaccurate. Consider using '#align rel_supr_tsum rel_iSup
 /-- If a function is countably sub-additive then it is sub-additive on countable types -/
 theorem rel_iSup_tsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : γ → β) :
-    R (m (⨆ b : γ, s b)) (∑' b : γ, m (s b)) :=
-  by
-  cases nonempty_encodable γ
-  rw [← supr_decode₂, ← tsum_iSup_decode₂ _ m0 s]
-  exact m_supr _
+    R (m (⨆ b : γ, s b)) (∑' b : γ, m (s b)) := by cases nonempty_encodable γ;
+  rw [← supr_decode₂, ← tsum_iSup_decode₂ _ m0 s]; exact m_supr _
 #align rel_supr_tsum rel_iSup_tsum
 
 /- warning: rel_supr_sum -> rel_iSup_sum is a dubious translation:
@@ -1297,9 +1284,7 @@ Case conversion may be inaccurate. Consider using '#align rel_supr_sum rel_iSup_
 /-- If a function is countably sub-additive then it is sub-additive on finite sets -/
 theorem rel_iSup_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : δ → β) (t : Finset δ) :
-    R (m (⨆ d ∈ t, s d)) (∑ d in t, m (s d)) :=
-  by
-  rw [iSup_subtype', ← Finset.tsum_subtype]
+    R (m (⨆ d ∈ t, s d)) (∑ d in t, m (s d)) := by rw [iSup_subtype', ← Finset.tsum_subtype];
   exact rel_iSup_tsum m m0 R m_supr _
 #align rel_supr_sum rel_iSup_sum
 
@@ -1422,9 +1407,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : AddCommGroup.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] [_inst_3 : TopologicalAddGroup.{u2} α _inst_2 (AddCommGroup.toAddGroup.{u2} α _inst_1)] {f : β -> α} {g : β -> α} {a₁ : α} {a₂ : α}, (HasSum.{u2, u1} α β (AddCommGroup.toAddCommMonoid.{u2} α _inst_1) _inst_2 f a₁) -> (HasSum.{u2, u1} α β (AddCommGroup.toAddCommMonoid.{u2} α _inst_1) _inst_2 g a₂) -> (HasSum.{u2, u1} α β (AddCommGroup.toAddCommMonoid.{u2} α _inst_1) _inst_2 (fun (b : β) => HSub.hSub.{u2, u2, u2} α α α (instHSub.{u2} α (SubNegMonoid.toSub.{u2} α (AddGroup.toSubNegMonoid.{u2} α (AddCommGroup.toAddGroup.{u2} α _inst_1)))) (f b) (g b)) (HSub.hSub.{u2, u2, u2} α α α (instHSub.{u2} α (SubNegMonoid.toSub.{u2} α (AddGroup.toSubNegMonoid.{u2} α (AddCommGroup.toAddGroup.{u2} α _inst_1)))) a₁ a₂))
 Case conversion may be inaccurate. Consider using '#align has_sum.sub HasSum.subₓ'. -/
 theorem HasSum.sub (hf : HasSum f a₁) (hg : HasSum g a₂) : HasSum (fun b => f b - g b) (a₁ - a₂) :=
-  by
-  simp only [sub_eq_add_neg]
-  exact hf.add hg.neg
+  by simp only [sub_eq_add_neg]; exact hf.add hg.neg
 #align has_sum.sub HasSum.sub
 
 /- warning: summable.sub -> Summable.sub is a dubious translation:
@@ -1574,8 +1557,7 @@ theorem hasSum_ite_sub_hasSum [DecidableEq β] (hf : HasSum f a) (b : β) :
     HasSum (fun n => ite (n = b) 0 (f n)) (a - f b) :=
   by
   convert hf.update b 0 using 1
-  · ext n
-    rw [Function.update_apply]
+  · ext n; rw [Function.update_apply]
   · rw [sub_add_eq_add_sub, zero_add]
 #align has_sum_ite_sub_has_sum hasSum_ite_sub_hasSum
 
@@ -1771,9 +1753,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_sum.pos_add_zero_add_neg HasSum.pos_add_zero_add_negₓ'. -/
 theorem HasSum.pos_add_zero_add_neg {b : α} {f : ℤ → α} (hpos : HasSum (fun n : ℕ => f (n + 1)) a)
     (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + f 0 + b) :=
-  haveI : ∀ g : ℕ → α, HasSum (fun k => g (k + 1)) a → HasSum g (a + g 0) :=
-    by
-    intro g hg
+  haveI : ∀ g : ℕ → α, HasSum (fun k => g (k + 1)) a → HasSum g (a + g 0) := by intro g hg;
     simpa using (hasSum_nat_add_iff _).mp hg
   (this (fun n => f n) hpos).nonneg_add_neg hneg
 #align has_sum.pos_add_zero_add_neg HasSum.pos_add_zero_add_neg
@@ -2150,10 +2130,8 @@ lean 3 declaration is
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : AddCommGroup.{u1} G] [_inst_3 : TopologicalAddGroup.{u1} G _inst_1 (AddCommGroup.toAddGroup.{u1} G _inst_2)] {f : Nat -> G}, (Summable.{u1, 0} G Nat (AddCommGroup.toAddCommMonoid.{u1} G _inst_2) _inst_1 f) -> (Filter.Tendsto.{0, u1} Nat G f (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{u1} G _inst_1 (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (NegZeroClass.toZero.{u1} G (SubNegZeroMonoid.toNegZeroClass.{u1} G (SubtractionMonoid.toSubNegZeroMonoid.{u1} G (SubtractionCommMonoid.toSubtractionMonoid.{u1} G (AddCommGroup.toDivisionAddCommMonoid.{u1} G _inst_2)))))))))
 Case conversion may be inaccurate. Consider using '#align summable.tendsto_at_top_zero Summable.tendsto_atTop_zeroₓ'. -/
-theorem Summable.tendsto_atTop_zero {f : ℕ → G} (hf : Summable f) : Tendsto f atTop (𝓝 0) :=
-  by
-  rw [← Nat.cofinite_eq_atTop]
-  exact hf.tendsto_cofinite_zero
+theorem Summable.tendsto_atTop_zero {f : ℕ → G} (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
+  rw [← Nat.cofinite_eq_atTop]; exact hf.tendsto_cofinite_zero
 #align summable.tendsto_at_top_zero Summable.tendsto_atTop_zero
 
 end TopologicalGroup

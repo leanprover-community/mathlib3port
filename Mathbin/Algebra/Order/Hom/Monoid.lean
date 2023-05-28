@@ -235,10 +235,7 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u3} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] [_inst_3 : OrderAddMonoidHomClass.{u1, u3, u2} F α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (AddMonoid.toAddZeroClass.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))] (f : F) {a : α}, (LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1))) (OfNat.ofNat.{u3} α 0 (Zero.toOfNat0.{u3} α (AddMonoid.toZero.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1))))) a) -> (LE.le.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (OrderedAddCommMonoid.toPartialOrder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) _inst_2))) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (AddMonoid.toZero.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (AddCommMonoid.toAddMonoid.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (OrderedAddCommMonoid.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) _inst_2))))) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{u1, u3, u2} F α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1902 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1904 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1))) x._@.Mathlib.Order.Hom.Basic._hyg.1902 x._@.Mathlib.Order.Hom.Basic._hyg.1904) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1926 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2))) _x x._@.Mathlib.Order.Hom.Basic._hyg.1926) (OrderAddMonoidHomClass.toOrderHomClass.{u1, u3, u2} F α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (AddMonoid.toAddZeroClass.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f a))
 Case conversion may be inaccurate. Consider using '#align map_nonneg map_nonnegₓ'. -/
-theorem map_nonneg (ha : 0 ≤ a) : 0 ≤ f a :=
-  by
-  rw [← map_zero f]
-  exact OrderHomClass.mono _ ha
+theorem map_nonneg (ha : 0 ≤ a) : 0 ≤ f a := by rw [← map_zero f]; exact OrderHomClass.mono _ ha
 #align map_nonneg map_nonneg
 
 /- warning: map_nonpos -> map_nonpos is a dubious translation:
@@ -247,10 +244,7 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u3} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] [_inst_3 : OrderAddMonoidHomClass.{u1, u3, u2} F α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (AddMonoid.toAddZeroClass.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))] (f : F) {a : α}, (LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1))) a (OfNat.ofNat.{u3} α 0 (Zero.toOfNat0.{u3} α (AddMonoid.toZero.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1)))))) -> (LE.le.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (OrderedAddCommMonoid.toPartialOrder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) _inst_2))) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{u1, u3, u2} F α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1902 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1904 : α) => LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1))) x._@.Mathlib.Order.Hom.Basic._hyg.1902 x._@.Mathlib.Order.Hom.Basic._hyg.1904) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1926 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2))) _x x._@.Mathlib.Order.Hom.Basic._hyg.1926) (OrderAddMonoidHomClass.toOrderHomClass.{u1, u3, u2} F α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommMonoid.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (AddMonoid.toAddZeroClass.{u3} α (AddCommMonoid.toAddMonoid.{u3} α (OrderedAddCommMonoid.toAddCommMonoid.{u3} α _inst_1))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f a) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (AddMonoid.toZero.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (AddCommMonoid.toAddMonoid.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) (OrderedAddCommMonoid.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) a) _inst_2))))))
 Case conversion may be inaccurate. Consider using '#align map_nonpos map_nonposₓ'. -/
-theorem map_nonpos (ha : a ≤ 0) : f a ≤ 0 :=
-  by
-  rw [← map_zero f]
-  exact OrderHomClass.mono _ ha
+theorem map_nonpos (ha : a ≤ 0) : f a ≤ 0 := by rw [← map_zero f]; exact OrderHomClass.mono _ ha
 #align map_nonpos map_nonpos
 
 end OrderedAddCommMonoid
@@ -266,11 +260,8 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : OrderedAddCommGroup.{u3} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] [_inst_3 : AddMonoidHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))] (f : F), Iff (Monotone.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommGroup.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) _x) (AddHomClass.toFunLike.{u1, u3, u2} F α β (AddZeroClass.toAdd.{u3} α (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))) (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f)) (forall (a : α), (LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommGroup.toPartialOrder.{u3} α _inst_1))) (OfNat.ofNat.{u3} α 0 (Zero.toOfNat0.{u3} α (NegZeroClass.toZero.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))))) a) -> (LE.le.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (OrderedAddCommMonoid.toPartialOrder.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) _inst_2))) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (AddMonoid.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (AddCommMonoid.toAddMonoid.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (OrderedAddCommMonoid.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) _inst_2))))) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) _x) (AddHomClass.toFunLike.{u1, u3, u2} F α β (AddZeroClass.toAdd.{u3} α (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))) (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f a)))
 Case conversion may be inaccurate. Consider using '#align monotone_iff_map_nonneg monotone_iff_map_nonnegₓ'. -/
 theorem monotone_iff_map_nonneg : Monotone (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
-  ⟨fun h a => by
-    rw [← map_zero f]
-    apply h, fun h a b hl => by
-    rw [← sub_add_cancel b a, map_add f]
-    exact le_add_of_nonneg_left (h _ <| sub_nonneg.2 hl)⟩
+  ⟨fun h a => by rw [← map_zero f]; apply h, fun h a b hl => by
+    rw [← sub_add_cancel b a, map_add f]; exact le_add_of_nonneg_left (h _ <| sub_nonneg.2 hl)⟩
 #align monotone_iff_map_nonneg monotone_iff_map_nonneg
 
 /- warning: antitone_iff_map_nonpos -> antitone_iff_map_nonpos is a dubious translation:
@@ -312,11 +303,8 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : OrderedAddCommGroup.{u3} α] [_inst_2 : OrderedAddCommMonoid.{u2} β] [_inst_3 : AddMonoidHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))] (f : F) [_inst_4 : CovariantClass.{u2, u2} β β (fun (x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3046 : β) (x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3048 : β) => HAdd.hAdd.{u2, u2, u2} β β β (instHAdd.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))))) x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3046 x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3048) (fun (x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3061 : β) (x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3063 : β) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2))) x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3061 x._@.Mathlib.Algebra.Order.Hom.Monoid._hyg.3063)], Iff (StrictMono.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (OrderedAddCommGroup.toPartialOrder.{u3} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OrderedAddCommMonoid.toPartialOrder.{u2} β _inst_2)) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) _x) (AddHomClass.toFunLike.{u1, u3, u2} F α β (AddZeroClass.toAdd.{u3} α (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))) (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f)) (forall (a : α), (LT.lt.{u3} α (Preorder.toLT.{u3} α (PartialOrder.toPreorder.{u3} α (OrderedAddCommGroup.toPartialOrder.{u3} α _inst_1))) (OfNat.ofNat.{u3} α 0 (Zero.toOfNat0.{u3} α (NegZeroClass.toZero.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))))) a) -> (LT.lt.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (Preorder.toLT.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (OrderedAddCommMonoid.toPartialOrder.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) _inst_2))) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (AddMonoid.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (AddCommMonoid.toAddMonoid.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) (OrderedAddCommMonoid.toAddCommMonoid.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) a) _inst_2))))) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => β) _x) (AddHomClass.toFunLike.{u1, u3, u2} F α β (AddZeroClass.toAdd.{u3} α (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1)))))) (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2)))) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F α β (AddMonoid.toAddZeroClass.{u3} α (SubNegMonoid.toAddMonoid.{u3} α (AddGroup.toSubNegMonoid.{u3} α (AddCommGroup.toAddGroup.{u3} α (OrderedAddCommGroup.toAddCommGroup.{u3} α _inst_1))))) (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β (OrderedAddCommMonoid.toAddCommMonoid.{u2} β _inst_2))) _inst_3)) f a)))
 Case conversion may be inaccurate. Consider using '#align strict_mono_iff_map_pos strictMono_iff_map_posₓ'. -/
 theorem strictMono_iff_map_pos : StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
-  ⟨fun h a => by
-    rw [← map_zero f]
-    apply h, fun h a b hl => by
-    rw [← sub_add_cancel b a, map_add f]
-    exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)⟩
+  ⟨fun h a => by rw [← map_zero f]; apply h, fun h a b hl => by
+    rw [← sub_add_cancel b a, map_add f]; exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)⟩
 #align strict_mono_iff_map_pos strictMono_iff_map_pos
 
 /- warning: strict_anti_iff_map_neg -> strictAnti_iff_map_neg is a dubious translation:
@@ -362,10 +350,7 @@ variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulOneClass α
 instance : OrderMonoidHomClass (α →*o β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_mul f := f.map_mul'
   map_one f := f.map_one'
   Monotone f := f.monotone'
@@ -418,10 +403,7 @@ theorem coe_mk (f : α →* β) (h) : (OrderMonoidHom.mk f h : α → β) = f :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align order_monoid_hom.mk_coe OrderMonoidHom.mk_coeₓ'. -/
 @[simp, to_additive]
-theorem mk_coe (f : α →*o β) (h) : OrderMonoidHom.mk (f : α →* β) h = f :=
-  by
-  ext
-  rfl
+theorem mk_coe (f : α →*o β) (h) : OrderMonoidHom.mk (f : α →* β) h = f := by ext; rfl
 #align order_monoid_hom.mk_coe OrderMonoidHom.mk_coe
 #align order_add_monoid_hom.mk_coe OrderAddMonoidHom.mk_coe
 
@@ -703,10 +685,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u3} β] [_inst_3 : Preorder.{u2} γ] [_inst_5 : MulOneClass.{u1} α] [_inst_6 : MulOneClass.{u3} β] [_inst_7 : MulOneClass.{u2} γ] (f : OrderMonoidHom.{u3, u2} β γ _inst_2 _inst_3 _inst_6 _inst_7), Eq.{max (succ u1) (succ u2)} (OrderMonoidHom.{u1, u2} α γ _inst_1 _inst_3 _inst_5 _inst_7) (OrderMonoidHom.comp.{u1, u3, u2} α β γ _inst_1 _inst_2 _inst_3 _inst_5 _inst_6 _inst_7 f (OfNat.ofNat.{max u1 u3} (OrderMonoidHom.{u1, u3} α β _inst_1 _inst_2 _inst_5 _inst_6) 1 (One.toOfNat1.{max u1 u3} (OrderMonoidHom.{u1, u3} α β _inst_1 _inst_2 _inst_5 _inst_6) (OrderMonoidHom.instOneOrderMonoidHom.{u1, u3} α β _inst_1 _inst_2 _inst_5 _inst_6)))) (OfNat.ofNat.{max u1 u2} (OrderMonoidHom.{u1, u2} α γ _inst_1 _inst_3 _inst_5 _inst_7) 1 (One.toOfNat1.{max u1 u2} (OrderMonoidHom.{u1, u2} α γ _inst_1 _inst_3 _inst_5 _inst_7) (OrderMonoidHom.instOneOrderMonoidHom.{u1, u2} α γ _inst_1 _inst_3 _inst_5 _inst_7)))
 Case conversion may be inaccurate. Consider using '#align order_monoid_hom.comp_one OrderMonoidHom.comp_oneₓ'. -/
 @[simp, to_additive]
-theorem comp_one (f : β →*o γ) : f.comp (1 : α →*o β) = 1 :=
-  by
-  ext
-  exact map_one f
+theorem comp_one (f : β →*o γ) : f.comp (1 : α →*o β) = 1 := by ext; exact map_one f
 #align order_monoid_hom.comp_one OrderMonoidHom.comp_one
 #align order_add_monoid_hom.comp_zero OrderAddMonoidHom.comp_zero
 
@@ -754,10 +733,8 @@ theorem mul_comp (g₁ g₂ : β →*o γ) (f : α →*o β) : (g₁ * g₂).com
 <too large>
 Case conversion may be inaccurate. Consider using '#align order_monoid_hom.comp_mul OrderMonoidHom.comp_mulₓ'. -/
 @[to_additive]
-theorem comp_mul (g : β →*o γ) (f₁ f₂ : α →*o β) : g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ :=
-  by
-  ext
-  exact map_mul g _ _
+theorem comp_mul (g : β →*o γ) (f₁ f₂ : α →*o β) : g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
+  ext; exact map_mul g _ _
 #align order_monoid_hom.comp_mul OrderMonoidHom.comp_mul
 #align order_add_monoid_hom.comp_add OrderAddMonoidHom.comp_add
 
@@ -776,10 +753,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {hα : OrderedCommMonoid.{u2} α} {hβ : OrderedCommMonoid.{u1} β} (f : OrderMonoidHom.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ)))), Eq.{max (succ u2) (succ u1)} (MonoidHom.{u2, u1} α β (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ)))) (OrderMonoidHom.toMonoidHom.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ))) f) (MonoidHomClass.toMonoidHom.{u2, u1, max u2 u1} α β (OrderMonoidHom.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ)))) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ))) (OrderMonoidHomClass.toMonoidHomClass.{max u2 u1, u2, u1} (OrderMonoidHom.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ)))) α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ))) (OrderMonoidHom.instOrderMonoidHomClassOrderMonoidHom.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (OrderedCommMonoid.toPartialOrder.{u2} α hα)) (PartialOrder.toPreorder.{u1} β (OrderedCommMonoid.toPartialOrder.{u1} β hβ)) (Monoid.toMulOneClass.{u2} α (CommMonoid.toMonoid.{u2} α (OrderedCommMonoid.toCommMonoid.{u2} α hα))) (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β (OrderedCommMonoid.toCommMonoid.{u1} β hβ))))) f)
 Case conversion may be inaccurate. Consider using '#align order_monoid_hom.to_monoid_hom_eq_coe OrderMonoidHom.toMonoidHom_eq_coeₓ'. -/
 @[simp, to_additive]
-theorem toMonoidHom_eq_coe (f : α →*o β) : f.toMonoidHom = f :=
-  by
-  ext
-  rfl
+theorem toMonoidHom_eq_coe (f : α →*o β) : f.toMonoidHom = f := by ext; rfl
 #align order_monoid_hom.to_monoid_hom_eq_coe OrderMonoidHom.toMonoidHom_eq_coe
 #align order_add_monoid_hom.to_add_monoid_hom_eq_coe OrderAddMonoidHom.toAddMonoidHom_eq_coe
 
@@ -832,10 +806,7 @@ variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] [MulZeroOneClas
 instance : OrderMonoidWithZeroHomClass (α →*₀o β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_mul f := f.map_mul'
   map_one f := f.map_one'
   map_zero f := f.map_zero'
@@ -880,10 +851,7 @@ theorem coe_mk (f : α →*₀ β) (h) : (OrderMonoidWithZeroHom.mk f h : α →
 <too large>
 Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero_hom.mk_coe OrderMonoidWithZeroHom.mk_coeₓ'. -/
 @[simp]
-theorem mk_coe (f : α →*₀o β) (h) : OrderMonoidWithZeroHom.mk (f : α →*₀ β) h = f :=
-  by
-  ext
-  rfl
+theorem mk_coe (f : α →*₀o β) (h) : OrderMonoidWithZeroHom.mk (f : α →*₀ β) h = f := by ext; rfl
 #align order_monoid_with_zero_hom.mk_coe OrderMonoidWithZeroHom.mk_coe
 
 #print OrderMonoidWithZeroHom.toOrderMonoidHom /-
@@ -1141,10 +1109,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {hα : Preorder.{u2} α} {hα' : MulZeroOneClass.{u2} α} {hβ : Preorder.{u1} β} {hβ' : MulZeroOneClass.{u1} β} (f : OrderMonoidWithZeroHom.{u2, u1} α β hα hβ hα' hβ'), Eq.{max (succ u2) (succ u1)} (MonoidWithZeroHom.{u2, u1} α β hα' hβ') (OrderMonoidWithZeroHom.toMonoidWithZeroHom.{u2, u1} α β hα hβ hα' hβ' f) (MonoidWithZeroHomClass.toMonoidWithZeroHom.{u2, u1, max u2 u1} α β (OrderMonoidWithZeroHom.{u2, u1} α β hα hβ hα' hβ') hα' hβ' (OrderMonoidWithZeroHomClass.toMonoidWithZeroHomClass.{max u2 u1, u2, u1} (OrderMonoidWithZeroHom.{u2, u1} α β hα hβ hα' hβ') α β hα hβ hα' hβ' (OrderMonoidWithZeroHom.instOrderMonoidWithZeroHomClassOrderMonoidWithZeroHom.{u2, u1} α β hα hβ hα' hβ')) f)
 Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero_hom.to_monoid_with_zero_hom_eq_coe OrderMonoidWithZeroHom.toMonoidWithZeroHom_eq_coeₓ'. -/
 @[simp]
-theorem toMonoidWithZeroHom_eq_coe (f : α →*₀o β) : f.toMonoidWithZeroHom = f :=
-  by
-  ext
-  rfl
+theorem toMonoidWithZeroHom_eq_coe (f : α →*₀o β) : f.toMonoidWithZeroHom = f := by ext; rfl
 #align order_monoid_with_zero_hom.to_monoid_with_zero_hom_eq_coe OrderMonoidWithZeroHom.toMonoidWithZeroHom_eq_coe
 
 /- warning: order_monoid_with_zero_hom.to_order_monoid_hom_eq_coe -> OrderMonoidWithZeroHom.toOrderMonoidHom_eq_coe is a dubious translation:

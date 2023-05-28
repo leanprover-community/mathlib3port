@@ -438,9 +438,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.perm.is_cycle_inv Equiv.Perm.isCycle_invₓ'. -/
 @[simp]
 theorem isCycle_inv : IsCycle f⁻¹ ↔ IsCycle f :=
-  ⟨fun h => by
-    convert h.inv
-    rw [inv_inv], IsCycle.inv⟩
+  ⟨fun h => by convert h.inv; rw [inv_inv], IsCycle.inv⟩
 #align equiv.perm.is_cycle_inv Equiv.Perm.isCycle_inv
 
 /- warning: equiv.perm.is_cycle.conj -> Equiv.Perm.IsCycle.conj is a dubious translation:
@@ -508,18 +506,12 @@ variable [DecidableEq α]
 #print Equiv.Perm.isCycle_swap /-
 theorem isCycle_swap (hxy : x ≠ y) : IsCycle (swap x y) :=
   ⟨y, by rwa [swap_apply_right], fun a (ha : ite (a = x) y (ite (a = y) x a) ≠ a) =>
-    if hya : y = a then ⟨0, hya⟩
-    else
-      ⟨1, by
-        rw [zpow_one, swap_apply_def]
-        split_ifs  at * <;> cc⟩⟩
+    if hya : y = a then ⟨0, hya⟩ else ⟨1, by rw [zpow_one, swap_apply_def]; split_ifs  at * <;> cc⟩⟩
 #align equiv.perm.is_cycle_swap Equiv.Perm.isCycle_swap
 -/
 
 #print Equiv.Perm.IsSwap.isCycle /-
-protected theorem IsSwap.isCycle : IsSwap f → IsCycle f :=
-  by
-  rintro ⟨x, y, hxy, rfl⟩
+protected theorem IsSwap.isCycle : IsSwap f → IsCycle f := by rintro ⟨x, y, hxy, rfl⟩;
   exact is_cycle_swap hxy
 #align equiv.perm.is_swap.is_cycle Equiv.Perm.IsSwap.isCycle
 -/
@@ -627,9 +619,7 @@ theorem isCycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
         exact this.1
       let ⟨i, hi⟩ :=
         is_cycle_swap_mul_aux₁ n hb'
-          (f.Injective <| by
-            rw [apply_inv_self]
-            rwa [pow_succ, mul_apply] at h)
+          (f.Injective <| by rw [apply_inv_self]; rwa [pow_succ, mul_apply] at h)
       ⟨i + 1, by
         rw [add_comm, zpow_add, mul_apply, hi, zpow_one, mul_apply, apply_inv_self,
           swap_apply_of_ne_of_ne (ne_and_ne_of_swap_mul_apply_ne_self hb).2 (Ne.symm hfbx)]⟩
@@ -683,10 +673,8 @@ theorem IsCycle.eq_swap_of_apply_apply_eq_self {α : Type _} [DecidableEq α] {f
         cases' hz.2 hy with j hj
         rw [← sub_add_cancel j i, zpow_add, mul_apply, hi] at hj
         cases' zpow_apply_eq_of_apply_apply_eq_self hffx (j - i) with hji hji
-        · rw [← hj, hji] at hyx
-          cc
-        · rw [← hj, hji] at hfyx
-          cc
+        · rw [← hj, hji] at hyx; cc
+        · rw [← hj, hji] at hfyx; cc
 #align equiv.perm.is_cycle.eq_swap_of_apply_apply_eq_self Equiv.Perm.IsCycle.eq_swap_of_apply_apply_eq_self
 -/
 
@@ -1054,10 +1042,8 @@ alias is_cycle_on_inv ↔ is_cycle_on.of_inv is_cycle_on.inv
 
 #print Equiv.Perm.IsCycleOn.conj /-
 theorem IsCycleOn.conj (h : f.IsCycleOn s) : (g * f * g⁻¹).IsCycleOn ((g : Perm α) '' s) :=
-  ⟨(g.bijOn_image.comp h.1).comp g.bijOn_symm_image, fun x hx y hy =>
-    by
-    rw [← preimage_inv] at hx hy
-    convert(h.2 hx hy).conj <;> rw [apply_inv_self]⟩
+  ⟨(g.bijOn_image.comp h.1).comp g.bijOn_symm_image, fun x hx y hy => by
+    rw [← preimage_inv] at hx hy; convert(h.2 hx hy).conj <;> rw [apply_inv_self]⟩
 #align equiv.perm.is_cycle_on.conj Equiv.Perm.IsCycleOn.conj
 -/
 
@@ -1106,9 +1092,7 @@ theorem isCycle_iff_exists_isCycleOn :
 
 #print Equiv.Perm.IsCycleOn.apply_mem_iff /-
 theorem IsCycleOn.apply_mem_iff (hf : f.IsCycleOn s) : f x ∈ s ↔ x ∈ s :=
-  ⟨fun hx => by
-    convert hf.1.perm_inv.1 hx
-    rw [inv_apply_self], fun hx => hf.1.MapsTo hx⟩
+  ⟨fun hx => by convert hf.1.perm_inv.1 hx; rw [inv_apply_self], fun hx => hf.1.MapsTo hx⟩
 #align equiv.perm.is_cycle_on.apply_mem_iff Equiv.Perm.IsCycleOn.apply_mem_iff
 -/
 
@@ -1213,10 +1197,8 @@ theorem IsCycleOn.exists_pow_eq {s : Finset α} (hf : f.IsCycleOn s) (ha : a ∈
 
 #print Equiv.Perm.IsCycleOn.exists_pow_eq' /-
 theorem IsCycleOn.exists_pow_eq' (hs : s.Finite) (hf : f.IsCycleOn s) (ha : a ∈ s) (hb : b ∈ s) :
-    ∃ n : ℕ, (f ^ n) a = b := by
-  lift s to Finset α using id hs
-  obtain ⟨n, -, hn⟩ := hf.exists_pow_eq ha hb
-  exact ⟨n, hn⟩
+    ∃ n : ℕ, (f ^ n) a = b := by lift s to Finset α using id hs;
+  obtain ⟨n, -, hn⟩ := hf.exists_pow_eq ha hb; exact ⟨n, hn⟩
 #align equiv.perm.is_cycle_on.exists_pow_eq' Equiv.Perm.IsCycleOn.exists_pow_eq'
 -/
 
@@ -1251,9 +1233,7 @@ theorem IsCycleOn.of_zpow {n : ℤ} (hf : (f ^ n).IsCycleOn s) (h : Set.BijOn f 
 #print Equiv.Perm.IsCycleOn.extendDomain /-
 theorem IsCycleOn.extendDomain {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p)
     (h : g.IsCycleOn s) : (g.extendDomain f).IsCycleOn (coe ∘ f '' s) :=
-  ⟨h.1.extendDomain, by
-    rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩
-    exact (h.2 ha hb).extendDomain⟩
+  ⟨h.1.extendDomain, by rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩; exact (h.2 ha hb).extendDomain⟩
 #align equiv.perm.is_cycle_on.extend_domain Equiv.Perm.IsCycleOn.extendDomain
 -/
 
@@ -1289,10 +1269,8 @@ theorem cycleOf_apply (f : Perm α) (x y : α) : cycleOf f x y = if SameCycle f 
   by
   dsimp only [cycle_of]
   split_ifs
-  · apply of_subtype_apply_of_mem
-    exact h
-  · apply of_subtype_apply_of_not_mem
-    exact h
+  · apply of_subtype_apply_of_mem; exact h
+  · apply of_subtype_apply_of_not_mem; exact h
 #align equiv.perm.cycle_of_apply Equiv.Perm.cycleOf_apply
 -/
 
@@ -1459,9 +1437,7 @@ theorem isCycle_cycleOf (f : Perm α) (hx : f x ≠ x) : IsCycle (cycleOf f x) :
       if hxy : SameCycle f x y then
         let ⟨i, hi⟩ := hxy
         ⟨i, by rw [cycle_of_zpow_apply_self, hi]⟩
-      else by
-        rw [cycle_of_apply_of_not_same_cycle hxy] at h
-        exact (h rfl).elim⟩
+      else by rw [cycle_of_apply_of_not_same_cycle hxy] at h; exact (h rfl).elim⟩
 #align equiv.perm.is_cycle_cycle_of Equiv.Perm.isCycle_cycleOf
 -/
 
@@ -1599,10 +1575,8 @@ theorem isCycle_cycleOf_iff (f : Perm α) : IsCycle (cycleOf f x) ↔ f x ≠ x 
 
 #print Equiv.Perm.isCycleOn_support_cycleOf /-
 theorem isCycleOn_support_cycleOf (f : Perm α) (x : α) : f.IsCycleOn (f.cycleOf x).support :=
-  ⟨f.BijOn <| by simp [mem_support_cycle_of_iff], fun a ha b hb =>
-    by
-    rw [mem_coe, mem_support_cycle_of_iff] at ha hb
-    exact ha.1.symm.trans hb.1⟩
+  ⟨f.BijOn <| by simp [mem_support_cycle_of_iff], fun a ha b hb => by
+    rw [mem_coe, mem_support_cycle_of_iff] at ha hb; exact ha.1.symm.trans hb.1⟩
 #align equiv.perm.is_cycle_on_support_cycle_of Equiv.Perm.isCycleOn_support_cycleOf
 -/
 
@@ -1662,8 +1636,7 @@ def cycleFactorsAux [Fintype α] :
       by
       simp only [imp_false, List.Pairwise.nil, List.not_mem_nil, forall_const, and_true_iff,
         forall_prop_of_false, Classical.not_not, not_false_iff, List.prod_nil] at *
-      ext
-      simp [*]⟩
+      ext; simp [*]⟩
   | x::l, f, h =>
     if hx : f x = x then
       cycle_factors_aux l f fun y hy => List.mem_of_ne_of_mem (fun h => hy (by rwa [h])) (h hy)
@@ -1671,17 +1644,13 @@ def cycleFactorsAux [Fintype α] :
       let ⟨m, hm₁, hm₂, hm₃⟩ :=
         cycle_factors_aux l ((cycleOf f x)⁻¹ * f) fun y hy =>
           List.mem_of_ne_of_mem
-            (fun h : y = x =>
-              by
-              rw [h, mul_apply, Ne.def, inv_eq_iff_eq, cycle_of_apply_self] at hy
-              exact hy rfl)
+            (fun h : y = x => by
+              rw [h, mul_apply, Ne.def, inv_eq_iff_eq, cycle_of_apply_self] at hy; exact hy rfl)
             (h fun h : f y = y =>
               by
               rw [mul_apply, h, Ne.def, inv_eq_iff_eq, cycle_of_apply] at hy
               split_ifs  at hy <;> cc)
-      ⟨cycleOf f x::m, by
-        rw [List.prod_cons, hm₁]
-        simp, fun g hg =>
+      ⟨cycleOf f x::m, by rw [List.prod_cons, hm₁]; simp, fun g hg =>
         ((List.mem_cons _ _ _).1 hg).elim (fun hg => hg.symm ▸ isCycle_cycleOf _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
@@ -2174,8 +2143,7 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
     induction' n with n ih
     · exact subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _))
     · convert H.mul_mem (H.mul_mem h3 ih) (H.inv_mem h3)
-      simp_rw [mul_swap_eq_swap_mul, mul_inv_cancel_right, pow_succ]
-      rfl
+      simp_rw [mul_swap_eq_swap_mul, mul_inv_cancel_right, pow_succ]; rfl
   have step2 : ∀ n : ℕ, swap x ((σ ^ n) x) ∈ H :=
     by
     intro n
@@ -2183,11 +2151,9 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
     · convert H.one_mem
       exact swap_self x
     · by_cases h5 : x = (σ ^ n) x
-      · rw [pow_succ, mul_apply, ← h5]
-        exact h4
+      · rw [pow_succ, mul_apply, ← h5]; exact h4
       by_cases h6 : x = (σ ^ (n + 1)) x
-      · rw [← h6, swap_self]
-        exact H.one_mem
+      · rw [← h6, swap_self]; exact H.one_mem
       rw [swap_comm, ← swap_mul_swap_mul_swap h5 h6]
       exact H.mul_mem (H.mul_mem (step1 n) ih) (step1 n)
   have step3 : ∀ y : α, swap x y ∈ H := by
@@ -2202,11 +2168,9 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
   have step4 : ∀ y z : α, swap y z ∈ H := by
     intro y z
     by_cases h5 : z = x
-    · rw [h5, swap_comm]
-      exact step3 y
+    · rw [h5, swap_comm]; exact step3 y
     by_cases h6 : z = y
-    · rw [h6, swap_self]
-      exact H.one_mem
+    · rw [h6, swap_self]; exact H.one_mem
     rw [← swap_mul_swap_mul_swap h5 h6, swap_comm z x]
     exact H.mul_mem (H.mul_mem (step3 y) (step3 z)) (step3 y)
   rw [eq_top_iff, ← closure_is_swap, closure_le]
@@ -2605,10 +2569,8 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Semiring.{u1} α] [_inst_2 : AddCommMonoid.{u2} β] [_inst_3 : Module.{u1, u2} α β _inst_1 _inst_2] {s : Finset.{u3} ι} {σ : Equiv.Perm.{succ u3} ι}, (Equiv.Perm.IsCycleOn.{u3} ι σ (Finset.toSet.{u3} ι s)) -> (forall (f : ι -> α) (g : ι -> β), Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α _inst_1) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (Module.toMulActionWithZero.{u1, u2} α β _inst_1 _inst_2 _inst_3))))) (Finset.sum.{u1, u3} α ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))) s (fun (i : ι) => f i)) (Finset.sum.{u2, u3} β ι _inst_2 s (fun (i : ι) => g i))) (Finset.sum.{u2, 0} β Nat _inst_2 (Finset.range (Finset.card.{u3} ι s)) (fun (k : Nat) => Finset.sum.{u2, u3} β ι _inst_2 s (fun (i : ι) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} α β (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_1)) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} α β (Semiring.toMonoidWithZero.{u1} α _inst_1) (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_2)) (Module.toMulActionWithZero.{u1, u2} α β _inst_1 _inst_2 _inst_3))))) (f i) (g (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.Perm.{succ u3} ι) ι (fun (_x : ι) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : ι) => ι) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u3} ι ι) (HPow.hPow.{u3, 0, u3} (Equiv.Perm.{succ u3} ι) Nat (Equiv.Perm.{succ u3} ι) (instHPow.{u3, 0} (Equiv.Perm.{succ u3} ι) Nat (Monoid.Pow.{u3} (Equiv.Perm.{succ u3} ι) (DivInvMonoid.toMonoid.{u3} (Equiv.Perm.{succ u3} ι) (Group.toDivInvMonoid.{u3} (Equiv.Perm.{succ u3} ι) (Equiv.Perm.permGroup.{u3} ι))))) σ k) i))))))
 Case conversion may be inaccurate. Consider using '#align finset.sum_smul_sum_eq_sum_perm Finset.sum_smul_sum_eq_sum_permₓ'. -/
 theorem sum_smul_sum_eq_sum_perm (hσ : σ.IsCycleOn s) (f : ι → α) (g : ι → β) :
-    ((∑ i in s, f i) • ∑ i in s, g i) = ∑ k in range s.card, ∑ i in s, f i • g ((σ ^ k) i) :=
-  by
-  simp_rw [sum_smul_sum, product_self_eq_disj_Union_perm hσ, sum_disj_Union, sum_map]
-  rfl
+    ((∑ i in s, f i) • ∑ i in s, g i) = ∑ k in range s.card, ∑ i in s, f i • g ((σ ^ k) i) := by
+  simp_rw [sum_smul_sum, product_self_eq_disj_Union_perm hσ, sum_disj_Union, sum_map]; rfl
 #align finset.sum_smul_sum_eq_sum_perm Finset.sum_smul_sum_eq_sum_perm
 
 /- warning: finset.sum_mul_sum_eq_sum_perm -> Finset.sum_mul_sum_eq_sum_perm is a dubious translation:

@@ -79,11 +79,7 @@ protected theorem zero : padicValNat p 0 = 0 := by simp [padicValNat]
 #print padicValNat.one /-
 /-- `padic_val_nat p 1` is `0` for any `p`. -/
 @[simp]
-protected theorem one : padicValNat p 1 = 0 :=
-  by
-  unfold padicValNat
-  split_ifs
-  simp
+protected theorem one : padicValNat p 1 = 0 := by unfold padicValNat; split_ifs; simp
 #align padic_val_nat.one padicValNat.one
 -/
 
@@ -133,10 +129,7 @@ variable {p : ℕ}
 Case conversion may be inaccurate. Consider using '#align padic_val_int.of_ne_one_ne_zero padicValInt.of_ne_one_ne_zeroₓ'. -/
 theorem of_ne_one_ne_zero {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
     padicValInt p z =
-      (multiplicity (p : ℤ) z).get
-        (by
-          apply multiplicity.finite_int_iff.2
-          simp [hp, hz]) :=
+      (multiplicity (p : ℤ) z).get (by apply multiplicity.finite_int_iff.2; simp [hp, hz]) :=
   by
   rw [padicValInt, padicValNat, dif_pos (And.intro hp (Int.natAbs_pos_of_ne_zero hz))]
   simp only [multiplicity.Int.natAbs p z]
@@ -248,10 +241,7 @@ Case conversion may be inaccurate. Consider using '#align padic_val_rat.multipli
 theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     padicValRat p q =
       (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero_of_ne_zero hq⟩) -
-        (multiplicity p q.den).get
-          (by
-            rw [← finite_iff_dom, finite_nat_iff]
-            exact ⟨hp, q.pos⟩) :=
+        (multiplicity p q.den).get (by rw [← finite_iff_dom, finite_nat_iff]; exact ⟨hp, q.pos⟩) :=
   by
   rw [padicValRat, padicValInt.of_ne_one_ne_zero hp, padicValNat, dif_pos]
   · rfl

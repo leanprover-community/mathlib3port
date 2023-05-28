@@ -104,10 +104,7 @@ theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
   by
   rcases h with ⟨c, hc, li, rfl⟩
   obtain ⟨li, rfl⟩ : ∃ li' : ℂ ≃ₗᵢ[ℝ] ℂ, li'.toLinearIsometry = li
-  exact
-    ⟨li.to_linear_isometry_equiv rfl, by
-      ext1
-      rfl⟩
+  exact ⟨li.to_linear_isometry_equiv rfl, by ext1; rfl⟩
   rcases linear_isometry_complex li with ⟨a, rfl | rfl⟩
   -- let rot := c • (a : ℂ) • continuous_linear_map.id ℂ ℂ,
   · refine' Or.inl ⟨c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ, _⟩

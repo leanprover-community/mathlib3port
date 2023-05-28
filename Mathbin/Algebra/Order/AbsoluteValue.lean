@@ -60,10 +60,7 @@ Case conversion may be inaccurate. Consider using '#align absolute_value.zero_ho
 instance zeroHomClass : ZeroHomClass (AbsoluteValue R S) R S
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_zero f := (f.eq_zero' _).2 rfl
 #align absolute_value.zero_hom_class AbsoluteValue.zeroHomClass
 

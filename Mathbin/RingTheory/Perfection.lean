@@ -136,9 +136,7 @@ theorem coeff_pthRoot (f : Ring.Perfection R p) (n : ℕ) :
 #align perfection.coeff_pth_root Perfection.coeff_pthRoot
 
 theorem coeff_pow_p (f : Ring.Perfection R p) (n : ℕ) : coeff R p (n + 1) (f ^ p) = coeff R p n f :=
-  by
-  rw [RingHom.map_pow]
-  exact f.2 n
+  by rw [RingHom.map_pow]; exact f.2 n
 #align perfection.coeff_pow_p Perfection.coeff_pow_p
 
 theorem coeff_pow_p' (f : Ring.Perfection R p) (n : ℕ) : coeff R p (n + 1) f ^ p = coeff R p n f :=
@@ -453,18 +451,8 @@ theorem preVal_zero : preVal K v O hv p 0 = 0 :=
 theorem preVal_mul {x y : ModP K v O hv p} (hxy0 : x * y ≠ 0) :
     preVal K v O hv p (x * y) = preVal K v O hv p x * preVal K v O hv p y :=
   by
-  have hx0 : x ≠ 0 :=
-    mt
-      (by
-        rintro rfl
-        rw [MulZeroClass.zero_mul])
-      hxy0
-  have hy0 : y ≠ 0 :=
-    mt
-      (by
-        rintro rfl
-        rw [MulZeroClass.mul_zero])
-      hxy0
+  have hx0 : x ≠ 0 := mt (by rintro rfl; rw [MulZeroClass.zero_mul]) hxy0
+  have hy0 : y ≠ 0 := mt (by rintro rfl; rw [MulZeroClass.mul_zero]) hxy0
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y
   rw [← RingHom.map_mul] at hxy0⊢
@@ -474,15 +462,9 @@ theorem preVal_mul {x y : ModP K v O hv p} (hxy0 : x * y ≠ 0) :
 theorem preVal_add (x y : ModP K v O hv p) :
     preVal K v O hv p (x + y) ≤ max (preVal K v O hv p x) (preVal K v O hv p y) :=
   by
-  by_cases hx0 : x = 0;
-  · rw [hx0, zero_add]
-    exact le_max_right _ _
-  by_cases hy0 : y = 0;
-  · rw [hy0, add_zero]
-    exact le_max_left _ _
-  by_cases hxy0 : x + y = 0;
-  · rw [hxy0, pre_val_zero]
-    exact zero_le _
+  by_cases hx0 : x = 0; · rw [hx0, zero_add]; exact le_max_right _ _
+  by_cases hy0 : y = 0; · rw [hy0, add_zero]; exact le_max_left _ _
+  by_cases hxy0 : x + y = 0; · rw [hxy0, pre_val_zero]; exact zero_le _
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y
   rw [← RingHom.map_add] at hxy0⊢
@@ -492,9 +474,8 @@ theorem preVal_add (x y : ModP K v O hv p) :
 theorem v_p_lt_preVal {x : ModP K v O hv p} : v p < preVal K v O hv p x ↔ x ≠ 0 :=
   by
   refine'
-    ⟨fun h hx => by
-      rw [hx, pre_val_zero] at h
-      exact not_lt_zero' h, fun h => lt_of_not_le fun hp => h _⟩
+    ⟨fun h hx => by rw [hx, pre_val_zero] at h; exact not_lt_zero' h, fun h =>
+      lt_of_not_le fun hp => h _⟩
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   rw [pre_val_mk h, ← map_natCast (algebraMap O K) p, hv.le_iff_dvd] at hp
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]; exact hp
@@ -502,9 +483,7 @@ theorem v_p_lt_preVal {x : ModP K v O hv p} : v p < preVal K v O hv p x ↔ x �
 
 theorem preVal_eq_zero {x : ModP K v O hv p} : preVal K v O hv p x = 0 ↔ x = 0 :=
   ⟨fun hvx =>
-    by_contradiction fun hx0 : x ≠ 0 =>
-      by
-      rw [← v_p_lt_pre_val, hvx] at hx0
+    by_contradiction fun hx0 : x ≠ 0 => by rw [← v_p_lt_pre_val, hvx] at hx0;
       exact not_lt_zero' hx0,
     fun hx => hx.symm ▸ preVal_zero⟩
 #align mod_p.pre_val_eq_zero ModP.preVal_eq_zero
@@ -533,9 +512,7 @@ theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : x ^ p ≠ 0) 
   rw [RingHom.map_pow, v.map_pow, ← rpow_lt_rpow_iff h1p, ← rpow_nat_cast, ← rpow_mul,
     mul_one_div_cancel (Nat.cast_ne_zero.2 hp.1.NeZero : (p : ℝ) ≠ 0), rpow_one] at hx hy
   rw [RingHom.map_mul, v.map_mul]; refine' lt_of_le_of_lt _ (mul_lt_mul₀ hx hy)
-  by_cases hvp : v p = 0;
-  · rw [hvp]
-    exact zero_le _; replace hvp := zero_lt_iff.2 hvp
+  by_cases hvp : v p = 0; · rw [hvp]; exact zero_le _; replace hvp := zero_lt_iff.2 hvp
   conv_lhs => rw [← rpow_one (v p)]; rw [← rpow_add (ne_of_gt hvp)]
   refine' rpow_le_rpow_of_exponent_ge hvp (map_natCast (algebraMap O K) p ▸ hv.2 _) _
   rw [← add_div, div_le_one (Nat.cast_pos.2 hp.1.Pos : 0 < (p : ℝ))]; exact_mod_cast hp.1.two_le
@@ -589,8 +566,7 @@ theorem valAux_eq {f : PreTilt K v O hv p} {n : ℕ} (hfn : coeff _ _ n f ≠ 0)
   have h : ∃ n, coeff _ _ n f ≠ 0 := ⟨n, hfn⟩
   rw [val_aux, dif_pos h]
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le (Nat.find_min' h hfn)
-  induction' k with k ih
-  · rfl
+  induction' k with k ih; · rfl
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (coeff _ _ (Nat.find h + k + 1) f)
   have h1 : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := hx.symm ▸ hfn
   have h2 : (Ideal.Quotient.mk _ (x ^ p) : ModP K v O hv p) ≠ 0 :=
@@ -619,10 +595,8 @@ theorem valAux_one : valAux K v O hv p 1 = 1 :=
 theorem valAux_mul (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f * g) = valAux K v O hv p f * valAux K v O hv p g :=
   by
-  by_cases hf : f = 0
-  · rw [hf, MulZeroClass.zero_mul, val_aux_zero, MulZeroClass.zero_mul]
-  by_cases hg : g = 0
-  · rw [hg, MulZeroClass.mul_zero, val_aux_zero, MulZeroClass.mul_zero]
+  by_cases hf : f = 0; · rw [hf, MulZeroClass.zero_mul, val_aux_zero, MulZeroClass.zero_mul]
+  by_cases hg : g = 0; · rw [hg, MulZeroClass.mul_zero, val_aux_zero, MulZeroClass.mul_zero]
   obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hm := coeff_ne_zero_of_le hm (le_max_left m n)
@@ -631,27 +605,18 @@ theorem valAux_mul (f g : PreTilt K v O hv p) :
     by
     rw [RingHom.map_mul]
     refine' ModP.mul_ne_zero_of_pow_p_ne_zero _ _
-    · rw [← RingHom.map_pow, coeff_pow_p f]
-      assumption
-    · rw [← RingHom.map_pow, coeff_pow_p g]
-      assumption
+    · rw [← RingHom.map_pow, coeff_pow_p f]; assumption
+    · rw [← RingHom.map_pow, coeff_pow_p g]; assumption
   rw [val_aux_eq (coeff_add_ne_zero hm 1), val_aux_eq (coeff_add_ne_zero hn 1), val_aux_eq hfg]
-  rw [RingHom.map_mul] at hfg⊢
-  rw [ModP.preVal_mul hfg, mul_pow]
+  rw [RingHom.map_mul] at hfg⊢; rw [ModP.preVal_mul hfg, mul_pow]
 #align pre_tilt.val_aux_mul PreTilt.valAux_mul
 
 theorem valAux_add (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f + g) ≤ max (valAux K v O hv p f) (valAux K v O hv p g) :=
   by
-  by_cases hf : f = 0;
-  · rw [hf, zero_add, val_aux_zero, max_eq_right]
-    exact zero_le _
-  by_cases hg : g = 0;
-  · rw [hg, add_zero, val_aux_zero, max_eq_left]
-    exact zero_le _
-  by_cases hfg : f + g = 0;
-  · rw [hfg, val_aux_zero]
-    exact zero_le _
+  by_cases hf : f = 0; · rw [hf, zero_add, val_aux_zero, max_eq_right]; exact zero_le _
+  by_cases hg : g = 0; · rw [hg, add_zero, val_aux_zero, max_eq_left]; exact zero_le _
+  by_cases hfg : f + g = 0; · rw [hfg, val_aux_zero]; exact zero_le _
   replace hf : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
   replace hg : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hfg : ∃ n, coeff _ _ n (f + g) ≠ 0 := not_forall.1 fun h => hfg <| Perfection.ext h
@@ -686,9 +651,7 @@ variable {K v O hv p}
 
 theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 :=
   by
-  by_cases hf0 : f = 0;
-  · rw [hf0]
-    exact iff_of_true (Valuation.map_zero _) rfl
+  by_cases hf0 : f = 0; · rw [hf0]; exact iff_of_true (Valuation.map_zero _) rfl
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf0 <| Perfection.ext h
   show val_aux K v O hv p f = 0 ↔ f = 0; refine' iff_of_false (fun hvf => hn _) hf0
   rw [val_aux_eq hn] at hvf; replace hvf := pow_eq_zero hvf; rwa [ModP.preVal_eq_zero] at hvf
@@ -701,9 +664,7 @@ instance : IsDomain (PreTilt K v O hv p) :=
   haveI : Nontrivial (PreTilt K v O hv p) := ⟨(CharP.nontrivial_of_char_ne_one hp.1.ne_one).1⟩
   haveI : NoZeroDivisors (PreTilt K v O hv p) :=
     ⟨fun f g hfg => by
-      simp_rw [← map_eq_zero] at hfg⊢
-      contrapose! hfg
-      rw [Valuation.map_mul]
+      simp_rw [← map_eq_zero] at hfg⊢; contrapose! hfg; rw [Valuation.map_mul]
       exact mul_ne_zero hfg.1 hfg.2⟩
   exact NoZeroDivisors.to_isDomain _
 

@@ -64,31 +64,19 @@ def oreEqv : Setoid (R × S)
   R rs rs' := ∃ (u : S)(v : R), rs'.1 * u = rs.1 * v ∧ (rs'.2 : R) * u = rs.2 * v
   iseqv := by
     refine' ⟨_, _, _⟩
-    · rintro ⟨r, s⟩
-      use 1
-      use 1
-      simp [Submonoid.one_mem]
+    · rintro ⟨r, s⟩; use 1; use 1; simp [Submonoid.one_mem]
     · rintro ⟨r, s⟩ ⟨r', s'⟩ ⟨u, v, hru, hsu⟩
       rcases ore_condition (s : R) s' with ⟨r₂, s₂, h₁⟩
       rcases ore_condition r₂ u with ⟨r₃, s₃, h₂⟩
-      have : (s : R) * ((v : R) * r₃) = (s : R) * (s₂ * s₃) :=
-        by
-        assoc_rw [h₁, h₂, hsu]
-        symm
+      have : (s : R) * ((v : R) * r₃) = (s : R) * (s₂ * s₃) := by assoc_rw [h₁, h₂, hsu]; symm;
         apply mul_assoc
       rcases ore_left_cancel (v * r₃) (s₂ * s₃) s this with ⟨w, hw⟩
-      use s₂ * s₃ * w
-      use u * r₃ * w
-      constructor <;> simp only [Submonoid.coe_mul]
-      · assoc_rw [hru, ← hw]
-        simp [mul_assoc]
-      · assoc_rw [hsu, ← hw]
-        simp [mul_assoc]
+      use s₂ * s₃ * w; use u * r₃ * w; constructor <;> simp only [Submonoid.coe_mul]
+      · assoc_rw [hru, ← hw]; simp [mul_assoc]
+      · assoc_rw [hsu, ← hw]; simp [mul_assoc]
     · rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨r₃, s₃⟩ ⟨u, v, hur₁, hs₁u⟩ ⟨u', v', hur₂, hs₂u⟩
       rcases ore_condition v' u with ⟨r', s', h⟩
-      use u' * s'
-      use v * r'
-      constructor <;> simp only [Submonoid.coe_mul]
+      use u' * s'; use v * r'; constructor <;> simp only [Submonoid.coe_mul]
       · assoc_rw [hur₂, h, hur₁, mul_assoc]
       · assoc_rw [hs₂u, h, hs₁u, mul_assoc]
 #align ore_localization.ore_eqv OreLocalization.oreEqv
@@ -138,11 +126,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] {S : Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)} [_inst_2 : OreLocalization.OreSet.{u1} R _inst_1 S] {β : (OreLocalization.{u1} R _inst_1 S _inst_2) -> Prop}, (forall (r : R) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)), β (OreLocalization.oreDiv.{u1} R _inst_1 S _inst_2 r s)) -> (forall (q : OreLocalization.{u1} R _inst_1 S _inst_2), β q)
 Case conversion may be inaccurate. Consider using '#align ore_localization.ind OreLocalization.indₓ'. -/
 @[elab_as_elim]
-protected theorem ind {β : R[S⁻¹] → Prop} (c : ∀ (r : R) (s : S), β (r /ₒ s)) : ∀ q, β q :=
-  by
-  apply Quotient.ind
-  rintro ⟨r, s⟩
-  exact c r s
+protected theorem ind {β : R[S⁻¹] → Prop} (c : ∀ (r : R) (s : S), β (r /ₒ s)) : ∀ q, β q := by
+  apply Quotient.ind; rintro ⟨r, s⟩; exact c r s
 #align ore_localization.ind OreLocalization.ind
 
 /- warning: ore_localization.ore_div_eq_iff -> OreLocalization.oreDiv_eq_iff is a dubious translation:
@@ -161,8 +146,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.expand OreLocalization.expandₓ'. -/
 /-- A fraction `r /ₒ s` is equal to its expansion by an arbitrary factor `t` if `s * t ∈ S`. -/
 protected theorem expand (r : R) (s : S) (t : R) (hst : (s : R) * t ∈ S) :
-    r /ₒ s = r * t /ₒ ⟨s * t, hst⟩ := by
-  apply Quotient.sound
+    r /ₒ s = r * t /ₒ ⟨s * t, hst⟩ := by apply Quotient.sound;
   refine' ⟨s, t * s, _, _⟩ <;> dsimp <;> rw [mul_assoc] <;> rfl
 #align ore_localization.expand OreLocalization.expand
 
@@ -211,23 +195,11 @@ def liftExpand {C : Sort _} (P : R → S → C)
     (hP : ∀ (r t : R) (s : S) (ht : (s : R) * t ∈ S), P r s = P (r * t) ⟨s * t, ht⟩) : R[S⁻¹] → C :=
   Quotient.lift (fun p : R × S => P p.1 p.2) fun p q pq =>
     by
-    cases' p with r₁ s₁
-    cases' q with r₂ s₂
-    rcases pq with ⟨u, v, hr₂, hs₂⟩
+    cases' p with r₁ s₁; cases' q with r₂ s₂; rcases pq with ⟨u, v, hr₂, hs₂⟩
     dsimp at *
-    have s₁vS : (s₁ : R) * v ∈ S := by
-      rw [← hs₂, ← S.coe_mul]
-      exact SetLike.coe_mem (s₂ * u)
-    replace hs₂ : s₂ * u = ⟨(s₁ : R) * v, s₁vS⟩
-    · ext
-      simp [hs₂]
-    rw [hP r₁ v s₁ s₁vS,
-      hP r₂ u s₂
-        (by
-          norm_cast
-          rw [hs₂]
-          assumption),
-      hr₂]
+    have s₁vS : (s₁ : R) * v ∈ S := by rw [← hs₂, ← S.coe_mul]; exact SetLike.coe_mem (s₂ * u)
+    replace hs₂ : s₂ * u = ⟨(s₁ : R) * v, s₁vS⟩; · ext; simp [hs₂]
+    rw [hP r₁ v s₁ s₁vS, hP r₂ u s₂ (by norm_cast; rw [hs₂]; assumption), hr₂]
     simpa [← hs₂]
 #align ore_localization.lift_expand OreLocalization.liftExpand
 
@@ -291,44 +263,32 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
   rcases ore_left_cancel _ _ _ this with ⟨s₄, hs₄⟩
   symm; rw [ore_div_eq_iff]
   use s₃ * s₄; use r₃ * s₄; simp only [Submonoid.coe_mul]; constructor
-  · assoc_rw [← hs₄]
-    simp only [mul_assoc]
-  · assoc_rw [h₃]
-    simp only [mul_assoc]
+  · assoc_rw [← hs₄]; simp only [mul_assoc]
+  · assoc_rw [h₃]; simp only [mul_assoc]
 
 #print OreLocalization.mul /-
 /-- The multiplication on the Ore localization of monoids. -/
 protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
   lift₂Expand mul' fun r₂ p s₂ hp r₁ r s₁ hr =>
     by
-    have h₁ := ore_eq r₁ s₂
-    set r₁' := ore_num r₁ s₂
-    set s₂' := ore_denom r₁ s₂
-    rcases ore_condition (↑s₂ * r₁') ⟨s₂ * p, hp⟩ with ⟨p', s_star, h₂⟩
-    dsimp at h₂
-    rcases ore_condition r (s₂' * s_star) with ⟨p_flat, s_flat, h₃⟩
-    simp only [S.coe_mul] at h₃
-    have : r₁ * r * s_flat = s₂ * p * (p' * p_flat) :=
-      by
-      rw [← mul_assoc, ← h₂, ← h₁, mul_assoc, h₃]
-      simp only [mul_assoc]
-    rw [mul'_char (r₂ * p) (r₁ * r) ⟨↑s₂ * p, hp⟩ ⟨↑s₁ * r, hr⟩ _ _ this]
-    clear this
+    have h₁ := ore_eq r₁ s₂; set r₁' := ore_num r₁ s₂; set s₂' := ore_denom r₁ s₂
+    rcases ore_condition (↑s₂ * r₁') ⟨s₂ * p, hp⟩ with ⟨p', s_star, h₂⟩; dsimp at h₂
+    rcases ore_condition r (s₂' * s_star) with ⟨p_flat, s_flat, h₃⟩; simp only [S.coe_mul] at h₃
+    have : r₁ * r * s_flat = s₂ * p * (p' * p_flat) := by
+      rw [← mul_assoc, ← h₂, ← h₁, mul_assoc, h₃]; simp only [mul_assoc]
+    rw [mul'_char (r₂ * p) (r₁ * r) ⟨↑s₂ * p, hp⟩ ⟨↑s₁ * r, hr⟩ _ _ this]; clear this
     have hsssp : ↑s₁ * ↑s₂' * ↑s_star * p_flat ∈ S :=
       by
       rw [mul_assoc, mul_assoc, ← mul_assoc ↑s₂', ← h₃, ← mul_assoc]
       exact S.mul_mem hr (SetLike.coe_mem s_flat)
     have : (⟨↑s₁ * r, hr⟩ : S) * s_flat = ⟨s₁ * s₂' * s_star * p_flat, hsssp⟩ :=
       by
-      ext
-      simp only [[anonymous], Submonoid.coe_mul]
+      ext; simp only [[anonymous], Submonoid.coe_mul]
       rw [mul_assoc, h₃, ← mul_assoc, ← mul_assoc]
-    rw [this]
-    clear this
+    rw [this]; clear this
     rcases ore_left_cancel (p * p') (r₁' * ↑s_star) s₂ (by simp [← mul_assoc, h₂]) with ⟨s₂'', h₂''⟩
     rw [← mul_assoc, mul_assoc r₂, OreLocalization.eq_of_num_factor_eq h₂'']
-    norm_cast  at hsssp⊢
-    rw [← OreLocalization.expand _ _ _ hsssp, ← mul_assoc]
+    norm_cast  at hsssp⊢; rw [← OreLocalization.expand _ _ _ hsssp, ← mul_assoc]
     apply OreLocalization.expand
 #align ore_localization.mul OreLocalization.mul
 -/
@@ -393,10 +353,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] {S : Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)} [_inst_2 : OreLocalization.OreSet.{u1} R _inst_1 S] {r : R} (hr : Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) r S), Eq.{succ u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.oreDiv.{u1} R _inst_1 S _inst_2 r (Subtype.mk.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S) r hr)) (OfNat.ofNat.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) 1 (One.toOfNat1.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instOneOreLocalization.{u1} R _inst_1 S _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.div_eq_one' OreLocalization.div_eq_one'ₓ'. -/
 @[simp]
-protected theorem div_eq_one' {r : R} (hr : r ∈ S) : r /ₒ ⟨r, hr⟩ = 1 :=
-  by
-  rw [OreLocalization.one_def, ore_div_eq_iff]
-  exact ⟨⟨r, hr⟩, 1, by simp, by simp⟩
+protected theorem div_eq_one' {r : R} (hr : r ∈ S) : r /ₒ ⟨r, hr⟩ = 1 := by
+  rw [OreLocalization.one_def, ore_div_eq_iff]; exact ⟨⟨r, hr⟩, 1, by simp, by simp⟩
 #align ore_localization.div_eq_one' OreLocalization.div_eq_one'
 
 /- warning: ore_localization.div_eq_one -> OreLocalization.div_eq_one is a dubious translation:
@@ -444,9 +402,7 @@ protected theorem mul_assoc (x y z : R[S⁻¹]) : x * y * z = x * (y * z) :=
   rcases ore_div_mul_char' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
   rcases ore_condition rb sa with ⟨rc, sc, hc⟩
   rw [ore_div_mul_char (r₁ * ra) r₃ (s₂ * sa) s₃ rc (sb * sc)
-      (by
-        simp only [Submonoid.coe_mul]
-        assoc_rw [hb, hc])]
+      (by simp only [Submonoid.coe_mul]; assoc_rw [hb, hc])]
   rw [mul_assoc, ← mul_assoc s₃]
   symm; apply ore_div_mul_char
   assoc_rw [hc, ← ha]; apply mul_assoc
@@ -679,8 +635,7 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹]
     dsimp; constructor
     · intro h
       rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff] at h
-      rcases h with ⟨u, v, h₁, h₂⟩
-      dsimp at h₂
+      rcases h with ⟨u, v, h₁, h₂⟩; dsimp at h₂
       rw [one_mul, one_mul] at h₂
       subst h₂
       use u
@@ -713,13 +668,10 @@ private theorem add''_char (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) (rb : R) 
   by
   simp only [add'']
   have ha := ore_eq (s₁ : R) s₂
-  set! ra := ore_num (s₁ : R) s₂ with h
-  rw [← h] at *
-  clear h
+  set! ra := ore_num (s₁ : R) s₂ with h; rw [← h] at *; clear h
   -- r tilde
-  set! sa := ore_denom (s₁ : R) s₂ with h
-  rw [← h] at *
-  clear h
+  set! sa := ore_denom (s₁ : R) s₂ with h;
+  rw [← h] at *; clear h
   -- s tilde
   rcases ore_condition (sa : R) sb with ⟨rc, sc, hc⟩
   -- s*, r*
@@ -727,16 +679,12 @@ private theorem add''_char (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) (rb : R) 
     rw [← mul_assoc, ← hb, mul_assoc, ← hc, ← mul_assoc, ← mul_assoc, ha]
   rcases ore_left_cancel _ _ s₂ this with ⟨sd, hd⟩
   -- s#
-  symm
+  symm;
   rw [ore_div_eq_iff]
-  use sc * sd
-  use rc * sd
+  use sc * sd; use rc * sd
   constructor <;> simp only [Submonoid.coe_mul]
-  · noncomm_ring
-    assoc_rw [hd, hc]
-    noncomm_ring
-  · assoc_rw [hc]
-    noncomm_ring
+  · noncomm_ring; assoc_rw [hd, hc]; noncomm_ring
+  · assoc_rw [hc]; noncomm_ring
 
 attribute [local instance] OreLocalization.oreEqv
 
@@ -751,44 +699,30 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
     --s~~, r~~
     rcases ore_condition rb sc with ⟨rd, sd, hd⟩
     -- s#, r#
-    dsimp at *
+    dsimp at *;
     rw [add''_char _ _ _ _ rc sc hc]
-    have : ↑s₁ * ↑(sb * sd) = ↑s₂ * (rc * rd) :=
-      by
-      simp only [Submonoid.coe_mul]
-      assoc_rw [hb', hd, hc]
-      noncomm_ring
+    have : ↑s₁ * ↑(sb * sd) = ↑s₂ * (rc * rd) := by simp only [Submonoid.coe_mul];
+      assoc_rw [hb', hd, hc]; noncomm_ring
     rw [add''_char _ _ _ _ (rc * rd : R) (sb * sd : S) this]
-    simp only [Submonoid.coe_mul]
-    assoc_rw [hb, hd]
+    simp only [Submonoid.coe_mul]; assoc_rw [hb, hd]
     rw [← mul_assoc, ← add_mul, ore_div_eq_iff]
-    use 1
-    use rd
-    constructor
+    use 1; use rd; constructor
     · simp
-    · simp only [mul_one, Submonoid.coe_one, Submonoid.coe_mul] at this⊢
-      assoc_rw [hc, this]
+    · simp only [mul_one, Submonoid.coe_one, Submonoid.coe_mul] at this⊢; assoc_rw [hc, this]
 
 private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂ /ₒ s₂) = add' r₂ s₂ (r₁ /ₒ s₁) :=
   by
   simp only [add', ore_div, add'', Quotient.lift_mk, Quotient.eq']
-  have hb := ore_eq (↑s₂) s₁
-  set rb := ore_num (↑s₂) s₁ with h
+  have hb := ore_eq (↑s₂) s₁; set rb := ore_num (↑s₂) s₁ with h
   -- r~~
-  rw [← h]
-  clear h
-  set sb := ore_denom (↑s₂) s₁ with h
-  rw [← h]
-  clear h
+  rw [← h];
+  clear h; set sb := ore_denom (↑s₂) s₁ with h; rw [← h]; clear h
   -- s~~
-  have ha := ore_eq (↑s₁) s₂
+  have ha := ore_eq (↑s₁) s₂;
   set ra := ore_num (↑s₁) s₂ with h
   -- r~
-  rw [← h]
-  clear h
-  set sa := ore_denom (↑s₁) s₂ with h
-  rw [← h]
-  clear h
+  rw [← h];
+  clear h; set sa := ore_denom (↑s₁) s₂ with h; rw [← h]; clear h
   -- s~
   rcases ore_condition ra sb with ⟨rc, sc, hc⟩
   -- r#, s#
@@ -796,15 +730,11 @@ private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂
     rw [← mul_assoc, ← hb, mul_assoc, ← hc, ← mul_assoc, ← ha, mul_assoc]
   rcases ore_left_cancel _ _ s₁ this with ⟨sd, hd⟩
   -- s+
-  use sc * sd
+  use sc * sd;
   use rc * sd
-  dsimp
-  constructor
-  · rw [add_mul, add_mul, add_comm]
-    assoc_rw [← hd, hc]
-    noncomm_ring
-  · rw [mul_assoc, ← mul_assoc ↑sa, ← hd, hb]
-    noncomm_ring
+  dsimp; constructor
+  · rw [add_mul, add_mul, add_comm]; assoc_rw [← hd, hc]; noncomm_ring
+  · rw [mul_assoc, ← mul_assoc ↑sa, ← hd, hb]; noncomm_ring
 
 /-- The addition on the Ore localization. -/
 private def add : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] := fun x =>
@@ -915,9 +845,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))} [_inst_2 : OreLocalization.OreSet.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S] (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)), Eq.{succ u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.oreDiv.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2 (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) s) (OfNat.ofNat.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) 0 (Zero.toOfNat0.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instZeroOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.zero_div_eq_zero OreLocalization.zero_div_eq_zeroₓ'. -/
 @[simp]
-theorem zero_div_eq_zero (s : S) : 0 /ₒ s = 0 :=
-  by
-  rw [OreLocalization.zero_def, ore_div_eq_iff]
+theorem zero_div_eq_zero (s : S) : 0 /ₒ s = 0 := by rw [OreLocalization.zero_def, ore_div_eq_iff];
   exact ⟨s, 1, by simp⟩
 #align ore_localization.zero_div_eq_zero OreLocalization.zero_div_eq_zero
 
@@ -989,23 +917,14 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_add_char' r₂ r₃ s₂ s₃ with ⟨ra, sa, ha, q⟩
-  rw [q]
-  clear q
+  rcases ore_div_add_char' r₂ r₃ s₂ s₃ with ⟨ra, sa, ha, q⟩; rw [q]; clear q
   rw [OreLocalization.expand' r₂ s₂ sa]
-  rcases ore_div_mul_char' r₁ (r₂ * sa) s₁ (s₂ * sa) with ⟨rb, sb, hb, q⟩
-  rw [q]
-  clear q
-  have hs₃rasb : ↑s₃ * (ra * sb) ∈ S :=
-    by
-    rw [← mul_assoc, ← ha]
-    norm_cast
-    apply SetLike.coe_mem
+  rcases ore_div_mul_char' r₁ (r₂ * sa) s₁ (s₂ * sa) with ⟨rb, sb, hb, q⟩; rw [q]; clear q
+  have hs₃rasb : ↑s₃ * (ra * sb) ∈ S := by rw [← mul_assoc, ← ha]; norm_cast; apply SetLike.coe_mem
   rw [OreLocalization.expand _ _ _ hs₃rasb]
   have ha' : ↑(s₂ * sa * sb) = ↑s₃ * (ra * sb) := by simp [ha, ← mul_assoc]
   rw [← Subtype.coe_eq_of_eq_mk ha']
-  rcases ore_div_mul_char' r₁ (r₃ * (ra * sb)) s₁ (s₂ * sa * sb) with ⟨rc, sc, hc, hc'⟩
-  rw [hc']
+  rcases ore_div_mul_char' r₁ (r₃ * (ra * sb)) s₁ (s₂ * sa * sb) with ⟨rc, sc, hc, hc'⟩; rw [hc']
   rw [ore_div_add_char (s₂ * sa * sb) (s₂ * sa * sb * sc) 1 sc (by simp)]
   rw [OreLocalization.expand' (r₂ * ↑sa + r₃ * ra) (s₂ * sa) (sb * sc)]
   conv_lhs =>
@@ -1013,8 +932,7 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
     skip
     congr
     rw [add_mul, S.coe_mul, ← mul_assoc, hb, ← mul_assoc, mul_assoc r₃, hc, mul_assoc, ← mul_add]
-  rw [OreLocalization.mul_cancel']
-  simp only [mul_one, Submonoid.coe_mul, mul_add, ← mul_assoc]
+  rw [OreLocalization.mul_cancel']; simp only [mul_one, Submonoid.coe_mul, mul_add, ← mul_assoc]
 #align ore_localization.left_distrib OreLocalization.left_distrib
 
 /- warning: ore_localization.right_distrib -> OreLocalization.right_distrib is a dubious translation:
@@ -1070,23 +988,16 @@ def universalHom : R[S⁻¹] →+* T :=
     map_add' := fun x y => by
       induction' x using OreLocalization.ind with r₁ s₁
       induction' y using OreLocalization.ind with r₂ s₂
-      rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩
-      rw [h₃']
-      clear h₃'
+      rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩; rw [h₃']; clear h₃'
       simp only [universal_mul_hom_apply, [anonymous], RingHom.toMonoidHom_eq_coe,
         MonoidHom.toFun_eq_coe]
       simp only [mul_inv_rev, MonoidHom.map_mul, RingHom.map_add, RingHom.map_mul, Units.val_mul]
       rw [add_mul, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.val_mul]
       simp only [mul_one, mul_right_inv, Units.val_one]
-      congr 1
-      rw [mul_assoc]
-      congr 1
-      norm_cast  at h₃
-      have h₃' := Subtype.coe_eq_of_eq_mk h₃
+      congr 1; rw [mul_assoc]; congr 1
+      norm_cast  at h₃; have h₃' := Subtype.coe_eq_of_eq_mk h₃
       rw [← Units.val_mul, ← mul_inv_rev, ← fS.map_mul, h₃']
-      have hs₂r₃ : ↑s₂ * r₃ ∈ S := by
-        rw [← h₃]
-        exact SetLike.coe_mem (s₁ * s₃)
+      have hs₂r₃ : ↑s₂ * r₃ ∈ S := by rw [← h₃]; exact SetLike.coe_mem (s₁ * s₃)
       apply (Units.inv_mul_cancel_left (fS s₂) _).symm.trans
       conv_lhs =>
         congr
@@ -1239,9 +1150,7 @@ protected def inv : R[R⁰⁻¹] → R[R⁰⁻¹] :=
       by_cases hr : r = 0
       · simp [hr]
       · by_cases ht : t = 0
-        · exfalso
-          apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩
-          simp [ht, MulZeroClass.mul_zero]
+        · exfalso; apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩; simp [ht, MulZeroClass.mul_zero]
         · simp only [hr, ht, [anonymous], dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
           apply OreLocalization.expand)
 #align ore_localization.inv OreLocalization.inv
@@ -1270,11 +1179,8 @@ protected theorem mul_inv_cancel (x : R[R⁰⁻¹]) (h : x ≠ 0) : x * x⁻¹ =
   induction' x using OreLocalization.ind with r s
   rw [OreLocalization.inv_def, OreLocalization.one_def]
   by_cases hr : r = 0
-  · exfalso
-    apply h
-    simp [hr]
-  · simp [hr]
-    apply OreLocalization.div_eq_one'
+  · exfalso; apply h; simp [hr]
+  · simp [hr]; apply OreLocalization.div_eq_one'
 #align ore_localization.mul_inv_cancel OreLocalization.mul_inv_cancel
 
 /- warning: ore_localization.inv_zero -> OreLocalization.inv_zero is a dubious translation:
@@ -1283,10 +1189,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : OreLocalization.OreSet.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))] [_inst_4 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))], Eq.{succ u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) (Inv.inv.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) (OreLocalization.inv'.{u1} R _inst_1 _inst_2 _inst_3 _inst_4) (OfNat.ofNat.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) 0 (Zero.toOfNat0.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) (OreLocalization.instZeroOreLocalizationToMonoidToMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3)))) (OfNat.ofNat.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) 0 (Zero.toOfNat0.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3) (OreLocalization.instZeroOreLocalizationToMonoidToMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) _inst_3)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.inv_zero OreLocalization.inv_zeroₓ'. -/
-protected theorem inv_zero : (0 : R[R⁰⁻¹])⁻¹ = 0 :=
-  by
-  rw [OreLocalization.zero_def, OreLocalization.inv_def]
-  simp
+protected theorem inv_zero : (0 : R[R⁰⁻¹])⁻¹ = 0 := by
+  rw [OreLocalization.zero_def, OreLocalization.inv_def]; simp
 #align ore_localization.inv_zero OreLocalization.inv_zero
 
 instance : DivisionRing R[R⁰⁻¹] :=

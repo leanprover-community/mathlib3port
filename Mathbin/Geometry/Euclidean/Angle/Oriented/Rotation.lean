@@ -520,8 +520,7 @@ theorem inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two {x y : V} :
       rw [neg_smul, ← smul_neg, o.neg_rotation_pi_div_two]
   · rcases h with (rfl | ⟨r, rfl⟩)
     · exact Or.inl rfl
-    · by_cases hx : x = 0
-      · exact Or.inl hx
+    · by_cases hx : x = 0; · exact Or.inl hx
       rcases lt_trichotomy r 0 with (hr | rfl | hr)
       · refine' Or.inr (Or.inr (Or.inr _))
         rw [o.oangle_smul_right_of_neg _ _ hr, o.neg_rotation_pi_div_two,

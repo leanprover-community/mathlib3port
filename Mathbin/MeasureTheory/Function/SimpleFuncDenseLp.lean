@@ -335,8 +335,7 @@ theorem measure_preimage_lt_top_of_memℒp (hp_pos : p ≠ 0) (hp_ne_top : p ≠
   by_cases hyf : y ∈ f.range
   swap
   · suffices h_empty : f ⁻¹' {y} = ∅
-    · rw [h_empty, measure_empty]
-      exact ENNReal.coe_lt_top
+    · rw [h_empty, measure_empty]; exact ENNReal.coe_lt_top
     ext1 x
     rw [Set.mem_preimage, Set.mem_singleton_iff, mem_empty_iff_false, iff_false_iff]
     refine' fun hxy => hyf _
@@ -357,11 +356,9 @@ theorem memℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E}
     (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : Memℒp f p μ :=
   by
   by_cases hp0 : p = 0
-  · rw [hp0, mem_ℒp_zero_iff_ae_strongly_measurable]
-    exact f.ae_strongly_measurable
+  · rw [hp0, mem_ℒp_zero_iff_ae_strongly_measurable]; exact f.ae_strongly_measurable
   by_cases hp_top : p = ∞
-  · rw [hp_top]
-    exact mem_ℒp_top f μ
+  · rw [hp_top]; exact mem_ℒp_top f μ
   refine' ⟨f.ae_strongly_measurable, _⟩
   rw [snorm_eq_snorm' hp0 hp_top, f.snorm'_eq]
   refine' ENNReal.rpow_lt_top_of_nonneg (by simp) (ennreal.sum_lt_top_iff.mpr fun y hy => _).Ne
@@ -532,24 +529,12 @@ theorem coe_smul (c : 𝕜) (f : lp.simpleFunc E p μ) :
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
 protected def module : Module 𝕜 (lp.simpleFunc E p μ)
     where
-  one_smul f := by
-    ext1
-    exact one_smul _ _
-  mul_smul x y f := by
-    ext1
-    exact mul_smul _ _ _
-  smul_add x f g := by
-    ext1
-    exact smul_add _ _ _
-  smul_zero x := by
-    ext1
-    exact smul_zero _
-  add_smul x y f := by
-    ext1
-    exact add_smul _ _ _
-  zero_smul f := by
-    ext1
-    exact zero_smul _ _
+  one_smul f := by ext1; exact one_smul _ _
+  mul_smul x y f := by ext1; exact mul_smul _ _ _
+  smul_add x f g := by ext1; exact smul_add _ _ _
+  smul_zero x := by ext1; exact smul_zero _
+  add_smul x y f := by ext1; exact add_smul _ _ _
+  zero_smul f := by ext1; exact zero_smul _ _
 #align measure_theory.Lp.simple_func.module MeasureTheory.lp.simpleFunc.module
 
 attribute [local instance] simple_func.module
@@ -604,10 +589,8 @@ theorem toLp_neg (f : α →ₛ E) (hf : Memℒp f p μ) : toLp (-f) hf.neg = -t
 #align measure_theory.Lp.simple_func.to_Lp_neg MeasureTheory.lp.simpleFunc.toLp_neg
 
 theorem toLp_sub (f g : α →ₛ E) (hf : Memℒp f p μ) (hg : Memℒp g p μ) :
-    toLp (f - g) (hf.sub hg) = toLp f hf - toLp g hg :=
-  by
-  simp only [sub_eq_add_neg, ← to_Lp_neg, ← to_Lp_add]
-  rfl
+    toLp (f - g) (hf.sub hg) = toLp f hf - toLp g hg := by
+  simp only [sub_eq_add_neg, ← to_Lp_neg, ← to_Lp_add]; rfl
 #align measure_theory.Lp.simple_func.to_Lp_sub MeasureTheory.lp.simpleFunc.toLp_sub
 
 variable [NormedRing 𝕜] [Module 𝕜 E] [BoundedSMul 𝕜 E]
@@ -673,10 +656,8 @@ theorem toLp_toSimpleFunc (f : lp.simpleFunc E p μ) :
   simpleFunc.eq' (Classical.choose_spec f.2)
 #align measure_theory.Lp.simple_func.to_Lp_to_simple_func MeasureTheory.lp.simpleFunc.toLp_toSimpleFunc
 
-theorem toSimpleFunc_toLp (f : α →ₛ E) (hfi : Memℒp f p μ) : toSimpleFunc (toLp f hfi) =ᵐ[μ] f :=
-  by
-  rw [← ae_eq_fun.mk_eq_mk]
-  exact Classical.choose_spec (to_Lp f hfi).2
+theorem toSimpleFunc_toLp (f : α →ₛ E) (hfi : Memℒp f p μ) : toSimpleFunc (toLp f hfi) =ᵐ[μ] f := by
+  rw [← ae_eq_fun.mk_eq_mk]; exact Classical.choose_spec (to_Lp f hfi).2
 #align measure_theory.Lp.simple_func.to_simple_func_to_Lp MeasureTheory.lp.simpleFunc.toSimpleFunc_toLp
 
 variable (E μ)
@@ -901,13 +882,10 @@ theorem exists_simpleFunc_nonneg_ae_eq {f : lp.simpleFunc G p μ} (hf : 0 ≤ f)
     ∃ f' : α →ₛ G, 0 ≤ f' ∧ f =ᵐ[μ] f' :=
   by
   rw [← Lp.simple_func.coe_fn_nonneg] at hf
-  have hf_ae : 0 ≤ᵐ[μ] simple_func.to_simple_func f :=
-    by
-    filter_upwards [to_simple_func_eq_to_fun f, hf]with _ h1 _
-    rwa [h1]
+  have hf_ae : 0 ≤ᵐ[μ] simple_func.to_simple_func f := by
+    filter_upwards [to_simple_func_eq_to_fun f, hf]with _ h1 _; rwa [h1]
   let s := to_measurable μ { x | ¬0 ≤ simple_func.to_simple_func f x }ᶜ
-  have hs_zero : μ (sᶜ) = 0 := by
-    rw [compl_compl, measure_to_measurable]
+  have hs_zero : μ (sᶜ) = 0 := by rw [compl_compl, measure_to_measurable];
     rwa [eventually_le, ae_iff] at hf_ae
   have hfs_nonneg : ∀ x ∈ s, 0 ≤ simple_func.to_simple_func f x :=
     by
@@ -984,8 +962,7 @@ theorem denseRange_coeSimpleFuncNonnegToLpNonneg [hp : Fact (1 ≤ p)] (hp_ne_to
     · have hg_nonneg : 0 ≤ᵐ[μ] g := (Lp.coe_fn_nonneg _).mpr g.2
       refine' hg_nonneg.mono fun a ha => subset_closure _
       simpa using ha
-    · simp_rw [sub_zero]
-      exact hg_mem_ℒp.snorm_lt_top
+    · simp_rw [sub_zero]; exact hg_mem_ℒp.snorm_lt_top
   refine'
     ⟨fun n =>
       (coe_simple_func_nonneg_to_Lp_nonneg p μ G) ⟨to_Lp (x n) (hx_mem_ℒp n), hx_nonneg_Lp n⟩,
@@ -1064,10 +1041,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
     refine' simple_func.induction _ _
     · intro c s hs h
       by_cases hc : c = 0
-      · subst hc
-        convert h_ind 0 MeasurableSet.empty (by simp) using 1
-        ext
-        simp [const]
+      · subst hc; convert h_ind 0 MeasurableSet.empty (by simp) using 1; ext; simp [const]
       have hp_pos : p ≠ 0 := (lt_of_lt_of_le zero_lt_one _i.elim).ne'
       exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)
     · intro f g hfg hf hg int_fg
@@ -1146,9 +1120,7 @@ theorem L1.SimpleFunc.toLp_one_eq_toL1 (f : α →ₛ E) (hf : Integrable f μ) 
 #align measure_theory.L1.simple_func.to_Lp_one_eq_to_L1 MeasureTheory.L1.SimpleFunc.toLp_one_eq_toL1
 
 protected theorem L1.SimpleFunc.integrable (f : α →₁ₛ[μ] E) :
-    Integrable (lp.simpleFunc.toSimpleFunc f) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable]
+    Integrable (lp.simpleFunc.toSimpleFunc f) μ := by rw [← mem_ℒp_one_iff_integrable];
   exact Lp.simple_func.mem_ℒp f
 #align measure_theory.L1.simple_func.integrable MeasureTheory.L1.SimpleFunc.integrable
 

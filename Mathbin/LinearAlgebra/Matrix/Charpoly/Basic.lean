@@ -99,8 +99,7 @@ theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M)
   ext (k i j)
   simp only [matPolyEquiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases h : i = j
-  · subst h
-    rw [charmatrix_apply_eq, coeff_sub]
+  · subst h; rw [charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
     split_ifs <;> simp
   · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]

@@ -88,10 +88,7 @@ variable [∀ i, Zero (β i)] [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
 #print Dfinsupp.funLike /-
 instance funLike : FunLike (Π₀ i, β i) ι β :=
-  ⟨fun f => f.toFun, fun ⟨f₁, s₁⟩ ⟨f₂, s₁⟩ (h : f₁ = f₂) =>
-    by
-    subst h
-    congr ⟩
+  ⟨fun f => f.toFun, fun ⟨f₁, s₁⟩ ⟨f₂, s₁⟩ (h : f₁ = f₂) => by subst h; congr ⟩
 #align dfinsupp.fun_like Dfinsupp.funLike
 -/
 
@@ -183,19 +180,14 @@ theorem mapRange_apply (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) 
 #print Dfinsupp.mapRange_id /-
 @[simp]
 theorem mapRange_id (h : ∀ i, id (0 : β₁ i) = 0 := fun i => rfl) (g : Π₀ i : ι, β₁ i) :
-    mapRange (fun i => (id : β₁ i → β₁ i)) h g = g :=
-  by
-  ext
-  rfl
+    mapRange (fun i => (id : β₁ i → β₁ i)) h g = g := by ext; rfl
 #align dfinsupp.map_range_id Dfinsupp.mapRange_id
 -/
 
 #print Dfinsupp.mapRange_comp /-
 theorem mapRange_comp (f : ∀ i, β₁ i → β₂ i) (f₂ : ∀ i, β i → β₁ i) (hf : ∀ i, f i 0 = 0)
     (hf₂ : ∀ i, f₂ i 0 = 0) (h : ∀ i, (f i ∘ f₂ i) 0 = 0) (g : Π₀ i : ι, β i) :
-    mapRange (fun i => f i ∘ f₂ i) h g = mapRange f hf (mapRange f₂ hf₂ g) :=
-  by
-  ext
+    mapRange (fun i => f i ∘ f₂ i) h g = mapRange f hf (mapRange f₂ hf₂ g) := by ext;
   simp only [map_range_apply]
 #align dfinsupp.map_range_comp Dfinsupp.mapRange_comp
 -/
@@ -203,8 +195,7 @@ theorem mapRange_comp (f : ∀ i, β₁ i → β₂ i) (f₂ : ∀ i, β i → �
 #print Dfinsupp.mapRange_zero /-
 @[simp]
 theorem mapRange_zero (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) :
-    mapRange f hf (0 : Π₀ i, β₁ i) = 0 := by
-  ext
+    mapRange f hf (0 : Π₀ i, β₁ i) = 0 := by ext;
   simp only [map_range_apply, coe_zero, Pi.zero_apply, hf]
 #align dfinsupp.map_range_zero Dfinsupp.mapRange_zero
 -/
@@ -219,15 +210,9 @@ def zipWith (f : ∀ i, β₁ i → β₂ i → β i) (hf : ∀ i, f i 0 0 = 0) 
     refine' y.support'.map fun ys => _
     refine' ⟨xs + ys, fun i => _⟩
     obtain h1 | (h1 : x i = 0) := xs.prop i
-    · left
-      rw [Multiset.mem_add]
-      left
-      exact h1
+    · left; rw [Multiset.mem_add]; left; exact h1
     obtain h2 | (h2 : y i = 0) := ys.prop i
-    · left
-      rw [Multiset.mem_add]
-      right
-      exact h2
+    · left; rw [Multiset.mem_add]; right; exact h2
     right; rw [h1, h2, hf]⟩
 #align dfinsupp.zip_with Dfinsupp.zipWith
 -/
@@ -260,10 +245,7 @@ theorem piecewise_apply (i : ι) : x.piecewise y s i = if i ∈ s then x i else 
 
 #print Dfinsupp.coe_piecewise /-
 @[simp, norm_cast]
-theorem coe_piecewise : ⇑(x.piecewise y s) = s.piecewise x y :=
-  by
-  ext
-  apply piecewise_apply
+theorem coe_piecewise : ⇑(x.piecewise y s) = s.piecewise x y := by ext; apply piecewise_apply
 #align dfinsupp.coe_piecewise Dfinsupp.coe_piecewise
 -/
 
@@ -577,9 +559,7 @@ theorem filter_pos_add_filter_neg [∀ i, AddZeroClass (β i)] (f : Π₀ i, β 
 #print Dfinsupp.filter_zero /-
 @[simp]
 theorem filter_zero [∀ i, Zero (β i)] (p : ι → Prop) [DecidablePred p] :
-    (0 : Π₀ i, β i).filterₓ p = 0 := by
-  ext
-  simp
+    (0 : Π₀ i, β i).filterₓ p = 0 := by ext; simp
 #align dfinsupp.filter_zero Dfinsupp.filter_zero
 -/
 
@@ -591,10 +571,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.filter_add Dfinsupp.filter_addₓ'. -/
 @[simp]
 theorem filter_add [∀ i, AddZeroClass (β i)] (p : ι → Prop) [DecidablePred p] (f g : Π₀ i, β i) :
-    (f + g).filterₓ p = f.filterₓ p + g.filterₓ p :=
-  by
-  ext
-  simp [ite_add_zero]
+    (f + g).filterₓ p = f.filterₓ p + g.filterₓ p := by ext; simp [ite_add_zero]
 #align dfinsupp.filter_add Dfinsupp.filter_add
 
 /- warning: dfinsupp.filter_smul -> Dfinsupp.filter_smul is a dubious translation:
@@ -605,9 +582,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.filter_smul Dfinsupp.filter_smulₓ'. -/
 @[simp]
 theorem filter_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] (p : ι → Prop)
-    [DecidablePred p] (r : γ) (f : Π₀ i, β i) : (r • f).filterₓ p = r • f.filterₓ p :=
-  by
-  ext
+    [DecidablePred p] (r : γ) (f : Π₀ i, β i) : (r • f).filterₓ p = r • f.filterₓ p := by ext;
   simp [smul_ite]
 #align dfinsupp.filter_smul Dfinsupp.filter_smul
 
@@ -1001,19 +976,14 @@ theorem filter_single_neg {p : ι → Prop} [DecidablePred p] (i : ι) (x : β i
 #print Dfinsupp.single_eq_of_sigma_eq /-
 /-- Equality of sigma types is sufficient (but not necessary) to show equality of `dfinsupp`s. -/
 theorem single_eq_of_sigma_eq {i j} {xi : β i} {xj : β j} (h : (⟨i, xi⟩ : Sigma β) = ⟨j, xj⟩) :
-    Dfinsupp.single i xi = Dfinsupp.single j xj :=
-  by
-  cases h
-  rfl
+    Dfinsupp.single i xi = Dfinsupp.single j xj := by cases h; rfl
 #align dfinsupp.single_eq_of_sigma_eq Dfinsupp.single_eq_of_sigma_eq
 -/
 
 #print Dfinsupp.equivFunOnFintype_single /-
 @[simp]
 theorem equivFunOnFintype_single [Fintype ι] (i : ι) (m : β i) :
-    (@Dfinsupp.equivFunOnFintype ι β _ _) (Dfinsupp.single i m) = Pi.single i m :=
-  by
-  ext
+    (@Dfinsupp.equivFunOnFintype ι β _ _) (Dfinsupp.single i m) = Pi.single i m := by ext;
   simp [Dfinsupp.single_eq_pi_single]
 #align dfinsupp.equiv_fun_on_fintype_single Dfinsupp.equivFunOnFintype_single
 -/
@@ -1021,9 +991,7 @@ theorem equivFunOnFintype_single [Fintype ι] (i : ι) (m : β i) :
 #print Dfinsupp.equivFunOnFintype_symm_single /-
 @[simp]
 theorem equivFunOnFintype_symm_single [Fintype ι] (i : ι) (m : β i) :
-    (@Dfinsupp.equivFunOnFintype ι β _ _).symm (Pi.single i m) = Dfinsupp.single i m :=
-  by
-  ext i'
+    (@Dfinsupp.equivFunOnFintype ι β _ _).symm (Pi.single i m) = Dfinsupp.single i m := by ext i';
   simp only [← single_eq_pi_single, equiv_fun_on_fintype_symm_coe]
 #align dfinsupp.equiv_fun_on_fintype_symm_single Dfinsupp.equivFunOnFintype_symm_single
 -/
@@ -1162,9 +1130,7 @@ theorem coe_update : (f.update i b : ∀ i : ι, β i) = Function.update f i b :
 
 #print Dfinsupp.update_self /-
 @[simp]
-theorem update_self : f.update i (f i) = f := by
-  ext
-  simp
+theorem update_self : f.update i (f i) = f := by ext; simp
 #align dfinsupp.update_self Dfinsupp.update_self
 -/
 
@@ -1235,8 +1201,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.single_add Df
 theorem single_add (i : ι) (b₁ b₂ : β i) : single i (b₁ + b₂) = single i b₁ + single i b₂ :=
   ext fun i' => by
     by_cases h : i = i'
-    · subst h
-      simp only [add_apply, single_eq_same]
+    · subst h; simp only [add_apply, single_eq_same]
     · simp only [add_apply, single_eq_of_ne h, zero_add]
 #align dfinsupp.single_add Dfinsupp.single_add
 
@@ -1383,27 +1348,21 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
       Subtype.coe_mk]
     have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0 :=
       by
-      intro j
-      cases' H j with H2 H2
+      intro j; cases' H j with H2 H2
       · cases' Multiset.mem_cons.1 H2 with H3 H3
-        · right
-          exact if_pos H3
-        · left
-          exact H3
-      right
-      split_ifs <;> [rfl;exact H2]
+        · right; exact if_pos H3
+        · left; exact H3
+      right; split_ifs <;> [rfl;exact H2]
     have H3 :
       (⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨i ::ₘ s, _⟩⟩ : Π₀ i, β i) =
         ⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨s, H2⟩⟩ :=
       ext fun _ => rfl
-    rw [H3]
-    apply ih
+    rw [H3]; apply ih
   have H3 : single i _ + _ = (⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩ : Π₀ i, β i) := single_add_erase _ _
   rw [← H3]
   change p (single i (f i) + _)
   cases' Classical.em (f i = 0) with h h
-  · rw [h, single_zero, zero_add]
-    exact H2
+  · rw [h, single_zero, zero_add]; exact H2
   refine' ha _ _ _ _ h H2
   rw [erase_same]
 #align dfinsupp.induction Dfinsupp.induction
@@ -1420,8 +1379,7 @@ theorem induction₂ {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (h0 : p 
     have h4 : f + single i b = single i b + f :=
       by
       ext j; by_cases H : i = j
-      · subst H
-        simp [h1]
+      · subst H; simp [h1]
       · simp [H]
     Eq.recOn h4 <| ha i b f h1 h2 h3
 #align dfinsupp.induction₂ Dfinsupp.induction₂
@@ -1649,8 +1607,7 @@ theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} :
 theorem support_single_ne_zero {i : ι} {b : β i} (hb : b ≠ 0) : (single i b).support = {i} :=
   by
   ext j; by_cases h : i = j
-  · subst h
-    simp [hb]
+  · subst h; simp [hb]
   simp [Ne.symm h, h]
 #align dfinsupp.support_single_ne_zero Dfinsupp.support_single_ne_zero
 -/
@@ -1679,11 +1636,7 @@ theorem mapRange_def [∀ (i) (x : β₁ i), Decidable (x ≠ 0)] {f : ∀ i, β
 @[simp]
 theorem mapRange_single {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0} {i : ι} {b : β₁ i} :
     mapRange f hf (single i b) = single i (f i b) :=
-  Dfinsupp.ext fun i' => by
-    by_cases i = i' <;>
-      [·
-        subst i'
-        simp;simp [h, hf]]
+  Dfinsupp.ext fun i' => by by_cases i = i' <;> [· subst i'; simp;simp [h, hf]]
 #align dfinsupp.map_range_single Dfinsupp.mapRange_single
 -/
 
@@ -1720,20 +1673,14 @@ end MapRangeAndZipWith
 
 #print Dfinsupp.erase_def /-
 theorem erase_def (i : ι) (f : Π₀ i, β i) : f.eraseₓ i = mk (f.support.eraseₓ i) fun j => f j.1 :=
-  by
-  ext j
-  by_cases h1 : j = i <;> by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
+  by ext j; by_cases h1 : j = i <;> by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 #align dfinsupp.erase_def Dfinsupp.erase_def
 -/
 
 #print Dfinsupp.support_erase /-
 @[simp]
-theorem support_erase (i : ι) (f : Π₀ i, β i) : (f.eraseₓ i).support = f.support.eraseₓ i :=
-  by
-  ext j
-  by_cases h1 : j = i
-  simp [h1]
-  by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
+theorem support_erase (i : ι) (f : Π₀ i, β i) : (f.eraseₓ i).support = f.support.eraseₓ i := by
+  ext j; by_cases h1 : j = i; simp [h1]; by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 #align dfinsupp.support_erase Dfinsupp.support_erase
 -/
 
@@ -1754,8 +1701,7 @@ theorem support_update (f : Π₀ i, β i) (i : ι) (b : β i) [Decidable (b = 0
   by
   ext j
   split_ifs with hb
-  · subst hb
-    simp [update_eq_erase, support_erase]
+  · subst hb; simp [update_eq_erase, support_erase]
   · rw [support_update_ne_zero f _ hb]
 #align dfinsupp.support_update Dfinsupp.support_update
 -/
@@ -1793,9 +1739,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.support_subtype_domain Dfinsupp.support_subtypeDomainₓ'. -/
 @[simp]
 theorem support_subtypeDomain {f : Π₀ i, β i} : (subtypeDomain p f).support = f.support.Subtype p :=
-  by
-  ext i
-  simp
+  by ext i; simp
 #align dfinsupp.support_subtype_domain Dfinsupp.support_subtypeDomain
 
 end FilterAndSubtypeDomain
@@ -1842,9 +1786,7 @@ instance [∀ i, Zero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀ i
           have hf : f i = 0 := by rwa [mem_support_iff, Classical.not_not] at h
           have hg : g i = 0 := by rwa [h₁, mem_support_iff, Classical.not_not] at h
           rw [hf, hg],
-      by
-      rintro rfl
-      simp⟩
+      by rintro rfl; simp⟩
 
 section Equiv
 
@@ -1884,9 +1826,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain_zero Dfinsupp.comapDomain_zeroₓ'. -/
 @[simp]
 theorem comapDomain_zero [∀ i, Zero (β i)] (h : κ → ι) (hh : Function.Injective h) :
-    comapDomain h hh (0 : Π₀ i, β i) = 0 := by
-  ext
-  rw [zero_apply, comap_domain_apply, zero_apply]
+    comapDomain h hh (0 : Π₀ i, β i) = 0 := by ext; rw [zero_apply, comap_domain_apply, zero_apply]
 #align dfinsupp.comap_domain_zero Dfinsupp.comapDomain_zero
 
 /- warning: dfinsupp.comap_domain_add -> Dfinsupp.comapDomain_add is a dubious translation:
@@ -1897,10 +1837,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain_add Dfinsupp.comapDomain_addₓ'. -/
 @[simp]
 theorem comapDomain_add [∀ i, AddZeroClass (β i)] (h : κ → ι) (hh : Function.Injective h)
-    (f g : Π₀ i, β i) : comapDomain h hh (f + g) = comapDomain h hh f + comapDomain h hh g :=
-  by
-  ext
-  rw [add_apply, comap_domain_apply, comap_domain_apply, comap_domain_apply, add_apply]
+    (f g : Π₀ i, β i) : comapDomain h hh (f + g) = comapDomain h hh f + comapDomain h hh g := by
+  ext; rw [add_apply, comap_domain_apply, comap_domain_apply, comap_domain_apply, add_apply]
 #align dfinsupp.comap_domain_add Dfinsupp.comapDomain_add
 
 /- warning: dfinsupp.comap_domain_smul -> Dfinsupp.comapDomain_smul is a dubious translation:
@@ -1912,9 +1850,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain_
 @[simp]
 theorem comapDomain_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)]
     (h : κ → ι) (hh : Function.Injective h) (r : γ) (f : Π₀ i, β i) :
-    comapDomain h hh (r • f) = r • comapDomain h hh f :=
-  by
-  ext
+    comapDomain h hh (r • f) = r • comapDomain h hh f := by ext;
   rw [smul_apply, comap_domain_apply, smul_apply, comap_domain_apply]
 #align dfinsupp.comap_domain_smul Dfinsupp.comapDomain_smul
 
@@ -1969,9 +1905,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain'_zero Dfinsupp.comapDomain'_zeroₓ'. -/
 @[simp]
 theorem comapDomain'_zero [∀ i, Zero (β i)] (h : κ → ι) {h' : ι → κ}
-    (hh' : Function.LeftInverse h' h) : comapDomain' h hh' (0 : Π₀ i, β i) = 0 :=
-  by
-  ext
+    (hh' : Function.LeftInverse h' h) : comapDomain' h hh' (0 : Π₀ i, β i) = 0 := by ext;
   rw [zero_apply, comap_domain'_apply, zero_apply]
 #align dfinsupp.comap_domain'_zero Dfinsupp.comapDomain'_zero
 
@@ -1984,9 +1918,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain'
 @[simp]
 theorem comapDomain'_add [∀ i, AddZeroClass (β i)] (h : κ → ι) {h' : ι → κ}
     (hh' : Function.LeftInverse h' h) (f g : Π₀ i, β i) :
-    comapDomain' h hh' (f + g) = comapDomain' h hh' f + comapDomain' h hh' g :=
-  by
-  ext
+    comapDomain' h hh' (f + g) = comapDomain' h hh' f + comapDomain' h hh' g := by ext;
   rw [add_apply, comap_domain'_apply, comap_domain'_apply, comap_domain'_apply, add_apply]
 #align dfinsupp.comap_domain'_add Dfinsupp.comapDomain'_add
 
@@ -1999,9 +1931,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.comap_domain'
 @[simp]
 theorem comapDomain'_smul [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)]
     (h : κ → ι) {h' : ι → κ} (hh' : Function.LeftInverse h' h) (r : γ) (f : Π₀ i, β i) :
-    comapDomain' h hh' (r • f) = r • comapDomain' h hh' f :=
-  by
-  ext
+    comapDomain' h hh' (r • f) = r • comapDomain' h hh' f := by ext;
   rw [smul_apply, comap_domain'_apply, smul_apply, comap_domain'_apply]
 #align dfinsupp.comap_domain'_smul Dfinsupp.comapDomain'_smul
 
@@ -2034,16 +1964,13 @@ def equivCongrLeft [∀ i, Zero (β i)] (h : ι ≃ κ) : (Π₀ i, β i) ≃ Π
   invFun f :=
     mapRange (fun i => Equiv.cast <| congr_arg β <| h.symm_apply_apply i)
       (fun i =>
-        (Equiv.cast_eq_iff_heq _).mpr <| by
-          convert HEq.rfl
+        (Equiv.cast_eq_iff_heq _).mpr <| by convert HEq.rfl;
           repeat' exact (h.symm_apply_apply i).symm)
       (@comapDomain' _ _ _ _ h _ h.left_inv f)
-  left_inv f := by
-    ext i
+  left_inv f := by ext i;
     rw [map_range_apply, comap_domain'_apply, comap_domain'_apply, Equiv.cast_eq_iff_heq,
       h.symm_apply_apply]
-  right_inv f := by
-    ext k
+  right_inv f := by ext k;
     rw [comap_domain'_apply, map_range_apply, comap_domain'_apply, Equiv.cast_eq_iff_heq,
       h.apply_symm_apply]
 #align dfinsupp.equiv_congr_left Dfinsupp.equivCongrLeft
@@ -2116,21 +2043,10 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.sigma_curry_a
 theorem sigmaCurry_apply [∀ i j, Zero (δ i j)] (f : Π₀ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
     sigmaCurry f i j = f ⟨i, j⟩ := by
   dsimp only [sigma_curry]; by_cases h : f ⟨i, j⟩ = 0
-  · rw [h, mk_apply]
-    split_ifs
-    · rw [mk_apply]
-      split_ifs
-      · exact h
-      · rfl
-    · rfl
-  · rw [mk_of_mem, mk_of_mem]
-    · rfl
-    · rw [mem_preimage, mem_support_to_fun]
-      exact h
-    · rw [mem_image]
-      refine' ⟨⟨i, j⟩, _, rfl⟩
-      rw [mem_support_to_fun]
-      exact h
+  · rw [h, mk_apply]; split_ifs; · rw [mk_apply]; split_ifs; · exact h; · rfl; · rfl
+  · rw [mk_of_mem, mk_of_mem]; · rfl
+    · rw [mem_preimage, mem_support_to_fun]; exact h
+    · rw [mem_image]; refine' ⟨⟨i, j⟩, _, rfl⟩; rw [mem_support_to_fun]; exact h
 #align dfinsupp.sigma_curry_apply Dfinsupp.sigmaCurry_apply
 
 /- warning: dfinsupp.sigma_curry_zero -> Dfinsupp.sigmaCurry_zero is a dubious translation:
@@ -2140,11 +2056,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {δ : forall (i : ι), (α i) -> Type.{u3}} [_inst_1 : forall (i : ι) (j : α i), Zero.{u3} (δ i j)], Eq.{max (max (succ u2) (succ u3)) (succ u1)} (Dfinsupp.{u2, max u3 u1} ι (fun (i : ι) => Dfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1)) (fun (i : ι) => Dfinsupp.instZeroDfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1))) (Dfinsupp.sigmaCurry.{u2, u3, u1} ι (fun (i : ι) => α i) δ _inst_1 (OfNat.ofNat.{max (max u2 u3) u1} (Dfinsupp.{max u1 u2, u3} (Sigma.{u2, u1} ι (fun (i : ι) => α i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => δ (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i))) 0 (Zero.toOfNat0.{max (max u2 u3) u1} (Dfinsupp.{max u1 u2, u3} (Sigma.{u2, u1} ι (fun (i : ι) => α i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => δ (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i))) (Dfinsupp.instZeroDfinsupp.{max u2 u1, u3} (Sigma.{u2, u1} ι (fun (i : ι) => α i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => δ (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i)) (fun (i : Sigma.{u2, u1} ι (fun (i : ι) => α i)) => _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) i) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) i)))))) (OfNat.ofNat.{max (max u2 u3) u1} (Dfinsupp.{u2, max u3 u1} ι (fun (i : ι) => Dfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1)) (fun (i : ι) => Dfinsupp.instZeroDfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1))) 0 (Zero.toOfNat0.{max (max u2 u3) u1} (Dfinsupp.{u2, max u3 u1} ι (fun (i : ι) => Dfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1)) (fun (i : ι) => Dfinsupp.instZeroDfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1))) (Dfinsupp.instZeroDfinsupp.{u2, max u3 u1} ι (fun (i : ι) => Dfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1)) (fun (i : ι) => Dfinsupp.instZeroDfinsupp.{u1, u3} (α i) (fun (j : α i) => δ i j) (fun (i_1 : α i) => _inst_1 i i_1)))))
 Case conversion may be inaccurate. Consider using '#align dfinsupp.sigma_curry_zero Dfinsupp.sigmaCurry_zeroₓ'. -/
 @[simp]
-theorem sigmaCurry_zero [∀ i j, Zero (δ i j)] : sigmaCurry (0 : Π₀ i : Σi, _, δ i.1 i.2) = 0 :=
-  by
-  ext (i j)
-  rw [sigma_curry_apply]
-  rfl
+theorem sigmaCurry_zero [∀ i j, Zero (δ i j)] : sigmaCurry (0 : Π₀ i : Σi, _, δ i.1 i.2) = 0 := by
+  ext (i j); rw [sigma_curry_apply]; rfl
 #align dfinsupp.sigma_curry_zero Dfinsupp.sigmaCurry_zero
 
 /- warning: dfinsupp.sigma_curry_add -> Dfinsupp.sigmaCurry_add is a dubious translation:
@@ -2303,12 +2216,8 @@ noncomputable def sigmaCurryEquiv [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (
     where
   toFun := sigmaCurry
   invFun := sigmaUncurry
-  left_inv f := by
-    ext ⟨i, j⟩
-    rw [sigma_uncurry_apply, sigma_curry_apply]
-  right_inv f := by
-    ext (i j)
-    rw [sigma_curry_apply, sigma_uncurry_apply]
+  left_inv f := by ext ⟨i, j⟩; rw [sigma_uncurry_apply, sigma_curry_apply]
+  right_inv f := by ext (i j); rw [sigma_curry_apply, sigma_uncurry_apply]
 #align dfinsupp.sigma_curry_equiv Dfinsupp.sigmaCurryEquiv
 -/
 
@@ -2446,9 +2355,7 @@ theorem prod_mapRange_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂
   rw [map_range_def]
   refine' (Finset.prod_subset support_mk_subset _).trans _
   · intro i h1 h2
-    dsimp
-    simp [h1] at h2
-    dsimp at h2
+    dsimp; simp [h1] at h2; dsimp at h2
     simp [h1, h2, h0]
   · refine' Finset.prod_congr rfl _
     intro i h1
@@ -2481,9 +2388,7 @@ theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x
   by
   by_cases h : b ≠ 0
   · simp [Dfinsupp.prod, support_single_ne_zero h]
-  · rw [Classical.not_not] at h
-    simp [h, prod_zero_index, h_zero]
-    rfl
+  · rw [Classical.not_not] at h; simp [h, prod_zero_index, h_zero]; rfl
 #align dfinsupp.prod_single_index Dfinsupp.prod_single_index
 #align dfinsupp.sum_single_index Dfinsupp.sum_single_index
 
@@ -2690,14 +2595,11 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
       refine'
         (Finset.sum_subset H1 _).symm.trans
           ((Finset.sum_congr rfl _).trans (Finset.sum_subset H2 _))
-      · intro i H1 H2
-        rw [Finset.mem_inter] at H2
+      · intro i H1 H2; rw [Finset.mem_inter] at H2
         simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hy i).resolve_left (mt (And.intro H1) H2), AddMonoidHom.map_zero]
-      · intro i H1
-        rfl
-      · intro i H1 H2
-        rw [Finset.mem_inter] at H2
+      · intro i H1; rfl
+      · intro i H1 H2; rw [Finset.mem_inter] at H2
         simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hx i).resolve_left (mt (fun H3 => And.intro H3 H1) H2), AddMonoidHom.map_zero]
   map_add' := by
@@ -2706,18 +2608,12 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
     simp only [coe_add, coe_mk', Subtype.coe_mk, Pi.add_apply, map_add, Finset.sum_add_distrib]
     congr 1
     · refine' (Finset.sum_subset _ _).symm
-      · intro i
-        simp only [Multiset.mem_toFinset, Multiset.mem_add]
-        exact Or.inl
-      · intro i H1 H2
-        simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
+      · intro i; simp only [Multiset.mem_toFinset, Multiset.mem_add]; exact Or.inl
+      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hf i).resolve_left H2, AddMonoidHom.map_zero]
     · refine' (Finset.sum_subset _ _).symm
-      · intro i
-        simp only [Multiset.mem_toFinset, Multiset.mem_add]
-        exact Or.inr
-      · intro i H1 H2
-        simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
+      · intro i; simp only [Multiset.mem_toFinset, Multiset.mem_add]; exact Or.inr
+      · intro i H1 H2; simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hg i).resolve_left H2, AddMonoidHom.map_zero]
   map_zero' := rfl
 #align dfinsupp.sum_add_hom Dfinsupp.sumAddHom
@@ -2874,15 +2770,9 @@ def liftAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] : (∀ i, β i �
     where
   toFun := sumAddHom
   invFun F i := F.comp (singleAddHom β i)
-  left_inv x := by
-    ext
-    simp
-  right_inv ψ := by
-    ext
-    simp
-  map_add' F G := by
-    ext
-    simp
+  left_inv x := by ext; simp
+  right_inv ψ := by ext; simp
+  map_add' F G := by ext; simp
 #align dfinsupp.lift_add_hom Dfinsupp.liftAddHom
 
 /- warning: dfinsupp.lift_add_hom_single_add_hom -> Dfinsupp.liftAddHom_singleAddHom is a dubious translation:
@@ -3144,14 +3034,8 @@ def mapRange.addEquiv (e : ∀ i, β₁ i ≃+ β₂ i) : (Π₀ i, β₁ i) ≃
       (e i).toAddMonoidHom with
     toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero
     invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero
-    left_inv := fun x => by
-      rw [← map_range_comp] <;>
-        · simp_rw [AddEquiv.symm_comp_self]
-          simp
-    right_inv := fun x => by
-      rw [← map_range_comp] <;>
-        · simp_rw [AddEquiv.self_comp_symm]
-          simp }
+    left_inv := fun x => by rw [← map_range_comp] <;> · simp_rw [AddEquiv.symm_comp_self]; simp
+    right_inv := fun x => by rw [← map_range_comp] <;> · simp_rw [AddEquiv.self_comp_symm]; simp }
 #align dfinsupp.map_range.add_equiv Dfinsupp.mapRange.addEquiv
 
 /- warning: dfinsupp.map_range.add_equiv_refl -> Dfinsupp.mapRange.addEquiv_refl is a dubious translation:

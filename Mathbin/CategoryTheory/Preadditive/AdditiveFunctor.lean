@@ -222,9 +222,7 @@ but is expected to have type
   forall {C : Type.{u1}} {D : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] [_inst_2 : CategoryTheory.Category.{u4, u2} D] [_inst_3 : CategoryTheory.Preadditive.{u3, u1} C _inst_1] [_inst_4 : CategoryTheory.Preadditive.{u4, u2} D _inst_2] (e : CategoryTheory.Equivalence.{u3, u4, u1, u2} C D _inst_1 _inst_2) [_inst_5 : CategoryTheory.Functor.Additive.{u1, u2, u3, u4} C D _inst_1 _inst_2 _inst_3 _inst_4 (CategoryTheory.Equivalence.functor.{u3, u4, u1, u2} C D _inst_1 _inst_2 e)], CategoryTheory.Functor.Additive.{u2, u1, u4, u3} D C _inst_2 _inst_1 _inst_4 _inst_3 (CategoryTheory.Equivalence.inverse.{u3, u4, u1, u2} C D _inst_1 _inst_2 e)
 Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.inverse_additive CategoryTheory.Equivalence.inverse_additiveₓ'. -/
 instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additive
-    where map_add' X Y f g := by
-    apply e.functor.map_injective
-    simp
+    where map_add' X Y f g := by apply e.functor.map_injective; simp
 #align category_theory.equivalence.inverse_additive CategoryTheory.Equivalence.inverse_additive
 
 end Equivalence

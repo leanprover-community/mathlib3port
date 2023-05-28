@@ -55,10 +55,8 @@ theorem contDiffOn_fderiv_coord_change (i j : atlas H M) :
     ContDiffOn 𝕜 ∞ (fderivWithin 𝕜 (j.1.extend I ∘ (i.1.extend I).symm) (range I))
       ((i.1.extend I).symm ≫ j.1.extend I).source :=
   by
-  have h : ((i.1.extend I).symm ≫ j.1.extend I).source ⊆ range I :=
-    by
-    rw [i.1.extend_coord_change_source]
-    apply image_subset_range
+  have h : ((i.1.extend I).symm ≫ j.1.extend I).source ⊆ range I := by
+    rw [i.1.extend_coord_change_source]; apply image_subset_range
   intro x hx
   refine' (ContDiffWithinAt.fderivWithin_right _ I.unique_diff le_top <| h hx).mono h
   refine'
@@ -102,8 +100,7 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
     refine'
       (contDiffOn_fderiv_coord_change I i j).ContinuousOn.comp ((i.1.continuousOn_extend I).mono _)
         _
-    · rw [i.1.extend_source]
-      exact inter_subset_left _ _
+    · rw [i.1.extend_source]; exact inter_subset_left _ _
     simp_rw [← i.1.extend_image_source_inter, maps_to_image]
   coordChange_comp := by
     rintro i j k x ⟨⟨hxi, hxj⟩, hxk⟩ v
@@ -122,8 +119,7 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
         (cont_diff_within_at_extend_coord_change' I (subset_maximal_atlas I j.2)
               (subset_maximal_atlas I i.2) hxj hxi).DifferentiableWithinAt
           le_top
-    · intro x hx
-      exact mem_range_self _
+    · intro x hx; exact mem_range_self _
     · exact I.unique_diff_at_image
     · rw [Function.comp_apply, i.1.extend_left_inv I hxi]
 #align tangent_bundle_core tangentBundleCore
@@ -334,13 +330,9 @@ theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
     (chartAt (ModelProd H E) p).toLocalEquiv = (Equiv.sigmaEquivProd H E).toLocalEquiv :=
   by
   ext x : 1
-  · ext
-    · rfl
+  · ext; · rfl
     exact (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1) x.2
-  · intro x
-    ext
-    · rfl
-    apply hEq_of_eq
+  · intro x; ext; · rfl; apply hEq_of_eq
     exact (tangentBundleCore I H).coordChange_self (achart _ x.1) x.1 (mem_achart_source H x.1) x.2
   simp_rw [TangentBundle.chartAt, FiberBundleCore.localTriv, FiberBundleCore.localTrivAsLocalEquiv,
     VectorBundleCore.toFiberBundleCore_baseSet, tangentBundleCore_baseSet]
@@ -349,11 +341,8 @@ theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
 
 @[simp, mfld_simps]
 theorem tangentBundle_model_space_coe_chartAt (p : TangentBundle I H) :
-    ⇑(chartAt (ModelProd H E) p) = Equiv.sigmaEquivProd H E :=
-  by
-  unfold_coes
-  simp_rw [tangentBundle_model_space_chartAt]
-  rfl
+    ⇑(chartAt (ModelProd H E) p) = Equiv.sigmaEquivProd H E := by unfold_coes;
+  simp_rw [tangentBundle_model_space_chartAt]; rfl
 #align tangent_bundle_model_space_coe_chart_at tangentBundle_model_space_coe_chartAt
 
 @[simp, mfld_simps]
@@ -362,15 +351,12 @@ theorem tangentBundle_model_space_coe_chartAt_symm (p : TangentBundle I H) :
       (Equiv.sigmaEquivProd H E).symm :=
   by
   unfold_coes
-  simp_rw [LocalHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]
-  rfl
+  simp_rw [LocalHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]; rfl
 #align tangent_bundle_model_space_coe_chart_at_symm tangentBundle_model_space_coe_chartAt_symm
 
 theorem tangentBundleCore_coordChange_model_space (x x' z : H) :
     (tangentBundleCore I H).coordChange (achart H x) (achart H x') z = ContinuousLinearMap.id 𝕜 E :=
-  by
-  ext v
-  exact (tangentBundleCore I H).coordChange_self (achart _ z) z (mem_univ _) v
+  by ext v; exact (tangentBundleCore I H).coordChange_self (achart _ z) z (mem_univ _) v
 #align tangent_bundle_core_coord_change_model_space tangentBundleCore_coordChange_model_space
 
 variable (H)

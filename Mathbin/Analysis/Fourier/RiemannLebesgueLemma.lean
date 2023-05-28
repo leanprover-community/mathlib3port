@@ -95,9 +95,7 @@ theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
     ext1 v
     simp_rw [inner_add_left, hiw, Real.fourierChar_apply, neg_add, mul_add, of_real_add, add_mul,
       exp_add]
-    have : 2 * π * -(1 / 2) = -π := by
-      field_simp
-      ring
+    have : 2 * π * -(1 / 2) = -π := by field_simp; ring
     rw [this, of_real_neg, neg_mul, exp_neg, exp_pi_mul_I, inv_neg, inv_one, mul_neg_one, neg_neg]
   rw [this, integral_add_right_eq_self]
   simp only [neg_smul, integral_neg]
@@ -137,9 +135,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
   let A := { v : V | ‖v‖ ≤ R + 1 }
   have mA : MeasurableSet A :=
     by
-    suffices A = Metric.closedBall (0 : V) (R + 1)
-      by
-      rw [this]
+    suffices A = Metric.closedBall (0 : V) (R + 1) by rw [this];
       exact metric.is_closed_ball.measurable_set
     simp_rw [A, Metric.closedBall, dist_eq_norm, sub_zero]
   obtain ⟨B, hB_pos, hB_vol⟩ : ∃ B : ℝ≥0, 0 < B ∧ volume A ≤ B :=
@@ -157,8 +153,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
       (div_pos hε hB_pos)
   refine' ⟨1 / 2 + 1 / (2 * δ), fun w hw_bd => _⟩
   have hw_ne : w ≠ 0 := by
-    contrapose! hw_bd
-    rw [hw_bd, norm_zero]
+    contrapose! hw_bd; rw [hw_bd, norm_zero]
     exact add_pos one_half_pos (one_div_pos.mpr <| mul_pos two_pos hδ1)
   have hw'_nm : ‖i w‖ = 1 / (2 * ‖w‖) := by
     rw [norm_smul, norm_div, Real.norm_of_nonneg (mul_nonneg two_pos.le <| sq_nonneg _), norm_one,
@@ -168,9 +163,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
       (hf1.integrable_of_has_compact_support hf2),
     norm_smul, norm_eq_abs, ← Complex.ofReal_one, ← of_real_bit0, ← of_real_div,
     Complex.abs_of_nonneg one_half_pos.le]
-  have : ε = 1 / 2 * (2 * ε) := by
-    field_simp
-    rw [mul_comm]
+  have : ε = 1 / 2 * (2 * ε) := by field_simp; rw [mul_comm]
   rw [this, mul_lt_mul_left (one_half_pos : (0 : ℝ) < 1 / 2)]
   refine' lt_of_le_of_lt (norm_integral_le_integral_norm _) _
   simp_rw [norm_smul, norm_eq_abs, abs_coe_circle, one_mul]
@@ -190,8 +183,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
       refine' le_trans (le_add_of_nonneg_right <| one_div_nonneg.mpr <| _) hw_bd
       exact (mul_pos (zero_lt_two' ℝ) hδ1).le
     · exact ((le_add_iff_nonneg_right _).mpr zero_le_one).trans hv.le
-  rw [int_A]
-  clear int_A
+  rw [int_A]; clear int_A
   --* Bound integral using fact that `‖f v - f (v + w')‖` is small.
   have bdA : ∀ v : V, v ∈ A → ‖‖f v - f (v + i w)‖‖ ≤ ε / B :=
     by
@@ -203,7 +195,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
     refine' (lt_add_of_pos_left _ _).trans_le hw_bd
     exact one_half_pos
   have bdA2 := norm_set_integral_le_of_norm_le_const (hB_vol.trans_lt ENNReal.coe_lt_top) bdA _
-  swap
+  swap;
   · apply Continuous.aestronglyMeasurable
     exact
       continuous_norm.comp <|
@@ -228,8 +220,7 @@ variable (f)
 theorem tendsto_integral_exp_inner_smul_cocompact :
     Tendsto (fun w : V => ∫ v, e[-⟪v, w⟫] • f v) (cocompact V) (𝓝 0) :=
   by
-  by_cases hfi : integrable f
-  swap
+  by_cases hfi : integrable f; swap
   · convert tendsto_const_nhds
     ext1 w
     apply integral_undef
@@ -321,24 +312,16 @@ theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.IsAddHaarMeasur
   let Adualₗ : (V →L[ℝ] ℝ) ≃ₗ[ℝ] V' →L[ℝ] ℝ :=
     { toFun := fun t => t.comp A.symm.to_continuous_linear_map
       invFun := fun t => t.comp A.to_continuous_linear_map
-      map_add' := by
-        intro t s
-        ext1 v
+      map_add' := by intro t s; ext1 v;
         simp only [ContinuousLinearMap.coe_comp', Function.comp_apply,
           ContinuousLinearMap.add_apply]
-      map_smul' := by
-        intro x f
-        ext1 v
+      map_smul' := by intro x f; ext1 v;
         simp only [RingHom.id_apply, ContinuousLinearMap.coe_comp', Function.comp_apply,
           ContinuousLinearMap.smul_apply]
-      left_inv := by
-        intro w
-        ext1 v
+      left_inv := by intro w; ext1 v;
         simp only [[anonymous], ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe,
           Function.comp_apply, ContinuousLinearEquiv.symm_apply_apply]
-      right_inv := by
-        intro w
-        ext1 v
+      right_inv := by intro w; ext1 v;
         simp only [[anonymous], ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe,
           Function.comp_apply, ContinuousLinearEquiv.apply_symm_apply] }
   let Adual : (V →L[ℝ] ℝ) ≃L[ℝ] V' →L[ℝ] ℝ :=

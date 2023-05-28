@@ -51,20 +51,15 @@ noncomputable def nth : ℕ → ℕ
   | n => sInf { i : ℕ | p i ∧ ∀ k < n, nth k < i }
 #align nat.nth Nat.nth
 
-theorem nth_zero : nth p 0 = sInf { i : ℕ | p i } :=
-  by
-  rw [nth]
-  simp
+theorem nth_zero : nth p 0 = sInf { i : ℕ | p i } := by rw [nth]; simp
 #align nat.nth_zero Nat.nth_zero
 
 @[simp]
 theorem nth_zero_of_zero (h : p 0) : nth p 0 = 0 := by simp [nth_zero, h]
 #align nat.nth_zero_of_zero Nat.nth_zero_of_zero
 
-theorem nth_zero_of_exists [DecidablePred p] (h : ∃ n, p n) : nth p 0 = Nat.find h :=
-  by
-  rw [nth_zero]
-  convert Nat.sInf_def h
+theorem nth_zero_of_exists [DecidablePred p] (h : ∃ n, p n) : nth p 0 = Nat.find h := by
+  rw [nth_zero]; convert Nat.sInf_def h
 #align nat.nth_zero_of_exists Nat.nth_zero_of_exists
 
 theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)

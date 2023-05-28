@@ -86,12 +86,8 @@ instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects))
       rw [← congr_fun (limit.w (hom_diagram X Y) h) f, ← congr_fun (limit.w (hom_diagram Y Z) h) g]
       dsimp
       simp
-  id_comp' _ _ _ := by
-    ext
-    simp only [category.id_comp, types.limit.π_mk']
-  comp_id' _ _ _ := by
-    ext
-    simp only [types.limit.π_mk', category.comp_id]
+  id_comp' _ _ _ := by ext; simp only [category.id_comp, types.limit.π_mk']
+  comp_id' _ _ _ := by ext; simp only [types.limit.π_mk', category.comp_id]
 
 #print CategoryTheory.Cat.HasLimits.limitConeX /-
 /-- Auxiliary definition: the limit category. -/
@@ -143,8 +139,7 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.pt ⟶ limitConeX F
         dsimp
         simp
       erw [functor.congr_hom this f]
-      dsimp
-      simp
+      dsimp; simp
   map_id' X := by simp
   map_comp' X Y Z f g := by simp
 #align category_theory.Cat.has_limits.limit_cone_lift CategoryTheory.Cat.HasLimits.limitConeLift
@@ -158,9 +153,7 @@ theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ C
     (j : J) (h : X = Y) :
     limit.π (homDiagram X Y) j (eqToHom h) =
       eqToHom (congr_arg (limit.π (F ⋙ Cat.objects.{v, v}) j) h) :=
-  by
-  subst h
-  simp
+  by subst h; simp
 #align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.Cat.HasLimits.limit_π_homDiagram_eqToHom
 
 #print CategoryTheory.Cat.HasLimits.limitConeIsLimit /-
@@ -174,12 +167,10 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)
     fapply CategoryTheory.Functor.ext
     · intro X
       ext
-      dsimp
-      simp only [types.limit.lift_π_apply', ← w j]
+      dsimp; simp only [types.limit.lift_π_apply', ← w j]
       rfl
     · intro X Y f
-      dsimp
-      simp [fun j => functor.congr_hom (w j).symm f]
+      dsimp; simp [fun j => functor.congr_hom (w j).symm f]
       congr
 #align category_theory.Cat.has_limits.limit_cone_is_limit CategoryTheory.Cat.HasLimits.limitConeIsLimit
 -/

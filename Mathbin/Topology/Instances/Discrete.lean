@@ -33,9 +33,7 @@ variable {α : Type _} [TopologicalSpace α]
 
 instance (priority := 100) DiscreteTopology.firstCountableTopology [DiscreteTopology α] :
     FirstCountableTopology α
-    where nhds_generated_countable := by
-    rw [nhds_discrete]
-    exact is_countably_generated_pure
+    where nhds_generated_countable := by rw [nhds_discrete]; exact is_countably_generated_pure
 #align discrete_topology.first_countable_topology DiscreteTopology.firstCountableTopology
 
 instance (priority := 100) DiscreteTopology.secondCountableTopology_of_encodable

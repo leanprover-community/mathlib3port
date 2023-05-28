@@ -27,14 +27,8 @@ namespace AddCommGroupCat
 
 instance : Preadditive AddCommGroupCat
     where
-  add_comp P Q R f f' g :=
-    show (f + f') ≫ g = f ≫ g + f' ≫ g by
-      ext
-      simp
-  comp_add P Q R f g g' :=
-    show f ≫ (g + g') = f ≫ g + f ≫ g' by
-      ext
-      simp
+  add_comp P Q R f f' g := show (f + f') ≫ g = f ≫ g + f' ≫ g by ext; simp
+  comp_add P Q R f g g' := show f ≫ (g + g') = f ≫ g + f ≫ g' by ext; simp
 
 end AddCommGroupCat
 

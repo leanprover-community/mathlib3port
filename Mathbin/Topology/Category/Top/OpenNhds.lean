@@ -81,10 +81,7 @@ instance (x : X) : Inhabited (OpenNhds x) :=
   ⟨⊤⟩
 
 #print TopologicalSpace.OpenNhds.openNhdsCategory /-
-instance openNhdsCategory (x : X) : Category.{u} (OpenNhds x) :=
-  by
-  unfold open_nhds
-  infer_instance
+instance openNhdsCategory (x : X) : Category.{u} (OpenNhds x) := by unfold open_nhds; infer_instance
 #align topological_space.open_nhds.open_nhds_category TopologicalSpace.OpenNhds.openNhdsCategory
 -/
 

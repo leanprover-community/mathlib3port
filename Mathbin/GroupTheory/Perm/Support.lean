@@ -190,10 +190,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {g : Equiv.Perm.{succ u1} α} {h : Equiv.Perm.{succ u1} α}, (Equiv.Perm.Disjoint.{u1} α f g) -> (Equiv.Perm.Disjoint.{u1} α f h) -> (Equiv.Perm.Disjoint.{u1} α f (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) g h))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint.mul_right Equiv.Perm.Disjoint.mul_rightₓ'. -/
-theorem Disjoint.mul_right (H1 : Disjoint f g) (H2 : Disjoint f h) : Disjoint f (g * h) :=
-  by
-  rw [disjoint_comm]
-  exact H1.symm.mul_left H2.symm
+theorem Disjoint.mul_right (H1 : Disjoint f g) (H2 : Disjoint f h) : Disjoint f (g * h) := by
+  rw [disjoint_comm]; exact H1.symm.mul_left H2.symm
 #align equiv.perm.disjoint.mul_right Equiv.Perm.Disjoint.mul_right
 
 /- warning: equiv.perm.disjoint_prod_right -> Equiv.Perm.disjoint_prod_right is a dubious translation:
@@ -338,25 +336,12 @@ theorem ofSubtype_swap_eq {p : α → Prop} [DecidablePred p] (x y : Subtype p) 
       split_ifs with hzx hzy
       · simp_rw [hzx, Subtype.coe_eta, swap_apply_left]
       · simp_rw [hzy, Subtype.coe_eta, swap_apply_right]
-      · rw [swap_apply_of_ne_of_ne]
-        rfl
-        intro h
-        apply hzx
-        rw [← h]
-        rfl
-        intro h
-        apply hzy
-        rw [← h]
-        rfl
+      · rw [swap_apply_of_ne_of_ne]; rfl
+        intro h; apply hzx; rw [← h]; rfl
+        intro h; apply hzy; rw [← h]; rfl
     · rw [of_subtype_apply_of_not_mem _ hz, swap_apply_of_ne_of_ne]
-      intro h
-      apply hz
-      rw [h]
-      exact Subtype.prop x
-      intro h
-      apply hz
-      rw [h]
-      exact Subtype.prop y
+      intro h; apply hz; rw [h]; exact Subtype.prop x
+      intro h; apply hz; rw [h]; exact Subtype.prop y
 #align equiv.perm.of_subtype_swap_eq Equiv.Perm.ofSubtype_swap_eq
 
 /- warning: equiv.perm.is_swap.of_subtype_is_swap -> Equiv.Perm.IsSwap.of_subtype_isSwap is a dubious translation:
@@ -368,11 +353,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.is_swap.of_
 theorem IsSwap.of_subtype_isSwap {p : α → Prop} [DecidablePred p] {f : Perm (Subtype p)}
     (h : f.IsSwap) : (ofSubtype f).IsSwap :=
   let ⟨⟨x, hx⟩, ⟨y, hy⟩, hxy⟩ := h
-  ⟨x, y, by
-    simp only [Ne.def] at hxy
-    exact hxy.1, by
-    simp only [hxy.2, of_subtype_swap_eq]
-    rfl⟩
+  ⟨x, y, by simp only [Ne.def] at hxy; exact hxy.1, by simp only [hxy.2, of_subtype_swap_eq]; rfl⟩
 #align equiv.perm.is_swap.of_subtype_is_swap Equiv.Perm.IsSwap.of_subtype_isSwap
 
 #print Equiv.Perm.ne_and_ne_of_swap_mul_apply_ne_self /-
@@ -452,9 +433,7 @@ theorem not_mem_support {x : α} : x ∉ f.support ↔ f x = x := by simp
 -/
 
 #print Equiv.Perm.coe_support_eq_set_support /-
-theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = { x | f x ≠ x } :=
-  by
-  ext
+theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = { x | f x ≠ x } := by ext;
   simp
 #align equiv.perm.coe_support_eq_set_support Equiv.Perm.coe_support_eq_set_support
 -/
@@ -1000,9 +979,7 @@ end Support
 #print Equiv.Perm.support_subtype_perm /-
 @[simp]
 theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
-    (f.subtypePerm h : Perm { x // x ∈ s }).support = s.attach.filterₓ fun x => f x ≠ x :=
-  by
-  ext
+    (f.subtypePerm h : Perm { x // x ∈ s }).support = s.attach.filterₓ fun x => f x ≠ x := by ext;
   simp [Subtype.ext_iff]
 #align equiv.perm.support_subtype_perm Equiv.Perm.support_subtype_perm
 -/

@@ -296,10 +296,7 @@ theorem mk_ne_zero_of_natDegree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0)
 #print AdjoinRoot.aeval_eq /-
 @[simp]
 theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
-  Polynomial.induction_on p
-    (fun x => by
-      rw [aeval_C]
-      rfl)
+  Polynomial.induction_on p (fun x => by rw [aeval_C]; rfl)
     (fun p q ihp ihq => by rw [AlgHom.map_add, RingHom.map_add, ihp, ihq]) fun n x ih =>
     by
     rw [AlgHom.map_mul, aeval_C, AlgHom.map_pow, aeval_X, RingHom.map_mul, mk_C, RingHom.map_pow,
@@ -726,9 +723,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g)
       rw [← monomial_zero_right _]
       convert congr_arg _ (Function.update_noteq hj _ _)
     -- Fix `decidable_eq` mismatch
-    · intros
-      have := Finset.mem_univ i
-      contradiction
+    · intros ; have := Finset.mem_univ i; contradiction
 #align adjoin_root.power_basis' AdjoinRoot.powerBasis'
 -/
 
@@ -752,8 +747,7 @@ theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * C f.leadingCoeff�
   have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f :=
     by
     ext
-    · simp only [RingHom.comp_apply, mk_C, lift_of]
-      rfl
+    · simp only [RingHom.comp_apply, mk_C, lift_of]; rfl
     · simp only [RingHom.comp_apply, mk_X, lift_root]
   rw [degree_eq_nat_degree f'_monic.ne_zero, degree_eq_nat_degree q_monic.ne_zero,
     WithBot.coe_le_coe, nat_degree_mul hf, nat_degree_C, add_zero]

@@ -58,9 +58,8 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
   have h3 : (0 : ℝ) < 3 := by norm_num1
   have h23 : 0 < (2 / 3 : ℝ) := by norm_num1
   -- In the trivial case `f = 0`, we take `g = 0`
-  rcases eq_or_ne f 0 with (rfl | hf)
-  · use 0
-    simp
+  rcases eq_or_ne f 0 with (rfl | hf);
+  · use 0; simp
   replace hf : 0 < ‖f‖ := norm_pos_iff.2 hf
   /- Otherwise, the closed sets `e '' (f ⁻¹' (Iic (-‖f‖ / 3)))` and `e '' (f ⁻¹' (Ici (‖f‖ / 3)))`
     are disjoint, hence by Urysohn's lemma there exists a function `g` that is equal to `-‖f‖ / 3`
@@ -120,8 +119,7 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     Function.iterate_succ_apply' _ _ _
   have hgf : ∀ n, dist ((g n).comp_continuous e) f ≤ (2 / 3) ^ n * ‖f‖ :=
     by
-    intro n
-    induction' n with n ihn
+    intro n; induction' n with n ihn
     · simp [g0]
     · rw [g_succ n, add_comp_continuous, ← dist_sub_right, add_sub_cancel', pow_succ, mul_assoc]
       refine' (hF_dist _).trans (mul_le_mul_of_nonneg_left _ (by norm_num1))
@@ -153,8 +151,7 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
     refine'
       (dist_le_of_le_geometric_of_tendsto₀ _ _ (by norm_num1) hg_dist hg_cau.tendsto_lim).trans_eq _
     field_simp [show (3 - 2 : ℝ) = 1 by norm_num1]
-  · rw [← hge]
-    exact norm_comp_continuous_le _ _
+  · rw [← hge]; exact norm_comp_continuous_le _ _
 #align bounded_continuous_function.exists_extension_norm_eq_of_closed_embedding' BoundedContinuousFunction.exists_extension_norm_eq_of_closed_embedding'
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version with a closed
@@ -224,16 +221,12 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
   have hle : a ≤ b := (hmem default).1.trans (hmem default).2
   rcases hle.eq_or_lt with (rfl | hlt)
   · have : ∀ x, f x = a := by simpa using hmem
-    use const Y a
-    simp [this, Function.funext_iff]
+    use const Y a; simp [this, Function.funext_iff]
   -- Put `c = (a + b) / 2`. Then `a < c < b` and `c - a = b - c`.
   set c := (a + b) / 2
   have hac : a < c := left_lt_add_div_two.2 hlt
   have hcb : c < b := add_div_two_lt_right.2 hlt
-  have hsub : c - a = b - c := by
-    simp only [c]
-    field_simp
-    ring
+  have hsub : c - a = b - c := by simp only [c]; field_simp; ring
   /- Due to `exists_extension_forall_mem_Icc_of_closed_embedding`, there exists an extension `g`
     such that `g y ∈ [a, b]` for all `y`. However, if `a` and/or `b` do not belong to the range of
     `f`, then we need to ensure that these points do not belong to the range of `g`. This is done
@@ -259,8 +252,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
         (is_closed_singleton.preimage g.continuous) hd (sub_nonneg.2 hac.le) with
       ⟨dg, dg0, dga, dgmem⟩
     replace hgf : ∀ x, (g + dg) (e x) = f x
-    · intro x
-      simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
+    · intro x; simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
     refine' ⟨g + dg, fun y => _, funext hgf⟩
     · have hay : a < (g + dg) y :=
         by
@@ -297,8 +289,7 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
       (is_closed_singleton.preimage g.continuous) hd (sub_nonneg.2 hcb.le) with
     ⟨dg, dg0, dgb, dgmem⟩
   replace hgf : ∀ x, (g - dg) (e x) = f x
-  · intro x
-    simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
+  · intro x; simp [dg0 (Or.inl <| mem_range_self _), ← hgf]
   refine' ⟨g - dg, fun y => _, funext hgf⟩
   · have hyb : (g - dg) y < b :=
       by
@@ -389,11 +380,9 @@ theorem exists_extension_forall_mem_of_closedEmbedding (f : C(X, ℝ)) {t : Set 
   set t' : Set ℝ := coe ∘ h '' t
   have ht_sub : t' ⊆ Ioo (-1 : ℝ) 1 := image_subset_iff.2 fun x hx => (h x).2
   have : ord_connected t' := by
-    constructor
-    rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ z hz
+    constructor; rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ z hz
     lift z to Ioo (-1 : ℝ) 1 using Icc_subset_Ioo (h x).2.1 (h y).2.2 hz
-    change z ∈ Icc (h x) (h y) at hz
-    rw [← h.image_Icc] at hz
+    change z ∈ Icc (h x) (h y) at hz; rw [← h.image_Icc] at hz
     rcases hz with ⟨z, hz, rfl⟩
     exact ⟨z, hs.out hx hy hz, rfl⟩
   have hFt : ∀ x, F x ∈ t' := fun x => mem_image_of_mem _ (hf x)
@@ -407,8 +396,7 @@ theorem exists_extension_forall_mem_of_closedEmbedding (f : C(X, ℝ)) {t : Set 
   · rcases hG y with ⟨a, ha, hay⟩
     convert ha
     exact hgG.2 hay.symm
-  · ext x
-    exact hgG.2 (congr_fun hGF _)
+  · ext x; exact hgG.2 (congr_fun hGF _)
 #align continuous_map.exists_extension_forall_mem_of_closed_embedding ContinuousMap.exists_extension_forall_mem_of_closedEmbedding
 
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed

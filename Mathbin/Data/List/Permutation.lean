@@ -201,10 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.map_map_permutations'_aux List.map_map_permutations'Auxₓ'. -/
 theorem map_map_permutations'Aux (f : α → β) (t : α) (ts : List α) :
     map (map f) (permutations'Aux t ts) = permutations'Aux (f t) (map f ts) := by
-  induction' ts with a ts ih <;>
-    [rfl;·
-      simp [← ih]
-      rfl]
+  induction' ts with a ts ih <;> [rfl;· simp [← ih]; rfl]
 #align list.map_map_permutations'_aux List.map_map_permutations'Aux
 
 #print List.permutations'Aux_eq_permutationsAux2 /-
@@ -233,8 +230,7 @@ theorem mem_permutationsAux2 {t : α} {ts : List α} {ys : List α} {l l' : List
     · exact ⟨y :: l₁, l₂, l0, by simp⟩
   · rintro ⟨_ | ⟨y', l₁⟩, l₂, l0, ye, rfl⟩
     · simp [ye]
-    · simp only [cons_append] at ye
-      rcases ye with ⟨rfl, rfl⟩
+    · simp only [cons_append] at ye; rcases ye with ⟨rfl, rfl⟩
       exact Or.inr ⟨l₁, l₂, l0, by simp⟩
 #align list.mem_permutations_aux2 List.mem_permutationsAux2
 -/
@@ -262,11 +258,7 @@ theorem length_permutationsAux2 (t : α) (ts : List α) (ys : List α) (f : List
 theorem foldr_permutationsAux2 (t : α) (ts : List α) (r L : List (List α)) :
     foldr (fun y r => (permutationsAux2 t ts r y id).2) r L =
       (L.bind fun y => (permutationsAux2 t ts [] y id).2) ++ r :=
-  by
-  induction' L with l L ih <;>
-    [rfl;·
-      simp [ih]
-      rw [← permutations_aux2_append]]
+  by induction' L with l L ih <;> [rfl;· simp [ih]; rw [← permutations_aux2_append]]
 #align list.foldr_permutations_aux2 List.foldr_permutationsAux2
 -/
 

@@ -181,8 +181,7 @@ theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E)
   by
   set e : (ℝ × ℝ) ≃L[ℝ] ℂ := equiv_real_prod_clm.symm
   have he : ∀ x y : ℝ, ↑x + ↑y * I = e (x, y) := fun x y => (mk_eq_add_mul_I x y).symm
-  have he₁ : e (1, 0) = 1 := rfl
-  have he₂ : e (0, 1) = I := rfl
+  have he₁ : e (1, 0) = 1 := rfl; have he₂ : e (0, 1) = I := rfl
   simp only [he] at *
   set F : ℝ × ℝ → E := f ∘ e
   set F' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E := fun p => (f' (e p)).comp (e : ℝ × ℝ →L[ℝ] ℂ)
@@ -194,8 +193,7 @@ theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E)
       neg_sub]
   set R : Set (ℝ × ℝ) := [z.re, w.re] ×ˢ [w.im, z.im]
   set t : Set (ℝ × ℝ) := e ⁻¹' s
-  rw [uIcc_comm z.im] at Hc Hi
-  rw [min_comm z.im, max_comm z.im] at Hd
+  rw [uIcc_comm z.im] at Hc Hi; rw [min_comm z.im, max_comm z.im] at Hd
   have hR : e ⁻¹' ([z.re, w.re] ×ℂ [w.im, z.im]) = R := rfl
   have htc : ContinuousOn F R := Hc.comp e.continuous_on hR.ge
   have htd :
@@ -324,10 +322,8 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
   /- We apply the previous lemma to `λ z, f (c + exp z)` on the rectangle
     `[log r, log R] × [0, 2 * π]`. -/
   set A := closed_ball c R \ ball c r
-  obtain ⟨a, rfl⟩ : ∃ a, Real.exp a = r
-  exact ⟨Real.log r, Real.exp_log h0⟩
-  obtain ⟨b, rfl⟩ : ∃ b, Real.exp b = R
-  exact ⟨Real.log R, Real.exp_log (h0.trans_le hle)⟩
+  obtain ⟨a, rfl⟩ : ∃ a, Real.exp a = r; exact ⟨Real.log r, Real.exp_log h0⟩
+  obtain ⟨b, rfl⟩ : ∃ b, Real.exp b = R; exact ⟨Real.log R, Real.exp_log (h0.trans_le hle)⟩
   rw [Real.exp_le_exp] at hle
   -- Unfold definition of `circle_integral` and cancel some terms.
   suffices
@@ -341,11 +337,8 @@ theorem circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_c
   set g : ℂ → ℂ := (· + ·) c ∘ exp
   have hdg : Differentiable ℂ g := differentiable_exp.const_add _
   replace hs : (g ⁻¹' s).Countable := (hs.preimage (add_right_injective c)).preimage_cexp
-  have h_maps : maps_to g R A := by
-    rintro z ⟨h, -⟩
-    simpa [dist_eq, g, abs_exp, hle] using h.symm
-  replace hc : ContinuousOn (f ∘ g) R
-  exact hc.comp hdg.continuous.continuous_on h_maps
+  have h_maps : maps_to g R A := by rintro z ⟨h, -⟩; simpa [dist_eq, g, abs_exp, hle] using h.symm
+  replace hc : ContinuousOn (f ∘ g) R; exact hc.comp hdg.continuous.continuous_on h_maps
   replace hd :
     ∀ z ∈ Ioo (min a b) (max a b) ×ℂ Ioo (min 0 (2 * π)) (max 0 (2 * π)) \ g ⁻¹' s,
       DifferentiableAt ℂ (f ∘ g) z
@@ -431,9 +424,7 @@ theorem circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of
       rw [norm_smul, norm_inv, hz, ← dist_eq_norm]
       refine' mul_le_mul_of_nonneg_left (hδ _ ⟨_, hzne⟩).le (inv_nonneg.2 hr0.le)
       rwa [mem_closedBall_iff_norm, hz]
-    _ = ε := by
-      field_simp [hr0.ne', real.two_pi_pos.ne']
-      ac_rfl
+    _ = ε := by field_simp [hr0.ne', real.two_pi_pos.ne'] ; ac_rfl
     
 #align complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto Complex.circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto
 

@@ -217,10 +217,7 @@ theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
   by
   apply get_section_is_unique
   intro V' fV' hV'
-  have eq : Z.hom = Y.hom ≫ (G.map f.right.unop).op :=
-    by
-    convert f.w
-    erw [category.id_comp]
+  have eq : Z.hom = Y.hom ≫ (G.map f.right.unop).op := by convert f.w; erw [category.id_comp]
   rw [Eq] at hV'
   convert get_section_is_amalgamation hu ℱ hS hx Y (fV' ≫ f.right.unop) _ using 1
   · tidy
@@ -378,14 +375,8 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
   homEquiv X Y :=
     { toFun := fun f => ⟨(Ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩
       invFun := fun f => ⟨((Ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩
-      left_inv := fun f => by
-        ext1
-        dsimp
-        rw [Equiv.symm_apply_apply]
-      right_inv := fun f => by
-        ext1
-        dsimp
-        rw [Equiv.apply_symm_apply] }
+      left_inv := fun f => by ext1; dsimp; rw [Equiv.symm_apply_apply]
+      right_inv := fun f => by ext1; dsimp; rw [Equiv.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(Ran.adjunction A G.op).Unit.app X.val⟩
       naturality' := fun _ _ f =>
@@ -394,12 +385,8 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
     { app := fun X => ⟨(Ran.adjunction A G.op).counit.app X.val⟩
       naturality' := fun _ _ f =>
         Sheaf.Hom.ext _ _ <| (Ran.adjunction A G.op).counit.naturality f.val }
-  homEquiv_unit X Y f := by
-    ext1
-    apply (Ran.adjunction A G.op).homEquiv_unit
-  homEquiv_counit X Y f := by
-    ext1
-    apply (Ran.adjunction A G.op).homEquiv_counit
+  homEquiv_unit X Y f := by ext1; apply (Ran.adjunction A G.op).homEquiv_unit
+  homEquiv_counit X Y f := by ext1; apply (Ran.adjunction A G.op).homEquiv_counit
 #align category_theory.sites.pullback_copullback_adjunction CategoryTheory.Sites.pullbackCopullbackAdjunction
 -/
 

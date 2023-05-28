@@ -153,11 +153,7 @@ but is expected to have type
   forall {F : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} F] {_inst_2 : Type.{u1} -> Type.{u3}} [G : Applicative.{u1, u3} _inst_2] {{_inst_3 : ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G}} {{_inst_4 : ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G}}, (Eq.{max (max (succ (succ u1)) (succ u2)) (succ u3)} (forall {α._@.Mathlib.Control.Traversable.Basic._hyg.243 : Type.{u1}}, (F α._@.Mathlib.Control.Traversable.Basic._hyg.243) -> (_inst_2 α._@.Mathlib.Control.Traversable.Basic._hyg.243)) (fun {α._@.Mathlib.Control.Traversable.Basic._hyg.243 : Type.{u1}} => ApplicativeTransformation.app.{u1, u2, u3} F _inst_1 _inst_2 G _inst_3 α._@.Mathlib.Control.Traversable.Basic._hyg.243) (fun {α._@.Mathlib.Control.Traversable.Basic._hyg.243 : Type.{u1}} => ApplicativeTransformation.app.{u1, u2, u3} F _inst_1 _inst_2 G _inst_4 α._@.Mathlib.Control.Traversable.Basic._hyg.243)) -> (Eq.{max (max (succ (succ u1)) (succ u2)) (succ u3)} (ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G) _inst_3 _inst_4)
 Case conversion may be inaccurate. Consider using '#align applicative_transformation.coe_inj ApplicativeTransformation.coe_injₓ'. -/
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
-  by
-  cases η
-  cases η'
-  congr
-  exact h
+  by cases η; cases η'; congr ; exact h
 #align applicative_transformation.coe_inj ApplicativeTransformation.coe_inj
 
 /- warning: applicative_transformation.ext -> ApplicativeTransformation.ext is a dubious translation:
@@ -168,10 +164,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align applicative_transformation.ext ApplicativeTransformation.extₓ'. -/
 @[ext]
 theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) :
-    η = η' := by
-  apply coe_inj
-  ext1 α
-  exact funext (h α)
+    η = η' := by apply coe_inj; ext1 α; exact funext (h α)
 #align applicative_transformation.ext ApplicativeTransformation.ext
 
 /- warning: applicative_transformation.ext_iff -> ApplicativeTransformation.ext_iff is a dubious translation:
@@ -219,9 +212,7 @@ theorem preserves_map {α β} (x : α → β) (y : F α) : η (x <$> y) = x <$> 
 -/
 
 #print ApplicativeTransformation.preserves_map' /-
-theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Functor.map x ∘ @η _ :=
-  by
-  ext y
+theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Functor.map x ∘ @η _ := by ext y;
   exact preserves_map η x y
 #align applicative_transformation.preserves_map' ApplicativeTransformation.preserves_map'
 -/

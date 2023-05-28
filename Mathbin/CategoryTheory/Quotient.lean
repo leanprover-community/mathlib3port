@@ -146,13 +146,7 @@ def functor : C ⥤ Quotient r where
 
 noncomputable instance : Full (functor r) where preimage X Y f := Quot.out f
 
-instance : EssSurj (functor r)
-    where mem_essImage Y :=
-    ⟨Y.as,
-      ⟨eqToIso
-          (by
-            ext
-            rfl)⟩⟩
+instance : EssSurj (functor r) where mem_essImage Y := ⟨Y.as, ⟨eqToIso (by ext; rfl)⟩⟩
 
 /- warning: category_theory.quotient.induction -> CategoryTheory.Quotient.induction is a dubious translation:
 lean 3 declaration is
@@ -162,9 +156,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.quotient.induction CategoryTheory.Quotient.inductionₓ'. -/
 protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
     (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) : ∀ {a b : Quotient r} (f : a ⟶ b), P f :=
-  by
-  rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
-  exact h f
+  by rintro ⟨x⟩ ⟨y⟩ ⟨f⟩; exact h f
 #align category_theory.quotient.induction CategoryTheory.Quotient.induction
 
 /- warning: category_theory.quotient.sound -> CategoryTheory.Quotient.sound is a dubious translation:
@@ -191,13 +183,9 @@ theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) :
   · erw [Quot.eq]
     intro h
     induction' h with m m' hm
-    · cases hm
-      apply congruence.comp_left
-      apply congruence.comp_right
-      assumption
+    · cases hm; apply congruence.comp_left; apply congruence.comp_right; assumption
     · apply refl
-    · apply symm
-      assumption
+    · apply symm; assumption
     · apply trans <;> assumption
   · apply Quotient.sound
 #align category_theory.quotient.functor_map_eq_iff CategoryTheory.Quotient.functor_map_eq_iff
@@ -218,14 +206,9 @@ Case conversion may be inaccurate. Consider using '#align category_theory.quotie
 def lift : Quotient r ⥤ D where
   obj a := F.obj a.as
   map a b hf :=
-    Quot.liftOn hf (fun f => F.map f)
-      (by
-        rintro _ _ ⟨_, _, _, _, h⟩
-        simp [H _ _ _ _ h])
+    Quot.liftOn hf (fun f => F.map f) (by rintro _ _ ⟨_, _, _, _, h⟩; simp [H _ _ _ _ h])
   map_id' a := F.map_id a.as
-  map_comp' := by
-    rintro a b c ⟨f⟩ ⟨g⟩
-    exact F.map_comp f g
+  map_comp' := by rintro a b c ⟨f⟩ ⟨g⟩; exact F.map_comp f g
 #align category_theory.quotient.lift CategoryTheory.Quotient.lift
 
 /- warning: category_theory.quotient.lift_spec -> CategoryTheory.Quotient.lift_spec is a dubious translation:
@@ -237,10 +220,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.quotie
 theorem lift_spec : functor r ⋙ lift r F H = F :=
   by
   apply Functor.ext; rotate_left
-  · rintro X
-    rfl
-  · rintro X Y f
-    simp
+  · rintro X; rfl
+  · rintro X Y f; simp
 #align category_theory.quotient.lift_spec CategoryTheory.Quotient.lift_spec
 
 /- warning: category_theory.quotient.lift_unique -> CategoryTheory.Quotient.lift_unique is a dubious translation:
@@ -253,11 +234,7 @@ theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = 
   by
   subst_vars
   apply functor.hext
-  · rintro X
-    dsimp [lift, Functor]
-    congr
-    ext
-    rfl
+  · rintro X; dsimp [lift, Functor]; congr ; ext; rfl
   · rintro X Y f
     dsimp [lift, Functor]
     apply Quot.inductionOn f
@@ -303,11 +280,8 @@ theorem lift.isLift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X)
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.quotient.lift_map_functor_map CategoryTheory.Quotient.lift_map_functor_mapₓ'. -/
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) :
-    (lift r F H).map ((functor r).map f) = F.map f :=
-  by
-  rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
-  dsimp
-  simp
+    (lift r F H).map ((functor r).map f) = F.map f := by
+  rw [← nat_iso.naturality_1 (lift.is_lift r F H)]; dsimp; simp
 #align category_theory.quotient.lift_map_functor_map CategoryTheory.Quotient.lift_map_functor_map
 
 end Quotient

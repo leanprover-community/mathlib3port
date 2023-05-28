@@ -410,10 +410,7 @@ instance : GroupWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.divInvMonoid,
     WithZero.nontrivial with
     inv_zero := inv_zero
-    mul_inv_cancel := fun a ha => by
-      lift a to α using ha
-      norm_cast
-      apply mul_right_inv }
+    mul_inv_cancel := fun a ha => by lift a to α using ha; norm_cast; apply mul_right_inv }
 
 end Group
 
@@ -440,8 +437,7 @@ instance [Semiring α] : Semiring (WithZero α) :=
       exact congr_arg some (left_distrib _ _ _)
     right_distrib := fun a b c => by
       cases' c with c
-      · change (a + b) * 0 = a * 0 + b * 0
-        simp
+      · change (a + b) * 0 = a * 0 + b * 0; simp
       cases' a with a <;> cases' b with b <;> try rfl
       exact congr_arg some (right_distrib _ _ _) }
 

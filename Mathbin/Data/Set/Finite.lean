@@ -134,18 +134,14 @@ protected noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finset
 
 #print Set.Finite.exists_finset /-
 theorem Finite.exists_finset {s : Set α} (h : s.Finite) :
-    ∃ s' : Finset α, ∀ a : α, a ∈ s' ↔ a ∈ s :=
-  by
-  cases h
+    ∃ s' : Finset α, ∀ a : α, a ∈ s' ↔ a ∈ s := by cases h;
   exact ⟨s.to_finset, fun _ => mem_to_finset⟩
 #align set.finite.exists_finset Set.Finite.exists_finset
 -/
 
 #print Set.Finite.exists_finset_coe /-
-theorem Finite.exists_finset_coe {s : Set α} (h : s.Finite) : ∃ s' : Finset α, ↑s' = s :=
-  by
-  cases h
-  exact ⟨s.to_finset, s.coe_to_finset⟩
+theorem Finite.exists_finset_coe {s : Set α} (h : s.Finite) : ∃ s' : Finset α, ↑s' = s := by
+  cases h; exact ⟨s.to_finset, s.coe_to_finset⟩
 #align set.finite.exists_finset_coe Set.Finite.exists_finset_coe
 -/
 
@@ -299,10 +295,7 @@ attribute [protected] to_finset_mono to_finset_strict_mono
 #print Set.Finite.toFinset_setOf /-
 @[simp]
 protected theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p]
-    (h : { x | p x }.Finite) : h.toFinset = Finset.univ.filterₓ p :=
-  by
-  ext
-  simp
+    (h : { x | p x }.Finite) : h.toFinset = Finset.univ.filterₓ p := by ext; simp
 #align set.finite.to_finset_set_of Set.Finite.toFinset_setOf
 -/
 
@@ -325,10 +318,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] (hs : Set.Finite.{u1} α s) (ht : Set.Finite.{u1} α t) (h : Set.Finite.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)), Eq.{succ u1} (Finset.{u1} α) (Set.Finite.toFinset.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) h) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.Finite.toFinset.{u1} α s hs) (Set.Finite.toFinset.{u1} α t ht))
 Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_inter Set.Finite.toFinset_interₓ'. -/
 protected theorem toFinset_inter [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
-    (h : (s ∩ t).Finite) : h.toFinset = hs.toFinset ∩ ht.toFinset :=
-  by
-  ext
-  simp
+    (h : (s ∩ t).Finite) : h.toFinset = hs.toFinset ∩ ht.toFinset := by ext; simp
 #align set.finite.to_finset_inter Set.Finite.toFinset_inter
 
 /- warning: set.finite.to_finset_union -> Set.Finite.toFinset_union is a dubious translation:
@@ -338,10 +328,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] (hs : Set.Finite.{u1} α s) (ht : Set.Finite.{u1} α t) (h : Set.Finite.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)), Eq.{succ u1} (Finset.{u1} α) (Set.Finite.toFinset.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) h) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.Finite.toFinset.{u1} α s hs) (Set.Finite.toFinset.{u1} α t ht))
 Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_union Set.Finite.toFinset_unionₓ'. -/
 protected theorem toFinset_union [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
-    (h : (s ∪ t).Finite) : h.toFinset = hs.toFinset ∪ ht.toFinset :=
-  by
-  ext
-  simp
+    (h : (s ∪ t).Finite) : h.toFinset = hs.toFinset ∪ ht.toFinset := by ext; simp
 #align set.finite.to_finset_union Set.Finite.toFinset_union
 
 /- warning: set.finite.to_finset_diff -> Set.Finite.toFinset_diff is a dubious translation:
@@ -351,10 +338,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] (hs : Set.Finite.{u1} α s) (ht : Set.Finite.{u1} α t) (h : Set.Finite.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t)), Eq.{succ u1} (Finset.{u1} α) (Set.Finite.toFinset.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) h) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.Finite.toFinset.{u1} α s hs) (Set.Finite.toFinset.{u1} α t ht))
 Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_diff Set.Finite.toFinset_diffₓ'. -/
 protected theorem toFinset_diff [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
-    (h : (s \ t).Finite) : h.toFinset = hs.toFinset \ ht.toFinset :=
-  by
-  ext
-  simp
+    (h : (s \ t).Finite) : h.toFinset = hs.toFinset \ ht.toFinset := by ext; simp
 #align set.finite.to_finset_diff Set.Finite.toFinset_diff
 
 /- warning: set.finite.to_finset_symm_diff -> Set.Finite.toFinset_symmDiff is a dubious translation:
@@ -364,9 +348,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] (hs : Set.Finite.{u1} α s) (ht : Set.Finite.{u1} α t) (h : Set.Finite.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t)), Eq.{succ u1} (Finset.{u1} α) (Set.Finite.toFinset.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t) h) (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.Finite.toFinset.{u1} α s hs) (Set.Finite.toFinset.{u1} α t ht))
 Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_symm_diff Set.Finite.toFinset_symmDiffₓ'. -/
 protected theorem toFinset_symmDiff [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
-    (h : (s ∆ t).Finite) : h.toFinset = hs.toFinset ∆ ht.toFinset :=
-  by
-  ext
+    (h : (s ∆ t).Finite) : h.toFinset = hs.toFinset ∆ ht.toFinset := by ext;
   simp [mem_symm_diff, Finset.mem_symmDiff]
 #align set.finite.to_finset_symm_diff Set.Finite.toFinset_symmDiff
 
@@ -377,26 +359,19 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (hs : Set.Finite.{u1} α s) (h : Set.Finite.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)), Eq.{succ u1} (Finset.{u1} α) (Set.Finite.toFinset.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) h) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b))) (Set.Finite.toFinset.{u1} α s hs))
 Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_compl Set.Finite.toFinset_complₓ'. -/
 protected theorem toFinset_compl [DecidableEq α] [Fintype α] (hs : s.Finite) (h : sᶜ.Finite) :
-    h.toFinset = hs.toFinsetᶜ := by
-  ext
-  simp
+    h.toFinset = hs.toFinsetᶜ := by ext; simp
 #align set.finite.to_finset_compl Set.Finite.toFinset_compl
 
 #print Set.Finite.toFinset_empty /-
 @[simp]
-protected theorem toFinset_empty (h : (∅ : Set α).Finite) : h.toFinset = ∅ :=
-  by
-  ext
-  simp
+protected theorem toFinset_empty (h : (∅ : Set α).Finite) : h.toFinset = ∅ := by ext; simp
 #align set.finite.to_finset_empty Set.Finite.toFinset_empty
 -/
 
 #print Set.Finite.toFinset_univ /-
 @[simp]
 protected theorem toFinset_univ [Fintype α] (h : (Set.univ : Set α).Finite) :
-    h.toFinset = Finset.univ := by
-  ext
-  simp
+    h.toFinset = Finset.univ := by ext; simp
 #align set.finite.to_finset_univ Set.Finite.toFinset_univ
 -/
 
@@ -417,18 +392,14 @@ protected theorem toFinset_eq_univ [Fintype α] {h : s.Finite} :
 
 #print Set.Finite.toFinset_image /-
 protected theorem toFinset_image [DecidableEq β] (f : α → β) (hs : s.Finite) (h : (f '' s).Finite) :
-    h.toFinset = hs.toFinset.image f := by
-  ext
-  simp
+    h.toFinset = hs.toFinset.image f := by ext; simp
 #align set.finite.to_finset_image Set.Finite.toFinset_image
 -/
 
 #print Set.Finite.toFinset_range /-
 @[simp]
 protected theorem toFinset_range [DecidableEq α] [Fintype β] (f : β → α) (h : (range f).Finite) :
-    h.toFinset = Finset.univ.image f := by
-  ext
-  simp
+    h.toFinset = Finset.univ.image f := by ext; simp
 #align set.finite.to_finset_range Set.Finite.toFinset_range
 -/
 
@@ -511,9 +482,7 @@ instance fintypeInterOfRight (s t : Set α) [Fintype t] [DecidablePred (· ∈ s
 #print Set.fintypeSubset /-
 /-- A `fintype` structure on a set defines a `fintype` structure on its subset. -/
 def fintypeSubset (s : Set α) {t : Set α} [Fintype s] [DecidablePred (· ∈ t)] (h : t ⊆ s) :
-    Fintype t := by
-  rw [← inter_eq_self_of_subset_right h]
-  apply Set.fintypeInterOfLeft
+    Fintype t := by rw [← inter_eq_self_of_subset_right h]; apply Set.fintypeInterOfLeft
 #align set.fintype_subset Set.fintypeSubset
 -/
 
@@ -548,9 +517,7 @@ instance fintypeiUnion [DecidableEq α] [Fintype (PLift ι)] (f : ι → Set α)
 
 #print Set.fintypesUnion /-
 instance fintypesUnion [DecidableEq α] {s : Set (Set α)} [Fintype s]
-    [H : ∀ t : s, Fintype (t : Set α)] : Fintype (⋃₀ s) :=
-  by
-  rw [sUnion_eq_Union]
+    [H : ∀ t : s, Fintype (t : Set α)] : Fintype (⋃₀ s) := by rw [sUnion_eq_Union];
   exact @Set.fintypeiUnion _ _ _ _ _ H
 #align set.fintype_sUnion Set.fintypesUnion
 -/
@@ -722,18 +689,14 @@ instance fintypeOffDiag [DecidableEq α] (s : Set α) [Fintype s] : Fintype s.of
 #print Set.fintypeImage2 /-
 /-- `image2 f s t` is `fintype` if `s` and `t` are. -/
 instance fintypeImage2 [DecidableEq γ] (f : α → β → γ) (s : Set α) (t : Set β) [hs : Fintype s]
-    [ht : Fintype t] : Fintype (image2 f s t : Set γ) :=
-  by
-  rw [← image_prod]
+    [ht : Fintype t] : Fintype (image2 f s t : Set γ) := by rw [← image_prod];
   apply Set.fintypeImage
 #align set.fintype_image2 Set.fintypeImage2
 -/
 
 #print Set.fintypeSeq /-
 instance fintypeSeq [DecidableEq β] (f : Set (α → β)) (s : Set α) [Fintype f] [Fintype s] :
-    Fintype (f.seq s) := by
-  rw [seq_def]
-  apply Set.fintypeBiUnion'
+    Fintype (f.seq s) := by rw [seq_def]; apply Set.fintypeBiUnion'
 #align set.fintype_seq Set.fintypeSeq
 -/
 
@@ -774,9 +737,7 @@ theorem finite_toSet (s : Finset α) : (s : Set α).Finite :=
 
 #print Finset.finite_toSet_toFinset /-
 @[simp]
-theorem finite_toSet_toFinset (s : Finset α) : s.finite_toSet.toFinset = s :=
-  by
-  ext
+theorem finite_toSet_toFinset (s : Finset α) : s.finite_toSet.toFinset = s := by ext;
   rw [Set.Finite.mem_toFinset, mem_coe]
 #align finset.finite_to_set_to_finset Finset.finite_toSet_toFinset
 -/
@@ -795,9 +756,7 @@ theorem finite_toSet (s : Multiset α) : { x | x ∈ s }.Finite := by
 #print Multiset.finite_toSet_toFinset /-
 @[simp]
 theorem finite_toSet_toFinset [DecidableEq α] (s : Multiset α) :
-    s.finite_toSet.toFinset = s.toFinset := by
-  ext x
-  simp
+    s.finite_toSet.toFinset = s.toFinset := by ext x; simp
 #align multiset.finite_to_set_to_finset Multiset.finite_toSet_toFinset
 -/
 
@@ -841,26 +800,19 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : Finite.{succ u1} (Set.Elem.{u1} α s)] [_inst_2 : Finite.{succ u1} (Set.Elem.{u1} α t)], Finite.{succ u1} (Set.Elem.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align finite.set.finite_union Finite.Set.finite_unionₓ'. -/
-instance finite_union (s t : Set α) [Finite s] [Finite t] : Finite (s ∪ t : Set α) :=
-  by
-  cases nonempty_fintype s
-  cases nonempty_fintype t
-  infer_instance
+instance finite_union (s t : Set α) [Finite s] [Finite t] : Finite (s ∪ t : Set α) := by
+  cases nonempty_fintype s; cases nonempty_fintype t; infer_instance
 #align finite.set.finite_union Finite.Set.finite_union
 
 #print Finite.Set.finite_sep /-
-instance finite_sep (s : Set α) (p : α → Prop) [Finite s] : Finite ({ a ∈ s | p a } : Set α) :=
-  by
-  cases nonempty_fintype s
-  infer_instance
+instance finite_sep (s : Set α) (p : α → Prop) [Finite s] : Finite ({ a ∈ s | p a } : Set α) := by
+  cases nonempty_fintype s; infer_instance
 #align finite.set.finite_sep Finite.Set.finite_sep
 -/
 
 #print Finite.Set.subset /-
-protected theorem subset (s : Set α) {t : Set α} [Finite s] (h : t ⊆ s) : Finite t :=
-  by
-  rw [← sep_eq_of_subset h]
-  infer_instance
+protected theorem subset (s : Set α) {t : Set α} [Finite s] (h : t ⊆ s) : Finite t := by
+  rw [← sep_eq_of_subset h]; infer_instance
 #align finite.set.subset Finite.Set.subset
 -/
 
@@ -895,10 +847,8 @@ instance finite_diff (s t : Set α) [Finite s] : Finite (s \ t : Set α) :=
 #align finite.set.finite_diff Finite.Set.finite_diff
 
 #print Finite.Set.finite_range /-
-instance finite_range (f : ι → α) [Finite ι] : Finite (range f) :=
-  by
-  haveI := Fintype.ofFinite (PLift ι)
-  infer_instance
+instance finite_range (f : ι → α) [Finite ι] : Finite (range f) := by
+  haveI := Fintype.ofFinite (PLift ι); infer_instance
 #align finite.set.finite_range Finite.Set.finite_range
 -/
 
@@ -912,9 +862,7 @@ instance finite_iUnion [Finite ι] (f : ι → Set α) [∀ i, Finite (f i)] : F
 
 #print Finite.Set.finite_sUnion /-
 instance finite_sUnion {s : Set (Set α)} [Finite s] [H : ∀ t : s, Finite (t : Set α)] :
-    Finite (⋃₀ s) := by
-  rw [sUnion_eq_Union]
-  exact @Finite.Set.finite_iUnion _ _ _ _ H
+    Finite (⋃₀ s) := by rw [sUnion_eq_Union]; exact @Finite.Set.finite_iUnion _ _ _ _ H
 #align finite.set.finite_sUnion Finite.Set.finite_sUnion
 -/
 
@@ -963,10 +911,8 @@ instance finite_insert (a : α) (s : Set α) [Finite s] : Finite (insert a s : S
 -/
 
 #print Finite.Set.finite_image /-
-instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) :=
-  by
-  cases nonempty_fintype s
-  infer_instance
+instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) := by
+  cases nonempty_fintype s; infer_instance
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
@@ -989,17 +935,13 @@ instance finite_prod (s : Set α) (t : Set β) [Finite s] [Finite t] :
 
 #print Finite.Set.finite_image2 /-
 instance finite_image2 (f : α → β → γ) (s : Set α) (t : Set β) [Finite s] [Finite t] :
-    Finite (image2 f s t : Set γ) := by
-  rw [← image_prod]
-  infer_instance
+    Finite (image2 f s t : Set γ) := by rw [← image_prod]; infer_instance
 #align finite.set.finite_image2 Finite.Set.finite_image2
 -/
 
 #print Finite.Set.finite_seq /-
-instance finite_seq (f : Set (α → β)) (s : Set α) [Finite f] [Finite s] : Finite (f.seq s) :=
-  by
-  rw [seq_def]
-  infer_instance
+instance finite_seq (f : Set (α → β)) (s : Set α) [Finite f] [Finite s] : Finite (f.seq s) := by
+  rw [seq_def]; infer_instance
 #align finite.set.finite_seq Finite.Set.finite_seq
 -/
 
@@ -1047,11 +989,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.Finite.{u1} α t) -> (Set.Finite.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.finite.union Set.Finite.unionₓ'. -/
-theorem Finite.union {s t : Set α} (hs : s.Finite) (ht : t.Finite) : (s ∪ t).Finite :=
-  by
-  cases hs
-  cases ht
-  apply to_finite
+theorem Finite.union {s t : Set α} (hs : s.Finite) (ht : t.Finite) : (s ∪ t).Finite := by cases hs;
+  cases ht; apply to_finite
 #align set.finite.union Set.Finite.union
 
 /- warning: set.finite.finite_of_compl -> Set.Finite.finite_of_compl is a dubious translation:
@@ -1060,10 +999,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.Finite.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) -> (Finite.{succ u1} α)
 Case conversion may be inaccurate. Consider using '#align set.finite.finite_of_compl Set.Finite.finite_of_complₓ'. -/
-theorem Finite.finite_of_compl {s : Set α} (hs : s.Finite) (hsc : sᶜ.Finite) : Finite α :=
-  by
-  rw [← finite_univ_iff, ← union_compl_self s]
-  exact hs.union hsc
+theorem Finite.finite_of_compl {s : Set α} (hs : s.Finite) (hsc : sᶜ.Finite) : Finite α := by
+  rw [← finite_univ_iff, ← union_compl_self s]; exact hs.union hsc
 #align set.finite.finite_of_compl Set.Finite.finite_of_compl
 
 /- warning: set.finite.sup -> Set.Finite.sup is a dubious translation:
@@ -1077,10 +1014,8 @@ theorem Finite.sup {s t : Set α} : s.Finite → t.Finite → (s ⊔ t).Finite :
 #align set.finite.sup Set.Finite.sup
 
 #print Set.Finite.sep /-
-theorem Finite.sep {s : Set α} (hs : s.Finite) (p : α → Prop) : { a ∈ s | p a }.Finite :=
-  by
-  cases hs
-  apply to_finite
+theorem Finite.sep {s : Set α} (hs : s.Finite) (p : α → Prop) : { a ∈ s | p a }.Finite := by
+  cases hs; apply to_finite
 #align set.finite.sep Set.Finite.sep
 -/
 
@@ -1090,10 +1025,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (forall (t : Set.{u1} α), Set.Finite.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.finite.inter_of_left Set.Finite.inter_of_leftₓ'. -/
-theorem Finite.inter_of_left {s : Set α} (hs : s.Finite) (t : Set α) : (s ∩ t).Finite :=
-  by
-  cases hs
-  apply to_finite
+theorem Finite.inter_of_left {s : Set α} (hs : s.Finite) (t : Set α) : (s ∩ t).Finite := by
+  cases hs; apply to_finite
 #align set.finite.inter_of_left Set.Finite.inter_of_left
 
 /- warning: set.finite.inter_of_right -> Set.Finite.inter_of_right is a dubious translation:
@@ -1102,10 +1035,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (forall (t : Set.{u1} α), Set.Finite.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t s))
 Case conversion may be inaccurate. Consider using '#align set.finite.inter_of_right Set.Finite.inter_of_rightₓ'. -/
-theorem Finite.inter_of_right {s : Set α} (hs : s.Finite) (t : Set α) : (t ∩ s).Finite :=
-  by
-  cases hs
-  apply to_finite
+theorem Finite.inter_of_right {s : Set α} (hs : s.Finite) (t : Set α) : (t ∩ s).Finite := by
+  cases hs; apply to_finite
 #align set.finite.inter_of_right Set.Finite.inter_of_right
 
 /- warning: set.finite.inf_of_left -> Set.Finite.inf_of_left is a dubious translation:
@@ -1129,11 +1060,8 @@ theorem Finite.inf_of_right {s : Set α} (h : s.Finite) (t : Set α) : (t ⊓ s)
 #align set.finite.inf_of_right Set.Finite.inf_of_right
 
 #print Set.Finite.subset /-
-theorem Finite.subset {s : Set α} (hs : s.Finite) {t : Set α} (ht : t ⊆ s) : t.Finite :=
-  by
-  cases hs
-  haveI := Finite.Set.subset _ ht
-  apply to_finite
+theorem Finite.subset {s : Set α} (hs : s.Finite) {t : Set α} (ht : t ⊆ s) : t.Finite := by
+  cases hs; haveI := Finite.Set.subset _ ht; apply to_finite
 #align set.finite.subset Set.Finite.subset
 -/
 
@@ -1143,9 +1071,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (forall (t : Set.{u1} α), Set.Finite.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.finite.diff Set.Finite.diffₓ'. -/
-theorem Finite.diff {s : Set α} (hs : s.Finite) (t : Set α) : (s \ t).Finite :=
-  by
-  cases hs
+theorem Finite.diff {s : Set α} (hs : s.Finite) (t : Set α) : (s \ t).Finite := by cases hs;
   apply to_finite
 #align set.finite.diff Set.Finite.diff
 
@@ -1160,19 +1086,14 @@ theorem Finite.of_diff {s t : Set α} (hd : (s \ t).Finite) (ht : t.Finite) : s.
 #align set.finite.of_diff Set.Finite.of_diff
 
 #print Set.finite_iUnion /-
-theorem finite_iUnion [Finite ι] {f : ι → Set α} (H : ∀ i, (f i).Finite) : (⋃ i, f i).Finite :=
-  by
-  haveI := fun i => (H i).Fintype
-  apply to_finite
+theorem finite_iUnion [Finite ι] {f : ι → Set α} (H : ∀ i, (f i).Finite) : (⋃ i, f i).Finite := by
+  haveI := fun i => (H i).Fintype; apply to_finite
 #align set.finite_Union Set.finite_iUnion
 -/
 
 #print Set.Finite.sUnion /-
 theorem Finite.sUnion {s : Set (Set α)} (hs : s.Finite) (H : ∀ t ∈ s, Set.Finite t) :
-    (⋃₀ s).Finite := by
-  cases hs
-  haveI := fun i : s => (H i i.2).to_subtype
-  apply to_finite
+    (⋃₀ s).Finite := by cases hs; haveI := fun i : s => (H i i.2).to_subtype; apply to_finite
 #align set.finite.sUnion Set.Finite.sUnion
 -/
 
@@ -1198,11 +1119,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.finite.bUnion' Set.Finite.biUnion'ₓ'. -/
 /-- Dependent version of `finite.bUnion`. -/
 theorem Finite.biUnion' {ι} {s : Set ι} (hs : s.Finite) {t : ∀ i ∈ s, Set α}
-    (ht : ∀ i ∈ s, (t i ‹_›).Finite) : (⋃ i ∈ s, t i ‹_›).Finite :=
-  by
-  cases hs
-  rw [bUnion_eq_Union]
-  apply finite_Union fun i : s => ht i.1 i.2
+    (ht : ∀ i ∈ s, (t i ‹_›).Finite) : (⋃ i ∈ s, t i ‹_›).Finite := by cases hs;
+  rw [bUnion_eq_Union]; apply finite_Union fun i : s => ht i.1 i.2
 #align set.finite.bUnion' Set.Finite.biUnion'
 
 #print Set.Finite.sInter /-
@@ -1242,9 +1160,7 @@ theorem finite_empty : (∅ : Set α).Finite :=
 
 #print Set.Infinite.nonempty /-
 protected theorem Infinite.nonempty {s : Set α} (h : s.Infinite) : s.Nonempty :=
-  nonempty_iff_ne_empty.2 <| by
-    rintro rfl
-    exact h finite_empty
+  nonempty_iff_ne_empty.2 <| by rintro rfl; exact h finite_empty
 #align set.infinite.nonempty Set.Infinite.nonempty
 -/
 
@@ -1263,17 +1179,13 @@ theorem finite_pure (a : α) : (pure a : Set α).Finite :=
 
 #print Set.Finite.insert /-
 @[simp]
-theorem Finite.insert (a : α) {s : Set α} (hs : s.Finite) : (insert a s).Finite :=
-  by
-  cases hs
+theorem Finite.insert (a : α) {s : Set α} (hs : s.Finite) : (insert a s).Finite := by cases hs;
   apply to_finite
 #align set.finite.insert Set.Finite.insert
 -/
 
 #print Set.Finite.image /-
-theorem Finite.image {s : Set α} (f : α → β) (hs : s.Finite) : (f '' s).Finite :=
-  by
-  cases hs
+theorem Finite.image {s : Set α} (f : α → β) (hs : s.Finite) : (f '' s).Finite := by cases hs;
   apply to_finite
 #align set.finite.image Set.Finite.image
 -/
@@ -1286,9 +1198,7 @@ theorem finite_range (f : ι → α) [Finite ι] : (range f).Finite :=
 
 #print Set.Finite.dependent_image /-
 theorem Finite.dependent_image {s : Set α} (hs : s.Finite) (F : ∀ i ∈ s, β) :
-    { y : β | ∃ (x : _)(hx : x ∈ s), y = F x hx }.Finite :=
-  by
-  cases hs
+    { y : β | ∃ (x : _)(hx : x ∈ s), y = F x hx }.Finite := by cases hs;
   simpa [range, eq_comm] using finite_range fun x : s => F x x.2
 #align set.finite.dependent_image Set.Finite.dependent_image
 -/
@@ -1301,8 +1211,7 @@ theorem Finite.map {α β} {s : Set α} : ∀ f : α → β, s.Finite → (f <$>
 
 #print Set.Finite.of_finite_image /-
 theorem Finite.of_finite_image {s : Set α} {f : α → β} (h : (f '' s).Finite) (hi : Set.InjOn f s) :
-    s.Finite := by
-  cases h
+    s.Finite := by cases h;
   exact
     ⟨Fintype.ofInjective (fun a => (⟨f a.1, mem_image_of_mem f a.2⟩ : f '' s)) fun a b eq =>
         Subtype.eq <| hi a.2 b.2 <| Subtype.ext_iff_val.1 Eq⟩
@@ -1311,9 +1220,7 @@ theorem Finite.of_finite_image {s : Set α} {f : α → β} (h : (f '' s).Finite
 
 #print Set.finite_of_finite_preimage /-
 theorem finite_of_finite_preimage {f : α → β} {s : Set β} (h : (f ⁻¹' s).Finite)
-    (hs : s ⊆ range f) : s.Finite :=
-  by
-  rw [← image_preimage_eq_of_subset hs]
+    (hs : s ⊆ range f) : s.Finite := by rw [← image_preimage_eq_of_subset hs];
   exact finite.image f h
 #align set.finite_of_finite_preimage Set.finite_of_finite_preimage
 -/
@@ -1356,11 +1263,8 @@ variable {s : Set α} {t : Set β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Finite.prod /-
-protected theorem Finite.prod (hs : s.Finite) (ht : t.Finite) : (s ×ˢ t : Set (α × β)).Finite :=
-  by
-  cases hs
-  cases ht
-  apply to_finite
+protected theorem Finite.prod (hs : s.Finite) (ht : t.Finite) : (s ×ˢ t : Set (α × β)).Finite := by
+  cases hs; cases ht; apply to_finite
 #align set.finite.prod Set.Finite.prod
 -/
 
@@ -1424,10 +1328,7 @@ protected theorem Finite.offDiag (hs : s.Finite) : s.offDiag.Finite := by
 
 #print Set.Finite.image2 /-
 protected theorem Finite.image2 (f : α → β → γ) (hs : s.Finite) (ht : t.Finite) :
-    (image2 f s t).Finite := by
-  cases hs
-  cases ht
-  apply to_finite
+    (image2 f s t).Finite := by cases hs; cases ht; apply to_finite
 #align set.finite.image2 Set.Finite.image2
 -/
 
@@ -1507,9 +1408,7 @@ theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set
 #print Set.union_finset_finite_of_range_finite /-
 /-- A finite union of finsets is finite. -/
 theorem union_finset_finite_of_range_finite (f : α → Finset β) (h : (range f).Finite) :
-    (⋃ a, (f a : Set β)).Finite := by
-  rw [← bUnion_range]
-  exact h.bUnion fun y hy => y.finite_toSet
+    (⋃ a, (f a : Set β)).Finite := by rw [← bUnion_range]; exact h.bUnion fun y hy => y.finite_toSet
 #align set.union_finset_finite_of_range_finite Set.union_finset_finite_of_range_finite
 -/
 
@@ -1739,10 +1638,8 @@ theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop}
       convert Classical.choose_spec (h _ _)
       ext x
       constructor
-      · rintro ⟨m, hmn, rfl⟩
-        exact ⟨⟨m, hmn⟩, rfl⟩
-      · rintro ⟨⟨m, hmn⟩, rfl⟩
-        exact ⟨m, hmn, rfl⟩⟩
+      · rintro ⟨m, hmn, rfl⟩; exact ⟨⟨m, hmn⟩, rfl⟩
+      · rintro ⟨⟨m, hmn⟩, rfl⟩; exact ⟨m, hmn, rfl⟩⟩
 #align set.seq_of_forall_finite_exists Set.seq_of_forall_finite_exists
 -/
 
@@ -2021,18 +1918,14 @@ theorem Infinite.exists_ne_map_eq_of_mapsTo {s : Set α} {t : Set β} {f : α �
 
 #print Set.infinite_range_of_injective /-
 theorem infinite_range_of_injective [Infinite α] {f : α → β} (hi : Injective f) :
-    (range f).Infinite :=
-  by
-  rw [← image_univ, infinite_image_iff (inj_on_of_injective hi _)]
+    (range f).Infinite := by rw [← image_univ, infinite_image_iff (inj_on_of_injective hi _)];
   exact infinite_univ
 #align set.infinite_range_of_injective Set.infinite_range_of_injective
 -/
 
 #print Set.infinite_of_injective_forall_mem /-
 theorem infinite_of_injective_forall_mem [Infinite α] {s : Set β} {f : α → β} (hi : Injective f)
-    (hf : ∀ x : α, f x ∈ s) : s.Infinite :=
-  by
-  rw [← range_subset_iff] at hf
+    (hf : ∀ x : α, f x ∈ s) : s.Infinite := by rw [← range_subset_iff] at hf;
   exact (infinite_range_of_injective hi).mono hf
 #align set.infinite_of_injective_forall_mem Set.infinite_of_injective_forall_mem
 -/
@@ -2215,8 +2108,7 @@ theorem Finite.iSup_biInf_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonem
   by
   revert hf
   refine' hs.induction_on _ _
-  · intro hf
-    simp [iSup_const]
+  · intro hf; simp [iSup_const]
   · intro a s has hs ihs hf
     rw [ball_insert_iff] at hf
     simp only [iInf_insert, ← ihs hf.2]
@@ -2406,8 +2298,7 @@ theorem Finite.exists_maximal_wrt [PartialOrder β] (f : α → β) (s : Set α)
   · exact fun h => absurd h not_nonempty_empty
   intro a s his _ ih _
   cases' s.eq_empty_or_nonempty with h h
-  · use a
-    simp [h]
+  · use a; simp [h]
   rcases ih h with ⟨b, hb, ih⟩
   by_cases f b ≤ f a
   · refine' ⟨a, Set.mem_insert _ _, fun c hc hac => le_antisymm hac _⟩

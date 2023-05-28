@@ -167,9 +167,7 @@ theorem mul_def {a b : ℤ} : Int.mul a b = a * b :=
 
 #print Int.negSucc_not_nonneg /-
 @[simp]
-theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[n+1] ↔ False :=
-  by
-  simp only [not_le, iff_false_iff]
+theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[n+1] ↔ False := by simp only [not_le, iff_false_iff];
   exact Int.negSucc_lt_zero n
 #align int.neg_succ_not_nonneg Int.negSucc_not_nonneg
 -/
@@ -340,11 +338,8 @@ theorem add_one_le_iff {a b : ℤ} : a + 1 ≤ b ↔ a < b :=
 
 #print Int.coe_pred_of_pos /-
 @[norm_cast]
-theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 :=
-  by
-  cases n
-  cases h
-  simp
+theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by cases n;
+  cases h; simp
 #align int.coe_pred_of_pos Int.coe_pred_of_pos
 -/
 
@@ -358,11 +353,9 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
     · exact hz
     · exact hp _ i_ih
   · have : ∀ n : ℕ, p (-n) := by
-      intro n
-      induction n
+      intro n; induction n
       · simp [hz]
-      · convert hn _ n_ih using 1
-        simp [sub_eq_neg_add]
+      · convert hn _ n_ih using 1; simp [sub_eq_neg_add]
     exact this (i + 1)
 #align int.induction_on Int.induction_on
 -/
@@ -400,10 +393,8 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=
 -/
 
 #print Int.natAbs_sub_le /-
-theorem natAbs_sub_le (a b : ℤ) : natAbs (a - b) ≤ natAbs a + natAbs b :=
-  by
-  rw [sub_eq_add_neg, ← Int.natAbs_neg b]
-  apply nat_abs_add_le
+theorem natAbs_sub_le (a b : ℤ) : natAbs (a - b) ≤ natAbs a + natAbs b := by
+  rw [sub_eq_add_neg, ← Int.natAbs_neg b]; apply nat_abs_add_le
 #align int.nat_abs_sub_le Int.natAbs_sub_le
 -/
 
@@ -471,8 +462,7 @@ theorem natAbs_eq_natAbs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a =
   ·
     cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;>
       simp [h]
-  · cases h <;> rw [h]
-    rw [Int.natAbs_neg]
+  · cases h <;> rw [h]; rw [Int.natAbs_neg]
 #align int.nat_abs_eq_nat_abs_iff Int.natAbs_eq_natAbs_iff
 -/
 
@@ -646,16 +636,10 @@ theorem div_add_mod (a b : ℤ) : b * (a / b) + a % b = a :=
   (add_comm _ _).trans (emod_add_ediv _ _)
 #align int.div_add_mod Int.div_add_modₓ
 
-theorem mod_add_div' (m k : ℤ) : m % k + m / k * k = m :=
-  by
-  rw [mul_comm]
-  exact mod_add_div _ _
+theorem mod_add_div' (m k : ℤ) : m % k + m / k * k = m := by rw [mul_comm]; exact mod_add_div _ _
 #align int.mod_add_div' Int.mod_add_div'ₓ
 
-theorem div_add_mod' (m k : ℤ) : m / k * k + m % k = m :=
-  by
-  rw [mul_comm]
-  exact div_add_mod _ _
+theorem div_add_mod' (m k : ℤ) : m / k * k + m % k = m := by rw [mul_comm]; exact div_add_mod _ _
 #align int.div_add_mod' Int.div_add_mod'ₓ
 
 theorem mod_def (a b : ℤ) : a % b = a - b * (a / b) :=

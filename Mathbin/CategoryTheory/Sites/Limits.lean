@@ -162,15 +162,10 @@ instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
     { liftedCone :=
         ⟨⟨E.pt, is_sheaf_of_is_limit _ _ hE⟩,
           ⟨fun t => ⟨E.π.app _⟩, fun u v e => Sheaf.Hom.ext _ _ <| E.π.naturality _⟩⟩
-      validLift :=
-        Cones.ext (eqToIso rfl) fun j => by
-          dsimp
-          simp
+      validLift := Cones.ext (eqToIso rfl) fun j => by dsimp; simp
       makesLimit :=
         { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩
-          fac := fun S j => by
-            ext1
-            apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
+          fac := fun S j => by ext1; apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
           uniq := fun S m hm => by
             ext1
             exact
@@ -230,10 +225,7 @@ def sheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPresheaf J D)
   pt := ⟨J.sheafify E.pt, GrothendieckTopology.Plus.isSheaf_plus_plus _ _⟩
   ι :=
     { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.pt⟩
-      naturality' := fun i j f => by
-        ext1
-        dsimp
-        erw [category.comp_id, ← category.assoc, E.w f] }
+      naturality' := fun i j f => by ext1; dsimp; erw [category.comp_id, ← category.assoc, E.w f] }
 #align category_theory.Sheaf.sheafify_cocone CategoryTheory.Sheaf.sheafifyCocone
 
 /- warning: category_theory.Sheaf.is_colimit_sheafify_cocone -> CategoryTheory.Sheaf.isColimitSheafifyCocone is a dubious translation:

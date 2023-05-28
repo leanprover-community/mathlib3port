@@ -136,19 +136,10 @@ def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolution Z
     where
   cocomplex := (CochainComplex.single₀ C).obj Z
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
-  Injective n := by
-    cases n <;>
-      · dsimp
-        infer_instance
-  exact₀ := by
-    dsimp
-    exact exact_epi_zero _
-  exact n := by
-    dsimp
-    exact exact_of_zero _ _
-  Mono := by
-    dsimp
-    infer_instance
+  Injective n := by cases n <;> · dsimp; infer_instance
+  exact₀ := by dsimp; exact exact_epi_zero _
+  exact n := by dsimp; exact exact_of_zero _ _
+  Mono := by dsimp; infer_instance
 #align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolution.self
 -/
 

@@ -329,12 +329,8 @@ theorem isBoundedLinearMap_prod_multilinear {E : ι → Type _} [∀ i, NormedAd
     [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedLinearMap 𝕜 fun p : ContinuousMultilinearMap 𝕜 E F × ContinuousMultilinearMap 𝕜 E G =>
       p.1.Prod p.2 :=
-  { map_add := fun p₁ p₂ => by
-      ext1 m
-      rfl
-    map_smul := fun c p => by
-      ext1 m
-      rfl
+  { map_add := fun p₁ p₂ => by ext1 m; rfl
+    map_smul := fun c p => by ext1 m; rfl
     bound :=
       ⟨1, zero_lt_one, fun p => by
         rw [one_mul]
@@ -363,12 +359,7 @@ theorem isBoundedLinearMap_continuousMultilinearMap_comp_linear (g : G →L[𝕜
       f.compContinuousLinearMap fun _ => g :=
   by
   refine'
-    IsLinearMap.with_bound
-      ⟨fun f₁ f₂ => by
-        ext m
-        rfl, fun c f => by
-        ext m
-        rfl⟩
+    IsLinearMap.with_bound ⟨fun f₁ f₂ => by ext m; rfl, fun c f => by ext m; rfl⟩
       (‖g‖ ^ Fintype.card ι) fun f => _
   apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
   · apply_rules [mul_nonneg, pow_nonneg, norm_nonneg]
@@ -378,10 +369,8 @@ theorem isBoundedLinearMap_continuousMultilinearMap_comp_linear (g : G →L[𝕜
       by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       exact Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => g.le_op_norm _
-    _ = ‖g‖ ^ Fintype.card ι * ‖f‖ * ∏ i, ‖m i‖ :=
-      by
-      simp [Finset.prod_mul_distrib, Finset.card_univ]
-      ring
+    _ = ‖g‖ ^ Fintype.card ι * ‖f‖ * ∏ i, ‖m i‖ := by
+      simp [Finset.prod_mul_distrib, Finset.card_univ]; ring
     
 #align is_bounded_linear_map_continuous_multilinear_map_comp_linear isBoundedLinearMap_continuousMultilinearMap_comp_linear
 

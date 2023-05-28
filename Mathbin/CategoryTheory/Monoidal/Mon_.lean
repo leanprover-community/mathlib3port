@@ -187,9 +187,7 @@ def isoOfIso {M N : Mon_ C} (f : M.pt ≅ N.pt) (one_f : M.one ≫ f.Hom = N.one
       mul_hom' := mul_f }
   inv :=
     { Hom := f.inv
-      one_hom' := by
-        rw [← one_f]
-        simp
+      one_hom' := by rw [← one_f]; simp
       mul_hom' := by
         rw [← cancel_mono f.hom]
         slice_rhs 2 3 => rw [mul_f]
@@ -200,12 +198,8 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A)
     where
   default :=
     { Hom := A.one
-      one_hom' := by
-        dsimp
-        simp
-      mul_hom' := by
-        dsimp
-        simp [A.one_mul, unitors_equal] }
+      one_hom' := by dsimp; simp
+      mul_hom' := by dsimp; simp [A.one_mul, unitors_equal] }
   uniq f := by
     ext; simp
     rw [← category.id_comp f.hom]
@@ -260,19 +254,13 @@ def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D
         simp only [category.assoc] }
   map A B f :=
     { Hom := F.map f.Hom
-      one_hom' := by
-        dsimp
-        rw [category.assoc, ← F.to_functor.map_comp, f.one_hom]
+      one_hom' := by dsimp; rw [category.assoc, ← F.to_functor.map_comp, f.one_hom]
       mul_hom' := by
         dsimp
         rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp,
           f.mul_hom] }
-  map_id' A := by
-    ext
-    simp
-  map_comp' A B C f g := by
-    ext
-    simp
+  map_id' A := by ext; simp
+  map_comp' A B C f g := by ext; simp
 #align category_theory.lax_monoidal_functor.map_Mon CategoryTheory.LaxMonoidalFunctor.mapMon
 
 variable (C D)
@@ -313,9 +301,7 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C
       map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.pt)).symm }
   map A B f :=
     { app := fun _ => f.Hom
-      naturality' := fun _ _ _ => by
-        dsimp
-        rw [category.id_comp, category.comp_id]
+      naturality' := fun _ _ _ => by dsimp; rw [category.id_comp, category.comp_id]
       unit' := f.OneHom
       tensor' := fun _ _ => f.MulHom }
 #align Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
@@ -422,18 +408,14 @@ theorem one_associator {M N P : Mon_ C} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem one_leftUnitor {M : Mon_ C} :
-    ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.pt).Hom = M.one :=
-  by
-  slice_lhs 2 3 => rw [left_unitor_naturality]
-  simp
+    ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.pt).Hom = M.one := by
+  slice_lhs 2 3 => rw [left_unitor_naturality]; simp
 #align Mon_.one_left_unitor Mon_.one_leftUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem one_rightUnitor {M : Mon_ C} :
-    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.pt).Hom = M.one :=
-  by
-  slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]
-  simp
+    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.pt).Hom = M.one := by
+  slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]; simp
 #align Mon_.one_right_unitor Mon_.one_rightUnitor
 
 variable [BraidedCategory C]
@@ -574,43 +556,17 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
         slice_rhs 1 2 => rw [tensor_μ_natural]
         slice_lhs 2 3 => rw [← tensor_comp, hom.mul_hom f, hom.mul_hom g, tensor_comp]
         simp only [category.assoc] }
-  tensor_id' := by
-    intros
-    ext
-    apply tensor_id
-  tensor_comp' := by
-    intros
-    ext
-    apply tensor_comp
+  tensor_id' := by intros ; ext; apply tensor_id
+  tensor_comp' := by intros ; ext; apply tensor_comp
   tensorUnit := trivial C
   associator M N P := isoOfIso (α_ M.pt N.pt P.pt) one_associator mul_associator
-  associator_naturality' := by
-    intros
-    ext
-    dsimp
-    apply associator_naturality
+  associator_naturality' := by intros ; ext; dsimp; apply associator_naturality
   leftUnitor M := isoOfIso (λ_ M.pt) one_leftUnitor mul_leftUnitor
-  leftUnitor_naturality' := by
-    intros
-    ext
-    dsimp
-    apply left_unitor_naturality
+  leftUnitor_naturality' := by intros ; ext; dsimp; apply left_unitor_naturality
   rightUnitor M := isoOfIso (ρ_ M.pt) one_rightUnitor mul_rightUnitor
-  rightUnitor_naturality' := by
-    intros
-    ext
-    dsimp
-    apply right_unitor_naturality
-  pentagon' := by
-    intros
-    ext
-    dsimp
-    apply pentagon
-  triangle' := by
-    intros
-    ext
-    dsimp
-    apply triangle
+  rightUnitor_naturality' := by intros ; ext; dsimp; apply right_unitor_naturality
+  pentagon' := by intros ; ext; dsimp; apply pentagon
+  triangle' := by intros ; ext; dsimp; apply triangle
 #align Mon_.Mon_monoidal Mon_.monMonoidal
 
 end Mon_

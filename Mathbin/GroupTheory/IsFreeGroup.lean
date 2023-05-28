@@ -99,12 +99,8 @@ def lift : (Generators G → H) ≃ (G →* H) :=
   FreeGroup.lift.trans
     { toFun := fun f => f.comp (mulEquiv G).symm.toMonoidHom
       invFun := fun f => f.comp (mulEquiv G).toMonoidHom
-      left_inv := fun f => by
-        ext
-        simp
-      right_inv := fun f => by
-        ext
-        simp }
+      left_inv := fun f => by ext; simp
+      right_inv := fun f => by ext; simp }
 #align is_free_group.lift IsFreeGroup.lift
 -/
 

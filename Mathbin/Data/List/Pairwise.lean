@@ -320,8 +320,7 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
     Pairwise R (l.pmap f h) ↔
       Pairwise (fun b₁ b₂ => ∀ (h₁ : p b₁) (h₂ : p b₂), R (f b₁ h₁) (f b₂ h₂)) l :=
   by
-  induction' l with a l ihl
-  · simp
+  induction' l with a l ihl; · simp
   obtain ⟨ha, hl⟩ : p a ∧ ∀ b, b ∈ l → p b := by simpa using h
   simp only [ihl hl, pairwise_cons, bex_imp, pmap, and_congr_left_iff, mem_pmap]
   refine' fun _ => ⟨fun H b hb hpa hpb => H _ _ hb rfl, _⟩
@@ -449,8 +448,7 @@ theorem pairwise_iff_nthLe {R} :
     refine'
       ⟨fun H i j h₁ h₂ => _, fun H =>
         ⟨fun a' m => _, fun i j h₁ h₂ => H _ _ (succ_lt_succ h₁) (succ_lt_succ h₂)⟩⟩
-    · cases' j with j
-      · exact (Nat.not_lt_zero _).elim h₂
+    · cases' j with j; · exact (Nat.not_lt_zero _).elim h₂
       cases' i with i
       · exact H.1 _ (nth_le_mem l _ _)
       · exact H.2 _ _ (lt_of_succ_lt_succ h₁) (lt_of_succ_lt_succ h₂)
@@ -509,10 +507,8 @@ theorem pwFilter_map (f : β → α) :
       have h' : ¬∀ b : β, b ∈ pwFilter (fun x y : β => R (f x) (f y)) xs → R (f x) (f b) :=
         fun hh =>
         h fun a ha => by
-          rw [pw_filter_map, mem_map] at ha
-          rcases ha with ⟨b, hb₀, hb₁⟩
-          subst a
-          exact hh _ hb₀
+          rw [pw_filter_map, mem_map] at ha; rcases ha with ⟨b, hb₀, hb₁⟩
+          subst a; exact hh _ hb₀
       rw [map, pw_filter_cons_of_neg h, pw_filter_cons_of_neg h', pw_filter_map]
 #align list.pw_filter_map List.pwFilter_map
 -/

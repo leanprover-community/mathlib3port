@@ -168,10 +168,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     -- apply the Mean Value Theorem: the bound on the derivative comes from differentiability.
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
-        (fun y h => by
-          rw [fR.deriv]
-          exact hM _ h)
-        (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
+        (fun y h => by rw [fR.deriv]; exact hM _ h) (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
     exact @mem_closed_ball_self ℝ _ α ζ (le_of_lt z0)
   -- 3: the weird inequality of Liouville type with powers of the denominators.
   · show 1 ≤ (a + 1 : ℝ) ^ f.nat_degree * |eval α fR - eval (z / (a + 1)) fR|
@@ -209,11 +206,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x :=
   -- Use the Liouville property, with exponent `r +  deg f`.
   obtain ⟨a, b, b1, -, a1⟩ :
     ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) := lx (r + f.nat_degree)
-  have b0 : (0 : ℝ) < b :=
-    zero_lt_one.trans
-      (by
-        rw [← Int.cast_one]
-        exact int.cast_lt.mpr b1)
+  have b0 : (0 : ℝ) < b := zero_lt_one.trans (by rw [← Int.cast_one]; exact int.cast_lt.mpr b1)
   -- Prove that `b ^ f.nat_degree * abs (x - a / b)` is strictly smaller than itself
   -- recall, this is a proof by contradiction!
   refine' lt_irrefl ((b : ℝ) ^ f.nat_degree * |x - ↑a / ↑b|) _

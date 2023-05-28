@@ -134,9 +134,7 @@ theorem ne_zero (z : ℍ) : (z : ℂ) ≠ 0 :=
   mt (congr_arg Complex.im) z.im_ne_zero
 #align upper_half_plane.ne_zero UpperHalfPlane.ne_zero
 
-theorem normSq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) :=
-  by
-  rw [Complex.normSq_pos]
+theorem normSq_pos (z : ℍ) : 0 < Complex.normSq (z : ℂ) := by rw [Complex.normSq_pos];
   exact z.ne_zero
 #align upper_half_plane.norm_sq_pos UpperHalfPlane.normSq_pos
 
@@ -253,8 +251,7 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
 instance : MulAction GL(2, ℝ)⁺ ℍ where
   smul := smulAux
   one_smul z := by
-    ext1
-    change _ / _ = _
+    ext1; change _ / _ = _
     simp [coeFn_coe_base']
   mul_smul := mul_smul'
 
@@ -279,9 +276,7 @@ theorem sLOnGLPos_smul_apply (s : SL(2, ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) :
 #align upper_half_plane.SL_on_GL_pos_smul_apply UpperHalfPlane.sLOnGLPos_smul_apply
 
 instance SL_to_GL_tower : IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ
-    where smul_assoc := by
-    intro s g z
-    simp only [SL_on_GL_pos_smul_apply, coe_coe]
+    where smul_assoc := by intro s g z; simp only [SL_on_GL_pos_smul_apply, coe_coe];
     apply mul_smul'
 #align upper_half_plane.SL_to_GL_tower UpperHalfPlane.SL_to_GL_tower
 
@@ -295,9 +290,7 @@ theorem subgroup_on_gLPos_smul_apply (s : Γ) (g : GL(2, ℝ)⁺) (z : ℍ) :
 #align upper_half_plane.subgroup_on_GL_pos_smul_apply UpperHalfPlane.subgroup_on_gLPos_smul_apply
 
 instance subgroup_on_gLPos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
-    where smul_assoc := by
-    intro s g z
-    simp only [subgroup_on_GL_pos_smul_apply, coe_coe]
+    where smul_assoc := by intro s g z; simp only [subgroup_on_GL_pos_smul_apply, coe_coe];
     apply mul_smul'
 #align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_gLPos
 
@@ -311,9 +304,7 @@ theorem subgroup_on_SL_apply (s : Γ) (g : SL(2, ℤ)) (z : ℍ) :
 #align upper_half_plane.subgroup_on_SL_apply UpperHalfPlane.subgroup_on_SL_apply
 
 instance subgroup_to_SL_tower : IsScalarTower Γ SL(2, ℤ) ℍ
-    where smul_assoc s g z := by
-    rw [subgroup_on_SL_apply]
-    apply MulAction.mul_smul
+    where smul_assoc s g z := by rw [subgroup_on_SL_apply]; apply MulAction.mul_smul
 #align upper_half_plane.subgroup_to_SL_tower UpperHalfPlane.subgroup_to_SL_tower
 
 end ModularScalarTowers
@@ -462,10 +453,8 @@ end RealAddAction
 
 /- these next few lemmas are *not* flagged `@simp` because of the constructors on the RHS;
 instead we use the versions with coercions to `ℂ` as simp lemmas instead. -/
-theorem modular_s_smul (z : ℍ) : ModularGroup.S • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos :=
-  by
-  rw [special_linear_group_apply]
-  simp [ModularGroup.S, neg_div, inv_neg]
+theorem modular_s_smul (z : ℍ) : ModularGroup.S • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos := by
+  rw [special_linear_group_apply]; simp [ModularGroup.S, neg_div, inv_neg]
 #align upper_half_plane.modular_S_smul UpperHalfPlane.modular_s_smul
 
 theorem modular_t_zpow_smul (z : ℍ) (n : ℤ) : ModularGroup.T ^ n • z = (n : ℝ) +ᵥ z :=
@@ -485,11 +474,8 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_eq_zero (g : SL(2, ℝ)) (hc : ↑�
   by
   obtain ⟨a, b, ha, rfl⟩ := g.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero hc
   refine' ⟨⟨_, mul_self_pos.mpr ha⟩, b * a, _⟩
-  ext1 ⟨z, hz⟩
-  ext1
-  suffices ↑a * z * a + b * a = b * a + a * a * z
-    by
-    rw [special_linear_group_apply]
+  ext1 ⟨z, hz⟩; ext1
+  suffices ↑a * z * a + b * a = b * a + a * a * z by rw [special_linear_group_apply];
     simpa [add_mul]
   ring
 #align upper_half_plane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero UpperHalfPlane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero
@@ -502,28 +488,19 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑�
   by
   have h_denom := denom_ne_zero g
   induction' g using Matrix.SpecialLinearGroup.fin_two_induction with a b c d h
-  replace hc : c ≠ 0
-  · simpa using hc
+  replace hc : c ≠ 0; · simpa using hc
   refine' ⟨⟨_, mul_self_pos.mpr hc⟩, c * d, a / c, _⟩
-  ext1 ⟨z, hz⟩
-  ext1
+  ext1 ⟨z, hz⟩; ext1
   suffices (↑a * z + b) / (↑c * z + d) = a / c - (c * d + ↑c * ↑c * z)⁻¹
     by
     rw [special_linear_group_apply]
     simpa only [inv_neg, modular_S_smul, Subtype.coe_mk, coe_vadd, Complex.ofReal_mul,
       coe_pos_real_smul, Complex.real_smul, Function.comp_apply, Complex.ofReal_div]
-  replace hc : (c : ℂ) ≠ 0
-  · norm_cast
-    assumption
-  replace h_denom : ↑c * z + d ≠ 0
-  · simpa using h_denom ⟨z, hz⟩
-  have h_aux : (c : ℂ) * d + ↑c * ↑c * z ≠ 0 :=
-    by
-    rw [mul_assoc, ← mul_add, add_comm]
+  replace hc : (c : ℂ) ≠ 0; · norm_cast; assumption
+  replace h_denom : ↑c * z + d ≠ 0; · simpa using h_denom ⟨z, hz⟩
+  have h_aux : (c : ℂ) * d + ↑c * ↑c * z ≠ 0 := by rw [mul_assoc, ← mul_add, add_comm];
     exact mul_ne_zero hc h_denom
-  replace h : (a * d - b * c : ℂ) = (1 : ℂ)
-  · norm_cast
-    assumption
+  replace h : (a * d - b * c : ℂ) = (1 : ℂ); · norm_cast; assumption
   field_simp
   linear_combination (-(z * ↑c ^ 2) - ↑c * ↑d) * h
 #align upper_half_plane.exists_SL2_smul_eq_of_apply_zero_one_ne_zero UpperHalfPlane.exists_SL2_smul_eq_of_apply_zero_one_ne_zero

@@ -102,9 +102,7 @@ theorem leibniz_iff_x (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
             (X i : MvPolynomial σ R) • D (monomial s 1) :=
   by
   refine' ⟨fun H p i => H _ _, fun H => _⟩
-  have hC : ∀ r, D (C r) = 0 := by
-    intro r
-    rw [C_eq_smul_one, D.map_smul, h₁, smul_zero]
+  have hC : ∀ r, D (C r) = 0 := by intro r; rw [C_eq_smul_one, D.map_smul, h₁, smul_zero]
   have : ∀ p i, D (p * X i) = p • D (X i) + (X i : MvPolynomial σ R) • D p :=
     by
     intro p i
@@ -134,9 +132,7 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A
       by
       simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
       rw [Finsupp.sum_add_index'] <;>
-        [skip;· simp;·
-          intros
-          simp only [Nat.cast_add, (monomial _).map_add, add_smul]]
+        [skip;· simp;· intros ; simp only [Nat.cast_add, (monomial _).map_add, add_smul]]
       rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip;· simp;· simp]
       rw [tsub_self, add_tsub_cancel_right, Nat.cast_one, ← C_apply, C_1, one_smul, add_comm,
         Finsupp.smul_sum]

@@ -57,9 +57,7 @@ section Countable
 
 variable [Countable ι]
 
-theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) :=
-  by
-  rw [coe_eq_pi]
+theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) := by rw [coe_eq_pi];
   exact MeasurableSet.univ_pi fun i => measurableSet_Ioc
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSet_coe
 
@@ -75,9 +73,7 @@ end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc :=
-  by
-  rw [coe_eq_pi]
+theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc := by rw [coe_eq_pi];
   exact measure.univ_pi_Ioc_ae_eq_Icc
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
 

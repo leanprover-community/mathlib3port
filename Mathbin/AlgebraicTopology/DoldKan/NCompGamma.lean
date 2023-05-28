@@ -49,15 +49,11 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
   by
   induction' Δ' using SimplexCategory.rec with m
   obtain ⟨k, hk⟩ :=
-    Nat.exists_eq_add_of_lt
-      (len_lt_of_mono i fun h => by
-        rw [← h] at h₁
-        exact h₁ rfl)
+    Nat.exists_eq_add_of_lt (len_lt_of_mono i fun h => by rw [← h] at h₁; exact h₁ rfl)
   simp only [len_mk] at hk
   cases k
   · change n = m + 1 at hk
-    subst hk
-    obtain ⟨j, rfl⟩ := eq_δ_of_mono i
+    subst hk; obtain ⟨j, rfl⟩ := eq_δ_of_mono i
     rw [is_δ₀.iff] at h₂
     have h₃ : 1 ≤ (j : ℕ) := by
       by_contra
@@ -88,11 +84,7 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
     · simp only [op_comp, X.map_comp, assoc, P_infty_f]
       erw [(higher_faces_vanish.of_P _ _).comp_δ_eq_zero_assoc _ hj₁, zero_comp]
       by_contra
-      exact
-        hj₁
-          (by
-            simp only [Fin.ext_iff, Fin.val_zero]
-            linarith)
+      exact hj₁ (by simp only [Fin.ext_iff, Fin.val_zero]; linarith)
 #align algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zero
 
 /- warning: algebraic_topology.dold_kan.Γ₀_obj_termwise_map_mono_comp_P_infty -> AlgebraicTopology.DoldKan.Γ₀_obj_termwise_mapMono_comp_PInfty is a dubious translation:
@@ -121,20 +113,15 @@ theorem Γ₀_obj_termwise_mapMono_comp_PInfty (X : SimplicialObject C) {Δ Δ' 
     dsimp
     rw [← P_infty.comm' _ n rfl, alternating_face_map_complex.obj_d_eq]
     simp only [eq_self_iff_true, id_comp, if_true, preadditive.comp_sum]
-    rw [Finset.sum_eq_single (0 : Fin (n + 2))]
-    rotate_left
+    rw [Finset.sum_eq_single (0 : Fin (n + 2))]; rotate_left
     · intro b hb hb'
       rw [preadditive.comp_zsmul]
-      erw [P_infty_comp_map_mono_eq_zero X (SimplexCategory.δ b) h
-          (by
-            rw [is_δ₀.iff]
-            exact hb'),
+      erw [P_infty_comp_map_mono_eq_zero X (SimplexCategory.δ b) h (by rw [is_δ₀.iff]; exact hb'),
         zsmul_zero]
     · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
     · simpa only [hi.eq_δ₀, Fin.val_zero, pow_zero, one_zsmul]
   -- The case `i ≠ δ 0`
-  · rw [Γ₀.obj.termwise.map_mono_eq_zero _ i _ hi, zero_comp]
-    swap
+  · rw [Γ₀.obj.termwise.map_mono_eq_zero _ i _ hi, zero_comp]; swap
     · by_contra h'
       exact h (congr_arg SimplexCategory.len h'.symm)
     rw [P_infty_comp_map_mono_eq_zero]
@@ -274,10 +261,7 @@ Case conversion may be inaccurate. Consider using '#align algebraic_topology.dol
 theorem identity_N₂ :
     ((𝟙 (N₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ N₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 N₂ : N₂ ⟶ N₂) =
       𝟙 N₂ :=
-  by
-  ext P : 2
-  dsimp
-  rw [Γ₂.map_id, N₂.map_id, comp_id, id_comp, identity_N₂_objectwise P]
+  by ext P : 2; dsimp; rw [Γ₂.map_id, N₂.map_id, comp_id, id_comp, identity_N₂_objectwise P]
 #align algebraic_topology.dold_kan.identity_N₂ AlgebraicTopology.DoldKan.identity_N₂
 
 instance : IsIso (Γ₂N₂.natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ _ ⟶ _) :=

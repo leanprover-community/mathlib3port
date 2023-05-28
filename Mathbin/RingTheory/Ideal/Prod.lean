@@ -96,10 +96,7 @@ theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I
   by
   ext
   rw [mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective]
-  exact
-    ⟨by
-      rintro ⟨x, ⟨h, rfl⟩⟩
-      exact h.1, fun h => ⟨⟨x, 0⟩, ⟨⟨h, Ideal.zero_mem _⟩, rfl⟩⟩⟩
+  exact ⟨by rintro ⟨x, ⟨h, rfl⟩⟩; exact h.1, fun h => ⟨⟨x, 0⟩, ⟨⟨h, Ideal.zero_mem _⟩, rfl⟩⟩⟩
 #align ideal.map_fst_prod Ideal.map_fst_prod
 
 /- warning: ideal.map_snd_prod -> Ideal.map_snd_prod is a dubious translation:
@@ -113,10 +110,7 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I
   by
   ext
   rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
-  exact
-    ⟨by
-      rintro ⟨x, ⟨h, rfl⟩⟩
-      exact h.2, fun h => ⟨⟨0, x⟩, ⟨⟨Ideal.zero_mem _, h⟩, rfl⟩⟩⟩
+  exact ⟨by rintro ⟨x, ⟨h, rfl⟩⟩; exact h.2, fun h => ⟨⟨0, x⟩, ⟨⟨Ideal.zero_mem _, h⟩, rfl⟩⟩⟩
 #align ideal.map_snd_prod Ideal.map_snd_prod
 
 /- warning: ideal.map_prod_comm_prod -> Ideal.map_prodComm_prod is a dubious translation:
@@ -210,8 +204,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.is_prime_ideal_p
 theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal S)).IsPrime :=
   by
   constructor
-  · rcases h with ⟨h, -⟩
-    contrapose! h
+  · rcases h with ⟨h, -⟩; contrapose! h
     rw [← prod_top_top, Prod.ext_iff] at h
     exact h.1
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩

@@ -273,20 +273,13 @@ Case conversion may be inaccurate. Consider using '#align category_theory.monoid
 def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e)
     where
   toLaxMonoidalFunctor := laxToTransported e
-  ε_isIso := by
-    dsimp
-    infer_instance
-  μ_isIso X Y := by
-    dsimp
-    infer_instance
+  ε_isIso := by dsimp; infer_instance
+  μ_isIso X Y := by dsimp; infer_instance
 #align category_theory.monoidal.to_transported CategoryTheory.Monoidal.toTransported
 
 end
 
-instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor :=
-  by
-  dsimp
-  infer_instance
+instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor := by dsimp; infer_instance
 
 /- warning: category_theory.monoidal.from_transported -> CategoryTheory.Monoidal.fromTransported is a dubious translation:
 lean 3 declaration is

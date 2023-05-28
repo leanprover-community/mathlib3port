@@ -145,8 +145,7 @@ theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g <| 
     Semiconj (f^[n]) (g k) (g <| n + k) :=
   by
   induction' n with n ihn generalizing k
-  · rw [Nat.zero_add]
-    exact id_left
+  · rw [Nat.zero_add]; exact id_left
   · rw [Nat.succ_eq_add_one, Nat.add_right_comm, Nat.add_assoc]
     exact (H k).compLeft (ihn (k + 1))
 #align function.semiconj.iterate_left Function.Semiconj.iterate_left
@@ -252,11 +251,7 @@ theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[
 /-- A recursor for the iterate of a function. -/
 def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) :
     p ((f^[n]) a) :=
-  Nat.rec ha
-    (fun m => by
-      rw [iterate_succ']
-      exact h _)
-    n
+  Nat.rec ha (fun m => by rw [iterate_succ']; exact h _) n
 #align function.iterate.rec Function.Iterate.rec
 -/
 
@@ -276,10 +271,7 @@ variable {f} {m n : ℕ} {a : α}
 #print Function.LeftInverse.iterate /-
 theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) :
     LeftInverse (g^[n]) (f^[n]) :=
-  Nat.recOn n (fun _ => rfl) fun n ihn =>
-    by
-    rw [iterate_succ', iterate_succ]
-    exact ihn.comp hg
+  Nat.recOn n (fun _ => rfl) fun n ihn => by rw [iterate_succ', iterate_succ]; exact ihn.comp hg
 #align function.left_inverse.iterate Function.LeftInverse.iterate
 -/
 

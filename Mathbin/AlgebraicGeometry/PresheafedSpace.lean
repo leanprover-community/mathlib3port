@@ -143,11 +143,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.hext AlgebraicGeometry.PresheafedSpace.hextₓ'. -/
 -- TODO including `injections` would make tidy work earlier.
 theorem hext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) :
-    α = β := by
-  cases α
-  cases β
-  congr
-  exacts[w, h]
+    α = β := by cases α; cases β; congr ; exacts[w, h]
 #align algebraic_geometry.PresheafedSpace.hext AlgebraicGeometry.PresheafedSpace.hext
 
 /- warning: algebraic_geometry.PresheafedSpace.id -> AlgebraicGeometry.PresheafedSpace.id is a dubious translation:
@@ -274,18 +270,8 @@ Case conversion may be inaccurate. Consider using '#align algebraic_geometry.Pre
 @[simp]
 theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
-      X.Presheaf.map
-        (eqToHom
-          (by
-            induction U using Opposite.rec'
-            cases U
-            rfl)) :=
-  by
-  induction U using Opposite.rec'
-  cases U
-  simp only [id_c]
-  dsimp
-  simp
+      X.Presheaf.map (eqToHom (by induction U using Opposite.rec'; cases U; rfl)) :=
+  by induction U using Opposite.rec'; cases U; simp only [id_c]; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.id_c_app AlgebraicGeometry.PresheafedSpace.id_c_app
 
 /- warning: algebraic_geometry.PresheafedSpace.comp_base -> AlgebraicGeometry.PresheafedSpace.comp_base is a dubious translation:
@@ -325,11 +311,7 @@ theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y 
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebraic_geometry.PresheafedSpace.congr_app AlgebraicGeometry.PresheafedSpace.congr_appₓ'. -/
 theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
-    α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) :=
-  by
-  subst h
-  dsimp
-  simp
+    α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) := by subst h; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.congr_app AlgebraicGeometry.PresheafedSpace.congr_app
 
 section
@@ -374,12 +356,7 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y
   inv :=
     { base := H.inv
       c := Presheaf.toPushforwardOfIso H α.Hom }
-  hom_inv_id' := by
-    ext
-    · simp
-      erw [category.id_comp]
-      simpa
-    simp
+  hom_inv_id' := by ext; · simp; erw [category.id_comp]; simpa; simp
   inv_hom_id' := by
     ext x
     induction x using Opposite.rec'
@@ -390,8 +367,7 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y
     cases x
     rw [nat_trans.comp_app] at this
     convert this
-    · dsimp
-      simp
+    · dsimp; simp
     · simp
     · simp
 #align algebraic_geometry.PresheafedSpace.iso_of_components AlgebraicGeometry.PresheafedSpace.isoOfComponents
@@ -486,9 +462,7 @@ def ofRestrict {U : TopCat} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : To
   c :=
     { app := fun V => X.Presheaf.map (h.IsOpenMap.Adjunction.counit.app V.unop).op
       naturality' := fun U V f =>
-        show _ = _ ≫ X.Presheaf.map _ by
-          rw [← map_comp, ← map_comp]
-          rfl }
+        show _ = _ ≫ X.Presheaf.map _ by rw [← map_comp, ← map_comp]; rfl }
 #align algebraic_geometry.PresheafedSpace.of_restrict AlgebraicGeometry.PresheafedSpace.ofRestrict
 
 /- warning: algebraic_geometry.PresheafedSpace.of_restrict_mono -> AlgebraicGeometry.PresheafedSpace.ofRestrict_mono is a dubious translation:
@@ -505,9 +479,7 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
   intro Z g₁ g₂ eq
   ext V
   · induction V using Opposite.rec'
-    have hV : (opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V) = V :=
-      by
-      ext1
+    have hV : (opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V) = V := by ext1;
       exact Set.preimage_image_eq _ hf.inj
     haveI :
       is_iso (hf.is_open_map.adjunction.counit.app (unop (op (hf.is_open_map.functor.obj V)))) :=
@@ -536,10 +508,7 @@ Case conversion may be inaccurate. Consider using '#align algebraic_geometry.Pre
 theorem restrict_top_presheaf (X : PresheafedSpace C) :
     (X.restrict (Opens.openEmbedding ⊤)).Presheaf =
       (Opens.inclusionTopIso X.carrier).inv _* X.Presheaf :=
-  by
-  dsimp
-  rw [opens.inclusion_top_functor X.carrier]
-  rfl
+  by dsimp; rw [opens.inclusion_top_functor X.carrier]; rfl
 #align algebraic_geometry.PresheafedSpace.restrict_top_presheaf AlgebraicGeometry.PresheafedSpace.restrict_top_presheaf
 
 /- warning: algebraic_geometry.PresheafedSpace.of_restrict_top_c -> AlgebraicGeometry.PresheafedSpace.ofRestrict_top_c is a dubious translation:
@@ -550,8 +519,7 @@ theorem ofRestrict_top_c (X : PresheafedSpace C) :
       eqToHom
         (by
           rw [restrict_top_presheaf, ← presheaf.pushforward.comp_eq]
-          erw [iso.inv_hom_id]
-          rw [presheaf.pushforward.id_eq]) :=
+          erw [iso.inv_hom_id]; rw [presheaf.pushforward.id_eq]) :=
   by
   /- another approach would be to prove the left hand side
        is a natural isoomorphism, but I encountered a universe
@@ -559,10 +527,7 @@ theorem ofRestrict_top_c (X : PresheafedSpace C) :
   ext U;
   change X.presheaf.map _ = _; convert eq_to_hom_map _ _ using 1
   congr ; simpa
-  · induction U using Opposite.rec'
-    dsimp
-    congr
-    ext
+  · induction U using Opposite.rec'; dsimp; congr ; ext
     exact ⟨fun h => ⟨⟨x, trivial⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
 #align algebraic_geometry.PresheafedSpace.of_restrict_top_c AlgebraicGeometry.PresheafedSpace.ofRestrict_top_c
 
@@ -594,18 +559,10 @@ def restrictTopIso (X : PresheafedSpace C) : X.restrict (Opens.openEmbedding ⊤
   hom_inv_id' :=
     AlgebraicGeometry.PresheafedSpace.Hom.ext _ _
         (ConcreteCategory.hom_ext _ _ fun ⟨x, _⟩ => rfl) <|
-      by
-      erw [comp_c]
-      rw [X.of_restrict_top_c]
-      ext
-      simp
+      by erw [comp_c]; rw [X.of_restrict_top_c]; ext; simp
   inv_hom_id' :=
-    AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ rfl <|
-      by
-      erw [comp_c]
-      rw [X.of_restrict_top_c]
-      ext
-      simpa [-eq_to_hom_refl]
+    AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ rfl <| by erw [comp_c]; rw [X.of_restrict_top_c];
+      ext; simpa [-eq_to_hom_refl]
 #align algebraic_geometry.PresheafedSpace.restrict_top_iso AlgebraicGeometry.PresheafedSpace.restrictTopIso
 
 end Restrict

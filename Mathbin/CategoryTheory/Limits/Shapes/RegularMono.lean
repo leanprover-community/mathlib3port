@@ -71,11 +71,7 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
   left := g
   right := h
   w := equalizer.condition g h
-  IsLimit :=
-    Fork.IsLimit.mk _ (fun s => limit.lift _ s) (by simp) fun s m w =>
-      by
-      ext1
-      simp [← w]
+  IsLimit := Fork.IsLimit.mk _ (fun s => limit.lift _ s) (by simp) fun s m w => by ext1; simp [← w]
 #align category_theory.equalizer_regular CategoryTheory.equalizerRegular
 -/
 
@@ -190,20 +186,14 @@ def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMo
 #print CategoryTheory.regularMonoCategoryOfSplitMonoCategory /-
 instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] :
     RegularMonoCategory C
-    where regularMonoOfMono _ _ f _ :=
-    by
-    haveI := is_split_mono_of_mono f
-    infer_instance
+    where regularMonoOfMono _ _ f _ := by haveI := is_split_mono_of_mono f; infer_instance
 #align category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
 -/
 
 #print CategoryTheory.strongMonoCategory_of_regularMonoCategory /-
 instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMonoCategory C] :
     StrongMonoCategory C
-    where strongMono_of_mono _ _ f _ :=
-    by
-    haveI := regular_mono_of_mono f
-    infer_instance
+    where strongMono_of_mono _ _ f _ := by haveI := regular_mono_of_mono f; infer_instance
 #align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strongMonoCategory_of_regularMonoCategory
 -/
 
@@ -234,10 +224,7 @@ instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
   right := h
   w := coequalizer.condition g h
   IsColimit :=
-    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s) (by simp) fun s m w =>
-      by
-      ext1
-      simp [← w]
+    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s) (by simp) fun s m w => by ext1; simp [← w]
 #align category_theory.coequalizer_regular CategoryTheory.coequalizerRegular
 -/
 
@@ -293,8 +280,7 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     apply t.hom_ext
     apply (pushout_cocone.mk _ _ comm).coequalizer_ext
     · exact z
-    · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]
-      rfl
+    · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]; rfl
 #align category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
 -/
 
@@ -360,20 +346,14 @@ def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f 
 #print CategoryTheory.regularEpiCategoryOfSplitEpiCategory /-
 instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] :
     RegularEpiCategory C
-    where regularEpiOfEpi _ _ f _ :=
-    by
-    haveI := is_split_epi_of_epi f
-    infer_instance
+    where regularEpiOfEpi _ _ f _ := by haveI := is_split_epi_of_epi f; infer_instance
 #align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 -/
 
 #print CategoryTheory.strongEpiCategory_of_regularEpiCategory /-
 instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCategory C] :
     StrongEpiCategory C
-    where strongEpi_of_epi _ _ f _ :=
-    by
-    haveI := regular_epi_of_epi f
-    infer_instance
+    where strongEpi_of_epi _ _ f _ := by haveI := regular_epi_of_epi f; infer_instance
 #align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strongEpiCategory_of_regularEpiCategory
 -/
 

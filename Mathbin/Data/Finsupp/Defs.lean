@@ -814,9 +814,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.equiv_fun_on_finite_single Finsupp.equivFunOnFinite_singleₓ'. -/
 @[simp]
 theorem equivFunOnFinite_single [DecidableEq α] [Finite α] (x : α) (m : M) :
-    Finsupp.equivFunOnFinite (Finsupp.single x m) = Pi.single x m :=
-  by
-  ext
+    Finsupp.equivFunOnFinite (Finsupp.single x m) = Pi.single x m := by ext;
   simp [Finsupp.single_eq_pi_single]
 #align finsupp.equiv_fun_on_finite_single Finsupp.equivFunOnFinite_single
 
@@ -1003,10 +1001,8 @@ Case conversion may be inaccurate. Consider using '#align finsupp.erase_single F
 theorem erase_single {a : α} {b : M} : erase a (single a b) = 0 :=
   by
   ext s; by_cases hs : s = a
-  · rw [hs, erase_same]
-    rfl
-  · rw [erase_ne hs]
-    exact single_eq_of_ne (Ne.symm hs)
+  · rw [hs, erase_same]; rfl
+  · rw [erase_ne hs]; exact single_eq_of_ne (Ne.symm hs)
 #align finsupp.erase_single Finsupp.erase_single
 
 /- warning: finsupp.erase_single_ne -> Finsupp.erase_single_ne is a dubious translation:
@@ -1676,10 +1672,8 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
     suffices p (single a (f a) + f.eraseₓ a) by rwa [single_add_erase] at this
     classical
       apply ha
-      · rw [support_erase, mem_erase]
-        exact fun H => H.1 rfl
-      · rw [← mem_support_iff, hf]
-        exact mem_cons_self _ _
+      · rw [support_erase, mem_erase]; exact fun H => H.1 rfl
+      · rw [← mem_support_iff, hf]; exact mem_cons_self _ _
       · apply ih _ _
         rw [support_erase, hf, Finset.erase_cons]
 #align finsupp.induction Finsupp.induction
@@ -1699,8 +1693,7 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     suffices p (f.eraseₓ a + single a (f a)) by rwa [erase_add_single] at this
     classical
       apply ha
-      · rw [support_erase, mem_erase]
-        exact fun H => H.1 rfl
+      · rw [support_erase, mem_erase]; exact fun H => H.1 rfl
       · rw [← mem_support_iff, hf]
         exact mem_cons_self _ _
       · apply ih _ _

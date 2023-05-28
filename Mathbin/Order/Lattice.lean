@@ -353,8 +353,7 @@ Case conversion may be inaccurate. Consider using '#align le_iff_exists_sup le_i
 theorem le_iff_exists_sup : a ≤ b ↔ ∃ c, b = a ⊔ c :=
   by
   constructor
-  · intro h
-    exact ⟨b, (sup_eq_right.mpr h).symm⟩
+  · intro h; exact ⟨b, (sup_eq_right.mpr h).symm⟩
   · rintro ⟨c, rfl : _ = _ ⊔ _⟩
     exact le_sup_left
 #align le_iff_exists_sup le_iff_exists_sup
@@ -1218,15 +1217,9 @@ def Lattice.mk' {α : Type _} [Sup α] [Inf α] (sup_comm : ∀ a b : α, a ⊔ 
       inf_sup_self
   { partial_order_inst, semilatt_sup_inst,
     semilatt_inf_inst with
-    inf_le_left := fun a b => by
-      rw [partial_order_eq]
-      apply inf_le_left
-    inf_le_right := fun a b => by
-      rw [partial_order_eq]
-      apply inf_le_right
-    le_inf := fun a b c => by
-      rw [partial_order_eq]
-      apply le_inf }
+    inf_le_left := fun a b => by rw [partial_order_eq]; apply inf_le_left
+    inf_le_right := fun a b => by rw [partial_order_eq]; apply inf_le_right
+    le_inf := fun a b c => by rw [partial_order_eq]; apply le_inf }
 #align lattice.mk' Lattice.mk'
 -/
 
@@ -1255,9 +1248,7 @@ theorem sup_le_inf : a ⊔ b ≤ a ⊓ b ↔ a = b :=
   ⟨fun h =>
     le_antisymm (le_sup_left.trans <| h.trans inf_le_right)
       (le_sup_right.trans <| h.trans inf_le_left),
-    by
-    rintro rfl
-    simp⟩
+    by rintro rfl; simp⟩
 #align sup_le_inf sup_le_inf
 
 /- warning: inf_eq_sup -> inf_eq_sup is a dubious translation:
@@ -2459,18 +2450,9 @@ protected def Function.Injective.semilatticeSup [Sup α] [SemilatticeSup β] (f 
     (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) : SemilatticeSup α :=
   { PartialOrder.lift f hf_inj with
     sup := Sup.sup
-    le_sup_left := fun a b => by
-      change f a ≤ f (a ⊔ b)
-      rw [map_sup]
-      exact le_sup_left
-    le_sup_right := fun a b => by
-      change f b ≤ f (a ⊔ b)
-      rw [map_sup]
-      exact le_sup_right
-    sup_le := fun a b c ha hb => by
-      change f (a ⊔ b) ≤ f c
-      rw [map_sup]
-      exact sup_le ha hb }
+    le_sup_left := fun a b => by change f a ≤ f (a ⊔ b); rw [map_sup]; exact le_sup_left
+    le_sup_right := fun a b => by change f b ≤ f (a ⊔ b); rw [map_sup]; exact le_sup_right
+    sup_le := fun a b c ha hb => by change f (a ⊔ b) ≤ f c; rw [map_sup]; exact sup_le ha hb }
 #align function.injective.semilattice_sup Function.Injective.semilatticeSup
 
 /- warning: function.injective.semilattice_inf -> Function.Injective.semilatticeInf is a dubious translation:
@@ -2487,18 +2469,9 @@ protected def Function.Injective.semilatticeInf [Inf α] [SemilatticeInf β] (f 
     (hf_inj : Function.Injective f) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) : SemilatticeInf α :=
   { PartialOrder.lift f hf_inj with
     inf := Inf.inf
-    inf_le_left := fun a b => by
-      change f (a ⊓ b) ≤ f a
-      rw [map_inf]
-      exact inf_le_left
-    inf_le_right := fun a b => by
-      change f (a ⊓ b) ≤ f b
-      rw [map_inf]
-      exact inf_le_right
-    le_inf := fun a b c ha hb => by
-      change f a ≤ f (b ⊓ c)
-      rw [map_inf]
-      exact le_inf ha hb }
+    inf_le_left := fun a b => by change f (a ⊓ b) ≤ f a; rw [map_inf]; exact inf_le_left
+    inf_le_right := fun a b => by change f (a ⊓ b) ≤ f b; rw [map_inf]; exact inf_le_right
+    le_inf := fun a b c ha hb => by change f a ≤ f (b ⊓ c); rw [map_inf]; exact le_inf ha hb }
 #align function.injective.semilattice_inf Function.Injective.semilatticeInf
 
 /- warning: function.injective.lattice -> Function.Injective.lattice is a dubious translation:
@@ -2534,8 +2507,7 @@ protected def Function.Injective.distribLattice [Sup α] [Inf α] [DistribLattic
     le_sup_inf := fun a b c =>
       by
       change f ((a ⊔ b) ⊓ (a ⊔ c)) ≤ f (a ⊔ b ⊓ c)
-      rw [map_inf, map_sup, map_sup, map_sup, map_inf]
-      exact le_sup_inf }
+      rw [map_inf, map_sup, map_sup, map_sup, map_inf]; exact le_sup_inf }
 #align function.injective.distrib_lattice Function.Injective.distribLattice
 
 end lift

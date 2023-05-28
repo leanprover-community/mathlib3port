@@ -175,11 +175,7 @@ theorem ext {I J : FractionalIdeal S P} : (∀ x, x ∈ I ↔ x ∈ J) → I = J
 /-- Copy of a `fractional_ideal` with a new underlying set equal to the old one.
 Useful to fix definitional equalities. -/
 protected def copy (p : FractionalIdeal S P) (s : Set P) (hs : s = ↑p) : FractionalIdeal S P :=
-  ⟨Submodule.copy p s hs, by
-    convert p.is_fractional
-    ext
-    simp only [hs]
-    rfl⟩
+  ⟨Submodule.copy p s hs, by convert p.is_fractional; ext; simp only [hs]; rfl⟩
 #align fractional_ideal.copy FractionalIdeal.copy
 -/
 
@@ -826,10 +822,8 @@ theorem mul_def (I J : FractionalIdeal S P) : I * J = ⟨I * J, I.IsFractional.m
 <too large>
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.coe_mul FractionalIdeal.coe_mulₓ'. -/
 @[simp, norm_cast]
-theorem coe_mul (I J : FractionalIdeal S P) : (↑(I * J) : Submodule R P) = I * J :=
-  by
-  simp only [mul_def]
-  rfl
+theorem coe_mul (I J : FractionalIdeal S P) : (↑(I * J) : Submodule R P) = I * J := by
+  simp only [mul_def]; rfl
 #align fractional_ideal.coe_mul FractionalIdeal.coe_mul
 
 /- warning: fractional_ideal.coe_ideal_mul -> FractionalIdeal.coeIdeal_mul is a dubious translation:
@@ -878,9 +872,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))} {P : Type.{u1}} [_inst_2 : CommRing.{u1} P] [_inst_3 : Algebra.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))] {I : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3} {J : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3} {i : P} {j : P}, (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) i I) -> (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) j J) -> (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) (HMul.hMul.{u1, u1, u1} P P P (instHMul.{u1} P (NonUnitalNonAssocRing.toMul.{u1} P (NonAssocRing.toNonUnitalNonAssocRing.{u1} P (Ring.toNonAssocRing.{u1} P (CommRing.toRing.{u1} P _inst_2))))) i j) (HMul.hMul.{u1, u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (instHMul.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.instMulFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) I J))
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.mul_mem_mul FractionalIdeal.mul_mem_mulₓ'. -/
 theorem mul_mem_mul {I J : FractionalIdeal S P} {i j : P} (hi : i ∈ I) (hj : j ∈ J) :
-    i * j ∈ I * J := by
-  simp only [mul_def]
-  exact Submodule.mul_mem_mul hi hj
+    i * j ∈ I * J := by simp only [mul_def]; exact Submodule.mul_mem_mul hi hj
 #align fractional_ideal.mul_mem_mul FractionalIdeal.mul_mem_mul
 
 /- warning: fractional_ideal.mul_le -> FractionalIdeal.mul_le is a dubious translation:
@@ -889,10 +881,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))} {P : Type.{u1}} [_inst_2 : CommRing.{u1} P] [_inst_3 : Algebra.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))] {I : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3} {J : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3} {K : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3}, Iff (LE.le.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (Preorder.toLE.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (PartialOrder.toPreorder.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SemilatticeInf.toPartialOrder.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (Lattice.toSemilatticeInf.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.lattice.{u2, u1} R _inst_1 S P _inst_2 _inst_3))))) (HMul.hMul.{u1, u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (instHMul.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.instMulFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) I J) K) (forall (i : P), (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) i I) -> (forall (j : P), (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) j J) -> (Membership.mem.{u1, u1} P (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (SetLike.instMembership.{u1, u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) P (FractionalIdeal.instSetLikeFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)) (HMul.hMul.{u1, u1, u1} P P P (instHMul.{u1} P (NonUnitalNonAssocRing.toMul.{u1} P (NonAssocRing.toNonUnitalNonAssocRing.{u1} P (Ring.toNonAssocRing.{u1} P (CommRing.toRing.{u1} P _inst_2))))) i j) K)))
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.mul_le FractionalIdeal.mul_leₓ'. -/
-theorem mul_le {I J K : FractionalIdeal S P} : I * J ≤ K ↔ ∀ i ∈ I, ∀ j ∈ J, i * j ∈ K :=
-  by
-  simp only [mul_def]
-  exact Submodule.mul_le
+theorem mul_le {I J K : FractionalIdeal S P} : I * J ≤ K ↔ ∀ i ∈ I, ∀ j ∈ J, i * j ∈ K := by
+  simp only [mul_def]; exact Submodule.mul_le
 #align fractional_ideal.mul_le FractionalIdeal.mul_le
 
 instance : Pow (FractionalIdeal S P) ℕ :=
@@ -1322,16 +1312,9 @@ theorem isFractional_span_iff {s : Set P} :
     IsFractional S (span R s) ↔ ∃ a ∈ S, ∀ b : P, b ∈ s → IsInteger R (a • b) :=
   ⟨fun ⟨a, a_mem, h⟩ => ⟨a, a_mem, fun b hb => h b (subset_span hb)⟩, fun ⟨a, a_mem, h⟩ =>
     ⟨a, a_mem, fun b hb =>
-      span_induction hb h
-        (by
-          rw [smul_zero]
-          exact is_integer_zero)
-        (fun x y hx hy => by
-          rw [smul_add]
-          exact is_integer_add hx hy)
-        fun s x hx => by
-        rw [smul_comm]
-        exact is_integer_smul hx⟩⟩
+      span_induction hb h (by rw [smul_zero]; exact is_integer_zero)
+        (fun x y hx hy => by rw [smul_add]; exact is_integer_add hx hy) fun s x hx => by
+        rw [smul_comm]; exact is_integer_smul hx⟩⟩
 #align fractional_ideal.is_fractional_span_iff FractionalIdeal.isFractional_span_iff
 
 include loc
@@ -1402,9 +1385,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))} {P : Type.{u1}} [_inst_2 : CommRing.{u1} P] [_inst_3 : Algebra.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))], (Function.Injective.{succ u2, succ u1} R P (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => P) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)))) R P (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} P (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} P (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)))) R P (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} P (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)))) R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))) (RingHom.instRingHomClassRingHom.{u2, u1} R P (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} P (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))))))) (algebraMap.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)) _inst_3))) -> (forall (I : Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))), (IsUnit.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (MonoidWithZero.toMonoid.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (Semiring.toMonoidWithZero.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (CommSemiring.toSemiring.{u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.instCommSemiringFractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3)))) (FractionalIdeal.coeIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3 I)) -> (Ideal.FG.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) I))
 Case conversion may be inaccurate. Consider using '#align ideal.fg_of_is_unit Ideal.fg_of_isUnitₓ'. -/
 theorem Ideal.fg_of_isUnit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)
-    (h : IsUnit (I : FractionalIdeal S P)) : I.FG :=
-  by
-  rw [← coe_ideal_fg S inj I]
+    (h : IsUnit (I : FractionalIdeal S P)) : I.FG := by rw [← coe_ideal_fg S inj I];
   exact fg_of_is_unit I h
 #align ideal.fg_of_is_unit Ideal.fg_of_isUnit
 
@@ -1493,9 +1474,7 @@ theorem canonicalEquiv_trans_canonicalEquiv (P'' : Type _) [CommRing P''] [Algeb
 <too large>
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.canonical_equiv_coe_ideal FractionalIdeal.canonicalEquiv_coeIdealₓ'. -/
 @[simp]
-theorem canonicalEquiv_coeIdeal (I : Ideal R) : canonicalEquiv S P P' I = I :=
-  by
-  ext
+theorem canonicalEquiv_coeIdeal (I : Ideal R) : canonicalEquiv S P P' I = I := by ext;
   simp [IsLocalization.map_eq]
 #align fractional_ideal.canonical_equiv_coe_ideal FractionalIdeal.canonicalEquiv_coeIdeal
 
@@ -1661,9 +1640,7 @@ variable [Algebra R₁ K] [frac : IsFractionRing R₁ K]
 
 instance : Nontrivial (FractionalIdeal R₁⁰ K) :=
   ⟨⟨0, 1, fun h =>
-      have this : (1 : K) ∈ (0 : FractionalIdeal R₁⁰ K) :=
-        by
-        rw [← (algebraMap R₁ K).map_one]
+      have this : (1 : K) ∈ (0 : FractionalIdeal R₁⁰ K) := by rw [← (algebraMap R₁ K).map_one];
         simpa only [h] using coe_mem_one R₁⁰ 1
       one_ne_zero ((mem_zero_iff _).mp this)⟩⟩
 
@@ -1674,10 +1651,7 @@ but is expected to have type
   forall {R₁ : Type.{u2}} [_inst_4 : CommRing.{u2} R₁] {K : Type.{u1}} [_inst_5 : Field.{u1} K] [_inst_6 : Algebra.{u2, u1} R₁ K (CommRing.toCommSemiring.{u2} R₁ _inst_4) (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_5)))] (I : FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (J : FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6), (Eq.{succ u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (HMul.hMul.{u1, u1, u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (instHMul.{u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (FractionalIdeal.instMulFractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6)) I J) (OfNat.ofNat.{u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) 1 (One.toOfNat1.{u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (FractionalIdeal.instOneFractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6)))) -> (Ne.{succ u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) I (OfNat.ofNat.{u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) 0 (Zero.toOfNat0.{u1} (FractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6) (FractionalIdeal.instZeroFractionalIdeal.{u2, u1} R₁ _inst_4 (nonZeroDivisors.{u2} R₁ (Semiring.toMonoidWithZero.{u2} R₁ (CommSemiring.toSemiring.{u2} R₁ (CommRing.toCommSemiring.{u2} R₁ _inst_4)))) K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_5)) _inst_6))))
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.ne_zero_of_mul_eq_one FractionalIdeal.ne_zero_of_mul_eq_oneₓ'. -/
 theorem ne_zero_of_mul_eq_one (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : I ≠ 0 := fun hI =>
-  zero_ne_one' (FractionalIdeal R₁⁰ K)
-    (by
-      convert h
-      simp [hI])
+  zero_ne_one' (FractionalIdeal R₁⁰ K) (by convert h; simp [hI])
 #align fractional_ideal.ne_zero_of_mul_eq_one FractionalIdeal.ne_zero_of_mul_eq_one
 
 variable [IsDomain R₁]
@@ -1757,8 +1731,7 @@ theorem coe_div {I J : FractionalIdeal R₁⁰ K} (hJ : J ≠ 0) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.mem_div_iff_of_nonzero FractionalIdeal.mem_div_iff_of_nonzeroₓ'. -/
 theorem mem_div_iff_of_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) {x} :
-    x ∈ I / J ↔ ∀ y ∈ J, x * y ∈ I := by
-  rw [div_nonzero h]
+    x ∈ I / J ↔ ∀ y ∈ J, x * y ∈ I := by rw [div_nonzero h];
   exact Submodule.mem_div_iff_forall_mul_mem
 #align fractional_ideal.mem_div_iff_of_nonzero FractionalIdeal.mem_div_iff_of_nonzero
 
@@ -1780,8 +1753,7 @@ Case conversion may be inaccurate. Consider using '#align fractional_ideal.le_se
 theorem le_self_mul_one_div {I : FractionalIdeal R₁⁰ K} (hI : I ≤ (1 : FractionalIdeal R₁⁰ K)) :
     I ≤ I * (1 / I) := by
   by_cases hI_nz : I = 0
-  · rw [hI_nz, div_zero, MulZeroClass.mul_zero]
-    exact zero_le 0
+  · rw [hI_nz, div_zero, MulZeroClass.mul_zero]; exact zero_le 0
   · rw [← coe_le_coe, coe_mul, coe_div hI_nz, coe_one]
     rw [← coe_le_coe, coe_one] at hI
     exact Submodule.le_self_mul_one_div hI
@@ -1942,16 +1914,10 @@ def spanFinset {ι : Type _} (s : Finset ι) (f : ι → K) : FractionalIdeal R�
     by
     obtain ⟨a', ha'⟩ := IsLocalization.exist_integer_multiples R₁⁰ s f
     refine' ⟨a', a'.2, fun x hx => Submodule.span_induction hx _ _ _ _⟩
-    · rintro _ ⟨i, hi, rfl⟩
-      exact ha' i hi
-    · rw [smul_zero]
-      exact IsLocalization.isInteger_zero
-    · intro x y hx hy
-      rw [smul_add]
-      exact IsLocalization.isInteger_add hx hy
-    · intro c x hx
-      rw [smul_comm]
-      exact IsLocalization.isInteger_smul hx⟩
+    · rintro _ ⟨i, hi, rfl⟩; exact ha' i hi
+    · rw [smul_zero]; exact IsLocalization.isInteger_zero
+    · intro x y hx hy; rw [smul_add]; exact IsLocalization.isInteger_add hx hy
+    · intro c x hx; rw [smul_comm]; exact IsLocalization.isInteger_smul hx⟩
 #align fractional_ideal.span_finset FractionalIdeal.spanFinset
 -/
 
@@ -2007,19 +1973,15 @@ irreducible_def spanSingleton (x : P) : FractionalIdeal S P :=
 #print FractionalIdeal.coe_spanSingleton /-
 -- local attribute [semireducible] span_singleton
 @[simp]
-theorem coe_spanSingleton (x : P) : (spanSingleton S x : Submodule R P) = span R {x} :=
-  by
-  rw [span_singleton]
-  rfl
+theorem coe_spanSingleton (x : P) : (spanSingleton S x : Submodule R P) = span R {x} := by
+  rw [span_singleton]; rfl
 #align fractional_ideal.coe_span_singleton FractionalIdeal.coe_spanSingleton
 -/
 
 #print FractionalIdeal.mem_spanSingleton /-
 @[simp]
-theorem mem_spanSingleton {x y : P} : x ∈ spanSingleton S y ↔ ∃ z : R, z • y = x :=
-  by
-  rw [span_singleton]
-  exact Submodule.mem_span_singleton
+theorem mem_spanSingleton {x y : P} : x ∈ spanSingleton S y ↔ ∃ z : R, z • y = x := by
+  rw [span_singleton]; exact Submodule.mem_span_singleton
 #align fractional_ideal.mem_span_singleton FractionalIdeal.mem_spanSingleton
 -/
 
@@ -2060,9 +2022,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] {S : Submonoid.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (NonAssocSemiring.toMulZeroOneClass.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))} {P : Type.{u1}} [_inst_2 : CommRing.{u1} P] [_inst_3 : Algebra.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2))] [loc : IsLocalization.{u2, u1} R (CommRing.toCommSemiring.{u2} R _inst_1) S P (CommRing.toCommSemiring.{u1} P _inst_2) _inst_3] (I : FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) [_inst_8 : Submodule.IsPrincipal.{u2, u1} R P (CommRing.toRing.{u2} R _inst_1) (Ring.toAddCommGroup.{u1} P (CommRing.toRing.{u1} P _inst_2)) (Algebra.toModule.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)) _inst_3) (FractionalIdeal.coeToSubmodule.{u2, u1} R _inst_1 S P _inst_2 _inst_3 I)], Eq.{succ u1} (FractionalIdeal.{u2, u1} R _inst_1 S P _inst_2 _inst_3) I (FractionalIdeal.spanSingleton.{u2, u1} R _inst_1 S P _inst_2 _inst_3 loc (Submodule.IsPrincipal.generator.{u2, u1} R P (Ring.toAddCommGroup.{u1} P (CommRing.toRing.{u1} P _inst_2)) (CommRing.toRing.{u2} R _inst_1) (Algebra.toModule.{u2, u1} R P (CommRing.toCommSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u1} P (CommRing.toCommSemiring.{u1} P _inst_2)) _inst_3) (FractionalIdeal.coeToSubmodule.{u2, u1} R _inst_1 S P _inst_2 _inst_3 I) _inst_8))
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.eq_span_singleton_of_principal FractionalIdeal.eq_spanSingleton_of_principalₓ'. -/
 theorem eq_spanSingleton_of_principal (I : FractionalIdeal S P) [IsPrincipal (I : Submodule R P)] :
-    I = spanSingleton S (generator (I : Submodule R P)) :=
-  by
-  rw [span_singleton]
+    I = spanSingleton S (generator (I : Submodule R P)) := by rw [span_singleton];
   exact coe_to_submodule_injective (span_singleton_generator ↑I).symm
 #align fractional_ideal.eq_span_singleton_of_principal FractionalIdeal.eq_spanSingleton_of_principal
 
@@ -2085,9 +2045,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} {P : Type.{u2}} [_inst_2 : CommRing.{u2} P] [_inst_3 : Algebra.{u1, u2} R P (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u2} P (CommRing.toCommSemiring.{u2} P _inst_2))] [loc : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) S P (CommRing.toCommSemiring.{u2} P _inst_2) _inst_3], Eq.{succ u2} (FractionalIdeal.{u1, u2} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.spanSingleton.{u1, u2} R _inst_1 S P _inst_2 _inst_3 loc (OfNat.ofNat.{u2} P 0 (Zero.toOfNat0.{u2} P (CommMonoidWithZero.toZero.{u2} P (CommSemiring.toCommMonoidWithZero.{u2} P (CommRing.toCommSemiring.{u2} P _inst_2)))))) (OfNat.ofNat.{u2} (FractionalIdeal.{u1, u2} R _inst_1 S P _inst_2 _inst_3) 0 (Zero.toOfNat0.{u2} (FractionalIdeal.{u1, u2} R _inst_1 S P _inst_2 _inst_3) (FractionalIdeal.instZeroFractionalIdeal.{u1, u2} R _inst_1 S P _inst_2 _inst_3)))
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.span_singleton_zero FractionalIdeal.spanSingleton_zeroₓ'. -/
 @[simp]
-theorem spanSingleton_zero : spanSingleton S (0 : P) = 0 :=
-  by
-  ext
+theorem spanSingleton_zero : spanSingleton S (0 : P) = 0 := by ext;
   simp [Submodule.mem_span_singleton, eq_comm]
 #align fractional_ideal.span_singleton_zero FractionalIdeal.spanSingleton_zero
 
@@ -2339,10 +2297,8 @@ instance isPrincipal {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [Alg
   by
   obtain ⟨a, aI, -, ha⟩ := exists_eq_span_singleton_mul I
   use (algebraMap R K a)⁻¹ * algebraMap R K (generator aI)
-  suffices I = span_singleton R⁰ ((algebraMap R K a)⁻¹ * algebraMap R K (generator aI))
-    by
-    rw [span_singleton] at this
-    exact congr_arg Subtype.val this
+  suffices I = span_singleton R⁰ ((algebraMap R K a)⁻¹ * algebraMap R K (generator aI)) by
+    rw [span_singleton] at this; exact congr_arg Subtype.val this
   conv_lhs => rw [ha, ← span_singleton_generator aI]
   rw [Ideal.submodule_span_eq, coe_ideal_span_singleton (generator aI),
     span_singleton_mul_span_singleton]
@@ -2401,11 +2357,8 @@ attribute [local instance] Classical.propDecidable
 <too large>
 Case conversion may be inaccurate. Consider using '#align fractional_ideal.is_noetherian_zero FractionalIdeal.isNoetherian_zeroₓ'. -/
 theorem isNoetherian_zero : IsNoetherian R₁ (0 : FractionalIdeal R₁⁰ K) :=
-  isNoetherian_submodule.mpr fun I (hI : I ≤ (0 : FractionalIdeal R₁⁰ K)) =>
-    by
-    rw [coe_zero] at hI
-    rw [le_bot_iff.mp hI]
-    exact fg_bot
+  isNoetherian_submodule.mpr fun I (hI : I ≤ (0 : FractionalIdeal R₁⁰ K)) => by rw [coe_zero] at hI;
+    rw [le_bot_iff.mp hI]; exact fg_bot
 #align fractional_ideal.is_noetherian_zero FractionalIdeal.isNoetherian_zero
 
 /- warning: fractional_ideal.is_noetherian_iff -> FractionalIdeal.isNoetherian_iff is a dubious translation:

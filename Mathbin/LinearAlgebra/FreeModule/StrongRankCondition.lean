@@ -49,8 +49,7 @@ instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R 
   by
   suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by
     rwa [strongRankCondition_iff_succ R]
-  intro n f
-  by_contra hf
+  intro n f; by_contra hf
   -- Lean is unable to find these instances without help, either via this `letI`, or via duplicate
   -- instances with unecessarily strong typeclasses on `R` and `M`.
   letI : Module.Finite R (Fin n.succ → R) := Module.Finite.pi

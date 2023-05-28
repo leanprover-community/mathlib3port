@@ -153,8 +153,7 @@ theorem factors_eq_nil (n : ℕ) : n.factors = [] ↔ n = 0 ∨ n = 1 :=
   · rcases n with (_ | _ | n)
     · exact Or.inl rfl
     · exact Or.inr rfl
-    · rw [factors] at h
-      injection h
+    · rw [factors] at h; injection h
   · rcases h with (rfl | rfl)
     · exact factors_zero
     · exact factors_one
@@ -199,8 +198,7 @@ theorem mem_factors {n p} (hn : n ≠ 0) : p ∈ factors n ↔ Prime p ∧ p ∣
 theorem le_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ≤ n :=
   by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · rw [factors_zero] at h
-    cases h
+  · rw [factors_zero] at h; cases h
   · exact le_of_dvd hn (dvd_of_mem_factors h)
 #align nat.le_of_mem_factors Nat.le_of_mem_factors
 -/
@@ -215,10 +213,8 @@ theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀ 
     rintro rfl
     rw [prod_eq_zero_iff] at h₁
     exact Prime.ne_zero (h₂ 0 h₁) rfl
-  · simp_rw [← prime_iff]
-    exact h₂
-  · simp_rw [← prime_iff]
-    exact fun p => prime_of_mem_factors
+  · simp_rw [← prime_iff]; exact h₂
+  · simp_rw [← prime_iff]; exact fun p => prime_of_mem_factors
 #align nat.factors_unique Nat.factors_unique
 -/
 
@@ -369,9 +365,7 @@ theorem mem_factors_mul_left {p a b : ℕ} (hpa : p ∈ a.factors) (hb : b ≠ 0
 #print Nat.mem_factors_mul_right /-
 /-- If `p` is a prime factor of `b` then `p` is also a prime factor of `a * b` for any `a > 0` -/
 theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : a ≠ 0) :
-    p ∈ (a * b).factors := by
-  rw [mul_comm]
-  exact mem_factors_mul_left hpb ha
+    p ∈ (a * b).factors := by rw [mul_comm]; exact mem_factors_mul_left hpb ha
 #align nat.mem_factors_mul_right Nat.mem_factors_mul_right
 -/
 

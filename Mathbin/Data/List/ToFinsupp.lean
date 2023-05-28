@@ -98,9 +98,7 @@ theorem toFinsupp_apply_le (hn : l.length ≤ n) : l.toFinsupp n = 0 :=
 #print List.toFinsupp_nil /-
 @[simp]
 theorem toFinsupp_nil [DecidablePred fun i => getD ([] : List M) i 0 ≠ 0] :
-    toFinsupp ([] : List M) = 0 := by
-  ext
-  simp
+    toFinsupp ([] : List M) = 0 := by ext; simp
 #align list.to_finsupp_nil List.toFinsupp_nil
 -/
 

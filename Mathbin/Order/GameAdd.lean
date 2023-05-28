@@ -239,10 +239,8 @@ variable {rα}
 
 #print Sym2.gameAdd_iff /-
 theorem gameAdd_iff :
-    ∀ {x y : α × α}, GameAdd rα ⟦x⟧ ⟦y⟧ ↔ Prod.GameAdd rα rα x y ∨ Prod.GameAdd rα rα x.symm y :=
-  by
-  rintro ⟨_, _⟩ ⟨_, _⟩
-  rfl
+    ∀ {x y : α × α}, GameAdd rα ⟦x⟧ ⟦y⟧ ↔ Prod.GameAdd rα rα x y ∨ Prod.GameAdd rα rα x.symm y := by
+  rintro ⟨_, _⟩ ⟨_, _⟩; rfl
 #align sym2.game_add_iff Sym2.gameAdd_iff
 -/
 
@@ -274,18 +272,14 @@ theorem GameAdd.snd {a b₁ b₂ : α} (h : rα b₁ b₂) : GameAdd rα ⟦(a, 
 -/
 
 #print Sym2.GameAdd.fst_snd /-
-theorem GameAdd.fst_snd {a₁ a₂ b : α} (h : rα a₁ a₂) : GameAdd rα ⟦(a₁, b)⟧ ⟦(b, a₂)⟧ :=
-  by
-  rw [Sym2.eq_swap]
-  exact game_add.snd h
+theorem GameAdd.fst_snd {a₁ a₂ b : α} (h : rα a₁ a₂) : GameAdd rα ⟦(a₁, b)⟧ ⟦(b, a₂)⟧ := by
+  rw [Sym2.eq_swap]; exact game_add.snd h
 #align sym2.game_add.fst_snd Sym2.GameAdd.fst_snd
 -/
 
 #print Sym2.GameAdd.snd_fst /-
-theorem GameAdd.snd_fst {a₁ a₂ b : α} (h : rα a₁ a₂) : GameAdd rα ⟦(b, a₁)⟧ ⟦(a₂, b)⟧ :=
-  by
-  rw [Sym2.eq_swap]
-  exact game_add.fst h
+theorem GameAdd.snd_fst {a₁ a₂ b : α} (h : rα a₁ a₂) : GameAdd rα ⟦(b, a₁)⟧ ⟦(a₂, b)⟧ := by
+  rw [Sym2.eq_swap]; exact game_add.fst h
 #align sym2.game_add.snd_fst Sym2.GameAdd.snd_fst
 -/
 

@@ -130,9 +130,7 @@ theorem whiskerRight_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c �
               (α_ _ _ _).inv ≫
                 (α_ _ _ _).inv ▷ h ≫
                   η.naturality f ▷ G.map g ▷ h ≫ (α_ _ _ _).Hom ▷ h ≫ (α_ _ _ _).Hom :=
-  by
-  rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_comp]
-  simp
+  by rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_comp]; simp
 #align category_theory.oplax_nat_trans.whisker_right_naturality_comp CategoryTheory.OplaxNatTrans.whiskerRight_naturality_comp
 
 @[simp, reassoc]
@@ -146,9 +144,7 @@ theorem whiskerLeft_naturality_id (f : a' ⟶ G.obj a) :
 theorem whiskerRight_naturality_id (f : G.obj a ⟶ a') :
     η.naturality (𝟙 a) ▷ f ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map_id a ▷ f =
       F.map_id a ▷ η.app a ▷ f ≫ (λ_ (η.app a)).Hom ▷ f ≫ (ρ_ (η.app a)).inv ▷ f ≫ (α_ _ _ _).Hom :=
-  by
-  rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_id]
-  simp
+  by rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_id]; simp
 #align category_theory.oplax_nat_trans.whisker_right_naturality_id CategoryTheory.OplaxNatTrans.whiskerRight_naturality_id
 
 end
@@ -181,8 +177,7 @@ def vcomp (η : OplaxNatTrans F G) (θ : OplaxNatTrans G H) : OplaxNatTrans F H
     exact _ ◁ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv
     exact (α_ _ _ _).Hom ≫ _ ◁ (α_ _ _ _).inv
     exact _ ◁ (α_ _ _ _).Hom ≫ (α_ _ _ _).inv
-    · rw [whisker_exchange_assoc]
-      simp
+    · rw [whisker_exchange_assoc]; simp
     · simp
 #align category_theory.oplax_nat_trans.vcomp CategoryTheory.OplaxNatTrans.vcomp
 

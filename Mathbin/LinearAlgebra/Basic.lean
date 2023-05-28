@@ -104,8 +104,7 @@ theorem sum_smul_index_linearMap' {α : Type _} {R : Type _} {M : Type _} {M₂ 
   by
   rw [Finsupp.sum_smul_index', Finsupp.smul_sum]
   · simp only [map_smul]
-  · intro i
-    exact (h i).map_zero
+  · intro i; exact (h i).map_zero
 #align finsupp.sum_smul_index_linear_map' Finsupp.sum_smul_index_linearMap'
 
 variable (α : Type _) [Finite α]
@@ -200,10 +199,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi_eq_sum_univ pi_eq_sum_univₓ'. -/
 /-- decomposing `x : ι → R` as a sum along the canonical basis -/
 theorem pi_eq_sum_univ {ι : Type _} [Fintype ι] [DecidableEq ι] {R : Type _} [Semiring R]
-    (x : ι → R) : x = ∑ i, x i • fun j => if i = j then 1 else 0 :=
-  by
-  ext
-  simp
+    (x : ι → R) : x = ∑ i, x i • fun j => if i = j then 1 else 0 := by ext; simp
 #align pi_eq_sum_univ pi_eq_sum_univ
 
 /-! ### Properties of linear maps -/
@@ -500,10 +496,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_5 : AddCommMonoid.{u1} M] [_inst_10 : Module.{u2, u1} R M _inst_1 _inst_5] (f : LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) (n : Nat), Eq.{succ u1} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : M) => M) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : M) => M) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, u1, u1} R R M M _inst_1 _inst_1 _inst_5 _inst_5 _inst_10 _inst_10 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (HPow.hPow.{u1, 0, u1} (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) Nat (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) (instHPow.{u1, 0} (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) Nat (Monoid.Pow.{u1} (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) (Module.End.monoid.{u2, u1} R M _inst_1 _inst_5 _inst_10))) f n)) (Nat.iterate.{succ u1} M (FunLike.coe.{succ u1, succ u1, succ u1} (LinearMap.{u2, u2, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) M M _inst_5 _inst_5 _inst_10 _inst_10) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : M) => M) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, u1, u1} R R M M _inst_1 _inst_1 _inst_5 _inst_5 _inst_10 _inst_10 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) f) n)
 Case conversion may be inaccurate. Consider using '#align linear_map.coe_pow LinearMap.coe_powₓ'. -/
-theorem coe_pow (f : M →ₗ[R] M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
-  by
-  ext m
-  apply pow_apply
+theorem coe_pow (f : M →ₗ[R] M) (n : ℕ) : ⇑(f ^ n) = f^[n] := by ext m; apply pow_apply
 #align linear_map.coe_pow LinearMap.coe_pow
 
 #print LinearMap.id_pow /-
@@ -530,9 +523,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_map.iterate_surjective LinearMap.iterate_surjectiveₓ'. -/
 theorem iterate_surjective (h : Surjective f') : ∀ n : ℕ, Surjective ⇑(f' ^ n)
   | 0 => surjective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact surjective.comp (iterate_surjective n) h
+  | n + 1 => by rw [iterate_succ]; exact surjective.comp (iterate_surjective n) h
 #align linear_map.iterate_surjective LinearMap.iterate_surjective
 
 /- warning: linear_map.iterate_injective -> LinearMap.iterate_injective is a dubious translation:
@@ -543,9 +534,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_map.iterate_injective LinearMap.iterate_injectiveₓ'. -/
 theorem iterate_injective (h : Injective f') : ∀ n : ℕ, Injective ⇑(f' ^ n)
   | 0 => injective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact injective.comp (iterate_injective n) h
+  | n + 1 => by rw [iterate_succ]; exact injective.comp (iterate_injective n) h
 #align linear_map.iterate_injective LinearMap.iterate_injective
 
 /- warning: linear_map.iterate_bijective -> LinearMap.iterate_bijective is a dubious translation:
@@ -556,9 +545,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_map.iterate_bijective LinearMap.iterate_bijectiveₓ'. -/
 theorem iterate_bijective (h : Bijective f') : ∀ n : ℕ, Bijective ⇑(f' ^ n)
   | 0 => bijective_id
-  | n + 1 => by
-    rw [iterate_succ]
-    exact bijective.comp (iterate_bijective n) h
+  | n + 1 => by rw [iterate_succ]; exact bijective.comp (iterate_bijective n) h
 #align linear_map.iterate_bijective LinearMap.iterate_bijective
 
 /- warning: linear_map.injective_of_iterate_injective -> LinearMap.injective_of_iterate_injective is a dubious translation:
@@ -668,9 +655,7 @@ def ringLmapEquivSelf [Module S M] [SMulCommClass R S M] : (R →ₗ[R] M) ≃�
   { applyₗ' S (1 : R) with
     toFun := fun f => f 1
     invFun := smulRight (1 : R →ₗ[R] R)
-    left_inv := fun f => by
-      ext
-      simp
+    left_inv := fun f => by ext; simp
     right_inv := fun x => by simp }
 #align linear_map.ring_lmap_equiv_self LinearMap.ringLmapEquivSelf
 -/
@@ -748,18 +733,10 @@ def smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M
     where
   toFun f :=
     { toFun := LinearMap.smulRight f
-      map_add' := fun m m' => by
-        ext
-        apply smul_add
-      map_smul' := fun c m => by
-        ext
-        apply smul_comm }
-  map_add' f f' := by
-    ext
-    apply add_smul
-  map_smul' c f := by
-    ext
-    apply mul_smul
+      map_add' := fun m m' => by ext; apply smul_add
+      map_smul' := fun c m => by ext; apply smul_comm }
+  map_add' f f' := by ext; apply add_smul
+  map_smul' c f := by ext; apply mul_smul
 #align linear_map.smul_rightₗ LinearMap.smulRightₗ
 -/
 
@@ -786,22 +763,10 @@ def addMonoidHomLequivNat {A B : Type _} (R : Type _) [Semiring R] [AddCommMonoi
     where
   toFun := AddMonoidHom.toNatLinearMap
   invFun := LinearMap.toAddMonoidHom
-  map_add' := by
-    intros
-    ext
-    rfl
-  map_smul' := by
-    intros
-    ext
-    rfl
-  left_inv := by
-    intro f
-    ext
-    rfl
-  right_inv := by
-    intro f
-    ext
-    rfl
+  map_add' := by intros ; ext; rfl
+  map_smul' := by intros ; ext; rfl
+  left_inv := by intro f; ext; rfl
+  right_inv := by intro f; ext; rfl
 #align add_monoid_hom_lequiv_nat addMonoidHomLequivNat
 -/
 
@@ -820,22 +785,10 @@ def addMonoidHomLequivInt {A B : Type _} (R : Type _) [Semiring R] [AddCommGroup
     where
   toFun := AddMonoidHom.toIntLinearMap
   invFun := LinearMap.toAddMonoidHom
-  map_add' := by
-    intros
-    ext
-    rfl
-  map_smul' := by
-    intros
-    ext
-    rfl
-  left_inv := by
-    intro f
-    ext
-    rfl
-  right_inv := by
-    intro f
-    ext
-    rfl
+  map_add' := by intros ; ext; rfl
+  map_smul' := by intros ; ext; rfl
+  left_inv := by intro f; ext; rfl
+  right_inv := by intro f; ext; rfl
 #align add_monoid_hom_lequiv_int addMonoidHomLequivInt
 
 /-! ### Properties of submodules -/
@@ -909,9 +862,7 @@ variable (p p')
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.subtype_comp_of_le Submodule.subtype_comp_ofLeₓ'. -/
 theorem subtype_comp_ofLe (p q : Submodule R M) (h : p ≤ q) : q.Subtype.comp (ofLe h) = p.Subtype :=
-  by
-  ext ⟨b, hb⟩
-  rfl
+  by ext ⟨b, hb⟩; rfl
 #align submodule.subtype_comp_of_le Submodule.subtype_comp_ofLe
 
 variable (R)
@@ -1104,12 +1055,10 @@ noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R
     Equiv.Set.image f p
       i with
     map_add' := by
-      intros
-      simp only [coe_add, map_add, Equiv.toFun_as_coe, Equiv.Set.image_apply]
+      intros ; simp only [coe_add, map_add, Equiv.toFun_as_coe, Equiv.Set.image_apply]
       rfl
     map_smul' := by
-      intros
-      simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.toFun_as_coe, Equiv.Set.image_apply]
+      intros ; simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.toFun_as_coe, Equiv.Set.image_apply]
       rfl }
 #align submodule.equiv_map_of_injective Submodule.equivMapOfInjective
 -/
@@ -1779,10 +1728,7 @@ theorem mem_range [RingHomSurjective τ₁₂] {f : F} {x} : x ∈ range f ↔ �
 /- warning: linear_map.range_eq_map -> LinearMap.range_eq_map is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.range_eq_map LinearMap.range_eq_mapₓ'. -/
-theorem range_eq_map [RingHomSurjective τ₁₂] (f : F) : range f = map f ⊤ :=
-  by
-  ext
-  simp
+theorem range_eq_map [RingHomSurjective τ₁₂] (f : F) : range f = map f ⊤ := by ext; simp
 #align linear_map.range_eq_map LinearMap.range_eq_map
 
 /- warning: linear_map.mem_range_self -> LinearMap.mem_range_self is a dubious translation:
@@ -2183,9 +2129,7 @@ include sc
 Case conversion may be inaccurate. Consider using '#align linear_map.ker_eq_bot_of_injective LinearMap.ker_eq_bot_of_injectiveₓ'. -/
 theorem ker_eq_bot_of_injective {f : F} (hf : Injective f) : ker f = ⊥ :=
   by
-  have : Disjoint ⊤ (ker f) := by
-    rw [disjoint_ker, ← map_zero f]
-    exact fun x hx H => hf H
+  have : Disjoint ⊤ (ker f) := by rw [disjoint_ker, ← map_zero f]; exact fun x hx H => hf H
   simpa [disjoint_iff_inf_le]
 #align linear_map.ker_eq_bot_of_injective LinearMap.ker_eq_bot_of_injective
 
@@ -2314,20 +2258,12 @@ theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
     ker f ≤ p ↔ ∃ y ∈ range f, f ⁻¹' {y} ⊆ p :=
   by
   constructor
-  · intro h
-    use 0
-    rw [← SetLike.mem_coe, range_coe]
-    exact ⟨⟨0, map_zero f⟩, h⟩
+  · intro h; use 0; rw [← SetLike.mem_coe, range_coe]; exact ⟨⟨0, map_zero f⟩, h⟩
   · rintro ⟨y, h₁, h₂⟩
-    rw [SetLike.le_def]
-    intro z hz
-    simp only [mem_ker, SetLike.mem_coe] at hz
-    rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁
-    obtain ⟨x, hx⟩ := h₁
+    rw [SetLike.le_def]; intro z hz; simp only [mem_ker, SetLike.mem_coe] at hz
+    rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁; obtain ⟨x, hx⟩ := h₁
     have hx' : x ∈ p := h₂ hx
-    have hxz : z + x ∈ p := by
-      apply h₂
-      simp [hx, hz]
+    have hxz : z + x ∈ p := by apply h₂; simp [hx, hz]
     suffices z + x - x ∈ p by simpa only [this, add_sub_cancel]
     exact p.sub_mem hxz hx'
 #align linear_map.ker_le_iff LinearMap.ker_le_iff
@@ -2389,8 +2325,7 @@ theorem isLinearMap_add [Semiring R] [AddCommMonoid M] [Module R M] :
   by
   apply IsLinearMap.mk
   · intro x y
-    simp only [Prod.fst_add, Prod.snd_add]
-    cc
+    simp only [Prod.fst_add, Prod.snd_add]; cc
   · intro x y
     simp [smul_add]
 #align is_linear_map.is_linear_map_add IsLinearMap.isLinearMap_add
@@ -2758,11 +2693,8 @@ omit σ₂₁
 end Module
 
 #print LinearEquiv.uniqueOfSubsingleton /-
-instance uniqueOfSubsingleton [Subsingleton R] [Subsingleton R₂] : Unique (M ≃ₛₗ[σ₁₂] M₂) :=
-  by
-  haveI := Module.subsingleton R M
-  haveI := Module.subsingleton R₂ M₂
-  infer_instance
+instance uniqueOfSubsingleton [Subsingleton R] [Subsingleton R₂] : Unique (M ≃ₛₗ[σ₁₂] M₂) := by
+  haveI := Module.subsingleton R M; haveI := Module.subsingleton R₂ M₂; infer_instance
 #align linear_equiv.unique_of_subsingleton LinearEquiv.uniqueOfSubsingleton
 -/
 
@@ -2813,16 +2745,12 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
           SetLike.mem_coe]⟩ with
     invFun := fun y =>
       ⟨(e.symm : M₂ →ₛₗ[σ₂₁] M) y, by
-        rcases y with ⟨y', hy⟩
-        rw [Submodule.mem_map] at hy
-        rcases hy with ⟨x, hx, hxy⟩
-        subst hxy
+        rcases y with ⟨y', hy⟩; rw [Submodule.mem_map] at hy; rcases hy with ⟨x, hx, hxy⟩; subst hxy
         simp only [symm_apply_apply, Submodule.coe_mk, coe_coe, hx]⟩
     left_inv := fun x => by
       simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
         LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
-    right_inv := fun y => by
-      apply SetCoe.ext
+    right_inv := fun y => by apply SetCoe.ext;
       simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
         LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
 #align linear_equiv.submodule_map LinearEquiv.submoduleMap
@@ -2931,15 +2859,9 @@ variable (V V₂ R)
 /-- Linear equivalence between a curried and uncurried function.
   Differs from `tensor_product.curry`. -/
 protected def curry : (V × V₂ → R) ≃ₗ[R] V → V₂ → R :=
-  {
-    Equiv.curry _ _
-      _ with
-    map_add' := fun _ _ => by
-      ext
-      rfl
-    map_smul' := fun _ _ => by
-      ext
-      rfl }
+  { Equiv.curry _ _ _ with
+    map_add' := fun _ _ => by ext; rfl
+    map_smul' := fun _ _ => by ext; rfl }
 #align linear_equiv.curry LinearEquiv.curry
 -/
 
@@ -3064,10 +2986,8 @@ def ofSubmodule' [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂
 Case conversion may be inaccurate. Consider using '#align linear_equiv.of_submodule'_to_linear_map LinearEquiv.ofSubmodule'_toLinearMapₓ'. -/
 theorem ofSubmodule'_toLinearMap [Module R M] [Module R₂ M₂] (f : M ≃ₛₗ[σ₁₂] M₂)
     (U : Submodule R₂ M₂) :
-    (f.ofSubmodule' U).toLinearMap = (f.toLinearMap.domRestrict _).codRestrict _ Subtype.prop :=
-  by
-  ext
-  rfl
+    (f.ofSubmodule' U).toLinearMap = (f.toLinearMap.domRestrict _).codRestrict _ Subtype.prop := by
+  ext; rfl
 #align linear_equiv.of_submodule'_to_linear_map LinearEquiv.ofSubmodule'_toLinearMap
 
 /- warning: linear_equiv.of_submodule'_apply -> LinearEquiv.ofSubmodule'_apply is a dubious translation:
@@ -3417,18 +3337,10 @@ def arrowCongr {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiring R] [AddCommM
     where
   toFun := fun f : M₁ →ₗ[R] M₂₁ => (e₂ : M₂₁ →ₗ[R] M₂₂).comp <| f.comp (e₁.symm : M₂ →ₗ[R] M₁)
   invFun f := (e₂.symm : M₂₂ →ₗ[R] M₂₁).comp <| f.comp (e₁ : M₁ →ₗ[R] M₂)
-  left_inv f := by
-    ext x
-    simp only [symm_apply_apply, comp_app, coe_comp, coe_coe]
-  right_inv f := by
-    ext x
-    simp only [comp_app, apply_symm_apply, coe_comp, coe_coe]
-  map_add' f g := by
-    ext x
-    simp only [map_add, add_apply, comp_app, coe_comp, coe_coe]
-  map_smul' c f := by
-    ext x
-    simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ e₂, coe_coe]
+  left_inv f := by ext x; simp only [symm_apply_apply, comp_app, coe_comp, coe_coe]
+  right_inv f := by ext x; simp only [comp_app, apply_symm_apply, coe_comp, coe_coe]
+  map_add' f g := by ext x; simp only [map_add, add_apply, comp_app, coe_comp, coe_coe]
+  map_smul' c f := by ext x; simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ e₂, coe_coe]
 #align linear_equiv.arrow_congr LinearEquiv.arrowCongr
 -/
 
@@ -3460,9 +3372,7 @@ Case conversion may be inaccurate. Consider using '#align linear_equiv.arrow_con
 theorem arrowCongr_comp {N N₂ N₃ : Sort _} [AddCommMonoid N] [AddCommMonoid N₂] [AddCommMonoid N₃]
     [Module R N] [Module R N₂] [Module R N₃] (e₁ : M ≃ₗ[R] N) (e₂ : M₂ ≃ₗ[R] N₂) (e₃ : M₃ ≃ₗ[R] N₃)
     (f : M →ₗ[R] M₂) (g : M₂ →ₗ[R] M₃) :
-    arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
-  by
-  ext
+    arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) := by ext;
   simp only [symm_apply_apply, arrow_congr_apply, LinearMap.comp_apply]
 #align linear_equiv.arrow_congr_comp LinearEquiv.arrowCongr_comp
 
@@ -3529,20 +3439,14 @@ theorem conj_comp (e : M ≃ₗ[R] M₂) (f g : Module.End R M) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_equiv.conj_trans LinearEquiv.conj_transₓ'. -/
 theorem conj_trans (e₁ : M ≃ₗ[R] M₂) (e₂ : M₂ ≃ₗ[R] M₃) :
-    e₁.conj.trans e₂.conj = (e₁.trans e₂).conj :=
-  by
-  ext (f x)
-  rfl
+    e₁.conj.trans e₂.conj = (e₁.trans e₂).conj := by ext (f x); rfl
 #align linear_equiv.conj_trans LinearEquiv.conj_trans
 
 /- warning: linear_equiv.conj_id -> LinearEquiv.conj_id is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_equiv.conj_id LinearEquiv.conj_idₓ'. -/
 @[simp]
-theorem conj_id (e : M ≃ₗ[R] M₂) : e.conj LinearMap.id = LinearMap.id :=
-  by
-  ext
-  simp [conj_apply]
+theorem conj_id (e : M ≃ₗ[R] M₂) : e.conj LinearMap.id = LinearMap.id := by ext; simp [conj_apply]
 #align linear_equiv.conj_id LinearEquiv.conj_id
 
 end CommSemiring
@@ -3612,9 +3516,7 @@ theorem equivSubtypeMap_apply {p : Submodule R M} {q : Submodule R p} (x : q) :
 Case conversion may be inaccurate. Consider using '#align submodule.equiv_subtype_map_symm_apply Submodule.equivSubtypeMap_symm_applyₓ'. -/
 @[simp]
 theorem equivSubtypeMap_symm_apply {p : Submodule R M} {q : Submodule R p} (x : q.map p.Subtype) :
-    ((p.equivSubtypeMap q).symm x : M) = x := by
-  cases x
-  rfl
+    ((p.equivSubtypeMap q).symm x : M) = x := by cases x; rfl
 #align submodule.equiv_subtype_map_symm_apply Submodule.equivSubtypeMap_symm_apply
 
 /- warning: submodule.comap_subtype_equiv_of_le -> Submodule.comapSubtypeEquivOfLe is a dubious translation:
@@ -3662,10 +3564,8 @@ Case conversion may be inaccurate. Consider using '#align submodule.mem_map_equi
 theorem mem_map_equiv {e : M ≃ₛₗ[τ₁₂] M₂} {x : M₂} : x ∈ p.map (e : M →ₛₗ[τ₁₂] M₂) ↔ e.symm x ∈ p :=
   by
   rw [Submodule.mem_map]; constructor
-  · rintro ⟨y, hy, hx⟩
-    simp [← hx, hy]
-  · intro hx
-    refine' ⟨e.symm x, hx, by simp⟩
+  · rintro ⟨y, hy, hx⟩; simp [← hx, hy]
+  · intro hx; refine' ⟨e.symm x, hx, by simp⟩
 #align submodule.mem_map_equiv Submodule.mem_map_equiv
 
 omit τ₂₁
@@ -3758,15 +3658,11 @@ the set of maps $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \}$ is a submodule of `Hom(M,
 def compatibleMaps : Submodule R (N →ₗ[R] N₂)
     where
   carrier := { fₗ | pₗ ≤ comap fₗ qₗ }
-  zero_mem' := by
-    change pₗ ≤ comap (0 : N →ₗ[R] N₂) qₗ
-    rw [comap_zero]
-    refine' le_top
+  zero_mem' := by change pₗ ≤ comap (0 : N →ₗ[R] N₂) qₗ; rw [comap_zero]; refine' le_top
   add_mem' f₁ f₂ h₁ h₂ :=
     by
     apply le_trans _ (inf_comap_le_comap_add qₗ f₁ f₂)
-    rw [le_inf_iff]
-    exact ⟨h₁, h₂⟩
+    rw [le_inf_iff]; exact ⟨h₁, h₂⟩
   smul_mem' c fₗ h := le_trans h (comap_le_comap_smul qₗ fₗ c)
 #align submodule.compatible_maps Submodule.compatibleMaps
 -/

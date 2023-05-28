@@ -170,10 +170,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.right_derived_id CategoryTheory.NatTrans.rightDerived_idₓ'. -/
 @[simp]
 theorem NatTrans.rightDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
-    NatTrans.rightDerived (𝟙 F) n = 𝟙 (F.rightDerived n) :=
-  by
-  simp [nat_trans.right_derived]
-  rfl
+    NatTrans.rightDerived (𝟙 F) n = 𝟙 (F.rightDerived n) := by simp [nat_trans.right_derived]; rfl
 #align category_theory.nat_trans.right_derived_id CategoryTheory.NatTrans.rightDerived_id
 
 /- warning: category_theory.nat_trans.right_derived_comp -> CategoryTheory.NatTrans.rightDerived_comp is a dubious translation:
@@ -270,10 +267,7 @@ def rightDerivedZeroToSelfApp [EnoughInjectives C] [PreservesFiniteLimits F] {X 
     (P : InjectiveResolution X) : (F.rightDerived 0).obj X ⟶ F.obj X :=
   (rightDerivedObjIso F 0 P).Hom ≫
     (homologyIsoKernelDesc _ _ _).Hom ≫
-      kernel.map _ _ (cokernel.desc _ (𝟙 _) (by simp)) (𝟙 _)
-          (by
-            ext
-            simp) ≫
+      kernel.map _ _ (cokernel.desc _ (𝟙 _) (by simp)) (𝟙 _) (by ext; simp) ≫
         (asIso (kernel.lift _ _ (exact_of_map_injective_resolution F P).w)).inv
 #align category_theory.abelian.functor.right_derived_zero_to_self_app CategoryTheory.Abelian.Functor.rightDerivedZeroToSelfApp
 

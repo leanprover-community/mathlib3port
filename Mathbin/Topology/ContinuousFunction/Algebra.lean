@@ -1037,21 +1037,11 @@ def ContinuousMap.compRightAlgHom {α β : Type _} [TopologicalSpace α] [Topolo
     (f : C(α, β)) : C(β, A) →ₐ[R] C(α, A)
     where
   toFun g := g.comp f
-  map_zero' := by
-    ext
-    rfl
-  map_add' g₁ g₂ := by
-    ext
-    rfl
-  map_one' := by
-    ext
-    rfl
-  map_mul' g₁ g₂ := by
-    ext
-    rfl
-  commutes' r := by
-    ext
-    rfl
+  map_zero' := by ext; rfl
+  map_add' g₁ g₂ := by ext; rfl
+  map_one' := by ext; rfl
+  map_mul' g₁ g₂ := by ext; rfl
+  commutes' r := by ext; rfl
 #align continuous_map.comp_right_alg_hom ContinuousMap.compRightAlgHom
 
 variable {A}
@@ -1105,10 +1095,8 @@ theorem Subalgebra.separatesPoints_monotone :
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebra_map_apply algebraMap_applyₓ'. -/
 @[simp]
-theorem algebraMap_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1 :=
-  by
-  rw [Algebra.algebraMap_eq_smul_one]
-  rfl
+theorem algebraMap_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1 := by
+  rw [Algebra.algebraMap_eq_smul_one]; rfl
 #align algebra_map_apply algebraMap_apply
 
 variable {𝕜 : Type _} [TopologicalSpace 𝕜]
@@ -1175,11 +1163,8 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace �
       exact Subsingleton.elim _ _
     · inhabit α
       ext f
-      have h : f = algebraMap R C(α, R) (f default) :=
-        by
-        ext x'
-        simp only [mul_one, Algebra.id.smul_eq_mul, algebraMap_apply]
-        congr
+      have h : f = algebraMap R C(α, R) (f default) := by ext x';
+        simp only [mul_one, Algebra.id.smul_eq_mul, algebraMap_apply]; congr
       rw [h]
       simp only [Subalgebra.algebraMap_mem]⟩
 #align continuous_map.subsingleton_subalgebra ContinuousMap.subsingleton_subalgebra

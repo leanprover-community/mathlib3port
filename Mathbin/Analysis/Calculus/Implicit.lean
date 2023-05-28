@@ -359,12 +359,12 @@ theorem to_implicitFunctionOfComplemented (hf : HasStrictFDerivAt f f' a) (hf' :
           hker).implicitFunction_hasStrictFDerivAt
       (ker f').subtypeL _ _
   swap
-  · ext
+  · ext;
     simp only [Classical.choose_spec hker, implicit_function_data_of_complemented,
       ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL', Submodule.coeSubtype,
       Function.comp_apply, ContinuousLinearMap.coe_id', id.def]
   swap
-  · ext
+  · ext;
     simp only [ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL', Submodule.coeSubtype,
       Function.comp_apply, LinearMap.map_coe_ker, ContinuousLinearMap.zero_apply]
   simp only [implicit_function_data_of_complemented, map_sub, sub_self]

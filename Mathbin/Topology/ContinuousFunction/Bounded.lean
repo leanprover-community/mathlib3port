@@ -81,10 +81,7 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 instance : BoundedContinuousMapClass (α →ᵇ β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_continuous f := f.continuous_toFun
   map_bounded f := f.map_bounded'
 
@@ -1195,13 +1192,8 @@ Case conversion may be inaccurate. Consider using '#align bounded_continuous_fun
 def toContinuousMapAddHom : (α →ᵇ β) →+ C(α, β)
     where
   toFun := toContinuousMap
-  map_zero' := by
-    ext
-    simp
-  map_add' := by
-    intros
-    ext
-    simp
+  map_zero' := by ext; simp
+  map_add' := by intros ; ext; simp
 #align bounded_continuous_function.to_continuous_map_add_hom BoundedContinuousFunction.toContinuousMapAddHom
 
 end LipschitzAdd
@@ -1742,9 +1734,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : SeminormedAddCommGroup.{u2} β] (f : BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) (g : BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) {x : α}, LE.le.{0} Real Real.instLEReal (Norm.norm.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (SeminormedAddCommGroup.toNorm.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) _inst_2) (HSub.hSub.{u2, u2, u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (instHSub.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (SubNegMonoid.toSub.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (AddGroup.toSubNegMonoid.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (SeminormedAddGroup.toAddGroup.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) x) _inst_2))))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α (fun (_x : α) => (fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α β _inst_1 (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) (BoundedContinuousMapClass.toContinuousMapClass.{max u1 u2, u1, u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2) (BoundedContinuousFunction.instBoundedContinuousMapClassBoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)))) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α (fun (_x : α) => (fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : α) => β) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α β _inst_1 (UniformSpace.toTopologicalSpace.{u2} β (PseudoMetricSpace.toUniformSpace.{u2} β (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2))) (BoundedContinuousMapClass.toContinuousMapClass.{max u1 u2, u1, u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2) (BoundedContinuousFunction.instBoundedContinuousMapClassBoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)))) g x))) (Dist.dist.{max u1 u2} (BoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) (BoundedContinuousFunction.instDistBoundedContinuousFunction.{u1, u2} α β _inst_1 (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} β _inst_2)) f g)
 Case conversion may be inaccurate. Consider using '#align bounded_continuous_function.abs_diff_coe_le_dist BoundedContinuousFunction.abs_diff_coe_le_distₓ'. -/
-theorem abs_diff_coe_le_dist : ‖f x - g x‖ ≤ dist f g :=
-  by
-  rw [dist_eq_norm]
+theorem abs_diff_coe_le_dist : ‖f x - g x‖ ≤ dist f g := by rw [dist_eq_norm];
   exact (f - g).norm_coe_le_norm x
 #align bounded_continuous_function.abs_diff_coe_le_dist BoundedContinuousFunction.abs_diff_coe_le_dist
 
@@ -2190,10 +2180,8 @@ instance : Algebra 𝕜 (α →ᵇ γ) :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align bounded_continuous_function.algebra_map_apply BoundedContinuousFunction.algebraMap_applyₓ'. -/
 @[simp]
-theorem algebraMap_apply (k : 𝕜) (a : α) : algebraMap 𝕜 (α →ᵇ γ) k a = k • 1 :=
-  by
-  rw [Algebra.algebraMap_eq_smul_one]
-  rfl
+theorem algebraMap_apply (k : 𝕜) (a : α) : algebraMap 𝕜 (α →ᵇ γ) k a = k • 1 := by
+  rw [Algebra.algebraMap_eq_smul_one]; rfl
 #align bounded_continuous_function.algebra_map_apply BoundedContinuousFunction.algebraMap_apply
 
 instance : NormedAlgebra 𝕜 (α →ᵇ γ) :=
@@ -2497,10 +2485,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bounded_continuous_function.self_eq_nnreal_part_sub_nnreal_part_neg BoundedContinuousFunction.self_eq_nnrealPart_sub_nnrealPart_negₓ'. -/
 /-- Decompose a bounded continuous function to its positive and negative parts. -/
 theorem self_eq_nnrealPart_sub_nnrealPart_neg (f : α →ᵇ ℝ) :
-    ⇑f = coe ∘ f.nnrealPart - coe ∘ (-f).nnrealPart :=
-  by
-  funext x
-  dsimp
+    ⇑f = coe ∘ f.nnrealPart - coe ∘ (-f).nnrealPart := by funext x; dsimp;
   simp only [max_zero_sub_max_neg_zero_eq_self]
 #align bounded_continuous_function.self_eq_nnreal_part_sub_nnreal_part_neg BoundedContinuousFunction.self_eq_nnrealPart_sub_nnrealPart_neg
 
@@ -2513,10 +2498,7 @@ Case conversion may be inaccurate. Consider using '#align bounded_continuous_fun
 /-- Express the absolute value of a bounded continuous function in terms of its
 positive and negative parts. -/
 theorem abs_self_eq_nnrealPart_add_nnrealPart_neg (f : α →ᵇ ℝ) :
-    abs ∘ ⇑f = coe ∘ f.nnrealPart + coe ∘ (-f).nnrealPart :=
-  by
-  funext x
-  dsimp
+    abs ∘ ⇑f = coe ∘ f.nnrealPart + coe ∘ (-f).nnrealPart := by funext x; dsimp;
   simp only [max_zero_add_max_neg_zero_eq_abs_self]
 #align bounded_continuous_function.abs_self_eq_nnreal_part_add_nnreal_part_neg BoundedContinuousFunction.abs_self_eq_nnrealPart_add_nnrealPart_neg
 

@@ -55,8 +55,7 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
     where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
-  lower_lt_upper i := by
-    dsimp only [Set.piecewise]
+  lower_lt_upper i := by dsimp only [Set.piecewise];
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
 -/
@@ -126,10 +125,8 @@ def splitCenterBoxEmb (I : Box ι) : Set ι ↪ Box ι :=
 
 #print BoxIntegral.Box.iUnion_coe_splitCenterBox /-
 @[simp]
-theorem iUnion_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
-  by
-  ext x
-  simp
+theorem iUnion_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I := by
+  ext x; simp
 #align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.iUnion_coe_splitCenterBox
 -/
 
@@ -190,13 +187,11 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     Nat.recOn m hpI fun m => by simpa only [J_succ] using hs (J m) (hJle m)
   have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m :=
     by
-    intro m i
-    induction' m with m ihm
-    · simp [J]
+    intro m i; induction' m with m ihm; · simp [J]
     simp only [pow_succ', J_succ, upper_sub_lower_split_center_box, ihm, div_div]
   have h0 : J 0 = I := rfl
   -- Now we clear unneeded assumptions
-  clear_value J
+  clear_value J;
   clear hpI hs J_succ s
   -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for
   -- sufficiently large `m`. This contradicts `hJp`.

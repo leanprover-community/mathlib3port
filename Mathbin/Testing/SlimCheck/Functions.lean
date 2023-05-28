@@ -313,8 +313,7 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
   case nil ys i h₁ h₂ => cases h₂
   case cons x' xs xs_ih ys i h₁ h₂ =>
     cases i
-    · injection h₂ with h₀ h₁
-      subst h₀
+    · injection h₂ with h₀ h₁; subst h₀
       cases ys
       · cases h₁
       ·
@@ -326,8 +325,7 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
         simp only [nth, zip_cons_cons, list.apply_id_cons] at h₂⊢
         rw [if_neg]
         · apply xs_ih <;> solve_by_elim [succ.inj]
-        · apply h₀
-          apply nth_mem h₂
+        · apply h₀; apply nth_mem h₂
 #align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
@@ -347,21 +345,18 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
       cases' ys with y ys
       · cases h₃
       dsimp [lookup] at h₃; split_ifs  at h₃
-      · subst x'
-        subst val
+      · subst x'; subst val
         simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
       · cases' h₀ with _ _ h₀ h₅
         cases' h₂ with _ _ h₂ h₄
         have h₆ := Nat.succ.inj h₁
         specialize xs_ih h₅ ys h₃ h₄ h₆
         simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
-        suffices : val ∈ ys
-        tauto
+        suffices : val ∈ ys; tauto
         erw [← Option.mem_def, mem_lookup_iff] at h₃
         simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
-        subst a
-        subst b
+        subst a; subst b
         apply (mem_zip h₃).2
         simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
         rwa [map_fst_zip _ _ (le_of_eq h₆)]
@@ -390,11 +385,9 @@ theorem applyId_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup 
     suffices some x = some y by injection this
     have h₂ := h₁.length_eq
     rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h
-    rw [← hx, ← hy]
-    congr
+    rw [← hx, ← hy]; congr
     apply nth_injective _ (h₁.nodup_iff.1 h₀)
-    · symm
-      rw [h]
+    · symm; rw [h]
       rw [← list.apply_id_zip_eq] <;> assumption
     · rw [← h₁.length_eq]
       rw [nth_eq_some] at hx
@@ -503,8 +496,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   dsimp [id] at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) :=
     by
-    rw [← h₀, ← h₁, list.to_finmap']
-    clear h₀ h₁ xs₀ xs₁ hperm hnodup
+    rw [← h₀, ← h₁, list.to_finmap']; clear h₀ h₁ xs₀ xs₁ hperm hnodup
     induction xs
     case nil => simp only [zip_nil_right, map_nil]
     case
@@ -512,8 +504,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
       simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
       exact xs_ih
   revert hperm hnodup
-  rw [hxs]
-  intros
+  rw [hxs]; intros
   apply apply_id_injective
   · rwa [← h₀, hxs, hperm.nodup_iff]
   · rwa [← hxs, h₀, h₁] at hperm

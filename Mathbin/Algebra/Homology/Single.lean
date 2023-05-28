@@ -62,31 +62,19 @@ def single (j : ι) : V ⥤ HomologicalComplex V c
   map A B f :=
     {
       f := fun i =>
-        if h : i = j then
-          eqToHom
-              (by
-                dsimp
-                rw [if_pos h]) ≫
-            f ≫
-              eqToHom
-                (by
-                  dsimp
-                  rw [if_pos h])
+        if h : i = j then eqToHom (by dsimp; rw [if_pos h]) ≫ f ≫ eqToHom (by dsimp; rw [if_pos h])
         else 0 }
   map_id' A := by
     ext
     dsimp
     split_ifs with h
-    · subst h
-      simp
-    · rw [if_neg h]
-      simp
+    · subst h; simp
+    · rw [if_neg h]; simp
   map_comp' A B C f g := by
     ext
     dsimp
     split_ifs with h
-    · subst h
-      simp
+    · subst h; simp
     · simp
 #align homological_complex.single HomologicalComplex.single
 -/
@@ -110,9 +98,7 @@ Case conversion may be inaccurate. Consider using '#align homological_complex.si
 @[simp]
 theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
     ((single V c j).map f).f j = (singleObjXSelf V c j A).Hom ≫ f ≫ (singleObjXSelf V c j B).inv :=
-  by
-  simp
-  rfl
+  by simp; rfl
 #align homological_complex.single_map_f_self HomologicalComplex.single_map_f_self
 
 instance (j : ι) : Faithful (single V c j)
@@ -132,8 +118,7 @@ instance (j : ι) : Full (single V c j)
     ext i
     dsimp
     split_ifs
-    · subst h
-      simp
+    · subst h; simp
     · symm
       apply zero_of_target_iso_zero
       dsimp
@@ -167,20 +152,8 @@ def single₀ : V ⥤ ChainComplex V ℕ
         match n with
         | 0 => f
         | n + 1 => 0 }
-  map_id' X := by
-    ext n
-    cases n
-    rfl
-    dsimp
-    unfold_aux
-    simp
-  map_comp' X Y Z f g := by
-    ext n
-    cases n
-    rfl
-    dsimp
-    unfold_aux
-    simp
+  map_id' X := by ext n; cases n; rfl; dsimp; unfold_aux; simp
+  map_comp' X Y Z f g := by ext n; cases n; rfl; dsimp; unfold_aux; simp
 #align chain_complex.single₀ ChainComplex.single₀
 -/
 
@@ -218,10 +191,8 @@ theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 
 <too large>
 Case conversion may be inaccurate. Consider using '#align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_X_dToₓ'. -/
 @[simp]
-theorem single₀_obj_X_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 :=
-  by
-  rw [d_to_eq ((single₀ V).obj X) rfl]
-  simp
+theorem single₀_obj_X_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 := by
+  rw [d_to_eq ((single₀ V).obj X) rfl]; simp
 #align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_X_dTo
 
 /- warning: chain_complex.single₀_obj_X_d_from -> ChainComplex.single₀_obj_x_dFrom is a dubious translation:
@@ -231,10 +202,8 @@ Case conversion may be inaccurate. Consider using '#align chain_complex.single�
 theorem single₀_obj_x_dFrom (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i = 0 :=
   by
   cases i
-  · rw [d_from_eq_zero]
-    simp
-  · rw [d_from_eq ((single₀ V).obj X) rfl]
-    simp
+  · rw [d_from_eq_zero]; simp
+  · rw [d_from_eq ((single₀ V).obj X) rfl]; simp
 #align chain_complex.single₀_obj_X_d_from ChainComplex.single₀_obj_x_dFrom
 
 /- warning: chain_complex.single₀_map_f_0 -> ChainComplex.single₀_map_f_0 is a dubious translation:
@@ -263,10 +232,7 @@ is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
   NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero)
-    fun X Y f => by
-    ext
-    dsimp [homologyFunctor]
-    simp
+    fun X Y f => by ext; dsimp [homologyFunctor]; simp
 #align chain_complex.homology_functor_0_single₀ ChainComplex.homologyFunctor0Single₀
 -/
 
@@ -299,10 +265,7 @@ are the same as morphisms `f : C.X 0 ⟶ X` such that `C.d 1 0 ≫ f = 0`.
 def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
     (C ⟶ (single₀ V).obj X) ≃ { f : C.pt 0 ⟶ X // C.d 1 0 ≫ f = 0 }
     where
-  toFun f :=
-    ⟨f.f 0, by
-      rw [← f.comm 1 0]
-      simp⟩
+  toFun f := ⟨f.f 0, by rw [← f.comm 1 0]; simp⟩
   invFun f :=
     { f := fun i =>
         match i with
@@ -312,11 +275,9 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
         by
         rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;>
           simp only [comp_zero, zero_comp, single₀_obj_X_d]
-        · rw [C.shape, zero_comp]
-          simp
+        · rw [C.shape, zero_comp]; simp
         · exact f.2.symm
-        · rw [C.shape, zero_comp]
-          simp [i.succ_succ_ne_one.symm] }
+        · rw [C.shape, zero_comp]; simp [i.succ_succ_ne_one.symm] }
   left_inv f := by
     ext i
     rcases i with ⟨⟩
@@ -331,10 +292,7 @@ Case conversion may be inaccurate. Consider using '#align chain_complex.to_singl
 @[ext]
 theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X)
     (h : f.f 0 = g.f 0) : f = g :=
-  (toSingle₀Equiv C X).Injective
-    (by
-      ext
-      exact h)
+  (toSingle₀Equiv C X).Injective (by ext; exact h)
 #align chain_complex.to_single₀_ext ChainComplex.to_single₀_ext
 
 /- warning: chain_complex.from_single₀_equiv -> ChainComplex.fromSingle₀Equiv is a dubious translation:
@@ -378,18 +336,12 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
     (fun X =>
       { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ }
         inv := { f := fun i => by cases i <;> simpa using 𝟙 _ }
-        hom_inv_id' := by
-          ext (_ | i) <;>
-            · dsimp
-              simp
+        hom_inv_id' := by ext (_ | i) <;> · dsimp; simp
         inv_hom_id' := by
           ext (_ | i)
           · apply category.id_comp
           · apply has_zero_object.to_zero_ext })
-    fun X Y f => by
-    ext (_ | i) <;>
-      · dsimp
-        simp
+    fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align chain_complex.single₀_iso_single ChainComplex.single₀IsoSingle
 
 instance : Faithful (single₀ V) :=
@@ -424,20 +376,8 @@ def single₀ : V ⥤ CochainComplex V ℕ
         match n with
         | 0 => f
         | n + 1 => 0 }
-  map_id' X := by
-    ext n
-    cases n
-    rfl
-    dsimp
-    unfold_aux
-    simp
-  map_comp' X Y Z f g := by
-    ext n
-    cases n
-    rfl
-    dsimp
-    unfold_aux
-    simp
+  map_id' X := by ext n; cases n; rfl; dsimp; unfold_aux; simp
+  map_comp' X Y Z f g := by ext n; cases n; rfl; dsimp; unfold_aux; simp
 #align cochain_complex.single₀ CochainComplex.single₀
 -/
 
@@ -475,10 +415,8 @@ theorem single₀_obj_X_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 
 <too large>
 Case conversion may be inaccurate. Consider using '#align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_x_dFromₓ'. -/
 @[simp]
-theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 :=
-  by
-  rw [d_from_eq ((single₀ V).obj X) rfl]
-  simp
+theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 := by
+  rw [d_from_eq ((single₀ V).obj X) rfl]; simp
 #align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_x_dFrom
 
 /- warning: cochain_complex.single₀_obj_X_d_to -> CochainComplex.single₀_obj_x_dTo is a dubious translation:
@@ -488,10 +426,8 @@ Case conversion may be inaccurate. Consider using '#align cochain_complex.single
 theorem single₀_obj_x_dTo (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 :=
   by
   cases i
-  · rw [d_to_eq_zero]
-    simp
-  · rw [d_to_eq ((single₀ V).obj X) rfl]
-    simp
+  · rw [d_to_eq_zero]; simp
+  · rw [d_to_eq ((single₀ V).obj X) rfl]; simp
 #align cochain_complex.single₀_obj_X_d_to CochainComplex.single₀_obj_x_dTo
 
 /- warning: cochain_complex.single₀_map_f_0 -> CochainComplex.single₀_map_f_0 is a dubious translation:
@@ -520,10 +456,7 @@ is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
   NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero)
-    fun X Y f => by
-    ext
-    dsimp [homologyFunctor]
-    simp
+    fun X Y f => by ext; dsimp [homologyFunctor]; simp
 #align cochain_complex.homology_functor_0_single₀ CochainComplex.homologyFunctor0Single₀
 -/
 
@@ -555,10 +488,7 @@ are the same as morphisms `f : X ⟶ C.X 0` such that `f ≫ C.d 0 1 = 0`.
 def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
     ((single₀ V).obj X ⟶ C) ≃ { f : X ⟶ C.pt 0 // f ≫ C.d 0 1 = 0 }
     where
-  toFun f :=
-    ⟨f.f 0, by
-      rw [f.comm 0 1]
-      simp⟩
+  toFun f := ⟨f.f 0, by rw [f.comm 0 1]; simp⟩
   invFun f :=
     { f := fun i =>
         match i with
@@ -568,13 +498,9 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
         by
         rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;>
           simp only [comp_zero, zero_comp, single₀_obj_X_d]
-        · convert comp_zero
-          rw [C.shape]
-          simp
+        · convert comp_zero; rw [C.shape]; simp
         · exact f.2
-        · convert comp_zero
-          rw [C.shape]
-          simp only [ComplexShape.up_Rel, zero_add]
+        · convert comp_zero; rw [C.shape]; simp only [ComplexShape.up_Rel, zero_add]
           exact (Nat.one_lt_succ_succ j).Ne }
   left_inv f := by
     ext i
@@ -598,18 +524,12 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
     (fun X =>
       { Hom := { f := fun i => by cases i <;> simpa using 𝟙 _ }
         inv := { f := fun i => by cases i <;> simpa using 𝟙 _ }
-        hom_inv_id' := by
-          ext (_ | i) <;>
-            · dsimp
-              simp
+        hom_inv_id' := by ext (_ | i) <;> · dsimp; simp
         inv_hom_id' := by
           ext (_ | i)
           · apply category.id_comp
           · apply has_zero_object.to_zero_ext })
-    fun X Y f => by
-    ext (_ | i) <;>
-      · dsimp
-        simp
+    fun X Y f => by ext (_ | i) <;> · dsimp; simp
 #align cochain_complex.single₀_iso_single CochainComplex.single₀IsoSingle
 
 instance : Faithful (single₀ V) :=

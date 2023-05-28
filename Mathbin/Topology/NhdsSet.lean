@@ -55,10 +55,8 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
 Case conversion may be inaccurate. Consider using '#align nhds_set_diagonal nhdsSet_diagonalₓ'. -/
-theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) :=
-  by
-  rw [nhdsSet, ← range_diag, ← range_comp]
-  rfl
+theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
+  rw [nhdsSet, ← range_diag, ← range_comp]; rfl
 #align nhds_set_diagonal nhdsSet_diagonal
 
 #print mem_nhdsSet_iff_forall /-
@@ -211,10 +209,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s₁ (nhdsSet.{u1} α _inst_1 t₁)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s₂ (nhdsSet.{u1} α _inst_1 t₂)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) (nhdsSet.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t₁ t₂)))
 Case conversion may be inaccurate. Consider using '#align union_mem_nhds_set union_mem_nhdsSetₓ'. -/
-theorem union_mem_nhdsSet (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) :=
-  by
-  rw [nhdsSet_union]
-  exact union_mem_sup h₁ h₂
+theorem union_mem_nhdsSet (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
+  rw [nhdsSet_union]; exact union_mem_sup h₁ h₂
 #align union_mem_nhds_set union_mem_nhdsSet
 
 #print Continuous.tendsto_nhdsSet /-

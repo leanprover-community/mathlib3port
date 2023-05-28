@@ -1341,8 +1341,7 @@ theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
   have :
     (f (n, k)).2 + k * (f (n, k)).1 = n ∧ (0 < k → (f (n, k)).2 < k) ∧ (k = 0 → (f (n, k)).1 = 0) :=
     by
-    induction' n with n IH
-    · exact ⟨rfl, id, fun _ => rfl⟩
+    induction' n with n IH; · exact ⟨rfl, id, fun _ => rfl⟩
     rw [fun n : ℕ =>
       show
         f (n.succ, k) =
@@ -1354,13 +1353,10 @@ theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
       refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
       rwa [← Nat.succ_add, h, add_comm, ← Nat.mul_succ] at this
     · exact ⟨by rw [Nat.succ_add, IH.1], fun k0 => lt_of_le_of_ne (IH.2.1 k0) h, IH.2.2⟩
-  revert this
-  cases' f (n, k) with D M
-  simp
-  intro h₁ h₂ h₃
+  revert this; cases' f (n, k) with D M
+  simp; intro h₁ h₂ h₃
   cases Nat.eq_zero_or_pos k
-  · simp [h, h₃ h] at h₁⊢
-    simp [h₁]
+  · simp [h, h₃ h] at h₁⊢; simp [h₁]
   · exact (Nat.div_mod_unique h).2 ⟨h₁, h₂ h⟩
 #align primrec.nat_div_mod [anonymous]
 
@@ -1436,14 +1432,10 @@ private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ 
     have :
       ∀ n, F a n = ((List.take n (f a)).foldl (fun s b => h a (s, b)) (g a), List.drop n (f a)) :=
       by
-      intro
-      simp [F]
-      generalize f a = l
-      generalize g a = x
-      induction' n with n IH generalizing l x
-      · rfl
-      simp
-      cases' l with b l <;> simp [IH]
+      intro ; simp [F]
+      generalize f a = l; generalize g a = x
+      induction' n with n IH generalizing l x; · rfl
+      simp; cases' l with b l <;> simp [IH]
     rw [this, List.take_all_of_le (length_le_encode _)]
 
 private theorem list_cons' :
@@ -1641,8 +1633,7 @@ theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β 
   (snd.comp this).of_eq fun a =>
     by
     suffices F a = (f a, List.recOn (f a) (g a) fun b l IH => h a (b, l, IH)) by rw [this]
-    simp [F]
-    induction' f a with b l IH <;> simp [*]
+    simp [F]; induction' f a with b l IH <;> simp [*]
 #align primrec.list_rec Primrec.list_rec
 
 #print Primrec.list_get? /-
@@ -1664,10 +1655,8 @@ theorem list_get? : Primrec₂ (@List.get? α) :=
     dsimp; symm
     induction' l with a l IH generalizing n; · rfl
     cases' n with n
-    · rw [(_ : F (a :: l) 0 = Sum.inr a)]
-      · rfl
-      clear IH
-      dsimp [F]
+    · rw [(_ : F (a :: l) 0 = Sum.inr a)]; · rfl
+      clear IH; dsimp [F]
       induction' l with b l IH <;> simp [*]
     · apply IH
 #align primrec.list_nth Primrec.list_get?
@@ -2235,11 +2224,7 @@ theorem sqrt : @Primrec' 1 fun v => v.headI.sqrt :=
           have x := v.head <;> have y := v.tail.head <;>
             exact if x.succ < y.succ * y.succ then y else y.succ)
         head (const 0) _
-    · convert this
-      funext
-      congr
-      funext x y
-      congr <;> simp
+    · convert this; funext; congr ; funext x y; congr <;> simp
     have x1 := succ.comp₁ _ head
     have y1 := succ.comp₁ _ (tail head)
     exact if_lt x1 (mul.comp₂ _ y1 y1) (tail head) y1

@@ -305,12 +305,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pow_nonneg pow_nonnegₓ'. -/
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact zero_le_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_nonneg H (pow_nonneg _)
+  | 0 => by rw [pow_zero]; exact zero_le_one
+  | n + 1 => by rw [pow_succ]; exact mul_nonneg H (pow_nonneg _)
 #align pow_nonneg pow_nonneg
 
 /- warning: add_le_mul_two_add -> add_le_mul_two_add is a dubious translation:
@@ -429,10 +425,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} α] {a : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))) (bit1.{u1} α (Semiring.toOne.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1)) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))) a))
 Case conversion may be inaccurate. Consider using '#align bit1_pos' bit1_pos'ₓ'. -/
-theorem bit1_pos' (h : 0 < a) : 0 < bit1 a :=
-  by
-  nontriviality
-  exact bit1_pos h.le
+theorem bit1_pos' (h : 0 < a) : 0 < bit1 a := by nontriviality; exact bit1_pos h.le
 #align bit1_pos' bit1_pos'
 
 /- warning: mul_le_one -> mul_le_one is a dubious translation:
@@ -757,10 +750,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedRing.{u1} α] (a : α) (b : α), Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedRing.toPartialOrder.{u1} α _inst_1))) a b) (Exists.{succ u1} α (fun (c : α) => And (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedRing.toPartialOrder.{u1} α _inst_1))) c (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedRing.toOrderedSemiring.{u1} α _inst_1))))))) (Eq.{succ u1} α b (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (OrderedRing.toRing.{u1} α _inst_1))))))) a c))))
 Case conversion may be inaccurate. Consider using '#align le_iff_exists_nonneg_add le_iff_exists_nonneg_addₓ'. -/
 theorem le_iff_exists_nonneg_add (a b : α) : a ≤ b ↔ ∃ c ≥ 0, b = a + c :=
-  ⟨fun h => ⟨b - a, sub_nonneg.mpr h, by simp⟩, fun ⟨c, hc, h⟩ =>
-    by
-    rw [h, le_add_iff_nonneg_right]
-    exact hc⟩
+  ⟨fun h => ⟨b - a, sub_nonneg.mpr h, by simp⟩, fun ⟨c, hc, h⟩ => by
+    rw [h, le_add_iff_nonneg_right]; exact hc⟩
 #align le_iff_exists_nonneg_add le_iff_exists_nonneg_add
 
 end OrderedRing
@@ -877,13 +868,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pow_pos pow_posₓ'. -/
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
-  | 0 => by
-    nontriviality
-    rw [pow_zero]
-    exact zero_lt_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_pos H (pow_pos _)
+  | 0 => by nontriviality; rw [pow_zero]; exact zero_lt_one
+  | n + 1 => by rw [pow_succ]; exact mul_pos H (pow_pos _)
 #align pow_pos pow_pos
 
 /- warning: mul_self_lt_mul_self -> mul_self_lt_mul_self is a dubious translation:
@@ -939,10 +925,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) b a))
 Case conversion may be inaccurate. Consider using '#align lt_mul_left lt_mul_leftₓ'. -/
-theorem lt_mul_left (hn : 0 < a) (hm : 1 < b) : a < b * a :=
-  by
-  convert mul_lt_mul_of_pos_right hm hn
-  rw [one_mul]
+theorem lt_mul_left (hn : 0 < a) (hm : 1 < b) : a < b * a := by
+  convert mul_lt_mul_of_pos_right hm hn; rw [one_mul]
 #align lt_mul_left lt_mul_left
 
 /- warning: lt_mul_right -> lt_mul_right is a dubious translation:
@@ -951,10 +935,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a b))
 Case conversion may be inaccurate. Consider using '#align lt_mul_right lt_mul_rightₓ'. -/
-theorem lt_mul_right (hn : 0 < a) (hm : 1 < b) : a < a * b :=
-  by
-  convert mul_lt_mul_of_pos_left hm hn
-  rw [mul_one]
+theorem lt_mul_right (hn : 0 < a) (hm : 1 < b) : a < a * b := by
+  convert mul_lt_mul_of_pos_left hm hn; rw [mul_one]
 #align lt_mul_right lt_mul_right
 
 /- warning: lt_mul_self -> lt_mul_self is a dubious translation:
@@ -1458,10 +1440,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) c) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) c b)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) b))
 Case conversion may be inaccurate. Consider using '#align zero_le_mul_left zero_le_mul_leftₓ'. -/
 @[simp]
-theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b :=
-  by
-  convert mul_le_mul_left h
-  simp
+theorem zero_le_mul_left (h : 0 < c) : 0 ≤ c * b ↔ 0 ≤ b := by convert mul_le_mul_left h; simp
 #align zero_le_mul_left zero_le_mul_left
 
 /- warning: zero_le_mul_right -> zero_le_mul_right is a dubious translation:
@@ -1471,10 +1450,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) c) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) b c)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) b))
 Case conversion may be inaccurate. Consider using '#align zero_le_mul_right zero_le_mul_rightₓ'. -/
 @[simp]
-theorem zero_le_mul_right (h : 0 < c) : 0 ≤ b * c ↔ 0 ≤ b :=
-  by
-  convert mul_le_mul_right h
-  simp
+theorem zero_le_mul_right (h : 0 < c) : 0 ≤ b * c ↔ 0 ≤ b := by convert mul_le_mul_right h; simp
 #align zero_le_mul_right zero_le_mul_right
 
 /- warning: add_le_mul_of_left_le_right -> add_le_mul_of_left_le_right is a dubious translation:
@@ -2104,9 +2080,7 @@ Case conversion may be inaccurate. Consider using '#align mul_self_pos mul_self_
 theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 :=
   by
   constructor
-  · rintro h rfl
-    rw [MulZeroClass.mul_zero] at h
-    exact h.false
+  · rintro h rfl; rw [MulZeroClass.mul_zero] at h; exact h.false
   · intro h
     cases' h.lt_or_lt with h h
     exacts[mul_pos_of_neg_of_neg h h, mul_pos h h]

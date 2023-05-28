@@ -91,9 +91,7 @@ theorem mem_bot {x : E} : x ∈ (⊥ : IntermediateField F E) ↔ x ∈ Set.rang
 #align intermediate_field.mem_bot IntermediateField.mem_bot
 
 @[simp]
-theorem bot_toSubalgebra : (⊥ : IntermediateField F E).toSubalgebra = ⊥ :=
-  by
-  ext
+theorem bot_toSubalgebra : (⊥ : IntermediateField F E).toSubalgebra = ⊥ := by ext;
   rw [mem_to_subalgebra, Algebra.mem_bot, mem_bot]
 #align intermediate_field.bot_to_subalgebra IntermediateField.bot_toSubalgebra
 
@@ -189,10 +187,8 @@ theorem equivOfEq_symm {S T : IntermediateField F E} (h : S = T) :
 #align intermediate_field.equiv_of_eq_symm IntermediateField.equivOfEq_symm
 
 @[simp]
-theorem equivOfEq_rfl (S : IntermediateField F E) : equivOfEq (rfl : S = S) = AlgEquiv.refl :=
-  by
-  ext
-  rfl
+theorem equivOfEq_rfl (S : IntermediateField F E) : equivOfEq (rfl : S = S) = AlgEquiv.refl := by
+  ext; rfl
 #align intermediate_field.equiv_of_eq_rfl IntermediateField.equivOfEq_rfl
 
 @[simp]
@@ -254,10 +250,7 @@ theorem topEquiv_symm_apply_coe (a : E) : ↑(topEquiv.symm a : (⊤ : Intermedi
 
 @[simp]
 theorem restrictScalars_bot_eq_self (K : IntermediateField F E) :
-    (⊥ : IntermediateField K E).restrictScalars _ = K :=
-  by
-  ext
-  rw [mem_restrict_scalars, mem_bot]
+    (⊥ : IntermediateField K E).restrictScalars _ = K := by ext; rw [mem_restrict_scalars, mem_bot];
   exact set.ext_iff.mp Subtype.range_coe x
 #align intermediate_field.restrict_scalars_bot_eq_self IntermediateField.restrictScalars_bot_eq_self
 
@@ -371,8 +364,7 @@ theorem adjoin_adjoin_left (T : Set E) :
   rw [SetLike.ext'_iff]
   change ↑(adjoin (adjoin F S) T) = _
   apply Set.eq_of_subset_of_subset <;> rw [adjoin_subset_adjoin_iff] <;> constructor
-  · rintro _ ⟨⟨x, hx⟩, rfl⟩
-    exact adjoin.mono _ _ _ (Set.subset_union_left _ _) hx
+  · rintro _ ⟨⟨x, hx⟩, rfl⟩; exact adjoin.mono _ _ _ (Set.subset_union_left _ _) hx
   · exact subset_adjoin_of_subset_right _ _ (Set.subset_union_right _ _)
   · exact subset_adjoin_of_subset_left _ (adjoin.range_algebra_map_subset _ _)
   · exact Set.union_subset (subset_adjoin_of_subset_left _ (subset_adjoin _ _)) (subset_adjoin _ _)
@@ -674,18 +666,14 @@ section AdjoinIntermediateFieldLattice
 variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E} {S : Set E}
 
 @[simp]
-theorem adjoin_eq_bot_iff : adjoin F S = ⊥ ↔ S ⊆ (⊥ : IntermediateField F E) :=
-  by
-  rw [eq_bot_iff, adjoin_le_iff]
-  rfl
+theorem adjoin_eq_bot_iff : adjoin F S = ⊥ ↔ S ⊆ (⊥ : IntermediateField F E) := by
+  rw [eq_bot_iff, adjoin_le_iff]; rfl
 #align intermediate_field.adjoin_eq_bot_iff IntermediateField.adjoin_eq_bot_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 @[simp]
-theorem adjoin_simple_eq_bot_iff : F⟮⟯ = ⊥ ↔ α ∈ (⊥ : IntermediateField F E) :=
-  by
-  rw [adjoin_eq_bot_iff]
-  exact Set.singleton_subset_iff
+theorem adjoin_simple_eq_bot_iff : F⟮⟯ = ⊥ ↔ α ∈ (⊥ : IntermediateField F E) := by
+  rw [adjoin_eq_bot_iff]; exact Set.singleton_subset_iff
 #align intermediate_field.adjoin_simple_eq_bot_iff IntermediateField.adjoin_simple_eq_bot_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -744,9 +732,7 @@ theorem rank_adjoin_eq_one_iff : Module.rank F (adjoin F S) = 1 ↔ S ⊆ (⊥ :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem rank_adjoin_simple_eq_one_iff : Module.rank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) :=
-  by
-  rw [rank_adjoin_eq_one_iff]
-  exact Set.singleton_subset_iff
+  by rw [rank_adjoin_eq_one_iff]; exact Set.singleton_subset_iff
 #align intermediate_field.rank_adjoin_simple_eq_one_iff IntermediateField.rank_adjoin_simple_eq_one_iff
 
 theorem finrank_adjoin_eq_one_iff : finrank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : IntermediateField F E) :=
@@ -754,10 +740,8 @@ theorem finrank_adjoin_eq_one_iff : finrank F (adjoin F S) = 1 ↔ S ⊆ (⊥ : 
 #align intermediate_field.finrank_adjoin_eq_one_iff IntermediateField.finrank_adjoin_eq_one_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem finrank_adjoin_simple_eq_one_iff : finrank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) :=
-  by
-  rw [finrank_adjoin_eq_one_iff]
-  exact Set.singleton_subset_iff
+theorem finrank_adjoin_simple_eq_one_iff : finrank F F⟮⟯ = 1 ↔ α ∈ (⊥ : IntermediateField F E) := by
+  rw [finrank_adjoin_eq_one_iff]; exact Set.singleton_subset_iff
 #align intermediate_field.finrank_adjoin_simple_eq_one_iff IntermediateField.finrank_adjoin_simple_eq_one_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -854,13 +838,9 @@ noncomputable def adjoinRootEquivAdjoin (h : IsIntegral F α) : AdjoinRoot (minp
             (Set.union_subset
               (fun x hx =>
                 Exists.cases_on hx fun y hy =>
-                  ⟨y, by
-                    rw [RingHom.comp_apply, AdjoinRoot.lift_of]
-                    exact hy⟩)
+                  ⟨y, by rw [RingHom.comp_apply, AdjoinRoot.lift_of]; exact hy⟩)
               (set.singleton_subset_iff.mpr
-                ⟨AdjoinRoot.root (minpoly F α),
-                  by
-                  rw [RingHom.comp_apply, AdjoinRoot.lift_root]
+                ⟨AdjoinRoot.root (minpoly F α), by rw [RingHom.comp_apply, AdjoinRoot.lift_root];
                   rfl⟩)))
 #align intermediate_field.adjoin_root_equiv_adjoin IntermediateField.adjoinRootEquivAdjoin
 
@@ -1076,12 +1056,8 @@ def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· 
   carrier s := ∃ x : Lifts F E K, x ∈ Insert.insert ⊥ c ∧ (s ∈ x.1 : Prop)
   zero_mem' := ⟨⊥, Set.mem_insert ⊥ c, zero_mem ⊥⟩
   one_mem' := ⟨⊥, Set.mem_insert ⊥ c, one_mem ⊥⟩
-  neg_mem' := by
-    rintro _ ⟨x, y, h⟩
-    exact ⟨x, ⟨y, x.1.neg_mem h⟩⟩
-  inv_mem' := by
-    rintro _ ⟨x, y, h⟩
-    exact ⟨x, ⟨y, x.1.inv_mem h⟩⟩
+  neg_mem' := by rintro _ ⟨x, y, h⟩; exact ⟨x, ⟨y, x.1.neg_mem h⟩⟩
+  inv_mem' := by rintro _ ⟨x, y, h⟩; exact ⟨x, ⟨y, x.1.inv_mem h⟩⟩
   add_mem' := by
     rintro _ _ ⟨x, hx, ha⟩ ⟨y, hy, hb⟩
     obtain ⟨z, hz, hxz, hyz⟩ := lifts.exists_max_two hc hx hy
@@ -1145,10 +1121,7 @@ noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral 
   let h3 : IsIntegral x.1 s := isIntegral_of_isScalarTower h1
   let key : (minpoly x.1 s).Splits x.2.toRingHom :=
     splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero h1))
-      ((splits_map_iff _ _).mpr
-        (by
-          convert h2
-          exact RingHom.ext fun y => x.2.commutes y))
+      ((splits_map_iff _ _).mpr (by convert h2; exact RingHom.ext fun y => x.2.commutes y))
       (minpoly.dvd_map_of_isScalarTower _ _ _)
   ⟨x.1⟮⟯.restrictScalars F,
     (@algHomEquivSigma F x.1 (x.1⟮⟯.restrictScalars F) K _ _ _ _ _ _ _

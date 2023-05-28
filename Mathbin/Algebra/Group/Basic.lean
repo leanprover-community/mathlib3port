@@ -35,18 +35,14 @@ variable (f : α → α → α) [IsAssociative α f] (x y : α)
 /-- Composing two associative operations of `f : α → α → α` on the left
 is equal to an associative operation on the left.
 -/
-theorem comp_assoc_left : f x ∘ f y = f (f x y) :=
-  by
-  ext z
+theorem comp_assoc_left : f x ∘ f y = f (f x y) := by ext z;
   rw [Function.comp_apply, @IsAssociative.assoc _ f]
 #align comp_assoc_left comp_assoc_left
 
 /-- Composing two associative operations of `f : α → α → α` on the right
 is equal to an associative operation on the right.
 -/
-theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) :=
-  by
-  ext z
+theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) := by ext z;
   rw [Function.comp_apply, @IsAssociative.assoc _ f]
 #align comp_assoc_right comp_assoc_right
 
@@ -126,9 +122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_one_iff_eq_one_of_mul_eq_one eq_one_iff_eq_one_of_mul_eq_oneₓ'. -/
 @[to_additive]
 theorem eq_one_iff_eq_one_of_mul_eq_one {a b : M} (h : a * b = 1) : a = 1 ↔ b = 1 := by
-  constructor <;>
-    · rintro rfl
-      simpa using h
+  constructor <;> · rintro rfl; simpa using h
 #align eq_one_iff_eq_one_of_mul_eq_one eq_one_iff_eq_one_of_mul_eq_one
 #align eq_zero_iff_eq_zero_of_add_eq_zero eq_zero_iff_eq_zero_of_add_eq_zero
 
@@ -1537,9 +1531,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b a) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) c a)) (Eq.{succ u1} G b c)
 Case conversion may be inaccurate. Consider using '#align div_left_inj div_left_injₓ'. -/
 @[simp, to_additive]
-theorem div_left_inj : b / a = c / a ↔ b = c :=
-  by
-  rw [div_eq_mul_inv, div_eq_mul_inv]
+theorem div_left_inj : b / a = c / a ↔ b = c := by rw [div_eq_mul_inv, div_eq_mul_inv];
   exact mul_left_inj _
 #align div_left_inj div_left_inj
 #align sub_left_inj sub_left_inj
@@ -1714,9 +1706,7 @@ theorem exists_npow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : 
     ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by
   cases' n with n n
   · rw [zpow_ofNat] at h
-    refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩
-    rw [n0]
-    rfl
+    refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩; rw [n0]; rfl
   · rw [zpow_negSucc, inv_eq_one] at h
     refine' ⟨n + 1, n.succ_pos, h⟩
 #align exists_npow_eq_one_of_zpow_eq_one exists_npow_eq_one_of_zpow_eq_one
@@ -2053,8 +2043,7 @@ theorem multiplicative_of_isTotal (p : α → Prop) (hswap : ∀ {a b}, p a → 
     (pa : p a) (pb : p b) (pc : p c) : f a c = f a b * f b c :=
   by
   apply multiplicative_of_symmetric_of_isTotal (fun a b => p a ∧ p b) r f fun _ _ => And.symm
-  · simp_rw [and_imp]
-    exact @hswap
+  · simp_rw [and_imp]; exact @hswap
   · exact fun a b c rab rbc pab pbc pac => hmul rab rbc pab.1 pab.2 pac.2
   exacts[⟨pa, pb⟩, ⟨pb, pc⟩, ⟨pa, pc⟩]
 #align multiplicative_of_is_total multiplicative_of_isTotal

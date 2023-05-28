@@ -95,23 +95,17 @@ theorem oangle_self (x : V) : o.oangle x x = 0 :=
 #align orientation.oangle_self Orientation.oangle_self
 
 /-- If the angle between two vectors is nonzero, the first vector is nonzero. -/
-theorem left_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ 0 :=
-  by
-  rintro rfl
+theorem left_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ 0 := by rintro rfl;
   simpa using h
 #align orientation.left_ne_zero_of_oangle_ne_zero Orientation.left_ne_zero_of_oangle_ne_zero
 
 /-- If the angle between two vectors is nonzero, the second vector is nonzero. -/
-theorem right_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : y ≠ 0 :=
-  by
-  rintro rfl
+theorem right_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : y ≠ 0 := by rintro rfl;
   simpa using h
 #align orientation.right_ne_zero_of_oangle_ne_zero Orientation.right_ne_zero_of_oangle_ne_zero
 
 /-- If the angle between two vectors is nonzero, the vectors are not equal. -/
-theorem ne_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ y :=
-  by
-  rintro rfl
+theorem ne_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ y := by rintro rfl;
   simpa using h
 #align orientation.ne_of_oangle_ne_zero Orientation.ne_of_oangle_ne_zero
 
@@ -451,10 +445,8 @@ theorem oangle_eq_pi_iff_sameRay_neg {x y : V} :
   rw [← o.oangle_eq_zero_iff_same_ray]
   constructor
   · intro h
-    by_cases hx : x = 0
-    · simpa [hx, real.angle.pi_ne_zero.symm] using h
-    by_cases hy : y = 0
-    · simpa [hy, real.angle.pi_ne_zero.symm] using h
+    by_cases hx : x = 0; · simpa [hx, real.angle.pi_ne_zero.symm] using h
+    by_cases hy : y = 0; · simpa [hy, real.angle.pi_ne_zero.symm] using h
     refine' ⟨hx, hy, _⟩
     rw [o.oangle_neg_right hx hy, h, Real.Angle.coe_pi_add_coe_pi]
   · rintro ⟨hx, hy, h⟩
@@ -477,19 +469,15 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
   rw [oangle_eq_zero_iff_same_ray, oangle_eq_pi_iff_same_ray_neg]
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with (h | ⟨-, -, h⟩)
-    · by_cases hx : x = 0
-      · simp [hx]
+    · by_cases hx : x = 0; · simp [hx]
       obtain ⟨r, -, rfl⟩ := h.exists_nonneg_left hx
       exact Or.inr ⟨r, rfl⟩
-    · by_cases hx : x = 0
-      · simp [hx]
+    · by_cases hx : x = 0; · simp [hx]
       obtain ⟨r, -, hy⟩ := h.exists_nonneg_left hx
       refine' Or.inr ⟨-r, _⟩
       simp [hy]
-  · rcases h with (rfl | ⟨r, rfl⟩)
-    · simp
-    by_cases hx : x = 0
-    · simp [hx]
+  · rcases h with (rfl | ⟨r, rfl⟩); · simp
+    by_cases hx : x = 0; · simp [hx]
     rcases lt_trichotomy r 0 with (hr | hr | hr)
     · rw [← neg_smul]
       exact
@@ -779,12 +767,8 @@ theorem angle_eq_iff_oangle_eq_of_sign_eq {w x y z : V} (hw : w ≠ 0) (hx : x �
 theorem oangle_eq_angle_of_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) :
     o.oangle x y = InnerProductGeometry.angle x y :=
   by
-  by_cases hx : x = 0;
-  · exfalso
-    simpa [hx] using h
-  by_cases hy : y = 0;
-  · exfalso
-    simpa [hy] using h
+  by_cases hx : x = 0; · exfalso; simpa [hx] using h
+  by_cases hy : y = 0; · exfalso; simpa [hy] using h
   refine' (o.oangle_eq_angle_or_eq_neg_angle hx hy).resolve_right _
   intro hxy
   rw [hxy, Real.Angle.sign_neg, neg_eq_iff_eq_neg, ← SignType.neg_iff, ← not_le] at h
@@ -799,12 +783,8 @@ negative. -/
 theorem oangle_eq_neg_angle_of_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) :
     o.oangle x y = -InnerProductGeometry.angle x y :=
   by
-  by_cases hx : x = 0;
-  · exfalso
-    simpa [hx] using h
-  by_cases hy : y = 0;
-  · exfalso
-    simpa [hy] using h
+  by_cases hx : x = 0; · exfalso; simpa [hx] using h
+  by_cases hy : y = 0; · exfalso; simpa [hy] using h
   refine' (o.oangle_eq_angle_or_eq_neg_angle hx hy).resolve_left _
   intro hxy
   rw [hxy, ← SignType.neg_iff, ← not_le] at h
@@ -1133,8 +1113,7 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
 theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle (y - x) y).toReal| < π / 2 :=
   by
-  by_cases hn : x = y
-  · simp [hn, div_pos, Real.pi_pos]
+  by_cases hn : x = y; · simp [hn, div_pos, Real.pi_pos]
   have hs : ((2 : ℤ) • o.oangle (y - x) y).sign = (o.oangle (y - x) y).sign :=
     by
     conv_rhs => rw [oangle_sign_sub_left_swap]

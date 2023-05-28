@@ -52,10 +52,8 @@ def UnsatLinComb (ns : List Nat) (ts : List Term) : Prop :=
 #align omega.unsat_lin_comb Omega.UnsatLinComb
 
 theorem unsatLinComb_of (ns : List Nat) (ts : List Term) :
-    (linComb ns ts).fst < 0 → (∀ x ∈ (linComb ns ts).snd, x = (0 : Int)) → UnsatLinComb ns ts :=
-  by
-  intro h1 h2
-  exact ⟨h1, h2⟩
+    (linComb ns ts).fst < 0 → (∀ x ∈ (linComb ns ts).snd, x = (0 : Int)) → UnsatLinComb ns ts := by
+  intro h1 h2; exact ⟨h1, h2⟩
 #align omega.unsat_lin_comb_of Omega.unsatLinComb_of
 
 theorem unsat_of_unsatLinComb (ns : List Nat) (ts : List Term) :

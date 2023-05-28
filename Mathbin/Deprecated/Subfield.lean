@@ -51,8 +51,7 @@ but is expected to have type
   forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] {S : Set.{u1} F}, (IsSubfield.{u1} F _inst_1 S) -> (forall {x : F} {y : F}, (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) x S) -> (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) y S) -> (Membership.mem.{u1, u1} F (Set.{u1} F) (Set.instMembershipSet.{u1} F) (HDiv.hDiv.{u1, u1, u1} F F F (instHDiv.{u1} F (Field.toDiv.{u1} F _inst_1)) x y) S))
 Case conversion may be inaccurate. Consider using '#align is_subfield.div_mem IsSubfield.div_memₓ'. -/
 theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈ S) (hy : y ∈ S) :
-    x / y ∈ S := by
-  rw [div_eq_mul_inv]
+    x / y ∈ S := by rw [div_eq_mul_inv];
   exact hS.to_is_subring.to_is_submonoid.mul_mem hx (hS.inv_mem hy)
 #align is_subfield.div_mem IsSubfield.div_mem
 
@@ -60,10 +59,8 @@ theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈
 theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h : a ∈ s) :
     a ^ n ∈ s := by
   cases n
-  · rw [zpow_ofNat]
-    exact hs.to_is_subring.to_is_submonoid.pow_mem h
-  · rw [zpow_negSucc]
-    exact hs.inv_mem (hs.to_is_subring.to_is_submonoid.pow_mem h)
+  · rw [zpow_ofNat]; exact hs.to_is_subring.to_is_submonoid.pow_mem h
+  · rw [zpow_negSucc]; exact hs.inv_mem (hs.to_is_subring.to_is_submonoid.pow_mem h)
 #align is_subfield.pow_mem IsSubfield.pow_mem
 -/
 
@@ -106,10 +103,8 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] {K : Type.{u2}} [_inst_2 : Field.{u2} K] (f : RingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))), IsSubfield.{u2} K _inst_2 (Set.range.{u2, succ u1} K F (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))) F (fun (_x : F) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : F) => K) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))) F K (NonUnitalNonAssocSemiring.toMul.{u1} F (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} F (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))))) (NonUnitalNonAssocSemiring.toMul.{u2} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2)))))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))) F K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} F (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} K (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))))) F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2)))) (RingHom.instRingHomClassRingHom.{u1, u2} F K (Semiring.toNonAssocSemiring.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1)))) (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2)))))))) f))
 Case conversion may be inaccurate. Consider using '#align range.is_subfield Range.isSubfieldₓ'. -/
-theorem Range.isSubfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) :=
-  by
-  rw [← Set.image_univ]
-  apply Image.isSubfield _ Univ.isSubfield
+theorem Range.isSubfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) := by
+  rw [← Set.image_univ]; apply Image.isSubfield _ Univ.isSubfield
 #align range.is_subfield Range.isSubfield
 
 namespace Field

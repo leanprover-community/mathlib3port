@@ -49,11 +49,7 @@ theorem mem_ordConnectedComponent : y ∈ ordConnectedComponent s x ↔ [x, y] �
 #print Set.dual_ordConnectedComponent /-
 theorem dual_ordConnectedComponent :
     ordConnectedComponent (ofDual ⁻¹' s) (toDual x) = ofDual ⁻¹' ordConnectedComponent s x :=
-  ext <|
-    toDual.Surjective.forall.2 fun x =>
-      by
-      rw [mem_ord_connected_component, dual_uIcc]
-      rfl
+  ext <| toDual.Surjective.forall.2 fun x => by rw [mem_ord_connected_component, dual_uIcc]; rfl
 #align set.dual_ord_connected_component Set.dual_ordConnectedComponent
 -/
 
@@ -289,15 +285,12 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
   by
   rw [disjoint_iff_inf_le]
   rintro x ⟨hx₁, hx₂⟩
-  rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩
-  clear hx₁
-  rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩
-  clear hx₂
+  rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩; clear hx₁
+  rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩; clear hx₂
   rw [mem_ord_connected_component, subset_inter_iff] at ha hb
   wlog hab : a ≤ b
   · exact this b hbt a has ha hb (le_of_not_le hab)
-  cases' ha with ha ha'
-  cases' hb with hb hb'
+  cases' ha with ha ha'; cases' hb with hb hb'
   have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ :=
     by
     rw [ord_separating_set_comm, uIcc_comm] at hb'

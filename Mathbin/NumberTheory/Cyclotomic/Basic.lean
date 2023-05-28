@@ -183,10 +183,8 @@ theorem union_right [h : IsCyclotomicExtension (S ∪ T) A B] :
     by
     refine' le_antisymm (fun x hx => _) fun x hx => _
     · rcases hx with ⟨n, hn₁ | hn₂, hnpow⟩
-      · left
-        exact ⟨n, hn₁, hnpow⟩
-      · right
-        exact ⟨n, hn₂, hnpow⟩
+      · left; exact ⟨n, hn₁, hnpow⟩
+      · right; exact ⟨n, hn₂, hnpow⟩
     · rcases hx with (⟨n, hn⟩ | ⟨n, hn⟩)
       · exact ⟨n, Or.inl hn.1, hn.2⟩
       · exact ⟨n, Or.inr hn.1, hn.2⟩

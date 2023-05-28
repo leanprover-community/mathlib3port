@@ -284,8 +284,7 @@ theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b �
     exists_congr fun a => ⟨fun ha b => ⟨fun hba hb => _, fun hb => _⟩, fun ha => ⟨_, fun b hb => _⟩⟩
   · exact ha.1 ((mul_mem_cancel_left hb).1 hba)
   · exact inv_inv b ▸ ha.2 _ (mt inv_mem_iff.1 hb)
-  · rw [← inv_mem_iff, ← ha, inv_mul_self]
-    exact one_mem _
+  · rw [← inv_mem_iff, ← ha, inv_mul_self]; exact one_mem _
   · rwa [ha, inv_mem_iff]
 #align subgroup.index_eq_two_iff Subgroup.index_eq_two_iff
 #align add_subgroup.index_eq_two_iff AddSubgroup.index_eq_two_iff
@@ -443,10 +442,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Type.{u2}} [_inst_2 : Group.{u2} H] (f : MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))), Eq.{1} Nat (Subgroup.index.{u1} G _inst_1 (MonoidHom.ker.{u1, u2} G _inst_1 H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) f)) (Nat.card.{u2} (Set.Elem.{u2} H (Set.range.{u2, succ u1} H G (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => H) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) G H (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (MulOneClass.toMul.{u2} H (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))) G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2))) (MonoidHom.monoidHomClass.{u1, u2} G H (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} H (DivInvMonoid.toMonoid.{u2} H (Group.toDivInvMonoid.{u2} H _inst_2)))))) f))))
 Case conversion may be inaccurate. Consider using '#align subgroup.index_ker Subgroup.index_kerₓ'. -/
 @[to_additive]
-theorem index_ker {H} [Group H] (f : G →* H) : f.ker.index = Nat.card (Set.range f) :=
-  by
-  rw [← MonoidHom.comap_bot, index_comap, relindex_bot_left]
-  rfl
+theorem index_ker {H} [Group H] (f : G →* H) : f.ker.index = Nat.card (Set.range f) := by
+  rw [← MonoidHom.comap_bot, index_comap, relindex_bot_left]; rfl
 #align subgroup.index_ker Subgroup.index_ker
 #align add_subgroup.index_ker AddSubgroup.index_ker
 
@@ -458,10 +455,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.relindex_ker Subgroup.relindex_kerₓ'. -/
 @[to_additive]
 theorem relindex_ker {H} [Group H] (f : G →* H) (K : Subgroup G) :
-    f.ker.relindex K = Nat.card (f '' K) :=
-  by
-  rw [← MonoidHom.comap_bot, relindex_comap, relindex_bot_left]
-  rfl
+    f.ker.relindex K = Nat.card (f '' K) := by
+  rw [← MonoidHom.comap_bot, relindex_comap, relindex_bot_left]; rfl
 #align subgroup.relindex_ker Subgroup.relindex_ker
 #align add_subgroup.relindex_ker AddSubgroup.relindex_ker
 
@@ -472,10 +467,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.card.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H))) (Subgroup.index.{u1} G _inst_1 H)) (Nat.card.{u1} G)
 Case conversion may be inaccurate. Consider using '#align subgroup.card_mul_index Subgroup.card_mul_indexₓ'. -/
 @[simp, to_additive card_mul_index]
-theorem card_mul_index : Nat.card H * H.index = Nat.card G :=
-  by
-  rw [← relindex_bot_left, ← index_bot]
-  exact relindex_mul_index bot_le
+theorem card_mul_index : Nat.card H * H.index = Nat.card G := by
+  rw [← relindex_bot_left, ← index_bot]; exact relindex_mul_index bot_le
 #align subgroup.card_mul_index Subgroup.card_mul_index
 #align add_subgroup.card_mul_index AddSubgroup.card_mul_index
 
@@ -833,11 +826,8 @@ theorem card_eq_one : Nat.card H = 1 ↔ H = ⊥ :=
 
 #print Subgroup.index_ne_zero_of_finite /-
 @[to_additive]
-theorem index_ne_zero_of_finite [hH : Finite (G ⧸ H)] : H.index ≠ 0 :=
-  by
-  cases nonempty_fintype (G ⧸ H)
-  rw [index_eq_card]
-  exact Fintype.card_ne_zero
+theorem index_ne_zero_of_finite [hH : Finite (G ⧸ H)] : H.index ≠ 0 := by
+  cases nonempty_fintype (G ⧸ H); rw [index_eq_card]; exact Fintype.card_ne_zero
 #align subgroup.index_ne_zero_of_finite Subgroup.index_ne_zero_of_finite
 #align add_subgroup.index_ne_zero_of_finite AddSubgroup.index_ne_zero_of_finite
 -/

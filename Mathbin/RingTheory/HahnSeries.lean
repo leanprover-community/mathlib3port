@@ -505,9 +505,7 @@ but is expected to have type
   forall {Γ : Type.{u3}} {R : Type.{u1}} [_inst_1 : PartialOrder.{u3} Γ] [_inst_2 : Zero.{u1} R] {Γ' : Type.{u2}} [_inst_3 : PartialOrder.{u2} Γ'] {f : OrderEmbedding.{u3, u2} Γ Γ' (Preorder.toLE.{u3} Γ (PartialOrder.toPreorder.{u3} Γ _inst_1)) (Preorder.toLE.{u2} Γ' (PartialOrder.toPreorder.{u2} Γ' _inst_3))}, Eq.{max (succ u1) (succ u2)} (HahnSeries.{u2, u1} Γ' R _inst_3 _inst_2) (HahnSeries.embDomain.{u3, u1, u2} Γ R _inst_1 _inst_2 Γ' _inst_3 f (OfNat.ofNat.{max u3 u1} (HahnSeries.{u3, u1} Γ R _inst_1 _inst_2) 0 (Zero.toOfNat0.{max u3 u1} (HahnSeries.{u3, u1} Γ R _inst_1 _inst_2) (HahnSeries.instZeroHahnSeries.{u3, u1} Γ R _inst_1 _inst_2)))) (OfNat.ofNat.{max u1 u2} (HahnSeries.{u2, u1} Γ' R _inst_3 _inst_2) 0 (Zero.toOfNat0.{max u1 u2} (HahnSeries.{u2, u1} Γ' R _inst_3 _inst_2) (HahnSeries.instZeroHahnSeries.{u2, u1} Γ' R _inst_3 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align hahn_series.emb_domain_zero HahnSeries.embDomain_zeroₓ'. -/
 @[simp]
-theorem embDomain_zero {f : Γ ↪o Γ'} : embDomain f (0 : HahnSeries Γ R) = 0 :=
-  by
-  ext
+theorem embDomain_zero {f : Γ ↪o Γ'} : embDomain f (0 : HahnSeries Γ R) = 0 := by ext;
   simp [emb_domain_notin_image_support]
 #align hahn_series.emb_domain_zero HahnSeries.embDomain_zero
 
@@ -565,15 +563,9 @@ instance : Add (HahnSeries Γ R)
 instance : AddMonoid (HahnSeries Γ R) where
   zero := 0
   add := (· + ·)
-  add_assoc x y z := by
-    ext
-    apply add_assoc
-  zero_add x := by
-    ext
-    apply zero_add
-  add_zero x := by
-    ext
-    apply add_zero
+  add_assoc x y z := by ext; apply add_assoc
+  zero_add x := by ext; apply zero_add
+  add_zero x := by ext; apply add_zero
 
 /- warning: hahn_series.add_coeff' -> HahnSeries.add_coeff' is a dubious translation:
 lean 3 declaration is
@@ -634,10 +626,7 @@ Case conversion may be inaccurate. Consider using '#align hahn_series.single.add
 /-- `single` as an additive monoid/group homomorphism -/
 @[simps]
 def single.addMonoidHom (a : Γ) : R →+ HahnSeries Γ R :=
-  { single a with
-    map_add' := fun x y => by
-      ext b
-      by_cases h : b = a <;> simp [h] }
+  { single a with map_add' := fun x y => by ext b; by_cases h : b = a <;> simp [h] }
 #align hahn_series.single.add_monoid_hom HahnSeries.single.addMonoidHom
 
 /- warning: hahn_series.coeff.add_monoid_hom -> HahnSeries.coeff.addMonoidHom is a dubious translation:
@@ -680,10 +669,7 @@ end Domain
 end AddMonoid
 
 instance [AddCommMonoid R] : AddCommMonoid (HahnSeries Γ R) :=
-  { HahnSeries.addMonoid with
-    add_comm := fun x y => by
-      ext
-      apply add_comm }
+  { HahnSeries.addMonoid with add_comm := fun x y => by ext; apply add_comm }
 
 section AddGroup
 
@@ -697,9 +683,7 @@ instance : AddGroup (HahnSeries Γ R) :=
         isPwo_support' := by
           rw [Function.support_neg]
           exact x.is_pwo_support }
-    add_left_neg := fun x => by
-      ext
-      apply add_left_neg }
+    add_left_neg := fun x => by ext; apply add_left_neg }
 
 /- warning: hahn_series.neg_coeff' -> HahnSeries.neg_coeff' is a dubious translation:
 lean 3 declaration is
@@ -729,10 +713,7 @@ but is expected to have type
   forall {Γ : Type.{u2}} {R : Type.{u1}} [_inst_1 : PartialOrder.{u2} Γ] [_inst_2 : AddGroup.{u1} R] {x : HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))}, Eq.{succ u2} (Set.{u2} Γ) (HahnSeries.support.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2)))) (Neg.neg.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (NegZeroClass.toNeg.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (SubNegZeroMonoid.toNegZeroClass.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (SubtractionMonoid.toSubNegZeroMonoid.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (AddGroup.toSubtractionMonoid.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (HahnSeries.instAddGroupHahnSeriesToZeroToNegZeroClassToSubNegZeroMonoidToSubtractionMonoid.{u2, u1} Γ R _inst_1 _inst_2))))) x)) (HahnSeries.support.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2)))) x)
 Case conversion may be inaccurate. Consider using '#align hahn_series.support_neg HahnSeries.support_negₓ'. -/
 @[simp]
-theorem support_neg {x : HahnSeries Γ R} : (-x).support = x.support :=
-  by
-  ext
-  simp
+theorem support_neg {x : HahnSeries Γ R} : (-x).support = x.support := by ext; simp
 #align hahn_series.support_neg HahnSeries.support_neg
 
 /- warning: hahn_series.sub_coeff' -> HahnSeries.sub_coeff' is a dubious translation:
@@ -742,9 +723,7 @@ but is expected to have type
   forall {Γ : Type.{u2}} {R : Type.{u1}} [_inst_1 : PartialOrder.{u2} Γ] [_inst_2 : AddGroup.{u1} R] {x : HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))} {y : HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))}, Eq.{max (succ u2) (succ u1)} (Γ -> R) (HahnSeries.coeff.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2)))) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (instHSub.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (SubNegMonoid.toSub.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (AddGroup.toSubNegMonoid.{max u2 u1} (HahnSeries.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2))))) (HahnSeries.instAddGroupHahnSeriesToZeroToNegZeroClassToSubNegZeroMonoidToSubtractionMonoid.{u2, u1} Γ R _inst_1 _inst_2)))) x y)) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (Γ -> R) (Γ -> R) (Γ -> R) (instHSub.{max u2 u1} (Γ -> R) (Pi.instSub.{u2, u1} Γ (fun (ᾰ : Γ) => R) (fun (i : Γ) => SubNegMonoid.toSub.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_2)))) (HahnSeries.coeff.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2)))) x) (HahnSeries.coeff.{u2, u1} Γ R _inst_1 (NegZeroClass.toZero.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (AddGroup.toSubtractionMonoid.{u1} R _inst_2)))) y))
 Case conversion may be inaccurate. Consider using '#align hahn_series.sub_coeff' HahnSeries.sub_coeff'ₓ'. -/
 @[simp]
-theorem sub_coeff' {x y : HahnSeries Γ R} : (x - y).coeff = x.coeff - y.coeff :=
-  by
-  ext
+theorem sub_coeff' {x y : HahnSeries Γ R} : (x - y).coeff = x.coeff - y.coeff := by ext;
   simp [sub_eq_add_neg]
 #align hahn_series.sub_coeff' HahnSeries.sub_coeff'
 
@@ -767,8 +746,7 @@ Case conversion may be inaccurate. Consider using '#align hahn_series.order_neg 
 @[simp]
 theorem order_neg [Zero Γ] {f : HahnSeries Γ R} : (-f).order = f.order :=
   by
-  by_cases hf : f = 0
-  · simp only [hf, neg_zero]
+  by_cases hf : f = 0; · simp only [hf, neg_zero]
   simp only [order, support_neg, neg_eq_zero]
 #align hahn_series.order_neg HahnSeries.order_neg
 
@@ -802,30 +780,18 @@ theorem smul_coeff {r : R} {x : HahnSeries Γ V} {a : Γ} : (r • x).coeff a = 
 instance : DistribMulAction R (HahnSeries Γ V)
     where
   smul := (· • ·)
-  one_smul _ := by
-    ext
-    simp
-  smul_zero _ := by
-    ext
-    simp
-  smul_add _ _ _ := by
-    ext
-    simp [smul_add]
-  mul_smul _ _ _ := by
-    ext
-    simp [mul_smul]
+  one_smul _ := by ext; simp
+  smul_zero _ := by ext; simp
+  smul_add _ _ _ := by ext; simp [smul_add]
+  mul_smul _ _ _ := by ext; simp [mul_smul]
 
 variable {S : Type _} [Monoid S] [DistribMulAction S V]
 
 instance [SMul R S] [IsScalarTower R S V] : IsScalarTower R S (HahnSeries Γ V) :=
-  ⟨fun r s a => by
-    ext
-    simp⟩
+  ⟨fun r s a => by ext; simp⟩
 
 instance [SMulCommClass R S V] : SMulCommClass R S (HahnSeries Γ V) :=
-  ⟨fun r s a => by
-    ext
-    simp [smul_comm]⟩
+  ⟨fun r s a => by ext; simp [smul_comm]⟩
 
 end DistribMulAction
 
@@ -836,12 +802,8 @@ variable [PartialOrder Γ] [Semiring R] {V : Type _} [AddCommMonoid V] [Module R
 instance : Module R (HahnSeries Γ V) :=
   {
     HahnSeries.distribMulAction with
-    zero_smul := fun _ => by
-      ext
-      simp
-    add_smul := fun _ _ _ => by
-      ext
-      simp [add_smul] }
+    zero_smul := fun _ => by ext; simp
+    add_smul := fun _ _ _ => by ext; simp [add_smul] }
 
 /- warning: hahn_series.single.linear_map -> HahnSeries.single.linearMap is a dubious translation:
 lean 3 declaration is
@@ -852,10 +814,7 @@ Case conversion may be inaccurate. Consider using '#align hahn_series.single.lin
 /-- `single` as a linear map -/
 @[simps]
 def single.linearMap (a : Γ) : R →ₗ[R] HahnSeries Γ R :=
-  { single.addMonoidHom a with
-    map_smul' := fun r s => by
-      ext b
-      by_cases h : b = a <;> simp [h] }
+  { single.addMonoidHom a with map_smul' := fun r s => by ext b; by_cases h : b = a <;> simp [h] }
 #align hahn_series.single.linear_map HahnSeries.single.linearMap
 
 /- warning: hahn_series.coeff.linear_map -> HahnSeries.coeff.linearMap is a dubious translation:
@@ -1151,9 +1110,7 @@ theorem single_zero_mul_coeff [NonUnitalNonAssocSemiring R] {r : R} {x : HahnSer
 Case conversion may be inaccurate. Consider using '#align hahn_series.single_zero_mul_eq_smul HahnSeries.single_zero_mul_eq_smulₓ'. -/
 @[simp]
 theorem single_zero_mul_eq_smul [Semiring R] {r : R} {x : HahnSeries Γ R} :
-    single 0 r * x = r • x := by
-  ext
-  exact single_zero_mul_coeff
+    single 0 r * x = r • x := by ext; exact single_zero_mul_coeff
 #align hahn_series.single_zero_mul_eq_smul HahnSeries.single_zero_mul_eq_smul
 
 /- warning: hahn_series.support_mul_subset_add_support -> HahnSeries.support_mul_subset_add_support is a dubious translation:
@@ -1219,12 +1176,8 @@ instance [NonUnitalNonAssocSemiring R] : NonUnitalNonAssocSemiring (HahnSeries �
     zero := 0
     add := (· + ·)
     mul := (· * ·)
-    zero_mul := fun _ => by
-      ext
-      simp
-    mul_zero := fun _ => by
-      ext
-      simp }
+    zero_mul := fun _ => by ext; simp
+    mul_zero := fun _ => by ext; simp }
 
 instance [NonUnitalSemiring R] : NonUnitalSemiring (HahnSeries Γ R) :=
   { HahnSeries.nonUnitalNonAssocSemiring with
@@ -1240,12 +1193,8 @@ instance [NonAssocSemiring R] : NonAssocSemiring (HahnSeries Γ R) :=
     one := 1
     add := (· + ·)
     mul := (· * ·)
-    one_mul := fun x => by
-      ext
-      exact single_zero_mul_coeff.trans (one_mul _)
-    mul_one := fun x => by
-      ext
-      exact mul_single_zero_coeff.trans (mul_one _) }
+    one_mul := fun x => by ext; exact single_zero_mul_coeff.trans (one_mul _)
+    mul_one := fun x => by ext; exact mul_single_zero_coeff.trans (mul_one _) }
 
 instance [Semiring R] : Semiring (HahnSeries Γ R) :=
   { HahnSeries.nonAssocSemiring,
@@ -1291,8 +1240,7 @@ instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R
     where eq_zero_or_eq_zero_of_mul_eq_zero x y xy :=
     by
     by_cases hx : x = 0
-    · left
-      exact hx
+    · left; exact hx
     right
     contrapose! xy
     rw [HahnSeries.ext_iff, Function.funext_iff, not_forall]
@@ -1375,9 +1323,7 @@ def C : R →+* HahnSeries Γ R where
   toFun := single 0
   map_zero' := single_eq_zero
   map_one' := rfl
-  map_add' x y := by
-    ext a
-    by_cases h : a = 0 <;> simp [h]
+  map_add' x y := by ext a; by_cases h : a = 0 <;> simp [h]
   map_mul' x y := by rw [single_mul_single, zero_add]
 #align hahn_series.C HahnSeries.C
 
@@ -1542,11 +1488,9 @@ variable [CommSemiring R] {A : Type _} [Semiring A] [Algebra R A]
 instance : Algebra R (HahnSeries Γ A)
     where
   toRingHom := C.comp (algebraMap R A)
-  smul_def' r x := by
-    ext
-    simp
+  smul_def' r x := by ext; simp
   commutes' r x := by
-    ext
+    ext;
     simp only [smul_coeff, single_zero_mul_eq_smul, RingHom.coe_comp, RingHom.toFun_eq_coe, C_apply,
       Function.comp_apply, algebraMap_smul, mul_single_zero_coeff]
     rw [← Algebra.commutes, Algebra.smul_def]
@@ -1616,15 +1560,9 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R
     where
   toFun f := PowerSeries.mk f.coeff
   invFun f := ⟨fun n => PowerSeries.coeff R n f, (Nat.lt_wfRel.IsWf _).IsPwo⟩
-  left_inv f := by
-    ext
-    simp
-  right_inv f := by
-    ext
-    simp
-  map_add' f g := by
-    ext
-    simp
+  left_inv f := by ext; simp
+  right_inv f := by ext; simp
+  map_add' f g := by ext; simp
   map_mul' f g := by
     ext n
     simp only [PowerSeries.coeff_mul, PowerSeries.coeff_mk, mul_coeff, is_pwo_support]
@@ -1747,8 +1685,7 @@ theorem ofPowerSeries_X_pow {R} [CommSemiring R] (n : ℕ) :
   by
   rw [RingHom.map_pow]
   induction' n with n ih
-  · simp
-    rfl
+  · simp; rfl
   rw [pow_succ, ih, of_power_series_X, mul_comm, single_mul_single, one_mul, Nat.cast_succ]
 #align hahn_series.of_power_series_X_pow HahnSeries.ofPowerSeries_X_pow
 
@@ -1769,15 +1706,9 @@ def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R �
     where
   toFun f := f.coeff
   invFun f := ⟨(f : (σ →₀ ℕ) → R), Finsupp.isPwo _⟩
-  left_inv f := by
-    ext
-    simp
-  right_inv f := by
-    ext
-    simp
-  map_add' f g := by
-    ext
-    simp
+  left_inv f := by ext; simp
+  right_inv f := by ext; simp
+  map_add' f g := by ext; simp
   map_mul' f g := by
     ext n
     simp only [MvPowerSeries.coeff_mul]
@@ -2119,18 +2050,10 @@ instance : AddCommMonoid (SummableFamily Γ R α)
     where
   add := (· + ·)
   zero := 0
-  zero_add s := by
-    ext
-    apply zero_add
-  add_zero s := by
-    ext
-    apply add_zero
-  add_comm s t := by
-    ext
-    apply add_comm
-  add_assoc r s t := by
-    ext
-    apply add_assoc
+  zero_add s := by ext; apply zero_add
+  add_zero s := by ext; apply add_zero
+  add_comm s t := by ext; apply add_comm
+  add_assoc r s t := by ext; apply add_assoc
 
 /- warning: hahn_series.summable_family.hsum -> HahnSeries.SummableFamily.hsum is a dubious translation:
 lean 3 declaration is
@@ -2202,16 +2125,12 @@ instance : AddCommGroup (SummableFamily Γ R α) :=
     SummableFamily.addCommMonoid with
     neg := fun s =>
       { toFun := fun a => -s a
-        isPwo_iUnion_support' := by
-          simp_rw [support_neg]
-          exact s.is_pwo_Union_support'
+        isPwo_iUnion_support' := by simp_rw [support_neg]; exact s.is_pwo_Union_support'
         finite_co_support' := fun g =>
           by
           simp only [neg_coeff', Pi.neg_apply, Ne.def, neg_eq_zero]
           exact s.finite_co_support g }
-    add_left_neg := fun a => by
-      ext
-      apply add_left_neg }
+    add_left_neg := fun a => by ext; apply add_left_neg }
 
 /- warning: hahn_series.summable_family.coe_neg -> HahnSeries.SummableFamily.coe_neg is a dubious translation:
 lean 3 declaration is

@@ -380,13 +380,7 @@ lean 3 declaration is
 but is expected to have type
   forall (X : TopCat.{u1}), Eq.{succ u1} (CategoryTheory.Functor.{u1, u1, u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)))))) (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))))))) (TopologicalSpace.Opens.map.{u1} X X (CategoryTheory.CategoryStruct.id.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1}) X)) (CategoryTheory.Functor.id.{u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)))))))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.map_id_eq TopologicalSpace.Opens.map_id_eqₓ'. -/
-theorem map_id_eq : map (𝟙 X) = 𝟭 (Opens X) :=
-  by
-  unfold map
-  congr
-  ext
-  rfl
-  ext
+theorem map_id_eq : map (𝟙 X) = 𝟭 (Opens X) := by unfold map; congr ; ext; rfl; ext
 #align topological_space.opens.map_id_eq TopologicalSpace.Opens.map_id_eq
 
 end
@@ -433,14 +427,8 @@ lean 3 declaration is
 but is expected to have type
   forall {X : TopCat.{u1}} {Y : TopCat.{u1}} (f : Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) X Y) (g : Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) X Y), (Eq.{succ u1} (Quiver.Hom.{succ u1, succ u1} TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) X Y) f g) -> (Eq.{succ u1} (CategoryTheory.Functor.{u1, u1, u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} Y) (TopCat.topologicalSpace_coe.{u1} Y)))))) (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))))))) (TopologicalSpace.Opens.map.{u1} X Y f) (TopologicalSpace.Opens.map.{u1} X Y g))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.map_eq TopologicalSpace.Opens.map_eqₓ'. -/
-theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g :=
-  by
-  unfold map
-  congr
-  ext
-  rw [h]
-  rw [h]
-  assumption'
+theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g := by unfold map; congr ; ext; rw [h];
+  rw [h]; assumption'
 #align topological_space.opens.map_eq TopologicalSpace.Opens.map_eq
 
 /- warning: topological_space.opens.map_iso_refl -> TopologicalSpace.Opens.mapIso_refl is a dubious translation:
@@ -487,14 +475,10 @@ def mapMapIso {X Y : TopCat.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X
   inverse := map H.inv
   unitIso :=
     NatIso.ofComponents (fun U => eqToIso (by simp [map, Set.preimage_preimage]))
-      (by
-        intro _ _ _
-        simp)
+      (by intro _ _ _; simp)
   counitIso :=
     NatIso.ofComponents (fun U => eqToIso (by simp [map, Set.preimage_preimage]))
-      (by
-        intro _ _ _
-        simp)
+      (by intro _ _ _; simp)
 #align topological_space.opens.map_map_iso TopologicalSpace.Opens.mapMapIso
 
 end TopologicalSpace.Opens
@@ -538,8 +522,7 @@ Case conversion may be inaccurate. Consider using '#align is_open_map.functor_fu
 instance IsOpenMap.functorFullOfMono {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] :
     Full hf.Functor
     where preimage U V i :=
-    homOfLE fun x hx => by
-      obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩
+    homOfLE fun x hx => by obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩;
       exact (TopCat.mono_iff_injective f).mp H Eq ▸ hy
 #align is_open_map.functor_full_of_mono IsOpenMap.functorFullOfMono
 
@@ -562,9 +545,7 @@ open TopologicalSpace
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.open_embedding_obj_top TopologicalSpace.Opens.openEmbedding_obj_topₓ'. -/
 @[simp]
 theorem openEmbedding_obj_top {X : TopCat} (U : Opens X) :
-    U.OpenEmbedding.IsOpenMap.Functor.obj ⊤ = U :=
-  by
-  ext1
+    U.OpenEmbedding.IsOpenMap.Functor.obj ⊤ = U := by ext1;
   exact set.image_univ.trans Subtype.range_coe
 #align topological_space.opens.open_embedding_obj_top TopologicalSpace.Opens.openEmbedding_obj_top
 
@@ -572,10 +553,8 @@ theorem openEmbedding_obj_top {X : TopCat} (U : Opens X) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.inclusion_map_eq_top TopologicalSpace.Opens.inclusion_map_eq_topₓ'. -/
 @[simp]
-theorem inclusion_map_eq_top {X : TopCat} (U : Opens X) : (Opens.map U.inclusion).obj U = ⊤ :=
-  by
-  ext1
-  exact Subtype.coe_preimage_self _
+theorem inclusion_map_eq_top {X : TopCat} (U : Opens X) : (Opens.map U.inclusion).obj U = ⊤ := by
+  ext1; exact Subtype.coe_preimage_self _
 #align topological_space.opens.inclusion_map_eq_top TopologicalSpace.Opens.inclusion_map_eq_top
 
 /- warning: topological_space.opens.adjunction_counit_app_self -> TopologicalSpace.Opens.adjunction_counit_app_self is a dubious translation:
@@ -607,10 +586,8 @@ theorem functor_obj_map_obj {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) (U :
     hf.Functor.obj ((Opens.map f).obj U) = hf.Functor.obj ⊤ ⊓ U :=
   by
   ext; constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨⟨x, trivial, rfl⟩, hx⟩
-  · rintro ⟨⟨x, -, rfl⟩, hx⟩
-    exact ⟨x, hx, rfl⟩
+  · rintro ⟨x, hx, rfl⟩; exact ⟨⟨x, trivial, rfl⟩, hx⟩
+  · rintro ⟨⟨x, -, rfl⟩, hx⟩; exact ⟨x, hx, rfl⟩
 #align topological_space.opens.functor_obj_map_obj TopologicalSpace.Opens.functor_obj_map_obj
 
 /- warning: topological_space.opens.functor_map_eq_inf -> TopologicalSpace.Opens.functor_map_eq_inf is a dubious translation:
@@ -618,11 +595,8 @@ theorem functor_obj_map_obj {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) (U :
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.functor_map_eq_inf TopologicalSpace.Opens.functor_map_eq_infₓ'. -/
 @[simp]
 theorem functor_map_eq_inf {X : TopCat} (U V : Opens X) :
-    U.OpenEmbedding.IsOpenMap.Functor.obj ((Opens.map U.inclusion).obj V) = V ⊓ U :=
-  by
-  ext1
-  refine' set.image_preimage_eq_inter_range.trans _
-  simpa
+    U.OpenEmbedding.IsOpenMap.Functor.obj ((Opens.map U.inclusion).obj V) = V ⊓ U := by ext1;
+  refine' set.image_preimage_eq_inter_range.trans _; simpa
 #align topological_space.opens.functor_map_eq_inf TopologicalSpace.Opens.functor_map_eq_inf
 
 /- warning: topological_space.opens.map_functor_eq' -> TopologicalSpace.Opens.map_functor_eq' is a dubious translation:
@@ -648,10 +622,7 @@ Case conversion may be inaccurate. Consider using '#align topological_space.open
 @[simp]
 theorem adjunction_counit_map_functor {X : TopCat} {U : Opens X} (V : Opens U) :
     U.OpenEmbedding.IsOpenMap.Adjunction.counit.app (U.OpenEmbedding.IsOpenMap.Functor.obj V) =
-      eqToHom
-        (by
-          conv_rhs => rw [← V.map_functor_eq]
-          rfl) :=
+      eqToHom (by conv_rhs => rw [← V.map_functor_eq]; rfl) :=
   by ext
 #align topological_space.opens.adjunction_counit_map_functor TopologicalSpace.Opens.adjunction_counit_map_functor
 

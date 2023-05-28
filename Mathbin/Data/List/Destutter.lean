@@ -138,9 +138,7 @@ theorem destutter'_of_chain (h : l.Chain R a) : l.destutter' R a = a :: l :=
 #print List.destutter'_eq_self_iff /-
 @[simp]
 theorem destutter'_eq_self_iff (a) : l.destutter' R a = a :: l ↔ l.Chain R a :=
-  ⟨fun h => by
-    rw [← chain', ← h]
-    exact l.destutter'_is_chain' R a, destutter'_of_chain _ _⟩
+  ⟨fun h => by rw [← chain', ← h]; exact l.destutter'_is_chain' R a, destutter'_of_chain _ _⟩
 #align list.destutter'_eq_self_iff List.destutter'_eq_self_iff
 -/
 

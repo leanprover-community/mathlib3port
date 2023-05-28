@@ -98,10 +98,8 @@ theorem aeval_zeta [IsDomain B] [NeZero ((n : ℕ) : B)] : aeval (zeta n A B) (c
   exact zeta_spec n A B
 #align is_cyclotomic_extension.aeval_zeta IsCyclotomicExtension.aeval_zeta
 
-theorem zeta_isRoot [IsDomain B] [NeZero ((n : ℕ) : B)] : IsRoot (cyclotomic n B) (zeta n A B) :=
-  by
-  convert aeval_zeta n A B
-  rw [is_root.def, aeval_def, eval₂_eq_eval_map, map_cyclotomic]
+theorem zeta_isRoot [IsDomain B] [NeZero ((n : ℕ) : B)] : IsRoot (cyclotomic n B) (zeta n A B) := by
+  convert aeval_zeta n A B; rw [is_root.def, aeval_def, eval₂_eq_eval_map, map_cyclotomic]
 #align is_cyclotomic_extension.zeta_is_root IsCyclotomicExtension.zeta_isRoot
 
 theorem zeta_pow : zeta n A B ^ (n : ℕ) = 1 :=
@@ -383,14 +381,11 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
     rw [Nat.sub_add_comm hs, pow_coe]
   rw [norm_eq_norm_adjoin K]
   · have H := hη.sub_one_norm_is_prime_pow _ hirr₁ htwo
-    swap
-    · rw [PNat.pow_coe]
-      exact hpri.1.IsPrimePow.pow (Nat.succ_ne_zero _)
+    swap; · rw [PNat.pow_coe]; exact hpri.1.IsPrimePow.pow (Nat.succ_ne_zero _)
     rw [add_sub_cancel] at H
     rw [H, coe_coe]
     congr
-    · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]
-      exact Nat.succ_ne_zero _
+    · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]; exact Nat.succ_ne_zero _
     have := FiniteDimensional.finrank_mul_finrank K K⟮⟯ L
     rw [IsCyclotomicExtension.finrank L hirr, IsCyclotomicExtension.finrank K⟮⟯ hirr₁, PNat.pow_coe,
       PNat.pow_coe, Nat.totient_prime_pow hpri.out (k - s).succ_pos,

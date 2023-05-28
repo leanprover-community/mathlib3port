@@ -152,9 +152,7 @@ def isoMk (h : A₀.1 ≅ A₁.1) (w : F.map h.Hom ≫ A₁.str = A₀.str ≫ h
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv
-      h' := by
-        rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
-        simp }
+      h' := by rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]; simp }
 #align category_theory.endofunctor.algebra.iso_mk CategoryTheory.Endofunctor.Algebra.isoMk
 
 #print CategoryTheory.Endofunctor.Algebra.forget /-
@@ -170,10 +168,7 @@ def forget (F : C ⥤ C) : Algebra F ⥤ C where
 /-- An algebra morphism with an underlying isomorphism hom in `C` is an algebra isomorphism. -/
 theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
   ⟨⟨{   f := inv f.1
-        h' := by
-          rw [is_iso.eq_comp_inv f.1, category.assoc, ← f.h]
-          simp },
-      by tidy⟩⟩
+        h' := by rw [is_iso.eq_comp_inv f.1, category.assoc, ← f.h]; simp }, by tidy⟩⟩
 #align category_theory.endofunctor.algebra.iso_of_iso CategoryTheory.Endofunctor.Algebra.iso_of_iso
 -/
 
@@ -219,15 +214,7 @@ def functorOfNatTrans {F G : C ⥤ C} (α : G ⟶ F) : Algebra F ⥤ Algebra G
 /-- The identity transformation induces the identity endofunctor on the category of algebras. -/
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.algebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Algebra.functorOfNatTransId
 -/
@@ -237,15 +224,7 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : F₁ ⟶ F₂) :
     functorOfNatTrans (α ≫ β) ≅ functorOfNatTrans β ⋙ functorOfNatTrans α :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.algebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Algebra.functorOfNatTransComp
 -/
@@ -260,15 +239,7 @@ lemmas about.
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
     functorOfNatTrans α ≅ functorOfNatTrans β :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp [h]))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp [h])) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.algebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Algebra.functorOfNatTransEq
 -/
@@ -335,8 +306,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.endofu
 theorem right_inv : A.str ≫ strInv h = 𝟙 _ :=
   by
   rw [str_inv, ← (h.to ⟨F.obj A.1, F.map A.str⟩).h, ← F.map_id, ← F.map_comp]
-  congr
-  exact left_inv h
+  congr ; exact left_inv h
 #align category_theory.endofunctor.algebra.initial.right_inv CategoryTheory.Endofunctor.Algebra.Initial.right_inv
 
 /- warning: category_theory.endofunctor.algebra.initial.str_is_iso -> CategoryTheory.Endofunctor.Algebra.Initial.str_isIso is a dubious translation:
@@ -487,10 +457,8 @@ def forget (F : C ⥤ C) : Coalgebra F ⥤ C
 /-- A coalgebra morphism with an underlying isomorphism hom in `C` is a coalgebra isomorphism. -/
 theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
   ⟨⟨{   f := inv f.1
-        h' := by
-          rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc]
-          simp },
-      by tidy⟩⟩
+        h' := by rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc]; simp }, by
+      tidy⟩⟩
 #align category_theory.endofunctor.coalgebra.iso_of_iso CategoryTheory.Endofunctor.Coalgebra.iso_of_iso
 -/
 
@@ -538,15 +506,7 @@ def functorOfNatTrans {F G : C ⥤ C} (α : F ⟶ G) : Coalgebra F ⥤ Coalgebra
 /-- The identity transformation induces the identity endofunctor on the category of coalgebras. -/
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.coalgebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransId
 -/
@@ -556,15 +516,7 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : F₁ ⟶ F₂) :
     functorOfNatTrans (α ≫ β) ≅ functorOfNatTrans α ⋙ functorOfNatTrans β :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.coalgebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransComp
 -/
@@ -578,15 +530,7 @@ lemmas about.
 @[simps (config := { rhsMd := semireducible })]
 def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
     functorOfNatTrans α ≅ functorOfNatTrans β :=
-  NatIso.ofComponents
-    (fun X =>
-      isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp [h]))
-    fun X Y f => by
-    ext
-    dsimp
+  NatIso.ofComponents (fun X => isoMk (Iso.refl _) (by dsimp; simp [h])) fun X Y f => by ext; dsimp;
     simp
 #align category_theory.endofunctor.coalgebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransEq
 -/
@@ -675,28 +619,16 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
           h' := by
             erw [F.map_id, category.id_comp, category.comp_id]
             apply (adj.hom_equiv _ _).left_inv A.str }
-      naturality' := fun A₁ A₂ f => by
-        ext1
-        dsimp
-        erw [category.id_comp, category.comp_id]
-        rfl }
+      naturality' := fun A₁ A₂ f => by ext1; dsimp; erw [category.id_comp, category.comp_id]; rfl }
   inv :=
     { app := fun A =>
         { f := 𝟙 A.1
           h' := by
             erw [F.map_id, category.id_comp, category.comp_id]
             apply ((adj.hom_equiv _ _).left_inv A.str).symm }
-      naturality' := fun A₁ A₂ f => by
-        ext1
-        dsimp
-        erw [category.comp_id, category.id_comp]
-        rfl }
-  hom_inv_id' := by
-    ext
-    exact category.comp_id _
-  inv_hom_id' := by
-    ext
-    exact category.comp_id _
+      naturality' := fun A₁ A₂ f => by ext1; dsimp; erw [category.comp_id, category.id_comp]; rfl }
+  hom_inv_id' := by ext; exact category.comp_id _
+  inv_hom_id' := by ext; exact category.comp_id _
 #align category_theory.endofunctor.adjunction.alg_coalg_equiv.unit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.unitIso
 -/
 
@@ -710,32 +642,18 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
     { app := fun V =>
         { f := 𝟙 V.1
           h' := by
-            dsimp
-            erw [G.map_id, category.id_comp, category.comp_id]
+            dsimp; erw [G.map_id, category.id_comp, category.comp_id]
             apply (adj.hom_equiv _ _).right_inv V.str }
-      naturality' := fun V₁ V₂ f => by
-        ext1
-        dsimp
-        erw [category.comp_id, category.id_comp]
-        rfl }
+      naturality' := fun V₁ V₂ f => by ext1; dsimp; erw [category.comp_id, category.id_comp]; rfl }
   inv :=
     { app := fun V =>
         { f := 𝟙 V.1
           h' := by
-            dsimp
-            rw [G.map_id, category.comp_id, category.id_comp]
+            dsimp; rw [G.map_id, category.comp_id, category.id_comp]
             apply ((adj.hom_equiv _ _).right_inv V.str).symm }
-      naturality' := fun V₁ V₂ f => by
-        ext1
-        dsimp
-        erw [category.comp_id, category.id_comp]
-        rfl }
-  hom_inv_id' := by
-    ext
-    exact category.comp_id _
-  inv_hom_id' := by
-    ext
-    exact category.comp_id _
+      naturality' := fun V₁ V₂ f => by ext1; dsimp; erw [category.comp_id, category.id_comp]; rfl }
+  hom_inv_id' := by ext; exact category.comp_id _
+  inv_hom_id' := by ext; exact category.comp_id _
 #align category_theory.endofunctor.adjunction.alg_coalg_equiv.counit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.counitIso
 -/
 
@@ -753,9 +671,7 @@ def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G
   inverse := Coalgebra.toAlgebraOf adj
   unitIso := AlgCoalgEquiv.unitIso adj
   counitIso := AlgCoalgEquiv.counitIso adj
-  functor_unitIso_comp' A := by
-    ext
-    exact category.comp_id _
+  functor_unitIso_comp' A := by ext; exact category.comp_id _
 #align category_theory.endofunctor.adjunction.algebra_coalgebra_equiv CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv
 
 end Adjunction

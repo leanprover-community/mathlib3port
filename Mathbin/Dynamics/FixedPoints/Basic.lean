@@ -122,10 +122,7 @@ protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by 
 
 #print Function.IsFixedPt.preimage_iterate /-
 theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : ℕ) :
-    IsFixedPt (Set.preimage (f^[n])) s :=
-  by
-  rw [Set.preimage_iterate_eq]
-  exact h.iterate n
+    IsFixedPt (Set.preimage (f^[n])) s := by rw [Set.preimage_iterate_eq]; exact h.iterate n
 #align function.is_fixed_pt.preimage_iterate Function.IsFixedPt.preimage_iterate
 -/
 
@@ -142,10 +139,8 @@ protected theorem perm_inv (h : IsFixedPt e x) : IsFixedPt (⇑e⁻¹) x :=
 -/
 
 #print Function.IsFixedPt.perm_pow /-
-protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x :=
-  by
-  rw [Equiv.Perm.coe_pow]
-  exact h.iterate _
+protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x := by
+  rw [Equiv.Perm.coe_pow]; exact h.iterate _
 #align function.is_fixed_pt.perm_pow Function.IsFixedPt.perm_pow
 -/
 

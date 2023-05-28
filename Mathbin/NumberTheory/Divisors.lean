@@ -175,8 +175,7 @@ theorem mem_divisorsAntidiagonal {x : ℕ × ℕ} :
   apply and_congr_right
   rintro rfl
   constructor <;> intro h
-  · contrapose! h
-    simp [h]
+  · contrapose! h; simp [h]
   · rw [Nat.lt_add_one_iff, Nat.lt_add_one_iff]
     rw [mul_eq_zero, Decidable.not_or_iff_and_not] at h
     simp only [succ_le_of_lt (Nat.pos_of_ne_zero h.1), succ_le_of_lt (Nat.pos_of_ne_zero h.2),
@@ -219,18 +218,13 @@ theorem divisors_subset_properDivisors {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n)
 
 #print Nat.divisors_zero /-
 @[simp]
-theorem divisors_zero : divisors 0 = ∅ := by
-  ext
-  simp
+theorem divisors_zero : divisors 0 = ∅ := by ext; simp
 #align nat.divisors_zero Nat.divisors_zero
 -/
 
 #print Nat.properDivisors_zero /-
 @[simp]
-theorem properDivisors_zero : properDivisors 0 = ∅ :=
-  by
-  ext
-  simp
+theorem properDivisors_zero : properDivisors 0 = ∅ := by ext; simp
 #align nat.proper_divisors_zero Nat.properDivisors_zero
 -/
 
@@ -242,9 +236,7 @@ theorem properDivisors_subset_divisors : properDivisors n ⊆ divisors n :=
 
 #print Nat.divisors_one /-
 @[simp]
-theorem divisors_one : divisors 1 = {1} := by
-  ext
-  simp
+theorem divisors_one : divisors 1 = {1} := by ext; simp
 #align nat.divisors_one Nat.divisors_one
 -/
 
@@ -258,8 +250,7 @@ theorem properDivisors_one : properDivisors 1 = ∅ := by rw [proper_divisors, I
 theorem pos_of_mem_divisors {m : ℕ} (h : m ∈ n.divisors) : 0 < m :=
   by
   cases m
-  · rw [mem_divisors, zero_dvd_iff] at h
-    cases h.2 h.1
+  · rw [mem_divisors, zero_dvd_iff] at h; cases h.2 h.1
   apply Nat.succ_pos
 #align nat.pos_of_mem_divisors Nat.pos_of_mem_divisors
 -/
@@ -278,18 +269,13 @@ theorem one_mem_properDivisors_iff_one_lt : 1 ∈ n.properDivisors ↔ 1 < n := 
 
 #print Nat.divisorsAntidiagonal_zero /-
 @[simp]
-theorem divisorsAntidiagonal_zero : divisorsAntidiagonal 0 = ∅ :=
-  by
-  ext
-  simp
+theorem divisorsAntidiagonal_zero : divisorsAntidiagonal 0 = ∅ := by ext; simp
 #align nat.divisors_antidiagonal_zero Nat.divisorsAntidiagonal_zero
 -/
 
 #print Nat.divisorsAntidiagonal_one /-
 @[simp]
-theorem divisorsAntidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} :=
-  by
-  ext
+theorem divisorsAntidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} := by ext;
   simp [mul_eq_one, Prod.ext_iff]
 #align nat.divisors_antidiagonal_one Nat.divisorsAntidiagonal_one
 -/
@@ -337,10 +323,8 @@ but is expected to have type
   forall {n : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.image.{0, 0} (Prod.{0, 0} Nat Nat) Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Prod.fst.{0, 0} Nat Nat) (Nat.divisorsAntidiagonal n)) (Nat.divisors n)
 Case conversion may be inaccurate. Consider using '#align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisorsAntidiagonalₓ'. -/
 @[simp]
-theorem image_fst_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.fst = divisors n :=
-  by
-  ext
-  simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
+theorem image_fst_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.fst = divisors n := by
+  ext; simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
 #align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisorsAntidiagonal
 
 /- warning: nat.image_snd_divisors_antidiagonal -> Nat.image_snd_divisorsAntidiagonal is a dubious translation:
@@ -447,9 +431,7 @@ theorem Prime.properDivisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} :
 
 #print Nat.divisors_prime_pow /-
 theorem divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
-    divisors (p ^ k) = (Finset.range (k + 1)).map ⟨pow p, pow_right_injective pp.two_le⟩ :=
-  by
-  ext
+    divisors (p ^ k) = (Finset.range (k + 1)).map ⟨pow p, pow_right_injective pp.two_le⟩ := by ext;
   simp [mem_divisors_prime_pow, pp, Nat.lt_succ_iff, @eq_comm _ a]
 #align nat.divisors_prime_pow Nat.divisors_prime_pow
 -/
@@ -571,9 +553,7 @@ theorem mem_properDivisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ
 
 #print Nat.properDivisors_prime_pow /-
 theorem properDivisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
-    properDivisors (p ^ k) = (Finset.range k).map ⟨pow p, pow_right_injective pp.two_le⟩ :=
-  by
-  ext
+    properDivisors (p ^ k) = (Finset.range k).map ⟨pow p, pow_right_injective pp.two_le⟩ := by ext;
   simp [mem_proper_divisors_prime_pow, pp, Nat.lt_succ_iff, @eq_comm _ a]
 #align nat.proper_divisors_prime_pow Nat.properDivisors_prime_pow
 -/

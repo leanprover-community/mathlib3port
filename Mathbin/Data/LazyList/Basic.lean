@@ -57,18 +57,9 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α
   toFun := LazyList.ofList
   invFun := LazyList.toList
   right_inv := by
-    intro
-    induction x
-    rfl
-    simp! [*]
-    ext
-    cases x
-    rfl
-  left_inv := by
-    intro
-    induction x
-    rfl
-    simp! [*]
+    intro ; induction x; rfl; simp! [*]
+    ext; cases x; rfl
+  left_inv := by intro ; induction x; rfl; simp! [*]
 #align lazy_list.list_equiv_lazy_list LazyList.listEquivLazyList
 -/
 
@@ -102,24 +93,17 @@ instance : Traversable LazyList
 instance : IsLawfulTraversable LazyList :=
   by
   apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
-  · induction x
-    rfl
+  · induction x; rfl
     simp! [Equiv.map, Functor.map] at *
-    simp [*]
-    rfl
-  · induction x
-    rfl
+    simp [*]; rfl
+  · induction x; rfl
     simp! [Equiv.map, Functor.mapConst] at *
-    simp [*]
-    rfl
+    simp [*]; rfl
   · induction x
-    · simp! [Traversable.traverse, Equiv.traverse, functor_norm]
-      rfl
-    simp! [Equiv.map, Functor.mapConst, Traversable.traverse] at *
-    rw [x_ih]
+    · simp! [Traversable.traverse, Equiv.traverse, functor_norm]; rfl
+    simp! [Equiv.map, Functor.mapConst, Traversable.traverse] at *; rw [x_ih]
     dsimp [list_equiv_lazy_list, Equiv.traverse, to_list, Traversable.traverse, List.traverse]
-    simp! [functor_norm]
-    rfl
+    simp! [functor_norm]; rfl
 
 #print LazyList.init /-
 /-- `init xs`, if `xs` non-empty, drops the last element of the list.
@@ -221,13 +205,8 @@ theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : �
 
 instance : LawfulMonad LazyList
     where
-  pure_bind := by
-    intros
-    apply append_nil
-  bind_assoc := by
-    intros
-    dsimp [(· >>= ·)]
-    induction x <;> simp [LazyList.bind, append_bind, *]
+  pure_bind := by intros ; apply append_nil
+  bind_assoc := by intros ; dsimp [(· >>= ·)]; induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros
     simp [(· <$> ·)]

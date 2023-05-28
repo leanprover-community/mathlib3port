@@ -337,8 +337,7 @@ noncomputable instance : Inv (Cauchy abv) :=
       have := lim_zero_congr fg
       by_cases hf : lim_zero f
       · simp [hf, this.1 hf, Setoid.refl]
-      · have hg := mt this.2 hf
-        simp [hf, hg]
+      · have hg := mt this.2 hf; simp [hf, hg]
         have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg)

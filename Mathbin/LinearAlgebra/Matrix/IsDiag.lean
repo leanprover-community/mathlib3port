@@ -120,9 +120,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {n : Type.{u1}} [_inst_1 : Zero.{u3} α] [_inst_2 : Zero.{u2} β] {A : Matrix.{u1, u1, u3} n n α}, (Matrix.IsDiag.{u3, u1} α n _inst_1 A) -> (forall {f : α -> β}, (Eq.{succ u2} β (f (OfNat.ofNat.{u3} α 0 (Zero.toOfNat0.{u3} α _inst_1))) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_2))) -> (Matrix.IsDiag.{u2, u1} β n _inst_2 (Matrix.map.{u3, u2, u1, u1} n n α β A f)))
 Case conversion may be inaccurate. Consider using '#align matrix.is_diag.map Matrix.IsDiag.mapₓ'. -/
 theorem IsDiag.map [Zero α] [Zero β] {A : Matrix n n α} (ha : A.IsDiag) {f : α → β} (hf : f 0 = 0) :
-    (A.map f).IsDiag := by
-  intro i j h
-  simp [ha h, hf]
+    (A.map f).IsDiag := by intro i j h; simp [ha h, hf]
 #align matrix.is_diag.map Matrix.IsDiag.map
 
 /- warning: matrix.is_diag.neg -> Matrix.IsDiag.neg is a dubious translation:
@@ -131,9 +129,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : AddGroup.{u2} α] {A : Matrix.{u1, u1, u2} n n α}, (Matrix.IsDiag.{u2, u1} α n (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) A) -> (Matrix.IsDiag.{u2, u1} α n (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) (Neg.neg.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.neg.{u2, u1, u1} n n α (NegZeroClass.toNeg.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1))))) A))
 Case conversion may be inaccurate. Consider using '#align matrix.is_diag.neg Matrix.IsDiag.negₓ'. -/
-theorem IsDiag.neg [AddGroup α] {A : Matrix n n α} (ha : A.IsDiag) : (-A).IsDiag :=
-  by
-  intro i j h
+theorem IsDiag.neg [AddGroup α] {A : Matrix n n α} (ha : A.IsDiag) : (-A).IsDiag := by intro i j h;
   simp [ha h]
 #align matrix.is_diag.neg Matrix.IsDiag.neg
 
@@ -155,9 +151,7 @@ but is expected to have type
   forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : AddZeroClass.{u2} α] {A : Matrix.{u1, u1, u2} n n α} {B : Matrix.{u1, u1, u2} n n α}, (Matrix.IsDiag.{u2, u1} α n (AddZeroClass.toZero.{u2} α _inst_1) A) -> (Matrix.IsDiag.{u2, u1} α n (AddZeroClass.toZero.{u2} α _inst_1) B) -> (Matrix.IsDiag.{u2, u1} α n (AddZeroClass.toZero.{u2} α _inst_1) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHAdd.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.add.{u2, u1, u1} n n α (AddZeroClass.toAdd.{u2} α _inst_1))) A B))
 Case conversion may be inaccurate. Consider using '#align matrix.is_diag.add Matrix.IsDiag.addₓ'. -/
 theorem IsDiag.add [AddZeroClass α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) :
-    (A + B).IsDiag := by
-  intro i j h
-  simp [ha h, hb h]
+    (A + B).IsDiag := by intro i j h; simp [ha h, hb h]
 #align matrix.is_diag.add Matrix.IsDiag.add
 
 /- warning: matrix.is_diag.sub -> Matrix.IsDiag.sub is a dubious translation:
@@ -167,9 +161,7 @@ but is expected to have type
   forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : AddGroup.{u2} α] {A : Matrix.{u1, u1, u2} n n α} {B : Matrix.{u1, u1, u2} n n α}, (Matrix.IsDiag.{u2, u1} α n (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) A) -> (Matrix.IsDiag.{u2, u1} α n (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) B) -> (Matrix.IsDiag.{u2, u1} α n (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHSub.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.sub.{u2, u1, u1} n n α (SubNegMonoid.toSub.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) A B))
 Case conversion may be inaccurate. Consider using '#align matrix.is_diag.sub Matrix.IsDiag.subₓ'. -/
 theorem IsDiag.sub [AddGroup α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) :
-    (A - B).IsDiag := by
-  intro i j h
-  simp [ha h, hb h]
+    (A - B).IsDiag := by intro i j h; simp [ha h, hb h]
 #align matrix.is_diag.sub Matrix.IsDiag.sub
 
 /- warning: matrix.is_diag.smul -> Matrix.IsDiag.smul is a dubious translation:
@@ -179,9 +171,7 @@ but is expected to have type
   forall {α : Type.{u2}} {R : Type.{u3}} {n : Type.{u1}} [_inst_1 : Monoid.{u3} R] [_inst_2 : AddMonoid.{u2} α] [_inst_3 : DistribMulAction.{u3, u2} R α _inst_1 _inst_2] (k : R) {A : Matrix.{u1, u1, u2} n n α}, (Matrix.IsDiag.{u2, u1} α n (AddMonoid.toZero.{u2} α _inst_2) A) -> (Matrix.IsDiag.{u2, u1} α n (AddMonoid.toZero.{u2} α _inst_2) (HSMul.hSMul.{u3, max u2 u1, max u2 u1} R (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHSMul.{u3, max u2 u1} R (Matrix.{u1, u1, u2} n n α) (Matrix.smul.{u2, u1, u1, u3} n n R α (SMulZeroClass.toSMul.{u3, u2} R α (AddMonoid.toZero.{u2} α _inst_2) (DistribSMul.toSMulZeroClass.{u3, u2} R α (AddMonoid.toAddZeroClass.{u2} α _inst_2) (DistribMulAction.toDistribSMul.{u3, u2} R α _inst_1 _inst_2 _inst_3))))) k A))
 Case conversion may be inaccurate. Consider using '#align matrix.is_diag.smul Matrix.IsDiag.smulₓ'. -/
 theorem IsDiag.smul [Monoid R] [AddMonoid α] [DistribMulAction R α] (k : R) {A : Matrix n n α}
-    (ha : A.IsDiag) : (k • A).IsDiag := by
-  intro i j h
-  simp [ha h]
+    (ha : A.IsDiag) : (k • A).IsDiag := by intro i j h; simp [ha h]
 #align matrix.is_diag.smul Matrix.IsDiag.smul
 
 /- warning: matrix.is_diag_smul_one -> Matrix.isDiag_smul_one is a dubious translation:
@@ -237,9 +227,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.is_diag_conj_tr
 @[simp]
 theorem isDiag_conjTranspose_iff [Semiring α] [StarRing α] {A : Matrix n n α} :
     Aᴴ.IsDiag ↔ A.IsDiag :=
-  ⟨fun ha => by
-    convert ha.conj_transpose
-    simp, IsDiag.conjTranspose⟩
+  ⟨fun ha => by convert ha.conj_transpose; simp, IsDiag.conjTranspose⟩
 #align matrix.is_diag_conj_transpose_iff Matrix.isDiag_conjTranspose_iff
 
 /- warning: matrix.is_diag.submatrix -> Matrix.IsDiag.submatrix is a dubious translation:

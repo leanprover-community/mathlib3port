@@ -71,8 +71,7 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
   have h₂ : dist d a = dist a p / dist b p * dist b c :=
     by
     rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
-    · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
-      rwa [angle_comm]
+    · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]; rwa [angle_comm]
     all_goals field_simp [mul_comm, hmul]
   have h₃ : dist d p = dist a p * dist c p / dist b p := by field_simp [mul_comm, hmul]
   have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_comm, mul_comm]

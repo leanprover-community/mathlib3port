@@ -206,8 +206,7 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F
     (by
       rintro (X | X) (Y | Y) f
       · apply h.hom.naturality
-      · cases f
-        exact hh _
+      · cases f; exact hh _
       · cases f
       · cases f
         change G.map (𝟙 _) ≫ hG.hom = hG.hom ≫ 𝟙 _

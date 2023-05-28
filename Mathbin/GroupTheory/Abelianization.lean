@@ -287,12 +287,8 @@ def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H
     where
   toFun := Abelianization.map e.toMonoidHom
   invFun := Abelianization.map e.symm.toMonoidHom
-  left_inv := by
-    rintro ⟨a⟩
-    simp
-  right_inv := by
-    rintro ⟨a⟩
-    simp
+  left_inv := by rintro ⟨a⟩; simp
+  right_inv := by rintro ⟨a⟩; simp
   map_mul' := MonoidHom.map_mul _
 #align mul_equiv.abelianization_congr MulEquiv.abelianizationCongr
 
@@ -355,9 +351,7 @@ def Abelianization.equivOfComm {H : Type _} [CommGroup H] : H ≃* Abelianizatio
     toFun := Abelianization.of
     invFun := Abelianization.lift (MonoidHom.id H)
     left_inv := fun a => rfl
-    right_inv := by
-      rintro ⟨a⟩
-      rfl }
+    right_inv := by rintro ⟨a⟩; rfl }
 #align abelianization.equiv_of_comm Abelianization.equivOfComm
 
 section commutatorRepresentatives

@@ -300,11 +300,7 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
     rw [coe_insert]
     refine' hs.insert _ fun b hb hab => ha.2 <| (hs.is_upper_set' h) hab.le_compl_left hb
     rintro rfl
-    have :=
-      h {⊤}
-        (by
-          rw [coe_singleton]
-          exact intersecting_singleton.2 top_ne_bot)
+    have := h {⊤} (by rw [coe_singleton]; exact intersecting_singleton.2 top_ne_bot)
     rw [compl_bot] at ha
     rw [coe_eq_empty.1 ((hs.is_upper_set' h).not_top_mem.1 ha.2)] at this
     exact Finset.singleton_ne_empty _ (this <| empty_subset _).symm

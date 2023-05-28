@@ -149,14 +149,12 @@ theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : Locally
   let ggg := LocallyConstant.unflip gg
   refine' ⟨j0, ggg, _⟩
   have : f.map ι = LocallyConstant.unflip (f.map ι).flip := by simp
-  rw [this]
-  clear this
+  rw [this]; clear this
   have :
     LocallyConstant.comap (C.π.app j0) ggg =
       LocallyConstant.unflip (LocallyConstant.comap (C.π.app j0) ggg).flip :=
     by simp
-  rw [this]
-  clear this
+  rw [this]; clear this
   congr 1
   ext1 a
   change ff a = _
@@ -225,8 +223,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
     haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
       (inferInstance : CompactSpace (F.obj j))
     have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system (F ⋙ Profinite.toTopCat)
-    suffices : Nonempty C.X
-    exact IsEmpty.false (S.proj this.some)
+    suffices : Nonempty C.X; exact IsEmpty.false (S.proj this.some)
     let D := Profinite.to_Top.map_cone C
     have hD : is_limit D := is_limit_of_preserves Profinite.toTopCat hC
     have CD := (hD.cone_point_unique_up_to_iso (TopCat.limitConeIsLimit.{u} _)).inv

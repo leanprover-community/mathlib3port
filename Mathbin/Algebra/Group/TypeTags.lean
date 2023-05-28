@@ -502,12 +502,8 @@ def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
     where
   toFun f := ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
   invFun f := ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_monoid_hom.to_multiplicative AddMonoidHom.toMultiplicative
 -/
 
@@ -518,12 +514,8 @@ def MonoidHom.toAdditive [MulOneClass α] [MulOneClass β] : (α →* β) ≃ (A
     where
   toFun f := ⟨fun a => ofMul (f a.toMul), f.2, f.3⟩
   invFun f := ⟨fun a => (f (ofMul a)).toMul, f.2, f.3⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align monoid_hom.to_additive MonoidHom.toAdditive
 -/
 
@@ -535,12 +527,8 @@ def AddMonoidHom.toMultiplicative' [MulOneClass α] [AddZeroClass β] :
     where
   toFun f := ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
   invFun f := ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_monoid_hom.to_multiplicative' AddMonoidHom.toMultiplicative'
 -/
 
@@ -561,12 +549,8 @@ def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClass β] :
     where
   toFun f := ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
   invFun f := ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_monoid_hom.to_multiplicative'' AddMonoidHom.toMultiplicative''
 -/
 

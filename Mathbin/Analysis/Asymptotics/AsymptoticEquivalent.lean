@@ -212,11 +212,8 @@ theorem isEquivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ c
   by
   rw [is_equivalent, is_o_const_iff h]
   constructor <;> intro h <;>
-          [·
-            have := h.sub tendsto_const_nhds
-            rw [zero_sub (-c)] at this;·
-            have := h.sub tendsto_const_nhds
-            rw [← sub_self c]] <;>
+          [· have := h.sub tendsto_const_nhds;
+            rw [zero_sub (-c)] at this;· have := h.sub tendsto_const_nhds; rw [← sub_self c]] <;>
         convert this <;>
       try ext <;>
     simp
@@ -244,8 +241,7 @@ Case conversion may be inaccurate. Consider using '#align asymptotics.is_equival
 theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (𝓝 c)) :
     Tendsto v l (𝓝 c) := by
   by_cases h : c = 0
-  · subst c
-    rw [← is_o_one_iff ℝ] at hu⊢
+  · subst c; rw [← is_o_one_iff ℝ] at hu⊢
     simpa using (huv.symm.is_o.trans hu).add hu
   · rw [← is_equivalent_const_iff_tendsto h] at hu⊢
     exact huv.symm.trans hu
@@ -393,8 +389,7 @@ theorem isEquivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) :
     have key : tendsto (fun x => v x / v x) l (𝓝 1) :=
       (tendsto_congr' <| hz.mono fun x hnz => @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
     convert this.add key
-    · ext
-      simp
+    · ext; simp
     · norm_num
   · exact is_equivalent_of_tendsto_one (hz.mono fun x hnvz hz => (hnvz hz).elim)
 #align asymptotics.is_equivalent_iff_tendsto_one Asymptotics.isEquivalent_iff_tendsto_one
@@ -433,9 +428,7 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
       ‖φ x - 1‖ * ‖u x‖ ≤ c / 2 / C * ‖u x‖ :=
         mul_le_mul_of_nonneg_right hφx.le (norm_nonneg <| u x)
       _ ≤ c / 2 / C * (C * ‖v x‖) := (mul_le_mul_of_nonneg_left hCuvx (div_pos (by linarith) hC).le)
-      _ = c / 2 * ‖v x‖ := by
-        field_simp [hC.ne.symm]
-        ring
+      _ = c / 2 * ‖v x‖ := by field_simp [hC.ne.symm] ; ring
       
   calc
     ‖((fun x : α => φ x • u x) - v) x‖ = ‖(φ x - 1) • u x + (u x - v x)‖ := by

@@ -127,9 +127,7 @@ namespace PolishSpace
 
 #print PolishSpace.t2Space /-
 instance (priority := 100) t2Space (α : Type _) [TopologicalSpace α] [PolishSpace α] : T2Space α :=
-  by
-  letI := upgradePolishSpace α
-  infer_instance
+  by letI := upgradePolishSpace α; infer_instance
 #align polish_space.t2_space PolishSpace.t2Space
 -/
 
@@ -374,10 +372,7 @@ def TopologicalSpace.Opens.CompleteCopy.instMetricSpace (s : Set α) :
         by
         rw [← Real.dist_eq, ← Real.dist_eq, ← Real.dist_eq]
         exact add_le_add (dist_triangle _ _ _) (dist_triangle _ _ _)
-      _ = dist x y + dist y z :=
-        by
-        rw [dist_complete_copy_eq, dist_complete_copy_eq]
-        abel
+      _ = dist x y + dist y z := by rw [dist_complete_copy_eq, dist_complete_copy_eq]; abel
       
   eq_of_dist_eq_zero := by
     intro x y hxy
@@ -422,8 +417,7 @@ def [anonymous] (hs : IsOpen s) (h's : sᶜ.Nonempty) : TopologicalSpace.Opens.C
       rw [← hs.is_closed_compl.not_mem_iff_inf_dist_pos h's]
       simp
     apply tendsto.add
-    · apply Continuous.tendsto
-      exact continuous_subtype_coe.dist continuous_const
+    · apply Continuous.tendsto; exact continuous_subtype_coe.dist continuous_const
     · refine' (tendsto.sub_const _ _).abs
       refine' tendsto.div tendsto_const_nhds _ I.ne'
       exact ((continuous_inf_dist_pt _).comp continuous_subtype_val).Tendsto _
@@ -444,10 +438,8 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
     ⟨_, A.tendsto_lim⟩
   suffices xs : x ∈ s
   · refine' ⟨⟨x, xs⟩, _⟩
-    have L : tendsto (fun n => (id ⟨(u n).1, (u n).2⟩ : s)) at_top (𝓝 ⟨x, xs⟩) :=
-      by
-      apply embedding_subtype_coe.tendsto_nhds_iff.2
-      exact xlim
+    have L : tendsto (fun n => (id ⟨(u n).1, (u n).2⟩ : s)) at_top (𝓝 ⟨x, xs⟩) := by
+      apply embedding_subtype_coe.tendsto_nhds_iff.2; exact xlim
     convert((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
     ext1 n
     simp [complete_copy_id_homeo]
@@ -455,10 +447,8 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
     by
     refine' ⟨(1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0, fun n => _⟩
     calc
-      1 / inf_dist (u n).val (sᶜ) ≤ dist (1 / inf_dist (u n).val (sᶜ)) 0 :=
-        by
-        rw [Real.dist_0_eq_abs]
-        exact le_abs_self _
+      1 / inf_dist (u n).val (sᶜ) ≤ dist (1 / inf_dist (u n).val (sᶜ)) 0 := by
+        rw [Real.dist_0_eq_abs]; exact le_abs_self _
       _ ≤
           dist (1 / inf_dist (u n).1 (sᶜ)) (1 / inf_dist (u 0).1 (sᶜ)) +
             dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
@@ -477,10 +467,8 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
   have I : ∀ n, 1 / C ≤ inf_dist (u n).1 (sᶜ) :=
     by
     intro n
-    have : 0 < inf_dist (u n).val (sᶜ) :=
-      by
-      apply (hs.is_closed_compl.not_mem_iff_inf_dist_pos h's).1
-      simp
+    have : 0 < inf_dist (u n).val (sᶜ) := by
+      apply (hs.is_closed_compl.not_mem_iff_inf_dist_pos h's).1; simp
     rw [div_le_iff' Cpos]
     exact (div_le_iff this).1 (hC n).le
   have I' : 1 / C ≤ inf_dist x (sᶜ) :=
@@ -556,15 +544,11 @@ theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α
     refine' ⟨f.symm ⁻¹' u, _, by simp only [Equiv.symm_symm, Equiv.symm_preimage_preimage]⟩
     refine' isOpen_sum_iff.2 ⟨_, _⟩
     · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_val hu
-      have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u :=
-        by
-        ext x
+      have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u := by ext x;
         simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inl]
       rwa [this]
     · have : IsOpen ((coe : t → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_val hu
-      have : Sum.inr ⁻¹' (⇑f.symm ⁻¹' u) = (coe : t → α) ⁻¹' u :=
-        by
-        ext x
+      have : Sum.inr ⁻¹' (⇑f.symm ⁻¹' u) = (coe : t → α) ⁻¹' u := by ext x;
         simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inr]
       rwa [this]
   · have : is_closed[t'] (g ⁻¹' range (Sum.inl : s → Sum s t)) :=

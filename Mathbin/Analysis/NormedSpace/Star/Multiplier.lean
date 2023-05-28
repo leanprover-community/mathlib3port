@@ -110,10 +110,7 @@ variable {𝕜 A}
 Case conversion may be inaccurate. Consider using '#align double_centralizer.range_to_prod DoubleCentralizer.range_toProdₓ'. -/
 theorem range_toProd :
     Set.range toProd = { lr : (A →L[𝕜] A) × _ | ∀ x y, lr.2 x * y = x * lr.1 y } :=
-  Set.ext fun x =>
-    ⟨by
-      rintro ⟨a, rfl⟩
-      exact a.central, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
+  Set.ext fun x => ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
 #align double_centralizer.range_to_prod DoubleCentralizer.range_toProd
 
 instance : Add 𝓜(𝕜, A)
@@ -438,9 +435,7 @@ Case conversion may be inaccurate. Consider using '#align double_centralizer.ran
 theorem range_toProdMulOpposite :
     Set.range toProdMulOpposite = { lr : (A →L[𝕜] A) × _ | ∀ x y, unop lr.2 x * y = x * lr.1 y } :=
   Set.ext fun x =>
-    ⟨by
-      rintro ⟨a, rfl⟩
-      exact a.central, fun hx => ⟨⟨(x.1, unop x.2), hx⟩, Prod.ext rfl rfl⟩⟩
+    ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨(x.1, unop x.2), hx⟩, Prod.ext rfl rfl⟩⟩
 #align double_centralizer.range_to_prod_mul_opposite DoubleCentralizer.range_toProdMulOpposite
 
 /-- The ring structure is inherited as the pullback under the injective map
@@ -745,8 +740,7 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
             simpa only [sqrt_sq, sqrt_mul] using fun b =>
               sqrt_le_sqrt_iff.mpr ((h b).trans (h1 b))))
     convert rpow_le_rpow this two_pos.le
-    · simp only [rpow_two, div_pow, sq_sqrt]
-      simp only [sq, mul_self_div_self]
+    · simp only [rpow_two, div_pow, sq_sqrt]; simp only [sq, mul_self_div_self]
     · simp only [rpow_two, sq_sqrt]
   have h1 : ∀ b, ‖a.fst b‖₊ ^ 2 ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ :=
     by

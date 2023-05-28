@@ -142,9 +142,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
                 ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
       by
-      congr
-      ext (i j)
-      rw [Fin.succAbove_zero, Matrix.cons_val_succ, Fin.val_succ, mul_comm]
+      congr ; ext (i j); rw [Fin.succAbove_zero, Matrix.cons_val_succ, Fin.val_succ, mul_comm]
       exact (geom_sum₂_mul (v i.succ) (v 0) (j + 1 : ℕ)).symm
     _ =
         (∏ i : Fin n, v (Fin.succ i) - v 0) *
@@ -218,10 +216,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zeroₓ'. -/
 theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
     {f v : Fin n → R} (hf : Function.Injective f) (hfv : ∀ j, (∑ i, v i * f j ^ (i : ℕ)) = 0) :
-    v = 0 := by
-  apply eq_zero_of_forall_index_sum_pow_mul_eq_zero hf
-  simp_rw [mul_comm]
-  exact hfv
+    v = 0 := by apply eq_zero_of_forall_index_sum_pow_mul_eq_zero hf; simp_rw [mul_comm]; exact hfv
 #align matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero
 
 /- warning: matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero -> Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero is a dubious translation:

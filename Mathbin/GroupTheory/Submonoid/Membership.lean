@@ -97,11 +97,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list_prod_mem list_prod_memₓ'. -/
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[to_additive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.Prod ∈ S :=
-  by
-  lift l to List S using hl
-  rw [← coe_list_prod]
-  exact l.prod.coe_prop
+theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.Prod ∈ S := by
+  lift l to List S using hl; rw [← coe_list_prod]; exact l.prod.coe_prop
 #align list_prod_mem list_prod_mem
 #align list_sum_mem list_sum_mem
 
@@ -110,11 +107,8 @@ theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.Prod ∈ S :=
 @[to_additive
       "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (m : Multiset M)
-    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S :=
-  by
-  lift m to Multiset S using hm
-  rw [← coe_multiset_prod]
-  exact m.prod.coe_prop
+    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S := by lift m to Multiset S using hm;
+  rw [← coe_multiset_prod]; exact m.prod.coe_prop
 #align multiset_prod_mem multiset_prod_mem
 #align multiset_sum_mem multiset_sum_mem
 -/
@@ -187,11 +181,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.list_prod_mem Submonoid.list_prod_memₓ'. -/
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[to_additive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ s) : l.Prod ∈ s :=
-  by
-  lift l to List s using hl
-  rw [← coe_list_prod]
-  exact l.prod.coe_prop
+theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ s) : l.Prod ∈ s := by
+  lift l to List s using hl; rw [← coe_list_prod]; exact l.prod.coe_prop
 #align submonoid.list_prod_mem Submonoid.list_prod_mem
 #align add_submonoid.list_sum_mem AddSubmonoid.list_sum_mem
 
@@ -205,11 +196,8 @@ Case conversion may be inaccurate. Consider using '#align submonoid.multiset_pro
 @[to_additive
       "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoid M] (S : Submonoid M) (m : Multiset M)
-    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S :=
-  by
-  lift m to Multiset S using hm
-  rw [← coe_multiset_prod]
-  exact m.prod.coe_prop
+    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S := by lift m to Multiset S using hm;
+  rw [← coe_multiset_prod]; exact m.prod.coe_prop
 #align submonoid.multiset_prod_mem Submonoid.multiset_prod_mem
 #align add_submonoid.multiset_sum_mem AddSubmonoid.multiset_sum_mem
 
@@ -606,11 +594,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.induction_of
 @[elab_as_elim, to_additive]
 theorem induction_of_closure_eq_top_left {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (H1 : p 1) (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) : p x :=
-  closure_induction_left
-    (by
-      rw [hs]
-      exact mem_top _)
-    H1 Hmul
+  closure_induction_left (by rw [hs]; exact mem_top _) H1 Hmul
 #align submonoid.induction_of_closure_eq_top_left Submonoid.induction_of_closure_eq_top_left
 #align add_submonoid.induction_of_closure_eq_top_left AddSubmonoid.induction_of_closure_eq_top_left
 
@@ -638,11 +622,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.induction_of
 @[elab_as_elim, to_additive]
 theorem induction_of_closure_eq_top_right {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
     (H1 : p 1) (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) : p x :=
-  closure_induction_right
-    (by
-      rw [hs]
-      exact mem_top _)
-    H1 Hmul
+  closure_induction_right (by rw [hs]; exact mem_top _) H1 Hmul
 #align submonoid.induction_of_closure_eq_top_right Submonoid.induction_of_closure_eq_top_right
 #align add_submonoid.induction_of_closure_eq_top_right AddSubmonoid.induction_of_closure_eq_top_right
 
@@ -687,9 +667,7 @@ theorem mem_powers_iff (x z : M) : x ∈ powers z ↔ ∃ n : ℕ, z ^ n = x :=
 #align submonoid.mem_powers_iff Submonoid.mem_powers_iff
 
 #print Submonoid.powers_eq_closure /-
-theorem powers_eq_closure (n : M) : powers n = closure {n} :=
-  by
-  ext
+theorem powers_eq_closure (n : M) : powers n = closure {n} := by ext;
   exact mem_closure_singleton.symm
 #align submonoid.powers_eq_closure Submonoid.powers_eq_closure
 -/
@@ -866,11 +844,8 @@ theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [SMul
     (hs : ∀ x ∈ s, ∀ (y : N) (z : α), (x • y) • z = x • y • z) : IsScalarTower M N α :=
   by
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
-  · intro y z
-    rw [one_smul, one_smul]
-  · clear x
-    intro x hx x' hx' y z
-    rw [mul_smul, mul_smul, hs x hx, hx']
+  · intro y z; rw [one_smul, one_smul]
+  · clear x; intro x hx x' hx' y z; rw [mul_smul, mul_smul, hs x hx, hx']
 #align is_scalar_tower.of_mclosure_eq_top IsScalarTower.of_mclosure_eq_top
 #align vadd_assoc_class.of_mclosure_eq_top VAddAssocClass.of_mclosure_eq_top
 
@@ -886,11 +861,8 @@ theorem SMulCommClass.of_mclosure_eq_top {N α} [Monoid M] [SMul N α] [MulActio
     SMulCommClass M N α :=
   by
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
-  · intro y z
-    rw [one_smul, one_smul]
-  · clear x
-    intro x hx x' hx' y z
-    rw [mul_smul, mul_smul, hx', hs x hx]
+  · intro y z; rw [one_smul, one_smul]
+  · clear x; intro x hx x' hx' y z; rw [mul_smul, mul_smul, hx', hs x hx]
 #align smul_comm_class.of_mclosure_eq_top SMulCommClass.of_mclosure_eq_top
 #align vadd_comm_class.of_mclosure_eq_top VAddCommClass.of_mclosure_eq_top
 

@@ -101,10 +101,7 @@ def atMostOneFixedPointEquivSum_derangements [DecidableEq α] (a : α) :
         Sum { f : Perm α // fixedPoints f ⊆ {a} ∧ a ∈ fixedPoints f }
           { f : Perm α // fixedPoints f ⊆ {a} ∧ a ∉ fixedPoints f } :=
       by
-      refine' Equiv.sumCongr _ _ <;>
-        · convert subtype_subtype_equiv_subtype_inter _ _
-          ext f
-          rfl
+      refine' Equiv.sumCongr _ _ <;> · convert subtype_subtype_equiv_subtype_inter _ _; ext f; rfl
     _ ≃ Sum { f : Perm α // fixedPoints f = {a} } { f : Perm α // fixedPoints f = ∅ } :=
       by
       refine' Equiv.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
@@ -168,9 +165,7 @@ theorem RemoveNone.fiber_some (a : α) :
     apply_fun some  at x_fixed
     cases' Fx : F (some x) with y
     · rwa [remove_none_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed
-    · exfalso
-      rw [remove_none_some F ⟨y, Fx⟩] at x_fixed
-      exact F_derangement _ x_fixed
+    · exfalso; rw [remove_none_some F ⟨y, Fx⟩] at x_fixed; exact F_derangement _ x_fixed
   · intro h_opfp
     use equiv.perm.decompose_option.symm (some a, f)
     constructor
@@ -181,8 +176,7 @@ theorem RemoveNone.fiber_some (a : α) :
       · simp
       simp only [Equiv.optionCongr_apply, Option.map_some']
       by_cases x_vs_a : x = a
-      · rw [x_vs_a, swap_apply_right]
-        apply Option.some_ne_none
+      · rw [x_vs_a, swap_apply_right]; apply Option.some_ne_none
       have ne_1 : some x ≠ none := Option.some_ne_none _
       have ne_2 : some x ≠ some a := (Option.some_injective α).ne_iff.mpr x_vs_a
       rw [swap_apply_of_ne_of_ne ne_1 ne_2, (Option.some_injective α).ne_iff]
@@ -204,10 +198,8 @@ variable [DecidableEq α]
 def derangementsOptionEquivSigmaAtMostOneFixedPoint :
     derangements (Option α) ≃ Σa : α, { f : Perm α | fixedPoints f ⊆ {a} } :=
   by
-  have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False :=
-    by
-    rw [equiv.remove_none.fiber_none]
-    exact IsEmpty.false
+  have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False := by
+    rw [equiv.remove_none.fiber_none]; exact IsEmpty.false
   calc
     derangements (Option α) ≃ Equiv.Perm.decomposeOption '' derangements (Option α) :=
       Equiv.image _ _

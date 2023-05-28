@@ -66,10 +66,7 @@ theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCo
     0 ≤ ∏ x in s, f x :=
   calc
     0 ≤ ∏ x in s, (if f x ≤ 0 then (-1 : β) else 1) * f x :=
-      Finset.prod_nonneg fun x _ => by
-        split_ifs with hx hx
-        · simp [hx]
-        simp at hx⊢
+      Finset.prod_nonneg fun x _ => by split_ifs with hx hx; · simp [hx]; simp at hx⊢;
         exact le_of_lt hx
     _ = _ := by
       rw [Finset.prod_mul_distrib, Finset.prod_ite, Finset.prod_const_one, mul_one,
@@ -157,8 +154,7 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
           mul_ne_zero two_ne_zero h₀).deriv using
       1
     nth_rw 3 [← mul_self_sqrt hx.le]
-    field_simp
-    ring
+    field_simp; ring
 #align deriv2_sqrt_mul_log deriv2_sqrt_mul_log
 
 theorem strictConcaveOn_sqrt_mul_log_Ioi : StrictConcaveOn ℝ (Set.Ioi 1) fun x => sqrt x * log x :=

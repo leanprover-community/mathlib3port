@@ -62,14 +62,8 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
   map t₁ t₂ h :=
     { f := fun i => (C.pt i).map h
       comm' := fun i j hij => NatTrans.naturality _ _ }
-  map_id' t := by
-    ext i
-    dsimp
-    rw [(C.X i).map_id]
-  map_comp' t₁ t₂ t₃ h₁ h₂ := by
-    ext i
-    dsimp
-    rw [functor.map_comp]
+  map_id' t := by ext i; dsimp; rw [(C.X i).map_id]
+  map_comp' t₁ t₂ t₃ h₁ h₂ := by ext i; dsimp; rw [functor.map_comp]
 #align homological_complex.as_functor HomologicalComplex.asFunctor
 
 /- warning: homological_complex.complex_of_functors_to_functor_to_complex -> HomologicalComplex.complexOfFunctorsToFunctorToComplex is a dubious translation:
@@ -89,9 +83,7 @@ def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
     { app := fun t =>
         { f := fun i => (f.f i).app t
           comm' := fun i j w => NatTrans.congr_app (f.comm i j) t }
-      naturality' := fun t t' g => by
-        ext i
-        exact (f.f i).naturality g }
+      naturality' := fun t t' g => by ext i; exact (f.f i).naturality g }
 #align homological_complex.complex_of_functors_to_functor_to_complex HomologicalComplex.complexOfFunctorsToFunctorToComplex
 
 end HomologicalComplex

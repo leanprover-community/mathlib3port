@@ -62,8 +62,7 @@ theorem RespectsIso.cancel_right_isIso (hP : RespectsIso @P) {R S T : CommRingCa
     (g : S ⟶ T) [IsIso g] : P (f ≫ g) ↔ P f :=
   ⟨fun H => by
     convert hP.1 (f ≫ g) (as_iso g).symm.commRingCatIsoToRingEquiv H
-    change f = f ≫ g ≫ inv g
-    simp, hP.1 f (asIso g).commRingCatIsoToRingEquiv⟩
+    change f = f ≫ g ≫ inv g; simp, hP.1 f (asIso g).commRingCatIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_isIso
 
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _}
@@ -106,14 +105,8 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
     (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) :
     RingHom.RespectsIso @P := by
   constructor
-  · introv H
-    skip
-    apply hP
-    exacts[H, hP' e]
-  · introv H
-    skip
-    apply hP
-    exacts[hP' e, H]
+  · introv H; skip; apply hP; exacts[H, hP' e]
+  · introv H; skip; apply hP; exacts[hP' e, H]
 #align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respectsIso
 
 end StableUnderComposition

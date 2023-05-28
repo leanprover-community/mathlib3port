@@ -104,8 +104,7 @@ theorem primorial_le_4_pow (n : ℕ) : n# ≤ 4 ^ n :=
   induction' n using Nat.strong_induction_on with n ihn
   cases n; · rfl
   rcases n.even_or_odd with (⟨m, rfl⟩ | ho)
-  · rcases m.eq_zero_or_pos with (rfl | hm)
-    · decide
+  · rcases m.eq_zero_or_pos with (rfl | hm); · decide
     calc
       (m + m + 1)# = (m + 1 + m)# := by rw [add_right_comm]
       _ ≤ (m + 1)# * choose (m + 1 + m) (m + 1) := (primorial_add_le m.le_succ)

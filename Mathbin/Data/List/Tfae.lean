@@ -76,8 +76,7 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
   by
   induction' l with c l IH generalizing a b <;>
     simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, chain.nil] at *
-  · intro a b
-    exact Iff.intro a b
+  · intro a b; exact Iff.intro a b
   rintro ⟨ab, ⟨bc, ch⟩⟩ la
   have := IH ⟨bc, ch⟩ (ab ∘ la)
   exact ⟨⟨ab, la ∘ (this.2 c (Or.inl rfl) _ (ilast'_mem _ _)).1 ∘ bc⟩, this⟩

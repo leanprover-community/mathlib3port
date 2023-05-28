@@ -93,9 +93,7 @@ instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
       map := fun j j' φ =>
         equalizer.lift (limits.equalizer.ι (𝟙 _) (p.app j) ≫ F.map φ)
           (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id])
-      map_id' := fun j => by
-        ext
-        simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp]
+      map_id' := fun j => by ext; simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp]
       map_comp' := fun j j' j'' φ φ' => by
         ext
         simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
@@ -103,11 +101,7 @@ instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
     { app := fun j => equalizer.ι _ _
       naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
   let e : F ⟶ Y :=
-    { app := fun j =>
-        equalizer.lift (p.app j)
-          (by
-            rw [comp_id]
-            exact (congr_app hp j).symm)
+    { app := fun j => equalizer.lift (p.app j) (by rw [comp_id]; exact (congr_app hp j).symm)
       naturality' := fun j j' φ => by
         ext
         simp only [assoc, equalizer.lift_ι, nat_trans.naturality, equalizer.lift_ι_assoc] }
@@ -187,17 +181,11 @@ instance : Full (karoubiFunctorCategoryEmbedding J C)
             simp only [comp_f] at h
             dsimp [karoubi_functor_category_embedding] at h
             erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] }
-      comm := by
-        ext j
-        exact (f.app j).comm }
-  witness' P Q f := by
-    ext j
-    rfl
+      comm := by ext j; exact (f.app j).comm }
+  witness' P Q f := by ext j; rfl
 
 instance : Faithful (karoubiFunctorCategoryEmbedding J C)
-    where map_injective' P Q f f' h := by
-    ext j
-    exact hom_ext.mp (congr_app h j)
+    where map_injective' P Q f f' h := by ext j; exact hom_ext.mp (congr_app h j)
 
 /- warning: category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding -> CategoryTheory.Idempotents.toKaroubi_comp_karoubiFunctorCategoryEmbedding is a dubious translation:
 <too large>

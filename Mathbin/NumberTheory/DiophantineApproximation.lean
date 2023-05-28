@@ -119,10 +119,7 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
       ⟨le_sub_iff_add_le.mpr _, sub_le_iff_le_add.mpr <| le_of_lt <| (hfu m).trans <| lt_one_add _⟩
     simpa only [neg_add_cancel_comm_assoc] using hf'
   · simp_rw [not_exists] at H
-    have hD : (Ico (0 : ℤ) n).card < D.card :=
-      by
-      rw [card_Icc, card_Ico]
-      exact lt_add_one n
+    have hD : (Ico (0 : ℤ) n).card < D.card := by rw [card_Icc, card_Ico]; exact lt_add_one n
     have hfu' : ∀ m, f m ≤ n := fun m => lt_add_one_iff.mp (floor_lt.mpr (by exact_mod_cast hfu m))
     have hwd : ∀ m : ℤ, m ∈ D → f m ∈ Ico (0 : ℤ) n := fun x hx =>
       mem_Ico.mpr
@@ -137,10 +134,7 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
       ⟨⌊ξ * y⌋ - ⌊ξ * x⌋, y - x, sub_pos_of_lt x_lt_y,
         sub_le_iff_le_add.mpr <| le_add_of_le_of_nonneg (mem_Icc.mp hy).2 (mem_Icc.mp hx).1, _⟩
     convert_to|fract (ξ * y) * (n + 1) - fract (ξ * x) * (n + 1)| ≤ 1
-    · congr
-      push_cast
-      simp only [fract]
-      ring
+    · congr ; push_cast ; simp only [fract]; ring
     exact (abs_sub_lt_one_of_floor_eq_floor hxy.symm).le
 #align real.exists_int_int_abs_mul_sub_le Real.exists_int_int_abs_mul_sub_le
 
@@ -165,9 +159,7 @@ theorem exists_rat_abs_sub_le_and_den_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
   by
   obtain ⟨j, k, hk₀, hk₁, h⟩ := exists_int_int_abs_mul_sub_le ξ n_pos
   have hk₀' : (0 : ℝ) < k := int.cast_pos.mpr hk₀
-  have hden : ((j / k : ℚ).den : ℤ) ≤ k :=
-    by
-    convert le_of_dvd hk₀ (Rat.den_dvd j k)
+  have hden : ((j / k : ℚ).den : ℤ) ≤ k := by convert le_of_dvd hk₀ (Rat.den_dvd j k);
     exact Rat.coe_int_div_eq_divInt
   refine' ⟨j / k, _, nat.cast_le.mp (hden.trans hk₁)⟩
   rw [← div_div, le_div_iff (nat.cast_pos.mpr <| Rat.pos _ : (0 : ℝ) < _)]
@@ -427,9 +419,7 @@ def ContfracLegendre.Ass (ξ : ℝ) (u v : ℤ) : Prop :=
 -- ### Auxiliary lemmas
 -- This saves a few lines below, as it is frequently needed.
 private theorem aux₀ {v : ℤ} (hv : 0 < v) : (0 : ℝ) < v ∧ (0 : ℝ) < 2 * v - 1 :=
-  ⟨cast_pos.mpr hv, by
-    norm_cast
-    linarith⟩
+  ⟨cast_pos.mpr hv, by norm_cast; linarith⟩
 
 -- In the following, we assume that `ass ξ u v` holds and `v ≥ 2`.
 variable {ξ : ℝ} {u v : ℤ} (hv : 2 ≤ v) (h : ContfracLegendre.Ass ξ u v)
@@ -513,28 +503,18 @@ private theorem aux₃ :
   have H : (2 * u' - 1 : ℝ) ≤ (2 * v - 1) * fract ξ :=
     by
     replace h := (abs_lt.mp h).1
-    have : (2 * (v : ℝ) - 1) * (-(v * (2 * v - 1))⁻¹ + u' / v) = 2 * u' - (1 + u') / v :=
-      by
-      field_simp [Hv.ne', Hv'.ne']
-      ring
+    have : (2 * (v : ℝ) - 1) * (-(v * (2 * v - 1))⁻¹ + u' / v) = 2 * u' - (1 + u') / v := by
+      field_simp [Hv.ne', Hv'.ne'] ; ring
     rw [hu'ℝ, add_div, mul_div_cancel _ Hv.ne', ← sub_sub, sub_right_comm, self_sub_floor,
       lt_sub_iff_add_lt, ← mul_lt_mul_left Hv', this] at h
     refine' LE.le.trans _ h.le
     rw [sub_le_sub_iff_left, div_le_one Hv, add_comm]
     exact_mod_cast huv
   have help₁ : ∀ {a b c : ℝ}, a ≠ 0 → b ≠ 0 → c ≠ 0 → |a⁻¹ - b / c| = |(a - c / b) * (b / c / a)| :=
-    by
-    intros
-    rw [abs_sub_comm]
-    congr 1
-    field_simp
-    ring
+    by intros ; rw [abs_sub_comm]; congr 1; field_simp; ring
   have help₂ :
-    ∀ {a b c d : ℝ}, a ≠ 0 → b ≠ 0 → c ≠ 0 → d ≠ 0 → (b * c)⁻¹ * (b / d / a) = (d * c * a)⁻¹ :=
-    by
-    intros
-    field_simp
-    ring
+    ∀ {a b c d : ℝ}, a ≠ 0 → b ≠ 0 → c ≠ 0 → d ≠ 0 → (b * c)⁻¹ * (b / d / a) = (d * c * a)⁻¹ := by
+    intros ; field_simp; ring
   calc
     |(fract ξ)⁻¹ - v / u'| = |(fract ξ - u' / v) * (v / u' / fract ξ)| :=
       help₁ hξ₀.ne' Hv.ne' Hu.ne'
@@ -553,14 +533,9 @@ private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋
   · rw [sub_eq_add_neg, ← neg_mul, isCoprime_comm, IsCoprime.add_mul_right_left_iff]
     exact h.1
   · obtain ⟨hv₀, hv₀'⟩ := aux₀ (zero_lt_two.trans_le hv)
-    have Hv : (v * (2 * v - 1) : ℝ)⁻¹ + v⁻¹ = 2 / (2 * v - 1) :=
-      by
-      field_simp [hv₀.ne', hv₀'.ne']
+    have Hv : (v * (2 * v - 1) : ℝ)⁻¹ + v⁻¹ = 2 / (2 * v - 1) := by field_simp [hv₀.ne', hv₀'.ne'] ;
       ring
-    have Huv : (u / v : ℝ) = ⌊ξ⌋ + v⁻¹ :=
-      by
-      rw [sub_eq_iff_eq_add'.mp huv]
-      field_simp [hv₀.ne']
+    have Huv : (u / v : ℝ) = ⌊ξ⌋ + v⁻¹ := by rw [sub_eq_iff_eq_add'.mp huv]; field_simp [hv₀.ne']
     have h' := (abs_sub_lt_iff.mp h.2.2).1
     rw [Huv, ← sub_sub, sub_lt_iff_lt_add, self_sub_floor, Hv] at h'
     rwa [lt_sub_iff_add_lt', (by ring : (v : ℝ) + -(1 / 2) = (2 * v - 1) / 2),
@@ -609,9 +584,7 @@ theorem exists_rat_eq_convergent' {v : ℕ} (h : ContfracLegendre.Ass ξ u v) :
         simp [convergent, hξ₁, hξ₂, cast_sub, cast_one]
   · obtain ⟨huv₀, huv₁⟩ := aux₂ (nat.cast_le.mpr ht) h
     have Hv : (v : ℚ) ≠ 0 := (nat.cast_pos.mpr (zero_lt_one.trans ht)).ne'
-    have huv₁' : (u - ⌊ξ⌋ * v).toNat < v := by
-      zify
-      rwa [to_nat_of_nonneg huv₀.le]
+    have huv₁' : (u - ⌊ξ⌋ * v).toNat < v := by zify; rwa [to_nat_of_nonneg huv₀.le]
     have inv : contfrac_legendre.ass (fract ξ)⁻¹ v (u - ⌊ξ⌋ * ↑v).toNat :=
       (to_nat_of_nonneg huv₀.le).symm ▸ invariant (nat.cast_le.mpr ht) h
     obtain ⟨n, hn⟩ := ih (u - ⌊ξ⌋ * v).toNat huv₁' inv
@@ -637,12 +610,7 @@ theorem exists_rat_eq_convergent {q : ℚ} (h : |ξ - q| < 1 / (2 * q.den ^ 2)) 
     have hq₂ : (0 : ℝ) < 2 * (q.denom * q.denom) := mul_pos zero_lt_two (mul_pos hq₀ hq₀)
     rw [← coe_coe] at *
     rw [(by norm_cast : (q.num / q.denom : ℝ) = (q.num / q.denom : ℚ)), Rat.num_div_den]
-    exact
-      h.trans
-        (by
-          rw [← one_div, sq, one_div_lt_one_div hq₂ hq₁, ← sub_pos]
-          ring_nf
-          exact hq₀)
+    exact h.trans (by rw [← one_div, sq, one_div_lt_one_div hq₂ hq₁, ← sub_pos]; ring_nf; exact hq₀)
 #align real.exists_rat_eq_convergent Real.exists_rat_eq_convergent
 
 /-- The main result, *Legendre's Theorem* on rational approximation:

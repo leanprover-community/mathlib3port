@@ -44,8 +44,7 @@ def Quotient.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S
       ⟦fun j h => if e : j = i then by rw [e] <;> exact a else l _ (h.resolve_left e)⟧
     refine' fun a₁ l₁ a₂ l₂ h₁ h₂ => Quotient.sound fun j h => _
     by_cases e : j = i <;> simp [e]
-    · subst j
-      exact h₁
+    · subst j; exact h₁
     · exact h₂ _ _
 #align quotient.fin_choice_aux Quotient.finChoiceAux
 -/
@@ -97,13 +96,10 @@ Case conversion may be inaccurate. Consider using '#align quotient.fin_choice_eq
 theorem Quotient.finChoice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι → Type _}
     [∀ i, Setoid (α i)] (f : ∀ i, α i) : (Quotient.finChoice fun i => ⟦f i⟧) = ⟦f⟧ :=
   by
-  let q
-  swap
-  change Quotient.liftOn q _ _ = _
+  let q; swap; change Quotient.liftOn q _ _ = _
   have : q = ⟦fun i h => f i⟧ := by
     dsimp only [q]
     exact Quotient.inductionOn (@Finset.univ ι _).1 fun l => Quotient.finChoiceAux_eq _ _
-  simp [this]
-  exact Setoid.refl _
+  simp [this]; exact Setoid.refl _
 #align quotient.fin_choice_eq Quotient.finChoice_eq
 

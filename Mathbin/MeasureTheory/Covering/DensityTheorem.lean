@@ -131,8 +131,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
   · filter_upwards [xmem, δlim self_mem_nhdsWithin]with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot
-    swap
-    · simp [not_ne_bot.1 h]
+    swap; · simp [not_ne_bot.1 h]
     have hK : 0 ≤ K := by
       skip
       rcases(xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
@@ -140,8 +139,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
       exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
     have δpos := eventually_mem_of_tendsto_nhdsWithin δlim
     replace δlim := tendsto_nhds_of_tendsto_nhdsWithin δlim
-    replace hK : 0 < K + 1
-    · linarith
+    replace hK : 0 < K + 1; · linarith
     apply (((metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).And δpos).And xmem).mono
     rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
     replace hjε : (K + 1) * δ j < ε := by

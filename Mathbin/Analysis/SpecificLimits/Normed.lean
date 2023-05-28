@@ -211,35 +211,29 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
     ⟨(neg_lt_zero.2 (hx.1.trans_lt hx.2)).trans_le hx.1, hx.2⟩
   have B : Ioo 0 R ⊆ Ioo (-R) R := subset.trans Ioo_subset_Ico_self A
   -- First we prove that 1-4 are equivalent using 2 → 3 → 4, 1 → 3, and 2 → 1
-  tfae_have 1 → 3
+  tfae_have 1 → 3;
   exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsBigO⟩
-  tfae_have 2 → 1
-  exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
+  tfae_have 2 → 1; exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
   tfae_have 3 → 2
   · rintro ⟨a, ha, H⟩
     rcases exists_between (abs_lt.2 ha) with ⟨b, hab, hbR⟩
     exact
       ⟨b, ⟨(abs_nonneg a).trans_lt hab, hbR⟩,
         H.trans_is_o (isLittleO_pow_pow_of_abs_lt_left (hab.trans_le (le_abs_self b)))⟩
-  tfae_have 2 → 4
-  exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsBigO⟩
-  tfae_have 4 → 3
-  exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
+  tfae_have 2 → 4; exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsBigO⟩
+  tfae_have 4 → 3; exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
   -- Add 5 and 6 using 4 → 6 → 5 → 3
   tfae_have 4 → 6
   · rintro ⟨a, ha, H⟩
     rcases bound_of_is_O_nat_at_top H with ⟨C, hC₀, hC⟩
     refine' ⟨a, ha, C, hC₀, fun n => _⟩
     simpa only [Real.norm_eq_abs, abs_pow, abs_of_nonneg ha.1.le] using hC (pow_ne_zero n ha.1.ne')
-  tfae_have 6 → 5
-  exact fun ⟨a, ha, C, H₀, H⟩ => ⟨a, ha.2, C, Or.inl H₀, H⟩
+  tfae_have 6 → 5; exact fun ⟨a, ha, C, H₀, H⟩ => ⟨a, ha.2, C, Or.inl H₀, H⟩
   tfae_have 5 → 3
   · rintro ⟨a, ha, C, h₀, H⟩
     rcases sign_cases_of_C_mul_pow_nonneg fun n => (abs_nonneg _).trans (H n) with
       (rfl | ⟨hC₀, ha₀⟩)
-    · obtain rfl : f = 0 := by
-        ext n
-        simpa using H n
+    · obtain rfl : f = 0 := by ext n; simpa using H n
       simp only [lt_irrefl, false_or_iff] at h₀
       exact ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, is_O_zero _ _⟩
     exact
@@ -250,8 +244,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
   · rintro ⟨a, ha, H⟩
     refine' ⟨a, ha, (H.def zero_lt_one).mono fun n hn => _⟩
     rwa [Real.norm_eq_abs, Real.norm_eq_abs, one_mul, abs_pow, abs_of_pos ha.1] at hn
-  tfae_have 8 → 7
-  exact fun ⟨a, ha, H⟩ => ⟨a, ha.2, H⟩
+  tfae_have 8 → 7; exact fun ⟨a, ha, H⟩ => ⟨a, ha.2, H⟩
   tfae_have 7 → 3
   · rintro ⟨a, ha, H⟩
     have : 0 ≤ a := nonneg_of_eventually_pow_nonneg (H.mono fun n => (abs_nonneg _).trans)
@@ -280,8 +273,7 @@ theorem isLittleO_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k :
   conv in (r' ^ _) ^ _ => rw [← pow_mul, mul_comm, pow_mul]
   suffices : ∀ n : ℕ, ‖(n : R)‖ ≤ (r' - 1)⁻¹ * ‖(1 : R)‖ * ‖r' ^ n‖
   exact (is_O_of_le' _ this).pow _
-  intro n
-  rw [mul_right_comm]
+  intro n; rw [mul_right_comm]
   refine' n.norm_cast_le.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))
   simpa [div_eq_inv_mul, Real.norm_eq_abs, abs_of_nonneg h0] using n.cast_le_pow_div_sub h1
 #align is_o_pow_const_const_pow_of_one_lt isLittleO_pow_const_const_pow_of_one_lt
@@ -430,9 +422,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_sum_geometric_of_norm_lt_1 hasSum_geometric_of_norm_lt_1ₓ'. -/
 theorem hasSum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : HasSum (fun n : ℕ => ξ ^ n) (1 - ξ)⁻¹ :=
   by
-  have xi_ne_one : ξ ≠ 1 := by
-    contrapose! h
-    simp [h]
+  have xi_ne_one : ξ ≠ 1 := by contrapose! h; simp [h]
   have A : tendsto (fun n => (ξ ^ n - 1) * (ξ - 1)⁻¹) at_top (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
     ((tendsto_pow_atTop_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds
   rw [hasSum_iff_tendsto_nat_of_summable_norm]
@@ -554,9 +544,7 @@ theorem hasSum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜]
     simpa using summable_pow_mul_geometric_of_norm_lt_1 1 hr
   have B : HasSum (pow r : ℕ → 𝕜) (1 - r)⁻¹ := hasSum_geometric_of_norm_lt_1 hr
   refine' A.has_sum_iff.2 _
-  have hr' : r ≠ 1 := by
-    rintro rfl
-    simpa [lt_irrefl] using hr
+  have hr' : r ≠ 1 := by rintro rfl; simpa [lt_irrefl] using hr
   set s : 𝕜 := ∑' n : ℕ, n * r ^ n
   calc
     s = (1 - r) * s / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm
@@ -937,10 +925,7 @@ theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone
     CauchySeq fun n => ∑ i in range (n + 1), f i • z i :=
   by
   have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg <| hfa hab
-  have hf0' : tendsto (fun n => -f n) at_top (𝓝 0) :=
-    by
-    convert hf0.neg
-    norm_num
+  have hf0' : tendsto (fun n => -f n) at_top (𝓝 0) := by convert hf0.neg; norm_num
   convert(hfa'.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
   funext
   simp
@@ -952,10 +937,8 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat), LE.le.{0} Real Real.instLEReal (Norm.norm.{0} Real Real.norm (Finset.sum.{0, 0} Real Nat Real.instAddCommMonoidReal (Finset.range n) (fun (i : Nat) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) i))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
 Case conversion may be inaccurate. Consider using '#align norm_sum_neg_one_pow_le norm_sum_neg_one_pow_leₓ'. -/
-theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i‖ ≤ 1 :=
-  by
-  rw [neg_one_geom_sum]
-  split_ifs <;> norm_num
+theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i‖ ≤ 1 := by
+  rw [neg_one_geom_sum]; split_ifs <;> norm_num
 #align norm_sum_neg_one_pow_le norm_sum_neg_one_pow_le
 
 /- warning: monotone.cauchy_seq_alternating_series_of_tendsto_zero -> Monotone.cauchySeq_alternating_series_of_tendsto_zero is a dubious translation:

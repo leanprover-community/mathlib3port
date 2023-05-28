@@ -161,8 +161,7 @@ theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
     simp only [← place_apply, ← infinite_place.coe_mk, mem_closedBall_zero_iff, norm_le_iff]
     exact fun x => le_iff_le x r
   convert(embeddings.finite_of_norm_le K ℂ r).image (canonical_embedding K)
-  ext
-  constructor
+  ext; constructor
   · rintro ⟨⟨_, ⟨x, rfl⟩, rfl⟩, hx2⟩
     exact ⟨x, ⟨SetLike.coe_mem x, (HEq x).mp hx2⟩, rfl⟩
   · rintro ⟨x, ⟨hx1, hx2⟩, rfl⟩

@@ -66,9 +66,7 @@ theorem pure_def (a : α) : (pure a : Set α) = {a} :=
 /-- `set.image2` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image2_def {α β γ : Type _} (f : α → β → γ) (s : Set α) (t : Set β) :
-    image2 f s t = f <$> s <*> t := by
-  ext
-  simp
+    image2 f s t = f <$> s <*> t := by ext; simp
 #align set.image2_def Set.image2_def
 -/
 

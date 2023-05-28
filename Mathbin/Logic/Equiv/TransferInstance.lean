@@ -165,11 +165,7 @@ def mulEquiv (e : α ≃ β) [Mul β] :
     α ≃* β :=
   by
   intros
-  exact
-    { e with
-      map_mul' := fun x y => by
-        apply e.symm.injective
-        simp }
+  exact { e with map_mul' := fun x y => by apply e.symm.injective; simp }
 #align equiv.mul_equiv Equiv.mulEquiv
 #align equiv.add_equiv Equiv.addEquiv
 -/
@@ -210,21 +206,13 @@ Case conversion may be inaccurate. Consider using '#align equiv.ring_equiv Equiv
 where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
 -/
-def ringEquiv (e : α ≃ β) [Add β] [Mul β] :
-    by
-    letI := Equiv.Add e
-    letI := Equiv.Mul e
+def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by letI := Equiv.Add e; letI := Equiv.Mul e;
     exact α ≃+* β := by
   intros
   exact
-    {
-      e with
-      map_add' := fun x y => by
-        apply e.symm.injective
-        simp
-      map_mul' := fun x y => by
-        apply e.symm.injective
-        simp }
+    { e with
+      map_add' := fun x y => by apply e.symm.injective; simp
+      map_mul' := fun x y => by apply e.symm.injective; simp }
 #align equiv.ring_equiv Equiv.ringEquiv
 
 #print Equiv.ringEquiv_apply /-
@@ -235,11 +223,8 @@ theorem ringEquiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv 
 -/
 
 #print Equiv.ringEquiv_symm_apply /-
-theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) :
-    by
-    letI := Equiv.Add e
-    letI := Equiv.Mul e
-    exact (RingEquiv e).symm b = e.symm b := by intros ; rfl
+theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by letI := Equiv.Add e;
+    letI := Equiv.Mul e; exact (RingEquiv e).symm b = e.symm b := by intros ; rfl
 #align equiv.ring_equiv_symm_apply Equiv.ringEquiv_symm_apply
 -/
 
@@ -690,12 +675,7 @@ def linearEquiv (e : α ≃ β) [AddCommMonoid β] [Module R β] :
     letI := Equiv.module R e
     exact α ≃ₗ[R] β := by
   intros
-  exact
-    { Equiv.addEquiv e with
-      map_smul' := fun r x => by
-        apply e.symm.injective
-        simp
-        rfl }
+  exact { Equiv.addEquiv e with map_smul' := fun r x => by apply e.symm.injective; simp; rfl }
 #align equiv.linear_equiv Equiv.linearEquiv
 -/
 
@@ -719,8 +699,7 @@ protected def algebra (e : α ≃ β) [Semiring β] :
     simp only [Function.comp_apply, RingHom.coe_comp]
     have p := ring_equiv_symm_apply e
     dsimp at p
-    erw [p]
-    clear p
+    erw [p]; clear p
     apply (RingEquiv e).Injective
     simp only [(RingEquiv e).map_mul]
     simp [Algebra.commutes]
@@ -738,12 +717,7 @@ def algEquiv (e : α ≃ β) [Semiring β] [Algebra R β] :
     letI := Equiv.algebra R e
     exact α ≃ₐ[R] β := by
   intros
-  exact
-    { Equiv.ringEquiv e with
-      commutes' := fun r => by
-        apply e.symm.injective
-        simp
-        rfl }
+  exact { Equiv.ringEquiv e with commutes' := fun r => by apply e.symm.injective; simp; rfl }
 #align equiv.alg_equiv Equiv.algEquiv
 -/
 

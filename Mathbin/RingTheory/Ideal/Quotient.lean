@@ -87,8 +87,7 @@ protected def ringCon (I : Ideal R) : RingCon R :=
       have : a₁ * a₂ - b₁ * b₂ = a₂ * (a₁ - b₁) + (a₂ - b₂) * b₁ := by
         rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_comm, mul_comm b₁]
       rw [← this] at F
-      change _ ∈ _
-      convert F }
+      change _ ∈ _; convert F }
 #align ideal.quotient.ring_con Ideal.Quotient.ringCon
 
 #print Ideal.Quotient.commRing /-
@@ -273,11 +272,7 @@ instance isDomain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
 #print Ideal.Quotient.isDomain_iff_prime /-
 theorem isDomain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   by
-  refine'
-    ⟨fun H => ⟨zero_ne_one_iff.1 _, fun x y h => _⟩, fun h =>
-      by
-      skip
-      infer_instance⟩
+  refine' ⟨fun H => ⟨zero_ne_one_iff.1 _, fun x y h => _⟩, fun h => by skip; infer_instance⟩
   · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
     exact zero_ne_one
   · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
@@ -432,9 +427,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (S : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (T : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (H : LE.le.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Preorder.toLE.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (PartialOrder.toPreorder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.completeLattice.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) S T), Eq.{succ u1} (RingHom.{u1, u1} R (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (CommSemiring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (CommRing.toCommSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (Ideal.Quotient.commRing.{u1} R _inst_1 T))))) (RingHom.comp.{u1, u1, u1} R (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) S) (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) S) (CommSemiring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) S) (CommRing.toCommSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) S) (Ideal.Quotient.commRing.{u1} R _inst_1 S)))) (Semiring.toNonAssocSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (CommSemiring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (CommRing.toCommSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) T) (Ideal.Quotient.commRing.{u1} R _inst_1 T)))) (Ideal.Quotient.factor.{u1} R _inst_1 S T H) (Ideal.Quotient.mk.{u1} R _inst_1 S)) (Ideal.Quotient.mk.{u1} R _inst_1 T)
 Case conversion may be inaccurate. Consider using '#align ideal.quotient.factor_comp_mk Ideal.Quotient.factor_comp_mkₓ'. -/
 @[simp]
-theorem factor_comp_mk (S T : Ideal R) (H : S ≤ T) : (factor S T H).comp (mk S) = mk T :=
-  by
-  ext x
+theorem factor_comp_mk (S T : Ideal R) (H : S ≤ T) : (factor S T H).comp (mk S) = mk T := by ext x;
   rw [RingHom.comp_apply, factor_mk]
 #align ideal.quotient.factor_comp_mk Ideal.Quotient.factor_comp_mk
 
@@ -451,10 +444,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.quot_equiv_of_eq
 See also `submodule.quot_equiv_of_eq` and `ideal.quotient_equiv_alg_of_eq`.
 -/
 def quotEquivOfEq {R : Type _} [CommRing R] {I J : Ideal R} (h : I = J) : R ⧸ I ≃+* R ⧸ J :=
-  { Submodule.quotEquivOfEq I J h with
-    map_mul' := by
-      rintro ⟨x⟩ ⟨y⟩
-      rfl }
+  { Submodule.quotEquivOfEq I J h with map_mul' := by rintro ⟨x⟩ ⟨y⟩; rfl }
 #align ideal.quot_equiv_of_eq Ideal.quotEquivOfEq
 
 #print Ideal.quotEquivOfEq_mk /-
@@ -524,12 +514,8 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
   toFun x :=
     Quotient.liftOn' x (fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
       funext fun i => (Submodule.Quotient.eq' _).2 (QuotientAddGroup.leftRel_apply.mp hab i)
-  map_add' := by
-    rintro ⟨_⟩ ⟨_⟩
-    rfl
-  map_smul' := by
-    rintro ⟨_⟩ ⟨_⟩
-    rfl
+  map_add' := by rintro ⟨_⟩ ⟨_⟩; rfl
+  map_smul' := by rintro ⟨_⟩ ⟨_⟩; rfl
   invFun x := Ideal.Quotient.mk (I.pi ι) fun i => Quotient.out' (x i)
   left_inv := by
     rintro ⟨x⟩
@@ -575,36 +561,23 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
   by
   have : ∀ j ∈ s, j ≠ i → ∃ r : R, ∃ H : r - 1 ∈ f i, r ∈ f j :=
     by
-    intro j hjs hji
-    specialize hf i his j hjs hji.symm
+    intro j hjs hji; specialize hf i his j hjs hji.symm
     rw [eq_top_iff_one, Submodule.mem_sup] at hf
-    rcases hf with ⟨r, hri, s, hsj, hrs⟩
-    refine' ⟨1 - r, _, _⟩
-    · rw [sub_right_comm, sub_self, zero_sub]
-      exact (f i).neg_mem hri
-    · rw [← hrs, add_sub_cancel']
-      exact hsj
+    rcases hf with ⟨r, hri, s, hsj, hrs⟩; refine' ⟨1 - r, _, _⟩
+    · rw [sub_right_comm, sub_self, zero_sub]; exact (f i).neg_mem hri
+    · rw [← hrs, add_sub_cancel']; exact hsj
   classical
     have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j ∈ s, j ≠ i → g j ∈ f j :=
       by
       choose g hg1 hg2
       refine' ⟨fun j => if H : j ∈ s ∧ j ≠ i then g j H.1 H.2 else 1, fun j => _, fun j => _⟩
-      · split_ifs with h
-        · apply hg1
-        rw [sub_self]
-        exact (f i).zero_mem
-      · intro hjs hji
-        rw [dif_pos]
-        · apply hg2
-        exact ⟨hjs, hji⟩
+      · split_ifs with h; · apply hg1; rw [sub_self]; exact (f i).zero_mem
+      · intro hjs hji; rw [dif_pos]; · apply hg2; exact ⟨hjs, hji⟩
     rcases this with ⟨g, hgi, hgj⟩
     use ∏ x in s.erase i, g x
     constructor
     · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
-      apply Finset.prod_eq_one
-      intros
-      rw [← RingHom.map_one, Quotient.eq']
-      apply hgi
+      apply Finset.prod_eq_one; intros ; rw [← RingHom.map_one, Quotient.eq']; apply hgi
     intro j hjs hji
     rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
     refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _
@@ -633,13 +606,9 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   intro i
   rw [← Quotient.eq', RingHom.map_sum]
   refine' Eq.trans (Finset.sum_eq_single i _ _) _
-  · intro j _ hji
-    rw [quotient.eq_zero_iff_mem]
-    exact (f i).mul_mem_left _ (hφ2 j i hji)
-  · intro hi
-    exact (hi <| Finset.mem_univ i).elim
-  specialize hφ1 i
-  rw [← Quotient.eq', RingHom.map_one] at hφ1
+  · intro j _ hji; rw [quotient.eq_zero_iff_mem]; exact (f i).mul_mem_left _ (hφ2 j i hji)
+  · intro hi; exact (hi <| Finset.mem_univ i).elim
+  specialize hφ1 i; rw [← Quotient.eq', RingHom.map_one] at hφ1
   rw [RingHom.map_mul, hφ1, mul_one]
 #align ideal.exists_sub_mem Ideal.exists_sub_mem
 

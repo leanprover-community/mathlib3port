@@ -146,9 +146,7 @@ lean 3 declaration is
 but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : NonUnitalNormedRing.{u1} E] [_inst_2 : StarRing.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1))] [_inst_3 : CstarRing.{u1} E _inst_1 _inst_2] {x : E}, Eq.{1} Real (Norm.norm.{u1} E (NonUnitalNormedRing.toNorm.{u1} E _inst_1) (HMul.hMul.{u1, u1, u1} E E E (instHMul.{u1} E (NonUnitalNonAssocRing.toMul.{u1} E (NonUnitalRing.toNonUnitalNonAssocRing.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1)))) x (Star.star.{u1} E (InvolutiveStar.toStar.{u1} E (StarAddMonoid.toInvolutiveStar.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (NormedAddGroup.toAddGroup.{u1} E (NormedAddCommGroup.toNormedAddGroup.{u1} E (NonUnitalNormedRing.toNormedAddCommGroup.{u1} E _inst_1))))) (StarRing.toStarAddMonoid.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1)) _inst_2))) x))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Norm.norm.{u1} E (NonUnitalNormedRing.toNorm.{u1} E _inst_1) x) (Norm.norm.{u1} E (NonUnitalNormedRing.toNorm.{u1} E _inst_1) x))
 Case conversion may be inaccurate. Consider using '#align cstar_ring.norm_self_mul_star CstarRing.norm_self_mul_starₓ'. -/
-theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ :=
-  by
-  nth_rw 1 [← star_star x]
+theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ := by nth_rw 1 [← star_star x];
   simp only [norm_star_mul_self, norm_star]
 #align cstar_ring.norm_self_mul_star CstarRing.norm_self_mul_star
 
@@ -188,10 +186,8 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : NonUnitalNormedRing.{u1} E] [_inst_2 : StarRing.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1))] [_inst_3 : CstarRing.{u1} E _inst_1 _inst_2] (x : E), Iff (Eq.{succ u1} E (HMul.hMul.{u1, u1, u1} E E E (instHMul.{u1} E (NonUnitalNonAssocRing.toMul.{u1} E (NonUnitalRing.toNonUnitalNonAssocRing.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1)))) (Star.star.{u1} E (InvolutiveStar.toStar.{u1} E (StarAddMonoid.toInvolutiveStar.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (NormedAddGroup.toAddGroup.{u1} E (NormedAddCommGroup.toNormedAddGroup.{u1} E (NonUnitalNormedRing.toNormedAddCommGroup.{u1} E _inst_1))))) (StarRing.toStarAddMonoid.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1)) _inst_2))) x) x) (OfNat.ofNat.{u1} E 0 (Zero.toOfNat0.{u1} E (SemigroupWithZero.toZero.{u1} E (NonUnitalSemiring.toSemigroupWithZero.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1))))))) (Eq.{succ u1} E x (OfNat.ofNat.{u1} E 0 (Zero.toOfNat0.{u1} E (SemigroupWithZero.toZero.{u1} E (NonUnitalSemiring.toSemigroupWithZero.{u1} E (NonUnitalRing.toNonUnitalSemiring.{u1} E (NonUnitalNormedRing.toNonUnitalRing.{u1} E _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align cstar_ring.star_mul_self_eq_zero_iff CstarRing.star_mul_self_eq_zero_iffₓ'. -/
 @[simp]
-theorem star_mul_self_eq_zero_iff (x : E) : star x * x = 0 ↔ x = 0 :=
-  by
-  rw [← norm_eq_zero, norm_star_mul_self]
-  exact mul_self_eq_zero.trans norm_eq_zero
+theorem star_mul_self_eq_zero_iff (x : E) : star x * x = 0 ↔ x = 0 := by
+  rw [← norm_eq_zero, norm_star_mul_self]; exact mul_self_eq_zero.trans norm_eq_zero
 #align cstar_ring.star_mul_self_eq_zero_iff CstarRing.star_mul_self_eq_zero_iff
 
 /- warning: cstar_ring.star_mul_self_ne_zero_iff -> CstarRing.star_mul_self_ne_zero_iff is a dubious translation:
@@ -347,9 +343,7 @@ theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A�
   ·
     calc
       _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
-      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
-        rw [mul_assoc]
-        exact norm_mul_le _ _
+      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by rw [mul_assoc]; exact norm_mul_le _ _
       _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
       
 #align cstar_ring.norm_coe_unitary_mul CstarRing.norm_coe_unitary_mul

@@ -195,10 +195,8 @@ theorem fib_two_mul (n : ℕ) : fib (2 * n) = fib n * (2 * fib (n + 1) - fib n) 
 -/
 
 #print Nat.fib_two_mul_add_one /-
-theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib n ^ 2 :=
-  by
-  rw [two_mul, fib_add]
-  ring
+theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib n ^ 2 := by
+  rw [two_mul, fib_add]; ring
 #align nat.fib_two_mul_add_one Nat.fib_two_mul_add_one
 -/
 
@@ -297,15 +295,12 @@ theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by rw [fast_fib, fast_fib_a
 theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (fib n) :=
   by
   cases Nat.eq_zero_or_pos n
-  · rw [h]
-    simp
+  · rw [h]; simp
   replace h := Nat.succ_pred_eq_of_pos h; rw [← h, succ_eq_add_one]
   calc
     gcd (fib m) (fib (n.pred + 1 + m)) =
         gcd (fib m) (fib n.pred * fib m + fib (n.pred + 1) * fib (m + 1)) :=
-      by
-      rw [← fib_add n.pred _]
-      ring_nf
+      by rw [← fib_add n.pred _]; ring_nf
     _ = gcd (fib m) (fib (n.pred + 1) * fib (m + 1)) := by
       rw [add_comm, gcd_add_mul_right_right (fib m) _ (fib n.pred)]
     _ = gcd (fib m) (fib (n.pred + 1)) :=

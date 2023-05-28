@@ -124,8 +124,7 @@ instance [SeminormedRing A] : NormedRing (Completion A) :=
             (Continuous.comp Real.continuous_mul
               (Continuous.prod_map continuous_norm continuous_norm))
       · intro x y
-        simp only [← coe_mul, norm_coe]
-        exact norm_mul_le x y }
+        simp only [← coe_mul, norm_coe]; exact norm_mul_le x y }
 
 instance [SeminormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSMul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
@@ -138,8 +137,7 @@ instance [SeminormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSM
           isClosed_le (Continuous.comp continuous_norm (continuous_const_smul r))
             (Continuous.comp (continuous_mul_left _) continuous_norm)
       · intro x
-        simp only [← coe_smul, norm_coe]
-        exact norm_smul_le r x }
+        simp only [← coe_smul, norm_coe]; exact norm_smul_le r x }
 
 end Algebra
 

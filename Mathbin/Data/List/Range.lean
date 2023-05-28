@@ -435,10 +435,7 @@ theorem finRange_zero : finRange 0 = [] :=
 #print List.mem_finRange /-
 @[simp]
 theorem mem_finRange {n : ℕ} (a : Fin n) : a ∈ finRange n :=
-  mem_pmap.2
-    ⟨a.1, mem_range.2 a.2, by
-      cases a
-      rfl⟩
+  mem_pmap.2 ⟨a.1, mem_range.2 a.2, by cases a; rfl⟩
 #align list.mem_fin_range List.mem_finRange
 -/
 

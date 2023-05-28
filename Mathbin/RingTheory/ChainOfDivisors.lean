@@ -57,8 +57,7 @@ theorem Associates.isAtom_iff {p : Associates M} (h₁ : p ≠ 0) : IsAtom p ↔
     ⟨by simpa only [Associates.isUnit_iff_eq_one] using hp.1, fun a b h =>
       (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.isUnit_iff_eq_one.mpr ha)) fun ha =>
         Or.inr
-          (show IsUnit b by
-            rw [ha] at h
+          (show IsUnit b by rw [ha] at h;
             apply isUnit_of_associated_mul (show Associated (p * b) p by conv_rhs => rw [h]) h₁)⟩,
     fun hp =>
     ⟨by simpa only [Associates.isUnit_iff_eq_one, Associates.bot_eq_one] using hp.1,
@@ -221,8 +220,7 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     have : (finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card = i + 1 :=
       by
       conv_rhs => rw [← Finset.card_fin (i + 1)]
-      cases n
-      · contradiction
+      cases n; · contradiction
       rw [Finset.card_image_iff]
       refine' Set.injOn_of_injective (fun m m' h => Fin.ext _) _
       refine'
@@ -264,10 +262,8 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
     rw [hi'] at this
     obtain ⟨u, hu, hu'⟩ := (dvd_prime_pow (show Prime (c 1) from _) i).1 this
     refine' finset.mem_image.mpr ⟨u, Finset.mem_univ _, _⟩
-    · rw [associated_iff_eq] at hu'
-      rw [Fin.val_cast_of_lt (Nat.lt_succ_of_le hu), hu']
-    · rw [← irreducible_iff_prime]
-      exact second_of_chain_is_irreducible hn h₁ (@h₂) hq
+    · rw [associated_iff_eq] at hu'; rw [Fin.val_cast_of_lt (Nat.lt_succ_of_le hu), hu']
+    · rw [← irreducible_iff_prime]; exact second_of_chain_is_irreducible hn h₁ (@h₂) hq
 #align divisor_chain.eq_pow_second_of_chain_of_has_chain DivisorChain.eq_pow_second_of_chain_of_has_chain
 
 /- warning: divisor_chain.is_prime_pow_of_has_chain -> DivisorChain.isPrimePow_of_has_chain is a dubious translation:
@@ -308,9 +304,7 @@ theorem coe_factor_orderIso_map_eq_one_iff {m u : Associates M} {n : Associates 
     by
     rw [show u = ↑(d.symm ⟨↑(d ⟨u, hu'⟩), (d ⟨u, hu'⟩).Prop⟩) by
         simp only [Subtype.coe_eta, OrderIso.symm_apply_apply, Subtype.coe_mk]]
-    convert factor_orderIso_map_one_eq_bot d.symm, fun hu =>
-    by
-    simp_rw [hu]
+    convert factor_orderIso_map_one_eq_bot d.symm, fun hu => by simp_rw [hu];
     convert factor_orderIso_map_one_eq_bot d⟩
 #align coe_factor_order_iso_map_eq_one_iff coe_factor_orderIso_map_eq_one_iff
 
@@ -461,7 +455,7 @@ def mkFactorOrderIsoOfFactorDvdEquiv {m : M} {n : N} {d : { l : M // l ∣ m } �
     ⟨Associates.mk
         (d
           ⟨associatesEquivOfUniqueUnits ↑l, by
-            obtain ⟨x, hx⟩ := l
+            obtain ⟨x, hx⟩ := l;
             rw [Subtype.coe_mk, associatesEquivOfUniqueUnits_apply, out_dvd_iff]
             exact hx⟩),
       mk_le_mk_iff_dvd_iff.mpr (Subtype.prop (d ⟨associatesEquivOfUniqueUnits ↑l, _⟩))⟩
@@ -564,9 +558,7 @@ theorem multiplicity_factor_dvd_iso_eq_multiplicity_of_mem_normalizedFactors {m 
           ⟨associates_equiv_of_unique_units.symm p, by
             rw [associatesEquivOfUniqueUnits_symm_apply] <;>
               exact mk_le_mk_of_dvd (dvd_of_mem_normalized_factors hp)⟩) :=
-    by
-    rw [mkFactorOrderIsoOfFactorDvdEquiv_apply_coe]
-    rfl
+    by rw [mkFactorOrderIsoOfFactorDvdEquiv_apply_coe]; rfl
   rw [this]
   letI := Classical.decEq (Associates M)
   refine'

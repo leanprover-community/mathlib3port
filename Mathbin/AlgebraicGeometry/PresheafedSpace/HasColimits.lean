@@ -78,12 +78,7 @@ Case conversion may be inaccurate. Consider using '#align algebraic_geometry.Pre
 theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) (j) (U) :
     (F.map (𝟙 j)).c.app (op U) =
       (Pushforward.id (F.obj j).Presheaf).inv.app (op U) ≫
-        (pushforwardEq
-                (by
-                  simp
-                  rfl)
-                (F.obj j).Presheaf).Hom.app
-          (op U) :=
+        (pushforwardEq (by simp; rfl) (F.obj j).Presheaf).Hom.app (op U) :=
   by
   cases U
   dsimp
@@ -100,12 +95,7 @@ theorem map_comp_c_app (F : J ⥤ PresheafedSpace.{v} C) {j₁ j₂ j₃} (f : j
       (F.map g).c.app (op U) ≫
         (pushforwardMap (F.map g).base (F.map f).c).app (op U) ≫
           (Pushforward.comp (F.obj j₁).Presheaf (F.map f).base (F.map g).base).inv.app (op U) ≫
-            (pushforwardEq
-                    (by
-                      rw [F.map_comp]
-                      rfl)
-                    _).Hom.app
-              _ :=
+            (pushforwardEq (by rw [F.map_comp]; rfl) _).Hom.app _ :=
   by
   cases U
   dsimp
@@ -131,11 +121,7 @@ def componentwiseDiagram (F : J ⥤ PresheafedSpace.{v} C) [HasColimit F]
   obj j := (F.obj (unop j)).Presheaf.obj (op ((Opens.map (colimit.ι F (unop j)).base).obj U))
   map j k f :=
     (F.map f.unop).c.app _ ≫
-      (F.obj (unop k)).Presheaf.map
-        (eqToHom
-          (by
-            rw [← colimit.w F f.unop, comp_base]
-            rfl))
+      (F.obj (unop k)).Presheaf.map (eqToHom (by rw [← colimit.w F f.unop, comp_base]; rfl))
   map_comp' i j k f g := by
     cases U
     dsimp
@@ -200,8 +186,7 @@ def pushforwardDiagramToColimit (F : J ⥤ PresheafedSpace.{v} C) :
       exact colimit.w (F ⋙ PresheafedSpace.forget C) g
     -- Finally, the original goal is now easy:
     swap
-    · simp
-      rfl
+    · simp; rfl
 #align algebraic_geometry.PresheafedSpace.pushforward_diagram_to_colimit AlgebraicGeometry.PresheafedSpace.pushforwardDiagramToColimit
 
 variable [∀ X : TopCat.{v}, HasLimitsOfShape Jᵒᵖ (X.Presheaf C)]
@@ -313,10 +298,7 @@ def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.p
     replace w := congr_arg op w
     have w' := nat_trans.congr (F.map f.unop).c w
     rw [w']
-    dsimp
-    simp
-    dsimp
-    simp
+    dsimp; simp; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.descCApp
 
 /- warning: algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_naturality -> AlgebraicGeometry.PresheafedSpace.ColimitCoconeIsColimit.desc_c_naturality is a dubious translation:
@@ -398,10 +380,8 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpace.{v} C) : IsColimit (colimi
       m.base =
         colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) :=
       by
-      apply CategoryTheory.Limits.colimit.hom_ext
-      intro j
-      apply ContinuousMap.ext
-      intro x
+      apply CategoryTheory.Limits.colimit.hom_ext; intro j
+      apply ContinuousMap.ext; intro x
       dsimp
       simp only [colimit.ι_desc_apply, map_cocone_ι_app]
       rw [← w j]
@@ -409,8 +389,7 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpace.{v} C) : IsColimit (colimi
     fapply PresheafedSpace.ext
     -- could `ext` please not reorder goals?
     · exact t
-    · ext (U j)
-      dsimp [desc, desc_c_app]
+    · ext (U j); dsimp [desc, desc_c_app]
       simp only [limit.lift_π, eq_to_hom_op, eq_to_hom_map, assoc,
         limit_obj_iso_limit_comp_evaluation_inv_π_app]
       rw [PresheafedSpace.congr_app (w (unop j)).symm U]
@@ -433,9 +412,7 @@ instance : PreservesColimitsOfShape J (PresheafedSpace.forget C)
         apply is_colimit.of_iso_colimit (colimit.is_colimit _)
         fapply cocones.ext
         · rfl
-        · intro j
-          dsimp
-          simp)
+        · intro j; dsimp; simp)
 
 /-- When `C` has limits, the category of presheaved spaces with values in `C` itself has colimits.
 -/
@@ -465,9 +442,7 @@ instance forgetPreservesColimits [HasLimits C] : PreservesColimits (PresheafedSp
             apply is_colimit.of_iso_colimit (colimit.is_colimit _)
             fapply cocones.ext
             · rfl
-            · intro j
-              dsimp
-              simp) }
+            · intro j; dsimp; simp) }
 #align algebraic_geometry.PresheafedSpace.forget_preserves_colimits AlgebraicGeometry.PresheafedSpace.forgetPreservesColimits
 
 /- warning: algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit -> AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit is a dubious translation:

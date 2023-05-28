@@ -111,9 +111,7 @@ lean 3 declaration is
 but is expected to have type
   Not (TopologicalSpace.FirstCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.instTopologicalSpaceAlexandroff.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))))
 Case conversion may be inaccurate. Consider using '#align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroffₓ'. -/
-theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞ :=
-  by
-  intro
+theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞ := by intro ;
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
 #align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroff
 
@@ -123,9 +121,7 @@ lean 3 declaration is
 but is expected to have type
   Not (TopologicalSpace.SecondCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.instTopologicalSpaceAlexandroff.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))))
 Case conversion may be inaccurate. Consider using '#align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroffₓ'. -/
-theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
-  by
-  intro
+theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ := by intro ;
   exact not_first_countable_topology_alexandroff inferInstance
 #align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroff
 

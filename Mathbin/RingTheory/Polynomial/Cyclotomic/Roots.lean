@@ -132,9 +132,7 @@ theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup :
 #align polynomial.roots_cyclotomic_nodup Polynomial.roots_cyclotomic_nodup
 
 theorem cyclotomic.roots_to_finset_eq_primitiveRoots [NeZero (n : R)] :
-    (⟨(cyclotomic n R).roots, roots_cyclotomic_nodup⟩ : Finset _) = primitiveRoots n R :=
-  by
-  ext
+    (⟨(cyclotomic n R).roots, roots_cyclotomic_nodup⟩ : Finset _) = primitiveRoots n R := by ext;
   simp [cyclotomic_ne_zero n R, is_root_cyclotomic_iff, mem_primitiveRoots,
     NeZero.pos_of_neZero_natCast R]
 #align polynomial.cyclotomic.roots_to_finset_eq_primitive_roots Polynomial.cyclotomic.roots_to_finset_eq_primitiveRoots

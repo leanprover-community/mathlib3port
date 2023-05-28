@@ -173,10 +173,7 @@ instance (priority := 100) [SemilinearMapClass F σ M M₃] : AddMonoidHomClass 
     SemilinearMapClass.toAddHomClass F σ M
       M₃ with
     coe := fun f => (f : M → M₃)
-    map_zero := fun f =>
-      show f 0 = 0 by
-        rw [← zero_smul R (0 : M), map_smulₛₗ]
-        simp }
+    map_zero := fun f => show f 0 = 0 by rw [← zero_smul R (0 : M), map_smulₛₗ]; simp }
 
 -- `R` is an `out_param` so it's not dangerous
 @[nolint dangerous_instance]
@@ -441,11 +438,7 @@ Case conversion may be inaccurate. Consider using '#align linear_map.map_eq_zero
 -- TODO: generalize to `zero_hom_class`
 @[simp]
 theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :=
-  ⟨fun w => by
-    apply h
-    simp [w], fun w => by
-    subst w
-    simp⟩
+  ⟨fun w => by apply h; simp [w], fun w => by subst w; simp⟩
 #align linear_map.map_eq_zero_iff LinearMap.map_eq_zero_iff
 
 section Pointwise
@@ -771,9 +764,7 @@ def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [Rin
     exact
       { toFun := g
         map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂]
-        map_smul' := fun a b => by
-          rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]
-          simp [h₂] }
+        map_smul' := fun a b => by rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]; simp [h₂] }
 #align linear_map.inverse LinearMap.inverse
 
 end AddCommMonoid
@@ -880,9 +871,7 @@ but is expected to have type
   forall {R : Type.{u3}} {M : Type.{u2}} {M₂ : Type.{u1}} [_inst_1 : Semiring.{u3} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u1} M₂] [_inst_4 : Module.{u3, u2} R M _inst_1 _inst_2] [_inst_5 : Module.{u3, u1} R M₂ _inst_1 _inst_3] {f : DistribMulActionHom.{u3, u2, u1} R (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_1)) M (AddCommMonoid.toAddMonoid.{u2} M _inst_2) (Module.toDistribMulAction.{u3, u2} R M _inst_1 _inst_2 _inst_4) M₂ (AddCommMonoid.toAddMonoid.{u1} M₂ _inst_3) (Module.toDistribMulAction.{u3, u1} R M₂ _inst_1 _inst_3 _inst_5)} {g : DistribMulActionHom.{u3, u2, u1} R (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_1)) M (AddCommMonoid.toAddMonoid.{u2} M _inst_2) (Module.toDistribMulAction.{u3, u2} R M _inst_1 _inst_2 _inst_4) M₂ (AddCommMonoid.toAddMonoid.{u1} M₂ _inst_3) (Module.toDistribMulAction.{u3, u1} R M₂ _inst_1 _inst_3 _inst_5)}, (Eq.{max (succ u2) (succ u1)} (LinearMap.{u3, u3, u2, u1} R R _inst_1 _inst_1 (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R _inst_1)) M M₂ _inst_2 _inst_3 _inst_4 _inst_5) (DistribMulActionHom.toLinearMap.{u3, u2, u1} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 f) (DistribMulActionHom.toLinearMap.{u3, u2, u1} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 g)) -> (Eq.{max (succ u2) (succ u1)} (DistribMulActionHom.{u3, u2, u1} R (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_1)) M (AddCommMonoid.toAddMonoid.{u2} M _inst_2) (Module.toDistribMulAction.{u3, u2} R M _inst_1 _inst_2 _inst_4) M₂ (AddCommMonoid.toAddMonoid.{u1} M₂ _inst_3) (Module.toDistribMulAction.{u3, u1} R M₂ _inst_1 _inst_3 _inst_5)) f g)
 Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.to_linear_map_injective DistribMulActionHom.toLinearMap_injectiveₓ'. -/
 theorem toLinearMap_injective {f g : M →+[R] M₂} (h : (f : M →ₗ[R] M₂) = (g : M →ₗ[R] M₂)) :
-    f = g := by
-  ext m
-  exact LinearMap.congr_fun h m
+    f = g := by ext m; exact LinearMap.congr_fun h m
 #align distrib_mul_action_hom.to_linear_map_injective DistribMulActionHom.toLinearMap_injective
 
 end DistribMulActionHom
@@ -1030,10 +1019,7 @@ but is expected to have type
   forall {M : Type.{u2}} {M₂ : Type.{u1}} [_inst_1 : AddCommMonoid.{u2} M] [_inst_2 : AddCommMonoid.{u1} M₂], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (AddMonoidHom.{u2, u1} M M₂ (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)) (AddMonoid.toAddZeroClass.{u1} M₂ (AddCommMonoid.toAddMonoid.{u1} M₂ _inst_2))) (LinearMap.{0, 0, u2, u1} Nat Nat Nat.semiring Nat.semiring (RingHom.id.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring)) M M₂ _inst_1 _inst_2 (AddCommMonoid.natModule.{u2} M _inst_1) (AddCommMonoid.natModule.{u1} M₂ _inst_2)) (AddMonoidHom.toNatLinearMap.{u2, u1} M M₂ _inst_1 _inst_2)
 Case conversion may be inaccurate. Consider using '#align add_monoid_hom.to_nat_linear_map_injective AddMonoidHom.toNatLinearMap_injectiveₓ'. -/
 theorem AddMonoidHom.toNatLinearMap_injective [AddCommMonoid M] [AddCommMonoid M₂] :
-    Function.Injective (@AddMonoidHom.toNatLinearMap M M₂ _ _) :=
-  by
-  intro f g h
-  ext
+    Function.Injective (@AddMonoidHom.toNatLinearMap M M₂ _ _) := by intro f g h; ext;
   exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_nat_linear_map_injective AddMonoidHom.toNatLinearMap_injective
 
@@ -1058,10 +1044,7 @@ but is expected to have type
   forall {M : Type.{u2}} {M₂ : Type.{u1}} [_inst_1 : AddCommGroup.{u2} M] [_inst_2 : AddCommGroup.{u1} M₂], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (AddMonoidHom.{u2, u1} M M₂ (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_1)))) (AddMonoid.toAddZeroClass.{u1} M₂ (SubNegMonoid.toAddMonoid.{u1} M₂ (AddGroup.toSubNegMonoid.{u1} M₂ (AddCommGroup.toAddGroup.{u1} M₂ _inst_2))))) (LinearMap.{0, 0, u2, u1} Int Int Int.instSemiringInt Int.instSemiringInt (RingHom.id.{0} Int (Semiring.toNonAssocSemiring.{0} Int Int.instSemiringInt)) M M₂ (AddCommGroup.toAddCommMonoid.{u2} M _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M₂ _inst_2) (AddCommGroup.intModule.{u2} M _inst_1) (AddCommGroup.intModule.{u1} M₂ _inst_2)) (AddMonoidHom.toIntLinearMap.{u2, u1} M M₂ _inst_1 _inst_2)
 Case conversion may be inaccurate. Consider using '#align add_monoid_hom.to_int_linear_map_injective AddMonoidHom.toIntLinearMap_injectiveₓ'. -/
 theorem AddMonoidHom.toIntLinearMap_injective [AddCommGroup M] [AddCommGroup M₂] :
-    Function.Injective (@AddMonoidHom.toIntLinearMap M M₂ _ _) :=
-  by
-  intro f g h
-  ext
+    Function.Injective (@AddMonoidHom.toIntLinearMap M M₂ _ _) := by intro f g h; ext;
   exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_int_linear_map_injective AddMonoidHom.toIntLinearMap_injective
 
@@ -1092,11 +1075,8 @@ but is expected to have type
   forall {M : Type.{u2}} {M₂ : Type.{u1}} [_inst_1 : AddCommGroup.{u2} M] [_inst_2 : Module.{0, u2} Rat M Rat.semiring (AddCommGroup.toAddCommMonoid.{u2} M _inst_1)] [_inst_3 : AddCommGroup.{u1} M₂] [_inst_4 : Module.{0, u1} Rat M₂ Rat.semiring (AddCommGroup.toAddCommMonoid.{u1} M₂ _inst_3)], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (AddMonoidHom.{u2, u1} M M₂ (AddMonoid.toAddZeroClass.{u2} M (SubNegMonoid.toAddMonoid.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_1)))) (AddMonoid.toAddZeroClass.{u1} M₂ (SubNegMonoid.toAddMonoid.{u1} M₂ (AddGroup.toSubNegMonoid.{u1} M₂ (AddCommGroup.toAddGroup.{u1} M₂ _inst_3))))) (LinearMap.{0, 0, u2, u1} Rat Rat Rat.semiring Rat.semiring (RingHom.id.{0} Rat (Semiring.toNonAssocSemiring.{0} Rat Rat.semiring)) M M₂ (AddCommGroup.toAddCommMonoid.{u2} M _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M₂ _inst_3) _inst_2 _inst_4) (AddMonoidHom.toRatLinearMap.{u2, u1} M M₂ _inst_1 _inst_2 _inst_3 _inst_4)
 Case conversion may be inaccurate. Consider using '#align add_monoid_hom.to_rat_linear_map_injective AddMonoidHom.toRatLinearMap_injectiveₓ'. -/
 theorem AddMonoidHom.toRatLinearMap_injective [AddCommGroup M] [Module ℚ M] [AddCommGroup M₂]
-    [Module ℚ M₂] : Function.Injective (@AddMonoidHom.toRatLinearMap M M₂ _ _ _ _) :=
-  by
-  intro f g h
-  ext
-  exact LinearMap.congr_fun h x
+    [Module ℚ M₂] : Function.Injective (@AddMonoidHom.toRatLinearMap M M₂ _ _ _ _) := by
+  intro f g h; ext; exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_rat_linear_map_injective AddMonoidHom.toRatLinearMap_injective
 
 /- warning: add_monoid_hom.coe_to_rat_linear_map -> AddMonoidHom.coe_toRatLinearMap is a dubious translation:

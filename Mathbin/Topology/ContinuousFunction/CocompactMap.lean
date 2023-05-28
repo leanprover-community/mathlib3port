@@ -78,10 +78,7 @@ variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [Top
 instance : CocompactMapClass (CocompactMap α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_continuous f := f.continuous_toFun
   cocompact_tendsto f := f.cocompact_tendsto'
 
@@ -123,12 +120,8 @@ to fix definitional equalities. -/
 protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : CocompactMap α β
     where
   toFun := f'
-  continuous_toFun := by
-    rw [h]
-    exact f.continuous_to_fun
-  cocompact_tendsto' := by
-    simp_rw [h]
-    exact f.cocompact_tendsto'
+  continuous_toFun := by rw [h]; exact f.continuous_to_fun
+  cocompact_tendsto' := by simp_rw [h]; exact f.cocompact_tendsto'
 #align cocompact_map.copy CocompactMap.copy
 
 /- warning: cocompact_map.coe_copy -> CocompactMap.coe_copy is a dubious translation:

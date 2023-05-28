@@ -62,11 +62,7 @@ theorem eqToHom_refl (X : C) (p : X = X) : eqToHom p = 𝟙 X :=
 #print CategoryTheory.eqToHom_trans /-
 @[simp, reassoc]
 theorem eqToHom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
-    eqToHom p ≫ eqToHom q = eqToHom (p.trans q) :=
-  by
-  cases p
-  cases q
-  simp
+    eqToHom p ≫ eqToHom q = eqToHom (p.trans q) := by cases p; cases q; simp
 #align category_theory.eq_to_hom_trans CategoryTheory.eqToHom_trans
 -/
 
@@ -96,10 +92,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congrArg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
-    (congr_arg (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q :=
-  by
-  cases p
-  simp
+    (congr_arg (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q := by cases p; simp
 #align category_theory.congr_arg_mpr_hom_left CategoryTheory.congrArg_mpr_hom_left
 -/
 
@@ -113,10 +106,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congrArg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
-    (congr_arg (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm :=
-  by
-  cases q
-  simp
+    (congr_arg (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm := by cases q; simp
 #align category_theory.congr_arg_mpr_hom_right CategoryTheory.congrArg_mpr_hom_right
 -/
 
@@ -161,19 +151,15 @@ theorem eqToIso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
 
 #print CategoryTheory.eqToHom_op /-
 @[simp]
-theorem eqToHom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_arg op h.symm) :=
-  by
-  cases h
-  rfl
+theorem eqToHom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_arg op h.symm) := by
+  cases h; rfl
 #align category_theory.eq_to_hom_op CategoryTheory.eqToHom_op
 -/
 
 #print CategoryTheory.eqToHom_unop /-
 @[simp]
 theorem eqToHom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eqToHom h).unop = eqToHom (congr_arg unop h.symm) :=
-  by
-  cases h
-  rfl
+  by cases h; rfl
 #align category_theory.eq_to_hom_unop CategoryTheory.eqToHom_unop
 -/
 
@@ -182,10 +168,7 @@ instance {X Y : C} (h : X = Y) : IsIso (eqToHom h) :=
 
 #print CategoryTheory.inv_eqToHom /-
 @[simp]
-theorem inv_eqToHom {X Y : C} (h : X = Y) : inv (eqToHom h) = eqToHom h.symm :=
-  by
-  ext
-  simp
+theorem inv_eqToHom {X Y : C} (h : X = Y) : inv (eqToHom h) = eqToHom h.symm := by ext; simp
 #align category_theory.inv_eq_to_hom CategoryTheory.inv_eqToHom
 -/
 
@@ -204,11 +187,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.functo
 theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
     (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G :=
   by
-  cases' F with F_obj _ _ _
-  cases' G with G_obj _ _ _
-  obtain rfl : F_obj = G_obj := by
-    ext X
-    apply h_obj
+  cases' F with F_obj _ _ _; cases' G with G_obj _ _ _
+  obtain rfl : F_obj = G_obj := by ext X; apply h_obj
   congr
   funext X Y f
   simpa using h_map X Y f
@@ -217,11 +197,7 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
 #print CategoryTheory.Functor.conj_eqToHom_iff_hEq /-
 /-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. -/
 theorem conj_eqToHom_iff_hEq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
-    f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g :=
-  by
-  cases h
-  cases h'
-  simp
+    f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g := by cases h; cases h'; simp
 #align category_theory.functor.conj_eq_to_hom_iff_heq CategoryTheory.Functor.conj_eqToHom_iff_hEq
 -/
 
@@ -288,10 +264,7 @@ variable {E : Type u₃} [Category.{v₃} E] {F G : C ⥤ D} {X Y Z : C} {f : X 
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_comp_heq CategoryTheory.Functor.map_comp_hEqₓ'. -/
 theorem map_comp_hEq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.obj Z = G.obj Z)
     (hf : HEq (F.map f) (G.map f)) (hg : HEq (F.map g) (G.map g)) :
-    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) :=
-  by
-  rw [F.map_comp, G.map_comp]
-  congr
+    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by rw [F.map_comp, G.map_comp]; congr
 #align category_theory.functor.map_comp_heq CategoryTheory.Functor.map_comp_hEq
 
 /- warning: category_theory.functor.map_comp_heq' -> CategoryTheory.Functor.map_comp_hEq' is a dubious translation:
@@ -320,10 +293,7 @@ theorem precomp_map_hEq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.ma
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.postcomp_map_heq CategoryTheory.Functor.postcomp_map_hEqₓ'. -/
 theorem postcomp_map_hEq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
-    (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) :=
-  by
-  dsimp
-  congr
+    (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by dsimp; congr
 #align category_theory.functor.postcomp_map_heq CategoryTheory.Functor.postcomp_map_hEq
 
 /- warning: category_theory.functor.postcomp_map_heq' -> CategoryTheory.Functor.postcomp_map_hEq' is a dubious translation:
@@ -394,9 +364,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2} (α : Quiver.Hom.{max (succ u3) (succ u2), max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max (max u3 u4) u1) u2} (CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u3, u4} C _inst_1 D _inst_2))) F G) {X : C} {Y : C} (h : Eq.{succ u3} C X Y), Eq.{succ u2} (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X)) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G α X) (CategoryTheory.CategoryStruct.comp.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) X Y (CategoryTheory.eqToHom.{u1, u3} C _inst_1 X Y h)) (CategoryTheory.CategoryStruct.comp.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) Y) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) X) (CategoryTheory.NatTrans.app.{u1, u2, u3, u4} C _inst_1 D _inst_2 F G α Y) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 G) Y X (CategoryTheory.eqToHom.{u1, u3} C _inst_1 Y X (Eq.symm.{succ u3} C X Y h)))))
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.congr CategoryTheory.NatTrans.congrₓ'. -/
 theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
-    α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) :=
-  by
-  rw [α.naturality_assoc]
+    α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by rw [α.naturality_assoc];
   simp [eq_to_hom_map]
 #align category_theory.nat_trans.congr CategoryTheory.NatTrans.congr
 
@@ -413,10 +381,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {ι : Type.{u1}} {F : ι -> C} {G : ι -> C} (α : forall (i : ι), Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (F i) (G i)) {i : ι} {j : ι} (h : Eq.{succ u1} ι i j), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (F i) (G i)) (α i) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (F i) (F j) (G i) (CategoryTheory.eqToHom.{u2, u3} C _inst_1 (F i) (F j) (congr_arg.{succ u1, succ u3} ι C i j F h)) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (F j) (G j) (G i) (α j) (CategoryTheory.eqToHom.{u2, u3} C _inst_1 (G j) (G i) (congr_arg.{succ u1, succ u3} ι C j i G (Eq.symm.{succ u1} ι i j h)))))
 Case conversion may be inaccurate. Consider using '#align category_theory.dcongr_arg CategoryTheory.dcongr_argₓ'. -/
 theorem dcongr_arg {ι : Type _} {F G : ι → C} (α : ∀ i, F i ⟶ G i) {i j : ι} (h : i = j) :
-    α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) :=
-  by
-  subst h
-  simp
+    α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) := by subst h; simp
 #align category_theory.dcongr_arg CategoryTheory.dcongr_arg
 
 end CategoryTheory

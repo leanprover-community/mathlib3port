@@ -72,8 +72,7 @@ theorem Real.fourierCoeff_tsum_comp_add {f : C(ℝ, ℂ)}
     simp_rw [norm_eq_supr_norm, restrict_apply, mul_apply, norm_mul, this, one_mul]
   have eadd : ∀ n : ℤ, e.comp (ContinuousMap.addRight n) = e :=
     by
-    intro n
-    ext1 x
+    intro n; ext1 x
     have : periodic e 1 := periodic.comp (fun x => AddCircle.coe_add_period 1 x) _
     simpa only [mul_one] using this.int_mul n x
   -- Now the main argument. First unwind some definitions.
@@ -193,8 +192,7 @@ theorem isBigO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   have A : ∀ x : ℝ, 0 ≤ |x| ^ (-b) := fun x => by positivity
   rwa [mul_assoc, mul_le_mul_left hc, norm_of_nonneg (A _), norm_of_nonneg (A _)]
   convert claim x (by linarith only [hx.1]) y.1 y.2.1
-  · apply abs_of_nonneg
-    linarith [y.2.1]
+  · apply abs_of_nonneg; linarith [y.2.1]
   · exact abs_of_pos hx'.1
 #align is_O_norm_Icc_restrict_at_top isBigO_norm_Icc_restrict_atTop
 
@@ -205,12 +203,9 @@ theorem isBigO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   have h1 : is_O at_top (f.comp (ContinuousMap.mk _ continuous_neg)) fun x : ℝ => |x| ^ (-b) :=
     by
     convert hf.comp_tendsto tendsto_neg_at_top_at_bot
-    ext1 x
-    simp only [Function.comp_apply, abs_neg]
+    ext1 x; simp only [Function.comp_apply, abs_neg]
   have h2 := (isBigO_norm_Icc_restrict_atTop hb h1 (-S) (-R)).comp_tendsto tendsto_neg_at_bot_at_top
-  have : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b) :=
-    by
-    ext1 x
+  have : (fun x : ℝ => |x| ^ (-b)) ∘ Neg.neg = fun x : ℝ => |x| ^ (-b) := by ext1 x;
     simp only [Function.comp_apply, abs_neg]
   rw [this] at h2
   refine' (is_O_of_le _ fun x => _).trans h2
@@ -244,11 +239,9 @@ theorem isBigO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
   simp_rw [cocompact_eq, is_O_sup] at hf⊢
   constructor
   · refine' (is_O_of_le at_bot _).trans (isBigO_norm_Icc_restrict_atBot hb hf.1 (-r) r)
-    simp_rw [norm_norm]
-    exact this
+    simp_rw [norm_norm]; exact this
   · refine' (is_O_of_le at_top _).trans (isBigO_norm_Icc_restrict_atTop hb hf.2 (-r) r)
-    simp_rw [norm_norm]
-    exact this
+    simp_rw [norm_norm]; exact this
 #align is_O_norm_restrict_cocompact isBigO_norm_restrict_cocompact
 
 /-- **Poisson's summation formula**, assuming that `f` decays as

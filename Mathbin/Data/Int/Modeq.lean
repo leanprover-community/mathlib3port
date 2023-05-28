@@ -207,9 +207,7 @@ protected theorem mul_right' (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * 
 
 #print Int.ModEq.add /-
 protected theorem add (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a + c ≡ b + d [ZMOD n] :=
-  modEq_iff_dvd.2 <| by
-    convert dvd_add h₁.dvd h₂.dvd
-    ring
+  modEq_iff_dvd.2 <| by convert dvd_add h₁.dvd h₂.dvd; ring
 #align int.modeq.add Int.ModEq.add
 -/
 
@@ -229,9 +227,7 @@ protected theorem add_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a + c ≡ b + c [
 protected theorem add_left_cancel (h₁ : a ≡ b [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) :
     c ≡ d [ZMOD n] :=
   have : d - c = b + d - (a + c) - (b - a) := by ring
-  modEq_iff_dvd.2 <| by
-    rw [this]
-    exact dvd_sub h₂.dvd h₁.dvd
+  modEq_iff_dvd.2 <| by rw [this]; exact dvd_sub h₂.dvd h₁.dvd
 #align int.modeq.add_left_cancel Int.ModEq.add_left_cancel
 -/
 
@@ -243,9 +239,7 @@ protected theorem add_left_cancel' (c : ℤ) (h : c + a ≡ c + b [ZMOD n]) : a 
 
 #print Int.ModEq.add_right_cancel /-
 protected theorem add_right_cancel (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) :
-    a ≡ b [ZMOD n] := by
-  rw [add_comm a, add_comm b] at h₂
-  exact h₁.add_left_cancel h₂
+    a ≡ b [ZMOD n] := by rw [add_comm a, add_comm b] at h₂; exact h₁.add_left_cancel h₂
 #align int.modeq.add_right_cancel Int.ModEq.add_right_cancel
 -/
 
@@ -262,10 +256,8 @@ protected theorem neg (h : a ≡ b [ZMOD n]) : -a ≡ -b [ZMOD n] :=
 -/
 
 #print Int.ModEq.sub /-
-protected theorem sub (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a - c ≡ b - d [ZMOD n] :=
-  by
-  rw [sub_eq_add_neg, sub_eq_add_neg]
-  exact h₁.add h₂.neg
+protected theorem sub (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a - c ≡ b - d [ZMOD n] := by
+  rw [sub_eq_add_neg, sub_eq_add_neg]; exact h₁.add h₂.neg
 #align int.modeq.sub Int.ModEq.sub
 -/
 

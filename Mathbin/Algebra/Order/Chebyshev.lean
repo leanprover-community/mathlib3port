@@ -131,9 +131,7 @@ Case conversion may be inaccurate. Consider using '#align monovary_on.sum_mul_su
 monotone/antitone), the product of their sum is less than the size of the set times their scalar
 product. -/
 theorem MonovaryOn.sum_mul_sum_le_card_mul_sum (hfg : MonovaryOn f g s) :
-    ((∑ i in s, f i) * ∑ i in s, g i) ≤ s.card * ∑ i in s, f i * g i :=
-  by
-  rw [← nsmul_eq_mul]
+    ((∑ i in s, f i) * ∑ i in s, g i) ≤ s.card * ∑ i in s, f i * g i := by rw [← nsmul_eq_mul];
   exact hfg.sum_smul_sum_le_card_smul_sum
 #align monovary_on.sum_mul_sum_le_card_mul_sum MonovaryOn.sum_mul_sum_le_card_mul_sum
 
@@ -147,10 +145,8 @@ Case conversion may be inaccurate. Consider using '#align antivary_on.card_mul_s
 other is antitone), the product of their sum is greater than the size of the set times their scalar
 product. -/
 theorem AntivaryOn.card_mul_sum_le_sum_mul_sum (hfg : AntivaryOn f g s) :
-    ((s.card : α) * ∑ i in s, f i * g i) ≤ (∑ i in s, f i) * ∑ i in s, g i :=
-  by
-  rw [← nsmul_eq_mul]
-  exact hfg.card_smul_sum_le_sum_smul_sum
+    ((s.card : α) * ∑ i in s, f i * g i) ≤ (∑ i in s, f i) * ∑ i in s, g i := by
+  rw [← nsmul_eq_mul]; exact hfg.card_smul_sum_le_sum_smul_sum
 #align antivary_on.card_mul_sum_le_sum_mul_sum AntivaryOn.card_mul_sum_le_sum_mul_sum
 
 /- warning: sq_sum_le_card_mul_sum_sq -> sq_sum_le_card_mul_sum_sq is a dubious translation:
@@ -161,10 +157,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sq_sum_le_card_mul_sum_sq sq_sum_le_card_mul_sum_sqₓ'. -/
 /-- Special case of **Chebyshev's Sum Inequality** or the **Cauchy-Schwarz Inequality**: The square
 of the sum is less than the size of the set times the sum of the squares. -/
-theorem sq_sum_le_card_mul_sum_sq : (∑ i in s, f i) ^ 2 ≤ s.card * ∑ i in s, f i ^ 2 :=
-  by
-  simp_rw [sq]
-  exact (monovaryOn_self _ _).sum_mul_sum_le_card_mul_sum
+theorem sq_sum_le_card_mul_sum_sq : (∑ i in s, f i) ^ 2 ≤ s.card * ∑ i in s, f i ^ 2 := by
+  simp_rw [sq]; exact (monovaryOn_self _ _).sum_mul_sum_le_card_mul_sum
 #align sq_sum_le_card_mul_sum_sq sq_sum_le_card_mul_sum_sq
 
 variable [Fintype ι]

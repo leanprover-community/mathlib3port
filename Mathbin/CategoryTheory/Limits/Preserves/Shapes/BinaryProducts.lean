@@ -56,11 +56,7 @@ essentially lets us commute `binary_fan.mk` with `functor.map_cone`.
 def isLimitMapConeBinaryFanEquiv :
     IsLimit (G.mapCone (BinaryFan.mk f g)) ≃ IsLimit (BinaryFan.mk (G.map f) (G.map g)) :=
   (IsLimit.postcomposeHomEquiv (diagramIsoPair _) _).symm.trans
-    (IsLimit.equivIsoLimit
-      (Cones.ext (Iso.refl _)
-        (by
-          rintro (_ | _)
-          tidy)))
+    (IsLimit.equivIsoLimit (Cones.ext (Iso.refl _) (by rintro (_ | _); tidy)))
 #align category_theory.limits.is_limit_map_cone_binary_fan_equiv CategoryTheory.Limits.isLimitMapConeBinaryFanEquiv
 
 /- warning: category_theory.limits.map_is_limit_of_preserves_of_is_limit -> CategoryTheory.Limits.mapIsLimitOfPreservesOfIsLimit is a dubious translation:
@@ -173,11 +169,7 @@ This essentially lets us commute `binary_cofan.mk` with `functor.map_cocone`.
 def isColimitMapCoconeBinaryCofanEquiv :
     IsColimit (G.mapCocone (BinaryCofan.mk f g)) ≃ IsColimit (BinaryCofan.mk (G.map f) (G.map g)) :=
   (IsColimit.precomposeHomEquiv (diagramIsoPair _).symm _).symm.trans
-    (IsColimit.equivIsoColimit
-      (Cocones.ext (Iso.refl _)
-        (by
-          rintro (_ | _)
-          tidy)))
+    (IsColimit.equivIsoColimit (Cocones.ext (Iso.refl _) (by rintro (_ | _); tidy)))
 #align category_theory.limits.is_colimit_map_cocone_binary_cofan_equiv CategoryTheory.Limits.isColimitMapCoconeBinaryCofanEquiv
 
 /- warning: category_theory.limits.map_is_colimit_of_preserves_of_is_colimit -> CategoryTheory.Limits.mapIsColimitOfPreservesOfIsColimit is a dubious translation:

@@ -144,10 +144,8 @@ theorem mk_ker {I : Ideal R} : (Quotient.mk I).ker = I := by
 /- warning: ideal.map_mk_eq_bot_of_le -> Ideal.map_mk_eq_bot_of_le is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align ideal.map_mk_eq_bot_of_le Ideal.map_mk_eq_bot_of_leₓ'. -/
-theorem map_mk_eq_bot_of_le {I J : Ideal R} (h : I ≤ J) : I.map J.Quotient.mk = ⊥ :=
-  by
-  rw [map_eq_bot_iff_le_ker, mk_ker]
-  exact h
+theorem map_mk_eq_bot_of_le {I J : Ideal R} (h : I ≤ J) : I.map J.Quotient.mk = ⊥ := by
+  rw [map_eq_bot_iff_le_ker, mk_ker]; exact h
 #align ideal.map_mk_eq_bot_of_le Ideal.map_mk_eq_bot_of_le
 
 /- warning: ideal.ker_quotient_lift -> Ideal.ker_quotient_lift is a dubious translation:
@@ -181,10 +179,7 @@ theorem bot_quotient_isMaximal_iff (I : Ideal R) : (⊥ : Ideal (R ⧸ I)).IsMax
   ⟨fun hI =>
     @mk_ker _ _ I ▸
       @comap_isMaximal_of_surjective _ _ _ _ _ _ (Quotient.mk I) Quotient.mk_surjective ⊥ hI,
-    fun hI => by
-    skip
-    letI := quotient.field I
-    exact bot_is_maximal⟩
+    fun hI => by skip; letI := quotient.field I; exact bot_is_maximal⟩
 #align ideal.bot_quotient_is_maximal_iff Ideal.bot_quotient_isMaximal_iff
 
 /- warning: ideal.mem_quotient_iff_mem_sup -> Ideal.mem_quotient_iff_mem_sup is a dubious translation:
@@ -211,9 +206,7 @@ theorem mem_quotient_iff_mem {I J : Ideal R} (hIJ : I ≤ J) {x : R} :
 <too large>
 Case conversion may be inaccurate. Consider using '#align ideal.comap_map_mk Ideal.comap_map_mkₓ'. -/
 theorem comap_map_mk {I J : Ideal R} (h : I ≤ J) :
-    Ideal.comap (Ideal.Quotient.mk I) (Ideal.map (Ideal.Quotient.mk I) J) = J :=
-  by
-  ext
+    Ideal.comap (Ideal.Quotient.mk I) (Ideal.map (Ideal.Quotient.mk I) J) = J := by ext;
   rw [← Ideal.mem_quotient_iff_mem h, Ideal.mem_comap]
 #align ideal.comap_map_mk Ideal.comap_map_mk
 
@@ -494,22 +487,13 @@ def quotientEquiv (I : Ideal R) (J : Ideal S) (f : R ≃+* S) (hIJ : J = I.map (
     R ⧸ I ≃+* S ⧸ J :=
   {
     quotientMap J (↑f)
-      (by
-        rw [hIJ]
+      (by rw [hIJ];
         exact
           @le_comap_map _ S _ _ _ _ _
             _) with
-    invFun :=
-      quotientMap I (↑f.symm)
-        (by
-          rw [hIJ]
-          exact le_of_eq (map_comap_of_equiv I f))
-    left_inv := by
-      rintro ⟨r⟩
-      simp
-    right_inv := by
-      rintro ⟨s⟩
-      simp }
+    invFun := quotientMap I (↑f.symm) (by rw [hIJ]; exact le_of_eq (map_comap_of_equiv I f))
+    left_inv := by rintro ⟨r⟩; simp
+    right_inv := by rintro ⟨s⟩; simp }
 #align ideal.quotient_equiv Ideal.quotientEquiv
 
 /- warning: ideal.quotient_equiv_mk -> Ideal.quotientEquiv_mk is a dubious translation:
@@ -735,13 +719,7 @@ def liftSupQuotQuotMk (I J : Ideal R) : R ⧸ I ⊔ J →+* (R ⧸ I) ⧸ J.map 
 /-- `quot_quot_to_quot_add` and `lift_sup_double_qot_mk` are inverse isomorphisms. In the case where
     `I ≤ J`, this is the Third Isomorphism Theorem (see `quot_quot_equiv_quot_of_le`)-/
 def quotQuotEquivQuotSup : (R ⧸ I) ⧸ J.map (Ideal.Quotient.mk I) ≃+* R ⧸ I ⊔ J :=
-  RingEquiv.ofHomInv (quotQuotToQuotSup I J) (liftSupQuotQuotMk I J)
-    (by
-      ext z
-      rfl)
-    (by
-      ext z
-      rfl)
+  RingEquiv.ofHomInv (quotQuotToQuotSup I J) (liftSupQuotQuotMk I J) (by ext z; rfl) (by ext z; rfl)
 #align double_quot.quot_quot_equiv_quot_sup DoubleQuot.quotQuotEquivQuotSup
 -/
 

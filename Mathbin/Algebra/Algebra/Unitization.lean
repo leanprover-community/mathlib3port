@@ -666,17 +666,13 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
         show
           x₁.1 • (x₂.2 + x₃.2) + (x₂.1 + x₃.1) • x₁.2 + x₁.2 * (x₂.2 + x₃.2) =
             x₁.1 • x₂.2 + x₂.1 • x₁.2 + x₁.2 * x₂.2 + (x₁.1 • x₃.2 + x₃.1 • x₁.2 + x₁.2 * x₃.2)
-          by
-          simp only [smul_add, add_smul, mul_add]
-          abel
+          by simp only [smul_add, add_smul, mul_add]; abel
     right_distrib := fun x₁ x₂ x₃ =>
       ext (add_mul x₁.1 x₂.1 x₃.1) <|
         show
           (x₁.1 + x₂.1) • x₃.2 + x₃.1 • (x₁.2 + x₂.2) + (x₁.2 + x₂.2) * x₃.2 =
             x₁.1 • x₃.2 + x₃.1 • x₁.2 + x₁.2 * x₃.2 + (x₂.1 • x₃.2 + x₃.1 • x₂.2 + x₂.2 * x₃.2)
-          by
-          simp only [add_smul, smul_add, add_mul]
-          abel }
+          by simp only [add_smul, smul_add, add_mul]; abel }
 
 instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTower R A A]
     [SMulCommClass R A A] : Monoid (Unitization R A) :=
@@ -956,14 +952,8 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C)
       commutes' := fun r => by
         simp only [algebra_map_eq_inl, fst_inl, snd_inl, φ.map_zero, add_zero] }
   invFun φ := φ.toNonUnitalAlgHom.comp (inrNonUnitalAlgHom R A)
-  left_inv φ := by
-    ext
-    simp
-  right_inv φ :=
-    Unitization.algHom_ext'
-      (by
-        ext
-        simp)
+  left_inv φ := by ext; simp
+  right_inv φ := Unitization.algHom_ext' (by ext; simp)
 #align unitization.lift Unitization.lift
 
 /- warning: unitization.lift_symm_apply -> Unitization.lift_symm_apply is a dubious translation:

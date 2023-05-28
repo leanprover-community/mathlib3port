@@ -72,8 +72,7 @@ theorem formPerm_disjoint_iff (hl : Nodup l) (hl' : Nodup l') (hn : 2 ≤ l.leng
     rw [form_perm_apply_mem_eq_self_iff _ hl _ hx, form_perm_apply_mem_eq_self_iff _ hl' _ hx'] at h
     rcases h with (hl | hl') <;> linarith
   · intro h x
-    by_cases hx : x ∈ l
-    by_cases hx' : x ∈ l'
+    by_cases hx : x ∈ l; by_cases hx' : x ∈ l'
     · exact (h hx hx').elim
     all_goals have := form_perm_eq_self_of_not_mem _ _ ‹_›; tauto
 #align list.form_perm_disjoint_iff List.formPerm_disjoint_iff

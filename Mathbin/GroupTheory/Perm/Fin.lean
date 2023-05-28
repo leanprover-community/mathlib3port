@@ -141,8 +141,7 @@ theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n :=
   by
   induction' n with n ih
   · simp
-  · rw [finRotate_succ_eq_decomposeFin]
-    simp [ih, pow_succ]
+  · rw [finRotate_succ_eq_decomposeFin]; simp [ih, pow_succ]
 #align sign_fin_rotate sign_finRotate
 
 /- warning: support_fin_rotate -> support_finRotate is a dubious translation:
@@ -152,10 +151,7 @@ but is expected to have type
   forall {n : Nat}, Eq.{1} (Finset.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) (Equiv.Perm.support.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (fun (a : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (b : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) => instDecidableEqFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a b) (Fin.fintype (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (finRotate (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) (Finset.univ.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Fin.fintype (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align support_fin_rotate support_finRotateₓ'. -/
 @[simp]
-theorem support_finRotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ :=
-  by
-  ext
-  simp
+theorem support_finRotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ := by ext; simp
 #align support_fin_rotate support_finRotate
 
 /- warning: support_fin_rotate_of_le -> support_finRotate_of_le is a dubious translation:
@@ -217,10 +213,7 @@ namespace Fin
 def cycleRange {n : ℕ} (i : Fin n) : Perm (Fin n) :=
   (finRotate (i + 1)).extendDomain
     (Equiv.ofLeftInverse' (Fin.castLE (Nat.succ_le_of_lt i.is_lt)).toEmbedding coe
-      (by
-        intro x
-        ext
-        simp))
+      (by intro x; ext; simp))
 #align fin.cycle_range Fin.cycleRange
 -/
 
@@ -262,8 +255,7 @@ theorem coe_cycleRange_of_le {n : ℕ} {i j : Fin n.succ} (h : j ≤ i) :
     (cycleRange i j : ℕ) = if j = i then 0 else j + 1 :=
   by
   rw [cycle_range_of_le h]
-  split_ifs with h'
-  · rfl
+  split_ifs with h'; · rfl
   exact
     coe_add_one_of_lt
       (calc
@@ -326,9 +318,7 @@ theorem cycleRange_zero (n : ℕ) : cycleRange (0 : Fin n.succ) = 1 :=
 
 #print Fin.cycleRange_last /-
 @[simp]
-theorem cycleRange_last (n : ℕ) : cycleRange (last n) = finRotate (n + 1) :=
-  by
-  ext i
+theorem cycleRange_last (n : ℕ) : cycleRange (last n) = finRotate (n + 1) := by ext i;
   rw [coe_cycle_range_of_le (le_last _), coe_finRotate]
 #align fin.cycle_range_last Fin.cycleRange_last
 -/
@@ -371,8 +361,7 @@ theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
   cases n
   · rcases j with ⟨_, ⟨⟩⟩
   rcases lt_trichotomy j i with (hlt | heq | hgt)
-  · have : (j + 1).cast_succ = j.succ := by
-      ext
+  · have : (j + 1).cast_succ = j.succ := by ext;
       rw [coe_cast_succ, coe_succ, Fin.val_add_one_of_lt (lt_of_lt_of_le hlt i.le_last)]
     rw [Fin.cycleRange_of_lt hlt, Fin.succAbove_below, this, swap_apply_of_ne_of_ne]
     · apply Fin.succ_ne_zero
@@ -380,8 +369,7 @@ theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
     · rw [Fin.lt_iff_val_lt_val]
       simpa [this] using hlt
   · rw [HEq, Fin.cycleRange_self, Fin.succAbove_below, swap_apply_right, Fin.castSucc_zero]
-    · rw [Fin.castSucc_zero]
-      apply Fin.succ_pos
+    · rw [Fin.castSucc_zero]; apply Fin.succ_pos
   · rw [Fin.cycleRange_of_gt hgt, Fin.succAbove_above, swap_apply_of_ne_of_ne]
     · apply Fin.succ_ne_zero
     · apply (Fin.succ_injective _).Ne hgt.ne.symm

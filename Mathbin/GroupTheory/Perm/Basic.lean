@@ -685,9 +685,7 @@ theorem subtypePerm_pow (f : Perm α) (n : ℕ) (hf) :
 
 private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x ↔ p ((f ^ n) x)
   | Int.ofNat n => pow_aux hf
-  | Int.negSucc n => by
-    rw [zpow_negSucc]
-    exact inv_aux.1 (pow_aux hf)
+  | Int.negSucc n => by rw [zpow_negSucc]; exact inv_aux.1 (pow_aux hf)
 
 #print Equiv.Perm.subtypePerm_zpow /-
 @[simp]
@@ -955,9 +953,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swapₓ'. -/
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) :
     swap y z * swap x y * swap y z = swap z x :=
-  Equiv.ext fun n => by
-    simp only [swap_apply_def, perm.mul_apply]
-    split_ifs <;> cc
+  Equiv.ext fun n => by simp only [swap_apply_def, perm.mul_apply]; split_ifs <;> cc
 #align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swap
 
 end Swap
@@ -1034,18 +1030,14 @@ theorem inv_addRight : (Equiv.addRight a)⁻¹ = Equiv.addRight (-a) :=
 
 #print Equiv.pow_addLeft /-
 @[simp]
-theorem pow_addLeft (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
-  by
-  ext
+theorem pow_addLeft (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) := by ext;
   simp [perm.coe_pow]
 #align equiv.pow_add_left Equiv.pow_addLeft
 -/
 
 #print Equiv.pow_addRight /-
 @[simp]
-theorem pow_addRight (n : ℕ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
-  by
-  ext
+theorem pow_addRight (n : ℕ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) := by ext;
   simp [perm.coe_pow]
 #align equiv.pow_add_right Equiv.pow_addRight
 -/
@@ -1144,9 +1136,7 @@ theorem inv_mulRight : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
 
 #print Equiv.pow_mulLeft /-
 @[simp, to_additive pow_add_left]
-theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
-  by
-  ext
+theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) := by ext;
   simp [perm.coe_pow]
 #align equiv.pow_mul_left Equiv.pow_mulLeft
 #align equiv.pow_add_left Equiv.pow_addLeft
@@ -1154,9 +1144,7 @@ theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
 
 #print Equiv.pow_mulRight /-
 @[simp, to_additive pow_add_right]
-theorem pow_mulRight (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) :=
-  by
-  ext
+theorem pow_mulRight (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) := by ext;
   simp [perm.coe_pow]
 #align equiv.pow_mul_right Equiv.pow_mulRight
 #align equiv.pow_add_right Equiv.pow_addRight
@@ -1205,35 +1193,27 @@ alias bij_on_perm_inv ↔ bij_on.of_perm_inv bij_on.perm_inv
 #align set.bij_on.perm_inv Set.BijOn.perm_inv
 
 #print Set.MapsTo.perm_pow /-
-theorem MapsTo.perm_pow : MapsTo f s s → ∀ n : ℕ, MapsTo (⇑(f ^ n)) s s :=
-  by
-  simp_rw [Equiv.Perm.coe_pow]
-  exact maps_to.iterate
+theorem MapsTo.perm_pow : MapsTo f s s → ∀ n : ℕ, MapsTo (⇑(f ^ n)) s s := by
+  simp_rw [Equiv.Perm.coe_pow]; exact maps_to.iterate
 #align set.maps_to.perm_pow Set.MapsTo.perm_pow
 -/
 
 #print Set.SurjOn.perm_pow /-
-theorem SurjOn.perm_pow : SurjOn f s s → ∀ n : ℕ, SurjOn (⇑(f ^ n)) s s :=
-  by
-  simp_rw [Equiv.Perm.coe_pow]
-  exact surj_on.iterate
+theorem SurjOn.perm_pow : SurjOn f s s → ∀ n : ℕ, SurjOn (⇑(f ^ n)) s s := by
+  simp_rw [Equiv.Perm.coe_pow]; exact surj_on.iterate
 #align set.surj_on.perm_pow Set.SurjOn.perm_pow
 -/
 
 #print Set.BijOn.perm_pow /-
-theorem BijOn.perm_pow : BijOn f s s → ∀ n : ℕ, BijOn (⇑(f ^ n)) s s :=
-  by
-  simp_rw [Equiv.Perm.coe_pow]
-  exact bij_on.iterate
+theorem BijOn.perm_pow : BijOn f s s → ∀ n : ℕ, BijOn (⇑(f ^ n)) s s := by
+  simp_rw [Equiv.Perm.coe_pow]; exact bij_on.iterate
 #align set.bij_on.perm_pow Set.BijOn.perm_pow
 -/
 
 #print Set.BijOn.perm_zpow /-
 theorem BijOn.perm_zpow (hf : BijOn f s s) : ∀ n : ℤ, BijOn (⇑(f ^ n)) s s
   | Int.ofNat n => hf.perm_pow _
-  | Int.negSucc n => by
-    rw [zpow_negSucc]
-    exact (hf.perm_pow _).perm_inv
+  | Int.negSucc n => by rw [zpow_negSucc]; exact (hf.perm_pow _).perm_inv
 #align set.bij_on.perm_zpow Set.BijOn.perm_zpow
 -/
 

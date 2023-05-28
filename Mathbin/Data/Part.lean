@@ -260,12 +260,7 @@ theorem not_none_dom : ¬(none : Part α).Dom :=
 
 #print Part.some_ne_none /-
 @[simp]
-theorem some_ne_none (x : α) : some x ≠ none :=
-  by
-  intro h
-  change none.dom
-  rw [← h]
-  trivial
+theorem some_ne_none (x : α) : some x ≠ none := by intro h; change none.dom; rw [← h]; trivial
 #align part.some_ne_none Part.some_ne_none
 -/
 
@@ -280,10 +275,8 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x :=
   by
   constructor
-  · rw [Ne, eq_none_iff', Classical.not_not]
-    exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
-  · rintro ⟨x, rfl⟩
-    apply some_ne_none
+  · rw [Ne, eq_none_iff', Classical.not_not]; exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
+  · rintro ⟨x, rfl⟩; apply some_ne_none
 #align part.ne_none_iff Part.ne_none_iff
 -/
 
@@ -321,9 +314,7 @@ theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b �
 
 #print Part.get_eq_get_of_eq /-
 theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) :
-    a.get ha = b.get (h ▸ ha) := by
-  congr
-  exact h
+    a.get ha = b.get (h ▸ ha) := by congr ; exact h
 #align part.get_eq_get_of_eq Part.get_eq_get_of_eq
 -/
 
@@ -543,9 +534,7 @@ instance : PartialOrder (Part α)
 
 instance : OrderBot (Part α) where
   bot := none
-  bot_le := by
-    introv x
-    rintro ⟨⟨_⟩, _⟩
+  bot_le := by introv x; rintro ⟨⟨_⟩, _⟩
 
 /- warning: part.le_total_of_le_of_le -> Part.le_total_of_le_of_le is a dubious translation:
 lean 3 declaration is
@@ -556,9 +545,7 @@ Case conversion may be inaccurate. Consider using '#align part.le_total_of_le_of
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
     x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
-  · rw [h]
-    left
-    apply OrderBot.bot_le _
+  · rw [h]; left; apply OrderBot.bot_le _
   right; intro b' h₁
   rw [Part.eq_some_iff] at h₀
   replace hx := hx _ h₀; replace hy := hy _ h₁
@@ -879,14 +866,12 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
     x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y :=
   by
   constructor <;> intro h
-  · intro a h' b
-    replace h := h b
+  · intro a h' b; replace h := h b
     simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
     apply h _ h'
   · intro b h'
     simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
-    rcases h' with ⟨a, h₀, h₁⟩
-    apply h _ h₀ _ h₁
+    rcases h' with ⟨a, h₀, h₁⟩; apply h _ h₀ _ h₁
 #align part.bind_le Part.bind_le
 
 instance : MonadFail Part :=
@@ -906,8 +891,7 @@ theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) :
     a ∈ restrict p o h ↔ p ∧ a ∈ o :=
   by
   dsimp [restrict, mem_eq]; constructor
-  · rintro ⟨h₀, h₁⟩
-    exact ⟨h₀, ⟨_, h₁⟩⟩
+  · rintro ⟨h₀, h₁⟩; exact ⟨h₀, ⟨_, h₁⟩⟩
   rintro ⟨h₀, h₁, h₂⟩; exact ⟨h₀, h₂⟩
 #align part.mem_restrict Part.mem_restrict
 -/

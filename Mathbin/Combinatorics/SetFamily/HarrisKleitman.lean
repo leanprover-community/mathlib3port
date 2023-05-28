@@ -46,10 +46,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {a : α}, (IsLowerSet.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.toSet.{u1} (Finset.{u1} α) 𝒜)) -> (IsLowerSet.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.toSet.{u1} (Finset.{u1} α) (Finset.nonMemberSubfamily.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a 𝒜)))
 Case conversion may be inaccurate. Consider using '#align is_lower_set.non_member_subfamily IsLowerSet.nonMemberSubfamilyₓ'. -/
 theorem IsLowerSet.nonMemberSubfamily (h : IsLowerSet (𝒜 : Set (Finset α))) :
-    IsLowerSet (𝒜.nonMemberSubfamily a : Set (Finset α)) := fun s t hts =>
-  by
-  simp_rw [mem_coe, mem_non_member_subfamily]
-  exact And.imp (h hts) (mt <| @hts _)
+    IsLowerSet (𝒜.nonMemberSubfamily a : Set (Finset α)) := fun s t hts => by
+  simp_rw [mem_coe, mem_non_member_subfamily]; exact And.imp (h hts) (mt <| @hts _)
 #align is_lower_set.non_member_subfamily IsLowerSet.nonMemberSubfamily
 
 /- warning: is_lower_set.member_subfamily -> IsLowerSet.memberSubfamily is a dubious translation:
@@ -168,9 +166,7 @@ Case conversion may be inaccurate. Consider using '#align is_lower_set.card_inte
 /-- **Harris-Kleitman inequality**: Lower sets and upper sets of finsets anticorrelate. -/
 theorem IsLowerSet.card_inter_le_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset α)))
     (hℬ : IsUpperSet (ℬ : Set (Finset α))) : 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card ≤ 𝒜.card * ℬ.card :=
-  by
-  rw [inter_comm, mul_comm 𝒜.card]
-  exact hℬ.card_inter_le_finset h𝒜
+  by rw [inter_comm, mul_comm 𝒜.card]; exact hℬ.card_inter_le_finset h𝒜
 #align is_lower_set.card_inter_le_finset IsLowerSet.card_inter_le_finset
 
 /- warning: is_upper_set.le_card_inter_finset -> IsUpperSet.le_card_inter_finset is a dubious translation:

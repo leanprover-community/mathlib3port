@@ -219,9 +219,7 @@ theorem rpow_nat_cast (x : ℝ≥0) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
 
 #print NNReal.rpow_two /-
 @[simp]
-theorem rpow_two (x : ℝ≥0) : x ^ (2 : ℝ) = x ^ 2 :=
-  by
-  rw [← rpow_nat_cast]
+theorem rpow_two (x : ℝ≥0) : x ^ (2 : ℝ) = x ^ 2 := by rw [← rpow_nat_cast];
   simp only [Nat.cast_bit0, Nat.cast_one]
 #align nnreal.rpow_two NNReal.rpow_two
 -/
@@ -514,18 +512,14 @@ theorem rpow_one_div_eq_iff {x y : ℝ≥0} {z : ℝ} (hz : z ≠ 0) : x ^ (1 / 
 #align nnreal.rpow_one_div_eq_iff NNReal.rpow_one_div_eq_iff
 
 #print NNReal.pow_nat_rpow_nat_inv /-
-theorem pow_nat_rpow_nat_inv (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x :=
-  by
-  rw [← NNReal.coe_eq, coe_rpow, NNReal.coe_pow]
-  exact Real.pow_nat_rpow_nat_inv x.2 hn
+theorem pow_nat_rpow_nat_inv (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
+  rw [← NNReal.coe_eq, coe_rpow, NNReal.coe_pow]; exact Real.pow_nat_rpow_nat_inv x.2 hn
 #align nnreal.pow_nat_rpow_nat_inv NNReal.pow_nat_rpow_nat_inv
 -/
 
 #print NNReal.rpow_nat_inv_pow_nat /-
-theorem rpow_nat_inv_pow_nat (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x :=
-  by
-  rw [← NNReal.coe_eq, NNReal.coe_pow, coe_rpow]
-  exact Real.rpow_nat_inv_pow_nat x.2 hn
+theorem rpow_nat_inv_pow_nat (x : ℝ≥0) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℝ)) ^ n = x := by
+  rw [← NNReal.coe_eq, NNReal.coe_pow, coe_rpow]; exact Real.rpow_nat_inv_pow_nat x.2 hn
 #align nnreal.rpow_nat_inv_pow_nat NNReal.rpow_nat_inv_pow_nat
 -/
 
@@ -575,9 +569,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.rpow_zero ENNReal.rpow_zeroₓ'. -/
 @[simp]
 theorem rpow_zero {x : ℝ≥0∞} : x ^ (0 : ℝ) = 1 := by
-  cases x <;>
-    · dsimp only [(· ^ ·), rpow]
-      simp [lt_irrefl]
+  cases x <;> · dsimp only [(· ^ ·), rpow]; simp [lt_irrefl]
 #align ennreal.rpow_zero ENNReal.rpow_zero
 
 /- warning: ennreal.top_rpow_def -> ENNReal.top_rpow_def is a dubious translation:
@@ -656,11 +648,8 @@ but is expected to have type
   forall (y : Real), Eq.{1} ENNReal (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) (HPow.hPow.{0, 0, 0} ENNReal Real ENNReal (instHPow.{0, 0} ENNReal Real ENNReal.instPowENNRealReal) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) y) (HPow.hPow.{0, 0, 0} ENNReal Real ENNReal (instHPow.{0, 0} ENNReal Real ENNReal.instPowENNRealReal) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) y)) (HPow.hPow.{0, 0, 0} ENNReal Real ENNReal (instHPow.{0, 0} ENNReal Real ENNReal.instPowENNRealReal) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) y)
 Case conversion may be inaccurate. Consider using '#align ennreal.zero_rpow_mul_self ENNReal.zero_rpow_mul_selfₓ'. -/
 @[simp]
-theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y :=
-  by
-  rw [zero_rpow_def]
-  split_ifs
-  exacts[MulZeroClass.zero_mul _, one_mul _, top_mul_top]
+theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y := by rw [zero_rpow_def];
+  split_ifs; exacts[MulZeroClass.zero_mul _, one_mul _, top_mul_top]
 #align ennreal.zero_rpow_mul_self ENNReal.zero_rpow_mul_self
 
 /- warning: ennreal.coe_rpow_of_ne_zero -> ENNReal.coe_rpow_of_ne_zero is a dubious translation:
@@ -722,9 +711,7 @@ theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x :=
 
 #print ENNReal.one_rpow /-
 @[simp]
-theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 :=
-  by
-  rw [← coe_one, coe_rpow_of_ne_zero one_ne_zero]
+theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 := by rw [← coe_one, coe_rpow_of_ne_zero one_ne_zero];
   simp
 #align ennreal.one_rpow ENNReal.one_rpow
 -/
@@ -790,9 +777,7 @@ theorem rpow_eq_top_of_nonneg (x : ℝ≥0∞) {y : ℝ} (hy0 : 0 ≤ y) : x ^ y
   rw [ENNReal.rpow_eq_top_iff]
   intro h
   cases h
-  · exfalso
-    rw [lt_iff_not_ge] at h
-    exact h.right hy0
+  · exfalso; rw [lt_iff_not_ge] at h; exact h.right hy0
   · exact h.left
 #align ennreal.rpow_eq_top_of_nonneg ENNReal.rpow_eq_top_of_nonneg
 
@@ -913,9 +898,7 @@ but is expected to have type
   forall (x : ENNReal), Eq.{1} ENNReal (HPow.hPow.{0, 0, 0} ENNReal Real ENNReal (instHPow.{0, 0} ENNReal Real ENNReal.instPowENNRealReal) x (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HPow.hPow.{0, 0, 0} ENNReal Nat ENNReal (instHPow.{0, 0} ENNReal Nat (Monoid.Pow.{0} ENNReal (MonoidWithZero.toMonoid.{0} ENNReal (Semiring.toMonoidWithZero.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))))))) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align ennreal.rpow_two ENNReal.rpow_twoₓ'. -/
 @[simp]
-theorem rpow_two (x : ℝ≥0∞) : x ^ (2 : ℝ) = x ^ 2 :=
-  by
-  rw [← rpow_nat_cast]
+theorem rpow_two (x : ℝ≥0∞) : x ^ (2 : ℝ) = x ^ 2 := by rw [← rpow_nat_cast];
   simp only [Nat.cast_bit0, Nat.cast_one]
 #align ennreal.rpow_two ENNReal.rpow_two
 
@@ -1045,9 +1028,7 @@ where the inverse is `λ x : ℝ≥0∞, x ^ (1 / y)`. -/
 @[simps apply]
 def orderIsoRpow (y : ℝ) (hy : 0 < y) : ℝ≥0∞ ≃o ℝ≥0∞ :=
   (strictMono_rpow_of_pos hy).orderIsoOfRightInverse (fun x => x ^ y) (fun x => x ^ (1 / y))
-    fun x => by
-    dsimp
-    rw [← rpow_mul, one_div_mul_cancel hy.ne.symm, rpow_one]
+    fun x => by dsimp; rw [← rpow_mul, one_div_mul_cancel hy.ne.symm, rpow_one]
 #align ennreal.order_iso_rpow ENNReal.orderIsoRpow
 
 /- warning: ennreal.order_iso_rpow_symm_apply -> ENNReal.orderIsoRpow_symm_apply is a dubious translation:
@@ -1057,10 +1038,8 @@ but is expected to have type
   forall (y : Real) (hy : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) y), Eq.{1} (OrderIso.{0, 0} ENNReal ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))))) (OrderIso.symm.{0, 0} ENNReal ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (ENNReal.orderIsoRpow y hy)) (ENNReal.orderIsoRpow (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real (Semiring.toOne.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Real (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Real (LinearOrderedSemifield.toLinearOrderedCommSemiring.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal)))))))) y) (Iff.mpr (LT.lt.{0} Real (Preorder.toLT.{0} Real (PartialOrder.toPreorder.{0} Real (StrictOrderedSemiring.toPartialOrder.{0} Real (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Real (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Real (LinearOrderedSemifield.toLinearOrderedCommSemiring.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal))))))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real (CommMonoidWithZero.toZero.{0} Real (CommGroupWithZero.toCommMonoidWithZero.{0} Real (Semifield.toCommGroupWithZero.{0} Real (LinearOrderedSemifield.toSemifield.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal))))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedSemifield.toDiv.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real (Semiring.toOne.{0} Real (StrictOrderedSemiring.toSemiring.{0} Real (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Real (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Real (LinearOrderedSemifield.toLinearOrderedCommSemiring.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal)))))))) y)) (LT.lt.{0} Real (Preorder.toLT.{0} Real (PartialOrder.toPreorder.{0} Real (StrictOrderedSemiring.toPartialOrder.{0} Real (LinearOrderedSemiring.toStrictOrderedSemiring.{0} Real (LinearOrderedCommSemiring.toLinearOrderedSemiring.{0} Real (LinearOrderedSemifield.toLinearOrderedCommSemiring.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal))))))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real (CommMonoidWithZero.toZero.{0} Real (CommGroupWithZero.toCommMonoidWithZero.{0} Real (Semifield.toCommGroupWithZero.{0} Real (LinearOrderedSemifield.toSemifield.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal))))))) y) (one_div_pos.{0} Real (LinearOrderedField.toLinearOrderedSemifield.{0} Real Real.instLinearOrderedFieldReal) y) hy))
 Case conversion may be inaccurate. Consider using '#align ennreal.order_iso_rpow_symm_apply ENNReal.orderIsoRpow_symm_applyₓ'. -/
 theorem orderIsoRpow_symm_apply (y : ℝ) (hy : 0 < y) :
-    (orderIsoRpow y hy).symm = orderIsoRpow (1 / y) (one_div_pos.2 hy) :=
-  by
-  simp only [order_iso_rpow, one_div_one_div]
-  rfl
+    (orderIsoRpow y hy).symm = orderIsoRpow (1 / y) (one_div_pos.2 hy) := by
+  simp only [order_iso_rpow, one_div_one_div]; rfl
 #align ennreal.order_iso_rpow_symm_apply ENNReal.orderIsoRpow_symm_apply
 
 /- warning: ennreal.rpow_le_rpow -> ENNReal.rpow_le_rpow is a dubious translation:
@@ -1245,8 +1224,7 @@ theorem rpow_pos_of_nonneg {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hp_nonne
   · simp [hp_zero, zero_lt_one]
   · rw [← Ne.def] at hp_zero
     have hp_pos := lt_of_le_of_ne hp_nonneg hp_zero.symm
-    rw [← zero_rpow_of_pos hp_pos]
-    exact rpow_lt_rpow hx_pos hp_pos
+    rw [← zero_rpow_of_pos hp_pos]; exact rpow_lt_rpow hx_pos hp_pos
 #align ennreal.rpow_pos_of_nonneg ENNReal.rpow_pos_of_nonneg
 
 /- warning: ennreal.rpow_pos -> ENNReal.rpow_pos is a dubious translation:
@@ -1380,14 +1358,12 @@ theorem one_le_rpow_of_pos_of_le_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 
 theorem toNNReal_rpow (x : ℝ≥0∞) (z : ℝ) : x.toNNReal ^ z = (x ^ z).toNNReal :=
   by
   rcases lt_trichotomy z 0 with (H | H | H)
-  · cases x
-    · simp [H, ne_of_lt]
+  · cases x; · simp [H, ne_of_lt]
     by_cases hx : x = 0
     · simp [hx, H, ne_of_lt]
     · simp [coe_rpow_of_ne_zero hx]
   · simp [H]
-  · cases x
-    · simp [H, ne_of_gt]
+  · cases x; · simp [H, ne_of_gt]
     simp [coe_rpow_of_nonneg _ (le_of_lt H)]
 #align ennreal.to_nnreal_rpow ENNReal.toNNReal_rpow
 -/

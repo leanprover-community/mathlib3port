@@ -113,9 +113,7 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} (Nat -> (Finset.{0} Nat)) (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring)) Finset.range
 Case conversion may be inaccurate. Consider using '#align nat.Iio_eq_range Nat.Iio_eq_rangeₓ'. -/
-theorem Iio_eq_range : Iio = range := by
-  ext (b x)
-  rw [mem_Iio, mem_range]
+theorem Iio_eq_range : Iio = range := by ext (b x); rw [mem_Iio, mem_range]
 #align nat.Iio_eq_range Nat.Iio_eq_range
 
 /- warning: nat.Ico_zero_eq_range -> Nat.Ico_zero_eq_range is a dubious translation:
@@ -274,10 +272,7 @@ but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
 Case conversion may be inaccurate. Consider using '#align nat.Icc_succ_left Nat.Icc_succ_leftₓ'. -/
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
-theorem Icc_succ_left : Icc a.succ b = Ioc a b :=
-  by
-  ext x
-  rw [mem_Icc, mem_Ioc, succ_le_iff]
+theorem Icc_succ_left : Icc a.succ b = Ioc a b := by ext x; rw [mem_Icc, mem_Ioc, succ_le_iff]
 #align nat.Icc_succ_left Nat.Icc_succ_left
 
 /- warning: nat.Ico_succ_right -> Nat.Ico_succ_right is a dubious translation:
@@ -286,10 +281,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (Nat.succ b)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
 Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_right Nat.Ico_succ_rightₓ'. -/
-theorem Ico_succ_right : Ico a b.succ = Icc a b :=
-  by
-  ext x
-  rw [mem_Ico, mem_Icc, lt_succ_iff]
+theorem Ico_succ_right : Ico a b.succ = Icc a b := by ext x; rw [mem_Ico, mem_Icc, lt_succ_iff]
 #align nat.Ico_succ_right Nat.Ico_succ_right
 
 /- warning: nat.Ico_succ_left -> Nat.Ico_succ_left is a dubious translation:
@@ -298,10 +290,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
 Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_left Nat.Ico_succ_leftₓ'. -/
-theorem Ico_succ_left : Ico a.succ b = Ioo a b :=
-  by
-  ext x
-  rw [mem_Ico, mem_Ioo, succ_le_iff]
+theorem Ico_succ_left : Ico a.succ b = Ioo a b := by ext x; rw [mem_Ico, mem_Ioo, succ_le_iff]
 #align nat.Ico_succ_left Nat.Ico_succ_left
 
 /- warning: nat.Icc_pred_right -> Nat.Icc_pred_right is a dubious translation:
@@ -310,9 +299,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) {b : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) b) -> (Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b))
 Case conversion may be inaccurate. Consider using '#align nat.Icc_pred_right Nat.Icc_pred_rightₓ'. -/
-theorem Icc_pred_right {b : ℕ} (h : 0 < b) : Icc a (b - 1) = Ico a b :=
-  by
-  ext x
+theorem Icc_pred_right {b : ℕ} (h : 0 < b) : Icc a (b - 1) = Ico a b := by ext x;
   rw [mem_Icc, mem_Ico, lt_iff_le_pred h]
 #align nat.Icc_pred_right Nat.Icc_pred_right
 
@@ -322,9 +309,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) (Nat.succ b)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
 Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_succ Nat.Ico_succ_succₓ'. -/
-theorem Ico_succ_succ : Ico a.succ b.succ = Ioc a b :=
-  by
-  ext x
+theorem Ico_succ_succ : Ico a.succ b.succ = Ioc a b := by ext x;
   rw [mem_Ico, mem_Ioc, succ_le_iff, lt_succ_iff]
 #align nat.Ico_succ_succ Nat.Ico_succ_succ
 
@@ -462,9 +447,7 @@ theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
     rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
   rw [Ico_succ_left_eq_erase_Ico, succ_add, Ico_succ_right_eq_insert_Ico le_self_add]
   rintro k hk l hl (hkl : k % a = l % a)
-  have ha : 0 < a := by
-    by_contra ha
-    simp only [not_lt, nonpos_iff_eq_zero] at ha
+  have ha : 0 < a := by by_contra ha; simp only [not_lt, nonpos_iff_eq_zero] at ha;
     simpa [ha] using hk
   simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
@@ -494,8 +477,7 @@ theorem image_Ico_mod (n a : ℕ) : (Ico n (n + a)).image (· % a) = range a :=
   ext i
   simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
-  · rintro ⟨i, h, rfl⟩
-    exact mod_lt i ha.bot_lt
+  · rintro ⟨i, h, rfl⟩; exact mod_lt i ha.bot_lt
   intro hia
   have hn := Nat.mod_add_div n a
   obtain hi | hi := lt_or_le i (n % a)

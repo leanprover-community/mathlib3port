@@ -140,43 +140,28 @@ theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L �
 instance lieQuotientLieRing : LieRing (L ⧸ I)
     where
   add_lie := by
-    intro x' y' z'
-    apply Quotient.inductionOn₃' x' y' z'
-    intro x y z
+    intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
-    apply add_lie
+    apply congr_arg; apply add_lie
   lie_add := by
-    intro x' y' z'
-    apply Quotient.inductionOn₃' x' y' z'
-    intro x y z
+    intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
-    apply lie_add
+    apply congr_arg; apply lie_add
   lie_self := by
-    intro x'
-    apply Quotient.inductionOn' x'
-    intro x
+    intro x'; apply Quotient.inductionOn' x'; intro x
     rw [is_quotient_mk, ← mk_bracket]
-    apply congr_arg
-    apply lie_self
+    apply congr_arg; apply lie_self
   leibniz_lie := by
-    intro x' y' z'
-    apply Quotient.inductionOn₃' x' y' z'
-    intro x y z
+    intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
-    apply congr_arg
-    apply leibniz_lie
+    apply congr_arg; apply leibniz_lie
 #align lie_submodule.quotient.lie_quotient_lie_ring LieSubmodule.Quotient.lieQuotientLieRing
 
 instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I)
     where lie_smul := by
-    intro t x' y'
-    apply Quotient.inductionOn₂' x' y'
-    intro x y
+    intro t x' y'; apply Quotient.inductionOn₂' x' y'; intro x y
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_smul]
-    apply congr_arg
-    apply lie_smul
+    apply congr_arg; apply lie_smul
 #align lie_submodule.quotient.lie_quotient_lie_algebra LieSubmodule.Quotient.lieQuotientLieAlgebra
 
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
@@ -193,9 +178,7 @@ theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
 #align lie_submodule.quotient.mk_eq_zero LieSubmodule.Quotient.mk_eq_zero
 
 @[simp]
-theorem mk'_ker : (mk' N).ker = N := by
-  ext
-  simp
+theorem mk'_ker : (mk' N).ker = N := by ext; simp
 #align lie_submodule.quotient.mk'_ker LieSubmodule.Quotient.mk'_ker
 
 @[simp]

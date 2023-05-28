@@ -547,8 +547,7 @@ theorem lineCount_eq_pointCount [Finite P] [Finite L] (p : P) (l : L) :
   Exists.elim (exists_point l) fun q hq =>
     (lineCount_eq_lineCount L p q).trans <|
       by
-      cases nonempty_fintype P
-      cases nonempty_fintype L
+      cases nonempty_fintype P; cases nonempty_fintype L
       exact has_lines.line_count_eq_point_count (card_points_eq_card_lines P L) hq
 #align configuration.projective_plane.line_count_eq_point_count Configuration.ProjectivePlane.lineCount_eq_pointCount
 

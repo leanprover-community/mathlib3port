@@ -163,9 +163,7 @@ theorem Integrable.integrableOn (h : Integrable f μ) : IntegrableOn f s μ :=
 #align measure_theory.integrable.integrable_on MeasureTheory.Integrable.integrableOn
 
 theorem IntegrableOn.restrict (h : IntegrableOn f s μ) (hs : MeasurableSet s) :
-    IntegrableOn f s (μ.restrict t) :=
-  by
-  rw [integrable_on, measure.restrict_restrict hs]
+    IntegrableOn f s (μ.restrict t) := by rw [integrable_on, measure.restrict_restrict hs];
   exact h.mono_set (inter_subset_left _ _)
 #align measure_theory.integrable_on.restrict MeasureTheory.IntegrableOn.restrict
 
@@ -205,8 +203,7 @@ theorem integrableOn_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set 
   by
   apply hs.induction_on
   · simp
-  · intro a s ha hs hf
-    simp [hf, or_imp, forall_and]
+  · intro a s ha hs hf; simp [hf, or_imp, forall_and]
 #align measure_theory.integrable_on_finite_bUnion MeasureTheory.integrableOn_finite_bUnion
 
 @[simp]
@@ -224,9 +221,7 @@ theorem integrableOn_finite_iUnion [Finite β] {t : β → Set α} :
 #align measure_theory.integrable_on_finite_Union MeasureTheory.integrableOn_finite_iUnion
 
 theorem IntegrableOn.add_measure (hμ : IntegrableOn f s μ) (hν : IntegrableOn f s ν) :
-    IntegrableOn f s (μ + ν) := by
-  delta integrable_on
-  rw [measure.restrict_add]
+    IntegrableOn f s (μ + ν) := by delta integrable_on; rw [measure.restrict_add];
   exact hμ.integrable.add_measure hν
 #align measure_theory.integrable_on.add_measure MeasureTheory.IntegrableOn.add_measure
 
@@ -307,8 +302,7 @@ theorem IntegrableOn.restrict_toMeasurable (hf : IntegrableOn f s μ) (h's : ∀
   apply measure.restrict_to_measurable_of_cover _ A
   intro x hx
   have : 0 < ‖f x‖ := by simp only [h's x hx, norm_pos_iff, Ne.def, not_false_iff]
-  obtain ⟨n, hn⟩ : ∃ n, u n < ‖f x‖
-  exact ((tendsto_order.1 u_lim).2 _ this).exists
+  obtain ⟨n, hn⟩ : ∃ n, u n < ‖f x‖; exact ((tendsto_order.1 u_lim).2 _ this).exists
   refine' mem_Union.2 ⟨n, _⟩
   exact subset_to_measurable _ _ hn.le
 #align measure_theory.integrable_on.restrict_to_measurable MeasureTheory.IntegrableOn.restrict_toMeasurable
@@ -325,8 +319,7 @@ theorem IntegrableOn.of_ae_diff_eq_zero (hf : IntegrableOn f s μ) (ht : NullMea
     by
     rw [integrable_on, hu.restrict_to_measurable]
     · exact hu
-    · intro x hx
-      exact hx.2
+    · intro x hx; exact hx.2
   have B : integrable_on f (t \ v) μ :=
     by
     apply integrable_on_zero.congr
@@ -491,10 +484,8 @@ theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (s
     Integrable (f + g) μ ↔ Integrable f μ ∧ Integrable g μ :=
   by
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
-  · rw [← indicator_add_eq_left h]
-    exact hfg.indicator hf.measurable_set_support
-  · rw [← indicator_add_eq_right h]
-    exact hfg.indicator hg.measurable_set_support
+  · rw [← indicator_add_eq_left h]; exact hfg.indicator hf.measurable_set_support
+  · rw [← indicator_add_eq_right h]; exact hfg.indicator hg.measurable_set_support
 #align measure_theory.integrable_add_of_disjoint MeasureTheory.integrable_add_of_disjoint
 
 end NormedAddCommGroup
@@ -708,34 +699,22 @@ variable [NoAtoms μ]
 
 theorem integrableOn_Icc_iff_integrableOn_Ioc :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioc a b) μ :=
-  integrableOn_Icc_iff_integrableOn_Ioc'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Icc_iff_integrableOn_Ioc' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Icc_iff_integrable_on_Ioc integrableOn_Icc_iff_integrableOn_Ioc
 
 theorem integrableOn_Icc_iff_integrableOn_Ico :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ico a b) μ :=
-  integrableOn_Icc_iff_integrableOn_Ico'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Icc_iff_integrableOn_Ico' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Icc_iff_integrable_on_Ico integrableOn_Icc_iff_integrableOn_Ico
 
 theorem integrableOn_Ico_iff_integrableOn_Ioo :
     IntegrableOn f (Ico a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
-  integrableOn_Ico_iff_integrableOn_Ioo'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Ico_iff_integrableOn_Ioo' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Ico_iff_integrable_on_Ioo integrableOn_Ico_iff_integrableOn_Ioo
 
 theorem integrableOn_Ioc_iff_integrableOn_Ioo :
     IntegrableOn f (Ioc a b) μ ↔ IntegrableOn f (Ioo a b) μ :=
-  integrableOn_Ioc_iff_integrableOn_Ioo'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Ioc_iff_integrableOn_Ioo' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Ioc_iff_integrable_on_Ioo integrableOn_Ioc_iff_integrableOn_Ioo
 
 theorem integrableOn_Icc_iff_integrableOn_Ioo :
@@ -745,18 +724,12 @@ theorem integrableOn_Icc_iff_integrableOn_Ioo :
 
 theorem integrableOn_Ici_iff_integrableOn_Ioi :
     IntegrableOn f (Ici b) μ ↔ IntegrableOn f (Ioi b) μ :=
-  integrableOn_Ici_iff_integrableOn_Ioi'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Ici_iff_integrableOn_Ioi' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Ici_iff_integrable_on_Ioi integrableOn_Ici_iff_integrableOn_Ioi
 
 theorem integrableOn_Iic_iff_integrableOn_Iio :
     IntegrableOn f (Iic b) μ ↔ IntegrableOn f (Iio b) μ :=
-  integrableOn_Iic_iff_integrableOn_Iio'
-    (by
-      rw [measure_singleton]
-      exact ENNReal.zero_ne_top)
+  integrableOn_Iic_iff_integrableOn_Iio' (by rw [measure_singleton]; exact ENNReal.zero_ne_top)
 #align integrable_on_Iic_iff_integrable_on_Iio integrableOn_Iic_iff_integrableOn_Iio
 
 end PartialOrder

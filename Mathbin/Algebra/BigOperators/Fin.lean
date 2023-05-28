@@ -176,10 +176,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> β), Eq.{succ u1} β (Finset.prod.{u1, 0} β (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) _inst_1 (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin.fintype (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)))) (fun (i : Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) => f i)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 2 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 2 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))))
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_three Fin.prod_univ_threeₓ'. -/
 @[to_additive]
-theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_two]
-  rfl
+theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 := by
+  rw [prod_univ_cast_succ, prod_univ_two]; rfl
 #align fin.prod_univ_three Fin.prod_univ_three
 #align fin.sum_univ_three Fin.sum_univ_three
 
@@ -190,10 +188,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (f : (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) -> β), Eq.{succ u1} β (Finset.prod.{u1, 0} β (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) _inst_1 (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Fin.fintype (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) (fun (i : Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) => f i)) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) 2 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)) 2 (NeZero.succ (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))))))) (f (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) 3 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)) 3 (NeZero.succ (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)))))))
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_four Fin.prod_univ_fourₓ'. -/
 @[to_additive]
-theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_three]
-  rfl
+theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 := by
+  rw [prod_univ_cast_succ, prod_univ_three]; rfl
 #align fin.prod_univ_four Fin.prod_univ_four
 #align fin.sum_univ_four Fin.sum_univ_four
 
@@ -205,9 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_five Fin.prod_univ_fiveₓ'. -/
 @[to_additive]
 theorem prod_univ_five [CommMonoid β] (f : Fin 5 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_four]
-  rfl
+  by rw [prod_univ_cast_succ, prod_univ_four]; rfl
 #align fin.prod_univ_five Fin.prod_univ_five
 #align fin.sum_univ_five Fin.sum_univ_five
 
@@ -216,9 +210,7 @@ theorem prod_univ_five [CommMonoid β] (f : Fin 5 → β) : (∏ i, f i) = f 0 *
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_six Fin.prod_univ_sixₓ'. -/
 @[to_additive]
 theorem prod_univ_six [CommMonoid β] (f : Fin 6 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_five]
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 := by rw [prod_univ_cast_succ, prod_univ_five];
   rfl
 #align fin.prod_univ_six Fin.prod_univ_six
 #align fin.sum_univ_six Fin.sum_univ_six
@@ -228,10 +220,8 @@ theorem prod_univ_six [CommMonoid β] (f : Fin 6 → β) :
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_seven Fin.prod_univ_sevenₓ'. -/
 @[to_additive]
 theorem prod_univ_seven [CommMonoid β] (f : Fin 7 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_six]
-  rfl
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 := by
+  rw [prod_univ_cast_succ, prod_univ_six]; rfl
 #align fin.prod_univ_seven Fin.prod_univ_seven
 #align fin.sum_univ_seven Fin.sum_univ_seven
 
@@ -240,10 +230,8 @@ theorem prod_univ_seven [CommMonoid β] (f : Fin 7 → β) :
 Case conversion may be inaccurate. Consider using '#align fin.prod_univ_eight Fin.prod_univ_eightₓ'. -/
 @[to_additive]
 theorem prod_univ_eight [CommMonoid β] (f : Fin 8 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 :=
-  by
-  rw [prod_univ_cast_succ, prod_univ_seven]
-  rfl
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 := by
+  rw [prod_univ_cast_succ, prod_univ_seven]; rfl
 #align fin.prod_univ_eight Fin.prod_univ_eight
 #align fin.sum_univ_eight Fin.sum_univ_eight
 
@@ -302,13 +290,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.prod_congr' Fin.prod_congr'ₓ'. -/
 @[to_additive]
 theorem prod_congr' {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h : a = b) :
-    (∏ i : Fin a, f (cast h i)) = ∏ i : Fin b, f i :=
-  by
-  subst h
-  congr
-  ext
-  congr
-  ext
+    (∏ i : Fin a, f (cast h i)) = ∏ i : Fin b, f i := by subst h; congr ; ext; congr ; ext;
   rw [coe_cast]
 #align fin.prod_congr' Fin.prod_congr'
 #align fin.sum_congr' Fin.sum_congr'
@@ -565,8 +547,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
             (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLE (Fin.is_lt _).le j))
             (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLE (Nat.succ_le_succ (Fin.is_lt _).le) j))
             fun j => rfl
-        simp_rw [this]
-        clear this
+        simp_rw [this]; clear this
         dsimp only [Fin.val_zero]
         simp_rw [Fintype.prod_empty, Nat.div_one, mul_one, Fin.cons_zero, Fin.prod_univ_succ]
         change (_ + ∑ y : _, _ / (x * _) % _ * (x * _)) = _
@@ -578,10 +559,8 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
           simp_rw [Fin.cons_succ]
         congr with i
         congr with j
-        · cases j
-          rfl
-        · cases j
-          rfl)
+        · cases j; rfl
+        · cases j; rfl)
 #align fin_pi_fin_equiv finPiFinEquiv
 -/
 
@@ -628,9 +607,7 @@ theorem prod_take_ofFn {n : ℕ} (f : Fin n → α) (i : ℕ) :
     have A :
       ((Finset.univ : Finset (Fin n)).filterₓ fun j => j.val < i + 1) =
         ((Finset.univ : Finset (Fin n)).filterₓ fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} :=
-      by
-      ext ⟨_, _⟩
-      simp [Nat.lt_succ_iff_lt_or_eq]
+      by ext ⟨_, _⟩; simp [Nat.lt_succ_iff_lt_or_eq]
     have B :
       _root_.disjoint (Finset.filter (fun j : Fin n => j.val < i) Finset.univ)
         (singleton (⟨i, h⟩ : Fin n)) :=
@@ -682,9 +659,7 @@ Case conversion may be inaccurate. Consider using '#align list.alternating_sum_e
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem alternatingSum_eq_finset_sum {G : Type _} [AddCommGroup G] :
     ∀ L : List G, alternatingSum L = ∑ i : Fin L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.is_lt
-  | [] => by
-    rw [alternating_sum, Finset.sum_eq_zero]
-    rintro ⟨i, ⟨⟩⟩
+  | [] => by rw [alternating_sum, Finset.sum_eq_zero]; rintro ⟨i, ⟨⟩⟩
   | g::[] => by simp
   | g::h::L =>
     calc
@@ -713,9 +688,7 @@ Case conversion may be inaccurate. Consider using '#align list.alternating_prod_
 @[to_additive]
 theorem alternatingProd_eq_finset_prod {G : Type _} [CommGroup G] :
     ∀ L : List G, alternatingProd L = ∏ i : Fin L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
-  | [] => by
-    rw [alternating_prod, Finset.prod_eq_one]
-    rintro ⟨i, ⟨⟩⟩
+  | [] => by rw [alternating_prod, Finset.prod_eq_one]; rintro ⟨i, ⟨⟩⟩
   | g::[] => by
     show g = ∏ i : Fin 1, [g].nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
     rw [Fin.prod_univ_succ]; simp

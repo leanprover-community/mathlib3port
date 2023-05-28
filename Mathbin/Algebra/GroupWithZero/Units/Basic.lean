@@ -172,9 +172,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} M₀] (x : M₀), (IsUnit.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1) x) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ _inst_1)))) x (Ring.inverse.{u1} M₀ _inst_1 x)) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align ring.mul_inverse_cancel Ring.mul_inverse_cancelₓ'. -/
-theorem mul_inverse_cancel (x : M₀) (h : IsUnit x) : x * inverse x = 1 :=
-  by
-  rcases h with ⟨u, rfl⟩
+theorem mul_inverse_cancel (x : M₀) (h : IsUnit x) : x * inverse x = 1 := by rcases h with ⟨u, rfl⟩;
   rw [inverse_unit, Units.mul_inv]
 #align ring.mul_inverse_cancel Ring.mul_inverse_cancel
 
@@ -184,9 +182,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} M₀] (x : M₀), (IsUnit.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1) x) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ _inst_1)))) (Ring.inverse.{u1} M₀ _inst_1 x) x) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (Monoid.toOne.{u1} M₀ (MonoidWithZero.toMonoid.{u1} M₀ _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align ring.inverse_mul_cancel Ring.inverse_mul_cancelₓ'. -/
-theorem inverse_mul_cancel (x : M₀) (h : IsUnit x) : inverse x * x = 1 :=
-  by
-  rcases h with ⟨u, rfl⟩
+theorem inverse_mul_cancel (x : M₀) (h : IsUnit x) : inverse x * x = 1 := by rcases h with ⟨u, rfl⟩;
   rw [inverse_unit, Units.inv_mul]
 #align ring.inverse_mul_cancel Ring.inverse_mul_cancel
 
@@ -272,9 +268,7 @@ but is expected to have type
   forall (M₀ : Type.{u1}) [_inst_1 : MonoidWithZero.{u1} M₀], Eq.{succ u1} M₀ (Ring.inverse.{u1} M₀ _inst_1 (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ _inst_1)))) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring.inverse_zero Ring.inverse_zeroₓ'. -/
 @[simp]
-theorem inverse_zero : inverse (0 : M₀) = 0 :=
-  by
-  nontriviality
+theorem inverse_zero : inverse (0 : M₀) = 0 := by nontriviality;
   exact inverse_non_unit _ not_isUnit_zero
 #align ring.inverse_zero Ring.inverse_zero
 
@@ -327,10 +321,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] (h : optParam.{0} (Ne.{succ u1} G₀ (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (one_ne_zero.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))) (NeZero.one.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) (GroupWithZero.toNontrivial.{u1} G₀ _inst_2)))), Eq.{succ u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (Units.mk0.{u1} G₀ _inst_2 (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) h) (OfNat.ofNat.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) 1 (One.toOfNat1.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (InvOneClass.toOne.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (DivInvOneMonoid.toInvOneClass.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (DivisionMonoid.toDivInvOneMonoid.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (Group.toDivisionMonoid.{u1} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (Units.instGroupUnits.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))))))
 Case conversion may be inaccurate. Consider using '#align units.mk0_one Units.mk0_oneₓ'. -/
 @[simp]
-theorem mk0_one (h := one_ne_zero) : mk0 (1 : G₀) h = 1 :=
-  by
-  ext
-  rfl
+theorem mk0_one (h := one_ne_zero) : mk0 (1 : G₀) h = 1 := by ext; rfl
 #align units.mk0_one Units.mk0_one
 
 /- warning: units.coe_mk0 -> Units.val_mk0 is a dubious translation:
@@ -502,9 +493,7 @@ Case conversion may be inaccurate. Consider using '#align units.mk0_mul Units.mk
 theorem Units.mk0_mul (x y : G₀) (hxy) :
     Units.mk0 (x * y) hxy =
       Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align units.mk0_mul Units.mk0_mul
 
 /- warning: div_ne_zero -> div_ne_zero is a dubious translation:
@@ -513,9 +502,7 @@ lean 3 declaration is
 but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Ne.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align div_ne_zero div_ne_zeroₓ'. -/
-theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 :=
-  by
-  rw [div_eq_mul_inv]
+theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 := by rw [div_eq_mul_inv];
   exact mul_ne_zero ha (inv_ne_zero hb)
 #align div_ne_zero div_ne_zero
 

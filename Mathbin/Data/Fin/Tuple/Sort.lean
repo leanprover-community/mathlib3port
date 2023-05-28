@@ -166,11 +166,9 @@ strictly monotone (w.r.t. the lexicographic ordering on the target). -/
 theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) :=
   by
   constructor <;> intro h
-  · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
-    exact (graph_equiv₂ f).StrictMono
+  · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]; exact (graph_equiv₂ f).StrictMono
   · have := Subsingleton.elim (graph_equiv₂ f) (h.order_iso_of_surjective _ <| Equiv.surjective _)
-    ext1
-    exact (graph_equiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
+    ext1; exact (graph_equiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
 #align tuple.eq_sort_iff' Tuple.eq_sort_iff'
 -/
 
@@ -223,9 +221,7 @@ theorem comp_perm_comp_sort_eq_comp_sort : (f ∘ σ) ∘ sort (f ∘ σ) = f �
 /-- If a permutation `f ∘ σ` of the tuple `f` is not the same as `f ∘ sort f`, then `f ∘ σ`
 has a pair of strictly decreasing entries. -/
 theorem antitone_pair_of_not_sorted' (h : f ∘ σ ≠ f ∘ sort f) :
-    ∃ i j, i < j ∧ (f ∘ σ) j < (f ∘ σ) i :=
-  by
-  contrapose! h
+    ∃ i j, i < j ∧ (f ∘ σ) j < (f ∘ σ) i := by contrapose! h;
   exact comp_sort_eq_comp_iff_monotone.mpr (monotone_iff_forall_lt.mpr h)
 #align tuple.antitone_pair_of_not_sorted' Tuple.antitone_pair_of_not_sorted'
 -/

@@ -164,10 +164,8 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         by
         rw [multiplicity_factorial ((log_mono_right <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
-      _ = (∑ i in Ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) :=
-        by
-        rw [sum_add_distrib, sum_boole]
-        simp
+      _ = (∑ i in Ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
+        rw [sum_add_distrib, sum_boole]; simp
       _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
         congr_arg coe <| Finset.sum_congr rfl fun _ _ => (succ_div _ _).symm
       
@@ -187,10 +185,8 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
   have hp' := hp.prime
   have h0 : 2 ≤ p := hp.two_le
   have h1 : 1 ≤ p * n + 1 := Nat.le_add_left _ _
-  have h2 : p * n + 1 ≤ p * (n + 1)
-  linarith
-  have h3 : p * n + 1 ≤ p * (n + 1) + 1
-  linarith
+  have h2 : p * n + 1 ≤ p * (n + 1); linarith
+  have h3 : p * n + 1 ≤ p * (n + 1) + 1; linarith
   have hm : multiplicity p (p * n)! ≠ ⊤ :=
     by
     rw [Ne.def, eq_top_iff_not_finite, Classical.not_not, finite_nat_iff]
@@ -397,23 +393,19 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
   · contradiction
   · intro b n ih h
     by_cases hn : n = 0
-    · subst hn
-      simp at h
-      simp [h, one_right h2.not_unit]
+    · subst hn; simp at h; simp [h, one_right h2.not_unit]
     have : multiplicity 2 (2 * n)! < (2 * n : ℕ) :=
       by
       rw [prime_two.multiplicity_factorial_mul]
       refine' (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le _
-      rw [two_mul]
-      norm_cast
+      rw [two_mul]; norm_cast
     cases b
     · simpa [bit0_eq_two_mul n]
     · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
         simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0,
           bit0_eq_two_mul n]
       rw [multiplicity_eq_zero.2 (two_not_dvd_two_mul_add_one n), zero_add]
-      refine' this.trans _
-      exact_mod_cast lt_succ_self _
+      refine' this.trans _; exact_mod_cast lt_succ_self _
 #align nat.multiplicity_two_factorial_lt Nat.multiplicity_two_factorial_lt
 
 end Nat

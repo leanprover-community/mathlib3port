@@ -69,10 +69,7 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N)
     suffices
       (has_bracket_aux x).comp (has_bracket_aux y) =
         has_bracket_aux ⁅x, y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
-      by
-      simp only [← LinearMap.add_apply]
-      rw [← LinearMap.comp_apply, this]
-      rfl
+      by simp only [← LinearMap.add_apply]; rw [← LinearMap.comp_apply, this]; rfl
     ext (m n)
     simp only [has_bracket_aux, LieRing.of_associative_ring_bracket, LinearMap.mul_apply, mk_apply,
       LinearMap.lTensor_sub, LinearMap.compr₂_apply, Function.comp_apply, LinearMap.coe_comp,
@@ -105,7 +102,7 @@ tensor-hom adjunction is equivariant with respect to the `L` action. -/
 def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
   { TensorProduct.lift.equiv R M N P with
     map_lie' := fun x f => by
-      ext (m n)
+      ext (m n);
       simp only [mk_apply, LinearMap.compr₂_apply, lie_tmul_right, LinearMap.sub_apply,
         lift.equiv_apply, LinearEquiv.toFun_eq_coe, LieHom.lie_apply, LinearMap.map_add]
       abel }
@@ -152,11 +149,10 @@ def map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) : M ⊗[R] N →ₗ�
       simp only [LinearMap.toFun_eq_coe]
       apply t.induction_on
       · simp only [LinearMap.map_zero, lie_zero]
-      · intro m n
+      · intro m n;
         simp only [LieModuleHom.coe_to_linearMap, lie_tmul_right, LieModuleHom.map_lie, map_tmul,
           LinearMap.map_add]
-      · intro t₁ t₂ ht₁ ht₂
-        simp only [ht₁, ht₂, lie_add, LinearMap.map_add] }
+      · intro t₁ t₂ ht₁ ht₂; simp only [ht₁, ht₂, lie_add, LinearMap.map_add] }
 #align tensor_product.lie_module.map TensorProduct.LieModule.map
 
 @[simp]
@@ -200,9 +196,7 @@ variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
     { (toEndomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
-      map_lie' := fun x m => by
-        ext n
-        simp [LieRing.of_associative_ring_bracket] }
+      map_lie' := fun x m => by ext n; simp [LieRing.of_associative_ring_bracket] }
 #align lie_module.to_module_hom LieModule.toModuleHom
 
 @[simp]
@@ -242,16 +236,10 @@ theorem lieIdeal_oper_eq_tensor_map_range :
     LieModuleHom.coe_linearMap_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]
   congr ; ext m; constructor
-  · rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩
-    use x ⊗ₜ n
-    constructor
-    · use ⟨x, hx⟩, ⟨n, hn⟩
-      simp
+  · rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩; use x ⊗ₜ n; constructor
+    · use ⟨x, hx⟩, ⟨n, hn⟩; simp
     · simp
-  · rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩
-    rw [← h]
-    use ⟨x, hx⟩, ⟨n, hn⟩
-    simp
+  · rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩; rw [← h]; use ⟨x, hx⟩, ⟨n, hn⟩; simp
 #align lie_submodule.lie_ideal_oper_eq_tensor_map_range LieSubmodule.lieIdeal_oper_eq_tensor_map_range
 
 end LieSubmodule

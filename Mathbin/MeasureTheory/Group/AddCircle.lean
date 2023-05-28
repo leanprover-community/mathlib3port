@@ -67,16 +67,13 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
   set G := AddSubgroup.zmultiples u
   set n := addOrderOf u
   set B := ball x (T / (2 * n))
-  have hn : 1 ≤ (n : ℝ) := by
-    norm_cast
-    linarith [addOrderOf_pos' hu]
+  have hn : 1 ≤ (n : ℝ) := by norm_cast; linarith [addOrderOf_pos' hu]
   refine' is_add_fundamental_domain.mk_of_measure_univ_le _ _ _ _
   ·-- `null_measurable_set I volume`
     exact measurable_set_ball.null_measurable_set.congr hI.symm
   · -- `∀ (g : G), g ≠ 0 → ae_disjoint volume (g +ᵥ I) I`
     rintro ⟨g, hg⟩ hg'
-    replace hg' : g ≠ 0
-    · simpa only [Ne.def, AddSubgroup.mk_eq_zero_iff] using hg'
+    replace hg' : g ≠ 0; · simpa only [Ne.def, AddSubgroup.mk_eq_zero_iff] using hg'
     change ae_disjoint volume (g +ᵥ I) I
     refine'
       ae_disjoint.congr (Disjoint.aedisjoint _)
@@ -96,11 +93,8 @@ theorem isAddFundamentalDomain_of_ae_ball (I : Set <| AddCircle T) (u x : AddCir
   · -- `volume univ ≤ ∑' (g : G), volume (g +ᵥ I)`
     replace hI : I =ᵐ[volume] closed_ball x (T / (2 * ↑n)) := hI.trans closed_ball_ae_eq_ball.symm
     haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples
-    have hG_card : (Finset.univ : Finset G).card = n :=
-      by
-      show _ = addOrderOf u
-      rw [add_order_eq_card_zmultiples', Nat.card_eq_fintype_card]
-      rfl
+    have hG_card : (Finset.univ : Finset G).card = n := by show _ = addOrderOf u;
+      rw [add_order_eq_card_zmultiples', Nat.card_eq_fintype_card]; rfl
     simp_rw [measure_vadd]
     rw [AddCircle.measure_univ, tsum_fintype, Finset.sum_const, measure_congr hI,
       volume_closed_ball, ← ENNReal.ofReal_nsmul, mul_div, mul_div_mul_comm,
@@ -116,9 +110,7 @@ theorem volume_of_add_preimage_eq (s I : Set <| AddCircle T) (u x : AddCircle T)
   by
   let G := AddSubgroup.zmultiples u
   haveI : Fintype G := @Fintype.ofFinite _ hu.finite_zmultiples
-  have hsG : ∀ g : G, (g +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s :=
-    by
-    rintro ⟨y, hy⟩
+  have hsG : ∀ g : G, (g +ᵥ s : Set <| AddCircle T) =ᵐ[volume] s := by rintro ⟨y, hy⟩;
     exact (vadd_ae_eq_self_of_mem_zmultiples hs hy : _)
   rw [(is_add_fundamental_domain_of_ae_ball I u x hu hI).measure_eq_card_smul_of_vadd_ae_eq_self s
       hsG,

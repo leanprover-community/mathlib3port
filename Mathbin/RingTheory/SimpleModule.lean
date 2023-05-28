@@ -178,9 +178,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_sSup_simplesₓ'. -/
 theorem is_semisimple_iff_top_eq_sSup_simples :
     sSup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
-  ⟨is_semisimple_of_sSup_simples_eq_top, by
-    intro
-    exact IsSemisimpleModule.sSup_simples_eq_top⟩
+  ⟨is_semisimple_of_sSup_simples_eq_top, by intro ; exact IsSemisimpleModule.sSup_simples_eq_top⟩
 #align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_sSup_simples
 
 namespace LinearMap
@@ -317,9 +315,7 @@ instance JordanHolderModule.instJordanHolderLattice : JordanHolderLattice (Submo
   iso_symm := fun A B ⟨f⟩ => ⟨f.symm⟩
   iso_trans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩
   second_iso A B h :=
-    ⟨by
-      rw [sup_comm, inf_comm]
-      exact (LinearMap.quotientInfEquivSupQuotient B A).symm⟩
+    ⟨by rw [sup_comm, inf_comm]; exact (LinearMap.quotientInfEquivSupQuotient B A).symm⟩
 #align jordan_holder_module JordanHolderModule.instJordanHolderLattice
 -/
 

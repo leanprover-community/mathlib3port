@@ -45,12 +45,8 @@ def free : Type u ⥤ ModuleCat R
     where
   obj X := ModuleCat.of R (X →₀ R)
   map X Y f := Finsupp.lmapDomain _ _ f
-  map_id' := by
-    intros
-    exact Finsupp.lmapDomain_id _ _
-  map_comp' := by
-    intros
-    exact Finsupp.lmapDomain_comp _ _ _ _
+  map_id' := by intros ; exact Finsupp.lmapDomain_id _ _
+  map_comp' := by intros ; exact Finsupp.lmapDomain_comp _ _ _ _
 #align Module.free ModuleCat.free
 
 /-- The free-forgetful adjunction for R-modules.
@@ -161,12 +157,7 @@ instance : LaxMonoidal.{u} (free R).obj
   associativity' := associativity R
 
 instance : IsIso (LaxMonoidal.ε (free R).obj) :=
-  ⟨⟨Finsupp.lapply PUnit.unit,
-      ⟨by
-        ext
-        simp, by
-        ext (⟨⟩⟨⟩)
-        simp⟩⟩⟩
+  ⟨⟨Finsupp.lapply PUnit.unit, ⟨by ext; simp, by ext (⟨⟩⟨⟩); simp⟩⟩⟩
 
 end Free
 
@@ -177,12 +168,8 @@ def monoidalFree : MonoidalFunctor (Type u) (ModuleCat.{u} R) :=
   {
     LaxMonoidalFunctor.of
       (free R).obj with
-    ε_isIso := by
-      dsimp
-      infer_instance
-    μ_isIso := fun X Y => by
-      dsimp
-      infer_instance }
+    ε_isIso := by dsimp; infer_instance
+    μ_isIso := fun X Y => by dsimp; infer_instance }
 #align Module.monoidal_free ModuleCat.monoidalFree
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -264,10 +251,7 @@ instance : Linear R (Free R C)
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_left_comm]
 
 theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
-    (single f r ≫ single g s : Free.of R X ⟶ Free.of R Z) = single (f ≫ g) (r * s) :=
-  by
-  dsimp
-  simp
+    (single f r ≫ single g s : Free.of R X ⟶ Free.of R Z) = single (f ≫ g) (r * s) := by dsimp; simp
 #align category_theory.Free.single_comp_single CategoryTheory.Free.single_comp_single
 
 end
@@ -294,9 +278,7 @@ open Preadditive Linear
 def lift (F : C ⥤ D) : Free R C ⥤ D where
   obj X := F.obj X
   map X Y f := f.Sum fun f' r => r • F.map f'
-  map_id' := by
-    dsimp [CategoryTheory.categoryFree]
-    simp
+  map_id' := by dsimp [CategoryTheory.categoryFree]; simp
   map_comp' X Y Z f g := by
     apply Finsupp.induction_linear f
     · simp only [limits.zero_comp, sum_zero_index]
@@ -304,14 +286,10 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
       rw [add_comp]
       rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
       · simp only [w₁, w₂, add_comp]
-      · intros
-        rw [zero_smul]
-      · intros
-        simp only [add_smul]
-      · intros
-        rw [zero_smul]
-      · intros
-        simp only [add_smul]
+      · intros ; rw [zero_smul]
+      · intros ; simp only [add_smul]
+      · intros ; rw [zero_smul]
+      · intros ; simp only [add_smul]
     · intro f' r
       apply Finsupp.induction_linear g
       · simp only [limits.comp_zero, sum_zero_index]
@@ -319,14 +297,10 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
         rw [comp_add]
         rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
         · simp only [w₁, w₂, comp_add]
-        · intros
-          rw [zero_smul]
-        · intros
-          simp only [add_smul]
-        · intros
-          rw [zero_smul]
-        · intros
-          simp only [add_smul]
+        · intros ; rw [zero_smul]
+        · intros ; simp only [add_smul]
+        · intros ; rw [zero_smul]
+        · intros ; simp only [add_smul]
       · intro g' s
         erw [single_comp_single]
         simp [mul_comm r s, mul_smul]

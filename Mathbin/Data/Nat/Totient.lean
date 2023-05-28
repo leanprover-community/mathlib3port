@@ -179,10 +179,8 @@ theorem totient_even {n : ℕ} (hn : 2 < n) : Even n.totient :=
   by
   haveI : Fact (1 < n) := ⟨one_lt_two.trans hn⟩
   haveI : NeZero n := NeZero.of_gt hn
-  suffices 2 = orderOf (-1 : (ZMod n)ˣ)
-    by
-    rw [← ZMod.card_units_eq_totient, even_iff_two_dvd, this]
-    exact orderOf_dvd_card_univ
+  suffices 2 = orderOf (-1 : (ZMod n)ˣ) by
+    rw [← ZMod.card_units_eq_totient, even_iff_two_dvd, this]; exact orderOf_dvd_card_univ
   rw [← orderOf_units, Units.coe_neg_one, orderOf_neg_one, ringChar.eq (ZMod n) n, if_neg hn.ne']
 #align nat.totient_even Nat.totient_even
 -/
@@ -222,9 +220,7 @@ theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) :
   · simp [hd0.ne']
   · simp only [mem_filter, mem_range, exists_prop, and_imp]
     refine' fun b hb1 hb2 => _
-    have : d ∣ b := by
-      rw [← hb2]
-      apply gcd_dvd_right
+    have : d ∣ b := by rw [← hb2]; apply gcd_dvd_right
     rcases this with ⟨q, rfl⟩
     refine' ⟨q, ⟨⟨(mul_lt_mul_left hd0).1 hb1, _⟩, rfl⟩⟩
     rwa [gcd_mul_left, mul_right_eq_self_iff hd0] at hb2
@@ -233,8 +229,7 @@ theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) :
 #print Nat.sum_totient /-
 theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n :=
   by
-  rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
+  rcases n.eq_zero_or_pos with (rfl | hn); · simp
   rw [← sum_div_divisors n φ]
   have : n = ∑ d : ℕ in n.divisors, (Filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
     by
@@ -437,8 +432,7 @@ Case conversion may be inaccurate. Consider using '#align nat.totient_eq_mul_pro
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_mul_prod_factors (n : ℕ) : (φ n : ℚ) = n * ∏ p in n.factors.toFinset, 1 - p⁻¹ :=
   by
-  by_cases hn : n = 0
-  · simp [hn]
+  by_cases hn : n = 0; · simp [hn]
   have hn' : (n : ℚ) ≠ 0 := by simp [hn]
   have hpQ : (∏ p in n.factors.to_finset, (p : ℚ)) ≠ 0 :=
     by
@@ -462,14 +456,11 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
     intro a1 a2 b1 b2 c1 c2 h1 h2
     calc
       a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by apply mul_mul_mul_comm
-      _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by
-        congr 1
-        exact div_mul_div_comm h1 h2
+      _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by congr 1; exact div_mul_div_comm h1 h2
       
   simp only [totient_eq_div_factors_mul]
   rw [shuffle, shuffle]
-  rotate_left
-  repeat' apply prod_prime_factors_dvd
+  rotate_left; repeat' apply prod_prime_factors_dvd
   · simp only [prod_factors_gcd_mul_prod_factors_mul]
     rw [eq_comm, mul_comm, ← mul_assoc, ← Nat.mul_div_assoc]
     exact mul_dvd_mul (prod_prime_factors_dvd a) (prod_prime_factors_dvd b)
@@ -480,8 +471,7 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
 theorem totient_super_multiplicative (a b : ℕ) : φ a * φ b ≤ φ (a * b) :=
   by
   let d := a.gcd b
-  rcases(zero_le a).eq_or_lt with (rfl | ha0)
-  · simp
+  rcases(zero_le a).eq_or_lt with (rfl | ha0); · simp
   have hd0 : 0 < d := Nat.gcd_pos_of_pos_left _ ha0
   rw [← mul_le_mul_right hd0, ← totient_gcd_mul_totient_mul a b, mul_comm]
   apply mul_le_mul_left' (Nat.totient_le d)
@@ -491,10 +481,8 @@ theorem totient_super_multiplicative (a b : ℕ) : φ a * φ b ≤ φ (a * b) :=
 #print Nat.totient_dvd_of_dvd /-
 theorem totient_dvd_of_dvd {a b : ℕ} (h : a ∣ b) : φ a ∣ φ b :=
   by
-  rcases eq_or_ne a 0 with (rfl | ha0)
-  · simp [zero_dvd_iff.1 h]
-  rcases eq_or_ne b 0 with (rfl | hb0)
-  · simp
+  rcases eq_or_ne a 0 with (rfl | ha0); · simp [zero_dvd_iff.1 h]
+  rcases eq_or_ne b 0 with (rfl | hb0); · simp
   have hab' : a.factorization.support ⊆ b.factorization.support :=
     by
     intro p

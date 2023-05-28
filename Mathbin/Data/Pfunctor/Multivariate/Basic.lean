@@ -123,10 +123,8 @@ def const.get (x : (const n A).Obj α) : A :=
 
 #print MvPFunctor.const.get_map /-
 @[simp]
-theorem const.get_map (f : α ⟹ β) (x : (const n A).Obj α) : const.get (f <$$> x) = const.get x :=
-  by
-  cases x
-  rfl
+theorem const.get_map (f : α ⟹ β) (x : (const n A).Obj α) : const.get (f <$$> x) = const.get x := by
+  cases x; rfl
 #align mvpfunctor.const.get_map MvPFunctor.const.get_map
 -/
 
@@ -138,11 +136,8 @@ theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x
 
 #print MvPFunctor.const.mk_get /-
 @[simp]
-theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x :=
-  by
-  cases x
-  dsimp [const.get, const.mk]
-  congr with (_⟨⟩)
+theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := by cases x;
+  dsimp [const.get, const.mk]; congr with (_⟨⟩)
 #align mvpfunctor.const.mk_get MvPFunctor.const.mk_get
 -/
 
@@ -175,10 +170,7 @@ def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
 
 #print MvPFunctor.comp.get_map /-
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
-    comp.get (f <$$> x) = (fun i (x : (Q i).Obj α) => f <$$> x) <$$> comp.get x :=
-  by
-  cases x
-  rfl
+    comp.get (f <$$> x) = (fun i (x : (Q i).Obj α) => f <$$> x) <$$> comp.get x := by cases x; rfl
 #align mvpfunctor.comp.get_map MvPFunctor.comp.get_map
 -/
 
@@ -211,11 +203,9 @@ theorem liftP_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
     LiftP p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
   by
   constructor
-  · rintro ⟨y, hy⟩
-    cases' h : y with a f
+  · rintro ⟨y, hy⟩; cases' h : y with a f
     refine' ⟨a, fun i j => (f i j).val, _, fun i j => (f i j).property⟩
-    rw [← hy, h, map_eq]
-    rfl
+    rw [← hy, h, map_eq]; rfl
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i j => ⟨f i j, pf i j⟩⟩
   rw [xeq]; rfl
@@ -227,9 +217,7 @@ theorem liftP_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
     @LiftP.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
   by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
-  · casesm*Exists _, _ ∧ _
-    subst_vars
-    assumption
+  · casesm*Exists _, _ ∧ _; subst_vars; assumption
   repeat' first |constructor|assumption
 #align mvpfunctor.liftp_iff' MvPFunctor.liftP_iff'
 -/
@@ -239,22 +227,15 @@ theorem liftR_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     LiftR r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
   by
   constructor
-  · rintro ⟨u, xeq, yeq⟩
-    cases' h : u with a f
+  · rintro ⟨u, xeq, yeq⟩; cases' h : u with a f
     use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd
-    constructor
-    · rw [← xeq, h]
-      rfl
-    constructor
-    · rw [← yeq, h]
-      rfl
-    intro i j
-    exact (f i j).property
+    constructor; · rw [← xeq, h]; rfl
+    constructor; · rw [← yeq, h]; rfl
+    intro i j; exact (f i j).property
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
   dsimp; constructor
-  · rw [xeq]
-    rfl
+  · rw [xeq]; rfl
   rw [yeq]; rfl
 #align mvpfunctor.liftr_iff MvPFunctor.liftR_iff
 -/
@@ -268,12 +249,8 @@ theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.B a ⟹ α) (i) :
   ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun i x => ∃ y : P.B a i, f i y = x
-    rw [liftp_iff']
-    intros
-    refine' ⟨_, rfl⟩
-  · simp only [liftp_iff']
-    cases h
-    subst x
+    rw [liftp_iff']; intros ; refine' ⟨_, rfl⟩
+  · simp only [liftp_iff']; cases h; subst x
     tauto
 #align mvpfunctor.supp_eq MvPFunctor.supp_eq
 -/

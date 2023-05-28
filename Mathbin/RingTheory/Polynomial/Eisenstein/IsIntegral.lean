@@ -173,8 +173,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     refine' Prime.dvd_of_pow_dvd_pow_mul_pow_of_square_not_dvd hp (_ : _ ^ n.succ ∣ _) hndiv
     convert(IsUnit.dvd_mul_right ⟨(-1) ^ (n.succ * n), rfl⟩).mpr this using 1
     push_cast
-    ring_nf
-    simp [pow_right_comm _ _ 2]
+    ring_nf; simp [pow_right_comm _ _ 2]
   -- We claim the quotient of `Q^n * _` by `p^n` is the following `r`:
   have aux : ∀ i ∈ (range (Q.nat_degree + 1)).eraseₓ 0, B.dim ≤ i + n :=
     by
@@ -209,7 +208,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       _root_.map_pow, finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.isIntegrallyClosed_eq_field_fractions' K hBint, coeff_map, ← hn]
     ring
-  swap
+  swap;
   ·
     simp_rw [← smul_sum, ← smul_sub, Algebra.smul_def p, algebraMap_apply R K L, _root_.map_mul,
       Algebra.norm_algebraMap, finrank_K_L, hr, ← hn]

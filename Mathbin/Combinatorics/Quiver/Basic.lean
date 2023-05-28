@@ -81,11 +81,8 @@ theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F 
       ∀ (X Y : V) (f : X ⟶ Y),
         F.map f = Eq.recOn (h_obj Y).symm (Eq.recOn (h_obj X).symm (G.map f))) :
     F = G := by
-  cases' F with F_obj _
-  cases' G with G_obj _
-  obtain rfl : F_obj = G_obj := by
-    ext X
-    apply h_obj
+  cases' F with F_obj _; cases' G with G_obj _
+  obtain rfl : F_obj = G_obj := by ext X; apply h_obj
   congr
   funext X Y f
   simpa using h_map X Y f
@@ -126,9 +123,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prefunctor.comp_id Prefunctor.comp_idₓ'. -/
 @[simp]
 theorem comp_id {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
-    F.comp (id _) = F := by
-  cases F
-  rfl
+    F.comp (id _) = F := by cases F; rfl
 #align prefunctor.comp_id Prefunctor.comp_id
 
 /- warning: prefunctor.id_comp -> Prefunctor.id_comp is a dubious translation:
@@ -139,9 +134,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prefunctor.id_comp Prefunctor.id_compₓ'. -/
 @[simp]
 theorem id_comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
-    (id _).comp F = F := by
-  cases F
-  rfl
+    (id _).comp F = F := by cases F; rfl
 #align prefunctor.id_comp Prefunctor.id_comp
 
 /- warning: prefunctor.comp_assoc -> Prefunctor.comp_assoc is a dubious translation:

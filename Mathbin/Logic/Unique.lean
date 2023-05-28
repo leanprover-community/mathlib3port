@@ -76,10 +76,7 @@ theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a
 theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) :
     Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩,
-    fun ⟨a, ha, he⟩ =>
-    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
-        congr
-        exact he b hb⟩⟩⟩
+    fun ⟨a, ha, he⟩ => ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by congr ; exact he b hb⟩⟩⟩
 #align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
 -/
 
@@ -223,10 +220,7 @@ end Unique
 theorem unique_iff_subsingleton_and_nonempty (α : Sort u) :
     Nonempty (Unique α) ↔ Subsingleton α ∧ Nonempty α :=
   ⟨fun ⟨u⟩ => by constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
-    ⟨by
-      skip
-      inhabit α
-      exact Unique.mk' α⟩⟩
+    ⟨by skip; inhabit α; exact Unique.mk' α⟩⟩
 #align unique_iff_subsingleton_and_nonempty unique_iff_subsingleton_and_nonempty
 -/
 
@@ -274,9 +268,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Unique.{u2} α] (f : α -> β), Eq.{imax u2 u1} (α -> β) f (Function.const.{u1, u2} β α (f (Inhabited.default.{u2} α (Unique.instInhabited.{u2} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align eq_const_of_unique eq_const_of_uniqueₓ'. -/
-theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) :=
-  by
-  ext x
+theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by ext x;
   rw [Subsingleton.elim x default]
 #align eq_const_of_unique eq_const_of_unique
 

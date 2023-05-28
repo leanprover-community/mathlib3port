@@ -205,9 +205,7 @@ instance subsingleton_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl 
 -/
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
-  ⟨fun a => by
-    letI := a.is_well_founded
-    apply Subsingleton.elim⟩
+  ⟨fun a => by letI := a.is_well_founded; apply Subsingleton.elim⟩
 
 /- warning: initial_seg.eq -> InitialSeg.eq is a dubious translation:
 lean 3 declaration is
@@ -580,14 +578,12 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
     by
     have ef : (f : α → β) = g := by
       show ((f : r ≼i s) : α → β) = g
-      rw [@Subsingleton.elim _ _ (f : r ≼i s) g]
-      rfl
+      rw [@Subsingleton.elim _ _ (f : r ≼i s) g]; rfl
     have et : f.top = g.top :=
       by
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
       simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
-    cases f
-    cases g
+    cases f; cases g
     have := RelEmbedding.coe_fn_injective ef <;> congr ⟩
 
 /- warning: principal_seg.top_eq -> PrincipalSeg.top_eq is a dubious translation:
@@ -607,10 +603,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} γ t], (PrincipalSeg.{u2, u1} α β r s) -> (forall (g : PrincipalSeg.{u1, u3} β γ s t) (h : PrincipalSeg.{u2, u3} α γ r t), t (PrincipalSeg.top.{u2, u3} α γ r t h) (PrincipalSeg.top.{u1, u3} β γ s t g))
 Case conversion may be inaccurate. Consider using '#align principal_seg.top_lt_top PrincipalSeg.topLTTopₓ'. -/
 theorem topLTTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
-    (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top :=
-  by
-  rw [Subsingleton.elim h (f.trans g)]
-  apply PrincipalSeg.lt_top
+    (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
+  rw [Subsingleton.elim h (f.trans g)]; apply PrincipalSeg.lt_top
 #align principal_seg.top_lt_top PrincipalSeg.topLTTop
 
 #print PrincipalSeg.ofElement /-

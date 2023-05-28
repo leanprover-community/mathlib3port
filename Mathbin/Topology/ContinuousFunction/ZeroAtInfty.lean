@@ -77,10 +77,7 @@ variable [TopologicalSpace β] [Zero β] [ZeroAtInftyContinuousMapClass F α β]
 instance : ZeroAtInftyContinuousMapClass C₀(α, β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_continuous f := f.continuous_toFun
   zero_at_infty f := f.zero_at_infty'
 
@@ -110,12 +107,8 @@ to fix definitional equalities. -/
 protected def copy (f : C₀(α, β)) (f' : α → β) (h : f' = f) : C₀(α, β)
     where
   toFun := f'
-  continuous_toFun := by
-    rw [h]
-    exact f.continuous_to_fun
-  zero_at_infty' := by
-    simp_rw [h]
-    exact f.zero_at_infty'
+  continuous_toFun := by rw [h]; exact f.continuous_to_fun
+  zero_at_infty' := by simp_rw [h]; exact f.zero_at_infty'
 #align zero_at_infty_continuous_map.copy ZeroAtInftyContinuousMap.copy
 
 @[simp]
@@ -141,12 +134,8 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
       continuous_toFun := f.Continuous
       zero_at_infty' := by simp }
   invFun f := f
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
 #align zero_at_infty_continuous_map.continuous_map.lift_zero_at_infty ZeroAtInftyContinuousMap.ContinuousMap.liftZeroAtInfty
 
 /-- A continuous function on a compact space is automatically a continuous function vanishing at
@@ -427,9 +416,7 @@ section
 
 variable (α) (β)
 
-theorem toBcf_injective : Function.Injective (toBcf : C₀(α, β) → α →ᵇ β) := fun f g h =>
-  by
-  ext
+theorem toBcf_injective : Function.Injective (toBcf : C₀(α, β) → α →ᵇ β) := fun f g h => by ext;
   simpa only using FunLike.congr_fun h x
 #align zero_at_infty_continuous_map.to_bcf_injective ZeroAtInftyContinuousMap.toBcf_injective
 
@@ -476,10 +463,7 @@ theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ
       _ < dist g.to_bcf f + ε / 2 := (add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx)
       _ < ε := by simpa [add_halves ε] using add_lt_add_right hg (ε / 2)
       
-  exact
-    ⟨⟨f.to_continuous_map, this⟩, by
-      ext
-      rfl⟩
+  exact ⟨⟨f.to_continuous_map, this⟩, by ext; rfl⟩
 #align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_toBcf
 
 /-- Continuous functions vanishing at infinity taking values in a complete space form a

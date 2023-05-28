@@ -75,10 +75,7 @@ but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : Zero.{u1} N] (f : Finsupp.{u2, u1} α N _inst_3) (g : Finsupp.{u2, u1} α N _inst_3), Eq.{succ u2} (Set.{u2} α) (Finset.toSet.{u2} α (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) _inst_3 f g)) (setOf.{u2} α (fun (x : α) => Ne.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α N _inst_3) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) _x) (Finsupp.funLike.{u2, u1} α N _inst_3) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α N _inst_3) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) _x) (Finsupp.funLike.{u2, u1} α N _inst_3) g x)))
 Case conversion may be inaccurate. Consider using '#align finsupp.coe_ne_locus Finsupp.coe_neLocusₓ'. -/
 @[simp]
-theorem coe_neLocus : ↑(f.neLocus g) = { x | f x ≠ g x } :=
-  by
-  ext
-  exact mem_ne_locus
+theorem coe_neLocus : ↑(f.neLocus g) = { x | f x ≠ g x } := by ext; exact mem_ne_locus
 #align finsupp.coe_ne_locus Finsupp.coe_neLocus
 
 /- warning: finsupp.ne_locus_eq_empty -> Finsupp.neLocus_eq_empty is a dubious translation:
@@ -123,9 +120,7 @@ but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : Zero.{u1} N] (f : Finsupp.{u2, u1} α N _inst_3), Eq.{succ u2} (Finset.{u2} α) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) _inst_3 f (OfNat.ofNat.{max u2 u1} (Finsupp.{u2, u1} α N _inst_3) 0 (Zero.toOfNat0.{max u2 u1} (Finsupp.{u2, u1} α N _inst_3) (Finsupp.zero.{u2, u1} α N _inst_3)))) (Finsupp.support.{u2, u1} α N _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_zero_right Finsupp.neLocus_zero_rightₓ'. -/
 @[simp]
-theorem neLocus_zero_right : f.neLocus 0 = f.support :=
-  by
-  ext
+theorem neLocus_zero_right : f.neLocus 0 = f.support := by ext;
   rw [mem_ne_locus, mem_support_iff, coe_zero, Pi.zero_apply]
 #align finsupp.ne_locus_zero_right Finsupp.neLocus_zero_right
 
@@ -157,9 +152,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.zip_with_ne_lo
 theorem zipWith_neLocus_eq_left [DecidableEq N] [Zero M] [DecidableEq P] [Zero P] [Zero N]
     {F : M → N → P} (F0 : F 0 0 = 0) (f : α →₀ M) (g₁ g₂ : α →₀ N)
     (hF : ∀ f, Function.Injective fun g => F f g) :
-    (zipWith F F0 f g₁).neLocus (zipWith F F0 f g₂) = g₁.neLocus g₂ :=
-  by
-  ext
+    (zipWith F F0 f g₁).neLocus (zipWith F F0 f g₂) = g₁.neLocus g₂ := by ext;
   simpa only [mem_ne_locus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_left Finsupp.zipWith_neLocus_eq_left
 
@@ -169,18 +162,14 @@ Case conversion may be inaccurate. Consider using '#align finsupp.zip_with_ne_lo
 theorem zipWith_neLocus_eq_right [DecidableEq M] [Zero M] [DecidableEq P] [Zero P] [Zero N]
     {F : M → N → P} (F0 : F 0 0 = 0) (f₁ f₂ : α →₀ M) (g : α →₀ N)
     (hF : ∀ g, Function.Injective fun f => F f g) :
-    (zipWith F F0 f₁ g).neLocus (zipWith F F0 f₂ g) = f₁.neLocus f₂ :=
-  by
-  ext
+    (zipWith F F0 f₁ g).neLocus (zipWith F F0 f₂ g) = f₁.neLocus f₂ := by ext;
   simpa only [mem_ne_locus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_right Finsupp.zipWith_neLocus_eq_right
 
 #print Finsupp.mapRange_neLocus_eq /-
 theorem mapRange_neLocus_eq [DecidableEq N] [DecidableEq M] [Zero M] [Zero N] (f g : α →₀ N)
     {F : N → M} (F0 : F 0 = 0) (hF : Function.Injective F) :
-    (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g :=
-  by
-  ext
+    (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g := by ext;
   simpa only [mem_ne_locus] using hF.ne_iff
 #align finsupp.map_range_ne_locus_eq Finsupp.mapRange_neLocus_eq
 -/

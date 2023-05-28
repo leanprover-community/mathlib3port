@@ -82,9 +82,7 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
   rw [← not_or]
   intro w
   apply h
-  cases w <;>
-    · rw [w]
-      simp
+  cases w <;> · rw [w]; simp
 #align finsupp.support_mul Finsupp.support_mul
 
 instance : MulZeroClass (α →₀ β) :=

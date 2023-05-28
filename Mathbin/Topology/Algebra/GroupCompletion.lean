@@ -166,10 +166,8 @@ instance : SubNegMonoid (Completion α) :=
         fun a b => by exact_mod_cast congr_arg coe (sub_eq_add_neg a b)
     zsmul := (· • ·)
     zsmul_zero' := fun a =>
-      Completion.induction_on a (isClosed_eq continuous_map continuous_const) fun a =>
-        by
-        rw_mod_cast [zero_smul]
-        rfl
+      Completion.induction_on a (isClosed_eq continuous_map continuous_const) fun a => by
+        rw_mod_cast [zero_smul]; rfl
     zsmul_succ' := fun n a =>
       Completion.induction_on a
         (isClosed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
@@ -186,11 +184,7 @@ instance : AddGroup (Completion α) :=
     add_left_neg := fun a =>
       Completion.induction_on a
         (isClosed_eq (continuous_map₂ Completion.continuous_map continuous_id) continuous_const)
-        fun a =>
-        show -(a : Completion α) + a = 0
-          by
-          rw_mod_cast [add_left_neg]
-          rfl }
+        fun a => show -(a : Completion α) + a = 0 by rw_mod_cast [add_left_neg]; rfl }
 
 instance : UniformAddGroup (Completion α) :=
   ⟨uniformContinuous_map₂ Sub.sub⟩
@@ -256,9 +250,7 @@ instance : AddCommGroup (Completion α) :=
       Completion.induction_on₂ a b
         (isClosed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_snd continuous_fst))
-        fun x y => by
-        change ↑x + ↑y = ↑y + ↑x
-        rw [← coe_add, ← coe_add, add_comm] }
+        fun x y => by change ↑x + ↑y = ↑y + ↑x; rw [← coe_add, ← coe_add, add_comm] }
 
 instance [Semiring R] [Module R α] [UniformContinuousConstSMul R α] : Module R (Completion α) :=
   { Completion.distribMulAction,
@@ -266,9 +258,7 @@ instance [Semiring R] [Module R α] [UniformContinuousConstSMul R α] : Module R
     smul := (· • ·)
     add_smul := fun a b =>
       ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _))
-        fun x => by
-        norm_cast
-        rw [add_smul] }
+        fun x => by norm_cast; rw [add_smul] }
 
 end UniformAddCommGroup
 

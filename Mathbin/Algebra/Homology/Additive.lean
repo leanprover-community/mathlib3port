@@ -208,9 +208,7 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
       d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }
   map C D f :=
     { f := fun i => F.map (f.f i)
-      comm' := fun i j h => by
-        dsimp
-        rw [← F.map_comp, ← F.map_comp, f.comm] }
+      comm' := fun i j h => by dsimp; rw [← F.map_comp, ← F.map_comp, f.comm] }
 #align category_theory.functor.map_homological_complex CategoryTheory.Functor.mapHomologicalComplex
 -/
 
@@ -453,22 +451,13 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
               | i + 1 => F.mapZeroObject.inv }
         hom_inv_id' := by
           ext (_ | i)
-          · unfold_aux
-            simp
+          · unfold_aux; simp
           · unfold_aux
             dsimp
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-        inv_hom_id' := by
-          ext (_ | i) <;>
-            · unfold_aux
-              dsimp
-              simp })
-    fun X Y f => by
-    ext (_ | i) <;>
-      · unfold_aux
-        dsimp
-        simp
+        inv_hom_id' := by ext (_ | i) <;> · unfold_aux; dsimp; simp })
+    fun X Y f => by ext (_ | i) <;> · unfold_aux; dsimp; simp
 #align chain_complex.single₀_map_homological_complex ChainComplex.single₀MapHomologicalComplex
 -/
 
@@ -534,22 +523,13 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
               | i + 1 => F.mapZeroObject.inv }
         hom_inv_id' := by
           ext (_ | i)
-          · unfold_aux
-            simp
+          · unfold_aux; simp
           · unfold_aux
             dsimp
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-        inv_hom_id' := by
-          ext (_ | i) <;>
-            · unfold_aux
-              dsimp
-              simp })
-    fun X Y f => by
-    ext (_ | i) <;>
-      · unfold_aux
-        dsimp
-        simp
+        inv_hom_id' := by ext (_ | i) <;> · unfold_aux; dsimp; simp })
+    fun X Y f => by ext (_ | i) <;> · unfold_aux; dsimp; simp
 #align cochain_complex.single₀_map_homological_complex CochainComplex.single₀MapHomologicalComplex
 -/
 

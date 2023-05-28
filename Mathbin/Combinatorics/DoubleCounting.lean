@@ -126,10 +126,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) {s : Finset.{u2} α} {t : Finset.{u1} β} [_inst_3 : forall (a : α) (b : β), Decidable (r a b)], Eq.{1} Nat (Finset.sum.{0, u2} Nat α Nat.addCommMonoid s (fun (a : α) => Finset.card.{u1} β (Finset.bipartiteAbove.{u2, u1} α β r t a (fun (a_1 : β) => _inst_3 a a_1)))) (Finset.sum.{0, u1} Nat β Nat.addCommMonoid t (fun (b : β) => Finset.card.{u2} α (Finset.bipartiteBelow.{u2, u1} α β r s b (fun (a : α) => _inst_3 a b))))
 Case conversion may be inaccurate. Consider using '#align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelowₓ'. -/
 theorem sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow [∀ a b, Decidable (r a b)] :
-    (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card :=
-  by
-  simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
-  exact sum_comm
+    (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card := by
+  simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]; exact sum_comm
 #align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow
 
 /- warning: finset.card_mul_le_card_mul -> Finset.card_mul_le_card_mul is a dubious translation:
@@ -184,13 +182,9 @@ theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t �
       card_mul_le_card_mul _
         (fun a h =>
           card_pos.2 <|
-            (by
-              rw [← coe_nonempty, coe_bipartite_above]
-              exact hs _ h : (t.bipartite_above r a).Nonempty))
-        fun b h =>
-        card_le_one.2 <| by
-          simp_rw [mem_bipartite_below]
-          exact ht _ h
+            (by rw [← coe_nonempty, coe_bipartite_above]; exact hs _ h :
+              (t.bipartite_above r a).Nonempty))
+        fun b h => card_le_one.2 <| by simp_rw [mem_bipartite_below]; exact ht _ h
 #align finset.card_le_card_of_forall_subsingleton Finset.card_le_card_of_forall_subsingleton
 
 #print Finset.card_le_card_of_forall_subsingleton' /-

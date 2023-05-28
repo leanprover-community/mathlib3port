@@ -102,10 +102,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {S : Type.{u2}} [_inst_2 : Semiring.{u2} S] {f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)} (p : Polynomial.{u2} S _inst_2), Iff (Membership.mem.{u2, u2} (Polynomial.{u2} S _inst_2) (Subsemiring.{u2} (Polynomial.{u2} S _inst_2) (Semiring.toNonAssocSemiring.{u2} (Polynomial.{u2} S _inst_2) (Polynomial.semiring.{u2} S _inst_2))) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} (Polynomial.{u2} S _inst_2) (Semiring.toNonAssocSemiring.{u2} (Polynomial.{u2} S _inst_2) (Polynomial.semiring.{u2} S _inst_2))) (Polynomial.{u2} S _inst_2) (Subsemiring.instSetLikeSubsemiring.{u2} (Polynomial.{u2} S _inst_2) (Semiring.toNonAssocSemiring.{u2} (Polynomial.{u2} S _inst_2) (Polynomial.semiring.{u2} S _inst_2)))) p (Polynomial.lifts.{u1, u2} R _inst_1 S _inst_2 f)) (forall (n : Nat), Membership.mem.{u2, u2} S (Set.{u2} S) (Set.instMembershipSet.{u2} S) (Polynomial.coeff.{u2} S _inst_2 p n) (Set.range.{u2, succ u1} S R (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2) (RingHom.instRingHomClassRingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2))))) f)))
 Case conversion may be inaccurate. Consider using '#align polynomial.lifts_iff_coeff_lifts Polynomial.lifts_iff_coeff_liftsₓ'. -/
-theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.range f :=
-  by
-  rw [lifts_iff_ring_hom_srange, mem_map_srange f]
-  rfl
+theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.range f := by
+  rw [lifts_iff_ring_hom_srange, mem_map_srange f]; rfl
 #align polynomial.lifts_iff_coeff_lifts Polynomial.lifts_iff_coeff_lifts
 
 /- warning: polynomial.C_mem_lifts -> Polynomial.C_mem_lifts is a dubious translation:
@@ -399,9 +397,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.smul_mem_lifts Polynomial.smul_mem_liftsₓ'. -/
 /-- If `p` lifts and `(r : R)` then `r • p` lifts. -/
 theorem smul_mem_lifts {p : S[X]} (r : R) (hp : p ∈ lifts (algebraMap R S)) :
-    r • p ∈ lifts (algebraMap R S) :=
-  by
-  rw [mem_lifts_iff_mem_alg] at hp⊢
+    r • p ∈ lifts (algebraMap R S) := by rw [mem_lifts_iff_mem_alg] at hp⊢;
   exact Subalgebra.smul_mem (map_alg R S).range hp r
 #align polynomial.smul_mem_lifts Polynomial.smul_mem_lifts
 

@@ -89,8 +89,7 @@ theorem lSeriesSummable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ}
     ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
   · simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
   intro n
-  cases n
-  · simp
+  cases n; · simp
   apply congr rfl
   have h0 : (n.succ : ℂ) ≠ 0 := by
     rw [Ne.def, Nat.cast_eq_zero]
@@ -118,8 +117,7 @@ theorem zeta_lSeriesSummable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 
     summable_norm_iff, ← Real.summable_one_div_nat_rpow, iff_iff_eq]
   by_cases h0 : z.re = 0
   · rw [h0, ← summable_nat_add_iff 1]
-    swap
-    · infer_instance
+    swap; · infer_instance
     apply congr rfl
     ext n
     simp [n.succ_ne_zero]

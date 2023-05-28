@@ -53,8 +53,7 @@ theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p :=
   rcases p.trichotomy with (rfl | rfl | h)
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.toFinite
   · exact mem_ℓp_infty_iff.mpr (Set.Finite.bddAbove (Set.range fun i : α => ‖f i‖).toFinite)
-  · cases nonempty_fintype α
-    exact memℓp_gen ⟨finset.univ.sum _, hasSum_fintype _⟩
+  · cases nonempty_fintype α; exact memℓp_gen ⟨finset.univ.sum _, hasSum_fintype _⟩
 #align mem_ℓp.all Memℓp.all
 
 variable [Fintype α]
@@ -78,12 +77,9 @@ theorem coe_equiv_lpPiLp_symm (f : PiLp p E) : (Equiv.lpPiLp.symm f : ∀ i, E i
 theorem equiv_lpPiLp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
-  · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]
-    rfl
-  · rw [PiLp.norm_eq_ciSup, lp.norm_eq_csupr]
-    rfl
-  · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]
-    rfl
+  · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]; rfl
+  · rw [PiLp.norm_eq_ciSup, lp.norm_eq_csupr]; rfl
+  · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]; rfl
 #align equiv_lp_pi_Lp_norm equiv_lpPiLp_norm
 
 /-- The canonical `add_equiv` between `lp E p` and `pi_Lp p E` when `E : α → Type u` with
@@ -164,9 +160,7 @@ theorem coe_addEquiv_lpBcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : α 
 noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
   { AddEquiv.lpBcf with
     map_smul' := fun k f => rfl
-    norm_map' := fun f => by
-      simp only [norm_eq_supr_norm, lp.norm_eq_csupr]
-      rfl }
+    norm_map' := fun f => by simp only [norm_eq_supr_norm, lp.norm_eq_csupr]; rfl }
 #align lp_bcfₗᵢ lpBcfₗᵢ
 
 variable {𝕜}

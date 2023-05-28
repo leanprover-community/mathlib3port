@@ -76,15 +76,10 @@ theorem euler_criterion {a : ZMod p} (ha : a ≠ 0) : IsSquare (a : ZMod p) ↔ 
   by
   apply (iff_congr _ (by simp [Units.ext_iff])).mp (euler_criterion_units p (Units.mk0 a ha))
   simp only [Units.ext_iff, sq, Units.val_mk0, Units.val_mul]
-  constructor;
-  · rintro ⟨y, hy⟩
-    exact ⟨y, hy.symm⟩
+  constructor; · rintro ⟨y, hy⟩; exact ⟨y, hy.symm⟩
   · rintro ⟨y, rfl⟩
-    have hy : y ≠ 0 := by
-      rintro rfl
-      simpa [zero_pow] using ha
-    refine' ⟨Units.mk0 y hy, _⟩
-    simp
+    have hy : y ≠ 0 := by rintro rfl; simpa [zero_pow] using ha
+    refine' ⟨Units.mk0 y hy, _⟩; simp
 #align zmod.euler_criterion ZMod.euler_criterion
 
 /-- If `a : zmod p` is nonzero, then `a^(p/2)` is either `1` or `-1`. -/
@@ -92,9 +87,7 @@ theorem pow_div_two_eq_neg_one_or_one {a : ZMod p} (ha : a ≠ 0) :
     a ^ (p / 2) = 1 ∨ a ^ (p / 2) = -1 :=
   by
   cases' prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
-  · subst p
-    revert a ha
-    decide
+  · subst p; revert a ha; decide
   rw [← mul_self_eq_one_iff, ← pow_add, ← two_mul, two_mul_odd_div_two hp_odd]
   exact pow_card_sub_one_eq_one ha
 #align zmod.pow_div_two_eq_neg_one_or_one ZMod.pow_div_two_eq_neg_one_or_one
@@ -143,9 +136,7 @@ theorem eq_pow (a : ℤ) : (legendreSym p a : ZMod p) = a ^ (p / 2) :=
       subst p
       rw [legendreSym, quadraticChar_eq_one_of_char_two hc ha]
       revert ha
-      generalize (a : ZMod 2) = b
-      revert b
-      decide
+      generalize (a : ZMod 2) = b; revert b; decide
   · convert quadraticChar_eq_pow_of_char_ne_two' hc (a : ZMod p)
     exact (card p).symm
 #align legendre_sym.eq_pow legendreSym.eq_pow
@@ -209,11 +200,7 @@ theorem eq_one_iff {a : ℤ} (ha0 : (a : ZMod p) ≠ 0) : legendreSym p a = 1 �
 #align legendre_sym.eq_one_iff legendreSym.eq_one_iff
 
 theorem eq_one_iff' {a : ℕ} (ha0 : (a : ZMod p) ≠ 0) :
-    legendreSym p a = 1 ↔ IsSquare (a : ZMod p) :=
-  by
-  rw [eq_one_iff]
-  norm_cast
-  exact_mod_cast ha0
+    legendreSym p a = 1 ↔ IsSquare (a : ZMod p) := by rw [eq_one_iff]; norm_cast; exact_mod_cast ha0
 #align legendre_sym.eq_one_iff' legendreSym.eq_one_iff'
 
 /-- `legendre_sym p a = -1` iff `a` is a nonsquare mod `p`. -/
@@ -221,10 +208,8 @@ theorem eq_neg_one_iff {a : ℤ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMod
   quadraticChar_neg_one_iff_not_isSquare
 #align legendre_sym.eq_neg_one_iff legendreSym.eq_neg_one_iff
 
-theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMod p) :=
-  by
-  rw [eq_neg_one_iff]
-  norm_cast
+theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMod p) := by
+  rw [eq_neg_one_iff]; norm_cast
 #align legendre_sym.eq_neg_one_iff' legendreSym.eq_neg_one_iff'
 
 /-- The number of square roots of `a` modulo `p` is determined by the Legendre symbol. -/

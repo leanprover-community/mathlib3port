@@ -125,11 +125,8 @@ theorem deriv.scomp (hg : DifferentiableAt 𝕜' g₁ (h x)) (hh : Differentiabl
 
 theorem HasDerivAtFilter.comp_hasFDerivAtFilter {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x) {L'' : Filter E}
     (hh₂ : HasDerivAtFilter h₂ h₂' (f x) L') (hf : HasFDerivAtFilter f f' x L'')
-    (hL : Tendsto f L'' L') : HasFDerivAtFilter (h₂ ∘ f) (h₂' • f') x L'' :=
-  by
-  convert(hh₂.restrict_scalars 𝕜).comp x hf hL
-  ext x
-  simp [mul_comm]
+    (hL : Tendsto f L'' L') : HasFDerivAtFilter (h₂ ∘ f) (h₂' • f') x L'' := by
+  convert(hh₂.restrict_scalars 𝕜).comp x hf hL; ext x; simp [mul_comm]
 #align has_deriv_at_filter.comp_has_fderiv_at_filter HasDerivAtFilter.comp_hasFDerivAtFilter
 
 theorem HasStrictDerivAt.comp_hasStrictFDerivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x)
@@ -164,18 +161,12 @@ theorem HasDerivWithinAt.comp_hasFDerivWithinAt {f : E → 𝕜'} {f' : E →L[�
 
 theorem HasDerivAtFilter.comp (hh₂ : HasDerivAtFilter h₂ h₂' (h x) L')
     (hh : HasDerivAtFilter h h' x L) (hL : Tendsto h L L') :
-    HasDerivAtFilter (h₂ ∘ h) (h₂' * h') x L :=
-  by
-  rw [mul_comm]
-  exact hh₂.scomp x hh hL
+    HasDerivAtFilter (h₂ ∘ h) (h₂' * h') x L := by rw [mul_comm]; exact hh₂.scomp x hh hL
 #align has_deriv_at_filter.comp HasDerivAtFilter.comp
 
 theorem HasDerivWithinAt.comp (hh₂ : HasDerivWithinAt h₂ h₂' s' (h x))
     (hh : HasDerivWithinAt h h' s x) (hst : MapsTo h s s') :
-    HasDerivWithinAt (h₂ ∘ h) (h₂' * h') s x :=
-  by
-  rw [mul_comm]
-  exact hh₂.scomp x hh hst
+    HasDerivWithinAt (h₂ ∘ h) (h₂' * h') s x := by rw [mul_comm]; exact hh₂.scomp x hh hst
 #align has_deriv_within_at.comp HasDerivWithinAt.comp
 
 /-- The chain rule. -/
@@ -185,10 +176,7 @@ theorem HasDerivAt.comp (hh₂ : HasDerivAt h₂ h₂' (h x)) (hh : HasDerivAt h
 #align has_deriv_at.comp HasDerivAt.comp
 
 theorem HasStrictDerivAt.comp (hh₂ : HasStrictDerivAt h₂ h₂' (h x)) (hh : HasStrictDerivAt h h' x) :
-    HasStrictDerivAt (h₂ ∘ h) (h₂' * h') x :=
-  by
-  rw [mul_comm]
-  exact hh₂.scomp x hh
+    HasStrictDerivAt (h₂ ∘ h) (h₂' * h') x := by rw [mul_comm]; exact hh₂.scomp x hh
 #align has_strict_deriv_at.comp HasStrictDerivAt.comp
 
 theorem HasDerivAt.comp_hasDerivWithinAt (hh₂ : HasDerivAt h₂ h₂' (h x))

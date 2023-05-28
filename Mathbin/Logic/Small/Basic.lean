@@ -149,8 +149,7 @@ instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : 
   by
   rcases isEmpty_or_nonempty α with ⟨⟩ <;> skip
   · apply small_map (Equiv.equivPEmpty α)
-  · apply small_map Equiv.punitOfNonemptyOfSubsingleton
-    assumption'
+  · apply small_map Equiv.punitOfNonemptyOfSubsingleton; assumption'
 #align small_subsingleton small_subsingleton
 -/
 

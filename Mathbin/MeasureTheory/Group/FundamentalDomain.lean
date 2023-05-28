@@ -124,14 +124,10 @@ theorem mk_of_measure_univ_le [FiniteMeasure μ] [Countable G] (h_meas : NullMea
     AEDisjoint
     ae_covers :=
       by
-      replace h_meas : ∀ g : G, null_measurable_set (g • s) μ := fun g =>
-        by
-        rw [← inv_inv g, ← preimage_smul]
-        exact h_meas.preimage (h_qmp g⁻¹)
-      have h_meas' : null_measurable_set { a | ∃ g : G, g • a ∈ s } μ :=
-        by
-        rw [← Union_smul_eq_set_of_exists]
-        exact null_measurable_set.Union h_meas
+      replace h_meas : ∀ g : G, null_measurable_set (g • s) μ := fun g => by
+        rw [← inv_inv g, ← preimage_smul]; exact h_meas.preimage (h_qmp g⁻¹)
+      have h_meas' : null_measurable_set { a | ∃ g : G, g • a ∈ s } μ := by
+        rw [← Union_smul_eq_set_of_exists]; exact null_measurable_set.Union h_meas
       rw [ae_iff_measure_eq h_meas', ← Union_smul_eq_set_of_exists]
       refine' le_antisymm (measure_mono <| subset_univ _) _
       rw [measure_Union₀ ae_disjoint h_meas]

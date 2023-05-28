@@ -91,8 +91,7 @@ theorem continuousOn_Ico_extendFrom_Ioo [TopologicalSpace α] [LinearOrder α] [
     ContinuousOn (extendFrom (Ioo a b) f) (Ico a b) :=
   by
   apply continuousOn_extendFrom
-  · rw [closure_Ioo hab.ne]
-    exact Ico_subset_Icc_self
+  · rw [closure_Ioo hab.ne]; exact Ico_subset_Icc_self
   · intro x x_in
     rcases eq_left_or_mem_Ioo_of_mem_Ico x_in with (rfl | h)
     · use la

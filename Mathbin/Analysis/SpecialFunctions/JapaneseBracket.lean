@@ -119,10 +119,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
   have h_meas : Measurable fun ω : E => (1 + ‖ω‖) ^ (-r) := by measurability
-  have h_pos : ∀ x : E, 0 ≤ (1 + ‖x‖) ^ (-r) :=
-    by
-    intro x
-    positivity
+  have h_pos : ∀ x : E, 0 ≤ (1 + ‖x‖) ^ (-r) := by intro x; positivity
   rw [lintegral_eq_lintegral_meas_le volume h_pos h_meas]
   -- We use the first transformation of the integrant to show that we only have to integrate from
   -- 0 to 1 and from 1 to ∞

@@ -485,13 +485,10 @@ theorem sin_eq_iff_coe_eq_or_add_eq_pi {θ ψ : ℝ} :
     sin θ = sin ψ ↔ (θ : Angle) = ψ ∨ (θ : Angle) + ψ = π :=
   by
   constructor
-  · intro Hsin
-    rw [← cos_pi_div_two_sub, ← cos_pi_div_two_sub] at Hsin
+  · intro Hsin; rw [← cos_pi_div_two_sub, ← cos_pi_div_two_sub] at Hsin
     cases' cos_eq_iff_coe_eq_or_eq_neg.mp Hsin with h h
-    · left
-      rw [coe_sub, coe_sub] at h
-      exact sub_right_inj.1 h
-    right
+    · left; rw [coe_sub, coe_sub] at h; exact sub_right_inj.1 h
+    right;
     rw [coe_sub, coe_sub, eq_neg_iff_add_eq_zero, add_sub, sub_add_eq_add_sub, ← coe_add,
       add_halves, sub_sub, sub_eq_zero] at h
     exact h.symm
@@ -1857,9 +1854,7 @@ Case conversion may be inaccurate. Consider using '#align real.angle.eq_iff_sign
 theorem eq_iff_sign_eq_and_abs_toReal_eq {θ ψ : Angle} :
     θ = ψ ↔ θ.sign = ψ.sign ∧ |θ.toReal| = |ψ.toReal| :=
   by
-  refine' ⟨_, fun h => _⟩;
-  · rintro rfl
-    exact ⟨rfl, rfl⟩
+  refine' ⟨_, fun h => _⟩; · rintro rfl; exact ⟨rfl, rfl⟩
   rcases h with ⟨hs, hr⟩
   rw [abs_eq_abs] at hr
   rcases hr with (hr | hr)
@@ -1949,22 +1944,17 @@ theorem sign_two_nsmul_eq_sign_iff {θ : Angle} :
     rw [not_lt, le_abs, le_neg] at hle
     have hpi' : θ.to_real ≠ π := by simpa using hpi
     rcases hle with (hle | hle) <;> rcases hle.eq_or_lt with (heq | hlt)
-    · rw [← coe_to_real θ, ← HEq] at h
-      simpa using h
+    · rw [← coe_to_real θ, ← HEq] at h; simpa using h
     · rw [← sign_to_real hpi, sign_pos (pi_div_two_pos.trans hlt), ← sign_to_real,
         two_nsmul_to_real_eq_two_mul_sub_two_pi.2 hlt, _root_.sign_neg] at h
       · simpa using h
       · rw [← mul_sub]
         exact mul_neg_of_pos_of_neg two_pos (sub_neg.2 ((to_real_le_pi _).lt_of_ne hpi'))
-      · intro he
-        simpa [he] using h
-    · rw [← coe_to_real θ, HEq] at h
-      simpa using h
+      · intro he; simpa [he] using h
+    · rw [← coe_to_real θ, HEq] at h; simpa using h
     · rw [← sign_to_real hpi, _root_.sign_neg (hlt.trans (Left.neg_neg_iff.2 pi_div_two_pos)), ←
         sign_to_real] at h
-      swap
-      · intro he
-        simpa [he] using h
+      swap; · intro he; simpa [he] using h
       rw [← neg_div] at hlt
       rw [two_nsmul_to_real_eq_two_mul_add_two_pi.2 hlt.le, sign_pos] at h
       · simpa using h
@@ -1973,8 +1963,7 @@ theorem sign_two_nsmul_eq_sign_iff {θ : Angle} :
       by
       rw [Ne.def, two_nsmul_eq_pi_iff, not_or]
       constructor
-      · rintro rfl
-        simpa [pi_pos, div_pos, abs_of_pos] using h
+      · rintro rfl; simpa [pi_pos, div_pos, abs_of_pos] using h
       · rintro rfl
         rw [to_real_neg_pi_div_two] at h
         simpa [pi_pos, div_pos, neg_div, abs_of_pos] using h

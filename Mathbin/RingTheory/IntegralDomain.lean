@@ -74,8 +74,7 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
     ‹CancelMonoidWithZero
         M› with
     inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1
-    mul_inv_cancel := fun a ha => by
-      simp [Inv.inv, dif_neg ha]
+    mul_inv_cancel := fun a ha => by simp [Inv.inv, dif_neg ha];
       exact Fintype.rightInverse_bijInv _ _
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
 #align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
@@ -173,9 +172,7 @@ theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective 
   · intro g hg
     rw [sep_def, mem_filter] at hg
     rw [Multiset.mem_toFinset, mem_nth_roots hn, ← f.map_pow, hg.2]
-  · intros
-    apply hf
-    assumption
+  · intros ; apply hf; assumption
 #align card_nth_roots_subgroup_units card_nthRoots_subgroup_units
 
 /- warning: is_cyclic_of_subgroup_is_domain -> isCyclic_of_subgroup_isDomain is a dubious translation:
@@ -215,8 +212,7 @@ instance subgroup_units_cyclic : IsCyclic S :=
   by
   refine' isCyclic_of_subgroup_isDomain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
   · simp
-  · intros
-    simp
+  · intros ; simp
 #align subgroup_units_cyclic subgroup_units_cyclic
 
 end

@@ -74,10 +74,8 @@ def Compares [LT α] : Ordering → α → α → Prop
 -/
 
 #print Ordering.compares_swap /-
-theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b ↔ o.Compares b a :=
-  by
-  cases o
-  exacts[Iff.rfl, eq_comm, Iff.rfl]
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b ↔ o.Compares b a := by
+  cases o; exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align ordering.compares_swap Ordering.compares_swap
 -/
 
@@ -231,9 +229,7 @@ open Ordering OrderDual
 #print toDual_compares_toDual /-
 @[simp]
 theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
-    Compares o (toDual a) (toDual b) ↔ Compares o b a :=
-  by
-  cases o
+    Compares o (toDual a) (toDual b) ↔ Compares o b a := by cases o;
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align to_dual_compares_to_dual toDual_compares_toDual
 -/
@@ -241,9 +237,7 @@ theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
 #print ofDual_compares_ofDual /-
 @[simp]
 theorem ofDual_compares_ofDual [LT α] {a b : αᵒᵈ} {o : Ordering} :
-    Compares o (ofDual a) (ofDual b) ↔ Compares o b a :=
-  by
-  cases o
+    Compares o (ofDual a) (ofDual b) ↔ Compares o b a := by cases o;
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align of_dual_compares_of_dual ofDual_compares_ofDual
 -/
@@ -397,10 +391,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmpₓ'. -/
 theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' :=
   by
-  rw [← not_lt, ← not_lt]
-  apply not_congr
-  apply lt_iff_lt_of_cmp_eq_cmp
-  rwa [cmp_eq_cmp_symm]
+  rw [← not_lt, ← not_lt]; apply not_congr
+  apply lt_iff_lt_of_cmp_eq_cmp; rwa [cmp_eq_cmp_symm]
 #align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmp
 
 /- warning: eq_iff_eq_of_cmp_eq_cmp -> eq_iff_eq_of_cmp_eq_cmp is a dubious translation:

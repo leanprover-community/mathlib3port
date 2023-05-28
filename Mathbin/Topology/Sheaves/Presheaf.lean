@@ -146,9 +146,7 @@ Case conversion may be inaccurate. Consider using '#align Top.presheaf.restrict_
 @[simp]
 theorem restrict_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C]
     {F : X.Presheaf C} {U V W : Opens X} (e₁ : U ≤ V) (e₂ : V ≤ W) (x : F.obj (op W)) :
-    x |_ V |_ U = x |_ U := by
-  delta restrict_open restrict
-  rw [← comp_apply, ← functor.map_comp]
+    x |_ V |_ U = x |_ U := by delta restrict_open restrict; rw [← comp_apply, ← functor.map_comp];
   rfl
 #align Top.presheaf.restrict_restrict TopCat.Presheaf.restrict_restrict
 
@@ -158,9 +156,7 @@ Case conversion may be inaccurate. Consider using '#align Top.presheaf.map_restr
 @[simp]
 theorem map_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C]
     {F G : X.Presheaf C} (e : F ⟶ G) {U V : Opens X} (h : U ≤ V) (x : F.obj (op V)) :
-    e.app _ (x |_ U) = e.app _ x |_ U :=
-  by
-  delta restrict_open restrict
+    e.app _ (x |_ U) = e.app _ x |_ U := by delta restrict_open restrict;
   rw [← comp_apply, nat_trans.naturality, comp_apply]
 #align Top.presheaf.map_restrict TopCat.Presheaf.map_restrict
 
@@ -271,9 +267,7 @@ def id : 𝟙 X _* ℱ ≅ ℱ :=
 #align Top.presheaf.pushforward.id TopCat.Presheaf.Pushforward.id
 
 #print TopCat.Presheaf.Pushforward.id_eq /-
-theorem id_eq : 𝟙 X _* ℱ = ℱ := by
-  unfold pushforward_obj
-  rw [opens.map_id_eq]
+theorem id_eq : 𝟙 X _* ℱ = ℱ := by unfold pushforward_obj; rw [opens.map_id_eq];
   erw [functor.id_comp]
 #align Top.presheaf.pushforward.id_eq TopCat.Presheaf.Pushforward.id_eq
 -/
@@ -282,9 +276,7 @@ theorem id_eq : 𝟙 X _* ℱ = ℱ := by
 <too large>
 Case conversion may be inaccurate. Consider using '#align Top.presheaf.pushforward.id_hom_app' TopCat.Presheaf.Pushforward.id_hom_app'ₓ'. -/
 @[simp]
-theorem id_hom_app' (U) (p) : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) :=
-  by
-  dsimp [id]
+theorem id_hom_app' (U) (p) : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by dsimp [id];
   simp
 #align Top.presheaf.pushforward.id_hom_app' TopCat.Presheaf.Pushforward.id_hom_app'
 
@@ -307,9 +299,7 @@ theorem id_hom_app (U) : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_
 <too large>
 Case conversion may be inaccurate. Consider using '#align Top.presheaf.pushforward.id_inv_app' TopCat.Presheaf.Pushforward.id_inv_app'ₓ'. -/
 @[simp]
-theorem id_inv_app' (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) :=
-  by
-  dsimp [id]
+theorem id_inv_app' (U) (p) : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by dsimp [id];
   simp
 #align Top.presheaf.pushforward.id_inv_app' TopCat.Presheaf.Pushforward.id_inv_app'
 
@@ -337,9 +327,7 @@ theorem comp_eq {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* �
 Case conversion may be inaccurate. Consider using '#align Top.presheaf.pushforward.comp_hom_app TopCat.Presheaf.Pushforward.comp_hom_appₓ'. -/
 @[simp]
 theorem comp_hom_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
-    (comp ℱ f g).Hom.app U = 𝟙 _ := by
-  dsimp [comp]
-  tidy
+    (comp ℱ f g).Hom.app U = 𝟙 _ := by dsimp [comp]; tidy
 #align Top.presheaf.pushforward.comp_hom_app TopCat.Presheaf.Pushforward.comp_hom_app
 
 /- warning: Top.presheaf.pushforward.comp_inv_app -> TopCat.Presheaf.Pushforward.comp_inv_app is a dubious translation:
@@ -347,9 +335,7 @@ theorem comp_hom_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
 Case conversion may be inaccurate. Consider using '#align Top.presheaf.pushforward.comp_inv_app TopCat.Presheaf.Pushforward.comp_inv_appₓ'. -/
 @[simp]
 theorem comp_inv_app {Y Z : TopCat.{w}} (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
-    (comp ℱ f g).inv.app U = 𝟙 _ := by
-  dsimp [comp]
-  tidy
+    (comp ℱ f g).inv.app U = 𝟙 _ := by dsimp [comp]; tidy
 #align Top.presheaf.pushforward.comp_inv_app TopCat.Presheaf.Pushforward.comp_inv_app
 
 end Pushforward
@@ -366,9 +352,7 @@ Case conversion may be inaccurate. Consider using '#align Top.presheaf.pushforwa
 def pushforwardMap {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) : f _* ℱ ⟶ f _* 𝒢
     where
   app U := α.app _
-  naturality' U V i := by
-    erw [α.naturality]
-    rfl
+  naturality' U V i := by erw [α.naturality]; rfl
 #align Top.presheaf.pushforward_map TopCat.Presheaf.pushforwardMap
 
 open CategoryTheory.Limits
@@ -508,11 +492,9 @@ theorem id_pushforward {X : TopCat.{w}} : pushforward C (𝟙 X) = 𝟭 (X.Presh
   apply CategoryTheory.Functor.ext
   · intros
     ext U
-    have h := f.congr
-    erw [h (opens.op_map_id_obj U)]
+    have h := f.congr; erw [h (opens.op_map_id_obj U)]
     simpa [eq_to_hom_map]
-  · intros
-    apply pushforward.id_eq
+  · intros ; apply pushforward.id_eq
 #align Top.presheaf.id_pushforward TopCat.Presheaf.id_pushforward
 
 section Iso

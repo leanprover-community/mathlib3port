@@ -81,9 +81,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s}, (Finpartition.IsEquipartition.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P) -> (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) -> (LE.le.{0} Nat instLENat (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Finset.card.{u1} α s) (Finset.card.{u1} (Finset.{u1} α) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P))) (Finset.card.{u1} α t))
 Case conversion may be inaccurate. Consider using '#align finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_partₓ'. -/
 theorem IsEquipartition.average_le_card_part (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
-    s.card / P.parts.card ≤ t.card := by
-  rw [← P.sum_card_parts]
-  exact equitable_on.le hP ht
+    s.card / P.parts.card ≤ t.card := by rw [← P.sum_card_parts]; exact equitable_on.le hP ht
 #align finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_part
 
 /- warning: finpartition.is_equipartition.card_part_le_average_add_one -> Finpartition.IsEquipartition.card_part_le_average_add_one is a dubious translation:
@@ -93,9 +91,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s}, (Finpartition.IsEquipartition.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s P) -> (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α t) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Finset.card.{u1} α s) (Finset.card.{u1} (Finset.{u1} α) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align finpartition.is_equipartition.card_part_le_average_add_one Finpartition.IsEquipartition.card_part_le_average_add_oneₓ'. -/
 theorem IsEquipartition.card_part_le_average_add_one (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
-    t.card ≤ s.card / P.parts.card + 1 :=
-  by
-  rw [← P.sum_card_parts]
+    t.card ≤ s.card / P.parts.card + 1 := by rw [← P.sum_card_parts];
   exact equitable_on.le_add_one hP ht
 #align finpartition.is_equipartition.card_part_le_average_add_one Finpartition.IsEquipartition.card_part_le_average_add_one
 
@@ -121,10 +117,8 @@ theorem top_isEquipartition : (⊤ : Finpartition s).IsEquipartition :=
 #align finpartition.top_is_equipartition Finpartition.top_isEquipartition
 
 #print Finpartition.indiscrete_isEquipartition /-
-theorem indiscrete_isEquipartition {hs : s ≠ ∅} : (indiscrete hs).IsEquipartition :=
-  by
-  rw [is_equipartition, indiscrete_parts, coe_singleton]
-  exact Set.equitableOn_singleton s _
+theorem indiscrete_isEquipartition {hs : s ≠ ∅} : (indiscrete hs).IsEquipartition := by
+  rw [is_equipartition, indiscrete_parts, coe_singleton]; exact Set.equitableOn_singleton s _
 #align finpartition.indiscrete_is_equipartition Finpartition.indiscrete_isEquipartition
 -/
 

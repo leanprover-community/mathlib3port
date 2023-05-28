@@ -101,17 +101,13 @@ variable {β : Type _} [DecidableEq α] {r : α → α → Prop} {l : List α}
 
 #print List.pairwise_of_coe_toFinset_pairwise /-
 theorem pairwise_of_coe_toFinset_pairwise (hl : (l.toFinset : Set α).Pairwise r) (hn : l.Nodup) :
-    l.Pairwise r := by
-  rw [coe_to_finset] at hl
-  exact hn.pairwise_of_set_pairwise hl
+    l.Pairwise r := by rw [coe_to_finset] at hl; exact hn.pairwise_of_set_pairwise hl
 #align list.pairwise_of_coe_to_finset_pairwise List.pairwise_of_coe_toFinset_pairwise
 -/
 
 #print List.pairwise_iff_coe_toFinset_pairwise /-
 theorem pairwise_iff_coe_toFinset_pairwise (hn : l.Nodup) (hs : Symmetric r) :
-    (l.toFinset : Set α).Pairwise r ↔ l.Pairwise r :=
-  by
-  rw [coe_to_finset, hn.pairwise_coe]
+    (l.toFinset : Set α).Pairwise r ↔ l.Pairwise r := by rw [coe_to_finset, hn.pairwise_coe];
   exact ⟨hs⟩
 #align list.pairwise_iff_coe_to_finset_pairwise List.pairwise_iff_coe_toFinset_pairwise
 -/

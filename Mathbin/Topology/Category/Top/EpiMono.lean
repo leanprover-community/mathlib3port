@@ -38,13 +38,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Top.epi_iff_surjective TopCat.epi_iff_surjectiveₓ'. -/
 theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
-  suffices epi f ↔ epi ((forget TopCat).map f)
-    by
-    rw [this, CategoryTheory.epi_iff_surjective]
-    rfl
+  suffices epi f ↔ epi ((forget TopCat).map f) by rw [this, CategoryTheory.epi_iff_surjective]; rfl
   constructor
-  · intro
-    infer_instance
+  · intro ; infer_instance
   · apply functor.epi_of_epi_map
 #align Top.epi_iff_surjective TopCat.epi_iff_surjective
 
@@ -56,13 +52,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Top.mono_iff_injective TopCat.mono_iff_injectiveₓ'. -/
 theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
-  suffices mono f ↔ mono ((forget TopCat).map f)
-    by
-    rw [this, CategoryTheory.mono_iff_injective]
+  suffices mono f ↔ mono ((forget TopCat).map f) by rw [this, CategoryTheory.mono_iff_injective];
     rfl
   constructor
-  · intro
-    infer_instance
+  · intro ; infer_instance
   · apply functor.mono_of_mono_map
 #align Top.mono_iff_injective TopCat.mono_iff_injective
 

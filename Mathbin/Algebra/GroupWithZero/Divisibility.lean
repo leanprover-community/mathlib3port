@@ -49,10 +49,7 @@ Case conversion may be inaccurate. Consider using '#align zero_dvd_iff zero_dvd_
     product with zero equals `a` iff `a` equals zero. -/
 @[simp]
 theorem zero_dvd_iff : 0 ∣ a ↔ a = 0 :=
-  ⟨eq_zero_of_zero_dvd, fun h => by
-    rw [h]
-    use 0
-    simp⟩
+  ⟨eq_zero_of_zero_dvd, fun h => by rw [h]; use 0; simp⟩
 #align zero_dvd_iff zero_dvd_iff
 
 /- warning: dvd_zero -> dvd_zero is a dubious translation:
@@ -110,8 +107,7 @@ def DvdNotUnit (a b : α) : Prop :=
 theorem dvdNotUnit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b :=
   by
   constructor
-  · rintro rfl
-    exact hnd (dvd_zero _)
+  · rintro rfl; exact hnd (dvd_zero _)
   · rcases hd with ⟨c, rfl⟩
     refine' ⟨c, _, rfl⟩
     rintro ⟨u, rfl⟩

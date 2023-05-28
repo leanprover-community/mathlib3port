@@ -188,9 +188,7 @@ theorem contMdiffAt_totalSpace (f : M → TotalSpace E) (x₀ : M) :
     ContMdiffAt IM (IB.Prod 𝓘(𝕜, F)) n f x₀ ↔
       ContMdiffAt IM IB n (fun x => (f x).proj) x₀ ∧
         ContMdiffAt IM 𝓘(𝕜, F) n (fun x => (trivializationAt F E (f x₀).proj (f x)).2) x₀ :=
-  by
-  simp_rw [← contMdiffWithinAt_univ]
-  exact cont_mdiff_within_at_total_space f
+  by simp_rw [← contMdiffWithinAt_univ]; exact cont_mdiff_within_at_total_space f
 #align bundle.cont_mdiff_at_total_space Bundle.contMdiffAt_totalSpace
 
 variable (E)
@@ -462,8 +460,7 @@ theorem mk_smoothCoordChange (he : e ∈ a.pretrivializationAtlas)
   by
   ext
   · rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
-    rw [e.proj_symm_apply' hb.1]
-    exact hb.2
+    rw [e.proj_symm_apply' hb.1]; exact hb.2
   · exact a.smooth_coord_change_apply he he' hb v
 #align vector_prebundle.mk_smooth_coord_change VectorPrebundle.mk_smoothCoordChange
 

@@ -402,10 +402,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : InvolutiveInv.{u1} α] {ι : Sort.{u2}} {f : ι -> α}, Eq.{succ u1} (Set.{u1} α) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1)) (Set.range.{u1, u2} α ι f)) (Set.range.{u1, u2} α ι (fun (i : ι) => Inv.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_1) (f i)))
 Case conversion may be inaccurate. Consider using '#align set.inv_range Set.inv_rangeₓ'. -/
 @[to_additive]
-theorem inv_range {ι : Sort _} {f : ι → α} : (range f)⁻¹ = range fun i => (f i)⁻¹ :=
-  by
-  rw [← image_inv]
-  exact (range_comp _ _).symm
+theorem inv_range {ι : Sort _} {f : ι → α} : (range f)⁻¹ = range fun i => (f i)⁻¹ := by
+  rw [← image_inv]; exact (range_comp _ _).symm
 #align set.inv_range Set.inv_range
 #align set.neg_range Set.neg_range
 
@@ -1383,12 +1381,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.pow_mem_pow Set.pow_mem_powₓ'. -/
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact one_mem_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_mem_mul ha (pow_mem_pow _)
+  | 0 => by rw [pow_zero]; exact one_mem_one
+  | n + 1 => by rw [pow_succ]; exact mul_mem_mul ha (pow_mem_pow _)
 #align set.pow_mem_pow Set.pow_mem_pow
 #align set.nsmul_mem_nsmul Set.nsmul_mem_nsmul
 
@@ -1400,12 +1394,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.pow_subset_pow Set.pow_subset_powₓ'. -/
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact subset.rfl
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_subset_mul hst (pow_subset_pow _)
+  | 0 => by rw [pow_zero]; exact subset.rfl
+  | n + 1 => by rw [pow_succ]; exact mul_subset_mul hst (pow_subset_pow _)
 #align set.pow_subset_pow Set.pow_subset_pow
 #align set.nsmul_subset_nsmul Set.nsmul_subset_nsmul
 
@@ -1557,15 +1547,12 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
 protected def divisionMonoid : DivisionMonoid (Set α) :=
   { Set.monoid, Set.hasInvolutiveInv, Set.div,
     Set.ZPow with
-    mul_inv_rev := fun s t => by
-      simp_rw [← image_inv]
-      exact image_image2_antidistrib mul_inv_rev
+    mul_inv_rev := fun s t => by simp_rw [← image_inv]; exact image_image2_antidistrib mul_inv_rev
     inv_eq_of_mul := fun s t h =>
       by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Set.mul_eq_one_iff.1 h
       rw [inv_singleton, inv_eq_of_mul_eq_one_right hab]
-    div_eq_mul_inv := fun s t => by
-      rw [← image_id (s / t), ← image_inv]
+    div_eq_mul_inv := fun s t => by rw [← image_id (s / t), ← image_inv];
       exact image_image2_distrib_right div_eq_mul_inv }
 #align set.division_monoid Set.divisionMonoid
 #align set.subtraction_monoid Set.subtractionMonoid
@@ -1604,12 +1591,8 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (S
 protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α) :=
   {
     Set.hasInvolutiveNeg with
-    neg_mul := fun _ _ => by
-      simp_rw [← image_neg]
-      exact image2_image_left_comm neg_mul
-    mul_neg := fun _ _ => by
-      simp_rw [← image_neg]
-      exact image_image2_right_comm mul_neg }
+    neg_mul := fun _ _ => by simp_rw [← image_neg]; exact image2_image_left_comm neg_mul
+    mul_neg := fun _ _ => by simp_rw [← image_neg]; exact image_image2_right_comm mul_neg }
 #align set.has_distrib_neg Set.hasDistribNeg
 -/
 
@@ -1971,10 +1954,8 @@ theorem image_mul : m '' (s * t) = m '' s * m '' t :=
 
 #print Set.preimage_mul_preimage_subset /-
 @[to_additive]
-theorem preimage_mul_preimage_subset {s t : Set β} : m ⁻¹' s * m ⁻¹' t ⊆ m ⁻¹' (s * t) :=
-  by
-  rintro _ ⟨_, _, _, _, rfl⟩
-  exact ⟨_, _, ‹_›, ‹_›, (map_mul m _ _).symm⟩
+theorem preimage_mul_preimage_subset {s t : Set β} : m ⁻¹' s * m ⁻¹' t ⊆ m ⁻¹' (s * t) := by
+  rintro _ ⟨_, _, _, _, rfl⟩; exact ⟨_, _, ‹_›, ‹_›, (map_mul m _ _).symm⟩
 #align set.preimage_mul_preimage_subset Set.preimage_mul_preimage_subset
 #align set.preimage_add_preimage_subset Set.preimage_add_preimage_subset
 -/
@@ -2006,10 +1987,8 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Group.{u2} α] [_inst_2 : DivisionMonoid.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))] (m : F) {s : Set.{u3} β} {t : Set.{u3} β}, HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (HDiv.hDiv.{u2, u2, u2} (Set.{u2} α) (Set.{u2} α) (Set.{u2} α) (instHDiv.{u2} (Set.{u2} α) (Set.div.{u2} α (DivInvMonoid.toDiv.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (Set.preimage.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) s) (Set.preimage.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) t)) (Set.preimage.{u2, u3} α β (FunLike.coe.{succ u1, succ u2, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : α) => β) _x) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toMul.{u2} α (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1)))) (MulOneClass.toMul.{u3} β (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β (Monoid.toMulOneClass.{u2} α (DivInvMonoid.toMonoid.{u2} α (Group.toDivInvMonoid.{u2} α _inst_1))) (Monoid.toMulOneClass.{u3} β (DivInvMonoid.toMonoid.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2))) _inst_3)) m) (HDiv.hDiv.{u3, u3, u3} (Set.{u3} β) (Set.{u3} β) (Set.{u3} β) (instHDiv.{u3} (Set.{u3} β) (Set.div.{u3} β (DivInvMonoid.toDiv.{u3} β (DivisionMonoid.toDivInvMonoid.{u3} β _inst_2)))) s t))
 Case conversion may be inaccurate. Consider using '#align set.preimage_div_preimage_subset Set.preimage_div_preimage_subsetₓ'. -/
 @[to_additive]
-theorem preimage_div_preimage_subset {s t : Set β} : m ⁻¹' s / m ⁻¹' t ⊆ m ⁻¹' (s / t) :=
-  by
-  rintro _ ⟨_, _, _, _, rfl⟩
-  exact ⟨_, _, ‹_›, ‹_›, (map_div m _ _).symm⟩
+theorem preimage_div_preimage_subset {s t : Set β} : m ⁻¹' s / m ⁻¹' t ⊆ m ⁻¹' (s / t) := by
+  rintro _ ⟨_, _, _, _, rfl⟩; exact ⟨_, _, ‹_›, ‹_›, (map_div m _ _).symm⟩
 #align set.preimage_div_preimage_subset Set.preimage_div_preimage_subset
 #align set.preimage_sub_preimage_subset Set.preimage_sub_preimage_subset
 

@@ -63,10 +63,8 @@ instance List.encodable : Encodable (List α) :=
 -/
 
 #print List.countable /-
-instance List.countable {α : Type _} [Countable α] : Countable (List α) :=
-  by
-  haveI := Encodable.ofCountable α
-  infer_instance
+instance List.countable {α : Type _} [Countable α] : Countable (List α) := by
+  haveI := Encodable.ofCountable α; infer_instance
 #align list.countable List.countable
 -/
 

@@ -941,13 +941,9 @@ theorem LocalHomeomorph.isLocalStructomorphWithinAt_iff {G : StructureGroupoid H
     refine' ⟨e.restr f.source, closedUnderRestriction' he f.open_source, _, _, hxe, _⟩
     · simp_rw [LocalHomeomorph.restr_source]
       refine' (inter_subset_right _ _).trans interior_subset
-    · intro x' hx'
-      exact hfe ⟨hx'.1, hx'.2.1⟩
-    · rw [f.open_source.interior_eq]
-      exact Or.resolve_right hx (not_not.mpr h2x)
-  · intro hf hx
-    obtain ⟨e, he, h2e, hfe, hxe⟩ := hf hx
-    exact ⟨e, he, hfe, hxe⟩
+    · intro x' hx'; exact hfe ⟨hx'.1, hx'.2.1⟩
+    · rw [f.open_source.interior_eq]; exact Or.resolve_right hx (not_not.mpr h2x)
+  · intro hf hx; obtain ⟨e, he, h2e, hfe, hxe⟩ := hf hx; exact ⟨e, he, hfe, hxe⟩
 #align local_homeomorph.is_local_structomorph_within_at_iff LocalHomeomorph.isLocalStructomorphWithinAt_iff
 
 /- warning: local_homeomorph.is_local_structomorph_within_at_iff' -> LocalHomeomorph.isLocalStructomorphWithinAt_iff' is a dubious translation:

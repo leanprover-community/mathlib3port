@@ -122,9 +122,7 @@ theorem choose_two_right (n : ℕ) : choose n 2 = n * (n - 1) / 2 :=
   by
   induction' n with n ih
   simp
-  · rw [triangle_succ n]
-    simp [choose, ih]
-    rw [add_comm]
+  · rw [triangle_succ n]; simp [choose, ih]; rw [add_comm]
 #align nat.choose_two_right Nat.choose_two_right
 -/
 
@@ -247,10 +245,8 @@ theorem choose_symm {n k : ℕ} (hk : k ≤ n) : choose n (n - k) = choose n k :
 -/
 
 #print Nat.choose_symm_of_eq_add /-
-theorem choose_symm_of_eq_add {n a b : ℕ} (h : n = a + b) : Nat.choose n a = Nat.choose n b :=
-  by
-  convert Nat.choose_symm (Nat.le_add_left _ _)
-  rw [add_tsub_cancel_right]
+theorem choose_symm_of_eq_add {n a b : ℕ} (h : n = a + b) : Nat.choose n a = Nat.choose n b := by
+  convert Nat.choose_symm (Nat.le_add_left _ _); rw [add_tsub_cancel_right]
 #align nat.choose_symm_of_eq_add Nat.choose_symm_of_eq_add
 -/
 

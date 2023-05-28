@@ -1105,10 +1105,8 @@ theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
 #print StrictMonoOn.eq_iff_eq /-
 theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a = f b ↔ a = b :=
-  ⟨fun h => le_antisymm ((hf.le_iff_le ha hb).mp h.le) ((hf.le_iff_le hb ha).mp h.ge),
-    by
-    rintro rfl
-    rfl⟩
+  ⟨fun h => le_antisymm ((hf.le_iff_le ha hb).mp h.le) ((hf.le_iff_le hb ha).mp h.ge), by
+    rintro rfl; rfl⟩
 #align strict_mono_on.eq_iff_eq StrictMonoOn.eq_iff_eq
 -/
 
@@ -1541,8 +1539,7 @@ theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r]
   by
   rcases hab.dest with ⟨n, rfl⟩; clear hab
   induction' n with n ihn
-  · rw [Int.ofNat_one]
-    apply h
+  · rw [Int.ofNat_one]; apply h
   · rw [Int.ofNat_succ, ← Int.add_assoc]
     exact trans ihn (h _)
 #align int.rel_of_forall_rel_succ_of_lt Int.rel_of_forall_rel_succ_of_lt
@@ -1645,9 +1642,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_l
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x)
-    (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x :=
-  by
-  rintro rfl
+    (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_nat
 
@@ -1660,9 +1655,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_l
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α}
-    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x :=
-  by
-  rintro rfl
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
 
@@ -1675,9 +1668,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_l
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x)
-    (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x :=
-  by
-  rintro rfl
+    (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_int Monotone.ne_of_lt_of_lt_int
 
@@ -1690,9 +1681,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_l
 /-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α}
-    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x :=
-  by
-  rintro rfl
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_int
 

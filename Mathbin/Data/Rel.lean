@@ -74,9 +74,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (Rel.{u2, u1} α β) (Rel.inv.{u1, u2} β α (Rel.inv.{u2, u1} α β r)) r
 Case conversion may be inaccurate. Consider using '#align rel.inv_inv Rel.inv_invₓ'. -/
-theorem inv_inv : inv (inv r) = r := by
-  ext (x y)
-  rfl
+theorem inv_inv : inv (inv r) = r := by ext (x y); rfl
 #align rel.inv_inv Rel.inv_inv
 
 #print Rel.dom /-
@@ -108,15 +106,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Eq.{succ u2} (Set.{u2} α) (Rel.codom.{u1, u2} β α (Rel.inv.{u2, u1} α β r)) (Rel.dom.{u2, u1} α β r)
 Case conversion may be inaccurate. Consider using '#align rel.codom_inv Rel.codom_invₓ'. -/
-theorem codom_inv : r.inv.codom = r.dom := by
-  ext (x y)
-  rfl
+theorem codom_inv : r.inv.codom = r.dom := by ext (x y); rfl
 #align rel.codom_inv Rel.codom_inv
 
 #print Rel.dom_inv /-
-theorem dom_inv : r.inv.dom = r.codom := by
-  ext (x y)
-  rfl
+theorem dom_inv : r.inv.dom = r.codom := by ext (x y); rfl
 #align rel.dom_inv Rel.dom_inv
 -/
 
@@ -138,8 +132,7 @@ Case conversion may be inaccurate. Consider using '#align rel.comp_assoc Rel.com
 theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) ∘ t) = (r ∘ s ∘ t) :=
   by
   unfold comp; ext (x w); constructor
-  · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩
-    exact ⟨y, rxy, z, syz, tzw⟩
+  · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩; exact ⟨y, rxy, z, syz, tzw⟩
   rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 #align rel.comp_assoc Rel.comp_assoc
 
@@ -150,11 +143,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (Rel.{u2, u1} α β) (Rel.comp.{u2, u1, u1} α β β r (Eq.{succ u1} β)) r
 Case conversion may be inaccurate. Consider using '#align rel.comp_right_id Rel.comp_right_idₓ'. -/
 @[simp]
-theorem comp_right_id (r : Rel α β) : (r ∘ @Eq β) = r :=
-  by
-  unfold comp
-  ext y
-  simp
+theorem comp_right_id (r : Rel α β) : (r ∘ @Eq β) = r := by unfold comp; ext y; simp
 #align rel.comp_right_id Rel.comp_right_id
 
 /- warning: rel.comp_left_id -> Rel.comp_left_id is a dubious translation:
@@ -164,17 +153,11 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Eq.{max (succ u2) (succ u1)} (Rel.{u2, u1} α β) (Rel.comp.{u2, u2, u1} α α β (Eq.{succ u2} α) r) r
 Case conversion may be inaccurate. Consider using '#align rel.comp_left_id Rel.comp_left_idₓ'. -/
 @[simp]
-theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r :=
-  by
-  unfold comp
-  ext x
-  simp
+theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r := by unfold comp; ext x; simp
 #align rel.comp_left_id Rel.comp_left_id
 
 #print Rel.inv_id /-
-theorem inv_id : inv (@Eq α) = @Eq α := by
-  ext (x y)
-  constructor <;> apply Eq.symm
+theorem inv_id : inv (@Eq α) = @Eq α := by ext (x y); constructor <;> apply Eq.symm
 #align rel.inv_id Rel.inv_id
 -/
 
@@ -184,9 +167,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (r : Rel.{u3, u2} α β) (s : Rel.{u2, u1} β γ), Eq.{max (succ u3) (succ u1)} (Rel.{u1, u3} γ α) (Rel.inv.{u3, u1} α γ (Rel.comp.{u3, u2, u1} α β γ r s)) (Rel.comp.{u1, u2, u3} γ β α (Rel.inv.{u2, u1} β γ s) (Rel.inv.{u3, u2} α β r))
 Case conversion may be inaccurate. Consider using '#align rel.inv_comp Rel.inv_compₓ'. -/
-theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) :=
-  by
-  ext (x z)
+theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) := by ext (x z);
   simp [comp, inv, flip, and_comm]
 #align rel.inv_comp Rel.inv_comp
 
@@ -252,10 +233,7 @@ theorem image_union (s t : Set α) : r.image (s ∪ t) = r.image s ∪ r.image t
 
 #print Rel.image_id /-
 @[simp]
-theorem image_id (s : Set α) : image (@Eq α) s = s :=
-  by
-  ext x
-  simp [mem_image]
+theorem image_id (s : Set α) : image (@Eq α) s = s := by ext x; simp [mem_image]
 #align rel.image_id Rel.image_id
 -/
 
@@ -268,16 +246,12 @@ Case conversion may be inaccurate. Consider using '#align rel.image_comp Rel.ima
 theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (image r t) :=
   by
   ext z; simp only [mem_image]; constructor
-  · rintro ⟨x, xt, y, rxy, syz⟩
-    exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
+  · rintro ⟨x, xt, y, rxy, syz⟩; exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
   rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩; exact ⟨x, xt, y, rxy, syz⟩
 #align rel.image_comp Rel.image_comp
 
 #print Rel.image_univ /-
-theorem image_univ : r.image Set.univ = r.codom :=
-  by
-  ext y
-  simp [mem_image, codom]
+theorem image_univ : r.image Set.univ = r.codom := by ext y; simp [mem_image, codom]
 #align rel.image_univ Rel.image_univ
 -/
 

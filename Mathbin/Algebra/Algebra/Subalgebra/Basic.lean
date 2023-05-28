@@ -1046,9 +1046,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_subalgebr
 @[simp]
 theorem toSubalgebra_mk (s : Set A) (h0 hadd hsmul h1 hmul) :
     (Submodule.mk s hadd h0 hsmul : Submodule R A).toSubalgebra h1 hmul =
-      Subalgebra.mk s (@hmul) h1 (@hadd) h0 fun r =>
-        by
-        rw [Algebra.algebraMap_eq_smul_one]
+      Subalgebra.mk s (@hmul) h1 (@hadd) h0 fun r => by rw [Algebra.algebraMap_eq_smul_one];
         exact hsmul r h1 :=
   rfl
 #align submodule.to_subalgebra_mk Submodule.toSubalgebra_mk
@@ -1109,11 +1107,8 @@ theorem mem_range_self (φ : A →ₐ[R] B) (x : A) : φ x ∈ φ.range :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align alg_hom.coe_range AlgHom.coe_rangeₓ'. -/
 @[simp]
-theorem coe_range (φ : A →ₐ[R] B) : (φ.range : Set B) = Set.range φ :=
-  by
-  ext
-  rw [SetLike.mem_coe, mem_range]
-  rfl
+theorem coe_range (φ : A →ₐ[R] B) : (φ.range : Set B) = Set.range φ := by ext;
+  rw [SetLike.mem_coe, mem_range]; rfl
 #align alg_hom.coe_range AlgHom.coe_range
 
 #print AlgHom.range_comp /-
@@ -1291,10 +1286,7 @@ Case conversion may be inaccurate. Consider using '#align alg_equiv.subalgebra_m
 `subalgebra_map` is the induced equivalence between `S` and `S.map e` -/
 @[simps]
 def subalgebraMap (e : A ≃ₐ[R] B) (S : Subalgebra R A) : S ≃ₐ[R] S.map e.toAlgHom :=
-  { e.toRingEquiv.subsemiringMap S.toSubsemiring with
-    commutes' := fun r => by
-      ext
-      simp }
+  { e.toRingEquiv.subsemiringMap S.toSubsemiring with commutes' := fun r => by ext; simp }
 #align alg_equiv.subalgebra_map AlgEquiv.subalgebraMap
 
 end AlgEquiv
@@ -1594,19 +1586,15 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {x : A}, Iff (Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x (Bot.bot.{u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (CompleteLattice.toBot.{u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)))) (Membership.mem.{u2, u2} A (Set.{u2} A) (Set.instMembershipSet.{u2} A) x (Set.range.{u2, succ u1} A R (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => A) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2)) R A (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2)) R A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2)) R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2) (RingHom.instRingHomClassRingHom.{u1, u2} R A (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} A _inst_2))))) (algebraMap.{u1, u2} R A _inst_1 _inst_2 _inst_3))))
 Case conversion may be inaccurate. Consider using '#align algebra.mem_bot Algebra.mem_botₓ'. -/
 theorem mem_bot {x : A} : x ∈ (⊥ : Subalgebra R A) ↔ x ∈ Set.range (algebraMap R A) :=
-  suffices (ofId R A).range = (⊥ : Subalgebra R A)
-    by
-    rw [← this, ← SetLike.mem_coe, AlgHom.coe_range]
-    rfl
+  suffices (ofId R A).range = (⊥ : Subalgebra R A) by
+    rw [← this, ← SetLike.mem_coe, AlgHom.coe_range]; rfl
   le_bot_iff.mp fun x hx => Subalgebra.range_le _ ((ofId R A).coe_range ▸ hx)
 #align algebra.mem_bot Algebra.mem_bot
 
 /- warning: algebra.to_submodule_bot -> Algebra.toSubmodule_bot is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebra.to_submodule_bot Algebra.toSubmodule_botₓ'. -/
-theorem toSubmodule_bot : (⊥ : Subalgebra R A).toSubmodule = R ∙ 1 :=
-  by
-  ext x
+theorem toSubmodule_bot : (⊥ : Subalgebra R A).toSubmodule = R ∙ 1 := by ext x;
   simp [mem_bot, -Set.singleton_one, Submodule.mem_span_singleton, Algebra.smul_def]
 #align algebra.to_submodule_bot Algebra.toSubmodule_bot
 
@@ -1930,10 +1918,7 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), Eq.{succ u2} (AlgEquiv.{u1, u2, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S)) (Subalgebra.equivOfEq.{u1, u2} R A _inst_1 _inst_2 _inst_3 S S (rfl.{succ u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) S)) (AlgEquiv.refl.{u1, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S))
 Case conversion may be inaccurate. Consider using '#align subalgebra.equiv_of_eq_rfl Subalgebra.equivOfEq_rflₓ'. -/
 @[simp]
-theorem equivOfEq_rfl (S : Subalgebra R A) : equivOfEq S S rfl = AlgEquiv.refl :=
-  by
-  ext
-  rfl
+theorem equivOfEq_rfl (S : Subalgebra R A) : equivOfEq S S rfl = AlgEquiv.refl := by ext; rfl
 #align subalgebra.equiv_of_eq_rfl Subalgebra.equivOfEq_rfl
 
 /- warning: subalgebra.equiv_of_eq_trans -> Subalgebra.equivOfEq_trans is a dubious translation:
@@ -2432,10 +2417,7 @@ theorem mem_of_finset_sum_eq_one_of_pow_smul_mem {S : Type _} [CommRing S] [Alge
     (e : (∑ i in ι', l i * s i) = 1) (hs : ∀ i, s i ∈ S') (hl : ∀ i, l i ∈ S') (x : S)
     (H : ∀ i, ∃ n : ℕ, (s i ^ n : S) • x ∈ S') : x ∈ S' := by
   classical
-    suffices x ∈ (Algebra.ofId S' S).range.toSubmodule
-      by
-      obtain ⟨x, rfl⟩ := this
-      exact x.2
+    suffices x ∈ (Algebra.ofId S' S).range.toSubmodule by obtain ⟨x, rfl⟩ := this; exact x.2
     choose n hn using H
     let s' : ι → S' := fun x => ⟨s x, hs x⟩
     have : Ideal.span (s' '' ι') = ⊤ :=

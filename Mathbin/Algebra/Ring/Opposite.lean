@@ -226,12 +226,8 @@ def NonUnitalRingHom.op {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAsso
     where
   toFun f := { f.toAddMonoidHom.mulOp, f.toMulHom.op with }
   invFun f := { f.toAddMonoidHom.mulUnop, f.toMulHom.unop with }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align non_unital_ring_hom.op NonUnitalRingHom.op
 -/
 
@@ -283,12 +279,8 @@ def RingHom.op {α β} [NonAssocSemiring α] [NonAssocSemiring β] : (α →+* �
     where
   toFun f := { f.toAddMonoidHom.mulOp, f.toMonoidHom.op with }
   invFun f := { f.toAddMonoidHom.mulUnop, f.toMonoidHom.unop with }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align ring_hom.op RingHom.op
 -/
 

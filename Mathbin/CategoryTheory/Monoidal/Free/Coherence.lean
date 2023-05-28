@@ -143,30 +143,12 @@ def normalizeMapAux :
     ∀ {X Y : F C},
       (X ⟶ᵐ Y) → ((Discrete.functor (normalizeObj X) : _ ⥤ N C) ⟶ Discrete.functor (normalizeObj Y))
   | _, _, id _ => 𝟙 _
-  | _, _, α_hom _ _ _ =>
-    ⟨fun X => 𝟙 _, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
-  | _, _, α_inv _ _ _ =>
-    ⟨fun X => 𝟙 _, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
-  | _, _, l_hom _ =>
-    ⟨fun X => 𝟙 _, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
-  | _, _, l_inv _ =>
-    ⟨fun X => 𝟙 _, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
-  | _, _, ρ_hom _ =>
-    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
-  | _, _, ρ_inv _ =>
-    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by
-      rintro ⟨X⟩ ⟨Y⟩ f
-      simp⟩
+  | _, _, α_hom _ _ _ => ⟨fun X => 𝟙 _, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
+  | _, _, α_inv _ _ _ => ⟨fun X => 𝟙 _, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
+  | _, _, l_hom _ => ⟨fun X => 𝟙 _, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
+  | _, _, l_inv _ => ⟨fun X => 𝟙 _, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
+  | _, _, ρ_hom _ => ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
+  | _, _, ρ_inv _ => ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by rintro ⟨X⟩ ⟨Y⟩ f; simp⟩
   | X, Y, @comp _ U V W f g => normalize_map_aux f ≫ normalize_map_aux g
   | X, Y, @hom.tensor _ T U V W f g =>
     ⟨fun X =>
@@ -222,10 +204,7 @@ def fullNormalize : F C ⥤ N C
 def tensorFunc : F C ⥤ N C ⥤ F C
     where
   obj X := Discrete.functor fun n => inclusion.obj ⟨n⟩ ⊗ X
-  map X Y f :=
-    ⟨fun n => 𝟙 _ ⊗ f, by
-      rintro ⟨X⟩ ⟨Y⟩
-      tidy⟩
+  map X Y f := ⟨fun n => 𝟙 _ ⊗ f, by rintro ⟨X⟩ ⟨Y⟩; tidy⟩
 #align category_theory.free_monoidal_category.tensor_func CategoryTheory.FreeMonoidalCategory.tensorFunc
 -/
 
@@ -242,11 +221,7 @@ theorem tensorFunc_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f
 Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_mapₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensorFunc_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
-    ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z :=
-  by
-  cases n
-  cases n'
-  tidy
+    ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by cases n; cases n'; tidy
 #align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map
 
 /- warning: category_theory.free_monoidal_category.normalize_iso_app -> CategoryTheory.FreeMonoidalCategory.normalizeIsoApp is a dubious translation:
@@ -288,10 +263,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.free_m
 /-- Auxiliary definition for `normalize_iso`. -/
 @[simp]
 def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
-  NatIso.ofComponents (normalizeIsoApp C X)
-    (by
-      rintro ⟨X⟩ ⟨Y⟩
-      tidy)
+  NatIso.ofComponents (normalizeIsoApp C X) (by rintro ⟨X⟩ ⟨Y⟩; tidy)
 #align category_theory.free_monoidal_category.normalize_iso_aux CategoryTheory.FreeMonoidalCategory.normalizeIsoAux
 
 section
@@ -340,26 +312,21 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         simp only [id_tensor_associator_inv_naturality_assoc, ← pentagon_inv_assoc,
           tensor_hom_inv_id_assoc, tensor_id, category.id_comp, discrete.functor_map_id,
           comp_tensor_id, iso.cancel_iso_inv_left, category.assoc]
-        dsimp
-        simp only [category.comp_id]
+        dsimp; simp only [category.comp_id]
       · dsimp
         simp only [discrete.functor_map_id, comp_tensor_id, category.assoc, pentagon_inv_assoc, ←
           associator_inv_naturality_assoc, tensor_id, iso.cancel_iso_inv_left]
-        dsimp
-        simp only [category.comp_id]
+        dsimp; simp only [category.comp_id]
       · dsimp
         rw [triangle_assoc_comp_right_assoc]
         simp only [discrete.functor_map_id, category.assoc]
         cases n
-        dsimp
-        simp only [category.comp_id]
+        dsimp; simp only [category.comp_id]
       · dsimp
         simp only [triangle_assoc_comp_left_inv_assoc, inv_hom_id_tensor_assoc, tensor_id,
           category.id_comp, discrete.functor_map_id]
-        dsimp
-        simp only [category.comp_id]
-        cases n
-        simp
+        dsimp; simp only [category.comp_id]
+        cases n; simp
       · dsimp
         rw [← (iso.inv_comp_eq _).2 (right_unitor_tensor _ _), category.assoc, ←
           right_unitor_naturality]
@@ -375,8 +342,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
           iso.inv_hom_id_assoc]
         congr
         convert(discrete_functor_map_eq_id inclusion_obj _ _).symm
-        ext
-        rfl
+        ext; rfl
       · dsimp at *
         rw [id_tensor_comp, category.assoc, f_ih_g ⟦f_g⟧, ← category.assoc, f_ih_f ⟦f_f⟧,
           category.assoc, ← functor.map_comp]

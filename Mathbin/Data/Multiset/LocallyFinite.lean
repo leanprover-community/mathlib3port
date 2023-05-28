@@ -278,10 +278,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α _inst_1] {a : α} {b : α} {c : α} [_inst_3 : DecidablePred.{succ u1} α (fun (_x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) _x c)], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c a) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α (fun (x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x c) (fun (a : α) => _inst_3 a) (Multiset.Ico.{u1} α _inst_1 _inst_2 a b)) (EmptyCollection.emptyCollection.{u1} (Multiset.{u1} α) (Multiset.instEmptyCollectionMultiset.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_filter_lt_of_le_left Multiset.Ico_filter_lt_of_le_leftₓ'. -/
 theorem Ico_filter_lt_of_le_left [DecidablePred (· < c)] (hca : c ≤ a) :
-    ((Ico a b).filterₓ fun x => x < c) = ∅ :=
-  by
-  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_left hca]
-  rfl
+    ((Ico a b).filterₓ fun x => x < c) = ∅ := by
+  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_left hca]; rfl
 #align multiset.Ico_filter_lt_of_le_left Multiset.Ico_filter_lt_of_le_left
 
 /- warning: multiset.Ico_filter_lt_of_right_le -> Multiset.Ico_filter_lt_of_right_le is a dubious translation:
@@ -302,10 +300,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α _inst_1] {a : α} {b : α} {c : α} [_inst_3 : DecidablePred.{succ u1} α (fun (_x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) _x c)], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c b) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α (fun (x : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x c) (fun (a : α) => _inst_3 a) (Multiset.Ico.{u1} α _inst_1 _inst_2 a b)) (Multiset.Ico.{u1} α _inst_1 _inst_2 a c))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_filter_lt_of_le_right Multiset.Ico_filter_lt_of_le_rightₓ'. -/
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    ((Ico a b).filterₓ fun x => x < c) = Ico a c :=
-  by
-  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_right hcb]
-  rfl
+    ((Ico a b).filterₓ fun x => x < c) = Ico a c := by
+  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_right hcb]; rfl
 #align multiset.Ico_filter_lt_of_le_right Multiset.Ico_filter_lt_of_le_right
 
 /- warning: multiset.Ico_filter_le_of_le_left -> Multiset.Ico_filter_le_of_le_left is a dubious translation:
@@ -326,10 +322,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α _inst_1] {a : α} {b : α} [_inst_3 : DecidablePred.{succ u1} α ((fun (x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1271 : α) (x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1273 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1271 x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1273) b)], Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b x) (fun (a : α) => _inst_3 a) (Multiset.Ico.{u1} α _inst_1 _inst_2 a b)) (EmptyCollection.emptyCollection.{u1} (Multiset.{u1} α) (Multiset.instEmptyCollectionMultiset.{u1} α))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_filter_le_of_right_le Multiset.Ico_filter_le_of_right_leₓ'. -/
 theorem Ico_filter_le_of_right_le [DecidablePred ((· ≤ ·) b)] :
-    ((Ico a b).filterₓ fun x => b ≤ x) = ∅ :=
-  by
-  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_right_le]
-  rfl
+    ((Ico a b).filterₓ fun x => b ≤ x) = ∅ := by
+  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_right_le]; rfl
 #align multiset.Ico_filter_le_of_right_le Multiset.Ico_filter_le_of_right_le
 
 /- warning: multiset.Ico_filter_le_of_left_le -> Multiset.Ico_filter_le_of_left_le is a dubious translation:
@@ -339,10 +333,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α _inst_1] {a : α} {b : α} {c : α} [_inst_3 : DecidablePred.{succ u1} α ((fun (x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1363 : α) (x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1365 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1363 x._@.Mathlib.Data.Multiset.LocallyFinite._hyg.1365) c)], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a c) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c x) (fun (a : α) => _inst_3 a) (Multiset.Ico.{u1} α _inst_1 _inst_2 a b)) (Multiset.Ico.{u1} α _inst_1 _inst_2 c b))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_filter_le_of_left_le Multiset.Ico_filter_le_of_left_leₓ'. -/
 theorem Ico_filter_le_of_left_le [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    ((Ico a b).filterₓ fun x => c ≤ x) = Ico c b :=
-  by
-  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_left_le hac]
-  rfl
+    ((Ico a b).filterₓ fun x => c ≤ x) = Ico c b := by
+  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_left_le hac]; rfl
 #align multiset.Ico_filter_le_of_left_le Multiset.Ico_filter_le_of_left_le
 
 end Preorder
@@ -388,9 +380,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α} {c : α} {d : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b c) -> (Multiset.Disjoint.{u1} α (Multiset.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a b) (Multiset.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 c d))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_disjoint_Ico Multiset.Ico_disjoint_Icoₓ'. -/
 theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (Ico a b).Disjoint (Ico c d) :=
-  fun x hab hbc => by
-  rw [mem_Ico] at hab hbc
-  exact hab.2.not_le (h.trans hbc.1)
+  fun x hab hbc => by rw [mem_Ico] at hab hbc; exact hab.2.not_le (h.trans hbc.1)
 #align multiset.Ico_disjoint_Ico Multiset.Ico_disjoint_Ico
 
 /- warning: multiset.Ico_inter_Ico_of_le -> Multiset.Ico_inter_Ico_of_le is a dubious translation:
@@ -411,10 +401,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α} [_inst_3 : DecidablePred.{succ u1} α (fun (_x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _x a)], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (fun (a : α) => _inst_3 a) (Multiset.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a b)) (Singleton.singleton.{u1, u1} α (Multiset.{u1} α) (Multiset.instSingletonMultiset.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align multiset.Ico_filter_le_left Multiset.Ico_filter_le_leftₓ'. -/
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
-    ((Ico a b).filterₓ fun x => x ≤ a) = {a} :=
-  by
-  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_left hab]
-  rfl
+    ((Ico a b).filterₓ fun x => x ≤ a) = {a} := by
+  rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_left hab]; rfl
 #align multiset.Ico_filter_le_left Multiset.Ico_filter_le_left
 
 /- warning: multiset.card_Ico_eq_card_Icc_sub_one -> Multiset.card_Ico_eq_card_Icc_sub_one is a dubious translation:
@@ -576,10 +564,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} α] [_inst_2 : ExistsAddOfLE.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1))] (a : α) (b : α) (c : α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) x c) (Multiset.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 a b)) (Multiset.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) a c) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) b c))
 Case conversion may be inaccurate. Consider using '#align multiset.map_add_right_Icc Multiset.map_add_right_Iccₓ'. -/
-theorem map_add_right_Icc (a b c : α) : ((Icc a b).map fun x => x + c) = Icc (a + c) (b + c) :=
-  by
-  simp_rw [add_comm _ c]
-  exact map_add_left_Icc _ _ _
+theorem map_add_right_Icc (a b c : α) : ((Icc a b).map fun x => x + c) = Icc (a + c) (b + c) := by
+  simp_rw [add_comm _ c]; exact map_add_left_Icc _ _ _
 #align multiset.map_add_right_Icc Multiset.map_add_right_Icc
 
 /- warning: multiset.map_add_right_Ico -> Multiset.map_add_right_Ico is a dubious translation:
@@ -588,10 +574,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} α] [_inst_2 : ExistsAddOfLE.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1))] (a : α) (b : α) (c : α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) x c) (Multiset.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 a b)) (Multiset.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) a c) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) b c))
 Case conversion may be inaccurate. Consider using '#align multiset.map_add_right_Ico Multiset.map_add_right_Icoₓ'. -/
-theorem map_add_right_Ico (a b c : α) : ((Ico a b).map fun x => x + c) = Ico (a + c) (b + c) :=
-  by
-  simp_rw [add_comm _ c]
-  exact map_add_left_Ico _ _ _
+theorem map_add_right_Ico (a b c : α) : ((Ico a b).map fun x => x + c) = Ico (a + c) (b + c) := by
+  simp_rw [add_comm _ c]; exact map_add_left_Ico _ _ _
 #align multiset.map_add_right_Ico Multiset.map_add_right_Ico
 
 /- warning: multiset.map_add_right_Ioc -> Multiset.map_add_right_Ioc is a dubious translation:
@@ -600,10 +584,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} α] [_inst_2 : ExistsAddOfLE.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1))] (a : α) (b : α) (c : α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) x c) (Multiset.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 a b)) (Multiset.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) a c) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) b c))
 Case conversion may be inaccurate. Consider using '#align multiset.map_add_right_Ioc Multiset.map_add_right_Iocₓ'. -/
-theorem map_add_right_Ioc (a b c : α) : ((Ioc a b).map fun x => x + c) = Ioc (a + c) (b + c) :=
-  by
-  simp_rw [add_comm _ c]
-  exact map_add_left_Ioc _ _ _
+theorem map_add_right_Ioc (a b c : α) : ((Ioc a b).map fun x => x + c) = Ioc (a + c) (b + c) := by
+  simp_rw [add_comm _ c]; exact map_add_left_Ioc _ _ _
 #align multiset.map_add_right_Ioc Multiset.map_add_right_Ioc
 
 /- warning: multiset.map_add_right_Ioo -> Multiset.map_add_right_Ioo is a dubious translation:
@@ -612,10 +594,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} α] [_inst_2 : ExistsAddOfLE.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1))] (a : α) (b : α) (c : α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) x c) (Multiset.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 a b)) (Multiset.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelAddCommMonoid.toPartialOrder.{u1} α _inst_1)) _inst_3 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) a c) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddRightCancelMonoid.toAddMonoid.{u1} α (AddCancelMonoid.toAddRightCancelMonoid.{u1} α (AddCancelCommMonoid.toAddCancelMonoid.{u1} α (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} α _inst_1))))))) b c))
 Case conversion may be inaccurate. Consider using '#align multiset.map_add_right_Ioo Multiset.map_add_right_Iooₓ'. -/
-theorem map_add_right_Ioo (a b c : α) : ((Ioo a b).map fun x => x + c) = Ioo (a + c) (b + c) :=
-  by
-  simp_rw [add_comm _ c]
-  exact map_add_left_Ioo _ _ _
+theorem map_add_right_Ioo (a b c : α) : ((Ioo a b).map fun x => x + c) = Ioo (a + c) (b + c) := by
+  simp_rw [add_comm _ c]; exact map_add_left_Ioo _ _ _
 #align multiset.map_add_right_Ioo Multiset.map_add_right_Ioo
 
 end OrderedCancelAddCommMonoid

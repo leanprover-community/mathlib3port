@@ -120,19 +120,11 @@ def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ
   invFun x :=
     ⟨Units.mk0 x fun hx => x.NeZero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
-        Eq.ge <| by
-          rw [← map_mul]
-          convert v.valuation.map_one
+        Eq.ge <| by rw [← map_mul]; convert v.valuation.map_one;
           exact subtype.mk_eq_mk.mp x.val_inv⟩
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
-  map_mul' _ _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
+  map_mul' _ _ := by ext; rfl
 #align set.unit_equiv_units_integer Set.unitEquivUnitsInteger
 
 end Set

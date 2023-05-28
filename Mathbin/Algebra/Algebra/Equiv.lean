@@ -111,10 +111,7 @@ instance : AlgEquivClass (A₁ ≃ₐ[R] A₂) R A₁ A₂
     where
   coe := toFun
   inv := invFun
-  coe_injective' f g h₁ h₂ := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h₁ h₂ := by cases f; cases g; congr
   map_add := map_add'
   map_mul := map_mul'
   commutes := commutes'
@@ -410,10 +407,8 @@ def symm (e : A₁ ≃ₐ[R] A₂) : A₂ ≃ₐ[R] A₁ :=
   { e.toRingEquiv.symm with
     commutes' := fun r =>
       by
-      rw [← e.to_ring_equiv.symm_apply_apply (algebraMap R A₁ r)]
-      congr
-      change _ = e _
-      rw [e.commutes] }
+      rw [← e.to_ring_equiv.symm_apply_apply (algebraMap R A₁ r)]; congr
+      change _ = e _; rw [e.commutes] }
 #align alg_equiv.symm AlgEquiv.symm
 -/
 
@@ -454,10 +449,7 @@ theorem invFun_eq_symm {e : A₁ ≃ₐ[R] A₂} : e.invFun = e.symm :=
 
 #print AlgEquiv.symm_symm /-
 @[simp]
-theorem symm_symm (e : A₁ ≃ₐ[R] A₂) : e.symm.symm = e :=
-  by
-  ext
-  rfl
+theorem symm_symm (e : A₁ ≃ₐ[R] A₂) : e.symm.symm = e := by ext; rfl
 #align alg_equiv.symm_symm AlgEquiv.symm_symm
 -/
 
@@ -567,20 +559,16 @@ theorem trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) (x
 <too large>
 Case conversion may be inaccurate. Consider using '#align alg_equiv.comp_symm AlgEquiv.comp_symmₓ'. -/
 @[simp]
-theorem comp_symm (e : A₁ ≃ₐ[R] A₂) : AlgHom.comp (e : A₁ →ₐ[R] A₂) ↑e.symm = AlgHom.id R A₂ :=
-  by
-  ext
-  simp
+theorem comp_symm (e : A₁ ≃ₐ[R] A₂) : AlgHom.comp (e : A₁ →ₐ[R] A₂) ↑e.symm = AlgHom.id R A₂ := by
+  ext; simp
 #align alg_equiv.comp_symm AlgEquiv.comp_symm
 
 /- warning: alg_equiv.symm_comp -> AlgEquiv.symm_comp is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align alg_equiv.symm_comp AlgEquiv.symm_compₓ'. -/
 @[simp]
-theorem symm_comp (e : A₁ ≃ₐ[R] A₂) : AlgHom.comp ↑e.symm (e : A₁ →ₐ[R] A₂) = AlgHom.id R A₁ :=
-  by
-  ext
-  simp
+theorem symm_comp (e : A₁ ≃ₐ[R] A₂) : AlgHom.comp ↑e.symm (e : A₁ →ₐ[R] A₂) = AlgHom.id R A₁ := by
+  ext; simp
 #align alg_equiv.symm_comp AlgEquiv.symm_comp
 
 /- warning: alg_equiv.left_inverse_symm -> AlgEquiv.leftInverse_symm is a dubious translation:
@@ -622,18 +610,14 @@ theorem arrowCongr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring 
     (e₃ : A₃ ≃ₐ[R] A₃') (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₃) :
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
-  ext
-  simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
-  congr
-  exact (e₂.symm_apply_apply _).symm
+  ext; simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
+  congr ; exact (e₂.symm_apply_apply _).symm
 #align alg_equiv.arrow_congr_comp AlgEquiv.arrowCongr_comp
 
 #print AlgEquiv.arrowCongr_refl /-
 @[simp]
-theorem arrowCongr_refl : arrowCongr AlgEquiv.refl AlgEquiv.refl = Equiv.refl (A₁ →ₐ[R] A₂) :=
-  by
-  ext
-  rfl
+theorem arrowCongr_refl : arrowCongr AlgEquiv.refl AlgEquiv.refl = Equiv.refl (A₁ →ₐ[R] A₂) := by
+  ext; rfl
 #align alg_equiv.arrow_congr_refl AlgEquiv.arrowCongr_refl
 -/
 
@@ -644,10 +628,8 @@ Case conversion may be inaccurate. Consider using '#align alg_equiv.arrow_congr_
 theorem arrowCongr_trans {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring A₂'] [Semiring A₃']
     [Algebra R A₁'] [Algebra R A₂'] [Algebra R A₃'] (e₁ : A₁ ≃ₐ[R] A₂) (e₁' : A₁' ≃ₐ[R] A₂')
     (e₂ : A₂ ≃ₐ[R] A₃) (e₂' : A₂' ≃ₐ[R] A₃') :
-    arrowCongr (e₁.trans e₂) (e₁'.trans e₂') = (arrowCongr e₁ e₁').trans (arrowCongr e₂ e₂') :=
-  by
-  ext
-  rfl
+    arrowCongr (e₁.trans e₂) (e₁'.trans e₂') = (arrowCongr e₁ e₁').trans (arrowCongr e₂ e₂') := by
+  ext; rfl
 #align alg_equiv.arrow_congr_trans AlgEquiv.arrowCongr_trans
 
 /- warning: alg_equiv.arrow_congr_symm -> AlgEquiv.arrowCongr_symm is a dubious translation:
@@ -656,10 +638,7 @@ Case conversion may be inaccurate. Consider using '#align alg_equiv.arrow_congr_
 @[simp]
 theorem arrowCongr_symm {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'] [Algebra R A₁']
     [Algebra R A₂'] (e₁ : A₁ ≃ₐ[R] A₁') (e₂ : A₂ ≃ₐ[R] A₂') :
-    (arrowCongr e₁ e₂).symm = arrowCongr e₁.symm e₂.symm :=
-  by
-  ext
-  rfl
+    (arrowCongr e₁ e₂).symm = arrowCongr e₁.symm e₂.symm := by ext; rfl
 #align alg_equiv.arrow_congr_symm AlgEquiv.arrowCongr_symm
 
 #print AlgEquiv.ofAlgHom /-
@@ -839,20 +818,15 @@ theorem ofLinearEquiv_symm :
 Case conversion may be inaccurate. Consider using '#align alg_equiv.of_linear_equiv_to_linear_equiv AlgEquiv.ofLinearEquiv_toLinearEquivₓ'. -/
 @[simp]
 theorem ofLinearEquiv_toLinearEquiv (map_mul) (commutes) :
-    ofLinearEquiv e.toLinearEquiv map_mul commutes = e :=
-  by
-  ext
-  rfl
+    ofLinearEquiv e.toLinearEquiv map_mul commutes = e := by ext; rfl
 #align alg_equiv.of_linear_equiv_to_linear_equiv AlgEquiv.ofLinearEquiv_toLinearEquiv
 
 /- warning: alg_equiv.to_linear_equiv_of_linear_equiv -> AlgEquiv.toLinearEquiv_ofLinearEquiv is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align alg_equiv.to_linear_equiv_of_linear_equiv AlgEquiv.toLinearEquiv_ofLinearEquivₓ'. -/
 @[simp]
-theorem toLinearEquiv_ofLinearEquiv : toLinearEquiv (ofLinearEquiv l map_mul commutes) = l :=
-  by
-  ext
-  rfl
+theorem toLinearEquiv_ofLinearEquiv : toLinearEquiv (ofLinearEquiv l map_mul commutes) = l := by
+  ext; rfl
 #align alg_equiv.to_linear_equiv_of_linear_equiv AlgEquiv.toLinearEquiv_ofLinearEquiv
 
 end OfLinearEquiv
@@ -915,15 +889,9 @@ def autCongr (ϕ : A₁ ≃ₐ[R] A₂) : (A₁ ≃ₐ[R] A₁) ≃* A₂ ≃ₐ
     where
   toFun ψ := ϕ.symm.trans (ψ.trans ϕ)
   invFun ψ := ϕ.trans (ψ.trans ϕ.symm)
-  left_inv ψ := by
-    ext
-    simp_rw [trans_apply, symm_apply_apply]
-  right_inv ψ := by
-    ext
-    simp_rw [trans_apply, apply_symm_apply]
-  map_mul' ψ χ := by
-    ext
-    simp only [mul_apply, trans_apply, symm_apply_apply]
+  left_inv ψ := by ext; simp_rw [trans_apply, symm_apply_apply]
+  right_inv ψ := by ext; simp_rw [trans_apply, apply_symm_apply]
+  map_mul' ψ χ := by ext; simp only [mul_apply, trans_apply, symm_apply_apply]
 #align alg_equiv.aut_congr AlgEquiv.autCongr
 
 /- warning: alg_equiv.aut_congr_refl -> AlgEquiv.autCongr_refl is a dubious translation:
@@ -933,10 +901,7 @@ but is expected to have type
   forall {R : Type.{u1}} {A₁ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A₁] [_inst_5 : Algebra.{u1, u2} R A₁ _inst_1 _inst_2], Eq.{succ u2} (MulEquiv.{u2, u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (MulOneClass.toMul.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Monoid.toMulOneClass.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (DivInvMonoid.toMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Group.toDivInvMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (AlgEquiv.aut.{u1, u2} R A₁ _inst_1 _inst_2 _inst_5))))) (MulOneClass.toMul.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Monoid.toMulOneClass.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (DivInvMonoid.toMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Group.toDivInvMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (AlgEquiv.aut.{u1, u2} R A₁ _inst_1 _inst_2 _inst_5)))))) (AlgEquiv.autCongr.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5 (AlgEquiv.refl.{u1, u2} R A₁ _inst_1 _inst_2 _inst_5)) (MulEquiv.refl.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (MulOneClass.toMul.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Monoid.toMulOneClass.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (DivInvMonoid.toMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (Group.toDivInvMonoid.{u2} (AlgEquiv.{u1, u2, u2} R A₁ A₁ _inst_1 _inst_2 _inst_2 _inst_5 _inst_5) (AlgEquiv.aut.{u1, u2} R A₁ _inst_1 _inst_2 _inst_5))))))
 Case conversion may be inaccurate. Consider using '#align alg_equiv.aut_congr_refl AlgEquiv.autCongr_reflₓ'. -/
 @[simp]
-theorem autCongr_refl : autCongr AlgEquiv.refl = MulEquiv.refl (A₁ ≃ₐ[R] A₁) :=
-  by
-  ext
-  rfl
+theorem autCongr_refl : autCongr AlgEquiv.refl = MulEquiv.refl (A₁ ≃ₐ[R] A₁) := by ext; rfl
 #align alg_equiv.aut_congr_refl AlgEquiv.autCongr_refl
 
 /- warning: alg_equiv.aut_congr_symm -> AlgEquiv.autCongr_symm is a dubious translation:

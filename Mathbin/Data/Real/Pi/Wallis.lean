@@ -55,8 +55,7 @@ theorem w_succ (k : ℕ) :
 
 theorem w_pos (k : ℕ) : 0 < w k := by
   induction' k with k hk
-  · unfold W
-    simp
+  · unfold W; simp
   · rw [W_succ]
     refine' mul_pos hk (mul_pos (div_pos _ _) (div_pos _ _)) <;> positivity
 #align real.wallis.W_pos Real.Wallis.w_pos
@@ -105,8 +104,7 @@ theorem le_w (k : ℕ) : ((2 : ℝ) * k + 1) / (2 * k + 2) * (π / 2) ≤ w k :=
 theorem tendsto_w_nhds_pi_div_two : Tendsto w atTop (𝓝 <| π / 2) :=
   by
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ tendsto_const_nhds le_W W_le
-  have : 𝓝 (π / 2) = 𝓝 ((1 - 0) * (π / 2)) := by rw [sub_zero, one_mul]
-  rw [this]
+  have : 𝓝 (π / 2) = 𝓝 ((1 - 0) * (π / 2)) := by rw [sub_zero, one_mul]; rw [this]
   refine' tendsto.mul _ tendsto_const_nhds
   have h : ∀ n : ℕ, ((2 : ℝ) * n + 1) / (2 * n + 2) = 1 - 1 / (2 * n + 2) :=
     by
@@ -116,8 +114,7 @@ theorem tendsto_w_nhds_pi_div_two : Tendsto w atTop (𝓝 <| π / 2) :=
           (add_pos_of_nonneg_of_pos (mul_nonneg (two_pos : 0 < (2 : ℝ)).le (Nat.cast_nonneg _))
             two_pos)),
       one_mul]
-    congr 1
-    ring
+    congr 1; ring
   simp_rw [h]
   refine' (tendsto_const_nhds.div_at_top _).const_sub _
   refine' tendsto.at_top_add _ tendsto_const_nhds

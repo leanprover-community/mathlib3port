@@ -128,17 +128,12 @@ theorem vonMangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
 #align nat.arithmetic_function.von_mangoldt_sum Nat.ArithmeticFunction.vonMangoldt_sum
 
 @[simp]
-theorem vonMangoldt_mul_zeta : Λ * ζ = log := by
-  ext n
-  rw [coe_mul_zeta_apply, von_mangoldt_sum]
+theorem vonMangoldt_mul_zeta : Λ * ζ = log := by ext n; rw [coe_mul_zeta_apply, von_mangoldt_sum];
   rfl
 #align nat.arithmetic_function.von_mangoldt_mul_zeta Nat.ArithmeticFunction.vonMangoldt_mul_zeta
 
 @[simp]
-theorem zeta_mul_vonMangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log :=
-  by
-  rw [mul_comm]
-  simp
+theorem zeta_mul_vonMangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log := by rw [mul_comm]; simp
 #align nat.arithmetic_function.zeta_mul_von_mangoldt Nat.ArithmeticFunction.zeta_mul_vonMangoldt
 
 @[simp]
@@ -147,9 +142,7 @@ theorem log_mul_moebius_eq_vonMangoldt : log * μ = Λ := by
 #align nat.arithmetic_function.log_mul_moebius_eq_von_mangoldt Nat.ArithmeticFunction.log_mul_moebius_eq_vonMangoldt
 
 @[simp]
-theorem moebius_mul_log_eq_vonMangoldt : (μ : ArithmeticFunction ℝ) * log = Λ :=
-  by
-  rw [mul_comm]
+theorem moebius_mul_log_eq_vonMangoldt : (μ : ArithmeticFunction ℝ) * log = Λ := by rw [mul_comm];
   simp
 #align nat.arithmetic_function.moebius_mul_log_eq_von_mangoldt Nat.ArithmeticFunction.moebius_mul_log_eq_vonMangoldt
 

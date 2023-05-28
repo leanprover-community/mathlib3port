@@ -34,10 +34,8 @@ instance localization_unit_isIso (R : CommRingCat) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align localization_unit_is_iso' localization_unit_isIso'ₓ'. -/
 instance localization_unit_isIso' (R : CommRingCat) :
-    @IsIso CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) :=
-  by
-  cases R
-  exact localization_unit_isIso _
+    @IsIso CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) := by
+  cases R; exact localization_unit_isIso _
 #align localization_unit_is_iso' localization_unit_isIso'
 
 #print IsLocalization.epi /-
@@ -65,9 +63,7 @@ but is expected to have type
   forall {R : CommRingCat.{u1}} (M : Submonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (MulZeroOneClass.toMulOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (NonAssocSemiring.toMulZeroOneClass.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (Semiring.toNonAssocSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommSemiring.toSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R))))))), CategoryTheory.Epi.{u1, succ u1} CommRingCat.{u1} instCommRingCatLargeCategory.{u1} R (CommRingCat.of.{u1} (Localization.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M) (Localization.instCommRingLocalizationToCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R) M)) (CommRingCat.ofHom.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (Localization.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M) (CommRingCat.instCommRingα_1.{u1} R) (Localization.instCommRingLocalizationToCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R) M) (algebraMap.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (Localization.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) (CommSemiring.toSemiring.{u1} (Localization.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M) (Localization.instCommSemiringLocalizationToCommMonoid.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M)) (Localization.instAlgebraLocalizationToCommMonoidToSemiringInstCommSemiringLocalizationToCommMonoid.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) M (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R)) (Algebra.id.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRing.toCommSemiring.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} R) (CommRingCat.instCommRingα_1.{u1} R))))))
 Case conversion may be inaccurate. Consider using '#align localization.epi' Localization.epi'ₓ'. -/
 instance Localization.epi' {R : CommRingCat} (M : Submonoid R) :
-    @Epi CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R <| Localization M : _) :=
-  by
-  cases R
+    @Epi CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R <| Localization M : _) := by cases R;
   exact IsLocalization.epi M _
 #align localization.epi' Localization.epi'
 

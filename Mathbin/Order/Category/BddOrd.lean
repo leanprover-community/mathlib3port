@@ -95,12 +95,8 @@ def Iso.mk {α β : BddOrd.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply _
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply _
+  hom_inv_id' := by ext; exact e.symm_apply_apply _
+  inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align BddOrd.iso.mk BddOrd.Iso.mk
 
 /-- The equivalence between `BddOrd` and itself induced by `order_dual` both ways. -/

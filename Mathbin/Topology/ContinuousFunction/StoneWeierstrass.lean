@@ -237,9 +237,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     dsimp [h]
     simp only [coeFn_coe_base', Subtype.coe_mk, sup'_coe, Finset.sup'_apply, Finset.lt_sup'_iff]
     exact ⟨y, ym, zm⟩
-  have h_eq : ∀ x, h x x = f x := by
-    intro x
-    simp [coeFn_coe_base', w₁]
+  have h_eq : ∀ x, h x x = f x := by intro x; simp [coeFn_coe_base', w₁]
   -- For each `x`, we define `W x` to be `{z | h x z < f z + ε}`,
   let W : ∀ x, Set X := fun x => { z | h x z < f z + ε }
   -- This is still a neighbourhood of `x`.
@@ -266,9 +264,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   intro z
   -- We rewrite into this particular form,
   -- so that simp lemmas about inequalities involving `finset.inf'` can fire.
-  rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a
-      by
-      intros
+  rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by intros ;
       simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm']]
   fconstructor
   · dsimp [k]
@@ -406,7 +402,7 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
   have hFA : F ∈ A :=
     by
     refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
-    ext1
+    ext1;
     simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one,
       const_apply]
   -- Consider now the function `λ x, |f x - f x₂| ^ 2`

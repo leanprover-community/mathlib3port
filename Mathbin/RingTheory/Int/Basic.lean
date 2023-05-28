@@ -47,9 +47,7 @@ instance : WfDvdMonoid ℕ :=
         (WithTop.wellFounded_lt Nat.lt_wfRel)
     intro a b h
     cases a
-    · exfalso
-      revert h
-      simp [DvdNotUnit]
+    · exfalso; revert h; simp [DvdNotUnit]
     cases b
     · simpa [succ_ne_zero] using WithTop.coe_lt_top (a + 1)
     cases' dvd_and_not_dvd_iff.2 h with h1 h2
@@ -250,10 +248,8 @@ Case conversion may be inaccurate. Consider using '#align int.exists_unit_of_abs
 theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs a : ℤ) = u * a :=
   by
   cases' nat_abs_eq a with h
-  · use 1, isUnit_one
-    rw [← h, one_mul]
-  · use -1, is_unit_one.neg
-    rw [← neg_eq_iff_eq_neg.mpr h]
+  · use 1, isUnit_one; rw [← h, one_mul]
+  · use -1, is_unit_one.neg; rw [← neg_eq_iff_eq_neg.mpr h]
     simp only [neg_mul, one_mul]
 #align int.exists_unit_of_abs Int.exists_unit_of_abs
 
@@ -329,16 +325,11 @@ Case conversion may be inaccurate. Consider using '#align int.sq_of_gcd_eq_one I
 theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcd a b = 1) (heq : a * b = c ^ 2) :
     ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -a0 ^ 2 :=
   by
-  have h' : IsUnit (GCDMonoid.gcd a b) :=
-    by
-    rw [← coe_gcd, h, Int.ofNat_one]
-    exact isUnit_one
+  have h' : IsUnit (GCDMonoid.gcd a b) := by rw [← coe_gcd, h, Int.ofNat_one]; exact isUnit_one
   obtain ⟨d, ⟨u, hu⟩⟩ := exists_associated_pow_of_mul_eq_pow h' HEq
   use d
   rw [← hu]
-  cases' Int.units_eq_one_or u with hu' hu' <;>
-    · rw [hu']
-      simp
+  cases' Int.units_eq_one_or u with hu' hu' <;> · rw [hu']; simp
 #align int.sq_of_gcd_eq_one Int.sq_of_gcd_eq_one
 
 /- warning: int.sq_of_coprime -> Int.sq_of_coprime is a dubious translation:
@@ -629,10 +620,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Int), Eq.{1} (Ideal.{0} Int Int.instSemiringInt) (Ideal.span.{0} Int Int.instSemiringInt (Singleton.singleton.{0, 0} Int (Set.{0} Int) (Set.instSingletonSet.{0} Int) (Nat.cast.{0} Int instNatCastInt (Int.natAbs a)))) (Ideal.span.{0} Int Int.instSemiringInt (Singleton.singleton.{0, 0} Int (Set.{0} Int) (Set.instSingletonSet.{0} Int) a))
 Case conversion may be inaccurate. Consider using '#align int.span_nat_abs Int.span_natAbsₓ'. -/
-theorem span_natAbs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {a} :=
-  by
-  rw [Ideal.span_singleton_eq_span_singleton]
-  exact (associated_nat_abs _).symm
+theorem span_natAbs (a : ℤ) : Ideal.span ({a.natAbs} : Set ℤ) = Ideal.span {a} := by
+  rw [Ideal.span_singleton_eq_span_singleton]; exact (associated_nat_abs _).symm
 #align int.span_nat_abs Int.span_natAbs
 
 /- warning: int.eq_pow_of_mul_eq_pow_bit1_left -> Int.eq_pow_of_mul_eq_pow_bit1_left is a dubious translation:

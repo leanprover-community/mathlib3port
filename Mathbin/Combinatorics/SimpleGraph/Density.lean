@@ -93,9 +93,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} [_inst_2 : forall (a : α), DecidablePred.{succ u1} β (r a)] {s₁ : Finset.{u2} α} {s₂ : Finset.{u2} α} {t₁ : Finset.{u1} β} {t₂ : Finset.{u1} β}, (HasSubset.Subset.{u2} (Finset.{u2} α) (Finset.instHasSubsetFinset.{u2} α) s₂ s₁) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) t₂ t₁) -> (HasSubset.Subset.{max u1 u2} (Finset.{max u1 u2} (Prod.{u2, u1} α β)) (Finset.instHasSubsetFinset.{max u2 u1} (Prod.{u2, u1} α β)) (Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s₂ t₂) (Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s₁ t₁))
 Case conversion may be inaccurate. Consider using '#align rel.interedges_mono Rel.interedges_monoₓ'. -/
 theorem interedges_mono (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) : interedges r s₂ t₂ ⊆ interedges r s₁ t₁ :=
-  fun x => by
-  simp_rw [mem_interedges_iff]
-  exact fun h => ⟨hs h.1, ht h.2.1, h.2.2⟩
+  fun x => by simp_rw [mem_interedges_iff]; exact fun h => ⟨hs h.1, ht h.2.1, h.2.2⟩
 #align rel.interedges_mono Rel.interedges_mono
 
 variable (r)
@@ -406,10 +404,8 @@ include hr
 
 #print Rel.swap_mem_interedges_iff /-
 @[simp]
-theorem swap_mem_interedges_iff {x : α × α} : x.symm ∈ interedges r s t ↔ x ∈ interedges r t s :=
-  by
-  rw [mem_interedges_iff, mem_interedges_iff, hr.iff]
-  exact and_left_comm
+theorem swap_mem_interedges_iff {x : α × α} : x.symm ∈ interedges r s t ↔ x ∈ interedges r t s := by
+  rw [mem_interedges_iff, mem_interedges_iff, hr.iff]; exact and_left_comm
 #align rel.swap_mem_interedges_iff Rel.swap_mem_interedges_iff
 -/
 

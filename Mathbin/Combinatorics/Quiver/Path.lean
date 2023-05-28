@@ -136,10 +136,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} (p : Quiver.Path.{u1, u2} V _inst_1 a b), (Eq.{1} Nat (Quiver.Path.length.{u2, u1} V _inst_1 a b p) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u2} V a b)
 Case conversion may be inaccurate. Consider using '#align quiver.path.eq_of_length_zero Quiver.Path.eq_of_length_zeroₓ'. -/
-theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b :=
-  by
-  cases p
-  · rfl
+theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b := by cases p; · rfl;
   · cases Nat.succ_ne_zero _ hzero
 #align quiver.path.eq_of_length_zero Quiver.Path.eq_of_length_zero
 
@@ -220,10 +217,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.path.comp_inj Q
 theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length = q₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   by
-  refine'
-    ⟨fun h => _, by
-      rintro ⟨rfl, rfl⟩
-      rfl⟩
+  refine' ⟨fun h => _, by rintro ⟨rfl, rfl⟩; rfl⟩
   induction' q₁ with d₁ e₁ q₁ f₁ ih generalizing q₂ <;> obtain _ | ⟨q₂, f₂⟩ := q₂
   · exact ⟨h, rfl⟩
   · cases hq
@@ -244,9 +238,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.path.comp_inj' 
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq,
-    by
-    rintro ⟨rfl, rfl⟩
-    rfl⟩
+    by rintro ⟨rfl, rfl⟩; rfl⟩
 #align quiver.path.comp_inj' Quiver.Path.comp_inj'
 
 /- warning: quiver.path.comp_injective_left -> Quiver.Path.comp_injective_left is a dubious translation:

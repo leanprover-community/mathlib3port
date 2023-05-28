@@ -326,9 +326,7 @@ theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) 
 
 #print Filter.tendsto_iff_ptendsto_univ /-
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Ptendsto (PFun.res f Set.univ) l₁ l₂ :=
-  by
-  rw [← tendsto_iff_ptendsto]
+    Tendsto f l₁ l₂ ↔ Ptendsto (PFun.res f Set.univ) l₁ l₂ := by rw [← tendsto_iff_ptendsto];
   simp [principal_univ]
 #align filter.tendsto_iff_ptendsto_univ Filter.tendsto_iff_ptendsto_univ
 -/

@@ -116,10 +116,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] :
   refine' le_antisymm _ bot_le
   calc
     μ s ≤ ∑' x : h.index, μ (h.covering x) := h.measure_le_tsum
-    _ = ∑' x : h.index, 0 := by
-      congr
-      ext1 x
-      exact h.covering_mem x.2
+    _ = ∑' x : h.index, 0 := by congr ; ext1 x; exact h.covering_mem x.2
     _ = 0 := by simp only [tsum_zero, add_zero]
     
 #align vitali_family.ae_eventually_measure_pos VitaliFamily.ae_eventually_measure_pos
@@ -377,8 +374,7 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
       refine' ⟨_, _, _⟩
       · exact (inter_subset_left _ _).trans (subset_union_left _ _)
       · exact (inter_subset_right _ _).trans (subset_union_left _ _)
-      · simp_rw [Union_inter, inter_Union]
-        exact subset_union_right _ _
+      · simp_rw [Union_inter, inter_Union]; exact subset_union_right _ _
     refine' le_antisymm ((measure_mono A).trans _) bot_le
     calc
       μ
@@ -387,10 +383,8 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
           μ (to_measurable μ (sᶜ)) +
             μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
         measure_union_le _ _
-      _ = μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
-        by
-        have : μ (sᶜ) = 0 := v.ae_tendsto_div hρ
-        rw [measure_to_measurable, this, zero_add]
+      _ = μ (⋃ (m) (n), to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
+        have : μ (sᶜ) = 0 := v.ae_tendsto_div hρ; rw [measure_to_measurable, this, zero_add]
       _ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
         ((measure_Union_le _).trans (ENNReal.tsum_le_tsum fun m => measure_Union_le _))
       _ = 0 := by simp only [H, tsum_zero]
@@ -515,8 +509,7 @@ theorem measure_le_mul_of_subset_limRatioMeas_lt {p : ℝ≥0} {s : Set α}
       _ ≤ ρ (s ∩ t) + ρ (s ∩ tᶜ) := (measure_union_le _ _)
       _ ≤ p * μ (s ∩ t) + 0 :=
         (add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le))
-      _ ≤ p * μ s := by
-        rw [add_zero]
+      _ ≤ p * μ s := by rw [add_zero];
         exact mul_le_mul_left' (measure_mono (inter_subset_left _ _)) _
       
   refine' v.measure_le_of_frequently_le _ hρ _ fun x hx => _
@@ -544,8 +537,7 @@ theorem mul_measure_le_of_subset_lt_limRatioMeas {q : ℝ≥0} {s : Set α}
         apply add_le_add H
         rw [coe_nnreal_smul_apply]
         exact mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _
-      _ ≤ ρ s := by
-        rw [A, MulZeroClass.mul_zero, add_zero]
+      _ ≤ ρ s := by rw [A, MulZeroClass.mul_zero, add_zero];
         exact measure_mono (inter_subset_left _ _)
       
   refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.smul _) _ _

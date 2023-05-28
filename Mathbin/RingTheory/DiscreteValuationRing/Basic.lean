@@ -171,12 +171,10 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
   constructor
   · intro RDVR
     rcases id RDVR with ⟨Rlocal⟩
-    constructor
-    assumption
+    constructor; assumption
     skip
     use LocalRing.maximalIdeal R
-    constructor
-    constructor
+    constructor; constructor
     · assumption
     · infer_instance
     · rintro Q ⟨hQ1, hQ2⟩
@@ -194,9 +192,7 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
     refine' { not_a_field' := _ }
     rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
     have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
-    intro h
-    rw [h, le_bot_iff] at hPM
-    exact hP1 hPM
+    intro h; rw [h, le_bot_iff] at hPM; exact hP1 hPM
 #align discrete_valuation_ring.iff_pid_with_one_nonzero_prime DiscreteValuationRing.iff_pid_with_one_nonzero_prime
 
 /- warning: discrete_valuation_ring.associated_of_irreducible -> DiscreteValuationRing.associated_of_irreducible is a dubious translation:
@@ -246,10 +242,7 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
   obtain ⟨n, hn⟩ := hR hp.ne_zero
   have : Irreducible (ϖ ^ n) := hn.symm.irreducible hp
   rcases lt_trichotomy n 1 with (H | rfl | H)
-  · obtain rfl : n = 0 := by
-      clear hn this
-      revert H n
-      exact by decide
+  · obtain rfl : n = 0 := by clear hn this; revert H n; exact by decide
     simpa only [not_irreducible_one, pow_zero] using this
   · simpa only [pow_one] using hn.symm
   · obtain ⟨n, rfl⟩ : ∃ k, n = 1 + k + 1 := Nat.exists_eq_add_of_lt H
@@ -279,21 +272,17 @@ theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
       refine' ⟨spec.1.NeZero, spec.1.not_unit, _⟩
       intro a b h
       by_cases ha : a = 0
-      · rw [ha]
-        simp only [true_or_iff, dvd_zero]
+      · rw [ha]; simp only [true_or_iff, dvd_zero]
       obtain ⟨m, u, rfl⟩ := spec.2 ha
       rw [mul_assoc, mul_left_comm, IsUnit.dvd_mul_left _ _ _ (Units.isUnit _)] at h
       rw [IsUnit.dvd_mul_right (Units.isUnit _)]
       by_cases hm : m = 0
-      · simp only [hm, one_mul, pow_zero] at h⊢
-        right
-        exact h
+      · simp only [hm, one_mul, pow_zero] at h⊢; right; exact h
       left
       obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm
       rw [pow_succ]
       apply dvd_mul_of_dvd_left dvd_rfl _
-    · rw [Multiset.prod_replicate]
-      exact Classical.choose_spec (spec.2 hx)
+    · rw [Multiset.prod_replicate]; exact Classical.choose_spec (spec.2 hx)
 #align discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.toUniqueFactorizationMonoid
 -/
 
@@ -341,10 +330,7 @@ theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRing R] [IsDomain
   by
   constructor
   intro I
-  by_cases I0 : I = ⊥
-  · rw [I0]
-    use 0
-    simp only [Set.singleton_zero, Submodule.span_zero]
+  by_cases I0 : I = ⊥; · rw [I0]; use 0; simp only [Set.singleton_zero, Submodule.span_zero]
   obtain ⟨x, hxI, hx0⟩ : ∃ x ∈ I, x ≠ (0 : R) := I.ne_bot_iff.mp I0
   obtain ⟨p, hp, H⟩ := has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible h₁ h₂
   have ex : ∃ n : ℕ, p ^ n ∈ I := by
@@ -408,8 +394,7 @@ theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDom
   by
   letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
-  obtain ⟨p, hp, H⟩ := hR
-  exact ⟨p, hp⟩
+  obtain ⟨p, hp, H⟩ := hR; exact ⟨p, hp⟩
 #align discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
 -/
 
@@ -471,10 +456,7 @@ Case conversion may be inaccurate. Consider using '#align discrete_valuation_rin
 theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (hirr : Irreducible ϖ) :
     ∃ n : ℕ, s = Ideal.span {ϖ ^ n} :=
   by
-  have gen_ne_zero : generator s ≠ 0 :=
-    by
-    rw [Ne.def, ← eq_bot_iff_generator_eq_zero]
-    assumption
+  have gen_ne_zero : generator s ≠ 0 := by rw [Ne.def, ← eq_bot_iff_generator_eq_zero]; assumption
   rcases associated_pow_irreducible gen_ne_zero hirr with ⟨n, u, hnu⟩
   use n
   have : span _ = _ := span_singleton_generator s
@@ -501,8 +483,7 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
   · simpa only [Multiset.card_replicate]
   all_goals
     intro x hx
-    obtain rfl := Multiset.eq_of_mem_replicate hx
-    assumption
+    obtain rfl := Multiset.eq_of_mem_replicate hx; assumption
 #align discrete_valuation_ring.unit_mul_pow_congr_pow DiscreteValuationRing.unit_mul_pow_congr_pow
 
 /- warning: discrete_valuation_ring.unit_mul_pow_congr_unit -> DiscreteValuationRing.unit_mul_pow_congr_unit is a dubious translation:
@@ -518,8 +499,7 @@ theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m 
   rw [← sub_eq_zero] at h
   rw [← sub_mul, mul_eq_zero] at h
   cases h
-  · rw [sub_eq_zero] at h
-    exact_mod_cast h
+  · rw [sub_eq_zero] at h; exact_mod_cast h
   · apply (hirr.ne_zero (pow_eq_zero h)).elim
 #align discrete_valuation_ring.unit_mul_pow_congr_unit DiscreteValuationRing.unit_mul_pow_congr_unit
 

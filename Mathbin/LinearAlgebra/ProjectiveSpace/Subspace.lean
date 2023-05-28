@@ -61,10 +61,7 @@ variable {K V}
 instance : SetLike (Subspace K V) (ℙ K V)
     where
   coe := carrier
-  coe_injective' A B := by
-    cases A
-    cases B
-    simp
+  coe_injective' A B := by cases A; cases B; simp
 
 /- warning: projectivization.subspace.mem_carrier_iff -> Projectivization.Subspace.mem_carrier_iff is a dubious translation:
 lean 3 declaration is
@@ -132,10 +129,8 @@ def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe
     ⟨fun h => le_trans (subset_span _) h, by
       intro h x hx
       induction hx
-      · apply h
-        assumption
-      · apply B.mem_add
-        assumption'⟩
+      · apply h; assumption
+      · apply B.mem_add; assumption'⟩
   le_l_u S := subset_span _
   choice_eq _ _ := rfl
 #align projectivization.subspace.gi Projectivization.Subspace.gi
@@ -209,11 +204,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align projectivization.subspace.span_univ Projectivization.Subspace.span_univₓ'. -/
 /-- The span of the entire projective space is the top of the lattice of subspaces. -/
 @[simp]
-theorem span_univ : span (Set.univ : Set (ℙ K V)) = ⊤ :=
-  by
-  rw [eq_top_iff, SetLike.le_def]
-  intro x hx
-  exact subset_span _ (Set.mem_univ x)
+theorem span_univ : span (Set.univ : Set (ℙ K V)) = ⊤ := by rw [eq_top_iff, SetLike.le_def];
+  intro x hx; exact subset_span _ (Set.mem_univ x)
 #align projectivization.subspace.span_univ Projectivization.Subspace.span_univ
 
 /- warning: projectivization.subspace.span_le_subspace_iff -> Projectivization.Subspace.span_le_subspace_iff is a dubious translation:
@@ -297,9 +289,7 @@ theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S
 /-- A point in a projective space is contained in the span of a set of points if and only if the
 point is contained in all subspaces of the projective space which contain the set of points. -/
 theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Subspace K V, S ⊆ W → u ∈ W :=
-  by
-  simp_rw [← span_le_subspace_iff]
-  exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_refl _)⟩
+  by simp_rw [← span_le_subspace_iff]; exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_refl _)⟩
 #align projectivization.subspace.mem_span Projectivization.Subspace.mem_span
 -/
 
@@ -311,8 +301,7 @@ theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf { W | S ⊆ W } :=
   ext
   simp_rw [mem_carrier_iff, mem_span x]
   refine' ⟨fun hx => _, fun hx W hW => _⟩
-  · rintro W ⟨T, ⟨hT, rfl⟩⟩
-    exact hx T hT
+  · rintro W ⟨T, ⟨hT, rfl⟩⟩; exact hx T hT
   · exact (@sInf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_sInf
 -/

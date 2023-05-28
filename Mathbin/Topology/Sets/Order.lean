@@ -40,10 +40,7 @@ namespace ClopenUpperSet
 instance : SetLike (ClopenUpperSet α) α
     where
   coe s := s.carrier
-  coe_injective' s t h := by
-    obtain ⟨⟨_, _⟩, _⟩ := s
-    obtain ⟨⟨_, _⟩, _⟩ := t
-    congr
+  coe_injective' s t h := by obtain ⟨⟨_, _⟩, _⟩ := s; obtain ⟨⟨_, _⟩, _⟩ := t; congr
 
 #print ClopenUpperSet.upper /-
 theorem upper (s : ClopenUpperSet α) : IsUpperSet (s : Set α) :=

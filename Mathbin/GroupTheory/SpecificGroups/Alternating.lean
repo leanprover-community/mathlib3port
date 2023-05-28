@@ -293,10 +293,7 @@ theorem nontrivial_of_three_le_card (h3 : 3 ≤ card α) : Nontrivial (alternati
 #align alternating_group.nontrivial_of_three_le_card alternatingGroup.nontrivial_of_three_le_card
 
 instance {n : ℕ} : Nontrivial (alternatingGroup (Fin (n + 3))) :=
-  nontrivial_of_three_le_card
-    (by
-      rw [card_fin]
-      exact le_add_left (le_refl 3))
+  nontrivial_of_three_le_card (by rw [card_fin]; exact le_add_left (le_refl 3))
 
 /- warning: alternating_group.normal_closure_fin_rotate_five -> alternatingGroup.normalClosure_finRotate_five is a dubious translation:
 <too large>

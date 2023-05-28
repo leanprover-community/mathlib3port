@@ -87,8 +87,7 @@ theorem continuous_right_toIcoMod : ContinuousWithinAt (toIcoMod hp a) (Ici x) x
   refine' ⟨_, ⟨l + d, min (a + p) u + d, _, fun x => id⟩, fun y => _⟩ <;>
     simp_rw [← sub_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
   · exact ⟨hxI.1, hd.2, hxI.2⟩
-  · rintro ⟨h, h'⟩
-    apply hIs
+  · rintro ⟨h, h'⟩; apply hIs
     rw [← toIcoMod_sub_zsmul, (toIcoMod_eq_self _).2]
     exacts[⟨h.1, h.2.2⟩, ⟨hd.1.trans (sub_le_sub_right h' _), h.2.1⟩]
 #align continuous_right_to_Ico_mod continuous_right_toIcoMod
@@ -118,9 +117,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_eventually_eq_to_Ioc_mod toIcoMod_eventuallyEq_toIocModₓ'. -/
 theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod hp a =ᶠ[𝓝 x] toIocMod hp a :=
   IsOpen.mem_nhds
-      (by
-        rw [Ico_eq_locus_Ioc_eq_iUnion_Ioo]
-        exact isOpen_iUnion fun i => isOpen_Ioo) <|
+      (by rw [Ico_eq_locus_Ioc_eq_iUnion_Ioo]; exact isOpen_iUnion fun i => isOpen_Ioo) <|
     (not_modEq_iff_toIcoMod_eq_toIocMod hp).1 <| not_modEq_iff_ne_mod_zmultiples.2 hx
 #align to_Ico_mod_eventually_eq_to_Ioc_mod toIcoMod_eventuallyEq_toIocMod
 
@@ -437,10 +434,8 @@ Case conversion may be inaccurate. Consider using '#align add_circle.coe_image_I
 /-- The image of the closed-open interval `[a, a + p)` under the quotient map `𝕜 → add_circle p` is
 the entire space. -/
 @[simp]
-theorem coe_image_Ico_eq : (coe : 𝕜 → AddCircle p) '' Ico a (a + p) = univ :=
-  by
-  rw [image_eq_range]
-  exact (equiv_Ico p a).symm.range_eq_univ
+theorem coe_image_Ico_eq : (coe : 𝕜 → AddCircle p) '' Ico a (a + p) = univ := by
+  rw [image_eq_range]; exact (equiv_Ico p a).symm.range_eq_univ
 #align add_circle.coe_image_Ico_eq AddCircle.coe_image_Ico_eq
 
 /- warning: add_circle.coe_image_Ioc_eq -> AddCircle.coe_image_Ioc_eq is a dubious translation:
@@ -452,10 +447,8 @@ Case conversion may be inaccurate. Consider using '#align add_circle.coe_image_I
 /-- The image of the closed-open interval `[a, a + p)` under the quotient map `𝕜 → add_circle p` is
 the entire space. -/
 @[simp]
-theorem coe_image_Ioc_eq : (coe : 𝕜 → AddCircle p) '' Ioc a (a + p) = univ :=
-  by
-  rw [image_eq_range]
-  exact (equiv_Ioc p a).symm.range_eq_univ
+theorem coe_image_Ioc_eq : (coe : 𝕜 → AddCircle p) '' Ioc a (a + p) = univ := by
+  rw [image_eq_range]; exact (equiv_Ioc p a).symm.range_eq_univ
 #align add_circle.coe_image_Ioc_eq AddCircle.coe_image_Ioc_eq
 
 /- warning: add_circle.coe_image_Icc_eq -> AddCircle.coe_image_Icc_eq is a dubious translation:
@@ -528,9 +521,7 @@ instance : DivisibleBy (AddCircle p) ℤ
   div_zero x := by
     simp only [algebraMap.coe_zero, QuotientAddGroup.mk_zero, inv_zero, MulZeroClass.zero_mul]
   div_cancel n x hn := by
-    replace hn : (n : 𝕜) ≠ 0;
-    · norm_cast
-      assumption
+    replace hn : (n : 𝕜) ≠ 0; · norm_cast; assumption
     change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
     rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
     exact (equiv_Ico p 0).symm_apply_apply x
@@ -568,8 +559,7 @@ theorem gcd_mul_addOrderOf_div_eq {n : ℕ} (m : ℕ) (hn : 0 < n) :
   rw [mul_comm_div, ← nsmul_eq_mul, coe_nsmul, addOrderOf_nsmul'']
   · rw [add_order_of_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
     exacts[n.gcd_dvd_left m, hp]
-  · rw [← addOrderOf_pos_iff, add_order_of_period_div hn]
-    exacts[hn, hp]
+  · rw [← addOrderOf_pos_iff, add_order_of_period_div hn]; exacts[hn, hp]
 #align add_circle.gcd_mul_add_order_of_div_eq AddCircle.gcd_mul_addOrderOf_div_eq
 
 variable {p}
@@ -578,9 +568,7 @@ variable {p}
 <too large>
 Case conversion may be inaccurate. Consider using '#align add_circle.add_order_of_div_of_gcd_eq_one AddCircle.addOrderOf_div_of_gcd_eq_oneₓ'. -/
 theorem addOrderOf_div_of_gcd_eq_one {m n : ℕ} (hn : 0 < n) (h : m.gcd n = 1) :
-    addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n :=
-  by
-  convert gcd_mul_add_order_of_div_eq p m hn
+    addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n := by convert gcd_mul_add_order_of_div_eq p m hn;
   rw [h, one_mul]
 #align add_circle.add_order_of_div_of_gcd_eq_one AddCircle.addOrderOf_div_of_gcd_eq_one
 
@@ -605,9 +593,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_circle.add_order_of_coe_rat AddCircle.addOrderOf_coe_ratₓ'. -/
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den :=
   by
-  have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by
-    norm_cast
-    exact q.pos.ne.symm
+  have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by norm_cast; exact q.pos.ne.symm
   rw [← @Rat.num_den q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_ofNat, Rat.num_den,
     add_order_of_div_of_gcd_eq_one' q.pos q.cop]
   infer_instance
@@ -620,8 +606,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
     addOrderOf u = n ↔ ∃ m < n, m.gcd n = 1 ∧ ↑(↑m / ↑n * p) = u :=
   by
   refine' ⟨QuotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
-  · rintro ⟨m, h₀, h₁, rfl⟩
-    exact add_order_of_div_of_gcd_eq_one h h₁
+  · rintro ⟨m, h₀, h₁, rfl⟩; exact add_order_of_div_of_gcd_eq_one h h₁
   have h0 := addOrderOf_nsmul_eq_zero (k : AddCircle p)
   rw [hk, ← coe_nsmul, coe_eq_zero_iff] at h0
   obtain ⟨a, ha⟩ := h0
@@ -633,9 +618,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   · rw [← Int.ofNat_lt, han]
     exact Int.emod_lt_of_pos _ (Int.ofNat_lt.2 h)
   · have := (gcd_mul_add_order_of_div_eq p _ h).trans ((congr_arg addOrderOf he).trans hk).symm
-    rw [he, Nat.mul_left_eq_self_iff] at this
-    · exact this
-    · rwa [hk]
+    rw [he, Nat.mul_left_eq_self_iff] at this; · exact this; · rwa [hk]
   convert congr_arg coe ha using 1
   rw [coe_add, ← Int.cast_ofNat, han, zsmul_eq_mul, mul_div_right_comm, eq_comm, add_left_eq_self, ←
     zsmul_eq_mul, coe_zsmul, coe_period, smul_zero]
@@ -674,8 +657,7 @@ def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
           rw [← mul_div_right_comm, eq_div_iff, mul_comm, ← zsmul_eq_mul, mul_smul_comm, ←
             nsmul_eq_mul, ← coe_nat_zsmul, smul_smul,
             (zsmul_strictMono_left hp.out).Injective.eq_iff, mul_comm] at hm
-          swap
-          · exact Nat.cast_ne_zero.2 hn.ne'
+          swap; · exact Nat.cast_ne_zero.2 hn.ne'
           rw [← @Nat.cast_inj ℤ, ← sub_eq_zero]
           refine' Int.eq_zero_of_abs_lt_dvd ⟨_, hm.symm⟩ (abs_sub_lt_iff.2 ⟨_, _⟩) <;>
             apply (Int.sub_le_self _ <| Nat.cast_nonneg _).trans_lt (Nat.cast_lt.2 _)
@@ -815,23 +797,17 @@ identifying the endpoints. -/
 def equivIccQuot : 𝕋 ≃ Quot (EndpointIdent p a)
     where
   toFun x := Quot.mk _ <| inclusion Ico_subset_Icc_self (equivIco _ _ x)
-  invFun x :=
-    Quot.liftOn x coe <| by
-      rintro _ _ ⟨_⟩
-      exact (coe_add_period p a).symm
+  invFun x := Quot.liftOn x coe <| by rintro _ _ ⟨_⟩; exact (coe_add_period p a).symm
   left_inv := (equivIco p a).symm_apply_apply
   right_inv :=
     Quot.ind <| by
       rintro ⟨x, hx⟩
       have := _
       rcases ne_or_eq x (a + p) with (h | rfl)
-      · revert x
-        exact this
-      · rw [← Quot.sound endpoint_ident.mk]
-        exact this _ _ (lt_add_of_pos_right a hp.out).Ne
+      · revert x; exact this
+      · rw [← Quot.sound endpoint_ident.mk]; exact this _ _ (lt_add_of_pos_right a hp.out).Ne
       intro x hx h
-      congr
-      ext1
+      congr ; ext1
       apply congr_arg Subtype.val ((equiv_Ico p a).right_inv ⟨x, hx.1, hx.2.lt_of_ne h⟩)
 #align add_circle.equiv_Icc_quot AddCircle.equivIccQuot
 
@@ -896,11 +872,7 @@ variable {p a}
 Case conversion may be inaccurate. Consider using '#align add_circle.lift_Ico_eq_lift_Icc AddCircle.liftIco_eq_lift_Iccₓ'. -/
 theorem liftIco_eq_lift_Icc {f : 𝕜 → B} (h : f a = f (a + p)) :
     liftIco p a f =
-      Quot.lift (restrict (Icc a <| a + p) f)
-          (by
-            rintro _ _ ⟨_⟩
-            exact h) ∘
-        equivIccQuot p a :=
+      Quot.lift (restrict (Icc a <| a + p) f) (by rintro _ _ ⟨_⟩; exact h) ∘ equivIccQuot p a :=
   rfl
 #align add_circle.lift_Ico_eq_lift_Icc AddCircle.liftIco_eq_lift_Icc
 

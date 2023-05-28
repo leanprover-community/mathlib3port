@@ -82,15 +82,11 @@ theorem toComplexMeasure_to_signedMeasure (c : ComplexMeasure α) : c.re.toCompl
 #align measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.toComplexMeasure_to_signedMeasure
 
 theorem MeasureTheory.SignedMeasure.re_toComplexMeasure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).re = s := by
-  ext (i hi)
-  rfl
+    (s.toComplexMeasure t).re = s := by ext (i hi); rfl
 #align measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_toComplexMeasure
 
 theorem MeasureTheory.SignedMeasure.im_toComplexMeasure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).im = t := by
-  ext (i hi)
-  rfl
+    (s.toComplexMeasure t).im = t := by ext (i hi); rfl
 #align measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_toComplexMeasure
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
@@ -128,10 +124,7 @@ end
 theorem absolutelyContinuous_eNNReal_iff (c : ComplexMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
     c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ := by
   constructor <;> intro h
-  ·
-    constructor <;>
-      · intro i hi
-        simp [h hi]
+  · constructor <;> · intro i hi; simp [h hi]
   · intro i hi
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
     exacts[by simp, h.2 hi, h.1 hi]

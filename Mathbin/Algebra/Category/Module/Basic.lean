@@ -219,11 +219,8 @@ Case conversion may be inaccurate. Consider using '#align Module.is_zero_of_subs
 theorem isZero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M :=
   by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
-  · ext
-    have : x = 0 := Subsingleton.elim _ _
-    rw [this, map_zero, map_zero]
-  · ext
-    apply Subsingleton.elim
+  · ext; have : x = 0 := Subsingleton.elim _ _; rw [this, map_zero, map_zero]
+  · ext; apply Subsingleton.elim
 #align Module.is_zero_of_subsingleton ModuleCat.isZero_of_subsingleton
 
 instance : HasZeroObject (ModuleCat.{v} R) :=
@@ -389,14 +386,8 @@ namespace ModuleCat
 
 instance : Preadditive (ModuleCat.{v} R)
     where
-  add_comp P Q R f f' g :=
-    show (f + f') ≫ g = f ≫ g + f' ≫ g by
-      ext
-      simp
-  comp_add P Q R f g g' :=
-    show f ≫ (g + g') = f ≫ g + f ≫ g' by
-      ext
-      simp
+  add_comp P Q R f f' g := show (f + f') ≫ g = f ≫ g + f' ≫ g by ext; simp
+  comp_add P Q R f g g' := show f ≫ (g + g') = f ≫ g + f ≫ g' by ext; simp
 
 /- warning: Module.forget₂_AddCommGroup_additive -> ModuleCat.forget₂_addCommGroupCat_additive is a dubious translation:
 lean 3 declaration is
@@ -415,14 +406,8 @@ variable {S : Type u} [CommRing S]
 instance : Linear S (ModuleCat.{v} S)
     where
   homModule X Y := LinearMap.module
-  smul_comp' := by
-    intros
-    ext
-    simp
-  comp_smul' := by
-    intros
-    ext
-    simp
+  smul_comp' := by intros ; ext; simp
+  comp_smul' := by intros ; ext; simp
 
 variable {X Y X' Y' : ModuleCat.{v} S}
 

@@ -90,8 +90,7 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
 theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n :=
   by
   unfold sub_nat_nat; cases e : n - m
-  · simp only [sub_nat_nat, cast_of_nat]
-    simp [e, Nat.le_of_sub_eq_zero e]
+  · simp only [sub_nat_nat, cast_of_nat]; simp [e, Nat.le_of_sub_eq_zero e]
   ·
     rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
       Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]

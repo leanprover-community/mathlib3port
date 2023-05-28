@@ -45,10 +45,8 @@ but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 GroupCatMax.{u1, u2} instGroupCatLargeCategory.{max u2 u1}) (j : J), Group.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 GroupCatMax.{u1, u2} instGroupCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} GroupCat.{max u2 u1} instGroupCatLargeCategory.{max u2 u1} GroupCat.concreteCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align Group.group_obj GroupCat.groupObjₓ'. -/
 @[to_additive]
-instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget GroupCat).obj j) :=
-  by
-  change Group (F.obj j)
-  infer_instance
+instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget GroupCat).obj j) := by
+  change Group (F.obj j); infer_instance
 #align Group.group_obj GroupCat.groupObj
 #align AddGroup.add_group_obj AddGroupCat.addGroupObj
 
@@ -211,10 +209,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align CommGroup.comm_group_obj CommGroupCat.commGroupObjₓ'. -/
 @[to_additive]
 instance commGroupObj (F : J ⥤ CommGroupCat.{max v u}) (j) :
-    CommGroup ((F ⋙ forget CommGroupCat).obj j) :=
-  by
-  change CommGroup (F.obj j)
-  infer_instance
+    CommGroup ((F ⋙ forget CommGroupCat).obj j) := by change CommGroup (F.obj j); infer_instance
 #align CommGroup.comm_group_obj CommGroupCat.commGroupObj
 #align AddCommGroup.add_comm_group_obj AddCommGroupCat.addCommGroupObj
 
@@ -392,17 +387,10 @@ def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) : kernel f ≅ AddCom
           -- TODO where is this `has_coe_t_aux.coe` coming from? can we prevent it appearing?
           change (kernel.ι f) g ∈ f.ker
           simp [AddMonoidHom.mem_ker]⟩
-      map_zero' := by
-        ext
-        simp
-      map_add' := fun g g' => by
-        ext
-        simp }
+      map_zero' := by ext; simp
+      map_add' := fun g g' => by ext; simp }
   inv := kernel.lift f (AddSubgroup.subtype f.ker) (by tidy)
-  hom_inv_id' := by
-    apply equalizer.hom_ext _
-    ext
-    simp
+  hom_inv_id' := by apply equalizer.hom_ext _; ext; simp
   inv_hom_id' := by
     apply AddCommGroupCat.ext
     simp only [AddMonoidHom.coe_mk, coe_id, coe_comp]

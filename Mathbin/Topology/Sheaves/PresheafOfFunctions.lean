@@ -54,9 +54,7 @@ def presheafToTypes (T : X → Type v) : X.Presheaf (Type v)
     where
   obj U := ∀ x : unop U, T x
   map U V i g := fun x : unop V => g (i.unop x)
-  map_id' U := by
-    ext (g⟨x, hx⟩)
-    rfl
+  map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Types TopCat.presheafToTypes
 -/
@@ -93,9 +91,7 @@ def presheafToType (T : Type v) : X.Presheaf (Type v)
     where
   obj U := unop U → T
   map U V i g := g ∘ i.unop
-  map_id' U := by
-    ext (g⟨x, hx⟩)
-    rfl
+  map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Type TopCat.presheafToType
 -/
@@ -198,16 +194,12 @@ def commRingYoneda : TopCommRingCat.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u}
   obj R :=
     { obj := fun X => continuousFunctions X R
       map := fun X Y f => continuousFunctions.pullback f R
-      map_id' := fun X => by
-        ext
-        rfl
+      map_id' := fun X => by ext; rfl
       map_comp' := fun X Y Z f g => rfl }
   map R S φ :=
     { app := fun X => continuousFunctions.map X φ
       naturality' := fun X Y f => rfl }
-  map_id' X := by
-    ext
-    rfl
+  map_id' X := by ext; rfl
   map_comp' X Y Z f g := rfl
 #align Top.CommRing_yoneda TopCat.commRingYoneda
 

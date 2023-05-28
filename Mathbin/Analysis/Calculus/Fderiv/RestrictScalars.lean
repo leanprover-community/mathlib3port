@@ -120,20 +120,14 @@ theorem Differentiable.restrictScalars (h : Differentiable 𝕜' f) : Differenti
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at_of_restrict_scalars hasFDerivWithinAt_of_restrictScalarsₓ'. -/
 theorem hasFDerivWithinAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivWithinAt f g' s x)
-    (H : f'.restrictScalars 𝕜 = g') : HasFDerivWithinAt f f' s x :=
-  by
-  rw [← H] at h
-  exact h
+    (H : f'.restrictScalars 𝕜 = g') : HasFDerivWithinAt f f' s x := by rw [← H] at h; exact h
 #align has_fderiv_within_at_of_restrict_scalars hasFDerivWithinAt_of_restrictScalars
 
 /- warning: has_fderiv_at_of_restrict_scalars -> hasFDerivAt_of_restrictScalars is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_at_of_restrict_scalars hasFDerivAt_of_restrictScalarsₓ'. -/
 theorem hasFDerivAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivAt f g' x)
-    (H : f'.restrictScalars 𝕜 = g') : HasFDerivAt f f' x :=
-  by
-  rw [← H] at h
-  exact h
+    (H : f'.restrictScalars 𝕜 = g') : HasFDerivAt f f' x := by rw [← H] at h; exact h
 #align has_fderiv_at_of_restrict_scalars hasFDerivAt_of_restrictScalars
 
 /- warning: differentiable_at.fderiv_restrict_scalars -> DifferentiableAt.fderiv_restrictScalars is a dubious translation:

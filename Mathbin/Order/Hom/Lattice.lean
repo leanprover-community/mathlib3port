@@ -665,9 +665,7 @@ variable {α}
 
 instance : Sup (SupHom α β) :=
   ⟨fun f g =>
-    ⟨f ⊔ g, fun a b => by
-      rw [Pi.sup_apply, map_sup, map_sup]
-      exact sup_sup_sup_comm _ _ _ _⟩⟩
+    ⟨f ⊔ g, fun a b => by rw [Pi.sup_apply, map_sup, map_sup]; exact sup_sup_sup_comm _ _ _ _⟩⟩
 
 instance : SemilatticeSup (SupHom α β) :=
   FunLike.coe_injective.SemilatticeSup _ fun f g => rfl
@@ -983,9 +981,7 @@ variable {α}
 
 instance : Inf (InfHom α β) :=
   ⟨fun f g =>
-    ⟨f ⊓ g, fun a b => by
-      rw [Pi.inf_apply, map_inf, map_inf]
-      exact inf_inf_inf_comm _ _ _ _⟩⟩
+    ⟨f ⊓ g, fun a b => by rw [Pi.inf_apply, map_inf, map_inf]; exact inf_inf_inf_comm _ _ _ _⟩⟩
 
 instance : SemilatticeInf (InfHom α β) :=
   FunLike.coe_injective.SemilatticeInf _ fun f g => rfl
@@ -1094,10 +1090,7 @@ def toBotHom (f : SupBotHom α β) : BotHom α β :=
 instance : SupBotHomClass (SupBotHom α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_sup f := f.map_sup'
   map_bot f := f.map_bot'
 
@@ -1364,10 +1357,7 @@ def toTopHom (f : InfTopHom α β) : TopHom α β :=
 instance : InfTopHomClass (InfTopHom α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_inf f := f.map_inf'
   map_top f := f.map_top'
 

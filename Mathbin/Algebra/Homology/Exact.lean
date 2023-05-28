@@ -232,9 +232,8 @@ theorem exact_epi_comp (hgh : Exact g h) [Epi f] : Exact (f ≫ g) h :=
 #print CategoryTheory.exact_iso_comp /-
 @[simp]
 theorem exact_iso_comp [IsIso f] : Exact (f ≫ g) h ↔ Exact g h :=
-  ⟨fun w => by
-    rw [← is_iso.inv_hom_id_assoc f g]
-    exact exact_epi_comp w, fun w => exact_epi_comp w⟩
+  ⟨fun w => by rw [← is_iso.inv_hom_id_assoc f g]; exact exact_epi_comp w, fun w =>
+    exact_epi_comp w⟩
 #align category_theory.exact_iso_comp CategoryTheory.exact_iso_comp
 -/
 
@@ -276,18 +275,11 @@ theorem exact_kernelSubobject_arrow : Exact (kernelSubobject f).arrow f :=
   by
   refine' ⟨by simp, _⟩
   apply @is_iso.epi_of_iso _ _ _ _ _ _
-  exact
-    ⟨⟨factor_thru_image_subobject _, by
-        ext
-        simp, by
-        ext
-        simp⟩⟩
+  exact ⟨⟨factor_thru_image_subobject _, by ext; simp, by ext; simp⟩⟩
 #align category_theory.exact_kernel_subobject_arrow CategoryTheory.exact_kernelSubobject_arrow
 
 #print CategoryTheory.exact_kernel_ι /-
-theorem exact_kernel_ι : Exact (kernel.ι f) f :=
-  by
-  rw [← kernel_subobject_arrow', exact_iso_comp]
+theorem exact_kernel_ι : Exact (kernel.ι f) f := by rw [← kernel_subobject_arrow', exact_iso_comp];
   exact exact_kernel_subobject_arrow
 #align category_theory.exact_kernel_ι CategoryTheory.exact_kernel_ι
 -/
@@ -316,10 +308,8 @@ theorem kernelSubobject_arrow_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B
 #align category_theory.kernel_subobject_arrow_eq_zero_of_exact_zero_left CategoryTheory.kernelSubobject_arrow_eq_zero_of_exact_zero_left
 
 #print CategoryTheory.kernel_ι_eq_zero_of_exact_zero_left /-
-theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kernel.ι g = 0 :=
-  by
-  rw [← kernel_subobject_arrow']
-  simp [kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
+theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kernel.ι g = 0 := by
+  rw [← kernel_subobject_arrow']; simp [kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
 #align category_theory.kernel_ι_eq_zero_of_exact_zero_left CategoryTheory.kernel_ι_eq_zero_of_exact_zero_left
 -/
 

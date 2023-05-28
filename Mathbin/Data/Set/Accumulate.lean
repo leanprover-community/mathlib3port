@@ -96,8 +96,7 @@ theorem iUnion_accumulate [Preorder α] : (⋃ x, Accumulate s x) = ⋃ x, s x :
   by
   apply subset.antisymm
   · simp only [subset_def, mem_Union, exists_imp, mem_accumulate]
-    intro z x x' hx'x hz
-    exact ⟨x', hz⟩
+    intro z x x' hx'x hz; exact ⟨x', hz⟩
   · exact Union_mono fun i => subset_accumulate
 #align set.Union_accumulate Set.iUnion_accumulate
 

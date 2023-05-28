@@ -334,8 +334,7 @@ theorem xInTermsOfW_vars_aux (n : ℕ) :
     rcases H with ⟨j, hj, H⟩
     rw [vars_C_mul] at H
     swap
-    · apply pow_ne_zero
-      exact_mod_cast hp.1.NeZero
+    · apply pow_ne_zero; exact_mod_cast hp.1.NeZero
     rw [mem_range] at hj
     replace H := (ih j hj).2 (vars_pow _ _ H)
     rw [mem_range] at H
@@ -384,8 +383,7 @@ theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
     bind₁ (W_ R) (xInTermsOfW p R n) = X n :=
   by
   apply Nat.strong_induction_on n
-  clear n
-  intro n H
+  clear n; intro n H
   rw [xInTermsOfW_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
   have : (W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i)) = C (p ^ n : R) * X n := by
     simp only [wittPolynomial_eq_sum_c_mul_x_pow, tsub_self, sum_range_succ_comm, pow_one,

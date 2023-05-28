@@ -100,10 +100,8 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     · rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
       refine' ⟨Function.update g i x, fun j hj => _, _⟩
       obtain rfl | hj := finset.mem_insert.mp hj
-      · rw [Function.update_same]
-        exact hx
-      · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
-        exact hg hj
+      · rw [Function.update_same]; exact hx
+      · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact hg hj
       rw [Finset.prod_update_of_not_mem hi, Function.update_same]
     · rintro ⟨g, hg, rfl⟩
       exact
@@ -121,9 +119,7 @@ Case conversion may be inaccurate. Consider using '#align set.mem_fintype_prod S
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
 theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
-    (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏ i, g i) = a :=
-  by
-  rw [mem_finset_prod]
+    (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α)(hg : ∀ i, g i ∈ f i), (∏ i, g i) = a := by rw [mem_finset_prod];
   simp
 #align set.mem_fintype_prod Set.mem_fintype_prod
 #align set.mem_fintype_sum Set.mem_fintype_sum
@@ -274,9 +270,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_finset_prod_
 /-- The n-ary version of `set.image_mul_prod`. -/
 @[to_additive "The n-ary version of `set.add_image_prod`. "]
 theorem image_finset_prod_pi (l : Finset ι) (S : ι → Set α) :
-    (fun f : ι → α => ∏ i in l, f i) '' (l : Set ι).pi S = ∏ i in l, S i :=
-  by
-  ext
+    (fun f : ι → α => ∏ i in l, f i) '' (l : Set ι).pi S = ∏ i in l, S i := by ext;
   simp_rw [mem_finset_prod, mem_image, mem_pi, exists_prop, Finset.mem_coe]
 #align set.image_finset_prod_pi Set.image_finset_prod_pi
 #align set.image_finset_sum_pi Set.image_finset_sum_pi

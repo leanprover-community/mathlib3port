@@ -152,10 +152,7 @@ def finCongr {n m : ℕ} (h : n = m) : Fin n ≃ Fin m :=
 #print finCongr_apply_mk /-
 @[simp]
 theorem finCongr_apply_mk {n m : ℕ} (h : n = m) (k : ℕ) (w : k < n) :
-    finCongr h ⟨k, w⟩ =
-      ⟨k, by
-        subst h
-        exact w⟩ :=
+    finCongr h ⟨k, w⟩ = ⟨k, by subst h; exact w⟩ :=
   rfl
 #align fin_congr_apply_mk finCongr_apply_mk
 -/
@@ -169,18 +166,14 @@ theorem finCongr_symm {n m : ℕ} (h : n = m) : (finCongr h).symm = finCongr h.s
 
 #print finCongr_apply_coe /-
 @[simp]
-theorem finCongr_apply_coe {n m : ℕ} (h : n = m) (k : Fin n) : (finCongr h k : ℕ) = k :=
-  by
-  cases k
+theorem finCongr_apply_coe {n m : ℕ} (h : n = m) (k : Fin n) : (finCongr h k : ℕ) = k := by cases k;
   rfl
 #align fin_congr_apply_coe finCongr_apply_coe
 -/
 
 #print finCongr_symm_apply_coe /-
 theorem finCongr_symm_apply_coe {n m : ℕ} (h : n = m) (k : Fin m) : ((finCongr h).symm k : ℕ) = k :=
-  by
-  cases k
-  rfl
+  by cases k; rfl
 #align fin_congr_symm_apply_coe finCongr_symm_apply_coe
 -/
 
@@ -627,9 +620,7 @@ theorem Fin.snoc_eq_cons_rotate {α : Type _} (v : Fin n → α) (a : α) :
   by_cases h' : i < n
   · rw [finRotate_of_lt h', Fin.snoc, Fin.cons, dif_pos h']
     rfl
-  · have h'' : n = i := by
-      simp only [not_lt] at h'
-      exact (Nat.eq_of_le_of_lt_succ h' h).symm
+  · have h'' : n = i := by simp only [not_lt] at h'; exact (Nat.eq_of_le_of_lt_succ h' h).symm
     subst h''
     rw [finRotate_last', Fin.snoc, Fin.cons, dif_neg (lt_irrefl _)]
     rfl

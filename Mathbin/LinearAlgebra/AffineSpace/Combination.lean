@@ -62,10 +62,7 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.univ.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin.fintype (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Insert.insert.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.instInsertFinset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (fun (a : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (b : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) => instDecidableEqFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) a b)) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Singleton.singleton.{0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Finset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Finset.instSingletonFinset.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
 Case conversion may be inaccurate. Consider using '#align finset.univ_fin2 Finset.univ_fin2ₓ'. -/
-theorem univ_fin2 : (univ : Finset (Fin 2)) = {0, 1} :=
-  by
-  ext x
-  fin_cases x <;> simp
+theorem univ_fin2 : (univ : Finset (Fin 2)) = {0, 1} := by ext x; fin_cases x <;> simp
 #align finset.univ_fin2 Finset.univ_fin2
 
 variable {k : Type _} {V : Type _} {P : Type _} [Ring k] [AddCommGroup V] [Module k V]
@@ -608,9 +605,7 @@ theorem attach_affineCombination_of_injective [DecidableEq P] (s : Finset P) (w 
   let g₁ : s → V := fun i => w (f i) • (f i -ᵥ Classical.choice S.nonempty)
   let g₂ : P → V := fun i => w i • (i -ᵥ Classical.choice S.nonempty)
   change univ.sum g₁ = (image f univ).Sum g₂
-  have hgf : g₁ = g₂ ∘ f := by
-    ext
-    simp
+  have hgf : g₁ = g₂ ∘ f := by ext; simp
   rw [hgf, sum_image]
   exact fun _ _ _ _ hxy => hf hxy
 #align finset.attach_affine_combination_of_injective Finset.attach_affineCombination_of_injective
@@ -1214,12 +1209,8 @@ lean 3 declaration is
 but is expected to have type
   forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : DivisionRing.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (DivisionSemiring.toSemiring.{u2} k (DivisionRing.toDivisionSemiring.{u2} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] (s : Finset.{u3} P), Eq.{succ u3} P (Finset.centroid.{u2, u1, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 (Subtype.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s)) (Finset.univ.{u3} (Subtype.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s)) (Finset.Subtype.fintype.{u3} P s)) (Subtype.val.{succ u3} P (fun (x : P) => Membership.mem.{u3, u3} P (Finset.{u3} P) (Finset.instMembershipFinset.{u3} P) x s))) (Finset.centroid.{u2, u1, u3, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 P s (id.{succ u3} P))
 Case conversion may be inaccurate. Consider using '#align finset.centroid_univ Finset.centroid_univₓ'. -/
-theorem centroid_univ (s : Finset P) : univ.centroid k (coe : s → P) = s.centroid k id :=
-  by
-  rw [centroid, centroid, ← s.attach_affine_combination_coe]
-  congr
-  ext
-  simp
+theorem centroid_univ (s : Finset P) : univ.centroid k (coe : s → P) = s.centroid k id := by
+  rw [centroid, centroid, ← s.attach_affine_combination_coe]; congr ; ext; simp
 #align finset.centroid_univ Finset.centroid_univ
 
 /- warning: finset.centroid_singleton -> Finset.centroid_singleton is a dubious translation:
@@ -1456,8 +1447,7 @@ theorem weightedVSub_mem_vectorSpan {s : Finset ι} {w : ι → k} (h : (∑ i i
     (p : ι → P) : s.weightedVSub p w ∈ vectorSpan k (Set.range p) := by
   classical
     rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
-    · skip
-      simp [Finset.eq_empty_of_isEmpty s]
+    · skip; simp [Finset.eq_empty_of_isEmpty s]
     · rw [vectorSpan_range_eq_span_range_vsub_right k p i0, ← Set.image_univ,
         Finsupp.mem_span_image_iff_total,
         Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero s w p h (p i0),
@@ -1513,8 +1503,7 @@ theorem mem_vectorSpan_iff_eq_weightedVSub {v : V} {p : ι → P} :
   by
   classical
     constructor
-    · rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
-      swap
+    · rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩); swap
       · rw [vectorSpan_range_eq_span_range_vsub_right k p i0, ← Set.image_univ,
           Finsupp.mem_span_image_iff_total]
         rintro ⟨l, hl, hv⟩
@@ -1642,9 +1631,7 @@ theorem mem_affineSpan_iff_eq_weightedVSubOfPoint_vadd [Nontrivial k] (p : ι �
         by_cases hj : j ∈ s
         · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
         · simp [w', Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
-      have hww : ∀ i, i ≠ j → w i = w' i := by
-        intro i hij
-        simp [w', hij]
+      have hww : ∀ i, i ≠ j → w i = w' i := by intro i hij; simp [w', hij]
       rw [s.weighted_vsub_of_point_eq_of_weights_eq p j w w' hww, ←
         s.weighted_vsub_of_point_insert w' p j, ←
         (insert j s).affineCombination_eq_weightedVSubOfPoint_vadd_of_sum_eq_one w' p h₁ (p j)]

@@ -176,8 +176,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.quotient_quo
 def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkQ →ₗ[R] M ⧸ T :=
   liftq _ (mapq S T LinearMap.id h)
     (by
-      rintro _ ⟨x, hx, rfl⟩
-      rw [LinearMap.mem_ker, mkq_apply, mapq_apply]
+      rintro _ ⟨x, hx, rfl⟩; rw [LinearMap.mem_ker, mkq_apply, mapq_apply]
       exact (quotient.mk_eq_zero _).mpr hx)
 #align submodule.quotient_quotient_equiv_quotient_aux Submodule.quotientQuotientEquivQuotientAux
 

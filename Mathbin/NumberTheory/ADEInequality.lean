@@ -242,8 +242,7 @@ Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_thre
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 :=
   by
   have h3 : (0 : ℚ) < 3 := by norm_num
-  contrapose! H
-  rw [sum_inv_pqr]
+  contrapose! H; rw [sum_inv_pqr]
   have h3q := H.trans hpq
   have h3r := h3q.trans hqr
   calc
@@ -262,8 +261,7 @@ Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_four
 theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 :=
   by
   have h4 : (0 : ℚ) < 4 := by norm_num
-  contrapose! H
-  rw [sum_inv_pqr]
+  contrapose! H; rw [sum_inv_pqr]
   have h4r := H.trans hqr
   simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_one, coe_coe]
   calc
@@ -282,8 +280,7 @@ Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_six 
 theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
   by
   have h6 : (0 : ℚ) < 6 := by norm_num
-  contrapose! H
-  rw [sum_inv_pqr]
+  contrapose! H; rw [sum_inv_pqr]
   simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_bit1, Nat.cast_one, PNat.coe_bit1,
     coe_coe]
   calc

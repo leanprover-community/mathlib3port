@@ -126,10 +126,8 @@ Case conversion may be inaccurate. Consider using '#align simple_graph.dart_card
 theorem dart_card_eq_twice_card_edges : Fintype.card G.Dart = 2 * G.edgeFinset.card :=
   by
   rw [← card_univ]
-  rw [@card_eq_sum_card_fiberwise _ _ _ dart.edge _ G.edge_finset fun d h =>
-      by
-      rw [mem_edge_finset]
-      apply dart.edge_mem]
+  rw [@card_eq_sum_card_fiberwise _ _ _ dart.edge _ G.edge_finset fun d h => by
+      rw [mem_edge_finset]; apply dart.edge_mem]
   rw [← mul_comm, sum_const_nat]
   intro e h
   apply G.dart_edge_fiber_card e

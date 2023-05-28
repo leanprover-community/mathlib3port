@@ -460,10 +460,7 @@ omit σ₄₃
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.compl₂_id LinearMap.compl₂_idₓ'. -/
 @[simp]
-theorem compl₂_id : f.compl₂ LinearMap.id = f :=
-  by
-  ext
-  rw [compl₂_apply, id_coe, id.def]
+theorem compl₂_id : f.compl₂ LinearMap.id = f := by ext; rw [compl₂_apply, id_coe, id.def]
 #align linear_map.compl₂_id LinearMap.compl₂_id
 
 #print LinearMap.compl₁₂ /-
@@ -488,10 +485,8 @@ theorem compl₁₂_apply (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.compl₁₂_id_id LinearMap.compl₁₂_id_idₓ'. -/
 @[simp]
-theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁₂ LinearMap.id LinearMap.id = f :=
-  by
-  ext
-  simp_rw [compl₁₂_apply, id_coe, id.def]
+theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁₂ LinearMap.id LinearMap.id = f := by
+  ext; simp_rw [compl₁₂_apply, id_coe, id.def]
 #align linear_map.compl₁₂_id_id LinearMap.compl₁₂_id_id
 
 /- warning: linear_map.compl₁₂_inj -> LinearMap.compl₁₂_inj is a dubious translation:
@@ -504,10 +499,8 @@ theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Q�
   constructor <;> intro h
   · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
     ext (x y)
-    cases' hₗ x with x' hx
-    subst hx
-    cases' hᵣ y with y' hy
-    subst hy
+    cases' hₗ x with x' hx; subst hx
+    cases' hᵣ y with y' hy; subst hy
     convert LinearMap.congr_fun₂ h x' y'
   ·-- B₁ = B₂ → B₁.comp l r = B₂.comp l r
     subst h

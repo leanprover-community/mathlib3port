@@ -49,9 +49,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
       ENNReal.pow_pos (ENNReal.inv_pos.2 ENNReal.two_ne_top) _
     have hpow_le : ∀ {m n : ℕ}, m ≤ n → (2⁻¹ : ℝ≥0∞) ^ n ≤ 2⁻¹ ^ m := fun m n h =>
       pow_le_pow_of_le_one' (ENNReal.inv_le_one.2 ennreal.one_lt_two.le) h
-    have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n :=
-      by
-      intro n
+    have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by intro n;
       simp [pow_succ, ← mul_assoc, ENNReal.mul_inv_cancel]
     -- Consider an open covering `S : set (set α)`
     refine' ⟨fun ι s ho hcov => _⟩
@@ -82,18 +80,13 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
         D n i =
           ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt :
             ∀ m < n, ∀ (j : ι), x ∉ D m j), ball x (2⁻¹ ^ n) :=
-      fun n s => by
-      simp only [D]
-      rw [Nat.strongRecOn'_beta]
+      fun n s => by simp only [D]; rw [Nat.strongRecOn'_beta]
     have memD :
       ∀ {n i y},
         y ∈ D n i ↔
           ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt :
             ∀ m < n, ∀ (j : ι), x ∉ D m j), edist y x < 2⁻¹ ^ n :=
-      by
-      intro n i y
-      rw [Dn n i]
-      simp only [mem_Union, mem_ball]
+      by intro n i y; rw [Dn n i]; simp only [mem_Union, mem_ball]
     -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that
     -- `ball x (3 / 2 ^ n) ⊆ s (ind x)`, then either `x ∈ D n i`, or `x ∈ D m i` for some `m < n`.
     have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
@@ -152,8 +145,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
         rw [disjoint_iff_inf_le]
         rintro y ⟨hym, hyx⟩
         rcases memD.1 hym with ⟨z, rfl, hzi, H, hz⟩
-        have : z ∉ ball x (2⁻¹ ^ k) := fun hz => H n (by linarith) i (hsub hz)
-        apply this
+        have : z ∉ ball x (2⁻¹ ^ k) := fun hz => H n (by linarith) i (hsub hz); apply this
         calc
           edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
           _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := (ENNReal.add_lt_add hz hyx)
@@ -170,8 +162,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
         · exact this z hzD hzB y hyD hyB h'.symm (h'.lt_or_lt.resolve_left h)
         rcases memD.1 hyD with ⟨y', rfl, hsuby, -, hdisty⟩
         rcases memD.1 hzD with ⟨z', rfl, -, -, hdistz⟩
-        suffices : edist z' y' < 3 * 2⁻¹ ^ m
-        exact nmem_of_lt_ind h (hsuby this)
+        suffices : edist z' y' < 3 * 2⁻¹ ^ m; exact nmem_of_lt_ind h (hsuby this)
         calc
           edist z' y' ≤ edist z' x + edist x y' := edist_triangle _ _ _
           _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
@@ -187,8 +178,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
       have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
         (finite_le_nat _).biUnion' fun i hi =>
           (Hle i hi).Finite.biUnion' fun _ _ => finite_singleton _
-      refine' this.subset fun I hI => _
-      simp only [mem_Union]
+      refine' this.subset fun I hI => _; simp only [mem_Union]
       refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩
       exact not_lt.1 fun hlt => (Hgt I.1 hlt I.2).le_bot hI.some_spec
 

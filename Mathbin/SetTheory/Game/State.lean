@@ -97,35 +97,23 @@ def ofStateAuxRelabelling :
   | s, 0, 0, hn, hm => by
     dsimp [PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i
-      dsimp at i
-      exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
-    · intro j
-      dsimp at j
-      exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
   | s, 0, m + 1, hn, hm => by
     dsimp [PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i
-      dsimp at i
-      exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
-    · intro j
-      dsimp at j
-      exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
   | s, n + 1, 0, hn, hm => by
     dsimp [PGame.ofStateAux]
     fconstructor; rfl; rfl
-    · intro i
-      dsimp at i
-      exfalso
+    · intro i; dsimp at i; exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hm)
-    · intro j
-      dsimp at j
-      exfalso
+    · intro j; dsimp at j; exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
   | s, n + 1, m + 1, hn, hm => by
     dsimp [PGame.ofStateAux]
@@ -175,8 +163,7 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
   by
   induction n
   · have t' := (left_moves_of_state_aux 0 h) t
-    exfalso
-    exact turn_bound_ne_zero_of_left_move t'.2 (nonpos_iff_eq_zero.mp h)
+    exfalso; exact turn_bound_ne_zero_of_left_move t'.2 (nonpos_iff_eq_zero.mp h)
   · rfl
 #align pgame.relabelling_move_left_aux PGame.relabellingMoveLeftAux
 
@@ -203,8 +190,7 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
   by
   induction n
   · have t' := (right_moves_of_state_aux 0 h) t
-    exfalso
-    exact turn_bound_ne_zero_of_right_move t'.2 (nonpos_iff_eq_zero.mp h)
+    exfalso; exact turn_bound_ne_zero_of_right_move t'.2 (nonpos_iff_eq_zero.mp h)
   · rfl
 #align pgame.relabelling_move_right_aux PGame.relabellingMoveRightAux
 

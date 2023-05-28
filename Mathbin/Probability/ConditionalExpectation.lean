@@ -44,9 +44,7 @@ theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFi
     (hf : strongly_measurable[m₁] f) (hindp : IndepCat m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] :=
   by
   by_cases hfint : integrable f μ
-  swap;
-  · rw [condexp_undef hfint, integral_undef hfint]
-    rfl
+  swap; · rw [condexp_undef hfint, integral_undef hfint]; rfl
   have hfint₁ := hfint.trim hle₁ hf
   refine'
     (ae_eq_condexp_of_forall_set_integral_eq hle₂ hfint

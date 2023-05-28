@@ -463,9 +463,7 @@ unsafe def find_rule (ls : List Name) : mono_law → tactic (List expr)
 universe u v
 
 def applyRel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (h : R x y) (hx : x = x')
-    (hy : y = y') : R x' y' := by
-  rw [← hx, ← hy]
-  apply h
+    (hy : y = y') : R x' y' := by rw [← hx, ← hy]; apply h
 #align tactic.interactive.apply_rel Tactic.Interactive.applyRel
 
 unsafe def ac_refine (e : expr) : tactic Unit :=

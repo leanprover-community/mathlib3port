@@ -153,10 +153,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_ite_eq Finsupp.prod_ite_eqₓ'. -/
 @[simp, to_additive]
 theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
-    (f.Prod fun x v => ite (a = x) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
-  by
-  dsimp [Finsupp.prod]
-  rw [f.support.prod_ite_eq]
+    (f.Prod fun x v => ite (a = x) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 := by
+  dsimp [Finsupp.prod]; rw [f.support.prod_ite_eq]
 #align finsupp.prod_ite_eq Finsupp.prod_ite_eq
 #align finsupp.sum_ite_eq Finsupp.sum_ite_eq
 
@@ -183,10 +181,8 @@ Case conversion may be inaccurate. Consider using '#align finsupp.prod_ite_eq' F
 /-- A restatement of `prod_ite_eq` with the equality test reversed. -/
 @[simp, to_additive "A restatement of `sum_ite_eq` with the equality test reversed."]
 theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
-    (f.Prod fun x v => ite (x = a) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
-  by
-  dsimp [Finsupp.prod]
-  rw [f.support.prod_ite_eq']
+    (f.Prod fun x v => ite (x = a) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 := by
+  dsimp [Finsupp.prod]; rw [f.support.prod_ite_eq']
 #align finsupp.prod_ite_eq' Finsupp.prod_ite_eq'
 #align finsupp.sum_ite_eq' Finsupp.sum_ite_eq'
 
@@ -656,15 +652,9 @@ def liftAddHom [AddZeroClass M] [AddCommMonoid N] : (α → M →+ N) ≃+ ((α 
       map_zero' := Finset.sum_empty
       map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
   invFun F x := F.comp <| singleAddHom x
-  left_inv F := by
-    ext
-    simp
-  right_inv F := by
-    ext
-    simp
-  map_add' F G := by
-    ext
-    simp
+  left_inv F := by ext; simp
+  right_inv F := by ext; simp
+  map_add' F G := by ext; simp
 #align finsupp.lift_add_hom Finsupp.liftAddHom
 
 /- warning: finsupp.lift_add_hom_apply -> Finsupp.liftAddHom_apply is a dubious translation:
@@ -1023,11 +1013,7 @@ namespace Nat
 #print Nat.prod_pow_pos_of_zero_not_mem_support /-
 /-- If `0 : ℕ` is not in the support of `f : ℕ →₀ ℕ` then `0 < ∏ x in f.support, x ^ (f x)`. -/
 theorem prod_pow_pos_of_zero_not_mem_support {f : ℕ →₀ ℕ} (hf : 0 ∉ f.support) : 0 < f.Prod pow :=
-  Finset.prod_pos fun a ha =>
-    pos_iff_ne_zero.mpr
-      (pow_ne_zero _ fun H => by
-        subst H
-        exact hf ha)
+  Finset.prod_pos fun a ha => pos_iff_ne_zero.mpr (pow_ne_zero _ fun H => by subst H; exact hf ha)
 #align nat.prod_pow_pos_of_zero_not_mem_support Nat.prod_pow_pos_of_zero_not_mem_support
 -/
 

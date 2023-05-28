@@ -108,10 +108,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Nontrivial.{u1} R] {p : (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> R}, (IsCoprime.{u1} R _inst_1 (p (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFinHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) 0))) (p (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (Fin.instOfNatFinHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) 1)))) -> (Ne.{succ u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> R) p (OfNat.ofNat.{u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> R) 0 (Zero.toOfNat0.{u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> R) (Pi.instZero.{0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (fun (a._@.Mathlib.RingTheory.Coprime.Basic._hyg.535 : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) => R) (fun (i : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) => CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_coprime.ne_zero IsCoprime.ne_zeroₓ'. -/
 /-- If a 2-vector `p` satisfies `is_coprime (p 0) (p 1)`, then `p ≠ 0`. -/
-theorem IsCoprime.ne_zero [Nontrivial R] {p : Fin 2 → R} (h : IsCoprime (p 0) (p 1)) : p ≠ 0 :=
-  by
-  rintro rfl
-  exact not_isCoprime_zero_zero h
+theorem IsCoprime.ne_zero [Nontrivial R] {p : Fin 2 → R} (h : IsCoprime (p 0) (p 1)) : p ≠ 0 := by
+  rintro rfl; exact not_isCoprime_zero_zero h
 #align is_coprime.ne_zero IsCoprime.ne_zero
 
 #print isCoprime_one_left /-
@@ -176,10 +174,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x y) -> (IsCoprime.{u1} R _inst_1 x z) -> (IsCoprime.{u1} R _inst_1 x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) y z))
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_right IsCoprime.mul_rightₓ'. -/
-theorem IsCoprime.mul_right (H1 : IsCoprime x y) (H2 : IsCoprime x z) : IsCoprime x (y * z) :=
-  by
-  rw [isCoprime_comm] at H1 H2⊢
-  exact H1.mul_left H2
+theorem IsCoprime.mul_right (H1 : IsCoprime x y) (H2 : IsCoprime x z) : IsCoprime x (y * z) := by
+  rw [isCoprime_comm] at H1 H2⊢; exact H1.mul_left H2
 #align is_coprime.mul_right IsCoprime.mul_right
 
 /- warning: is_coprime.mul_dvd -> IsCoprime.mul_dvd is a dubious translation:
@@ -216,10 +212,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) x y) z) -> (IsCoprime.{u1} R _inst_1 y z)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_left_right IsCoprime.of_mul_left_rightₓ'. -/
-theorem IsCoprime.of_mul_left_right (H : IsCoprime (x * y) z) : IsCoprime y z :=
-  by
-  rw [mul_comm] at H
-  exact H.of_mul_left_left
+theorem IsCoprime.of_mul_left_right (H : IsCoprime (x * y) z) : IsCoprime y z := by
+  rw [mul_comm] at H; exact H.of_mul_left_left
 #align is_coprime.of_mul_left_right IsCoprime.of_mul_left_right
 
 /- warning: is_coprime.of_mul_right_left -> IsCoprime.of_mul_right_left is a dubious translation:
@@ -228,10 +222,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) y z)) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_right_left IsCoprime.of_mul_right_leftₓ'. -/
-theorem IsCoprime.of_mul_right_left (H : IsCoprime x (y * z)) : IsCoprime x y :=
-  by
-  rw [isCoprime_comm] at H⊢
-  exact H.of_mul_left_left
+theorem IsCoprime.of_mul_right_left (H : IsCoprime x (y * z)) : IsCoprime x y := by
+  rw [isCoprime_comm] at H⊢; exact H.of_mul_left_left
 #align is_coprime.of_mul_right_left IsCoprime.of_mul_right_left
 
 /- warning: is_coprime.of_mul_right_right -> IsCoprime.of_mul_right_right is a dubious translation:
@@ -240,10 +232,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) y z)) -> (IsCoprime.{u1} R _inst_1 x z)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_right_right IsCoprime.of_mul_right_rightₓ'. -/
-theorem IsCoprime.of_mul_right_right (H : IsCoprime x (y * z)) : IsCoprime x z :=
-  by
-  rw [mul_comm] at H
-  exact H.of_mul_right_left
+theorem IsCoprime.of_mul_right_right (H : IsCoprime x (y * z)) : IsCoprime x z := by
+  rw [mul_comm] at H; exact H.of_mul_right_left
 #align is_coprime.of_mul_right_right IsCoprime.of_mul_right_right
 
 /- warning: is_coprime.mul_left_iff -> IsCoprime.mul_left_iff is a dubious translation:
@@ -327,10 +317,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) z y)) y) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_add_mul_right_left IsCoprime.of_add_mul_right_leftₓ'. -/
-theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y :=
-  by
-  rw [mul_comm] at h
-  exact h.of_add_mul_left_left
+theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y := by
+  rw [mul_comm] at h; exact h.of_add_mul_left_left
 #align is_coprime.of_add_mul_right_left IsCoprime.of_add_mul_right_left
 
 /- warning: is_coprime.of_add_mul_left_right -> IsCoprime.of_add_mul_left_right is a dubious translation:
@@ -339,10 +327,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) y (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) x z))) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_add_mul_left_right IsCoprime.of_add_mul_left_rightₓ'. -/
-theorem IsCoprime.of_add_mul_left_right (h : IsCoprime x (y + x * z)) : IsCoprime x y :=
-  by
-  rw [isCoprime_comm] at h⊢
-  exact h.of_add_mul_left_left
+theorem IsCoprime.of_add_mul_left_right (h : IsCoprime x (y + x * z)) : IsCoprime x y := by
+  rw [isCoprime_comm] at h⊢; exact h.of_add_mul_left_left
 #align is_coprime.of_add_mul_left_right IsCoprime.of_add_mul_left_right
 
 /- warning: is_coprime.of_add_mul_right_right -> IsCoprime.of_add_mul_right_right is a dubious translation:
@@ -351,10 +337,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) y (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) z x))) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_add_mul_right_right IsCoprime.of_add_mul_right_rightₓ'. -/
-theorem IsCoprime.of_add_mul_right_right (h : IsCoprime x (y + z * x)) : IsCoprime x y :=
-  by
-  rw [mul_comm] at h
-  exact h.of_add_mul_left_right
+theorem IsCoprime.of_add_mul_right_right (h : IsCoprime x (y + z * x)) : IsCoprime x y := by
+  rw [mul_comm] at h; exact h.of_add_mul_left_right
 #align is_coprime.of_add_mul_right_right IsCoprime.of_add_mul_right_right
 
 /- warning: is_coprime.of_mul_add_left_left -> IsCoprime.of_mul_add_left_left is a dubious translation:
@@ -363,10 +347,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) y z) x) y) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_add_left_left IsCoprime.of_mul_add_left_leftₓ'. -/
-theorem IsCoprime.of_mul_add_left_left (h : IsCoprime (y * z + x) y) : IsCoprime x y :=
-  by
-  rw [add_comm] at h
-  exact h.of_add_mul_left_left
+theorem IsCoprime.of_mul_add_left_left (h : IsCoprime (y * z + x) y) : IsCoprime x y := by
+  rw [add_comm] at h; exact h.of_add_mul_left_left
 #align is_coprime.of_mul_add_left_left IsCoprime.of_mul_add_left_left
 
 /- warning: is_coprime.of_mul_add_right_left -> IsCoprime.of_mul_add_right_left is a dubious translation:
@@ -375,10 +357,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) z y) x) y) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_add_right_left IsCoprime.of_mul_add_right_leftₓ'. -/
-theorem IsCoprime.of_mul_add_right_left (h : IsCoprime (z * y + x) y) : IsCoprime x y :=
-  by
-  rw [add_comm] at h
-  exact h.of_add_mul_right_left
+theorem IsCoprime.of_mul_add_right_left (h : IsCoprime (z * y + x) y) : IsCoprime x y := by
+  rw [add_comm] at h; exact h.of_add_mul_right_left
 #align is_coprime.of_mul_add_right_left IsCoprime.of_mul_add_right_left
 
 /- warning: is_coprime.of_mul_add_left_right -> IsCoprime.of_mul_add_left_right is a dubious translation:
@@ -387,10 +367,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) x z) y)) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_add_left_right IsCoprime.of_mul_add_left_rightₓ'. -/
-theorem IsCoprime.of_mul_add_left_right (h : IsCoprime x (x * z + y)) : IsCoprime x y :=
-  by
-  rw [add_comm] at h
-  exact h.of_add_mul_left_right
+theorem IsCoprime.of_mul_add_left_right (h : IsCoprime x (x * z + y)) : IsCoprime x y := by
+  rw [add_comm] at h; exact h.of_add_mul_left_right
 #align is_coprime.of_mul_add_left_right IsCoprime.of_mul_add_left_right
 
 /- warning: is_coprime.of_mul_add_right_right -> IsCoprime.of_mul_add_right_right is a dubious translation:
@@ -399,10 +377,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, (IsCoprime.{u1} R _inst_1 x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) z x) y)) -> (IsCoprime.{u1} R _inst_1 x y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.of_mul_add_right_right IsCoprime.of_mul_add_right_rightₓ'. -/
-theorem IsCoprime.of_mul_add_right_right (h : IsCoprime x (z * x + y)) : IsCoprime x y :=
-  by
-  rw [add_comm] at h
-  exact h.of_add_mul_right_right
+theorem IsCoprime.of_mul_add_right_right (h : IsCoprime x (z * x + y)) : IsCoprime x y := by
+  rw [add_comm] at h; exact h.of_add_mul_right_right
 #align is_coprime.of_mul_add_right_right IsCoprime.of_mul_add_right_right
 
 end CommSemiring
@@ -535,10 +511,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) z y)) y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.add_mul_right_left IsCoprime.add_mul_right_leftₓ'. -/
-theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y :=
-  by
-  rw [mul_comm]
-  exact h.add_mul_left_left z
+theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by
+  rw [mul_comm]; exact h.add_mul_left_left z
 #align is_coprime.add_mul_right_left IsCoprime.add_mul_right_left
 
 /- warning: is_coprime.add_mul_left_right -> IsCoprime.add_mul_left_right is a dubious translation:
@@ -547,10 +521,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) y (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) x z)))
 Case conversion may be inaccurate. Consider using '#align is_coprime.add_mul_left_right IsCoprime.add_mul_left_rightₓ'. -/
-theorem add_mul_left_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (y + x * z) :=
-  by
-  rw [isCoprime_comm]
-  exact h.symm.add_mul_left_left z
+theorem add_mul_left_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (y + x * z) := by
+  rw [isCoprime_comm]; exact h.symm.add_mul_left_left z
 #align is_coprime.add_mul_left_right IsCoprime.add_mul_left_right
 
 /- warning: is_coprime.add_mul_right_right -> IsCoprime.add_mul_right_right is a dubious translation:
@@ -559,10 +531,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) y (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) z x)))
 Case conversion may be inaccurate. Consider using '#align is_coprime.add_mul_right_right IsCoprime.add_mul_right_rightₓ'. -/
-theorem add_mul_right_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (y + z * x) :=
-  by
-  rw [isCoprime_comm]
-  exact h.symm.add_mul_right_left z
+theorem add_mul_right_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (y + z * x) := by
+  rw [isCoprime_comm]; exact h.symm.add_mul_right_left z
 #align is_coprime.add_mul_right_right IsCoprime.add_mul_right_right
 
 /- warning: is_coprime.mul_add_left_left -> IsCoprime.mul_add_left_left is a dubious translation:
@@ -571,10 +541,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) y z) x) y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_add_left_left IsCoprime.mul_add_left_leftₓ'. -/
-theorem mul_add_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (y * z + x) y :=
-  by
-  rw [add_comm]
-  exact h.add_mul_left_left z
+theorem mul_add_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (y * z + x) y := by
+  rw [add_comm]; exact h.add_mul_left_left z
 #align is_coprime.mul_add_left_left IsCoprime.mul_add_left_left
 
 /- warning: is_coprime.mul_add_right_left -> IsCoprime.mul_add_right_left is a dubious translation:
@@ -583,10 +551,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) z y) x) y)
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_add_right_left IsCoprime.mul_add_right_leftₓ'. -/
-theorem mul_add_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (z * y + x) y :=
-  by
-  rw [add_comm]
-  exact h.add_mul_right_left z
+theorem mul_add_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (z * y + x) y := by
+  rw [add_comm]; exact h.add_mul_right_left z
 #align is_coprime.mul_add_right_left IsCoprime.mul_add_right_left
 
 /- warning: is_coprime.mul_add_left_right -> IsCoprime.mul_add_left_right is a dubious translation:
@@ -595,10 +561,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) x z) y))
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_add_left_right IsCoprime.mul_add_left_rightₓ'. -/
-theorem mul_add_left_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (x * z + y) :=
-  by
-  rw [add_comm]
-  exact h.add_mul_left_right z
+theorem mul_add_left_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (x * z + y) := by
+  rw [add_comm]; exact h.add_mul_left_right z
 #align is_coprime.mul_add_left_right IsCoprime.mul_add_left_right
 
 /- warning: is_coprime.mul_add_right_right -> IsCoprime.mul_add_right_right is a dubious translation:
@@ -607,10 +571,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {x : R} {y : R}, (IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x y) -> (forall (z : R), IsCoprime.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) x (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R _inst_1))))) z x) y))
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_add_right_right IsCoprime.mul_add_right_rightₓ'. -/
-theorem mul_add_right_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (z * x + y) :=
-  by
-  rw [add_comm]
-  exact h.add_mul_right_right z
+theorem mul_add_right_right {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime x (z * x + y) := by
+  rw [add_comm]; exact h.add_mul_right_right z
 #align is_coprime.mul_add_right_right IsCoprime.mul_add_right_right
 
 /- warning: is_coprime.add_mul_left_left_iff -> IsCoprime.add_mul_left_left_iff is a dubious translation:

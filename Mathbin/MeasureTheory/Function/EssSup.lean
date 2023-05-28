@@ -109,10 +109,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] (c : β), (Ne.{succ u2} (MeasureTheory.Measure.{u2} α m) μ (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) -> (Eq.{succ u1} β (essSup.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c)
 Case conversion may be inaccurate. Consider using '#align ess_sup_const essSup_constₓ'. -/
-theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
-  by
-  rw [← ae_ne_bot] at hμ
-  exact essSup_const' _
+theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c := by
+  rw [← ae_ne_bot] at hμ; exact essSup_const' _
 #align ess_sup_const essSup_const
 
 /- warning: ess_inf_const -> essInf_const is a dubious translation:
@@ -121,10 +119,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_1 : ConditionallyCompleteLattice.{u1} β] (c : β), (Ne.{succ u2} (MeasureTheory.Measure.{u2} α m) μ (OfNat.ofNat.{u2} (MeasureTheory.Measure.{u2} α m) 0 (Zero.toOfNat0.{u2} (MeasureTheory.Measure.{u2} α m) (MeasureTheory.Measure.instZero.{u2} α m)))) -> (Eq.{succ u1} β (essInf.{u2, u1} α β _inst_1 m (fun (x : α) => c) μ) c)
 Case conversion may be inaccurate. Consider using '#align ess_inf_const essInf_constₓ'. -/
-theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
-  by
-  rw [← ae_ne_bot] at hμ
-  exact essInf_const' _
+theorem essInf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c := by
+  rw [← ae_ne_bot] at hμ; exact essInf_const' _
 #align ess_inf_const essInf_const
 
 end ConditionallyCompleteLattice
@@ -140,9 +136,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {m : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m) (f : α -> β), Eq.{succ u1} β (essSup.{u2, u1} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (InfSet.sInf.{u1} β (ConditionallyCompleteLattice.toInfSet.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)) (setOf.{u1} β (fun (a : β) => Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m μ) (setOf.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) a (f x)))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))
 Case conversion may be inaccurate. Consider using '#align ess_sup_eq_Inf essSup_eq_sInfₓ'. -/
 theorem essSup_eq_sInf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essSup f μ = sInf { a | μ { x | a < f x } = 0 } :=
-  by
-  dsimp [essSup, limsup, Limsup]
+    essSup f μ = sInf { a | μ { x | a < f x } = 0 } := by dsimp [essSup, limsup, Limsup];
   simp only [ae_iff, not_le]
 #align ess_sup_eq_Inf essSup_eq_sInf
 
@@ -153,9 +147,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} β] {m : MeasurableSpace.{u2} α} (μ : MeasureTheory.Measure.{u2} α m) (f : α -> β), Eq.{succ u1} β (essInf.{u2, u1} α β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1) m f μ) (SupSet.sSup.{u1} β (ConditionallyCompleteLattice.toSupSet.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)) (setOf.{u1} β (fun (a : β) => Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α (MeasureTheory.Measure.toOuterMeasure.{u2} α m μ) (setOf.{u2} α (fun (x : α) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} β _inst_1)))))) (f x) a))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))
 Case conversion may be inaccurate. Consider using '#align ess_inf_eq_Sup essInf_eq_sSupₓ'. -/
 theorem essInf_eq_sSup {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essInf f μ = sSup { a | μ { x | f x < a } = 0 } :=
-  by
-  dsimp [essInf, liminf, Liminf]
+    essInf f μ = sSup { a | μ { x | f x < a } = 0 } := by dsimp [essInf, liminf, Liminf];
   simp only [ae_iff, not_le]
 #align ess_inf_eq_Sup essInf_eq_sSup
 
@@ -217,9 +209,7 @@ theorem meas_essSup_lt
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
       run_tac
         is_bounded_default) :
-    μ { y | essSup f μ < f y } = 0 := by
-  simp_rw [← not_le]
-  exact ae_le_essSup hf
+    μ { y | essSup f μ < f y } = 0 := by simp_rw [← not_le]; exact ae_le_essSup hf
 #align meas_ess_sup_lt meas_essSup_lt
 
 /- warning: meas_lt_ess_inf -> meas_lt_essInf is a dubious translation:
@@ -230,9 +220,7 @@ theorem meas_lt_essInf
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
       run_tac
         is_bounded_default) :
-    μ { y | f y < essInf f μ } = 0 := by
-  simp_rw [← not_le]
-  exact ae_essInf_le hf
+    μ { y | f y < essInf f μ } = 0 := by simp_rw [← not_le]; exact ae_essInf_le hf
 #align meas_lt_ess_inf meas_lt_essInf
 
 end ConditionallyCompleteLinearOrder
@@ -428,9 +416,7 @@ theorem essSup_comp_le_essSup_map_measure (hf : AEMeasurable f μ) :
         run_tac
           is_bounded_default)
   simp_rw [Filter.mem_map]
-  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by
-    ext1 x
-    simp_rw [Set.mem_preimage]
+  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by ext1 x; simp_rw [Set.mem_preimage]
   rw [this]
   exact fun h => mem_ae_of_mem_ae_map hf h
 #align ess_sup_comp_le_ess_sup_map_measure essSup_comp_le_essSup_map_measure
@@ -537,8 +523,7 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
   rw [eventually_map] at h_restrict_le⊢
   rw [ae_restrict_iff' hs] at h_restrict_le
   have hc : 0 ≤ c := by
-    rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c
-    exact hx.1.trans hx.2
+    rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c; exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae
     rw [eventually_le, ae_restrict_iff' hs] at hf
@@ -623,9 +608,7 @@ Case conversion may be inaccurate. Consider using '#align ennreal.ess_sup_liminf
 theorem essSup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α → ℝ≥0∞) :
     essSup (fun x => atTop.liminf fun n => f n x) μ ≤
       atTop.liminf fun n => essSup (fun x => f n x) μ :=
-  by
-  simp_rw [essSup]
-  exact ENNReal.limsup_liminf_le_liminf_limsup fun a b => f b a
+  by simp_rw [essSup]; exact ENNReal.limsup_liminf_le_liminf_limsup fun a b => f b a
 #align ennreal.ess_sup_liminf_le ENNReal.essSup_liminf_le
 
 /- warning: ennreal.coe_ess_sup -> ENNReal.coe_essSup is a dubious translation:

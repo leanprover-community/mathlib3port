@@ -279,9 +279,7 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDomain R] [IsDedek
   choose g'' hg'' using hag
   letI := Classical.propDecidable
   let g' i := if h : i ∈ s then g'' i h else 0
-  have hg' : ∀ i ∈ s, algebraMap _ _ (g' i) = a * g i :=
-    by
-    intro i hi
+  have hg' : ∀ i ∈ s, algebraMap _ _ (g' i) = a * g i := by intro i hi;
     exact (congr_arg _ (dif_pos hi)).trans (hg'' i hi)
   -- Because `R/I` is nontrivial, we can lift `g` to a nontrivial linear dependence in `S`.
   have hgI : algebraMap R S (g' j) ≠ 0 :=
@@ -472,8 +470,7 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
     rw [LinearMap.restrictScalars_apply, Submodule.mkQ_apply, Submodule.mkQ_apply,
       Submodule.Quotient.eq] at y_eq
     exact add_mem (Submodule.mem_sup_left y_mem) (neg_mem <| Submodule.mem_sup_right y_eq)
-  · have := b.linear_independent
-    rw [b_eq_b'] at this
+  · have := b.linear_independent; rw [b_eq_b'] at this
     convert finrank_quotient_map.linear_independent_of_nontrivial K _
         ((Algebra.linearMap S L).restrictScalars R) _ ((Submodule.mkQ _).restrictScalars R) this
     · rw [quotient.algebra_map_eq, Ideal.mk_ker]
@@ -791,10 +788,8 @@ instance Factors.finiteDimensional_quotient [IsNoetherian R S] [p.IsMaximal]
 #align ideal.factors.finite_dimensional_quotient Ideal.Factors.finiteDimensional_quotient
 
 theorem Factors.inertiaDeg_ne_zero [IsNoetherian R S] [p.IsMaximal]
-    (P : (factors (map (algebraMap R S) p)).toFinset) : inertiaDeg (algebraMap R S) p P ≠ 0 :=
-  by
-  rw [inertia_deg_algebra_map]
-  exact (finite_dimensional.finrank_pos_iff.mpr inferInstance).ne'
+    (P : (factors (map (algebraMap R S) p)).toFinset) : inertiaDeg (algebraMap R S) p P ≠ 0 := by
+  rw [inertia_deg_algebra_map]; exact (finite_dimensional.finrank_pos_iff.mpr inferInstance).ne'
 #align ideal.factors.inertia_deg_ne_zero Ideal.Factors.inertiaDeg_ne_zero
 
 instance Factors.finiteDimensional_quotient_pow [IsNoetherian R S] [p.IsMaximal]

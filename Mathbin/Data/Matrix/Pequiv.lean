@@ -126,8 +126,7 @@ theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l
   · simp [h, ← f.eq_some_iff]
   · rw [Finset.sum_eq_single fj]
     · simp [h, ← f.eq_some_iff]
-    · intro b H n
-      simp [h, ← f.eq_some_iff, n.symm]
+    · intro b H n; simp [h, ← f.eq_some_iff, n.symm]
     · simp
 #align pequiv.matrix_mul_apply PEquiv.matrix_mul_apply
 
@@ -138,9 +137,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Fintype.{u2} m] [_inst_2 : DecidableEq.{succ u2} m] [_inst_3 : Semiring.{u3} α] (f : Equiv.{succ u2, succ u2} m m) (M : Matrix.{u2, u1, u3} m n α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u2, u1, u3} m n α) (Matrix.mul.{u3, u2, u2, u1} m m n α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u3} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α _inst_3))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α _inst_3))) (PEquiv.toMatrix.{u3, u2, u2} m m α (fun (a : m) (b : m) => _inst_2 a b) (MonoidWithZero.toZero.{u3} α (Semiring.toMonoidWithZero.{u3} α _inst_3)) (Semiring.toOne.{u3} α _inst_3) (Equiv.toPEquiv.{u2, u2} m m f)) M) (fun (i : m) => M (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} m m) m (fun (_x : m) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : m) => m) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} m m) f i))
 Case conversion may be inaccurate. Consider using '#align pequiv.to_pequiv_mul_matrix PEquiv.toPEquiv_mul_matrixₓ'. -/
 theorem toPEquiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m ≃ m)
-    (M : Matrix m n α) : f.toPEquiv.toMatrix ⬝ M = fun i => M (f i) :=
-  by
-  ext (i j)
+    (M : Matrix m n α) : f.toPEquiv.toMatrix ⬝ M = fun i => M (f i) := by ext (i j);
   rw [mul_matrix_apply, Equiv.toPEquiv_apply]
 #align pequiv.to_pequiv_mul_matrix PEquiv.toPEquiv_mul_matrix
 
@@ -220,11 +217,7 @@ theorem toMatrix_swap [DecidableEq n] [Ring α] (i j : n) :
   by
   ext
   dsimp [to_matrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, one_apply]
-  split_ifs <;>
-    first
-      |· simp_all|·
-        exfalso
-        assumption
+  split_ifs <;> first |· simp_all|· exfalso; assumption
 #align pequiv.to_matrix_swap PEquiv.toMatrix_swap
 
 /- warning: pequiv.single_mul_single -> PEquiv.single_mul_single is a dubious translation:

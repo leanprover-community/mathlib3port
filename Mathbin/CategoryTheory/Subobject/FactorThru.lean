@@ -158,8 +158,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {Y : C} {Z : C} {P : CategoryTheory.Subobject.{u1, u2} C _inst_1 Y} {Q : CategoryTheory.Subobject.{u1, u2} C _inst_1 Y} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) Z Y), (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 Y))) P Q) -> (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 Z Y P f) -> (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 Z Y Q f)
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.factors_of_le CategoryTheory.Subobject.factors_of_leₓ'. -/
 theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) :
-    P.Factors f → Q.Factors f := by
-  simp only [factors_iff]
+    P.Factors f → Q.Factors f := by simp only [factors_iff];
   exact fun ⟨u, hu⟩ => ⟨u ≫ of_le _ _ h, by simp [← hu]⟩
 #align category_theory.subobject.factors_of_le CategoryTheory.Subobject.factors_of_le
 
@@ -194,10 +193,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} (P : CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (h : CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) P) X P (CategoryTheory.Subobject.arrow.{u1, u2} C _inst_1 X P)), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) P) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) P)) (CategoryTheory.Subobject.factorThru.{u1, u2} C _inst_1 (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) P) X P (CategoryTheory.Subobject.arrow.{u1, u2} C _inst_1 X P) h) (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) P))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.factor_thru_self CategoryTheory.Subobject.factorThru_selfₓ'. -/
 @[simp]
-theorem factorThru_self {X : C} (P : Subobject X) (h) : P.factorThru P.arrow h = 𝟙 P :=
-  by
-  ext
-  simp
+theorem factorThru_self {X : C} (P : Subobject X) (h) : P.factorThru P.arrow h = 𝟙 P := by ext; simp
 #align category_theory.subobject.factor_thru_self CategoryTheory.Subobject.factorThru_self
 
 /- warning: category_theory.subobject.factor_thru_mk_self -> CategoryTheory.Subobject.factorThru_mk_self is a dubious translation:
@@ -208,10 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.factor_thru_mk_self CategoryTheory.Subobject.factorThru_mk_selfₓ'. -/
 @[simp]
 theorem factorThru_mk_self (f : X ⟶ Y) [Mono f] :
-    (mk f).factorThru f (mk_factors_self f) = (underlyingIso f).inv :=
-  by
-  ext
-  simp
+    (mk f).factorThru f (mk_factors_self f) = (underlyingIso f).inv := by ext; simp
 #align category_theory.subobject.factor_thru_mk_self CategoryTheory.Subobject.factorThru_mk_self
 
 /- warning: category_theory.subobject.factor_thru_comp_arrow -> CategoryTheory.Subobject.factorThru_comp_arrow is a dubious translation:
@@ -222,9 +215,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.factor_thru_comp_arrow CategoryTheory.Subobject.factorThru_comp_arrowₓ'. -/
 @[simp]
 theorem factorThru_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) (h) :
-    P.factorThru (f ≫ P.arrow) h = f := by
-  ext
-  simp
+    P.factorThru (f ≫ P.arrow) h = f := by ext; simp
 #align category_theory.subobject.factor_thru_comp_arrow CategoryTheory.Subobject.factorThru_comp_arrow
 
 /- warning: category_theory.subobject.factor_thru_eq_zero -> CategoryTheory.Subobject.factorThru_eq_zero is a dubious translation:
@@ -239,8 +230,7 @@ theorem factorThru_eq_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} {f :
     replace w := w =≫ P.arrow
     simpa using w
   · rintro rfl
-    ext
-    simp
+    ext; simp
 #align category_theory.subobject.factor_thru_eq_zero CategoryTheory.Subobject.factorThru_eq_zero
 
 /- warning: category_theory.subobject.factor_thru_right -> CategoryTheory.Subobject.factorThru_right is a dubious translation:
@@ -274,10 +264,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.subobj
 -- `rw factor_thru_le h`, obtaining a subgoal `P.factors f`.
 -- (While the reverse direction looks plausible as a simp lemma, it seems to be unproductive.)
 theorem factorThru_ofLE {Y Z : C} {P Q : Subobject Y} {f : Z ⟶ Y} (h : P ≤ Q) (w : P.Factors f) :
-    Q.factorThru f (factors_of_le f h w) = P.factorThru f w ≫ ofLE P Q h :=
-  by
-  ext
-  simp
+    Q.factorThru f (factors_of_le f h w) = P.factorThru f w ≫ ofLE P Q h := by ext; simp
 #align category_theory.subobject.factor_thru_of_le CategoryTheory.Subobject.factorThru_ofLE
 
 section Preadditive
@@ -302,10 +289,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.subobj
 -- However you can `rw` by it to assert that `f` and `g` factor through `P` separately.
 theorem factorThru_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y) (w : P.Factors (f + g))
     (wf : P.Factors f) (wg : P.Factors g) :
-    P.factorThru (f + g) w = P.factorThru f wf + P.factorThru g wg :=
-  by
-  ext
-  simp
+    P.factorThru (f + g) w = P.factorThru f wf + P.factorThru g wg := by ext; simp
 #align category_theory.subobject.factor_thru_add CategoryTheory.Subobject.factorThru_add
 
 /- warning: category_theory.subobject.factors_left_of_factors_add -> CategoryTheory.Subobject.factors_left_of_factors_add is a dubious translation:
@@ -327,9 +311,7 @@ theorem factorThru_add_sub_factorThru_right {X Y : C} {P : Subobject Y} (f g : X
     (w : P.Factors (f + g)) (wg : P.Factors g) :
     P.factorThru (f + g) w - P.factorThru g wg =
       P.factorThru f (factors_left_of_factors_add f g w wg) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align category_theory.subobject.factor_thru_add_sub_factor_thru_right CategoryTheory.Subobject.factorThru_add_sub_factorThru_right
 
 /- warning: category_theory.subobject.factors_right_of_factors_add -> CategoryTheory.Subobject.factors_right_of_factors_add is a dubious translation:
@@ -351,9 +333,7 @@ theorem factorThru_add_sub_factorThru_left {X Y : C} {P : Subobject Y} (f g : X 
     (w : P.Factors (f + g)) (wf : P.Factors f) :
     P.factorThru (f + g) w - P.factorThru f wf =
       P.factorThru g (factors_right_of_factors_add f g w wf) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align category_theory.subobject.factor_thru_add_sub_factor_thru_left CategoryTheory.Subobject.factorThru_add_sub_factorThru_left
 
 end Preadditive

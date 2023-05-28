@@ -106,18 +106,10 @@ theorem hasFiniteIntegral_compProd_iff ⦃f : β × γ → E⦄ (h1f : StronglyM
   have : ∀ {p q r : Prop} (h1 : r → p), (r ↔ p ∧ q) ↔ p → (r ↔ q) := fun p q r h1 => by
     rw [← and_congr_right_iff, and_iff_right_of_imp h1]
   rw [this]
-  · intro h2f
-    rw [lintegral_congr_ae]
-    refine' h2f.mp _
-    apply eventually_of_forall
-    intro x hx
-    dsimp only
-    rw [of_real_to_real]
-    rw [← lt_top_iff_ne_top]
-    exact hx
-  · intro h2f
-    refine' ae_lt_top _ h2f.ne
-    exact h1f.ennnorm.lintegral_kernel_prod_right''
+  · intro h2f; rw [lintegral_congr_ae]
+    refine' h2f.mp _; apply eventually_of_forall; intro x hx; dsimp only
+    rw [of_real_to_real]; rw [← lt_top_iff_ne_top]; exact hx
+  · intro h2f; refine' ae_lt_top _ h2f.ne; exact h1f.ennnorm.lintegral_kernel_prod_right''
 #align probability_theory.has_finite_integral_comp_prod_iff ProbabilityTheory.hasFiniteIntegral_compProd_iff
 
 theorem hasFiniteIntegral_compProd_iff' ⦃f : β × γ → E⦄
@@ -295,8 +287,7 @@ theorem set_integral_compProd {f : β × γ → E} {s : Set β} {t : Set γ} (hs
   by
   rw [← kernel.restrict_apply (κ ⊗ₖ η) (hs.prod ht), ← comp_prod_restrict, integral_comp_prod]
   · simp_rw [kernel.restrict_apply]
-  · rw [comp_prod_restrict, kernel.restrict_apply]
-    exact hf
+  · rw [comp_prod_restrict, kernel.restrict_apply]; exact hf
 #align probability_theory.set_integral_comp_prod ProbabilityTheory.set_integral_compProd
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

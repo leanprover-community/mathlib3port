@@ -418,9 +418,7 @@ theorem ContinuousLinearMap.compContinuousMultilinearMap_coe (g : M₂ →L[R] M
     (f : ContinuousMultilinearMap R M₁ M₂) :
     (g.compContinuousMultilinearMap f : (∀ i, M₁ i) → M₃) =
       (g : M₂ → M₃) ∘ (f : (∀ i, M₁ i) → M₂) :=
-  by
-  ext m
-  rfl
+  by ext m; rfl
 #align continuous_linear_map.comp_continuous_multilinear_map_coe ContinuousLinearMap.compContinuousMultilinearMap_coe
 
 #print ContinuousMultilinearMap.piEquiv /-
@@ -432,12 +430,8 @@ def piEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' i)]
     where
   toFun := ContinuousMultilinearMap.pi
   invFun f i := (ContinuousLinearMap.proj i : _ →L[R] M' i).compContinuousMultilinearMap f
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
 #align continuous_multilinear_map.pi_equiv ContinuousMultilinearMap.piEquiv
 -/
 

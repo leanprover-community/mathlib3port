@@ -249,11 +249,8 @@ def unbot : ∀ x : WithBot α, x ≠ ⊥ → α
 
 #print WithBot.coe_unbot /-
 @[simp]
-theorem coe_unbot (x : WithBot α) (h : x ≠ ⊥) : (x.unbot h : WithBot α) = x :=
-  by
-  cases x
-  simpa using h
-  rfl
+theorem coe_unbot (x : WithBot α) (h : x ≠ ⊥) : (x.unbot h : WithBot α) = x := by cases x;
+  simpa using h; rfl
 #align with_bot.coe_unbot WithBot.coe_unbot
 -/
 
@@ -476,8 +473,7 @@ instance [Preorder α] : Preorder (WithBot α)
     where
   le := (· ≤ ·)
   lt := (· < ·)
-  lt_iff_le_not_le := by
-    intros
+  lt_iff_le_not_le := by intros ;
     cases a <;> cases b <;> simp [lt_iff_le_not_le] <;> simp [(· < ·), (· ≤ ·)]
   le_refl o a ha := ⟨a, ha, le_rfl⟩
   le_trans o₁ o₂ o₃ h₁ h₂ a ha :=
@@ -489,8 +485,7 @@ instance [PartialOrder α] : PartialOrder (WithBot α) :=
   { WithBot.preorder with
     le_antisymm := fun o₁ o₂ h₁ h₂ => by
       cases' o₁ with a
-      · cases' o₂ with b
-        · rfl
+      · cases' o₂ with b; · rfl
         rcases h₂ b rfl with ⟨_, ⟨⟩, _⟩
       · rcases h₁ a rfl with ⟨b, ⟨⟩, h₁'⟩
         rcases h₂ b rfl with ⟨_, ⟨⟩, h₂'⟩
@@ -1740,14 +1735,11 @@ instance [Preorder α] : Preorder (WithTop α)
   lt := (· < ·)
   lt_iff_le_not_le := by simp [← to_dual_lt_to_dual_iff, lt_iff_le_not_le]
   le_refl _ := toDual_le_toDual_iff.mp le_rfl
-  le_trans _ _ _ := by
-    simp_rw [← to_dual_le_to_dual_iff]
-    exact Function.swap le_trans
+  le_trans _ _ _ := by simp_rw [← to_dual_le_to_dual_iff]; exact Function.swap le_trans
 
 instance [PartialOrder α] : PartialOrder (WithTop α) :=
   { WithTop.preorder with
-    le_antisymm := fun _ _ => by
-      simp_rw [← to_dual_le_to_dual_iff]
+    le_antisymm := fun _ _ => by simp_rw [← to_dual_le_to_dual_iff];
       exact Function.swap le_antisymm }
 
 #print WithTop.coe_strictMono /-
@@ -1935,9 +1927,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10533 : α) (x._@.Mathlib.Order.WithBot._hyg.10535 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10533 x._@.Mathlib.Order.WithBot._hyg.10535)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10553 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10555 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10553 x._@.Mathlib.Order.WithBot._hyg.10555)
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
-  ⟨fun _ _ => by
-    simp_rw [← to_dual_le_to_dual_iff]
-    exact total_of _ _ _⟩
+  ⟨fun _ _ => by simp_rw [← to_dual_le_to_dual_iff]; exact total_of _ _ _⟩
 #align with_top.is_total_le WithTop.isTotal_le
 
 instance [LinearOrder α] : LinearOrder (WithTop α) :=

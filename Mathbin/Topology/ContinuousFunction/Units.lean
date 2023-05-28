@@ -47,12 +47,8 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <|
             MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
 #align continuous_map.units_lift ContinuousMap.unitsLift
 #align continuous_map.add_units_lift ContinuousMap.addUnitsLift
 
@@ -86,17 +82,12 @@ noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : 
 instance canLift :
     CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_val.comp f.Continuous⟩)
       fun f => ∀ x, IsUnit (f x)
-    where prf f h :=
-    ⟨unitsOfForallIsUnit h, by
-      ext
-      rfl⟩
+    where prf f h := ⟨unitsOfForallIsUnit h, by ext; rfl⟩
 #align continuous_map.can_lift ContinuousMap.canLift
 
 theorem isUnit_iff_forall_isUnit (f : C(X, R)) : IsUnit f ↔ ∀ x, IsUnit (f x) :=
   Iff.intro (fun h => fun x => ⟨unitsLift.symm h.Unit x, rfl⟩) fun h =>
-    ⟨(unitsOfForallIsUnit h).unitsLift, by
-      ext
-      rfl⟩
+    ⟨(unitsOfForallIsUnit h).unitsLift, by ext; rfl⟩
 #align continuous_map.is_unit_iff_forall_is_unit ContinuousMap.isUnit_iff_forall_isUnit
 
 end NormedRing

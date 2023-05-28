@@ -179,10 +179,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} (M : Matrix.{u2, u1, u3} m n α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u2, u1, u3} m n α) (Matrix.map.{u3, u3, u2, u1} m n α α M (id.{succ u3} α)) M
 Case conversion may be inaccurate. Consider using '#align matrix.map_id Matrix.map_idₓ'. -/
 @[simp]
-theorem map_id (M : Matrix m n α) : M.map id = M :=
-  by
-  ext
-  rfl
+theorem map_id (M : Matrix m n α) : M.map id = M := by ext; rfl
 #align matrix.map_id Matrix.map_id
 
 /- warning: matrix.map_map -> Matrix.map_map is a dubious translation:
@@ -193,9 +190,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.map_map Matrix.map_mapₓ'. -/
 @[simp]
 theorem map_map {M : Matrix m n α} {β γ : Type _} {f : α → β} {g : β → γ} :
-    (M.map f).map g = M.map (g ∘ f) := by
-  ext
-  rfl
+    (M.map f).map g = M.map (g ∘ f) := by ext; rfl
 #align matrix.map_map Matrix.map_map
 
 /- warning: matrix.map_injective -> Matrix.map_injective is a dubious translation:
@@ -412,9 +407,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.map_zero Matrix.map_zeroₓ'. -/
 @[simp]
 protected theorem map_zero [Zero α] [Zero β] (f : α → β) (h : f 0 = 0) :
-    (0 : Matrix m n α).map f = 0 := by
-  ext
-  simp [h]
+    (0 : Matrix m n α).map f = 0 := by ext; simp [h]
 #align matrix.map_zero Matrix.map_zero
 
 /- warning: matrix.map_add -> Matrix.map_add is a dubious translation:
@@ -501,17 +494,13 @@ theorem IsLeftRegular.matrix [Mul α] {k : α} (hk : IsLeftRegular k) :
 
 #print Matrix.subsingleton_of_empty_left /-
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Matrix m n α) :=
-  ⟨fun M N => by
-    ext
-    exact isEmptyElim i⟩
+  ⟨fun M N => by ext; exact isEmptyElim i⟩
 #align matrix.subsingleton_of_empty_left Matrix.subsingleton_of_empty_left
 -/
 
 #print Matrix.subsingleton_of_empty_right /-
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Matrix m n α) :=
-  ⟨fun M N => by
-    ext
-    exact isEmptyElim j⟩
+  ⟨fun M N => by ext; exact isEmptyElim j⟩
 #align matrix.subsingleton_of_empty_right Matrix.subsingleton_of_empty_right
 -/
 
@@ -613,10 +602,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Zero.{u2} α], Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.diagonal.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) _inst_2 (fun (_x : n) => OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α _inst_2))) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n α) 0 (Zero.toOfNat0.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.zero.{u2, u1, u1} n n α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align matrix.diagonal_zero Matrix.diagonal_zeroₓ'. -/
 @[simp]
-theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 :=
-  by
-  ext
-  simp [diagonal]
+theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := by ext; simp [diagonal]
 #align matrix.diagonal_zero Matrix.diagonal_zero
 
 /- warning: matrix.diagonal_transpose -> Matrix.diagonal_transpose is a dubious translation:
@@ -690,10 +676,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.diagonal_map Matrix.diagonal_mapₓ'. -/
 @[simp]
 theorem diagonal_map [Zero α] [Zero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
-    (diagonal d).map f = diagonal fun m => f (d m) :=
-  by
-  ext
-  simp only [diagonal_apply, map_apply]
+    (diagonal d).map f = diagonal fun m => f (d m) := by ext; simp only [diagonal_apply, map_apply];
   split_ifs <;> simp [h]
 #align matrix.diagonal_map Matrix.diagonal_map
 
@@ -779,10 +762,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.map_one Matrix.map_oneₓ'. -/
 @[simp]
 theorem map_one [Zero β] [One β] (f : α → β) (h₀ : f 0 = 0) (h₁ : f 1 = 1) :
-    (1 : Matrix n n α).map f = (1 : Matrix n n β) :=
-  by
-  ext
-  simp only [one_apply, map_apply]
+    (1 : Matrix n n α).map f = (1 : Matrix n n β) := by ext; simp only [one_apply, map_apply];
   split_ifs <;> simp [h₀, h₁]
 #align matrix.map_one Matrix.map_one
 
@@ -1530,9 +1510,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.smul_mul Matrix.smul_mulₓ'. -/
 @[simp]
 theorem smul_mul [Fintype n] [Monoid R] [DistribMulAction R α] [IsScalarTower R α α] (a : R)
-    (M : Matrix m n α) (N : Matrix n l α) : (a • M) ⬝ N = a • M ⬝ N :=
-  by
-  ext
+    (M : Matrix m n α) (N : Matrix n l α) : (a • M) ⬝ N = a • M ⬝ N := by ext;
   apply smul_dot_product
 #align matrix.smul_mul Matrix.smul_mul
 
@@ -1544,9 +1522,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.mul_smul Matrix.mul_smulₓ'. -/
 @[simp]
 theorem mul_smul [Fintype n] [Monoid R] [DistribMulAction R α] [SMulCommClass R α α]
-    (M : Matrix m n α) (a : R) (N : Matrix n l α) : M ⬝ (a • N) = a • M ⬝ N :=
-  by
-  ext
+    (M : Matrix m n α) (a : R) (N : Matrix n l α) : M ⬝ (a • N) = a • M ⬝ N := by ext;
   apply dot_product_smul
 #align matrix.mul_smul Matrix.mul_smul
 
@@ -1563,10 +1539,8 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u1}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} α] [_inst_2 : Fintype.{u3} n] (M : Matrix.{u2, u3, u4} m n α), Eq.{max (max (succ u4) (succ u2)) (succ u1)} (Matrix.{u2, u1, u4} m o α) (Matrix.mul.{u4, u2, u3, u1} m n o α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) M (OfNat.ofNat.{max (max u4 u3) u1} (Matrix.{u3, u1, u4} n o α) 0 (Zero.toOfNat0.{max (max u4 u3) u1} (Matrix.{u3, u1, u4} n o α) (Matrix.zero.{u4, u3, u1} n o α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)))))) (OfNat.ofNat.{max (max u4 u2) u1} (Matrix.{u2, u1, u4} m o α) 0 (Zero.toOfNat0.{max (max u4 u2) u1} (Matrix.{u2, u1, u4} m o α) (Matrix.zero.{u4, u2, u1} m o α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_zero Matrix.mul_zeroₓ'. -/
 @[simp]
-protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 :=
-  by
-  ext (i j)
-  apply dot_product_zero
+protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 := by
+  ext (i j); apply dot_product_zero
 #align matrix.mul_zero Matrix.mul_zero
 
 /- warning: matrix.zero_mul -> Matrix.zero_mul is a dubious translation:
@@ -1576,10 +1550,8 @@ but is expected to have type
   forall {l : Type.{u1}} {m : Type.{u3}} {n : Type.{u2}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} α] [_inst_2 : Fintype.{u3} m] (M : Matrix.{u3, u2, u4} m n α), Eq.{max (max (succ u4) (succ u1)) (succ u2)} (Matrix.{u1, u2, u4} l n α) (Matrix.mul.{u4, u1, u3, u2} l m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) (OfNat.ofNat.{max (max u4 u1) u3} (Matrix.{u1, u3, u4} l m α) 0 (Zero.toOfNat0.{max (max u4 u1) u3} (Matrix.{u1, u3, u4} l m α) (Matrix.zero.{u4, u1, u3} l m α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1))))) M) (OfNat.ofNat.{max (max u4 u1) u2} (Matrix.{u1, u2, u4} l n α) 0 (Zero.toOfNat0.{max (max u4 u1) u2} (Matrix.{u1, u2, u4} l n α) (Matrix.zero.{u4, u1, u2} l n α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.zero_mul Matrix.zero_mulₓ'. -/
 @[simp]
-protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 :=
-  by
-  ext (i j)
-  apply zero_dot_product
+protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 := by
+  ext (i j); apply zero_dot_product
 #align matrix.zero_mul Matrix.zero_mul
 
 /- warning: matrix.mul_add -> Matrix.mul_add is a dubious translation:
@@ -1589,9 +1561,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u3}} {o : Type.{u1}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} α] [_inst_2 : Fintype.{u3} n] (L : Matrix.{u2, u3, u4} m n α) (M : Matrix.{u3, u1, u4} n o α) (N : Matrix.{u3, u1, u4} n o α), Eq.{max (max (succ u4) (succ u2)) (succ u1)} (Matrix.{u2, u1, u4} m o α) (Matrix.mul.{u4, u2, u3, u1} m n o α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) L (HAdd.hAdd.{max (max u4 u3) u1, max (max u4 u3) u1, max (max u4 u3) u1} (Matrix.{u3, u1, u4} n o α) (Matrix.{u3, u1, u4} n o α) (Matrix.{u3, u1, u4} n o α) (instHAdd.{max (max u4 u3) u1} (Matrix.{u3, u1, u4} n o α) (Matrix.add.{u4, u3, u1} n o α (Distrib.toAdd.{u4} α (NonUnitalNonAssocSemiring.toDistrib.{u4} α _inst_1)))) M N)) (HAdd.hAdd.{max (max u4 u2) u1, max (max u4 u2) u1, max (max u4 u2) u1} (Matrix.{u2, u1, u4} m o α) (Matrix.{u2, u1, u4} m o α) (Matrix.{u2, u1, u4} m o α) (instHAdd.{max (max u4 u2) u1} (Matrix.{u2, u1, u4} m o α) (Matrix.add.{u4, u2, u1} m o α (Distrib.toAdd.{u4} α (NonUnitalNonAssocSemiring.toDistrib.{u4} α _inst_1)))) (Matrix.mul.{u4, u2, u3, u1} m n o α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) L M) (Matrix.mul.{u4, u2, u3, u1} m n o α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) L N))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_add Matrix.mul_addₓ'. -/
 protected theorem mul_add [Fintype n] (L : Matrix m n α) (M N : Matrix n o α) :
-    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by
-  ext (i j)
-  apply dot_product_add
+    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by ext (i j); apply dot_product_add
 #align matrix.mul_add Matrix.mul_add
 
 /- warning: matrix.add_mul -> Matrix.add_mul is a dubious translation:
@@ -1601,9 +1571,7 @@ but is expected to have type
   forall {l : Type.{u2}} {m : Type.{u3}} {n : Type.{u1}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} α] [_inst_2 : Fintype.{u3} m] (L : Matrix.{u2, u3, u4} l m α) (M : Matrix.{u2, u3, u4} l m α) (N : Matrix.{u3, u1, u4} m n α), Eq.{max (max (succ u4) (succ u2)) (succ u1)} (Matrix.{u2, u1, u4} l n α) (Matrix.mul.{u4, u2, u3, u1} l m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) (HAdd.hAdd.{max (max u4 u2) u3, max (max u4 u2) u3, max (max u4 u2) u3} (Matrix.{u2, u3, u4} l m α) (Matrix.{u2, u3, u4} l m α) (Matrix.{u2, u3, u4} l m α) (instHAdd.{max (max u4 u2) u3} (Matrix.{u2, u3, u4} l m α) (Matrix.add.{u4, u2, u3} l m α (Distrib.toAdd.{u4} α (NonUnitalNonAssocSemiring.toDistrib.{u4} α _inst_1)))) L M) N) (HAdd.hAdd.{max (max u4 u2) u1, max (max u4 u2) u1, max (max u4 u2) u1} (Matrix.{u2, u1, u4} l n α) (Matrix.{u2, u1, u4} l n α) (Matrix.{u2, u1, u4} l n α) (instHAdd.{max (max u4 u2) u1} (Matrix.{u2, u1, u4} l n α) (Matrix.add.{u4, u2, u1} l n α (Distrib.toAdd.{u4} α (NonUnitalNonAssocSemiring.toDistrib.{u4} α _inst_1)))) (Matrix.mul.{u4, u2, u3, u1} l m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) L N) (Matrix.mul.{u4, u2, u3, u1} l m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1) M N))
 Case conversion may be inaccurate. Consider using '#align matrix.add_mul Matrix.add_mulₓ'. -/
 protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) :
-    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by
-  ext (i j)
-  apply add_dot_product
+    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by ext (i j); apply add_dot_product
 #align matrix.add_mul Matrix.add_mul
 
 instance [Fintype n] : NonUnitalNonAssocSemiring (Matrix n n α) :=
@@ -1636,10 +1604,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.mul_diagonal Matrix.mul_diagonalₓ'. -/
 @[simp]
 theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n α) (i j) :
-    (M ⬝ diagonal d) i j = M i j * d j :=
-  by
-  rw [← diagonal_transpose]
-  apply dot_product_diagonal
+    (M ⬝ diagonal d) i j = M i j * d j := by rw [← diagonal_transpose]; apply dot_product_diagonal
 #align matrix.mul_diagonal Matrix.mul_diagonal
 
 /- warning: matrix.diagonal_mul_diagonal -> Matrix.diagonal_mul_diagonal is a dubious translation:
@@ -1672,9 +1637,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] [_inst_3 : DecidableEq.{succ u2} m] (M : Matrix.{u2, u1, u3} m n α) (a : α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u2, u1, u3} m n α) (HSMul.hSMul.{u3, max (max u3 u2) u1, max (max u3 u2) u1} α (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (instHSMul.{u3, max (max u3 u2) u1} α (Matrix.{u2, u1, u3} m n α) (Matrix.smul.{u3, u2, u1, u3} m n α α (SMulZeroClass.toSMul.{u3, u3} α α (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)) (SMulWithZero.toSMulZeroClass.{u3, u3} α α (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)) (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)) (MulZeroClass.toSMulWithZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))) a M) (Matrix.mul.{u3, u2, u2, u1} m m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u3} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α _inst_1) (Matrix.diagonal.{u3, u2} m α (fun (a : m) (b : m) => _inst_3 a b) (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)) (fun (_x : m) => a)) M)
 Case conversion may be inaccurate. Consider using '#align matrix.smul_eq_diagonal_mul Matrix.smul_eq_diagonal_mulₓ'. -/
 theorem smul_eq_diagonal_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) (a : α) :
-    a • M = (diagonal fun _ => a) ⬝ M := by
-  ext
-  simp
+    a • M = (diagonal fun _ => a) ⬝ M := by ext; simp
 #align matrix.smul_eq_diagonal_mul Matrix.smul_eq_diagonal_mul
 
 /- warning: matrix.diag_col_mul_row -> Matrix.diag_col_mul_row is a dubious translation:
@@ -1684,9 +1647,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : NonUnitalNonAssocSemiring.{u2} α] (a : n -> α) (b : n -> α), Eq.{max (succ u2) (succ u1)} (n -> α) (Matrix.diag.{u2, u1} n α (Matrix.mul.{u2, u1, 0, u1} n Unit n α PUnit.fintype.{0} (NonUnitalNonAssocSemiring.toMul.{u2} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α _inst_1) (Matrix.col.{u2, u1} n α a) (Matrix.row.{u2, u1} n α b))) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (n -> α) (n -> α) (n -> α) (instHMul.{max u2 u1} (n -> α) (Pi.instMul.{u1, u2} n (fun (i : n) => α) (fun (i : n) => NonUnitalNonAssocSemiring.toMul.{u2} α _inst_1))) a b)
 Case conversion may be inaccurate. Consider using '#align matrix.diag_col_mul_row Matrix.diag_col_mul_rowₓ'. -/
 @[simp]
-theorem diag_col_mul_row (a b : n → α) : diag (col a ⬝ row b) = a * b :=
-  by
-  ext
+theorem diag_col_mul_row (a b : n → α) : diag (col a ⬝ row b) = a * b := by ext;
   simp [Matrix.mul_apply, col, row]
 #align matrix.diag_col_mul_row Matrix.diag_col_mul_row
 
@@ -1803,10 +1764,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.map_mul Matrix.map_mulₓ'. -/
 @[simp]
 theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
-    {f : α →+* β} : (L ⬝ M).map f = L.map f ⬝ M.map f :=
-  by
-  ext
-  simp [mul_apply, RingHom.map_sum]
+    {f : α →+* β} : (L ⬝ M).map f = L.map f ⬝ M.map f := by ext; simp [mul_apply, RingHom.map_sum]
 #align matrix.map_mul Matrix.map_mul
 
 variable (α n)
@@ -1835,9 +1793,7 @@ but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {α : Type.{u5}} [_inst_1 : NonUnitalSemiring.{u5} α] [_inst_2 : Fintype.{u3} m] [_inst_3 : Fintype.{u2} n] (L : Matrix.{u4, u3, u5} l m α) (M : Matrix.{u3, u2, u5} m n α) (N : Matrix.{u2, u1, u5} n o α), Eq.{max (max (succ u5) (succ u4)) (succ u1)} (Matrix.{u4, u1, u5} l o α) (Matrix.mul.{u5, u4, u2, u1} l n o α _inst_3 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) (Matrix.mul.{u5, u4, u3, u2} l m n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) L M) N) (Matrix.mul.{u5, u4, u3, u1} l m o α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) L (Matrix.mul.{u5, u3, u2, u1} m n o α _inst_3 (NonUnitalNonAssocSemiring.toMul.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u5} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u5} α _inst_1)) M N))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_assoc Matrix.mul_assocₓ'. -/
 protected theorem mul_assoc (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) :
-    L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by
-  ext
-  apply dot_product_assoc
+    L ⬝ M ⬝ N = L ⬝ (M ⬝ N) := by ext; apply dot_product_assoc
 #align matrix.mul_assoc Matrix.mul_assoc
 
 instance : NonUnitalSemiring (Matrix n n α) :=
@@ -1865,9 +1821,7 @@ but is expected to have type
   forall {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocRing.{u4} α] [_inst_2 : Fintype.{u2} n] (M : Matrix.{u3, u2, u4} m n α) (N : Matrix.{u2, u1, u4} n o α), Eq.{max (max (succ u4) (succ u3)) (succ u1)} (Matrix.{u3, u1, u4} m o α) (Matrix.mul.{u4, u3, u2, u1} m n o α _inst_2 (NonUnitalNonAssocRing.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} α _inst_1)) (Neg.neg.{max (max u4 u3) u2} (Matrix.{u3, u2, u4} m n α) (Matrix.neg.{u4, u3, u2} m n α (NegZeroClass.toNeg.{u4} α (SubNegZeroMonoid.toNegZeroClass.{u4} α (SubtractionMonoid.toSubNegZeroMonoid.{u4} α (SubtractionCommMonoid.toSubtractionMonoid.{u4} α (AddCommGroup.toDivisionAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toAddCommGroup.{u4} α _inst_1))))))) M) N) (Neg.neg.{max (max u4 u3) u1} (Matrix.{u3, u1, u4} m o α) (Matrix.neg.{u4, u3, u1} m o α (NegZeroClass.toNeg.{u4} α (SubNegZeroMonoid.toNegZeroClass.{u4} α (SubtractionMonoid.toSubNegZeroMonoid.{u4} α (SubtractionCommMonoid.toSubtractionMonoid.{u4} α (AddCommGroup.toDivisionAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toAddCommGroup.{u4} α _inst_1))))))) (Matrix.mul.{u4, u3, u2, u1} m n o α _inst_2 (NonUnitalNonAssocRing.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} α _inst_1)) M N))
 Case conversion may be inaccurate. Consider using '#align matrix.neg_mul Matrix.neg_mulₓ'. -/
 @[simp]
-protected theorem neg_mul (M : Matrix m n α) (N : Matrix n o α) : (-M) ⬝ N = -M ⬝ N :=
-  by
-  ext
+protected theorem neg_mul (M : Matrix m n α) (N : Matrix n o α) : (-M) ⬝ N = -M ⬝ N := by ext;
   apply neg_dot_product
 #align matrix.neg_mul Matrix.neg_mul
 
@@ -1878,9 +1832,7 @@ but is expected to have type
   forall {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocRing.{u4} α] [_inst_2 : Fintype.{u2} n] (M : Matrix.{u3, u2, u4} m n α) (N : Matrix.{u2, u1, u4} n o α), Eq.{max (max (succ u4) (succ u3)) (succ u1)} (Matrix.{u3, u1, u4} m o α) (Matrix.mul.{u4, u3, u2, u1} m n o α _inst_2 (NonUnitalNonAssocRing.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} α _inst_1)) M (Neg.neg.{max (max u4 u2) u1} (Matrix.{u2, u1, u4} n o α) (Matrix.neg.{u4, u2, u1} n o α (NegZeroClass.toNeg.{u4} α (SubNegZeroMonoid.toNegZeroClass.{u4} α (SubtractionMonoid.toSubNegZeroMonoid.{u4} α (SubtractionCommMonoid.toSubtractionMonoid.{u4} α (AddCommGroup.toDivisionAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toAddCommGroup.{u4} α _inst_1))))))) N)) (Neg.neg.{max (max u4 u3) u1} (Matrix.{u3, u1, u4} m o α) (Matrix.neg.{u4, u3, u1} m o α (NegZeroClass.toNeg.{u4} α (SubNegZeroMonoid.toNegZeroClass.{u4} α (SubtractionMonoid.toSubNegZeroMonoid.{u4} α (SubtractionCommMonoid.toSubtractionMonoid.{u4} α (AddCommGroup.toDivisionAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toAddCommGroup.{u4} α _inst_1))))))) (Matrix.mul.{u4, u3, u2, u1} m n o α _inst_2 (NonUnitalNonAssocRing.toMul.{u4} α _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u4} α _inst_1)) M N))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_neg Matrix.mul_negₓ'. -/
 @[simp]
-protected theorem mul_neg (M : Matrix m n α) (N : Matrix n o α) : M ⬝ (-N) = -M ⬝ N :=
-  by
-  ext
+protected theorem mul_neg (M : Matrix m n α) (N : Matrix n o α) : M ⬝ (-N) = -M ⬝ N := by ext;
   apply dot_product_neg
 #align matrix.mul_neg Matrix.mul_neg
 
@@ -1957,10 +1909,7 @@ def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
         Matrix n n α) with
     toFun := fun a => a • 1
     map_one' := by simp
-    map_mul' := by
-      intros
-      ext
-      simp [mul_assoc] }
+    map_mul' := by intros ; ext; simp [mul_assoc] }
 #align matrix.scalar Matrix.scalar
 -/
 
@@ -2011,8 +1960,7 @@ theorem scalar_inj [Nonempty n] {r s : α} : scalar n r = scalar n s ↔ r = s :
   · intro h
     inhabit n
     rw [← scalar_apply_eq r (Inhabited.default n), ← scalar_apply_eq s (Inhabited.default n), h]
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align matrix.scalar_inj Matrix.scalar_inj
 
 end Scalar
@@ -2030,9 +1978,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : CommSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] [_inst_3 : DecidableEq.{succ u2} n] (M : Matrix.{u1, u2, u3} m n α) (a : α), Eq.{max (max (succ u3) (succ u1)) (succ u2)} (Matrix.{u1, u2, u3} m n α) (HSMul.hSMul.{u3, max (max u3 u1) u2, max (max u3 u1) u2} α (Matrix.{u1, u2, u3} m n α) (Matrix.{u1, u2, u3} m n α) (instHSMul.{u3, max (max u3 u1) u2} α (Matrix.{u1, u2, u3} m n α) (Matrix.smul.{u3, u1, u2, u3} m n α α (Algebra.toSMul.{u3, u3} α α _inst_1 (CommSemiring.toSemiring.{u3} α _inst_1) (Algebra.id.{u3} α _inst_1)))) a M) (Matrix.mul.{u3, u1, u2, u2} m n n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u3} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α (CommSemiring.toSemiring.{u3} α _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α (CommSemiring.toSemiring.{u3} α _inst_1)))) M (Matrix.diagonal.{u3, u2} n α (fun (a : n) (b : n) => _inst_3 a b) (CommMonoidWithZero.toZero.{u3} α (CommSemiring.toCommMonoidWithZero.{u3} α _inst_1)) (fun (_x : n) => a)))
 Case conversion may be inaccurate. Consider using '#align matrix.smul_eq_mul_diagonal Matrix.smul_eq_mul_diagonalₓ'. -/
 theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) :
-    a • M = M ⬝ diagonal fun _ => a := by
-  ext
-  simp [mul_comm]
+    a • M = M ⬝ diagonal fun _ => a := by ext; simp [mul_comm]
 #align matrix.smul_eq_mul_diagonal Matrix.smul_eq_mul_diagonal
 
 /- warning: matrix.mul_mul_right -> Matrix.mul_mul_right is a dubious translation:
@@ -2625,10 +2571,8 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Mul.{u3} α] [_inst_2 : AddCommMonoid.{u3} α] (w : m -> α) (v : n -> α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u2, u1, u3} m n α) (Matrix.vecMulVec.{u3, u2, u1} m n α _inst_1 w v) (Matrix.mul.{u3, u2, 0, u1} m Unit n α PUnit.fintype.{0} _inst_1 _inst_2 (Matrix.col.{u3, u2} m α w) (Matrix.row.{u3, u1} n α v))
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_vec_eq Matrix.vecMulVec_eqₓ'. -/
 theorem vecMulVec_eq [Mul α] [AddCommMonoid α] (w : m → α) (v : n → α) :
-    vecMulVec w v = col w ⬝ row v := by
-  ext (i j)
-  simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]
-  rfl
+    vecMulVec w v = col w ⬝ row v := by ext (i j);
+  simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]; rfl
 #align matrix.vec_mul_vec_eq Matrix.vecMulVec_eq
 
 section NonUnitalNonAssocSemiring
@@ -2660,9 +2604,7 @@ def mulVec.addMonoidHomLeft [Fintype n] (v : n → α) : Matrix m n α →+ m �
     where
   toFun M := mulVec M v
   map_zero' := by ext <;> simp [mul_vec] <;> rfl
-  map_add' x y := by
-    ext m
-    apply add_dot_product
+  map_add' x y := by ext m; apply add_dot_product
 #align matrix.mul_vec.add_monoid_hom_left Matrix.mulVec.addMonoidHomLeft
 -/
 
@@ -2708,10 +2650,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (A : Matrix.{u1, u2, u3} m n α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 A (OfNat.ofNat.{max u3 u2} (n -> α) 0 (Zero.toOfNat0.{max u3 u2} (n -> α) (Pi.instZero.{u2, u3} n (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18071 : n) => α) (fun (i : n) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))) (OfNat.ofNat.{max u3 u1} (m -> α) 0 (Zero.toOfNat0.{max u3 u1} (m -> α) (Pi.instZero.{u1, u3} m (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18074 : m) => α) (fun (i : m) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_zero Matrix.mulVec_zeroₓ'. -/
 @[simp]
-theorem mulVec_zero [Fintype n] (A : Matrix m n α) : mulVec A 0 = 0 :=
-  by
-  ext
-  simp [mul_vec]
+theorem mulVec_zero [Fintype n] (A : Matrix m n α) : mulVec A 0 = 0 := by ext; simp [mul_vec]
 #align matrix.mul_vec_zero Matrix.mulVec_zero
 
 /- warning: matrix.zero_vec_mul -> Matrix.zero_vecMul is a dubious translation:
@@ -2721,10 +2660,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] (A : Matrix.{u2, u1, u3} m n α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 (OfNat.ofNat.{max u2 u3} (m -> α) 0 (Zero.toOfNat0.{max u3 u2} (m -> α) (Pi.instZero.{u2, u3} m (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18125 : m) => α) (fun (i : m) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1))))) A) (OfNat.ofNat.{max u3 u1} (n -> α) 0 (Zero.toOfNat0.{max u3 u1} (n -> α) (Pi.instZero.{u1, u3} n (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18132 : n) => α) (fun (i : n) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.zero_vec_mul Matrix.zero_vecMulₓ'. -/
 @[simp]
-theorem zero_vecMul [Fintype m] (A : Matrix m n α) : vecMul 0 A = 0 :=
-  by
-  ext
-  simp [vec_mul]
+theorem zero_vecMul [Fintype m] (A : Matrix m n α) : vecMul 0 A = 0 := by ext; simp [vec_mul]
 #align matrix.zero_vec_mul Matrix.zero_vecMul
 
 /- warning: matrix.zero_mul_vec -> Matrix.zero_mulVec is a dubious translation:
@@ -2734,9 +2670,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (v : n -> α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 (OfNat.ofNat.{max (max u3 u1) u2} (Matrix.{u1, u2, u3} m n α) 0 (Zero.toOfNat0.{max (max u3 u1) u2} (Matrix.{u1, u2, u3} m n α) (Matrix.zero.{u3, u1, u2} m n α (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1))))) v) (OfNat.ofNat.{max u3 u1} (m -> α) 0 (Zero.toOfNat0.{max u3 u1} (m -> α) (Pi.instZero.{u1, u3} m (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18074 : m) => α) (fun (i : m) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.zero_mul_vec Matrix.zero_mulVecₓ'. -/
 @[simp]
-theorem zero_mulVec [Fintype n] (v : n → α) : mulVec (0 : Matrix m n α) v = 0 :=
-  by
-  ext
+theorem zero_mulVec [Fintype n] (v : n → α) : mulVec (0 : Matrix m n α) v = 0 := by ext;
   simp [mul_vec]
 #align matrix.zero_mul_vec Matrix.zero_mulVec
 
@@ -2747,9 +2681,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] (v : m -> α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 v (OfNat.ofNat.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.zero.{u3, u2, u1} m n α (MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))) (OfNat.ofNat.{max u3 u1} (n -> α) 0 (Zero.toOfNat0.{max u3 u1} (n -> α) (Pi.instZero.{u1, u3} n (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18132 : n) => α) (fun (i : n) => MulZeroClass.toZero.{u3} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u3} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_zero Matrix.vecMul_zeroₓ'. -/
 @[simp]
-theorem vecMul_zero [Fintype m] (v : m → α) : vecMul v (0 : Matrix m n α) = 0 :=
-  by
-  ext
+theorem vecMul_zero [Fintype m] (v : m → α) : vecMul v (0 : Matrix m n α) = 0 := by ext;
   simp [vec_mul]
 #align matrix.vec_mul_zero Matrix.vecMul_zero
 
@@ -2760,9 +2692,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u3}} {R : Type.{u2}} {α : Type.{u4}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} α] [_inst_2 : Fintype.{u3} n] [_inst_3 : Monoid.{u2} R] [_inst_4 : DistribMulAction.{u2, u4} R α _inst_3 (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1))] [_inst_5 : IsScalarTower.{u2, u4, u4} R α α (SMulZeroClass.toSMul.{u2, u4} R α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (DistribSMul.toSMulZeroClass.{u2, u4} R α (AddMonoid.toAddZeroClass.{u4} α (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1))) (DistribMulAction.toDistribSMul.{u2, u4} R α _inst_3 (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1)) _inst_4))) (SMulZeroClass.toSMul.{u4, u4} α α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (SMulWithZero.toSMulZeroClass.{u4, u4} α α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (MulZeroClass.toSMulWithZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)))) (SMulZeroClass.toSMul.{u2, u4} R α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (DistribSMul.toSMulZeroClass.{u2, u4} R α (AddMonoid.toAddZeroClass.{u4} α (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1))) (DistribMulAction.toDistribSMul.{u2, u4} R α _inst_3 (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1)) _inst_4)))] (a : R) (A : Matrix.{u1, u3, u4} m n α) (b : n -> α), Eq.{max (succ u4) (succ u1)} (m -> α) (Matrix.mulVec.{u4, u1, u3} m n α _inst_1 _inst_2 (HSMul.hSMul.{u2, max (max u4 u1) u3, max (max u4 u1) u3} R (Matrix.{u1, u3, u4} m n α) (Matrix.{u1, u3, u4} m n α) (instHSMul.{u2, max (max u4 u1) u3} R (Matrix.{u1, u3, u4} m n α) (Matrix.smul.{u4, u1, u3, u2} m n R α (SMulZeroClass.toSMul.{u2, u4} R α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (DistribSMul.toSMulZeroClass.{u2, u4} R α (AddMonoid.toAddZeroClass.{u4} α (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1))) (DistribMulAction.toDistribSMul.{u2, u4} R α _inst_3 (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1)) _inst_4))))) a A) b) (HSMul.hSMul.{u2, max u4 u1, max u4 u1} R (m -> α) (m -> α) (instHSMul.{u2, max u4 u1} R (m -> α) (Pi.instSMul.{u1, u4, u2} m R (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18074 : m) => α) (fun (i : m) => SMulZeroClass.toSMul.{u2, u4} R α (MulZeroClass.toZero.{u4} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u4} α _inst_1)) (DistribSMul.toSMulZeroClass.{u2, u4} R α (AddMonoid.toAddZeroClass.{u4} α (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1))) (DistribMulAction.toDistribSMul.{u2, u4} R α _inst_3 (AddCommMonoid.toAddMonoid.{u4} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u4} α _inst_1)) _inst_4))))) a (Matrix.mulVec.{u4, u1, u3} m n α _inst_1 _inst_2 A b))
 Case conversion may be inaccurate. Consider using '#align matrix.smul_mul_vec_assoc Matrix.smul_mulVec_assocₓ'. -/
 theorem smul_mulVec_assoc [Fintype n] [Monoid R] [DistribMulAction R α] [IsScalarTower R α α]
-    (a : R) (A : Matrix m n α) (b : n → α) : (a • A).mulVec b = a • A.mulVec b :=
-  by
-  ext
+    (a : R) (A : Matrix m n α) (b : n → α) : (a • A).mulVec b = a • A.mulVec b := by ext;
   apply smul_dot_product
 #align matrix.smul_mul_vec_assoc Matrix.smul_mulVec_assoc
 
@@ -2773,10 +2703,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (A : Matrix.{u1, u2, u3} m n α) (x : n -> α) (y : n -> α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 A (HAdd.hAdd.{max u3 u2, max u3 u2, max u3 u2} (n -> α) (n -> α) (n -> α) (instHAdd.{max u3 u2} (n -> α) (Pi.instAdd.{u2, u3} n (fun (ᾰ : n) => α) (fun (i : n) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) x y)) (HAdd.hAdd.{max u3 u1, max u3 u1, max u3 u1} (m -> α) (m -> α) (m -> α) (instHAdd.{max u3 u1} (m -> α) (Pi.instAdd.{u1, u3} m (fun (ᾰ : m) => α) (fun (i : m) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 A x) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 A y))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_add Matrix.mulVec_addₓ'. -/
 theorem mulVec_add [Fintype n] (A : Matrix m n α) (x y : n → α) :
-    A.mulVec (x + y) = A.mulVec x + A.mulVec y :=
-  by
-  ext
-  apply dot_product_add
+    A.mulVec (x + y) = A.mulVec x + A.mulVec y := by ext; apply dot_product_add
 #align matrix.mul_vec_add Matrix.mulVec_add
 
 /- warning: matrix.add_mul_vec -> Matrix.add_mulVec is a dubious translation:
@@ -2786,10 +2713,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (A : Matrix.{u1, u2, u3} m n α) (B : Matrix.{u1, u2, u3} m n α) (x : n -> α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 (HAdd.hAdd.{max (max u3 u1) u2, max (max u3 u1) u2, max (max u3 u1) u2} (Matrix.{u1, u2, u3} m n α) (Matrix.{u1, u2, u3} m n α) (Matrix.{u1, u2, u3} m n α) (instHAdd.{max (max u3 u1) u2} (Matrix.{u1, u2, u3} m n α) (Matrix.add.{u3, u1, u2} m n α (Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) A B) x) (HAdd.hAdd.{max u3 u1, max u3 u1, max u3 u1} (m -> α) (m -> α) (m -> α) (instHAdd.{max u3 u1} (m -> α) (Pi.instAdd.{u1, u3} m (fun (ᾰ : m) => α) (fun (i : m) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 A x) (Matrix.mulVec.{u3, u1, u2} m n α _inst_1 _inst_2 B x))
 Case conversion may be inaccurate. Consider using '#align matrix.add_mul_vec Matrix.add_mulVecₓ'. -/
 theorem add_mulVec [Fintype n] (A B : Matrix m n α) (x : n → α) :
-    (A + B).mulVec x = A.mulVec x + B.mulVec x :=
-  by
-  ext
-  apply add_dot_product
+    (A + B).mulVec x = A.mulVec x + B.mulVec x := by ext; apply add_dot_product
 #align matrix.add_mul_vec Matrix.add_mulVec
 
 /- warning: matrix.vec_mul_add -> Matrix.vecMul_add is a dubious translation:
@@ -2799,10 +2723,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] (A : Matrix.{u2, u1, u3} m n α) (B : Matrix.{u2, u1, u3} m n α) (x : m -> α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 x (HAdd.hAdd.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (instHAdd.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.add.{u3, u2, u1} m n α (Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) A B)) (HAdd.hAdd.{max u3 u1, max u3 u1, max u3 u1} (n -> α) (n -> α) (n -> α) (instHAdd.{max u3 u1} (n -> α) (Pi.instAdd.{u1, u3} n (fun (ᾰ : n) => α) (fun (i : n) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 x A) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 x B))
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_add Matrix.vecMul_addₓ'. -/
 theorem vecMul_add [Fintype m] (A B : Matrix m n α) (x : m → α) :
-    vecMul x (A + B) = vecMul x A + vecMul x B :=
-  by
-  ext
-  apply dot_product_add
+    vecMul x (A + B) = vecMul x A + vecMul x B := by ext; apply dot_product_add
 #align matrix.vec_mul_add Matrix.vecMul_add
 
 /- warning: matrix.add_vec_mul -> Matrix.add_vecMul is a dubious translation:
@@ -2812,10 +2733,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] (A : Matrix.{u2, u1, u3} m n α) (x : m -> α) (y : m -> α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 (HAdd.hAdd.{max u3 u2, max u3 u2, max u3 u2} (m -> α) (m -> α) (m -> α) (instHAdd.{max u3 u2} (m -> α) (Pi.instAdd.{u2, u3} m (fun (ᾰ : m) => α) (fun (i : m) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) x y) A) (HAdd.hAdd.{max u3 u1, max u3 u1, max u3 u1} (n -> α) (n -> α) (n -> α) (instHAdd.{max u3 u1} (n -> α) (Pi.instAdd.{u1, u3} n (fun (ᾰ : n) => α) (fun (i : n) => Distrib.toAdd.{u3} α (NonUnitalNonAssocSemiring.toDistrib.{u3} α _inst_1)))) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 x A) (Matrix.vecMul.{u3, u2, u1} m n α _inst_1 _inst_2 y A))
 Case conversion may be inaccurate. Consider using '#align matrix.add_vec_mul Matrix.add_vecMulₓ'. -/
 theorem add_vecMul [Fintype m] (A : Matrix m n α) (x y : m → α) :
-    vecMul (x + y) A = vecMul x A + vecMul y A :=
-  by
-  ext
-  apply add_dot_product
+    vecMul (x + y) A = vecMul x A + vecMul y A := by ext; apply add_dot_product
 #align matrix.add_vec_mul Matrix.add_vecMul
 
 /- warning: matrix.vec_mul_smul -> Matrix.vecMul_smul is a dubious translation:
@@ -2826,8 +2744,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_smul Matrix.vecMul_smulₓ'. -/
 theorem vecMul_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [DistribMulAction R S]
     [IsScalarTower R S S] (M : Matrix n m S) (b : R) (v : n → S) :
-    M.vecMul (b • v) = b • M.vecMul v := by
-  ext i
+    M.vecMul (b • v) = b • M.vecMul v := by ext i;
   simp only [vec_mul, dot_product, Finset.smul_sum, Pi.smul_apply, smul_mul_assoc]
 #align matrix.vec_mul_smul Matrix.vecMul_smul
 
@@ -2839,8 +2756,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_smul Matrix.mulVec_smulₓ'. -/
 theorem mulVec_smul [Fintype n] [Monoid R] [NonUnitalNonAssocSemiring S] [DistribMulAction R S]
     [SMulCommClass R S S] (M : Matrix m n S) (b : R) (v : n → S) :
-    M.mulVec (b • v) = b • M.mulVec v := by
-  ext i
+    M.mulVec (b • v) = b • M.mulVec v := by ext i;
   simp only [mul_vec, dot_product, Finset.smul_sum, Pi.smul_apply, mul_smul_comm]
 #align matrix.mul_vec_smul Matrix.mulVec_smul
 
@@ -2912,9 +2828,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_vec_mul Matrix.vecMul_vecMulₓ'. -/
 @[simp]
 theorem vecMul_vecMul [Fintype n] [Fintype m] (v : m → α) (M : Matrix m n α) (N : Matrix n o α) :
-    vecMul (vecMul v M) N = vecMul v (M ⬝ N) := by
-  ext
-  apply dot_product_assoc
+    vecMul (vecMul v M) N = vecMul v (M ⬝ N) := by ext; apply dot_product_assoc
 #align matrix.vec_mul_vec_mul Matrix.vecMul_vecMul
 
 /- warning: matrix.mul_vec_mul_vec -> Matrix.mulVec_mulVec is a dubious translation:
@@ -2925,10 +2839,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_mul_vec Matrix.mulVec_mulVecₓ'. -/
 @[simp]
 theorem mulVec_mulVec [Fintype n] [Fintype o] (v : o → α) (M : Matrix m n α) (N : Matrix n o α) :
-    mulVec M (mulVec N v) = mulVec (M ⬝ N) v := by
-  ext
-  symm
-  apply dot_product_assoc
+    mulVec M (mulVec N v) = mulVec (M ⬝ N) v := by ext; symm; apply dot_product_assoc
 #align matrix.mul_vec_mul_vec Matrix.mulVec_mulVec
 
 /- warning: matrix.star_mul_vec -> Matrix.star_mulVec is a dubious translation:
@@ -2982,9 +2893,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : NonUnitalSemiring.{u2} α] [_inst_2 : Fintype.{u1} n] (A : Matrix.{u1, u1, u2} n n α) (B : Matrix.{u1, u1, u2} n n α) (C : Matrix.{u1, u1, u2} n n α) (i : n) (j : n), Eq.{succ u2} α (Matrix.mul.{u2, u1, u1, u1} n n n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) (Matrix.mul.{u2, u1, u1, u1} n n n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) A B) C i j) (Matrix.dotProduct.{u2, u1} n α _inst_2 (NonUnitalNonAssocSemiring.toMul.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1)) (A i) (Matrix.mulVec.{u2, u1, u1} n n α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1) _inst_2 B (Matrix.transpose.{u2, u1, u1} n n α C j)))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_mul_apply Matrix.mul_mul_applyₓ'. -/
 theorem mul_mul_apply [Fintype n] (A B C : Matrix n n α) (i j : n) :
-    (A ⬝ B ⬝ C) i j = A i ⬝ᵥ B.mulVec (Cᵀ j) :=
-  by
-  rw [Matrix.mul_assoc]
+    (A ⬝ B ⬝ C) i j = A i ⬝ᵥ B.mulVec (Cᵀ j) := by rw [Matrix.mul_assoc];
   simpa only [mul_apply, dot_product, mul_vec]
 #align matrix.mul_mul_apply Matrix.mul_mul_apply
 
@@ -3023,9 +2932,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : NonAssocSemiring.{u2} α] [_inst_2 : Fintype.{u1} m] [_inst_4 : DecidableEq.{succ u1} m] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.mulVec.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1) _inst_2 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_4 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_1)) (NonAssocSemiring.toOne.{u2} α _inst_1)))) v) v
 Case conversion may be inaccurate. Consider using '#align matrix.one_mul_vec Matrix.one_mulVecₓ'. -/
 @[simp]
-theorem one_mulVec (v : m → α) : mulVec 1 v = v :=
-  by
-  ext
+theorem one_mulVec (v : m → α) : mulVec 1 v = v := by ext;
   rw [← diagonal_one, mul_vec_diagonal, one_mul]
 #align matrix.one_mul_vec Matrix.one_mulVec
 
@@ -3036,9 +2943,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : NonAssocSemiring.{u2} α] [_inst_2 : Fintype.{u1} m] [_inst_4 : DecidableEq.{succ u1} m] (v : m -> α), Eq.{max (succ u2) (succ u1)} (m -> α) (Matrix.vecMul.{u2, u1, u1} m m α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α _inst_1) _inst_2 v (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} m m α) (Matrix.one.{u2, u1} m α (fun (a : m) (b : m) => _inst_4 a b) (MulZeroOneClass.toZero.{u2} α (NonAssocSemiring.toMulZeroOneClass.{u2} α _inst_1)) (NonAssocSemiring.toOne.{u2} α _inst_1))))) v
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_one Matrix.vecMul_oneₓ'. -/
 @[simp]
-theorem vecMul_one (v : m → α) : vecMul v 1 = v :=
-  by
-  ext
+theorem vecMul_one (v : m → α) : vecMul v 1 = v := by ext;
   rw [← diagonal_one, vec_mul_diagonal, mul_one]
 #align matrix.vec_mul_one Matrix.vecMul_one
 
@@ -3054,10 +2959,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocRing.{u3} α] [_inst_2 : Fintype.{u2} m] (v : m -> α) (A : Matrix.{u2, u1, u3} m n α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 (Neg.neg.{max u3 u2} (m -> α) (Pi.instNeg.{u2, u3} m (fun (ᾰ : m) => α) (fun (i : m) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) v) A) (Neg.neg.{max u3 u1} (n -> α) (Pi.instNeg.{u1, u3} n (fun (ᾰ : n) => α) (fun (i : n) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) (Matrix.vecMul.{u3, u2, u1} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 v A))
 Case conversion may be inaccurate. Consider using '#align matrix.neg_vec_mul Matrix.neg_vecMulₓ'. -/
-theorem neg_vecMul [Fintype m] (v : m → α) (A : Matrix m n α) : vecMul (-v) A = -vecMul v A :=
-  by
-  ext
-  apply neg_dot_product
+theorem neg_vecMul [Fintype m] (v : m → α) (A : Matrix m n α) : vecMul (-v) A = -vecMul v A := by
+  ext; apply neg_dot_product
 #align matrix.neg_vec_mul Matrix.neg_vecMul
 
 /- warning: matrix.vec_mul_neg -> Matrix.vecMul_neg is a dubious translation:
@@ -3066,10 +2969,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocRing.{u3} α] [_inst_2 : Fintype.{u2} m] (v : m -> α) (A : Matrix.{u2, u1, u3} m n α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.vecMul.{u3, u2, u1} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 v (Neg.neg.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.neg.{u3, u2, u1} m n α (NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) A)) (Neg.neg.{max u3 u1} (n -> α) (Pi.instNeg.{u1, u3} n (fun (ᾰ : n) => α) (fun (i : n) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) (Matrix.vecMul.{u3, u2, u1} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 v A))
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_neg Matrix.vecMul_negₓ'. -/
-theorem vecMul_neg [Fintype m] (v : m → α) (A : Matrix m n α) : vecMul v (-A) = -vecMul v A :=
-  by
-  ext
-  apply dot_product_neg
+theorem vecMul_neg [Fintype m] (v : m → α) (A : Matrix m n α) : vecMul v (-A) = -vecMul v A := by
+  ext; apply dot_product_neg
 #align matrix.vec_mul_neg Matrix.vecMul_neg
 
 /- warning: matrix.neg_mul_vec -> Matrix.neg_mulVec is a dubious translation:
@@ -3078,10 +2979,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocRing.{u3} α] [_inst_2 : Fintype.{u2} n] (v : n -> α) (A : Matrix.{u1, u2, u3} m n α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 (Neg.neg.{max (max u3 u1) u2} (Matrix.{u1, u2, u3} m n α) (Matrix.neg.{u3, u1, u2} m n α (NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) A) v) (Neg.neg.{max u3 u1} (m -> α) (Pi.instNeg.{u1, u3} m (fun (ᾰ : m) => α) (fun (i : m) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) (Matrix.mulVec.{u3, u1, u2} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 A v))
 Case conversion may be inaccurate. Consider using '#align matrix.neg_mul_vec Matrix.neg_mulVecₓ'. -/
-theorem neg_mulVec [Fintype n] (v : n → α) (A : Matrix m n α) : mulVec (-A) v = -mulVec A v :=
-  by
-  ext
-  apply neg_dot_product
+theorem neg_mulVec [Fintype n] (v : n → α) (A : Matrix m n α) : mulVec (-A) v = -mulVec A v := by
+  ext; apply neg_dot_product
 #align matrix.neg_mul_vec Matrix.neg_mulVec
 
 /- warning: matrix.mul_vec_neg -> Matrix.mulVec_neg is a dubious translation:
@@ -3090,10 +2989,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalNonAssocRing.{u3} α] [_inst_2 : Fintype.{u2} n] (v : n -> α) (A : Matrix.{u1, u2, u3} m n α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 A (Neg.neg.{max u3 u2} (n -> α) (Pi.instNeg.{u2, u3} n (fun (ᾰ : n) => α) (fun (i : n) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) v)) (Neg.neg.{max u3 u1} (m -> α) (Pi.instNeg.{u1, u3} m (fun (ᾰ : m) => α) (fun (i : m) => NegZeroClass.toNeg.{u3} α (SubNegZeroMonoid.toNegZeroClass.{u3} α (SubtractionMonoid.toSubNegZeroMonoid.{u3} α (SubtractionCommMonoid.toSubtractionMonoid.{u3} α (AddCommGroup.toDivisionAddCommMonoid.{u3} α (NonUnitalNonAssocRing.toAddCommGroup.{u3} α _inst_1))))))) (Matrix.mulVec.{u3, u1, u2} m n α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u3} α _inst_1) _inst_2 A v))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_neg Matrix.mulVec_negₓ'. -/
-theorem mulVec_neg [Fintype n] (v : n → α) (A : Matrix m n α) : mulVec A (-v) = -mulVec A v :=
-  by
-  ext
-  apply dot_product_neg
+theorem mulVec_neg [Fintype n] (v : n → α) (A : Matrix m n α) : mulVec A (-v) = -mulVec A v := by
+  ext; apply dot_product_neg
 #align matrix.mul_vec_neg Matrix.mulVec_neg
 
 /- warning: matrix.sub_mul_vec -> Matrix.sub_mulVec is a dubious translation:
@@ -3128,10 +3025,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : NonUnitalCommSemiring.{u3} α] [_inst_2 : Fintype.{u2} m] (A : Matrix.{u2, u1, u3} m n α) (x : m -> α), Eq.{max (succ u3) (succ u1)} (n -> α) (Matrix.mulVec.{u3, u1, u2} n m α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u3} α _inst_1)) _inst_2 (Matrix.transpose.{u3, u2, u1} m n α A) x) (Matrix.vecMul.{u3, u2, u1} m n α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u3} α _inst_1)) _inst_2 x A)
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_transpose Matrix.mulVec_transposeₓ'. -/
-theorem mulVec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVec Aᵀ x = vecMul x A :=
-  by
-  ext
-  apply dot_product_comm
+theorem mulVec_transpose [Fintype m] (A : Matrix m n α) (x : m → α) : mulVec Aᵀ x = vecMul x A := by
+  ext; apply dot_product_comm
 #align matrix.mul_vec_transpose Matrix.mulVec_transpose
 
 /- warning: matrix.vec_mul_transpose -> Matrix.vecMul_transpose is a dubious translation:
@@ -3140,10 +3035,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : NonUnitalCommSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (A : Matrix.{u1, u2, u3} m n α) (x : n -> α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.vecMul.{u3, u2, u1} n m α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u3} α _inst_1)) _inst_2 x (Matrix.transpose.{u3, u1, u2} m n α A)) (Matrix.mulVec.{u3, u1, u2} m n α (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u3} α (NonUnitalCommSemiring.toNonUnitalSemiring.{u3} α _inst_1)) _inst_2 A x)
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_transpose Matrix.vecMul_transposeₓ'. -/
-theorem vecMul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMul x Aᵀ = mulVec A x :=
-  by
-  ext
-  apply dot_product_comm
+theorem vecMul_transpose [Fintype n] (A : Matrix m n α) (x : n → α) : vecMul x Aᵀ = mulVec A x := by
+  ext; apply dot_product_comm
 #align matrix.vec_mul_transpose Matrix.vecMul_transpose
 
 /- warning: matrix.mul_vec_vec_mul -> Matrix.mulVec_vecMul is a dubious translation:
@@ -3179,9 +3072,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : CommSemiring.{u3} α] [_inst_2 : Fintype.{u2} n] (A : Matrix.{u1, u2, u3} m n α) (b : n -> α) (a : α), Eq.{max (succ u3) (succ u1)} (m -> α) (Matrix.mulVec.{u3, u1, u2} m n α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α (CommSemiring.toSemiring.{u3} α _inst_1))) _inst_2 A (HSMul.hSMul.{u3, max u3 u2, max u3 u2} α (n -> α) (n -> α) (instHSMul.{u3, max u3 u2} α (n -> α) (Pi.instSMul.{u2, u3, u3} n α (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.20828 : n) => α) (fun (i : n) => Algebra.toSMul.{u3, u3} α α _inst_1 (CommSemiring.toSemiring.{u3} α _inst_1) (Algebra.id.{u3} α _inst_1)))) a b)) (HSMul.hSMul.{u3, max u3 u1, max u3 u1} α (m -> α) (m -> α) (instHSMul.{u3, max u3 u1} α (m -> α) (Pi.instSMul.{u1, u3, u3} m α (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.18074 : m) => α) (fun (i : m) => Algebra.toSMul.{u3, u3} α α _inst_1 (CommSemiring.toSemiring.{u3} α _inst_1) (Algebra.id.{u3} α _inst_1)))) a (Matrix.mulVec.{u3, u1, u2} m n α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} α (Semiring.toNonAssocSemiring.{u3} α (CommSemiring.toSemiring.{u3} α _inst_1))) _inst_2 A b))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_smul_assoc Matrix.mulVec_smul_assocₓ'. -/
 theorem mulVec_smul_assoc [Fintype n] (A : Matrix m n α) (b : n → α) (a : α) :
-    A.mulVec (a • b) = a • A.mulVec b := by
-  ext
-  apply dot_product_smul
+    A.mulVec (a • b) = a • A.mulVec b := by ext; apply dot_product_smul
 #align matrix.mul_vec_smul_assoc Matrix.mulVec_smul_assoc
 
 end CommSemiring
@@ -3233,10 +3124,8 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Add.{u3} α] (M : Matrix.{u2, u1, u3} m n α) (N : Matrix.{u2, u1, u3} m n α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u1, u2, u3} n m α) (Matrix.transpose.{u3, u2, u1} m n α (HAdd.hAdd.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (instHAdd.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.add.{u3, u2, u1} m n α _inst_1)) M N)) (HAdd.hAdd.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (Matrix.{u1, u2, u3} n m α) (Matrix.{u1, u2, u3} n m α) (Matrix.{u1, u2, u3} n m α) (instHAdd.{max (max u3 u2) u1} (Matrix.{u1, u2, u3} n m α) (Matrix.add.{u3, u1, u2} n m α _inst_1)) (Matrix.transpose.{u3, u2, u1} m n α M) (Matrix.transpose.{u3, u2, u1} m n α N))
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_add Matrix.transpose_addₓ'. -/
 @[simp]
-theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = Mᵀ + Nᵀ :=
-  by
-  ext (i j)
-  simp
+theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = Mᵀ + Nᵀ := by
+  ext (i j); simp
 #align matrix.transpose_add Matrix.transpose_add
 
 /- warning: matrix.transpose_sub -> Matrix.transpose_sub is a dubious translation:
@@ -3246,10 +3135,8 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Sub.{u3} α] (M : Matrix.{u2, u1, u3} m n α) (N : Matrix.{u2, u1, u3} m n α), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u1, u2, u3} n m α) (Matrix.transpose.{u3, u2, u1} m n α (HSub.hSub.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (Matrix.{u2, u1, u3} m n α) (instHSub.{max (max u3 u2) u1} (Matrix.{u2, u1, u3} m n α) (Matrix.sub.{u3, u2, u1} m n α _inst_1)) M N)) (HSub.hSub.{max (max u3 u2) u1, max (max u3 u2) u1, max (max u3 u2) u1} (Matrix.{u1, u2, u3} n m α) (Matrix.{u1, u2, u3} n m α) (Matrix.{u1, u2, u3} n m α) (instHSub.{max (max u3 u2) u1} (Matrix.{u1, u2, u3} n m α) (Matrix.sub.{u3, u1, u2} n m α _inst_1)) (Matrix.transpose.{u3, u2, u1} m n α M) (Matrix.transpose.{u3, u2, u1} m n α N))
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_sub Matrix.transpose_subₓ'. -/
 @[simp]
-theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = Mᵀ - Nᵀ :=
-  by
-  ext (i j)
-  simp
+theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = Mᵀ - Nᵀ := by
+  ext (i j); simp
 #align matrix.transpose_sub Matrix.transpose_sub
 
 /- warning: matrix.transpose_mul -> Matrix.transpose_mul is a dubious translation:
@@ -3273,10 +3160,8 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u4}} {R : Type.{u3}} [_inst_1 : SMul.{u3, u4} R α] (c : R) (M : Matrix.{u2, u1, u4} m n α), Eq.{max (max (succ u4) (succ u2)) (succ u1)} (Matrix.{u1, u2, u4} n m α) (Matrix.transpose.{u4, u2, u1} m n α (HSMul.hSMul.{u3, max (max u4 u2) u1, max (max u4 u2) u1} R (Matrix.{u2, u1, u4} m n α) (Matrix.{u2, u1, u4} m n α) (instHSMul.{u3, max (max u4 u2) u1} R (Matrix.{u2, u1, u4} m n α) (Matrix.smul.{u4, u2, u1, u3} m n R α _inst_1)) c M)) (HSMul.hSMul.{u3, max (max u1 u2) u4, max (max u4 u2) u1} R (Matrix.{u1, u2, u4} n m α) (Matrix.{u1, u2, u4} n m α) (instHSMul.{u3, max (max u4 u2) u1} R (Matrix.{u1, u2, u4} n m α) (Matrix.smul.{u4, u1, u2, u3} n m R α _inst_1)) c (Matrix.transpose.{u4, u2, u1} m n α M))
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_smul Matrix.transpose_smulₓ'. -/
 @[simp]
-theorem transpose_smul {R : Type _} [SMul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ :=
-  by
-  ext (i j)
-  rfl
+theorem transpose_smul {R : Type _} [SMul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ := by
+  ext (i j); rfl
 #align matrix.transpose_smul Matrix.transpose_smul
 
 /- warning: matrix.transpose_neg -> Matrix.transpose_neg is a dubious translation:
@@ -3295,10 +3180,7 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} {β : Type.{u4}} {f : α -> β} {M : Matrix.{u2, u1, u3} m n α}, Eq.{max (max (succ u4) (succ u2)) (succ u1)} (Matrix.{u1, u2, u4} n m β) (Matrix.map.{u3, u4, u1, u2} n m α β (Matrix.transpose.{u3, u2, u1} m n α M) f) (Matrix.transpose.{u4, u2, u1} m n β (Matrix.map.{u3, u4, u2, u1} m n α β M f))
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_map Matrix.transpose_mapₓ'. -/
-theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map f)ᵀ :=
-  by
-  ext
-  rfl
+theorem transpose_map {f : α → β} {M : Matrix m n α} : Mᵀ.map f = (M.map f)ᵀ := by ext; rfl
 #align matrix.transpose_map Matrix.transpose_map
 
 variable (m n α)
@@ -4403,10 +4285,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Add.{u2} α] (v : m -> α) (w : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, 0, u2} m Unit α) (Matrix.col.{u2, u1} m α (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (m -> α) (m -> α) (m -> α) (instHAdd.{max u2 u1} (m -> α) (Pi.instAdd.{u1, u2} m (fun (ᾰ : m) => α) (fun (i : m) => _inst_1))) v w)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{u1, 0, u2} m Unit α) (Matrix.{u1, 0, u2} m Unit α) (Matrix.{u1, 0, u2} m Unit α) (instHAdd.{max u2 u1} (Matrix.{u1, 0, u2} m Unit α) (Matrix.add.{u2, u1, 0} m Unit α _inst_1)) (Matrix.col.{u2, u1} m α v) (Matrix.col.{u2, u1} m α w))
 Case conversion may be inaccurate. Consider using '#align matrix.col_add Matrix.col_addₓ'. -/
 @[simp]
-theorem col_add [Add α] (v w : m → α) : col (v + w) = col v + col w :=
-  by
-  ext
-  rfl
+theorem col_add [Add α] (v w : m → α) : col (v + w) = col v + col w := by ext; rfl
 #align matrix.col_add Matrix.col_add
 
 /- warning: matrix.col_smul -> Matrix.col_smul is a dubious translation:
@@ -4416,10 +4295,7 @@ but is expected to have type
   forall {m : Type.{u1}} {R : Type.{u2}} {α : Type.{u3}} [_inst_1 : SMul.{u2, u3} R α] (x : R) (v : m -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{u1, 0, u3} m Unit α) (Matrix.col.{u3, u1} m α (HSMul.hSMul.{u2, max u3 u1, max u3 u1} R (m -> α) (m -> α) (instHSMul.{u2, max u3 u1} R (m -> α) (Pi.instSMul.{u1, u3, u2} m R (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.27420 : m) => α) (fun (i : m) => _inst_1))) x v)) (HSMul.hSMul.{u2, max u1 u3, max u3 u1} R (Matrix.{u1, 0, u3} m Unit α) (Matrix.{u1, 0, u3} m Unit α) (instHSMul.{u2, max u3 u1} R (Matrix.{u1, 0, u3} m Unit α) (Matrix.smul.{u3, u1, 0, u2} m Unit R α _inst_1)) x (Matrix.col.{u3, u1} m α v))
 Case conversion may be inaccurate. Consider using '#align matrix.col_smul Matrix.col_smulₓ'. -/
 @[simp]
-theorem col_smul [SMul R α] (x : R) (v : m → α) : col (x • v) = x • col v :=
-  by
-  ext
-  rfl
+theorem col_smul [SMul R α] (x : R) (v : m → α) : col (x • v) = x • col v := by ext; rfl
 #align matrix.col_smul Matrix.col_smul
 
 /- warning: matrix.row_add -> Matrix.row_add is a dubious translation:
@@ -4429,10 +4305,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Add.{u2} α] (v : m -> α) (w : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{0, u1, u2} Unit m α) (Matrix.row.{u2, u1} m α (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (m -> α) (m -> α) (m -> α) (instHAdd.{max u2 u1} (m -> α) (Pi.instAdd.{u1, u2} m (fun (ᾰ : m) => α) (fun (i : m) => _inst_1))) v w)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Matrix.{0, u1, u2} Unit m α) (Matrix.{0, u1, u2} Unit m α) (Matrix.{0, u1, u2} Unit m α) (instHAdd.{max u2 u1} (Matrix.{0, u1, u2} Unit m α) (Matrix.add.{u2, 0, u1} Unit m α _inst_1)) (Matrix.row.{u2, u1} m α v) (Matrix.row.{u2, u1} m α w))
 Case conversion may be inaccurate. Consider using '#align matrix.row_add Matrix.row_addₓ'. -/
 @[simp]
-theorem row_add [Add α] (v w : m → α) : row (v + w) = row v + row w :=
-  by
-  ext
-  rfl
+theorem row_add [Add α] (v w : m → α) : row (v + w) = row v + row w := by ext; rfl
 #align matrix.row_add Matrix.row_add
 
 /- warning: matrix.row_smul -> Matrix.row_smul is a dubious translation:
@@ -4442,10 +4315,7 @@ but is expected to have type
   forall {m : Type.{u1}} {R : Type.{u2}} {α : Type.{u3}} [_inst_1 : SMul.{u2, u3} R α] (x : R) (v : m -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{0, u1, u3} Unit m α) (Matrix.row.{u3, u1} m α (HSMul.hSMul.{u2, max u3 u1, max u3 u1} R (m -> α) (m -> α) (instHSMul.{u2, max u3 u1} R (m -> α) (Pi.instSMul.{u1, u3, u2} m R (fun (a._@.Mathlib.Data.Matrix.Basic._hyg.27527 : m) => α) (fun (i : m) => _inst_1))) x v)) (HSMul.hSMul.{u2, max u1 u3, max u3 u1} R (Matrix.{0, u1, u3} Unit m α) (Matrix.{0, u1, u3} Unit m α) (instHSMul.{u2, max u3 u1} R (Matrix.{0, u1, u3} Unit m α) (Matrix.smul.{u3, 0, u1, u2} Unit m R α _inst_1)) x (Matrix.row.{u3, u1} m α v))
 Case conversion may be inaccurate. Consider using '#align matrix.row_smul Matrix.row_smulₓ'. -/
 @[simp]
-theorem row_smul [SMul R α] (x : R) (v : m → α) : row (x • v) = x • row v :=
-  by
-  ext
-  rfl
+theorem row_smul [SMul R α] (x : R) (v : m → α) : row (x • v) = x • row v := by ext; rfl
 #align matrix.row_smul Matrix.row_smul
 
 /- warning: matrix.transpose_col -> Matrix.transpose_col is a dubious translation:
@@ -4455,10 +4325,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} (v : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{0, u1, u2} Unit m α) (Matrix.transpose.{u2, u1, 0} m Unit α (Matrix.col.{u2, u1} m α v)) (Matrix.row.{u2, u1} m α v)
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_col Matrix.transpose_colₓ'. -/
 @[simp]
-theorem transpose_col (v : m → α) : (Matrix.col v)ᵀ = Matrix.row v :=
-  by
-  ext
-  rfl
+theorem transpose_col (v : m → α) : (Matrix.col v)ᵀ = Matrix.row v := by ext; rfl
 #align matrix.transpose_col Matrix.transpose_col
 
 /- warning: matrix.transpose_row -> Matrix.transpose_row is a dubious translation:
@@ -4468,10 +4335,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} (v : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, 0, u2} m Unit α) (Matrix.transpose.{u2, 0, u1} Unit m α (Matrix.row.{u2, u1} m α v)) (Matrix.col.{u2, u1} m α v)
 Case conversion may be inaccurate. Consider using '#align matrix.transpose_row Matrix.transpose_rowₓ'. -/
 @[simp]
-theorem transpose_row (v : m → α) : (Matrix.row v)ᵀ = Matrix.col v :=
-  by
-  ext
-  rfl
+theorem transpose_row (v : m → α) : (Matrix.row v)ᵀ = Matrix.col v := by ext; rfl
 #align matrix.transpose_row Matrix.transpose_row
 
 /- warning: matrix.conj_transpose_col -> Matrix.conjTranspose_col is a dubious translation:
@@ -4481,10 +4345,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Star.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{0, u1, u2} Unit m α) (Matrix.conjTranspose.{u2, u1, 0} m Unit α _inst_1 (Matrix.col.{u2, u1} m α v)) (Matrix.row.{u2, u1} m α (Star.star.{max u1 u2} (m -> α) (Pi.instStarForAll.{u1, u2} m (fun (ᾰ : m) => α) (fun (i : m) => _inst_1)) v))
 Case conversion may be inaccurate. Consider using '#align matrix.conj_transpose_col Matrix.conjTranspose_colₓ'. -/
 @[simp]
-theorem conjTranspose_col [Star α] (v : m → α) : (col v)ᴴ = row (star v) :=
-  by
-  ext
-  rfl
+theorem conjTranspose_col [Star α] (v : m → α) : (col v)ᴴ = row (star v) := by ext; rfl
 #align matrix.conj_transpose_col Matrix.conjTranspose_col
 
 /- warning: matrix.conj_transpose_row -> Matrix.conjTranspose_row is a dubious translation:
@@ -4494,10 +4355,7 @@ but is expected to have type
   forall {m : Type.{u1}} {α : Type.{u2}} [_inst_1 : Star.{u2} α] (v : m -> α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, 0, u2} m Unit α) (Matrix.conjTranspose.{u2, 0, u1} Unit m α _inst_1 (Matrix.row.{u2, u1} m α v)) (Matrix.col.{u2, u1} m α (Star.star.{max u1 u2} (m -> α) (Pi.instStarForAll.{u1, u2} m (fun (ᾰ : m) => α) (fun (i : m) => _inst_1)) v))
 Case conversion may be inaccurate. Consider using '#align matrix.conj_transpose_row Matrix.conjTranspose_rowₓ'. -/
 @[simp]
-theorem conjTranspose_row [Star α] (v : m → α) : (row v)ᴴ = col (star v) :=
-  by
-  ext
-  rfl
+theorem conjTranspose_row [Star α] (v : m → α) : (row v)ᴴ = col (star v) := by ext; rfl
 #align matrix.conj_transpose_row Matrix.conjTranspose_row
 
 /- warning: matrix.row_vec_mul -> Matrix.row_vecMul is a dubious translation:
@@ -4507,10 +4365,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Fintype.{u2} m] [_inst_2 : NonUnitalNonAssocSemiring.{u3} α] (M : Matrix.{u2, u1, u3} m n α) (v : m -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{0, u1, u3} Unit n α) (Matrix.row.{u3, u1} n α (Matrix.vecMul.{u3, u2, u1} m n α _inst_2 _inst_1 v M)) (Matrix.mul.{u3, 0, u2, u1} Unit m n α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u3} α _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α _inst_2) (Matrix.row.{u3, u2} m α v) M)
 Case conversion may be inaccurate. Consider using '#align matrix.row_vec_mul Matrix.row_vecMulₓ'. -/
 theorem row_vecMul [Fintype m] [NonUnitalNonAssocSemiring α] (M : Matrix m n α) (v : m → α) :
-    Matrix.row (Matrix.vecMul v M) = Matrix.row v ⬝ M :=
-  by
-  ext
-  rfl
+    Matrix.row (Matrix.vecMul v M) = Matrix.row v ⬝ M := by ext; rfl
 #align matrix.row_vec_mul Matrix.row_vecMul
 
 /- warning: matrix.col_vec_mul -> Matrix.col_vecMul is a dubious translation:
@@ -4520,10 +4375,7 @@ but is expected to have type
   forall {m : Type.{u2}} {n : Type.{u1}} {α : Type.{u3}} [_inst_1 : Fintype.{u2} m] [_inst_2 : NonUnitalNonAssocSemiring.{u3} α] (M : Matrix.{u2, u1, u3} m n α) (v : m -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{u1, 0, u3} n Unit α) (Matrix.col.{u3, u1} n α (Matrix.vecMul.{u3, u2, u1} m n α _inst_2 _inst_1 v M)) (Matrix.transpose.{u3, 0, u1} Unit n α (Matrix.mul.{u3, 0, u2, u1} Unit m n α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u3} α _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α _inst_2) (Matrix.row.{u3, u2} m α v) M))
 Case conversion may be inaccurate. Consider using '#align matrix.col_vec_mul Matrix.col_vecMulₓ'. -/
 theorem col_vecMul [Fintype m] [NonUnitalNonAssocSemiring α] (M : Matrix m n α) (v : m → α) :
-    Matrix.col (Matrix.vecMul v M) = (Matrix.row v ⬝ M)ᵀ :=
-  by
-  ext
-  rfl
+    Matrix.col (Matrix.vecMul v M) = (Matrix.row v ⬝ M)ᵀ := by ext; rfl
 #align matrix.col_vec_mul Matrix.col_vecMul
 
 /- warning: matrix.col_mul_vec -> Matrix.col_mulVec is a dubious translation:
@@ -4533,10 +4385,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_2 : NonUnitalNonAssocSemiring.{u3} α] (M : Matrix.{u1, u2, u3} m n α) (v : n -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{u1, 0, u3} m Unit α) (Matrix.col.{u3, u1} m α (Matrix.mulVec.{u3, u1, u2} m n α _inst_2 _inst_1 M v)) (Matrix.mul.{u3, u1, u2, 0} m n Unit α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u3} α _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α _inst_2) M (Matrix.col.{u3, u2} n α v))
 Case conversion may be inaccurate. Consider using '#align matrix.col_mul_vec Matrix.col_mulVecₓ'. -/
 theorem col_mulVec [Fintype n] [NonUnitalNonAssocSemiring α] (M : Matrix m n α) (v : n → α) :
-    Matrix.col (Matrix.mulVec M v) = M ⬝ Matrix.col v :=
-  by
-  ext
-  rfl
+    Matrix.col (Matrix.mulVec M v) = M ⬝ Matrix.col v := by ext; rfl
 #align matrix.col_mul_vec Matrix.col_mulVec
 
 /- warning: matrix.row_mul_vec -> Matrix.row_mulVec is a dubious translation:
@@ -4546,10 +4395,7 @@ but is expected to have type
   forall {m : Type.{u1}} {n : Type.{u2}} {α : Type.{u3}} [_inst_1 : Fintype.{u2} n] [_inst_2 : NonUnitalNonAssocSemiring.{u3} α] (M : Matrix.{u1, u2, u3} m n α) (v : n -> α), Eq.{max (succ u3) (succ u1)} (Matrix.{0, u1, u3} Unit m α) (Matrix.row.{u3, u1} m α (Matrix.mulVec.{u3, u1, u2} m n α _inst_2 _inst_1 M v)) (Matrix.transpose.{u3, u1, 0} m Unit α (Matrix.mul.{u3, u1, u2, 0} m n Unit α _inst_1 (NonUnitalNonAssocSemiring.toMul.{u3} α _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} α _inst_2) M (Matrix.col.{u3, u2} n α v)))
 Case conversion may be inaccurate. Consider using '#align matrix.row_mul_vec Matrix.row_mulVecₓ'. -/
 theorem row_mulVec [Fintype n] [NonUnitalNonAssocSemiring α] (M : Matrix m n α) (v : n → α) :
-    Matrix.row (Matrix.mulVec M v) = (M ⬝ Matrix.col v)ᵀ :=
-  by
-  ext
-  rfl
+    Matrix.row (Matrix.mulVec M v) = (M ⬝ Matrix.col v)ᵀ := by ext; rfl
 #align matrix.row_mul_vec Matrix.row_mulVec
 
 /- warning: matrix.row_mul_col_apply -> Matrix.row_mul_col_apply is a dubious translation:

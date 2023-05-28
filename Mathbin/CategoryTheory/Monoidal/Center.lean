@@ -126,11 +126,7 @@ theorem comp_f {X Y Z : Center C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.
 #align category_theory.center.comp_f CategoryTheory.Center.comp_f
 
 @[ext]
-theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g :=
-  by
-  cases f
-  cases g
-  congr
+theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by cases f; cases g; congr ;
   exact w
 #align category_theory.center.ext CategoryTheory.Center.ext
 
@@ -298,11 +294,8 @@ theorem associator_hom_f (X Y Z : Center C) : Hom.f (α_ X Y Z).Hom = (α_ X.1 Y
 #align category_theory.center.associator_hom_f CategoryTheory.Center.associator_hom_f
 
 @[simp]
-theorem associator_inv_f (X Y Z : Center C) : Hom.f (α_ X Y Z).inv = (α_ X.1 Y.1 Z.1).inv :=
-  by
-  ext
-  rw [← associator_hom_f, ← comp_f, iso.hom_inv_id]
-  rfl
+theorem associator_inv_f (X Y Z : Center C) : Hom.f (α_ X Y Z).inv = (α_ X.1 Y.1 Z.1).inv := by ext;
+  rw [← associator_hom_f, ← comp_f, iso.hom_inv_id]; rfl
 #align category_theory.center.associator_inv_f CategoryTheory.Center.associator_inv_f
 
 @[simp]
@@ -311,11 +304,8 @@ theorem leftUnitor_hom_f (X : Center C) : Hom.f (λ_ X).Hom = (λ_ X.1).Hom :=
 #align category_theory.center.left_unitor_hom_f CategoryTheory.Center.leftUnitor_hom_f
 
 @[simp]
-theorem leftUnitor_inv_f (X : Center C) : Hom.f (λ_ X).inv = (λ_ X.1).inv :=
-  by
-  ext
-  rw [← left_unitor_hom_f, ← comp_f, iso.hom_inv_id]
-  rfl
+theorem leftUnitor_inv_f (X : Center C) : Hom.f (λ_ X).inv = (λ_ X.1).inv := by ext;
+  rw [← left_unitor_hom_f, ← comp_f, iso.hom_inv_id]; rfl
 #align category_theory.center.left_unitor_inv_f CategoryTheory.Center.leftUnitor_inv_f
 
 @[simp]
@@ -324,11 +314,8 @@ theorem rightUnitor_hom_f (X : Center C) : Hom.f (ρ_ X).Hom = (ρ_ X.1).Hom :=
 #align category_theory.center.right_unitor_hom_f CategoryTheory.Center.rightUnitor_hom_f
 
 @[simp]
-theorem rightUnitor_inv_f (X : Center C) : Hom.f (ρ_ X).inv = (ρ_ X.1).inv :=
-  by
-  ext
-  rw [← right_unitor_hom_f, ← comp_f, iso.hom_inv_id]
-  rfl
+theorem rightUnitor_inv_f (X : Center C) : Hom.f (ρ_ X).inv = (ρ_ X.1).inv := by ext;
+  rw [← right_unitor_hom_f, ← comp_f, iso.hom_inv_id]; rfl
 #align category_theory.center.right_unitor_inv_f CategoryTheory.Center.rightUnitor_inv_f
 
 end
@@ -349,11 +336,7 @@ def forget : MonoidalFunctor (Center C) C
 #align category_theory.center.forget CategoryTheory.Center.forget
 
 instance : ReflectsIsomorphisms (forget C).toFunctor
-    where reflects A B f i := by
-    dsimp at i
-    skip
-    change is_iso (iso_mk f).Hom
-    infer_instance
+    where reflects A B f i := by dsimp at i; skip; change is_iso (iso_mk f).Hom; infer_instance
 
 end
 

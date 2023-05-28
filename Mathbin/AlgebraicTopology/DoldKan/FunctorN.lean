@@ -72,16 +72,9 @@ def N₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)
       idem := PInfty_idem }
   map X Y f :=
     { f := PInfty ≫ AlternatingFaceMapComplex.map f
-      comm := by
-        ext
-        simp }
-  map_id' X := by
-    ext
-    dsimp
-    simp
-  map_comp' X Y Z f g := by
-    ext
-    simp
+      comm := by ext; simp }
+  map_id' X := by ext; dsimp; simp
+  map_comp' X Y Z f g := by ext; simp
 #align algebraic_topology.dold_kan.N₁ AlgebraicTopology.DoldKan.N₁
 
 /- warning: algebraic_topology.dold_kan.N₂ -> AlgebraicTopology.DoldKan.N₂ is a dubious translation:

@@ -50,10 +50,8 @@ theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x
 
 #print Transcendental.irrational /-
 /-- A transcendental real number is irrational. -/
-theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r :=
-  by
-  rintro ⟨a, rfl⟩
-  exact tr (isAlgebraic_algebraMap a)
+theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r := by
+  rintro ⟨a, rfl⟩; exact tr (isAlgebraic_algebraMap a)
 #align transcendental.irrational Transcendental.irrational
 -/
 
@@ -75,10 +73,7 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
   by
   rintro ⟨⟨N, D, P, C⟩, rfl⟩
   rw [← cast_pow] at hxr
-  have c1 : ((D : ℤ) : ℝ) ≠ 0 :=
-    by
-    rw [Int.cast_ne_zero, Int.coe_nat_ne_zero]
-    exact ne_of_gt P
+  have c1 : ((D : ℤ) : ℝ) ≠ 0 := by rw [Int.cast_ne_zero, Int.coe_nat_ne_zero]; exact ne_of_gt P
   have c2 : ((D : ℤ) : ℝ) ^ n ≠ 0 := pow_ne_zero _ c1
   rw [num_denom', cast_pow, cast_mk, div_pow, div_eq_iff_mul_eq c2, ← Int.cast_pow, ← Int.cast_pow,
     ← Int.cast_mul, Int.cast_inj] at hxr
@@ -109,12 +104,8 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
       Nat.zero_mod] using hv
   refine' irrational_nrt_of_notint_nrt _ _ hxr _ hnpos
   rintro ⟨y, rfl⟩
-  rw [← Int.cast_pow, Int.cast_inj] at hxr
-  subst m
-  have : y ≠ 0 := by
-    rintro rfl
-    rw [zero_pow hnpos] at hm
-    exact hm rfl
+  rw [← Int.cast_pow, Int.cast_inj] at hxr; subst m
+  have : y ≠ 0 := by rintro rfl; rw [zero_pow hnpos] at hm; exact hm rfl
   erw [multiplicity.pow' (Nat.prime_iff_prime_int.1 hp.1) (finite_int_iff.2 ⟨hp.1.ne_one, this⟩),
     Nat.mul_mod_right] at hv
   exact hv rfl
@@ -226,10 +217,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (Irrational x) -> (forall (m : Int), Ne.{1} Real x (Int.cast.{0} Real Real.intCast m))
 Case conversion may be inaccurate. Consider using '#align irrational.ne_int Irrational.ne_intₓ'. -/
-theorem ne_int (h : Irrational x) (m : ℤ) : x ≠ m :=
-  by
-  rw [← Rat.cast_coe_int]
-  exact h.ne_rat _
+theorem ne_int (h : Irrational x) (m : ℤ) : x ≠ m := by rw [← Rat.cast_coe_int]; exact h.ne_rat _
 #align irrational.ne_int Irrational.ne_int
 
 /- warning: irrational.ne_nat -> Irrational.ne_nat is a dubious translation:
@@ -362,9 +350,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} (m : Int), (Irrational (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Int.cast.{0} Real Real.intCast m) x)) -> (Irrational x)
 Case conversion may be inaccurate. Consider using '#align irrational.of_int_add Irrational.of_int_addₓ'. -/
-theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x :=
-  by
-  rw [← cast_coe_int] at h
+theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x := by rw [← cast_coe_int] at h;
   exact h.of_rat_add m
 #align irrational.of_int_add Irrational.of_int_add
 
@@ -384,9 +370,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (Irrational x) -> (forall (m : Int), Irrational (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Int.cast.{0} Real Real.intCast m) x))
 Case conversion may be inaccurate. Consider using '#align irrational.int_add Irrational.int_addₓ'. -/
-theorem int_add (h : Irrational x) (m : ℤ) : Irrational (m + x) :=
-  by
-  rw [← cast_coe_int]
+theorem int_add (h : Irrational x) (m : ℤ) : Irrational (m + x) := by rw [← cast_coe_int];
   exact h.rat_add m
 #align irrational.int_add Irrational.int_add
 
@@ -674,11 +658,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (Irrational x) -> (forall {m : Int}, (Ne.{1} Int m (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Irrational (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) x (Int.cast.{0} Real Real.intCast m))))
 Case conversion may be inaccurate. Consider using '#align irrational.mul_int Irrational.mul_intₓ'. -/
-theorem mul_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x * m) :=
-  by
-  rw [← cast_coe_int]
-  refine' h.mul_rat _
-  rwa [Int.cast_ne_zero]
+theorem mul_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x * m) := by
+  rw [← cast_coe_int]; refine' h.mul_rat _; rwa [Int.cast_ne_zero]
 #align irrational.mul_int Irrational.mul_int
 
 /- warning: irrational.int_mul -> Irrational.int_mul is a dubious translation:
@@ -806,10 +787,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (Irrational x) -> (forall {q : Rat}, (Ne.{1} Rat q (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) -> (Irrational (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) x (Rat.cast.{0} Real Real.ratCast q))))
 Case conversion may be inaccurate. Consider using '#align irrational.div_rat Irrational.div_ratₓ'. -/
-theorem div_rat (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (x / q) :=
-  by
-  rw [div_eq_mul_inv, ← cast_inv]
-  exact h.mul_rat (inv_ne_zero hq)
+theorem div_rat (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (x / q) := by
+  rw [div_eq_mul_inv, ← cast_inv]; exact h.mul_rat (inv_ne_zero hq)
 #align irrational.div_rat Irrational.div_rat
 
 /- warning: irrational.of_int_div -> Irrational.of_int_div is a dubious translation:
@@ -848,11 +827,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (Irrational x) -> (forall {m : Int}, (Ne.{1} Int m (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Irrational (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) x (Int.cast.{0} Real Real.intCast m))))
 Case conversion may be inaccurate. Consider using '#align irrational.div_int Irrational.div_intₓ'. -/
-theorem div_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x / m) :=
-  by
-  rw [← cast_coe_int]
-  refine' h.div_rat _
-  rwa [Int.cast_ne_zero]
+theorem div_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x / m) := by
+  rw [← cast_coe_int]; refine' h.div_rat _; rwa [Int.cast_ne_zero]
 #align irrational.div_int Irrational.div_int
 
 /- warning: irrational.of_nat_div -> Irrational.of_nat_div is a dubious translation:
@@ -927,22 +903,14 @@ but is expected to have type
   forall {x : Real} (n : Nat), (Irrational (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) x n)) -> (Irrational x)
 Case conversion may be inaccurate. Consider using '#align irrational.of_pow Irrational.of_powₓ'. -/
 theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
-  | 0 => fun h => by
-    rw [pow_zero] at h
-    exact (h ⟨1, cast_one⟩).elim
-  | n + 1 => fun h => by
-    rw [pow_succ] at h
-    exact h.mul_cases.elim id (of_pow n)
+  | 0 => fun h => by rw [pow_zero] at h; exact (h ⟨1, cast_one⟩).elim
+  | n + 1 => fun h => by rw [pow_succ] at h; exact h.mul_cases.elim id (of_pow n)
 #align irrational.of_pow Irrational.of_pow
 
 #print Irrational.of_zpow /-
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
-  | (n : ℕ) => fun h => by
-    rw [zpow_ofNat] at h
-    exact h.of_pow _
-  | -[n+1] => fun h => by
-    rw [zpow_negSucc] at h
-    exact h.of_inv.of_pow _
+  | (n : ℕ) => fun h => by rw [zpow_ofNat] at h; exact h.of_pow _
+  | -[n+1] => fun h => by rw [zpow_negSucc] at h; exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
 -/
 
@@ -963,16 +931,14 @@ theorem one_lt_natDegree_of_irrational_root (hx : Irrational x) (p_nonzero : p �
     (x_is_root : aeval x p = 0) : 1 < p.natDegree :=
   by
   by_contra rid
-  rcases exists_eq_X_add_C_of_nat_degree_le_one (not_lt.1 rid) with ⟨a, b, rfl⟩
-  clear rid
+  rcases exists_eq_X_add_C_of_nat_degree_le_one (not_lt.1 rid) with ⟨a, b, rfl⟩; clear rid
   have : (a : ℝ) * x = -b := by simpa [eq_neg_iff_add_eq_zero] using x_is_root
   rcases em (a = 0) with (rfl | ha)
   · obtain rfl : b = 0 := by simpa
     simpa using p_nonzero
   · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
     refine' hx ⟨-b / a, _⟩
-    assumption_mod_cast
-    assumption_mod_cast
+    assumption_mod_cast; assumption_mod_cast
 #align one_lt_nat_degree_of_irrational_root one_lt_natDegree_of_irrational_root
 
 end Polynomial

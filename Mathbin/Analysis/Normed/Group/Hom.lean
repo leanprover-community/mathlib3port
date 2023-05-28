@@ -217,10 +217,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.to_add_monoid_hom_injective NormedAddGroupHom.toAddMonoidHom_injectiveₓ'. -/
 theorem toAddMonoidHom_injective :
     Function.Injective (@NormedAddGroupHom.toAddMonoidHom V₁ V₂ _ _) := fun f g h =>
-  coe_inj <|
-    show ⇑f.toAddMonoidHom = g by
-      rw [h]
-      rfl
+  coe_inj <| show ⇑f.toAddMonoidHom = g by rw [h]; rfl
 #align normed_add_group_hom.to_add_monoid_hom_injective NormedAddGroupHom.toAddMonoidHom_injective
 
 /- warning: normed_add_group_hom.mk_to_add_monoid_hom -> NormedAddGroupHom.mk_toAddMonoidHom is a dubious translation:
@@ -424,9 +421,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.lipschitz NormedAddGroupHom.lipschitzₓ'. -/
 /-- continuous linear maps are Lipschitz continuous. -/
 theorem lipschitz : LipschitzWith ⟨‖f‖, opNorm_nonneg f⟩ f :=
-  LipschitzWith.of_dist_le_mul fun x y =>
-    by
-    rw [dist_eq_norm, dist_eq_norm, ← map_sub]
+  LipschitzWith.of_dist_le_mul fun x y => by rw [dist_eq_norm, dist_eq_norm, ← map_sub];
     apply le_op_norm
 #align normed_add_group_hom.lipschitz NormedAddGroupHom.lipschitz
 
@@ -618,11 +613,7 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.o
 theorem opNorm_zero : ‖(0 : NormedAddGroupHom V₁ V₂)‖ = 0 :=
   le_antisymm
     (csInf_le bounds_bddBelow
-      ⟨ge_of_eq rfl, fun _ =>
-        le_of_eq
-          (by
-            rw [MulZeroClass.zero_mul]
-            exact norm_zero)⟩)
+      ⟨ge_of_eq rfl, fun _ => le_of_eq (by rw [MulZeroClass.zero_mul]; exact norm_zero)⟩)
     (opNorm_nonneg _)
 #align normed_add_group_hom.op_norm_zero NormedAddGroupHom.opNorm_zero
 
@@ -1061,10 +1052,7 @@ but is expected to have type
   forall {V₁ : Type.{u1}} {V₂ : Type.{u3}} {V₃ : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u1} V₁] [_inst_3 : SeminormedAddCommGroup.{u3} V₂] [_inst_4 : SeminormedAddCommGroup.{u2} V₃] {f : NormedAddGroupHom.{u1, u3} V₁ V₂ _inst_2 _inst_3} {g : NormedAddGroupHom.{u3, u2} V₂ V₃ _inst_3 _inst_4} (C₁ : Real) (C₂ : Real) (C₃ : Real), (Eq.{1} Real C₃ (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) C₂ C₁)) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{max u3 u2} (NormedAddGroupHom.{u3, u2} V₂ V₃ _inst_3 _inst_4) (NormedAddGroupHom.hasOpNorm.{u3, u2} V₂ V₃ _inst_3 _inst_4) g) C₂) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{max u1 u3} (NormedAddGroupHom.{u1, u3} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u1, u3} V₁ V₂ _inst_2 _inst_3) f) C₁) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{max u2 u1} (NormedAddGroupHom.{u1, u2} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.hasOpNorm.{u1, u2} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.comp.{u1, u3, u2} V₁ V₂ V₃ _inst_2 _inst_3 _inst_4 g f)) C₃)
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.norm_comp_le_of_le' NormedAddGroupHom.norm_comp_le_of_le'ₓ'. -/
 theorem norm_comp_le_of_le' {g : NormedAddGroupHom V₂ V₃} (C₁ C₂ C₃ : ℝ) (h : C₃ = C₂ * C₁)
-    (hg : ‖g‖ ≤ C₂) (hf : ‖f‖ ≤ C₁) : ‖g.comp f‖ ≤ C₃ :=
-  by
-  rw [h]
-  exact norm_comp_le_of_le hg hf
+    (hg : ‖g‖ ≤ C₂) (hf : ‖f‖ ≤ C₁) : ‖g.comp f‖ ≤ C₃ := by rw [h]; exact norm_comp_le_of_le hg hf
 #align normed_add_group_hom.norm_comp_le_of_le' NormedAddGroupHom.norm_comp_le_of_le'
 
 /- warning: normed_add_group_hom.comp_hom -> NormedAddGroupHom.compHom is a dubious translation:
@@ -1073,15 +1061,8 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.c
 /-- Composition of normed groups hom as an additive group morphism. -/
 def compHom : NormedAddGroupHom V₂ V₃ →+ NormedAddGroupHom V₁ V₂ →+ NormedAddGroupHom V₁ V₃ :=
   AddMonoidHom.mk'
-    (fun g =>
-      AddMonoidHom.mk' (fun f => g.comp f)
-        (by
-          intros
-          ext
-          exact map_add g _ _))
-    (by
-      intros
-      ext
+    (fun g => AddMonoidHom.mk' (fun f => g.comp f) (by intros ; ext; exact map_add g _ _))
+    (by intros ; ext;
       simp only [comp_apply, Pi.add_apply, Function.comp_apply, AddMonoidHom.add_apply,
         AddMonoidHom.mk'_apply, coe_add])
 #align normed_add_group_hom.comp_hom NormedAddGroupHom.compHom
@@ -1093,10 +1074,8 @@ but is expected to have type
   forall {V₁ : Type.{u1}} {V₂ : Type.{u3}} {V₃ : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u1} V₁] [_inst_3 : SeminormedAddCommGroup.{u3} V₂] [_inst_4 : SeminormedAddCommGroup.{u2} V₃] (f : NormedAddGroupHom.{u3, u2} V₂ V₃ _inst_3 _inst_4), Eq.{max (succ u1) (succ u2)} (NormedAddGroupHom.{u1, u2} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.comp.{u1, u3, u2} V₁ V₂ V₃ _inst_2 _inst_3 _inst_4 f (OfNat.ofNat.{max u1 u3} (NormedAddGroupHom.{u1, u3} V₁ V₂ _inst_2 _inst_3) 0 (Zero.toOfNat0.{max u1 u3} (NormedAddGroupHom.{u1, u3} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.zero.{u1, u3} V₁ V₂ _inst_2 _inst_3)))) (OfNat.ofNat.{max u1 u2} (NormedAddGroupHom.{u1, u2} V₁ V₃ _inst_2 _inst_4) 0 (Zero.toOfNat0.{max u1 u2} (NormedAddGroupHom.{u1, u2} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.zero.{u1, u2} V₁ V₃ _inst_2 _inst_4)))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.comp_zero NormedAddGroupHom.comp_zeroₓ'. -/
 @[simp]
-theorem comp_zero (f : NormedAddGroupHom V₂ V₃) : f.comp (0 : NormedAddGroupHom V₁ V₂) = 0 :=
-  by
-  ext
-  exact map_zero f
+theorem comp_zero (f : NormedAddGroupHom V₂ V₃) : f.comp (0 : NormedAddGroupHom V₁ V₂) = 0 := by
+  ext; exact map_zero f
 #align normed_add_group_hom.comp_zero NormedAddGroupHom.comp_zero
 
 /- warning: normed_add_group_hom.zero_comp -> NormedAddGroupHom.zero_comp is a dubious translation:
@@ -1106,18 +1085,14 @@ but is expected to have type
   forall {V₁ : Type.{u3}} {V₂ : Type.{u2}} {V₃ : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u3} V₁] [_inst_3 : SeminormedAddCommGroup.{u2} V₂] [_inst_4 : SeminormedAddCommGroup.{u1} V₃] (f : NormedAddGroupHom.{u3, u2} V₁ V₂ _inst_2 _inst_3), Eq.{max (succ u3) (succ u1)} (NormedAddGroupHom.{u3, u1} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.comp.{u3, u2, u1} V₁ V₂ V₃ _inst_2 _inst_3 _inst_4 (OfNat.ofNat.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₂ V₃ _inst_3 _inst_4) 0 (Zero.toOfNat0.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₂ V₃ _inst_3 _inst_4) (NormedAddGroupHom.zero.{u2, u1} V₂ V₃ _inst_3 _inst_4))) f) (OfNat.ofNat.{max u3 u1} (NormedAddGroupHom.{u3, u1} V₁ V₃ _inst_2 _inst_4) 0 (Zero.toOfNat0.{max u3 u1} (NormedAddGroupHom.{u3, u1} V₁ V₃ _inst_2 _inst_4) (NormedAddGroupHom.zero.{u3, u1} V₁ V₃ _inst_2 _inst_4)))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.zero_comp NormedAddGroupHom.zero_compₓ'. -/
 @[simp]
-theorem zero_comp (f : NormedAddGroupHom V₁ V₂) : (0 : NormedAddGroupHom V₂ V₃).comp f = 0 :=
-  by
-  ext
-  rfl
+theorem zero_comp (f : NormedAddGroupHom V₁ V₂) : (0 : NormedAddGroupHom V₂ V₃).comp f = 0 := by
+  ext; rfl
 #align normed_add_group_hom.zero_comp NormedAddGroupHom.zero_comp
 
 #print NormedAddGroupHom.comp_assoc /-
 theorem comp_assoc {V₄ : Type _} [SeminormedAddCommGroup V₄] (h : NormedAddGroupHom V₃ V₄)
     (g : NormedAddGroupHom V₂ V₃) (f : NormedAddGroupHom V₁ V₂) :
-    (h.comp g).comp f = h.comp (g.comp f) := by
-  ext
-  rfl
+    (h.comp g).comp f = h.comp (g.comp f) := by ext; rfl
 #align normed_add_group_hom.comp_assoc NormedAddGroupHom.comp_assoc
 -/
 
@@ -1151,10 +1126,7 @@ def incl (s : AddSubgroup V) : NormedAddGroupHom s V
     where
   toFun := (coe : s → V)
   map_add' v w := AddSubgroup.coe_add _ _ _
-  bound' :=
-    ⟨1, fun v => by
-      rw [one_mul]
-      rfl⟩
+  bound' := ⟨1, fun v => by rw [one_mul]; rfl⟩
 #align normed_add_group_hom.incl NormedAddGroupHom.incl
 
 /- warning: normed_add_group_hom.norm_incl -> NormedAddGroupHom.norm_incl is a dubious translation:
@@ -1185,10 +1157,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u2} V₁] [_inst_4 : SeminormedAddCommGroup.{u1} V₂] (f : NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) (v : V₁), Iff (Membership.mem.{u2, u2} V₁ (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) V₁ (AddSubgroup.instSetLikeAddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3)))) v (NormedAddGroupHom.ker.{u2, u1} V₁ V₂ _inst_3 _inst_4 f)) (Eq.{succ u1} V₂ (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) V₁ (fun (_x : V₁) => V₂) (AddHomClass.toFunLike.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) V₁ V₂ (AddZeroClass.toAdd.{u2} V₁ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3)))))) (AddZeroClass.toAdd.{u1} V₂ (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4)))))) (AddMonoidHomClass.toAddHomClass.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) V₁ V₂ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))))) (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4))))) (NormedAddGroupHom.toAddMonoidHomClass.{u2, u1} V₁ V₂ _inst_3 _inst_4))) f v) (OfNat.ofNat.{u1} V₂ 0 (Zero.toOfNat0.{u1} V₂ (NegZeroClass.toZero.{u1} V₂ (SubNegZeroMonoid.toNegZeroClass.{u1} V₂ (SubtractionMonoid.toSubNegZeroMonoid.{u1} V₂ (SubtractionCommMonoid.toSubtractionMonoid.{u1} V₂ (AddCommGroup.toDivisionAddCommMonoid.{u1} V₂ (SeminormedAddCommGroup.toAddCommGroup.{u1} V₂ _inst_4)))))))))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.mem_ker NormedAddGroupHom.mem_kerₓ'. -/
-theorem mem_ker (v : V₁) : v ∈ f.ker ↔ f v = 0 :=
-  by
-  erw [f.to_add_monoid_hom.mem_ker]
-  rfl
+theorem mem_ker (v : V₁) : v ∈ f.ker ↔ f v = 0 := by erw [f.to_add_monoid_hom.mem_ker]; rfl
 #align normed_add_group_hom.mem_ker NormedAddGroupHom.mem_ker
 
 /- warning: normed_add_group_hom.ker.lift -> NormedAddGroupHom.ker.lift is a dubious translation:
@@ -1202,15 +1171,8 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.k
 @[simps]
 def ker.lift (h : g.comp f = 0) : NormedAddGroupHom V₁ g.ker
     where
-  toFun v :=
-    ⟨f v, by
-      erw [g.mem_ker]
-      show (g.comp f) v = 0
-      rw [h]
-      rfl⟩
-  map_add' v w := by
-    simp only [map_add]
-    rfl
+  toFun v := ⟨f v, by erw [g.mem_ker]; show (g.comp f) v = 0; rw [h]; rfl⟩
+  map_add' v w := by simp only [map_add]; rfl
   bound' := f.bound'
 #align normed_add_group_hom.ker.lift NormedAddGroupHom.ker.lift
 
@@ -1221,9 +1183,7 @@ but is expected to have type
   forall {V₁ : Type.{u3}} {V₂ : Type.{u1}} {V₃ : Type.{u2}} [_inst_3 : SeminormedAddCommGroup.{u3} V₁] [_inst_4 : SeminormedAddCommGroup.{u1} V₂] [_inst_5 : SeminormedAddCommGroup.{u2} V₃] (f : NormedAddGroupHom.{u3, u1} V₁ V₂ _inst_3 _inst_4) (g : NormedAddGroupHom.{u1, u2} V₂ V₃ _inst_4 _inst_5) (h : Eq.{max (succ u3) (succ u2)} (NormedAddGroupHom.{u3, u2} V₁ V₃ _inst_3 _inst_5) (NormedAddGroupHom.comp.{u3, u1, u2} V₁ V₂ V₃ _inst_3 _inst_4 _inst_5 g f) (OfNat.ofNat.{max u3 u2} (NormedAddGroupHom.{u3, u2} V₁ V₃ _inst_3 _inst_5) 0 (Zero.toOfNat0.{max u3 u2} (NormedAddGroupHom.{u3, u2} V₁ V₃ _inst_3 _inst_5) (NormedAddGroupHom.zero.{u3, u2} V₁ V₃ _inst_3 _inst_5)))), Eq.{max (succ u3) (succ u1)} (NormedAddGroupHom.{u3, u1} V₁ V₂ _inst_3 _inst_4) (NormedAddGroupHom.comp.{u3, u1, u1} V₁ (Subtype.{succ u1} V₂ (fun (x : V₂) => Membership.mem.{u1, u1} V₂ (AddSubgroup.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4))) V₂ (AddSubgroup.instSetLikeAddSubgroup.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4)))) x (NormedAddGroupHom.ker.{u1, u2} V₂ V₃ _inst_4 _inst_5 g))) V₂ _inst_3 (AddSubgroup.seminormedAddCommGroup.{u1} V₂ _inst_4 (NormedAddGroupHom.ker.{u1, u2} V₂ V₃ _inst_4 _inst_5 g)) _inst_4 (NormedAddGroupHom.incl.{u1} V₂ _inst_4 (NormedAddGroupHom.ker.{u1, u2} V₂ V₃ _inst_4 _inst_5 g)) (NormedAddGroupHom.ker.lift.{u3, u1, u2} V₁ V₂ V₃ _inst_3 _inst_4 _inst_5 f g h)) f
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.ker.incl_comp_lift NormedAddGroupHom.ker.incl_comp_liftₓ'. -/
 @[simp]
-theorem ker.incl_comp_lift (h : g.comp f = 0) : (incl g.ker).comp (ker.lift f g h) = f :=
-  by
-  ext
+theorem ker.incl_comp_lift (h : g.comp f = 0) : (incl g.ker).comp (ker.lift f g h) = f := by ext;
   rfl
 #align normed_add_group_hom.ker.incl_comp_lift NormedAddGroupHom.ker.incl_comp_lift
 
@@ -1234,10 +1194,7 @@ but is expected to have type
   forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u2} V₁] [_inst_4 : SeminormedAddCommGroup.{u1} V₂], Eq.{succ u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (NormedAddGroupHom.ker.{u2, u1} V₁ V₂ _inst_3 _inst_4 (OfNat.ofNat.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) 0 (Zero.toOfNat0.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) (NormedAddGroupHom.zero.{u2, u1} V₁ V₂ _inst_3 _inst_4)))) (Top.top.{u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (AddSubgroup.instTopAddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.ker_zero NormedAddGroupHom.ker_zeroₓ'. -/
 @[simp]
-theorem ker_zero : (0 : NormedAddGroupHom V₁ V₂).ker = ⊤ :=
-  by
-  ext
-  simp [mem_ker]
+theorem ker_zero : (0 : NormedAddGroupHom V₁ V₂).ker = ⊤ := by ext; simp [mem_ker]
 #align normed_add_group_hom.ker_zero NormedAddGroupHom.ker_zero
 
 /- warning: normed_add_group_hom.coe_ker -> NormedAddGroupHom.coe_ker is a dubious translation:
@@ -1284,9 +1241,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V₁ : Type.{u1}} {V₂ : Type.{u2}} [_inst_3 : SeminormedAddCommGroup.{u1} V₁] [_inst_4 : SeminormedAddCommGroup.{u2} V₂] (f : NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_3 _inst_4) (v : V₂), Iff (Membership.mem.{u2, u2} V₂ (AddSubgroup.{u2} V₂ (SeminormedAddGroup.toAddGroup.{u2} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₂ _inst_4))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V₂ (SeminormedAddGroup.toAddGroup.{u2} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₂ _inst_4))) V₂ (AddSubgroup.instSetLikeAddSubgroup.{u2} V₂ (SeminormedAddGroup.toAddGroup.{u2} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₂ _inst_4)))) v (NormedAddGroupHom.range.{u1, u2} V₁ V₂ _inst_3 _inst_4 f)) (Exists.{succ u1} V₁ (fun (w : V₁) => Eq.{succ u2} V₂ (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_3 _inst_4) V₁ (fun (_x : V₁) => V₂) (AddHomClass.toFunLike.{max u1 u2, u1, u2} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_3 _inst_4) V₁ V₂ (AddZeroClass.toAdd.{u1} V₁ (AddMonoid.toAddZeroClass.{u1} V₁ (SubNegMonoid.toAddMonoid.{u1} V₁ (AddGroup.toSubNegMonoid.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3)))))) (AddZeroClass.toAdd.{u2} V₂ (AddMonoid.toAddZeroClass.{u2} V₂ (SubNegMonoid.toAddMonoid.{u2} V₂ (AddGroup.toSubNegMonoid.{u2} V₂ (SeminormedAddGroup.toAddGroup.{u2} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₂ _inst_4)))))) (AddMonoidHomClass.toAddHomClass.{max u1 u2, u1, u2} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_3 _inst_4) V₁ V₂ (AddMonoid.toAddZeroClass.{u1} V₁ (SubNegMonoid.toAddMonoid.{u1} V₁ (AddGroup.toSubNegMonoid.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3))))) (AddMonoid.toAddZeroClass.{u2} V₂ (SubNegMonoid.toAddMonoid.{u2} V₂ (AddGroup.toSubNegMonoid.{u2} V₂ (SeminormedAddGroup.toAddGroup.{u2} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₂ _inst_4))))) (NormedAddGroupHom.toAddMonoidHomClass.{u1, u2} V₁ V₂ _inst_3 _inst_4))) f w) v))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.mem_range NormedAddGroupHom.mem_rangeₓ'. -/
-theorem mem_range (v : V₂) : v ∈ f.range ↔ ∃ w, f w = v :=
-  by
-  rw [range, AddMonoidHom.mem_range]
+theorem mem_range (v : V₂) : v ∈ f.range ↔ ∃ w, f w = v := by rw [range, AddMonoidHom.mem_range];
   rfl
 #align normed_add_group_hom.mem_range NormedAddGroupHom.mem_range
 
@@ -1307,10 +1262,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} {V₃ : Type.{u3}} [_inst_3 : SeminormedAddCommGroup.{u2} V₁] [_inst_4 : SeminormedAddCommGroup.{u1} V₂] [_inst_5 : SeminormedAddCommGroup.{u3} V₃] (f : NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_3 _inst_4) (g : NormedAddGroupHom.{u1, u3} V₂ V₃ _inst_4 _inst_5), Eq.{succ u3} (AddSubgroup.{u3} V₃ (SeminormedAddGroup.toAddGroup.{u3} V₃ (SeminormedAddCommGroup.toSeminormedAddGroup.{u3} V₃ _inst_5))) (NormedAddGroupHom.range.{u2, u3} V₁ V₃ _inst_3 _inst_5 (NormedAddGroupHom.comp.{u2, u1, u3} V₁ V₂ V₃ _inst_3 _inst_4 _inst_5 g f)) (AddSubgroup.map.{u1, u3} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_4)) V₃ (SeminormedAddGroup.toAddGroup.{u3} V₃ (SeminormedAddCommGroup.toSeminormedAddGroup.{u3} V₃ _inst_5)) (NormedAddGroupHom.toAddMonoidHom.{u1, u3} V₂ V₃ _inst_4 _inst_5 g) (NormedAddGroupHom.range.{u2, u1} V₁ V₂ _inst_3 _inst_4 f))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.comp_range NormedAddGroupHom.comp_rangeₓ'. -/
-theorem comp_range : (g.comp f).range = AddSubgroup.map g.toAddMonoidHom f.range :=
-  by
-  erw [AddMonoidHom.map_range]
-  rfl
+theorem comp_range : (g.comp f).range = AddSubgroup.map g.toAddMonoidHom f.range := by
+  erw [AddMonoidHom.map_range]; rfl
 #align normed_add_group_hom.comp_range NormedAddGroupHom.comp_range
 
 /- warning: normed_add_group_hom.incl_range -> NormedAddGroupHom.incl_range is a dubious translation:
@@ -1319,9 +1272,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V₁ : Type.{u1}} [_inst_3 : SeminormedAddCommGroup.{u1} V₁] (s : AddSubgroup.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3))), Eq.{succ u1} (AddSubgroup.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3))) (NormedAddGroupHom.range.{u1, u1} (Subtype.{succ u1} V₁ (fun (x : V₁) => Membership.mem.{u1, u1} V₁ (AddSubgroup.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3))) V₁ (AddSubgroup.instSetLikeAddSubgroup.{u1} V₁ (SeminormedAddGroup.toAddGroup.{u1} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₁ _inst_3)))) x s)) V₁ (AddSubgroup.seminormedAddCommGroup.{u1} V₁ _inst_3 s) _inst_3 (NormedAddGroupHom.incl.{u1} V₁ _inst_3 s)) s
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.incl_range NormedAddGroupHom.incl_rangeₓ'. -/
-theorem incl_range (s : AddSubgroup V₁) : (incl s).range = s :=
-  by
-  ext x
+theorem incl_range (s : AddSubgroup V₁) : (incl s).range = s := by ext x;
   exact ⟨fun ⟨y, hy⟩ => by rw [← hy] <;> simp, fun hx => ⟨⟨x, hx⟩, by simp⟩⟩
 #align normed_add_group_hom.incl_range NormedAddGroupHom.incl_range
 
@@ -1478,11 +1429,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u2}} {W : Type.{u1}} [_inst_1 : SeminormedAddCommGroup.{u2} V] [_inst_2 : SeminormedAddCommGroup.{u1} W] (f : NormedAddGroupHom.{u2, u1} V W _inst_1 _inst_2) (g : NormedAddGroupHom.{u2, u1} V W _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (NormedAddGroupHom.{u2, u1} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) V (AddSubgroup.instSetLikeAddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1)))) x (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g))) W (AddSubgroup.seminormedAddCommGroup.{u2} V _inst_1 (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g)) _inst_2) (NormedAddGroupHom.comp.{u2, u2, u1} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) V (AddSubgroup.instSetLikeAddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1)))) x (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g))) V W (AddSubgroup.seminormedAddCommGroup.{u2} V _inst_1 (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g)) _inst_1 _inst_2 f (NormedAddGroupHom.Equalizer.ι.{u2, u1} V W _inst_1 _inst_2 f g)) (NormedAddGroupHom.comp.{u2, u2, u1} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1))) V (AddSubgroup.instSetLikeAddSubgroup.{u2} V (SeminormedAddGroup.toAddGroup.{u2} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V _inst_1)))) x (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g))) V W (AddSubgroup.seminormedAddCommGroup.{u2} V _inst_1 (NormedAddGroupHom.equalizer.{u2, u1} V W _inst_1 _inst_2 f g)) _inst_1 _inst_2 g (NormedAddGroupHom.Equalizer.ι.{u2, u1} V W _inst_1 _inst_2 f g))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.equalizer.comp_ι_eq NormedAddGroupHom.Equalizer.comp_ι_eqₓ'. -/
-theorem comp_ι_eq : f.comp (ι f g) = g.comp (ι f g) :=
-  by
-  ext
-  rw [comp_apply, comp_apply, ← sub_eq_zero, ← NormedAddGroupHom.sub_apply]
-  exact x.2
+theorem comp_ι_eq : f.comp (ι f g) = g.comp (ι f g) := by ext;
+  rw [comp_apply, comp_apply, ← sub_eq_zero, ← NormedAddGroupHom.sub_apply]; exact x.2
 #align normed_add_group_hom.equalizer.comp_ι_eq NormedAddGroupHom.Equalizer.comp_ι_eq
 
 variable {f g}
@@ -1503,12 +1451,8 @@ def lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) :
     ⟨φ v,
       show (f - g) (φ v) = 0 by
         rw [NormedAddGroupHom.sub_apply, sub_eq_zero, ← comp_apply, h, comp_apply]⟩
-  map_add' v₁ v₂ := by
-    ext
-    simp only [map_add, AddSubgroup.coe_add, Subtype.coe_mk]
-  bound' := by
-    obtain ⟨C, C_pos, hC⟩ := φ.bound
-    exact ⟨C, hC⟩
+  map_add' v₁ v₂ := by ext; simp only [map_add, AddSubgroup.coe_add, Subtype.coe_mk]
+  bound' := by obtain ⟨C, C_pos, hC⟩ := φ.bound; exact ⟨C, hC⟩
 #align normed_add_group_hom.equalizer.lift NormedAddGroupHom.Equalizer.lift
 
 /- warning: normed_add_group_hom.equalizer.ι_comp_lift -> NormedAddGroupHom.Equalizer.ι_comp_lift is a dubious translation:
@@ -1516,9 +1460,7 @@ def lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) :
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.equalizer.ι_comp_lift NormedAddGroupHom.Equalizer.ι_comp_liftₓ'. -/
 @[simp]
 theorem ι_comp_lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) :
-    (ι _ _).comp (lift φ h) = φ := by
-  ext
-  rfl
+    (ι _ _).comp (lift φ h) = φ := by ext; rfl
 #align normed_add_group_hom.equalizer.ι_comp_lift NormedAddGroupHom.Equalizer.ι_comp_lift
 
 /- warning: normed_add_group_hom.equalizer.lift_equiv -> NormedAddGroupHom.Equalizer.liftEquiv is a dubious translation:
@@ -1535,9 +1477,7 @@ def liftEquiv :
   toFun φ := lift φ φ.Prop
   invFun ψ := ⟨(ι f g).comp ψ, by rw [← comp_assoc, ← comp_assoc, comp_ι_eq]⟩
   left_inv φ := by simp
-  right_inv ψ := by
-    ext
-    rfl
+  right_inv ψ := by ext; rfl
 #align normed_add_group_hom.equalizer.lift_equiv NormedAddGroupHom.Equalizer.liftEquiv
 
 /- warning: normed_add_group_hom.equalizer.map -> NormedAddGroupHom.Equalizer.map is a dubious translation:
@@ -1548,8 +1488,7 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.e
 `normed_add_group_hom (f₁.equalizer g₁) (f₂.equalizer g₂)`. -/
 def map (φ : NormedAddGroupHom V₁ V₂) (ψ : NormedAddGroupHom W₁ W₂) (hf : ψ.comp f₁ = f₂.comp φ)
     (hg : ψ.comp g₁ = g₂.comp φ) : NormedAddGroupHom (f₁.equalizer g₁) (f₂.equalizer g₂) :=
-  lift (φ.comp <| ι _ _) <| by
-    simp only [← comp_assoc, ← hf, ← hg]
+  lift (φ.comp <| ι _ _) <| by simp only [← comp_assoc, ← hf, ← hg];
     simp only [comp_assoc, comp_ι_eq]
 #align normed_add_group_hom.equalizer.map NormedAddGroupHom.Equalizer.map
 
@@ -1573,10 +1512,7 @@ but is expected to have type
   forall {V₁ : Type.{u2}} [_inst_3 : SeminormedAddCommGroup.{u2} V₁] {W₁ : Type.{u1}} [_inst_6 : SeminormedAddCommGroup.{u1} W₁] {f₁ : NormedAddGroupHom.{u2, u1} V₁ W₁ _inst_3 _inst_6} {g₁ : NormedAddGroupHom.{u2, u1} V₁ W₁ _inst_3 _inst_6}, Eq.{succ u2} (NormedAddGroupHom.{u2, u2} (Subtype.{succ u2} V₁ (fun (x : V₁) => Membership.mem.{u2, u2} V₁ (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) V₁ (AddSubgroup.instSetLikeAddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3)))) x (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁))) (Subtype.{succ u2} V₁ (fun (x : V₁) => Membership.mem.{u2, u2} V₁ (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) V₁ (AddSubgroup.instSetLikeAddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3)))) x (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁))) (AddSubgroup.seminormedAddCommGroup.{u2} V₁ _inst_3 (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁)) (AddSubgroup.seminormedAddCommGroup.{u2} V₁ _inst_3 (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁))) (NormedAddGroupHom.Equalizer.map.{u2, u2, u1, u1} V₁ V₁ _inst_3 _inst_3 W₁ W₁ _inst_6 _inst_6 f₁ g₁ f₁ g₁ (NormedAddGroupHom.id.{u2} V₁ _inst_3) (NormedAddGroupHom.id.{u1} W₁ _inst_6) (rfl.{max (succ u2) (succ u1)} (NormedAddGroupHom.{u2, u1} V₁ W₁ _inst_3 _inst_6) (NormedAddGroupHom.comp.{u2, u1, u1} V₁ W₁ W₁ _inst_3 _inst_6 _inst_6 (NormedAddGroupHom.id.{u1} W₁ _inst_6) f₁)) (rfl.{max (succ u2) (succ u1)} (NormedAddGroupHom.{u2, u1} V₁ W₁ _inst_3 _inst_6) (NormedAddGroupHom.comp.{u2, u1, u1} V₁ W₁ W₁ _inst_3 _inst_6 _inst_6 (NormedAddGroupHom.id.{u1} W₁ _inst_6) g₁))) (NormedAddGroupHom.id.{u2} (Subtype.{succ u2} V₁ (fun (x : V₁) => Membership.mem.{u2, u2} V₁ (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) (SetLike.instMembership.{u2, u2} (AddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3))) V₁ (AddSubgroup.instSetLikeAddSubgroup.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_3)))) x (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁))) (AddSubgroup.seminormedAddCommGroup.{u2} V₁ _inst_3 (NormedAddGroupHom.equalizer.{u2, u1} V₁ W₁ _inst_3 _inst_6 f₁ g₁)))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.equalizer.map_id NormedAddGroupHom.Equalizer.map_idₓ'. -/
 @[simp]
-theorem map_id : map (id V₁) (id W₁) rfl rfl = id (f₁.equalizer g₁) :=
-  by
-  ext
-  rfl
+theorem map_id : map (id V₁) (id W₁) rfl rfl = id (f₁.equalizer g₁) := by ext; rfl
 #align normed_add_group_hom.equalizer.map_id NormedAddGroupHom.Equalizer.map_id
 
 /- warning: normed_add_group_hom.equalizer.comm_sq₂ -> NormedAddGroupHom.Equalizer.comm_sq₂ is a dubious translation:
@@ -1594,9 +1530,7 @@ theorem map_comp_map (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g�
     (hf' : ψ'.comp f₂ = f₃.comp φ') (hg' : ψ'.comp g₂ = g₃.comp φ') :
     (map φ' ψ' hf' hg').comp (map φ ψ hf hg) =
       map (φ'.comp φ) (ψ'.comp ψ) (comm_sq₂ hf hf') (comm_sq₂ hg hg') :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align normed_add_group_hom.equalizer.map_comp_map NormedAddGroupHom.Equalizer.map_comp_map
 
 /- warning: normed_add_group_hom.equalizer.ι_norm_noninc -> NormedAddGroupHom.Equalizer.ι_normNoninc is a dubious translation:

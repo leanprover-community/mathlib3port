@@ -191,17 +191,13 @@ theorem chain_iff_pairwise [IsTrans α R] {a : α} {l : List α} : Chain R a l �
 
 #print List.Chain.sublist /-
 protected theorem Chain.sublist [IsTrans α R] (hl : l₂.Chain R a) (h : l₁ <+ l₂) : l₁.Chain R a :=
-  by
-  rw [chain_iff_pairwise] at hl⊢
-  exact hl.sublist (h.cons_cons a)
+  by rw [chain_iff_pairwise] at hl⊢; exact hl.sublist (h.cons_cons a)
 #align list.chain.sublist List.Chain.sublist
 -/
 
 #print List.Chain.rel /-
-protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R a b :=
-  by
-  rw [chain_iff_pairwise] at hl
-  exact rel_of_pairwise_cons hl hb
+protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R a b := by
+  rw [chain_iff_pairwise] at hl; exact rel_of_pairwise_cons hl hb
 #align list.chain.rel List.Chain.rel
 -/
 
@@ -218,8 +214,7 @@ theorem chain_iff_nthLe {R} :
     constructor
     · rintro ⟨R, ⟨h0, h⟩⟩
       constructor
-      · intro w
-        exact R
+      · intro w; exact R
       intro i w
       cases i
       · apply h0
@@ -227,8 +222,7 @@ theorem chain_iff_nthLe {R} :
       simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w
       exact lt_pred_iff.mpr w
     rintro ⟨h0, h⟩; constructor
-    · apply h0
-      simp
+    · apply h0; simp
     constructor
     · apply h 0
     intro i w; convert h (i + 1) _ using 1
@@ -341,10 +335,8 @@ theorem chain'_iff_pairwise [IsTrans α R] : ∀ {l : List α}, Chain' R l ↔ P
 -/
 
 #print List.Chain'.sublist /-
-protected theorem Chain'.sublist [IsTrans α R] (hl : l₂.Chain' R) (h : l₁ <+ l₂) : l₁.Chain' R :=
-  by
-  rw [chain'_iff_pairwise] at hl⊢
-  exact hl.sublist h
+protected theorem Chain'.sublist [IsTrans α R] (hl : l₂.Chain' R) (h : l₁ <+ l₂) : l₁.Chain' R := by
+  rw [chain'_iff_pairwise] at hl⊢; exact hl.sublist h
 #align list.chain'.sublist List.Chain'.sublist
 -/
 
@@ -369,10 +361,8 @@ theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
 -/
 
 #print List.Chain'.rel_head? /-
-theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y :=
-  by
-  rw [← cons_head'_tail hy] at h
-  exact h.rel_head
+theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y := by
+  rw [← cons_head'_tail hy] at h; exact h.rel_head
 #align list.chain'.rel_head' List.Chain'.rel_head?
 -/
 
@@ -421,10 +411,8 @@ theorem Chain'.right_of_append (h : Chain' R (l₁ ++ l₂)) : Chain' R l₂ :=
 -/
 
 #print List.Chain'.infix /-
-theorem Chain'.infix (h : Chain' R l) (h' : l₁ <:+: l) : Chain' R l₁ :=
-  by
-  rcases h' with ⟨l₂, l₃, rfl⟩
-  exact h.left_of_append.right_of_append
+theorem Chain'.infix (h : Chain' R l) (h' : l₁ <:+: l) : Chain' R l₁ := by
+  rcases h' with ⟨l₂, l₃, rfl⟩; exact h.left_of_append.right_of_append
 #align list.chain'.infix List.Chain'.infix
 -/
 

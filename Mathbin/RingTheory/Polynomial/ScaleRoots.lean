@@ -58,10 +58,7 @@ theorem coeff_scaleRoots_natDegree (p : R[X]) (s : R) :
 
 #print Polynomial.zero_scaleRoots /-
 @[simp]
-theorem zero_scaleRoots (s : R) : scaleRoots 0 s = 0 :=
-  by
-  ext
-  simp
+theorem zero_scaleRoots (s : R) : scaleRoots 0 s = 0 := by ext; simp
 #align polynomial.zero_scale_roots Polynomial.zero_scaleRoots
 -/
 
@@ -83,10 +80,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))) (s : R), LE.le.{0} (Finset.{0} Nat) (Preorder.toLE.{0} (Finset.{0} Nat) (PartialOrder.toPreorder.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat))) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p)
 Case conversion may be inaccurate. Consider using '#align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_leₓ'. -/
-theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ p.support :=
-  by
-  intro
-  simpa using left_ne_zero_of_mul
+theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ p.support := by
+  intro ; simpa using left_ne_zero_of_mul
 #align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_le
 
 /- warning: polynomial.support_scale_roots_eq -> Polynomial.support_scaleRoots_eq is a dubious translation:

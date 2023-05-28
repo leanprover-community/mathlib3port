@@ -91,11 +91,8 @@ Case conversion may be inaccurate. Consider using '#align generalized_continued_
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem compExactValue_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) :
-    ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a :=
-  by
-  field_simp [fract_a_ne_zero]
-  rw [Int.fract]
-  ring
+    ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a := by
+  field_simp [fract_a_ne_zero] ; rw [Int.fract]; ring
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some_aux_comp
 
 open
@@ -175,8 +172,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
         comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr
         by
         have : v = comp_exact_value ppconts pconts ifp_n.fr := IH nth_stream_eq
-        conv_lhs => rw [this]
-        assumption
+        conv_lhs => rw [this]; assumption
       -- get the correspondence between ifp_n and ifp_succ_n
       obtain ⟨ifp_n', nth_stream_eq', ifp_n_fract_ne_zero, ⟨refl⟩⟩ :
         ∃ ifp_n,
@@ -190,10 +186,9 @@ theorem compExactValue_correctness_of_stream_eq_some :
         nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq ifp_n_fract_ne_zero
       -- the claim now follows by unfolding the definitions and tedious calculations
       -- some shorthand notation
-      let ppA := ppconts.a
+      let ppA := ppconts.a;
       let ppB := ppconts.b
-      let pA := pconts.a
-      let pB := pconts.b
+      let pA := pconts.a; let pB := pconts.b
       have :
         comp_exact_value ppconts pconts ifp_n.fr =
           (ppA + ifp_n.fr⁻¹ * pA) / (ppB + ifp_n.fr⁻¹ * pB) :=

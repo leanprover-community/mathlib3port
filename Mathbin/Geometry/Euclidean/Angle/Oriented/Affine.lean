@@ -81,24 +81,18 @@ theorem oangle_self_left_right (p₁ p₂ : P) : ∡ p₁ p₂ p₁ = 0 :=
 #align euclidean_geometry.oangle_self_left_right EuclideanGeometry.oangle_self_left_right
 
 /-- If the angle between three points is nonzero, the first two points are not equal. -/
-theorem left_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₂ :=
-  by
-  rw [← @vsub_ne_zero V]
-  exact o.left_ne_zero_of_oangle_ne_zero h
+theorem left_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₂ := by
+  rw [← @vsub_ne_zero V]; exact o.left_ne_zero_of_oangle_ne_zero h
 #align euclidean_geometry.left_ne_of_oangle_ne_zero EuclideanGeometry.left_ne_of_oangle_ne_zero
 
 /-- If the angle between three points is nonzero, the last two points are not equal. -/
-theorem right_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₃ ≠ p₂ :=
-  by
-  rw [← @vsub_ne_zero V]
-  exact o.right_ne_zero_of_oangle_ne_zero h
+theorem right_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₃ ≠ p₂ := by
+  rw [← @vsub_ne_zero V]; exact o.right_ne_zero_of_oangle_ne_zero h
 #align euclidean_geometry.right_ne_of_oangle_ne_zero EuclideanGeometry.right_ne_of_oangle_ne_zero
 
 /-- If the angle between three points is nonzero, the first and third points are not equal. -/
-theorem left_ne_right_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₃ :=
-  by
-  rw [← (vsub_left_injective p₂).ne_iff]
-  exact o.ne_of_oangle_ne_zero h
+theorem left_ne_right_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₃ := by
+  rw [← (vsub_left_injective p₂).ne_iff]; exact o.ne_of_oangle_ne_zero h
 #align euclidean_geometry.left_ne_right_of_oangle_ne_zero EuclideanGeometry.left_ne_right_of_oangle_ne_zero
 
 /-- If the angle between three points is `π`, the first two points are not equal. -/
@@ -342,8 +336,7 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq {p₁ p₂ p₃ : P} (hn : 
   rw [oangle, oangle]
   convert o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq _ h using 1
   · rw [← neg_vsub_eq_vsub_rev p₁ p₃, ← neg_vsub_eq_vsub_rev p₁ p₂, o.oangle_neg_neg]
-  · rw [← o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]
-    simp
+  · rw [← o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]; simp
   · simpa using hn
 #align euclidean_geometry.oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq EuclideanGeometry.oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq
 
@@ -577,9 +570,7 @@ same ray. -/
 theorem Wbtw.oangle_eq_left {p₁ p₁' p₂ p₃ : P} (h : Wbtw ℝ p₂ p₁ p₁') (hp₁p₂ : p₁ ≠ p₂) :
     ∡ p₁ p₂ p₃ = ∡ p₁' p₂ p₃ := by
   by_cases hp₃p₂ : p₃ = p₂; · simp [hp₃p₂]
-  by_cases hp₁'p₂ : p₁' = p₂;
-  · rw [hp₁'p₂, wbtw_self_iff] at h
-    exact False.elim (hp₁p₂ h)
+  by_cases hp₁'p₂ : p₁' = p₂; · rw [hp₁'p₂, wbtw_self_iff] at h; exact False.elim (hp₁p₂ h)
   rw [← oangle_add hp₁'p₂ hp₁p₂ hp₃p₂, h.oangle₃₁₂_eq_zero, zero_add]
 #align wbtw.oangle_eq_left Wbtw.oangle_eq_left
 
@@ -850,8 +841,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
     (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) (hp₃p₄ : s.SSameSide p₃ p₄) :
     (∡ p₁ p₄ p₂).sign = (∡ p₁ p₃ p₂).sign :=
   by
-  by_cases h : p₁ = p₂
-  · simp [h]
+  by_cases h : p₁ = p₂; · simp [h]
   let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' { p | s.s_same_side p₃ p }
   have hc : IsConnected sp :=
     (is_connected_set_of_s_same_side hp₃p₄.2.1 hp₃p₄.nonempty).image _
@@ -886,9 +876,7 @@ theorem AffineSubspace.SOppSide.oangle_sign_eq_neg {s : AffineSubspace ℝ P} {p
     (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) (hp₃p₄ : s.SOppSide p₃ p₄) :
     (∡ p₁ p₄ p₂).sign = -(∡ p₁ p₃ p₂).sign :=
   by
-  have hp₁p₃ : p₁ ≠ p₃ := by
-    rintro rfl
-    exact hp₃p₄.left_not_mem hp₁
+  have hp₁p₃ : p₁ ≠ p₃ := by rintro rfl; exact hp₃p₄.left_not_mem hp₁
   rw [←
     (hp₃p₄.symm.trans (s_opp_side_point_reflection hp₁ hp₃p₄.left_not_mem)).oangle_sign_eq hp₁ hp₂,
     ← oangle_rotate_sign p₁, ← oangle_rotate_sign p₁, oangle_swap₁₃_sign,

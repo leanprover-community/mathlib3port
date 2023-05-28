@@ -175,9 +175,7 @@ protected def stream (v : K) : Stream' <| Option (IntFractPair K)
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
-theorem stream_isSeq (v : K) : (IntFractPair.stream v).IsSeq :=
-  by
-  intro _ hyp
+theorem stream_isSeq (v : K) : (IntFractPair.stream v).IsSeq := by intro _ hyp;
   simp [int_fract_pair.stream, hyp]
 #align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_isSeq
 -/

@@ -81,10 +81,8 @@ theorem mem_preimage {s : Set β} {a : α} : a ∈ f ⁻¹' s ↔ f a ∈ s :=
 -/
 
 #print Set.preimage_congr /-
-theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ x : α, f x = g x) : f ⁻¹' s = g ⁻¹' s :=
-  by
-  congr with x
-  apply_assumption
+theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ x : α, f x = g x) : f ⁻¹' s = g ⁻¹' s := by
+  congr with x; apply_assumption
 #align set.preimage_congr Set.preimage_congr
 -/
 
@@ -209,9 +207,7 @@ theorem preimage_const_of_not_mem {b : β} {s : Set β} (h : b ∉ s) : (fun x :
 
 #print Set.preimage_const /-
 theorem preimage_const (b : β) (s : Set β) [Decidable (b ∈ s)] :
-    (fun x : α => b) ⁻¹' s = if b ∈ s then univ else ∅ :=
-  by
-  split_ifs with hb hb
+    (fun x : α => b) ⁻¹' s = if b ∈ s then univ else ∅ := by split_ifs with hb hb;
   exacts[preimage_const_of_mem hb, preimage_const_of_not_mem hb]
 #align set.preimage_const Set.preimage_const
 -/
@@ -259,9 +255,7 @@ theorem preimage_preimage {g : β → γ} {f : α → β} {s : Set γ} :
 #print Set.eq_preimage_subtype_val_iff /-
 theorem eq_preimage_subtype_val_iff {p : α → Prop} {s : Set (Subtype p)} {t : Set α} :
     s = Subtype.val ⁻¹' t ↔ ∀ (x) (h : p x), (⟨x, h⟩ : Subtype p) ∈ s ↔ x ∈ t :=
-  ⟨fun s_eq x h => by
-    rw [s_eq]
-    simp, fun h => ext fun ⟨x, hx⟩ => by simp [h]⟩
+  ⟨fun s_eq x h => by rw [s_eq]; simp, fun h => ext fun ⟨x, hx⟩ => by simp [h]⟩
 #align set.eq_preimage_subtype_val_iff Set.eq_preimage_subtype_val_iff
 -/
 
@@ -489,10 +483,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_subset Set.image_subsetₓ'. -/
 /-- Image is monotone with respect to `⊆`. See `set.monotone_image` for the statement in
 terms of `≤`. -/
-theorem image_subset {a b : Set α} (f : α → β) (h : a ⊆ b) : f '' a ⊆ f '' b :=
-  by
-  simp only [subset_def, mem_image]
-  exact fun x => fun ⟨w, h1, h2⟩ => ⟨w, h h1, h2⟩
+theorem image_subset {a b : Set α} (f : α → β) (h : a ⊆ b) : f '' a ⊆ f '' b := by
+  simp only [subset_def, mem_image]; exact fun x => fun ⟨w, h1, h2⟩ => ⟨w, h h1, h2⟩
 #align set.image_subset Set.image_subset
 
 /- warning: set.monotone_image -> Set.monotone_image is a dubious translation:
@@ -519,9 +511,7 @@ theorem image_union (f : α → β) (s t : Set α) : f '' (s ∪ t) = f '' s ∪
 
 #print Set.image_empty /-
 @[simp]
-theorem image_empty (f : α → β) : f '' ∅ = ∅ := by
-  ext
-  simp
+theorem image_empty (f : α → β) : f '' ∅ = ∅ := by ext; simp
 #align set.image_empty Set.image_empty
 -/
 
@@ -566,10 +556,7 @@ theorem image_univ_of_surjective {ι : Type _} {f : ι → β} (H : Surjective f
 
 #print Set.image_singleton /-
 @[simp]
-theorem image_singleton {f : α → β} {a : α} : f '' {a} = {f a} :=
-  by
-  ext
-  simp [image, eq_comm]
+theorem image_singleton {f : α → β} {a : α} : f '' {a} = {f a} := by ext; simp [image, eq_comm]
 #align set.image_singleton Set.image_singleton
 -/
 
@@ -616,10 +603,7 @@ theorem mem_compl_image [BooleanAlgebra α] (t : α) (S : Set α) : t ∈ compl 
 #print Set.image_id' /-
 /-- A variant of `image_id` -/
 @[simp]
-theorem image_id' (s : Set α) : (fun x => x) '' s = s :=
-  by
-  ext
-  simp
+theorem image_id' (s : Set α) : (fun x => x) '' s = s := by ext; simp
 #align set.image_id' Set.image_id'
 -/
 
@@ -641,9 +625,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {a : α} {s : Set.{u2} α}, Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) a s)) (Insert.insert.{u1, u1} β (Set.{u1} β) (Set.instInsertSet.{u1} β) (f a) (Set.image.{u2, u1} α β f s))
 Case conversion may be inaccurate. Consider using '#align set.image_insert_eq Set.image_insert_eqₓ'. -/
 theorem image_insert_eq {f : α → β} {a : α} {s : Set α} : f '' insert a s = insert (f a) (f '' s) :=
-  by
-  ext
-  simp [and_or_left, exists_or, eq_comm, or_comm', and_comm']
+  by ext; simp [and_or_left, exists_or, eq_comm, or_comm', and_comm']
 #align set.image_insert_eq Set.image_insert_eq
 
 #print Set.image_pair /-
@@ -712,9 +694,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α}, (Function.Surjective.{succ u2, succ u1} α β f) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.image.{u2, u1} α β f s)) (Set.image.{u2, u1} α β f (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)))
 Case conversion may be inaccurate. Consider using '#align set.subset_image_compl Set.subset_image_complₓ'. -/
 theorem subset_image_compl {f : α → β} {s : Set α} (H : Surjective f) : (f '' s)ᶜ ⊆ f '' sᶜ :=
-  compl_subset_iff_union.2 <| by
-    rw [← image_union]
-    simp [image_univ_of_surjective H]
+  compl_subset_iff_union.2 <| by rw [← image_union]; simp [image_univ_of_surjective H]
 #align set.subset_image_compl Set.subset_image_compl
 
 /- warning: set.image_compl_eq -> Set.image_compl_eq is a dubious translation:
@@ -1165,9 +1145,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.forall_subtype_range_iff Set.forall_subtype_range_iffₓ'. -/
 theorem forall_subtype_range_iff {p : range f → Prop} :
     (∀ a : range f, p a) ↔ ∀ i, p ⟨f i, mem_range_self _⟩ :=
-  ⟨fun H i => H _, fun H ⟨y, i, hi⟩ => by
-    subst hi
-    apply H⟩
+  ⟨fun H i => H _, fun H ⟨y, i, hi⟩ => by subst hi; apply H⟩
 #align set.forall_subtype_range_iff Set.forall_subtype_range_iff
 
 /- warning: set.exists_range_iff -> Set.exists_range_iff is a dubious translation:
@@ -1197,9 +1175,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.exists_subtype_range_iff Set.exists_subtype_range_iffₓ'. -/
 theorem exists_subtype_range_iff {p : range f → Prop} :
     (∃ a : range f, p a) ↔ ∃ i, p ⟨f i, mem_range_self _⟩ :=
-  ⟨fun ⟨⟨a, i, hi⟩, ha⟩ => by
-    subst a
-    exact ⟨i, ha⟩, fun ⟨i, hi⟩ => ⟨_, hi⟩⟩
+  ⟨fun ⟨⟨a, i, hi⟩, ha⟩ => by subst a; exact ⟨i, ha⟩, fun ⟨i, hi⟩ => ⟨_, hi⟩⟩
 #align set.exists_subtype_range_iff Set.exists_subtype_range_iff
 
 /- warning: set.range_iff_surjective -> Set.range_iff_surjective is a dubious translation:
@@ -1223,10 +1199,7 @@ alias range_iff_surjective ↔ _ _root_.function.surjective.range_eq
 
 #print Set.image_univ /-
 @[simp]
-theorem image_univ {f : α → β} : f '' univ = range f :=
-  by
-  ext
-  simp [image, range]
+theorem image_univ {f : α → β} : f '' univ = range f := by ext; simp [image, range]
 #align set.image_univ Set.image_univ
 -/
 
@@ -1252,9 +1225,7 @@ theorem mem_range_of_mem_image (f : α → β) (s) {x : β} (h : x ∈ f '' s) :
 
 #print Nat.mem_range_succ /-
 theorem Nat.mem_range_succ (i : ℕ) : i ∈ range Nat.succ ↔ 0 < i :=
-  ⟨by
-    rintro ⟨n, rfl⟩
-    exact Nat.succ_pos n, fun h => ⟨_, Nat.succ_pred_eq_of_pos h⟩⟩
+  ⟨by rintro ⟨n, rfl⟩; exact Nat.succ_pos n, fun h => ⟨_, Nat.succ_pred_eq_of_pos h⟩⟩
 #align nat.mem_range_succ Nat.mem_range_succ
 -/
 
@@ -1290,9 +1261,7 @@ theorem range_subset_iff : range f ⊆ s ↔ ∀ y, f y ∈ s :=
 
 #print Set.range_eq_iff /-
 theorem range_eq_iff (f : α → β) (s : Set β) :
-    range f = s ↔ (∀ a, f a ∈ s) ∧ ∀ b ∈ s, ∃ a, f a = b :=
-  by
-  rw [← range_subset_iff]
+    range f = s ↔ (∀ a, f a ∈ s) ∧ ∀ b ∈ s, ∃ a, f a = b := by rw [← range_subset_iff];
   exact le_antisymm_iff
 #align set.range_eq_iff Set.range_eq_iff
 -/
@@ -1369,12 +1338,8 @@ theorem insert_image_compl_eq_range (f : α → β) (x : α) : insert (f x) (f '
     · exact ⟨x', h⟩
   · rintro ⟨x', h⟩
     by_cases hx : x' = x
-    · left
-      rw [← h, hx]
-    · right
-      refine' ⟨_, _, h⟩
-      rw [mem_compl_singleton_iff]
-      exact hx
+    · left; rw [← h, hx]
+    · right; refine' ⟨_, _, h⟩; rw [mem_compl_singleton_iff]; exact hx
 #align set.insert_image_compl_eq_range Set.insert_image_compl_eq_range
 
 /- warning: set.image_preimage_eq_inter_range -> Set.image_preimage_eq_inter_range is a dubious translation:
@@ -1397,10 +1362,7 @@ theorem image_preimage_eq_of_subset {f : α → β} {s : Set β} (hs : s ⊆ ran
 
 #print Set.image_preimage_eq_iff /-
 theorem image_preimage_eq_iff {f : α → β} {s : Set β} : f '' (f ⁻¹' s) = s ↔ s ⊆ range f :=
-  ⟨by
-    intro h
-    rw [← h]
-    apply image_subset_range, image_preimage_eq_of_subset⟩
+  ⟨by intro h; rw [← h]; apply image_subset_range, image_preimage_eq_of_subset⟩
 #align set.image_preimage_eq_iff Set.image_preimage_eq_iff
 -/
 
@@ -1442,9 +1404,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_subset_pr
 theorem preimage_subset_preimage_iff {s t : Set α} {f : β → α} (hs : s ⊆ range f) :
     f ⁻¹' s ⊆ f ⁻¹' t ↔ s ⊆ t := by
   constructor
-  · intro h x hx
-    rcases hs hx with ⟨y, rfl⟩
-    exact h hx
+  · intro h x hx; rcases hs hx with ⟨y, rfl⟩; exact h hx
   intro h x; apply h
 #align set.preimage_subset_preimage_iff Set.preimage_subset_preimage_iff
 
@@ -1457,9 +1417,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_eq_preima
 theorem preimage_eq_preimage' {s t : Set α} {f : β → α} (hs : s ⊆ range f) (ht : t ⊆ range f) :
     f ⁻¹' s = f ⁻¹' t ↔ s = t := by
   constructor
-  · intro h
-    apply subset.antisymm
-    rw [← preimage_subset_preimage_iff hs, h]
+  · intro h; apply subset.antisymm; rw [← preimage_subset_preimage_iff hs, h]
     rw [← preimage_subset_preimage_iff ht, h]
   rintro rfl; rfl
 #align set.preimage_eq_preimage' Set.preimage_eq_preimage'
@@ -1561,10 +1519,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}}, IsCompl.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (SemilatticeInf.toPartialOrder.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (Lattice.toSemilatticeInf.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (GeneralizedCoheytingAlgebra.toLattice.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (BiheytingAlgebra.toCoheytingAlgebra.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (BooleanAlgebra.toBiheytingAlgebra.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (Set.instBooleanAlgebraSet.{max u2 u1} (Sum.{u2, u1} α β)))))))) (BooleanAlgebra.toBoundedOrder.{max u2 u1} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (Set.instBooleanAlgebraSet.{max u2 u1} (Sum.{u2, u1} α β))) (Set.range.{max u2 u1, succ u2} (Sum.{u2, u1} α β) α (Sum.inl.{u2, u1} α β)) (Set.range.{max u2 u1, succ u1} (Sum.{u2, u1} α β) β (Sum.inr.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align set.is_compl_range_inl_range_inr Set.isCompl_range_inl_range_inrₓ'. -/
 theorem isCompl_range_inl_range_inr : IsCompl (range <| @Sum.inl α β) (range Sum.inr) :=
-  IsCompl.of_le
-    (by
-      rintro y ⟨⟨x₁, rfl⟩, ⟨x₂, _⟩⟩
-      cc)
+  IsCompl.of_le (by rintro y ⟨⟨x₁, rfl⟩, ⟨x₂, _⟩⟩; cc)
     (by rintro (x | y) - <;> [left;right] <;> exact mem_range_self _)
 #align set.is_compl_range_inl_range_inr Set.isCompl_range_inl_range_inr
 
@@ -1614,10 +1569,7 @@ theorem range_inr_inter_range_inl : range (Sum.inr : β → Sum α β) ∩ range
 
 #print Set.preimage_inl_image_inr /-
 @[simp]
-theorem preimage_inl_image_inr (s : Set β) : Sum.inl ⁻¹' (@Sum.inr α β '' s) = ∅ :=
-  by
-  ext
-  simp
+theorem preimage_inl_image_inr (s : Set β) : Sum.inl ⁻¹' (@Sum.inr α β '' s) = ∅ := by ext; simp
 #align set.preimage_inl_image_inr Set.preimage_inl_image_inr
 -/
 
@@ -1628,10 +1580,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.preimage.{u1, max u1 u2} β (Sum.{u2, u1} α β) (Sum.inr.{u2, u1} α β) (Set.image.{u2, max u1 u2} α (Sum.{u2, u1} α β) (Sum.inl.{u2, u1} α β) s)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} β) (Set.instEmptyCollectionSet.{u1} β))
 Case conversion may be inaccurate. Consider using '#align set.preimage_inr_image_inl Set.preimage_inr_image_inlₓ'. -/
 @[simp]
-theorem preimage_inr_image_inl (s : Set α) : Sum.inr ⁻¹' (@Sum.inl α β '' s) = ∅ :=
-  by
-  ext
-  simp
+theorem preimage_inr_image_inl (s : Set α) : Sum.inr ⁻¹' (@Sum.inl α β '' s) = ∅ := by ext; simp
 #align set.preimage_inr_image_inl Set.preimage_inr_image_inl
 
 /- warning: set.preimage_inl_range_inr -> Set.preimage_inl_range_inr is a dubious translation:
@@ -1869,14 +1818,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f s) (Set.range.{u1, succ u2} β (Set.Elem.{u2} α s) (fun (x : Set.Elem.{u2} α s) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)))
 Case conversion may be inaccurate. Consider using '#align set.image_eq_range Set.image_eq_rangeₓ'. -/
-theorem image_eq_range (f : α → β) (s : Set α) : f '' s = range fun x : s => f x :=
-  by
-  ext
-  constructor
-  rintro ⟨x, h1, h2⟩
-  exact ⟨⟨x, h1⟩, h2⟩
-  rintro ⟨⟨x, h1⟩, h2⟩
-  exact ⟨x, h1, h2⟩
+theorem image_eq_range (f : α → β) (s : Set α) : f '' s = range fun x : s => f x := by ext;
+  constructor; rintro ⟨x, h1, h2⟩; exact ⟨⟨x, h1⟩, h2⟩; rintro ⟨⟨x, h1⟩, h2⟩; exact ⟨x, h1, h2⟩
 #align set.image_eq_range Set.image_eq_range
 
 /- warning: sum.range_eq -> Sum.range_eq is a dubious translation:
@@ -1909,11 +1852,8 @@ Case conversion may be inaccurate. Consider using '#align set.range_ite_subset' 
 theorem range_ite_subset' {p : Prop} [Decidable p] {f g : α → β} :
     range (if p then f else g) ⊆ range f ∪ range g :=
   by
-  by_cases h : p;
-  · rw [if_pos h]
-    exact subset_union_left _ _
-  · rw [if_neg h]
-    exact subset_union_right _ _
+  by_cases h : p; · rw [if_pos h]; exact subset_union_left _ _
+  · rw [if_neg h]; exact subset_union_right _ _
 #align set.range_ite_subset' Set.range_ite_subset'
 
 /- warning: set.range_ite_subset -> Set.range_ite_subset is a dubious translation:
@@ -1979,10 +1919,8 @@ theorem range_diff_image {f : α → β} (H : Injective f) (s : Set α) : range 
 
 #print Set.range_inclusion /-
 @[simp]
-theorem range_inclusion (h : s ⊆ t) : range (inclusion h) = { x : t | (x : α) ∈ s } :=
-  by
-  ext ⟨x, hx⟩
-  simp [inclusion]
+theorem range_inclusion (h : s ⊆ t) : range (inclusion h) = { x : t | (x : α) ∈ s } := by
+  ext ⟨x, hx⟩; simp [inclusion]
 #align set.range_inclusion Set.range_inclusion
 -/
 
@@ -2001,22 +1939,16 @@ theorem apply_rangeSplitting (f : α → β) (x : range f) : f (rangeSplitting f
 
 #print Set.comp_rangeSplitting /-
 @[simp]
-theorem comp_rangeSplitting (f : α → β) : f ∘ rangeSplitting f = coe :=
-  by
-  ext
-  simp only [Function.comp_apply]
-  apply apply_range_splitting
+theorem comp_rangeSplitting (f : α → β) : f ∘ rangeSplitting f = coe := by ext;
+  simp only [Function.comp_apply]; apply apply_range_splitting
 #align set.comp_range_splitting Set.comp_rangeSplitting
 -/
 
 #print Set.leftInverse_rangeSplitting /-
 -- When `f` is injective, see also `equiv.of_injective`.
 theorem leftInverse_rangeSplitting (f : α → β) :
-    LeftInverse (rangeFactorization f) (rangeSplitting f) := fun x =>
-  by
-  ext
-  simp only [range_factorization_coe]
-  apply apply_range_splitting
+    LeftInverse (rangeFactorization f) (rangeSplitting f) := fun x => by ext;
+  simp only [range_factorization_coe]; apply apply_range_splitting
 #align set.left_inverse_range_splitting Set.leftInverse_rangeSplitting
 -/
 
@@ -2145,10 +2077,8 @@ Case conversion may be inaccurate. Consider using '#align set.subsingleton_of_pr
 /-- If the preimage of a set under an surjective map is a subsingleton,
 the set is a subsingleton. -/
 theorem subsingleton_of_preimage {α β : Type _} {f : α → β} (hf : Function.Surjective f) (s : Set β)
-    (hs : (f ⁻¹' s).Subsingleton) : s.Subsingleton := fun fx hx fy hy =>
-  by
-  rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩
-  exact congr_arg f (hs hx hy)
+    (hs : (f ⁻¹' s).Subsingleton) : s.Subsingleton := fun fx hx fy hy => by
+  rcases hf fx, hf fy with ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩; exact congr_arg f (hs hx hy)
 #align set.subsingleton_of_preimage Set.subsingleton_of_preimage
 
 #print Set.subsingleton_range /-
@@ -2241,11 +2171,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Surjective.{succ u1, succ u2} (Set.{u1} β) (Set.{u2} α) (Set.preimage.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align function.injective.preimage_surjective Function.Injective.preimage_surjectiveₓ'. -/
-theorem Injective.preimage_surjective (hf : Injective f) : Surjective (preimage f) :=
-  by
-  intro s
-  use f '' s
-  rw [hf.preimage_image]
+theorem Injective.preimage_surjective (hf : Injective f) : Surjective (preimage f) := by intro s;
+  use f '' s; rw [hf.preimage_image]
 #align function.injective.preimage_surjective Function.Injective.preimage_surjective
 
 /- warning: function.injective.subsingleton_image_iff -> Function.Injective.subsingleton_image_iff is a dubious translation:
@@ -2275,11 +2202,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Surjective.{succ u2, succ u1} α β f) -> (Function.Surjective.{succ u2, succ u1} (Set.{u2} α) (Set.{u1} β) (Set.image.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align function.surjective.image_surjective Function.Surjective.image_surjectiveₓ'. -/
-theorem Surjective.image_surjective (hf : Surjective f) : Surjective (image f) :=
-  by
-  intro s
-  use f ⁻¹' s
-  rw [hf.image_preimage]
+theorem Surjective.image_surjective (hf : Surjective f) : Surjective (image f) := by intro s;
+  use f ⁻¹' s; rw [hf.image_preimage]
 #align function.surjective.image_surjective Function.Surjective.image_surjective
 
 /- warning: function.surjective.nonempty_preimage -> Function.Surjective.nonempty_preimage is a dubious translation:
@@ -2298,18 +2222,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Injective.{succ u2, succ u1} (Set.{u2} α) (Set.{u1} β) (Set.image.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align function.injective.image_injective Function.Injective.image_injectiveₓ'. -/
-theorem Injective.image_injective (hf : Injective f) : Injective (image f) :=
-  by
-  intro s t h
+theorem Injective.image_injective (hf : Injective f) : Injective (image f) := by intro s t h;
   rw [← preimage_image_eq s hf, ← preimage_image_eq t hf, h]
 #align function.injective.image_injective Function.Injective.image_injective
 
 #print Function.Surjective.preimage_subset_preimage_iff /-
 theorem Surjective.preimage_subset_preimage_iff {s t : Set β} (hf : Surjective f) :
-    f ⁻¹' s ⊆ f ⁻¹' t ↔ s ⊆ t :=
-  by
-  apply preimage_subset_preimage_iff
-  rw [hf.range_eq]
+    f ⁻¹' s ⊆ f ⁻¹' t ↔ s ⊆ t := by apply preimage_subset_preimage_iff; rw [hf.range_eq];
   apply subset_univ
 #align function.surjective.preimage_subset_preimage_iff Function.Surjective.preimage_subset_preimage_iff
 -/
@@ -2429,9 +2348,7 @@ theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coe '' { x : ↥s | �
 -/
 
 #print Subtype.range_coe /-
-theorem range_coe {s : Set α} : range (coe : s → α) = s :=
-  by
-  rw [← Set.image_univ]
+theorem range_coe {s : Set α} : range (coe : s → α) = s := by rw [← Set.image_univ];
   simp [-Set.image_univ, coe_image]
 #align subtype.range_coe Subtype.range_coe
 -/
@@ -2539,10 +2456,8 @@ theorem exists_set_subtype {t : Set α} (p : Set α → Prop) :
     (∃ s : Set t, p (coe '' s)) ↔ ∃ s : Set α, s ⊆ t ∧ p s :=
   by
   constructor
-  · rintro ⟨s, hs⟩
-    refine' ⟨coe '' s, _, hs⟩
-    convert image_subset_range _ _
-    rw [range_coe]
+  · rintro ⟨s, hs⟩; refine' ⟨coe '' s, _, hs⟩
+    convert image_subset_range _ _; rw [range_coe]
   rintro ⟨s, hs₁, hs₂⟩; refine' ⟨coe ⁻¹' s, _⟩
   rw [image_preimage_eq_of_subset]; exact hs₂; rw [range_coe]; exact hs₁
 #align subtype.exists_set_subtype Subtype.exists_set_subtype
@@ -2665,9 +2580,7 @@ variable {f : α → β}
 theorem preimage_injective : Injective (preimage f) ↔ Surjective f :=
   by
   refine' ⟨fun h y => _, surjective.preimage_injective⟩
-  obtain ⟨x, hx⟩ : (f ⁻¹' {y}).Nonempty :=
-    by
-    rw [h.nonempty_apply_iff preimage_empty]
+  obtain ⟨x, hx⟩ : (f ⁻¹' {y}).Nonempty := by rw [h.nonempty_apply_iff preimage_empty];
     apply singleton_nonempty
   exact ⟨x, hx⟩
 #align set.preimage_injective Set.preimage_injective

@@ -88,9 +88,7 @@ section Lex
 variable (r : α → α → Prop) (s : β → β → Prop)
 
 instance [IsRefl α r] [IsRefl β s] : IsRefl (Sum α β) (Lex r s) :=
-  ⟨by
-    rintro (a | a)
-    exacts[lex.inl (refl _), lex.inr (refl _)]⟩
+  ⟨by rintro (a | a); exacts[lex.inl (refl _), lex.inr (refl _)]⟩
 
 instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (Lex r s) :=
   ⟨by rintro _ (⟨h⟩ | ⟨h⟩) <;> exact irrefl _ h⟩

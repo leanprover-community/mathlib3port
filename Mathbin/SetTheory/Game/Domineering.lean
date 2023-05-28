@@ -159,9 +159,7 @@ def domineering (b : Domineering.Board) : PGame :=
 #align pgame.domineering PGame.domineering
 
 /-- All games of Domineering are short, because each move removes two squares. -/
-instance shortDomineering (b : Domineering.Board) : Short (domineering b) :=
-  by
-  dsimp [domineering]
+instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by dsimp [domineering];
   infer_instance
 #align pgame.short_domineering PGame.shortDomineering
 
@@ -175,16 +173,10 @@ def domineering.l :=
   domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
 #align pgame.domineering.L PGame.domineering.l
 
-instance shortOne : Short domineering.one :=
-  by
-  dsimp [domineering.one]
-  infer_instance
+instance shortOne : Short domineering.one := by dsimp [domineering.one]; infer_instance
 #align pgame.short_one PGame.shortOne
 
-instance shortL : Short domineering.l :=
-  by
-  dsimp [domineering.L]
-  infer_instance
+instance shortL : Short domineering.l := by dsimp [domineering.L]; infer_instance
 #align pgame.short_L PGame.shortL
 
 -- The VM can play small games successfully:

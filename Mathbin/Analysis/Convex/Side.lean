@@ -866,12 +866,10 @@ theorem wOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p
   by
   rw [w_opp_side_comm, w_opp_side_iff_exists_left h]
   constructor
-  · rintro (hy | ⟨p, hp, hr⟩)
-    · exact Or.inl hy
+  · rintro (hy | ⟨p, hp, hr⟩); · exact Or.inl hy
     refine' Or.inr ⟨p, hp, _⟩
     rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
-  · rintro (hy | ⟨p, hp, hr⟩)
-    · exact Or.inl hy
+  · rintro (hy | ⟨p, hp, hr⟩); · exact Or.inl hy
     refine' Or.inr ⟨p, hp, _⟩
     rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
 #align affine_subspace.w_opp_side_iff_exists_right AffineSubspace.wOppSide_iff_exists_right
@@ -1248,9 +1246,7 @@ theorem Sbtw.sOppSide_of_not_mem_of_mem {s : AffineSubspace R P} {x y z : P} (h 
   refine' ⟨h.wbtw.w_opp_side₁₃ hy, hx, fun hz => hx _⟩
   rcases h with ⟨⟨t, ⟨ht0, ht1⟩, rfl⟩, hyx, hyz⟩
   rw [line_map_apply] at hy
-  have ht : t ≠ 1 := by
-    rintro rfl
-    simpa [line_map_apply] using hyz
+  have ht : t ≠ 1 := by rintro rfl; simpa [line_map_apply] using hyz
   have hy' := vsub_mem_direction hy hz
   rw [vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev z, ← neg_one_smul R (z -ᵥ x), ← add_smul, ←
     sub_eq_add_neg, s.direction.smul_mem_iff (sub_ne_zero_of_ne ht)] at hy'

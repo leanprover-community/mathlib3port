@@ -107,10 +107,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) t) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) s t))
 Case conversion may be inaccurate. Consider using '#align is_upper_set.mul_left IsUpperSet.mul_leftₓ'. -/
 @[to_additive]
-theorem IsUpperSet.mul_left (ht : IsUpperSet t) : IsUpperSet (s * t) :=
-  by
-  rw [← smul_eq_mul, ← bUnion_smul_set]
-  exact isUpperSet_iUnion₂ fun x hx => ht.smul
+theorem IsUpperSet.mul_left (ht : IsUpperSet t) : IsUpperSet (s * t) := by
+  rw [← smul_eq_mul, ← bUnion_smul_set]; exact isUpperSet_iUnion₂ fun x hx => ht.smul
 #align is_upper_set.mul_left IsUpperSet.mul_left
 #align is_upper_set.add_left IsUpperSet.add_left
 
@@ -121,9 +119,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) s) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) s t))
 Case conversion may be inaccurate. Consider using '#align is_upper_set.mul_right IsUpperSet.mul_rightₓ'. -/
 @[to_additive]
-theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) :=
-  by
-  rw [mul_comm]
+theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) := by rw [mul_comm];
   exact hs.mul_left
 #align is_upper_set.mul_right IsUpperSet.mul_right
 #align is_upper_set.add_right IsUpperSet.add_right
@@ -181,9 +177,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) t) -> (IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))) s t))
 Case conversion may be inaccurate. Consider using '#align is_upper_set.div_left IsUpperSet.div_leftₓ'. -/
 @[to_additive]
-theorem IsUpperSet.div_left (ht : IsUpperSet t) : IsLowerSet (s / t) :=
-  by
-  rw [div_eq_mul_inv]
+theorem IsUpperSet.div_left (ht : IsUpperSet t) : IsLowerSet (s / t) := by rw [div_eq_mul_inv];
   exact ht.inv.mul_left
 #align is_upper_set.div_left IsUpperSet.div_left
 #align is_upper_set.sub_left IsUpperSet.sub_left
@@ -195,9 +189,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) s) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) (HDiv.hDiv.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHDiv.{u1} (Set.{u1} α) (Set.div.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))) s t))
 Case conversion may be inaccurate. Consider using '#align is_upper_set.div_right IsUpperSet.div_rightₓ'. -/
 @[to_additive]
-theorem IsUpperSet.div_right (hs : IsUpperSet s) : IsUpperSet (s / t) :=
-  by
-  rw [div_eq_mul_inv]
+theorem IsUpperSet.div_right (hs : IsUpperSet s) : IsUpperSet (s / t) := by rw [div_eq_mul_inv];
   exact hs.mul_right
 #align is_upper_set.div_right IsUpperSet.div_right
 #align is_upper_set.sub_right IsUpperSet.sub_right
@@ -310,9 +302,7 @@ instance : CommSemigroup (UpperSet α) :=
 @[to_additive]
 private theorem one_mul (s : UpperSet α) : 1 * s = s :=
   SetLike.coe_injective <|
-    (subset_mul_right _ left_mem_Ici).antisymm' <|
-      by
-      rw [← smul_eq_mul, ← bUnion_smul_set]
+    (subset_mul_right _ left_mem_Ici).antisymm' <| by rw [← smul_eq_mul, ← bUnion_smul_set];
       exact Union₂_subset fun _ => s.upper.smul_subset
 
 @[to_additive]
@@ -320,9 +310,7 @@ instance : CommMonoid (UpperSet α) :=
   { UpperSet.commSemigroup with
     one := 1
     one_mul := one_mul
-    mul_one := fun s => by
-      rw [mul_comm]
-      exact one_mul _ }
+    mul_one := fun s => by rw [mul_comm]; exact one_mul _ }
 
 end UpperSet
 
@@ -398,9 +386,7 @@ instance : CommSemigroup (LowerSet α) :=
 @[to_additive]
 private theorem one_mul (s : LowerSet α) : 1 * s = s :=
   SetLike.coe_injective <|
-    (subset_mul_right _ right_mem_Iic).antisymm' <|
-      by
-      rw [← smul_eq_mul, ← bUnion_smul_set]
+    (subset_mul_right _ right_mem_Iic).antisymm' <| by rw [← smul_eq_mul, ← bUnion_smul_set];
       exact Union₂_subset fun _ => s.lower.smul_subset
 
 @[to_additive]
@@ -408,9 +394,7 @@ instance : CommMonoid (LowerSet α) :=
   { LowerSet.commSemigroup with
     one := 1
     one_mul := one_mul
-    mul_one := fun s => by
-      rw [mul_comm]
-      exact one_mul _ }
+    mul_one := fun s => by rw [mul_comm]; exact one_mul _ }
 
 end LowerSet
 
@@ -497,10 +481,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) (SetLike.coe.{u1, u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) α (UpperSet.instSetLikeUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) (upperClosure.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)) s)) t) (SetLike.coe.{u1, u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) α (UpperSet.instSetLikeUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) (upperClosure.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) s t)))
 Case conversion may be inaccurate. Consider using '#align upper_closure_mul upperClosure_mulₓ'. -/
 @[to_additive]
-theorem upperClosure_mul : ↑(upperClosure s) * t = upperClosure (s * t) :=
-  by
-  simp_rw [mul_comm _ t]
-  exact mul_upperClosure _ _
+theorem upperClosure_mul : ↑(upperClosure s) * t = upperClosure (s * t) := by
+  simp_rw [mul_comm _ t]; exact mul_upperClosure _ _
 #align upper_closure_mul upperClosure_mul
 #align upper_closure_add upperClosure_add
 
@@ -511,10 +493,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommGroup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) (SetLike.coe.{u1, u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) α (LowerSet.instSetLikeLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) (lowerClosure.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)) s)) t) (SetLike.coe.{u1, u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) α (LowerSet.instSetLikeLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)))) (lowerClosure.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1)))))))) s t)))
 Case conversion may be inaccurate. Consider using '#align lower_closure_mul lowerClosure_mulₓ'. -/
 @[to_additive]
-theorem lowerClosure_mul : ↑(lowerClosure s) * t = lowerClosure (s * t) :=
-  by
-  simp_rw [mul_comm _ t]
-  exact mul_lowerClosure _ _
+theorem lowerClosure_mul : ↑(lowerClosure s) * t = lowerClosure (s * t) := by
+  simp_rw [mul_comm _ t]; exact mul_lowerClosure _ _
 #align lower_closure_mul lowerClosure_mul
 #align lower_closure_add lowerClosure_add
 

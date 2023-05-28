@@ -166,11 +166,8 @@ attribute [class] InnerProductSpace.Core
 norm. -/
 def InnerProductSpace.toCore [NormedAddCommGroup E] [c : InnerProductSpace 𝕜 E] :
     InnerProductSpace.Core 𝕜 E :=
-  {
-    c with
-    nonneg_re := fun x => by
-      rw [← InnerProductSpace.norm_sq_eq_inner]
-      apply sq_nonneg
+  { c with
+    nonneg_re := fun x => by rw [← InnerProductSpace.norm_sq_eq_inner]; apply sq_nonneg
     definite := fun x hx =>
       norm_eq_zero.1 <| pow_eq_zero <| by rw [InnerProductSpace.norm_sq_eq_inner x, hx, map_zero] }
 #align inner_product_space.to_core InnerProductSpace.toCore
@@ -329,9 +326,7 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {F : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : AddCommGroup.{u1} F] [_inst_3 : Module.{u2, u1} 𝕜 F (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} F _inst_2)] [c : InnerProductSpace.Core.{u2, u1} 𝕜 F _inst_1 _inst_2 _inst_3] {x : F}, Iff (Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 F (InnerProductSpace.Core.toInner'.{u2, u1} 𝕜 F _inst_1 _inst_2 _inst_3 c) x x) (OfNat.ofNat.{u2} 𝕜 0 (Zero.toOfNat0.{u2} 𝕜 (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))))))) (Eq.{succ u1} F x (OfNat.ofNat.{u1} F 0 (Zero.toOfNat0.{u1} F (NegZeroClass.toZero.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F _inst_2))))))))
 Case conversion may be inaccurate. Consider using '#align inner_product_space.core.inner_self_eq_zero InnerProductSpace.Core.inner_self_eq_zeroₓ'. -/
 theorem inner_self_eq_zero {x : F} : ⟪x, x⟫ = 0 ↔ x = 0 :=
-  ⟨c.definite _, by
-    rintro rfl
-    exact inner_zero_left _⟩
+  ⟨c.definite _, by rintro rfl; exact inner_zero_left _⟩
 #align inner_product_space.core.inner_self_eq_zero InnerProductSpace.Core.inner_self_eq_zero
 
 /- warning: inner_product_space.core.norm_sq_eq_zero -> InnerProductSpace.Core.normSq_eq_zero is a dubious translation:
@@ -378,9 +373,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {F : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : AddCommGroup.{u1} F] [_inst_3 : Module.{u2, u1} 𝕜 F (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} F _inst_2)] [c : InnerProductSpace.Core.{u2, u1} 𝕜 F _inst_1 _inst_2 _inst_3] (x : F) (y : F), Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 F (InnerProductSpace.Core.toInner'.{u2, u1} 𝕜 F _inst_1 _inst_2 _inst_3 c) (Neg.neg.{u1} F (NegZeroClass.toNeg.{u1} F (SubNegZeroMonoid.toNegZeroClass.{u1} F (SubtractionMonoid.toSubNegZeroMonoid.{u1} F (SubtractionCommMonoid.toSubtractionMonoid.{u1} F (AddCommGroup.toDivisionAddCommMonoid.{u1} F _inst_2))))) x) y) (Neg.neg.{u2} 𝕜 (Ring.toNeg.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (Inner.inner.{u2, u1} 𝕜 F (InnerProductSpace.Core.toInner'.{u2, u1} 𝕜 F _inst_1 _inst_2 _inst_3 c) x y))
 Case conversion may be inaccurate. Consider using '#align inner_product_space.core.inner_neg_left InnerProductSpace.Core.inner_neg_leftₓ'. -/
-theorem inner_neg_left (x y : F) : ⟪-x, y⟫ = -⟪x, y⟫ :=
-  by
-  rw [← neg_one_smul 𝕜 x, inner_smul_left]
+theorem inner_neg_left (x y : F) : ⟪-x, y⟫ = -⟪x, y⟫ := by rw [← neg_one_smul 𝕜 x, inner_smul_left];
   simp
 #align inner_product_space.core.inner_neg_left InnerProductSpace.Core.inner_neg_left
 
@@ -417,10 +410,8 @@ theorem inner_sub_right (x y z : F) : ⟪x, y - z⟫ = ⟪x, y⟫ - ⟪x, z⟫ :
 /- warning: inner_product_space.core.inner_mul_symm_re_eq_norm -> InnerProductSpace.Core.inner_mul_symm_re_eq_norm is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align inner_product_space.core.inner_mul_symm_re_eq_norm InnerProductSpace.Core.inner_mul_symm_re_eq_normₓ'. -/
-theorem inner_mul_symm_re_eq_norm (x y : F) : re (⟪x, y⟫ * ⟪y, x⟫) = ‖⟪x, y⟫ * ⟪y, x⟫‖ :=
-  by
-  rw [← inner_conj_symm, mul_comm]
-  exact re_eq_norm_of_mul_conj (inner y x)
+theorem inner_mul_symm_re_eq_norm (x y : F) : re (⟪x, y⟫ * ⟪y, x⟫) = ‖⟪x, y⟫ * ⟪y, x⟫‖ := by
+  rw [← inner_conj_symm, mul_comm]; exact re_eq_norm_of_mul_conj (inner y x)
 #align inner_product_space.core.inner_mul_symm_re_eq_norm InnerProductSpace.Core.inner_mul_symm_re_eq_norm
 
 /- warning: inner_product_space.core.inner_add_add_self -> InnerProductSpace.Core.inner_add_add_self is a dubious translation:
@@ -636,9 +627,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] {x : E} {y : E}, Iff (Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x y) (OfNat.ofNat.{u2} 𝕜 0 (Zero.toOfNat0.{u2} 𝕜 (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))))))) (Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) y x) (OfNat.ofNat.{u2} 𝕜 0 (Zero.toOfNat0.{u2} 𝕜 (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))))))
 Case conversion may be inaccurate. Consider using '#align inner_eq_zero_symm inner_eq_zero_symmₓ'. -/
-theorem inner_eq_zero_symm {x y : E} : ⟪x, y⟫ = 0 ↔ ⟪y, x⟫ = 0 :=
-  by
-  rw [← inner_conj_symm]
+theorem inner_eq_zero_symm {x y : E} : ⟪x, y⟫ = 0 ↔ ⟪y, x⟫ = 0 := by rw [← inner_conj_symm];
   exact star_eq_zero
 #align inner_eq_zero_symm inner_eq_zero_symm
 
@@ -665,10 +654,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] (x : E) (y : E) (z : E), Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (NormedAddGroup.toAddGroup.{u1} E (NormedAddCommGroup.toNormedAddGroup.{u1} E _inst_2))))))) y z)) (HAdd.hAdd.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHAdd.{u2} 𝕜 (Distrib.toAdd.{u2} 𝕜 (NonUnitalNonAssocSemiring.toDistrib.{u2} 𝕜 (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u2} 𝕜 (Ring.toNonAssocRing.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))))))) (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x y) (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x z))
 Case conversion may be inaccurate. Consider using '#align inner_add_right inner_add_rightₓ'. -/
-theorem inner_add_right (x y z : E) : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ :=
-  by
-  rw [← inner_conj_symm, inner_add_left, RingHom.map_add]
-  simp only [inner_conj_symm]
+theorem inner_add_right (x y z : E) : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ := by
+  rw [← inner_conj_symm, inner_add_left, RingHom.map_add]; simp only [inner_conj_symm]
 #align inner_add_right inner_add_right
 
 /- warning: inner_re_symm -> inner_re_symm is a dubious translation:
@@ -706,10 +693,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] (x : E) (y : E) (r : Real), Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) (HSMul.hSMul.{u2, u1, u1} 𝕜 E E (instHSMul.{u2, u1} 𝕜 E (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3))))))) (IsROrC.ofReal.{u2} 𝕜 _inst_1 r) x) y) (HSMul.hSMul.{0, u2, u2} Real 𝕜 𝕜 (instHSMul.{0, u2} Real 𝕜 (Algebra.toSMul.{0, u2} Real 𝕜 Real.instCommSemiringReal (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (NormedAlgebra.toAlgebra.{0, u2} Real 𝕜 Real.normedField (SeminormedCommRing.toSeminormedRing.{u2} 𝕜 (NormedCommRing.toSeminormedCommRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))) (IsROrC.toNormedAlgebra.{u2} 𝕜 _inst_1)))) r (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x y))
 Case conversion may be inaccurate. Consider using '#align inner_smul_real_left inner_smul_real_leftₓ'. -/
-theorem inner_smul_real_left (x y : E) (r : ℝ) : ⟪(r : 𝕜) • x, y⟫ = r • ⟪x, y⟫ :=
-  by
-  rw [inner_smul_left, conj_of_real, Algebra.smul_def]
-  rfl
+theorem inner_smul_real_left (x y : E) (r : ℝ) : ⟪(r : 𝕜) • x, y⟫ = r • ⟪x, y⟫ := by
+  rw [inner_smul_left, conj_of_real, Algebra.smul_def]; rfl
 #align inner_smul_real_left inner_smul_real_left
 
 /- warning: inner_smul_right -> inner_smul_right is a dubious translation:
@@ -738,10 +723,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] (x : E) (y : E) (r : Real), Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x (HSMul.hSMul.{u2, u1, u1} 𝕜 E E (instHSMul.{u2, u1} 𝕜 E (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) (InnerProductSpace.toNormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3))))))) (IsROrC.ofReal.{u2} 𝕜 _inst_1 r) y)) (HSMul.hSMul.{0, u2, u2} Real 𝕜 𝕜 (instHSMul.{0, u2} Real 𝕜 (Algebra.toSMul.{0, u2} Real 𝕜 Real.instCommSemiringReal (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (NormedAlgebra.toAlgebra.{0, u2} Real 𝕜 Real.normedField (SeminormedCommRing.toSeminormedRing.{u2} 𝕜 (NormedCommRing.toSeminormedCommRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))))) (IsROrC.toNormedAlgebra.{u2} 𝕜 _inst_1)))) r (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x y))
 Case conversion may be inaccurate. Consider using '#align inner_smul_real_right inner_smul_real_rightₓ'. -/
-theorem inner_smul_real_right (x y : E) (r : ℝ) : ⟪x, (r : 𝕜) • y⟫ = r • ⟪x, y⟫ :=
-  by
-  rw [inner_smul_right, Algebra.smul_def]
-  rfl
+theorem inner_smul_real_right (x y : E) (r : ℝ) : ⟪x, (r : 𝕜) • y⟫ = r • ⟪x, y⟫ := by
+  rw [inner_smul_right, Algebra.smul_def]; rfl
 #align inner_smul_real_right inner_smul_real_right
 
 #print sesqFormOfInner /-
@@ -926,9 +909,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] (x : E), Eq.{succ u2} 𝕜 (IsROrC.ofReal.{u2} 𝕜 _inst_1 (Norm.norm.{u2} 𝕜 (NormedField.toNorm.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1))) (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x x))) (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x x)
 Case conversion may be inaccurate. Consider using '#align inner_self_norm_to_K inner_self_ofReal_normₓ'. -/
-theorem inner_self_ofReal_norm (x : E) : (‖⟪x, x⟫‖ : 𝕜) = ⟪x, x⟫ :=
-  by
-  rw [← inner_self_re_eq_norm]
+theorem inner_self_ofReal_norm (x : E) : (‖⟪x, x⟫‖ : 𝕜) = ⟪x, x⟫ := by rw [← inner_self_re_eq_norm];
   exact inner_self_ofReal_re _
 #align inner_self_norm_to_K inner_self_ofReal_norm
 
@@ -997,9 +978,7 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : IsROrC.{u2} 𝕜] [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : InnerProductSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] (x : E) (y : E), Eq.{succ u2} 𝕜 (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) (Neg.neg.{u1} E (NegZeroClass.toNeg.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) x) y) (Neg.neg.{u2} 𝕜 (Ring.toNeg.{u2} 𝕜 (NormedRing.toRing.{u2} 𝕜 (NormedCommRing.toNormedRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 (DenselyNormedField.toNormedField.{u2} 𝕜 (IsROrC.toDenselyNormedField.{u2} 𝕜 _inst_1)))))) (Inner.inner.{u2, u1} 𝕜 E (InnerProductSpace.toInner.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3) x y))
 Case conversion may be inaccurate. Consider using '#align inner_neg_left inner_neg_leftₓ'. -/
 @[simp]
-theorem inner_neg_left (x y : E) : ⟪-x, y⟫ = -⟪x, y⟫ :=
-  by
-  rw [← neg_one_smul 𝕜 x, inner_smul_left]
+theorem inner_neg_left (x y : E) : ⟪-x, y⟫ = -⟪x, y⟫ := by rw [← neg_one_smul 𝕜 x, inner_smul_left];
   simp
 #align inner_neg_left inner_neg_left
 
@@ -1057,10 +1036,8 @@ theorem inner_sub_right (x y z : E) : ⟪x, y - z⟫ = ⟪x, y⟫ - ⟪x, z⟫ :
 /- warning: inner_mul_symm_re_eq_norm -> inner_mul_symm_re_eq_norm is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align inner_mul_symm_re_eq_norm inner_mul_symm_re_eq_normₓ'. -/
-theorem inner_mul_symm_re_eq_norm (x y : E) : re (⟪x, y⟫ * ⟪y, x⟫) = ‖⟪x, y⟫ * ⟪y, x⟫‖ :=
-  by
-  rw [← inner_conj_symm, mul_comm]
-  exact re_eq_norm_of_mul_conj (inner y x)
+theorem inner_mul_symm_re_eq_norm (x y : E) : re (⟪x, y⟫ * ⟪y, x⟫) = ‖⟪x, y⟫ * ⟪y, x⟫‖ := by
+  rw [← inner_conj_symm, mul_comm]; exact re_eq_norm_of_mul_conj (inner y x)
 #align inner_mul_symm_re_eq_norm inner_mul_symm_re_eq_norm
 
 /- warning: inner_add_add_self -> inner_add_add_self is a dubious translation:
@@ -1170,9 +1147,7 @@ Case conversion may be inaccurate. Consider using '#align real_inner_mul_inner_s
 /-- Cauchy–Schwarz inequality for real inner products. -/
 theorem real_inner_mul_inner_self_le (x y : F) : ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ ≤ ⟪x, x⟫_ℝ * ⟪y, y⟫_ℝ :=
   calc
-    ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ ≤ ‖⟪x, y⟫_ℝ‖ * ‖⟪y, x⟫_ℝ‖ :=
-      by
-      rw [real_inner_comm y, ← norm_mul]
+    ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ ≤ ‖⟪x, y⟫_ℝ‖ * ‖⟪y, x⟫_ℝ‖ := by rw [real_inner_comm y, ← norm_mul];
       exact le_abs_self _
     _ ≤ ⟪x, x⟫_ℝ * ⟪y, y⟫_ℝ := @inner_mul_inner_self_le ℝ _ _ _ _ x y
     
@@ -1632,10 +1607,8 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_4] (x : F), Eq.{1} Real (Inner.inner.{0, u1} Real F (InnerProductSpace.toInner.{0, u1} Real F Real.isROrC _inst_4 _inst_5) x x) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) x) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) x))
 Case conversion may be inaccurate. Consider using '#align real_inner_self_eq_norm_mul_norm real_inner_self_eq_norm_mul_normₓ'. -/
-theorem real_inner_self_eq_norm_mul_norm (x : F) : ⟪x, x⟫_ℝ = ‖x‖ * ‖x‖ :=
-  by
-  have h := @inner_self_eq_norm_mul_norm ℝ F _ _ _ x
-  simpa using h
+theorem real_inner_self_eq_norm_mul_norm (x : F) : ⟪x, x⟫_ℝ = ‖x‖ * ‖x‖ := by
+  have h := @inner_self_eq_norm_mul_norm ℝ F _ _ _ x; simpa using h
 #align real_inner_self_eq_norm_mul_norm real_inner_self_eq_norm_mul_norm
 
 /- warning: real_inner_self_eq_norm_sq -> real_inner_self_eq_norm_sq is a dubious translation:
@@ -1675,10 +1648,8 @@ but is expected to have type
   forall {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : InnerProductSpace.{0, u1} Real F Real.isROrC _inst_4] (x : F) (y : F), Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) (HAdd.hAdd.{u1, u1, u1} F F F (instHAdd.{u1} F (AddZeroClass.toAdd.{u1} F (AddMonoid.toAddZeroClass.{u1} F (SubNegMonoid.toAddMonoid.{u1} F (AddGroup.toSubNegMonoid.{u1} F (NormedAddGroup.toAddGroup.{u1} F (NormedAddCommGroup.toNormedAddGroup.{u1} F _inst_4))))))) x y)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) x) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) (Inner.inner.{0, u1} Real F (InnerProductSpace.toInner.{0, u1} Real F Real.isROrC _inst_4 _inst_5) x y))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Norm.norm.{u1} F (NormedAddCommGroup.toNorm.{u1} F _inst_4) y) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
 Case conversion may be inaccurate. Consider using '#align norm_add_sq_real norm_add_sq_realₓ'. -/
 /-- Expand the square -/
-theorem norm_add_sq_real (x y : F) : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 :=
-  by
-  have h := @norm_add_sq ℝ _ _ _ _ x y
-  simpa using h
+theorem norm_add_sq_real (x y : F) : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 := by
+  have h := @norm_add_sq ℝ _ _ _ _ x y; simpa using h
 #align norm_add_sq_real norm_add_sq_real
 
 /- warning: norm_add_pow_two_real -> norm_add_pow_two_real is a dubious translation:
@@ -1695,9 +1666,7 @@ alias norm_add_sq_real ← norm_add_pow_two_real
 Case conversion may be inaccurate. Consider using '#align norm_add_mul_self norm_add_mul_selfₓ'. -/
 /-- Expand the square -/
 theorem norm_add_mul_self (x y : E) : ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ :=
-  by
-  repeat' rw [← sq]
-  exact norm_add_sq _ _
+  by repeat' rw [← sq]; exact norm_add_sq _ _
 #align norm_add_mul_self norm_add_mul_self
 
 /- warning: norm_add_mul_self_real -> norm_add_mul_self_real is a dubious translation:
@@ -1708,10 +1677,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align norm_add_mul_self_real norm_add_mul_self_realₓ'. -/
 /-- Expand the square -/
 theorem norm_add_mul_self_real (x y : F) :
-    ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ :=
-  by
-  have h := @norm_add_mul_self ℝ _ _ _ _ x y
-  simpa using h
+    ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ := by
+  have h := @norm_add_mul_self ℝ _ _ _ _ x y; simpa using h
 #align norm_add_mul_self_real norm_add_mul_self_real
 
 /- warning: norm_sub_sq -> norm_sub_sq is a dubious translation:
@@ -1754,9 +1721,7 @@ alias norm_sub_sq_real ← norm_sub_pow_two_real
 Case conversion may be inaccurate. Consider using '#align norm_sub_mul_self norm_sub_mul_selfₓ'. -/
 /-- Expand the square -/
 theorem norm_sub_mul_self (x y : E) : ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ :=
-  by
-  repeat' rw [← sq]
-  exact norm_sub_sq _ _
+  by repeat' rw [← sq]; exact norm_sub_sq _ _
 #align norm_sub_mul_self norm_sub_mul_self
 
 /- warning: norm_sub_mul_self_real -> norm_sub_mul_self_real is a dubious translation:
@@ -1767,10 +1732,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align norm_sub_mul_self_real norm_sub_mul_self_realₓ'. -/
 /-- Expand the square -/
 theorem norm_sub_mul_self_real (x y : F) :
-    ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ :=
-  by
-  have h := @norm_sub_mul_self ℝ _ _ _ _ x y
-  simpa using h
+    ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ := by
+  have h := @norm_sub_mul_self ℝ _ _ _ _ x y; simpa using h
 #align norm_sub_mul_self_real norm_sub_mul_self_real
 
 /- warning: norm_inner_le_norm -> norm_inner_le_norm is a dubious translation:
@@ -1864,9 +1827,7 @@ omit 𝕜
 Case conversion may be inaccurate. Consider using '#align re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_twoₓ'. -/
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : E) :
-    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x‖ * ‖x‖ - ‖y‖ * ‖y‖) / 2 :=
-  by
-  rw [@norm_add_mul_self 𝕜]
+    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x‖ * ‖x‖ - ‖y‖ * ‖y‖) / 2 := by rw [@norm_add_mul_self 𝕜];
   ring
 #align re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
 
@@ -1875,9 +1836,7 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_tw
 Case conversion may be inaccurate. Consider using '#align re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_twoₓ'. -/
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : E) :
-    re ⟪x, y⟫ = (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ - ‖x - y‖ * ‖x - y‖) / 2 :=
-  by
-  rw [@norm_sub_mul_self 𝕜]
+    re ⟪x, y⟫ = (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ - ‖x - y‖ * ‖x - y‖) / 2 := by rw [@norm_sub_mul_self 𝕜];
   ring
 #align re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
 
@@ -1886,10 +1845,8 @@ theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_tw
 Case conversion may be inaccurate. Consider using '#align re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_fourₓ'. -/
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
-    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x - y‖ * ‖x - y‖) / 4 :=
-  by
-  rw [@norm_add_mul_self 𝕜, @norm_sub_mul_self 𝕜]
-  ring
+    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x - y‖ * ‖x - y‖) / 4 := by
+  rw [@norm_add_mul_self 𝕜, @norm_sub_mul_self 𝕜]; ring
 #align re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four
 
 /- warning: im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four -> im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four is a dubious translation:
@@ -1897,10 +1854,8 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
 Case conversion may be inaccurate. Consider using '#align im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_fourₓ'. -/
 /-- Polarization identity: The imaginary part of the inner product, in terms of the norm. -/
 theorem im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four (x y : E) :
-    im ⟪x, y⟫ = (‖x - IK • y‖ * ‖x - IK • y‖ - ‖x + IK • y‖ * ‖x + IK • y‖) / 4 :=
-  by
-  simp only [@norm_add_mul_self 𝕜, @norm_sub_mul_self 𝕜, inner_smul_right, I_mul_re]
-  ring
+    im ⟪x, y⟫ = (‖x - IK • y‖ * ‖x - IK • y‖ - ‖x + IK • y‖ * ‖x + IK • y‖) / 4 := by
+  simp only [@norm_add_mul_self 𝕜, @norm_sub_mul_self 𝕜, inner_smul_right, I_mul_re]; ring
 #align im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_i_smul_mul_self_sub_norm_add_i_smul_mul_self_div_four
 
 /- warning: inner_eq_sum_norm_sq_div_four -> inner_eq_sum_norm_sq_div_four is a dubious translation:
@@ -2909,10 +2864,7 @@ theorem isBoundedBilinearMap_inner [NormedSpace ℝ E] :
     add_right := inner_add_right
     smul_right := fun r x y => by
       simp only [← algebraMap_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right]
-    bound :=
-      ⟨1, zero_lt_one, fun x y => by
-        rw [one_mul]
-        exact norm_inner_le_norm x y⟩ }
+    bound := ⟨1, zero_lt_one, fun x y => by rw [one_mul]; exact norm_inner_le_norm x y⟩ }
 #align is_bounded_bilinear_map_inner isBoundedBilinearMap_inner
 -/
 
@@ -2991,9 +2943,7 @@ end BesselsInequality
 instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜
     where
   inner x y := conj x * y
-  norm_sq_eq_inner x := by
-    unfold inner
-    rw [mul_comm, mul_conj, of_real_re, norm_sq_eq_def']
+  norm_sq_eq_inner x := by unfold inner; rw [mul_comm, mul_conj, of_real_re, norm_sq_eq_def']
   conj_symm x y := by simp only [mul_comm, map_mul, starRingEnd_self_apply]
   add_left x y z := by simp only [add_mul, map_add]
   smul_left x y z := by simp only [mul_assoc, smul_eq_mul, map_mul]
@@ -3198,9 +3148,7 @@ theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_f
   rintro ⟨i, v⟩ ⟨j, w⟩ hvw
   by_cases hij : i = j
   · subst hij
-    have : v ≠ w := fun h => by
-      subst h
-      exact hvw rfl
+    have : v ≠ w := fun h => by subst h; exact hvw rfl
     simpa only [LinearIsometry.inner_map_map] using (hv_family i).2 this
   · exact hV hij (v_family i v) (v_family j w)
 #align orthogonal_family.orthonormal_sigma_orthonormal OrthogonalFamily.orthonormal_sigma_orthonormal

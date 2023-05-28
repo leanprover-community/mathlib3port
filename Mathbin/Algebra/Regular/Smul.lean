@@ -148,9 +148,7 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : SMul.{u2, u1} R M] [_inst_5 : Mul.{u2} R] [_inst_6 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) a b)) -> (IsSMulRegular.{u2, u1} R M _inst_1 b)
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_mul IsSMulRegular.of_mulₓ'. -/
 theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSMulRegular M (a * b)) : IsSMulRegular M b :=
-  by
-  rw [← smul_eq_mul] at ab
-  exact ab.of_smul _
+  by rw [← smul_eq_mul] at ab; exact ab.of_smul _
 #align is_smul_regular.of_mul IsSMulRegular.of_mul
 
 /- warning: is_smul_regular.mul_iff_right -> IsSMulRegular.mul_iff_right is a dubious translation:
@@ -212,10 +210,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_mul_eq_one IsSMulRegular.of_mul_eq_oneₓ'. -/
 /-- An element of `R` admitting a left inverse is `M`-regular. -/
 theorem of_mul_eq_one (h : a * b = 1) : IsSMulRegular M b :=
-  of_mul
-    (by
-      rw [h]
-      exact one M)
+  of_mul (by rw [h]; exact one M)
 #align is_smul_regular.of_mul_eq_one IsSMulRegular.of_mul_eq_one
 
 /- warning: is_smul_regular.pow -> IsSMulRegular.pow is a dubious translation:
@@ -229,8 +224,7 @@ theorem pow (n : ℕ) (ra : IsSMulRegular M a) : IsSMulRegular M (a ^ n) :=
   by
   induction' n with n hn
   · simp only [one, pow_zero]
-  · rw [pow_succ]
-    exact (ra.smul_iff (a ^ n)).mpr hn
+  · rw [pow_succ]; exact (ra.smul_iff (a ^ n)).mpr hn
 #align is_smul_regular.pow IsSMulRegular.pow
 
 /- warning: is_smul_regular.pow_iff -> IsSMulRegular.pow_iff is a dubious translation:
@@ -261,10 +255,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_smul_eq_one IsSMulRegular.of_smul_eq_oneₓ'. -/
 /-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
 theorem of_smul_eq_one (h : a • s = 1) : IsSMulRegular M s :=
-  of_smul a
-    (by
-      rw [h]
-      exact one M)
+  of_smul a (by rw [h]; exact one M)
 #align is_smul_regular.of_smul_eq_one IsSMulRegular.of_smul_eq_one
 
 end MonoidSmul

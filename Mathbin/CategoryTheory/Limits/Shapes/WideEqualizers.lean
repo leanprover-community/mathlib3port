@@ -140,10 +140,7 @@ def parallelFamily : WalkingParallelFamily J ⥤ C
     match x, y, h with
     | _, _, id _ => 𝟙 _
     | _, _, line j => f j
-  map_comp' := by
-    rintro _ _ _ ⟨⟩ ⟨⟩ <;>
-      · unfold_aux
-        simp <;> rfl
+  map_comp' := by rintro _ _ _ ⟨⟩ ⟨⟩ <;> · unfold_aux; simp <;> rfl
 #align category_theory.limits.parallel_family CategoryTheory.Limits.parallelFamily
 -/
 
@@ -570,10 +567,7 @@ def Cone.ofTrident {F : WalkingParallelFamily J ⥤ C} (t : Trident fun j => F.m
   pt := t.pt
   π :=
     { app := fun X => t.π.app X ≫ eqToHom (by tidy)
-      naturality' := fun j j' g => by
-        cases g <;>
-          · dsimp
-            simp }
+      naturality' := fun j j' g => by cases g <;> · dsimp; simp }
 #align category_theory.limits.cone.of_trident CategoryTheory.Limits.Cone.ofTrident
 
 /- warning: category_theory.limits.cocone.of_cotrident -> CategoryTheory.Limits.Cocone.ofCotrident is a dubious translation:

@@ -156,13 +156,8 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
     have key :
       (fun p : α × α => x₀ * p.1 * (p.2 * y₀)) =
         ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) :=
-      by
-      ext p
-      simp [uncurry, mul_assoc]
-    have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x :=
-      by
-      ext x
-      simp
+      by ext p; simp [uncurry, mul_assoc]
+    have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by ext x; simp
     calc
       map (uncurry (· * ·)) (𝓝 (x₀, y₀)) = map (uncurry (· * ·)) (𝓝 x₀ ×ᶠ 𝓝 y₀) := by
         rw [nhds_prod_eq]
@@ -340,9 +335,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : OrderTopology.{u1} α _inst_2 (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))] {_inst_4 : Filter.{u2} β} {f : β -> α} {g : β -> α} {l : α}, (Filter.Tendsto.{u2, u1} β α f _inst_4 (nhds.{u1} α _inst_2 l)) -> (Filter.Tendsto.{u2, u1} β α g _inst_4 (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))))) -> (Filter.Tendsto.{u2, u1} β α (fun (x : β) => HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (LinearOrderedField.toDiv.{u1} α _inst_1)) (f x) (g x)) _inst_4 (nhds.{u1} α _inst_2 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α (LinearOrderedSemifield.toSemifield.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1)))))))))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.div_at_top Filter.Tendsto.div_atTopₓ'. -/
 theorem Filter.Tendsto.div_atTop [ContinuousMul α] {f g : β → α} {l : Filter β} {a : α}
-    (h : Tendsto f l (𝓝 a)) (hg : Tendsto g l atTop) : Tendsto (fun x => f x / g x) l (𝓝 0) :=
-  by
-  simp only [div_eq_mul_inv]
+    (h : Tendsto f l (𝓝 a)) (hg : Tendsto g l atTop) : Tendsto (fun x => f x / g x) l (𝓝 0) := by
+  simp only [div_eq_mul_inv];
   exact MulZeroClass.mul_zero a ▸ h.mul (tendsto_inv_at_top_zero.comp hg)
 #align filter.tendsto.div_at_top Filter.Tendsto.div_atTop
 

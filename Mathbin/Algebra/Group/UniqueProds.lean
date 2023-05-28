@@ -56,10 +56,8 @@ variable {G H : Type _} [Mul G] [Mul H] {A B : Finset G} {a0 b0 : G}
 
 #print UniqueMul.mt /-
 theorem mt {G} [Mul G] {A B : Finset G} {a0 b0 : G} (h : UniqueMul A B a0 b0) :
-    ∀ ⦃a b⦄, a ∈ A → b ∈ B → a ≠ a0 ∨ b ≠ b0 → a * b ≠ a0 * b0 := fun _ _ ha hb k =>
-  by
-  contrapose! k
-  exact h ha hb k
+    ∀ ⦃a b⦄, a ∈ A → b ∈ B → a ≠ a0 ∨ b ≠ b0 → a * b ≠ a0 * b0 := fun _ _ ha hb k => by
+  contrapose! k; exact h ha hb k
 #align unique_mul.mt UniqueMul.mt
 -/
 

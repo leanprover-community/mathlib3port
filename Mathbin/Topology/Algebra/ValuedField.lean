@@ -171,8 +171,7 @@ instance (priority := 100) completable : CompletableTopField K :=
       refine' ⟨hF.1.map _, _⟩
       replace hF := hF.2
       intro γ
-      rcases hF (min (γ * γ₀ * γ₀) γ₀) with ⟨M₁, M₁_in, H₁⟩
-      clear hF
+      rcases hF (min (γ * γ₀ * γ₀) γ₀) with ⟨M₁, M₁_in, H₁⟩; clear hF
       use (fun x : K => x⁻¹) '' (M₀ ∩ M₁)
       constructor
       · rw [mem_map]
@@ -182,13 +181,9 @@ instance (priority := 100) completable : CompletableTopField K :=
         simp only [mem_set_of_eq]
         specialize H₁ x x_in₁ y y_in₁
         replace x_in₀ := H₀ x x_in₀
-        replace y_in₀ := H₀ y y_in₀
-        clear H₀
+        replace y_in₀ := H₀ y y_in₀; clear H₀
         apply Valuation.inversion_estimate
-        · have : (v x : Γ₀) ≠ 0 := by
-            intro h
-            rw [h] at x_in₀
-            simpa using x_in₀
+        · have : (v x : Γ₀) ≠ 0 := by intro h; rw [h] at x_in₀; simpa using x_in₀
           exact (Valuation.ne_zero_iff _).mp this
         · refine' lt_of_lt_of_le H₁ _
           rw [Units.min_val]
@@ -221,9 +216,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     exact valued.continuous_valuation.tendsto' 0 0 (map_zero v)
   · have preimage_one : v ⁻¹' {(1 : Γ₀)} ∈ 𝓝 (1 : K) :=
       by
-      have : (v (1 : K) : Γ₀) ≠ 0 := by
-        rw [Valuation.map_one]
-        exact zero_ne_one.symm
+      have : (v (1 : K) : Γ₀) ≠ 0 := by rw [Valuation.map_one]; exact zero_ne_one.symm
       convert Valued.loc_const this
       ext x
       rw [Valuation.map_one, mem_preimage, mem_singleton_iff, mem_set_of_eq]
@@ -306,9 +299,7 @@ theorem extension_extends (x : K) : extension (x : hat K) = v x :=
 noncomputable def extensionValuation : Valuation (hat K) Γ₀
     where
   toFun := Valued.extension
-  map_zero' := by
-    rw [← v.map_zero, ← Valued.extension_extends (0 : K)]
-    rfl
+  map_zero' := by rw [← v.map_zero, ← Valued.extension_extends (0 : K)]; rfl
   map_one' := by
     rw [← completion.coe_one, Valued.extension_extends (1 : K)]
     exact Valuation.map_one _
@@ -358,12 +349,10 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
   rw [mem_closure_iff_nhds']
   refine' ⟨fun hx => _, fun hx s hs => _⟩
   · obtain ⟨⟨-, y, hy₁ : v y < (γ : Γ₀), rfl⟩, hy₂⟩ := hx _ hγ₀
-    replace hy₂ : v y = γ₀
-    · simpa using hy₂
+    replace hy₂ : v y = γ₀; · simpa using hy₂
     rwa [← hy₂]
   · obtain ⟨y, hy₁, hy₂ : ↑y ∈ s⟩ := completion.dense_range_coe.mem_nhds (inter_mem hγ₀ hs)
-    replace hy₁ : v y = γ₀
-    · simpa using hy₁
+    replace hy₁ : v y = γ₀; · simpa using hy₁
     rw [← hy₁] at hx
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
 #align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt

@@ -340,16 +340,10 @@ theorem coe_sup (a b : Regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ :=
 instance : BooleanAlgebra (Regular α) :=
   { Regular.lattice, Regular.boundedOrder, Regular.hasHimp,
     Regular.hasCompl with
-    le_sup_inf := fun a b c =>
-      coe_le_coe.1 <| by
-        dsimp
-        rw [sup_inf_left, compl_compl_inf_distrib]
+    le_sup_inf := fun a b c => coe_le_coe.1 <| by dsimp; rw [sup_inf_left, compl_compl_inf_distrib]
     inf_compl_le_bot := fun a => coe_le_coe.1 <| disjoint_iff_inf_le.1 disjoint_compl_right
     top_le_sup_compl := fun a =>
-      coe_le_coe.1 <| by
-        dsimp
-        rw [compl_sup, inf_compl_eq_bot, compl_bot]
-        rfl
+      coe_le_coe.1 <| by dsimp; rw [compl_sup, inf_compl_eq_bot, compl_bot]; rfl
     himp_eq := fun a b =>
       coe_injective
         (by

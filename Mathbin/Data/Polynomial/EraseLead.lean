@@ -201,8 +201,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.erase_lead_
 theorem eraseLead_monomial (i : ℕ) (r : R) : eraseLead (monomial i r) = 0 :=
   by
   by_cases hr : r = 0
-  · subst r
-    simp only [monomial_zero_right, erase_lead_zero]
+  · subst r; simp only [monomial_zero_right, erase_lead_zero]
   · rw [erase_lead, nat_degree_monomial, if_neg hr, erase_monomial]
 #align polynomial.erase_lead_monomial Polynomial.eraseLead_monomial
 

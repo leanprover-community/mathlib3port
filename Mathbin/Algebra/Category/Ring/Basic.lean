@@ -410,20 +410,14 @@ def commRingCatIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) : X ≃+* Y
 #print CategoryTheory.Iso.commRingIsoToRingEquiv_toRingHom /-
 @[simp]
 theorem commRingIsoToRingEquiv_toRingHom {X Y : CommRingCat} (i : X ≅ Y) :
-    i.commRingCatIsoToRingEquiv.toRingHom = i.Hom :=
-  by
-  ext
-  rfl
+    i.commRingCatIsoToRingEquiv.toRingHom = i.Hom := by ext; rfl
 #align category_theory.iso.CommRing_iso_to_ring_equiv_to_ring_hom CategoryTheory.Iso.commRingIsoToRingEquiv_toRingHom
 -/
 
 #print CategoryTheory.Iso.commRingIsoToRingEquiv_symm_toRingHom /-
 @[simp]
 theorem commRingIsoToRingEquiv_symm_toRingHom {X Y : CommRingCat} (i : X ≅ Y) :
-    i.commRingCatIsoToRingEquiv.symm.toRingHom = i.inv :=
-  by
-  ext
-  rfl
+    i.commRingCatIsoToRingEquiv.symm.toRingHom = i.inv := by ext; rfl
 #align category_theory.iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom CategoryTheory.Iso.commRingIsoToRingEquiv_symm_toRingHom
 -/
 

@@ -247,10 +247,7 @@ theorem uniformEmbedding_subtype_val {p : α → Prop} : UniformEmbedding (coe :
 #print uniformEmbedding_set_inclusion /-
 theorem uniformEmbedding_set_inclusion {s t : Set α} (hst : s ⊆ t) :
     UniformEmbedding (inclusion hst) :=
-  { comap_uniformity :=
-      by
-      erw [uniformity_subtype, uniformity_subtype, comap_comap]
-      congr
+  { comap_uniformity := by erw [uniformity_subtype, uniformity_subtype, comap_comap]; congr
     inj := inclusion_injective hst }
 #align uniform_embedding_set_inclusion uniformEmbedding_set_inclusion
 -/

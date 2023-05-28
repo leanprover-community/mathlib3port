@@ -180,9 +180,7 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
   -- functions, and decompose an s-finite kernel as a sum of finite kernels. We then use that
   -- `with_density` commutes with sums for both arguments and get a sum of finite kernels.
   by_cases hf : Measurable (Function.uncurry f)
-  swap
-  · rw [with_density_of_not_measurable _ hf]
-    infer_instance
+  swap; · rw [with_density_of_not_measurable _ hf]; infer_instance
   let fs : ℕ → α → β → ℝ≥0∞ := fun n a b => min (f a b) (n + 1) - min (f a b) n
   have h_le : ∀ a b n, ⌈(f a b).toReal⌉₊ ≤ n → f a b ≤ n :=
     by
@@ -232,13 +230,9 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
     rw [Filter.EventuallyEq, Filter.eventually_atTop]
     exact ⟨⌈(f a b).toReal⌉₊, fun n hn => (min_eq_left (h_le a b n hn)).symm⟩
   rw [hf_eq_tsum, with_density_tsum _ fun n : ℕ => _]
-  swap
-  · exact (hf.min measurable_const).sub (hf.min measurable_const)
+  swap; · exact (hf.min measurable_const).sub (hf.min measurable_const)
   refine' is_s_finite_kernel_sum fun n => _
-  suffices is_finite_kernel (with_density κ (fs n))
-    by
-    haveI := this
-    infer_instance
+  suffices is_finite_kernel (with_density κ (fs n)) by haveI := this; infer_instance
   refine' is_finite_kernel_with_density_of_bounded _ (ENNReal.coe_ne_top : ↑n + 1 ≠ ∞) fun a b => _
   norm_cast
   calc

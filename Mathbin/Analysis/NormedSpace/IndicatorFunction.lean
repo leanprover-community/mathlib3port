@@ -78,9 +78,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {E : Type.{u2}} [_inst_1 : SeminormedAddCommGroup.{u2} E] {s : Set.{u1} α} (f : α -> E) (a : α), LE.le.{0} Real Real.instLEReal (Norm.norm.{u2} E (SeminormedAddCommGroup.toNorm.{u2} E _inst_1) (Set.indicator.{u1, u2} α E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_1)))))) s f a)) (Norm.norm.{u2} E (SeminormedAddCommGroup.toNorm.{u2} E _inst_1) (f a))
 Case conversion may be inaccurate. Consider using '#align norm_indicator_le_norm_self norm_indicator_le_norm_selfₓ'. -/
-theorem norm_indicator_le_norm_self : ‖indicator s f a‖ ≤ ‖f a‖ :=
-  by
-  rw [norm_indicator_eq_indicator_norm]
-  apply indicator_norm_le_norm_self
+theorem norm_indicator_le_norm_self : ‖indicator s f a‖ ≤ ‖f a‖ := by
+  rw [norm_indicator_eq_indicator_norm]; apply indicator_norm_le_norm_self
 #align norm_indicator_le_norm_self norm_indicator_le_norm_self
 

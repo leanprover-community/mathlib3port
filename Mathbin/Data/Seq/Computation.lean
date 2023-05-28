@@ -52,10 +52,7 @@ instance : CoeTC α (Computation α) :=
 /-- `think c` is the computation that delays for one "tick" and then performs
   computation `c`. -/
 def think (c : Computation α) : Computation α :=
-  ⟨none::c.1, fun n a h => by
-    cases' n with n
-    contradiction
-    exact c.2 h⟩
+  ⟨none::c.1, fun n a h => by cases' n with n; contradiction; exact c.2 h⟩
 #align computation.think Computation.think
 -/
 
@@ -132,11 +129,9 @@ theorem destruct_eq_pure {s : Computation α} {a : α} : destruct s = Sum.inl a 
   dsimp [destruct]
   induction' f0 : s.1 0 with <;> intro h
   · contradiction
-  · apply Subtype.eq
-    funext n
+  · apply Subtype.eq; funext n
     induction' n with n IH
-    · injection h with h'
-      rwa [h'] at f0
+    · injection h with h'; rwa [h'] at f0
     · exact s.2 IH
 #align computation.destruct_eq_ret Computation.destruct_eq_pure
 -/
@@ -146,13 +141,10 @@ theorem destruct_eq_think {s : Computation α} {s'} : destruct s = Sum.inr s' �
   by
   dsimp [destruct]
   induction' f0 : s.1 0 with a' <;> intro h
-  · injection h with h'
-    rw [← h']
+  · injection h with h'; rw [← h']
     cases' s with f al
-    apply Subtype.eq
-    dsimp [think, tail]
-    rw [← f0]
-    exact (Stream'.eta f).symm
+    apply Subtype.eq; dsimp [think, tail]
+    rw [← f0]; exact (Stream'.eta f).symm
   · contradiction
 #align computation.destruct_eq_think Computation.destruct_eq_think
 -/
@@ -232,11 +224,8 @@ def recOn {C : Computation α → Sort v} (s : Computation α) (h1 : ∀ a, C (p
     (h2 : ∀ s, C (think s)) : C s :=
   by
   induction' H : destruct s with v v
-  · rw [destruct_eq_ret H]
-    apply h1
-  · cases' v with a s'
-    rw [destruct_eq_think H]
-    apply h2
+  · rw [destruct_eq_ret H]; apply h1
+  · cases' v with a s'; rw [destruct_eq_think H]; apply h2
 #align computation.rec_on Computation.recOn
 -/
 
@@ -263,12 +252,9 @@ def corec (f : β → Sum α β) (b : β) : Computation α :=
   revert h; generalize Sum.inr b = o; revert o
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = some a' → (corec.F f (corec.F f o).2).1 = some a'
-    cases' o with a b <;> intro h
-    · exact h
-    dsimp [corec.F] at h
-    dsimp [corec.F]
-    cases' f b with a b'
-    · exact h
+    cases' o with a b <;> intro h; · exact h
+    dsimp [corec.F] at h; dsimp [corec.F]
+    cases' f b with a b'; · exact h
     · contradiction
   · rw [Stream'.corec'_eq (corec.F f) (corec.F f o).2, Stream'.corec'_eq (corec.F f) o]
     exact IH (corec.F f o).2
@@ -347,16 +333,12 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
         And.imp id (fun r => ⟨tail s, tail s', by cases s <;> rfl, by cases s' <;> rfl, r⟩) this
       have := bisim r; revert r this
       apply rec_on s _ _ <;> intros <;> apply rec_on s' _ _ <;> intros <;> intro r this
-      · constructor
-        dsimp at this
-        rw [this]
-        assumption
+      · constructor; dsimp at this; rw [this]; assumption
       · rw [destruct_ret, destruct_think] at this
         exact False.elim this
       · rw [destruct_ret, destruct_think] at this
         exact False.elim this
-      · simp at this
-        simp [*]
+      · simp at this; simp [*]
   exact ⟨s₁, s₂, rfl, rfl, r⟩
 #align computation.eq_of_bisim Computation.eq_of_bisim
 -/
@@ -375,11 +357,8 @@ instance : Membership α (Computation α) :=
   ⟨Computation.Mem⟩
 
 #print Computation.le_stable /-
-theorem le_stable (s : Computation α) {a m n} (h : m ≤ n) : s.1 m = some a → s.1 n = some a :=
-  by
-  cases' s with f al
-  induction' h with n h IH
-  exacts[id, fun h2 => al (IH h2)]
+theorem le_stable (s : Computation α) {a m n} (h : m ≤ n) : s.1 m = some a → s.1 n = some a := by
+  cases' s with f al; induction' h with n h IH; exacts[id, fun h2 => al (IH h2)]
 #align computation.le_stable Computation.le_stable
 -/
 
@@ -418,12 +397,8 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 
 #print Computation.terminates_def /-
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
-  ⟨fun ⟨⟨a, n, h⟩⟩ =>
-    ⟨n, by
-      dsimp [Stream'.nth] at h
-      rw [← h]
-      exact rfl⟩,
-    fun ⟨n, h⟩ => ⟨⟨Option.get h, n, (Option.eq_some_of_isSome h).symm⟩⟩⟩
+  ⟨fun ⟨⟨a, n, h⟩⟩ => ⟨n, by dsimp [Stream'.nth] at h; rw [← h]; exact rfl⟩, fun ⟨n, h⟩ =>
+    ⟨⟨Option.get h, n, (Option.eq_some_of_isSome h).symm⟩⟩⟩
 #align computation.terminates_def Computation.terminates_def
 -/
 
@@ -459,10 +434,7 @@ instance think_terminates (s : Computation α) : ∀ [Terminates s], Terminates 
 
 #print Computation.of_think_mem /-
 theorem of_think_mem {s : Computation α} {a} : a ∈ think s → a ∈ s
-  | ⟨n, h⟩ => by
-    cases' n with n'
-    contradiction
-    exact ⟨n', h⟩
+  | ⟨n, h⟩ => by cases' n with n'; contradiction; exact ⟨n', h⟩
 #align computation.of_think_mem Computation.of_think_mem
 -/
 
@@ -590,11 +562,7 @@ theorem get_promises : s ~> get s := fun a => get_eq_of_mem _
 -/
 
 #print Computation.mem_of_promises /-
-theorem mem_of_promises {a} (p : s ~> a) : a ∈ s :=
-  by
-  cases h
-  cases' h with a' h
-  rw [p h]
+theorem mem_of_promises {a} (p : s ~> a) : a ∈ s := by cases h; cases' h with a' h; rw [p h];
   exact h
 #align computation.mem_of_promises Computation.mem_of_promises
 -/
@@ -697,9 +665,7 @@ theorem length_think (s : Computation α) [h : Terminates s] : length (think s) 
       Nat.find_spec ((terminates_def _).1 s.think_terminates)
     cases' length (think s) with n
     · contradiction
-    · apply Nat.succ_le_succ
-      apply Nat.find_min'
-      apply this
+    · apply Nat.succ_le_succ; apply Nat.find_min'; apply this
 #align computation.length_think Computation.length_think
 -/
 
@@ -756,15 +722,10 @@ theorem eq_thinkN {s : Computation α} {a n} (h : Results s a n) : s = thinkN (p
   by
   revert s
   induction' n with n IH <;> intro s <;> apply rec_on s (fun a' => _) fun s => _ <;> intro h
-  · rw [← eq_of_ret_mem h.mem]
-    rfl
-  · cases' of_results_think h with n h
-    cases h
-    contradiction
-  · have := h.len_unique (results_ret _)
-    contradiction
-  · rw [IH (results_think_iff.1 h)]
-    rfl
+  · rw [← eq_of_ret_mem h.mem]; rfl
+  · cases' of_results_think h with n h; cases h; contradiction
+  · have := h.len_unique (results_ret _); contradiction
+  · rw [IH (results_think_iff.1 h)]; rfl
 #align computation.eq_thinkN Computation.eq_thinkN
 -/
 
@@ -965,14 +926,9 @@ theorem results_bind {s : Computation α} {f : α → Computation β} {a b m n} 
   by
   have := h1.mem; revert m
   apply mem_rec_on this _ fun s IH => _ <;> intro m h1
-  · rw [ret_bind]
-    rw [h1.len_unique (results_ret _)]
-    exact h2
-  · rw [think_bind]
-    cases' of_results_think h1 with m' h
-    cases' h with h1 e
-    rw [e]
-    exact results_think (IH h1)
+  · rw [ret_bind]; rw [h1.len_unique (results_ret _)]; exact h2
+  · rw [think_bind]; cases' of_results_think h1 with m' h; cases' h with h1 e
+    rw [e]; exact results_think (IH h1)
 #align computation.results_bind Computation.results_bind
 -/
 
@@ -1014,13 +970,10 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
     Results (bind s f) b k → ∃ a m n, Results s a m ∧ Results (f a) b n ∧ k = n + m :=
   by
   induction' k with n IH generalizing s <;> apply rec_on s (fun a => _) fun s' => _ <;> intro e
-  · simp [thinkN] at e
-    refine' ⟨a, _, _, results_ret _, e, rfl⟩
-  · have := congr_arg head (eq_thinkN e)
-    contradiction
-  · simp at e
-    refine' ⟨a, _, n + 1, results_ret _, e, rfl⟩
-  · simp at e
+  · simp [thinkN] at e; refine' ⟨a, _, _, results_ret _, e, rfl⟩
+  · have := congr_arg head (eq_thinkN e); contradiction
+  · simp at e; refine' ⟨a, _, n + 1, results_ret _, e, rfl⟩
+  · simp at e;
     exact by
       let ⟨a, m, n', h1, h2, e'⟩ := IH e
       rw [e'] <;> exact ⟨a, m.succ, n', results_think h1, h2, rfl⟩
@@ -1591,11 +1544,8 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) (a)
     (ha : a ∈ ca) : LiftRel R ca cb := by
   revert cb; refine' mem_rec_on ha _ fun ca' IH => _ <;> intro cb Hc <;> have h := H Hc
-  · simp at h
-    simp [h]
-  · have h := H Hc
-    simp
-    revert h
+  · simp at h; simp [h]
+  · have h := H Hc; simp; revert h;
     apply cb.rec_on (fun b => _) fun cb' => _ <;> intro h <;> simp at h <;> simp [h]
     exact IH _ h
 #align computation.lift_rel_rec.lem Computation.LiftRelRec.lem

@@ -305,10 +305,8 @@ theorem basis_pair_left (hij : i ≠ j) : Lagrange.basis {i, j} v i = basisDivis
 
 #print Lagrange.basis_pair_right /-
 @[simp]
-theorem basis_pair_right (hij : i ≠ j) : Lagrange.basis {i, j} v j = basisDivisor (v j) (v i) :=
-  by
-  rw [pair_comm]
-  exact basis_pair_left hij.symm
+theorem basis_pair_right (hij : i ≠ j) : Lagrange.basis {i, j} v j = basisDivisor (v j) (v i) := by
+  rw [pair_comm]; exact basis_pair_left hij.symm
 #align lagrange.basis_pair_right Lagrange.basis_pair_right
 -/
 
@@ -445,10 +443,8 @@ theorem interpolate_singleton : interpolate {i} v r = C (r i) := by
 /- warning: lagrange.interpolate_one -> Lagrange.interpolate_one is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align lagrange.interpolate_one Lagrange.interpolate_oneₓ'. -/
-theorem interpolate_one (hvs : Set.InjOn v s) (hs : s.Nonempty) : interpolate s v 1 = 1 :=
-  by
-  simp_rw [interpolate_apply, Pi.one_apply, map_one, one_mul]
-  exact sum_basis hvs hs
+theorem interpolate_one (hvs : Set.InjOn v s) (hs : s.Nonempty) : interpolate s v 1 = 1 := by
+  simp_rw [interpolate_apply, Pi.one_apply, map_one, one_mul]; exact sum_basis hvs hs
 #align lagrange.interpolate_one Lagrange.interpolate_one
 
 /- warning: lagrange.eval_interpolate_at_node -> Lagrange.eval_interpolate_at_node is a dubious translation:
@@ -537,10 +533,8 @@ theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree 
 <too large>
 Case conversion may be inaccurate. Consider using '#align lagrange.eq_interpolate_of_eval_eq Lagrange.eq_interpolate_of_eval_eqₓ'. -/
 theorem eq_interpolate_of_eval_eq {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀ i ∈ s, f.eval (v i) = r i) : f = interpolate s v r :=
-  by
-  rw [eq_interpolate hvs degree_f_lt]
-  exact interpolate_eq_of_values_eq_on _ _ eval_f
+    (eval_f : ∀ i ∈ s, f.eval (v i) = r i) : f = interpolate s v r := by
+  rw [eq_interpolate hvs degree_f_lt]; exact interpolate_eq_of_values_eq_on _ _ eval_f
 #align lagrange.eq_interpolate_of_eval_eq Lagrange.eq_interpolate_of_eval_eq
 
 /- warning: lagrange.eq_interpolate_iff -> Lagrange.eq_interpolate_iff is a dubious translation:
@@ -554,8 +548,7 @@ theorem eq_interpolate_iff {f : F[X]} (hvs : Set.InjOn v s) :
   by
   constructor <;> intro h
   · exact eq_interpolate_of_eval_eq _ hvs h.1 h.2
-  · rw [h]
-    exact ⟨degree_interpolate_lt _ hvs, fun _ hi => eval_interpolate_at_node _ hvs hi⟩
+  · rw [h]; exact ⟨degree_interpolate_lt _ hvs, fun _ hi => eval_interpolate_at_node _ hvs hi⟩
 #align lagrange.eq_interpolate_iff Lagrange.eq_interpolate_iff
 
 #print Lagrange.funEquivDegreeLT /-
@@ -707,10 +700,8 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] {ι : Type.{u2}} {s : Finset.{u2} ι} {v : ι -> F} {i : ι}, (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Eq.{succ u1} F (Polynomial.eval.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1))) (v i) (Lagrange.nodal.{u1, u2} F _inst_1 ι s v)) (OfNat.ofNat.{u1} F 0 (Zero.toOfNat0.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align lagrange.eval_nodal_at_node Lagrange.eval_nodal_at_nodeₓ'. -/
-theorem eval_nodal_at_node (hi : i ∈ s) : eval (v i) (nodal s v) = 0 :=
-  by
-  rw [eval_nodal, prod_eq_zero_iff]
-  exact ⟨i, hi, sub_eq_zero_of_eq rfl⟩
+theorem eval_nodal_at_node (hi : i ∈ s) : eval (v i) (nodal s v) = 0 := by
+  rw [eval_nodal, prod_eq_zero_iff]; exact ⟨i, hi, sub_eq_zero_of_eq rfl⟩
 #align lagrange.eval_nodal_at_node Lagrange.eval_nodal_at_node
 
 /- warning: lagrange.eval_nodal_not_at_node -> Lagrange.eval_nodal_not_at_node is a dubious translation:
@@ -719,10 +710,8 @@ lean 3 declaration is
 but is expected to have type
   forall {F : Type.{u1}} [_inst_1 : Field.{u1} F] {ι : Type.{u2}} {s : Finset.{u2} ι} {v : ι -> F} {x : F}, (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Ne.{succ u1} F x (v i))) -> (Ne.{succ u1} F (Polynomial.eval.{u1} F (DivisionSemiring.toSemiring.{u1} F (Semifield.toDivisionSemiring.{u1} F (Field.toSemifield.{u1} F _inst_1))) x (Lagrange.nodal.{u1, u2} F _inst_1 ι s v)) (OfNat.ofNat.{u1} F 0 (Zero.toOfNat0.{u1} F (CommMonoidWithZero.toZero.{u1} F (CommGroupWithZero.toCommMonoidWithZero.{u1} F (Semifield.toCommGroupWithZero.{u1} F (Field.toSemifield.{u1} F _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align lagrange.eval_nodal_not_at_node Lagrange.eval_nodal_not_at_nodeₓ'. -/
-theorem eval_nodal_not_at_node (hx : ∀ i ∈ s, x ≠ v i) : eval x (nodal s v) ≠ 0 :=
-  by
-  simp_rw [nodal, eval_prod, prod_ne_zero_iff, eval_sub, eval_X, eval_C, sub_ne_zero]
-  exact hx
+theorem eval_nodal_not_at_node (hx : ∀ i ∈ s, x ≠ v i) : eval x (nodal s v) ≠ 0 := by
+  simp_rw [nodal, eval_prod, prod_ne_zero_iff, eval_sub, eval_X, eval_C, sub_ne_zero]; exact hx
 #align lagrange.eval_nodal_not_at_node Lagrange.eval_nodal_not_at_node
 
 /- warning: lagrange.nodal_eq_mul_nodal_erase -> Lagrange.nodal_eq_mul_nodal_erase is a dubious translation:

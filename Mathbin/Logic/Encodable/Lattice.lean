@@ -40,10 +40,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Encodable.{u1} β] [_inst_2 : CompleteLattice.{u2} α] (f : β -> α), Eq.{succ u2} α (iSup.{u2, 1} α (CompleteLattice.toSupSet.{u2} α _inst_2) Nat (fun (i : Nat) => iSup.{u2, succ u1} α (CompleteLattice.toSupSet.{u2} α _inst_2) β (fun (b : β) => iSup.{u2, 0} α (CompleteLattice.toSupSet.{u2} α _inst_2) (Membership.mem.{u1, u1} β (Option.{u1} β) (Option.instMembershipOption.{u1} β) b (Encodable.decode₂.{u1} β _inst_1 i)) (fun (H : Membership.mem.{u1, u1} β (Option.{u1} β) (Option.instMembershipOption.{u1} β) b (Encodable.decode₂.{u1} β _inst_1 i)) => f b)))) (iSup.{u2, succ u1} α (CompleteLattice.toSupSet.{u2} α _inst_2) β (fun (b : β) => f b))
 Case conversion may be inaccurate. Consider using '#align encodable.supr_decode₂ Encodable.iSup_decode₂ₓ'. -/
 theorem iSup_decode₂ [CompleteLattice α] (f : β → α) :
-    (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b :=
-  by
-  rw [iSup_comm]
-  simp [mem_decode₂]
+    (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by rw [iSup_comm]; simp [mem_decode₂]
 #align encodable.supr_decode₂ Encodable.iSup_decode₂
 
 /- warning: encodable.Union_decode₂ -> Encodable.iUnion_decode₂ is a dubious translation:
@@ -66,12 +63,8 @@ Case conversion may be inaccurate. Consider using '#align encodable.Union_decode
 theorem iUnion_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
     C (⋃ b ∈ decode₂ β n, f b) :=
   match decode₂ β n with
-  | none => by
-    simp
-    apply H0
-  | some b => by
-    convert H1 b
-    simp [ext_iff]
+  | none => by simp; apply H0
+  | some b => by convert H1 b; simp [ext_iff]
 #align encodable.Union_decode₂_cases Encodable.iUnion_decode₂_cases
 
 /- warning: encodable.Union_decode₂_disjoint_on -> Encodable.iUnion_decode₂_disjoint_on is a dubious translation:

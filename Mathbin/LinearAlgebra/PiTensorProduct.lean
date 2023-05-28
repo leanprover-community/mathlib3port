@@ -299,9 +299,7 @@ instance module' [Semiring R₁] [Module R₁ R] [SMulCommClass R₁ R R] : Modu
         by simp [PiTensorProduct.smul_add, ihx, ihy, add_add_add_comm]
     zero_smul := fun x =>
       PiTensorProduct.induction_on' x
-        (fun r f => by
-          simp_rw [smul_tprod_coeff' _ _, zero_smul]
-          exact zero_tprod_coeff _)
+        (fun r f => by simp_rw [smul_tprod_coeff' _ _, zero_smul]; exact zero_tprod_coeff _)
         fun x y ihx ihy => by rw [PiTensorProduct.smul_add, ihx, ihy, add_zero] }
 #align pi_tensor_product.module' PiTensorProduct.module'
 
@@ -377,13 +375,8 @@ variable {s}
 def liftAux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
   liftAddHom (fun p : R × ∀ i, s i => p.1 • φ p.2)
     (fun z f i hf => by rw [map_coord_zero φ i hf, smul_zero]) (fun f => by rw [zero_smul])
-    (fun _ z f i m₁ m₂ => by
-      skip
-      rw [← smul_add, φ.map_add])
-    (fun z₁ z₂ f => by rw [← add_smul]) fun _ z f i r =>
-    by
-    skip
-    simp [φ.map_smul, smul_smul, mul_comm]
+    (fun _ z f i m₁ m₂ => by skip; rw [← smul_add, φ.map_add]) (fun z₁ z₂ f => by rw [← add_smul])
+    fun _ z f i r => by skip; simp [φ.map_smul, smul_smul, mul_comm]
 #align pi_tensor_product.lift_aux PiTensorProduct.liftAux
 
 theorem liftAux_tprod (φ : MultilinearMap R s E) (f : ∀ i, s i) : liftAux φ (tprod R f) = φ f := by
@@ -413,18 +406,10 @@ def lift : MultilinearMap R s E ≃ₗ[R] (⨂[R] i, s i) →ₗ[R] E
     where
   toFun φ := { liftAux φ with map_smul' := liftAux.smul }
   invFun φ' := φ'.compMultilinearMap (tprod R)
-  left_inv φ := by
-    ext
-    simp [lift_aux_tprod, LinearMap.compMultilinearMap]
-  right_inv φ := by
-    ext
-    simp [lift_aux_tprod]
-  map_add' φ₁ φ₂ := by
-    ext
-    simp [lift_aux_tprod]
-  map_smul' r φ₂ := by
-    ext
-    simp [lift_aux_tprod]
+  left_inv φ := by ext; simp [lift_aux_tprod, LinearMap.compMultilinearMap]
+  right_inv φ := by ext; simp [lift_aux_tprod]
+  map_add' φ₁ φ₂ := by ext; simp [lift_aux_tprod]
+  map_smul' r φ₂ := by ext; simp [lift_aux_tprod]
 #align pi_tensor_product.lift PiTensorProduct.lift
 
 variable {φ : MultilinearMap R s E}
@@ -464,13 +449,11 @@ For simplicity, this is defined only for homogeneously- (rather than dependently
 def reindex (e : ι ≃ ι₂) : (⨂[R] i : ι, M) ≃ₗ[R] ⨂[R] i : ι₂, M :=
   LinearEquiv.ofLinear (lift (domDomCongr e.symm (tprod R : MultilinearMap R _ (⨂[R] i : ι₂, M))))
     (lift (domDomCongr e (tprod R : MultilinearMap R _ (⨂[R] i : ι, M))))
-    (by
-      ext
+    (by ext;
       simp only [LinearMap.comp_apply, LinearMap.id_apply, lift_tprod,
         LinearMap.compMultilinearMap_apply, lift.tprod, dom_dom_congr_apply,
         Equiv.apply_symm_apply])
-    (by
-      ext
+    (by ext;
       simp only [LinearMap.comp_apply, LinearMap.id_apply, lift_tprod,
         LinearMap.compMultilinearMap_apply, lift.tprod, dom_dom_congr_apply,
         Equiv.symm_apply_apply])
@@ -493,10 +476,7 @@ theorem reindex_comp_tprod (e : ι ≃ ι₂) :
 
 @[simp]
 theorem lift_comp_reindex (e : ι ≃ ι₂) (φ : MultilinearMap R (fun _ : ι₂ => M) E) :
-    lift φ ∘ₗ ↑(reindex R M e) = lift (φ.domDomCongr e.symm) :=
-  by
-  ext
-  simp
+    lift φ ∘ₗ ↑(reindex R M e) = lift (φ.domDomCongr e.symm) := by ext; simp
 #align pi_tensor_product.lift_comp_reindex PiTensorProduct.lift_comp_reindex
 
 @[simp]

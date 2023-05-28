@@ -499,10 +499,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {y : Real}, (LE.le.{0} Real Real.instLEReal x y) -> (LE.le.{0} Real Real.instLEReal (Real.sqrt x) (Real.sqrt y))
 Case conversion may be inaccurate. Consider using '#align real.sqrt_le_sqrt Real.sqrt_le_sqrtₓ'. -/
-theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y :=
-  by
-  rw [sqrt, sqrt, NNReal.coe_le_coe, NNReal.sqrt_le_sqrt_iff]
-  exact to_nnreal_le_to_nnreal h
+theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y := by
+  rw [sqrt, sqrt, NNReal.coe_le_coe, NNReal.sqrt_le_sqrt_iff]; exact to_nnreal_le_to_nnreal h
 #align real.sqrt_le_sqrt Real.sqrt_le_sqrt
 
 /- warning: real.sqrt_lt_sqrt -> Real.sqrt_lt_sqrt is a dubious translation:
@@ -878,10 +876,8 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
   by
   rw [Real.sqrt_le_iff]
   constructor
-  · norm_cast
-    simp
-  · norm_cast
-    exact le_of_lt (Nat.lt_succ_sqrt' a)
+  · norm_cast; simp
+  · norm_cast; exact le_of_lt (Nat.lt_succ_sqrt' a)
 #align real.real_sqrt_le_nat_sqrt_succ Real.real_sqrt_le_nat_sqrt_succ
 
 instance : StarOrderedRing ℝ :=

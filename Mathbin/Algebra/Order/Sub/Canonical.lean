@@ -46,9 +46,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.176 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.178 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.176 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.178) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.191 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.193 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.191 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.193)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a b) -> (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) b a) a) b)
 Case conversion may be inaccurate. Consider using '#align tsub_add_cancel_of_le tsub_add_cancel_of_leₓ'. -/
-theorem tsub_add_cancel_of_le (h : a ≤ b) : b - a + a = b :=
-  by
-  rw [add_comm]
+theorem tsub_add_cancel_of_le (h : a ≤ b) : b - a + a = b := by rw [add_comm];
   exact add_tsub_cancel_of_le h
 #align tsub_add_cancel_of_le tsub_add_cancel_of_le
 
@@ -109,11 +107,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.741 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.743 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.741 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.743) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.756 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.758 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.756 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.758)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a c) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) b c)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a b)
 Case conversion may be inaccurate. Consider using '#align lt_of_tsub_lt_tsub_right_of_le lt_of_tsub_lt_tsub_right_of_leₓ'. -/
 /-- See `lt_of_tsub_lt_tsub_right` for a stronger statement in a linear order. -/
-theorem lt_of_tsub_lt_tsub_right_of_le (h : c ≤ b) (h2 : a - c < b - c) : a < b :=
-  by
-  refine' ((tsub_le_tsub_iff_right h).mp h2.le).lt_of_ne _
-  rintro rfl
-  exact h2.false
+theorem lt_of_tsub_lt_tsub_right_of_le (h : c ≤ b) (h2 : a - c < b - c) : a < b := by
+  refine' ((tsub_le_tsub_iff_right h).mp h2.le).lt_of_ne _; rintro rfl; exact h2.false
 #align lt_of_tsub_lt_tsub_right_of_le lt_of_tsub_lt_tsub_right_of_le
 
 /- warning: tsub_add_tsub_cancel -> tsub_add_tsub_cancel is a dubious translation:
@@ -151,9 +146,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.eq_tsub_iff_add_eq_of_le AddLECancellable.eq_tsub_iff_add_eq_of_leₓ'. -/
 protected theorem eq_tsub_iff_add_eq_of_le (hc : AddLECancellable c) (h : c ≤ b) :
     a = b - c ↔ a + c = b :=
-  ⟨by
-    rintro rfl
-    exact tsub_add_cancel_of_le h, hc.eq_tsub_of_add_eq⟩
+  ⟨by rintro rfl; exact tsub_add_cancel_of_le h, hc.eq_tsub_of_add_eq⟩
 #align add_le_cancellable.eq_tsub_iff_add_eq_of_le AddLECancellable.eq_tsub_iff_add_eq_of_le
 
 /- warning: add_le_cancellable.tsub_eq_iff_eq_add_of_le -> AddLECancellable.tsub_eq_iff_eq_add_of_le is a dubious translation:
@@ -226,9 +219,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1828 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1830 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1828 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1830) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1843 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1845 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1843 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.1845)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (AddLECancellable.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a c) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) b (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) c a)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) b a) c))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.le_tsub_iff_right AddLECancellable.le_tsub_iff_rightₓ'. -/
 protected theorem le_tsub_iff_right (ha : AddLECancellable a) (h : a ≤ c) : b ≤ c - a ↔ b + a ≤ c :=
-  by
-  rw [add_comm]
-  exact ha.le_tsub_iff_left h
+  by rw [add_comm]; exact ha.le_tsub_iff_left h
 #align add_le_cancellable.le_tsub_iff_right AddLECancellable.le_tsub_iff_right
 
 /- warning: add_le_cancellable.tsub_lt_iff_left -> AddLECancellable.tsub_lt_iff_left is a dubious translation:
@@ -251,9 +242,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2047 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2049 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2047 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2049) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2062 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2064 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2062 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2064)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (AddLECancellable.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) b a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a b) c) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) c b)))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.tsub_lt_iff_right AddLECancellable.tsub_lt_iff_rightₓ'. -/
 protected theorem tsub_lt_iff_right (hb : AddLECancellable b) (hba : b ≤ a) :
-    a - b < c ↔ a < c + b := by
-  rw [add_comm]
-  exact hb.tsub_lt_iff_left hba
+    a - b < c ↔ a < c + b := by rw [add_comm]; exact hb.tsub_lt_iff_left hba
 #align add_le_cancellable.tsub_lt_iff_right AddLECancellable.tsub_lt_iff_right
 
 /- warning: add_le_cancellable.tsub_lt_iff_tsub_lt -> AddLECancellable.tsub_lt_iff_tsub_lt is a dubious translation:
@@ -299,9 +288,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2500 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2502 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2500 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2502) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2515 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2517 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2515 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2517)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (AddLECancellable.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c b) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) b c)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) c a) b))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.lt_tsub_iff_left_of_le AddLECancellable.lt_tsub_iff_left_of_leₓ'. -/
 protected theorem lt_tsub_iff_left_of_le (hc : AddLECancellable c) (h : c ≤ b) :
-    a < b - c ↔ c + a < b := by
-  rw [add_comm]
-  exact hc.lt_tsub_iff_right_of_le h
+    a < b - c ↔ c + a < b := by rw [add_comm]; exact hc.lt_tsub_iff_right_of_le h
 #align add_le_cancellable.lt_tsub_iff_left_of_le AddLECancellable.lt_tsub_iff_left_of_le
 
 /- warning: add_le_cancellable.tsub_inj_right -> AddLECancellable.tsub_inj_right is a dubious translation:
@@ -311,8 +298,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2615 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2617 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2615 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2617) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2630 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2632 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2630 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2632)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (AddLECancellable.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c a) -> (Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a b) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a c)) -> (Eq.{succ u1} α b c)
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.tsub_inj_right AddLECancellable.tsub_inj_rightₓ'. -/
 protected theorem tsub_inj_right (hab : AddLECancellable (a - b)) (h₁ : b ≤ a) (h₂ : c ≤ a)
-    (h₃ : a - b = a - c) : b = c := by
-  rw [← hab.inj]
+    (h₃ : a - b = a - c) : b = c := by rw [← hab.inj];
   rw [tsub_add_cancel_of_le h₁, h₃, tsub_add_cancel_of_le h₂]
 #align add_le_cancellable.tsub_inj_right AddLECancellable.tsub_inj_right
 
@@ -347,9 +333,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommSemigroup.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2999 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3001 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.2999 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3001) (fun (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3014 : α) (x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3016 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3014 x._@.Mathlib.Algebra.Order.Sub.Canonical._hyg.3016)] [_inst_5 : Sub.{u1} α] [_inst_6 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) _inst_5] {a : α} {b : α} {c : α}, (AddLECancellable.{u1} α (AddSemigroup.toAdd.{u1} α (AddCommSemigroup.toAddSemigroup.{u1} α _inst_1)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) c a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) a c) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_5) b c))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.tsub_lt_tsub_right_of_le AddLECancellable.tsub_lt_tsub_right_of_leₓ'. -/
 protected theorem tsub_lt_tsub_right_of_le (hc : AddLECancellable c) (h : c ≤ a) (h2 : a < b) :
-    a - c < b - c := by
-  apply hc.lt_tsub_of_add_lt_left
-  rwa [add_tsub_cancel_of_le h]
+    a - c < b - c := by apply hc.lt_tsub_of_add_lt_left; rwa [add_tsub_cancel_of_le h]
 #align add_le_cancellable.tsub_lt_tsub_right_of_le AddLECancellable.tsub_lt_tsub_right_of_le
 
 /- warning: add_le_cancellable.tsub_lt_tsub_iff_left_of_le_of_le -> AddLECancellable.tsub_lt_tsub_iff_left_of_le_of_le is a dubious translation:
@@ -663,9 +647,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))) _inst_2] {a : α} {b : α}, Iff (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) b a) a) b) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) a b)
 Case conversion may be inaccurate. Consider using '#align tsub_add_cancel_iff_le tsub_add_cancel_iff_leₓ'. -/
-theorem tsub_add_cancel_iff_le : b - a + a = b ↔ a ≤ b :=
-  by
-  rw [add_comm]
+theorem tsub_add_cancel_iff_le : b - a + a = b ↔ a ≤ b := by rw [add_comm];
   exact add_tsub_cancel_iff_le
 #align tsub_add_cancel_iff_le tsub_add_cancel_iff_le
 
@@ -1042,9 +1024,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) _inst_2] {a : α} {b : α}, Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) a b) (Min.min.{u1} α (CanonicallyLinearOrderedAddMonoid.toMin.{u1} α _inst_1) a b)) a
 Case conversion may be inaccurate. Consider using '#align tsub_add_min tsub_add_minₓ'. -/
-theorem tsub_add_min : a - b + min a b = a :=
-  by
-  rw [← tsub_min, tsub_add_cancel_of_le]
+theorem tsub_add_min : a - b + min a b = a := by rw [← tsub_min, tsub_add_cancel_of_le];
   apply min_le_left
 #align tsub_add_min tsub_add_min
 

@@ -474,9 +474,7 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
       simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
         sup_empty, forall_true_iff, not_mem_empty]
     · intro a r har ih h
-      have incs : ↑r ⊆ ↑(insert a r) := by
-        rw [Finset.coe_subset]
-        apply Finset.subset_insert
+      have incs : ↑r ⊆ ↑(insert a r) := by rw [Finset.coe_subset]; apply Finset.subset_insert
       -- x ∈ s is above the sup of r
       obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
       -- y ∈ s is above a
@@ -1018,9 +1016,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] (s : Finset.{u2} ι) (f : ι -> α) (a : α), Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s f) a) (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s (fun (i : ι) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) (f i) a))
 Case conversion may be inaccurate. Consider using '#align finset.sup_inf_distrib_right Finset.sup_inf_distrib_rightₓ'. -/
 theorem sup_inf_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
-    s.sup f ⊓ a = s.sup fun i => f i ⊓ a :=
-  by
-  rw [_root_.inf_comm, s.sup_inf_distrib_left]
+    s.sup f ⊓ a = s.sup fun i => f i ⊓ a := by rw [_root_.inf_comm, s.sup_inf_distrib_left];
   simp_rw [_root_.inf_comm]
 #align finset.sup_inf_distrib_right Finset.sup_inf_distrib_right
 
@@ -1478,9 +1474,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sup'_cons Finset.sup'_consₓ'. -/
 @[simp]
 theorem sup'_cons {b : β} {hb : b ∉ s} {h : (cons b s hb).Nonempty} :
-    (cons b s hb).sup' h f = f b ⊔ s.sup' H f :=
-  by
-  rw [← WithBot.coe_eq_coe]
+    (cons b s hb).sup' h f = f b ⊔ s.sup' H f := by rw [← WithBot.coe_eq_coe];
   simp only [coe_sup', sup_cons, WithBot.coe_sup]
 #align finset.sup'_cons Finset.sup'_cons
 
@@ -1492,9 +1486,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sup'_insert Finset.sup'_insertₓ'. -/
 @[simp]
 theorem sup'_insert [DecidableEq β] {b : β} {h : (insert b s).Nonempty} :
-    (insert b s).sup' h f = f b ⊔ s.sup' H f :=
-  by
-  rw [← WithBot.coe_eq_coe]
+    (insert b s).sup' h f = f b ⊔ s.sup' H f := by rw [← WithBot.coe_eq_coe];
   simp only [coe_sup', sup_insert, WithBot.coe_sup]
 #align finset.sup'_insert Finset.sup'_insert
 
@@ -1523,10 +1515,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u1} α] {s : Finset.{u2} β} (f : β -> α) {b : β} (h : Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b s), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) (f b) (Finset.sup'.{u1, u2} α β _inst_1 s (Exists.intro.{succ u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) x s) b h) f)
 Case conversion may be inaccurate. Consider using '#align finset.le_sup' Finset.le_sup'ₓ'. -/
-theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f :=
-  by
-  rw [← WithBot.coe_le_coe, coe_sup']
-  exact le_sup h
+theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f := by
+  rw [← WithBot.coe_le_coe, coe_sup']; exact le_sup h
 #align finset.le_sup' Finset.le_sup'
 
 /- warning: finset.le_sup'_of_le -> Finset.le_sup'_of_le is a dubious translation:
@@ -1549,9 +1539,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup'_const Fins
 theorem sup'_const (a : α) : (s.sup' H fun b => a) = a :=
   by
   apply le_antisymm
-  · apply sup'_le
-    intros
-    exact le_rfl
+  · apply sup'_le; intros ; exact le_rfl
   · apply le_sup' (fun b => a) H.some_spec
 #align finset.sup'_const Finset.sup'_const
 
@@ -1594,8 +1582,7 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonemp
   refine' comp_sup_eq_sup_comp g' _ rfl
   intro f₁ f₂
   induction f₁ using WithBot.recBotCoe
-  · rw [bot_sup_eq]
-    exact bot_sup_eq.symm
+  · rw [bot_sup_eq]; exact bot_sup_eq.symm
   · induction f₂ using WithBot.recBotCoe
     · rfl
     · exact congr_arg coe (g_sup f₁ f₂)
@@ -1614,8 +1601,7 @@ theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
   rw [coe_sup']
   refine' sup_induction trivial _ hs
   rintro (_ | a₁) h₁ a₂ h₂
-  · rw [WithBot.none_eq_bot, bot_sup_eq]
-    exact h₂
+  · rw [WithBot.none_eq_bot, bot_sup_eq]; exact h₂
   cases a₂
   exacts[h₁, hp a₁ h₁ a₂ h₂]
 #align finset.sup'_induction Finset.sup'_induction
@@ -2190,9 +2176,7 @@ theorem max_insert {a : α} {s : Finset α} : (insert a s).max = max a s.max :=
 
 #print Finset.max_singleton /-
 @[simp]
-theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) :=
-  by
-  rw [← insert_emptyc_eq]
+theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) := by rw [← insert_emptyc_eq];
   exact max_insert
 #align finset.max_singleton Finset.max_singleton
 -/
@@ -2227,11 +2211,9 @@ theorem mem_of_max {s : Finset α} : ∀ {a : α}, s.max = a → a ∈ s :=
     fun b s _ (ih : ∀ {a : α}, s.max = a → a ∈ s) a (h : (insert b s).max = a) =>
     by
     by_cases p : b = a
-    · induction p
-      exact mem_insert_self b s
+    · induction p; exact mem_insert_self b s
     · cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h
-      · cases h
-        cases p rfl
+      · cases h; cases p rfl
       · exact mem_insert_of_mem (ih h)
 #align finset.mem_of_max Finset.mem_of_max
 -/
@@ -2332,9 +2314,7 @@ theorem min_insert {a : α} {s : Finset α} : (insert a s).min = min (↑a) s.mi
 
 #print Finset.min_singleton /-
 @[simp]
-theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) :=
-  by
-  rw [← insert_emptyc_eq]
+theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) := by rw [← insert_emptyc_eq];
   exact min_insert
 #align finset.min_singleton Finset.min_singleton
 -/
@@ -2612,70 +2592,50 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
 #align finset.min'_lt_max'_of_card Finset.min'_lt_max'_of_card
 
 #print Finset.map_ofDual_min /-
-theorem map_ofDual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max :=
-  by
-  rw [max_eq_sup_with_bot, sup_image]
-  exact congr_fun Option.map_id _
+theorem map_ofDual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max := by
+  rw [max_eq_sup_with_bot, sup_image]; exact congr_fun Option.map_id _
 #align finset.map_of_dual_min Finset.map_ofDual_min
 -/
 
 #print Finset.map_ofDual_max /-
-theorem map_ofDual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min :=
-  by
-  rw [min_eq_inf_with_top, inf_image]
-  exact congr_fun Option.map_id _
+theorem map_ofDual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min := by
+  rw [min_eq_inf_with_top, inf_image]; exact congr_fun Option.map_id _
 #align finset.map_of_dual_max Finset.map_ofDual_max
 -/
 
 #print Finset.map_toDual_min /-
-theorem map_toDual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max :=
-  by
-  rw [max_eq_sup_with_bot, sup_image]
-  exact congr_fun Option.map_id _
+theorem map_toDual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max := by
+  rw [max_eq_sup_with_bot, sup_image]; exact congr_fun Option.map_id _
 #align finset.map_to_dual_min Finset.map_toDual_min
 -/
 
 #print Finset.map_toDual_max /-
-theorem map_toDual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min :=
-  by
-  rw [min_eq_inf_with_top, inf_image]
-  exact congr_fun Option.map_id _
+theorem map_toDual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min := by
+  rw [min_eq_inf_with_top, inf_image]; exact congr_fun Option.map_id _
 #align finset.map_to_dual_max Finset.map_toDual_max
 -/
 
 #print Finset.ofDual_min' /-
 theorem ofDual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) :
-    ofDual (min' s hs) = max' (s.image ofDual) (hs.image _) :=
-  by
-  convert rfl
-  exact image_id
+    ofDual (min' s hs) = max' (s.image ofDual) (hs.image _) := by convert rfl; exact image_id
 #align finset.of_dual_min' Finset.ofDual_min'
 -/
 
 #print Finset.ofDual_max' /-
 theorem ofDual_max' {s : Finset αᵒᵈ} (hs : s.Nonempty) :
-    ofDual (max' s hs) = min' (s.image ofDual) (hs.image _) :=
-  by
-  convert rfl
-  exact image_id
+    ofDual (max' s hs) = min' (s.image ofDual) (hs.image _) := by convert rfl; exact image_id
 #align finset.of_dual_max' Finset.ofDual_max'
 -/
 
 #print Finset.toDual_min' /-
 theorem toDual_min' {s : Finset α} (hs : s.Nonempty) :
-    toDual (min' s hs) = max' (s.image toDual) (hs.image _) :=
-  by
-  convert rfl
-  exact image_id
+    toDual (min' s hs) = max' (s.image toDual) (hs.image _) := by convert rfl; exact image_id
 #align finset.to_dual_min' Finset.toDual_min'
 -/
 
 #print Finset.toDual_max' /-
 theorem toDual_max' {s : Finset α} (hs : s.Nonempty) :
-    toDual (max' s hs) = min' (s.image toDual) (hs.image _) :=
-  by
-  convert rfl
-  exact image_id
+    toDual (max' s hs) = min' (s.image toDual) (hs.image _) := by convert rfl; exact image_id
 #align finset.to_dual_max' Finset.toDual_max'
 -/
 
@@ -2709,8 +2669,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.max'_insert Finset.max'_insertₓ'. -/
 theorem max'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).max' (s.insert_nonempty a) = max (s.max' H) a :=
-  (isGreatest_max' _ _).unique <| by
-    rw [coe_insert, max_comm]
+  (isGreatest_max' _ _).unique <| by rw [coe_insert, max_comm];
     exact (is_greatest_max' _ _).insert _
 #align finset.max'_insert Finset.max'_insert
 
@@ -2722,9 +2681,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.min'_insert Finset.min'_insertₓ'. -/
 theorem min'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).min' (s.insert_nonempty a) = min (s.min' H) a :=
-  (isLeast_min' _ _).unique <| by
-    rw [coe_insert, min_comm]
-    exact (is_least_min' _ _).insert _
+  (isLeast_min' _ _).unique <| by rw [coe_insert, min_comm]; exact (is_least_min' _ _).insert _
 #align finset.min'_insert Finset.min'_insert
 
 /- warning: finset.lt_max'_of_mem_erase_max' -> Finset.lt_max'_of_mem_erase_max' is a dubious translation:
@@ -3073,9 +3030,7 @@ theorem is_glb_iff_is_least [LinearOrder α] (i : α) (s : Finset α) (hs : s.No
     IsGLB (s : Set α) i ↔ IsLeast (↑s) i :=
   by
   refine' ⟨fun his => _, IsLeast.isGLB⟩
-  suffices i = min' s hs by
-    rw [this]
-    exact is_least_min' s hs
+  suffices i = min' s hs by rw [this]; exact is_least_min' s hs
   rw [IsGLB, IsGreatest, mem_lowerBounds, mem_upperBounds] at his
   exact le_antisymm (his.1 (Finset.min' s hs) (Finset.min'_mem s hs)) (his.2 _ (Finset.min'_le s))
 #align finset.is_glb_iff_is_least Finset.is_glb_iff_is_least
@@ -3090,9 +3045,7 @@ theorem is_lub_iff_is_greatest [LinearOrder α] (i : α) (s : Finset α) (hs : s
 
 #print Finset.is_glb_mem /-
 theorem is_glb_mem [LinearOrder α] {i : α} (s : Finset α) (his : IsGLB (s : Set α) i)
-    (hs : s.Nonempty) : i ∈ s := by
-  rw [← mem_coe]
-  exact ((is_glb_iff_is_least i s hs).mp his).1
+    (hs : s.Nonempty) : i ∈ s := by rw [← mem_coe]; exact ((is_glb_iff_is_least i s hs).mp his).1
 #align finset.is_glb_mem Finset.is_glb_mem
 -/
 
@@ -3188,9 +3141,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (t : α -> (Finset.{u1} β)), Eq.{succ u1} (Finset.{u1} β) (Finset.sup.{u1, u2} (Finset.{u1} β) α (Lattice.toSemilatticeSup.{u1} (Finset.{u1} β) (Finset.instLatticeFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) s t) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t)
 Case conversion may be inaccurate. Consider using '#align finset.sup_eq_bUnion Finset.sup_eq_biUnionₓ'. -/
 theorem sup_eq_biUnion {α β} [DecidableEq β] (s : Finset α) (t : α → Finset β) :
-    s.sup t = s.biUnion t := by
-  ext
-  rw [mem_sup, mem_bUnion]
+    s.sup t = s.biUnion t := by ext; rw [mem_sup, mem_bUnion]
 #align finset.sup_eq_bUnion Finset.sup_eq_biUnion
 
 /- warning: finset.sup_singleton'' -> Finset.sup_singleton'' is a dubious translation:
@@ -3201,9 +3152,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sup_singleton'' Finset.sup_singleton''ₓ'. -/
 @[simp]
 theorem sup_singleton'' [DecidableEq α] (s : Finset β) (f : β → α) :
-    (s.sup fun b => {f b}) = s.image f := by
-  ext a
-  rw [mem_sup, mem_image]
+    (s.sup fun b => {f b}) = s.image f := by ext a; rw [mem_sup, mem_image];
   simp only [mem_singleton, eq_comm]
 #align finset.sup_singleton'' Finset.sup_singleton''
 
@@ -3488,9 +3437,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] [_inst_2 : DecidableEq.{succ u2} α] (a : α) (s : Finset.{u2} α) (t : α -> β), Eq.{succ u1} β (iSup.{u1, succ u2} β (CompleteLattice.toSupSet.{u1} β _inst_1) α (fun (x : α) => iSup.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a s)) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a s)) => t x))) (Sup.sup.{u1} β (SemilatticeSup.toSup.{u1} β (Lattice.toSemilatticeSup.{u1} β (CompleteLattice.toLattice.{u1} β _inst_1))) (t a) (iSup.{u1, succ u2} β (CompleteLattice.toSupSet.{u1} β _inst_1) α (fun (x : α) => iSup.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) => t x))))
 Case conversion may be inaccurate. Consider using '#align finset.supr_insert Finset.iSup_insertₓ'. -/
 theorem iSup_insert (a : α) (s : Finset α) (t : α → β) :
-    (⨆ x ∈ insert a s, t x) = t a ⊔ ⨆ x ∈ s, t x :=
-  by
-  rw [insert_eq]
+    (⨆ x ∈ insert a s, t x) = t a ⊔ ⨆ x ∈ s, t x := by rw [insert_eq];
   simp only [iSup_union, Finset.iSup_singleton]
 #align finset.supr_insert Finset.iSup_insert
 

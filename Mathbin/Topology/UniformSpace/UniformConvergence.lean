@@ -561,13 +561,9 @@ theorem UniformContinuousOn.tendstoUniformly [UniformSpace α] [UniformSpace γ]
     show (fun q : α × β => (F x q.2, F q.1 q.2)) = Prod.map (↿F) ↿F ∘ φ by ext <;> simpa]
   apply hF.comp (tendsto_inf.mpr ⟨_, _⟩)
   · rw [uniformity_prod, tendsto_inf, tendsto_comap_iff, tendsto_comap_iff,
-      show (fun p : (α × β) × α × β => (p.1.1, p.2.1)) ∘ φ = (fun a => (x, a)) ∘ Prod.fst
-        by
-        ext
+      show (fun p : (α × β) × α × β => (p.1.1, p.2.1)) ∘ φ = (fun a => (x, a)) ∘ Prod.fst by ext;
         simp,
-      show (fun p : (α × β) × α × β => (p.1.2, p.2.2)) ∘ φ = (fun b => (b, b)) ∘ Prod.snd
-        by
-        ext
+      show (fun p : (α × β) × α × β => (p.1.2, p.2.2)) ∘ φ = (fun b => (b, b)) ∘ Prod.snd by ext;
         simp]
     exact
       ⟨tendsto_left_nhds_uniformity.comp tendsto_fst,
@@ -838,9 +834,7 @@ theorem tendstoUniformlyOn_of_seq_tendstoUniformlyOn {l : Filter ι} [l.IsCounta
     (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ u =
       (fun q : ℕ × α => (f q.snd, F ((fun n : ℕ => (u n).fst) q.fst) q.snd)) ∘ fun n =>
         (n, (u n).snd) :=
-    by
-    ext1 n
-    simp
+    by ext1 n; simp
   rw [this]
   refine' tendsto.comp h _
   rw [tendsto_prod_iff']
@@ -856,9 +850,7 @@ theorem TendstoUniformlyOn.seq_tendstoUniformlyOn {l : Filter ι} (h : TendstoUn
   have :
     (fun q : ℕ × α => (f q.snd, F (u q.fst) q.snd)) =
       (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ fun p : ℕ × α => (u p.fst, p.snd) :=
-    by
-    ext1 x
-    simp
+    by ext1 x; simp
   rw [this]
   refine' h.comp _
   rw [tendsto_prod_iff']
@@ -983,19 +975,15 @@ theorem tendstoLocallyUniformlyOn_iUnion {S : γ → Set α} (hS : ∀ i, IsOpen
 #print tendstoLocallyUniformlyOn_biUnion /-
 theorem tendstoLocallyUniformlyOn_biUnion {s : Set γ} {S : γ → Set α} (hS : ∀ i ∈ s, IsOpen (S i))
     (h : ∀ i ∈ s, TendstoLocallyUniformlyOn F f p (S i)) :
-    TendstoLocallyUniformlyOn F f p (⋃ i ∈ s, S i) :=
-  by
-  rw [bUnion_eq_Union]
+    TendstoLocallyUniformlyOn F f p (⋃ i ∈ s, S i) := by rw [bUnion_eq_Union];
   exact tendstoLocallyUniformlyOn_iUnion (fun i => hS _ i.2) fun i => h _ i.2
 #align tendsto_locally_uniformly_on_bUnion tendstoLocallyUniformlyOn_biUnion
 -/
 
 #print tendstoLocallyUniformlyOn_sUnion /-
 theorem tendstoLocallyUniformlyOn_sUnion (S : Set (Set α)) (hS : ∀ s ∈ S, IsOpen s)
-    (h : ∀ s ∈ S, TendstoLocallyUniformlyOn F f p s) : TendstoLocallyUniformlyOn F f p (⋃₀ S) :=
-  by
-  rw [sUnion_eq_bUnion]
-  exact tendstoLocallyUniformlyOn_biUnion hS h
+    (h : ∀ s ∈ S, TendstoLocallyUniformlyOn F f p s) : TendstoLocallyUniformlyOn F f p (⋃₀ S) := by
+  rw [sUnion_eq_bUnion]; exact tendstoLocallyUniformlyOn_biUnion hS h
 #align tendsto_locally_uniformly_on_sUnion tendstoLocallyUniformlyOn_sUnion
 -/
 
@@ -1007,9 +995,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_locally_uniformly_on.union TendstoLocallyUniformlyOn.unionₓ'. -/
 theorem TendstoLocallyUniformlyOn.union {s₁ s₂ : Set α} (hs₁ : IsOpen s₁) (hs₂ : IsOpen s₂)
     (h₁ : TendstoLocallyUniformlyOn F f p s₁) (h₂ : TendstoLocallyUniformlyOn F f p s₂) :
-    TendstoLocallyUniformlyOn F f p (s₁ ∪ s₂) :=
-  by
-  rw [← sUnion_pair]
+    TendstoLocallyUniformlyOn F f p (s₁ ∪ s₂) := by rw [← sUnion_pair];
   refine' tendstoLocallyUniformlyOn_sUnion _ _ _ <;> simp [*]
 #align tendsto_locally_uniformly_on.union TendstoLocallyUniformlyOn.union
 

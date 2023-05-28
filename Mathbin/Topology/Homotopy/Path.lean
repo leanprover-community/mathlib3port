@@ -270,8 +270,7 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
   map_one_left' x := by norm_num
   prop' t x hx := by
     cases hx
-    · rw [hx]
-      norm_num [hf₀]
+    · rw [hx]; norm_num [hf₀]
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       norm_num [hf₁]
@@ -290,8 +289,7 @@ def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm
   map_one_left' := by simp [Path.symm]
   prop' t x hx := by
     cases hx
-    · rw [hx]
-      simp
+    · rw [hx]; simp
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       simp

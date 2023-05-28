@@ -502,8 +502,7 @@ theorem isMaximal_comap_c_of_isMaximal [Nontrivial R] (hP' : ∀ x : R, C x ∈ 
   by
   haveI hp'_prime : (P.comap (C : R →+* R[X]) : Ideal R).IsPrime := comap_is_prime C P
   obtain ⟨m, hm⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_of_maximal P polynomial_not_is_field)
-  have : (m : R[X]) ≠ 0
-  rwa [Ne.def, Submodule.coe_eq_zero]
+  have : (m : R[X]) ≠ 0; rwa [Ne.def, Submodule.coe_eq_zero]
   let φ : R ⧸ P.comap (C : R →+* R[X]) →+* R[X] ⧸ P := QuotientMap P (C : R →+* R[X]) le_rfl
   let M : Submonoid (R ⧸ P.comap C) :=
     Submonoid.powers
@@ -525,8 +524,7 @@ theorem isMaximal_comap_c_of_isMaximal [Nontrivial R] (hP' : ∀ x : R, C x ∈ 
       IsLocalization.comap_map_of_isPrime_disjoint M (Localization M) ⊥ bot_prime
         (disjoint_iff_inf_le.mpr fun x hx => hM (hx.2 ▸ hx.1))]
     refine' ((is_maximal_iff_is_maximal_disjoint (Localization M) _ _).mp (by rwa [map_bot])).1
-    swap
-    exact Localization.isLocalization
+    swap; exact Localization.isLocalization
   let M' : Submonoid (R[X] ⧸ P) := M.map φ
   have hM' : (0 : R[X] ⧸ P) ∉ M' := fun ⟨z, hz⟩ =>
     hM (quotient_map_injective (trans hz.2 φ.map_zero.symm) ▸ hz.1)

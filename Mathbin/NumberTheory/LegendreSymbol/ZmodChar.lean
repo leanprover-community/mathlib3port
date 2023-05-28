@@ -64,9 +64,7 @@ but is expected to have type
   MulChar.IsQuadratic.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) Int Int.instCommRingInt ZMod.χ₄
 Case conversion may be inaccurate. Consider using '#align zmod.is_quadratic_χ₄ ZMod.isQuadratic_χ₄ₓ'. -/
 /-- `χ₄` takes values in `{0, 1, -1}` -/
-theorem isQuadratic_χ₄ : χ₄.IsQuadratic := by
-  intro a
-  decide!
+theorem isQuadratic_χ₄ : χ₄.IsQuadratic := by intro a; decide!
 #align zmod.is_quadratic_χ₄ ZMod.isQuadratic_χ₄
 
 /- warning: zmod.χ₄_nat_mod_four -> ZMod.χ₄_nat_mod_four is a dubious translation:
@@ -86,9 +84,7 @@ but is expected to have type
   forall (n : Int), Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))))) n)) (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 4 (instOfNatInt 4)))))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₄_int_mod_four ZMod.χ₄_int_mod_fourₓ'. -/
 /-- The value of `χ₄ n`, for `n : ℤ`, depends only on `n % 4`. -/
-theorem χ₄_int_mod_four (n : ℤ) : χ₄ n = χ₄ (n % 4 : ℤ) :=
-  by
-  rw [← ZMod.int_cast_mod n 4]
+theorem χ₄_int_mod_four (n : ℤ) : χ₄ n = χ₄ (n % 4 : ℤ) := by rw [← ZMod.int_cast_mod n 4];
   norm_cast
 #align zmod.χ₄_int_mod_four ZMod.χ₄_int_mod_four
 
@@ -147,10 +143,7 @@ but is expected to have type
   forall {n : Nat}, (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Nat.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Semiring.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))))) n)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₄_nat_one_mod_four ZMod.χ₄_nat_one_mod_fourₓ'. -/
 /-- If `n % 4 = 1`, then `χ₄ n = 1`. -/
-theorem χ₄_nat_one_mod_four {n : ℕ} (hn : n % 4 = 1) : χ₄ n = 1 :=
-  by
-  rw [χ₄_nat_mod_four, hn]
-  rfl
+theorem χ₄_nat_one_mod_four {n : ℕ} (hn : n % 4 = 1) : χ₄ n = 1 := by rw [χ₄_nat_mod_four, hn]; rfl
 #align zmod.χ₄_nat_one_mod_four ZMod.χ₄_nat_one_mod_four
 
 /- warning: zmod.χ₄_nat_three_mod_four -> ZMod.χ₄_nat_three_mod_four is a dubious translation:
@@ -160,9 +153,7 @@ but is expected to have type
   forall {n : Nat}, (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Nat.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Semiring.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))))) n)) (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₄_nat_three_mod_four ZMod.χ₄_nat_three_mod_fourₓ'. -/
 /-- If `n % 4 = 3`, then `χ₄ n = -1`. -/
-theorem χ₄_nat_three_mod_four {n : ℕ} (hn : n % 4 = 3) : χ₄ n = -1 :=
-  by
-  rw [χ₄_nat_mod_four, hn]
+theorem χ₄_nat_three_mod_four {n : ℕ} (hn : n % 4 = 3) : χ₄ n = -1 := by rw [χ₄_nat_mod_four, hn];
   rfl
 #align zmod.χ₄_nat_three_mod_four ZMod.χ₄_nat_three_mod_four
 
@@ -173,10 +164,7 @@ but is expected to have type
   forall {n : Int}, (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 4 (instOfNatInt 4))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) -> (Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))))) n)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₄_int_one_mod_four ZMod.χ₄_int_one_mod_fourₓ'. -/
 /-- If `n % 4 = 1`, then `χ₄ n = 1`. -/
-theorem χ₄_int_one_mod_four {n : ℤ} (hn : n % 4 = 1) : χ₄ n = 1 :=
-  by
-  rw [χ₄_int_mod_four, hn]
-  rfl
+theorem χ₄_int_one_mod_four {n : ℤ} (hn : n % 4 = 1) : χ₄ n = 1 := by rw [χ₄_int_mod_four, hn]; rfl
 #align zmod.χ₄_int_one_mod_four ZMod.χ₄_int_one_mod_four
 
 /- warning: zmod.χ₄_int_three_mod_four -> ZMod.χ₄_int_three_mod_four is a dubious translation:
@@ -186,24 +174,18 @@ but is expected to have type
   forall {n : Int}, (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 4 (instOfNatInt 4))) (OfNat.ofNat.{0} Int 3 (instOfNatInt 3))) -> (Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₄ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))) (ZMod.commRing (OfNat.ofNat.{0} Nat 4 (instOfNatNat 4))))) n)) (Neg.neg.{0} Int Int.instNegInt (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₄_int_three_mod_four ZMod.χ₄_int_three_mod_fourₓ'. -/
 /-- If `n % 4 = 3`, then `χ₄ n = -1`. -/
-theorem χ₄_int_three_mod_four {n : ℤ} (hn : n % 4 = 3) : χ₄ n = -1 :=
-  by
-  rw [χ₄_int_mod_four, hn]
+theorem χ₄_int_three_mod_four {n : ℤ} (hn : n % 4 = 3) : χ₄ n = -1 := by rw [χ₄_int_mod_four, hn];
   rfl
 #align zmod.χ₄_int_three_mod_four ZMod.χ₄_int_three_mod_four
 
 /-- If `n % 4 = 1`, then `(-1)^(n/2) = 1`. -/
-theorem neg_one_pow_div_two_of_one_mod_four {n : ℕ} (hn : n % 4 = 1) : (-1 : ℤ) ^ (n / 2) = 1 :=
-  by
-  rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_one hn), ← nat_cast_mod, hn]
-  rfl
+theorem neg_one_pow_div_two_of_one_mod_four {n : ℕ} (hn : n % 4 = 1) : (-1 : ℤ) ^ (n / 2) = 1 := by
+  rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_one hn), ← nat_cast_mod, hn]; rfl
 #align neg_one_pow_div_two_of_one_mod_four neg_one_pow_div_two_of_one_mod_four
 
 /-- If `n % 4 = 3`, then `(-1)^(n/2) = -1`. -/
 theorem neg_one_pow_div_two_of_three_mod_four {n : ℕ} (hn : n % 4 = 3) : (-1 : ℤ) ^ (n / 2) = -1 :=
-  by
-  rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_three hn), ← nat_cast_mod, hn]
-  rfl
+  by rw [← χ₄_eq_neg_one_pow (Nat.odd_of_mod_four_eq_three hn), ← nat_cast_mod, hn]; rfl
 #align neg_one_pow_div_two_of_three_mod_four neg_one_pow_div_two_of_three_mod_four
 
 /- warning: zmod.χ₈ -> ZMod.χ₈ is a dubious translation:
@@ -230,9 +212,7 @@ but is expected to have type
   MulChar.IsQuadratic.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) Int Int.instCommRingInt ZMod.χ₈
 Case conversion may be inaccurate. Consider using '#align zmod.is_quadratic_χ₈ ZMod.isQuadratic_χ₈ₓ'. -/
 /-- `χ₈` takes values in `{0, 1, -1}` -/
-theorem isQuadratic_χ₈ : χ₈.IsQuadratic := by
-  intro a
-  decide!
+theorem isQuadratic_χ₈ : χ₈.IsQuadratic := by intro a; decide!
 #align zmod.is_quadratic_χ₈ ZMod.isQuadratic_χ₈
 
 /- warning: zmod.χ₈_nat_mod_eight -> ZMod.χ₈_nat_mod_eight is a dubious translation:
@@ -252,9 +232,7 @@ but is expected to have type
   forall (n : Int), Eq.{1} Int (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₈ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))))) n)) (MulChar.toFun'.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (CommRing.toCommMonoid.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8)))) Int (CancelCommMonoidWithZero.toCommMonoidWithZero.{0} Int (IsDomain.toCancelCommMonoidWithZero.{0} Int Int.instCommSemiringInt (LinearOrderedRing.isDomain.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) ZMod.χ₈ (Int.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (Ring.toIntCast.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (CommRing.toRing.{0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 8 (instOfNatInt 8)))))
 Case conversion may be inaccurate. Consider using '#align zmod.χ₈_int_mod_eight ZMod.χ₈_int_mod_eightₓ'. -/
 /-- The value of `χ₈ n`, for `n : ℤ`, depends only on `n % 8`. -/
-theorem χ₈_int_mod_eight (n : ℤ) : χ₈ n = χ₈ (n % 8 : ℤ) :=
-  by
-  rw [← ZMod.int_cast_mod n 8]
+theorem χ₈_int_mod_eight (n : ℤ) : χ₈ n = χ₈ (n % 8 : ℤ) := by rw [← ZMod.int_cast_mod n 8];
   norm_cast
 #align zmod.χ₈_int_mod_eight ZMod.χ₈_int_mod_eight
 
@@ -310,9 +288,7 @@ but is expected to have type
   MulChar.IsQuadratic.{0, 0} (ZMod (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) (ZMod.commRing (OfNat.ofNat.{0} Nat 8 (instOfNatNat 8))) Int Int.instCommRingInt ZMod.χ₈'
 Case conversion may be inaccurate. Consider using '#align zmod.is_quadratic_χ₈' ZMod.isQuadratic_χ₈'ₓ'. -/
 /-- `χ₈'` takes values in `{0, 1, -1}` -/
-theorem isQuadratic_χ₈' : χ₈'.IsQuadratic := by
-  intro a
-  decide!
+theorem isQuadratic_χ₈' : χ₈'.IsQuadratic := by intro a; decide!
 #align zmod.is_quadratic_χ₈' ZMod.isQuadratic_χ₈'
 
 /- warning: zmod.χ₈'_int_eq_if_mod_eight -> ZMod.χ₈'_int_eq_if_mod_eight is a dubious translation:

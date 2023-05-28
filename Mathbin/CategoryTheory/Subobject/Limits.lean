@@ -167,10 +167,8 @@ theorem kernelSubobject_arrow' :
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_subobject_arrow_comp CategoryTheory.Limits.kernelSubobject_arrow_compₓ'. -/
 @[simp, reassoc, elementwise]
-theorem kernelSubobject_arrow_comp : (kernelSubobject f).arrow ≫ f = 0 :=
-  by
-  rw [← kernel_subobject_arrow]
-  simp only [category.assoc, kernel.condition, comp_zero]
+theorem kernelSubobject_arrow_comp : (kernelSubobject f).arrow ≫ f = 0 := by
+  rw [← kernel_subobject_arrow]; simp only [category.assoc, kernel.condition, comp_zero]
 #align category_theory.limits.kernel_subobject_arrow_comp CategoryTheory.Limits.kernelSubobject_arrow_comp
 
 #print CategoryTheory.Limits.kernelSubobject_factors /-
@@ -209,10 +207,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.factor_thru_kernel_subobject_comp_arrow CategoryTheory.Limits.factorThruKernelSubobject_comp_arrowₓ'. -/
 @[simp]
 theorem factorThruKernelSubobject_comp_arrow {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
-    factorThruKernelSubobject f h w ≫ (kernelSubobject f).arrow = h :=
-  by
-  dsimp [factor_thru_kernel_subobject]
-  simp
+    factorThruKernelSubobject f h w ≫ (kernelSubobject f).arrow = h := by
+  dsimp [factor_thru_kernel_subobject]; simp
 #align category_theory.limits.factor_thru_kernel_subobject_comp_arrow CategoryTheory.Limits.factorThruKernelSubobject_comp_arrow
 
 /- warning: category_theory.limits.factor_thru_kernel_subobject_comp_kernel_subobject_iso -> CategoryTheory.Limits.factorThruKernelSubobject_comp_kernelSubobjectIso is a dubious translation:
@@ -260,11 +256,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} [_inst_3 : CategoryTheory.Limits.HasKernel.{u1, u2} C _inst_1 _inst_2 X Y f], Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) (CategoryTheory.Limits.kernelSubobject.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3)) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) (CategoryTheory.Limits.kernelSubobject.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3))) (CategoryTheory.Limits.kernelSubobjectMap.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3 X Y f _inst_3 (CategoryTheory.CategoryStruct.id.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Arrow.{u1, u2} C _inst_1) (CategoryTheory.instCategoryArrow.{u1, u2} C _inst_1)) (CategoryTheory.Arrow.mk.{u1, u2} C _inst_1 X Y f))) (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 X)) (CategoryTheory.Limits.kernelSubobject.{u1, u2} C _inst_1 X Y _inst_2 f _inst_3)))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.kernel_subobject_map_id CategoryTheory.Limits.kernelSubobjectMap_idₓ'. -/
 @[simp]
-theorem kernelSubobjectMap_id : kernelSubobjectMap (𝟙 (Arrow.mk f)) = 𝟙 _ :=
-  by
-  ext
-  simp
-  dsimp
+theorem kernelSubobjectMap_id : kernelSubobjectMap (𝟙 (Arrow.mk f)) = 𝟙 _ := by ext; simp; dsimp;
   simp
 #align category_theory.limits.kernel_subobject_map_id CategoryTheory.Limits.kernelSubobjectMap_id
 
@@ -275,10 +267,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 @[simp]
 theorem kernelSubobjectMap_comp {X'' Y'' : C} {f'' : X'' ⟶ Y''} [HasKernel f'']
     (sq : Arrow.mk f ⟶ Arrow.mk f') (sq' : Arrow.mk f' ⟶ Arrow.mk f'') :
-    kernelSubobjectMap (sq ≫ sq') = kernelSubobjectMap sq ≫ kernelSubobjectMap sq' :=
-  by
-  ext
-  simp
+    kernelSubobjectMap (sq ≫ sq') = kernelSubobjectMap sq ≫ kernelSubobjectMap sq' := by ext; simp
 #align category_theory.limits.kernel_subobject_map_comp CategoryTheory.Limits.kernelSubobjectMap_comp
 
 /- warning: category_theory.limits.kernel_map_comp_kernel_subobject_iso_inv -> CategoryTheory.Limits.kernel_map_comp_kernelSubobjectIso_inv is a dubious translation:
@@ -515,10 +504,8 @@ def factorThruImageSubobject : X ⟶ imageSubobject f :=
   factorThruImage f ≫ (imageSubobjectIso f).inv
 #align category_theory.limits.factor_thru_image_subobject CategoryTheory.Limits.factorThruImageSubobject
 
-instance [HasEqualizers C] : Epi (factorThruImageSubobject f) :=
-  by
-  dsimp [factor_thru_image_subobject]
-  apply epi_comp
+instance [HasEqualizers C] : Epi (factorThruImageSubobject f) := by
+  dsimp [factor_thru_image_subobject]; apply epi_comp
 
 /- warning: category_theory.limits.image_subobject_arrow_comp -> CategoryTheory.Limits.imageSubobject_arrow_comp is a dubious translation:
 lean 3 declaration is
@@ -554,10 +541,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.factor_thru_image_subobject_comp_self CategoryTheory.Limits.factorThruImageSubobject_comp_selfₓ'. -/
 @[simp]
 theorem factorThruImageSubobject_comp_self {W : C} (k : W ⟶ X) (h) :
-    (imageSubobject f).factorThru (k ≫ f) h = k ≫ factorThruImageSubobject f :=
-  by
-  ext
-  simp
+    (imageSubobject f).factorThru (k ≫ f) h = k ≫ factorThruImageSubobject f := by ext; simp
 #align category_theory.limits.factor_thru_image_subobject_comp_self CategoryTheory.Limits.factorThruImageSubobject_comp_self
 
 /- warning: category_theory.limits.factor_thru_image_subobject_comp_self_assoc -> CategoryTheory.Limits.factorThruImageSubobject_comp_self_assoc is a dubious translation:
@@ -568,9 +552,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.factor_thru_image_subobject_comp_self_assoc CategoryTheory.Limits.factorThruImageSubobject_comp_self_assocₓ'. -/
 @[simp]
 theorem factorThruImageSubobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k' : W' ⟶ X) (h) :
-    (imageSubobject f).factorThru (k ≫ k' ≫ f) h = k ≫ k' ≫ factorThruImageSubobject f :=
-  by
-  ext
+    (imageSubobject f).factorThru (k ≫ k' ≫ f) h = k ≫ k' ≫ factorThruImageSubobject f := by ext;
   simp
 #align category_theory.limits.factor_thru_image_subobject_comp_self_assoc CategoryTheory.Limits.factorThruImageSubobject_comp_self_assoc
 
@@ -596,10 +578,8 @@ variable [HasZeroMorphisms C] [HasZeroObject C]
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.image_subobject_zero_arrow CategoryTheory.Limits.imageSubobject_zero_arrowₓ'. -/
 @[simp]
-theorem imageSubobject_zero_arrow : (imageSubobject (0 : X ⟶ Y)).arrow = 0 :=
-  by
-  rw [← image_subobject_arrow]
-  simp
+theorem imageSubobject_zero_arrow : (imageSubobject (0 : X ⟶ Y)).arrow = 0 := by
+  rw [← image_subobject_arrow]; simp
 #align category_theory.limits.image_subobject_zero_arrow CategoryTheory.Limits.imageSubobject_zero_arrow
 
 /- warning: category_theory.limits.image_subobject_zero -> CategoryTheory.Limits.imageSubobject_zero is a dubious translation:

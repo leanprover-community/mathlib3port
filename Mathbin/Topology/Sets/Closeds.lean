@@ -49,10 +49,7 @@ variable {α}
 
 instance : SetLike (Closeds α) α where
   coe := Closeds.carrier
-  coe_injective' s t h := by
-    cases s
-    cases t
-    congr
+  coe_injective' s t h := by cases s; cases t; congr
 
 #print TopologicalSpace.Closeds.closed /-
 theorem closed (s : Closeds α) : IsClosed (s : Set α) :=
@@ -217,11 +214,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} (s : ι -> (TopologicalSpace.Closeds.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.Closeds.{u1} α _inst_1) (iInf.{u1, u2} (TopologicalSpace.Closeds.{u1} α _inst_1) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.Closeds.{u1} α _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.Closeds.{u1} α _inst_1) (TopologicalSpace.Closeds.instCompleteLatticeCloseds.{u1} α _inst_1))) ι (fun (i : ι) => s i)) (TopologicalSpace.Closeds.mk.{u1} α _inst_1 (Set.iInter.{u1, u2} α ι (fun (i : ι) => SetLike.coe.{u1, u1} (TopologicalSpace.Closeds.{u1} α _inst_1) α (TopologicalSpace.Closeds.instSetLikeCloseds.{u1} α _inst_1) (s i))) (isClosed_iInter.{u1, u2} α ι _inst_1 (fun (i : ι) => SetLike.coe.{u1, u1} (TopologicalSpace.Closeds.{u1} α _inst_1) α (TopologicalSpace.Closeds.instSetLikeCloseds.{u1} α _inst_1) (s i)) (fun (i : ι) => TopologicalSpace.Closeds.closed'.{u1} α _inst_1 (s i))))
 Case conversion may be inaccurate. Consider using '#align topological_space.closeds.infi_def TopologicalSpace.Closeds.iInf_defₓ'. -/
 theorem iInf_def {ι} (s : ι → Closeds α) :
-    (⨅ i, s i) = ⟨⋂ i, s i, isClosed_iInter fun i => (s i).2⟩ :=
-  by
-  ext
-  simp only [iInf, coe_Inf, bInter_range]
-  rfl
+    (⨅ i, s i) = ⟨⋂ i, s i, isClosed_iInter fun i => (s i).2⟩ := by ext;
+  simp only [iInf, coe_Inf, bInter_range]; rfl
 #align topological_space.closeds.infi_def TopologicalSpace.Closeds.iInf_def
 
 /- warning: topological_space.closeds.infi_mk -> TopologicalSpace.Closeds.iInf_mk is a dubious translation:
@@ -418,10 +412,7 @@ namespace Clopens
 
 instance : SetLike (Clopens α) α where
   coe s := s.carrier
-  coe_injective' s t h := by
-    cases s
-    cases t
-    congr
+  coe_injective' s t h := by cases s; cases t; congr
 
 #print TopologicalSpace.Clopens.clopen /-
 theorem clopen (s : Clopens α) : IsClopen (s : Set α) :=

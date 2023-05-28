@@ -164,9 +164,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_eq_self_of_superset Set.mulIndicator_eq_self_of_supersetₓ'. -/
 @[to_additive]
 theorem mulIndicator_eq_self_of_superset (h1 : s.mulIndicator f = f) (h2 : s ⊆ t) :
-    t.mulIndicator f = f := by
-  rw [mul_indicator_eq_self] at h1⊢
-  exact subset.trans h1 h2
+    t.mulIndicator f = f := by rw [mul_indicator_eq_self] at h1⊢; exact subset.trans h1 h2
 #align set.mul_indicator_eq_self_of_superset Set.mulIndicator_eq_self_of_superset
 #align set.indicator_eq_self_of_superset Set.indicator_eq_self_of_superset
 
@@ -293,11 +291,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_congr Set.mulIndicator_congrₓ'. -/
 @[to_additive]
 theorem mulIndicator_congr (h : EqOn f g s) : mulIndicator s f = mulIndicator s g :=
-  funext fun x => by
-    simp only [mul_indicator]
-    split_ifs
-    · exact h h_1
-    rfl
+  funext fun x => by simp only [mul_indicator]; split_ifs; · exact h h_1; rfl
 #align set.mul_indicator_congr Set.mulIndicator_congr
 #align set.indicator_congr Set.indicator_congr
 
@@ -374,9 +368,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_mul_
 @[to_additive]
 theorem mulIndicator_mulIndicator (s t : Set α) (f : α → M) :
     mulIndicator s (mulIndicator t f) = mulIndicator (s ∩ t) f :=
-  funext fun x => by
-    simp only [mul_indicator]
-    split_ifs
+  funext fun x => by simp only [mul_indicator]; split_ifs;
     repeat' simp_all (config := { contextual := true })
 #align set.mul_indicator_mul_indicator Set.mulIndicator_mulIndicator
 #align set.indicator_indicator Set.indicator_indicator
@@ -415,9 +407,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_comp_right Set.mulIndicator_comp_rightₓ'. -/
 @[to_additive]
 theorem mulIndicator_comp_right {s : Set α} (f : β → α) {g : α → M} {x : β} :
-    mulIndicator (f ⁻¹' s) (g ∘ f) x = mulIndicator s g (f x) :=
-  by
-  simp only [mul_indicator]
+    mulIndicator (f ⁻¹' s) (g ∘ f) x = mulIndicator s g (f x) := by simp only [mul_indicator];
   split_ifs <;> rfl
 #align set.mul_indicator_comp_right Set.mulIndicator_comp_right
 #align set.indicator_comp_right Set.indicator_comp_right
@@ -553,11 +543,8 @@ theorem mem_range_mulIndicator {r : M} {s : Set α} {f : α → M} :
 #print Set.mulIndicator_rel_mulIndicator /-
 @[to_additive]
 theorem mulIndicator_rel_mulIndicator {r : M → M → Prop} (h1 : r 1 1) (ha : a ∈ s → r (f a) (g a)) :
-    r (mulIndicator s f a) (mulIndicator s g a) :=
-  by
-  simp only [mul_indicator]
-  split_ifs with has has
-  exacts[ha has, h1]
+    r (mulIndicator s f a) (mulIndicator s g a) := by simp only [mul_indicator];
+  split_ifs with has has; exacts[ha has, h1]
 #align set.mul_indicator_rel_mul_indicator Set.mulIndicator_rel_mulIndicator
 #align set.indicator_rel_indicator Set.indicator_rel_indicator
 -/
@@ -628,13 +615,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_mul Set.mulIndicator_mulₓ'. -/
 @[to_additive]
 theorem mulIndicator_mul (s : Set α) (f g : α → M) :
-    (mulIndicator s fun a => f a * g a) = fun a => mulIndicator s f a * mulIndicator s g a :=
-  by
-  funext
-  simp only [mul_indicator]
-  split_ifs
-  · rfl
-  rw [mul_one]
+    (mulIndicator s fun a => f a * g a) = fun a => mulIndicator s f a * mulIndicator s g a := by
+  funext; simp only [mul_indicator]; split_ifs; · rfl; rw [mul_one]
 #align set.mul_indicator_mul Set.mulIndicator_mul
 #align set.indicator_add Set.indicator_add
 
@@ -781,11 +763,8 @@ but is expected to have type
   forall {α : Type.{u3}} {M : Type.{u1}} {A : Type.{u2}} [_inst_1 : AddMonoid.{u2} A] [_inst_2 : Monoid.{u1} M] [_inst_3 : DistribMulAction.{u1, u2} M A _inst_2 _inst_1] (s : Set.{u3} α) (r : α -> M) (f : α -> A) (x : α), Eq.{succ u2} A (Set.indicator.{u3, u2} α A (AddMonoid.toZero.{u2} A _inst_1) s (fun (x : α) => HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_1) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_2 _inst_1 _inst_3)))) (r x) (f x)) x) (HSMul.hSMul.{u1, u2, u2} M A A (instHSMul.{u1, u2} M A (SMulZeroClass.toSMul.{u1, u2} M A (AddMonoid.toZero.{u2} A _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} M A (AddMonoid.toAddZeroClass.{u2} A _inst_1) (DistribMulAction.toDistribSMul.{u1, u2} M A _inst_2 _inst_1 _inst_3)))) (r x) (Set.indicator.{u3, u2} α A (AddMonoid.toZero.{u2} A _inst_1) s f x))
 Case conversion may be inaccurate. Consider using '#align set.indicator_smul_apply Set.indicator_smul_applyₓ'. -/
 theorem indicator_smul_apply (s : Set α) (r : α → M) (f : α → A) (x : α) :
-    indicator s (fun x => r x • f x) x = r x • indicator s f x :=
-  by
-  dsimp only [indicator]
-  split_ifs
-  exacts[rfl, (smul_zero (r x)).symm]
+    indicator s (fun x => r x • f x) x = r x • indicator s f x := by dsimp only [indicator];
+  split_ifs; exacts[rfl, (smul_zero (r x)).symm]
 #align set.indicator_smul_apply Set.indicator_smul_apply
 
 /- warning: set.indicator_smul -> Set.indicator_smul is a dubious translation:
@@ -1033,9 +1012,7 @@ theorem mulIndicator_finset_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f 
   by
   classical
     refine' Finset.induction_on I _ _
-    · intro h
-      funext
-      simp
+    · intro h; funext; simp
     intro a I haI ih hI
     funext
     rw [Finset.prod_insert haI, Finset.set_biUnion_insert, mul_indicator_union_of_not_mem_inter,
@@ -1077,13 +1054,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M] (s : Set.{u2} α) (f : α -> M) (g : α -> M), Eq.{max (succ u2) (succ u1)} (α -> M) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s (fun (a : α) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (f a) (g a))) (fun (a : α) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s f a) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s g a))
 Case conversion may be inaccurate. Consider using '#align set.indicator_mul Set.indicator_mulₓ'. -/
 theorem indicator_mul (s : Set α) (f g : α → M) :
-    (indicator s fun a => f a * g a) = fun a => indicator s f a * indicator s g a :=
-  by
-  funext
-  simp only [indicator]
-  split_ifs
-  · rfl
-  rw [MulZeroClass.mul_zero]
+    (indicator s fun a => f a * g a) = fun a => indicator s f a * indicator s g a := by funext;
+  simp only [indicator]; split_ifs; · rfl; rw [MulZeroClass.mul_zero]
 #align set.indicator_mul Set.indicator_mul
 
 /- warning: set.indicator_mul_left -> Set.indicator_mul_left is a dubious translation:
@@ -1093,12 +1065,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M] {a : α} (s : Set.{u2} α) (f : α -> M) (g : α -> M), Eq.{succ u1} M (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s (fun (a : α) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (f a) (g a)) a) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s f a) (g a))
 Case conversion may be inaccurate. Consider using '#align set.indicator_mul_left Set.indicator_mul_leftₓ'. -/
 theorem indicator_mul_left (s : Set α) (f g : α → M) :
-    indicator s (fun a => f a * g a) a = indicator s f a * g a :=
-  by
-  simp only [indicator]
-  split_ifs
-  · rfl
-  rw [MulZeroClass.zero_mul]
+    indicator s (fun a => f a * g a) a = indicator s f a * g a := by simp only [indicator];
+  split_ifs; · rfl; rw [MulZeroClass.zero_mul]
 #align set.indicator_mul_left Set.indicator_mul_left
 
 /- warning: set.indicator_mul_right -> Set.indicator_mul_right is a dubious translation:
@@ -1108,12 +1076,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M] {a : α} (s : Set.{u2} α) (f : α -> M) (g : α -> M), Eq.{succ u1} M (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s (fun (a : α) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (f a) (g a)) a) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (f a) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) s g a))
 Case conversion may be inaccurate. Consider using '#align set.indicator_mul_right Set.indicator_mul_rightₓ'. -/
 theorem indicator_mul_right (s : Set α) (f g : α → M) :
-    indicator s (fun a => f a * g a) a = f a * indicator s g a :=
-  by
-  simp only [indicator]
-  split_ifs
-  · rfl
-  rw [MulZeroClass.mul_zero]
+    indicator s (fun a => f a * g a) a = f a * indicator s g a := by simp only [indicator];
+  split_ifs; · rfl; rw [MulZeroClass.mul_zero]
 #align set.indicator_mul_right Set.indicator_mul_right
 
 /- warning: set.inter_indicator_mul -> Set.inter_indicator_mul is a dubious translation:
@@ -1123,10 +1087,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M] {t1 : Set.{u2} α} {t2 : Set.{u2} α} (f : α -> M) (g : α -> M) (x : α), Eq.{succ u1} M (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t1 t2) (fun (x : α) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (f x) (g x)) x) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulZeroClass.toMul.{u1} M _inst_1)) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) t1 f x) (Set.indicator.{u2, u1} α M (MulZeroClass.toZero.{u1} M _inst_1) t2 g x))
 Case conversion may be inaccurate. Consider using '#align set.inter_indicator_mul Set.inter_indicator_mulₓ'. -/
 theorem inter_indicator_mul {t1 t2 : Set α} (f g : α → M) (x : α) :
-    (t1 ∩ t2).indicator (fun x => f x * g x) x = t1.indicator f x * t2.indicator g x :=
-  by
-  rw [← Set.indicator_indicator]
-  simp [indicator]
+    (t1 ∩ t2).indicator (fun x => f x * g x) x = t1.indicator f x * t2.indicator g x := by
+  rw [← Set.indicator_indicator]; simp [indicator]
 #align set.inter_indicator_mul Set.inter_indicator_mul
 
 end MulZeroClass
@@ -1186,10 +1148,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} (M : Type.{u1}) [_inst_1 : MulZeroOneClass.{u1} M] [_inst_2 : Nontrivial.{u1} M] {U : Set.{u2} α} {V : Set.{u2} α}, (Eq.{max (succ u2) (succ u1)} (α -> M) (Set.indicator.{u2, u1} α M (MulZeroOneClass.toZero.{u1} M _inst_1) U (OfNat.ofNat.{max u2 u1} (α -> M) 1 (One.toOfNat1.{max u2 u1} (α -> M) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Algebra.IndicatorFunction._hyg.7782 : α) => M) (fun (i : α) => MulOneClass.toOne.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M _inst_1)))))) (Set.indicator.{u2, u1} α M (MulZeroOneClass.toZero.{u1} M _inst_1) V (OfNat.ofNat.{max u2 u1} (α -> M) 1 (One.toOfNat1.{max u2 u1} (α -> M) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Algebra.IndicatorFunction._hyg.7782 : α) => M) (fun (i : α) => MulOneClass.toOne.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M _inst_1))))))) -> (Eq.{succ u2} (Set.{u2} α) U V)
 Case conversion may be inaccurate. Consider using '#align set.indicator_one_inj Set.indicator_one_injₓ'. -/
-theorem indicator_one_inj {U V : Set α} (h : indicator U (1 : α → M) = indicator V 1) : U = V :=
-  by
-  ext
-  simp_rw [← indicator_eq_one_iff_mem M, h]
+theorem indicator_one_inj {U V : Set α} (h : indicator U (1 : α → M) = indicator V 1) : U = V := by
+  ext; simp_rw [← indicator_eq_one_iff_mem M, h]
 #align set.indicator_one_inj Set.indicator_one_inj
 
 end MulZeroOneClass

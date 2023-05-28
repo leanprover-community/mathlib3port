@@ -252,16 +252,12 @@ irreducible_def Basis.addHaar (b : Basis ι ℝ E) : Measure E :=
   Measure.addHaarMeasure b.parallelepiped
 #align basis.add_haar Basis.addHaar
 
-instance isAddHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar :=
-  by
-  rw [Basis.addHaar]
-  exact measure.is_add_haar_measure_add_haar_measure _
+instance isAddHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar := by
+  rw [Basis.addHaar]; exact measure.is_add_haar_measure_add_haar_measure _
 #align is_add_haar_measure_basis_add_haar isAddHaarMeasure_basis_addHaar
 
-theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 :=
-  by
-  rw [Basis.addHaar]
-  exact add_haar_measure_self
+theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 := by
+  rw [Basis.addHaar]; exact add_haar_measure_self
 #align basis.add_haar_self Basis.addHaar_self
 
 end NormedSpace

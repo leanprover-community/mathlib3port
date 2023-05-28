@@ -440,9 +440,7 @@ but is expected to have type
   forall {R : Type.{u3}} {S : Type.{u2}} [_inst_3 : Semiring.{u3} R] [_inst_4 : Semiring.{u2} S] {F : Type.{u1}} [_inst_5 : RingHomClass.{u1, u3, u2} F R S (Semiring.toNonAssocSemiring.{u3} R _inst_3) (Semiring.toNonAssocSemiring.{u2} S _inst_4)], F -> (forall {n : Nat} [hn : NeZero.{u2} S (MonoidWithZero.toZero.{u2} S (Semiring.toMonoidWithZero.{u2} S _inst_4)) (Nat.cast.{u2} S (Semiring.toNatCast.{u2} S _inst_4) n)], NeZero.{u3} R (MonoidWithZero.toZero.{u3} R (Semiring.toMonoidWithZero.{u3} R _inst_3)) (Nat.cast.{u3} R (Semiring.toNatCast.{u3} R _inst_3) n))
 Case conversion may be inaccurate. Consider using '#align ne_zero.nat_of_ne_zero NeZero.nat_of_neZeroₓ'. -/
 theorem NeZero.nat_of_neZero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F)
-    {n : ℕ} [hn : NeZero (n : S)] : NeZero (n : R) :=
-  by
-  apply NeZero.of_map f
+    {n : ℕ} [hn : NeZero (n : S)] : NeZero (n : R) := by apply NeZero.of_map f;
   simp only [map_natCast, hn]
 #align ne_zero.nat_of_ne_zero NeZero.nat_of_neZero
 

@@ -70,9 +70,7 @@ alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
 
 #print ZFSet.IsTransitive.inter /-
 protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive) :
-    (x ∩ y).IsTransitive := fun z hz w hw =>
-  by
-  rw [mem_inter] at hz⊢
+    (x ∩ y).IsTransitive := fun z hz w hw => by rw [mem_inter] at hz⊢;
   exact ⟨hx.mem_trans hw hz.1, hy.mem_trans hw hz.2⟩
 #align Set.is_transitive.inter ZFSet.IsTransitive.inter
 -/
@@ -108,18 +106,15 @@ protected theorem IsTransitive.union (hx : x.IsTransitive) (hy : y.IsTransitive)
 
 #print ZFSet.IsTransitive.powerset /-
 protected theorem IsTransitive.powerset (h : x.IsTransitive) : (powerset x).IsTransitive :=
-  fun y hy z hz => by
-  rw [mem_powerset] at hy⊢
-  exact h.subset_of_mem (hy hz)
+  fun y hy z hz => by rw [mem_powerset] at hy⊢; exact h.subset_of_mem (hy hz)
 #align Set.is_transitive.powerset ZFSet.IsTransitive.powerset
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.isTransitive_iff_sUnion_subset /-
 theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
-  ⟨fun h y hy => by
-    rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩
-    exact h.mem_trans hz' hz, fun H y hy z hz => H <| mem_sUnion_of_mem hz hy⟩
+  ⟨fun h y hy => by rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩; exact h.mem_trans hz' hz,
+    fun H y hy z hz => H <| mem_sUnion_of_mem hz hy⟩
 #align Set.is_transitive_iff_sUnion_subset ZFSet.isTransitive_iff_sUnion_subset
 -/
 

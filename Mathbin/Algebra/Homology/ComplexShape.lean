@@ -105,10 +105,7 @@ def symm (c : ComplexShape ι) : ComplexShape ι
 
 #print ComplexShape.symm_symm /-
 @[simp]
-theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c :=
-  by
-  ext
-  simp
+theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c := by ext; simp
 #align complex_shape.symm_symm ComplexShape.symm_symm
 -/
 
@@ -173,22 +170,14 @@ def prev (c : ComplexShape ι) (j : ι) : ι :=
 -/
 
 #print ComplexShape.next_eq' /-
-theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j :=
-  by
-  apply c.next_eq _ h
-  dsimp only [next]
-  rw [dif_pos]
-  exact Exists.choose_spec ⟨j, h⟩
+theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j := by
+  apply c.next_eq _ h; dsimp only [next]; rw [dif_pos]; exact Exists.choose_spec ⟨j, h⟩
 #align complex_shape.next_eq' ComplexShape.next_eq'
 -/
 
 #print ComplexShape.prev_eq' /-
-theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i :=
-  by
-  apply c.prev_eq _ h
-  dsimp only [prev]
-  rw [dif_pos]
-  exact Exists.choose_spec ⟨i, h⟩
+theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i := by
+  apply c.prev_eq _ h; dsimp only [prev]; rw [dif_pos]; exact Exists.choose_spec ⟨i, h⟩
 #align complex_shape.prev_eq' ComplexShape.prev_eq'
 -/
 

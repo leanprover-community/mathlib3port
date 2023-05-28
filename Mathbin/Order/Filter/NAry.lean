@@ -210,9 +210,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {m : α -> β -> γ} {f : Filter.{u2} α} {g : Filter.{u1} β}, Iff (Filter.NeBot.{u3} γ (Filter.map₂.{u2, u1, u3} α β γ m f g)) (And (Filter.NeBot.{u2} α f) (Filter.NeBot.{u1} β g))
 Case conversion may be inaccurate. Consider using '#align filter.map₂_ne_bot_iff Filter.map₂_neBot_iffₓ'. -/
 @[simp]
-theorem map₂_neBot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
-  by
-  simp_rw [ne_bot_iff]
+theorem map₂_neBot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot := by simp_rw [ne_bot_iff];
   exact map₂_eq_bot_iff.not.trans not_or
 #align filter.map₂_ne_bot_iff Filter.map₂_neBot_iff
 
@@ -350,9 +348,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (m : α -> β -> γ) (f : Filter.{u3} α) (g : Filter.{u2} β), Eq.{succ u1} (Filter.{u1} γ) (Filter.map₂.{u3, u2, u1} α β γ m f g) (Filter.map₂.{u2, u3, u1} β α γ (fun (a : β) (b : α) => m b a) g f)
 Case conversion may be inaccurate. Consider using '#align filter.map₂_swap Filter.map₂_swapₓ'. -/
 theorem map₂_swap (m : α → β → γ) (f : Filter α) (g : Filter β) :
-    map₂ m f g = map₂ (fun a b => m b a) g f :=
-  by
-  ext u
+    map₂ m f g = map₂ (fun a b => m b a) g f := by ext u;
   constructor <;> rintro ⟨s, t, hs, ht, hu⟩ <;> refine' ⟨t, s, ht, hs, by rwa [image2_swap]⟩
 #align filter.map₂_swap Filter.map₂_swap
 
@@ -535,9 +531,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_left_comm Filter.map₂_left_commₓ'. -/
 theorem map₂_left_comm {m : α → δ → ε} {n : β → γ → δ} {m' : α → γ → δ'} {n' : β → δ' → ε}
     (h_left_comm : ∀ a b c, m a (n b c) = n' b (m' a c)) :
-    map₂ m f (map₂ n g h) = map₂ n' g (map₂ m' f h) :=
-  by
-  rw [map₂_swap m', map₂_swap m]
+    map₂ m f (map₂ n g h) = map₂ n' g (map₂ m' f h) := by rw [map₂_swap m', map₂_swap m];
   exact map₂_assoc fun _ _ _ => h_left_comm _ _ _
 #align filter.map₂_left_comm Filter.map₂_left_comm
 
@@ -549,9 +543,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_right_comm Filter.map₂_right_commₓ'. -/
 theorem map₂_right_comm {m : δ → γ → ε} {n : α → β → δ} {m' : α → γ → δ'} {n' : δ' → β → ε}
     (h_right_comm : ∀ a b c, m (n a b) c = n' (m' a c) b) :
-    map₂ m (map₂ n f g) h = map₂ n' (map₂ m' f h) g :=
-  by
-  rw [map₂_swap n, map₂_swap n']
+    map₂ m (map₂ n f g) h = map₂ n' (map₂ m' f h) g := by rw [map₂_swap n, map₂_swap n'];
   exact map₂_assoc fun _ _ _ => h_right_comm _ _ _
 #align filter.map₂_right_comm Filter.map₂_right_comm
 
@@ -659,9 +651,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map_map₂_antidistrib Filter.map_map₂_antidistribₓ'. -/
 theorem map_map₂_antidistrib {n : γ → δ} {m' : β' → α' → δ} {n₁ : β → β'} {n₂ : α → α'}
     (h_antidistrib : ∀ a b, n (m a b) = m' (n₁ b) (n₂ a)) :
-    (map₂ m f g).map n = map₂ m' (g.map n₁) (f.map n₂) :=
-  by
-  rw [map₂_swap m]
+    (map₂ m f g).map n = map₂ m' (g.map n₁) (f.map n₂) := by rw [map₂_swap m];
   exact map_map₂_distrib fun _ _ => h_antidistrib _ _
 #align filter.map_map₂_antidistrib Filter.map_map₂_antidistrib
 

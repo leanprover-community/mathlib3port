@@ -166,9 +166,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     refine' Union₂_subset fun x hx => _
     apply ball_subset_ball'
     calc
-      δ + dist x 0 ≤ δ + 2 := by
-        rw [dist_zero_right]
-        exact add_le_add le_rfl (hs x hx)
+      δ + dist x 0 ≤ δ + 2 := by rw [dist_zero_right]; exact add_le_add le_rfl (hs x hx)
       _ = 5 / 2 := by norm_num [δ]
       
   have I :
@@ -240,10 +238,7 @@ theorem exists_good_δ :
       · rcases h δ hδ hδ' with ⟨s, hs, h's, s_card⟩
         obtain ⟨f, f_inj, hfs⟩ : ∃ f : Fin N → E, Function.Injective f ∧ range f ⊆ ↑s :=
           by
-          have : Fintype.card (Fin N) ≤ s.card :=
-            by
-            simp only [Fintype.card_fin]
-            exact s_card
+          have : Fintype.card (Fin N) ≤ s.card := by simp only [Fintype.card_fin]; exact s_card
           rcases Function.Embedding.exists_of_card_le_finset this with ⟨f, hf⟩
           exact ⟨f, f.injective, hf⟩
         simp only [range_subset_iff, Finset.mem_coe] at hfs
@@ -290,9 +285,7 @@ theorem exists_good_δ :
       simp only [hij, norm_zero, sub_self] at this
       exact lt_irrefl _ (this.trans_lt zero_lt_one)
     let s := Finset.image f Finset.univ
-    have s_card : s.card = N :=
-      by
-      rw [Finset.card_image_of_injective _ finj]
+    have s_card : s.card = N := by rw [Finset.card_image_of_injective _ finj];
       exact Finset.card_fin N
     have hs : ∀ c ∈ s, ‖c‖ ≤ 2 := by
       simp only [hf, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ,
@@ -302,9 +295,7 @@ theorem exists_good_δ :
       simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ,
         Finset.mem_image, Ne.def, exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
       intro i j hij
-      have : i ≠ j := fun h => by
-        rw [h] at hij
-        exact hij rfl
+      have : i ≠ j := fun h => by rw [h] at hij; exact hij rfl
       exact h'f i j this
     have : s.card ≤ multiplicity E := card_le_multiplicity hs h's
     rw [s_card, hN] at this
@@ -328,8 +319,7 @@ def goodτ : ℝ :=
   1 + goodδ E / 4
 #align besicovitch.good_τ Besicovitch.goodτ
 
-theorem one_lt_goodτ : 1 < goodτ E := by
-  dsimp [good_τ, good_δ]
+theorem one_lt_goodτ : 1 < goodτ E := by dsimp [good_τ, good_δ];
   linarith [(exists_good_δ E).choose_spec.1]
 #align besicovitch.one_lt_good_τ Besicovitch.one_lt_goodτ
 
@@ -350,9 +340,7 @@ theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖
       simp only [hij, norm_zero, sub_self] at this
       linarith [good_δ_lt_one E]
     let s := Finset.image f Finset.univ
-    have s_card : s.card = n :=
-      by
-      rw [Finset.card_image_of_injective _ finj]
+    have s_card : s.card = n := by rw [Finset.card_image_of_injective _ finj];
       exact Finset.card_fin n
     have hs : ∀ c ∈ s, ‖c‖ ≤ 2 := by
       simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ,
@@ -362,9 +350,7 @@ theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖
       simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ,
         Finset.mem_image, Ne.def, exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
       intro i j hij
-      have : i ≠ j := fun h => by
-        rw [h] at hij
-        exact hij rfl
+      have : i ≠ j := fun h => by rw [h] at hij; exact hij rfl
       exact h' i j this
     have : s.card ≤ multiplicity E := card_le_multiplicity_of_δ hs h's
     rwa [s_card] at this
@@ -410,11 +396,8 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       _ ≤ 1 := by linarith only [sq_nonneg δ]
       
   have J : 1 - δ ≤ 1 - δ / 4 := by linarith only [δnonneg]
-  have K : 1 - δ / 4 ≤ τ⁻¹ := by
-    rw [inv_eq_one_div, le_div_iff τpos]
-    exact I
-  suffices L : τ⁻¹ ≤ ‖a.c i - a.c j‖
-  · linarith only [J, K, L]
+  have K : 1 - δ / 4 ≤ τ⁻¹ := by rw [inv_eq_one_div, le_div_iff τpos]; exact I
+  suffices L : τ⁻¹ ≤ ‖a.c i - a.c j‖; · linarith only [J, K, L]
   have hτ' : ∀ k, τ⁻¹ ≤ a.r k := by
     intro k
     rw [inv_eq_one_div, div_le_iff τpos, ← lastr, mul_comm]
@@ -458,9 +441,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       
   have A : a.r j - δ ≤ ‖a.c i - a.c j‖ :=
     by
-    rcases ah j i inej.symm with (H | H)
-    · rw [norm_sub_rev]
-      linarith [H.1]
+    rcases ah j i inej.symm with (H | H); · rw [norm_sub_rev]; linarith [H.1]
     have C : a.r j ≤ 4 :=
       calc
         a.r j ≤ τ * a.r i := H.2
@@ -476,12 +457,8 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         linarith only [C]
       _ = (1 - δ / 4) * a.r j := by ring
       _ ≤ (1 - δ / 4) * (τ * a.r i) := (mul_le_mul_of_nonneg_left H.2 D)
-      _ ≤ 1 * a.r i := by
-        rw [← mul_assoc]
-        apply mul_le_mul_of_nonneg_right J (a.rpos _).le
-      _ ≤ ‖a.c i - a.c j‖ := by
-        rw [one_mul]
-        exact H.1
+      _ ≤ 1 * a.r i := by rw [← mul_assoc]; apply mul_le_mul_of_nonneg_right J (a.rpos _).le
+      _ ≤ ‖a.c i - a.c j‖ := by rw [one_mul]; exact H.1
       
   set d := (2 / ‖a.c j‖) • a.c j with hd
   have : a.r j - δ ≤ ‖a.c i - d‖ + (a.r j - 1) :=
@@ -557,10 +534,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       
   have invs_nonneg : 0 ≤ 2 / s := div_nonneg zero_le_two (zero_le_two.trans hi.le)
   calc
-    1 - δ = 2 / s * (s / 2 - s / 2 * δ) :=
-      by
-      field_simp [spos.ne']
-      ring
+    1 - δ = 2 / s * (s / 2 - s / 2 * δ) := by field_simp [spos.ne'] ; ring
     _ ≤ 2 / s * ‖d - a.c i‖ :=
       (mul_le_mul_of_nonneg_left (by linarith only [hcrj, I, J, hi]) invs_nonneg)
     _ = ‖(2 / s) • a.c i - (2 / ‖a.c j‖) • a.c j‖ :=
@@ -580,14 +554,12 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
   have norm_c'_le : ∀ i, ‖c' i‖ ≤ 2 := by
     intro i
     simp only [c']
-    split_ifs
-    · exact h
+    split_ifs; · exact h
     by_cases hi : ‖a.c i‖ = 0 <;> field_simp [norm_smul, hi]
   refine' ⟨c', fun n => norm_c'_le n, fun i j inej => _⟩
   -- up to exchanging `i` and `j`, one can assume `∥c i∥ ≤ ∥c j∥`.
   wlog hij : ‖a.c i‖ ≤ ‖a.c j‖ generalizing i j
-  · rw [norm_sub_rev]
-    exact this j i inej.symm (le_of_not_le hij)
+  · rw [norm_sub_rev]; exact this j i inej.symm (le_of_not_le hij)
   rcases le_or_lt ‖a.c j‖ 2 with (Hj | Hj)
   -- case `∥c j∥ ≤ 2` (and therefore also `∥c i∥ ≤ 2`)
   · simp_rw [c', Hj, hij.trans Hj, if_true]

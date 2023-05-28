@@ -134,9 +134,7 @@ theorem smul_le_stoppedValue_hitting [FiniteMeasure μ] (hsub : Submartingale f 
         (∫ ω in { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω },
           stoppedValue f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
   by
-  have hn : Set.Icc 0 n = { k | k ≤ n } := by
-    ext x
-    simp
+  have hn : Set.Icc 0 n = { k | k ≤ n } := by ext x; simp
   have :
     ∀ ω,
       ((ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω) →

@@ -426,10 +426,8 @@ lean 3 declaration is
 but is expected to have type
   forall {f : Nat -> NNReal}, (Summable.{0, 0} NNReal Nat (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal instNNRealStrictOrderedSemiring)) NNReal.instTopologicalSpaceNNReal f) -> (Filter.Tendsto.{0, 0} Nat NNReal f (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} NNReal NNReal.instTopologicalSpaceNNReal (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))))
 Case conversion may be inaccurate. Consider using '#align nnreal.tendsto_at_top_zero_of_summable NNReal.tendsto_atTop_zero_of_summableₓ'. -/
-theorem tendsto_atTop_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) : Tendsto f atTop (𝓝 0) :=
-  by
-  rw [← Nat.cofinite_eq_atTop]
-  exact tendsto_cofinite_zero_of_summable hf
+theorem tendsto_atTop_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
+  rw [← Nat.cofinite_eq_atTop]; exact tendsto_cofinite_zero_of_summable hf
 #align nnreal.tendsto_at_top_zero_of_summable NNReal.tendsto_atTop_zero_of_summable
 
 /- warning: nnreal.tendsto_tsum_compl_at_top_zero -> NNReal.tendsto_tsum_compl_atTop_zero is a dubious translation:

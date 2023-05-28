@@ -56,14 +56,8 @@ It also contains data for the unique homomorphism `ℕ → R`.
 @[protect_proj]
 class AddMonoidWithOne (R : Type u) extends NatCast R, AddMonoid R, One R where
   natCast := Nat.unaryCast
-  natCast_zero : nat_cast 0 = (0 : R) := by
-    intros
-    rfl
-  natCast_succ :
-    ∀ n, nat_cast (n + 1) = (nat_cast n + 1 :
-          R) := by
-    intros
-    rfl
+  natCast_zero : nat_cast 0 = (0 : R) := by intros ; rfl
+  natCast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by intros ; rfl
 #align add_monoid_with_one AddMonoidWithOne
 -/
 
@@ -282,10 +276,7 @@ but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : AddMonoidWithOne.{u1} R] {n : Nat} [h : NeZero.{u1} R (AddMonoid.toZero.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_1)) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R _inst_1) n)], NeZero.{0} Nat (Zero.ofOfNat0.{0} Nat (instOfNatNat 0)) n
 Case conversion may be inaccurate. Consider using '#align ne_zero.of_ne_zero_coe NeZero.of_neZero_natCastₓ'. -/
 theorem of_neZero_natCast (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
-  ⟨by
-    cases h
-    rintro rfl
-    · simpa using h⟩
+  ⟨by cases h; rintro rfl; · simpa using h⟩
 #align ne_zero.of_ne_zero_coe NeZero.of_neZero_natCast
 
 /- warning: ne_zero.pos_of_ne_zero_coe -> NeZero.pos_of_neZero_natCast is a dubious translation:

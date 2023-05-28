@@ -79,12 +79,8 @@ def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply x
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply x
+  hom_inv_id' := by ext; exact e.symm_apply_apply x
+  inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align Preord.iso.mk PreordCat.Iso.mk
 
 #print PreordCat.dual /-

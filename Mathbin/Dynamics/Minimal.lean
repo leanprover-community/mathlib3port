@@ -187,9 +187,7 @@ Case conversion may be inaccurate. Consider using '#align is_minimal_iff_closed_
 theorem isMinimal_iff_closed_smul_invariant [ContinuousConstSMul M α] :
     IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
   by
-  constructor;
-  · intro h s
-    exact eq_empty_or_univ_of_smul_invariant_closed M
+  constructor; · intro h s; exact eq_empty_or_univ_of_smul_invariant_closed M
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
   exacts[isClosed_closure, fun c => smul_closure_orbit_subset _ _,
     (orbit_nonempty _).closure.ne_empty]

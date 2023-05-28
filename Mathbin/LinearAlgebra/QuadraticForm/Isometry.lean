@@ -84,21 +84,14 @@ def refl (Q : QuadraticForm R M) : Q.Isometry Q :=
 @[symm]
 def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
   { (f : M₁ ≃ₗ[R] M₂).symm with
-    map_app' := by
-      intro m
-      rw [← f.map_app]
-      congr
-      exact f.to_linear_equiv.apply_symm_apply m }
+    map_app' := by intro m; rw [← f.map_app]; congr ; exact f.to_linear_equiv.apply_symm_apply m }
 #align quadratic_form.isometry.symm QuadraticForm.Isometry.symm
 
 /-- The composition of two isometries between quadratic forms. -/
 @[trans]
 def trans (f : Q₁.Isometry Q₂) (g : Q₂.Isometry Q₃) : Q₁.Isometry Q₃ :=
   { (f : M₁ ≃ₗ[R] M₂).trans (g : M₂ ≃ₗ[R] M₃) with
-    map_app' := by
-      intro m
-      rw [← f.map_app, ← g.map_app]
-      rfl }
+    map_app' := by intro m; rw [← f.map_app, ← g.map_app]; rfl }
 #align quadratic_form.isometry.trans QuadraticForm.Isometry.trans
 
 end Isometry

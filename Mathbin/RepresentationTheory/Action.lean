@@ -65,10 +65,7 @@ namespace Action
 variable {V}
 
 @[simp]
-theorem ρ_one {G : MonCat.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V :=
-  by
-  rw [MonoidHom.map_one]
-  rfl
+theorem ρ_one {G : MonCat.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V := by rw [MonoidHom.map_one]; rfl
 #align Action.ρ_one Action.ρ_one
 
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
@@ -80,12 +77,8 @@ def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (A
       inv := A.ρ (g⁻¹ : G)
       hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one])
       inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
-  map_one' := by
-    ext
-    exact A.ρ.map_one
-  map_mul' x y := by
-    ext
-    exact A.ρ.map_mul x y
+  map_one' := by ext; exact A.ρ.map_one
+  map_mul' x y := by ext; exact A.ρ.map_mul x y
 #align Action.ρ_Aut Action.ρAut
 
 variable (G : MonCat.{u})
@@ -169,17 +162,11 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
       comm' := comm }
   inv :=
     { Hom := f.inv
-      comm' := fun g => by
-        have w := comm g =≫ f.inv
-        simp at w
-        simp [w] }
+      comm' := fun g => by have w := comm g =≫ f.inv; simp at w; simp [w] }
 #align Action.mk_iso Action.mkIso
 
 instance (priority := 100) isIso_of_hom_isIso {M N : Action V G} (f : M ⟶ N) [IsIso f.Hom] :
-    IsIso f := by
-  convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
-  ext
-  rfl
+    IsIso f := by convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm); ext; rfl
 #align Action.is_iso_of_hom_is_iso Action.isIso_of_hom_isIso
 
 instance isIso_hom_mk {M N : Action V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
@@ -316,9 +303,7 @@ noncomputable instance [HasColimits V] : PreservesColimits (forget V G) :=
 end Forget
 
 theorem Iso.conj_ρ {M N : Action V G} (f : M ≅ N) (g : G) :
-    N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) :=
-  by
-  rw [iso.conj_apply, iso.eq_inv_comp]
+    N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by rw [iso.conj_apply, iso.eq_inv_comp];
   simp [f.hom.comm']
 #align Action.iso.conj_ρ Action.Iso.conj_ρ
 
@@ -328,16 +313,9 @@ variable [HasZeroMorphisms V]
 
 instance : HasZeroMorphisms (Action V G)
     where
-  Zero X Y :=
-    ⟨⟨0, by
-        intro g
-        simp⟩⟩
-  comp_zero P Q f R := by
-    ext1
-    simp
-  zero_comp P Q R f := by
-    ext1
-    simp
+  Zero X Y := ⟨⟨0, by intro g; simp⟩⟩
+  comp_zero P Q f R := by ext1; simp
+  zero_comp P Q R f := by ext1; simp
 
 instance forget_preservesZeroMorphisms : Functor.PreservesZeroMorphisms (forget V G) where
 #align Action.forget_preserves_zero_morphisms Action.forget_preservesZeroMorphisms
@@ -362,34 +340,13 @@ instance : Preadditive (Action V G)
     { zero := ⟨0, by simp⟩
       add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩
       neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩
-      zero_add := by
-        intros
-        ext
-        exact zero_add _
-      add_zero := by
-        intros
-        ext
-        exact add_zero _
-      add_assoc := by
-        intros
-        ext
-        exact add_assoc _ _ _
-      add_left_neg := by
-        intros
-        ext
-        exact add_left_neg _
-      add_comm := by
-        intros
-        ext
-        exact add_comm _ _ }
-  add_comp := by
-    intros
-    ext
-    exact preadditive.add_comp _ _ _ _ _ _
-  comp_add := by
-    intros
-    ext
-    exact preadditive.comp_add _ _ _ _ _ _
+      zero_add := by intros ; ext; exact zero_add _
+      add_zero := by intros ; ext; exact add_zero _
+      add_assoc := by intros ; ext; exact add_assoc _ _ _
+      add_left_neg := by intros ; ext; exact add_left_neg _
+      add_comm := by intros ; ext; exact add_comm _ _ }
+  add_comp := by intros ; ext; exact preadditive.add_comp _ _ _ _ _ _
+  comp_add := by intros ; ext; exact preadditive.comp_add _ _ _ _ _ _
 
 instance forget_additive : Functor.Additive (forget V G) where
 #align Action.forget_additive Action.forget_additive
@@ -432,38 +389,14 @@ instance : Linear R (Action V G)
     where
   homModule X Y :=
     { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩
-      one_smul := by
-        intros
-        ext
-        exact one_smul _ _
-      smul_zero := by
-        intros
-        ext
-        exact smul_zero _
-      zero_smul := by
-        intros
-        ext
-        exact zero_smul _ _
-      add_smul := by
-        intros
-        ext
-        exact add_smul _ _ _
-      smul_add := by
-        intros
-        ext
-        exact smul_add _ _ _
-      mul_smul := by
-        intros
-        ext
-        exact mul_smul _ _ _ }
-  smul_comp' := by
-    intros
-    ext
-    exact linear.smul_comp _ _ _ _ _ _
-  comp_smul' := by
-    intros
-    ext
-    exact linear.comp_smul _ _ _ _ _ _
+      one_smul := by intros ; ext; exact one_smul _ _
+      smul_zero := by intros ; ext; exact smul_zero _
+      zero_smul := by intros ; ext; exact zero_smul _ _
+      add_smul := by intros ; ext; exact add_smul _ _ _
+      smul_add := by intros ; ext; exact smul_add _ _ _
+      mul_smul := by intros ; ext; exact mul_smul _ _ _ }
+  smul_comp' := by intros ; ext; exact linear.smul_comp _ _ _ _ _ _
+  comp_smul' := by intros ; ext; exact linear.comp_smul _ _ _ _ _ _
 
 instance forget_linear : Functor.Linear R (forget V G) where
 #align Action.forget_linear Action.forget_linear
@@ -592,10 +525,8 @@ def forgetMonoidal : MonoidalFunctor (Action V G) V :=
     μ := fun X Y => 𝟙 _ }
 #align Action.forget_monoidal Action.forgetMonoidal
 
-instance forgetMonoidal_faithful : Faithful (forgetMonoidal V G).toFunctor :=
-  by
-  change faithful (forget V G)
-  infer_instance
+instance forgetMonoidal_faithful : Faithful (forgetMonoidal V G).toFunctor := by
+  change faithful (forget V G); infer_instance
 #align Action.forget_monoidal_faithful Action.forgetMonoidal_faithful
 
 section
@@ -611,10 +542,8 @@ def forgetBraided : BraidedFunctor (Action V G) V :=
   { forgetMonoidal _ _ with }
 #align Action.forget_braided Action.forgetBraided
 
-instance forgetBraided_faithful : Faithful (forgetBraided V G).toFunctor :=
-  by
-  change faithful (forget V G)
-  infer_instance
+instance forgetBraided_faithful : Faithful (forgetBraided V G).toFunctor := by
+  change faithful (forget V G); infer_instance
 #align Action.forget_braided_faithful Action.forgetBraided_faithful
 
 end
@@ -645,10 +574,8 @@ def functorCategoryMonoidalEquivalence : MonoidalFunctor (Action V G) (SingleObj
   Monoidal.fromTransported (Action.functorCategoryEquivalence _ _).symm
 #align Action.functor_category_monoidal_equivalence Action.functorCategoryMonoidalEquivalence
 
-instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor :=
-  by
-  change is_equivalence (Action.functorCategoryEquivalence _ _).Functor
-  infer_instance
+instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := by
+  change is_equivalence (Action.functorCategoryEquivalence _ _).Functor; infer_instance
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -723,28 +650,22 @@ theorem functorCategoryMonoidalEquivalence.inverse_map {A B : SingleObj G ⥤ V}
 
 variable (H : GroupCat.{u})
 
-instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
-  by
-  change right_rigid_category (single_obj H ⥤ V)
-  infer_instance
+instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+  change right_rigid_category (single_obj H ⥤ V); infer_instance
 
 /-- If `V` is right rigid, so is `Action V G`. -/
 instance [RightRigidCategory V] : RightRigidCategory (Action V H) :=
   rightRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
-  by
-  change left_rigid_category (single_obj H ⥤ V)
-  infer_instance
+instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+  change left_rigid_category (single_obj H ⥤ V); infer_instance
 
 /-- If `V` is left rigid, so is `Action V G`. -/
 instance [LeftRigidCategory V] : LeftRigidCategory (Action V H) :=
   leftRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [RigidCategory V] : RigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
-  by
-  change rigid_category (single_obj H ⥤ V)
-  infer_instance
+instance [RigidCategory V] : RigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+  change rigid_category (single_obj H ⥤ V); infer_instance
 
 /-- If `V` is rigid, so is `Action V G`. -/
 instance [RigidCategory V] : RigidCategory (Action V H) :=
@@ -769,19 +690,15 @@ theorem leftDual_v [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ :=
-  by
-  rw [← single_obj.inv_as_inv]
-  rfl
+theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ := by
+  rw [← single_obj.inv_as_inv]; rfl
 #align Action.right_dual_ρ Action.rightDual_ρ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) :=
-  by
-  rw [← single_obj.inv_as_inv]
-  rfl
+theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) := by
+  rw [← single_obj.inv_as_inv]; rfl
 #align Action.left_dual_ρ Action.leftDual_ρ
 
 end Monoidal
@@ -977,15 +894,9 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) : Action V G ⥤ Action W G
           map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map M N f :=
     { Hom := F.map f.Hom
-      comm' := fun g => by
-        dsimp
-        rw [← F.map_comp, f.comm, F.map_comp] }
-  map_id' M := by
-    ext
-    simp only [Action.id_hom, F.map_id]
-  map_comp' M N P f g := by
-    ext
-    simp only [Action.comp_hom, F.map_comp]
+      comm' := fun g => by dsimp; rw [← F.map_comp, f.comm, F.map_comp] }
+  map_id' M := by ext; simp only [Action.id_hom, F.map_id]
+  map_comp' M N P f g := by ext; simp only [Action.comp_hom, F.map_comp]
 #align category_theory.functor.map_Action CategoryTheory.Functor.mapAction
 
 variable (F : V ⥤ W) (G : MonCat.{u}) [Preadditive V] [Preadditive W]
@@ -1016,40 +927,17 @@ def mapAction : MonoidalFunctor (Action V G) (Action W G) :=
       G with
     ε :=
       { Hom := F.ε
-        comm' := fun g => by
-          dsimp
+        comm' := fun g => by dsimp;
           erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] }
     μ := fun X Y =>
       { Hom := F.μ X.V Y.V
         comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) }
     ε_isIso := by infer_instance
     μ_isIso := by infer_instance
-    μ_natural' := by
-      intros
-      ext
-      dsimp
-      simp
-    associativity' := by
-      intros
-      ext
-      dsimp
-      simp
-      dsimp
-      simp
-    left_unitality' := by
-      intros
-      ext
-      dsimp
-      simp
-      dsimp
-      simp
-    right_unitality' := by
-      intros
-      ext
-      dsimp
-      simp
-      dsimp
-      simp }
+    μ_natural' := by intros ; ext; dsimp; simp
+    associativity' := by intros ; ext; dsimp; simp; dsimp; simp
+    left_unitality' := by intros ; ext; dsimp; simp; dsimp; simp
+    right_unitality' := by intros ; ext; dsimp; simp; dsimp; simp }
 #align category_theory.monoidal_functor.map_Action CategoryTheory.MonoidalFunctor.mapAction
 
 @[simp]

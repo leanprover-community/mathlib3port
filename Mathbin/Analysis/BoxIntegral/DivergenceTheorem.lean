@@ -111,13 +111,11 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     intro y hy
     set g := fun y => f y - a - f' (y - x) with hg
     change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε
-    clear_value g
-    obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
+    clear_value g; obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
     convert_to‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
       have := Fin.insertNth_sub_same i (I.upper i) (I.lower i) y
-      simp only [← this, f'.map_sub]
-      abel
+      simp only [← this, f'.map_sub]; abel
     · have : ∀ z ∈ Icc (I.lower i) (I.upper i), i.insert_nth z y ∈ I.Icc := fun z hz =>
         I.maps_to_insert_nth_face_Icc hz hy
       replace hε : ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * diam I.Icc
@@ -242,8 +240,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
       ∀ z ∈ Icc (J.lower i) (J.upper i),
         maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
-    simp only [dist_eq_norm, F, fI]
-    dsimp
+    simp only [dist_eq_norm, F, fI]; dsimp
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]

@@ -104,9 +104,7 @@ theorem is_sol_mkSol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) :
 #print LinearRecurrence.mkSol_eq_init /-
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mkSol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
-  fun n => by
-  rw [mk_sol]
-  simp only [n.is_lt, dif_pos, Fin.mk_val, Fin.eta]
+  fun n => by rw [mk_sol]; simp only [n.is_lt, dif_pos, Fin.mk_val, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mkSol_eq_init
 -/
 
@@ -169,12 +167,8 @@ theorem is_sol_iff_mem_solSpace (u : ℕ → α) : E.IsSolution u ↔ u ∈ E.so
 def toInit : E.solSpace ≃ₗ[α] Fin E.order → α
     where
   toFun u x := (u : ℕ → α) x
-  map_add' u v := by
-    ext
-    simp
-  map_smul' a u := by
-    ext
-    simp
+  map_add' u v := by ext; simp
+  map_smul' a u := by ext; simp
   invFun u := ⟨E.mkSol u, E.is_sol_mkSol u⟩
   left_inv u := by ext n <;> symm <;> apply E.eq_mk_of_is_sol_of_eq_init u.2 <;> intro k <;> rfl
   right_inv u := Function.funext_iff.mpr fun n => E.mkSol_eq_init u n

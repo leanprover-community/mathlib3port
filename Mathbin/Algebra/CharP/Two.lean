@@ -57,9 +57,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))], Eq.{succ u1} (R -> R) (bit0.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) (OfNat.ofNat.{u1} (R -> R) 0 (Zero.toOfNat0.{u1} (R -> R) (Pi.instZero.{u1, u1} R (fun (a : R) => R) (fun (i : R) => MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align char_two.bit0_eq_zero CharTwo.bit0_eq_zeroₓ'. -/
 @[simp]
-theorem bit0_eq_zero : (bit0 : R → R) = 0 := by
-  funext
-  exact add_self_eq_zero _
+theorem bit0_eq_zero : (bit0 : R → R) = 0 := by funext; exact add_self_eq_zero _
 #align char_two.bit0_eq_zero CharTwo.bit0_eq_zero
 
 /- warning: char_two.bit0_apply_eq_zero -> CharTwo.bit0_apply_eq_zero is a dubious translation:
@@ -78,9 +76,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] [_inst_2 : CharP.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))], Eq.{succ u1} (R -> R) (bit1.{u1} R (Semiring.toOne.{u1} R _inst_1) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) (OfNat.ofNat.{u1} (R -> R) 1 (One.toOfNat1.{u1} (R -> R) (Pi.instOne.{u1, u1} R (fun (a : R) => R) (fun (i : R) => Semiring.toOne.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align char_two.bit1_eq_one CharTwo.bit1_eq_oneₓ'. -/
 @[simp]
-theorem bit1_eq_one : (bit1 : R → R) = 1 := by
-  funext
-  simp [bit1]
+theorem bit1_eq_one : (bit1 : R → R) = 1 := by funext; simp [bit1]
 #align char_two.bit1_eq_one CharTwo.bit1_eq_one
 
 /- warning: char_two.bit1_apply_eq_one -> CharTwo.bit1_apply_eq_one is a dubious translation:

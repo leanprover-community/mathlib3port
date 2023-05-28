@@ -309,10 +309,7 @@ theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c
 #align wcovby.le_and_le_iff Wcovby.le_and_le_iff
 
 #print Wcovby.Icc_eq /-
-theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} :=
-  by
-  ext c
-  exact h.le_and_le_iff
+theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} := by ext c; exact h.le_and_le_iff
 #align wcovby.Icc_eq Wcovby.Icc_eq
 -/
 
@@ -1055,10 +1052,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Wcovby.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2)) x y) (Or (And (Wcovby.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (Eq.{succ u1} β (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y))) (And (Wcovby.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y)) (Eq.{succ u2} α (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y))))
 Case conversion may be inaccurate. Consider using '#align prod.wcovby_iff Prod.wcovby_iffₓ'. -/
-theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 :=
-  by
-  cases x
-  cases y
+theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 := by cases x; cases y;
   exact mk_wcovby_mk_iff
 #align prod.wcovby_iff Prod.wcovby_iff
 
@@ -1068,10 +1062,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Covby.{max u2 u1} (Prod.{u2, u1} α β) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) x y) (Or (And (Covby.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (Eq.{succ u1} β (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y))) (And (Covby.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y)) (Eq.{succ u2} α (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y))))
 Case conversion may be inaccurate. Consider using '#align prod.covby_iff Prod.covby_iffₓ'. -/
-theorem covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 = y.1 :=
-  by
-  cases x
-  cases y
+theorem covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 = y.1 := by cases x; cases y;
   exact mk_covby_mk_iff
 #align prod.covby_iff Prod.covby_iff
 

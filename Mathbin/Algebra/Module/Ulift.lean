@@ -110,9 +110,7 @@ instance smulZeroClass [Zero M] [SMulZeroClass R M] : SMulZeroClass (ULift R) M 
 
 #print ULift.smulZeroClass' /-
 instance smulZeroClass' [Zero M] [SMulZeroClass R M] : SMulZeroClass R (ULift M)
-    where smul_zero c := by
-    ext
-    simp [smul_zero]
+    where smul_zero c := by ext; simp [smul_zero]
 #align ulift.smul_zero_class' ULift.smulZeroClass'
 -/
 
@@ -124,9 +122,7 @@ instance distribSmul [AddZeroClass M] [DistribSMul R M] : DistribSMul (ULift R) 
 
 #print ULift.distribSmul' /-
 instance distribSmul' [AddZeroClass M] [DistribSMul R M] : DistribSMul R (ULift M)
-    where smul_add c f g := by
-    ext
-    simp [smul_add]
+    where smul_add c f g := by ext; simp [smul_add]
 #align ulift.distrib_smul' ULift.distribSmul'
 -/
 
@@ -156,14 +152,9 @@ instance mulDistribMulAction [Monoid R] [Monoid M] [MulDistribMulAction R M] :
 #print ULift.mulDistribMulAction' /-
 instance mulDistribMulAction' [Monoid R] [Monoid M] [MulDistribMulAction R M] :
     MulDistribMulAction R (ULift M) :=
-  {
-    ULift.mulAction' with
-    smul_one := fun _ => by
-      ext
-      simp [smul_one]
-    smul_mul := fun c f g => by
-      ext
-      simp [smul_mul'] }
+  { ULift.mulAction' with
+    smul_one := fun _ => by ext; simp [smul_one]
+    smul_mul := fun c f g => by ext; simp [smul_mul'] }
 #align ulift.mul_distrib_mul_action' ULift.mulDistribMulAction'
 -/
 

@@ -260,8 +260,7 @@ theorem parts_nonempty (P : Finpartition a) (ha : a ≠ ⊥) : P.parts.Nonempty 
 
 instance : Unique (Finpartition (⊥ : α)) :=
   { Finpartition.inhabited α with
-    uniq := fun P => by
-      ext a
+    uniq := fun P => by ext a;
       exact iff_of_false (fun h => P.ne_bot h <| le_bot_iff.1 <| P.le h) (not_mem_empty a) }
 
 /- warning: is_atom.unique_finpartition -> IsAtom.uniqueFinpartition is a dubious translation:
@@ -632,9 +631,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) {a : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)))
 Case conversion may be inaccurate. Consider using '#align finpartition.exists_mem Finpartition.exists_memₓ'. -/
-theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t :=
-  by
-  simp_rw [← P.sup_parts] at ha
+theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t := by simp_rw [← P.sup_parts] at ha;
   exact mem_sup.1 ha
 #align finpartition.exists_mem Finpartition.exists_mem
 
@@ -706,9 +703,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), LE.le.{0} Nat instLENat (Finset.card.{u1} (Finset.{u1} α) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) (Finset.card.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align finpartition.card_parts_le_card Finpartition.card_parts_le_cardₓ'. -/
-theorem card_parts_le_card (P : Finpartition s) : P.parts.card ≤ s.card :=
-  by
-  rw [← card_bot s]
+theorem card_parts_le_card (P : Finpartition s) : P.parts.card ≤ s.card := by rw [← card_bot s];
   exact card_mono bot_le
 #align finpartition.card_parts_le_card Finpartition.card_parts_le_card
 

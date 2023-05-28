@@ -87,17 +87,13 @@ instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.Is
 variable {G H}
 
 #print SimpleGraph.IsClique.mono /-
-theorem IsClique.mono (h : G ≤ H) : G.IsClique s → H.IsClique s :=
-  by
-  simp_rw [is_clique_iff]
+theorem IsClique.mono (h : G ≤ H) : G.IsClique s → H.IsClique s := by simp_rw [is_clique_iff];
   exact Set.Pairwise.mono' h
 #align simple_graph.is_clique.mono SimpleGraph.IsClique.mono
 -/
 
 #print SimpleGraph.IsClique.subset /-
-theorem IsClique.subset (h : t ⊆ s) : G.IsClique s → G.IsClique t :=
-  by
-  simp_rw [is_clique_iff]
+theorem IsClique.subset (h : t ⊆ s) : G.IsClique s → G.IsClique t := by simp_rw [is_clique_iff];
   exact Set.Pairwise.mono h
 #align simple_graph.is_clique.subset SimpleGraph.IsClique.subset
 -/
@@ -152,10 +148,8 @@ instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finset α} :
 variable {G H}
 
 #print SimpleGraph.IsNClique.mono /-
-theorem IsNClique.mono (h : G ≤ H) : G.IsNClique n s → H.IsNClique n s :=
-  by
-  simp_rw [is_n_clique_iff]
-  exact And.imp_left (is_clique.mono h)
+theorem IsNClique.mono (h : G ≤ H) : G.IsNClique n s → H.IsNClique n s := by
+  simp_rw [is_n_clique_iff]; exact And.imp_left (is_clique.mono h)
 #align simple_graph.is_n_clique.mono SimpleGraph.IsNClique.mono
 -/
 

@@ -377,14 +377,9 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
     · rw [sUnion_eq_empty, or_iff_not_imp_left]
-      intro h
-      push_neg  at h
-      obtain ⟨U, hU, hne⟩ := h
-      have := (ih U hU).resolve_left hne
-      subst this
-      refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩,
-    by
-    rintro (rfl | rfl)
+      intro h; push_neg  at h; obtain ⟨U, hU, hne⟩ := h
+      have := (ih U hU).resolve_left hne; subst this
+      refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩, by rintro (rfl | rfl);
     exacts[@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
 #align topological_space.is_open_top_iff TopologicalSpace.isOpen_top_iff
 
@@ -949,10 +944,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (a : α), GaloisConnection.{u1, u1} (Filter.{u1} α) (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α)) (nhdsAdjoint.{u1} α a) (fun (t : TopologicalSpace.{u1} α) => nhds.{u1} α t a)
 Case conversion may be inaccurate. Consider using '#align gc_nhds gc_nhdsₓ'. -/
-theorem gc_nhds (a : α) : GaloisConnection (nhdsAdjoint a) fun t => @nhds α t a := fun f t =>
-  by
-  rw [le_nhds_iff]
-  exact ⟨fun H s hs has => H _ has hs, fun H s has hs => H _ hs has⟩
+theorem gc_nhds (a : α) : GaloisConnection (nhdsAdjoint a) fun t => @nhds α t a := fun f t => by
+  rw [le_nhds_iff]; exact ⟨fun H s hs has => H _ has hs, fun H s has hs => H _ hs has⟩
 #align gc_nhds gc_nhds
 
 /- warning: nhds_mono -> nhds_mono is a dubious translation:
@@ -1154,11 +1147,8 @@ theorem continuous_generateFrom {t : tspace α} {b : Set (Set β)} (h : ∀ s �
 
 #print continuous_induced_dom /-
 @[continuity]
-theorem continuous_induced_dom {t : tspace β} : cont (induced f t) t f :=
-  by
-  rw [continuous_def]
-  intro s h
-  exact ⟨_, h, rfl⟩
+theorem continuous_induced_dom {t : tspace β} : cont (induced f t) t f := by rw [continuous_def];
+  intro s h; exact ⟨_, h, rfl⟩
 #align continuous_induced_dom continuous_induced_dom
 -/
 
@@ -1174,11 +1164,8 @@ theorem continuous_induced_rng {g : γ → α} {t₂ : tspace β} {t₁ : tspace
 #align continuous_induced_rng continuous_induced_rng
 
 #print continuous_coinduced_rng /-
-theorem continuous_coinduced_rng {t : tspace α} : cont t (coinduced f t) f :=
-  by
-  rw [continuous_def]
-  intro s h
-  exact h
+theorem continuous_coinduced_rng {t : tspace α} : cont t (coinduced f t) f := by
+  rw [continuous_def]; intro s h; exact h
 #align continuous_coinduced_rng continuous_coinduced_rng
 -/
 
@@ -1435,9 +1422,7 @@ theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s :
 
 #print nhds_induced /-
 theorem nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) :
-    @nhds β (TopologicalSpace.induced f T) a = comap f (𝓝 (f a)) :=
-  by
-  ext s
+    @nhds β (TopologicalSpace.induced f T) a = comap f (𝓝 (f a)) := by ext s;
   rw [mem_nhds_induced, mem_comap]
 #align nhds_induced nhds_induced
 -/

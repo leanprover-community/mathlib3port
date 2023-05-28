@@ -60,9 +60,7 @@ theorem coe_zpowers (g : G) : ↑(zpowers g) = Set.range fun n : ℤ => g ^ n :=
 #align subgroup.coe_zpowers Subgroup.coe_zpowers
 
 #print Subgroup.zpowers_eq_closure /-
-theorem zpowers_eq_closure (g : G) : zpowers g = closure {g} :=
-  by
-  ext
+theorem zpowers_eq_closure (g : G) : zpowers g = closure {g} := by ext;
   exact mem_closure_singleton.symm
 #align subgroup.zpowers_eq_closure Subgroup.zpowers_eq_closure
 -/

@@ -41,19 +41,14 @@ protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoO
   have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s :=
     by
     intro x hx hxc
-    cases hx
-    · exact hx
-    rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact hs.1
+    cases hx; · exact hx
+    rcases eq_or_lt_of_le hxc with (rfl | h'x); · exact hs.1
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t :=
     by
     intro x hx hxc
-    cases hx
-    swap
-    · exact hx
-    rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact ht.1
+    cases hx; swap; · exact hx
+    rcases eq_or_lt_of_le hxc with (rfl | h'x); · exact ht.1
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
@@ -121,19 +116,14 @@ protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : Monoton
   have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s :=
     by
     intro x hx hxc
-    cases hx
-    · exact hx
-    rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact hs.1
+    cases hx; · exact hx
+    rcases eq_or_lt_of_le hxc with (rfl | h'x); · exact hs.1
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t :=
     by
     intro x hx hxc
-    cases hx
-    swap
-    · exact hx
-    rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact ht.1
+    cases hx; swap; · exact hx
+    rcases eq_or_lt_of_le hxc with (rfl | h'x); · exact ht.1
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)

@@ -234,9 +234,7 @@ theorem ofQuotientStabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α 
 theorem injective_ofQuotientStabilizer : Function.Injective (ofQuotientStabilizer α x) :=
   fun y₁ y₂ =>
   Quotient.inductionOn₂' y₁ y₂ fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
-    Quotient.sound' <| by
-      rw [left_rel_apply]
-      show (g₁⁻¹ * g₂) • x = x
+    Quotient.sound' <| by rw [left_rel_apply]; show (g₁⁻¹ * g₂) • x = x;
       rw [mul_smul, ← H, inv_smul_smul]
 #align mul_action.injective_of_quotient_stabilizer MulAction.injective_ofQuotientStabilizer
 #align add_action.injective_of_quotient_stabilizer AddAction.injective_ofQuotientStabilizer
@@ -304,10 +302,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_action.stabilizer_quotient MulAction.stabilizer_quotientₓ'. -/
 @[simp, to_additive]
 theorem stabilizer_quotient {G} [Group G] (H : Subgroup G) :
-    MulAction.stabilizer G ((1 : G) : G ⧸ H) = H :=
-  by
-  ext
-  simp [QuotientGroup.eq]
+    MulAction.stabilizer G ((1 : G) : G ⧸ H) = H := by ext; simp [QuotientGroup.eq]
 #align mul_action.stabilizer_quotient MulAction.stabilizer_quotient
 #align add_action.stabilizer_quotient AddAction.stabilizer_quotient
 

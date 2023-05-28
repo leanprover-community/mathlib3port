@@ -150,10 +150,8 @@ def isoIsTerminal (hX : IsZero X) (hY : IsTerminal Y) : X ≅ Y :=
 theorem of_iso (hY : IsZero Y) (e : X ≅ Y) : IsZero X :=
   by
   refine' ⟨fun Z => ⟨⟨⟨e.hom ≫ hY.to Z⟩, fun f => _⟩⟩, fun Z => ⟨⟨⟨hY.from Z ≫ e.inv⟩, fun f => _⟩⟩⟩
-  · rw [← cancel_epi e.inv]
-    apply hY.eq_of_src
-  · rw [← cancel_mono e.hom]
-    apply hY.eq_of_tgt
+  · rw [← cancel_epi e.inv]; apply hY.eq_of_src
+  · rw [← cancel_mono e.hom]; apply hY.eq_of_tgt
 #align category_theory.limits.is_zero.of_iso CategoryTheory.Limits.IsZero.of_iso
 -/
 
@@ -195,19 +193,13 @@ theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F :
   · refine'
       { app := fun X => (hF _).to _
         naturality' := _ }
-    intros
-    exact (hF _).eq_of_src _ _
-  · intro f
-    ext
-    apply (hF _).eq_of_src _ _
+    intros ; exact (hF _).eq_of_src _ _
+  · intro f; ext; apply (hF _).eq_of_src _ _
   · refine'
       { app := fun X => (hF _).from _
         naturality' := _ }
-    intros
-    exact (hF _).eq_of_tgt _ _
-  · intro f
-    ext
-    apply (hF _).eq_of_tgt _ _
+    intros ; exact (hF _).eq_of_tgt _ _
+  · intro f; ext; apply (hF _).eq_of_tgt _ _
 #align category_theory.functor.is_zero CategoryTheory.Functor.isZero
 
 namespace Limits

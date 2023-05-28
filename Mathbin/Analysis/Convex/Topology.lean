@@ -188,10 +188,8 @@ Case conversion may be inaccurate. Consider using '#align convex.combo_closure_i
 /-- If `s` is a convex set, then `a • closure s + b • interior s ⊆ interior s` for all `0 ≤ a`,
 `0 < b`, `a + b = 1`. See also `convex.combo_self_interior_subset_interior` for a weaker version. -/
 theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
-    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • closure s + b • interior s ⊆ interior s :=
-  by
-  rw [add_comm]
-  exact hs.combo_interior_closure_subset_interior hb ha (add_comm a b ▸ hab)
+    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • closure s + b • interior s ⊆ interior s := by
+  rw [add_comm]; exact hs.combo_interior_closure_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_closure_interior_subset_interior Convex.combo_closure_interior_subset_interior
 
 /- warning: convex.combo_self_interior_subset_interior -> Convex.combo_self_interior_subset_interior is a dubious translation:
@@ -200,10 +198,8 @@ Case conversion may be inaccurate. Consider using '#align convex.combo_self_inte
 /-- If `s` is a convex set, then `a • s + b • interior s ⊆ interior s` for all `0 ≤ a`, `0 < b`,
 `a + b = 1`. See also `convex.combo_closure_interior_subset_interior` for a stronger version. -/
 theorem Convex.combo_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
-    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • s + b • interior s ⊆ interior s :=
-  by
-  rw [add_comm]
-  exact hs.combo_interior_self_subset_interior hb ha (add_comm a b ▸ hab)
+    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • s + b • interior s ⊆ interior s := by
+  rw [add_comm]; exact hs.combo_interior_self_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_self_interior_subset_interior Convex.combo_self_interior_subset_interior
 
 /- warning: convex.combo_interior_closure_mem_interior -> Convex.combo_interior_closure_mem_interior is a dubious translation:

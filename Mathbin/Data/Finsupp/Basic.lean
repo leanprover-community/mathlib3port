@@ -96,9 +96,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {c : Prod.{u2, u1} α M} {f : Finsupp.{u2, u1} α M _inst_1}, Iff (Membership.mem.{max u2 u1, max u2 u1} (Prod.{u2, u1} α M) (Finset.{max u1 u2} (Prod.{u2, u1} α M)) (Finset.instMembershipFinset.{max u2 u1} (Prod.{u2, u1} α M)) c (Finsupp.graph.{u2, u1} α M _inst_1 f)) (And (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) (Prod.fst.{u2, u1} α M c)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) f (Prod.fst.{u2, u1} α M c)) (Prod.snd.{u2, u1} α M c)) (Ne.{succ u1} M (Prod.snd.{u2, u1} α M c) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align finsupp.mem_graph_iff Finsupp.mem_graph_iffₓ'. -/
 @[simp]
-theorem mem_graph_iff {c : α × M} {f : α →₀ M} : c ∈ f.graph ↔ f c.1 = c.2 ∧ c.2 ≠ 0 :=
-  by
-  cases c
+theorem mem_graph_iff {c : α × M} {f : α →₀ M} : c ∈ f.graph ↔ f c.1 = c.2 ∧ c.2 ≠ 0 := by cases c;
   exact mk_mem_graph_iff
 #align finsupp.mem_graph_iff Finsupp.mem_graph_iff
 
@@ -739,10 +737,8 @@ theorem mapDomain_apply {f : α → β} (hf : Function.Injective f) (x : α →�
     mapDomain f x (f a) = x a :=
   by
   rw [map_domain, sum_apply, Sum, Finset.sum_eq_single a, single_eq_same]
-  · intro b _ hba
-    exact single_eq_of_ne (hf.ne hba)
-  · intro h
-    rw [not_mem_support_iff.1 h, single_zero, zero_apply]
+  · intro b _ hba; exact single_eq_of_ne (hf.ne hba)
+  · intro h; rw [not_mem_support_iff.1 h, single_zero, zero_apply]
 #align finsupp.map_domain_apply Finsupp.mapDomain_apply
 
 /- warning: finsupp.map_domain_notin_range -> Finsupp.mapDomain_notin_range is a dubious translation:
@@ -778,10 +774,8 @@ theorem mapDomain_comp {f : α → β} {g : β → γ} :
     mapDomain (g ∘ f) v = mapDomain g (mapDomain f v) :=
   by
   refine' ((sum_sum_index _ _).trans _).symm
-  · intro
-    exact single_zero _
-  · intro
-    exact single_add _
+  · intro ; exact single_zero _
+  · intro ; exact single_add _
   refine' sum_congr fun _ _ => sum_single_index _
   · exact single_zero _
 #align finsupp.map_domain_comp Finsupp.mapDomain_comp
@@ -1037,8 +1031,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.map_domain_inj
 theorem mapDomain_injective {f : α → β} (hf : Function.Injective f) :
     Function.Injective (mapDomain f : (α →₀ M) → β →₀ M) :=
   by
-  intro v₁ v₂ eq
-  ext a
+  intro v₁ v₂ eq; ext a
   have : map_domain f v₁ (f a) = map_domain f v₂ (f a) := by rw [Eq]
   rwa [map_domain_apply hf, map_domain_apply hf] at this
 #align finsupp.map_domain_injective Finsupp.mapDomain_injective
@@ -1060,9 +1053,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.map_domain.add
 theorem mapDomain.addMonoidHom_comp_mapRange [AddCommMonoid N] (f : α → β) (g : M →+ N) :
     (mapDomain.addMonoidHom f).comp (mapRange.addMonoidHom g) =
       (mapRange.addMonoidHom g).comp (mapDomain.addMonoidHom f) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align finsupp.map_domain.add_monoid_hom_comp_map_range Finsupp.mapDomain.addMonoidHom_comp_mapRange
 
 /- warning: finsupp.map_domain_map_range -> Finsupp.mapDomain_mapRange is a dubious translation:
@@ -1208,10 +1199,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.comap_domain_z
 @[simp]
 theorem comapDomain_zero (f : α → β)
     (hif : Set.InjOn f (f ⁻¹' ↑(0 : β →₀ M).support) := Set.injOn_empty _) :
-    comapDomain f (0 : β →₀ M) hif = (0 : α →₀ M) :=
-  by
-  ext
-  rfl
+    comapDomain f (0 : β →₀ M) hif = (0 : α →₀ M) := by ext; rfl
 #align finsupp.comap_domain_zero Finsupp.comapDomain_zero
 
 /- warning: finsupp.comap_domain_single -> Finsupp.comapDomain_single is a dubious translation:
@@ -1247,9 +1235,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.comap_domain_add Finsupp.comapDomain_addₓ'. -/
 theorem comapDomain_add (v₁ v₂ : β →₀ M) (hv₁ : Set.InjOn f (f ⁻¹' ↑v₁.support))
     (hv₂ : Set.InjOn f (f ⁻¹' ↑v₂.support)) (hv₁₂ : Set.InjOn f (f ⁻¹' ↑(v₁ + v₂).support)) :
-    comapDomain f (v₁ + v₂) hv₁₂ = comapDomain f v₁ hv₁ + comapDomain f v₂ hv₂ :=
-  by
-  ext
+    comapDomain f (v₁ + v₂) hv₁₂ = comapDomain f v₁ hv₁ + comapDomain f v₂ hv₂ := by ext;
   simp only [comap_domain_apply, coe_add, Pi.add_apply]
 #align finsupp.comap_domain_add Finsupp.comapDomain_add
 
@@ -1328,10 +1314,7 @@ theorem some_apply [Zero M] (f : Option α →₀ M) (a : α) : f.some a = f (Op
 
 #print Finsupp.some_zero /-
 @[simp]
-theorem some_zero [Zero M] : (0 : Option α →₀ M).some = 0 :=
-  by
-  ext
-  simp
+theorem some_zero [Zero M] : (0 : Option α →₀ M).some = 0 := by ext; simp
 #align finsupp.some_zero Finsupp.some_zero
 -/
 
@@ -1342,18 +1325,13 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] (f : Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (g : Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))), Eq.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.some.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)) (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (instHAdd.{max u1 u2} (Finsupp.{u1, u2} (Option.{u1} α) M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.add.{u1, u2} (Option.{u1} α) M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) f g)) (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (instHAdd.{max u1 u2} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1))) (Finsupp.add.{u1, u2} α M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)))) (Finsupp.some.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)) f) (Finsupp.some.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_1)) g))
 Case conversion may be inaccurate. Consider using '#align finsupp.some_add Finsupp.some_addₓ'. -/
 @[simp]
-theorem some_add [AddCommMonoid M] (f g : Option α →₀ M) : (f + g).some = f.some + g.some :=
-  by
-  ext
+theorem some_add [AddCommMonoid M] (f g : Option α →₀ M) : (f + g).some = f.some + g.some := by ext;
   simp
 #align finsupp.some_add Finsupp.some_add
 
 #print Finsupp.some_single_none /-
 @[simp]
-theorem some_single_none [Zero M] (m : M) : (single none m : Option α →₀ M).some = 0 :=
-  by
-  ext
-  simp
+theorem some_single_none [Zero M] (m : M) : (single none m : Option α →₀ M).some = 0 := by ext; simp
 #align finsupp.some_single_none Finsupp.some_single_none
 -/
 
@@ -1424,10 +1402,7 @@ def filter (p : α → Prop) (f : α →₀ M) : α →₀ M
   support :=
     haveI := Classical.decPred p
     f.support.filter fun a => p a
-  mem_support_toFun a := by
-    split_ifs <;>
-      · simp only [h, mem_filter, mem_support_iff]
-        tauto
+  mem_support_toFun a := by split_ifs <;> · simp only [h, mem_filter, mem_support_iff]; tauto
 #align finsupp.filter Finsupp.filter
 -/
 
@@ -2004,10 +1979,8 @@ theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f 
       simp [single_apply, ite_apply, Prod.ext_iff, ite_and]
       split_ifs <;> simp [single_apply, *]
     rw [Finsupp.curry, sum_apply, sum_apply, Finsupp.sum, Finset.sum_eq_single, this, if_pos rfl]
-    · intro b hb b_ne
-      rw [this b, if_neg b_ne]
-    · intro hxy
-      rw [this (x, y), if_pos rfl, not_mem_support_iff.mp hxy]
+    · intro b hb b_ne; rw [this b, if_neg b_ne]
+    · intro hxy; rw [this (x, y), if_pos rfl, not_mem_support_iff.mp hxy]
 #align finsupp.curry_apply Finsupp.curry_apply
 
 /- warning: finsupp.sum_curry_index -> Finsupp.sum_curry_index is a dubious translation:
@@ -2060,10 +2033,8 @@ def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M)
   left_inv f := by
     rw [Finsupp.uncurry, sum_curry_index]
     · simp_rw [Prod.mk.eta, sum_single]
-    · intros
-      apply single_zero
-    · intros
-      apply single_add
+    · intros ; apply single_zero
+    · intros ; apply single_add
   right_inv f := by
     simp only [Finsupp.curry, Finsupp.uncurry, sum_sum_index, sum_zero_index, sum_add_index,
       sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
@@ -2178,9 +2149,7 @@ def sumFinsuppEquivProdFinsupp {α β γ : Type _} [Zero γ] : (Sum α β →₀
     ⟨f.comapDomain Sum.inl (Sum.inl_injective.InjOn _),
       f.comapDomain Sum.inr (Sum.inr_injective.InjOn _)⟩
   invFun fg := sumElim fg.1 fg.2
-  left_inv f := by
-    ext ab
-    cases' ab with a b <;> simp
+  left_inv f := by ext ab; cases' ab with a b <;> simp
   right_inv fg := by ext <;> simp
 #align finsupp.sum_finsupp_equiv_prod_finsupp Finsupp.sumFinsuppEquivProdFinsupp
 -/
@@ -2243,8 +2212,7 @@ This is the `finsupp` version of `equiv.sum_arrow_equiv_prod_arrow`. -/
 @[simps apply symm_apply]
 def sumFinsuppAddEquivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃+ (α →₀ M) × (β →₀ M) :=
   { sumFinsuppEquivProdFinsupp with
-    map_add' := by
-      intros
+    map_add' := by intros ;
       ext <;>
         simp only [Equiv.toFun_as_coe, Prod.fst_add, Prod.snd_add, add_apply,
           snd_sum_finsupp_equiv_prod_finsupp, fst_sum_finsupp_equiv_prod_finsupp] }
@@ -2369,14 +2337,8 @@ Case conversion may be inaccurate. Consider using '#align finsupp.comap_distrib_
 /-- `finsupp.comap_has_smul` is distributive -/
 def comapDistribMulAction : DistribMulAction G (α →₀ M)
     where
-  smul_zero g := by
-    ext
-    dsimp [(· • ·)]
-    simp
-  smul_add g f f' := by
-    ext
-    dsimp [(· • ·)]
-    simp [map_domain_add]
+  smul_zero g := by ext; dsimp [(· • ·)]; simp
+  smul_add g f f' := by ext; dsimp [(· • ·)]; simp [map_domain_add]
 #align finsupp.comap_distrib_mul_action Finsupp.comapDistribMulAction
 
 end
@@ -2409,9 +2371,7 @@ section
 instance [Zero M] [SMulZeroClass R M] : SMulZeroClass R (α →₀ M)
     where
   smul a v := v.mapRange ((· • ·) a) (smul_zero _)
-  smul_zero a := by
-    ext
-    apply smul_zero
+  smul_zero a := by ext; apply smul_zero
 
 /-!
 Throughout this section, some `monoid` and `semiring` arguments are specified with `{}` instead of
@@ -2494,9 +2454,7 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u3}} {R : Type.{u2}} [_inst_1 : AddMonoid.{u3} M] [_inst_2 : SMulZeroClass.{u2, u3} R M (AddMonoid.toZero.{u3} M _inst_1)] {b : R} {g : Finsupp.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finsupp.support.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1) (HSMul.hSMul.{u2, max u1 u3, max u1 u3} R (Finsupp.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)) (Finsupp.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)) (instHSMul.{u2, max u1 u3} R (Finsupp.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)) (SMulZeroClass.toSMul.{u2, max u1 u3} R (Finsupp.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)) (Finsupp.zero.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1)) (Finsupp.smulZeroClass.{u1, u3, u2} α M R (AddMonoid.toZero.{u3} M _inst_1) _inst_2))) b g)) (Finsupp.support.{u1, u3} α M (AddMonoid.toZero.{u3} M _inst_1) g)
 Case conversion may be inaccurate. Consider using '#align finsupp.support_smul Finsupp.support_smulₓ'. -/
 theorem support_smul [AddMonoid M] [SMulZeroClass R M] {b : R} {g : α →₀ M} :
-    (b • g).support ⊆ g.support := fun a =>
-  by
-  simp only [smul_apply, mem_support_iff, Ne.def]
+    (b • g).support ⊆ g.support := fun a => by simp only [smul_apply, mem_support_iff, Ne.def];
   exact mt fun h => h.symm ▸ smul_zero _
 #align finsupp.support_smul Finsupp.support_smul
 
@@ -2599,10 +2557,7 @@ theorem comapDomain_smul [AddMonoid M] [Monoid R] [DistribMulAction R M] {f : α
     (v : β →₀ M) (hfv : Set.InjOn f (f ⁻¹' ↑v.support))
     (hfrv : Set.InjOn f (f ⁻¹' ↑(r • v).support) :=
       hfv.mono <| Set.preimage_mono <| Finset.coe_subset.mpr support_smul) :
-    comapDomain f (r • v) hfrv = r • comapDomain f v hfv :=
-  by
-  ext
-  rfl
+    comapDomain f (r • v) hfrv = r • comapDomain f v hfv := by ext; rfl
 #align finsupp.comap_domain_smul Finsupp.comapDomain_smul
 
 /- warning: finsupp.comap_domain_smul_of_injective -> Finsupp.comapDomain_smul_of_injective is a dubious translation:
@@ -2933,12 +2888,8 @@ noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σj, ιs j) →₀ α) ≃ ∀ 
   invFun f :=
     onFinset (Finset.univ.Sigma fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
       Finset.mem_sigma.mpr ⟨Finset.mem_univ _, mem_support_iff.mpr hg⟩
-  left_inv f := by
-    ext
-    simp [split]
-  right_inv f := by
-    ext
-    simp [split]
+  left_inv f := by ext; simp [split]
+  right_inv f := by ext; simp [split]
 #align finsupp.sigma_finsupp_equiv_pi_finsupp Finsupp.sigmaFinsuppEquivPiFinsupp
 -/
 
@@ -2963,10 +2914,7 @@ This is the `add_equiv` version of `finsupp.sigma_finsupp_equiv_pi_finsupp`.
 -/
 noncomputable def sigmaFinsuppAddEquivPiFinsupp {α : Type _} {ιs : η → Type _} [AddMonoid α] :
     ((Σj, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
-  { sigmaFinsuppEquivPiFinsupp with
-    map_add' := fun f g => by
-      ext
-      simp }
+  { sigmaFinsuppEquivPiFinsupp with map_add' := fun f g => by ext; simp }
 #align finsupp.sigma_finsupp_add_equiv_pi_finsupp Finsupp.sigmaFinsuppAddEquivPiFinsupp
 
 /- warning: finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply -> Finsupp.sigmaFinsuppAddEquivPiFinsupp_apply is a dubious translation:

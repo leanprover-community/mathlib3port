@@ -116,10 +116,7 @@ Case conversion may be inaccurate. Consider using '#align list.tprod.elim List.T
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
 protected def elim : ∀ {l : List ι} (v : TProd α l) {i : ι} (hi : i ∈ l), α i
   | i :: is, v, j, hj =>
-    if hji : j = i then by
-      subst hji
-      exact v.1
-    else elim v.2 (hj.resolve_left hji)
+    if hji : j = i then by subst hji; exact v.1 else elim v.2 (hj.resolve_left hji)
 #align list.tprod.elim List.TProd.elim
 
 /- warning: list.tprod.elim_self -> List.TProd.elim_self is a dubious translation:
@@ -151,10 +148,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.tprod.elim_of_mem List.TProd.elim_of_memₓ'. -/
 @[simp]
 theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : TProd α (i :: l)) :
-    v.elim (mem_cons_of_mem _ hj) = TProd.elim v.2 hj :=
-  by
-  apply elim_of_ne
-  rintro rfl
+    v.elim (mem_cons_of_mem _ hj) = TProd.elim v.2 hj := by apply elim_of_ne; rintro rfl;
   exact hl.not_mem hj
 #align list.tprod.elim_of_mem List.TProd.elim_of_mem
 
@@ -167,8 +161,7 @@ Case conversion may be inaccurate. Consider using '#align list.tprod.elim_mk Lis
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (TProd.mk l f).elim hi = f i
   | i :: is, f, j, hj => by
     by_cases hji : j = i
-    · subst hji
-      simp
+    · subst hji; simp
     · rw [elim_of_ne _ hji, snd_mk, elim_mk]
 #align list.tprod.elim_mk List.TProd.elim_mk
 
@@ -275,12 +268,9 @@ Case conversion may be inaccurate. Consider using '#align set.elim_preimage_pi S
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
     (t : ∀ i, Set (α i)) : TProd.elim' h ⁻¹' pi univ t = Set.tprod l t :=
   by
-  have : { i | i ∈ l } = univ := by
-    ext i
-    simp [h]
+  have : { i | i ∈ l } = univ := by ext i; simp [h]
   rw [← this, ← mk_preimage_tprod, preimage_preimage]
-  convert preimage_id
-  simp [tprod.mk_elim hnd h, id_def]
+  convert preimage_id; simp [tprod.mk_elim hnd h, id_def]
 #align set.elim_preimage_pi Set.elim_preimage_pi
 
 end Set

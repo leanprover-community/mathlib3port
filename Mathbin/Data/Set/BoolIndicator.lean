@@ -34,18 +34,14 @@ noncomputable def boolIndicator (x : α) :=
 -/
 
 #print Set.mem_iff_boolIndicator /-
-theorem mem_iff_boolIndicator (x : α) : x ∈ s ↔ s.boolIndicator x = true :=
-  by
-  unfold bool_indicator
-  split_ifs <;> tauto
+theorem mem_iff_boolIndicator (x : α) : x ∈ s ↔ s.boolIndicator x = true := by
+  unfold bool_indicator; split_ifs <;> tauto
 #align set.mem_iff_bool_indicator Set.mem_iff_boolIndicator
 -/
 
 #print Set.not_mem_iff_boolIndicator /-
-theorem not_mem_iff_boolIndicator (x : α) : x ∉ s ↔ s.boolIndicator x = false :=
-  by
-  unfold bool_indicator
-  split_ifs <;> tauto
+theorem not_mem_iff_boolIndicator (x : α) : x ∉ s ↔ s.boolIndicator x = false := by
+  unfold bool_indicator; split_ifs <;> tauto
 #align set.not_mem_iff_bool_indicator Set.not_mem_iff_boolIndicator
 -/
 

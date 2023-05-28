@@ -504,11 +504,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_subring
 /-- A `subsemiring` containing -1 is a `subring`. -/
 def Subsemiring.toSubring (s : Subsemiring R) (hneg : (-1 : R) ∈ s) : Subring R :=
   { s.toSubmonoid, s.toAddSubmonoid with
-    neg_mem' := by
-      rintro x
-      rw [← neg_one_mul]
-      apply Subsemiring.mul_mem
-      exact hneg }
+    neg_mem' := by rintro x; rw [← neg_one_mul]; apply Subsemiring.mul_mem; exact hneg }
 #align subsemiring.to_subring Subsemiring.toSubring
 
 namespace Subring
@@ -1146,10 +1142,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Ring.{u1} R] [_inst_2 : Ring.{u2} S] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (Ring.toSemiring.{u2} S _inst_2))), Eq.{succ u2} (Subring.{u2} S _inst_2) (RingHom.range.{u1, u2} R S _inst_1 _inst_2 f) (Subring.map.{u1, u2} R S _inst_1 _inst_2 f (Top.top.{u1} (Subring.{u1} R _inst_1) (Subring.instTopSubring.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring_hom.range_eq_map RingHom.range_eq_mapₓ'. -/
-theorem range_eq_map (f : R →+* S) : f.range = Subring.map f ⊤ :=
-  by
-  ext
-  simp
+theorem range_eq_map (f : R →+* S) : f.range = Subring.map f ⊤ := by ext; simp
 #align ring_hom.range_eq_map RingHom.range_eq_map
 
 /- warning: ring_hom.mem_range_self -> RingHom.mem_range_self is a dubious translation:
@@ -2259,29 +2252,20 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
     C x := by
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
-  rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
-  clear hx
-  induction' L with hd tl ih
-  · exact h0
+  rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩; clear hx
+  induction' L with hd tl ih; · exact h0
   rw [List.forall_mem_cons] at HL
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
-  replace HL := HL.1
-  clear ih tl
+  replace HL := HL.1; clear ih tl
   rsuffices ⟨L, HL', HP | HP⟩ :
     ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact h1
+  · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact h1
     rw [List.forall_mem_cons] at HL'
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact hneg1
+  · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact hneg1
     rw [List.prod_cons, neg_mul_eq_mul_neg]
     rw [List.forall_mem_cons] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
@@ -2320,9 +2304,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {G : AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))} (k : Int) {g : R}, (Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)))) g G) -> (Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) k) g) G)
 Case conversion may be inaccurate. Consider using '#align add_subgroup.int_mul_mem AddSubgroup.int_mul_memₓ'. -/
 theorem AddSubgroup.int_mul_mem {G : AddSubgroup R} (k : ℤ) {g : R} (h : g ∈ G) : (k : R) * g ∈ G :=
-  by
-  convert AddSubgroup.zsmul_mem G h k
-  simp
+  by convert AddSubgroup.zsmul_mem G h k; simp
 #align add_subgroup.int_mul_mem AddSubgroup.int_mul_mem
 
 /-! ## Actions by `subring`s

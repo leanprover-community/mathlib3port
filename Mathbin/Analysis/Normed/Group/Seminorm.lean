@@ -546,10 +546,7 @@ Case conversion may be inaccurate. Consider using '#align group_seminorm.mul_bdd
 @[to_additive]
 theorem mul_bddBelow_range_add {p q : GroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x / y)) :=
-  ⟨0, by
-    rintro _ ⟨x, rfl⟩
-    dsimp
-    positivity⟩
+  ⟨0, by rintro _ ⟨x, rfl⟩; dsimp; positivity⟩
 #align group_seminorm.mul_bdd_below_range_add GroupSeminorm.mul_bddBelow_range_add
 #align add_group_seminorm.add_bdd_below_range_add AddGroupSeminorm.add_bddBelow_range_add
 
@@ -844,10 +841,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bddBelow_range_addₓ'. -/
 theorem add_bddBelow_range_add {p q : NonarchAddGroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x - y)) :=
-  ⟨0, by
-    rintro _ ⟨x, rfl⟩
-    dsimp
-    positivity⟩
+  ⟨0, by rintro _ ⟨x, rfl⟩; dsimp; positivity⟩
 #align nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bddBelow_range_add
 
 end AddCommGroup
@@ -944,10 +938,8 @@ instance [DecidableEq E] : One (NonarchAddGroupSeminorm E) :=
       map_zero' := if_pos rfl
       add_le_max' := fun x y => by
         by_cases hx : x = 0
-        · rw [if_pos hx, hx, zero_add]
-          exact le_max_of_le_right (le_refl _)
-        · rw [if_neg hx]
-          split_ifs <;> norm_num
+        · rw [if_pos hx, hx, zero_add]; exact le_max_of_le_right (le_refl _)
+        · rw [if_neg hx]; split_ifs <;> norm_num
       neg' := fun x => by simp_rw [neg_eq_zero] }⟩
 
 /- warning: nonarch_add_group_seminorm.apply_one -> NonarchAddGroupSeminorm.apply_one is a dubious translation:

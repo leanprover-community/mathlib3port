@@ -62,9 +62,7 @@ class IsAlgClosed : Prop where
 See also `is_alg_closed.splits_domain` for the case where `K` is algebraically closed.
 -/
 theorem IsAlgClosed.splits_codomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : K →+* k}
-    (p : K[X]) : p.Splits f := by
-  convert IsAlgClosed.splits (p.map f)
-  simp [splits_map_iff]
+    (p : K[X]) : p.Splits f := by convert IsAlgClosed.splits (p.map f); simp [splits_map_iff]
 #align is_alg_closed.splits_codomain IsAlgClosed.splits_codomain
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `K` is algebraically closed.
@@ -239,11 +237,8 @@ theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x,
   Iff.rfl
 #align lift.subfield_with_hom.le_def lift.SubfieldWithHom.le_def
 
-theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x :=
-  by
-  rw [le_def] at h
-  cases h
-  assumption
+theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.emb x := by rw [le_def] at h;
+  cases h; assumption
 #align lift.subfield_with_hom.compat lift.SubfieldWithHom.compat
 
 instance : Preorder (SubfieldWithHom K L M hL)
@@ -283,9 +278,7 @@ theorem maximal_subfieldWithHom_chain_bounded (c : Set (SubfieldWithHom K L M hL
         intro x
         simp [ub]
         rfl⟩⟩
-  else by
-    rw [Set.not_nonempty_iff_eq_empty] at hcn
-    simp [hcn]
+  else by rw [Set.not_nonempty_iff_eq_empty] at hcn; simp [hcn]
 #align lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded lift.SubfieldWithHom.maximal_subfieldWithHom_chain_bounded
 
 variable (hL M)
@@ -559,8 +552,7 @@ theorem Algebra.IsAlgebraic.range_eval_eq_rootSet_minpoly {F K} (A) [Field F] [F
   have := Algebra.isAlgebraic_iff_isIntegral.1 hK
   ext a; rw [mem_root_set_of_ne (minpoly.ne_zero (this x))] <;> [skip;infer_instance]
   refine' ⟨_, fun ha => _⟩
-  · rintro ⟨ψ, rfl⟩
-    rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
+  · rintro ⟨ψ, rfl⟩; rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
   let Fx := AdjoinRoot (minpoly F x)
   have hx : aeval x (minpoly F x) = 0 := minpoly.aeval F x
   letI : Algebra Fx A := (AdjoinRoot.lift (algebraMap F A) a ha).toAlgebra

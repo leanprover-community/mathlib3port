@@ -93,10 +93,8 @@ def invariants : Submodule k V
 theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v := by rfl
 #align representation.mem_invariants Representation.mem_invariants
 
-theorem invariants_eq_inter : (invariants ρ).carrier = ⋂ g : G, Function.fixedPoints (ρ g) :=
-  by
-  ext
-  simp [Function.IsFixedPt]
+theorem invariants_eq_inter : (invariants ρ).carrier = ⋂ g : G, Function.fixedPoints (ρ g) := by
+  ext; simp [Function.IsFixedPt]
 #align representation.invariants_eq_inter Representation.invariants_eq_inter
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
@@ -158,12 +156,8 @@ def invariantsEquivRepHom (X Y : Rep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨f.hom, fun g => (mem_invariants_iff_comm _ g).2 (f.comm g)⟩
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 #align representation.lin_hom.invariants_equiv_Rep_hom Representation.linHom.invariantsEquivRepHom
 
 end Rep

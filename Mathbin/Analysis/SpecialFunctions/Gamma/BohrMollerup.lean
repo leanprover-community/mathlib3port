@@ -66,9 +66,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     intro c x hc u hx
     dsimp only [f]
     rw [mul_rpow (exp_pos _).le ((rpow_nonneg_of_nonneg hx.le) _), ← exp_mul, ← rpow_mul hx.le]
-    congr 2 <;>
-      · field_simp [hc.ne']
-        ring
+    congr 2 <;> · field_simp [hc.ne'] ; ring
   -- show `f c u` is in `ℒp` for `p = 1/c`:
   have f_mem_Lp :
     ∀ {c u : ℝ} (hc : 0 < c) (hu : 0 < u),
@@ -99,11 +97,8 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     dsimp only [f]
     have A : exp (-x) = exp (-a * x) * exp (-b * x) := by
       rw [← exp_add, ← add_mul, ← neg_add, hab, neg_one_mul]
-    have B : x ^ (a * s + b * t - 1) = x ^ (a * (s - 1)) * x ^ (b * (t - 1)) :=
-      by
-      rw [← rpow_add hx, hab']
-      congr 1
-      ring
+    have B : x ^ (a * s + b * t - 1) = x ^ (a * (s - 1)) * x ^ (b * (t - 1)) := by
+      rw [← rpow_add hx, hab']; congr 1; ring
     rw [A, B]
     ring
   · rw [one_div_one_div, one_div_one_div]
@@ -171,9 +166,7 @@ theorem f_add_nat_eq (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = f y + log y)
   by
   induction' n with n hn
   · simp
-  · have : x + n.succ = x + n + 1 := by
-      push_cast
-      ring
+  · have : x + n.succ = x + n + 1 := by push_cast ; ring
     rw [this, hf_feq, hn]
     rw [Finset.range_succ, Finset.sum_insert Finset.not_mem_range_self]
     abel
@@ -186,10 +179,7 @@ theorem f_add_nat_le (hf_conv : ConvexOn ℝ (Ioi 0) f)
     f (n + x) ≤ f n + x * log n :=
   by
   have hn' : 0 < (n : ℝ) := nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)
-  have : f n + x * log n = (1 - x) * f n + x * f (n + 1) :=
-    by
-    rw [hf_feq hn']
-    ring
+  have : f n + x * log n = (1 - x) * f n + x * f (n + 1) := by rw [hf_feq hn']; ring
   rw [this, (by ring : (n : ℝ) + x = (1 - x) * n + x * (n + 1))]
   simpa only [smul_eq_mul] using
     hf_conv.2 hn' (by linarith : 0 < (n + 1 : ℝ)) (by linarith : 0 ≤ 1 - x) hx.le (by linarith)
@@ -200,10 +190,7 @@ theorem f_add_nat_ge (hf_conv : ConvexOn ℝ (Ioi 0) f)
     (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = f y + log y) (hn : 2 ≤ n) (hx : 0 < x) :
     f n + x * log (n - 1) ≤ f (n + x) :=
   by
-  have npos : 0 < (n : ℝ) - 1 :=
-    by
-    rw [← Nat.cast_one, sub_pos, Nat.cast_lt]
-    linarith
+  have npos : 0 < (n : ℝ) - 1 := by rw [← Nat.cast_one, sub_pos, Nat.cast_lt]; linarith
   have c :=
     (convex_on_iff_slope_mono_adjacent.mp <| hf_conv).2 npos (by linarith : 0 < (n : ℝ) + x)
       (by linarith : (n : ℝ) - 1 < (n : ℝ)) (by linarith)
@@ -220,12 +207,9 @@ theorem logGammaSeq_add_one (x : ℝ) (n : ℕ) :
   by
   dsimp only [Nat.factorial_succ, log_gamma_seq]
   conv_rhs => rw [Finset.sum_range_succ', Nat.cast_zero, add_zero]
-  rw [Nat.cast_mul, log_mul]
-  rotate_left
-  · rw [Nat.cast_ne_zero]
-    exact Nat.succ_ne_zero n
-  · rw [Nat.cast_ne_zero]
-    exact Nat.factorial_ne_zero n
+  rw [Nat.cast_mul, log_mul]; rotate_left
+  · rw [Nat.cast_ne_zero]; exact Nat.succ_ne_zero n
+  · rw [Nat.cast_ne_zero]; exact Nat.factorial_ne_zero n
   have :
     (∑ m : ℕ in Finset.range (n + 1), log (x + 1 + ↑m)) =
       ∑ k : ℕ in Finset.range (n + 1), log (x + ↑(k + 1)) :=
@@ -290,8 +274,7 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
       · rwa [nat.ceil_eq_zero.mpr (by linarith : x - 1 ≤ 0), Nat.cast_zero]
       · convert Nat.ceil_lt_add_one (by linarith : 0 ≤ x - 1)
         abel
-    · rw [← sub_le_iff_le_add]
-      exact Nat.le_ceil _
+    · rw [← sub_le_iff_le_add]; exact Nat.le_ceil _
   intro m
   induction' m with m hm generalizing x
   · rw [Nat.cast_zero, zero_add]
@@ -328,8 +311,7 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
       rw [sub_add_cancel, Nat.add_sub_cancel]
     rw [this] at hm
     convert hm.sub (tendsto_log_nat_add_one_sub_log.const_mul x) using 2
-    · ext1 n
-      ring
+    · ext1 n; ring
     · have := hf_feq ((Nat.cast_nonneg m).trans_lt hy)
       rw [sub_add_cancel] at this
       rw [this]
@@ -383,7 +365,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
   have :=
     bohr_mollerup.f_add_nat_le convex_on_log_Gamma (fun y hy => _) two_ne_zero one_half_pos
       (by norm_num : 1 / 2 ≤ (1 : ℝ))
-  swap
+  swap;
   ·
     rw [Function.comp_apply, Gamma_add_one hy.ne', log_mul hy.ne' (Gamma_pos_of_pos hy).ne',
       add_comm]

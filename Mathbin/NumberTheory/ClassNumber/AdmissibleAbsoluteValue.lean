@@ -114,18 +114,13 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
         (by simpa only [Fintype.card_fin, pow_succ] using Nat.lt_succ_self (M ^ n.succ))
     refine'
       ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
-    · refine' i.2.trans_le _
-      rwa [Finset.length_toList]
-    · intro i j h
-      ext
-      exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_toList _) _ _ _ _ h
+    · refine' i.2.trans_le _; rwa [Finset.length_toList]
+    · intro i j h; ext; exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_toList _) _ _ _ _ h
     have :
       ∀ i h,
         (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈
           finset.univ.filter fun x => t x = s :=
-      by
-      intro i h
-      exact finset.mem_to_list.mp (List.nthLe_mem _ _ _)
+      by intro i h; exact finset.mem_to_list.mp (List.nthLe_mem _ _ _)
     obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
     obtain ⟨_, h₁⟩ := finset.mem_filter.mp (this i₁ _)
     exact h₀.trans h₁.symm

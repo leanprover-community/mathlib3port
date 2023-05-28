@@ -81,10 +81,7 @@ variable [Bornology α] [Bornology β] [Bornology γ] [Bornology δ]
 instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
   comap_cobounded_le f := f.comap_cobounded_le'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`

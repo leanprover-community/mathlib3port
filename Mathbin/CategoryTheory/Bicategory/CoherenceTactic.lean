@@ -221,10 +221,8 @@ example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} (η : f' ⟶ (f
   η ⊗≫ 𝟙 _
 
 @[simp]
-theorem bicategoricalComp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ :=
-  by
-  dsimp [bicategorical_comp]
-  simp
+theorem bicategoricalComp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ := by
+  dsimp [bicategorical_comp]; simp
 #align category_theory.bicategory.bicategorical_comp_refl CategoryTheory.Bicategory.bicategoricalComp_refl
 
 end CategoryTheory.Bicategory

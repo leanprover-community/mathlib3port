@@ -317,20 +317,14 @@ theorem specializes_pi {f g : ∀ i, π i} : f ⤳ g ↔ ∀ i, f i ⤳ g i := b
 #align specializes_pi specializes_pi
 
 #print not_specializes_iff_exists_open /-
-theorem not_specializes_iff_exists_open : ¬x ⤳ y ↔ ∃ S : Set X, IsOpen S ∧ y ∈ S ∧ x ∉ S :=
-  by
-  rw [specializes_iff_forall_open]
-  push_neg
-  rfl
+theorem not_specializes_iff_exists_open : ¬x ⤳ y ↔ ∃ S : Set X, IsOpen S ∧ y ∈ S ∧ x ∉ S := by
+  rw [specializes_iff_forall_open]; push_neg; rfl
 #align not_specializes_iff_exists_open not_specializes_iff_exists_open
 -/
 
 #print not_specializes_iff_exists_closed /-
-theorem not_specializes_iff_exists_closed : ¬x ⤳ y ↔ ∃ S : Set X, IsClosed S ∧ x ∈ S ∧ y ∉ S :=
-  by
-  rw [specializes_iff_forall_closed]
-  push_neg
-  rfl
+theorem not_specializes_iff_exists_closed : ¬x ⤳ y ↔ ∃ S : Set X, IsClosed S ∧ x ∈ S ∧ y ∉ S := by
+  rw [specializes_iff_forall_closed]; push_neg; rfl
 #align not_specializes_iff_exists_closed not_specializes_iff_exists_closed
 -/
 
@@ -700,9 +694,7 @@ theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
 
 #print SeparationQuotient.isClosedMap_mk /-
 theorem isClosedMap_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
-  inducing_mk.IsClosedMap <| by
-    rw [range_mk]
-    exact isClosed_univ
+  inducing_mk.IsClosedMap <| by rw [range_mk]; exact isClosed_univ
 #align separation_quotient.is_closed_map_mk SeparationQuotient.isClosedMap_mk
 -/
 
@@ -913,10 +905,8 @@ Case conversion may be inaccurate. Consider using '#align separation_quotient.te
 @[simp]
 theorem tendsto_lift₂_nhds {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d}
     {x : X} {y : Y} {l : Filter α} :
-    Tendsto (uncurry <| lift₂ f hf) (𝓝 (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝 (x, y)) l :=
-  by
-  rw [← map_prod_map_mk_nhds, tendsto_map'_iff]
-  rfl
+    Tendsto (uncurry <| lift₂ f hf) (𝓝 (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝 (x, y)) l := by
+  rw [← map_prod_map_mk_nhds, tendsto_map'_iff]; rfl
 #align separation_quotient.tendsto_lift₂_nhds SeparationQuotient.tendsto_lift₂_nhds
 
 /- warning: separation_quotient.tendsto_lift₂_nhds_within -> SeparationQuotient.tendsto_lift₂_nhdsWithin is a dubious translation:
@@ -930,9 +920,7 @@ theorem tendsto_lift₂_nhdsWithin {f : X → Y → α} {hf : ∀ a b c d, (a ~ 
     {x : X} {y : Y} {s : Set (SeparationQuotient X × SeparationQuotient Y)} {l : Filter α} :
     Tendsto (uncurry <| lift₂ f hf) (𝓝[s] (mk x, mk y)) l ↔
       Tendsto (uncurry f) (𝓝[Prod.map mk mk ⁻¹' s] (x, y)) l :=
-  by
-  rw [nhdsWithin, ← map_prod_map_mk_nhds, ← Filter.push_pull, comap_principal]
-  rfl
+  by rw [nhdsWithin, ← map_prod_map_mk_nhds, ← Filter.push_pull, comap_principal]; rfl
 #align separation_quotient.tendsto_lift₂_nhds_within SeparationQuotient.tendsto_lift₂_nhdsWithin
 
 /- warning: separation_quotient.continuous_at_lift₂ -> SeparationQuotient.continuousAt_lift₂ is a dubious translation:

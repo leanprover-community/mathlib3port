@@ -115,9 +115,7 @@ theorem coe_eq_univ : (s : Set α) = Set.univ ↔ s = univ := by rw [← coe_uni
 -/
 
 #print Finset.Nonempty.eq_univ /-
-theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ :=
-  by
-  rintro ⟨x, hx⟩
+theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ := by rintro ⟨x, hx⟩;
   refine' eq_univ_of_forall fun y => by rwa [Subsingleton.elim y x]
 #align finset.nonempty.eq_univ Finset.Nonempty.eq_univ
 -/
@@ -293,18 +291,14 @@ theorem compl_inter (s t : Finset α) : (s ∩ t)ᶜ = sᶜ ∪ tᶜ :=
 
 #print Finset.compl_erase /-
 @[simp]
-theorem compl_erase : s.eraseₓ aᶜ = insert a (sᶜ) :=
-  by
-  ext
+theorem compl_erase : s.eraseₓ aᶜ = insert a (sᶜ) := by ext;
   simp only [or_iff_not_imp_left, mem_insert, not_and, mem_compl, mem_erase]
 #align finset.compl_erase Finset.compl_erase
 -/
 
 #print Finset.compl_insert /-
 @[simp]
-theorem compl_insert : insert a sᶜ = sᶜ.eraseₓ a :=
-  by
-  ext
+theorem compl_insert : insert a sᶜ = sᶜ.eraseₓ a := by ext;
   simp only [not_or, mem_insert, iff_self_iff, mem_compl, mem_erase]
 #align finset.compl_insert Finset.compl_insert
 -/
@@ -337,10 +331,8 @@ theorem compl_singleton (a : α) : ({a} : Finset α)ᶜ = univ.eraseₓ a := by
 -/
 
 #print Finset.insert_inj_on' /-
-theorem insert_inj_on' (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ : Finset α) :=
-  by
-  rw [coe_compl]
-  exact s.insert_inj_on
+theorem insert_inj_on' (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ : Finset α) := by
+  rw [coe_compl]; exact s.insert_inj_on
 #align finset.insert_inj_on' Finset.insert_inj_on'
 -/
 
@@ -387,10 +379,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.piecewise_univ Finset.piecewise_univₓ'. -/
 @[simp]
 theorem piecewise_univ [∀ i : α, Decidable (i ∈ (univ : Finset α))] {δ : α → Sort _}
-    (f g : ∀ i, δ i) : univ.piecewise f g = f :=
-  by
-  ext i
-  simp [piecewise]
+    (f g : ∀ i, δ i) : univ.piecewise f g = f := by ext i; simp [piecewise]
 #align finset.piecewise_univ Finset.piecewise_univ
 
 /- warning: finset.piecewise_compl -> Finset.piecewise_compl is a dubious translation:
@@ -401,9 +390,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.piecewise_compl Finset.piecewise_complₓ'. -/
 theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ i : α, Decidable (i ∈ s)]
     [∀ i : α, Decidable (i ∈ sᶜ)] {δ : α → Sort _} (f g : ∀ i, δ i) :
-    sᶜ.piecewise f g = s.piecewise g f := by
-  ext i
-  simp [piecewise]
+    sᶜ.piecewise f g = s.piecewise g f := by ext i; simp [piecewise]
 #align finset.piecewise_compl Finset.piecewise_compl
 
 #print Finset.piecewise_erase_univ /-
@@ -428,9 +415,7 @@ theorem univ_map_equiv_to_embedding {α β : Type _} [Fintype α] [Fintype β] (
 #print Finset.univ_filter_exists /-
 @[simp]
 theorem univ_filter_exists (f : α → β) [Fintype β] [DecidablePred fun y => ∃ x, f x = y]
-    [DecidableEq β] : (Finset.univ.filterₓ fun y => ∃ x, f x = y) = Finset.univ.image f :=
-  by
-  ext
+    [DecidableEq β] : (Finset.univ.filterₓ fun y => ∃ x, f x = y) = Finset.univ.image f := by ext;
   simp
 #align finset.univ_filter_exists Finset.univ_filter_exists
 -/
@@ -975,9 +960,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) _inst_4) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
 Case conversion may be inaccurate. Consider using '#align set.to_finset_inter Set.toFinset_interₓ'. -/
 @[simp]
-theorem toFinset_inter [Fintype ↥(s ∩ t)] : (s ∩ t).toFinset = s.toFinset ∩ t.toFinset :=
-  by
-  ext
+theorem toFinset_inter [Fintype ↥(s ∩ t)] : (s ∩ t).toFinset = s.toFinset ∩ t.toFinset := by ext;
   simp
 #align set.to_finset_inter Set.toFinset_inter
 
@@ -988,9 +971,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) _inst_4) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
 Case conversion may be inaccurate. Consider using '#align set.to_finset_union Set.toFinset_unionₓ'. -/
 @[simp]
-theorem toFinset_union [Fintype ↥(s ∪ t)] : (s ∪ t).toFinset = s.toFinset ∪ t.toFinset :=
-  by
-  ext
+theorem toFinset_union [Fintype ↥(s ∪ t)] : (s ∪ t).toFinset = s.toFinset ∪ t.toFinset := by ext;
   simp
 #align set.to_finset_union Set.toFinset_union
 
@@ -1001,9 +982,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) _inst_4) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
 Case conversion may be inaccurate. Consider using '#align set.to_finset_diff Set.toFinset_diffₓ'. -/
 @[simp]
-theorem toFinset_diff [Fintype ↥(s \ t)] : (s \ t).toFinset = s.toFinset \ t.toFinset :=
-  by
-  ext
+theorem toFinset_diff [Fintype ↥(s \ t)] : (s \ t).toFinset = s.toFinset \ t.toFinset := by ext;
   simp
 #align set.to_finset_diff Set.toFinset_diff
 
@@ -1014,9 +993,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} α t)] [_inst_4 : Fintype.{u1} (Set.Elem.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (CompleteLattice.toLattice.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t) _inst_4) (symmDiff.{u1} (Finset.{u1} α) (SemilatticeSup.toSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Set.toFinset.{u1} α s _inst_2) (Set.toFinset.{u1} α t _inst_3))
 Case conversion may be inaccurate. Consider using '#align set.to_finset_symm_diff Set.toFinset_symmDiffₓ'. -/
 @[simp]
-theorem toFinset_symmDiff [Fintype ↥(s ∆ t)] : (s ∆ t).toFinset = s.toFinset ∆ t.toFinset :=
-  by
-  ext
+theorem toFinset_symmDiff [Fintype ↥(s ∆ t)] : (s ∆ t).toFinset = s.toFinset ∆ t.toFinset := by ext;
   simp [mem_symm_diff, Finset.mem_symmDiff]
 #align set.to_finset_symm_diff Set.toFinset_symmDiff
 
@@ -1027,10 +1004,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} α s)] [_inst_4 : Fintype.{u1} α] [_inst_5 : Fintype.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))], Eq.{succ u1} (Finset.{u1} α) (Set.toFinset.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) _inst_5) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.booleanAlgebra.{u1} α _inst_4 (fun (a : α) (b : α) => _inst_1 a b))) (Set.toFinset.{u1} α s _inst_2))
 Case conversion may be inaccurate. Consider using '#align set.to_finset_compl Set.toFinset_complₓ'. -/
 @[simp]
-theorem toFinset_compl [Fintype α] [Fintype ↥(sᶜ)] : sᶜ.toFinset = s.toFinsetᶜ :=
-  by
-  ext
-  simp
+theorem toFinset_compl [Fintype α] [Fintype ↥(sᶜ)] : sᶜ.toFinset = s.toFinsetᶜ := by ext; simp
 #align set.to_finset_compl Set.toFinset_compl
 
 end DecidableEq
@@ -1038,10 +1012,7 @@ end DecidableEq
 #print Set.toFinset_empty /-
 -- TODO The `↥` circumvents an elaboration bug. See comment on `set.to_finset_univ`.
 @[simp]
-theorem toFinset_empty [Fintype ↥(∅ : Set α)] : (∅ : Set α).toFinset = ∅ :=
-  by
-  ext
-  simp
+theorem toFinset_empty [Fintype ↥(∅ : Set α)] : (∅ : Set α).toFinset = ∅ := by ext; simp
 #align set.to_finset_empty Set.toFinset_empty
 -/
 
@@ -1051,10 +1022,7 @@ it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` dis
 Reported in leanprover-community/lean#672 -/
 @[simp]
 theorem toFinset_univ [Fintype α] [Fintype ↥(Set.univ : Set α)] :
-    (Set.univ : Set α).toFinset = Finset.univ :=
-  by
-  ext
-  simp
+    (Set.univ : Set α).toFinset = Finset.univ := by ext; simp
 #align set.to_finset_univ Set.toFinset_univ
 -/
 
@@ -1075,10 +1043,7 @@ theorem toFinset_eq_univ [Fintype α] [Fintype s] : s.toFinset = Finset.univ ↔
 #print Set.toFinset_setOf /-
 @[simp]
 theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype { x | p x }] :
-    { x | p x }.toFinset = Finset.univ.filterₓ p :=
-  by
-  ext
-  simp
+    { x | p x }.toFinset = Finset.univ.filterₓ p := by ext; simp
 #align set.to_finset_set_of Set.toFinset_setOf
 -/
 
@@ -1109,18 +1074,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.to_finset_range Set.toFinset_rangeₓ'. -/
 @[simp]
 theorem toFinset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.range f)] :
-    (Set.range f).toFinset = Finset.univ.image f :=
-  by
-  ext
-  simp
+    (Set.range f).toFinset = Finset.univ.image f := by ext; simp
 #align set.to_finset_range Set.toFinset_range
 
 #print Set.toFinset_singleton /-
 -- TODO The `↥` circumvents an elaboration bug. See comment on `set.to_finset_univ`.
-theorem toFinset_singleton (a : α) [Fintype ↥({a} : Set α)] : ({a} : Set α).toFinset = {a} :=
-  by
-  ext
-  simp
+theorem toFinset_singleton (a : α) [Fintype ↥({a} : Set α)] : ({a} : Set α).toFinset = {a} := by
+  ext; simp
 #align set.to_finset_singleton Set.toFinset_singleton
 -/
 
@@ -1128,17 +1088,13 @@ theorem toFinset_singleton (a : α) [Fintype ↥({a} : Set α)] : ({a} : Set α)
 -- TODO The `↥` circumvents an elaboration bug. See comment on `set.to_finset_univ`.
 @[simp]
 theorem toFinset_insert [DecidableEq α] {a : α} {s : Set α} [Fintype ↥(insert a s : Set α)]
-    [Fintype s] : (insert a s).toFinset = insert a s.toFinset :=
-  by
-  ext
-  simp
+    [Fintype s] : (insert a s).toFinset = insert a s.toFinset := by ext; simp
 #align set.to_finset_insert Set.toFinset_insert
 -/
 
 #print Set.filter_mem_univ_eq_toFinset /-
 theorem filter_mem_univ_eq_toFinset [Fintype α] (s : Set α) [Fintype s] [DecidablePred (· ∈ s)] :
-    Finset.univ.filterₓ (· ∈ s) = s.toFinset := by
-  ext
+    Finset.univ.filterₓ (· ∈ s) = s.toFinset := by ext;
   simp only [mem_filter, Finset.mem_univ, true_and_iff, mem_to_finset]
 #align set.filter_mem_univ_eq_to_finset Set.filter_mem_univ_eq_toFinset
 -/
@@ -1165,10 +1121,8 @@ theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, L
 <too large>
 Case conversion may be inaccurate. Consider using '#align fin.image_succ_above_univ Fin.image_succAbove_univₓ'. -/
 @[simp]
-theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAbove = {i}ᶜ :=
-  by
-  ext m
-  simp
+theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAbove = {i}ᶜ := by
+  ext m; simp
 #align fin.image_succ_above_univ Fin.image_succAbove_univ
 
 /- warning: fin.image_succ_univ -> Fin.image_succ_univ is a dubious translation:
@@ -1363,10 +1317,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] {f : α -> β}, Eq.{succ u1} (Set.{u1} β) (Finset.toSet.{u1} β (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_2 a b) f (Finset.univ.{u2} α _inst_1))) (Set.range.{u1, succ u2} β α f)
 Case conversion may be inaccurate. Consider using '#align fintype.coe_image_univ Fintype.coe_image_univₓ'. -/
 theorem Fintype.coe_image_univ [Fintype α] [DecidableEq β] {f : α → β} :
-    ↑(Finset.image f Finset.univ) = Set.range f :=
-  by
-  ext x
-  simp
+    ↑(Finset.image f Finset.univ) = Set.range f := by ext x; simp
 #align fintype.coe_image_univ Fintype.coe_image_univ
 
 #print List.Subtype.fintype /-

@@ -64,9 +64,7 @@ include V W
 def contLinear (f : P →A[R] Q) : V →L[R] W :=
   { f.linear with
     toFun := f.linear
-    cont := by
-      rw [AffineMap.continuous_linear_iff]
-      exact f.cont }
+    cont := by rw [AffineMap.continuous_linear_iff]; exact f.cont }
 #align continuous_affine_map.cont_linear ContinuousAffineMap.contLinear
 
 @[simp]
@@ -76,10 +74,7 @@ theorem coe_contLinear (f : P →A[R] Q) : (f.contLinear : V → W) = f.linear :
 
 @[simp]
 theorem coe_contLinear_eq_linear (f : P →A[R] Q) :
-    (f.contLinear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear :=
-  by
-  ext
-  rfl
+    (f.contLinear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear := by ext; rfl
 #align continuous_affine_map.coe_cont_linear_eq_linear ContinuousAffineMap.coe_contLinear_eq_linear
 
 @[simp]
@@ -124,26 +119,20 @@ theorem contLinear_eq_zero_iff_exists_const (f : P →A[R] Q) :
   have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0 :=
     by
     refine' ⟨fun h => _, fun h => _⟩ <;> ext
-    · rw [← coe_cont_linear_eq_linear, h]
-      rfl
-    · rw [← coe_linear_eq_coe_cont_linear, h]
-      rfl
+    · rw [← coe_cont_linear_eq_linear, h]; rfl
+    · rw [← coe_linear_eq_coe_cont_linear, h]; rfl
   have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q :=
     by
     intro q
     refine' ⟨fun h => _, fun h => _⟩ <;> ext
-    · rw [h]
-      rfl
-    · rw [← coe_to_affine_map, h]
-      rfl
+    · rw [h]; rfl
+    · rw [← coe_to_affine_map, h]; rfl
   simp_rw [h₁, h₂]
   exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
 #align continuous_affine_map.cont_linear_eq_zero_iff_exists_const ContinuousAffineMap.contLinear_eq_zero_iff_exists_const
 
 @[simp]
-theorem to_affine_map_contLinear (f : V →L[R] W) : f.toContinuousAffineMap.contLinear = f :=
-  by
-  ext
+theorem to_affine_map_contLinear (f : V →L[R] W) : f.toContinuousAffineMap.contLinear = f := by ext;
   rfl
 #align continuous_affine_map.to_affine_map_cont_linear ContinuousAffineMap.to_affine_map_contLinear
 
@@ -246,9 +235,7 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g
   ·
     calc
       ‖f.comp g 0‖ = ‖f (g 0)‖ := by simp
-      _ = ‖f.cont_linear (g 0) + f 0‖ := by
-        rw [f.decomp]
-        simp
+      _ = ‖f.cont_linear (g 0) + f 0‖ := by rw [f.decomp]; simp
       _ ≤ ‖f.cont_linear‖ * ‖g 0‖ + ‖f 0‖ :=
         ((norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _))
       _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
@@ -261,9 +248,7 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g
         (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _
       _ ≤ ‖f‖ * ‖g‖ :=
         (mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _))
-      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
-        rw [le_add_iff_nonneg_right]
-        apply norm_nonneg
+      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by rw [le_add_iff_nonneg_right]; apply norm_nonneg
       
 #align continuous_affine_map.norm_comp_le ContinuousAffineMap.norm_comp_le
 
@@ -276,13 +261,8 @@ def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V �
     where
   toFun f := ⟨f 0, f.contLinear⟩
   invFun p := p.2.toContinuousAffineMap + const 𝕜 V p.1
-  left_inv f := by
-    ext
-    rw [f.decomp]
-    simp
-  right_inv := by
-    rintro ⟨v, f⟩
-    ext <;> simp
+  left_inv f := by ext; rw [f.decomp]; simp
+  right_inv := by rintro ⟨v, f⟩; ext <;> simp
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   norm_map' f := rfl

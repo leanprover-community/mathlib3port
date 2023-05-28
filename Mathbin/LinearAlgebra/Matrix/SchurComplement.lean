@@ -219,15 +219,13 @@ theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A 
     have := h.2 (-(A⁻¹ ⬝ B).mulVec x ⊕ᵥ x)
     rw [dot_product_mul_vec, schur_complement_eq₁₁ B D _ _ hA.1, neg_add_self, dot_product_zero,
       zero_add] at this
-    rw [dot_product_mul_vec]
-    exact this
+    rw [dot_product_mul_vec]; exact this
   · refine' fun h => ⟨h.1, fun x => _⟩
     rw [dot_product_mul_vec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]
     apply le_add_of_nonneg_of_le
     · rw [← dot_product_mul_vec]
       apply hA.pos_semidef.2
-    · rw [← dot_product_mul_vec]
-      apply h.2
+    · rw [← dot_product_mul_vec]; apply h.2
 #align matrix.pos_semidef.from_blocks₁₁ Matrix.PosSemidef.from_blocks₁₁
 
 theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜)

@@ -153,10 +153,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.pfilter.ext Order.PFilter.extₓ'. -/
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
-theorem ext (h : (s : Set P) = t) : s = t := by
-  cases s
-  cases t
-  exact congr_arg _ (Ideal.ext h)
+theorem ext (h : (s : Set P) = t) : s = t := by cases s; cases t; exact congr_arg _ (Ideal.ext h)
 #align order.pfilter.ext Order.PFilter.ext
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
@@ -305,9 +302,7 @@ Case conversion may be inaccurate. Consider using '#align order.pfilter.Inf_gc O
 theorem sInf_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
       sInf (OrderDual.ofDual F : PFilter P) :=
-  fun x F => by
-  simp
-  rfl
+  fun x F => by simp; rfl
 #align order.pfilter.Inf_gc Order.PFilter.sInf_gc
 
 /- warning: order.pfilter.Inf_gi -> Order.PFilter.infGi is a dubious translation:

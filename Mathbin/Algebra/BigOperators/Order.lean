@@ -542,10 +542,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Finset.Nonempty.{u1} α (f i))) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)))
 Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion Finset.card_le_card_biUnionₓ'. -/
 theorem card_le_card_biUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
-    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.biUnion f).card :=
-  by
-  rw [card_bUnion hs, card_eq_sum_ones]
-  exact sum_le_sum fun i hi => (hf i hi).card_pos
+    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.biUnion f).card := by
+  rw [card_bUnion hs, card_eq_sum_ones]; exact sum_le_sum fun i hi => (hf i hi).card_pos
 #align finset.card_le_card_bUnion Finset.card_le_card_biUnion
 
 /- warning: finset.card_le_card_bUnion_add_card_fiber -> Finset.card_le_card_biUnion_add_card_fiber is a dubious translation:
@@ -677,8 +675,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_lt_prod_of
 theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g i) :
     (∏ i in s, f i) < ∏ i in s, g i := by
   apply prod_lt_prod'
-  · intro i hi
-    apply le_of_lt (Hlt i hi)
+  · intro i hi; apply le_of_lt (Hlt i hi)
   cases' hs with i hi
   exact ⟨i, hi, Hlt i hi⟩
 #align finset.prod_lt_prod_of_nonempty' Finset.prod_lt_prod_of_nonempty'
@@ -882,8 +879,7 @@ theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g 
   by
   induction' s using Finset.induction with a s has ih h
   · simp
-  · simp only [prod_insert has]
-    apply mul_le_mul
+  · simp only [prod_insert has]; apply mul_le_mul
     · exact h1 a (mem_insert_self a s)
     · apply ih (fun x H => h0 _ _) fun x H => h1 _ _ <;> exact mem_insert_of_mem H
     · apply prod_nonneg fun x H => h0 x (mem_insert_of_mem H)
@@ -922,10 +918,8 @@ theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i +
     apply add_le_add <;> apply mul_le_mul_of_nonneg_left <;> try apply_assumption <;> assumption <;>
         apply prod_le_prod <;>
       simp (config := { contextual := true }) [*]
-  · apply prod_nonneg
-    simp only [and_imp, mem_sdiff, mem_singleton]
-    intro j h1j h2j
-    exact le_trans (hg j h1j) (hgf j h1j h2j)
+  · apply prod_nonneg; simp only [and_imp, mem_sdiff, mem_singleton]
+    intro j h1j h2j; exact le_trans (hg j h1j) (hgf j h1j h2j)
 #align finset.prod_add_prod_le Finset.prod_add_prod_le
 
 end OrderedCommSemiring

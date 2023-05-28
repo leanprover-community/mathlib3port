@@ -66,7 +66,7 @@ theorem hasStrictDerivAt_inv (hx : x ≠ 0) : HasStrictDerivAt Inv.inv (-(x ^ 2)
     rintro ⟨y, z⟩ ⟨hy, hz⟩
     simp only [mem_set_of_eq] at hy hz
     -- hy : y ≠ 0, hz : z ≠ 0
-    field_simp [hx, hy, hz]
+    field_simp [hx, hy, hz] ;
     ring
   refine' (is_O_refl (fun p : 𝕜 × 𝕜 => p.1 - p.2) _).mul_isLittleO ((is_o_one_iff _).2 _)
   rw [← sub_self (x * x)⁻¹]
@@ -198,8 +198,7 @@ theorem HasDerivWithinAt.div (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWith
   by
   convert hc.mul ((hasDerivAt_inv hx).comp_hasDerivWithinAt x hd)
   · simp only [div_eq_mul_inv]
-  · field_simp
-    ring
+  · field_simp; ring
 #align has_deriv_within_at.div HasDerivWithinAt.div
 
 theorem HasStrictDerivAt.div (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x)
@@ -207,8 +206,7 @@ theorem HasStrictDerivAt.div (hc : HasStrictDerivAt c c' x) (hd : HasStrictDeriv
   by
   convert hc.mul ((hasStrictDerivAt_inv hx).comp x hd)
   · simp only [div_eq_mul_inv]
-  · field_simp
-    ring
+  · field_simp; ring
 #align has_strict_deriv_at.div HasStrictDerivAt.div
 
 theorem HasDerivAt.div (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) (hx : d x ≠ 0) :

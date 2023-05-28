@@ -421,11 +421,8 @@ theorem trans_induction_on {P : ∀ {a b : α}, ReflTransGen r a b → Prop} {a 
 theorem cases_head (h : ReflTransGen r a b) : a = b ∨ ∃ c, r a c ∧ ReflTransGen r c b :=
   by
   induction h using Relation.ReflTransGen.head_induction_on
-  · left
-    rfl
-  · right
-    exists _
-    constructor <;> assumption
+  · left; rfl
+  · right; exists _; constructor <;> assumption
 #align relation.refl_trans_gen.cases_head Relation.ReflTransGen.cases_head
 -/
 
@@ -448,8 +445,7 @@ theorem total_of_right_unique (U : Relator.RightUnique r) (ab : ReflTransGen r a
   · rcases IH with (IH | IH)
     · rcases cases_head IH with (rfl | ⟨e, be, ec⟩)
       · exact Or.inr (single bd)
-      · cases U bd be
-        exact Or.inl ec
+      · cases U bd be; exact Or.inl ec
     · exact Or.inr (IH.tail bd)
 #align relation.refl_trans_gen.total_of_right_unique Relation.ReflTransGen.total_of_right_unique
 -/
@@ -650,11 +646,8 @@ theorem TransGen.mono {p : α → α → Prop} :
 -/
 
 #print Relation.TransGen.swap /-
-theorem TransGen.swap (h : TransGen r b a) : TransGen (swap r) a b :=
-  by
-  induction' h with b h b c hab hbc ih
-  · exact trans_gen.single h
-  exact ih.head hbc
+theorem TransGen.swap (h : TransGen r b a) : TransGen (swap r) a b := by
+  induction' h with b h b c hab hbc ih; · exact trans_gen.single h; exact ih.head hbc
 #align relation.trans_gen.swap Relation.TransGen.swap
 -/
 
@@ -683,9 +676,7 @@ theorem reflTransGen_iff_eq_or_transGen : ReflTransGen r a b ↔ b = a ∨ Trans
   · cases' h with c _ hac hcb
     · exact Or.inl rfl
     · exact Or.inr (trans_gen.tail' hac hcb)
-  · rcases h with (rfl | h)
-    · rfl
-    · exact h.to_refl
+  · rcases h with (rfl | h); · rfl; · exact h.to_refl
 #align relation.refl_trans_gen_iff_eq_or_trans_gen Relation.reflTransGen_iff_eq_or_transGen
 -/
 
@@ -756,11 +747,8 @@ theorem reflTransGen_closed {p : α → α → Prop} :
 -/
 
 #print Relation.ReflTransGen.swap /-
-theorem ReflTransGen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b :=
-  by
-  induction' h with b c hab hbc ih
-  · rfl
-  exact ih.head hbc
+theorem ReflTransGen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
+  induction' h with b c hab hbc ih; · rfl; exact ih.head hbc
 #align relation.refl_trans_gen.swap Relation.ReflTransGen.swap
 -/
 
@@ -800,8 +788,7 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d �
     rcases ih with ⟨b, hdb, hcb⟩
     have : ∃ a, refl_trans_gen r e a ∧ refl_gen r b a :=
       by
-      clear hcb
-      induction hdb
+      clear hcb; induction hdb
       case refl => exact ⟨e, refl, refl_gen.single hde⟩
       case tail f b hdf hfb ih =>
         rcases ih with ⟨a, hea, hfa⟩
@@ -809,8 +796,7 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d �
         · exact ⟨b, hea.tail hfb, refl_gen.refl⟩
         · rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
           exact ⟨c, hea.trans hac, hbc⟩
-    rcases this with ⟨a, hea, hba⟩
-    cases' hba with _ hba
+    rcases this with ⟨a, hea, hba⟩; cases' hba with _ hba
     · exact ⟨b, hea, hcb⟩
     · exact ⟨a, hea, hcb.tail hba⟩
 #align relation.church_rosser Relation.church_rosser

@@ -97,9 +97,7 @@ theorem evariance_lt_top_iff_memℒp [FiniteMeasure μ] (hX : AEStronglyMeasurab
 #align probability_theory.evariance_lt_top_iff_mem_ℒp ProbabilityTheory.evariance_lt_top_iff_memℒp
 
 theorem MeasureTheory.Memℒp.ofReal_variance_eq [FiniteMeasure μ] (hX : Memℒp X 2 μ) :
-    ENNReal.ofReal (variance X μ) = evariance X μ :=
-  by
-  rw [variance, ENNReal.ofReal_toReal]
+    ENNReal.ofReal (variance X μ) = evariance X μ := by rw [variance, ENNReal.ofReal_toReal];
   exact hX.evariance_lt_top.ne
 #align measure_theory.mem_ℒp.of_real_variance_eq MeasureTheory.Memℒp.ofReal_variance_eq
 
@@ -205,8 +203,7 @@ theorem variance_smul' {A : Type _} [CommSemiring A] [Algebra A ℝ] (c : A) (X 
     (μ : Measure Ω) : variance (c • X) μ = c ^ 2 • variance X μ :=
   by
   convert variance_smul (algebraMap A ℝ c) X μ
-  · ext1 x
-    simp only [algebraMap_smul]
+  · ext1 x; simp only [algebraMap_smul]
   · simp only [Algebra.smul_def, map_pow]
 #align probability_theory.variance_smul' ProbabilityTheory.variance_smul'
 
@@ -332,9 +329,7 @@ theorem IndepFunCat.variance_add [ProbabilityMeasure (ℙ : Measure Ω)] {X Y : 
       by
       congr
       exact h.integral_mul_of_integrable (hX.integrable one_le_two) (hY.integrable one_le_two)
-    _ = Var[X] + Var[Y] := by
-      simp only [variance_def', hX, hY, Pi.pow_apply]
-      ring
+    _ = Var[X] + Var[Y] := by simp only [variance_def', hX, hY, Pi.pow_apply]; ring
     
 #align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFunCat.variance_add
 

@@ -254,12 +254,9 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     Subtype.eq <| Eq.trans s.Prop.1.genericPoint_spec <| closure_eq_iff_isClosed.mpr s.2.2
   right_inv x :=
     isIrreducible_singleton.closure.genericPoint_spec.Eq
-      (by
-        convert isGenericPoint_closure using 1
-        rw [closure_closure])
+      (by convert isGenericPoint_closure using 1; rw [closure_closure])
   map_rel_iff' s t := by
-    change _ ⤳ _ ↔ _
-    rw [specializes_iff_closure_subset]
+    change _ ⤳ _ ↔ _; rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
 
@@ -296,9 +293,7 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
   obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure isClosed_closure
   obtain ⟨T, hT, rfl⟩ := hf.to_inducing.is_closed_iff.mp hS'
   rw [Set.image_preimage_eq_inter_range] at hx hS''
-  have hxT : x ∈ T := by
-    rw [← hT.closure_eq]
-    exact closure_mono (Set.inter_subset_left _ _) hx.mem
+  have hxT : x ∈ T := by rw [← hT.closure_eq]; exact closure_mono (Set.inter_subset_left _ _) hx.mem
   have hxU : x ∈ Set.range f :=
     by
     rw [hx.mem_open_set_iff hf.open_range]
@@ -329,9 +324,7 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
   rw [quasiSober_iff]
   intro t h h'
   obtain ⟨x, hx⟩ := h.1
-  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀ S := by
-    rw [hS'']
-    trivial
+  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀ S := by rw [hS'']; trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩
   have H : IsPreirreducible (coe ⁻¹' t : Set U) :=
     h.2.Preimage (hS ⟨U, hU⟩).openEmbedding_subtype_val
@@ -340,8 +333,7 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
   have := continuous_subtype_coe.closure_preimage_subset _ H.generic_point_spec.mem
   rw [h'.closure_eq] at this
   apply le_antisymm
-  · apply h'.closure_subset_iff.mpr
-    simpa using this
+  · apply h'.closure_subset_iff.mpr; simpa using this
   rw [← Set.image_singleton, ← closure_closure]
   have := closure_mono (image_closure_subset_closure_image (@continuous_subtype_val α _ U))
   refine' Set.Subset.trans _ this

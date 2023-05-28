@@ -110,16 +110,8 @@ and `F` preserves the correct limits. -/
 def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
   Adjunction.mkOfHomEquiv
     { homEquiv := composeEquiv J adj
-      homEquiv_naturality_left_symm := fun X' X Y f g =>
-        by
-        ext1
-        dsimp
-        simp
-      homEquiv_naturality_right := fun X Y Y' f g =>
-        by
-        ext1
-        dsimp
-        simp }
+      homEquiv_naturality_left_symm := fun X' X Y f g => by ext1; dsimp; simp
+      homEquiv_naturality_right := fun X Y Y' f g => by ext1; dsimp; simp }
 #align category_theory.Sheaf.adjunction CategoryTheory.Sheaf.adjunction
 
 instance [IsRightAdjoint F] : IsRightAdjoint (sheafCompose J F) :=

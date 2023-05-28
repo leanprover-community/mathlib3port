@@ -261,9 +261,7 @@ theorem HasIntegral.mono {l₁ l₂ : IntegrationParams} (h : HasIntegral I l₁
 #align box_integral.has_integral.mono BoxIntegral.HasIntegral.mono
 
 protected theorem Integrable.hasIntegral (h : Integrable I l f vol) :
-    HasIntegral I l f vol (integral I l f vol) :=
-  by
-  rw [integral, dif_pos h]
+    HasIntegral I l f vol (integral I l f vol) := by rw [integral, dif_pos h];
   exact Classical.choose_spec h
 #align box_integral.integrable.has_integral BoxIntegral.Integrable.hasIntegral
 
@@ -382,9 +380,7 @@ theorem Integrable.smul (hf : Integrable I l f vol) (c : ℝ) : Integrable I l (
 #align box_integral.integrable.smul BoxIntegral.Integrable.smul
 
 theorem Integrable.ofSmul {c : ℝ} (hf : Integrable I l (c • f) vol) (hc : c ≠ 0) :
-    Integrable I l f vol := by
-  convert hf.smul c⁻¹
-  ext x
+    Integrable I l f vol := by convert hf.smul c⁻¹; ext x;
   simp only [Pi.smul_apply, inv_smul_smul₀ hc]
 #align box_integral.integrable.of_smul BoxIntegral.Integrable.ofSmul
 
@@ -633,14 +629,10 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integra
     have hr : l.r_cond r := (h.convergence_r_cond _ C).min (HJi.convergence_r_cond _ C)
     have hJd : J.distortion ≤ C := le_trans (Finset.le_sup hJ) (le_max_left _ _)
     rcases l.exists_mem_base_set_is_partition J hJd r with ⟨πJ, hC, hp⟩
-    have hC₁ : l.mem_base_set J C (HJi.convergence_r δ' C) πJ :=
-      by
-      refine' hC.mono J le_rfl le_rfl fun x hx => _
-      exact min_le_right _ _
-    have hC₂ : l.mem_base_set J C (h.convergence_r δ' C) πJ :=
-      by
-      refine' hC.mono J le_rfl le_rfl fun x hx => _
-      exact min_le_left _ _
+    have hC₁ : l.mem_base_set J C (HJi.convergence_r δ' C) πJ := by
+      refine' hC.mono J le_rfl le_rfl fun x hx => _; exact min_le_right _ _
+    have hC₂ : l.mem_base_set J C (h.convergence_r δ' C) πJ := by
+      refine' hC.mono J le_rfl le_rfl fun x hx => _; exact min_le_left _ _
     exact ⟨πJ, hp, HJi.dist_integral_sum_integral_le_of_mem_base_set δ'0 hC₁ hp, hC₂⟩
   /- Now we combine these tagged partitions into a tagged prepartition of `I` that covers the
     same part of `I` as `π₀` and apply `box_integral.dist_integral_sum_le_of_mem_base_set` to
@@ -658,9 +650,7 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integra
           dist (∑ J in π₀.boxes, integral_sum f vol (πi J)) (∑ J in π₀.boxes, integral J l f vol) :=
       dist_triangle _ _ _
     _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' := (add_le_add this (dist_sum_sum_le_of_le _ hπiδ'))
-    _ = ε + δ := by
-      field_simp [H0.ne']
-      ring
+    _ = ε + δ := by field_simp [H0.ne'] ; ring
     
 #align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq
 
@@ -816,8 +806,7 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = false) (B : ι �
   simp only [Subtype.exists'] at H₁ H₂
   choose! δ₁ Hδ₁ using H₁
   choose! δ₂ Hδ₂ using H₂
-  have ε0' := half_pos ε0
-  have H0 : 0 < (2 ^ Fintype.card ι : ℝ) := pow_pos zero_lt_two _
+  have ε0' := half_pos ε0; have H0 : 0 < (2 ^ Fintype.card ι : ℝ) := pow_pos zero_lt_two _
   rcases hs.exists_pos_forall_sum_le (div_pos ε0' H0) with ⟨εs, hεs0, hεs⟩
   simp only [le_div_iff' H0, mul_sum] at hεs
   rcases exists_pos_mul_lt ε0' (B I) with ⟨ε', ε'0, hεI⟩
@@ -830,22 +819,18 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = false) (B : ι �
     sum_filter_add_sum_filter_not π.boxes fun J => π.tag J ∈ s, ←
     sum_filter_add_sum_filter_not π.boxes fun J => π.tag J ∈ s, ← add_halves ε]
   refine' dist_add_add_le_of_le _ _
-  · rcases s.eq_empty_or_nonempty with (rfl | hsne)
-    · simp [ε0'.le]
+  · rcases s.eq_empty_or_nonempty with (rfl | hsne); · simp [ε0'.le]
     /- For the boxes such that `π.tag J ∈ s`, we use the fact that at most `2 ^ #ι` boxes have the
         same tag. -/
     specialize hlH hsne
     have :
       ∀ J ∈ π.boxes.filter fun J => π.tag J ∈ s, dist (vol J (f <| π.tag J)) (g J) ≤ εs (π.tag J) :=
       by
-      intro J hJ
-      rw [Finset.mem_filter] at hJ
-      cases' hJ with hJ hJs
+      intro J hJ; rw [Finset.mem_filter] at hJ; cases' hJ with hJ hJs
       refine'
         Hδ₁ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ (hεs0 _) _ (π.le_of_mem' _ hJ) _ (hπδ.2 hlH J hJ) fun hD =>
           (Finset.le_sup hJ).trans (hπδ.3 hD)
-      convert hπδ.1 J hJ
-      exact (dif_pos hJs).symm
+      convert hπδ.1 J hJ; exact (dif_pos hJs).symm
     refine' (dist_sum_sum_le_of_le _ this).trans _
     rw [sum_comp]
     refine' (sum_le_sum _).trans (hεs _ _)
@@ -861,14 +846,11 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = false) (B : ι �
   have H₂ :
     ∀ J ∈ π.boxes.filter fun J => π.tag J ∉ s, dist (vol J (f <| π.tag J)) (g J) ≤ ε' * B J :=
     by
-    intro J hJ
-    rw [Finset.mem_filter] at hJ
-    cases' hJ with hJ hJs
+    intro J hJ; rw [Finset.mem_filter] at hJ; cases' hJ with hJ hJs
     refine'
       Hδ₂ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ ε'0 _ (π.le_of_mem' _ hJ) _ (fun hH => hπδ.2 hH J hJ)
         fun hD => (Finset.le_sup hJ).trans (hπδ.3 hD)
-    convert hπδ.1 J hJ
-    exact (dif_neg hJs).symm
+    convert hπδ.1 J hJ; exact (dif_neg hJs).symm
   refine'
     (dist_sum_sum_le_of_le _ H₂).trans
       ((sum_le_sum_of_subset_of_nonneg (filter_subset _ _) _).trans _)

@@ -87,13 +87,7 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
     have hz' : z ≠ c := ne_of_mem_sphere hz hr₀.ne'
     rw [dslope_of_ne _ hz', slope_def_module, norm_smul, norm_inv, mem_sphere_iff_norm.1 hz, ←
       div_eq_inv_mul, div_le_div_right hr₀, ← dist_eq_norm]
-    exact
-      le_of_lt
-        (h_maps
-          (mem_ball.2
-            (by
-              rw [mem_sphere.1 hz]
-              exact hr.2)))
+    exact le_of_lt (h_maps (mem_ball.2 (by rw [mem_sphere.1 hz]; exact hr.2)))
   · rw [closure_ball c hr₀.ne', mem_closed_ball]
     exact hr.1.le
 #align complex.schwarz_aux Complex.schwarz_aux
@@ -106,8 +100,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   have hR₁ : 0 < R₁ := nonempty_ball.1 ⟨z, hz⟩
   have hR₂ : 0 < R₂ := nonempty_ball.1 ⟨f z, h_maps hz⟩
   cases' eq_or_ne (dslope f c z) 0 with hc hc
-  · rw [hc, norm_zero]
-    exact div_nonneg hR₂.le hR₁.le
+  · rw [hc, norm_zero]; exact div_nonneg hR₂.le hR₁.le
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ‖g‖₊ = 1 := NNReal.eq hg
   have hg₀ : ‖g‖₊ ≠ 0 := by simpa only [hg'] using one_ne_zero
@@ -132,8 +125,7 @@ theorem affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div [CompleteSpace E] [St
   by
   set g := dslope f c
   rintro z hz
-  by_cases z = c
-  · simp [h]
+  by_cases z = c; · simp [h]
   have h_R₁ : 0 < R₁ := nonempty_ball.mp ⟨_, h_z₀⟩
   have g_le_div : ∀ z ∈ ball c R₁, ‖g z‖ ≤ R₂ / R₁ := fun z hz =>
     norm_dslope_le_div_of_maps_to_ball hd h_maps hz

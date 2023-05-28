@@ -229,10 +229,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
     have hinner₀ := hinner 0 (K.pointed_of_nonempty_of_is_closed Ne hc)
     -- the rest of the proof is a straightforward calculation
     rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀
-    have hbz : b - z ≠ 0 := by
-      rw [sub_ne_zero]
-      contrapose! hzK
-      rwa [← hzK]
+    have hbz : b - z ≠ 0 := by rw [sub_ne_zero]; contrapose! hzK; rwa [← hzK]
     rw [← neg_zero, lt_neg, ← neg_one_mul, ← real_inner_smul_left, smul_sub, neg_smul, one_smul,
       neg_smul, neg_sub_neg, one_smul]
     calc

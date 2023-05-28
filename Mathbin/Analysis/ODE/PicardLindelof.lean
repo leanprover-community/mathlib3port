@@ -88,9 +88,7 @@ instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
 
 instance : Inhabited (PicardLindelof E) :=
   ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0,
-      { ht₀ := by
-          rw [Subtype.coe_mk, Icc_self]
-          exact mem_singleton _
+      { ht₀ := by rw [Subtype.coe_mk, Icc_self]; exact mem_singleton _
         hR := by rfl
         lipschitz := fun t ht => (LipschitzWith.const 0).LipschitzOnWith _
         cont := fun _ _ => by simpa only [Pi.zero_apply] using continuousOn_const
@@ -192,10 +190,7 @@ protected theorem continuous : Continuous f :=
 
 /-- Each curve in `picard_lindelof.fun_space` is continuous. -/
 def toContinuousMap : v.FunSpace ↪ C(Icc v.tMin v.tMax, E) :=
-  ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by
-    cases f
-    cases g
-    simpa using h⟩
+  ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by cases f; cases g; simpa using h⟩
 #align picard_lindelof.fun_space.to_continuous_map PicardLindelof.FunSpace.toContinuousMap
 
 instance : MetricSpace v.FunSpace :=
@@ -209,11 +204,8 @@ theorem range_toContinuousMap :
     range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f } :=
   by
   ext f; constructor
-  · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
-    exact ⟨hf₀, hf_lip⟩
-  · rcases f with ⟨f, hf⟩
-    rintro ⟨hf₀, hf_lip⟩
-    exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
+  · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩; exact ⟨hf₀, hf_lip⟩
+  · rcases f with ⟨f, hf⟩; rintro ⟨hf₀, hf_lip⟩; exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
 #align picard_lindelof.fun_space.range_to_continuous_map PicardLindelof.FunSpace.range_toContinuousMap
 
 theorem map_t₀ : f v.t₀ = v.x₀ :=
@@ -458,9 +450,7 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
     · exact div_pos (half_pos hr) (lt_of_le_of_ne hC' (Ne.symm h))
   refine' ⟨ε, hε0, L, r / 2, C, _⟩
   exact
-    { ht₀ := by
-        rw [← Real.closedBall_eq_Icc]
-        exact mem_closed_ball_self hε0.le
+    { ht₀ := by rw [← Real.closedBall_eq_Icc]; exact mem_closed_ball_self hε0.le
       hR := (half_pos hr).le
       lipschitz := fun t ht =>
         hlip.mono

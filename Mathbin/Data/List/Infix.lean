@@ -186,9 +186,7 @@ theorem isInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ 
 -/
 
 #print List.isInfix.sublist /-
-protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ =>
-  by
-  rw [← h]
+protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by rw [← h];
   exact (sublist_append_right _ _).trans (sublist_append_left _ _)
 #align list.is_infix.sublist List.isInfix.sublist
 -/
@@ -872,34 +870,26 @@ theorem tails_eq_inits : ∀ l : List α, l.tails = (reverse <| map reverse <| i
 -/
 
 #print List.inits_reverse /-
-theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) :=
-  by
-  rw [tails_eq_inits l]
-  simp [reverse_involutive.comp_self]
+theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) := by
+  rw [tails_eq_inits l]; simp [reverse_involutive.comp_self]
 #align list.inits_reverse List.inits_reverse
 -/
 
 #print List.tails_reverse /-
-theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) :=
-  by
-  rw [inits_eq_tails l]
-  simp [reverse_involutive.comp_self]
+theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) := by
+  rw [inits_eq_tails l]; simp [reverse_involutive.comp_self]
 #align list.tails_reverse List.tails_reverse
 -/
 
 #print List.map_reverse_inits /-
-theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse <| tails <| reverse l) :=
-  by
-  rw [inits_eq_tails l]
-  simp [reverse_involutive.comp_self]
+theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse <| tails <| reverse l) := by
+  rw [inits_eq_tails l]; simp [reverse_involutive.comp_self]
 #align list.map_reverse_inits List.map_reverse_inits
 -/
 
 #print List.map_reverse_tails /-
-theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| inits <| reverse l) :=
-  by
-  rw [tails_eq_inits l]
-  simp [reverse_involutive.comp_self]
+theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| inits <| reverse l) := by
+  rw [tails_eq_inits l]; simp [reverse_involutive.comp_self]
 #align list.map_reverse_tails List.map_reverse_tails
 -/
 

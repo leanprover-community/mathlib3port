@@ -91,10 +91,8 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   simp only [TopologicalSpace.nhds_generateFrom, le_iInf_iff, ultrafilterBasis, le_principal_iff,
     mem_set_of_eq]
   constructor
-  · intro h a ha
-    exact h _ ⟨ha, a, rfl⟩
-  · rintro h a ⟨xi, a, rfl⟩
-    exact h _ xi
+  · intro h a ha; exact h _ ⟨ha, a, rfl⟩
+  · rintro h a ⟨xi, a, rfl⟩; exact h _ xi
 #align ultrafilter_converges_iff ultrafilter_converges_iff
 
 #print ultrafilter_compact /-

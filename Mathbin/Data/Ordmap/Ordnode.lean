@@ -226,10 +226,9 @@ def balanceL (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
     · cases' id l with ls ll lx lr
       · exact node (rs + 1) nil x r
       · refine' if ls > delta * rs then _ else node (ls + rs + 1) l x r
-        cases' id ll with lls
-        · exact nil
+        cases' id ll with lls; · exact nil
         --should not happen
-        cases' id lr with lrs lrl lrx lrr
+        cases' id lr with lrs lrl lrx lrr;
         · exact nil
         --should not happen
         exact
@@ -265,10 +264,9 @@ def balanceR (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
     · cases' id r with rs rl rx rr
       · exact node (ls + 1) l x nil
       · refine' if rs > delta * ls then _ else node (ls + rs + 1) l x r
-        cases' id rr with rrs
-        · exact nil
+        cases' id rr with rrs; · exact nil
         --should not happen
-        cases' id rl with rls rll rlx rlr
+        cases' id rl with rls rll rlx rlr;
         · exact nil
         --should not happen
         exact
@@ -316,10 +314,9 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
                   (node (size lrr + 1) lrr x nil)
       · refine'
           if delta * ls < rs then _ else if delta * rs < ls then _ else node (ls + rs + 1) l x r
-        · cases' id rl with rls rll rlx rlr
-          · exact nil
+        · cases' id rl with rls rll rlx rlr; · exact nil
           --should not happen
-          cases' id rr with rrs
+          cases' id rr with rrs;
           · exact nil
           --should not happen
           exact
@@ -327,10 +324,9 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             else
               node (ls + rs + 1) (node (ls + size rll + 1) l x rll) rlx
                 (node (size rlr + rrs + 1) rlr rx rr)
-        · cases' id ll with lls
-          · exact nil
+        · cases' id ll with lls; · exact nil
           --should not happen
-          cases' id lr with lrs lrl lrx lrr
+          cases' id lr with lrs lrl lrx lrr;
           · exact nil
           --should not happen
           exact

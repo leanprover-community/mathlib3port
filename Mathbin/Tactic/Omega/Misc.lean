@@ -43,10 +43,7 @@ theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a 
 #align omega.update_eq Omega.update_eq
 
 theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m → update m a v k = v k :=
-  by
-  intro h1
-  unfold update
-  rw [if_neg h1]
+  by intro h1; unfold update; rw [if_neg h1]
 #align omega.update_eq_of_ne Omega.update_eq_of_ne
 
 /-- Assign a new value to the zeroth variable, and push all

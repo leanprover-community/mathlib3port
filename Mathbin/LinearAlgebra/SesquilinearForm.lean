@@ -77,10 +77,8 @@ theorem isOrtho_def {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} {x y} : B.
 /- warning: linear_map.is_ortho_zero_left -> LinearMap.isOrtho_zero_left is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_ortho_zero_left LinearMap.isOrtho_zero_leftₓ'. -/
-theorem isOrtho_zero_left (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B (0 : M₁) x :=
-  by
-  dsimp only [is_ortho]
-  rw [map_zero B, zero_apply]
+theorem isOrtho_zero_left (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) : IsOrtho B (0 : M₁) x := by
+  dsimp only [is_ortho]; rw [map_zero B, zero_apply]
 #align linear_map.is_ortho_zero_left LinearMap.isOrtho_zero_left
 
 /- warning: linear_map.is_ortho_zero_right -> LinearMap.isOrtho_zero_right is a dubious translation:
@@ -147,8 +145,7 @@ theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} 
   · rw [map_smulₛₗ₂, H, smul_zero]
   · rw [map_smulₛₗ₂, smul_eq_zero] at H
     cases H
-    · rw [map_eq_zero I₁] at H
-      trivial
+    · rw [map_eq_zero I₁] at H; trivial
     · exact H
 #align linear_map.ortho_smul_left LinearMap.ortho_smul_left
 
@@ -229,9 +226,7 @@ theorem ortho_comm {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_refl.dom_restrict_refl LinearMap.IsRefl.domRestrictₓ'. -/
 theorem domRestrict (H : B.IsRefl) (p : Submodule R₁ M₁) : (B.domRestrict₁₂ p p).IsRefl :=
-  fun _ _ => by
-  simp_rw [dom_restrict₁₂_apply]
-  exact H _ _
+  fun _ _ => by simp_rw [dom_restrict₁₂_apply]; exact H _ _
 #align linear_map.is_refl.dom_restrict_refl LinearMap.IsRefl.domRestrict
 
 /- warning: linear_map.is_refl.flip_is_refl_iff -> LinearMap.IsRefl.flip_isRefl_iff is a dubious translation:
@@ -294,10 +289,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M (CommSemiring.toSemiring.{u2} R _inst_1) _inst_2] {I : RingHom.{u2, u2} R R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))} {B : LinearMap.{u2, u2, u1, max u2 u1} R R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) I M (LinearMap.{u2, u2, u1, u2} R R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) M R _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) _inst_3 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) _inst_2 (LinearMap.addCommMonoid.{u2, u2, u1, u2} R R M R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) _inst_3 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) _inst_3 (LinearMap.instModuleLinearMapAddCommMonoid.{u2, u2, u2, u1, u2} R R R M R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) _inst_2 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) _inst_3 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (CommSemiring.toSemiring.{u2} R _inst_1) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (smulCommClass_self.{u2, u2} R R (CommSemiring.toCommMonoid.{u2} R _inst_1) (MulActionWithZero.toMulAction.{u2, u2} R R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1)) (MonoidWithZero.toMulActionWithZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))))))}, (LinearMap.IsSymm.{u2, u1} R M _inst_1 _inst_2 _inst_3 I B) -> (LinearMap.IsRefl.{u2, u2, u1} R R M _inst_1 _inst_1 _inst_2 _inst_3 I (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) B)
 Case conversion may be inaccurate. Consider using '#align linear_map.is_symm.is_refl LinearMap.IsSymm.isReflₓ'. -/
-theorem isRefl (H : B.IsSymm) : B.IsRefl := fun x y H1 =>
-  by
-  rw [← H.eq]
-  simp [H1]
+theorem isRefl (H : B.IsSymm) : B.IsRefl := fun x y H1 => by rw [← H.eq]; simp [H1]
 #align linear_map.is_symm.is_refl LinearMap.IsSymm.isRefl
 
 /- warning: linear_map.is_symm.ortho_comm -> LinearMap.IsSymm.ortho_comm is a dubious translation:
@@ -314,9 +306,7 @@ theorem ortho_comm (H : B.IsSymm) {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_symm.dom_restrict_symm LinearMap.IsSymm.domRestrictₓ'. -/
 theorem domRestrict (H : B.IsSymm) (p : Submodule R M) : (B.domRestrict₁₂ p p).IsSymm := fun _ _ =>
-  by
-  simp_rw [dom_restrict₁₂_apply]
-  exact H _ _
+  by simp_rw [dom_restrict₁₂_apply]; exact H _ _
 #align linear_map.is_symm.dom_restrict_symm LinearMap.IsSymm.domRestrict
 
 end IsSymm
@@ -490,14 +480,10 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
   · rw [Finset.sum_singleton] at this⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
-    change B x (μ x • x) = 0 at this
-    rw [map_smulₛₗ, smul_eq_mul] at this
+    change B x (μ x • x) = 0 at this; rw [map_smulₛₗ, smul_eq_mul] at this
     exact
-      Or.elim (zero_eq_mul.mp this.symm)
-        (fun y => by
-          simp at y
-          exact y)
-        fun hfalse => False.elim <| hx hfalse
+      Or.elim (zero_eq_mul.mp this.symm) (fun y => by simp at y; exact y) fun hfalse =>
+        False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
 #align linear_map.span_singleton_inf_orthogonal_eq_bot LinearMap.span_singleton_inf_orthogonal_eq_bot
 
@@ -581,11 +567,8 @@ Case conversion may be inaccurate. Consider using '#align linear_map.is_adjoint_
 theorem isAdjointPair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g :=
   by
   constructor <;> intro h
-  · ext (x y)
-    rw [comp_apply, compl₂_apply]
-    exact h x y
-  · intro _ _
-    rw [← compl₂_apply, ← comp_apply, h]
+  · ext (x y); rw [comp_apply, compl₂_apply]; exact h x y
+  · intro _ _; rw [← compl₂_apply, ← comp_apply, h]
 #align linear_map.is_adjoint_pair_iff_comp_eq_compl₂ LinearMap.isAdjointPair_iff_comp_eq_compl₂
 
 /- warning: linear_map.is_adjoint_pair_zero -> LinearMap.isAdjointPair_zero is a dubious translation:
@@ -761,15 +744,13 @@ theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
   have hₗ :
     (F.compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M)).comp (e.symm.conj f) =
       (F.comp f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
-    by
-    ext
+    by ext;
     simp only [LinearEquiv.symm_conj_apply, coe_comp, LinearEquiv.coe_coe, compl₁₂_apply,
       LinearEquiv.apply_symm_apply]
   have hᵣ :
     (B.compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M)).compl₂ (e.symm.conj f) =
       (B.compl₂ f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
-    by
-    ext
+    by ext;
     simp only [LinearEquiv.symm_conj_apply, compl₂_apply, coe_comp, LinearEquiv.coe_coe,
       compl₁₂_apply, LinearEquiv.apply_symm_apply]
   have he : Function.Surjective (⇑(↑e : M₁ →ₗ[R] M) : M₁ → M) := e.surjective
@@ -798,9 +779,7 @@ theorem mem_selfAdjointSubmodule (f : Module.End R M) :
 Case conversion may be inaccurate. Consider using '#align linear_map.mem_skew_adjoint_submodule LinearMap.mem_skewAdjointSubmoduleₓ'. -/
 @[simp]
 theorem mem_skewAdjointSubmodule (f : Module.End R M) :
-    f ∈ B.skewAdjointSubmodule ↔ B.IsSkewAdjoint f :=
-  by
-  rw [is_skew_adjoint_iff_neg_self_adjoint]
+    f ∈ B.skewAdjointSubmodule ↔ B.IsSkewAdjoint f := by rw [is_skew_adjoint_iff_neg_self_adjoint];
   exact Iff.rfl
 #align linear_map.mem_skew_adjoint_submodule LinearMap.mem_skewAdjointSubmodule
 
@@ -935,10 +914,7 @@ theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →�
   · let h' := h x
     simp only [hB, zero_apply, eq_self_iff_true, forall_const] at h'
     exact h'
-  have h' : B x = 0 := by
-    ext
-    rw [zero_apply]
-    exact hB _
+  have h' : B x = 0 := by ext; rw [zero_apply]; exact hB _
   exact h x h'
 #align linear_map.separating_left_iff_linear_nontrivial LinearMap.separatingLeft_iff_linear_nontrivial
 
@@ -1074,12 +1050,8 @@ theorem IsOrthoᵢ.separatingLeft_of_not_isOrtho_basis_self [NoZeroDivisors R] {
     smul_eq_mul] at hB
   rw [Finset.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (h i) hB
-  · intro j hj hij
-    convert MulZeroClass.mul_zero _ using 2
-    exact hO hij
-  · intro hi
-    convert MulZeroClass.zero_mul _ using 2
-    exact finsupp.not_mem_support_iff.mp hi
+  · intro j hj hij; convert MulZeroClass.mul_zero _ using 2; exact hO hij
+  · intro hi; convert MulZeroClass.zero_mul _ using 2; exact finsupp.not_mem_support_iff.mp hi
 #align linear_map.is_Ortho.separating_left_of_not_is_ortho_basis_self LinearMap.IsOrthoᵢ.separatingLeft_of_not_isOrtho_basis_self
 
 /- warning: linear_map.is_Ortho.separating_right_iff_not_is_ortho_basis_self -> LinearMap.IsOrthoᵢ.separatingRight_iff_not_isOrtho_basis_self is a dubious translation:

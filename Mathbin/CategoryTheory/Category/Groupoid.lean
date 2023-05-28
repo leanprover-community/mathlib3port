@@ -157,10 +157,7 @@ def piLimitFan ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.Fan F :=
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
 def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.IsLimit (piLimitFan F) :=
   Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
-    (by
-      intros
-      dsimp only [pi_limit_fan]
-      simp [hom_to_functor])
+    (by intros ; dsimp only [pi_limit_fan]; simp [hom_to_functor])
     (by
       intro s m w
       apply functor.pi_ext
@@ -187,10 +184,7 @@ noncomputable def piIsoPi (J : Type u) (f : J → Grpd.{u, u}) : @of (∀ j, f j
 #print CategoryTheory.Grpd.piIsoPi_hom_π /-
 @[simp]
 theorem piIsoPi_hom_π (J : Type u) (f : J → Grpd.{u, u}) (j : J) :
-    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.Pi.eval _ j :=
-  by
-  simp [pi_iso_pi]
-  rfl
+    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.Pi.eval _ j := by simp [pi_iso_pi]; rfl
 #align category_theory.Groupoid.pi_iso_pi_hom_π CategoryTheory.Grpd.piIsoPi_hom_π
 -/
 

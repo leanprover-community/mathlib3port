@@ -82,12 +82,8 @@ def Iso.mk {α β : FinBddDistLat.{u}} (e : α ≃o β) : α ≅ β
     where
   hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply _
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply _
+  hom_inv_id' := by ext; exact e.symm_apply_apply _
+  inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align FinBddDistLat.iso.mk FinBddDistLat.Iso.mk
 
 example {X Y : FinBddDistLat} : (X ⟶ Y) = BoundedLatticeHom X Y :=

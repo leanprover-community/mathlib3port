@@ -57,14 +57,8 @@ but is expected to have type
   forall {n : Int}, Iff (Odd.{0} Int Int.instSemiringInt n) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.odd_iff Int.odd_iffₓ'. -/
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
-  ⟨fun ⟨m, hm⟩ => by
-    rw [hm, add_mod]
-    norm_num, fun h =>
-    ⟨n / 2,
-      (emod_add_ediv n 2).symm.trans
-        (by
-          rw [h]
-          abel)⟩⟩
+  ⟨fun ⟨m, hm⟩ => by rw [hm, add_mod]; norm_num, fun h =>
+    ⟨n / 2, (emod_add_ediv n 2).symm.trans (by rw [h]; abel)⟩⟩
 #align int.odd_iff Int.odd_iff
 
 #print Int.not_even_iff /-
@@ -204,10 +198,7 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Int), Not (Dvd.dvd.{0} Int Int.instDvdInt (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) n) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_oneₓ'. -/
-theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 :=
-  by
-  simp [add_mod]
-  rfl
+theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 := by simp [add_mod]; rfl
 #align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_one
 
 #print Int.even_sub /-
@@ -277,10 +268,8 @@ but is expected to have type
   forall {m : Int} {n : Nat}, Iff (Even.{0} Int Int.instAddInt (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat m n)) (And (Even.{0} Int Int.instAddInt m) (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
 Case conversion may be inaccurate. Consider using '#align int.even_pow Int.even_powₓ'. -/
 @[parity_simps]
-theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 :=
-  by
-  induction' n with n ih <;> simp [*, even_mul, pow_succ]
-  tauto
+theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
+  induction' n with n ih <;> simp [*, even_mul, pow_succ]; tauto
 #align int.even_pow Int.even_pow
 
 /- warning: int.even_pow' -> Int.even_pow' is a dubious translation:
@@ -448,12 +437,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) n)
 Case conversion may be inaccurate. Consider using '#align int.two_mul_div_two_add_one_of_odd Int.two_mul_ediv_two_add_one_of_oddₓ'. -/
-theorem two_mul_ediv_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n :=
-  by
-  rintro ⟨c, rfl⟩
-  rw [mul_comm]
-  convert Int.div_add_mod' _ _
-  simpa [Int.add_emod]
+theorem two_mul_ediv_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by rintro ⟨c, rfl⟩;
+  rw [mul_comm]; convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.two_mul_div_two_add_one_of_odd Int.two_mul_ediv_two_add_one_of_odd
 
 /- warning: int.div_two_mul_two_add_one_of_odd -> Int.ediv_two_mul_two_add_one_of_odd is a dubious translation:
@@ -462,11 +447,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) n)
 Case conversion may be inaccurate. Consider using '#align int.div_two_mul_two_add_one_of_odd Int.ediv_two_mul_two_add_one_of_oddₓ'. -/
-theorem ediv_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n :=
-  by
-  rintro ⟨c, rfl⟩
-  convert Int.div_add_mod' _ _
-  simpa [Int.add_emod]
+theorem ediv_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by rintro ⟨c, rfl⟩;
+  convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.div_two_mul_two_add_one_of_odd Int.ediv_two_mul_two_add_one_of_odd
 
 /- warning: int.add_one_div_two_mul_two_of_odd -> Int.add_one_ediv_two_mul_two_of_odd is a dubious translation:
@@ -475,12 +457,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int}, (Odd.{0} Int Int.instSemiringInt n) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)))) n)
 Case conversion may be inaccurate. Consider using '#align int.add_one_div_two_mul_two_of_odd Int.add_one_ediv_two_mul_two_of_oddₓ'. -/
-theorem add_one_ediv_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n :=
-  by
-  rintro ⟨c, rfl⟩
-  rw [add_comm]
-  convert Int.div_add_mod' _ _
-  simpa [Int.add_emod]
+theorem add_one_ediv_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by rintro ⟨c, rfl⟩;
+  rw [add_comm]; convert Int.div_add_mod' _ _; simpa [Int.add_emod]
 #align int.add_one_div_two_mul_two_of_odd Int.add_one_ediv_two_mul_two_of_odd
 
 /- warning: int.two_mul_div_two_of_odd -> Int.two_mul_ediv_two_of_odd is a dubious translation:

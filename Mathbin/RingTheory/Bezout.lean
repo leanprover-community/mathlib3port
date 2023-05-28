@@ -47,15 +47,12 @@ theorem iff_span_pair_isPrincipal :
     IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
   classical
     constructor
-    · intro H x y
-      infer_instance
+    · intro H x y; infer_instance
     · intro H
       constructor
       apply Submodule.fg_induction
       · exact fun _ => ⟨⟨_, rfl⟩⟩
-      · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
-        rw [← Submodule.span_insert]
-        exact H _ _
+      · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩; rw [← Submodule.span_insert]; exact H _ _
 #align is_bezout.iff_span_pair_is_principal IsBezout.iff_span_pair_isPrincipal
 
 section Gcd
@@ -87,11 +84,7 @@ theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y :=
 #align is_bezout.dvd_gcd IsBezout.dvd_gcd
 
 theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
-  Ideal.mem_span_pair.mp
-    (by
-      rw [← span_gcd]
-      apply Ideal.subset_span
-      simp)
+  Ideal.mem_span_pair.mp (by rw [← span_gcd]; apply Ideal.subset_span; simp)
 #align is_bezout.gcd_eq_sum IsBezout.gcd_eq_sum
 
 variable (R)
@@ -120,8 +113,7 @@ theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
   use f (gcd x y)
   trans Ideal.map f (Ideal.span {gcd x y})
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
-  · rw [Ideal.map_span, Set.image_singleton]
-    rfl
+  · rw [Ideal.map_span, Set.image_singleton]; rfl
 #align function.surjective.is_bezout Function.Surjective.isBezout
 
 instance (priority := 100) of_isPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
@@ -133,14 +125,11 @@ theorem tFAE [IsBezout R] [IsDomain R] :
   by
   classical
     tfae_have 1 → 2
-    · intro H
-      exact ⟨fun I => is_principal_of_fg _ (IsNoetherian.noetherian _)⟩
+    · intro H; exact ⟨fun I => is_principal_of_fg _ (IsNoetherian.noetherian _)⟩
     tfae_have 2 → 3
-    · intro
-      infer_instance
+    · intro ; infer_instance
     tfae_have 3 → 4
-    · intro
-      infer_instance
+    · intro ; infer_instance
     tfae_have 4 → 1
     · rintro ⟨h⟩
       rw [isNoetherianRing_iff, isNoetherian_iff_fg_wellFounded]
@@ -150,13 +139,9 @@ theorem tFAE [IsBezout R] [IsDomain R] :
       choose f hf
       exact
         { toFun := f
-          inj' := fun x y e => by
-            ext1
-            rw [hf, hf, e]
-          map_rel_iff' := fun x y => by
-            dsimp
-            rw [← Ideal.span_singleton_lt_span_singleton, ← hf, ← hf]
-            rfl }
+          inj' := fun x y e => by ext1; rw [hf, hf, e]
+          map_rel_iff' := fun x y => by dsimp;
+            rw [← Ideal.span_singleton_lt_span_singleton, ← hf, ← hf]; rfl }
     tfae_finish
 #align is_bezout.tfae IsBezout.tFAE
 

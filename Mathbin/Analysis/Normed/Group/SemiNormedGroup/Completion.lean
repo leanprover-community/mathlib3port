@@ -95,12 +95,10 @@ instance : Preadditive SemiNormedGroup.{u}
     where
   homGroup P Q := inferInstance
   add_comp := by
-    intros
-    ext
+    intros ; ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
   comp_add := by
-    intros
-    ext
+    intros ; ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
 
 instance : Functor.Additive completion where map_add' X Y := (completion.mapHom _ _).map_add
@@ -116,9 +114,7 @@ def completion.lift {V W : SemiNormedGroup} [CompleteSpace W] [SeparatedSpace W]
 #align SemiNormedGroup.Completion.lift SemiNormedGroup.completion.lift
 
 theorem completion.lift_comp_incl {V W : SemiNormedGroup} [CompleteSpace W] [SeparatedSpace W]
-    (f : V ⟶ W) : completion.incl ≫ completion.lift f = f :=
-  by
-  ext
+    (f : V ⟶ W) : completion.incl ≫ completion.lift f = f := by ext;
   apply NormedAddGroupHom.extension_coe
 #align SemiNormedGroup.Completion.lift_comp_incl SemiNormedGroup.completion.lift_comp_incl
 

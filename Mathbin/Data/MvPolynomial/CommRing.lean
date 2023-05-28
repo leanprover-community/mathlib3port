@@ -238,16 +238,9 @@ is determined by the evaluations f(X_1), f(X_2), ... -/
 @[simp]
 theorem eval₂Hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
     eval₂ c (f ∘ X) x = f x :=
-  MvPolynomial.induction_on x
-    (fun n => by
-      rw [hom_C f, eval₂_C]
-      exact eq_intCast c n)
-    (fun p q hp hq => by
-      rw [eval₂_add, hp, hq]
-      exact (f.map_add _ _).symm)
-    fun p n hp => by
-    rw [eval₂_mul, eval₂_X, hp]
-    exact (f.map_mul _ _).symm
+  MvPolynomial.induction_on x (fun n => by rw [hom_C f, eval₂_C]; exact eq_intCast c n)
+    (fun p q hp hq => by rw [eval₂_add, hp, hq]; exact (f.map_add _ _).symm) fun p n hp => by
+    rw [eval₂_mul, eval₂_X, hp]; exact (f.map_mul _ _).symm
 #align mv_polynomial.eval₂_hom_X MvPolynomial.eval₂Hom_X
 
 /- warning: mv_polynomial.hom_equiv -> MvPolynomial.homEquiv is a dubious translation:

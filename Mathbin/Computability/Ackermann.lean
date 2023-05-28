@@ -114,8 +114,7 @@ theorem ack_two (n : ℕ) : ack 2 n = 2 * n + 3 :=
 private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 :=
   by
   induction' n with n IH
-  · simp
-    norm_num
+  · simp; norm_num
   · simp [IH, pow_succ]
     rw [mul_sub, sub_add]
     norm_num
@@ -135,24 +134,16 @@ theorem ack_three (n : ℕ) : ack 3 n = 2 ^ (n + 3) - 3 :=
 #print ack_pos /-
 theorem ack_pos : ∀ m n, 0 < ack m n
   | 0, n => by simp
-  | m + 1, 0 => by
-    rw [ack_succ_zero]
-    apply ack_pos
-  | m + 1, n + 1 => by
-    rw [ack_succ_succ]
-    apply ack_pos
+  | m + 1, 0 => by rw [ack_succ_zero]; apply ack_pos
+  | m + 1, n + 1 => by rw [ack_succ_succ]; apply ack_pos
 #align ack_pos ack_pos
 -/
 
 #print one_lt_ack_succ_left /-
 theorem one_lt_ack_succ_left : ∀ m n, 1 < ack (m + 1) n
   | 0, n => by simp
-  | m + 1, 0 => by
-    rw [ack_succ_zero]
-    apply one_lt_ack_succ_left
-  | m + 1, n + 1 => by
-    rw [ack_succ_succ]
-    apply one_lt_ack_succ_left
+  | m + 1, 0 => by rw [ack_succ_zero]; apply one_lt_ack_succ_left
+  | m + 1, n + 1 => by rw [ack_succ_succ]; apply one_lt_ack_succ_left
 #align one_lt_ack_succ_left one_lt_ack_succ_left
 -/
 
@@ -359,9 +350,7 @@ private theorem sq_le_two_pow_add_one_minus_three (n : ℕ) : n ^ 2 ≤ 2 ^ (n +
 #print ack_add_one_sq_lt_ack_add_three /-
 theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m + 3) n
   | 0, n => by simpa using sq_le_two_pow_add_one_minus_three (n + 2)
-  | m + 1, 0 => by
-    rw [ack_succ_zero, ack_succ_zero]
-    apply ack_add_one_sq_lt_ack_add_three
+  | m + 1, 0 => by rw [ack_succ_zero, ack_succ_zero]; apply ack_add_one_sq_lt_ack_add_three
   | m + 1, n + 1 => by
     rw [ack_succ_succ, ack_succ_succ]
     apply (ack_add_one_sq_lt_ack_add_three _ _).trans (ack_mono_right _ <| ack_mono_left _ _)
@@ -480,17 +469,13 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
 -/
 
 #print not_nat_primrec_ack_self /-
-theorem not_nat_primrec_ack_self : ¬Nat.Primrec fun n => ack n n := fun h =>
-  by
-  cases' exists_lt_ack_of_nat_primrec h with m hm
-  exact (hm m).False
+theorem not_nat_primrec_ack_self : ¬Nat.Primrec fun n => ack n n := fun h => by
+  cases' exists_lt_ack_of_nat_primrec h with m hm; exact (hm m).False
 #align not_nat_primrec_ack_self not_nat_primrec_ack_self
 -/
 
 #print not_primrec_ack_self /-
-theorem not_primrec_ack_self : ¬Primrec fun n => ack n n :=
-  by
-  rw [Primrec.nat_iff]
+theorem not_primrec_ack_self : ¬Primrec fun n => ack n n := by rw [Primrec.nat_iff];
   exact not_nat_primrec_ack_self
 #align not_primrec_ack_self not_primrec_ack_self
 -/

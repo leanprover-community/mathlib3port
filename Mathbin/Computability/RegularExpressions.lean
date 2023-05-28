@@ -537,9 +537,7 @@ theorem matches'_map (f : α → β) :
     ∀ P : RegularExpression α, (P.map f).matches' = Language.map f P.matches'
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
-  | Char a => by
-    rw [eq_comm]
-    exact image_singleton
+  | Char a => by rw [eq_comm]; exact image_singleton
   | R + S => by simp only [matches_map, map, matches_add, map_add]
   | R * S => by simp only [matches_map, map, matches_mul, map_mul]
   | star R => by

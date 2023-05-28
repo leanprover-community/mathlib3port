@@ -285,10 +285,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {l : Filter.{u2} α}, Eq.{max (succ u2) (succ u1)} ((Filter.Germ.{u2, u1} α l β) -> (Filter.Germ.{u2, u1} α l β)) (Filter.Germ.map.{u2, u1, u1} α β β l (id.{succ u1} β)) (id.{max (succ u2) (succ u1)} (Filter.Germ.{u2, u1} α l β))
 Case conversion may be inaccurate. Consider using '#align filter.germ.map_id Filter.Germ.map_idₓ'. -/
 @[simp]
-theorem map_id : map id = (id : Germ l β → Germ l β) :=
-  by
-  ext ⟨f⟩
-  rfl
+theorem map_id : map id = (id : Germ l β → Germ l β) := by ext ⟨f⟩; rfl
 #align filter.germ.map_id Filter.Germ.map_id
 
 /- warning: filter.germ.map_map -> Filter.Germ.map_map is a dubious translation:
@@ -725,9 +722,7 @@ instance [Group G] : Group (Germ l G) :=
   { Germ.divInvMonoid with
     mul := (· * ·)
     one := 1
-    mul_left_inv := by
-      rintro ⟨f⟩
-      exact congr_arg (Quot.mk _) (mul_left_inv f) }
+    mul_left_inv := by rintro ⟨f⟩; exact congr_arg (Quot.mk _) (mul_left_inv f) }
 
 @[to_additive]
 instance [CommGroup G] : CommGroup (Germ l G) :=
@@ -753,27 +748,15 @@ instance [MulZeroClass R] : MulZeroClass (Germ l R)
     where
   zero := 0
   mul := (· * ·)
-  mul_zero f :=
-    inductionOn f fun f => by
-      norm_cast
-      rw [MulZeroClass.mul_zero]
-  zero_mul f :=
-    inductionOn f fun f => by
-      norm_cast
-      rw [MulZeroClass.zero_mul]
+  mul_zero f := inductionOn f fun f => by norm_cast; rw [MulZeroClass.mul_zero]
+  zero_mul f := inductionOn f fun f => by norm_cast; rw [MulZeroClass.zero_mul]
 
 instance [Distrib R] : Distrib (Germ l R)
     where
   mul := (· * ·)
   add := (· + ·)
-  left_distrib f g h :=
-    inductionOn₃ f g h fun f g h => by
-      norm_cast
-      rw [left_distrib]
-  right_distrib f g h :=
-    inductionOn₃ f g h fun f g h => by
-      norm_cast
-      rw [right_distrib]
+  left_distrib f g h := inductionOn₃ f g h fun f g h => by norm_cast; rw [left_distrib]
+  right_distrib f g h := inductionOn₃ f g h fun f g h => by norm_cast; rw [right_distrib]
 
 instance [Semiring R] : Semiring (Germ l R) :=
   { Germ.addCommMonoid, Germ.monoid, Germ.distrib, Germ.mulZeroClass, Germ.addMonoidWithOne with }
@@ -830,66 +813,42 @@ theorem coe_smul' [SMul M β] (c : α → M) (f : α → β) : ↑(c • f) = (c
 @[to_additive]
 instance [Monoid M] [MulAction M β] : MulAction M (Germ l β)
     where
-  one_smul f :=
-    inductionOn f fun f => by
-      norm_cast
-      simp only [one_smul]
-  mul_smul c₁ c₂ f :=
-    inductionOn f fun f => by
-      norm_cast
-      simp only [mul_smul]
+  one_smul f := inductionOn f fun f => by norm_cast; simp only [one_smul]
+  mul_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [mul_smul]
 
 #print Filter.Germ.mulAction' /-
 @[to_additive]
 instance mulAction' [Monoid M] [MulAction M β] : MulAction (Germ l M) (Germ l β)
     where
   one_smul f := inductionOn f fun f => by simp only [← coe_one, ← coe_smul', one_smul]
-  mul_smul c₁ c₂ f :=
-    inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by
-      norm_cast
-      simp only [mul_smul]
+  mul_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [mul_smul]
 #align filter.germ.mul_action' Filter.Germ.mulAction'
 #align filter.germ.add_action' Filter.Germ.addAction'
 -/
 
 instance [Monoid M] [AddMonoid N] [DistribMulAction M N] : DistribMulAction M (Germ l N)
     where
-  smul_add c f g :=
-    inductionOn₂ f g fun f g => by
-      norm_cast
-      simp only [smul_add]
+  smul_add c f g := inductionOn₂ f g fun f g => by norm_cast; simp only [smul_add]
   smul_zero c := by simp only [← coe_zero, ← coe_smul, smul_zero]
 
 #print Filter.Germ.distribMulAction' /-
 instance distribMulAction' [Monoid M] [AddMonoid N] [DistribMulAction M N] :
     DistribMulAction (Germ l M) (Germ l N)
     where
-  smul_add c f g :=
-    inductionOn₃ c f g fun c f g => by
-      norm_cast
-      simp only [smul_add]
+  smul_add c f g := inductionOn₃ c f g fun c f g => by norm_cast; simp only [smul_add]
   smul_zero c := inductionOn c fun c => by simp only [← coe_zero, ← coe_smul', smul_zero]
 #align filter.germ.distrib_mul_action' Filter.Germ.distribMulAction'
 -/
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] : Module R (Germ l M)
     where
-  add_smul c₁ c₂ f :=
-    inductionOn f fun f => by
-      norm_cast
-      simp only [add_smul]
-  zero_smul f :=
-    inductionOn f fun f => by
-      norm_cast
-      simp only [zero_smul, coe_zero]
+  add_smul c₁ c₂ f := inductionOn f fun f => by norm_cast; simp only [add_smul]
+  zero_smul f := inductionOn f fun f => by norm_cast; simp only [zero_smul, coe_zero]
 
 #print Filter.Germ.module' /-
 instance module' [Semiring R] [AddCommMonoid M] [Module R M] : Module (Germ l R) (Germ l M)
     where
-  add_smul c₁ c₂ f :=
-    inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by
-      norm_cast
-      simp only [add_smul]
+  add_smul c₁ c₂ f := inductionOn₃ c₁ c₂ f fun c₁ c₂ f => by norm_cast; simp only [add_smul]
   zero_smul f := inductionOn f fun f => by simp only [← coe_zero, ← coe_smul', zero_smul]
 #align filter.germ.module' Filter.Germ.module'
 -/

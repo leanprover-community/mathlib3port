@@ -76,17 +76,13 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
   simp only [coeff_X_pow, coeff_sum, coeff_C_mul]
   rw [Sum, Finset.sum_eq_single (n + 1)]
   simp only [Nat.add_succ_sub_one, add_zero, mul_one, if_true, eq_self_iff_true]; norm_cast
-  · intro b
-    cases b
-    · intros
-      rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
-    · intro _ H
+  · intro b; cases b
+    · intros ; rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
+    · intro _ H;
       rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), MulZeroClass.mul_zero]
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_one, Nat.cast_add, Nat.cast_one,
       mem_support_iff]
-    intro h
-    push_neg  at h
-    simp [h]
+    intro h; push_neg  at h; simp [h]
 #align polynomial.coeff_derivative Polynomial.coeff_derivative
 
 /- warning: polynomial.derivative_zero -> Polynomial.derivative_zero is a dubious translation:
@@ -119,10 +115,8 @@ theorem iterate_derivative_zero {k : ℕ} : (derivative^[k]) (0 : R[X]) = 0 :=
 Case conversion may be inaccurate. Consider using '#align polynomial.derivative_monomial Polynomial.derivative_monomialₓ'. -/
 @[simp]
 theorem derivative_monomial (a : R) (n : ℕ) :
-    derivative (monomial n a) = monomial (n - 1) (a * n) :=
-  by
-  rw [derivative_apply, sum_monomial_index, C_mul_X_pow_eq_monomial]
-  simp
+    derivative (monomial n a) = monomial (n - 1) (a * n) := by
+  rw [derivative_apply, sum_monomial_index, C_mul_X_pow_eq_monomial]; simp
 #align polynomial.derivative_monomial Polynomial.derivative_monomial
 
 /- warning: polynomial.derivative_C_mul_X -> Polynomial.derivative_C_mul_X is a dubious translation:
@@ -455,10 +449,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       by
       rw [mul_eq_sum_sum]
       trans; exact derivative_sum
-      trans;
-      · apply Finset.sum_congr rfl
-        intro x hx
-        exact derivative_sum
+      trans; · apply Finset.sum_congr rfl; intro x hx; exact derivative_sum
       apply Finset.sum_congr rfl; intro n hn; apply Finset.sum_congr rfl; intro m hm
       trans
       · exact congr_arg _ C_mul_X_pow_eq_monomial.symm
@@ -551,8 +542,7 @@ theorem mem_support_derivative [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
   by
   suffices ¬p.coeff (n + 1) * (n + 1 : ℕ) = 0 ↔ coeff p (n + 1) ≠ 0 by
     simpa only [mem_support_iff, coeff_derivative, Ne.def, Nat.cast_succ]
-  rw [← nsmul_eq_mul', smul_eq_zero]
-  simp only [Nat.succ_ne_zero, false_or_iff]
+  rw [← nsmul_eq_mul', smul_eq_zero]; simp only [Nat.succ_ne_zero, false_or_iff]
 #align polynomial.mem_support_derivative Polynomial.mem_support_derivative
 
 /- warning: polynomial.degree_derivative_eq -> Polynomial.degree_derivative_eq is a dubious translation:
@@ -577,8 +567,7 @@ theorem degree_derivative_eq [NoZeroSMulDivisors ℕ R] (p : R[X]) (hp : 0 < nat
     rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
     · show ¬leading_coeff p = 0
       rw [leading_coeff_eq_zero]
-      intro h
-      rw [h, nat_degree_zero] at hp
+      intro h; rw [h, nat_degree_zero] at hp
       exact lt_irrefl 0 (lt_of_le_of_lt (zero_le _) hp)
     exact hp
 #align polynomial.degree_derivative_eq Polynomial.degree_derivative_eq
@@ -596,7 +585,7 @@ theorem coeff_iterate_derivative_as_prod_Ico {k} (p : R[X]) :
   ·
     simp only [add_zero, forall_const, one_smul, Ico_self, eq_self_iff_true,
       Function.iterate_zero_apply, prod_empty]
-  · intro m
+  · intro m;
     rw [Function.iterate_succ_apply', coeff_derivative, ih (m + 1), ← Nat.cast_add_one, ←
       nsmul_eq_mul', smul_smul, mul_comm]
     apply congr_arg₂
@@ -800,8 +789,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.derivative_
 theorem derivative_comp (p q : R[X]) : (p.comp q).derivative = q.derivative * p.derivative.comp q :=
   by
   apply Polynomial.induction_on' p
-  · intro p₁ p₂ h₁ h₂
-    simp [h₁, h₂, mul_add]
+  · intro p₁ p₂ h₁ h₂; simp [h₁, h₂, mul_add]
   · intro n r
     simp only [derivative_pow, derivative_mul, monomial_comp, derivative_monomial, derivative_C,
       MulZeroClass.zero_mul, C_eq_nat_cast, zero_add, RingHom.map_mul]

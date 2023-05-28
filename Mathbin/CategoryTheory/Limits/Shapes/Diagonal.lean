@@ -179,50 +179,40 @@ def pullbackDiagonalMapIso :
 #print CategoryTheory.Limits.pullbackDiagonalMapIso_hom_fst /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIso_hom_fst :
-    (pullbackDiagonalMapIso f i i₁ i₂).Hom ≫ pullback.fst = pullback.snd ≫ pullback.fst :=
-  by
-  delta pullback_diagonal_map_iso
-  simp
+    (pullbackDiagonalMapIso f i i₁ i₂).Hom ≫ pullback.fst = pullback.snd ≫ pullback.fst := by
+  delta pullback_diagonal_map_iso; simp
 #align category_theory.limits.pullback_diagonal_map_iso_hom_fst CategoryTheory.Limits.pullbackDiagonalMapIso_hom_fst
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIso_hom_snd /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIso_hom_snd :
-    (pullbackDiagonalMapIso f i i₁ i₂).Hom ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
-  by
-  delta pullback_diagonal_map_iso
-  simp
+    (pullbackDiagonalMapIso f i i₁ i₂).Hom ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+  delta pullback_diagonal_map_iso; simp
 #align category_theory.limits.pullback_diagonal_map_iso_hom_snd CategoryTheory.Limits.pullbackDiagonalMapIso_hom_snd
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIso_inv_fst /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIso_inv_fst :
-    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.fst = pullback.fst ≫ i₁ ≫ pullback.fst :=
-  by
-  delta pullback_diagonal_map_iso
-  simp
+    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.fst = pullback.fst ≫ i₁ ≫ pullback.fst := by
+  delta pullback_diagonal_map_iso; simp
 #align category_theory.limits.pullback_diagonal_map_iso_inv_fst CategoryTheory.Limits.pullbackDiagonalMapIso_inv_fst
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIso_inv_snd_fst /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIso_inv_snd_fst :
-    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.snd ≫ pullback.fst = pullback.fst :=
-  by
-  delta pullback_diagonal_map_iso
-  simp
+    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.snd ≫ pullback.fst = pullback.fst := by
+  delta pullback_diagonal_map_iso; simp
 #align category_theory.limits.pullback_diagonal_map_iso_inv_snd_fst CategoryTheory.Limits.pullbackDiagonalMapIso_inv_snd_fst
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIso_inv_snd_snd /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIso_inv_snd_snd :
-    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.snd ≫ pullback.snd = pullback.snd :=
-  by
-  delta pullback_diagonal_map_iso
-  simp
+    (pullbackDiagonalMapIso f i i₁ i₂).inv ≫ pullback.snd ≫ pullback.snd = pullback.snd := by
+  delta pullback_diagonal_map_iso; simp
 #align category_theory.limits.pullback_diagonal_map_iso_inv_snd_snd CategoryTheory.Limits.pullbackDiagonalMapIso_inv_snd_snd
 -/
 
@@ -287,20 +277,16 @@ def pullbackDiagonalMapIdIso :
 #print CategoryTheory.Limits.pullbackDiagonalMapIdIso_hom_fst /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIdIso_hom_fst :
-    (pullbackDiagonalMapIdIso f g i).Hom ≫ pullback.fst = pullback.snd ≫ pullback.fst :=
-  by
-  delta pullback_diagonal_map_id_iso
-  simp
+    (pullbackDiagonalMapIdIso f g i).Hom ≫ pullback.fst = pullback.snd ≫ pullback.fst := by
+  delta pullback_diagonal_map_id_iso; simp
 #align category_theory.limits.pullback_diagonal_map_id_iso_hom_fst CategoryTheory.Limits.pullbackDiagonalMapIdIso_hom_fst
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIdIso_hom_snd /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIdIso_hom_snd :
-    (pullbackDiagonalMapIdIso f g i).Hom ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
-  by
-  delta pullback_diagonal_map_id_iso
-  simp
+    (pullbackDiagonalMapIdIso f g i).Hom ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+  delta pullback_diagonal_map_id_iso; simp
 #align category_theory.limits.pullback_diagonal_map_id_iso_hom_snd CategoryTheory.Limits.pullbackDiagonalMapIdIso_hom_snd
 -/
 
@@ -317,20 +303,16 @@ theorem pullbackDiagonalMapIdIso_inv_fst :
 #print CategoryTheory.Limits.pullbackDiagonalMapIdIso_inv_snd_fst /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIdIso_inv_snd_fst :
-    (pullbackDiagonalMapIdIso f g i).inv ≫ pullback.snd ≫ pullback.fst = pullback.fst :=
-  by
-  rw [iso.inv_comp_eq]
-  simp
+    (pullbackDiagonalMapIdIso f g i).inv ≫ pullback.snd ≫ pullback.fst = pullback.fst := by
+  rw [iso.inv_comp_eq]; simp
 #align category_theory.limits.pullback_diagonal_map_id_iso_inv_snd_fst CategoryTheory.Limits.pullbackDiagonalMapIdIso_inv_snd_fst
 -/
 
 #print CategoryTheory.Limits.pullbackDiagonalMapIdIso_inv_snd_snd /-
 @[simp, reassoc]
 theorem pullbackDiagonalMapIdIso_inv_snd_snd :
-    (pullbackDiagonalMapIdIso f g i).inv ≫ pullback.snd ≫ pullback.snd = pullback.snd :=
-  by
-  rw [iso.inv_comp_eq]
-  simp
+    (pullbackDiagonalMapIdIso f g i).inv ≫ pullback.snd ≫ pullback.snd = pullback.snd := by
+  rw [iso.inv_comp_eq]; simp
 #align category_theory.limits.pullback_diagonal_map_id_iso_inv_snd_snd CategoryTheory.Limits.pullbackDiagonalMapIdIso_inv_snd_snd
 -/
 
@@ -352,8 +334,7 @@ theorem pullback_map_diagonal_isPullback :
   apply is_pullback.of_iso_pullback _ (pullback_diagonal_map_id_iso f g i).symm
   · simp
   · ext <;> simp
-  · constructor
-    ext <;> simp [condition]
+  · constructor; ext <;> simp [condition]
 #align category_theory.limits.pullback_map_diagonal_is_pullback CategoryTheory.Limits.pullback_map_diagonal_isPullback
 -/
 
@@ -373,9 +354,7 @@ def diagonalObjPullbackFstIso {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
 theorem diagonalObjPullbackFstIso_hom_fst_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (diagonalObjPullbackFstIso f g).Hom ≫ pullback.fst ≫ pullback.fst =
       pullback.fst ≫ pullback.snd :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+  by delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_hom_fst_fst CategoryTheory.Limits.diagonalObjPullbackFstIso_hom_fst_fst
 -/
 
@@ -384,29 +363,23 @@ theorem diagonalObjPullbackFstIso_hom_fst_fst {X Y Z : C} (f : X ⟶ Z) (g : Y �
 theorem diagonalObjPullbackFstIso_hom_fst_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (diagonalObjPullbackFstIso f g).Hom ≫ pullback.fst ≫ pullback.snd =
       pullback.snd ≫ pullback.snd :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+  by delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_hom_fst_snd CategoryTheory.Limits.diagonalObjPullbackFstIso_hom_fst_snd
 -/
 
 #print CategoryTheory.Limits.diagonalObjPullbackFstIso_hom_snd /-
 @[simp, reassoc]
 theorem diagonalObjPullbackFstIso_hom_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (diagonalObjPullbackFstIso f g).Hom ≫ pullback.snd = pullback.fst ≫ pullback.fst :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+    (diagonalObjPullbackFstIso f g).Hom ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
+  delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_hom_snd CategoryTheory.Limits.diagonalObjPullbackFstIso_hom_snd
 -/
 
 #print CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_fst_fst /-
 @[simp, reassoc]
 theorem diagonalObjPullbackFstIso_inv_fst_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (diagonalObjPullbackFstIso f g).inv ≫ pullback.fst ≫ pullback.fst = pullback.snd :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+    (diagonalObjPullbackFstIso f g).inv ≫ pullback.fst ≫ pullback.fst = pullback.snd := by
+  delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_inv_fst_fst CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_fst_fst
 -/
 
@@ -415,19 +388,15 @@ theorem diagonalObjPullbackFstIso_inv_fst_fst {X Y Z : C} (f : X ⟶ Z) (g : Y �
 theorem diagonalObjPullbackFstIso_inv_fst_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (diagonalObjPullbackFstIso f g).inv ≫ pullback.fst ≫ pullback.snd =
       pullback.fst ≫ pullback.fst :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+  by delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_inv_fst_snd CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_fst_snd
 -/
 
 #print CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_snd_fst /-
 @[simp, reassoc]
 theorem diagonalObjPullbackFstIso_inv_snd_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (diagonalObjPullbackFstIso f g).inv ≫ pullback.snd ≫ pullback.fst = pullback.snd :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+    (diagonalObjPullbackFstIso f g).inv ≫ pullback.snd ≫ pullback.fst = pullback.snd := by
+  delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_inv_snd_fst CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_snd_fst
 -/
 
@@ -436,9 +405,7 @@ theorem diagonalObjPullbackFstIso_inv_snd_fst {X Y Z : C} (f : X ⟶ Z) (g : Y �
 theorem diagonalObjPullbackFstIso_inv_snd_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     (diagonalObjPullbackFstIso f g).inv ≫ pullback.snd ≫ pullback.snd =
       pullback.fst ≫ pullback.snd :=
-  by
-  delta diagonal_obj_pullback_fst_iso
-  simp
+  by delta diagonal_obj_pullback_fst_iso; simp
 #align category_theory.limits.diagonal_obj_pullback_fst_iso_inv_snd_snd CategoryTheory.Limits.diagonalObjPullbackFstIso_inv_snd_snd
 -/
 

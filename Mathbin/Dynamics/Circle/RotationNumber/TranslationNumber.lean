@@ -414,9 +414,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.coe_pow CircleDeg1Lift.coe_powₓ'. -/
 theorem coe_pow : ∀ n : ℕ, ⇑(f ^ n) = f^[n]
   | 0 => rfl
-  | n + 1 => by
-    ext x
-    simp [coe_pow n, pow_succ']
+  | n + 1 => by ext x; simp [coe_pow n, pow_succ']
 #align circle_deg1_lift.coe_pow CircleDeg1Lift.coe_pow
 
 /- warning: circle_deg1_lift.semiconj_by_iff_semiconj -> CircleDeg1Lift.semiconjBy_iff_semiconj is a dubious translation:
@@ -1337,9 +1335,7 @@ Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.trans
 @[simp]
 theorem translationNumber_zpow (f : CircleDeg1Liftˣ) : ∀ n : ℤ, τ (f ^ n : Units _) = n * τ f
   | (n : ℕ) => by simp [translation_number_pow f n]
-  | -[n+1] => by
-    simp
-    ring
+  | -[n+1] => by simp; ring
 #align circle_deg1_lift.translation_number_zpow CircleDeg1Lift.translationNumber_zpow
 
 /- warning: circle_deg1_lift.translation_number_conj_eq -> CircleDeg1Lift.translationNumber_conj_eq is a dubious translation:
@@ -1603,9 +1599,7 @@ Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.map_l
 theorem map_lt_add_translationNumber_add_one (x : ℝ) : f x < x + τ f + 1 :=
   calc
     f x < x + ⌊τ f⌋ + 1 := f.map_lt_add_floor_translationNumber_add_one x
-    _ ≤ x + τ f + 1 := by
-      mono*
-      exact floor_le (τ f)
+    _ ≤ x + τ f + 1 := by mono*; exact floor_le (τ f)
     
 #align circle_deg1_lift.map_lt_add_translation_number_add_one CircleDeg1Lift.map_lt_add_translationNumber_add_one
 
@@ -1734,10 +1728,8 @@ lean 3 declaration is
 but is expected to have type
   forall (f : CircleDeg1Lift), (Continuous.{0, 0} Real Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (FunLike.coe.{1, 1, 1} CircleDeg1Lift Real (fun (_x : Real) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.494 : Real) => Real) _x) (InfHomClass.toFunLike.{0, 0, 0} CircleDeg1Lift Real Real (Lattice.toInf.{0} Real (DistribLattice.toLattice.{0} Real (instDistribLattice.{0} Real Real.linearOrder))) (Lattice.toInf.{0} Real Real.lattice) (LatticeHomClass.toInfHomClass.{0, 0, 0} CircleDeg1Lift Real Real (DistribLattice.toLattice.{0} Real (instDistribLattice.{0} Real Real.linearOrder)) Real.lattice (OrderHomClass.toLatticeHomClass.{0, 0, 0} CircleDeg1Lift Real Real Real.linearOrder Real.lattice CircleDeg1Lift.instOrderHomClassCircleDeg1LiftRealInstLEReal))) f)) -> (forall (n : Nat), Continuous.{0, 0} Real Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (FunLike.coe.{1, 1, 1} CircleDeg1Lift Real (fun (_x : Real) => (fun (x._@.Mathlib.Order.Hom.Lattice._hyg.494 : Real) => Real) _x) (InfHomClass.toFunLike.{0, 0, 0} CircleDeg1Lift Real Real (Lattice.toInf.{0} Real (DistribLattice.toLattice.{0} Real (instDistribLattice.{0} Real Real.linearOrder))) (Lattice.toInf.{0} Real Real.lattice) (LatticeHomClass.toInfHomClass.{0, 0, 0} CircleDeg1Lift Real Real (DistribLattice.toLattice.{0} Real (instDistribLattice.{0} Real Real.linearOrder)) Real.lattice (OrderHomClass.toLatticeHomClass.{0, 0, 0} CircleDeg1Lift Real Real Real.linearOrder Real.lattice CircleDeg1Lift.instOrderHomClassCircleDeg1LiftRealInstLEReal))) (HPow.hPow.{0, 0, 0} CircleDeg1Lift Nat CircleDeg1Lift (instHPow.{0, 0} CircleDeg1Lift Nat (Monoid.Pow.{0} CircleDeg1Lift CircleDeg1Lift.instMonoidCircleDeg1Lift)) f n)))
 Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.continuous_pow CircleDeg1Lift.continuous_powₓ'. -/
-theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous ⇑(f ^ n : CircleDeg1Lift) :=
-  by
-  rw [coe_pow]
-  exact hf.iterate n
+theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous ⇑(f ^ n : CircleDeg1Lift) := by
+  rw [coe_pow]; exact hf.iterate n
 #align circle_deg1_lift.continuous_pow CircleDeg1Lift.continuous_pow
 
 /- warning: circle_deg1_lift.translation_number_eq_rat_iff -> CircleDeg1Lift.translationNumber_eq_rat_iff is a dubious translation:
@@ -1780,8 +1772,7 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type _} [Gr
       f₂ g⁻¹ (f₁ g x) ≤ f₂ g⁻¹ (x + τ (f₁ g) + 1) :=
         mono _ (map_lt_add_translation_number_add_one _ _).le
       _ = f₂ g⁻¹ (x + τ (f₂ g)) + 1 := by rw [h, map_add_one]
-      _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 := by
-        mono
+      _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 := by mono;
         exact (map_lt_add_translation_number_add_one _ _).le
       _ = x + 2 := by simp [this, bit0, add_assoc]
       
@@ -1819,9 +1810,7 @@ theorem units_semiconj_of_translationNumber_eq {f₁ f₂ : CircleDeg1Liftˣ} (h
     ∀ n : Multiplicative ℤ,
       τ ((Units.coeHom _).comp (zpowersHom _ f₁) n) =
         τ ((Units.coeHom _).comp (zpowersHom _ f₂) n) :=
-    by
-    intro n
-    simp [h]
+    by intro n; simp [h]
   (semiconj_of_group_action_of_forall_translation_number_eq _ _ this).imp fun F hF =>
     hF (Multiplicative.ofAdd 1)
 #align circle_deg1_lift.units_semiconj_of_translation_number_eq CircleDeg1Lift.units_semiconj_of_translationNumber_eq
@@ -1836,10 +1825,8 @@ Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.semic
 semiconjugate by a `circle_deg1_lift`. This version uses assumptions `is_unit f₁` and `is_unit f₂`
 to assume that `f₁` and `f₂` are homeomorphisms. -/
 theorem semiconj_of_isUnit_of_translationNumber_eq {f₁ f₂ : CircleDeg1Lift} (h₁ : IsUnit f₁)
-    (h₂ : IsUnit f₂) (h : τ f₁ = τ f₂) : ∃ F : CircleDeg1Lift, Semiconj F f₁ f₂ :=
-  by
-  rcases h₁, h₂ with ⟨⟨f₁, rfl⟩, ⟨f₂, rfl⟩⟩
-  exact units_semiconj_of_translation_number_eq h
+    (h₂ : IsUnit f₂) (h : τ f₁ = τ f₂) : ∃ F : CircleDeg1Lift, Semiconj F f₁ f₂ := by
+  rcases h₁, h₂ with ⟨⟨f₁, rfl⟩, ⟨f₂, rfl⟩⟩; exact units_semiconj_of_translation_number_eq h
 #align circle_deg1_lift.semiconj_of_is_unit_of_translation_number_eq CircleDeg1Lift.semiconj_of_isUnit_of_translationNumber_eq
 
 /- warning: circle_deg1_lift.semiconj_of_bijective_of_translation_number_eq -> CircleDeg1Lift.semiconj_of_bijective_of_translationNumber_eq is a dubious translation:

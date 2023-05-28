@@ -188,8 +188,7 @@ protected def Function.Surjective.module [AddCommMonoid M₂] [SMul R M₂] (f :
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
       simp only [add_smul, ← smul, ← f.map_add]
-    zero_smul := fun x => by
-      rcases hf x with ⟨x, rfl⟩
+    zero_smul := fun x => by rcases hf x with ⟨x, rfl⟩;
       simp only [← f.map_zero, ← smul, zero_smul] }
 #align function.surjective.module Function.Surjective.module
 
@@ -623,10 +622,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zsmul_eq_smul_cast zsmul_eq_smul_castₓ'. -/
 /-- `zsmul` is equal to any other module structure via a cast. -/
 theorem zsmul_eq_smul_cast (n : ℤ) (b : M) : n • b = (n : R) • b :=
-  have : (smulAddHom ℤ M).flip b = ((smulAddHom R M).flip b).comp (Int.castAddHom R) :=
-    by
-    ext
-    simp
+  have : (smulAddHom ℤ M).flip b = ((smulAddHom R M).flip b).comp (Int.castAddHom R) := by ext; simp
   AddMonoidHom.congr_fun this n
 #align zsmul_eq_smul_cast zsmul_eq_smul_cast
 
@@ -686,14 +682,9 @@ theorem map_inv_nat_cast_smul [AddCommMonoid M] [AddCommMonoid M₂] {F : Type _
   by
   by_cases hR : (n : R) = 0 <;> by_cases hS : (n : S) = 0
   · simp [hR, hS]
-  · suffices ∀ y, f y = 0 by simp [this]
-    clear x
-    intro x
-    rw [← inv_smul_smul₀ hS (f x), ← map_nat_cast_smul f R S]
-    simp [hR]
-  · suffices ∀ y, f y = 0 by simp [this]
-    clear x
-    intro x
+  · suffices ∀ y, f y = 0 by simp [this]; clear x; intro x
+    rw [← inv_smul_smul₀ hS (f x), ← map_nat_cast_smul f R S]; simp [hR]
+  · suffices ∀ y, f y = 0 by simp [this]; clear x; intro x
     rw [← smul_inv_smul₀ hR x, map_nat_cast_smul f R S, hS, zero_smul]
   · rw [← inv_smul_smul₀ hS (f _), ← map_nat_cast_smul f R S, smul_inv_smul₀ hR]
 #align map_inv_nat_cast_smul map_inv_nat_cast_smul
@@ -929,10 +920,7 @@ but is expected to have type
   forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2] [_inst_4 : NoZeroSMulDivisors.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (SMulZeroClass.toSMul.{u2, u1} R M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (Module.toMulActionWithZero.{u2, u1} R M _inst_1 _inst_2 _inst_3))))] [_inst_5 : CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))], NoZeroSMulDivisors.{0, u1} Nat M (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (AddMonoid.SMul.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2))
 Case conversion may be inaccurate. Consider using '#align nat.no_zero_smul_divisors Nat.noZeroSMulDivisorsₓ'. -/
 theorem Nat.noZeroSMulDivisors : NoZeroSMulDivisors ℕ M :=
-  ⟨by
-    intro c x
-    rw [nsmul_eq_smul_cast R, smul_eq_zero]
-    simp⟩
+  ⟨by intro c x; rw [nsmul_eq_smul_cast R, smul_eq_zero]; simp⟩
 #align nat.no_zero_smul_divisors Nat.noZeroSMulDivisors
 
 /- warning: two_nsmul_eq_zero -> two_nsmul_eq_zero is a dubious translation:
@@ -942,9 +930,7 @@ but is expected to have type
   forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2] [_inst_4 : NoZeroSMulDivisors.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (SMulZeroClass.toSMul.{u2, u1} R M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)) (Module.toMulActionWithZero.{u2, u1} R M _inst_1 _inst_2 _inst_3))))] [_inst_5 : CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))] {v : M}, Iff (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) v) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2))))) (Eq.{succ u1} M v (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align two_nsmul_eq_zero two_nsmul_eq_zeroₓ'. -/
 @[simp]
-theorem two_nsmul_eq_zero {v : M} : 2 • v = 0 ↔ v = 0 :=
-  by
-  haveI := Nat.noZeroSMulDivisors R M
+theorem two_nsmul_eq_zero {v : M} : 2 • v = 0 ↔ v = 0 := by haveI := Nat.noZeroSMulDivisors R M;
   simp [smul_eq_zero]
 #align two_nsmul_eq_zero two_nsmul_eq_zero
 

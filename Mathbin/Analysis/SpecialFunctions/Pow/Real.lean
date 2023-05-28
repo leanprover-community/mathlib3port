@@ -101,10 +101,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {y : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Iff (Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x y) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (And (Eq.{1} Real x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (Ne.{1} Real y (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))))
 Case conversion may be inaccurate. Consider using '#align real.rpow_eq_zero_iff_of_nonneg Real.rpow_eq_zero_iff_of_nonnegₓ'. -/
-theorem rpow_eq_zero_iff_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : x ^ y = 0 ↔ x = 0 ∧ y ≠ 0 :=
-  by
-  simp only [rpow_def_of_nonneg hx]
-  split_ifs <;> simp [*, exp_ne_zero]
+theorem rpow_eq_zero_iff_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : x ^ y = 0 ↔ x = 0 ∧ y ≠ 0 := by
+  simp only [rpow_def_of_nonneg hx]; split_ifs <;> simp [*, exp_ne_zero]
 #align real.rpow_eq_zero_iff_of_nonneg Real.rpow_eq_zero_iff_of_nonneg
 
 open Real
@@ -128,8 +126,7 @@ theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * 
       Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.ofReal_im,
       Real.log_neg_eq_log]
     ring
-  · rw [Complex.ofReal_eq_zero]
-    exact ne_of_lt hx
+  · rw [Complex.ofReal_eq_zero]; exact ne_of_lt hx
 #align real.rpow_def_of_neg Real.rpow_def_of_neg
 
 /- warning: real.rpow_def_of_nonpos -> Real.rpow_def_of_nonpos is a dubious translation:
@@ -291,10 +288,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {y : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} Real (Norm.norm.{0} Real Real.norm (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x y)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) (Norm.norm.{0} Real Real.norm x) y))
 Case conversion may be inaccurate. Consider using '#align real.norm_rpow_of_nonneg Real.norm_rpow_of_nonnegₓ'. -/
-theorem norm_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : ‖x ^ y‖ = ‖x‖ ^ y :=
-  by
-  simp_rw [Real.norm_eq_abs]
-  exact abs_rpow_of_nonneg hx_nonneg
+theorem norm_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : ‖x ^ y‖ = ‖x‖ ^ y := by
+  simp_rw [Real.norm_eq_abs]; exact abs_rpow_of_nonneg hx_nonneg
 #align real.norm_rpow_of_nonneg Real.norm_rpow_of_nonneg
 
 variable {x y z : ℝ}
@@ -413,10 +408,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (forall {y : Real} {z : Real}, (Ne.{1} Real (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y z) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) y z)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x y) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z))))
 Case conversion may be inaccurate. Consider using '#align real.rpow_sub' Real.rpow_sub'ₓ'. -/
-theorem rpow_sub' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y - z ≠ 0) : x ^ (y - z) = x ^ y / x ^ z :=
-  by
-  simp only [sub_eq_add_neg] at h⊢
-  simp only [rpow_add' hx h, rpow_neg hx, div_eq_mul_inv]
+theorem rpow_sub' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y - z ≠ 0) : x ^ (y - z) = x ^ y / x ^ z := by
+  simp only [sub_eq_add_neg] at h⊢; simp only [rpow_add' hx h, rpow_neg hx, div_eq_mul_inv]
 #align real.rpow_sub' Real.rpow_sub'
 
 end Real
@@ -661,9 +654,7 @@ but is expected to have type
   forall (x : Real), Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align real.rpow_two Real.rpow_twoₓ'. -/
 @[simp]
-theorem rpow_two (x : ℝ) : x ^ (2 : ℝ) = x ^ 2 :=
-  by
-  rw [← rpow_nat_cast]
+theorem rpow_two (x : ℝ) : x ^ (2 : ℝ) = x ^ 2 := by rw [← rpow_nat_cast];
   simp only [Nat.cast_bit0, Nat.cast_one]
 #align real.rpow_two Real.rpow_two
 
@@ -689,17 +680,11 @@ theorem mul_rpow {x y z : ℝ} (h : 0 ≤ x) (h₁ : 0 ≤ y) : (x * y) ^ z = x 
   by
   iterate 3 rw [Real.rpow_def_of_nonneg]; split_ifs <;> simp_all
   · have hx : 0 < x := by
-      cases' lt_or_eq_of_le h with h₂ h₂
-      · exact h₂
-      exfalso
-      apply h_2
-      exact Eq.symm h₂
+      cases' lt_or_eq_of_le h with h₂ h₂; · exact h₂
+      exfalso; apply h_2; exact Eq.symm h₂
     have hy : 0 < y := by
-      cases' lt_or_eq_of_le h₁ with h₂ h₂
-      · exact h₂
-      exfalso
-      apply h_3
-      exact Eq.symm h₂
+      cases' lt_or_eq_of_le h₁ with h₂ h₂; · exact h₂
+      exfalso; apply h_3; exact Eq.symm h₂
     rw [log_mul (ne_of_gt hx) (ne_of_gt hy), add_mul, exp_add]
   · exact h₁
   · exact h
@@ -752,8 +737,7 @@ Case conversion may be inaccurate. Consider using '#align real.rpow_lt_rpow Real
 theorem rpow_lt_rpow (hx : 0 ≤ x) (hxy : x < y) (hz : 0 < z) : x ^ z < y ^ z :=
   by
   rw [le_iff_eq_or_lt] at hx; cases hx
-  · rw [← hx, zero_rpow (ne_of_gt hz)]
-    exact rpow_pos_of_pos (by rwa [← hx] at hxy) _
+  · rw [← hx, zero_rpow (ne_of_gt hz)]; exact rpow_pos_of_pos (by rwa [← hx] at hxy) _
   rw [rpow_def_of_pos hx, rpow_def_of_pos (lt_trans hx hxy), exp_lt_exp]
   exact mul_lt_mul_of_pos_right (log_lt_log hx hxy) hz
 #align real.rpow_lt_rpow Real.rpow_lt_rpow
@@ -952,10 +936,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) z) -> (LT.lt.{0} Real Real.instLTReal (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.rpow_lt_one Real.rpow_lt_oneₓ'. -/
-theorem rpow_lt_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x < 1) (hz : 0 < z) : x ^ z < 1 :=
-  by
-  rw [← one_rpow z]
-  exact rpow_lt_rpow hx1 hx2 hz
+theorem rpow_lt_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x < 1) (hz : 0 < z) : x ^ z < 1 := by
+  rw [← one_rpow z]; exact rpow_lt_rpow hx1 hx2 hz
 #align real.rpow_lt_one Real.rpow_lt_one
 
 /- warning: real.rpow_le_one -> Real.rpow_le_one is a dubious translation:
@@ -964,10 +946,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) z) -> (LE.le.{0} Real Real.instLEReal (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.rpow_le_one Real.rpow_le_oneₓ'. -/
-theorem rpow_le_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x ≤ 1) (hz : 0 ≤ z) : x ^ z ≤ 1 :=
-  by
-  rw [← one_rpow z]
-  exact rpow_le_rpow hx1 hx2 hz
+theorem rpow_le_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x ≤ 1) (hz : 0 ≤ z) : x ^ z ≤ 1 := by
+  rw [← one_rpow z]; exact rpow_le_rpow hx1 hx2 hz
 #align real.rpow_le_one Real.rpow_le_one
 
 /- warning: real.rpow_lt_one_of_one_lt_of_neg -> Real.rpow_lt_one_of_one_lt_of_neg is a dubious translation:
@@ -976,10 +956,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x) -> (LT.lt.{0} Real Real.instLTReal z (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LT.lt.{0} Real Real.instLTReal (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.rpow_lt_one_of_one_lt_of_neg Real.rpow_lt_one_of_one_lt_of_negₓ'. -/
-theorem rpow_lt_one_of_one_lt_of_neg {x z : ℝ} (hx : 1 < x) (hz : z < 0) : x ^ z < 1 :=
-  by
-  convert rpow_lt_rpow_of_exponent_lt hx hz
-  exact (rpow_zero x).symm
+theorem rpow_lt_one_of_one_lt_of_neg {x z : ℝ} (hx : 1 < x) (hz : z < 0) : x ^ z < 1 := by
+  convert rpow_lt_rpow_of_exponent_lt hx hz; exact (rpow_zero x).symm
 #align real.rpow_lt_one_of_one_lt_of_neg Real.rpow_lt_one_of_one_lt_of_neg
 
 /- warning: real.rpow_le_one_of_one_le_of_nonpos -> Real.rpow_le_one_of_one_le_of_nonpos is a dubious translation:
@@ -988,10 +966,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x) -> (LE.le.{0} Real Real.instLEReal z (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LE.le.{0} Real Real.instLEReal (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.rpow_le_one_of_one_le_of_nonpos Real.rpow_le_one_of_one_le_of_nonposₓ'. -/
-theorem rpow_le_one_of_one_le_of_nonpos {x z : ℝ} (hx : 1 ≤ x) (hz : z ≤ 0) : x ^ z ≤ 1 :=
-  by
-  convert rpow_le_rpow_of_exponent_le hx hz
-  exact (rpow_zero x).symm
+theorem rpow_le_one_of_one_le_of_nonpos {x z : ℝ} (hx : 1 ≤ x) (hz : z ≤ 0) : x ^ z ≤ 1 := by
+  convert rpow_le_rpow_of_exponent_le hx hz; exact (rpow_zero x).symm
 #align real.rpow_le_one_of_one_le_of_nonpos Real.rpow_le_one_of_one_le_of_nonpos
 
 /- warning: real.one_lt_rpow -> Real.one_lt_rpow is a dubious translation:
@@ -1000,9 +976,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) z) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z))
 Case conversion may be inaccurate. Consider using '#align real.one_lt_rpow Real.one_lt_rpowₓ'. -/
-theorem one_lt_rpow {x z : ℝ} (hx : 1 < x) (hz : 0 < z) : 1 < x ^ z :=
-  by
-  rw [← one_rpow z]
+theorem one_lt_rpow {x z : ℝ} (hx : 1 < x) (hz : 0 < z) : 1 < x ^ z := by rw [← one_rpow z];
   exact rpow_lt_rpow zero_le_one hx hz
 #align real.one_lt_rpow Real.one_lt_rpow
 
@@ -1012,9 +986,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {z : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) z) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z))
 Case conversion may be inaccurate. Consider using '#align real.one_le_rpow Real.one_le_rpowₓ'. -/
-theorem one_le_rpow {x z : ℝ} (hx : 1 ≤ x) (hz : 0 ≤ z) : 1 ≤ x ^ z :=
-  by
-  rw [← one_rpow z]
+theorem one_le_rpow {x z : ℝ} (hx : 1 ≤ x) (hz : 0 ≤ z) : 1 ≤ x ^ z := by rw [← one_rpow z];
   exact rpow_le_rpow zero_le_one hx hz
 #align real.one_le_rpow Real.one_le_rpow
 
@@ -1025,9 +997,7 @@ but is expected to have type
   forall {x : Real} {z : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal z (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z))
 Case conversion may be inaccurate. Consider using '#align real.one_lt_rpow_of_pos_of_lt_one_of_neg Real.one_lt_rpow_of_pos_of_lt_one_of_negₓ'. -/
 theorem one_lt_rpow_of_pos_of_lt_one_of_neg (hx1 : 0 < x) (hx2 : x < 1) (hz : z < 0) : 1 < x ^ z :=
-  by
-  convert rpow_lt_rpow_of_exponent_gt hx1 hx2 hz
-  exact (rpow_zero x).symm
+  by convert rpow_lt_rpow_of_exponent_gt hx1 hx2 hz; exact (rpow_zero x).symm
 #align real.one_lt_rpow_of_pos_of_lt_one_of_neg Real.one_lt_rpow_of_pos_of_lt_one_of_neg
 
 /- warning: real.one_le_rpow_of_pos_of_le_one_of_nonpos -> Real.one_le_rpow_of_pos_of_le_one_of_nonpos is a dubious translation:
@@ -1037,9 +1007,7 @@ but is expected to have type
   forall {x : Real} {z : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal z (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x z))
 Case conversion may be inaccurate. Consider using '#align real.one_le_rpow_of_pos_of_le_one_of_nonpos Real.one_le_rpow_of_pos_of_le_one_of_nonposₓ'. -/
 theorem one_le_rpow_of_pos_of_le_one_of_nonpos (hx1 : 0 < x) (hx2 : x ≤ 1) (hz : z ≤ 0) :
-    1 ≤ x ^ z := by
-  convert rpow_le_rpow_of_exponent_ge hx1 hx2 hz
-  exact (rpow_zero x).symm
+    1 ≤ x ^ z := by convert rpow_le_rpow_of_exponent_ge hx1 hx2 hz; exact (rpow_zero x).symm
 #align real.one_le_rpow_of_pos_of_le_one_of_nonpos Real.one_le_rpow_of_pos_of_le_one_of_nonpos
 
 /- warning: real.rpow_lt_one_iff_of_pos -> Real.rpow_lt_one_iff_of_pos is a dubious translation:
@@ -1234,8 +1202,7 @@ theorem sqrt_eq_rpow (x : ℝ) : sqrt x = x ^ (1 / (2 : ℝ)) :=
   · rw [← mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg_of_nonneg h _), mul_self_sqrt h, ← sq,
       ← rpow_nat_cast, ← rpow_mul h]
     norm_num
-  · have : 1 / (2 : ℝ) * π = π / (2 : ℝ)
-    ring
+  · have : 1 / (2 : ℝ) * π = π / (2 : ℝ); ring
     rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, MulZeroClass.mul_zero]
 #align real.sqrt_eq_rpow Real.sqrt_eq_rpow
 

@@ -227,9 +227,7 @@ theorem coe_repr_symm : ↑b.repr.symm = Finsupp.total ι M R b :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.repr_total Basis.repr_totalₓ'. -/
 @[simp]
-theorem repr_total (v) : b.repr (Finsupp.total _ _ _ b v) = v :=
-  by
-  rw [← b.coe_repr_symm]
+theorem repr_total (v) : b.repr (Finsupp.total _ _ _ b v) = v := by rw [← b.coe_repr_symm];
   exact b.repr.apply_symm_apply v
 #align basis.repr_total Basis.repr_total
 
@@ -237,9 +235,7 @@ theorem repr_total (v) : b.repr (Finsupp.total _ _ _ b v) = v :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.total_repr Basis.total_reprₓ'. -/
 @[simp]
-theorem total_repr : Finsupp.total _ _ _ b (b.repr x) = x :=
-  by
-  rw [← b.coe_repr_symm]
+theorem total_repr : Finsupp.total _ _ _ b (b.repr x) = x := by rw [← b.coe_repr_symm];
   exact b.repr.symm_apply_apply x
 #align basis.total_repr Basis.total_repr
 
@@ -460,9 +456,7 @@ theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f 
     show b.repr (b j) i = f (b j) i
     rw [b.repr_self, f_eq]
   calc
-    b.repr x i = f_i x := by
-      rw [← this]
-      rfl
+    b.repr x i = f_i x := by rw [← this]; rfl
     _ = f x i := rfl
     
 #align basis.repr_apply_eq Basis.repr_apply_eq
@@ -472,9 +466,7 @@ theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f 
 Case conversion may be inaccurate. Consider using '#align basis.eq_of_repr_eq_repr Basis.eq_ofRepr_eq_reprₓ'. -/
 /-- Two bases are equal if they assign the same coordinates. -/
 theorem eq_ofRepr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x i = b₂.repr x i) : b₁ = b₂ :=
-  repr_injective <| by
-    ext
-    apply h
+  repr_injective <| by ext; apply h
 #align basis.eq_of_repr_eq_repr Basis.eq_ofRepr_eq_repr
 
 /- warning: basis.eq_of_apply_eq -> Basis.eq_of_apply_eq is a dubious translation:
@@ -690,9 +682,7 @@ theorem reindexRange_repr_self (i : ι) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.reindex_range_apply Basis.reindexRange_applyₓ'. -/
 @[simp]
-theorem reindexRange_apply (x : range b) : b.reindexRange x = x :=
-  by
-  rcases x with ⟨bi, ⟨i, rfl⟩⟩
+theorem reindexRange_apply (x : range b) : b.reindexRange x = x := by rcases x with ⟨bi, ⟨i, rfl⟩⟩;
   exact b.reindex_range_self i
 #align basis.reindex_range_apply Basis.reindexRange_apply
 
@@ -743,10 +733,8 @@ def reindexFinsetRange : Basis (Finset.univ.image b) R M :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.reindex_finset_range_self Basis.reindexFinsetRange_selfₓ'. -/
 theorem reindexFinsetRange_self (i : ι) (h := Finset.mem_image_of_mem b (Finset.mem_univ i)) :
-    b.reindexFinsetRange ⟨b i, h⟩ = b i :=
-  by
-  rw [reindex_finset_range, reindex_apply, reindex_range_apply]
-  rfl
+    b.reindexFinsetRange ⟨b i, h⟩ = b i := by
+  rw [reindex_finset_range, reindex_apply, reindex_range_apply]; rfl
 #align basis.reindex_finset_range_self Basis.reindexFinsetRange_self
 
 /- warning: basis.reindex_finset_range_apply -> Basis.reindexFinsetRange_apply is a dubious translation:
@@ -755,8 +743,7 @@ Case conversion may be inaccurate. Consider using '#align basis.reindex_finset_r
 @[simp]
 theorem reindexFinsetRange_apply (x : Finset.univ.image b) : b.reindexFinsetRange x = x :=
   by
-  rcases x with ⟨bi, hbi⟩
-  rcases finset.mem_image.mp hbi with ⟨i, -, rfl⟩
+  rcases x with ⟨bi, hbi⟩; rcases finset.mem_image.mp hbi with ⟨i, -, rfl⟩
   exact b.reindex_finset_range_self i
 #align basis.reindex_finset_range_apply Basis.reindexFinsetRange_apply
 
@@ -873,18 +860,10 @@ def constr : (ι → M') ≃ₗ[S] M →ₗ[R] M'
     where
   toFun f := (Finsupp.total M' M' R id).comp <| Finsupp.lmapDomain R R f ∘ₗ ↑b.repr
   invFun f i := f (b i)
-  left_inv f := by
-    ext
-    simp
-  right_inv f := by
-    refine' b.ext fun i => _
-    simp
-  map_add' f g := by
-    refine' b.ext fun i => _
-    simp
-  map_smul' c f := by
-    refine' b.ext fun i => _
-    simp
+  left_inv f := by ext; simp
+  right_inv f := by refine' b.ext fun i => _; simp
+  map_add' f g := by refine' b.ext fun i => _; simp
+  map_smul' c f := by refine' b.ext fun i => _; simp
 #align basis.constr Basis.constr
 -/
 
@@ -1002,10 +981,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align basis.map_equiv Basis.map_equivₓ'. -/
 @[simp]
 theorem map_equiv (b : Basis ι R M) (b' : Basis ι' R M') (e : ι ≃ ι') :
-    b.map (b.Equiv b' e) = b'.reindex e.symm :=
-  by
-  ext i
-  simp
+    b.map (b.Equiv b' e) = b'.reindex e.symm := by ext i; simp
 #align basis.map_equiv Basis.map_equiv
 
 end Equiv
@@ -1214,8 +1190,7 @@ theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup
               map_add' := fun y z => _
               map_smul' := fun c y => _ }⟩
     · rw [Finsupp.add_apply, add_smul]
-    · rw [Finsupp.smul_apply, smul_assoc]
-      simp
+    · rw [Finsupp.smul_apply, smul_assoc]; simp
     · refine' smul_left_injective _ nz _
       simp only [Finsupp.single_eq_same]
       exact (w (f default • x)).choose_spec
@@ -1351,11 +1326,8 @@ theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = 
   simp only [map_sum, LinearEquiv.map_smul, repr_self, Finsupp.smul_single, smul_eq_mul, mul_one,
     Finset.sum_apply']
   rw [Finset.sum_eq_single j, Finsupp.single_eq_same]
-  · rintro i - hi
-    exact Finsupp.single_eq_of_ne hi
-  · intros
-    have := Finset.mem_univ j
-    contradiction
+  · rintro i - hi; exact Finsupp.single_eq_of_ne hi
+  · intros ; have := Finset.mem_univ j; contradiction
 #align basis.repr_sum_self Basis.repr_sum_self
 
 #print Basis.ofEquivFun /-
@@ -1685,13 +1657,9 @@ protected noncomputable def span : Basis ι R (span R (range v)) :=
       (x : M) ∈
         map (Submodule.subtype (span R (range v)))
           (span R (Set.range fun i => Subtype.mk (v i) _)) :=
-      by
-      rw [h₂]
-      apply Subtype.mem x
+      by rw [h₂]; apply Subtype.mem x
     rcases mem_map.1 h₃ with ⟨y, hy₁, hy₂⟩
-    have h_x_eq_y : x = y := by
-      rw [Subtype.ext_iff, ← hy₂]
-      simp
+    have h_x_eq_y : x = y := by rw [Subtype.ext_iff, ← hy₂]; simp
     rwa [h_x_eq_y]
 #align basis.span Basis.span
 -/
@@ -1839,14 +1807,9 @@ noncomputable def mkFinCons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Fi
   have span_b : Submodule.span R (Set.range (N.Subtype ∘ b)) = N := by
     rw [Set.range_comp, Submodule.span_image, b.span_eq, Submodule.map_subtype_top]
   @Basis.mk _ _ _ (Fin.cons y (N.Subtype ∘ b) : Fin (n + 1) → M) _ _ _
-    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <|
-      by
-      rintro c ⟨x, hx⟩ hc
-      rw [span_b] at hx
-      exact hli c x hx hc)
-    fun x _ => by
-    rw [Fin.range_cons, Submodule.mem_span_insert', span_b]
-    exact hsp x
+    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <| by
+      rintro c ⟨x, hx⟩ hc; rw [span_b] at hx; exact hli c x hx hc)
+    fun x _ => by rw [Fin.range_cons, Submodule.mem_span_insert', span_b]; exact hsp x
 #align basis.mk_fin_cons Basis.mkFinCons
 
 /- warning: basis.coe_mk_fin_cons -> Basis.coe_mkFinCons is a dubious translation:
@@ -1965,8 +1928,7 @@ def Submodule.inductionOnRankAux (b : Basis ι R M) (P : Submodule R M → Sort 
   intro m v hli
   refine' nat.succ_le_succ_iff.mp (rank_le (Fin.cons ⟨x, x_mem⟩ fun i => ⟨v i, N'_le (v i).2⟩) _)
   convert hli.fin_cons' x _ _
-  · ext i
-    refine' Fin.cases _ _ i <;> simp
+  · ext i; refine' Fin.cases _ _ i <;> simp
   · intro c y hcy
     refine' x_ortho c y (submodule.span_le.mpr _ y.2) hcy
     rintro _ ⟨z, rfl⟩
@@ -2100,11 +2062,8 @@ but is expected to have type
   forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_4 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], LinearIndependent.{u2, u1, u2} (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x (Basis.ofVectorSpaceIndex.{u2, u1} K V _inst_1 _inst_2 _inst_4))) K V (Subtype.val.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Set.{u2} V) (Set.instMembershipSet.{u2} V) x (Basis.ofVectorSpaceIndex.{u2, u1} K V _inst_1 _inst_2 _inst_4))) (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_4
 Case conversion may be inaccurate. Consider using '#align basis.of_vector_space_index.linear_independent Basis.ofVectorSpaceIndex.linearIndependentₓ'. -/
 theorem ofVectorSpaceIndex.linearIndependent :
-    LinearIndependent K (coe : ofVectorSpaceIndex K V → V) :=
-  by
-  convert(of_vector_space K V).LinearIndependent
-  ext x
-  rw [of_vector_space_apply_self]
+    LinearIndependent K (coe : ofVectorSpaceIndex K V → V) := by
+  convert(of_vector_space K V).LinearIndependent; ext x; rw [of_vector_space_apply_self]
 #align basis.of_vector_space_index.linear_independent Basis.ofVectorSpaceIndex.linearIndependent
 
 /- warning: basis.range_of_vector_space -> Basis.range_ofVectorSpace is a dubious translation:
@@ -2163,22 +2122,15 @@ lattice of submodules. -/
 theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodule K V) :=
   by
   constructor
-  · rw [Submodule.ne_bot_iff]
-    exact ⟨v, ⟨mem_span_singleton_self v, hv⟩⟩
-  · intro T hT
-    by_contra
-    apply hT.2
+  · rw [Submodule.ne_bot_iff]; exact ⟨v, ⟨mem_span_singleton_self v, hv⟩⟩
+  · intro T hT; by_contra; apply hT.2
     change span K {v} ≤ T
     simp_rw [span_singleton_le_iff_mem, ← Ne.def, Submodule.ne_bot_iff] at *
     rcases h with ⟨s, ⟨hs, hz⟩⟩
     cases' mem_span_singleton.1 (hT.1 hs) with a ha
-    have h : a ≠ 0 := by
-      intro h
-      rw [h, zero_smul] at ha
-      exact hz ha.symm
+    have h : a ≠ 0 := by intro h; rw [h, zero_smul] at ha; exact hz ha.symm
     apply_fun fun x => a⁻¹ • x  at ha
-    simp_rw [← mul_smul, inv_mul_cancel h, one_smul, ha] at *
-    exact smul_mem T _ hs
+    simp_rw [← mul_smul, inv_mul_cancel h, one_smul, ha] at *; exact smul_mem T _ hs
 #align nonzero_span_atom nonzero_span_atom
 
 /- warning: atom_iff_nonzero_span -> atom_iff_nonzero_span is a dubious translation:
@@ -2200,8 +2152,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
     specialize h (span K {v})
     rw [span_singleton_eq_bot, lt_iff_le_and_ne] at h
     exact hv (h ⟨(span_singleton_le_iff_mem v W).2 hW, Ne.symm HEq⟩)
-  · rcases h with ⟨v, ⟨hv, rfl⟩⟩
-    exact nonzero_span_atom v hv
+  · rcases h with ⟨v, ⟨hv, rfl⟩⟩; exact nonzero_span_atom v hv
 #align atom_iff_nonzero_span atom_iff_nonzero_span
 
 /-- The lattice of submodules of a module over a division ring is atomistic. -/
@@ -2302,8 +2253,7 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩; clear hp
   rcases(LinearPMap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
   refine' ⟨f, _, _⟩
-  · rintro rfl
-    rw [LinearMap.zero_comp] at hf
+  · rintro rfl; rw [LinearMap.zero_comp] at hf
     have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
     simpa using (LinearMap.congr_fun hf _).trans this
   · refine' fun x hx => mem_ker.2 _

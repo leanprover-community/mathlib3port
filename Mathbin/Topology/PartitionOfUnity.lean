@@ -575,9 +575,7 @@ theorem sum_toPouFun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 -
     by
     rw [hs]
     exact fun i hi => f.support_to_pou_fun_subset i hi
-  have B : (mul_support fun i => 1 - f i x) ⊆ s :=
-    by
-    rw [hs, mul_support_one_sub]
+  have B : (mul_support fun i => 1 - f i x) ⊆ s := by rw [hs, mul_support_one_sub];
     exact fun i => id
   letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
   rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mulSupport_subset _ B,
@@ -637,8 +635,7 @@ def toPartitionOfUnity : PartitionOfUnity ι X s
     simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_eq_self]
     apply finprod_eq_zero (fun i => 1 - f i x) (f.ind x hx)
     · simp only [f.ind_apply x hx, sub_self]
-    · rw [mul_support_one_sub]
-      exact f.point_finite x
+    · rw [mul_support_one_sub]; exact f.point_finite x
   sum_le_one' x :=
     by
     simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_le_self_iff]

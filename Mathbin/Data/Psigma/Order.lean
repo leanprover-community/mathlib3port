@@ -72,16 +72,10 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
     le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl
     le_trans := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
-      · left
-        apply lt_trans
-        repeat' assumption
-      · left
-        assumption
-      · left
-        assumption
-      · right
-        apply le_trans
-        repeat' assumption
+      · left; apply lt_trans; repeat' assumption
+      · left; assumption
+      · left; assumption
+      · right; apply le_trans; repeat' assumption
     lt_iff_le_not_le :=
       by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
@@ -261,10 +255,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_max_order PSigma.Lex.noMaxOrderₓ'. -/
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=
-  ⟨by
-    rintro ⟨i, a⟩
-    obtain ⟨b, h⟩ := exists_gt a
-    exact ⟨⟨i, b⟩, right _ h⟩⟩
+  ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_gt a; exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_max_order PSigma.Lex.noMaxOrder
 
 /- warning: psigma.lex.no_min_order -> PSigma.Lex.noMinOrder is a dubious translation:
@@ -275,10 +266,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order PSigma.Lex.noMinOrderₓ'. -/
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ' i, α i) :=
-  ⟨by
-    rintro ⟨i, a⟩
-    obtain ⟨b, h⟩ := exists_lt a
-    exact ⟨⟨i, b⟩, right _ h⟩⟩
+  ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_lt a; exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_min_order PSigma.Lex.noMinOrder
 
 end Lex

@@ -112,13 +112,10 @@ theorem valuationOfNeZeroToFun_eq (x : Kˣ) :
 def valuationOfNeZero : Kˣ →* Multiplicative ℤ
     where
   toFun := v.valuationOfNeZeroToFun
-  map_one' := by
-    rw [← WithZero.coe_inj, valuation_of_ne_zero_to_fun_eq]
-    exact map_one _
+  map_one' := by rw [← WithZero.coe_inj, valuation_of_ne_zero_to_fun_eq]; exact map_one _
   map_mul' _ _ := by
     rw [← WithZero.coe_inj, WithZero.coe_mul]
-    simp only [valuation_of_ne_zero_to_fun_eq]
-    exact map_mul _ _ _
+    simp only [valuation_of_ne_zero_to_fun_eq]; exact map_mul _ _ _
 #align is_dedekind_domain.height_one_spectrum.valuation_of_ne_zero IsDedekindDomain.HeightOneSpectrum.valuationOfNeZero
 
 @[simp]

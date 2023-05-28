@@ -73,9 +73,7 @@ def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ Pi.eval C i)) : Cone F
   pt i := (c i).pt
   π :=
     { app := fun j i => (c i).π.app j
-      naturality' := fun j j' f => by
-        ext i
-        exact (c i).π.naturality f }
+      naturality' := fun j j' f => by ext i; exact (c i).π.naturality f }
 #align category_theory.pi.cone_of_cone_comp_eval CategoryTheory.pi.coneOfConeCompEval
 -/
 
@@ -88,9 +86,7 @@ def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ Pi.eval C i)) : Cocone F
   pt i := (c i).pt
   ι :=
     { app := fun j i => (c i).ι.app j
-      naturality' := fun j j' f => by
-        ext i
-        exact (c i).ι.naturality f }
+      naturality' := fun j j' f => by ext i; exact (c i).ι.naturality f }
 #align category_theory.pi.cocone_of_cocone_comp_eval CategoryTheory.pi.coconeOfCoconeCompEval
 -/
 

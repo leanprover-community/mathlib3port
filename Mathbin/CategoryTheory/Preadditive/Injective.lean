@@ -141,9 +141,7 @@ instance Type.enoughInjectives : EnoughInjectives (Type u₁)
       { j := WithBot X
         Injective := inferInstance
         f := Option.some
-        Mono := by
-          rw [mono_iff_injective]
-          exact Option.some_injective X }
+        Mono := by rw [mono_iff_injective]; exact Option.some_injective X }
 #align category_theory.injective.Type.enough_injectives CategoryTheory.Injective.Type.enoughInjectives
 -/
 

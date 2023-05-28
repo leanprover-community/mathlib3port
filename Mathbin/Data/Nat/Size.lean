@@ -159,11 +159,9 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n :=
   by
   rw [← one_shiftl]
   have : ∀ {n}, n = 0 → n < shiftl 1 (size n) := by simp
-  apply binary_rec _ _ n
-  · apply this rfl
+  apply binary_rec _ _ n; · apply this rfl
   intro b n IH
-  by_cases bit b n = 0
-  · apply this h
+  by_cases bit b n = 0; · apply this h
   rw [size_bit h, shiftl_succ]
   exact bit_lt_bit0 _ IH
 #align nat.lt_size_self Nat.lt_size_self
@@ -175,11 +173,9 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
     by
     rw [← one_shiftl]; revert n
     apply binary_rec _ _ m
-    · intro n h
-      simp
+    · intro n h; simp
     · intro b m IH n h
-      by_cases e : bit b m = 0
-      · simp [e]
+      by_cases e : bit b m = 0; · simp [e]
       rw [size_bit e]
       cases' n with n
       · exact e.elim (Nat.eq_zero_of_le_zero (le_of_lt_succ h))

@@ -99,18 +99,14 @@ theorem Definable.mono (hAs : A.Definable L s) (hAB : A ⊆ B) : B.Definable L s
 #print Set.definable_empty /-
 @[simp]
 theorem definable_empty : A.Definable L (∅ : Set (α → M)) :=
-  ⟨⊥, by
-    ext
-    simp⟩
+  ⟨⊥, by ext; simp⟩
 #align set.definable_empty Set.definable_empty
 -/
 
 #print Set.definable_univ /-
 @[simp]
 theorem definable_univ : A.Definable L (univ : Set (α → M)) :=
-  ⟨⊤, by
-    ext
-    simp⟩
+  ⟨⊤, by ext; simp⟩
 #align set.definable_univ Set.definable_univ
 -/
 

@@ -89,8 +89,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] [_inst_2 : Nonempty.{succ u2} α] [_inst_3 : LinearOrder.{u1} β] (f : α -> β), Exists.{succ u2} α (fun (x₀ : α) => forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_3)))))) (f x) (f x₀))
 Case conversion may be inaccurate. Consider using '#align finite.exists_max Finite.exists_maxₓ'. -/
 theorem Finite.exists_max [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by
-  cases nonempty_fintype α
+    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by cases nonempty_fintype α;
   simpa using exists_max_image univ f univ_nonempty
 #align finite.exists_max Finite.exists_max
 
@@ -101,8 +100,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] [_inst_2 : Nonempty.{succ u2} α] [_inst_3 : LinearOrder.{u1} β] (f : α -> β), Exists.{succ u2} α (fun (x₀ : α) => forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_3)))))) (f x₀) (f x))
 Case conversion may be inaccurate. Consider using '#align finite.exists_min Finite.exists_minₓ'. -/
 theorem Finite.exists_min [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by
-  cases nonempty_fintype α
+    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by cases nonempty_fintype α;
   simpa using exists_min_image univ f univ_nonempty
 #align finite.exists_min Finite.exists_min
 

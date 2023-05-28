@@ -127,9 +127,7 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D
     where
   obj := FunctorExtension₁.obj
   map F G := FunctorExtension₁.map
-  map_id' F := by
-    ext P
-    exact comp_p (F.map P.p)
+  map_id' F := by ext P; exact comp_p (F.map P.p)
   map_comp' F G H φ φ' := by
     ext P
     simp only [comp_f, functor_extension₁.map_app_f, nat_trans.comp_app, assoc]
@@ -247,9 +245,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.idempo
 theorem functorExtension₁_comp (F : C ⥤ Karoubi D) (G : D ⥤ Karoubi E) :
     (functorExtension₁ C E).obj (F ⋙ (functorExtension₁ D E).obj G) =
       (functorExtension₁ C D).obj F ⋙ (functorExtension₁ D E).obj G :=
-  Functor.ext (by tidy) fun X Y f => by
-    dsimp
-    simpa only [id_comp, comp_id]
+  Functor.ext (by tidy) fun X Y f => by dsimp; simpa only [id_comp, comp_id]
 #align category_theory.idempotents.functor_extension₁_comp CategoryTheory.Idempotents.functorExtension₁_comp
 
 /- warning: category_theory.idempotents.functor_extension₂ -> CategoryTheory.Idempotents.functorExtension₂ is a dubious translation:
@@ -317,10 +313,8 @@ theorem karoubiUniversal₂_functor_eq : (karoubiUniversal₂ C D).Functor = fun
   rfl
 #align category_theory.idempotents.karoubi_universal₂_functor_eq CategoryTheory.Idempotents.karoubiUniversal₂_functor_eq
 
-noncomputable instance : IsEquivalence (functorExtension₂ C D) :=
-  by
-  rw [← karoubi_universal₂_functor_eq]
-  infer_instance
+noncomputable instance : IsEquivalence (functorExtension₂ C D) := by
+  rw [← karoubi_universal₂_functor_eq]; infer_instance
 
 /- warning: category_theory.idempotents.functor_extension -> CategoryTheory.Idempotents.functorExtension is a dubious translation:
 lean 3 declaration is
@@ -358,10 +352,8 @@ theorem karoubiUniversal_functor_eq : (karoubiUniversal C D).Functor = functorEx
   rfl
 #align category_theory.idempotents.karoubi_universal_functor_eq CategoryTheory.Idempotents.karoubiUniversal_functor_eq
 
-noncomputable instance : IsEquivalence (functorExtension C D) :=
-  by
-  rw [← karoubi_universal_functor_eq]
-  infer_instance
+noncomputable instance : IsEquivalence (functorExtension C D) := by
+  rw [← karoubi_universal_functor_eq]; infer_instance
 
 noncomputable instance : IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (toKaroubi C)) :=
   IsEquivalence.cancelCompRight _
@@ -369,9 +361,7 @@ noncomputable instance : IsEquivalence ((whiskeringLeft C (Karoubi C) D).obj (to
     (IsEquivalence.ofEquivalence
       (@Equivalence.congrRight _ _ _ _ C _
         ((toKaroubi D).asEquivalence.trans (toKaroubi D).asEquivalence.symm)))
-    (by
-      change is_equivalence (karoubi_universal C D).inverse
-      infer_instance)
+    (by change is_equivalence (karoubi_universal C D).inverse; infer_instance)
 
 variable {C D}
 

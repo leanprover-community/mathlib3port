@@ -118,9 +118,7 @@ instance functionField_isScalarTower [IrreducibleSpace X.carrier] (U : Opens X.c
 
 noncomputable instance (R : CommRingCat) [IsDomain R] :
     Algebra R (Scheme.spec.obj <| op R).functionField :=
-  RingHom.toAlgebra <| by
-    change CommRingCat.of R ⟶ _
-    apply structure_sheaf.to_stalk
+  RingHom.toAlgebra <| by change CommRingCat.of R ⟶ _; apply structure_sheaf.to_stalk
 
 @[simp]
 theorem genericPoint_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
@@ -154,9 +152,7 @@ theorem IsAffineOpen.primeIdealOf_genericPoint {X : Scheme} [IsIntegral X] {U : 
       genericPoint (Scheme.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
   by
   haveI : is_affine _ := hU
-  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U :=
-    by
-    ext1
+  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by ext1;
     exact set.image_univ.trans Subtype.range_coe
   delta is_affine_open.prime_ideal_of
   rw [← Scheme.comp_val_base_apply]
@@ -175,19 +171,13 @@ theorem functionField_isFractionRing_of_isAffineOpen [IsIntegral X] (U : Opens X
   haveI : Nonempty (X.restrict U.open_embedding).carrier := hU'
   haveI : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
-      (by
-        dsimp
-        rw [opens.open_embedding_obj_top]
-        infer_instance)
-  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U :=
-    by
-    ext1
+      (by dsimp; rw [opens.open_embedding_obj_top]; infer_instance)
+  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by ext1;
     exact set.image_univ.trans Subtype.range_coe
   delta IsFractionRing Scheme.function_field
   convert hU.is_localization_stalk ⟨genericPoint X.carrier, _⟩ using 1
   rw [hU.prime_ideal_of_generic_point, generic_point_eq_bot_of_affine]
-  ext
-  exact mem_nonZeroDivisors_iff_ne_zero
+  ext; exact mem_nonZeroDivisors_iff_ne_zero
 #align algebraic_geometry.function_field_is_fraction_ring_of_is_affine_open AlgebraicGeometry.functionField_isFractionRing_of_isAffineOpen
 
 instance (x : X.carrier) : IsAffine (X.affineCover.obj x) :=

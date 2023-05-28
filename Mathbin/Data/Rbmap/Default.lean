@@ -73,8 +73,7 @@ theorem eq_some_of_toValue_eq_some {e : Option (α × β)} {v : β} :
     toValue e = some v → ∃ k, e = some (k, v) :=
   by
   cases' e with val <;> simp [to_value, false_imp_iff]
-  · cases val
-    simp
+  · cases val; simp
 #align rbmap.eq_some_of_to_value_eq_some Rbmap.eq_some_of_toValue_eq_some
 
 theorem eq_none_of_toValue_eq_none {e : Option (α × β)} : toValue e = none → e = none := by
@@ -105,8 +104,7 @@ variable [DecidableRel lt]
 theorem not_mem_of_findEntry_none [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β lt} :
     m.findEntry k = none → k ∉ m := by
   cases' m with t p; cases t <;> simp [find_entry]
-  · intros
-    simp [Membership.Mem, Rbmap.Mem]
+  · intros ; simp [Membership.Mem, Rbmap.Mem]
   all_goals intro h; exact Rbtree.not_mem_of_find_none h
 #align rbmap.not_mem_of_find_entry_none Rbmap.not_mem_of_findEntry_none
 
@@ -148,36 +146,24 @@ theorem findEntry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt
   by
   apply Iff.intro <;> cases' m with t p
   · intro h
-    have h := to_rbtree_mem h
-    cases' h with v h₁
-    have hex := Iff.mp (Rbtree.find_correct _ _) h₁
-    cases' hex with e h₂
-    exists e
-    cases t <;> simp [find_entry] at h₂⊢
-    · simp [Rbtree.find, Rbnode.find] at h₂
-      cases h₂
-    · cases' h₂ with h₂₁ h₂₂
-      constructor
+    have h := to_rbtree_mem h; cases' h with v h₁
+    have hex := Iff.mp (Rbtree.find_correct _ _) h₁; cases' hex with e h₂
+    exists e; cases t <;> simp [find_entry] at h₂⊢
+    · simp [Rbtree.find, Rbnode.find] at h₂; cases h₂
+    · cases' h₂ with h₂₁ h₂₂; constructor
       · have :=
           Rbtree.find_eq_find_of_eqv ⟨Rbnode.red_node t_lchild t_val t_rchild, p⟩
             (eqv_entries k v t_val.2)
-        rw [← this]
-        exact h₂₁
-      · cases e
-        apply eqv_keys_of_eqv_entries h₂₂
-    · cases' h₂ with h₂₁ h₂₂
-      constructor
+        rw [← this]; exact h₂₁
+      · cases e; apply eqv_keys_of_eqv_entries h₂₂
+    · cases' h₂ with h₂₁ h₂₂; constructor
       · have :=
           Rbtree.find_eq_find_of_eqv ⟨Rbnode.black_node t_lchild t_val t_rchild, p⟩
             (eqv_entries k v t_val.2)
-        rw [← this]
-        exact h₂₁
-      · cases e
-        apply eqv_keys_of_eqv_entries h₂₂
-  · intro h
-    cases' h with e h
-    cases' h with h₁ h₂
-    cases t <;> simp [find_entry] at h₁
+        rw [← this]; exact h₂₁
+      · cases e; apply eqv_keys_of_eqv_entries h₂₂
+  · intro h; cases' h with e h
+    cases' h with h₁ h₂; cases t <;> simp [find_entry] at h₁
     · contradiction
     all_goals exact to_rbmap_mem (Rbtree.mem_of_find_some h₁)
 #align rbmap.find_entry_correct Rbmap.findEntry_correct
@@ -200,10 +186,8 @@ theorem find_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
   apply Iff.intro
   · intro h
     have := Iff.mp (find_entry_correct k m) h
-    cases' this with e h
-    cases' h with h₁ h₂
-    exists e.2
-    simp [find, h₁, to_value]
+    cases' this with e h; cases' h with h₁ h₂
+    exists e.2; simp [find, h₁, to_value]
   · intro h
     cases' h with v h
     simp [find] at h
@@ -218,15 +202,13 @@ theorem constains_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt
   apply Iff.intro
   · intro h
     have h := Iff.mp (find_entry_correct k m) h
-    cases' h with e h
-    cases' h with h₁ h₂
+    cases' h with e h; cases' h with h₁ h₂
     simp [contains, h₁, Option.isSome]
   · simp [contains]
     intro h
     generalize he : find_entry m k = e
     cases e
-    · simp [he, Option.isSome] at h
-      contradiction
+    · simp [he, Option.isSome] at h; contradiction
     · exact mem_of_find_entry_some he
 #align rbmap.constains_correct Rbmap.constains_correct
 
@@ -272,10 +254,7 @@ theorem findEntry_insert_of_eqv [IsStrictWeakOrder α lt] (m : Rbmap α β lt) {
   intro h
   generalize h₁ : m.insert k₁ v = m'
   cases' m' with t p; cases t
-  · have := mem_insert k₁ m v
-    rw [h₁] at this
-    apply absurd this
-    apply not_mem_mk_rbmap
+  · have := mem_insert k₁ m v; rw [h₁] at this; apply absurd this; apply not_mem_mk_rbmap
   all_goals
     simp [find_entry]; rw [← h₁, insert]; apply Rbtree.find_insert_of_eqv
     apply eqv_entries_of_eqv_keys _ _ h

@@ -109,18 +109,14 @@ theorem epi_of_epi_map (F : C ⥤ D) [ReflectsEpimorphisms F] {X Y : C} {f : X �
 #print CategoryTheory.Functor.preservesMonomorphisms_comp /-
 instance preservesMonomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms F]
     [PreservesMonomorphisms G] : PreservesMonomorphisms (F ⋙ G)
-    where preserves X Y f h := by
-    rw [comp_map]
-    exact inferInstance
+    where preserves X Y f h := by rw [comp_map]; exact inferInstance
 #align category_theory.functor.preserves_monomorphisms_comp CategoryTheory.Functor.preservesMonomorphisms_comp
 -/
 
 #print CategoryTheory.Functor.preservesEpimorphisms_comp /-
 instance preservesEpimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms F]
     [PreservesEpimorphisms G] : PreservesEpimorphisms (F ⋙ G)
-    where preserves X Y f h := by
-    rw [comp_map]
-    exact inferInstance
+    where preserves X Y f h := by rw [comp_map]; exact inferInstance
 #align category_theory.functor.preserves_epimorphisms_comp CategoryTheory.Functor.preservesEpimorphisms_comp
 -/
 
@@ -333,10 +329,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.functo
 theorem isSplitEpi_iff [Full F] [Faithful F] : IsSplitEpi (F.map f) ↔ IsSplitEpi f :=
   by
   constructor
-  · intro h
-    exact is_split_epi.mk' ((split_epi_equiv F f).invFun h.exists_split_epi.some)
-  · intro h
-    exact is_split_epi.mk' ((split_epi_equiv F f).toFun h.exists_split_epi.some)
+  · intro h; exact is_split_epi.mk' ((split_epi_equiv F f).invFun h.exists_split_epi.some)
+  · intro h; exact is_split_epi.mk' ((split_epi_equiv F f).toFun h.exists_split_epi.some)
 #align category_theory.functor.is_split_epi_iff CategoryTheory.Functor.isSplitEpi_iff
 
 /- warning: category_theory.functor.split_mono_equiv -> CategoryTheory.Functor.splitMonoEquiv is a dubious translation:
@@ -368,10 +362,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.functo
 theorem isSplitMono_iff [Full F] [Faithful F] : IsSplitMono (F.map f) ↔ IsSplitMono f :=
   by
   constructor
-  · intro h
-    exact is_split_mono.mk' ((split_mono_equiv F f).invFun h.exists_split_mono.some)
-  · intro h
-    exact is_split_mono.mk' ((split_mono_equiv F f).toFun h.exists_split_mono.some)
+  · intro h; exact is_split_mono.mk' ((split_mono_equiv F f).invFun h.exists_split_mono.some)
+  · intro h; exact is_split_mono.mk' ((split_mono_equiv F f).toFun h.exists_split_mono.some)
 #align category_theory.functor.is_split_mono_iff CategoryTheory.Functor.isSplitMono_iff
 
 /- warning: category_theory.functor.epi_map_iff_epi -> CategoryTheory.Functor.epi_map_iff_epi is a dubious translation:
@@ -432,10 +424,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.strong_epi_map_of_strong_epi CategoryTheory.Adjunction.strongEpi_map_of_strongEpiₓ'. -/
 theorem strongEpi_map_of_strongEpi (adj : F ⊣ F') (f : A ⟶ B) [h₁ : F'.PreservesMonomorphisms]
     [h₂ : F.PreservesEpimorphisms] [StrongEpi f] : StrongEpi (F.map f) :=
-  ⟨inferInstance, fun X Y Z => by
-    intro
-    rw [adj.has_lifting_property_iff]
-    infer_instance⟩
+  ⟨inferInstance, fun X Y Z => by intro ; rw [adj.has_lifting_property_iff]; infer_instance⟩
 #align category_theory.adjunction.strong_epi_map_of_strong_epi CategoryTheory.Adjunction.strongEpi_map_of_strongEpi
 
 /- warning: category_theory.adjunction.strong_epi_map_of_is_equivalence -> CategoryTheory.Adjunction.strongEpi_map_of_isEquivalence is a dubious translation:

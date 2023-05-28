@@ -206,10 +206,8 @@ theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) 
   rw [uncurry_eq, prod.map_id_id, id_comp]
 #align category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
 
-theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X :=
-  by
-  rw [curry_eq, (exp A).map_id (A ⨯ _)]
-  apply comp_id
+theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X := by
+  rw [curry_eq, (exp A).map_id (A ⨯ _)]; apply comp_id
 #align category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
 
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
@@ -397,7 +395,7 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClos
           dsimp [prod_comparison]
           simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
-          dsimp
+          dsimp;
           simp
         -- See note [dsimp, simp]
         · have : is_left_adjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=

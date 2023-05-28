@@ -105,9 +105,7 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
   by
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb, hab⟩ := mem_approx_order_of_iff.mp ha
-  replace hb : b ^ m ∈ { u : A | orderOf u = n };
-  · rw [← hb] at hmn⊢
-    exact orderOf_pow_coprime hmn
+  replace hb : b ^ m ∈ { u : A | orderOf u = n }; · rw [← hb] at hmn⊢; exact orderOf_pow_coprime hmn
   apply ball_subset_thickening hb ((m : ℝ) • δ)
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
@@ -178,10 +176,8 @@ theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 
   simp only [mem_approx_add_orderOf_iff, mem_set_of_eq, ball, exists_prop, dist_eq_norm,
     AddCircle.addOrderOf_eq_pos_iff hn, mul_one]
   constructor
-  · rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩
-    exact ⟨m, hm₁, hm₂, hx⟩
-  · rintro ⟨m, hm₁, hm₂, hx⟩
-    exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
+  · rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩; exact ⟨m, hm₁, hm₂, hx⟩
+  · rintro ⟨m, hm₁, hm₂, hx⟩; exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
 #align unit_add_circle.mem_approx_add_order_of_iff UnitAddCircle.mem_approxAddOrderOf_iff
 
 theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
@@ -192,9 +188,7 @@ theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
     mem_set_of_eq]
   refine' iff_of_eq (congr_arg Set.Infinite <| ext fun n => ⟨fun hn => _, fun hn => _⟩)
   · exact (mem_approx_add_orderOf_iff hn.1).mp hn.2
-  · have h : 0 < n := by
-      obtain ⟨m, hm₁, hm₂, hm₃⟩ := hn
-      exact pos_of_gt hm₁
+  · have h : 0 < n := by obtain ⟨m, hm₁, hm₂, hm₃⟩ := hn; exact pos_of_gt hm₁
     exact ⟨h, (mem_approx_add_orderOf_iff h).mpr hn⟩
 #align unit_add_circle.mem_add_well_approximable_iff UnitAddCircle.mem_addWellApproximable_iff
 
@@ -244,9 +238,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
   letI : SemilatticeSup Nat.Primes := Nat.Subtype.semilatticeSup _
   set μ : Measure 𝕊 := volume
   set u : Nat.Primes → 𝕊 := fun p => ↑((↑(1 : ℕ) : ℝ) / p * T)
-  have hu₀ : ∀ p : Nat.Primes, addOrderOf (u p) = (p : ℕ) :=
-    by
-    rintro ⟨p, hp⟩
+  have hu₀ : ∀ p : Nat.Primes, addOrderOf (u p) = (p : ℕ) := by rintro ⟨p, hp⟩;
     exact add_order_of_div_of_gcd_eq_one hp.pos (gcd_one_left p)
   have hu : tendsto (addOrderOf ∘ u) at_top at_top :=
     by
@@ -318,10 +310,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       rw [hu₀, Subtype.coe_mk, hp.coprime_iff_not_dvd, q.mul_div_cancel_left hp.pos]
       exact fun contra => h_ndiv (mul_dvd_mul_left p contra)
     replace h_div : n / p * p = n := Nat.div_mul_cancel h_div
-    have hf : f = (fun y => x + y) ∘ fun y => p • y :=
-      by
-      ext
-      simp [add_comm x]
+    have hf : f = (fun y => x + y) ∘ fun y => p • y := by ext; simp [add_comm x]
     simp_rw [comp_app]
     rw [le_eq_subset, sSupHom.setImage_to_fun, hf, image_comp]
     have := @monotone_image 𝕊 𝕊 fun y => x + y
@@ -355,11 +344,9 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
     obtain ⟨p, hp⟩ := h
     rw [hE₁ p]
     cases hp
-    · cases hA p
-      · contradiction
+    · cases hA p; · contradiction
       simp only [h, union_ae_eq_univ_of_ae_eq_univ_left]
-    · cases hB p
-      · contradiction
+    · cases hB p; · contradiction
       simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
 #align add_circle.add_well_approximable_ae_empty_or_univ AddCircle.addWellApproximable_ae_empty_or_univ
 

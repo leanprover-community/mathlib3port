@@ -34,12 +34,8 @@ def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] :
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_equiv.to_multiplicative AddEquiv.toMultiplicative
 
 /- warning: mul_equiv.to_additive -> MulEquiv.toAdditive is a dubious translation:
@@ -53,12 +49,8 @@ def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive
     where
   toFun f := ⟨f.toMonoidHom.toAdditive, f.symm.toMonoidHom.toAdditive, f.3, f.4, f.5⟩
   invFun f := ⟨f.toAddMonoidHom, f.symm.toAddMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align mul_equiv.to_additive MulEquiv.toAdditive
 
 /- warning: add_equiv.to_multiplicative' -> AddEquiv.toMultiplicative' is a dubious translation:
@@ -74,12 +66,8 @@ def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] :
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'
 
 /- warning: mul_equiv.to_additive' -> MulEquiv.toAdditive' is a dubious translation:
@@ -107,12 +95,8 @@ def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] :
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by
-    ext
-    rfl
-  right_inv x := by
-    ext
-    rfl
+  left_inv x := by ext; rfl
+  right_inv x := by ext; rfl
 #align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''
 
 /- warning: mul_equiv.to_additive'' -> MulEquiv.toAdditive'' is a dubious translation:

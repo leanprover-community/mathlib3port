@@ -70,10 +70,8 @@ theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
   run_tac
     preform.induce sorry
   · cases p <;> try cases h1 <;> trivial
-  · cases h1
-    constructor <;> [· apply ihp;· apply ihq] <;> assumption
-  · cases h1
-    constructor <;> [· apply ihp;· apply ihq] <;> assumption
+  · cases h1; constructor <;> [· apply ihp;· apply ihq] <;> assumption
+  · cases h1; constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.int.is_nnf_push_neg Omega.Int.isNnf_pushNeg
 
 /-- Argument is free of negations -/
@@ -103,8 +101,7 @@ theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p :=
   run_tac
     preform.induce sorry
   · rw [push_neg_equiv]
-    apply not_congr
-    apply ih
+    apply not_congr; apply ih
   · apply pred_mono_2' (ihp v) (ihq v)
   · apply pred_mono_2' (ihp v) (ihq v)
 #align omega.int.nnf_equiv Omega.Int.nnf_equiv
@@ -125,19 +122,15 @@ theorem negFree_negElim : ∀ p : Preform, IsNnf p → NegFree (negElim p) :=
   by
   run_tac
     preform.induce sorry
-  · cases p <;> try cases h1 <;> try trivial
-    constructor <;> trivial
-  · cases h1
-    constructor <;> [· apply ihp;· apply ihq] <;> assumption
-  · cases h1
-    constructor <;> [· apply ihp;· apply ihq] <;> assumption
+  · cases p <;> try cases h1 <;> try trivial; constructor <;> trivial
+  · cases h1; constructor <;> [· apply ihp;· apply ihq] <;> assumption
+  · cases h1; constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.int.neg_free_neg_elim Omega.Int.negFree_negElim
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b :=
   by
   constructor <;> intro h1
-  · cases h1
-    apply le_antisymm <;> assumption
+  · cases h1; apply le_antisymm <;> assumption
   · constructor <;> apply le_of_eq <;> rw [h1]
 #align omega.int.le_and_le_iff_eq Omega.Int.le_and_le_iff_eq
 
@@ -150,19 +143,11 @@ theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
   · cases' p with t s t s <;> try apply h
     · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, preterm.val, preform.holds] at h
       simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
-      rw [or_comm']
-      assumption
+      rw [or_comm']; assumption
     · simp only [not_le, Int.add_one_le_iff, preterm.add_one, not_le, preterm.val, preform.holds,
         neg_elim] at *
       assumption
-  · simp only [neg_elim]
-    cases h <;>
-        [·
-          left
-          apply ihp;·
-          right
-          apply ihq] <;>
-      assumption
+  · simp only [neg_elim]; cases h <;> [· left; apply ihp;· right; apply ihq] <;> assumption
   · apply And.imp (ihp _) (ihq _) h
 #align omega.int.implies_neg_elim Omega.Int.implies_negElim
 
@@ -187,20 +172,17 @@ theorem exists_clause_holds {v : Nat → Int} :
   by
   run_tac
     preform.induce sorry
-  · apply List.exists_mem_cons_of
-    constructor
+  · apply List.exists_mem_cons_of; constructor
     · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [h2, Omega.Int.val_canonize, Omega.Term.val_sub, sub_self]
     · apply List.forall_mem_nil
-  · apply List.exists_mem_cons_of
-    constructor
+  · apply List.exists_mem_cons_of; constructor
     · apply List.forall_mem_nil
     · simp only [preterm.val, preform.holds] at h2
       rw [List.forall_mem_singleton]
       simp only [val_canonize, preterm.val, term.val_sub]
-      rw [le_sub_comm, sub_zero]
-      assumption
+      rw [le_sub_comm, sub_zero]; assumption
   · cases h1
   ·
     cases' h2 with h2 h2 <;>

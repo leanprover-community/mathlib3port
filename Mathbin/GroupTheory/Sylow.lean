@@ -208,10 +208,8 @@ noncomputable instance (H : Subgroup G) [Fintype (Sylow p G)] : Fintype (Sylow p
   Sylow.fintypeOfInjective H.subtype_injective
 
 /-- If `H` is a subgroup of `G`, then `finite (sylow p G)` implies `finite (sylow p H)`. -/
-instance (H : Subgroup G) [Finite (Sylow p G)] : Finite (Sylow p H) :=
-  by
-  cases nonempty_fintype (Sylow p G)
-  infer_instance
+instance (H : Subgroup G) [Finite (Sylow p G)] : Finite (Sylow p H) := by
+  cases nonempty_fintype (Sylow p G); infer_instance
 
 open Pointwise
 
@@ -337,10 +335,7 @@ theorem card_sylow_modEq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow 
         _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eq⟩
         _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm
         
-  have : Fintype (fixed_points P.1 (Sylow p G)) :=
-    by
-    rw [this]
-    infer_instance
+  have : Fintype (fixed_points P.1 (Sylow p G)) := by rw [this]; infer_instance
   have : card (fixed_points P.1 (Sylow p G)) = 1 := by simp [this]
   exact (P.2.card_modEq_card_fixedPoints (Sylow p G)).trans (by rw [this])
 #align card_sylow_modeq_one card_sylow_modEq_one
@@ -521,10 +516,7 @@ theorem mem_fixedPoints_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fin
     inv_mem_iff.1
       (mem_normalizer_fintype fun n (hn : n ∈ H) =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
-        show _ ∈ H by
-          rw [mul_inv_rev, inv_inv] at this
-          convert this
-          rw [inv_inv]),
+        show _ ∈ H by rw [mul_inv_rev, inv_inv] at this; convert this; rw [inv_inv]),
     fun hx : ∀ n : G, n ∈ H ↔ x * n * x⁻¹ ∈ H =>
     (mem_fixedPoints' _).2 fun y =>
       Quotient.inductionOn' y fun y hy =>
@@ -543,11 +535,7 @@ def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] 
       normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
   @subtypeQuotientEquivQuotientSubtype G (normalizer H : Set G) (id _) (id _) (fixedPoints _ _)
     (fun a => (@mem_fixedPoints_mul_left_cosets_iff_mem_normalizer _ _ _ ‹_› _).symm)
-    (by
-      intros
-      rw [setoidHasEquiv]
-      simp only [left_rel_apply]
-      rfl)
+    (by intros ; rw [setoidHasEquiv]; simp only [left_rel_apply]; rfl)
 #align sylow.fixed_points_mul_left_cosets_equiv_quotient Sylow.fixedPointsMulLeftCosetsEquivQuotient
 
 /-- If `H` is a `p`-subgroup of `G`, then the index of `H` inside its normalizer is congruent

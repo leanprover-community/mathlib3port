@@ -364,8 +364,7 @@ theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [Complete
       mem_prod_iff.2
         ⟨_, f.2.le_nhds_lim (mem_nhds_right (lim f.1) du), _,
           g.2.le_nhds_lim (mem_nhds_left (lim g.1) du), fun x h => _⟩
-    cases' x with a b
-    cases' h with h₁ h₂
+    cases' x with a b; cases' h with h₁ h₂
     rw [← e] at h₂
     exact dt ⟨_, h₁, h₂⟩
   · intro H

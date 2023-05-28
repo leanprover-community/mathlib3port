@@ -93,13 +93,9 @@ def triangleMorphism₁ : Triangle.mk u₁₂ v₁₂ w₁₂ ⟶ Triangle.mk u�
   hom₁ := 𝟙 X₁
   hom₂ := u₂₃
   hom₃ := h.m₁
-  comm₁' := by
-    dsimp
-    rw [id_comp, comm]
+  comm₁' := by dsimp; rw [id_comp, comm]
   comm₂' := h.comm₁
-  comm₃' := by
-    dsimp
-    simpa only [Functor.map_id, comp_id] using h.comm₂.symm
+  comm₃' := by dsimp; simpa only [Functor.map_id, comp_id] using h.comm₂.symm
 #align category_theory.triangulated.octahedron.triangle_morphism₁ CategoryTheory.Triangulated.Octahedron.triangleMorphism₁
 
 /- warning: category_theory.triangulated.octahedron.triangle_morphism₂ -> CategoryTheory.Triangulated.Octahedron.triangleMorphism₂ is a dubious translation:
@@ -112,12 +108,8 @@ def triangleMorphism₂ : Triangle.mk u₁₃ v₁₃ w₁₃ ⟶ Triangle.mk u�
   hom₁ := u₁₂
   hom₂ := 𝟙 X₃
   hom₃ := h.m₃
-  comm₁' := by
-    dsimp
-    rw [comp_id, comm]
-  comm₂' := by
-    dsimp
-    rw [id_comp, h.comm₃]
+  comm₁' := by dsimp; rw [comp_id, comm]
+  comm₂' := by dsimp; rw [id_comp, h.comm₃]
   comm₃' := h.comm₄
 #align category_theory.triangulated.octahedron.triangle_morphism₂ CategoryTheory.Triangulated.Octahedron.triangleMorphism₂
 

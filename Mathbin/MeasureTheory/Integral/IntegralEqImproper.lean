@@ -502,11 +502,8 @@ variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter �
 theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (hfi : Integrable f μ) :
     Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
-  suffices h : Tendsto (fun i => ∫ x : α, (φ i).indicator f x ∂μ) l (𝓝 (∫ x : α, f x ∂μ)) from
-    by
-    convert h
-    ext n
-    rw [integral_indicator (hφ.measurable n)]
+  suffices h : Tendsto (fun i => ∫ x : α, (φ i).indicator f x ∂μ) l (𝓝 (∫ x : α, f x ∂μ)) from by
+    convert h; ext n; rw [integral_indicator (hφ.measurable n)]
   tendsto_integral_filter_of_dominated_convergence (fun x => ‖f x‖)
     (eventually_of_forall fun i => hfi.AEStronglyMeasurable.indicator <| hφ.Measurable i)
     (eventually_of_forall fun i => ae_of_all _ fun x => norm_indicator_le_norm_self _ _) hfi.norm
@@ -623,11 +620,8 @@ theorem integrableOn_Ioc_of_interval_integral_norm_bounded {I a₀ b₀ : ℝ}
       (fun i => (hfi i).restrict measurableSet_Ioc) (eventually.mono h _)
   intro i hi; simp only [measure.restrict_restrict measurableSet_Ioc]
   refine' le_trans (set_integral_mono_set (hfi i).norm _ _) hi
-  · apply ae_of_all
-    simp only [Pi.zero_apply, norm_nonneg, forall_const]
-  · apply ae_of_all
-    intro c hc
-    exact hc.1
+  · apply ae_of_all; simp only [Pi.zero_apply, norm_nonneg, forall_const]
+  · apply ae_of_all; intro c hc; exact hc.1
 #align measure_theory.integrable_on_Ioc_of_interval_integral_norm_bounded MeasureTheory.integrableOn_Ioc_of_interval_integral_norm_bounded
 
 theorem integrableOn_Ioc_of_interval_integral_norm_bounded_left {I a₀ b : ℝ}
@@ -861,21 +855,15 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
   have eq : ∀ b : ℝ, a < b → (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u :=
     by
     intro b hb
-    have i1 : Ioo (min a b) (max a b) ⊆ Ioi a :=
-      by
-      rw [min_eq_left hb.le]
+    have i1 : Ioo (min a b) (max a b) ⊆ Ioi a := by rw [min_eq_left hb.le];
       exact Ioo_subset_Ioi_self
-    have i2 : [a, b] ⊆ Ici a := by
-      rw [uIcc_of_le hb.le]
-      exact Icc_subset_Ici_self
+    have i2 : [a, b] ⊆ Ici a := by rw [uIcc_of_le hb.le]; exact Icc_subset_Ici_self
     refine'
       intervalIntegral.integral_comp_smul_deriv''' (hf.mono i2)
         (fun x hx => hff' x <| mem_of_mem_of_subset hx i1) (hg_cont.mono <| image_subset _ _)
         (hg1.mono_set <| image_subset _ _) (hg2.mono_set i2)
-    · rw [min_eq_left hb.le]
-      exact Ioo_subset_Ioi_self
-    · rw [uIcc_of_le hb.le]
-      exact Icc_subset_Ici_self
+    · rw [min_eq_left hb.le]; exact Ioo_subset_Ioi_self
+    · rw [uIcc_of_le hb.le]; exact Icc_subset_Ici_self
   rw [integrableOn_Ici_iff_integrableOn_Ioi] at hg2
   have t2 := interval_integral_tendsto_integral_Ioi _ hg2 tendsto_id
   have : Ioi (f a) ⊆ f '' Ici a :=
@@ -915,20 +903,14 @@ theorem integral_comp_rpow_Ioi (g : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
       exact rpow_lt_rpow (le_of_lt hx) hxy (neg_pos.mpr h)
     exact StrictMonoOn.injOn fun x hx y hy hxy => rpow_lt_rpow (mem_Ioi.mp hx).le hxy h
   have a3 : (fun t : ℝ => t ^ p) '' S = S := by
-    ext1
-    rw [mem_image]
-    constructor
-    · rintro ⟨y, hy, rfl⟩
-      exact rpow_pos_of_pos hy p
-    · intro hx
-      refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
+    ext1; rw [mem_image]; constructor
+    · rintro ⟨y, hy, rfl⟩; exact rpow_pos_of_pos hy p
+    · intro hx; refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
       rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
   have := integral_image_eq_integral_abs_deriv_smul measurableSet_Ioi a1 a2 g
-  rw [a3] at this
-  rw [this]
+  rw [a3] at this; rw [this]
   refine' set_integral_congr measurableSet_Ioi _
-  intro x hx
-  dsimp only
+  intro x hx; dsimp only
   rw [abs_mul, abs_of_nonneg (rpow_nonneg_of_nonneg (le_of_lt hx) _)]
 #align measure_theory.integral_comp_rpow_Ioi MeasureTheory.integral_comp_rpow_Ioi
 
@@ -981,13 +963,9 @@ theorem integrableOn_Ioi_comp_rpow_iff [NormedSpace ℝ E] (f : ℝ → E) {p : 
       exact rpow_lt_rpow (le_of_lt hx) hxy (neg_pos.mpr h)
     exact StrictMonoOn.injOn fun x hx y hy hxy => rpow_lt_rpow (mem_Ioi.mp hx).le hxy h
   have a3 : (fun t : ℝ => t ^ p) '' S = S := by
-    ext1
-    rw [mem_image]
-    constructor
-    · rintro ⟨y, hy, rfl⟩
-      exact rpow_pos_of_pos hy p
-    · intro hx
-      refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
+    ext1; rw [mem_image]; constructor
+    · rintro ⟨y, hy, rfl⟩; exact rpow_pos_of_pos hy p
+    · intro hx; refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
       rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
   have := integrable_on_image_iff_integrable_on_abs_deriv_smul measurableSet_Ioi a1 a2 f
   rw [a3] at this

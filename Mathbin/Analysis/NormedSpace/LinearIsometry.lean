@@ -676,9 +676,7 @@ Case conversion may be inaccurate. Consider using '#align linear_map.to_linear_i
 /-- Construct a `linear_isometry` from a `linear_map` satisfying `isometry`. -/
 def LinearMap.toLinearIsometry (f : E →ₛₗ[σ₁₂] E₂) (hf : Isometry f) : E →ₛₗᵢ[σ₁₂] E₂ :=
   { f with
-    norm_map' := by
-      simp_rw [← dist_zero_right, ← f.map_zero]
-      exact fun x => hf.dist_eq x _ }
+    norm_map' := by simp_rw [← dist_zero_right, ← f.map_zero]; exact fun x => hf.dist_eq x _ }
 #align linear_map.to_linear_isometry LinearMap.toLinearIsometry
 
 namespace Submodule
@@ -812,12 +810,7 @@ instance : SemilinearIsometryEquivClass (E ≃ₛₗᵢ[σ₁₂] E₂) σ₁₂
     where
   coe e := e.toFun
   inv e := e.invFun
-  coe_injective' f g h₁ h₂ := by
-    cases' f with f' _
-    cases' g with g' _
-    cases f'
-    cases g'
-    congr
+  coe_injective' f g h₁ h₂ := by cases' f with f' _; cases' g with g' _; cases f'; cases g'; congr
   left_inv e := e.left_inv
   right_inv e := e.right_inv
   map_add f := map_add f.toLinearEquiv
@@ -966,10 +959,8 @@ theorem coe_toIsometryEquiv : ⇑e.toIsometryEquiv = e :=
 /- warning: linear_isometry_equiv.range_eq_univ -> LinearIsometryEquiv.range_eq_univ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.range_eq_univ LinearIsometryEquiv.range_eq_univₓ'. -/
-theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ :=
-  by
-  rw [← coe_to_isometry_equiv]
-  exact IsometryEquiv.range_eq_univ _
+theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ := by
+  rw [← coe_to_isometry_equiv]; exact IsometryEquiv.range_eq_univ _
 #align linear_isometry_equiv.range_eq_univ LinearIsometryEquiv.range_eq_univ
 
 #print LinearIsometryEquiv.toHomeomorph /-
@@ -1661,10 +1652,7 @@ noncomputable def ofSurjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Functi
 Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.coe_of_surjective LinearIsometryEquiv.coe_ofSurjectiveₓ'. -/
 @[simp]
 theorem coe_ofSurjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) :
-    ⇑(LinearIsometryEquiv.ofSurjective f hfr) = f :=
-  by
-  ext
-  rfl
+    ⇑(LinearIsometryEquiv.ofSurjective f hfr) = f := by ext; rfl
 #align linear_isometry_equiv.coe_of_surjective LinearIsometryEquiv.coe_ofSurjective
 
 #print LinearIsometryEquiv.ofLinearIsometry /-

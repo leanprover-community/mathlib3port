@@ -73,11 +73,8 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
   simp_rw [pi_quotient_lift, lsum_apply, sum_apply, comp_apply, proj_apply]
   rw [Finset.sum_eq_single i]
   · rw [Pi.single_eq_same]
-  · rintro j - hj
-    rw [Pi.single_eq_of_ne hj, _root_.map_zero]
-  · intros
-    have := Finset.mem_univ i
-    contradiction
+  · rintro j - hj; rw [Pi.single_eq_of_ne hj, _root_.map_zero]
+  · intros ; have := Finset.mem_univ i; contradiction
 #align submodule.pi_quotient_lift_single Submodule.piQuotientLift_single
 
 /- warning: submodule.quotient_pi_lift -> Submodule.quotientPiLift is a dubious translation:
@@ -87,9 +84,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.quotient_pi_
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) : (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
   (pi Set.univ p).liftQ (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
-    mem_ker.mpr <| by
-      ext i
-      simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
+    mem_ker.mpr <| by ext i; simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
 #align submodule.quotient_pi_lift Submodule.quotientPiLift
 
 /- warning: submodule.quotient_pi_lift_mk -> Submodule.quotientPiLift_mk is a dubious translation:
@@ -122,8 +117,7 @@ def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
       rw [comp_apply, pi_quotient_lift_single, Quotient.mk''_eq_mk', mapq_apply,
         quotient_pi_lift_mk, id_apply]
       by_cases hij : i = j <;> simp only [mkq_apply, coe_single]
-      · subst hij
-        simp only [Pi.single_eq_same]
+      · subst hij; simp only [Pi.single_eq_same]
       · simp only [Pi.single_eq_of_ne (Ne.symm hij), quotient.mk_zero] }
 #align submodule.quotient_pi Submodule.quotientPi
 -/

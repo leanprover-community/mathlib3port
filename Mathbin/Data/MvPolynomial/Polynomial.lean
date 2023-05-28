@@ -51,10 +51,8 @@ theorem eval_polynomial_eval_finSuccEquiv {n : ℕ} (f : MvPolynomial (Fin (n + 
       eval (show Fin (n + 1) → R from @Fin.cases _ (fun _ => R) (eval x q) x) f :=
   by
   simp only [fin_succ_equiv_apply, coe_eval₂_hom, eval_eval₂, polynomial_eval_eval₂]
-  have : (eval x).comp ((Polynomial.evalRingHom q).comp (polynomial.C.comp C)) = RingHom.id _ :=
-    by
-    ext
-    simp
+  have : (eval x).comp ((Polynomial.evalRingHom q).comp (polynomial.C.comp C)) = RingHom.id _ := by
+    ext; simp
   simp only [this, eval₂_id]
   congr
   funext i

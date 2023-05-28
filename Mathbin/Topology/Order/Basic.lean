@@ -1022,8 +1022,7 @@ theorem continuous_if_le [TopologicalSpace γ] [∀ x, Decidable (f x ≤ g x)] 
   by
   refine' continuous_if (fun a ha => hfg _ (frontier_le_subset_eq hf hg ha)) _ (hg'.mono _)
   · rwa [(isClosed_le hf hg).closure_eq]
-  · simp only [not_le]
-    exact closure_lt_subset_le hg hf
+  · simp only [not_le]; exact closure_lt_subset_le hg hf
 #align continuous_if_le continuous_if_le
 
 /- warning: continuous.if_le -> Continuous.if_le is a dubious translation:
@@ -1072,9 +1071,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous.min Continuous.minₓ'. -/
 @[continuity]
 theorem Continuous.min (hf : Continuous f) (hg : Continuous g) :
-    Continuous fun b => min (f b) (g b) :=
-  by
-  simp only [min_def]
+    Continuous fun b => min (f b) (g b) := by simp only [min_def];
   exact hf.if_le hg hf hg fun x => id
 #align continuous.min Continuous.min
 
@@ -1141,10 +1138,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))] {f : β -> α} {l : Filter.{u2} β} {a : α}, (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)) -> (Filter.Tendsto.{u2, u1} β α (fun (i : β) => Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_2) a (f i)) l (nhds.{u1} α _inst_1 a))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.max_right Filter.Tendsto.max_rightₓ'. -/
 theorem Filter.Tendsto.max_right {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
-    Tendsto (fun i => max a (f i)) l (𝓝 a) :=
-  by
-  convert((continuous_max.comp (@Continuous.Prod.mk α α _ _ a)).Tendsto a).comp h
-  simp
+    Tendsto (fun i => max a (f i)) l (𝓝 a) := by
+  convert((continuous_max.comp (@Continuous.Prod.mk α α _ _ a)).Tendsto a).comp h; simp
 #align filter.tendsto.max_right Filter.Tendsto.max_right
 
 /- warning: filter.tendsto.max_left -> Filter.Tendsto.max_left is a dubious translation:
@@ -1154,10 +1149,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))] {f : β -> α} {l : Filter.{u2} β} {a : α}, (Filter.Tendsto.{u2, u1} β α f l (nhds.{u1} α _inst_1 a)) -> (Filter.Tendsto.{u2, u1} β α (fun (i : β) => Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_2) (f i) a) l (nhds.{u1} α _inst_1 a))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.max_left Filter.Tendsto.max_leftₓ'. -/
 theorem Filter.Tendsto.max_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝 a)) :
-    Tendsto (fun i => max (f i) a) l (𝓝 a) :=
-  by
-  simp_rw [max_comm _ a]
-  exact h.max_right
+    Tendsto (fun i => max (f i) a) l (𝓝 a) := by simp_rw [max_comm _ a]; exact h.max_right
 #align filter.tendsto.max_left Filter.Tendsto.max_left
 
 /- warning: filter.tendsto_nhds_max_right -> Filter.tendsto_nhds_max_right is a dubious translation:
@@ -1180,9 +1172,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : OrderClosedTopology.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))] {f : β -> α} {l : Filter.{u2} β} {a : α}, (Filter.Tendsto.{u2, u1} β α f l (nhdsWithin.{u1} α _inst_1 a (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) a))) -> (Filter.Tendsto.{u2, u1} β α (fun (i : β) => Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_2) (f i) a) l (nhdsWithin.{u1} α _inst_1 a (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) a)))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_nhds_max_left Filter.tendsto_nhds_max_leftₓ'. -/
 theorem Filter.tendsto_nhds_max_left {l : Filter β} {a : α} (h : Tendsto f l (𝓝[>] a)) :
-    Tendsto (fun i => max (f i) a) l (𝓝[>] a) :=
-  by
-  simp_rw [max_comm _ a]
+    Tendsto (fun i => max (f i) a) l (𝓝[>] a) := by simp_rw [max_comm _ a];
   exact Filter.tendsto_nhds_max_right h
 #align filter.tendsto_nhds_max_left Filter.tendsto_nhds_max_left
 
@@ -2109,8 +2099,7 @@ theorem exists_Icc_mem_subset_of_mem_nhdsWithin_Ici {a : α} {s : Set α} (hs : 
     ∃ (b : _)(_ : a ≤ b), Icc a b ∈ 𝓝[≥] a ∧ Icc a b ⊆ s :=
   by
   rcases(em (IsMax a)).imp_right not_is_max_iff.mp with (ha | ha)
-  · use a
-    simpa [ha.Ici_eq] using hs
+  · use a; simpa [ha.Ici_eq] using hs
   · rcases(nhdsWithin_Ici_basis' ha).mem_iff.mp hs with ⟨b, hab, hbs⟩
     rcases eq_empty_or_nonempty (Ioo a b) with (H | ⟨c, hac, hcb⟩)
     · have : Ico a b = Icc a a := by rw [← Icc_union_Ioo_eq_Ico le_rfl hab, H, union_empty]
@@ -2325,8 +2314,7 @@ theorem countable_of_isolated_right' [SecondCountableTopology α] :
       exact False.elim (lt_irrefl _ ((Hy _ _ x't.1 H).trans_lt h'))
   refine' this.countable_of_is_open (fun x hx => _) fun x hx => ⟨x, hz x hx, le_rfl⟩
   suffices H : Ioc (z x) x = Ioo (z x) (y x)
-  · rw [H]
-    exact isOpen_Ioo
+  · rw [H]; exact isOpen_Ioo
   exact subset.antisymm (Ioc_subset_Ioo_right (hy x hx.1)) fun u hu => ⟨hu.1, Hy _ _ hx.1 hu.2⟩
 #align countable_of_isolated_right countable_of_isolated_right'
 
@@ -2342,9 +2330,7 @@ theorem countable_of_isolated_left' [SecondCountableTopology α] :
     Set.Countable { x : α | ∃ y, y < x ∧ Ioo y x = ∅ } :=
   by
   convert@countable_of_isolated_right' αᵒᵈ _ _ _ _
-  have : ∀ x y : α, Ioo x y = { z | z < y ∧ x < z } :=
-    by
-    simp_rw [and_comm', Ioo]
+  have : ∀ x y : α, Ioo x y = { z | z < y ∧ x < z } := by simp_rw [and_comm', Ioo];
     simp only [eq_self_iff_true, forall₂_true_iff]
   simp_rw [this]
   rfl
@@ -3134,9 +3120,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_top_
 /-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
 `at_top` and `g` tends to `C` then `f + g` tends to `at_top`. -/
 theorem Filter.Tendsto.atTop_add {C : α} (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
-    Tendsto (fun x => f x + g x) l atTop :=
-  by
-  conv in _ + _ => rw [add_comm]
+    Tendsto (fun x => f x + g x) l atTop := by conv in _ + _ => rw [add_comm];
   exact hg.add_at_top hf
 #align filter.tendsto.at_top_add Filter.Tendsto.atTop_add
 
@@ -3149,9 +3133,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_bot_
 /-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
 `at_bot` and `g` tends to `C` then `f + g` tends to `at_bot`. -/
 theorem Filter.Tendsto.atBot_add {C : α} (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
-    Tendsto (fun x => f x + g x) l atBot :=
-  by
-  conv in _ + _ => rw [add_comm]
+    Tendsto (fun x => f x + g x) l atBot := by conv in _ + _ => rw [add_comm];
   exact hg.add_at_bot hf
 #align filter.tendsto.at_bot_add Filter.Tendsto.atBot_add
 
@@ -3497,10 +3479,7 @@ theorem IsLUB.exists_seq_strictMono_tendsto_of_not_mem {t : Set α} {x : α}
   · simp only [ge_iff_le, eventually_at_top]
     refine' ⟨n, fun p hp => _⟩
     have up : u p ∈ Icc (u n) x := ⟨S.monotone hp, (I p).le⟩
-    have : Icc (u n) x ⊆ s n := by
-      cases n
-      · exact (hf 0 l hl).1
-      · exact (hf n.succ (u n) (I n)).1
+    have : Icc (u n) x ⊆ s n := by cases n; · exact (hf 0 l hl).1; · exact (hf n.succ (u n) (I n)).1
     exact this up
   · cases n
     · exact (hf 0 l hl).2.2.2
@@ -3745,8 +3724,7 @@ theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (Ioo a b) = Icc a b :=
       have hab' : (Ioo a b).Nonempty := nonempty_Ioo.2 hab
       simp only [insert_subset, singleton_subset_iff]
       exact ⟨(isGLB_Ioo hab).mem_closure hab', (isLUB_Ioo hab).mem_closure hab'⟩
-    · rw [Icc_eq_empty_of_lt hab]
-      exact empty_subset _
+    · rw [Icc_eq_empty_of_lt hab]; exact empty_subset _
 #align closure_Ioo closure_Ioo
 
 /- warning: closure_Ioc -> closure_Ioc is a dubious translation:
@@ -4442,10 +4420,8 @@ theorem Dense.exists_countable_dense_subset_no_bot_top [Nontrivial α] {s : Set 
   · exact (diff_subset _ _).trans hts
   · exact htc.mono (diff_subset _ _)
   · exact htd.diff_finite ((subsingleton_is_bot α).Finite.union (subsingleton_is_top α).Finite)
-  · intro x hx
-    simp [hx]
-  · intro x hx
-    simp [hx]
+  · intro x hx; simp [hx]
+  · intro x hx; simp [hx]
 #align dense.exists_countable_dense_subset_no_bot_top Dense.exists_countable_dense_subset_no_bot_top
 
 variable (α)

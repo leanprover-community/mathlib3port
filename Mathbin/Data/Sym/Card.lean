@@ -121,8 +121,7 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multich
   apply @pincer_recursion fun n k => card (Sym (Fin n) k) = multichoose n k
   · simp
   · intro b
-    induction' b with b IHb
-    · simp
+    induction' b with b IHb; · simp
     rw [multichoose_zero_succ, card_eq_zero_iff]
     infer_instance
   · intro x y h1 h2
@@ -140,9 +139,7 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multich
 #print Sym.card_sym_eq_multichoose /-
 /-- For any fintype `α` of cardinality `n`, `card (sym α k) = multichoose (card α) k` -/
 theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (Sym α k)] :
-    card (Sym α k) = multichoose (card α) k :=
-  by
-  rw [← card_sym_fin_eq_multichoose]
+    card (Sym α k) = multichoose (card α) k := by rw [← card_sym_fin_eq_multichoose];
   exact card_congr (equiv_congr (equiv_fin α))
 #align sym.card_sym_eq_multichoose Sym.card_sym_eq_multichoose
 -/

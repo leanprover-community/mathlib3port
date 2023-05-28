@@ -62,19 +62,15 @@ def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } :=
 scoped[Count] attribute [instance] Nat.CountSet.fintype
 
 #print Nat.count_eq_card_filter_range /-
-theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filterₓ p).card :=
-  by
-  rw [count, List.countp_eq_length_filter]
-  rfl
+theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filterₓ p).card := by
+  rw [count, List.countp_eq_length_filter]; rfl
 #align nat.count_eq_card_filter_range Nat.count_eq_card_filter_range
 -/
 
 #print Nat.count_eq_card_fintype /-
 /-- `count p n` can be expressed as the cardinality of `{k // k < n ∧ p k}`. -/
-theorem count_eq_card_fintype (n : ℕ) : count p n = Fintype.card { k : ℕ // k < n ∧ p k } :=
-  by
-  rw [count_eq_card_filter_range, ← Fintype.card_ofFinset, ← count_set.fintype]
-  rfl
+theorem count_eq_card_fintype (n : ℕ) : count p n = Fintype.card { k : ℕ // k < n ∧ p k } := by
+  rw [count_eq_card_filter_range, ← Fintype.card_ofFinset, ← count_set.fintype]; rfl
 #align nat.count_eq_card_fintype Nat.count_eq_card_fintype
 -/
 
@@ -108,10 +104,8 @@ theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p 
 -/
 
 #print Nat.count_add' /-
-theorem count_add' (a b : ℕ) : count p (a + b) = count (fun k => p (k + b)) a + count p b :=
-  by
-  rw [add_comm, count_add, add_comm]
-  simp_rw [add_comm b]
+theorem count_add' (a b : ℕ) : count p (a + b) = count (fun k => p (k + b)) a + count p b := by
+  rw [add_comm, count_add, add_comm]; simp_rw [add_comm b]
 #align nat.count_add' Nat.count_add'
 -/
 

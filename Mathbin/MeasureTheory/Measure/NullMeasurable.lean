@@ -210,9 +210,7 @@ protected theorem biUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable)
 
 #print MeasureTheory.NullMeasurableSet.sUnion /-
 protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
-    NullMeasurableSet (⋃₀ s) μ := by
-  rw [sUnion_eq_bUnion]
-  exact MeasurableSet.biUnion hs h
+    NullMeasurableSet (⋃₀ s) μ := by rw [sUnion_eq_bUnion]; exact MeasurableSet.biUnion hs h
 #align measure_theory.null_measurable_set.sUnion MeasureTheory.NullMeasurableSet.sUnion
 -/
 

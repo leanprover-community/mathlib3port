@@ -57,10 +57,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
         _ = 0 := zero_comp
         
   HasLimit.mk
-    { Cone :=
-        PullbackCone.mk a' b' <| by
-          simp at ha' hb'
-          rw [ha', hb']
+    { Cone := PullbackCone.mk a' b' <| by simp at ha' hb'; rw [ha', hb']
       IsLimit :=
         PullbackCone.IsLimit.mk _
           (fun s =>
@@ -82,20 +79,13 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
                   _ = 0 ≫ Limits.prod.snd := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_mono a).1 <| by
-              rw [kernel_fork.ι_of_ι] at ha'
+            (cancel_mono a).1 <| by rw [kernel_fork.ι_of_ι] at ha';
               simp [ha', pullback_cone.condition s])
-          (fun s =>
-            (cancel_mono b).1 <| by
-              rw [kernel_fork.ι_of_ι] at hb'
-              simp [hb'])
+          (fun s => (cancel_mono b).1 <| by rw [kernel_fork.ι_of_ι] at hb'; simp [hb'])
           fun s m h₁ h₂ =>
           (cancel_mono (kernel.ι (prod.lift f g))).1 <|
             calc
-              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a :=
-                by
-                congr
-                exact ha'.symm
+              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a := by congr ; exact ha'.symm
               _ = PullbackCone.fst s ≫ a := by rw [← category.assoc, h₁]
               _ = PullbackCone.snd s ≫ b := (PullbackCone.condition s)
               _ =
@@ -228,10 +218,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
         _ = 0 := HasZeroMorphisms.comp_zero _ _
         
   HasColimit.mk
-    { Cocone :=
-        PushoutCocone.mk a' b' <| by
-          simp only [cofork.π_of_π] at ha' hb'
-          rw [ha', hb']
+    { Cocone := PushoutCocone.mk a' b' <| by simp only [cofork.π_of_π] at ha' hb'; rw [ha', hb']
       IsColimit :=
         PushoutCocone.IsColimit.mk _
           (fun s =>
@@ -253,20 +240,14 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
                   _ = coprod.inr ≫ 0 := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_epi a).1 <| by
-              rw [cokernel_cofork.π_of_π] at ha'
+            (cancel_epi a).1 <| by rw [cokernel_cofork.π_of_π] at ha';
               simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
-            (cancel_epi b).1 <| by
-              rw [cokernel_cofork.π_of_π] at hb'
-              simp [reassoc_of hb'])
+            (cancel_epi b).1 <| by rw [cokernel_cofork.π_of_π] at hb'; simp [reassoc_of hb'])
           fun s m h₁ h₂ =>
           (cancel_epi (cokernel.π (coprod.desc f g))).1 <|
             calc
-              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m :=
-                by
-                congr
-                exact ha'.symm
+              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m := by congr ; exact ha'.symm
               _ = a ≫ PushoutCocone.inl s := by rw [category.assoc, h₁]
               _ = b ≫ PushoutCocone.inr s := (PushoutCocone.condition s)
               _ =

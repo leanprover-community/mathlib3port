@@ -558,8 +558,7 @@ theorem GradedMonoid.mk_list_dProd (l : List α) (fι : α → ι) (fA : ∀ a, 
     GradedMonoid.mk _ (l.dProd fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod :=
   by
   induction l
-  · simp
-    rfl
+  · simp; rfl
   · simp [← l_ih, GradedMonoid.mk_mul_mk, List.prod_cons]
     rfl
 #align graded_monoid.mk_list_dprod GradedMonoid.mk_list_dProd
@@ -649,10 +648,8 @@ theorem List.dProd_monoid {α} [AddMonoid ι] [Monoid R] (l : List α) (fι : α
     (l.dProd fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) :=
   by
   induction l
-  · rw [List.dProd_nil, List.map_nil, List.prod_nil]
-    rfl
-  · rw [List.dProd_cons, List.map_cons, List.prod_cons, l_ih]
-    rfl
+  · rw [List.dProd_nil, List.map_nil, List.prod_nil]; rfl
+  · rw [List.dProd_cons, List.map_cons, List.prod_cons, l_ih]; rfl
 #align list.dprod_monoid List.dProd_monoid
 
 end
@@ -745,10 +742,8 @@ Case conversion may be inaccurate. Consider using '#align set_like.pow_mem_grade
 theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A (n • i) :=
   by
   induction n
-  · rw [pow_zero, zero_nsmul]
-    exact one_mem_graded _
-  · rw [pow_succ', succ_nsmul']
-    exact mul_mem_graded n_ih h
+  · rw [pow_zero, zero_nsmul]; exact one_mem_graded _
+  · rw [pow_succ', succ_nsmul']; exact mul_mem_graded n_ih h
 #align set_like.pow_mem_graded SetLike.pow_mem_graded
 
 /- warning: set_like.list_prod_map_mem_graded -> SetLike.list_prod_map_mem_graded is a dubious translation:

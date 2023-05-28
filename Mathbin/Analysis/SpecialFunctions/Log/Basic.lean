@@ -63,11 +63,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} (hx : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x), Eq.{1} Real (Real.log x) (FunLike.coe.{1, 1, 1} (RelIso.{0, 0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Real) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (fun (_x : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => Real) (RelHomClass.toFunLike.{0, 0, 0} (RelIso.{0, 0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Real) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Real) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{0, 0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) => LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Real) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Real) => LE.le.{0} Real Real.instLEReal x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) (OrderIso.symm.{0, 0} Real (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) Real.instLEReal (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) Real.expOrderIso) (Subtype.mk.{1} Real (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) x hx))
 Case conversion may be inaccurate. Consider using '#align real.log_of_pos Real.log_of_posₓ'. -/
-theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ :=
-  by
-  rw [log_of_ne_zero hx.ne']
-  congr
-  exact abs_of_pos hx
+theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ := by rw [log_of_ne_zero hx.ne'];
+  congr ; exact abs_of_pos hx
 #align real.log_of_pos Real.log_of_pos
 
 /- warning: real.exp_log_eq_abs -> Real.exp_log_eq_abs is a dubious translation:
@@ -86,10 +83,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} Real (Real.exp (Real.log x)) x)
 Case conversion may be inaccurate. Consider using '#align real.exp_log Real.exp_logₓ'. -/
-theorem exp_log (hx : 0 < x) : exp (log x) = x :=
-  by
-  rw [exp_log_eq_abs hx.ne']
-  exact abs_of_pos hx
+theorem exp_log (hx : 0 < x) : exp (log x) = x := by rw [exp_log_eq_abs hx.ne']; exact abs_of_pos hx
 #align real.exp_log Real.exp_log
 
 /- warning: real.exp_log_of_neg -> Real.exp_log_of_neg is a dubious translation:
@@ -98,9 +92,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (Real.exp (Real.log x)) (Neg.neg.{0} Real Real.instNegReal x))
 Case conversion may be inaccurate. Consider using '#align real.exp_log_of_neg Real.exp_log_of_negₓ'. -/
-theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x :=
-  by
-  rw [exp_log_eq_abs (ne_of_lt hx)]
+theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by rw [exp_log_eq_abs (ne_of_lt hx)];
   exact abs_of_neg hx
 #align real.exp_log_of_neg Real.exp_log_of_neg
 
@@ -113,10 +105,8 @@ Case conversion may be inaccurate. Consider using '#align real.le_exp_log Real.l
 theorem le_exp_log (x : ℝ) : x ≤ exp (log x) :=
   by
   by_cases h_zero : x = 0
-  · rw [h_zero, log, dif_pos rfl, exp_zero]
-    exact zero_le_one
-  · rw [exp_log_eq_abs h_zero]
-    exact le_abs_self _
+  · rw [h_zero, log, dif_pos rfl, exp_zero]; exact zero_le_one
+  · rw [exp_log_eq_abs h_zero]; exact le_abs_self _
 #align real.le_exp_log Real.le_exp_log
 
 #print Real.log_exp /-
@@ -274,9 +264,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real} {y : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x y) -> (LT.lt.{0} Real Real.instLTReal (Real.log x) (Real.log y))
 Case conversion may be inaccurate. Consider using '#align real.log_lt_log Real.log_lt_logₓ'. -/
-theorem log_lt_log (hx : 0 < x) : x < y → log x < log y :=
-  by
-  intro h
+theorem log_lt_log (hx : 0 < x) : x < y → log x < log y := by intro h;
   rwa [← exp_lt_exp, exp_log hx, exp_log (lt_trans hx h)]
 #align real.log_lt_log Real.log_lt_log
 
@@ -332,9 +320,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Iff (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Real.log x)) (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x))
 Case conversion may be inaccurate. Consider using '#align real.log_pos_iff Real.log_pos_iffₓ'. -/
-theorem log_pos_iff (hx : 0 < x) : 0 < log x ↔ 1 < x :=
-  by
-  rw [← log_one]
+theorem log_pos_iff (hx : 0 < x) : 0 < log x ↔ 1 < x := by rw [← log_one];
   exact log_lt_log_iff zero_lt_one hx
 #align real.log_pos_iff Real.log_pos_iff
 
@@ -354,9 +340,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Iff (LT.lt.{0} Real Real.instLTReal (Real.log x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))
 Case conversion may be inaccurate. Consider using '#align real.log_neg_iff Real.log_neg_iffₓ'. -/
-theorem log_neg_iff (h : 0 < x) : log x < 0 ↔ x < 1 :=
-  by
-  rw [← log_one]
+theorem log_neg_iff (h : 0 < x) : log x < 0 ↔ x < 1 := by rw [← log_one];
   exact log_lt_log_iff h zero_lt_one
 #align real.log_neg_iff Real.log_neg_iff
 
@@ -544,10 +528,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} Real (Real.log (Real.sqrt x)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.log x) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))
 Case conversion may be inaccurate. Consider using '#align real.log_sqrt Real.log_sqrtₓ'. -/
-theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 :=
-  by
-  rw [eq_div_iff, mul_comm, ← Nat.cast_two, ← log_pow, sq_sqrt hx]
-  exact two_ne_zero
+theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 := by
+  rw [eq_div_iff, mul_comm, ← Nat.cast_two, ← log_pow, sq_sqrt hx]; exact two_ne_zero
 #align real.log_sqrt Real.log_sqrt
 
 /- warning: real.log_le_sub_one_of_pos -> Real.log_le_sub_one_of_pos is a dubious translation:
@@ -577,13 +559,9 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
   replace : log (1 / x) < 1 / x := by linarith
   rw [log_div one_ne_zero h1.ne', log_one, zero_sub, lt_div_iff h1] at this
   have aux : 0 ≤ -log x * x := by
-    refine' mul_nonneg _ h1.le
-    rw [← log_inv]
-    apply log_nonneg
-    rw [← le_inv h1 zero_lt_one, inv_one]
-    exact h2
-  rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this
-  exact this
+    refine' mul_nonneg _ h1.le; rw [← log_inv]; apply log_nonneg
+    rw [← le_inv h1 zero_lt_one, inv_one]; exact h2
+  rw [← abs_of_nonneg aux, neg_mul, abs_neg] at this; exact this
 #align real.abs_log_mul_self_lt Real.abs_log_mul_self_lt
 
 #print Real.tendsto_log_atTop /-

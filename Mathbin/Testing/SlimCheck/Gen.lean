@@ -208,10 +208,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
   have ha : 1 ≤ s :=
     le_trans Pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
-        List.length_le_sum_of_one_le _ fun i => by
-          simp
-          intros
-          assumption
+        List.length_le_sum_of_one_le _ fun i => by simp; intros ; assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
   Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this) fun i =>
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)

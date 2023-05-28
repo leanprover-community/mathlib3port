@@ -61,8 +61,7 @@ Case conversion may be inaccurate. Consider using '#align finset.le_sum_condense
 theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
     (∑ k in Ico 1 (2 ^ n), f k) ≤ ∑ k in range n, 2 ^ k • f (2 ^ k) :=
   by
-  induction' n with n ihn
-  · simp
+  induction' n with n ihn; · simp
   suffices (∑ k in Ico (2 ^ n) (2 ^ (n + 1)), f k) ≤ 2 ^ n • f (2 ^ n)
     by
     rw [sum_range_succ, ← sum_Ico_consecutive]
@@ -96,8 +95,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sum_condensed_l
 theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
     (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in Ico 2 (2 ^ n + 1), f k :=
   by
-  induction' n with n ihn
-  · simp
+  induction' n with n ihn; · simp
   suffices 2 ^ n • f (2 ^ (n + 1)) ≤ ∑ k in Ico (2 ^ n + 1) (2 ^ (n + 1) + 1), f k
     by
     rw [sum_range_succ, ← sum_Ico_consecutive]
@@ -263,10 +261,8 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
 
 #print Real.summable_nat_rpow /-
 @[simp]
-theorem Real.summable_nat_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ) ↔ p < -1 :=
-  by
-  rcases neg_surjective p with ⟨p, rfl⟩
-  simp [rpow_neg]
+theorem Real.summable_nat_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ) ↔ p < -1 := by
+  rcases neg_surjective p with ⟨p, rfl⟩; simp [rpow_neg]
 #align real.summable_nat_rpow Real.summable_nat_rpow
 -/
 
@@ -439,8 +435,7 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   have B : 0 < (n : α) + 1 := by linarith
   field_simp [B.ne']
   rw [div_le_div_iff _ A, ← sub_nonneg]
-  · ring_nf
-    exact B.le
+  · ring_nf; exact B.le
   · nlinarith
 #align sum_Ioc_inv_sq_le_sub sum_Ioc_inv_sq_le_sub
 

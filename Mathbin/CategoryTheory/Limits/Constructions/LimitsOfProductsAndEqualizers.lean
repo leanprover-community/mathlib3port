@@ -95,16 +95,11 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) :
     · refine' t₁.lift (fan.mk _ fun j => _)
       apply q.π.app j
     · apply t₂.hom_ext
-      intro j
+      intro j;
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
       simp [hs, ht]
-  uniq q m w :=
-    hi.hom_ext
-      (i.equalizer_ext
-        (t₁.hom_ext fun j => by
-          cases j
-          simpa using w j))
+  uniq q m w := hi.hom_ext (i.equalizer_ext (t₁.hom_ext fun j => by cases j; simpa using w j))
 #align category_theory.limits.has_limit_of_has_products_of_has_equalizers.build_is_limit CategoryTheory.Limits.HasLimitOfHasProductsOfHasEqualizers.buildIsLimit
 
 end HasLimitOfHasProductsOfHasEqualizers
@@ -344,16 +339,11 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
     · refine' t₂.desc (cofan.mk _ fun j => _)
       apply q.ι.app j
     · apply t₁.hom_ext
-      intro j
+      intro j;
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
       simp [reassoc_of hs, reassoc_of ht]
-  uniq q m w :=
-    hi.hom_ext
-      (i.coequalizer_ext
-        (t₂.hom_ext fun j => by
-          cases j
-          simpa using w j))
+  uniq q m w := hi.hom_ext (i.coequalizer_ext (t₂.hom_ext fun j => by cases j; simpa using w j))
 #align category_theory.limits.has_colimit_of_has_coproducts_of_has_coequalizers.build_is_colimit CategoryTheory.Limits.HasColimitOfHasCoproductsOfHasCoequalizers.buildIsColimit
 
 end HasColimitOfHasCoproductsOfHasCoequalizers

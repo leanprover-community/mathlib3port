@@ -289,10 +289,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.presieve.get_functor_pushforward_structure CategoryTheory.Presieve.getFunctorPushforwardStructureₓ'. -/
 /-- The fixed choice of a preimage. -/
 noncomputable def getFunctorPushforwardStructure {F : C ⥤ D} {S : Presieve X} {Y : D}
-    {f : Y ⟶ F.obj X} (h : S.functorPushforward F f) : FunctorPushforwardStructure F S f :=
-  by
-  choose Z f' g h₁ h using h
-  exact ⟨Z, f', g, h₁, h⟩
+    {f : Y ⟶ F.obj X} (h : S.functorPushforward F f) : FunctorPushforwardStructure F S f := by
+  choose Z f' g h₁ h using h; exact ⟨Z, f', g, h₁, h⟩
 #align category_theory.presieve.get_functor_pushforward_structure CategoryTheory.Presieve.getFunctorPushforwardStructure
 
 /- warning: category_theory.presieve.functor_pushforward_comp -> CategoryTheory.Presieve.functorPushforward_comp is a dubious translation:
@@ -306,10 +304,8 @@ theorem functorPushforward_comp (R : Presieve X) :
   by
   ext (x f)
   constructor
-  · rintro ⟨X, f₁, g₁, h₁, rfl⟩
-    exact ⟨F.obj X, F.map f₁, g₁, ⟨X, f₁, 𝟙 _, h₁, by simp⟩, rfl⟩
-  · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩
-    use ⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
+  · rintro ⟨X, f₁, g₁, h₁, rfl⟩; exact ⟨F.obj X, F.map f₁, g₁, ⟨X, f₁, 𝟙 _, h₁, by simp⟩, rfl⟩
+  · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩; use ⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
 #align category_theory.presieve.functor_pushforward_comp CategoryTheory.Presieve.functorPushforward_comp
 
 /- warning: category_theory.presieve.image_mem_functor_pushforward -> CategoryTheory.Presieve.image_mem_functorPushforward is a dubious translation:
@@ -384,9 +380,7 @@ open Lattice
 protected def sup (𝒮 : Set (Sieve X)) : Sieve X
     where
   arrows Y := { f | ∃ S ∈ 𝒮, Sieve.arrows S f }
-  downward_closed' Y Z f := by
-    rintro ⟨S, hS, hf⟩ g
-    exact ⟨S, hS, S.downward_closed hf _⟩
+  downward_closed' Y Z f := by rintro ⟨S, hS, hf⟩ g; exact ⟨S, hS, S.downward_closed hf _⟩
 #align category_theory.sieve.Sup CategoryTheory.Sieve.sup
 -/
 
@@ -413,9 +407,7 @@ protected def union (S R : Sieve X) : Sieve X
 protected def inter (S R : Sieve X) : Sieve X
     where
   arrows Y f := S f ∧ R f
-  downward_closed' := by
-    rintro Y Z f ⟨h₁, h₂⟩ g
-    simp [h₁, h₂]
+  downward_closed' := by rintro Y Z f ⟨h₁, h₂⟩ g; simp [h₁, h₂]
 #align category_theory.sieve.inter CategoryTheory.Sieve.inter
 -/
 
@@ -439,9 +431,7 @@ instance : CompleteLattice (Sieve X)
   sSup := Sieve.sup
   sInf := Sieve.inf
   le_sup 𝒮 S hS Y f hf := ⟨S, hS, hf⟩
-  sup_le ℰ S hS Y f := by
-    rintro ⟨R, hR, hf⟩
-    apply hS R hR _ hf
+  sup_le ℰ S hS Y f := by rintro ⟨R, hR, hf⟩; apply hS R hR _ hf
   inf_le _ _ hS _ _ h := h _ hS
   le_inf _ _ hS _ _ hf _ hR := hS _ hR _ hf
   le_sup_left _ _ _ _ := Or.inl
@@ -902,10 +892,7 @@ theorem functorPullback_arrows (R : Sieve (F.obj X)) :
 
 #print CategoryTheory.Sieve.functorPullback_id /-
 @[simp]
-theorem functorPullback_id (R : Sieve X) : R.functorPullback (𝟭 _) = R :=
-  by
-  ext
-  rfl
+theorem functorPullback_id (R : Sieve X) : R.functorPullback (𝟭 _) = R := by ext; rfl
 #align category_theory.sieve.functor_pullback_id CategoryTheory.Sieve.functorPullback_id
 -/
 
@@ -916,10 +903,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) {X : C} {E : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_3) (R : CategoryTheory.Sieve.{u3, u6} E _inst_3 (Prefunctor.obj.{succ u1, succ u3, u4, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F G)) X)), Eq.{max (succ u4) (succ u1)} (CategoryTheory.Sieve.{u1, u4} C _inst_1 X) (CategoryTheory.Sieve.functorPullback.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F G) X R) (CategoryTheory.Sieve.functorPullback.{u1, u2, u4, u5} C _inst_1 D _inst_2 F X (CategoryTheory.Sieve.functorPullback.{u2, u3, u5, u6} D _inst_2 E _inst_3 G (Prefunctor.obj.{succ u1, succ u2, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u4, u5} C _inst_1 D _inst_2 F) X) R))
 Case conversion may be inaccurate. Consider using '#align category_theory.sieve.functor_pullback_comp CategoryTheory.Sieve.functorPullback_compₓ'. -/
 theorem functorPullback_comp (R : Sieve ((F ⋙ G).obj X)) :
-    R.functorPullback (F ⋙ G) = (R.functorPullback G).functorPullback F :=
-  by
-  ext
-  rfl
+    R.functorPullback (F ⋙ G) = (R.functorPullback G).functorPullback F := by ext; rfl
 #align category_theory.sieve.functor_pullback_comp CategoryTheory.Sieve.functorPullback_comp
 
 /- warning: category_theory.sieve.functor_pushforward_extend_eq -> CategoryTheory.Sieve.functorPushforward_extend_eq is a dubious translation:
@@ -934,8 +918,7 @@ theorem functorPushforward_extend_eq {R : Presieve X} :
   ext (Y f); constructor
   · rintro ⟨X', g, f', ⟨X'', g', f'', h₁, rfl⟩, rfl⟩
     exact ⟨X'', f'', f' ≫ F.map g', h₁, by simp⟩
-  · rintro ⟨X', g, f', h₁, h₂⟩
-    exact ⟨X', g, f', le_generate R _ h₁, h₂⟩
+  · rintro ⟨X', g, f', h₁, h₂⟩; exact ⟨X', g, f', le_generate R _ h₁, h₂⟩
 #align category_theory.sieve.functor_pushforward_extend_eq CategoryTheory.Sieve.functorPushforward_extend_eq
 
 /- warning: category_theory.sieve.functor_pushforward -> CategoryTheory.Sieve.functorPushforward is a dubious translation:
@@ -979,9 +962,7 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) {X : C} {E : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u3, u6} E] (G : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_3) (R : CategoryTheory.Sieve.{u1, u4} C _inst_1 X), Eq.{max (succ u6) (succ u3)} (CategoryTheory.Sieve.{u3, u6} E _inst_3 (Prefunctor.obj.{succ u1, succ u3, u4, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F G)) X)) (CategoryTheory.Sieve.functorPushforward.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F G) X R) (CategoryTheory.Sieve.functorPushforward.{u2, u3, u5, u6} D _inst_2 E _inst_3 G (Prefunctor.obj.{succ u1, succ u2, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u4, u5} C _inst_1 D _inst_2 F) X) (CategoryTheory.Sieve.functorPushforward.{u1, u2, u4, u5} C _inst_1 D _inst_2 F X R))
 Case conversion may be inaccurate. Consider using '#align category_theory.sieve.functor_pushforward_comp CategoryTheory.Sieve.functorPushforward_compₓ'. -/
 theorem functorPushforward_comp (R : Sieve X) :
-    R.functorPushforward (F ⋙ G) = (R.functorPushforward F).functorPushforward G :=
-  by
-  ext
+    R.functorPushforward (F ⋙ G) = (R.functorPushforward F).functorPushforward G := by ext;
   simpa [R.arrows.functor_pushforward_comp F G]
 #align category_theory.sieve.functor_pushforward_comp CategoryTheory.Sieve.functorPushforward_comp
 
@@ -1231,9 +1212,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.sieve.functor_inclusion_is_mono CategoryTheory.Sieve.functorInclusion_is_monoₓ'. -/
 /-- The presheaf induced by a sieve is a subobject of the yoneda embedding. -/
 instance functorInclusion_is_mono : Mono S.functorInclusion :=
-  ⟨fun Z f g h => by
-    ext (Y y)
-    apply congr_fun (nat_trans.congr_app h Y) y⟩
+  ⟨fun Z f g h => by ext (Y y); apply congr_fun (nat_trans.congr_app h Y) y⟩
 #align category_theory.sieve.functor_inclusion_is_mono CategoryTheory.Sieve.functorInclusion_is_mono
 
 /- warning: category_theory.sieve.sieve_of_subfunctor -> CategoryTheory.Sieve.sieveOfSubfunctor is a dubious translation:

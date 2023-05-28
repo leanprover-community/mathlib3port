@@ -297,16 +297,9 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
           invFun := fun f => ⟨fun o => o.elim Y.toProd.2 f.toFun, f.map_point, rfl⟩
-          left_inv := fun f => by
-            ext
-            cases x
-            exact f.map_snd.symm
-            rfl
+          left_inv := fun f => by ext; cases x; exact f.map_snd.symm; rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      homEquiv_naturality_left_symm := fun X' X Y f g =>
-        by
-        ext
-        cases x <;> rfl }
+      homEquiv_naturality_left_symm := fun X' X Y f g => by ext; cases x <;> rfl }
 #align Pointed_to_Bipointed_fst_Bipointed_to_Pointed_fst_adjunction pointedToBipointedFstBipointedToPointedFstAdjunction
 -/
 
@@ -319,16 +312,9 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
           invFun := fun f => ⟨fun o => o.elim Y.toProd.1 f.toFun, rfl, f.map_point⟩
-          left_inv := fun f => by
-            ext
-            cases x
-            exact f.map_fst.symm
-            rfl
+          left_inv := fun f => by ext; cases x; exact f.map_fst.symm; rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      homEquiv_naturality_left_symm := fun X' X Y f g =>
-        by
-        ext
-        cases x <;> rfl }
+      homEquiv_naturality_left_symm := fun X' X Y f g => by ext; cases x <;> rfl }
 #align Pointed_to_Bipointed_snd_Bipointed_to_Pointed_snd_adjunction pointedToBipointedSndBipointedToPointedSndAdjunction
 -/
 

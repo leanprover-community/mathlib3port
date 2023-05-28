@@ -284,18 +284,11 @@ theorem mem_tangentCone_of_openSegment_subset {s : Set G} {x y : G} (h : openSeg
   show x + d n ∈ openSegment ℝ x y
   · rw [openSegment_eq_image]
     refine' ⟨(c n)⁻¹, ⟨_, _⟩, _⟩
-    · rw [inv_pos]
-      apply pow_pos
-      norm_num
-    · apply inv_lt_one
-      apply one_lt_pow _ (Nat.succ_ne_zero _)
-      norm_num
-    · simp only [d, sub_smul, smul_sub, one_smul]
-      abel
+    · rw [inv_pos]; apply pow_pos; norm_num
+    · apply inv_lt_one; apply one_lt_pow _ (Nat.succ_ne_zero _); norm_num
+    · simp only [d, sub_smul, smul_sub, one_smul]; abel
   show Filter.Tendsto (fun n : ℕ => ‖c n‖) Filter.atTop Filter.atTop
-  · have : (fun n : ℕ => ‖c n‖) = c := by
-      ext n
-      exact abs_of_nonneg (pow_nonneg (by norm_num) _)
+  · have : (fun n : ℕ => ‖c n‖) = c := by ext n; exact abs_of_nonneg (pow_nonneg (by norm_num) _)
     rw [this]
     exact (tendsto_pow_atTop_atTop_of_one_lt (by norm_num)).comp (tendsto_add_at_top_nat 1)
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
@@ -346,10 +339,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} [_inst_1 : NontriviallyNormedField.{u2} 𝕜] {E : Type.{u1}} [_inst_2 : NormedAddCommGroup.{u1} E] [_inst_3 : NormedSpace.{u2, u1} 𝕜 E (NontriviallyNormedField.toNormedField.{u2} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2)] {x : E}, UniqueDiffWithinAt.{u2, u1} 𝕜 _inst_1 E (AddCommGroup.toAddCommMonoid.{u1} E (NormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E (NontriviallyNormedField.toNormedField.{u2} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2) _inst_3) (UniformSpace.toTopologicalSpace.{u1} E (PseudoMetricSpace.toUniformSpace.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E _inst_2)))) (Set.univ.{u1} E) x
 Case conversion may be inaccurate. Consider using '#align unique_diff_within_at_univ uniqueDiffWithinAt_univₓ'. -/
-theorem uniqueDiffWithinAt_univ : UniqueDiffWithinAt 𝕜 univ x :=
-  by
-  rw [uniqueDiffWithinAt_iff, tangentCone_univ]
-  simp
+theorem uniqueDiffWithinAt_univ : UniqueDiffWithinAt 𝕜 univ x := by
+  rw [uniqueDiffWithinAt_iff, tangentCone_univ]; simp
 #align unique_diff_within_at_univ uniqueDiffWithinAt_univ
 
 /- warning: unique_diff_on_univ -> uniqueDiffOn_univ is a dubious translation:

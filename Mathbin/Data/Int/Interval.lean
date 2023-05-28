@@ -141,9 +141,7 @@ but is expected to have type
   forall (a : Int) (b : Int), Eq.{1} Nat (Finset.card.{0} Int (Finset.Icc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b)) (Int.toNat (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) b (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) a))
 Case conversion may be inaccurate. Consider using '#align int.card_Icc Int.card_Iccₓ'. -/
 @[simp]
-theorem card_Icc : (Icc a b).card = (b + 1 - a).toNat :=
-  by
-  change (Finset.map _ _).card = _
+theorem card_Icc : (Icc a b).card = (b + 1 - a).toNat := by change (Finset.map _ _).card = _;
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Icc Int.card_Icc
 
@@ -154,9 +152,7 @@ but is expected to have type
   forall (a : Int) (b : Int), Eq.{1} Nat (Finset.card.{0} Int (Finset.Ico.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b)) (Int.toNat (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_Ico Int.card_Icoₓ'. -/
 @[simp]
-theorem card_Ico : (Ico a b).card = (b - a).toNat :=
-  by
-  change (Finset.map _ _).card = _
+theorem card_Ico : (Ico a b).card = (b - a).toNat := by change (Finset.map _ _).card = _;
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ico Int.card_Ico
 
@@ -167,9 +163,7 @@ but is expected to have type
   forall (a : Int) (b : Int), Eq.{1} Nat (Finset.card.{0} Int (Finset.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b)) (Int.toNat (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_Ioc Int.card_Iocₓ'. -/
 @[simp]
-theorem card_Ioc : (Ioc a b).card = (b - a).toNat :=
-  by
-  change (Finset.map _ _).card = _
+theorem card_Ioc : (Ioc a b).card = (b - a).toNat := by change (Finset.map _ _).card = _;
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ioc Int.card_Ioc
 
@@ -180,9 +174,7 @@ but is expected to have type
   forall (a : Int) (b : Int), Eq.{1} Nat (Finset.card.{0} Int (Finset.Ioo.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b)) (Int.toNat (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align int.card_Ioo Int.card_Iooₓ'. -/
 @[simp]
-theorem card_Ioo : (Ioo a b).card = (b - a - 1).toNat :=
-  by
-  change (Finset.map _ _).card = _
+theorem card_Ioo : (Ioo a b).card = (b - a - 1).toNat := by change (Finset.map _ _).card = _;
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ioo Int.card_Ioo
 
@@ -323,8 +315,7 @@ theorem image_Ico_emod (n a : ℤ) (h : 0 ≤ a) : (Ico n (n + a)).image (· % a
   ext i
   simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
-  · rintro ⟨i, h, rfl⟩
-    exact ⟨mod_nonneg i (ne_of_gt ha), mod_lt_of_pos i ha⟩
+  · rintro ⟨i, h, rfl⟩; exact ⟨mod_nonneg i (ne_of_gt ha), mod_lt_of_pos i ha⟩
   intro hia
   have hn := Int.emod_add_ediv n a
   obtain hi | hi := lt_or_le i (n % a)

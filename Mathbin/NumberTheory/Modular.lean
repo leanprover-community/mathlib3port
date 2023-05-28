@@ -368,22 +368,14 @@ variable {z}
 theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ z : ℍ, g • z = T ^ n • z :=
   by
   have had := g.det_coe
-  replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1;
-  · rw [det_fin_two, hc] at had
-    linarith
+  replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1; · rw [det_fin_two, hc] at had; linarith
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
   · use ↑ₘg 0 1
-    suffices g = T ^ ↑ₘg 0 1 by
-      intro z
-      conv_lhs => rw [this]
-    ext (i j)
-    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    suffices g = T ^ ↑ₘg 0 1 by intro z; conv_lhs => rw [this]
+    ext (i j); fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
   · use -↑ₘg 0 1
-    suffices g = -T ^ (-↑ₘg 0 1) by
-      intro z
-      conv_lhs => rw [this, SL_neg_smul]
-    ext (i j)
-    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    suffices g = -T ^ (-↑ₘg 0 1) by intro z; conv_lhs => rw [this, SL_neg_smul]
+    ext (i j); fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
 #align modular_group.exists_eq_T_zpow_of_c_eq_zero ModularGroup.exists_eq_t_zpow_of_c_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
@@ -391,9 +383,7 @@ theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
 theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 :=
   by
   have hg := g.det_coe.symm
-  replace hg : ↑ₘg 0 1 = ↑ₘg 0 0 * ↑ₘg 1 1 - 1;
-  · rw [det_fin_two, hc] at hg
-    linarith
+  replace hg : ↑ₘg 0 1 = ↑ₘg 0 0 * ↑ₘg 1 1 - 1; · rw [det_fin_two, hc] at hg; linarith
   refine' Subtype.ext _
   conv_lhs => rw [Matrix.eta_fin_two ↑ₘg]
   rw [hc, hg]
@@ -520,20 +510,17 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 
   suffices 3 * c ^ 2 < 4
     by
     rw [← Int.cast_pow, ← Int.cast_three, ← Int.cast_four, ← Int.cast_mul, Int.cast_lt] at this
-    replace this : c' ^ 2 ≤ 1 ^ 2
-    · linarith
+    replace this : c' ^ 2 ≤ 1 ^ 2; · linarith
     rwa [sq_le_sq, abs_one] at this
   suffices c ≠ 0 → 9 * c ^ 4 < 16
     by
     rcases eq_or_ne c 0 with (hc | hc)
-    · rw [hc]
-      norm_num
+    · rw [hc]; norm_num
     · refine' (abs_lt_of_sq_lt_sq' _ (by norm_num)).2
       specialize this hc
       linarith
   intro hc
-  replace hc : 0 < c ^ 4
-  · rw [pow_bit0_pos_iff] <;> trivial
+  replace hc : 0 < c ^ 4; · rw [pow_bit0_pos_iff] <;> trivial
   have h₁ :=
     mul_lt_mul_of_pos_right
       (mul_lt_mul'' (three_lt_four_mul_im_sq_of_mem_fdo hg) (three_lt_four_mul_im_sq_of_mem_fdo hz)
@@ -550,9 +537,7 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 
       by
       rw [special_linear_group.im_smul_eq_div_norm_sq, div_pow]
       ring
-    _ ≤ 16 := by
-      rw [← mul_pow]
-      linarith
+    _ ≤ 16 := by rw [← mul_pow]; linarith
     
 #align modular_group.abs_c_le_one ModularGroup.abs_c_le_one
 
@@ -565,10 +550,7 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
     by_contra hc
     let a := ↑ₘg' 0 0
     let d := ↑ₘg' 1 1
-    have had : T ^ (-a) * g' = S * T ^ d :=
-      by
-      rw [g_eq_of_c_eq_one hc]
-      group
+    have had : T ^ (-a) * g' = S * T ^ d := by rw [g_eq_of_c_eq_one hc]; group
     let w := T ^ (-a) • g' • z
     have h₁ : w = S • T ^ d • z := by simp only [w, ← mul_smul, had]
     replace h₁ : norm_sq w < 1 := h₁.symm ▸ norm_sq_S_smul_lt_one (one_lt_norm_sq_T_zpow_smul hz d)
@@ -576,8 +558,7 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
     linarith
   have hn : ↑ₘg 1 0 ≠ -1 := by
     intro hc
-    replace hc : ↑ₘ(-g) 1 0 = 1
-    · simp [← neg_eq_iff_eq_neg.mpr hc]
+    replace hc : ↑ₘ(-g) 1 0 = 1; · simp [← neg_eq_iff_eq_neg.mpr hc]
     replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
     exact hp hg hc
   specialize hp hg

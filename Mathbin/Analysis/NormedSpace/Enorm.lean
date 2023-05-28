@@ -93,9 +93,7 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
 #align enorm.map_smul Enorm.map_smul
 
 @[simp]
-theorem map_zero : e 0 = 0 := by
-  rw [← zero_smul 𝕜 (0 : V), e.map_smul]
-  norm_num
+theorem map_zero : e 0 = 0 := by rw [← zero_smul 𝕜 (0 : V), e.map_smul]; norm_num
 #align enorm.map_zero Enorm.map_zero
 
 @[simp]

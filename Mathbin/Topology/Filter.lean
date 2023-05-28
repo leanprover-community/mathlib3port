@@ -140,10 +140,7 @@ but is expected to have type
   forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Filter.{u2} α) ι (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) l) p (fun (i : ι) => Set.Iic.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α)) (Filter.principal.{u2} α (s i))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.nhds Filter.HasBasis.nhdsₓ'. -/
 theorem HasBasis.nhds {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
-    HasBasis (𝓝 l) p fun i => Iic (𝓟 (s i)) :=
-  by
-  rw [nhds_eq]
-  exact h.lift' monotone_principal.Iic
+    HasBasis (𝓝 l) p fun i => Iic (𝓟 (s i)) := by rw [nhds_eq]; exact h.lift' monotone_principal.Iic
 #align filter.has_basis.nhds Filter.HasBasis.nhds
 
 /-- Neighborhoods of a countably generated filter is a countably generated filter. -/
@@ -231,9 +228,7 @@ but is expected to have type
   forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (f i)))
 Case conversion may be inaccurate. Consider using '#align filter.nhds_infi Filter.nhds_iInfₓ'. -/
 @[simp]
-theorem nhds_iInf (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
-  by
-  simp only [nhds_eq]
+theorem nhds_iInf (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) := by simp only [nhds_eq];
   apply lift'_infi_of_map_univ <;> simp
 #align filter.nhds_infi Filter.nhds_iInf
 
@@ -313,9 +308,7 @@ but is expected to have type
   forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (closure.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instSingletonSet.{u1} (Filter.{u1} α)) l)) (Set.Ici.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) l)
 Case conversion may be inaccurate. Consider using '#align filter.closure_singleton Filter.closure_singletonₓ'. -/
 @[simp]
-protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l :=
-  by
-  ext l'
+protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l := by ext l';
   simp [Filter.mem_closure, Filter.le_def]
 #align filter.closure_singleton Filter.closure_singleton
 

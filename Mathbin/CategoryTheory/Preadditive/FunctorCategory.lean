@@ -36,56 +36,24 @@ instance functorCategoryPreadditive : Preadditive (C ⥤ D)
   homGroup F G :=
     { add := fun α β =>
         { app := fun X => α.app X + β.app X
-          naturality' := by
-            intros
-            rw [comp_add, add_comp, α.naturality, β.naturality] }
+          naturality' := by intros ; rw [comp_add, add_comp, α.naturality, β.naturality] }
       zero :=
         { app := fun X => 0
-          naturality' := by
-            intros
-            rw [zero_comp, comp_zero] }
+          naturality' := by intros ; rw [zero_comp, comp_zero] }
       neg := fun α =>
         { app := fun X => -α.app X
-          naturality' := by
-            intros
-            rw [comp_neg, neg_comp, α.naturality] }
+          naturality' := by intros ; rw [comp_neg, neg_comp, α.naturality] }
       sub := fun α β =>
         { app := fun X => α.app X - β.app X
-          naturality' := by
-            intros
-            rw [comp_sub, sub_comp, α.naturality, β.naturality] }
-      add_assoc := by
-        intros
-        ext
-        apply add_assoc
-      zero_add := by
-        intros
-        ext
-        apply zero_add
-      add_zero := by
-        intros
-        ext
-        apply add_zero
-      sub_eq_add_neg := by
-        intros
-        ext
-        apply sub_eq_add_neg
-      add_left_neg := by
-        intros
-        ext
-        apply add_left_neg
-      add_comm := by
-        intros
-        ext
-        apply add_comm }
-  add_comp := by
-    intros
-    ext
-    apply add_comp
-  comp_add := by
-    intros
-    ext
-    apply comp_add
+          naturality' := by intros ; rw [comp_sub, sub_comp, α.naturality, β.naturality] }
+      add_assoc := by intros ; ext; apply add_assoc
+      zero_add := by intros ; ext; apply zero_add
+      add_zero := by intros ; ext; apply add_zero
+      sub_eq_add_neg := by intros ; ext; apply sub_eq_add_neg
+      add_left_neg := by intros ; ext; apply add_left_neg
+      add_comm := by intros ; ext; apply add_comm }
+  add_comp := by intros ; ext; apply add_comp
+  comp_add := by intros ; ext; apply comp_add
 #align category_theory.functor_category_preadditive CategoryTheory.functorCategoryPreadditive
 -/
 
@@ -165,9 +133,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.app_sum CategoryTheory.NatTrans.app_sumₓ'. -/
 @[simp]
 theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) :
-    (∑ i in s, α i).app X = ∑ i in s, (α i).app X :=
-  by
-  rw [← app_hom_apply, AddMonoidHom.map_sum]
+    (∑ i in s, α i).app X = ∑ i in s, (α i).app X := by rw [← app_hom_apply, AddMonoidHom.map_sum];
   rfl
 #align category_theory.nat_trans.app_sum CategoryTheory.NatTrans.app_sum
 

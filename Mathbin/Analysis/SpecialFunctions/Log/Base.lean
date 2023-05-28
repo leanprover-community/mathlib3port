@@ -180,9 +180,7 @@ but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) b) -> (Ne.{1} Real b (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) b (Real.logb b x)) x)
 Case conversion may be inaccurate. Consider using '#align real.rpow_logb Real.rpow_logbₓ'. -/
 @[simp]
-theorem rpow_logb (hx : 0 < x) : b ^ logb b x = x :=
-  by
-  rw [rpow_logb_eq_abs b_pos b_ne_one hx.ne']
+theorem rpow_logb (hx : 0 < x) : b ^ logb b x = x := by rw [rpow_logb_eq_abs b_pos b_ne_one hx.ne'];
   exact abs_of_pos hx
 #align real.rpow_logb Real.rpow_logb
 
@@ -192,10 +190,8 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) b) -> (Ne.{1} Real b (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) b (Real.logb b x)) (Neg.neg.{0} Real Real.instNegReal x))
 Case conversion may be inaccurate. Consider using '#align real.rpow_logb_of_neg Real.rpow_logb_of_negₓ'. -/
-theorem rpow_logb_of_neg (hx : x < 0) : b ^ logb b x = -x :=
-  by
-  rw [rpow_logb_eq_abs b_pos b_ne_one (ne_of_lt hx)]
-  exact abs_of_neg hx
+theorem rpow_logb_of_neg (hx : x < 0) : b ^ logb b x = -x := by
+  rw [rpow_logb_eq_abs b_pos b_ne_one (ne_of_lt hx)]; exact abs_of_neg hx
 #align real.rpow_logb_of_neg Real.rpow_logb_of_neg
 
 /- warning: real.surj_on_logb -> Real.surjOn_logb is a dubious translation:
@@ -239,8 +235,7 @@ theorem surjOn_logb' : SurjOn (logb b) (Iio 0) univ :=
   intro x x_in_univ
   use -b ^ x
   constructor
-  · simp only [Right.neg_neg_iff, Set.mem_Iio]
-    apply rpow_pos_of_pos b_pos
+  · simp only [Right.neg_neg_iff, Set.mem_Iio]; apply rpow_pos_of_pos b_pos
   · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
 #align real.surj_on_logb' Real.surjOn_logb'
 
@@ -273,10 +268,8 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real} {y : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) b) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x y) -> (LT.lt.{0} Real Real.instLTReal (Real.logb b x) (Real.logb b y))
 Case conversion may be inaccurate. Consider using '#align real.logb_lt_logb Real.logb_lt_logbₓ'. -/
-theorem logb_lt_logb (hx : 0 < x) (hxy : x < y) : logb b x < logb b y :=
-  by
-  rw [logb, logb, div_lt_div_right (log_pos hb)]
-  exact log_lt_log hx hxy
+theorem logb_lt_logb (hx : 0 < x) (hxy : x < y) : logb b x < logb b y := by
+  rw [logb, logb, div_lt_div_right (log_pos hb)]; exact log_lt_log hx hxy
 #align real.logb_lt_logb Real.logb_lt_logb
 
 /- warning: real.logb_lt_logb_iff -> Real.logb_lt_logb_iff is a dubious translation:
@@ -286,10 +279,8 @@ but is expected to have type
   forall {b : Real} {x : Real} {y : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) b) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) y) -> (Iff (LT.lt.{0} Real Real.instLTReal (Real.logb b x) (Real.logb b y)) (LT.lt.{0} Real Real.instLTReal x y))
 Case conversion may be inaccurate. Consider using '#align real.logb_lt_logb_iff Real.logb_lt_logb_iffₓ'. -/
 @[simp]
-theorem logb_lt_logb_iff (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ x < y :=
-  by
-  rw [logb, logb, div_lt_div_right (log_pos hb)]
-  exact log_lt_log_iff hx hy
+theorem logb_lt_logb_iff (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ x < y := by
+  rw [logb, logb, div_lt_div_right (log_pos hb)]; exact log_lt_log_iff hx hy
 #align real.logb_lt_logb_iff Real.logb_lt_logb_iff
 
 /- warning: real.logb_le_iff_le_rpow -> Real.logb_le_iff_le_rpow is a dubious translation:
@@ -338,9 +329,7 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) b) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Iff (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Real.logb b x)) (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x))
 Case conversion may be inaccurate. Consider using '#align real.logb_pos_iff Real.logb_pos_iffₓ'. -/
-theorem logb_pos_iff (hx : 0 < x) : 0 < logb b x ↔ 1 < x :=
-  by
-  rw [← @logb_one b]
+theorem logb_pos_iff (hx : 0 < x) : 0 < logb b x ↔ 1 < x := by rw [← @logb_one b];
   rw [logb_lt_logb_iff hb zero_lt_one hx]
 #align real.logb_pos_iff Real.logb_pos_iff
 
@@ -350,9 +339,7 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) b) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Real.logb b x))
 Case conversion may be inaccurate. Consider using '#align real.logb_pos Real.logb_posₓ'. -/
-theorem logb_pos (hx : 1 < x) : 0 < logb b x :=
-  by
-  rw [logb_pos_iff hb (lt_trans zero_lt_one hx)]
+theorem logb_pos (hx : 1 < x) : 0 < logb b x := by rw [logb_pos_iff hb (lt_trans zero_lt_one hx)];
   exact hx
 #align real.logb_pos Real.logb_pos
 
@@ -362,9 +349,7 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) b) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Iff (LT.lt.{0} Real Real.instLTReal (Real.logb b x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))
 Case conversion may be inaccurate. Consider using '#align real.logb_neg_iff Real.logb_neg_iffₓ'. -/
-theorem logb_neg_iff (h : 0 < x) : logb b x < 0 ↔ x < 1 :=
-  by
-  rw [← logb_one]
+theorem logb_neg_iff (h : 0 < x) : logb b x < 0 ↔ x < 1 := by rw [← logb_one];
   exact logb_lt_logb_iff hb h zero_lt_one
 #align real.logb_neg_iff Real.logb_neg_iff
 
@@ -526,10 +511,8 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real} {y : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) b) -> (LT.lt.{0} Real Real.instLTReal b (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x y) -> (LT.lt.{0} Real Real.instLTReal (Real.logb b y) (Real.logb b x))
 Case conversion may be inaccurate. Consider using '#align real.logb_lt_logb_of_base_lt_one Real.logb_lt_logb_of_base_lt_oneₓ'. -/
-theorem logb_lt_logb_of_base_lt_one (hx : 0 < x) (hxy : x < y) : logb b y < logb b x :=
-  by
-  rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]
-  exact log_lt_log hx hxy
+theorem logb_lt_logb_of_base_lt_one (hx : 0 < x) (hxy : x < y) : logb b y < logb b x := by
+  rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]; exact log_lt_log hx hxy
 #align real.logb_lt_logb_of_base_lt_one Real.logb_lt_logb_of_base_lt_one
 
 /- warning: real.logb_lt_logb_iff_of_base_lt_one -> Real.logb_lt_logb_iff_of_base_lt_one is a dubious translation:
@@ -540,9 +523,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.logb_lt_logb_iff_of_base_lt_one Real.logb_lt_logb_iff_of_base_lt_oneₓ'. -/
 @[simp]
 theorem logb_lt_logb_iff_of_base_lt_one (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ y < x :=
-  by
-  rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]
-  exact log_lt_log_iff hy hx
+  by rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]; exact log_lt_log_iff hy hx
 #align real.logb_lt_logb_iff_of_base_lt_one Real.logb_lt_logb_iff_of_base_lt_one
 
 /- warning: real.logb_le_iff_le_rpow_of_base_lt_one -> Real.logb_le_iff_le_rpow_of_base_lt_one is a dubious translation:
@@ -601,10 +582,8 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) b) -> (LT.lt.{0} Real Real.instLTReal b (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LT.lt.{0} Real Real.instLTReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Real.logb b x))
 Case conversion may be inaccurate. Consider using '#align real.logb_pos_of_base_lt_one Real.logb_pos_of_base_lt_oneₓ'. -/
-theorem logb_pos_of_base_lt_one (hx : 0 < x) (hx' : x < 1) : 0 < logb b x :=
-  by
-  rw [logb_pos_iff_of_base_lt_one b_pos b_lt_one hx]
-  exact hx'
+theorem logb_pos_of_base_lt_one (hx : 0 < x) (hx' : x < 1) : 0 < logb b x := by
+  rw [logb_pos_iff_of_base_lt_one b_pos b_lt_one hx]; exact hx'
 #align real.logb_pos_of_base_lt_one Real.logb_pos_of_base_lt_one
 
 /- warning: real.logb_neg_iff_of_base_lt_one -> Real.logb_neg_iff_of_base_lt_one is a dubious translation:
@@ -643,10 +622,8 @@ lean 3 declaration is
 but is expected to have type
   forall {b : Real} {x : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) b) -> (LT.lt.{0} Real Real.instLTReal b (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Real.logb b x))
 Case conversion may be inaccurate. Consider using '#align real.logb_nonneg_of_base_lt_one Real.logb_nonneg_of_base_lt_oneₓ'. -/
-theorem logb_nonneg_of_base_lt_one (hx : 0 < x) (hx' : x ≤ 1) : 0 ≤ logb b x :=
-  by
-  rw [logb_nonneg_iff_of_base_lt_one b_pos b_lt_one hx]
-  exact hx'
+theorem logb_nonneg_of_base_lt_one (hx : 0 < x) (hx' : x ≤ 1) : 0 ≤ logb b x := by
+  rw [logb_nonneg_iff_of_base_lt_one b_pos b_lt_one hx]; exact hx'
 #align real.logb_nonneg_of_base_lt_one Real.logb_nonneg_of_base_lt_one
 
 /- warning: real.logb_nonpos_iff_of_base_lt_one -> Real.logb_nonpos_iff_of_base_lt_one is a dubious translation:

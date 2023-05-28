@@ -381,10 +381,7 @@ section Real
 variable {R S : Type _} [OrderedRing R] [LinearOrderedRing S]
 
 theorem ringHom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f :=
-  (monotone_iff_map_nonneg f).2 fun r h =>
-    by
-    obtain ⟨s, rfl⟩ := hR r h
-    rw [map_pow]
+  (monotone_iff_map_nonneg f).2 fun r h => by obtain ⟨s, rfl⟩ := hR r h; rw [map_pow];
     apply sq_nonneg
 #align ring_hom_monotone ringHom_monotone
 

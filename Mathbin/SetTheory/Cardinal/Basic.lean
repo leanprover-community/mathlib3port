@@ -299,16 +299,12 @@ instance : PartialOrder Cardinal.{u} where
   le := (· ≤ ·)
   le_refl := by rintro ⟨α⟩ <;> exact ⟨embedding.refl _⟩
   le_trans := by rintro ⟨α⟩ ⟨β⟩ ⟨γ⟩ ⟨e₁⟩ ⟨e₂⟩ <;> exact ⟨e₁.trans e₂⟩
-  le_antisymm := by
-    rintro ⟨α⟩ ⟨β⟩ ⟨e₁⟩ ⟨e₂⟩
-    exact Quotient.sound (e₁.antisymm e₂)
+  le_antisymm := by rintro ⟨α⟩ ⟨β⟩ ⟨e₁⟩ ⟨e₂⟩; exact Quotient.sound (e₁.antisymm e₂)
 
 instance : LinearOrder Cardinal.{u} :=
   {
     Cardinal.partialOrder.{u} with
-    le_total := by
-      rintro ⟨α⟩ ⟨β⟩
-      apply embedding.total
+    le_total := by rintro ⟨α⟩ ⟨β⟩; apply embedding.total
     decidableLe := Classical.decRel _ }
 
 #print Cardinal.le_def /-
@@ -355,11 +351,8 @@ theorem mk_set_le (s : Set α) : (#s) ≤ (#α) :=
 -/
 
 #print Cardinal.out_embedding /-
-theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) :=
-  by
-  trans _
-  rw [← Quotient.out_eq c, ← Quotient.out_eq c']
-  rfl
+theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) := by trans _;
+  rw [← Quotient.out_eq c, ← Quotient.out_eq c']; rfl
 #align cardinal.out_embedding Cardinal.out_embedding
 -/
 
@@ -403,9 +396,7 @@ theorem lift_mk_eq' {α : Type u} {β : Type v} : lift.{v} (#α) = lift.{u} (#β
 #print Cardinal.lift_le /-
 @[simp]
 theorem lift_le {a b : Cardinal} : lift a ≤ lift b ↔ a ≤ b :=
-  inductionOn₂ a b fun α β => by
-    rw [← lift_umax]
-    exact lift_mk_le
+  inductionOn₂ a b fun α β => by rw [← lift_umax]; exact lift_mk_le
 #align cardinal.lift_le Cardinal.lift_le
 -/
 
@@ -600,13 +591,10 @@ Case conversion may be inaccurate. Consider using '#align cardinal.mk_fintype Ca
 theorem mk_fintype (α : Type u) [Fintype α] : (#α) = Fintype.card α :=
   by
   refine' Fintype.induction_empty_option _ _ _ α
-  · intro α β h e hα
-    letI := Fintype.ofEquiv β e.symm
+  · intro α β h e hα; letI := Fintype.ofEquiv β e.symm
     rwa [mk_congr e, Fintype.card_congr e] at hα
   · rfl
-  · intro α h hα
-    simp [hα]
-    rfl
+  · intro α h hα; simp [hα]; rfl
 #align cardinal.mk_fintype Cardinal.mk_fintype
 
 instance : Mul Cardinal.{u} :=
@@ -793,9 +781,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, Eq.{succ (succ u1)} Cardinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.instPowCardinal.{u1}) a (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) b c)) (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.instPowCardinal.{u1}) (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.instPowCardinal.{u1}) a b) c)
 Case conversion may be inaccurate. Consider using '#align cardinal.power_mul Cardinal.power_mulₓ'. -/
-theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) :=
-  by
-  rw [mul_comm b c]
+theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) := by rw [mul_comm b c];
   exact induction_on₃ a b c fun α β γ => mk_congr <| Equiv.curry γ β α
 #align cardinal.power_mul Cardinal.power_mul
 
@@ -972,12 +958,8 @@ instance : CommMonoidWithZero Cardinal.{u} :=
   { Cardinal.canonicallyOrderedCommSemiring with }
 
 #print Cardinal.zero_power_le /-
-theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 :=
-  by
-  by_cases h : c = 0
-  rw [h, power_zero]
-  rw [zero_power h]
-  apply zero_le
+theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 := by by_cases h : c = 0;
+  rw [h, power_zero]; rw [zero_power h]; apply zero_le
 #align cardinal.zero_power_le Cardinal.zero_power_le
 -/
 
@@ -995,8 +977,7 @@ theorem self_le_power (a : Cardinal) {b : Cardinal} (hb : 1 ≤ b) : a ≤ (a^b)
   by
   rcases eq_or_ne a 0 with (rfl | ha)
   · exact zero_le _
-  · convert power_le_power_left ha hb
-    exact power_one.symm
+  · convert power_le_power_left ha hb; exact power_one.symm
 #align cardinal.self_le_power Cardinal.self_le_power
 -/
 
@@ -1334,10 +1315,7 @@ theorem lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le {α : Type u} {β : Type v
     ULift.forall.2 fun b =>
       (mk_congr <|
             (Equiv.ulift.image _).trans
-              (Equiv.trans
-                (by
-                  rw [Equiv.image_eq_preimage]
-                  simp [Set.preimage])
+              (Equiv.trans (by rw [Equiv.image_eq_preimage]; simp [Set.preimage])
                 Equiv.ulift.symm)).trans_le
         (hf b)
 #align cardinal.lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le Cardinal.lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le
@@ -1346,9 +1324,7 @@ theorem lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le {α : Type u} {β : Type v
 /-- The range of an indexed cardinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. -/
 theorem bddAbove_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove (Set.range f) :=
-  ⟨_, by
-    rintro a ⟨i, rfl⟩
-    exact le_sum f i⟩
+  ⟨_, by rintro a ⟨i, rfl⟩; exact le_sum f i⟩
 #align cardinal.bdd_above_range Cardinal.bddAbove_range
 -/
 
@@ -1376,8 +1352,7 @@ theorem bddAbove_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :
     refine' ⟨_, fun hx => ⟨e ⟨x, hx⟩, _⟩⟩
     · rintro ⟨a, rfl⟩
       exact (e.symm a).Prop
-    · simp_rw [Subtype.val_eq_coe, Equiv.symm_apply_apply]
-      rfl⟩
+    · simp_rw [Subtype.val_eq_coe, Equiv.symm_apply_apply]; rfl⟩
 #align cardinal.bdd_above_iff_small Cardinal.bddAbove_iff_small
 -/
 
@@ -1389,18 +1364,13 @@ theorem bddAbove_of_small (s : Set Cardinal.{u}) [h : Small.{u} s] : BddAbove s 
 
 #print Cardinal.bddAbove_image /-
 theorem bddAbove_image (f : Cardinal.{u} → Cardinal.{max u v}) {s : Set Cardinal.{u}}
-    (hs : BddAbove s) : BddAbove (f '' s) :=
-  by
-  rw [bdd_above_iff_small] at hs⊢
-  exact small_lift _
+    (hs : BddAbove s) : BddAbove (f '' s) := by rw [bdd_above_iff_small] at hs⊢; exact small_lift _
 #align cardinal.bdd_above_image Cardinal.bddAbove_image
 -/
 
 #print Cardinal.bddAbove_range_comp /-
 theorem bddAbove_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAbove (range f))
-    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (range (g ∘ f)) :=
-  by
-  rw [range_comp]
+    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (range (g ∘ f)) := by rw [range_comp];
   exact bdd_above_image g hf
 #align cardinal.bdd_above_range_comp Cardinal.bddAbove_range_comp
 -/
@@ -1433,10 +1403,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} (f : ι -> Cardinal.{u1}), LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.sum.{u1, u1} ι f) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) (Cardinal.mk.{u1} ι) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f))
 Case conversion may be inaccurate. Consider using '#align cardinal.sum_le_supr Cardinal.sum_le_iSupₓ'. -/
-theorem sum_le_iSup {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * iSup f :=
-  by
-  rw [← lift_id (#ι)]
-  exact sum_le_supr_lift f
+theorem sum_le_iSup {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * iSup f := by
+  rw [← lift_id (#ι)]; exact sum_le_supr_lift f
 #align cardinal.sum_le_supr Cardinal.sum_le_iSup
 
 /- warning: cardinal.sum_nat_eq_add_sum_succ -> Cardinal.sum_nat_eq_add_sum_succ is a dubious translation:
@@ -1536,10 +1504,8 @@ but is expected to have type
   forall {ι : Type.{u1}} (f : ι -> Cardinal.{u2}), Iff (Eq.{max (succ (succ u2)) (succ (succ u1))} Cardinal.{max u1 u2} (Cardinal.prod.{u1, u2} ι f) (OfNat.ofNat.{max (succ u2) (succ u1)} Cardinal.{max u1 u2} 0 (Zero.toOfNat0.{max (succ u2) (succ u1)} Cardinal.{max u1 u2} Cardinal.instZeroCardinal.{max u2 u1}))) (Exists.{succ u1} ι (fun (i : ι) => Eq.{succ (succ u2)} Cardinal.{u2} (f i) (OfNat.ofNat.{succ u2} Cardinal.{u2} 0 (Zero.toOfNat0.{succ u2} Cardinal.{u2} Cardinal.instZeroCardinal.{u2}))))
 Case conversion may be inaccurate. Consider using '#align cardinal.prod_eq_zero Cardinal.prod_eq_zeroₓ'. -/
 @[simp]
-theorem prod_eq_zero {ι} (f : ι → Cardinal.{u}) : prod f = 0 ↔ ∃ i, f i = 0 :=
-  by
-  lift f to ι → Type u using fun _ => trivial
-  simp only [mk_eq_zero_iff, ← mk_pi, isEmpty_pi]
+theorem prod_eq_zero {ι} (f : ι → Cardinal.{u}) : prod f = 0 ↔ ∃ i, f i = 0 := by
+  lift f to ι → Type u using fun _ => trivial; simp only [mk_eq_zero_iff, ← mk_pi, isEmpty_pi]
 #align cardinal.prod_eq_zero Cardinal.prod_eq_zero
 
 /- warning: cardinal.prod_ne_zero -> Cardinal.prod_ne_zero is a dubious translation:
@@ -1601,11 +1567,8 @@ but is expected to have type
   forall {ι : Sort.{u1}} (f : ι -> Cardinal.{u3}), Eq.{max (succ (succ u2)) (succ (succ u3))} Cardinal.{max u3 u2} (Cardinal.lift.{u2, u3} (iInf.{succ u3, u1} Cardinal.{u3} (ConditionallyCompleteLattice.toInfSet.{succ u3} Cardinal.{u3} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u3} Cardinal.{u3} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u3} Cardinal.{u3} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u3}))) ι f)) (iInf.{max (succ u2) (succ u3), u1} Cardinal.{max u3 u2} (ConditionallyCompleteLattice.toInfSet.{max (succ u2) (succ u3)} Cardinal.{max u3 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u2) (succ u3)} Cardinal.{max u3 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u2) (succ u3)} Cardinal.{max u3 u2} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{max u2 u3}))) ι (fun (i : ι) => Cardinal.lift.{u2, u3} (f i)))
 Case conversion may be inaccurate. Consider using '#align cardinal.lift_infi Cardinal.lift_iInfₓ'. -/
 @[simp]
-theorem lift_iInf {ι} (f : ι → Cardinal) : lift (iInf f) = ⨅ i, lift (f i) :=
-  by
-  unfold iInf
-  convert lift_Inf (range f)
-  rw [range_comp]
+theorem lift_iInf {ι} (f : ι → Cardinal) : lift (iInf f) = ⨅ i, lift (f i) := by unfold iInf;
+  convert lift_Inf (range f); rw [range_comp]
 #align cardinal.lift_infi Cardinal.lift_iInf
 
 #print Cardinal.lift_down /-
@@ -1730,10 +1693,7 @@ Case conversion may be inaccurate. Consider using '#align cardinal.lift_supr_le 
 /-- To prove that the lift of a supremum is bounded by some cardinal `t`,
 it suffices to show that the lift of each cardinal is bounded by `t`. -/
 theorem lift_iSup_le {ι : Type v} {f : ι → Cardinal.{w}} {t : Cardinal} (hf : BddAbove (range f))
-    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (iSup f) ≤ t :=
-  by
-  rw [lift_supr hf]
-  exact ciSup_le' w
+    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (iSup f) ≤ t := by rw [lift_supr hf]; exact ciSup_le' w
 #align cardinal.lift_supr_le Cardinal.lift_iSup_le
 
 /- warning: cardinal.lift_supr_le_iff -> Cardinal.lift_iSup_le_iff is a dubious translation:
@@ -1744,9 +1704,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cardinal.lift_supr_le_iff Cardinal.lift_iSup_le_iffₓ'. -/
 @[simp]
 theorem lift_iSup_le_iff {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f))
-    {t : Cardinal} : lift.{u} (iSup f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t :=
-  by
-  rw [lift_supr hf]
+    {t : Cardinal} : lift.{u} (iSup f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t := by rw [lift_supr hf];
   exact ciSup_le_iff' (bdd_above_range_comp hf _)
 #align cardinal.lift_supr_le_iff Cardinal.lift_iSup_le_iff
 
@@ -2414,14 +2372,9 @@ Case conversion may be inaccurate. Consider using '#align cardinal.mul_lt_aleph_
 theorem mul_lt_aleph0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 ∨ a < ℵ₀ ∧ b < ℵ₀ :=
   by
   refine' ⟨fun h => _, _⟩
-  · by_cases ha : a = 0
-    · exact Or.inl ha
-    right
-    by_cases hb : b = 0
-    · exact Or.inl hb
-    right
-    rw [← Ne, ← one_le_iff_ne_zero] at ha hb
-    constructor
+  · by_cases ha : a = 0; · exact Or.inl ha
+    right; by_cases hb : b = 0; · exact Or.inl hb
+    right; rw [← Ne, ← one_le_iff_ne_zero] at ha hb; constructor
     · rw [← mul_one a]
       refine' (mul_le_mul' le_rfl hb).trans_lt h
     · rw [← one_mul b]
@@ -2510,10 +2463,8 @@ theorem mk_eq_aleph0 (α : Type _) [Countable α] [Infinite α] : (#α) = ℵ₀
 
 #print Cardinal.denumerable_iff /-
 theorem denumerable_iff {α : Type u} : Nonempty (Denumerable α) ↔ (#α) = ℵ₀ :=
-  ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equiv.ulift.symm), fun h =>
-    by
-    cases' Quotient.exact h with f
-    exact ⟨Denumerable.mk' <| f.trans Equiv.ulift⟩⟩
+  ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equiv.ulift.symm), fun h => by
+    cases' Quotient.exact h with f; exact ⟨Denumerable.mk' <| f.trans Equiv.ulift⟩⟩
 #align cardinal.denumerable_iff Cardinal.denumerable_iff
 -/
 
@@ -2826,8 +2777,7 @@ theorem toNat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat :=
   · rw [MulZeroClass.mul_zero, zero_to_nat, MulZeroClass.mul_zero]
   cases' lt_or_le x ℵ₀ with hx2 hx2
   · cases' lt_or_le y ℵ₀ with hy2 hy2
-    · lift x to ℕ using hx2
-      lift y to ℕ using hy2
+    · lift x to ℕ using hx2; lift y to ℕ using hy2
       rw [← Nat.cast_mul, to_nat_cast, to_nat_cast, to_nat_cast]
     · rw [to_nat_apply_of_aleph_0_le hy2, MulZeroClass.mul_zero, to_nat_apply_of_aleph_0_le]
       exact aleph_0_le_mul_iff'.2 (Or.inl ⟨hx1, hy2⟩)
@@ -3111,8 +3061,7 @@ theorem mk_emptyCollection_iff {α : Type u} {s : Set α} : (#s) = 0 ↔ s = ∅
   · intro h
     rw [mk_eq_zero_iff] at h
     exact eq_empty_iff_forall_not_mem.2 fun x hx => h.elim' ⟨x, hx⟩
-  · rintro rfl
-    exact mk_emptyc _
+  · rintro rfl; exact mk_emptyc _
 #align cardinal.mk_emptyc_iff Cardinal.mk_emptyCollection_iff
 -/
 
@@ -3214,10 +3163,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (A : Set.{u1} (Set.{u1} α)), LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (Set.Elem.{u1} α (Set.sUnion.{u1} α A))) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) (Cardinal.mk.{u1} (Set.Elem.{u1} (Set.{u1} α) A)) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (Set.Elem.{u1} (Set.{u1} α) A) (fun (s : Set.Elem.{u1} (Set.{u1} α) A) => Cardinal.mk.{u1} (Set.Elem.{u1} α (Subtype.val.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x A) s)))))
 Case conversion may be inaccurate. Consider using '#align cardinal.mk_sUnion_le Cardinal.mk_sUnion_leₓ'. -/
-theorem mk_sUnion_le {α : Type u} (A : Set (Set α)) : (#⋃₀ A) ≤ (#A) * ⨆ s : A, #s :=
-  by
-  rw [sUnion_eq_Union]
-  apply mk_Union_le
+theorem mk_sUnion_le {α : Type u} (A : Set (Set α)) : (#⋃₀ A) ≤ (#A) * ⨆ s : A, #s := by
+  rw [sUnion_eq_Union]; apply mk_Union_le
 #align cardinal.mk_sUnion_le Cardinal.mk_sUnion_le
 
 /- warning: cardinal.mk_bUnion_le -> Cardinal.mk_biUnion_le is a dubious translation:
@@ -3227,10 +3174,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u1}} (A : ι -> (Set.{u1} α)) (s : Set.{u1} ι), LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (Set.Elem.{u1} α (Set.iUnion.{u1, succ u1} α ι (fun (x : ι) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x s) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x s) => A x))))) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) (Cardinal.mk.{u1} (Set.Elem.{u1} ι s)) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (Set.Elem.{u1} ι s) (fun (x : Set.Elem.{u1} ι s) => Cardinal.mk.{u1} (Set.Elem.{u1} α (A (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x s) x))))))
 Case conversion may be inaccurate. Consider using '#align cardinal.mk_bUnion_le Cardinal.mk_biUnion_leₓ'. -/
 theorem mk_biUnion_le {ι α : Type u} (A : ι → Set α) (s : Set ι) :
-    (#⋃ x ∈ s, A x) ≤ (#s) * ⨆ x : s, #A x.1 :=
-  by
-  rw [bUnion_eq_Union]
-  apply mk_Union_le
+    (#⋃ x ∈ s, A x) ≤ (#s) * ⨆ x : s, #A x.1 := by rw [bUnion_eq_Union]; apply mk_Union_le
 #align cardinal.mk_bUnion_le Cardinal.mk_biUnion_le
 
 /- warning: cardinal.finset_card_lt_aleph_0 -> Cardinal.finset_card_lt_aleph0 is a dubious translation:
@@ -3327,10 +3271,8 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {a : α}, (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Set.Elem.{u1} α (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s))) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) (Cardinal.mk.{u1} (Set.Elem.{u1} α s)) (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (One.toOfNat1.{succ u1} Cardinal.{u1} Cardinal.instOneCardinal.{u1}))))
 Case conversion may be inaccurate. Consider using '#align cardinal.mk_insert Cardinal.mk_insertₓ'. -/
 theorem mk_insert {α : Type u} {s : Set α} {a : α} (h : a ∉ s) :
-    (#(insert a s : Set α)) = (#s) + 1 :=
-  by
-  rw [← union_singleton, mk_union_of_disjoint, mk_singleton]
-  simpa
+    (#(insert a s : Set α)) = (#s) + 1 := by
+  rw [← union_singleton, mk_union_of_disjoint, mk_singleton]; simpa
 #align cardinal.mk_insert Cardinal.mk_insert
 
 /- warning: cardinal.mk_sum_compl -> Cardinal.mk_sum_compl is a dubious translation:
@@ -3434,9 +3376,7 @@ theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α →
   by
   rw [lift_mk_le.{v, u, 0}]
   refine' ⟨⟨_, _⟩⟩
-  · rintro ⟨y, hy⟩
-    rcases Classical.subtype_of_exists (h hy) with ⟨x, rfl⟩
-    exact ⟨x, hy⟩
+  · rintro ⟨y, hy⟩; rcases Classical.subtype_of_exists (h hy) with ⟨x, rfl⟩; exact ⟨x, hy⟩
   rintro ⟨y, hy⟩ ⟨y', hy'⟩; dsimp
   rcases Classical.subtype_of_exists (h hy) with ⟨x, rfl⟩
   rcases Classical.subtype_of_exists (h hy') with ⟨x', rfl⟩
@@ -3474,10 +3414,8 @@ theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h
 theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α → β) {s : Set α}
     {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({ x ∈ s | f x ∈ t } : Set α)) :=
   by
-  rw [image_eq_range] at h
-  convert mk_preimage_of_subset_range_lift _ _ h using 1
-  rw [mk_sep]
-  rfl
+  rw [image_eq_range] at h; convert mk_preimage_of_subset_range_lift _ _ h using 1
+  rw [mk_sep]; rfl
 #align cardinal.mk_subset_ge_of_subset_image_lift Cardinal.mk_subset_ge_of_subset_image_lift
 -/
 
@@ -3485,10 +3423,8 @@ theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α �
 theorem mk_subset_ge_of_subset_image (f : α → β) {s : Set α} {t : Set β} (h : t ⊆ f '' s) :
     (#t) ≤ (#({ x ∈ s | f x ∈ t } : Set α)) :=
   by
-  rw [image_eq_range] at h
-  convert mk_preimage_of_subset_range _ _ h using 1
-  rw [mk_sep]
-  rfl
+  rw [image_eq_range] at h; convert mk_preimage_of_subset_range _ _ h using 1
+  rw [mk_sep]; rfl
 #align cardinal.mk_subset_ge_of_subset_image Cardinal.mk_subset_ge_of_subset_image
 -/
 

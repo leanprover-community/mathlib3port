@@ -39,13 +39,9 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
     where
   toFun r :=
     { app := fun M => by apply DistribMulAction.toAddMonoidHom M r
-      naturality' := fun M N f => by
-        ext
-        exact (f.map_smul _ _).symm }
+      naturality' := fun M N f => by ext; exact (f.map_smul _ _).symm }
   invFun φ := φ.app (ModuleCat.of R R) (1 : R)
-  left_inv := by
-    intro r
-    simp
+  left_inv := by intro r; simp
   right_inv := by
     intro φ; ext (M x)
     simp only [DistribMulAction.toAddMonoidHom_apply]
@@ -54,13 +50,7 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
         (1 : R)
     convert w.symm
     exact (one_smul _ _).symm
-  map_add' := by
-    intros
-    ext
-    simp [add_smul]
-  map_mul' := by
-    intros
-    ext
-    simpa using mul_smul _ _ _
+  map_add' := by intros ; ext; simp [add_smul]
+  map_mul' := by intros ; ext; simpa using mul_smul _ _ _
 #align ring_equiv_End_forget₂ ringEquivEndForget₂
 

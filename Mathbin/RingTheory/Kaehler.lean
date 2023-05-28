@@ -78,17 +78,11 @@ theorem Derivation.tensorProductTo_mul (D : Derivation R S M) (x y : S ⊗[R] S)
   by
   apply TensorProduct.induction_on x
   · rw [MulZeroClass.zero_mul, map_zero, map_zero, zero_smul, smul_zero, add_zero]
-  swap;
-  · rintro
-    simp only [add_mul, map_add, add_smul, *, smul_add]
-    rw [add_add_add_comm]
+  swap; · rintro; simp only [add_mul, map_add, add_smul, *, smul_add]; rw [add_add_add_comm]
   intro x₁ x₂
   apply TensorProduct.induction_on y
   · rw [MulZeroClass.mul_zero, map_zero, map_zero, zero_smul, smul_zero, add_zero]
-  swap;
-  · rintro
-    simp only [mul_add, map_add, add_smul, *, smul_add]
-    rw [add_add_add_comm]
+  swap; · rintro; simp only [mul_add, map_add, add_smul, *, smul_add]; rw [add_add_add_comm]
   intro x y
   simp only [tensor_product.tmul_mul_tmul, Derivation.tensorProductTo,
     TensorProduct.AlgebraTensorModule.lift_apply, TensorProduct.lift.tmul',
@@ -115,8 +109,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
     rw [← this]
     clear this hx
     apply TensorProduct.induction_on x <;> clear x
-    · rw [map_zero, TensorProduct.zero_tmul, sub_zero]
-      exact zero_mem _
+    · rw [map_zero, TensorProduct.zero_tmul, sub_zero]; exact zero_mem _
     · intro x y
       convert_to x • (1 ⊗ₜ y - y ⊗ₜ 1) ∈ _
       ·
@@ -260,9 +253,8 @@ theorem KaehlerDifferential.span_range_derivation :
     apply Submodule.subset_span
     exact ⟨x, KaehlerDifferential.dLinearMap_apply R S x⟩
   · exact ⟨zero_mem _, Submodule.zero_mem _⟩
-  · rintro x y ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
-    exact ⟨add_mem hx₁ hy₁, Submodule.add_mem _ hx₂ hy₂⟩
-  · rintro r x ⟨hx₁, hx₂⟩
+  · rintro x y ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩; exact ⟨add_mem hx₁ hy₁, Submodule.add_mem _ hx₂ hy₂⟩
+  · rintro r x ⟨hx₁, hx₂⟩;
     exact
       ⟨((KaehlerDifferential.ideal R S).restrictScalars S).smul_mem r hx₁,
         Submodule.smul_mem _ r hx₂⟩
@@ -285,8 +277,7 @@ def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ
     · rintro x (hx : _ = _) ⟨y, hy : _ = _⟩ -
       dsimp
       rw [Derivation.tensorProductTo_mul, hx, hy, zero_smul, zero_smul, zero_add]
-    · intro x y ex ey
-      rw [map_add, ex, ey, zero_add]
+    · intro x y ex ey; rw [map_add, ex, ey, zero_add]
 #align derivation.lift_kaehler_differential Derivation.liftKaehlerDifferential
 
 theorem Derivation.liftKaehlerDifferential_apply (D : Derivation R S M) (x) :
@@ -317,18 +308,13 @@ theorem Derivation.lift_kaehlerDifferential_unique (f f' : Ω[S⁄R] →ₗ[S] M
     f = f' := by
   apply LinearMap.ext
   intro x
-  have : x ∈ Submodule.span S (Set.range <| KaehlerDifferential.d R S) :=
-    by
-    rw [KaehlerDifferential.span_range_derivation]
-    trivial
+  have : x ∈ Submodule.span S (Set.range <| KaehlerDifferential.d R S) := by
+    rw [KaehlerDifferential.span_range_derivation]; trivial
   apply Submodule.span_induction this
-  · rintro _ ⟨x, rfl⟩
-    exact congr_arg (fun D : Derivation R S M => D x) hf
+  · rintro _ ⟨x, rfl⟩; exact congr_arg (fun D : Derivation R S M => D x) hf
   · rw [map_zero, map_zero]
-  · intro x y hx hy
-    rw [map_add, map_add, hx, hy]
-  · intro a x e
-    rw [map_smul, map_smul, e]
+  · intro x y hx hy; rw [map_add, map_add, hx, hy]
+  · intro a x e; rw [map_smul, map_smul, e]
 #align derivation.lift_kaehler_differential_unique Derivation.lift_kaehlerDifferential_unique
 
 variable (R S)
@@ -379,13 +365,11 @@ def KaehlerDifferential.quotientCotangentIdealRingEquiv :
     Function.RightInverse tensor_product.include_left
       (↑(tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S) : S ⊗[R] S →+* S) :=
     by
-    intro x
-    rw [AlgHom.coe_toRingHom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
+    intro x; rw [AlgHom.coe_toRingHom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
     rfl
   refine' (Ideal.quotCotangent _).trans _
   refine' (Ideal.quotEquivOfEq _).trans (RingHom.quotientKerEquivOfRightInverse this)
-  ext
-  rfl
+  ext; rfl
 #align kaehler_differential.quotient_cotangent_ideal_ring_equiv KaehlerDifferential.quotientCotangentIdealRingEquiv
 
 /-- The quotient ring of `S ⊗ S ⧸ J ^ 2` by `Ω[S⁄R]` is isomorphic to `S` as an `S`-algebra. -/
@@ -409,10 +393,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
     (tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S).kerSquareLift (f x) =
       KaehlerDifferential.quotientCotangentIdealRingEquiv R S
         (Ideal.Quotient.mk (KaehlerDifferential.ideal R S).cotangentIdeal <| f x) :=
-    by
-    generalize f x = y
-    obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
-    rfl
+    by generalize f x = y; obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y; rfl
   have e₂ :
     x = KaehlerDifferential.quotientCotangentIdealRingEquiv R S (IsScalarTower.toAlgHom R S _ x) :=
     (mul_one x).symm
@@ -423,8 +404,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
             (@RingEquiv.congr_arg _ _ _ _ _ _
               (KaehlerDifferential.quotientCotangentIdealRingEquiv R S) _ _ e)).trans
         e₂.symm
-  · intro e
-    apply (KaehlerDifferential.quotientCotangentIdealRingEquiv R S).Injective
+  · intro e; apply (KaehlerDifferential.quotientCotangentIdealRingEquiv R S).Injective
     exact e₁.symm.trans (e.trans e₂)
 #align kaehler_differential.End_equiv_aux KaehlerDifferential.End_equiv_aux
 
@@ -531,10 +511,7 @@ noncomputable def KaehlerDifferential.derivationQuotKerTotal :
   map_one_eq_zero' := KaehlerDifferential.kerTotal_mkQ_single_algebra_map_one _ _ _
   leibniz' a b :=
     (KaehlerDifferential.kerTotal_mkQ_single_mul _ _ _ _ _).trans
-      (by
-        simp_rw [← Finsupp.smul_single_one _ (1 * _ : S)]
-        dsimp
-        simp)
+      (by simp_rw [← Finsupp.smul_single_one _ (1 * _ : S)]; dsimp; simp)
 #align kaehler_differential.derivation_quot_ker_total KaehlerDifferential.derivationQuotKerTotal
 
 theorem KaehlerDifferential.derivationQuotKerTotal_apply (x) :

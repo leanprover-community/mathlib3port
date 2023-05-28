@@ -109,9 +109,7 @@ open ZeroObject
 
 #print CategoryTheory.Projective.zero_projective /-
 instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] : Projective (0 : C)
-    where Factors E X f e epi := by
-    use 0
-    ext
+    where Factors E X f e epi := by use 0; ext
 #align category_theory.projective.zero_projective CategoryTheory.Projective.zero_projective
 -/
 
@@ -136,9 +134,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Projective P ↔ Projective Q :=
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
 instance (X : Type u) : Projective X
     where Factors E X' f e epi :=
-    ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some,
-      by
-      ext x
+    ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some, by ext x;
       exact ((epi_iff_surjective _).mp epi (f x)).choose_spec⟩
 
 #print CategoryTheory.Projective.Type.enoughProjectives /-

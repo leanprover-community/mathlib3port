@@ -73,10 +73,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : DecidableEq.{succ u1} β] (f : Function.Embedding.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f)))) (Function.Embedding.toEquivRange.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f) (Equiv.ofInjective.{succ u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f) (Function.Embedding.injective.{succ u1, succ u2} α β f))
 Case conversion may be inaccurate. Consider using '#align function.embedding.to_equiv_range_eq_of_injective Function.Embedding.toEquivRange_eq_ofInjectiveₓ'. -/
 theorem Function.Embedding.toEquivRange_eq_ofInjective :
-    f.toEquivRange = Equiv.ofInjective f f.Injective :=
-  by
-  ext
-  simp
+    f.toEquivRange = Equiv.ofInjective f f.Injective := by ext; simp
 #align function.embedding.to_equiv_range_eq_of_injective Function.Embedding.toEquivRange_eq_ofInjective
 
 #print Equiv.Perm.viaFintypeEmbedding /-

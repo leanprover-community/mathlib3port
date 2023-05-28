@@ -212,9 +212,7 @@ theorem cycleType_conj {σ τ : Perm α} : (τ * σ * τ⁻¹).cycleType = σ.cy
   · intro σ τ hd hc hσ hτ π
     rw [← conj_mul, hd.cycle_type, disjoint.cycle_type, hσ, hτ]
     intro a
-    apply (hd (π⁻¹ a)).imp _ _ <;>
-      · intro h
-        rw [perm.mul_apply, perm.mul_apply, h, apply_inv_self]
+    apply (hd (π⁻¹ a)).imp _ _ <;> · intro h; rw [perm.mul_apply, perm.mul_apply, h, apply_inv_self]
 #align equiv.perm.cycle_type_conj Equiv.Perm.cycleType_conj
 
 #print Equiv.Perm.sum_cycleType /-
@@ -455,8 +453,7 @@ theorem mem_cycleType_iff {n : ℕ} {σ : Perm α} :
     rw [cycle_type_eq _ rfl hlc hld] at h
     obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map h
     rw [(List.perm_cons_erase cl).pairwise_iff fun _ _ hd => _] at hld
-    swap
-    · exact hd.symm
+    swap; · exact hd.symm
     refine' ⟨c, (l.erase c).Prod, _, _, hlc _ cl, rfl⟩
     ·
       rw [← List.prod_cons,
@@ -606,17 +603,13 @@ theorem one_eq : vectorsProdEqOne G 1 = {Vector.nil.cons 1} :=
 #align equiv.perm.vectors_prod_eq_one.one_eq Equiv.Perm.VectorsProdEqOne.one_eq
 
 #print Equiv.Perm.VectorsProdEqOne.zeroUnique /-
-instance zeroUnique : Unique (vectorsProdEqOne G 0) :=
-  by
-  rw [zero_eq]
+instance zeroUnique : Unique (vectorsProdEqOne G 0) := by rw [zero_eq];
   exact Set.uniqueSingleton Vector.nil
 #align equiv.perm.vectors_prod_eq_one.zero_unique Equiv.Perm.VectorsProdEqOne.zeroUnique
 -/
 
 #print Equiv.Perm.VectorsProdEqOne.oneUnique /-
-instance oneUnique : Unique (vectorsProdEqOne G 1) :=
-  by
-  rw [one_eq]
+instance oneUnique : Unique (vectorsProdEqOne G 1) := by rw [one_eq];
   exact Set.uniqueSingleton (vector.nil.cons 1)
 #align equiv.perm.vectors_prod_eq_one.one_unique Equiv.Perm.VectorsProdEqOne.oneUnique
 -/
@@ -649,10 +642,7 @@ by deleting the last entry of `v`. -/
 def equivVector : vectorsProdEqOne G n ≃ Vector G (n - 1) :=
   ((vectorEquiv G (n - 1)).trans
       (if hn : n = 0 then
-        show vectorsProdEqOne G (n - 1 + 1) ≃ vectorsProdEqOne G n
-          by
-          rw [hn]
-          apply equiv_of_unique
+        show vectorsProdEqOne G (n - 1 + 1) ≃ vectorsProdEqOne G n by rw [hn]; apply equiv_of_unique
       else by rw [tsub_add_cancel_of_le (Nat.pos_of_ne_zero hn).nat_succ_le])).symm
 #align equiv.perm.vectors_prod_eq_one.equiv_vector Equiv.Perm.VectorsProdEqOne.equivVector
 -/
@@ -863,10 +853,7 @@ theorem card_support_eq_three_iff : σ.support.card = 3 ↔ σ.IsThreeCycle :=
   obtain ⟨m, hm⟩ := exists_mem_of_ne_zero h1
   rw [← sum_cycle_type, ← cons_erase hn, ← cons_erase hm, Multiset.sum_cons, Multiset.sum_cons] at h
   -- TODO: linarith [...] should solve this directly
-  have : ∀ {k}, 2 ≤ m → 2 ≤ n → n + (m + k) = 3 → False :=
-    by
-    intros
-    linarith
+  have : ∀ {k}, 2 ≤ m → 2 ≤ n → n + (m + k) = 3 → False := by intros ; linarith
   cases this (two_le_of_mem_cycle_type (mem_of_mem_erase hm)) (two_le_of_mem_cycle_type hn) h
 #align card_support_eq_three_iff card_support_eq_three_iff
 -/
@@ -907,9 +894,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.perm.is_three_cycle.inv_iff Equiv.Perm.IsThreeCycle.inv_iffₓ'. -/
 @[simp]
 theorem inv_iff {f : Perm α} : IsThreeCycle f⁻¹ ↔ IsThreeCycle f :=
-  ⟨by
-    rw [← inv_inv f]
-    apply inv, inv⟩
+  ⟨by rw [← inv_inv f]; apply inv, inv⟩
 #align equiv.perm.is_three_cycle.inv_iff Equiv.Perm.IsThreeCycle.inv_iff
 
 #print Equiv.Perm.IsThreeCycle.orderOf /-

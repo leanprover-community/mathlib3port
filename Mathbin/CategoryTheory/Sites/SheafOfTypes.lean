@@ -234,9 +234,7 @@ theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X
   have h := (le_generate R Y hf).choose_spec
   unfold family_of_elements.sieve_extend
   rw [t h.some (𝟙 _) _ hf _]
-  · simp;
-  · rw [id_comp]
-    exact h.some_spec.some_spec.2
+  · simp; · rw [id_comp]; exact h.some_spec.some_spec.2
 #align category_theory.presieve.extend_agrees CategoryTheory.Presieve.extend_agrees
 
 #print CategoryTheory.Presieve.restrict_extend /-
@@ -305,10 +303,7 @@ equal when restricted to `R`.
 -/
 theorem restrict_inj {x₁ x₂ : FamilyOfElements P (generate R)} (t₁ : x₁.Compatible)
     (t₂ : x₂.Compatible) : x₁.restrict (le_generate R) = x₂.restrict (le_generate R) → x₁ = x₂ :=
-  fun h => by
-  rw [← extend_restrict t₁, ← extend_restrict t₂]
-  congr
-  exact h
+  fun h => by rw [← extend_restrict t₁, ← extend_restrict t₂]; congr ; exact h
 #align category_theory.presieve.restrict_inj CategoryTheory.Presieve.restrict_inj
 -/
 
@@ -387,10 +382,8 @@ choice, this is not well-defined generally.
 -/
 noncomputable def FamilyOfElements.functorPushforward {D : Type u₂} [Category.{v₂} D] (F : D ⥤ C)
     {X : D} {T : Presieve X} (x : FamilyOfElements (F.op ⋙ P) T) :
-    FamilyOfElements P (T.functorPushforward F) := fun Y f h =>
-  by
-  obtain ⟨Z, g, h, h₁, _⟩ := get_functor_pushforward_structure h
-  exact P.map h.op (x g h₁)
+    FamilyOfElements P (T.functorPushforward F) := fun Y f h => by
+  obtain ⟨Z, g, h, h₁, _⟩ := get_functor_pushforward_structure h; exact P.map h.op (x g h₁)
 #align category_theory.presieve.family_of_elements.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.functorPushforward
 
 section Pullback
@@ -755,8 +748,7 @@ theorem isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor :
   apply forall_congr'
   intro x
   constructor
-  · intro z hx
-    exact existsUnique_of_exists_of_unique (z.2 hx) z.1
+  · intro z hx; exact existsUnique_of_exists_of_unique (z.2 hx) z.1
   · intro h
     refine' ⟨_, ExistsUnique.exists ∘ h⟩
     intro t₁ t₂ ht₁ ht₂

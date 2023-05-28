@@ -192,8 +192,7 @@ theorem lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0 : 0 ≤ p
   by
   rw [← @lintegral_zero_fun α _ μ]
   refine' lintegral_congr_ae _
-  suffices h_mul_zero : f * g =ᵐ[μ] 0 * g
-  · rwa [MulZeroClass.zero_mul] at h_mul_zero
+  suffices h_mul_zero : f * g =ᵐ[μ] 0 * g; · rwa [MulZeroClass.zero_mul] at h_mul_zero
   have hf_eq_zero : f =ᵐ[μ] 0 := ae_eq_zero_of_lintegral_rpow_eq_zero hp0 hf hf_zero
   exact hf_eq_zero.mul (ae_eq_refl g)
 #align ennreal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero ENNReal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero
@@ -324,9 +323,7 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
       by
       rw [@ENNReal.mul_rpow_of_nonneg _ _ (1 / p) (by simp [hp0]), ← ENNReal.rpow_mul, ←
         ENNReal.rpow_mul]
-      have hpp2 : p * p2 = q := by
-        symm
-        rw [mul_comm, ← div_eq_iff hp0_ne]
+      have hpp2 : p * p2 = q := by symm; rw [mul_comm, ← div_eq_iff hp0_ne]
       have hpq2 : p * q2 = r :=
         by
         rw [← inv_inv r, ← one_div, ← one_div, h_one_div_r]
@@ -433,10 +430,7 @@ private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjugateExponent
       ((∫⁻ a : α, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a : α, g a ^ p ∂μ) ^ (1 / p)) *
         (∫⁻ a : α, (f + g) a ^ p ∂μ) ^ (1 / q) :=
     lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add hpq hf hf_top hg hg_top
-  have h_one_div_q : 1 / q = 1 - 1 / p :=
-    by
-    nth_rw 2 [← hpq.inv_add_inv_conj]
-    ring
+  have h_one_div_q : 1 / q = 1 - 1 / p := by nth_rw 2 [← hpq.inv_add_inv_conj]; ring
   simp_rw [h_one_div_q, sub_eq_add_neg 1 (1 / p), ENNReal.rpow_add _ _ h_add_zero h_add_top,
     rpow_one] at h
   nth_rw 2 [mul_comm] at h
@@ -462,10 +456,7 @@ theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AEMeasurab
   · refine' le_of_eq _
     simp_rw [h1, one_div_one, ENNReal.rpow_one]
     exact lintegral_add_left' hf _
-  have hp1_lt : 1 < p := by
-    refine' lt_of_le_of_ne hp1 _
-    symm
-    exact h1
+  have hp1_lt : 1 < p := by refine' lt_of_le_of_ne hp1 _; symm; exact h1
   have hpq := Real.isConjugateExponent_conjugateExponent hp1_lt
   by_cases h0 : (∫⁻ a, (f + g) a ^ p ∂μ) = 0
   · rw [h0, @ENNReal.zero_rpow_of_pos (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]

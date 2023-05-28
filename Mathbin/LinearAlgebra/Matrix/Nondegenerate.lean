@@ -82,11 +82,8 @@ theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.
   convert hv
   simp only [mul_vec_cramer M (Pi.single i 1), dot_product, Pi.smul_apply, smul_eq_mul]
   rw [Finset.sum_eq_single i, Pi.single_eq_same, mul_one]
-  · intro j _ hj
-    simp [hj]
-  · intros
-    have := Finset.mem_univ i
-    contradiction
+  · intro j _ hj; simp [hj]
+  · intros ; have := Finset.mem_univ i; contradiction
 #align matrix.nondegenerate_of_det_ne_zero Matrix.nondegenerate_of_det_ne_zero
 
 /- warning: matrix.eq_zero_of_vec_mul_eq_zero -> Matrix.eq_zero_of_vecMul_eq_zero is a dubious translation:

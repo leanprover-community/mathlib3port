@@ -82,9 +82,7 @@ but is expected to have type
   forall {R : Type.{u2}} {Γ₀ : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : LinearOrderedCommMonoidWithZero.{u1} Γ₀] (J : Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (v : Valuation.{u2, u1} (HasQuotient.Quotient.{u2, u2} R (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u2} R _inst_1) J) Γ₀ _inst_2 (CommRing.toRing.{u2} (HasQuotient.Quotient.{u2, u2} R (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u2} R _inst_1) J) (Ideal.Quotient.commRing.{u2} R _inst_1 J))), LE.le.{u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Preorder.toLE.{u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (PartialOrder.toPreorder.{u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Submodule.completeLattice.{u2, u2} R R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)))))))) J (Valuation.supp.{u2, u1} R Γ₀ _inst_1 _inst_2 (Valuation.comap.{u2, u1, u2} (HasQuotient.Quotient.{u2, u2} R (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u2} R _inst_1) J) Γ₀ (CommRing.toRing.{u2} (HasQuotient.Quotient.{u2, u2} R (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u2} R _inst_1) J) (Ideal.Quotient.commRing.{u2} R _inst_1 J)) _inst_2 R (CommRing.toRing.{u2} R _inst_1) (Ideal.Quotient.mk.{u2} R _inst_1 J) v))
 Case conversion may be inaccurate. Consider using '#align valuation.self_le_supp_comap Valuation.self_le_supp_comapₓ'. -/
 theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
-    J ≤ (v.comap (Ideal.Quotient.mk J)).supp :=
-  by
-  rw [comap_supp, ← Ideal.map_le_iff_le_comap]
+    J ≤ (v.comap (Ideal.Quotient.mk J)).supp := by rw [comap_supp, ← Ideal.map_le_iff_le_comap];
   simp
 #align valuation.self_le_supp_comap Valuation.self_le_supp_comap
 
@@ -97,9 +95,7 @@ Case conversion may be inaccurate. Consider using '#align valuation.comap_on_quo
 @[simp]
 theorem comap_onQuot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
-  ext <| by
-    rintro ⟨x⟩
-    rfl
+  ext <| by rintro ⟨x⟩; rfl
 #align valuation.comap_on_quot_eq Valuation.comap_onQuot_eq
 
 /- warning: valuation.supp_quot -> Valuation.supp_quot is a dubious translation:
@@ -117,16 +113,13 @@ theorem supp_quot {J : Ideal R} (hJ : J ≤ supp v) :
     apply Ideal.subset_span
     exact ⟨x, hx, rfl⟩
   · rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact hx
+    intro x hx; exact hx
 #align valuation.supp_quot Valuation.supp_quot
 
 /- warning: valuation.supp_quot_supp -> Valuation.supp_quot_supp is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align valuation.supp_quot_supp Valuation.supp_quot_suppₓ'. -/
-theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 :=
-  by
-  rw [supp_quot]
+theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 := by rw [supp_quot];
   exact Ideal.map_quotient_self _
 #align valuation.supp_quot_supp Valuation.supp_quot_supp
 

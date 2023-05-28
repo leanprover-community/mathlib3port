@@ -96,8 +96,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
         Polynomial.splits_of_splits_of_dvd _
           (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
           ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
-      · rw [← IsScalarTower.algebraMap_eq]
-        exact H2
+      · rw [← IsScalarTower.algebraMap_eq]; exact H2
       · rw [Polynomial.aeval_map_algebraMap, minpoly.aeval]
     obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (ne_of_lt (minpoly.degree_pos H5)).symm
     refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩

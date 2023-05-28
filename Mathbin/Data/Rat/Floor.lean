@@ -68,10 +68,7 @@ lean 3 declaration is
 but is expected to have type
   forall {q : Rat}, Eq.{1} Int (Int.floor.{0} Rat Rat.instLinearOrderedRingRat Rat.instFloorRingRatInstLinearOrderedRingRat q) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.floor_def Rat.floor_defₓ'. -/
-protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.den :=
-  by
-  cases q
-  rfl
+protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.den := by cases q; rfl
 #align rat.floor_def Rat.floor_def
 
 /- warning: rat.floor_int_div_nat_eq_div -> Rat.floor_int_div_nat_eq_div is a dubious translation:
@@ -185,17 +182,14 @@ theorem num_lt_succ_floor_mul_den (q : ℚ) : q.num < (⌊q⌋ + 1) * q.den :=
     rwa [this]
   suffices (q.num : ℚ) < q.num + (1 - fract q) * q.denom
     by
-    have : (q - fract q + 1) * q.denom = q.num + (1 - fract q) * q.denom
+    have : (q - fract q + 1) * q.denom = q.num + (1 - fract q) * q.denom;
     calc
       (q - fract q + 1) * q.denom = (q + (1 - fract q)) * q.denom := by ring
       _ = q * q.denom + (1 - fract q) * q.denom := by rw [add_mul]
       _ = q.num + (1 - fract q) * q.denom := by simp
       
     rwa [this]
-  suffices 0 < (1 - fract q) * q.denom
-    by
-    rw [← sub_lt_iff_lt_add']
-    simpa
+  suffices 0 < (1 - fract q) * q.denom by rw [← sub_lt_iff_lt_add']; simpa
   have : 0 < 1 - fract q := by
     have : fract q < 1 := fract_lt_one q
     have : 0 + fract q < 1 := by simp [this]

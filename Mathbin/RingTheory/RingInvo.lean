@@ -63,10 +63,7 @@ instance (R : Type _) [Semiring R] : RingInvoClass (RingInvo R) R
     where
   coe := toFun
   inv := invFun
-  coe_injective' e f h₁ h₂ := by
-    cases e
-    cases f
-    congr
+  coe_injective' e f h₁ h₂ := by cases e; cases f; congr
   map_add := map_add'
   map_mul := map_mul'
   left_inv := left_inv

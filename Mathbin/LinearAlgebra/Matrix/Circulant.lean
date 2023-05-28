@@ -285,9 +285,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.circulant_single_one Matrix.circulant_single_oneₓ'. -/
 @[simp]
 theorem circulant_single_one (α n) [Zero α] [One α] [DecidableEq n] [AddGroup n] :
-    circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) :=
-  by
-  ext (i j)
+    circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by ext (i j);
   simp [one_apply, Pi.single_apply, sub_eq_zero]
 #align matrix.circulant_single_one Matrix.circulant_single_one
 

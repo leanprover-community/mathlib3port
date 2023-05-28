@@ -559,10 +559,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] {x : Tropical.{u1} R} {y : Tropical.{u1} R} {z : Tropical.{u1} R}, Iff (Eq.{succ u1} (Tropical.{u1} R) (HAdd.hAdd.{u1, u1, u1} (Tropical.{u1} R) (Tropical.{u1} R) (Tropical.{u1} R) (instHAdd.{u1} (Tropical.{u1} R) (Tropical.instAddTropical.{u1} R _inst_1)) x y) z) (Or (And (Eq.{succ u1} (Tropical.{u1} R) x z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) x y)) (And (Eq.{succ u1} (Tropical.{u1} R) y z) (LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))) y x)))
 Case conversion may be inaccurate. Consider using '#align tropical.add_eq_iff Tropical.add_eq_iffₓ'. -/
-theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y = z ∧ y ≤ x :=
-  by
-  rw [trop_add_def, trop_eq_iff_eq_untrop]
-  simp [min_eq_iff]
+theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y = z ∧ y ≤ x := by
+  rw [trop_add_def, trop_eq_iff_eq_untrop]; simp [min_eq_iff]
 #align tropical.add_eq_iff Tropical.add_eq_iff
 
 /- warning: tropical.add_eq_zero_iff -> Tropical.add_eq_zero_iff is a dubious translation:

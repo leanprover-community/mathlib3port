@@ -271,18 +271,10 @@ def g : B →* SX'
   toFun β :=
     { toFun := fun x => β • x
       invFun := fun x => β⁻¹ • x
-      left_inv := fun x => by
-        dsimp only
-        rw [← mul_smul, mul_left_inv, one_smul]
-      right_inv := fun x => by
-        dsimp only
-        rw [← mul_smul, mul_right_inv, one_smul] }
-  map_one' := by
-    ext
-    simp [one_smul]
-  map_mul' b1 b2 := by
-    ext
-    simp [mul_smul]
+      left_inv := fun x => by dsimp only; rw [← mul_smul, mul_left_inv, one_smul]
+      right_inv := fun x => by dsimp only; rw [← mul_smul, mul_right_inv, one_smul] }
+  map_one' := by ext; simp [one_smul]
+  map_mul' b1 b2 := by ext; simp [mul_smul]
 #align Group.surjective_of_epi_auxs.G GroupCat.SurjectiveOfEpiAuxs.g
 -/
 
@@ -294,12 +286,8 @@ local notation "g" => g f
 -/
 def h : B →* SX' where
   toFun β := (τ.symm.trans (g β)).trans τ
-  map_one' := by
-    ext
-    simp
-  map_mul' b1 b2 := by
-    ext
-    simp
+  map_one' := by ext; simp
+  map_mul' b1 b2 := by ext; simp
 #align Group.surjective_of_epi_auxs.H GroupCat.SurjectiveOfEpiAuxs.h
 -/
 

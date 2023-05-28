@@ -164,10 +164,7 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_idₓ'. -/
 @[simp]
 theorem NatTrans.leftDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
-    NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) :=
-  by
-  simp [nat_trans.left_derived]
-  rfl
+    NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) := by simp [nat_trans.left_derived]; rfl
 #align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_id
 
 /- warning: category_theory.nat_trans.left_derived_comp -> CategoryTheory.NatTrans.leftDerived_comp is a dubious translation:

@@ -227,9 +227,7 @@ protected theorem add_left_cancel' (c : ℕ) (h : c + a ≡ c + b [MOD n]) : a �
 
 #print Nat.ModEq.add_right_cancel /-
 protected theorem add_right_cancel (h₁ : c ≡ d [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) :
-    a ≡ b [MOD n] := by
-  rw [add_comm a, add_comm b] at h₂
-  exact h₁.add_left_cancel h₂
+    a ≡ b [MOD n] := by rw [add_comm a, add_comm b] at h₂; exact h₁.add_left_cancel h₂
 #align nat.modeq.add_right_cancel Nat.ModEq.add_right_cancel
 -/
 
@@ -277,9 +275,7 @@ protected theorem mul_right_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) :
 /-- Cancel left multiplication in the modulus.
 
 For cancelling left multiplication on both sides of the `≡`, see `nat.modeq.mul_left_cancel'`. -/
-theorem of_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] :=
-  by
-  rw [modeq_iff_dvd] at *
+theorem of_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] := by rw [modeq_iff_dvd] at *;
   exact (dvd_mul_left (n : ℤ) (m : ℤ)).trans h
 #align nat.modeq.of_mul_left Nat.ModEq.of_mul_left
 -/
@@ -412,9 +408,7 @@ theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) : a ≡ b
 
 #print Nat.ModEq.cancel_right_div_gcd /-
 theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m / gcd m c] :=
-  by
-  apply cancel_left_div_gcd hm
-  simpa [mul_comm] using h
+  by apply cancel_left_div_gcd hm; simpa [mul_comm] using h
 #align nat.modeq.cancel_right_div_gcd Nat.ModEq.cancel_right_div_gcd
 -/
 
@@ -481,8 +475,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcd n m]) : { k // k ≡ a [MOD n] ∧ k
             Int.add_ediv_of_dvd_left, Int.mul_ediv_cancel_left _ hnonzero,
             Int.mul_ediv_assoc _ h.dvd, ← sub_sub, sub_self, zero_sub, dvd_neg, mul_assoc]
           exact dvd_mul_right _ _
-          norm_cast
-          exact dvd_mul_right _ _
+          norm_cast; exact dvd_mul_right _ _
         · exact dvd_lcm_left n m
         · rw [← sub_eq_iff_eq_add] at this
           rw [← this, sub_mul, sub_add, ← mul_sub, Int.sub_ediv_of_dvd,
@@ -624,8 +617,7 @@ theorem add_div {a b c : ℕ} (hc0 : 0 < c) :
     by simpa only [mul_add, add_comm, add_left_comm, add_assoc]
   rw [mod_add_div, mod_add_div, mod_add_div, mul_ite, add_assoc, add_assoc]
   conv_lhs => rw [← add_mod_add_ite]
-  simp
-  ac_rfl
+  simp; ac_rfl
 #align nat.add_div Nat.add_div
 
 #print Nat.add_div_eq_of_add_mod_lt /-

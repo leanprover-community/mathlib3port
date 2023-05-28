@@ -103,12 +103,8 @@ but is expected to have type
   Filter.Tendsto.{0, 0} Real Real (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) x)) (Filter.atTop.{0} Real Real.instPreorderReal) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align tendsto_rpow_div tendsto_rpow_divₓ'. -/
 /-- The function `x ^ (1 / x)` tends to `1` at `+∞`. -/
-theorem tendsto_rpow_div : Tendsto (fun x => x ^ ((1 : ℝ) / x)) atTop (𝓝 1) :=
-  by
-  convert tendsto_rpow_div_mul_add (1 : ℝ) _ (0 : ℝ) zero_ne_one
-  funext
-  congr 2
-  ring
+theorem tendsto_rpow_div : Tendsto (fun x => x ^ ((1 : ℝ) / x)) atTop (𝓝 1) := by
+  convert tendsto_rpow_div_mul_add (1 : ℝ) _ (0 : ℝ) zero_ne_one; funext; congr 2; ring
 #align tendsto_rpow_div tendsto_rpow_div
 
 /- warning: tendsto_rpow_neg_div -> tendsto_rpow_neg_div is a dubious translation:
@@ -118,12 +114,8 @@ but is expected to have type
   Filter.Tendsto.{0, 0} Real Real (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) x)) (Filter.atTop.{0} Real Real.instPreorderReal) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align tendsto_rpow_neg_div tendsto_rpow_neg_divₓ'. -/
 /-- The function `x ^ (-1 / x)` tends to `1` at `+∞`. -/
-theorem tendsto_rpow_neg_div : Tendsto (fun x => x ^ (-(1 : ℝ) / x)) atTop (𝓝 1) :=
-  by
-  convert tendsto_rpow_div_mul_add (-(1 : ℝ)) _ (0 : ℝ) zero_ne_one
-  funext
-  congr 2
-  ring
+theorem tendsto_rpow_neg_div : Tendsto (fun x => x ^ (-(1 : ℝ) / x)) atTop (𝓝 1) := by
+  convert tendsto_rpow_div_mul_add (-(1 : ℝ)) _ (0 : ℝ) zero_ne_one; funext; congr 2; ring
 #align tendsto_rpow_neg_div tendsto_rpow_neg_div
 
 /- warning: tendsto_exp_div_rpow_at_top -> tendsto_exp_div_rpow_atTop is a dubious translation:

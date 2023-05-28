@@ -53,10 +53,7 @@ instance {α : Sort u} {β : Sort v} : EmbeddingLike (α ↪ β) α β
     where
   coe := Embedding.toFun
   injective' := Embedding.inj'
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
 
 instance {α β : Sort _} : CanLift (α → β) (α ↪ β) coeFn Injective where prf f hf := ⟨⟨f, hf⟩, rfl⟩
 
@@ -199,10 +196,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Function.Embedding.{succ u2, succ u1} α β) (inj : Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f)), Eq.{max (succ u2) (succ u1)} (Function.Embedding.{succ u2, succ u1} α β) (Function.Embedding.mk.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) f) inj) f
 Case conversion may be inaccurate. Consider using '#align function.embedding.mk_coe Function.Embedding.mk_coeₓ'. -/
 @[simp]
-theorem mk_coe {α β : Type _} (f : α ↪ β) (inj) : (⟨f, inj⟩ : α ↪ β) = f :=
-  by
-  ext
-  simp
+theorem mk_coe {α β : Type _} (f : α ↪ β) (inj) : (⟨f, inj⟩ : α ↪ β) = f := by ext; simp
 #align function.embedding.mk_coe Function.Embedding.mk_coe
 
 /- warning: function.embedding.injective -> Function.Embedding.injective is a dubious translation:
@@ -249,10 +243,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.equiv_to_embedding_trans_symm_to_embedding Function.Embedding.equiv_toEmbedding_trans_symm_toEmbeddingₓ'. -/
 @[simp]
 theorem equiv_toEmbedding_trans_symm_toEmbedding {α β : Sort _} (e : α ≃ β) :
-    e.toEmbedding.trans e.symm.toEmbedding = Embedding.refl _ :=
-  by
-  ext
-  simp
+    e.toEmbedding.trans e.symm.toEmbedding = Embedding.refl _ := by ext; simp
 #align function.embedding.equiv_to_embedding_trans_symm_to_embedding Function.Embedding.equiv_toEmbedding_trans_symm_toEmbedding
 
 /- warning: function.embedding.equiv_symm_to_embedding_trans_to_embedding -> Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding is a dubious translation:
@@ -263,10 +254,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.equiv_symm_to_embedding_trans_to_embedding Function.Embedding.equiv_symm_toEmbedding_trans_toEmbeddingₓ'. -/
 @[simp]
 theorem equiv_symm_toEmbedding_trans_toEmbedding {α β : Sort _} (e : α ≃ β) :
-    e.symm.toEmbedding.trans e.toEmbedding = Embedding.refl _ :=
-  by
-  ext
-  simp
+    e.symm.toEmbedding.trans e.toEmbedding = Embedding.refl _ := by ext; simp
 #align function.embedding.equiv_symm_to_embedding_trans_to_embedding Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding
 
 #print Function.Embedding.congr /-
@@ -379,9 +367,7 @@ theorem coe_quotientOut (α) [s : Setoid α] : ⇑(quotientOut α) = Quotient.ou
 #print Function.Embedding.punit /-
 /-- Choosing an element `b : β` gives an embedding of `punit` into `β`. -/
 def punit {β : Sort _} (b : β) : PUnit ↪ β :=
-  ⟨fun _ => b, by
-    rintro ⟨⟩ ⟨⟩ _
-    rfl⟩
+  ⟨fun _ => b, by rintro ⟨⟩ ⟨⟩ _; rfl⟩
 #align function.embedding.punit Function.Embedding.punit
 -/
 
@@ -582,9 +568,7 @@ def subtypeInjectiveEquivEmbedding (α β : Sort _) : { f : α → β // Functio
   toFun f := ⟨f.val, f.property⟩
   invFun f := ⟨f, f.Injective⟩
   left_inv f := by simp
-  right_inv f := by
-    ext
-    rfl
+  right_inv f := by ext; rfl
 #align equiv.subtype_injective_equiv_embedding Equiv.subtypeInjectiveEquivEmbedding
 
 /- warning: equiv.embedding_congr -> Equiv.embeddingCongr is a dubious translation:
@@ -600,12 +584,8 @@ def embeddingCongr {α β γ δ : Sort _} (h : α ≃ β) (h' : γ ≃ δ) : (α
     where
   toFun f := f.congr h h'
   invFun f := f.congr h.symm h'.symm
-  left_inv x := by
-    ext
-    simp
-  right_inv x := by
-    ext
-    simp
+  left_inv x := by ext; simp
+  right_inv x := by ext; simp
 #align equiv.embedding_congr Equiv.embeddingCongr
 
 /- warning: equiv.embedding_congr_refl -> Equiv.embeddingCongr_refl is a dubious translation:
@@ -616,10 +596,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.embedding_congr_refl Equiv.embeddingCongr_reflₓ'. -/
 @[simp]
 theorem embeddingCongr_refl {α β : Sort _} :
-    embeddingCongr (Equiv.refl α) (Equiv.refl β) = Equiv.refl (α ↪ β) :=
-  by
-  ext
-  rfl
+    embeddingCongr (Equiv.refl α) (Equiv.refl β) = Equiv.refl (α ↪ β) := by ext; rfl
 #align equiv.embedding_congr_refl Equiv.embeddingCongr_refl
 
 /- warning: equiv.embedding_congr_trans -> Equiv.embeddingCongr_trans is a dubious translation:
@@ -658,9 +635,7 @@ theorem embeddingCongr_apply_trans {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _
     (ec : γ₁ ≃ γ₂) (f : α₁ ↪ β₁) (g : β₁ ↪ γ₁) :
     Equiv.embeddingCongr ea ec (f.trans g) =
       (Equiv.embeddingCongr ea eb f).trans (Equiv.embeddingCongr eb ec g) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align equiv.embedding_congr_apply_trans Equiv.embeddingCongr_apply_trans
 
 #print Equiv.refl_toEmbedding /-

@@ -275,10 +275,7 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
     Fix.rec g (Fix.mk x) = g (appendFun id (Fix.rec g) <$$> x) :=
   by
   have : recF g ∘ fixToW = Fix.rec g := by
-    apply funext
-    apply Quotient.ind
-    intro x
-    apply recF_eq_of_Wequiv
+    apply funext; apply Quotient.ind; intro x; apply recF_eq_of_Wequiv
     apply Wrepr_equiv
   conv =>
     lhs
@@ -318,18 +315,13 @@ theorem Fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
     ∀ x, g₁ x = g₂ x := by
   apply Quot.ind
   intro x
-  apply q.P.W_ind _ x
-  intro a f' f ih
+  apply q.P.W_ind _ x; intro a f' f ih
   show g₁ ⟦q.P.W_mk a f' f⟧ = g₂ ⟦q.P.W_mk a f' f⟧
-  rw [← fix.ind_aux a f' f]
-  apply h
+  rw [← fix.ind_aux a f' f]; apply h
   rw [← abs_map, ← abs_map, MvPFunctor.map_eq, MvPFunctor.map_eq]
   congr 2
   rw [MvPFunctor.appendContents, append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
-  have : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧ :=
-    by
-    ext x
-    exact ih x
+  have : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧ := by ext x; exact ih x
   rw [this]
 #align mvqpf.fix.ind_rec MvQPF.Fix.ind_rec
 -/
@@ -361,15 +353,12 @@ theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x :=
 #print MvQPF.Fix.dest_mk /-
 theorem Fix.dest_mk (x : F (append1 α (Fix F α))) : Fix.dest (Fix.mk x) = x :=
   by
-  unfold fix.dest
-  rw [fix.rec_eq, ← fix.dest, ← comp_map]
+  unfold fix.dest; rw [fix.rec_eq, ← fix.dest, ← comp_map]
   conv =>
     rhs
     rw [← MvFunctor.id_map x]
   rw [← append_fun_comp, id_comp]
-  have : fix.mk ∘ fix.dest = id := by
-    ext x
-    apply fix.mk_dest
+  have : fix.mk ∘ fix.dest = id := by ext x; apply fix.mk_dest
   rw [this, append_fun_id_id]
 #align mvqpf.fix.dest_mk MvQPF.Fix.dest_mk
 -/
@@ -398,12 +387,7 @@ instance mvqpfFix : MvQPF (Fix F) where
   p := q.p.wp
   abs α := Quot.mk WEquiv
   repr α := fixToW
-  abs_repr := by
-    intro α
-    apply Quot.ind
-    intro a
-    apply Quot.sound
-    apply Wrepr_equiv
+  abs_repr := by intro α; apply Quot.ind; intro a; apply Quot.sound; apply Wrepr_equiv
   abs_map := by
     intro α β g x;
     conv =>
@@ -422,17 +406,12 @@ def Fix.drec {β : Fix F α → Type u}
     (g : ∀ x : F (α ::: Sigma β), β (Fix.mk <| (id ::: Sigma.fst) <$$> x)) (x : Fix F α) : β x :=
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
-    symm
-    dsimp [y]
-    apply fix.ind_rec _ id _ x
-    intro x' ih
-    rw [fix.rec_eq]
-    dsimp
-    simp [append_fun_id_id] at ih
-    congr
+    symm; dsimp [y]; apply fix.ind_rec _ id _ x; intro x' ih
+    rw [fix.rec_eq]; dsimp; simp [append_fun_id_id] at ih
+    congr ;
     conv =>
       rhs
-      rw [← ih]
+      rw [← ih];
     rw [MvFunctor.map_map, ← append_fun_comp, id_comp]
   cast (by rw [this]) y.2
 #align mvqpf.fix.drec MvQPF.Fix.drec

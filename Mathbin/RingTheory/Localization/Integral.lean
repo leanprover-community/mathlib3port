@@ -130,10 +130,7 @@ Case conversion may be inaccurate. Consider using '#align is_localization.intege
 theorem integerNormalization_map_to_map (p : S[X]) :
     ∃ b : M, (integerNormalization M p).map (algebraMap R S) = (b : R) • p :=
   let ⟨b, hb⟩ := integerNormalization_spec M p
-  ⟨b,
-    Polynomial.ext fun i => by
-      rw [coeff_map, coeff_smul]
-      exact hb i⟩
+  ⟨b, Polynomial.ext fun i => by rw [coeff_map, coeff_smul]; exact hb i⟩
 #align is_localization.integer_normalization_map_to_map IsLocalization.integerNormalization_map_to_map
 
 variable {R' : Type _} [CommRing R']
@@ -367,8 +364,7 @@ theorem IsIntegral.exists_multiple_integral_of_isLocalization [Algebra Rₘ S] [
     rw [IsScalarTower.algebraMap_eq R Rₘ S, ← Polynomial.eval₂_map, hp'₁, Submonoid.smul_def,
       Algebra.smul_def, IsScalarTower.algebraMap_apply R Rₘ S]
     exact Polynomial.scaleRoots_eval₂_eq_zero _ hp₂
-  · rw [hp₁.leading_coeff]
-    exact one_mem _
+  · rw [hp₁.leading_coeff]; exact one_mem _
   · rwa [Polynomial.monic_scaleRoots_iff]
 #align is_integral.exists_multiple_integral_of_is_localization IsIntegral.exists_multiple_integral_of_isLocalization
 

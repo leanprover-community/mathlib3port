@@ -58,10 +58,8 @@ instance gradedAlgebra :
     refine'
       Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
-    · rw [AlgHom.commutes, DirectSum.algebraMap_apply]
-      rfl
-    · rw [AlgHom.map_add, ihx, ihy, ← map_add]
-      rfl
+    · rw [AlgHom.commutes, DirectSum.algebraMap_apply]; rfl
+    · rw [AlgHom.map_add, ihx, ihy, ← map_add]; rfl
     · obtain ⟨_, rfl⟩ := hm
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
       exact DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)

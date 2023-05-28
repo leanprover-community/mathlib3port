@@ -113,9 +113,7 @@ def rotate : Triangle C ⥤ Triangle C
     { hom₁ := f.hom₂
       hom₂ := f.hom₃
       hom₃ := f.hom₁⟦1⟧'
-      comm₃' := by
-        dsimp
-        simp only [comp_neg, neg_comp, ← functor.map_comp, f.comm₁] }
+      comm₃' := by dsimp; simp only [comp_neg, neg_comp, ← functor.map_comp, f.comm₁] }
 #align category_theory.pretriangulated.rotate CategoryTheory.Pretriangulated.rotate
 
 /- warning: category_theory.pretriangulated.inv_rotate -> CategoryTheory.Pretriangulated.invRotate is a dubious translation:
@@ -140,10 +138,7 @@ def invRotate : Triangle C ⥤ Triangle C
           functor.map_comp, assoc]
         erw [← nat_trans.naturality]
         rfl
-      comm₃' := by
-        dsimp
-        erw [← f.comm₂_assoc, assoc, ← nat_trans.naturality]
-        rfl }
+      comm₃' := by dsimp; erw [← f.comm₂_assoc, assoc, ← nat_trans.naturality]; rfl }
 #align category_theory.pretriangulated.inv_rotate CategoryTheory.Pretriangulated.invRotate
 
 variable {C}
@@ -208,14 +203,10 @@ def triangleRotation : Equivalence (Triangle C) (Triangle C)
 
 variable {C}
 
-instance : IsEquivalence (rotate C) :=
-  by
-  change is_equivalence (triangle_rotation C).Functor
+instance : IsEquivalence (rotate C) := by change is_equivalence (triangle_rotation C).Functor;
   infer_instance
 
-instance : IsEquivalence (invRotate C) :=
-  by
-  change is_equivalence (triangle_rotation C).inverse
+instance : IsEquivalence (invRotate C) := by change is_equivalence (triangle_rotation C).inverse;
   infer_instance
 
 end CategoryTheory.Pretriangulated

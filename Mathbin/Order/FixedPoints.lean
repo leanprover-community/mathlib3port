@@ -160,8 +160,7 @@ theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p
   by
   set s := { a | a ≤ lfp f ∧ p a }
   specialize hSup s fun a => And.right
-  suffices : Sup s = lfp f
-  exact this ▸ hSup
+  suffices : Sup s = lfp f; exact this ▸ hSup
   have h : Sup s ≤ lfp f := sSup_le fun b => And.left
   have hmem : f (Sup s) ∈ s := ⟨f.map_le_lfp h, step _ hSup h⟩
   exact h.antisymm (f.lfp_le <| le_sSup hmem)

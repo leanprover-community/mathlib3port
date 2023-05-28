@@ -254,10 +254,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
   -- by density, it also belongs to a ball `closed_ball (d p) (u n / 3)`.
   obtain ⟨p, hp⟩ : ∃ p : ℕ, x ∈ closed_ball (d p) (u n / 3) :=
     by
-    have : Set.Nonempty (ball x (u n / 3)) :=
-      by
-      simp only [nonempty_ball]
-      linarith [u_pos n]
+    have : Set.Nonempty (ball x (u n / 3)) := by simp only [nonempty_ball]; linarith [u_pos n]
     obtain ⟨p, hp⟩ : ∃ p : ℕ, d p ∈ ball x (u n / 3) := hd.exists_mem_open is_open_ball this
     exact ⟨p, (mem_ball'.1 hp).le⟩
   -- choose `q` for which `t q = K n z p`.
@@ -287,10 +284,8 @@ theorem exists_partition_approximatesLinearOn_of_hasFDerivWithinAt [SecondCounta
   refine'
     ⟨disjointed t, A, disjoint_disjointed _,
       MeasurableSet.disjointed fun n => (t_closed n).MeasurableSet, _, _, ht⟩
-  · rw [iUnion_disjointed]
-    exact st
-  · intro n
-    exact (t_approx n).mono_set (inter_subset_inter_right _ (disjointed_subset _ _))
+  · rw [iUnion_disjointed]; exact st
+  · intro n; exact (t_approx n).mono_set (inter_subset_inter_right _ (disjointed_subset _ _))
 #align exists_partition_approximates_linear_on_of_has_fderiv_within_at exists_partition_approximatesLinearOn_of_hasFDerivWithinAt
 
 namespace MeasureTheory
@@ -347,10 +342,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
       ∀ᶠ b : ℝ in 𝓝[>] 0, μ (closed_ball 0 b + A '' closed_ball 0 1) < m * μ (closed_ball 0 1) :=
       (tendsto_order.1 L2).2 _ I
     exact (H.and self_mem_nhdsWithin).exists
-  have : Iio (⟨ε, εpos.le⟩ : ℝ≥0) ∈ 𝓝 (0 : ℝ≥0) :=
-    by
-    apply Iio_mem_nhds
-    exact εpos
+  have : Iio (⟨ε, εpos.le⟩ : ℝ≥0) ∈ 𝓝 (0 : ℝ≥0) := by apply Iio_mem_nhds; exact εpos
   filter_upwards [this]
   -- fix a function `f` which is close enough to `A`.
   intro δ hδ s f hf
@@ -386,14 +378,9 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
       _ = ENNReal.ofReal (r ^ finrank ℝ E) * μ (A '' closed_ball 0 1 + closed_ball 0 ε) := by
         simp only [abs_of_nonneg r0, add_haar_smul, image_add_left, abs_pow, singleton_add,
           measure_preimage_add]
-      _ ≤ ENNReal.ofReal (r ^ finrank ℝ E) * (m * μ (closed_ball 0 1)) :=
-        by
-        rw [add_comm]
+      _ ≤ ENNReal.ofReal (r ^ finrank ℝ E) * (m * μ (closed_ball 0 1)) := by rw [add_comm];
         exact mul_le_mul_left' hε.le _
-      _ = m * μ (closed_ball x r) :=
-        by
-        simp only [add_haar_closed_ball' _ _ r0]
-        ring
+      _ = m * μ (closed_ball x r) := by simp only [add_haar_closed_ball' _ _ r0]; ring
       
   -- covering `s` by closed balls with total measure very close to `μ s`, one deduces that the
   -- measure of `f '' s` is at most `m * (μ s + a)` for any positive `a`.
@@ -421,9 +408,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
       _ ≤ ∑' x : t, μ (f '' (s ∩ closed_ball x (r x))) := (measure_Union_le _)
       _ ≤ ∑' x : t, m * μ (closed_ball x (r x)) :=
         (ENNReal.tsum_le_tsum fun x => I x (r x) (ts x.2) (rpos x x.2).le)
-      _ ≤ m * (μ s + a) := by
-        rw [ENNReal.tsum_mul_left]
-        exact mul_le_mul_left' μt _
+      _ ≤ m * (μ s + a) := by rw [ENNReal.tsum_mul_left]; exact mul_le_mul_left' μt _
       
   -- taking the limit in `a`, one obtains the conclusion
   have L : tendsto (fun a => (m : ℝ≥0∞) * (μ s + a)) (𝓝[>] 0) (𝓝 (m * (μ s + 0))) :=
@@ -451,8 +436,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
   rcases eq_or_lt_of_le (zero_le m) with (rfl | mpos)
   · apply eventually_of_forall
     simp only [forall_const, MulZeroClass.zero_mul, imp_true_iff, zero_le, ENNReal.coe_zero]
-  have hA : A.det ≠ 0 := by
-    intro h
+  have hA : A.det ≠ 0 := by intro h;
     simpa only [h, ENNReal.not_lt_zero, ENNReal.ofReal_zero, abs_zero] using hm
   -- let `B` be the continuous linear equiv version of `A`.
   let B := A.to_continuous_linear_equiv_of_det_ne_zero hA
@@ -501,9 +485,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
   -- let `δ` be small enough, and `f` approximated by `B` up to `δ`.
   filter_upwards [L1, L2]
   intro δ h1δ h2δ s f hf
-  have hf' : ApproximatesLinearOn f (B : E →L[ℝ] E) s δ :=
-    by
-    convert hf
+  have hf' : ApproximatesLinearOn f (B : E →L[ℝ] E) s δ := by convert hf;
     exact A.coe_to_continuous_linear_equiv_of_det_ne_zero _
   let F := hf'.to_local_equiv h1δ
   -- the condition to be checked can be reformulated in terms of the inverse maps
@@ -598,7 +580,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
       _ ≤ r * (δ + ε) * (‖z‖ + ε) :=
         mul_le_mul_of_nonneg_left norm_a (mul_nonneg rpos.le (add_nonneg δ.2 εpos.le))
       
-  show ‖(f' x - A) z‖ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε
+  show ‖(f' x - A) z‖ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε;
   exact
     calc
       ‖(f' x - A) z‖ = ‖(f' x - A) a + (f' x - A) (z - a)‖ :=
@@ -610,8 +592,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ‖z - a‖ :=
         by
         apply add_le_add
-        · rw [mul_assoc] at I
-          exact (mul_le_mul_left rpos).1 I
+        · rw [mul_assoc] at I; exact (mul_le_mul_left rpos).1 I
         · apply ContinuousLinearMap.le_op_norm
       _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε :=
         add_le_add le_rfl
@@ -684,8 +665,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (R : ℝ) (hs : s ⊆ closedBall 0 R) (ε : ℝ≥0)
     (εpos : 0 < ε) (h'f' : ∀ x ∈ s, (f' x).det = 0) : μ (f '' s) ≤ ε * μ (closedBall 0 R) :=
   by
-  rcases eq_empty_or_nonempty s with (rfl | h's)
-  · simp only [measure_empty, zero_le, image_empty]
+  rcases eq_empty_or_nonempty s with (rfl | h's); · simp only [measure_empty, zero_le, image_empty]
   have :
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0,
@@ -750,10 +730,8 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero
   · apply le_antisymm _ (zero_le _)
     rw [← Union_inter_closed_ball_nat s 0]
     calc
-      μ (f '' ⋃ n : ℕ, s ∩ closed_ball 0 n) ≤ ∑' n : ℕ, μ (f '' (s ∩ closed_ball 0 n)) :=
-        by
-        rw [image_Union]
-        exact measure_Union_le _
+      μ (f '' ⋃ n : ℕ, s ∩ closed_ball 0 n) ≤ ∑' n : ℕ, μ (f '' (s ∩ closed_ball 0 n)) := by
+        rw [image_Union]; exact measure_Union_le _
       _ ≤ 0 := by simp only [H, tsum_zero, nonpos_iff_eq_zero]
       
   intro R
@@ -961,10 +939,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       intro x hx
       have I : |(A n).det| ≤ |(f' x).det| + ε :=
         calc
-          |(A n).det| = |(f' x).det - ((f' x).det - (A n).det)| :=
-            by
-            congr 1
-            abel
+          |(A n).det| = |(f' x).det - ((f' x).det - (A n).det)| := by congr 1; abel
           _ ≤ |(f' x).det| + |(f' x).det - (A n).det| := (abs_sub _ _)
           _ ≤ |(f' x).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
@@ -1042,8 +1017,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
       by
       conv_rhs => rw [A]
       rw [lintegral_Union]
-      · intro n
-        exact hs.inter (u_meas n)
+      · intro n; exact hs.inter (u_meas n)
       · exact pairwise_disjoint_mono (disjoint_disjointed _) fun n => inter_subset_right _ _
     
 #align measure_theory.add_haar_image_le_lintegral_abs_det_fderiv MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv
@@ -1127,10 +1101,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       intro x hx
       have I : |(f' x).det| ≤ |(A n).det| + ε :=
         calc
-          |(f' x).det| = |(A n).det + ((f' x).det - (A n).det)| :=
-            by
-            congr 1
-            abel
+          |(f' x).det| = |(A n).det + ((f' x).det - (A n).det)| := by congr 1; abel
           _ ≤ |(A n).det| + |(f' x).det - (A n).det| := (abs_add _ _)
           _ ≤ |(A n).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
@@ -1206,8 +1177,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
       by
       conv_lhs => rw [A]
       rw [lintegral_Union]
-      · intro n
-        exact hs.inter (u_meas n)
+      · intro n; exact hs.inter (u_meas n)
       · exact pairwise_disjoint_mono (disjoint_disjointed _) fun n => inter_subset_right _ _
     _ ≤ ∑' n, μ (f '' (s ∩ u n)) :=
       by

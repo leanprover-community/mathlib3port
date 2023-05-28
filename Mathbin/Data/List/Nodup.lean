@@ -370,14 +370,9 @@ theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
   by
   induction' d with b l m d IH; · rfl
   by_cases b = a
-  · subst h
-    rw [erase_cons_head, filter_cons_of_neg]
-    symm
-    rw [filter_eq_self]
-    simpa only [Ne.def, eq_comm] using m
-    exact not_not_intro rfl
-  · rw [erase_cons_tail _ h, filter_cons_of_pos, IH]
-    exact h
+  · subst h; rw [erase_cons_head, filter_cons_of_neg]
+    symm; rw [filter_eq_self]; simpa only [Ne.def, eq_comm] using m; exact not_not_intro rfl
+  · rw [erase_cons_tail _ h, filter_cons_of_pos, IH]; exact h
 #align list.nodup.erase_eq_filter List.Nodup.erase_eq_filter
 
 /- warning: list.nodup.erase -> List.Nodup.erase is a dubious translation:

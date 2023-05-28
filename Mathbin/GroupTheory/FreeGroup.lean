@@ -197,8 +197,7 @@ theorem Step.cons_left_iff {a : α} {b : Bool} :
   constructor
   · generalize hL : ((a, b) :: L₁ : List _) = L
     rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
-    · simp at hL
-      simp [*]
+    · simp at hL; simp [*]
     · simp at hL
       rcases hL with ⟨rfl, rfl⟩
       refine' Or.inl ⟨s' ++ e, step.bnot, _⟩
@@ -308,9 +307,7 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
       intro h
       induction' h using Relation.ReflTransGen.head_induction_on with L₁ L₂ h₁₂ h ih generalizing
         L₁ L₂
-      · subst_vars
-        cases eq₂
-        constructor
+      · subst_vars; cases eq₂; constructor
       · subst_vars
         cases' p with a b
         rw [step.cons_left_iff] at h₁₂
@@ -425,8 +422,7 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2))
   by
   have : red ((x1, b1) :: L₁) ([(x2, b2)] ++ L₂) := H2
   rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
-  · simp [nil_iff] at h₁
-    contradiction
+  · simp [nil_iff] at h₁; contradiction
   · cases Eq
     show red (L₃ ++ L₄) ([(x1, not b1), (x2, b2)] ++ L₂)
     apply append_append _ h₂
@@ -704,11 +700,7 @@ theorem invRev_bijective : Function.Bijective (@invRev α) :=
 
 @[to_additive]
 instance : Inv (FreeGroup α) :=
-  ⟨Quot.map invRev
-      (by
-        intro a b h
-        cases h
-        simp [inv_rev])⟩
+  ⟨Quot.map invRev (by intro a b h; cases h; simp [inv_rev])⟩
 
 #print FreeGroup.inv_mk /-
 @[simp, to_additive]
@@ -966,9 +958,7 @@ over `α` to the free group over `β`. -/
       "Any function from `α` to `β` extends uniquely to an additive group homomorphism\nfrom the additive free group over `α` to the additive free group over `β`."]
 def map : FreeGroup α →* FreeGroup β :=
   MonoidHom.mk' (Quot.map (List.map fun x => (f x.1, x.2)) fun L₁ L₂ H => by cases H <;> simp)
-    (by
-      rintro ⟨L₁⟩ ⟨L₂⟩
-      simp)
+    (by rintro ⟨L₁⟩ ⟨L₂⟩; simp)
 #align free_group.map FreeGroup.map
 #align free_add_group.map FreeAddGroup.map
 
@@ -1471,11 +1461,8 @@ theorem reduce.red : Red L (reduce L) :=
       split_ifs with h
       · trans
         · exact red.cons_cons ih
-        · cases hd1
-          cases hd2
-          cases h
-          dsimp at *
-          subst_vars
+        · cases hd1; cases hd2; cases h
+          dsimp at *; subst_vars
           exact red.step.cons_bnot_rev.to_red
       · exact red.cons_cons ih
 #align free_group.reduce.red FreeGroup.reduce.red
@@ -1490,8 +1477,7 @@ theorem reduce.not {p : Prop} :
   | (x, b) :: L1, L2, L3, x', b' => by
     dsimp
     cases r : reduce L1
-    · dsimp
-      intro h
+    · dsimp; intro h
       have := congr_arg List.length h
       simp [-add_comm] at this
       exact absurd this (by decide)
@@ -1501,14 +1487,11 @@ theorem reduce.not {p : Prop} :
     · rw [H] at r
       exact @reduce.not L1 ((y, c) :: L2) L3 x' b' r
     rcases L2 with (_ | ⟨a, L2⟩)
-    · injections
-      subst_vars
-      simp at h
-      cc
+    · injections; subst_vars
+      simp at h; cc
     · refine' @reduce.not L1 L2 L3 x' b' _
       injection H with _ H
-      rw [r, H]
-      rfl
+      rw [r, H]; rfl
 #align free_group.reduce.not FreeGroup.reduce.not
 #align free_add_group.reduce.not FreeAddGroup.reduce.not
 -/
@@ -1676,9 +1659,7 @@ theorem toWord_mk : (mk L₁).toWord = reduce L₁ :=
 
 #print FreeGroup.reduce_toWord /-
 @[simp, to_additive]
-theorem reduce_toWord : ∀ x : FreeGroup α, reduce (toWord x) = toWord x :=
-  by
-  rintro ⟨L⟩
+theorem reduce_toWord : ∀ x : FreeGroup α, reduce (toWord x) = toWord x := by rintro ⟨L⟩;
   exact reduce.idem
 #align free_group.reduce_to_word FreeGroup.reduce_toWord
 #align free_add_group.reduce_to_word FreeAddGroup.reduce_toWord

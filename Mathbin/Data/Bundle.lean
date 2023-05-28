@@ -101,10 +101,7 @@ but is expected to have type
   forall {B : Type.{u2}} {E : B -> Type.{u1}} {x : B} {x' : B} (h : Eq.{succ u2} B x x') (b : E x), Eq.{max (succ u2) (succ u1)} (Bundle.TotalSpace.{u2, u1} B E) (Bundle.totalSpaceMk.{u2, u1} B E x' (cast.{succ u1} (E x) (E x') (congr_arg.{succ u2, succ (succ u1)} B Type.{u1} x x' E h) b)) (Bundle.totalSpaceMk.{u2, u1} B E x b)
 Case conversion may be inaccurate. Consider using '#align bundle.total_space.mk_cast Bundle.TotalSpace.mk_castₓ'. -/
 theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
-    totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b :=
-  by
-  subst h
-  rfl
+    totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b := by subst h; rfl
 #align bundle.total_space.mk_cast Bundle.TotalSpace.mk_cast
 
 /- warning: bundle.total_space.eta -> Bundle.TotalSpace.eta is a dubious translation:

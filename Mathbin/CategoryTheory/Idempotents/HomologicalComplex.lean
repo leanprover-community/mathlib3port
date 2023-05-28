@@ -217,10 +217,7 @@ def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ functor ⋙ inverse
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, HomologicalComplex.Hom.comm_assoc,
                   homological_complex.p_idem] }
-          comm := by
-            ext n
-            dsimp
-            simp only [homological_complex.p_idem] }
+          comm := by ext n; dsimp; simp only [homological_complex.p_idem] }
       naturality' := fun P Q φ => by
         ext
         dsimp
@@ -233,10 +230,7 @@ def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ functor ⋙ inverse
               comm' := fun i j hij => by
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, assoc, homological_complex.p_idem] }
-          comm := by
-            ext n
-            dsimp
-            simp only [homological_complex.p_idem] }
+          comm := by ext n; dsimp; simp only [homological_complex.p_idem] }
       naturality' := fun P Q φ => by
         ext
         dsimp

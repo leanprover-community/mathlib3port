@@ -132,12 +132,8 @@ This is the linear version of `finsupp.to_fun`. -/
 @[simps]
 def lcoeFun : (α →₀ M) →ₗ[R] α → M where
   toFun := coeFn
-  map_add' x y := by
-    ext
-    simp
-  map_smul' x y := by
-    ext
-    simp
+  map_add' x y := by ext; simp
+  map_smul' x y := by ext; simp
 #align finsupp.lcoe_fun Finsupp.lcoeFun
 
 section LsubtypeDomain
@@ -290,8 +286,7 @@ def supported (s : Set α) : Submodule R (α →₀ M) :=
     refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
     rw [Finset.coe_union]
   · simp only [subset_def, Finset.mem_coe, Set.mem_setOf_eq, mem_support_iff, zero_apply]
-    intro h ha
-    exact (ha rfl).elim
+    intro h ha; exact (ha rfl).elim
   · intro a p hp
     refine' subset.trans (Finset.coe_subset.2 support_smul) hp
 #align finsupp.supported Finsupp.supported
@@ -352,8 +347,7 @@ theorem supported_eq_span_single (s : Set α) :
     supported R R s = span R ((fun i => single i 1) '' s) :=
   by
   refine' (span_eq_of_le _ _ (SetLike.le_def.2 fun l hl => _)).symm
-  · rintro _ ⟨_, hp, rfl⟩
-    exact single_mem_supported R 1 hp
+  · rintro _ ⟨_, hp, rfl⟩; exact single_mem_supported R 1 hp
   · rw [← l.sum_single]
     refine' sum_mem fun i il => _
     convert@smul_mem R (α →₀ R) _ _ _ _ (single i 1) (l i) _
@@ -461,8 +455,7 @@ theorem supported_iUnion {δ : Type _} (s : δ → Set α) :
     rwa [LinearMap.range_comp, range_restrict_dom, Submodule.map_top, range_subtype] at this
   rw [range_le_iff_comap, eq_top_iff]
   rintro l ⟨⟩
-  apply Finsupp.induction l
-  · exact zero_mem _
+  apply Finsupp.induction l; · exact zero_mem _
   refine' fun x a l hl a0 => add_mem _
   by_cases ∃ i, x ∈ s i <;> simp [h]
   · cases' h with i hi
@@ -566,18 +559,10 @@ def lsum : (α → M →ₗ[R] N) ≃ₗ[S] (α →₀ M) →ₗ[R] N
       map_add' := (liftAddHom fun x => (F x).toAddMonoidHom).map_add
       map_smul' := fun c f => by simp [sum_smul_index', smul_sum] }
   invFun F x := F.comp (lsingle x)
-  left_inv F := by
-    ext (x y)
-    simp
-  right_inv F := by
-    ext (x y)
-    simp
-  map_add' F G := by
-    ext (x y)
-    simp
-  map_smul' F G := by
-    ext (x y)
-    simp
+  left_inv F := by ext (x y); simp
+  right_inv F := by ext (x y); simp
+  map_add' F G := by ext (x y); simp
+  map_smul' F G := by ext (x y); simp
 #align finsupp.lsum Finsupp.lsum
 
 /- warning: finsupp.coe_lsum -> Finsupp.coe_lsum is a dubious translation:
@@ -787,17 +772,12 @@ theorem lmapDomain_disjoint_ker (f : α → α') {s : Set α}
   simp; ext x
   haveI := Classical.decPred fun x => x ∈ s
   by_cases xs : x ∈ s
-  · have : Finsupp.sum l (fun a => Finsupp.single (f a)) (f x) = 0 :=
-      by
-      rw [h₂]
-      rfl
+  · have : Finsupp.sum l (fun a => Finsupp.single (f a)) (f x) = 0 := by rw [h₂]; rfl
     rw [Finsupp.sum_apply, Finsupp.sum, Finset.sum_eq_single x] at this
     · simpa [Finsupp.single_apply]
-    · intro y hy xy
-      simp [mt (H _ (h₁ hy) _ xs) xy]
+    · intro y hy xy; simp [mt (H _ (h₁ hy) _ xs) xy]
     · simp (config := { contextual := true })
-  · by_contra h
-    exact xs (h₁ <| Finsupp.mem_support_iff.2 h)
+  · by_contra h; exact xs (h₁ <| Finsupp.mem_support_iff.2 h)
 #align finsupp.lmap_domain_disjoint_ker Finsupp.lmapDomain_disjoint_ker
 
 end LmapDomain
@@ -820,12 +800,8 @@ This is the linear version of `finsupp.comap_domain`. -/
 def lcomapDomain (f : α → β) (hf : Function.Injective f) : (β →₀ M) →ₗ[R] α →₀ M
     where
   toFun l := Finsupp.comapDomain f l (hf.InjOn _)
-  map_add' x y := by
-    ext
-    simp
-  map_smul' c x := by
-    ext
-    simp
+  map_add' x y := by ext; simp
+  map_smul' c x := by ext; simp
 #align finsupp.lcomap_domain Finsupp.lcomapDomain
 
 end LcomapDomain
@@ -995,10 +971,8 @@ theorem lmapDomain_total (f : α → α') (g : M →ₗ[R] M') (h : ∀ i, g (v 
 <too large>
 Case conversion may be inaccurate. Consider using '#align finsupp.total_comp_lmap_domain Finsupp.total_comp_lmapDomainₓ'. -/
 theorem total_comp_lmapDomain (f : α → α') :
-    (Finsupp.total α' M' R v').comp (Finsupp.lmapDomain R R f) = Finsupp.total α M' R (v' ∘ f) :=
-  by
-  ext
-  simp
+    (Finsupp.total α' M' R v').comp (Finsupp.lmapDomain R R f) = Finsupp.total α M' R (v' ∘ f) := by
+  ext; simp
 #align finsupp.total_comp_lmap_domain Finsupp.total_comp_lmapDomain
 
 /- warning: finsupp.total_emb_domain -> Finsupp.total_embDomain is a dubious translation:
@@ -1081,18 +1055,15 @@ theorem span_image_eq_map_total (s : Set α) :
       by_cases c ∈ s
       · exact smul_mem _ _ (subset_span (Set.mem_image_of_mem _ h))
       · simp [(Finsupp.mem_supported' R _).1 hz _ h]
-    refine' sum_mem _
-    simp [this]
+    refine' sum_mem _; simp [this]
 #align finsupp.span_image_eq_map_total Finsupp.span_image_eq_map_total
 
 /- warning: finsupp.mem_span_image_iff_total -> Finsupp.mem_span_image_iff_total is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align finsupp.mem_span_image_iff_total Finsupp.mem_span_image_iff_totalₓ'. -/
 theorem mem_span_image_iff_total {s : Set α} {x : M} :
-    x ∈ span R (v '' s) ↔ ∃ l ∈ supported R R s, Finsupp.total α M R v l = x :=
-  by
-  rw [span_image_eq_map_total]
-  simp
+    x ∈ span R (v '' s) ↔ ∃ l ∈ supported R R s, Finsupp.total α M R v l = x := by
+  rw [span_image_eq_map_total]; simp
 #align finsupp.mem_span_image_iff_total Finsupp.mem_span_image_iff_total
 
 /- warning: finsupp.total_option -> Finsupp.total_option is a dubious translation:
@@ -1126,9 +1097,7 @@ but is expected to have type
   forall {M : Type.{u2}} (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] [_inst_3 : AddCommMonoid.{u2} M] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_3] (f : (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> M), Eq.{max (succ u2) (succ u1)} (LinearMap.{u1, u1, u1, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Finsupp.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) M (Finsupp.addCommMonoid.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) _inst_3 (Finsupp.module.{0, u1, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) _inst_4) (Finsupp.total.{0, u2, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) M R _inst_1 _inst_3 _inst_4 f) (OfNat.ofNat.{max u2 u1} (LinearMap.{u1, u1, u1, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Finsupp.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) M (Finsupp.addCommMonoid.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) _inst_3 (Finsupp.module.{0, u1, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) _inst_4) 0 (Zero.toOfNat0.{max u2 u1} (LinearMap.{u1, u1, u1, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Finsupp.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) M (Finsupp.addCommMonoid.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) _inst_3 (Finsupp.module.{0, u1, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) _inst_4) (LinearMap.instZeroLinearMap.{u1, u1, u1, u2} R R (Finsupp.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) M _inst_1 _inst_1 (Finsupp.addCommMonoid.{0, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) _inst_3 (Finsupp.module.{0, u1, u1} (Fin (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) _inst_4 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align finsupp.total_fin_zero Finsupp.total_fin_zeroₓ'. -/
 @[simp]
-theorem total_fin_zero (f : Fin 0 → M) : Finsupp.total (Fin 0) M R f = 0 :=
-  by
-  ext i
+theorem total_fin_zero (f : Fin 0 → M) : Finsupp.total (Fin 0) M R f = 0 := by ext i;
   apply finZeroElim i
 #align finsupp.total_fin_zero Finsupp.total_fin_zero
 
@@ -1164,9 +1133,7 @@ theorem totalOn_range (s : Set α) : (Finsupp.totalOn α M R v s).range = ⊤ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align finsupp.total_comp Finsupp.total_compₓ'. -/
 theorem total_comp (f : α' → α) :
-    Finsupp.total α' M R (v ∘ f) = (Finsupp.total α M R v).comp (lmapDomain R R f) :=
-  by
-  ext
+    Finsupp.total α' M R (v ∘ f) = (Finsupp.total α M R v).comp (lmapDomain R R f) := by ext;
   simp [total_apply]
 #align finsupp.total_comp Finsupp.total_comp
 
@@ -1441,10 +1408,7 @@ theorem lcongr_symm_single {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[
 Case conversion may be inaccurate. Consider using '#align finsupp.lcongr_symm Finsupp.lcongr_symmₓ'. -/
 @[simp]
 theorem lcongr_symm {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[R] N) :
-    (lcongr e₁ e₂).symm = lcongr e₁.symm e₂.symm :=
-  by
-  ext
-  rfl
+    (lcongr e₁ e₂).symm = lcongr e₁.symm e₂.symm := by ext; rfl
 #align finsupp.lcongr_symm Finsupp.lcongr_symm
 
 section Sum
@@ -1463,8 +1427,7 @@ This is the `linear_equiv` version of `finsupp.sum_finsupp_equiv_prod_finsupp`. 
 @[simps apply symm_apply]
 def sumFinsuppLEquivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃ₗ[R] (α →₀ M) × (β →₀ M) :=
   { sumFinsuppAddEquivProdFinsupp with
-    map_smul' := by
-      intros
+    map_smul' := by intros ;
       ext <;>
         simp only [[anonymous], Prod.smul_fst, Prod.smul_snd, smul_apply,
           snd_sum_finsupp_add_equiv_prod_finsupp, fst_sum_finsupp_add_equiv_prod_finsupp,
@@ -1523,10 +1486,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.sigma_finsupp_
 This is the `linear_equiv` version of `finsupp.sigma_finsupp_add_equiv_pi_finsupp`. -/
 noncomputable def sigmaFinsuppLEquivPiFinsupp {M : Type _} {ιs : η → Type _} [AddCommMonoid M]
     [Module R M] : ((Σj, ιs j) →₀ M) ≃ₗ[R] ∀ j, ιs j →₀ M :=
-  { sigmaFinsuppAddEquivPiFinsupp with
-    map_smul' := fun c f => by
-      ext
-      simp }
+  { sigmaFinsuppAddEquivPiFinsupp with map_smul' := fun c f => by ext; simp }
 #align finsupp.sigma_finsupp_lequiv_pi_finsupp Finsupp.sigmaFinsuppLEquivPiFinsupp
 
 /- warning: finsupp.sigma_finsupp_lequiv_pi_finsupp_apply -> Finsupp.sigmaFinsuppLEquivPiFinsupp_apply is a dubious translation:
@@ -1565,12 +1525,8 @@ noncomputable def finsuppProdLEquiv {α β : Type _} (R : Type _) {M : Type _} [
     [AddCommMonoid M] [Module R M] : (α × β →₀ M) ≃ₗ[R] α →₀ β →₀ M :=
   {
     finsuppProdEquiv with
-    map_add' := fun f g => by
-      ext
-      simp [finsupp_prod_equiv, curry_apply]
-    map_smul' := fun c f => by
-      ext
-      simp [finsupp_prod_equiv, curry_apply] }
+    map_add' := fun f g => by ext; simp [finsupp_prod_equiv, curry_apply]
+    map_smul' := fun c f => by ext; simp [finsupp_prod_equiv, curry_apply] }
 #align finsupp.finsupp_prod_lequiv Finsupp.finsuppProdLEquiv
 
 /- warning: finsupp.finsupp_prod_lequiv_apply -> Finsupp.finsuppProdLEquiv_apply is a dubious translation:
@@ -1615,18 +1571,10 @@ protected def Fintype.total : (α → M) →ₗ[S] (α → R) →ₗ[R] M
     where
   toFun v :=
     { toFun := fun f => ∑ i, f i • v i
-      map_add' := fun f g => by
-        simp_rw [← Finset.sum_add_distrib, ← add_smul]
-        rfl
-      map_smul' := fun r f => by
-        simp_rw [Finset.smul_sum, smul_smul]
-        rfl }
-  map_add' u v := by
-    ext
-    simp [Finset.sum_add_distrib, Pi.add_apply, smul_add]
-  map_smul' r v := by
-    ext
-    simp [Finset.smul_sum, smul_comm _ r]
+      map_add' := fun f g => by simp_rw [← Finset.sum_add_distrib, ← add_smul]; rfl
+      map_smul' := fun r f => by simp_rw [Finset.smul_sum, smul_smul]; rfl }
+  map_add' u v := by ext; simp [Finset.sum_add_distrib, Pi.add_apply, smul_add]
+  map_smul' r v := by ext; simp [Finset.smul_sum, smul_comm _ r]
 #align fintype.total Fintype.total
 -/
 
@@ -1851,9 +1799,7 @@ def Module.subsingletonEquiv (R M ι : Type _) [Semiring R] [Subsingleton R] [Ad
     [Module R M] : M ≃ₗ[R] ι →₀ R where
   toFun m := 0
   invFun f := 0
-  left_inv m := by
-    letI := Module.subsingleton R M
-    simp only [eq_iff_true_of_subsingleton]
+  left_inv m := by letI := Module.subsingleton R M; simp only [eq_iff_true_of_subsingleton]
   right_inv f := by simp only [eq_iff_true_of_subsingleton]
   map_add' m n := (add_zero 0).symm
   map_smul' r m := (smul_zero r).symm

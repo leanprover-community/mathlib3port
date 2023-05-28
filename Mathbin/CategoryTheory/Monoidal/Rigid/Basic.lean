@@ -786,16 +786,12 @@ def leftDualIso {X₁ X₂ Y : C} (p₁ : ExactPairing X₁ Y) (p₂ : ExactPair
 #align category_theory.left_dual_iso CategoryTheory.leftDualIso
 
 @[simp]
-theorem rightDualIso_id {X Y : C} (p : ExactPairing X Y) : rightDualIso p p = Iso.refl Y :=
-  by
-  ext
+theorem rightDualIso_id {X Y : C} (p : ExactPairing X Y) : rightDualIso p p = Iso.refl Y := by ext;
   simp only [right_dual_iso, iso.refl_hom, right_adjoint_mate_id]
 #align category_theory.right_dual_iso_id CategoryTheory.rightDualIso_id
 
 @[simp]
-theorem leftDualIso_id {X Y : C} (p : ExactPairing X Y) : leftDualIso p p = Iso.refl X :=
-  by
-  ext
+theorem leftDualIso_id {X Y : C} (p : ExactPairing X Y) : leftDualIso p p = Iso.refl X := by ext;
   simp only [left_dual_iso, iso.refl_hom, left_adjoint_mate_id]
 #align category_theory.left_dual_iso_id CategoryTheory.leftDualIso_id
 

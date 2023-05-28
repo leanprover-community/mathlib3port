@@ -63,11 +63,7 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
   map_comp' U V W i j :=
     by
     refine' Eq.trans _ (IsLocalization.map_comp_map _ _).symm
-    ext
-    dsimp
-    congr
-    rw [F.map_comp]
-    rfl
+    ext; dsimp; congr ; rw [F.map_comp]; rfl
 #align Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/

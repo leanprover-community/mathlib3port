@@ -155,18 +155,13 @@ noncomputable def nontrivialPSumUnique (α : Type _) [Inhabited α] :
 
 #print subsingleton_iff /-
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
-  ⟨by
-    intro h
-    exact Subsingleton.elim, fun h => ⟨h⟩⟩
+  ⟨by intro h; exact Subsingleton.elim, fun h => ⟨h⟩⟩
 #align subsingleton_iff subsingleton_iff
 -/
 
 #print not_nontrivial_iff_subsingleton /-
-theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
-  by
-  rw [nontrivial_iff, subsingleton_iff]
-  push_neg
-  rfl
+theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α := by
+  rw [nontrivial_iff, subsingleton_iff]; push_neg; rfl
 #align not_nontrivial_iff_subsingleton not_nontrivial_iff_subsingleton
 -/
 
@@ -185,10 +180,8 @@ theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
 
 #print subsingleton_or_nontrivial /-
 /-- A type is either a subsingleton or nontrivial. -/
-theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α :=
-  by
-  rw [← not_nontrivial_iff_subsingleton, or_comm']
-  exact Classical.em _
+theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
+  rw [← not_nontrivial_iff_subsingleton, or_comm']; exact Classical.em _
 #align subsingleton_or_nontrivial subsingleton_or_nontrivial
 -/
 
@@ -200,9 +193,7 @@ theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsi
 -/
 
 #print Option.nontrivial /-
-instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) :=
-  by
-  inhabit α
+instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by inhabit α;
   use none, some default
 #align option.nontrivial Option.nontrivial
 -/
@@ -228,9 +219,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
-  have : x' ≠ y' := by
-    contrapose! h
-    rw [← hx', ← hy', h]
+  have : x' ≠ y' := by contrapose! h; rw [← hx', ← hy', h]
   exact ⟨⟨x', y', this⟩⟩
 #align function.surjective.nontrivial Function.Surjective.nontrivial
 -/

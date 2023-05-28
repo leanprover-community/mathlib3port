@@ -58,10 +58,7 @@ instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
   ⟨toAffineMap⟩
 
 theorem to_affineMap_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
-  by
-  cases f
-  cases g
-  congr
+  by cases f; cases g; congr
 #align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affineMap_injective
 
 instance : ContinuousMapClass (P →A[R] Q) P Q
@@ -125,9 +122,7 @@ theorem coe_to_continuousMap (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f :
 #align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuousMap
 
 theorem to_continuousMap_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
-  by
-  ext a
-  exact ContinuousMap.congr_fun h a
+  by ext a; exact ContinuousMap.congr_fun h a
 #align continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuousMap_injective
 
 @[norm_cast]
@@ -146,10 +141,7 @@ theorem coe_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P → Q) 
 #align continuous_affine_map.coe_mk ContinuousAffineMap.coe_mk
 
 @[simp]
-theorem mk_coe (f : P →A[R] Q) (h) : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f :=
-  by
-  ext
-  rfl
+theorem mk_coe (f : P →A[R] Q) (h) : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f := by ext; rfl
 #align continuous_affine_map.mk_coe ContinuousAffineMap.mk_coe
 
 @[continuity]

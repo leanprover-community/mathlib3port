@@ -120,10 +120,8 @@ end Int
 
 #print Nat.cast_int_covby_iff /-
 @[simp, norm_cast]
-theorem Nat.cast_int_covby_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b :=
-  by
-  rw [Nat.covby_iff_succ_eq, Int.covby_iff_succ_eq]
-  exact Int.coe_nat_inj'
+theorem Nat.cast_int_covby_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
+  rw [Nat.covby_iff_succ_eq, Int.covby_iff_succ_eq]; exact Int.coe_nat_inj'
 #align nat.cast_int_covby_iff Nat.cast_int_covby_iff
 -/
 

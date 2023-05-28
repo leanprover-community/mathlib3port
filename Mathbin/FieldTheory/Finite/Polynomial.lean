@@ -37,14 +37,10 @@ variable {p : ℕ} [Fact p.Prime]
 theorem frobenius_zMod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand p f :=
   by
   apply induction_on f
-  · intro a
-    rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
-  · simp only [AlgHom.map_add, RingHom.map_add]
-    intro _ _ hf hg
-    rw [hf, hg]
+  · intro a; rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
+  · simp only [AlgHom.map_add, RingHom.map_add]; intro _ _ hf hg; rw [hf, hg]
   · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
-    intro _ _ hf
-    rw [hf, frobenius_def]
+    intro _ _ hf; rw [hf, frobenius_def]
 #align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zMod
 
 theorem expand_zMod (f : MvPolynomial σ (ZMod p)) : expand p f = f ^ p :=
@@ -109,10 +105,8 @@ theorem indicator_mem_restrictDegree (c : σ → K) :
     AddMonoidHom.map_nsmul, Multiset.coe_countAddMonoidHom, nsmul_eq_mul, Nat.cast_id]
   trans
   refine' Finset.sum_eq_single n _ _
-  · intro b hb ne
-    rw [Multiset.count_singleton, if_neg Ne.symm, MulZeroClass.mul_zero]
-  · intro h
-    exact (h <| Finset.mem_univ _).elim
+  · intro b hb ne; rw [Multiset.count_singleton, if_neg Ne.symm, MulZeroClass.mul_zero]
+  · intro h; exact (h <| Finset.mem_univ _).elim
   · rw [Multiset.count_singleton_self, mul_one]
 #align mv_polynomial.indicator_mem_restrict_degree MvPolynomial.indicator_mem_restrictDegree
 
@@ -141,14 +135,8 @@ variable (K σ)
 def evalₗ [CommSemiring K] : MvPolynomial σ K →ₗ[K] (σ → K) → K
     where
   toFun p e := eval e p
-  map_add' p q := by
-    ext x
-    rw [RingHom.map_add]
-    rfl
-  map_smul' a p := by
-    ext e
-    rw [smul_eq_C_mul, RingHom.map_mul, eval_C]
-    rfl
+  map_add' p q := by ext x; rw [RingHom.map_add]; rfl
+  map_smul' a p := by ext e; rw [smul_eq_C_mul, RingHom.map_mul, eval_C]; rfl
 #align mv_polynomial.evalₗ MvPolynomial.evalₗ
 
 end

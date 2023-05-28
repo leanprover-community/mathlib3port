@@ -147,10 +147,8 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u1}) (A : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CommRing.{u1} A] [_inst_3 : IsDomain.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2))] [_inst_4 : Algebra.{u1, u1} R A (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2))] [_inst_5 : NoZeroSMulDivisors.{u1, u1} R A (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (CommMonoidWithZero.toZero.{u1} A (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} A (IsDomain.toCancelCommMonoidWithZero.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2) _inst_3))) (Algebra.toSMul.{u1, u1} R A (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2)) _inst_4)], LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (Subtype.{succ u1} A (fun (x : A) => IsAlgebraic.{u1, u1} R A _inst_1 (CommRing.toRing.{u1} A _inst_2) _inst_4 x))) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) (Cardinal.mk.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) Cardinal.aleph0.{u1})
 Case conversion may be inaccurate. Consider using '#align algebraic.cardinal_mk_le_mul Algebraic.cardinal_mk_le_mulₓ'. -/
-theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ :=
-  by
-  rw [← lift_id (#_), ← lift_id (#R[X])]
-  exact cardinal_mk_lift_le_mul R A
+theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ := by
+  rw [← lift_id (#_), ← lift_id (#R[X])]; exact cardinal_mk_lift_le_mul R A
 #align algebraic.cardinal_mk_le_mul Algebraic.cardinal_mk_le_mul
 
 /- warning: algebraic.cardinal_mk_le_max -> Algebraic.cardinal_mk_le_max is a dubious translation:
@@ -159,10 +157,8 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u1}) (A : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CommRing.{u1} A] [_inst_3 : IsDomain.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2))] [_inst_4 : Algebra.{u1, u1} R A (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2))] [_inst_5 : NoZeroSMulDivisors.{u1, u1} R A (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (CommMonoidWithZero.toZero.{u1} A (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} A (IsDomain.toCancelCommMonoidWithZero.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2) _inst_3))) (Algebra.toSMul.{u1, u1} R A (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_2)) _inst_4)], LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} (Subtype.{succ u1} A (fun (x : A) => IsAlgebraic.{u1, u1} R A _inst_1 (CommRing.toRing.{u1} A _inst_2) _inst_4 x))) (Max.max.{succ u1} Cardinal.{u1} (CanonicallyLinearOrderedAddMonoid.toMax.{succ u1} Cardinal.{u1} Cardinal.instCanonicallyLinearOrderedAddMonoidCardinal.{u1}) (Cardinal.mk.{u1} R) Cardinal.aleph0.{u1})
 Case conversion may be inaccurate. Consider using '#align algebraic.cardinal_mk_le_max Algebraic.cardinal_mk_le_maxₓ'. -/
-theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀ :=
-  by
-  rw [← lift_id (#_), ← lift_id (#R)]
-  exact cardinal_mk_lift_le_max R A
+theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀ := by
+  rw [← lift_id (#_), ← lift_id (#R)]; exact cardinal_mk_lift_le_max R A
 #align algebraic.cardinal_mk_le_max Algebraic.cardinal_mk_le_max
 
 /- warning: algebraic.cardinal_mk_of_infinite -> Algebraic.cardinal_mk_of_infinite is a dubious translation:

@@ -97,10 +97,7 @@ but is expected to have type
   forall (K : Type.{u1}) {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] (v : Subtype.{succ u2} V (fun (v : V) => Ne.{succ u2} V v (OfNat.ofNat.{u2} V 0 (Zero.toOfNat0.{u2} V (NegZeroClass.toZero.{u2} V (SubNegZeroMonoid.toNegZeroClass.{u2} V (SubtractionMonoid.toSubNegZeroMonoid.{u2} V (SubtractionCommMonoid.toSubtractionMonoid.{u2} V (AddCommGroup.toDivisionAddCommMonoid.{u2} V _inst_2))))))))), Eq.{succ u2} (Projectivization.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.mk'.{u1, u2} K V _inst_1 _inst_2 _inst_3 v) (Projectivization.mk.{u1, u2} K V _inst_1 _inst_2 _inst_3 (Subtype.val.{succ u2} V (fun (v : V) => Ne.{succ u2} V v (OfNat.ofNat.{u2} V 0 (Zero.toOfNat0.{u2} V (NegZeroClass.toZero.{u2} V (SubNegZeroMonoid.toNegZeroClass.{u2} V (SubtractionMonoid.toSubNegZeroMonoid.{u2} V (SubtractionCommMonoid.toSubtractionMonoid.{u2} V (AddCommGroup.toDivisionAddCommMonoid.{u2} V _inst_2)))))))) v) (Subtype.property.{succ u2} V (fun (v : V) => Ne.{succ u2} V v (OfNat.ofNat.{u2} V 0 (Zero.toOfNat0.{u2} V (NegZeroClass.toZero.{u2} V (SubNegZeroMonoid.toNegZeroClass.{u2} V (SubtractionMonoid.toSubNegZeroMonoid.{u2} V (SubtractionCommMonoid.toSubtractionMonoid.{u2} V (AddCommGroup.toDivisionAddCommMonoid.{u2} V _inst_2)))))))) v))
 Case conversion may be inaccurate. Consider using '#align projectivization.mk'_eq_mk Projectivization.mk'_eq_mkₓ'. -/
 @[simp]
-theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 :=
-  by
-  dsimp [mk, mk']
-  congr 1
+theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by dsimp [mk, mk']; congr 1;
   simp
 #align projectivization.mk'_eq_mk Projectivization.mk'_eq_mk
 
@@ -134,9 +131,7 @@ but is expected to have type
   forall {K : Type.{u2}} {V : Type.{u1}} [_inst_1 : DivisionRing.{u2} K] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] (v : Projectivization.{u2, u1} K V _inst_1 _inst_2 _inst_3), Eq.{succ u1} (Projectivization.{u2, u1} K V _inst_1 _inst_2 _inst_3) (Projectivization.mk.{u2, u1} K V _inst_1 _inst_2 _inst_3 (Projectivization.rep.{u2, u1} K V _inst_1 _inst_2 _inst_3 v) (Projectivization.rep_nonzero.{u1, u2} K V _inst_1 _inst_2 _inst_3 v)) v
 Case conversion may be inaccurate. Consider using '#align projectivization.mk_rep Projectivization.mk_repₓ'. -/
 @[simp]
-theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v :=
-  by
-  dsimp [mk, Projectivization.rep]
+theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by dsimp [mk, Projectivization.rep];
   simp
 #align projectivization.mk_rep Projectivization.mk_rep
 
@@ -178,11 +173,8 @@ theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
   by
   rw [mk_eq_mk_iff K v w hv hw]
   constructor
-  · rintro ⟨a, ha⟩
-    exact ⟨a, ha⟩
-  · rintro ⟨a, ha⟩
-    refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩
-    rwa [c, zero_smul] at ha
+  · rintro ⟨a, ha⟩; exact ⟨a, ha⟩
+  · rintro ⟨a, ha⟩; refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩; rwa [c, zero_smul] at ha
 #align projectivization.mk_eq_mk_iff' Projectivization.mk_eq_mk_iff'
 
 /- warning: projectivization.exists_smul_eq_mk_rep -> Projectivization.exists_smul_eq_mk_rep is a dubious translation:
@@ -227,10 +219,7 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u2}} {V : Type.{u1}} [_inst_1 : DivisionRing.{u2} K] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] (v : Projectivization.{u2, u1} K V _inst_1 _inst_2 _inst_3), Eq.{succ u1} (Submodule.{u2, u1} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) _inst_3) (Projectivization.submodule.{u2, u1} K V _inst_1 _inst_2 _inst_3 v) (Submodule.span.{u2, u1} K V (DivisionSemiring.toSemiring.{u2} K (DivisionRing.toDivisionSemiring.{u2} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2) _inst_3 (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) (Projectivization.rep.{u2, u1} K V _inst_1 _inst_2 _inst_3 v)))
 Case conversion may be inaccurate. Consider using '#align projectivization.submodule_eq Projectivization.submodule_eqₓ'. -/
-theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep :=
-  by
-  conv_lhs => rw [← v.mk_rep]
-  rfl
+theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep := by conv_lhs => rw [← v.mk_rep]; rfl
 #align projectivization.submodule_eq Projectivization.submodule_eq
 
 /- warning: projectivization.finrank_submodule -> Projectivization.finrank_submodule is a dubious translation:
@@ -245,11 +234,8 @@ theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 :=
   exact finrank_span_singleton v.rep_nonzero
 #align projectivization.finrank_submodule Projectivization.finrank_submodule
 
-instance (v : ℙ K V) : FiniteDimensional K v.Submodule :=
-  by
-  rw [← v.mk_rep]
-  change FiniteDimensional K (K ∙ v.rep)
-  infer_instance
+instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by rw [← v.mk_rep];
+  change FiniteDimensional K (K ∙ v.rep); infer_instance
 
 #print Projectivization.submodule_injective /-
 theorem submodule_injective :
@@ -275,8 +261,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
   Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
     (by
       constructor
-      · intro u v h
-        apply_fun fun e => e.val  at h
+      · intro u v h; apply_fun fun e => e.val  at h
         apply submodule_injective h
       · rintro ⟨H, h⟩
         rw [finrank_eq_one_iff'] at h
@@ -284,10 +269,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         have : (v : V) ≠ 0 := fun c => hv (Subtype.coe_injective c)
         use mk K v this
         symm
-        ext x
-        revert x
-        erw [← Set.ext_iff]
-        ext x
+        ext x; revert x; erw [← Set.ext_iff]; ext x
         dsimp [-SetLike.mem_coe]
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
@@ -373,11 +355,8 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
 
 #print Projectivization.map_id /-
 @[simp]
-theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injective = id :=
-  by
-  ext v
-  induction v using Projectivization.ind
-  rfl
+theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injective = id := by ext v;
+  induction v using Projectivization.ind; rfl
 #align projectivization.map_id Projectivization.map_id
 -/
 
@@ -388,11 +367,8 @@ Case conversion may be inaccurate. Consider using '#align projectivization.map_c
 theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F}
     {γ : K →+* F} [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f)
     (g : W →ₛₗ[τ] U) (hg : Function.Injective g) :
-    map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf :=
-  by
-  ext v
-  induction v using Projectivization.ind
-  rfl
+    map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by ext v;
+  induction v using Projectivization.ind; rfl
 #align projectivization.map_comp Projectivization.map_comp
 
 end Map

@@ -67,9 +67,7 @@ theorem tendstoUniformlyOn_tsum_nat {f : ℕ → β → F} {u : ℕ → ℝ} (hu
 Version with general index set. -/
 theorem tendstoUniformly_tsum {f : α → β → F} (hu : Summable u) (hfu : ∀ n x, ‖f n x‖ ≤ u n) :
     TendstoUniformly (fun t : Finset α => fun x => ∑ n in t, f n x) (fun x => ∑' n, f n x) atTop :=
-  by
-  rw [← tendstoUniformlyOn_univ]
-  exact tendstoUniformlyOn_tsum hu fun n x hx => hfu n x
+  by rw [← tendstoUniformlyOn_univ]; exact tendstoUniformlyOn_tsum hu fun n x hx => hfu n x
 #align tendsto_uniformly_tsum tendstoUniformly_tsum
 
 /-- An infinite sum of functions with summable sup norm is the uniform limit of its partial sums.
@@ -182,9 +180,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (
     intro x
     exact (hasFDerivAt_tsum hu hf hf' hf0 x).DifferentiableAt
   · push_neg  at h
-    have : (fun x => ∑' n, f n x) = 0 := by
-      ext1 x
-      exact tsum_eq_zero_of_not_summable (h x)
+    have : (fun x => ∑' n, f n x) = 0 := by ext1 x; exact tsum_eq_zero_of_not_summable (h x)
     rw [this]
     exact differentiable_const 0
 #align differentiable_tsum differentiable_tsum
@@ -197,9 +193,7 @@ theorem fderiv_tsum_apply (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f 
 
 theorem fderiv_tsum (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
     (hf' : ∀ n x, ‖fderiv 𝕜 (f n) x‖ ≤ u n) {x₀ : E} (hf0 : Summable fun n => f n x₀) :
-    (fderiv 𝕜 fun y => ∑' n, f n y) = fun x => ∑' n, fderiv 𝕜 (f n) x :=
-  by
-  ext1 x
+    (fderiv 𝕜 fun y => ∑' n, f n y) = fun x => ∑' n, fderiv 𝕜 (f n) x := by ext1 x;
   exact fderiv_tsum_apply hu hf hf' hf0 x
 #align fderiv_tsum fderiv_tsum
 

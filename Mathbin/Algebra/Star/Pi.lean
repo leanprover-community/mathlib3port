@@ -94,10 +94,7 @@ but is expected to have type
   forall {I : Type.{u3}} {J : Type.{u2}} {α : Type.{u1}} (x : I -> α) (y : J -> α) [_inst_1 : Star.{u1} α], Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} I J) -> α) (Star.star.{max (max u3 u2) u1} ((Sum.{u3, u2} I J) -> α) (Pi.instStarForAll.{max u3 u2, u1} (Sum.{u3, u2} I J) (fun (ᾰ : Sum.{u3, u2} I J) => α) (fun (i : Sum.{u3, u2} I J) => _inst_1)) (Sum.elim.{u3, u2, succ u1} I J α x y)) (Sum.elim.{u3, u2, succ u1} I J α (Star.star.{max u3 u1} (I -> α) (Pi.instStarForAll.{u3, u1} I (fun (ᾰ : I) => α) (fun (i : I) => _inst_1)) x) (Star.star.{max u1 u2} (J -> α) (Pi.instStarForAll.{u2, u1} J (fun (ᾰ : J) => α) (fun (i : J) => _inst_1)) y))
 Case conversion may be inaccurate. Consider using '#align function.star_sum_elim Function.star_sum_elimₓ'. -/
 theorem star_sum_elim {I J α : Type _} (x : I → α) (y : J → α) [Star α] :
-    star (Sum.elim x y) = Sum.elim (star x) (star y) :=
-  by
-  ext x
-  cases x <;> simp
+    star (Sum.elim x y) = Sum.elim (star x) (star y) := by ext x; cases x <;> simp
 #align function.star_sum_elim Function.star_sum_elim
 
 end Function

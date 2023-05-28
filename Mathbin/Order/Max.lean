@@ -120,9 +120,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_left noMaxOrder_of_leftₓ'. -/
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by
-    obtain ⟨c, h⟩ := exists_gt a
-    exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
+  ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_gt a; exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_max_order_of_left noMaxOrder_of_left
 
 /- warning: no_max_order_of_right -> noMaxOrder_of_right is a dubious translation:
@@ -132,9 +130,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_right noMaxOrder_of_rightₓ'. -/
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by
-    obtain ⟨c, h⟩ := exists_gt b
-    exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
+  ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_gt b; exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_max_order_of_right noMaxOrder_of_right
 
 /- warning: no_min_order_of_left -> noMinOrder_of_left is a dubious translation:
@@ -144,9 +140,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_left noMinOrder_of_leftₓ'. -/
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by
-    obtain ⟨c, h⟩ := exists_lt a
-    exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
+  ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_lt a; exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_min_order_of_left noMinOrder_of_left
 
 /- warning: no_min_order_of_right -> noMinOrder_of_right is a dubious translation:
@@ -156,9 +150,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_right noMinOrder_of_rightₓ'. -/
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by
-    obtain ⟨c, h⟩ := exists_lt b
-    exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
+  ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_lt b; exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_min_order_of_right noMinOrder_of_right
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] : NoMaxOrder (∀ i, π i) :=
@@ -192,10 +184,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoBotOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align no_bot_order.to_no_min_order NoBotOrder.to_noMinOrderₓ'. -/
 theorem NoBotOrder.to_noMinOrder (α : Type _) [LinearOrder α] [NoBotOrder α] : NoMinOrder α :=
-  {
-    exists_lt := by
-      convert fun a : α => exists_not_ge a
-      simp_rw [not_le] }
+  { exists_lt := by convert fun a : α => exists_not_ge a; simp_rw [not_le] }
 #align no_bot_order.to_no_min_order NoBotOrder.to_noMinOrder
 
 /- warning: no_top_order.to_no_max_order -> NoTopOrder.to_noMaxOrder is a dubious translation:
@@ -205,10 +194,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoTopOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrderₓ'. -/
 theorem NoTopOrder.to_noMaxOrder (α : Type _) [LinearOrder α] [NoTopOrder α] : NoMaxOrder α :=
-  {
-    exists_gt := by
-      convert fun a : α => exists_not_le a
-      simp_rw [not_le] }
+  { exists_gt := by convert fun a : α => exists_not_le a; simp_rw [not_le] }
 #align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrder
 
 /- warning: no_bot_order_iff_no_min_order -> noBotOrder_iff_noMinOrder is a dubious translation:

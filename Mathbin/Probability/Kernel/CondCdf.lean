@@ -176,19 +176,13 @@ theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Counta
 #align lintegral_infi_directed_of_measurable lintegral_iInf_directed_of_measurable
 
 -- todo: move to measure_theory/pi_system
-theorem isPiSystem_Iic [SemilatticeInf α] : @IsPiSystem α (range Iic) :=
-  by
-  rintro s ⟨us, rfl⟩ t ⟨ut, rfl⟩ _
-  rw [Iic_inter_Iic]
-  exact ⟨us ⊓ ut, rfl⟩
+theorem isPiSystem_Iic [SemilatticeInf α] : @IsPiSystem α (range Iic) := by
+  rintro s ⟨us, rfl⟩ t ⟨ut, rfl⟩ _; rw [Iic_inter_Iic]; exact ⟨us ⊓ ut, rfl⟩
 #align is_pi_system_Iic isPiSystem_Iic
 
 -- todo: move to measure_theory/pi_system
-theorem isPiSystem_Ici [SemilatticeSup α] : @IsPiSystem α (range Ici) :=
-  by
-  rintro s ⟨us, rfl⟩ t ⟨ut, rfl⟩ _
-  rw [Ici_inter_Ici]
-  exact ⟨us ⊔ ut, rfl⟩
+theorem isPiSystem_Ici [SemilatticeSup α] : @IsPiSystem α (range Ici) := by
+  rintro s ⟨us, rfl⟩ t ⟨ut, rfl⟩ _; rw [Ici_inter_Ici]; exact ⟨us ⊔ ut, rfl⟩
 #align is_pi_system_Ici isPiSystem_Ici
 
 end AuxLemmasToBeMoved
@@ -293,8 +287,7 @@ theorem tendsto_iicSnd_atBot [FiniteMeasure ρ] {s : Set α} (hs : MeasurableSet
       ext1 x
       simp only [Rat.cast_eq_id, id.def, mem_Inter, mem_prod, mem_Iic]
       refine' ⟨fun h i => ⟨(h i).1, _⟩, fun h i => ⟨(h i).1, _⟩⟩ <;> have h' := h (-i)
-      · rw [neg_neg] at h'
-        exact h'.2
+      · rw [neg_neg] at h'; exact h'.2
       · exact h'.2
     rw [h_inter_eq] at h_neg
     have h_fun_eq : (fun r : ℚ => ρ (s ×ˢ Iic (r : ℝ))) = fun r => ρ (s ×ˢ Iic ↑(- -r)) := by
@@ -683,11 +676,8 @@ theorem measurable_condCdfRat (ρ : Measure (α × ℝ)) (q : ℚ) :
       measurable_const
 #align probability_theory.measurable_cond_cdf_rat ProbabilityTheory.measurable_condCdfRat
 
-theorem condCdfRat_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : 0 ≤ condCdfRat ρ a r :=
-  by
-  unfold cond_cdf_rat
-  split_ifs
-  exacts[ENNReal.toReal_nonneg, le_rfl, zero_le_one]
+theorem condCdfRat_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : 0 ≤ condCdfRat ρ a r := by
+  unfold cond_cdf_rat; split_ifs; exacts[ENNReal.toReal_nonneg, le_rfl, zero_le_one]
 #align probability_theory.cond_cdf_rat_nonneg ProbabilityTheory.condCdfRat_nonneg
 
 theorem condCdfRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCdfRat ρ a r ≤ 1 :=
@@ -820,11 +810,8 @@ theorem condCdf'_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℝ) : 0 ≤ co
 #align probability_theory.cond_cdf'_nonneg ProbabilityTheory.condCdf'_nonneg
 
 theorem bddBelow_range_condCdfRat_gt (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
-    BddBelow (range fun r : { r' : ℚ // x < ↑r' } => condCdfRat ρ a r) :=
-  by
-  refine' ⟨0, fun z => _⟩
-  rintro ⟨u, rfl⟩
-  exact cond_cdf_rat_nonneg ρ a _
+    BddBelow (range fun r : { r' : ℚ // x < ↑r' } => condCdfRat ρ a r) := by
+  refine' ⟨0, fun z => _⟩; rintro ⟨u, rfl⟩; exact cond_cdf_rat_nonneg ρ a _
 #align probability_theory.bdd_below_range_cond_cdf_rat_gt ProbabilityTheory.bddBelow_range_condCdfRat_gt
 
 theorem monotone_condCdf' (ρ : Measure (α × ℝ)) (a : α) : Monotone (condCdf' ρ a) :=

@@ -106,10 +106,8 @@ theorem inclusionInDoubleDual_norm_eq :
 /- warning: normed_space.inclusion_in_double_dual_norm_le -> NormedSpace.inclusionInDoubleDual_norm_le is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align normed_space.inclusion_in_double_dual_norm_le NormedSpace.inclusionInDoubleDual_norm_leₓ'. -/
-theorem inclusionInDoubleDual_norm_le : ‖inclusionInDoubleDual 𝕜 E‖ ≤ 1 :=
-  by
-  rw [inclusion_in_double_dual_norm_eq]
-  exact ContinuousLinearMap.norm_id_le
+theorem inclusionInDoubleDual_norm_le : ‖inclusionInDoubleDual 𝕜 E‖ ≤ 1 := by
+  rw [inclusion_in_double_dual_norm_eq]; exact ContinuousLinearMap.norm_id_le
 #align normed_space.inclusion_in_double_dual_norm_le NormedSpace.inclusionInDoubleDual_norm_le
 
 /- warning: normed_space.double_dual_bound -> NormedSpace.double_dual_bound is a dubious translation:
@@ -279,7 +277,7 @@ Case conversion may be inaccurate. Consider using '#align normed_space.smul_mem_
 small scalar multiple of `x'` is in `polar 𝕜 s`. -/
 theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ‖x' z‖ ≤ ‖c‖) :
     c⁻¹ • x' ∈ polar 𝕜 s := by
-  by_cases c_zero : c = 0
+  by_cases c_zero : c = 0;
   · simp only [c_zero, inv_zero, zero_smul]
     exact (dual_pairing 𝕜 E).flip.zero_mem_polar _
   have eq : ∀ z, ‖c⁻¹ • x' z‖ = ‖c⁻¹‖ * ‖x' z‖ := fun z => norm_smul c⁻¹ _

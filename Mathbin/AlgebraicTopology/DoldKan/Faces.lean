@@ -117,9 +117,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
           X.δ ⟨a + 1, Nat.succ_lt_succ (Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm))⟩ ≫
             X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm)⟩ :=
   by
-  have hnaq_shift : ∀ d : ℕ, n + d = a + d + q :=
-    by
-    intro d
+  have hnaq_shift : ∀ d : ℕ, n + d = a + d + q := by intro d;
     rw [add_assoc, add_comm d, ← add_assoc, hnaq]
   rw [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
     hσ'_eq hnaq (c_mk (n + 1) n rfl), hσ'_eq (hnaq_shift 1) (c_mk (n + 2) (n + 1) rfl)]
@@ -127,19 +125,16 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     comp_add]
   simp only [comp_zsmul, zsmul_comp, ← assoc, ← mul_zsmul]
   -- cleaning up the first sum
-  rw [← Fin.sum_congr' _ (hnaq_shift 2).symm, Fin.sum_trunc]
+  rw [← Fin.sum_congr' _ (hnaq_shift 2).symm, Fin.sum_trunc];
   swap
   · rintro ⟨k, hk⟩
     suffices φ ≫ X.δ (⟨a + 2 + k, by linarith⟩ : Fin (n + 2)) = 0 by
       simp only [this, Fin.natAdd_mk, Fin.cast_mk, zero_comp, smul_zero]
-    convert v ⟨a + k + 1, by linarith⟩
-        (by
-          rw [Fin.val_mk]
-          linarith)
+    convert v ⟨a + k + 1, by linarith⟩ (by rw [Fin.val_mk]; linarith)
     rw [Nat.succ_eq_add_one]
     linarith
   -- cleaning up the second sum
-  rw [← Fin.sum_congr' _ (hnaq_shift 3).symm, @Fin.sum_trunc _ _ (a + 3)]
+  rw [← Fin.sum_congr' _ (hnaq_shift 3).symm, @Fin.sum_trunc _ _ (a + 3)];
   swap
   · rintro ⟨k, hk⟩
     rw [assoc, X.δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
@@ -255,21 +250,18 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
     by_contra
     rw [not_le, ← Nat.succ_le_iff] at h
     linarith
-  rw [X.δ_comp_σ_of_gt', j.pred_succ]
-  swap
+  rw [X.δ_comp_σ_of_gt', j.pred_succ]; swap
   · rw [Fin.lt_iff_val_lt_val]
     simpa only [Fin.val_mk, Fin.val_succ, add_lt_add_iff_right] using haj
   obtain ham' | ham'' := ham.lt_or_eq
   · -- case where `a<m`
-    rw [← X.δ_comp_δ''_assoc]
-    swap
+    rw [← X.δ_comp_δ''_assoc]; swap
     · rw [Fin.le_iff_val_le_val]
       dsimp
       linarith
     simp only [← assoc, v j (by linarith), zero_comp]
   · -- in the last case, a=m, q=1 and j=a+1
-    rw [X.δ_comp_δ_self'_assoc]
-    swap
+    rw [X.δ_comp_δ_self'_assoc]; swap
     · ext
       dsimp
       have hq : q = 1 := by rw [← add_left_inj a, ha, ham'', add_comm]

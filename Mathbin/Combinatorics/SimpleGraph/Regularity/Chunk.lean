@@ -213,8 +213,7 @@ theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.
 #align szemeredi_regularity.card_chunk SzemerediRegularity.card_chunk
 
 theorem card_eq_of_mem_parts_chunk (hs : s ∈ (chunk hP G ε hU).parts) :
-    s.card = m ∨ s.card = m + 1 := by
-  unfold chunk at hs
+    s.card = m ∨ s.card = m + 1 := by unfold chunk at hs;
   split_ifs  at hs <;> exact card_eq_of_mem_parts_equitabilise hs
 #align szemeredi_regularity.card_eq_of_mem_parts_chunk SzemerediRegularity.card_eq_of_mem_parts_chunk
 
@@ -522,10 +521,8 @@ private theorem edge_density_star_not_uniform [Nonempty α]
   rw [abs_sub_le_iff] at hrs hpr' hqt'
   rw [le_abs] at hst⊢
   cases hst
-  left
-  linarith
-  right
-  linarith
+  left; linarith
+  right; linarith
 
 /-- Lower bound on the edge densities between non-uniform parts of `szemeredi_regularity.increment`.
 -/

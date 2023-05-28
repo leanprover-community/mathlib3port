@@ -246,9 +246,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
       let b := Basis.ofVectorSpace 𝕜 s
       have U : UniformEmbedding b.equiv_fun.symm.to_equiv :=
         by
-        have : Fintype.card (Basis.ofVectorSpaceIndex 𝕜 s) = n :=
-          by
-          rw [← s_dim]
+        have : Fintype.card (Basis.ofVectorSpaceIndex 𝕜 s) = n := by rw [← s_dim];
           exact (finrank_eq_card_basis b).symm
         have : Continuous b.equiv_fun := IH b this
         exact
@@ -465,20 +463,14 @@ theorem coe_toContinuousLinearEquiv_symm' (e : E ≃ₗ[𝕜] F) :
 #print LinearEquiv.toLinearEquiv_toContinuousLinearEquiv /-
 @[simp]
 theorem toLinearEquiv_toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) :
-    e.toContinuousLinearEquiv.toLinearEquiv = e :=
-  by
-  ext x
-  rfl
+    e.toContinuousLinearEquiv.toLinearEquiv = e := by ext x; rfl
 #align linear_equiv.to_linear_equiv_to_continuous_linear_equiv LinearEquiv.toLinearEquiv_toContinuousLinearEquiv
 -/
 
 #print LinearEquiv.toLinearEquiv_toContinuousLinearEquiv_symm /-
 @[simp]
 theorem toLinearEquiv_toContinuousLinearEquiv_symm (e : E ≃ₗ[𝕜] F) :
-    e.toContinuousLinearEquiv.symm.toLinearEquiv = e.symm :=
-  by
-  ext x
-  rfl
+    e.toContinuousLinearEquiv.symm.toLinearEquiv = e.symm := by ext x; rfl
 #align linear_equiv.to_linear_equiv_to_continuous_linear_equiv_symm LinearEquiv.toLinearEquiv_toContinuousLinearEquiv_symm
 -/
 
@@ -594,10 +586,7 @@ def toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZeroₓ'. -/
 @[simp]
 theorem coe_toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
-    (f.toContinuousLinearEquivOfDetNeZero hf : E →L[𝕜] E) = f :=
-  by
-  ext x
-  rfl
+    (f.toContinuousLinearEquivOfDetNeZero hf : E →L[𝕜] E) = f := by ext x; rfl
 #align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero
 
 /- warning: continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply -> ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply is a dubious translation:

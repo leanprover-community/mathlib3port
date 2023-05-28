@@ -984,9 +984,7 @@ Case conversion may be inaccurate. Consider using '#align galois_insertion.l_bin
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem l_biInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     {ι : Sort x} {p : ι → Prop} (f : ∀ (i) (hi : p i), α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
-    l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) :=
-  by
-  rw [iInf_subtype', iInf_subtype']
+    l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by rw [iInf_subtype', iInf_subtype'];
   exact gi.l_infi_of_ul_eq_self _ fun _ => hf _ _
 #align galois_insertion.l_binfi_of_ul_eq_self GaloisInsertion.l_biInf_of_ul_eq_self
 
@@ -1114,12 +1112,8 @@ def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : Comple
       gi.choice (sInf (u '' s)) <|
         (isGLB_sInf _).2 <|
           gi.gc.monotone_u.mem_lowerBounds_image (gi.isGLB_of_u_image <| isGLB_sInf _).1
-    inf_le := fun s => by
-      rw [gi.choice_eq]
-      exact (gi.is_glb_of_u_image (isGLB_sInf _)).1
-    le_inf := fun s => by
-      rw [gi.choice_eq]
-      exact (gi.is_glb_of_u_image (isGLB_sInf _)).2 }
+    inf_le := fun s => by rw [gi.choice_eq]; exact (gi.is_glb_of_u_image (isGLB_sInf _)).1
+    le_inf := fun s => by rw [gi.choice_eq]; exact (gi.is_glb_of_u_image (isGLB_sInf _)).2 }
 #align galois_insertion.lift_complete_lattice GaloisInsertion.liftCompleteLattice
 -/
 

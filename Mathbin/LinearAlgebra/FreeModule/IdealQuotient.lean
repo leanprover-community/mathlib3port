@@ -50,23 +50,19 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
   let e : S ≃ₗ[R] I := b'.equiv ab (Equiv.refl _)
   let f : S →ₗ[R] S := (I.subtype.restrict_scalars R).comp (e : S →ₗ[R] I)
   let f_apply : ∀ x, f x = b'.equiv ab (Equiv.refl _) x := fun x => rfl
-  have ha : ∀ i, f (b' i) = a i • b' i := by
-    intro i
+  have ha : ∀ i, f (b' i) = a i • b' i := by intro i;
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
   have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i :=
     by
-    intro x
-    simp_rw [ab.mem_ideal_iff', ab_eq]
+    intro x; simp_rw [ab.mem_ideal_iff', ab_eq]
     have : ∀ (c : ι → R) (i), b'.repr (∑ j : ι, c j • a j • b' j) i = a i * c i :=
       by
       intro c i
       simp only [← MulAction.mul_smul, b'.repr_sum_self, mul_comm]
     constructor
-    · rintro ⟨c, rfl⟩ i
-      exact ⟨c i, this c i⟩
+    · rintro ⟨c, rfl⟩ i; exact ⟨c i, this c i⟩
     · rintro ha
-      choose c hc using ha
-      exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
+      choose c hc using ha; exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
   -- Now we map everything through the linear equiv `S ≃ₗ (ι → R)`,
   -- which maps `I` to `I' := Π i, a i ℤ`.
   let I' : Submodule R (ι → R) := Submodule.pi Set.univ fun i => Ideal.span ({a i} : Set R)
@@ -77,17 +73,14 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
       Submodule.restrictScalars_mem, mem_I_iff, smul_eq_mul, forall_true_left, LinearEquiv.coe_coe,
       Basis.equivFun_apply]
     constructor
-    · rintro ⟨y, hy, rfl⟩ i
-      exact hy i
+    · rintro ⟨y, hy, rfl⟩ i; exact hy i
     · rintro hdvd
       refine' ⟨∑ i, x i • b' i, fun i => _, _⟩ <;> rwa [b'.repr_sum_self]
       · exact hdvd i
   refine' ((Submodule.Quotient.restrictScalarsEquiv R I).restrictScalars R).symm.trans _
-  any_goals apply RingHom.id
-  any_goals infer_instance
+  any_goals apply RingHom.id; any_goals infer_instance
   refine' (Submodule.Quotient.equiv (I.restrict_scalars R) I' b'.equiv_fun this).trans _
-  any_goals apply RingHom.id
-  any_goals infer_instance
+  any_goals apply RingHom.id; any_goals infer_instance
   classical
     let this :=
       Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))

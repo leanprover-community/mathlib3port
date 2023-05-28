@@ -741,8 +741,7 @@ theorem WithSeminorms.isVonNBounded_iff_seminorm_bounded {s : Set E} (hp : WithS
   intro hi I
   by_cases hI : I.nonempty
   · choose r hr h using hi
-    have h' : 0 < I.sup' hI r := by
-      rcases hI.bex with ⟨i, hi⟩
+    have h' : 0 < I.sup' hI r := by rcases hI.bex with ⟨i, hi⟩;
       exact lt_of_lt_of_le (hr i) (Finset.le_sup' r hi)
     refine' ⟨I.sup' hI r, h', fun x hx => finset_sup_apply_lt h' fun i hi => _⟩
     refine' lt_of_lt_of_le (h i x hx) _

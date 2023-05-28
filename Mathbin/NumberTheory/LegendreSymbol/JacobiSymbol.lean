@@ -129,9 +129,7 @@ theorem mul_right (a : ℤ) (b₁ b₂ : ℕ) [NeZero b₁] [NeZero b₂] :
 
 /-- The Jacobi symbol takes only the values `0`, `1` and `-1`. -/
 theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a | b) = -1 :=
-  ((@SignType.castHom ℤ _ _).toMonoidHom.mrange.copy {0, 1, -1} <|
-        by
-        rw [Set.pair_comm]
+  ((@SignType.castHom ℤ _ _).toMonoidHom.mrange.copy {0, 1, -1} <| by rw [Set.pair_comm];
         exact (SignType.range_eq SignType.castHom).symm).list_prod_mem
     (by
       intro _ ha'
@@ -149,10 +147,8 @@ theorem one_left (b : ℕ) : J(1 | b) = 1 :=
 #align jacobi_sym.one_left jacobiSym.one_left
 
 /-- The Jacobi symbol is multiplicative in its first argument. -/
-theorem mul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) * J(a₂ | b) :=
-  by
-  simp_rw [jacobiSym, List.pmap_eq_map_attach, legendreSym.mul]
-  exact List.prod_map_mul
+theorem mul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) * J(a₂ | b) := by
+  simp_rw [jacobiSym, List.pmap_eq_map_attach, legendreSym.mul]; exact List.prod_map_mul
 #align jacobi_sym.mul_left jacobiSym.mul_left
 
 /-- The symbol `J(a | b)` vanishes iff `a` and `b` are not coprime (assuming `b ≠ 0`). -/
@@ -170,28 +166,22 @@ protected theorem ne_zero {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) ≠ 0
   cases' eq_zero_or_neZero b with hb
   · rw [hb, zero_right]
     exact one_ne_zero
-  · contrapose! h
-    exact eq_zero_iff_not_coprime.1 h
+  · contrapose! h; exact eq_zero_iff_not_coprime.1 h
 #align jacobi_sym.ne_zero jacobiSym.ne_zero
 
 /-- The symbol `J(a | b)` vanishes if and only if `b ≠ 0` and `a` and `b` are not coprime. -/
 theorem eq_zero_iff {a : ℤ} {b : ℕ} : J(a | b) = 0 ↔ b ≠ 0 ∧ a.gcd b ≠ 1 :=
   ⟨fun h => by
     cases' eq_or_ne b 0 with hb hb
-    · rw [hb, zero_right] at h
-      cases h
-    exact ⟨hb, mt jacobiSym.ne_zero <| Classical.not_not.2 h⟩, fun ⟨hb, h⟩ =>
-    by
-    rw [← neZero_iff] at hb
-    exact eq_zero_iff_not_coprime.2 h⟩
+    · rw [hb, zero_right] at h; cases h
+    exact ⟨hb, mt jacobiSym.ne_zero <| Classical.not_not.2 h⟩, fun ⟨hb, h⟩ => by
+    rw [← neZero_iff] at hb; exact eq_zero_iff_not_coprime.2 h⟩
 #align jacobi_sym.eq_zero_iff jacobiSym.eq_zero_iff
 
 /-- The symbol `J(0 | b)` vanishes when `b > 1`. -/
 theorem zero_left {b : ℕ} (hb : 1 < b) : J(0 | b) = 0 :=
-  (@eq_zero_iff_not_coprime 0 b ⟨ne_zero_of_lt hb⟩).mpr <|
-    by
-    rw [Int.gcd_zero_left, Int.natAbs_ofNat]
-    exact hb.ne'
+  (@eq_zero_iff_not_coprime 0 b ⟨ne_zero_of_lt hb⟩).mpr <| by
+    rw [Int.gcd_zero_left, Int.natAbs_ofNat]; exact hb.ne'
 #align jacobi_sym.zero_left jacobiSym.zero_left
 
 /-- The symbol `J(a | b)` takes the value `1` or `-1` if `a` and `b` are coprime. -/
@@ -304,18 +294,14 @@ theorem nonsquare_of_jacobiSym_eq_neg_one {a : ℤ} {b : ℕ} (h : J(a | b) = -1
 
 /-- If `p` is prime, then `J(a | p)` is `-1` iff `a` is not a square modulo `p`. -/
 theorem nonsquare_iff_jacobiSym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
-    J(a | p) = -1 ↔ ¬IsSquare (a : ZMod p) :=
-  by
-  rw [← legendreSym.to_jacobiSym]
+    J(a | p) = -1 ↔ ¬IsSquare (a : ZMod p) := by rw [← legendreSym.to_jacobiSym];
   exact legendreSym.eq_neg_one_iff p
 #align zmod.nonsquare_iff_jacobi_sym_eq_neg_one ZMod.nonsquare_iff_jacobiSym_eq_neg_one
 
 /-- If `p` is prime and `J(a | p) = 1`, then `a` is q square mod `p`. -/
 theorem isSquare_of_jacobiSym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
     IsSquare (a : ZMod p) :=
-  Classical.not_not.mp <| by
-    rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]
-    decide
+  Classical.not_not.mp <| by rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]; decide
 #align zmod.is_square_of_jacobi_sym_eq_one ZMod.isSquare_of_jacobiSym_eq_one
 
 end ZMod
@@ -425,10 +411,7 @@ theorem quadratic_reciprocity' {a b : ℕ} (ha : Odd a) (hb : Odd b) :
   -- define the right hand side for fixed `a` as a `ℕ →* ℤ`
   let rhs : ℕ → ℕ →* ℤ := fun a =>
     { toFun := fun x => qrSign x a * J(x | a)
-      map_one' := by
-        convert← mul_one _
-        symm
-        all_goals apply one_left
+      map_one' := by convert← mul_one _; symm; all_goals apply one_left
       map_mul' := fun x y => by rw [qrSign.mul_left, Nat.cast_mul, mul_left, mul_mul_mul_comm] }
   have rhs_apply : ∀ a b : ℕ, rhs a b = qrSign b a * J(b | a) := fun a b => rfl
   refine' value_at a (rhs a) (fun p pp hp => Eq.symm _) hb
@@ -492,9 +475,7 @@ theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * 
     exact dvd_mul_left a' _
   cases e; · rfl
   · rw [χ₈_nat_mod_eight, χ₈_nat_mod_eight (b % (4 * a)), mod_mod_of_dvd b]
-    use 2 ^ e * a'
-    rw [ha₂, pow_succ]
-    ring
+    use 2 ^ e * a'; rw [ha₂, pow_succ]; ring
 #align jacobi_sym.mod_right' jacobiSym.mod_right'
 
 /-- The Jacobi symbol `J(a | b)` depends only on `b` mod `4*a`. -/

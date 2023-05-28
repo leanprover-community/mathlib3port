@@ -698,14 +698,8 @@ to `0 : ℕ`).
 /-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
 class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
   nsmul : ℕ → M → M := nsmulRec
-  nsmul_zero : ∀ x, nsmul 0 x = 0 := by
-    intros
-    rfl
-  nsmul_succ :
-    ∀ (n : ℕ) (x), nsmul n.succ x = x +
-          nsmul n x := by
-    intros
-    rfl
+  nsmul_zero : ∀ x, nsmul 0 x = 0 := by intros ; rfl
+  nsmul_succ : ∀ (n : ℕ) (x), nsmul n.succ x = x + nsmul n x := by intros ; rfl
 #align add_monoid AddMonoid
 -/
 
@@ -714,14 +708,8 @@ class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
 @[to_additive]
 class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
   npow : ℕ → M → M := npowRec
-  npow_zero : ∀ x, npow 0 x = 1 := by
-    intros
-    rfl
-  npow_succ :
-    ∀ (n : ℕ) (x), npow n.succ x = x * npow n
-            x := by
-    intros
-    rfl
+  npow_zero : ∀ x, npow 0 x = 1 := by intros ; rfl
+  npow_succ : ∀ (n : ℕ) (x), npow n.succ x = x * npow n x := by intros ; rfl
 #align monoid Monoid
 #align add_monoid AddMonoid
 -/
@@ -1028,25 +1016,12 @@ explanations on this.
 @[protect_proj]
 class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   div := fun a b => a * b⁻¹
-  div_eq_mul_inv :
-    ∀ a b : G, a / b = a * b⁻¹ := by
-    intros
-    rfl
+  div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by intros ; rfl
   zpow : ℤ → G → G := zpowRec
-  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by
-    intros
-    rfl
-  zpow_succ' :
-    ∀ (n : ℕ) (a : G),
-      zpow (Int.ofNat n.succ) a =
-        a * zpow (Int.ofNat n) a := by
-    intros
-    rfl
-  zpow_neg' :
-    ∀ (n : ℕ) (a : G), zpow -[n+1] a =
-        (zpow n.succ a)⁻¹ := by
-    intros
-    rfl
+  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by intros ; rfl
+  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
+    intros ; rfl
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[n+1] a = (zpow n.succ a)⁻¹ := by intros ; rfl
 #align div_inv_monoid DivInvMonoid
 -/
 
@@ -1071,25 +1046,12 @@ explanations on this.
 @[protect_proj]
 class SubNegMonoid (G : Type u) extends AddMonoid G, Neg G, Sub G where
   sub := fun a b => a + -b
-  sub_eq_add_neg :
-    ∀ a b : G, a - b = a + -b := by
-    intros
-    rfl
+  sub_eq_add_neg : ∀ a b : G, a - b = a + -b := by intros ; rfl
   zsmul : ℤ → G → G := zsmulRec
-  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by
-    intros
-    rfl
-  zsmul_succ' :
-    ∀ (n : ℕ) (a : G),
-      zsmul (Int.ofNat n.succ) a =
-        a + zsmul (Int.ofNat n) a := by
-    intros
-    rfl
-  zsmul_neg' :
-    ∀ (n : ℕ) (a : G), zsmul -[n+1] a =
-        -zsmul n.succ a := by
-    intros
-    rfl
+  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by intros ; rfl
+  zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
+    intros ; rfl
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[n+1] a = -zsmul n.succ a := by intros ; rfl
 #align sub_neg_monoid SubNegMonoid
 -/
 
@@ -1164,9 +1126,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Int.negSucc n)) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align zpow_neg_succ_of_nat zpow_negSuccₓ'. -/
 @[simp, to_additive]
-theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ :=
-  by
-  rw [← zpow_ofNat]
+theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by rw [← zpow_ofNat];
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
 #align zsmul_neg_succ_of_nat negSucc_zsmul
@@ -1502,10 +1462,7 @@ end Group
 #print Group.toDivInvMonoid_injective /-
 @[to_additive]
 theorem Group.toDivInvMonoid_injective {G : Type _} :
-    Function.Injective (@Group.toDivInvMonoid G) :=
-  by
-  rintro ⟨⟩ ⟨⟩ ⟨⟩
-  rfl
+    Function.Injective (@Group.toDivInvMonoid G) := by rintro ⟨⟩ ⟨⟩ ⟨⟩; rfl
 #align group.to_div_inv_monoid_injective Group.toDivInvMonoid_injective
 #align add_group.to_sub_neg_add_monoid_injective AddGroup.toSubNegAddMonoid_injective
 -/
@@ -1530,10 +1487,8 @@ attribute [instance 300] AddCommGroup.toAddCommMonoid
 
 #print CommGroup.toGroup_injective /-
 @[to_additive]
-theorem CommGroup.toGroup_injective {G : Type u} : Function.Injective (@CommGroup.toGroup G) :=
-  by
-  rintro ⟨⟩ ⟨⟩ ⟨⟩
-  rfl
+theorem CommGroup.toGroup_injective {G : Type u} : Function.Injective (@CommGroup.toGroup G) := by
+  rintro ⟨⟩ ⟨⟩ ⟨⟩; rfl
 #align comm_group.to_group_injective CommGroup.toGroup_injective
 #align add_comm_group.to_add_group_injective AddCommGroup.toAddGroup_injective
 -/

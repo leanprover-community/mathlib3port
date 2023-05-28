@@ -130,8 +130,7 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀ i ∈ s, 0
   · rcases A with ⟨i, his, hzi, hwi⟩
     rw [prod_eq_zero his]
     · exact sum_nonneg fun j hj => mul_nonneg (hw j hj) (hz j hj)
-    · rw [hzi]
-      exact zero_rpow hwi
+    · rw [hzi]; exact zero_rpow hwi
   -- If all numbers `z i` with non-zero weight are positive, then we apply Jensen's inequality
   -- for `exp` and numbers `log (z i)` with weights `w i`.
   · simp only [not_exists, not_and, Ne.def, Classical.not_not] at A
@@ -164,9 +163,7 @@ theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i 
       · rw [hx i hi h₀]
     _ = x := by
       rw [← rpow_sum_of_nonneg _ hw, hw', rpow_one]
-      have : (∑ i in s, w i) ≠ 0 := by
-        rw [hw']
-        exact one_ne_zero
+      have : (∑ i in s, w i) ≠ 0 := by rw [hw']; exact one_ne_zero
       obtain ⟨i, his, hi⟩ := exists_ne_zero_of_sum_ne_zero this
       rw [← hx i his hi]
       exact hz i his
@@ -470,10 +467,7 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
   by_cases hG_zero : (∑ i in s, g i ^ q) = 0
   ·
     calc
-      (∑ i in s, f i * g i) = ∑ i in s, g i * f i :=
-        by
-        congr with i
-        rw [mul_comm]
+      (∑ i in s, f i * g i) = ∑ i in s, g i * f i := by congr with i; rw [mul_comm]
       _ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
         (inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero)
       _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := mul_comm _ _
@@ -485,10 +479,8 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
     simp_rw [f', g', div_mul_div_comm, ← sum_div] at this
     rwa [div_le_iff, one_mul] at this
     refine' mul_ne_zero _ _
-    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]
-      exact Or.inl hF_zero
-    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]
-      exact Or.inl hG_zero
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]; exact Or.inl hF_zero
+    · rw [Ne.def, rpow_eq_zero_iff, not_and_or]; exact Or.inl hG_zero
   refine' inner_le_Lp_mul_Lp_of_norm_le_one s f' g' hpq (le_of_eq _) (le_of_eq _)
   ·
     simp_rw [f', div_rpow, ← sum_div, ← rpow_mul, one_div, inv_mul_cancel hpq.ne_zero, rpow_one,
@@ -1038,7 +1030,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
   simp [← ENNReal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
     le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this
   convert this using 1 <;> [skip;congr 2] <;> [skip;skip;simp;skip;simp] <;>
-    · apply Finset.sum_congr rfl fun i hi => _
+    · apply Finset.sum_congr rfl fun i hi => _;
       simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
 #align ennreal.inner_le_Lp_mul_Lq ENNReal.inner_le_Lp_mul_Lq
 
@@ -1091,8 +1083,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
         hp)
   push_cast [← ENNReal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
   convert this using 2 <;> [skip;congr 1;congr 1] <;>
-    · apply Finset.sum_congr rfl fun i hi => _
-      simp [H'.1 i hi, H'.2 i hi]
+    · apply Finset.sum_congr rfl fun i hi => _; simp [H'.1 i hi, H'.2 i hi]
 #align ennreal.Lp_add_le ENNReal.Lp_add_le
 
 end ENNReal

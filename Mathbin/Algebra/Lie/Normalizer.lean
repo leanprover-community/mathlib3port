@@ -54,16 +54,10 @@ variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 def normalizer : LieSubmodule R L M
     where
   carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
-  add_mem' m₁ m₂ hm₁ hm₂ x := by
-    rw [lie_add]
-    exact N.add_mem' (hm₁ x) (hm₂ x)
+  add_mem' m₁ m₂ hm₁ hm₂ x := by rw [lie_add]; exact N.add_mem' (hm₁ x) (hm₂ x)
   zero_mem' x := by simp
-  smul_mem' t m hm x := by
-    rw [lie_smul]
-    exact N.smul_mem' t (hm x)
-  lie_mem x m hm y := by
-    rw [leibniz_lie]
-    exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
+  smul_mem' t m hm x := by rw [lie_smul]; exact N.smul_mem' t (hm x)
+  lie_mem x m hm y := by rw [leibniz_lie]; exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
 #align lie_submodule.normalizer LieSubmodule.normalizer
 
 @[simp]
@@ -77,9 +71,7 @@ theorem le_normalizer : N ≤ N.normalizer := by
   exact fun x => N.lie_mem hm
 #align lie_submodule.le_normalizer LieSubmodule.le_normalizer
 
-theorem normalizer_inf : (N₁ ⊓ N₂).normalizer = N₁.normalizer ⊓ N₂.normalizer :=
-  by
-  ext
+theorem normalizer_inf : (N₁ ⊓ N₂).normalizer = N₁.normalizer ⊓ N₂.normalizer := by ext;
   simp [← forall_and]
 #align lie_submodule.normalizer_inf LieSubmodule.normalizer_inf
 
@@ -92,17 +84,12 @@ theorem monotone_normalizer : Monotone (normalizer : LieSubmodule R L M → LieS
 #align lie_submodule.monotone_normalizer LieSubmodule.monotone_normalizer
 
 @[simp]
-theorem comap_normalizer (f : M' →ₗ⁅R,L⁆ M) : N.normalizer.comap f = (N.comap f).normalizer :=
-  by
-  ext
-  simp
+theorem comap_normalizer (f : M' →ₗ⁅R,L⁆ M) : N.normalizer.comap f = (N.comap f).normalizer := by
+  ext; simp
 #align lie_submodule.comap_normalizer LieSubmodule.comap_normalizer
 
 theorem top_lie_le_iff_le_normalizer (N' : LieSubmodule R L M) :
-    ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.normalizer :=
-  by
-  rw [lie_le_iff]
-  tauto
+    ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.normalizer := by rw [lie_le_iff]; tauto
 #align lie_submodule.top_lie_le_iff_le_normalizer LieSubmodule.top_lie_le_iff_le_normalizer
 
 theorem gc_top_lie_normalizer :
@@ -133,10 +120,8 @@ def normalizer : LieSubalgebra R L :=
       exact H.sub_mem (hz ⟨_, hy x⟩) (hy ⟨_, hz x⟩) }
 #align lie_subalgebra.normalizer LieSubalgebra.normalizer
 
-theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y, x⁆ ∈ H :=
-  by
-  rw [Subtype.forall']
-  rfl
+theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y, x⁆ ∈ H := by
+  rw [Subtype.forall']; rfl
 #align lie_subalgebra.mem_normalizer_iff' LieSubalgebra.mem_normalizer_iff'
 
 theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x, y⁆ ∈ H :=

@@ -382,12 +382,8 @@ def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
     where
   Hom := ⟨f, f.Continuous⟩
   inv := ⟨f.symm, f.symm.Continuous⟩
-  hom_inv_id' := by
-    ext x
-    exact f.symm_apply_apply x
-  inv_hom_id' := by
-    ext x
-    exact f.apply_symm_apply x
+  hom_inv_id' := by ext x; exact f.symm_apply_apply x
+  inv_hom_id' := by ext x; exact f.apply_symm_apply x
 #align Profinite.iso_of_homeo Profinite.isoOfHomeo
 -/
 
@@ -397,12 +393,8 @@ def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
 def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
   toFun := f.Hom
   invFun := f.inv
-  left_inv x := by
-    change (f.hom ≫ f.inv) x = x
-    rw [iso.hom_inv_id, coe_id, id.def]
-  right_inv x := by
-    change (f.inv ≫ f.hom) x = x
-    rw [iso.inv_hom_id, coe_id, id.def]
+  left_inv x := by change (f.hom ≫ f.inv) x = x; rw [iso.hom_inv_id, coe_id, id.def]
+  right_inv x := by change (f.inv ≫ f.hom) x = x; rw [iso.inv_hom_id, coe_id, id.def]
   continuous_toFun := f.Hom.Continuous
   continuous_invFun := f.inv.Continuous
 #align Profinite.homeo_of_iso Profinite.homeoOfIso
@@ -416,12 +408,8 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y)
     where
   toFun := homeoOfIso
   invFun := isoOfHomeo
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
 #align Profinite.iso_equiv_homeo Profinite.isoEquivHomeo
 -/
 
@@ -435,15 +423,11 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
   by
   constructor
   · contrapose!
-    rintro ⟨y, hy⟩ hf
-    skip
+    rintro ⟨y, hy⟩ hf; skip
     let C := Set.range f
     have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
     let U := Cᶜ
-    have hyU : y ∈ U := by
-      refine' Set.mem_compl _
-      rintro ⟨y', hy'⟩
-      exact hy y' hy'
+    have hyU : y ∈ U := by refine' Set.mem_compl _; rintro ⟨y', hy'⟩; exact hy y' hy'
     have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
@@ -452,10 +436,8 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
       let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
       have H : h = g := by
         rw [← cancel_epi f]
-        ext x
-        dsimp [LocallyConstant.ofClopen]
-        rw [if_neg]
-        · rfl
+        ext x; dsimp [LocallyConstant.ofClopen]
+        rw [if_neg]; · rfl
         refine' mt (fun α => hVU α) _
         simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
       apply_fun fun e => (e y).down  at H

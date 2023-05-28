@@ -452,8 +452,7 @@ theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ
   change (to_pnat' _ : ℕ) = ite _ _ _
   split_ifs with h
   · exact to_pnat'_coe (tsub_pos_of_lt h)
-  · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]
-    rfl
+  · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]; rfl
 #align pnat.sub_coe PNat.sub_coe
 
 /- warning: pnat.add_sub_of_lt -> PNat.add_sub_of_lt is a dubious translation:
@@ -537,9 +536,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pnat.rec_on_succ PNat.recOn_succₓ'. -/
 @[simp]
 theorem recOn_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) :
-    @PNat.recOn (n + 1) p p1 hp = hp n (@PNat.recOn n p p1 hp) :=
-  by
-  cases' n with n h
+    @PNat.recOn (n + 1) p p1 hp = hp n (@PNat.recOn n p p1 hp) := by cases' n with n h;
   cases n <;> [exact absurd h (by decide);rfl]
 #align pnat.rec_on_succ PNat.recOn_succ
 
@@ -562,8 +559,7 @@ theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m :=
   let h₀ := Nat.mod_add_div (m : ℕ) (k : ℕ)
   have : ¬((m : ℕ) % (k : ℕ) = 0 ∧ (m : ℕ) / (k : ℕ) = 0) :=
     by
-    rintro ⟨hr, hq⟩
-    rw [hr, hq, MulZeroClass.mul_zero, zero_add] at h₀
+    rintro ⟨hr, hq⟩; rw [hr, hq, MulZeroClass.mul_zero, zero_add] at h₀
     exact (m.ne_zero h₀.symm).elim
   have := mod_div_aux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this
   exact this.trans h₀
@@ -577,17 +573,13 @@ theorem div_add_mod (m k : ℕ+) : (k * div m k + mod m k : ℕ) = m :=
 -/
 
 #print PNat.mod_add_div' /-
-theorem mod_add_div' (m k : ℕ+) : (mod m k + div m k * k : ℕ) = m :=
-  by
-  rw [mul_comm]
+theorem mod_add_div' (m k : ℕ+) : (mod m k + div m k * k : ℕ) = m := by rw [mul_comm];
   exact mod_add_div _ _
 #align pnat.mod_add_div' PNat.mod_add_div'
 -/
 
 #print PNat.div_add_mod' /-
-theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m :=
-  by
-  rw [mul_comm]
+theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by rw [mul_comm];
   exact div_add_mod _ _
 #align pnat.div_add_mod' PNat.div_add_mod'
 -/
@@ -605,11 +597,9 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
   · have hm : (m : ℕ) > 0 := m.pos
     rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm⊢
     by_cases h' : (m : ℕ) / (k : ℕ) = 0
-    · rw [h', MulZeroClass.mul_zero] at hm
-      exact (lt_irrefl _ hm).elim
+    · rw [h', MulZeroClass.mul_zero] at hm; exact (lt_irrefl _ hm).elim
     · let h' := Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h'))
-      rw [mul_one] at h'
-      exact ⟨h', le_refl (k : ℕ)⟩
+      rw [mul_one] at h'; exact ⟨h', le_refl (k : ℕ)⟩
   · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
 #align pnat.mod_le PNat.mod_le
 
@@ -617,9 +607,7 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) :=
   by
   constructor <;> intro h; rcases h with ⟨_, rfl⟩; apply dvd_mul_right
-  rcases h with ⟨a, h⟩; cases a;
-  · contrapose h
-    apply NeZero
+  rcases h with ⟨a, h⟩; cases a; · contrapose h; apply NeZero
   use a.succ; apply Nat.succ_pos; rw [← coe_inj, h, mul_coe, mk_coe]
 #align pnat.dvd_iff PNat.dvd_iff
 -/
@@ -629,11 +617,8 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
   by
   rw [dvd_iff]
   rw [Nat.dvd_iff_mod_eq_zero]; constructor
-  · intro h
-    apply Eq
-    rw [mod_coe, if_pos h]
-  · intro h
-    by_cases h' : (m : ℕ) % (k : ℕ) = 0
+  · intro h; apply Eq; rw [mod_coe, if_pos h]
+  · intro h; by_cases h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
     · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
       rw [mod_coe, if_neg h'] at h
@@ -647,11 +632,7 @@ lean 3 declaration is
 but is expected to have type
   forall {m : PNat} {n : PNat}, (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) m n) -> (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) m n)
 Case conversion may be inaccurate. Consider using '#align pnat.le_of_dvd PNat.le_of_dvdₓ'. -/
-theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n :=
-  by
-  rw [dvd_iff']
-  intro h
-  rw [← h]
+theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by rw [dvd_iff']; intro h; rw [← h];
   apply (mod_le n m).left
 #align pnat.le_of_dvd PNat.le_of_dvd
 

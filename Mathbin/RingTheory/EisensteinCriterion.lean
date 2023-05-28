@@ -46,8 +46,7 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
     · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg,
         MulZeroClass.mul_zero]
-      rintro rfl
-      exact not_lt_of_ge degree_le_nat_degree h
+      rintro rfl; exact not_lt_of_ge degree_le_nat_degree h
     · have : nat_degree f = n := nat_degree_eq_of_degree_eq_some h.symm
       rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_one, leading_coeff, this, coeff_map]
     · rw [coeff_eq_zero_of_degree_lt, coeff_eq_zero_of_degree_lt]

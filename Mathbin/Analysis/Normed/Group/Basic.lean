@@ -674,10 +674,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedGroup.{u1} E] (a : E), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align norm_nonneg' norm_nonneg'ₓ'. -/
 @[simp, to_additive norm_nonneg]
-theorem norm_nonneg' (a : E) : 0 ≤ ‖a‖ :=
-  by
-  rw [← dist_one_right]
-  exact dist_nonneg
+theorem norm_nonneg' (a : E) : 0 ≤ ‖a‖ := by rw [← dist_one_right]; exact dist_nonneg
 #align norm_nonneg' norm_nonneg'
 #align norm_nonneg norm_nonneg
 
@@ -714,9 +711,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne_one_of_norm_ne_zero ne_one_of_norm_ne_zeroₓ'. -/
 @[to_additive]
 theorem ne_one_of_norm_ne_zero : ‖a‖ ≠ 0 → a ≠ 1 :=
-  mt <| by
-    rintro rfl
-    exact norm_one'
+  mt <| by rintro rfl; exact norm_one'
 #align ne_one_of_norm_ne_zero ne_one_of_norm_ne_zero
 #align ne_zero_of_norm_ne_zero ne_zero_of_norm_ne_zero
 
@@ -776,9 +771,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedGroup.{u1} E] (a : E) (b : E), LE.le.{0} Real Real.instLEReal (Dist.dist.{u1} E (PseudoMetricSpace.toDist.{u1} E (SeminormedGroup.toPseudoMetricSpace.{u1} E _inst_1)) a b) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) a) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) b))
 Case conversion may be inaccurate. Consider using '#align dist_le_norm_mul_norm dist_le_norm_mul_normₓ'. -/
 @[to_additive]
-theorem dist_le_norm_mul_norm (a b : E) : dist a b ≤ ‖a‖ + ‖b‖ :=
-  by
-  rw [dist_eq_norm_div]
+theorem dist_le_norm_mul_norm (a b : E) : dist a b ≤ ‖a‖ + ‖b‖ := by rw [dist_eq_norm_div];
   apply norm_div_le
 #align dist_le_norm_mul_norm dist_le_norm_mul_norm
 #align dist_le_norm_add_norm dist_le_norm_add_norm
@@ -826,11 +819,8 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedGroup.{u1} E] (u : E) (v : E), LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) u) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) v) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) (HDiv.hDiv.{u1, u1, u1} E E E (instHDiv.{u1} E (DivInvMonoid.toDiv.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E _inst_1)))) u v)))
 Case conversion may be inaccurate. Consider using '#align norm_le_norm_add_norm_div' norm_le_norm_add_norm_div'ₓ'. -/
 @[to_additive]
-theorem norm_le_norm_add_norm_div' (u v : E) : ‖u‖ ≤ ‖v‖ + ‖u / v‖ :=
-  by
-  rw [add_comm]
-  refine' (norm_mul_le' _ _).trans_eq' _
-  rw [div_mul_cancel']
+theorem norm_le_norm_add_norm_div' (u v : E) : ‖u‖ ≤ ‖v‖ + ‖u / v‖ := by rw [add_comm];
+  refine' (norm_mul_le' _ _).trans_eq' _; rw [div_mul_cancel']
 #align norm_le_norm_add_norm_div' norm_le_norm_add_norm_div'
 #align norm_le_norm_add_norm_sub' norm_le_norm_add_norm_sub'
 
@@ -841,9 +831,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedGroup.{u1} E] (u : E) (v : E), LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) v) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) u) (Norm.norm.{u1} E (SeminormedGroup.toNorm.{u1} E _inst_1) (HDiv.hDiv.{u1, u1, u1} E E E (instHDiv.{u1} E (DivInvMonoid.toDiv.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E _inst_1)))) u v)))
 Case conversion may be inaccurate. Consider using '#align norm_le_norm_add_norm_div norm_le_norm_add_norm_divₓ'. -/
 @[to_additive]
-theorem norm_le_norm_add_norm_div (u v : E) : ‖v‖ ≤ ‖u‖ + ‖u / v‖ :=
-  by
-  rw [norm_div_rev]
+theorem norm_le_norm_add_norm_div (u v : E) : ‖v‖ ≤ ‖u‖ + ‖u / v‖ := by rw [norm_div_rev];
   exact norm_le_norm_add_norm_div' v u
 #align norm_le_norm_add_norm_div norm_le_norm_add_norm_div
 #align norm_le_norm_add_norm_sub norm_le_norm_add_norm_sub
@@ -1193,9 +1181,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_comm_group.nhds_basis_norm_lt NormedCommGroup.nhds_basis_norm_ltₓ'. -/
 @[to_additive]
 theorem NormedCommGroup.nhds_basis_norm_lt (x : E) :
-    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y / x‖ < ε } :=
-  by
-  simp_rw [← ball_eq']
+    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y / x‖ < ε } := by simp_rw [← ball_eq'];
   exact Metric.nhds_basis_ball
 #align normed_comm_group.nhds_basis_norm_lt NormedCommGroup.nhds_basis_norm_lt
 #align normed_add_comm_group.nhds_basis_norm_lt NormedAddCommGroup.nhds_basis_norm_lt
@@ -1208,10 +1194,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_comm_group.nhds_one_basis_norm_lt NormedCommGroup.nhds_one_basis_norm_ltₓ'. -/
 @[to_additive]
 theorem NormedCommGroup.nhds_one_basis_norm_lt :
-    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y‖ < ε } :=
-  by
-  convert NormedCommGroup.nhds_basis_norm_lt (1 : E)
-  simp
+    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y‖ < ε } := by
+  convert NormedCommGroup.nhds_basis_norm_lt (1 : E); simp
 #align normed_comm_group.nhds_one_basis_norm_lt NormedCommGroup.nhds_one_basis_norm_lt
 #align normed_add_comm_group.nhds_zero_basis_norm_lt NormedAddCommGroup.nhds_zero_basis_norm_lt
 
@@ -1223,10 +1207,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_comm_group.uniformity_basis_dist NormedCommGroup.uniformity_basis_distₓ'. -/
 @[to_additive]
 theorem NormedCommGroup.uniformity_basis_dist :
-    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : E × E | ‖p.fst / p.snd‖ < ε } :=
-  by
-  convert Metric.uniformity_basis_dist
-  simp [dist_eq_norm_div]
+    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : E × E | ‖p.fst / p.snd‖ < ε } := by
+  convert Metric.uniformity_basis_dist; simp [dist_eq_norm_div]
 #align normed_comm_group.uniformity_basis_dist NormedCommGroup.uniformity_basis_dist
 #align normed_add_comm_group.uniformity_basis_dist NormedAddCommGroup.uniformity_basis_dist
 
@@ -1477,9 +1459,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne_one_of_nnnorm_ne_zero ne_one_of_nnnorm_ne_zeroₓ'. -/
 @[to_additive]
 theorem ne_one_of_nnnorm_ne_zero {a : E} : ‖a‖₊ ≠ 0 → a ≠ 1 :=
-  mt <| by
-    rintro rfl
-    exact nnnorm_one'
+  mt <| by rintro rfl; exact nnnorm_one'
 #align ne_one_of_nnnorm_ne_zero ne_one_of_nnnorm_ne_zero
 #align ne_zero_of_nnnorm_ne_zero ne_zero_of_nnnorm_ne_zero
 
@@ -1679,10 +1659,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_iff_norm_tendsto_one tendsto_iff_norm_tendsto_oneₓ'. -/
 @[to_additive]
 theorem tendsto_iff_norm_tendsto_one {f : α → E} {a : Filter α} {b : E} :
-    Tendsto f a (𝓝 b) ↔ Tendsto (fun e => ‖f e / b‖) a (𝓝 0) :=
-  by
-  convert tendsto_iff_dist_tendsto_zero
-  simp [dist_eq_norm_div]
+    Tendsto f a (𝓝 b) ↔ Tendsto (fun e => ‖f e / b‖) a (𝓝 0) := by
+  convert tendsto_iff_dist_tendsto_zero; simp [dist_eq_norm_div]
 #align tendsto_iff_norm_tendsto_one tendsto_iff_norm_tendsto_one
 #align tendsto_iff_norm_tendsto_zero tendsto_iff_norm_tendsto_zero
 
@@ -1694,9 +1672,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_one_iff_norm_tendsto_one tendsto_one_iff_norm_tendsto_oneₓ'. -/
 @[to_additive]
 theorem tendsto_one_iff_norm_tendsto_one {f : α → E} {a : Filter α} :
-    Tendsto f a (𝓝 1) ↔ Tendsto (fun e => ‖f e‖) a (𝓝 0) :=
-  by
-  rw [tendsto_iff_norm_tendsto_one]
+    Tendsto f a (𝓝 1) ↔ Tendsto (fun e => ‖f e‖) a (𝓝 0) := by rw [tendsto_iff_norm_tendsto_one];
   simp only [div_one]
 #align tendsto_one_iff_norm_tendsto_one tendsto_one_iff_norm_tendsto_one
 #align tendsto_zero_iff_norm_tendsto_zero tendsto_zero_iff_norm_tendsto_zero
@@ -2462,9 +2438,7 @@ Case conversion may be inaccurate. Consider using '#align dist_prod_prod_le_of_l
 @[to_additive]
 theorem dist_prod_prod_le_of_le (s : Finset ι) {f a : ι → E} {d : ι → ℝ}
     (h : ∀ b ∈ s, dist (f b) (a b) ≤ d b) : dist (∏ b in s, f b) (∏ b in s, a b) ≤ ∑ b in s, d b :=
-  by
-  simp only [dist_eq_norm_div, ← Finset.prod_div_distrib] at *
-  exact norm_prod_le_of_le s h
+  by simp only [dist_eq_norm_div, ← Finset.prod_div_distrib] at *; exact norm_prod_le_of_le s h
 #align dist_prod_prod_le_of_le dist_prod_prod_le_of_le
 #align dist_sum_sum_le_of_le dist_sum_sum_le_of_le
 
@@ -2512,9 +2486,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (a : E) (b : E) (r : Real), Eq.{succ u1} (Set.{u1} E) (Set.preimage.{u1, u1} E E ((fun (x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16387 : E) (x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16389 : E) => HMul.hMul.{u1, u1, u1} E E E (instHMul.{u1} E (MulOneClass.toMul.{u1} E (Monoid.toMulOneClass.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))))) x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16387 x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16389) b) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) a r)) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HDiv.hDiv.{u1, u1, u1} E E E (instHDiv.{u1} E (DivInvMonoid.toDiv.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))) a b) r)
 Case conversion may be inaccurate. Consider using '#align preimage_mul_ball preimage_mul_ballₓ'. -/
 @[simp, to_additive]
-theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ball a r = ball (a / b) r :=
-  by
-  ext c
+theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ball a r = ball (a / b) r := by ext c;
   simp only [dist_eq_norm_div, Set.mem_preimage, mem_ball, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_ball preimage_mul_ball
 #align preimage_add_ball preimage_add_ball
@@ -2541,10 +2513,8 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (a : E) (b : E) (r : Real), Eq.{succ u1} (Set.{u1} E) (Set.preimage.{u1, u1} E E ((fun (x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16539 : E) (x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16541 : E) => HMul.hMul.{u1, u1, u1} E E E (instHMul.{u1} E (MulOneClass.toMul.{u1} E (Monoid.toMulOneClass.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))))) x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16539 x._@.Mathlib.Analysis.Normed.Group.Basic._hyg.16541) b) (Metric.sphere.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) a r)) (Metric.sphere.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HDiv.hDiv.{u1, u1, u1} E E E (instHDiv.{u1} E (DivInvMonoid.toDiv.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))) a b) r)
 Case conversion may be inaccurate. Consider using '#align preimage_mul_sphere preimage_mul_sphereₓ'. -/
 @[simp, to_additive]
-theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r = sphere (a / b) r :=
-  by
-  ext c
-  simp only [Set.mem_preimage, mem_sphere_iff_norm', div_div_eq_mul_div, mul_comm]
+theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r = sphere (a / b) r := by
+  ext c; simp only [Set.mem_preimage, mem_sphere_iff_norm', div_div_eq_mul_div, mul_comm]
 #align preimage_mul_sphere preimage_mul_sphere
 #align preimage_add_sphere preimage_add_sphere
 
@@ -2601,9 +2571,7 @@ theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ bal
   by
   simp only [mem_ball, dist_eq_norm_div, ← div_pow] at h⊢
   refine' lt_of_le_of_lt (norm_pow_le_mul_norm n (a / b)) _
-  replace hn : 0 < (n : ℝ);
-  · norm_cast
-    assumption
+  replace hn : 0 < (n : ℝ); · norm_cast; assumption
   rw [nsmul_eq_mul]
   nlinarith
 #align pow_mem_ball pow_mem_ball
@@ -2640,9 +2608,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real}, Eq.{succ u1} (Set.{u1} E) (HSMul.hSMul.{u1, u1, u1} E (Set.{u1} E) (Set.{u1} E) (instHSMul.{u1, u1} E (Set.{u1} E) (Set.smulSet.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))))) a (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HSMul.hSMul.{u1, u1, u1} E E E (instHSMul.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))))) a b) r)
 Case conversion may be inaccurate. Consider using '#align smul_closed_ball'' smul_closedBall''ₓ'. -/
 @[to_additive]
-theorem smul_closedBall'' : a • closedBall b r = closedBall (a • b) r :=
-  by
-  ext
+theorem smul_closedBall'' : a • closedBall b r = closedBall (a • b) r := by ext;
   simp [mem_closed_ball, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ←
     eq_inv_mul_iff_mul_eq, mul_assoc]
 #align smul_closed_ball'' smul_closedBall''
@@ -2655,9 +2621,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] {a : E} {b : E} {r : Real}, Eq.{succ u1} (Set.{u1} E) (HSMul.hSMul.{u1, u1, u1} E (Set.{u1} E) (Set.{u1} E) (instHSMul.{u1, u1} E (Set.{u1} E) (Set.smulSet.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))))) a (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) b r)) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (HSMul.hSMul.{u1, u1, u1} E E E (instHSMul.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1))))))) a b) r)
 Case conversion may be inaccurate. Consider using '#align smul_ball'' smul_ball''ₓ'. -/
 @[to_additive]
-theorem smul_ball'' : a • ball b r = ball (a • b) r :=
-  by
-  ext
+theorem smul_ball'' : a • ball b r = ball (a • b) r := by ext;
   simp [mem_ball, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ← eq_inv_mul_iff_mul_eq,
     mul_assoc]
 #align smul_ball'' smul_ball''
@@ -2701,8 +2665,7 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
       apply u_in
     · apply s.div_mem <;> apply u_in
   · intro l hl
-    obtain ⟨k, rfl⟩ : ∃ k, l = k + 1
-    exact Nat.exists_eq_succ_of_ne_zero hl.ne'
+    obtain ⟨k, rfl⟩ : ∃ k, l = k + 1; exact Nat.exists_eq_succ_of_ne_zero hl.ne'
     apply hφ
 #align controlled_prod_of_mem_closure controlled_prod_of_mem_closure
 #align controlled_sum_of_mem_closure controlled_sum_of_mem_closure
@@ -2746,10 +2709,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align edist_mul_mul_le edist_mul_mul_leₓ'. -/
 @[to_additive]
 theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
-    edist (a₁ * a₂) (b₁ * b₂) ≤ edist a₁ b₁ + edist a₂ b₂ :=
-  by
-  simp only [edist_nndist]
-  norm_cast
+    edist (a₁ * a₂) (b₁ * b₂) ≤ edist a₁ b₁ + edist a₂ b₂ := by simp only [edist_nndist]; norm_cast;
   apply nndist_mul_mul_le
 #align edist_mul_mul_le edist_mul_mul_le
 #align edist_add_add_le edist_add_add_le
@@ -2762,10 +2722,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnnorm_multiset_prod_le nnnorm_multiset_prod_leₓ'. -/
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
-  NNReal.coe_le_coe.1 <| by
-    push_cast
-    rw [Multiset.map_map]
-    exact norm_multiset_prod_le _
+  NNReal.coe_le_coe.1 <| by push_cast ; rw [Multiset.map_map]; exact norm_multiset_prod_le _
 #align nnnorm_multiset_prod_le nnnorm_multiset_prod_le
 #align nnnorm_multiset_sum_le nnnorm_multiset_sum_le
 
@@ -2777,9 +2734,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnnorm_prod_le nnnorm_prod_leₓ'. -/
 @[to_additive]
 theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊ ≤ ∑ a in s, ‖f a‖₊ :=
-  NNReal.coe_le_coe.1 <| by
-    push_cast
-    exact norm_prod_le _ _
+  NNReal.coe_le_coe.1 <| by push_cast ; exact norm_prod_le _ _
 #align nnnorm_prod_le nnnorm_prod_le
 #align nnnorm_sum_le nnnorm_sum_le
 
@@ -3219,9 +3174,7 @@ theorem cauchySeq_prod_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀ n
     CauchySeq fun n => ∏ k in range (n + 1), u k :=
   by
   let d : ℕ → E := fun n => ∏ k in range (n + 1), u k / v k
-  rw [show (fun n => ∏ k in range (n + 1), u k) = d * fun n => ∏ k in range (n + 1), v k
-      by
-      ext n
+  rw [show (fun n => ∏ k in range (n + 1), u k) = d * fun n => ∏ k in range (n + 1), v k by ext n;
       simp [d]]
   suffices ∀ n ≥ N, d n = d N by exact (tendsto_atTop_of_eventually_const this).CauchySeq.mul hv
   intro n hn
@@ -3305,9 +3258,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : NormedGroup.{u1} E] {a : E} {b : E}, Iff (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Norm.norm.{u1} E (NormedGroup.toNorm.{u1} E _inst_1) (HDiv.hDiv.{u1, u1, u1} E E E (instHDiv.{u1} E (DivInvMonoid.toDiv.{u1} E (Group.toDivInvMonoid.{u1} E (NormedGroup.toGroup.{u1} E _inst_1)))) a b))) (Ne.{succ u1} E a b)
 Case conversion may be inaccurate. Consider using '#align norm_div_pos_iff norm_div_pos_iffₓ'. -/
 @[to_additive]
-theorem norm_div_pos_iff : 0 < ‖a / b‖ ↔ a ≠ b :=
-  by
-  rw [(norm_nonneg' _).lt_iff_ne, ne_comm]
+theorem norm_div_pos_iff : 0 < ‖a / b‖ ↔ a ≠ b := by rw [(norm_nonneg' _).lt_iff_ne, ne_comm];
   exact norm_div_eq_zero_iff.not
 #align norm_div_pos_iff norm_div_pos_iff
 #align norm_sub_pos_iff norm_sub_pos_iff

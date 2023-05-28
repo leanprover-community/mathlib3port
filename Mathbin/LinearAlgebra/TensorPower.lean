@@ -248,10 +248,8 @@ def algebraMap₀ : R ≃ₗ[R] (⨂[R]^0) M :=
   LinearEquiv.symm <| isEmptyEquiv (Fin 0)
 #align tensor_power.algebra_map₀ TensorPower.algebraMap₀
 
-theorem algebraMap₀_eq_smul_one (r : R) : (algebraMap₀ r : (⨂[R]^0) M) = r • ₜ1 :=
-  by
-  simp [algebra_map₀]
-  congr
+theorem algebraMap₀_eq_smul_one (r : R) : (algebraMap₀ r : (⨂[R]^0) M) = r • ₜ1 := by
+  simp [algebra_map₀]; congr
 #align tensor_power.algebra_map₀_eq_smul_one TensorPower.algebraMap₀_eq_smul_one
 
 theorem algebraMap₀_one : (algebraMap₀ 1 : (⨂[R]^0) M) = ₜ1 :=

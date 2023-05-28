@@ -170,9 +170,7 @@ def TerminatedAt (g : GeneralizedContinuedFraction α) (n : ℕ) : Prop :=
 #print GeneralizedContinuedFraction.terminatedAtDecidable /-
 /-- It is decidable whether a gcf terminated at a given position. -/
 instance terminatedAtDecidable (g : GeneralizedContinuedFraction α) (n : ℕ) :
-    Decidable (g.TerminatedAt n) := by
-  unfold terminated_at
-  infer_instance
+    Decidable (g.TerminatedAt n) := by unfold terminated_at; infer_instance
 #align generalized_continued_fraction.terminated_at_decidable GeneralizedContinuedFraction.terminatedAtDecidable
 -/
 
@@ -271,10 +269,8 @@ instance : Inhabited (SimpleContinuedFraction α) :=
 
 /-- Lift a scf to a gcf using the inclusion map. -/
 instance hasCoeToGeneralizedContinuedFraction :
-    Coe (SimpleContinuedFraction α) (GeneralizedContinuedFraction α) :=
-  by
-  unfold SimpleContinuedFraction
-  infer_instance
+    Coe (SimpleContinuedFraction α) (GeneralizedContinuedFraction α) := by
+  unfold SimpleContinuedFraction; infer_instance
 #align simple_continued_fraction.has_coe_to_generalized_continued_fraction SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 /- warning: simple_continued_fraction.coe_to_generalized_continued_fraction clashes with [anonymous] -> [anonymous]
@@ -336,9 +332,7 @@ instance : Inhabited (ContinuedFraction α) :=
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleContinuedFraction α) :=
-  by
-  unfold ContinuedFraction
-  infer_instance
+  by unfold ContinuedFraction; infer_instance
 #align continued_fraction.has_coe_to_simple_continued_fraction ContinuedFraction.hasCoeToSimpleContinuedFraction
 
 /- warning: continued_fraction.coe_to_simple_continued_fraction clashes with [anonymous] -> [anonymous]
@@ -497,10 +491,7 @@ namespace GeneralizedContinuedFraction
 #print GeneralizedContinuedFraction.ext_iff /-
 /-- Two gcfs `g` and `g'` are equal if and only if their components are equal. -/
 protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
-    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by
-  cases g
-  cases g'
-  simp
+    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by cases g; cases g'; simp
 #align generalized_continued_fraction.ext_iff GeneralizedContinuedFraction.ext_iff
 -/
 

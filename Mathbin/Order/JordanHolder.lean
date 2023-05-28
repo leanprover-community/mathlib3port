@@ -623,9 +623,7 @@ Case conversion may be inaccurate. Consider using '#align composition_series.app
 theorem append_castAdd_aux (i : Fin m) :
     Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSucc) b (Fin.castAdd n i).cast_succ =
       a i.cast_succ :=
-  by
-  cases i
-  simp [Matrix.vecAppend_eq_ite, *]
+  by cases i; simp [Matrix.vecAppend_eq_ite, *]
 #align composition_series.append_cast_add_aux CompositionSeries.append_castAdd_aux
 
 /- warning: composition_series.append_succ_cast_add_aux -> CompositionSeries.append_succ_castAdd_aux is a dubious translation:
@@ -802,16 +800,12 @@ theorem mem_snoc {s : CompositionSeries X} {x y : X} {hsat : IsMaximal s.top x} 
   constructor
   · rintro ⟨i, rfl⟩
     refine' Fin.lastCases _ (fun i => _) i
-    · right
-      simp
-    · left
-      simp
+    · right; simp
+    · left; simp
   · intro h
     rcases h with (⟨i, rfl⟩ | rfl)
-    · use i.cast_succ
-      simp
-    · use Fin.last _
-      simp
+    · use i.cast_succ; simp
+    · use Fin.last _; simp
 #align composition_series.mem_snoc CompositionSeries.mem_snoc
 -/
 

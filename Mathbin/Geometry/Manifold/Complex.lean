@@ -69,7 +69,7 @@ protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ
   -- otherwise, let `p₀` be a point where the value of `f` has maximal norm
   obtain ⟨p₀, hp₀s, hp₀⟩ := hs₁.exists_forall_ge hs' hf.continuous.norm.continuous_on
   -- we will show `f` agrees everywhere with `f p₀`
-  suffices s ⊆ { r : M | f r = f p₀ } ∩ s by exact (this hb).1.trans (this ha).1.symm
+  suffices s ⊆ { r : M | f r = f p₀ } ∩ s by exact (this hb).1.trans (this ha).1.symm;
   clear ha hb a b
   refine' hs₂.subset_clopen _ ⟨p₀, hp₀s, ⟨rfl, hp₀s⟩⟩
   -- closedness of the set of points sent to `f p₀`

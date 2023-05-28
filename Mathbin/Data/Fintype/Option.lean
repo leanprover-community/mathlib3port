@@ -121,9 +121,7 @@ theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
     @trunc_rec_empty_option (fun α => ∀ h, @P α h) (fun α β e hα hβ => @of_equiv α β hβ e (hα _))
       (fun _i => by convert h_empty) _ α _ (Classical.decEq α)
   · exact p _
-  · rintro α hα - Pα hα'
-    skip
-    convert h_option α (Pα _)
+  · rintro α hα - Pα hα'; skip; convert h_option α (Pα _)
 #align fintype.induction_empty_option Fintype.induction_empty_option
 
 end Fintype

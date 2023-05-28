@@ -136,10 +136,8 @@ theorem MeasureTheory.AEStronglyMeasurable.memℒp_truncation [FiniteMeasure μ]
 #align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AEStronglyMeasurable.memℒp_truncation
 
 theorem MeasureTheory.AEStronglyMeasurable.integrable_truncation [FiniteMeasure μ]
-    (hf : AEStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable]
-  exact hf.mem_ℒp_truncation
+    (hf : AEStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ := by
+  rw [← mem_ℒp_one_iff_integrable]; exact hf.mem_ℒp_truncation
 #align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AEStronglyMeasurable.integrable_truncation
 
 theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
@@ -263,10 +261,8 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range, lt_min_iff] at hij
           simp only [hij, Nat.lt_succ_iff.1 hij.2.1, mem_sigma, mem_range, mem_Ico, and_self_iff]
-        · rintro ⟨i, j⟩ hij
-          rfl
-        · rintro ⟨i, j⟩ hij
-          rfl
+        · rintro ⟨i, j⟩ hij; rfl
+        · rintro ⟨i, j⟩ hij; rfl
       _ ≤ ∑ i in range N, (i + 1) * ∫ x in i..(i + 1 : ℕ), (1 : ℝ) ∂ρ :=
         by
         apply sum_le_sum fun i hi => _
@@ -400,10 +396,8 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       · rintro ⟨i, j⟩ hij
         simp only [mem_sigma, mem_range, mem_Ioo] at hij
         simp only [hij, mem_sigma, mem_range, and_self_iff]
-      · rintro ⟨i, j⟩ hij
-        rfl
-      · rintro ⟨i, j⟩ hij
-        rfl
+      · rintro ⟨i, j⟩ hij; rfl
+      · rintro ⟨i, j⟩ hij; rfl
     _ ≤ ∑ k in range K, 2 / (k + 1) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ :=
       by
       apply sum_le_sum fun k hk => _
@@ -532,10 +526,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range, mem_filter] at hij
           simp only [hij.2.1, hij.2.2, mem_sigma, mem_range, and_self_iff]
-        · rintro ⟨i, j⟩ hij
-          rfl
-        · rintro ⟨i, j⟩ hij
-          rfl
+        · rintro ⟨i, j⟩ hij; rfl
+        · rintro ⟨i, j⟩ hij; rfl
       _ ≤ ∑ j in range (u (N - 1)), c ^ 5 * (c - 1)⁻¹ ^ 3 / j ^ 2 * Var[Y j] :=
         by
         apply sum_le_sum fun j hj => _
@@ -547,10 +539,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         convert sum_div_nat_floor_pow_sq_le_div_sq N (Nat.cast_pos.2 hj) c_one
         · simp only [Nat.cast_lt]
         · simp only [one_div]
-      _ = c ^ 5 * (c - 1)⁻¹ ^ 3 * ∑ j in range (u (N - 1)), ((j : ℝ) ^ 2)⁻¹ * Var[Y j] :=
-        by
-        simp_rw [mul_sum, div_eq_mul_inv]
-        ring_nf
+      _ = c ^ 5 * (c - 1)⁻¹ ^ 3 * ∑ j in range (u (N - 1)), ((j : ℝ) ^ 2)⁻¹ * Var[Y j] := by
+        simp_rw [mul_sum, div_eq_mul_inv]; ring_nf
       _ ≤ c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0]) :=
         by
         apply mul_le_mul_of_nonneg_left (I1 _)

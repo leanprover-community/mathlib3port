@@ -75,9 +75,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
     apply s.exists_min_image fun z => f z / g z
     obtain ⟨x, hx, hgx⟩ : ∃ x ∈ t, 0 < g x := gpos
     exact ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩
-  have hg : 0 < g i₀ := by
-    rw [mem_filter] at mem
-    exact mem.2
+  have hg : 0 < g i₀ := by rw [mem_filter] at mem; exact mem.2
   have hi₀ : i₀ ∈ t := filter_subset _ _ mem
   let k : E → 𝕜 := fun z => f z - f i₀ / g i₀ * g z
   have hk : k i₀ = 0 := by field_simp [k, ne_of_gt hg]
@@ -92,9 +90,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
     by_cases hes : e ∈ s
-    · have hge : 0 < g e := by
-        rw [mem_filter] at hes
-        exact hes.2
+    · have hge : 0 < g e := by rw [mem_filter] at hes; exact hes.2
       rw [← le_div_iff hge]
       exact w _ hes
     · calc
@@ -241,8 +237,7 @@ theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃
   let t' := t.filter fun i => w i ≠ 0
   refine' ⟨t', t'.fintype_coe_sort, (coe : t' → E), w ∘ (coe : t' → E), _, _, _, _, _⟩
-  · rw [Subtype.range_coe_subtype]
-    exact subset.trans (Finset.filter_subset _ t) ht₁
+  · rw [Subtype.range_coe_subtype]; exact subset.trans (Finset.filter_subset _ t) ht₁
   · exact ht₂.comp_embedding ⟨_, inclusion_injective (Finset.filter_subset (fun i => w i ≠ 0) t)⟩
   ·
     exact fun i =>
@@ -250,10 +245,7 @@ theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜
   · erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
   · change (∑ i : t' in t'.attach, (fun e => w e • e) ↑i) = x
     erw [Finset.sum_attach, Finset.sum_filter_of_ne]
-    · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃
-      exact hw₃
-    · intro e he hwe contra
-      apply hwe
-      rw [contra, zero_smul]
+    · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃; exact hw₃
+    · intro e he hwe contra; apply hwe; rw [contra, zero_smul]
 #align eq_pos_convex_span_of_mem_convex_hull eq_pos_convex_span_of_mem_convexHull
 

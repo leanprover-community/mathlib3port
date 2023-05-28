@@ -57,9 +57,7 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
   have to_nnreal_μ : ∀ s, ((μ s).toNNReal : ℝ≥0∞) = μ s := fun s => ENNReal.coe_toNNReal <| hμ _
   have to_nnreal_ν : ∀ s, ((ν s).toNNReal : ℝ≥0∞) = ν s := fun s => ENNReal.coe_toNNReal <| hν _
-  have d_empty : d ∅ = 0 := by
-    change _ - _ = _
-    rw [measure_empty, measure_empty, sub_self]
+  have d_empty : d ∅ = 0 := by change _ - _ = _; rw [measure_empty, measure_empty, sub_self]
   have d_split : ∀ s t, MeasurableSet s → MeasurableSet t → d s = d (s \ t) + d (s ∩ t) :=
     by
     intro s t hs ht
@@ -176,10 +174,8 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
     have : tendsto (fun n => d (f m n)) at_top (𝓝 (d (⋂ n, f m n))) :=
       by
       refine' d_Inter _ _ _
-      · intro n
-        exact hf _ _
-      · intro n m hnm
-        exact f_subset_f le_rfl hnm
+      · intro n; exact hf _ _
+      · intro n m hnm; exact f_subset_f le_rfl hnm
     refine' ge_of_tendsto this (eventually_at_top.2 ⟨m, fun n hmn => _⟩)
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_trans _ (le_d_f _ _ hmn)

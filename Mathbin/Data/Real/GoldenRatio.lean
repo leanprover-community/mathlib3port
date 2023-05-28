@@ -65,23 +65,15 @@ theorem inv_gold_conj : ψ⁻¹ = -φ :=
 #align inv_gold_conj inv_gold_conj
 
 @[simp]
-theorem gold_mul_gold_conj : φ * ψ = -1 := by
-  field_simp
-  rw [← sq_sub_sq]
-  norm_num
+theorem gold_mul_gold_conj : φ * ψ = -1 := by field_simp; rw [← sq_sub_sq]; norm_num
 #align gold_mul_gold_conj gold_mul_gold_conj
 
 @[simp]
-theorem gold_conj_mul_gold : ψ * φ = -1 := by
-  rw [mul_comm]
-  exact gold_mul_gold_conj
+theorem gold_conj_mul_gold : ψ * φ = -1 := by rw [mul_comm]; exact gold_mul_gold_conj
 #align gold_conj_mul_gold gold_conj_mul_gold
 
 @[simp]
-theorem gold_add_gold_conj : φ + ψ = 1 :=
-  by
-  rw [goldenRatio, goldenConj]
-  ring
+theorem gold_add_gold_conj : φ + ψ = 1 := by rw [goldenRatio, goldenConj]; ring
 #align gold_add_gold_conj gold_add_gold_conj
 
 theorem one_sub_gold_conj : 1 - φ = ψ := by linarith [gold_add_gold_conj]
@@ -91,10 +83,7 @@ theorem one_sub_gold : 1 - ψ = φ := by linarith [gold_add_gold_conj]
 #align one_sub_gold one_sub_gold
 
 @[simp]
-theorem gold_sub_gold_conj : φ - ψ = Real.sqrt 5 :=
-  by
-  rw [goldenRatio, goldenConj]
-  ring
+theorem gold_sub_gold_conj : φ - ψ = Real.sqrt 5 := by rw [goldenRatio, goldenConj]; ring
 #align gold_sub_gold_conj gold_sub_gold_conj
 
 @[simp]
@@ -226,9 +215,7 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
   · intro i hi
     fin_cases hi
     · simp
-    · simp only [goldenRatio, goldenConj]
-      ring
-      rw [mul_inv_cancel] <;> norm_num
+    · simp only [goldenRatio, goldenConj]; ring; rw [mul_inv_cancel] <;> norm_num
   · exact fib_is_sol_fibRec
   · ring_nf
     exact

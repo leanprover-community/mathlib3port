@@ -174,18 +174,14 @@ infixr:80 " =≫ " => eq_whisker
 infixr:80 " ≫= " => whisker_eq
 
 #print CategoryTheory.eq_of_comp_left_eq /-
-theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g :=
-  by
-  convert w (𝟙 Y)
-  tidy
+theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g := by
+  convert w (𝟙 Y); tidy
 #align category_theory.eq_of_comp_left_eq CategoryTheory.eq_of_comp_left_eq
 -/
 
 #print CategoryTheory.eq_of_comp_right_eq /-
-theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g :=
-  by
-  convert w (𝟙 Y)
-  tidy
+theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g := by
+  convert w (𝟙 Y); tidy
 #align category_theory.eq_of_comp_right_eq CategoryTheory.eq_of_comp_right_eq
 -/
 
@@ -204,18 +200,14 @@ theorem eq_of_comp_right_eq' (f g : Y ⟶ Z)
 -/
 
 #print CategoryTheory.id_of_comp_left_id /-
-theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X :=
-  by
-  convert w (𝟙 X)
-  tidy
+theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X := by
+  convert w (𝟙 X); tidy
 #align category_theory.id_of_comp_left_id CategoryTheory.id_of_comp_left_id
 -/
 
 #print CategoryTheory.id_of_comp_right_id /-
-theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X :=
-  by
-  convert w (𝟙 X)
-  tidy
+theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X := by
+  convert w (𝟙 X); tidy
 #align category_theory.id_of_comp_right_id CategoryTheory.id_of_comp_right_id
 -/
 
@@ -286,18 +278,14 @@ theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f �
 -/
 
 #print CategoryTheory.cancel_epi_id /-
-theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y :=
-  by
-  convert cancel_epi f
-  simp
+theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
+  convert cancel_epi f; simp
 #align category_theory.cancel_epi_id CategoryTheory.cancel_epi_id
 -/
 
 #print CategoryTheory.cancel_mono_id /-
-theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X :=
-  by
-  convert cancel_mono f
-  simp
+theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X := by
+  convert cancel_mono f; simp
 #align category_theory.cancel_mono_id CategoryTheory.cancel_mono_id
 -/
 
@@ -334,9 +322,7 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
 
 #print CategoryTheory.mono_of_mono_fac /-
 theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Mono h] (w : f ≫ g = h) :
-    Mono f := by
-  subst h
-  exact mono_of_mono f g
+    Mono f := by subst h; exact mono_of_mono f g
 #align category_theory.mono_of_mono_fac CategoryTheory.mono_of_mono_fac
 -/
 

@@ -113,9 +113,7 @@ theorem removeZero_coeff_succ (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
 
 #print FormalMultilinearSeries.removeZero_of_pos /-
 theorem removeZero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 0 < n) :
-    p.removeZero n = p n := by
-  rw [← Nat.succ_pred_eq_of_pos h]
-  rfl
+    p.removeZero n = p n := by rw [← Nat.succ_pred_eq_of_pos h]; rfl
 #align formal_multilinear_series.remove_zero_of_pos FormalMultilinearSeries.removeZero_of_pos
 -/
 
@@ -124,10 +122,7 @@ theorem removeZero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 
 multilinear series are equal, then the values are also equal. -/
 theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → E} {w : Fin n → E}
     (h1 : m = n) (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) :
-    p m v = p n w := by
-  cases h1
-  congr with ⟨i, hi⟩
-  exact h2 i hi hi
+    p m v = p n w := by cases h1; congr with ⟨i, hi⟩; exact h2 i hi hi
 #align formal_multilinear_series.congr FormalMultilinearSeries.congr
 -/
 

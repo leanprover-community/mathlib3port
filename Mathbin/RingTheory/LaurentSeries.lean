@@ -106,10 +106,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Eq.{succ u1} (PowerSeries.{u1} R) (LaurentSeries.powerSeriesPart.{u1} R _inst_1 (OfNat.ofNat.{u1} (LaurentSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) 0 (Zero.toOfNat0.{u1} (LaurentSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (HahnSeries.instZeroHahnSeries.{0, u1} Int R (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} (PowerSeries.{u1} R) 0 (Zero.toOfNat0.{u1} (PowerSeries.{u1} R) (PowerSeries.instZeroPowerSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align laurent_series.power_series_part_zero LaurentSeries.powerSeriesPart_zeroₓ'. -/
 @[simp]
-theorem powerSeriesPart_zero : powerSeriesPart (0 : LaurentSeries R) = 0 :=
-  by
-  ext
-  simp
+theorem powerSeriesPart_zero : powerSeriesPart (0 : LaurentSeries R) = 0 := by ext; simp
 #align laurent_series.power_series_part_zero LaurentSeries.powerSeriesPart_zero
 
 /- warning: laurent_series.power_series_part_eq_zero -> LaurentSeries.powerSeriesPart_eq_zero is a dubious translation:
@@ -328,9 +325,7 @@ theorem coe_X : ((X : PowerSeries R) : LaurentSeries R) = single 1 1 :=
 Case conversion may be inaccurate. Consider using '#align power_series.coe_smul PowerSeries.coe_smulₓ'. -/
 @[simp, norm_cast]
 theorem coe_smul {S : Type _} [Semiring S] [Module R S] (r : R) (x : PowerSeries S) :
-    ((r • x : PowerSeries S) : LaurentSeries S) = r • x :=
-  by
-  ext
+    ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by ext;
   simp [coeff_coe, coeff_smul, smul_ite]
 #align power_series.coe_smul PowerSeries.coe_smul
 

@@ -56,10 +56,7 @@ attribute [local elab_without_expected_type] congr_fun
 def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F)
     where
   lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
-  uniq := by
-    intros
-    ext (x j)
-    exact congr_fun (w j) x
+  uniq := by intros ; ext (x j); exact congr_fun (w j) x
 #align category_theory.limits.types.limit_cone_is_limit CategoryTheory.Limits.Types.limitConeIsLimit
 -/
 
@@ -175,19 +172,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.types.limit.π_mk CategoryTheory.Limits.Types.Limit.π_mkₓ'. -/
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
-    (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) : limit.π F j (Limit.mk F x h) = x j :=
-  by
-  dsimp [limit.mk]
-  simp
+    (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) : limit.π F j (Limit.mk F x h) = x j := by
+  dsimp [limit.mk]; simp
 #align category_theory.limits.types.limit.π_mk CategoryTheory.Limits.Types.Limit.π_mk
 
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j)
     (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
-    limit.π F j (Limit.mk.{v, v} F x h) = x j :=
-  by
-  dsimp [limit.mk]
-  simp
+    limit.π F j (Limit.mk.{v, v} F x h) = x j := by dsimp [limit.mk]; simp
 #align category_theory.limits.types.limit.π_mk' CategoryTheory.Limits.Types.Limit.π_mk'
 
 /- warning: category_theory.limits.types.limit_ext -> CategoryTheory.Limits.Types.limit_ext is a dubious translation:
@@ -543,8 +535,7 @@ theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimi
     dsimp at H
     rwa [eq_true_iff] at H
   refine' h.hom_ext _
-  intro j
-  ext y
+  intro j; ext y
   erw [iff_true_iff]
   exact ⟨j, y, rfl⟩
 #align category_theory.limits.types.jointly_surjective CategoryTheory.Limits.Types.jointly_surjective
@@ -640,8 +631,7 @@ noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.pt, ∃ i xi, x 
       rcases hsurj x with ⟨i, xi, rfl⟩
       use colimit.ι F i xi
       simp
-  · intro j
-    apply colimit.ι_desc
+  · intro j; apply colimit.ι_desc
 #align category_theory.limits.types.filtered_colimit.is_colimit_of CategoryTheory.Limits.Types.FilteredColimit.isColimitOf
 
 variable [IsFilteredOrEmpty J]

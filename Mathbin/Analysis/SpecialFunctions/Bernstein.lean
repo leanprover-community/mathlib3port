@@ -125,8 +125,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
   simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this
   convert this using 1
-  · congr 1
-    funext k
+  · congr 1; funext k
     rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
     congr 1
     field_simp [h]
@@ -308,9 +307,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
       -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
           _ =
           2 * ‖f‖ * δ ^ (-2 : ℤ) * x * (1 - x) / n :=
-        by
-        rw [variance npos]
-        ring
+        by rw [variance npos]; ring
       _ ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) / n :=
         ((div_le_div_right npos).mpr <| by
           refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval)

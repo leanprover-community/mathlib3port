@@ -157,9 +157,7 @@ theorem prime_def_lt' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m → m <
         ⟨fun h m2 l d => not_lt_of_ge m2 ((h l d).symm ▸ by decide), fun h l d =>
           by
           rcases m with (_ | _ | m)
-          · rw [eq_zero_of_zero_dvd d] at p2
-            revert p2
-            exact by decide
+          · rw [eq_zero_of_zero_dvd d] at p2; revert p2; exact by decide
           · rfl
           · exact (h (by decide) l).elim d⟩
 #align nat.prime_def_lt' Nat.prime_def_lt'
@@ -275,10 +273,8 @@ theorem not_prime_mul {a b : ℕ} (a1 : 1 < a) (b1 : 1 < b) : ¬Prime (a * b) :=
 -/
 
 #print Nat.not_prime_mul' /-
-theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < b) : ¬Prime n :=
-  by
-  rw [← h]
-  exact not_prime_mul h₁ h₂
+theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < b) : ¬Prime n := by
+  rw [← h]; exact not_prime_mul h₁ h₂
 #align nat.not_prime_mul' Nat.not_prime_mul'
 -/
 
@@ -291,10 +287,7 @@ theorem prime_mul_iff {a b : ℕ} : Nat.Prime (a * b) ↔ a.Prime ∧ b = 1 ∨ 
 #print Nat.Prime.dvd_iff_eq /-
 theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔ p = a :=
   by
-  refine'
-    ⟨_, by
-      rintro rfl
-      rfl⟩
+  refine' ⟨_, by rintro rfl; rfl⟩
   -- rintro ⟨j, rfl⟩ does not work, due to `nat.prime` depending on the class `irreducible`
   rintro ⟨j, hj⟩
   rw [hj] at hp⊢
@@ -378,35 +371,27 @@ theorem minFacAux_has_prop {n : ℕ} (n2 : 2 ≤ n) :
         prime_def_le_sqrt.2
           ⟨n2, fun m m2 l d => not_lt_of_ge l <| lt_of_lt_of_le (sqrt_lt.2 h) (a m m2 d)⟩
       exact ⟨n2, dvd_rfl, fun m m2 d => le_of_eq ((dvd_prime_two_le pp m2).1 d).symm⟩
-    have k2 : 2 ≤ k := by
-      subst e
-      exact by decide
+    have k2 : 2 ≤ k := by subst e; exact by decide
     by_cases dk : k ∣ n <;> simp [dk]
     · exact ⟨k2, dk, a⟩
     · refine'
         have := min_fac_lemma n k h
         min_fac_aux_has_prop (k + 2) (i + 1) (by simp [e, left_distrib]) fun m m2 d => _
       cases' Nat.eq_or_lt_of_le (a m m2 d) with me ml
-      · subst me
-        contradiction
-      apply (Nat.eq_or_lt_of_le ml).resolve_left
-      intro me
-      rw [← me, e] at d
-      change 2 * (i + 2) ∣ n at d
+      · subst me; contradiction
+      apply (Nat.eq_or_lt_of_le ml).resolve_left; intro me
+      rw [← me, e] at d; change 2 * (i + 2) ∣ n at d
       have := a _ le_rfl (dvd_of_mul_right_dvd d)
-      rw [e] at this
-      exact absurd this (by decide)termination_by' ⟨_, measure_wf fun k => sqrt n + 2 - k⟩
+      rw [e] at this; exact absurd this (by decide)termination_by'
+  ⟨_, measure_wf fun k => sqrt n + 2 - k⟩
 #align nat.min_fac_aux_has_prop Nat.minFacAux_has_prop
 -/
 
 #print Nat.minFac_has_prop /-
 theorem minFac_has_prop {n : ℕ} (n1 : n ≠ 1) : MinFacProp n (minFac n) :=
   by
-  by_cases n0 : n = 0
-  · simp [n0, min_fac_prop, GE.ge]
-  have n2 : 2 ≤ n := by
-    revert n0 n1
-    rcases n with (_ | _ | _) <;> exact by decide
+  by_cases n0 : n = 0; · simp [n0, min_fac_prop, GE.ge]
+  have n2 : 2 ≤ n := by revert n0 n1; rcases n with (_ | _ | _) <;> exact by decide
   simp [min_fac_eq]
   by_cases d2 : 2 ∣ n <;> simp [d2]
   · exact ⟨le_rfl, d2, fun k k2 d => k2⟩
@@ -544,8 +529,7 @@ theorem minFac_eq_one_iff {n : ℕ} : minFac n = 1 ↔ n = 1 :=
     have := min_fac_prime hn
     rw [h] at this
     exact not_prime_one this
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align nat.min_fac_eq_one_iff Nat.minFac_eq_one_iff
 -/
 
@@ -755,8 +739,7 @@ theorem Prime.dvd_of_dvd_pow {p m n : ℕ} (pp : Prime p) (h : p ∣ m ^ n) : p 
   by
   induction' n with n IH
   · exact pp.not_dvd_one.elim h
-  · rw [pow_succ] at h
-    exact (pp.dvd_mul.1 h).elim id IH
+  · rw [pow_succ] at h; exact (pp.dvd_mul.1 h).elim id IH
 #align nat.prime.dvd_of_dvd_pow Nat.Prime.dvd_of_dvd_pow
 -/
 

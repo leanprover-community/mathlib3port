@@ -206,10 +206,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : Mul.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_2 _inst_3] (a : M) (b : M), LE.le.{u1} (Filter.{u1} M) (Preorder.toLE.{u1} (Filter.{u1} M) (PartialOrder.toPreorder.{u1} (Filter.{u1} M) (Filter.instPartialOrderFilter.{u1} M))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} M) (Filter.{u1} M) (Filter.{u1} M) (instHMul.{u1} (Filter.{u1} M) (Filter.instMul.{u1} M _inst_3)) (nhds.{u1} M _inst_2 a) (nhds.{u1} M _inst_2 b)) (nhds.{u1} M _inst_2 (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align le_nhds_mul le_nhds_mulₓ'. -/
 @[to_additive]
-theorem le_nhds_mul (a b : M) : 𝓝 a * 𝓝 b ≤ 𝓝 (a * b) :=
-  by
-  rw [← map₂_mul, ← map_uncurry_prod, ← nhds_prod_eq]
-  exact continuous_mul.tendsto _
+theorem le_nhds_mul (a b : M) : 𝓝 a * 𝓝 b ≤ 𝓝 (a * b) := by
+  rw [← map₂_mul, ← map_uncurry_prod, ← nhds_prod_eq]; exact continuous_mul.tendsto _
 #align le_nhds_mul le_nhds_mul
 #align le_nhds_add le_nhds_add
 
@@ -316,12 +314,8 @@ def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [ContinuousMul N] [T2Sp
     where
   val := r₁
   inv := r₂
-  val_inv := by
-    symm
-    simpa using h₁.mul h₂
-  inv_val := by
-    symm
-    simpa using h₂.mul h₁
+  val_inv := by symm; simpa using h₁.mul h₂
+  inv_val := by symm; simpa using h₂.mul h₁
 #align filter.tendsto.units Filter.Tendsto.units
 #align filter.tendsto.add_units Filter.Tendsto.addUnits
 
@@ -407,13 +401,8 @@ theorem ContinuousMul.of_nhds_one {M : Type u} [Monoid M] [TopologicalSpace M]
     have key :
       (fun p : M × M => x₀ * p.1 * (p.2 * y₀)) =
         ((fun x => x₀ * x) ∘ fun x => x * y₀) ∘ uncurry (· * ·) :=
-      by
-      ext p
-      simp [uncurry, mul_assoc]
-    have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x :=
-      by
-      ext x
-      simp
+      by ext p; simp [uncurry, mul_assoc]
+    have key₂ : ((fun x => x₀ * x) ∘ fun x => y₀ * x) = fun x => x₀ * y₀ * x := by ext x; simp
     calc
       map (uncurry (· * ·)) (𝓝 (x₀, y₀)) = map (uncurry (· * ·)) (𝓝 x₀ ×ᶠ 𝓝 y₀) := by
         rw [nhds_prod_eq]
@@ -769,10 +758,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : Monoid.{u1} M] [_inst_4 : ContinuousMul.{u1} M _inst_2 (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_3))] {s : Set.{u1} M} {t : Set.{u1} M}, (IsCompact.{u1} M _inst_2 s) -> (IsCompact.{u1} M _inst_2 t) -> (IsCompact.{u1} M _inst_2 (HMul.hMul.{u1, u1, u1} (Set.{u1} M) (Set.{u1} M) (Set.{u1} M) (instHMul.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_3)))) s t))
 Case conversion may be inaccurate. Consider using '#align is_compact.mul IsCompact.mulₓ'. -/
 @[to_additive]
-theorem IsCompact.mul {s t : Set M} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s * t) :=
-  by
-  rw [← image_mul_prod]
-  exact (hs.prod ht).image continuous_mul
+theorem IsCompact.mul {s t : Set M} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s * t) := by
+  rw [← image_mul_prod]; exact (hs.prod ht).image continuous_mul
 #align is_compact.mul IsCompact.mul
 #align is_compact.add IsCompact.add
 
@@ -839,9 +826,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_pow continu
 @[continuity, to_additive]
 theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
   | 0 => by simpa using continuous_const
-  | k + 1 => by
-    simp only [pow_succ]
-    exact continuous_id.mul (continuous_pow _)
+  | k + 1 => by simp only [pow_succ]; exact continuous_id.mul (continuous_pow _)
 #align continuous_pow continuous_pow
 #align continuous_nsmul continuous_nsmul
 
@@ -1101,9 +1086,7 @@ Case conversion may be inaccurate. Consider using '#align tendsto_multiset_prod 
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :
     (∀ i ∈ s, Tendsto (f i) x (𝓝 (a i))) →
       Tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
-  by
-  rcases s with ⟨l⟩
-  simpa using tendsto_list_prod l
+  by rcases s with ⟨l⟩; simpa using tendsto_list_prod l
 #align tendsto_multiset_prod tendsto_multiset_prod
 #align tendsto_multiset_sum tendsto_multiset_sum
 
@@ -1129,10 +1112,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_multiset_prod continuous_multiset_prodₓ'. -/
 @[continuity, to_additive]
 theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
-    (∀ i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod :=
-  by
-  rcases s with ⟨l⟩
-  simpa using continuous_list_prod l
+    (∀ i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod := by
+  rcases s with ⟨l⟩; simpa using continuous_list_prod l
 #align continuous_multiset_prod continuous_multiset_prod
 #align continuous_multiset_sum continuous_multiset_sum
 
@@ -1144,10 +1125,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_on_multiset_prod continuousOn_multiset_prodₓ'. -/
 @[to_additive]
 theorem continuousOn_multiset_prod {f : ι → X → M} (s : Multiset ι) {t : Set X} :
-    (∀ i ∈ s, ContinuousOn (f i) t) → ContinuousOn (fun a => (s.map fun i => f i a).Prod) t :=
-  by
-  rcases s with ⟨l⟩
-  simpa using continuousOn_list_prod l
+    (∀ i ∈ s, ContinuousOn (f i) t) → ContinuousOn (fun a => (s.map fun i => f i a).Prod) t := by
+  rcases s with ⟨l⟩; simpa using continuousOn_list_prod l
 #align continuous_on_multiset_prod continuousOn_multiset_prod
 #align continuous_on_multiset_sum continuousOn_multiset_sum
 
@@ -1297,8 +1276,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_continuous_mul_infi continuousMul_iInfₓ'. -/
 @[to_additive]
 theorem continuousMul_iInf {ts : ι' → TopologicalSpace M} (h' : ∀ i, @ContinuousMul M (ts i) _) :
-    @ContinuousMul M (⨅ i, ts i) _ := by
-  rw [← sInf_range]
+    @ContinuousMul M (⨅ i, ts i) _ := by rw [← sInf_range];
   exact continuousMul_sInf (set.forall_range_iff.mpr h')
 #align has_continuous_mul_infi continuousMul_iInf
 #align has_continuous_add_infi continuousAdd_iInf
@@ -1311,11 +1289,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align has_continuous_mul_inf continuousMul_infₓ'. -/
 @[to_additive]
 theorem continuousMul_inf {t₁ t₂ : TopologicalSpace M} (h₁ : @ContinuousMul M t₁ _)
-    (h₂ : @ContinuousMul M t₂ _) : @ContinuousMul M (t₁ ⊓ t₂) _ :=
-  by
-  rw [inf_eq_iInf]
-  refine' continuousMul_iInf fun b => _
-  cases b <;> assumption
+    (h₂ : @ContinuousMul M t₂ _) : @ContinuousMul M (t₁ ⊓ t₂) _ := by rw [inf_eq_iInf];
+  refine' continuousMul_iInf fun b => _; cases b <;> assumption
 #align has_continuous_mul_inf continuousMul_inf
 #align has_continuous_add_inf continuousAdd_inf
 

@@ -1076,9 +1076,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {x : α} {y : α} {z : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 y z) -> (Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) _inst_2) x y) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))))) x z))
 Case conversion may be inaccurate. Consider using '#align is_compl.disjoint_left_iff IsCompl.disjoint_left_iffₓ'. -/
-theorem disjoint_left_iff (h : IsCompl y z) : Disjoint x y ↔ x ≤ z :=
-  by
-  rw [disjoint_iff]
+theorem disjoint_left_iff (h : IsCompl y z) : Disjoint x y ↔ x ≤ z := by rw [disjoint_iff];
   exact h.inf_left_eq_bot_iff
 #align is_compl.disjoint_left_iff IsCompl.disjoint_left_iff
 

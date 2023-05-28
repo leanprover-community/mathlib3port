@@ -158,9 +158,7 @@ def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 
       map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.pt)).symm }
   map A B f :=
     { app := fun _ => f.Hom
-      naturality' := fun _ _ _ => by
-        dsimp
-        rw [category.id_comp, category.comp_id]
+      naturality' := fun _ _ _ => by dsimp; rw [category.id_comp, category.comp_id]
       unit' := f.OneHom
       tensor' := fun _ _ => f.MulHom }
 #align CommMon_.equiv_lax_braided_functor_punit.CommMon_to_lax_braided CommMon_.EquivLaxBraidedFunctorPunit.commMonToLaxBraided

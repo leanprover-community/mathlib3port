@@ -209,12 +209,8 @@ Case conversion may be inaccurate. Consider using '#align lower_topology.with_lo
 def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
   {
     WithLowerTopology.ofLower with
-    continuous_toFun := by
-      convert continuous_id
-      apply topology_eq_lower_topology
-    continuous_invFun := by
-      convert← continuous_id
-      apply topology_eq_lower_topology }
+    continuous_toFun := by convert continuous_id; apply topology_eq_lower_topology
+    continuous_invFun := by convert← continuous_id; apply topology_eq_lower_topology }
 #align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorph
 
 /- warning: lower_topology.is_open_iff_generate_Ici_compl -> LowerTopology.isOpen_iff_generate_Ici_compl is a dubious translation:

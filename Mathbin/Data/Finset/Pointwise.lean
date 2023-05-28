@@ -1174,12 +1174,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.pow_mem_pow Finset.pow_mem_powₓ'. -/
 @[to_additive]
 theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact one_mem_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_mem_mul ha (pow_mem_pow _)
+  | 0 => by rw [pow_zero]; exact one_mem_one
+  | n + 1 => by rw [pow_succ]; exact mul_mem_mul ha (pow_mem_pow _)
 #align finset.pow_mem_pow Finset.pow_mem_pow
 #align finset.nsmul_mem_nsmul Finset.nsmul_mem_nsmul
 
@@ -1191,12 +1187,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.pow_subset_pow Finset.pow_subset_powₓ'. -/
 @[to_additive]
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact subset.rfl
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_subset_mul hst (pow_subset_pow _)
+  | 0 => by rw [pow_zero]; exact subset.rfl
+  | n + 1 => by rw [pow_succ]; exact mul_subset_mul hst (pow_subset_pow _)
 #align finset.pow_subset_pow Finset.pow_subset_pow
 #align finset.nsmul_subset_nsmul Finset.nsmul_subset_nsmul
 
@@ -1236,10 +1228,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_prod_list_of_fn Finset.mem_prod_list_ofFnₓ'. -/
 @[to_additive]
 theorem mem_prod_list_ofFn {a : α} {s : Fin n → Finset α} :
-    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a :=
-  by
-  rw [← mem_coe, coe_list_prod, List.map_ofFn, Set.mem_prod_list_ofFn]
-  rfl
+    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a := by
+  rw [← mem_coe, coe_list_prod, List.map_ofFn, Set.mem_prod_list_ofFn]; rfl
 #align finset.mem_prod_list_of_fn Finset.mem_prod_list_ofFn
 #align finset.mem_sum_list_of_fn Finset.mem_sum_list_ofFn
 
@@ -1251,10 +1241,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_pow Finset.mem_powₓ'. -/
 @[to_additive]
 theorem mem_pow {a : α} {n : ℕ} :
-    a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => ↑(f i)).Prod = a :=
-  by
-  simp_rw [← mem_coe, coe_pow, Set.mem_pow]
-  rfl
+    a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => ↑(f i)).Prod = a := by
+  simp_rw [← mem_coe, coe_pow, Set.mem_pow]; rfl
 #align finset.mem_pow Finset.mem_pow
 #align finset.mem_nsmul Finset.mem_nsmul
 
@@ -1369,9 +1357,7 @@ Case conversion may be inaccurate. Consider using '#align finset.coe_zpow Finset
 @[simp, to_additive]
 theorem coe_zpow (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
   | Int.ofNat n => coe_pow _ _
-  | Int.negSucc n => by
-    refine' (coe_inv _).trans _
-    convert congr_arg Inv.inv (coe_pow _ _)
+  | Int.negSucc n => by refine' (coe_inv _).trans _; convert congr_arg Inv.inv (coe_pow _ _)
 #align finset.coe_zpow Finset.coe_zpow
 #align finset.coe_zsmul Finset.coe_zsmul
 
@@ -2683,10 +2669,8 @@ Case conversion may be inaccurate. Consider using '#align finset.op_smul_finset_
 -- TODO: replace hypothesis and conclusion with a typeclass
 @[to_additive]
 theorem op_smul_finset_smul_eq_smul_smul_finset (a : α) (s : Finset β) (t : Finset γ)
-    (h : ∀ (a : α) (b : β) (c : γ), (op a • b) • c = b • a • c) : (op a • s) • t = s • a • t :=
-  by
-  ext
-  simp [mem_smul, mem_smul_finset, h]
+    (h : ∀ (a : α) (b : β) (c : γ), (op a • b) • c = b • a • c) : (op a • s) • t = s • a • t := by
+  ext; simp [mem_smul, mem_smul_finset, h]
 #align finset.op_smul_finset_smul_eq_smul_smul_finset Finset.op_smul_finset_smul_eq_smul_smul_finset
 #align finset.op_vadd_finset_vadd_eq_vadd_vadd_finset Finset.op_vadd_finset_vadd_eq_vadd_vadd_finset
 
@@ -2926,10 +2910,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : Group.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, Iff (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.instHasSubsetFinset.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) a s) t) (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.instHasSubsetFinset.{u2} β) s (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) a) t))
 Case conversion may be inaccurate. Consider using '#align finset.smul_finset_subset_iff Finset.smul_finset_subset_iffₓ'. -/
 @[to_additive]
-theorem smul_finset_subset_iff : a • s ⊆ t ↔ s ⊆ a⁻¹ • t :=
-  by
-  simp_rw [← coe_subset]
-  push_cast
+theorem smul_finset_subset_iff : a • s ⊆ t ↔ s ⊆ a⁻¹ • t := by simp_rw [← coe_subset]; push_cast ;
   exact Set.set_smul_subset_iff
 #align finset.smul_finset_subset_iff Finset.smul_finset_subset_iff
 #align finset.vadd_finset_subset_iff Finset.vadd_finset_subset_iff
@@ -2941,10 +2922,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : Group.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))] {s : Finset.{u2} β} {t : Finset.{u2} β} {a : α}, Iff (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.instHasSubsetFinset.{u2} β) s (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) a t)) (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.instHasSubsetFinset.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) _inst_3))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) a) s) t)
 Case conversion may be inaccurate. Consider using '#align finset.subset_smul_finset_iff Finset.subset_smul_finset_iffₓ'. -/
 @[to_additive]
-theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t :=
-  by
-  simp_rw [← coe_subset]
-  push_cast
+theorem subset_smul_finset_iff : s ⊆ a • t ↔ a⁻¹ • s ⊆ t := by simp_rw [← coe_subset]; push_cast ;
   exact Set.subset_set_smul_iff
 #align finset.subset_smul_finset_iff Finset.subset_smul_finset_iff
 #align finset.subset_vadd_finset_iff Finset.subset_vadd_finset_iff
@@ -2988,9 +2966,7 @@ theorem smul_finset_univ [Fintype β] : a • (univ : Finset β) = univ :=
 #print Finset.smul_univ /-
 @[simp, to_additive]
 theorem smul_univ [Fintype β] {s : Finset α} (hs : s.Nonempty) : s • (univ : Finset β) = univ :=
-  coe_injective <| by
-    push_cast
-    exact Set.smul_univ hs
+  coe_injective <| by push_cast ; exact Set.smul_univ hs
 #align finset.smul_univ Finset.smul_univ
 #align finset.vadd_univ Finset.vadd_univ
 -/
@@ -3108,10 +3084,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : GroupWithZero.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))] [_inst_4 : Fintype.{u2} β] {s : Finset.{u1} α}, (Not (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s (OfNat.ofNat.{u1} (Finset.{u1} α) 0 (Zero.toOfNat0.{u1} (Finset.{u1} α) (Finset.zero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))))))) -> (Eq.{succ u2} (Finset.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3))) s (Finset.univ.{u2} β _inst_4)) (Finset.univ.{u2} β _inst_4))
 Case conversion may be inaccurate. Consider using '#align finset.smul_univ₀ Finset.smul_univ₀ₓ'. -/
 theorem smul_univ₀ [Fintype β] {s : Finset α} (hs : ¬s ⊆ 0) : s • (univ : Finset β) = univ :=
-  coe_injective <| by
-    rw [← coe_subset] at hs
-    push_cast at hs⊢
-    exact Set.smul_univ₀ hs
+  coe_injective <| by rw [← coe_subset] at hs; push_cast at hs⊢; exact Set.smul_univ₀ hs
 #align finset.smul_univ₀ Finset.smul_univ₀
 
 /- warning: finset.smul_finset_univ₀ -> Finset.smul_finset_univ₀ is a dubious translation:
@@ -3121,9 +3094,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : GroupWithZero.{u1} α] [_inst_3 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))] {a : α} [_inst_4 : Fintype.{u2} β], (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2))))) -> (Eq.{succ u2} (Finset.{u2} β) (HSMul.hSMul.{u1, u2, u2} α (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_2)) _inst_3))) a (Finset.univ.{u2} β _inst_4)) (Finset.univ.{u2} β _inst_4))
 Case conversion may be inaccurate. Consider using '#align finset.smul_finset_univ₀ Finset.smul_finset_univ₀ₓ'. -/
 theorem smul_finset_univ₀ [Fintype β] (ha : a ≠ 0) : a • (univ : Finset β) = univ :=
-  coe_injective <| by
-    push_cast
-    exact Set.smul_set_univ₀ ha
+  coe_injective <| by push_cast ; exact Set.smul_set_univ₀ ha
 #align finset.smul_finset_univ₀ Finset.smul_finset_univ₀
 
 end GroupWithZero
@@ -3191,9 +3162,7 @@ variable [NoZeroSMulDivisors α β] {a : α}
 
 #print Finset.zero_mem_smul_iff /-
 theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty :=
-  by
-  rw [← mem_coe, coe_smul, Set.zero_mem_smul_iff]
-  rfl
+  by rw [← mem_coe, coe_smul, Set.zero_mem_smul_iff]; rfl
 #align finset.zero_mem_smul_iff Finset.zero_mem_smul_iff
 -/
 
@@ -3203,10 +3172,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u2} α] [_inst_2 : Zero.{u1} β] [_inst_3 : SMulWithZero.{u2, u1} α β _inst_1 _inst_2] [_inst_4 : DecidableEq.{succ u1} β] {t : Finset.{u1} β} [_inst_5 : NoZeroSMulDivisors.{u2, u1} α β _inst_1 _inst_2 (SMulZeroClass.toSMul.{u2, u1} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u2, u1} α β _inst_1 _inst_2 _inst_3))] {a : α}, (Ne.{succ u2} α a (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α _inst_1))) -> (Iff (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_2)) (HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_4 a b) (SMulZeroClass.toSMul.{u2, u1} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u2, u1} α β _inst_1 _inst_2 _inst_3)))) a t)) (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_2)) t))
 Case conversion may be inaccurate. Consider using '#align finset.zero_mem_smul_finset_iff Finset.zero_mem_smul_finset_iffₓ'. -/
-theorem zero_mem_smul_finset_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β) ∈ t :=
-  by
-  rw [← mem_coe, coe_smul_finset, Set.zero_mem_smul_set_iff ha, mem_coe]
-  infer_instance
+theorem zero_mem_smul_finset_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β) ∈ t := by
+  rw [← mem_coe, coe_smul_finset, Set.zero_mem_smul_set_iff ha, mem_coe]; infer_instance
 #align finset.zero_mem_smul_finset_iff Finset.zero_mem_smul_finset_iff
 
 end SMulWithZero
@@ -3234,9 +3201,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u1} α] [_inst_2 : AddGroup.{u2} β] [_inst_3 : DistribMulAction.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))] [_inst_4 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ u2} (Finset.{u2} β) (HSMul.hSMul.{u1, u2, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_4 a b) (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2)) _inst_3))))) s (Neg.neg.{u2} (Finset.{u2} β) (Finset.neg.{u2} β (fun (a : β) (b : β) => _inst_4 a b) (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2))))) t)) (Neg.neg.{u2} (Finset.{u2} β) (Finset.neg.{u2} β (fun (a : β) (b : β) => _inst_4 a b) (NegZeroClass.toNeg.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2))))) (HSMul.hSMul.{u1, u2, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.{u2} β) (instHSMul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_4 a b) (SMulZeroClass.toSMul.{u1, u2} α β (NegZeroClass.toZero.{u2} β (SubNegZeroMonoid.toNegZeroClass.{u2} β (SubtractionMonoid.toSubNegZeroMonoid.{u2} β (AddGroup.toSubtractionMonoid.{u2} β _inst_2)))) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2))) (DistribMulAction.toDistribSMul.{u1, u2} α β _inst_1 (SubNegMonoid.toAddMonoid.{u2} β (AddGroup.toSubNegMonoid.{u2} β _inst_2)) _inst_3))))) s t))
 Case conversion may be inaccurate. Consider using '#align finset.smul_neg Finset.smul_negₓ'. -/
 @[simp]
-protected theorem smul_neg : s • -t = -(s • t) :=
-  by
-  simp_rw [← image_neg]
+protected theorem smul_neg : s • -t = -(s • t) := by simp_rw [← image_neg];
   exact image_image₂_right_comm smul_neg
 #align finset.smul_neg Finset.smul_neg
 
@@ -3265,9 +3230,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Ring.{u2} α] [_inst_2 : AddCommGroup.{u1} β] [_inst_3 : Module.{u2, u1} α β (Ring.toSemiring.{u2} α _inst_1) (AddCommGroup.toAddCommMonoid.{u1} β _inst_2)] [_inst_4 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : Finset.{u1} β} [_inst_5 : DecidableEq.{succ u2} α], Eq.{succ u1} (Finset.{u1} β) (HSMul.hSMul.{u2, u1, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.smul.{u2, u1} α β (fun (a : β) (b : β) => _inst_4 a b) (SMulZeroClass.toSMul.{u2, u1} α β (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} α β (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α (Ring.toSemiring.{u2} α _inst_1))) (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} α β (Semiring.toMonoidWithZero.{u2} α (Ring.toSemiring.{u2} α _inst_1)) (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (Module.toMulActionWithZero.{u2, u1} α β (Ring.toSemiring.{u2} α _inst_1) (AddCommGroup.toAddCommMonoid.{u1} β _inst_2) _inst_3)))))) (Neg.neg.{u2} (Finset.{u2} α) (Finset.neg.{u2} α (fun (a : α) (b : α) => _inst_5 a b) (Ring.toNeg.{u2} α _inst_1)) s) t) (Neg.neg.{u1} (Finset.{u1} β) (Finset.neg.{u1} β (fun (a : β) (b : β) => _inst_4 a b) (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2)))))) (HSMul.hSMul.{u2, u1, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.smul.{u2, u1} α β (fun (a : β) (b : β) => _inst_4 a b) (SMulZeroClass.toSMul.{u2, u1} α β (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} α β (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α (Ring.toSemiring.{u2} α _inst_1))) (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} α β (Semiring.toMonoidWithZero.{u2} α (Ring.toSemiring.{u2} α _inst_1)) (NegZeroClass.toZero.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β _inst_2))))) (Module.toMulActionWithZero.{u2, u1} α β (Ring.toSemiring.{u2} α _inst_1) (AddCommGroup.toAddCommMonoid.{u1} β _inst_2) _inst_3)))))) s t))
 Case conversion may be inaccurate. Consider using '#align finset.neg_smul Finset.neg_smulₓ'. -/
 @[simp]
-protected theorem neg_smul [DecidableEq α] : -s • t = -(s • t) :=
-  by
-  simp_rw [← image_neg]
+protected theorem neg_smul [DecidableEq α] : -s • t = -(s • t) := by simp_rw [← image_neg];
   exact image₂_image_left_comm neg_smul
 #align finset.neg_smul Finset.neg_smul
 

@@ -115,20 +115,16 @@ def negY : R :=
   -y₁ - W.a₁ * x₁ - W.a₃
 #align weierstrass_curve.neg_Y WeierstrassCurve.negY
 
-theorem negY_negY : W.negY x₁ (W.negY x₁ y₁) = y₁ :=
-  by
-  simp only [neg_Y]
-  ring1
+theorem negY_negY : W.negY x₁ (W.negY x₁ y₁) = y₁ := by simp only [neg_Y]; ring1
 #align weierstrass_curve.neg_Y_neg_Y WeierstrassCurve.negY_negY
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3769451639.map_simp -/
 theorem baseChange_negY :
     (W.base_change A).negY (algebraMap R A x₁) (algebraMap R A y₁) =
       algebraMap R A (W.negY x₁ y₁) :=
-  by
-  simp only [neg_Y]
+  by simp only [neg_Y];
   run_tac
-    map_simp
+    map_simp;
   rfl
 #align weierstrass_curve.base_change_neg_Y WeierstrassCurve.baseChange_negY
 
@@ -140,9 +136,8 @@ theorem baseChange_negY_of_baseChange (x₁ y₁ : A) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2574636079.eval_simp -/
 @[simp]
-theorem eval_negPolynomial : (W.negPolynomial.eval <| C y₁).eval x₁ = W.negY x₁ y₁ :=
-  by
-  rw [neg_Y, sub_sub, neg_polynomial]
+theorem eval_negPolynomial : (W.negPolynomial.eval <| C y₁).eval x₁ = W.negY x₁ y₁ := by
+  rw [neg_Y, sub_sub, neg_polynomial];
   run_tac
     eval_simp
 #align weierstrass_curve.eval_neg_polynomial WeierstrassCurve.eval_negPolynomial
@@ -174,11 +169,11 @@ theorem addPolynomial_eq :
             2 * x₁ * L ^ 2 + (W.a₁ * x₁ - 2 * y₁ - W.a₃) * L + (-W.a₁ * y₁ + W.a₄),
             -x₁ ^ 2 * L ^ 2 + (2 * x₁ * y₁ + W.a₃ * x₁) * L - (y₁ ^ 2 + W.a₃ * y₁ - W.a₆)⟩ :=
   by
-  rw [add_polynomial, line_polynomial, WeierstrassCurve.polynomial, Cubic.toPoly]
+  rw [add_polynomial, line_polynomial, WeierstrassCurve.polynomial, Cubic.toPoly];
   run_tac
     eval_simp
   run_tac
-    C_simp
+    C_simp;
   ring1
 #align weierstrass_curve.add_polynomial_eq WeierstrassCurve.addPolynomial_eq
 
@@ -195,10 +190,9 @@ def addX : R :=
 theorem baseChange_addX :
     (W.base_change A).addX (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A L) =
       algebraMap R A (W.addX x₁ x₂ L) :=
-  by
-  simp only [add_X]
+  by simp only [add_X];
   run_tac
-    map_simp
+    map_simp;
   rfl
 #align weierstrass_curve.base_change_add_X WeierstrassCurve.baseChange_addX
 
@@ -222,8 +216,7 @@ theorem baseChange_addY' :
     (W.base_change A).addY' (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
         (algebraMap R A L) =
       algebraMap R A (W.addY' x₁ x₂ y₁ L) :=
-  by
-  simp only [add_Y', base_change_add_X]
+  by simp only [add_Y', base_change_add_X];
   run_tac
     map_simp
 #align weierstrass_curve.base_change_add_Y' WeierstrassCurve.baseChange_addY'
@@ -324,11 +317,8 @@ end Point
 
 variable {W x₁ y₁}
 
-theorem equation_neg_iff : W.Equation x₁ (W.negY x₁ y₁) ↔ W.Equation x₁ y₁ :=
-  by
-  rw [equation_iff, equation_iff, neg_Y]
-  congr 2
-  ring1
+theorem equation_neg_iff : W.Equation x₁ (W.negY x₁ y₁) ↔ W.Equation x₁ y₁ := by
+  rw [equation_iff, equation_iff, neg_Y]; congr 2; ring1
 #align weierstrass_curve.equation_neg_iff WeierstrassCurve.equation_neg_iff
 
 theorem equation_neg_of (h : W.Equation x₁ <| W.negY x₁ y₁) : W.Equation x₁ y₁ :=
@@ -387,11 +377,7 @@ theorem neg_some (h : W.Nonsingular x₁ y₁) : -some h = some (nonsingular_neg
 #align weierstrass_curve.point.neg_some WeierstrassCurve.Point.neg_some
 
 instance : InvolutiveNeg W.Point :=
-  ⟨neg, by
-    rintro (_ | _)
-    · rfl
-    · simp
-      ring1⟩
+  ⟨neg, by rintro (_ | _); · rfl; · simp; ring1⟩
 
 end Point
 
@@ -445,9 +431,7 @@ theorem slope_of_Y_ne_eq_eval (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂
     W.slope x₁ x₂ y₁ y₂ =
       -(W.polynomialX.eval <| C y₁).eval x₁ / (W.polynomialY.eval <| C y₁).eval x₁ :=
   by
-  rw [slope_of_Y_ne hx hy, eval_polynomial_X, neg_sub]
-  congr 1
-  rw [neg_Y, eval_polynomial_Y]
+  rw [slope_of_Y_ne hx hy, eval_polynomial_X, neg_sub]; congr 1; rw [neg_Y, eval_polynomial_Y]
   ring1
 #align weierstrass_curve.slope_of_Y_ne_eq_eval WeierstrassCurve.slope_of_Y_ne_eq_eval
 
@@ -534,10 +518,9 @@ theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x�
     derivative (W.addPolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) =
       -((X - C x₁) * (X - C x₂) + (X - C x₁) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) +
           (X - C x₂) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) :=
-  by
-  rw [add_polynomial_slope h₁' h₂' hxy]
+  by rw [add_polynomial_slope h₁' h₂' hxy];
   run_tac
-    derivative_simp
+    derivative_simp;
   ring1
 #align weierstrass_curve.derivative_add_polynomial_slope WeierstrassCurve.derivative_addPolynomial_slope
 
@@ -550,7 +533,7 @@ before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, lies in `
 theorem equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     W.Equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
-  rw [equation_add_iff, add_polynomial_slope h₁' h₂' hxy]
+  rw [equation_add_iff, add_polynomial_slope h₁' h₂' hxy];
   run_tac
     eval_simp
   rw [neg_eq_zero, sub_self, MulZeroClass.mul_zero]

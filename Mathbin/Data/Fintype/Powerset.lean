@@ -66,9 +66,7 @@ Case conversion may be inaccurate. Consider using '#align finset.univ_filter_car
 @[simp]
 theorem Finset.univ_filter_card_eq (α : Type _) [Fintype α] (k : ℕ) :
     ((Finset.univ : Finset (Finset α)).filterₓ fun s => s.card = k) = Finset.univ.powersetLen k :=
-  by
-  ext
-  simp [Finset.mem_powersetLen]
+  by ext; simp [Finset.mem_powersetLen]
 #align finset.univ_filter_card_eq Finset.univ_filter_card_eq
 
 /- warning: fintype.card_finset_len -> Fintype.card_finset_len is a dubious translation:
@@ -96,10 +94,7 @@ instance Set.fintype [Fintype α] : Fintype (Set α) :=
 
 #print Set.finite' /-
 -- Not to be confused with `set.finite`, the predicate
-instance Set.finite' [Finite α] : Finite (Set α) :=
-  by
-  cases nonempty_fintype α
-  infer_instance
+instance Set.finite' [Finite α] : Finite (Set α) := by cases nonempty_fintype α; infer_instance
 #align set.finite' Set.finite'
 -/
 

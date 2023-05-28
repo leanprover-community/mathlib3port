@@ -101,11 +101,8 @@ section
 variable {I J s t : Ideal P} {x y : P}
 
 #print Order.Ideal.toLowerSet_injective /-
-theorem toLowerSet_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h =>
-  by
-  cases s
-  cases t
-  congr
+theorem toLowerSet_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h => by
+  cases s; cases t; congr
 #align order.ideal.to_lower_set_injective Order.Ideal.toLowerSet_injective
 -/
 
@@ -390,9 +387,7 @@ lean 3 declaration is
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderTop.{u1} P _inst_1] {I : Order.Ideal.{u1} P _inst_1}, (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toTop.{u1} P _inst_1 _inst_2)) I) -> (Eq.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 (OrderTop.to_isDirected_le.{u1} P _inst_1 _inst_2) (top_nonempty.{u1} P (OrderTop.toTop.{u1} P _inst_1 _inst_2))))))
 Case conversion may be inaccurate. Consider using '#align order.ideal.top_of_top_mem Order.Ideal.top_of_top_memₓ'. -/
-theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by
-  ext
-  exact iff_of_true (I.lower le_top h) trivial
+theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by ext; exact iff_of_true (I.lower le_top h) trivial
 #align order.ideal.top_of_top_mem Order.Ideal.top_of_top_mem
 
 /- warning: order.ideal.is_proper.top_not_mem -> Order.Ideal.IsProper.top_not_mem is a dubious translation:
@@ -543,9 +538,7 @@ supremum of `I` and `J`. -/
 instance : Sup (Ideal P) :=
   ⟨fun I J =>
     { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j }
-      nonempty' := by
-        cases inter_nonempty I J
-        exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
+      nonempty' := by cases inter_nonempty I J; exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
         ⟨x ⊔ y,
           ⟨xi ⊔ yi, sup_mem ‹_› ‹_›, xj ⊔ yj, sup_mem ‹_› ‹_›,
@@ -566,13 +559,8 @@ instance : Sup (Ideal P) :=
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with
     sup := (· ⊔ ·)
-    le_sup_left := fun I J i (_ : i ∈ I) =>
-      by
-      cases J.nonempty
-      exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩
-    le_sup_right := fun I J j (_ : j ∈ J) =>
-      by
-      cases I.nonempty
+    le_sup_left := fun I J i (_ : i ∈ I) => by cases J.nonempty; exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩
+    le_sup_right := fun I J j (_ : j ∈ J) => by cases I.nonempty;
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
       K.lower ha <| sup_mem (mem_of_mem_of_le hi hIK) (mem_of_mem_of_le hj hJK)
@@ -827,12 +815,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotoneₓ'. -/
 theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) :=
   by
-  apply monotone_nat_of_le_succ
-  intro n
-  dsimp only [sequence_of_cofinals]
-  cases Encodable.decode ι n
-  · rfl
-  · apply cofinal.le_above
+  apply monotone_nat_of_le_succ; intro n; dsimp only [sequence_of_cofinals]
+  cases Encodable.decode ι n; · rfl; · apply cofinal.le_above
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
 /- warning: order.sequence_of_cofinals.encode_mem -> Order.sequenceOfCofinals.encode_mem is a dubious translation:
@@ -842,11 +826,8 @@ but is expected to have type
   forall {P : Type.{u2}} [_inst_1 : Preorder.{u2} P] (p : P) {ι : Type.{u1}} [_inst_2 : Encodable.{u1} ι] (𝒟 : ι -> (Order.Cofinal.{u2} P _inst_1)) (i : ι), Membership.mem.{u2, u2} P (Order.Cofinal.{u2} P _inst_1) (Order.Cofinal.instMembershipCofinal.{u2} P _inst_1) (Order.sequenceOfCofinals.{u2, u1} P _inst_1 p ι _inst_2 𝒟 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Encodable.encode.{u1} ι _inst_2 i) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (𝒟 i)
 Case conversion may be inaccurate. Consider using '#align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_memₓ'. -/
 theorem sequenceOfCofinals.encode_mem (i : ι) :
-    sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i :=
-  by
-  dsimp only [sequence_of_cofinals]
-  rw [Encodable.encodek]
-  apply cofinal.above_mem
+    sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by dsimp only [sequence_of_cofinals];
+  rw [Encodable.encodek]; apply cofinal.above_mem
 #align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_mem
 
 /- warning: order.ideal_of_cofinals -> Order.idealOfCofinals is a dubious translation:

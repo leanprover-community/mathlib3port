@@ -196,11 +196,9 @@ def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.pt ≅ t.p
   apply cones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.π.naturality walking_cospan.hom.inl
-    dsimp at h₁
-    simp only [category.id_comp] at h₁
+    dsimp at h₁; simp only [category.id_comp] at h₁
     have h₂ := t.π.naturality walking_cospan.hom.inl
-    dsimp at h₂
-    simp only [category.id_comp] at h₂
+    dsimp at h₂; simp only [category.id_comp] at h₂
     simp_rw [h₂, ← category.assoc, ← w₁, ← h₁]
   · exact w₁
   · exact w₂
@@ -219,11 +217,9 @@ def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.pt ≅ t.pt)
   apply cocones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.ι.naturality walking_span.hom.fst
-    dsimp at h₁
-    simp only [category.comp_id] at h₁
+    dsimp at h₁; simp only [category.comp_id] at h₁
     have h₂ := t.ι.naturality walking_span.hom.fst
-    dsimp at h₂
-    simp only [category.comp_id] at h₂
+    dsimp at h₂; simp only [category.comp_id] at h₂
     simp_rw [← h₁, category.assoc, w₁, h₂]
   · exact w₁
   · exact w₂
@@ -600,10 +596,7 @@ variable {f : X ⟶ Z} {g : Y ⟶ Z} {f' : X' ⟶ Z'} {g' : Y' ⟶ Z'}
 /-- Construct an isomorphism of cospans from components. -/
 def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom) :
     cospan f g ≅ cospan f' g' :=
-  NatIso.ofComponents
-    (by
-      rintro (⟨⟩ | ⟨⟨⟩⟩)
-      exacts[iZ, iX, iY])
+  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts[iZ, iX, iY])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
 #align category_theory.limits.cospan_ext CategoryTheory.Limits.cospanExt
 -/
@@ -614,30 +607,24 @@ variable (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom)
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_app_left CategoryTheory.Limits.cospanExt_app_leftₓ'. -/
 @[simp]
-theorem cospanExt_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX :=
-  by
-  dsimp [cospan_ext]
-  simp
+theorem cospanExt_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX := by
+  dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_app_left CategoryTheory.Limits.cospanExt_app_left
 
 /- warning: category_theory.limits.cospan_ext_app_right -> CategoryTheory.Limits.cospanExt_app_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_app_right CategoryTheory.Limits.cospanExt_app_rightₓ'. -/
 @[simp]
-theorem cospanExt_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY :=
-  by
-  dsimp [cospan_ext]
-  simp
+theorem cospanExt_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY := by
+  dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_app_right CategoryTheory.Limits.cospanExt_app_right
 
 /- warning: category_theory.limits.cospan_ext_app_one -> CategoryTheory.Limits.cospanExt_app_one is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_app_one CategoryTheory.Limits.cospanExt_app_oneₓ'. -/
 @[simp]
-theorem cospanExt_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ :=
-  by
-  dsimp [cospan_ext]
-  simp
+theorem cospanExt_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ := by
+  dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_app_one CategoryTheory.Limits.cospanExt_app_one
 
 /- warning: category_theory.limits.cospan_ext_hom_app_left -> CategoryTheory.Limits.cospanExt_hom_app_left is a dubious translation:
@@ -645,9 +632,7 @@ theorem cospanExt_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = i
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_hom_app_left CategoryTheory.Limits.cospanExt_hom_app_leftₓ'. -/
 @[simp]
 theorem cospanExt_hom_app_left : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.left = iX.Hom :=
-  by
-  dsimp [cospan_ext]
-  simp
+  by dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_hom_app_left CategoryTheory.Limits.cospanExt_hom_app_left
 
 /- warning: category_theory.limits.cospan_ext_hom_app_right -> CategoryTheory.Limits.cospanExt_hom_app_right is a dubious translation:
@@ -655,19 +640,15 @@ theorem cospanExt_hom_app_left : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospa
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_hom_app_right CategoryTheory.Limits.cospanExt_hom_app_rightₓ'. -/
 @[simp]
 theorem cospanExt_hom_app_right : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.right = iY.Hom :=
-  by
-  dsimp [cospan_ext]
-  simp
+  by dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_hom_app_right CategoryTheory.Limits.cospanExt_hom_app_right
 
 /- warning: category_theory.limits.cospan_ext_hom_app_one -> CategoryTheory.Limits.cospanExt_hom_app_one is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_hom_app_one CategoryTheory.Limits.cospanExt_hom_app_oneₓ'. -/
 @[simp]
-theorem cospanExt_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom :=
-  by
-  dsimp [cospan_ext]
-  simp
+theorem cospanExt_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom := by
+  dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_hom_app_one CategoryTheory.Limits.cospanExt_hom_app_one
 
 /- warning: category_theory.limits.cospan_ext_inv_app_left -> CategoryTheory.Limits.cospanExt_inv_app_left is a dubious translation:
@@ -675,9 +656,7 @@ theorem cospanExt_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_inv_app_left CategoryTheory.Limits.cospanExt_inv_app_leftₓ'. -/
 @[simp]
 theorem cospanExt_inv_app_left : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.left = iX.inv :=
-  by
-  dsimp [cospan_ext]
-  simp
+  by dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_inv_app_left CategoryTheory.Limits.cospanExt_inv_app_left
 
 /- warning: category_theory.limits.cospan_ext_inv_app_right -> CategoryTheory.Limits.cospanExt_inv_app_right is a dubious translation:
@@ -685,19 +664,15 @@ theorem cospanExt_inv_app_left : (cospanExt iX iY iZ wf wg).inv.app WalkingCospa
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_inv_app_right CategoryTheory.Limits.cospanExt_inv_app_rightₓ'. -/
 @[simp]
 theorem cospanExt_inv_app_right : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.right = iY.inv :=
-  by
-  dsimp [cospan_ext]
-  simp
+  by dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_inv_app_right CategoryTheory.Limits.cospanExt_inv_app_right
 
 /- warning: category_theory.limits.cospan_ext_inv_app_one -> CategoryTheory.Limits.cospanExt_inv_app_one is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.cospan_ext_inv_app_one CategoryTheory.Limits.cospanExt_inv_app_oneₓ'. -/
 @[simp]
-theorem cospanExt_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv :=
-  by
-  dsimp [cospan_ext]
-  simp
+theorem cospanExt_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv := by
+  dsimp [cospan_ext]; simp
 #align category_theory.limits.cospan_ext_inv_app_one CategoryTheory.Limits.cospanExt_inv_app_one
 
 end
@@ -710,10 +685,7 @@ variable {f : X ⟶ Y} {g : X ⟶ Z} {f' : X' ⟶ Y'} {g' : X' ⟶ Z'}
 /-- Construct an isomorphism of spans from components. -/
 def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom) :
     span f g ≅ span f' g' :=
-  NatIso.ofComponents
-    (by
-      rintro (⟨⟩ | ⟨⟨⟩⟩)
-      exacts[iX, iY, iZ])
+  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts[iX, iY, iZ])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
 #align category_theory.limits.span_ext CategoryTheory.Limits.spanExt
 -/
@@ -724,29 +696,23 @@ variable (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom)
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_app_left CategoryTheory.Limits.spanExt_app_leftₓ'. -/
 @[simp]
-theorem spanExt_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_app_left CategoryTheory.Limits.spanExt_app_left
 
 /- warning: category_theory.limits.span_ext_app_right -> CategoryTheory.Limits.spanExt_app_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_app_right CategoryTheory.Limits.spanExt_app_rightₓ'. -/
 @[simp]
-theorem spanExt_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_app_right CategoryTheory.Limits.spanExt_app_right
 
 /- warning: category_theory.limits.span_ext_app_one -> CategoryTheory.Limits.spanExt_app_one is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_app_one CategoryTheory.Limits.spanExt_app_oneₓ'. -/
 @[simp]
-theorem spanExt_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX :=
-  by
-  dsimp [span_ext]
+theorem spanExt_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX := by dsimp [span_ext];
   simp
 #align category_theory.limits.span_ext_app_one CategoryTheory.Limits.spanExt_app_one
 
@@ -754,60 +720,48 @@ theorem spanExt_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_hom_app_left CategoryTheory.Limits.spanExt_hom_app_leftₓ'. -/
 @[simp]
-theorem spanExt_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_hom_app_left CategoryTheory.Limits.spanExt_hom_app_left
 
 /- warning: category_theory.limits.span_ext_hom_app_right -> CategoryTheory.Limits.spanExt_hom_app_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_hom_app_right CategoryTheory.Limits.spanExt_hom_app_rightₓ'. -/
 @[simp]
-theorem spanExt_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_hom_app_right CategoryTheory.Limits.spanExt_hom_app_right
 
 /- warning: category_theory.limits.span_ext_hom_app_zero -> CategoryTheory.Limits.spanExt_hom_app_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_hom_app_zero CategoryTheory.Limits.spanExt_hom_app_zeroₓ'. -/
 @[simp]
-theorem spanExt_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_hom_app_zero CategoryTheory.Limits.spanExt_hom_app_zero
 
 /- warning: category_theory.limits.span_ext_inv_app_left -> CategoryTheory.Limits.spanExt_inv_app_left is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_inv_app_left CategoryTheory.Limits.spanExt_inv_app_leftₓ'. -/
 @[simp]
-theorem spanExt_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_inv_app_left CategoryTheory.Limits.spanExt_inv_app_left
 
 /- warning: category_theory.limits.span_ext_inv_app_right -> CategoryTheory.Limits.spanExt_inv_app_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_inv_app_right CategoryTheory.Limits.spanExt_inv_app_rightₓ'. -/
 @[simp]
-theorem spanExt_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_inv_app_right CategoryTheory.Limits.spanExt_inv_app_right
 
 /- warning: category_theory.limits.span_ext_inv_app_zero -> CategoryTheory.Limits.spanExt_inv_app_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.span_ext_inv_app_zero CategoryTheory.Limits.spanExt_inv_app_zeroₓ'. -/
 @[simp]
-theorem spanExt_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv :=
-  by
-  dsimp [span_ext]
-  simp
+theorem spanExt_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv := by
+  dsimp [span_ext]; simp
 #align category_theory.limits.span_ext_inv_app_zero CategoryTheory.Limits.spanExt_inv_app_zero
 
 end
@@ -888,11 +842,7 @@ def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.pt ⟶
     IsLimit t :=
   { lift
     fac := fun s j =>
-      Option.casesOn j
-        (by
-          rw [← s.w inl, ← t.w inl, ← category.assoc]
-          congr
-          exact fac_left s)
+      Option.casesOn j (by rw [← s.w inl, ← t.w inl, ← category.assoc]; congr ; exact fac_left s)
         fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s)
     uniq := uniq }
 #align category_theory.limits.pullback_cone.is_limit_aux CategoryTheory.Limits.PullbackCone.isLimitAux
@@ -1078,9 +1028,7 @@ given in `pullback_cone.is_id_of_mono`.
 -/
 theorem mono_of_isLimitMkIdId (f : X ⟶ Y) (t : IsLimit (mk (𝟙 X) (𝟙 X) rfl : PullbackCone f f)) :
     Mono f :=
-  ⟨fun Z g h eq => by
-    rcases pullback_cone.is_limit.lift' t _ _ Eq with ⟨_, rfl, rfl⟩
-    rfl⟩
+  ⟨fun Z g h eq => by rcases pullback_cone.is_limit.lift' t _ _ Eq with ⟨_, rfl, rfl⟩; rfl⟩
 #align category_theory.limits.pullback_cone.mono_of_is_limit_mk_id_id CategoryTheory.Limits.PullbackCone.mono_of_isLimitMkIdId
 -/
 
@@ -1387,10 +1335,7 @@ The converse is given in `pushout_cocone.is_colimit_mk_id_id`.
 -/
 theorem epi_of_isColimitMkIdId (f : X ⟶ Y)
     (t : IsColimit (mk (𝟙 Y) (𝟙 Y) rfl : PushoutCocone f f)) : Epi f :=
-  ⟨fun Z g h eq =>
-    by
-    rcases pushout_cocone.is_colimit.desc' t _ _ Eq with ⟨_, rfl, rfl⟩
-    rfl⟩
+  ⟨fun Z g h eq => by rcases pushout_cocone.is_colimit.desc' t _ _ Eq with ⟨_, rfl, rfl⟩; rfl⟩
 #align category_theory.limits.pushout_cocone.epi_of_is_colimit_mk_id_id CategoryTheory.Limits.PushoutCocone.epi_of_isColimitMkIdId
 -/
 
@@ -1507,10 +1452,7 @@ def PullbackCone.isoMk {F : WalkingCospan ⥤ C} (t : Cone F) :
     (Cones.postcompose (diagramIsoCospan.{v} _).Hom).obj t ≅
       PullbackCone.mk (t.π.app WalkingCospan.left) (t.π.app WalkingCospan.right)
         ((t.π.naturality inl).symm.trans (t.π.naturality inr : _)) :=
-  Cones.ext (Iso.refl _) <| by
-    rintro (_ | (_ | _)) <;>
-      · dsimp
-        simp
+  Cones.ext (Iso.refl _) <| by rintro (_ | (_ | _)) <;> · dsimp; simp
 #align category_theory.limits.pullback_cone.iso_mk CategoryTheory.Limits.PullbackCone.isoMk
 
 /- warning: category_theory.limits.pushout_cocone.of_cocone -> CategoryTheory.Limits.PushoutCocone.ofCocone is a dubious translation:
@@ -1539,10 +1481,7 @@ def PushoutCocone.isoMk {F : WalkingSpan ⥤ C} (t : Cocone F) :
     (Cocones.precompose (diagramIsoSpan.{v} _).inv).obj t ≅
       PushoutCocone.mk (t.ι.app WalkingSpan.left) (t.ι.app WalkingSpan.right)
         ((t.ι.naturality fst).trans (t.ι.naturality snd).symm) :=
-  Cocones.ext (Iso.refl _) <| by
-    rintro (_ | (_ | _)) <;>
-      · dsimp
-        simp
+  Cocones.ext (Iso.refl _) <| by rintro (_ | (_ | _)) <;> · dsimp; simp
 #align category_theory.limits.pushout_cocone.iso_mk CategoryTheory.Limits.PushoutCocone.isoMk
 
 #print CategoryTheory.Limits.HasPullback /-
@@ -1761,9 +1700,7 @@ abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPusho
     (g₂ : T ⟶ Z) [HasPushout g₁ g₂] (i₁ : W ⟶ Y) (i₂ : X ⟶ Z) (i₃ : S ⟶ T) (eq₁ : f₁ ≫ i₁ = i₃ ≫ g₁)
     (eq₂ : f₂ ≫ i₂ = i₃ ≫ g₂) : pushout f₁ f₂ ⟶ pushout g₁ g₂ :=
   pushout.desc (i₁ ≫ pushout.inl) (i₂ ≫ pushout.inr)
-    (by
-      simp only [← category.assoc, eq₁, eq₂]
-      simp [pushout.condition])
+    (by simp only [← category.assoc, eq₁, eq₂]; simp [pushout.condition])
 #align category_theory.limits.pushout.map CategoryTheory.Limits.pushout.map
 -/
 
@@ -2245,10 +2182,8 @@ theorem pullbackConeOfLeftIso_snd : (pullbackConeOfLeftIso f g).snd = 𝟙 _ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.pullback_cone_of_left_iso_π_app_none CategoryTheory.Limits.pullbackConeOfLeftIso_π_app_noneₓ'. -/
 @[simp]
-theorem pullbackConeOfLeftIso_π_app_none : (pullbackConeOfLeftIso f g).π.app none = g :=
-  by
-  delta pullback_cone_of_left_iso
-  simp
+theorem pullbackConeOfLeftIso_π_app_none : (pullbackConeOfLeftIso f g).π.app none = g := by
+  delta pullback_cone_of_left_iso; simp
 #align category_theory.limits.pullback_cone_of_left_iso_π_app_none CategoryTheory.Limits.pullbackConeOfLeftIso_π_app_none
 
 /- warning: category_theory.limits.pullback_cone_of_left_iso_π_app_left -> CategoryTheory.Limits.pullbackConeOfLeftIso_π_app_left is a dubious translation:
@@ -2295,11 +2230,10 @@ instance pullback_snd_iso_of_left_iso : IsIso (pullback.snd : pullback f g ⟶ _
 variable (i : Z ⟶ W) [Mono i]
 
 #print CategoryTheory.Limits.hasPullback_of_right_factors_mono /-
-instance hasPullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫ i) :=
-  by
+instance hasPullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫ i) := by
   conv =>
     congr
-    rw [← category.id_comp i]
+    rw [← category.id_comp i];
   infer_instance
 #align category_theory.limits.has_pullback_of_right_factors_mono CategoryTheory.Limits.hasPullback_of_right_factors_mono
 -/
@@ -2404,12 +2338,11 @@ instance pullback_snd_iso_of_right_iso : IsIso (pullback.fst : pullback f g ⟶ 
 variable (i : Z ⟶ W) [Mono i]
 
 #print CategoryTheory.Limits.hasPullback_of_left_factors_mono /-
-instance hasPullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i) i :=
-  by
+instance hasPullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i) i := by
   conv =>
     congr
     skip
-    rw [← category.id_comp i]
+    rw [← category.id_comp i];
   infer_instance
 #align category_theory.limits.has_pullback_of_left_factors_mono CategoryTheory.Limits.hasPullback_of_left_factors_mono
 -/
@@ -2481,10 +2414,8 @@ theorem pushoutCoconeOfLeftIso_inr : (pushoutCoconeOfLeftIso f g).inr = 𝟙 _ :
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.pushout_cocone_of_left_iso_ι_app_none CategoryTheory.Limits.pushoutCoconeOfLeftIso_ι_app_noneₓ'. -/
 @[simp]
-theorem pushoutCoconeOfLeftIso_ι_app_none : (pushoutCoconeOfLeftIso f g).ι.app none = g :=
-  by
-  delta pushout_cocone_of_left_iso
-  simp
+theorem pushoutCoconeOfLeftIso_ι_app_none : (pushoutCoconeOfLeftIso f g).ι.app none = g := by
+  delta pushout_cocone_of_left_iso; simp
 #align category_theory.limits.pushout_cocone_of_left_iso_ι_app_none CategoryTheory.Limits.pushoutCoconeOfLeftIso_ι_app_none
 
 /- warning: category_theory.limits.pushout_cocone_of_left_iso_ι_app_left -> CategoryTheory.Limits.pushoutCoconeOfLeftIso_ι_app_left is a dubious translation:
@@ -2531,11 +2462,10 @@ instance pushout_inr_iso_of_left_iso : IsIso (pushout.inr : _ ⟶ pushout f g) :
 variable (h : W ⟶ X) [Epi h]
 
 #print CategoryTheory.Limits.hasPushout_of_right_factors_epi /-
-instance hasPushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f) :=
-  by
+instance hasPushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f) := by
   conv =>
     congr
-    rw [← category.comp_id h]
+    rw [← category.comp_id h];
   infer_instance
 #align category_theory.limits.has_pushout_of_right_factors_epi CategoryTheory.Limits.hasPushout_of_right_factors_epi
 -/
@@ -2592,10 +2522,8 @@ theorem pushoutCoconeOfRightIso_inr : (pushoutCoconeOfRightIso f g).inr = inv g 
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.pushout_cocone_of_right_iso_ι_app_none CategoryTheory.Limits.pushoutCoconeOfRightIso_ι_app_noneₓ'. -/
 @[simp]
-theorem pushoutCoconeOfRightIso_ι_app_none : (pushoutCoconeOfRightIso f g).ι.app none = f :=
-  by
-  delta pushout_cocone_of_right_iso
-  simp
+theorem pushoutCoconeOfRightIso_ι_app_none : (pushoutCoconeOfRightIso f g).ι.app none = f := by
+  delta pushout_cocone_of_right_iso; simp
 #align category_theory.limits.pushout_cocone_of_right_iso_ι_app_none CategoryTheory.Limits.pushoutCoconeOfRightIso_ι_app_none
 
 /- warning: category_theory.limits.pushout_cocone_of_right_iso_ι_app_left -> CategoryTheory.Limits.pushoutCoconeOfRightIso_ι_app_left is a dubious translation:
@@ -2643,12 +2571,11 @@ instance pushout_inl_iso_of_right_iso : IsIso (pushout.inl : _ ⟶ pushout f g) 
 variable (h : W ⟶ X) [Epi h]
 
 #print CategoryTheory.Limits.hasPushout_of_left_factors_epi /-
-instance hasPushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h :=
-  by
+instance hasPushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h := by
   conv =>
     congr
     skip
-    rw [← category.comp_id h]
+    rw [← category.comp_id h];
   infer_instance
 #align category_theory.limits.has_pushout_of_left_factors_epi CategoryTheory.Limits.hasPushout_of_left_factors_epi
 -/
@@ -2704,10 +2631,8 @@ instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst : pullback f f ⟶ _)
 -/
 
 #print CategoryTheory.Limits.snd_iso_of_mono_eq /-
-instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd : pullback f f ⟶ _) :=
-  by
-  rw [← fst_eq_snd_of_mono_eq]
-  infer_instance
+instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd : pullback f f ⟶ _) := by
+  rw [← fst_eq_snd_of_mono_eq]; infer_instance
 #align category_theory.limits.snd_iso_of_mono_eq CategoryTheory.Limits.snd_iso_of_mono_eq
 -/
 
@@ -2750,10 +2675,8 @@ instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl : _ ⟶ pushout f f) :=
 -/
 
 #print CategoryTheory.Limits.inr_iso_of_epi_eq /-
-instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr : _ ⟶ pushout f f) :=
-  by
-  rw [← inl_eq_inr_of_epi_eq]
-  infer_instance
+instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr : _ ⟶ pushout f f) := by
+  rw [← inl_eq_inr_of_epi_eq]; infer_instance
 #align category_theory.limits.inr_iso_of_epi_eq CategoryTheory.Limits.inr_iso_of_epi_eq
 -/
 
@@ -2792,10 +2715,7 @@ def bigSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
   rcases pullback_cone.is_limit.lift' H' s.fst l₁ hl₁.symm with ⟨l₂, hl₂, hl₂'⟩
   use l₂
   use hl₂
-  use
-    show l₂ ≫ f₁ ≫ f₂ = s.snd by
-      rw [← hl₁', ← hl₂', category.assoc]
-      rfl
+  use show l₂ ≫ f₁ ≫ f₂ = s.snd by rw [← hl₁', ← hl₂', category.assoc]; rfl
   intro m hm₁ hm₂
   apply pullback_cone.is_limit.hom_ext H'
   · erw [hm₁, hl₂]
@@ -2830,10 +2750,7 @@ def bigSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₂))
   rcases pushout_cocone.is_colimit.desc' H' s.inl (f₂ ≫ s.inr) this with ⟨l₁, hl₁, hl₁'⟩
   rcases pushout_cocone.is_colimit.desc' H l₁ s.inr hl₁' with ⟨l₂, hl₂, hl₂'⟩
   use l₂
-  use
-    show (g₁ ≫ g₂) ≫ l₂ = s.inl by
-      rw [← hl₁, ← hl₂, category.assoc]
-      rfl
+  use show (g₁ ≫ g₂) ≫ l₂ = s.inl by rw [← hl₁, ← hl₂, category.assoc]; rfl
   use hl₂'
   intro m hm₁ hm₂
   apply pushout_cocone.is_colimit.hom_ext H
@@ -2874,15 +2791,12 @@ def leftSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
   use hl₁
   constructor
   · apply pullback_cone.is_limit.hom_ext H
-    · erw [category.assoc, ← h₁, ← category.assoc, hl₁, s.condition]
-      rfl
-    · erw [category.assoc, hl₁']
-      rfl
+    · erw [category.assoc, ← h₁, ← category.assoc, hl₁, s.condition]; rfl
+    · erw [category.assoc, hl₁']; rfl
   · intro m hm₁ hm₂
     apply pullback_cone.is_limit.hom_ext H'
     · erw [hm₁, hl₁]
-    · erw [hl₁', ← hm₂]
-      exact (category.assoc _ _ _).symm
+    · erw [hl₁', ← hm₂]; exact (category.assoc _ _ _).symm
 #align category_theory.limits.left_square_is_pullback CategoryTheory.Limits.leftSquareIsPullback
 -/
 
@@ -2914,8 +2828,7 @@ def rightSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₁))
   use l₁
   refine' ⟨_, _, _⟩
   · apply pushout_cocone.is_colimit.hom_ext H
-    · erw [← category.assoc, hl₁]
-      rfl
+    · erw [← category.assoc, hl₁]; rfl
     · erw [← category.assoc, h₂, category.assoc, hl₁', s.condition]
   · exact hl₁'
   · intro m hm₁ hm₂

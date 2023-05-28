@@ -72,12 +72,8 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.homotop
 def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g)
     where
   toFun t i := homotopies i t
-  map_zero_left' t := by
-    ext i
-    simp only [pi_eval, homotopy.apply_zero]
-  map_one_left' t := by
-    ext i
-    simp only [pi_eval, homotopy.apply_one]
+  map_zero_left' t := by ext i; simp only [pi_eval, homotopy.apply_zero]
+  map_one_left' t := by ext i; simp only [pi_eval, homotopy.apply_one]
 #align continuous_map.homotopy.pi ContinuousMap.Homotopy.pi
 
 /-- The relative product homotopy of `homotopies` between functions `f` and `g` -/
@@ -153,9 +149,7 @@ def pi (γ : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) : Path.Homotopic.Quot
 #align path.homotopic.pi Path.Homotopic.pi
 
 theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => ⟦γ i⟧) = ⟦Path.pi γ⟧ :=
-  by
-  unfold pi
-  simp
+  by unfold pi; simp
 #align path.homotopic.pi_lift Path.Homotopic.pi_lift
 
 /-- Composition and products commute.

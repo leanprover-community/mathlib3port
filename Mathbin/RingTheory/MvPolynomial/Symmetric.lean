@@ -324,10 +324,7 @@ lean 3 declaration is
 but is expected to have type
   forall (σ : Type.{u2}) (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R] [_inst_3 : Fintype.{u2} σ] (n : Nat), MvPolynomial.IsSymmetric.{u2, u1} σ R _inst_1 (MvPolynomial.esymm.{u2, u1} σ R _inst_1 _inst_3 n)
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.esymm_is_symmetric MvPolynomial.esymm_isSymmetricₓ'. -/
-theorem esymm_isSymmetric (n : ℕ) : IsSymmetric (esymm σ R n) :=
-  by
-  intro
-  rw [rename_esymm]
+theorem esymm_isSymmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by intro ; rw [rename_esymm]
 #align mv_polynomial.esymm_is_symmetric MvPolynomial.esymm_isSymmetric
 
 /- warning: mv_polynomial.support_esymm'' -> MvPolynomial.support_esymm'' is a dubious translation:
@@ -380,9 +377,7 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.support_
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
-  by
-  rw [support_esymm']
-  exact bUnion_singleton
+  by rw [support_esymm']; exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 #print MvPolynomial.degrees_esymm /-
@@ -390,10 +385,8 @@ theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintyp
     (esymm σ R n).degrees = (univ : Finset σ).val := by
   classical
     have :
-      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val :=
-      by
-      funext
-      simp [Finsupp.toMultiset_sum_single]
+      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
+      funext; simp [Finsupp.toMultiset_sum_single]
     rw [degrees_def, support_esymm, sup_image, this, ← comp_sup_eq_sup_comp]
     · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
       simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)

@@ -226,10 +226,8 @@ theorem forall_biUnionTagged (p : (ι → ℝ) → Box ι → Prop) (π : Prepar
   by
   simp only [bex_imp, mem_bUnion_tagged]
   refine' ⟨fun H J hJ J' hJ' => _, fun H J' J hJ hJ' => _⟩
-  · rw [← π.tag_bUnion_tagged hJ hJ']
-    exact H J' J hJ hJ'
-  · rw [π.tag_bUnion_tagged hJ hJ']
-    exact H J hJ J' hJ'
+  · rw [← π.tag_bUnion_tagged hJ hJ']; exact H J' J hJ hJ'
+  · rw [π.tag_bUnion_tagged hJ hJ']; exact H J hJ J' hJ'
 #align box_integral.prepartition.forall_bUnion_tagged BoxIntegral.Prepartition.forall_biUnionTagged
 -/
 
@@ -538,8 +536,7 @@ def disjUnion (π₁ π₂ : TaggedPrepartition I) (h : Disjoint π₁.iUnion π
   toPrepartition := π₁.toPrepartition.disjUnion π₂.toPrepartition h
   Tag := π₁.boxes.piecewise π₁.Tag π₂.Tag
   tag_mem_Icc J := by
-    dsimp only [Finset.piecewise]
-    split_ifs
+    dsimp only [Finset.piecewise]; split_ifs
     exacts[π₁.tag_mem_Icc J, π₂.tag_mem_Icc J]
 #align box_integral.tagged_prepartition.disj_union BoxIntegral.TaggedPrepartition.disjUnion
 
@@ -611,10 +608,8 @@ theorem IsSubordinate.disjUnion [Fintype ι] (h₁ : IsSubordinate π₁ r) (h�
     (h : Disjoint π₁.iUnion π₂.iUnion) : IsSubordinate (π₁.disjUnion π₂ h) r :=
   by
   refine' fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
-  · rw [disj_union_tag_of_mem_left _ hJ]
-    exact h₁ _ hJ
-  · rw [disj_union_tag_of_mem_right _ hJ]
-    exact h₂ _ hJ
+  · rw [disj_union_tag_of_mem_left _ hJ]; exact h₁ _ hJ
+  · rw [disj_union_tag_of_mem_right _ hJ]; exact h₂ _ hJ
 #align box_integral.tagged_prepartition.is_subordinate.disj_union BoxIntegral.TaggedPrepartition.IsSubordinate.disjUnion
 
 /- warning: box_integral.tagged_prepartition.is_Henstock.disj_union -> BoxIntegral.TaggedPrepartition.IsHenstock.disjUnion is a dubious translation:
@@ -627,10 +622,8 @@ theorem IsHenstock.disjUnion (h₁ : IsHenstock π₁) (h₂ : IsHenstock π₂)
     (h : Disjoint π₁.iUnion π₂.iUnion) : IsHenstock (π₁.disjUnion π₂ h) :=
   by
   refine' fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => _) fun hJ => _
-  · rw [disj_union_tag_of_mem_left _ hJ]
-    exact h₁ _ hJ
-  · rw [disj_union_tag_of_mem_right _ hJ]
-    exact h₂ _ hJ
+  · rw [disj_union_tag_of_mem_left _ hJ]; exact h₁ _ hJ
+  · rw [disj_union_tag_of_mem_right _ hJ]; exact h₂ _ hJ
 #align box_integral.tagged_prepartition.is_Henstock.disj_union BoxIntegral.TaggedPrepartition.IsHenstock.disjUnion
 
 #print BoxIntegral.TaggedPrepartition.embedBox /-
@@ -641,9 +634,7 @@ def embedBox (I J : Box ι) (h : I ≤ J) : TaggedPrepartition I ↪ TaggedPrepa
     { π with
       le_of_mem' := fun J' hJ' => (π.le_of_mem' J' hJ').trans h
       tag_mem_Icc := fun J => Box.le_iff_Icc.1 h (π.tag_mem_Icc J) }
-  inj' := by
-    rintro ⟨⟨b₁, h₁le, h₁d⟩, t₁, ht₁⟩ ⟨⟨b₂, h₂le, h₂d⟩, t₂, ht₂⟩ H
-    simpa using H
+  inj' := by rintro ⟨⟨b₁, h₁le, h₁d⟩, t₁, ht₁⟩ ⟨⟨b₂, h₂le, h₂d⟩, t₂, ht₂⟩ H; simpa using H
 #align box_integral.tagged_prepartition.embed_box BoxIntegral.TaggedPrepartition.embedBox
 -/
 

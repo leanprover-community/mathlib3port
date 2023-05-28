@@ -103,10 +103,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.simple_
 theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀ k ≤ N, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
-  by
-  simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]
-  congr
-  simp
+  by simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]; congr ; simp
 #align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearestPtInd_succ
 
 #print MeasureTheory.SimpleFunc.nearestPtInd_le /-

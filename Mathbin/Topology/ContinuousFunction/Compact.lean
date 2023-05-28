@@ -55,11 +55,7 @@ equivalent to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := false })]
 def equivBoundedOfCompact : C(α, β) ≃ (α →ᵇ β) :=
-  ⟨mkOfCompact, BoundedContinuousFunction.toContinuousMap, fun f =>
-    by
-    ext
-    rfl, fun f => by
-    ext
+  ⟨mkOfCompact, BoundedContinuousFunction.toContinuousMap, fun f => by ext; rfl, fun f => by ext;
     rfl⟩
 #align continuous_map.equiv_bounded_of_compact ContinuousMap.equivBoundedOfCompact
 -/
@@ -459,9 +455,7 @@ def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
   {
     addEquivBoundedOfCompact α
       E with
-    map_smul' := fun c f => by
-      ext
-      simp
+    map_smul' := fun c f => by ext; simp
     norm_map' := fun f => rfl }
 #align continuous_map.linear_isometry_bounded_of_compact ContinuousMap.linearIsometryBoundedOfCompact
 
@@ -629,9 +623,7 @@ protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] �
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_linear_comp_left_continuous_compact ContinuousLinearMap.toLinear_compLeftContinuousCompactₓ'. -/
 @[simp]
 theorem ContinuousLinearMap.toLinear_compLeftContinuousCompact (g : β →L[𝕜] γ) :
-    (g.compLeftContinuousCompact X : C(X, β) →ₗ[𝕜] C(X, γ)) = g.compLeftContinuous 𝕜 X :=
-  by
-  ext f
+    (g.compLeftContinuousCompact X : C(X, β) →ₗ[𝕜] C(X, γ)) = g.compLeftContinuous 𝕜 X := by ext f;
   rfl
 #align continuous_linear_map.to_linear_comp_left_continuous_compact ContinuousLinearMap.toLinear_compLeftContinuousCompact
 
@@ -739,11 +731,8 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
   by
   refine' (ContinuousMap.exists_tendsto_compactOpen_iff_forall _).2 fun K hK => _
   lift K to compacts X using hK
-  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) :=
-    by
-    intro s
-    ext1 x
-    simp
+  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by intro s;
+    ext1 x; simp
   simpa only [HasSum, A] using summable_of_summable_norm (hF K)
 #align continuous_map.summable_of_locally_summable_norm ContinuousMap.summable_of_locally_summable_norm
 

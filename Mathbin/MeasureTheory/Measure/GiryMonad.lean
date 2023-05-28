@@ -145,9 +145,7 @@ theorem join_apply {m : Measure (Measure α)} {s : Set α} (hs : MeasurableSet s
 
 #print MeasureTheory.Measure.join_zero /-
 @[simp]
-theorem join_zero : (0 : Measure (Measure α)).join = 0 :=
-  by
-  ext1 s hs
+theorem join_zero : (0 : Measure (Measure α)).join = 0 := by ext1 s hs;
   simp only [hs, join_apply, lintegral_zero_measure, coe_zero, Pi.zero_apply]
 #align measure_theory.measure.join_zero MeasureTheory.Measure.join_zero
 -/
@@ -177,8 +175,7 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
     · exact fun n m h μ => simple_func.lintegral_mono (simple_func.monotone_eapprox _ h) le_rfl
   intro s f hf hm
   rw [lintegral_supr _ hm]
-  swap
-  · exact fun n => Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
+  swap; · exact fun n => Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
   congr
   funext n
   rw [lintegral_finset_sum (s n)]
@@ -271,10 +268,8 @@ theorem bind_bind {γ} [MeasurableSpace γ] {m : Measure α} {f : α → Measure
 #align measure_theory.measure.bind_bind MeasureTheory.Measure.bind_bind
 
 #print MeasureTheory.Measure.bind_dirac /-
-theorem bind_dirac {f : α → Measure β} (hf : Measurable f) (a : α) : bind (dirac a) f = f a :=
-  by
-  ext1 s hs
-  rw [bind_apply hs hf, lintegral_dirac' a ((measurable_coe hs).comp hf)]
+theorem bind_dirac {f : α → Measure β} (hf : Measurable f) (a : α) : bind (dirac a) f = f a := by
+  ext1 s hs; rw [bind_apply hs hf, lintegral_dirac' a ((measurable_coe hs).comp hf)]
 #align measure_theory.measure.bind_dirac MeasureTheory.Measure.bind_dirac
 -/
 

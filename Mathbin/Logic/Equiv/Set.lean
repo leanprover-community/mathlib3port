@@ -269,10 +269,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.prod_assoc_preim
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_assoc_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
-    Equiv.prodAssoc α β γ ⁻¹' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u :=
-  by
-  ext
-  simp [and_assoc']
+    Equiv.prodAssoc α β γ ⁻¹' s ×ˢ t ×ˢ u = (s ×ˢ t) ×ˢ u := by ext; simp [and_assoc']
 #align equiv.prod_assoc_preimage Equiv.prod_assoc_preimage
 
 /- warning: equiv.prod_assoc_symm_preimage -> Equiv.prod_assoc_symm_preimage is a dubious translation:
@@ -287,10 +284,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.prod_assoc_symm_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_assoc_symm_preimage {α β γ} {s : Set α} {t : Set β} {u : Set γ} :
-    (Equiv.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u :=
-  by
-  ext
-  simp [and_assoc']
+    (Equiv.prodAssoc α β γ).symm ⁻¹' (s ×ˢ t) ×ˢ u = s ×ˢ t ×ˢ u := by ext; simp [and_assoc']
 #align equiv.prod_assoc_symm_preimage Equiv.prod_assoc_symm_preimage
 
 /- warning: equiv.prod_assoc_image -> Equiv.prod_assoc_image is a dubious translation:
@@ -353,10 +347,7 @@ def setCongr {α : Type _} {s t : Set α} (h : s = t) : s ≃ t :=
 def image {α β : Type _} (e : α ≃ β) (s : Set α) : s ≃ e '' s
     where
   toFun x := ⟨e x.1, by simp⟩
-  invFun y :=
-    ⟨e.symm y.1, by
-      rcases y with ⟨-, ⟨a, ⟨m, rfl⟩⟩⟩
-      simpa using m⟩
+  invFun y := ⟨e.symm y.1, by rcases y with ⟨-, ⟨a, ⟨m, rfl⟩⟩⟩; simpa using m⟩
   left_inv x := by simp
   right_inv y := by simp
 #align equiv.image Equiv.image
@@ -470,10 +461,8 @@ theorem union_symm_apply_right {α} {s t : Set α} [DecidablePred fun x => x ∈
 #print Equiv.Set.singleton /-
 /-- A singleton set is equivalent to a `punit` type. -/
 protected def singleton {α} (a : α) : ({a} : Set α) ≃ PUnit.{u} :=
-  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ =>
-    by
-    simp at h
-    subst x, fun ⟨⟩ => rfl⟩
+  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ => by simp at h; subst x,
+    fun ⟨⟩ => rfl⟩
 #align equiv.set.singleton Equiv.Set.singleton
 -/
 
@@ -704,9 +693,7 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
         (by
           refine' (set.union' (· ∉ s) _ _).symm
           exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1]))
-    _ ≃ Sum s t := by
-      rw [(_ : t \ s ∪ s ∩ t = t)]
-      rw [union_comm, inter_comm, inter_union_diff]
+    _ ≃ Sum s t := by rw [(_ : t \ s ∪ s ∩ t = t)]; rw [union_comm, inter_comm, inter_union_diff]
     
 #align equiv.set.union_sum_inter Equiv.Set.unionSumInter
 
@@ -768,12 +755,8 @@ protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) 
     where
   toFun f a := ⟨(f : ∀ a, β a) a, f.2 a (mem_univ a)⟩
   invFun f := ⟨fun a => f a, fun a ha => (f a).2⟩
-  left_inv := fun ⟨f, hf⟩ => by
-    ext a
-    rfl
-  right_inv f := by
-    ext a
-    rfl
+  left_inv := fun ⟨f, hf⟩ => by ext a; rfl
+  right_inv f := by ext a; rfl
 #align equiv.set.univ_pi Equiv.Set.univPi
 -/
 
@@ -862,13 +845,9 @@ noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s :
     rangeSplitting f '' s ≃ s
     where
   toFun x :=
-    ⟨⟨f x, by simp⟩, by
-      rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-      simpa [apply_range_splitting f] using m⟩
+    ⟨⟨f x, by simp⟩, by rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩; simpa [apply_range_splitting f] using m⟩
   invFun x := ⟨rangeSplitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
-  left_inv x := by
-    rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-    simp [apply_range_splitting f]
+  left_inv x := by rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩; simp [apply_range_splitting f]
   right_inv x := by simp [apply_range_splitting f]
 #align equiv.set.range_splitting_image_equiv Equiv.Set.rangeSplittingImageEquiv
 -/
@@ -946,10 +925,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} (hf : Function.Injective.{succ u2, succ u1} α β f), Eq.{max (succ u1) (succ u2)} (forall (a : Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) => α) a) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) α) (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) (fun (_x : Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u2} (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) α) (Equiv.symm.{succ u2, succ u1} α (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f)) (Equiv.ofInjective.{succ u2, u1} α β f hf))) (Set.rangeSplitting.{u2, u1} α β f)
 Case conversion may be inaccurate. Consider using '#align equiv.coe_of_injective_symm Equiv.coe_ofInjective_symmₓ'. -/
 theorem coe_ofInjective_symm {α β} {f : α → β} (hf : Injective f) :
-    ((ofInjective f hf).symm : range f → α) = rangeSplitting f :=
-  by
-  ext ⟨y, x, rfl⟩
-  apply hf
+    ((ofInjective f hf).symm : range f → α) = rangeSplitting f := by ext ⟨y, x, rfl⟩; apply hf;
   simp [apply_range_splitting f]
 #align equiv.coe_of_injective_symm Equiv.coe_ofInjective_symm
 
@@ -975,13 +951,9 @@ theorem ofLeftInverse_eq_ofInjective {α β : Type _} (f : α → β) (f_inv : N
     (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) :
     ofLeftInverse f f_inv hf =
       ofInjective f
-        ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ =>
-          by
-          haveI : Subsingleton α := subsingleton_of_not_nonempty h
-          simp) :=
-  by
-  ext
-  simp
+        ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ => by
+          haveI : Subsingleton α := subsingleton_of_not_nonempty h; simp) :=
+  by ext; simp
 #align equiv.of_left_inverse_eq_of_injective Equiv.ofLeftInverse_eq_ofInjective
 
 /- warning: equiv.of_left_inverse'_eq_of_injective -> Equiv.ofLeftInverse'_eq_ofInjective is a dubious translation:
@@ -991,9 +963,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (f_inv : β -> α) (hf : Function.LeftInverse.{succ u2, succ u1} α β f_inv f), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f))) (Equiv.ofLeftInverse'.{succ u2, u1} α β f f_inv hf) (Equiv.ofInjective.{succ u2, u1} α β f (Function.LeftInverse.injective.{succ u2, succ u1} α β f_inv f hf))
 Case conversion may be inaccurate. Consider using '#align equiv.of_left_inverse'_eq_of_injective Equiv.ofLeftInverse'_eq_ofInjectiveₓ'. -/
 theorem ofLeftInverse'_eq_ofInjective {α β : Type _} (f : α → β) (f_inv : β → α)
-    (hf : LeftInverse f_inv f) : ofLeftInverse' f f_inv hf = ofInjective f hf.Injective :=
-  by
-  ext
+    (hf : LeftInverse f_inv f) : ofLeftInverse' f f_inv hf = ofInjective f hf.Injective := by ext;
   simp
 #align equiv.of_left_inverse'_eq_of_injective Equiv.ofLeftInverse'_eq_ofInjective
 
@@ -1079,10 +1049,7 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
       Function.update_apply, Function.update_apply, dif_pos h]
     have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j := subtype.ext_iff.trans (by rw [Subtype.coe_mk])
     simp_rw [h_coe]
-  · have : i ≠ e j := by
-      contrapose! h
-      have : (e j : α) ∈ s := (e j).2
-      rwa [← h] at this
+  · have : i ≠ e j := by contrapose! h; have : (e j : α) ∈ s := (e j).2; rwa [← h] at this
     simp [h, this]
 #align dite_comp_equiv_update dite_comp_equiv_updateₓ
 

@@ -87,8 +87,7 @@ theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
   rcases eq_or_ne n 0 with (rfl | hn0); · cases not_isPrimePow_zero h
   rcases is_prime_pow_iff_factorization_eq_single.mp h with ⟨p, k, hk0, h1⟩
   rcases em' p.prime with (pp | pp)
-  · refine' absurd _ hk0.ne'
-    simp [← Nat.factorization_eq_zero_of_non_prime n pp, h1]
+  · refine' absurd _ hk0.ne'; simp [← Nat.factorization_eq_zero_of_non_prime n pp, h1]
   refine' ⟨p, pp, _⟩
   refine' Nat.eq_of_factorization_eq (Nat.ord_compl_pos p hn0).ne' (by simp) fun q => _
   rw [Nat.factorization_ord_compl n p, h1]

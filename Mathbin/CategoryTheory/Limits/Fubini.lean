@@ -245,11 +245,7 @@ noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ l
 theorem limitFlipCompLimIsoLimitCompLim_hom_π_π (j) (k) :
     (limitFlipCompLimIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k =
       limit.π _ k ≫ limit.π _ j :=
-  by
-  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
-  simp
-  dsimp
-  simp
+  by dsimp [limit_flip_comp_lim_iso_limit_comp_lim]; simp; dsimp; simp
 #align category_theory.limits.limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π CategoryTheory.Limits.limitFlipCompLimIsoLimitCompLim_hom_π_π
 
 -- See note [dsimp, simp]
@@ -257,13 +253,7 @@ theorem limitFlipCompLimIsoLimitCompLim_hom_π_π (j) (k) :
 theorem limitFlipCompLimIsoLimitCompLim_inv_π_π (k) (j) :
     (limitFlipCompLimIsoLimitCompLim F).inv ≫ limit.π _ k ≫ limit.π _ j =
       limit.π _ j ≫ limit.π _ k :=
-  by
-  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
-  simp
-  dsimp
-  simp
-  dsimp
-  simp
+  by dsimp [limit_flip_comp_lim_iso_limit_comp_lim]; simp; dsimp; simp; dsimp; simp
 #align category_theory.limits.limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π CategoryTheory.Limits.limitFlipCompLimIsoLimitCompLim_inv_π_π
 
 end

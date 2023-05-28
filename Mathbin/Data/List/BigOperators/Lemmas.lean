@@ -124,8 +124,7 @@ Case conversion may be inaccurate. Consider using '#align list.dvd_prod List.dvd
 theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod :=
   by
   let ⟨s, t, h⟩ := mem_split ha
-  rw [h, prod_append, prod_cons, mul_left_comm]
-  exact dvd_mul_right _ _
+  rw [h, prod_append, prod_cons, mul_left_comm]; exact dvd_mul_right _ _
 #align list.dvd_prod List.dvd_prod
 
 /- warning: list.dvd_sum -> List.dvd_sum is a dubious translation:

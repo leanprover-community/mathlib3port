@@ -101,14 +101,11 @@ after `m` iterations of `f`. -/
 theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : MeasurableSet s)
     (h0 : μ s ≠ 0) : ∃ᶠ m in atTop, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 :=
   by
-  by_contra H
-  simp only [not_frequently, eventually_at_top, Ne.def, Classical.not_not] at H
+  by_contra H; simp only [not_frequently, eventually_at_top, Ne.def, Classical.not_not] at H
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
-  · apply h0
-    simpa using hN 0 le_rfl
-  rw [imp_false] at ihN
-  push_neg  at ihN
+  · apply h0; simpa using hN 0 le_rfl
+  rw [imp_false] at ihN; push_neg  at ihN
   rcases ihN with ⟨n, hn, hμn⟩
   set T := s ∩ ⋃ n ≥ N + 1, f^[n] ⁻¹' s
   have hT : MeasurableSet T :=
@@ -116,8 +113,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   have hμT : μ T = 0 :=
     by
     convert(measure_bUnion_null_iff <| to_countable _).2 hN
-    rw [← inter_Union₂]
-    rfl
+    rw [← inter_Union₂]; rfl
   have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diffₓ hT) this with
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
@@ -248,8 +244,7 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [SecondCountableTopo
 /-- Iteration of a conservative system is a conservative system. -/
 protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[n]) μ :=
   by
-  cases n
-  · exact conservative.id μ
+  cases n; · exact conservative.id μ
   -- Discharge the trivial case `n = 0`
   refine' ⟨hf.1.iterate _, fun s hs hs0 => _⟩
   rcases(hf.frequently_ae_mem_and_frequently_image_mem hs hs0).exists with ⟨x, hxs, hx⟩

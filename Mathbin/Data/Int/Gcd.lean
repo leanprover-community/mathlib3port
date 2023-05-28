@@ -58,10 +58,7 @@ theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') :=
 #print Nat.xgcd_aux_rec /-
 theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  cases r <;>
-    [exact absurd h (lt_irrefl _);·
-      simp only [xgcd_aux]
-      rfl]
+  cases r <;> [exact absurd h (lt_irrefl _);· simp only [xgcd_aux]; rfl]
 #align nat.xgcd_aux_rec Nat.xgcd_aux_rec
 -/
 
@@ -89,19 +86,13 @@ def gcdB (x y : ℕ) : ℤ :=
 
 #print Nat.gcdA_zero_left /-
 @[simp]
-theorem gcdA_zero_left {s : ℕ} : gcdA 0 s = 0 :=
-  by
-  unfold gcd_a
-  rw [xgcd, xgcd_zero_left]
+theorem gcdA_zero_left {s : ℕ} : gcdA 0 s = 0 := by unfold gcd_a; rw [xgcd, xgcd_zero_left]
 #align nat.gcd_a_zero_left Nat.gcdA_zero_left
 -/
 
 #print Nat.gcdB_zero_left /-
 @[simp]
-theorem gcdB_zero_left {s : ℕ} : gcdB 0 s = 1 :=
-  by
-  unfold gcd_b
-  rw [xgcd, xgcd_zero_left]
+theorem gcdB_zero_left {s : ℕ} : gcdB 0 s = 1 := by unfold gcd_b; rw [xgcd, xgcd_zero_left]
 #align nat.gcd_b_zero_left Nat.gcdB_zero_left
 -/
 
@@ -237,9 +228,7 @@ theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = x * gcdA x y + y * gcdB
   | -[m+1], (n : ℕ) =>
     show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
   | -[m+1], -[n+1] =>
-    show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_
-      by
-      rw [neg_mul_neg, neg_mul_neg]
+    show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by rw [neg_mul_neg, neg_mul_neg];
       apply Nat.gcd_eq_gcd_ab
 #align int.gcd_eq_gcd_ab Int.gcd_eq_gcd_ab
 -/
@@ -253,8 +242,7 @@ Case conversion may be inaccurate. Consider using '#align int.nat_abs_div Int.na
 theorem natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b :=
   by
   cases Nat.eq_zero_or_pos (nat_abs b)
-  · rw [eq_zero_of_nat_abs_eq_zero h]
-    simp [Int.div_zero]
+  · rw [eq_zero_of_nat_abs_eq_zero h]; simp [Int.div_zero]
   calc
     nat_abs (a / b) = nat_abs (a / b) * 1 := by rw [mul_one]
     _ = nat_abs (a / b) * (nat_abs b / nat_abs b) := by rw [Nat.div_self h]
@@ -396,18 +384,14 @@ theorem gcd_neg_left {x y : ℤ} : gcd (-x) y = gcd x y := by rw [Int.gcd, Int.g
 -/
 
 #print Int.gcd_mul_left /-
-theorem gcd_mul_left (i j k : ℤ) : gcd (i * j) (i * k) = natAbs i * gcd j k :=
-  by
-  rw [Int.gcd, Int.gcd, nat_abs_mul, nat_abs_mul]
-  apply Nat.gcd_mul_left
+theorem gcd_mul_left (i j k : ℤ) : gcd (i * j) (i * k) = natAbs i * gcd j k := by
+  rw [Int.gcd, Int.gcd, nat_abs_mul, nat_abs_mul]; apply Nat.gcd_mul_left
 #align int.gcd_mul_left Int.gcd_mul_left
 -/
 
 #print Int.gcd_mul_right /-
-theorem gcd_mul_right (i j k : ℤ) : gcd (i * j) (k * j) = gcd i k * natAbs j :=
-  by
-  rw [Int.gcd, Int.gcd, nat_abs_mul, nat_abs_mul]
-  apply Nat.gcd_mul_right
+theorem gcd_mul_right (i j k : ℤ) : gcd (i * j) (k * j) = gcd i k * natAbs j := by
+  rw [Int.gcd, Int.gcd, nat_abs_mul, nat_abs_mul]; apply Nat.gcd_mul_right
 #align int.gcd_mul_right Int.gcd_mul_right
 -/
 
@@ -432,8 +416,7 @@ theorem gcd_eq_zero_iff {i j : ℤ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 :=
     exact
       ⟨nat_abs_eq_zero.mp (Nat.eq_zero_of_gcd_eq_zero_left h),
         nat_abs_eq_zero.mp (Nat.eq_zero_of_gcd_eq_zero_right h)⟩
-  · intro h
-    rw [nat_abs_eq_zero.mpr h.left, nat_abs_eq_zero.mpr h.right]
+  · intro h; rw [nat_abs_eq_zero.mpr h.left, nat_abs_eq_zero.mpr h.right]
     apply Nat.gcd_zero_left
 #align int.gcd_eq_zero_iff Int.gcd_eq_zero_iff
 -/
@@ -621,9 +604,7 @@ Case conversion may be inaccurate. Consider using '#align int.dvd_of_dvd_mul_rig
 Compare with `is_coprime.dvd_of_dvd_mul_right` and
 `unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_right_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a b = 1) :
-    a ∣ c := by
-  rw [mul_comm] at habc
-  exact dvd_of_dvd_mul_left_of_gcd_one habc hab
+    a ∣ c := by rw [mul_comm] at habc; exact dvd_of_dvd_mul_left_of_gcd_one habc hab
 #align int.dvd_of_dvd_mul_right_of_gcd_one Int.dvd_of_dvd_mul_right_of_gcd_one
 
 #print Int.gcd_least_linear /-
@@ -644,63 +625,43 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
 
 
 #print Int.lcm_comm /-
-theorem lcm_comm (i j : ℤ) : lcm i j = lcm j i :=
-  by
-  rw [Int.lcm, Int.lcm]
-  exact Nat.lcm_comm _ _
+theorem lcm_comm (i j : ℤ) : lcm i j = lcm j i := by rw [Int.lcm, Int.lcm]; exact Nat.lcm_comm _ _
 #align int.lcm_comm Int.lcm_comm
 -/
 
 #print Int.lcm_assoc /-
-theorem lcm_assoc (i j k : ℤ) : lcm (lcm i j) k = lcm i (lcm j k) :=
-  by
-  rw [Int.lcm, Int.lcm, Int.lcm, Int.lcm, nat_abs_of_nat, nat_abs_of_nat]
-  apply Nat.lcm_assoc
+theorem lcm_assoc (i j k : ℤ) : lcm (lcm i j) k = lcm i (lcm j k) := by
+  rw [Int.lcm, Int.lcm, Int.lcm, Int.lcm, nat_abs_of_nat, nat_abs_of_nat]; apply Nat.lcm_assoc
 #align int.lcm_assoc Int.lcm_assoc
 -/
 
 #print Int.lcm_zero_left /-
 @[simp]
-theorem lcm_zero_left (i : ℤ) : lcm 0 i = 0 :=
-  by
-  rw [Int.lcm]
-  apply Nat.lcm_zero_left
+theorem lcm_zero_left (i : ℤ) : lcm 0 i = 0 := by rw [Int.lcm]; apply Nat.lcm_zero_left
 #align int.lcm_zero_left Int.lcm_zero_left
 -/
 
 #print Int.lcm_zero_right /-
 @[simp]
-theorem lcm_zero_right (i : ℤ) : lcm i 0 = 0 :=
-  by
-  rw [Int.lcm]
-  apply Nat.lcm_zero_right
+theorem lcm_zero_right (i : ℤ) : lcm i 0 = 0 := by rw [Int.lcm]; apply Nat.lcm_zero_right
 #align int.lcm_zero_right Int.lcm_zero_right
 -/
 
 #print Int.lcm_one_left /-
 @[simp]
-theorem lcm_one_left (i : ℤ) : lcm 1 i = natAbs i :=
-  by
-  rw [Int.lcm]
-  apply Nat.lcm_one_left
+theorem lcm_one_left (i : ℤ) : lcm 1 i = natAbs i := by rw [Int.lcm]; apply Nat.lcm_one_left
 #align int.lcm_one_left Int.lcm_one_left
 -/
 
 #print Int.lcm_one_right /-
 @[simp]
-theorem lcm_one_right (i : ℤ) : lcm i 1 = natAbs i :=
-  by
-  rw [Int.lcm]
-  apply Nat.lcm_one_right
+theorem lcm_one_right (i : ℤ) : lcm i 1 = natAbs i := by rw [Int.lcm]; apply Nat.lcm_one_right
 #align int.lcm_one_right Int.lcm_one_right
 -/
 
 #print Int.lcm_self /-
 @[simp]
-theorem lcm_self (i : ℤ) : lcm i i = natAbs i :=
-  by
-  rw [Int.lcm]
-  apply Nat.lcm_self
+theorem lcm_self (i : ℤ) : lcm i i = natAbs i := by rw [Int.lcm]; apply Nat.lcm_self
 #align int.lcm_self Int.lcm_self
 -/
 
@@ -710,10 +671,7 @@ lean 3 declaration is
 but is expected to have type
   forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt i (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
 Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_left Int.dvd_lcm_leftₓ'. -/
-theorem dvd_lcm_left (i j : ℤ) : i ∣ lcm i j :=
-  by
-  rw [Int.lcm]
-  apply coe_nat_dvd_right.mpr
+theorem dvd_lcm_left (i j : ℤ) : i ∣ lcm i j := by rw [Int.lcm]; apply coe_nat_dvd_right.mpr;
   apply Nat.dvd_lcm_left
 #align int.dvd_lcm_left Int.dvd_lcm_left
 
@@ -723,10 +681,7 @@ lean 3 declaration is
 but is expected to have type
   forall (i : Int) (j : Int), Dvd.dvd.{0} Int Int.instDvdInt j (Nat.cast.{0} Int instNatCastInt (Int.lcm i j))
 Case conversion may be inaccurate. Consider using '#align int.dvd_lcm_right Int.dvd_lcm_rightₓ'. -/
-theorem dvd_lcm_right (i j : ℤ) : j ∣ lcm i j :=
-  by
-  rw [Int.lcm]
-  apply coe_nat_dvd_right.mpr
+theorem dvd_lcm_right (i j : ℤ) : j ∣ lcm i j := by rw [Int.lcm]; apply coe_nat_dvd_right.mpr;
   apply Nat.dvd_lcm_right
 #align int.dvd_lcm_right Int.dvd_lcm_right
 

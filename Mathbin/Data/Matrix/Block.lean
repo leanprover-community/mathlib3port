@@ -270,9 +270,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_sub
 @[simp]
 theorem fromBlocks_submatrix_sum_swap_left (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) (f : p → Sum l m) :
-    (fromBlocks A B C D).submatrix Sum.swap f = (fromBlocks C D A B).submatrix id f :=
-  by
-  ext (i j)
+    (fromBlocks A B C D).submatrix Sum.swap f = (fromBlocks C D A B).submatrix id f := by ext (i j);
   cases i <;> dsimp <;> cases f j <;> rfl
 #align matrix.from_blocks_submatrix_sum_swap_left Matrix.fromBlocks_submatrix_sum_swap_left
 
@@ -285,9 +283,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_sub
 @[simp]
 theorem fromBlocks_submatrix_sum_swap_right (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
     (D : Matrix o m α) (f : p → Sum n o) :
-    (fromBlocks A B C D).submatrix f Sum.swap = (fromBlocks B A D C).submatrix f id :=
-  by
-  ext (i j)
+    (fromBlocks A B C D).submatrix f Sum.swap = (fromBlocks B A D C).submatrix f id := by ext (i j);
   cases j <;> dsimp <;> cases f i <;> rfl
 #align matrix.from_blocks_submatrix_sum_swap_right Matrix.fromBlocks_submatrix_sum_swap_right
 
@@ -397,10 +393,8 @@ but is expected to have type
   forall {l : Type.{u4}} {m : Type.{u3}} {n : Type.{u2}} {o : Type.{u1}} {α : Type.{u5}} [_inst_1 : Zero.{u5} α], Eq.{max (max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)) (succ u5)} (Matrix.{max u1 u2, max u3 u4, u5} (Sum.{u2, u1} n o) (Sum.{u4, u3} l m) α) (Matrix.fromBlocks.{u4, u3, u2, u1, u5} l m n o α (OfNat.ofNat.{max (max u4 u2) u5} (Matrix.{u2, u4, u5} n l α) 0 (Zero.toOfNat0.{max (max u4 u2) u5} (Matrix.{u2, u4, u5} n l α) (Matrix.zero.{u5, u2, u4} n l α _inst_1))) (OfNat.ofNat.{max (max u2 u5) u3} (Matrix.{u2, u3, u5} n m α) 0 (Zero.toOfNat0.{max (max u2 u5) u3} (Matrix.{u2, u3, u5} n m α) (Matrix.zero.{u5, u2, u3} n m α _inst_1))) (OfNat.ofNat.{max (max u4 u5) u1} (Matrix.{u1, u4, u5} o l α) 0 (Zero.toOfNat0.{max (max u4 u5) u1} (Matrix.{u1, u4, u5} o l α) (Matrix.zero.{u5, u1, u4} o l α _inst_1))) (OfNat.ofNat.{max (max u3 u1) u5} (Matrix.{u1, u3, u5} o m α) 0 (Zero.toOfNat0.{max (max u3 u1) u5} (Matrix.{u1, u3, u5} o m α) (Matrix.zero.{u5, u1, u3} o m α _inst_1)))) (OfNat.ofNat.{max (max (max (max u4 u3) u2) u1) u5} (Matrix.{max u1 u2, max u3 u4, u5} (Sum.{u2, u1} n o) (Sum.{u4, u3} l m) α) 0 (Zero.toOfNat0.{max (max (max (max u4 u3) u2) u1) u5} (Matrix.{max u1 u2, max u3 u4, u5} (Sum.{u2, u1} n o) (Sum.{u4, u3} l m) α) (Matrix.zero.{u5, max u2 u1, max u4 u3} (Sum.{u2, u1} n o) (Sum.{u4, u3} l m) α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_zero Matrix.fromBlocks_zeroₓ'. -/
 @[simp]
-theorem fromBlocks_zero [Zero α] : fromBlocks (0 : Matrix n l α) 0 0 (0 : Matrix o m α) = 0 :=
-  by
-  ext (i j)
-  rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> rfl
+theorem fromBlocks_zero [Zero α] : fromBlocks (0 : Matrix n l α) 0 0 (0 : Matrix o m α) = 0 := by
+  ext (i j); rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> rfl
 #align matrix.from_blocks_zero Matrix.fromBlocks_zero
 
 /- warning: matrix.from_blocks_add -> Matrix.fromBlocks_add is a dubious translation:
@@ -441,9 +435,7 @@ theorem fromBlocks_mulVec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring α]
     mulVec (fromBlocks A B C D) x =
       Sum.elim (mulVec A (x ∘ Sum.inl) + mulVec B (x ∘ Sum.inr))
         (mulVec C (x ∘ Sum.inl) + mulVec D (x ∘ Sum.inr)) :=
-  by
-  ext i
-  cases i <;> simp [mul_vec, dot_product]
+  by ext i; cases i <;> simp [mul_vec, dot_product]
 #align matrix.from_blocks_mul_vec Matrix.fromBlocks_mulVec
 
 /- warning: matrix.vec_mul_from_blocks -> Matrix.vecMul_fromBlocks is a dubious translation:
@@ -457,9 +449,7 @@ theorem vecMul_fromBlocks [Fintype n] [Fintype o] [NonUnitalNonAssocSemiring α]
     vecMul x (fromBlocks A B C D) =
       Sum.elim (vecMul (x ∘ Sum.inl) A + vecMul (x ∘ Sum.inr) C)
         (vecMul (x ∘ Sum.inl) B + vecMul (x ∘ Sum.inr) D) :=
-  by
-  ext i
-  cases i <;> simp [vec_mul, dot_product]
+  by ext i; cases i <;> simp [vec_mul, dot_product]
 #align matrix.vec_mul_from_blocks Matrix.vecMul_fromBlocks
 
 variable [DecidableEq l] [DecidableEq m]
@@ -522,9 +512,7 @@ but is expected to have type
   forall {l : Type.{u3}} {m : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} l] [_inst_2 : DecidableEq.{succ u2} m] [_inst_3 : Zero.{u1} α] [_inst_4 : One.{u1} α], Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{max u2 u3, max u2 u3, u1} (Sum.{u3, u2} l m) (Sum.{u3, u2} l m) α) (Matrix.fromBlocks.{u3, u2, u3, u2, u1} l m l m α (OfNat.ofNat.{max u3 u1} (Matrix.{u3, u3, u1} l l α) 1 (One.toOfNat1.{max u3 u1} (Matrix.{u3, u3, u1} l l α) (Matrix.one.{u1, u3} l α (fun (a : l) (b : l) => _inst_1 a b) _inst_3 _inst_4))) (OfNat.ofNat.{max (max u3 u1) u2} (Matrix.{u3, u2, u1} l m α) 0 (Zero.toOfNat0.{max (max u3 u1) u2} (Matrix.{u3, u2, u1} l m α) (Matrix.zero.{u1, u3, u2} l m α _inst_3))) (OfNat.ofNat.{max (max u3 u1) u2} (Matrix.{u2, u3, u1} m l α) 0 (Zero.toOfNat0.{max (max u3 u1) u2} (Matrix.{u2, u3, u1} m l α) (Matrix.zero.{u1, u2, u3} m l α _inst_3))) (OfNat.ofNat.{max u2 u1} (Matrix.{u2, u2, u1} m m α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u2, u2, u1} m m α) (Matrix.one.{u1, u2} m α (fun (a : m) (b : m) => _inst_2 a b) _inst_3 _inst_4)))) (OfNat.ofNat.{max (max u3 u2) u1} (Matrix.{max u2 u3, max u2 u3, u1} (Sum.{u3, u2} l m) (Sum.{u3, u2} l m) α) 1 (One.toOfNat1.{max (max u3 u2) u1} (Matrix.{max u2 u3, max u2 u3, u1} (Sum.{u3, u2} l m) (Sum.{u3, u2} l m) α) (Matrix.one.{u1, max u3 u2} (Sum.{u3, u2} l m) α (fun (a : Sum.{u3, u2} l m) (b : Sum.{u3, u2} l m) => Sum.instDecidableEqSum.{u3, u2} l m (fun (a : l) (b : l) => _inst_1 a b) (fun (a : m) (b : m) => _inst_2 a b) a b) _inst_3 _inst_4)))
 Case conversion may be inaccurate. Consider using '#align matrix.from_blocks_one Matrix.fromBlocks_oneₓ'. -/
 @[simp]
-theorem fromBlocks_one : fromBlocks (1 : Matrix l l α) 0 0 (1 : Matrix m m α) = 1 :=
-  by
-  ext (i j)
+theorem fromBlocks_one : fromBlocks (1 : Matrix l l α) 0 0 (1 : Matrix m m α) = 1 := by ext (i j);
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [one_apply]
 #align matrix.from_blocks_one Matrix.fromBlocks_one
 
@@ -593,10 +581,7 @@ but is expected to have type
   forall {m : Type.{u4}} {n : Type.{u3}} {o : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} o] [_inst_2 : Zero.{u2} α] (M : o -> (Matrix.{u4, u3, u2} m n α)) (ik : Prod.{u4, u1} m o) (jk : Prod.{u3, u1} n o), Eq.{succ u2} α (Matrix.blockDiagonal.{u4, u3, u1, u2} m n o α (fun (a : o) (b : o) => _inst_1 a b) _inst_2 M ik jk) (ite.{succ u2} α (Eq.{succ u1} o (Prod.snd.{u4, u1} m o ik) (Prod.snd.{u3, u1} n o jk)) (_inst_1 (Prod.snd.{u4, u1} m o ik) (Prod.snd.{u3, u1} n o jk)) (M (Prod.snd.{u4, u1} m o ik) (Prod.fst.{u4, u1} m o ik) (Prod.fst.{u3, u1} n o jk)) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal_apply Matrix.blockDiagonal_applyₓ'. -/
 theorem blockDiagonal_apply (M : o → Matrix m n α) (ik jk) :
-    blockDiagonal M ik jk = if ik.2 = jk.2 then M ik.2 ik.1 jk.1 else 0 :=
-  by
-  cases ik
-  cases jk
+    blockDiagonal M ik jk = if ik.2 = jk.2 then M ik.2 ik.1 jk.1 else 0 := by cases ik; cases jk;
   rfl
 #align matrix.block_diagonal_apply Matrix.blockDiagonal_apply
 
@@ -675,9 +660,7 @@ but is expected to have type
   forall {m : Type.{u4}} {n : Type.{u3}} {o : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} o] [_inst_2 : Zero.{u1} α], Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (Matrix.{max u2 u4, max u2 u3, u1} (Prod.{u4, u2} m o) (Prod.{u3, u2} n o) α) (Matrix.blockDiagonal.{u4, u3, u2, u1} m n o α (fun (a : o) (b : o) => _inst_1 a b) _inst_2 (OfNat.ofNat.{max (max (max u4 u3) u2) u1} (o -> (Matrix.{u4, u3, u1} m n α)) 0 (Zero.toOfNat0.{max (max (max u4 u3) u2) u1} (o -> (Matrix.{u4, u3, u1} m n α)) (Pi.instZero.{u2, max (max u4 u3) u1} o (fun (a._@.Mathlib.Data.Matrix.Block._hyg.4903 : o) => Matrix.{u4, u3, u1} m n α) (fun (i : o) => Matrix.zero.{u1, u4, u3} m n α _inst_2))))) (OfNat.ofNat.{max (max (max u4 u3) u2) u1} (Matrix.{max u2 u4, max u2 u3, u1} (Prod.{u4, u2} m o) (Prod.{u3, u2} n o) α) 0 (Zero.toOfNat0.{max (max (max u4 u3) u2) u1} (Matrix.{max u2 u4, max u2 u3, u1} (Prod.{u4, u2} m o) (Prod.{u3, u2} n o) α) (Matrix.zero.{u1, max u4 u2, max u3 u2} (Prod.{u4, u2} m o) (Prod.{u3, u2} n o) α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal_zero Matrix.blockDiagonal_zeroₓ'. -/
 @[simp]
-theorem blockDiagonal_zero : blockDiagonal (0 : o → Matrix m n α) = 0 :=
-  by
-  ext
+theorem blockDiagonal_zero : blockDiagonal (0 : o → Matrix m n α) = 0 := by ext;
   simp [block_diagonal_apply]
 #align matrix.block_diagonal_zero Matrix.blockDiagonal_zero
 
@@ -826,11 +809,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal_smul Matrix.blockDiagonal_smulₓ'. -/
 @[simp]
 theorem blockDiagonal_smul {R : Type _} [Monoid R] [AddMonoid α] [DistribMulAction R α] (x : R)
-    (M : o → Matrix m n α) : blockDiagonal (x • M) = x • blockDiagonal M :=
-  by
-  ext
-  simp only [block_diagonal_apply, Pi.smul_apply]
-  split_ifs <;> simp
+    (M : o → Matrix m n α) : blockDiagonal (x • M) = x • blockDiagonal M := by ext;
+  simp only [block_diagonal_apply, Pi.smul_apply]; split_ifs <;> simp
 #align matrix.block_diagonal_smul Matrix.blockDiagonal_smul
 
 end BlockDiagonal
@@ -1105,10 +1085,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal'
 theorem blockDiagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) (ik jk) :
     blockDiagonal' M ik jk =
       if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_arg n' h.symm) jk.2) else 0 :=
-  by
-  cases ik
-  cases jk
-  rfl
+  by cases ik; cases jk; rfl
 #align matrix.block_diagonal'_apply Matrix.blockDiagonal'_apply
 
 /- warning: matrix.block_diagonal'_apply_eq -> Matrix.blockDiagonal'_apply_eq is a dubious translation:
@@ -1184,9 +1161,7 @@ but is expected to have type
   forall {o : Type.{u4}} {m' : o -> Type.{u3}} {n' : o -> Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u4} o] [_inst_2 : Zero.{u1} α], Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (Matrix.{max u3 u4, max u2 u4, u1} (Sigma.{u4, u3} o (fun (i : o) => m' i)) (Sigma.{u4, u2} o (fun (i : o) => n' i)) α) (Matrix.blockDiagonal'.{u4, u3, u2, u1} o (fun (i : o) => m' i) (fun (i : o) => n' i) α (fun (a : o) (b : o) => _inst_1 a b) _inst_2 (OfNat.ofNat.{max (max (max u4 u3) u2) u1} (forall (i : o), Matrix.{u3, u2, u1} (m' i) (n' i) α) 0 (Zero.toOfNat0.{max (max (max u4 u3) u2) u1} (forall (i : o), Matrix.{u3, u2, u1} (m' i) (n' i) α) (Pi.instZero.{u4, max (max u3 u2) u1} o (fun (i : o) => Matrix.{u3, u2, u1} (m' i) (n' i) α) (fun (i : o) => Matrix.zero.{u1, u3, u2} (m' i) (n' i) α _inst_2))))) (OfNat.ofNat.{max (max (max u4 u3) u2) u1} (Matrix.{max u3 u4, max u2 u4, u1} (Sigma.{u4, u3} o (fun (i : o) => m' i)) (Sigma.{u4, u2} o (fun (i : o) => n' i)) α) 0 (Zero.toOfNat0.{max (max (max u4 u3) u2) u1} (Matrix.{max u3 u4, max u2 u4, u1} (Sigma.{u4, u3} o (fun (i : o) => m' i)) (Sigma.{u4, u2} o (fun (i : o) => n' i)) α) (Matrix.zero.{u1, max u4 u3, max u4 u2} (Sigma.{u4, u3} o (fun (i : o) => m' i)) (Sigma.{u4, u2} o (fun (i : o) => n' i)) α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal'_zero Matrix.blockDiagonal'_zeroₓ'. -/
 @[simp]
-theorem blockDiagonal'_zero : blockDiagonal' (0 : ∀ i, Matrix (m' i) (n' i) α) = 0 :=
-  by
-  ext
+theorem blockDiagonal'_zero : blockDiagonal' (0 : ∀ i, Matrix (m' i) (n' i) α) = 0 := by ext;
   simp [block_diagonal'_apply]
 #align matrix.block_diagonal'_zero Matrix.blockDiagonal'_zero
 
@@ -1294,7 +1269,7 @@ theorem blockDiagonal'_mul [NonUnitalNonAssocSemiring α] [∀ i, Fintype (n' i)
   simp only [block_diagonal'_apply, mul_apply, ← Finset.univ_sigma_univ, Finset.sum_sigma]
   rw [Fintype.sum_eq_single k]
   · split_ifs <;> simp
-  · intro j' hj'
+  · intro j' hj';
     exact Finset.sum_eq_zero fun _ _ => by rw [dif_neg hj'.symm, MulZeroClass.zero_mul]
 #align matrix.block_diagonal'_mul Matrix.blockDiagonal'_mul
 
@@ -1339,11 +1314,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.block_diagonal'_smul Matrix.blockDiagonal'_smulₓ'. -/
 @[simp]
 theorem blockDiagonal'_smul {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] (x : R)
-    (M : ∀ i, Matrix (m' i) (n' i) α) : blockDiagonal' (x • M) = x • blockDiagonal' M :=
-  by
-  ext
-  simp only [block_diagonal'_apply, Pi.smul_apply]
-  split_ifs <;> simp
+    (M : ∀ i, Matrix (m' i) (n' i) α) : blockDiagonal' (x • M) = x • blockDiagonal' M := by ext;
+  simp only [block_diagonal'_apply, Pi.smul_apply]; split_ifs <;> simp
 #align matrix.block_diagonal'_smul Matrix.blockDiagonal'_smul
 
 end BlockDiagonal'
@@ -1434,8 +1406,7 @@ theorem blockDiag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σ
     obtain rfl | hij := Decidable.eq_or_ne i j
     · rw [block_diag'_apply, diagonal_apply_eq, diagonal_apply_eq]
     · rw [block_diag'_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => _) hij)]
-      cases h
-      rfl
+      cases h; rfl
 #align matrix.block_diag'_diagonal Matrix.blockDiag'_diagonal
 
 /- warning: matrix.block_diag'_block_diagonal' -> Matrix.blockDiag'_blockDiagonal' is a dubious translation:

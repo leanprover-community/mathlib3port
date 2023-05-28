@@ -224,10 +224,8 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] [_inst_2 : FloorRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))] {v : K}, Eq.{succ u1} K (GeneralizedContinuedFraction.h.{u1} K (GeneralizedContinuedFraction.of.{u1} K _inst_1 _inst_2 v)) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (GeneralizedContinuedFraction.IntFractPair.b.{u1} K (Prod.fst.{u1, u1} (GeneralizedContinuedFraction.IntFractPair.{u1} K) (Stream'.Seq.{u1} (GeneralizedContinuedFraction.IntFractPair.{u1} K)) (GeneralizedContinuedFraction.IntFractPair.seq1.{u1} K _inst_1 _inst_2 v))))
 Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.of_h_eq_int_fract_pair_seq1_fst_b GeneralizedContinuedFraction.of_h_eq_intFractPair_seq1_fst_bₓ'. -/
-theorem of_h_eq_intFractPair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b :=
-  by
-  cases aux_seq_eq : int_fract_pair.seq1 v
-  simp [of, aux_seq_eq]
+theorem of_h_eq_intFractPair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b := by
+  cases aux_seq_eq : int_fract_pair.seq1 v; simp [of, aux_seq_eq]
 #align generalized_continued_fraction.of_h_eq_int_fract_pair_seq1_fst_b GeneralizedContinuedFraction.of_h_eq_intFractPair_seq1_fst_b
 
 /- warning: generalized_continued_fraction.of_h_eq_floor -> GeneralizedContinuedFraction.of_h_eq_floor is a dubious translation:
@@ -351,9 +349,7 @@ fractional parts of the stream of integer and fractional parts.
 theorem get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_ne_zero : ifp_n.fr ≠ 0) :
     (of v).s.get? n = some ⟨1, (IntFractPair.of ifp_n.fr⁻¹).b⟩ :=
-  have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) :=
-    by
-    cases ifp_n
+  have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) := by cases ifp_n;
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
   get?_of_eq_some_of_succ_get?_intFractPair_stream this
 #align generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GeneralizedContinuedFraction.get?_of_eq_some_of_get?_intFractPair_stream_fr_ne_zero

@@ -73,25 +73,17 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
   exact preserves_product.iso _ _
   exact preserves_product.iso _ _
   rintro ⟨⟩ ⟨⟩ ⟨⟩
-  · ext
-    simp
-    dsimp
-    simp
+  · ext; simp; dsimp; simp
   -- non-terminal `simp`, but `squeeze_simp` fails
   · ext
     simp only [limit.lift_π, functor.comp_map, map_lift_pi_comparison, fan.mk_π_app,
       preserves_product.iso_hom, parallel_pair_map_left, functor.map_comp, category.assoc]
-    dsimp
-    simp
+    dsimp; simp
   · ext
     simp only [limit.lift_π, functor.comp_map, parallel_pair_map_right, fan.mk_π_app,
       preserves_product.iso_hom, map_lift_pi_comparison, functor.map_comp, category.assoc]
-    dsimp
-    simp
-  · ext
-    simp
-    dsimp
-    simp
+    dsimp; simp
+  · ext; simp; dsimp; simp
 #align Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
 -/
 
@@ -111,9 +103,7 @@ def mapConeFork :
     dsimp; simp [diagram_comp_preserves_limits]; cases j <;> dsimp
     · rw [iso.eq_comp_inv]
       ext
-      simp
-      dsimp
-      simp
+      simp; dsimp; simp
     · rw [iso.eq_comp_inv]
       ext
       simp
@@ -188,9 +178,7 @@ theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F �
       apply iso.symm
       fapply cones.ext
       exact as_iso f
-      rintro ⟨_ | _⟩ <;>
-        · dsimp [f]
-          simp
+      rintro ⟨_ | _⟩ <;> · dsimp [f]; simp
     · -- Returning to the task of shwoing that `G.map f` is an isomorphism,
       -- we note that `G.map f` is almost but not quite (see below) a morphism
       -- from the sheaf condition cone for `F ⋙ G` to the

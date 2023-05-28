@@ -233,9 +233,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align algebra.adjoin_empty Algebra.adjoin_emptyₓ'. -/
 @[simp]
 theorem adjoin_empty : adjoin R (∅ : Set A) = ⊥ :=
-  show adjoin R ⊥ = ⊥ by
-    apply GaloisConnection.l_bot
-    exact Algebra.gc
+  show adjoin R ⊥ = ⊥ by apply GaloisConnection.l_bot; exact Algebra.gc
 #align algebra.adjoin_empty Algebra.adjoin_empty
 
 /- warning: algebra.adjoin_univ -> Algebra.adjoin_univ is a dubious translation:
@@ -257,26 +255,19 @@ Case conversion may be inaccurate. Consider using '#align algebra.adjoin_eq_span
 theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s) :=
   by
   apply le_antisymm
-  · intro r hr
-    rcases Subsemiring.mem_closure_iff_exists_list.1 hr with ⟨L, HL, rfl⟩
-    clear hr
-    induction' L with hd tl ih
-    · exact zero_mem _
+  · intro r hr; rcases Subsemiring.mem_closure_iff_exists_list.1 hr with ⟨L, HL, rfl⟩; clear hr
+    induction' L with hd tl ih; · exact zero_mem _
     rw [List.forall_mem_cons] at HL
     rw [List.map_cons, List.sum_cons]
     refine' Submodule.add_mem _ _ (ih HL.2)
-    replace HL := HL.1
-    clear ih tl
+    replace HL := HL.1; clear ih tl
     suffices ∃ (z r : _)(hr : r ∈ Submonoid.closure s), SMul.smul z r = List.prod hd
       by
-      rcases this with ⟨z, r, hr, hzr⟩
-      rw [← hzr]
+      rcases this with ⟨z, r, hr, hzr⟩; rw [← hzr]
       exact smul_mem _ _ (subset_span hr)
-    induction' hd with hd tl ih
-    · exact ⟨1, 1, (Submonoid.closure s).one_mem', one_smul _ _⟩
+    induction' hd with hd tl ih; · exact ⟨1, 1, (Submonoid.closure s).one_mem', one_smul _ _⟩
     rw [List.forall_mem_cons] at HL
-    rcases ih HL.2 with ⟨z, r, hr, hzr⟩
-    rw [List.prod_cons, ← hzr]
+    rcases ih HL.2 with ⟨z, r, hr, hzr⟩; rw [List.prod_cons, ← hzr]
     rcases HL.1 with (⟨hd, rfl⟩ | hs)
     · refine' ⟨hd * z, r, hr, _⟩
       rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_mul, _root_.mul_assoc]

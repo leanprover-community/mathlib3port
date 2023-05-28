@@ -97,9 +97,7 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
   calc
     (∏ j : σ, (e a : σ → K) j ^ d j) =
         (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j :=
-      by
-      rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
-      rfl
+      by rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]; rfl
     _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [Equiv.subtypeEquivCodomain_symm_apply_eq]
     _ = a ^ d i * ∏ j, x₀ j ^ d j := (congr_arg _ (Fintype.prod_congr _ _ _))
@@ -125,13 +123,9 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } :=
   by
-  have hq : 0 < q - 1 := by
-    rw [← Fintype.card_units, Fintype.card_pos_iff]
-    exact ⟨1⟩
+  have hq : 0 < q - 1 := by rw [← Fintype.card_units, Fintype.card_pos_iff]; exact ⟨1⟩
   let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
-  have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 :=
-    by
-    intro x
+  have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by intro x;
     simp only [S, true_and_iff, sep_def, mem_filter, mem_univ]
   /- The polynomial `F = ∏ i in s, (1 - (f i)^(q - 1))` has the nice property
     that it takes the value `1` on elements of `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}`

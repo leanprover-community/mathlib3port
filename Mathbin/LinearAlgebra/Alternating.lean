@@ -106,10 +106,7 @@ section Coercions
 instance funLike : FunLike (AlternatingMap R M N ι) (ι → M) fun _ => N
     where
   coe := AlternatingMap.toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
 #align alternating_map.fun_like AlternatingMap.funLike
 -/
 
@@ -635,12 +632,8 @@ def compAlternatingMap (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ Alt
   toFun f :=
     { g.compMultilinearMap (f : MultilinearMap R (fun _ : ι => M) N) with
       map_eq_zero_of_eq' := fun v i j h hij => by simp [f.map_eq_zero_of_eq v h hij] }
-  map_zero' := by
-    ext
-    simp
-  map_add' a b := by
-    ext
-    simp
+  map_zero' := by ext; simp
+  map_add' a b := by ext; simp
 #align linear_map.comp_alternating_map LinearMap.compAlternatingMap
 -/
 
@@ -739,10 +732,8 @@ but is expected to have type
   forall {R : Type.{u5}} [_inst_1 : Semiring.{u5} R] {M : Type.{u3}} [_inst_2 : AddCommMonoid.{u3} M] [_inst_3 : Module.{u5, u3} R M _inst_1 _inst_2] {N : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} N] [_inst_5 : Module.{u5, u2} R N _inst_1 _inst_4] {ι : Type.{u1}} {M₂ : Type.{u4}} [_inst_12 : AddCommMonoid.{u4} M₂] [_inst_13 : Module.{u5, u4} R M₂ _inst_1 _inst_12] (g : LinearMap.{u5, u5, u4, u3} R R _inst_1 _inst_1 (RingHom.id.{u5} R (Semiring.toNonAssocSemiring.{u5} R _inst_1)) M₂ M _inst_12 _inst_2 _inst_13 _inst_3), Eq.{max (max (succ u2) (succ u1)) (succ u4)} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.compLinearMap.{u5, u3, u2, u1, u4} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι M₂ _inst_12 _inst_13 (OfNat.ofNat.{max (max u3 u2) u1} (AlternatingMap.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (AlternatingMap.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u5, u3, u2, u1} R _inst_1 M _inst_2 _inst_3 N _inst_4 _inst_5 ι))) g) (OfNat.ofNat.{max (max u2 u1) u4} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) 0 (Zero.toOfNat0.{max (max u2 u1) u4} (AlternatingMap.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι) (AlternatingMap.zero.{u5, u4, u2, u1} R _inst_1 M₂ _inst_12 _inst_13 N _inst_4 _inst_5 ι)))
 Case conversion may be inaccurate. Consider using '#align alternating_map.zero_comp_linear_map AlternatingMap.zero_compLinearMapₓ'. -/
 @[simp]
-theorem zero_compLinearMap (g : M₂ →ₗ[R] M) : (0 : AlternatingMap R M N ι).compLinearMap g = 0 :=
-  by
-  ext
-  simp only [comp_linear_map_apply, zero_apply]
+theorem zero_compLinearMap (g : M₂ →ₗ[R] M) : (0 : AlternatingMap R M N ι).compLinearMap g = 0 := by
+  ext; simp only [comp_linear_map_apply, zero_apply]
 #align alternating_map.zero_comp_linear_map AlternatingMap.zero_compLinearMap
 
 /- warning: alternating_map.add_comp_linear_map -> AlternatingMap.add_compLinearMap is a dubious translation:
@@ -750,9 +741,7 @@ theorem zero_compLinearMap (g : M₂ →ₗ[R] M) : (0 : AlternatingMap R M N ι
 Case conversion may be inaccurate. Consider using '#align alternating_map.add_comp_linear_map AlternatingMap.add_compLinearMapₓ'. -/
 @[simp]
 theorem add_compLinearMap (f₁ f₂ : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) :
-    (f₁ + f₂).compLinearMap g = f₁.compLinearMap g + f₂.compLinearMap g :=
-  by
-  ext
+    (f₁ + f₂).compLinearMap g = f₁.compLinearMap g + f₂.compLinearMap g := by ext;
   simp only [comp_linear_map_apply, add_apply]
 #align alternating_map.add_comp_linear_map AlternatingMap.add_compLinearMap
 
@@ -918,9 +907,7 @@ theorem map_swap_add [DecidableEq ι] {i j : ι} (hij : i ≠ j) : f (v ∘ Equi
 <too large>
 Case conversion may be inaccurate. Consider using '#align alternating_map.map_add_swap AlternatingMap.map_add_swapₓ'. -/
 theorem map_add_swap [DecidableEq ι] {i j : ι} (hij : i ≠ j) : f v + f (v ∘ Equiv.swap i j) = 0 :=
-  by
-  rw [add_comm]
-  exact f.map_swap_add v hij
+  by rw [add_comm]; exact f.map_swap_add v hij
 #align alternating_map.map_add_swap AlternatingMap.map_add_swap
 
 #print AlternatingMap.map_swap /-
@@ -944,9 +931,7 @@ theorem map_perm [DecidableEq ι] [Fintype ι] (v : ι → M) (σ : Equiv.Perm �
 <too large>
 Case conversion may be inaccurate. Consider using '#align alternating_map.map_congr_perm AlternatingMap.map_congr_permₓ'. -/
 theorem map_congr_perm [DecidableEq ι] [Fintype ι] (σ : Equiv.Perm ι) : g v = σ.sign • g (v ∘ σ) :=
-  by
-  rw [g.map_perm, smul_smul]
-  simp
+  by rw [g.map_perm, smul_smul]; simp
 #align alternating_map.map_congr_perm AlternatingMap.map_congr_perm
 
 section DomDomCongr
@@ -1017,12 +1002,8 @@ def domDomCongrEquiv (σ : ι ≃ ι') : AlternatingMap R M N ι ≃+ Alternatin
     where
   toFun := domDomCongr σ
   invFun := domDomCongr σ.symm
-  left_inv f := by
-    ext
-    simp [Function.comp]
-  right_inv m := by
-    ext
-    simp [Function.comp]
+  left_inv f := by ext; simp [Function.comp]
+  right_inv m := by ext; simp [Function.comp]
   map_add' := domDomCongr_add σ
 #align alternating_map.dom_dom_congr_equiv AlternatingMap.domDomCongrEquiv
 -/
@@ -1228,9 +1209,7 @@ Case conversion may be inaccurate. Consider using '#align linear_map.comp_multil
 /-- Composition with a linear map before and after alternatization are equivalent. -/
 theorem compMultilinearMap_alternatization (g : N' →ₗ[R] N'₂)
     (f : MultilinearMap R (fun _ : ι => M) N') :
-    (g.compMultilinearMap f).alternatization = g.compAlternatingMap f.alternatization :=
-  by
-  ext
+    (g.compMultilinearMap f).alternatization = g.compAlternatingMap f.alternatization := by ext;
   simp [MultilinearMap.alternatization_def]
 #align linear_map.comp_multilinear_map_alternatization LinearMap.compMultilinearMap_alternatization
 
@@ -1330,9 +1309,7 @@ theorem domCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
   simp only [one_mul, neg_mul, Function.comp_apply, Units.neg_smul, perm.coe_mul, Units.val_neg,
     MultilinearMap.smul_apply, MultilinearMap.neg_apply, MultilinearMap.domDomCongr_apply,
     MultilinearMap.domCoprod_apply]
-  convert add_right_neg _ <;>
-    · ext k
-      rw [Equiv.apply_swap_eq_self hv]
+  convert add_right_neg _ <;> · ext k; rw [Equiv.apply_swap_eq_self hv]
 #align alternating_map.dom_coprod.summand_add_swap_smul_eq_zero AlternatingMap.domCoprod.summand_add_swap_smul_eq_zero
 
 /- warning: alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant -> AlternatingMap.domCoprod.summand_eq_zero_of_smul_invariant is a dubious translation:

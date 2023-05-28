@@ -409,9 +409,7 @@ theorem affineIndependent_equiv {ι' : Type _} (e : ι ≃ ι') {p : ι' → P} 
   by
   refine' ⟨_, AffineIndependent.comp_embedding e.to_embedding⟩
   intro h
-  have : p = p ∘ e ∘ e.symm.to_embedding := by
-    ext
-    simp
+  have : p = p ∘ e ∘ e.symm.to_embedding := by ext; simp
   rw [this]
   exact h.comp_embedding e.symm.to_embedding
 #align affine_independent_equiv affineIndependent_equiv
@@ -458,9 +456,7 @@ Case conversion may be inaccurate. Consider using '#align affine_independent.of_
 independent, then the original family of points is also affine-independent. -/
 theorem AffineIndependent.of_comp {p : ι → P} (f : P →ᵃ[k] P₂) (hai : AffineIndependent k (f ∘ p)) :
     AffineIndependent k p := by
-  cases' isEmpty_or_nonempty ι with h h;
-  · haveI := h
-    apply affineIndependent_of_subsingleton
+  cases' isEmpty_or_nonempty ι with h h; · haveI := h; apply affineIndependent_of_subsingleton
   obtain ⟨i⟩ := h
   rw [affineIndependent_iff_linearIndependent_vsub k p i]
   simp_rw [affineIndependent_iff_linearIndependent_vsub k (f ∘ p) i, Function.comp_apply, ←
@@ -476,9 +472,7 @@ affine-independent. -/
 theorem AffineIndependent.map' {p : ι → P} (hai : AffineIndependent k p) (f : P →ᵃ[k] P₂)
     (hf : Function.Injective f) : AffineIndependent k (f ∘ p) :=
   by
-  cases' isEmpty_or_nonempty ι with h h
-  · haveI := h
-    apply affineIndependent_of_subsingleton
+  cases' isEmpty_or_nonempty ι with h h; · haveI := h; apply affineIndependent_of_subsingleton
   obtain ⟨i⟩ := h
   rw [affineIndependent_iff_linearIndependent_vsub k p i] at hai
   simp_rw [affineIndependent_iff_linearIndependent_vsub k (f ∘ p) i, Function.comp_apply, ←
@@ -616,16 +610,9 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
     simp only [Finset.weightedVSub_eq_weightedVSubOfPoint_of_sum_eq_zero _ w (coe : t → V) hw 0,
       vsub_eq_sub, Finset.weightedVSubOfPoint_apply, sub_zero] at hwt
     let f : ∀ x : V, x ∈ t → k := fun x hx => w ⟨x, hx⟩
-    refine'
-      ⟨fun x => if hx : x ∈ t then f x hx else (0 : k), _, _,
-        by
-        use i
-        simp [hi, f]⟩
-    suffices (∑ e : V in t, dite (e ∈ t) (fun hx => f e hx • e) fun hx => 0) = 0
-      by
-      convert this
-      ext
-      by_cases hx : x ∈ t <;> simp [hx]
+    refine' ⟨fun x => if hx : x ∈ t then f x hx else (0 : k), _, _, by use i; simp [hi, f]⟩
+    suffices (∑ e : V in t, dite (e ∈ t) (fun hx => f e hx • e) fun hx => 0) = 0 by convert this;
+      ext; by_cases hx : x ∈ t <;> simp [hx]
     all_goals
       simp only [Finset.sum_dite_of_true fun x h => h, Subtype.val_eq_coe, Finset.mk_coe, f, hwt,
         hw]
@@ -727,9 +714,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
     have hsvi := hsv.linear_independent
     have hsvt := hsv.span_eq
     rw [Basis.coe_ofVectorSpace] at hsvi hsvt
-    have h0 : ∀ v : V, v ∈ Basis.ofVectorSpaceIndex _ _ → v ≠ 0 :=
-      by
-      intro v hv
+    have h0 : ∀ v : V, v ∈ Basis.ofVectorSpaceIndex _ _ → v ≠ 0 := by intro v hv;
       simpa using hsv.ne_zero ⟨v, hv⟩
     rw [linearIndependent_set_iff_affineIndependent_vadd_union_singleton k h0 p₁] at hsvi
     exact
@@ -741,10 +726,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
     have hsvt := bsv.span_eq
     rw [Basis.coe_extend] at hsvi hsvt
     have hsv := h.subset_extend (Set.subset_univ _)
-    have h0 : ∀ v : V, v ∈ h.extend _ → v ≠ 0 :=
-      by
-      intro v hv
-      simpa using bsv.ne_zero ⟨v, hv⟩
+    have h0 : ∀ v : V, v ∈ h.extend _ → v ≠ 0 := by intro v hv; simpa using bsv.ne_zero ⟨v, hv⟩
     rw [linearIndependent_set_iff_affineIndependent_vadd_union_singleton k h0 p₁] at hsvi
     refine' ⟨{p₁} ∪ (fun v => v +ᵥ p₁) '' h.extend (Set.subset_univ _), _, _⟩
     · refine' Set.Subset.trans _ (Set.union_subset_union_right _ (Set.image_subset _ hsv))
@@ -805,10 +787,7 @@ theorem affineIndependent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) : AffineInde
     fin_cases i
     · simpa using hi
   haveI : Unique { x // x ≠ (0 : Fin 2) } := ⟨⟨i₁⟩, he'⟩
-  have hz : (![p₁, p₂] ↑default -ᵥ ![p₁, p₂] 0 : V) ≠ 0 :=
-    by
-    rw [he' default]
-    simpa using h.symm
+  have hz : (![p₁, p₂] ↑default -ᵥ ![p₁, p₂] 0 : V) ≠ 0 := by rw [he' default]; simpa using h.symm
   exact linearIndependent_unique _ hz
 #align affine_independent_of_ne affineIndependent_of_ne
 
@@ -1117,10 +1096,7 @@ Case conversion may be inaccurate. Consider using '#align affine.simplex.face_eq
 `mk_of_point`. -/
 @[simp]
 theorem face_eq_mkOfPoint {n : ℕ} (s : Simplex k P n) (i : Fin (n + 1)) :
-    s.face (Finset.card_singleton i) = mkOfPoint k (s.points i) :=
-  by
-  ext
-  simp [face_points]
+    s.face (Finset.card_singleton i) = mkOfPoint k (s.points i) := by ext; simp [face_points]
 #align affine.simplex.face_eq_mk_of_point Affine.Simplex.face_eq_mkOfPoint
 
 /- warning: affine.simplex.range_face_points -> Affine.Simplex.range_face_points is a dubious translation:

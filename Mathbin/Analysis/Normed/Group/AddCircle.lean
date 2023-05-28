@@ -90,9 +90,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_circle.norm_neg_period AddCircle.norm_neg_periodₓ'. -/
 theorem norm_neg_period (x : ℝ) : ‖(x : AddCircle (-p))‖ = ‖(x : AddCircle p)‖ :=
   by
-  suffices ‖(↑(-1 * x) : AddCircle (-1 * p))‖ = ‖(x : AddCircle p)‖
-    by
-    rw [← this, neg_one_mul]
+  suffices ‖(↑(-1 * x) : AddCircle (-1 * p))‖ = ‖(x : AddCircle p)‖ by rw [← this, neg_one_mul];
     simp
   simp only [norm_coe_mul, abs_neg, abs_one, one_mul]
 #align add_circle.norm_neg_period AddCircle.norm_neg_period
@@ -122,8 +120,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
   by
   suffices ∀ x : ℝ, ‖(x : AddCircle (1 : ℝ))‖ = |x - round x|
     by
-    rcases eq_or_ne p 0 with (rfl | hp)
-    · simp
+    rcases eq_or_ne p 0 with (rfl | hp); · simp
     intros
     have hx := norm_coe_mul p x p⁻¹
     rw [abs_inv, eq_inv_mul_iff_mul_eq₀ ((not_congr abs_eq_zero).mpr hp)] at hx
@@ -152,10 +149,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
     simp only [mem_set_of_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
       smul_one_eq_coe] at hb
     obtain ⟨z, hz⟩ := hb
-    rw [(by
-        rw [hz]
-        abel : x = b - z),
-      fract_sub_int, ← abs_sub_round_eq_min]
+    rw [(by rw [hz]; abel : x = b - z), fract_sub_int, ← abs_sub_round_eq_min]
     convert round_le b 0
     simp
 #align add_circle.norm_eq AddCircle.norm_eq
@@ -223,8 +217,7 @@ theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ‖(x : AddCircle p)‖ =
       exact this (-p) (neg_pos.mpr hp) hx
   clear hx
   intro p hp hx
-  rcases eq_or_ne x (p / 2) with (rfl | hx')
-  · simp [abs_div, abs_two]
+  rcases eq_or_ne x (p / 2) with (rfl | hx'); · simp [abs_div, abs_two]
   suffices round (p⁻¹ * x) = 0 by simp [norm_eq, this]
   rw [round_eq_zero_iff]
   obtain ⟨hx₁, hx₂⟩ := abs_le.mp hx
@@ -306,27 +299,22 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
         Union_inter, Union_ite, this, hε]
     intro z
     simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs⊢
-    rcases eq_or_ne z 0 with (rfl | hz)
-    · simp
+    rcases eq_or_ne z 0 with (rfl | hz); · simp
     simp only [hz, zsmul_eq_mul, if_false, eq_empty_iff_forall_not_mem]
     rintro y ⟨⟨hy₁, hy₂⟩, hy₀⟩
     obtain ⟨hy₃, hy₄⟩ := hs hy₀
     rcases lt_trichotomy 0 p with (hp | rfl | hp)
     · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
-      · have : ↑z * p ≤ -p
-        nlinarith
+      · have : ↑z * p ≤ -p; nlinarith
         linarith [abs_eq_self.mpr hp.le]
-      · have : p ≤ ↑z * p
-        nlinarith
+      · have : p ≤ ↑z * p; nlinarith
         linarith [abs_eq_self.mpr hp.le]
     · simp only [MulZeroClass.mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε
       linarith
     · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
-      · have : -p ≤ ↑z * p
-        nlinarith
+      · have : -p ≤ ↑z * p; nlinarith
         linarith [abs_eq_neg_self.mpr hp.le]
-      · have : ↑z * p ≤ p
-        nlinarith
+      · have : ↑z * p ≤ p; nlinarith
         linarith [abs_eq_neg_self.mpr hp.le]
 #align add_circle.coe_real_preimage_closed_ball_inter_eq AddCircle.coe_real_preimage_closedBall_inter_eq
 
@@ -372,9 +360,7 @@ theorem le_add_order_smul_norm_of_isOfFinAddOrder {u : AddCircle p} (hu : IsOfFi
     (hu' : u ≠ 0) : p ≤ addOrderOf u • ‖u‖ :=
   by
   obtain ⟨n, hn⟩ := exists_norm_eq_of_fin_add_order hu
-  replace hu : (addOrderOf u : ℝ) ≠ 0;
-  · norm_cast
-    exact (add_order_of_pos_iff.mpr hu).Ne.symm
+  replace hu : (addOrderOf u : ℝ) ≠ 0; · norm_cast; exact (add_order_of_pos_iff.mpr hu).Ne.symm
   conv_lhs => rw [← mul_one p]
   rw [hn, nsmul_eq_mul, ← mul_assoc, mul_comm _ p, mul_assoc, mul_div_cancel' _ hu,
     mul_le_mul_left hp.out, Nat.one_le_cast, Nat.one_le_iff_ne_zero]

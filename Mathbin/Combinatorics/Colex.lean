@@ -366,9 +366,7 @@ Case conversion may be inaccurate. Consider using '#align colex.mem_le_of_single
 /-- If {r} is less than or equal to s in the colexicographical sense,
   then s contains an element greater than or equal to r. -/
 theorem mem_le_of_singleton_le [LinearOrder α] {r : α} {s : Finset α} :
-    ({r} : Finset α).toColex ≤ s.toColex ↔ ∃ x ∈ s, r ≤ x :=
-  by
-  rw [← not_lt]
+    ({r} : Finset α).toColex ≤ s.toColex ↔ ∃ x ∈ s, r ≤ x := by rw [← not_lt];
   simp [lt_singleton_iff_mem_lt]
 #align colex.mem_le_of_singleton_le Colex.mem_le_of_singleton_le
 

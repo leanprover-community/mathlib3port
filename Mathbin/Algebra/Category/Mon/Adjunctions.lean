@@ -71,24 +71,15 @@ def free : Type u ⥤ MonCat.{u}
     where
   obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
-  map_id' := by
-    intros
-    ext1
-    rfl
-  map_comp' := by
-    intros
-    ext1
-    rfl
+  map_id' := by intros ; ext1; rfl
+  map_comp' := by intros ; ext1; rfl
 #align free free
 
 /-- The free-forgetful adjunction for monoids. -/
 def adj : free ⊣ forget MonCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
-      homEquiv_naturality_left_symm := fun X Y G f g =>
-        by
-        ext1
-        rfl }
+      homEquiv_naturality_left_symm := fun X Y G f g => by ext1; rfl }
 #align adj adj
 
 instance : IsRightAdjoint (forget MonCat.{u}) :=

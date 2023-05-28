@@ -49,11 +49,7 @@ def divX (p : R[X]) : R[X] :=
 
 #print Polynomial.coeff_divX /-
 @[simp]
-theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) :=
-  by
-  rw [add_comm]
-  cases p
-  rfl
+theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) := by rw [add_comm]; cases p; rfl
 #align polynomial.coeff_div_X Polynomial.coeff_divX
 -/
 

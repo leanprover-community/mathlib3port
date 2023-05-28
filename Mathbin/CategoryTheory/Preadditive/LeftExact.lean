@@ -217,8 +217,7 @@ def preservesCoequalizerOfPreservesCokernels
   by
   letI := preserves_binary_biproducts_of_preserves_binary_coproducts F
   haveI := additive_of_preserves_binary_biproducts F
-  constructor
-  intro c i
+  constructor; intro c i
   let c' := is_colimit_cokernel_cofork_of_cofork (i.of_iso_colimit (cofork.iso_cofork_of_π c))
   dsimp only [cokernel_cofork_of_cofork_of_π] at c'
   let iFc := is_colimit_cofork_map_of_is_colimit' F _ c'

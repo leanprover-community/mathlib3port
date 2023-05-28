@@ -171,9 +171,7 @@ Case conversion may be inaccurate. Consider using '#align summable_of_norm_bound
 /-- The direct comparison test for series:  if the norm of `f` is bounded by a real function `g`
 which is summable, then `f` is summable. -/
 theorem summable_of_norm_bounded [CompleteSpace E] {f : ι → E} (g : ι → ℝ) (hg : Summable g)
-    (h : ∀ i, ‖f i‖ ≤ g i) : Summable f :=
-  by
-  rw [summable_iff_cauchySeq_finset]
+    (h : ∀ i, ‖f i‖ ≤ g i) : Summable f := by rw [summable_iff_cauchySeq_finset];
   exact cauchySeq_finset_of_norm_bounded g hg h
 #align summable_of_norm_bounded summable_of_norm_bounded
 

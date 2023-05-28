@@ -144,9 +144,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.dickson_two_zero Polynomial.dickson_two_zeroₓ'. -/
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
-  | 0 => by
-    simp only [dickson_zero, pow_zero]
-    norm_num
+  | 0 => by simp only [dickson_zero, pow_zero]; norm_num
   | 1 => by simp only [dickson_one, pow_one]
   | n + 2 => by
     simp only [dickson_add_two, C_0, MulZeroClass.zero_mul, sub_zero]
@@ -177,9 +175,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.dickson_one_one_eval_add_inv Polynomial.dickson_one_one_eval_add_invₓ'. -/
 theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     ∀ n, (dickson 1 (1 : R) n).eval (x + y) = x ^ n + y ^ n
-  | 0 => by
-    simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]
-    norm_num
+  | 0 => by simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]; norm_num
   | 1 => by simp only [eval_X, dickson_one, pow_one]
   | n + 2 =>
     by
@@ -196,9 +192,7 @@ variable (R)
 Case conversion may be inaccurate. Consider using '#align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_Tₓ'. -/
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.T R n).comp (C (⅟ 2) * X)
-  | 0 => by
-    simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
-    norm_num
+  | 0 => by simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]; norm_num
   | 1 => by
     rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_invOf_self,
       C_1, one_mul]
@@ -276,9 +270,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
     by
     let K := FractionRing (Polynomial (ZMod p))
     let f : ZMod p →+* K := (algebraMap _ (FractionRing _)).comp C
-    have : CharP K p := by
-      rw [← f.char_p_iff_char_p]
-      infer_instance
+    have : CharP K p := by rw [← f.char_p_iff_char_p]; infer_instance
     haveI : Infinite K :=
       Infinite.of_injective (algebraMap (Polynomial (ZMod p)) (FractionRing (Polynomial (ZMod p))))
         (IsFractionRing.injective _ _)
@@ -306,8 +298,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
       (Set.univ : Set K) =
         { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 }
       by
-      rw [this]
-      clear this
+      rw [this]; clear this
       refine' h.bUnion fun x hx => _
       -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
       let φ : K[X] := X ^ 2 - C x * X + 1

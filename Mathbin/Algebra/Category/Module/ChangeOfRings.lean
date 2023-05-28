@@ -455,21 +455,14 @@ def HomEquiv.fromExtendScalars {X Y} (g : X ⟶ (restrictScalars f).obj Y) :
   letI m1 : Module R S := Module.compHom S f; letI m2 : Module R Y := Module.compHom Y f
   refine' ⟨fun z => TensorProduct.lift ⟨fun s => ⟨_, _, _⟩, _, _⟩ z, _, _⟩
   · exact fun x => s • g x
-  · intros
-    rw [map_add, smul_add]
-  · intros
-    rw [RingHom.id_apply, smul_comm, ← LinearMap.map_smul]
-  · intros
-    ext
-    simp only [LinearMap.coe_mk, LinearMap.add_apply]
-    rw [← add_smul]
-  · intros
-    ext
+  · intros ; rw [map_add, smul_add]
+  · intros ; rw [RingHom.id_apply, smul_comm, ← LinearMap.map_smul]
+  · intros ; ext; simp only [LinearMap.coe_mk, LinearMap.add_apply]; rw [← add_smul]
+  · intros ; ext
     simp only [LinearMap.coe_mk, RingHom.id_apply, LinearMap.smul_apply, RestrictScalars.smul_def,
       smul_eq_mul]
     convert mul_smul _ _ _
-  · intros
-    rw [map_add]
+  · intros ; rw [map_add]
   · intro r z
     rw [RingHom.id_apply]
     induction' z using TensorProduct.induction_on with x y x y ih1 ih2
@@ -510,9 +503,7 @@ def Unit.map {X} : X ⟶ (extendScalars f ⋙ restrictScalars f).obj X
     where
   toFun x := (1 : S)⊗ₜ[R,f]x
   map_add' x x' := by rw [TensorProduct.tmul_add]
-  map_smul' r x := by
-    letI m1 : Module R S := Module.compHom S f
-    tidy
+  map_smul' r x := by letI m1 : Module R S := Module.compHom S f; tidy
 #align category_theory.Module.extend_restrict_scalars_adj.unit.map CategoryTheory.Module.ExtendRestrictScalarsAdj.Unit.map
 
 /--
@@ -535,18 +526,14 @@ def Counit.map {Y} : (restrictScalars f ⋙ extendScalars f).obj Y ⟶ Y :=
   letI m1 : Module R S := Module.compHom S f
   letI m2 : Module R Y := Module.compHom Y f
   refine' ⟨TensorProduct.lift ⟨fun s : S => ⟨fun y : Y => s • y, smul_add _, _⟩, _, _⟩, _, _⟩
-  · intros
+  · intros ;
     rw [RingHom.id_apply, RestrictScalars.smul_def, ← mul_smul, mul_comm, mul_smul,
       RestrictScalars.smul_def]
-  · intros
-    ext
-    simp only [LinearMap.add_apply, LinearMap.coe_mk, add_smul]
-  · intros
-    ext
+  · intros ; ext; simp only [LinearMap.add_apply, LinearMap.coe_mk, add_smul]
+  · intros ; ext
     simpa only [RingHom.id_apply, LinearMap.smul_apply, LinearMap.coe_mk,
       @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, smul_eq_mul, mul_smul]
-  · intros
-    rw [map_add]
+  · intros ; rw [map_add]
   · intro s z
     rw [RingHom.id_apply]
     induction' z using TensorProduct.induction_on with x s' z1 z2 ih1 ih2

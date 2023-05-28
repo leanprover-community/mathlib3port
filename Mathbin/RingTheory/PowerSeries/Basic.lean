@@ -411,21 +411,13 @@ protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * �
   refine' Finset.sum_bij (fun p _ => ⟨(p.2.1, p.2.2 + p.1.2), (p.2.2, p.1.2)⟩) _ _ _ _ <;>
     simp only [mem_antidiagonal, Finset.mem_sigma, heq_iff_eq, Prod.mk.inj_iff, and_imp,
       exists_prop]
-  · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
-    rintro rfl rfl
+  · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩; dsimp only; rintro rfl rfl
     simp [add_assoc]
-  · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩
-    dsimp only
-    rintro rfl rfl
+  · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩; dsimp only; rintro rfl rfl
     apply mul_assoc
-  · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
-    rintro rfl rfl - rfl rfl - rfl rfl
+  · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩; dsimp only; rintro rfl rfl - rfl rfl - rfl rfl
     rfl
-  · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
-    rintro rfl rfl
+  · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩; dsimp only; rintro rfl rfl
     refine' ⟨⟨(i + k, l), (i, k)⟩, _, _⟩ <;> simp [add_assoc]
 #align mv_power_series.mul_assoc MvPowerSeries.mul_assoc
 
@@ -468,13 +460,10 @@ theorem monomial_mul_monomial (m n : σ →₀ ℕ) (a b : R) :
   ext k
   simp only [coeff_mul_monomial, coeff_monomial]
   split_ifs with h₁ h₂ h₃ h₃ h₂ <;> try rfl
-  · rw [← h₂, tsub_add_cancel_of_le h₁] at h₃
-    exact (h₃ rfl).elim
-  · rw [h₃, add_tsub_cancel_right] at h₂
-    exact (h₂ rfl).elim
+  · rw [← h₂, tsub_add_cancel_of_le h₁] at h₃; exact (h₃ rfl).elim
+  · rw [h₃, add_tsub_cancel_right] at h₂; exact (h₂ rfl).elim
   · exact MulZeroClass.zero_mul b
-  · rw [h₂] at h₁
-    exact (h₁ <| le_add_left le_rfl).elim
+  · rw [h₂] at h₁; exact (h₁ <| le_add_left le_rfl).elim
 #align mv_power_series.monomial_mul_monomial MvPowerSeries.monomial_mul_monomial
 
 variable (σ) (R)
@@ -577,11 +566,8 @@ lean 3 declaration is
 but is expected to have type
   forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : Semiring.{u2} R] (s : σ), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), succ u2} (LinearMap.{u2, u2, max u2 u1, u2} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (MvPowerSeries.{u1, u2} σ R) R (MvPowerSeries.instAddCommMonoidMvPowerSeries.{u1, u2} σ R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (MvPowerSeries.instModuleMvPowerSeriesInstAddCommMonoidMvPowerSeries.{u1, u2, u2} σ R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (Semiring.toModule.{u2} R _inst_1)) (Semiring.toModule.{u2} R _inst_1)) (MvPowerSeries.{u1, u2} σ R) (fun (_x : MvPowerSeries.{u1, u2} σ R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, max u1 u2, u2} R R (MvPowerSeries.{u1, u2} σ R) R _inst_1 _inst_1 (MvPowerSeries.instAddCommMonoidMvPowerSeries.{u1, u2} σ R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (MvPowerSeries.instModuleMvPowerSeriesInstAddCommMonoidMvPowerSeries.{u1, u2, u2} σ R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (Semiring.toModule.{u2} R _inst_1)) (Semiring.toModule.{u2} R _inst_1) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (MvPowerSeries.coeff.{u1, u2} σ R _inst_1 (OfNat.ofNat.{u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) 0 (Zero.toOfNat0.{u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.zero.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero))))) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) (MonoidWithZero.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) (Semiring.toMonoidWithZero.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : MvPowerSeries.{u1, u2} σ R) => R) (MvPowerSeries.X.{u1, u2} σ R _inst_1 s)) _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mv_power_series.coeff_zero_X MvPowerSeries.coeff_zero_Xₓ'. -/
-theorem coeff_zero_X (s : σ) : coeff R (0 : σ →₀ ℕ) (X s : MvPowerSeries σ R) = 0 :=
-  by
-  rw [coeff_X, if_neg]
-  intro h
-  exact one_ne_zero (single_eq_zero.mp h.symm)
+theorem coeff_zero_X (s : σ) : coeff R (0 : σ →₀ ℕ) (X s : MvPowerSeries σ R) = 0 := by
+  rw [coeff_X, if_neg]; intro h; exact one_ne_zero (single_eq_zero.mp h.symm)
 #align mv_power_series.coeff_zero_X MvPowerSeries.coeff_zero_X
 
 /- warning: mv_power_series.commute_X -> MvPowerSeries.commute_X is a dubious translation:
@@ -782,10 +768,7 @@ lean 3 declaration is
 but is expected to have type
   forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (f : MvPowerSeries.{u2, u1} σ R) (a : R), Eq.{max (succ u2) (succ u1)} (MvPowerSeries.{u2, u1} σ R) (HSMul.hSMul.{u1, max u2 u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.{u2, u1} σ R) (instHSMul.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (SMulZeroClass.toSMul.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instZeroMvPowerSeries.{u2, u1} σ R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (MvPowerSeries.instZeroMvPowerSeries.{u2, u1} σ R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (MulActionWithZero.toSMulWithZero.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toMonoidWithZero.{u1} R _inst_1) (MvPowerSeries.instZeroMvPowerSeries.{u2, u1} σ R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Module.toMulActionWithZero.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) _inst_1 (MvPowerSeries.instAddCommMonoidMvPowerSeries.{u2, u1} σ R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MvPowerSeries.instModuleMvPowerSeriesInstAddCommMonoidMvPowerSeries.{u2, u1, u1} σ R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1))))))) a f) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => MvPowerSeries.{u2, u1} σ R) a) (MvPowerSeries.{u2, u1} σ R) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => MvPowerSeries.{u2, u1} σ R) a) (instHMul.{max u2 u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => MvPowerSeries.{u2, u1} σ R) a) (MvPowerSeries.instMulMvPowerSeries.{u2, u1} σ R _inst_1)) (FunLike.coe.{max (succ u2) (succ u1), succ u1, max (succ u2) (succ u1)} (RingHom.{u1, max u1 u2} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => MvPowerSeries.{u2, u1} σ R) _x) (MulHomClass.toFunLike.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1))) R (MvPowerSeries.{u2, u1} σ R) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1))) R (MvPowerSeries.{u2, u1} σ R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u1, max u2 u1} (RingHom.{u1, max u1 u2} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1))) R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, max u2 u1} R (MvPowerSeries.{u2, u1} σ R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPowerSeries.{u2, u1} σ R) (MvPowerSeries.instSemiringMvPowerSeries.{u2, u1} σ R _inst_1)))))) (MvPowerSeries.C.{u2, u1} σ R _inst_1) a) f)
 Case conversion may be inaccurate. Consider using '#align mv_power_series.smul_eq_C_mul MvPowerSeries.smul_eq_C_mulₓ'. -/
-theorem smul_eq_C_mul (f : MvPowerSeries σ R) (a : R) : a • f = C σ R a * f :=
-  by
-  ext
-  simp
+theorem smul_eq_C_mul (f : MvPowerSeries σ R) (a : R) : a • f = C σ R a * f := by ext; simp
 #align mv_power_series.smul_eq_C_mul MvPowerSeries.smul_eq_C_mul
 
 #print MvPowerSeries.X_inj /-
@@ -794,12 +777,8 @@ theorem X_inj [Nontrivial R] {s t : σ} : (X s : MvPowerSeries σ R) = X t ↔ s
     intro h; replace h := congr_arg (coeff R (single s 1)) h; rw [coeff_X, if_pos rfl, coeff_X] at h
     split_ifs  at h with H
     · rw [Finsupp.single_eq_single_iff] at H
-      cases H
-      · exact H.1
-      · exfalso
-        exact one_ne_zero H.1
-    · exfalso
-      exact one_ne_zero h, congr_arg X⟩
+      cases H; · exact H.1; · exfalso; exact one_ne_zero H.1
+    · exfalso; exact one_ne_zero h, congr_arg X⟩
 #align mv_power_series.X_inj MvPowerSeries.X_inj
 -/
 
@@ -826,9 +805,7 @@ def map : MvPowerSeries σ R →+* MvPowerSeries σ S
   map_zero' := ext fun n => f.map_zero
   map_one' :=
     ext fun n =>
-      show f ((coeff R n) 1) = (coeff S n) 1
-        by
-        rw [coeff_one, coeff_one]
+      show f ((coeff R n) 1) = (coeff S n) 1 by rw [coeff_one, coeff_one];
         split_ifs <;> simp [f.map_one, f.map_zero]
   map_add' φ ψ :=
     ext fun n => show f ((coeff R n) (φ + ψ)) = f ((coeff R n) φ) + f ((coeff R n) ψ) by simp
@@ -883,10 +860,8 @@ theorem constantCoeff_map (φ : MvPowerSeries σ R) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_power_series.map_monomial MvPowerSeries.map_monomialₓ'. -/
 @[simp]
-theorem map_monomial (n : σ →₀ ℕ) (a : R) : map σ f (monomial R n a) = monomial S n (f a) :=
-  by
-  ext m
-  simp [coeff_monomial, apply_ite f]
+theorem map_monomial (n : σ →₀ ℕ) (a : R) : map σ f (monomial R n a) = monomial S n (f a) := by
+  ext m; simp [coeff_monomial, apply_ite f]
 #align mv_power_series.map_monomial MvPowerSeries.map_monomial
 
 /- warning: mv_power_series.map_C -> MvPowerSeries.map_C is a dubious translation:
@@ -916,12 +891,8 @@ variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 instance : Algebra R (MvPowerSeries σ A) :=
   {
     MvPowerSeries.module with
-    commutes' := fun a φ => by
-      ext n
-      simp [Algebra.commutes]
-    smul_def' := fun a σ => by
-      ext n
-      simp [(coeff A n).map_smul_of_tower a, Algebra.smul_def]
+    commutes' := fun a φ => by ext n; simp [Algebra.commutes]
+    smul_def' := fun a σ => by ext n; simp [(coeff A n).map_smul_of_tower a, Algebra.smul_def]
     toRingHom := (MvPowerSeries.map σ (algebraMap R A)).comp (C σ R) }
 
 /- warning: mv_power_series.C_eq_algebra_map -> MvPowerSeries.c_eq_algebraMap is a dubious translation:
@@ -982,14 +953,8 @@ variable (R)
 def trunc : MvPowerSeries σ R →+ MvPolynomial σ R
     where
   toFun := truncFun n
-  map_zero' := by
-    ext
-    simp [coeff_trunc_fun]
-  map_add' := by
-    intros
-    ext
-    simp [coeff_trunc_fun, ite_add]
-    split_ifs <;> rfl
+  map_zero' := by ext; simp [coeff_trunc_fun]
+  map_add' := by intros ; ext; simp [coeff_trunc_fun, ite_add]; split_ifs <;> rfl
 #align mv_power_series.trunc MvPowerSeries.trunc
 -/
 
@@ -1010,17 +975,10 @@ theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
   MvPolynomial.ext _ _ fun m => by
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H'
-    · subst m
-      simp
-    · symm
-      rw [MvPolynomial.coeff_one]
-      exact if_neg (Ne.symm H')
-    · symm
-      rw [MvPolynomial.coeff_one]
-      refine' if_neg _
-      rintro rfl
-      apply H
-      exact Ne.bot_lt hnn
+    · subst m; simp
+    · symm; rw [MvPolynomial.coeff_one]; exact if_neg (Ne.symm H')
+    · symm; rw [MvPolynomial.coeff_one]; refine' if_neg _
+      rintro rfl; apply H; exact Ne.bot_lt hnn
 #align mv_power_series.trunc_one MvPowerSeries.trunc_one
 
 /- warning: mv_power_series.trunc_C -> MvPowerSeries.trunc_c is a dubious translation:
@@ -1053,44 +1011,24 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
   constructor
   · rintro ⟨φ, rfl⟩ m h
     rw [coeff_mul, Finset.sum_eq_zero]
-    rintro ⟨i, j⟩ hij
-    rw [coeff_X_pow, if_neg, MulZeroClass.zero_mul]
-    contrapose! h
-    subst i
-    rw [Finsupp.mem_antidiagonal] at hij
-    rw [← hij, Finsupp.add_apply, Finsupp.single_eq_same]
-    exact Nat.le_add_right n _
-  · intro h
-    refine' ⟨fun m => coeff R (m + single s n) φ, _⟩
-    ext m
-    by_cases H : m - single s n + single s n = m
+    rintro ⟨i, j⟩ hij; rw [coeff_X_pow, if_neg, MulZeroClass.zero_mul]
+    contrapose! h; subst i; rw [Finsupp.mem_antidiagonal] at hij
+    rw [← hij, Finsupp.add_apply, Finsupp.single_eq_same]; exact Nat.le_add_right n _
+  · intro h; refine' ⟨fun m => coeff R (m + single s n) φ, _⟩
+    ext m; by_cases H : m - single s n + single s n = m
     · rw [coeff_mul, Finset.sum_eq_single (single s n, m - single s n)]
       · rw [coeff_X_pow, if_pos rfl, one_mul]
         simpa using congr_arg (fun m : σ →₀ ℕ => coeff R m φ) H.symm
-      · rintro ⟨i, j⟩ hij hne
-        rw [Finsupp.mem_antidiagonal] at hij
-        rw [coeff_X_pow]
-        split_ifs with hi
-        · exfalso
-          apply hne
-          rw [← hij, ← hi, Prod.mk.inj_iff]
-          refine' ⟨rfl, _⟩
-          ext t
-          simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
+      · rintro ⟨i, j⟩ hij hne; rw [Finsupp.mem_antidiagonal] at hij
+        rw [coeff_X_pow]; split_ifs with hi
+        · exfalso; apply hne; rw [← hij, ← hi, Prod.mk.inj_iff]; refine' ⟨rfl, _⟩
+          ext t; simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
         · exact MulZeroClass.zero_mul _
-      · intro hni
-        exfalso
-        apply hni
-        rwa [Finsupp.mem_antidiagonal, add_comm]
+      · intro hni; exfalso; apply hni; rwa [Finsupp.mem_antidiagonal, add_comm]
     · rw [h, coeff_mul, Finset.sum_eq_zero]
-      · rintro ⟨i, j⟩ hij
-        rw [Finsupp.mem_antidiagonal] at hij
-        rw [coeff_X_pow]
-        split_ifs with hi
-        · exfalso
-          apply H
-          rw [← hij, hi]
-          ext
+      · rintro ⟨i, j⟩ hij; rw [Finsupp.mem_antidiagonal] at hij
+        rw [coeff_X_pow]; split_ifs with hi
+        · exfalso; apply H; rw [← hij, hi]; ext
           rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
         · exact MulZeroClass.zero_mul _
       ·
@@ -1098,8 +1036,7 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
           contrapose! H
           ext t
           by_cases hst : s = t
-          · subst t
-            simpa using tsub_add_cancel_of_le H
+          · subst t; simpa using tsub_add_cancel_of_le H
           · simp [Finsupp.single_apply, hst]
 #align mv_power_series.X_pow_dvd_iff MvPowerSeries.X_pow_dvd_iff
 
@@ -1203,9 +1140,7 @@ Case conversion may be inaccurate. Consider using '#align mv_power_series.mul_in
 theorem mul_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ R φ = u) :
     φ * invOfUnit φ u = 1 :=
   ext fun n =>
-    if H : n = 0 then by
-      rw [H]
-      simp [coeff_mul, support_single_ne_zero, h]
+    if H : n = 0 then by rw [H]; simp [coeff_mul, support_single_ne_zero, h]
     else
       by
       have : ((0 : σ →₀ ℕ), n) ∈ n.antidiagonal := by rw [Finsupp.mem_antidiagonal, zero_add]
@@ -1215,21 +1150,16 @@ theorem mul_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ 
         Finset.insert_erase this, Finset.sum_insert (Finset.not_mem_erase _ _),
         Finset.insert_erase this, if_neg (not_lt_of_ge <| le_rfl), zero_add, add_comm, ←
         sub_eq_add_neg, sub_eq_zero, Finset.sum_congr rfl]
-      rintro ⟨i, j⟩ hij
-      rw [Finset.mem_erase, Finsupp.mem_antidiagonal] at hij
+      rintro ⟨i, j⟩ hij; rw [Finset.mem_erase, Finsupp.mem_antidiagonal] at hij
       cases' hij with h₁ h₂
-      subst n
-      rw [if_pos]
+      subst n; rw [if_pos]
       suffices (0 : _) + j < i + j by simpa
       apply add_lt_add_right
       constructor
-      · intro s
-        exact Nat.zero_le _
-      · intro H
-        apply h₁
+      · intro s; exact Nat.zero_le _
+      · intro H; apply h₁
         suffices i = 0 by simp [this]
-        ext1 s
-        exact Nat.eq_zero_of_le_zero (H s)
+        ext1 s; exact Nat.eq_zero_of_le_zero (H s)
 #align mv_power_series.mul_inv_of_unit MvPowerSeries.mul_invOfUnit
 
 end Ring
@@ -1320,8 +1250,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_power_series.inv_eq_zero MvPowerSeries.inv_eq_zeroₓ'. -/
 theorem inv_eq_zero {φ : MvPowerSeries σ k} : φ⁻¹ = 0 ↔ constantCoeff σ k φ = 0 :=
   ⟨fun h => by simpa using congr_arg (constant_coeff σ k) h, fun h =>
-    ext fun n => by
-      rw [coeff_inv]
+    ext fun n => by rw [coeff_inv];
       split_ifs <;>
         simp only [h, MvPowerSeries.coeff_zero, MulZeroClass.zero_mul, inv_zero, neg_zero]⟩
 #align mv_power_series.inv_eq_zero MvPowerSeries.inv_eq_zero
@@ -1435,9 +1364,7 @@ protected theorem mul_inv_rev (φ ψ : MvPowerSeries σ k) : (φ * ψ)⁻¹ = ψ
 
 instance : InvOneClass (MvPowerSeries σ k) :=
   { MvPowerSeries.hasOne, MvPowerSeries.hasInv with
-    inv_one := by
-      rw [MvPowerSeries.inv_eq_iff_mul_eq_one, mul_one]
-      simp }
+    inv_one := by rw [MvPowerSeries.inv_eq_iff_mul_eq_one, mul_one]; simp }
 
 /- warning: mv_power_series.C_inv -> MvPowerSeries.C_inv is a dubious translation:
 <too large>
@@ -1618,9 +1545,7 @@ but is expected to have type
   forall (σ : Type.{u2}) (R : Type.{u1}) [_inst_1 : CommSemiring.{u1} R], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPowerSeries.{u2, u1} σ R) (Coe.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPowerSeries.{u2, u1} σ R) (MvPolynomial.coeToMvPowerSeries.{u2, u1} σ R _inst_1))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.coe_injective MvPolynomial.coe_injectiveₓ'. -/
 theorem coe_injective : Function.Injective (coe : MvPolynomial σ R → MvPowerSeries σ R) :=
-  fun x y h => by
-  ext
-  simp_rw [← coeff_coe, h]
+  fun x y h => by ext; simp_rw [← coeff_coe, h]
 #align mv_polynomial.coe_injective MvPolynomial.coe_injective
 
 variable {σ R φ ψ}
@@ -1858,10 +1783,7 @@ Case conversion may be inaccurate. Consider using '#align power_series.ext Power
 /-- Two formal power series are equal if all their coefficients are equal.-/
 @[ext]
 theorem ext {φ ψ : PowerSeries R} (h : ∀ n, coeff R n φ = coeff R n ψ) : φ = ψ :=
-  MvPowerSeries.ext fun n => by
-    rw [← coeff_def]
-    · apply h
-    rfl
+  MvPowerSeries.ext fun n => by rw [← coeff_def]; · apply h; rfl
 #align power_series.ext PowerSeries.ext
 
 /- warning: power_series.ext_iff -> PowerSeries.ext_iff is a dubious translation:
@@ -1977,10 +1899,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R], Eq.{succ u1} (forall (ᾰ : PowerSeries.{u1} R), (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : PowerSeries.{u1} R) => R) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (LinearMap.{u1, u1, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (PowerSeries.{u1} R) R (PowerSeries.instAddCommMonoidPowerSeries.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (PowerSeries.instModulePowerSeriesInstAddCommMonoidPowerSeries.{u1, u1} R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) (Semiring.toModule.{u1} R _inst_1)) (PowerSeries.{u1} R) (fun (_x : PowerSeries.{u1} R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : PowerSeries.{u1} R) => R) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u1, u1} R R (PowerSeries.{u1} R) R _inst_1 _inst_1 (PowerSeries.instAddCommMonoidPowerSeries.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (PowerSeries.instModulePowerSeriesInstAddCommMonoidPowerSeries.{u1, u1} R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1)) (Semiring.toModule.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (PowerSeries.coeff.{u1} R _inst_1 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (PowerSeries.{u1} R) (fun (_x : PowerSeries.{u1} R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : PowerSeries.{u1} R) => R) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (PowerSeries.{u1} R) R (NonUnitalNonAssocSemiring.toMul.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (PowerSeries.{u1} R) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (RingHom.instRingHomClassRingHom.{u1, u1} (PowerSeries.{u1} R) R (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) (PowerSeries.constantCoeff.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align power_series.coeff_zero_eq_constant_coeff PowerSeries.coeff_zero_eq_constantCoeffₓ'. -/
 @[simp]
-theorem coeff_zero_eq_constantCoeff : ⇑(coeff R 0) = constantCoeff R :=
-  by
-  rw [coeff, Finsupp.single_zero]
-  rfl
+theorem coeff_zero_eq_constantCoeff : ⇑(coeff R 0) = constantCoeff R := by
+  rw [coeff, Finsupp.single_zero]; rfl
 #align power_series.coeff_zero_eq_constant_coeff PowerSeries.coeff_zero_eq_constantCoeff
 
 /- warning: power_series.coeff_zero_eq_constant_coeff_apply -> PowerSeries.coeff_zero_eq_constantCoeff_apply is a dubious translation:
@@ -2143,19 +2063,16 @@ theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
   by
   symm
   apply Finset.sum_bij fun (p : ℕ × ℕ) h => (single () p.1, single () p.2)
-  · rintro ⟨i, j⟩ hij
-    rw [Finset.Nat.mem_antidiagonal] at hij
+  · rintro ⟨i, j⟩ hij; rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
-  · rintro ⟨i, j⟩ hij
-    rfl
+  · rintro ⟨i, j⟩ hij; rfl
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
     simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
   · rintro ⟨f, g⟩ hfg
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
-    · rw [Prod.mk.inj_iff]
-      dsimp
+    · rw [Prod.mk.inj_iff]; dsimp
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
 #align power_series.coeff_mul PowerSeries.coeff_mul
 
@@ -2190,10 +2107,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (f : PowerSeries.{u1} R) (a : R), Eq.{succ u1} (PowerSeries.{u1} R) (HSMul.hSMul.{u1, u1, u1} R (PowerSeries.{u1} R) (PowerSeries.{u1} R) (instHSMul.{u1, u1} R (PowerSeries.{u1} R) (SMulZeroClass.toSMul.{u1, u1} R (PowerSeries.{u1} R) (PowerSeries.instZeroPowerSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (SMulWithZero.toSMulZeroClass.{u1, u1} R (PowerSeries.{u1} R) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (PowerSeries.instZeroPowerSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (MulActionWithZero.toSMulWithZero.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toMonoidWithZero.{u1} R _inst_1) (PowerSeries.instZeroPowerSeries.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Module.toMulActionWithZero.{u1, u1} R (PowerSeries.{u1} R) _inst_1 (PowerSeries.instAddCommMonoidPowerSeries.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (PowerSeries.instModulePowerSeriesInstAddCommMonoidPowerSeries.{u1, u1} R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Semiring.toModule.{u1} R _inst_1))))))) a f) (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (PowerSeries.{u1} R) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (NonUnitalNonAssocSemiring.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (Semiring.toNonAssocSemiring.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) a) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))))) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => PowerSeries.{u1} R) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) R (PowerSeries.{u1} R) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) R (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)))))) (PowerSeries.C.{u1} R _inst_1) a) f)
 Case conversion may be inaccurate. Consider using '#align power_series.smul_eq_C_mul PowerSeries.smul_eq_C_mulₓ'. -/
-theorem smul_eq_C_mul (f : PowerSeries R) (a : R) : a • f = C R a * f :=
-  by
-  ext
-  simp
+theorem smul_eq_C_mul (f : PowerSeries R) (a : R) : a • f = C R a * f := by ext; simp
 #align power_series.smul_eq_C_mul PowerSeries.smul_eq_C_mul
 
 /- warning: power_series.coeff_succ_mul_X -> PowerSeries.coeff_succ_mul_X is a dubious translation:
@@ -2306,12 +2220,8 @@ Case conversion may be inaccurate. Consider using '#align power_series.coeff_mul
 theorem coeff_mul_X_pow (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (p * X ^ n) = coeff R d p :=
   by
   rw [coeff_mul, Finset.sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]
-    rintro rfl
-    apply h2
-    rw [Finset.Nat.mem_antidiagonal, add_right_cancel_iff] at h1
-    subst h1
+  · rintro ⟨i, j⟩ h1 h2; rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]; rintro rfl; apply h2
+    rw [Finset.Nat.mem_antidiagonal, add_right_cancel_iff] at h1; subst h1
   · exact fun h1 => (h1 (Finset.Nat.mem_antidiagonal.2 rfl)).elim
 #align power_series.coeff_mul_X_pow PowerSeries.coeff_mul_X_pow
 
@@ -2322,12 +2232,8 @@ Case conversion may be inaccurate. Consider using '#align power_series.coeff_X_p
 theorem coeff_X_pow_mul (p : PowerSeries R) (n d : ℕ) : coeff R (d + n) (X ^ n * p) = coeff R d p :=
   by
   rw [coeff_mul, Finset.sum_eq_single (n, d), coeff_X_pow, if_pos rfl, one_mul]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, MulZeroClass.zero_mul]
-    rintro rfl
-    apply h2
-    rw [Finset.Nat.mem_antidiagonal, add_comm, add_right_cancel_iff] at h1
-    subst h1
+  · rintro ⟨i, j⟩ h1 h2; rw [coeff_X_pow, if_neg, MulZeroClass.zero_mul]; rintro rfl; apply h2
+    rw [Finset.Nat.mem_antidiagonal, add_comm, add_right_cancel_iff] at h1; subst h1
   · rw [add_comm]
     exact fun h1 => (h1 (Finset.Nat.mem_antidiagonal.2 rfl)).elim
 #align power_series.coeff_X_pow_mul PowerSeries.coeff_X_pow_mul
@@ -2352,8 +2258,7 @@ theorem coeff_X_pow_mul' (p : PowerSeries R) (n d : ℕ) :
     coeff R d (X ^ n * p) = ite (n ≤ d) (coeff R (d - n) p) 0 :=
   by
   split_ifs
-  · rw [← tsub_add_cancel_of_le h, coeff_X_pow_mul]
-    simp
+  · rw [← tsub_add_cancel_of_le h, coeff_X_pow_mul]; simp
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, MulZeroClass.zero_mul]
     have := finset.nat.mem_antidiagonal.mp hx
@@ -2456,10 +2361,7 @@ theorem coeff_map (n : ℕ) (φ : PowerSeries R) : coeff S n (map f φ) = f (coe
 <too large>
 Case conversion may be inaccurate. Consider using '#align power_series.map_C PowerSeries.map_Cₓ'. -/
 @[simp]
-theorem map_C (r : R) : map f (C _ r) = C _ (f r) :=
-  by
-  ext
-  simp [coeff_C, apply_ite f]
+theorem map_C (r : R) : map f (C _ r) = C _ (f r) := by ext; simp [coeff_C, apply_ite f]
 #align power_series.map_C PowerSeries.map_C
 
 /- warning: power_series.map_X -> PowerSeries.map_X is a dubious translation:
@@ -2469,9 +2371,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {S : Type.{u2}} [_inst_2 : Semiring.{u2} S] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : PowerSeries.{u1} R) => PowerSeries.{u2} S) (PowerSeries.X.{u1} R _inst_1)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2))) (PowerSeries.{u1} R) (fun (_x : PowerSeries.{u1} R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : PowerSeries.{u1} R) => PowerSeries.{u2} S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2))) (PowerSeries.{u1} R) (PowerSeries.{u2} S) (NonUnitalNonAssocSemiring.toMul.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u2} (PowerSeries.{u2} S) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2))) (PowerSeries.{u1} R) (PowerSeries.{u2} S) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2))) (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2)) (RingHom.instRingHomClassRingHom.{u1, u2} (PowerSeries.{u1} R) (PowerSeries.{u2} S) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} (PowerSeries.{u2} S) (PowerSeries.instSemiringPowerSeries.{u2} S _inst_2)))))) (PowerSeries.map.{u1, u2} R _inst_1 S _inst_2 f) (PowerSeries.X.{u1} R _inst_1)) (PowerSeries.X.{u2} S _inst_2)
 Case conversion may be inaccurate. Consider using '#align power_series.map_X PowerSeries.map_Xₓ'. -/
 @[simp]
-theorem map_X : map f X = X := by
-  ext
-  simp [coeff_X, apply_ite f]
+theorem map_X : map f X = X := by ext; simp [coeff_X, apply_ite f]
 #align power_series.map_X PowerSeries.map_X
 
 end Map
@@ -2488,10 +2388,8 @@ theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
   convert@MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ; apply propext
   classical
     constructor <;> intro h m hm
-    · rw [Finsupp.unique_single m]
-      convert h _ hm
-    · apply h
-      simpa only [Finsupp.single_eq_same] using hm
+    · rw [Finsupp.unique_single m]; convert h _ hm
+    · apply h; simpa only [Finsupp.single_eq_same] using hm
 #align power_series.X_pow_dvd_iff PowerSeries.X_pow_dvd_iff
 
 /- warning: power_series.X_dvd_iff -> PowerSeries.X_dvd_iff is a dubious translation:
@@ -2505,8 +2403,7 @@ theorem X_dvd_iff {φ : PowerSeries R} : (X : PowerSeries R) ∣ φ ↔ constant
   rw [← pow_one (X : PowerSeries R), X_pow_dvd_iff, ← coeff_zero_eq_constant_coeff_apply]
   constructor <;> intro h
   · exact h 0 zero_lt_one
-  · intro m hm
-    rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
+  · intro m hm; rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
 #align power_series.X_dvd_iff PowerSeries.X_dvd_iff
 
 end Semiring
@@ -2527,19 +2424,11 @@ Case conversion may be inaccurate. Consider using '#align power_series.rescale P
 noncomputable def rescale (a : R) : PowerSeries R →+* PowerSeries R
     where
   toFun f := PowerSeries.mk fun n => a ^ n * PowerSeries.coeff R n f
-  map_zero' := by
-    ext
-    simp only [LinearMap.map_zero, PowerSeries.coeff_mk, MulZeroClass.mul_zero]
+  map_zero' := by ext; simp only [LinearMap.map_zero, PowerSeries.coeff_mk, MulZeroClass.mul_zero]
   map_one' := by
-    ext1
-    simp only [mul_boole, PowerSeries.coeff_mk, PowerSeries.coeff_one]
-    split_ifs
-    · rw [h, pow_zero]
-    rfl
-  map_add' := by
-    intros
-    ext
-    exact mul_add _ _ _
+    ext1; simp only [mul_boole, PowerSeries.coeff_mk, PowerSeries.coeff_one]
+    split_ifs; · rw [h, pow_zero]; rfl
+  map_add' := by intros ; ext; exact mul_add _ _ _
   map_mul' f g := by
     ext
     rw [PowerSeries.coeff_mul, PowerSeries.coeff_mk, PowerSeries.coeff_mul, Finset.mul_sum]
@@ -2588,9 +2477,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{succ u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.rescale.{u1} R _inst_1 (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (RingHom.id.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align power_series.rescale_one PowerSeries.rescale_oneₓ'. -/
 @[simp]
-theorem rescale_one : rescale 1 = RingHom.id (PowerSeries R) :=
-  by
-  ext
+theorem rescale_one : rescale 1 = RingHom.id (PowerSeries R) := by ext;
   simp only [RingHom.id_apply, rescale, one_pow, coeff_mk, one_mul, RingHom.coe_mk]
 #align power_series.rescale_one PowerSeries.rescale_one
 
@@ -2600,9 +2487,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (f : Nat -> R) (a : R), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : PowerSeries.{u1} R) => PowerSeries.{u1} R) (PowerSeries.mk.{u1} R f)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.{u1} R) (fun (_x : PowerSeries.{u1} R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : PowerSeries.{u1} R) => PowerSeries.{u1} R) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.{u1} R) (PowerSeries.{u1} R) (NonUnitalNonAssocSemiring.toMul.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.{u1} R) (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (RingHom.instRingHomClassRingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))))) (PowerSeries.rescale.{u1} R _inst_1 a) (PowerSeries.mk.{u1} R f)) (PowerSeries.mk.{u1} R (fun (n : Nat) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) a n) (f n)))
 Case conversion may be inaccurate. Consider using '#align power_series.rescale_mk PowerSeries.rescale_mkₓ'. -/
-theorem rescale_mk (f : ℕ → R) (a : R) : rescale a (mk f) = mk fun n : ℕ => a ^ n * f n :=
-  by
-  ext
+theorem rescale_mk (f : ℕ → R) (a : R) : rescale a (mk f) = mk fun n : ℕ => a ^ n * f n := by ext;
   rw [coeff_rescale, coeff_mk, coeff_mk]
 #align power_series.rescale_mk PowerSeries.rescale_mk
 
@@ -2623,9 +2508,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (a : R) (b : R), Eq.{succ u1} (RingHom.{u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (PowerSeries.rescale.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) a b)) (RingHom.comp.{u1, u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (PowerSeries.rescale.{u1} R _inst_1 b) (PowerSeries.rescale.{u1} R _inst_1 a))
 Case conversion may be inaccurate. Consider using '#align power_series.rescale_mul PowerSeries.rescale_mulₓ'. -/
-theorem rescale_mul (a b : R) : rescale (a * b) = (rescale b).comp (rescale a) :=
-  by
-  ext
+theorem rescale_mul (a b : R) : rescale (a * b) = (rescale b).comp (rescale a) := by ext;
   simp [← rescale_rescale]
 #align power_series.rescale_mul PowerSeries.rescale_mul
 
@@ -2674,15 +2557,10 @@ theorem trunc_one (n) : trunc (n + 1) (1 : PowerSeries R) = 1 :=
   Polynomial.ext fun m => by
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H' <;> rw [Polynomial.coeff_one]
-    · subst m
-      rw [if_pos rfl]
-    · symm
-      exact if_neg (Ne.elim (Ne.symm H'))
-    · symm
-      refine' if_neg _
-      rintro rfl
-      apply H
-      exact Nat.zero_lt_succ _
+    · subst m; rw [if_pos rfl]
+    · symm; exact if_neg (Ne.elim (Ne.symm H'))
+    · symm; refine' if_neg _
+      rintro rfl; apply H; exact Nat.zero_lt_succ _
 #align power_series.trunc_one PowerSeries.trunc_one
 
 /- warning: power_series.trunc_C -> PowerSeries.trunc_C is a dubious translation:
@@ -2744,24 +2622,16 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
   congr 1
   symm
   apply Finset.sum_bij fun (p : ℕ × ℕ) h => (single () p.1, single () p.2)
-  · rintro ⟨i, j⟩ hij
-    rw [Finset.Nat.mem_antidiagonal] at hij
+  · rintro ⟨i, j⟩ hij; rw [Finset.Nat.mem_antidiagonal] at hij
     rw [Finsupp.mem_antidiagonal, ← Finsupp.single_add, hij]
   · rintro ⟨i, j⟩ hij
     by_cases H : j < n
-    · rw [if_pos H, if_pos]
-      · rfl
+    · rw [if_pos H, if_pos]; · rfl
       constructor
-      · rintro ⟨⟩
-        simpa [Finsupp.single_eq_same] using le_of_lt H
-      · intro hh
-        rw [lt_iff_not_ge] at H
-        apply H
+      · rintro ⟨⟩; simpa [Finsupp.single_eq_same] using le_of_lt H
+      · intro hh; rw [lt_iff_not_ge] at H; apply H
         simpa [Finsupp.single_eq_same] using hh ()
-    · rw [if_neg H, if_neg]
-      rintro ⟨h₁, h₂⟩
-      apply h₂
-      rintro ⟨⟩
+    · rw [if_neg H, if_neg]; rintro ⟨h₁, h₂⟩; apply h₂; rintro ⟨⟩
       simpa [Finsupp.single_eq_same] using not_lt.1 H
   · rintro ⟨i, j⟩ ⟨k, l⟩ hij hkl
     simpa only [Prod.mk.inj_iff, Finsupp.unique_single_eq_iff] using id
@@ -2769,8 +2639,7 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
     refine' ⟨(f (), g ()), _, _⟩
     · rw [Finsupp.mem_antidiagonal] at hfg
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
-    · rw [Prod.mk.inj_iff]
-      dsimp
+    · rw [Prod.mk.inj_iff]; dsimp
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
 #align power_series.coeff_inv_aux PowerSeries.coeff_inv_aux
 
@@ -2901,43 +2770,30 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align power_series.eq_zero_or_eq_zero_of_mul_eq_zero PowerSeries.eq_zero_or_eq_zero_of_mul_eq_zeroₓ'. -/
 theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : PowerSeries R) (h : φ * ψ = 0) :
     φ = 0 ∨ ψ = 0 := by
-  rw [or_iff_not_imp_left]
-  intro H
-  have ex : ∃ m, coeff R m φ ≠ 0 := by
-    contrapose! H
-    exact ext H
+  rw [or_iff_not_imp_left]; intro H
+  have ex : ∃ m, coeff R m φ ≠ 0 := by contrapose! H; exact ext H
   let m := Nat.find ex
   have hm₁ : coeff R m φ ≠ 0 := Nat.find_spec ex
   have hm₂ : ∀ k < m, ¬coeff R k φ ≠ 0 := fun k => Nat.find_min ex
-  ext n
-  rw [(coeff R n).map_zero]
-  apply Nat.strong_induction_on n
-  clear n
-  intro n ih
+  ext n; rw [(coeff R n).map_zero]; apply Nat.strong_induction_on n
+  clear n; intro n ih
   replace h := congr_arg (coeff R (m + n)) h
   rw [LinearMap.map_zero, coeff_mul, Finset.sum_eq_single (m, n)] at h
   · replace h := eq_zero_or_eq_zero_of_mul_eq_zero h
-    rw [or_iff_not_imp_left] at h
-    exact h hm₁
+    rw [or_iff_not_imp_left] at h; exact h hm₁
   · rintro ⟨i, j⟩ hij hne
-    by_cases hj : j < n
-    · rw [ih j hj, MulZeroClass.mul_zero]
+    by_cases hj : j < n; · rw [ih j hj, MulZeroClass.mul_zero]
     by_cases hi : i < m
-    · specialize hm₂ _ hi
-      push_neg  at hm₂
-      rw [hm₂, MulZeroClass.zero_mul]
+    · specialize hm₂ _ hi; push_neg  at hm₂; rw [hm₂, MulZeroClass.zero_mul]
     rw [Finset.Nat.mem_antidiagonal] at hij
     push_neg  at hi hj
     suffices m < i by
       have : m + n < i + j := add_lt_add_of_lt_of_le this hj
-      exfalso
-      exact ne_of_lt this hij.symm
+      exfalso; exact ne_of_lt this hij.symm
     contrapose! hne
     obtain rfl := le_antisymm hi hne
     simpa [Ne.def, Prod.mk.inj_iff] using (add_right_inj m).mp hij
-  · contrapose!
-    intro h
-    rw [Finset.Nat.mem_antidiagonal]
+  · contrapose!; intro h; rw [Finset.Nat.mem_antidiagonal]
 #align power_series.eq_zero_or_eq_zero_of_mul_eq_zero PowerSeries.eq_zero_or_eq_zero_of_mul_eq_zero
 
 instance [NoZeroDivisors R] : NoZeroDivisors (PowerSeries R)
@@ -2962,12 +2818,9 @@ Case conversion may be inaccurate. Consider using '#align power_series.span_X_is
  over an integral domain is a prime ideal.-/
 theorem span_X_isPrime : (Ideal.span ({X} : Set (PowerSeries R))).IsPrime :=
   by
-  suffices Ideal.span ({X} : Set (PowerSeries R)) = (constant_coeff R).ker
-    by
-    rw [this]
+  suffices Ideal.span ({X} : Set (PowerSeries R)) = (constant_coeff R).ker by rw [this];
     exact RingHom.ker_isPrime _
-  apply Ideal.ext
-  intro φ
+  apply Ideal.ext; intro φ
   rw [RingHom.mem_ker, Ideal.mem_span_singleton, X_dvd_iff]
 #align power_series.span_X_is_prime PowerSeries.span_X_isPrime
 
@@ -2982,8 +2835,7 @@ theorem X_prime : Prime (X : PowerSeries R) :=
   by
   rw [← Ideal.span_singleton_prime]
   · exact span_X_is_prime
-  · intro h
-    simpa using congr_arg (coeff R 1) h
+  · intro h; simpa using congr_arg (coeff R 1) h
 #align power_series.X_prime PowerSeries.X_prime
 
 /- warning: power_series.rescale_injective -> PowerSeries.rescale_injective is a dubious translation:
@@ -3351,9 +3203,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align power_series.coeff_of_lt_order PowerSeries.coeff_of_lt_orderₓ'. -/
 /-- The `n`th coefficient of a formal power series is `0` if `n` is strictly
 smaller than the order of the power series.-/
-theorem coeff_of_lt_order (n : ℕ) (h : ↑n < order φ) : coeff R n φ = 0 :=
-  by
-  contrapose! h
+theorem coeff_of_lt_order (n : ℕ) (h : ↑n < order φ) : coeff R n φ = 0 := by contrapose! h;
   exact order_le _ h
 #align power_series.coeff_of_lt_order PowerSeries.coeff_of_lt_order
 
@@ -3368,12 +3218,8 @@ Case conversion may be inaccurate. Consider using '#align power_series.order_eq_
 theorem order_eq_top {φ : PowerSeries R} : φ.order = ⊤ ↔ φ = 0 :=
   by
   constructor
-  · intro h
-    ext n
-    rw [(coeff R n).map_zero, coeff_of_lt_order]
-    simp [h]
-  · rintro rfl
-    exact order_zero
+  · intro h; ext n; rw [(coeff R n).map_zero, coeff_of_lt_order]; simp [h]
+  · rintro rfl; exact order_zero
 #align power_series.order_eq_top PowerSeries.order_eq_top
 
 /- warning: power_series.nat_le_order -> PowerSeries.nat_le_order is a dubious translation:
@@ -3403,12 +3249,9 @@ the `i`th coefficient is `0` for all `i < n`.-/
 theorem le_order (φ : PowerSeries R) (n : PartENat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) :
     n ≤ order φ := by
   induction n using PartENat.casesOn
-  · show _ ≤ _
-    rw [top_le_iff, order_eq_top]
-    ext i
-    exact h _ (PartENat.natCast_lt_top i)
-  · apply nat_le_order
-    simpa only [PartENat.coe_lt_coe] using h
+  · show _ ≤ _; rw [top_le_iff, order_eq_top]
+    ext i; exact h _ (PartENat.natCast_lt_top i)
+  · apply nat_le_order; simpa only [PartENat.coe_lt_coe] using h
 #align power_series.le_order PowerSeries.le_order
 
 /- warning: power_series.order_eq_nat -> PowerSeries.order_eq_nat is a dubious translation:
@@ -3433,16 +3276,11 @@ theorem order_eq {φ : PowerSeries R} {n : PartENat} :
     order φ = n ↔ (∀ i : ℕ, ↑i = n → coeff R i φ ≠ 0) ∧ ∀ i : ℕ, ↑i < n → coeff R i φ = 0 :=
   by
   induction n using PartENat.casesOn
-  · rw [order_eq_top]
-    constructor
-    · rintro rfl
-      constructor <;> intros
-      · exfalso
-        exact PartENat.natCast_ne_top ‹_› ‹_›
+  · rw [order_eq_top]; constructor
+    · rintro rfl; constructor <;> intros
+      · exfalso; exact PartENat.natCast_ne_top ‹_› ‹_›
       · exact (coeff _ _).map_zero
-    · rintro ⟨h₁, h₂⟩
-      ext i
-      exact h₂ i (PartENat.natCast_lt_top i)
+    · rintro ⟨h₁, h₂⟩; ext i; exact h₂ i (PartENat.natCast_lt_top i)
   · simpa [PartENat.natCast_inj] using order_eq_nat
 #align power_series.order_eq PowerSeries.order_eq
 
@@ -3463,14 +3301,9 @@ theorem le_order_add (φ ψ : PowerSeries R) : min (order φ) (order ψ) ≤ ord
 private theorem order_add_of_order_eq.aux (φ ψ : PowerSeries R) (h : order φ ≠ order ψ)
     (H : order φ < order ψ) : order (φ + ψ) ≤ order φ ⊓ order ψ :=
   by
-  suffices order (φ + ψ) = order φ by
-    rw [le_inf_iff, this]
-    exact ⟨le_rfl, le_of_lt H⟩
-  · rw [order_eq]
-    constructor
-    · intro i hi
-      rw [← hi] at H
-      rw [(coeff _ _).map_add, coeff_of_lt_order i H, add_zero]
+  suffices order (φ + ψ) = order φ by rw [le_inf_iff, this]; exact ⟨le_rfl, le_of_lt H⟩
+  · rw [order_eq]; constructor
+    · intro i hi; rw [← hi] at H; rw [(coeff _ _).map_add, coeff_of_lt_order i H, add_zero]
       exact (order_eq_nat.1 hi.symm).1
     · intro i hi
       rw [(coeff _ _).map_add, coeff_of_lt_order i hi, coeff_of_lt_order i (lt_trans hi H),
@@ -3530,13 +3363,9 @@ theorem order_monomial (n : ℕ) (a : R) [Decidable (a = 0)] :
   by
   split_ifs with h
   · rw [h, order_eq_top, LinearMap.map_zero]
-  · rw [order_eq]
-    constructor <;> intro i hi
-    · rw [PartENat.natCast_inj] at hi
-      rwa [hi, coeff_monomial_same]
-    · rw [PartENat.coe_lt_coe] at hi
-      rw [coeff_monomial, if_neg]
-      exact ne_of_lt hi
+  · rw [order_eq]; constructor <;> intro i hi
+    · rw [PartENat.natCast_inj] at hi; rwa [hi, coeff_monomial_same]
+    · rw [PartENat.coe_lt_coe] at hi; rw [coeff_monomial, if_neg]; exact ne_of_lt hi
 #align power_series.order_monomial PowerSeries.order_monomial
 
 /- warning: power_series.order_monomial_of_ne_zero -> PowerSeries.order_monomial_of_ne_zero is a dubious translation:
@@ -3677,10 +3506,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align power_series.order_X_pow PowerSeries.order_X_powₓ'. -/
 /-- The order of the formal power series `X^n` is `n`.-/
 @[simp]
-theorem order_X_pow (n : ℕ) : order ((X : PowerSeries R) ^ n) = n :=
-  by
-  rw [X_pow_eq, order_monomial_of_ne_zero]
-  exact one_ne_zero
+theorem order_X_pow (n : ℕ) : order ((X : PowerSeries R) ^ n) = n := by
+  rw [X_pow_eq, order_monomial_of_ne_zero]; exact one_ne_zero
 #align power_series.order_X_pow PowerSeries.order_X_pow
 
 end OrderZeroNeOne
@@ -3743,9 +3570,7 @@ theorem coeff_coe (n) : PowerSeries.coeff R n φ = coeff φ n :=
 Case conversion may be inaccurate. Consider using '#align polynomial.coe_monomial Polynomial.coe_monomialₓ'. -/
 @[simp, norm_cast]
 theorem coe_monomial (n : ℕ) (a : R) :
-    (monomial n a : PowerSeries R) = PowerSeries.monomial R n a :=
-  by
-  ext
+    (monomial n a : PowerSeries R) = PowerSeries.monomial R n a := by ext;
   simp [coeff_coe, PowerSeries.coeff_monomial, Polynomial.coeff_monomial, eq_comm]
 #align polynomial.coe_monomial Polynomial.coe_monomial
 
@@ -3780,10 +3605,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (φ : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (ψ : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)), Eq.{succ u1} (PowerSeries.{u1} R) (Polynomial.ToPowerSeries.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHAdd.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.add'.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) φ ψ)) (HAdd.hAdd.{u1, u1, u1} (PowerSeries.{u1} R) (PowerSeries.{u1} R) (PowerSeries.{u1} R) (instHAdd.{u1} (PowerSeries.{u1} R) (Distrib.toAdd.{u1} (PowerSeries.{u1} R) (NonUnitalNonAssocSemiring.toDistrib.{u1} (PowerSeries.{u1} R) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (PowerSeries.{u1} R) (Semiring.toNonAssocSemiring.{u1} (PowerSeries.{u1} R) (PowerSeries.instSemiringPowerSeries.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))))) (Polynomial.ToPowerSeries.{u1} R _inst_1 φ) (Polynomial.ToPowerSeries.{u1} R _inst_1 ψ))
 Case conversion may be inaccurate. Consider using '#align polynomial.coe_add Polynomial.coe_addₓ'. -/
 @[simp, norm_cast]
-theorem coe_add : ((φ + ψ : R[X]) : PowerSeries R) = φ + ψ :=
-  by
-  ext
-  simp
+theorem coe_add : ((φ + ψ : R[X]) : PowerSeries R) = φ + ψ := by ext; simp
 #align polynomial.coe_add Polynomial.coe_add
 
 /- warning: polynomial.coe_mul -> Polynomial.coe_mul is a dubious translation:
@@ -3853,9 +3675,7 @@ theorem constantCoeff_coe : PowerSeries.constantCoeff R φ = φ.coeff 0 :=
 variable (R)
 
 #print Polynomial.coe_injective /-
-theorem coe_injective : Function.Injective (coe : R[X] → PowerSeries R) := fun x y h =>
-  by
-  ext
+theorem coe_injective : Function.Injective (coe : R[X] → PowerSeries R) := fun x y h => by ext;
   simp_rw [← coeff_coe, h]
 #align polynomial.coe_injective Polynomial.coe_injective
 -/

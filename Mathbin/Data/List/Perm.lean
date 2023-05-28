@@ -302,10 +302,8 @@ theorem Perm.filterMap (f : α → Option β) {l₁ l₂ : List α} (p : l₁ ~ 
   by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂
   · simp
-  · simp only [filter_map]
-    cases' f x with a <;> simp [filter_map, IH, perm.cons]
-  · simp only [filter_map]
-    cases' f x with a <;> cases' f y with b <;> simp [filter_map, swap]
+  · simp only [filter_map]; cases' f x with a <;> simp [filter_map, IH, perm.cons]
+  · simp only [filter_map]; cases' f x with a <;> cases' f y with b <;> simp [filter_map, swap]
   · exact IH₁.trans IH₂
 #align list.perm.filter_map List.Perm.filterMap
 -/
@@ -448,8 +446,7 @@ theorem forall₂_comp_perm_eq_perm_comp_forall₂ : Forall₂ r ∘r Perm = Per
   by
   funext l₁ l₃; apply propext
   constructor
-  · intro h
-    rcases h with ⟨l₂, h₁₂, h₂₃⟩
+  · intro h; rcases h with ⟨l₂, h₁₂, h₂₃⟩
     have : forall₂ (flip r) l₂ l₁ := h₁₂.flip
     rcases perm_comp_forall₂ h₂₃.symm this with ⟨l', h₁, h₂⟩
     exact ⟨l', h₂.symm, h₁.flip⟩
@@ -639,9 +636,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.countp_eq_countp_filter_add List.countp_eq_countp_filter_addₓ'. -/
 theorem countp_eq_countp_filter_add (l : List α) (p q : α → Prop) [DecidablePred p]
     [DecidablePred q] : l.countp p = (l.filterₓ q).countp p + (l.filterₓ fun a => ¬q a).countp p :=
-  by
-  rw [← countp_append]
-  exact perm.countp_eq _ (filter_append_perm _ _).symm
+  by rw [← countp_append]; exact perm.countp_eq _ (filter_append_perm _ _).symm
 #align list.countp_eq_countp_filter_add List.countp_eq_countp_filter_add
 
 #print List.Perm.count_eq /-
@@ -783,43 +778,27 @@ theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} :
       perm_induction_on p _ (fun x t₁ t₂ p IH => _) (fun x y t₁ t₂ p IH => _)
         fun t₁ t₂ t₃ p₁ p₂ IH₁ IH₂ => _ <;>
     intro l₁ l₂ r₁ r₂ e₁ e₂
-  · apply (not_mem_nil a).elim
-    rw [← e₁]
-    simp
+  · apply (not_mem_nil a).elim; rw [← e₁]; simp
   · cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp at e₁ e₂ <;> injections <;> subst x
-    · substs t₁ t₂
-      exact p
-    · substs z t₁ t₂
-      exact p.trans perm_middle
-    · substs y t₁ t₂
-      exact perm_middle.symm.trans p
-    · substs z t₁ t₂
-      exact (IH rfl rfl).cons y
+    · substs t₁ t₂; exact p
+    · substs z t₁ t₂; exact p.trans perm_middle
+    · substs y t₁ t₂; exact perm_middle.symm.trans p
+    · substs z t₁ t₂; exact (IH rfl rfl).cons y
   · rcases l₁ with (_ | ⟨y, _ | ⟨z, l₁⟩⟩) <;> rcases l₂ with (_ | ⟨u, _ | ⟨v, l₂⟩⟩) <;>
           dsimp at e₁ e₂ <;> injections <;> substs x y
-    · substs r₁ r₂
-      exact p.cons a
-    · substs r₁ r₂
-      exact p.cons u
-    · substs r₁ v t₂
-      exact (p.trans perm_middle).cons u
-    · substs r₁ r₂
-      exact p.cons y
-    · substs r₁ r₂ y u
-      exact p.cons a
-    · substs r₁ u v t₂
-      exact ((p.trans perm_middle).cons y).trans (swap _ _ _)
-    · substs r₂ z t₁
-      exact (perm_middle.symm.trans p).cons y
-    · substs r₂ y z t₁
-      exact (swap _ _ _).trans ((perm_middle.symm.trans p).cons u)
-    · substs u v t₁ t₂
-      exact (IH rfl rfl).swap' _ _
+    · substs r₁ r₂; exact p.cons a
+    · substs r₁ r₂; exact p.cons u
+    · substs r₁ v t₂; exact (p.trans perm_middle).cons u
+    · substs r₁ r₂; exact p.cons y
+    · substs r₁ r₂ y u; exact p.cons a
+    · substs r₁ u v t₂; exact ((p.trans perm_middle).cons y).trans (swap _ _ _)
+    · substs r₂ z t₁; exact (perm_middle.symm.trans p).cons y
+    · substs r₂ y z t₁; exact (swap _ _ _).trans ((perm_middle.symm.trans p).cons u)
+    · substs u v t₁ t₂; exact (IH rfl rfl).swap' _ _
   · substs t₁ t₃
     have : a ∈ t₂ := p₁.subset (by simp)
     rcases mem_split this with ⟨l₂, r₂, e₂⟩
-    subst t₂
-    exact (IH₁ rfl rfl).trans (IH₂ rfl rfl)
+    subst t₂; exact (IH₁ rfl rfl).trans (IH₂ rfl rfl)
 #align list.perm_inv_core List.perm_inv_core
 -/
 
@@ -886,10 +865,8 @@ theorem cons_subperm_of_mem {a : α} {l₁ l₂ : List α} (d₁ : Nodup l₁) (
   case cons r₁ r₂ b s' ih =>
     simp at h₂
     cases' h₂ with e m
-    · subst b
-      exact ⟨a :: r₁, p.cons a, s'.cons2 _ _ _⟩
-    · rcases ih m d₁ h₁ p with ⟨t, p', s'⟩
-      exact ⟨t, p', s'.cons _ _ _⟩
+    · subst b; exact ⟨a :: r₁, p.cons a, s'.cons2 _ _ _⟩
+    · rcases ih m d₁ h₁ p with ⟨t, p', s'⟩; exact ⟨t, p', s'.cons _ _ _⟩
   case
     cons2 r₁ r₂ b s' ih =>
     have bm : b ∈ l₁ := p.subset <| mem_cons_self _ _
@@ -1123,8 +1100,7 @@ theorem Perm.bagInter_right {l₁ l₂ : List α} (t : List α) (h : l₁ ~ l₂
   by
   induction' h with x _ _ _ _ x y _ _ _ _ _ _ ih_1 ih_2 generalizing t; · simp
   · by_cases x ∈ t <;> simp [*, perm.cons]
-  · by_cases x = y
-    · simp [h]
+  · by_cases x = y; · simp [h]
     by_cases xt : x ∈ t <;> by_cases yt : y ∈ t
     · simp [xt, yt, mem_erase_of_ne h, mem_erase_of_ne (Ne.symm h), erase_comm, swap]
     · simp [xt, yt, mt mem_of_mem_erase, perm.cons]
@@ -1177,11 +1153,8 @@ theorem cons_perm_iff_perm_erase {a : α} {l₁ l₂ : List α} :
 theorem perm_iff_count {l₁ l₂ : List α} : l₁ ~ l₂ ↔ ∀ a, count a l₁ = count a l₂ :=
   ⟨Perm.count_eq, fun H => by
     induction' l₁ with a l₁ IH generalizing l₂
-    · cases' l₂ with b l₂
-      · rfl
-      specialize H b
-      simp at H
-      contradiction
+    · cases' l₂ with b l₂; · rfl
+      specialize H b; simp at H; contradiction
     · have : a ∈ l₂ := count_pos.1 (by rw [← H] <;> simp <;> apply Nat.succ_pos)
       refine' ((IH fun b => _).cons a).trans (perm_cons_erase this).symm
       specialize H b
@@ -1312,15 +1285,12 @@ theorem perm_insert_swap (x y : α) (l : List α) : insert x (insert y l) ~ inse
 theorem perm_insertNth {α} (x : α) (l : List α) {n} (h : n ≤ l.length) : insertNth n x l ~ x :: l :=
   by
   induction l generalizing n
-  · cases n
-    rfl
-    cases h
+  · cases n; rfl; cases h
   cases n
   · simp [insert_nth]
   · simp only [insert_nth, modify_nth_tail]
     trans
-    · apply perm.cons
-      apply l_ih
+    · apply perm.cons; apply l_ih
       apply Nat.le_of_succ_le_succ h
     · apply perm.swap
 #align list.perm_insert_nth List.perm_insertNth
@@ -1398,8 +1368,7 @@ theorem Perm.pairwise_iff {R : α → α → Prop} (S : Symmetric R) :
     ⟨this p, this p.symm⟩
   fun l₁ l₂ p d => by
   induction' d with a l₁ h d IH generalizing l₂
-  · rw [← p.nil_eq]
-    constructor
+  · rw [← p.nil_eq]; constructor
   · have : a ∈ l₂ := p.subset (mem_cons_self _ _)
     rcases mem_split this with ⟨s₂, t₂, rfl⟩
     have p' := (p.trans perm_middle).cons_inv
@@ -1507,16 +1476,12 @@ theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
   change Pairwise F l₁ at H
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
   · cases h : f a
-    · simp [h]
-      exact IH (pairwise_cons.1 H).2
+    · simp [h]; exact IH (pairwise_cons.1 H).2
     · simp [lookmap_cons_some _ _ h, p]
   · cases' h₁ : f a with c <;> cases' h₂ : f b with d
-    · simp [h₁, h₂]
-      apply swap
-    · simp [h₁, lookmap_cons_some _ _ h₂]
-      apply swap
-    · simp [lookmap_cons_some _ _ h₁, h₂]
-      apply swap
+    · simp [h₁, h₂]; apply swap
+    · simp [h₁, lookmap_cons_some _ _ h₂]; apply swap
+    · simp [lookmap_cons_some _ _ h₁, h₂]; apply swap
     · simp [lookmap_cons_some _ _ h₁, lookmap_cons_some _ _ h₂]
       rcases(pairwise_cons.1 H).1 _ (Or.inl rfl) _ h₂ _ h₁ with ⟨rfl, rfl⟩
       rfl
@@ -1539,8 +1504,7 @@ theorem Perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂; · simp
   · by_cases h : f a
     · simp [h, p]
-    · simp [h]
-      exact IH (pairwise_cons.1 H).2
+    · simp [h]; exact IH (pairwise_cons.1 H).2
   · by_cases h₁ : f a <;> by_cases h₂ : f b <;> simp [h₁, h₂]
     · cases (pairwise_cons.1 H).1 _ (Or.inl rfl) h₂ h₁
     · apply swap
@@ -1572,29 +1536,20 @@ theorem Perm.take_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
     cases n <;>
       simp only [mem_cons_iff, false_or_iff, true_or_iff, Filter, *, Nat.zero_eq, if_true,
         not_mem_nil, eq_self_iff_true, or_false_iff, if_false, perm_cons, take]
-    · rw [filter_eq_nil.2]
-      intros
-      solve_by_elim [Ne.symm]
-    · convert perm.swap _ _ _
-      rw [@filter_congr' _ _ (· ∈ take n h_l)]
-      · clear h₁
-        induction n generalizing h_l
-        · simp
+    · rw [filter_eq_nil.2]; intros ; solve_by_elim [Ne.symm]
+    · convert perm.swap _ _ _; rw [@filter_congr' _ _ (· ∈ take n h_l)]
+      · clear h₁; induction n generalizing h_l; · simp
         cases h_l <;>
           simp only [mem_cons_iff, true_or_iff, eq_self_iff_true, filter_cons_of_pos, true_and_iff,
             take, not_mem_nil, filter_false, take_nil]
         cases' h₃ with _ _ h₃ h₄
         rwa [@filter_congr' _ _ (· ∈ take n_n h_l_tl), n_ih]
-        · introv h
-          apply h₂ _ (Or.inr h)
-        · introv h
-          simp only [(h₃ x h).symm, false_or_iff]
-      · introv h
-        simp only [(h₂ x h).symm, (h₁ x (Or.inr h)).symm, false_or_iff]
+        · introv h; apply h₂ _ (Or.inr h)
+        · introv h; simp only [(h₃ x h).symm, false_or_iff]
+      · introv h; simp only [(h₂ x h).symm, (h₁ x (Or.inr h)).symm, false_or_iff]
   case trans h_l₁ h_l₂ h_l₃ h₀ h₁ h_ih₀ h_ih₁ n =>
     trans
-    · apply h_ih₀
-      rwa [h₁.nodup_iff]
+    · apply h_ih₀; rwa [h₁.nodup_iff]
     · apply perm.filter _ h₁
 #align list.perm.take_inter List.Perm.take_inter
 -/
@@ -1605,9 +1560,7 @@ theorem Perm.drop_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
   by
   by_cases h'' : n ≤ xs.length
   · let n' := xs.length - n
-    have h₀ : n = xs.length - n' := by
-      dsimp [n']
-      rwa [tsub_tsub_cancel_of_le]
+    have h₀ : n = xs.length - n' := by dsimp [n']; rwa [tsub_tsub_cancel_of_le]
     have h₁ : n' ≤ xs.length := by apply tsub_le_self
     have h₂ : xs.drop n = (xs.reverse.take n').reverse := by
       rw [reverse_take _ h₁, h₀, reverse_reverse]
@@ -1652,8 +1605,7 @@ theorem perm_of_mem_permutationsAux :
   · subst e
     have p : l₁ ++ l₂ ~ is := by
       simp [permutations] at m
-      cases' m with e m
-      · simp [e]
+      cases' m with e m; · simp [e]
       exact is.append_nil ▸ IH2 m
     exact ((perm_middle.trans (p.cons _)).append_right _).trans (perm_append_comm.cons _)
 #align list.perm_of_mem_permutations_aux List.perm_of_mem_permutationsAux
@@ -1705,8 +1657,7 @@ theorem mem_permutationsAux_of_perm :
   intro t ts is IH1 IH2 l p
   rw [permutations_aux_cons, mem_foldr_permutations_aux2]
   rcases IH1 (p.trans perm_middle) with (⟨is', p', e⟩ | m)
-  · clear p
-    subst e
+  · clear p; subst e
     rcases mem_split (p'.symm.subset (mem_cons_self _ _)) with ⟨l₁, l₂, e⟩
     subst is'
     have p := (perm_middle.symm.trans p').cons_inv
@@ -1729,10 +1680,8 @@ theorem perm_permutations'Aux_comm (a b : α) (l : List α) :
     (permutations'Aux a l).bind (permutations'Aux b) ~
       (permutations'Aux b l).bind (permutations'Aux a) :=
   by
-  induction' l with c l ih
-  · simp [swap]
-  simp [permutations'_aux]
-  apply perm.swap'
+  induction' l with c l ih; · simp [swap]
+  simp [permutations'_aux]; apply perm.swap'
   have :
     ∀ a b,
       (map (cons c) (permutations'_aux a l)).bind (permutations'_aux b) ~
@@ -1753,8 +1702,7 @@ theorem perm_permutations'Aux_comm (a b : α) (l : List α) :
 theorem Perm.permutations' {s t : List α} (p : s ~ t) : permutations' s ~ permutations' t :=
   by
   induction' p with a s t p IH a b l s t u p₁ p₂ IH₁ IH₂; · simp
-  · simp only [permutations']
-    exact IH.bind_right _
+  · simp only [permutations']; exact IH.bind_right _
   · simp only [permutations']
     rw [bind_assoc, bind_assoc]
     apply perm.bind_left

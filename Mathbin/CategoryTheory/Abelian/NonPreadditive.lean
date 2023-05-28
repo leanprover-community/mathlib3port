@@ -129,7 +129,7 @@ instance : Epi (Abelian.factorThruImage f) :=
     let h := hu.g
     -- By hypothesis, p factors through the kernel of g via some t.
     obtain ⟨t, ht⟩ := kernel.lift' g p hpg
-    have fh : f ≫ h = 0
+    have fh : f ≫ h = 0;
     calc
       f ≫ h = (p ≫ i) ≫ h := (abelian.image.fac f).symm ▸ rfl
       _ = ((t ≫ kernel.ι g) ≫ i) ≫ h := (ht ▸ rfl)
@@ -144,7 +144,7 @@ instance : Epi (Abelian.factorThruImage f) :=
       
     -- h factors through the cokernel of f via some l.
     obtain ⟨l, hl⟩ := cokernel.desc' f h fh
-    have hih : i ≫ h = 0
+    have hih : i ≫ h = 0;
     calc
       i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl
       _ = 0 ≫ l := by rw [← category.assoc, kernel.condition]
@@ -177,7 +177,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
     let h := hu.g
     -- By hypothesis, i factors through the cokernel of g via some t.
     obtain ⟨t, ht⟩ := cokernel.desc' g i hgi
-    have hf : h ≫ f = 0
+    have hf : h ≫ f = 0;
     calc
       h ≫ f = h ≫ p ≫ i := (abelian.coimage.fac f).symm ▸ rfl
       _ = h ≫ p ≫ cokernel.π g ≫ t := (ht ▸ rfl)
@@ -192,7 +192,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
       
     -- h factors through the kernel of f via some l.
     obtain ⟨l, hl⟩ := kernel.lift' f h hf
-    have hhp : h ≫ p = 0
+    have hhp : h ≫ p = 0;
     calc
       h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl
       _ = l ≫ 0 := by rw [category.assoc, cokernel.condition]
@@ -291,8 +291,7 @@ instance epi_r {A : C} : Epi (r A) :=
     by
     refine' fork.is_limit.mk _ (fun s => fork.ι s ≫ limits.prod.fst) _ _
     · intro s
-      ext <;> simp
-      erw [category.comp_id]
+      ext <;> simp; erw [category.comp_id]
     · intro s m h
       haveI : mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
       apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1

@@ -98,8 +98,7 @@ theorem finiteInterClosure_insert {A : Set α} (cond : FiniteInter S) (P)
     ·
       exact
         Or.inr
-          ⟨Q ∩ R, cond.inter_mem hQ hR, by
-            ext x
+          ⟨Q ∩ R, cond.inter_mem hQ hR, by ext x;
             constructor <;> simp (config := { contextual := true })⟩
 #align has_finite_inter.finite_inter_closure_insert FiniteInter.finiteInterClosure_insert
 

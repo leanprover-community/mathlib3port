@@ -52,12 +52,7 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
   by
   refine' (s.iso Δ).inv ≫ sigma.desc fun B => _
   by_cases B = A
-  ·
-    exact
-      eq_to_hom
-        (by
-          subst h
-          rfl)
+  · exact eq_to_hom (by subst h; rfl)
   · exact 0
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
@@ -257,10 +252,7 @@ def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ N₁.o
             dsimp
             rw [assoc, assoc, assoc, π_summand_comp_ι_summand_comp_P_infty_eq_P_infty,
               HomologicalComplex.Hom.comm] }
-      comm := by
-        ext n
-        dsimp
-        rw [id_comp, assoc, P_infty_f_idem] }
+      comm := by ext n; dsimp; rw [id_comp, assoc, P_infty_f_idem] }
   inv :=
     { f :=
         { f := fun n => s.πSummand (IndexSet.id (op [n]))
@@ -272,10 +264,7 @@ def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ N₁.o
             · intro A h hA
               simp only [assoc, s.ι_summand_comp_d_comp_π_summand_eq_zero _ _ _ hA, comp_zero]
             · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff] }
-      comm := by
-        ext n
-        dsimp
-        simp only [comp_id, P_infty_comp_π_summand_id] }
+      comm := by ext n; dsimp; simp only [comp_id, P_infty_comp_π_summand_id] }
   hom_inv_id' := by
     ext n
     simpa only [assoc, P_infty_comp_π_summand_id, karoubi.comp_f, HomologicalComplex.comp_f,
@@ -320,10 +309,7 @@ def nondegComplexFunctor : Split C ⥤ ChainComplex C ℕ
         · dsimp at h
           subst h
           simpa only [splitting.ι_π_summand_eq_id, comp_id, splitting.ι_π_summand_eq_id_assoc]
-        · have h' : splitting.index_set.id (op [j]) ≠ A :=
-            by
-            symm
-            exact h
+        · have h' : splitting.index_set.id (op [j]) ≠ A := by symm; exact h
           rw [S₁.s.ι_π_summand_eq_zero_assoc _ _ h', S₂.s.ι_π_summand_eq_zero _ _ h', zero_comp,
             comp_zero] }
 #align simplicial_object.split.nondeg_complex_functor SimplicialObject.Split.nondegComplexFunctor

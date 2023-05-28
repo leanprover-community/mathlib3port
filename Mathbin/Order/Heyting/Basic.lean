@@ -629,10 +629,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) a b) c) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) a c) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) b c))
 Case conversion may be inaccurate. Consider using '#align sup_himp_distrib sup_himp_distribₓ'. -/
 theorem sup_himp_distrib (a b c : α) : a ⊔ b ⇨ c = (a ⇨ c) ⊓ (b ⇨ c) :=
-  eq_of_forall_le_iff fun d =>
-    by
-    rw [le_inf_iff, le_himp_comm, sup_le_iff]
-    simp_rw [le_himp_comm]
+  eq_of_forall_le_iff fun d => by rw [le_inf_iff, le_himp_comm, sup_le_iff]; simp_rw [le_himp_comm]
 #align sup_himp_distrib sup_himp_distrib
 
 /- warning: himp_le_himp_left -> himp_le_himp_left is a dubious translation:
@@ -693,10 +690,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] {a : α} {b : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedHeytingAlgebra.toOrderTop.{u1} α _inst_1) a b) -> (Eq.{succ u1} α (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) b a) a)
 Case conversion may be inaccurate. Consider using '#align codisjoint.himp_eq_right Codisjoint.himp_eq_rightₓ'. -/
-theorem Codisjoint.himp_eq_right (h : Codisjoint a b) : b ⇨ a = a :=
-  by
-  conv_rhs => rw [← @top_himp _ _ a]
-  rw [← h.eq_top, sup_himp_self_left]
+theorem Codisjoint.himp_eq_right (h : Codisjoint a b) : b ⇨ a = a := by
+  conv_rhs => rw [← @top_himp _ _ a]; rw [← h.eq_top, sup_himp_self_left]
 #align codisjoint.himp_eq_right Codisjoint.himp_eq_right
 
 /- warning: codisjoint.himp_eq_left -> Codisjoint.himp_eq_left is a dubious translation:
@@ -756,10 +751,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] (a : α) (b : α) (c : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) a b) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) b c)) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) a c)
 Case conversion may be inaccurate. Consider using '#align himp_triangle himp_triangleₓ'. -/
-theorem himp_triangle (a b c : α) : (a ⇨ b) ⊓ (b ⇨ c) ≤ a ⇨ c :=
-  by
-  rw [le_himp_iff, inf_right_comm, ← le_himp_iff]
-  exact himp_inf_le.trans le_himp_himp
+theorem himp_triangle (a b c : α) : (a ⇨ b) ⊓ (b ⇨ c) ≤ a ⇨ c := by
+  rw [le_himp_iff, inf_right_comm, ← le_himp_iff]; exact himp_inf_le.trans le_himp_himp
 #align himp_triangle himp_triangle
 
 /- warning: himp_inf_himp_cancel -> himp_inf_himp_cancel is a dubious translation:
@@ -784,9 +777,7 @@ instance : GeneralizedCoheytingAlgebra αᵒᵈ :=
   { OrderDual.lattice α,
     OrderDual.orderBot α with
     sdiff := fun a b => toDual (ofDual b ⇨ ofDual a)
-    sdiff_le_iff := fun a b c => by
-      rw [sup_comm]
-      exact le_himp_iff }
+    sdiff_le_iff := fun a b c => by rw [sup_comm]; exact le_himp_iff }
 
 #print Prod.generalizedHeytingAlgebra /-
 instance Prod.generalizedHeytingAlgebra [GeneralizedHeytingAlgebra β] :
@@ -798,8 +789,7 @@ instance Prod.generalizedHeytingAlgebra [GeneralizedHeytingAlgebra β] :
 
 #print Pi.generalizedHeytingAlgebra /-
 instance Pi.generalizedHeytingAlgebra {α : ι → Type _} [∀ i, GeneralizedHeytingAlgebra (α i)] :
-    GeneralizedHeytingAlgebra (∀ i, α i) := by
-  pi_instance
+    GeneralizedHeytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => le_himp_iff
 #align pi.generalized_heyting_algebra Pi.generalizedHeytingAlgebra
 -/
@@ -1175,9 +1165,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1)) b c)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a b) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a c))
 Case conversion may be inaccurate. Consider using '#align sdiff_inf_distrib sdiff_inf_distribₓ'. -/
 theorem sdiff_inf_distrib (a b c : α) : a \ (b ⊓ c) = a \ b ⊔ a \ c :=
-  eq_of_forall_ge_iff fun d =>
-    by
-    rw [sup_le_iff, sdiff_le_comm, le_inf_iff]
+  eq_of_forall_ge_iff fun d => by rw [sup_le_iff, sdiff_le_comm, le_inf_iff];
     simp_rw [sdiff_le_comm]
 #align sdiff_inf_distrib sdiff_inf_distrib
 
@@ -1280,10 +1268,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] {a : α} {b : α}, (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toOrderBot.{u1} α _inst_1) a b) -> (Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a b) a)
 Case conversion may be inaccurate. Consider using '#align disjoint.sdiff_eq_left Disjoint.sdiff_eq_leftₓ'. -/
-theorem Disjoint.sdiff_eq_left (h : Disjoint a b) : a \ b = a :=
-  by
-  conv_rhs => rw [← @sdiff_bot _ _ a]
-  rw [← h.eq_bot, sdiff_inf_self_left]
+theorem Disjoint.sdiff_eq_left (h : Disjoint a b) : a \ b = a := by
+  conv_rhs => rw [← @sdiff_bot _ _ a]; rw [← h.eq_bot, sdiff_inf_self_left]
 #align disjoint.sdiff_eq_left Disjoint.sdiff_eq_left
 
 /- warning: disjoint.sdiff_eq_right -> Disjoint.sdiff_eq_right is a dubious translation:
@@ -1343,10 +1329,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α) (c : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a c) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a b) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b c))
 Case conversion may be inaccurate. Consider using '#align sdiff_triangle sdiff_triangleₓ'. -/
-theorem sdiff_triangle (a b c : α) : a \ c ≤ a \ b ⊔ b \ c :=
-  by
-  rw [sdiff_le_iff, sup_left_comm, ← sdiff_le_iff]
-  exact sdiff_sdiff_le.trans le_sup_sdiff
+theorem sdiff_triangle (a b c : α) : a \ c ≤ a \ b ⊔ b \ c := by
+  rw [sdiff_le_iff, sup_left_comm, ← sdiff_le_iff]; exact sdiff_sdiff_le.trans le_sup_sdiff
 #align sdiff_triangle sdiff_triangle
 
 /- warning: sdiff_sup_sdiff_cancel -> sdiff_sup_sdiff_cancel is a dubious translation:
@@ -1365,10 +1349,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) c a) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) c b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a c) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b c))
 Case conversion may be inaccurate. Consider using '#align sdiff_le_sdiff_of_sup_le_sup_left sdiff_le_sdiff_of_sup_le_sup_leftₓ'. -/
-theorem sdiff_le_sdiff_of_sup_le_sup_left (h : c ⊔ a ≤ c ⊔ b) : a \ c ≤ b \ c :=
-  by
-  rw [← sup_sdiff_left_self, ← @sup_sdiff_left_self _ _ _ b]
-  exact sdiff_le_sdiff_right h
+theorem sdiff_le_sdiff_of_sup_le_sup_left (h : c ⊔ a ≤ c ⊔ b) : a \ c ≤ b \ c := by
+  rw [← sup_sdiff_left_self, ← @sup_sdiff_left_self _ _ _ b]; exact sdiff_le_sdiff_right h
 #align sdiff_le_sdiff_of_sup_le_sup_left sdiff_le_sdiff_of_sup_le_sup_left
 
 /- warning: sdiff_le_sdiff_of_sup_le_sup_right -> sdiff_le_sdiff_of_sup_le_sup_right is a dubious translation:
@@ -1377,10 +1359,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] {a : α} {b : α} {c : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) a c) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) b c)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a c) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b c))
 Case conversion may be inaccurate. Consider using '#align sdiff_le_sdiff_of_sup_le_sup_right sdiff_le_sdiff_of_sup_le_sup_rightₓ'. -/
-theorem sdiff_le_sdiff_of_sup_le_sup_right (h : a ⊔ c ≤ b ⊔ c) : a \ c ≤ b \ c :=
-  by
-  rw [← sup_sdiff_right_self, ← @sup_sdiff_right_self _ _ b]
-  exact sdiff_le_sdiff_right h
+theorem sdiff_le_sdiff_of_sup_le_sup_right (h : a ⊔ c ≤ b ⊔ c) : a \ c ≤ b \ c := by
+  rw [← sup_sdiff_right_self, ← @sup_sdiff_right_self _ _ b]; exact sdiff_le_sdiff_right h
 #align sdiff_le_sdiff_of_sup_le_sup_right sdiff_le_sdiff_of_sup_le_sup_right
 
 /- warning: inf_sdiff_sup_left -> inf_sdiff_sup_left is a dubious translation:
@@ -1417,9 +1397,7 @@ instance : GeneralizedHeytingAlgebra αᵒᵈ :=
   { OrderDual.lattice α,
     OrderDual.orderTop α with
     himp := fun a b => toDual (ofDual b \ ofDual a)
-    le_himp_iff := fun a b c => by
-      rw [inf_comm]
-      exact sdiff_le_iff }
+    le_himp_iff := fun a b c => by rw [inf_comm]; exact sdiff_le_iff }
 
 #print Prod.generalizedCoheytingAlgebra /-
 instance Prod.generalizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] :
@@ -1431,9 +1409,7 @@ instance Prod.generalizedCoheytingAlgebra [GeneralizedCoheytingAlgebra β] :
 
 #print Pi.generalizedCoheytingAlgebra /-
 instance Pi.generalizedCoheytingAlgebra {α : ι → Type _} [∀ i, GeneralizedCoheytingAlgebra (α i)] :
-    GeneralizedCoheytingAlgebra (∀ i, α i) :=
-  by
-  pi_instance
+    GeneralizedCoheytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => sdiff_le_iff
 #align pi.generalized_coheyting_algebra Pi.generalizedCoheytingAlgebra
 -/
@@ -1814,9 +1790,7 @@ instance : CoheytingAlgebra αᵒᵈ :=
     OrderDual.boundedOrder α with
     hnot := toDual ∘ compl ∘ ofDual
     sdiff := fun a b => toDual (ofDual b ⇨ ofDual a)
-    sdiff_le_iff := fun a b c => by
-      rw [sup_comm]
-      exact le_himp_iff
+    sdiff_le_iff := fun a b c => by rw [sup_comm]; exact le_himp_iff
     top_sdiff := himp_bot }
 
 #print ofDual_hnot /-
@@ -1842,8 +1816,7 @@ instance Prod.heytingAlgebra [HeytingAlgebra β] : HeytingAlgebra (α × β) :=
 
 #print Pi.heytingAlgebra /-
 instance Pi.heytingAlgebra {α : ι → Type _} [∀ i, HeytingAlgebra (α i)] :
-    HeytingAlgebra (∀ i, α i) := by
-  pi_instance
+    HeytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => le_himp_iff
 #align pi.heyting_algebra Pi.heytingAlgebra
 -/
@@ -2192,9 +2165,7 @@ instance : HeytingAlgebra αᵒᵈ :=
     OrderDual.boundedOrder α with
     compl := toDual ∘ hnot ∘ ofDual
     himp := fun a b => toDual (ofDual b \ ofDual a)
-    le_himp_iff := fun a b c => by
-      rw [inf_comm]
-      exact sdiff_le_iff
+    le_himp_iff := fun a b c => by rw [inf_comm]; exact sdiff_le_iff
     himp_bot := top_sdiff' }
 
 #print ofDual_compl /-
@@ -2236,8 +2207,7 @@ instance Prod.coheytingAlgebra [CoheytingAlgebra β] : CoheytingAlgebra (α × �
 
 #print Pi.coheytingAlgebra /-
 instance Pi.coheytingAlgebra {α : ι → Type _} [∀ i, CoheytingAlgebra (α i)] :
-    CoheytingAlgebra (∀ i, α i) := by
-  pi_instance
+    CoheytingAlgebra (∀ i, α i) := by pi_instance;
   exact fun a b c => forall_congr' fun i => sdiff_le_iff
 #align pi.coheyting_algebra Pi.coheytingAlgebra
 -/
@@ -2339,15 +2309,9 @@ protected def Function.Injective.generalizedHeytingAlgebra [Sup α] [Inf α] [To
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) : GeneralizedHeytingAlgebra α :=
   { hf.Lattice f map_sup map_inf, ‹Top α›,
-    ‹HImp
-        α› with
-    le_top := fun a => by
-      change f _ ≤ _
-      rw [map_top]
-      exact le_top
-    le_himp_iff := fun a b c => by
-      change f _ ≤ _ ↔ f _ ≤ _
-      erw [map_himp, map_inf, le_himp_iff] }
+    ‹HImp α› with
+    le_top := fun a => by change f _ ≤ _; rw [map_top]; exact le_top
+    le_himp_iff := fun a b c => by change f _ ≤ _ ↔ f _ ≤ _; erw [map_himp, map_inf, le_himp_iff] }
 #align function.injective.generalized_heyting_algebra Function.Injective.generalizedHeytingAlgebra
 
 /- warning: function.injective.generalized_coheyting_algebra -> Function.Injective.generalizedCoheytingAlgebra is a dubious translation:
@@ -2365,14 +2329,9 @@ protected def Function.Injective.generalizedCoheytingAlgebra [Sup α] [Inf α] [
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedCoheytingAlgebra α :=
   { hf.Lattice f map_sup map_inf, ‹Bot α›,
-    ‹SDiff
-        α› with
-    bot_le := fun a => by
-      change f _ ≤ _
-      rw [map_bot]
-      exact bot_le
-    sdiff_le_iff := fun a b c => by
-      change f _ ≤ _ ↔ f _ ≤ _
+    ‹SDiff α› with
+    bot_le := fun a => by change f _ ≤ _; rw [map_bot]; exact bot_le
+    sdiff_le_iff := fun a b c => by change f _ ≤ _ ↔ f _ ≤ _;
       erw [map_sdiff, map_sup, sdiff_le_iff] }
 #align function.injective.generalized_coheyting_algebra Function.Injective.generalizedCoheytingAlgebra
 
@@ -2391,12 +2350,8 @@ protected def Function.Injective.heytingAlgebra [Sup α] [Inf α] [Top α] [Bot 
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) : HeytingAlgebra α :=
   { hf.GeneralizedHeytingAlgebra f map_sup map_inf map_top map_himp, ‹Bot α›,
-    ‹HasCompl
-        α› with
-    bot_le := fun a => by
-      change f _ ≤ _
-      rw [map_bot]
-      exact bot_le
+    ‹HasCompl α› with
+    bot_le := fun a => by change f _ ≤ _; rw [map_bot]; exact bot_le
     himp_bot := fun a => hf <| by erw [map_himp, map_compl, map_bot, himp_bot] }
 #align function.injective.heyting_algebra Function.Injective.heytingAlgebra
 
@@ -2415,12 +2370,8 @@ protected def Function.Injective.coheytingAlgebra [Sup α] [Inf α] [Top α] [Bo
     (map_hnot : ∀ a, f (￢a) = ￢f a) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     CoheytingAlgebra α :=
   { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff, ‹Top α›,
-    ‹HNot
-        α› with
-    le_top := fun a => by
-      change f _ ≤ _
-      rw [map_top]
-      exact le_top
+    ‹HNot α› with
+    le_top := fun a => by change f _ ≤ _; rw [map_top]; exact le_top
     top_sdiff := fun a => hf <| by erw [map_sdiff, map_hnot, map_top, top_sdiff'] }
 #align function.injective.coheyting_algebra Function.Injective.coheytingAlgebra
 

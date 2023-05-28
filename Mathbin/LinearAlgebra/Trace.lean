@@ -140,8 +140,7 @@ theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g 
   if H : ∃ s : Finset M, Nonempty (Basis s R M) then
     by
     let ⟨s, ⟨b⟩⟩ := H
-    simp_rw [trace_eq_matrix_trace R b, LinearMap.toMatrix_mul]
-    apply Matrix.trace_mul_comm
+    simp_rw [trace_eq_matrix_trace R b, LinearMap.toMatrix_mul]; apply Matrix.trace_mul_comm
   else by rw [trace, dif_neg H, LinearMap.zero_apply, LinearMap.zero_apply]
 #align linear_map.trace_mul_comm LinearMap.trace_mul_comm
 
@@ -151,9 +150,7 @@ Case conversion may be inaccurate. Consider using '#align linear_map.trace_conj 
 /-- The trace of an endomorphism is invariant under conjugation -/
 @[simp]
 theorem trace_conj (g : M →ₗ[R] M) (f : (M →ₗ[R] M)ˣ) : trace R M (↑f * g * ↑f⁻¹) = trace R M g :=
-  by
-  rw [trace_mul_comm]
-  simp
+  by rw [trace_mul_comm]; simp
 #align linear_map.trace_conj LinearMap.trace_conj
 
 end
@@ -180,8 +177,7 @@ theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
     simp only [Function.comp_apply, Basis.tensorProduct_apply, Basis.coe_dualBasis, coe_comp]
     rw [trace_eq_matrix_trace R b, toMatrix_dualTensorHom]
     by_cases hij : i = j
-    · rw [hij]
-      simp
+    · rw [hij]; simp
     rw [Matrix.StdBasisMatrix.trace_zero j i (1 : R) hij]
     simp [Finsupp.single_eq_pi_single, hij]
 #align linear_map.trace_eq_contract_of_basis LinearMap.trace_eq_contract_of_basis

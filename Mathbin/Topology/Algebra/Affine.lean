@@ -81,10 +81,7 @@ variable [CommRing R] [Module R F] [ContinuousConstSMul R F]
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t :=
   by
-  suffices ⇑(homothety x t) = fun y => t • (y - x) + x
-    by
-    rw [this]
-    continuity
+  suffices ⇑(homothety x t) = fun y => t • (y - x) + x by rw [this]; continuity
   ext y
   simp [homothety_apply]
 #align affine_map.homothety_continuous AffineMap.homothety_continuous

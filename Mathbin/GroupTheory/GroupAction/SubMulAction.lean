@@ -299,10 +299,8 @@ variable [SMul S R] [SMul S M] [IsScalarTower S R M]
 variable (p : SubMulAction R M)
 
 #print SubMulAction.smul_of_tower_mem /-
-theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p :=
-  by
-  rw [← one_smul R x, ← smul_assoc]
-  exact p.smul_mem _ h
+theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
+  rw [← one_smul R x, ← smul_assoc]; exact p.smul_mem _ h
 #align sub_mul_action.smul_of_tower_mem SubMulAction.smul_of_tower_mem
 -/
 
@@ -440,10 +438,7 @@ variable {r : R} {x y : M}
 /- warning: sub_mul_action.neg_mem -> SubMulAction.neg_mem is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align sub_mul_action.neg_mem SubMulAction.neg_memₓ'. -/
-theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
-  by
-  rw [← neg_one_smul R]
-  exact p.smul_mem _ hx
+theorem neg_mem (hx : x ∈ p) : -x ∈ p := by rw [← neg_one_smul R]; exact p.smul_mem _ hx
 #align sub_mul_action.neg_mem SubMulAction.neg_mem
 
 /- warning: sub_mul_action.neg_mem_iff -> SubMulAction.neg_mem_iff is a dubious translation:
@@ -451,9 +446,7 @@ theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
 Case conversion may be inaccurate. Consider using '#align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iffₓ'. -/
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
-  ⟨fun h => by
-    rw [← neg_neg x]
-    exact neg_mem _ h, neg_mem _⟩
+  ⟨fun h => by rw [← neg_neg x]; exact neg_mem _ h, neg_mem _⟩
 #align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iff
 
 instance : Neg p :=

@@ -172,9 +172,7 @@ section
 open Ordering
 
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
-def AndKind.cmp (p q : AndKind) : Ordering :=
-  by
-  cases p <;> cases q
+def AndKind.cmp (p q : AndKind) : Ordering := by cases p <;> cases q;
   exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
 #align tactic.itauto.and_kind.cmp Tactic.Itauto.AndKind.cmp
 

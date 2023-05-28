@@ -243,8 +243,7 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
       simp only [mem_carrier_iff] at hx12⊢
       let J := span (⇑(algebraMap A (away f)) '' x.val.as_homogeneous_ideal)
       suffices h : ∀ x y : Localization.Away f, x * y ∈ J → x ∈ J ∨ y ∈ J
-      · rw [HomogeneousLocalization.mul_val] at hx12
-        exact h x1.val x2.val hx12
+      · rw [HomogeneousLocalization.mul_val] at hx12; exact h x1.val x2.val hx12
       clear x1 x2 hx12
       intro x1 x2 hx12
       induction' x1 using Localization.induction_on with data_x1
@@ -261,11 +260,11 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
       rcases x.1.IsPrime.mem_or_mem (show a1 * a2 * f ^ N * f ^ M ∈ _ from _) with (h1 | rid2)
       rcases x.1.IsPrime.mem_or_mem h1 with (h1 | rid1)
       rcases x.1.IsPrime.mem_or_mem h1 with (h1 | h2)
-      · left
+      · left;
         simp only [show (mk a1 ⟨f ^ n1, _⟩ : away f) = mk a1 1 * mk 1 ⟨f ^ n1, ⟨n1, rfl⟩⟩ by
             rw [Localization.mk_mul, mul_one, one_mul]]
         exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h1, rfl⟩)
-      · right
+      · right;
         simp only [show (mk a2 ⟨f ^ n2, _⟩ : away f) = mk a2 1 * mk 1 ⟨f ^ n2, ⟨n2, rfl⟩⟩ by
             rw [Localization.mk_mul, mul_one, one_mul]]
         exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨_, h2, rfl⟩)
@@ -273,8 +272,7 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
       · exact False.elim (x.2 (x.1.IsPrime.mem_of_pow_mem M rid2))
       · rw [← mul_comm (f ^ M), ← mul_comm (f ^ N), eq1]
         refine' mul_mem_left _ _ (mul_mem_left _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
-        generalize_proofs h₁ h₂
-        exact (Classical.choose_spec h₂).1⟩
+        generalize_proofs h₁ h₂; exact (Classical.choose_spec h₂).1⟩
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.to_fun AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.toFun
 
 /-
@@ -298,20 +296,15 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       intro a_mem_y
       apply hy
       rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk'', Subtype.coe_mk]
-      dsimp
-      rcases b_mem2 with ⟨k, hk⟩
-      simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1
-          by
-          rw [mk_mul, one_mul, mul_one]
-          congr
-          rw [hk]]
+      dsimp; rcases b_mem2 with ⟨k, hk⟩
+      simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1 by
+          rw [mk_mul, one_mul, mul_one]; congr ; rw [hk]]
       exact Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨_, a_mem_y, rfl⟩)
     · change y.1 ∈ _ at hy
       rcases hy with ⟨hy1, hy2⟩
       rw [ProjectiveSpectrum.mem_coe_basicOpen] at hy1 hy2
       rw [Set.mem_preimage, to_fun, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen]
-      intro rid
-      dsimp at rid
+      intro rid; dsimp at rid
       rcases mem_carrier.clear_denominator 𝒜 _ rid with ⟨c, N, acd, eq1⟩
       rw [Algebra.smul_def] at eq1
       change Localization.mk (f ^ N) 1 * mk _ _ = mk (∑ _, _) _ at eq1
@@ -326,8 +319,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       · exact y.2 (y.1.IsPrime.mem_of_pow_mem M H3)
       · rw [mul_comm _ (f ^ N), mul_comm _ (f ^ M), eq1]
         refine' mul_mem_left _ _ (mul_mem_left _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
-        generalize_proofs h₁ h₂
-        exact (Classical.choose_spec h₂).1
+        generalize_proofs h₁ h₂; exact (Classical.choose_spec h₂).1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.preimage_eq AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.preimage_eq
 
 end ToSpec
@@ -430,15 +422,9 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
   (mem_carrier_iff f_deg q a).trans
     (by
       constructor <;> intro h i <;> specialize h i
-      · rw [Set.mem_image]
-        refine' ⟨_, h, rfl⟩
-      · rw [Set.mem_image] at h
-        rcases h with ⟨x, h, hx⟩
-        convert h
-        rw [ext_iff_val, val_mk']
-        dsimp only [Subtype.coe_mk]
-        rw [← hx]
-        rfl)
+      · rw [Set.mem_image]; refine' ⟨_, h, rfl⟩
+      · rw [Set.mem_image] at h; rcases h with ⟨x, h, hx⟩
+        convert h; rw [ext_iff_val, val_mk']; dsimp only [Subtype.coe_mk]; rw [← hx]; rfl)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff' AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
@@ -496,21 +482,16 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
                       mem_tac⟩,
                 ⟨i, rfl⟩⟩
   rotate_left
-  · rw [(_ : m * i = _)]
+  · rw [(_ : m * i = _)];
     run_tac
-      mem_tac
-    rw [← add_smul, Nat.add_sub_of_le h1]
-    rfl
-  · rw [(_ : m * i = _)]
+      mem_tac;
+    rw [← add_smul, Nat.add_sub_of_le h1]; rfl
+  · rw [(_ : m * i = _)];
     run_tac
-      mem_tac
-    rw [← add_smul]
-    congr
-    zify [le_of_not_lt h2, le_of_not_le h1]
-    abel
+      mem_tac;
+    rw [← add_smul]; congr ; zify [le_of_not_lt h2, le_of_not_le h1] ; abel
   convert_to(∑ i in range (m + m + 1), g i) ∈ q.1; swap
-  · refine' q.1.sum_mem fun j hj => nsmul_mem _ _
-    split_ifs
+  · refine' q.1.sum_mem fun j hj => nsmul_mem _ _; split_ifs
     exacts[q.1.zero_mem, q.1.mul_mem_left _ (hb i), q.1.mul_mem_right _ (ha i)]
   rw [ext_iff_val, val_mk']
   change _ = (algebraMap (HomogeneousLocalization.Away 𝒜 f) (Localization.Away f)) _
@@ -521,12 +502,8 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
   split_ifs with h2 h1
   · exact ((Finset.mem_range.1 hj).not_le h2).elim
   all_goals simp only [mul_val, zero_val, val_mk', Subtype.coe_mk, mk_mul, ← smul_mk]; congr 2
-  · rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1];
-  · simp_rw [pow_add]
-    rfl
-  · rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)];
-  · simp_rw [pow_add]
-    rfl
+  · rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1]; · simp_rw [pow_add]; rfl
+  · rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)]; · simp_rw [pow_add]; rfl
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.add_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.add_mem
 
 variable (hm : 0 < m) (q : Spec.T A⁰_ f)
@@ -546,8 +523,7 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
   by
   revert c
   refine' DirectSum.Decomposition.inductionOn 𝒜 _ _ _
-  · rw [zero_smul]
-    exact carrier.zero_mem f_deg hm _
+  · rw [zero_smul]; exact carrier.zero_mem f_deg hm _
   · rintro n ⟨a, ha⟩ i
     simp_rw [Subtype.coe_mk, proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
     split_ifs
@@ -560,19 +536,13 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
                   ⟨_, _⟩, ⟨i - n, rfl⟩⟩ :
             A⁰_ f) ∈ q.1
       · erw [ext_iff_val, val_mk', mul_val, val_mk', val_mk', Subtype.coe_mk]
-        simp_rw [mul_pow, Subtype.coe_mk]
-        rw [Localization.mk_mul]
-        congr
-        erw [← pow_add, Nat.add_sub_of_le h]
-      · exact Ideal.mul_mem_left _ _ (hx _)
-        rw [smul_eq_mul, mul_comm]
+        simp_rw [mul_pow, Subtype.coe_mk]; rw [Localization.mk_mul]
+        congr ; erw [← pow_add, Nat.add_sub_of_le h]
+      · exact Ideal.mul_mem_left _ _ (hx _); rw [smul_eq_mul, mul_comm];
         run_tac
           mem_tac
-    · simp_rw [zero_pow hm]
-      convert carrier.zero_mem f_deg hm q i
-      rw [map_zero, zero_pow hm]
-  · simp_rw [add_smul]
-    exact fun _ _ => carrier.add_mem f_deg q
+    · simp_rw [zero_pow hm]; convert carrier.zero_mem f_deg hm q i; rw [map_zero, zero_pow hm]
+  · simp_rw [add_smul]; exact fun _ _ => carrier.add_mem f_deg q
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.smul_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.smul_mem
 
 /-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as an ideal.
@@ -622,8 +592,7 @@ theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
     show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _
       by
       rw [← and_forall_ne nx, and_iff_left, ← and_forall_ne ny, and_iff_left]
-      · apply q.2.mem_or_mem
-        convert hxy (nx + ny) using 1
+      · apply q.2.mem_or_mem; convert hxy (nx + ny) using 1
         simp_rw [proj_apply, decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
           decompose_of_mem_same 𝒜 (mul_mem hnx hny), mul_pow, pow_add]
         simpa only [ext_iff_val, val_mk', mul_val, mk_mul]

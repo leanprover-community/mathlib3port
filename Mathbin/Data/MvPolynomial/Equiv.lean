@@ -81,12 +81,8 @@ def pUnitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X]
     let g : MvPolynomial PUnit R →+* R[X] := eval₂_hom Polynomial.C fun u : PUnit => Polynomial.X
     show ∀ p, f.comp g p = p
     apply is_id
-    · ext a
-      dsimp
-      rw [eval₂_C, Polynomial.eval₂_C]
-    · rintro ⟨⟩
-      dsimp
-      rw [eval₂_X, Polynomial.eval₂_X]
+    · ext a; dsimp; rw [eval₂_C, Polynomial.eval₂_C]
+    · rintro ⟨⟩; dsimp; rw [eval₂_X, Polynomial.eval₂_X]
   right_inv p :=
     Polynomial.induction_on p (fun a => by rw [Polynomial.eval₂_C, MvPolynomial.eval₂_C])
       (fun p q hp hq => by rw [Polynomial.eval₂_add, MvPolynomial.eval₂_add, hp, hq]) fun p n hp =>
@@ -275,12 +271,7 @@ and the ground ring. -/
 @[simps]
 def isEmptyAlgEquiv [he : IsEmpty σ] : MvPolynomial σ R ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom (aeval (IsEmpty.elim he)) (Algebra.ofId _ _)
-    (by
-      ext
-      simp [Algebra.ofId_apply, algebra_map_eq])
-    (by
-      ext (i m)
-      exact IsEmpty.elim' he i)
+    (by ext; simp [Algebra.ofId_apply, algebra_map_eq]) (by ext (i m); exact IsEmpty.elim' he i)
 #align mv_polynomial.is_empty_alg_equiv MvPolynomial.isEmptyAlgEquiv
 -/
 
@@ -335,18 +326,12 @@ def sumRingEquiv : MvPolynomial (Sum S₁ S₂) R ≃+* MvPolynomial S₁ (MvPol
   · refine' RingHom.ext fun p => _
     rw [RingHom.comp_apply]
     convert hom_eq_hom ((sum_to_iter R S₁ S₂).comp ((iter_to_sum R S₁ S₂).comp C)) C _ _ p
-    · ext1 a
-      dsimp
-      rw [iter_to_sum_C_C R S₁ S₂, sum_to_iter_C R S₁ S₂]
-    · intro c
-      dsimp
-      rw [iter_to_sum_C_X R S₁ S₂, sum_to_iter_Xr R S₁ S₂]
-  · intro b
-    rw [iter_to_sum_X R S₁ S₂, sum_to_iter_Xl R S₁ S₂]
-  · ext1 a
+    · ext1 a; dsimp; rw [iter_to_sum_C_C R S₁ S₂, sum_to_iter_C R S₁ S₂]
+    · intro c; dsimp; rw [iter_to_sum_C_X R S₁ S₂, sum_to_iter_Xr R S₁ S₂]
+  · intro b; rw [iter_to_sum_X R S₁ S₂, sum_to_iter_Xl R S₁ S₂]
+  · ext1 a;
     rw [RingHom.comp_apply, RingHom.comp_apply, sum_to_iter_C R S₁ S₂, iter_to_sum_C_C R S₁ S₂]
-  · intro n
-    cases' n with b c
+  · intro n; cases' n with b c
     · rw [sum_to_iter_Xl, iter_to_sum_X]
     · rw [sum_to_iter_Xr, iter_to_sum_C_X]
 #align mv_polynomial.sum_ring_equiv MvPolynomial.sumRingEquiv
@@ -440,9 +425,7 @@ theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
     finSuccEquiv R n p =
       eval₂Hom (Polynomial.C.comp (C : R →+* MvPolynomial (Fin n) R))
         (fun i : Fin (n + 1) => Fin.cases Polynomial.X (fun k => Polynomial.C (X k)) i) p :=
-  by
-  rw [← fin_succ_equiv_eq]
-  rfl
+  by rw [← fin_succ_equiv_eq]; rfl
 #align mv_polynomial.fin_succ_equiv_apply MvPolynomial.finSuccEquiv_apply
 
 /- warning: mv_polynomial.fin_succ_equiv_comp_C_eq_C -> MvPolynomial.finSuccEquiv_comp_C_eq_C is a dubious translation:
@@ -499,10 +482,7 @@ theorem finSuccEquiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (
     obtain hij | rfl := ne_or_eq i (j 0)
     · simp only [hij, if_false, coeff_zero]
     simp only [eq_self_iff_true, if_true]
-    have hmj : m ≠ j.tail := by
-      rintro rfl
-      rw [cons_tail] at hjmi
-      contradiction
+    have hmj : m ≠ j.tail := by rintro rfl; rw [cons_tail] at hjmi; contradiction
     simpa only [monomial_eq, C_1, one_mul, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
       coeff_monomial m j.tail (1 : R)
 #align mv_polynomial.fin_succ_equiv_coeff_coeff MvPolynomial.finSuccEquiv_coeff_coeff
@@ -517,9 +497,7 @@ theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (
   -- turn this into a def `polynomial.map_alg_hom`
   let φ : (MvPolynomial (Fin n) R)[X] →ₐ[R] R[X] :=
     { Polynomial.mapRingHom (eval s) with
-      commutes' := fun r => by
-        convert Polynomial.map_C _
-        exact (eval_C _).symm }
+      commutes' := fun r => by convert Polynomial.map_C _; exact (eval_C _).symm }
   show
     aeval (Fin.cons y s : Fin (n + 1) → R) f =
       (Polynomial.aeval y).comp (φ.comp (finSuccEquiv R n).toAlgHom) f

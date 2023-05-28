@@ -220,10 +220,8 @@ def coequalizerCoconeIsColimit (F : WalkingParallelPair ⥤ C) : IsColimit (coeq
     have J1 : pushout_inl F ≫ m = c.ι.app walking_parallel_pair.one := by
       simpa using J walking_parallel_pair.one
     apply pushout.hom_ext
-    · rw [colimit.ι_desc]
-      exact J1
-    · rw [colimit.ι_desc, ← pushout_inl_eq_pushout_inr]
-      exact J1
+    · rw [colimit.ι_desc]; exact J1
+    · rw [colimit.ι_desc, ← pushout_inl_eq_pushout_inr]; exact J1
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.coequalizer_cocone_is_colimit CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.coequalizerCoconeIsColimit
 -/
 

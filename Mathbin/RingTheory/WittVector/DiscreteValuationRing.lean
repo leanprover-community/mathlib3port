@@ -110,17 +110,12 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
     simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
       (constant_coeff : WittVector p k →+* _).isUnit_map hp
   refine' ⟨hp, fun a b hab => _⟩
-  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by
-    rw [← mul_ne_zero_iff]
-    intro h
-    rw [h] at hab
+  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by rw [← mul_ne_zero_iff]; intro h; rw [h] at hab;
     exact p_nonzero p k hab
   obtain ⟨m, a, ha, rfl⟩ := verschiebung_nonzero ha0
   obtain ⟨n, b, hb, rfl⟩ := verschiebung_nonzero hb0
-  cases m
-  · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
-  cases n
-  · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
+  cases m; · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
+  cases n; · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,

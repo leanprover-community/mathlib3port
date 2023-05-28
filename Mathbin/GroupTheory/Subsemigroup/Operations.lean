@@ -1140,12 +1140,9 @@ theorem le_prod_iff {s : Subsemigroup M} {t : Subsemigroup N} {u : Subsemigroup 
   constructor
   · intro h
     constructor
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).1
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).2
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
-    exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).1
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).2
+  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h; exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 #align subsemigroup.le_prod_iff Subsemigroup.le_prod_iff
 #align add_subsemigroup.le_prod_iff AddSubsemigroup.le_prod_iff
 
@@ -1369,10 +1366,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_hom.subsemigroup_map_surjective MulHom.subsemigroupMap_surjectiveₓ'. -/
 @[to_additive]
 theorem subsemigroupMap_surjective (f : M →ₙ* N) (M' : Subsemigroup M) :
-    Function.Surjective (f.subsemigroupMap M') :=
-  by
-  rintro ⟨_, x, hx, rfl⟩
-  exact ⟨⟨x, hx⟩, rfl⟩
+    Function.Surjective (f.subsemigroupMap M') := by rintro ⟨_, x, hx, rfl⟩; exact ⟨⟨x, hx⟩, rfl⟩
 #align mul_hom.subsemigroup_map_surjective MulHom.subsemigroupMap_surjective
 #align add_hom.subsemigroup_map_surjective AddHom.subsemigroupMap_surjective
 

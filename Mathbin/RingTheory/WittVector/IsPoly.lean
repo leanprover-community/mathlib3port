@@ -231,9 +231,7 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance idIsPoly : IsPoly p fun _ _ => id :=
-  ⟨⟨X, by
-      intros
-      simp only [aeval_X, id]⟩⟩
+  ⟨⟨X, by intros ; simp only [aeval_X, id]⟩⟩
 #align witt_vector.id_is_poly WittVector.idIsPoly
 
 instance idIsPolyI' : IsPoly p fun _ _ a => a :=
@@ -495,10 +493,7 @@ section ZeroOne
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zeroIsPoly : IsPoly p fun _ _ _ => 0 :=
-  ⟨⟨0, by
-      intros
-      funext n
-      simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
+  ⟨⟨0, by intros ; funext n; simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
 #align witt_vector.zero_is_poly WittVector.zeroIsPoly
 
 @[simp]
@@ -526,8 +521,7 @@ theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomi
   · intro i hi hi0
     simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.Pos _), MulZeroClass.mul_zero,
       AlgHom.map_pow, bind₁_X_right, AlgHom.map_mul]
-  · rw [Finset.mem_range]
-    decide
+  · rw [Finset.mem_range]; decide
 #align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_onePoly_wittPolynomial
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
@@ -547,19 +541,13 @@ omit hp
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem add_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
-  ⟨⟨wittAdd p, by
-      intros
-      dsimp only [WittVector.hasAdd]
-      simp [eval]⟩⟩
+  ⟨⟨wittAdd p, by intros ; dsimp only [WittVector.hasAdd]; simp [eval]⟩⟩
 #align witt_vector.add_is_poly₂ WittVector.add_isPoly₂
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem mul_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
-  ⟨⟨wittMul p, by
-      intros
-      dsimp only [WittVector.hasMul]
-      simp [eval]⟩⟩
+  ⟨⟨wittMul p, by intros ; dsimp only [WittVector.hasMul]; simp [eval]⟩⟩
 #align witt_vector.mul_is_poly₂ WittVector.mul_isPoly₂
 
 include hp

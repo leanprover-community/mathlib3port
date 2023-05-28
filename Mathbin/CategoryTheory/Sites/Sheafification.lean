@@ -145,8 +145,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.meq.mk CategoryTheory.Meq.mkₓ'. -/
 /-- Make a term of `meq P S`. -/
 def mk {X : C} {P : Cᵒᵖ ⥤ D} (S : J.cover X) (x : P.obj (op X)) : Meq P S :=
-  ⟨fun I => P.map I.f.op x, fun I => by
-    dsimp
+  ⟨fun I => P.map I.f.op x, fun I => by dsimp;
     simp only [← comp_apply, ← P.map_comp, ← op_comp, I.w]⟩
 #align category_theory.meq.mk CategoryTheory.Meq.mk
 
@@ -449,9 +448,7 @@ def meqOfSep (P : Cᵒᵖ ⥤ D)
     let IR : S.relation :=
       ⟨_, _, _, II.g₁ ≫ II.fst.to_middle_hom, II.g₂ ≫ II.snd.to_middle_hom, II.fst.from_middle_hom,
         II.snd.from_middle_hom, II.fst.from_middle_condition, II.snd.from_middle_condition, _⟩
-    swap;
-    · simp only [category.assoc, II.fst.middle_spec, II.snd.middle_spec]
-      apply II.w
+    swap; · simp only [category.assoc, II.fst.middle_spec, II.snd.middle_spec]; apply II.w
     exact s.condition IR
 #align category_theory.grothendieck_topology.plus.meq_of_sep CategoryTheory.GrothendieckTopology.Plus.meqOfSep
 
@@ -503,8 +500,7 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
   · refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
     apply sieve.downward_closed
     convert II.hf
-    cases I
-    rfl
+    cases I; rfl
   let IB : S.arrow := IA.from_middle
   let IC : (T IB).arrow := IA.to_middle
   let ID : (T I).arrow := ⟨IV.Y, IV.f ≫ II.f, sieve.downward_closed (T I) II.hf IV.f⟩
@@ -546,8 +542,7 @@ theorem isSheaf_of_sep (P : Cᵒᵖ ⥤ D)
     obtain ⟨t, ht⟩ := exists_of_sep P hsep X S (meq.equiv _ _ x)
     use t
     apply_fun meq.equiv _ _
-    swap
-    · infer_instance
+    swap; · infer_instance
     rw [← ht]
     ext i
     dsimp
@@ -619,10 +614,8 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (J : CategoryTheory.GrothendieckTopology.{u2, u3} C _inst_1) {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{max u2 u3, u1} D] [_inst_3 : forall (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X), CategoryTheory.Limits.HasMultiequalizer.{max u3 u2, u1, max u3 u2} D _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u1, u2, u3} C _inst_1 X J D _inst_2 S P)] [_inst_4 : forall (X : C), CategoryTheory.Limits.HasColimitsOfShape.{max u3 u2, max u3 u2, max u3 u2, u1} (Opposite.{max (succ u3) (succ u2)} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X)) (CategoryTheory.Category.opposite.{max u3 u2, max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (Preorder.smallCategory.{max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (CategoryTheory.GrothendieckTopology.instPreorderCover.{u2, u3} C _inst_1 J X))) D _inst_2] (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2), Eq.{max (succ u3) (succ u2)} (Quiver.Hom.{max (succ u3) (succ u2), max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2))) (CategoryTheory.GrothendieckTopology.sheafify.{u1, u2, u3} C _inst_1 J D _inst_2 (fun (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) => _inst_3 P X S) (fun (X : C) => _inst_4 X) P) (CategoryTheory.GrothendieckTopology.sheafify.{u1, u2, u3} C _inst_1 J D _inst_2 (fun (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) => _inst_3 P X S) (fun (X : C) => _inst_4 X) P)) (CategoryTheory.GrothendieckTopology.sheafifyMap.{u1, u2, u3} C _inst_1 J D _inst_2 (fun (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) => _inst_3 P X S) (fun (X : C) => _inst_4 X) P P (CategoryTheory.CategoryStruct.id.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2)) P)) (CategoryTheory.CategoryStruct.id.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2)) (CategoryTheory.GrothendieckTopology.sheafify.{u1, u2, u3} C _inst_1 J D _inst_2 (fun (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) => _inst_3 P X S) (fun (X : C) => _inst_4 X) P))
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.sheafify_map_id CategoryTheory.GrothendieckTopology.sheafifyMap_idₓ'. -/
 @[simp]
-theorem sheafifyMap_id (P : Cᵒᵖ ⥤ D) : J.sheafifyMap (𝟙 P) = 𝟙 (J.sheafify P) :=
-  by
-  dsimp [sheafify_map, sheafify]
-  simp
+theorem sheafifyMap_id (P : Cᵒᵖ ⥤ D) : J.sheafifyMap (𝟙 P) = 𝟙 (J.sheafify P) := by
+  dsimp [sheafify_map, sheafify]; simp
 #align category_theory.grothendieck_topology.sheafify_map_id CategoryTheory.GrothendieckTopology.sheafifyMap_id
 
 /- warning: category_theory.grothendieck_topology.sheafify_map_comp -> CategoryTheory.GrothendieckTopology.sheafifyMap_comp is a dubious translation:
@@ -630,9 +623,7 @@ theorem sheafifyMap_id (P : Cᵒᵖ ⥤ D) : J.sheafifyMap (𝟙 P) = 𝟙 (J.sh
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.sheafify_map_comp CategoryTheory.GrothendieckTopology.sheafifyMap_compₓ'. -/
 @[simp]
 theorem sheafifyMap_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
-    J.sheafifyMap (η ≫ γ) = J.sheafifyMap η ≫ J.sheafifyMap γ :=
-  by
-  dsimp [sheafify_map, sheafify]
+    J.sheafifyMap (η ≫ γ) = J.sheafifyMap η ≫ J.sheafifyMap γ := by dsimp [sheafify_map, sheafify];
   simp
 #align category_theory.grothendieck_topology.sheafify_map_comp CategoryTheory.GrothendieckTopology.sheafifyMap_comp
 
@@ -641,10 +632,8 @@ theorem sheafifyMap_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.to_sheafify_naturality CategoryTheory.GrothendieckTopology.toSheafify_naturalityₓ'. -/
 @[simp, reassoc]
 theorem toSheafify_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
-    η ≫ J.toSheafify _ = J.toSheafify _ ≫ J.sheafifyMap η :=
-  by
-  dsimp [sheafify_map, sheafify, to_sheafify]
-  simp
+    η ≫ J.toSheafify _ = J.toSheafify _ ≫ J.sheafifyMap η := by
+  dsimp [sheafify_map, sheafify, to_sheafify]; simp
 #align category_theory.grothendieck_topology.to_sheafify_naturality CategoryTheory.GrothendieckTopology.toSheafify_naturality
 
 variable (D)
@@ -761,10 +750,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.to_sheafify_sheafify_lift CategoryTheory.GrothendieckTopology.toSheafify_sheafifyLiftₓ'. -/
 @[simp, reassoc]
 theorem toSheafify_sheafifyLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
-    J.toSheafify P ≫ sheafifyLift J η hQ = η :=
-  by
-  dsimp only [sheafify_lift, to_sheafify]
-  simp
+    J.toSheafify P ≫ sheafifyLift J η hQ = η := by dsimp only [sheafify_lift, to_sheafify]; simp
 #align category_theory.grothendieck_topology.to_sheafify_sheafify_lift CategoryTheory.GrothendieckTopology.toSheafify_sheafifyLift
 
 /- warning: category_theory.grothendieck_topology.sheafify_lift_unique -> CategoryTheory.GrothendieckTopology.sheafifyLift_unique is a dubious translation:
@@ -863,8 +849,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.presheaf_to_Sheaf_preserves_zero_morphisms CategoryTheory.presheafToSheaf_preservesZeroMorphismsₓ'. -/
 instance presheafToSheaf_preservesZeroMorphisms [Preadditive D] :
     (presheafToSheaf J D).PreservesZeroMorphisms
-    where map_zero' F G := by
-    ext
+    where map_zero' F G := by ext;
     erw [colimit.ι_map, comp_zero, J.plus_map_zero, J.diagram_nat_trans_zero, zero_comp]
 #align category_theory.presheaf_to_Sheaf_preserves_zero_morphisms CategoryTheory.presheafToSheaf_preservesZeroMorphisms
 
@@ -886,10 +871,7 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
       homEquiv_naturality_left_symm := by
         intro P Q R η γ; ext1; dsimp; symm
         apply J.sheafify_map_sheafify_lift
-      homEquiv_naturality_right := fun P Q R η γ =>
-        by
-        dsimp
-        rw [category.assoc] }
+      homEquiv_naturality_right := fun P Q R η γ => by dsimp; rw [category.assoc] }
 #align category_theory.sheafification_adjunction CategoryTheory.sheafificationAdjunction
 
 /- warning: category_theory.Sheaf_to_presheaf_is_right_adjoint -> CategoryTheory.sheafToPresheafIsRightAdjoint is a dubious translation:
@@ -919,11 +901,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (J : CategoryTheory.GrothendieckTopology.{u2, u3} C _inst_1) (D : Type.{u1}) [_inst_2 : CategoryTheory.Category.{max u2 u3, u1} D] [_inst_3 : CategoryTheory.ConcreteCategory.{max u2 u3, max u3 u2, u1} D _inst_2] [_inst_4 : CategoryTheory.Limits.PreservesLimits.{max u3 u2, max u3 u2, u1, max (succ u3) (succ u2)} D _inst_2 Type.{max u3 u2} CategoryTheory.types.{max u3 u2} (CategoryTheory.forget.{u1, max u3 u2, max u3 u2} D _inst_2 _inst_3)] [_inst_5 : forall (P : CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (X : C) (S : CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X), CategoryTheory.Limits.HasMultiequalizer.{max u3 u2, u1, max u3 u2} D _inst_2 (CategoryTheory.GrothendieckTopology.Cover.index.{u1, u2, u3} C _inst_1 X J D _inst_2 S P)] [_inst_6 : forall (X : C), CategoryTheory.Limits.HasColimitsOfShape.{max u3 u2, max u3 u2, max u3 u2, u1} (Opposite.{max (succ u3) (succ u2)} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X)) (CategoryTheory.Category.opposite.{max u3 u2, max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (Preorder.smallCategory.{max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (CategoryTheory.GrothendieckTopology.instPreorderCover.{u2, u3} C _inst_1 J X))) D _inst_2] [_inst_7 : forall (X : C), CategoryTheory.Limits.PreservesColimitsOfShape.{max u3 u2, max u3 u2, max u3 u2, max u3 u2, u1, max (succ u3) (succ u2)} D _inst_2 Type.{max u3 u2} CategoryTheory.types.{max u3 u2} (Opposite.{max (succ u3) (succ u2)} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X)) (CategoryTheory.Category.opposite.{max u3 u2, max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (Preorder.smallCategory.{max u3 u2} (CategoryTheory.GrothendieckTopology.Cover.{u2, u3} C _inst_1 J X) (CategoryTheory.GrothendieckTopology.instPreorderCover.{u2, u3} C _inst_1 J X))) (CategoryTheory.forget.{u1, max u3 u2, max u3 u2} D _inst_2 _inst_3)] [_inst_8 : CategoryTheory.ReflectsIsomorphisms.{max u3 u2, max u3 u2, u1, max (succ u3) (succ u2)} D _inst_2 Type.{max u3 u2} CategoryTheory.types.{max u3 u2} (CategoryTheory.forget.{u1, max u3 u2, max u3 u2} D _inst_2 _inst_3)] {F : CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2} {G : CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2} (f : Quiver.Hom.{max (succ u3) (succ u2), max (max u3 u2) u1} (CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2) (CategoryTheory.Sheaf.instCategorySheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2))) F G), Iff (CategoryTheory.Mono.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Sheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2) (CategoryTheory.Sheaf.instCategorySheaf.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2) F G f) (CategoryTheory.Mono.{max u3 u2, max (max u3 u2) u1} (CategoryTheory.Functor.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Functor.category.{u2, max u3 u2, u3, u1} (Opposite.{succ u3} C) (CategoryTheory.Category.opposite.{u2, u3} C _inst_1) D _inst_2) (CategoryTheory.Sheaf.val.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2 F) (CategoryTheory.Sheaf.val.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2 G) (CategoryTheory.Sheaf.Hom.val.{u2, max u3 u2, u3, u1} C _inst_1 J D _inst_2 F G f))
 Case conversion may be inaccurate. Consider using '#align category_theory.Sheaf.hom.mono_iff_presheaf_mono CategoryTheory.Sheaf.Hom.mono_iff_presheaf_monoₓ'. -/
 theorem Sheaf.Hom.mono_iff_presheaf_mono {F G : Sheaf J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
-  ⟨fun m => by
-    skip
-    infer_instance, fun m => by
-    skip
-    exact Sheaf.hom.mono_of_presheaf_mono J D f⟩
+  ⟨fun m => by skip; infer_instance, fun m => by skip; exact Sheaf.hom.mono_of_presheaf_mono J D f⟩
 #align category_theory.Sheaf.hom.mono_iff_presheaf_mono CategoryTheory.Sheaf.Hom.mono_iff_presheaf_mono
 
 variable {J D}
@@ -940,12 +918,8 @@ def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val
     where
   Hom := ⟨(J.isoSheafify P.2).Hom⟩
   inv := ⟨(J.isoSheafify P.2).inv⟩
-  hom_inv_id' := by
-    ext1
-    apply (J.iso_sheafify P.2).hom_inv_id
-  inv_hom_id' := by
-    ext1
-    apply (J.iso_sheafify P.2).inv_hom_id
+  hom_inv_id' := by ext1; apply (J.iso_sheafify P.2).hom_inv_id
+  inv_hom_id' := by ext1; apply (J.iso_sheafify P.2).inv_hom_id
 #align category_theory.sheafification_iso CategoryTheory.sheafificationIso
 
 /- warning: category_theory.is_iso_sheafification_adjunction_counit -> CategoryTheory.isIso_sheafificationAdjunction_counit is a dubious translation:

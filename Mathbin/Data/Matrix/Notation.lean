@@ -74,9 +74,7 @@ unsafe instance Matrix.toExpr [Lean.ToLevel.{u}] [Lean.ToLevel.{u_1}] [Lean.ToLe
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
-    by
-    dsimp only [Matrix]
-    exact h m
+    by dsimp only [Matrix]; exact h m
 #align matrix.matrix.reflect Matrix.toExpr
 -/
 
@@ -170,10 +168,7 @@ theorem head_val' (B : Fin m.succ → n' → α) (j : n') : (vecHead fun i => B 
 #print Matrix.tail_val' /-
 @[simp]
 theorem tail_val' (B : Fin m.succ → n' → α) (j : n') :
-    (vecTail fun i => B i j) = fun i => vecTail B i j :=
-  by
-  ext
-  simp [vec_tail]
+    (vecTail fun i => B i j) = fun i => vecTail B i j := by ext; simp [vec_tail]
 #align matrix.tail_val' Matrix.tail_val'
 -/
 
@@ -240,28 +235,20 @@ theorem col_empty (v : Fin 0 → α) : col v = vecEmpty :=
 
 #print Matrix.col_cons /-
 @[simp]
-theorem col_cons (x : α) (u : Fin m → α) : col (vecCons x u) = vecCons (fun _ => x) (col u) :=
-  by
-  ext (i j)
-  refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
+theorem col_cons (x : α) (u : Fin m → α) : col (vecCons x u) = vecCons (fun _ => x) (col u) := by
+  ext (i j); refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
 #align matrix.col_cons Matrix.col_cons
 -/
 
 #print Matrix.row_empty /-
 @[simp]
-theorem row_empty : row (vecEmpty : Fin 0 → α) = fun _ => vecEmpty :=
-  by
-  ext
-  rfl
+theorem row_empty : row (vecEmpty : Fin 0 → α) = fun _ => vecEmpty := by ext; rfl
 #align matrix.row_empty Matrix.row_empty
 -/
 
 #print Matrix.row_cons /-
 @[simp]
-theorem row_cons (x : α) (u : Fin m → α) : row (vecCons x u) = fun _ => vecCons x u :=
-  by
-  ext
-  rfl
+theorem row_cons (x : α) (u : Fin m → α) : row (vecCons x u) = fun _ => vecCons x u := by ext; rfl
 #align matrix.row_cons Matrix.row_cons
 -/
 
@@ -286,9 +273,7 @@ theorem transpose_empty_cols (A : Matrix (Fin 0) m' α) : Aᵀ = of fun i => ![]
 #print Matrix.cons_transpose /-
 @[simp]
 theorem cons_transpose (v : n' → α) (A : Matrix (Fin m) n' α) :
-    (of (vecCons v A))ᵀ = of fun i => vecCons (v i) (Aᵀ i) :=
-  by
-  ext (i j)
+    (of (vecCons v A))ᵀ = of fun i => vecCons (v i) (Aᵀ i) := by ext (i j);
   refine' Fin.cases _ _ j <;> simp
 #align matrix.cons_transpose Matrix.cons_transpose
 -/
@@ -303,10 +288,8 @@ theorem head_transpose (A : Matrix m' (Fin n.succ) α) :
 
 #print Matrix.tail_transpose /-
 @[simp]
-theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vecTail ∘ A)ᵀ :=
-  by
-  ext (i j)
-  rfl
+theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vecTail ∘ A)ᵀ := by
+  ext (i j); rfl
 #align matrix.tail_transpose Matrix.tail_transpose
 -/
 
@@ -364,12 +347,8 @@ theorem mul_val_succ [Fintype n'] (A : Matrix (Fin m.succ) n' α) (B : Matrix n'
 #print Matrix.cons_mul /-
 @[simp]
 theorem cons_mul [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (B : Matrix n' o' α) :
-    of (vecCons v A) ⬝ B = of (vecCons (vecMul v B) (of.symm (of A ⬝ B))) :=
-  by
-  ext (i j)
-  refine' Fin.cases _ _ i
-  · rfl
-  simp [mul_val_succ]
+    of (vecCons v A) ⬝ B = of (vecCons (vecMul v B) (of.symm (of A ⬝ B))) := by ext (i j);
+  refine' Fin.cases _ _ i; · rfl; simp [mul_val_succ]
 #align matrix.cons_mul Matrix.cons_mul
 -/
 
@@ -400,9 +379,7 @@ theorem vecMul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Fin 0) α) : v
 #print Matrix.cons_vecMul /-
 @[simp]
 theorem cons_vecMul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
-    vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of <| vecTail B) :=
-  by
-  ext i
+    vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of <| vecTail B) := by ext i;
   simp [vec_mul]
 #align matrix.cons_vec_mul Matrix.cons_vecMul
 -/
@@ -410,9 +387,7 @@ theorem cons_vecMul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
 #print Matrix.vecMul_cons /-
 @[simp]
 theorem vecMul_cons (v : Fin n.succ → α) (w : o' → α) (B : Fin n → o' → α) :
-    vecMul v (of <| vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) :=
-  by
-  ext i
+    vecMul v (of <| vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) := by ext i;
   simp [vec_mul]
 #align matrix.vec_mul_cons Matrix.vecMul_cons
 -/
@@ -451,9 +426,7 @@ theorem mulVec_empty (A : Matrix m' (Fin 0) α) (v : Fin 0 → α) : mulVec A v 
 #print Matrix.cons_mulVec /-
 @[simp]
 theorem cons_mulVec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : n' → α) :
-    mulVec (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) :=
-  by
-  ext i
+    mulVec (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) := by ext i;
   refine' Fin.cases _ _ i <;> simp [mul_vec]
 #align matrix.cons_mul_vec Matrix.cons_mulVec
 -/
@@ -466,9 +439,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_cons Matrix.mulVec_consₓ'. -/
 @[simp]
 theorem mulVec_cons {α} [CommSemiring α] (A : m' → Fin n.succ → α) (x : α) (v : Fin n → α) :
-    mulVec (of A) (vecCons x v) = x • vecHead ∘ A + mulVec (of (vecTail ∘ A)) v :=
-  by
-  ext i
+    mulVec (of A) (vecCons x v) = x • vecHead ∘ A + mulVec (of (vecTail ∘ A)) v := by ext i;
   simp [mul_vec, mul_comm]
 #align matrix.mul_vec_cons Matrix.mulVec_cons
 
@@ -508,9 +479,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.cons_vec_mul_vec Matrix.cons_vecMulVecₓ'. -/
 @[simp]
 theorem cons_vecMulVec (x : α) (v : Fin m → α) (w : n' → α) :
-    vecMulVec (vecCons x v) w = vecCons (x • w) (vecMulVec v w) :=
-  by
-  ext i
+    vecMulVec (vecCons x v) w = vecCons (x • w) (vecMulVec v w) := by ext i;
   refine' Fin.cases _ _ i <;> simp [vec_mul_vec]
 #align matrix.cons_vec_mul_vec Matrix.cons_vecMulVec
 
@@ -522,9 +491,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.vec_mul_vec_cons Matrix.vecMulVec_consₓ'. -/
 @[simp]
 theorem vecMulVec_cons (v : m' → α) (x : α) (w : Fin n → α) :
-    vecMulVec v (vecCons x w) = fun i => v i • vecCons x w :=
-  by
-  ext (i j)
+    vecMulVec v (vecCons x w) = fun i => v i • vecCons x w := by ext (i j);
   rw [vec_mul_vec_apply, Pi.smul_apply, smul_eq_mul]
 #align matrix.vec_mul_vec_cons Matrix.vecMulVec_cons
 
@@ -553,10 +520,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.smul_mat_cons Matrix.smul_mat_consₓ'. -/
 @[simp]
 theorem smul_mat_cons (x : α) (v : n' → α) (A : Fin m → n' → α) :
-    x • vecCons v A = vecCons (x • v) (x • A) :=
-  by
-  ext i
-  refine' Fin.cases _ _ i <;> simp
+    x • vecCons v A = vecCons (x • v) (x • A) := by ext i; refine' Fin.cases _ _ i <;> simp
 #align matrix.smul_mat_cons Matrix.smul_mat_cons
 
 end Smul
@@ -574,10 +538,8 @@ theorem submatrix_empty (A : Matrix m' n' α) (row : Fin 0 → m') (col : o' →
 #print Matrix.submatrix_cons_row /-
 @[simp]
 theorem submatrix_cons_row (A : Matrix m' n' α) (i : m') (row : Fin m → m') (col : o' → n') :
-    submatrix A (vecCons i row) col = vecCons (fun j => A i (col j)) (submatrix A row col) :=
-  by
-  ext (i j)
-  refine' Fin.cases _ _ i <;> simp [submatrix]
+    submatrix A (vecCons i row) col = vecCons (fun j => A i (col j)) (submatrix A row col) := by
+  ext (i j); refine' Fin.cases _ _ i <;> simp [submatrix]
 #align matrix.submatrix_cons_row Matrix.submatrix_cons_row
 -/
 
@@ -595,9 +557,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α], Eq.{succ u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α) (OfNat.ofNat.{u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α) 1 (One.toOfNat1.{u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α) (Matrix.one.{u1, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α (fun (a : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (b : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) => instDecidableEqFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) a b) _inst_1 _inst_2))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α)) ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) (fun (_x : (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) => Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α)) (Matrix.of.{u1, 0, 0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) α) (Matrix.vecCons.{u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecEmpty.{u1} α))) (Matrix.vecCons.{u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (Matrix.vecEmpty.{u1} α))) (Matrix.vecEmpty.{u1} ((Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> α)))))
 Case conversion may be inaccurate. Consider using '#align matrix.one_fin_two Matrix.one_fin_twoₓ'. -/
-theorem one_fin_two : (1 : Matrix (Fin 2) (Fin 2) α) = !![1, 0; 0, 1] :=
-  by
-  ext (i j)
+theorem one_fin_two : (1 : Matrix (Fin 2) (Fin 2) α) = !![1, 0; 0, 1] := by ext (i j);
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
 
@@ -607,27 +567,21 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α], Eq.{succ u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α) (OfNat.ofNat.{u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α) 1 (One.toOfNat1.{u1} (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α) (Matrix.one.{u1, 0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α (fun (a : Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (b : Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) => instDecidableEqFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) a b) _inst_1 _inst_2))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α)) ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (fun (_x : (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) => Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α)) (Matrix.of.{u1, 0, 0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) α) (Matrix.vecCons.{u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecEmpty.{u1} α)))) (Matrix.vecCons.{u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecEmpty.{u1} α)))) (Matrix.vecCons.{u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2)) (Matrix.vecEmpty.{u1} α)))) (Matrix.vecEmpty.{u1} ((Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> α))))))
 Case conversion may be inaccurate. Consider using '#align matrix.one_fin_three Matrix.one_fin_threeₓ'. -/
-theorem one_fin_three : (1 : Matrix (Fin 3) (Fin 3) α) = !![1, 0, 0; 0, 1, 0; 0, 0, 1] :=
-  by
-  ext (i j)
-  fin_cases i <;> fin_cases j <;> rfl
+theorem one_fin_three : (1 : Matrix (Fin 3) (Fin 3) α) = !![1, 0, 0; 0, 1, 0; 0, 0, 1] := by
+  ext (i j); fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_three Matrix.one_fin_three
 
 end One
 
 #print Matrix.eta_fin_two /-
-theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) : A = !![A 0 0, A 0 1; A 1 0, A 1 1] :=
-  by
-  ext (i j)
-  fin_cases i <;> fin_cases j <;> rfl
+theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) : A = !![A 0 0, A 0 1; A 1 0, A 1 1] := by
+  ext (i j); fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
 -/
 
 #print Matrix.eta_fin_three /-
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
-    A = !![A 0 0, A 0 1, A 0 2; A 1 0, A 1 1, A 1 2; A 2 0, A 2 1, A 2 2] :=
-  by
-  ext (i j)
+    A = !![A 0 0, A 0 1, A 0 2; A 1 0, A 1 1, A 1 2; A 2 0, A 2 1, A 2 2] := by ext (i j);
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
 -/

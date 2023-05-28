@@ -122,18 +122,13 @@ instance monoCoprodType : MonoCoprod (Type u) :=
     by
     refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
-        binary_cofan.is_colimit.mk _
-          (fun Y f₁ f₂ x => by
-            cases x
-            exacts[f₁ x, f₂ x])
+        binary_cofan.is_colimit.mk _ (fun Y f₁ f₂ x => by cases x; exacts[f₁ x, f₂ x])
           (fun Y f₁ f₂ => rfl) (fun Y f₁ f₂ => rfl) _
       intro Y f₁ f₂ m h₁ h₂
       ext x
       cases x
-      · dsimp
-        exact congr_fun h₁ x
-      · dsimp
-        exact congr_fun h₂ x
+      · dsimp; exact congr_fun h₁ x
+      · dsimp; exact congr_fun h₂ x
     · rw [mono_iff_injective]
       intro a₁ a₂ h
       simp only [binary_cofan.mk_inl] at h

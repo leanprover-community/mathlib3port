@@ -347,8 +347,7 @@ theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ
       le_iSup_of_le (φ.map ENNReal.toNNReal) (le_iSup_of_le this (ge_of_eq <| lintegral_congr h))
   · have h_meas : μ (φ ⁻¹' {∞}) ≠ 0 := mt measure_zero_iff_ae_nmem.1 h
     refine' le_trans le_top (ge_of_eq <| (iSup_eq_top _).2 fun b hb => _)
-    obtain ⟨n, hn⟩ : ∃ n : ℕ, b < n * μ (φ ⁻¹' {∞})
-    exact exists_nat_mul_gt h_meas (ne_of_lt hb)
+    obtain ⟨n, hn⟩ : ∃ n : ℕ, b < n * μ (φ ⁻¹' {∞}); exact exists_nat_mul_gt h_meas (ne_of_lt hb)
     use (const α (n : ℝ≥0)).restrict (φ ⁻¹' {∞})
     simp only [lt_iSup_iff, exists_prop, coe_restrict, φ.measurable_set_preimage, coe_const,
       ENNReal.coe_indicator, map_coe_ennreal_restrict, simple_func.map_const, ENNReal.coe_nat,
@@ -405,11 +404,8 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.supr₂
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem iSup₂_lintegral_le {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
-    (⨆ (i) (j), ∫⁻ a, f i j a ∂μ) ≤ ∫⁻ a, ⨆ (i) (j), f i j a ∂μ :=
-  by
-  convert(monotone_lintegral μ).le_map_iSup₂ f
-  ext1 a
-  simp only [iSup_apply]
+    (⨆ (i) (j), ∫⁻ a, f i j a ∂μ) ≤ ∫⁻ a, ⨆ (i) (j), f i j a ∂μ := by
+  convert(monotone_lintegral μ).le_map_iSup₂ f; ext1 a; simp only [iSup_apply]
 #align measure_theory.supr₂_lintegral_le MeasureTheory.iSup₂_lintegral_le
 
 /- warning: measure_theory.le_infi_lintegral -> MeasureTheory.le_iInf_lintegral is a dubious translation:
@@ -419,9 +415,7 @@ but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ι : Sort.{u2}} (f : ι -> α -> ENNReal), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.lintegral.{u1} α m μ (fun (a : α) => iInf.{0, u2} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => f i a))) (iInf.{0, u2} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => MeasureTheory.lintegral.{u1} α m μ (fun (a : α) => f i a)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.le_infi_lintegral MeasureTheory.le_iInf_lintegralₓ'. -/
 theorem le_iInf_lintegral {ι : Sort _} (f : ι → α → ℝ≥0∞) :
-    (∫⁻ a, ⨅ i, f i a ∂μ) ≤ ⨅ i, ∫⁻ a, f i a ∂μ :=
-  by
-  simp only [← iInf_apply]
+    (∫⁻ a, ⨅ i, f i a ∂μ) ≤ ⨅ i, ∫⁻ a, f i a ∂μ := by simp only [← iInf_apply];
   exact (monotone_lintegral μ).map_iInf_le
 #align measure_theory.le_infi_lintegral MeasureTheory.le_iInf_lintegral
 
@@ -432,11 +426,8 @@ but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ι : Sort.{u3}} {ι' : ι -> Sort.{u2}} (f : forall (i : ι), (ι' i) -> α -> ENNReal), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.lintegral.{u1} α m μ (fun (a : α) => iInf.{0, u3} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => iInf.{0, u2} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (ι' i) (fun (h : ι' i) => f i h a)))) (iInf.{0, u3} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => iInf.{0, u2} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (ι' i) (fun (h : ι' i) => MeasureTheory.lintegral.{u1} α m μ (fun (a : α) => f i h a))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.le_infi₂_lintegral MeasureTheory.le_iInf₂_lintegralₓ'. -/
 theorem le_iInf₂_lintegral {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
-    (∫⁻ a, ⨅ (i) (h : ι' i), f i h a ∂μ) ≤ ⨅ (i) (h : ι' i), ∫⁻ a, f i h a ∂μ :=
-  by
-  convert(monotone_lintegral μ).map_iInf₂_le f
-  ext1 a
-  simp only [iInf_apply]
+    (∫⁻ a, ⨅ (i) (h : ι' i), f i h a ∂μ) ≤ ⨅ (i) (h : ι' i), ∫⁻ a, f i h a ∂μ := by
+  convert(monotone_lintegral μ).map_iInf₂_le f; ext1 a; simp only [iInf_apply]
 #align measure_theory.le_infi₂_lintegral MeasureTheory.le_iInf₂_lintegral
 
 /- warning: measure_theory.lintegral_mono_ae -> MeasureTheory.lintegral_mono_ae is a dubious translation:
@@ -502,11 +493,8 @@ theorem set_lintegral_congr {f : α → ℝ≥0∞} {s t : Set α} (h : s =ᵐ[�
 
 #print MeasureTheory.set_lintegral_congr_fun /-
 theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : MeasurableSet s)
-    (hfg : ∀ᵐ x ∂μ, x ∈ s → f x = g x) : (∫⁻ x in s, f x ∂μ) = ∫⁻ x in s, g x ∂μ :=
-  by
-  rw [lintegral_congr_ae]
-  rw [eventually_eq]
-  rwa [ae_restrict_iff' hs]
+    (hfg : ∀ᵐ x ∂μ, x ∈ s → f x = g x) : (∫⁻ x in s, f x ∂μ) = ∫⁻ x in s, g x ∂μ := by
+  rw [lintegral_congr_ae]; rw [eventually_eq]; rwa [ae_restrict_iff' hs]
 #align measure_theory.set_lintegral_congr_fun MeasureTheory.set_lintegral_congr_fun
 -/
 
@@ -573,29 +561,20 @@ theorem lintegral_iSup {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
   rcases ENNReal.lt_iff_exists_coe.1 ha with ⟨r, rfl, ha⟩
   have ha : r < 1 := ENNReal.coe_lt_coe.1 ha
   let rs := s.map fun a => r * a
-  have eq_rs : (const α r : α →ₛ ℝ≥0∞) * map c s = rs.map c :=
-    by
-    ext1 a
-    exact ennreal.coe_mul.symm
+  have eq_rs : (const α r : α →ₛ ℝ≥0∞) * map c s = rs.map c := by ext1 a; exact ennreal.coe_mul.symm
   have eq : ∀ p, rs.map c ⁻¹' {p} = ⋃ n, rs.map c ⁻¹' {p} ∩ { a | p ≤ f n a } :=
     by
     intro p
     rw [← inter_Union, ← inter_univ (map c rs ⁻¹' {p})]
     refine' Set.ext fun x => and_congr_right fun hx => (true_iff_iff _).2 _
-    by_cases p_eq : p = 0
-    · simp [p_eq]
-    simp at hx
-    subst hx
+    by_cases p_eq : p = 0; · simp [p_eq]
+    simp at hx; subst hx
     have : r * s x ≠ 0 := by rwa [(· ≠ ·), ← ENNReal.coe_eq_zero]
-    have : s x ≠ 0 := by
-      refine' mt _ this
-      intro h
-      rw [h, MulZeroClass.mul_zero]
+    have : s x ≠ 0 := by refine' mt _ this; intro h; rw [h, MulZeroClass.mul_zero]
     have : (rs.map c) x < ⨆ n : ℕ, f n x :=
       by
       refine' lt_of_lt_of_le (ENNReal.coe_lt_coe.2 _) (hsf x)
-      suffices : r * s x < 1 * s x
-      simpa [rs]
+      suffices : r * s x < 1 * s x; simpa [rs]
       exact mul_lt_mul_of_pos_right ha (pos_iff_ne_zero.2 this)
     rcases lt_iSup_iff.1 this with ⟨i, hi⟩
     exact mem_Union.2 ⟨i, le_of_lt hi⟩
@@ -603,8 +582,7 @@ theorem lintegral_iSup {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
     by
     intro r i j h
     refine' inter_subset_inter (subset.refl _) _
-    intro x hx
-    exact le_trans hx (h_mono h x)
+    intro x hx; exact le_trans hx (h_mono h x)
   have h_meas : ∀ n, MeasurableSet { a : α | (⇑(map c rs)) a ≤ f n a } := fun n =>
     measurableSet_le (simple_func.measurable _) (hf n)
   calc
@@ -705,8 +683,7 @@ theorem lintegral_eq_iSup_eapprox_lintegral {f : α → ℝ≥0∞} (hf : Measur
       by
       rw [lintegral_supr]
       · measurability
-      · intro i j h
-        exact monotone_eapprox f h
+      · intro i j h; exact monotone_eapprox f h
     _ = ⨆ n, (eapprox f n).lintegral μ := by
       congr <;> ext n <;> rw [(eapprox f n).lintegral_eq_lintegral]
     
@@ -804,24 +781,19 @@ theorem lintegral_add_aux {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Me
       by
       congr ; funext a
       rw [ENNReal.iSup_add_iSup_of_monotone]; · rfl
-      · intro i j h
-        exact monotone_eapprox _ h a
-      · intro i j h
-        exact monotone_eapprox _ h a
+      · intro i j h; exact monotone_eapprox _ h a
+      · intro i j h; exact monotone_eapprox _ h a
     _ = ⨆ n, (eapprox f n).lintegral μ + (eapprox g n).lintegral μ :=
       by
       rw [lintegral_supr]
       · congr
-        funext n
-        rw [← simple_func.add_lintegral, ← simple_func.lintegral_eq_lintegral]
+        funext n; rw [← simple_func.add_lintegral, ← simple_func.lintegral_eq_lintegral]
         rfl
       · measurability
-      · intro i j h a
-        exact add_le_add (monotone_eapprox _ h _) (monotone_eapprox _ h _)
+      · intro i j h a; exact add_le_add (monotone_eapprox _ h _) (monotone_eapprox _ h _)
     _ = (⨆ n, (eapprox f n).lintegral μ) + ⨆ n, (eapprox g n).lintegral μ := by
       refine' (ENNReal.iSup_add_iSup_of_monotone _ _).symm <;>
-        · intro i j h
-          exact simple_func.lintegral_mono (monotone_eapprox _ h) (le_refl μ)
+        · intro i j h; exact simple_func.lintegral_mono (monotone_eapprox _ h) (le_refl μ)
     _ = (∫⁻ a, f a ∂μ) + ∫⁻ a, g a ∂μ := by
       rw [lintegral_eq_supr_eapprox_lintegral hf, lintegral_eq_supr_eapprox_lintegral hg]
     
@@ -913,9 +885,7 @@ theorem lintegral_sum_measure {m : MeasurableSpace α} {ι} (f : α → ℝ≥0�
   simp only [lintegral, iSup_subtype', simple_func.lintegral_sum, ENNReal.tsum_eq_iSup_sum]
   rw [iSup_comm]
   congr ; funext s
-  induction' s using Finset.induction_on with i s hi hs;
-  · apply bot_unique
-    simp
+  induction' s using Finset.induction_on with i s hi hs; · apply bot_unique; simp
   simp only [Finset.sum_insert hi, ← hs]
   refine' (ENNReal.iSup_add_iSup _).symm
   intro φ ψ
@@ -956,10 +926,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.lintegral_finset_sum_measure MeasureTheory.lintegral_finset_sum_measureₓ'. -/
 @[simp]
 theorem lintegral_finset_sum_measure {ι} {m : MeasurableSpace α} (s : Finset ι) (f : α → ℝ≥0∞)
-    (μ : ι → Measure α) : (∫⁻ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫⁻ a, f a ∂μ i :=
-  by
-  rw [← measure.sum_coe_finset, lintegral_sum_measure, ← Finset.tsum_subtype']
-  rfl
+    (μ : ι → Measure α) : (∫⁻ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫⁻ a, f a ∂μ i := by
+  rw [← measure.sum_coe_finset, lintegral_sum_measure, ← Finset.tsum_subtype']; rfl
 #align measure_theory.lintegral_finset_sum_measure MeasureTheory.lintegral_finset_sum_measure
 
 /- warning: measure_theory.lintegral_zero_measure -> MeasureTheory.lintegral_zero_measure is a dubious translation:
@@ -1039,22 +1007,15 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.lintegr
 theorem lintegral_const_mul (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) :
     (∫⁻ a, r * f a ∂μ) = r * ∫⁻ a, f a ∂μ :=
   calc
-    (∫⁻ a, r * f a ∂μ) = ∫⁻ a, ⨆ n, (const α r * eapprox f n) a ∂μ :=
-      by
-      congr
-      funext a
-      rw [← supr_eapprox_apply f hf, ENNReal.mul_iSup]
-      rfl
+    (∫⁻ a, r * f a ∂μ) = ∫⁻ a, ⨆ n, (const α r * eapprox f n) a ∂μ := by congr ; funext a;
+      rw [← supr_eapprox_apply f hf, ENNReal.mul_iSup]; rfl
     _ = ⨆ n, r * (eapprox f n).lintegral μ :=
       by
       rw [lintegral_supr]
-      · congr
-        funext n
+      · congr ; funext n
         rw [← simple_func.const_mul_lintegral, ← simple_func.lintegral_eq_lintegral]
-      · intro n
-        exact simple_func.measurable _
-      · intro i j h a
-        exact mul_le_mul_left' (monotone_eapprox _ h _) _
+      · intro n; exact simple_func.measurable _
+      · intro i j h a; exact mul_le_mul_left' (monotone_eapprox _ h _) _
     _ = r * ∫⁻ a, f a ∂μ := by rw [← ENNReal.mul_iSup, lintegral_eq_supr_eapprox_lintegral hf]
     
 #align measure_theory.lintegral_const_mul MeasureTheory.lintegral_const_mul
@@ -1105,9 +1066,7 @@ theorem lintegral_const_mul' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r �
   · simp [h]
   apply le_antisymm _ (lintegral_const_mul_le r f)
   have rinv : r * r⁻¹ = 1 := ENNReal.mul_inv_cancel h hr
-  have rinv' : r⁻¹ * r = 1 := by
-    rw [mul_comm]
-    exact rinv
+  have rinv' : r⁻¹ * r = 1 := by rw [mul_comm]; exact rinv
   have := lintegral_const_mul_le r⁻¹ fun x => r * f x
   simp [(mul_assoc _ _ _).symm, rinv'] at this
   simpa [(mul_assoc _ _ _).symm, rinv] using mul_le_mul_left' this r
@@ -1332,9 +1291,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.meas_ge
 /-- **Markov's inequality** also known as **Chebyshev's first inequality**. -/
 theorem meas_ge_le_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) {ε : ℝ≥0∞} (hε : ε ≠ 0)
     (hε' : ε ≠ ∞) : μ { x | ε ≤ f x } ≤ (∫⁻ a, f a ∂μ) / ε :=
-  (ENNReal.le_div_iff_mul_le (Or.inl hε) (Or.inl hε')).2 <|
-    by
-    rw [mul_comm]
+  (ENNReal.le_div_iff_mul_le (Or.inl hε) (Or.inl hε')).2 <| by rw [mul_comm];
     exact mul_meas_ge_le_lintegral₀ hf ε
 #align measure_theory.meas_ge_le_lintegral_div MeasureTheory.meas_ge_le_lintegral_div
 
@@ -1630,10 +1587,8 @@ theorem limsup_lintegral_le {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0�
     _ = ∫⁻ a, ⨅ n : ℕ, ⨆ i ≥ n, f i a ∂μ :=
       by
       refine' (lintegral_infi _ _ _).symm
-      · intro n
-        exact measurable_biSup _ (to_countable _) hf_meas
-      · intro n m hnm a
-        exact iSup_le_iSup_of_subset fun i hi => le_trans hnm hi
+      · intro n; exact measurable_biSup _ (to_countable _) hf_meas
+      · intro n m hnm a; exact iSup_le_iSup_of_subset fun i hi => le_trans hnm hi
       · refine' ne_top_of_le_ne_top h_fin (lintegral_mono_ae _)
         refine' (ae_all_iff.2 h_bound).mono fun n hn => _
         exact iSup_le fun i => iSup_le fun hi => hn i
@@ -1708,21 +1663,15 @@ theorem tendsto_lintegral_filter_of_dominated_convergence {ι} {l : Filter ι}
   by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
-  have hxl := by
-    rw [tendsto_at_top'] at xl
-    exact xl
+  have hxl := by rw [tendsto_at_top'] at xl; exact xl
   have h := inter_mem hF_meas h_bound
   replace h := hxl _ h
   rcases h with ⟨k, h⟩
   rw [← tendsto_add_at_top_iff_nat k]
   refine' tendsto_lintegral_of_dominated_convergence _ _ _ _ _
   · exact bound
-  · intro
-    refine' (h _ _).1
-    exact Nat.le_add_left _ _
-  · intro
-    refine' (h _ _).2
-    exact Nat.le_add_left _ _
+  · intro ; refine' (h _ _).1; exact Nat.le_add_left _ _
+  · intro ; refine' (h _ _).2; exact Nat.le_add_left _ _
   · assumption
   · refine' h_lim.mono fun a h_lim => _
     apply @tendsto.comp _ _ _ (fun n => x (n + k)) fun n => F n a
@@ -1747,8 +1696,7 @@ theorem lintegral_iSup_directed_of_measurable [Countable β] {f : β → α → 
     (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ :=
   by
   cases nonempty_encodable β
-  cases isEmpty_or_nonempty β
-  · simp [iSup_of_empty]
+  cases isEmpty_or_nonempty β; · simp [iSup_of_empty]
   inhabit β
   have : ∀ a, (⨆ b, f b a) = ⨆ n, f (h_directed.sequence f n) a :=
     by
@@ -1821,8 +1769,7 @@ theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i
   simp only [ENNReal.tsum_eq_iSup_sum]
   rw [lintegral_supr_directed]
   · simp [lintegral_finset_sum' _ fun i _ => hf i]
-  · intro b
-    exact Finset.aemeasurable_sum _ fun i _ => hf i
+  · intro b; exact Finset.aemeasurable_sum _ fun i _ => hf i
   · intro s t
     use s ∪ t
     constructor
@@ -2001,10 +1948,7 @@ theorem lintegral_map' {mβ : MeasurableSpace β} {f : β → ℝ≥0∞} {g : �
   calc
     (∫⁻ a, f a ∂Measure.map g μ) = ∫⁻ a, hf.mk f a ∂Measure.map g μ :=
       lintegral_congr_ae hf.ae_eq_mk
-    _ = ∫⁻ a, hf.mk f a ∂Measure.map (hg.mk g) μ :=
-      by
-      congr 1
-      exact measure.map_congr hg.ae_eq_mk
+    _ = ∫⁻ a, hf.mk f a ∂Measure.map (hg.mk g) μ := by congr 1; exact measure.map_congr hg.ae_eq_mk
     _ = ∫⁻ a, hf.mk f (hg.mk g a) ∂μ := (lintegral_map hf.measurable_mk hg.measurable_mk)
     _ = ∫⁻ a, hf.mk f (g a) ∂μ := (lintegral_congr_ae <| hg.ae_eq_mk.symm.fun_comp _)
     _ = ∫⁻ a, f (g a) ∂μ := lintegral_congr_ae (ae_eq_comp hg hf.ae_eq_mk.symm)
@@ -2245,9 +2189,7 @@ theorem NNReal.count_const_le_le_of_tsum_le [MeasurableSingletonClass α] {a : �
     (a_mble : Measurable a) (a_summable : Summable a) {c : ℝ≥0} (tsum_le_c : (∑' i, a i) ≤ c)
     {ε : ℝ≥0} (ε_ne_zero : ε ≠ 0) : Measure.count { i : α | ε ≤ a i } ≤ c / ε :=
   by
-  rw [show (fun i => ε ≤ a i) = fun i => (ε : ℝ≥0∞) ≤ (coe ∘ a) i
-      by
-      funext i
+  rw [show (fun i => ε ≤ a i) = fun i => (ε : ℝ≥0∞) ≤ (coe ∘ a) i by funext i;
       simp only [ENNReal.coe_le_coe]]
   apply
     ENNReal.count_const_le_le_of_tsum_le (measurable_coe_nnreal_ennreal.comp a_mble) _
@@ -2376,15 +2318,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_lt_top MeasureTheory.ae_lt_topₓ'. -/
 theorem ae_lt_top {f : α → ℝ≥0∞} (hf : Measurable f) (h2f : (∫⁻ x, f x ∂μ) ≠ ∞) :
     ∀ᵐ x ∂μ, f x < ∞ := by
-  simp_rw [ae_iff, ENNReal.not_lt_top]
-  by_contra h
-  apply h2f.lt_top.not_le
-  have : (f ⁻¹' {∞}).indicator ⊤ ≤ f := by
-    intro x
+  simp_rw [ae_iff, ENNReal.not_lt_top]; by_contra h; apply h2f.lt_top.not_le
+  have : (f ⁻¹' {∞}).indicator ⊤ ≤ f := by intro x;
     by_cases hx : x ∈ f ⁻¹' {∞} <;> [simpa [hx] ;simp [hx]]
   convert lintegral_mono this
-  rw [lintegral_indicator _ (hf (measurable_set_singleton ∞))]
-  simp [ENNReal.top_mul', preimage, h]
+  rw [lintegral_indicator _ (hf (measurable_set_singleton ∞))]; simp [ENNReal.top_mul', preimage, h]
 #align measure_theory.ae_lt_top MeasureTheory.ae_lt_top
 
 /- warning: measure_theory.ae_lt_top' -> MeasureTheory.ae_lt_top' is a dubious translation:
@@ -2658,8 +2596,7 @@ theorem withDensity_apply_eq_zero {f : α → ℝ≥0∞} {s : Set α} (hf : Mea
     have A : μ.with_density f t = 0 := by rw [measure_to_measurable, hs]
     rw [with_density_apply f (measurable_set_to_measurable _ s), lintegral_eq_zero_iff hf,
       eventually_eq, ae_restrict_iff, ae_iff] at A
-    swap
-    · exact hf (measurable_set_singleton 0)
+    swap; · exact hf (measurable_set_singleton 0)
     simp only [Pi.zero_apply, mem_set_of_eq, Filter.mem_mk] at A
     convert A
     ext x
@@ -2987,8 +2924,7 @@ theorem lintegral_trim {μ : Measure α} (hm : m ≤ m0) {f : α → ℝ≥0∞}
   · intro c s hs
     rw [lintegral_indicator _ hs, lintegral_indicator _ (hm s hs), set_lintegral_const,
       set_lintegral_const]
-    suffices h_trim_s : μ.trim hm s = μ s
-    · rw [h_trim_s]
+    suffices h_trim_s : μ.trim hm s = μ s; · rw [h_trim_s]
     exact trim_measurable_set_eq hm hs
   · intro f g hfg hf hg hf_prop hg_prop
     have h_m := lintegral_add_left hf g
@@ -3052,8 +2988,7 @@ theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measure α} (hm :
   rw [← this]
   refine' univ_le_of_forall_fin_meas_le hm C hf fun S hS_meas hS_mono => _
   rw [← lintegral_indicator]
-  swap
-  · exact hm (⋃ n, S n) (@MeasurableSet.iUnion _ _ m _ _ hS_meas)
+  swap; · exact hm (⋃ n, S n) (@MeasurableSet.iUnion _ _ m _ _ hS_meas)
   have h_integral_indicator : (⨆ n, ∫⁻ x in S n, f x ∂μ) = ⨆ n, ∫⁻ x, (S n).indicator f x ∂μ :=
     by
     congr
@@ -3140,8 +3075,7 @@ theorem SimpleFunc.exists_lt_lintegral_simpleFunc_of_lt_lintegral {m : Measurabl
   · simp only [hs, const_zero, coe_piecewise, coe_const, simple_func.coe_zero, univ_inter,
       piecewise_eq_indicator, lintegral_indicator, lintegral_const, measure.restrict_apply',
       coe_indicator, Function.const_apply] at hL
-    have c_ne_zero : c ≠ 0 := by
-      intro hc
+    have c_ne_zero : c ≠ 0 := by intro hc;
       simpa only [hc, ENNReal.coe_zero, MulZeroClass.zero_mul, not_lt_zero] using hL
     have : L / c < μ s := by
       rwa [ENNReal.div_lt_iff, mul_comm]
@@ -3151,8 +3085,7 @@ theorem SimpleFunc.exists_lt_lintegral_simpleFunc_of_lt_lintegral {m : Measurabl
       ∃ t : Set α, MeasurableSet t ∧ t ⊆ s ∧ L / ↑c < μ t ∧ μ t < ∞ :=
       measure.exists_subset_measure_lt_top hs this
     refine' ⟨piecewise t ht (const α c) (const α 0), fun x => _, _, _⟩
-    · apply indicator_le_indicator_of_subset ts fun x => _
-      exact zero_le _
+    · apply indicator_le_indicator_of_subset ts fun x => _; exact zero_le _
     ·
       simp only [ht, const_zero, coe_piecewise, coe_const, simple_func.coe_zero, univ_inter,
         piecewise_eq_indicator, coe_indicator, Function.const_apply, lintegral_indicator,

@@ -136,9 +136,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (Coheyting.boundary.{u1} α _inst_1 (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a b)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) (Coheyting.boundary.{u1} α _inst_1 a) b) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a (Coheyting.boundary.{u1} α _inst_1 b)))
 Case conversion may be inaccurate. Consider using '#align coheyting.boundary_inf Coheyting.boundary_infₓ'. -/
 /-- **Leibniz rule** for the co-Heyting boundary. -/
-theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b :=
-  by
-  unfold boundary
+theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b := by unfold boundary;
   rw [hnot_inf_distrib, inf_sup_left, inf_right_comm, ← inf_assoc]
 #align coheyting.boundary_inf Coheyting.boundary_inf
 
@@ -201,10 +199,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α} {b : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (Coheyting.boundary.{u1} α _inst_1 b) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (Coheyting.boundary.{u1} α _inst_1 (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) a b)) (Coheyting.boundary.{u1} α _inst_1 (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))) a b)))
 Case conversion may be inaccurate. Consider using '#align coheyting.boundary_le_boundary_sup_sup_boundary_inf_right Coheyting.boundary_le_boundary_sup_sup_boundary_inf_rightₓ'. -/
-theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) :=
-  by
-  rw [@sup_comm _ _ a, inf_comm]
-  exact boundary_le_boundary_sup_sup_boundary_inf_left
+theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
+  rw [@sup_comm _ _ a, inf_comm]; exact boundary_le_boundary_sup_sup_boundary_inf_left
 #align coheyting.boundary_le_boundary_sup_sup_boundary_inf_right Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right
 
 /- warning: coheyting.boundary_sup_sup_boundary_inf -> Coheyting.boundary_sup_sup_boundary_inf is a dubious translation:
@@ -231,10 +227,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] (a : α), Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a)) (Coheyting.boundary.{u1} α _inst_1 a)) a
 Case conversion may be inaccurate. Consider using '#align coheyting.hnot_hnot_sup_boundary Coheyting.hnot_hnot_sup_boundaryₓ'. -/
-theorem hnot_hnot_sup_boundary (a : α) : ￢￢a ⊔ ∂ a = a :=
-  by
-  rw [boundary, sup_inf_left, hnot_sup_self, inf_top_eq, sup_eq_right]
-  exact hnot_hnot_le
+theorem hnot_hnot_sup_boundary (a : α) : ￢￢a ⊔ ∂ a = a := by
+  rw [boundary, sup_inf_left, hnot_sup_self, inf_top_eq, sup_eq_right]; exact hnot_hnot_le
 #align coheyting.hnot_hnot_sup_boundary Coheyting.hnot_hnot_sup_boundary
 
 /- warning: coheyting.hnot_eq_top_iff_exists_boundary -> Coheyting.hnot_eq_top_iff_exists_boundary is a dubious translation:
@@ -244,10 +238,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α}, Iff (Eq.{succ u1} α (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a) (Top.top.{u1} α (CoheytingAlgebra.toTop.{u1} α _inst_1))) (Exists.{succ u1} α (fun (b : α) => Eq.{succ u1} α (Coheyting.boundary.{u1} α _inst_1 b) a))
 Case conversion may be inaccurate. Consider using '#align coheyting.hnot_eq_top_iff_exists_boundary Coheyting.hnot_eq_top_iff_exists_boundaryₓ'. -/
 theorem hnot_eq_top_iff_exists_boundary : ￢a = ⊤ ↔ ∃ b, ∂ b = a :=
-  ⟨fun h => ⟨a, by rw [boundary, h, inf_top_eq]⟩,
-    by
-    rintro ⟨b, rfl⟩
-    exact hnot_boundary _⟩
+  ⟨fun h => ⟨a, by rw [boundary, h, inf_top_eq]⟩, by rintro ⟨b, rfl⟩; exact hnot_boundary _⟩
 #align coheyting.hnot_eq_top_iff_exists_boundary Coheyting.hnot_eq_top_iff_exists_boundary
 
 end Coheyting

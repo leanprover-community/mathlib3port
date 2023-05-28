@@ -125,10 +125,7 @@ Case conversion may be inaccurate. Consider using '#align list.func.length_set L
 -- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
-  | 0, a :: as => by
-    rw [max_eq_left]
-    rfl
-    simp [Nat.le_add_right]
+  | 0, a :: as => by rw [max_eq_left]; rfl; simp [Nat.le_add_right]
   | m + 1, [] => by simp only [Set, Nat.zero_max, length, @length_set m]
   | m + 1, a :: as => by simp only [Set, Nat.max_succ_succ, length, @length_set m]
 #align list.func.length_set List.Func.length_set
@@ -169,12 +166,9 @@ theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀
   | [], h => by cases h
   | b :: as, h => by
     rw [mem_cons_iff] at h; cases h
-    · exists 0
-      intro d
-      apply h
+    · exists 0; intro d; apply h
     · cases' eq_get_of_mem h with n h2
-      exists n + 1
-      apply h2
+      exists n + 1; apply h2
 #align list.func.eq_get_of_mem [anonymous]
 
 #print List.Func.mem_get_of_le /-
@@ -202,25 +196,18 @@ theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default 
 #print List.Func.get_set_eq_of_ne /-
 theorem get_set_eq_of_ne {a : α} :
     ∀ {as : List α} (k : ℕ) (m : ℕ), m ≠ k → get m (as {k ↦ a}) = get m as
-  | as, 0, m, h1 => by
-    cases m
-    contradiction
-    cases as <;> simp only [Set, get, get_nil]
+  | as, 0, m, h1 => by cases m; contradiction; cases as <;> simp only [Set, get, get_nil]
   | as, k + 1, m, h1 => by
     cases as <;> cases m
     simp only [Set, get]
     · have h3 : get m (nil {k ↦ a}) = default :=
         by
         rw [get_set_eq_of_ne k m, get_nil]
-        intro hc
-        apply h1
-        simp [hc]
+        intro hc; apply h1; simp [hc]
       apply h3
     simp only [Set, get]
     · apply get_set_eq_of_ne k m
-      intro hc
-      apply h1
-      simp [hc]
+      intro hc; apply h1; simp [hc]
 #align list.func.get_set_eq_of_ne List.Func.get_set_eq_of_ne
 -/
 
@@ -246,8 +233,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} :
   · apply get_map h2
   · rw [not_lt] at h2
     rw [get_eq_default_of_le _ h2, get_eq_default_of_le, h1]
-    rw [length_map]
-    apply h2
+    rw [length_map]; apply h2
 #align list.func.get_map' List.Func.get_map'
 -/
 
@@ -259,8 +245,7 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
   by_cases h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
   · rw [not_lt] at h3
-    rw [get_eq_default_of_le _ h3]
-    apply h1
+    rw [get_eq_default_of_le _ h3]; apply h1
 #align list.func.forall_val_of_forall_mem List.Func.forall_val_of_forall_mem
 -/
 
@@ -296,8 +281,7 @@ theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv
     · apply h2 0
     have h3 : as1.length = as2.length := by simpa [add_left_inj, add_comm, length] using h1
     apply eq_of_equiv h3
-    intro m
-    apply h2 (m + 1)
+    intro m; apply h2 (m + 1)
 #align list.func.eq_of_equiv List.Func.eq_of_equiv
 -/
 
@@ -315,11 +299,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.func.get_neg List.Func.get_negₓ'. -/
 -- neg
 @[simp]
-theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as :=
-  by
-  unfold neg
-  rw [@get_map' α α ⟨0⟩]
-  apply neg_zero
+theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as := by
+  unfold neg; rw [@get_map' α α ⟨0⟩]; apply neg_zero
 #align list.func.get_neg List.Func.get_neg
 
 #print List.Func.length_neg /-
@@ -394,9 +375,7 @@ Case conversion may be inaccurate. Consider using '#align list.func.get_add List
 -- add
 @[simp]
 theorem get_add {α : Type u} [AddMonoid α] {k : ℕ} {xs ys : List α} :
-    @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys :=
-  by
-  apply get_pointwise
+    @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys := by apply get_pointwise;
   apply zero_add
 #align list.func.get_add List.Func.get_add
 
@@ -473,9 +452,7 @@ Case conversion may be inaccurate. Consider using '#align list.func.get_sub List
 -- sub
 @[simp]
 theorem get_sub {α : Type u} [AddGroup α] {k : ℕ} {xs ys : List α} :
-    @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys :=
-  by
-  apply get_pointwise
+    @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys := by apply get_pointwise;
   apply sub_zero
 #align list.func.get_sub List.Func.get_sub
 

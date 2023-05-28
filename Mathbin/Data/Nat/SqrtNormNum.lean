@@ -22,9 +22,7 @@ namespace NormNum
 open Tactic Nat
 
 theorem is_sqrt {n a a2 b : ℕ} (ha2 : a * a = a2) (hb : a2 + b = n) (hle : b ≤ bit0 a) :
-    sqrt n = a := by
-  rw [← hb, ← ha2, ← pow_two]
-  exact sqrt_add_eq' _ hle
+    sqrt n = a := by rw [← hb, ← ha2, ← pow_two]; exact sqrt_add_eq' _ hle
 #align norm_num.is_sqrt NormNum.is_sqrt
 
 /-- Given `n` provides `(a, ⊢ nat.sqrt n = a)`. -/

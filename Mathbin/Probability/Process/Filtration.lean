@@ -67,12 +67,8 @@ protected theorem le (f : Filtration ι m) (i : ι) : f i ≤ m :=
 #align measure_theory.filtration.le MeasureTheory.Filtration.le
 
 @[ext]
-protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g :=
-  by
-  cases f
-  cases g
-  simp only
-  exact h
+protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g := by
+  cases f; cases g; simp only; exact h
 #align measure_theory.filtration.ext MeasureTheory.Filtration.ext
 
 variable (ι)
@@ -153,8 +149,7 @@ noncomputable instance : InfSet (Filtration ι m) :=
     { seq := fun i => if Set.Nonempty s then sInf ((fun f : Filtration ι m => f i) '' s) else m
       mono' := fun i j hij => by
         by_cases h_nonempty : Set.Nonempty s
-        swap
-        · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
+        swap; · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
         simp only [h_nonempty, if_true, le_sInf_iff, Set.mem_image, forall_exists_index, and_imp,
           forall_apply_eq_imp_iff₂]
         refine' fun f hf_mem => le_trans _ (f.mono hij)
@@ -200,9 +195,7 @@ noncomputable instance : CompleteLattice (Filtration ι m)
     exact sInf_le ⟨f, hf_mem, rfl⟩
   le_inf s f h_forall i := by
     by_cases hs : s.nonempty
-    swap;
-    · simp only [Inf_def, hs, if_false]
-      exact f.le i
+    swap; · simp only [Inf_def, hs, if_false]; exact f.le i
     simp only [Inf_def, hs, if_true, le_sInf_iff, Set.mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
     exact fun g hg_mem => h_forall g hg_mem i
@@ -318,8 +311,7 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
     refine' generate_from_le _
     rintro t ⟨hn, u, hu, hu'⟩
     obtain heq | heq | heq | heq := Set.indicator_const_preimage (s n) u (1 : β)
-    pick_goal 4
-    rw [Set.mem_singleton_iff] at heq
+    pick_goal 4; rw [Set.mem_singleton_iff] at heq
     all_goals rw [HEq] at hu'; rw [← hu']
     exacts[measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
       MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]

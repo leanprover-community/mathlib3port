@@ -64,19 +64,13 @@ instance : SecondCountableTopology EReal :=
         _
     apply le_generateFrom fun s h => _
     rcases h with ⟨a, hs | hs⟩ <;>
-        [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : EReal) < b }
-            by
-            ext x
+        [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : EReal) < b } by ext x;
             simpa only [hs, exists_prop, mem_Union] using
               lt_iff_exists_rat_btwn];rw [show
-            s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : EReal) < a }, { b | b < ((q : ℝ) : EReal) }
-            by
-            ext x
+            s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : EReal) < a }, { b | b < ((q : ℝ) : EReal) } by ext x;
             simpa only [hs, and_comm', exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
-      · apply isOpen_iUnion
-        intro q
-        apply isOpen_iUnion
-        intro hq
+      · apply isOpen_iUnion; intro q
+        apply isOpen_iUnion; intro hq
         apply generate_open.basic
         exact mem_Union.2 ⟨q, by simp⟩⟩
 
@@ -98,14 +92,12 @@ theorem embedding_coe : Embedding (coe : ℝ → EReal) :=
         show IsOpen { b : ℝ | a < ↑b }
         · induction a using EReal.rec
           · simp only [isOpen_univ, bot_lt_coe, set_of_true]
-          · simp only [EReal.coe_lt_coe_iff]
-            exact isOpen_Ioi
+          · simp only [EReal.coe_lt_coe_iff]; exact isOpen_Ioi
           · simp only [set_of_false, isOpen_empty, not_top_lt]
         show IsOpen { b : ℝ | ↑b < a }
         · induction a using EReal.rec
           · simp only [not_lt_bot, set_of_false, isOpen_empty]
-          · simp only [EReal.coe_lt_coe_iff]
-            exact isOpen_Iio
+          · simp only [EReal.coe_lt_coe_iff]; exact isOpen_Iio
           · simp only [isOpen_univ, coe_lt_top, set_of_true]
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ _]
         refine' le_generateFrom fun s ha => _
@@ -206,13 +198,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ereal.continuous_on_to_real EReal.continuousOn_toRealₓ'. -/
 theorem continuousOn_toReal : ContinuousOn EReal.toReal ({⊥, ⊤}ᶜ : Set EReal) := fun a ha =>
   ContinuousAt.continuousWithinAt
-    (tendsto_toReal
-      (by
-        simp [not_or] at ha
-        exact ha.2)
-      (by
-        simp [not_or] at ha
-        exact ha.1))
+    (tendsto_toReal (by simp [not_or] at ha; exact ha.2) (by simp [not_or] at ha; exact ha.1))
 #align ereal.continuous_on_to_real EReal.continuousOn_toReal
 
 /- warning: ereal.ne_bot_top_homeomorph_real -> EReal.neBotTopHomeomorphReal is a dubious translation:

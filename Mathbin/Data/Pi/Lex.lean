@@ -94,9 +94,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {β : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (β i)] {r : ι -> ι -> Prop}, (WellFounded.{succ u1} ι r) -> (forall {x : forall (i : ι), β i} {y : forall (i : ι), β i}, (LT.lt.{max u1 u2} (forall (i : ι), β i) (Preorder.toLT.{max u1 u2} (forall (i : ι), β i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => β i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (β i) (_inst_1 i)))) x y) -> (Pi.Lex.{u1, u2} ι (fun (i : ι) => β i) r (fun (i : ι) (x._@.Mathlib.Data.Pi.Lex._hyg.822 : β i) (x._@.Mathlib.Data.Pi.Lex._hyg.824 : β i) => LT.lt.{u2} (β i) (Preorder.toLT.{u2} (β i) (PartialOrder.toPreorder.{u2} (β i) (_inst_1 i))) x._@.Mathlib.Data.Pi.Lex._hyg.822 x._@.Mathlib.Data.Pi.Lex._hyg.824) x y))
 Case conversion may be inaccurate. Consider using '#align pi.lex_lt_of_lt Pi.lex_lt_of_ltₓ'. -/
 theorem lex_lt_of_lt [∀ i, PartialOrder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i}
-    (hlt : x < y) : Pi.Lex r (fun i => (· < ·)) x y :=
-  by
-  simp_rw [Pi.Lex, le_antisymm_iff]
+    (hlt : x < y) : Pi.Lex r (fun i => (· < ·)) x y := by simp_rw [Pi.Lex, le_antisymm_iff];
   exact lex_lt_of_lt_of_preorder hwf hlt
 #align pi.lex_lt_of_lt Pi.lex_lt_of_lt
 
@@ -110,8 +108,7 @@ theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r)
       · rw [Function.ne_iff] at hab
         let i := wf.min _ hab
         have hri : ∀ j, r j i → a j = b j := by
-          intro j
-          rw [← not_imp_not]
+          intro j; rw [← not_imp_not]
           exact fun h' => wf.not_lt_min _ _ h'
         have hne : a i ≠ b i := wf.min_mem _ hab
         cases' trichotomous_of s (a i) (b i) with hi hi
@@ -166,9 +163,7 @@ Case conversion may be inaccurate. Consider using '#align pi.to_lex_monotone Pi.
 theorem toLex_monotone : Monotone (@toLex (∀ i, β i)) := fun a b h =>
   or_iff_not_imp_left.2 fun hne =>
     let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
-    ⟨i, fun j hj => by
-      contrapose! hl
-      exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
+    ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 #align pi.to_lex_monotone Pi.toLex_monotone
 
 /- warning: pi.to_lex_strict_mono -> Pi.toLex_strictMono is a dubious translation:
@@ -179,9 +174,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.to_lex_strict_mono Pi.toLex_strictMonoₓ'. -/
 theorem toLex_strictMono : StrictMono (@toLex (∀ i, β i)) := fun a b h =>
   let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 h.Ne)
-  ⟨i, fun j hj => by
-    contrapose! hl
-    exact ⟨j, hl, hj⟩, (h.le i).lt_of_ne hi⟩
+  ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h.le i).lt_of_ne hi⟩
 #align pi.to_lex_strict_mono Pi.toLex_strictMono
 
 /- warning: pi.lt_to_lex_update_self_iff -> Pi.lt_toLex_update_self_iff is a dubious translation:

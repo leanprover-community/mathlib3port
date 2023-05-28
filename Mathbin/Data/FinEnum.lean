@@ -179,36 +179,24 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
     s ∈ Finset.enum xs ↔ ∀ x ∈ s, x ∈ xs :=
   by
   induction xs generalizing s <;> simp [*, finset.enum]
-  · simp [Finset.eq_empty_iff_forall_not_mem, (· ∉ ·)]
-    rfl
-  · constructor
-    rintro ⟨a, h, h'⟩ x hx
+  · simp [Finset.eq_empty_iff_forall_not_mem, (· ∉ ·)]; rfl
+  · constructor; rintro ⟨a, h, h'⟩ x hx
     cases h'
-    · right
-      apply h
-      subst a
-      exact hx
-    · simp only [h', mem_union, mem_singleton] at hx⊢
-      cases hx
+    · right; apply h; subst a; exact hx
+    · simp only [h', mem_union, mem_singleton] at hx⊢; cases hx
       · exact Or.inl hx
       · exact Or.inr (h _ hx)
-    intro h
-    exists s \ ({xs_hd} : Finset α)
+    intro h; exists s \ ({xs_hd} : Finset α)
     simp only [and_imp, mem_sdiff, mem_singleton]
     simp only [or_iff_not_imp_left] at h
     exists h
     by_cases xs_hd ∈ s
-    · have : {xs_hd} ⊆ s
-      simp only [HasSubset.Subset, *, forall_eq, mem_singleton]
+    · have : {xs_hd} ⊆ s; simp only [HasSubset.Subset, *, forall_eq, mem_singleton]
       simp only [union_sdiff_of_subset this, or_true_iff, Finset.union_sdiff_of_subset,
         eq_self_iff_true]
-    · left
-      symm
-      simp only [sdiff_eq_self]
-      intro a
-      simp only [and_imp, mem_inter, mem_singleton]
-      rintro h₀ rfl
-      apply h h₀
+    · left; symm; simp only [sdiff_eq_self]
+      intro a; simp only [and_imp, mem_inter, mem_singleton]
+      rintro h₀ rfl; apply h h₀
 #align fin_enum.finset.mem_enum FinEnum.Finset.mem_enum
 -/
 
@@ -302,17 +290,10 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
   · ext (a⟨⟩)
   · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
-    constructor
-    exact ⟨_, rfl⟩
-    exists pi.tail f
-    constructor
+    constructor; exact ⟨_, rfl⟩
+    exists pi.tail f; constructor
     · apply xs_ih
-    · ext (x h)
-      simp [pi.cons]
-      split_ifs
-      subst x
-      rfl
-      rfl
+    · ext (x h); simp [pi.cons]; split_ifs; subst x; rfl; rfl
 #align fin_enum.mem_pi FinEnum.mem_pi
 
 #print FinEnum.pi.enum /-

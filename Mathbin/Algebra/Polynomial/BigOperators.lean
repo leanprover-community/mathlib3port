@@ -217,9 +217,7 @@ theorem leadingCoeff_multiset_prod' (h : (t.map leadingCoeff).Prod ≠ 0) :
   by
   induction' t using Multiset.induction_on with a t ih; · simp
   simp only [Multiset.map_cons, Multiset.prod_cons] at h⊢
-  rw [Polynomial.leadingCoeff_mul'] <;>
-    · rwa [ih]
-      apply right_ne_zero_of_mul h
+  rw [Polynomial.leadingCoeff_mul'] <;> · rwa [ih]; apply right_ne_zero_of_mul h
 #align polynomial.leading_coeff_multiset_prod' Polynomial.leadingCoeff_multiset_prod'
 
 /- warning: polynomial.leading_coeff_prod' -> Polynomial.leadingCoeff_prod' is a dubious translation:
@@ -259,8 +257,7 @@ theorem natDegree_multiset_prod' (h : (t.map fun f => leadingCoeff f).Prod ≠ 0
   rw [Multiset.map_cons, Multiset.prod_cons] at ht⊢
   rw [Multiset.sum_cons, Polynomial.natDegree_mul', ih]
   · apply right_ne_zero_of_mul ht
-  · rwa [Polynomial.leadingCoeff_multiset_prod']
-    apply right_ne_zero_of_mul ht
+  · rwa [Polynomial.leadingCoeff_multiset_prod']; apply right_ne_zero_of_mul ht
 #align polynomial.nat_degree_multiset_prod' Polynomial.natDegree_multiset_prod'
 
 /- warning: polynomial.nat_degree_prod' -> Polynomial.natDegree_prod' is a dubious translation:
@@ -286,16 +283,12 @@ theorem natDegree_multiset_prod_of_monic (h : ∀ f ∈ t, Monic f) :
   by
   nontriviality R
   apply nat_degree_multiset_prod'
-  suffices (t.map fun f => leading_coeff f).Prod = 1
-    by
-    rw [this]
-    simp
+  suffices (t.map fun f => leading_coeff f).Prod = 1 by rw [this]; simp
   convert prod_replicate t.card (1 : R)
   · simp only [eq_replicate, Multiset.card_map, eq_self_iff_true, true_and_iff]
     rintro i hi
     obtain ⟨i, hi, rfl⟩ := multiset.mem_map.mp hi
-    apply h
-    assumption
+    apply h; assumption
   · simp
 #align polynomial.nat_degree_multiset_prod_of_monic Polynomial.natDegree_multiset_prod_of_monic
 -/
@@ -365,8 +358,7 @@ theorem multiset_prod_X_sub_C_nextCoeff (t : Multiset R) :
   rw [next_coeff_multiset_prod]
   · simp only [next_coeff_X_sub_C]
     exact t.sum_hom (-AddMonoidHom.id R)
-  · intros
-    apply monic_X_sub_C
+  · intros ; apply monic_X_sub_C
 #align polynomial.multiset_prod_X_sub_C_next_coeff Polynomial.multiset_prod_X_sub_C_nextCoeff
 
 /- warning: polynomial.prod_X_sub_C_next_coeff -> Polynomial.prod_X_sub_C_nextCoeff is a dubious translation:
@@ -390,9 +382,7 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
   convert multiset_prod_X_sub_C_next_coeff (by assumption)
   rw [next_coeff]; split_ifs
   · rw [nat_degree_multiset_prod_of_monic] at h <;> simp only [Multiset.mem_map] at *
-    swap
-    · rintro _ ⟨_, _, rfl⟩
-      apply monic_X_sub_C
+    swap; · rintro _ ⟨_, _, rfl⟩; apply monic_X_sub_C
     simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h
     contrapose! h
     obtain ⟨x, hx⟩ := card_pos_iff_exists_mem.mp ht
@@ -511,9 +501,7 @@ See `polynomial.leading_coeff_multiset_prod'` (with a `'`) for a version for com
 where additionally, the product of the leading coefficients must be nonzero.
 -/
 theorem leadingCoeff_multiset_prod : t.Prod.leadingCoeff = (t.map fun f => leadingCoeff f).Prod :=
-  by
-  rw [← leading_coeff_hom_apply, MonoidHom.map_multiset_prod]
-  rfl
+  by rw [← leading_coeff_hom_apply, MonoidHom.map_multiset_prod]; rfl
 #align polynomial.leading_coeff_multiset_prod Polynomial.leadingCoeff_multiset_prod
 
 /- warning: polynomial.leading_coeff_prod -> Polynomial.leadingCoeff_prod is a dubious translation:

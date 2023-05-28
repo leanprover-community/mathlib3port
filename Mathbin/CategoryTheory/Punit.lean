@@ -116,20 +116,16 @@ theorem equiv_pUnit_iff_unique :
   constructor
   · rintro ⟨h⟩
     refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩
-    apply uniqueOfSubsingleton _
-    swap
+    apply uniqueOfSubsingleton _; swap
     · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by convert h.unit.app x
       have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by convert h.unit_inv.app y
       exact hx ≫ hy
-    have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y :=
-      by
-      intro z
+    have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by intro z;
       simpa using congr_arg (· ≫ h.unit_inv.app y) (h.unit.naturality z)
     apply Subsingleton.intro
     intro a b
     rw [this a, this b]
-    simp only [functor.comp_map]
-    congr
+    simp only [functor.comp_map]; congr
   · rintro ⟨⟨p⟩, h⟩
     haveI := fun x y => (h x y).some
     refine'

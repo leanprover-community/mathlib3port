@@ -118,10 +118,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsStrictOrder.{u1} α r] (f : RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.659 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.661 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.659 x._@.Mathlib.Order.OrderIsoNat._hyg.661) r) (k : Nat), Not (Acc.{succ u1} α r (FunLike.coe.{succ u1, 1, succ u1} (RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.659 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.661 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.659 x._@.Mathlib.Order.OrderIsoNat._hyg.661) r) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Nat) => α) _x) (RelHomClass.toFunLike.{u1, 0, u1} (RelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.659 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.661 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.659 x._@.Mathlib.Order.OrderIsoNat._hyg.661) r) Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.659 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.661 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.659 x._@.Mathlib.Order.OrderIsoNat._hyg.661) r (RelEmbedding.instRelHomClassRelEmbedding.{0, u1} Nat α (fun (x._@.Mathlib.Order.OrderIsoNat._hyg.659 : Nat) (x._@.Mathlib.Order.OrderIsoNat._hyg.661 : Nat) => GT.gt.{0} Nat instLTNat x._@.Mathlib.Order.OrderIsoNat._hyg.659 x._@.Mathlib.Order.OrderIsoNat._hyg.661) r)) f k))
 Case conversion may be inaccurate. Consider using '#align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seqₓ'. -/
-theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) (k : ℕ) : ¬Acc r (f k) :=
-  by
-  rw [acc_iff_no_decreasing_seq, not_isEmpty_iff]
-  exact ⟨⟨f, k, rfl⟩⟩
+theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) (k : ℕ) : ¬Acc r (f k) := by
+  rw [acc_iff_no_decreasing_seq, not_isEmpty_iff]; exact ⟨⟨f, k, rfl⟩⟩
 #align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seq
 
 #print RelEmbedding.wellFounded_iff_no_descending_seq /-
@@ -138,10 +136,8 @@ theorem wellFounded_iff_no_descending_seq :
 -/
 
 #print RelEmbedding.not_wellFounded_of_decreasing_seq /-
-theorem not_wellFounded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
-  by
-  rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
-  exact ⟨f⟩
+theorem not_wellFounded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r := by
+  rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]; exact ⟨f⟩
 #align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_wellFounded_of_decreasing_seq
 -/
 
@@ -205,10 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.subtype.order_iso_of_nat_apply Nat.Subtype.orderIsoOfNat_applyₓ'. -/
 @[simp]
 theorem Subtype.orderIsoOfNat_apply [DecidablePred (· ∈ s)] {n : ℕ} :
-    Subtype.orderIsoOfNat s n = Subtype.ofNat s n :=
-  by
-  simp [subtype.order_iso_of_nat]
-  congr
+    Subtype.orderIsoOfNat s n = Subtype.ofNat s n := by simp [subtype.order_iso_of_nat]; congr
 #align nat.subtype.order_iso_of_nat_apply Nat.Subtype.orderIsoOfNat_apply
 
 variable (s)

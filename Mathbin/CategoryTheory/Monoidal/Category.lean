@@ -267,9 +267,7 @@ instance tensor_isIso {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIso
 #print CategoryTheory.MonoidalCategory.inv_tensor /-
 @[simp]
 theorem inv_tensor {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIso g] :
-    inv (f ⊗ g) = inv f ⊗ inv g := by
-  ext
-  simp [← tensor_comp]
+    inv (f ⊗ g) = inv f ⊗ inv g := by ext; simp [← tensor_comp]
 #align category_theory.monoidal_category.inv_tensor CategoryTheory.MonoidalCategory.inv_tensor
 -/
 
@@ -300,10 +298,8 @@ theorem dite_tensor {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.comp_tensor_id /-
 @[reassoc, simp]
-theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗ 𝟙 Z) ≫ (g ⊗ 𝟙 Z) :=
-  by
-  rw [← tensor_comp]
-  simp
+theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗ 𝟙 Z) ≫ (g ⊗ 𝟙 Z) := by
+  rw [← tensor_comp]; simp
 #align category_theory.monoidal_category.comp_tensor_id CategoryTheory.MonoidalCategory.comp_tensor_id
 -/
 
@@ -312,10 +308,8 @@ theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.id_tensor_comp /-
 @[reassoc, simp]
-theorem id_tensor_comp (f : W ⟶ X) (g : X ⟶ Y) : 𝟙 Z ⊗ f ≫ g = (𝟙 Z ⊗ f) ≫ (𝟙 Z ⊗ g) :=
-  by
-  rw [← tensor_comp]
-  simp
+theorem id_tensor_comp (f : W ⟶ X) (g : X ⟶ Y) : 𝟙 Z ⊗ f ≫ g = (𝟙 Z ⊗ f) ≫ (𝟙 Z ⊗ g) := by
+  rw [← tensor_comp]; simp
 #align category_theory.monoidal_category.id_tensor_comp CategoryTheory.MonoidalCategory.id_tensor_comp
 -/
 
@@ -324,10 +318,8 @@ theorem id_tensor_comp (f : W ⟶ X) (g : X ⟶ Y) : 𝟙 Z ⊗ f ≫ g = (𝟙 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.id_tensor_comp_tensor_id /-
 @[simp, reassoc]
-theorem id_tensor_comp_tensor_id (f : W ⟶ X) (g : Y ⟶ Z) : (𝟙 Y ⊗ f) ≫ (g ⊗ 𝟙 X) = g ⊗ f :=
-  by
-  rw [← tensor_comp]
-  simp
+theorem id_tensor_comp_tensor_id (f : W ⟶ X) (g : Y ⟶ Z) : (𝟙 Y ⊗ f) ≫ (g ⊗ 𝟙 X) = g ⊗ f := by
+  rw [← tensor_comp]; simp
 #align category_theory.monoidal_category.id_tensor_comp_tensor_id CategoryTheory.MonoidalCategory.id_tensor_comp_tensor_id
 -/
 
@@ -336,10 +328,8 @@ theorem id_tensor_comp_tensor_id (f : W ⟶ X) (g : Y ⟶ Z) : (𝟙 Y ⊗ f) �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.MonoidalCategory.tensor_id_comp_id_tensor /-
 @[simp, reassoc]
-theorem tensor_id_comp_id_tensor (f : W ⟶ X) (g : Y ⟶ Z) : (g ⊗ 𝟙 W) ≫ (𝟙 Z ⊗ f) = g ⊗ f :=
-  by
-  rw [← tensor_comp]
-  simp
+theorem tensor_id_comp_id_tensor (f : W ⟶ X) (g : Y ⟶ Z) : (g ⊗ 𝟙 W) ≫ (𝟙 Z ⊗ f) = g ⊗ f := by
+  rw [← tensor_comp]; simp
 #align category_theory.monoidal_category.tensor_id_comp_id_tensor CategoryTheory.MonoidalCategory.tensor_id_comp_id_tensor
 -/
 
@@ -465,10 +455,8 @@ end
 #print CategoryTheory.MonoidalCategory.associator_inv_naturality /-
 @[reassoc]
 theorem associator_inv_naturality {X Y Z X' Y' Z' : C} (f : X ⟶ X') (g : Y ⟶ Y') (h : Z ⟶ Z') :
-    (f ⊗ g ⊗ h) ≫ (α_ X' Y' Z').inv = (α_ X Y Z).inv ≫ ((f ⊗ g) ⊗ h) :=
-  by
-  rw [comp_inv_eq, assoc, associator_naturality]
-  simp
+    (f ⊗ g ⊗ h) ≫ (α_ X' Y' Z').inv = (α_ X Y Z).inv ≫ ((f ⊗ g) ⊗ h) := by
+  rw [comp_inv_eq, assoc, associator_naturality]; simp
 #align category_theory.monoidal_category.associator_inv_naturality CategoryTheory.MonoidalCategory.associator_inv_naturality
 -/
 
@@ -733,13 +721,8 @@ def tensorUnitRight : C ⥤ C where
 /-- The associator as a natural isomorphism. -/
 @[simps]
 def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
-  NatIso.ofComponents
-    (by
-      intros
-      apply monoidal_category.associator)
-    (by
-      intros
-      apply monoidal_category.associator_naturality)
+  NatIso.ofComponents (by intros ; apply monoidal_category.associator)
+    (by intros ; apply monoidal_category.associator_naturality)
 #align category_theory.monoidal_category.associator_nat_iso CategoryTheory.MonoidalCategory.associatorNatIso
 -/
 
@@ -747,13 +730,8 @@ def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
 /-- The left unitor as a natural isomorphism. -/
 @[simps]
 def leftUnitorNatIso : tensorUnitLeft C ≅ 𝟭 C :=
-  NatIso.ofComponents
-    (by
-      intros
-      apply monoidal_category.left_unitor)
-    (by
-      intros
-      apply monoidal_category.left_unitor_naturality)
+  NatIso.ofComponents (by intros ; apply monoidal_category.left_unitor)
+    (by intros ; apply monoidal_category.left_unitor_naturality)
 #align category_theory.monoidal_category.left_unitor_nat_iso CategoryTheory.MonoidalCategory.leftUnitorNatIso
 -/
 
@@ -761,13 +739,8 @@ def leftUnitorNatIso : tensorUnitLeft C ≅ 𝟭 C :=
 /-- The right unitor as a natural isomorphism. -/
 @[simps]
 def rightUnitorNatIso : tensorUnitRight C ≅ 𝟭 C :=
-  NatIso.ofComponents
-    (by
-      intros
-      apply monoidal_category.right_unitor)
-    (by
-      intros
-      apply monoidal_category.right_unitor_naturality)
+  NatIso.ofComponents (by intros ; apply monoidal_category.right_unitor)
+    (by intros ; apply monoidal_category.right_unitor_naturality)
 #align category_theory.monoidal_category.right_unitor_nat_iso CategoryTheory.MonoidalCategory.rightUnitorNatIso
 -/
 
@@ -792,10 +765,7 @@ def tensorLeft (X : C) : C ⥤ C where
 tensoring on the left with `Y`, and then again with `X`.
 -/
 def tensorLeftTensor (X Y : C) : tensorLeft (X ⊗ Y) ≅ tensorLeft Y ⋙ tensorLeft X :=
-  NatIso.ofComponents (associator _ _) fun Z Z' f =>
-    by
-    dsimp
-    rw [← tensor_id]
+  NatIso.ofComponents (associator _ _) fun Z Z' f => by dsimp; rw [← tensor_id];
     apply associator_naturality
 #align category_theory.monoidal_category.tensor_left_tensor CategoryTheory.MonoidalCategory.tensorLeftTensor
 -/
@@ -882,10 +852,7 @@ variable {C}
 tensoring on the right with `X`, and then again with `Y`.
 -/
 def tensorRightTensor (X Y : C) : tensorRight (X ⊗ Y) ≅ tensorRight X ⋙ tensorRight Y :=
-  NatIso.ofComponents (fun Z => (associator Z X Y).symm) fun Z Z' f =>
-    by
-    dsimp
-    rw [← tensor_id]
+  NatIso.ofComponents (fun Z => (associator Z X Y).symm) fun Z Z' f => by dsimp; rw [← tensor_id];
     apply associator_inv_naturality
 #align category_theory.monoidal_category.tensor_right_tensor CategoryTheory.MonoidalCategory.tensorRightTensor
 -/
@@ -948,10 +915,7 @@ instance prodMonoidal : MonoidalCategory (C₁ × C₂)
 #print CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_hom_fst /-
 @[simp]
 theorem prodMonoidal_leftUnitor_hom_fst (X : C₁ × C₂) :
-    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).1 = (λ_ X.1).Hom :=
-  by
-  cases X
-  rfl
+    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).1 = (λ_ X.1).Hom := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_left_unitor_hom_fst CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_hom_fst
 -/
 
@@ -959,10 +923,7 @@ theorem prodMonoidal_leftUnitor_hom_fst (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_hom_snd /-
 @[simp]
 theorem prodMonoidal_leftUnitor_hom_snd (X : C₁ × C₂) :
-    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).2 = (λ_ X.2).Hom :=
-  by
-  cases X
-  rfl
+    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).2 = (λ_ X.2).Hom := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_left_unitor_hom_snd CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_hom_snd
 -/
 
@@ -970,10 +931,7 @@ theorem prodMonoidal_leftUnitor_hom_snd (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_inv_fst /-
 @[simp]
 theorem prodMonoidal_leftUnitor_inv_fst (X : C₁ × C₂) :
-    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).1 = (λ_ X.1).inv :=
-  by
-  cases X
-  rfl
+    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).1 = (λ_ X.1).inv := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_left_unitor_inv_fst CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_inv_fst
 -/
 
@@ -981,10 +939,7 @@ theorem prodMonoidal_leftUnitor_inv_fst (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_inv_snd /-
 @[simp]
 theorem prodMonoidal_leftUnitor_inv_snd (X : C₁ × C₂) :
-    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).2 = (λ_ X.2).inv :=
-  by
-  cases X
-  rfl
+    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).2 = (λ_ X.2).inv := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_left_unitor_inv_snd CategoryTheory.MonoidalCategory.prodMonoidal_leftUnitor_inv_snd
 -/
 
@@ -992,10 +947,7 @@ theorem prodMonoidal_leftUnitor_inv_snd (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_hom_fst /-
 @[simp]
 theorem prodMonoidal_rightUnitor_hom_fst (X : C₁ × C₂) :
-    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).1 = (ρ_ X.1).Hom :=
-  by
-  cases X
-  rfl
+    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).1 = (ρ_ X.1).Hom := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_right_unitor_hom_fst CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_hom_fst
 -/
 
@@ -1003,10 +955,7 @@ theorem prodMonoidal_rightUnitor_hom_fst (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_hom_snd /-
 @[simp]
 theorem prodMonoidal_rightUnitor_hom_snd (X : C₁ × C₂) :
-    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).2 = (ρ_ X.2).Hom :=
-  by
-  cases X
-  rfl
+    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).2 = (ρ_ X.2).Hom := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_right_unitor_hom_snd CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_hom_snd
 -/
 
@@ -1014,10 +963,7 @@ theorem prodMonoidal_rightUnitor_hom_snd (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_inv_fst /-
 @[simp]
 theorem prodMonoidal_rightUnitor_inv_fst (X : C₁ × C₂) :
-    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).1 = (ρ_ X.1).inv :=
-  by
-  cases X
-  rfl
+    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).1 = (ρ_ X.1).inv := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_right_unitor_inv_fst CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_inv_fst
 -/
 
@@ -1025,10 +971,7 @@ theorem prodMonoidal_rightUnitor_inv_fst (X : C₁ × C₂) :
 #print CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_inv_snd /-
 @[simp]
 theorem prodMonoidal_rightUnitor_inv_snd (X : C₁ × C₂) :
-    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).2 = (ρ_ X.2).inv :=
-  by
-  cases X
-  rfl
+    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).2 = (ρ_ X.2).inv := by cases X; rfl
 #align category_theory.monoidal_category.prod_monoidal_right_unitor_inv_snd CategoryTheory.MonoidalCategory.prodMonoidal_rightUnitor_inv_snd
 -/
 

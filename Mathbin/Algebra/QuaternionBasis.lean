@@ -192,10 +192,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {A : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : Ring.{u1} A] [_inst_4 : Algebra.{u2, u1} R A (CommRing.toCommSemiring.{u2} R _inst_1) (Ring.toSemiring.{u1} A _inst_2)] {c₁ : R} {c₂ : R} (q : QuaternionAlgebra.Basis.{u2, u1} R A _inst_1 _inst_2 _inst_4 c₁ c₂) (x : QuaternionAlgebra.{u2} R c₁ c₂) (y : QuaternionAlgebra.{u2} R c₁ c₂), Eq.{succ u1} A (QuaternionAlgebra.Basis.lift.{u2, u1} R A _inst_1 _inst_2 _inst_4 c₁ c₂ q (HAdd.hAdd.{u2, u2, u2} (QuaternionAlgebra.{u2} R c₁ c₂) (QuaternionAlgebra.{u2} R c₁ c₂) (QuaternionAlgebra.{u2} R c₁ c₂) (instHAdd.{u2} (QuaternionAlgebra.{u2} R c₁ c₂) (QuaternionAlgebra.instAddQuaternionAlgebra.{u2} R _inst_1 c₁ c₂)) x y)) (HAdd.hAdd.{u1, u1, u1} A A A (instHAdd.{u1} A (Distrib.toAdd.{u1} A (NonUnitalNonAssocSemiring.toDistrib.{u1} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} A (NonAssocRing.toNonUnitalNonAssocRing.{u1} A (Ring.toNonAssocRing.{u1} A _inst_2)))))) (QuaternionAlgebra.Basis.lift.{u2, u1} R A _inst_1 _inst_2 _inst_4 c₁ c₂ q x) (QuaternionAlgebra.Basis.lift.{u2, u1} R A _inst_1 _inst_2 _inst_4 c₁ c₂ q y))
 Case conversion may be inaccurate. Consider using '#align quaternion_algebra.basis.lift_add QuaternionAlgebra.Basis.lift_addₓ'. -/
-theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y :=
-  by
-  simp [lift, add_smul]
-  abel
+theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y := by
+  simp [lift, add_smul]; abel
 #align quaternion_algebra.basis.lift_add QuaternionAlgebra.Basis.lift_add
 
 /- warning: quaternion_algebra.basis.lift_mul -> QuaternionAlgebra.Basis.lift_mul is a dubious translation:

@@ -66,17 +66,13 @@ variable {R K}
 
 @[simp]
 theorem coe_toPrincipalIdeal (x : Kˣ) :
-    (toPrincipalIdeal R K x : FractionalIdeal R⁰ K) = spanSingleton _ x :=
-  by
-  simp only [toPrincipalIdeal]
-  rfl
+    (toPrincipalIdeal R K x : FractionalIdeal R⁰ K) = spanSingleton _ x := by
+  simp only [toPrincipalIdeal]; rfl
 #align coe_to_principal_ideal coe_toPrincipalIdeal
 
 @[simp]
 theorem toPrincipalIdeal_eq_iff {I : (FractionalIdeal R⁰ K)ˣ} {x : Kˣ} :
-    toPrincipalIdeal R K x = I ↔ spanSingleton R⁰ (x : K) = I :=
-  by
-  simp only [toPrincipalIdeal]
+    toPrincipalIdeal R K x = I ↔ spanSingleton R⁰ (x : K) = I := by simp only [toPrincipalIdeal];
   exact Units.ext_iff
 #align to_principal_ideal_eq_iff toPrincipalIdeal_eq_iff
 
@@ -138,8 +134,7 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
       span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ
     exact ⟨_, _, sec_fst_ne_zero le_rfl x.ne_zero, sec_snd_ne_zero le_rfl ↑x, hJ⟩
   · rintro ⟨x, y, hx, hy, h⟩
-    constructor
-    rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
+    constructor; rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
     convert(mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_nonZeroDivisors_of_ne_zero hy).2
         h
     apply (Ne.isUnit _).unit_spec
@@ -288,8 +283,7 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
   constructor
   · rintro ⟨X, ⟨x, hX⟩, hx⟩
     refine' ⟨x, _, _⟩
-    · rintro rfl
-      simpa [X.ne_zero.symm] using hX
+    · rintro rfl; simpa [X.ne_zero.symm] using hX
     simpa only [hX, mul_comm] using hx
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨Units.mk0 _ (span_singleton_ne_zero_iff.mpr hx), ⟨x, rfl⟩, _⟩
@@ -306,8 +300,7 @@ theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
   · rintro ⟨z, hz, h⟩
     obtain ⟨x, ⟨y, hy⟩, rfl⟩ := IsLocalization.mk'_surjective R⁰ z
     refine' ⟨x, y, _, mem_non_zero_divisors_iff_ne_zero.mp hy, _⟩
-    · rintro hx
-      apply hz
+    · rintro hx; apply hz
       rw [hx, IsFractionRing.mk'_eq_div, _root_.map_zero, zero_div]
     · exact (FractionalIdeal.mk'_mul_coeIdeal_eq_coeIdeal _ hy).mp h
   · rintro ⟨x, y, hx, hy, h⟩
@@ -376,14 +369,10 @@ theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
   refine' ⟨fun ⟨x, hx⟩ => ⟨⟨x, by rw [← hx, coe_span_singleton]⟩⟩, _⟩
   intro hI
   obtain ⟨x, hx⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hI
-  have hx' : (I : FractionalIdeal R⁰ K) = span_singleton R⁰ x :=
-    by
-    apply Subtype.coe_injective
+  have hx' : (I : FractionalIdeal R⁰ K) = span_singleton R⁰ x := by apply Subtype.coe_injective;
     rw [hx, coe_span_singleton]
   refine' ⟨Units.mk0 x _, _⟩
-  · intro x_eq
-    apply Units.ne_zero I
-    simp [hx', x_eq]
+  · intro x_eq; apply Units.ne_zero I; simp [hx', x_eq]
   simp [hx']
 #align class_group.mk_eq_one_iff ClassGroup.mk_eq_one_iff
 
@@ -418,17 +407,13 @@ theorem card_classGroup_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGro
 theorem card_classGroup_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)] :
     Fintype.card (ClassGroup R) = 1 ↔ IsPrincipalIdealRing R :=
   by
-  constructor; swap;
-  · intros
-    convert card_classGroup_eq_one
-    assumption
+  constructor; swap; · intros ; convert card_classGroup_eq_one; assumption
   rw [Fintype.card_eq_one_iff]
   rintro ⟨I, hI⟩
   have eq_one : ∀ J : ClassGroup R, J = 1 := fun J => trans (hI J) (hI 1).symm
   refine' ⟨fun I => _⟩
   by_cases hI : I = ⊥
-  · rw [hI]
-    exact bot_isPrincipal
+  · rw [hI]; exact bot_isPrincipal
   exact (ClassGroup.mk0_eq_one_iff (mem_non_zero_divisors_iff_ne_zero.mpr hI)).mp (eq_one _)
 #align card_class_group_eq_one_iff card_classGroup_eq_one_iff
 

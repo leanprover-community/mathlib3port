@@ -50,8 +50,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
     by_cases hx : x ∉ closure s
-    · rw [← closure_closure] at hx
-      exact hasFDerivWithinAt_of_not_mem_closure hx
+    · rw [← closure_closure] at hx; exact hasFDerivWithinAt_of_not_mem_closure hx
     push_neg  at hx
     rw [HasFDerivWithinAt, HasFDerivAtFilter, Asymptotics.isLittleO_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
@@ -101,10 +100,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
       apply ContinuousWithinAt.mono _ this
       simp only [ContinuousWithinAt]
     rw [nhdsWithin_prod_eq]
-    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) :=
-        by
-        intros
-        abel
+    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by intros ; abel
       simp only [this]
       exact
         tendsto.comp continuous_norm.continuous_at
@@ -138,8 +134,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
     rw [t_closure]
     intro y hy
     by_cases h : y = a
-    · rw [h]
-      exact f_lim.mono ts
+    · rw [h]; exact f_lim.mono ts
     · have : y ∈ s := sab ⟨lt_of_le_of_ne hy.1 (Ne.symm h), hy.2⟩
       exact (f_diff.continuous_on y this).mono ts
   have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) :=
@@ -179,8 +174,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     rw [t_closure]
     intro y hy
     by_cases h : y = a
-    · rw [h]
-      exact f_lim.mono ts
+    · rw [h]; exact f_lim.mono ts
     · have : y ∈ s := sab ⟨hy.1, lt_of_le_of_ne hy.2 h⟩
       exact (f_diff.continuous_on y this).mono ts
   have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) :=

@@ -347,9 +347,7 @@ def interUnionPullbackCone :
     PullbackCone (F.1.map (homOfLE inf_le_left : U ⊓ V ⟶ _).op)
       (F.1.map (homOfLE inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLE le_sup_left).op) (F.1.map (homOfLE le_sup_right).op)
-    (by
-      rw [← F.1.map_comp, ← F.1.map_comp]
-      congr )
+    (by rw [← F.1.map_comp, ← F.1.map_comp]; congr )
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
 
 /- warning: Top.sheaf.inter_union_pullback_cone_X -> TopCat.Sheaf.interUnionPullbackCone_pt is a dubious translation:
@@ -412,10 +410,7 @@ def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
   rintro i j f
   induction i using Opposite.rec'
   induction j using Opposite.rec'
-  let g : j ⟶ i := f.unop
-  have : f = g.op := rfl
-  clear_value g
-  subst this
+  let g : j ⟶ i := f.unop; have : f = g.op := rfl; clear_value g; subst this
   rcases i with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;> rcases j with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;>
         rcases g with ⟨⟩ <;>
       dsimp <;>

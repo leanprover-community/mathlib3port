@@ -131,9 +131,7 @@ noncomputable def verschiebung : 𝕎 R →+ 𝕎 R
   map_zero' := by
     ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;>
       simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
-  map_add' := by
-    ghost_calc _ _
-    rintro ⟨⟩ <;> ghost_simp
+  map_add' := by ghost_calc _ _; rintro ⟨⟩ <;> ghost_simp
 #align witt_vector.verschiebung WittVector.verschiebung
 
 omit hp
@@ -149,11 +147,7 @@ include hp
 /-- verschiebung is a natural transformation -/
 @[simp]
 theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) :
-    map f (verschiebung x) = verschiebung (map f x) :=
-  by
-  ext ⟨-, -⟩
-  exact f.map_zero
-  rfl
+    map f (verschiebung x) = verschiebung (map f x) := by ext ⟨-, -⟩; exact f.map_zero; rfl
 #align witt_vector.map_verschiebung WittVector.map_verschiebung
 
 @[ghost_simps]
@@ -206,8 +200,7 @@ theorem bind₁_verschiebungPoly_wittPolynomial (n : ℕ) :
       simp only [← aeval_verschiebung_poly, coeff_mk]
       funext k
       exact eval₂_hom_congr (RingHom.ext_int _ _) rfl rfl
-    · rw [ghost_component_verschiebung]
-      rfl
+    · rw [ghost_component_verschiebung]; rfl
 #align witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebungPoly_wittPolynomial
 
 end WittVector

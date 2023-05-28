@@ -37,10 +37,7 @@ def Fermat42 (a b c : ℤ) : Prop :=
 namespace Fermat42
 
 #print Fermat42.comm /-
-theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c :=
-  by
-  delta Fermat42
-  rw [add_comm]
+theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c := by delta Fermat42; rw [add_comm];
   tauto
 #align fermat_42.comm Fermat42.comm
 -/
@@ -56,17 +53,13 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
   delta Fermat42
   constructor
   · intro f42
-    constructor
-    · exact mul_ne_zero hk0 f42.1
-    constructor
-    · exact mul_ne_zero hk0 f42.2.1
+    constructor; · exact mul_ne_zero hk0 f42.1
+    constructor; · exact mul_ne_zero hk0 f42.2.1
     · have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
       linear_combination k ^ 4 * H
   · intro f42
-    constructor
-    · exact right_ne_zero_of_mul f42.1
-    constructor
-    · exact right_ne_zero_of_mul f42.2.1
+    constructor; · exact right_ne_zero_of_mul f42.1
+    constructor; · exact right_ne_zero_of_mul f42.2.1
     apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
     linear_combination f42.2.2
 #align fermat_42.mul Fermat42.mul
@@ -97,8 +90,7 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   have S_nonempty : S.nonempty := by
     use Int.natAbs c
     rw [Set.mem_setOf_eq]
-    use ⟨a, ⟨b, c⟩⟩
-    tauto
+    use ⟨a, ⟨b, c⟩⟩; tauto
   let m : ℕ := Nat.find S_nonempty
   have m_mem : m ∈ S := Nat.find_spec S_nonempty
   rcases m_mem with ⟨s0, hs0, hs1⟩
@@ -106,8 +98,7 @@ theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minima
   intro a1 b1 c1 h1
   rw [← hs1]
   apply Nat.find_min'
-  use ⟨a1, ⟨b1, c1⟩⟩
-  tauto
+  use ⟨a1, ⟨b1, c1⟩⟩; tauto
 #align fermat_42.exists_minimal Fermat42.exists_minimal
 -/
 
@@ -128,8 +119,7 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b :=
   have hpc : (p : ℤ) ^ 2 ∣ c :=
     by
     rw [← Int.pow_dvd_pow_iff zero_lt_two, ← h.1.2.2]
-    apply Dvd.intro (a1 ^ 4 + b1 ^ 4)
-    ring
+    apply Dvd.intro (a1 ^ 4 + b1 ^ 4); ring
   obtain ⟨c1, rfl⟩ := hpc
   have hf : Fermat42 a1 b1 c1 :=
     (Fermat42.mul (int.coe_nat_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
@@ -153,8 +143,7 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) :=
   rintro ⟨⟨ha, hb, heq⟩, h2⟩
   constructor
   · apply And.intro ha (And.intro hb _)
-    rw [HEq]
-    exact (neg_sq c).symm
+    rw [HEq]; exact (neg_sq c).symm
   rwa [Int.natAbs_neg c]
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
 -/
@@ -170,9 +159,7 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     · exfalso
       have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
         Int.dvd_gcd (Int.dvd_of_emod_eq_zero hap) (Int.dvd_of_emod_eq_zero hbp)
-      rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
-      revert h1
-      norm_num
+      rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1; revert h1; norm_num
     · exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 #align fermat_42.exists_odd_minimal Fermat42.exists_odd_minimal
@@ -186,10 +173,8 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
   by
   obtain ⟨a0, b0, c0, hf, hc⟩ := exists_odd_minimal h
   rcases lt_trichotomy 0 c0 with (h1 | rfl | h1)
-  · use a0, b0, c0
-    tauto
-  · exfalso
-    exact NeZero hf.1 rfl
+  · use a0, b0, c0; tauto
+  · exfalso; exact NeZero hf.1 rfl
   · use a0, b0, -c0, neg_of_minimal hf, hc
     exact neg_pos.mpr h1
 #align fermat_42.exists_pos_odd_minimal Fermat42.exists_pos_odd_minimal
@@ -239,9 +224,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   have h2 : Int.gcd (a ^ 2) (b ^ 2) = 1 := int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal h).pow
   -- in order to reduce the possibilities we get from the classification of pythagorean triples
   -- it helps if we know the parity of a ^ 2 (and the sign of c):
-  have ha22 : a ^ 2 % 2 = 1 := by
-    rw [sq, Int.mul_emod, ha2]
-    norm_num
+  have ha22 : a ^ 2 % 2 = 1 := by rw [sq, Int.mul_emod, ha2]; norm_num
   obtain ⟨m, n, ht1, ht2, ht3, ht4, ht5, ht6⟩ := ht.coprime_classification' h2 ha22 hc
   -- Now a, n, m form a pythagorean triple and so we can obtain r and s such that
   -- a = r ^ 2 - s ^ 2, n = 2 * r * s and m = r ^ 2 + s ^ 2
@@ -262,8 +245,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     apply lt_of_le_of_ne ht6
     rintro rfl
     revert hb20
-    rw [ht2]
-    simp
+    rw [ht2]; simp
   obtain ⟨r, s, htt1, htt2, htt3, htt4, htt5, htt6⟩ := htt.coprime_classification' h3 ha2 h4
   -- Now use the fact that (b / 2) ^ 2 = m * r * s, and m, r and s are pairwise coprime to obtain
   -- i, j and k such that m = i ^ 2, r = j ^ 2 and s = k ^ 2.
@@ -275,8 +257,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- b is even because b ^ 2 = 2 * m * n.
   have hb2 : 2 ∣ b := by
     apply @Int.Prime.dvd_pow' _ 2 _ Nat.prime_two
-    rw [ht2, mul_assoc]
-    exact dvd_mul_right 2 (m * n)
+    rw [ht2, mul_assoc]; exact dvd_mul_right 2 (m * n)
   cases' hb2 with b' hb2'
   have hs : b' ^ 2 = m * (r * s) :=
     by
@@ -286,25 +267,19 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     by
     -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz
-    revert hb20
-    rw [ht2, htt2, mul_assoc, @mul_assoc _ _ _ r s, hrsz]
+    revert hb20; rw [ht2, htt2, mul_assoc, @mul_assoc _ _ _ r s, hrsz]
     simp
   have h2b0 : b' ≠ 0 := by
     apply ne_zero_pow two_ne_zero
-    rw [hs]
-    apply mul_ne_zero
-    · exact ne_of_gt h4
-    · exact hrsz
+    rw [hs]; apply mul_ne_zero; · exact ne_of_gt h4; · exact hrsz
   obtain ⟨i, hi⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
   -- use m is positive to exclude m = - i ^ 2
   have hi' : ¬m = -i ^ 2 := by
     by_contra h1
-    have hit : -i ^ 2 ≤ 0
-    apply neg_nonpos.mpr (sq_nonneg i)
+    have hit : -i ^ 2 ≤ 0; apply neg_nonpos.mpr (sq_nonneg i)
     rw [← h1] at hit
     apply absurd h4 (not_lt.mpr hit)
-  replace hi : m = i ^ 2
-  · apply Or.resolve_right hi hi'
+  replace hi : m = i ^ 2; · apply Or.resolve_right hi hi'
   rw [mul_comm] at hs
   rw [Int.gcd_comm] at hcp
   -- obtain d such that r * s = d ^ 2
@@ -318,40 +293,28 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       exact neg_nonpos.mpr ((zero_le_mul_right h4).mpr (sq_nonneg d))
     have h2' : 0 ≤ b' ^ 2 := by apply sq_nonneg b'
     exact absurd (lt_of_le_of_ne h2' (Ne.symm (pow_ne_zero _ h2b0))) (not_lt.mpr h2)
-  replace hd : r * s = d ^ 2
-  · apply Or.resolve_right hd hd'
+  replace hd : r * s = d ^ 2; · apply Or.resolve_right hd hd'
   -- r = +/- j ^ 2
   obtain ⟨j, hj⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hj0 : j ≠ 0 := by
-    intro h0
-    rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hj
+    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hj
     apply left_ne_zero_of_mul hrsz hj
   rw [mul_comm] at hd
   rw [Int.gcd_comm] at htt4
   -- s = +/- k ^ 2
   obtain ⟨k, hk⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hk0 : k ≠ 0 := by
-    intro h0
-    rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hk
+    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hk
     apply right_ne_zero_of_mul hrsz hk
-  have hj2 : r ^ 2 = j ^ 4 := by
-    cases' hj with hjp hjp <;>
-      · rw [hjp]
-        ring
-  have hk2 : s ^ 2 = k ^ 4 := by
-    cases' hk with hkp hkp <;>
-      · rw [hkp]
-        ring
+  have hj2 : r ^ 2 = j ^ 4 := by cases' hj with hjp hjp <;> · rw [hjp]; ring
+  have hk2 : s ^ 2 = k ^ 4 := by cases' hk with hkp hkp <;> · rw [hkp]; ring
   -- from m = r ^ 2 + s ^ 2 we now get a new solution to a ^ 4 + b ^ 4 = c ^ 2:
   have hh : i ^ 2 = j ^ 4 + k ^ 4 := by rw [← hi, htt3, hj2, hk2]
-  have hn : n ≠ 0 := by
-    rw [ht2] at hb20
-    apply right_ne_zero_of_mul hb20
+  have hn : n ≠ 0 := by rw [ht2] at hb20; apply right_ne_zero_of_mul hb20
   -- and it has a smaller c: from c = m ^ 2 + n ^ 2 we see that m is smaller than c, and i ^ 2 = m.
   have hic : Int.natAbs i < Int.natAbs c :=
     by
-    apply int.coe_nat_lt.mp
-    rw [← Int.eq_natAbs_of_zero_le (le_of_lt hc)]
+    apply int.coe_nat_lt.mp; rw [← Int.eq_natAbs_of_zero_le (le_of_lt hc)]
     apply gt_of_gt_of_ge _ (Int.natAbs_le_self_sq i)
     rw [← hi, ht3]
     apply gt_of_gt_of_ge _ (Int.le_self_sq m)

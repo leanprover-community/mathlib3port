@@ -243,14 +243,9 @@ def assoc : (M ⊗[A] P) ⊗[R] N ≃ₗ[A] M ⊗[A] P ⊗[R] N :=
     (lift <|
       TensorProduct.uncurry A _ _ _ <| comp (lcurry R A _ _ _) <| TensorProduct.mk A M (P ⊗[R] N))
     (TensorProduct.uncurry A _ _ _ <|
-      comp (uncurry R A _ _ _) <| by
-        apply TensorProduct.curry
-        exact mk R A _ _)
-    (by
-      ext
-      rfl)
-    (by
-      ext
+      comp (uncurry R A _ _ _) <| by apply TensorProduct.curry; exact mk R A _ _)
+    (by ext; rfl)
+    (by ext;
       simp only [curry_apply, TensorProduct.curry_apply, mk_apply, TensorProduct.mk_apply,
         uncurry_apply, TensorProduct.uncurry_apply, id_apply, lift_tmul, compr₂_apply,
         restrict_scalars_apply, Function.comp_apply, to_fun_eq_coe, lcurry_apply,
@@ -322,9 +317,7 @@ theorem baseChange_eq_ltensor : (f.base_change A : A ⊗ M → A ⊗ N) = f.lTen
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.base_change_add LinearMap.baseChange_addₓ'. -/
 @[simp]
-theorem baseChange_add : (f + g).base_change A = f.base_change A + g.base_change A :=
-  by
-  ext
+theorem baseChange_add : (f + g).base_change A = f.base_change A + g.base_change A := by ext;
   simp [base_change_eq_ltensor]
 #align linear_map.base_change_add LinearMap.baseChange_add
 
@@ -332,19 +325,14 @@ theorem baseChange_add : (f + g).base_change A = f.base_change A + g.base_change
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.base_change_zero LinearMap.baseChange_zeroₓ'. -/
 @[simp]
-theorem baseChange_zero : baseChange A (0 : M →ₗ[R] N) = 0 :=
-  by
-  ext
-  simp [base_change_eq_ltensor]
+theorem baseChange_zero : baseChange A (0 : M →ₗ[R] N) = 0 := by ext; simp [base_change_eq_ltensor]
 #align linear_map.base_change_zero LinearMap.baseChange_zero
 
 /- warning: linear_map.base_change_smul -> LinearMap.baseChange_smul is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.base_change_smul LinearMap.baseChange_smulₓ'. -/
 @[simp]
-theorem baseChange_smul : (r • f).base_change A = r • f.base_change A :=
-  by
-  ext
+theorem baseChange_smul : (r • f).base_change A = r • f.base_change A := by ext;
   simp [base_change_tmul]
 #align linear_map.base_change_smul LinearMap.baseChange_smul
 
@@ -377,9 +365,7 @@ variable (f g : M →ₗ[R] N)
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.base_change_sub LinearMap.baseChange_subₓ'. -/
 @[simp]
-theorem baseChange_sub : (f - g).base_change A = f.base_change A - g.base_change A :=
-  by
-  ext
+theorem baseChange_sub : (f - g).base_change A = f.base_change A - g.base_change A := by ext;
   simp [base_change_eq_ltensor]
 #align linear_map.base_change_sub LinearMap.baseChange_sub
 
@@ -387,9 +373,7 @@ theorem baseChange_sub : (f - g).base_change A = f.base_change A - g.base_change
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.base_change_neg LinearMap.baseChange_negₓ'. -/
 @[simp]
-theorem baseChange_neg : (-f).base_change A = -f.base_change A :=
-  by
-  ext
+theorem baseChange_neg : (-f).base_change A = -f.base_change A := by ext;
   simp [base_change_eq_ltensor]
 #align linear_map.base_change_neg LinearMap.baseChange_neg
 
@@ -488,25 +472,17 @@ theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
   · simp only [LinearMap.map_zero, forall_const, LinearMap.zero_apply]
   apply TensorProduct.induction_on z
   · simp only [LinearMap.map_zero, forall_const]
-  · intros
-    simp only [h]
-  · intros
-    simp only [LinearMap.map_add, *]
-  · intros
-    simp only [LinearMap.map_add, *, LinearMap.add_apply]
-  · intros
-    simp only [LinearMap.map_add, *, LinearMap.add_apply]
+  · intros ; simp only [h]
+  · intros ; simp only [LinearMap.map_add, *]
+  · intros ; simp only [LinearMap.map_add, *, LinearMap.add_apply]
+  · intros ; simp only [LinearMap.map_add, *, LinearMap.add_apply]
 #align algebra.tensor_product.mul_assoc' Algebra.TensorProduct.mul_assoc'
 
 /- warning: algebra.tensor_product.mul_assoc -> Algebra.TensorProduct.mul_assoc is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebra.tensor_product.mul_assoc Algebra.TensorProduct.mul_assocₓ'. -/
 theorem mul_assoc (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
-  mul_assoc' mul
-    (by
-      intros
-      simp only [mul_apply, mul_assoc])
-    x y z
+  mul_assoc' mul (by intros ; simp only [mul_apply, mul_assoc]) x y z
 #align algebra.tensor_product.mul_assoc Algebra.TensorProduct.mul_assoc
 
 /- warning: algebra.tensor_product.one_mul -> Algebra.TensorProduct.one_mul is a dubious translation:
@@ -604,21 +580,13 @@ instance leftAlgebra : Algebra S (A ⊗[R] B) :=
     commutes' := fun r x => by
       apply TensorProduct.induction_on x
       · simp
-      · intro a b
-        dsimp
-        rw [Algebra.commutes, _root_.mul_one, _root_.one_mul]
-      · intro y y' h h'
-        dsimp at h h'⊢
-        simp only [mul_add, add_mul, h, h']
+      · intro a b; dsimp; rw [Algebra.commutes, _root_.mul_one, _root_.one_mul]
+      · intro y y' h h'; dsimp at h h'⊢; simp only [mul_add, add_mul, h, h']
     smul_def' := fun r x => by
       apply TensorProduct.induction_on x
       · simp [smul_zero]
-      · intro a b
-        dsimp
-        rw [TensorProduct.smul_tmul', Algebra.smul_def r a, _root_.one_mul]
-      · intros
-        dsimp
-        simp [smul_add, mul_add, *] }
+      · intro a b; dsimp; rw [TensorProduct.smul_tmul', Algebra.smul_def r a, _root_.one_mul]
+      · intros ; dsimp; simp [smul_add, mul_add, *] }
 #align algebra.tensor_product.left_algebra Algebra.TensorProduct.leftAlgebra
 
 -- This is for the `undergrad.yaml` list.
@@ -684,8 +652,7 @@ def includeRight : B →ₐ[R] A ⊗[R] B where
   commutes' r := by
     simp only [algebraMap_apply]
     trans r • (1 : A) ⊗ₜ[R] (1 : B)
-    · rw [← tmul_smul, Algebra.smul_def]
-      simp
+    · rw [← tmul_smul, Algebra.smul_def]; simp
     · simp [Algebra.smul_def]
 #align algebra.tensor_product.include_right Algebra.TensorProduct.includeRight
 
@@ -703,9 +670,7 @@ theorem includeLeft_comp_algebraMap {R S T : Type _} [CommRing R] [CommRing S] [
     [Algebra R S] [Algebra R T] :
     (includeLeft.toRingHom.comp (algebraMap R S) : R →+* S ⊗[R] T) =
       includeRight.toRingHom.comp (algebraMap R T) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align algebra.tensor_product.include_left_comp_algebra_map Algebra.TensorProduct.includeLeft_comp_algebraMap
 
 end Semiring
@@ -889,8 +854,7 @@ def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R
           · intro a₁ b₁
             apply TensorProduct.induction_on ab₂
             · simp only [zero_tmul, map_zero, MulZeroClass.mul_zero]
-            · intros
-              simp only [tmul_mul_tmul, w₁]
+            · intros ; simp only [tmul_mul_tmul, w₁]
             · intro x₁ x₂ h₁ h₂
               simp only [tmul_mul_tmul] at h₁ h₂
               simp only [tmul_mul_tmul, mul_add, add_tmul, map_add, h₁, h₂]
@@ -987,8 +951,7 @@ protected def comm : A ⊗[R] B ≃ₐ[R] B ⊗[R] A :=
   algEquivOfLinearEquivTensorProduct (TensorProduct.comm R A B) (by simp) fun r =>
     by
     trans r • (1 : B) ⊗ₜ[R] (1 : A)
-    · rw [← tmul_smul, Algebra.smul_def]
-      simp
+    · rw [← tmul_smul, Algebra.smul_def]; simp
     · simp [Algebra.smul_def]
 #align algebra.tensor_product.comm Algebra.TensorProduct.comm
 
@@ -1213,10 +1176,8 @@ def productMap : A ⊗[R] B →ₐ[R] S :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebra.tensor_product.product_map_apply_tmul Algebra.TensorProduct.productMap_apply_tmulₓ'. -/
 @[simp]
-theorem productMap_apply_tmul (a : A) (b : B) : productMap f g (a ⊗ₜ b) = f a * g b :=
-  by
-  unfold product_map lmul'
-  simp
+theorem productMap_apply_tmul (a : A) (b : B) : productMap f g (a ⊗ₜ b) = f a * g b := by
+  unfold product_map lmul'; simp
 #align algebra.tensor_product.product_map_apply_tmul Algebra.TensorProduct.productMap_apply_tmul
 
 /- warning: algebra.tensor_product.product_map_left_apply -> Algebra.TensorProduct.productMap_left_apply is a dubious translation:
@@ -1276,10 +1237,7 @@ Case conversion may be inaccurate. Consider using '#align algebra.tensor_product
 and `g : B →ₐ[R] S` is an `A`-algebra homomorphism. -/
 @[simps]
 def productLeftAlgHom (f : A' →ₐ[A] S) (g : B →ₐ[R] S) : A' ⊗[R] B →ₐ[A] S :=
-  { (productMap (f.restrictScalars R) g).toRingHom with
-    commutes' := fun r => by
-      dsimp
-      simp }
+  { (productMap (f.restrictScalars R) g).toRingHom with commutes' := fun r => by dsimp; simp }
 #align algebra.tensor_product.product_left_alg_hom Algebra.TensorProduct.productLeftAlgHom
 
 end
@@ -1381,8 +1339,7 @@ def endTensorEndAlgHom : End R M ⊗[R] End R N →ₐ[R] End R (M ⊗[R] N) :=
     simp only [hom_tensor_hom_map_apply, TensorProduct.map_mul]
   · intro r
     simp only [hom_tensor_hom_map_apply]
-    ext (m n)
-    simp [smul_tmul]
+    ext (m n); simp [smul_tmul]
 #align module.End_tensor_End_alg_hom Module.endTensorEndAlgHom
 -/
 
@@ -1428,11 +1385,8 @@ Case conversion may be inaccurate. Consider using '#align tensor_product.algebra
 def moduleAux : A ⊗[R] B →ₗ[R] M →ₗ[R] M :=
   TensorProduct.lift
     { toFun := fun a => a • (Algebra.lsmul R M : B →ₐ[R] Module.End R M).toLinearMap
-      map_add' := fun r t => by
-        ext
-        simp only [add_smul, LinearMap.add_apply]
-      map_smul' := fun n r => by
-        ext
+      map_add' := fun r t => by ext; simp only [add_smul, LinearMap.add_apply]
+      map_smul' := fun n r => by ext;
         simp only [RingHom.id_apply, LinearMap.smul_apply, smul_assoc] }
 #align tensor_product.algebra.module_aux TensorProduct.Algebra.moduleAux
 
@@ -1474,20 +1428,16 @@ protected def module : Module (A ⊗[R] B) M
     by
     apply TensorProduct.induction_on x <;> apply TensorProduct.induction_on y
     · simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
-    · intro a b
-      simp only [MulZeroClass.zero_mul, map_zero, LinearMap.zero_apply]
-    · intro z w hz hw
-      simp only [MulZeroClass.zero_mul, map_zero, LinearMap.zero_apply]
-    · intro a b
-      simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
+    · intro a b; simp only [MulZeroClass.zero_mul, map_zero, LinearMap.zero_apply]
+    · intro z w hz hw; simp only [MulZeroClass.zero_mul, map_zero, LinearMap.zero_apply]
+    · intro a b; simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
     · intro a₁ b₁ a₂ b₂
       simp only [module_aux_apply, mul_smul, smul_comm a₁ b₂, Algebra.TensorProduct.tmul_mul_tmul,
         LinearMap.mul_apply]
     · intro z w hz hw a b
       simp only at hz hw
       simp only [mul_add, hz, hw, map_add, LinearMap.add_apply]
-    · intro z w hz hw
-      simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
+    · intro z w hz hw; simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
     · intro a b z w hz hw
       simp only at hz hw
       simp only [map_add, add_mul, LinearMap.add_apply, hz, hw]

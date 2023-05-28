@@ -147,9 +147,7 @@ theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GCDMonoid.lcm (s₁
 
 #print Finset.lcm_congr /-
 theorem lcm_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f a = g a) : s₁.lcm f = s₂.lcm g :=
-  by
-  subst hs
-  exact Finset.fold_congr hfg
+  by subst hs; exact Finset.fold_congr hfg
 #align finset.lcm_congr Finset.lcm_congr
 -/
 
@@ -301,9 +299,7 @@ theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GCDMonoid.gcd (s₁
 
 #print Finset.gcd_congr /-
 theorem gcd_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f a = g a) : s₁.gcd f = s₂.gcd g :=
-  by
-  subst hs
-  exact Finset.fold_congr hfg
+  by subst hs; exact Finset.fold_congr hfg
 #align finset.gcd_congr Finset.gcd_congr
 -/
 
@@ -374,8 +370,7 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
     rw [gcd_union]
     trans GCDMonoid.gcd (0 : α) _
     · refine' congr (congr rfl _) rfl
-      apply s.induction_on
-      · simp
+      apply s.induction_on; · simp
       intro a s has h
       rw [filter_insert]
       split_ifs with h1 <;> simp [h, h1]
@@ -422,9 +417,7 @@ theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0) (hg :
     s.gcd g = 1 :=
   ((@mul_right_eq_self₀ _ _ (s.gcd f) _).1 <| by
         conv_lhs => rw [← normalize_gcd, ← gcd_mul_left, ← gcd_congr rfl hg]).resolve_right <|
-    by
-    contrapose! hs
-    exact gcd_eq_zero_iff.1 hs
+    by contrapose! hs; exact gcd_eq_zero_iff.1 hs
 #align finset.extract_gcd' Finset.extract_gcd'
 
 /- warning: finset.extract_gcd -> Finset.extract_gcd is a dubious translation:
@@ -440,8 +433,7 @@ theorem extract_gcd (f : β → α) (hs : s.Nonempty) :
     · refine' ⟨fun b => 1, fun b hb => by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], _⟩
       rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
     · choose g' hg using @gcd_dvd _ _ _ _ s f
-      have := fun b hb => _
-      push_neg  at h
+      have := fun b hb => _; push_neg  at h
       refine' ⟨fun b => if hb : b ∈ s then g' hb else 0, this, extract_gcd' f _ h this⟩
       rw [dif_pos hb, hg hb]
 #align finset.extract_gcd Finset.extract_gcd

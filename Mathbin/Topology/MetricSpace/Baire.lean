@@ -80,9 +80,8 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
     refine' ⟨y, min (min (δ / 2) r) (B (n + 1)), _, _, fun z hz => ⟨_, _⟩⟩
     show 0 < min (min (δ / 2) r) (B (n + 1))
     exact lt_min (lt_min (ENNReal.half_pos δpos) rpos) (Bpos (n + 1))
-    show min (min (δ / 2) r) (B (n + 1)) ≤ B (n + 1)
-    exact min_le_right _ _
-    show z ∈ closed_ball x δ
+    show min (min (δ / 2) r) (B (n + 1)) ≤ B (n + 1); exact min_le_right _ _
+    show z ∈ closed_ball x δ;
     exact
       calc
         edist z x ≤ edist z y + edist y x := edist_triangle _ _ _
@@ -90,7 +89,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
         _ ≤ δ / 2 + δ / 2 := (add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl)
         _ = δ := ENNReal.add_halves δ
         
-    show z ∈ f n
+    show z ∈ f n;
     exact
       hr
         (calc
@@ -158,8 +157,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
     have : closed_ball (c (n + 1)) (r (n + 1)) ⊆ f n :=
       subset.trans (incl n) (inter_subset_right _ _)
     exact this (yball (n + 1))
-  show edist y x ≤ ε
-  exact le_trans (yball 0) (min_le_left _ _)
+  show edist y x ≤ ε; exact le_trans (yball 0) (min_le_left _ _)
 #align baire_category_theorem_emetric_complete baire_category_theorem_emetric_complete
 -/
 

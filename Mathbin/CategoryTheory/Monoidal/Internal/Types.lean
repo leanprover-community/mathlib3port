@@ -56,17 +56,9 @@ def inverse : MonCat.{u} ⥤ Mon_ (Type u)
     { pt := A
       one := fun _ => 1
       mul := fun p => p.1 * p.2
-      one_mul' := by
-        ext ⟨_, _⟩
-        dsimp
-        simp
-      mul_one' := by
-        ext ⟨_, _⟩
-        dsimp
-        simp
-      mul_assoc' := by
-        ext ⟨⟨x, y⟩, z⟩
-        simp [mul_assoc] }
+      one_mul' := by ext ⟨_, _⟩; dsimp; simp
+      mul_one' := by ext ⟨_, _⟩; dsimp; simp
+      mul_assoc' := by ext ⟨⟨x, y⟩, z⟩; simp [mul_assoc] }
   map A B f := { Hom := f }
 #align Mon_Type_equivalence_Mon.inverse MonTypeEquivalenceMon.inverse
 
@@ -134,9 +126,7 @@ def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
     where
   obj A :=
     { MonTypeEquivalenceMon.inverse.obj ((forget₂ CommMonCat MonCat).obj A) with
-      mul_comm' := by
-        ext ⟨x, y⟩
-        exact CommMonoid.mul_comm y x }
+      mul_comm' := by ext ⟨x, y⟩; exact CommMonoid.mul_comm y x }
   map A B f := MonTypeEquivalenceMon.inverse.map f
 #align CommMon_Type_equivalence_CommMon.inverse CommMonTypeEquivalenceCommMon.inverse
 

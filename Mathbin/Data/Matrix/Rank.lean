@@ -159,9 +159,7 @@ but is expected to have type
   forall {n : Type.{u1}} {R : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_3 : CommRing.{u2} R] [_inst_4 : StrongRankCondition.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3))] [_inst_5 : DecidableEq.{succ u1} n] (A : Matrix.{u1, u1, u2} n n R), (IsUnit.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} n n R) (Matrix.semiring.{u2, u1} n R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_3)) _inst_1 (fun (a : n) (b : n) => _inst_5 a b)))) A) -> (Eq.{1} Nat (Matrix.rank.{u1, u1, u2} n n R _inst_1 _inst_3 A) (Fintype.card.{u1} n _inst_1))
 Case conversion may be inaccurate. Consider using '#align matrix.rank_of_is_unit Matrix.rank_of_isUnitₓ'. -/
 theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R) (h : IsUnit A) :
-    A.rank = Fintype.card n := by
-  obtain ⟨A, rfl⟩ := h
-  exact rank_unit A
+    A.rank = Fintype.card n := by obtain ⟨A, rfl⟩ := h; exact rank_unit A
 #align matrix.rank_of_is_unit Matrix.rank_of_isUnit
 
 /- warning: matrix.rank_submatrix_le -> Matrix.rank_submatrix_le is a dubious translation:
@@ -215,16 +213,12 @@ theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCom
   by
   let e₁ := (Pi.basisFun R m).Equiv v₁ (Equiv.refl _)
   let e₂ := (Pi.basisFun R n).Equiv v₂ (Equiv.refl _)
-  have range_e₂ : (e₂ : (n → R) →ₗ[R] M₂).range = ⊤ :=
-    by
-    rw [LinearMap.range_eq_top]
+  have range_e₂ : (e₂ : (n → R) →ₗ[R] M₂).range = ⊤ := by rw [LinearMap.range_eq_top];
     exact e₂.surjective
   refine' LinearEquiv.finrank_eq (e₁.of_submodules _ _ _)
   rw [← LinearMap.range_comp, ← LinearMap.range_comp_of_range_eq_top (to_lin v₂ v₁ A) range_e₂]
   congr 1
-  apply LinearMap.pi_ext'
-  rintro i
-  apply LinearMap.ext_ring
+  apply LinearMap.pi_ext'; rintro i; apply LinearMap.ext_ring
   have aux₁ := to_lin_self (Pi.basisFun R n) (Pi.basisFun R m) A i
   have aux₂ := Basis.equiv_apply (Pi.basisFun R n) i v₂
   rw [to_lin_eq_to_lin', to_lin'_apply'] at aux₁
@@ -297,8 +291,7 @@ theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
     replace h := congr_arg (dot_product (star x)) h
     rwa [dot_product_mul_vec, dot_product_zero, vec_mul_conj_transpose, star_star,
       dot_product_star_self_eq_zero] at h
-  · intro h
-    rw [h, mul_vec_zero]
+  · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_self
 
 /- warning: matrix.rank_conj_transpose_mul_self -> Matrix.rank_conjTranspose_mul_self is a dubious translation:
@@ -363,8 +356,7 @@ theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
   · intro h
     replace h := congr_arg (dot_product x) h
     rwa [dot_product_mul_vec, dot_product_zero, vec_mul_transpose, dot_product_self_eq_zero] at h
-  · intro h
-    rw [h, mul_vec_zero]
+  · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_self
 
 /- warning: matrix.rank_transpose_mul_self -> Matrix.rank_transpose_mul_self is a dubious translation:

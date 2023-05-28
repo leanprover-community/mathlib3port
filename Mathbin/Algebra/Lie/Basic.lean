@@ -229,10 +229,7 @@ but is expected to have type
   forall {L : Type.{u1}} {M : Type.{u2}} [_inst_2 : LieRing.{u1} L] [_inst_4 : AddCommGroup.{u2} M] [_inst_6 : LieRingModule.{u1, u2} L M _inst_2 _inst_4] (x : L) (m : M), Eq.{succ u2} M (Bracket.bracket.{u1, u2} L M (LieRingModule.toBracket.{u1, u2} L M _inst_2 _inst_4 _inst_6) (Neg.neg.{u1} L (NegZeroClass.toNeg.{u1} L (SubNegZeroMonoid.toNegZeroClass.{u1} L (SubtractionMonoid.toSubNegZeroMonoid.{u1} L (SubtractionCommMonoid.toSubtractionMonoid.{u1} L (AddCommGroup.toDivisionAddCommMonoid.{u1} L (LieRing.toAddCommGroup.{u1} L _inst_2)))))) x) m) (Neg.neg.{u2} M (NegZeroClass.toNeg.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_4))))) (Bracket.bracket.{u1, u2} L M (LieRingModule.toBracket.{u1, u2} L M _inst_2 _inst_4 _inst_6) x m))
 Case conversion may be inaccurate. Consider using '#align neg_lie neg_lieₓ'. -/
 @[simp]
-theorem neg_lie : ⁅-x, m⁆ = -⁅x, m⁆ :=
-  by
-  rw [← sub_eq_zero, sub_neg_eq_add, ← add_lie]
-  simp
+theorem neg_lie : ⁅-x, m⁆ = -⁅x, m⁆ := by rw [← sub_eq_zero, sub_neg_eq_add, ← add_lie]; simp
 #align neg_lie neg_lie
 
 /- warning: lie_neg -> lie_neg is a dubious translation:
@@ -242,10 +239,7 @@ but is expected to have type
   forall {L : Type.{u1}} {M : Type.{u2}} [_inst_2 : LieRing.{u1} L] [_inst_4 : AddCommGroup.{u2} M] [_inst_6 : LieRingModule.{u1, u2} L M _inst_2 _inst_4] (x : L) (m : M), Eq.{succ u2} M (Bracket.bracket.{u1, u2} L M (LieRingModule.toBracket.{u1, u2} L M _inst_2 _inst_4 _inst_6) x (Neg.neg.{u2} M (NegZeroClass.toNeg.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_4))))) m)) (Neg.neg.{u2} M (NegZeroClass.toNeg.{u2} M (SubNegZeroMonoid.toNegZeroClass.{u2} M (SubtractionMonoid.toSubNegZeroMonoid.{u2} M (SubtractionCommMonoid.toSubtractionMonoid.{u2} M (AddCommGroup.toDivisionAddCommMonoid.{u2} M _inst_4))))) (Bracket.bracket.{u1, u2} L M (LieRingModule.toBracket.{u1, u2} L M _inst_2 _inst_4 _inst_6) x m))
 Case conversion may be inaccurate. Consider using '#align lie_neg lie_negₓ'. -/
 @[simp]
-theorem lie_neg : ⁅x, -m⁆ = -⁅x, m⁆ :=
-  by
-  rw [← sub_eq_zero, sub_neg_eq_add, ← lie_add]
-  simp
+theorem lie_neg : ⁅x, -m⁆ = -⁅x, m⁆ := by rw [← sub_eq_zero, sub_neg_eq_add, ← lie_add]; simp
 #align lie_neg lie_neg
 
 /- warning: sub_lie -> sub_lie is a dubious translation:
@@ -312,10 +306,8 @@ lean 3 declaration is
 but is expected to have type
   forall {L : Type.{u1}} [_inst_2 : LieRing.{u1} L] (x : L) (y : L) (z : L), Eq.{succ u1} L (HAdd.hAdd.{u1, u1, u1} L L L (instHAdd.{u1} L (AddZeroClass.toAdd.{u1} L (AddMonoid.toAddZeroClass.{u1} L (SubNegMonoid.toAddMonoid.{u1} L (AddGroup.toSubNegMonoid.{u1} L (AddCommGroup.toAddGroup.{u1} L (LieRing.toAddCommGroup.{u1} L _inst_2))))))) (HAdd.hAdd.{u1, u1, u1} L L L (instHAdd.{u1} L (AddZeroClass.toAdd.{u1} L (AddMonoid.toAddZeroClass.{u1} L (SubNegMonoid.toAddMonoid.{u1} L (AddGroup.toSubNegMonoid.{u1} L (AddCommGroup.toAddGroup.{u1} L (LieRing.toAddCommGroup.{u1} L _inst_2))))))) (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) x (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) y z)) (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) y (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) z x))) (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) z (Bracket.bracket.{u1, u1} L L (LieRingModule.toBracket.{u1, u1} L L _inst_2 (LieRing.toAddCommGroup.{u1} L _inst_2) (lieRingSelfModule.{u1} L _inst_2)) x y))) (OfNat.ofNat.{u1} L 0 (Zero.toOfNat0.{u1} L (NegZeroClass.toZero.{u1} L (SubNegZeroMonoid.toNegZeroClass.{u1} L (SubtractionMonoid.toSubNegZeroMonoid.{u1} L (SubtractionCommMonoid.toSubtractionMonoid.{u1} L (AddCommGroup.toDivisionAddCommMonoid.{u1} L (LieRing.toAddCommGroup.{u1} L _inst_2))))))))
 Case conversion may be inaccurate. Consider using '#align lie_jacobi lie_jacobiₓ'. -/
-theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 :=
-  by
-  rw [← neg_neg ⁅x, y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]
-  abel
+theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 := by
+  rw [← neg_neg ⁅x, y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]; abel
 #align lie_jacobi lie_jacobi
 
 /- warning: lie_ring.int_lie_algebra -> LieRing.intLieAlgebra is a dubious translation:
@@ -331,19 +323,13 @@ instance : LieRingModule L (M →ₗ[R] N)
     where
   bracket x f :=
     { toFun := fun m => ⁅x, f m⁆ - f ⁅x, m⁆
-      map_add' := fun m n => by
-        simp only [lie_add, LinearMap.map_add]
-        abel
+      map_add' := fun m n => by simp only [lie_add, LinearMap.map_add]; abel
       map_smul' := fun t m => by
         simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
   add_lie x y f := by
-    ext n
-    simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
+    ext n; simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
     abel
-  lie_add x f g := by
-    ext n
-    simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]
-    abel
+  lie_add x f g := by ext n; simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]; abel
   leibniz_lie x y f := by
     ext n
     simp only [lie_lie, LinearMap.coe_mk, LinearMap.map_sub, LinearMap.add_apply, lie_sub]
@@ -362,9 +348,7 @@ instance : LieModule R L (M →ₗ[R] N)
   smul_lie t x f := by
     ext n
     simp only [smul_sub, smul_lie, LinearMap.smul_apply, LieHom.lie_apply, LinearMap.map_smul]
-  lie_smul t x f := by
-    ext n
-    simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
+  lie_smul t x f := by ext n; simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
 
 end BasicProperties
 
@@ -599,9 +583,7 @@ but is expected to have type
   forall {R : Type.{u1}} {L₁ : Type.{u2}} {L₂ : Type.{u3}} [_inst_1 : CommRing.{u1} R] [_inst_2 : LieRing.{u2} L₁] [_inst_3 : LieAlgebra.{u1, u2} R L₁ _inst_1 _inst_2] [_inst_4 : LieRing.{u3} L₂] [_inst_5 : LieAlgebra.{u1, u3} R L₂ _inst_1 _inst_4] {f : LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5} {g : LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5}, Iff (Eq.{max (succ u2) (succ u3)} (LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f g) (forall (x : L₁), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L₁) => L₂) x) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L₁ (fun (_x : L₁) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L₁) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f x) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (LieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) L₁ (fun (_x : L₁) => (fun (x._@.Mathlib.Algebra.Lie.Basic._hyg.3919 : L₁) => L₂) _x) (LieHom.instFunLikeLieHom.{u1, u2, u3} R L₁ L₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) g x))
 Case conversion may be inaccurate. Consider using '#align lie_hom.ext_iff LieHom.ext_iffₓ'. -/
 theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
-    rintro rfl x
-    rfl, ext⟩
+  ⟨by rintro rfl x; rfl, ext⟩
 #align lie_hom.ext_iff LieHom.ext_iff
 
 /- warning: lie_hom.congr_fun -> LieHom.congr_fun is a dubious translation:
@@ -618,10 +600,7 @@ theorem congr_fun {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x =
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_hom.mk_coe LieHom.mk_coeₓ'. -/
 @[simp]
-theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) (h₁ h₂ h₃) : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f :=
-  by
-  ext
-  rfl
+theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) (h₁ h₂ h₃) : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f := by ext; rfl
 #align lie_hom.mk_coe LieHom.mk_coe
 
 /- warning: lie_hom.coe_mk -> LieHom.coe_mk is a dubious translation:
@@ -636,9 +615,7 @@ theorem coe_mk (f : L₁ → L₂) (h₁ h₂ h₃) : ((⟨⟨f, h₁, h₂⟩, 
 /-- The composition of morphisms is a morphism. -/
 def comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) : L₁ →ₗ⁅R⁆ L₃ :=
   { LinearMap.comp f.toLinearMap g.toLinearMap with
-    map_lie' := fun x y => by
-      change f (g ⁅x, y⁆) = ⁅f (g x), f (g y)⁆
-      rw [map_lie, map_lie] }
+    map_lie' := fun x y => by change f (g ⁅x, y⁆) = ⁅f (g x), f (g y)⁆; rw [map_lie, map_lie] }
 #align lie_hom.comp LieHom.comp
 -/
 
@@ -670,19 +647,13 @@ theorem coe_linearMap_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆
 
 #print LieHom.comp_id /-
 @[simp]
-theorem comp_id (f : L₁ →ₗ⁅R⁆ L₂) : f.comp (id : L₁ →ₗ⁅R⁆ L₁) = f :=
-  by
-  ext
-  rfl
+theorem comp_id (f : L₁ →ₗ⁅R⁆ L₂) : f.comp (id : L₁ →ₗ⁅R⁆ L₁) = f := by ext; rfl
 #align lie_hom.comp_id LieHom.comp_id
 -/
 
 #print LieHom.id_comp /-
 @[simp]
-theorem id_comp (f : L₁ →ₗ⁅R⁆ L₂) : (id : L₂ →ₗ⁅R⁆ L₂).comp f = f :=
-  by
-  ext
-  rfl
+theorem id_comp (f : L₁ →ₗ⁅R⁆ L₂) : (id : L₂ →ₗ⁅R⁆ L₂).comp f = f := by ext; rfl
 #align lie_hom.id_comp LieHom.id_comp
 -/
 
@@ -911,10 +882,7 @@ def symm (e : L₁ ≃ₗ⁅R⁆ L₂) : L₂ ≃ₗ⁅R⁆ L₁ :=
 
 #print LieEquiv.symm_symm /-
 @[simp]
-theorem symm_symm (e : L₁ ≃ₗ⁅R⁆ L₂) : e.symm.symm = e :=
-  by
-  ext
-  rfl
+theorem symm_symm (e : L₁ ≃ₗ⁅R⁆ L₂) : e.symm.symm = e := by ext; rfl
 #align lie_equiv.symm_symm LieEquiv.symm_symm
 -/
 
@@ -1194,10 +1162,8 @@ instance : Inhabited (M →ₗ⁅R,L⁆ N) :=
 /- warning: lie_module_hom.coe_injective -> LieModuleHom.coe_injective is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_hom.coe_injective LieModuleHom.coe_injectiveₓ'. -/
-theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeFn :=
-  by
-  rintro ⟨⟨f, _⟩⟩ ⟨⟨g, _⟩⟩ ⟨h⟩
-  congr
+theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeFn := by
+  rintro ⟨⟨f, _⟩⟩ ⟨⟨g, _⟩⟩ ⟨h⟩; congr
 #align lie_module_hom.coe_injective LieModuleHom.coe_injective
 
 /- warning: lie_module_hom.ext -> LieModuleHom.ext is a dubious translation:
@@ -1212,9 +1178,7 @@ theorem ext {f g : M →ₗ⁅R,L⁆ N} (h : ∀ m, f m = g m) : f = g :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_hom.ext_iff LieModuleHom.ext_iffₓ'. -/
 theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=
-  ⟨by
-    rintro rfl m
-    rfl, ext⟩
+  ⟨by rintro rfl m; rfl, ext⟩
 #align lie_module_hom.ext_iff LieModuleHom.ext_iff
 
 /- warning: lie_module_hom.congr_fun -> LieModuleHom.congr_fun is a dubious translation:
@@ -1228,30 +1192,21 @@ theorem congr_fun {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_hom.mk_coe LieModuleHom.mk_coeₓ'. -/
 @[simp]
-theorem mk_coe (f : M →ₗ⁅R,L⁆ N) (h) : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f :=
-  by
-  ext
-  rfl
+theorem mk_coe (f : M →ₗ⁅R,L⁆ N) (h) : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f := by ext; rfl
 #align lie_module_hom.mk_coe LieModuleHom.mk_coe
 
 /- warning: lie_module_hom.coe_mk -> LieModuleHom.coe_mk is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_hom.coe_mk LieModuleHom.coe_mkₓ'. -/
 @[simp]
-theorem coe_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f :=
-  by
-  ext
-  rfl
+theorem coe_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f := by ext; rfl
 #align lie_module_hom.coe_mk LieModuleHom.coe_mk
 
 /- warning: lie_module_hom.coe_linear_mk -> LieModuleHom.coe_linear_mk is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_hom.coe_linear_mk LieModuleHom.coe_linear_mkₓ'. -/
 @[norm_cast, simp]
-theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f :=
-  by
-  ext
-  rfl
+theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f := by ext; rfl
 #align lie_module_hom.coe_linear_mk LieModuleHom.coe_linear_mk
 
 /- warning: lie_module_hom.comp -> LieModuleHom.comp is a dubious translation:
@@ -1260,9 +1215,7 @@ Case conversion may be inaccurate. Consider using '#align lie_module_hom.comp Li
 /-- The composition of Lie module morphisms is a morphism. -/
 def comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) : M →ₗ⁅R,L⁆ P :=
   { LinearMap.comp f.toLinearMap g.toLinearMap with
-    map_lie' := fun x m => by
-      change f (g ⁅x, m⁆) = ⁅x, f (g m)⁆
-      rw [map_lie, map_lie] }
+    map_lie' := fun x m => by change f (g ⁅x, m⁆) = ⁅x, f (g m)⁆; rw [map_lie, map_lie] }
 #align lie_module_hom.comp LieModuleHom.comp
 
 /- warning: lie_module_hom.comp_apply -> LieModuleHom.comp_apply is a dubious translation:
@@ -1611,11 +1564,8 @@ theorem symm_apply_apply (e : M ≃ₗ⁅R,L⁆ N) : ∀ x, e.symm (e x) = x :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align lie_module_equiv.symm_symm LieModuleEquiv.symm_symmₓ'. -/
 @[simp]
-theorem symm_symm (e : M ≃ₗ⁅R,L⁆ N) : e.symm.symm = e :=
-  by
-  ext
-  apply_fun e.symm using e.symm.injective
-  simp
+theorem symm_symm (e : M ≃ₗ⁅R,L⁆ N) : e.symm.symm = e := by ext;
+  apply_fun e.symm using e.symm.injective; simp
 #align lie_module_equiv.symm_symm LieModuleEquiv.symm_symm
 
 /- warning: lie_module_equiv.trans -> LieModuleEquiv.trans is a dubious translation:

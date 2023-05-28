@@ -103,9 +103,7 @@ theorem pdf_eq_zero_of_not_measurable {m : MeasurableSpace Ω} {ℙ : Measure Ω
 #align measure_theory.pdf_eq_zero_of_not_measurable MeasureTheory.pdf_eq_zero_of_not_measurable
 
 theorem measurable_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E}
-    (X : Ω → E) (h : pdf X ℙ μ ≠ 0) : Measurable X :=
-  by
-  by_contra hX
+    (X : Ω → E) (h : pdf X ℙ μ ≠ 0) : Measurable X := by by_contra hX;
   exact h (pdf_eq_zero_of_not_measurable hX)
 #align measure_theory.measurable_of_pdf_ne_zero MeasureTheory.measurable_of_pdf_ne_zero
 
@@ -220,10 +218,8 @@ theorem integral_fun_mul_eq_integral [FiniteMeasure ℙ] {X : Ω → E} [HasPdf 
     all_goals infer_instance
 #align measure_theory.pdf.integral_fun_mul_eq_integral MeasureTheory.pdf.integral_fun_mul_eq_integral
 
-theorem map_absolutelyContinuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ :=
-  by
-  rw [map_eq_with_density_pdf X ℙ μ]
-  exact with_density_absolutely_continuous _ _
+theorem map_absolutelyContinuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ := by
+  rw [map_eq_with_density_pdf X ℙ μ]; exact with_density_absolutely_continuous _ _
 #align measure_theory.pdf.map_absolutely_continuous MeasureTheory.pdf.map_absolutelyContinuous
 
 /-- A random variable that `has_pdf` is quasi-measure preserving. -/
@@ -252,9 +248,7 @@ theorem hasPdf_iff {X : Ω → E} :
 #align measure_theory.pdf.has_pdf_iff MeasureTheory.pdf.hasPdf_iff
 
 theorem hasPdf_iff_of_measurable {X : Ω → E} (hX : Measurable X) :
-    HasPdf X ℙ μ ↔ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ :=
-  by
-  rw [has_pdf_iff]
+    HasPdf X ℙ μ ↔ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ := by rw [has_pdf_iff];
   simp only [hX, true_and_iff]
 #align measure_theory.pdf.has_pdf_iff_of_measurable MeasureTheory.pdf.hasPdf_iff_of_measurable
 

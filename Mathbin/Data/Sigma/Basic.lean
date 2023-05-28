@@ -89,13 +89,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} {x₀ : Sigma.{u2, u1} α β} {x₁ : Sigma.{u2, u1} α β}, (Eq.{succ u2} α (Sigma.fst.{u2, u1} α β x₀) (Sigma.fst.{u2, u1} α β x₁)) -> (HEq.{succ u1} (β (Sigma.fst.{u2, u1} α β x₀)) (Sigma.snd.{u2, u1} α β x₀) (β (Sigma.fst.{u2, u1} α β x₁)) (Sigma.snd.{u2, u1} α β x₁)) -> (Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align sigma.ext Sigma.extₓ'. -/
 @[ext]
-theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ :=
-  by
-  cases x₀
-  cases x₁
-  cases h₀
-  cases h₁
-  rfl
+theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by cases x₀;
+  cases x₁; cases h₀; cases h₁; rfl
 #align sigma.ext Sigma.ext
 
 /- warning: sigma.ext_iff -> Sigma.ext_iff is a dubious translation:
@@ -104,10 +99,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} {x₀ : Sigma.{u2, u1} α β} {x₁ : Sigma.{u2, u1} α β}, Iff (Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} α β) x₀ x₁) (And (Eq.{succ u2} α (Sigma.fst.{u2, u1} α β x₀) (Sigma.fst.{u2, u1} α β x₁)) (HEq.{succ u1} (β (Sigma.fst.{u2, u1} α β x₀)) (Sigma.snd.{u2, u1} α β x₀) (β (Sigma.fst.{u2, u1} α β x₁)) (Sigma.snd.{u2, u1} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align sigma.ext_iff Sigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 :=
-  by
-  cases x₀
-  cases x₁
+theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by cases x₀; cases x₁;
   exact Sigma.mk.inj_iff
 #align sigma.ext_iff Sigma.ext_iff
 
@@ -380,13 +372,8 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {x₀ : PSigma.{u2, u1} α β} {x₁ : PSigma.{u2, u1} α β}, (Eq.{u2} α (PSigma.fst.{u2, u1} α β x₀) (PSigma.fst.{u2, u1} α β x₁)) -> (HEq.{u1} (β (PSigma.fst.{u2, u1} α β x₀)) (PSigma.snd.{u2, u1} α β x₀) (β (PSigma.fst.{u2, u1} α β x₁)) (PSigma.snd.{u2, u1} α β x₁)) -> (Eq.{max (max 1 u2) u1} (PSigma.{u2, u1} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align psigma.ext PSigma.extₓ'. -/
 @[ext]
-theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ :=
-  by
-  cases x₀
-  cases x₁
-  cases h₀
-  cases h₁
-  rfl
+theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by cases x₀;
+  cases x₁; cases h₀; cases h₁; rfl
 #align psigma.ext PSigma.ext
 
 /- warning: psigma.ext_iff -> PSigma.ext_iff is a dubious translation:
@@ -395,10 +382,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {x₀ : PSigma.{u2, u1} α β} {x₁ : PSigma.{u2, u1} α β}, Iff (Eq.{max (max 1 u2) u1} (PSigma.{u2, u1} α β) x₀ x₁) (And (Eq.{u2} α (PSigma.fst.{u2, u1} α β x₀) (PSigma.fst.{u2, u1} α β x₁)) (HEq.{u1} (β (PSigma.fst.{u2, u1} α β x₀)) (PSigma.snd.{u2, u1} α β x₀) (β (PSigma.fst.{u2, u1} α β x₁)) (PSigma.snd.{u2, u1} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align psigma.ext_iff PSigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 :=
-  by
-  cases x₀
-  cases x₁
+theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by cases x₀; cases x₁;
   exact PSigma.mk.inj_iff
 #align psigma.ext_iff PSigma.ext_iff
 

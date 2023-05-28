@@ -140,9 +140,7 @@ def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜
     where
   toFun x := a * x + b
   invFun y := (y - b) / a
-  left_inv x := by
-    simp only [add_sub_cancel]
-    exact mul_div_cancel_left x h
+  left_inv x := by simp only [add_sub_cancel]; exact mul_div_cancel_left x h
   right_inv y := by simp [mul_div_cancel' _ h]
 #align affine_homeomorph affineHomeomorph
 
@@ -192,22 +190,14 @@ theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors
   simp_rw [eq_on, Pi.one_apply, Pi.pow_apply, sq_eq_one_iff] at hsq
   -- First deal with crazy case where `S` is empty.
   by_cases hSe : ∀ x : α, x ∉ S
-  · left
-    intro x hx
-    exfalso
-    exact hSe x hx
+  · left; intro x hx
+    exfalso; exact hSe x hx
   push_neg  at hSe
   choose y hy using hSe
   suffices ∀ x : α, x ∈ S → f x = f y by
     rcases hsq hy with ⟨⟩
-    · left
-      intro z hz
-      rw [Pi.one_apply z, ← h]
-      exact this z hz
-    · right
-      intro z hz
-      rw [Pi.neg_apply, Pi.one_apply, ← h]
-      exact this z hz
+    · left; intro z hz; rw [Pi.one_apply z, ← h]; exact this z hz
+    · right; intro z hz; rw [Pi.neg_apply, Pi.one_apply, ← h]; exact this z hz
   refine' fun x hx => hS.constant_of_maps_to hf (fun z hz => _) hx hy
   show f z ∈ ({-1, 1} : Set 𝕜)
   · exact mem_insert_iff.mpr (hsq hz).symm
@@ -254,8 +244,7 @@ theorem IsPreconnected.eq_of_sq_eq [Field 𝕜] [HasContinuousInv₀ 𝕜] [Cont
       mul_eq_zero] at hy'
     cases hy'
     -- need to handle case of `char 𝕜 = 2` separately
-    · exfalso
-      exact hg_ne hy hy'
+    · exfalso; exact hg_ne hy hy'
     ·
       rw [h hx, Pi.neg_apply, eq_comm, ← sub_eq_zero, sub_eq_add_neg, neg_neg, ← mul_two, hy',
         MulZeroClass.mul_zero]

@@ -55,10 +55,8 @@ theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ C (X ^ p) :=
 variable {R}
 
 #print Polynomial.expand_eq_sum /-
-theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => C a * (X ^ p) ^ e :=
-  by
-  dsimp [expand, eval₂]
-  rfl
+theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => C a * (X ^ p) ^ e := by
+  dsimp [expand, eval₂]; rfl
 #align polynomial.expand_eq_sum Polynomial.expand_eq_sum
 -/
 
@@ -135,18 +133,9 @@ theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
   simp_rw [coeff_sum, ← pow_mul, C_mul_X_pow_eq_monomial, coeff_monomial, Sum]
   split_ifs with h
   · rw [Finset.sum_eq_single (n / p), Nat.mul_div_cancel' h, if_pos rfl]
-    · intro b hb1 hb2
-      rw [if_neg]
-      intro hb3
-      apply hb2
-      rw [← hb3, Nat.mul_div_cancel_left b hp]
-    · intro hn
-      rw [not_mem_support_iff.1 hn]
-      split_ifs <;> rfl
-  · rw [Finset.sum_eq_zero]
-    intro k hk
-    rw [if_neg]
-    exact fun hkn => h ⟨k, hkn.symm⟩
+    · intro b hb1 hb2; rw [if_neg]; intro hb3; apply hb2; rw [← hb3, Nat.mul_div_cancel_left b hp]
+    · intro hn; rw [not_mem_support_iff.1 hn]; split_ifs <;> rfl
+  · rw [Finset.sum_eq_zero]; intro k hk; rw [if_neg]; exact fun hkn => h ⟨k, hkn.symm⟩
 #align polynomial.coeff_expand Polynomial.coeff_expand
 -/
 
@@ -206,16 +195,12 @@ theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.nat
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hf1]
   refine' le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun n hn => _) _
-  · rw [coeff_expand hp]
-    split_ifs with hpn
-    · rw [coeff_eq_zero_of_nat_degree_lt]
-      contrapose! hn
-      rw [WithBot.coe_le_coe, ← Nat.div_mul_cancel hpn]
-      exact Nat.mul_le_mul_right p hn
+  · rw [coeff_expand hp]; split_ifs with hpn
+    · rw [coeff_eq_zero_of_nat_degree_lt]; contrapose! hn
+      rw [WithBot.coe_le_coe, ← Nat.div_mul_cancel hpn]; exact Nat.mul_le_mul_right p hn
     · rfl
   · refine' le_degree_of_ne_zero _
-    rw [coeff_expand_mul hp, ← leading_coeff]
-    exact mt leading_coeff_eq_zero.1 hf
+    rw [coeff_expand_mul hp, ← leading_coeff]; exact mt leading_coeff_eq_zero.1 hf
 #align polynomial.nat_degree_expand Polynomial.natDegree_expand
 -/
 
@@ -376,10 +361,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.of_irreduci
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
   Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
-    ih <|
-      of_irreducible_expand hp <| by
-        rw [pow_succ] at hf
-        rwa [expand_expand]
+    ih <| of_irreducible_expand hp <| by rw [pow_succ] at hf; rwa [expand_expand]
 #align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_pow
 
 end IsDomain

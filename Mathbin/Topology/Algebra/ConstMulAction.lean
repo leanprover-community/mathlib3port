@@ -503,8 +503,7 @@ theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpac
   rcases eq_or_ne c 0 with (rfl | hc)
   · rcases eq_empty_or_nonempty s with (rfl | hs)
     · simp
-    · rw [zero_smul_set hs, zero_smul_set hs.closure]
-      exact closure_singleton
+    · rw [zero_smul_set hs, zero_smul_set hs.closure]; exact closure_singleton
   · exact ((Homeomorph.smulOfNeZero c hc).image_closure s).symm
 #align closure_smul₀ closure_smul₀
 -/
@@ -548,8 +547,7 @@ theorem isClosedMap_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoid
     [T1Space M] [Module 𝕜 M] [ContinuousConstSMul 𝕜 M] (c : 𝕜) : IsClosedMap fun x : M => c • x :=
   by
   rcases eq_or_ne c 0 with (rfl | hne)
-  · simp only [zero_smul]
-    exact isClosedMap_const
+  · simp only [zero_smul]; exact isClosedMap_const
   · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
 #align is_closed_map_smul₀ isClosedMap_smul₀
 

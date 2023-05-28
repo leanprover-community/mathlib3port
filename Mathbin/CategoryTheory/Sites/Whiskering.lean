@@ -134,12 +134,8 @@ def mapMultifork :
   Cones.ext (eqToIso rfl)
     (by
       rintro (a | b)
-      · dsimp
-        simpa
-      · dsimp
-        simp
-        dsimp [multifork.of_ι]
-        simpa)
+      · dsimp; simpa
+      · dsimp; simp; dsimp [multifork.of_ι]; simpa)
 #align category_theory.grothendieck_topology.cover.map_multifork CategoryTheory.GrothendieckTopology.Cover.mapMultifork
 
 end GrothendieckTopology.Cover

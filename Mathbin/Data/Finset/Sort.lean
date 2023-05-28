@@ -99,9 +99,7 @@ theorem sort_singleton (a : α) : sort r {a} = [a] :=
 -/
 
 #print Finset.sort_perm_toList /-
-theorem sort_perm_toList (s : Finset α) : sort r s ~ s.toList :=
-  by
-  rw [← Multiset.coe_eq_coe]
+theorem sort_perm_toList (s : Finset α) : sort r s ~ s.toList := by rw [← Multiset.coe_eq_coe];
   simp only [coe_to_list, sort_eq]
 #align finset.sort_perm_to_list Finset.sort_perm_toList
 -/
@@ -143,11 +141,7 @@ theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length
 
 #print Finset.min'_eq_sorted_zero /-
 theorem min'_eq_sorted_zero {s : Finset α} {h : s.Nonempty} :
-    s.min' h =
-      (s.sort (· ≤ ·)).nthLe 0
-        (by
-          rw [length_sort]
-          exact card_pos.2 h) :=
+    s.min' h = (s.sort (· ≤ ·)).nthLe 0 (by rw [length_sort]; exact card_pos.2 h) :=
   (sorted_zero_eq_min'_aux _ _ _).symm
 #align finset.min'_eq_sorted_zero Finset.min'_eq_sorted_zero
 -/
@@ -175,10 +169,7 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
 theorem sorted_last_eq_max' {s : Finset α}
     {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
-      s.max'
-        (by
-          rw [length_sort] at h
-          exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
+      s.max' (by rw [length_sort] at h; exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
   sorted_last_eq_max'_aux _ _ _
 #align finset.sorted_last_eq_max' Finset.sorted_last_eq_max'
 -/
@@ -242,11 +233,7 @@ theorem orderIsoOfFin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (x :
 <too large>
 Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fin_apply Finset.orderEmbOfFin_applyₓ'. -/
 theorem orderEmbOfFin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
-    s.orderEmbOfFin h i =
-      (s.sort (· ≤ ·)).nthLe i
-        (by
-          rw [length_sort, h]
-          exact i.2) :=
+    s.orderEmbOfFin h i = (s.sort (· ≤ ·)).nthLe i (by rw [length_sort, h]; exact i.2) :=
   rfl
 #align finset.order_emb_of_fin_apply Finset.orderEmbOfFin_apply
 
@@ -327,8 +314,7 @@ theorem orderEmbOfFin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin
   apply Fin.strictMono_unique hmono (s.order_emb_of_fin h).StrictMono
   rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
-  · rcases mem_image.1 hx with ⟨x, hx, rfl⟩
-    exact hfs x
+  · rcases mem_image.1 hx with ⟨x, hx, rfl⟩; exact hfs x
   · rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
 #align finset.order_emb_of_fin_unique Finset.orderEmbOfFin_unique
 

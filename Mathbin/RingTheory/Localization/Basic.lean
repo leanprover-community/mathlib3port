@@ -134,9 +134,7 @@ Case conversion may be inaccurate. Consider using '#align is_localization.of_le 
 theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (algebraMap R S r)) :
     IsLocalization N S :=
   { map_units := fun r => h₂ r r.2
-    surj := fun s => by
-      obtain ⟨⟨x, y, hy⟩, H⟩ := IsLocalization.surj M s
-      exact ⟨⟨x, y, h₁ hy⟩, H⟩
+    surj := fun s => by obtain ⟨⟨x, y, hy⟩, H⟩ := IsLocalization.surj M s; exact ⟨⟨x, y, h₁ hy⟩, H⟩
     eq_iff_exists := fun x y => by
       constructor
       · rw [IsLocalization.eq_iff_exists M]
@@ -949,11 +947,7 @@ isomorphism `j : R ≃+* P` such that `j(M) = T` induces an isomorphism of local
 `S ≃+* Q`. -/
 @[simps]
 noncomputable def ringEquivOfRingEquiv (h : R ≃+* P) (H : M.map h.toMonoidHom = T) : S ≃+* Q :=
-  have H' : T.map h.symm.toMonoidHom = M :=
-    by
-    rw [← M.map_id, ← H, Submonoid.map_map]
-    congr
-    ext
+  have H' : T.map h.symm.toMonoidHom = M := by rw [← M.map_id, ← H, Submonoid.map_map]; congr ; ext;
     apply h.symm_apply_apply
   {
     map Q (h : R →+* P)
@@ -963,13 +957,11 @@ noncomputable def ringEquivOfRingEquiv (h : R ≃+* P) (H : M.map h.toMonoidHom 
     left_inv := fun x =>
       by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
-      intro x
-      convert congr_arg (algebraMap R S) (h.symm_apply_apply x).symm
+      intro x; convert congr_arg (algebraMap R S) (h.symm_apply_apply x).symm
     right_inv := fun x =>
       by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
-      intro x
-      convert congr_arg (algebraMap P Q) (h.apply_symm_apply x).symm }
+      intro x; convert congr_arg (algebraMap P Q) (h.apply_symm_apply x).symm }
 #align is_localization.ring_equiv_of_ring_equiv IsLocalization.ringEquivOfRingEquiv
 
 end
@@ -1232,10 +1224,8 @@ instance : Add (Localization M) :=
 /- warning: localization.add_mk -> Localization.add_mk is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align localization.add_mk Localization.add_mkₓ'. -/
-theorem add_mk (a b c d) : (mk a b : Localization M) + mk c d = mk (b * c + d * a) (b * d) :=
-  by
-  unfold Add.add Localization.add
-  apply lift_on₂_mk
+theorem add_mk (a b c d) : (mk a b : Localization M) + mk c d = mk (b * c + d * a) (b * d) := by
+  unfold Add.add Localization.add; apply lift_on₂_mk
 #align localization.add_mk Localization.add_mk
 
 /- warning: localization.add_mk_self -> Localization.add_mk_self is a dubious translation:
@@ -1372,14 +1362,10 @@ instance {S : Type _} [Semiring S] [Module S R] [IsScalarTower S R R] : Module S
     Localization.distribMulAction with
     zero_smul :=
       Localization.ind <|
-        Prod.rec <| by
-          intros
-          simp only [Localization.smul_mk, zero_smul, mk_zero]
+        Prod.rec <| by intros ; simp only [Localization.smul_mk, zero_smul, mk_zero]
     add_smul := fun s₁ s₂ =>
       Localization.ind <|
-        Prod.rec <| by
-          intros
-          simp only [Localization.smul_mk, add_smul, add_mk_self] }
+        Prod.rec <| by intros ; simp only [Localization.smul_mk, add_smul, add_mk_self] }
 
 instance {S : Type _} [CommSemiring S] [Algebra S R] : Algebra S (Localization M)
     where
@@ -1572,9 +1558,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} (a : R) (b : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R (CommMonoid.toMonoid.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1))))) x M)), Eq.{succ u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (Neg.neg.{u1} (Localization.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M) (Localization.instNegLocalizationToCommMonoid.{u1} R _inst_1 M) (Localization.mk.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M a b)) (Localization.mk.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1) M (Neg.neg.{u1} R (Ring.toNeg.{u1} R (CommRing.toRing.{u1} R _inst_1)) a) b)
 Case conversion may be inaccurate. Consider using '#align localization.neg_mk Localization.neg_mkₓ'. -/
-theorem neg_mk (a b) : -(mk a b : Localization M) = mk (-a) b :=
-  by
-  unfold Neg.neg Localization.neg
+theorem neg_mk (a b) : -(mk a b : Localization M) = mk (-a) b := by unfold Neg.neg Localization.neg;
   apply lift_on_mk
 #align localization.neg_mk Localization.neg_mk
 
@@ -1587,10 +1571,7 @@ instance : CommRing (Localization M) :=
       Localization.induction_on x fun x => by
         simp [smul_mk, add_mk_self, -mk_eq_monoid_of_mk', add_comm (n : ℤ) 1, add_smul]
     zsmul_neg' := fun n x =>
-      Localization.induction_on x fun x =>
-        by
-        rw [smul_mk, smul_mk, neg_mk, ← neg_smul]
-        rfl
+      Localization.induction_on x fun x => by rw [smul_mk, smul_mk, neg_mk, ← neg_smul]; rfl
     neg := Neg.neg
     sub := fun x y => x + -y
     sub_eq_add_neg := fun x y => rfl

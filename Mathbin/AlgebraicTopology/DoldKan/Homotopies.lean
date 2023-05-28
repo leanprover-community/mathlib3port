@@ -140,11 +140,7 @@ def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].pt n ⟶ K[X].pt m) := fun n m
 
 #print AlgebraicTopology.DoldKan.hσ'_eq_zero /-
 theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) :
-    (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 :=
-  by
-  simp only [hσ', hσ]
-  split_ifs
-  exact zero_comp
+    (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 := by simp only [hσ', hσ]; split_ifs; exact zero_comp
 #align algebraic_topology.dold_kan.hσ'_eq_zero AlgebraicTopology.DoldKan.hσ'_eq_zero
 -/
 
@@ -158,8 +154,7 @@ theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
   by
   simp only [hσ', hσ]
   split_ifs
-  · exfalso
-    linarith
+  · exfalso; linarith
   · have h' := tsub_eq_of_eq_add ha
     congr
 #align algebraic_topology.dold_kan.hσ'_eq AlgebraicTopology.DoldKan.hσ'_eq

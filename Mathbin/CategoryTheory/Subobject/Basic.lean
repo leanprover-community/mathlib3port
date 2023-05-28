@@ -262,9 +262,7 @@ instance arrow_mono {X : C} (Y : Subobject X) : Mono Y.arrow :=
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.arrow_congr CategoryTheory.Subobject.arrow_congrₓ'. -/
 @[simp]
 theorem arrow_congr {A : C} (X Y : Subobject A) (h : X = Y) :
-    eqToHom (congr_arg (fun X : Subobject A => (X : C)) h) ≫ Y.arrow = X.arrow :=
-  by
-  induction h
+    eqToHom (congr_arg (fun X : Subobject A => (X : C)) h) ≫ Y.arrow = X.arrow := by induction h;
   simp
 #align category_theory.subobject.arrow_congr CategoryTheory.Subobject.arrow_congr
 
@@ -478,9 +476,7 @@ instance {B : C} (X Y : Subobject B) (h : X ≤ Y) : Mono (ofLE X Y h) :=
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.of_le_mk_le_mk_of_comm CategoryTheory.Subobject.ofLE_mk_le_mk_of_commₓ'. -/
 theorem ofLE_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ B} [Mono f₁] [Mono f₂]
     (g : A₁ ⟶ A₂) (w : g ≫ f₂ = f₁) :
-    ofLE _ _ (mk_le_mk_of_comm g w) = (underlyingIso _).Hom ≫ g ≫ (underlyingIso _).inv :=
-  by
-  ext
+    ofLE _ _ (mk_le_mk_of_comm g w) = (underlyingIso _).Hom ≫ g ≫ (underlyingIso _).inv := by ext;
   simp [w]
 #align category_theory.subobject.of_le_mk_le_mk_of_comm CategoryTheory.Subobject.ofLE_mk_le_mk_of_comm
 
@@ -646,18 +642,14 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {B : C} (X : CategoryTheory.Subobject.{u1, u2} C _inst_1 B), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) X) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) X)) (CategoryTheory.Subobject.ofLE.{u1, u2} C _inst_1 B X X (le_rfl.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B)) X)) (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) X))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.of_le_refl CategoryTheory.Subobject.ofLE_reflₓ'. -/
 @[simp]
-theorem ofLE_refl {B : C} (X : Subobject B) : ofLE X X le_rfl = 𝟙 _ :=
-  by
-  apply (cancel_mono X.arrow).mp
-  simp
+theorem ofLE_refl {B : C} (X : Subobject B) : ofLE X X le_rfl = 𝟙 _ := by
+  apply (cancel_mono X.arrow).mp; simp
 #align category_theory.subobject.of_le_refl CategoryTheory.Subobject.ofLE_refl
 
 #print CategoryTheory.Subobject.ofMkLEMk_refl /-
 @[simp]
-theorem ofMkLEMk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLEMk f f le_rfl = 𝟙 _ :=
-  by
-  apply (cancel_mono f).mp
-  simp
+theorem ofMkLEMk_refl {B A₁ : C} (f : A₁ ⟶ B) [Mono f] : ofMkLEMk f f le_rfl = 𝟙 _ := by
+  apply (cancel_mono f).mp; simp
 #align category_theory.subobject.of_mk_le_mk_refl CategoryTheory.Subobject.ofMkLEMk_refl
 -/
 
@@ -973,10 +965,8 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
           (pullback_cone.is_limit.lift' t (pullback.fst ≫ a.arrow) pullback.snd _).1
           (pullback_cone.is_limit.lift' _ _ _ _).2.1.symm)
         _
-    · rw [← pullback.condition, assoc]
-      rfl
-    · dsimp
-      rw [pullback.lift_snd_assoc]
+    · rw [← pullback.condition, assoc]; rfl
+    · dsimp; rw [pullback.lift_snd_assoc]
       apply (pullback_cone.is_limit.lift' _ _ _ _).2.2
 #align category_theory.subobject.map_pullback CategoryTheory.Subobject.map_pullback
 

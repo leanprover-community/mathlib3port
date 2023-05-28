@@ -122,10 +122,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsWeakUpperModularLattice.{u1} α _inst_1] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b) a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b) b) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) b (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align covby_sup_of_inf_covby_of_inf_covby_right covby_sup_of_inf_covby_of_inf_covby_rightₓ'. -/
-theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b :=
-  by
-  rw [inf_comm, sup_comm]
-  exact fun ha hb => covby_sup_of_inf_covby_of_inf_covby_left hb ha
+theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b := by
+  rw [inf_comm, sup_comm]; exact fun ha hb => covby_sup_of_inf_covby_of_inf_covby_left hb ha
 #align covby_sup_of_inf_covby_of_inf_covby_right covby_sup_of_inf_covby_of_inf_covby_right
 
 /- warning: covby.sup_of_inf_of_inf_left -> Covby.sup_of_inf_of_inf_left is a dubious translation:
@@ -171,10 +169,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsWeakLowerModularLattice.{u1} α _inst_1] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) a (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a b)) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) b (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a b)) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b) b)
 Case conversion may be inaccurate. Consider using '#align inf_covby_of_covby_sup_of_covby_sup_right inf_covby_of_covby_sup_of_covby_sup_rightₓ'. -/
-theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b :=
-  by
-  rw [sup_comm, inf_comm]
-  exact fun ha hb => inf_covby_of_covby_sup_of_covby_sup_left hb ha
+theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b := by
+  rw [sup_comm, inf_comm]; exact fun ha hb => inf_covby_of_covby_sup_of_covby_sup_left hb ha
 #align inf_covby_of_covby_sup_of_covby_sup_right inf_covby_of_covby_sup_of_covby_sup_right
 
 /- warning: covby.inf_of_sup_of_sup_left -> Covby.inf_of_sup_of_sup_left is a dubious translation:
@@ -220,9 +216,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsUpperModularLattice.{u1} α _inst_1] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b) b) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) a (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align covby_sup_of_inf_covby_right covby_sup_of_inf_covby_rightₓ'. -/
-theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b :=
-  by
-  rw [sup_comm, inf_comm]
+theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b := by rw [sup_comm, inf_comm];
   exact covby_sup_of_inf_covby_left
 #align covby_sup_of_inf_covby_right covby_sup_of_inf_covby_right
 
@@ -277,9 +271,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsLowerModularLattice.{u1} α _inst_1] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) b (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a b)) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (Inf.inf.{u1} α (Lattice.toInf.{u1} α _inst_1) a b) a)
 Case conversion may be inaccurate. Consider using '#align inf_covby_of_covby_sup_right inf_covby_of_covby_sup_rightₓ'. -/
-theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a :=
-  by
-  rw [inf_comm, sup_comm]
+theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a := by rw [inf_comm, sup_comm];
   exact inf_covby_of_covby_sup_left
 #align inf_covby_of_covby_sup_right inf_covby_of_covby_sup_right
 
@@ -525,12 +517,10 @@ def infIooOrderIsoIooSup (a b : α) : Ioo (a ⊓ b) a ≃o Ioo b (a ⊔ b)
       inf_le_left.trans_lt' <|
         inf_strictMonoOn_Icc_sup (Ioo_subset_Icc_self c.2) (right_mem_Icc.2 le_sup_right) c.2.2⟩
   left_inv c :=
-    Subtype.ext <| by
-      dsimp
+    Subtype.ext <| by dsimp;
       rw [sup_comm, ← inf_sup_assoc_of_le _ c.prop.2.le, sup_eq_right.2 c.prop.1.le]
   right_inv c :=
-    Subtype.ext <| by
-      dsimp
+    Subtype.ext <| by dsimp;
       rw [inf_comm, inf_sup_assoc_of_le _ c.prop.1.le, inf_eq_left.2 c.prop.2.le]
   map_rel_iff' c d :=
     @OrderIso.le_iff_le _ _ _ _ (infIccOrderIsoIccSup _ _) ⟨c.1, Ioo_subset_Icc_self c.2⟩

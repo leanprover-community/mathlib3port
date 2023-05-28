@@ -152,13 +152,9 @@ theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
             (h₁ : f.eval₂ φ a₀ = 0) (h₂ : f.derivative.eval₂ φ a₀ ≠ 0),
             ∃ a : R, f.IsRoot a ∧ φ a = a₀] :=
   by
-  tfae_have _3_2 : 3 → 2;
-  · intro H
-    exact H (residue R) Ideal.Quotient.mk_surjective
+  tfae_have _3_2 : 3 → 2; · intro H; exact H (residue R) Ideal.Quotient.mk_surjective
   tfae_have _2_1 : 2 → 1
-  · intro H
-    constructor
-    intro f hf a₀ h₁ h₂
+  · intro H; constructor; intro f hf a₀ h₁ h₂
     specialize H f hf (residue R a₀)
     have aux := flip mem_nonunits_iff.mp h₂
     simp only [aeval_def, residue_field.algebra_map_eq, eval₂_at_apply, ←
@@ -173,8 +169,7 @@ theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
     have H := HenselianLocalRing.is_henselian f hf a₀
     simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ _
-    · refine' ⟨a, ha₁, _⟩
-      rwa [φ.map_sub, sub_eq_zero] at ha₂
+    · refine' ⟨a, ha₁, _⟩; rwa [φ.map_sub, sub_eq_zero] at ha₂
     · contrapose! h₂
       rwa [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← LocalRing.ker_eq_maximalIdeal φ hφ,
         φ.mem_ker] at h₂
@@ -184,10 +179,7 @@ theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
 
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R)
     where
-  jac := by
-    rw [Ideal.jacobson, le_sInf_iff]
-    rintro I ⟨-, hI⟩
-    exact (eq_maximal_ideal hI).ge
+  jac := by rw [Ideal.jacobson, le_sInf_iff]; rintro I ⟨-, hI⟩; exact (eq_maximal_ideal hI).ge
   is_henselian := by
     intro f hf a₀ h₁ h₂
     refine' HenselianLocalRing.is_henselian f hf a₀ h₁ _
@@ -211,19 +203,14 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
       -- applying the function sending `b` to `b - f(b)/f'(b)` (Newton's method).
       -- Note that `f'.eval b` is a unit, because `b` has the same residue as `a₀` modulo `I`.
       let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
-      have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) :=
-        by
-        intro n
-        dsimp only [c, Nat.rec_add_one]
-        rfl
+      have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by intro n;
+        dsimp only [c, Nat.rec_add_one]; rfl
       -- we now spend some time determining properties of the sequence `c : ℕ → R`
       -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
       -- `hf'c`  : for every `n`, `f'.eval (c n)` is a unit
       -- `hfcI`  : for every `n`, `f.eval (c n)` is contained in `I ^ (n+1)`
       have hc_mod : ∀ n, c n ≡ a₀ [SMOD I] := by
-        intro n
-        induction' n with n ih
-        · rfl
+        intro n; induction' n with n ih; · rfl
         rw [Nat.succ_eq_add_one, hc, sub_eq_add_neg, ← add_zero a₀]
         refine' ih.add _
         rw [SModEq.zero, Ideal.neg_mem_iff]
@@ -239,23 +226,19 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
       have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1) :=
         by
         intro n
-        induction' n with n ih
-        · simpa only [pow_one]
+        induction' n with n ih; · simpa only [pow_one]
         simp only [Nat.succ_eq_add_one]
         rw [← taylor_eval_sub (c n), hc]
         simp only [sub_eq_add_neg, add_neg_cancel_comm]
         rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ←
           Finset.sum_range_add_sum_Ico _ (Nat.le_add_left _ _)]
-        swap
-        · intro i
-          rw [MulZeroClass.zero_mul]
+        swap; · intro i; rw [MulZeroClass.zero_mul]
         refine' Ideal.add_mem _ _ _
         · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_one, pow_one, taylor_coeff_zero,
             mul_neg, Finset.sum_singleton, Finset.range_one, pow_zero]
           rw [mul_left_comm, Ring.mul_inverse_cancel _ (hf'c n), mul_one, add_neg_self]
           exact Ideal.zero_mem _
-        · refine' Submodule.sum_mem _ _
-          simp only [Finset.mem_Ico]
+        · refine' Submodule.sum_mem _ _; simp only [Finset.mem_Ico]
           rintro i ⟨h2i, hi⟩
           have aux : n + 2 ≤ i * (n + 1) := by trans 2 * (n + 1) <;> nlinarith only [h2i]
           refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
@@ -266,24 +249,19 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         by
         intro m n hmn
         rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one]
-        obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
-        clear hmn
-        induction' k with k ih
-        · rw [add_zero]
+        obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn; clear hmn
+        induction' k with k ih; · rw [add_zero]
         rw [Nat.succ_eq_add_one, ← add_assoc, hc, ← add_zero (c m), sub_eq_add_neg]
-        refine' ih.add _
-        symm
+        refine' ih.add _; symm
         rw [SModEq.zero, Ideal.neg_mem_iff]
         refine' Ideal.mul_mem_right _ _ (Ideal.pow_le_pow _ (hfcI _))
-        rw [add_assoc]
-        exact le_self_add
+        rw [add_assoc]; exact le_self_add
       -- hence the sequence converges to some limit point `a`, which is the `a` we are looking for
       obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux
       refine' ⟨a, _, _⟩
       · show f.is_root a
         suffices ∀ n, f.eval a ≡ 0 [SMOD (I ^ n • ⊤ : Ideal R)] by exact IsHausdorff.haus' _ this
-        intro n
-        specialize ha n
+        intro n; specialize ha n
         rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] at ha⊢
         refine' (ha.symm.eval f).trans _
         rw [SModEq.zero]

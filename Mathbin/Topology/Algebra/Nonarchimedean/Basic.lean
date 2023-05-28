@@ -97,10 +97,7 @@ Case conversion may be inaccurate. Consider using '#align nonarchimedean_group.n
 theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : NonarchimedeanGroup H :=
   {
     is_nonarchimedean := fun U hU =>
-      have h₁ : f ⁻¹' U ∈ nhds (1 : G) :=
-        by
-        apply emb.continuous.tendsto
-        rwa [f.map_one]
+      have h₁ : f ⁻¹' U ∈ nhds (1 : G) := by apply emb.continuous.tendsto; rwa [f.map_one]
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
       ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
 #align nonarchimedean_group.nonarchimedean_of_emb NonarchimedeanGroup.nonarchimedean_of_emb

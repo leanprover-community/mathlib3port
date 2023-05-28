@@ -71,10 +71,8 @@ theorem mem_localizationLocalizationSubmodule {x : R} :
   by
   rw [localization_localization_submodule, Submonoid.mem_comap, Submonoid.mem_sup]
   constructor
-  · rintro ⟨y, hy, _, ⟨z, hz, rfl⟩, e⟩
-    exact ⟨⟨y, hy⟩, ⟨z, hz⟩, e.symm⟩
-  · rintro ⟨y, z, e⟩
-    exact ⟨y, y.prop, _, ⟨z, z.prop, rfl⟩, e.symm⟩
+  · rintro ⟨y, hy, _, ⟨z, hz, rfl⟩, e⟩; exact ⟨⟨y, hy⟩, ⟨z, hz⟩, e.symm⟩
+  · rintro ⟨y, z, e⟩; exact ⟨y, y.prop, _, ⟨z, z.prop, rfl⟩, e.symm⟩
 #align is_localization.mem_localization_localization_submodule IsLocalization.mem_localizationLocalizationSubmodule
 
 variable (M N) [IsLocalization M S]
@@ -255,10 +253,7 @@ theorem localization_isScalarTower_of_submonoid_le (M N : Submonoid R) (h : M �
 noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
     Algebra (Localization.AtPrime x) (Localization (nonZeroDivisors R)) :=
   localizationAlgebraOfSubmonoidLe _ _ x.primeCompl (nonZeroDivisors R)
-    (by
-      intro a ha
-      rw [mem_nonZeroDivisors_iff_ne_zero]
-      exact fun h => ha (h.symm ▸ x.zero_mem))
+    (by intro a ha; rw [mem_nonZeroDivisors_iff_ne_zero]; exact fun h => ha (h.symm ▸ x.zero_mem))
 
 /- warning: is_localization.is_localization_of_submonoid_le -> IsLocalization.isLocalization_of_submonoid_le is a dubious translation:
 <too large>
@@ -297,10 +292,8 @@ theorem isLocalization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoca
         simpa only [mul_comm] using this
       simp_rw [IsLocalization.eq_iff_exists N T, IsLocalization.eq_iff_exists M S]
       constructor
-      · rintro ⟨a, e⟩
-        exact ⟨a, 1, by convert e using 1 <;> simp <;> ring⟩
-      · rintro ⟨a, b, e⟩
-        exact ⟨a * (⟨_, h b.prop⟩ : N), by convert e using 1 <;> simp <;> ring⟩ }
+      · rintro ⟨a, e⟩; exact ⟨a, 1, by convert e using 1 <;> simp <;> ring⟩
+      · rintro ⟨a, b, e⟩; exact ⟨a * (⟨_, h b.prop⟩ : N), by convert e using 1 <;> simp <;> ring⟩ }
 #align is_localization.is_localization_of_submonoid_le IsLocalization.isLocalization_of_submonoid_le
 
 /- warning: is_localization.is_localization_of_is_exists_mul_mem -> IsLocalization.isLocalization_of_is_exists_mul_mem is a dubious translation:
@@ -315,9 +308,7 @@ theorem isLocalization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization 
       have := IsLocalization.map_units S ⟨_, hm⟩
       erw [map_mul] at this
       exact (is_unit.mul_iff.mp this).2
-    surj := fun z => by
-      obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z
-      exact ⟨⟨y, _, h s.prop⟩, e⟩
+    surj := fun z => by obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z; exact ⟨⟨y, _, h s.prop⟩, e⟩
     eq_iff_exists := fun x₁ x₂ => by
       rw [IsLocalization.eq_iff_exists M]
       refine' ⟨fun ⟨x, hx⟩ => ⟨⟨_, h x.Prop⟩, hx⟩, _⟩

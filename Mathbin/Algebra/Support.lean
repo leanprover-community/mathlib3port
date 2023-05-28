@@ -176,10 +176,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {f : α -> M}, Iff (Eq.{succ u2} (Set.{u2} α) (Function.mulSupport.{u2, u1} α M _inst_1 f) (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α))) (Eq.{max (succ u2) (succ u1)} (α -> M) f (OfNat.ofNat.{max u2 u1} (α -> M) 1 (One.toOfNat1.{max u2 u1} (α -> M) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Algebra.Support._hyg.714 : α) => M) (fun (i : α) => _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_eq_empty_iff Function.mulSupport_eq_empty_iffₓ'. -/
 @[simp, to_additive]
-theorem mulSupport_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 :=
-  by
-  simp_rw [← subset_empty_iff, mul_support_subset_iff', funext_iff]
-  simp
+theorem mulSupport_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 := by
+  simp_rw [← subset_empty_iff, mul_support_subset_iff', funext_iff]; simp
 #align function.mul_support_eq_empty_iff Function.mulSupport_eq_empty_iff
 #align function.support_eq_empty_iff Function.support_eq_empty_iff
 
@@ -231,9 +229,7 @@ theorem mulSupport_one : (mulSupport fun x : α => (1 : M)) = ∅ :=
 
 #print Function.mulSupport_const /-
 @[to_additive]
-theorem mulSupport_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) = Set.univ :=
-  by
-  ext x
+theorem mulSupport_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) = Set.univ := by ext x;
   simp [hc]
 #align function.mul_support_const Function.mulSupport_const
 #align function.support_const Function.support_const

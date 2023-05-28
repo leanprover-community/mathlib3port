@@ -641,9 +641,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {f : β -> α} {s : Set.{u2} β}, (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) (Set.image.{u2, u1} β α f s)) -> (Set.Nonempty.{u2} β s) -> (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) (Set.image.{u2, u1} β α f s) (iSup.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) (Set.Elem.{u2} β s) (fun (i : Set.Elem.{u2} β s) => f (Subtype.val.{succ u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) i))))
 Case conversion may be inaccurate. Consider using '#align is_lub_csupr_set isLUB_ciSup_setₓ'. -/
 theorem isLUB_ciSup_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) (Hne : s.Nonempty) :
-    IsLUB (f '' s) (⨆ i : s, f i) := by
-  rw [← sSup_image']
-  exact isLUB_csSup (Hne.image _) H
+    IsLUB (f '' s) (⨆ i : s, f i) := by rw [← sSup_image']; exact isLUB_csSup (Hne.image _) H
 #align is_lub_csupr_set isLUB_ciSup_set
 
 /- warning: is_glb_cInf -> isGLB_csInf is a dubious translation:
@@ -1527,10 +1525,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_lt_of_lt_cSup exists_lt_of_lt_csSupₓ'. -/
 /-- When b < Sup s, there is an element a in s with b < a, if s is nonempty and the order is
 a linear order. -/
-theorem exists_lt_of_lt_csSup (hs : s.Nonempty) (hb : b < sSup s) : ∃ a ∈ s, b < a :=
-  by
-  contrapose! hb
-  exact csSup_le hs hb
+theorem exists_lt_of_lt_csSup (hs : s.Nonempty) (hb : b < sSup s) : ∃ a ∈ s, b < a := by
+  contrapose! hb; exact csSup_le hs hb
 #align exists_lt_of_lt_cSup exists_lt_of_lt_csSup
 
 /- warning: exists_lt_of_lt_csupr -> exists_lt_of_lt_ciSup is a dubious translation:
@@ -1593,9 +1589,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Set.{u1} α} [_inst_2 : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9302 : α) (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9304 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9302 x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9304)], (Set.Nonempty.{u1} α s) -> (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1))))) s (InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align is_least_Inf isLeast_csInfₓ'. -/
-theorem isLeast_csInf (hs : s.Nonempty) : IsLeast s (sInf s) :=
-  by
-  rw [sInf_eq_argmin_on hs]
+theorem isLeast_csInf (hs : s.Nonempty) : IsLeast s (sInf s) := by rw [sInf_eq_argmin_on hs];
   exact ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
 #align is_least_Inf isLeast_csInf
 
@@ -1809,10 +1803,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u1} α] {s : Set.{u1} α} {a : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1))))))) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1))) s)) -> (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1))))))) a b)))
 Case conversion may be inaccurate. Consider using '#align exists_lt_of_lt_cSup' exists_lt_of_lt_csSup'ₓ'. -/
-theorem exists_lt_of_lt_csSup' {s : Set α} {a : α} (h : a < sSup s) : ∃ b ∈ s, a < b :=
-  by
-  contrapose! h
-  exact csSup_le' h
+theorem exists_lt_of_lt_csSup' {s : Set α} {a : α} (h : a < sSup s) : ∃ b ∈ s, a < b := by
+  contrapose! h; exact csSup_le' h
 #align exists_lt_of_lt_cSup' exists_lt_of_lt_csSup'
 
 /- warning: csupr_le_iff' -> ciSup_le_iff' is a dubious translation:
@@ -1842,10 +1834,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u2} α] {f : ι -> α} {a : α}, (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1))))))) a (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1))) ι (fun (i : ι) => f i))) -> (Exists.{u1} ι (fun (i : ι) => LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1))))))) a (f i)))
 Case conversion may be inaccurate. Consider using '#align exists_lt_of_lt_csupr' exists_lt_of_lt_ciSup'ₓ'. -/
-theorem exists_lt_of_lt_ciSup' {f : ι → α} {a : α} (h : a < ⨆ i, f i) : ∃ i, a < f i :=
-  by
-  contrapose! h
-  exact ciSup_le' h
+theorem exists_lt_of_lt_ciSup' {f : ι → α} {a : α} (h : a < ⨆ i, f i) : ∃ i, a < f i := by
+  contrapose! h; exact ciSup_le' h
 #align exists_lt_of_lt_csupr' exists_lt_of_lt_ciSup'
 
 /- warning: csupr_mono' -> ciSup_mono' is a dubious translation:
@@ -1890,14 +1880,12 @@ theorem isLUB_sSup' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
-    · intro _ _
-      exact le_top
+    · intro _ _; exact le_top
     · rintro (⟨⟩ | a) ha
       · contradiction
       apply some_le_some.2
       exact le_csSup h_1 ha
-    · intro _ _
-      exact le_top
+    · intro _ _; exact le_top
   · show ite _ _ _ ∈ _
     split_ifs
     · rintro (⟨⟩ | a) ha
@@ -1909,15 +1897,10 @@ theorem isLUB_sSup' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
       · rcases hs with ⟨⟨⟩ | b, hb⟩
         · exact absurd hb h
         · exact ⟨b, hb⟩
-      · intro a ha
-        exact some_le_some.1 (hb ha)
+      · intro a ha; exact some_le_some.1 (hb ha)
     · rintro (⟨⟩ | b) hb
       · exact le_rfl
-      · exfalso
-        apply h_1
-        use b
-        intro a ha
-        exact some_le_some.1 (hb ha)
+      · exfalso; apply h_1; use b; intro a ha; exact some_le_some.1 (hb ha)
 #align with_top.is_lub_Sup' WithTop.isLUB_sSup'
 
 /- warning: with_top.is_lub_Sup -> WithTop.isLUB_sSup is a dubious translation:
@@ -1933,12 +1916,8 @@ theorem isLUB_sSup (s : Set (WithTop α)) : IsLUB s (sSup s) :=
     show IsLUB ∅ (ite _ _ _)
     split_ifs
     · cases h
-    · rw [preimage_empty, csSup_empty]
-      exact isLUB_empty
-    · exfalso
-      apply h_1
-      use ⊥
-      rintro a ⟨⟩
+    · rw [preimage_empty, csSup_empty]; exact isLUB_empty
+    · exfalso; apply h_1; use ⊥; rintro a ⟨⟩
   exact is_lub_Sup' hs
 #align with_top.is_lub_Sup WithTop.isLUB_sSup
 
@@ -1955,8 +1934,7 @@ theorem isGLB_sInf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
-    · intro a ha
-      exact top_le_iff.2 (Set.mem_singleton_iff.1 (h ha))
+    · intro a ha; exact top_le_iff.2 (Set.mem_singleton_iff.1 (h ha))
     · rintro (⟨⟩ | a) ha
       · exact le_top
       refine' some_le_some.2 (csInf_le _ ha)
@@ -1971,13 +1949,9 @@ theorem isGLB_sInf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (Wi
       exact some_le_some.1 (hb hc)
   · show ite _ _ _ ∈ _
     split_ifs
-    · intro _ _
-      exact le_top
+    · intro _ _; exact le_top
     · rintro (⟨⟩ | a) ha
-      · exfalso
-        apply h
-        intro b hb
-        exact Set.mem_singleton_iff.2 (top_le_iff.1 (ha hb))
+      · exfalso; apply h; intro b hb; exact Set.mem_singleton_iff.2 (top_le_iff.1 (ha hb))
       · refine' some_le_some.2 (le_csInf _ _)
         ·
           classical
@@ -2000,11 +1974,7 @@ theorem isGLB_sInf (s : Set (WithTop α)) : IsGLB s (sInf s) :=
   by
   by_cases hs : BddBelow s
   · exact is_glb_Inf' hs
-  · exfalso
-    apply hs
-    use ⊥
-    intro _ _
-    exact bot_le
+  · exfalso; apply hs; use ⊥; intro _ _; exact bot_le
 #align with_top.is_glb_Inf WithTop.isGLB_sInf
 
 noncomputable instance : CompleteLinearOrder (WithTop α) :=
@@ -2140,11 +2110,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u3} α] [_inst_2 : ConditionallyCompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (ConditionallyCompleteLattice.toLattice.{u2} β _inst_2)))) l u) -> (forall {s : Set.{u1} γ} {f : γ -> α}, (BddAbove.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) (Set.image.{u1, u3} γ α f s)) -> (Set.Nonempty.{u1} γ s) -> (Eq.{succ u2} β (l (iSup.{u3, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u3} α _inst_1) (Set.Elem.{u1} γ s) (fun (i : Set.Elem.{u1} γ s) => f (Subtype.val.{succ u1} γ (fun (x : γ) => Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s) i)))) (iSup.{u2, succ u1} β (ConditionallyCompleteLattice.toSupSet.{u2} β _inst_2) (Set.Elem.{u1} γ s) (fun (i : Set.Elem.{u1} γ s) => l (f (Subtype.val.{succ u1} γ (fun (x : γ) => Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) x s) i))))))
 Case conversion may be inaccurate. Consider using '#align galois_connection.l_csupr_set GaloisConnection.l_ciSup_setₓ'. -/
 theorem l_ciSup_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
-    (hne : s.Nonempty) : l (⨆ i : s, f i) = ⨆ i : s, l (f i) :=
-  by
-  haveI := hne.to_subtype
-  rw [image_eq_range] at hf
-  exact gc.l_csupr hf
+    (hne : s.Nonempty) : l (⨆ i : s, f i) = ⨆ i : s, l (f i) := by haveI := hne.to_subtype;
+  rw [image_eq_range] at hf; exact gc.l_csupr hf
 #align galois_connection.l_csupr_set GaloisConnection.l_ciSup_set
 
 /- warning: galois_connection.u_cInf -> GaloisConnection.u_csInf is a dubious translation:
@@ -2439,31 +2406,18 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
         split_ifs
-        · rw [h] at h_1
-          cases h_1
-        · convert bot_le
-          convert WithBot.csSup_empty
-          rw [h]
-          rfl
-        · exfalso
-          apply h_2
-          use ⊥
-          rw [h]
-          rintro b ⟨⟩
+        · rw [h] at h_1; cases h_1
+        · convert bot_le; convert WithBot.csSup_empty; rw [h]; rfl
+        · exfalso; apply h_2; use ⊥; rw [h]; rintro b ⟨⟩
       · refine' (WithTop.isLUB_sSup' h).2 ha
     inf_le := fun S a haS =>
       show ite _ _ _ ≤ a by
         split_ifs
-        · cases' a with a
-          exact le_rfl
+        · cases' a with a; exact le_rfl
           cases h haS <;> tauto
         · cases a
           · exact le_top
-          · apply WithTop.some_le_some.2
-            refine' csInf_le _ haS
-            use ⊥
-            intro b hb
-            exact bot_le
+          · apply WithTop.some_le_some.2; refine' csInf_le _ haS; use ⊥; intro b hb; exact bot_le
     le_inf := fun S a haS => (WithTop.isGLB_sInf' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 -/

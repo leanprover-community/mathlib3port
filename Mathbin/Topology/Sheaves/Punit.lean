@@ -35,21 +35,16 @@ theorem isSheaf_of_isTerminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤
     (it : IsTerminal <| F.obj <| op ⊥) : F.IsSheaf := fun c U s hs =>
   by
   obtain rfl | hne := eq_or_ne U ⊥
-  · intro _ _
-    rw [@exists_unique_iff_exists _ ⟨fun _ _ => _⟩]
-    · refine' ⟨it.from _, fun U hU hs => is_terminal.hom_ext _ _ _⟩
-      rwa [le_bot_iff.1 hU.le]
+  · intro _ _; rw [@exists_unique_iff_exists _ ⟨fun _ _ => _⟩]
+    · refine' ⟨it.from _, fun U hU hs => is_terminal.hom_ext _ _ _⟩; rwa [le_bot_iff.1 hU.le]
     · apply it.hom_ext
-  · convert presieve.is_sheaf_for_top_sieve _
-    rw [← sieve.id_mem_iff_eq_top]
-    have := (U.eq_bot_or_top hind).resolve_left hne
-    subst this
+  · convert presieve.is_sheaf_for_top_sieve _; rw [← sieve.id_mem_iff_eq_top]
+    have := (U.eq_bot_or_top hind).resolve_left hne; subst this
     obtain he | ⟨⟨x⟩⟩ := isEmpty_or_nonempty X
     · exact (hne <| SetLike.ext'_iff.2 <| Set.univ_eq_empty_iff.2 he).elim
     obtain ⟨U, f, hf, hm⟩ := hs x trivial
     obtain rfl | rfl := U.eq_bot_or_top hind
-    · cases hm
-    · convert hf
+    · cases hm; · convert hf
 #align Top.presheaf.is_sheaf_of_is_terminal_of_indiscrete TopCat.Presheaf.isSheaf_of_isTerminal_of_indiscrete
 
 /- warning: Top.presheaf.is_sheaf_iff_is_terminal_of_indiscrete -> TopCat.Presheaf.isSheaf_iff_isTerminal_of_indiscrete is a dubious translation:

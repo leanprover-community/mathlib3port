@@ -72,12 +72,10 @@ theorem mem_range_mapToFractionRing_iff (B : Type _) [CommRing B] [Algebra A B] 
     x ∈ (mapToFractionRing K S B hS).range ↔
       ∃ (a s : A)(hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ :=
   ⟨by
-    rintro ⟨x, rfl⟩
-    obtain ⟨a, s, rfl⟩ := IsLocalization.mk'_surjective S x
-    use a, s, s.2
-    apply IsLocalization.lift_mk', by
-    rintro ⟨a, s, hs, rfl⟩
-    use IsLocalization.mk' _ a ⟨s, hs⟩
+    rintro ⟨x, rfl⟩; obtain ⟨a, s, rfl⟩ := IsLocalization.mk'_surjective S x
+    use a, s, s.2; apply IsLocalization.lift_mk',
+    by
+    rintro ⟨a, s, hs, rfl⟩; use IsLocalization.mk' _ a ⟨s, hs⟩
     apply IsLocalization.lift_mk'⟩
 #align localization.mem_range_map_to_fraction_ring_iff Localization.mem_range_mapToFractionRing_iff
 
@@ -121,10 +119,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 noncomputable def subalgebra (hS : S ≤ A⁰) : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
       { x | ∃ (a s : A)(hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ } <|
-    by
-    ext
-    symm
-    apply mem_range_map_to_fraction_ring_iff
+    by ext; symm; apply mem_range_map_to_fraction_ring_iff
 #align localization.subalgebra Localization.subalgebra
 
 namespace Subalgebra
@@ -135,11 +130,8 @@ lean 3 declaration is
 but is expected to have type
   forall {A : Type.{u1}} (K : Type.{u2}) [_inst_1 : CommRing.{u1} A] (S : Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (hS : LE.le.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (Preorder.toLE.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (Submonoid.instCompleteLatticeSubmonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))))))) S (nonZeroDivisors.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))))) [_inst_2 : CommRing.{u2} K] [_inst_3 : Algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_2))] [_inst_4 : IsFractionRing.{u1, u2} A _inst_1 K _inst_2 _inst_3], IsLocalization.{u1, u2} A (CommRing.toCommSemiring.{u1} A _inst_1) S (Subtype.{succ u2} K (fun (x : K) => Membership.mem.{u2, u2} K (Subalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_2)) _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_2)) _inst_3) K (Subalgebra.instSetLikeSubalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_2)) _inst_3)) x (Localization.subalgebra.{u1, u2} A K _inst_1 S _inst_2 _inst_3 _inst_4 hS))) (Subalgebra.toCommSemiring.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommRing.toCommSemiring.{u2} K _inst_2) _inst_3 (Localization.subalgebra.{u1, u2} A K _inst_1 S _inst_2 _inst_3 _inst_4 hS)) (Subalgebra.algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K _inst_2)) _inst_3 (Localization.subalgebra.{u1, u2} A K _inst_1 S _inst_2 _inst_3 _inst_4 hS))
 Case conversion may be inaccurate. Consider using '#align localization.subalgebra.is_localization_subalgebra Localization.subalgebra.isLocalization_subalgebraₓ'. -/
-instance isLocalization_subalgebra : IsLocalization S (subalgebra K S hS) :=
-  by
-  dsimp only [Localization.subalgebra]
-  rw [Subalgebra.copy_eq]
-  infer_instance
+instance isLocalization_subalgebra : IsLocalization S (subalgebra K S hS) := by
+  dsimp only [Localization.subalgebra]; rw [Subalgebra.copy_eq]; infer_instance
 #align localization.subalgebra.is_localization_subalgebra Localization.subalgebra.isLocalization_subalgebra
 
 /- warning: localization.subalgebra.is_fraction_ring -> Localization.subalgebra.isFractionRing is a dubious translation:
@@ -190,10 +182,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 noncomputable def ofField : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
       { x | ∃ (a s : A)(hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ } <|
-    by
-    ext
-    symm
-    apply mem_range_map_to_fraction_ring_iff_of_field
+    by ext; symm; apply mem_range_map_to_fraction_ring_iff_of_field
 #align localization.subalgebra.of_field Localization.subalgebra.ofField
 
 /- warning: localization.subalgebra.is_localization_of_field -> Localization.subalgebra.isLocalization_ofField is a dubious translation:
@@ -202,11 +191,8 @@ lean 3 declaration is
 but is expected to have type
   forall {A : Type.{u1}} (K : Type.{u2}) [_inst_1 : CommRing.{u1} A] (S : Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (hS : LE.le.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (Preorder.toLE.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Submonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))) (Submonoid.instCompleteLatticeSubmonoid.{u1} A (MulZeroOneClass.toMulOneClass.{u1} A (NonAssocSemiring.toMulZeroOneClass.{u1} A (Semiring.toNonAssocSemiring.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))))))) S (nonZeroDivisors.{u1} A (Semiring.toMonoidWithZero.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))))) [_inst_2 : Field.{u2} K] [_inst_3 : Algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2)))] [_inst_4 : IsFractionRing.{u1, u2} A _inst_1 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_2)) _inst_3], IsLocalization.{u1, u2} A (CommRing.toCommSemiring.{u1} A _inst_1) S (Subtype.{succ u2} K (fun (x : K) => Membership.mem.{u2, u2} K (Subalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))) _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))) _inst_3) K (Subalgebra.instSetLikeSubalgebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))) _inst_3)) x (Localization.subalgebra.ofField.{u1, u2} A K _inst_1 S hS _inst_2 _inst_3 _inst_4))) (Subalgebra.toCommSemiring.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2)) _inst_3 (Localization.subalgebra.ofField.{u1, u2} A K _inst_1 S hS _inst_2 _inst_3 _inst_4)) (Subalgebra.algebra.{u1, u2} A K (CommRing.toCommSemiring.{u1} A _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_2))) _inst_3 (Localization.subalgebra.ofField.{u1, u2} A K _inst_1 S hS _inst_2 _inst_3 _inst_4))
 Case conversion may be inaccurate. Consider using '#align localization.subalgebra.is_localization_of_field Localization.subalgebra.isLocalization_ofFieldₓ'. -/
-instance isLocalization_ofField : IsLocalization S (subalgebra.ofField K S hS) :=
-  by
-  dsimp only [Localization.subalgebra.ofField]
-  rw [Subalgebra.copy_eq]
-  infer_instance
+instance isLocalization_ofField : IsLocalization S (subalgebra.ofField K S hS) := by
+  dsimp only [Localization.subalgebra.ofField]; rw [Subalgebra.copy_eq]; infer_instance
 #align localization.subalgebra.is_localization_of_field Localization.subalgebra.isLocalization_ofField
 
 /- warning: localization.subalgebra.is_fraction_ring_of_field -> Localization.subalgebra.isFractionRing_ofField is a dubious translation:

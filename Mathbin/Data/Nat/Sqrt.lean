@@ -139,14 +139,12 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
   have re : div2 (2 * r * 2 ^ m) = r * 2 ^ m := by
     rw [div2_val, mul_assoc, Nat.mul_div_cancel_left _ (by decide : 2 > 0)]
   cases' lt_or_ge n ((r + 2 ^ m) * (r + 2 ^ m)) with hl hl
-  · rw [sqrt_aux_2 b0 (lb.2 hl), hm, re]
-    apply H1 hl
+  · rw [sqrt_aux_2 b0 (lb.2 hl), hm, re]; apply H1 hl
   · cases' le.dest hl with n' e
     rw [@sqrt_aux_1 (2 * r * 2 ^ m) (n - r * r) (2 ^ m * 2 ^ m) b0 (n - (r + 2 ^ m) * (r + 2 ^ m)),
       hm, re, ← right_distrib]
     · apply H2 hl
-    apply Eq.symm
-    apply tsub_eq_of_eq_add_rev
+    apply Eq.symm; apply tsub_eq_of_eq_add_rev
     rw [← add_assoc, (_ : r * r + _ = _)]
     exact (add_tsub_cancel_of_le hl).symm
     simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_assoc]
@@ -177,8 +175,7 @@ private theorem sqrt_aux_is_sqrt (n) :
 private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
   by
   generalize e : size n = s; cases' s with s <;> simp [e, sqrt]
-  · rw [size_eq_zero.1 e, is_sqrt]
-    exact by decide
+  · rw [size_eq_zero.1 e, is_sqrt]; exact by decide
   · have := sqrt_aux_is_sqrt n (div2 s) 0 (zero_le _)
     simp [show 2 ^ div2 s * 2 ^ div2 s = shiftl 1 (bit0 (div2 s))
         by
@@ -187,12 +184,9 @@ private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
         rw [one_shiftl, pow_add]] at
       this
     apply this
-    rw [← pow_add, ← mul_two]
-    apply size_le.1
-    rw [e]
-    apply (@div_lt_iff_lt_mul _ _ 2 (by decide)).1
-    rw [div2_val]
-    apply lt_succ_self
+    rw [← pow_add, ← mul_two]; apply size_le.1
+    rw [e]; apply (@div_lt_iff_lt_mul _ _ 2 (by decide)).1
+    rw [div2_val]; apply lt_succ_self
 
 #print Nat.sqrt_le /-
 theorem sqrt_le (n : ℕ) : sqrt n * sqrt n ≤ n :=
@@ -269,10 +263,8 @@ theorem sqrt_zero : sqrt 0 = 0 := by rw [sqrt, size_zero, sqrt._match_1]
 #print Nat.sqrt_eq_zero /-
 theorem sqrt_eq_zero {n : ℕ} : sqrt n = 0 ↔ n = 0 :=
   ⟨fun h =>
-    Nat.eq_zero_of_le_zero <| le_of_lt_succ <| (@sqrt_lt n 1).1 <| by rw [h] <;> exact by decide,
-    by
-    rintro rfl
-    simp⟩
+    Nat.eq_zero_of_le_zero <| le_of_lt_succ <| (@sqrt_lt n 1).1 <| by rw [h] <;> exact by decide, by
+    rintro rfl; simp⟩
 #align nat.sqrt_eq_zero Nat.sqrt_eq_zero
 -/
 

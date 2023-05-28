@@ -185,15 +185,11 @@ def imageFactorisation {X Y : C} (f : X ⟶ Y) [IsIso (Abelian.coimageImageCompa
 -/
 
 instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Mono f]
-    [IsIso (Abelian.coimageImageComparison f)] : IsIso (imageMonoFactorisation f).e :=
-  by
-  rw [image_mono_factorisation_e']
-  exact is_iso.comp_is_iso
+    [IsIso (Abelian.coimageImageComparison f)] : IsIso (imageMonoFactorisation f).e := by
+  rw [image_mono_factorisation_e']; exact is_iso.comp_is_iso
 
-instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Epi f] : IsIso (imageMonoFactorisation f).m :=
-  by
-  dsimp
-  infer_instance
+instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Epi f] : IsIso (imageMonoFactorisation f).m := by
+  dsimp; infer_instance
 
 variable [∀ {X Y : C} (f : X ⟶ Y), IsIso (Abelian.coimageImageComparison f)]
 
@@ -963,12 +959,8 @@ def abelian : Abelian C :=
     HasFiniteProducts := by infer_instance
     HasKernels := by convert(by infer_instance : limits.has_kernels C)
     HasCokernels := by convert(by infer_instance : limits.has_cokernels C)
-    normalMonoOfMono := by
-      intros
-      convert normal_mono_of_mono f
-    normalEpiOfEpi := by
-      intros
-      convert normal_epi_of_epi f }
+    normalMonoOfMono := by intros ; convert normal_mono_of_mono f
+    normalEpiOfEpi := by intros ; convert normal_epi_of_epi f }
 #align category_theory.non_preadditive_abelian.abelian CategoryTheory.NonPreadditiveAbelian.abelian
 -/
 

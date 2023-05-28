@@ -524,9 +524,7 @@ Case conversion may be inaccurate. Consider using '#align smul_smul_smul_comm sm
 @[to_additive]
 theorem smul_smul_smul_comm [SMul α β] [SMul α γ] [SMul β δ] [SMul α δ] [SMul γ δ]
     [IsScalarTower α β δ] [IsScalarTower α γ δ] [SMulCommClass β γ δ] (a : α) (b : β) (c : γ)
-    (d : δ) : (a • b) • c • d = (a • c) • b • d :=
-  by
-  rw [smul_assoc, smul_assoc, smul_comm b]
+    (d : δ) : (a • b) • c • d = (a • c) • b • d := by rw [smul_assoc, smul_assoc, smul_comm b];
   infer_instance
 #align smul_smul_smul_comm smul_smul_smul_comm
 #align vadd_vadd_vadd_comm vadd_vadd_vadd_comm
@@ -655,12 +653,8 @@ protected def Function.Surjective.mulAction [SMul M β] (f : α → β) (hf : Su
     (smul : ∀ (c : M) (x), f (c • x) = c • f x) : MulAction M β
     where
   smul := (· • ·)
-  one_smul y := by
-    rcases hf y with ⟨x, rfl⟩
-    rw [← smul, one_smul]
-  mul_smul c₁ c₂ y := by
-    rcases hf y with ⟨x, rfl⟩
-    simp only [← smul, mul_smul]
+  one_smul y := by rcases hf y with ⟨x, rfl⟩; rw [← smul, one_smul]
+  mul_smul c₁ c₂ y := by rcases hf y with ⟨x, rfl⟩; simp only [← smul, mul_smul]
 #align function.surjective.mul_action Function.Surjective.mulAction
 #align function.surjective.add_action Function.Surjective.addAction
 -/
@@ -1018,8 +1012,7 @@ protected def Function.Surjective.distribSMul [AddZeroClass B] [SMul M B] (f : A
   { f.toZeroHom.SMulZeroClass smul with
     smul := (· • ·)
     smul_add := fun c x y => by
-      rcases hf x with ⟨x, rfl⟩
-      rcases hf y with ⟨y, rfl⟩
+      rcases hf x with ⟨x, rfl⟩; rcases hf y with ⟨y, rfl⟩
       simp only [smul_add, ← smul, ← map_add] }
 #align function.surjective.distrib_smul Function.Surjective.distribSMul
 
@@ -1303,8 +1296,7 @@ protected def Function.Surjective.mulDistribMulAction [Monoid B] [SMul M B] (f :
   { hf.MulAction f smul with
     smul := (· • ·)
     smul_mul := fun c x y => by
-      rcases hf x with ⟨x, rfl⟩
-      rcases hf y with ⟨y, rfl⟩
+      rcases hf x with ⟨x, rfl⟩; rcases hf y with ⟨y, rfl⟩
       simp only [smul_mul', ← smul, ← f.map_mul]
     smul_one := fun c => by simp only [← f.map_one, ← smul, smul_one] }
 #align function.surjective.mul_distrib_mul_action Function.Surjective.mulDistribMulAction

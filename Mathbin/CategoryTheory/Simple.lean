@@ -76,8 +76,7 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
       haveI : mono (f ≫ i.hom) := mono_comp _ _
       constructor
       · intro h w
-        have j : is_iso (f ≫ i.hom)
-        infer_instance
+        have j : is_iso (f ≫ i.hom); infer_instance
         rw [simple.mono_is_iso_iff_nonzero] at j
         subst w
         simpa using j
@@ -85,8 +84,7 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
         have j : is_iso (f ≫ i.hom) :=
           by
           apply is_iso_of_mono_of_nonzero
-          intro w
-          apply h
+          intro w; apply h
           simpa using (cancel_mono i.inv).2 w
         rw [← category.comp_id f, ← i.hom_inv_id, ← category.assoc]
         infer_instance }
@@ -233,11 +231,9 @@ theorem Biprod.isIso_inl_iff_isZero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ 
   by
   rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl, ← biprod.total, add_right_eq_self]
   constructor
-  · intro h
-    replace h := h =≫ biprod.snd
+  · intro h; replace h := h =≫ biprod.snd
     simpa [← is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
-  · intro h
-    rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
+  · intro h; rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
     rw [h, zero_comp]
 #align category_theory.biprod.is_iso_inl_iff_is_zero CategoryTheory.Biprod.isIso_inl_iff_isZero
 -/
@@ -309,11 +305,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrderₓ'. -/
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
-  ⟨by
-    intro h
-    infer_instance, by
-    intro h
-    exact simple_of_is_simple_order_subobject X⟩
+  ⟨by intro h; infer_instance, by intro h; exact simple_of_is_simple_order_subobject X⟩
 #align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrder
 
 /- warning: category_theory.subobject_simple_iff_is_atom -> CategoryTheory.subobject_simple_iff_isAtom is a dubious translation:

@@ -588,9 +588,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : IsROrC.{u1} K] (r : Real), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => K) (IsROrC.ofReal.{u1} K _inst_1 r)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) K (fun (_x : K) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => K) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) K K (NonUnitalNonAssocSemiring.toMul.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))))) (NonUnitalNonAssocSemiring.toMul.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) K K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (RingHom.instRingHomClassRingHom.{u1, u1} K K (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))))))) (starRingEnd.{u1} K (Semifield.toCommSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))) (IsROrC.toStarRing.{u1} K _inst_1)) (IsROrC.ofReal.{u1} K _inst_1 r)) (IsROrC.ofReal.{u1} K _inst_1 r)
 Case conversion may be inaccurate. Consider using '#align is_R_or_C.conj_of_real IsROrC.conj_ofRealₓ'. -/
 @[simp, is_R_or_C_simps]
-theorem conj_ofReal (r : ℝ) : conj (r : K) = (r : K) :=
-  by
-  rw [ext_iff]
+theorem conj_ofReal (r : ℝ) : conj (r : K) = (r : K) := by rw [ext_iff];
   simp only [of_real_im, conj_im, eq_self_iff_true, conj_re, and_self_iff, neg_zero]
 #align is_R_or_C.conj_of_real IsROrC.conj_ofReal
 
@@ -746,9 +744,7 @@ def normSq : K →*₀ ℝ where
   toFun z := re z * re z + im z * im z
   map_zero' := by simp only [add_zero, MulZeroClass.mul_zero, map_zero]
   map_one' := by simp only [one_im, add_zero, mul_one, one_re, MulZeroClass.mul_zero]
-  map_mul' z w := by
-    simp only [mul_im, mul_re]
-    ring
+  map_mul' z w := by simp only [mul_im, mul_re]; ring
 #align is_R_or_C.norm_sq IsROrC.normSq
 -/
 
@@ -815,10 +811,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : IsROrC.{u1} K] {z : K}, Iff (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => Real) z) (FunLike.coe.{succ u1, succ u1, 1} (MonoidWithZeroHom.{u1, 0} K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) K (fun (_x : K) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => Real) _x) (MulHomClass.toFunLike.{u1, u1, 0} (MonoidWithZeroHom.{u1, 0} K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) K Real (MulOneClass.toMul.{u1} K (MulZeroOneClass.toMulOneClass.{u1} K (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))))) (MulOneClass.toMul.{0} Real (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))) (MonoidHomClass.toMulHomClass.{u1, u1, 0} (MonoidWithZeroHom.{u1, 0} K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) K Real (MulZeroOneClass.toMulOneClass.{u1} K (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))))) (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) (MonoidWithZeroHomClass.toMonoidHomClass.{u1, u1, 0} (MonoidWithZeroHom.{u1, 0} K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (MonoidWithZeroHom.monoidWithZeroHomClass.{u1, 0} K Real (NonAssocSemiring.toMulZeroOneClass.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1)))))))) (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))))) (IsROrC.normSq.{u1} K _inst_1) z) (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => Real) z) 0 (Zero.toOfNat0.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => Real) z) Real.instZeroReal))) (Eq.{succ u1} K z (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))))))
 Case conversion may be inaccurate. Consider using '#align is_R_or_C.norm_sq_eq_zero IsROrC.normSq_eq_zeroₓ'. -/
 @[simp, is_R_or_C_simps]
-theorem normSq_eq_zero {z : K} : normSq z = 0 ↔ z = 0 :=
-  by
-  rw [norm_sq_eq_def']
-  simp [sq]
+theorem normSq_eq_zero {z : K} : normSq z = 0 ↔ z = 0 := by rw [norm_sq_eq_def']; simp [sq]
 #align is_R_or_C.norm_sq_eq_zero IsROrC.normSq_eq_zero
 
 /- warning: is_R_or_C.norm_sq_pos -> IsROrC.normSq_pos is a dubious translation:
@@ -858,10 +851,8 @@ theorem normSq_mul (z w : K) : normSq (z * w) = normSq z * normSq w :=
 /- warning: is_R_or_C.norm_sq_add -> IsROrC.normSq_add is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_R_or_C.norm_sq_add IsROrC.normSq_addₓ'. -/
-theorem normSq_add (z w : K) : normSq (z + w) = normSq z + normSq w + 2 * re (z * conj w) :=
-  by
-  simp only [norm_sq_apply, map_add, mul_neg, sub_neg_eq_add, is_R_or_C_simps]
-  ring
+theorem normSq_add (z w : K) : normSq (z + w) = normSq z + normSq w + 2 * re (z * conj w) := by
+  simp only [norm_sq_apply, map_add, mul_neg, sub_neg_eq_add, is_R_or_C_simps]; ring
 #align is_R_or_C.norm_sq_add IsROrC.normSq_add
 
 /- warning: is_R_or_C.re_sq_le_norm_sq -> IsROrC.re_sq_le_normSq is a dubious translation:
@@ -1183,9 +1174,7 @@ but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : IsROrC.{u1} K] (n : Nat), Eq.{1} Real (Norm.norm.{u1} K (NormedField.toNorm.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))) (Nat.cast.{u1} K (Semiring.toNatCast.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K (NormedField.toField.{u1} K (DenselyNormedField.toNormedField.{u1} K (IsROrC.toDenselyNormedField.{u1} K _inst_1))))))) n)) (Nat.cast.{0} Real Real.natCast n)
 Case conversion may be inaccurate. Consider using '#align is_R_or_C.norm_nat_cast IsROrC.norm_natCastₓ'. -/
 @[simp, is_R_or_C_simps, norm_cast]
-theorem norm_natCast (n : ℕ) : ‖(n : K)‖ = n :=
-  by
-  rw [← of_real_nat_cast]
+theorem norm_natCast (n : ℕ) : ‖(n : K)‖ = n := by rw [← of_real_nat_cast];
   exact norm_of_nonneg (Nat.cast_nonneg n)
 #align is_R_or_C.norm_nat_cast IsROrC.norm_natCast
 
@@ -1524,9 +1513,7 @@ theorem reLm_coe : (reLm : K → ℝ) = re :=
 #print IsROrC.reClm /-
 /-- The real part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def reClm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous reLm 1 fun x => by
-    rw [one_mul]
-    exact abs_re_le_norm x
+  LinearMap.mkContinuous reLm 1 fun x => by rw [one_mul]; exact abs_re_le_norm x
 #align is_R_or_C.re_clm IsROrC.reClm
 -/
 
@@ -1574,9 +1561,7 @@ theorem imLm_coe : (imLm : K → ℝ) = im :=
 #print IsROrC.imClm /-
 /-- The imaginary part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def imClm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous imLm 1 fun x => by
-    rw [one_mul]
-    exact abs_im_le_norm x
+  LinearMap.mkContinuous imLm 1 fun x => by rw [one_mul]; exact abs_im_le_norm x
 #align is_R_or_C.im_clm IsROrC.imClm
 -/
 

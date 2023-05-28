@@ -407,10 +407,7 @@ theorem HasStrictFDerivAt.mul' {x : E} (ha : HasStrictFDerivAt a a' x)
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_strict_fderiv_at.mul HasStrictFDerivAt.mulₓ'. -/
 theorem HasStrictFDerivAt.mul (hc : HasStrictFDerivAt c c' x) (hd : HasStrictFDerivAt d d' x) :
-    HasStrictFDerivAt (fun y => c y * d y) (c x • d' + d x • c') x :=
-  by
-  convert hc.mul' hd
-  ext z
+    HasStrictFDerivAt (fun y => c y * d y) (c x • d' + d x • c') x := by convert hc.mul' hd; ext z;
   apply mul_comm
 #align has_strict_fderiv_at.mul HasStrictFDerivAt.mul
 
@@ -427,11 +424,8 @@ theorem HasFDerivWithinAt.mul' (ha : HasFDerivWithinAt a a' s x) (hb : HasFDeriv
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at.mul HasFDerivWithinAt.mulₓ'. -/
 theorem HasFDerivWithinAt.mul (hc : HasFDerivWithinAt c c' s x) (hd : HasFDerivWithinAt d d' s x) :
-    HasFDerivWithinAt (fun y => c y * d y) (c x • d' + d x • c') s x :=
-  by
-  convert hc.mul' hd
-  ext z
-  apply mul_comm
+    HasFDerivWithinAt (fun y => c y * d y) (c x • d' + d x • c') s x := by convert hc.mul' hd;
+  ext z; apply mul_comm
 #align has_fderiv_within_at.mul HasFDerivWithinAt.mul
 
 /- warning: has_fderiv_at.mul' -> HasFDerivAt.mul' is a dubious translation:
@@ -446,10 +440,7 @@ theorem HasFDerivAt.mul' (ha : HasFDerivAt a a' x) (hb : HasFDerivAt b b' x) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_at.mul HasFDerivAt.mulₓ'. -/
 theorem HasFDerivAt.mul (hc : HasFDerivAt c c' x) (hd : HasFDerivAt d d' x) :
-    HasFDerivAt (fun y => c y * d y) (c x • d' + d x • c') x :=
-  by
-  convert hc.mul' hd
-  ext z
+    HasFDerivAt (fun y => c y * d y) (c x • d' + d x • c') x := by convert hc.mul' hd; ext z;
   apply mul_comm
 #align has_fderiv_at.mul HasFDerivAt.mul
 
@@ -590,10 +581,7 @@ theorem HasStrictFDerivAt.mul_const' (ha : HasStrictFDerivAt a a' x) (b : 𝔸) 
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_strict_fderiv_at.mul_const HasStrictFDerivAt.mul_constₓ'. -/
 theorem HasStrictFDerivAt.mul_const (hc : HasStrictFDerivAt c c' x) (d : 𝔸') :
-    HasStrictFDerivAt (fun y => c y * d) (d • c') x :=
-  by
-  convert hc.mul_const' d
-  ext z
+    HasStrictFDerivAt (fun y => c y * d) (d • c') x := by convert hc.mul_const' d; ext z;
   apply mul_comm
 #align has_strict_fderiv_at.mul_const HasStrictFDerivAt.mul_const
 
@@ -609,10 +597,7 @@ theorem HasFDerivWithinAt.mul_const' (ha : HasFDerivWithinAt a a' s x) (b : 𝔸
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at.mul_const HasFDerivWithinAt.mul_constₓ'. -/
 theorem HasFDerivWithinAt.mul_const (hc : HasFDerivWithinAt c c' s x) (d : 𝔸') :
-    HasFDerivWithinAt (fun y => c y * d) (d • c') s x :=
-  by
-  convert hc.mul_const' d
-  ext z
+    HasFDerivWithinAt (fun y => c y * d) (d • c') s x := by convert hc.mul_const' d; ext z;
   apply mul_comm
 #align has_fderiv_within_at.mul_const HasFDerivWithinAt.mul_const
 
@@ -628,11 +613,7 @@ theorem HasFDerivAt.mul_const' (ha : HasFDerivAt a a' x) (b : 𝔸) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_at.mul_const HasFDerivAt.mul_constₓ'. -/
 theorem HasFDerivAt.mul_const (hc : HasFDerivAt c c' x) (d : 𝔸') :
-    HasFDerivAt (fun y => c y * d) (d • c') x :=
-  by
-  convert hc.mul_const' d
-  ext z
-  apply mul_comm
+    HasFDerivAt (fun y => c y * d) (d • c') x := by convert hc.mul_const' d; ext z; apply mul_comm
 #align has_fderiv_at.mul_const HasFDerivAt.mul_const
 
 /- warning: differentiable_within_at.mul_const -> DifferentiableWithinAt.mul_const is a dubious translation:
@@ -816,8 +797,7 @@ theorem hasFDerivAt_ring_inverse (x : Rˣ) :
     simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by norm_num
     convert(Asymptotics.isLittleO_pow_pow h12).comp_tendsto tendsto_norm_zero
-    ext
-    simp
+    ext; simp
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=
     by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _

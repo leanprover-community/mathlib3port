@@ -160,9 +160,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_3 : Ring.{u2} A] [_inst_4 : Algebra.{u1, u2} R A (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} A _inst_3)] [_inst_8 : Nontrivial.{u1} R], IsAlgebraic.{u1, u2} R A _inst_1 _inst_3 _inst_4 (OfNat.ofNat.{u2} A 1 (One.toOfNat1.{u2} A (Semiring.toOne.{u2} A (Ring.toSemiring.{u2} A _inst_3))))
 Case conversion may be inaccurate. Consider using '#align is_algebraic_one isAlgebraic_oneₓ'. -/
-theorem isAlgebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) :=
-  by
-  rw [← _root_.map_one _]
+theorem isAlgebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) := by rw [← _root_.map_one _];
   exact isAlgebraic_algebraMap 1
 #align is_algebraic_one isAlgebraic_one
 
@@ -172,9 +170,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_3 : Ring.{u2} A] [_inst_4 : Algebra.{u1, u2} R A (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} A _inst_3)] [_inst_8 : Nontrivial.{u1} R] (n : Nat), IsAlgebraic.{u1, u2} R A _inst_1 _inst_3 _inst_4 (Nat.cast.{u2} A (Semiring.toNatCast.{u2} A (Ring.toSemiring.{u2} A _inst_3)) n)
 Case conversion may be inaccurate. Consider using '#align is_algebraic_nat isAlgebraic_natₓ'. -/
-theorem isAlgebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) :=
-  by
-  rw [← map_natCast _]
+theorem isAlgebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) := by rw [← map_natCast _];
   exact isAlgebraic_algebraMap n
 #align is_algebraic_nat isAlgebraic_nat
 
@@ -184,10 +180,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommRing.{u1} R] [_inst_3 : Ring.{u2} A] [_inst_4 : Algebra.{u1, u2} R A (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} A _inst_3)] [_inst_8 : Nontrivial.{u1} R] (n : Int), IsAlgebraic.{u1, u2} R A _inst_1 _inst_3 _inst_4 (Int.cast.{u2} A (Ring.toIntCast.{u2} A _inst_3) n)
 Case conversion may be inaccurate. Consider using '#align is_algebraic_int isAlgebraic_intₓ'. -/
-theorem isAlgebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) :=
-  by
-  rw [← _root_.map_int_cast (algebraMap R A)]
-  exact isAlgebraic_algebraMap n
+theorem isAlgebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
+  rw [← _root_.map_int_cast (algebraMap R A)]; exact isAlgebraic_algebraMap n
 #align is_algebraic_int isAlgebraic_int
 
 /- warning: is_algebraic_rat -> isAlgebraic_rat is a dubious translation:
@@ -197,9 +191,7 @@ but is expected to have type
   forall (R : Type.{u1}) {A : Type.{u2}} [_inst_8 : DivisionRing.{u2} A] [_inst_9 : Field.{u1} R] [_inst_10 : Algebra.{u1, u2} R A (Semifield.toCommSemiring.{u1} R (Field.toSemifield.{u1} R _inst_9)) (DivisionSemiring.toSemiring.{u2} A (DivisionRing.toDivisionSemiring.{u2} A _inst_8))] (n : Rat), IsAlgebraic.{u1, u2} R A (EuclideanDomain.toCommRing.{u1} R (Field.toEuclideanDomain.{u1} R _inst_9)) (DivisionRing.toRing.{u2} A _inst_8) _inst_10 (Rat.cast.{u2} A (DivisionRing.toRatCast.{u2} A _inst_8) n)
 Case conversion may be inaccurate. Consider using '#align is_algebraic_rat isAlgebraic_ratₓ'. -/
 theorem isAlgebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A] (n : ℚ) :
-    IsAlgebraic R (n : A) := by
-  rw [← map_ratCast (algebraMap R A)]
-  exact isAlgebraic_algebraMap n
+    IsAlgebraic R (n : A) := by rw [← map_ratCast (algebraMap R A)]; exact isAlgebraic_algebraMap n
 #align is_algebraic_rat isAlgebraic_rat
 
 #print isAlgebraic_of_mem_rootSet /-
@@ -445,12 +437,8 @@ noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L)
     (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
   toFun ϕ := ϕ.toAlgHom
   invFun ϕ := AlgEquiv.ofBijective ϕ (ha.algHom_bijective ϕ)
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
   map_mul' _ _ := rfl
 #align algebra.is_algebraic.alg_equiv_equiv_alg_hom Algebra.IsAlgebraic.algEquivEquivAlgHom
 
@@ -546,9 +534,7 @@ Case conversion may be inaccurate. Consider using '#align subalgebra.inv_mem_of_
 theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
     (aeval_eq : aeval x p = 0) (coeff_zero_ne : p.coeff 0 ≠ 0) : (x⁻¹ : L) ∈ A :=
   by
-  suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (div_X p)
-    by
-    rw [this]
+  suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (div_X p) by rw [this];
     exact A.smul_mem (aeval x _).2 _
   have : aeval (x : L) p = 0 := by rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
   rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def,

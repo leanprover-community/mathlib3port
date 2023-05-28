@@ -82,9 +82,7 @@ but is expected to have type
   forall (x : Complex) (y : Complex), Iff (Eq.{1} Complex (HPow.hPow.{0, 0, 0} Complex Complex Complex (instHPow.{0, 0} Complex Complex Complex.instPowComplex) x y) (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex))) (And (Eq.{1} Complex x (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex))) (Ne.{1} Complex y (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex))))
 Case conversion may be inaccurate. Consider using '#align complex.cpow_eq_zero_iff Complex.cpow_eq_zero_iffₓ'. -/
 @[simp]
-theorem cpow_eq_zero_iff (x y : ℂ) : x ^ y = 0 ↔ x = 0 ∧ y ≠ 0 :=
-  by
-  simp only [cpow_def]
+theorem cpow_eq_zero_iff (x y : ℂ) : x ^ y = 0 ↔ x = 0 ∧ y ≠ 0 := by simp only [cpow_def];
   split_ifs <;> simp [*, exp_ne_zero]
 #align complex.cpow_eq_zero_iff Complex.cpow_eq_zero_iff
 
@@ -105,13 +103,8 @@ theorem zero_cpow_eq_iff {x : ℂ} {a : ℂ} : 0 ^ x = a ↔ x ≠ 0 ∧ a = 0 �
   · intro hyp
     simp only [cpow_def, eq_self_iff_true, if_true] at hyp
     by_cases x = 0
-    · subst h
-      simp only [if_true, eq_self_iff_true] at hyp
-      right
-      exact ⟨rfl, hyp.symm⟩
-    · rw [if_neg h] at hyp
-      left
-      exact ⟨h, hyp.symm⟩
+    · subst h; simp only [if_true, eq_self_iff_true] at hyp; right; exact ⟨rfl, hyp.symm⟩
+    · rw [if_neg h] at hyp; left; exact ⟨h, hyp.symm⟩
   · rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
     · exact zero_cpow h
     · exact cpow_zero _
@@ -217,9 +210,7 @@ but is expected to have type
   forall (x : Complex), Eq.{1} Complex (HPow.hPow.{0, 0, 0} Complex Complex Complex (instHPow.{0, 0} Complex Complex Complex.instPowComplex) x (OfNat.ofNat.{0} Complex 2 (instOfNat.{0} Complex 2 (Semiring.toNatCast.{0} Complex Complex.instSemiringComplex) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (HPow.hPow.{0, 0, 0} Complex Nat Complex (instHPow.{0, 0} Complex Nat (Monoid.Pow.{0} Complex (MonoidWithZero.toMonoid.{0} Complex (Semiring.toMonoidWithZero.{0} Complex Complex.instSemiringComplex)))) x (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align complex.cpow_two Complex.cpow_twoₓ'. -/
 @[simp]
-theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 :=
-  by
-  rw [← cpow_nat_cast]
+theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by rw [← cpow_nat_cast];
   simp only [Nat.cast_bit0, Nat.cast_one]
 #align complex.cpow_two Complex.cpow_two
 

@@ -160,9 +160,7 @@ theorem Matrix.toMatrix₂Aux_toLinearMap₂'Aux (f : Matrix n m R) :
     LinearMap.toMatrix₂Aux (fun i => stdBasis R₁ (fun _ => R₁) i 1)
         (fun j => stdBasis R₂ (fun _ => R₂) j 1) (f.toLinearMap₂'Aux σ₁ σ₂) =
       f :=
-  by
-  ext (i j)
-  simp_rw [LinearMap.toMatrix₂Aux_apply, Matrix.toLinearMap₂'Aux_stdBasis]
+  by ext (i j); simp_rw [LinearMap.toMatrix₂Aux_apply, Matrix.toLinearMap₂'Aux_stdBasis]
 #align matrix.to_matrix₂_aux_to_linear_map₂'_aux Matrix.toMatrix₂Aux_toLinearMap₂'Aux
 
 end CommRing
@@ -378,30 +376,24 @@ theorem LinearMap.toMatrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) �
       rintro j' -
       simp only [smul_eq_mul, Pi.basisFun_repr, mul_assoc, mul_comm, mul_left_comm,
         Pi.basisFun_apply, of_apply]
-    · intros
-      simp only [zero_smul, smul_zero]
-  · intros
-    simp only [zero_smul, Finsupp.sum_zero]
+    · intros ; simp only [zero_smul, smul_zero]
+  · intros ; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂'_compl₁₂ LinearMap.toMatrix₂'_compl₁₂
 
 /- warning: linear_map.to_matrix₂'_comp -> LinearMap.toMatrix₂'_comp is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_comp LinearMap.toMatrix₂'_compₓ'. -/
 theorem LinearMap.toMatrix₂'_comp (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (n' → R) →ₗ[R] n → R) :
-    (B.comp f).toMatrix₂' = f.toMatrix'ᵀ ⬝ B.toMatrix₂' :=
-  by
-  rw [← LinearMap.compl₂_id (B.comp f), ← LinearMap.compl₁₂]
-  simp
+    (B.comp f).toMatrix₂' = f.toMatrix'ᵀ ⬝ B.toMatrix₂' := by
+  rw [← LinearMap.compl₂_id (B.comp f), ← LinearMap.compl₁₂]; simp
 #align linear_map.to_matrix₂'_comp LinearMap.toMatrix₂'_comp
 
 /- warning: linear_map.to_matrix₂'_compl₂ -> LinearMap.toMatrix₂'_compl₂ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂'_compl₂ LinearMap.toMatrix₂'_compl₂ₓ'. -/
 theorem LinearMap.toMatrix₂'_compl₂ (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (m' → R) →ₗ[R] m → R) :
-    (B.compl₂ f).toMatrix₂' = B.toMatrix₂' ⬝ f.toMatrix' :=
-  by
-  rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂]
-  simp
+    (B.compl₂ f).toMatrix₂' = B.toMatrix₂' ⬝ f.toMatrix' := by
+  rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂]; simp
 #align linear_map.to_matrix₂'_compl₂ LinearMap.toMatrix₂'_compl₂
 
 /- warning: linear_map.mul_to_matrix₂'_mul -> LinearMap.mul_toMatrix₂'_mul is a dubious translation:
@@ -525,9 +517,7 @@ theorem Matrix.toLinearMap₂_symm : (Matrix.toLinearMap₂ b₁ b₂).symm = Li
 <too large>
 Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map₂_basis_fun Matrix.toLinearMap₂_basisFunₓ'. -/
 theorem Matrix.toLinearMap₂_basisFun :
-    Matrix.toLinearMap₂ (Pi.basisFun R n) (Pi.basisFun R m) = Matrix.toLinearMap₂' :=
-  by
-  ext M
+    Matrix.toLinearMap₂ (Pi.basisFun R n) (Pi.basisFun R m) = Matrix.toLinearMap₂' := by ext M;
   simp only [Matrix.toLinearMap₂_apply, Matrix.toLinearMap₂'_apply, Pi.basisFun_repr, coe_comp,
     Function.comp_apply]
 #align matrix.to_linear_map₂_basis_fun Matrix.toLinearMap₂_basisFun
@@ -536,9 +526,7 @@ theorem Matrix.toLinearMap₂_basisFun :
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_basis_fun LinearMap.toMatrix₂_basisFunₓ'. -/
 theorem LinearMap.toMatrix₂_basisFun :
-    LinearMap.toMatrix₂ (Pi.basisFun R n) (Pi.basisFun R m) = LinearMap.toMatrix₂' :=
-  by
-  ext B
+    LinearMap.toMatrix₂ (Pi.basisFun R n) (Pi.basisFun R m) = LinearMap.toMatrix₂' := by ext B;
   rw [LinearMap.toMatrix₂_apply, LinearMap.toMatrix₂'_apply, Pi.basisFun_apply, Pi.basisFun_apply]
 #align linear_map.to_matrix₂_basis_fun LinearMap.toMatrix₂_basisFun
 
@@ -594,10 +582,8 @@ theorem LinearMap.toMatrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) 
       rintro j' -
       simp only [smul_eq_mul, LinearMap.toMatrix_apply, Basis.equivFun_apply, mul_assoc, mul_comm,
         mul_left_comm]
-    · intros
-      simp only [zero_smul, smul_zero]
-  · intros
-    simp only [zero_smul, Finsupp.sum_zero]
+    · intros ; simp only [zero_smul, smul_zero]
+  · intros ; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂_compl₁₂ LinearMap.toMatrix₂_compl₁₂
 
 /- warning: linear_map.to_matrix₂_comp -> LinearMap.toMatrix₂_comp is a dubious translation:
@@ -614,10 +600,8 @@ theorem LinearMap.toMatrix₂_comp (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M�
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix₂_compl₂ LinearMap.toMatrix₂_compl₂ₓ'. -/
 theorem LinearMap.toMatrix₂_compl₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M₂' →ₗ[R] M₂) :
-    LinearMap.toMatrix₂ b₁ b₂' (B.compl₂ f) = LinearMap.toMatrix₂ b₁ b₂ B ⬝ toMatrix b₂' b₂ f :=
-  by
-  rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂, LinearMap.toMatrix₂_compl₁₂ b₁ b₂]
-  simp
+    LinearMap.toMatrix₂ b₁ b₂' (B.compl₂ f) = LinearMap.toMatrix₂ b₁ b₂ B ⬝ toMatrix b₂' b₂ f := by
+  rw [← LinearMap.comp_id B, ← LinearMap.compl₁₂, LinearMap.toMatrix₂_compl₁₂ b₁ b₂]; simp
 #align linear_map.to_matrix₂_compl₂ LinearMap.toMatrix₂_compl₂
 
 /- warning: linear_map.to_matrix₂_mul_basis_to_matrix -> LinearMap.toMatrix₂_mul_basis_toMatrix is a dubious translation:
@@ -829,12 +813,10 @@ theorem mem_pairSelfAdjointMatricesSubmodule :
     Submodule.mem_map, mem_is_pair_self_adjoint_submodule]
   constructor
   · rintro ⟨f, hf, hA⟩
-    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']
-    rw [hf'] at hf
+    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']; rw [hf'] at hf
     rw [← isAdjointPair_toLinearMap₂']
     exact hf
-  · intro h
-    refine' ⟨A₁.to_lin', _, LinearMap.toMatrix'_toLin' _⟩
+  · intro h; refine' ⟨A₁.to_lin', _, LinearMap.toMatrix'_toLin' _⟩
     exact (isAdjointPair_toLinearMap₂' _ _ _ _).mpr h
 #align mem_pair_self_adjoint_matrices_submodule mem_pairSelfAdjointMatricesSubmodule
 
@@ -854,10 +836,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mem_self_adjoint_matrices_submodule mem_selfAdjointMatricesSubmoduleₓ'. -/
 @[simp]
 theorem mem_selfAdjointMatricesSubmodule :
-    A₁ ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A₁ :=
-  by
-  erw [mem_pairSelfAdjointMatricesSubmodule]
-  rfl
+    A₁ ∈ selfAdjointMatricesSubmodule J ↔ J.IsSelfAdjoint A₁ := by
+  erw [mem_pairSelfAdjointMatricesSubmodule]; rfl
 #align mem_self_adjoint_matrices_submodule mem_selfAdjointMatricesSubmodule
 
 #print skewAdjointMatricesSubmodule /-

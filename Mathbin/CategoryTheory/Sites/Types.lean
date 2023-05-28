@@ -110,20 +110,14 @@ noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
 
 theorem eval_typesGlue {S hs α} (f) : eval.{u} S α (typesGlue S hs α f) = f :=
   funext fun x =>
-    (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩).trans <|
-      by
-      convert functor_to_types.map_id_apply _ _
-      rw [← op_id]
-      congr
+    (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩).trans <| by
+      convert functor_to_types.map_id_apply _ _; rw [← op_id]; congr
 #align category_theory.eval_types_glue CategoryTheory.eval_typesGlue
 
 theorem typesGlue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s :=
   (hs.IsSheafFor _ _ (generate_discretePresieve_mem α)).IsSeparatedFor.ext fun β f hf =>
     (IsSheafFor.valid_glue _ _ _ hf).trans <|
-      (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <|
-        by
-        rw [← op_comp]
-        congr 2
+      (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <| by rw [← op_comp]; congr 2;
         exact funext fun x => congr_arg f (Classical.choose_spec hf x).symm
 #align category_theory.types_glue_eval CategoryTheory.typesGlue_eval
 
@@ -139,10 +133,8 @@ noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
 #align category_theory.eval_equiv CategoryTheory.evalEquiv
 
 theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) :
-    eval S β (S.map f.op s) x = eval S α s (f x) :=
-  by
-  simp_rw [eval, ← functor_to_types.map_comp_apply, ← op_comp]
-  rfl
+    eval S β (S.map f.op s) x = eval S α s (f x) := by
+  simp_rw [eval, ← functor_to_types.map_comp_apply, ← op_comp]; rfl
 #align category_theory.eval_map CategoryTheory.eval_map
 
 /-- Given a sheaf `S`, construct an isomorphism `S ≅ [-, S(*)]`. -/
@@ -160,12 +152,8 @@ noncomputable def equivYoneda' (S : SheafOfTypes typesGrothendieckTopology) :
     where
   Hom := ⟨(equivYoneda S.1 S.2).Hom⟩
   inv := ⟨(equivYoneda S.1 S.2).inv⟩
-  hom_inv_id' := by
-    ext1
-    apply (equiv_yoneda S.1 S.2).hom_inv_id
-  inv_hom_id' := by
-    ext1
-    apply (equiv_yoneda S.1 S.2).inv_hom_id
+  hom_inv_id' := by ext1; apply (equiv_yoneda S.1 S.2).hom_inv_id
+  inv_hom_id' := by ext1; apply (equiv_yoneda S.1 S.2).inv_hom_id
 #align category_theory.equiv_yoneda' CategoryTheory.equivYoneda'
 
 theorem eval_app (S₁ S₂ : SheafOfTypes.{u} typesGrothendieckTopology) (f : S₁ ⟶ S₂) (α : Type u)

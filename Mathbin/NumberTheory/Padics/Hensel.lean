@@ -212,10 +212,8 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
     mt norm_eq_zero.2 (by rw [hz.1] <;> apply deriv_norm_ne_zero <;> assumption)
   have hdzne' : (↑(F.derivative.eval z) : ℚ_[p]) ≠ 0 := fun h => hdzne (Subtype.ext_iff_val.2 h)
   obtain ⟨q, hq⟩ := F.binom_expansion z (-z1)
-  have : ‖(↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)) : ℚ_[p])‖ ≤ 1 :=
-    by
-    rw [padicNormE.mul]
-    exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1
+  have : ‖(↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)) : ℚ_[p])‖ ≤ 1 := by
+    rw [padicNormE.mul]; exact mul_le_one (PadicInt.norm_le_one _) (norm_nonneg _) h1
   have : F.derivative.eval z * -z1 = -F.eval z := by
     calc
       F.derivative.eval z * -z1 =
@@ -333,10 +331,7 @@ private theorem newton_seq_dist_aux (n : ℕ) :
     ∀ k : ℕ, ‖newton_seq (n + k) - newton_seq n‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ n
   | 0 => by simp [T_pow_nonneg hnorm, mul_nonneg]
   | k + 1 =>
-    have : 2 ^ n ≤ 2 ^ (n + k) := by
-      apply pow_le_pow
-      norm_num
-      apply Nat.le_add_right
+    have : 2 ^ n ≤ 2 ^ (n + k) := by apply pow_le_pow; norm_num; apply Nat.le_add_right
     calc
       ‖newton_seq (n + (k + 1)) - newton_seq n‖ = ‖newton_seq (n + k + 1) - newton_seq n‖ := by
         rw [add_assoc]
@@ -403,8 +398,7 @@ private theorem bound'_sq :
   simp only [mul_assoc]
   apply tendsto.mul
   · apply tendsto_const_nhds
-  · apply bound'
-    assumption
+  · apply bound'; assumption
 
 private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq :=
   by
@@ -413,10 +407,8 @@ private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq :=
   exists N
   intro j hj
   apply lt_of_le_of_lt
-  · apply newton_seq_dist _ _ hj
-    assumption
-  · apply hN
-    exact le_rfl
+  · apply newton_seq_dist _ _ hj; assumption
+  · apply hN; exact le_rfl
 
 private def newton_cau_seq : CauSeq ℤ_[p] norm :=
   ⟨_, newton_seq_is_cauchy⟩
@@ -450,8 +442,7 @@ private theorem soln_dist_to_a_lt_deriv : ‖soln - a‖ < ‖F.derivative.eval 
   by
   rw [soln_dist_to_a, div_lt_iff]
   · rwa [sq] at hnorm
-  · apply deriv_norm_pos
-    assumption
+  · apply deriv_norm_pos; assumption
 
 private theorem eval_soln : F.eval soln = 0 :=
   limit_zero_of_norm_tendsto_zero newton_seq_norm_tendsto_zero

@@ -609,17 +609,11 @@ def toAddTorsor (s : AffineSubspace k P) [Nonempty s] : AddTorsor s.direction s
     where
   vadd a b := ⟨(a : V) +ᵥ (b : P), vadd_mem_of_mem_direction a.2 b.2⟩
   zero_vadd := by simp
-  add_vadd a b c := by
-    ext
-    apply add_vadd
+  add_vadd a b c := by ext; apply add_vadd
   vsub a b := ⟨(a : P) -ᵥ (b : P), (vsub_left_mem_direction_iff_mem a.2 _).mpr b.2⟩
   Nonempty := by infer_instance
-  vsub_vadd' a b := by
-    ext
-    apply AddTorsor.vsub_vadd'
-  vadd_vsub' a b := by
-    ext
-    apply AddTorsor.vadd_vsub'
+  vsub_vadd' a b := by ext; apply AddTorsor.vsub_vadd'
+  vadd_vsub' a b := by ext; apply AddTorsor.vadd_vsub'
 #align affine_subspace.to_add_torsor AffineSubspace.toAddTorsor
 -/
 
@@ -1374,10 +1368,8 @@ lean 3 declaration is
 but is expected to have type
   forall {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : Ring.{u3} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u1} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] (Q : AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S), Iff (Set.Nonempty.{u1} P (SetLike.coe.{u1, u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) P (AffineSubspace.instSetLikeAffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) Q)) (Ne.{succ u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) Q (Bot.bot.{u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) (CompleteLattice.toBot.{u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) (AffineSubspace.instCompleteLatticeAffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S))))
 Case conversion may be inaccurate. Consider using '#align affine_subspace.nonempty_iff_ne_bot AffineSubspace.nonempty_iff_ne_botₓ'. -/
-theorem nonempty_iff_ne_bot (Q : AffineSubspace k P) : (Q : Set P).Nonempty ↔ Q ≠ ⊥ :=
-  by
-  rw [nonempty_iff_ne_empty]
-  exact not_congr Q.coe_eq_bot_iff
+theorem nonempty_iff_ne_bot (Q : AffineSubspace k P) : (Q : Set P).Nonempty ↔ Q ≠ ⊥ := by
+  rw [nonempty_iff_ne_empty]; exact not_congr Q.coe_eq_bot_iff
 #align affine_subspace.nonempty_iff_ne_bot AffineSubspace.nonempty_iff_ne_bot
 
 /- warning: affine_subspace.eq_bot_or_nonempty -> AffineSubspace.eq_bot_or_nonempty is a dubious translation:
@@ -1386,10 +1378,8 @@ lean 3 declaration is
 but is expected to have type
   forall {k : Type.{u3}} {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : Ring.{u3} k] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u3, u2} k V (Ring.toSemiring.{u3} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [S : AddTorsor.{u2, u1} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] (Q : AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S), Or (Eq.{succ u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) Q (Bot.bot.{u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) (CompleteLattice.toBot.{u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) (AffineSubspace.instCompleteLatticeAffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S)))) (Set.Nonempty.{u1} P (SetLike.coe.{u1, u1} (AffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) P (AffineSubspace.instSetLikeAffineSubspace.{u3, u2, u1} k V P _inst_1 _inst_2 _inst_3 S) Q))
 Case conversion may be inaccurate. Consider using '#align affine_subspace.eq_bot_or_nonempty AffineSubspace.eq_bot_or_nonemptyₓ'. -/
-theorem eq_bot_or_nonempty (Q : AffineSubspace k P) : Q = ⊥ ∨ (Q : Set P).Nonempty :=
-  by
-  rw [nonempty_iff_ne_bot]
-  apply eq_or_ne
+theorem eq_bot_or_nonempty (Q : AffineSubspace k P) : Q = ⊥ ∨ (Q : Set P).Nonempty := by
+  rw [nonempty_iff_ne_bot]; apply eq_or_ne
 #align affine_subspace.eq_bot_or_nonempty AffineSubspace.eq_bot_or_nonempty
 
 /- warning: affine_subspace.subsingleton_of_subsingleton_span_eq_top -> AffineSubspace.subsingleton_of_subsingleton_span_eq_top is a dubious translation:
@@ -1904,10 +1894,8 @@ but is expected to have type
   forall (k : Type.{u2}) {V : Type.{u1}} {P : Type.{u3}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u1} V] [_inst_3 : Module.{u2, u1} k V (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V P (AddCommGroup.toAddGroup.{u1} V _inst_2)] {s : Set.{u3} P}, Iff (LT.lt.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (Preorder.toLT.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (PartialOrder.toPreorder.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (OmegaCompletePartialOrder.toPartialOrder.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (CompleteLattice.instOmegaCompletePartialOrder.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineSubspace.instCompleteLatticeAffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4))))) (Bot.bot.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (CompleteLattice.toBot.{u3} (AffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4) (AffineSubspace.instCompleteLatticeAffineSubspace.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4))) (affineSpan.{u2, u1, u3} k V P _inst_1 _inst_2 _inst_3 _inst_4 s)) (Set.Nonempty.{u3} P s)
 Case conversion may be inaccurate. Consider using '#align bot_lt_affine_span bot_lt_affineSpanₓ'. -/
 @[simp]
-theorem bot_lt_affineSpan : ⊥ < affineSpan k s ↔ s.Nonempty :=
-  by
-  rw [bot_lt_iff_ne_bot, nonempty_iff_ne_empty]
-  exact (affineSpan_eq_bot _).Not
+theorem bot_lt_affineSpan : ⊥ < affineSpan k s ↔ s.Nonempty := by
+  rw [bot_lt_iff_ne_bot, nonempty_iff_ne_empty]; exact (affineSpan_eq_bot _).Not
 #align bot_lt_affine_span bot_lt_affineSpan
 
 end
@@ -2621,9 +2609,7 @@ but is expected to have type
   forall {k : Type.{u5}} {V₁ : Type.{u4}} {P₁ : Type.{u3}} {V₂ : Type.{u2}} {P₂ : Type.{u1}} [_inst_1 : Ring.{u5} k] [_inst_2 : AddCommGroup.{u4} V₁] [_inst_3 : Module.{u5, u4} k V₁ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u4} V₁ _inst_2)] [_inst_4 : AddTorsor.{u4, u3} V₁ P₁ (AddCommGroup.toAddGroup.{u4} V₁ _inst_2)] [_inst_5 : AddCommGroup.{u2} V₂] [_inst_6 : Module.{u5, u2} k V₂ (Ring.toSemiring.{u5} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V₂ _inst_5)] [_inst_7 : AddTorsor.{u2, u1} V₂ P₂ (AddCommGroup.toAddGroup.{u2} V₂ _inst_5)] {f : AffineMap.{u5, u4, u3, u2, u1} k V₁ P₁ V₂ P₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7}, Eq.{succ u3} (AffineSubspace.{u5, u4, u3} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4) (AffineSubspace.comap.{u5, u4, u3, u2, u1} k V₁ P₁ V₂ P₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6 _inst_7 f (Top.top.{u1} (AffineSubspace.{u5, u2, u1} k V₂ P₂ _inst_1 _inst_5 _inst_6 _inst_7) (CompleteLattice.toTop.{u1} (AffineSubspace.{u5, u2, u1} k V₂ P₂ _inst_1 _inst_5 _inst_6 _inst_7) (AffineSubspace.instCompleteLatticeAffineSubspace.{u5, u2, u1} k V₂ P₂ _inst_1 _inst_5 _inst_6 _inst_7)))) (Top.top.{u3} (AffineSubspace.{u5, u4, u3} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4) (CompleteLattice.toTop.{u3} (AffineSubspace.{u5, u4, u3} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4) (AffineSubspace.instCompleteLatticeAffineSubspace.{u5, u4, u3} k V₁ P₁ _inst_1 _inst_2 _inst_3 _inst_4)))
 Case conversion may be inaccurate. Consider using '#align affine_subspace.comap_top AffineSubspace.comap_topₓ'. -/
 @[simp]
-theorem comap_top {f : P₁ →ᵃ[k] P₂} : (⊤ : AffineSubspace k P₂).comap f = ⊤ :=
-  by
-  rw [← ext_iff]
+theorem comap_top {f : P₁ →ᵃ[k] P₂} : (⊤ : AffineSubspace k P₂).comap f = ⊤ := by rw [← ext_iff];
   exact preimage_univ
 #align affine_subspace.comap_top AffineSubspace.comap_top
 
@@ -2868,10 +2854,8 @@ theorem parallel_iff_direction_eq_and_eq_bot_iff_eq_bot {s₁ s₂ : AffineSubsp
     s₁ ∥ s₂ ↔ s₁.direction = s₂.direction ∧ (s₁ = ⊥ ↔ s₂ = ⊥) :=
   by
   refine' ⟨fun h => ⟨h.direction_eq, _, _⟩, fun h => _⟩
-  · rintro rfl
-    exact bot_parallel_iff_eq_bot.1 h
-  · rintro rfl
-    exact parallel_bot_iff_eq_bot.1 h
+  · rintro rfl; exact bot_parallel_iff_eq_bot.1 h
+  · rintro rfl; exact parallel_bot_iff_eq_bot.1 h
   · rcases h with ⟨hd, hb⟩
     by_cases hs₁ : s₁ = ⊥
     · rw [hs₁, bot_parallel_iff_eq_bot]

@@ -336,8 +336,7 @@ theorem sin_angle_mul_norm_mul_norm (x y : V) :
       rw [hx, inner_zero_left, MulZeroClass.zero_mul, neg_zero]
     · rw [norm_eq_zero] at hy
       rw [hy, inner_zero_right, MulZeroClass.zero_mul, neg_zero]
-  · field_simp [h]
-    ring_nf
+  · field_simp [h] ; ring_nf
 #align inner_product_geometry.sin_angle_mul_norm_mul_norm InnerProductGeometry.sin_angle_mul_norm_mul_norm
 
 /- warning: inner_product_geometry.angle_eq_zero_iff -> InnerProductGeometry.angle_eq_zero_iff is a dubious translation:
@@ -552,9 +551,7 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
   by
   refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-  have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by
-    rw [h]
-    exact sq_abs (‖x‖ - ‖y‖)
+  have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by rw [h]; exact sq_abs (‖x‖ - ‖y‖)
   rw [norm_sub_pow_two_real] at h1
   calc
     ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith

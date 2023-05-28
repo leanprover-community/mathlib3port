@@ -80,9 +80,7 @@ protected theorem functionField_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] Fq
     exact FiniteDimensional.of_fintype_basis (b.map_coeffs e this)
   · let b := FiniteDimensional.finBasis Fqt F
     refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
-    intro c x
-    convert(this (e.symm c) x).symm
-    simp only [e.apply_symm_apply]
+    intro c x; convert(this (e.symm c) x).symm; simp only [e.apply_symm_apply]
 #align function_field_iff functionField_iff
 
 theorem algebraMap_injective [Algebra Fq[X] F] [Algebra (RatFunc Fq) F]
@@ -205,8 +203,7 @@ theorem InftyValuation.map_add_le_max' (x y : RatFunc Fq) :
       rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq x))]
       exact le_refl _
     · by_cases hxy : x + y = 0
-      · rw [infty_valuation_def, if_pos hxy]
-        exact zero_le'
+      · rw [infty_valuation_def, if_pos hxy]; exact zero_le'
       · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy,
           if_neg hxy]
         rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.ofAdd_le, WithZero.coe_le_coe,
@@ -253,9 +250,7 @@ theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
     inftyValuationDef Fq (algebraMap Fq[X] (RatFunc Fq) p) =
       Multiplicative.ofAdd (p.natDegree : ℤ) :=
   by
-  have hp' : algebraMap Fq[X] (RatFunc Fq) p ≠ 0 :=
-    by
-    rw [Ne.def, RatFunc.algebraMap_eq_zero_iff]
+  have hp' : algebraMap Fq[X] (RatFunc Fq) p ≠ 0 := by rw [Ne.def, RatFunc.algebraMap_eq_zero_iff];
     exact hp
   rw [infty_valuation_def, if_neg hp', RatFunc.intDegree_polynomial]
 #align function_field.infty_valuation.polynomial FunctionField.inftyValuation.polynomial

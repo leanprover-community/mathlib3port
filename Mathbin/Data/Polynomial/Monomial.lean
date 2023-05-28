@@ -87,16 +87,10 @@ theorem ringHom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (C a)
     ext
     · simp [h₁, RingEquiv.toRingHom_eq_coe]
     · simpa [RingEquiv.toRingHom_eq_coe] using h₂
-  have B : f = f'.comp (to_finsupp_iso R) :=
-    by
-    rw [hf', RingHom.comp_assoc]
-    ext x
+  have B : f = f'.comp (to_finsupp_iso R) := by rw [hf', RingHom.comp_assoc]; ext x;
     simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
       RingHom.coe_comp, RingEquiv.coe_toRingHom]
-  have C : g = g'.comp (to_finsupp_iso R) :=
-    by
-    rw [hg', RingHom.comp_assoc]
-    ext x
+  have C : g = g'.comp (to_finsupp_iso R) := by rw [hg', RingHom.comp_assoc]; ext x;
     simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
       RingHom.coe_comp, RingEquiv.coe_toRingHom]
   rw [B, C, A]

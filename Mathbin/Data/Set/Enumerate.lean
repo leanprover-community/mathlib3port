@@ -92,8 +92,7 @@ theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, 
   by
   wlog hn : n₁ ≤ n₂
   · cases' le_total n₁ n₂ with H H <;> [skip;symm] <;> apply_assumption <;> assumption
-  · rcases Nat.le.dest hn with ⟨m, rfl⟩
-    clear hn
+  · rcases Nat.le.dest hn with ⟨m, rfl⟩; clear hn
     induction n₁ generalizing s
     case zero =>
       cases m

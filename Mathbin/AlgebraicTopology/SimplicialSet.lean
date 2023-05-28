@@ -94,10 +94,7 @@ def boundary (n : ℕ) : SSet
     where
   obj m := { α : Δ[n].obj m // ¬Function.Surjective (asOrderHom α) }
   map m₁ m₂ f α :=
-    ⟨f.unop ≫ (α : Δ[n].obj m₁), by
-      intro h
-      apply α.property
-      exact Function.Surjective.of_comp h⟩
+    ⟨f.unop ≫ (α : Δ[n].obj m₁), by intro h; apply α.property; exact Function.Surjective.of_comp h⟩
 #align sSet.boundary SSet.boundary
 -/
 

@@ -474,9 +474,7 @@ private theorem le_min_of_lt_of_le (ha : a < b) (hb : a ≤ c) : a ≤ min b c :
 private theorem le_min_of_le_of_lt (ha : a ≤ b) (hb : a < c) : a ≤ min b c :=
   le_min ha hb.le
 
-private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c :=
-  by
-  rw [min_def]
+private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c := by rw [min_def];
   split_ifs <;> assumption
 
 private theorem min_ne_of_ne_of_lt (ha : a ≠ c) (hb : c < b) : min a b ≠ c :=
@@ -485,9 +483,7 @@ private theorem min_ne_of_ne_of_lt (ha : a ≠ c) (hb : c < b) : min a b ≠ c :
 private theorem min_ne_of_lt_of_ne (ha : c < a) (hb : b ≠ c) : min a b ≠ c :=
   min_ne ha.ne' hb
 
-private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c :=
-  by
-  rw [max_def]
+private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c := by rw [max_def];
   split_ifs <;> assumption
 
 end LinearOrder
@@ -659,9 +655,7 @@ private theorem div_ne_zero_of_ne_zero_of_pos (ha : a ≠ 0) (hb : 0 < b) : a / 
 
 end LinearOrderedSemifield
 
-private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a :=
-  by
-  rw [Int.ediv_self ha.ne']
+private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a := by rw [Int.ediv_self ha.ne'];
   exact zero_lt_one
 
 private theorem int_div_nonneg_of_pos_of_nonneg {a b : ℤ} (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a / b :=
@@ -963,10 +957,8 @@ private theorem int_coe_nat_pos {n : ℕ} : 0 < n → 0 < (n : ℤ) :=
 private theorem int_cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : n ≠ 0 → (n : α) ≠ 0 :=
   Int.cast_ne_zero.2
 
-private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) :=
-  by
-  rw [← Int.cast_zero]
-  exact Int.cast_mono hn
+private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) := by
+  rw [← Int.cast_zero]; exact Int.cast_mono hn
 
 private theorem int_cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : 0 < n → 0 < (n : α) :=
   Int.cast_pos.2

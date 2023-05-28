@@ -526,10 +526,7 @@ but is expected to have type
   forall {K : Type.{u2}} [hring : CommRing.{u2} K] {R : Type.{u1}} [_inst_1 : SMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring))] (c : R) (p : RatFunc.{u2} K hring), Eq.{succ u2} (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (RatFunc.toFractionRing.{u2} K hring (HSMul.hSMul.{u1, u2, u2} R (RatFunc.{u2} K hring) (RatFunc.{u2} K hring) (instHSMul.{u1, u2} R (RatFunc.{u2} K hring) (RatFunc.instSMulRatFunc.{u2, u1} K hring R _inst_1)) c p)) (HSMul.hSMul.{u1, u2, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) (instHSMul.{u1, u2} R (FractionRing.{u2} (Polynomial.{u2} K (CommSemiring.toSemiring.{u2} K (CommRing.toCommSemiring.{u2} K hring))) (Polynomial.commRing.{u2} K hring)) _inst_1) c (RatFunc.toFractionRing.{u2} K hring p))
 Case conversion may be inaccurate. Consider using '#align ratfunc.to_fraction_ring_smul RatFunc.toFractionRing_smulₓ'. -/
 theorem toFractionRing_smul [SMul R (FractionRing K[X])] (c : R) (p : RatFunc K) :
-    toFractionRing (c • p) = c • toFractionRing p :=
-  by
-  cases p
-  rw [← of_fraction_ring_smul]
+    toFractionRing (c • p) = c • toFractionRing p := by cases p; rw [← of_fraction_ring_smul]
 #align ratfunc.to_fraction_ring_smul RatFunc.toFractionRing_smul
 
 /- warning: ratfunc.smul_eq_C_smul -> RatFunc.smul_eq_C_smul is a dubious translation:
@@ -826,10 +823,7 @@ def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.co
     rw [← of_fraction_ring_one, ← Localization.mk_one, lift_on_of_fraction_ring_mk]
     simp only [map_one, Submonoid.coe_one, div_one]
   map_mul' x y := by
-    cases x
-    cases y
-    induction' x with p q
-    induction' y with p' q'
+    cases x; cases y; induction' x with p q; induction' y with p' q'
     · rw [← of_fraction_ring_mul, Localization.mk_mul]
       simp only [lift_on_of_fraction_ring_mk, div_mul_div_comm, map_mul, Submonoid.coe_mul]
     · rfl
@@ -878,10 +872,7 @@ def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : RatFunc 
       simp only [MonoidWithZeroHom.toFun_eq_coe]
       cases subsingleton_or_nontrivial R
       · rw [Subsingleton.elim (x + y) y, Subsingleton.elim x 0, map_zero, zero_add]
-      cases x
-      cases y
-      induction' x with p q
-      induction' y with p' q'
+      cases x; cases y; induction' x with p q; induction' y with p' q'
       · rw [← of_fraction_ring_add, Localization.add_mk]
         simp only [RingHom.toMonoidWithZeroHom_eq_coe,
           lift_monoid_with_zero_hom_apply_of_fraction_ring_mk]
@@ -997,10 +988,8 @@ theorem div_smul {R} [Monoid R] [DistribMulAction R K[X]] [IsScalarTower R K[X] 
 <too large>
 Case conversion may be inaccurate. Consider using '#align ratfunc.algebra_map_apply RatFunc.algebraMap_applyₓ'. -/
 theorem algebraMap_apply {R : Type _} [CommSemiring R] [Algebra R K[X]] (x : R) :
-    algebraMap R (RatFunc K) x = algebraMap _ _ (algebraMap R K[X] x) / algebraMap K[X] _ 1 :=
-  by
-  rw [← mk_eq_div]
-  rfl
+    algebraMap R (RatFunc K) x = algebraMap _ _ (algebraMap R K[X] x) / algebraMap K[X] _ 1 := by
+  rw [← mk_eq_div]; rfl
 #align ratfunc.algebra_map_apply RatFunc.algebraMap_apply
 
 /- warning: ratfunc.map_apply_div_ne_zero -> RatFunc.map_apply_div_ne_zero is a dubious translation:
@@ -1176,9 +1165,7 @@ instance : IsFractionRing K[X] (RatFunc K)
         (to_fraction_ring_ring_equiv K).symm.Injective.eq_iff.trans
           (IsLocalization.eq_iff_exists _ _)
   surj := by
-    rintro ⟨z⟩
-    convert IsLocalization.surj K[X]⁰ z
-    ext ⟨x, y⟩
+    rintro ⟨z⟩; convert IsLocalization.surj K[X]⁰ z; ext ⟨x, y⟩
     simp only [← of_fraction_ring_algebra_map, Function.comp_apply, ← of_fraction_ring_mul]
 
 variable {K}
@@ -2245,9 +2232,7 @@ theorem algebraMap_apply_div :
 #align ratfunc.algebra_map_apply_div RatFunc.algebraMap_apply_div
 
 instance : IsScalarTower F[X] (RatFunc F) (LaurentSeries F) :=
-  ⟨fun x y z => by
-    ext
-    simp⟩
+  ⟨fun x y z => by ext; simp⟩
 
 end LaurentSeries
 

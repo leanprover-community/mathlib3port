@@ -107,10 +107,7 @@ theorem isOpen_iff_inter_of_iSup_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpe
   constructor
   · exact fun H i => H.inter (U i).2
   · intro H
-    have : (⋃ i, (U i : Set β)) = Set.univ :=
-      by
-      convert congr_arg coe hU
-      simp
+    have : (⋃ i, (U i : Set β)) = Set.univ := by convert congr_arg coe hU; simp
     rw [← s.inter_univ, ← this, Set.inter_iUnion]
     exact isOpen_iUnion H
 #align is_open_iff_inter_of_supr_eq_top isOpen_iff_inter_of_iSup_eq_top
@@ -173,14 +170,9 @@ theorem inducing_iff_inducing_of_iSup_eq_top (h : Continuous f) :
   simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrict_preimage, maps_to.coe_restrict,
     restrict_eq, ← @Filter.comap_comap _ _ _ _ coe f]
   constructor
-  · intro H i x
-    rw [← H, ← inducing_coe.nhds_eq_comap]
+  · intro H i x; rw [← H, ← inducing_coe.nhds_eq_comap]
   · intro H x
-    obtain ⟨i, hi⟩ :=
-      opens.mem_supr.mp
-        (show f x ∈ iSup U by
-          rw [hU]
-          triv)
+    obtain ⟨i, hi⟩ := opens.mem_supr.mp (show f x ∈ iSup U by rw [hU]; triv)
     erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).openEmbedding_subtype_val ⟨x, hi⟩]
     rw [(H i) ⟨x, hi⟩, Filter.subtype_coe_map_comap, Function.comp_apply, Subtype.coe_mk,
       inf_eq_left, Filter.le_principal_iff]
@@ -200,9 +192,7 @@ theorem embedding_iff_embedding_of_iSup_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply inducing_iff_inducing_of_iSup_eq_top <;> assumption
-  · apply Set.injective_iff_injective_of_iUnion_eq_univ
-    convert congr_arg coe hU
-    simp
+  · apply Set.injective_iff_injective_of_iUnion_eq_univ; convert congr_arg coe hU; simp
 #align embedding_iff_embedding_of_supr_eq_top embedding_iff_embedding_of_iSup_eq_top
 
 /- warning: open_embedding_iff_open_embedding_of_supr_eq_top -> openEmbedding_iff_openEmbedding_of_iSup_eq_top is a dubious translation:
@@ -218,8 +208,7 @@ theorem openEmbedding_iff_openEmbedding_of_iSup_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_iSup_eq_top <;> assumption
-  · simp_rw [Set.range_restrictPreimage]
-    apply isOpen_iff_coe_preimage_of_iSup_eq_top hU
+  · simp_rw [Set.range_restrictPreimage]; apply isOpen_iff_coe_preimage_of_iSup_eq_top hU
 #align open_embedding_iff_open_embedding_of_supr_eq_top openEmbedding_iff_openEmbedding_of_iSup_eq_top
 
 /- warning: closed_embedding_iff_closed_embedding_of_supr_eq_top -> closedEmbedding_iff_closedEmbedding_of_iSup_eq_top is a dubious translation:
@@ -235,7 +224,6 @@ theorem closedEmbedding_iff_closedEmbedding_of_iSup_eq_top (h : Continuous f) :
   rw [forall_and]
   apply and_congr
   · apply embedding_iff_embedding_of_iSup_eq_top <;> assumption
-  · simp_rw [Set.range_restrictPreimage]
-    apply isClosed_iff_coe_preimage_of_iSup_eq_top hU
+  · simp_rw [Set.range_restrictPreimage]; apply isClosed_iff_coe_preimage_of_iSup_eq_top hU
 #align closed_embedding_iff_closed_embedding_of_supr_eq_top closedEmbedding_iff_closedEmbedding_of_iSup_eq_top
 

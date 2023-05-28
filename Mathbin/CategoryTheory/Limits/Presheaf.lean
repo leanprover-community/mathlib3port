@@ -275,20 +275,14 @@ def extendAlongYonedaIsoKanApp (X) :
       trans colimit.pre ((category_of_elements.π X).leftOp ⋙ A) (𝟭 _)
       congr
       · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
-      · ext
-        simp only [colimit.ι_pre]
-        erw [category.comp_id]
-        congr
+      · ext; simp only [colimit.ι_pre]; erw [category.comp_id]; congr
     inv_hom_id' :=
       by
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor]
       trans colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) (𝟭 _)
       congr
       · exact category_of_elements.to_from_costructured_arrow_eq X
-      · ext
-        simp only [colimit.ι_pre]
-        erw [category.comp_id]
-        congr }
+      · ext; simp only [colimit.ι_pre]; erw [category.comp_id]; congr }
 #align category_theory.colimit_adj.extend_along_yoneda_iso_Kan_app CategoryTheory.ColimitAdj.extendAlongYonedaIsoKanApp
 
 /- warning: category_theory.colimit_adj.extend_along_yoneda_iso_Kan -> CategoryTheory.ColimitAdj.extendAlongYonedaIsoKan is a dubious translation:

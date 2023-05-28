@@ -112,8 +112,7 @@ theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i :=
     cases' not_forall.1 (mt Equiv.ext h2) with x h3
     convert MulZeroClass.mul_zero _
     apply Finset.prod_eq_zero
-    · change x ∈ _
-      simp
+    · change x ∈ _; simp
     exact if_neg h3
   · simp
   · simp
@@ -156,9 +155,7 @@ but is expected to have type
   forall {n : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Fintype.{u1} n] {R : Type.{u2}} [_inst_5 : CommRing.{u2} R] [_inst_6 : IsEmpty.{succ u1} n], Eq.{max (succ u2) (succ u1)} ((Matrix.{u1, u1, u2} n n R) -> R) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_1 a b) _inst_2 R _inst_5) (Function.const.{succ u2, max (succ u2) (succ u1)} R (Matrix.{u1, u1, u2} n n R) (OfNat.ofNat.{u2} R 1 (One.toOfNat1.{u2} R (Semiring.toOne.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_5))))))
 Case conversion may be inaccurate. Consider using '#align matrix.coe_det_is_empty Matrix.coe_det_isEmptyₓ'. -/
 @[simp]
-theorem coe_det_isEmpty [IsEmpty n] : (det : Matrix n n R → R) = Function.const _ 1 :=
-  by
-  ext
+theorem coe_det_isEmpty [IsEmpty n] : (det : Matrix n n R → R) = Function.const _ 1 := by ext;
   exact det_is_empty
 #align matrix.coe_det_is_empty Matrix.coe_det_isEmpty
 
@@ -261,15 +258,11 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
       (sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equiv.mulRight σ⁻¹) _ _ fun τ =>
           by
-          have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j :=
-            by
-            rw [← (σ⁻¹ : _ ≃ _).prod_comp]
+          have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j := by rw [← (σ⁻¹ : _ ≃ _).prod_comp];
             simp only [Equiv.Perm.coe_mul, apply_inv_self]
           have h : ε σ * ε (τ * σ⁻¹) = ε τ :=
             calc
-              ε σ * ε (τ * σ⁻¹) = ε (τ * σ⁻¹ * σ) :=
-                by
-                rw [mul_comm, sign_mul (τ * σ⁻¹)]
+              ε σ * ε (τ * σ⁻¹) = ε (τ * σ⁻¹ * σ) := by rw [mul_comm, sign_mul (τ * σ⁻¹)];
                 simp only [Int.cast_mul, Units.val_mul]
               _ = ε τ := by simp only [inv_mul_cancel_right]
               
@@ -495,9 +488,7 @@ theorem det_mul_row (v : n → R) (A : Matrix n n R) :
     det (of fun i j => v j * A i j) = (∏ i, v i) * det A :=
   calc
     det (of fun i j => v j * A i j) = det (A ⬝ diagonal v) :=
-      congr_arg det <| by
-        ext
-        simp [mul_comm]
+      congr_arg det <| by ext; simp [mul_comm]
     _ = (∏ i, v i) * det A := by rw [det_mul, det_diagonal, mul_comm]
     
 #align matrix.det_mul_row Matrix.det_mul_row
@@ -599,9 +590,7 @@ but is expected to have type
   forall {n : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Fintype.{u1} n] {R : Type.{u2}} [_inst_5 : CommRing.{u2} R] {A : Matrix.{u1, u1, u2} n n R} (j : n), (forall (i : n), Eq.{succ u2} R (A i j) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_5)))))) -> (Eq.{succ u2} R (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_1 a b) _inst_2 R _inst_5 A) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_5))))))
 Case conversion may be inaccurate. Consider using '#align matrix.det_eq_zero_of_column_eq_zero Matrix.det_eq_zero_of_column_eq_zeroₓ'. -/
 theorem det_eq_zero_of_column_eq_zero {A : Matrix n n R} (j : n) (h : ∀ i, A i j = 0) : det A = 0 :=
-  by
-  rw [← det_transpose]
-  exact det_eq_zero_of_row_eq_zero j h
+  by rw [← det_transpose]; exact det_eq_zero_of_row_eq_zero j h
 #align matrix.det_eq_zero_of_column_eq_zero Matrix.det_eq_zero_of_column_eq_zero
 
 variable {M : Matrix n n R} {i j : n}
@@ -624,10 +613,8 @@ but is expected to have type
   forall {n : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Fintype.{u1} n] {R : Type.{u2}} [_inst_5 : CommRing.{u2} R] {M : Matrix.{u1, u1, u2} n n R} {i : n} {j : n}, (Ne.{succ u1} n i j) -> (forall (k : n), Eq.{succ u2} R (M k i) (M k j)) -> (Eq.{succ u2} R (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_1 a b) _inst_2 R _inst_5 M) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_5))))))
 Case conversion may be inaccurate. Consider using '#align matrix.det_zero_of_column_eq Matrix.det_zero_of_column_eqₓ'. -/
 /-- If a matrix has a repeated column, the determinant will be zero. -/
-theorem det_zero_of_column_eq (i_ne_j : i ≠ j) (hij : ∀ k, M k i = M k j) : M.det = 0 :=
-  by
-  rw [← det_transpose, det_zero_of_row_eq i_ne_j]
-  exact funext hij
+theorem det_zero_of_column_eq (i_ne_j : i ≠ j) (hij : ∀ k, M k i = M k j) : M.det = 0 := by
+  rw [← det_transpose, det_zero_of_row_eq i_ne_j]; exact funext hij
 #align matrix.det_zero_of_column_eq Matrix.det_zero_of_column_eq
 
 end DetZero
@@ -819,8 +806,7 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
     · exact mt (fun h => show k ∈ insert i s from h ▸ Finset.mem_insert_self _ _) hk
     · intro i' hi'
       rw [Function.update_apply]
-      split_ifs with hi'i
-      · rfl
+      split_ifs with hi'i; · rfl
       · exact hs i' fun h => hi' ((finset.mem_insert.mp h).resolve_left hi'i)
     · exact fun h => hk (Finset.mem_insert_of_mem h)
     · intro i' j'
@@ -873,8 +859,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   · intro i hi
     rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi
     rw [Function.update_apply]
-    split_ifs with hik
-    · rfl
+    split_ifs with hik; · rfl
     exact hc _ (fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (Ne.symm hik)))
   · rwa [hM', update_row_ne (Fin.succ_ne_zero _).symm]
   intro i j
@@ -962,8 +947,7 @@ theorem det_blockDiagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Ma
     exact (this k x).1
   · intro σ hσ
     rw [mem_preserving_snd] at hσ
-    have hσ' : ∀ x, (σ⁻¹ x).snd = x.snd := by
-      intro x
+    have hσ' : ∀ x, (σ⁻¹ x).snd = x.snd := by intro x;
       conv_rhs => rw [← perm.apply_inv_self σ x, hσ]
     have mk_apply_eq : ∀ k x, ((σ (x, k)).fst, k) = σ (x, k) :=
       by
@@ -1030,9 +1014,7 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
     · intro σ₁ σ₂ h₁ h₂
       dsimp only
       intro h
-      have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x :=
-        by
-        intro x
+      have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by intro x;
         exact congr_fun (congr_arg to_fun h) x
       simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2
       ext
@@ -1051,15 +1033,13 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
         rw [Set.mem_toFinset] at hσn
         apply absurd (mem_sum_congr_hom_range_of_perm_maps_to_inl _) hσn
         rintro x ⟨a, ha⟩
-        rw [← ha]
-        exact h a
+        rw [← ha]; exact h a
       obtain ⟨a, ha⟩ := not_forall.mp h1
       cases' hx : σ (Sum.inl a) with a2 b
       · have hn := (not_exists.mp ha) a2
         exact absurd hx.symm hn
       · rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), MulZeroClass.mul_zero]
-        rw [hx, from_blocks_apply₂₁]
-        rfl
+        rw [hx, from_blocks_apply₂₁]; rfl
 #align matrix.det_from_blocks_zero₂₁ Matrix.det_fromBlocks_zero₂₁
 
 /- warning: matrix.det_from_blocks_zero₁₂ -> Matrix.det_fromBlocks_zero₁₂ is a dubious translation:

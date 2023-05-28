@@ -173,16 +173,8 @@ def homotopyEquivOfIso {C D : HomologicalComplex V c}
     where
   Hom := Quot.out i.Hom
   inv := Quot.out i.inv
-  homotopyHomInvId :=
-    homotopyOfEq _ _
-      (by
-        simp
-        rfl)
-  homotopyInvHomId :=
-    homotopyOfEq _ _
-      (by
-        simp
-        rfl)
+  homotopyHomInvId := homotopyOfEq _ _ (by simp; rfl)
+  homotopyInvHomId := homotopyOfEq _ _ (by simp; rfl)
 #align homotopy_category.homotopy_equiv_of_iso HomotopyCategory.homotopyEquivOfIso
 
 variable (V c) [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]

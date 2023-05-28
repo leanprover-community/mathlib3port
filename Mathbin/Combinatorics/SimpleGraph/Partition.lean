@@ -98,18 +98,14 @@ def partOfVertex (v : V) : Set V :=
 -/
 
 #print SimpleGraph.Partition.partOfVertex_mem /-
-theorem partOfVertex_mem (v : V) : P.partOfVertex v ∈ P.parts :=
-  by
-  obtain ⟨h, -⟩ := (P.is_partition.2 v).choose_spec.1
-  exact h
+theorem partOfVertex_mem (v : V) : P.partOfVertex v ∈ P.parts := by
+  obtain ⟨h, -⟩ := (P.is_partition.2 v).choose_spec.1; exact h
 #align simple_graph.partition.part_of_vertex_mem SimpleGraph.Partition.partOfVertex_mem
 -/
 
 #print SimpleGraph.Partition.mem_partOfVertex /-
-theorem mem_partOfVertex (v : V) : v ∈ P.partOfVertex v :=
-  by
-  obtain ⟨⟨h1, h2⟩, h3⟩ := (P.is_partition.2 v).choose_spec
-  exact h2.1
+theorem mem_partOfVertex (v : V) : v ∈ P.partOfVertex v := by
+  obtain ⟨⟨h1, h2⟩, h3⟩ := (P.is_partition.2 v).choose_spec; exact h2.1
 #align simple_graph.partition.mem_part_of_vertex SimpleGraph.Partition.mem_partOfVertex
 -/
 
@@ -127,10 +123,8 @@ theorem partOfVertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def toColoring : G.Coloring P.parts :=
-  Coloring.mk (fun v => ⟨P.partOfVertex v, P.partOfVertex_mem v⟩) fun _ _ hvw =>
-    by
-    rw [Ne.def, Subtype.mk_eq_mk]
-    exact P.part_of_vertex_ne_of_adj hvw
+  Coloring.mk (fun v => ⟨P.partOfVertex v, P.partOfVertex_mem v⟩) fun _ _ hvw => by
+    rw [Ne.def, Subtype.mk_eq_mk]; exact P.part_of_vertex_ne_of_adj hvw
 #align simple_graph.partition.to_coloring SimpleGraph.Partition.toColoring
 -/
 

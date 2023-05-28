@@ -62,14 +62,8 @@ def cechNerve : SimplicialObject C
   map m n g :=
     WidePullback.lift (WidePullback.base _)
       (fun i => (WidePullback.π fun i => f.Hom) <| g.unop.toOrderHom i) fun j => by simp
-  map_id' x := by
-    ext ⟨⟩
-    · simpa
-    · simp
-  map_comp' x y z f g := by
-    ext ⟨⟩
-    · simpa
-    · simp
+  map_id' x := by ext ⟨⟩; · simpa; · simp
+  map_comp' x y z f g := by ext ⟨⟩; · simpa; · simp
 #align category_theory.arrow.cech_nerve CategoryTheory.Arrow.cechNerve
 -/
 
@@ -84,10 +78,7 @@ def mapCechNerve {f g : Arrow C}
   app n :=
     WidePullback.lift (WidePullback.base _ ≫ F.right) (fun i => WidePullback.π _ i ≫ F.left)
       fun j => by simp
-  naturality' x y f := by
-    ext ⟨⟩
-    · simp
-    · simp
+  naturality' x y f := by ext ⟨⟩; · simp; · simp
 #align category_theory.arrow.map_cech_nerve CategoryTheory.Arrow.mapCechNerve
 -/
 
@@ -100,9 +91,7 @@ def augmentedCechNerve : SimplicialObject.Augmented C
   right := f.right
   Hom :=
     { app := fun i => WidePullback.base _
-      naturality' := fun x y f => by
-        dsimp
-        simp }
+      naturality' := fun x y f => by dsimp; simp }
 #align category_theory.arrow.augmented_cech_nerve CategoryTheory.Arrow.augmentedCechNerve
 -/
 
@@ -116,9 +105,7 @@ def mapAugmentedCechNerve {f g : Arrow C}
     where
   left := mapCechNerve F
   right := F.right
-  w' := by
-    ext
-    simp
+  w' := by ext; simp
 #align category_theory.arrow.map_augmented_cech_nerve CategoryTheory.Arrow.mapAugmentedCechNerve
 -/
 
@@ -138,14 +125,8 @@ def cechNerve : Arrow C ⥤ SimplicialObject C
     where
   obj f := f.cechNerve
   map f g F := Arrow.mapCechNerve F
-  map_id' i := by
-    ext
-    · simp
-    · simp
-  map_comp' x y z f g := by
-    ext
-    · simp
-    · simp
+  map_id' i := by ext; · simp; · simp
+  map_comp' x y z f g := by ext; · simp; · simp
 #align category_theory.simplicial_object.cech_nerve CategoryTheory.SimplicialObject.cechNerve
 -/
 
@@ -156,16 +137,8 @@ def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
     where
   obj f := f.augmentedCechNerve
   map f g F := Arrow.mapAugmentedCechNerve F
-  map_id' x := by
-    ext
-    · simp
-    · simp
-    · rfl
-  map_comp' x y z f g := by
-    ext
-    · simp
-    · simp
-    · rfl
+  map_id' x := by ext; · simp; · simp; · rfl
+  map_comp' x y z f g := by ext; · simp; · simp; · rfl
 #align category_theory.simplicial_object.augmented_cech_nerve CategoryTheory.SimplicialObject.augmentedCechNerve
 -/
 
@@ -202,9 +175,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
   left :=
     { app := fun x =>
         Limits.WidePullback.lift (X.Hom.app _ ≫ G.right)
-          (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i =>
-          by
-          dsimp
+          (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i => by dsimp;
           erw [category.assoc, arrow.w, augmented.to_arrow_obj_hom, nat_trans.naturality_assoc,
             functor.const_obj_map, category.id_comp]
       naturality' := by
@@ -219,10 +190,7 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
             category.assoc]
           erw [category.id_comp] }
   right := G.right
-  w' := by
-    ext
-    dsimp
-    simp
+  w' := by ext; dsimp; simp
 #align category_theory.simplicial_object.equivalence_left_to_right CategoryTheory.SimplicialObject.equivalenceLeftToRight
 
 /- warning: category_theory.simplicial_object.cech_nerve_equiv -> CategoryTheory.SimplicialObject.cechNerveEquiv is a dubious translation:
@@ -275,17 +243,8 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
 abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmentedCechNerve :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechNerveEquiv
-      homEquiv_naturality_left_symm := fun x y f g h =>
-        by
-        ext
-        · simp
-        · simp
-      homEquiv_naturality_right := fun x y f g h =>
-        by
-        ext
-        · simp
-        · simp
-        · rfl }
+      homEquiv_naturality_left_symm := fun x y f g h => by ext; · simp; · simp
+      homEquiv_naturality_right := fun x y f g h => by ext; · simp; · simp; · rfl }
 #align category_theory.simplicial_object.cech_nerve_adjunction CategoryTheory.SimplicialObject.cechNerveAdjunction
 -/
 
@@ -309,14 +268,8 @@ def cechConerve : CosimplicialObject C
     WidePushout.desc (WidePushout.head _)
       (fun i => (WidePushout.ι fun i => f.Hom) <| g.toOrderHom i) fun i => by
       rw [wide_pushout.arrow_ι fun i => f.hom]
-  map_id' x := by
-    ext ⟨⟩
-    · simpa
-    · simp
-  map_comp' x y z f g := by
-    ext ⟨⟩
-    · simpa
-    · simp
+  map_id' x := by ext ⟨⟩; · simpa; · simp
+  map_comp' x y z f g := by ext ⟨⟩; · simpa; · simp
 #align category_theory.arrow.cech_conerve CategoryTheory.Arrow.cechConerve
 -/
 
@@ -331,10 +284,7 @@ def mapCechConerve {f g : Arrow C}
   app n :=
     WidePushout.desc (F.left ≫ WidePushout.head _) (fun i => F.right ≫ WidePushout.ι _ i) fun i =>
       by rw [← arrow.w_assoc F, wide_pushout.arrow_ι fun i => g.hom]
-  naturality' x y f := by
-    ext
-    · simp
-    · simp
+  naturality' x y f := by ext; · simp; · simp
 #align category_theory.arrow.map_cech_conerve CategoryTheory.Arrow.mapCechConerve
 -/
 
@@ -347,9 +297,7 @@ def augmentedCechConerve : CosimplicialObject.Augmented C
   right := f.cechConerve
   Hom :=
     { app := fun i => WidePushout.head _
-      naturality' := fun x y f => by
-        dsimp
-        simp }
+      naturality' := fun x y f => by dsimp; simp }
 #align category_theory.arrow.augmented_cech_conerve CategoryTheory.Arrow.augmentedCechConerve
 -/
 
@@ -363,9 +311,7 @@ def mapAugmentedCechConerve {f g : Arrow C}
     where
   left := F.left
   right := mapCechConerve F
-  w' := by
-    ext
-    simp
+  w' := by ext; simp
 #align category_theory.arrow.map_augmented_cech_conerve CategoryTheory.Arrow.mapAugmentedCechConerve
 -/
 
@@ -385,16 +331,8 @@ def cechConerve : Arrow C ⥤ CosimplicialObject C
     where
   obj f := f.cechConerve
   map f g F := Arrow.mapCechConerve F
-  map_id' i := by
-    ext
-    · dsimp
-      simp
-    · dsimp
-      simp
-  map_comp' f g h F G := by
-    ext
-    · simp
-    · simp
+  map_id' i := by ext; · dsimp; simp; · dsimp; simp
+  map_comp' f g h F G := by ext; · simp; · simp
 #align category_theory.cosimplicial_object.cech_conerve CategoryTheory.CosimplicialObject.cechConerve
 -/
 
@@ -405,18 +343,8 @@ def augmentedCechConerve : Arrow C ⥤ CosimplicialObject.Augmented C
     where
   obj f := f.augmentedCechConerve
   map f g F := Arrow.mapAugmentedCechConerve F
-  map_id' f := by
-    ext
-    · rfl
-    · dsimp
-      simp
-    · dsimp
-      simp
-  map_comp' f g h F G := by
-    ext
-    · rfl
-    · simp
-    · simp
+  map_id' f := by ext; · rfl; · dsimp; simp; · dsimp; simp
+  map_comp' f g h F G := by ext; · rfl; · simp; · simp
 #align category_theory.cosimplicial_object.augmented_cech_conerve CategoryTheory.CosimplicialObject.augmentedCechConerve
 -/
 
@@ -474,9 +402,7 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
           simp only [functor.const_obj_map, ← nat_trans.naturality, wide_pushout.head_desc_assoc,
             wide_pushout.head_desc, category.assoc]
           erw [category.id_comp] }
-  w' := by
-    ext
-    simp
+  w' := by ext; simp
 #align category_theory.cosimplicial_object.equivalence_right_to_left CategoryTheory.CosimplicialObject.equivalenceRightToLeft
 
 /- warning: category_theory.cosimplicial_object.cech_conerve_equiv -> CategoryTheory.CosimplicialObject.cechConerveEquiv is a dubious translation:
@@ -527,17 +453,8 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
 abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechConerveEquiv
-      homEquiv_naturality_left_symm := fun x y f g h =>
-        by
-        ext
-        · rfl
-        · simp
-        · simp
-      homEquiv_naturality_right := fun x y f g h =>
-        by
-        ext
-        · simp
-        · simp }
+      homEquiv_naturality_left_symm := fun x y f g h => by ext; · rfl; · simp; · simp
+      homEquiv_naturality_right := fun x y f g h => by ext; · simp; · simp }
 #align category_theory.cosimplicial_object.cech_conerve_adjunction CategoryTheory.CosimplicialObject.cechConerveAdjunction
 -/
 

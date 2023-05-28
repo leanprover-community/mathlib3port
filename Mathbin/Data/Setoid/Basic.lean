@@ -216,11 +216,8 @@ instance : InfSet (Setoid α) :=
 #print Setoid.sInf_def /-
 /-- The underlying binary operation of the infimum of a set of equivalence relations
     is the infimum of the set's image under the map to the underlying binary operation. -/
-theorem sInf_def {s : Set (Setoid α)} : (sInf s).Rel = sInf (Rel '' s) :=
-  by
-  ext
-  simp only [sInf_image, iInf_apply, iInf_Prop_eq]
-  rfl
+theorem sInf_def {s : Set (Setoid α)} : (sInf s).Rel = sInf (Rel '' s) := by ext;
+  simp only [sInf_image, iInf_apply, iInf_Prop_eq]; rfl
 #align setoid.Inf_def Setoid.sInf_def
 -/
 

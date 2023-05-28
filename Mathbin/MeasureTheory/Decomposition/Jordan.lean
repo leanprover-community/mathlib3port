@@ -225,10 +225,8 @@ def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
     negPart_finite := inferInstance
     MutuallySingular := by
       refine' ⟨iᶜ, hi.1.compl, _, _⟩
-      · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]
-        simp
-      · rw [to_measure_of_le_zero_apply _ _ hi.1.compl hi.1.compl.compl]
-        simp }
+      · rw [to_measure_of_zero_le_apply _ _ hi.1 hi.1.compl]; simp
+      · rw [to_measure_of_le_zero_apply _ _ hi.1.compl hi.1.compl.compl]; simp }
 #align measure_theory.signed_measure.to_jordan_decomposition MeasureTheory.SignedMeasure.toJordanDecomposition
 
 theorem toJordanDecomposition_spec (s : SignedMeasure α) :
@@ -524,8 +522,7 @@ theorem null_of_totalVariation_zero (s : SignedMeasure α) {i : Set α}
   rw [← to_signed_measure_to_jordan_decomposition s, to_signed_measure, vector_measure.coe_sub,
     Pi.sub_apply, measure.to_signed_measure_apply, measure.to_signed_measure_apply]
   by_cases hi : MeasurableSet i
-  · rw [if_pos hi, if_pos hi]
-    simp [hs.1, hs.2]
+  · rw [if_pos hi, if_pos hi]; simp [hs.1, hs.2]
   · simp [if_neg hi]
 #align measure_theory.signed_measure.null_of_total_variation_zero MeasureTheory.SignedMeasure.null_of_totalVariation_zero
 
@@ -550,7 +547,7 @@ theorem totalVariation_absolutelyContinuous_iff (s : SignedMeasure α) (μ : Mea
       s.toJordanDecomposition.posPart ≪ μ ∧ s.toJordanDecomposition.negPart ≪ μ :=
   by
   constructor <;> intro h
-  · constructor
+  · constructor;
     all_goals
       refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
       have := h hS₂

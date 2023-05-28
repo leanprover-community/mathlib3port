@@ -72,9 +72,7 @@ theorem Prop.top_eq_true : (⊤ : Prop) = True :=
 
 #print Prop.le_isTotal /-
 instance Prop.le_isTotal : IsTotal Prop (· ≤ ·) :=
-  ⟨fun p q => by
-    change (p → q) ∨ (q → p)
-    tauto⟩
+  ⟨fun p q => by change (p → q) ∨ (q → p); tauto⟩
 #align Prop.le_is_total Prop.le_isTotal
 -/
 

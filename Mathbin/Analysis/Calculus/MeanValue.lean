@@ -355,8 +355,7 @@ theorem norm_image_sub_le_of_norm_deriv_right_le_segment {f' : ℝ → E} {C : �
     intro x
     simpa using (hasDerivAt_const x C).mul ((hasDerivAt_id x).sub (hasDerivAt_const x a))
   convert image_norm_le_of_norm_deriv_right_le_deriv_boundary hg hg' _ hB bound
-  simp only [g, B]
-  rw [sub_self, norm_zero, sub_self, MulZeroClass.mul_zero]
+  simp only [g, B]; rw [sub_self, norm_zero, sub_self, MulZeroClass.mul_zero]
 #align norm_image_sub_le_of_norm_deriv_right_le_segment norm_image_sub_le_of_norm_deriv_right_le_segment
 
 /-- A function on `[a, b]` with the norm of the derivative within `[a, b]`
@@ -487,13 +486,9 @@ theorem norm_image_sub_le_of_norm_has_fderiv_within_le
     by
     rw [← image_subset_iff, ← segment_eq_image']
     apply hs.segment_subset xs ys
-  have : f x = f (g 0) := by
-    simp only [g]
-    rw [zero_smul, add_zero]
+  have : f x = f (g 0) := by simp only [g]; rw [zero_smul, add_zero]
   rw [this]
-  have : f y = f (g 1) := by
-    simp only [g]
-    rw [one_smul, add_sub_cancel'_right]
+  have : f y = f (g 1) := by simp only [g]; rw [one_smul, add_sub_cancel'_right]
   rw [this]
   have D2 : ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt (f ∘ g) (f' (g t) (y - x)) (Icc 0 1) t :=
     by
@@ -730,11 +725,7 @@ theorem lipschitzWith_of_nnnorm_deriv_le {C : ℝ≥0} (hf : Differentiable 𝕜
 then it is a constant function. -/
 theorem is_const_of_deriv_eq_zero (hf : Differentiable 𝕜 f) (hf' : ∀ x, deriv f x = 0) (x y : 𝕜) :
     f x = f y :=
-  is_const_of_fderiv_eq_zero hf
-    (fun z => by
-      ext
-      simp [← deriv_fderiv, hf'])
-    _ _
+  is_const_of_fderiv_eq_zero hf (fun z => by ext; simp [← deriv_fderiv, hf']) _ _
 #align is_const_of_deriv_eq_zero is_const_of_deriv_eq_zero
 
 end Convex
@@ -759,9 +750,7 @@ theorem exists_ratio_hasDerivAt_eq_ratio_slope :
     ∃ c ∈ Ioo a b, (g b - g a) * f' c = (f b - f a) * g' c :=
   by
   let h x := (g b - g a) * f x - (f b - f a) * g x
-  have hI : h a = h b := by
-    simp only [h]
-    ring
+  have hI : h a = h b := by simp only [h]; ring
   let h' x := (g b - g a) * f' x - (f b - f a) * g' x
   have hhh' : ∀ x ∈ Ioo a b, HasDerivAt h (h' x) x := fun x hx =>
     ((hff' x hx).const_mul (g b - g a)).sub ((hgg' x hx).const_mul (f b - f a))
@@ -866,9 +855,7 @@ theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D
     subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
   obtain ⟨a, a_mem, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
   exact exists_deriv_eq_slope f hxy (hf.mono hxyD) (hf'.mono hxyD')
-  have : C < (f y - f x) / (y - x) := by
-    rw [← ha]
-    exact hf'_gt _ (hxyD' a_mem)
+  have : C < (f y - f x) / (y - x) := by rw [← ha]; exact hf'_gt _ (hxyD' a_mem)
   exact (lt_div_iff (sub_pos.2 hxy)).1 this
 #align convex.mul_sub_lt_image_sub_of_lt_deriv Convex.mul_sub_lt_image_sub_of_lt_deriv
 
@@ -891,16 +878,13 @@ theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D
     ∀ (x) (_ : x ∈ D) (y) (_ : y ∈ D), x ≤ y → C * (y - x) ≤ f y - f x :=
   by
   intro x hx y hy hxy
-  cases' eq_or_lt_of_le hxy with hxy' hxy'
-  · rw [hxy', sub_self, sub_self, MulZeroClass.mul_zero]
+  cases' eq_or_lt_of_le hxy with hxy' hxy'; · rw [hxy', sub_self, sub_self, MulZeroClass.mul_zero]
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
     subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
   obtain ⟨a, a_mem, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
   exact exists_deriv_eq_slope f hxy' (hf.mono hxyD) (hf'.mono hxyD')
-  have : C ≤ (f y - f x) / (y - x) := by
-    rw [← ha]
-    exact hf'_ge _ (hxyD' a_mem)
+  have : C ≤ (f y - f x) / (y - x) := by rw [← ha]; exact hf'_ge _ (hxyD' a_mem)
   exact (le_div_iff (sub_pos.2 hxy')).1 this
 #align convex.mul_sub_le_image_sub_of_le_deriv Convex.mul_sub_le_image_sub_of_le_deriv
 
@@ -1401,17 +1385,11 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
     by
     rw [segment_eq_image']
     simp only [mem_image, and_imp, add_right_inj]
-    intro t ht
-    exact ⟨t, ht, rfl⟩
+    intro t ht; exact ⟨t, ht, rfl⟩
   have hseg' : Icc 0 1 ⊆ g ⁻¹' s := by
-    rw [← image_subset_iff]
-    unfold image
-    change ∀ _, _
-    intro z Hz
-    rw [mem_set_of_eq] at Hz
-    rcases Hz with ⟨t, Ht, hgt⟩
-    rw [← hgt]
-    exact hs.segment_subset xs ys (hseg t Ht)
+    rw [← image_subset_iff]; unfold image; change ∀ _, _
+    intro z Hz; rw [mem_set_of_eq] at Hz; rcases Hz with ⟨t, Ht, hgt⟩
+    rw [← hgt]; exact hs.segment_subset xs ys (hseg t Ht)
   -- derivative of pullback of f under parametrization
   have hfg :
     ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt (f ∘ g) ((f' (g t) : E → ℝ) (y - x)) (Icc (0 : ℝ) 1) t :=
@@ -1430,8 +1408,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
     · exact fun t Ht => (hfg t <| hIccIoo Ht).HasDerivAt (Icc_mem_nhds Ht.1 Ht.2)
   -- reinterpret on domain
   rcases hMVT with ⟨t, Ht, hMVT'⟩
-  use g t
-  refine' ⟨hseg t <| hIccIoo Ht, _⟩
+  use g t; refine' ⟨hseg t <| hIccIoo Ht, _⟩
   simp [g, hMVT']
 #align domain_mvt domain_mvt
 
@@ -1466,10 +1443,7 @@ theorem hasStrictFDerivAt_of_hasFDerivAt_of_continuousAt
   rintro ⟨a, b⟩ h
   rw [← ball_prod_same, prod_mk_mem_set_prod_eq] at h
   -- exploit the choice of ε as the modulus of continuity of f'
-  have hf' : ∀ x' ∈ ball x ε, ‖f' x' - f' x‖ ≤ c :=
-    by
-    intro x' H'
-    rw [← dist_eq_norm]
+  have hf' : ∀ x' ∈ ball x ε, ‖f' x' - f' x‖ ≤ c := by intro x' H'; rw [← dist_eq_norm];
     exact le_of_lt (hε H').2
   -- apply mean value theorem
   letI : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G

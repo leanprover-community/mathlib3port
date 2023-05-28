@@ -62,10 +62,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {op : β -> β -> β} [hc : IsCommutative.{u1} β op] [ha : IsAssociative.{u1} β op] {f : α -> β} {b : β} {s : Finset.{u2} α} {a : α} (h : Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s)), Eq.{succ u1} β (Finset.fold.{u2, u1} α β op hc ha b f (Finset.cons.{u2} α a s h)) (op (f a) (Finset.fold.{u2, u1} α β op hc ha b f s))
 Case conversion may be inaccurate. Consider using '#align finset.fold_cons Finset.fold_consₓ'. -/
 @[simp]
-theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f :=
-  by
-  dsimp only [fold]
-  rw [cons_val, Multiset.map_cons, fold_cons_left]
+theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f := by
+  dsimp only [fold]; rw [cons_val, Multiset.map_cons, fold_cons_left]
 #align finset.fold_cons Finset.fold_cons
 
 /- warning: finset.fold_insert -> Finset.fold_insert is a dubious translation:
@@ -202,8 +200,7 @@ theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] :
     (insert a s).fold op b f = f a * s.fold op b f :=
   by
   by_cases a ∈ s
-  · rw [← insert_erase h]
-    simp [← ha.assoc, hi.idempotent]
+  · rw [← insert_erase h]; simp [← ha.assoc, hi.idempotent]
   · apply fold_insert h
 #align finset.fold_insert_idem Finset.fold_insert_idem
 
@@ -270,18 +267,11 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
     rw [Finset.fold_insert ha, hr, IH, ← and_assoc', and_comm' (r c (f a)), and_assoc']
     apply and_congr Iff.rfl
     constructor
-    · rintro ⟨h₁, h₂⟩
-      intro b hb
-      rw [Finset.mem_insert] at hb
+    · rintro ⟨h₁, h₂⟩; intro b hb; rw [Finset.mem_insert] at hb
       rcases hb with (rfl | hb) <;> solve_by_elim
-    · intro h
-      constructor
+    · intro h; constructor
       · exact h a (Finset.mem_insert_self _ _)
-      · intro b hb
-        apply h b
-        rw [Finset.mem_insert]
-        right
-        exact hb
+      · intro b hb; apply h b; rw [Finset.mem_insert]; right; exact hb
 #align finset.fold_op_rel_iff_and Finset.fold_op_rel_iff_and
 
 /- warning: finset.fold_op_rel_iff_or -> Finset.fold_op_rel_iff_or is a dubious translation:
@@ -301,16 +291,12 @@ theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y
     apply or_congr Iff.rfl
     constructor
     · rintro (h₁ | ⟨x, hx, h₂⟩)
-      · use a
-        simp [h₁]
+      · use a; simp [h₁]
       · refine' ⟨x, by simp [hx], h₂⟩
     · rintro ⟨x, hx, h⟩
-      rw [mem_insert] at hx
-      cases hx
-      · left
-        rwa [hx] at h
-      · right
-        exact ⟨x, hx, h⟩
+      rw [mem_insert] at hx; cases hx
+      · left; rwa [hx] at h
+      · right; exact ⟨x, hx, h⟩
 #align finset.fold_op_rel_iff_or Finset.fold_op_rel_iff_or
 
 omit hc ha
@@ -322,8 +308,7 @@ theorem fold_union_empty_singleton [DecidableEq α] (s : Finset α) :
   by
   apply Finset.induction_on s
   · simp only [fold_empty]
-  · intro a s has ih
-    rw [fold_insert has, ih, insert_eq]
+  · intro a s has ih; rw [fold_insert has, ih, insert_eq]
 #align finset.fold_union_empty_singleton Finset.fold_union_empty_singleton
 -/
 

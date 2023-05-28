@@ -74,9 +74,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] {ι : Type.{u1}} {s : ι -> C} [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u2, u3} C _inst_1], (CategoryTheory.HomOrthogonal.{u2, u3, u1} C _inst_1 ι s) -> (forall {i : ι} {j : ι}, (Ne.{succ u1} ι i j) -> (forall (f : Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) f (OfNat.ofNat.{u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) 0 (Zero.toOfNat0.{u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (s i) (s j)) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u2, u3} C _inst_1 _inst_2 (s i) (s j))))))
 Case conversion may be inaccurate. Consider using '#align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zeroₓ'. -/
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) :
-    f = 0 := by
-  haveI := o i j w
-  apply Subsingleton.elim
+    f = 0 := by haveI := o i j w; apply Subsingleton.elim
 #align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zero
 
 section
@@ -95,15 +93,8 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i))
     where
   toFun z i j k :=
-    eqToHom
-        (by
-          rcases k with ⟨k, ⟨⟩⟩
-          simp) ≫
-      biproduct.components z k j ≫
-        eqToHom
-          (by
-            rcases j with ⟨j, ⟨⟩⟩
-            simp)
+    eqToHom (by rcases k with ⟨k, ⟨⟩⟩; simp) ≫
+      biproduct.components z k j ≫ eqToHom (by rcases j with ⟨j, ⟨⟩⟩; simp)
   invFun z :=
     biproduct.matrix fun j k =>
       if h : f j = g k then z (f j) ⟨k, by simp [h]⟩ ⟨j, by simp⟩ ≫ eqToHom (by simp [h]) else 0
@@ -111,10 +102,8 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
     ext (j k)
     simp only [category.assoc, biproduct.lift_π, biproduct.ι_matrix]
     split_ifs
-    · simp
-      rfl
-    · symm
-      apply o.eq_zero h
+    · simp; rfl
+    · symm; apply o.eq_zero h
   right_inv z := by
     ext (i⟨j, w⟩⟨k, ⟨⟩⟩)
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
@@ -137,11 +126,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
     [Fintype β] {f : α → ι} {g : β → ι} :
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃+
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
-  { o.matrixDecomposition with
-    map_add' := fun w z => by
-      ext
-      dsimp [biproduct.components]
-      simp }
+  { o.matrixDecomposition with map_add' := fun w z => by ext; dsimp [biproduct.components]; simp }
 #align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
 
 /- warning: category_theory.hom_orthogonal.matrix_decomposition_id -> CategoryTheory.HomOrthogonal.matrixDecomposition_id is a dubious translation:
@@ -156,8 +141,7 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f
   simp only [category.comp_id, category.id_comp, category.assoc, End.one_def, eq_to_hom_refl,
     Matrix.one_apply, hom_orthogonal.matrix_decomposition_apply, biproduct.components]
   split_ifs with h
-  · cases h
-    simp
+  · cases h; simp
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
 #align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrixDecomposition_id
@@ -178,9 +162,7 @@ theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintyp
   conv_lhs => rw [← category.id_comp w, ← biproduct.total]
   simp only [preadditive.sum_comp, preadditive.comp_sum]
   apply Finset.sum_congr_set
-  · intros
-    simp
-    rfl
+  · intros ; simp; rfl
   · intro b nm
     simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
     simp only [category.assoc]
@@ -203,10 +185,7 @@ noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : 
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ₗ[R]
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
   { o.matrixDecompositionAddEquiv with
-    map_smul' := fun w z => by
-      ext
-      dsimp [biproduct.components]
-      simp }
+    map_smul' := fun w z => by ext; dsimp [biproduct.components]; simp }
 #align category_theory.hom_orthogonal.matrix_decomposition_linear_equiv CategoryTheory.HomOrthogonal.matrixDecompositionLinearEquiv
 -/
 
@@ -240,12 +219,7 @@ theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype 
   simp only [Cardinal.mk_fintype, Nat.cast_inj]
   exact
     Matrix.square_of_invertible (o.matrix_decomposition i.inv c) (o.matrix_decomposition i.hom c)
-      (by
-        rw [← o.matrix_decomposition_comp]
-        simp)
-      (by
-        rw [← o.matrix_decomposition_comp]
-        simp)
+      (by rw [← o.matrix_decomposition_comp]; simp) (by rw [← o.matrix_decomposition_comp]; simp)
 #align category_theory.hom_orthogonal.equiv_of_iso CategoryTheory.HomOrthogonal.equiv_of_iso
 
 end

@@ -72,10 +72,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
   eq_iff_exists := by
     intro x y
     rw [eq_intCast, eq_intCast, Int.cast_inj]
-    refine'
-      ⟨by
-        rintro rfl
-        use 1, _⟩
+    refine' ⟨by rintro rfl; use 1, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
     apply mul_left_cancel₀ _ h
     rwa [mem_nonZeroDivisors_iff_ne_zero] at hc
@@ -263,7 +260,7 @@ Case conversion may be inaccurate. Consider using '#align is_fraction_ring.mk'_e
 theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y :=
   by
   refine' ⟨_, fun hxy => by rw [hxy, mk'_self']⟩
-  · intro hxy
+  · intro hxy;
     have hy : (algebraMap A K) ↑y ≠ (0 : K) :=
       IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors y.property
     rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy

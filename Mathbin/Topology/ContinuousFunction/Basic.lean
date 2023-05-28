@@ -282,11 +282,7 @@ The continuous functions from `α` to `β` are the same as the plain functions w
 -/
 @[simps]
 def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
-  ⟨fun f => f, fun f => ⟨f, continuous_of_discreteTopology⟩, fun f =>
-    by
-    ext
-    rfl, fun f => by
-    ext
+  ⟨fun f => f, fun f => ⟨f, continuous_of_discreteTopology⟩, fun f => by ext; rfl, fun f => by ext;
     rfl⟩
 #align continuous_map.equiv_fn_of_discrete ContinuousMap.equivFnOfDiscrete
 -/

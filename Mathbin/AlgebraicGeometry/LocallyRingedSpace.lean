@@ -112,9 +112,7 @@ instance {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) :
 /-- The identity morphism on a locally ringed space. -/
 @[simps]
 def id (X : LocallyRingedSpace) : Hom X X :=
-  ⟨𝟙 _, fun x => by
-    erw [PresheafedSpace.stalk_map.id]
-    apply isLocalRingHom_id⟩
+  ⟨𝟙 _, fun x => by erw [PresheafedSpace.stalk_map.id]; apply isLocalRingHom_id⟩
 #align algebraic_geometry.LocallyRingedSpace.id AlgebraicGeometry.LocallyRingedSpace.id
 
 instance (X : LocallyRingedSpace) : Inhabited (Hom X X) :=
@@ -132,18 +130,9 @@ instance : Category LocallyRingedSpace where
   Hom := Hom
   id := id
   comp X Y Z f g := comp f g
-  comp_id' := by
-    intros
-    ext1
-    simp [comp]
-  id_comp' := by
-    intros
-    ext1
-    simp [comp]
-  assoc' := by
-    intros
-    ext1
-    simp [comp]
+  comp_id' := by intros ; ext1; simp [comp]
+  id_comp' := by intros ; ext1; simp [comp]
+  assoc' := by intros ; ext1; simp [comp]
 
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]

@@ -124,10 +124,7 @@ Case conversion may be inaccurate. Consider using '#align set.ord_t5_nhd_mem_nhd
 theorem ordT5Nhd_mem_nhdsSet (hd : Disjoint s (closure t)) : ordT5Nhd s t ∈ 𝓝ˢ s :=
   bUnion_mem_nhdsSet fun x hx =>
     ordConnectedComponent_mem_nhds.2 <|
-      inter_mem
-        (by
-          rw [← mem_interior_iff_mem_nhds, interior_compl]
-          exact disjoint_left.1 hd hx)
+      inter_mem (by rw [← mem_interior_iff_mem_nhds, interior_compl]; exact disjoint_left.1 hd hx)
         (compl_section_ordSeparatingSet_mem_nhds hd hx)
 #align set.ord_t5_nhd_mem_nhds_set Set.ordT5Nhd_mem_nhdsSet
 

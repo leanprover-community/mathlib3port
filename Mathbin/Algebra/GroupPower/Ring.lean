@@ -53,9 +53,7 @@ Case conversion may be inaccurate. Consider using '#align zero_pow' zero_pow'ₓ
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
-  | k + 1, h => by
-    rw [pow_succ]
-    exact MulZeroClass.zero_mul _
+  | k + 1, h => by rw [pow_succ]; exact MulZeroClass.zero_mul _
 #align zero_pow' zero_pow'
 
 /- warning: zero_pow_eq -> zero_pow_eq is a dubious translation:
@@ -136,10 +134,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} M] {a : M} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M _inst_1))) a n) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1)))) -> (Ne.{succ u1} M a (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (MonoidWithZero.toZero.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align ne_zero_pow ne_zero_powₓ'. -/
-theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 :=
-  by
-  contrapose!
-  rintro rfl
+theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 := by contrapose!; rintro rfl;
   exact zero_pow' n hn
 #align ne_zero_pow ne_zero_pow
 
@@ -184,9 +179,7 @@ Case conversion may be inaccurate. Consider using '#align zero_pow_eq_zero zero_
 theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   by
   constructor <;> intro h
-  · rw [pos_iff_ne_zero]
-    rintro rfl
-    simpa using h
+  · rw [pos_iff_ne_zero]; rintro rfl; simpa using h
   · exact zero_pow' n h.ne.symm
 #align zero_pow_eq_zero zero_pow_eq_zero
 
@@ -247,15 +240,10 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
     (h1 : ¬IsUnit x) : x ^ n ∣ x ^ m ↔ n ≤ m :=
   by
   constructor
-  · intro h
-    rw [← not_lt]
-    intro hmn
-    apply h1
-    have : x ^ m * x ∣ x ^ m * 1 := by
-      rw [← pow_succ', mul_one]
+  · intro h; rw [← not_lt]; intro hmn; apply h1
+    have : x ^ m * x ∣ x ^ m * 1 := by rw [← pow_succ', mul_one];
       exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
-    rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this
-    apply pow_ne_zero m h0
+    rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this; apply pow_ne_zero m h0
   · apply pow_dvd_pow
 #align pow_dvd_pow_iff pow_dvd_pow_iff
 

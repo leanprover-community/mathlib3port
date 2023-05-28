@@ -162,10 +162,8 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
         simp)
     fun n => by
     cases n <;> dsimp
-    · ext
-      simp
-    · ext
-      simp
+    · ext; simp
+    · ext; simp
 #align algebraic_topology.normalized_Moore_complex.map AlgebraicTopology.NormalizedMooreComplex.map
 -/
 
@@ -189,14 +187,8 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ
     where
   obj := obj
   map X Y f := map f
-  map_id' X := by
-    ext n
-    cases n <;>
-      · dsimp
-        simp
-  map_comp' X Y Z f g := by
-    ext n
-    cases n <;> simp
+  map_id' X := by ext n; cases n <;> · dsimp; simp
+  map_comp' X Y Z f g := by ext n; cases n <;> simp
 #align algebraic_topology.normalized_Moore_complex AlgebraicTopology.normalizedMooreComplex
 -/
 

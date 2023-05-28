@@ -142,8 +142,7 @@ theorem continuousOn_continuousLinearMapCoordChange [VectorBundle 𝕜₁ F₁ E
   refine' ((h₁.comp_continuous_on (h₄.mono _)).clm_comp (h₂.comp_continuous_on (h₃.mono _))).congr _
   · mfld_set_tac
   · mfld_set_tac
-  · intro b hb
-    ext (L v)
+  · intro b hb; ext (L v)
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
       ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compSL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm]

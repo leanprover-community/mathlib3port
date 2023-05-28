@@ -521,11 +521,7 @@ theorem MulAut.conjNormal_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
 Case conversion may be inaccurate. Consider using '#align mul_aut.conj_normal_symm_apply MulAut.conjNormal_symm_applyₓ'. -/
 @[simp]
 theorem MulAut.conjNormal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
-    ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g :=
-  by
-  change _ * _⁻¹⁻¹ = _
-  rw [inv_inv]
-  rfl
+    ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g := by change _ * _⁻¹⁻¹ = _; rw [inv_inv]; rfl
 #align mul_aut.conj_normal_symm_apply MulAut.conjNormal_symm_apply
 
 /- warning: mul_aut.conj_normal_inv_apply -> MulAut.conjNormal_inv_apply is a dubious translation:

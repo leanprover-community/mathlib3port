@@ -115,10 +115,7 @@ variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ]
 instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_rel f := f.monotone'
   exists_map_eq_of_map_le := PseudoEpimorphism.exists_map_eq_of_map_le'
 
@@ -250,10 +247,7 @@ def toPseudoEpimorphism (f : EsakiaHom α β) : PseudoEpimorphism α β :=
 instance : EsakiaHomClass (EsakiaHom α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
-    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f; obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g; congr
   map_rel f := f.monotone'
   map_continuous f := f.continuous_toFun
   exists_map_eq_of_map_le f := f.exists_map_eq_of_map_le'

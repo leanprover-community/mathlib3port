@@ -156,10 +156,8 @@ theorem ι_isoLocallyRingedSpace_inv (i : D.J) :
   𝖣.ι_gluedIso_inv forgetToLocallyRingedSpace i
 #align algebraic_geometry.Scheme.glue_data.ι_iso_LocallyRingedSpace_inv AlgebraicGeometry.Scheme.GlueData.ι_isoLocallyRingedSpace_inv
 
-instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
-  by
-  rw [← D.ι_iso_LocallyRingedSpace_inv]
-  infer_instance
+instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+  rw [← D.ι_iso_LocallyRingedSpace_inv]; infer_instance
 #align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.Scheme.GlueData.ι_isOpenImmersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
@@ -283,34 +281,26 @@ def gluedCoverT' (x y z : 𝒰.J) :
 
 @[simp, reassoc]
 theorem gluedCoverT'_fst_fst (x y z : 𝒰.J) :
-    𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
-  by
-  delta glued_cover_t'
-  simp
+    𝒰.gluedCoverT' x y z ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+  delta glued_cover_t'; simp
 #align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_fst AlgebraicGeometry.Scheme.OpenCover.gluedCoverT'_fst_fst
 
 @[simp, reassoc]
 theorem gluedCoverT'_fst_snd (x y z : 𝒰.J) :
-    gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
-  by
-  delta glued_cover_t'
-  simp
+    gluedCoverT' 𝒰 x y z ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+  delta glued_cover_t'; simp
 #align algebraic_geometry.Scheme.open_cover.glued_cover_t'_fst_snd AlgebraicGeometry.Scheme.OpenCover.gluedCoverT'_fst_snd
 
 @[simp, reassoc]
 theorem gluedCoverT'_snd_fst (x y z : 𝒰.J) :
-    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
-  by
-  delta glued_cover_t'
-  simp
+    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+  delta glued_cover_t'; simp
 #align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_fst AlgebraicGeometry.Scheme.OpenCover.gluedCoverT'_snd_fst
 
 @[simp, reassoc]
 theorem gluedCoverT'_snd_snd (x y z : 𝒰.J) :
-    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst :=
-  by
-  delta glued_cover_t'
-  simp
+    gluedCoverT' 𝒰 x y z ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
+  delta glued_cover_t'; simp
 #align algebraic_geometry.Scheme.open_cover.glued_cover_t'_snd_snd AlgebraicGeometry.Scheme.OpenCover.gluedCoverT'_snd_snd
 
 theorem glued_cover_cocycle_fst (x y z : 𝒰.J) :
@@ -382,8 +372,7 @@ theorem fromGlued_injective : Function.Injective 𝒰.fromGlued.1.base :=
   use e.hom ⟨⟨x, y⟩, h⟩
   simp_rw [← comp_apply]
   constructor
-  · erw [is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.left]
-    rfl
+  · erw [is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.left]; rfl
   · erw [pullback_symmetry_hom_comp_fst,
       is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right]
     rfl
@@ -414,9 +403,7 @@ theorem fromGlued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
   · rw [← Set.image_preimage_eq_inter_range]
     apply show is_open_immersion (𝒰.map (𝒰.f x)) by infer_instance.base_open.IsOpenMap
     convert hU (𝒰.f x) using 1
-    rw [← ι_from_glued]
-    erw [coe_comp]
-    rw [Set.preimage_comp]
+    rw [← ι_from_glued]; erw [coe_comp]; rw [Set.preimage_comp]
     congr 1
     refine' Set.preimage_image_eq _ 𝒰.from_glued_injective
   · exact ⟨hx, 𝒰.covers x⟩

@@ -116,10 +116,7 @@ theorem mk_one (h : (1 : α) ∈ Icc (0 : α) 1) : (⟨1, h⟩ : Icc (0 : α) 1)
 <too large>
 Case conversion may be inaccurate. Consider using '#align set.Icc.coe_eq_zero Set.Icc.coe_eq_zeroₓ'. -/
 @[simp, norm_cast]
-theorem coe_eq_zero {x : Icc (0 : α) 1} : (x : α) = 0 ↔ x = 0 :=
-  by
-  symm
-  exact Subtype.ext_iff
+theorem coe_eq_zero {x : Icc (0 : α) 1} : (x : α) = 0 ↔ x = 0 := by symm; exact Subtype.ext_iff
 #align set.Icc.coe_eq_zero Set.Icc.coe_eq_zero
 
 /- warning: set.Icc.coe_ne_zero -> Set.Icc.coe_ne_zero is a dubious translation:
@@ -133,10 +130,7 @@ theorem coe_ne_zero {x : Icc (0 : α) 1} : (x : α) ≠ 0 ↔ x ≠ 0 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align set.Icc.coe_eq_one Set.Icc.coe_eq_oneₓ'. -/
 @[simp, norm_cast]
-theorem coe_eq_one {x : Icc (0 : α) 1} : (x : α) = 1 ↔ x = 1 :=
-  by
-  symm
-  exact Subtype.ext_iff
+theorem coe_eq_one {x : Icc (0 : α) 1} : (x : α) = 1 ↔ x = 1 := by symm; exact Subtype.ext_iff
 #align set.Icc.coe_eq_one Set.Icc.coe_eq_one
 
 /- warning: set.Icc.coe_ne_one -> Set.Icc.coe_ne_one is a dubious translation:
@@ -291,10 +285,8 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_2 : OrderedRing.{u1} β] {t : β}, (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) t (Set.Icc.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedRing.toPartialOrder.{u1} β _inst_2)) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β (MonoidWithZero.toZero.{u1} β (Semiring.toMonoidWithZero.{u1} β (OrderedSemiring.toSemiring.{u1} β (OrderedRing.toOrderedSemiring.{u1} β _inst_2)))))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β (OrderedRing.toOrderedSemiring.{u1} β _inst_2))))))) -> (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (HSub.hSub.{u1, u1, u1} β β β (instHSub.{u1} β (Ring.toSub.{u1} β (OrderedRing.toRing.{u1} β _inst_2))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β (OrderedRing.toOrderedSemiring.{u1} β _inst_2))))) t) (Set.Icc.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedRing.toPartialOrder.{u1} β _inst_2)) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β (MonoidWithZero.toZero.{u1} β (Semiring.toMonoidWithZero.{u1} β (OrderedSemiring.toSemiring.{u1} β (OrderedRing.toOrderedSemiring.{u1} β _inst_2)))))) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β (OrderedRing.toOrderedSemiring.{u1} β _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align set.Icc.one_sub_mem Set.Icc.one_sub_memₓ'. -/
-theorem one_sub_mem {t : β} (ht : t ∈ Icc (0 : β) 1) : 1 - t ∈ Icc (0 : β) 1 :=
-  by
-  rw [mem_Icc] at *
-  exact ⟨sub_nonneg.2 ht.2, (sub_le_self_iff _).2 ht.1⟩
+theorem one_sub_mem {t : β} (ht : t ∈ Icc (0 : β) 1) : 1 - t ∈ Icc (0 : β) 1 := by
+  rw [mem_Icc] at *; exact ⟨sub_nonneg.2 ht.2, (sub_le_self_iff _).2 ht.1⟩
 #align set.Icc.one_sub_mem Set.Icc.one_sub_mem
 
 /- warning: set.Icc.mem_iff_one_sub_mem -> Set.Icc.mem_iff_one_sub_mem is a dubious translation:
@@ -367,9 +359,7 @@ theorem mk_zero [Nontrivial α] (h : (0 : α) ∈ Ico (0 : α) 1) : (⟨0, h⟩ 
 <too large>
 Case conversion may be inaccurate. Consider using '#align set.Ico.coe_eq_zero Set.Ico.coe_eq_zeroₓ'. -/
 @[simp, norm_cast]
-theorem coe_eq_zero [Nontrivial α] {x : Ico (0 : α) 1} : (x : α) = 0 ↔ x = 0 :=
-  by
-  symm
+theorem coe_eq_zero [Nontrivial α] {x : Ico (0 : α) 1} : (x : α) = 0 ↔ x = 0 := by symm;
   exact Subtype.ext_iff
 #align set.Ico.coe_eq_zero Set.Ico.coe_eq_zero
 
@@ -492,9 +482,7 @@ theorem mk_one [Nontrivial α] (h : (1 : α) ∈ Ioc (0 : α) 1) : (⟨1, h⟩ :
 <too large>
 Case conversion may be inaccurate. Consider using '#align set.Ioc.coe_eq_one Set.Ioc.coe_eq_oneₓ'. -/
 @[simp, norm_cast]
-theorem coe_eq_one [Nontrivial α] {x : Ioc (0 : α) 1} : (x : α) = 1 ↔ x = 1 :=
-  by
-  symm
+theorem coe_eq_one [Nontrivial α] {x : Ioc (0 : α) 1} : (x : α) = 1 ↔ x = 1 := by symm;
   exact Subtype.ext_iff
 #align set.Ioc.coe_eq_one Set.Ioc.coe_eq_one
 

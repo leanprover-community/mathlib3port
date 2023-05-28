@@ -68,10 +68,7 @@ attribute [local instance] concrete_category.has_coe_to_sort
 
 @[simp]
 theorem cyclesMap_toCycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
-    (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ :=
-  by
-  ext
-  simp
+    (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ := by ext; simp
 #align Module.cycles_map_to_cycles ModuleCat.cyclesMap_toCycles
 
 /-- Build a term of `C.homology i` from an element `C.X i` such that `C.d_from i x = 0`. -/

@@ -899,9 +899,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LHom.setOf_realize_onFormulaₓ'. -/
 @[simp]
 theorem LHom.setOf_realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
-    (ψ : L.Formula α) : (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize :=
-  by
-  ext
+    (ψ : L.Formula α) : (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize := by ext;
   simp
 #align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LHom.setOf_realize_onFormula
 

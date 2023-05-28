@@ -52,10 +52,7 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
           naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => AddMonoidHom.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩)
-      fac := by
-        rintro s (⟨⟩ | ⟨⟩) <;>
-          · ext x
-            simp
+      fac := by rintro s (⟨⟩ | ⟨⟩) <;> · ext x; simp
       uniq := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩];rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
@@ -124,12 +121,8 @@ to the cartesian product of those groups.
 def lift (s : Fan f) : s.pt ⟶ AddCommGroupCat.of (∀ j, f j)
     where
   toFun x j := s.π.app ⟨j⟩ x
-  map_zero' := by
-    ext
-    simp
-  map_add' x y := by
-    ext
-    simp
+  map_zero' := by ext; simp
+  map_add' x y := by ext; simp
 #align AddCommGroup.has_limit.lift AddCommGroupCat.HasLimit.lift
 -/
 
@@ -144,10 +137,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
       π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
   IsLimit :=
     { lift := lift f
-      fac := fun s j => by
-        cases j
-        ext
-        simp
+      fac := fun s j => by cases j; ext; simp
       uniq := fun s m w => by
         ext (x j)
         dsimp only [has_limit.lift]

@@ -49,23 +49,15 @@ theorem birthday_def (x : PGame) :
     birthday x =
       max (lsub.{u, u} fun i => birthday (x.moveLeft i))
         (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
-  by
-  cases x
-  rw [birthday]
-  rfl
+  by cases x; rw [birthday]; rfl
 #align pgame.birthday_def PGame.birthday_def
 
 theorem birthday_moveLeft_lt {x : PGame} (i : x.LeftMoves) : (x.moveLeft i).birthday < x.birthday :=
-  by
-  cases x
-  rw [birthday]
-  exact lt_max_of_lt_left (lt_lsub _ i)
+  by cases x; rw [birthday]; exact lt_max_of_lt_left (lt_lsub _ i)
 #align pgame.birthday_move_left_lt PGame.birthday_moveLeft_lt
 
 theorem birthday_moveRight_lt {x : PGame} (i : x.RightMoves) :
-    (x.moveRight i).birthday < x.birthday := by
-  cases x
-  rw [birthday]
+    (x.moveRight i).birthday < x.birthday := by cases x; rw [birthday];
   exact lt_max_of_lt_right (lt_lsub _ i)
 #align pgame.birthday_move_right_lt PGame.birthday_moveRight_lt
 
@@ -113,16 +105,11 @@ theorem birthday_zero : birthday 0 = 0 := by simp [PEmpty.isEmpty]
 #align pgame.birthday_zero PGame.birthday_zero
 
 @[simp]
-theorem birthday_one : birthday 1 = 1 := by
-  rw [birthday_def]
-  simp
+theorem birthday_one : birthday 1 = 1 := by rw [birthday_def]; simp
 #align pgame.birthday_one PGame.birthday_one
 
 @[simp]
-theorem birthday_star : birthday star = 1 :=
-  by
-  rw [birthday_def]
-  simp
+theorem birthday_star : birthday star = 1 := by rw [birthday_def]; simp
 #align pgame.birthday_star PGame.birthday_star
 
 @[simp]

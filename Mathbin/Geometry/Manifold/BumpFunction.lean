@@ -115,9 +115,7 @@ theorem support_eq_inter_preimage :
     f.to_cont_diff_bump.support_eq]
 #align smooth_bump_function.support_eq_inter_preimage SmoothBumpFunction.support_eq_inter_preimage
 
-theorem isOpen_support : IsOpen (support f) :=
-  by
-  rw [support_eq_inter_preimage]
+theorem isOpen_support : IsOpen (support f) := by rw [support_eq_inter_preimage];
   exact isOpen_extChartAt_preimage I c is_open_ball
 #align smooth_bump_function.is_open_support SmoothBumpFunction.isOpen_support
 
@@ -132,10 +130,8 @@ theorem support_eq_symm_image :
       ⟨fun h => extChartAt_target_subset_range _ _ h, fun h => f.ball_subset ⟨hy, h⟩⟩
 #align smooth_bump_function.support_eq_symm_image SmoothBumpFunction.support_eq_symm_image
 
-theorem support_subset_source : support f ⊆ (chartAt H c).source :=
-  by
-  rw [f.support_eq_inter_preimage, ← extChartAt_source I]
-  exact inter_subset_left _ _
+theorem support_subset_source : support f ⊆ (chartAt H c).source := by
+  rw [f.support_eq_inter_preimage, ← extChartAt_source I]; exact inter_subset_left _ _
 #align smooth_bump_function.support_subset_source SmoothBumpFunction.support_subset_source
 
 theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ support f) :
@@ -146,8 +142,7 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
   cases' hs with hse hsf
   apply subset.antisymm
   · refine' subset_inter (subset_inter (subset.trans hsf ball_subset_closed_ball) _) _
-    · rintro _ ⟨x, -, rfl⟩
-      exact mem_range_self _
+    · rintro _ ⟨x, -, rfl⟩; exact mem_range_self _
     · rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
       exact inter_subset_right _ _
   · refine' subset.trans (inter_subset_inter_left _ f.closed_ball_subset) _
@@ -178,10 +173,7 @@ theorem eventuallyEq_one_of_dist_lt (hs : x ∈ (chartAt H c).source)
 #align smooth_bump_function.eventually_eq_one_of_dist_lt SmoothBumpFunction.eventuallyEq_one_of_dist_lt
 
 theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventuallyEq_one_of_dist_lt (mem_chart_source _ _) <|
-    by
-    rw [dist_self]
-    exact f.r_pos
+  f.eventuallyEq_one_of_dist_lt (mem_chart_source _ _) <| by rw [dist_self]; exact f.r_pos
 #align smooth_bump_function.eventually_eq_one SmoothBumpFunction.eventuallyEq_one
 
 @[simp]
@@ -190,9 +182,7 @@ theorem eq_one : f c = 1 :=
 #align smooth_bump_function.eq_one SmoothBumpFunction.eq_one
 
 theorem support_mem_nhds : support f ∈ 𝓝 c :=
-  f.eventuallyEq_one.mono fun x hx => by
-    rw [hx]
-    exact one_ne_zero
+  f.eventuallyEq_one.mono fun x hx => by rw [hx]; exact one_ne_zero
 #align smooth_bump_function.support_mem_nhds SmoothBumpFunction.support_mem_nhds
 
 theorem tsupport_mem_nhds : tsupport f ∈ 𝓝 c :=

@@ -259,11 +259,7 @@ theorem nontrivial_of_invariantBasisNumber : Nontrivial R :=
   refine' zero_ne_one (eq_of_fin_equiv R _)
   haveI := not_nontrivial_iff_subsingleton.1 h
   haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
-  refine' { .. } <;>
-    first
-      |·
-        intros
-        exact 0|tidy
+  refine' { .. } <;> first |· intros ; exact 0|tidy
 #align nontrivial_of_invariant_basis_number nontrivial_of_invariantBasisNumber
 -/
 

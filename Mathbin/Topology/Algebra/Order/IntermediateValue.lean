@@ -511,14 +511,12 @@ theorem IsClosed.mem_of_ge_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsC
     (ha : a ∈ s) (hab : a ≤ b) (hgt : ∀ x ∈ s ∩ Ico a b, (s ∩ Ioc x b).Nonempty) : b ∈ s :=
   by
   let S := s ∩ Icc a b
-  replace ha : a ∈ S
-  exact ⟨ha, left_mem_Icc.2 hab⟩
+  replace ha : a ∈ S; exact ⟨ha, left_mem_Icc.2 hab⟩
   have Sbd : BddAbove S := ⟨b, fun z hz => hz.2.2⟩
   let c := Sup (s ∩ Icc a b)
   have c_mem : c ∈ S := hs.cSup_mem ⟨_, ha⟩ Sbd
   have c_le : c ≤ b := csSup_le ⟨_, ha⟩ fun x hx => hx.2.2
-  cases' eq_or_lt_of_le c_le with hc hc
-  exact hc ▸ c_mem.1
+  cases' eq_or_lt_of_le c_le with hc hc; exact hc ▸ c_mem.1
   exfalso
   rcases hgt c ⟨c_mem.1, c_mem.2.1, hc⟩ with ⟨x, xs, cx, xb⟩
   exact not_lt_of_le (le_csSup Sbd ⟨xs, le_trans (le_csSup Sbd ha) (le_of_lt cx), xb⟩) cx
@@ -539,10 +537,7 @@ theorem IsClosed.Icc_subset_of_forall_exists_gt {a b : α} {s : Set α} (hs : Is
   intro y hy
   have : IsClosed (s ∩ Icc a y) :=
     by
-    suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y
-      by
-      rw [this]
-      exact IsClosed.inter hs isClosed_Icc
+    suffices s ∩ Icc a y = s ∩ Icc a b ∩ Icc a y by rw [this]; exact IsClosed.inter hs isClosed_Icc
     rw [inter_assoc]
     congr
     exact (inter_eq_self_of_subset_right <| Icc_subset_Icc_right hy.2).symm

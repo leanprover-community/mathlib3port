@@ -169,15 +169,10 @@ theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) :
 theorem isTrivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L M = ⊤ :=
   by
   constructor
-  · rintro ⟨h⟩
-    ext
+  · rintro ⟨h⟩; ext
     simp only [mem_max_triv_submodule, h, forall_const, true_iff_iff, eq_self_iff_true]
-  · intro h
-    constructor
-    intro x m
-    revert x
-    rw [← mem_max_triv_submodule R L M, h]
-    exact LieSubmodule.mem_top m
+  · intro h; constructor; intro x m; revert x
+    rw [← mem_max_triv_submodule R L M, h]; exact LieSubmodule.mem_top m
 #align lie_module.is_trivial_iff_max_triv_eq_top LieModule.isTrivial_iff_max_triv_eq_top
 
 variable {R L M N}
@@ -207,12 +202,8 @@ def maxTrivEquiv (e : M ≃ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M ≃ₗ⁅R,L
           N) with
     toFun := maxTrivHom (e : M →ₗ⁅R,L⁆ N)
     invFun := maxTrivHom (e.symm : N →ₗ⁅R,L⁆ M)
-    left_inv := fun m => by
-      ext
-      simp
-    right_inv := fun n => by
-      ext
-      simp }
+    left_inv := fun m => by ext; simp
+    right_inv := fun n => by ext; simp }
 #align lie_module.max_triv_equiv LieModule.maxTrivEquiv
 
 @[norm_cast, simp]
@@ -223,9 +214,7 @@ theorem coe_maxTrivEquiv_apply (e : M ≃ₗ⁅R,L⁆ N) (m : maxTrivSubmodule R
 
 @[simp]
 theorem maxTrivEquiv_of_refl_eq_refl :
-    maxTrivEquiv (LieModuleEquiv.refl : M ≃ₗ⁅R,L⁆ M) = LieModuleEquiv.refl :=
-  by
-  ext
+    maxTrivEquiv (LieModuleEquiv.refl : M ≃ₗ⁅R,L⁆ M) = LieModuleEquiv.refl := by ext;
   simp only [coe_max_triv_equiv_apply, LieModuleEquiv.refl_apply]
 #align lie_module.max_triv_equiv_of_refl_eq_refl LieModule.maxTrivEquiv_of_refl_eq_refl
 
@@ -244,28 +233,17 @@ def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃
       map_lie' := fun x m =>
         by
         have hf : ⁅x, f.val⁆ m = 0 := by rw [f.property x, LinearMap.zero_apply]
-        rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.toFun_eq_coe] at hf
-        exact hf.symm }
-  map_add' f g := by
-    ext
-    simp
-  map_smul' F G := by
-    ext
-    simp
-  invFun F :=
-    ⟨F, fun x => by
-      ext
-      simp⟩
+        rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.toFun_eq_coe] at hf; exact hf.symm }
+  map_add' f g := by ext; simp
+  map_smul' F G := by ext; simp
+  invFun F := ⟨F, fun x => by ext; simp⟩
   left_inv f := by simp
   right_inv F := by simp
 #align lie_module.max_triv_linear_map_equiv_lie_module_hom LieModule.maxTrivLinearMapEquivLieModuleHom
 
 @[simp]
 theorem coe_maxTrivLinearMapEquivLieModuleHom (f : maxTrivSubmodule R L (M →ₗ[R] N)) :
-    (maxTrivLinearMapEquivLieModuleHom f : M → N) = f :=
-  by
-  ext
-  rfl
+    (maxTrivLinearMapEquivLieModuleHom f : M → N) = f := by ext; rfl
 #align lie_module.coe_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_maxTrivLinearMapEquivLieModuleHom
 
 @[simp]
@@ -276,10 +254,7 @@ theorem coe_maxTrivLinearMapEquivLieModuleHom_symm (f : M →ₗ⁅R,L⁆ N) :
 
 @[simp]
 theorem coe_linearMap_maxTrivLinearMapEquivLieModuleHom (f : maxTrivSubmodule R L (M →ₗ[R] N)) :
-    (maxTrivLinearMapEquivLieModuleHom f : M →ₗ[R] N) = (f : M →ₗ[R] N) :=
-  by
-  ext
-  rfl
+    (maxTrivLinearMapEquivLieModuleHom f : M →ₗ[R] N) = (f : M →ₗ[R] N) := by ext; rfl
 #align lie_module.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_linearMap_maxTrivLinearMapEquivLieModuleHom
 
 @[simp]

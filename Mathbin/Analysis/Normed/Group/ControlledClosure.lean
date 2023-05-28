@@ -129,9 +129,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
         (add_le_add (sum_le_sum fun k _ => mul_le_mul_of_nonneg_left (hv _ k.succ_pos).le hC.le)
           hnorm₀)
       _ = (∑ k in range (n + 1), C * b k) + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
-      _ ≤ (C + ε) * ‖h‖ := by
-        rw [add_comm, add_mul]
-        apply add_le_add_left this
+      _ ≤ (C + ε) * ‖h‖ := by rw [add_comm, add_mul]; apply add_le_add_left this
       
 #align controlled_closure_of_complete controlled_closure_of_complete
 

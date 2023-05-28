@@ -378,8 +378,7 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
   intro hx
   -- Replace `x : ℤ` with `y : zmod 4`
   replace hx : x % (2 : ℕ) = 1 % (2 : ℕ);
-  · rw [Int.odd_iff] at hx
-    norm_num [hx]
+  · rw [Int.odd_iff] at hx; norm_num [hx]
   calc
     x ^ 2 % (4 : ℕ) = 1 % (4 : ℕ) := _
     _ = 1 := by norm_num
@@ -413,9 +412,7 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
     exact hx_odd.pow.add_odd hy_odd.pow
   cases' i with i
   · intro hxy'
-    have : 2 * 2 ∣ 2 * x := by
-      convert dvd_add hxy hxy'
-      ring
+    have : 2 * 2 ∣ 2 * x := by convert dvd_add hxy hxy'; ring
     have : 2 ∣ x := (mul_dvd_mul_iff_left (by norm_num)).mp this
     contradiction
   suffices ∀ x : ℤ, Odd x → x ^ 2 ^ (i + 1) % 4 = 1
@@ -576,8 +573,7 @@ theorem pow_add_pow (hxy : p ∣ x + y) (hx : ¬p ∣ x) {n : ℕ} (hn : Odd n) 
     padicValNat p (x ^ n + y ^ n) = padicValNat p (x + y) + padicValNat p n :=
   by
   cases y
-  · have := dvd_zero p
-    contradiction
+  · have := dvd_zero p; contradiction
   rw [← PartENat.natCast_inj, Nat.cast_add]
   iterate 3 rw [padicValNat_def, PartENat.natCast_get]
   · exact multiplicity.Nat.pow_add_pow hp.out hp1 hxy hx hn

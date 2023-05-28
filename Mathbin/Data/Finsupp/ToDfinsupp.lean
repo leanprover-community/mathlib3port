@@ -103,9 +103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.to_dfinsupp_single Finsupp.toDfinsupp_singleₓ'. -/
 @[simp]
 theorem Finsupp.toDfinsupp_single (i : ι) (m : M) :
-    (Finsupp.single i m).toDfinsupp = Dfinsupp.single i m :=
-  by
-  ext
+    (Finsupp.single i m).toDfinsupp = Dfinsupp.single i m := by ext;
   simp [Finsupp.single_apply, Dfinsupp.single_apply]
 #align finsupp.to_dfinsupp_single Finsupp.toDfinsupp_single
 
@@ -118,10 +116,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {M : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : Zero.{u1} M] [_inst_3 : forall (m : M), Decidable (Ne.{succ u1} M m (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_2)))] (f : Finsupp.{u2, u1} ι M _inst_2), Eq.{succ u2} (Finset.{u2} ι) (Dfinsupp.support.{u2, u1} ι (fun (i : ι) => M) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_2) (fun (i : ι) (x : M) => _inst_3 x) (Finsupp.toDfinsupp.{u2, u1} ι M _inst_2 f)) (Finsupp.support.{u2, u1} ι M _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align to_dfinsupp_support toDfinsupp_supportₓ'. -/
 @[simp]
-theorem toDfinsupp_support (f : ι →₀ M) : f.toDfinsupp.support = f.support :=
-  by
-  ext
-  simp
+theorem toDfinsupp_support (f : ι →₀ M) : f.toDfinsupp.support = f.support := by ext; simp
 #align to_dfinsupp_support toDfinsupp_support
 
 #print Dfinsupp.toFinsupp /-
@@ -153,9 +148,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {M : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : Zero.{u1} M] [_inst_3 : forall (m : M), Decidable (Ne.{succ u1} M m (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_2)))] (f : Dfinsupp.{u2, u1} ι (fun (i : ι) => M) (fun (i : ι) => _inst_2)), Eq.{succ u2} (Finset.{u2} ι) (Finsupp.support.{u2, u1} ι M _inst_2 (Dfinsupp.toFinsupp.{u2, u1} ι M (fun (a : ι) (b : ι) => _inst_1 a b) _inst_2 (fun (m : M) => _inst_3 m) f)) (Dfinsupp.support.{u2, u1} ι (fun (i : ι) => M) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_2) (fun (i : ι) (x : M) => _inst_3 x) f)
 Case conversion may be inaccurate. Consider using '#align dfinsupp.to_finsupp_support Dfinsupp.toFinsupp_supportₓ'. -/
 @[simp]
-theorem Dfinsupp.toFinsupp_support (f : Π₀ i : ι, M) : f.toFinsupp.support = f.support :=
-  by
-  ext
+theorem Dfinsupp.toFinsupp_support (f : Π₀ i : ι, M) : f.toFinsupp.support = f.support := by ext;
   simp
 #align dfinsupp.to_finsupp_support Dfinsupp.toFinsupp_support
 
@@ -167,9 +160,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dfinsupp.to_finsupp_single Dfinsupp.toFinsupp_singleₓ'. -/
 @[simp]
 theorem Dfinsupp.toFinsupp_single (i : ι) (m : M) :
-    (Dfinsupp.single i m : Π₀ i : ι, M).toFinsupp = Finsupp.single i m :=
-  by
-  ext
+    (Dfinsupp.single i m : Π₀ i : ι, M).toFinsupp = Finsupp.single i m := by ext;
   simp [Finsupp.single_apply, Dfinsupp.single_apply]
 #align dfinsupp.to_finsupp_single Dfinsupp.toFinsupp_single
 
@@ -409,12 +400,8 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
     intro h
     rw [h] at hg
     simpa using hg
-  left_inv f := by
-    ext
-    simp [split]
-  right_inv f := by
-    ext
-    simp [split]
+  left_inv f := by ext; simp [split]
+  right_inv f := by ext; simp [split]
 #align sigma_finsupp_equiv_dfinsupp sigmaFinsuppEquivDfinsupp
 -/
 
@@ -489,9 +476,7 @@ Case conversion may be inaccurate. Consider using '#align sigma_finsupp_equiv_df
 theorem sigmaFinsuppEquivDfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (f + g) =
       (sigmaFinsuppEquivDfinsupp f + sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align sigma_finsupp_equiv_dfinsupp_add sigmaFinsuppEquivDfinsupp_add
 
 /- warning: sigma_finsupp_add_equiv_dfinsupp -> sigmaFinsuppAddEquivDfinsupp is a dubious translation:
@@ -520,9 +505,7 @@ theorem sigmaFinsuppEquivDfinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribMulA
     (f : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (r • f) =
       @SMul.smul R (Π₀ i, η i →₀ N) MulAction.toHasSmul r (sigmaFinsuppEquivDfinsupp f) :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align sigma_finsupp_equiv_dfinsupp_smul sigmaFinsuppEquivDfinsupp_smul
 
 attribute [-instance] Finsupp.addMonoid

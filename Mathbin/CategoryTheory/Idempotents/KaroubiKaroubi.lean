@@ -98,12 +98,8 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             simp only [hom_ext, comp_f] at h⊢
             erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
-  hom_inv_id' := by
-    ext P
-    simpa only [hom_ext, id_eq] using P.idem
-  inv_hom_id' := by
-    ext P
-    simpa only [hom_ext, id_eq] using P.idem
+  hom_inv_id' := by ext P; simpa only [hom_ext, id_eq] using P.idem
+  inv_hom_id' := by ext P; simpa only [hom_ext, id_eq] using P.idem
 #align category_theory.idempotents.karoubi_karoubi.counit_iso CategoryTheory.Idempotents.KaroubiKaroubi.counitIso
 
 /- warning: category_theory.idempotents.karoubi_karoubi.equivalence -> CategoryTheory.Idempotents.KaroubiKaroubi.equivalence is a dubious translation:
@@ -129,9 +125,7 @@ but is expected to have type
   forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1], CategoryTheory.Functor.Additive.{max u1 u2, max u1 u2, u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.Equivalence.functor.{u2, u2, max u1 u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.{u1, u2} C _inst_1))
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi_karoubi.equivalence.additive_functor CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_functorₓ'. -/
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor :=
-  by
-  dsimp
-  infer_instance
+  by dsimp; infer_instance
 #align category_theory.idempotents.karoubi_karoubi.equivalence.additive_functor CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_functor
 
 /- warning: category_theory.idempotents.karoubi_karoubi.equivalence.additive_inverse -> CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_inverse is a dubious translation:
@@ -141,9 +135,7 @@ but is expected to have type
   forall (C : Type.{u1}) [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Preadditive.{u2, u1} C _inst_1], CategoryTheory.Functor.Additive.{max u1 u2, max u1 u2, u2, u2} (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.Idempotents.instPreadditiveKaroubiInstCategoryKaroubi.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Equivalence.inverse.{u2, u2, max u1 u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.{max u2 u1, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{max u1 u2, u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.{u1, u2} C _inst_1))
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi_karoubi.equivalence.additive_inverse CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_inverseₓ'. -/
 instance equivalence.additive_inverse [Preadditive C] : Functor.Additive (equivalence C).inverse :=
-  by
-  dsimp
-  infer_instance
+  by dsimp; infer_instance
 #align category_theory.idempotents.karoubi_karoubi.equivalence.additive_inverse CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_inverse
 
 end KaroubiKaroubi

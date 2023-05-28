@@ -93,8 +93,7 @@ Case conversion may be inaccurate. Consider using '#align euclidean_geometry.dis
 works for `x = c`. -/
 theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c :=
   by
-  rcases eq_or_ne x c with (rfl | hx)
-  · simp
+  rcases eq_or_ne x c with (rfl | hx); · simp
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
   field_simp [inversion, norm_smul, abs_div, ← dist_eq_norm_vsub, sq, mul_assoc]
 #align euclidean_geometry.dist_inversion_center EuclideanGeometry.dist_inversion_center
@@ -212,9 +211,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
     dist_inversion_inversion hc hd, one_pow] at H
   rw [← dist_pos] at hb hc hd
   rw [← div_le_div_right (mul_pos hb (mul_pos hc hd))]
-  convert H <;>
-    · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]
-      ring
+  convert H <;> · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a] ; ring
 #align euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
 
 end EuclideanGeometry

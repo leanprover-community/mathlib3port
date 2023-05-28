@@ -233,8 +233,7 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
     refine' subset.antisymm (fun c hc => _) (subset_univ _)
     by_cases h : 1 < c.length
     · simp [h]
-    · have : c.length = 1 := by
-        refine' (eq_iff_le_not_lt.2 ⟨_, h⟩).symm
+    · have : c.length = 1 := by refine' (eq_iff_le_not_lt.2 ⟨_, h⟩).symm;
         exact c.length_pos_of_pos hn
       rw [← Composition.eq_single_iff_length hn] at this
       simp [this]
@@ -292,10 +291,8 @@ theorem rightInv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] 
           (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition n)),
             p.compAlongComposition (p.right_inv i) c) :=
   by
-  cases n
-  · exact False.elim (zero_lt_two.not_le hn)
-  cases n
-  · exact False.elim (one_lt_two.not_le hn)
+  cases n; · exact False.elim (zero_lt_two.not_le hn)
+  cases n; · exact False.elim (one_lt_two.not_le hn)
   simp only [right_inv, neg_inj]
   congr 1
   ext v
@@ -552,15 +549,11 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
       tendsto (fun a => 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) (𝓝 0)
         (𝓝 (2 * I * C * r ^ 2 * (I + 1) ^ 2 * 0)) :=
       tendsto_const_nhds.mul tendsto_id
-    have A : ∀ᶠ a in 𝓝 0, 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a < 1 :=
-      by
-      apply (tendsto_order.1 this).2
-      simp [zero_lt_one]
+    have A : ∀ᶠ a in 𝓝 0, 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a < 1 := by
+      apply (tendsto_order.1 this).2; simp [zero_lt_one]
     have : tendsto (fun a => r * (I + 1) * a) (𝓝 0) (𝓝 (r * (I + 1) * 0)) :=
       tendsto_const_nhds.mul tendsto_id
-    have B : ∀ᶠ a in 𝓝 0, r * (I + 1) * a < 1 / 2 :=
-      by
-      apply (tendsto_order.1 this).2
+    have B : ∀ᶠ a in 𝓝 0, r * (I + 1) * a < 1 / 2 := by apply (tendsto_order.1 this).2;
       simp [zero_lt_one]
     have C : ∀ᶠ a in 𝓝[>] (0 : ℝ), (0 : ℝ) < a := by
       filter_upwards [self_mem_nhdsWithin]with _ ha using ha
@@ -587,10 +580,8 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
       calc
         S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
           radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
-        _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) :=
-          by
-          rw [geom_sum_Ico' _ In]
-          exact ne_of_lt (rSn.trans_lt (by norm_num))
+        _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) := by
+          rw [geom_sum_Ico' _ In]; exact ne_of_lt (rSn.trans_lt (by norm_num))
         _ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) :=
           by
           apply_rules [add_le_add, le_refl, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg,
@@ -608,8 +599,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
   let a' : NNReal := ⟨a, apos.le⟩
   suffices H : (a' : ENNReal) ≤ (p.right_inv i).radius
-  · apply lt_of_lt_of_le _ H
-    exact_mod_cast apos
+  · apply lt_of_lt_of_le _ H; exact_mod_cast apos
   apply le_radius_of_bound _ ((I + 1) * a) fun n => _
   by_cases hn : n = 0
   · have : ‖p.right_inv i n‖ = ‖p.right_inv i 0‖ := by congr <;> try rw [hn]

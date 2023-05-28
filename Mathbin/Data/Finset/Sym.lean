@@ -46,10 +46,8 @@ theorem isDiag_mk'_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag �
 -/
 
 #print Finset.not_isDiag_mk'_of_mem_offDiag /-
-theorem not_isDiag_mk'_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ :=
-  by
-  rw [Sym2.isDiag_iff_proj_eq]
-  exact (mem_off_diag.1 h).2.2
+theorem not_isDiag_mk'_of_mem_offDiag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
+  rw [Sym2.isDiag_iff_proj_eq]; exact (mem_off_diag.1 h).2.2
 #align finset.not_is_diag_mk_of_mem_off_diag Finset.not_isDiag_mk'_of_mem_offDiag
 -/
 
@@ -139,10 +137,8 @@ theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he =>
 
 #print Finset.image_diag_union_image_offDiag /-
 theorem image_diag_union_image_offDiag :
-    s.diag.image Quotient.mk' ∪ s.offDiag.image Quotient.mk' = s.Sym2 :=
-  by
-  rw [← image_union, diag_union_off_diag]
-  rfl
+    s.diag.image Quotient.mk' ∪ s.offDiag.image Quotient.mk' = s.Sym2 := by
+  rw [← image_union, diag_union_off_diag]; rfl
 #align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_offDiag
 -/
 
@@ -288,9 +284,7 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 <too large>
 Case conversion may be inaccurate. Consider using '#align finset.sym_inter Finset.sym_interₓ'. -/
 @[simp]
-theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n :=
-  by
-  ext m
+theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by ext m;
   simp only [mem_inter, mem_sym_iff, imp_and, forall_and]
 #align finset.sym_inter Finset.sym_inter
 

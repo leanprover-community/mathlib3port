@@ -294,9 +294,7 @@ def isLimitChangeEmptyCone {c₁ : Cone F₁} (hl : IsLimit c₁) (c₂ : Cone F
     IsLimit c₂ where
   lift c := hl.lift ⟨c.pt, by tidy⟩ ≫ hi.Hom
   fac _ j := j.as.elim
-  uniq c f _ := by
-    erw [← hl.uniq ⟨c.X, by tidy⟩ (f ≫ hi.inv) fun j => j.as.elim]
-    simp
+  uniq c f _ := by erw [← hl.uniq ⟨c.X, by tidy⟩ (f ≫ hi.inv) fun j => j.as.elim]; simp
 #align category_theory.limits.is_limit_change_empty_cone CategoryTheory.Limits.isLimitChangeEmptyCone
 -/
 
@@ -338,9 +336,7 @@ def isColimitChangeEmptyCocone {c₁ : Cocone F₁} (hl : IsColimit c₁) (c₂ 
     where
   desc c := hi.inv ≫ hl.desc ⟨c.pt, by tidy⟩
   fac _ j := j.as.elim
-  uniq c f _ := by
-    erw [← hl.uniq ⟨c.X, by tidy⟩ (hi.hom ≫ f) fun j => j.as.elim]
-    simp
+  uniq c f _ := by erw [← hl.uniq ⟨c.X, by tidy⟩ (hi.hom ≫ f) fun j => j.as.elim]; simp
 #align category_theory.limits.is_colimit_change_empty_cocone CategoryTheory.Limits.isColimitChangeEmptyCocone
 -/
 
@@ -875,10 +871,7 @@ def colimitOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) :
     IsColimit (coconeOfDiagramTerminal tX F)
     where
   desc s := s.ι.app X
-  uniq s m w :=
-    by
-    rw [← w X, cocone_of_diagram_terminal_ι_app, tX.hom_ext (tX.from X) (𝟙 _)]
-    simp
+  uniq s m w := by rw [← w X, cocone_of_diagram_terminal_ι_app, tX.hom_ext (tX.from X) (𝟙 _)]; simp
 #align category_theory.limits.colimit_of_diagram_terminal CategoryTheory.Limits.colimitOfDiagramTerminal
 -/
 
@@ -959,10 +952,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 -/
 theorem isIso_π_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasLimit F] :
     IsIso (limit.π F j) :=
-  ⟨⟨limit.lift _ (coneOfDiagramInitial I F),
-      ⟨by
-        ext
-        simp, by simp⟩⟩⟩
+  ⟨⟨limit.lift _ (coneOfDiagramInitial I F), ⟨by ext; simp, by simp⟩⟩⟩
 #align category_theory.limits.is_iso_π_of_is_initial CategoryTheory.Limits.isIso_π_of_isInitial
 
 /- warning: category_theory.limits.is_iso_π_initial -> CategoryTheory.Limits.isIso_π_initial is a dubious translation:
@@ -983,9 +973,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_iso_π_of_is_terminal CategoryTheory.Limits.isIso_π_of_isTerminalₓ'. -/
 theorem isIso_π_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F j) :=
-  ⟨⟨limit.lift _ (coneOfDiagramTerminal I F), by
-      ext
-      simp, by simp⟩⟩
+  ⟨⟨limit.lift _ (coneOfDiagramTerminal I F), by ext; simp, by simp⟩⟩
 #align category_theory.limits.is_iso_π_of_is_terminal CategoryTheory.Limits.isIso_π_of_isTerminal
 
 /- warning: category_theory.limits.is_iso_π_terminal -> CategoryTheory.Limits.isIso_π_terminal is a dubious translation:
@@ -1009,10 +997,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 -/
 theorem isIso_ι_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasColimit F] :
     IsIso (colimit.ι F j) :=
-  ⟨⟨colimit.desc _ (coconeOfDiagramTerminal I F),
-      ⟨by simp, by
-        ext
-        simp⟩⟩⟩
+  ⟨⟨colimit.desc _ (coconeOfDiagramTerminal I F), ⟨by simp, by ext; simp⟩⟩⟩
 #align category_theory.limits.is_iso_ι_of_is_terminal CategoryTheory.Limits.isIso_ι_of_isTerminal
 
 /- warning: category_theory.limits.is_iso_ι_terminal -> CategoryTheory.Limits.isIso_ι_terminal is a dubious translation:
@@ -1033,10 +1018,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_iso_ι_of_is_initial CategoryTheory.Limits.isIso_ι_of_isInitialₓ'. -/
 theorem isIso_ι_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasColimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F j) :=
-  ⟨⟨colimit.desc _ (coconeOfDiagramInitial I F),
-      ⟨by tidy, by
-        ext
-        simp⟩⟩⟩
+  ⟨⟨colimit.desc _ (coconeOfDiagramInitial I F), ⟨by tidy, by ext; simp⟩⟩⟩
 #align category_theory.limits.is_iso_ι_of_is_initial CategoryTheory.Limits.isIso_ι_of_isInitial
 
 /- warning: category_theory.limits.is_iso_ι_initial -> CategoryTheory.Limits.isIso_ι_initial is a dubious translation:

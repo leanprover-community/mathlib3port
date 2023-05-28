@@ -53,11 +53,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.smul_std_basis_matrix Matrix.smul_stdBasisMatrixₓ'. -/
 @[simp]
 theorem smul_stdBasisMatrix (i : m) (j : n) (a b : α) :
-    b • stdBasisMatrix i j a = stdBasisMatrix i j (b • a) :=
-  by
-  unfold std_basis_matrix
-  ext
-  simp
+    b • stdBasisMatrix i j a = stdBasisMatrix i j (b • a) := by unfold std_basis_matrix; ext; simp
 #align matrix.smul_std_basis_matrix Matrix.smul_stdBasisMatrix
 
 /- warning: matrix.std_basis_matrix_zero -> Matrix.stdBasisMatrix_zero is a dubious translation:
@@ -67,11 +63,8 @@ but is expected to have type
   forall {m : Type.{u3}} {n : Type.{u2}} {α : Type.{u1}} [_inst_2 : DecidableEq.{succ u3} m] [_inst_3 : DecidableEq.{succ u2} n] [_inst_4 : Semiring.{u1} α] (i : m) (j : n), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (Matrix.{u3, u2, u1} m n α) (Matrix.stdBasisMatrix.{u3, u2, u1} m n α (fun (a : m) (b : m) => _inst_2 a b) (fun (a : n) (b : n) => _inst_3 a b) _inst_4 i j (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_4))))) (OfNat.ofNat.{max (max u3 u2) u1} (Matrix.{u3, u2, u1} m n α) 0 (Zero.toOfNat0.{max (max u3 u2) u1} (Matrix.{u3, u2, u1} m n α) (Matrix.zero.{u1, u3, u2} m n α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_4)))))
 Case conversion may be inaccurate. Consider using '#align matrix.std_basis_matrix_zero Matrix.stdBasisMatrix_zeroₓ'. -/
 @[simp]
-theorem stdBasisMatrix_zero (i : m) (j : n) : stdBasisMatrix i j (0 : α) = 0 :=
-  by
-  unfold std_basis_matrix
-  ext
-  simp
+theorem stdBasisMatrix_zero (i : m) (j : n) : stdBasisMatrix i j (0 : α) = 0 := by
+  unfold std_basis_matrix; ext; simp
 #align matrix.std_basis_matrix_zero Matrix.stdBasisMatrix_zero
 
 /- warning: matrix.std_basis_matrix_add -> Matrix.stdBasisMatrix_add is a dubious translation:
@@ -135,8 +128,7 @@ protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → P
   by
   rw [matrix_eq_sum_std_basis M, ← Finset.sum_product']
   apply Finset.sum_induction _ _ h_add h_zero
-  · intros
-    apply h_std_basis
+  · intros ; apply h_std_basis
 #align matrix.induction_on' Matrix.induction_on'
 
 /- warning: matrix.induction_on -> Matrix.induction_on is a dubious translation:
@@ -181,10 +173,8 @@ but is expected to have type
   forall {m : Type.{u3}} {n : Type.{u2}} {α : Type.{u1}} [_inst_2 : DecidableEq.{succ u3} m] [_inst_3 : DecidableEq.{succ u2} n] [_inst_4 : Semiring.{u1} α] (i : m) (j : n) (c : α) (i' : m) (j' : n), (Not (And (Eq.{succ u3} m i i') (Eq.{succ u2} n j j'))) -> (Eq.{succ u1} α (Matrix.stdBasisMatrix.{u3, u2, u1} m n α (fun (a : m) (b : m) => _inst_2 a b) (fun (a : n) (b : n) => _inst_3 a b) _inst_4 i j c i' j') (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_4)))))
 Case conversion may be inaccurate. Consider using '#align matrix.std_basis_matrix.apply_of_ne Matrix.StdBasisMatrix.apply_of_neₓ'. -/
 @[simp]
-theorem apply_of_ne (h : ¬(i = i' ∧ j = j')) : stdBasisMatrix i j c i' j' = 0 :=
-  by
-  simp only [std_basis_matrix, and_imp, ite_eq_right_iff]
-  tauto
+theorem apply_of_ne (h : ¬(i = i' ∧ j = j')) : stdBasisMatrix i j c i' j' = 0 := by
+  simp only [std_basis_matrix, and_imp, ite_eq_right_iff]; tauto
 #align matrix.std_basis_matrix.apply_of_ne Matrix.StdBasisMatrix.apply_of_ne
 
 /- warning: matrix.std_basis_matrix.apply_of_row_ne -> Matrix.StdBasisMatrix.apply_of_row_ne is a dubious translation:
@@ -233,9 +223,7 @@ but is expected to have type
   forall {n : Type.{u2}} {α : Type.{u1}} [_inst_3 : DecidableEq.{succ u2} n] [_inst_4 : Semiring.{u1} α] (i : n) (c : α), Eq.{max (succ u2) (succ u1)} (n -> α) (Matrix.diag.{u1, u2} n α (Matrix.stdBasisMatrix.{u2, u2, u1} n n α (fun (a : n) (b : n) => _inst_3 a b) (fun (a : n) (b : n) => _inst_3 a b) _inst_4 i i c)) (Pi.single.{u2, u1} n (fun (i : n) => α) (fun (a : n) (b : n) => _inst_3 a b) (fun (i : n) => MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α _inst_4)) i c)
 Case conversion may be inaccurate. Consider using '#align matrix.std_basis_matrix.diag_same Matrix.StdBasisMatrix.diag_sameₓ'. -/
 @[simp]
-theorem diag_same : diag (stdBasisMatrix i i c) = Pi.single i c :=
-  by
-  ext j
+theorem diag_same : diag (stdBasisMatrix i i c) = Pi.single i c := by ext j;
   by_cases hij : i = j <;> try rw [hij] <;> simp [hij]
 #align matrix.std_basis_matrix.diag_same Matrix.StdBasisMatrix.diag_same
 

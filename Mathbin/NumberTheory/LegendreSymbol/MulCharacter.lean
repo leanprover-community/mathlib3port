@@ -127,9 +127,7 @@ the value `1` on units. -/
 noncomputable def trivial : MulChar R R'
     where
   toFun := by classical exact fun x => if IsUnit x then 1 else 0
-  map_nonunit' := by
-    intro a ha
-    simp only [ha, if_false]
+  map_nonunit' := by intro a ha; simp only [ha, if_false]
   map_one' := by simp only [isUnit_one, if_true]
   map_mul' := by
     intro x y
@@ -219,9 +217,7 @@ theorem ext {χ χ' : MulChar R R'} (h : ∀ a : Rˣ, χ a = χ' a) : χ = χ' :
 
 #print MulChar.ext_iff /-
 theorem ext_iff {χ χ' : MulChar R R'} : χ = χ' ↔ ∀ a : Rˣ, χ a = χ' a :=
-  ⟨by
-    rintro rfl a
-    rfl, ext⟩
+  ⟨by rintro rfl a; rfl, ext⟩
 #align mul_char.ext_iff MulChar.ext_iff
 -/
 
@@ -279,9 +275,7 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
           norm_cast
         · simp only [hy, not_false_iff, dif_neg, MulZeroClass.mul_zero]
       · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, MulZeroClass.zero_mul]
-  map_nonunit' := by
-    intro a ha
-    simp only [ha, not_false_iff, dif_neg]
+  map_nonunit' := by intro a ha; simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
 
 /- warning: mul_char.of_unit_hom_coe -> MulChar.ofUnitHom_coe is a dubious translation:
@@ -304,14 +298,8 @@ noncomputable def equivToUnitHom : MulChar R R' ≃ (Rˣ →* R'ˣ)
     where
   toFun := to_unit_hom
   invFun := of_unit_hom
-  left_inv := by
-    intro χ
-    ext x
-    rw [of_unit_hom_coe, coe_to_unit_hom]
-  right_inv := by
-    intro f
-    ext x
-    rw [coe_to_unit_hom, of_unit_hom_coe]
+  left_inv := by intro χ; ext x; rw [of_unit_hom_coe, coe_to_unit_hom]
+  right_inv := by intro f; ext x; rw [coe_to_unit_hom, of_unit_hom_coe]
 #align mul_char.equiv_to_unit_hom MulChar.equivToUnitHom
 
 /- warning: mul_char.to_unit_hom_eq -> MulChar.toUnitHom_eq is a dubious translation:
@@ -451,18 +439,12 @@ theorem coeToFun_mul (χ χ' : MulChar R R') : ⇑(χ * χ') = χ * χ' :=
 #align mul_char.coe_to_fun_mul MulChar.coeToFun_mul
 
 #print MulChar.one_mul /-
-protected theorem one_mul (χ : MulChar R R') : (1 : MulChar R R') * χ = χ :=
-  by
-  ext
-  simp
+protected theorem one_mul (χ : MulChar R R') : (1 : MulChar R R') * χ = χ := by ext; simp
 #align mul_char.one_mul MulChar.one_mul
 -/
 
 #print MulChar.mul_one /-
-protected theorem mul_one (χ : MulChar R R') : χ * 1 = χ :=
-  by
-  ext
-  simp
+protected theorem mul_one (χ : MulChar R R') : χ * 1 = χ := by ext; simp
 #align mul_char.mul_one MulChar.mul_one
 -/
 
@@ -512,9 +494,7 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
     have h := IsUnit.map χ ha
     apply_fun (· * ·) (χ a) using IsUnit.mul_right_injective h
     rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, MulChar.map_one]
-  · revert ha
-    nontriviality R
-    intro ha
+  · revert ha; nontriviality R; intro ha
     -- `nontriviality R` by itself doesn't do it
     rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
 #align mul_char.inv_apply MulChar.inv_apply
@@ -550,14 +530,8 @@ noncomputable instance commGroup : CommGroup (MulChar R R') :=
     mul := (· * ·)
     inv := Inv.inv
     mul_left_inv := inv_mul
-    mul_assoc := by
-      intro χ₁ χ₂ χ₃
-      ext a
-      simp [mul_assoc]
-    mul_comm := by
-      intro χ₁ χ₂
-      ext a
-      simp [mul_comm]
+    mul_assoc := by intro χ₁ χ₂ χ₃; ext a; simp [mul_assoc]
+    mul_comm := by intro χ₁ χ₂; ext a; simp [mul_comm]
     one_mul
     mul_one }
 #align mul_char.comm_group MulChar.commGroup

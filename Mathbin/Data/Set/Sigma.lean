@@ -35,8 +35,7 @@ Case conversion may be inaccurate. Consider using '#align set.range_sigma_mk Set
 theorem range_sigmaMk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
   by
   apply subset.antisymm
-  · rintro _ ⟨b, rfl⟩
-    simp
+  · rintro _ ⟨b, rfl⟩; simp
   · rintro ⟨x, y⟩ (rfl | _)
     exact mem_range_self y
 #align set.range_sigma_mk Set.range_sigmaMk
@@ -48,9 +47,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (forall (s : Set.{u1} (α j)), Eq.{succ u1} (Set.{u1} (α i)) (Set.preimage.{u1, max u2 u1} (α i) (Sigma.{u2, u1} ι α) (Sigma.mk.{u2, u1} ι α i) (Set.image.{u1, max u2 u1} (α j) (Sigma.{u2, u1} ι α) (Sigma.mk.{u2, u1} ι α j) s)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (α i)) (Set.instEmptyCollectionSet.{u1} (α i))))
 Case conversion may be inaccurate. Consider using '#align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigmaMk_of_neₓ'. -/
 theorem preimage_image_sigmaMk_of_ne (h : i ≠ j) (s : Set (α j)) :
-    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
-  ext x
-  simp [h.symm]
+    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by ext x; simp [h.symm]
 #align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigmaMk_of_ne
 
 /- warning: set.image_sigma_mk_preimage_sigma_map_subset -> Set.image_sigmaMk_preimage_sigmaMap_subset is a dubious translation:
@@ -232,9 +229,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sigma_singleton Set.sigma_singletonₓ'. -/
 @[simp]
 theorem sigma_singleton {a : ∀ i, α i} :
-    (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s :=
-  by
-  ext ⟨x, y⟩
+    (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s := by ext ⟨x, y⟩;
   simp [and_left_comm, eq_comm]
 #align set.sigma_singleton Set.sigma_singleton
 
@@ -277,10 +272,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s₁ : Set.{u2} ι} {s₂ : Set.{u2} ι} {t₁ : forall (i : ι), Set.{u1} (α i)} {t₂ : forall (i : ι), Set.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Inter.inter.{max u2 u1} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Set.instInterSet.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) s₁ t₁) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) s₂ t₂)) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) (Inter.inter.{u2} (Set.{u2} ι) (Set.instInterSet.{u2} ι) s₁ s₂) (fun (i : ι) => Inter.inter.{u1} (Set.{u1} (α i)) (Set.instInterSet.{u1} (α i)) (t₁ i) (t₂ i)))
 Case conversion may be inaccurate. Consider using '#align set.sigma_inter_sigma Set.sigma_inter_sigmaₓ'. -/
-theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i :=
-  by
-  ext ⟨x, y⟩
-  simp [and_assoc', and_left_comm]
+theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
+  ext ⟨x, y⟩; simp [and_assoc', and_left_comm]
 #align set.sigma_inter_sigma Set.sigma_inter_sigma
 
 /- warning: set.insert_sigma -> Set.insert_sigma is a dubious translation:

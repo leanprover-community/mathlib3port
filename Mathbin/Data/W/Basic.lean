@@ -167,10 +167,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} [_inst_1 : forall (a : α), Fintype.{u1} (β a)] (t : WType.{u2, u1} α β), LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (WType.depth.{u2, u1} α β (fun (a : α) => _inst_1 a) t)
 Case conversion may be inaccurate. Consider using '#align W_type.depth_pos WType.depth_posₓ'. -/
-theorem depth_pos (t : WType β) : 0 < t.depth :=
-  by
-  cases t
-  apply Nat.succ_pos
+theorem depth_pos (t : WType β) : 0 < t.depth := by cases t; apply Nat.succ_pos
 #align W_type.depth_pos WType.depth_pos
 
 /- warning: W_type.depth_lt_depth_mk -> WType.depth_lt_depth_mk is a dubious translation:
@@ -200,9 +197,7 @@ variable [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (WType' β 0) :=
   let f : WType' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
-  let finv : Empty → WType' β 0 := by
-    intro x
-    cases x
+  let finv : Empty → WType' β 0 := by intro x; cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
 
@@ -222,10 +217,7 @@ private def finv (n : ℕ) : (Σa : α, β a → WType' β n) → WType' β (n +
 variable [Encodable α]
 
 private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (WType' β (n + 1)) :=
-  Encodable.ofLeftInverse (f n) (finv n)
-    (by
-      rintro ⟨⟨_, _⟩, _⟩
-      rfl)
+  Encodable.ofLeftInverse (f n) (finv n) (by rintro ⟨⟨_, _⟩, _⟩; rfl)
 
 /-- `W_type` is encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
 encodable. -/

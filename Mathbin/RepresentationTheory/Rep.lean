@@ -56,14 +56,10 @@ variable [Monoid G]
 instance : CoeSort (Rep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
-instance (V : Rep k G) : AddCommGroup V :=
-  by
-  change AddCommGroup ((forget₂ (Rep k G) (ModuleCat k)).obj V)
-  infer_instance
+instance (V : Rep k G) : AddCommGroup V := by
+  change AddCommGroup ((forget₂ (Rep k G) (ModuleCat k)).obj V); infer_instance
 
-instance (V : Rep k G) : Module k V :=
-  by
-  change Module k ((forget₂ (Rep k G) (ModuleCat k)).obj V)
+instance (V : Rep k G) : Module k V := by change Module k ((forget₂ (Rep k G) (ModuleCat k)).obj V);
   infer_instance
 
 /-- Specialize the existing `Action.ρ`, changing the type to `representation k G V`.
@@ -203,10 +199,7 @@ on `k[X]`. -/
 @[simps]
 noncomputable def linearizationTrivialIso (X : Type u) :
     (linearization k G).obj (Action.mk X 1) ≅ trivial k G (X →₀ k) :=
-  Action.mkIso (Iso.refl _) fun g => by
-    ext1
-    ext1
-    exact linearization_of _ _ _
+  Action.mkIso (Iso.refl _) fun g => by ext1; ext1; exact linearization_of _ _ _
 #align Rep.linearization_trivial_iso Rep.linearizationTrivialIso
 
 variable (k G)
@@ -505,8 +498,7 @@ theorem to_Module_monoidAlgebra_map_aux {k G : Type _} [CommRing k] [Monoid G] (
   · intro g
     simp only [one_smul, MonoidAlgebra.lift_single, MonoidAlgebra.of_apply]
     exact LinearMap.congr_fun (w g) x
-  · intro g h gw hw
-    simp only [map_add, add_left_inj, LinearMap.add_apply, hw, gw]
+  · intro g h gw hw; simp only [map_add, add_left_inj, LinearMap.add_apply, hw, gw]
   · intro r g w
     simp only [AlgHom.map_smul, w, RingHom.id_apply, LinearMap.smul_apply, LinearMap.map_smulₛₗ]
 #align Rep.to_Module_monoid_algebra_map_aux Rep.to_Module_monoidAlgebra_map_aux
@@ -531,9 +523,7 @@ def ofModuleMonoidAlgebra : ModuleCat.{u} (MonoidAlgebra k G) ⥤ Rep k G
   obj M := Rep.of (Representation.ofModule k G M)
   map M N f :=
     { hom := { f with map_smul' := fun r x => f.map_smul (algebraMap k _ r) x }
-      comm' := fun g => by
-        ext
-        apply f.map_smul }
+      comm' := fun g => by ext; apply f.map_smul }
 #align Rep.of_Module_monoid_algebra Rep.ofModuleMonoidAlgebra
 
 theorem ofModuleMonoidAlgebra_obj_coe (M : ModuleCat.{u} (MonoidAlgebra k G)) :
@@ -590,9 +580,7 @@ def unitIso (V : Rep k G) : V ≅ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgeb
           dsimp [unit_iso_add_equiv]
           simp only [Representation.asModuleEquiv_symm_map_smul,
             RestrictScalars.addEquiv_symm_map_algebraMap_smul] })
-    fun g => by
-    ext
-    apply unit_iso_comm
+    fun g => by ext; apply unit_iso_comm
 #align Rep.unit_iso Rep.unitIso
 
 /-- The categorical equivalence `Rep k G ≌ Module (monoid_algebra k G)`. -/

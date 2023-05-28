@@ -130,11 +130,9 @@ def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n)
   by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
-    have := s.2 _ h'
-    rw [h] at this
+    have := s.2 _ h'; rw [h] at this
     exact Nat.not_succ_le_self n this
-  · intro x h'
-    rcases Finset.mem_cons.1 h' with (rfl | h')
+  · intro x h'; rcases Finset.mem_cons.1 h' with (rfl | h')
     · exact ge_of_eq h
     · exact Nat.le_of_succ_le (s.2 _ h')
 #align derive_fintype.finset_above.cons DeriveFintype.FinsetAbove.cons
@@ -189,11 +187,9 @@ def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · rw [Finset.disjoint_left]
     intro a hs ht
-    have := t.2 _ ht
-    rw [s.2 _ hs] at this
+    have := t.2 _ ht; rw [s.2 _ hs] at this
     exact Nat.not_succ_le_self n this
-  · intro x h'
-    rcases Finset.mem_disjUnion.1 h' with (h' | h')
+  · intro x h'; rcases Finset.mem_disjUnion.1 h' with (h' | h')
     · exact ge_of_eq (s.2 _ h')
     · exact Nat.le_of_succ_le (t.2 _ h')
 #align derive_fintype.finset_above.union DeriveFintype.FinsetAbove.union

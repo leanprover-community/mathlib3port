@@ -278,8 +278,7 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
     (by
       intro h
       cases' m with m
-      · simp [zero_add] at h
-        exact Or.inr h
+      · simp [zero_add] at h; exact Or.inr h
       exact Or.inl (succ_pos _))
     (by
       intro h; cases' h with mpos npos
@@ -339,10 +338,7 @@ theorem add_succ_lt_add (hab : m < n) (hcd : k < l) : m + k + 1 < n + l :=
 
 #print Nat.pred_le_iff /-
 theorem pred_le_iff : pred m ≤ n ↔ m ≤ succ n :=
-  ⟨le_succ_of_pred_le, by
-    cases m
-    · exact fun _ => zero_le n
-    exact le_of_succ_le_succ⟩
+  ⟨le_succ_of_pred_le, by cases m; · exact fun _ => zero_le n; exact le_of_succ_le_succ⟩
 #align nat.pred_le_iff Nat.pred_le_iff
 -/
 
@@ -375,11 +371,8 @@ theorem le_or_le_of_add_eq_add_pred (h : k + l = m + n - 1) : m ≤ k ∨ n ≤ 
   by
   cases' le_or_lt m k with h' h' <;> [left;right]
   · exact h'
-  · replace h' := add_lt_add_right h' l
-    rw [h] at h'
-    cases' n.eq_zero_or_pos with hn hn
-    · rw [hn]
-      exact zero_le l
+  · replace h' := add_lt_add_right h' l; rw [h] at h'
+    cases' n.eq_zero_or_pos with hn hn; · rw [hn]; exact zero_le l
     rw [m.add_sub_assoc hn, add_lt_add_iff_left] at h'
     exact Nat.le_of_pred_lt h'
 #align nat.le_or_le_of_add_eq_add_pred Nat.le_or_le_of_add_eq_add_pred
@@ -737,8 +730,7 @@ theorem div_eq_self : m / n = m ↔ m = 0 ∨ n = 1 :=
     cases n
     · simp_all
     · cases n
-      · right
-        rfl
+      · right; rfl
       · left
         have : m / (n + 2) ≤ m / 2 := div_le_div_left (by simp) (by decide)
         refine' eq_zero_of_le_half _
@@ -815,8 +807,7 @@ theorem findGreatest_eq_iff :
     rintro rfl
     exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.Ne HEq.symm).elim⟩
   · by_cases hk : P (k + 1)
-    · rw [find_greatest_eq hk]
-      constructor
+    · rw [find_greatest_eq hk]; constructor
       · rintro rfl
         exact ⟨le_rfl, fun _ => hk, fun n hlt hle => (hlt.not_le hle).elim⟩
       · rintro ⟨hle, h0, hm⟩
@@ -845,8 +836,7 @@ theorem findGreatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 <
 theorem findGreatest_spec (hmb : m ≤ n) (hm : P m) : P (Nat.findGreatest P n) :=
   by
   by_cases h : Nat.findGreatest P n = 0
-  · cases m
-    · rwa [h]
+  · cases m; · rwa [h]
     exact ((find_greatest_eq_zero_iff.1 h) m.zero_lt_succ hmb hm).elim
   · exact (find_greatest_eq_iff.1 rfl).2.1 h
 #align nat.find_greatest_spec Nat.findGreatest_spec
@@ -992,17 +982,11 @@ theorem bit1_lt_bit0_iff : bit1 m < bit0 n ↔ m < n :=
 -/
 
 @[simp]
-theorem one_le_bit0_iff : 1 ≤ bit0 n ↔ 0 < n :=
-  by
-  convert bit1_le_bit0_iff
-  rfl
+theorem one_le_bit0_iff : 1 ≤ bit0 n ↔ 0 < n := by convert bit1_le_bit0_iff; rfl
 #align nat.one_le_bit0_iff Nat.one_le_bit0_iff
 
 @[simp]
-theorem one_lt_bit0_iff : 1 < bit0 n ↔ 1 ≤ n :=
-  by
-  convert bit1_lt_bit0_iff
-  rfl
+theorem one_lt_bit0_iff : 1 < bit0 n ↔ 1 ≤ n := by convert bit1_lt_bit0_iff; rfl
 #align nat.one_lt_bit0_iff Nat.one_lt_bit0_iff
 
 @[simp]

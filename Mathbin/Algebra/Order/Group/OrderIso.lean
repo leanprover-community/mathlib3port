@@ -152,10 +152,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.863 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.865 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.863 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.865)) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.878 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.880 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.878 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.880)] (a : α), Eq.{succ u1} (OrderIso.{u1, u1} α α _inst_2 _inst_2) (OrderIso.symm.{u1, u1} α α _inst_2 _inst_2 (OrderIso.mulRight.{u1} α _inst_1 _inst_2 _inst_3 a)) (OrderIso.mulRight.{u1} α _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_right_symm OrderIso.mulRight_symmₓ'. -/
 @[simp, to_additive]
-theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight a⁻¹ :=
-  by
-  ext x
-  rfl
+theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight a⁻¹ := by
+  ext x; rfl
 #align order_iso.mul_right_symm OrderIso.mulRight_symm
 #align order_iso.add_right_symm OrderIso.addRight_symm
 
@@ -203,10 +201,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1174 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1176 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1174 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1176) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1189 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1191 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1189 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.1191)] (a : α), Eq.{succ u1} (OrderIso.{u1, u1} α α _inst_2 _inst_2) (OrderIso.symm.{u1, u1} α α _inst_2 _inst_2 (OrderIso.mulLeft.{u1} α _inst_1 _inst_2 _inst_3 a)) (OrderIso.mulLeft.{u1} α _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_left_symm OrderIso.mulLeft_symmₓ'. -/
 @[simp, to_additive]
-theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft a⁻¹ :=
-  by
-  ext x
-  rfl
+theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft a⁻¹ := by
+  ext x; rfl
 #align order_iso.mul_left_symm OrderIso.mulLeft_symm
 #align order_iso.add_left_symm OrderIso.addLeft_symm
 

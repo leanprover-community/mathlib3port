@@ -152,10 +152,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {p : (Prod.{u2, u1} α β) -> Prop} {s : Set.{u1} β}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.prod.{u2, u1} α β f (Filter.principal.{u1} β s))) (Filter.Eventually.{u2} α (fun (x : α) => forall (y : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) y s) -> (p (Prod.mk.{u2, u1} α β x y))) f)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_prod_principal_iff Filter.eventually_prod_principal_iffₓ'. -/
 theorem eventually_prod_principal_iff {p : α × β → Prop} {s : Set β} :
-    (∀ᶠ x : α × β in f ×ᶠ 𝓟 s, p x) ↔ ∀ᶠ x : α in f, ∀ y : β, y ∈ s → p (x, y) :=
-  by
-  rw [eventually_iff, eventually_iff, mem_prod_principal]
-  simp only [mem_set_of_eq]
+    (∀ᶠ x : α × β in f ×ᶠ 𝓟 s, p x) ↔ ∀ᶠ x : α in f, ∀ y : β, y ∈ s → p (x, y) := by
+  rw [eventually_iff, eventually_iff, mem_prod_principal]; simp only [mem_set_of_eq]
 #align filter.eventually_prod_principal_iff Filter.eventually_prod_principal_iff
 
 /- warning: filter.comap_prod -> Filter.comap_prod is a dubious translation:
@@ -372,9 +370,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : ι -> (Filter.{u2} α)} {g : Filter.{u1} β}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β (iInf.{u2, u3} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => f i)) g) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β (f i) g))
 Case conversion may be inaccurate. Consider using '#align filter.prod_infi_left Filter.prod_iInf_leftₓ'. -/
 theorem prod_iInf_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
-    (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g :=
-  by
-  rw [Filter.prod, comap_infi, iInf_inf]
+    (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g := by rw [Filter.prod, comap_infi, iInf_inf];
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_left Filter.prod_iInf_left
 
@@ -385,9 +381,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : Filter.{u2} α} {g : ι -> (Filter.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β f (iInf.{u1, u3} (Filter.{u1} β) (CompleteLattice.toInfSet.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)) ι (fun (i : ι) => g i))) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β f (g i)))
 Case conversion may be inaccurate. Consider using '#align filter.prod_infi_right Filter.prod_iInf_rightₓ'. -/
 theorem prod_iInf_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
-    (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i :=
-  by
-  rw [Filter.prod, comap_infi, inf_iInf]
+    (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i := by rw [Filter.prod, comap_infi, inf_iInf];
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_right Filter.prod_iInf_right
 
@@ -448,10 +442,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β f g) (Filter.map.{max u2 u1, max u1 u2} (Prod.{u1, u2} β α) (Prod.{u2, u1} α β) (fun (p : Prod.{u1, u2} β α) => Prod.mk.{u2, u1} α β (Prod.snd.{u1, u2} β α p) (Prod.fst.{u1, u2} β α p)) (Filter.prod.{u1, u2} β α g f))
 Case conversion may be inaccurate. Consider using '#align filter.prod_comm Filter.prod_commₓ'. -/
-theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) :=
-  by
-  rw [prod_comm', ← map_swap_eq_comap_swap]
-  rfl
+theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) := by
+  rw [prod_comm', ← map_swap_eq_comap_swap]; rfl
 #align filter.prod_comm Filter.prod_comm
 
 /- warning: filter.map_fst_prod -> Filter.map_fst_prod is a dubious translation:
@@ -518,10 +510,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β} {p : (Prod.{u2, u1} α β) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.prod.{u2, u1} α β f g)) (Filter.Eventually.{max u2 u1} (Prod.{u1, u2} β α) (fun (y : Prod.{u1, u2} β α) => p (Prod.swap.{u1, u2} β α y)) (Filter.prod.{u1, u2} β α g f))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_swap_iff Filter.eventually_swap_iffₓ'. -/
 theorem eventually_swap_iff {p : α × β → Prop} :
-    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.symm :=
-  by
-  rw [prod_comm, eventually_map]
-  simpa
+    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.symm := by
+  rw [prod_comm, eventually_map]; simpa
 #align filter.eventually_swap_iff Filter.eventually_swap_iff
 
 /- warning: filter.prod_assoc -> Filter.prod_assoc is a dubious translation:
@@ -736,9 +726,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} (f : α -> β -> γ) (a : α) (B : Filter.{u3} β), Eq.{succ u2} (Filter.{u2} γ) (Filter.map.{max u3 u1, u2} (Prod.{u1, u3} α β) γ (Function.uncurry.{u1, u3, u2} α β γ f) (Filter.prod.{u1, u3} α β (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a) B)) (Filter.map.{u3, u2} β γ (f a) B)
 Case conversion may be inaccurate. Consider using '#align filter.map_pure_prod Filter.map_pure_prodₓ'. -/
 theorem map_pure_prod (f : α → β → γ) (a : α) (B : Filter β) :
-    Filter.map (Function.uncurry f) (pure a ×ᶠ B) = Filter.map (f a) B :=
-  by
-  rw [Filter.pure_prod]
+    Filter.map (Function.uncurry f) (pure a ×ᶠ B) = Filter.map (f a) B := by rw [Filter.pure_prod];
   rfl
 #align filter.map_pure_prod Filter.map_pure_prod
 
@@ -775,10 +763,8 @@ theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = �
     rcases mem_prod_iff.1 (empty_mem_iff_bot.2 h) with ⟨s, hs, t, ht, hst⟩
     rw [subset_empty_iff, Set.prod_eq_empty_iff] at hst
     cases' hst with s_eq t_eq
-    · left
-      exact empty_mem_iff_bot.1 (s_eq ▸ hs)
-    · right
-      exact empty_mem_iff_bot.1 (t_eq ▸ ht)
+    · left; exact empty_mem_iff_bot.1 (s_eq ▸ hs)
+    · right; exact empty_mem_iff_bot.1 (t_eq ▸ ht)
   · rintro (rfl | rfl)
     exact bot_prod
     exact prod_bot
@@ -828,10 +814,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : Filter.{u3} α} {g : Filter.{u2} β} {g' : Filter.{u1} γ} {s : α -> (Prod.{u2, u1} β γ)}, Iff (Filter.Tendsto.{u3, max u2 u1} α (Prod.{u2, u1} β γ) s f (Filter.prod.{u2, u1} β γ g g')) (And (Filter.Tendsto.{u3, u2} α β (fun (n : α) => Prod.fst.{u2, u1} β γ (s n)) f g) (Filter.Tendsto.{u3, u1} α γ (fun (n : α) => Prod.snd.{u2, u1} β γ (s n)) f g'))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_prod_iff' Filter.tendsto_prod_iff'ₓ'. -/
 theorem tendsto_prod_iff' {f : Filter α} {g : Filter β} {g' : Filter γ} {s : α → β × γ} :
-    Tendsto s f (g ×ᶠ g') ↔ Tendsto (fun n => (s n).1) f g ∧ Tendsto (fun n => (s n).2) f g' :=
-  by
-  unfold Filter.prod
-  simp only [tendsto_inf, tendsto_comap_iff, iff_self_iff]
+    Tendsto s f (g ×ᶠ g') ↔ Tendsto (fun n => (s n).1) f g ∧ Tendsto (fun n => (s n).2) f g' := by
+  unfold Filter.prod; simp only [tendsto_inf, tendsto_comap_iff, iff_self_iff]
 #align filter.tendsto_prod_iff' Filter.tendsto_prod_iff'
 
 end Prod

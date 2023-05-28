@@ -110,10 +110,7 @@ theorem T_complex_cos : ∀ n, (T ℂ n).eval (cos θ) = cos (n * θ)
     by
     simp only [eval_X, eval_one, T_add_two, eval_sub, eval_bit0, Nat.cast_succ, eval_mul]
     rw [T_complex_cos (n + 1), T_complex_cos n]
-    have aux : sin θ * sin θ = 1 - cos θ * cos θ :=
-      by
-      rw [← sin_sq_add_cos_sq θ]
-      ring
+    have aux : sin θ * sin θ = 1 - cos θ * cos θ := by rw [← sin_sq_add_cos_sq θ]; ring
     simp only [Nat.cast_add, Nat.cast_one, add_mul, cos_add, one_mul, sin_add, mul_assoc, aux]
     ring
 #align polynomial.chebyshev.T_complex_cos Polynomial.Chebyshev.T_complex_cos

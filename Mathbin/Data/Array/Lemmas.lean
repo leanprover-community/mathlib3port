@@ -202,7 +202,7 @@ theorem write_toList {i v} : (a.write i v).toList = a.toList.set i v :=
       let ⟨_, e⟩ := List.get?_eq_some'.1 _
       e.symm
     by_cases ij : (i : ℕ) = j
-    · subst j
+    · subst j;
       rw [show (⟨(i : ℕ), h₃⟩ : Fin _) = i from Fin.eq_of_veq rfl, Array'.read_write,
         List.get?_set_eq_of_lt]
       simp [h₃]

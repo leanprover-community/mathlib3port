@@ -286,8 +286,7 @@ theorem bounded (f : CauSeq β abv) : ∃ r, ∀ i, abv (f i) < r :=
   cases' lt_or_le j i with ij ij
   · exact lt_of_le_of_lt (this i _ (le_of_lt ij)) (lt_add_one _)
   · have := lt_of_le_of_lt (abv_add abv _ _) (add_lt_add_of_le_of_lt (this i _ le_rfl) (h _ ij))
-    rw [add_sub, add_comm] at this
-    simpa
+    rw [add_sub, add_comm] at this; simpa
 #align cau_seq.bounded CauSeq.bounded
 
 /- warning: cau_seq.bounded' -> CauSeq.bounded' is a dubious translation:

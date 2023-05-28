@@ -234,8 +234,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
   simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub,
     nnnorm_prod, Units.mk0_prod]
   convert Finset.prod_lt_prod' _ _
-  swap
-  · exact fun _ => Units.mk0 (Real.toNNReal (q - 1)) (by simp [hq'])
+  swap; · exact fun _ => Units.mk0 (Real.toNNReal (q - 1)) (by simp [hq'])
   · simp only [Complex.card_primitiveRoots, prod_const, card_attach]
   · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ←
       Units.val_le_val, ← NNReal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.val_mk0,
@@ -310,8 +309,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
   simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub,
     nnnorm_prod, Units.mk0_prod]
   convert Finset.prod_lt_prod' _ _
-  swap
-  · exact fun _ => Units.mk0 (Real.toNNReal (q + 1)) (by simp <;> linarith only [hq'])
+  swap; · exact fun _ => Units.mk0 (Real.toNNReal (q + 1)) (by simp <;> linarith only [hq'])
   · simp [Complex.card_primitiveRoots]
   · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ←
       Units.val_le_val, ← NNReal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.val_mk0,

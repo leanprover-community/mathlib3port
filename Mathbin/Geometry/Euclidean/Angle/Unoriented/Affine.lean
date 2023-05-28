@@ -442,10 +442,7 @@ theorem dist_eq_abs_sub_dist_iff_angle_eq_zero {p1 p2 p3 : P} (hp1p2 : p1 ≠ p2
 /-- If M is the midpoint of the segment AB, then ∠AMB = π. -/
 theorem angle_midpoint_eq_pi (p1 p2 : P) (hp1p2 : p1 ≠ p2) : ∠ p1 (midpoint ℝ p1 p2) p2 = π :=
   by
-  have : p2 -ᵥ midpoint ℝ p1 p2 = -(p1 -ᵥ midpoint ℝ p1 p2) :=
-    by
-    rw [neg_vsub_eq_vsub_rev]
-    simp
+  have : p2 -ᵥ midpoint ℝ p1 p2 = -(p1 -ᵥ midpoint ℝ p1 p2) := by rw [neg_vsub_eq_vsub_rev]; simp
   simp [angle, this, hp1p2, -zero_lt_one]
 #align euclidean_geometry.angle_midpoint_eq_pi EuclideanGeometry.angle_midpoint_eq_pi
 -/
@@ -564,9 +561,7 @@ theorem Wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
     ∠ p₂ p₁ p₃ = 0 := by
   rw [angle, angle_eq_zero_iff]
   rcases h with ⟨r, ⟨hr0, hr1⟩, rfl⟩
-  have hr0' : r ≠ 0 := by
-    rintro rfl
-    simpa using hp₂p₁
+  have hr0' : r ≠ 0 := by rintro rfl; simpa using hp₂p₁
   replace hr0 := hr0.lt_of_ne hr0'.symm
   refine' ⟨vsub_ne_zero.2 hp₂p₁, r⁻¹, inv_pos.2 hr0, _⟩
   rw [AffineMap.lineMap_apply, vadd_vsub_assoc, vsub_self, add_zero, smul_smul, inv_mul_cancel hr0',
@@ -717,10 +712,8 @@ theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ :
   by
   refine' ⟨fun h => _, fun h => _⟩
   · replace h := h.wbtw_or_wbtw_or_wbtw
-    by_cases h₁₂ : p₁ = p₂
-    · exact Or.inl h₁₂
-    by_cases h₃₂ : p₃ = p₂
-    · exact Or.inr (Or.inl h₃₂)
+    by_cases h₁₂ : p₁ = p₂; · exact Or.inl h₁₂
+    by_cases h₃₂ : p₃ = p₂; · exact Or.inr (Or.inl h₃₂)
     rw [or_iff_right h₁₂, or_iff_right h₃₂]
     rcases h with (h | h | h)
     · exact Or.inr (angle_eq_pi_iff_sbtw.2 ⟨h, Ne.symm h₁₂, Ne.symm h₃₂⟩)
@@ -731,10 +724,8 @@ theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ :
     · simpa using collinear_pair ℝ p₁ p₃
     · rw [angle_eq_zero_iff_ne_and_wbtw] at h
       rcases h with (⟨-, h⟩ | ⟨-, h⟩)
-      · rw [Set.insert_comm]
-        exact h.collinear
-      · rw [Set.insert_comm, Set.pair_comm]
-        exact h.collinear
+      · rw [Set.insert_comm]; exact h.collinear
+      · rw [Set.insert_comm, Set.pair_comm]; exact h.collinear
     · rw [angle_eq_pi_iff_sbtw] at h
       exact h.wbtw.collinear
 #align euclidean_geometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi EuclideanGeometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi

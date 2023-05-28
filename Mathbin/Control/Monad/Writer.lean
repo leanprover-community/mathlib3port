@@ -82,17 +82,9 @@ instance [One ω] [Mul ω] : Monad (WriterT ω m)
 
 instance [Monoid ω] [LawfulMonad m] : LawfulMonad (WriterT ω m)
     where
-  id_map := by
-    intros
-    cases x
-    simp [(· <$> ·), WriterT.bind, WriterT.pure]
-  pure_bind := by
-    intros
-    simp [Pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]
-    ext <;> rfl
-  bind_assoc := by
-    intros
-    simp [(· >>= ·), WriterT.bind, mul_assoc, functor_norm]
+  id_map := by intros ; cases x; simp [(· <$> ·), WriterT.bind, WriterT.pure]
+  pure_bind := by intros ; simp [Pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]; ext <;> rfl
+  bind_assoc := by intros ; simp [(· >>= ·), WriterT.bind, mul_assoc, functor_norm]
 
 @[inline]
 protected def lift [One ω] (a : m α) : WriterT ω m α :=

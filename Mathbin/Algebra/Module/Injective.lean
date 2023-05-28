@@ -173,15 +173,8 @@ instance : Inf (ExtensionOf i f)
 instance : SemilatticeInf (ExtensionOf i f) :=
   Function.Injective.semilatticeInf ExtensionOf.toLinearPmap
     (fun X Y h =>
-      ExtensionOf.ext (by rw [h]) fun x y h' =>
-        by
-        induction h
-        congr
-        exact_mod_cast h')
-    fun X Y =>
-    LinearPMap.ext rfl fun x y h => by
-      congr
-      exact_mod_cast h
+      ExtensionOf.ext (by rw [h]) fun x y h' => by induction h; congr ; exact_mod_cast h')
+    fun X Y => LinearPMap.ext rfl fun x y h => by congr ; exact_mod_cast h
 
 variable {R i f}
 
@@ -503,13 +496,9 @@ protected theorem injective (h : Module.Baer R Q) : Module.Injective R Q :=
       ⟨{  toFun := fun y =>
             (extension_of_max i f).toLinearPMap
               ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivial⟩
-          map_add' := fun x y => by
-            rw [← LinearPMap.map_add]
-            congr
-          map_smul' := fun r x => by
-            rw [← LinearPMap.map_smul]
-            congr },
-        fun x => ((extension_of_max i f).is_extension x).symm⟩ }
+          map_add' := fun x y => by rw [← LinearPMap.map_add]; congr
+          map_smul' := fun r x => by rw [← LinearPMap.map_smul]; congr }, fun x =>
+        ((extension_of_max i f).is_extension x).symm⟩ }
 #align module.Baer.injective Module.Baer.injective
 -/
 

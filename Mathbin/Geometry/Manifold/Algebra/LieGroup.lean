@@ -112,16 +112,13 @@ theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
 
 @[to_additive]
 theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
-  by
-  rw [div_eq_mul_inv]
-  exact ((smooth_mul I).comp (hf.prod_mk hg.inv) : _)
+  by rw [div_eq_mul_inv]; exact ((smooth_mul I).comp (hf.prod_mk hg.inv) : _)
 #align smooth.div Smooth.div
 #align smooth.sub Smooth.sub
 
 @[to_additive]
 theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
-    SmoothOn I' I (f / g) s := by
-  rw [div_eq_mul_inv]
+    SmoothOn I' I (f / g) s := by rw [div_eq_mul_inv];
   exact ((smooth_mul I).comp_smoothOn (hf.prod_mk hg.inv) : _)
 #align smooth_on.div SmoothOn.div
 #align smooth_on.sub SmoothOn.sub

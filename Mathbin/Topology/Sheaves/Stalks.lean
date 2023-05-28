@@ -114,10 +114,7 @@ composition with the `germ` morphisms.
 -/
 theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
     (ih : ∀ (U : Opens X) (hxU : x ∈ U), F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
-  colimit.hom_ext fun U => by
-    induction U using Opposite.rec'
-    cases' U with U hxU
-    exact ih U hxU
+  colimit.hom_ext fun U => by induction U using Opposite.rec'; cases' U with U hxU; exact ih U hxU
 #align Top.presheaf.stalk_hom_ext TopCat.Presheaf.stalk_hom_ext
 
 @[simp, reassoc, elementwise]
@@ -217,9 +214,7 @@ theorem stalkPushforward_iso_of_openEmbedding {f : X ⟶ Y} (hf : OpenEmbedding 
       refine' F.map_iso (eq_to_iso _)
       dsimp only [functor.op]
       exact congr_arg op (opens.ext <| Set.preimage_image_eq (unop U).1.1 hf.inj)
-    · intro U V i
-      erw [← F.map_comp, ← F.map_comp]
-      congr
+    · intro U V i; erw [← F.map_comp, ← F.map_comp]; congr
   · ext U
     rw [← iso.comp_inv_eq]
     erw [colimit.ι_map_assoc]
@@ -249,9 +244,7 @@ def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
     { pt := F.stalk (f x)
       ι :=
         { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩
-          naturality' := fun _ _ i => by
-            erw [category.comp_id]
-            exact F.germ_res i.left.unop _ } }
+          naturality' := fun _ _ i => by erw [category.comp_id]; exact F.germ_res i.left.unop _ } }
 #align Top.presheaf.germ_to_pullback_stalk TopCat.Presheaf.germToPullbackStalk
 
 /-- The morphism `(f⁻¹ℱ)ₓ ⟶ ℱ_{f(x)}`. -/
@@ -261,10 +254,7 @@ def stalkPullbackInv (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
     { pt := F.stalk (f x)
       ι :=
         { app := fun U => F.germToPullbackStalk _ f (unop U).1 ⟨x, (unop U).2⟩
-          naturality' := fun _ _ _ =>
-            by
-            erw [colimit.pre_desc, category.comp_id]
-            congr } }
+          naturality' := fun _ _ _ => by erw [colimit.pre_desc, category.comp_id]; congr } }
 #align Top.presheaf.stalk_pullback_inv TopCat.Presheaf.stalkPullbackInv
 
 /-- The isomorphism `ℱ_{f(x)} ≅ (f⁻¹ℱ)ₓ`. -/
@@ -346,9 +336,7 @@ theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : 
 @[simp]
 theorem stalkSpecializes_refl {C : Type _} [Category C] [Limits.HasColimits C] {X : TopCat}
     (F : X.Presheaf C) (x : X) : F.stalkSpecializes (specializes_refl x) = 𝟙 _ :=
-  F.stalk_hom_ext fun _ _ => by
-    dsimp
-    simpa
+  F.stalk_hom_ext fun _ _ => by dsimp; simpa
 #align Top.presheaf.stalk_specializes_refl TopCat.Presheaf.stalkSpecializes_refl
 
 @[simp, reassoc, elementwise]
@@ -362,20 +350,14 @@ theorem stalkSpecializes_comp {C : Type _} [Category C] [Limits.HasColimits C] {
 theorem stalkSpecializes_stalkFunctor_map {F G : X.Presheaf C} (f : F ⟶ G) {x y : X} (h : x ⤳ y) :
     F.stalkSpecializes h ≫ (stalkFunctor C x).map f =
       (stalkFunctor C y).map f ≫ G.stalkSpecializes h :=
-  by
-  ext
-  delta stalk_functor
-  simpa [stalk_specializes]
+  by ext; delta stalk_functor; simpa [stalk_specializes]
 #align Top.presheaf.stalk_specializes_stalk_functor_map TopCat.Presheaf.stalkSpecializes_stalkFunctor_map
 
 @[simp, reassoc, elementwise]
 theorem stalkSpecializes_stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     (f _* F).stalkSpecializes (f.map_specializes h) ≫ F.stalkPushforward _ f x =
       F.stalkPushforward _ f y ≫ F.stalkSpecializes h :=
-  by
-  ext
-  delta stalk_pushforward
-  simpa [stalk_specializes]
+  by ext; delta stalk_pushforward; simpa [stalk_specializes]
 #align Top.presheaf.stalk_specializes_stalk_pushforward TopCat.Presheaf.stalkSpecializes_stalkPushforward
 
 /-- The stalks are isomorphic on inseparable points -/
@@ -516,11 +498,7 @@ theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, Mono <| (stal
 
 theorem mono_iff_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) :
     Mono f ↔ ∀ x, Mono ((stalkFunctor C x).map f.1) :=
-  ⟨by
-    intro m
-    exact stalk_mono_of_mono _, by
-    intro m
-    exact mono_of_stalk_mono _⟩
+  ⟨by intro m; exact stalk_mono_of_mono _, by intro m; exact mono_of_stalk_mono _⟩
 #align Top.presheaf.mono_iff_stalk_mono TopCat.Presheaf.mono_iff_stalk_mono
 
 /-- For surjectivity, we are given an arbitrary section `t` and need to find a preimage for it.
@@ -617,8 +595,7 @@ theorem isIso_of_stalkFunctor_map_iso {F G : Sheaf C X} (f : F ⟶ G)
   -- We show that all components of `f` are isomorphisms.
   suffices ∀ U : (opens X)ᵒᵖ, is_iso (f.1.app U) by
     exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f.1 this
-  intro U
-  induction U using Opposite.rec'
+  intro U; induction U using Opposite.rec'
   apply app_is_iso_of_stalk_functor_map_iso
 #align Top.presheaf.is_iso_of_stalk_functor_map_iso TopCat.Presheaf.isIso_of_stalkFunctor_map_iso
 
@@ -630,8 +607,7 @@ theorem isIso_iff_stalkFunctor_map_iso {F G : Sheaf C X} (f : F ⟶ G) :
     IsIso f ↔ ∀ x : X, IsIso ((stalkFunctor C x).map f.1) :=
   by
   constructor
-  · intro h x
-    skip
+  · intro h x; skip
     exact @functor.map_is_iso _ _ _ _ _ _ (stalk_functor C x) f.1 ((sheaf.forget C X).map_isIso f)
   · intro h
     exact is_iso_of_stalk_functor_map_iso f

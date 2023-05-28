@@ -113,9 +113,7 @@ theorem restrictStalkIso_inv_eq_ofRestrict {U : TopCat} (X : PresheafedSpace.{v}
 
 instance ofRestrict_stalkMap_isIso {U : TopCat} (X : PresheafedSpace.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (x : U) :
-    IsIso (stalkMap (X.of_restrict h) x) :=
-  by
-  rw [← restrict_stalk_iso_inv_eq_of_restrict]
+    IsIso (stalkMap (X.of_restrict h) x) := by rw [← restrict_stalk_iso_inv_eq_of_restrict];
   infer_instance
 #align algebraic_geometry.PresheafedSpace.of_restrict_stalk_map_is_iso AlgebraicGeometry.PresheafedSpace.ofRestrict_stalkMap_isIso
 
@@ -162,10 +160,7 @@ either side of the equality.
 theorem congr {X Y : PresheafedSpace.{v} C} (α β : X ⟶ Y) (h₁ : α = β) (x x' : X) (h₂ : x = x') :
     stalkMap α x ≫ eqToHom (show X.stalk x = X.stalk x' by rw [h₂]) =
       eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x') by rw [h₁, h₂]) ≫ stalkMap β x' :=
-  stalk_hom_ext _ fun U hx => by
-    subst h₁
-    subst h₂
-    simp
+  stalk_hom_ext _ fun U hx => by subst h₁; subst h₂; simp
 #align algebraic_geometry.PresheafedSpace.stalk_map.congr AlgebraicGeometry.PresheafedSpace.stalkMap.congr
 
 theorem congr_hom {X Y : PresheafedSpace.{v} C} (α β : X ⟶ Y) (h : α = β) (x : X) :
@@ -214,9 +209,7 @@ def stalkIso {X Y : PresheafedSpace.{v} C} (α : X ≅ Y) (x : X) :
 theorem stalkSpecializes_stalkMap {X Y : PresheafedSpace.{v} C} (f : X ⟶ Y) {x y : X} (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
-  by
-  delta PresheafedSpace.stalk_map
-  simp [stalk_map]
+  by delta PresheafedSpace.stalk_map; simp [stalk_map]
 #align algebraic_geometry.PresheafedSpace.stalk_map.stalk_specializes_stalk_map AlgebraicGeometry.PresheafedSpace.stalkMap.stalkSpecializes_stalkMap
 
 end StalkMap

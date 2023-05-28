@@ -60,10 +60,8 @@ theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
 -/
 
 #print Int.toNat_lt' /-
-theorem toNat_lt' {a : ℤ} {b : ℕ} (hb : b ≠ 0) : a.toNat < b ↔ a < b :=
-  by
-  rw [← to_nat_lt_to_nat, to_nat_coe_nat]
-  exact coe_nat_pos.2 hb.bot_lt
+theorem toNat_lt' {a : ℤ} {b : ℕ} (hb : b ≠ 0) : a.toNat < b ↔ a < b := by
+  rw [← to_nat_lt_to_nat, to_nat_coe_nat]; exact coe_nat_pos.2 hb.bot_lt
 #align int.to_nat_lt Int.toNat_lt'
 -/
 

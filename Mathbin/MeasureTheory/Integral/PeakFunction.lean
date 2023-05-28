@@ -132,8 +132,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
         apply set_integral_mono_set
         · exact (integrable_of_integral_eq_one h'i).norm.mul_const _
         · exact eventually_of_forall fun x => mul_nonneg (norm_nonneg _) δpos.le
-        · apply eventually_of_forall
-          exact inter_subset_left s u
+        · apply eventually_of_forall; exact inter_subset_left s u
       _ = ∫ x in s, φ i x * δ ∂μ :=
         by
         apply set_integral_congr hs fun x hx => _
@@ -156,8 +155,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
         rw [integral_mul_left]
         apply mul_le_mul_of_nonneg_left (set_integral_mono_set hmg.norm _ _) δpos.le
         · exact eventually_of_forall fun x => norm_nonneg _
-        · apply eventually_of_forall
-          exact diff_subset s u
+        · apply eventually_of_forall; exact diff_subset s u
       
   calc
     ‖∫ x in s, φ i x • g x ∂μ‖ = ‖(∫ x in s \ u, φ i x • g x ∂μ) + ∫ x in s ∩ u, φ i x • g x ∂μ‖ :=
@@ -292,8 +290,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       tendsto (fun n => (μ (v ∩ s)).toReal⁻¹ * (t / t') ^ n) at_top
         (𝓝 ((μ (v ∩ s)).toReal⁻¹ * 0)) :=
       by
-      apply tendsto.mul tendsto_const_nhds _
-      · infer_instance
+      apply tendsto.mul tendsto_const_nhds _; · infer_instance
       apply tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg t_pos t'_pos.le)
       exact (div_lt_one t'_pos).2 tt'
     rw [MulZeroClass.mul_zero] at N
@@ -324,9 +321,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrab
     (hcg : ContinuousWithinAt g s x₀) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=
   by
-  have : x₀ ∈ s := by
-    rw [← hs.is_closed.closure_eq]
-    exact closure_mono interior_subset h₀
+  have : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
   apply
     tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhds_within_pos hs _ hc
       h'c hnc hnc₀ this hmg hcg
@@ -347,9 +342,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuo
     (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x)
     (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s)) (hmg : ContinuousOn g s) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=
-  haveI : x₀ ∈ s := by
-    rw [← hs.is_closed.closure_eq]
-    exact closure_mono interior_subset h₀
+  haveI : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
   tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn hs hc h'c hnc hnc₀ h₀
     (hmg.integrable_on_compact hs) (hmg x₀ this)
 #align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn

@@ -132,8 +132,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_replicate Li
 theorem prod_replicate (n : ℕ) (a : M) : (replicate n a).Prod = a ^ n :=
   by
   induction' n with n ih
-  · rw [pow_zero]
-    rfl
+  · rw [pow_zero]; rfl
   · rw [List.replicate_succ, List.prod_cons, ih, pow_succ]
 #align list.prod_replicate List.prod_replicate
 #align list.sum_replicate List.sum_replicate
@@ -277,9 +276,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_take_mul_pro
 theorem prod_take_mul_prod_drop : ∀ (L : List M) (i : ℕ), (L.take i).Prod * (L.drop i).Prod = L.Prod
   | [], i => by simp [Nat.zero_le]
   | L, 0 => by simp
-  | h :: t, n + 1 => by
-    dsimp
-    rw [prod_cons, prod_cons, mul_assoc, prod_take_mul_prod_drop]
+  | h :: t, n + 1 => by dsimp; rw [prod_cons, prod_cons, mul_assoc, prod_take_mul_prod_drop]
 #align list.prod_take_mul_prod_drop List.prod_take_mul_prod_drop
 #align list.sum_take_add_sum_drop List.sum_take_add_sum_drop
 
@@ -294,9 +291,7 @@ theorem prod_take_succ :
     ∀ (L : List M) (i : ℕ) (p), (L.take (i + 1)).Prod = (L.take i).Prod * L.nthLe i p
   | [], i, p => by cases p
   | h :: t, 0, _ => by simp
-  | h :: t, n + 1, _ => by
-    dsimp
-    rw [prod_cons, prod_cons, prod_take_succ, mul_assoc]
+  | h :: t, n + 1, _ => by dsimp; rw [prod_cons, prod_cons, prod_take_succ, mul_assoc]
 #align list.prod_take_succ List.prod_take_succ
 #align list.sum_take_succ List.sum_take_succ
 
@@ -308,12 +303,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.length_pos_of_prod_ne_one List.length_pos_of_prod_ne_oneₓ'. -/
 /-- A list with product not one must have positive length. -/
 @[to_additive "A list with sum not zero must have positive length."]
-theorem length_pos_of_prod_ne_one (L : List M) (h : L.Prod ≠ 1) : 0 < L.length :=
-  by
-  cases L
-  · contrapose h
-    simp
-  · simp
+theorem length_pos_of_prod_ne_one (L : List M) (h : L.Prod ≠ 1) : 0 < L.length := by cases L;
+  · contrapose h; simp; · simp
 #align list.length_pos_of_prod_ne_one List.length_pos_of_prod_ne_one
 #align list.length_pos_of_sum_ne_zero List.length_pos_of_sum_ne_zero
 
@@ -551,9 +542,7 @@ Case conversion may be inaccurate. Consider using '#align list.exists_lt_of_prod
 @[to_additive exists_lt_of_sum_lt]
 theorem exists_lt_of_prod_lt' [LinearOrder M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
     [CovariantClass M M (· * ·) (· ≤ ·)] {l : List ι} (f g : ι → M)
-    (h : (l.map f).Prod < (l.map g).Prod) : ∃ i ∈ l, f i < g i :=
-  by
-  contrapose! h
+    (h : (l.map f).Prod < (l.map g).Prod) : ∃ i ∈ l, f i < g i := by contrapose! h;
   exact prod_le_prod' h
 #align list.exists_lt_of_prod_lt' List.exists_lt_of_prod_lt'
 #align list.exists_lt_of_sum_lt List.exists_lt_of_sum_lt
@@ -568,9 +557,7 @@ Case conversion may be inaccurate. Consider using '#align list.exists_le_of_prod
 theorem exists_le_of_prod_le' [LinearOrder M] [CovariantClass M M (· * ·) (· < ·)]
     [CovariantClass M M (· * ·) (· ≤ ·)] [CovariantClass M M (Function.swap (· * ·)) (· < ·)]
     [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] {l : List ι} (hl : l ≠ []) (f g : ι → M)
-    (h : (l.map f).Prod ≤ (l.map g).Prod) : ∃ x ∈ l, f x ≤ g x :=
-  by
-  contrapose! h
+    (h : (l.map f).Prod ≤ (l.map g).Prod) : ∃ x ∈ l, f x ≤ g x := by contrapose! h;
   exact prod_lt_prod_of_ne_nil hl _ _ h
 #align list.exists_le_of_prod_le' List.exists_le_of_prod_le'
 #align list.exists_le_of_sum_le List.exists_le_of_sum_le
@@ -950,11 +937,7 @@ If desired, we could add a class stating that `default = 0`.
 
 #print List.headI_add_tail_sum /-
 /-- This relies on `default ℕ = 0`. -/
-theorem headI_add_tail_sum (L : List ℕ) : L.headI + L.tail.Sum = L.Sum :=
-  by
-  cases L
-  · simp
-    rfl
+theorem headI_add_tail_sum (L : List ℕ) : L.headI + L.tail.Sum = L.Sum := by cases L; · simp; rfl;
   · simp
 #align list.head_add_tail_sum List.headI_add_tail_sum
 -/

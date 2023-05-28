@@ -172,9 +172,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_leftₓ'. -/
 /-- C(-, γ) is a functor. -/
 theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(α, γ)) :=
-  continuous_generateFrom fun m ⟨s, hs, u, hu, hm⟩ =>
-    by
-    rw [hm, image_gen f hs hu]
+  continuous_generateFrom fun m ⟨s, hs, u, hu, hm⟩ => by rw [hm, image_gen f hs hu];
     exact ContinuousMap.isOpen_gen (hs.image f.2) hu
 #align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_left
 
@@ -352,10 +350,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_restrict ContinuousMap.continuous_restrictₓ'. -/
 /-- For any subset `s` of `α`, the restriction of continuous functions to `s` is continuous as a
 function from `C(α, β)` to `C(s, β)` with their respective compact-open topologies. -/
-theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.restrict s :=
-  by
-  rw [continuous_iff_le_induced]
-  exact compact_open_le_induced s
+theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.restrict s := by
+  rw [continuous_iff_le_induced]; exact compact_open_le_induced s
 #align continuous_map.continuous_restrict ContinuousMap.continuous_restrict
 
 /- warning: continuous_map.nhds_compact_open_eq_Inf_nhds_induced -> ContinuousMap.nhds_compactOpen_eq_sInf_nhds_induced is a dubious translation:
@@ -365,10 +361,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (f : ContinuousMap.{u2, u1} α β _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (nhds.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2) (ContinuousMap.compactOpen.{u2, u1} α β _inst_1 _inst_2) f) (iInf.{max u2 u1, succ u2} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (Filter.instCompleteLatticeFilter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)))) (Set.{u2} α) (fun (s : Set.{u2} α) => iInf.{max u2 u1, 0} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (Filter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)) (Filter.instCompleteLatticeFilter.{max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2)))) (IsCompact.{u2} α _inst_1 s) (fun (hs : IsCompact.{u2} α _inst_1 s) => Filter.comap.{max u2 u1, max u2 u1} (ContinuousMap.{u2, u1} α β _inst_1 _inst_2) (ContinuousMap.{u2, u1} (Set.Elem.{u2} α s) β (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) _inst_1) _inst_2) (ContinuousMap.restrict.{u2, u1} α β _inst_1 _inst_2 s) (nhds.{max u2 u1} (ContinuousMap.{u2, u1} (Set.Elem.{u2} α s) β (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) _inst_1) _inst_2) (ContinuousMap.compactOpen.{u2, u1} (Set.Elem.{u2} α s) β (instTopologicalSpaceSubtype.{u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) _inst_1) _inst_2) (ContinuousMap.restrict.{u2, u1} α β _inst_1 _inst_2 s f)))))
 Case conversion may be inaccurate. Consider using '#align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compactOpen_eq_sInf_nhds_inducedₓ'. -/
 theorem nhds_compactOpen_eq_sInf_nhds_induced (f : C(α, β)) :
-    𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) :=
-  by
-  rw [compact_open_eq_Inf_induced]
-  simp [nhds_iInf, nhds_induced]
+    𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) := by
+  rw [compact_open_eq_Inf_induced]; simp [nhds_iInf, nhds_induced]
 #align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compactOpen_eq_sInf_nhds_induced
 
 /- warning: continuous_map.tendsto_compact_open_restrict -> ContinuousMap.tendsto_compactOpen_restrict is a dubious translation:
@@ -392,9 +386,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.tendsto
 theorem tendsto_compactOpen_iff_forall {ι : Type _} {l : Filter ι} (F : ι → C(α, β)) (f : C(α, β)) :
     Filter.Tendsto F l (𝓝 f) ↔
       ∀ (s) (hs : IsCompact s), Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
-  by
-  rw [compact_open_eq_Inf_induced]
-  simp [nhds_iInf, nhds_induced, Filter.tendsto_comap_iff]
+  by rw [compact_open_eq_Inf_induced]; simp [nhds_iInf, nhds_induced, Filter.tendsto_comap_iff]
 #align continuous_map.tendsto_compact_open_iff_forall ContinuousMap.tendsto_compactOpen_iff_forall
 
 /- warning: continuous_map.exists_tendsto_compact_open_iff_forall -> ContinuousMap.exists_tendsto_compactOpen_iff_forall is a dubious translation:
@@ -516,10 +508,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_curry' ContinuousMap.continuous_curry'ₓ'. -/
 /-- If a map `α × β → γ` is continuous, then its curried form `α → C(β, γ)` is continuous. -/
 theorem continuous_curry' (f : C(α × β, γ)) : Continuous (curry' f) :=
-  have hf : curry' f = ContinuousMap.comp f ∘ coev _ _ :=
-    by
-    ext
-    rfl
+  have hf : curry' f = ContinuousMap.comp f ∘ coev _ _ := by ext; rfl
   hf ▸ Continuous.comp (continuous_comp f) continuous_coev
 #align continuous_map.continuous_curry' ContinuousMap.continuous_curry'
 
@@ -532,11 +521,8 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.continu
 /-- To show continuity of a map `α → C(β, γ)`, it suffices to show that its uncurried form
     `α × β → γ` is continuous. -/
 theorem continuous_of_continuous_uncurry (f : α → C(β, γ))
-    (h : Continuous (Function.uncurry fun x y => f x y)) : Continuous f :=
-  by
-  convert continuous_curry' ⟨_, h⟩
-  ext
-  rfl
+    (h : Continuous (Function.uncurry fun x y => f x y)) : Continuous f := by
+  convert continuous_curry' ⟨_, h⟩; ext; rfl
 #align continuous_map.continuous_of_continuous_uncurry ContinuousMap.continuous_of_continuous_uncurry
 
 /- warning: continuous_map.curry -> ContinuousMap.curry is a dubious translation:
@@ -677,10 +663,7 @@ def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β)
   toFun := const α
   invFun f := f default
   left_inv a := rfl
-  right_inv f := by
-    ext
-    rw [Unique.eq_default a]
-    rfl
+  right_inv f := by ext; rw [Unique.eq_default a]; rfl
   continuous_toFun := continuous_const'
   continuous_invFun := continuous_eval'.comp (continuous_id.prod_mk continuous_const)
 #align homeomorph.continuous_map_of_unique Homeomorph.continuousMapOfUnique

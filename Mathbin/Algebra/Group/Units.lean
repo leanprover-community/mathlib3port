@@ -888,10 +888,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_eq_one mul_eq_oneₓ'. -/
 @[simp, to_additive]
 theorem mul_eq_one : a * b = 1 ↔ a = 1 ∧ b = 1 :=
-  ⟨fun h => ⟨eq_one_of_mul_right h, eq_one_of_mul_left h⟩,
-    by
-    rintro ⟨rfl, rfl⟩
-    exact mul_one _⟩
+  ⟨fun h => ⟨eq_one_of_mul_right h, eq_one_of_mul_left h⟩, by rintro ⟨rfl, rfl⟩; exact mul_one _⟩
 #align mul_eq_one mul_eq_one
 #align add_eq_zero add_eq_zero
 
@@ -981,10 +978,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Exists.{succ u1} M (fun (b : M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a b) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align is_unit.exists_right_inv IsUnit.exists_right_invₓ'. -/
 @[to_additive IsAddUnit.exists_neg]
-theorem IsUnit.exists_right_inv [Monoid M] {a : M} (h : IsUnit a) : ∃ b, a * b = 1 :=
-  by
-  rcases h with ⟨⟨a, b, hab, _⟩, rfl⟩
-  exact ⟨b, hab⟩
+theorem IsUnit.exists_right_inv [Monoid M] {a : M} (h : IsUnit a) : ∃ b, a * b = 1 := by
+  rcases h with ⟨⟨a, b, hab, _⟩, rfl⟩; exact ⟨b, hab⟩
 #align is_unit.exists_right_inv IsUnit.exists_right_inv
 #align is_add_unit.exists_neg IsAddUnit.exists_neg
 
@@ -995,10 +990,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M}, (IsUnit.{u1} M _inst_1 a) -> (Exists.{succ u1} M (fun (b : M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) b a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align is_unit.exists_left_inv IsUnit.exists_left_invₓ'. -/
 @[to_additive IsAddUnit.exists_neg']
-theorem IsUnit.exists_left_inv [Monoid M] {a : M} (h : IsUnit a) : ∃ b, b * a = 1 :=
-  by
-  rcases h with ⟨⟨a, b, _, hba⟩, rfl⟩
-  exact ⟨b, hba⟩
+theorem IsUnit.exists_left_inv [Monoid M] {a : M} (h : IsUnit a) : ∃ b, b * a = 1 := by
+  rcases h with ⟨⟨a, b, _, hba⟩, rfl⟩; exact ⟨b, hba⟩
 #align is_unit.exists_left_inv IsUnit.exists_left_inv
 #align is_add_unit.exists_neg' IsAddUnit.exists_neg'
 
@@ -1033,10 +1026,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {x : M} {y : M}, (IsUnit.{u1} M _inst_1 x) -> (IsUnit.{u1} M _inst_1 y) -> (IsUnit.{u1} M _inst_1 (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x y))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul IsUnit.mulₓ'. -/
 @[to_additive]
-theorem IsUnit.mul [Monoid M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x * y) :=
-  by
-  rintro ⟨x, rfl⟩ ⟨y, rfl⟩
-  exact ⟨x * y, Units.val_mul _ _⟩
+theorem IsUnit.mul [Monoid M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x * y) := by
+  rintro ⟨x, rfl⟩ ⟨y, rfl⟩; exact ⟨x * y, Units.val_mul _ _⟩
 #align is_unit.mul IsUnit.mul
 #align is_add_unit.add IsAddUnit.add
 
@@ -1261,9 +1252,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} M] {a : M}, (IsUnit.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_1)) a) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_1))))) (Inv.inv.{u1} M (InvOneClass.toInv.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M _inst_1))) a) a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (InvOneClass.toOne.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_unit.inv_mul_cancel IsUnit.inv_mul_cancelₓ'. -/
 @[simp, to_additive]
-protected theorem inv_mul_cancel : IsUnit a → a⁻¹ * a = 1 :=
-  by
-  rintro ⟨u, rfl⟩
+protected theorem inv_mul_cancel : IsUnit a → a⁻¹ * a = 1 := by rintro ⟨u, rfl⟩;
   rw [← Units.val_inv_eq_inv_val, Units.inv_mul]
 #align is_unit.inv_mul_cancel IsUnit.inv_mul_cancel
 #align is_add_unit.neg_add_cancel IsAddUnit.neg_add_cancel
@@ -1275,9 +1264,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} M] {a : M}, (IsUnit.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_1)) a) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (DivInvMonoid.toMonoid.{u1} M (DivisionMonoid.toDivInvMonoid.{u1} M _inst_1))))) a (Inv.inv.{u1} M (InvOneClass.toInv.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M _inst_1))) a)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (InvOneClass.toOne.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_inv_cancel IsUnit.mul_inv_cancelₓ'. -/
 @[simp, to_additive]
-protected theorem mul_inv_cancel : IsUnit a → a * a⁻¹ = 1 :=
-  by
-  rintro ⟨u, rfl⟩
+protected theorem mul_inv_cancel : IsUnit a → a * a⁻¹ = 1 := by rintro ⟨u, rfl⟩;
   rw [← Units.val_inv_eq_inv_val, Units.mul_inv]
 #align is_unit.mul_inv_cancel IsUnit.mul_inv_cancel
 #align is_add_unit.add_neg_cancel IsAddUnit.add_neg_cancel

@@ -960,8 +960,7 @@ theorem diag_sub_val {n} {α : TypeVec.{u} n} : subtypeVal (repeatEq α) ⊚ dia
 theorem prod_id : ∀ {n} {α β : TypeVec.{u} n}, (id ⊗' id) = (id : α ⊗ β ⟹ _) :=
   by
   intros ; ext (i a); induction i
-  · cases a
-    rfl
+  · cases a; rfl
   · apply i_ih
 #align typevec.prod_id TypeVec.prod_id
 -/
@@ -981,9 +980,7 @@ end Liftp'
 
 #print TypeVec.dropFun_diag /-
 @[simp]
-theorem dropFun_diag {α} : dropFun (@prod.diag (n + 1) α) = prod.diag :=
-  by
-  ext i : 2
+theorem dropFun_diag {α} : dropFun (@prod.diag (n + 1) α) = prod.diag := by ext i : 2;
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_diag TypeVec.dropFun_diag
 -/
@@ -1007,36 +1004,28 @@ theorem lastFun_subtypeVal {α} (p : α ⟹ repeat (n + 1) Prop) :
 #print TypeVec.dropFun_toSubtype /-
 @[simp]
 theorem dropFun_toSubtype {α} (p : α ⟹ repeat (n + 1) Prop) : dropFun (toSubtype p) = toSubtype _ :=
-  by
-  ext i : 2
-  induction i <;> simp [drop_fun, *] <;> rfl
+  by ext i : 2; induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_to_subtype TypeVec.dropFun_toSubtype
 -/
 
 #print TypeVec.lastFun_toSubtype /-
 @[simp]
-theorem lastFun_toSubtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (toSubtype p) = id :=
-  by
-  ext i : 2
-  induction i <;> simp [drop_fun, *] <;> rfl
+theorem lastFun_toSubtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (toSubtype p) = id := by
+  ext i : 2; induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_to_subtype TypeVec.lastFun_toSubtype
 -/
 
 #print TypeVec.dropFun_of_subtype /-
 @[simp]
 theorem dropFun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) :
-    dropFun (ofSubtype p) = ofSubtype _ := by
-  ext i : 2
-  induction i <;> simp [drop_fun, *] <;> rfl
+    dropFun (ofSubtype p) = ofSubtype _ := by ext i : 2; induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_of_subtype TypeVec.dropFun_of_subtype
 -/
 
 #print TypeVec.lastFun_of_subtype /-
 @[simp]
-theorem lastFun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (ofSubtype p) = id :=
-  by
-  ext i : 2
-  induction i <;> simp [drop_fun, *] <;> rfl
+theorem lastFun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (ofSubtype p) = id := by
+  ext i : 2; induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_of_subtype TypeVec.lastFun_of_subtype
 -/
 
@@ -1055,9 +1044,7 @@ open MvFunctor
 #print TypeVec.dropFun_prod /-
 @[simp]
 theorem dropFun_prod {α α' β β' : TypeVec (n + 1)} (f : α ⟹ β) (f' : α' ⟹ β') :
-    dropFun (f ⊗' f') = (dropFun f ⊗' dropFun f') :=
-  by
-  ext i : 2
+    dropFun (f ⊗' f') = (dropFun f ⊗' dropFun f') := by ext i : 2;
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_prod TypeVec.dropFun_prod
 -/
@@ -1065,9 +1052,7 @@ theorem dropFun_prod {α α' β β' : TypeVec (n + 1)} (f : α ⟹ β) (f' : α'
 #print TypeVec.lastFun_prod /-
 @[simp]
 theorem lastFun_prod {α α' β β' : TypeVec (n + 1)} (f : α ⟹ β) (f' : α' ⟹ β') :
-    lastFun (f ⊗' f') = Prod.map (lastFun f) (lastFun f') :=
-  by
-  ext i : 1
+    lastFun (f ⊗' f') = Prod.map (lastFun f) (lastFun f') := by ext i : 1;
   induction i <;> simp [last_fun, *] <;> rfl
 #align typevec.last_fun_prod TypeVec.lastFun_prod
 -/
@@ -1099,21 +1084,15 @@ theorem dropFun_id {α : TypeVec (n + 1)} : dropFun (@TypeVec.id _ α) = id :=
 @[simp]
 theorem prod_map_id {α β : TypeVec n} : (@TypeVec.id _ α ⊗' @TypeVec.id _ β) = id :=
   by
-  ext i : 2
-  induction i <;> simp only [TypeVec.prod.map, *, drop_fun_id]
-  cases x
-  rfl
-  rfl
+  ext i : 2; induction i <;> simp only [TypeVec.prod.map, *, drop_fun_id]
+  cases x; rfl; rfl
 #align typevec.prod_map_id TypeVec.prod_map_id
 -/
 
 #print TypeVec.subtypeVal_diagSub /-
 @[simp]
-theorem subtypeVal_diagSub {α : TypeVec n} : subtypeVal (repeatEq α) ⊚ diagSub = prod.diag :=
-  by
-  clear * -
-  ext i
-  induction i <;> [rfl;apply i_ih]
+theorem subtypeVal_diagSub {α : TypeVec n} : subtypeVal (repeatEq α) ⊚ diagSub = prod.diag := by
+  clear * - ; ext i; induction i <;> [rfl;apply i_ih]
 #align typevec.subtype_val_diag_sub TypeVec.subtypeVal_diagSub
 -/
 

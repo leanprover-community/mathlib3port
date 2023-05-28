@@ -145,10 +145,7 @@ def cylinder (x : ∀ n, E n) (n : ℕ) : Set (∀ n, E n) :=
 
 #print PiNat.cylinder_eq_pi /-
 theorem cylinder_eq_pi (x : ∀ n, E n) (n : ℕ) :
-    cylinder x n = Set.pi (Finset.range n : Set ℕ) fun i : ℕ => {x i} :=
-  by
-  ext y
-  simp [cylinder]
+    cylinder x n = Set.pi (Finset.range n : Set ℕ) fun i : ℕ => {x i} := by ext y; simp [cylinder]
 #align pi_nat.cylinder_eq_pi PiNat.cylinder_eq_pi
 -/
 
@@ -452,8 +449,7 @@ Case conversion may be inaccurate. Consider using '#align pi_nat.mem_cylinder_if
 theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} :
     y ∈ cylinder x n ↔ dist y x ≤ (1 / 2) ^ n :=
   by
-  rcases eq_or_ne y x with (rfl | hne)
-  · simp [PiNat.dist_self]
+  rcases eq_or_ne y x with (rfl | hne); · simp [PiNat.dist_self]
   suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ first_diff y x by simpa [dist_eq_of_ne hne]
   constructor
   · intro hy
@@ -472,8 +468,7 @@ Case conversion may be inaccurate. Consider using '#align pi_nat.apply_eq_of_dis
 theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2) ^ n) {i : ℕ}
     (hi : i ≤ n) : x i = y i :=
   by
-  rcases eq_or_ne x y with (rfl | hne)
-  · rfl
+  rcases eq_or_ne x y with (rfl | hne); · rfl
   have : n < first_diff x y := by
     simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff, one_lt_two] using h
   exact apply_eq_of_lt_first_diff (hi.trans_lt this)
@@ -499,8 +494,7 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
     rw [PiNat.dist_comm]
     exact mem_cylinder_iff_dist_le.1 hxy
   · intro H x y
-    rcases eq_or_ne x y with (rfl | hne)
-    · simp [PiNat.dist_nonneg]
+    rcases eq_or_ne x y with (rfl | hne); · simp [PiNat.dist_nonneg]
     rw [dist_eq_of_ne hne]
     apply H x y (first_diff x y)
     rw [first_diff_comm]
@@ -681,9 +675,7 @@ theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : �
   apply lt_irrefl (inf_dist x s)
   calc
     inf_dist x s ≤ dist x y := inf_dist_le_dist_of_mem ys
-    _ ≤ (1 / 2) ^ n := by
-      rw [mem_cylinder_comm] at hy
-      exact mem_cylinder_iff_dist_le.1 hy
+    _ ≤ (1 / 2) ^ n := by rw [mem_cylinder_comm] at hy; exact mem_cylinder_iff_dist_le.1 hy
     _ < inf_dist x s := hn
     
 #align pi_nat.exists_disjoint_cylinder PiNat.exists_disjoint_cylinder
@@ -749,8 +741,7 @@ Case conversion may be inaccurate. Consider using '#align pi_nat.inter_cylinder_
 theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClosed s)
     (hne : s.Nonempty) (x : ∀ n, E n) : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
   by
-  by_cases hx : x ∈ s
-  · exact ⟨x, hx, self_mem_cylinder _ _⟩
+  by_cases hx : x ∈ s; · exact ⟨x, hx, self_mem_cylinder _ _⟩
   have A := exists_disjoint_cylinder hs hx
   have B : longest_prefix x s < shortest_prefix_diff x s :=
     Nat.pred_lt (shortest_prefix_diff_pos hs hne hx).ne'
@@ -841,8 +832,7 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
   -- check that the range of `f` is `s`.
   · apply subset.antisymm
     · rintro x ⟨y, rfl⟩
-      by_cases hy : y ∈ s
-      · rwa [fs y hy]
+      by_cases hy : y ∈ s; · rwa [fs y hy]
       simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).choose_spec.1
     · intro x hx
       rw [← fs x hx]
@@ -850,10 +840,9 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
   -- check that `f` is `1`-Lipschitz, by a case analysis.
   · apply LipschitzWith.mk_one fun x y => _
     -- exclude the trivial cases where `x = y`, or `f x = f y`.
-    rcases eq_or_ne x y with (rfl | hxy)
+    rcases eq_or_ne x y with (rfl | hxy);
     · simp
-    rcases eq_or_ne (f x) (f y) with (h' | hfxfy)
-    · simp [h', dist_nonneg]
+    rcases eq_or_ne (f x) (f y) with (h' | hfxfy); · simp [h', dist_nonneg]
     have I2 : cylinder x (first_diff x y) = cylinder y (first_diff x y) :=
       by
       rw [← mem_cylinder_iff_eq]
@@ -864,7 +853,7 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
     by_cases xs : x ∈ s
     · rw [fs x xs] at hfxfy⊢
       -- case where `y ∈ s`, trivial
-      by_cases ys : y ∈ s
+      by_cases ys : y ∈ s;
       · rw [fs y ys]
       -- case where `y ∉ s`
       have A : (s ∩ cylinder y (longest_prefix y s)).Nonempty :=
@@ -991,8 +980,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
     by
     apply continuous_iff_continuousAt.2 fun y => _
     apply continuousAt_of_locally_lipschitz zero_lt_one 4 fun x hxy => _
-    rcases eq_or_ne x y with (rfl | hne)
-    · simp
+    rcases eq_or_ne x y with (rfl | hne); · simp
     have hne' : x.1 ≠ y.1 := subtype.coe_injective.ne hne
     have dist' : dist x y = dist x.1 y.1 := rfl
     let n := first_diff x.1 y.1 - 1

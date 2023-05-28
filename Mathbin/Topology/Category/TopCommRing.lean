@@ -183,11 +183,7 @@ instance : ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u})
     -- Putting these together we obtain the isomorphism we're after:
     exact
       ⟨⟨⟨e_Ring.symm, i_Top.inv.2⟩,
-          ⟨by
-            ext x
-            exact e_Ring.left_inv x, by
-            ext x
-            exact e_Ring.right_inv x⟩⟩⟩
+          ⟨by ext x; exact e_Ring.left_inv x, by ext x; exact e_Ring.right_inv x⟩⟩⟩
 
 end TopCommRingCat
 

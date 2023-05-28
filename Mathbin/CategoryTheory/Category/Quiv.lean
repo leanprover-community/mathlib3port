@@ -93,16 +93,8 @@ def free : QuivCat.{v, u} ⥤ Cat.{max u v, u}
     { obj := fun X => F.obj X
       map := fun X Y f => F.mapPath f
       map_comp' := fun X Y Z f g => F.mapPath_comp f g }
-  map_id' V := by
-    change (show paths V ⥤ _ from _) = _
-    ext
-    apply eq_conj_eq_to_hom
-    rfl
-  map_comp' U V W F G := by
-    change (show paths U ⥤ _ from _) = _
-    ext
-    apply eq_conj_eq_to_hom
-    rfl
+  map_id' V := by change (show paths V ⥤ _ from _) = _; ext; apply eq_conj_eq_to_hom; rfl
+  map_comp' U V W F G := by change (show paths U ⥤ _ from _) = _; ext; apply eq_conj_eq_to_hom; rfl
 #align category_theory.Cat.free CategoryTheory.Cat.free
 -/
 
@@ -137,10 +129,7 @@ def adj : Cat.free ⊣ QuivCat.forget :=
     { homEquiv := fun V C =>
         { toFun := fun F => Paths.of.comp F.toPrefunctor
           invFun := fun F => lift F
-          left_inv := fun F => by
-            ext
-            · erw [(eq_conj_eq_to_hom _).symm]
-              apply category.id_comp
+          left_inv := fun F => by ext; · erw [(eq_conj_eq_to_hom _).symm]; apply category.id_comp;
             rfl
           right_inv := by
             rintro ⟨obj, map⟩
@@ -148,12 +137,8 @@ def adj : Cat.free ⊣ QuivCat.forget :=
             congr
             ext (X Y f)
             exact category.id_comp _ }
-      homEquiv_naturality_left_symm := fun V W C f g =>
-        by
-        change (show paths V ⥤ _ from _) = _
-        ext
-        apply eq_conj_eq_to_hom
-        rfl }
+      homEquiv_naturality_left_symm := fun V W C f g => by change (show paths V ⥤ _ from _) = _;
+        ext; apply eq_conj_eq_to_hom; rfl }
 #align category_theory.Quiv.adj CategoryTheory.QuivCat.adj
 
 end Quiv

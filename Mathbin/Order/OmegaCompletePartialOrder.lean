@@ -154,10 +154,7 @@ theorem exists_of_mem_map {b : β} : b ∈ c.map f → ∃ a, a ∈ c ∧ f a = 
 
 #print OmegaCompletePartialOrder.Chain.mem_map_iff /-
 theorem mem_map_iff {b : β} : b ∈ c.map f ↔ ∃ a, a ∈ c ∧ f a = b :=
-  ⟨exists_of_mem_map _, fun h => by
-    rcases h with ⟨w, h, h'⟩
-    subst b
-    apply mem_map c _ h⟩
+  ⟨exists_of_mem_map _, fun h => by rcases h with ⟨w, h, h'⟩; subst b; apply mem_map c _ h⟩
 #align omega_complete_partial_order.chain.mem_map_iff OmegaCompletePartialOrder.Chain.mem_map_iff
 -/
 
@@ -297,8 +294,7 @@ theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ 
   by
   constructor <;> intros
   · trans ωSup c
-    exact le_ωSup _ _
-    assumption
+    exact le_ωSup _ _; assumption
   exact ωSup_le _ _ ‹_›
 #align omega_complete_partial_order.ωSup_le_iff OmegaCompletePartialOrder.ωSup_le_iff
 
@@ -480,9 +476,7 @@ theorem mem_chain_of_mem_ωSup {c : Chain (Part α)} {a : α} (h : a ∈ Part.ω
   by
   simp [Part.ωSup] at h; split_ifs  at h
   · have h' := Classical.choose_spec h_1
-    rw [← eq_some_iff] at h
-    rw [← h]
-    exact h'
+    rw [← eq_some_iff] at h; rw [← h]; exact h'
   · rcases h with ⟨⟨⟩⟩
 #align part.mem_chain_of_mem_ωSup Part.mem_chain_of_mem_ωSup
 
@@ -491,18 +485,11 @@ noncomputable instance omegaCompletePartialOrder : OmegaCompletePartialOrder (Pa
     where
   ωSup := Part.ωSup
   le_ωSup c i := by
-    intro x hx
-    rw [← eq_some_iff] at hx⊢
-    rw [ωSup_eq_some, ← hx]
-    rw [← hx]
-    exact ⟨i, rfl⟩
+    intro x hx; rw [← eq_some_iff] at hx⊢
+    rw [ωSup_eq_some, ← hx]; rw [← hx]; exact ⟨i, rfl⟩
   ωSup_le := by
-    rintro c x hx a ha
-    replace ha := mem_chain_of_mem_ωSup ha
-    cases' ha with i ha
-    apply hx i
-    rw [← ha]
-    apply mem_some
+    rintro c x hx a ha; replace ha := mem_chain_of_mem_ωSup ha
+    cases' ha with i ha; apply hx i; rw [← ha]; apply mem_some
 #align part.omega_complete_partial_order Part.omegaCompletePartialOrder
 -/
 
@@ -518,20 +505,13 @@ theorem mem_ωSup (x : α) (c : Chain (Part α)) : x ∈ ωSup c ↔ some x ∈ 
   by
   simp [OmegaCompletePartialOrder.ωSup, Part.ωSup]
   constructor
-  · split_ifs
-    swap
-    rintro ⟨⟨⟩⟩
-    intro h'
-    have hh := Classical.choose_spec h
-    simp at h'
-    subst x
-    exact hh
+  · split_ifs; swap; rintro ⟨⟨⟩⟩
+    intro h'; have hh := Classical.choose_spec h
+    simp at h'; subst x; exact hh
   · intro h
     have h' : ∃ a : α, some a ∈ c := ⟨_, h⟩
-    rw [dif_pos h']
-    have hh := Classical.choose_spec h'
-    rw [eq_of_chain hh h]
-    simp
+    rw [dif_pos h']; have hh := Classical.choose_spec h'
+    rw [eq_of_chain hh h]; simp
 #align part.mem_ωSup Part.mem_ωSup
 
 end Inst
@@ -547,10 +527,7 @@ open OmegaCompletePartialOrder OmegaCompletePartialOrder.Chain
 instance [∀ a, OmegaCompletePartialOrder (β a)] : OmegaCompletePartialOrder (∀ a, β a)
     where
   ωSup c a := ωSup (c.map (Pi.evalOrderHom a))
-  ωSup_le c f hf a :=
-    ωSup_le _ _ <| by
-      rintro i
-      apply hf
+  ωSup_le c f hf a := ωSup_le _ _ <| by rintro i; apply hf
   le_ωSup c i x := le_ωSup_of_le _ <| le_rfl
 
 namespace OmegaCompletePartialOrder
@@ -657,9 +634,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complete_lattice.Sup_continuous CompleteLattice.sSup_continuousₓ'. -/
 theorem sSup_continuous (s : Set <| α →o β) (hs : ∀ f ∈ s, Continuous f) : Continuous (sSup s) :=
   by
-  intro c
-  apply eq_of_forall_ge_iff
-  intro z
+  intro c; apply eq_of_forall_ge_iff; intro z
   suffices (∀ f ∈ s, ∀ (n), (f : _) (c n) ≤ z) ↔ ∀ (n), ∀ f ∈ s, (f : _) (c n) ≤ z by
     simpa (config := { contextual := true }) [ωSup_le_iff, hs _ _ _]
   exact ⟨fun H n f hf => H f hf n, fun H f hf n => H n f hf⟩
@@ -883,12 +858,9 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
   apply eq_of_forall_ge_iff; intro x
   simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
   constructor <;> intro h'''
-  · intro b hb
-    apply ωSup_le _ _ _
-    rintro i y hy
-    simp only [Part.mem_ωSup] at hb
-    rcases hb with ⟨j, hb⟩
-    replace hb := hb.symm
+  · intro b hb; apply ωSup_le _ _ _
+    rintro i y hy; simp only [Part.mem_ωSup] at hb
+    rcases hb with ⟨j, hb⟩; replace hb := hb.symm
     simp only [Part.eq_some_iff, chain.map_coe, Function.comp_apply, OrderHom.apply_coe] at hy hb
     replace hb : b ∈ f (c (max i j)) := f.mono (c.mono (le_max_right i j)) _ hb
     replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy
@@ -896,8 +868,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
       Function.comp_apply, OrderHom.bind_coe]
     exact ⟨_, hb, hy⟩
-  · intro i
-    intro y hy
+  · intro i; intro y hy
     simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
       Function.comp_apply, OrderHom.bind_coe] at hy
     rcases hy with ⟨b, hb₀, hb₁⟩
@@ -1080,11 +1051,8 @@ theorem forall_forall_merge (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) (z 
   · apply h
   · apply le_trans _ (h (max i j))
     trans c₀ i (c₁ (max i j))
-    · apply (c₀ i).Monotone
-      apply c₁.monotone
-      apply le_max_right
-    · apply c₀.monotone
-      apply le_max_left
+    · apply (c₀ i).Monotone; apply c₁.monotone; apply le_max_right
+    · apply c₀.monotone; apply le_max_left
 #align omega_complete_partial_order.continuous_hom.forall_forall_merge OmegaCompletePartialOrder.ContinuousHom.forall_forall_merge
 
 /- warning: omega_complete_partial_order.continuous_hom.forall_forall_merge' -> OmegaCompletePartialOrder.ContinuousHom.forall_forall_merge' is a dubious translation:
@@ -1131,24 +1099,19 @@ Case conversion may be inaccurate. Consider using '#align omega_complete_partial
 @[simps]
 def apply : (α →𝒄 β) × α →𝒄 β where
   toFun f := f.1 f.2
-  monotone' x y h := by
-    dsimp
-    trans y.fst x.snd <;> [apply h.1;apply y.1.Monotone h.2]
+  monotone' x y h := by dsimp; trans y.fst x.snd <;> [apply h.1;apply y.1.Monotone h.2]
   cont := by
     intro c
     apply le_antisymm
-    · apply ωSup_le
-      intro i
+    · apply ωSup_le; intro i
       dsimp
       rw [(c _).fst.Continuous]
-      apply ωSup_le
-      intro j
+      apply ωSup_le; intro j
       apply le_ωSup_of_le (max i j)
       apply apply_mono
       exact monotone_fst (OrderHom.mono _ (le_max_left _ _))
       exact monotone_snd (OrderHom.mono _ (le_max_right _ _))
-    · apply ωSup_le
-      intro i
+    · apply ωSup_le; intro i
       apply le_ωSup_of_le i
       dsimp
       apply OrderHom.mono _

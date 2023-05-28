@@ -93,9 +93,7 @@ theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by
 /- warning: linear_map.polar_eq_Inter -> LinearMap.polar_eq_iInter is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.polar_eq_Inter LinearMap.polar_eq_iInterₓ'. -/
-theorem polar_eq_iInter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } :=
-  by
-  ext
+theorem polar_eq_iInter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } := by ext;
   simp only [polar_mem_iff, Set.mem_iInter, Set.mem_setOf_eq]
 #align linear_map.polar_eq_Inter LinearMap.polar_eq_iInter
 
@@ -167,10 +165,8 @@ theorem polar_zero : B.polar ({0} : Set E) = Set.univ :=
 /- warning: linear_map.subset_bipolar -> LinearMap.subset_bipolar is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.subset_bipolar LinearMap.subset_bipolarₓ'. -/
-theorem subset_bipolar (s : Set E) : s ⊆ B.flip.polar (B.polar s) := fun x hx y hy =>
-  by
-  rw [B.flip_apply]
-  exact hy x hx
+theorem subset_bipolar (s : Set E) : s ⊆ B.flip.polar (B.polar s) := fun x hx y hy => by
+  rw [B.flip_apply]; exact hy x hx
 #align linear_map.subset_bipolar LinearMap.subset_bipolar
 
 /- warning: linear_map.tripolar_eq_polar -> LinearMap.tripolar_eq_polar is a dubious translation:

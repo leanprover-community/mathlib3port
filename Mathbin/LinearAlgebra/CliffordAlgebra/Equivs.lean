@@ -106,10 +106,7 @@ theorem reverse_eq_id :
 
 @[simp]
 theorem involute_eq_id :
-    (involute : CliffordAlgebra (0 : QuadraticForm R Unit) →ₐ[R] _) = AlgHom.id R _ :=
-  by
-  ext
-  simp
+    (involute : CliffordAlgebra (0 : QuadraticForm R Unit) →ₐ[R] _) = AlgHom.id R _ := by ext; simp
 #align clifford_algebra_ring.involute_eq_id CliffordAlgebraRing.involute_eq_id
 
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
@@ -117,13 +114,8 @@ protected def equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
       ⟨0, fun m : Unit => (MulZeroClass.zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
-    (Algebra.ofId R _)
-    (by
-      ext x
-      exact AlgHom.commutes _ x)
-    (by
-      ext : 1
-      rw [ι_eq_zero, LinearMap.comp_zero, LinearMap.comp_zero])
+    (Algebra.ofId R _) (by ext x; exact AlgHom.commutes _ x)
+    (by ext : 1; rw [ι_eq_zero, LinearMap.comp_zero, LinearMap.comp_zero])
 #align clifford_algebra_ring.equiv CliffordAlgebraRing.equiv
 
 end CliffordAlgebraRing
@@ -424,14 +416,8 @@ protected def equiv : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] R[ε] :=
   AlgEquiv.ofAlgHom
     (CliffordAlgebra.lift (0 : QuadraticForm R R) ⟨inrHom R _, fun m => inr_mul_inr _ m m⟩)
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
-    (by
-      ext x : 1
-      dsimp
-      rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
-    (by
-      ext : 2
-      dsimp
-      rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])
+    (by ext x : 1; dsimp; rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
+    (by ext : 2; dsimp; rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])
 #align clifford_algebra_dual_number.equiv CliffordAlgebraDualNumber.equiv
 
 @[simp]

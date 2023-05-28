@@ -54,8 +54,7 @@ def reesAlgebra : Subalgebra R R[X]
   one_mem' i := by
     rw [coeff_one]
     split_ifs
-    · subst h
-      simp
+    · subst h; simp
     · simp
   add_mem' f g hf hg i := by
     rw [coeff_add]
@@ -64,8 +63,7 @@ def reesAlgebra : Subalgebra R R[X]
   algebraMap_mem' r i := by
     rw [algebraMap_apply, coeff_C]
     split_ifs
-    · subst h
-      simp
+    · subst h; simp
     · simp
 #align rees_algebra reesAlgebra
 -/
@@ -117,9 +115,7 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
     · intro r hr s hs
       rw [Nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial]
       exact Subalgebra.mul_mem _ (Algebra.subset_adjoin (Set.mem_image_of_mem _ hr)) (hn hs)
-    · intro x y hx hy
-      rw [monomial_add]
-      exact Subalgebra.add_mem _ hx hy
+    · intro x y hx hy; rw [monomial_add]; exact Subalgebra.add_mem _ hx hy
 #align monomial_mem_adjoin_monomial monomial_mem_adjoin_monomial
 
 #print adjoin_monomial_eq_reesAlgebra /-

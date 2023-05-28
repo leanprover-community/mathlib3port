@@ -70,17 +70,11 @@ theorem rnDeriv_ae_eq_condexp {hm : m ≤ m0} [hμm : SigmaFinite (μ.trim hm)] 
 theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ snorm f 1 μ :=
   by
   by_cases hf : integrable f μ
-  swap;
-  · rw [condexp_undef hf, snorm_zero]
-    exact zero_le _
+  swap; · rw [condexp_undef hf, snorm_zero]; exact zero_le _
   by_cases hm : m ≤ m0
-  swap;
-  · rw [condexp_of_not_le hm, snorm_zero]
-    exact zero_le _
+  swap; · rw [condexp_of_not_le hm, snorm_zero]; exact zero_le _
   by_cases hsig : sigma_finite (μ.trim hm)
-  swap;
-  · rw [condexp_of_not_sigma_finite hm hsig, snorm_zero]
-    exact zero_le _
+  swap; · rw [condexp_of_not_sigma_finite hm hsig, snorm_zero]; exact zero_le _
   calc
     snorm (μ[f|m]) 1 μ ≤ snorm (μ[|f||m]) 1 μ :=
       by
@@ -152,8 +146,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   have : (∫ x in s, |(μ[f|m]) x| ∂μ) = ∫ x, |(μ[s.indicator f|m]) x| ∂μ :=
     by
     rw [← integral_indicator]
-    swap
-    · exact hnm _ hs
+    swap; · exact hnm _ hs
     refine' integral_congr_ae _
     have : (fun x => |(μ[s.indicator f|m]) x|) =ᵐ[μ] fun x => |s.indicator (μ[f|m]) x| :=
       eventually_eq.fun_comp (condexp_indicator hfint hs) _
@@ -161,8 +154,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
     rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
     rfl
   rw [this, ← integral_indicator]
-  swap
-  · exact hnm _ hs
+  swap; · exact hnm _ hs
   refine'
     (integral_abs_condexp_le _).trans
       (le_of_eq <| integral_congr_ae <| eventually_of_forall fun x => _)
@@ -291,12 +283,9 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
     classical simp_rw [Set.indicator_apply, hx]
   · have h_add := @simple_func.coe_add _ _ m _ g₁ g₂
     calc
-      μ[⇑(g₁ + g₂) * g|m] =ᵐ[μ] μ[(⇑g₁ + ⇑g₂) * g|m] :=
-        by
-        refine' condexp_congr_ae (eventually_eq.mul _ eventually_eq.rfl)
-        rw [h_add]
-      _ =ᵐ[μ] μ[⇑g₁ * g|m] + μ[⇑g₂ * g|m] := by
-        rw [add_mul]
+      μ[⇑(g₁ + g₂) * g|m] =ᵐ[μ] μ[(⇑g₁ + ⇑g₂) * g|m] := by
+        refine' condexp_congr_ae (eventually_eq.mul _ eventually_eq.rfl); rw [h_add]
+      _ =ᵐ[μ] μ[⇑g₁ * g|m] + μ[⇑g₂ * g|m] := by rw [add_mul];
         exact condexp_add (hg.simple_func_mul' hm _) (hg.simple_func_mul' hm _)
       _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := (eventually_eq.add h_eq₁ h_eq₂)
       _ =ᵐ[μ] ⇑(g₁ + g₂) * μ[g|m] := by rw [h_add, add_mul]
@@ -379,14 +368,9 @@ theorem condexp_strongly_measurable_mul_of_bound₀ (hm : m ≤ m0) [FiniteMeasu
 theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measurable[m] f)
     (hfg : Integrable (f * g) μ) (hg : Integrable g μ) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] :=
   by
-  by_cases hm : m ≤ m0
-  swap
-  · simp_rw [condexp_of_not_le hm]
-    rw [MulZeroClass.mul_zero]
+  by_cases hm : m ≤ m0; swap; · simp_rw [condexp_of_not_le hm]; rw [MulZeroClass.mul_zero]
   by_cases hμm : sigma_finite (μ.trim hm)
-  swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm]
-    rw [MulZeroClass.mul_zero]
+  swap; · simp_rw [condexp_of_not_sigma_finite hm hμm]; rw [MulZeroClass.mul_zero]
   haveI : sigma_finite (μ.trim hm) := hμm
   obtain ⟨sets, sets_prop, h_univ⟩ := hf.exists_spanning_measurable_set_norm_le hm μ
   simp_rw [forall_and] at sets_prop
@@ -398,9 +382,7 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
     rw [Pi.mul_apply]
     obtain ⟨i, hi⟩ : ∃ i, x ∈ sets i :=
       by
-      have h_mem : x ∈ ⋃ i, sets i := by
-        rw [h_univ]
-        exact Set.mem_univ _
+      have h_mem : x ∈ ⋃ i, sets i := by rw [h_univ]; exact Set.mem_univ _
       simpa using h_mem
     exact hx i hi
   refine' fun n => ae_imp_of_ae_restrict _

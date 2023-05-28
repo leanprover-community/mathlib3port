@@ -43,9 +43,7 @@ theorem measurable_of_tendsto_ennreal' {ι} {f : ι → α → ℝ≥0∞} {g : 
     Measurable g := by
   rcases u.exists_seq_tendsto with ⟨x, hx⟩
   rw [tendsto_pi_nhds] at lim
-  have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top) = g :=
-    by
-    ext1 y
+  have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top) = g := by ext1 y;
     exact ((limUnder y).comp hx).liminf_eq
   rw [← this]
   show Measurable fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top
@@ -105,21 +103,16 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
     Measurable g :=
   by
   letI : PseudoMetricSpace β := pseudo_metrizable_space_pseudo_metric β
-  apply measurable_of_is_closed'
-  intro s h1s h2s h3s
+  apply measurable_of_is_closed'; intro s h1s h2s h3s
   have : Measurable fun x => inf_nndist (g x) s :=
     by
     suffices : tendsto (fun i x => inf_nndist (f i x) s) u (𝓝 fun x => inf_nndist (g x) s)
     exact measurable_of_tendsto_nnreal' u (fun i => (hf i).infNndist) this
-    rw [tendsto_pi_nhds] at lim⊢
-    intro x
+    rw [tendsto_pi_nhds] at lim⊢; intro x
     exact ((continuous_inf_nndist_pt s).Tendsto (g x)).comp (limUnder x)
-  have h4s : g ⁻¹' s = (fun x => inf_nndist (g x) s) ⁻¹' {0} :=
-    by
-    ext x
+  have h4s : g ⁻¹' s = (fun x => inf_nndist (g x) s) ⁻¹' {0} := by ext x;
     simp [h1s, ← h1s.mem_iff_inf_dist_zero h2s, ← NNReal.coe_eq_zero]
-  rw [h4s]
-  exact this (measurable_set_singleton 0)
+  rw [h4s]; exact this (measurable_set_singleton 0)
 #align measurable_of_tendsto_metrizable' measurable_of_tendsto_metrizable'
 
 /- warning: measurable_of_tendsto_metrizable -> measurable_of_tendsto_metrizable is a dubious translation:

@@ -91,8 +91,7 @@ theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0
   by
   rw [bernsteinPolynomial]
   split_ifs
-  · subst h
-    simp
+  · subst h; simp
   · simp [zero_pow (Nat.pos_of_ne_zero h)]
 #align bernstein_polynomial.eval_at_0 bernsteinPolynomial.eval_at_0
 
@@ -100,8 +99,7 @@ theorem eval_at_1 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 1 = if ν = n
   by
   rw [bernsteinPolynomial]
   split_ifs
-  · subst h
-    simp
+  · subst h; simp
   · obtain w | w := (n - ν).eq_zero_or_pos
     · simp [Nat.choose_eq_zero_of_lt ((tsub_eq_zero_iff_le.mp w).lt_of_ne (Ne.symm h))]
     · simp [zero_pow w]
@@ -131,10 +129,8 @@ theorem derivative_succ_aux (n ν : ℕ) :
     refine' congr (congr_arg (· * ·) (congr (congr_arg (· * ·) _) rfl)) rfl
     -- Now it's just about binomial coefficients
     exact_mod_cast congr_arg (fun m : ℕ => (m : R[X])) (Nat.succ_mul_choose_eq n ν).symm
-  · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
-    congr 1
-    rw [mul_comm, ← mul_assoc, ← mul_assoc]
-    congr 1
+  · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]; congr 1
+    rw [mul_comm, ← mul_assoc, ← mul_assoc]; congr 1
     norm_cast
     congr 1
     convert(Nat.choose_mul_succ_eq n (ν + 1)).symm using 1
@@ -149,8 +145,7 @@ theorem derivative_succ (n ν : ℕ) :
   by
   cases n
   · simp [bernsteinPolynomial]
-  · rw [Nat.cast_succ]
-    apply derivative_succ_aux
+  · rw [Nat.cast_succ]; apply derivative_succ_aux
 #align bernstein_polynomial.derivative_succ bernsteinPolynomial.derivative_succ
 
 theorem derivative_zero (n : ℕ) :
@@ -291,14 +286,11 @@ theorem linearIndependent_aux (n k : ℕ) (h : k ≤ n + 1) :
         exact (iterate_derivative_at_1_ne_zero ℚ n k h).symm
       apply span_induction m
       · simp
-        rintro ⟨a, w⟩
-        simp only [Fin.val_mk]
+        rintro ⟨a, w⟩; simp only [Fin.val_mk]
         rw [iterate_derivative_at_1_eq_zero_of_lt ℚ n ((tsub_lt_tsub_iff_left_of_le h).mpr w)]
       · simp
-      · intro x y hx hy
-        simp [hx, hy]
-      · intro a x h
-        simp [h]
+      · intro x y hx hy; simp [hx, hy]
+      · intro a x h; simp [h]
 #align bernstein_polynomial.linear_independent_aux bernsteinPolynomial.linearIndependent_aux
 
 /-- The Bernstein polynomials are linearly independent.
@@ -315,9 +307,7 @@ theorem linearIndependent (n : ℕ) :
 
 theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
-    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n :=
-      by
-      rw [add_pow]
+    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by rw [add_pow];
       simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_comm]
     _ = 1 := by simp
     
@@ -334,12 +324,8 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
   -- We'll work in `mv_polynomial bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.X tt
   let y : MvPolynomial Bool R := MvPolynomial.X ff
-  have pderiv_tt_x : pderiv tt x = 1 := by
-    rw [pderiv_X]
-    rfl
-  have pderiv_tt_y : pderiv tt y = 0 := by
-    rw [pderiv_X]
-    rfl
+  have pderiv_tt_x : pderiv tt x = 1 := by rw [pderiv_X]; rfl
+  have pderiv_tt_y : pderiv tt y = 0 := by rw [pderiv_X]; rfl
   let e : Bool → R[X] := fun i => cond i X (1 - X)
   -- Start with `(x+y)^n = (x+y)^n`,
   -- take the `x`-derivative, evaluate at `x=X, y=1-X`, and multiply by `X`:
@@ -380,12 +366,8 @@ theorem sum_mul_smul (n : ℕ) :
   -- We'll work in `mv_polynomial bool R`.
   let x : MvPolynomial Bool R := MvPolynomial.X tt
   let y : MvPolynomial Bool R := MvPolynomial.X ff
-  have pderiv_tt_x : pderiv tt x = 1 := by
-    rw [pderiv_X]
-    rfl
-  have pderiv_tt_y : pderiv tt y = 0 := by
-    rw [pderiv_X]
-    rfl
+  have pderiv_tt_x : pderiv tt x = 1 := by rw [pderiv_X]; rfl
+  have pderiv_tt_y : pderiv tt y = 0 := by rw [pderiv_X]; rfl
   let e : Bool → R[X] := fun i => cond i X (1 - X)
   -- Start with `(x+y)^n = (x+y)^n`,
   -- take the second `x`-derivative, evaluate at `x=X, y=1-X`, and multiply by `X`:
@@ -451,16 +433,12 @@ theorem variance (n : ℕ) :
     _ = _ := p
     _ = _ := _
     
-  · congr 1
-    simp only [← nat_cast_mul, push_cast]
-    cases k <;>
-      · simp
-        ring
+  · congr 1; simp only [← nat_cast_mul, push_cast]
+    cases k <;> · simp; ring
   · simp only [← nat_cast_mul, push_cast]
     cases n
     · simp
-    · simp
-      ring
+    · simp; ring
 #align bernstein_polynomial.variance bernsteinPolynomial.variance
 
 end bernsteinPolynomial

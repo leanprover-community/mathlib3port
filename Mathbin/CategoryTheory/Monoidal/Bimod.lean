@@ -703,10 +703,7 @@ variable {R S : Mon_ C} (P : Bimod R S)
 
 /-- The underlying morphism of the forward component of the left unitor isomorphism. -/
 noncomputable def hom : TensorBimod.x (regular R) P ⟶ P.pt :=
-  coequalizer.desc P.actLeft
-    (by
-      dsimp
-      rw [category.assoc, left_assoc])
+  coequalizer.desc P.actLeft (by dsimp; rw [category.assoc, left_assoc])
 #align Bimod.left_unitor_Bimod.hom Bimod.LeftUnitorBimod.hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -776,10 +773,7 @@ variable {R S : Mon_ C} (P : Bimod R S)
 
 /-- The underlying morphism of the forward component of the right unitor isomorphism. -/
 noncomputable def hom : TensorBimod.x P (regular S) ⟶ P.pt :=
-  coequalizer.desc P.actRight
-    (by
-      dsimp
-      rw [category.assoc, right_assoc, iso.hom_inv_id_assoc])
+  coequalizer.desc P.actRight (by dsimp; rw [category.assoc, right_assoc, iso.hom_inv_id_assoc])
 #align Bimod.right_unitor_Bimod.hom Bimod.RightUnitorBimod.hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

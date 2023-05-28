@@ -48,10 +48,7 @@ variable {C : Type u₃} [Category.{v₃} C] {D : Type u₄} [Category.{v₄} D]
 def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const J) F
     where
   obj c := CostructuredArrow.mk c.π
-  map c d f :=
-    CostructuredArrow.homMk f.Hom <| by
-      ext
-      simp
+  map c d f := CostructuredArrow.homMk f.Hom <| by ext; simp
 #align category_theory.limits.cone.to_costructured_arrow CategoryTheory.Limits.Cone.toCostructuredArrow
 -/
 
@@ -64,10 +61,7 @@ def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤
   obj c := ⟨c.left, c.Hom⟩
   map c d f :=
     { Hom := f.left
-      w' := fun j => by
-        convert congr_fun (congr_arg nat_trans.app f.w) j
-        dsimp
-        simp }
+      w' := fun j => by convert congr_fun (congr_arg nat_trans.app f.w) j; dsimp; simp }
 #align category_theory.limits.cone.from_costructured_arrow CategoryTheory.Limits.Cone.fromCostructuredArrow
 -/
 
@@ -165,10 +159,7 @@ def IsLimit.ofReflectsConeTerminal {F : J ⥤ C} {F' : K ⥤ D} (G : Cone F ⥤ 
 def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (const J)
     where
   obj c := StructuredArrow.mk c.ι
-  map c d f :=
-    StructuredArrow.homMk f.Hom <| by
-      ext
-      simp
+  map c d f := StructuredArrow.homMk f.Hom <| by ext; simp
 #align category_theory.limits.cocone.to_structured_arrow CategoryTheory.Limits.Cocone.toStructuredArrow
 -/
 
@@ -181,10 +172,7 @@ def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ C
   obj c := ⟨c.right, c.Hom⟩
   map c d f :=
     { Hom := f.right
-      w' := fun j => by
-        convert(congr_fun (congr_arg nat_trans.app f.w) j).symm
-        dsimp
-        simp }
+      w' := fun j => by convert(congr_fun (congr_arg nat_trans.app f.w) j).symm; dsimp; simp }
 #align category_theory.limits.cocone.from_structured_arrow CategoryTheory.Limits.Cocone.fromStructuredArrow
 -/
 

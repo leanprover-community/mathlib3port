@@ -89,7 +89,7 @@ theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
       rw [(is_colimit.equiv_of_nat_iso_of_iso (diagram_iso_span F') c' (pushout_cocone.mk _ _ this)
             _).nonempty_congr]
       · exact ⟨fun h => ⟨⟨this⟩, h⟩, fun h => h.2⟩
-      · refine' cocones.ext (iso.refl c'.X) _
+      · refine' cocones.ext (iso.refl c'.X) _;
         rintro (_ | _ | _) <;> dsimp <;>
           simp only [c'.w, category.assoc, category.id_comp, category.comp_id]
     · exact ⟨nat_trans.congr_app eα.symm _⟩
@@ -97,42 +97,26 @@ theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
     · exact ⟨by simp⟩
     constructor
     · rintro ⟨h₁, h₂⟩ (_ | _ | _)
-      · rw [← c'.w walking_span.hom.fst]
-        exact (hα walking_span.hom.fst).paste_horiz h₁
+      · rw [← c'.w walking_span.hom.fst]; exact (hα walking_span.hom.fst).paste_horiz h₁
       exacts[h₁, h₂]
-    · intro h
-      exact ⟨h _, h _⟩
+    · intro h; exact ⟨h _, h _⟩
   · introv H W' hf hg hh hi w
-    refine'
-      Iff.trans _
-        ((H w.cocone
-              ⟨by
-                rintro (_ | _ | _)
-                exacts[αW, αX, αY], _⟩
-              αZ _ _).trans
-          _)
+    refine' Iff.trans _ ((H w.cocone ⟨by rintro (_ | _ | _); exacts[αW, αX, αY], _⟩ αZ _ _).trans _)
     rotate_left
     · rintro i _ (_ | _ | _)
-      · dsimp
-        simp only [Functor.map_id, category.comp_id, category.id_comp]
+      · dsimp; simp only [Functor.map_id, category.comp_id, category.id_comp]
       exacts[hf.w, hg.w]
     · ext (_ | _ | _)
-      · dsimp
-        rw [pushout_cocone.condition_zero]
-        erw [category.assoc, hh.w, hf.w_assoc]
+      · dsimp; rw [pushout_cocone.condition_zero]; erw [category.assoc, hh.w, hf.w_assoc]
       exacts[hh.w.symm, hi.w.symm]
     · rintro i _ (_ | _ | _)
-      · dsimp
-        simp_rw [Functor.map_id]
+      · dsimp; simp_rw [Functor.map_id]
         exact is_pullback.of_horiz_is_iso ⟨by rw [category.comp_id, category.id_comp]⟩
       exacts[hf, hg]
     · constructor
-      · intro h
-        exact ⟨h walking_cospan.left, h walking_cospan.right⟩
+      · intro h; exact ⟨h walking_cospan.left, h walking_cospan.right⟩
       · rintro ⟨h₁, h₂⟩ (_ | _ | _)
-        · dsimp
-          rw [pushout_cocone.condition_zero]
-          exact hf.paste_horiz h₁
+        · dsimp; rw [pushout_cocone.condition_zero]; exact hf.paste_horiz h₁
         exacts[h₁, h₂]
     · exact ⟨fun h => h.2, fun h => ⟨_, h⟩⟩
 #align category_theory.is_pushout.is_van_kampen_iff CategoryTheory.IsPushout.isVanKampen_iff
@@ -148,18 +132,12 @@ theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCol
     dsimp
     refine' ⟨h.desc (binary_cofan.mk (c.inr ≫ s.inr) s.inl), h.fac _ ⟨walking_pair.right⟩, _, _⟩
     · apply binary_cofan.is_colimit.hom_ext hc
-      · rw [← H.w_assoc]
-        erw [h.fac _ ⟨walking_pair.right⟩]
-        exact s.condition
-      · rw [← category.assoc]
-        exact h.fac _ ⟨walking_pair.left⟩
+      · rw [← H.w_assoc]; erw [h.fac _ ⟨walking_pair.right⟩]; exact s.condition
+      · rw [← category.assoc]; exact h.fac _ ⟨walking_pair.left⟩
     · intro m e₁ e₂
       apply binary_cofan.is_colimit.hom_ext h
-      · dsimp
-        rw [category.assoc, e₂, eq_comm]
-        exact h.fac _ ⟨walking_pair.left⟩
-      · refine' e₁.trans (Eq.symm _)
-        exact h.fac _ _
+      · dsimp; rw [category.assoc, e₂, eq_comm]; exact h.fac _ ⟨walking_pair.left⟩
+      · refine' e₁.trans (Eq.symm _); exact h.fac _ _
   · refine' fun H => ⟨_⟩
     fapply limits.binary_cofan.is_colimit_mk
     ·
@@ -168,22 +146,15 @@ theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCol
           (pushout_cocone.mk s.inr _ <|
             (hc.fac (binary_cofan.mk (f ≫ s.inr) s.inl) ⟨walking_pair.left⟩).symm)
     · intro s
-      erw [category.assoc, H.is_colimit.fac _ walking_span.right, hc.fac]
-      rfl
-    · intro s
-      exact H.is_colimit.fac _ walking_span.left
+      erw [category.assoc, H.is_colimit.fac _ walking_span.right, hc.fac]; rfl
+    · intro s; exact H.is_colimit.fac _ walking_span.left
     · intro s m e₁ e₂
       apply pushout_cocone.is_colimit.hom_ext H.is_colimit
-      · symm
-        exact (H.is_colimit.fac _ walking_span.left).trans e₂.symm
+      · symm; exact (H.is_colimit.fac _ walking_span.left).trans e₂.symm
       · erw [H.is_colimit.fac _ walking_span.right]
         apply binary_cofan.is_colimit.hom_ext hc
-        · dsimp
-          erw [hc.fac, ← H.w_assoc, e₂]
-          rfl
-        · refine' ((category.assoc _ _ _).symm.trans e₁).trans _
-          symm
-          exact hc.fac _ _
+        · dsimp; erw [hc.fac, ← H.w_assoc, e₂]; rfl
+        · refine' ((category.assoc _ _ _).symm.trans e₁).trans _; symm; exact hc.fac _ _
 #align category_theory.is_coprod_iff_is_pushout CategoryTheory.is_coprod_iff_isPushout
 
 theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryExtensive C]
@@ -201,8 +172,7 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
     ((binary_cofan.is_van_kampen_iff _).mp (finitary_extensive.van_kampen _ hc₁)
           (binary_cofan.mk _ _) pullback.snd _ _ _ hh.w.symm).trans
       _
-  · dsimp
-    rw [← pullback.condition_assoc, category.assoc, hi.w]
+  · dsimp; rw [← pullback.condition_assoc, category.assoc, hi.w]
   constructor
   · rintro ⟨hc₃, hc₄⟩
     refine' ⟨hc₄, _⟩
@@ -226,11 +196,9 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
       rw [this]
       exact is_pullback.of_vert_is_iso ⟨by rw [← this, category.comp_id, pullback.lift_fst]⟩
     · apply is_pullback.of_right _ e₁ (is_pullback.of_has_pullback _ _)
-      rw [category.assoc, pullback.lift_fst, ← H.w, ← w.w]
-      exact hf.paste_horiz hc₄
+      rw [category.assoc, pullback.lift_fst, ← H.w, ← w.w]; exact hf.paste_horiz hc₄
     · apply is_pullback.of_right _ e₂ (is_pullback.of_has_pullback _ _)
-      rw [category.assoc, pullback.lift_fst]
-      exact hc₃
+      rw [category.assoc, pullback.lift_fst]; exact hc₃
   · rintro ⟨hc₃, hc₄⟩
     exact ⟨(is_pullback.of_has_pullback αY c.inr).paste_horiz hc₄, hc₃⟩
 #align category_theory.is_pushout.is_van_kampen_inl CategoryTheory.IsPushout.isVanKampen_inl

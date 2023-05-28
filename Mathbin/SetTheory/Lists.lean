@@ -202,9 +202,7 @@ theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l�
   by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
   generalize h' : Lists'.cons a l₁ = l₁' at h
-  cases' h with l a' a'' l l' e m s;
-  · cases a
-    cases h'
+  cases' h with l a' a'' l l' e m s; · cases a; cases h'
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
 
@@ -258,8 +256,7 @@ theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l�
     rw [← of_to_list l₁]
     revert H; induction to_list l₁ <;> intro
     · exact subset.nil
-    · simp at H
-      exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
+    · simp at H; exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
 #align lists'.subset_def Lists'.subset_def
 
 end Lists'
@@ -341,12 +338,10 @@ def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 :
         | tt, l => D l
         | ff, l => PUnit)
     by exact ⟨fun ⟨b, l⟩ => (this _).1, fun l => (this l).2⟩
-  intros
-  induction' l with a b a l IH₁ IH₂
+  intros ; induction' l with a b a l IH₁ IH₂
   · exact ⟨C0 _, ⟨⟩⟩
   · exact ⟨C1 _ D0, D0⟩
-  · suffices
-    · exact ⟨C1 _ this, this⟩
+  · suffices; · exact ⟨C1 _ this, this⟩
     exact D1 ⟨_, _⟩ _ IH₁.1 IH₂.2
 #align lists.induction_mut Lists.inductionMut
 -/
@@ -402,10 +397,8 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   · intro a l₂ l₃ h₁ h₂
     rwa [← equiv_atom.1 h₁] at h₂
   · intro l₁ IH l₂ l₃ h₁ h₂
-    cases' h₁ with _ _ l₂
-    · exact h₂
-    cases' h₂ with _ _ l₃
-    · exact h₁
+    cases' h₁ with _ _ l₂; · exact h₂
+    cases' h₂ with _ _ l₃; · exact h₁
     cases' equiv.antisymm_iff.1 h₁ with hl₁ hr₁
     cases' equiv.antisymm_iff.1 h₂ with hl₂ hr₂
     apply equiv.antisymm_iff.2 <;> constructor <;> apply Lists'.subset_def.2
@@ -418,8 +411,7 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
       rcases Lists'.mem_of_subset' hr₁ m₂ with ⟨a₁, m₁, e₂₁⟩
       exact ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩
   · rintro _ ⟨⟩
-  · intro a l IH₁ IH₂
-    simpa [IH₁] using IH₂
+  · intro a l IH₁ IH₂; simpa [IH₁] using IH₂
 #align lists.equiv.trans Lists.Equiv.trans
 -/
 
@@ -462,10 +454,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
-    SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) :=
-  by
+    SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
   run_tac
-    unfold_sizeof
+    unfold_sizeof;
   apply sizeof_pos
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
 

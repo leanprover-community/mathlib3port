@@ -104,9 +104,7 @@ theorem ae_eq_zero_of_forall_dual_of_isSeparable [NormedAddCommGroup E] [NormedS
     calc
       ‖s x x‖ = ‖s x (x - a)‖ := by simp only [h, sub_zero, ContinuousLinearMap.map_sub]
       _ ≤ 1 * ‖(x : E) - a‖ := (ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _)
-      _ < ‖a‖ / 2 := by
-        rw [one_mul]
-        rwa [dist_eq_norm'] at hx
+      _ < ‖a‖ / 2 := by rw [one_mul]; rwa [dist_eq_norm'] at hx
       _ < ‖(x : E)‖ := I
       _ = ‖s x x‖ := by rw [(hs x).2, IsROrC.norm_coe_norm]
       
@@ -163,10 +161,8 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
     ext1 x
     simp_rw [Set.mem_iUnion, Set.mem_setOf_eq]
     constructor <;> intro h
-    · obtain ⟨n, hn⟩ := ((tendsto_order.1 u_lim).1 _ h).exists
-      exact ⟨n, hn.le⟩
-    · obtain ⟨n, hn⟩ := h
-      exact hn.trans_lt (u_lt _)
+    · obtain ⟨n, hn⟩ := ((tendsto_order.1 u_lim).1 _ h).exists; exact ⟨n, hn.le⟩
+    · obtain ⟨n, hn⟩ := h; exact hn.trans_lt (u_lt _)
   rw [h_Union, measure_Union_null_iff]
   intro n
   exact hc _ (u_lt n)
@@ -199,9 +195,7 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         _ = ∫⁻ x in s, g x + ε ∂μ := (lintegral_add_right _ measurable_const).symm
         _ ≤ ∫⁻ x in s, f x ∂μ :=
           (set_lintegral_mono (hg.add measurable_const) hf fun x hx => hx.1.1)
-        _ ≤ (∫⁻ x in s, g x ∂μ) + 0 := by
-          rw [add_zero]
-          exact h s s_meas s_lt_top
+        _ ≤ (∫⁻ x in s, g x ∂μ) + 0 := by rw [add_zero]; exact h s s_meas s_lt_top
         
     have B : (∫⁻ x in s, g x ∂μ) ≠ ∞ := by
       apply ne_of_lt
@@ -299,9 +293,7 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable (hfm : Str
   by_contra
   refine' (lt_self_iff_false (∫ x in s, f x ∂μ)).mp (h_int_gt.trans_lt _)
   refine' (mul_neg_iff.mpr (Or.inr ⟨hb_neg, _⟩)).trans_le _
-  swap
-  · simp_rw [measure.restrict_restrict hs]
-    exact hf_zero s hs mus
+  swap; · simp_rw [measure.restrict_restrict hs]; exact hf_zero s hs mus
   refine' ENNReal.toReal_nonneg.lt_of_ne fun h_eq => h _
   cases' (ENNReal.toReal_eq_zero_iff _).mp h_eq.symm with hμs_eq_zero hμs_eq_top
   · exact hμs_eq_zero

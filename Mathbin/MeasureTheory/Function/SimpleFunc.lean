@@ -282,9 +282,7 @@ theorem simpleFunc_bot {α} (f : @SimpleFunc α ⊥ β) [Nonempty β] : ∃ c, �
       rw [← hf_meas, Set.mem_preimage]
       exact Set.mem_singleton _
     · refine' ⟨f h.some, fun x => _⟩
-      have : x ∈ f ⁻¹' {f h.some} := by
-        rw [hf_meas]
-        exact Set.mem_univ x
+      have : x ∈ f ⁻¹' {f h.some} := by rw [hf_meas]; exact Set.mem_univ x
       rwa [Set.mem_preimage, Set.mem_singleton_iff] at this
 #align measure_theory.simple_func.simple_func_bot MeasureTheory.SimpleFunc.simpleFunc_bot
 
@@ -737,9 +735,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.pair_preimage_singleton MeasureTheory.SimpleFunc.pair_preimage_singletonₓ'. -/
 -- A special form of `pair_preimage`
 theorem pair_preimage_singleton (f : α →ₛ β) (g : α →ₛ γ) (b : β) (c : γ) :
-    pair f g ⁻¹' {(b, c)} = f ⁻¹' {b} ∩ g ⁻¹' {c} :=
-  by
-  rw [← singleton_prod_singleton]
+    pair f g ⁻¹' {(b, c)} = f ⁻¹' {b} ∩ g ⁻¹' {c} := by rw [← singleton_prod_singleton];
   exact pair_preimage _ _ _ _
 #align measure_theory.simple_func.pair_preimage_singleton MeasureTheory.SimpleFunc.pair_preimage_singleton
 
@@ -1134,10 +1130,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.coe_restrict MeasureTheory.SimpleFunc.coe_restrictₓ'. -/
 @[simp]
 theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) :
-    ⇑(restrict f s) = indicator s f :=
-  by
-  rw [restrict, dif_pos hs]
-  rfl
+    ⇑(restrict f s) = indicator s f := by rw [restrict, dif_pos hs]; rfl
 #align measure_theory.simple_func.coe_restrict MeasureTheory.SimpleFunc.coe_restrict
 
 /- warning: measure_theory.simple_func.restrict_univ -> MeasureTheory.SimpleFunc.restrict_univ is a dubious translation:
@@ -1454,8 +1447,7 @@ theorem sum_eapproxDiff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
     (∑ k in Finset.range (n + 1), (eapproxDiff f k a : ℝ≥0∞)) = eapprox f n a :=
   by
   induction' n with n IH
-  · simp only [Nat.zero_eq, Finset.sum_singleton, Finset.range_one]
-    rfl
+  · simp only [Nat.zero_eq, Finset.sum_singleton, Finset.range_one]; rfl
   · rw [Finset.sum_range_succ, Nat.succ_eq_add_one, IH, eapprox_diff, coe_map, Function.comp_apply,
       coe_sub, Pi.sub_apply, ENNReal.coe_toNNReal,
       add_tsub_cancel_of_le (monotone_eapprox f (Nat.le_succ _) _)]
@@ -1503,14 +1495,12 @@ theorem lintegral_eq_of_subset (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞
   by
   refine' Finset.sum_bij_ne_zero (fun r _ _ => r) _ _ _ _
   · simpa only [forall_range_iff, mul_ne_zero_iff, and_imp]
-  · intros
-    assumption
+  · intros ; assumption
   · intro b _ hb
     refine' ⟨b, _, hb, rfl⟩
     rw [mem_range, ← preimage_singleton_nonempty]
     exact nonempty_of_measure_ne_zero (mul_ne_zero_iff.1 hb).2
-  · intros
-    rfl
+  · intros ; rfl
 #align measure_theory.simple_func.lintegral_eq_of_subset MeasureTheory.SimpleFunc.lintegral_eq_of_subset
 
 /- warning: measure_theory.simple_func.lintegral_eq_of_subset' -> MeasureTheory.SimpleFunc.lintegral_eq_of_subset' is a dubious translation:
@@ -1541,10 +1531,7 @@ theorem map_lintegral (g : β → ℝ≥0∞) (f : α →ₛ β) :
   rw [map_preimage_singleton, ← f.sum_measure_preimage_singleton, Finset.mul_sum]
   refine' Finset.sum_congr _ _
   · congr
-  · intro x
-    simp only [Finset.mem_filter]
-    rintro ⟨_, h⟩
-    rw [h]
+  · intro x; simp only [Finset.mem_filter]; rintro ⟨_, h⟩; rw [h]
 #align measure_theory.simple_func.map_lintegral MeasureTheory.SimpleFunc.map_lintegral
 
 /- warning: measure_theory.simple_func.add_lintegral -> MeasureTheory.SimpleFunc.add_lintegral is a dubious translation:
@@ -1799,9 +1786,7 @@ theorem lintegral_congr {f g : α →ₛ ℝ≥0∞} (h : f =ᵐ[μ] g) : f.lint
 theorem lintegral_map' {β} [MeasurableSpace β] {μ' : Measure β} (f : α →ₛ ℝ≥0∞) (g : β →ₛ ℝ≥0∞)
     (m' : α → β) (eq : ∀ a, f a = g (m' a)) (h : ∀ s, MeasurableSet s → μ' s = μ (m' ⁻¹' s)) :
     f.lintegral μ = g.lintegral μ' :=
-  lintegral_eq_of_measure_preimage fun y =>
-    by
-    simp only [preimage, Eq]
+  lintegral_eq_of_measure_preimage fun y => by simp only [preimage, Eq];
     exact (h (g ⁻¹' {y}) (g.measurable_set_preimage _)).symm
 #align measure_theory.simple_func.lintegral_map' MeasureTheory.SimpleFunc.lintegral_map'
 -/
@@ -1840,10 +1825,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u1} β] [_inst_3 : MeasurableSpace.{u2} α] (f : MeasureTheory.SimpleFunc.{u2, u1} α _inst_3 β), MeasurableSet.{u2} α _inst_3 (Function.support.{u2, u1} α β _inst_1 (MeasureTheory.SimpleFunc.toFun.{u2, u1} α _inst_3 β f))
 Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.measurable_set_support MeasureTheory.SimpleFunc.measurableSet_supportₓ'. -/
-theorem measurableSet_support [MeasurableSpace α] (f : α →ₛ β) : MeasurableSet (support f) :=
-  by
-  rw [f.support_eq]
-  exact Finset.measurableSet_biUnion _ fun y hy => measurable_set_fiber _ _
+theorem measurableSet_support [MeasurableSpace α] (f : α →ₛ β) : MeasurableSet (support f) := by
+  rw [f.support_eq]; exact Finset.measurableSet_biUnion _ fun y hy => measurable_set_fiber _ _
 #align measure_theory.simple_func.measurable_set_support MeasureTheory.SimpleFunc.measurableSet_support
 
 #print MeasureTheory.SimpleFunc.FinMeasSupp /-
@@ -1956,9 +1939,7 @@ but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {β : Type.{u2}} [_inst_3 : AddMonoid.{u2} β] {f : MeasureTheory.SimpleFunc.{u1, u2} α m β} {g : MeasureTheory.SimpleFunc.{u1, u2} α m β}, (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (AddMonoid.toZero.{u2} β _inst_3) m f μ) -> (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (AddMonoid.toZero.{u2} β _inst_3) m g μ) -> (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (AddMonoid.toZero.{u2} β _inst_3) m (HAdd.hAdd.{max u1 u2, max u1 u2, max u1 u2} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.{u1, u2} α m β) (instHAdd.{max u1 u2} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.instAdd.{u1, u2} α β m (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_3)))) f g) μ)
 Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.fin_meas_supp.add MeasureTheory.SimpleFunc.FinMeasSupp.addₓ'. -/
 protected theorem add {β} [AddMonoid β] {f g : α →ₛ β} (hf : f.FinMeasSupp μ)
-    (hg : g.FinMeasSupp μ) : (f + g).FinMeasSupp μ :=
-  by
-  rw [add_eq_map₂]
+    (hg : g.FinMeasSupp μ) : (f + g).FinMeasSupp μ := by rw [add_eq_map₂];
   exact hf.map₂ hg (zero_add 0)
 #align measure_theory.simple_func.fin_meas_supp.add MeasureTheory.SimpleFunc.FinMeasSupp.add
 
@@ -1969,9 +1950,7 @@ but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {β : Type.{u2}} [_inst_3 : MonoidWithZero.{u2} β] {f : MeasureTheory.SimpleFunc.{u1, u2} α m β} {g : MeasureTheory.SimpleFunc.{u1, u2} α m β}, (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (MonoidWithZero.toZero.{u2} β _inst_3) m f μ) -> (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (MonoidWithZero.toZero.{u2} β _inst_3) m g μ) -> (MeasureTheory.SimpleFunc.FinMeasSupp.{u1, u2} α β (MonoidWithZero.toZero.{u2} β _inst_3) m (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.{u1, u2} α m β) (instHMul.{max u1 u2} (MeasureTheory.SimpleFunc.{u1, u2} α m β) (MeasureTheory.SimpleFunc.instMul.{u1, u2} α β m (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β _inst_3))))) f g) μ)
 Case conversion may be inaccurate. Consider using '#align measure_theory.simple_func.fin_meas_supp.mul MeasureTheory.SimpleFunc.FinMeasSupp.mulₓ'. -/
 protected theorem mul {β} [MonoidWithZero β] {f g : α →ₛ β} (hf : f.FinMeasSupp μ)
-    (hg : g.FinMeasSupp μ) : (f * g).FinMeasSupp μ :=
-  by
-  rw [mul_eq_map₂]
+    (hg : g.FinMeasSupp μ) : (f * g).FinMeasSupp μ := by rw [mul_eq_map₂];
   exact hf.map₂ hg (MulZeroClass.zero_mul 0)
 #align measure_theory.simple_func.fin_meas_supp.mul MeasureTheory.SimpleFunc.FinMeasSupp.mul
 
@@ -1988,8 +1967,7 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
   · simp only [ae_iff, Ne.def, Classical.not_not] at hf
     simp [Set.preimage, hf]
   · by_cases ha0 : a = 0
-    · subst a
-      rwa [MulZeroClass.zero_mul]
+    · subst a; rwa [MulZeroClass.zero_mul]
     · exact mul_ne_top ha (fin_meas_supp_iff.1 hm _ ha0).Ne
 #align measure_theory.simple_func.fin_meas_supp.lintegral_lt_top MeasureTheory.SimpleFunc.FinMeasSupp.lintegral_lt_top
 
@@ -2046,29 +2024,22 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoid γ] {P : Sim
   generalize h : f.range \ {0} = s
   rw [← Finset.coe_inj, Finset.coe_sdiff, Finset.coe_singleton, simple_func.coe_range] at h
   revert s f h; refine' Finset.induction _ _
-  · intro f hf
-    rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf
-    convert h_ind 0 MeasurableSet.univ
-    ext x
-    simp [hf]
+  · intro f hf; rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf
+    convert h_ind 0 MeasurableSet.univ; ext x; simp [hf]
   · intro x s hxs ih f hf
     have mx := f.measurable_set_preimage {x}
     let g := simple_func.piecewise (f ⁻¹' {x}) mx 0 f
     have Pg : P g := by
-      apply ih
-      simp only [g, simple_func.coe_piecewise, range_piecewise]
+      apply ih; simp only [g, simple_func.coe_piecewise, range_piecewise]
       rw [image_compl_preimage, union_diff_distrib, diff_diff_comm, hf, Finset.coe_insert,
         insert_diff_self_of_not_mem, diff_eq_empty.mpr, Set.empty_union]
-      · rw [Set.image_subset_iff]
-        convert Set.subset_univ _
+      · rw [Set.image_subset_iff]; convert Set.subset_univ _
         exact preimage_const_of_mem (mem_singleton _)
       · rwa [Finset.mem_coe]
     convert h_add _ Pg (h_ind x mx)
-    · ext1 y
-      by_cases hy : y ∈ f ⁻¹' {x} <;> [simpa [hy] ;simp [hy]]
+    · ext1 y; by_cases hy : y ∈ f ⁻¹' {x} <;> [simpa [hy] ;simp [hy]]
     rw [disjoint_iff_inf_le]
-    rintro y
-    by_cases hy : y ∈ f ⁻¹' {x} <;> simp [hy]
+    rintro y; by_cases hy : y ∈ f ⁻¹' {x} <;> simp [hy]
 #align measure_theory.simple_func.induction MeasureTheory.SimpleFunc.induction
 
 end SimpleFunc
@@ -2103,8 +2074,7 @@ theorem Measurable.ennreal_induction {α} [MeasurableSpace α] {P : (α → ℝ�
     ⦃f : α → ℝ≥0∞⦄ (hf : Measurable f) : P f :=
   by
   convert h_supr (fun n => (eapprox f n).Measurable) (monotone_eapprox f) _
-  · ext1 x
-    rw [supr_eapprox_apply f hf]
+  · ext1 x; rw [supr_eapprox_apply f hf]
   ·
     exact fun n =>
       simple_func.induction (fun c s hs => h_ind c hs)

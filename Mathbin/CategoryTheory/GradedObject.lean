@@ -122,10 +122,7 @@ theorem comapEq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = 
 #print CategoryTheory.GradedObject.eqToHom_apply /-
 @[simp]
 theorem eqToHom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
-    (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) :=
-  by
-  subst h
-  rfl
+    (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) := by subst h; rfl
 #align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eqToHom_apply
 -/
 
@@ -143,22 +140,9 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
     where
   Functor := comap (fun _ => C) (e.symm : γ → β)
   inverse := comap (fun _ => C) (e : β → γ)
-  counitIso :=
-    (comapComp (fun _ => C) _ _).trans
-      (comapEq C
-        (by
-          ext
-          simp))
-  unitIso :=
-    (comapEq C
-          (by
-            ext
-            simp)).trans
-      (comapComp _ _ _).symm
-  functor_unitIso_comp' X := by
-    ext b
-    dsimp
-    simp
+  counitIso := (comapComp (fun _ => C) _ _).trans (comapEq C (by ext; simp))
+  unitIso := (comapEq C (by ext; simp)).trans (comapComp _ _ _).symm
+  functor_unitIso_comp' X := by ext b; dsimp; simp
 #align category_theory.graded_object.comap_equiv CategoryTheory.GradedObject.comapEquiv
 
 -- See note [dsimp, simp].
@@ -173,30 +157,11 @@ Case conversion may be inaccurate. Consider using '#align category_theory.graded
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => comap (fun _ => C) fun b : β => b + n • s
-      zero :=
-        comapEq C
-            (by
-              ext
-              simp) ≪≫
-          comapId β fun _ => C
-      add := fun m n =>
-        comapEq C
-            (by
-              ext
-              simp [add_zsmul, add_comm]) ≪≫
-          (comapComp _ _ _).symm
-      assoc_hom_app := fun m₁ m₂ m₃ X => by
-        ext
-        dsimp
-        simp
-      zero_add_hom_app := fun n X => by
-        ext
-        dsimp
-        simpa
-      add_zero_hom_app := fun n X => by
-        ext
-        dsimp
-        simpa }
+      zero := comapEq C (by ext; simp) ≪≫ comapId β fun _ => C
+      add := fun m n => comapEq C (by ext; simp [add_zsmul, add_comm]) ≪≫ (comapComp _ _ _).symm
+      assoc_hom_app := fun m₁ m₂ m₃ X => by ext; dsimp; simp
+      zero_add_hom_app := fun n X => by ext; dsimp; simpa
+      add_zero_hom_app := fun n X => by ext; dsimp; simpa }
 #align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShift
 
 /- warning: category_theory.graded_object.shift_functor_obj_apply -> CategoryTheory.GradedObject.shiftFunctor_obj_apply is a dubious translation:

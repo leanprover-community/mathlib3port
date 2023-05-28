@@ -462,8 +462,7 @@ theorem Monic.not_irreducible_iff_exists_add_mul_eq_coeff (hm : p.Monic) (hnd : 
   rw [hm.irreducible_iff_nat_degree', and_iff_right, hnd]
   push_neg; constructor
   · rintro ⟨a, b, ha, hb, rfl, hdb | ⟨⟨⟩⟩⟩
-    have hda := hnd
-    rw [ha.nat_degree_mul hb, hdb] at hda
+    have hda := hnd; rw [ha.nat_degree_mul hb, hdb] at hda
     use a.coeff 0, b.coeff 0, mul_coeff_zero a b
     simpa only [next_coeff, hnd, add_right_cancel hda, hdb] using ha.next_coeff_mul hb
   · rintro ⟨c₁, c₂, hmul, hadd⟩
@@ -472,8 +471,7 @@ theorem Monic.not_irreducible_iff_exists_add_mul_eq_coeff (hm : p.Monic) (hnd : 
     rw [p.as_sum_range_C_mul_X_pow, hnd, Finset.sum_range_succ, Finset.sum_range_succ,
       Finset.sum_range_one, ← hnd, hm.coeff_nat_degree, hnd, hmul, hadd, C_mul, C_add, C_1]
     ring
-  · rintro rfl
-    simpa only [nat_degree_one] using hnd
+  · rintro rfl; simpa only [nat_degree_one] using hnd
 #align polynomial.monic.not_irreducible_iff_exists_add_mul_eq_coeff Polynomial.Monic.not_irreducible_iff_exists_add_mul_eq_coeff
 
 /- warning: polynomial.root_mul -> Polynomial.root_mul is a dubious translation:
@@ -521,9 +519,7 @@ theorem le_rootMultiplicity_iff {p : R[X]} (p0 : p ≠ 0) {a : R} {n : ℕ} :
   by
   simp_rw [root_multiplicity, dif_neg p0, Nat.le_find_iff, Classical.not_not]
   refine' ⟨fun h => _, fun h m hm => (pow_dvd_pow _ hm).trans h⟩
-  cases n;
-  · rw [pow_zero]
-    apply one_dvd; · exact h n n.lt_succ_self
+  cases n; · rw [pow_zero]; apply one_dvd; · exact h n n.lt_succ_self
 #align polynomial.le_root_multiplicity_iff Polynomial.le_rootMultiplicity_iff
 
 /- warning: polynomial.root_multiplicity_le_iff -> Polynomial.rootMultiplicity_le_iff is a dubious translation:
@@ -570,17 +566,12 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] (r : R), Prime.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (IsDomain.toCancelCommMonoidWithZero.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.commSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Polynomial.instIsDomainPolynomialToSemiringSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2))) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) r) (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (instHSub.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.sub.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Polynomial.X.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.semiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) (Polynomial.C.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) r))
 Case conversion may be inaccurate. Consider using '#align polynomial.prime_X_sub_C Polynomial.prime_X_sub_Cₓ'. -/
 theorem prime_X_sub_C (r : R) : Prime (X - C r) :=
-  ⟨X_sub_C_ne_zero r, not_isUnit_X_sub_C r, fun _ _ =>
-    by
-    simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
-    exact id⟩
+  ⟨X_sub_C_ne_zero r, not_isUnit_X_sub_C r, fun _ _ => by
+    simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]; exact id⟩
 #align polynomial.prime_X_sub_C Polynomial.prime_X_sub_C
 
 #print Polynomial.prime_X /-
-theorem prime_X : Prime (X : R[X]) :=
-  by
-  convert prime_X_sub_C (0 : R)
-  simp
+theorem prime_X : Prime (X : R[X]) := by convert prime_X_sub_C (0 : R); simp
 #align polynomial.prime_X Polynomial.prime_X
 -/
 
@@ -731,9 +722,7 @@ theorem exists_multiset_roots :
         · rw [ha, count_cons_self, Nat.succ_eq_add_one, add_comm]
         · rw [count_cons_of_ne ha, zero_add]⟩
     else
-      ⟨0, (degree_eq_nat_degree hp).symm ▸ WithBot.coe_le_coe.2 (Nat.zero_le _),
-        by
-        intro a
+      ⟨0, (degree_eq_nat_degree hp).symm ▸ WithBot.coe_le_coe.2 (Nat.zero_le _), by intro a;
         rw [count_zero, root_multiplicity_eq_zero (not_exists.mp h a)]⟩
 #align polynomial.exists_multiset_roots Polynomial.exists_multiset_roots
 
@@ -1001,10 +990,8 @@ theorem roots_list_prod (L : List R[X]) :
 -/
 
 #print Polynomial.roots_multiset_prod /-
-theorem roots_multiset_prod (m : Multiset R[X]) : (0 : R[X]) ∉ m → m.Prod.roots = m.bind roots :=
-  by
-  rcases m with ⟨L⟩
-  simpa only [Multiset.coe_prod, quot_mk_to_coe''] using roots_list_prod L
+theorem roots_multiset_prod (m : Multiset R[X]) : (0 : R[X]) ∉ m → m.Prod.roots = m.bind roots := by
+  rcases m with ⟨L⟩; simpa only [Multiset.coe_prod, quot_mk_to_coe''] using roots_list_prod L
 #align polynomial.roots_multiset_prod Polynomial.roots_multiset_prod
 -/
 
@@ -1085,9 +1072,7 @@ theorem roots_multiset_prod_X_sub_C (s : Multiset R) : (s.map fun a => X - C a).
   by
   rw [roots_multiset_prod, Multiset.bind_map]
   · simp_rw [roots_X_sub_C, Multiset.bind_singleton, Multiset.map_id']
-  · rw [Multiset.mem_map]
-    rintro ⟨a, -, h⟩
-    exact X_sub_C_ne_zero a h
+  · rw [Multiset.mem_map]; rintro ⟨a, -, h⟩; exact X_sub_C_ne_zero a h
 #align polynomial.roots_multiset_prod_X_sub_C Polynomial.roots_multiset_prod_X_sub_C
 
 /- warning: polynomial.nat_degree_multiset_prod_X_sub_C_eq_card -> Polynomial.natDegree_multiset_prod_X_sub_C_eq_card is a dubious translation:
@@ -1536,12 +1521,9 @@ theorem eq_leadingCoeff_mul_of_monic_of_dvd_of_natDegree_le {R} [CommRing R] {p 
   obtain rfl | hq := eq_or_ne q 0; · simp
   have rzero : r ≠ 0 := fun h => by simpa [h, hq] using hr
   rw [hr, nat_degree_mul'] at hdeg; swap
-  · rw [hp.leading_coeff, one_mul, leading_coeff_ne_zero]
-    exact rzero
+  · rw [hp.leading_coeff, one_mul, leading_coeff_ne_zero]; exact rzero
   rw [mul_comm, @eq_C_of_nat_degree_eq_zero _ _ r] at hr
-  · convert hr
-    convert leading_coeff_C _ using 1
-    rw [hr, leading_coeff_mul_monic hp]
+  · convert hr; convert leading_coeff_C _ using 1; rw [hr, leading_coeff_mul_monic hp]
   · exact (add_right_inj _).1 (le_antisymm hdeg <| Nat.le.intro rfl)
 #align polynomial.eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le Polynomial.eq_leadingCoeff_mul_of_monic_of_dvd_of_natDegree_le
 
@@ -1562,8 +1544,7 @@ theorem isCoprime_X_sub_C_of_isUnit_sub {R} [CommRing R] {a b : R} (h : IsUnit (
   ⟨-C h.Unit⁻¹.val, C h.Unit⁻¹.val,
     by
     rw [neg_mul_comm, ← left_distrib, neg_add_eq_sub, sub_sub_sub_cancel_left, ← C_sub, ← C_mul]
-    convert C_1
-    exact h.coe_inv_mul⟩
+    convert C_1; exact h.coe_inv_mul⟩
 #align polynomial.is_coprime_X_sub_C_of_is_unit_sub Polynomial.isCoprime_X_sub_C_of_isUnit_sub
 
 /- warning: polynomial.pairwise_coprime_X_sub_C -> Polynomial.pairwise_coprime_X_sub_C is a dubious translation:
@@ -1634,9 +1615,7 @@ theorem exists_prod_multiset_X_sub_C_mul (p : R[X]) :
   obtain ⟨q, he⟩ := p.prod_multiset_X_sub_C_dvd
   use q, he.symm
   obtain rfl | hq := eq_or_ne q 0
-  · rw [MulZeroClass.mul_zero] at he
-    subst he
-    simp
+  · rw [MulZeroClass.mul_zero] at he; subst he; simp
   constructor
   · conv_rhs => rw [he]
     rw [monic_prod_multiset_X_sub_C.nat_degree_mul' hq, nat_degree_multiset_prod_X_sub_C_eq_card]
@@ -1663,10 +1642,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.prod_multis
 /-- A monic polynomial `p` that has as many roots as its degree
 can be written `p = ∏(X - a)`, for `a` in `p.roots`. -/
 theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq (hp : p.Monic)
-    (hroots : p.roots.card = p.natDegree) : (p.roots.map fun a => X - C a).Prod = p :=
-  by
-  convert C_leading_coeff_mul_prod_multiset_X_sub_C hroots
-  rw [hp.leading_coeff, C_1, one_mul]
+    (hroots : p.roots.card = p.natDegree) : (p.roots.map fun a => X - C a).Prod = p := by
+  convert C_leading_coeff_mul_prod_multiset_X_sub_C hroots; rw [hp.leading_coeff, C_1, one_mul]
 #align polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq Polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq
 
 end CommRing
@@ -1748,9 +1725,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.map_roots_le Polynomial.map_roots_leₓ'. -/
 theorem map_roots_le [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
     p.roots.map f ≤ (p.map f).roots :=
-  Multiset.le_iff_count.2 fun b => by
-    rw [count_roots]
-    apply count_map_roots h
+  Multiset.le_iff_count.2 fun b => by rw [count_roots]; apply count_map_roots h
 #align polynomial.map_roots_le Polynomial.map_roots_le
 
 /- warning: polynomial.map_roots_le_of_injective -> Polynomial.map_roots_le_of_injective is a dubious translation:
@@ -1770,9 +1745,7 @@ theorem map_roots_le_of_injective [IsDomain A] [IsDomain B] (p : A[X]) {f : A �
 <too large>
 Case conversion may be inaccurate. Consider using '#align polynomial.card_roots_le_map Polynomial.card_roots_le_mapₓ'. -/
 theorem card_roots_le_map [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
-    p.roots.card ≤ (p.map f).roots.card :=
-  by
-  rw [← p.roots.card_map f]
+    p.roots.card ≤ (p.map f).roots.card := by rw [← p.roots.card_map f];
   exact Multiset.card_le_of_le (map_roots_le h)
 #align polynomial.card_roots_le_map Polynomial.card_roots_le_map
 
@@ -1855,9 +1828,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f)
         (h_irr.is_unit_or_is_unit <| (congr_arg (map φ) h).trans (Polynomial.map_mul φ)).imp _ _ <;>
       apply is_unit_of_is_unit_leading_coeff_of_is_unit_map <;>
     apply isUnit_of_mul_eq_one
-  · exact q;
-  · rw [mul_comm]
-    exact q
+  · exact q; · rw [mul_comm]; exact q
 #align polynomial.monic.irreducible_of_irreducible_map Polynomial.Monic.irreducible_of_irreducible_map
 
 end

@@ -64,10 +64,7 @@ def factorThruImage : G ⟶ image f :=
 -/
 
 #print AddCommGroupCat.image.fac /-
-theorem image.fac : factorThruImage f ≫ image.ι f = f :=
-  by
-  ext
-  rfl
+theorem image.fac : factorThruImage f ≫ image.ι f = f := by ext; rfl
 #align AddCommGroup.image.fac AddCommGroupCat.image.fac
 -/
 

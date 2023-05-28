@@ -442,9 +442,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} (h : Filter.HasBasis.{u2, u1} α ι l p s), Eq.{succ u2} (Filter.{u2} α) (Filter.IsBasis.filter.{u2, u1} α ι p s (Filter.HasBasis.isBasis.{u1, u2} α ι l p s h)) l
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.filter_eq Filter.HasBasis.filter_eqₓ'. -/
-theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filterₓ = l :=
-  by
-  ext U
+theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filterₓ = l := by ext U;
   simp [h.mem_iff, is_basis.mem_filter_iff]
 #align filter.has_basis.filter_eq Filter.HasBasis.filter_eq
 
@@ -1179,9 +1177,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) f g)) (forall {p : α -> Prop}, (Filter.Eventually.{u1} α (fun (x : α) => p x) g) -> (Filter.Frequently.{u1} α (fun (x : α) => p x) f))
 Case conversion may be inaccurate. Consider using '#align filter.inf_ne_bot_iff_frequently_right Filter.inf_neBot_iff_frequently_rightₓ'. -/
 theorem inf_neBot_iff_frequently_right {f g : Filter α} :
-    NeBot (f ⊓ g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in g, p x) → ∃ᶠ x in f, p x :=
-  by
-  rw [inf_comm]
+    NeBot (f ⊓ g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in g, p x) → ∃ᶠ x in f, p x := by rw [inf_comm];
   exact inf_ne_bot_iff_frequently_left
 #align filter.inf_ne_bot_iff_frequently_right Filter.inf_neBot_iff_frequently_right
 
@@ -1342,10 +1338,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Eq.{succ u2} (Set.{u2} α) (Set.sInter.{u2} α (Filter.sets.{u2} α l)) (Set.iInter.{u2, u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (p i) (fun (hi : p i) => s i))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.sInter_sets Filter.HasBasis.sInter_setsₓ'. -/
-theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i :=
-  by
-  rw [sInter_eq_bInter]
-  exact h.bInter_mem monotone_id
+theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i := by
+  rw [sInter_eq_bInter]; exact h.bInter_mem monotone_id
 #align filter.has_basis.sInter_sets Filter.HasBasis.sInter_sets
 
 variable {ι'' : Type _} [Preorder ι''] (l) (s'' : ι'' → Set α)
@@ -1387,10 +1381,8 @@ variable {la : Filter α} {pa : ι → Prop} {sa : ι → Set α} {lb : Filter �
   {sb : ι' → Set β} {f : α → β}
 
 theorem HasBasis.tendsto_left_iff (hla : la.HasBasis pa sa) :
-    Tendsto f la lb ↔ ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t :=
-  by
-  simp only [tendsto, (hla.map f).le_iffₓ, image_subset_iff]
-  rfl
+    Tendsto f la lb ↔ ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t := by
+  simp only [tendsto, (hla.map f).le_iffₓ, image_subset_iff]; rfl
 #align filter.has_basis.tendsto_left_iff Filter.HasBasis.tendsto_left_iffₓ
 
 /- warning: filter.has_basis.tendsto_right_iff -> Filter.HasBasis.tendsto_right_iff is a dubious translation:
@@ -1648,18 +1640,9 @@ theorem antitone_seq_of_seq (s : ℕ → Set α) :
   use fun n => ⋂ m ≤ n, s m; constructor
   · exact fun i j hij => bInter_mono (Iic_subset_Iic.2 hij) fun n hn => subset.refl _
   apply le_antisymm <;> rw [le_iInf_iff] <;> intro i
-  · rw [le_principal_iff]
-    refine' (bInter_mem (finite_le_nat _)).2 fun j hji => _
-    rw [← le_principal_iff]
-    apply iInf_le_of_le j _
-    exact le_rfl
-  · apply iInf_le_of_le i _
-    rw [principal_mono]
-    intro a
-    simp
-    intro h
-    apply h
-    rfl
+  · rw [le_principal_iff]; refine' (bInter_mem (finite_le_nat _)).2 fun j hji => _
+    rw [← le_principal_iff]; apply iInf_le_of_le j _; exact le_rfl
+  · apply iInf_le_of_le i _; rw [principal_mono]; intro a; simp; intro h; apply h; rfl
 #align filter.antitone_seq_of_seq Filter.antitone_seq_of_seq
 
 /- warning: filter.countable_binfi_eq_infi_seq -> Filter.countable_biInf_eq_iInf_seq is a dubious translation:
@@ -1895,8 +1878,7 @@ theorem isCountablyGenerated_iff_exists_antitone_basis {f : Filter α} :
     IsCountablyGenerated f ↔ ∃ x : ℕ → Set α, f.HasAntitoneBasis x :=
   by
   constructor
-  · intro h
-    exact f.exists_antitone_basis
+  · intro h; exact f.exists_antitone_basis
   · rintro ⟨x, h⟩
     rw [h.to_has_basis.eq_infi]
     exact is_countably_generated_seq x
@@ -1912,10 +1894,8 @@ theorem isCountablyGenerated_principal (s : Set α) : IsCountablyGenerated (𝓟
 
 #print Filter.isCountablyGenerated_pure /-
 @[instance]
-theorem isCountablyGenerated_pure (a : α) : IsCountablyGenerated (pure a) :=
-  by
-  rw [← principal_singleton]
-  exact is_countably_generated_principal _
+theorem isCountablyGenerated_pure (a : α) : IsCountablyGenerated (pure a) := by
+  rw [← principal_singleton]; exact is_countably_generated_principal _
 #align filter.is_countably_generated_pure Filter.isCountablyGenerated_pure
 -/
 

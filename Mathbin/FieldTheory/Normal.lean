@@ -185,9 +185,7 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
   haveI : FiniteDimensional F D := FiniteDimensional.trans F E D
   rsuffices ⟨ϕ⟩ : Nonempty (D →ₐ[F] E)
   · rw [← WithBot.coe_one, degree_eq_iff_nat_degree_eq q_irred.ne_zero, ← finrankED]
-    have nat_lemma : ∀ a b c : ℕ, a * b = c → c ≤ a → 0 < c → b = 1 :=
-      by
-      intro a b c h1 h2 h3
+    have nat_lemma : ∀ a b c : ℕ, a * b = c → c ≤ a → 0 < c → b = 1 := by intro a b c h1 h2 h3;
       nlinarith
     exact
       nat_lemma _ _ _ (FiniteDimensional.finrank_mul_finrank F E D)
@@ -406,9 +404,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
         (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨isIntegral_of_isScalarTower (h.out x).1,
           splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
-            (by
-              rw [splits_map_iff, ← IsScalarTower.algebraMap_eq]
-              exact (h.out x).2)
+            (by rw [splits_map_iff, ← IsScalarTower.algebraMap_eq]; exact (h.out x).2)
             (minpoly.dvd_map_of_isScalarTower F K₁ x)⟩
 #align alg_hom.lift_normal AlgHom.liftNormal
 

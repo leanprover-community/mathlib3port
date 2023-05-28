@@ -81,19 +81,12 @@ variable {M}
 -/
 irreducible_def ι : M →ₗ[R] TensorAlgebra R M :=
   { toFun := fun m => RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
-    map_add' := fun x y => by
-      rw [← AlgHom.map_add]
-      exact RingQuot.mkAlgHom_rel R rel.add
-    map_smul' := fun r x => by
-      rw [← AlgHom.map_smul]
-      exact RingQuot.mkAlgHom_rel R rel.smul }
+    map_add' := fun x y => by rw [← AlgHom.map_add]; exact RingQuot.mkAlgHom_rel R rel.add
+    map_smul' := fun r x => by rw [← AlgHom.map_smul]; exact RingQuot.mkAlgHom_rel R rel.smul }
 #align tensor_algebra.ι TensorAlgebra.ι
 
 theorem ringQuot_mkAlgHom_freeAlgebra_ι_eq_ι (m : M) :
-    RingQuot.mkAlgHom R (Rel R M) (FreeAlgebra.ι R m) = ι R m :=
-  by
-  rw [ι]
-  rfl
+    RingQuot.mkAlgHom R (Rel R M) (FreeAlgebra.ι R m) = ι R m := by rw [ι]; rfl
 #align tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ringQuot_mkAlgHom_freeAlgebra_ι_eq_ι
 
 /-- Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
@@ -126,25 +119,19 @@ variable {R}
 
 @[simp]
 theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) :
-    (lift R f).toLinearMap.comp (ι R) = f :=
-  by
-  convert(lift R).symm_apply_apply f
+    (lift R f).toLinearMap.comp (ι R) = f := by convert(lift R).symm_apply_apply f;
   simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (x) :
-    lift R f (ι R x) = f x := by
-  conv_rhs => rw [← ι_comp_lift f]
-  rfl
+    lift R f (ι R x) = f x := by conv_rhs => rw [← ι_comp_lift f]; rfl
 #align tensor_algebra.lift_ι_apply TensorAlgebra.lift_ι_apply
 
 @[simp]
 theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
-    (g : TensorAlgebra R M →ₐ[R] A) : g.toLinearMap.comp (ι R) = f ↔ g = lift R f :=
-  by
-  rw [← (lift R).symm_apply_eq]
-  simp only [lift, Equiv.coe_fn_symm_mk]
+    (g : TensorAlgebra R M →ₐ[R] A) : g.toLinearMap.comp (ι R) = f ↔ g = lift R f := by
+  rw [← (lift R).symm_apply_eq]; simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.lift_unique TensorAlgebra.lift_unique
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.
@@ -152,9 +139,7 @@ theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
 -- For now, we avoid this by not marking it irreducible.
 @[simp]
 theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra R M →ₐ[R] A) :
-    lift R (g.toLinearMap.comp (ι R)) = g :=
-  by
-  rw [← lift_symm_apply]
+    lift R (g.toLinearMap.comp (ι R)) = g := by rw [← lift_symm_apply];
   exact (lift R).apply_symm_apply g
 #align tensor_algebra.lift_comp_ι TensorAlgebra.lift_comp_ι
 

@@ -84,9 +84,7 @@ def unitClosed : Closed (𝟙_ C)
                 invFun := fun a => (leftUnitor X).Hom ≫ a
                 left_inv := by tidy
                 right_inv := by tidy }
-            homEquiv_naturality_left_symm := fun X' X Y f g =>
-              by
-              dsimp
+            homEquiv_naturality_left_symm := fun X' X Y f g => by dsimp;
               rw [left_unitor_naturality_assoc] } }
 #align category_theory.unit_closed CategoryTheory.unitClosed
 -/
@@ -401,10 +399,8 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.MonoidalCategory.{u1, u2} C _inst_1] (A : C) (X : C) [_inst_3 : CategoryTheory.Closed.{u1, u2} C _inst_1 _inst_2 A], Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) X) (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.ihom.{u1, u2} C _inst_1 _inst_2 A _inst_3)) (CategoryTheory.MonoidalCategory.tensorObj.{u1, u2} C _inst_1 _inst_2 A (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) X)))) (CategoryTheory.MonoidalClosed.curry.{u1, u2} C _inst_1 _inst_2 A (CategoryTheory.MonoidalCategory.tensorObj.{u1, u2} C _inst_1 _inst_2 A (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) X)) (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) X) _inst_3 (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.MonoidalCategory.tensorObj.{u1, u2} C _inst_1 _inst_2 A (Prefunctor.obj.{succ u1, succ u1, u2, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1)) X)))) (CategoryTheory.NatTrans.app.{u1, u1, u2, u2} C _inst_1 C _inst_1 (CategoryTheory.Functor.id.{u1, u2} C _inst_1) (CategoryTheory.Functor.comp.{u1, u1, u1, u2, u2, u2} C _inst_1 C _inst_1 C _inst_1 (CategoryTheory.MonoidalCategory.tensorLeft.{u1, u2} C _inst_1 _inst_2 A) (CategoryTheory.ihom.{u1, u2} C _inst_1 _inst_2 A _inst_3)) (CategoryTheory.ihom.coev.{u1, u2} C _inst_1 _inst_2 A _inst_3) X)
 Case conversion may be inaccurate. Consider using '#align category_theory.monoidal_closed.curry_id_eq_coev CategoryTheory.MonoidalClosed.curry_id_eq_coevₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X :=
-  by
-  rw [curry_eq, (ihom A).map_id (A ⊗ _)]
-  apply comp_id
+theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X := by
+  rw [curry_eq, (ihom A).map_id (A ⊗ _)]; apply comp_id
 #align category_theory.monoidal_closed.curry_id_eq_coev CategoryTheory.MonoidalClosed.curry_id_eq_coev
 
 section Pre
@@ -455,10 +451,7 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
 
 #print CategoryTheory.MonoidalClosed.pre_id /-
 @[simp]
-theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ :=
-  by
-  simp only [pre, Functor.map_id]
-  dsimp
+theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by simp only [pre, Functor.map_id]; dsimp;
   simp
 #align category_theory.monoidal_closed.pre_id CategoryTheory.MonoidalClosed.pre_id
 -/

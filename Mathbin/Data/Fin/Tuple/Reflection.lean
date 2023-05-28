@@ -57,8 +57,7 @@ theorem seq_eq : ∀ {m} (f : Fin m → α → β) (v : Fin m → α), seq f v =
       simp_rw [seq, seq_eq]
       refine' i.cases _ fun i => _
       · rfl
-      · simp only [Matrix.cons_val_succ]
-        rfl
+      · simp only [Matrix.cons_val_succ]; rfl
 #align fin_vec.seq_eq FinVec.seq_eq
 -/
 
@@ -126,9 +125,7 @@ example (P : (fin 2 → α) → Prop) : (∀ f, P f) ↔ (∀ a₀ a₁, P ![a�
 -/
 @[simp]
 theorem forall_iff : ∀ {m} (P : (Fin m → α) → Prop), Forall P ↔ ∀ x, P x
-  | 0, P => by
-    simp only [forall, Fin.forall_fin_zero_pi]
-    rfl
+  | 0, P => by simp only [forall, Fin.forall_fin_zero_pi]; rfl
   | n + 1, P => by simp only [forall, forall_iff, Fin.forall_fin_succ_pi, Matrix.vecCons]
 #align fin_vec.forall_iff FinVec.forall_iff
 -/
@@ -151,9 +148,7 @@ example (P : (fin 2 → α) → Prop) : (∃ f, P f) ↔ (∃ a₀ a₁, P ![a�
 ```
 -/
 theorem exists_iff : ∀ {m} (P : (Fin m → α) → Prop), Exists P ↔ ∃ x, P x
-  | 0, P => by
-    simp only [exists, Fin.exists_fin_zero_pi, Matrix.vecEmpty]
-    rfl
+  | 0, P => by simp only [exists, Fin.exists_fin_zero_pi, Matrix.vecEmpty]; rfl
   | n + 1, P => by simp only [exists, exists_iff, Fin.exists_fin_succ_pi, Matrix.vecCons]
 #align fin_vec.exists_iff FinVec.exists_iff
 -/

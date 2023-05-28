@@ -186,8 +186,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]
     rw [mem_closed_ball, dist_eq_norm] at hy
-    replace hr : 0 < r
-    exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
+    replace hr : 0 < r; exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
 #align closure_ball closure_ball
 
@@ -217,8 +216,7 @@ theorem interior_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0)
   · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
   refine' subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
-  rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
-  · exact hr
+  rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl); · exact hr
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
   suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1
     by
@@ -270,8 +268,7 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
     DiscreteTopology <| AddSubgroup.zmultiples e :=
   by
   rcases eq_or_ne e 0 with (rfl | he)
-  · rw [AddSubgroup.zmultiples_zero_eq_bot]
-    infer_instance
+  · rw [AddSubgroup.zmultiples_zero_eq_bot]; infer_instance
   · rw [discreteTopology_iff_open_singleton_zero, isOpen_induced_iff]
     refine' ⟨Metric.ball 0 ‖e‖, Metric.isOpen_ball, _⟩
     ext ⟨x, hx⟩
@@ -389,9 +386,7 @@ theorem rescale_to_shell_semi_normed_zpow {c : α} (hc : 1 < ‖c‖) {ε : ℝ}
   have xεpos : 0 < ‖x‖ / ε := div_pos ((Ne.symm hx).le_iff_lt.1 (norm_nonneg x)) εpos
   rcases exists_mem_Ico_zpow xεpos hc with ⟨n, hn⟩
   have cpos : 0 < ‖c‖ := lt_trans (zero_lt_one : (0 : ℝ) < 1) hc
-  have cnpos : 0 < ‖c ^ (n + 1)‖ := by
-    rw [norm_zpow]
-    exact lt_trans xεpos hn.2
+  have cnpos : 0 < ‖c ^ (n + 1)‖ := by rw [norm_zpow]; exact lt_trans xεpos hn.2
   refine' ⟨-(n + 1), _, _, _, _⟩
   show c ^ (-(n + 1)) ≠ 0; exact zpow_ne_zero _ (norm_pos_iff.1 cpos)
   show ‖c ^ (-(n + 1)) • x‖ < ε
@@ -431,9 +426,7 @@ See note [reducible non-instances] -/
 def NormedSpace.induced {F : Type _} (α β γ : Type _) [NormedField α] [AddCommGroup β] [Module α β]
     [SeminormedAddCommGroup γ] [NormedSpace α γ] [LinearMapClass F α β γ] (f : F) :
     @NormedSpace α β _ (SeminormedAddCommGroup.induced β γ f)
-    where norm_smul_le a b := by
-    unfold norm
-    exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
+    where norm_smul_le a b := by unfold norm; exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
 #align normed_space.induced NormedSpace.induced
 -/
 
@@ -850,9 +843,7 @@ See note [reducible non-instances] -/
 def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β]
     [SeminormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
     @NormedAlgebra α β _ (SeminormedRing.induced β γ f)
-    where norm_smul_le a b := by
-    unfold norm
-    exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
+    where norm_smul_le a b := by unfold norm; exact (map_smul f a b).symm ▸ norm_smul_le a (f b)
 #align normed_algebra.induced NormedAlgebra.induced
 
 /- warning: subalgebra.to_normed_algebra -> Subalgebra.toNormedAlgebra is a dubious translation:

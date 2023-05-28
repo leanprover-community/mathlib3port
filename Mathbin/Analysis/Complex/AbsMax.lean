@@ -197,8 +197,7 @@ theorem norm_eqOn_closedBall_of_isMaxOn {f : E → F} {z : E} {r : ℝ}
   by
   intro w hw
   rw [mem_closed_ball, dist_comm] at hw
-  rcases eq_or_ne z w with (rfl | hne)
-  · rfl
+  rcases eq_or_ne z w with (rfl | hne); · rfl
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
   suffices ‖(f ∘ e) (1 : ℂ)‖ = ‖(f ∘ e) (0 : ℂ)‖ by simpa [e]
@@ -258,8 +257,7 @@ theorem norm_eqOn_of_isPreconnected_of_isMaxOn {f : E → F} {U : Set E} {c : E}
   by
   set V := U ∩ { z | IsMaxOn (norm ∘ f) U z }
   have hV : ∀ x ∈ V, ‖f x‖ = ‖f c‖ := fun x hx => le_antisymm (hm hx.1) (hx.2 hcU)
-  suffices : U ⊆ V
-  exact fun x hx => hV x (this hx)
+  suffices : U ⊆ V; exact fun x hx => hV x (this hx)
   have hVo : IsOpen V := by
     simpa only [ho.mem_nhds_iff, set_of_and, set_of_mem_eq] using
       is_open_set_of_mem_nhds_and_is_max_on_norm hd
@@ -405,9 +403,7 @@ theorem exists_mem_frontier_isMaxOn_norm [FiniteDimensional ℂ E] {f : E → F}
   obtain ⟨w, hwU, hle⟩ : ∃ w ∈ closure U, IsMaxOn (norm ∘ f) (closure U) w
   exact hc.exists_forall_ge hne.closure hd.continuous_on.norm
   rw [closure_eq_interior_union_frontier, mem_union] at hwU
-  cases hwU
-  rotate_left
-  · exact ⟨w, hwU, hle⟩
+  cases hwU; rotate_left; · exact ⟨w, hwU, hle⟩
   have : interior U ≠ univ := ne_top_of_le_ne_top hc.ne_univ interior_subset_closure
   rcases exists_mem_frontier_infDist_compl_eq_dist hwU this with ⟨z, hzU, hzw⟩
   refine' ⟨z, frontier_interior_subset hzU, fun x hx => (mem_set_of_eq.mp <| hle hx).trans_eq _⟩
@@ -423,8 +419,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
     (hz : z ∈ closure U) : ‖f z‖ ≤ C :=
   by
   rw [closure_eq_self_union_frontier, union_comm, mem_union] at hz
-  cases hz
-  · exact hC z hz
+  cases hz; · exact hC z hz
   /- In case of a finite dimensional domain, one can just apply
     `complex.exists_mem_frontier_is_max_on_norm`. To make it work in any Banach space, we restrict
     the function to a line first. -/

@@ -187,9 +187,7 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} {B : Type.{u3}} [_inst_1 : Monoid.{u1} R] [_inst_2 : NonUnitalNonAssocSemiring.{u2} A] [_inst_3 : DistribMulAction.{u1, u2} R A _inst_1 (AddCommMonoid.toAddMonoid.{u2} A (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A _inst_2))] [_inst_4 : NonUnitalNonAssocSemiring.{u3} B] [_inst_5 : DistribMulAction.{u1, u3} R B _inst_1 (AddCommMonoid.toAddMonoid.{u3} B (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} B _inst_4))] {f : NonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5} {g : NonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5}, Iff (Eq.{max (succ u2) (succ u3)} (NonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f g) (forall (x : A), Eq.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.NonUnitalAlg._hyg.1412 : A) => B) x) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (NonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.NonUnitalAlg._hyg.1412 : A) => B) _x) (NonUnitalAlgHom.instFunLikeNonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) f x) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (NonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.NonUnitalAlg._hyg.1412 : A) => B) _x) (NonUnitalAlgHom.instFunLikeNonUnitalAlgHom.{u1, u2, u3} R A B _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) g x))
 Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.ext_iff NonUnitalAlgHom.ext_iffₓ'. -/
 theorem ext_iff {f g : A →ₙₐ[R] B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by
-    rintro rfl x
-    rfl, ext⟩
+  ⟨by rintro rfl x; rfl, ext⟩
 #align non_unital_alg_hom.ext_iff NonUnitalAlgHom.ext_iff
 
 /- warning: non_unital_alg_hom.congr_fun -> NonUnitalAlgHom.congr_fun is a dubious translation:
@@ -214,9 +212,7 @@ theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h
 <too large>
 Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.mk_coe NonUnitalAlgHom.mk_coeₓ'. -/
 @[simp]
-theorem mk_coe (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f :=
-  by
-  ext
+theorem mk_coe (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f := by ext;
   rfl
 #align non_unital_alg_hom.mk_coe NonUnitalAlgHom.mk_coe
 
@@ -258,9 +254,7 @@ theorem coe_to_mulHom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f
 
 #print NonUnitalAlgHom.to_distribMulActionHom_injective /-
 theorem to_distribMulActionHom_injective {f g : A →ₙₐ[R] B}
-    (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g :=
-  by
-  ext a
+    (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g := by ext a;
   exact DistribMulActionHom.congr_fun h a
 #align non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distribMulActionHom_injective
 -/
@@ -268,10 +262,8 @@ theorem to_distribMulActionHom_injective {f g : A →ₙₐ[R] B}
 /- warning: non_unital_alg_hom.to_mul_hom_injective -> NonUnitalAlgHom.to_mulHom_injective is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mulHom_injectiveₓ'. -/
-theorem to_mulHom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g :=
-  by
-  ext a
-  exact MulHom.congr_fun h a
+theorem to_mulHom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g := by
+  ext a; exact MulHom.congr_fun h a
 #align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mulHom_injective
 
 /- warning: non_unital_alg_hom.coe_distrib_mul_action_hom_mk -> NonUnitalAlgHom.coe_distribMulActionHom_mk is a dubious translation:
@@ -279,10 +271,7 @@ theorem to_mulHom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g
 Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distribMulActionHom_mkₓ'. -/
 @[norm_cast]
 theorem coe_distribMulActionHom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
-    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ :=
-  by
-  ext
-  rfl
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ := by ext; rfl
 #align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distribMulActionHom_mk
 
 /- warning: non_unital_alg_hom.coe_mul_hom_mk -> NonUnitalAlgHom.coe_mulHom_mk is a dubious translation:
@@ -290,10 +279,7 @@ theorem coe_distribMulActionHom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) 
 Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mulHom_mkₓ'. -/
 @[norm_cast]
 theorem coe_mulHom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
-    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ :=
-  by
-  ext
-  rfl
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by ext; rfl
 #align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mulHom_mk
 
 /- warning: non_unital_alg_hom.map_smul -> NonUnitalAlgHom.map_smul is a dubious translation:

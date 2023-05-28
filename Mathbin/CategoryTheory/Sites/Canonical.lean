@@ -239,10 +239,7 @@ namespace Subcanonical
 /-- If every functor `yoneda.obj X` is a `J`-sheaf, then `J` is subcanonical. -/
 theorem of_yoneda_isSheaf (J : GrothendieckTopology C)
     (h : ∀ X, Presieve.IsSheaf J (yoneda.obj X)) : Subcanonical J :=
-  le_finestTopology _ _
-    (by
-      rintro P ⟨X, rfl⟩
-      apply h)
+  le_finestTopology _ _ (by rintro P ⟨X, rfl⟩; apply h)
 #align category_theory.sheaf.subcanonical.of_yoneda_is_sheaf CategoryTheory.Sheaf.Subcanonical.of_yoneda_isSheaf
 
 /-- If `J` is subcanonical, then any representable is a `J`-sheaf. -/

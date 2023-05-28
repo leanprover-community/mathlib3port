@@ -423,10 +423,8 @@ theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z ''
   by
   rcases h with ⟨⟨t, ht, rfl⟩, hyx, hyz⟩
   rcases Set.eq_endpoints_or_mem_Ioo_of_mem_Icc ht with (rfl | rfl | ho)
-  · exfalso
-    simpa using hyx
-  · exfalso
-    simpa using hyz
+  · exfalso; simpa using hyx
+  · exfalso; simpa using hyz
   · exact ⟨t, ho, rfl⟩
 #align sbtw.mem_image_Ioo Sbtw.mem_image_Ioo
 
@@ -1049,29 +1047,17 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
   by
   -- Should not be needed; see comments on local instances in `data.sign`.
   letI : DecidableRel ((· < ·) : R → R → Prop) := LinearOrderedRing.decidableLt
-  have h₁₃ : i₁ ≠ i₃ := by
-    rintro rfl
-    simpa using h₂
-  have h₂₃ : i₂ ≠ i₃ := by
-    rintro rfl
-    simpa using h₁
-  have h3 : ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃ :=
-    by
-    clear h₁ h₂ h₁' h₂'
-    decide!
-  have hu : (Finset.univ : Finset (Fin 3)) = {i₁, i₂, i₃} :=
-    by
-    clear h₁ h₂ h₁' h₂'
-    decide!
+  have h₁₃ : i₁ ≠ i₃ := by rintro rfl; simpa using h₂
+  have h₂₃ : i₂ ≠ i₃ := by rintro rfl; simpa using h₁
+  have h3 : ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃ := by clear h₁ h₂ h₁' h₂'; decide!
+  have hu : (Finset.univ : Finset (Fin 3)) = {i₁, i₂, i₃} := by clear h₁ h₂ h₁' h₂'; decide!
   have hp : p ∈ affineSpan R (Set.range t.points) :=
     by
     have hle : line[R, t.points i₁, p₁] ≤ affineSpan R (Set.range t.points) :=
       by
       refine' affineSpan_pair_le_of_mem_of_mem (mem_affineSpan _ (Set.mem_range_self _)) _
-      have hle : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points) :=
-        by
-        refine' affineSpan_mono _ _
-        simp [Set.insert_subset]
+      have hle : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points) := by
+        refine' affineSpan_mono _ _; simp [Set.insert_subset]
       rw [AffineSubspace.le_def'] at hle
       exact hle _ h₁.wbtw.mem_affine_span
     rw [AffineSubspace.le_def'] at hle
@@ -1189,8 +1175,7 @@ theorem sbtw_iff_left_ne_and_right_mem_image_Ioi {x y z : P} :
     rw [Set.mem_Ici] at hr
     rcases hr.lt_or_eq with (hrlt | rfl)
     · exact Set.mem_image_of_mem _ hrlt
-    · exfalso
-      simpa using h
+    · exfalso; simpa using h
   · rcases h with ⟨hne, r, hr, rfl⟩
     rw [Set.mem_Ioi] at hr
     refine'
@@ -1417,12 +1402,10 @@ theorem Wbtw.collinear {x y z : P} (h : Wbtw R x y z) : Collinear R ({x, y, z} :
   intro p hp
   simp_rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
   rcases hp with (rfl | rfl | rfl)
-  · refine' ⟨0, _⟩
-    simp
+  · refine' ⟨0, _⟩; simp
   · rcases h with ⟨t, -, rfl⟩
     exact ⟨t, rfl⟩
-  · refine' ⟨1, _⟩
-    simp
+  · refine' ⟨1, _⟩; simp
 #align wbtw.collinear Wbtw.collinear
 
 /- warning: collinear.wbtw_or_wbtw_or_wbtw -> Collinear.wbtw_or_wbtw_or_wbtw is a dubious translation:
@@ -1467,10 +1450,8 @@ theorem wbtw_iff_sameRay_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x
   by
   refine' ⟨Wbtw.sameRay_vsub, fun h => _⟩
   rcases h with (h | h | ⟨r₁, r₂, hr₁, hr₂, h⟩)
-  · rw [vsub_eq_zero_iff_eq] at h
-    simp [h]
-  · rw [vsub_eq_zero_iff_eq] at h
-    simp [h]
+  · rw [vsub_eq_zero_iff_eq] at h; simp [h]
+  · rw [vsub_eq_zero_iff_eq] at h; simp [h]
   · refine'
       ⟨r₂ / (r₁ + r₂),
         ⟨div_nonneg hr₂.le (add_nonneg hr₁.le hr₂.le),
@@ -1516,10 +1497,8 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u3}) {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : LinearOrderedField.{u3} R] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u3, u2} R V (DivisionSemiring.toSemiring.{u3} R (Semifield.toDivisionSemiring.{u3} R (LinearOrderedSemifield.toSemifield.{u3} R (LinearOrderedField.toLinearOrderedSemifield.{u3} R _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : AddTorsor.{u2, u1} V P (AddCommGroup.toAddGroup.{u2} V _inst_2)] (x : P) (y : P), Wbtw.{u3, u2, u1} R V P (OrderedCommRing.toOrderedRing.{u3} R (StrictOrderedCommRing.toOrderedCommRing.{u3} R (LinearOrderedCommRing.toStrictOrderedCommRing.{u3} R (LinearOrderedField.toLinearOrderedCommRing.{u3} R _inst_1)))) _inst_2 _inst_3 _inst_4 x (midpoint.{u3, u2, u1} R V P (DivisionRing.toRing.{u3} R (Field.toDivisionRing.{u3} R (LinearOrderedField.toField.{u3} R _inst_1))) (invertibleTwo.{u3} R (Field.toDivisionRing.{u3} R (LinearOrderedField.toField.{u3} R _inst_1)) (StrictOrderedSemiring.to_charZero.{u3} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u3} R (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u3} R (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u3} R (LinearOrderedField.toLinearOrderedSemifield.{u3} R _inst_1)))))) _inst_2 _inst_3 _inst_4 x y) y
 Case conversion may be inaccurate. Consider using '#align wbtw_midpoint wbtw_midpointₓ'. -/
-theorem wbtw_midpoint (x y : P) : Wbtw R x (midpoint R x y) y :=
-  by
-  convert wbtw_pointReflection R (midpoint R x y) x
-  simp
+theorem wbtw_midpoint (x y : P) : Wbtw R x (midpoint R x y) y := by
+  convert wbtw_pointReflection R (midpoint R x y) x; simp
 #align wbtw_midpoint wbtw_midpoint
 
 /- warning: sbtw_midpoint_of_ne -> sbtw_midpoint_of_ne is a dubious translation:

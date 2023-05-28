@@ -159,19 +159,11 @@ def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolution Z
   π := 𝟙 ((ChainComplex.single₀ C).obj Z)
   Projective n := by
     cases n
-    · dsimp
-      infer_instance
-    · dsimp
-      infer_instance
-  exact₀ := by
-    dsimp
-    exact exact_zero_mono _
-  exact n := by
-    dsimp
-    exact exact_of_zero _ _
-  Epi := by
-    dsimp
-    infer_instance
+    · dsimp; infer_instance
+    · dsimp; infer_instance
+  exact₀ := by dsimp; exact exact_zero_mono _
+  exact n := by dsimp; exact exact_of_zero _ _
+  Epi := by dsimp; infer_instance
 #align category_theory.ProjectiveResolution.self CategoryTheory.ProjectiveResolution.self
 -/
 
@@ -232,11 +224,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.Projec
 /-- The resolution maps intertwine the lift of a morphism and that morphism. -/
 @[simp, reassoc]
 theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y)
-    (Q : ProjectiveResolution Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f :=
-  by
-  ext
-  dsimp [lift, lift_f_zero]
-  apply factor_thru_comp
+    (Q : ProjectiveResolution Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
+  ext; dsimp [lift, lift_f_zero]; apply factor_thru_comp
 #align category_theory.ProjectiveResolution.lift_commutes CategoryTheory.ProjectiveResolution.lift_commutes
 
 -- Now that we've checked this property of the lift,

@@ -193,15 +193,9 @@ instance homCategory (a b : B) : Category (Hom a b)
   Hom f g := Quot (@Rel _ _ _ _ f g)
   id f := Quot.mk Rel (Hom₂.id f)
   comp f g h := Quot.map₂ Hom₂.vcomp Rel.vcomp_right Rel.vcomp_left
-  id_comp' := by
-    rintro f g ⟨η⟩
-    exact Quot.sound (rel.id_comp η)
-  comp_id' := by
-    rintro f g ⟨η⟩
-    exact Quot.sound (rel.comp_id η)
-  assoc' := by
-    rintro f g h i ⟨η⟩ ⟨θ⟩ ⟨ι⟩
-    exact Quot.sound (rel.assoc η θ ι)
+  id_comp' := by rintro f g ⟨η⟩; exact Quot.sound (rel.id_comp η)
+  comp_id' := by rintro f g ⟨η⟩; exact Quot.sound (rel.comp_id η)
+  assoc' := by rintro f g h i ⟨η⟩ ⟨θ⟩ ⟨ι⟩; exact Quot.sound (rel.assoc η θ ι)
 #align category_theory.free_bicategory.hom_category CategoryTheory.FreeBicategory.homCategory
 -/
 
@@ -215,32 +209,19 @@ instance bicategory : Bicategory (FreeBicategory B)
   homCategory := FreeBicategory.homCategory
   whiskerLeft a b c f g h η := Quot.map (Hom₂.whisker_left f) (Rel.whisker_left f g h) η
   whiskerLeft_id a b c f g := Quot.sound (Rel.whisker_left_id f g)
-  whiskerLeft_comp := by
-    rintro a b c f g h i ⟨η⟩ ⟨θ⟩
+  whiskerLeft_comp := by rintro a b c f g h i ⟨η⟩ ⟨θ⟩;
     exact Quot.sound (rel.whisker_left_comp f η θ)
-  id_whiskerLeft := by
-    rintro a b f g ⟨η⟩
-    exact Quot.sound (rel.id_whisker_left η)
-  comp_whiskerLeft := by
-    rintro a b c d f g h h' ⟨η⟩
-    exact Quot.sound (rel.comp_whisker_left f g η)
+  id_whiskerLeft := by rintro a b f g ⟨η⟩; exact Quot.sound (rel.id_whisker_left η)
+  comp_whiskerLeft := by rintro a b c d f g h h' ⟨η⟩; exact Quot.sound (rel.comp_whisker_left f g η)
   whiskerRight a b c f g η h := Quot.map (Hom₂.whisker_right h) (Rel.whisker_right f g h) η
   id_whiskerRight a b c f g := Quot.sound (Rel.id_whisker_right f g)
-  comp_whiskerRight := by
-    rintro a b c f g h ⟨η⟩ ⟨θ⟩ i
+  comp_whiskerRight := by rintro a b c f g h ⟨η⟩ ⟨θ⟩ i;
     exact Quot.sound (rel.comp_whisker_right i η θ)
-  whiskerRight_id := by
-    rintro a b f g ⟨η⟩
-    exact Quot.sound (rel.whisker_right_id η)
-  whiskerRight_comp := by
-    rintro a b c d f f' ⟨η⟩ g h
+  whiskerRight_id := by rintro a b f g ⟨η⟩; exact Quot.sound (rel.whisker_right_id η)
+  whiskerRight_comp := by rintro a b c d f f' ⟨η⟩ g h;
     exact Quot.sound (rel.whisker_right_comp g h η)
-  whisker_assoc := by
-    rintro a b c d f g g' ⟨η⟩ h
-    exact Quot.sound (rel.whisker_assoc f η h)
-  whisker_exchange := by
-    rintro a b c f g h i ⟨η⟩ ⟨θ⟩
-    exact Quot.sound (rel.whisker_exchange η θ)
+  whisker_assoc := by rintro a b c d f g g' ⟨η⟩ h; exact Quot.sound (rel.whisker_assoc f η h)
+  whisker_exchange := by rintro a b c f g h i ⟨η⟩ ⟨θ⟩; exact Quot.sound (rel.whisker_exchange η θ)
   associator a b c d f g h :=
     { Hom := Quot.mk Rel (Hom₂.associator f g h)
       inv := Quot.mk Rel (Hom₂.associator_inv f g h)

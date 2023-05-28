@@ -150,25 +150,18 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   haveI : DecidablePred P := Classical.decPred P
   set z := mk p fun n => if P n then x.coeff n else y.coeff n with hz
   have hx : select P z = x := by
-    ext1 n
-    rw [select, coeff_mk, coeff_mk]
-    split_ifs with hn
-    · rfl
-    · rw [(h n).resolve_right hn]
+    ext1 n; rw [select, coeff_mk, coeff_mk]
+    split_ifs with hn; · rfl; · rw [(h n).resolve_right hn]
   have hy : select (fun i => ¬P i) z = y := by
-    ext1 n
-    rw [select, coeff_mk, coeff_mk]
-    split_ifs with hn
-    · exact hn.symm
-    · rfl
+    ext1 n; rw [select, coeff_mk, coeff_mk]
+    split_ifs with hn; · exact hn.symm; · rfl
   calc
     (x + y).coeff n = z.coeff n := by rw [← hx, ← hy, select_add_select_not P z]
     _ = x.coeff n + y.coeff n := _
     
   dsimp [z]
   split_ifs with hn
-  · dsimp [P] at hn
-    rw [hn, add_zero]
+  · dsimp [P] at hn; rw [hn, add_zero]
   · rw [(h n).resolve_right hn, zero_add]
 #align witt_vector.coeff_add_of_disjoint WittVector.coeff_add_of_disjoint
 

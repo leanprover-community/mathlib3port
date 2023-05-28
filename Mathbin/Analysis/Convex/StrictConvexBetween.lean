@@ -42,10 +42,8 @@ theorem Sbtw.dist_lt_max_dist (p : P) {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p�
   rw [Sbtw, ← wbtw_vsub_const_iff p, Wbtw, affineSegment_eq_segment, ← insert_endpoints_openSegment,
     Set.mem_insert_iff, Set.mem_insert_iff] at h
   rcases h with ⟨h | h | h, hp₂p₁, hp₂p₃⟩
-  · rw [vsub_left_cancel_iff] at h
-    exact False.elim (hp₂p₁ h)
-  · rw [vsub_left_cancel_iff] at h
-    exact False.elim (hp₂p₃ h)
+  · rw [vsub_left_cancel_iff] at h; exact False.elim (hp₂p₁ h)
+  · rw [vsub_left_cancel_iff] at h; exact False.elim (hp₂p₃ h)
   · rw [openSegment_eq_image, Set.mem_image] at h
     rcases h with ⟨r, ⟨hr0, hr1⟩, hr⟩
     simp_rw [@dist_eq_norm_vsub V, ← hr]
@@ -82,14 +80,12 @@ theorem Collinear.wbtw_of_dist_eq_of_dist_le {p p₁ p₂ p₃ : P} {r : ℝ}
   by
   rcases h.wbtw_or_wbtw_or_wbtw with (hw | hw | hw)
   · exact hw
-  · by_cases hp₃p₂ : p₃ = p₂
-    · simp [hp₃p₂]
+  · by_cases hp₃p₂ : p₃ = p₂; · simp [hp₃p₂]
     have hs : Sbtw ℝ p₂ p₃ p₁ := ⟨hw, hp₃p₂, hp₁p₃.symm⟩
     have hs' := hs.dist_lt_max_dist p
     rw [hp₁, hp₃, lt_max_iff, lt_self_iff_false, or_false_iff] at hs'
     exact False.elim (hp₂.not_lt hs')
-  · by_cases hp₁p₂ : p₁ = p₂
-    · simp [hp₁p₂]
+  · by_cases hp₁p₂ : p₁ = p₂; · simp [hp₁p₂]
     have hs : Sbtw ℝ p₃ p₁ p₂ := ⟨hw, hp₁p₃, hp₁p₂⟩
     have hs' := hs.dist_lt_max_dist p
     rw [hp₁, hp₃, lt_max_iff, lt_self_iff_false, false_or_iff] at hs'
@@ -109,9 +105,7 @@ theorem Collinear.sbtw_of_dist_eq_of_dist_lt {p p₁ p₂ p₃ : P} {r : ℝ}
     (hp₃ : dist p₃ p = r) (hp₁p₃ : p₁ ≠ p₃) : Sbtw ℝ p₁ p₂ p₃ :=
   by
   refine' ⟨h.wbtw_of_dist_eq_of_dist_le hp₁ hp₂.le hp₃ hp₁p₃, _, _⟩
-  · rintro rfl
-    exact hp₂.ne hp₁
-  · rintro rfl
-    exact hp₂.ne hp₃
+  · rintro rfl; exact hp₂.ne hp₁
+  · rintro rfl; exact hp₂.ne hp₃
 #align collinear.sbtw_of_dist_eq_of_dist_lt Collinear.sbtw_of_dist_eq_of_dist_lt
 

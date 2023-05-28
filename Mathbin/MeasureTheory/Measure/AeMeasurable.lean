@@ -127,25 +127,16 @@ Case conversion may be inaccurate. Consider using '#align ae_measurable.sum_meas
 @[measurability]
 theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasurable f (μ i)) :
     AEMeasurable f (Sum μ) := by
-  nontriviality β
-  inhabit β
+  nontriviality β; inhabit β
   set s : ι → Set α := fun i => to_measurable (μ i) { x | f x ≠ (h i).mk f x }
-  have hsμ : ∀ i, μ i (s i) = 0 := by
-    intro i
-    rw [measure_to_measurable]
-    exact (h i).ae_eq_mk
+  have hsμ : ∀ i, μ i (s i) = 0 := by intro i; rw [measure_to_measurable]; exact (h i).ae_eq_mk
   have hsm : MeasurableSet (⋂ i, s i) :=
     MeasurableSet.iInter fun i => measurable_set_to_measurable _ _
-  have hs : ∀ i x, x ∉ s i → f x = (h i).mk f x :=
-    by
-    intro i x hx
-    contrapose! hx
+  have hs : ∀ i x, x ∉ s i → f x = (h i).mk f x := by intro i x hx; contrapose! hx;
     exact subset_to_measurable _ _ hx
   set g : α → β := (⋂ i, s i).piecewise (const α default) f
   refine' ⟨g, measurable_of_restrict_of_restrict_compl hsm _ _, ae_sum_iff.mpr fun i => _⟩
-  · rw [restrict_piecewise]
-    simp only [Set.restrict, const]
-    exact measurable_const
+  · rw [restrict_piecewise]; simp only [Set.restrict, const]; exact measurable_const
   · rw [restrict_piecewise_compl, compl_Inter]
     intro t ht
     refine'
@@ -157,14 +148,10 @@ theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasur
     simp only [mem_preimage, mem_Union, Subtype.coe_mk, Set.restrict, mem_inter_iff,
       mem_compl_iff] at hx⊢
     constructor
-    · rintro ⟨i, hxt, hxs⟩
-      rwa [hs _ _ hxs]
-    · rcases hx with ⟨i, hi⟩
-      rw [hs _ _ hi]
-      exact fun h => ⟨i, h, hi⟩
+    · rintro ⟨i, hxt, hxs⟩; rwa [hs _ _ hxs]
+    · rcases hx with ⟨i, hi⟩; rw [hs _ _ hi]; exact fun h => ⟨i, h, hi⟩
   · refine' measure_mono_null (fun x (hx : f x ≠ g x) => _) (hsμ i)
-    contrapose! hx
-    refine' (piecewise_eq_of_not_mem _ _ _ _).symm
+    contrapose! hx; refine' (piecewise_eq_of_not_mem _ _ _ _).symm
     exact fun h => hx (mem_Inter.1 h i)
 #align ae_measurable.sum_measure AEMeasurable.sum_measure
 
@@ -185,10 +172,8 @@ theorem aemeasurable_sum_measure_iff [Countable ι] {μ : ι → Measure α} :
 Case conversion may be inaccurate. Consider using '#align ae_measurable_add_measure_iff aemeasurable_add_measure_iffₓ'. -/
 @[simp]
 theorem aemeasurable_add_measure_iff :
-    AEMeasurable f (μ + ν) ↔ AEMeasurable f μ ∧ AEMeasurable f ν :=
-  by
-  rw [← sum_cond, aemeasurable_sum_measure_iff, Bool.forall_bool, and_comm]
-  rfl
+    AEMeasurable f (μ + ν) ↔ AEMeasurable f μ ∧ AEMeasurable f ν := by
+  rw [← sum_cond, aemeasurable_sum_measure_iff, Bool.forall_bool, and_comm]; rfl
 #align ae_measurable_add_measure_iff aemeasurable_add_measure_iff
 
 /- warning: ae_measurable.add_measure -> AEMeasurable.add_measure is a dubious translation:
@@ -588,9 +573,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.measure
 theorem MeasureTheory.Measure.restrict_map_of_aemeasurable {f : α → δ} (hf : AEMeasurable f μ)
     {s : Set δ} (hs : MeasurableSet s) : (μ.map f).restrict s = (μ.restrict <| f ⁻¹' s).map f :=
   calc
-    (μ.map f).restrict s = (μ.map (hf.mk f)).restrict s :=
-      by
-      congr 1
+    (μ.map f).restrict s = (μ.map (hf.mk f)).restrict s := by congr 1;
       apply measure.map_congr hf.ae_eq_mk
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map (hf.mk f) := (Measure.restrict_map hf.measurable_mk hs)
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map f :=

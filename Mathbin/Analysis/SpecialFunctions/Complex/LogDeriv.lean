@@ -47,17 +47,12 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
           simpa [log_im, neg_pi_lt_arg, (arg_le_pi _).lt_iff_ne, arg_eq_pi_iff, not_and_or]
         h.imp (fun h => le_of_lt h) id
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2)
-      right_inv' := fun x hx =>
-        exp_log <| by
-          rintro rfl
-          simpa [lt_irrefl] using hx }
+      right_inv' := fun x hx => exp_log <| by rintro rfl; simpa [lt_irrefl] using hx }
     continuous_exp.ContinuousOn isOpenMap_exp (isOpen_Ioo.Preimage continuous_im)
 #align complex.exp_local_homeomorph Complex.expLocalHomeomorph
 
 theorem hasStrictDerivAt_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
-  have h0 : x ≠ 0 := by
-    rintro rfl
-    simpa [lt_irrefl] using h
+  have h0 : x ≠ 0 := by rintro rfl; simpa [lt_irrefl] using h
   expLocalHomeomorph.hasStrictDerivAt_symm h h0 <| by
     simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 #align complex.has_strict_deriv_at_log Complex.hasStrictDerivAt_log
@@ -88,10 +83,8 @@ theorem HasStrictFDerivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h
 #align has_strict_fderiv_at.clog HasStrictFDerivAt.clog
 
 theorem HasStrictDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasStrictDerivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictDerivAt (fun t => log (f t)) (f' / f x) x :=
-  by
-  rw [div_eq_inv_mul]
-  exact (has_strict_deriv_at_log h₂).comp x h₁
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictDerivAt (fun t => log (f t)) (f' / f x) x := by
+  rw [div_eq_inv_mul]; exact (has_strict_deriv_at_log h₂).comp x h₁
 #align has_strict_deriv_at.clog HasStrictDerivAt.clog
 
 theorem HasStrictDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ : HasStrictDerivAt f f' x)
@@ -105,10 +98,8 @@ theorem HasFDerivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : 
 #align has_fderiv_at.clog HasFDerivAt.clog
 
 theorem HasDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasDerivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivAt (fun t => log (f t)) (f' / f x) x :=
-  by
-  rw [div_eq_inv_mul]
-  exact (has_strict_deriv_at_log h₂).HasDerivAt.comp x h₁
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivAt (fun t => log (f t)) (f' / f x) x := by
+  rw [div_eq_inv_mul]; exact (has_strict_deriv_at_log h₂).HasDerivAt.comp x h₁
 #align has_deriv_at.clog HasDerivAt.clog
 
 theorem HasDerivAt.clog_real {f : ℝ → ℂ} {x : ℝ} {f' : ℂ} (h₁ : HasDerivAt f f' x)

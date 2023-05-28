@@ -170,10 +170,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {A : Type.{u3}} [_inst_2 : Semiring.{u3} A] [_inst_3 : Algebra.{u2, u3} R A _inst_1 _inst_2] {A' : Type.{u1}} [_inst_4 : Semiring.{u1} A'] [_inst_5 : Algebra.{u2, u1} R A' _inst_1 _inst_4] (f : AlgHom.{u2, u3, u1} R A A' _inst_1 _inst_2 _inst_4 _inst_3 _inst_5), Eq.{succ u1} (Submodule.{u2, u1} R A' (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5)) (Submodule.map.{u2, u2, u3, u1, max u3 u1} R R A A' (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_2))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u3} R A _inst_1 _inst_2 _inst_3) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (RingHomSurjective.ids.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (LinearMap.{u2, u2, u3, u1} R R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) A A' (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_2))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u3} R A _inst_1 _inst_2 _inst_3) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5)) (LinearMap.semilinearMapClass.{u2, u2, u3, u1} R R A A' (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_2))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u3} R A _inst_1 _inst_2 _inst_3) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (AlgHom.toLinearMap.{u2, u3, u1} R A A' _inst_1 _inst_2 _inst_4 _inst_3 _inst_5 f) (OfNat.ofNat.{u3} (Submodule.{u2, u3} R A (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_2))) (Algebra.toModule.{u2, u3} R A _inst_1 _inst_2 _inst_3)) 1 (One.toOfNat1.{u3} (Submodule.{u2, u3} R A (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_2))) (Algebra.toModule.{u2, u3} R A _inst_1 _inst_2 _inst_3)) (Submodule.one.{u2, u3} R _inst_1 A _inst_2 _inst_3)))) (OfNat.ofNat.{u1} (Submodule.{u2, u1} R A' (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5)) 1 (One.toOfNat1.{u1} (Submodule.{u2, u1} R A' (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} A' (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} A' (Semiring.toNonAssocSemiring.{u1} A' _inst_4))) (Algebra.toModule.{u2, u1} R A' _inst_1 _inst_4 _inst_5)) (Submodule.one.{u2, u1} R _inst_1 A' _inst_4 _inst_5)))
 Case conversion may be inaccurate. Consider using '#align submodule.map_one Submodule.map_oneₓ'. -/
 protected theorem map_one {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') :
-    map f.toLinearMap (1 : Submodule R A) = 1 :=
-  by
-  ext
-  simp
+    map f.toLinearMap (1 : Submodule R A) = 1 := by ext; simp
 #align submodule.map_one Submodule.map_one
 
 /- warning: submodule.map_op_one -> Submodule.map_op_one is a dubious translation:
@@ -181,11 +178,8 @@ protected theorem map_one {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
 Case conversion may be inaccurate. Consider using '#align submodule.map_op_one Submodule.map_op_oneₓ'. -/
 @[simp]
 theorem map_op_one :
-    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R A) = 1 :=
-  by
-  ext
-  induction x using MulOpposite.rec'
-  simp
+    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R A) = 1 := by ext;
+  induction x using MulOpposite.rec'; simp
 #align submodule.map_op_one Submodule.map_op_one
 
 /- warning: submodule.comap_op_one -> Submodule.comap_op_one is a dubious translation:
@@ -193,9 +187,7 @@ theorem map_op_one :
 Case conversion may be inaccurate. Consider using '#align submodule.comap_op_one Submodule.comap_op_oneₓ'. -/
 @[simp]
 theorem comap_op_one :
-    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R Aᵐᵒᵖ) = 1 :=
-  by
-  ext
+    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R Aᵐᵒᵖ) = 1 := by ext;
   simp
 #align submodule.comap_op_one Submodule.comap_op_one
 
@@ -317,18 +309,14 @@ theorem bot_mul : ⊥ * M = ⊥ :=
 
 #print Submodule.one_mul /-
 @[simp]
-protected theorem one_mul : (1 : Submodule R A) * M = M :=
-  by
-  conv_lhs => rw [one_eq_span, ← span_eq M]
-  erw [span_mul_span, one_mul, span_eq]
+protected theorem one_mul : (1 : Submodule R A) * M = M := by
+  conv_lhs => rw [one_eq_span, ← span_eq M]; erw [span_mul_span, one_mul, span_eq]
 #align submodule.one_mul Submodule.one_mul
 -/
 
 #print Submodule.mul_one /-
 @[simp]
-protected theorem mul_one : M * 1 = M :=
-  by
-  conv_lhs => rw [one_eq_span, ← span_eq M]
+protected theorem mul_one : M * 1 = M := by conv_lhs => rw [one_eq_span, ← span_eq M];
   erw [span_mul_span, mul_one, span_eq]
 #align submodule.mul_one Submodule.mul_one
 -/
@@ -539,10 +527,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {A : Type.{u2}} [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {P : Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)} {x : A} {y : A}, Iff (Membership.mem.{u2, u2} A (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) A (Submodule.setLike.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3))) x (HMul.hMul.{u2, u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (instHMul.{u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.mul.{u1, u2} R _inst_1 A _inst_2 _inst_3)) (Submodule.span.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3) (Singleton.singleton.{u2, u2} A (Set.{u2} A) (Set.instSingletonSet.{u2} A) y)) P)) (Exists.{succ u2} A (fun (z : A) => And (Membership.mem.{u2, u2} A (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) A (Submodule.setLike.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3))) z P) (Eq.{succ u2} A (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (NonUnitalNonAssocSemiring.toMul.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2)))) y z) x)))
 Case conversion may be inaccurate. Consider using '#align submodule.mem_span_singleton_mul Submodule.mem_span_singleton_mulₓ'. -/
-theorem mem_span_singleton_mul {x y : A} : x ∈ span R {y} * P ↔ ∃ z ∈ P, y * z = x :=
-  by
-  simp_rw [(· * ·), map₂_span_singleton_eq_map, exists_prop]
-  rfl
+theorem mem_span_singleton_mul {x y : A} : x ∈ span R {y} * P ↔ ∃ z ∈ P, y * z = x := by
+  simp_rw [(· * ·), map₂_span_singleton_eq_map, exists_prop]; rfl
 #align submodule.mem_span_singleton_mul Submodule.mem_span_singleton_mul
 
 /- warning: submodule.mem_mul_span_singleton -> Submodule.mem_mul_span_singleton is a dubious translation:
@@ -551,10 +537,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {A : Type.{u2}} [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] {P : Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)} {x : A} {y : A}, Iff (Membership.mem.{u2, u2} A (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) A (Submodule.setLike.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3))) x (HMul.hMul.{u2, u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (instHMul.{u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (Submodule.mul.{u1, u2} R _inst_1 A _inst_2 _inst_3)) P (Submodule.span.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3) (Singleton.singleton.{u2, u2} A (Set.{u2} A) (Set.instSingletonSet.{u2} A) y)))) (Exists.{succ u2} A (fun (z : A) => And (Membership.mem.{u2, u2} A (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3)) A (Submodule.setLike.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2))) (Algebra.toModule.{u1, u2} R A _inst_1 _inst_2 _inst_3))) z P) (Eq.{succ u2} A (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (NonUnitalNonAssocSemiring.toMul.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A _inst_2)))) z y) x)))
 Case conversion may be inaccurate. Consider using '#align submodule.mem_mul_span_singleton Submodule.mem_mul_span_singletonₓ'. -/
-theorem mem_mul_span_singleton {x y : A} : x ∈ P * span R {y} ↔ ∃ z ∈ P, z * y = x :=
-  by
-  simp_rw [(· * ·), map₂_span_singleton_eq_map_flip, exists_prop]
-  rfl
+theorem mem_mul_span_singleton {x y : A} : x ∈ P * span R {y} ↔ ∃ z ∈ P, z * y = x := by
+  simp_rw [(· * ·), map₂_span_singleton_eq_map_flip, exists_prop]; rfl
 #align submodule.mem_mul_span_singleton Submodule.mem_mul_span_singleton
 
 /-- Sub-R-modules of an R-algebra form an idempotent semiring. -/
@@ -617,8 +601,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.le_pow_to_ad
 theorem le_pow_toAddSubmonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAddSubmonoid :=
   by
   obtain rfl | hn := Decidable.eq_or_ne n 0
-  · rw [pow_zero, pow_zero]
-    exact le_one_to_add_submonoid
+  · rw [pow_zero, pow_zero]; exact le_one_to_add_submonoid
   · exact (pow_to_add_submonoid M hn).ge
 #align submodule.le_pow_to_add_submonoid Submodule.le_pow_toAddSubmonoid
 
@@ -909,8 +892,7 @@ theorem smul_singleton (a : A) (M : Submodule R A) :
     rintro _ ⟨b, m, hb, hm, rfl⟩
     rw [SetLike.mem_coe, mem_map, set.mem_singleton_iff.mp hb]
     exact ⟨m, hm, rfl⟩
-  · rintro _ ⟨m, hm, rfl⟩
-    exact subset_span ⟨a, m, Set.mem_singleton a, hm, rfl⟩
+  · rintro _ ⟨m, hm, rfl⟩; exact subset_span ⟨a, m, Set.mem_singleton a, hm, rfl⟩
 #align submodule.smul_singleton Submodule.smul_singleton
 -/
 
@@ -926,11 +908,8 @@ This is the general form of the ideal quotient, traditionally written $I : J$.
 instance : Div (Submodule R A) :=
   ⟨fun I J =>
     { carrier := { x | ∀ y ∈ J, x * y ∈ I }
-      zero_mem' := fun y hy => by
-        rw [MulZeroClass.zero_mul]
-        apply Submodule.zero_mem
-      add_mem' := fun a b ha hb y hy => by
-        rw [add_mul]
+      zero_mem' := fun y hy => by rw [MulZeroClass.zero_mul]; apply Submodule.zero_mem
+      add_mem' := fun a b ha hb y hy => by rw [add_mul];
         exact Submodule.add_mem _ (ha _ hy) (hb _ hy)
       smul_mem' := fun r x hx y hy => by
         rw [Algebra.smul_mul_assoc]
@@ -947,10 +926,8 @@ theorem mem_div_iff_forall_mul_mem {x : A} {I J : Submodule R A} : x ∈ I / J �
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.mem_div_iff_smul_subset Submodule.mem_div_iff_smul_subsetₓ'. -/
 theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ x • (J : Set A) ⊆ I :=
-  ⟨fun h y ⟨y', hy', xy'_eq_y⟩ => by
-    rw [← xy'_eq_y]
-    apply h
-    assumption, fun h y hy => h (Set.smul_mem_smul_set hy)⟩
+  ⟨fun h y ⟨y', hy', xy'_eq_y⟩ => by rw [← xy'_eq_y]; apply h; assumption, fun h y hy =>
+    h (Set.smul_mem_smul_set hy)⟩
 #align submodule.mem_div_iff_smul_subset Submodule.mem_div_iff_smul_subset
 
 /- warning: submodule.le_div_iff -> Submodule.le_div_iff is a dubious translation:

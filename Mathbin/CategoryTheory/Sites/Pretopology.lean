@@ -208,8 +208,7 @@ def trivial : Pretopology C
   pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩
     refine' ⟨pullback g f, pullback.snd, _, _⟩
-    · skip
-      refine' ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _) (by simp), ⟨_, by tidy⟩⟩⟩
+    · skip; refine' ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _) (by simp), ⟨_, by tidy⟩⟩⟩
       apply pullback.hom_ext
       · rw [assoc, pullback.lift_fst, ← pullback.condition_assoc]
         simp
@@ -219,8 +218,7 @@ def trivial : Pretopology C
     rintro X S Ti ⟨Z, g, i, rfl⟩ hS
     rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩
     refine' ⟨_, f ≫ g, _, _⟩
-    · skip
-      infer_instance
+    · skip; infer_instance
     ext (W k)
     constructor
     · rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩

@@ -104,9 +104,7 @@ variable {α} (c : ClosureOperator α)
 #print ClosureOperator.ext /-
 @[ext]
 theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : α → α) → c₁ = c₂
-  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by
-    congr
-    exact h
+  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by congr ; exact h
 #align closure_operator.ext ClosureOperator.ext
 -/
 
@@ -259,10 +257,7 @@ theorem closure_is_closed (x : α) : c x ∈ c.closed :=
 #print ClosureOperator.closed_eq_range_close /-
 /-- The set of closed elements for `c` is exactly its range. -/
 theorem closed_eq_range_close : c.closed = Set.range c :=
-  Set.ext fun x =>
-    ⟨fun h => ⟨x, h⟩, by
-      rintro ⟨y, rfl⟩
-      apply c.idempotent⟩
+  Set.ext fun x => ⟨fun h => ⟨x, h⟩, by rintro ⟨y, rfl⟩; apply c.idempotent⟩
 #align closure_operator.closed_eq_range_close ClosureOperator.closed_eq_range_close
 -/
 
@@ -291,9 +286,7 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
     c =
       mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy =>
         (c.closure_le_closed_iff_le x hy).2 hxy :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
 -/
 
@@ -497,9 +490,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.ext LowerAdjoint.extₓ'. -/
 @[ext]
 theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
-  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by
-    congr
-    exact h
+  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by congr ; exact h
 #align lower_adjoint.ext LowerAdjoint.ext
 
 /- warning: lower_adjoint.monotone -> LowerAdjoint.monotone is a dubious translation:
@@ -904,9 +895,7 @@ operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
 theorem closureOperator_gi_self [PartialOrder α] (c : ClosureOperator α) :
-    c.gi.gc.ClosureOperator = c := by
-  ext x
-  rfl
+    c.gi.gc.ClosureOperator = c := by ext x; rfl
 #align closure_operator_gi_self closureOperator_gi_self
 -/
 

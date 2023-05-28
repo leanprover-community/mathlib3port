@@ -95,9 +95,7 @@ Case conversion may be inaccurate. Consider using '#align factor_thru_image_subo
 -- This is less useful as a `simp` lemma than it initially appears,
 -- as it "loses" the information the morphism factors through the image.
 theorem factorThruImageSubobject_comp_imageToKernel (w : f ≫ g = 0) :
-    factorThruImageSubobject f ≫ imageToKernel f g w = factorThruKernelSubobject g f w :=
-  by
-  ext
+    factorThruImageSubobject f ≫ imageToKernel f g w = factorThruKernelSubobject g f w := by ext;
   simp
 #align factor_thru_image_subobject_comp_image_to_kernel factorThruImageSubobject_comp_imageToKernel
 
@@ -112,9 +110,7 @@ variable {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
 Case conversion may be inaccurate. Consider using '#align image_to_kernel_zero_left imageToKernel_zero_leftₓ'. -/
 @[simp]
 theorem imageToKernel_zero_left [HasKernels V] [HasZeroObject V] {w} :
-    imageToKernel (0 : A ⟶ B) g w = 0 := by
-  ext
-  simp
+    imageToKernel (0 : A ⟶ B) g w = 0 := by ext; simp
 #align image_to_kernel_zero_left imageToKernel_zero_left
 
 /- warning: image_to_kernel_zero_right -> imageToKernel_zero_right is a dubious translation:
@@ -123,9 +119,7 @@ Case conversion may be inaccurate. Consider using '#align image_to_kernel_zero_r
 theorem imageToKernel_zero_right [HasImages V] {w} :
     imageToKernel f (0 : B ⟶ C) w =
       (imageSubobject f).arrow ≫ inv (kernelSubobject (0 : B ⟶ C)).arrow :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_zero_right imageToKernel_zero_right
 
 section
@@ -138,9 +132,7 @@ Case conversion may be inaccurate. Consider using '#align image_to_kernel_comp_r
 theorem imageToKernel_comp_right {D : V} (h : C ⟶ D) (w : f ≫ g = 0) :
     imageToKernel f (g ≫ h) (by simp [reassoc_of w]) =
       imageToKernel f g w ≫ Subobject.ofLE _ _ (kernelSubobject_comp_le g h) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_comp_right imageToKernel_comp_right
 
 /- warning: image_to_kernel_comp_left -> imageToKernel_comp_left is a dubious translation:
@@ -149,9 +141,7 @@ Case conversion may be inaccurate. Consider using '#align image_to_kernel_comp_l
 theorem imageToKernel_comp_left {Z : V} (h : Z ⟶ A) (w : f ≫ g = 0) :
     imageToKernel (h ≫ f) g (by simp [w]) =
       Subobject.ofLE _ _ (imageSubobject_comp_le h f) ≫ imageToKernel f g w :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_comp_left imageToKernel_comp_left
 
 /- warning: image_to_kernel_comp_mono -> imageToKernel_comp_mono is a dubious translation:
@@ -162,9 +152,7 @@ theorem imageToKernel_comp_mono {D : V} (h : C ⟶ D) [Mono h] (w) :
     imageToKernel f (g ≫ h) w =
       imageToKernel f g ((cancel_mono h).mp (by simpa using w : (f ≫ g) ≫ h = 0 ≫ h)) ≫
         (Subobject.isoOfEq _ _ (kernelSubobject_comp_mono g h)).inv :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_comp_mono imageToKernel_comp_mono
 
 /- warning: image_to_kernel_epi_comp -> imageToKernel_epi_comp is a dubious translation:
@@ -175,9 +163,7 @@ theorem imageToKernel_epi_comp {Z : V} (h : Z ⟶ A) [Epi h] (w) :
     imageToKernel (h ≫ f) g w =
       Subobject.ofLE _ _ (imageSubobject_comp_le h f) ≫
         imageToKernel f g ((cancel_epi h).mp (by simpa using w : h ≫ f ≫ g = h ≫ 0)) :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_epi_comp imageToKernel_epi_comp
 
 end
@@ -190,9 +176,7 @@ theorem imageToKernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} 
     imageToKernel (f ≫ i.Hom) (i.inv ≫ g) w =
       (imageSubobjectCompIso _ _).Hom ≫
         imageToKernel f g (by simpa using w) ≫ (kernelSubobjectIsoComp i.inv g).inv :=
-  by
-  ext
-  simp
+  by ext; simp
 #align image_to_kernel_comp_hom_inv_comp imageToKernel_comp_hom_inv_comp
 
 open ZeroObject
@@ -292,10 +276,7 @@ Case conversion may be inaccurate. Consider using '#align homology.ext homology.
 /-- To check two morphisms out of `homology f g w` are equal, it suffices to check on cycles. -/
 @[ext]
 theorem homology.ext {D : V} {k k' : homology f g w ⟶ D}
-    (p : homology.π f g w ≫ k = homology.π f g w ≫ k') : k = k' :=
-  by
-  ext
-  exact p
+    (p : homology.π f g w ≫ k = homology.π f g w ≫ k') : k = k' := by ext; exact p
 #align homology.ext homology.ext
 
 /- warning: homology_of_zero_right -> homologyOfZeroRight is a dubious translation:
@@ -357,10 +338,8 @@ the `image_to_kernel` morphisms intertwine the induced map on kernels and the in
 -/
 @[reassoc]
 theorem imageSubobjectMap_comp_imageToKernel (p : α.right = β.left) :
-    imageToKernel f g w ≫ kernelSubobjectMap β = imageSubobjectMap α ≫ imageToKernel f' g' w' :=
-  by
-  ext
-  simp [p]
+    imageToKernel f g w ≫ kernelSubobjectMap β = imageSubobjectMap α ≫ imageToKernel f' g' w' := by
+  ext; simp [p]
 #align image_subobject_map_comp_image_to_kernel imageSubobjectMap_comp_imageToKernel
 -/
 
@@ -449,12 +428,8 @@ def homology.mapIso (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ �
         rw [← cancel_mono α.hom.right, ← comma.comp_right, α.inv_hom_id, comma.id_right, p, ←
           comma.comp_left, β.inv_hom_id, comma.id_left]
         rfl)
-  hom_inv_id' := by
-    rw [homology.map_comp]
-    convert homology.map_id _ <;> rw [iso.hom_inv_id]
-  inv_hom_id' := by
-    rw [homology.map_comp]
-    convert homology.map_id _ <;> rw [iso.inv_hom_id]
+  hom_inv_id' := by rw [homology.map_comp]; convert homology.map_id _ <;> rw [iso.hom_inv_id]
+  inv_hom_id' := by rw [homology.map_comp]; convert homology.map_id _ <;> rw [iso.inv_hom_id]
 #align homology.map_iso homology.mapIso
 
 end
@@ -530,10 +505,7 @@ this variant provides a morphism
 which is sometimes more convenient.
 -/
 def imageToKernel' (w : f ≫ g = 0) : image f ⟶ kernel g :=
-  kernel.lift g (image.ι f)
-    (by
-      ext
-      simpa using w)
+  kernel.lift g (image.ι f) (by ext; simpa using w)
 #align image_to_kernel' imageToKernel'
 -/
 
@@ -544,9 +516,7 @@ Case conversion may be inaccurate. Consider using '#align image_subobject_iso_im
 theorem imageSubobjectIso_imageToKernel' (w : f ≫ g = 0) :
     (imageSubobjectIso f).Hom ≫ imageToKernel' f g w =
       imageToKernel f g w ≫ (kernelSubobjectIso g).Hom :=
-  by
-  ext
-  simp [imageToKernel']
+  by ext; simp [imageToKernel']
 #align image_subobject_iso_image_to_kernel' imageSubobjectIso_imageToKernel'
 
 /- warning: image_to_kernel'_kernel_subobject_iso -> imageToKernel'_kernelSubobjectIso is a dubious translation:
@@ -556,9 +526,7 @@ Case conversion may be inaccurate. Consider using '#align image_to_kernel'_kerne
 theorem imageToKernel'_kernelSubobjectIso (w : f ≫ g = 0) :
     imageToKernel' f g w ≫ (kernelSubobjectIso g).inv =
       (imageSubobjectIso f).inv ≫ imageToKernel f g w :=
-  by
-  ext
-  simp [imageToKernel']
+  by ext; simp [imageToKernel']
 #align image_to_kernel'_kernel_subobject_iso imageToKernel'_kernelSubobjectIso
 
 variable [HasCokernels V]
@@ -580,8 +548,7 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) :
     simp only [iso.hom_inv_id_assoc, cokernel.π_desc, cokernel.π_desc_assoc, category.assoc,
       coequalizer_as_cokernel]
     exact (category.comp_id _).symm
-  inv_hom_id' := by
-    ext1
+  inv_hom_id' := by ext1;
     simp only [iso.inv_hom_id_assoc, cokernel.π_desc, category.comp_id, cokernel.π_desc_assoc,
       category.assoc]
 #align homology_iso_cokernel_image_to_kernel' homologyIsoCokernelImageToKernel'
@@ -595,9 +562,7 @@ variable [HasEqualizers V]
 def homologyIsoCokernelLift (w : f ≫ g = 0) : homology f g w ≅ cokernel (kernel.lift g f w) :=
   by
   refine' homologyIsoCokernelImageToKernel' f g w ≪≫ _
-  have p : factor_thru_image f ≫ imageToKernel' f g w = kernel.lift g f w :=
-    by
-    ext
+  have p : factor_thru_image f ≫ imageToKernel' f g w = kernel.lift g f w := by ext;
     simp [imageToKernel']
   exact (cokernel_epi_comp _ _).symm ≪≫ cokernel_iso_of_eq p
 #align homology_iso_cokernel_lift homologyIsoCokernelLift

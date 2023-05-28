@@ -97,10 +97,7 @@ variable [NonUnitalNonAssocSemiring α]
 instance : CentroidHomClass (CentroidHom α) α
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
   map_zero f := f.map_zero'
   map_add f := f.map_add'
   map_mul_left f := f.map_mul_left'
@@ -373,11 +370,9 @@ instance hasNsmul : SMul ℕ (CentroidHom α) :=
       (n • f :
         α →+
           α) with
-      map_mul_left' := fun a b => by
-        change n • f (a * b) = a * n • f b
+      map_mul_left' := fun a b => by change n • f (a * b) = a * n • f b;
         rw [map_mul_left f, ← mul_smul_comm]
-      map_mul_right' := fun a b => by
-        change n • f (a * b) = n • f a * b
+      map_mul_right' := fun a b => by change n • f (a * b) = n • f a * b;
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
 #align centroid_hom.has_nsmul CentroidHom.hasNsmul
 -/
@@ -589,10 +584,7 @@ theorem toEnd_mul (x y : CentroidHom α) : (x * y).toEnd = x.toEnd * y.toEnd :=
 
 #print CentroidHom.toEnd_pow /-
 @[simp]
-theorem toEnd_pow (x : CentroidHom α) (n : ℕ) : (x ^ n).toEnd = x.toEnd ^ n :=
-  by
-  ext
-  rfl
+theorem toEnd_pow (x : CentroidHom α) (n : ℕ) : (x ^ n).toEnd = x.toEnd ^ n := by ext; rfl
 #align centroid_hom.to_End_pow CentroidHom.toEnd_pow
 -/
 
@@ -646,11 +638,9 @@ instance hasZsmul : SMul ℤ (CentroidHom α) :=
       (n • f :
         α →+
           α) with
-      map_mul_left' := fun a b => by
-        change n • f (a * b) = a * n • f b
+      map_mul_left' := fun a b => by change n • f (a * b) = a * n • f b;
         rw [map_mul_left f, ← mul_smul_comm]
-      map_mul_right' := fun a b => by
-        change n • f (a * b) = n • f a * b
+      map_mul_right' := fun a b => by change n • f (a * b) = n • f a * b;
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
 #align centroid_hom.has_zsmul CentroidHom.hasZsmul
 -/

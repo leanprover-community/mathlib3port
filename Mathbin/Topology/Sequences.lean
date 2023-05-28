@@ -158,10 +158,8 @@ theorem seqClosure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : seqClosure s
 /-- In a Fréchet-Urysohn space, a point belongs to the closure of a set iff it is a limit
 of a sequence taking values in this set. -/
 theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
-    a ∈ closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) :=
-  by
-  rw [← seqClosure_eq_closure]
-  rfl
+    a ∈ closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) := by
+  rw [← seqClosure_eq_closure]; rfl
 #align mem_closure_iff_seq_limit mem_closure_iff_seq_limit
 -/
 

@@ -115,56 +115,33 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     [AddCommGroup M] [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.FG) (hin : N ≤ I • N) :
     ∃ r : R, r - 1 ∈ I ∧ ∀ n ∈ N, r • n = (0 : M) :=
   by
-  rw [fg_def] at hn
-  rcases hn with ⟨s, hfs, hs⟩
+  rw [fg_def] at hn; rcases hn with ⟨s, hfs, hs⟩
   have : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N :=
     by
     refine' ⟨1, _, _, _⟩
-    · rw [sub_self]
-      exact I.zero_mem
-    · rw [hs]
-      intro n hn
-      rw [mem_comap]
-      change (1 : R) • n ∈ I • N
-      rw [one_smul]
-      exact hin hn
-    · rw [← span_le, hs]
-      exact le_refl N
-  clear hin hs
-  revert this
+    · rw [sub_self]; exact I.zero_mem
+    · rw [hs]; intro n hn; rw [mem_comap]; change (1 : R) • n ∈ I • N; rw [one_smul]; exact hin hn
+    · rw [← span_le, hs]; exact le_refl N
+  clear hin hs; revert this
   refine' Set.Finite.dinduction_on hfs (fun H => _) fun i s his hfs ih H => _
-  · rcases H with ⟨r, hr1, hrn, hs⟩
-    refine' ⟨r, hr1, fun n hn => _⟩
-    specialize hrn hn
+  · rcases H with ⟨r, hr1, hrn, hs⟩; refine' ⟨r, hr1, fun n hn => _⟩; specialize hrn hn
     rwa [mem_comap, span_empty, smul_bot, mem_bot] at hrn
-  apply ih
-  rcases H with ⟨r, hr1, hrn, hs⟩
+  apply ih; rcases H with ⟨r, hr1, hrn, hs⟩
   rw [← Set.singleton_union, span_union, smul_sup] at hrn
   rw [Set.insert_subset] at hs
   have : ∃ c : R, c - 1 ∈ I ∧ c • i ∈ I • span R s :=
     by
-    specialize hrn hs.1
-    rw [mem_comap, mem_sup] at hrn
-    rcases hrn with ⟨y, hy, z, hz, hyz⟩
-    change y + z = r • i at hyz
-    rw [mem_smul_span_singleton] at hy
-    rcases hy with ⟨c, hci, rfl⟩
-    use r - c
-    constructor
-    · rw [sub_right_comm]
-      exact I.sub_mem hr1 hci
-    · rw [sub_smul, ← hyz, add_sub_cancel']
-      exact hz
-  rcases this with ⟨c, hc1, hci⟩
-  refine' ⟨c * r, _, _, hs.2⟩
+    specialize hrn hs.1; rw [mem_comap, mem_sup] at hrn
+    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • i at hyz
+    rw [mem_smul_span_singleton] at hy; rcases hy with ⟨c, hci, rfl⟩
+    use r - c; constructor
+    · rw [sub_right_comm]; exact I.sub_mem hr1 hci
+    · rw [sub_smul, ← hyz, add_sub_cancel']; exact hz
+  rcases this with ⟨c, hc1, hci⟩; refine' ⟨c * r, _, _, hs.2⟩
   · simpa only [mul_sub, mul_one, sub_add_sub_cancel] using I.add_mem (I.mul_mem_left c hr1) hc1
-  · intro n hn
-    specialize hrn hn
-    rw [mem_comap, mem_sup] at hrn
-    rcases hrn with ⟨y, hy, z, hz, hyz⟩
-    change y + z = r • n at hyz
-    rw [mem_smul_span_singleton] at hy
-    rcases hy with ⟨d, hdi, rfl⟩
+  · intro n hn; specialize hrn hn; rw [mem_comap, mem_sup] at hrn
+    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • n at hyz
+    rw [mem_smul_span_singleton] at hy; rcases hy with ⟨d, hdi, rfl⟩
     change _ • _ ∈ I • span R s
     rw [mul_smul, ← hyz, smul_add, smul_smul, mul_comm, mul_smul]
     exact add_mem (smul_mem _ _ hci) (smul_mem _ _ hz)
@@ -205,10 +182,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.fg_unit Subm
 theorem fg_unit {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (I : (Submodule R A)ˣ) :
     (I : Submodule R A).FG :=
   by
-  have : (1 : A) ∈ (I * ↑I⁻¹ : Submodule R A) :=
-    by
-    rw [I.mul_inv]
-    exact one_le.mp le_rfl
+  have : (1 : A) ∈ (I * ↑I⁻¹ : Submodule R A) := by rw [I.mul_inv]; exact one_le.mp le_rfl
   obtain ⟨T, T', hT, hT', one_mem⟩ := mem_span_mul_finite_of_mem_mul this
   refine' ⟨T, span_eq_of_le _ hT _⟩
   rw [← one_mul ↑I, ← mul_one (span R ↑T)]
@@ -284,9 +258,7 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2] {ι : Type.{u3}} [_inst_4 : Finite.{succ u3} ι] (N : ι -> (Submodule.{u2, u1} R M _inst_1 _inst_2 _inst_3)), (forall (i : ι), Submodule.FG.{u2, u1} R M _inst_1 _inst_2 _inst_3 (N i)) -> (Submodule.FG.{u2, u1} R M _inst_1 _inst_2 _inst_3 (iSup.{u1, succ u3} (Submodule.{u2, u1} R M _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toSupSet.{u1} (Submodule.{u2, u1} R M _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Submodule.{u2, u1} R M _inst_1 _inst_2 _inst_3) (Submodule.completeLattice.{u2, u1} R M _inst_1 _inst_2 _inst_3))) ι N))
 Case conversion may be inaccurate. Consider using '#align submodule.fg_supr Submodule.fg_iSupₓ'. -/
 theorem fg_iSup {ι : Type _} [Finite ι] (N : ι → Submodule R M) (h : ∀ i, (N i).FG) : (iSup N).FG :=
-  by
-  cases nonempty_fintype ι
-  simpa using fg_bsupr Finset.univ N fun i hi => h i
+  by cases nonempty_fintype ι; simpa using fg_bsupr Finset.univ N fun i hi => h i
 #align submodule.fg_supr Submodule.fg_iSup
 
 variable {P : Type _} [AddCommMonoid P] [Module R P]
@@ -320,8 +292,7 @@ theorem fg_of_fg_map_injective (f : M →ₗ[R] P) (hf : Function.Injective f) {
       by
       rw [f.map_span, Finset.coe_preimage, Set.image_preimage_eq_inter_range,
         Set.inter_eq_self_of_subset_left, ht]
-      rw [← LinearMap.range_coe, ← span_le, ht, ← map_top]
-      exact map_mono le_top⟩
+      rw [← LinearMap.range_coe, ← span_le, ht, ← map_top]; exact map_mono le_top⟩
 #align submodule.fg_of_fg_map_injective Submodule.fg_of_fg_map_injective
 
 /- warning: submodule.fg_of_fg_map -> Submodule.fg_of_fg_map is a dubious translation:
@@ -400,44 +371,31 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
     [AddCommGroup P] [Module R P] (f : M →ₗ[R] P) {s : Submodule R M} (hs1 : (s.map f).FG)
     (hs2 : (s ⊓ f.ker).FG) : s.FG :=
   by
-  haveI := Classical.decEq R
-  haveI := Classical.decEq M
-  haveI := Classical.decEq P
-  cases' hs1 with t1 ht1
-  cases' hs2 with t2 ht2
+  haveI := Classical.decEq R; haveI := Classical.decEq M; haveI := Classical.decEq P
+  cases' hs1 with t1 ht1; cases' hs2 with t2 ht2
   have : ∀ y ∈ t1, ∃ x ∈ s, f x = y := by
     intro y hy
-    have : y ∈ map f s := by
-      rw [← ht1]
-      exact subset_span hy
+    have : y ∈ map f s := by rw [← ht1]; exact subset_span hy
     rcases mem_map.1 this with ⟨x, hx1, hx2⟩
     exact ⟨x, hx1, hx2⟩
   have : ∃ g : P → M, ∀ y ∈ t1, g y ∈ s ∧ f (g y) = y :=
     by
     choose g hg1 hg2
     exists fun y => if H : y ∈ t1 then g y H else 0
-    intro y H
-    constructor
-    · simp only [dif_pos H]
-      apply hg1
-    · simp only [dif_pos H]
-      apply hg2
-  cases' this with g hg
-  clear this
+    intro y H; constructor
+    · simp only [dif_pos H]; apply hg1
+    · simp only [dif_pos H]; apply hg2
+  cases' this with g hg; clear this
   exists t1.image g ∪ t2
   rw [Finset.coe_union, span_union, Finset.coe_image]
   apply le_antisymm
   · refine' sup_le (span_le.2 <| image_subset_iff.2 _) (span_le.2 _)
-    · intro y hy
-      exact (hg y hy).1
-    · intro x hx
-      have := subset_span hx
+    · intro y hy; exact (hg y hy).1
+    · intro x hx; have := subset_span hx
       rw [ht2] at this
       exact this.1
   intro x hx
-  have : f x ∈ map f s := by
-    rw [mem_map]
-    exact ⟨x, hx, rfl⟩
+  have : f x ∈ map f s := by rw [mem_map]; exact ⟨x, hx, rfl⟩
   rw [← ht1, ← Set.image_id ↑t1, Finsupp.mem_span_image_iff_total] at this
   rcases this with ⟨l, hl1, hl2⟩
   refine'
@@ -445,21 +403,17 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
       ⟨(Finsupp.total M M R id).toFun ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _,
         x - Finsupp.total M M R id ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _,
         add_sub_cancel'_right _ _⟩
-  · rw [← Set.image_id (g '' ↑t1), Finsupp.mem_span_image_iff_total]
-    refine' ⟨_, _, rfl⟩
+  · rw [← Set.image_id (g '' ↑t1), Finsupp.mem_span_image_iff_total]; refine' ⟨_, _, rfl⟩
     haveI : Inhabited P := ⟨0⟩
     rw [← Finsupp.lmapDomain_supported _ _ g, mem_map]
     refine' ⟨l, hl1, _⟩
     rfl
-  rw [ht2, mem_inf]
-  constructor
+  rw [ht2, mem_inf]; constructor
   · apply s.sub_mem hx
     rw [Finsupp.total_apply, Finsupp.lmapDomain_apply, Finsupp.sum_mapDomain_index]
     refine' s.sum_mem _
-    · intro y hy
-      exact s.smul_mem _ (hg y (hl1 hy)).1
-    · exact zero_smul _
-    · exact fun _ _ _ => add_smul _ _ _
+    · intro y hy; exact s.smul_mem _ (hg y (hl1 hy)).1
+    · exact zero_smul _; · exact fun _ _ _ => add_smul _ _ _
   · rw [LinearMap.mem_ker, f.map_sub, ← hl2]
     rw [Finsupp.total_apply, Finsupp.total_apply, Finsupp.lmapDomain_apply]
     rw [Finsupp.sum_mapDomain_index, Finsupp.sum, Finsupp.sum, f.map_sum]
@@ -467,8 +421,7 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
     refine' Finset.sum_congr rfl fun y hy => _
     unfold id
     rw [f.map_smul, (hg y (hl1 hy)).2]
-    · exact zero_smul _
-    · exact fun _ _ _ => add_smul _ _ _
+    · exact zero_smul _; · exact fun _ _ _ => add_smul _ _ _
 #align submodule.fg_of_fg_map_of_fg_inf_ker Submodule.fg_of_fg_map_of_fg_inf_ker
 
 /- warning: submodule.fg_induction -> Submodule.fg_induction is a dubious translation:
@@ -483,10 +436,8 @@ theorem fg_induction (R M : Type _) [Semiring R] [AddCommMonoid M] [Module R M]
   classical
     obtain ⟨s, rfl⟩ := hN
     induction s using Finset.induction
-    · rw [Finset.coe_empty, Submodule.span_empty, ← Submodule.span_zero_singleton]
-      apply h₁
-    · rw [Finset.coe_insert, Submodule.span_insert]
-      apply h₂ <;> apply_assumption
+    · rw [Finset.coe_empty, Submodule.span_empty, ← Submodule.span_zero_singleton]; apply h₁
+    · rw [Finset.coe_insert, Submodule.span_insert]; apply h₂ <;> apply_assumption
 #align submodule.fg_induction Submodule.fg_induction
 
 /- warning: submodule.fg_ker_comp -> Submodule.fg_ker_comp is a dubious translation:
@@ -527,10 +478,7 @@ theorem FG.stablizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o
   by
   obtain ⟨S, hS⟩ := hM'
   have : ∀ s : S, ∃ n, (s : M) ∈ N n := fun s =>
-    (Submodule.mem_iSup_of_chain N s).mp
-      (by
-        rw [H, ← hS]
-        exact Submodule.subset_span s.2)
+    (Submodule.mem_iSup_of_chain N s).mp (by rw [H, ← hS]; exact Submodule.subset_span s.2)
   choose f hf
   use S.attach.sup f
   apply le_antisymm
@@ -538,8 +486,7 @@ theorem FG.stablizes_of_iSup_eq {M' : Submodule R M} (hM' : M'.FG) (N : ℕ →o
     rw [Submodule.span_le]
     intro s hs
     exact N.2 (Finset.le_sup <| S.mem_attach ⟨s, hs⟩) (hf _)
-  · rw [← H]
-    exact le_iSup _ _
+  · rw [← H]; exact le_iSup _ _
 #align submodule.fg.stablizes_of_supr_eq Submodule.FG.stablizes_of_iSup_eq
 
 /- warning: submodule.fg_iff_compact -> Submodule.fg_iff_compact is a dubious translation:
@@ -567,10 +514,8 @@ theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactE
       -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
       obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eq sSup)
       have ssup : s = u.sup id := by
-        suffices : u.sup id ≤ s
-        exact le_antisymm husup this
-        rw [sSup, Finset.sup_id_eq_sSup]
-        exact sSup_le_sSup huspan
+        suffices : u.sup id ≤ s; exact le_antisymm husup this
+        rw [sSup, Finset.sup_id_eq_sSup]; exact sSup_le_sSup huspan
       obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
       rw [Finset.sup_image, Function.comp.left_id, Finset.sup_eq_iSup, supr_rw, ←
         span_eq_supr_of_singleton_spans, eq_comm] at ssup
@@ -691,8 +636,7 @@ theorem exists_radical_pow_le_of_fg {R : Type _} [CommSemiring R] (I : Ideal R) 
     ∃ n : ℕ, I.radical ^ n ≤ I := by
   have := le_refl I.radical; revert this
   refine' Submodule.fg_induction _ _ (fun J => J ≤ I.radical → ∃ n : ℕ, J ^ n ≤ I) _ _ _ h
-  · intro x hx
-    obtain ⟨n, hn⟩ := hx (subset_span (Set.mem_singleton x))
+  · intro x hx; obtain ⟨n, hn⟩ := hx (subset_span (Set.mem_singleton x))
     exact ⟨n, by rwa [← Ideal.span, span_singleton_pow, span_le, Set.singleton_subset_iff]⟩
   · intro J K hJ hK hJK
     obtain ⟨n, hn⟩ := hJ fun x hx => hJK <| Ideal.mem_sup_left hx
@@ -703,8 +647,7 @@ theorem exists_radical_pow_le_of_fg {R : Type _} [CommSemiring R] (I : Ideal R) 
     obtain h | h := le_or_lt n i
     · exact ideal.mul_le_right.trans ((Ideal.pow_le_pow h).trans hn)
     · refine' ideal.mul_le_left.trans ((Ideal.pow_le_pow _).trans hm)
-      rw [add_comm, Nat.add_sub_assoc h.le]
-      apply Nat.le_add_right
+      rw [add_comm, Nat.add_sub_assoc h.le]; apply Nat.le_add_right
 #align ideal.exists_radical_pow_le_of_fg Ideal.exists_radical_pow_le_of_fg
 
 end Ideal

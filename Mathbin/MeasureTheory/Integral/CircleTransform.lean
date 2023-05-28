@@ -114,9 +114,7 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
       (continuous_on_id.comp continuousOn_fst fun _ => And.left)
   simp only [mem_prod, Ne.def, and_imp, Prod.forall]
   intro a b ha hb
-  have ha2 : a ∈ ball z R := by
-    simp at *
-    linarith
+  have ha2 : a ∈ ball z R := by simp at *; linarith
   exact sub_ne_zero.2 (circleMap_ne_mem_ball ha2 b)
 #align complex.continuous_on_prod_circle_transform_function Complex.continuousOn_prod_circle_transform_function
 
@@ -155,10 +153,7 @@ theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0
   have :=
     IsCompact.exists_forall_ge comp none
       (cts.mono
-        (by
-          intro z
-          simp only [mem_prod, mem_closed_ball, mem_univ, and_true_iff, and_imp]
-          tauto))
+        (by intro z; simp only [mem_prod, mem_closed_ball, mem_univ, and_true_iff, and_imp]; tauto))
   simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
 #align complex.abs_circle_transform_bounding_function_le Complex.abs_circleTransformBoundingFunction_le
 
@@ -177,9 +172,7 @@ theorem circleTransformDeriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ �
   have funccomp : ContinuousOn (fun r => abs (f r)) (sphere z R) :=
     by
     have cabs : ContinuousOn abs ⊤ := by apply continuous_abs.continuous_on
-    apply cabs.comp hf
-    rw [maps_to]
-    tauto
+    apply cabs.comp hf; rw [maps_to]; tauto
   have sbou :=
     IsCompact.exists_forall_ge (isCompact_sphere z R) (NormedSpace.sphere_nonempty.2 hR.le) funccomp
   obtain ⟨X, HX, HX2⟩ := sbou

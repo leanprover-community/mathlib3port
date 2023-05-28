@@ -156,10 +156,8 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Commute.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))) a c) -> (Commute.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))) b c) -> (Commute.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) c)
 Case conversion may be inaccurate. Consider using '#align commute.div_left Commute.div_leftₓ'. -/
 @[simp]
-theorem div_left (hac : Commute a c) (hbc : Commute b c) : Commute (a / b) c :=
-  by
-  rw [div_eq_mul_inv]
-  exact hac.mul_left hbc.inv_left₀
+theorem div_left (hac : Commute a c) (hbc : Commute b c) : Commute (a / b) c := by
+  rw [div_eq_mul_inv]; exact hac.mul_left hbc.inv_left₀
 #align commute.div_left Commute.div_left
 
 end Commute

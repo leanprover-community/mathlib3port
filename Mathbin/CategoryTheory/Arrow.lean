@@ -90,17 +90,12 @@ but is expected to have type
   forall {T : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} T] (f : CategoryTheory.Arrow.{u1, u2} T _inst_1), Eq.{max (succ u2) (succ u1)} (CategoryTheory.Arrow.{u1, u2} T _inst_1) (CategoryTheory.Arrow.mk.{u1, u2} T _inst_1 (Prefunctor.obj.{succ u1, succ u1, u2, u2} T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} T _inst_1 T _inst_1 (CategoryTheory.Functor.id.{u1, u2} T _inst_1)) (CategoryTheory.Comma.left.{u1, u1, u1, u2, u2, u2} T _inst_1 T _inst_1 T _inst_1 (CategoryTheory.Functor.id.{u1, u2} T _inst_1) (CategoryTheory.Functor.id.{u1, u2} T _inst_1) f)) (Prefunctor.obj.{succ u1, succ u1, u2, u2} T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) T (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} T (CategoryTheory.Category.toCategoryStruct.{u1, u2} T _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, u2} T _inst_1 T _inst_1 (CategoryTheory.Functor.id.{u1, u2} T _inst_1)) (CategoryTheory.Comma.right.{u1, u1, u1, u2, u2, u2} T _inst_1 T _inst_1 T _inst_1 (CategoryTheory.Functor.id.{u1, u2} T _inst_1) (CategoryTheory.Functor.id.{u1, u2} T _inst_1) f)) (CategoryTheory.Comma.hom.{u1, u1, u1, u2, u2, u2} T _inst_1 T _inst_1 T _inst_1 (CategoryTheory.Functor.id.{u1, u2} T _inst_1) (CategoryTheory.Functor.id.{u1, u2} T _inst_1) f)) f
 Case conversion may be inaccurate. Consider using '#align category_theory.arrow.mk_eq CategoryTheory.Arrow.mk_eqₓ'. -/
 @[simp]
-theorem mk_eq (f : Arrow T) : Arrow.mk f.Hom = f :=
-  by
-  cases f
-  rfl
+theorem mk_eq (f : Arrow T) : Arrow.mk f.Hom = f := by cases f; rfl
 #align category_theory.arrow.mk_eq CategoryTheory.Arrow.mk_eq
 
 #print CategoryTheory.Arrow.mk_injective /-
 theorem mk_injective (A B : T) : Function.Injective (Arrow.mk : (A ⟶ B) → Arrow T) := fun f g h =>
-  by
-  cases h
-  rfl
+  by cases h; rfl
 #align category_theory.arrow.mk_injective CategoryTheory.Arrow.mk_injective
 -/
 
@@ -408,11 +403,7 @@ def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D
   map a b f :=
     { left := F.map f.left
       right := F.map f.right
-      w' := by
-        have w := f.w
-        simp only [id_map] at w
-        dsimp
-        simp only [← F.map_comp, w] }
+      w' := by have w := f.w; simp only [id_map] at w; dsimp; simp only [← F.map_comp, w] }
 #align category_theory.functor.map_arrow CategoryTheory.Functor.mapArrow
 -/
 

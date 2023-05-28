@@ -207,11 +207,7 @@ unity and `K` is a `p`-th cyclotomic extension of `ℚ`. -/
 @[simps]
 noncomputable def IsPrimitiveRoot.adjoinEquivRingOfIntegers' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ p) : adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
-  @adjoinEquivRingOfIntegers p 1 K _ _ _ _
-    (by
-      convert hcycl
-      rw [pow_one])
-    (by rwa [pow_one])
+  @adjoinEquivRingOfIntegers p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one])
 #align is_primitive_root.adjoin_equiv_ring_of_integers' IsPrimitiveRoot.adjoinEquivRingOfIntegers'
 
 /-- The ring of integers of a `p`-th cyclotomic extension of `ℚ` is a cyclotomic extension. -/
@@ -225,31 +221,19 @@ instance IsCyclotomicExtension.ring_of_integers' [IsCyclotomicExtension {p} ℚ 
 cyclotomic extension of `ℚ`. -/
 noncomputable def integralPowerBasis' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ p) : PowerBasis ℤ (𝓞 K) :=
-  @integralPowerBasis p 1 K _ _ _ _
-    (by
-      convert hcycl
-      rw [pow_one])
-    (by rwa [pow_one])
+  @integralPowerBasis p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one])
 #align is_primitive_root.integral_power_basis' IsPrimitiveRoot.integralPowerBasis'
 
 @[simp]
 theorem integralPowerBasis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
     hζ.integralPowerBasis'.gen = ⟨ζ, hζ.IsIntegral p.Pos⟩ :=
-  @integralPowerBasis_gen p 1 K _ _ _ _
-    (by
-      convert hcycl
-      rw [pow_one])
-    (by rwa [pow_one])
+  @integralPowerBasis_gen p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one])
 #align is_primitive_root.integral_power_basis'_gen IsPrimitiveRoot.integralPowerBasis'_gen
 
 @[simp]
 theorem power_basis_int'_dim [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
     hζ.integralPowerBasis'.dim = φ p := by
-  erw [@integral_power_basis_dim p 1 K _ _ _ _
-      (by
-        convert hcycl
-        rw [pow_one])
-      (by rwa [pow_one]),
+  erw [@integral_power_basis_dim p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one]),
     pow_one]
 #align is_primitive_root.power_basis_int'_dim IsPrimitiveRoot.power_basis_int'_dim
 
@@ -279,11 +263,7 @@ theorem subOneIntegralPowerBasis_gen [IsCyclotomicExtension {p ^ k} ℚ K]
 extension of `ℚ`. -/
 noncomputable def subOneIntegralPowerBasis' [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ p) : PowerBasis ℤ (𝓞 K) :=
-  @subOneIntegralPowerBasis p 1 K _ _ _ _
-    (by
-      convert hcycl
-      rw [pow_one])
-    (by rwa [pow_one])
+  @subOneIntegralPowerBasis p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one])
 #align is_primitive_root.sub_one_integral_power_basis' IsPrimitiveRoot.subOneIntegralPowerBasis'
 
 @[simp]
@@ -291,11 +271,7 @@ theorem subOneIntegralPowerBasis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ p) :
     hζ.subOneIntegralPowerBasis'.gen =
       ⟨ζ - 1, Subalgebra.sub_mem _ (hζ.IsIntegral p.Pos) (Subalgebra.one_mem _)⟩ :=
-  @subOneIntegralPowerBasis_gen p 1 K _ _ _ _
-    (by
-      convert hcycl
-      rw [pow_one])
-    (by rwa [pow_one])
+  @subOneIntegralPowerBasis_gen p 1 K _ _ _ _ (by convert hcycl; rw [pow_one]) (by rwa [pow_one])
 #align is_primitive_root.sub_one_integral_power_basis'_gen IsPrimitiveRoot.subOneIntegralPowerBasis'_gen
 
 end IsPrimitiveRoot

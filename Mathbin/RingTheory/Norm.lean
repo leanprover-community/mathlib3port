@@ -80,10 +80,7 @@ theorem norm_apply (x : S) : norm R x = LinearMap.det (lmul R S x) :=
 #align algebra.norm_apply Algebra.norm_apply
 
 theorem norm_eq_one_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis s R S)) (x : S) :
-    norm R x = 1 := by
-  rw [norm_apply, LinearMap.det]
-  split_ifs with h
-  rfl
+    norm R x = 1 := by rw [norm_apply, LinearMap.det]; split_ifs with h; rfl
 #align algebra.norm_eq_one_of_not_exists_basis Algebra.norm_eq_one_of_not_exists_basis
 
 variable {R}
@@ -97,10 +94,8 @@ theorem norm_eq_one_of_not_module_finite (h : ¬Module.Finite R S) (x : S) : nor
 
 -- Can't be a `simp` lemma because it depends on a choice of basis
 theorem norm_eq_matrix_det [Fintype ι] [DecidableEq ι] (b : Basis ι R S) (s : S) :
-    norm R s = Matrix.det (Algebra.leftMulMatrix b s) :=
-  by
-  rwa [norm_apply, ← LinearMap.det_toMatrix b, ← to_matrix_lmul_eq]
-  rfl
+    norm R s = Matrix.det (Algebra.leftMulMatrix b s) := by
+  rwa [norm_apply, ← LinearMap.det_toMatrix b, ← to_matrix_lmul_eq]; rfl
 #align algebra.norm_eq_matrix_det Algebra.norm_eq_matrix_det
 
 /-- If `x` is in the base ring `K`, then the norm is `x ^ [L : K]`. -/
@@ -110,8 +105,7 @@ theorem norm_algebraMap_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
   haveI := Classical.decEq ι
   rw [norm_apply, ← det_to_matrix b, lmul_algebra_map]
   convert@det_diagonal _ _ _ _ _ fun i : ι => x
-  · ext (i j)
-    rw [to_matrix_lsmul, Matrix.diagonal]
+  · ext (i j); rw [to_matrix_lsmul, Matrix.diagonal]
   · rw [Finset.prod_const, Finset.card_univ]
 #align algebra.norm_algebra_map_of_basis Algebra.norm_algebraMap_of_basis
 
@@ -173,9 +167,7 @@ theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fin
     norm R x = 0 ↔ x = 0 := by
   constructor
   let b := Module.Free.chooseBasis R S
-  swap;
-  · rintro rfl
-    exact norm_zero
+  swap; · rintro rfl; exact norm_zero
   · letI := Classical.decEq (Module.Free.ChooseBasisIndex R S)
     rw [norm_eq_matrix_det b, ← Matrix.exists_mulVec_eq_zero_iff]
     rintro ⟨v, v_ne, hv⟩
@@ -259,8 +251,7 @@ theorem IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots (x : L)
       ((minpoly K x).map (algebraMap K F)).roots.Prod :=
   by
   have injKxL := (algebraMap K⟮⟯ L).Injective
-  by_cases hx : IsIntegral K x
-  swap
+  by_cases hx : IsIntegral K x; swap
   · simp [minpoly.eq_zero hx, IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
   have hx' : IsIntegral K (adjoin_simple.gen K x) :=
     by
@@ -289,10 +280,8 @@ theorem norm_eq_prod_embeddings_gen [Algebra R F] (pb : PowerBasis R S)
     Finset.prod_eq_multiset_prod, Multiset.toFinset_val, multiset.dedup_eq_self.mpr,
     Multiset.map_id]
   · exact nodup_roots hfx.map
-  · intro x
-    rfl
-  · intro σ
-    rw [pb.lift_equiv'_apply_coe, id.def]
+  · intro x; rfl
+  · intro σ; rw [pb.lift_equiv'_apply_coe, id.def]
 #align algebra.norm_eq_prod_embeddings_gen Algebra.norm_eq_prod_embeddings_gen
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/

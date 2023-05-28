@@ -188,9 +188,7 @@ theorem span_insert_zero : span R (insert (0 : M) s) = span R s :=
 Case conversion may be inaccurate. Consider using '#align submodule.span_preimage_le Submodule.span_preimage_leₓ'. -/
 -- See also `span_preimage_eq` below.
 theorem span_preimage_le (f : M →ₛₗ[σ₁₂] M₂) (s : Set M₂) :
-    span R (f ⁻¹' s) ≤ (span R₂ s).comap f :=
-  by
-  rw [span_le, comap_coe]
+    span R (f ⁻¹' s) ≤ (span R₂ s).comap f := by rw [span_le, comap_coe];
   exact preimage_mono subset_span
 #align submodule.span_preimage_le Submodule.span_preimage_le
 
@@ -527,10 +525,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.mem_supr_of_directed Submodule.mem_iSup_of_directedₓ'. -/
 @[simp]
 theorem mem_iSup_of_directed {ι} [Nonempty ι] (S : ι → Submodule R M) (H : Directed (· ≤ ·) S) {x} :
-    x ∈ iSup S ↔ ∃ i, x ∈ S i :=
-  by
-  rw [← SetLike.mem_coe, coe_supr_of_directed S H, mem_Union]
-  rfl
+    x ∈ iSup S ↔ ∃ i, x ∈ S i := by rw [← SetLike.mem_coe, coe_supr_of_directed S H, mem_Union]; rfl
 #align submodule.mem_supr_of_directed Submodule.mem_iSup_of_directed
 
 /- warning: submodule.mem_Sup_of_directed -> Submodule.mem_sSup_of_directed is a dubious translation:
@@ -622,11 +617,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] (p : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (p' : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3), Eq.{succ u2} (Set.{u2} M) (SetLike.coe.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Sup.sup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (SemilatticeSup.toSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Lattice.toSemilatticeSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (ConditionallyCompleteLattice.toLattice.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_2 _inst_3))))) p p')) (HAdd.hAdd.{u2, u2, u2} (Set.{u2} M) (Set.{u2} M) (Set.{u2} M) (instHAdd.{u2} (Set.{u2} M) (Set.add.{u2} M (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))))) (SetLike.coe.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_2 _inst_3) p) (SetLike.coe.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_2 _inst_3) p'))
 Case conversion may be inaccurate. Consider using '#align submodule.coe_sup Submodule.coe_supₓ'. -/
-theorem coe_sup : ↑(p ⊔ p') = (p + p' : Set M) :=
-  by
-  ext
-  rw [SetLike.mem_coe, mem_sup, Set.mem_add]
-  simp
+theorem coe_sup : ↑(p ⊔ p') = (p + p' : Set M) := by ext;
+  rw [SetLike.mem_coe, mem_sup, Set.mem_add]; simp
 #align submodule.coe_sup Submodule.coe_sup
 
 /- warning: submodule.sup_to_add_submonoid -> Submodule.sup_toAddSubmonoid is a dubious translation:
@@ -682,8 +674,7 @@ theorem nontrivial_span_singleton {x : M} (h : x ≠ 0) : Nontrivial (R ∙ x) :
 theorem mem_span_singleton {y : M} : (x ∈ R ∙ y) ↔ ∃ a : R, a • y = x :=
   ⟨fun h => by
     apply span_induction h
-    · rintro y (rfl | ⟨⟨⟩⟩)
-      exact ⟨1, by simp⟩
+    · rintro y (rfl | ⟨⟨⟩⟩); exact ⟨1, by simp⟩
     · exact ⟨0, by simp⟩
     · rintro _ _ ⟨a, rfl⟩ ⟨b, rfl⟩
       exact ⟨a + b, by simp [add_smul]⟩
@@ -711,10 +702,8 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u1}) {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2] (x : M), Iff (Eq.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.span.{u1, u2} R M _inst_1 _inst_2 _inst_3 (Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) x)) (Top.top.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.instTopSubmodule.{u1, u2} R M _inst_1 _inst_2 _inst_3))) (forall (v : M), Exists.{succ u1} R (fun (r : R) => Eq.{succ u2} M (HSMul.hSMul.{u1, u2, u2} R M M (instHSMul.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (MulActionWithZero.toSMulWithZero.{u1, u2} R M (Semiring.toMonoidWithZero.{u1} R _inst_1) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Module.toMulActionWithZero.{u1, u2} R M _inst_1 _inst_2 _inst_3))))) r x) v))
 Case conversion may be inaccurate. Consider using '#align submodule.span_singleton_eq_top_iff Submodule.span_singleton_eq_top_iffₓ'. -/
-theorem span_singleton_eq_top_iff (x : M) : (R ∙ x) = ⊤ ↔ ∀ v, ∃ r : R, r • x = v :=
-  by
-  rw [eq_top_iff, le_span_singleton_iff]
-  tauto
+theorem span_singleton_eq_top_iff (x : M) : (R ∙ x) = ⊤ ↔ ∀ v, ∃ r : R, r • x = v := by
+  rw [eq_top_iff, le_span_singleton_iff]; tauto
 #align submodule.span_singleton_eq_top_iff Submodule.span_singleton_eq_top_iff
 
 /- warning: submodule.span_zero_singleton -> Submodule.span_zero_singleton is a dubious translation:
@@ -724,10 +713,7 @@ but is expected to have type
   forall (R : Type.{u1}) {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2], Eq.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.span.{u1, u2} R M _inst_1 _inst_2 _inst_3 (Singleton.singleton.{u2, u2} M (Set.{u2} M) (Set.instSingletonSet.{u2} M) (OfNat.ofNat.{u2} M 0 (Zero.toOfNat0.{u2} M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) (Bot.bot.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_3) (Submodule.instBotSubmodule.{u1, u2} R M _inst_1 _inst_2 _inst_3))
 Case conversion may be inaccurate. Consider using '#align submodule.span_zero_singleton Submodule.span_zero_singletonₓ'. -/
 @[simp]
-theorem span_zero_singleton : (R ∙ (0 : M)) = ⊥ :=
-  by
-  ext
-  simp [mem_span_singleton, eq_comm]
+theorem span_zero_singleton : (R ∙ (0 : M)) = ⊥ := by ext; simp [mem_span_singleton, eq_comm]
 #align submodule.span_zero_singleton Submodule.span_zero_singleton
 
 #print Submodule.span_singleton_eq_range /-
@@ -953,23 +939,11 @@ theorem span_singleton_eq_span_singleton {R M : Type _} [Ring R] [AddCommGroup M
     exact ⟨fun hx => ⟨1, by rw [hx, smul_zero]⟩, fun ⟨z, hz⟩ => (smul_eq_zero_iff_eq z).mp hz⟩
   constructor
   · intro hxy
-    cases'
-      mem_span_singleton.mp
-        (by
-          rw [hxy]
-          apply mem_span_singleton_self) with
-      v hv
-    cases'
-      mem_span_singleton.mp
-        (by
-          rw [← hxy]
-          apply mem_span_singleton_self) with
-      i hi
-    have vi : v * i = 1 := by
-      rw [← one_smul R y, ← hi, smul_smul] at hv
+    cases' mem_span_singleton.mp (by rw [hxy]; apply mem_span_singleton_self) with v hv
+    cases' mem_span_singleton.mp (by rw [← hxy]; apply mem_span_singleton_self) with i hi
+    have vi : v * i = 1 := by rw [← one_smul R y, ← hi, smul_smul] at hv;
       exact smul_left_injective R hy hv
-    have iv : i * v = 1 := by
-      rw [← one_smul R x, ← hv, smul_smul] at hi
+    have iv : i * v = 1 := by rw [← one_smul R x, ← hv, smul_smul] at hi;
       exact smul_left_injective R hx hi
     exact ⟨⟨v, i, vi, iv⟩, hv⟩
   · rintro ⟨v, rfl⟩
@@ -1160,14 +1134,10 @@ theorem submodule_eq_sSup_le_nonzero_spans (p : Submodule R M) :
   by
   let S := { T : Submodule R M | ∃ (m : M)(hm : m ∈ p)(hz : m ≠ 0), T = span R {m} }
   apply le_antisymm
-  · intro m hm
-    by_cases h : m = 0
-    · rw [h]
-      simp
+  · intro m hm; by_cases h : m = 0
+    · rw [h]; simp
     · exact @le_sSup _ _ S _ ⟨m, ⟨hm, ⟨h, rfl⟩⟩⟩ m (mem_span_singleton_self m)
-  · rw [sSup_le_iff]
-    rintro S ⟨_, ⟨_, ⟨_, rfl⟩⟩⟩
-    rwa [span_singleton_le_iff_mem]
+  · rw [sSup_le_iff]; rintro S ⟨_, ⟨_, ⟨_, rfl⟩⟩⟩; rwa [span_singleton_le_iff_mem]
 #align submodule.submodule_eq_Sup_le_nonzero_spans Submodule.submodule_eq_sSup_le_nonzero_spans
 
 /- warning: submodule.lt_sup_iff_not_mem -> Submodule.lt_sup_iff_not_mem is a dubious translation:
@@ -1189,13 +1159,10 @@ theorem lt_sup_iff_not_mem {I : Submodule R M} {a : M} : (I < I ⊔ R ∙ a) ↔
     have h2 := gt_of_ge_of_gt h1 h
     exact lt_irrefl I h2
   · intro h
-    apply set_like.lt_iff_le_and_exists.mpr
-    constructor
+    apply set_like.lt_iff_le_and_exists.mpr; constructor
     simp only [le_sup_left]
     use a
-    constructor
-    swap
-    · assumption
+    constructor; swap; · assumption
     · have : (R ∙ a) ≤ I ⊔ R ∙ a := le_sup_right
       exact this (mem_span_singleton_self a)
 #align submodule.lt_sup_iff_not_mem Submodule.lt_sup_iff_not_mem
@@ -1228,8 +1195,7 @@ theorem mem_span_finite_of_mem_span {S : Set M} {x : M} (hx : x ∈ span R S) :
     · rwa [Finset.coe_singleton, Set.singleton_subset_iff]
     · rw [Finset.coe_singleton]
       exact Submodule.mem_span_singleton_self x
-  · use ∅
-    simp
+  · use ∅; simp
   · rintro x y ⟨X, hX, hxX⟩ ⟨Y, hY, hyY⟩
     refine' ⟨X ∪ Y, _, _⟩
     · rw [Finset.coe_union]
@@ -1379,10 +1345,8 @@ theorem mem_span_insert' {x y} {s : Set M} :
     x ∈ span R (insert y s) ↔ ∃ a : R, x + a • y ∈ span R s :=
   by
   rw [mem_span_insert]; constructor
-  · rintro ⟨a, z, hz, rfl⟩
-    exact ⟨-a, by simp [hz, add_assoc]⟩
-  · rintro ⟨a, h⟩
-    exact ⟨-a, _, h, by simp [add_comm, add_left_comm]⟩
+  · rintro ⟨a, z, hz, rfl⟩; exact ⟨-a, by simp [hz, add_assoc]⟩
+  · rintro ⟨a, h⟩; exact ⟨-a, _, h, by simp [add_comm, add_left_comm]⟩
 #align submodule.mem_span_insert' Submodule.mem_span_insert'
 
 instance : IsModularLattice (Submodule R M) :=
@@ -1498,9 +1462,7 @@ def toSpanSingleton (x : M) : R →ₗ[R] M :=
 #print LinearMap.span_singleton_eq_range /-
 /-- The range of `to_span_singleton x` is the span of `x`.-/
 theorem span_singleton_eq_range (x : M) : (R ∙ x) = (toSpanSingleton R M x).range :=
-  Submodule.ext fun y => by
-    refine' Iff.trans _ linear_map.mem_range.symm
-    exact mem_span_singleton
+  Submodule.ext fun y => by refine' Iff.trans _ linear_map.mem_range.symm; exact mem_span_singleton
 #align linear_map.span_singleton_eq_range LinearMap.span_singleton_eq_range
 -/
 
@@ -1522,10 +1484,7 @@ but is expected to have type
   forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2], Eq.{max (succ u2) (succ u1)} (LinearMap.{u2, u2, u2, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) _inst_2 (Semiring.toModule.{u2} R _inst_1) _inst_3) (LinearMap.toSpanSingleton.{u2, u1} R M _inst_1 _inst_2 _inst_3 (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M (AddCommMonoid.toAddMonoid.{u1} M _inst_2))))) (OfNat.ofNat.{max u2 u1} (LinearMap.{u2, u2, u2, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) _inst_2 (Semiring.toModule.{u2} R _inst_1) _inst_3) 0 (Zero.toOfNat0.{max u2 u1} (LinearMap.{u2, u2, u2, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) R M (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) _inst_2 (Semiring.toModule.{u2} R _inst_1) _inst_3) (LinearMap.instZeroLinearMap.{u2, u2, u2, u1} R R R M _inst_1 _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) _inst_2 (Semiring.toModule.{u2} R _inst_1) _inst_3 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align linear_map.to_span_singleton_zero LinearMap.toSpanSingleton_zeroₓ'. -/
 @[simp]
-theorem toSpanSingleton_zero : toSpanSingleton R M 0 = 0 :=
-  by
-  ext
-  simp
+theorem toSpanSingleton_zero : toSpanSingleton R M 0 = 0 := by ext; simp
 #align linear_map.to_span_singleton_zero LinearMap.toSpanSingleton_zero
 
 end

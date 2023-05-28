@@ -115,11 +115,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mul_dyson_e_transform.smul_finset_snd_subset_fst Finset.mulDysonEtransform.smul_finset_snd_subset_fstₓ'. -/
 @[to_additive]
 theorem mulDysonEtransform.smul_finset_snd_subset_fst :
-    e • (mulDysonEtransform e x).2 ⊆ (mulDysonEtransform e x).1 :=
-  by
-  dsimp
-  rw [smul_finset_inter, smul_inv_smul, inter_comm]
-  exact inter_subset_union
+    e • (mulDysonEtransform e x).2 ⊆ (mulDysonEtransform e x).1 := by dsimp;
+  rw [smul_finset_inter, smul_inv_smul, inter_comm]; exact inter_subset_union
 #align finset.mul_dyson_e_transform.smul_finset_snd_subset_fst Finset.mulDysonEtransform.smul_finset_snd_subset_fst
 #align finset.add_dyson_e_transform.vadd_finset_snd_subset_fst Finset.addDysonEtransform.vadd_finset_snd_subset_fst
 

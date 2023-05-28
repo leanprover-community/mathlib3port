@@ -178,10 +178,8 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
       (-((k ! : ℝ)⁻¹ * (x - y) ^ k)) t y :=
     by
     -- Commuting the factors:
-    have : -((k ! : ℝ)⁻¹ * (x - y) ^ k) = ((k + 1 : ℝ) * k !)⁻¹ * (-(k + 1) * (x - y) ^ k) :=
-      by
-      field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k]
-      ring_nf
+    have : -((k ! : ℝ)⁻¹ * (x - y) ^ k) = ((k + 1 : ℝ) * k !)⁻¹ * (-(k + 1) * (x - y) ^ k) := by
+      field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k] ; ring_nf
     rw [this]
     exact (monomial_has_deriv_aux y x _).HasDerivWithinAt.const_mul _
   convert this.smul hf
@@ -296,10 +294,8 @@ theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ
       f x - taylorWithinEval f n (Icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (Icc x₀ x) x' * (x - x₀) ^ (n + 1) / (n + 1)! :=
   by
-  have gcont : ContinuousOn (fun t : ℝ => (x - t) ^ (n + 1)) (Icc x₀ x) :=
-    by
-    refine' Continuous.continuousOn _
-    continuity
+  have gcont : ContinuousOn (fun t : ℝ => (x - t) ^ (n + 1)) (Icc x₀ x) := by
+    refine' Continuous.continuousOn _; continuity
   have xy_ne : ∀ y : ℝ, y ∈ Ioo x₀ x → (x - y) ^ n ≠ 0 :=
     by
     intro y hy

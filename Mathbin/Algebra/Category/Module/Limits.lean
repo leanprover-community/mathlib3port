@@ -45,9 +45,7 @@ but is expected to have type
   forall {R : Type.{u3}} [_inst_1 : Ring.{u3} R] {J : Type.{u1}} [_inst_2 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, max (max u3 (succ u1)) (succ u2)} J _inst_2 (ModuleCat.ModuleCatMax.{u3, u1, u2} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1)) (j : J), AddCommGroup.{max u1 u2} (Prefunctor.obj.{succ u1, max (succ u1) (succ u2), u1, max (succ u1) (succ u2)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_2)) Type.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} CategoryTheory.types.{max u1 u2})) (CategoryTheory.Functor.toPrefunctor.{u1, max u1 u2, u1, max (succ u1) (succ u2)} J _inst_2 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, max (max u3 (succ u1)) (succ u2), max (succ u1) (succ u2)} J _inst_2 (ModuleCat.ModuleCatMax.{u3, u1, u2} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{max u3 (succ (max u1 u2)), max u1 u2, max u1 u2} (ModuleCat.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleConcreteCategory.{max u1 u2, u3} R _inst_1)))) j)
 Case conversion may be inaccurate. Consider using '#align Module.add_comm_group_obj ModuleCat.addCommGroupObjₓ'. -/
 instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) (j) :
-    AddCommGroup ((F ⋙ forget (ModuleCat R)).obj j) :=
-  by
-  change AddCommGroup (F.obj j)
+    AddCommGroup ((F ⋙ forget (ModuleCat R)).obj j) := by change AddCommGroup (F.obj j);
   infer_instance
 #align Module.add_comm_group_obj ModuleCat.addCommGroupObj
 
@@ -58,10 +56,7 @@ but is expected to have type
   forall {R : Type.{u3}} [_inst_1 : Ring.{u3} R] {J : Type.{u1}} [_inst_2 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, max (max u3 (succ u1)) (succ u2)} J _inst_2 (ModuleCat.ModuleCatMax.{u3, u1, u2} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1)) (j : J), Module.{u3, max u1 u2} R (Prefunctor.obj.{succ u1, max (succ u1) (succ u2), u1, max (succ u1) (succ u2)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_2)) Type.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} CategoryTheory.types.{max u1 u2})) (CategoryTheory.Functor.toPrefunctor.{u1, max u1 u2, u1, max (succ u1) (succ u2)} J _inst_2 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, max (max u3 (succ u1)) (succ u2), max (succ u1) (succ u2)} J _inst_2 (ModuleCat.ModuleCatMax.{u3, u1, u2} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{max u3 (succ (max u1 u2)), max u1 u2, max u1 u2} (ModuleCat.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleConcreteCategory.{max u1 u2, u3} R _inst_1)))) j) (Ring.toSemiring.{u3} R _inst_1) (AddCommGroup.toAddCommMonoid.{max u1 u2} (Prefunctor.obj.{succ u1, max (succ u1) (succ u2), u1, max (succ u1) (succ u2)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_2)) Type.{max u1 u2} (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} (CategoryTheory.Category.toCategoryStruct.{max u1 u2, max (succ u1) (succ u2)} Type.{max u1 u2} CategoryTheory.types.{max u1 u2})) (CategoryTheory.Functor.toPrefunctor.{u1, max u1 u2, u1, max (succ u1) (succ u2)} J _inst_2 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, max (max u3 (succ u1)) (succ u2), max (succ u1) (succ u2)} J _inst_2 (ModuleCat.ModuleCatMax.{u3, u1, u2} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{max u3 (succ (max u1 u2)), max u1 u2, max u1 u2} (ModuleCat.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleCategory.{max u1 u2, u3} R _inst_1) (ModuleCat.moduleConcreteCategory.{max u1 u2, u3} R _inst_1)))) j) (ModuleCat.addCommGroupObj.{u1, u2, u3} R _inst_1 J _inst_2 F j))
 Case conversion may be inaccurate. Consider using '#align Module.module_obj ModuleCat.moduleObjₓ'. -/
 instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) :
-    Module R ((F ⋙ forget (ModuleCat R)).obj j) :=
-  by
-  change Module R (F.obj j)
-  infer_instance
+    Module R ((F ⋙ forget (ModuleCat R)).obj j) := by change Module R (F.obj j); infer_instance
 #align Module.module_obj ModuleCat.moduleObj
 
 /- warning: Module.sections_submodule -> ModuleCat.sectionsSubmodule is a dubious translation:
@@ -260,10 +255,7 @@ def directLimitDiagram : ι ⥤ ModuleCat R
     where
   obj i := ModuleCat.of R (G i)
   map i j hij := f i j hij.le
-  map_id' i := by
-    apply LinearMap.ext
-    intro x
-    apply Module.DirectedSystem.map_self
+  map_id' i := by apply LinearMap.ext; intro x; apply Module.DirectedSystem.map_self
   map_comp' i j k hij hjk := by
     apply LinearMap.ext
     intro x
@@ -289,10 +281,7 @@ def directLimitCocone : Cocone (directLimitDiagram G f)
   pt := ModuleCat.of R <| DirectLimit G f
   ι :=
     { app := Module.DirectLimit.of R ι G f
-      naturality' := fun i j hij => by
-        apply LinearMap.ext
-        intro x
-        exact direct_limit.of_f }
+      naturality' := fun i j hij => by apply LinearMap.ext; intro x; exact direct_limit.of_f }
 #align Module.direct_limit_cocone ModuleCat.directLimitCocone
 
 /- warning: Module.direct_limit_is_colimit -> ModuleCat.directLimitIsColimit is a dubious translation:
@@ -306,11 +295,7 @@ in the sense of `category_theory`. -/
 @[simps]
 def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (directLimitCocone G f)
     where
-  desc s :=
-    DirectLimit.lift R ι G f s.ι.app fun i j h x =>
-      by
-      rw [← s.w (hom_of_le h)]
-      rfl
+  desc s := DirectLimit.lift R ι G f s.ι.app fun i j h x => by rw [← s.w (hom_of_le h)]; rfl
   fac s i := by
     apply LinearMap.ext
     intro x
@@ -321,10 +306,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
     have :
       s.ι.app = fun i =>
         LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i) :=
-      by
-      funext i
-      rw [← h]
-      rfl
+      by funext i; rw [← h]; rfl
     apply LinearMap.ext
     intro x
     simp only [this]

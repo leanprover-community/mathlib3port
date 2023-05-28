@@ -121,8 +121,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
         exact ⟨(not_le.1 h).le, unitInterval.le_one x⟩
   prop' t x hx := by
     cases hx
-    · rw [hx]
-      simp [refl_trans_symm_aux]
+    · rw [hx]; simp [refl_trans_symm_aux]
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
       norm_num [refl_trans_symm_aux]
@@ -286,10 +285,8 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
   -- TODO: why does split_ifs not reduce the ifs??????
   split_ifs with h₁ h₂ h₃ h₄ h₅
   · simp [h₂, h₃, -one_div]
-  · exfalso
-    linarith
-  · exfalso
-    linarith
+  · exfalso; linarith
+  · exfalso; linarith
   · have h : ¬(x : ℝ) + 1 / 4 ≤ 1 / 2 := by linarith
     have h' : 2 * ((x : ℝ) + 1 / 4) - 1 ≤ 1 / 2 := by linarith
     have h'' : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by linarith
@@ -300,8 +297,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
   · have h : ¬(1 / 2 : ℝ) * (x + 1) ≤ 1 / 2 := by linarith
     have h' : ¬2 * ((1 / 2 : ℝ) * (x + 1)) - 1 ≤ 1 / 2 := by linarith
     simp only [h₁, h₅, h, h', if_false, dif_neg (show ¬False from id)]
-    congr
-    ring
+    congr ; ring
 #align path.homotopy.trans_assoc_reparam Path.Homotopy.trans_assoc_reparam
 -/
 

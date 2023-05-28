@@ -67,10 +67,8 @@ theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs :=
     rw [_root_.abs_div, abs_abs]
     exact div_le_one_of_le x.abs_im_le_abs (abs.nonneg x)
   rw [abs_le] at him
-  rw [arg]
-  split_ifs with h₁ h₂ h₂
-  · rw [Real.cos_arcsin]
-    field_simp [Real.sqrt_sq, habs.le, *]
+  rw [arg]; split_ifs with h₁ h₂ h₂
+  · rw [Real.cos_arcsin]; field_simp [Real.sqrt_sq, habs.le, *]
   · rw [Real.cos_add_pi, Real.cos_arcsin]
     field_simp [Real.sqrt_div (sq_nonneg _), Real.sqrt_sq_eq_abs, _root_.abs_of_neg (not_le.1 h₁),
       *]
@@ -125,9 +123,7 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
 
 #print Complex.range_exp_mul_I /-
 @[simp]
-theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.sphere 0 1 :=
-  by
-  ext x
+theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.sphere 0 1 := by ext x;
   simp only [mem_sphere_zero_iff_norm, norm_eq_abs, abs_eq_one_iff, mem_range]
 #align complex.range_exp_mul_I Complex.range_exp_mul_I
 -/
@@ -145,13 +141,10 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ←
     mk_eq_add_mul_I, neg_div, mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
   by_cases h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
-  · rw [if_pos]
-    exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
-  · rw [mem_Icc, not_and_or, not_le, not_le] at h₁
-    cases h₁
+  · rw [if_pos]; exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
+  · rw [mem_Icc, not_and_or, not_le, not_le] at h₁; cases h₁
     · replace hθ := hθ.1
-      have hcos : Real.cos θ < 0 := by
-        rw [← neg_pos, ← Real.cos_add_pi]
+      have hcos : Real.cos θ < 0 := by rw [← neg_pos, ← Real.cos_add_pi];
         refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith
       have hsin : Real.sin θ < 0 := Real.sin_neg_of_neg_of_neg_pi_lt (by linarith) hθ
       rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel] <;>
@@ -273,10 +266,7 @@ theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im :=
   rcases eq_or_ne z 0 with (rfl | h₀); · simp
   calc
     0 ≤ arg z ↔ 0 ≤ Real.sin (arg z) :=
-      ⟨fun h => Real.sin_nonneg_of_mem_Icc ⟨h, arg_le_pi z⟩,
-        by
-        contrapose!
-        intro h
+      ⟨fun h => Real.sin_nonneg_of_mem_Icc ⟨h, arg_le_pi z⟩, by contrapose!; intro h;
         exact Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_arg _)⟩
     _ ↔ _ := by rw [sin_arg, le_div_iff (abs.pos h₀), MulZeroClass.zero_mul]
     
@@ -411,13 +401,9 @@ theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 :=
   by
   by_cases h₀ : z = 0; · simp [h₀, lt_irrefl, real.pi_ne_zero.symm]
   constructor
-  · intro h
-    rw [← abs_mul_cos_add_sin_mul_I z, h]
-    simp [h₀]
-  · cases' z with x y
-    rintro ⟨h : x < 0, rfl : y = 0⟩
-    rw [← arg_neg_one, ← arg_real_mul (-1) (neg_pos.2 h)]
-    simp [← of_real_def]
+  · intro h; rw [← abs_mul_cos_add_sin_mul_I z, h]; simp [h₀]
+  · cases' z with x y; rintro ⟨h : x < 0, rfl : y = 0⟩
+    rw [← arg_neg_one, ← arg_real_mul (-1) (neg_pos.2 h)]; simp [← of_real_def]
 #align complex.arg_eq_pi_iff Complex.arg_eq_pi_iff
 
 /- warning: complex.arg_lt_pi_iff -> Complex.arg_lt_pi_iff is a dubious translation:
@@ -450,11 +436,8 @@ theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.
   by
   by_cases h₀ : z = 0; · simp [h₀, lt_irrefl, real.pi_div_two_pos.ne]
   constructor
-  · intro h
-    rw [← abs_mul_cos_add_sin_mul_I z, h]
-    simp [h₀]
-  · cases' z with x y
-    rintro ⟨rfl : x = 0, hy : 0 < y⟩
+  · intro h; rw [← abs_mul_cos_add_sin_mul_I z, h]; simp [h₀]
+  · cases' z with x y; rintro ⟨rfl : x = 0, hy : 0 < y⟩
     rw [← arg_I, ← arg_real_mul I hy, of_real_mul', I_re, I_im, MulZeroClass.mul_zero, mul_one]
 #align complex.arg_eq_pi_div_two_iff Complex.arg_eq_pi_div_two_iff
 
@@ -468,11 +451,8 @@ theorem arg_eq_neg_pi_div_two_iff {z : ℂ} : arg z = -(π / 2) ↔ z.re = 0 ∧
   by
   by_cases h₀ : z = 0; · simp [h₀, lt_irrefl, Real.pi_ne_zero]
   constructor
-  · intro h
-    rw [← abs_mul_cos_add_sin_mul_I z, h]
-    simp [h₀]
-  · cases' z with x y
-    rintro ⟨rfl : x = 0, hy : y < 0⟩
+  · intro h; rw [← abs_mul_cos_add_sin_mul_I z, h]; simp [h₀]
+  · cases' z with x y; rintro ⟨rfl : x = 0, hy : y < 0⟩
     rw [← arg_neg_I, ← arg_real_mul (-I) (neg_pos.2 hy), mk_eq_add_mul_I]
     simp
 #align complex.arg_eq_neg_pi_div_two_iff Complex.arg_eq_neg_pi_div_two_iff
@@ -966,10 +946,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complex.continuous_at_arg Complex.continuousAt_argₓ'. -/
 theorem continuousAt_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x :=
   by
-  have h₀ : abs x ≠ 0 := by
-    rw [abs.ne_zero_iff]
-    rintro rfl
-    simpa using h
+  have h₀ : abs x ≠ 0 := by rw [abs.ne_zero_iff]; rintro rfl; simpa using h
   rw [← lt_or_lt_iff_ne] at h
   rcases h with (hx_re | hx_im | hx_im)
   exacts[(real.continuous_at_arcsin.comp
@@ -1003,8 +980,7 @@ theorem tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
             continuous_abs.continuous_within_at _)).sub
       tendsto_const_nhds
   · simp [him]
-  · lift z to ℝ using him
-    simpa using hre.ne
+  · lift z to ℝ using him; simpa using hre.ne
 #align complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
 
 /- warning: complex.continuous_within_at_arg_of_re_neg_of_im_zero -> Complex.continuousWithinAt_arg_of_re_neg_of_im_zero is a dubious translation:
@@ -1027,8 +1003,7 @@ theorem continuousWithinAt_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
             ((continuous_im.continuous_at.comp_continuous_within_at continuousWithinAt_neg).div
               continuous_abs.continuous_within_at _)).add
         tendsto_const_nhds
-    lift z to ℝ using him
-    simpa using hre.ne
+    lift z to ℝ using him; simpa using hre.ne
   · rw [arg, if_neg hre.not_le, if_pos him.ge]
 #align complex.continuous_within_at_arg_of_re_neg_of_im_zero Complex.continuousWithinAt_arg_of_re_neg_of_im_zero
 

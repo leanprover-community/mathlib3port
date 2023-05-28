@@ -143,12 +143,8 @@ theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f
     (hα : α = α') (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' :=
   by
   subst hα
-  have : ∀ a, HEq (f a) (f' a) := by
-    intro a
-    exact h a a (HEq.refl a)
-  have : β = β' := by
-    funext a
-    exact type_eq_of_hEq (this a)
+  have : ∀ a, HEq (f a) (f' a) := by intro a; exact h a a (HEq.refl a)
+  have : β = β' := by funext a; exact type_eq_of_hEq (this a)
   subst this
   apply hEq_of_eq
   funext a
@@ -313,14 +309,10 @@ theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a 
   by
   dsimp only at h
   by_cases h₁ : p x₁ <;> by_cases h₂ : p x₂
-  · rw [dif_pos h₁, dif_pos h₂] at h
-    injection hf h
-  · rw [dif_pos h₁, dif_neg h₂] at h
-    exact (im_disj h).elim
-  · rw [dif_neg h₁, dif_pos h₂] at h
-    exact (im_disj h.symm).elim
-  · rw [dif_neg h₁, dif_neg h₂] at h
-    injection hf' h
+  · rw [dif_pos h₁, dif_pos h₂] at h; injection hf h
+  · rw [dif_pos h₁, dif_neg h₂] at h; exact (im_disj h).elim
+  · rw [dif_neg h₁, dif_pos h₂] at h; exact (im_disj h.symm).elim
+  · rw [dif_neg h₁, dif_neg h₂] at h; injection hf' h
 #align function.injective.dite Function.Injective.dite
 
 #print Function.Surjective.of_comp /-
@@ -467,8 +459,7 @@ theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g
   · simp only [(· ∘ ·), exists_apply_eq_apply]
   · intro y
     have : True = ∃ x, f x = y := congr_fun h y
-    rw [← this]
-    exact trivial
+    rw [← this]; exact trivial
 #align function.surjective_of_right_cancellable_Prop Function.surjective_of_right_cancellable_Prop
 
 /- warning: function.bijective_iff_exists_unique -> Function.bijective_iff_existsUnique is a dubious translation:
@@ -568,12 +559,8 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
   have hg : injective g := by
     intro s t h
-    suffices cast hU (g s).2 = cast hU (g t).2
-      by
-      simp only [cast_cast, cast_eq] at this
-      assumption
-    · congr
-      assumption
+    suffices cast hU (g s).2 = cast hU (g t).2 by simp only [cast_cast, cast_eq] at this; assumption
+    · congr ; assumption
   exact cantor_injective g hg
 #align function.not_surjective_Type Function.not_surjective_Type
 -/
@@ -1029,20 +1016,16 @@ theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.forall_update_iff /-
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
-    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) :=
-  by
-  rw [← and_forall_ne a, update_same]
-  simp (config := { contextual := true })
+    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
+  rw [← and_forall_ne a, update_same]; simp (config := { contextual := true })
 #align function.forall_update_iff Function.forall_update_iff
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.exists_update_iff /-
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
-    (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) :=
-  by
-  rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
-  simp [not_and_or]
+    (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
+  rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]; simp [not_and_or]
 #align function.exists_update_iff Function.exists_update_iff
 -/
 
@@ -1147,8 +1130,7 @@ theorem apply_update {ι : Sort _} [DecidableEq ι] {α β : ι → Sort _} (f :
     f j (update g i v j) = update (fun k => f k (g k)) i (f i v) j :=
   by
   by_cases h : j = i
-  · subst j
-    simp
+  · subst j; simp
   · simp [h]
 #align function.apply_update Function.apply_update
 
@@ -1163,8 +1145,7 @@ theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _
     f j (update g i v j) (update h i w j) = update (fun k => f k (g k) (h k)) i (f i v w) j :=
   by
   by_cases h : j = i
-  · subst j
-    simp
+  · subst j; simp
   · simp [h]
 #align function.apply_update₂ Function.apply_update₂
 
@@ -1201,10 +1182,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.update_idem Function.update_idemₓ'. -/
 @[simp]
 theorem update_idem {α} [DecidableEq α] {β : α → Sort _} {a : α} (v w : β a) (f : ∀ a, β a) :
-    update (update f a v) a w = update f a w :=
-  by
-  funext b
-  by_cases b = a <;> simp [update, h]
+    update (update f a v) a w = update f a w := by funext b; by_cases b = a <;> simp [update, h]
 #align function.update_idem Function.update_idem
 
 end Update
@@ -1253,9 +1231,7 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β) (g : α -> γ) (e' : β -> γ) (b : β) [_inst_1 : Decidable (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b))], Eq.{u1} γ (Function.extend.{u3, u2, u1} α β γ f g e' b) (dite.{u1} γ (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b)) _inst_1 (fun (h : Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b)) => g (Classical.choose.{u3} α (fun (a : α) => Eq.{u2} β (f a) b) h)) (fun (h : Not (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b))) => e' b))
 Case conversion may be inaccurate. Consider using '#align function.extend_def Function.extend_defₓ'. -/
 theorem extend_def (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
-    extend f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b :=
-  by
-  unfold extend
+    extend f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b := by unfold extend;
   congr
 #align function.extend_def Function.extend_def
 
@@ -1318,13 +1294,9 @@ theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g 
     (e' : β → γ) (b : β) : F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
   by
   by_cases hb : ∃ a, f a = b
-  · cases' hb with a ha
-    subst b
+  · cases' hb with a ha; subst b
     rw [factors_through.extend_apply, factors_through.extend_apply]
-    · intro a b h
-      simp only [comp_apply]
-      apply congr_arg
-      exact hf h
+    · intro a b h; simp only [comp_apply]; apply congr_arg; exact hf h
     · exact hf
   · rw [extend_apply' _ _ _ hb, extend_apply' _ _ _ hb]
 #align function.factors_through.apply_extend Function.FactorsThrough.apply_extend

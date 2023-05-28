@@ -104,9 +104,7 @@ Case conversion may be inaccurate. Consider using '#align zero_geom_sum zero_geo
 theorem zero_geom_sum : ∀ {n}, (∑ i in range n, (0 : α) ^ i) = if n = 0 then 0 else 1
   | 0 => by simp
   | 1 => by simp
-  | n + 2 => by
-    rw [geom_sum_succ']
-    simp [zero_geom_sum]
+  | n + 2 => by rw [geom_sum_succ']; simp [zero_geom_sum]
 #align zero_geom_sum zero_geom_sum
 
 #print one_geom_sum /-
@@ -611,10 +609,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] {x : α}, (Ne.{succ u1} α x (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1)))))) -> (forall {m : Nat} {n : Nat}, (LE.le.{0} Nat instLENat m n) -> (Eq.{succ u1} α (Finset.sum.{u1, 0} α Nat (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))))) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring m n) (fun (i : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1)))))) x i)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivisionRing.toDiv.{u1} α _inst_1)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1)))))) x m) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1)))))) x n)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))) x))))
 Case conversion may be inaccurate. Consider using '#align geom_sum_Ico' geom_sum_Ico'ₓ'. -/
 theorem geom_sum_Ico' [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn : m ≤ n) :
-    (∑ i in Finset.Ico m n, x ^ i) = (x ^ m - x ^ n) / (1 - x) :=
-  by
-  simp only [geom_sum_Ico hx hmn]
-  convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
+    (∑ i in Finset.Ico m n, x ^ i) = (x ^ m - x ^ n) / (1 - x) := by
+  simp only [geom_sum_Ico hx hmn]; convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
 #align geom_sum_Ico' geom_sum_Ico'
 
 /- warning: geom_sum_Ico_le_of_lt_one -> geom_sum_Ico_le_of_lt_one is a dubious translation:
@@ -812,14 +808,9 @@ theorem geom_sum_alternating_of_lt_neg_one [StrictOrderedRing α] (hx : x + 1 < 
   intro n hn ihn
   simp only [Nat.even_add_one, geom_sum_succ]
   by_cases hn' : Even n
-  · rw [if_pos hn'] at ihn
-    rw [if_neg, lt_add_iff_pos_left]
-    exact mul_pos_of_neg_of_neg hx0 ihn
-    exact not_not_intro hn'
-  · rw [if_neg hn'] at ihn
-    rw [if_pos]
-    swap
-    · exact hn'
+  · rw [if_pos hn'] at ihn; rw [if_neg, lt_add_iff_pos_left]
+    exact mul_pos_of_neg_of_neg hx0 ihn; exact not_not_intro hn'
+  · rw [if_neg hn'] at ihn; rw [if_pos]; swap; · exact hn'
     have := add_lt_add_right (mul_lt_mul_of_neg_left ihn hx0) 1
     rw [mul_one] at this
     exact this.trans hx

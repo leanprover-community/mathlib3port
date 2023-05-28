@@ -390,19 +390,13 @@ attribute [ext] Zero
 
 #print Unit.ext /-
 @[ext]
-theorem Unit.ext {x y : Unit} : x = y := by
-  cases x
-  cases y
-  rfl
+theorem Unit.ext {x y : Unit} : x = y := by cases x; cases y; rfl
 #align unit.ext Unit.ext
 -/
 
 #print PUnit.ext /-
 @[ext]
-theorem PUnit.ext {x y : PUnit} : x = y := by
-  cases x
-  cases y
-  rfl
+theorem PUnit.ext {x y : PUnit} : x = y := by cases x; cases y; rfl
 #align punit.ext PUnit.ext
 -/
 

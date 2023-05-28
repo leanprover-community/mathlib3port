@@ -93,10 +93,7 @@ variable [SetLike S R] [hSR : SubsemiringClass S R] (s : S)
 include hSR
 
 #print coe_nat_mem /-
-theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s :=
-  by
-  rw [← nsmul_one]
-  exact nsmul_mem (one_mem _) _
+theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s := by rw [← nsmul_one]; exact nsmul_mem (one_mem _) _
 #align coe_nat_mem coe_nat_mem
 -/
 
@@ -1062,10 +1059,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), Eq.{succ u2} (Subsemiring.{u2} S _inst_2) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f) (Subsemiring.map.{u1, u2} R S _inst_1 _inst_2 f (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring_hom.srange_eq_map RingHom.rangeS_eq_mapₓ'. -/
-theorem rangeS_eq_map (f : R →+* S) : f.srange = (⊤ : Subsemiring R).map f :=
-  by
-  ext
-  simp
+theorem rangeS_eq_map (f : R →+* S) : f.srange = (⊤ : Subsemiring R).map f := by ext; simp
 #align ring_hom.srange_eq_map RingHom.rangeS_eq_map
 
 /- warning: ring_hom.mem_srange_self -> RingHom.mem_rangeS_self is a dubious translation:

@@ -211,8 +211,7 @@ theorem log_mono_right {b : ℕ} {r₁ r₂ : R} (h₀ : 0 < r₁) (h : r₁ ≤
     exact Nat.clog_mono_right _ (Nat.ceil_mono <| inv_le_inv_of_le h₀ h)
   · rw [log_of_right_le_one _ h₁, log_of_one_le_right _ h₂]
     exact (neg_nonpos.mpr (Int.coe_nat_nonneg _)).trans (Int.coe_nat_nonneg _)
-  · obtain rfl := le_antisymm h (h₂.trans h₁)
-    rfl
+  · obtain rfl := le_antisymm h (h₂.trans h₁); rfl
   · rw [log_of_one_le_right _ h₁, log_of_one_le_right _ h₂, Int.ofNat_le]
     exact Nat.log_mono_right (Nat.floor_mono h)
 #align int.log_mono_right Int.log_mono_right

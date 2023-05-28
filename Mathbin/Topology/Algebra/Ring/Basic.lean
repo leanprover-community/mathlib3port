@@ -295,9 +295,7 @@ theorem TopologicalRing.of_addGroup_of_nhds_zero [TopologicalAddGroup R]
       (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
     by
     convert this using 1
-    · ext
-      simp only [comp_app, mul_add, add_mul]
-      abel
+    · ext; simp only [comp_app, mul_add, add_mul]; abel
     · simp only [add_comm]
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
@@ -451,10 +449,7 @@ instance inhabited {α : Type u} [Ring α] : Inhabited (RingTopology α) :=
 
 #print RingTopology.ext /-
 @[ext]
-theorem ext {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g :=
-  by
-  ext : 2
-  exact h
+theorem ext {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by ext : 2; exact h
 #align ring_topology.ext' RingTopology.ext
 -/
 
@@ -498,10 +493,7 @@ contained in the intersection of `s` and `t`. -/
 instance : CompleteSemilatticeInf (RingTopology α) :=
   { RingTopology.partialOrder with
     sInf := defInf
-    inf_le := fun S a haS =>
-      by
-      apply topological_space.complete_lattice.Inf_le
-      use a, ⟨haS, rfl⟩
+    inf_le := fun S a haS => by apply topological_space.complete_lattice.Inf_le; use a, ⟨haS, rfl⟩
     le_inf := by
       intro S a hab
       apply topological_space.complete_lattice.le_Inf

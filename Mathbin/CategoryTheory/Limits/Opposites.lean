@@ -505,17 +505,13 @@ instance hasCoequalizers_opposite [HasEqualizers C] : HasCoequalizers Cᵒᵖ :=
 
 #print CategoryTheory.Limits.hasFiniteColimits_opposite /-
 instance hasFiniteColimits_opposite [HasFiniteLimits C] : HasFiniteColimits Cᵒᵖ
-    where out J 𝒟 𝒥 := by
-    skip
-    infer_instance
+    where out J 𝒟 𝒥 := by skip; infer_instance
 #align category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.hasFiniteColimits_opposite
 -/
 
 #print CategoryTheory.Limits.hasFiniteLimits_opposite /-
 instance hasFiniteLimits_opposite [HasFiniteColimits C] : HasFiniteLimits Cᵒᵖ
-    where out J 𝒟 𝒥 := by
-    skip
-    infer_instance
+    where out J 𝒟 𝒥 := by skip; infer_instance
 #align category_theory.limits.has_finite_limits_opposite CategoryTheory.Limits.hasFiniteLimits_opposite
 -/
 
@@ -608,8 +604,7 @@ theorem unop_fst {X Y Z : Cᵒᵖ} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocon
     c.unop.fst = c.inl.unop :=
   by
   change (_ : limits.cone _).π.app _ = _
-  simp only [pushout_cocone.ι_app_left, pushout_cocone.unop_π_app]
-  tidy
+  simp only [pushout_cocone.ι_app_left, pushout_cocone.unop_π_app]; tidy
 #align category_theory.limits.pushout_cocone.unop_fst CategoryTheory.Limits.PushoutCocone.unop_fst
 -/
 
@@ -619,8 +614,7 @@ theorem unop_snd {X Y Z : Cᵒᵖ} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocon
     c.unop.snd = c.inr.unop :=
   by
   change (_ : limits.cone _).π.app _ = _
-  simp only [pushout_cocone.unop_π_app, pushout_cocone.ι_app_right]
-  tidy
+  simp only [pushout_cocone.unop_π_app, pushout_cocone.ι_app_right]; tidy
 #align category_theory.limits.pushout_cocone.unop_snd CategoryTheory.Limits.PushoutCocone.unop_snd
 -/
 
@@ -636,18 +630,14 @@ def op {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : Pullbac
 #print CategoryTheory.Limits.PushoutCocone.op_fst /-
 @[simp]
 theorem op_fst {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : c.op.fst = c.inl.op :=
-  by
-  change (_ : limits.cone _).π.app _ = _
-  apply category.comp_id
+  by change (_ : limits.cone _).π.app _ = _; apply category.comp_id
 #align category_theory.limits.pushout_cocone.op_fst CategoryTheory.Limits.PushoutCocone.op_fst
 -/
 
 #print CategoryTheory.Limits.PushoutCocone.op_snd /-
 @[simp]
 theorem op_snd {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : PushoutCocone f g) : c.op.snd = c.inr.op :=
-  by
-  change (_ : limits.cone _).π.app _ = _
-  apply category.comp_id
+  by change (_ : limits.cone _).π.app _ = _; apply category.comp_id
 #align category_theory.limits.pushout_cocone.op_snd CategoryTheory.Limits.PushoutCocone.op_snd
 -/
 
@@ -701,18 +691,14 @@ def op {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : PushoutC
 #print CategoryTheory.Limits.PullbackCone.op_inl /-
 @[simp]
 theorem op_inl {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : c.op.inl = c.fst.op :=
-  by
-  change (_ : limits.cocone _).ι.app _ = _
-  apply category.id_comp
+  by change (_ : limits.cocone _).ι.app _ = _; apply category.id_comp
 #align category_theory.limits.pullback_cone.op_inl CategoryTheory.Limits.PullbackCone.op_inl
 -/
 
 #print CategoryTheory.Limits.PullbackCone.op_inr /-
 @[simp]
 theorem op_inr {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} (c : PullbackCone f g) : c.op.inr = c.snd.op :=
-  by
-  change (_ : limits.cocone _).ι.app _ = _
-  apply category.id_comp
+  by change (_ : limits.cocone _).ι.app _ = _; apply category.id_comp
 #align category_theory.limits.pullback_cone.op_inr CategoryTheory.Limits.PullbackCone.op_inr
 -/
 

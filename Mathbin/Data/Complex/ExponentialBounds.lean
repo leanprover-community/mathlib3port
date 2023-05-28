@@ -66,15 +66,8 @@ theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / 10 ^ 10 :=
     by
     norm_num1 at *
     assumption
-  have t : |(2⁻¹ : ℝ)| = 2⁻¹ := by
-    rw [abs_of_pos]
-    norm_num
-  have z :=
-    Real.abs_log_sub_add_sum_range_le
-      (show |(2⁻¹ : ℝ)| < 1 by
-        rw [t]
-        norm_num)
-      34
+  have t : |(2⁻¹ : ℝ)| = 2⁻¹ := by rw [abs_of_pos]; norm_num
+  have z := Real.abs_log_sub_add_sum_range_le (show |(2⁻¹ : ℝ)| < 1 by rw [t]; norm_num) 34
   rw [t] at z
   norm_num1 at z
   rw [one_div (2 : ℝ), log_inv, ← sub_eq_add_neg, _root_.abs_sub_comm] at z

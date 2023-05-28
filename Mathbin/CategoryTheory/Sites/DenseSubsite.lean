@@ -281,10 +281,7 @@ theorem appHom_restrict {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) (x) :
 Case conversion may be inaccurate. Consider using '#align category_theory.cover_dense.types.app_hom_valid_glue CategoryTheory.CoverDense.Types.appHom_valid_glueₓ'. -/
 @[simp]
 theorem appHom_valid_glue {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) :
-    appHom H α X ≫ ℱ'.val.map f = ℱ.map f ≫ α.app (op Y) :=
-  by
-  ext
-  apply app_hom_restrict
+    appHom H α X ≫ ℱ'.val.map f = ℱ.map f ≫ α.app (op Y) := by ext; apply app_hom_restrict
 #align category_theory.cover_dense.types.app_hom_valid_glue CategoryTheory.CoverDense.Types.appHom_valid_glue
 
 /- warning: category_theory.cover_dense.types.app_iso -> CategoryTheory.CoverDense.Types.appIso is a dubious translation:
@@ -302,16 +299,8 @@ noncomputable def appIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val �
     where
   Hom := appHom H i.Hom X
   inv := appHom H i.inv X
-  hom_inv_id' := by
-    ext x
-    apply H.ext
-    intro Y f
-    simp
-  inv_hom_id' := by
-    ext x
-    apply H.ext
-    intro Y f
-    simp
+  hom_inv_id' := by ext x; apply H.ext; intro Y f; simp
+  inv_hom_id' := by ext x; apply H.ext; intro Y f; simp
 #align category_theory.cover_dense.types.app_iso CategoryTheory.CoverDense.Types.appIso
 
 #print CategoryTheory.CoverDense.Types.presheafHom /-
@@ -351,12 +340,8 @@ noncomputable def sheafIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val
     where
   Hom := ⟨(presheafIso H i).Hom⟩
   inv := ⟨(presheafIso H i).inv⟩
-  hom_inv_id' := by
-    ext1
-    apply (presheaf_iso H i).hom_inv_id
-  inv_hom_id' := by
-    ext1
-    apply (presheaf_iso H i).inv_hom_id
+  hom_inv_id' := by ext1; apply (presheaf_iso H i).hom_inv_id
+  inv_hom_id' := by ext1; apply (presheaf_iso H i).inv_hom_id
 #align category_theory.cover_dense.types.sheaf_iso CategoryTheory.CoverDense.Types.sheafIso
 -/
 
@@ -470,12 +455,8 @@ noncomputable def sheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op
     where
   Hom := ⟨(presheafIso H i).Hom⟩
   inv := ⟨(presheafIso H i).inv⟩
-  hom_inv_id' := by
-    ext1
-    apply (presheaf_iso H i).hom_inv_id
-  inv_hom_id' := by
-    ext1
-    apply (presheaf_iso H i).inv_hom_id
+  hom_inv_id' := by ext1; apply (presheaf_iso H i).hom_inv_id
+  inv_hom_id' := by ext1; apply (presheaf_iso H i).inv_hom_id
 #align category_theory.cover_dense.sheaf_iso CategoryTheory.CoverDense.sheafIso
 -/
 

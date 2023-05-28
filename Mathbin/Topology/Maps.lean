@@ -97,9 +97,7 @@ Case conversion may be inaccurate. Consider using '#align inducing_of_inducing_c
 theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Inducing (g ∘ f)) : Inducing f :=
   ⟨le_antisymm (by rwa [← continuous_iff_le_induced])
-      (by
-        rw [hgf.induced, ← continuous_iff_le_induced]
-        apply hg.comp continuous_induced_dom)⟩
+      (by rw [hgf.induced, ← continuous_iff_le_induced]; apply hg.comp continuous_induced_dom)⟩
 #align inducing_of_inducing_compose inducing_of_inducing_compose
 
 /- warning: inducing_iff_nhds -> inducing_iff_nhds is a dubious translation:
@@ -240,8 +238,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (Inducing.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (s : Set.{u2} α), Eq.{succ u2} (Set.{u2} α) (closure.{u2} α _inst_1 s) (Set.preimage.{u2, u1} α β f (closure.{u1} β _inst_2 (Set.image.{u2, u1} α β f s))))
 Case conversion may be inaccurate. Consider using '#align inducing.closure_eq_preimage_closure_image Inducing.closure_eq_preimage_closure_imageₓ'. -/
 theorem Inducing.closure_eq_preimage_closure_image {f : α → β} (hf : Inducing f) (s : Set α) :
-    closure s = f ⁻¹' closure (f '' s) := by
-  ext x
+    closure s = f ⁻¹' closure (f '' s) := by ext x;
   rw [Set.mem_preimage, ← closure_induced, hf.induced]
 #align inducing.closure_eq_preimage_closure_image Inducing.closure_eq_preimage_closure_image
 
@@ -507,9 +504,7 @@ protected theorem of_quotientMap_compose (hf : Continuous f) (hg : Continuous g)
     (hgf : QuotientMap (g ∘ f)) : QuotientMap g :=
   ⟨hgf.1.of_comp,
     le_antisymm
-      (by
-        rw [hgf.right, ← continuous_iff_coinduced_le]
-        apply continuous_coinduced_rng.comp hf)
+      (by rw [hgf.right, ← continuous_iff_coinduced_le]; apply continuous_coinduced_rng.comp hf)
       (by rwa [← continuous_iff_coinduced_le])⟩
 #align quotient_map.of_quotient_map_compose QuotientMap.of_quotientMap_compose
 
@@ -610,9 +605,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) -> (IsOpen.{u1} β _inst_2 (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align is_open_map.is_open_range IsOpenMap.isOpen_rangeₓ'. -/
-theorem isOpen_range (hf : IsOpenMap f) : IsOpen (range f) :=
-  by
-  rw [← image_univ]
+theorem isOpen_range (hf : IsOpenMap f) : IsOpen (range f) := by rw [← image_univ];
   exact hf _ isOpen_univ
 #align is_open_map.is_open_range IsOpenMap.isOpen_range
 
@@ -862,10 +855,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] {g : β -> γ} {f : α -> β}, (IsClosedMap.{u3, u2} β γ _inst_2 _inst_3 g) -> (IsClosedMap.{u1, u3} α β _inst_1 _inst_2 f) -> (IsClosedMap.{u1, u2} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ g f))
 Case conversion may be inaccurate. Consider using '#align is_closed_map.comp IsClosedMap.compₓ'. -/
 protected theorem comp {g : β → γ} {f : α → β} (hg : IsClosedMap g) (hf : IsClosedMap f) :
-    IsClosedMap (g ∘ f) := by
-  intro s hs
-  rw [image_comp]
-  exact hg _ (hf _ hs)
+    IsClosedMap (g ∘ f) := by intro s hs; rw [image_comp]; exact hg _ (hf _ hs)
 #align is_closed_map.comp IsClosedMap.comp
 
 /- warning: is_closed_map.closure_image_subset -> IsClosedMap.closure_image_subset is a dubious translation:

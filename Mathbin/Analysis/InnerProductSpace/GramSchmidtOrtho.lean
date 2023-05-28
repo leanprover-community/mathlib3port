@@ -62,10 +62,8 @@ noncomputable def gramSchmidt (f : ι → E) : ι → E
 
 /-- This lemma uses `∑ i in` instead of `∑ i :`.-/
 theorem gramSchmidt_def (f : ι → E) (n : ι) :
-    gramSchmidt 𝕜 f n = f n - ∑ i in Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) :=
-  by
-  rw [← sum_attach, attach_eq_univ, gramSchmidt]
-  rfl
+    gramSchmidt 𝕜 f n = f n - ∑ i in Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt 𝕜 f i) (f n) := by
+  rw [← sum_attach, attach_eq_univ, gramSchmidt]; rfl
 #align gram_schmidt_def gramSchmidt_def
 
 theorem gramSchmidt_def' (f : ι → E) (n : ι) :

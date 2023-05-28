@@ -1655,10 +1655,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b)) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b)))
 Case conversion may be inaccurate. Consider using '#align set.Icc_diff_Ioo_same Set.Icc_diff_Ioo_sameₓ'. -/
 @[simp]
-theorem Icc_diff_Ioo_same (h : a ≤ b) : Icc a b \ Ioo a b = {a, b} :=
-  by
-  rw [← Icc_diff_both, diff_diff_cancel_left]
-  simp [insert_subset, h]
+theorem Icc_diff_Ioo_same (h : a ≤ b) : Icc a b \ Ioo a b = {a, b} := by
+  rw [← Icc_diff_both, diff_diff_cancel_left]; simp [insert_subset, h]
 #align set.Icc_diff_Ioo_same Set.Icc_diff_Ioo_same
 
 /- warning: set.Ici_diff_Ioi_same -> Set.Ici_diff_Ioi_same is a dubious translation:
@@ -3382,10 +3380,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) a) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) b)) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align set.Iic_inter_Iic Set.Iic_inter_Iicₓ'. -/
 @[simp]
-theorem Iic_inter_Iic {a b : α} : Iic a ∩ Iic b = Iic (a ⊓ b) :=
-  by
-  ext x
-  simp [Iic]
+theorem Iic_inter_Iic {a b : α} : Iic a ∩ Iic b = Iic (a ⊓ b) := by ext x; simp [Iic]
 #align set.Iic_inter_Iic Set.Iic_inter_Iic
 
 /- warning: set.Ioc_inter_Iic -> Set.Ioc_inter_Iic is a dubious translation:
@@ -3412,10 +3407,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) b)) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align set.Ici_inter_Ici Set.Ici_inter_Iciₓ'. -/
 @[simp]
-theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a ⊔ b) :=
-  by
-  ext x
-  simp [Ici]
+theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a ⊔ b) := by ext x; simp [Ici]
 #align set.Ici_inter_Ici Set.Ici_inter_Ici
 
 /- warning: set.Ico_inter_Ici -> Set.Ico_inter_Ici is a dubious translation:
@@ -3644,9 +3636,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) b a)) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) a b) (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align set.Ioc_union_Ioc_symm Set.Ioc_union_Ioc_symmₓ'. -/
 @[simp]
-theorem Ioc_union_Ioc_symm : Ioc a b ∪ Ioc b a = Ioc (min a b) (max a b) :=
-  by
-  rw [max_comm]
+theorem Ioc_union_Ioc_symm : Ioc a b ∪ Ioc b a = Ioc (min a b) (max a b) := by rw [max_comm];
   apply Ioc_union_Ioc <;> rw [max_comm] <;> exact min_le_max
 #align set.Ioc_union_Ioc_symm Set.Ioc_union_Ioc_symm
 
@@ -3732,10 +3722,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Icc_prod_Icc Set.Icc_prod_Iccₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : Icc a₁ a₂ ×ˢ Icc b₁ b₂ = Icc (a₁, b₁) (a₂, b₂) :=
-  by
-  ext ⟨x, y⟩
-  simp [and_assoc, and_comm', and_left_comm]
+theorem Icc_prod_Icc (a₁ a₂ : α) (b₁ b₂ : β) : Icc a₁ a₂ ×ˢ Icc b₁ b₂ = Icc (a₁, b₁) (a₂, b₂) := by
+  ext ⟨x, y⟩; simp [and_assoc, and_comm', and_left_comm]
 #align set.Icc_prod_Icc Set.Icc_prod_Icc
 
 /- warning: set.Icc_prod_eq -> Set.Icc_prod_eq is a dubious translation:

@@ -49,15 +49,9 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
     Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨A⟩ :=
-        { g with
-          map_smul' := by
-            intros
-            rw [RingHom.id_apply, g.to_fun_eq_coe, map_zsmul] }
+        { g with map_smul' := by intros ; rw [RingHom.id_apply, g.to_fun_eq_coe, map_zsmul] }
       let F : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨Y⟩ :=
-        { f with
-          map_smul' := by
-            intros
-            rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
+        { f with map_smul' := by intros ; rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
       have : mono F := by
         refine' ⟨fun Z α β eq1 => _⟩
         let α' : AddCommGroupCat.of Z ⟶ X := α.to_add_monoid_hom
@@ -68,11 +62,9 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
           simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using
             FunLike.congr_fun eq1 x
         rw [cancel_mono] at eq2
-        ext
-        simpa only using FunLike.congr_fun eq2 x
+        ext; simpa only using FunLike.congr_fun eq2 x
       refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
-      ext
-      convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      ext; convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
 #align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 /- warning: AddCommGroup.injective_as_module_of_injective_as_Ab -> AddCommGroupCat.injective_as_module_of_injective_as_Ab is a dubious translation:
@@ -88,21 +80,17 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
       skip
       let G : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨A⟩ := g.to_add_monoid_hom
       let F : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨Y⟩ := f.to_add_monoid_hom
-      have : mono F := by
-        rw [mono_iff_injective]
-        intro _ _ h
+      have : mono F := by rw [mono_iff_injective]; intro _ _ h;
         exact ((ModuleCat.mono_iff_injective f).mp m) h
       refine' ⟨{ injective.factor_thru G F with map_smul' := _ }, _⟩
-      · intro m x
-        rw [AddMonoidHom.toFun_eq_coe, RingHom.id_apply]
+      · intro m x; rw [AddMonoidHom.toFun_eq_coe, RingHom.id_apply]
         induction' m using Int.induction_on with n hn n hn
         · rw [zero_smul]
           convert map_zero _
           convert zero_smul _ x
         · simp only [add_smul, map_add, hn, one_smul]
         · simp only [sub_smul, map_sub, hn, one_smul]
-      ext
-      convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      ext; convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
 #align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 #print AddCommGroupCat.injective_of_divisible /-
@@ -119,8 +107,7 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
             ⟨{  toFun := _
                 map_add' := _
                 map_smul' := _ }, fun n hn => _⟩
-          · intro n
-            exact g 0
+          · intro n; exact g 0
           · intro n1 n2
             simp only [map_zero, add_zero]
           · intro n1 n2
@@ -136,8 +123,7 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
                 map_smul' := _ }, fun n hn => _⟩
           · intro n
             exact n • DivisibleBy.div gₘ m
-          · intro n1 n2
-            simp only [add_smul]
+          · intro n1 n2; simp only [add_smul]
           · intro n1 n2
             rw [RingHom.id_apply, smul_eq_mul, mul_smul]
           · rw [Submodule.mem_span_singleton] at hn

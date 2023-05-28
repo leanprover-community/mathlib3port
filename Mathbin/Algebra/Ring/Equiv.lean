@@ -140,10 +140,7 @@ variable [Mul R] [Add R] [Mul S] [Add S] [Mul S'] [Add S']
 instance : RingEquivClass (R ≃+* S) R S where
   coe := toFun
   inv := invFun
-  coe_injective' e f h₁ h₂ := by
-    cases e
-    cases f
-    congr
+  coe_injective' e f h₁ h₂ := by cases e; cases f; congr
   map_add := map_add'
   map_mul := map_mul'
   left_inv := RingEquiv.left_inv
@@ -578,12 +575,8 @@ protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ (
     where
   toFun f := { f.toAddEquiv.mulOp, f.toMulEquiv.op with }
   invFun f := { AddEquiv.mulOp.symm f.toAddEquiv, MulEquiv.op.symm f.toMulEquiv with }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
 #align ring_equiv.op RingEquiv.op
 
 /- warning: ring_equiv.unop -> RingEquiv.unop is a dubious translation:
@@ -1042,10 +1035,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom RingEquiv.toNonUnitalRingHomm_comp_symm_toNonUnitalRingHomₓ'. -/
 @[simp]
 theorem toNonUnitalRingHomm_comp_symm_toNonUnitalRingHom (e : R ≃+* S) :
-    e.toNonUnitalRingHom.comp e.symm.toNonUnitalRingHom = NonUnitalRingHom.id _ :=
-  by
-  ext
-  simp
+    e.toNonUnitalRingHom.comp e.symm.toNonUnitalRingHom = NonUnitalRingHom.id _ := by ext; simp
 #align ring_equiv.to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom RingEquiv.toNonUnitalRingHomm_comp_symm_toNonUnitalRingHom
 
 /- warning: ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom -> RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHom is a dubious translation:
@@ -1056,10 +1046,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHomₓ'. -/
 @[simp]
 theorem symm_toNonUnitalRingHom_comp_toNonUnitalRingHom (e : R ≃+* S) :
-    e.symm.toNonUnitalRingHom.comp e.toNonUnitalRingHom = NonUnitalRingHom.id _ :=
-  by
-  ext
-  simp
+    e.symm.toNonUnitalRingHom.comp e.toNonUnitalRingHom = NonUnitalRingHom.id _ := by ext; simp
 #align ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHom
 
 end NonUnitalSemiringHom
@@ -1246,10 +1233,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.to_ring_hom_comp_symm_to_ring_hom RingEquiv.toRingHom_comp_symm_toRingHomₓ'. -/
 @[simp]
 theorem toRingHom_comp_symm_toRingHom (e : R ≃+* S) :
-    e.toRingHom.comp e.symm.toRingHom = RingHom.id _ :=
-  by
-  ext
-  simp
+    e.toRingHom.comp e.symm.toRingHom = RingHom.id _ := by ext; simp
 #align ring_equiv.to_ring_hom_comp_symm_to_ring_hom RingEquiv.toRingHom_comp_symm_toRingHom
 
 /- warning: ring_equiv.symm_to_ring_hom_comp_to_ring_hom -> RingEquiv.symm_toRingHom_comp_toRingHom is a dubious translation:
@@ -1260,10 +1244,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.symm_to_ring_hom_comp_to_ring_hom RingEquiv.symm_toRingHom_comp_toRingHomₓ'. -/
 @[simp]
 theorem symm_toRingHom_comp_toRingHom (e : R ≃+* S) :
-    e.symm.toRingHom.comp e.toRingHom = RingHom.id _ :=
-  by
-  ext
-  simp
+    e.symm.toRingHom.comp e.toRingHom = RingHom.id _ := by ext; simp
 #align ring_equiv.symm_to_ring_hom_comp_to_ring_hom RingEquiv.symm_toRingHom_comp_toRingHom
 
 /- warning: ring_equiv.of_hom_inv' -> RingEquiv.ofHomInv' is a dubious translation:

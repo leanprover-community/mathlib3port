@@ -388,9 +388,7 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
       run_tac
         is_bounded_default) :
     ∃ c : α, Tendsto u f (𝓝 c) := by
-  by_cases hbot : f = ⊥;
-  · rw [hbot]
-    exact ⟨Inf ∅, tendsto_bot⟩
+  by_cases hbot : f = ⊥; · rw [hbot]; exact ⟨Inf ∅, tendsto_bot⟩
   haveI : ne_bot f := ⟨hbot⟩
   refine' ⟨limsup u f, _⟩
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
@@ -465,9 +463,7 @@ theorem limsup_eq_bot : f.limsup u = ⊥ ↔ u =ᶠ[f] ⊥ :=
   ⟨fun h =>
     (EventuallyLE.trans eventually_le_limsup <| eventually_of_forall fun _ => h.le).mono fun x hx =>
       le_antisymm hx bot_le,
-    fun h => by
-    rw [limsup_congr h]
-    exact limsup_const_bot⟩
+    fun h => by rw [limsup_congr h]; exact limsup_const_bot⟩
 #align limsup_eq_bot limsup_eq_bot
 
 /- warning: liminf_eq_top -> liminf_eq_top is a dubious translation:

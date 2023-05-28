@@ -50,9 +50,7 @@ theorem antisymm' [IsAntisymm α r] {a b : α} : r a b → r b a → b = a := fu
 
 #print antisymm_iff /-
 theorem antisymm_iff [IsRefl α r] [IsAntisymm α r] {a b : α} : r a b ∧ r b a ↔ a = b :=
-  ⟨fun h => antisymm h.1 h.2, by
-    rintro rfl
-    exact ⟨refl _, refl _⟩⟩
+  ⟨fun h => antisymm h.1 h.2, by rintro rfl; exact ⟨refl _, refl _⟩⟩
 #align antisymm_iff antisymm_iff
 -/
 

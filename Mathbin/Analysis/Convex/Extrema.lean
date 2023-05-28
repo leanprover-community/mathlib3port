@@ -42,11 +42,9 @@ Case conversion may be inaccurate. Consider using '#align is_min_on.of_is_local_
 theorem IsMinOn.of_isLocalMinOn_of_convexOn_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) :
     IsMinOn f (Icc a b) a := by
-  rintro c hc
-  dsimp only [mem_set_of_eq]
+  rintro c hc; dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhdsWithin_Icc_eq_nhdsWithin_Ici a_lt_b] at h_local_min
-  rcases hc.1.eq_or_lt with (rfl | a_lt_c)
-  · exact le_rfl
+  rcases hc.1.eq_or_lt with (rfl | a_lt_c); · exact le_rfl
   have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y :=
     h_local_min.filter_mono (nhdsWithin_mono _ Ioi_subset_Ici_self)
   have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := Ioc_mem_nhdsWithin_Ioi (left_mem_Ico.2 a_lt_c)

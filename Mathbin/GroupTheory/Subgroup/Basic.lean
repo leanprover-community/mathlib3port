@@ -173,12 +173,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zpow_mem zpow_memₓ'. -/
 @[to_additive]
 theorem zpow_mem {x : M} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
-  | (n : ℕ) => by
-    rw [zpow_ofNat]
-    exact pow_mem hx n
-  | -[n+1] => by
-    rw [zpow_negSucc]
-    exact inv_mem (pow_mem hx n.succ)
+  | (n : ℕ) => by rw [zpow_ofNat]; exact pow_mem hx n
+  | -[n+1] => by rw [zpow_negSucc]; exact inv_mem (pow_mem hx n.succ)
 #align zpow_mem zpow_mem
 #align zsmul_mem zsmul_mem
 
@@ -208,9 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_inv_mem_iff_exists_mem exists_inv_mem_iff_exists_memₓ'. -/
 @[simp, to_additive]
 theorem exists_inv_mem_iff_exists_mem {P : G → Prop} : (∃ x : G, x ∈ H ∧ P x⁻¹) ↔ ∃ x ∈ H, P x := by
-  constructor <;>
-    · rintro ⟨x, x_in, hx⟩
-      exact ⟨x⁻¹, inv_mem x_in, by simp [hx]⟩
+  constructor <;> · rintro ⟨x, x_in, hx⟩; exact ⟨x⁻¹, inv_mem x_in, by simp [hx]⟩
 #align exists_inv_mem_iff_exists_mem exists_inv_mem_iff_exists_mem
 #align exists_neg_mem_iff_exists_mem exists_neg_mem_iff_exists_mem
 
@@ -426,10 +420,7 @@ def inclusion {H K : S} (h : H ≤ K) : H →* K :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align subgroup_class.inclusion_self SubgroupClass.inclusion_selfₓ'. -/
 @[simp, to_additive]
-theorem inclusion_self (x : H) : inclusion le_rfl x = x :=
-  by
-  cases x
-  rfl
+theorem inclusion_self (x : H) : inclusion le_rfl x = x := by cases x; rfl
 #align subgroup_class.inclusion_self SubgroupClass.inclusion_self
 #align add_subgroup_class.inclusion_self AddSubgroupClass.inclusion_self
 
@@ -446,10 +437,8 @@ theorem inclusion_mk {h : H ≤ K} (x : G) (hx : x ∈ H) : inclusion h ⟨x, hx
 <too large>
 Case conversion may be inaccurate. Consider using '#align subgroup_class.inclusion_right SubgroupClass.inclusion_rightₓ'. -/
 @[to_additive]
-theorem inclusion_right (h : H ≤ K) (x : K) (hx : (x : G) ∈ H) : inclusion h ⟨x, hx⟩ = x :=
-  by
-  cases x
-  rfl
+theorem inclusion_right (h : H ≤ K) (x : K) (hx : (x : G) ∈ H) : inclusion h ⟨x, hx⟩ = x := by
+  cases x; rfl
 #align subgroup_class.inclusion_right SubgroupClass.inclusion_right
 #align add_subgroup_class.inclusion_right AddSubgroupClass.inclusion_right
 
@@ -458,19 +447,14 @@ theorem inclusion_right (h : H ≤ K) (x : K) (hx : (x : G) ∈ H) : inclusion h
 Case conversion may be inaccurate. Consider using '#align subgroup_class.inclusion_inclusion SubgroupClass.inclusion_inclusionₓ'. -/
 @[simp]
 theorem inclusion_inclusion {L : S} (hHK : H ≤ K) (hKL : K ≤ L) (x : H) :
-    inclusion hKL (inclusion hHK x) = inclusion (hHK.trans hKL) x :=
-  by
-  cases x
-  rfl
+    inclusion hKL (inclusion hHK x) = inclusion (hHK.trans hKL) x := by cases x; rfl
 #align subgroup_class.inclusion_inclusion SubgroupClass.inclusion_inclusion
 
 /- warning: subgroup_class.coe_inclusion -> SubgroupClass.coe_inclusion is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align subgroup_class.coe_inclusion SubgroupClass.coe_inclusionₓ'. -/
 @[simp, to_additive]
-theorem coe_inclusion {H K : S} {h : H ≤ K} (a : H) : (inclusion h a : G) = a :=
-  by
-  cases a
+theorem coe_inclusion {H K : S} {h : H ≤ K} (a : H) : (inclusion h a : G) = a := by cases a;
   simp only [inclusion, [anonymous], MonoidHom.mk'_apply]
 #align subgroup_class.coe_inclusion SubgroupClass.coe_inclusion
 #align add_subgroup_class.coe_inclusion AddSubgroupClass.coe_inclusion
@@ -483,9 +467,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup_class.subtype_comp_inclusion SubgroupClass.subtype_comp_inclusionₓ'. -/
 @[simp, to_additive]
 theorem subtype_comp_inclusion {H K : S} (hH : H ≤ K) :
-    (SubgroupClass.subtype K).comp (inclusion hH) = SubgroupClass.subtype H :=
-  by
-  ext
+    (SubgroupClass.subtype K).comp (inclusion hH) = SubgroupClass.subtype H := by ext;
   simp only [MonoidHom.comp_apply, coeSubtype, coe_inclusion]
 #align subgroup_class.subtype_comp_inclusion SubgroupClass.subtype_comp_inclusion
 #align add_subgroup_class.subtype_comp_inclusion AddSubgroupClass.subtype_comp_inclusion
@@ -1271,10 +1253,8 @@ def inclusion {H K : Subgroup G} (h : H ≤ K) : H →* K :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align subgroup.coe_inclusion Subgroup.coe_inclusionₓ'. -/
 @[simp, to_additive]
-theorem coe_inclusion {H K : Subgroup G} {h : H ≤ K} (a : H) : (inclusion h a : G) = a :=
-  by
-  cases a
-  simp only [inclusion, coe_mk, MonoidHom.mk'_apply]
+theorem coe_inclusion {H K : Subgroup G} {h : H ≤ K} (a : H) : (inclusion h a : G) = a := by
+  cases a; simp only [inclusion, coe_mk, MonoidHom.mk'_apply]
 #align subgroup.coe_inclusion Subgroup.coe_inclusion
 #align add_subgroup.coe_inclusion AddSubgroup.coe_inclusion
 
@@ -1455,9 +1435,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.coe_eq_single
 @[to_additive]
 theorem coe_eq_singleton {H : Subgroup G} : (∃ g : G, (H : Set G) = {g}) ↔ H = ⊥ :=
   ⟨fun ⟨g, hg⟩ =>
-    haveI : Subsingleton (H : Set G) := by
-      rw [hg]
-      infer_instance
+    haveI : Subsingleton (H : Set G) := by rw [hg]; infer_instance
     H.eq_bot_of_subsingleton,
     fun h => ⟨1, SetLike.ext'_iff.mp h⟩⟩
 #align subgroup.coe_eq_singleton Subgroup.coe_eq_singleton
@@ -1999,10 +1977,8 @@ but is expected to have type
   forall (G : Type.{u1}) [_inst_4 : Group.{u1} G] (S : Set.{u1} G), Iff (Eq.{succ u1} (Subgroup.{u1} G _inst_4) (Subgroup.closure.{u1} G _inst_4 S) (Bot.bot.{u1} (Subgroup.{u1} G _inst_4) (Subgroup.instBotSubgroup.{u1} G _inst_4))) (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) S (Singleton.singleton.{u1, u1} G (Set.{u1} G) (Set.instSingletonSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_4))))))))
 Case conversion may be inaccurate. Consider using '#align subgroup.closure_eq_bot_iff Subgroup.closure_eq_bot_iffₓ'. -/
 @[to_additive]
-theorem closure_eq_bot_iff (G : Type _) [Group G] (S : Set G) : closure S = ⊥ ↔ S ⊆ {1} :=
-  by
-  rw [← le_bot_iff]
-  exact closure_le _
+theorem closure_eq_bot_iff (G : Type _) [Group G] (S : Set G) : closure S = ⊥ ↔ S ⊆ {1} := by
+  rw [← le_bot_iff]; exact closure_le _
 #align subgroup.closure_eq_bot_iff Subgroup.closure_eq_bot_iff
 #align add_subgroup.closure_eq_bot_iff AddSubgroup.closure_eq_bot_iff
 
@@ -2099,8 +2075,7 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} (h
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hK i j with ⟨k, hki, hkj⟩
     exact ⟨k, mul_mem (hki hi) (hkj hj)⟩
-  rintro _ ⟨i, hi⟩
-  exact ⟨i, inv_mem hi⟩
+  rintro _ ⟨i, hi⟩; exact ⟨i, inv_mem hi⟩
 #align subgroup.mem_supr_of_directed Subgroup.mem_iSup_of_directed
 #align add_subgroup.mem_supr_of_directed AddSubgroup.mem_iSup_of_directed
 
@@ -2193,10 +2168,7 @@ theorem comap_comap (K : Subgroup P) (g : N →* P) (f : G →* N) :
 
 #print Subgroup.comap_id /-
 @[simp, to_additive]
-theorem comap_id (K : Subgroup N) : K.comap (MonoidHom.id _) = K :=
-  by
-  ext
-  rfl
+theorem comap_id (K : Subgroup N) : K.comap (MonoidHom.id _) = K := by ext; rfl
 #align subgroup.comap_id Subgroup.comap_id
 #align add_subgroup.comap_id AddSubgroup.comap_id
 -/
@@ -2208,9 +2180,7 @@ theorem comap_id (K : Subgroup N) : K.comap (MonoidHom.id _) = K :=
 def map (f : G →* N) (H : Subgroup G) : Subgroup N :=
   { H.toSubmonoid.map f with
     carrier := f '' H
-    inv_mem' := by
-      rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, H.inv_mem hx, f.map_inv x⟩ }
+    inv_mem' := by rintro _ ⟨x, hx, rfl⟩; exact ⟨x⁻¹, H.inv_mem hx, f.map_inv x⟩ }
 #align subgroup.map Subgroup.map
 #align add_subgroup.map AddSubgroup.map
 -/
@@ -2303,9 +2273,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.map_one_eq_bot Subgroup.map_one_eq_botₓ'. -/
 @[simp, to_additive]
 theorem map_one_eq_bot : K.map (1 : G →* N) = ⊥ :=
-  eq_bot_iff.mpr <| by
-    rintro x ⟨y, _, rfl⟩
-    simp
+  eq_bot_iff.mpr <| by rintro x ⟨y, _, rfl⟩; simp
 #align subgroup.map_one_eq_bot Subgroup.map_one_eq_bot
 #align add_subgroup.map_zero_eq_bot AddSubgroup.map_zero_eq_bot
 
@@ -2524,12 +2492,8 @@ but is expected to have type
   forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))), (Function.Surjective.{succ u2, succ u1} G N (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : G) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) G N (MulOneClass.toMul.{u2} G (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)))) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4))) (MonoidHom.monoidHomClass.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))))) f)) -> (Eq.{succ u1} (Subgroup.{u1} N _inst_4) (Subgroup.map.{u2, u1} G _inst_1 N _inst_4 f (Top.top.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instTopSubgroup.{u2} G _inst_1))) (Top.top.{u1} (Subgroup.{u1} N _inst_4) (Subgroup.instTopSubgroup.{u1} N _inst_4)))
 Case conversion may be inaccurate. Consider using '#align subgroup.map_top_of_surjective Subgroup.map_top_of_surjectiveₓ'. -/
 @[simp, to_additive]
-theorem map_top_of_surjective (f : G →* N) (h : Function.Surjective f) : Subgroup.map f ⊤ = ⊤ :=
-  by
-  rw [eq_top_iff]
-  intro x hx
-  obtain ⟨y, hy⟩ := h x
-  exact ⟨y, trivial, hy⟩
+theorem map_top_of_surjective (f : G →* N) (h : Function.Surjective f) : Subgroup.map f ⊤ = ⊤ := by
+  rw [eq_top_iff]; intro x hx; obtain ⟨y, hy⟩ := h x; exact ⟨y, trivial, hy⟩
 #align subgroup.map_top_of_surjective Subgroup.map_top_of_surjective
 #align add_subgroup.map_top_of_surjective AddSubgroup.map_top_of_surjective
 
@@ -3024,10 +2988,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.pi_bot Subgroup.pi_botₓ'. -/
 @[to_additive]
 theorem pi_bot : (pi Set.univ fun i => (⊥ : Subgroup (f i))) = ⊥ :=
-  (eq_bot_iff_forall _).mpr fun p hp =>
-    by
-    simp only [mem_pi, mem_bot] at *
-    ext j
+  (eq_bot_iff_forall _).mpr fun p hp => by simp only [mem_pi, mem_bot] at *; ext j;
     exact hp j trivial
 #align subgroup.pi_bot Subgroup.pi_bot
 #align add_subgroup.pi_bot AddSubgroup.pi_bot
@@ -3043,11 +3004,8 @@ theorem le_pi_iff {I : Set η} {H : ∀ i, Subgroup (f i)} {J : Subgroup (∀ i,
     J ≤ pi I H ↔ ∀ i : η, i ∈ I → map (Pi.evalMonoidHom f i) J ≤ H i :=
   by
   constructor
-  · intro h i hi
-    rintro _ ⟨x, hx, rfl⟩
-    exact (h hx) _ hi
-  · intro h x hx i hi
-    refine' h i hi ⟨_, hx, rfl⟩
+  · intro h i hi; rintro _ ⟨x, hx, rfl⟩; exact (h hx) _ hi
+  · intro h x hx i hi; refine' h i hi ⟨_, hx, rfl⟩
 #align subgroup.le_pi_iff Subgroup.le_pi_iff
 #align add_subgroup.le_pi_iff AddSubgroup.le_pi_iff
 
@@ -3062,12 +3020,10 @@ theorem mulSingle_mem_pi [DecidableEq η] {I : Set η} {H : ∀ i, Subgroup (f i
     Pi.mulSingle i x ∈ pi I H ↔ i ∈ I → x ∈ H i :=
   by
   constructor
-  · intro h hi
-    simpa using h i hi
+  · intro h hi; simpa using h i hi
   · intro h j hj
     by_cases heq : j = i
-    · subst HEq
-      simpa using h hj
+    · subst HEq; simpa using h hj
     · simp [HEq, one_mem]
 #align subgroup.mul_single_mem_pi Subgroup.mulSingle_mem_pi
 #align add_subgroup.single_mem_pi AddSubgroup.single_mem_pi
@@ -3393,11 +3349,8 @@ lean 3 declaration is
 but is expected to have type
   forall {G : Type.{u1}} [_inst_4 : CommGroup.{u1} G], Eq.{succ u1} (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_4)) (Subgroup.center.{u1} G (CommGroup.toGroup.{u1} G _inst_4)) (Top.top.{u1} (Subgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_4)) (Subgroup.instTopSubgroup.{u1} G (CommGroup.toGroup.{u1} G _inst_4)))
 Case conversion may be inaccurate. Consider using '#align comm_group.center_eq_top CommGroup.center_eq_topₓ'. -/
-theorem CommGroup.center_eq_top {G : Type _} [CommGroup G] : center G = ⊤ :=
-  by
-  rw [eq_top_iff']
-  intro x y
-  exact mul_comm y x
+theorem CommGroup.center_eq_top {G : Type _} [CommGroup G] : center G = ⊤ := by rw [eq_top_iff'];
+  intro x y; exact mul_comm y x
 #align comm_group.center_eq_top CommGroup.center_eq_top
 
 /- warning: group.comm_group_of_center_eq_top -> Group.commGroupOfCenterEqTop is a dubious translation:
@@ -3408,11 +3361,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.comm_group_of_center_eq_top Group.commGroupOfCenterEqTopₓ'. -/
 /-- A group is commutative if the center is the whole group -/
 def Group.commGroupOfCenterEqTop (h : center G = ⊤) : CommGroup G :=
-  { (_ : Group G) with
-    mul_comm := by
-      rw [eq_top_iff'] at h
-      intro x y
-      exact h y x }
+  { (_ : Group G) with mul_comm := by rw [eq_top_iff'] at h; intro x y; exact h y x }
 #align group.comm_group_of_center_eq_top Group.commGroupOfCenterEqTop
 
 variable {G} (H)
@@ -3426,14 +3375,9 @@ def normalizer : Subgroup G
     where
   carrier := { g : G | ∀ n, n ∈ H ↔ g * n * g⁻¹ ∈ H }
   one_mem' := by simp
-  mul_mem' a b (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) (hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H) n :=
-    by
-    rw [hb, ha]
-    simp [mul_assoc]
-  inv_mem' a (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) n :=
-    by
-    rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
-    simp [mul_assoc]
+  mul_mem' a b (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) (hb : ∀ n, n ∈ H ↔ b * n * b⁻¹ ∈ H) n := by
+    rw [hb, ha]; simp [mul_assoc]
+  inv_mem' a (ha : ∀ n, n ∈ H ↔ a * n * a⁻¹ ∈ H) n := by rw [ha (a⁻¹ * n * a⁻¹⁻¹)]; simp [mul_assoc]
 #align subgroup.normalizer Subgroup.normalizer
 #align add_subgroup.normalizer AddSubgroup.normalizer
 -/
@@ -3448,14 +3392,9 @@ def setNormalizer (S : Set G) : Subgroup G
     where
   carrier := { g : G | ∀ n, n ∈ S ↔ g * n * g⁻¹ ∈ S }
   one_mem' := by simp
-  mul_mem' a b (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) (hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S) n :=
-    by
-    rw [hb, ha]
-    simp [mul_assoc]
-  inv_mem' a (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) n :=
-    by
-    rw [ha (a⁻¹ * n * a⁻¹⁻¹)]
-    simp [mul_assoc]
+  mul_mem' a b (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) (hb : ∀ n, n ∈ S ↔ b * n * b⁻¹ ∈ S) n := by
+    rw [hb, ha]; simp [mul_assoc]
+  inv_mem' a (ha : ∀ n, n ∈ S ↔ a * n * a⁻¹ ∈ S) n := by rw [ha (a⁻¹ * n * a⁻¹⁻¹)]; simp [mul_assoc]
 #align subgroup.set_normalizer Subgroup.setNormalizer
 #align add_subgroup.set_normalizer AddSubgroup.setNormalizer
 -/
@@ -3889,9 +3828,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Subgroup.{u1} G _inst_1} [tn : Subgroup.Normal.{u1} G _inst_1 N] {a : G}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) a N) -> (HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) (conjugatesOf.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) N))
 Case conversion may be inaccurate. Consider using '#align group.conjugates_subset_normal Group.conjugates_subset_normalₓ'. -/
 theorem conjugates_subset_normal {N : Subgroup G} [tn : N.Normal] {a : G} (h : a ∈ N) :
-    conjugatesOf a ⊆ N := by
-  rintro a hc
-  obtain ⟨c, rfl⟩ := isConj_iff.1 hc
+    conjugatesOf a ⊆ N := by rintro a hc; obtain ⟨c, rfl⟩ := isConj_iff.1 hc;
   exact tn.conj_mem a h c
 #align group.conjugates_subset_normal Group.conjugates_subset_normal
 
@@ -4077,10 +4014,8 @@ lean 3 declaration is
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.normalCore.{u1} G _inst_1 H) H
 Case conversion may be inaccurate. Consider using '#align subgroup.normal_core_le Subgroup.normalCore_leₓ'. -/
-theorem normalCore_le (H : Subgroup G) : H.normalCore ≤ H := fun a h =>
-  by
-  rw [← mul_one a, ← inv_one, ← one_mul a]
-  exact h 1
+theorem normalCore_le (H : Subgroup G) : H.normalCore ≤ H := fun a h => by
+  rw [← mul_one a, ← inv_one, ← one_mul a]; exact h 1
 #align subgroup.normal_core_le Subgroup.normalCore_le
 
 #print Subgroup.normalCore_normal /-
@@ -4320,11 +4255,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (MonoidHom.range.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.toGroup.{u1} G _inst_1 H) G _inst_1 (Subgroup.subtype.{u1} G _inst_1 H)) H
 Case conversion may be inaccurate. Consider using '#align subgroup.subtype_range Subgroup.subtype_rangeₓ'. -/
 @[simp, to_additive]
-theorem Subgroup.subtype_range (H : Subgroup G) : H.Subtype.range = H :=
-  by
-  rw [range_eq_map, ← SetLike.coe_set_eq, coe_map, Subgroup.coeSubtype]
-  ext
-  simp
+theorem Subgroup.subtype_range (H : Subgroup G) : H.Subtype.range = H := by
+  rw [range_eq_map, ← SetLike.coe_set_eq, coe_map, Subgroup.coeSubtype]; ext; simp
 #align subgroup.subtype_range Subgroup.subtype_range
 #align add_subgroup.subtype_range AddSubgroup.subtype_range
 
@@ -4405,10 +4337,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.of_injectiv
 @[to_additive "The range of an injective additive group homomorphism is isomorphic to its\ndomain."]
 noncomputable def ofInjective {f : G →* N} (hf : Function.Injective f) : G ≃* f.range :=
   MulEquiv.ofBijective (f.codRestrict f.range fun x => ⟨x, rfl⟩)
-    ⟨fun x y h => hf (Subtype.ext_iff.mp h),
-      by
-      rintro ⟨x, y, rfl⟩
-      exact ⟨y, rfl⟩⟩
+    ⟨fun x y h => hf (Subtype.ext_iff.mp h), by rintro ⟨x, y, rfl⟩; exact ⟨y, rfl⟩⟩
 #align monoid_hom.of_injective MonoidHom.ofInjective
 #align add_monoid_hom.of_injective AddMonoidHom.ofInjective
 
@@ -4473,9 +4402,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {M : Type.{u2}} [_inst_7 : Monoid.{u2} M] (f : MonoidHom.{u1, u2} G M (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} M _inst_7)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (MonoidHom.ker.{u1, u2} G _inst_1 (Units.{u2} M _inst_7) (Units.instMulOneClassUnits.{u2} M _inst_7) (MonoidHom.toHomUnits.{u1, u2} G M _inst_1 _inst_7 f)) (MonoidHom.ker.{u1, u2} G _inst_1 M (Monoid.toMulOneClass.{u2} M _inst_7) f)
 Case conversion may be inaccurate. Consider using '#align monoid_hom.ker_to_hom_units MonoidHom.ker_toHomUnitsₓ'. -/
 @[simp, to_additive]
-theorem ker_toHomUnits {M} [Monoid M] (f : G →* M) : f.toHomUnits.ker = f.ker :=
-  by
-  ext x
+theorem ker_toHomUnits {M} [Monoid M] (f : G →* M) : f.toHomUnits.ker = f.ker := by ext x;
   simp [mem_ker, Units.ext_iff]
 #align monoid_hom.ker_to_hom_units MonoidHom.ker_toHomUnits
 #align add_monoid_hom.ker_to_hom_add_units AddMonoidHom.ker_toHomAddUnits
@@ -5178,10 +5105,8 @@ theorem sup_subgroupOf_eq {H K L : Subgroup G} (hH : H ≤ L) (hK : K ≤ L) :
 Case conversion may be inaccurate. Consider using '#align subgroup.codisjoint_subgroup_of_sup Subgroup.codisjoint_subgroupOf_supₓ'. -/
 @[to_additive]
 theorem codisjoint_subgroupOf_sup (H K : Subgroup G) :
-    Codisjoint (H.subgroupOf (H ⊔ K)) (K.subgroupOf (H ⊔ K)) :=
-  by
-  rw [codisjoint_iff, sup_subgroup_of_eq, subgroup_of_self]
-  exacts[le_sup_left, le_sup_right]
+    Codisjoint (H.subgroupOf (H ⊔ K)) (K.subgroupOf (H ⊔ K)) := by
+  rw [codisjoint_iff, sup_subgroup_of_eq, subgroup_of_self]; exacts[le_sup_left, le_sup_right]
 #align subgroup.codisjoint_subgroup_of_sup Subgroup.codisjoint_subgroupOf_sup
 #align add_subgroup.codisjoint_add_subgroup_of_sup AddSubgroup.codisjoint_addSubgroupOf_sup
 
@@ -5589,10 +5514,7 @@ namespace Subgroup
 Case conversion may be inaccurate. Consider using '#align subgroup.equiv_map_of_injective_coe_mul_equiv Subgroup.equivMapOfInjective_coe_mulEquivₓ'. -/
 @[simp, to_additive]
 theorem equivMapOfInjective_coe_mulEquiv (H : Subgroup G) (e : G ≃* G') :
-    H.equivMapOfInjective (e : G →* G') (EquivLike.injective e) = e.subgroupMap H :=
-  by
-  ext
-  rfl
+    H.equivMapOfInjective (e : G →* G') (EquivLike.injective e) = e.subgroupMap H := by ext; rfl
 #align subgroup.equiv_map_of_injective_coe_mul_equiv Subgroup.equivMapOfInjective_coe_mulEquiv
 #align add_subgroup.equiv_map_of_injective_coe_add_equiv AddSubgroup.equivMapOfInjective_coe_addEquiv
 
@@ -5797,12 +5719,9 @@ Case conversion may be inaccurate. Consider using '#align subgroup.commute_of_no
 theorem commute_of_normal_of_disjoint (H₁ H₂ : Subgroup G) (hH₁ : H₁.Normal) (hH₂ : H₂.Normal)
     (hdis : Disjoint H₁ H₂) (x y : G) (hx : x ∈ H₁) (hy : y ∈ H₂) : Commute x y :=
   by
-  suffices x * y * x⁻¹ * y⁻¹ = 1 by
-    show x * y = y * x
-    · rw [mul_assoc, mul_eq_one_iff_eq_inv] at this
-      simpa
-  apply hdis.le_bot
-  constructor
+  suffices x * y * x⁻¹ * y⁻¹ = 1 by show x * y = y * x;
+    · rw [mul_assoc, mul_eq_one_iff_eq_inv] at this; simpa
+  apply hdis.le_bot; constructor
   · suffices x * (y * x⁻¹ * y⁻¹) ∈ H₁ by simpa [mul_assoc]
     exact H₁.mul_mem hx (hH₁.conj_mem _ (H₁.inv_mem hx) _)
   · show x * y * x⁻¹ * y⁻¹ ∈ H₂

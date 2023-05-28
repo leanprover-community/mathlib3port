@@ -59,13 +59,8 @@ def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D
   map S T f :=
     Multiequalizer.lift _ _ (fun I => Multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
       Multiequalizer.condition (S.unop.index P) (I.map f.unop)
-  map_id' S := by
-    ext I
-    cases I
-    simpa
-  map_comp' S T W f g := by
-    ext I
-    simpa
+  map_id' S := by ext I; cases I; simpa
+  map_comp' S T W f g := by ext I; simpa
 #align category_theory.grothendieck_topology.diagram CategoryTheory.GrothendieckTopology.diagram
 
 /- warning: category_theory.grothendieck_topology.diagram_pullback -> CategoryTheory.GrothendieckTopology.diagramPullback is a dubious translation:
@@ -78,10 +73,7 @@ def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).o
   app S :=
     Multiequalizer.lift _ _ (fun I => Multiequalizer.ι (S.unop.index P) I.base) fun I =>
       Multiequalizer.condition (S.unop.index P) I.base
-  naturality' S T f := by
-    ext
-    dsimp
-    simpa
+  naturality' S T f := by ext; dsimp; simpa
 #align category_theory.grothendieck_topology.diagram_pullback CategoryTheory.GrothendieckTopology.diagramPullback
 
 /- warning: category_theory.grothendieck_topology.diagram_nat_trans -> CategoryTheory.GrothendieckTopology.diagramNatTrans is a dubious translation:
@@ -102,10 +94,7 @@ def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X
         erw [category.assoc, category.assoc, ← η.naturality, ← η.naturality, ← category.assoc, ←
           category.assoc, multiequalizer.condition]
         rfl)
-  naturality' _ _ _ := by
-    dsimp
-    ext
-    simpa
+  naturality' _ _ _ := by dsimp; ext; simpa
 #align category_theory.grothendieck_topology.diagram_nat_trans CategoryTheory.GrothendieckTopology.diagramNatTrans
 
 /- warning: category_theory.grothendieck_topology.diagram_nat_trans_id -> CategoryTheory.GrothendieckTopology.diagramNatTrans_id is a dubious translation:
@@ -125,9 +114,7 @@ theorem diagramNatTrans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (𝟙
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.diagram_nat_trans_zero CategoryTheory.GrothendieckTopology.diagramNatTrans_zeroₓ'. -/
 @[simp]
 theorem diagramNatTrans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) :
-    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by
-  ext (j x)
-  dsimp
+    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by ext (j x); dsimp;
   rw [zero_comp, multiequalizer.lift_ι, comp_zero]
 #align category_theory.grothendieck_topology.diagram_nat_trans_zero CategoryTheory.GrothendieckTopology.diagramNatTrans_zero
 
@@ -136,10 +123,7 @@ theorem diagramNatTrans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) :
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.diagram_nat_trans_comp CategoryTheory.GrothendieckTopology.diagramNatTrans_compₓ'. -/
 @[simp]
 theorem diagramNatTrans_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) (X : C) :
-    J.diagramNatTrans (η ≫ γ) X = J.diagramNatTrans η X ≫ J.diagramNatTrans γ X :=
-  by
-  ext
-  dsimp
+    J.diagramNatTrans (η ≫ γ) X = J.diagramNatTrans η X ≫ J.diagramNatTrans γ X := by ext; dsimp;
   simp
 #align category_theory.grothendieck_topology.diagram_nat_trans_comp CategoryTheory.GrothendieckTopology.diagramNatTrans_comp
 
@@ -255,9 +239,7 @@ theorem plusMap_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.plus_map_zero CategoryTheory.GrothendieckTopology.plusMap_zeroₓ'. -/
 @[simp]
-theorem plusMap_zero [Preadditive D] (P Q : Cᵒᵖ ⥤ D) : J.plusMap (0 : P ⟶ Q) = 0 :=
-  by
-  ext
+theorem plusMap_zero [Preadditive D] (P Q : Cᵒᵖ ⥤ D) : J.plusMap (0 : P ⟶ Q) = 0 := by ext;
   erw [comp_zero, colimit.ι_map, J.diagram_nat_trans_zero, zero_comp]
 #align category_theory.grothendieck_topology.plus_map_zero CategoryTheory.GrothendieckTopology.plusMap_zero
 
@@ -386,8 +368,7 @@ theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
   dsimp [multifork.of_ι]
   convert multiequalizer.condition (S.unop.index P)
       ⟨_, _, _, II.f, 𝟙 _, I.f, II.f ≫ I.f, I.hf, sieve.downward_closed _ I.hf _, by simp⟩
-  · cases I
-    rfl
+  · cases I; rfl
   · dsimp [cover.index]
     erw [P.map_id, category.comp_id]
     rfl
@@ -404,23 +385,18 @@ theorem isIso_toPlus_of_isSheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P)
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP
   rsuffices : ∀ X, is_iso ((J.to_plus P).app X)
   · apply nat_iso.is_iso_of_is_iso_app
-  intro X
-  dsimp
+  intro X; dsimp
   rsuffices : is_iso (colimit.ι (J.diagram P X.unop) (op ⊤))
   · apply is_iso.comp_is_iso
   rsuffices : ∀ (S T : (J.cover X.unop)ᵒᵖ) (f : S ⟶ T), is_iso ((J.diagram P X.unop).map f)
   · apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
   intro S T e
-  have : S.unop.to_multiequalizer P ≫ (J.diagram P X.unop).map e = T.unop.to_multiequalizer P :=
-    by
-    ext
-    dsimp
-    simpa
+  have : S.unop.to_multiequalizer P ≫ (J.diagram P X.unop).map e = T.unop.to_multiequalizer P := by
+    ext; dsimp; simpa
   have :
     (J.diagram P X.unop).map e = inv (S.unop.to_multiequalizer P) ≫ T.unop.to_multiequalizer P := by
     simp [← this]
-  rw [this]
-  infer_instance
+  rw [this]; infer_instance
 #align category_theory.grothendieck_topology.is_iso_to_plus_of_is_sheaf CategoryTheory.GrothendieckTopology.isIso_toPlus_of_isSheaf
 
 /- warning: category_theory.grothendieck_topology.iso_to_plus -> CategoryTheory.GrothendieckTopology.isoToPlus is a dubious translation:
@@ -491,13 +467,9 @@ Case conversion may be inaccurate. Consider using '#align category_theory.grothe
 theorem plus_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.plusObj P ⟶ Q) (hQ : Presheaf.IsSheaf J Q)
     (h : J.toPlus P ≫ η = J.toPlus P ≫ γ) : η = γ :=
   by
-  have : γ = J.plus_lift (J.to_plus P ≫ γ) hQ :=
-    by
-    apply plus_lift_unique
-    rfl
+  have : γ = J.plus_lift (J.to_plus P ≫ γ) hQ := by apply plus_lift_unique; rfl
   rw [this]
-  apply plus_lift_unique
-  exact h
+  apply plus_lift_unique; exact h
 #align category_theory.grothendieck_topology.plus_hom_ext CategoryTheory.GrothendieckTopology.plus_hom_ext
 
 /- warning: category_theory.grothendieck_topology.iso_to_plus_inv -> CategoryTheory.GrothendieckTopology.isoToPlus_inv is a dubious translation:
@@ -533,10 +505,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.plus_functor_preserves_zero_morphisms CategoryTheory.GrothendieckTopology.plusFunctor_preservesZeroMorphismsₓ'. -/
 instance plusFunctor_preservesZeroMorphisms [Preadditive D] :
     (plusFunctor J D).PreservesZeroMorphisms
-    where map_zero' F G := by
-    ext
-    dsimp
-    rw [J.plus_map_zero, nat_trans.app_zero]
+    where map_zero' F G := by ext; dsimp; rw [J.plus_map_zero, nat_trans.app_zero]
 #align category_theory.grothendieck_topology.plus_functor_preserves_zero_morphisms CategoryTheory.GrothendieckTopology.plusFunctor_preservesZeroMorphisms
 
 end CategoryTheory.GrothendieckTopology

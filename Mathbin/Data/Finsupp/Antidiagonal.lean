@@ -79,12 +79,9 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
   ext ⟨a, b⟩
   suffices a = g → (a + b = f ↔ g ≤ f ∧ b = f - g) by
     simpa [apply_ite ((· ∈ ·) (a, b)), ← and_assoc, @and_right_comm _ (a = _), and_congr_left_iff]
-  rintro rfl
-  constructor
-  · rintro rfl
-    exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
-  · rintro ⟨h, rfl⟩
-    exact add_tsub_cancel_of_le h
+  rintro rfl; constructor
+  · rintro rfl; exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
+  · rintro ⟨h, rfl⟩; exact add_tsub_cancel_of_le h
 #align finsupp.antidiagonal_filter_fst_eq Finsupp.antidiagonal_filter_fst_eq
 
 /- warning: finsupp.antidiagonal_filter_snd_eq -> Finsupp.antidiagonal_filter_snd_eq is a dubious translation:
@@ -100,12 +97,9 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
   ext ⟨a, b⟩
   suffices b = g → (a + b = f ↔ g ≤ f ∧ a = f - g) by
     simpa [apply_ite ((· ∈ ·) (a, b)), ← and_assoc, and_congr_left_iff]
-  rintro rfl
-  constructor
-  · rintro rfl
-    exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
-  · rintro ⟨h, rfl⟩
-    exact tsub_add_cancel_of_le h
+  rintro rfl; constructor
+  · rintro rfl; exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
+  · rintro ⟨h, rfl⟩; exact tsub_add_cancel_of_le h
 #align finsupp.antidiagonal_filter_snd_eq Finsupp.antidiagonal_filter_snd_eq
 
 #print Finsupp.antidiagonal_zero /-

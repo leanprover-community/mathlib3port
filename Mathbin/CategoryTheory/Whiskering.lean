@@ -326,10 +326,7 @@ theorem assoc (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H = F �
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom =
       whiskerRight (rightUnitor F).Hom G :=
-  by
-  ext
-  dsimp
-  simp
+  by ext; dsimp; simp
 #align category_theory.functor.triangle CategoryTheory.Functor.triangle
 -/
 
@@ -343,10 +340,7 @@ theorem pentagon :
     whiskerRight (associator F G H).Hom K ≫
         (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
-  by
-  ext
-  dsimp
-  simp
+  by ext; dsimp; simp
 #align category_theory.functor.pentagon CategoryTheory.Functor.pentagon
 -/
 

@@ -104,9 +104,7 @@ theorem one_le_succ_nth_stream_b {ifp_succ_n : IntFractPair K}
       int_fract_pair.stream v n = some ifp_n ∧
         ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
   exact succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
-  suffices 1 ≤ ifp_n.fr⁻¹ by
-    rw_mod_cast [le_floor]
-    assumption
+  suffices 1 ≤ ifp_n.fr⁻¹ by rw_mod_cast [le_floor]; assumption
   suffices ifp_n.fr ≤ 1
     by
     have h : 0 < ifp_n.fr :=
@@ -128,8 +126,7 @@ theorem succ_nth_stream_b_le_nth_stream_fr_inv {ifp_n ifp_succ_n : IntFractPair 
   suffices (⌊ifp_n.fr⁻¹⌋ : K) ≤ ifp_n.fr⁻¹
     by
     cases' ifp_n with _ ifp_n_fr
-    have : ifp_n_fr ≠ 0 := by
-      intro h
+    have : ifp_n_fr ≠ 0 := by intro h;
       simpa [h, int_fract_pair.stream, nth_stream_eq] using succ_nth_stream_eq
     have : int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n := by
       simpa [this, int_fract_pair.stream, nth_stream_eq, Option.coe_def] using succ_nth_stream_eq
@@ -180,7 +177,7 @@ theorem of_part_num_eq_one_and_exists_int_part_denom_eq {gp : GeneralizedContinu
 theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.get? n = some a) :
     a = 1 :=
   by
-  obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.a = a
+  obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.a = a;
   exact exists_s_a_of_part_num nth_part_num_eq
   have : gp.a = 1 := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).left
   rwa [gp_a_eq_a_n] at this
@@ -190,7 +187,7 @@ theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.g
 theorem exists_int_eq_of_part_denom {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) : ∃ z : ℤ, b = (z : K) :=
   by
-  obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.b = b
+  obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.b = b;
   exact exists_s_b_of_part_denom nth_part_denom_eq
   have : ∃ z : ℤ, gp.b = (z : K) := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).right
   rwa [gp_b_eq_b_n] at this
@@ -221,7 +218,7 @@ theorem fib_le_of_continuantsAux_b :
         -- case 2 ≤ n
         have : ¬n + 2 ≤ 1 := by linarith
         have not_terminated_at_n : ¬g.terminated_at n := Or.resolve_left hyp this
-        obtain ⟨gp, s_ppred_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
+        obtain ⟨gp, s_ppred_nth_eq⟩ : ∃ gp, g.s.nth n = some gp;
         exact option.ne_none_iff_exists'.mp not_terminated_at_n
         set pconts := g.continuants_aux (n + 1) with pconts_eq
         set ppconts := g.continuants_aux n with ppconts_eq
@@ -293,10 +290,8 @@ theorem zero_le_of_continuantsAux_b : 0 ≤ ((of v).continuantsAux n).b :=
 #align generalized_continued_fraction.zero_le_of_continuants_aux_b GeneralizedContinuedFraction.zero_le_of_continuantsAux_b
 
 /-- Shows that all denominators are nonnegative. -/
-theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
-  by
-  rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
-  exact zero_le_of_continuants_aux_b
+theorem zero_le_of_denom : 0 ≤ (of v).denominators n := by
+  rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]; exact zero_le_of_continuants_aux_b
 #align generalized_continued_fraction.zero_le_of_denom GeneralizedContinuedFraction.zero_le_of_denom
 
 theorem le_of_succ_succ_get?_continuantsAux_b {b : K}
@@ -330,7 +325,7 @@ theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=
     have : g.denominators (n + 1) = g.denominators n :=
       denominators_stable_of_terminated n.le_succ this
     rw [this]
-  · obtain ⟨b, nth_part_denom_eq⟩ : ∃ b, g.partial_denominators.nth n = some b
+  · obtain ⟨b, nth_part_denom_eq⟩ : ∃ b, g.partial_denominators.nth n = some b;
     exact option.ne_none_iff_exists'.mp not_terminated
     have : 1 ≤ b := of_one_le_nth_part_denom nth_part_denom_eq
     calc
@@ -371,7 +366,7 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
     -- let's change the goal to something more readable
     change pA * conts.b - pB * conts.a = (-1) ^ (n + 1)
     have not_terminated_at_n : ¬terminated_at g n := Or.resolve_left hyp n.succ_ne_zero
-    obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
+    obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp;
     exact option.ne_none_iff_exists'.elim_left not_terminated_at_n
     -- unfold the recurrence relation for `conts` once and simplify to derive the following
     suffices pA * (ppB + gp.b * pB) - pB * (ppA + gp.b * pA) = (-1) ^ (n + 1)
@@ -380,7 +375,7 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
       have gp_a_eq_one : gp.a = 1 := of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
       rw [gp_a_eq_one, this.symm]
       ring
-    suffices : pA * ppB - pB * ppA = (-1) ^ (n + 1)
+    suffices : pA * ppB - pB * ppA = (-1) ^ (n + 1);
     calc
       pA * (ppB + gp.b * pB) - pB * (ppA + gp.b * pA) =
           pA * ppB + pA * gp.b * pB - pB * ppA - pB * gp.b * pA :=
@@ -434,7 +429,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K}
     comp_exact_value_correctness_of_stream_eq_some stream_nth_eq
   cases' Decidable.em (ifp.fr = 0) with ifp_fr_eq_zero ifp_fr_ne_zero
   · suffices v - g.convergents n = 0 by simpa [ifp_fr_eq_zero]
-    replace g_finite_correctness : v = g.convergents n
+    replace g_finite_correctness : v = g.convergents n;
     · simpa [GeneralizedContinuedFraction.compExactValue, ifp_fr_eq_zero] using g_finite_correctness
     exact sub_eq_zero.elim_right g_finite_correctness
   · -- more shorthand notation
@@ -445,7 +440,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K}
     -- first, let's simplify the goal as `ifp.fr ≠ 0`
     suffices v - A / B = (-1) ^ n / (B * (ifp.fr⁻¹ * B + pB)) by simpa [ifp_fr_ne_zero]
     -- now we can unfold `g.comp_exact_value` to derive the following equality for `v`
-    replace g_finite_correctness : v = (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B)
+    replace g_finite_correctness : v = (pA + ifp.fr⁻¹ * A) / (pB + ifp.fr⁻¹ * B);
     ·
       simpa [GeneralizedContinuedFraction.compExactValue, ifp_fr_ne_zero, next_continuants,
         next_numerator, next_denominator, add_comm] using g_finite_correctness
@@ -522,7 +517,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
   set pred_conts := continuants_aux g n with pred_conts_eq
   -- change the goal to something more readable
   change |v - convergents g n| ≤ 1 / (conts.b * nextConts.b)
-  obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp
+  obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp;
   exact option.ne_none_iff_exists'.elim_left not_terminated_at_n
   have gp_a_eq_one : gp.a = 1 := of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
   -- unfold the recurrence relation for `nextConts.b`
@@ -530,10 +525,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     simp [nextConts, continuants_aux_recurrence s_nth_eq pred_conts_eq conts_eq, gp_a_eq_one,
       pred_conts_eq.symm, conts_eq.symm, add_comm]
   let denom := conts.b * (pred_conts.b + gp.b * conts.b)
-  suffices |v - g.convergents n| ≤ 1 / denom
-    by
-    rw [nextConts_b_eq]
-    congr 1
+  suffices |v - g.convergents n| ≤ 1 / denom by rw [nextConts_b_eq]; congr 1
   obtain ⟨ifp_succ_n, succ_nth_stream_eq, ifp_succ_n_b_eq_gp_b⟩ :
     ∃ ifp_succ_n, int_fract_pair.stream v (n + 1) = some ifp_succ_n ∧ (ifp_succ_n.b : K) = gp.b
   exact int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some s_nth_eq
@@ -590,7 +582,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
         any_goals repeat' first |apply mul_pos|apply add_pos_of_nonneg_of_pos <;> assumption
       rwa [abs_of_pos this]
     rwa [this]
-  suffices : 0 < denom ∧ denom ≤ denom'
+  suffices : 0 < denom ∧ denom ≤ denom';
   exact div_le_div_of_le_left zero_le_one this.left this.right
   constructor
   · have : 0 < pred_conts.b + gp.b * conts.b :=
@@ -599,7 +591,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
         nextConts_b_ineq
     solve_by_elim [mul_pos]
   · -- we can cancel multiplication by `conts.b` and addition with `pred_conts.b`
-    suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b
+    suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b;
     exact (mul_le_mul_left zero_lt_conts_b).right <| (add_le_add_iff_left pred_conts.b).right this
     suffices (ifp_succ_n.b : K) * conts.b ≤ ifp_n.fr⁻¹ * conts.b by rwa [← ifp_succ_n_b_eq_gp_b]
     have : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ :=

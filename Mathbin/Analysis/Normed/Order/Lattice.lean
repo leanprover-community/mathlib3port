@@ -299,10 +299,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NormedLatticeAddCommGroup.{u1} α] (z : α), LipschitzWith.{u1, u1} α α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedAddCommGroup.toMetricSpace.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)))) (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedAddCommGroup.toMetricSpace.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) (fun (x : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1))) x z)
 Case conversion may be inaccurate. Consider using '#align lipschitz_with_sup_right lipschitzWith_sup_rightₓ'. -/
 theorem lipschitzWith_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
-  LipschitzWith.of_dist_le_mul fun x y =>
-    by
-    rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]
-    exact norm_sup_sub_sup_le_norm x y z
+  LipschitzWith.of_dist_le_mul fun x y => by
+    rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]; exact norm_sup_sub_sup_le_norm x y z
 #align lipschitz_with_sup_right lipschitzWith_sup_right
 
 #print lipschitzWith_pos /-
@@ -331,9 +329,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_closed_nonneg isClosed_nonnegₓ'. -/
 theorem isClosed_nonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 ≤ x } :=
   by
-  suffices { x : E | 0 ≤ x } = NegPart.neg ⁻¹' {(0 : E)}
-    by
-    rw [this]
+  suffices { x : E | 0 ≤ x } = NegPart.neg ⁻¹' {(0 : E)} by rw [this];
     exact IsClosed.preimage continuous_neg' isClosed_singleton
   ext1 x
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq, neg_eq_zero_iff]
@@ -349,9 +345,7 @@ theorem isClosed_le_of_isClosed_nonneg {G} [OrderedAddCommGroup G] [TopologicalS
     [ContinuousSub G] (h : IsClosed { x : G | 0 ≤ x }) : IsClosed { p : G × G | p.fst ≤ p.snd } :=
   by
   have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } :=
-    by
-    ext1 p
-    simp only [sub_nonneg, Set.preimage_setOf_eq]
+    by ext1 p; simp only [sub_nonneg, Set.preimage_setOf_eq]
   rw [this]
   exact IsClosed.preimage (continuous_snd.sub continuous_fst) h
 #align is_closed_le_of_is_closed_nonneg isClosed_le_of_isClosed_nonneg

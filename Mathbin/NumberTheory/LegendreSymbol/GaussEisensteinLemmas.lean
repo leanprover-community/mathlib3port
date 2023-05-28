@@ -48,22 +48,15 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   · intro a ha
     rw [mem_Ico, ← Nat.succ_sub hp, Nat.succ_sub_one]
     constructor
-    · apply Nat.pos_of_ne_zero
-      rw [← @val_zero p]
-      intro h
-      apply Units.ne_zero a (val_injective p h)
+    · apply Nat.pos_of_ne_zero; rw [← @val_zero p]
+      intro h; apply Units.ne_zero a (val_injective p h)
     · exact val_lt _
-  · intro a ha
-    simp only [cast_id, nat_cast_val]
-  · intro _ _ _ _ h
-    rw [Units.ext_iff]
-    exact val_injective p h
+  · intro a ha; simp only [cast_id, nat_cast_val]
+  · intro _ _ _ _ h; rw [Units.ext_iff]; exact val_injective p h
   · intro b hb
     rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb
     refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
-    · intro h
-      apply hb.1
-      apply_fun val  at h
+    · intro h; apply hb.1; apply_fun val  at h
       simpa only [val_cast_of_lt hb.right, val_zero] using h
     · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
@@ -113,8 +106,7 @@ theorem Ico_map_valMinAbs_natAbs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a 
     · apply Nat.pos_of_ne_zero
       simp only [div_eq_mul_inv, hap, CharP.cast_eq_zero_iff (ZMod p) p, hpe hb, not_false_iff,
         val_min_abs_eq_zero, inv_eq_zero, Int.natAbs_eq_zero, Ne.def, mul_eq_zero, or_self_iff]
-    · apply lt_succ_of_le
-      apply nat_abs_val_min_abs_le
+    · apply lt_succ_of_le; apply nat_abs_val_min_abs_le
     · rw [nat_cast_nat_abs_val_min_abs]
       split_ifs
       ·
@@ -358,9 +350,7 @@ theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 
     (ha0 : (a : ZMod p) ≠ 0) : legendreSym p a = (-1) ^ ∑ x in Ico 1 (p / 2).succ, x * a / p :=
   by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
-  have ha0' : ((a : ℤ) : ZMod p) ≠ 0 := by
-    norm_cast
-    exact ha0
+  have ha0' : ((a : ℤ) : ZMod p) ≠ 0 := by norm_cast; exact ha0
   rw [neg_one_pow_eq_pow_mod_two, gauss_lemma hp ha0', neg_one_pow_eq_pow_mod_two,
     (by norm_cast : ((a : ℤ) : ZMod p) = (a : ZMod p)),
     show _ = _ from eisenstein_lemma_aux p ha1 ha0]

@@ -203,10 +203,7 @@ instance : SemilinearEquivClass (M ≃ₛₗ[σ] M₂) σ M M₂
     where
   coe := LinearEquiv.toFun
   inv := LinearEquiv.invFun
-  coe_injective' f g h₁ h₂ := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h₁ h₂ := by cases f; cases g; congr
   left_inv := LinearEquiv.left_inv
   right_inv := LinearEquiv.right_inv
   map_add := map_add'
@@ -625,9 +622,7 @@ include re₁₂ re₂₁ module_M₁ module_M₂
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_equiv.self_trans_symm LinearEquiv.self_trans_symmₓ'. -/
 @[simp]
-theorem self_trans_symm (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.trans f.symm = LinearEquiv.refl R₁ M₁ :=
-  by
-  ext x
+theorem self_trans_symm (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.trans f.symm = LinearEquiv.refl R₁ M₁ := by ext x;
   simp
 #align linear_equiv.self_trans_symm LinearEquiv.self_trans_symm
 
@@ -635,9 +630,7 @@ theorem self_trans_symm (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.trans f.symm = L
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_equiv.symm_trans_self LinearEquiv.symm_trans_selfₓ'. -/
 @[simp]
-theorem symm_trans_self (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.symm.trans f = LinearEquiv.refl R₂ M₂ :=
-  by
-  ext x
+theorem symm_trans_self (f : M₁ ≃ₛₗ[σ₁₂] M₂) : f.symm.trans f = LinearEquiv.refl R₂ M₂ := by ext x;
   simp
 #align linear_equiv.symm_trans_self LinearEquiv.symm_trans_self
 
@@ -726,10 +719,7 @@ include module_M module_S_M₂ re₁ re₂
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_equiv.symm_symm LinearEquiv.symm_symmₓ'. -/
 @[simp]
-theorem symm_symm (e : M ≃ₛₗ[σ] M₂) : e.symm.symm = e :=
-  by
-  cases e
-  rfl
+theorem symm_symm (e : M ≃ₛₗ[σ] M₂) : e.symm.symm = e := by cases e; rfl
 #align linear_equiv.symm_symm LinearEquiv.symm_symm
 
 omit module_M module_S_M₂ re₁ re₂
@@ -997,10 +987,7 @@ def ofSubsingleton : M ≃ₗ[R] M₂ :=
 
 #print LinearEquiv.ofSubsingleton_self /-
 @[simp]
-theorem ofSubsingleton_self : ofSubsingleton M M = refl R M :=
-  by
-  ext
-  simp
+theorem ofSubsingleton_self : ofSubsingleton M M = refl R M := by ext; simp
 #align linear_equiv.of_subsingleton_self LinearEquiv.ofSubsingleton_self
 -/
 
@@ -1110,9 +1097,7 @@ Case conversion may be inaccurate. Consider using '#align add_equiv.to_nat_linea
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between
 ℕ-modules -/
 def toNatLinearEquiv : M ≃ₗ[ℕ] M₂ :=
-  e.toLinearEquiv fun c a => by
-    erw [e.to_add_monoid_hom.map_nsmul]
-    rfl
+  e.toLinearEquiv fun c a => by erw [e.to_add_monoid_hom.map_nsmul]; rfl
 #align add_equiv.to_nat_linear_equiv AddEquiv.toNatLinearEquiv
 
 /- warning: add_equiv.coe_to_nat_linear_equiv -> AddEquiv.coe_toNatLinearEquiv is a dubious translation:
@@ -1127,10 +1112,7 @@ theorem coe_toNatLinearEquiv : ⇑e.toNatLinearEquiv = e :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align add_equiv.to_nat_linear_equiv_to_add_equiv AddEquiv.toNatLinearEquiv_toAddEquivₓ'. -/
 @[simp]
-theorem toNatLinearEquiv_toAddEquiv : e.toNatLinearEquiv.toAddEquiv = e :=
-  by
-  ext
-  rfl
+theorem toNatLinearEquiv_toAddEquiv : e.toNatLinearEquiv.toAddEquiv = e := by ext; rfl
 #align add_equiv.to_nat_linear_equiv_to_add_equiv AddEquiv.toNatLinearEquiv_toAddEquiv
 
 /- warning: linear_equiv.to_add_equiv_to_nat_linear_equiv -> LinearEquiv.toAddEquiv_toNatLinearEquiv is a dubious translation:
@@ -1201,10 +1183,7 @@ theorem coe_toIntLinearEquiv : ⇑e.toIntLinearEquiv = e :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align add_equiv.to_int_linear_equiv_to_add_equiv AddEquiv.toIntLinearEquiv_toAddEquivₓ'. -/
 @[simp]
-theorem toIntLinearEquiv_toAddEquiv : e.toIntLinearEquiv.toAddEquiv = e :=
-  by
-  ext
-  rfl
+theorem toIntLinearEquiv_toAddEquiv : e.toIntLinearEquiv.toAddEquiv = e := by ext; rfl
 #align add_equiv.to_int_linear_equiv_to_add_equiv AddEquiv.toIntLinearEquiv_toAddEquiv
 
 /- warning: linear_equiv.to_add_equiv_to_int_linear_equiv -> LinearEquiv.toAddEquiv_toIntLinearEquiv is a dubious translation:

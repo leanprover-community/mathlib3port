@@ -835,10 +835,8 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {s : Set.{u1} (Prod.{u1, u1} α α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (Filter.prod.{u1, u1} α α f f)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (HasSubset.Subset.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instHasSubsetSet.{u1} (Prod.{u1, u1} α α)) (Set.prod.{u1, u1} α α t t) s)))
 Case conversion may be inaccurate. Consider using '#align filter.mem_prod_same_iff Filter.mem_prod_same_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s :=
-  by
-  rw [prod_same_eq, mem_lift'_sets]
-  exact monotone_id.set_prod monotone_id
+theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s := by
+  rw [prod_same_eq, mem_lift'_sets]; exact monotone_id.set_prod monotone_id
 #align filter.mem_prod_same_iff Filter.mem_prod_same_iff
 
 /- warning: filter.tendsto_prod_self_iff -> Filter.tendsto_prod_self_iff is a dubious translation:

@@ -294,10 +294,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) (symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a b) (Inf.inf.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1)) a b)) (symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align symm_diff_sdiff_inf symmDiff_sdiff_infₓ'. -/
 @[simp]
-theorem symmDiff_sdiff_inf : a ∆ b \ (a ⊓ b) = a ∆ b :=
-  by
-  rw [symmDiff_sdiff]
-  simp [symmDiff]
+theorem symmDiff_sdiff_inf : a ∆ b \ (a ⊓ b) = a ∆ b := by rw [symmDiff_sdiff]; simp [symmDiff]
 #align symm_diff_sdiff_inf symmDiff_sdiff_inf
 
 /- warning: symm_diff_sdiff_eq_sup -> symmDiff_sdiff_eq_sup is a dubious translation:
@@ -555,10 +552,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) a b) (bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) a b)) (bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align sup_himp_bihimp sup_himp_bihimpₓ'. -/
 @[simp]
-theorem sup_himp_bihimp : a ⊔ b ⇨ a ⇔ b = a ⇔ b :=
-  by
-  rw [himp_bihimp]
-  simp [bihimp]
+theorem sup_himp_bihimp : a ⊔ b ⇨ a ⇔ b = a ⇔ b := by rw [himp_bihimp]; simp [bihimp]
 #align sup_himp_bihimp sup_himp_bihimp
 
 /- warning: bihimp_himp_eq_inf -> bihimp_himp_eq_inf is a dubious translation:
@@ -1130,8 +1124,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) a c) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) b c) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1) (symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) a b) c)
 Case conversion may be inaccurate. Consider using '#align disjoint.symm_diff_left Disjoint.symmDiff_leftₓ'. -/
 protected theorem Disjoint.symmDiff_left (ha : Disjoint a c) (hb : Disjoint b c) :
-    Disjoint (a ∆ b) c := by
-  rw [symmDiff_eq_sup_sdiff_inf]
+    Disjoint (a ∆ b) c := by rw [symmDiff_eq_sup_sdiff_inf];
   exact (ha.sup_left hb).disjoint_sdiff_left
 #align disjoint.symm_diff_left Disjoint.symmDiff_left
 
@@ -1666,10 +1659,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] {a : α} {b : α} {c : α}, (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1)) b c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))))) a (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BooleanAlgebra.toSDiff.{u1} α _inst_1) a b) (symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))))) (BooleanAlgebra.toSDiff.{u1} α _inst_1) a c)))
 Case conversion may be inaccurate. Consider using '#align disjoint.le_symm_diff_sup_symm_diff_right Disjoint.le_symmDiff_sup_symmDiff_rightₓ'. -/
-theorem Disjoint.le_symmDiff_sup_symmDiff_right (h : Disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c :=
-  by
-  simp_rw [symmDiff_comm a]
-  exact h.le_symm_diff_sup_symm_diff_left
+theorem Disjoint.le_symmDiff_sup_symmDiff_right (h : Disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c := by
+  simp_rw [symmDiff_comm a]; exact h.le_symm_diff_sup_symm_diff_left
 #align disjoint.le_symm_diff_sup_symm_diff_right Disjoint.le_symmDiff_sup_symmDiff_right
 
 /- warning: codisjoint.bihimp_inf_bihimp_le_left -> Codisjoint.bihimp_inf_bihimp_le_left is a dubious translation:

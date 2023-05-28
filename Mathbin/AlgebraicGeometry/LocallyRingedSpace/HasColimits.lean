@@ -83,10 +83,7 @@ noncomputable def coproductCofan : Cocone F
   pt := coproduct F
   ι :=
     { app := fun j => ⟨colimit.ι (F ⋙ forgetToSheafedSpace) j, inferInstance⟩
-      naturality' := fun j j' f => by
-        cases j
-        cases j'
-        tidy }
+      naturality' := fun j j' f => by cases j; cases j'; tidy }
 #align algebraic_geometry.LocallyRingedSpace.coproduct_cofan AlgebraicGeometry.LocallyRingedSpace.coproductCofan
 
 /-- The explicit coproduct cofan constructed in `coproduct_cofan` is indeed a colimit. -/
@@ -266,10 +263,8 @@ noncomputable def coequalizerCofork : Cofork f g :=
 
 theorem isLocalRingHom_stalkMap_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) (x)
     (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) :
-    IsLocalRingHom (PresheafedSpace.stalkMap g x) :=
-  by
-  rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]
-  infer_instance
+    IsLocalRingHom (PresheafedSpace.stalkMap g x) := by
+  rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]; infer_instance
 #align algebraic_geometry.LocallyRingedSpace.is_local_ring_hom_stalk_map_congr AlgebraicGeometry.LocallyRingedSpace.isLocalRingHom_stalkMap_congr
 
 /-- The cofork constructed in `coequalizer_cofork` is indeed a colimit cocone. -/
@@ -290,10 +285,7 @@ noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g)
   constructor
   · exact LocallyRingedSpace.hom.ext _ _ (coequalizer.π_desc _ _)
   intro m h
-  replace h : (coequalizer_cofork f g).π.1 ≫ m.1 = s.π.1 :=
-    by
-    rw [← h]
-    rfl
+  replace h : (coequalizer_cofork f g).π.1 ≫ m.1 = s.π.1 := by rw [← h]; rfl
   apply LocallyRingedSpace.hom.ext
   apply (colimit.is_colimit (parallel_pair f.1 g.1)).uniq (cofork.of_π s.π.1 e) m.1
   rintro ⟨⟩

@@ -155,10 +155,7 @@ theorem card_insert_of_mem (h : a ∈ s) : card (insert a s) = s.card := by rw [
 
 #print Finset.card_insert_le /-
 theorem card_insert_le (a : α) (s : Finset α) : card (insert a s) ≤ s.card + 1 := by
-  by_cases a ∈ s <;>
-    [·
-      rw [insert_eq_of_mem h]
-      exact Nat.le_succ _;rw [card_insert_of_not_mem h]]
+  by_cases a ∈ s <;> [· rw [insert_eq_of_mem h]; exact Nat.le_succ _;rw [card_insert_of_not_mem h]]
 #align finset.card_insert_le Finset.card_insert_le
 -/
 
@@ -301,10 +298,8 @@ variable {s t : Finset α} {f : α → β} {n : ℕ}
 
 #print Finset.length_toList /-
 @[simp]
-theorem length_toList (s : Finset α) : s.toList.length = s.card :=
-  by
-  rw [to_list, ← Multiset.coe_card, Multiset.coe_toList]
-  rfl
+theorem length_toList (s : Finset α) : s.toList.length = s.card := by
+  rw [to_list, ← Multiset.coe_card, Multiset.coe_toList]; rfl
 #align finset.length_to_list Finset.length_toList
 -/
 
@@ -748,10 +743,7 @@ theorem card_le_one : s.card ≤ 1 ↔ ∀ a ∈ s, ∀ b ∈ s, a = b :=
 -/
 
 #print Finset.card_le_one_iff /-
-theorem card_le_one_iff : s.card ≤ 1 ↔ ∀ {a b}, a ∈ s → b ∈ s → a = b :=
-  by
-  rw [card_le_one]
-  tauto
+theorem card_le_one_iff : s.card ≤ 1 ↔ ∀ {a b}, a ∈ s → b ∈ s → a = b := by rw [card_le_one]; tauto
 #align finset.card_le_one_iff Finset.card_le_one_iff
 -/
 
@@ -781,17 +773,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Finset.{u1} α}, Iff (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.card.{u1} α s)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b s) (Ne.{succ u1} α a b)))))
 Case conversion may be inaccurate. Consider using '#align finset.one_lt_card Finset.one_lt_cardₓ'. -/
-theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b :=
-  by
-  rw [← not_iff_not]
-  push_neg
+theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by rw [← not_iff_not]; push_neg;
   exact card_le_one
 #align finset.one_lt_card Finset.one_lt_card
 
 #print Finset.one_lt_card_iff /-
-theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b :=
-  by
-  rw [one_lt_card]
+theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b := by rw [one_lt_card];
   simp only [exists_prop, exists_and_left]
 #align finset.one_lt_card_iff Finset.one_lt_card_iff
 -/
@@ -921,10 +908,8 @@ Case conversion may be inaccurate. Consider using '#align finset.strong_inductio
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strongInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
-    s.strong_induction_on H = H s fun t h => t.strong_induction_on H :=
-  by
-  dsimp only [strong_induction_on]
-  rw [strong_induction]
+    s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
+  dsimp only [strong_induction_on]; rw [strong_induction]
 #align finset.strong_induction_on_eq Finset.strongInductionOn_eq
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -985,10 +970,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.strong_downward_induction_on_eq Finset.strongDownwardInductionOn_eqₓ'. -/
 theorem strongDownwardInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) :
-    s.strongDownwardInductionOn H = H s fun t ht h => t.strongDownwardInductionOn H ht :=
-  by
-  dsimp only [strong_downward_induction_on]
-  rw [strong_downward_induction]
+    s.strongDownwardInductionOn H = H s fun t ht h => t.strongDownwardInductionOn H ht := by
+  dsimp only [strong_downward_induction_on]; rw [strong_downward_induction]
 #align finset.strong_downward_induction_on_eq Finset.strongDownwardInductionOn_eq
 
 /- warning: finset.lt_wf -> Finset.lt_wf is a dubious translation:

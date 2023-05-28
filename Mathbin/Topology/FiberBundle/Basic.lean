@@ -369,9 +369,7 @@ theorem continuousAt_totalSpace (f : X → TotalSpace E) {x₀ : X} :
     ContinuousAt f x₀ ↔
       ContinuousAt (fun x => (f x).proj) x₀ ∧
         ContinuousAt (fun x => ((trivializationAt F E (f x₀).proj) (f x)).2) x₀ :=
-  by
-  simp_rw [← continuousWithinAt_univ]
-  exact continuous_within_at_total_space F f
+  by simp_rw [← continuousWithinAt_univ]; exact continuous_within_at_total_space F f
 #align fiber_bundle.continuous_at_total_space FiberBundle.continuousAt_totalSpace
 
 end FiberBundle
@@ -407,8 +405,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
     obtain ⟨-, ec : Trivialization F (π E), hec : Icc a c ⊆ ec.base_set⟩ : c ∈ s :=
       by
-      cases' hc.1.eq_or_lt with heq hlt
-      · rwa [← HEq]
+      cases' hc.1.eq_or_lt with heq hlt; · rwa [← HEq]
       refine' ⟨hc, _⟩
       /- In order to show that `c ∈ s`, consider a trivialization `ec` of `proj` over a neighborhood
           of `c`. Its base set includes `(c', c]` for some `c' ∈ [a, c)`. -/
@@ -451,9 +448,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
       exacts[Or.inr ⟨hed, hdcb.1⟩, Or.inl ⟨had ⟨hx.1, hxd⟩, hxd⟩]
     · /- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
           `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
-      rw [disjoint_left] at he
-      push_neg  at he
-      rcases he with ⟨d', hdd' : d' < d, hd'c⟩
+      rw [disjoint_left] at he; push_neg  at he; rcases he with ⟨d', hdd' : d' < d, hd'c⟩
       exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
 #align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_Icc_subset
 
@@ -596,10 +591,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fiber_bundle_core.mem_triv_change_source FiberBundleCore.mem_trivChange_sourceₓ'. -/
 @[simp, mfld_simps]
 theorem mem_trivChange_source (i j : ι) (p : B × F) :
-    p ∈ (Z.trivChange i j).source ↔ p.1 ∈ Z.baseSet i ∩ Z.baseSet j :=
-  by
-  erw [mem_prod]
-  simp
+    p ∈ (Z.trivChange i j).source ↔ p.1 ∈ Z.baseSet i ∩ Z.baseSet j := by erw [mem_prod]; simp
 #align fiber_bundle_core.mem_triv_change_source FiberBundleCore.mem_trivChange_source
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -658,9 +650,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {B : Type.{u3}} {F : Type.{u2}} [_inst_2 : TopologicalSpace.{u3} B] [_inst_3 : TopologicalSpace.{u2} F] (Z : FiberBundleCore.{u1, u3, u2} ι B _inst_2 F _inst_3) (i : ι) (p : Prod.{u3, u2} B F), Iff (Membership.mem.{max u3 u2, max u3 u2} (Prod.{u3, u2} B F) (Set.{max u3 u2} (Prod.{u3, u2} B F)) (Set.instMembershipSet.{max u3 u2} (Prod.{u3, u2} B F)) p (LocalEquiv.target.{max u3 u2, max u3 u2} (FiberBundleCore.TotalSpace.{u1, u3, u2} ι B F _inst_2 _inst_3 Z) (Prod.{u3, u2} B F) (FiberBundleCore.localTrivAsLocalEquiv.{u1, u3, u2} ι B F _inst_2 _inst_3 Z i))) (Membership.mem.{u3, u3} B (Set.{u3} B) (Set.instMembershipSet.{u3} B) (Prod.fst.{u3, u2} B F p) (FiberBundleCore.baseSet.{u1, u3, u2} ι B _inst_2 F _inst_3 Z i))
 Case conversion may be inaccurate. Consider using '#align fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_localTrivAsLocalEquiv_targetₓ'. -/
 theorem mem_localTrivAsLocalEquiv_target (p : B × F) :
-    p ∈ (Z.localTrivAsLocalEquiv i).target ↔ p.1 ∈ Z.baseSet i :=
-  by
-  erw [mem_prod]
+    p ∈ (Z.localTrivAsLocalEquiv i).target ↔ p.1 ∈ Z.baseSet i := by erw [mem_prod];
   simp only [and_true_iff, mem_univ]
 #align fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_localTrivAsLocalEquiv_target
 
@@ -687,9 +677,7 @@ theorem localTrivAsLocalEquiv_trans (i j : ι) :
       (Z.trivChange i j).toLocalEquiv :=
   by
   constructor
-  · ext x
-    simp only [mem_local_triv_as_local_equiv_target, mfld_simps]
-    rfl
+  · ext x; simp only [mem_local_triv_as_local_equiv_target, mfld_simps]; rfl
   · rintro ⟨x, v⟩ hx
     simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_and_iff,
       Prod.mk.inj_iff, prod_mk_mem_set_prod_eq, LocalEquiv.trans_source, mem_inter_iff,
@@ -735,9 +723,7 @@ def localTriv (i : ι) : Trivialization F Z.proj
   open_baseSet := Z.isOpen_baseSet i
   source_eq := rfl
   target_eq := rfl
-  proj_toFun p hp := by
-    simp only [mfld_simps]
-    rfl
+  proj_toFun p hp := by simp only [mfld_simps]; rfl
   open_source := Z.open_source' i
   open_target := (Z.isOpen_baseSet i).Prod isOpen_univ
   continuous_toFun := by
@@ -898,10 +884,8 @@ but is expected to have type
   forall {ι : Type.{u3}} {B : Type.{u2}} {F : Type.{u1}} [_inst_2 : TopologicalSpace.{u2} B] [_inst_3 : TopologicalSpace.{u1} F] (Z : FiberBundleCore.{u3, u2, u1} ι B _inst_2 F _inst_3) (p : FiberBundleCore.TotalSpace.{u3, u2, u1} ι B F _inst_2 _inst_3 Z), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} B F) (Trivialization.toFun'.{u2, u1, max u2 u1} B F (Bundle.TotalSpace.{u2, u1} B (FiberBundleCore.Fiber.{u3, u2, u1} ι B F _inst_2 _inst_3 Z)) _inst_2 _inst_3 (Bundle.TotalSpace.proj.{u2, u1} B (FiberBundleCore.Fiber.{u3, u2, u1} ι B F _inst_2 _inst_3 Z)) (FiberBundleCore.toTopologicalSpace.{u3, u2, u1} ι B F _inst_2 _inst_3 Z) (FiberBundleCore.localTrivAt.{u3, u2, u1} ι B F _inst_2 _inst_3 Z (Sigma.fst.{u2, u1} B (fun (x : B) => FiberBundleCore.Fiber.{u3, u2, u1} ι B F _inst_2 _inst_3 Z x) p)) p) (Prod.mk.{u2, u1} B F (Sigma.fst.{u2, u1} B (fun (x : B) => FiberBundleCore.Fiber.{u3, u2, u1} ι B F _inst_2 _inst_3 Z x) p) (Sigma.snd.{u2, u1} B (fun (x : B) => FiberBundleCore.Fiber.{u3, u2, u1} ι B F _inst_2 _inst_3 Z x) p))
 Case conversion may be inaccurate. Consider using '#align fiber_bundle_core.local_triv_at_apply FiberBundleCore.localTrivAt_applyₓ'. -/
 @[simp, mfld_simps]
-theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
-  by
-  rw [local_triv_at, local_triv_apply, coord_change_self]
-  exact Z.mem_base_set_at p.1
+theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ := by
+  rw [local_triv_at, local_triv_apply, coord_change_self]; exact Z.mem_base_set_at p.1
 #align fiber_bundle_core.local_triv_at_apply FiberBundleCore.localTrivAt_apply
 
 /- warning: fiber_bundle_core.local_triv_at_apply_mk -> FiberBundleCore.localTrivAt_apply_mk is a dubious translation:
@@ -946,10 +930,8 @@ but is expected to have type
   forall {ι : Type.{u1}} {B : Type.{u3}} {F : Type.{u2}} [_inst_2 : TopologicalSpace.{u3} B] [_inst_3 : TopologicalSpace.{u2} F] (Z : FiberBundleCore.{u1, u3, u2} ι B _inst_2 F _inst_3) (b : B) (a : F), Membership.mem.{max u3 u2, max u3 u2} (Sigma.{u3, u2} B (fun (x : B) => FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z x)) (Set.{max u3 u2} (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z))) (Set.instMembershipSet.{max u3 u2} (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z))) (Sigma.mk.{u3, u2} B (fun (x : B) => FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z x) b a) (LocalEquiv.source.{max u3 u2, max u3 u2} (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) (Prod.{u3, u2} B F) (LocalHomeomorph.toLocalEquiv.{max u3 u2, max u3 u2} (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) (Prod.{u3, u2} B F) (FiberBundleCore.toTopologicalSpace.{u1, u3, u2} ι B F _inst_2 _inst_3 Z) (instTopologicalSpaceProd.{u3, u2} B F _inst_2 _inst_3) (Trivialization.toLocalHomeomorph.{u3, u2, max u3 u2} B F (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) _inst_2 _inst_3 (FiberBundleCore.toTopologicalSpace.{u1, u3, u2} ι B F _inst_2 _inst_3 Z) (Bundle.TotalSpace.proj.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) (FiberBundleCore.localTrivAt.{u1, u3, u2} ι B F _inst_2 _inst_3 Z b))))
 Case conversion may be inaccurate. Consider using '#align fiber_bundle_core.mem_source_at FiberBundleCore.mem_source_atₓ'. -/
 @[simp, mfld_simps]
-theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source :=
-  by
-  rw [local_triv_at, mem_local_triv_source]
-  exact Z.mem_base_set_at b
+theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source := by
+  rw [local_triv_at, mem_local_triv_source]; exact Z.mem_base_set_at b
 #align fiber_bundle_core.mem_source_at FiberBundleCore.mem_source_at
 
 /- warning: fiber_bundle_core.mem_local_triv_target -> FiberBundleCore.mem_localTriv_target is a dubious translation:
@@ -995,10 +977,8 @@ but is expected to have type
   forall {ι : Type.{u1}} {B : Type.{u3}} {F : Type.{u2}} [_inst_2 : TopologicalSpace.{u3} B] [_inst_3 : TopologicalSpace.{u2} F] (Z : FiberBundleCore.{u1, u3, u2} ι B _inst_2 F _inst_3) (b : B), Membership.mem.{u3, u3} B (Set.{u3} B) (Set.instMembershipSet.{u3} B) b (Trivialization.baseSet.{u3, u2, max u3 u2} B F (Bundle.TotalSpace.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) _inst_2 _inst_3 (FiberBundleCore.toTopologicalSpace.{u1, u3, u2} ι B F _inst_2 _inst_3 Z) (Bundle.TotalSpace.proj.{u3, u2} B (FiberBundleCore.Fiber.{u1, u3, u2} ι B F _inst_2 _inst_3 Z)) (FiberBundleCore.localTrivAt.{u1, u3, u2} ι B F _inst_2 _inst_3 Z b))
 Case conversion may be inaccurate. Consider using '#align fiber_bundle_core.mem_local_triv_at_base_set FiberBundleCore.mem_localTrivAt_baseSetₓ'. -/
 @[simp, mfld_simps]
-theorem mem_localTrivAt_baseSet (b : B) : b ∈ (Z.localTrivAt b).baseSet :=
-  by
-  rw [local_triv_at, ← base_set_at]
-  exact Z.mem_base_set_at b
+theorem mem_localTrivAt_baseSet (b : B) : b ∈ (Z.localTrivAt b).baseSet := by
+  rw [local_triv_at, ← base_set_at]; exact Z.mem_base_set_at b
 #align fiber_bundle_core.mem_local_triv_at_base_set FiberBundleCore.mem_localTrivAt_baseSet
 
 #print FiberBundleCore.continuous_totalSpaceMk /-
@@ -1017,10 +997,8 @@ theorem continuous_totalSpaceMk (b : B) :
   apply IsOpen.inter
   · simp only [total_space.proj, proj, ← preimage_comp]
     by_cases b ∈ (Z.local_triv i).baseSet
-    · rw [preimage_const_of_mem h]
-      exact isOpen_univ
-    · rw [preimage_const_of_not_mem h]
-      exact isOpen_empty
+    · rw [preimage_const_of_mem h]; exact isOpen_univ
+    · rw [preimage_const_of_not_mem h]; exact isOpen_empty
   · simp only [Function.comp, local_triv_apply]
     rw [preimage_inter, preimage_comp]
     by_cases b ∈ Z.base_set i
@@ -1183,9 +1161,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
       letI := a.total_space_topology
       refine'
         continuous_on_iff'.mpr fun s hs =>
-          ⟨e ⁻¹' s ∩ e.source, is_open_supr_iff.mpr fun e' => _,
-            by
-            rw [inter_assoc, inter_self]
+          ⟨e ⁻¹' s ∩ e.source, is_open_supr_iff.mpr fun e' => _, by rw [inter_assoc, inter_self];
             rfl⟩
       refine' is_open_supr_iff.mpr fun he' => _
       rw [isOpen_coinduced, isOpen_induced_iff]
@@ -1193,10 +1169,8 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
       have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
-        ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _,
-          by
-          simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]
-          rfl⟩
+        ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by
+          simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]; rfl⟩
       rw [inter_assoc]
       exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he')
     continuous_invFun := a.continuous_symm_of_mem_pretrivializationAtlas he }
@@ -1248,11 +1222,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fiber_prebundle.inducing_total_space_mk FiberPrebundle.inducing_totalSpaceMkₓ'. -/
 @[continuity]
 theorem inducing_totalSpaceMk (b : B) :
-    @Inducing _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
-  by
-  letI := a.total_space_topology
-  letI := a.fiber_topology b
-  exact ⟨rfl⟩
+    @Inducing _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) := by
+  letI := a.total_space_topology; letI := a.fiber_topology b; exact ⟨rfl⟩
 #align fiber_prebundle.inducing_total_space_mk FiberPrebundle.inducing_totalSpaceMk
 
 /- warning: fiber_prebundle.continuous_total_space_mk -> FiberPrebundle.continuous_totalSpaceMk is a dubious translation:

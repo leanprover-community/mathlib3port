@@ -130,10 +130,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_localization.coe_submodule_span IsLocalization.coeSubmodule_spanₓ'. -/
 @[simp]
 theorem coeSubmodule_span (s : Set R) :
-    coeSubmodule S (Ideal.span s) = Submodule.span R (algebraMap R S '' s) :=
-  by
-  rw [IsLocalization.coeSubmodule, Ideal.span, Submodule.map_span]
-  rfl
+    coeSubmodule S (Ideal.span s) = Submodule.span R (algebraMap R S '' s) := by
+  rw [IsLocalization.coeSubmodule, Ideal.span, Submodule.map_span]; rfl
 #align is_localization.coe_submodule_span IsLocalization.coeSubmodule_span
 
 /- warning: is_localization.coe_submodule_span_singleton -> IsLocalization.coeSubmodule_span_singleton is a dubious translation:

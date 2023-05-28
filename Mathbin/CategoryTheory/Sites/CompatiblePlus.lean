@@ -230,10 +230,8 @@ theorem toPlus_comp_plusCompIso_inv :
 #align category_theory.grothendieck_topology.to_plus_comp_plus_comp_iso_inv CategoryTheory.GrothendieckTopology.toPlus_comp_plusCompIso_inv
 
 theorem plusCompIso_inv_eq_plusLift (hP : Presheaf.IsSheaf J (J.plusObj P ⋙ F)) :
-    (J.plusCompIso F P).inv = J.plusLift (whiskerRight (J.toPlus _) _) hP :=
-  by
-  apply J.plus_lift_unique
-  simp [iso.comp_inv_eq]
+    (J.plusCompIso F P).inv = J.plusLift (whiskerRight (J.toPlus _) _) hP := by
+  apply J.plus_lift_unique; simp [iso.comp_inv_eq]
 #align category_theory.grothendieck_topology.plus_comp_iso_inv_eq_plus_lift CategoryTheory.GrothendieckTopology.plusCompIso_inv_eq_plusLift
 
 end CategoryTheory.GrothendieckTopology

@@ -259,9 +259,7 @@ theorem ordConnected_Ioo {a b : α} : OrdConnected (Ioo a b) :=
 #print Set.ordConnected_singleton /-
 @[instance]
 theorem ordConnected_singleton {α : Type _} [PartialOrder α] {a : α} : OrdConnected ({a} : Set α) :=
-  by
-  rw [← Icc_self]
-  exact ord_connected_Icc
+  by rw [← Icc_self]; exact ord_connected_Icc
 #align set.ord_connected_singleton Set.ordConnected_singleton
 -/
 
@@ -305,9 +303,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_image Set.ordConnected_imageₓ'. -/
 @[instance]
 theorem ordConnected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α}
-    [hs : OrdConnected s] : OrdConnected (e '' s) :=
-  by
-  erw [(e : α ≃o β).image_eq_preimage]
+    [hs : OrdConnected s] : OrdConnected (e '' s) := by erw [(e : α ≃o β).image_eq_preimage];
   apply ord_connected_preimage
 #align set.ord_connected_image Set.ordConnected_image
 
@@ -353,8 +349,7 @@ Case conversion may be inaccurate. Consider using '#align is_antichain.ord_conne
 protected theorem IsAntichain.ordConnected (hs : IsAntichain (· ≤ ·) s) : s.OrdConnected :=
   ⟨fun x hx y hy z hz => by
     obtain rfl := hs.eq hx hy (hz.1.trans hz.2)
-    rw [Icc_self, mem_singleton_iff] at hz
-    rwa [hz]⟩
+    rw [Icc_self, mem_singleton_iff] at hz; rwa [hz]⟩
 #align is_antichain.ord_connected IsAntichain.ordConnected
 
 end PartialOrder

@@ -88,10 +88,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sized_Union Set.sized_iUnionₓ'. -/
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
-theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r :=
-  by
-  simp_rw [Set.Sized, Set.mem_iUnion, forall_exists_index]
-  exact forall_swap
+theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
+  simp_rw [Set.Sized, Set.mem_iUnion, forall_exists_index]; exact forall_swap
 #align set.sized_Union Set.sized_iUnion
 
 /- warning: set.sized_Union₂ -> Set.sized_iUnion₂ is a dubious translation:

@@ -73,9 +73,7 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     refine' (Rat.divInt_eq_iff _ hd).mp _
     · exact int.coe_nat_ne_zero.mpr (Rat.den_nz _)
     · rwa [num_denom]
-  have hqdn : q.num ∣ n := by
-    rw [qdf]
-    exact Rat.num_dvd _ hd
+  have hqdn : q.num ∣ n := by rw [qdf]; exact Rat.num_dvd _ hd
   refine' ⟨n / q.num, _, _⟩
   · rw [Int.ediv_mul_cancel hqdn]
   · refine' Int.eq_mul_div_of_mul_eq_mul_of_dvd_left _ hqdn this
@@ -143,19 +141,13 @@ theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).den ∣ d.1 :=
 #align rat.mk_pnat_denom_dvd [anonymous]
 
 #print Rat.add_den_dvd /-
-theorem add_den_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).den ∣ q₁.den * q₂.den :=
-  by
-  cases q₁
-  cases q₂
+theorem add_den_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).den ∣ q₁.den * q₂.den := by cases q₁; cases q₂;
   apply mk_pnat_denom_dvd
 #align rat.add_denom_dvd Rat.add_den_dvd
 -/
 
 #print Rat.mul_den_dvd /-
-theorem mul_den_dvd (q₁ q₂ : ℚ) : (q₁ * q₂).den ∣ q₁.den * q₂.den :=
-  by
-  cases q₁
-  cases q₂
+theorem mul_den_dvd (q₁ q₂ : ℚ) : (q₁ * q₂).den ∣ q₁.den * q₂.den := by cases q₁; cases q₂;
   apply mk_pnat_denom_dvd
 #align rat.mul_denom_dvd Rat.mul_den_dvd
 -/
@@ -281,17 +273,12 @@ lean 3 declaration is
 but is expected to have type
   forall {q : Rat}, Eq.{1} Rat (Inv.inv.{0} Rat Rat.instInvRat q) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Rat.den q)) (Int.cast.{0} Rat Rat.instIntCastRat (Rat.num q)))
 Case conversion may be inaccurate. Consider using '#align rat.inv_def' Rat.inv_def''ₓ'. -/
-theorem inv_def'' {q : ℚ} : q⁻¹ = (q.den : ℚ) / q.num :=
-  by
-  conv_lhs => rw [← @num_denom q]
+theorem inv_def'' {q : ℚ} : q⁻¹ = (q.den : ℚ) / q.num := by conv_lhs => rw [← @num_denom q];
   rw [inv_def, mk_eq_div, Int.cast_ofNat]
 #align rat.inv_def' Rat.inv_def''
 
 #print Rat.inv_neg /-
-protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ :=
-  by
-  rw [← @num_denom q]
-  simp [-num_denom]
+protected theorem inv_neg (q : ℚ) : (-q)⁻¹ = -q⁻¹ := by rw [← @num_denom q]; simp [-num_denom]
 #align rat.inv_neg Rat.inv_neg
 -/
 
@@ -304,10 +291,8 @@ Case conversion may be inaccurate. Consider using '#align rat.mul_denom_eq_num R
 @[simp]
 theorem mul_den_eq_num {q : ℚ} : q * q.den = q.num :=
   by
-  suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1
-    by
-    conv => pattern (occs := 1) q <;> (rw [← @num_denom q])
-    rwa [coe_int_eq_mk, coe_nat_eq_mk]
+  suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by
+    conv => pattern (occs := 1) q <;> (rw [← @num_denom q]); rwa [coe_int_eq_mk, coe_nat_eq_mk]
   have : (q.denom : ℤ) ≠ 0 := ne_of_gt (by exact_mod_cast q.pos)
   rw [Rat.mul_def' this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
 #align rat.mul_denom_eq_num Rat.mul_den_eq_num
@@ -365,8 +350,7 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.coprim
 theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n :=
   by
   by_cases hn : n = 0
-  · subst hn
-    simp only [Int.cast_zero, Int.zero_div, zero_div]
+  · subst hn; simp only [Int.cast_zero, Int.zero_div, zero_div]
   · have : (n : ℚ) ≠ 0 := by rwa [← coe_int_inj] at hn
     simp only [Int.ediv_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
 #align rat.coe_int_div_self Rat.coe_int_div_self

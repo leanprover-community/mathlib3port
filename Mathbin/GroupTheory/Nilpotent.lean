@@ -671,8 +671,7 @@ theorem nilpotencyClass_eq_quotient_center_plus_one [hH : IsNilpotent G] [Nontri
   rw [nilpotencyClass_quotient_center]
   rcases h : Group.nilpotencyClass G with ⟨⟩
   · exfalso
-    rw [nilpotencyClass_zero_iff_subsingleton] at h
-    skip
+    rw [nilpotencyClass_zero_iff_subsingleton] at h; skip
     apply false_of_nontrivial_of_subsingleton G
   · simp
 #align nilpotency_class_eq_quotient_center_plus_one nilpotencyClass_eq_quotient_center_plus_one
@@ -702,12 +701,8 @@ theorem nilpotent_center_quotient_ind {P : ∀ (G) [Group G], ∀ [IsNilpotent G
     exact hstep _ (ih _ hn)
 #align nilpotent_center_quotient_ind nilpotent_center_quotient_ind
 
-theorem derived_le_lower_central (n : ℕ) : derivedSeries G n ≤ lowerCentralSeries G n :=
-  by
-  induction' n with i ih
-  · simp
-  · apply commutator_mono ih
-    simp
+theorem derived_le_lower_central (n : ℕ) : derivedSeries G n ≤ lowerCentralSeries G n := by
+  induction' n with i ih; · simp; · apply commutator_mono ih; simp
 #align derived_le_lower_central derived_le_lower_central
 
 /-- Abelian groups are nilpotent -/
@@ -871,8 +866,7 @@ theorem normalizerCondition_of_isNilpotent [h : IsNilpotent G] : NormalizerCondi
   -- roughly based on https://groupprops.subwiki.org/wiki/Nilpotent_implies_normalizer_condition
   rw [normalizerCondition_iff_only_full_group_self_normalizing]
   apply nilpotent_center_quotient_ind G <;> clear! G
-  · intro G _ _ H _
-    apply Subsingleton.elim
+  · intro G _ _ H _; apply Subsingleton.elim
   · intro G _ _ ih H hH
     have hch : center G ≤ H := subgroup.center_le_normalizer.trans (le_of_eq hH)
     have hkh : (mk' (center G)).ker ≤ H := by simpa using hch
@@ -904,8 +898,7 @@ theorem IsPGroup.isNilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h :
     revert hG
     induction' val using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
     · infer_instance
-    · intro
-      intro h
+    · intro ; intro h
       have hcq : Fintype.card (G ⧸ center G) < Fintype.card G :=
         by
         rw [card_eq_card_quotient_mul_card_subgroup (center G)]
@@ -944,13 +937,9 @@ theorem isNilpotent_of_finite_tFAE :
   by
   tfae_have 1 → 2; · exact @normalizerCondition_of_isNilpotent _ _
   tfae_have 2 → 3; · exact fun h H => normalizer_condition.normal_of_coatom H h
-  tfae_have 3 → 4;
-  · intro h p _ P
-    exact Sylow.normal_of_all_max_subgroups_normal h _
+  tfae_have 3 → 4; · intro h p _ P; exact Sylow.normal_of_all_max_subgroups_normal h _
   tfae_have 4 → 5; · exact fun h => Nonempty.intro (Sylow.directProductOfNormal h)
-  tfae_have 5 → 1;
-  · rintro ⟨e⟩
-    exact isNilpotent_of_product_of_sylow_group e
+  tfae_have 5 → 1; · rintro ⟨e⟩; exact isNilpotent_of_product_of_sylow_group e
   tfae_finish
 #align is_nilpotent_of_finite_tfae isNilpotent_of_finite_tFAE
 

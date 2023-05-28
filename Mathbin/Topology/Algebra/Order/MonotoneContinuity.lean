@@ -454,10 +454,8 @@ protected theorem continuous (e : α ≃o β) : Continuous e :=
   rw [‹OrderTopology β›.topology_eq_generate_intervals]
   refine' continuous_generateFrom fun s hs => _
   rcases hs with ⟨a, rfl | rfl⟩
-  · rw [e.preimage_Ioi]
-    apply isOpen_lt'
-  · rw [e.preimage_Iio]
-    apply isOpen_gt'
+  · rw [e.preimage_Ioi]; apply isOpen_lt'
+  · rw [e.preimage_Iio]; apply isOpen_gt'
 #align order_iso.continuous OrderIso.continuous
 
 /- warning: order_iso.to_homeomorph -> OrderIso.toHomeomorph is a dubious translation:

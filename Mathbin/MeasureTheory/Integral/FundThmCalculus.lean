@@ -211,10 +211,8 @@ instance pure (a : ℝ) : FTCFilter a (pure a) ⊥
   le_nhds := bot_le
 #align interval_integral.FTC_filter.pure intervalIntegral.FTCFilter.pure
 
-instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
-  by
-  rw [nhdsWithin, principal_singleton, inf_eq_right.2 (pure_le_nhds a)]
-  infer_instance
+instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ := by
+  rw [nhdsWithin, principal_singleton, inf_eq_right.2 (pure_le_nhds a)]; infer_instance
 #align interval_integral.FTC_filter.nhds_within_singleton intervalIntegral.FTCFilter.nhdsWithinSingleton
 
 theorem finite_at_inner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
@@ -228,10 +226,7 @@ instance nhds (a : ℝ) : FTCFilter a (𝓝 a) (𝓝 a)
   le_nhds := le_rfl
 #align interval_integral.FTC_filter.nhds intervalIntegral.FTCFilter.nhds
 
-instance nhdsUniv (a : ℝ) : FTCFilter a (𝓝[univ] a) (𝓝 a) :=
-  by
-  rw [nhdsWithin_univ]
-  infer_instance
+instance nhdsUniv (a : ℝ) : FTCFilter a (𝓝[univ] a) (𝓝 a) := by rw [nhdsWithin_univ]; infer_instance
 #align interval_integral.FTC_filter.nhds_univ intervalIntegral.FTCFilter.nhdsUniv
 
 instance nhdsLeft (a : ℝ) : FTCFilter a (𝓝[≤] a) (𝓝[≤] a)
@@ -439,8 +434,7 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
       (tendsto_const_pure.mono_right FTC_filter.pure_le) hub
   filter_upwards [A, A', B, B']with _ ua_va a_ua ub_vb b_ub
   rw [← integral_interval_sub_interval_comm']
-  · dsimp only
-    abel
+  · dsimp only; abel
   exacts[ub_vb, ua_va, b_ub.symm.trans <| hab.symm.trans a_ua]
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
 
@@ -620,8 +614,7 @@ theorem integral_hasStrictFDerivAt_of_tendsto_ae (hf : IntervalIntegrable f volu
       ((continuous_snd.comp continuous_snd).Tendsto ((a, b), (a, b)))
       ((continuous_snd.comp continuous_fst).Tendsto ((a, b), (a, b)))
   refine' (this.congr_left _).trans_isBigO _
-  · intro x
-    simp [sub_smul]
+  · intro x; simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
 #align interval_integral.integral_has_strict_fderiv_at_of_tendsto_ae intervalIntegral.integral_hasStrictFDerivAt_of_tendsto_ae
 
@@ -837,8 +830,7 @@ theorem integral_hasFDerivWithinAt_of_tendsto_ae (hf : IntervalIntegrable f volu
       (tendsto_const_pure.mono_right FTC_filter.pure_le : tendsto _ _ (𝓝[s] a)) tendsto_fst
       (tendsto_const_pure.mono_right FTC_filter.pure_le : tendsto _ _ (𝓝[t] b)) tendsto_snd
   refine' (this.congr_left _).trans_isBigO _
-  · intro x
-    simp [sub_smul]
+  · intro x; simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
 #align interval_integral.integral_has_fderiv_within_at_of_tendsto_ae intervalIntegral.integral_hasFDerivWithinAt_of_tendsto_ae
 
@@ -1142,7 +1134,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
   by
   -- This follows from the version on a closed-open interval (applied to `[t, b)` for `t` close to
   -- `a`) and a continuity argument.
-  obtain rfl | a_lt_b := hab.eq_or_lt
+  obtain rfl | a_lt_b := hab.eq_or_lt;
   · simp
   set s := { t | g b - g t ≤ ∫ u in t..b, φ u } ∩ Icc a b
   have s_closed : IsClosed s :=
@@ -1175,8 +1167,7 @@ theorem integral_le_sub_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
   convert sub_le_integral_of_has_deriv_right_of_le hab hcont.neg (fun x hx => (hderiv x hx).neg)
       φint.neg fun x hx => neg_le_neg (hφg x hx)
   · abel
-  · simp only [← integral_neg]
-    rfl
+  · simp only [← integral_neg]; rfl
 #align interval_integral.integral_le_sub_of_has_deriv_right_of_le intervalIntegral.integral_le_sub_of_has_deriv_right_of_le
 
 /-- Auxiliary lemma in the proof of `integral_eq_sub_of_has_deriv_right_of_le`: real version -/
@@ -1245,8 +1236,7 @@ theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
   have Fderiv : ∀ x ∈ Ioo a b, HasDerivAt F (f' x) x :=
     by
     refine' fun x hx => (hderiv x hx).congr_of_eventuallyEq _
-    filter_upwards [Ioo_mem_nhds hx.1 hx.2]with _ hy
-    simp only [F]
+    filter_upwards [Ioo_mem_nhds hx.1 hx.2]with _ hy; simp only [F]
     rw [update_noteq hy.2.Ne, update_noteq hy.1.ne']
   have hcont : ContinuousOn F (Icc a b) :=
     by
@@ -1286,8 +1276,7 @@ theorem integrableOn_deriv_right_of_nonneg (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt g (g' x) (Ioi x) x)
     (g'pos : ∀ x ∈ Ioo a b, 0 ≤ g' x) : IntegrableOn g' (Ioc a b) :=
   by
-  by_cases hab : a < b
-  swap
+  by_cases hab : a < b; swap
   · simp [Ioc_eq_empty hab]
   rw [integrableOn_Ioc_iff_integrableOn_Ioo]
   have meas_g' : AEMeasurable g' (volume.restrict (Ioo a b)) :=
@@ -1400,10 +1389,8 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
   have h_cont : ContinuousOn (fun u => ∫ t in f a..f u, g t) [a, b] :=
     by
     refine' (continuous_on_primitive_interval' hg1 _).comp hf _
-    · rw [← hf.image_uIcc]
-      exact mem_image_of_mem f left_mem_uIcc
-    · rw [← hf.image_uIcc]
-      exact maps_to_image _ _
+    · rw [← hf.image_uIcc]; exact mem_image_of_mem f left_mem_uIcc
+    · rw [← hf.image_uIcc]; exact maps_to_image _ _
   have h_der :
     ∀ x ∈ Ioo (min a b) (max a b),
       HasDerivWithinAt (fun u => ∫ t in f a..f u, g t) (f' x • (g ∘ f) x) (Ioi x) x :=
@@ -1411,17 +1398,13 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
     intro x hx
     obtain ⟨c, hc⟩ := nonempty_Ioo.mpr hx.1
     obtain ⟨d, hd⟩ := nonempty_Ioo.mpr hx.2
-    have cdsub : [c, d] ⊆ Ioo (min a b) (max a b) :=
-      by
-      rw [uIcc_of_le (hc.2.trans hd.1).le]
+    have cdsub : [c, d] ⊆ Ioo (min a b) (max a b) := by rw [uIcc_of_le (hc.2.trans hd.1).le];
       exact Icc_subset_Ioo hc.1 hd.2
     replace hg_cont := hg_cont.mono (image_subset f cdsub)
     let J := [Inf (f '' [c, d]), Sup (f '' [c, d])]
     have hJ : f '' [c, d] = J := (hf.mono (cdsub.trans Ioo_subset_Icc_self)).image_uIcc
     rw [hJ] at hg_cont
-    have h2x : f x ∈ J := by
-      rw [← hJ]
-      exact mem_image_of_mem _ (mem_uIcc_of_le hc.2.le hd.1.le)
+    have h2x : f x ∈ J := by rw [← hJ]; exact mem_image_of_mem _ (mem_uIcc_of_le hc.2.le hd.1.le)
     have h2g : IntervalIntegrable g volume (f a) (f x) :=
       by
       refine' hg1.mono_set _

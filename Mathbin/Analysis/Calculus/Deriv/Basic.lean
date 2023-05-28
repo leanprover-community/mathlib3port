@@ -230,11 +230,8 @@ alias hasDerivAt_iff_hasFDerivAt ↔ HasDerivAt.hasFDerivAt _
 #align has_deriv_at.has_fderiv_at HasDerivAt.hasFDerivAt
 
 theorem derivWithin_zero_of_not_differentiableWithinAt (h : ¬DifferentiableWithinAt 𝕜 f s x) :
-    derivWithin f s x = 0 := by
-  unfold derivWithin
-  rw [fderivWithin_zero_of_not_differentiableWithinAt]
-  simp
-  assumption
+    derivWithin f s x = 0 := by unfold derivWithin;
+  rw [fderivWithin_zero_of_not_differentiableWithinAt]; simp; assumption
 #align deriv_within_zero_of_not_differentiable_within_at derivWithin_zero_of_not_differentiableWithinAt
 
 theorem differentiableWithinAt_of_derivWithin_ne_zero (h : derivWithin f s x ≠ 0) :
@@ -242,12 +239,8 @@ theorem differentiableWithinAt_of_derivWithin_ne_zero (h : derivWithin f s x ≠
   not_imp_comm.1 derivWithin_zero_of_not_differentiableWithinAt h
 #align differentiable_within_at_of_deriv_within_ne_zero differentiableWithinAt_of_derivWithin_ne_zero
 
-theorem deriv_zero_of_not_differentiableAt (h : ¬DifferentiableAt 𝕜 f x) : deriv f x = 0 :=
-  by
-  unfold deriv
-  rw [fderiv_zero_of_not_differentiableAt]
-  simp
-  assumption
+theorem deriv_zero_of_not_differentiableAt (h : ¬DifferentiableAt 𝕜 f x) : deriv f x = 0 := by
+  unfold deriv; rw [fderiv_zero_of_not_differentiableAt]; simp; assumption
 #align deriv_zero_of_not_differentiable_at deriv_zero_of_not_differentiableAt
 
 theorem differentiableAt_of_deriv_ne_zero (h : deriv f x ≠ 0) : DifferentiableAt 𝕜 f x :=
@@ -482,9 +475,7 @@ theorem deriv_fderiv : smulRight (1 : 𝕜 →L[𝕜] 𝕜) (deriv f x) = fderiv
 #align deriv_fderiv deriv_fderiv
 
 theorem DifferentiableAt.derivWithin (h : DifferentiableAt 𝕜 f x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
-    derivWithin f s x = deriv f x := by
-  unfold derivWithin deriv
-  rw [h.fderiv_within hxs]
+    derivWithin f s x = deriv f x := by unfold derivWithin deriv; rw [h.fderiv_within hxs]
 #align differentiable_at.deriv_within DifferentiableAt.derivWithin
 
 theorem HasDerivWithinAt.deriv_eq_zero (hd : HasDerivWithinAt f 0 s x)
@@ -512,24 +503,16 @@ theorem derivWithin_congr_set (h : s =ᶠ[𝓝 x] t) : derivWithin f s x = deriv
 #align deriv_within_congr_set derivWithin_congr_set
 
 @[simp]
-theorem derivWithin_univ : derivWithin f univ = deriv f :=
-  by
-  ext
-  unfold derivWithin deriv
+theorem derivWithin_univ : derivWithin f univ = deriv f := by ext; unfold derivWithin deriv;
   rw [fderivWithin_univ]
 #align deriv_within_univ derivWithin_univ
 
-theorem derivWithin_inter (ht : t ∈ 𝓝 x) : derivWithin f (s ∩ t) x = derivWithin f s x :=
-  by
-  unfold derivWithin
-  rw [fderivWithin_inter ht]
+theorem derivWithin_inter (ht : t ∈ 𝓝 x) : derivWithin f (s ∩ t) x = derivWithin f s x := by
+  unfold derivWithin; rw [fderivWithin_inter ht]
 #align deriv_within_inter derivWithin_inter
 
-theorem derivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : derivWithin f s x = deriv f x :=
-  by
-  unfold derivWithin
-  rw [fderivWithin_of_open hs hx]
-  rfl
+theorem derivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : derivWithin f s x = deriv f x := by
+  unfold derivWithin; rw [fderivWithin_of_open hs hx]; rfl
 #align deriv_within_of_open derivWithin_of_open
 
 theorem deriv_mem_iff {f : 𝕜 → F} {s : Set F} {x : 𝕜} :
@@ -611,23 +594,15 @@ theorem HasDerivAt.congr_of_eventuallyEq (h : HasDerivAt f f' x) (h₁ : f₁ =�
 #align has_deriv_at.congr_of_eventually_eq HasDerivAt.congr_of_eventuallyEq
 
 theorem Filter.EventuallyEq.derivWithin_eq (hL : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
-    derivWithin f₁ s x = derivWithin f s x :=
-  by
-  unfold derivWithin
-  rw [hL.fderiv_within_eq hx]
+    derivWithin f₁ s x = derivWithin f s x := by unfold derivWithin; rw [hL.fderiv_within_eq hx]
 #align filter.eventually_eq.deriv_within_eq Filter.EventuallyEq.derivWithin_eq
 
 theorem derivWithin_congr (hs : EqOn f₁ f s) (hx : f₁ x = f x) :
-    derivWithin f₁ s x = derivWithin f s x :=
-  by
-  unfold derivWithin
-  rw [fderivWithin_congr hs hx]
+    derivWithin f₁ s x = derivWithin f s x := by unfold derivWithin; rw [fderivWithin_congr hs hx]
 #align deriv_within_congr derivWithin_congr
 
-theorem Filter.EventuallyEq.deriv_eq (hL : f₁ =ᶠ[𝓝 x] f) : deriv f₁ x = deriv f x :=
-  by
-  unfold deriv
-  rwa [Filter.EventuallyEq.fderiv_eq]
+theorem Filter.EventuallyEq.deriv_eq (hL : f₁ =ᶠ[𝓝 x] f) : deriv f₁ x = deriv f x := by
+  unfold deriv; rwa [Filter.EventuallyEq.fderiv_eq]
 #align filter.eventually_eq.deriv_eq Filter.EventuallyEq.deriv_eq
 
 protected theorem Filter.EventuallyEq.deriv (h : f₁ =ᶠ[𝓝 x] f) : deriv f₁ =ᶠ[𝓝 x] deriv f :=

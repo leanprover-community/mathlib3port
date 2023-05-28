@@ -409,12 +409,8 @@ def ofIsComplProd {p q : Submodule R₁ E} (h : IsCompl p q) :
     (p →ₗ[R₁] F) × (q →ₗ[R₁] F) →ₗ[R₁] E →ₗ[R₁] F
     where
   toFun φ := ofIsCompl h φ.1 φ.2
-  map_add' := by
-    intro φ ψ
-    rw [Prod.snd_add, Prod.fst_add, of_is_compl_add]
-  map_smul' := by
-    intro c φ
-    simp [Prod.smul_snd, Prod.smul_fst, of_is_compl_smul]
+  map_add' := by intro φ ψ; rw [Prod.snd_add, Prod.fst_add, of_is_compl_add]
+  map_smul' := by intro c φ; simp [Prod.smul_snd, Prod.smul_fst, of_is_compl_smul]
 #align linear_map.of_is_compl_prod LinearMap.ofIsComplProd
 
 /- warning: linear_map.of_is_compl_prod_apply -> LinearMap.ofIsComplProd_apply is a dubious translation:
@@ -468,9 +464,7 @@ a linear equivalence `E ≃ₗ[R] F × G`. -/
 def equivProdOfSurjectiveOfIsCompl (f : E →ₗ[R] F) (g : E →ₗ[R] G) (hf : f.range = ⊤)
     (hg : g.range = ⊤) (hfg : IsCompl f.ker g.ker) : E ≃ₗ[R] F × G :=
   LinearEquiv.ofBijective (f.Prod g)
-    ⟨by simp [← ker_eq_bot, hfg.inf_eq_bot],
-      by
-      rw [← range_eq_top]
+    ⟨by simp [← ker_eq_bot, hfg.inf_eq_bot], by rw [← range_eq_top];
       simp [range_prod_eq hfg.sup_eq_top, *]⟩
 #align linear_map.equiv_prod_of_surjective_of_is_compl LinearMap.equivProdOfSurjectiveOfIsCompl
 
@@ -556,19 +550,10 @@ Case conversion may be inaccurate. Consider using '#align linear_map.is_proj_iff
 theorem isProj_iff_idempotent (f : M →ₗ[S] M) : (∃ p : Submodule S M, IsProj p f) ↔ f ∘ₗ f = f :=
   by
   constructor
-  · intro h
-    obtain ⟨p, hp⟩ := h
-    ext
-    rw [comp_apply]
-    exact hp.map_id (f x) (hp.map_mem x)
-  · intro h
-    use f.range
-    constructor
-    · intro x
-      exact mem_range_self f x
-    · intro x hx
-      obtain ⟨y, hy⟩ := mem_range.1 hx
-      rw [← hy, ← comp_apply, h]
+  · intro h; obtain ⟨p, hp⟩ := h; ext; rw [comp_apply]; exact hp.map_id (f x) (hp.map_mem x)
+  · intro h; use f.range; constructor
+    · intro x; exact mem_range_self f x
+    · intro x hx; obtain ⟨y, hy⟩ := mem_range.1 hx; rw [← hy, ← comp_apply, h]
 #align linear_map.is_proj_iff_idempotent LinearMap.isProj_iff_idempotent
 
 namespace IsProj
@@ -597,11 +582,8 @@ theorem codRestrict_apply {f : M →ₗ[S] M} (h : IsProj m f) (x : M) : ↑(h.c
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_proj.cod_restrict_apply_cod LinearMap.IsProj.codRestrict_apply_codₓ'. -/
 @[simp]
-theorem codRestrict_apply_cod {f : M →ₗ[S] M} (h : IsProj m f) (x : m) : h.codRestrict x = x :=
-  by
-  ext
-  rw [cod_restrict_apply]
-  exact h.map_id x x.2
+theorem codRestrict_apply_cod {f : M →ₗ[S] M} (h : IsProj m f) (x : m) : h.codRestrict x = x := by
+  ext; rw [cod_restrict_apply]; exact h.map_id x x.2
 #align linear_map.is_proj.cod_restrict_apply_cod LinearMap.IsProj.codRestrict_apply_cod
 
 /- warning: linear_map.is_proj.cod_restrict_ker -> LinearMap.IsProj.codRestrict_ker is a dubious translation:
@@ -614,9 +596,7 @@ theorem codRestrict_ker {f : M →ₗ[S] M} (h : IsProj m f) : h.codRestrict.ker
 /- warning: linear_map.is_proj.is_compl -> LinearMap.IsProj.isCompl is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_proj.is_compl LinearMap.IsProj.isComplₓ'. -/
-theorem isCompl {f : E →ₗ[R] E} (h : IsProj p f) : IsCompl p f.ker :=
-  by
-  rw [← cod_restrict_ker]
+theorem isCompl {f : E →ₗ[R] E} (h : IsProj p f) : IsCompl p f.ker := by rw [← cod_restrict_ker];
   exact is_compl_of_proj h.cod_restrict_apply_cod
 #align linear_map.is_proj.is_compl LinearMap.IsProj.isCompl
 
@@ -658,10 +638,8 @@ variable {R : Type _} [CommRing R] {E : Type _} [AddCommGroup E] [Module R E] {p
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.is_proj.eq_conj_prod_map LinearMap.IsProj.eq_conj_prodMapₓ'. -/
 theorem IsProj.eq_conj_prodMap {f : E →ₗ[R] E} (h : IsProj p f) :
-    f = (p.prodEquivOfIsCompl f.ker h.IsCompl).conj (prodMap id 0) :=
-  by
-  rw [LinearEquiv.conj_apply]
-  exact h.eq_conj_prod_map'
+    f = (p.prodEquivOfIsCompl f.ker h.IsCompl).conj (prodMap id 0) := by
+  rw [LinearEquiv.conj_apply]; exact h.eq_conj_prod_map'
 #align linear_map.is_proj.eq_conj_prod_map LinearMap.IsProj.eq_conj_prodMap
 
 end LinearMap

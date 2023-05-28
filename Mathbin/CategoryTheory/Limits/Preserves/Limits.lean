@@ -107,10 +107,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.lift_comp_preserves_limits_iso_hom CategoryTheory.lift_comp_preservesLimitsIso_homₓ'. -/
 @[simp, reassoc]
 theorem lift_comp_preservesLimitsIso_hom (t : Cone F) :
-    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) :=
-  by
-  ext
-  simp [← G.map_comp]
+    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) := by
+  ext; simp [← G.map_comp]
 #align category_theory.lift_comp_preserves_limits_iso_hom CategoryTheory.lift_comp_preservesLimitsIso_hom
 
 variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J C]
@@ -200,10 +198,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.preserves_colimits_iso_inv_comp_desc CategoryTheory.preservesColimitsIso_inv_comp_descₓ'. -/
 @[simp, reassoc]
 theorem preservesColimitsIso_inv_comp_desc (t : Cocone F) :
-    (preservesColimitIso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.mapCocone t) :=
-  by
-  ext
-  simp [← G.map_comp]
+    (preservesColimitIso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.mapCocone t) := by
+  ext; simp [← G.map_comp]
 #align category_theory.preserves_colimits_iso_inv_comp_desc CategoryTheory.preservesColimitsIso_inv_comp_desc
 
 variable [PreservesColimitsOfShape J G] [HasColimitsOfShape J D] [HasColimitsOfShape J C]

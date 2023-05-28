@@ -203,8 +203,7 @@ theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by_cases hs : Metric.Bounded s
   · rw [Real.ediam_eq hs, ← volume_Icc]
     exact volume.mono (Real.subset_Icc_sInf_sSup_of_bounded hs)
-  · rw [Metric.ediam_of_unbounded hs]
-    exact le_top
+  · rw [Metric.ediam_of_unbounded hs]; exact le_top
 #align real.volume_le_diam Real.volume_le_diam
 
 theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (h : ∀ᶠ x in 𝓝 a, p x) :
@@ -337,10 +336,7 @@ theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
   calc
     volume ((· * ·) a ⁻¹' s) = Measure.map ((· * ·) a) volume s :=
       ((Homeomorph.mulLeft₀ a h).toMeasurableEquiv.map_apply s).symm
-    _ = ENNReal.ofReal (abs a⁻¹) * volume s :=
-      by
-      rw [map_volume_mul_left h]
-      rfl
+    _ = ENNReal.ofReal (abs a⁻¹) * volume s := by rw [map_volume_mul_left h]; rfl
     
 #align real.volume_preimage_mul_left Real.volume_preimage_mul_left
 
@@ -360,10 +356,7 @@ theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
   calc
     volume ((· * a) ⁻¹' s) = Measure.map (· * a) volume s :=
       ((Homeomorph.mulRight₀ a h).toMeasurableEquiv.map_apply s).symm
-    _ = ENNReal.ofReal (abs a⁻¹) * volume s :=
-      by
-      rw [map_volume_mul_right h]
-      rfl
+    _ = ENNReal.ofReal (abs a⁻¹) * volume s := by rw [map_volume_mul_right h]; rfl
     
 #align real.volume_preimage_mul_right Real.volume_preimage_mul_right
 
@@ -383,8 +376,7 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
   refine' (measure.pi_eq fun s hs => _).symm
   simp only [det_diagonal, measure.coe_smul, Algebra.id.smul_eq_mul, Pi.smul_apply]
   rw [measure.map_apply _ (MeasurableSet.univ_pi hs)]
-  swap
-  · exact Continuous.measurable (LinearMap.continuous_on_pi _)
+  swap; · exact Continuous.measurable (LinearMap.continuous_on_pi _)
   have :
     (Matrix.toLin' (diagonal D) ⁻¹' Set.pi Set.univ fun i : ι => s i) =
       Set.pi Set.univ fun i : ι => (· * ·) (D i) ⁻¹' s i :=

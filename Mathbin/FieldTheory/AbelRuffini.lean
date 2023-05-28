@@ -233,14 +233,10 @@ variable (E)
 def solvableByRad : IntermediateField F E
     where
   carrier := IsSolvableByRad F
-  zero_mem' := by
-    convert IsSolvableByRad.base (0 : F)
-    rw [RingHom.map_zero]
+  zero_mem' := by convert IsSolvableByRad.base (0 : F); rw [RingHom.map_zero]
   add_mem' := IsSolvableByRad.add
   neg_mem' := IsSolvableByRad.neg
-  one_mem' := by
-    convert IsSolvableByRad.base (1 : F)
-    rw [RingHom.map_one]
+  one_mem' := by convert IsSolvableByRad.base (1 : F); rw [RingHom.map_one]
   mul_mem' := IsSolvableByRad.mul
   inv_mem' := IsSolvableByRad.inv
   algebraMap_mem' := IsSolvableByRad.base
@@ -269,28 +265,16 @@ theorem induction (P : solvableByRad F E → Prop)
   · exact fun α => ⟨algebraMap F (solvableByRad F E) α, rfl, base α⟩
   · intro α β hα hβ Pα Pβ
     obtain ⟨⟨α₀, hα₀, Pα⟩, β₀, hβ₀, Pβ⟩ := Pα, Pβ
-    exact
-      ⟨α₀ + β₀, by
-        rw [← hα₀, ← hβ₀]
-        rfl, add α₀ β₀ Pα Pβ⟩
+    exact ⟨α₀ + β₀, by rw [← hα₀, ← hβ₀]; rfl, add α₀ β₀ Pα Pβ⟩
   · intro α hα Pα
     obtain ⟨α₀, hα₀, Pα⟩ := Pα
-    exact
-      ⟨-α₀, by
-        rw [← hα₀]
-        rfl, neg α₀ Pα⟩
+    exact ⟨-α₀, by rw [← hα₀]; rfl, neg α₀ Pα⟩
   · intro α β hα hβ Pα Pβ
     obtain ⟨⟨α₀, hα₀, Pα⟩, β₀, hβ₀, Pβ⟩ := Pα, Pβ
-    exact
-      ⟨α₀ * β₀, by
-        rw [← hα₀, ← hβ₀]
-        rfl, mul α₀ β₀ Pα Pβ⟩
+    exact ⟨α₀ * β₀, by rw [← hα₀, ← hβ₀]; rfl, mul α₀ β₀ Pα Pβ⟩
   · intro α hα Pα
     obtain ⟨α₀, hα₀, Pα⟩ := Pα
-    exact
-      ⟨α₀⁻¹, by
-        rw [← hα₀]
-        rfl, inv α₀ Pα⟩
+    exact ⟨α₀⁻¹, by rw [← hα₀]; rfl, inv α₀ Pα⟩
   · intro α n hn hα Pα
     obtain ⟨α₀, hα₀, Pα⟩ := Pα
     refine' ⟨⟨α, IsSolvableByRad.rad α n hn hα⟩, rfl, rad _ n hn _⟩
@@ -403,10 +387,7 @@ theorem isSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal :=
   by
   revert α
   apply solvableByRad.induction
-  ·
-    exact fun α => by
-      rw [minpoly.eq_X_sub_C]
-      exact gal_x_sub_c_isSolvable α
+  · exact fun α => by rw [minpoly.eq_X_sub_C]; exact gal_x_sub_c_isSolvable α
   ·
     exact fun α β =>
       induction2

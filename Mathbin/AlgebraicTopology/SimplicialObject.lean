@@ -57,19 +57,13 @@ scoped[Simplicial]
     (X : CategoryTheory.SimplicialObject hole!).obj (Opposite.op (SimplexCategory.mk n))
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (SimplicialObject C) :=
-  by
-  dsimp [simplicial_object]
-  infer_instance
+    HasLimitsOfShape J (SimplicialObject C) := by dsimp [simplicial_object]; infer_instance
 
 instance [HasLimits C] : HasLimits (SimplicialObject C) :=
   ⟨inferInstance⟩
 
 instance {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
-    HasColimitsOfShape J (SimplicialObject C) :=
-  by
-  dsimp [simplicial_object]
-  infer_instance
+    HasColimitsOfShape J (SimplicialObject C) := by dsimp [simplicial_object]; infer_instance
 
 instance [HasColimits C] : HasColimits (SimplicialObject C) :=
   ⟨inferInstance⟩
@@ -116,10 +110,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : CategoryTheory.SimplicialObject.{u1, u2} C _inst_1) {n : Nat} (h : Eq.{1} Nat n n), Eq.{succ u1} (CategoryTheory.Iso.{u1, u2} C _inst_1 (Prefunctor.obj.{1, succ u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (Prefunctor.obj.{1, succ u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)))) (CategoryTheory.SimplicialObject.eqToIso.{u1, u2} C _inst_1 X n n h) (CategoryTheory.Iso.refl.{u1, u2} C _inst_1 (Prefunctor.obj.{1, succ u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))))
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.eq_to_iso_refl CategoryTheory.SimplicialObject.eqToIso_reflₓ'. -/
 @[simp]
-theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
-  by
-  ext
-  simp [eq_to_iso]
+theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by ext; simp [eq_to_iso]
 #align category_theory.simplicial_object.eq_to_iso_refl CategoryTheory.SimplicialObject.eqToIso_refl
 
 /- warning: category_theory.simplicial_object.δ_comp_δ -> CategoryTheory.SimplicialObject.δ_comp_δ is a dubious translation:
@@ -128,9 +119,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 /-- The generic case of the first simplicial identity -/
 @[reassoc]
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) :
-    X.δ j.succ ≫ X.δ i = X.δ i.cast_succ ≫ X.δ j :=
-  by
-  dsimp [δ]
+    X.δ j.succ ≫ X.δ i = X.δ i.cast_succ ≫ X.δ j := by dsimp [δ];
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ H]
 #align category_theory.simplicial_object.δ_comp_δ CategoryTheory.SimplicialObject.δ_comp_δ
 
@@ -141,9 +130,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
     X.δ j ≫ X.δ i =
       X.δ i.cast_succ ≫ X.δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
+  by dsimp [δ]; simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
 #align category_theory.simplicial_object.δ_comp_δ' CategoryTheory.SimplicialObject.δ_comp_δ'
 
 /- warning: category_theory.simplicial_object.δ_comp_δ'' -> CategoryTheory.SimplicialObject.δ_comp_δ'' is a dubious translation:
@@ -153,9 +140,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
     X.δ j.succ ≫ X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) =
       X.δ i ≫ X.δ j :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ'' H]
+  by dsimp [δ]; simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ'' H]
 #align category_theory.simplicial_object.δ_comp_δ'' CategoryTheory.SimplicialObject.δ_comp_δ''
 
 /- warning: category_theory.simplicial_object.δ_comp_δ_self -> CategoryTheory.SimplicialObject.δ_comp_δ_self is a dubious translation:
@@ -163,10 +148,8 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.δ_comp_δ_self CategoryTheory.SimplicialObject.δ_comp_δ_selfₓ'. -/
 /-- The special case of the first simplicial identity -/
 @[reassoc]
-theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.δ i.succ ≫ X.δ i :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ_self]
+theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.δ i.succ ≫ X.δ i := by
+  dsimp [δ]; simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ_self]
 #align category_theory.simplicial_object.δ_comp_δ_self CategoryTheory.SimplicialObject.δ_comp_δ_self
 
 /- warning: category_theory.simplicial_object.δ_comp_δ_self' -> CategoryTheory.SimplicialObject.δ_comp_δ_self' is a dubious translation:
@@ -174,9 +157,7 @@ theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i.cast_succ ≫ X.δ i = X.
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.δ_comp_δ_self' CategoryTheory.SimplicialObject.δ_comp_δ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_δ_self' {n} {j : Fin (n + 3)} {i : Fin (n + 2)} (H : j = i.cast_succ) :
-    X.δ j ≫ X.δ i = X.δ i.succ ≫ X.δ i := by
-  subst H
-  rw [δ_comp_δ_self]
+    X.δ j ≫ X.δ i = X.δ i.succ ≫ X.δ i := by subst H; rw [δ_comp_δ_self]
 #align category_theory.simplicial_object.δ_comp_δ_self' CategoryTheory.SimplicialObject.δ_comp_δ_self'
 
 /- warning: category_theory.simplicial_object.δ_comp_σ_of_le -> CategoryTheory.SimplicialObject.δ_comp_σ_of_le is a dubious translation:
@@ -185,9 +166,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 /-- The second simplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
-    X.σ j.succ ≫ X.δ i.cast_succ = X.δ i ≫ X.σ j :=
-  by
-  dsimp [δ, σ]
+    X.σ j.succ ≫ X.δ i.cast_succ = X.δ i ≫ X.σ j := by dsimp [δ, σ];
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_le H]
 #align category_theory.simplicial_object.δ_comp_σ_of_le CategoryTheory.SimplicialObject.δ_comp_σ_of_le
 
@@ -207,9 +186,7 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.σ i ≫ X.δ i.cast_succ = �
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.δ_comp_σ_self' CategoryTheory.SimplicialObject.δ_comp_σ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
-    X.σ i ≫ X.δ j = 𝟙 _ := by
-  subst H
-  rw [δ_comp_σ_self]
+    X.σ i ≫ X.δ j = 𝟙 _ := by subst H; rw [δ_comp_σ_self]
 #align category_theory.simplicial_object.δ_comp_σ_self' CategoryTheory.SimplicialObject.δ_comp_σ_self'
 
 /- warning: category_theory.simplicial_object.δ_comp_σ_succ -> CategoryTheory.SimplicialObject.δ_comp_σ_succ is a dubious translation:
@@ -234,9 +211,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.δ_comp_σ_succ' CategoryTheory.SimplicialObject.δ_comp_σ_succ'ₓ'. -/
 @[reassoc]
 theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ) :
-    X.σ i ≫ X.δ j = 𝟙 _ := by
-  subst H
-  rw [δ_comp_σ_succ]
+    X.σ i ≫ X.δ j = 𝟙 _ := by subst H; rw [δ_comp_σ_succ]
 #align category_theory.simplicial_object.δ_comp_σ_succ' CategoryTheory.SimplicialObject.δ_comp_σ_succ'
 
 /- warning: category_theory.simplicial_object.δ_comp_σ_of_gt -> CategoryTheory.SimplicialObject.δ_comp_σ_of_gt is a dubious translation:
@@ -245,9 +220,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 /-- The fourth simplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
-    X.σ j.cast_succ ≫ X.δ i.succ = X.δ i ≫ X.σ j :=
-  by
-  dsimp [δ, σ]
+    X.σ j.cast_succ ≫ X.δ i.succ = X.δ i ≫ X.σ j := by dsimp [δ, σ];
   simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt H]
 #align category_theory.simplicial_object.δ_comp_σ_of_gt CategoryTheory.SimplicialObject.δ_comp_σ_of_gt
 
@@ -264,9 +237,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
               (lt_of_lt_of_le
                 (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) :=
-  by
-  dsimp [δ, σ]
-  simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]
+  by dsimp [δ, σ]; simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]
 #align category_theory.simplicial_object.δ_comp_σ_of_gt' CategoryTheory.SimplicialObject.δ_comp_σ_of_gt'
 
 /- warning: category_theory.simplicial_object.σ_comp_σ -> CategoryTheory.SimplicialObject.σ_comp_σ is a dubious translation:
@@ -275,9 +246,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.simpli
 /-- The fifth simplicial identity -/
 @[reassoc]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
-    X.σ j ≫ X.σ i.cast_succ = X.σ i ≫ X.σ j.succ :=
-  by
-  dsimp [δ, σ]
+    X.σ j ≫ X.σ i.cast_succ = X.σ i ≫ X.σ j.succ := by dsimp [δ, σ];
   simp only [← X.map_comp, ← op_comp, SimplexCategory.σ_comp_σ H]
 #align category_theory.simplicial_object.σ_comp_σ CategoryTheory.SimplicialObject.σ_comp_σ
 
@@ -324,19 +293,13 @@ variable {C}
 namespace Truncated
 
 instance {n} {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (SimplicialObject.Truncated C n) :=
-  by
-  dsimp [truncated]
-  infer_instance
+    HasLimitsOfShape J (SimplicialObject.Truncated C n) := by dsimp [truncated]; infer_instance
 
 instance {n} [HasLimits C] : HasLimits (SimplicialObject.Truncated C n) :=
   ⟨inferInstance⟩
 
 instance {n} {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
-    HasColimitsOfShape J (SimplicialObject.Truncated C n) :=
-  by
-  dsimp [truncated]
-  infer_instance
+    HasColimitsOfShape J (SimplicialObject.Truncated C n) := by dsimp [truncated]; infer_instance
 
 instance {n} [HasColimits C] : HasColimits (SimplicialObject.Truncated C n) :=
   ⟨inferInstance⟩
@@ -503,8 +466,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
 Case conversion may be inaccurate. Consider using '#align category_theory.simplicial_object.augment_hom_zero CategoryTheory.SimplicialObject.augment_hom_zeroₓ'. -/
 @[simp]
 theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀) (w) :
-    (X.augment X₀ f w).Hom.app (op [0]) = f := by
-  dsimp
+    (X.augment X₀ f w).Hom.app (op [0]) = f := by dsimp;
   rw [SimplexCategory.hom_zero_zero ([0].const 0), op_id, X.map_id, category.id_comp]
 #align category_theory.simplicial_object.augment_hom_zero CategoryTheory.SimplicialObject.augment_hom_zero
 
@@ -526,19 +488,13 @@ scoped[Simplicial]
     (X : CategoryTheory.CosimplicialObject hole!).obj (SimplexCategory.mk n)
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (CosimplicialObject C) :=
-  by
-  dsimp [cosimplicial_object]
-  infer_instance
+    HasLimitsOfShape J (CosimplicialObject C) := by dsimp [cosimplicial_object]; infer_instance
 
 instance [HasLimits C] : HasLimits (CosimplicialObject C) :=
   ⟨inferInstance⟩
 
 instance {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
-    HasColimitsOfShape J (CosimplicialObject C) :=
-  by
-  dsimp [cosimplicial_object]
-  infer_instance
+    HasColimitsOfShape J (CosimplicialObject C) := by dsimp [cosimplicial_object]; infer_instance
 
 instance [HasColimits C] : HasColimits (CosimplicialObject C) :=
   ⟨inferInstance⟩
@@ -585,10 +541,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (X : CategoryTheory.CosimplicialObject.{u1, u2} C _inst_1) {n : Nat} (h : Eq.{1} Nat n n), Eq.{succ u1} (CategoryTheory.Iso.{u1, u2} C _inst_1 (Prefunctor.obj.{1, succ u1, 0, u2} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} SimplexCategory SimplexCategory.smallCategory C _inst_1 X) (SimplexCategory.mk n)) (Prefunctor.obj.{1, succ u1, 0, u2} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} SimplexCategory SimplexCategory.smallCategory C _inst_1 X) (SimplexCategory.mk n))) (CategoryTheory.CosimplicialObject.eqToIso.{u1, u2} C _inst_1 X n n h) (CategoryTheory.Iso.refl.{u1, u2} C _inst_1 (Prefunctor.obj.{1, succ u1, 0, u2} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u1, 0, u2} SimplexCategory SimplexCategory.smallCategory C _inst_1 X) (SimplexCategory.mk n)))
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.eq_to_iso_refl CategoryTheory.CosimplicialObject.eqToIso_reflₓ'. -/
 @[simp]
-theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ :=
-  by
-  ext
-  simp [eq_to_iso]
+theorem eqToIso_refl {n : ℕ} (h : n = n) : X.eqToIso h = Iso.refl _ := by ext; simp [eq_to_iso]
 #align category_theory.cosimplicial_object.eq_to_iso_refl CategoryTheory.CosimplicialObject.eqToIso_refl
 
 /- warning: category_theory.cosimplicial_object.δ_comp_δ -> CategoryTheory.CosimplicialObject.δ_comp_δ is a dubious translation:
@@ -597,9 +550,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 /-- The generic case of the first cosimplicial identity -/
 @[reassoc]
 theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) :
-    X.δ i ≫ X.δ j.succ = X.δ j ≫ X.δ i.cast_succ :=
-  by
-  dsimp [δ]
+    X.δ i ≫ X.δ j.succ = X.δ j ≫ X.δ i.cast_succ := by dsimp [δ];
   simp only [← X.map_comp, SimplexCategory.δ_comp_δ H]
 #align category_theory.cosimplicial_object.δ_comp_δ CategoryTheory.CosimplicialObject.δ_comp_δ
 
@@ -610,9 +561,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
     X.δ i ≫ X.δ j =
       X.δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ X.δ i.cast_succ :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
+  by dsimp [δ]; simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ' H]
 #align category_theory.cosimplicial_object.δ_comp_δ' CategoryTheory.CosimplicialObject.δ_comp_δ'
 
 /- warning: category_theory.cosimplicial_object.δ_comp_δ'' -> CategoryTheory.CosimplicialObject.δ_comp_δ'' is a dubious translation:
@@ -622,9 +571,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
     X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ X.δ j.succ =
       X.δ j ≫ X.δ i :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ'' H]
+  by dsimp [δ]; simp only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_δ'' H]
 #align category_theory.cosimplicial_object.δ_comp_δ'' CategoryTheory.CosimplicialObject.δ_comp_δ''
 
 /- warning: category_theory.cosimplicial_object.δ_comp_δ_self -> CategoryTheory.CosimplicialObject.δ_comp_δ_self is a dubious translation:
@@ -632,10 +579,8 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.δ_comp_δ_self CategoryTheory.CosimplicialObject.δ_comp_δ_selfₓ'. -/
 /-- The special case of the first cosimplicial identity -/
 @[reassoc]
-theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.δ i ≫ X.δ i.succ :=
-  by
-  dsimp [δ]
-  simp only [← X.map_comp, SimplexCategory.δ_comp_δ_self]
+theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.δ i ≫ X.δ i.succ := by
+  dsimp [δ]; simp only [← X.map_comp, SimplexCategory.δ_comp_δ_self]
 #align category_theory.cosimplicial_object.δ_comp_δ_self CategoryTheory.CosimplicialObject.δ_comp_δ_self
 
 /- warning: category_theory.cosimplicial_object.δ_comp_δ_self' -> CategoryTheory.CosimplicialObject.δ_comp_δ_self' is a dubious translation:
@@ -643,9 +588,7 @@ theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : X.δ i ≫ X.δ i.cast_succ = X.
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.δ_comp_δ_self' CategoryTheory.CosimplicialObject.δ_comp_δ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) :
-    X.δ i ≫ X.δ j = X.δ i ≫ X.δ i.succ := by
-  subst H
-  rw [δ_comp_δ_self]
+    X.δ i ≫ X.δ j = X.δ i ≫ X.δ i.succ := by subst H; rw [δ_comp_δ_self]
 #align category_theory.cosimplicial_object.δ_comp_δ_self' CategoryTheory.CosimplicialObject.δ_comp_δ_self'
 
 /- warning: category_theory.cosimplicial_object.δ_comp_σ_of_le -> CategoryTheory.CosimplicialObject.δ_comp_σ_of_le is a dubious translation:
@@ -654,9 +597,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 /-- The second cosimplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
-    X.δ i.cast_succ ≫ X.σ j.succ = X.σ j ≫ X.δ i :=
-  by
-  dsimp [δ, σ]
+    X.δ i.cast_succ ≫ X.σ j.succ = X.σ j ≫ X.δ i := by dsimp [δ, σ];
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_of_le H]
 #align category_theory.cosimplicial_object.δ_comp_σ_of_le CategoryTheory.CosimplicialObject.δ_comp_σ_of_le
 
@@ -676,9 +617,7 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : X.δ i.cast_succ ≫ X.σ i = �
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.δ_comp_σ_self' CategoryTheory.CosimplicialObject.δ_comp_σ_self'ₓ'. -/
 @[reassoc]
 theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
-    X.δ j ≫ X.σ i = 𝟙 _ := by
-  subst H
-  rw [δ_comp_σ_self]
+    X.δ j ≫ X.σ i = 𝟙 _ := by subst H; rw [δ_comp_σ_self]
 #align category_theory.cosimplicial_object.δ_comp_σ_self' CategoryTheory.CosimplicialObject.δ_comp_σ_self'
 
 /- warning: category_theory.cosimplicial_object.δ_comp_σ_succ -> CategoryTheory.CosimplicialObject.δ_comp_σ_succ is a dubious translation:
@@ -703,9 +642,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.δ_comp_σ_succ' CategoryTheory.CosimplicialObject.δ_comp_σ_succ'ₓ'. -/
 @[reassoc]
 theorem δ_comp_σ_succ' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.succ) :
-    X.δ j ≫ X.σ i = 𝟙 _ := by
-  subst H
-  rw [δ_comp_σ_succ]
+    X.δ j ≫ X.σ i = 𝟙 _ := by subst H; rw [δ_comp_σ_succ]
 #align category_theory.cosimplicial_object.δ_comp_σ_succ' CategoryTheory.CosimplicialObject.δ_comp_σ_succ'
 
 /- warning: category_theory.cosimplicial_object.δ_comp_σ_of_gt -> CategoryTheory.CosimplicialObject.δ_comp_σ_of_gt is a dubious translation:
@@ -714,9 +651,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 /-- The fourth cosimplicial identity -/
 @[reassoc]
 theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
-    X.δ i.succ ≫ X.σ j.cast_succ = X.σ j ≫ X.δ i :=
-  by
-  dsimp [δ, σ]
+    X.δ i.succ ≫ X.σ j.cast_succ = X.σ j ≫ X.δ i := by dsimp [δ, σ];
   simp only [← X.map_comp, SimplexCategory.δ_comp_σ_of_gt H]
 #align category_theory.cosimplicial_object.δ_comp_σ_of_gt CategoryTheory.CosimplicialObject.δ_comp_σ_of_gt
 
@@ -733,9 +668,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
                 (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) ≫
         X.δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) :=
-  by
-  dsimp [δ, σ]
-  simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]
+  by dsimp [δ, σ]; simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]
 #align category_theory.cosimplicial_object.δ_comp_σ_of_gt' CategoryTheory.CosimplicialObject.δ_comp_σ_of_gt'
 
 /- warning: category_theory.cosimplicial_object.σ_comp_σ -> CategoryTheory.CosimplicialObject.σ_comp_σ is a dubious translation:
@@ -744,9 +677,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.cosimp
 /-- The fifth cosimplicial identity -/
 @[reassoc]
 theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
-    X.σ i.cast_succ ≫ X.σ j = X.σ j.succ ≫ X.σ i :=
-  by
-  dsimp [δ, σ]
+    X.σ i.cast_succ ≫ X.σ j = X.σ j.succ ≫ X.σ i := by dsimp [δ, σ];
   simp only [← X.map_comp, SimplexCategory.σ_comp_σ H]
 #align category_theory.cosimplicial_object.σ_comp_σ CategoryTheory.CosimplicialObject.σ_comp_σ
 
@@ -797,19 +728,13 @@ variable {C}
 namespace Truncated
 
 instance {n} {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (CosimplicialObject.Truncated C n) :=
-  by
-  dsimp [truncated]
-  infer_instance
+    HasLimitsOfShape J (CosimplicialObject.Truncated C n) := by dsimp [truncated]; infer_instance
 
 instance {n} [HasLimits C] : HasLimits (CosimplicialObject.Truncated C n) :=
   ⟨inferInstance⟩
 
 instance {n} {J : Type v} [SmallCategory J] [HasColimitsOfShape J C] :
-    HasColimitsOfShape J (CosimplicialObject.Truncated C n) :=
-  by
-  dsimp [truncated]
-  infer_instance
+    HasColimitsOfShape J (CosimplicialObject.Truncated C n) := by dsimp [truncated]; infer_instance
 
 instance {n} [HasColimits C] : HasColimits (CosimplicialObject.Truncated C n) :=
   ⟨inferInstance⟩
@@ -969,8 +894,7 @@ def augment (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
 Case conversion may be inaccurate. Consider using '#align category_theory.cosimplicial_object.augment_hom_zero CategoryTheory.CosimplicialObject.augment_hom_zeroₓ'. -/
 @[simp]
 theorem augment_hom_zero (X : CosimplicialObject C) (X₀ : C) (f : X₀ ⟶ X.obj [0]) (w) :
-    (X.augment X₀ f w).Hom.app [0] = f := by
-  dsimp
+    (X.augment X₀ f w).Hom.app [0] = f := by dsimp;
   rw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.comp_id]
 #align category_theory.cosimplicial_object.augment_hom_zero CategoryTheory.CosimplicialObject.augment_hom_zero
 
@@ -1100,13 +1024,8 @@ objects and augmented cosimplicial objects in the opposite category. -/
 def simplicialCosimplicialAugmentedEquiv :
     (SimplicialObject.Augmented C)ᵒᵖ ≌ CosimplicialObject.Augmented Cᵒᵖ :=
   Equivalence.mk (simplicialToCosimplicialAugmented _) (cosimplicialToSimplicialAugmented _)
-    (NatIso.ofComponents (fun X => X.unop.rightOpLeftOpIso.op) fun X Y f =>
-      by
-      dsimp
-      rw [← f.op_unop]
-      simp_rw [← op_comp]
-      congr 1
-      tidy)
+    (NatIso.ofComponents (fun X => X.unop.rightOpLeftOpIso.op) fun X Y f => by dsimp;
+      rw [← f.op_unop]; simp_rw [← op_comp]; congr 1; tidy)
     ((NatIso.ofComponents fun X => X.leftOpRightOpIso) <| by tidy)
 #align category_theory.simplicial_cosimplicial_augmented_equiv CategoryTheory.simplicialCosimplicialAugmentedEquiv
 

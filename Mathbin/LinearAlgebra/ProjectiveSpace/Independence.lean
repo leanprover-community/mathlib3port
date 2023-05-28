@@ -65,13 +65,10 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
   · rintro ⟨ff, hff, hh⟩
     choose a ha using fun i : ι => exists_smul_eq_mk_rep K (ff i) (hff i)
     convert hh.units_smul a
-    ext i
-    exact (ha i).symm
+    ext i; exact (ha i).symm
   · convert independent.mk _ _ h
-    · ext
-      simp only [mk_rep]
-    · intro i
-      apply rep_nonzero
+    · ext; simp only [mk_rep]
+    · intro i; apply rep_nonzero
 #align projectivization.independent_iff Projectivization.independent_iff
 
 /- warning: projectivization.independent_iff_complete_lattice_independent -> Projectivization.independent_iff_completeLattice_independent is a dubious translation:
@@ -122,8 +119,7 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     ext i
     simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_apply]
   · convert dependent.mk _ _ h
-    · ext i
-      simp only [mk_rep]
+    · ext i; simp only [mk_rep]
     · exact fun i => rep_nonzero (f i)
 #align projectivization.dependent_iff Projectivization.dependent_iff
 

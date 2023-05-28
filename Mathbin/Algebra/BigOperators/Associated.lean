@@ -162,10 +162,8 @@ theorem finset_prod_mk {p : Finset β} {f : β → α} :
 
 #print Associates.rel_associated_iff_map_eq_map /-
 theorem rel_associated_iff_map_eq_map {p q : Multiset α} :
-    Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk :=
-  by
-  rw [← Multiset.rel_eq, Multiset.rel_map]
-  simp only [mk_eq_mk_iff_associated]
+    Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk := by
+  rw [← Multiset.rel_eq, Multiset.rel_map]; simp only [mk_eq_mk_iff_associated]
 #align associates.rel_associated_iff_map_eq_map Associates.rel_associated_iff_map_eq_map
 -/
 

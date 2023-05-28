@@ -92,15 +92,9 @@ instance : SmallCategory (WalkingMulticospan fst snd)
   Hom := Hom
   id := Hom.id
   comp X Y Z := Hom.comp
-  id_comp' := by
-    rintro (_ | _) (_ | _) (_ | _ | _)
-    tidy
-  comp_id' := by
-    rintro (_ | _) (_ | _) (_ | _ | _)
-    tidy
-  assoc' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) (_ | _ | _)
-    tidy
+  id_comp' := by rintro (_ | _) (_ | _) (_ | _ | _); tidy
+  comp_id' := by rintro (_ | _) (_ | _) (_ | _ | _); tidy
+  assoc' := by rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) (_ | _ | _); tidy
 
 end WalkingMulticospan
 
@@ -137,15 +131,9 @@ instance : SmallCategory (WalkingMultispan fst snd)
   Hom := Hom
   id := Hom.id
   comp X Y Z := Hom.comp
-  id_comp' := by
-    rintro (_ | _) (_ | _) (_ | _ | _)
-    tidy
-  comp_id' := by
-    rintro (_ | _) (_ | _) (_ | _ | _)
-    tidy
-  assoc' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) (_ | _ | _)
-    tidy
+  id_comp' := by rintro (_ | _) (_ | _) (_ | _ | _); tidy
+  comp_id' := by rintro (_ | _) (_ | _) (_ | _ | _); tidy
+  assoc' := by rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) (_ | _ | _); tidy
 
 end WalkingMultispan
 
@@ -192,12 +180,8 @@ def multicospan : WalkingMulticospan I.fstTo I.sndTo ⥤ C
     | _, _, walking_multicospan.hom.id x => 𝟙 _
     | _, _, walking_multicospan.hom.fst b => I.fst _
     | _, _, walking_multicospan.hom.snd b => I.snd _
-  map_id' := by
-    rintro (_ | _)
-    tidy
-  map_comp' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _)
-    tidy
+  map_id' := by rintro (_ | _); tidy
+  map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _); tidy
 #align category_theory.limits.multicospan_index.multicospan CategoryTheory.Limits.MulticospanIndex.multicospan
 -/
 
@@ -306,12 +290,8 @@ def multispan : WalkingMultispan I.fstFrom I.sndFrom ⥤ C
     | _, _, walking_multispan.hom.id x => 𝟙 _
     | _, _, walking_multispan.hom.fst b => I.fst _
     | _, _, walking_multispan.hom.snd b => I.snd _
-  map_id' := by
-    rintro (_ | _)
-    tidy
-  map_comp' := by
-    rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _)
-    tidy
+  map_id' := by rintro (_ | _); tidy
+  map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _); tidy
 #align category_theory.limits.multispan_index.multispan CategoryTheory.Limits.MultispanIndex.multispan
 -/
 
@@ -445,10 +425,8 @@ theorem app_left_eq_ι (a) : K.π.app (WalkingMulticospan.left a) = K.ι a :=
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multifork.app_right_eq_ι_comp_fst CategoryTheory.Limits.Multifork.app_right_eq_ι_comp_fstₓ'. -/
 @[simp]
 theorem app_right_eq_ι_comp_fst (b) :
-    K.π.app (WalkingMulticospan.right b) = K.ι (I.fstTo b) ≫ I.fst b :=
-  by
-  rw [← K.w (walking_multicospan.hom.fst b)]
-  rfl
+    K.π.app (WalkingMulticospan.right b) = K.ι (I.fstTo b) ≫ I.fst b := by
+  rw [← K.w (walking_multicospan.hom.fst b)]; rfl
 #align category_theory.limits.multifork.app_right_eq_ι_comp_fst CategoryTheory.Limits.Multifork.app_right_eq_ι_comp_fst
 
 /- warning: category_theory.limits.multifork.app_right_eq_ι_comp_snd -> CategoryTheory.Limits.Multifork.app_right_eq_ι_comp_snd is a dubious translation:
@@ -456,10 +434,8 @@ theorem app_right_eq_ι_comp_fst (b) :
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multifork.app_right_eq_ι_comp_snd CategoryTheory.Limits.Multifork.app_right_eq_ι_comp_sndₓ'. -/
 @[reassoc]
 theorem app_right_eq_ι_comp_snd (b) :
-    K.π.app (WalkingMulticospan.right b) = K.ι (I.sndTo b) ≫ I.snd b :=
-  by
-  rw [← K.w (walking_multicospan.hom.snd b)]
-  rfl
+    K.π.app (WalkingMulticospan.right b) = K.ι (I.sndTo b) ≫ I.snd b := by
+  rw [← K.w (walking_multicospan.hom.snd b)]; rfl
 #align category_theory.limits.multifork.app_right_eq_ι_comp_snd CategoryTheory.Limits.Multifork.app_right_eq_ι_comp_snd
 
 /- warning: category_theory.limits.multifork.hom_comp_ι -> CategoryTheory.Limits.Multifork.hom_comp_ι is a dubious translation:
@@ -485,12 +461,8 @@ def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals symm; dsimp; rw [category.id_comp]; apply category.comp_id
-        · dsimp
-          rw [category.id_comp]
-          rfl
-        · dsimp
-          rw [category.id_comp]
-          apply w }
+        · dsimp; rw [category.id_comp]; rfl
+        · dsimp; rw [category.id_comp]; apply w }
 #align category_theory.limits.multifork.of_ι CategoryTheory.Limits.Multifork.ofι
 -/
 
@@ -535,11 +507,9 @@ variable [HasProduct I.left] [HasProduct I.right]
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multifork.pi_condition CategoryTheory.Limits.Multifork.pi_conditionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
-theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap :=
-  by
-  ext
+theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by ext;
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp
 #align category_theory.limits.multifork.pi_condition CategoryTheory.Limits.Multifork.pi_condition
 
@@ -593,11 +563,8 @@ noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals symm; dsimp; rw [category.id_comp]; apply category.comp_id
-        · change 𝟙 _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
-          simp
-        · change 𝟙 _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
-          rw [c.condition_assoc]
-          simp }
+        · change 𝟙 _ ≫ _ ≫ _ = (_ ≫ _) ≫ _; simp
+        · change 𝟙 _ ≫ _ ≫ _ = (_ ≫ _) ≫ _; rw [c.condition_assoc]; simp }
 #align category_theory.limits.multifork.of_pi_fork CategoryTheory.Limits.Multifork.ofPiFork
 -/
 
@@ -637,9 +604,7 @@ noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap
     { Hom := f.Hom
       w' := by
         rintro (_ | _)
-        · ext
-          dsimp
-          simp
+        · ext; dsimp; simp
         · ext
           simp only [multifork.to_pi_fork_π_app_one, multifork.pi_condition, category.assoc]
           dsimp [snd_pi_map]
@@ -681,20 +646,10 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
           (by
             rintro (_ | _) <;> dsimp <;>
               simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
-      fun K₁ K₂ f => by
-      ext
-      simp
+      fun K₁ K₂ f => by ext; simp
   counitIso :=
-    NatIso.ofComponents
-      (fun K =>
-        Fork.ext (Iso.refl _)
-          (by
-            ext ⟨j⟩
-            dsimp
-            simp))
-      fun K₁ K₂ f => by
-      ext
-      simp
+    NatIso.ofComponents (fun K => Fork.ext (Iso.refl _) (by ext ⟨j⟩; dsimp; simp)) fun K₁ K₂ f => by
+      ext; simp
 #align category_theory.limits.multicospan_index.multifork_equiv_pi_fork CategoryTheory.Limits.MulticospanIndex.multiforkEquivPiFork
 
 end MulticospanIndex
@@ -722,20 +677,16 @@ theorem π_eq_app_right (b) : K.ι.app (WalkingMultispan.right _) = K.π b :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multicofork.fst_app_right CategoryTheory.Limits.Multicofork.fst_app_rightₓ'. -/
 @[simp]
-theorem fst_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.fst a ≫ K.π _ :=
-  by
-  rw [← K.w (walking_multispan.hom.fst a)]
-  rfl
+theorem fst_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.fst a ≫ K.π _ := by
+  rw [← K.w (walking_multispan.hom.fst a)]; rfl
 #align category_theory.limits.multicofork.fst_app_right CategoryTheory.Limits.Multicofork.fst_app_right
 
 /- warning: category_theory.limits.multicofork.snd_app_right -> CategoryTheory.Limits.Multicofork.snd_app_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multicofork.snd_app_right CategoryTheory.Limits.Multicofork.snd_app_rightₓ'. -/
 @[reassoc]
-theorem snd_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.π _ :=
-  by
-  rw [← K.w (walking_multispan.hom.snd a)]
-  rfl
+theorem snd_app_right (a) : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.π _ := by
+  rw [← K.w (walking_multispan.hom.snd a)]; rfl
 #align category_theory.limits.multicofork.snd_app_right CategoryTheory.Limits.Multicofork.snd_app_right
 
 #print CategoryTheory.Limits.Multicofork.ofπ /-
@@ -753,12 +704,8 @@ def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals dsimp; rw [category.comp_id]; apply category.id_comp
-        · dsimp
-          rw [category.comp_id]
-          rfl
-        · dsimp
-          rw [category.comp_id]
-          apply (w _).symm }
+        · dsimp; rw [category.comp_id]; rfl
+        · dsimp; rw [category.comp_id]; apply (w _).symm }
 #align category_theory.limits.multicofork.of_π CategoryTheory.Limits.Multicofork.ofπ
 -/
 
@@ -803,11 +750,9 @@ variable [HasCoproduct I.left] [HasCoproduct I.right]
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multicofork.sigma_condition CategoryTheory.Limits.Multicofork.sigma_conditionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc]
-theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π :=
-  by
-  ext
+theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by ext;
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp
 #align category_theory.limits.multicofork.sigma_condition CategoryTheory.Limits.Multicofork.sigma_condition
 
@@ -853,13 +798,11 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multi
       naturality' := by
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals dsimp; rw [category.comp_id]; apply category.id_comp
-        · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
-          dsimp
+        · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _; dsimp
           simp only [cofork.condition, category.comp_id]
           rw [← I.ι_fst_sigma_map_assoc, c.condition]
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ 𝟙 _
-          rw [c.condition]
-          simp }
+          rw [c.condition]; simp }
 #align category_theory.limits.multicofork.of_sigma_cofork CategoryTheory.Limits.Multicofork.ofSigmaCofork
 -/
 
@@ -930,22 +873,13 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
   inverse := ofSigmaCoforkFunctor I
   unitIso :=
     NatIso.ofComponents (fun K => Cocones.ext (Iso.refl _) (by rintro (_ | _) <;> dsimp <;> simp))
-      fun K₁ K₂ f => by
-      ext
-      simp
+      fun K₁ K₂ f => by ext; simp
   counitIso :=
     NatIso.ofComponents
       (fun K =>
         Cofork.ext (Iso.refl _)
-          (by
-            ext ⟨j⟩
-            dsimp
-            simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
-            rfl))
-      fun K₁ K₂ f => by
-      ext
-      dsimp
-      simp
+          (by ext ⟨j⟩; dsimp; simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]; rfl))
+      fun K₁ K₂ f => by ext; dsimp; simp
 #align category_theory.limits.multispan_index.multicofork_equiv_sigma_cofork CategoryTheory.Limits.MultispanIndex.multicoforkEquivSigmaCofork
 
 end MultispanIndex
@@ -1096,10 +1030,8 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (I : CategoryTheory.Limits.MulticospanIndex.{u1, u2, u3} C _inst_1) [_inst_2 : CategoryTheory.Limits.HasMultiequalizer.{u2, u3, u1} C _inst_1 I] [_inst_3 : CategoryTheory.Limits.HasProduct.{u1, u2, u3} (CategoryTheory.Limits.MulticospanIndex.L.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MulticospanIndex.left.{u1, u2, u3} C _inst_1 I)] [_inst_4 : CategoryTheory.Limits.HasProduct.{u1, u2, u3} (CategoryTheory.Limits.MulticospanIndex.R.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MulticospanIndex.right.{u1, u2, u3} C _inst_1 I)] (a : CategoryTheory.Limits.MulticospanIndex.L.{u1, u2, u3} C _inst_1 I), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Limits.multiequalizer.{u2, u3, u1} C _inst_1 I _inst_2) (CategoryTheory.Limits.MulticospanIndex.left.{u1, u2, u3} C _inst_1 I a)) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (CategoryTheory.Limits.multiequalizer.{u2, u3, u1} C _inst_1 I _inst_2) (CategoryTheory.Limits.piObj.{u1, u2, u3} (CategoryTheory.Limits.MulticospanIndex.L.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MulticospanIndex.left.{u1, u2, u3} C _inst_1 I) _inst_3) (CategoryTheory.Limits.MulticospanIndex.left.{u1, u2, u3} C _inst_1 I a) (CategoryTheory.Limits.Multiequalizer.ιPi.{u2, u3, u1} C _inst_1 I _inst_2 _inst_3 _inst_4) (CategoryTheory.Limits.Pi.π.{u1, u2, u3} (CategoryTheory.Limits.MulticospanIndex.L.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MulticospanIndex.left.{u1, u2, u3} C _inst_1 I) _inst_3 a)) (CategoryTheory.Limits.Multiequalizer.ι.{u2, u3, u1} C _inst_1 I _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multiequalizer.ι_pi_π CategoryTheory.Limits.Multiequalizer.ιPi_πₓ'. -/
 @[simp, reassoc]
-theorem ιPi_π (a) : ιPi I ≫ Pi.π I.left a = ι I a :=
-  by
-  rw [ι_pi, category.assoc, ← iso.eq_inv_comp, iso_equalizer]
-  simpa
+theorem ιPi_π (a) : ιPi I ≫ Pi.π I.left a = ι I a := by
+  rw [ι_pi, category.assoc, ← iso.eq_inv_comp, iso_equalizer]; simpa
 #align category_theory.limits.multiequalizer.ι_pi_π CategoryTheory.Limits.Multiequalizer.ιPi_π
 
 instance : Mono (ιPi I) :=
@@ -1225,10 +1157,8 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (I : CategoryTheory.Limits.MultispanIndex.{u1, u2, u3} C _inst_1) [_inst_2 : CategoryTheory.Limits.HasMulticoequalizer.{u2, u3, u1} C _inst_1 I] [_inst_3 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u3} (CategoryTheory.Limits.MultispanIndex.L.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MultispanIndex.left.{u1, u2, u3} C _inst_1 I)] [_inst_4 : CategoryTheory.Limits.HasCoproduct.{u1, u2, u3} (CategoryTheory.Limits.MultispanIndex.R.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MultispanIndex.right.{u1, u2, u3} C _inst_1 I)] (b : CategoryTheory.Limits.MultispanIndex.R.{u1, u2, u3} C _inst_1 I), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Limits.MultispanIndex.right.{u1, u2, u3} C _inst_1 I b) (CategoryTheory.Limits.multicoequalizer.{u2, u3, u1} C _inst_1 I _inst_2)) (CategoryTheory.CategoryStruct.comp.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (CategoryTheory.Limits.MultispanIndex.right.{u1, u2, u3} C _inst_1 I b) (CategoryTheory.Limits.sigmaObj.{u1, u2, u3} (CategoryTheory.Limits.MultispanIndex.R.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MultispanIndex.right.{u1, u2, u3} C _inst_1 I) _inst_4) (CategoryTheory.Limits.multicoequalizer.{u2, u3, u1} C _inst_1 I _inst_2) (CategoryTheory.Limits.Sigma.ι.{u1, u2, u3} (CategoryTheory.Limits.MultispanIndex.R.{u1, u2, u3} C _inst_1 I) C _inst_1 (CategoryTheory.Limits.MultispanIndex.right.{u1, u2, u3} C _inst_1 I) _inst_4 b) (CategoryTheory.Limits.Multicoequalizer.sigmaπ.{u2, u3, u1} C _inst_1 I _inst_2 _inst_3 _inst_4)) (CategoryTheory.Limits.Multicoequalizer.π.{u2, u3, u1} C _inst_1 I _inst_2 b)
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.multicoequalizer.ι_sigma_π CategoryTheory.Limits.Multicoequalizer.ι_sigmaπₓ'. -/
 @[simp, reassoc]
-theorem ι_sigmaπ (b) : Sigma.ι I.right b ≫ sigmaπ I = π I b :=
-  by
-  rw [sigma_π, ← category.assoc, iso.comp_inv_eq, iso_coequalizer]
-  simpa
+theorem ι_sigmaπ (b) : Sigma.ι I.right b ≫ sigmaπ I = π I b := by
+  rw [sigma_π, ← category.assoc, iso.comp_inv_eq, iso_coequalizer]; simpa
 #align category_theory.limits.multicoequalizer.ι_sigma_π CategoryTheory.Limits.Multicoequalizer.ι_sigmaπ
 
 instance : Epi (sigmaπ I) :=

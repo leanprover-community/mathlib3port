@@ -236,10 +236,8 @@ but is expected to have type
   forall (E' : Type.{u1}) [_inst_12 : NormedAddCommGroup.{u1} E'] [_inst_13 : NormedSpace.{0, u1} Real E' Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E' _inst_12)] [_inst_14 : FiniteDimensional.{0, u1} Real E' Real.instDivisionRingReal (NormedAddCommGroup.toAddCommGroup.{u1} E' _inst_12) (NormedSpace.toModule.{0, u1} Real E' Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} E' _inst_12) _inst_13)], LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) (lipschitzExtensionConstant.{u1} E' _inst_12 _inst_13 _inst_14)
 Case conversion may be inaccurate. Consider using '#align lipschitz_extension_constant_pos lipschitzExtensionConstant_posₓ'. -/
 theorem lipschitzExtensionConstant_pos (E' : Type _) [NormedAddCommGroup E'] [NormedSpace ℝ E']
-    [FiniteDimensional ℝ E'] : 0 < lipschitzExtensionConstant E' :=
-  by
-  rw [lipschitzExtensionConstant]
-  exact zero_lt_one.trans_le (le_max_right _ _)
+    [FiniteDimensional ℝ E'] : 0 < lipschitzExtensionConstant E' := by
+  rw [lipschitzExtensionConstant]; exact zero_lt_one.trans_le (le_max_right _ _)
 #align lipschitz_extension_constant_pos lipschitzExtensionConstant_pos
 
 /- warning: lipschitz_on_with.extend_finite_dimension -> LipschitzOnWith.extend_finite_dimension is a dubious translation:
@@ -307,10 +305,7 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
       tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
-  replace hg : (∑ i, ‖g i - f i‖₊) < K⁻¹
-  · rw [← NNReal.coe_lt_coe]
-    push_cast
-    exact hg
+  replace hg : (∑ i, ‖g i - f i‖₊) < K⁻¹; · rw [← NNReal.coe_lt_coe]; push_cast ; exact hg
   rw [LinearMap.ker_eq_bot]
   refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply,
@@ -436,8 +431,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
       exact ⟨n, le_of_lt hn⟩
     choose n hn using this
     use n
-    replace hn : ∀ i : Fin d, ‖(φ - (v.constrL <| u ∘ n)) (v i)‖ ≤ ε / (2 * C)
-    · simp [hn]
+    replace hn : ∀ i : Fin d, ‖(φ - (v.constrL <| u ∘ n)) (v i)‖ ≤ ε / (2 * C); · simp [hn]
     have : C * (ε / (2 * C)) = ε / 2 := by
       rw [eq_div_iff (two_ne_zero : (2 : ℝ) ≠ 0), mul_comm, ← mul_assoc,
         mul_div_cancel' _ (ne_of_gt h_2C)]
@@ -512,17 +506,12 @@ theorem exists_norm_le_le_norm_sub_of_finset {c : 𝕜} (hc : 1 < ‖c‖) {R : 
   have Fclosed : IsClosed (F : Set E) := Submodule.closed_of_finiteDimensional _
   have : ∃ x, x ∉ F := by
     contrapose! h
-    have : (⊤ : Submodule 𝕜 E) = F := by
-      ext x
-      simp [h]
+    have : (⊤ : Submodule 𝕜 E) = F := by ext x; simp [h]
     have : FiniteDimensional 𝕜 (⊤ : Submodule 𝕜 E) := by rwa [this]
     refine' Module.finite_def.2 ((Submodule.fg_top _).1 (Module.finite_def.1 this))
   obtain ⟨x, xR, hx⟩ : ∃ x : E, ‖x‖ ≤ R ∧ ∀ y : E, y ∈ F → 1 ≤ ‖x - y‖ :=
     riesz_lemma_of_norm_lt hc hR Fclosed this
-  have hx' : ∀ y : E, y ∈ F → 1 ≤ ‖y - x‖ := by
-    intro y hy
-    rw [← norm_neg]
-    simpa using hx y hy
+  have hx' : ∀ y : E, y ∈ F → 1 ≤ ‖y - x‖ := by intro y hy; rw [← norm_neg]; simpa using hx y hy
   exact ⟨x, xR, fun y hy => hx' _ (Submodule.subset_span hy)⟩
 #align exists_norm_le_le_norm_sub_of_finset exists_norm_le_le_norm_sub_of_finset
 
@@ -640,15 +629,12 @@ space if finite-dimensional. -/
       "If a function has compact support, then either the function is trivial or the\nspace if finite-dimensional."]
 theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [TopologicalSpace X] [One X]
     [T2Space X] {f : E → X} (hf : HasCompactMulSupport f) (h'f : Continuous f) :
-    f = 1 ∨ FiniteDimensional 𝕜 E := by
-  by_cases h : ∀ x, f x = 1
-  · apply Or.inl
-    ext x
-    exact h x
+    f = 1 ∨ FiniteDimensional 𝕜 E :=
+  by
+  by_cases h : ∀ x, f x = 1; · apply Or.inl; ext x; exact h x
   apply Or.inr
   push_neg  at h
-  obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1
-  exact h
+  obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1; exact h
   have : Function.mulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
@@ -698,8 +684,7 @@ theorem closedEmbedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x
 theorem isClosedMap_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
   by
   by_cases hc : c = 0
-  · simp_rw [hc, smul_zero]
-    exact isClosedMap_const
+  · simp_rw [hc, smul_zero]; exact isClosedMap_const
   · exact (closedEmbedding_smul_left hc).IsClosedMap
 #align is_closed_map_smul_left isClosedMap_smul_left
 -/
@@ -831,9 +816,7 @@ theorem IsCompact.exists_mem_frontier_infDist_compl_eq_dist {E : Type _} [Normed
     [NormedSpace ℝ E] [Nontrivial E] {x : E} {K : Set E} (hK : IsCompact K) (hx : x ∈ K) :
     ∃ y ∈ frontier K, Metric.infDist x (Kᶜ) = dist x y :=
   by
-  obtain hx' | hx' : x ∈ interior K ∪ frontier K :=
-    by
-    rw [← closure_eq_interior_union_frontier]
+  obtain hx' | hx' : x ∈ interior K ∪ frontier K := by rw [← closure_eq_interior_union_frontier];
     exact subset_closure hx
   · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
     rcases hx' with ⟨r, hr₀, hrK⟩

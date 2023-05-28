@@ -107,10 +107,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 /-- Given a tower `A / ↥U / S / R` of algebras, where `U` is an `S`-subalgebra of `A`, reinterpret
 `U` as an `R`-subalgebra of `A`. -/
 def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
-  { U with
-    algebraMap_mem' := fun x => by
-      rw [algebraMap_apply R S A]
-      exact U.algebra_map_mem _ }
+  { U with algebraMap_mem' := fun x => by rw [algebraMap_apply R S A]; exact U.algebra_map_mem _ }
 #align subalgebra.restrict_scalars Subalgebra.restrictScalars
 -/
 
@@ -197,8 +194,7 @@ theorem adjoin_range_toAlgHom (t : Set A) :
       by
       suffices Set.range (algebraMap (toAlgHom R S A).range A) = Set.range (algebraMap S A) by
         rw [this]
-      ext z
-      exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
+      ext z; exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
 #align is_scalar_tower.adjoin_range_to_alg_hom IsScalarTower.adjoin_range_toAlgHom
 -/
 

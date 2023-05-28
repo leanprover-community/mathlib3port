@@ -111,9 +111,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {φ : Ultrafilter.{u1} α} [_inst_1 : Preorder.{u2} β], Eq.{max (succ u1) (succ u2)} ((Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) -> (Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) -> Prop) (fun (x._@.Mathlib.Order.Filter.FilterProduct._hyg.6816 : Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) (x._@.Mathlib.Order.Filter.FilterProduct._hyg.6818 : Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) => LT.lt.{max u1 u2} (Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) (Preorder.toLT.{max u1 u2} (Filter.Germ.{u1, u2} α (Ultrafilter.toFilter.{u1} α φ) β) (Filter.Germ.preorder.{u1, u2} α β (Ultrafilter.toFilter.{u1} α φ) _inst_1)) x._@.Mathlib.Order.Filter.FilterProduct._hyg.6816 x._@.Mathlib.Order.Filter.FilterProduct._hyg.6818) (Filter.Germ.LiftRel.{u1, u2, u2} α β β (Ultrafilter.toFilter.{u1} α φ) (fun (x._@.Mathlib.Order.Filter.FilterProduct._hyg.6832 : β) (x._@.Mathlib.Order.Filter.FilterProduct._hyg.6834 : β) => LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_1) x._@.Mathlib.Order.Filter.FilterProduct._hyg.6832 x._@.Mathlib.Order.Filter.FilterProduct._hyg.6834))
 Case conversion may be inaccurate. Consider using '#align filter.germ.lt_def Filter.Germ.lt_defₓ'. -/
-theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) :=
-  by
-  ext (⟨f⟩⟨g⟩)
+theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by ext (⟨f⟩⟨g⟩);
   exact coe_lt
 #align filter.germ.lt_def Filter.Germ.lt_def
 
@@ -256,10 +254,8 @@ Case conversion may be inaccurate. Consider using '#align filter.germ.max_def Fi
 theorem max_def [LinearOrder β] (x y : β*) : max x y = map₂ max x y :=
   inductionOn₂ x y fun a b => by
     cases le_total (a : β*) b
-    · rw [max_eq_right h, map₂_coe, coe_eq]
-      exact h.mono fun i hi => (max_eq_right hi).symm
-    · rw [max_eq_left h, map₂_coe, coe_eq]
-      exact h.mono fun i hi => (max_eq_left hi).symm
+    · rw [max_eq_right h, map₂_coe, coe_eq]; exact h.mono fun i hi => (max_eq_right hi).symm
+    · rw [max_eq_left h, map₂_coe, coe_eq]; exact h.mono fun i hi => (max_eq_left hi).symm
 #align filter.germ.max_def Filter.Germ.max_def
 
 /- warning: filter.germ.min_def -> Filter.Germ.min_def is a dubious translation:
@@ -271,10 +267,8 @@ Case conversion may be inaccurate. Consider using '#align filter.germ.min_def Fi
 theorem min_def [K : LinearOrder β] (x y : β*) : min x y = map₂ min x y :=
   inductionOn₂ x y fun a b => by
     cases le_total (a : β*) b
-    · rw [min_eq_left h, map₂_coe, coe_eq]
-      exact h.mono fun i hi => (min_eq_left hi).symm
-    · rw [min_eq_right h, map₂_coe, coe_eq]
-      exact h.mono fun i hi => (min_eq_right hi).symm
+    · rw [min_eq_left h, map₂_coe, coe_eq]; exact h.mono fun i hi => (min_eq_left hi).symm
+    · rw [min_eq_right h, map₂_coe, coe_eq]; exact h.mono fun i hi => (min_eq_right hi).symm
 #align filter.germ.min_def Filter.Germ.min_def
 
 /- warning: filter.germ.abs_def -> Filter.Germ.abs_def is a dubious translation:

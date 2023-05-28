@@ -209,10 +209,8 @@ theorem induction {C : CliffordAlgebra Q → Prop}
 theorem ι_mul_ι_add_swap (a b : M) :
     ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
   calc
-    ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b :=
-      by
-      rw [(ι Q).map_add, mul_add, add_mul, add_mul]
-      abel
+    ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b := by
+      rw [(ι Q).map_add, mul_add, add_mul, add_mul]; abel
     _ = algebraMap R _ (Q (a + b)) - algebraMap R _ (Q a) - algebraMap R _ (Q b) := by
       rw [ι_sq_scalar, ι_sq_scalar, ι_sq_scalar]
     _ = algebraMap R _ (Q (a + b) - Q a - Q b) := by rw [← RingHom.map_sub, ← RingHom.map_sub]
@@ -270,10 +268,8 @@ theorem map_apply_ι (f : M₁ →ₗ[R] M₂) (hf) (m : M₁) : map Q₁ Q₂ f
 
 @[simp]
 theorem map_id :
-    (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) :=
-  by
-  ext m
-  exact map_apply_ι _ _ _ _ m
+    (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) := by
+  ext m; exact map_apply_ι _ _ _ _ m
 #align clifford_algebra.map_id CliffordAlgebra.map_id
 
 @[simp]
@@ -318,17 +314,13 @@ theorem equivOfIsometry_symm (e : Q₁.Isometry Q₂) :
 
 @[simp]
 theorem equivOfIsometry_trans (e₁₂ : Q₁.Isometry Q₂) (e₂₃ : Q₂.Isometry Q₃) :
-    (equivOfIsometry e₁₂).trans (equivOfIsometry e₂₃) = equivOfIsometry (e₁₂.trans e₂₃) :=
-  by
-  ext x
+    (equivOfIsometry e₁₂).trans (equivOfIsometry e₂₃) = equivOfIsometry (e₁₂.trans e₂₃) := by ext x;
   exact AlgHom.congr_fun (map_comp_map Q₁ Q₂ Q₃ _ _ _ _) x
 #align clifford_algebra.equiv_of_isometry_trans CliffordAlgebra.equivOfIsometry_trans
 
 @[simp]
 theorem equivOfIsometry_refl :
-    (equivOfIsometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl :=
-  by
-  ext x
+    (equivOfIsometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by ext x;
   exact AlgHom.congr_fun (map_id Q₁) x
 #align clifford_algebra.equiv_of_isometry_refl CliffordAlgebra.equivOfIsometry_refl
 

@@ -141,24 +141,17 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
         | walking_multicospan.right b => I.fst b (x.1 _)
       property := by
         rintro (a | b) (a' | b') (f | f | f)
-        · change (I.multicospan.map (𝟙 _)) _ = _
-          simp
+        · change (I.multicospan.map (𝟙 _)) _ = _; simp
         · rfl
-        · dsimp
-          erw [← x.2 b']
-          rfl
-        · change (I.multicospan.map (𝟙 _)) _ = _
-          simp }
+        · dsimp; erw [← x.2 b']; rfl
+        · change (I.multicospan.map (𝟙 _)) _ = _; simp }
   left_inv := by
     intro x; ext (a | b)
     · rfl
     · change _ = x.val _
       rw [← x.2 (walking_multicospan.hom.fst b)]
       rfl
-  right_inv := by
-    intro x
-    ext i
-    rfl
+  right_inv := by intro x; ext i; rfl
 #align category_theory.limits.concrete.multiequalizer_equiv_aux CategoryTheory.Limits.Concrete.multiequalizerEquivAux
 
 #print CategoryTheory.Limits.Concrete.multiequalizerEquiv /-
@@ -275,8 +268,7 @@ theorem Concrete.isColimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsCol
   apply_fun TX.hom
   swap;
   · suffices Function.Bijective TX.hom by exact this.1
-    rw [← is_iso_iff_bijective]
-    apply is_iso.of_iso
+    rw [← is_iso_iff_bijective]; apply is_iso.of_iso
   change (E.ι.app i ≫ TX.hom) x = (E.ι.app j ≫ TX.hom) y
   erw [T.hom.w, T.hom.w]
   obtain ⟨k, f, g, h⟩ := h

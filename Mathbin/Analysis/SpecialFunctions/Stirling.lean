@@ -91,20 +91,13 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
   · ext k
     rw [← pow_mul, pow_add]
     push_cast
-    have : 2 * (k : ℝ) + 1 ≠ 0 := by
-      norm_cast
-      exact succ_ne_zero (2 * k)
-    have : 2 * ((m : ℝ) + 1) + 1 ≠ 0 := by
-      norm_cast
-      exact succ_ne_zero (2 * m.succ)
+    have : 2 * (k : ℝ) + 1 ≠ 0 := by norm_cast; exact succ_ne_zero (2 * k)
+    have : 2 * ((m : ℝ) + 1) + 1 ≠ 0 := by norm_cast; exact succ_ne_zero (2 * m.succ)
     field_simp
     ring
-  · have h : ∀ (x : ℝ) (hx : x ≠ 0), 1 + x⁻¹ = (x + 1) / x :=
-      by
-      intros
+  · have h : ∀ (x : ℝ) (hx : x ≠ 0), 1 + x⁻¹ = (x + 1) / x := by intros ;
       rw [_root_.add_div, div_self hx, inv_eq_one_div]
-    simp (disch :=
-      norm_cast
+    simp (disch := norm_cast;
       apply_rules [mul_ne_zero, succ_ne_zero, factorial_ne_zero, exp_ne_zero]
         ) only [log_stirling_seq_formula,
       log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
@@ -175,11 +168,8 @@ theorem log_stirlingSeq_bounded_aux :
   use (1 / 4 * d : ℝ)
   let log_stirling_seq' : ℕ → ℝ := fun k => log (stirling_seq k.succ)
   intro n
-  have h₁ : ∀ k, log_stirling_seq' k - log_stirling_seq' (k + 1) ≤ 1 / 4 * (1 / k.succ ^ 2) :=
-    by
-    intro k
-    convert log_stirling_seq_sub_log_stirling_seq_succ k using 1
-    field_simp
+  have h₁ : ∀ k, log_stirling_seq' k - log_stirling_seq' (k + 1) ≤ 1 / 4 * (1 / k.succ ^ 2) := by
+    intro k; convert log_stirling_seq_sub_log_stirling_seq_succ k using 1; field_simp
   have h₂ : (∑ k : ℕ in range n, (1 : ℝ) / k.succ ^ 2) ≤ d :=
     sum_le_tsum (range n) (fun k _ => by positivity)
       ((summable_nat_add_iff 1).mpr <| real.summable_one_div_nat_pow.mpr one_lt_two)
@@ -202,10 +192,7 @@ theorem log_stirlingSeq_bounded_by_constant : ∃ c, ∀ n : ℕ, c ≤ log (sti
 #align stirling.log_stirling_seq_bounded_by_constant Stirling.log_stirlingSeq_bounded_by_constant
 
 /-- The sequence `stirling_seq` is positive for `n > 0`  -/
-theorem stirling_seq'_pos (n : ℕ) : 0 < stirlingSeq n.succ :=
-  by
-  unfold stirling_seq
-  positivity
+theorem stirling_seq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by unfold stirling_seq; positivity
 #align stirling.stirling_seq'_pos Stirling.stirling_seq'_pos
 
 /-- The sequence `stirling_seq` has a positive lower bound.
@@ -268,9 +255,7 @@ theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0)
   have : (n : ℝ) ≠ 0 := cast_ne_zero.mpr hn
   have : exp 1 ≠ 0 := exp_ne_zero 1
   have : ((2 * n)! : ℝ) ≠ 0 := cast_ne_zero.mpr (factorial_ne_zero (2 * n))
-  have : 2 * (n : ℝ) + 1 ≠ 0 := by
-    norm_cast
-    exact succ_ne_zero (2 * n)
+  have : 2 * (n : ℝ) + 1 ≠ 0 := by norm_cast; exact succ_ne_zero (2 * n)
   field_simp
   simp only [mul_pow, mul_comm 2 n, mul_comm 4 n, pow_mul]
   ring

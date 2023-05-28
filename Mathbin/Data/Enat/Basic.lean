@@ -167,11 +167,8 @@ theorem coe_toNat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
 /- warning: enat.to_nat_add -> ENat.toNat_add is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align enat.to_nat_add ENat.toNat_addₓ'. -/
-theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n :=
-  by
-  lift m to ℕ using hm
-  lift n to ℕ using hn
-  rfl
+theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n := by
+  lift m to ℕ using hm; lift n to ℕ using hn; rfl
 #align enat.to_nat_add ENat.toNat_add
 
 /- warning: enat.to_nat_sub -> ENat.toNat_sub is a dubious translation:

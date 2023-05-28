@@ -51,9 +51,7 @@ def Finite.equivFin (α : Type _) [Finite α] : α ≃ Fin (Nat.card α) :=
 
 #print Finite.equivFinOfCardEq /-
 /-- Similar to `finite.equiv_fin` but with control over the term used for the cardinality. -/
-def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃ Fin n :=
-  by
-  subst h
+def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃ Fin n := by subst h;
   apply Finite.equivFin
 #align finite.equiv_fin_of_card_eq Finite.equivFinOfCardEq
 -/
@@ -101,26 +99,19 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] [_inst_2 : Finite.{succ u1} β], Iff (Eq.{1} Nat (Nat.card.{u2} α) (Nat.card.{u1} β)) (Nonempty.{max (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} α β))
 Case conversion may be inaccurate. Consider using '#align finite.card_eq Finite.card_eqₓ'. -/
-theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) :=
-  by
-  haveI := Fintype.ofFinite α
-  haveI := Fintype.ofFinite β
-  simp [Fintype.card_eq]
+theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) := by
+  haveI := Fintype.ofFinite α; haveI := Fintype.ofFinite β; simp [Fintype.card_eq]
 #align finite.card_eq Finite.card_eq
 
 #print Finite.card_le_one_iff_subsingleton /-
-theorem card_le_one_iff_subsingleton [Finite α] : Nat.card α ≤ 1 ↔ Subsingleton α :=
-  by
-  haveI := Fintype.ofFinite α
-  simp [Fintype.card_le_one_iff_subsingleton]
+theorem card_le_one_iff_subsingleton [Finite α] : Nat.card α ≤ 1 ↔ Subsingleton α := by
+  haveI := Fintype.ofFinite α; simp [Fintype.card_le_one_iff_subsingleton]
 #align finite.card_le_one_iff_subsingleton Finite.card_le_one_iff_subsingleton
 -/
 
 #print Finite.one_lt_card_iff_nontrivial /-
-theorem one_lt_card_iff_nontrivial [Finite α] : 1 < Nat.card α ↔ Nontrivial α :=
-  by
-  haveI := Fintype.ofFinite α
-  simp [Fintype.one_lt_card_iff_nontrivial]
+theorem one_lt_card_iff_nontrivial [Finite α] : 1 < Nat.card α ↔ Nontrivial α := by
+  haveI := Fintype.ofFinite α; simp [Fintype.one_lt_card_iff_nontrivial]
 #align finite.one_lt_card_iff_nontrivial Finite.one_lt_card_iff_nontrivial
 -/
 
@@ -132,18 +123,15 @@ theorem one_lt_card [Finite α] [h : Nontrivial α] : 1 < Nat.card α :=
 
 #print Finite.card_option /-
 @[simp]
-theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 :=
-  by
-  haveI := Fintype.ofFinite α
-  simp
+theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 := by
+  haveI := Fintype.ofFinite α; simp
 #align finite.card_option Finite.card_option
 -/
 
 #print Finite.card_le_of_injective /-
 theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) :
     Nat.card α ≤ Nat.card β := by
-  haveI := Fintype.ofFinite β
-  haveI := Fintype.ofInjective f hf
+  haveI := Fintype.ofFinite β; haveI := Fintype.ofInjective f hf
   simpa using Fintype.card_le_of_injective f hf
 #align finite.card_le_of_injective Finite.card_le_of_injective
 -/
@@ -162,15 +150,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finite.card_le_of_surjective Finite.card_le_of_surjectiveₓ'. -/
 theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) :
     Nat.card β ≤ Nat.card α := by
-  haveI := Fintype.ofFinite α
-  haveI := Fintype.ofSurjective f hf
+  haveI := Fintype.ofFinite α; haveI := Fintype.ofSurjective f hf
   simpa using Fintype.card_le_of_surjective f hf
 #align finite.card_le_of_surjective Finite.card_le_of_surjective
 
 #print Finite.card_eq_zero_iff /-
-theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α :=
-  by
-  haveI := Fintype.ofFinite α
+theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α := by haveI := Fintype.ofFinite α;
   simp [Fintype.card_eq_zero_iff]
 #align finite.card_eq_zero_iff Finite.card_eq_zero_iff
 -/
@@ -262,11 +247,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u2} α] [_inst_2 : Finite.{succ u1} β], Eq.{1} Nat (Nat.card.{max u1 u2} (Sum.{u2, u1} α β)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Nat.card.{u2} α) (Nat.card.{u1} β))
 Case conversion may be inaccurate. Consider using '#align finite.card_sum Finite.card_sumₓ'. -/
-theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β :=
-  by
-  haveI := Fintype.ofFinite α
-  haveI := Fintype.ofFinite β
-  simp
+theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β := by
+  haveI := Fintype.ofFinite α; haveI := Fintype.ofFinite β; simp
 #align finite.card_sum Finite.card_sum
 
 /- warning: finite.card_image_le -> Finite.card_image_le is a dubious translation:
@@ -290,18 +272,14 @@ theorem card_range_le [Finite α] (f : α → β) : Nat.card (Set.range f) ≤ N
 #align finite.card_range_le Finite.card_range_le
 
 #print Finite.card_subtype_le /-
-theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α :=
-  by
-  haveI := Fintype.ofFinite α
-  simpa using Fintype.card_subtype_le p
+theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α := by
+  haveI := Fintype.ofFinite α; simpa using Fintype.card_subtype_le p
 #align finite.card_subtype_le Finite.card_subtype_le
 -/
 
 #print Finite.card_subtype_lt /-
 theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) :
-    Nat.card { x // p x } < Nat.card α :=
-  by
-  haveI := Fintype.ofFinite α
+    Nat.card { x // p x } < Nat.card α := by haveI := Fintype.ofFinite α;
   simpa using Fintype.card_subtype_lt hx
 #align finite.card_subtype_lt Finite.card_subtype_lt
 -/

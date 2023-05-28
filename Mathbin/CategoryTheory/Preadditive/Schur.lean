@@ -131,13 +131,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
     haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
       @spectrum.nonempty_of_isAlgClosed_of_finiteDimensional 𝕜 (End X) _ _ _ _ _
-        (by
-          convert I
-          ext
-          rfl
-          ext
-          rfl)
-        (End.of f)
+        (by convert I; ext; rfl; ext; rfl) (End.of f)
     use c
     rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def,
       Classical.not_not, sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu
@@ -217,10 +211,7 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
   by
   rw [← not_nonempty_iff, ← not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
-  refine'
-    ⟨fun h => by
-      rw [h]
-      simp, fun h => _⟩
+  refine' ⟨fun h => by rw [h]; simp, fun h => _⟩
   have := finrank_hom_simple_simple_le_one 𝕜 X Y
   interval_cases h' : finrank 𝕜 (X ⟶ Y)
   · exact h'

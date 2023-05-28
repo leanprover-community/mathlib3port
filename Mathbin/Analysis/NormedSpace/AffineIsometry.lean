@@ -83,10 +83,7 @@ protected def linearIsometry : V →ₗᵢ[𝕜] V₂ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align affine_isometry.linear_eq_linear_isometry AffineIsometry.linear_eq_linearIsometryₓ'. -/
 @[simp]
-theorem linear_eq_linearIsometry : f.linear = f.LinearIsometry.toLinearMap :=
-  by
-  ext
-  rfl
+theorem linear_eq_linearIsometry : f.linear = f.LinearIsometry.toLinearMap := by ext; rfl
 #align affine_isometry.linear_eq_linear_isometry AffineIsometry.linear_eq_linearIsometry
 
 include V V₂
@@ -157,10 +154,7 @@ but is expected to have type
   forall {𝕜 : Type.{u1}} {V : Type.{u3}} {V₂ : Type.{u2}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u3} V] [_inst_4 : SeminormedAddCommGroup.{u2} V₂] [_inst_7 : NormedSpace.{u1, u3} 𝕜 V _inst_1 _inst_2] [_inst_9 : NormedSpace.{u1, u2} 𝕜 V₂ _inst_1 _inst_4] (f : LinearIsometry.{u1, u1, u3, u2} 𝕜 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))))) V V₂ _inst_2 _inst_4 (NormedSpace.toModule.{u1, u3} 𝕜 V _inst_1 _inst_2 _inst_7) (NormedSpace.toModule.{u1, u2} 𝕜 V₂ _inst_1 _inst_4 _inst_9)), Eq.{max (succ u3) (succ u2)} (LinearIsometry.{u1, u1, u3, u2} 𝕜 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))))) V V₂ _inst_2 _inst_4 (NormedSpace.toModule.{u1, u3} 𝕜 V _inst_1 _inst_2 _inst_7) (NormedSpace.toModule.{u1, u2} 𝕜 V₂ _inst_1 _inst_4 _inst_9)) (AffineIsometry.linearIsometry.{u1, u3, u2, u3, u2} 𝕜 V V₂ V V₂ _inst_1 _inst_2 _inst_4 _inst_7 _inst_9 (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} V _inst_2) (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} V₂ _inst_4) (SeminormedAddCommGroup.toNormedAddTorsor.{u3} V _inst_2) (SeminormedAddCommGroup.toNormedAddTorsor.{u2} V₂ _inst_4) (LinearIsometry.toAffineIsometry.{u1, u3, u2} 𝕜 V V₂ _inst_1 _inst_2 _inst_4 _inst_7 _inst_9 f)) f
 Case conversion may be inaccurate. Consider using '#align linear_isometry.to_affine_isometry_linear_isometry LinearIsometry.toAffineIsometry_linearIsometryₓ'. -/
 @[simp]
-theorem toAffineIsometry_linearIsometry : f.toAffineIsometry.LinearIsometry = f :=
-  by
-  ext
-  rfl
+theorem toAffineIsometry_linearIsometry : f.toAffineIsometry.LinearIsometry = f := by ext; rfl
 #align linear_isometry.to_affine_isometry_linear_isometry LinearIsometry.toAffineIsometry_linearIsometry
 
 /- warning: linear_isometry.to_affine_isometry_to_affine_map -> LinearIsometry.toAffineIsometry_toAffineMap is a dubious translation:
@@ -498,10 +492,7 @@ protected def linearIsometryEquiv : V ≃ₗᵢ[𝕜] V₂ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align affine_isometry_equiv.linear_eq_linear_isometry AffineIsometryEquiv.linear_eq_linear_isometryₓ'. -/
 @[simp]
-theorem linear_eq_linear_isometry : e.linear = e.LinearIsometryEquiv.toLinearEquiv :=
-  by
-  ext
-  rfl
+theorem linear_eq_linear_isometry : e.linear = e.LinearIsometryEquiv.toLinearEquiv := by ext; rfl
 #align affine_isometry_equiv.linear_eq_linear_isometry AffineIsometryEquiv.linear_eq_linear_isometry
 
 include V V₂
@@ -582,9 +573,7 @@ theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) : ⇑
 Case conversion may be inaccurate. Consider using '#align affine_isometry_equiv.linear_isometry_equiv_mk' AffineIsometryEquiv.linearIsometryEquiv_mk'ₓ'. -/
 @[simp]
 theorem linearIsometryEquiv_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) :
-    (mk' e e' p h).LinearIsometryEquiv = e' := by
-  ext
-  rfl
+    (mk' e e' p h).LinearIsometryEquiv = e' := by ext; rfl
 #align affine_isometry_equiv.linear_isometry_equiv_mk' AffineIsometryEquiv.linearIsometryEquiv_mk'
 
 end AffineIsometryEquiv
@@ -616,10 +605,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.to_affine_isometry_equiv_linear_isometry_equiv LinearIsometryEquiv.toAffineIsometryEquiv_linearIsometryEquivₓ'. -/
 @[simp]
 theorem toAffineIsometryEquiv_linearIsometryEquiv :
-    e.toAffineIsometryEquiv.LinearIsometryEquiv = e :=
-  by
-  ext
-  rfl
+    e.toAffineIsometryEquiv.LinearIsometryEquiv = e := by ext; rfl
 #align linear_isometry_equiv.to_affine_isometry_equiv_linear_isometry_equiv LinearIsometryEquiv.toAffineIsometryEquiv_linearIsometryEquiv
 
 /- warning: linear_isometry_equiv.to_affine_isometry_equiv_to_affine_equiv -> LinearIsometryEquiv.toAffineIsometryEquiv_toAffineEquiv is a dubious translation:
@@ -681,9 +667,7 @@ include V V₂
 /- warning: affine_isometry_equiv.range_eq_univ -> AffineIsometryEquiv.range_eq_univ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align affine_isometry_equiv.range_eq_univ AffineIsometryEquiv.range_eq_univₓ'. -/
-theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ :=
-  by
-  rw [← coe_to_isometry_equiv]
+theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ := by rw [← coe_to_isometry_equiv];
   exact IsometryEquiv.range_eq_univ _
 #align affine_isometry_equiv.range_eq_univ AffineIsometryEquiv.range_eq_univ
 
@@ -1146,9 +1130,7 @@ Case conversion may be inaccurate. Consider using '#align affine_isometry_equiv.
 theorem symm_constVsub (p : P) :
     (constVsub 𝕜 p).symm =
       (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vaddConst 𝕜 p) :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align affine_isometry_equiv.symm_const_vsub AffineIsometryEquiv.symm_constVsub
 
 omit V
@@ -1322,9 +1304,7 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by
-    ext v
-    simp
+    by ext v; simp
   rw [this]
   simp only [Homeomorph.comp_continuous_iff, Homeomorph.comp_continuous_iff']
 #align affine_map.continuous_linear_iff AffineMap.continuous_linear_iff
@@ -1340,9 +1320,7 @@ theorem AffineMap.isOpenMap_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.l
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by
-    ext v
-    simp
+    by ext v; simp
   rw [this]
   simp only [Homeomorph.comp_isOpenMap_iff, Homeomorph.comp_isOpenMap_iff']
 #align affine_map.is_open_map_linear_iff AffineMap.isOpenMap_linear_iff

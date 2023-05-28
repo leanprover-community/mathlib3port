@@ -296,13 +296,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_lt_mul_of_lt_of_le₀ mul_lt_mul_of_lt_of_le₀ₓ'. -/
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=
   have hd : d ≠ 0 := ne_zero_of_lt hcd
-  if ha : a = 0 then by
-    rw [ha, MulZeroClass.zero_mul, zero_lt_iff]
-    exact mul_ne_zero hb hd
+  if ha : a = 0 then by rw [ha, MulZeroClass.zero_mul, zero_lt_iff]; exact mul_ne_zero hb hd
   else
-    if hc : c = 0 then by
-      rw [hc, MulZeroClass.mul_zero, zero_lt_iff]
-      exact mul_ne_zero hb hd
+    if hc : c = 0 then by rw [hc, MulZeroClass.mul_zero, zero_lt_iff]; exact mul_ne_zero hb hd
     else
       show Units.mk0 a ha * Units.mk0 c hc < Units.mk0 b hb * Units.mk0 d hd from
         mul_lt_mul_of_le_of_lt hab hcd
@@ -324,9 +320,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) x (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) y z)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) x (Inv.inv.{u1} α (LinearOrderedCommGroupWithZero.toInv.{u1} α _inst_1) z)) y)
 Case conversion may be inaccurate. Consider using '#align mul_inv_lt_of_lt_mul₀ mul_inv_lt_of_lt_mul₀ₓ'. -/
-theorem mul_inv_lt_of_lt_mul₀ (h : x < y * z) : x * z⁻¹ < y :=
-  by
-  contrapose! h
+theorem mul_inv_lt_of_lt_mul₀ (h : x < y * z) : x * z⁻¹ < y := by contrapose! h;
   simpa only [inv_inv] using mul_inv_le_of_le_mul h
 #align mul_inv_lt_of_lt_mul₀ mul_inv_lt_of_lt_mul₀
 
@@ -336,9 +330,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {x : α} {y : α} {z : α} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) x (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) y z)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) (Inv.inv.{u1} α (LinearOrderedCommGroupWithZero.toInv.{u1} α _inst_1) y) x) z)
 Case conversion may be inaccurate. Consider using '#align inv_mul_lt_of_lt_mul₀ inv_mul_lt_of_lt_mul₀ₓ'. -/
-theorem inv_mul_lt_of_lt_mul₀ (h : x < y * z) : y⁻¹ * x < z :=
-  by
-  rw [mul_comm] at *
+theorem inv_mul_lt_of_lt_mul₀ (h : x < y * z) : y⁻¹ * x < z := by rw [mul_comm] at *;
   exact mul_inv_lt_of_lt_mul₀ h
 #align inv_mul_lt_of_lt_mul₀ inv_mul_lt_of_lt_mul₀
 
@@ -348,9 +340,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α] (c : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) a b) -> (Ne.{succ u1} α c (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) b c))
 Case conversion may be inaccurate. Consider using '#align mul_lt_right₀ mul_lt_right₀ₓ'. -/
-theorem mul_lt_right₀ (c : α) (h : a < b) (hc : c ≠ 0) : a * c < b * c :=
-  by
-  contrapose! h
+theorem mul_lt_right₀ (c : α) (h : a < b) (hc : c ≠ 0) : a * c < b * c := by contrapose! h;
   exact le_of_le_mul_right hc h
 #align mul_lt_right₀ mul_lt_right₀
 
@@ -404,9 +394,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {a : α} {b : α} {c : α} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α], (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))))))) a c)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) b c))
 Case conversion may be inaccurate. Consider using '#align mul_le_mul_left₀ mul_le_mul_left₀ₓ'. -/
-theorem mul_le_mul_left₀ (ha : a ≠ 0) : a * b ≤ a * c ↔ b ≤ c :=
-  by
-  simp only [mul_comm a]
+theorem mul_le_mul_left₀ (ha : a ≠ 0) : a * b ≤ a * c ↔ b ≤ c := by simp only [mul_comm a];
   exact mul_le_mul_right₀ ha
 #align mul_le_mul_left₀ mul_le_mul_left₀
 
@@ -471,10 +459,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α] {a : α} (ha : Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))), Eq.{succ u1} (OrderIso.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))))) (OrderIso.symm.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (OrderIso.mulLeft₀'.{u1} α _inst_1 a ha)) (OrderIso.mulLeft₀'.{u1} α _inst_1 (Inv.inv.{u1} α (GroupWithZero.toInv.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))) a) (inv_ne_zero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1)) a ha))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_left₀'_symm OrderIso.mulLeft₀'_symmₓ'. -/
 theorem OrderIso.mulLeft₀'_symm {a : α} (ha : a ≠ 0) :
-    (OrderIso.mulLeft₀' ha).symm = OrderIso.mulLeft₀' (inv_ne_zero ha) :=
-  by
-  ext
-  rfl
+    (OrderIso.mulLeft₀' ha).symm = OrderIso.mulLeft₀' (inv_ne_zero ha) := by ext; rfl
 #align order_iso.mul_left₀'_symm OrderIso.mulLeft₀'_symm
 
 /- warning: order_iso.mul_right₀' -> OrderIso.mulRight₀' is a dubious translation:
@@ -498,10 +483,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} α] {a : α} (ha : Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))), Eq.{succ u1} (OrderIso.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1))))))) (OrderIso.symm.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} α _inst_1)))))) (OrderIso.mulRight₀'.{u1} α _inst_1 a ha)) (OrderIso.mulRight₀'.{u1} α _inst_1 (Inv.inv.{u1} α (GroupWithZero.toInv.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1))) a) (inv_ne_zero.{u1} α (CommGroupWithZero.toGroupWithZero.{u1} α (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} α _inst_1)) a ha))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_right₀'_symm OrderIso.mulRight₀'_symmₓ'. -/
 theorem OrderIso.mulRight₀'_symm {a : α} (ha : a ≠ 0) :
-    (OrderIso.mulRight₀' ha).symm = OrderIso.mulRight₀' (inv_ne_zero ha) :=
-  by
-  ext
-  rfl
+    (OrderIso.mulRight₀' ha).symm = OrderIso.mulRight₀' (inv_ne_zero ha) := by ext; rfl
 #align order_iso.mul_right₀'_symm OrderIso.mulRight₀'_symm
 
 instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=

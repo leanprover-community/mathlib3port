@@ -92,10 +92,8 @@ inductive Rel : lib R X → lib R X → Prop
 
 variable {R X}
 
-theorem Rel.addLeft (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a + b) (a + c) :=
-  by
-  rw [add_comm _ b, add_comm _ c]
-  exact h.add_right _
+theorem Rel.addLeft (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a + b) (a + c) := by
+  rw [add_comm _ b, add_comm _ c]; exact h.add_right _
 #align free_lie_algebra.rel.add_left FreeLieAlgebra.Rel.addLeft
 
 theorem Rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by
@@ -163,20 +161,10 @@ on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
 instance : LieRing (FreeLieAlgebra R X)
     where
   bracket := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_left _) fun _ _ _ => Rel.mul_right _
-  add_lie := by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [add_mul]
-  lie_add := by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    change Quot.mk _ _ = Quot.mk _ _
-    rw [mul_add]
-  lie_self := by
-    rintro ⟨a⟩
-    exact Quot.sound (rel.lie_self a)
-  leibniz_lie := by
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
-    exact Quot.sound (rel.leibniz_lie a b c)
+  add_lie := by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩; change Quot.mk _ _ = Quot.mk _ _; rw [add_mul]
+  lie_add := by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩; change Quot.mk _ _ = Quot.mk _ _; rw [mul_add]
+  lie_self := by rintro ⟨a⟩; exact Quot.sound (rel.lie_self a)
+  leibniz_lie := by rintro ⟨a⟩ ⟨b⟩ ⟨c⟩; exact Quot.sound (rel.leibniz_lie a b c)
 
 instance : LieAlgebra R (FreeLieAlgebra R X)
     where lie_smul := by
@@ -241,21 +229,11 @@ def lift : (X → L) ≃ (FreeLieAlgebra R X →ₗ⁅R⁆ L)
     where
   toFun f :=
     { toFun := fun c => Quot.liftOn c (liftAux R f) (liftAux_spec R f)
-      map_add' := by
-        rintro ⟨a⟩ ⟨b⟩
-        rw [← lift_aux_map_add]
-        rfl
-      map_smul' := by
-        rintro t ⟨a⟩
-        rw [← lift_aux_map_smul]
-        rfl
-      map_lie' := by
-        rintro ⟨a⟩ ⟨b⟩
-        rw [← lift_aux_map_mul]
-        rfl }
+      map_add' := by rintro ⟨a⟩ ⟨b⟩; rw [← lift_aux_map_add]; rfl
+      map_smul' := by rintro t ⟨a⟩; rw [← lift_aux_map_smul]; rfl
+      map_lie' := by rintro ⟨a⟩ ⟨b⟩; rw [← lift_aux_map_mul]; rfl }
   invFun F := F ∘ of R
-  left_inv f := by
-    ext x
+  left_inv f := by ext x;
     simp only [lift_aux, of, Quot.liftOn_mk, LieHom.coe_mk, Function.comp_apply, lib.lift_of_apply]
   right_inv F := by
     ext ⟨a⟩
@@ -286,10 +264,8 @@ theorem lift_of_apply (f : X → L) (x) : lift R f (of R x) = f x := by
 #align free_lie_algebra.lift_of_apply FreeLieAlgebra.lift_of_apply
 
 @[simp]
-theorem lift_comp_of (F : FreeLieAlgebra R X →ₗ⁅R⁆ L) : lift R (F ∘ of R) = F :=
-  by
-  rw [← lift_symm_apply]
-  exact (lift R).apply_symm_apply F
+theorem lift_comp_of (F : FreeLieAlgebra R X →ₗ⁅R⁆ L) : lift R (F ∘ of R) = F := by
+  rw [← lift_symm_apply]; exact (lift R).apply_symm_apply F
 #align free_lie_algebra.lift_comp_of FreeLieAlgebra.lift_comp_of
 
 @[ext]
@@ -307,13 +283,8 @@ algebra. -/
 def universalEnvelopingEquivFreeAlgebra :
     UniversalEnvelopingAlgebra R (FreeLieAlgebra R X) ≃ₐ[R] FreeAlgebra R X :=
   AlgEquiv.ofAlgHom (UniversalEnvelopingAlgebra.lift R <| FreeLieAlgebra.lift R <| FreeAlgebra.ι R)
-    (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
-    (by
-      ext
-      simp)
-    (by
-      ext
-      simp)
+    (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R) (by ext; simp)
+    (by ext; simp)
 #align free_lie_algebra.universal_enveloping_equiv_free_algebra FreeLieAlgebra.universalEnvelopingEquivFreeAlgebra
 
 end FreeLieAlgebra

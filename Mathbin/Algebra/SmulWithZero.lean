@@ -147,9 +147,7 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SMulWithZero R M'
     where
   smul := (· • ·)
-  zero_smul m := by
-    rcases hf m with ⟨x, rfl⟩
-    simp [← smul]
+  zero_smul m := by rcases hf m with ⟨x, rfl⟩; simp [← smul]
   smul_zero c := by simp only [← f.map_zero, ← smul, smul_zero]
 #align function.surjective.smul_with_zero Function.Surjective.smulWithZero
 -/

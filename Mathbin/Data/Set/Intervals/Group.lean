@@ -287,10 +287,8 @@ theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
     Nonempty ↥(Ico x (x + dx) \ Ico y (y + dy)) :=
   by
   cases' lt_or_le x y with h' h'
-  · use x
-    simp [*, not_le.2 h']
-  · use max x (x + dy)
-    simp [*, le_refl]
+  · use x; simp [*, not_le.2 h']
+  · use max x (x + dy); simp [*, le_refl]
 #align set.nonempty_Ico_sdiff Set.nonempty_Ico_sdiff
 
 end LinearOrderedAddCommGroup

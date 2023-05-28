@@ -250,22 +250,14 @@ theorem act_invAct_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
 -/
 
 #print Rack.left_cancel /-
-theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
-  by
-  constructor
-  apply (act x).Injective
-  rintro rfl
-  rfl
+theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' := by constructor;
+  apply (act x).Injective; rintro rfl; rfl
 #align rack.left_cancel Rack.left_cancel
 -/
 
 #print Rack.left_cancel_inv /-
-theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' :=
-  by
-  constructor
-  apply (act x).symm.Injective
-  rintro rfl
-  rfl
+theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' := by constructor;
+  apply (act x).symm.Injective; rintro rfl; rfl
 #align rack.left_cancel_inv Rack.left_cancel_inv
 -/
 
@@ -336,30 +328,22 @@ theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by rw [← righ
 
 #print Rack.self_invAct_invAct_eq /-
 @[simp]
-theorem self_invAct_invAct_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
-  by
-  have h := @self_act_act_eq _ _ (op x) (op y)
-  simpa using h
+theorem self_invAct_invAct_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y := by
+  have h := @self_act_act_eq _ _ (op x) (op y); simpa using h
 #align rack.self_inv_act_inv_act_eq Rack.self_invAct_invAct_eq
 -/
 
 #print Rack.self_act_invAct_eq /-
 @[simp]
-theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
-  by
-  rw [← left_cancel (x ◃ x)]
-  rw [right_inv]
-  rw [self_act_act_eq]
-  rw [right_inv]
+theorem self_act_invAct_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y := by rw [← left_cancel (x ◃ x)];
+  rw [right_inv]; rw [self_act_act_eq]; rw [right_inv]
 #align rack.self_act_inv_act_eq Rack.self_act_invAct_eq
 -/
 
 #print Rack.self_invAct_act_eq /-
 @[simp]
-theorem self_invAct_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
-  by
-  have h := @self_act_inv_act_eq _ _ (op x) (op y)
-  simpa using h
+theorem self_invAct_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y := by
+  have h := @self_act_inv_act_eq _ _ (op x) (op y); simpa using h
 #align rack.self_inv_act_act_eq Rack.self_invAct_act_eq
 -/
 
@@ -375,10 +359,8 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
 -/
 
 #print Rack.self_invAct_eq_iff_eq /-
-theorem self_invAct_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
-  by
-  have h := @self_act_eq_iff_eq _ _ (op x) (op y)
-  simpa using h
+theorem self_invAct_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y := by
+  have h := @self_act_eq_iff_eq _ _ (op x) (op y); simpa using h
 #align rack.self_inv_act_eq_iff_eq Rack.self_invAct_eq_iff_eq
 -/
 
@@ -422,10 +404,8 @@ def IsAbelian (R : Type _) [Rack R] : Prop :=
 #print Rack.assoc_iff_id /-
 /-- Associative racks are uninteresting.
 -/
-theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z :=
-  by
-  rw [self_distrib]
-  rw [left_cancel]
+theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z := by
+  rw [self_distrib]; rw [left_cancel]
 #align rack.assoc_iff_id Rack.assoc_iff_id
 -/
 
@@ -515,18 +495,12 @@ attribute [simp] fix
 
 #print Quandle.fix_inv /-
 @[simp]
-theorem fix_inv {x : Q} : x ◃⁻¹ x = x :=
-  by
-  rw [← left_cancel x]
-  simp
+theorem fix_inv {x : Q} : x ◃⁻¹ x = x := by rw [← left_cancel x]; simp
 #align quandle.fix_inv Quandle.fix_inv
 -/
 
 #print Quandle.oppositeQuandle /-
-instance oppositeQuandle : Quandle Qᵐᵒᵖ
-    where fix x := by
-    induction x using MulOpposite.rec'
-    simp
+instance oppositeQuandle : Quandle Qᵐᵒᵖ where fix x := by induction x using MulOpposite.rec'; simp
 #align quandle.opposite_quandle Quandle.oppositeQuandle
 -/
 
@@ -549,12 +523,8 @@ instance Conj.quandle (G : Type _) [Group G] : Quandle (Conj G)
     dsimp only [MulEquiv.coe_toEquiv, MulAut.conj_apply, conj]
     group
   invAct x := (@MulAut.conj G _ x).symm
-  left_inv x y := by
-    dsimp [act, conj]
-    group
-  right_inv x y := by
-    dsimp [act, conj]
-    group
+  left_inv x y := by dsimp [act, conj]; group
+  right_inv x y := by dsimp [act, conj]; group
   fix x := by simp
 #align quandle.conj.quandle Quandle.Conj.quandle
 -/
@@ -612,11 +582,8 @@ def dihedralAct (n : ℕ) (a : ZMod n) : ZMod n → ZMod n := fun b => 2 * a - b
 -/
 
 #print Quandle.dihedralAct.inv /-
-theorem dihedralAct.inv (n : ℕ) (a : ZMod n) : Function.Involutive (dihedralAct n a) :=
-  by
-  intro b
-  dsimp [dihedral_act]
-  ring
+theorem dihedralAct.inv (n : ℕ) (a : ZMod n) : Function.Involutive (dihedralAct n a) := by intro b;
+  dsimp [dihedral_act]; ring
 #align quandle.dihedral_act.inv Quandle.dihedralAct.inv
 -/
 
@@ -930,9 +897,7 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] :
           change Quotient.liftOn ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _
           simp [to_envel_group.map_aux] }
   invFun F := (Quandle.Conj.map F).comp (toEnvelGroup R)
-  left_inv f := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
   right_inv F :=
     MonoidHom.ext fun x =>
       Quotient.inductionOn x fun x => by

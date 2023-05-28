@@ -173,10 +173,8 @@ If the Frobenius morphism at `A` is an isomorphism, then the exponential compari
 (at `A`) is an isomorphism.
 -/
 theorem expComparison_iso_of_frobeniusMorphism_iso (h : L ⊣ F) (A : C)
-    [i : IsIso (frobeniusMorphism F h A)] : IsIso (expComparison F A) :=
-  by
-  rw [← frobenius_morphism_mate F h]
-  infer_instance
+    [i : IsIso (frobeniusMorphism F h A)] : IsIso (expComparison F A) := by
+  rw [← frobenius_morphism_mate F h]; infer_instance
 #align category_theory.exp_comparison_iso_of_frobenius_morphism_iso CategoryTheory.expComparison_iso_of_frobeniusMorphism_iso
 
 /-- If `F` is full and faithful, and has a left adjoint which preserves binary products, then it is

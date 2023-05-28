@@ -313,10 +313,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalSeminormedRing.{u1} α] (x : α) (y : α), LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => α) y) (NonUnitalSeminormedRing.toNorm.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => α) y) _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (AddMonoidHom.{u1, u1} α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoidHom.{u1, u1} α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoidHom.{u1, u1} α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))) α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoidHom.addMonoidHomClass.{u1, u1} α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))))))))) (AddMonoidHom.mulRight.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalSeminormedRing.toNonUnitalRing.{u1} α _inst_1))) x) y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Norm.norm.{u1} α (NonUnitalSeminormedRing.toNorm.{u1} α _inst_1) x) (Norm.norm.{u1} α (NonUnitalSeminormedRing.toNorm.{u1} α _inst_1) y))
 Case conversion may be inaccurate. Consider using '#align mul_right_bound mulRight_boundₓ'. -/
 /-- In a seminormed ring, the right-multiplication `add_monoid_hom` is bounded. -/
-theorem mulRight_bound (x : α) : ∀ y : α, ‖AddMonoidHom.mulRight x y‖ ≤ ‖x‖ * ‖y‖ := fun y =>
-  by
-  rw [mul_comm]
-  convert norm_mul_le y x
+theorem mulRight_bound (x : α) : ∀ y : α, ‖AddMonoidHom.mulRight x y‖ ≤ ‖x‖ * ‖y‖ := fun y => by
+  rw [mul_comm]; convert norm_mul_le y x
 #align mul_right_bound mulRight_bound
 
 instance : NonUnitalSeminormedRing (ULift α) :=
@@ -709,8 +707,7 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSeminormedRing 
         convert((continuous_fst.tendsto x).norm.mul
                 ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
             (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)
-        show tendsto _ _ _
-        exact tendsto_const_nhds
+        show tendsto _ _ _; exact tendsto_const_nhds
         simp⟩
 #align semi_normed_ring_top_monoid semi_normed_ring_top_monoid
 
@@ -907,9 +904,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NormedDivisionRing.{u1} α] {z : α} {w : α}, (Ne.{succ u1} α z (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α (NormedDivisionRing.toDivisionRing.{u1} α _inst_1)))))))) -> (Ne.{succ u1} α w (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α (NormedDivisionRing.toDivisionRing.{u1} α _inst_1)))))))) -> (Eq.{1} NNReal (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (NormedRing.toSeminormedRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1)))) (Inv.inv.{u1} α (DivisionRing.toInv.{u1} α (NormedDivisionRing.toDivisionRing.{u1} α _inst_1)) z) (Inv.inv.{u1} α (DivisionRing.toInv.{u1} α (NormedDivisionRing.toDivisionRing.{u1} α _inst_1)) w)) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal (CanonicallyLinearOrderedSemifield.toDiv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal)) (NNDist.nndist.{u1} α (PseudoMetricSpace.toNNDist.{u1} α (SeminormedRing.toPseudoMetricSpace.{u1} α (NormedRing.toSeminormedRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1)))) z w) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (NNNorm.nnnorm.{u1} α (SeminormedAddGroup.toNNNorm.{u1} α (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} α (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{u1} α (NonUnitalNormedRing.toNonUnitalSeminormedRing.{u1} α (NormedRing.toNonUnitalNormedRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1)))))) z) (NNNorm.nnnorm.{u1} α (SeminormedAddGroup.toNNNorm.{u1} α (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} α (NonUnitalSeminormedRing.toSeminormedAddCommGroup.{u1} α (NonUnitalNormedRing.toNonUnitalSeminormedRing.{u1} α (NormedRing.toNonUnitalNormedRing.{u1} α (NormedDivisionRing.toNormedRing.{u1} α _inst_1)))))) w))))
 Case conversion may be inaccurate. Consider using '#align nndist_inv_inv₀ nndist_inv_inv₀ₓ'. -/
 theorem nndist_inv_inv₀ {z w : α} (hz : z ≠ 0) (hw : w ≠ 0) :
-    nndist z⁻¹ w⁻¹ = nndist z w / (‖z‖₊ * ‖w‖₊) :=
-  by
-  rw [← NNReal.coe_eq]
+    nndist z⁻¹ w⁻¹ = nndist z w / (‖z‖₊ * ‖w‖₊) := by rw [← NNReal.coe_eq];
   simp [-NNReal.coe_eq, dist_inv_inv₀ hz hw]
 #align nndist_inv_inv₀ nndist_inv_inv₀
 
@@ -1350,9 +1345,7 @@ instance : NormedField ℚ :=
 instance : DenselyNormedField ℚ
     where lt_norm_lt r₁ r₂ h₀ hr :=
     let ⟨q, h⟩ := exists_rat_btwn hr
-    ⟨q, by
-      unfold norm
-      rwa [abs_of_pos (h₀.trans_lt h.1)]⟩
+    ⟨q, by unfold norm; rwa [abs_of_pos (h₀.trans_lt h.1)]⟩
 
 section RingHomIsometric
 
@@ -1394,9 +1387,7 @@ See note [reducible non-instances] -/
 def NonUnitalSeminormedRing.induced [NonUnitalRing R] [NonUnitalSeminormedRing S]
     [NonUnitalRingHomClass F R S] (f : F) : NonUnitalSeminormedRing R :=
   { SeminormedAddCommGroup.induced R S f with
-    norm_mul := fun x y => by
-      unfold norm
-      exact (map_mul f x y).symm ▸ norm_mul_le (f x) (f y) }
+    norm_mul := fun x y => by unfold norm; exact (map_mul f x y).symm ▸ norm_mul_le (f x) (f y) }
 #align non_unital_semi_normed_ring.induced NonUnitalSeminormedRing.induced
 -/
 
@@ -1470,9 +1461,7 @@ See note [reducible non-instances] -/
 def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S]
     (f : F) (hf : Function.Injective f) : NormedDivisionRing R :=
   { NormedAddCommGroup.induced R S f hf with
-    norm_mul' := fun x y => by
-      unfold norm
-      exact (map_mul f x y).symm ▸ norm_mul (f x) (f y) }
+    norm_mul' := fun x y => by unfold norm; exact (map_mul f x y).symm ▸ norm_mul (f x) (f y) }
 #align normed_division_ring.induced NormedDivisionRing.induced
 -/
 

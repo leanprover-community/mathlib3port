@@ -114,8 +114,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     (f : PartialIso α β) (a : α) : ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b :=
   by
   by_cases h : ∃ b, (a, b) ∈ f.val
-  · cases' h with b hb
-    exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
+  · cases' h with b hb; exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
   have :
     ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).image Prod.snd,
       ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
@@ -134,12 +133,10 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
   cases' lt_or_gt_of_ne this with hl hr
   · have : p1 < a ∧ p2 < b :=
       ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
-    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
-    cc
+    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this; cc
   · have : a < p1 ∧ b < p2 :=
       ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
-    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this
-    cc
+    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this; cc
 #align order.partial_iso.exists_across Order.PartialIso.exists_across
 
 #print Order.PartialIso.comm /-
@@ -148,12 +145,10 @@ protected def comm : PartialIso α β → PartialIso β α :=
   Subtype.map (Finset.image (Equiv.prodComm _ _)) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equiv.prodComm α β).symm p)
-        (by
-          rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp
+        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp;
           rwa [← Finset.mem_coe])
         ((Equiv.prodComm α β).symm q)
-        (by
-          rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq
+        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq;
           rwa [← Finset.mem_coe])
 #align order.partial_iso.comm Order.PartialIso.comm
 -/
@@ -180,8 +175,7 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
     · simp only [cmp_self_eq_eq]
-    · rw [cmp_eq_cmp_symm]
-      exact a_b _ qf
+    · rw [cmp_eq_cmp_symm]; exact a_b _ qf
     · exact a_b _ pf
     · exact f.prop _ pf _ qf
 #align order.partial_iso.defined_at_left Order.PartialIso.definedAtLeft

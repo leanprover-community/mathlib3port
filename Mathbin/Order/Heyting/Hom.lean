@@ -159,11 +159,8 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
     [OrderIsoClass F α β] : HeytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iff fun c =>
-        by
-        simp only [← map_inv_le_iff, le_himp_iff]
-        rw [← OrderIsoClass.map_le_map_iff f]
-        simp }
+      eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_himp_iff];
+        rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_heyting_hom_class OrderIsoClass.toHeytingHomClass
 
 /- warning: order_iso_class.to_coheyting_hom_class -> OrderIsoClass.toCoheytingHomClass is a dubious translation:
@@ -177,11 +174,8 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
     [CoheytingAlgebra β] [OrderIsoClass F α β] : CoheytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iff fun c =>
-        by
-        simp only [← le_map_inv_iff, sdiff_le_iff]
-        rw [← OrderIsoClass.map_le_map_iff f]
-        simp }
+      eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, sdiff_le_iff];
+        rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_coheyting_hom_class OrderIsoClass.toCoheytingHomClass
 
 /- warning: order_iso_class.to_biheyting_hom_class -> OrderIsoClass.toBiheytingHomClass is a dubious translation:
@@ -196,17 +190,11 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
   {
     OrderIsoClass.toLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iff fun c =>
-        by
-        simp only [← map_inv_le_iff, le_himp_iff]
-        rw [← OrderIsoClass.map_le_map_iff f]
-        simp
+      eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_himp_iff];
+        rw [← OrderIsoClass.map_le_map_iff f]; simp
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iff fun c =>
-        by
-        simp only [← le_map_inv_iff, sdiff_le_iff]
-        rw [← OrderIsoClass.map_le_map_iff f]
-        simp }
+      eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, sdiff_le_iff];
+        rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_biheyting_hom_class OrderIsoClass.toBiheytingHomClass
 
 #print BoundedLatticeHomClass.toBiheytingHomClass /-

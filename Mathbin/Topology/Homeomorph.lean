@@ -250,9 +250,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u2} (Homeomorph.{u2, u2} α α _inst_1 _inst_1) (Homeomorph.trans.{u2, u1, u2} α β α _inst_1 _inst_2 _inst_1 h (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 h)) (Homeomorph.refl.{u2} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align homeomorph.self_trans_symm Homeomorph.self_trans_symmₓ'. -/
 @[simp]
-theorem self_trans_symm (h : α ≃ₜ β) : h.trans h.symm = Homeomorph.refl α :=
-  by
-  ext
+theorem self_trans_symm (h : α ≃ₜ β) : h.trans h.symm = Homeomorph.refl α := by ext;
   apply symm_apply_apply
 #align homeomorph.self_trans_symm Homeomorph.self_trans_symm
 
@@ -263,9 +261,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u1} (Homeomorph.{u1, u1} β β _inst_2 _inst_2) (Homeomorph.trans.{u1, u2, u1} β α β _inst_2 _inst_1 _inst_2 (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 h) h) (Homeomorph.refl.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.symm_trans_self Homeomorph.symm_trans_selfₓ'. -/
 @[simp]
-theorem symm_trans_self (h : α ≃ₜ β) : h.symm.trans h = Homeomorph.refl β :=
-  by
-  ext
+theorem symm_trans_self (h : α ≃ₜ β) : h.symm.trans h = Homeomorph.refl β := by ext;
   apply apply_symm_apply
 #align homeomorph.symm_trans_self Homeomorph.symm_trans_self
 
@@ -1272,9 +1268,7 @@ def piSplitAt (β : ι → Type _) [∀ j, TopologicalSpace (β j)] :
   continuous_invFun :=
     continuous_pi fun j => by
       dsimp only [Equiv.piSplitAt]
-      split_ifs
-      subst h
-      exacts[continuous_fst, (continuous_apply _).comp continuous_snd]
+      split_ifs; subst h; exacts[continuous_fst, (continuous_apply _).comp continuous_snd]
 #align homeomorph.pi_split_at Homeomorph.piSplitAt
 
 /- warning: homeomorph.fun_split_at -> Homeomorph.funSplitAt is a dubious translation:

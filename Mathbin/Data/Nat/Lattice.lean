@@ -62,7 +62,7 @@ theorem Set.Infinite.Nat.sSup_eq_zero {s : Set ℕ} (h : s.Infinite) : sSup s = 
 theorem sInf_eq_zero {s : Set ℕ} : sInf s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
   by
   cases eq_empty_or_nonempty s
-  · subst h
+  · subst h;
     simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, InfSet.sInf, mem_empty_iff_false,
       exists_false, dif_neg, not_false_iff]
   · simp only [h.ne_empty, or_false_iff, Nat.sInf_def, h, Nat.find_eq_zero]
@@ -71,10 +71,7 @@ theorem sInf_eq_zero {s : Set ℕ} : sInf s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
 
 #print Nat.sInf_empty /-
 @[simp]
-theorem sInf_empty : sInf ∅ = 0 := by
-  rw [Inf_eq_zero]
-  right
-  rfl
+theorem sInf_empty : sInf ∅ = 0 := by rw [Inf_eq_zero]; right; rfl
 #align nat.Inf_empty Nat.sInf_empty
 -/
 
@@ -86,9 +83,7 @@ theorem iInf_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : iInf f = 0 :
 -/
 
 #print Nat.sInf_mem /-
-theorem sInf_mem {s : Set ℕ} (h : s.Nonempty) : sInf s ∈ s :=
-  by
-  rw [Nat.sInf_def h]
+theorem sInf_mem {s : Set ℕ} (h : s.Nonempty) : sInf s ∈ s := by rw [Nat.sInf_def h];
   exact Nat.find_spec h
 #align nat.Inf_mem Nat.sInf_mem
 -/
@@ -97,31 +92,23 @@ theorem sInf_mem {s : Set ℕ} (h : s.Nonempty) : sInf s ∈ s :=
 theorem not_mem_of_lt_sInf {s : Set ℕ} {m : ℕ} (hm : m < sInf s) : m ∉ s :=
   by
   cases eq_empty_or_nonempty s
-  · subst h
-    apply not_mem_empty
-  · rw [Nat.sInf_def h] at hm
-    exact Nat.find_min h hm
+  · subst h; apply not_mem_empty
+  · rw [Nat.sInf_def h] at hm; exact Nat.find_min h hm
 #align nat.not_mem_of_lt_Inf Nat.not_mem_of_lt_sInf
 -/
 
 #print Nat.sInf_le /-
-protected theorem sInf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : sInf s ≤ m :=
-  by
-  rw [Nat.sInf_def ⟨m, hm⟩]
-  exact Nat.find_min' ⟨m, hm⟩ hm
+protected theorem sInf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : sInf s ≤ m := by
+  rw [Nat.sInf_def ⟨m, hm⟩]; exact Nat.find_min' ⟨m, hm⟩ hm
 #align nat.Inf_le Nat.sInf_le
 -/
 
 #print Nat.nonempty_of_pos_sInf /-
 theorem nonempty_of_pos_sInf {s : Set ℕ} (h : 0 < sInf s) : s.Nonempty :=
   by
-  by_contra contra
-  rw [Set.not_nonempty_iff_eq_empty] at contra
-  have h' : Inf s ≠ 0 := ne_of_gt h
-  apply h'
-  rw [Nat.sInf_eq_zero]
-  right
-  assumption
+  by_contra contra; rw [Set.not_nonempty_iff_eq_empty] at contra
+  have h' : Inf s ≠ 0 := ne_of_gt h; apply h'
+  rw [Nat.sInf_eq_zero]; right; assumption
 #align nat.nonempty_of_pos_Inf Nat.nonempty_of_pos_sInf
 -/
 
@@ -237,10 +224,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (u : Nat -> α) (n : Nat), Eq.{succ u1} α (iSup.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (H : LT.lt.{0} Nat instLTNat k (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => u k))) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (u (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (iSup.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (k : Nat) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (LT.lt.{0} Nat instLTNat k n) (fun (H : LT.lt.{0} Nat instLTNat k n) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))))
 Case conversion may be inaccurate. Consider using '#align nat.supr_lt_succ' Nat.iSup_lt_succ'ₓ'. -/
-theorem iSup_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0 ⊔ ⨆ k < n, u (k + 1) :=
-  by
-  rw [← sup_iSup_nat_succ]
-  simp
+theorem iSup_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0 ⊔ ⨆ k < n, u (k + 1) := by
+  rw [← sup_iSup_nat_succ]; simp
 #align nat.supr_lt_succ' Nat.iSup_lt_succ'
 
 /- warning: nat.infi_lt_succ -> Nat.iInf_lt_succ is a dubious translation:

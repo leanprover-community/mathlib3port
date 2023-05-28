@@ -85,9 +85,7 @@ theorem toMatrix_transpose_apply : (e.toMatrix v)ᵀ j = e.repr (v j) :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align basis.to_matrix_eq_to_matrix_constr Basis.toMatrix_eq_toMatrix_constrₓ'. -/
 theorem toMatrix_eq_toMatrix_constr [Fintype ι] [DecidableEq ι] (v : ι → M) :
-    e.toMatrix v = LinearMap.toMatrix e e (e.constr ℕ v) :=
-  by
-  ext
+    e.toMatrix v = LinearMap.toMatrix e e (e.constr ℕ v) := by ext;
   rw [Basis.toMatrix_apply, LinearMap.toMatrix_apply, Basis.constr_basis]
 #align basis.to_matrix_eq_to_matrix_constr Basis.toMatrix_eq_toMatrix_constr
 
@@ -99,9 +97,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align basis.coe_pi_basis_fun.to_matrix_eq_transpose Basis.coePiBasisFun.toMatrix_eq_transposeₓ'. -/
 -- TODO (maybe) Adjust the definition of `basis.to_matrix` to eliminate the transpose.
 theorem coePiBasisFun.toMatrix_eq_transpose [Fintype ι] :
-    ((Pi.basisFun R ι).toMatrix : Matrix ι ι R → Matrix ι ι R) = Matrix.transpose :=
-  by
-  ext (M i j)
+    ((Pi.basisFun R ι).toMatrix : Matrix ι ι R → Matrix ι ι R) = Matrix.transpose := by ext (M i j);
   rfl
 #align basis.coe_pi_basis_fun.to_matrix_eq_transpose Basis.coePiBasisFun.toMatrix_eq_transpose
 
@@ -323,9 +319,8 @@ theorem LinearMap.toMatrix_id_eq_basis_toMatrix [DecidableEq ι] :
 Case conversion may be inaccurate. Consider using '#align basis.to_matrix_reindex' Basis.toMatrix_reindex'ₓ'. -/
 /-- See also `basis.to_matrix_reindex` which gives the `simp` normal form of this result. -/
 theorem Basis.toMatrix_reindex' [DecidableEq ι] [DecidableEq ι'] (b : Basis ι R M) (v : ι' → M)
-    (e : ι ≃ ι') : (b.reindex e).toMatrix v = Matrix.reindexAlgEquiv _ e (b.toMatrix (v ∘ e)) :=
-  by
-  ext
+    (e : ι ≃ ι') : (b.reindex e).toMatrix v = Matrix.reindexAlgEquiv _ e (b.toMatrix (v ∘ e)) := by
+  ext;
   simp only [Basis.toMatrix_apply, Basis.repr_reindex, Matrix.reindexAlgEquiv_apply,
     Matrix.reindex_apply, Matrix.submatrix_apply, Function.comp_apply, e.apply_symm_apply,
     Finsupp.mapDomain_equiv_apply]
@@ -382,9 +377,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align basis.to_matrix_reindex Basis.toMatrix_reindexₓ'. -/
 @[simp]
 theorem Basis.toMatrix_reindex (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι') :
-    (b.reindex e).toMatrix v = (b.toMatrix v).submatrix e.symm id :=
-  by
-  ext
+    (b.reindex e).toMatrix v = (b.toMatrix v).submatrix e.symm id := by ext;
   simp only [Basis.toMatrix_apply, Basis.repr_reindex, Matrix.submatrix_apply, id.def,
     Finsupp.mapDomain_equiv_apply]
 #align basis.to_matrix_reindex Basis.toMatrix_reindex
@@ -394,9 +387,7 @@ theorem Basis.toMatrix_reindex (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι
 Case conversion may be inaccurate. Consider using '#align basis.to_matrix_map Basis.toMatrix_mapₓ'. -/
 @[simp]
 theorem Basis.toMatrix_map (b : Basis ι R M) (f : M ≃ₗ[R] N) (v : ι → N) :
-    (b.map f).toMatrix v = b.toMatrix (f.symm ∘ v) :=
-  by
-  ext
+    (b.map f).toMatrix v = b.toMatrix (f.symm ∘ v) := by ext;
   simp only [Basis.toMatrix_apply, Basis.map, LinearEquiv.trans_apply]
 #align basis.to_matrix_map Basis.toMatrix_map
 

@@ -48,10 +48,7 @@ variable {a b : Cardinal.{u}} {n m : ℕ}
 @[simp]
 theorem isUnit_iff : IsUnit a ↔ a = 1 :=
   by
-  refine'
-    ⟨fun h => _, by
-      rintro rfl
-      exact isUnit_one⟩
+  refine' ⟨fun h => _, by rintro rfl; exact isUnit_one⟩
   rcases eq_or_ne a 0 with (rfl | ha)
   · exact (not_isUnit_zero h).elim
   rw [isUnit_iff_forall_dvd] at h
@@ -99,8 +96,7 @@ theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a :=
   cases' eq_or_ne (b * c) 0 with hz hz
   · rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
   wlog h : c ≤ b
-  · cases le_total c b <;> [skip;rw [or_comm']] <;> apply_assumption
-    assumption'
+  · cases le_total c b <;> [skip;rw [or_comm']] <;> apply_assumption; assumption'
     all_goals rwa [mul_comm]
   left
   have habc := le_of_dvd hz hbc

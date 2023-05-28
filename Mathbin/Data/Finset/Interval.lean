@@ -39,18 +39,10 @@ instance : LocallyFiniteOrder (Finset α)
   finsetIco s t := t.ssubsets.filterₓ ((· ⊆ ·) s)
   finsetIoc s t := t.powerset.filterₓ ((· ⊂ ·) s)
   finsetIoo s t := t.ssubsets.filterₓ ((· ⊂ ·) s)
-  finset_mem_Icc s t u := by
-    rw [mem_filter, mem_powerset]
-    exact and_comm' _ _
-  finset_mem_Ico s t u := by
-    rw [mem_filter, mem_ssubsets]
-    exact and_comm' _ _
-  finset_mem_Ioc s t u := by
-    rw [mem_filter, mem_powerset]
-    exact and_comm' _ _
-  finset_mem_Ioo s t u := by
-    rw [mem_filter, mem_ssubsets]
-    exact and_comm' _ _
+  finset_mem_Icc s t u := by rw [mem_filter, mem_powerset]; exact and_comm' _ _
+  finset_mem_Ico s t u := by rw [mem_filter, mem_ssubsets]; exact and_comm' _ _
+  finset_mem_Ioc s t u := by rw [mem_filter, mem_powerset]; exact and_comm' _ _
+  finset_mem_Ioo s t u := by rw [mem_filter, mem_ssubsets]; exact and_comm' _ _
 
 /- warning: finset.Icc_eq_filter_powerset -> Finset.Icc_eq_filter_powerset is a dubious translation:
 lean 3 declaration is

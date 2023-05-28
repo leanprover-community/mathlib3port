@@ -146,8 +146,7 @@ theorem exists_taggedPartition_isHenstock_isSubordinate_homothetic (I : Box ι)
               π.distortion = I.distortion :=
   by
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
-  · choose! πi hP hHen hr Hn Hd using hJ
-    choose! n hn using Hn
+  · choose! πi hP hHen hr Hn Hd using hJ; choose! n hn using Hn
     have hP : ((split_center J).biUnionTagged πi).IsPartition :=
       (is_partition_split_center _).biUnionTagged hP
     have hsub :
@@ -171,8 +170,7 @@ theorem exists_taggedPartition_isHenstock_isSubordinate_homothetic (I : Box ι)
       ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _,
         (is_subordinate_single _ _).2 HIcc.2, _, distortion_single _ _⟩
     simp only [tagged_prepartition.mem_single, forall_eq]
-    refine' ⟨0, fun i => _⟩
-    simp
+    refine' ⟨0, fun i => _⟩; simp
 #align box_integral.box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic BoxIntegral.Box.exists_taggedPartition_isHenstock_isSubordinate_homothetic
 
 end Box

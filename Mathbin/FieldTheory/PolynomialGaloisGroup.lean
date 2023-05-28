@@ -173,12 +173,8 @@ def rootsEquivRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingFi
 instance galActionAux : MulAction p.Gal (rootSet p p.SplittingField)
     where
   smul ϕ := Set.MapsTo.restrict ϕ _ _ <| rootSet_mapsTo ϕ.toAlgHom
-  one_smul _ := by
-    ext
-    rfl
-  mul_smul _ _ _ := by
-    ext
-    rfl
+  one_smul _ := by ext; rfl
+  mul_smul _ _ _ := by ext; rfl
 #align polynomial.gal.gal_action_aux Polynomial.Gal.galActionAux
 
 /-- The action of `gal p` on the roots of `p` in `E`. -/
@@ -258,9 +254,7 @@ def restrictProd : (p * q).Gal →* p.Gal × q.Gal :=
 theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
   by
   by_cases hpq : p * q = 0
-  · have : Unique (p * q).Gal := by
-      rw [hpq]
-      infer_instance
+  · have : Unique (p * q).Gal := by rw [hpq]; infer_instance
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
   intro f g hfg
   dsimp only [restrict_prod, restrict_dvd] at hfg
@@ -408,9 +402,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
         (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
   by_cases hp : p = 0
-  · haveI : IsEmpty (p.root_set ℂ) := by
-      rw [hp, root_set_zero]
-      infer_instance
+  · haveI : IsEmpty (p.root_set ℂ) := by rw [hp, root_set_zero]; infer_instance
     simp_rw [(gal_action_hom p ℂ _).support.eq_empty_of_isEmpty, hp, root_set_zero,
       Set.toFinset_empty, Finset.card_empty]
   have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective
@@ -420,10 +412,8 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   let b : Finset ℂ := _
   let c : Finset ℂ := _
   change a.card = b.card + c.card
-  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := by
-    intro z
-    rw [Set.mem_toFinset, mem_root_set_of_ne hp]
-    infer_instance
+  have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := by intro z;
+    rw [Set.mem_toFinset, mem_root_set_of_ne hp]; infer_instance
   have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0 :=
     by
     intro z
@@ -432,12 +422,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     · rintro ⟨w, hw, rfl⟩
       exact ⟨by rw [aeval_alg_hom_apply, hw, AlgHom.map_zero], rfl⟩
     · rintro ⟨hz1, hz2⟩
-      have key : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z :=
-        by
-        ext
-        rfl
-        rw [hz2]
-        rfl
+      have key : IsScalarTower.toAlgHom ℚ ℝ ℂ z.re = z := by ext; rfl; rw [hz2]; rfl
       exact ⟨z.re, inj (by rwa [← aeval_alg_hom_apply, key, AlgHom.map_zero]), key⟩
   have hc0 :
     ∀ w : p.root_set ℂ,

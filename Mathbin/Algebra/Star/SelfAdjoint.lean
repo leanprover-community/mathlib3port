@@ -454,9 +454,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1))] {x : R}, Iff (Membership.mem.{u1, u1} R (AddSubgroup.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R _inst_1) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R _inst_1)) x (selfAdjoint.{u1} R _inst_1 _inst_2)) (Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)) _inst_2)) x) x)
 Case conversion may be inaccurate. Consider using '#align self_adjoint.mem_iff selfAdjoint.mem_iffₓ'. -/
-theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x :=
-  by
-  rw [← AddSubgroup.mem_carrier]
+theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x := by rw [← AddSubgroup.mem_carrier];
   exact Iff.rfl
 #align self_adjoint.mem_iff selfAdjoint.mem_iff
 
@@ -662,9 +660,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddCommGroup.{u1} R] [_inst_2 : StarAddMonoid.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R _inst_1)))] {x : R}, Iff (Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R _inst_1)) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R _inst_1))) x (skewAdjoint.{u1} R _inst_1 _inst_2)) (Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R _inst_1))) _inst_2)) x) (Neg.neg.{u1} R (NegZeroClass.toNeg.{u1} R (SubNegZeroMonoid.toNegZeroClass.{u1} R (SubtractionMonoid.toSubNegZeroMonoid.{u1} R (SubtractionCommMonoid.toSubtractionMonoid.{u1} R (AddCommGroup.toDivisionAddCommMonoid.{u1} R _inst_1))))) x))
 Case conversion may be inaccurate. Consider using '#align skew_adjoint.mem_iff skewAdjoint.mem_iffₓ'. -/
-theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x :=
-  by
-  rw [← AddSubgroup.mem_carrier]
+theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x := by rw [← AddSubgroup.mem_carrier];
   exact Iff.rfl
 #align skew_adjoint.mem_iff skewAdjoint.mem_iff
 
@@ -725,9 +721,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] [_inst_2 : StarRing.{u1} R (Semiring.toNonUnitalSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1))] {x : R}, (Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R (Ring.toAddCommGroup.{u1} R _inst_1))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R (Ring.toAddCommGroup.{u1} R _inst_1))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddCommGroup.toAddGroup.{u1} R (Ring.toAddCommGroup.{u1} R _inst_1)))) x (skewAdjoint.{u1} R (Ring.toAddCommGroup.{u1} R _inst_1) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) _inst_2))) -> (IsStarNormal.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))) (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R (Ring.toSemiring.{u1} R _inst_1)) _inst_2))) x)
 Case conversion may be inaccurate. Consider using '#align skew_adjoint.is_star_normal_of_mem skewAdjoint.isStarNormal_of_memₓ'. -/
 theorem isStarNormal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
-  ⟨by
-    simp only [mem_iff] at hx
-    simp only [hx, Commute.neg_left]⟩
+  ⟨by simp only [mem_iff] at hx; simp only [hx, Commute.neg_left]⟩
 #align skew_adjoint.is_star_normal_of_mem skewAdjoint.isStarNormal_of_mem
 
 instance (x : skewAdjoint R) : IsStarNormal (x : R) :=

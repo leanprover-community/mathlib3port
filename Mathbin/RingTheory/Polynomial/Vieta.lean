@@ -94,10 +94,8 @@ theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h :
 <too large>
 Case conversion may be inaccurate. Consider using '#align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeffₓ'. -/
 theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
-    (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i :=
-  by
-  rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]
-  rfl
+    (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i := by
+  rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]; rfl
 #align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeff
 
 end Semiring
@@ -215,8 +213,7 @@ theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
   · simp_rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_X_add_C_eq_sum_esymm s
     rwa [Multiset.map_map]
-  · rw [Multiset.card_map]
-    rfl
+  · rw [Multiset.card_map]; rfl
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymm
 
 /- warning: mv_polynomial.prod_X_add_C_coeff -> MvPolynomial.prod_X_add_C_coeff is a dubious translation:

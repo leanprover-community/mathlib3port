@@ -59,35 +59,21 @@ theorem nim_def (o : Ordinal) :
     nim o =
       PGame.mk o.out.α o.out.α (fun o₂ => nim (Ordinal.typein (· < ·) o₂)) fun o₂ =>
         nim (Ordinal.typein (· < ·) o₂) :=
-  by
-  rw [nim]
-  rfl
+  by rw [nim]; rfl
 #align pgame.nim_def PGame.nim_def
 
-theorem leftMoves_nim (o : Ordinal) : (nim o).LeftMoves = o.out.α :=
-  by
-  rw [nim_def]
-  rfl
+theorem leftMoves_nim (o : Ordinal) : (nim o).LeftMoves = o.out.α := by rw [nim_def]; rfl
 #align pgame.left_moves_nim PGame.leftMoves_nim
 
-theorem rightMoves_nim (o : Ordinal) : (nim o).RightMoves = o.out.α :=
-  by
-  rw [nim_def]
-  rfl
+theorem rightMoves_nim (o : Ordinal) : (nim o).RightMoves = o.out.α := by rw [nim_def]; rfl
 #align pgame.right_moves_nim PGame.rightMoves_nim
 
 theorem moveLeft_nim_hEq (o : Ordinal) :
-    HEq (nim o).moveLeft fun i : o.out.α => nim (typein (· < ·) i) :=
-  by
-  rw [nim_def]
-  rfl
+    HEq (nim o).moveLeft fun i : o.out.α => nim (typein (· < ·) i) := by rw [nim_def]; rfl
 #align pgame.move_left_nim_heq PGame.moveLeft_nim_hEq
 
 theorem moveRight_nim_hEq (o : Ordinal) :
-    HEq (nim o).moveRight fun i : o.out.α => nim (typein (· < ·) i) :=
-  by
-  rw [nim_def]
-  rfl
+    HEq (nim o).moveRight fun i : o.out.α => nim (typein (· < ·) i) := by rw [nim_def]; rfl
 #align pgame.move_right_nim_heq PGame.moveRight_nim_hEq
 
 /-- Turns an ordinal less than `o` into a left move for `nim o` and viceversa. -/
@@ -132,30 +118,22 @@ theorem moveRight_nim {o : Ordinal} (i) : (nim o).moveRight (toRightMovesNim i) 
 /-- A recursion principle for left moves of a nim game. -/
 @[elab_as_elim]
 def leftMovesNimRecOn {o : Ordinal} {P : (nim o).LeftMoves → Sort _} (i : (nim o).LeftMoves)
-    (H : ∀ a < o, P <| toLeftMovesNim ⟨a, H⟩) : P i :=
-  by
-  rw [← to_left_moves_nim.apply_symm_apply i]
-  apply H
+    (H : ∀ a < o, P <| toLeftMovesNim ⟨a, H⟩) : P i := by
+  rw [← to_left_moves_nim.apply_symm_apply i]; apply H
 #align pgame.left_moves_nim_rec_on PGame.leftMovesNimRecOn
 
 /-- A recursion principle for right moves of a nim game. -/
 @[elab_as_elim]
 def rightMovesNimRecOn {o : Ordinal} {P : (nim o).RightMoves → Sort _} (i : (nim o).RightMoves)
-    (H : ∀ a < o, P <| toRightMovesNim ⟨a, H⟩) : P i :=
-  by
-  rw [← to_right_moves_nim.apply_symm_apply i]
-  apply H
+    (H : ∀ a < o, P <| toRightMovesNim ⟨a, H⟩) : P i := by
+  rw [← to_right_moves_nim.apply_symm_apply i]; apply H
 #align pgame.right_moves_nim_rec_on PGame.rightMovesNimRecOn
 
-instance isEmpty_nim_zero_leftMoves : IsEmpty (nim 0).LeftMoves :=
-  by
-  rw [nim_def]
+instance isEmpty_nim_zero_leftMoves : IsEmpty (nim 0).LeftMoves := by rw [nim_def];
   exact Ordinal.isEmpty_out_zero
 #align pgame.is_empty_nim_zero_left_moves PGame.isEmpty_nim_zero_leftMoves
 
-instance isEmpty_nim_zero_rightMoves : IsEmpty (nim 0).RightMoves :=
-  by
-  rw [nim_def]
+instance isEmpty_nim_zero_rightMoves : IsEmpty (nim 0).RightMoves := by rw [nim_def];
   exact Ordinal.isEmpty_out_zero
 #align pgame.is_empty_nim_zero_right_moves PGame.isEmpty_nim_zero_rightMoves
 
@@ -323,11 +301,7 @@ theorem equiv_nim_grundyValue : ∀ (G : PGame.{u}) [G.Impartial], G ≈ nim (gr
 
 theorem grundyValue_eq_iff_equiv_nim {G : PGame} [G.Impartial] {o : Ordinal} :
     grundyValue G = o ↔ (G ≈ nim o) :=
-  ⟨by
-    rintro rfl
-    exact equiv_nim_grundy_value G, by
-    intro h
-    rw [← nim_equiv_iff_eq]
+  ⟨by rintro rfl; exact equiv_nim_grundy_value G, by intro h; rw [← nim_equiv_iff_eq];
     exact (equiv_nim_grundy_value G).symm.trans h⟩
 #align pgame.grundy_value_eq_iff_equiv_nim PGame.grundyValue_eq_iff_equiv_nim
 
@@ -408,8 +382,7 @@ theorem grundyValue_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m
       simp [Nat.lxor_cancel_right, hn _ h]
     -- In the second case, reducing the `n` pile to `nat.lxor u m` gives the desired Grundy value.
     · refine' ⟨to_left_moves_add (Sum.inr <| to_left_moves_nim ⟨_, Ordinal.nat_cast_lt.2 h⟩), _⟩
-      have : n.lxor (u.lxor n) = u
-      rw [Nat.lxor'_comm u, Nat.lxor'_cancel_left]
+      have : n.lxor (u.lxor n) = u; rw [Nat.lxor'_comm u, Nat.lxor'_cancel_left]
       simpa [hm _ h] using this
 #align pgame.grundy_value_nim_add_nim PGame.grundyValue_nim_add_nim
 

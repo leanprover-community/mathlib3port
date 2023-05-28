@@ -103,12 +103,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {n : Type.{u2}} [_inst_2 : DecidableEq.{succ u2} n] [_inst_3 : Fintype.{u2} n], (Eq.{1} Nat (Fintype.card.{u2} n _inst_3) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall (M : Matrix.{u2, u2, u1} n n R), Eq.{succ u1} R (Matrix.det.{u1, u2} n (fun (a : n) (b : n) => _inst_2 a b) _inst_3 R _inst_1 M) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align matrix.det_of_card_zero Matrix.det_of_card_zeroₓ'. -/
-theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1 :=
-  by
-  rw [Fintype.card_eq_zero_iff] at h
-  suffices M = 1 by simp [this]
-  ext i
-  exact h.elim i
+theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1 := by
+  rw [Fintype.card_eq_zero_iff] at h; suffices M = 1 by simp [this]; ext i; exact h.elim i
 #align matrix.det_of_card_zero Matrix.det_of_card_zero
 
 #print Matrix.charpoly_degree_eq_dim /-
@@ -116,31 +112,16 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     M.charpoly.degree = Fintype.card n :=
   by
   by_cases Fintype.card n = 0
-  · rw [h]
-    unfold charpoly
-    rw [det_of_card_zero]
-    · simp
-    · assumption
+  · rw [h]; unfold charpoly; rw [det_of_card_zero]; · simp; · assumption
   rw [← sub_add_cancel M.charpoly (∏ i : n, X - C (M i i))]
   have h1 : (∏ i : n, X - C (M i i)).degree = Fintype.card n :=
     by
-    rw [degree_eq_iff_nat_degree_eq_of_pos]
-    swap
-    apply Nat.pos_of_ne_zero h
-    rw [nat_degree_prod']
-    simp_rw [nat_degree_X_sub_C]
-    unfold Fintype.card
-    simp
-    simp_rw [(monic_X_sub_C _).leadingCoeff]
-    simp
-  rw [degree_add_eq_right_of_degree_lt]
-  exact h1
-  rw [h1]
-  apply lt_trans (charpoly_sub_diagonal_degree_lt M)
-  rw [WithBot.coe_lt_coe]
-  rw [← Nat.pred_eq_sub_one]
-  apply Nat.pred_lt
-  apply h
+    rw [degree_eq_iff_nat_degree_eq_of_pos]; swap; apply Nat.pos_of_ne_zero h
+    rw [nat_degree_prod']; simp_rw [nat_degree_X_sub_C]; unfold Fintype.card; simp
+    simp_rw [(monic_X_sub_C _).leadingCoeff]; simp
+  rw [degree_add_eq_right_of_degree_lt]; exact h1; rw [h1]
+  apply lt_trans (charpoly_sub_diagonal_degree_lt M); rw [WithBot.coe_lt_coe]
+  rw [← Nat.pred_eq_sub_one]; apply Nat.pred_lt; apply h
 #align matrix.charpoly_degree_eq_dim Matrix.charpoly_degree_eq_dim
 -/
 
@@ -155,25 +136,14 @@ theorem charpoly_natDegree_eq_dim [Nontrivial R] (M : Matrix n n R) :
 theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
   by
   nontriviality
-  by_cases Fintype.card n = 0
-  · rw [charpoly, det_of_card_zero h]
-    apply monic_one
-  have mon : (∏ i : n, X - C (M i i)).Monic :=
-    by
-    apply monic_prod_of_monic univ fun i : n => X - C (M i i)
-    simp [monic_X_sub_C]
+  by_cases Fintype.card n = 0; · rw [charpoly, det_of_card_zero h]; apply monic_one
+  have mon : (∏ i : n, X - C (M i i)).Monic := by
+    apply monic_prod_of_monic univ fun i : n => X - C (M i i); simp [monic_X_sub_C]
   rw [← sub_add_cancel (∏ i : n, X - C (M i i)) M.charpoly] at mon
-  rw [monic] at *
-  rw [leading_coeff_add_of_degree_lt] at mon
-  rw [← mon]
-  rw [charpoly_degree_eq_dim]
-  rw [← neg_sub]
-  rw [degree_neg]
-  apply lt_trans (charpoly_sub_diagonal_degree_lt M)
-  rw [WithBot.coe_lt_coe]
-  rw [← Nat.pred_eq_sub_one]
-  apply Nat.pred_lt
-  apply h
+  rw [monic] at *; rw [leading_coeff_add_of_degree_lt] at mon; rw [← mon]
+  rw [charpoly_degree_eq_dim]; rw [← neg_sub]; rw [degree_neg]
+  apply lt_trans (charpoly_sub_diagonal_degree_lt M); rw [WithBot.coe_lt_coe]
+  rw [← Nat.pred_eq_sub_one]; apply Nat.pred_lt; apply h
 #align matrix.charpoly_monic Matrix.charpoly_monic
 -/
 
@@ -201,10 +171,7 @@ theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
   by
   unfold Polynomial.eval; unfold eval₂
   trans Polynomial.sum (matPolyEquiv M) fun (e : ℕ) (a : Matrix n n R) => (a * (scalar n) r ^ e) i j
-  · unfold Polynomial.sum
-    rw [sum_apply]
-    dsimp
-    rfl
+  · unfold Polynomial.sum; rw [sum_apply]; dsimp; rfl
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
     simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]

@@ -140,8 +140,7 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
     if `star a * a` is invertible, then so is `a`. -/
   nontriviality A
   set a' : elementalStarAlgebra ℂ a := ⟨a, self_mem ℂ a⟩
-  suffices : IsUnit (star a' * a')
-  exact (IsUnit.mul_iff.1 this).2
+  suffices : IsUnit (star a' * a'); exact (IsUnit.mul_iff.1 this).2
   replace h := (show Commute (star a) a from star_comm_self' a).isUnit_mul_iff.2 ⟨h.star, h⟩
   /- Since `a` is invertible, `‖star a * a‖ ≠ 0`, so `‖star a * a‖ • 1` is invertible in
     `elemental_star_algebra ℂ a`, and so it suffices to show that the distance between this unit and
@@ -183,9 +182,7 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
       (calc
         (‖star a' * a' - algebraMap ℂ _ ‖star a * a‖‖₊ : ℝ≥0∞) =
             ‖algebraMap ℂ A ‖star a * a‖ - star a * a‖₊ :=
-          by
-          rw [← nnnorm_neg, neg_sub]
-          rfl
+          by rw [← nnnorm_neg, neg_sub]; rfl
         _ = spectralRadius ℂ (algebraMap ℂ A ‖star a * a‖ - star a * a) :=
           by
           refine' (IsSelfAdjoint.spectralRadius_eq_nnnorm _).symm

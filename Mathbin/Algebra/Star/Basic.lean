@@ -590,9 +590,7 @@ instance RingHom.involutiveStar {S : Type _} [NonAssocSemiring S] [CommSemiring 
     InvolutiveStar (S →+* R)
     where
   toHasStar := { unit := fun f => RingHom.comp (starRingEnd R) f }
-  star_involutive := by
-    intro
-    ext
+  star_involutive := by intro ; ext;
     simp only [RingHom.coe_comp, Function.comp_apply, starRingEnd_self_apply]
 #align ring_hom.has_involutive_star RingHom.involutiveStar
 -/
@@ -743,9 +741,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalSemiring.{u1} R] [_inst_2 : PartialOrder.{u1} R] [_inst_3 : StarOrderedRing.{u1} R _inst_1 _inst_2] {r : R}, LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R _inst_2)) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (SemigroupWithZero.toZero.{u1} R (NonUnitalSemiring.toSemigroupWithZero.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) r (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonUnitalSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (StarRing.toStarAddMonoid.{u1} R _inst_1 (StarOrderedRing.toStarRing.{u1} R _inst_1 _inst_2 _inst_3)))) r))
 Case conversion may be inaccurate. Consider using '#align star_mul_self_nonneg' star_mul_self_nonneg'ₓ'. -/
-theorem star_mul_self_nonneg' {r : R} : 0 ≤ r * star r :=
-  by
-  nth_rw_rhs 1 [← star_star r]
+theorem star_mul_self_nonneg' {r : R} : 0 ≤ r * star r := by nth_rw_rhs 1 [← star_star r];
   exact star_mul_self_nonneg
 #align star_mul_self_nonneg' star_mul_self_nonneg'
 
@@ -945,9 +941,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : StarSemigroup.{u1} R (Monoid.toSemigroup.{u1} R _inst_1)] (r : R) [_inst_3 : Invertible.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (Monoid.toOne.{u1} R _inst_1) r] [_inst_4 : Invertible.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (Monoid.toOne.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) r)], Eq.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) (Invertible.invOf.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (Monoid.toOne.{u1} R _inst_1) r _inst_3)) (Invertible.invOf.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (Monoid.toOne.{u1} R _inst_1) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) r) _inst_4)
 Case conversion may be inaccurate. Consider using '#align star_inv_of star_invOfₓ'. -/
 theorem star_invOf {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r]
-    [Invertible (star r)] : star (⅟ r) = ⅟ (star r) :=
-  by
-  letI := Invertible.star r
+    [Invertible (star r)] : star (⅟ r) = ⅟ (star r) := by letI := Invertible.star r;
   convert(rfl : star (⅟ r) = _)
 #align star_inv_of star_invOf
 

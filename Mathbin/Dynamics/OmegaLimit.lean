@@ -339,10 +339,8 @@ but is expected to have type
   forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u3} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α) {v : Set.{u3} τ}, (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) v f) -> (Eq.{succ u2} (Set.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f ϕ s) (Set.iInter.{u2, succ u3} β (Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) (fun (u : Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) => closure.{u2} β _inst_1 (Set.image2.{u3, u1, u2} τ α β ϕ (Inter.inter.{u3} (Set.{u3} τ) (Set.instInterSet.{u3} τ) (Subtype.val.{succ u3} (Set.{u3} τ) (fun (x : Set.{u3} τ) => Membership.mem.{u3, u3} (Set.{u3} τ) (Set.{u3} (Set.{u3} τ)) (Set.instMembershipSet.{u3} (Set.{u3} τ)) x (Filter.sets.{u3} τ f)) u) v) s))))
 Case conversion may be inaccurate. Consider using '#align omega_limit_eq_Inter_inter omegaLimit_eq_iInter_interₓ'. -/
 theorem omegaLimit_eq_iInter_inter {v : Set τ} (hv : v ∈ f) :
-    ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ (u ∩ v) s) :=
-  by
-  rw [omegaLimit_eq_biInter_inter _ _ _ hv]
-  apply bInter_eq_Inter
+    ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ (u ∩ v) s) := by
+  rw [omegaLimit_eq_biInter_inter _ _ _ hv]; apply bInter_eq_Inter
 #align omega_limit_eq_Inter_inter omegaLimit_eq_iInter_inter
 
 /- warning: omega_limit_subset_closure_fw_image -> omegaLimit_subset_closure_fw_image is a dubious translation:
@@ -492,8 +490,7 @@ theorem nonempty_omegaLimit_of_isCompact_absorbing [NeBot f] {c : Set β} (hc₁
   rw [omegaLimit_eq_iInter_inter _ _ _ hv₁]
   apply IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
   · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
-    use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
-    constructor
+    use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩; constructor
     all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) subset.rfl)
   · intro u
     have hn : (image2 ϕ (u ∩ v) s).Nonempty :=

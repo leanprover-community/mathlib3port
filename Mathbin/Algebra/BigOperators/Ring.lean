@@ -86,10 +86,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sum_mul_sum Fin
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sum_mul_sum {ι₁ : Type _} {ι₂ : Type _} (s₁ : Finset ι₁) (s₂ : Finset ι₂) (f₁ : ι₁ → β)
     (f₂ : ι₂ → β) : ((∑ x₁ in s₁, f₁ x₁) * ∑ x₂ in s₂, f₂ x₂) = ∑ p in s₁ ×ˢ s₂, f₁ p.1 * f₂ p.2 :=
-  by
-  rw [sum_product, sum_mul, sum_congr rfl]
-  intros
-  rw [mul_sum]
+  by rw [sum_product, sum_mul, sum_congr rfl]; intros ; rw [mul_sum]
 #align finset.sum_mul_sum Finset.sum_mul_sum
 
 end Semiring
@@ -147,8 +144,7 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
     (∏ a in s, ∑ b in t a, f a b) = ∑ p in s.pi t, ∏ x in s.attach, f x.1 (p x.1 x.2) :=
   by
   induction' s using Finset.induction with a s ha ih
-  · rw [pi_empty, sum_singleton]
-    rfl
+  · rw [pi_empty, sum_singleton]; rfl
   · have h₁ :
       ∀ x ∈ t a,
         ∀ y ∈ t a,
@@ -169,13 +165,10 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
     refine' sum_congr rfl fun g _ => _
     rw [attach_insert, prod_insert, prod_image]
     · simp only [pi.cons_same]
-      congr with ⟨v, hv⟩
-      congr
+      congr with ⟨v, hv⟩; congr
       exact (pi.cons_ne (by rintro rfl <;> exact ha hv)).symm
     · exact fun _ _ _ _ => Subtype.eq ∘ Subtype.mk.inj
-    · simp only [mem_image]
-      rintro ⟨⟨_, hm⟩, _, rfl⟩
-      exact ha hm
+    · simp only [mem_image]; rintro ⟨⟨_, hm⟩, _, rfl⟩; exact ha hm
 #align finset.prod_sum Finset.prod_sum
 
 open Classical
@@ -246,14 +239,11 @@ theorem prod_add_ordered {ι R : Type _} [CommSemiring R] [LinearOrder ι] (s : 
           (g i * ∏ j in s.filterₓ (· < i), f j + g j) * ∏ j in s.filterₓ fun j => i < j, f j :=
   by
   refine' Finset.induction_on_max s (by simp) _
-  clear s
-  intro a s ha ihs
+  clear s; intro a s ha ihs
   have ha' : a ∉ s := fun ha' => (ha a ha').False
   rw [prod_insert ha', prod_insert ha', sum_insert ha', filter_insert, if_neg (lt_irrefl a),
     filter_true_of_mem ha, ihs, add_mul, mul_add, mul_add, add_assoc]
-  congr 1
-  rw [add_comm]
-  congr 1
+  congr 1; rw [add_comm]; congr 1
   · rw [filter_false_of_mem, prod_empty, mul_one]
     exact (forall_mem_insert _ _ _).2 ⟨lt_irrefl a, fun i hi => (ha i hi).not_lt⟩
   · rw [mul_sum]
@@ -290,10 +280,8 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_one_sub_or
 /-- `∏ i, (1 - f i) = 1 - ∑ i, f i * (∏ j < i, 1 - f j)`. This formula is useful in construction of
 a partition of unity from a collection of “bump” functions.  -/
 theorem prod_one_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : Finset ι)
-    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filterₓ (· < i), 1 - f j :=
-  by
-  rw [prod_sub_ordered]
-  simp
+    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filterₓ (· < i), 1 - f j := by
+  rw [prod_sub_ordered]; simp
 #align finset.prod_one_sub_ordered Finset.prod_one_sub_ordered
 
 /- warning: finset.sum_pow_mul_eq_add_pow -> Finset.sum_pow_mul_eq_add_pow is a dubious translation:

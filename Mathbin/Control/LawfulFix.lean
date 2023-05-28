@@ -84,9 +84,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align part.fix.approx_mono Part.Fix.approx_monoₓ'. -/
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j :=
   by
-  induction' j with j ih;
-  · cases hij
-    exact le_rfl
+  induction' j with j ih; · cases hij; exact le_rfl
   cases hij; · exact le_rfl
   exact le_trans (ih ‹_›) (approx_mono' f)
 #align part.fix.approx_mono Part.Fix.approx_mono
@@ -101,27 +99,21 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
   by
   by_cases h₀ : ∃ i : ℕ, (approx f i a).Dom
   · simp only [Part.fix_def f h₀]
-    constructor <;> intro hh
-    exact ⟨_, hh⟩
+    constructor <;> intro hh; exact ⟨_, hh⟩
     have h₁ := Nat.find_spec h₀
     rw [dom_iff_mem] at h₁
     cases' h₁ with y h₁
     replace h₁ := approx_mono' f _ _ h₁
-    suffices : y = b
-    subst this
-    exact h₁
+    suffices : y = b; subst this; exact h₁
     cases' hh with i hh
-    revert h₁
-    generalize succ (Nat.find h₀) = j
-    intro
+    revert h₁; generalize succ (Nat.find h₀) = j; intro
     wlog case : i ≤ j
     · cases' le_total i j with H H <;> [skip;symm] <;> apply_assumption <;> assumption
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
   · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]
     simp only [dom_iff_mem, not_exists] at h₀
-    intro
-    apply h₀
+    intro ; apply h₀
 #align part.fix.mem_iff Part.Fix.mem_iff
 
 /- warning: part.fix.approx_le_fix -> Part.Fix.approx_le_fix is a dubious translation:
@@ -130,9 +122,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} (f : OrderHom.{max u2 u1, max u2 u1} (forall (a : α), Part.{u1} (β a)) (forall (a : α), Part.{u1} (β a)) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i)))) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i))))) (i : Nat), LE.le.{max u2 u1} (forall (a : α), Part.{u1} (β a)) (Pi.hasLe.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => Preorder.toLE.{u1} (Part.{u1} (β i)) (PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i))))) (Part.Fix.approx.{u2, u1} α (fun (a : α) => β a) (OrderHom.toFun.{max u2 u1, max u2 u1} (forall (a : α), Part.{u1} (β a)) (forall (a : α), Part.{u1} (β a)) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i)))) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i)))) f) i) (Part.fix.{u2, u1} α (fun (a : α) => β a) (OrderHom.toFun.{max u2 u1, max u2 u1} (forall (a : α), Part.{u1} (β a)) (forall (a : α), Part.{u1} (β a)) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i)))) (Pi.preorder.{u2, u1} α (fun (a : α) => Part.{u1} (β a)) (fun (i : α) => PartialOrder.toPreorder.{u1} (Part.{u1} (β i)) (Part.instPartialOrderPart.{u1} (β i)))) f))
 Case conversion may be inaccurate. Consider using '#align part.fix.approx_le_fix Part.Fix.approx_le_fixₓ'. -/
-theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh =>
-  by
-  rw [mem_iff f]
+theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh => by rw [mem_iff f];
   exact ⟨_, hh⟩
 #align part.fix.approx_le_fix Part.Fix.approx_le_fix
 
@@ -145,14 +135,12 @@ Case conversion may be inaccurate. Consider using '#align part.fix.exists_fix_le
 theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x :=
   by
   by_cases hh : ∃ i b, b ∈ approx f i x
-  · rcases hh with ⟨i, b, hb⟩
-    exists i
+  · rcases hh with ⟨i, b, hb⟩; exists i
     intro b' h'
     have hb' := approx_le_fix f i _ _ hb
     obtain rfl := Part.mem_unique h' hb'
     exact hb
-  · simp only [not_exists] at hh
-    exists 0
+  · simp only [not_exists] at hh; exists 0
     intro b' h'
     simp only [mem_iff f] at h'
     cases' h' with i h'
@@ -220,19 +208,14 @@ Case conversion may be inaccurate. Consider using '#align part.fix_eq_ωSup Part
 theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) :=
   by
   apply le_antisymm
-  · intro x
-    cases' exists_fix_le_approx f x with i hx
+  · intro x; cases' exists_fix_le_approx f x with i hx
     trans approx f i.succ x
-    · trans
-      apply hx
-      apply approx_mono' f
+    · trans; apply hx; apply approx_mono' f
     apply le_ωSup_of_le i.succ
-    dsimp [approx]
-    rfl
+    dsimp [approx]; rfl
   · apply ωSup_le _ _ _
     simp only [fix.approx_chain, OrderHom.coe_fun_mk]
-    intro y x
-    apply approx_le_fix f
+    intro y x; apply approx_le_fix f
 #align part.fix_eq_ωSup Part.fix_eq_ωSup
 
 /- warning: part.fix_le -> Part.fix_le is a dubious translation:
@@ -267,15 +250,11 @@ theorem fix_eq : Part.fix f = f (Part.fix f) :=
   rw [fix_eq_ωSup f, hc]
   apply le_antisymm
   · apply ωSup_le_ωSup_of_le _
-    intro i
-    exists i
-    intro x
+    intro i; exists i; intro x
     -- intros x y hx,
     apply le_f_of_mem_approx _ ⟨i, rfl⟩
   · apply ωSup_le_ωSup_of_le _
-    intro i
-    exists i.succ
-    rfl
+    intro i; exists i.succ; rfl
 #align part.fix_eq Part.fix_eq
 
 end Part
@@ -358,12 +337,8 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u3}) (β : α -> Type.{u2}) (γ : forall (a : α), (β a) -> Type.{u1}) [_inst_1 : forall (x : α) (y : β x), OmegaCompletePartialOrder.{u1} (γ x y)], OmegaCompletePartialOrder.Continuous.{max (max u3 u2) u1, max (max u3 u2) u1} (forall (x : Sigma.{u3, u2} α (fun (a : α) => β a)), γ (Sigma.fst.{u3, u2} α (fun (a : α) => β a) x) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) x)) (forall (a : α) (b : β a), γ a b) (Pi.instOmegaCompletePartialOrderForAll.{max u3 u2, u1} (Sigma.{u3, u2} α (fun (a : α) => β a)) (fun (x : Sigma.{u3, u2} α (fun (a : α) => β a)) => γ (Sigma.fst.{u3, u2} α (fun (a : α) => β a) x) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) x)) (fun (a : Sigma.{u3, u2} α (fun (a : α) => β a)) => _inst_1 (Sigma.fst.{u3, u2} α (fun (a : α) => β a) a) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) a))) (Pi.instOmegaCompletePartialOrderForAll.{u3, max u2 u1} α (fun (a : α) => forall (b : β a), γ a b) (fun (a : α) => Pi.instOmegaCompletePartialOrderForAll.{u2, u1} (β a) (fun (b : β a) => γ a b) (fun (a_1 : β a) => _inst_1 a a_1))) (Pi.monotoneCurry.{u3, u2, u1} α β γ (fun (x : α) (y : β x) => PartialOrder.toPreorder.{u1} (γ x y) (OmegaCompletePartialOrder.toPartialOrder.{u1} (γ x y) (_inst_1 x y))))
 Case conversion may be inaccurate. Consider using '#align pi.continuous_curry Pi.continuous_curryₓ'. -/
-theorem continuous_curry : Continuous <| monotoneCurry α β γ := fun c =>
-  by
-  ext (x y)
-  dsimp [curry, ωSup]
-  rw [map_comp, map_comp]
-  rfl
+theorem continuous_curry : Continuous <| monotoneCurry α β γ := fun c => by ext (x y);
+  dsimp [curry, ωSup]; rw [map_comp, map_comp]; rfl
 #align pi.continuous_curry Pi.continuous_curry
 
 /- warning: pi.continuous_uncurry -> Pi.continuous_uncurry is a dubious translation:
@@ -372,12 +347,8 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u3}) (β : α -> Type.{u2}) (γ : forall (a : α), (β a) -> Type.{u1}) [_inst_1 : forall (x : α) (y : β x), OmegaCompletePartialOrder.{u1} (γ x y)], OmegaCompletePartialOrder.Continuous.{max (max u3 u2) u1, max (max u3 u2) u1} (forall (a : α) (b : β a), γ a b) (forall (x : Sigma.{u3, u2} α (fun (a : α) => β a)), γ (Sigma.fst.{u3, u2} α (fun (a : α) => β a) x) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) x)) (Pi.instOmegaCompletePartialOrderForAll.{u3, max u2 u1} α (fun (a : α) => forall (b : β a), γ a b) (fun (a : α) => Pi.instOmegaCompletePartialOrderForAll.{u2, u1} (β a) (fun (b : β a) => γ a b) (fun (a_1 : β a) => _inst_1 a a_1))) (Pi.instOmegaCompletePartialOrderForAll.{max u3 u2, u1} (Sigma.{u3, u2} α (fun (a : α) => β a)) (fun (x : Sigma.{u3, u2} α (fun (a : α) => β a)) => γ (Sigma.fst.{u3, u2} α (fun (a : α) => β a) x) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) x)) (fun (a : Sigma.{u3, u2} α (fun (a : α) => β a)) => _inst_1 (Sigma.fst.{u3, u2} α (fun (a : α) => β a) a) (Sigma.snd.{u3, u2} α (fun (a : α) => β a) a))) (Pi.monotoneUncurry.{u3, u2, u1} α β γ (fun (x : α) (y : β x) => PartialOrder.toPreorder.{u1} (γ x y) (OmegaCompletePartialOrder.toPartialOrder.{u1} (γ x y) (_inst_1 x y))))
 Case conversion may be inaccurate. Consider using '#align pi.continuous_uncurry Pi.continuous_uncurryₓ'. -/
-theorem continuous_uncurry : Continuous <| monotoneUncurry α β γ := fun c =>
-  by
-  ext (x y)
-  dsimp [uncurry, ωSup]
-  rw [map_comp, map_comp]
-  rfl
+theorem continuous_uncurry : Continuous <| monotoneUncurry α β γ := fun c => by ext (x y);
+  dsimp [uncurry, ωSup]; rw [map_comp, map_comp]; rfl
 #align pi.continuous_uncurry Pi.continuous_uncurry
 
 end Monotone

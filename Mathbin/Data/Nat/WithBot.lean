@@ -73,9 +73,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat}, LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (OfNat.ofNat.{0} (WithBot.{0} Nat) 0 (Zero.toOfNat0.{0} (WithBot.{0} Nat) (WithBot.zero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))) (Nat.cast.{0} (WithBot.{0} Nat) (AddMonoidWithOne.toNatCast.{0} (WithBot.{0} Nat) (WithBot.addMonoidWithOne.{0} Nat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} Nat (NonAssocSemiring.toAddCommMonoidWithOne.{0} Nat (Semiring.toNonAssocSemiring.{0} Nat Nat.semiring))))) n)
 Case conversion may be inaccurate. Consider using '#align nat.with_bot.coe_nonneg Nat.WithBot.coe_nonnegₓ'. -/
-theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) :=
-  by
-  rw [← WithBot.coe_zero, WithBot.coe_le_coe]
+theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by rw [← WithBot.coe_zero, WithBot.coe_le_coe];
   exact Nat.zero_le _
 #align nat.with_bot.coe_nonneg Nat.WithBot.coe_nonneg
 

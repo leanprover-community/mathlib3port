@@ -311,11 +311,7 @@ The converse of `category_theory.over.mono_of_mono_left`.
 instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :=
   by
   refine' ⟨fun (Y : T) l m a => _⟩
-  let l' : mk (m ≫ f.hom) ⟶ f :=
-    hom_mk l
-      (by
-        dsimp
-        rw [← over.w k, reassoc_of a])
+  let l' : mk (m ≫ f.hom) ⟶ f := hom_mk l (by dsimp; rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.left this
   rw [← cancel_mono k]
   ext
@@ -333,12 +329,7 @@ variable (f : Over X)
 def iteratedSliceForward : Over f ⥤ Over f.left
     where
   obj α := Over.mk α.Hom.left
-  map α β κ :=
-    Over.homMk κ.left.left
-      (by
-        rw [autoParam_eq]
-        rw [← over.w κ]
-        rfl)
+  map α β κ := Over.homMk κ.left.left (by rw [autoParam_eq]; rw [← over.w κ]; rfl)
 #align category_theory.over.iterated_slice_forward CategoryTheory.Over.iteratedSliceForward
 -/
 
@@ -366,15 +357,9 @@ def iteratedSliceEquiv : Over f ≌ Over f.left
   inverse := iteratedSliceBackward f
   unitIso :=
     NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy))
-      fun X Y g => by
-      ext
-      dsimp
-      simp
+      fun X Y g => by ext; dsimp; simp
   counitIso :=
-    NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g =>
-      by
-      ext
-      dsimp
+    NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g => by ext; dsimp;
       simp
 #align category_theory.over.iterated_slice_equiv CategoryTheory.Over.iteratedSliceEquiv
 
@@ -667,10 +652,7 @@ instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
   by
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : g ⟶ mk (g.hom ≫ m) :=
-    hom_mk l
-      (by
-        dsimp
-        rw [← under.w k, category.assoc, a, category.assoc])
+    hom_mk l (by dsimp; rw [← under.w k, category.assoc, a, category.assoc])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.right this
   rw [← cancel_epi k]
   ext

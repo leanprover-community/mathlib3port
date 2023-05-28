@@ -134,12 +134,8 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   target := { x | ∀ i, 0 ≤ x i }
   map_source' x hx := by simpa only [Subtype.range_val] using x.property
   map_target' x hx := mem_univ _
-  left_inv' := fun ⟨xval, xprop⟩ hx => by
-    ext i
-    simp only [Subtype.coe_mk, xprop i, max_eq_left]
-  right_inv' x hx := by
-    ext1 i
-    simp only [hx i, max_eq_left]
+  left_inv' := fun ⟨xval, xprop⟩ hx => by ext i; simp only [Subtype.coe_mk, xprop i, max_eq_left]
+  right_inv' x hx := by ext1 i; simp only [hx i, max_eq_left]
   source_eq := rfl
   unique_diff' :=
     by
@@ -175,11 +171,8 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
   map_target' := by
-    simp only [min_lt_iff, mem_set_of_eq]
-    intro z hz
-    left
-    dsimp [-Subtype.val_eq_coe] at hz
-    linarith
+    simp only [min_lt_iff, mem_set_of_eq]; intro z hz; left
+    dsimp [-Subtype.val_eq_coe] at hz; linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
     simp only [mem_set_of_eq, mem_Icc] at hz h'z
@@ -227,11 +220,8 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
   map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
   map_target' := by
-    simp only [lt_max_iff, mem_set_of_eq]
-    intro z hz
-    left
-    dsimp [-Subtype.val_eq_coe] at hz
-    linarith
+    simp only [lt_max_iff, mem_set_of_eq]; intro z hz; left
+    dsimp [-Subtype.val_eq_coe] at hz; linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
     simp only [mem_set_of_eq, mem_Icc] at hz h'z

@@ -189,10 +189,7 @@ theorem Adj.symm {G : SimpleGraph V} {u v : V} (h : G.Adj u v) : G.Adj v u :=
 -/
 
 #print SimpleGraph.ne_of_adj /-
-theorem ne_of_adj (h : G.Adj a b) : a ≠ b :=
-  by
-  rintro rfl
-  exact G.irrefl h
+theorem ne_of_adj (h : G.Adj a b) : a ≠ b := by rintro rfl; exact G.irrefl h
 #align simple_graph.ne_of_adj SimpleGraph.ne_of_adj
 -/
 
@@ -215,11 +212,8 @@ theorem ne_of_adj_of_not_adj {v w x : V} (h : G.Adj v x) (hn : ¬G.Adj w x) : v 
 -/
 
 #print SimpleGraph.adj_injective /-
-theorem adj_injective : Injective (Adj : SimpleGraph V → V → V → Prop) := fun G H h =>
-  by
-  cases G
-  cases H
-  congr
+theorem adj_injective : Injective (Adj : SimpleGraph V → V → V → Prop) := fun G H h => by cases G;
+  cases H; congr
 #align simple_graph.adj_injective SimpleGraph.adj_injective
 -/
 
@@ -322,9 +316,7 @@ instance : SupSet (SimpleGraph V) :=
   ⟨fun s =>
     { Adj := fun a b => ∃ G ∈ s, Adj G a b
       symm := fun a b => Exists₂.imp fun _ _ => Adj.symm
-      loopless := by
-        rintro a ⟨G, hG, ha⟩
-        exact ha.ne rfl }⟩
+      loopless := by rintro a ⟨G, hG, ha⟩; exact ha.ne rfl }⟩
 
 instance : InfSet (SimpleGraph V) :=
   ⟨fun s =>
@@ -383,10 +375,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.Inf_adj_of_nonempty SimpleGraph.sInf_adj_of_nonemptyₓ'. -/
 theorem sInf_adj_of_nonempty {s : Set (SimpleGraph V)} (hs : s.Nonempty) :
     (sInf s).Adj a b ↔ ∀ G ∈ s, Adj G a b :=
-  sInf_adj.trans <|
-    and_iff_left_of_imp <| by
-      obtain ⟨G, hG⟩ := hs
-      exact fun h => (h _ hG).Ne
+  sInf_adj.trans <| and_iff_left_of_imp <| by obtain ⟨G, hG⟩ := hs; exact fun h => (h _ hG).Ne
 #align simple_graph.Inf_adj_of_nonempty SimpleGraph.sInf_adj_of_nonempty
 
 /- warning: simple_graph.infi_adj_of_nonempty -> SimpleGraph.iInf_adj_of_nonempty is a dubious translation:
@@ -419,20 +408,13 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
     le_top := fun x v w h => x.ne_of_adj h
     bot_le := fun x v w h => h.elim
     sdiff_eq := fun x y => by
-      ext (v w)
-      refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
-      rintro rfl
-      exact x.irrefl h.1
+      ext (v w); refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
+      rintro rfl; exact x.irrefl h.1
     inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1
-    top_le_sup_compl := fun a v w ne => by
-      by_cases a.adj v w
-      exact Or.inl h
-      exact Or.inr ⟨Ne, h⟩
+    top_le_sup_compl := fun a v w ne => by by_cases a.adj v w; exact Or.inl h; exact Or.inr ⟨Ne, h⟩
     sSup := sSup
     le_sup := fun s G hG a b hab => ⟨G, hG, hab⟩
-    sup_le := fun s G hG a b => by
-      rintro ⟨H, hH, hab⟩
-      exact hG _ hH hab
+    sup_le := fun s G hG a b => by rintro ⟨H, hH, hab⟩; exact hG _ hH hab
     sInf := sInf
     inf_le := fun s G hG a b hab => hab.1 hG
     le_inf := fun s G hG a b hab => ⟨fun H hH => hG _ hH hab, hab.Ne⟩
@@ -583,10 +565,7 @@ def neighborSet (v : V) : Set V :=
 
 #print SimpleGraph.neighborSet.memDecidable /-
 instance neighborSet.memDecidable (v : V) [DecidableRel G.Adj] :
-    DecidablePred (· ∈ G.neighborSet v) :=
-  by
-  unfold neighbor_set
-  infer_instance
+    DecidablePred (· ∈ G.neighborSet v) := by unfold neighbor_set; infer_instance
 #align simple_graph.neighbor_set.mem_decidable SimpleGraph.neighborSet.memDecidable
 -/
 
@@ -711,10 +690,8 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V), Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V (Sup.sup.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instSupSimpleGraph.{u1} V) G₁ G₂)) (Union.union.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instUnionSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_sup SimpleGraph.edgeSet_supₓ'. -/
 @[simp]
-theorem edgeSet_sup : (G₁ ⊔ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding ∪ G₂.edgeSetEmbedding :=
-  by
-  ext ⟨x, y⟩
-  rfl
+theorem edgeSet_sup : (G₁ ⊔ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding ∪ G₂.edgeSetEmbedding := by
+  ext ⟨x, y⟩; rfl
 #align simple_graph.edge_set_sup SimpleGraph.edgeSet_sup
 
 /- warning: simple_graph.edge_set_inf -> SimpleGraph.edgeSet_inf is a dubious translation:
@@ -724,10 +701,8 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V), Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V (Inf.inf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instInfSimpleGraph.{u1} V) G₁ G₂)) (Inter.inter.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instInterSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_inf SimpleGraph.edgeSet_infₓ'. -/
 @[simp]
-theorem edgeSet_inf : (G₁ ⊓ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding ∩ G₂.edgeSetEmbedding :=
-  by
-  ext ⟨x, y⟩
-  rfl
+theorem edgeSet_inf : (G₁ ⊓ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding ∩ G₂.edgeSetEmbedding := by
+  ext ⟨x, y⟩; rfl
 #align simple_graph.edge_set_inf SimpleGraph.edgeSet_inf
 
 /- warning: simple_graph.edge_set_sdiff -> SimpleGraph.edgeSet_sdiff is a dubious translation:
@@ -737,10 +712,8 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V), Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G₁ G₂)) (SDiff.sdiff.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instSDiffSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G₁) (SimpleGraph.edgeSet.{u1} V G₂))
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_sdiff SimpleGraph.edgeSet_sdiffₓ'. -/
 @[simp]
-theorem edgeSet_sdiff : (G₁ \ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding \ G₂.edgeSetEmbedding :=
-  by
-  ext ⟨x, y⟩
-  rfl
+theorem edgeSet_sdiff : (G₁ \ G₂).edgeSetEmbedding = G₁.edgeSetEmbedding \ G₂.edgeSetEmbedding := by
+  ext ⟨x, y⟩; rfl
 #align simple_graph.edge_set_sdiff SimpleGraph.edgeSet_sdiff
 
 /- warning: simple_graph.edge_set_sdiff_sdiff_is_diag -> SimpleGraph.edgeSet_sdiff_sdiff_isDiag is a dubious translation:
@@ -834,9 +807,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u1}}, Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.fintype_edge_set_bot SimpleGraph.fintypeEdgeSetBotₓ'. -/
-instance fintypeEdgeSetBot : Fintype (⊥ : SimpleGraph V).edgeSetEmbedding :=
-  by
-  rw [edge_set_bot]
+instance fintypeEdgeSetBot : Fintype (⊥ : SimpleGraph V).edgeSetEmbedding := by rw [edge_set_bot];
   infer_instance
 #align simple_graph.fintype_edge_set_bot SimpleGraph.fintypeEdgeSetBot
 
@@ -847,9 +818,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V) [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V (Sup.sup.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instSupSimpleGraph.{u1} V) G₁ G₂)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.fintype_edge_set_sup SimpleGraph.fintypeEdgeSetSupₓ'. -/
 instance fintypeEdgeSetSup [DecidableEq V] [Fintype G₁.edgeSetEmbedding]
-    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ ⊔ G₂).edgeSetEmbedding :=
-  by
-  rw [edge_set_sup]
+    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ ⊔ G₂).edgeSetEmbedding := by rw [edge_set_sup];
   infer_instance
 #align simple_graph.fintype_edge_set_sup SimpleGraph.fintypeEdgeSetSup
 
@@ -860,9 +829,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V) [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V (Inf.inf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instInfSimpleGraph.{u1} V) G₁ G₂)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.fintype_edge_set_inf SimpleGraph.fintypeEdgeSetInfₓ'. -/
 instance fintypeEdgeSetInf [DecidableEq V] [Fintype G₁.edgeSetEmbedding]
-    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ ⊓ G₂).edgeSetEmbedding :=
-  by
-  rw [edge_set_inf]
+    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ ⊓ G₂).edgeSetEmbedding := by rw [edge_set_inf];
   exact Set.fintypeInter _ _
 #align simple_graph.fintype_edge_set_inf SimpleGraph.fintypeEdgeSetInf
 
@@ -873,9 +840,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G₁ : SimpleGraph.{u1} V) (G₂ : SimpleGraph.{u1} V) [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₁))] [_inst_3 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G₂))], Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G₁ G₂)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.fintype_edge_set_sdiff SimpleGraph.fintypeEdgeSetSdiffₓ'. -/
 instance fintypeEdgeSetSdiff [DecidableEq V] [Fintype G₁.edgeSetEmbedding]
-    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ \ G₂).edgeSetEmbedding :=
-  by
-  rw [edge_set_sdiff]
+    [Fintype G₂.edgeSetEmbedding] : Fintype (G₁ \ G₂).edgeSetEmbedding := by rw [edge_set_sdiff];
   exact Set.fintypeDiff _ _
 #align simple_graph.fintype_edge_set_sdiff SimpleGraph.fintypeEdgeSetSdiff
 
@@ -910,9 +875,7 @@ Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_
 -- Note: we need to make sure `from_edge_set_adj` and this lemma are confluent.
 -- In particular, both yield `⟦(u, v)⟧ ∈ (from_edge_set s).edge_set` ==> `⟦(v, w)⟧ ∈ s ∧ v ≠ w`.
 @[simp]
-theorem edgeSet_fromEdgeSet : (fromEdgeSet s).edgeSetEmbedding = s \ { e | e.IsDiag } :=
-  by
-  ext e
+theorem edgeSet_fromEdgeSet : (fromEdgeSet s).edgeSetEmbedding = s \ { e | e.IsDiag } := by ext e;
   exact Sym2.ind (by simp) e
 #align simple_graph.edge_set_from_edge_set SimpleGraph.edgeSet_fromEdgeSet
 
@@ -923,9 +886,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (SimpleGraph.edgeSet.{u1} V G)) G
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_edge_set SimpleGraph.fromEdgeSet_edgeSetₓ'. -/
 @[simp]
-theorem fromEdgeSet_edgeSet : fromEdgeSet G.edgeSetEmbedding = G :=
-  by
-  ext (v w)
+theorem fromEdgeSet_edgeSet : fromEdgeSet G.edgeSetEmbedding = G := by ext (v w);
   exact ⟨fun h => h.1, fun h => ⟨h, G.ne_of_adj h⟩⟩
 #align simple_graph.from_edge_set_edge_set SimpleGraph.fromEdgeSet_edgeSet
 
@@ -936,9 +897,7 @@ but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (EmptyCollection.emptyCollection.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instEmptyCollectionSet.{u1} (Sym2.{u1} V)))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_empty SimpleGraph.fromEdgeSet_emptyₓ'. -/
 @[simp]
-theorem fromEdgeSet_empty : fromEdgeSet (∅ : Set (Sym2 V)) = ⊥ :=
-  by
-  ext (v w)
+theorem fromEdgeSet_empty : fromEdgeSet (∅ : Set (Sym2 V)) = ⊥ := by ext (v w);
   simp only [from_edge_set_adj, Set.mem_empty_iff_false, false_and_iff, bot_adj]
 #align simple_graph.from_edge_set_empty SimpleGraph.fromEdgeSet_empty
 
@@ -949,9 +908,7 @@ but is expected to have type
   forall {V : Type.{u1}}, Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.fromEdgeSet.{u1} V (Set.univ.{u1} (Sym2.{u1} V))) (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_univ SimpleGraph.fromEdgeSet_univₓ'. -/
 @[simp]
-theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ :=
-  by
-  ext (v w)
+theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ := by ext (v w);
   simp only [from_edge_set_adj, Set.mem_univ, true_and_iff, top_adj]
 #align simple_graph.from_edge_set_univ SimpleGraph.fromEdgeSet_univ
 
@@ -963,11 +920,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_inf SimpleGraph.fromEdgeSet_infₓ'. -/
 @[simp]
 theorem fromEdgeSet_inf (s t : Set (Sym2 V)) :
-    fromEdgeSet s ⊓ fromEdgeSet t = fromEdgeSet (s ∩ t) :=
-  by
-  ext (v w)
-  simp only [from_edge_set_adj, Set.mem_inter_iff, Ne.def, inf_adj]
-  tauto
+    fromEdgeSet s ⊓ fromEdgeSet t = fromEdgeSet (s ∩ t) := by ext (v w);
+  simp only [from_edge_set_adj, Set.mem_inter_iff, Ne.def, inf_adj]; tauto
 #align simple_graph.from_edge_set_inf SimpleGraph.fromEdgeSet_inf
 
 /- warning: simple_graph.from_edge_set_sup -> SimpleGraph.fromEdgeSet_sup is a dubious translation:
@@ -978,9 +932,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_sup SimpleGraph.fromEdgeSet_supₓ'. -/
 @[simp]
 theorem fromEdgeSet_sup (s t : Set (Sym2 V)) :
-    fromEdgeSet s ⊔ fromEdgeSet t = fromEdgeSet (s ∪ t) :=
-  by
-  ext (v w)
+    fromEdgeSet s ⊔ fromEdgeSet t = fromEdgeSet (s ∪ t) := by ext (v w);
   simp [Set.mem_union, or_and_right]
 #align simple_graph.from_edge_set_sup SimpleGraph.fromEdgeSet_sup
 
@@ -992,9 +944,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.from_edge_set_sdiff SimpleGraph.fromEdgeSet_sdiffₓ'. -/
 @[simp]
 theorem fromEdgeSet_sdiff (s t : Set (Sym2 V)) :
-    fromEdgeSet s \ fromEdgeSet t = fromEdgeSet (s \ t) :=
-  by
-  ext (v w)
+    fromEdgeSet s \ fromEdgeSet t = fromEdgeSet (s \ t) := by ext (v w);
   constructor <;> simp (config := { contextual := true })
 #align simple_graph.from_edge_set_sdiff SimpleGraph.fromEdgeSet_sdiff
 
@@ -1009,10 +959,8 @@ theorem fromEdgeSet_mono {s t : Set (Sym2 V)} (h : s ⊆ t) : fromEdgeSet s ≤ 
 #align simple_graph.from_edge_set_mono SimpleGraph.fromEdgeSet_mono
 -/
 
-instance [DecidableEq V] [Fintype s] : Fintype (fromEdgeSet s).edgeSetEmbedding :=
-  by
-  rw [edge_set_from_edge_set s]
-  infer_instance
+instance [DecidableEq V] [Fintype s] : Fintype (fromEdgeSet s).edgeSetEmbedding := by
+  rw [edge_set_from_edge_set s]; infer_instance
 
 end FromEdgeSet
 
@@ -1135,18 +1083,14 @@ theorem Dart.symm_ne (d : G.Dart) : d.symm ≠ d :=
 -/
 
 #print SimpleGraph.dart_edge_eq_iff /-
-theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm :=
-  by
-  rintro ⟨p, hp⟩ ⟨q, hq⟩
-  simp [Sym2.mk''_eq_mk''_iff]
+theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm := by
+  rintro ⟨p, hp⟩ ⟨q, hq⟩; simp [Sym2.mk''_eq_mk''_iff]
 #align simple_graph.dart_edge_eq_iff SimpleGraph.dart_edge_eq_iff
 -/
 
 #print SimpleGraph.dart_edge_eq_mk'_iff /-
 theorem dart_edge_eq_mk'_iff :
-    ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.symm :=
-  by
-  rintro ⟨p, h⟩
+    ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.symm := by rintro ⟨p, h⟩;
   apply Sym2.mk''_eq_mk''_iff
 #align simple_graph.dart_edge_eq_mk_iff SimpleGraph.dart_edge_eq_mk'_iff
 -/
@@ -1154,10 +1098,7 @@ theorem dart_edge_eq_mk'_iff :
 #print SimpleGraph.dart_edge_eq_mk'_iff' /-
 theorem dart_edge_eq_mk'_iff' :
     ∀ {d : G.Dart} {u v : V}, d.edge = ⟦(u, v)⟧ ↔ d.fst = u ∧ d.snd = v ∨ d.fst = v ∧ d.snd = u :=
-  by
-  rintro ⟨⟨a, b⟩, h⟩ u v
-  rw [dart_edge_eq_mk_iff]
-  simp
+  by rintro ⟨⟨a, b⟩, h⟩ u v; rw [dart_edge_eq_mk_iff]; simp
 #align simple_graph.dart_edge_eq_mk_iff' SimpleGraph.dart_edge_eq_mk'_iff'
 -/
 
@@ -1183,10 +1124,7 @@ def dartOfNeighborSet (v : V) (w : G.neighborSet v) : G.Dart :=
 
 #print SimpleGraph.dartOfNeighborSet_injective /-
 theorem dartOfNeighborSet_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) :=
-  fun e₁ e₂ h =>
-  Subtype.ext <| by
-    injection h with h'
-    convert congr_arg Prod.snd h'
+  fun e₁ e₂ h => Subtype.ext <| by injection h with h'; convert congr_arg Prod.snd h'
 #align simple_graph.dart_of_neighbor_set_injective SimpleGraph.dartOfNeighborSet_injective
 -/
 
@@ -1196,10 +1134,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Nontrivial.{u1} V], Nonempty.{succ u1} (SimpleGraph.Dart.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.nonempty_dart_top SimpleGraph.nonempty_dart_topₓ'. -/
-instance nonempty_dart_top [Nontrivial V] : Nonempty (⊤ : SimpleGraph V).Dart :=
-  by
-  obtain ⟨v, w, h⟩ := exists_pair_ne V
-  exact ⟨⟨(v, w), h⟩⟩
+instance nonempty_dart_top [Nontrivial V] : Nonempty (⊤ : SimpleGraph V).Dart := by
+  obtain ⟨v, w, h⟩ := exists_pair_ne V; exact ⟨⟨(v, w), h⟩⟩
 #align simple_graph.nonempty_dart_top SimpleGraph.nonempty_dart_top
 
 end Darts
@@ -1561,9 +1497,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) (v : V), Eq.{succ u1} (Set.{u1} V) (SimpleGraph.neighborSet.{u1} V (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) v) (SDiff.sdiff.{u1} (Set.{u1} V) (Set.instSDiffSet.{u1} V) (HasCompl.compl.{u1} (Set.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} V) (Set.instBooleanAlgebraSet.{u1} V)) (SimpleGraph.neighborSet.{u1} V G v)) (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) v))
 Case conversion may be inaccurate. Consider using '#align simple_graph.neighbor_set_compl SimpleGraph.neighborSet_complₓ'. -/
 theorem neighborSet_compl (G : SimpleGraph V) (v : V) : Gᶜ.neighborSet v = G.neighborSet vᶜ \ {v} :=
-  by
-  ext w
-  simp [and_comm', eq_comm]
+  by ext w; simp [and_comm', eq_comm]
 #align simple_graph.neighbor_set_compl SimpleGraph.neighborSet_compl
 
 #print SimpleGraph.commonNeighbors /-
@@ -1636,9 +1570,7 @@ but is expected to have type
   forall {V : Type.{u1}} {v : V} {w : V}, Eq.{succ u1} (Set.{u1} V) (SimpleGraph.commonNeighbors.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) v w) (SDiff.sdiff.{u1} (Set.{u1} V) (Set.instSDiffSet.{u1} V) (Set.univ.{u1} V) (Insert.insert.{u1, u1} V (Set.{u1} V) (Set.instInsertSet.{u1} V) v (Singleton.singleton.{u1, u1} V (Set.{u1} V) (Set.instSingletonSet.{u1} V) w)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.common_neighbors_top_eq SimpleGraph.commonNeighbors_top_eqₓ'. -/
 theorem commonNeighbors_top_eq {v w : V} :
-    (⊤ : SimpleGraph V).commonNeighbors v w = Set.univ \ {v, w} :=
-  by
-  ext u
+    (⊤ : SimpleGraph V).commonNeighbors v w = Set.univ \ {v, w} := by ext u;
   simp [common_neighbors, eq_comm, not_or_distrib.symm]
 #align simple_graph.common_neighbors_top_eq SimpleGraph.commonNeighbors_top_eq
 
@@ -1656,18 +1588,14 @@ def otherVertexOfIncident {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v) : V 
 
 #print SimpleGraph.edge_other_incident_set /-
 theorem edge_other_incident_set {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v) :
-    e ∈ G.incidenceSet (G.otherVertexOfIncident h) :=
-  by
-  use h.1
+    e ∈ G.incidenceSet (G.otherVertexOfIncident h) := by use h.1;
   simp [other_vertex_of_incident, Sym2.other_mem']
 #align simple_graph.edge_other_incident_set SimpleGraph.edge_other_incident_set
 -/
 
 #print SimpleGraph.incidence_other_prop /-
 theorem incidence_other_prop {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v) :
-    G.otherVertexOfIncident h ∈ G.neighborSet v :=
-  by
-  cases' h with he hv
+    G.otherVertexOfIncident h ∈ G.neighborSet v := by cases' h with he hv;
   rwa [← Sym2.other_spec' hv, mem_edge_set] at he
 #align simple_graph.incidence_other_prop SimpleGraph.incidence_other_prop
 -/
@@ -1726,9 +1654,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) (G' : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G G') (SimpleGraph.deleteEdges.{u1} V G (SimpleGraph.edgeSet.{u1} V G'))
 Case conversion may be inaccurate. Consider using '#align simple_graph.sdiff_eq_delete_edges SimpleGraph.sdiff_eq_deleteEdgesₓ'. -/
 theorem sdiff_eq_deleteEdges (G G' : SimpleGraph V) : G \ G' = G.deleteEdges G'.edgeSetEmbedding :=
-  by
-  ext
-  simp
+  by ext; simp
 #align simple_graph.sdiff_eq_delete_edges SimpleGraph.sdiff_eq_deleteEdges
 
 /- warning: simple_graph.delete_edges_eq_sdiff_from_edge_set -> SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet is a dubious translation:
@@ -1738,9 +1664,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) (s : Set.{u1} (Sym2.{u1} V)), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G s) (SDiff.sdiff.{u1} (SimpleGraph.{u1} V) (SimpleGraph.sdiff.{u1} V) G (SimpleGraph.fromEdgeSet.{u1} V s))
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSetₓ'. -/
 theorem deleteEdges_eq_sdiff_fromEdgeSet (s : Set (Sym2 V)) : G.deleteEdges s = G \ fromEdgeSet s :=
-  by
-  ext
-  exact ⟨fun h => ⟨h.1, not_and_of_not_left _ h.2⟩, fun h => ⟨h.1, not_and'.mp h.2 h.Ne⟩⟩
+  by ext; exact ⟨fun h => ⟨h.1, not_and_of_not_left _ h.2⟩, fun h => ⟨h.1, not_and'.mp h.2 h.Ne⟩⟩
 #align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.deleteEdges_eq_sdiff_fromEdgeSet
 
 /- warning: simple_graph.compl_eq_delete_edges -> SimpleGraph.compl_eq_deleteEdges is a dubious translation:
@@ -1749,9 +1673,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (HasCompl.compl.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasCompl.{u1} V) G) (SimpleGraph.deleteEdges.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (SimpleGraph.edgeSet.{u1} V G))
 Case conversion may be inaccurate. Consider using '#align simple_graph.compl_eq_delete_edges SimpleGraph.compl_eq_deleteEdgesₓ'. -/
-theorem compl_eq_deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSetEmbedding :=
-  by
-  ext
+theorem compl_eq_deleteEdges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSetEmbedding := by ext;
   simp
 #align simple_graph.compl_eq_delete_edges SimpleGraph.compl_eq_deleteEdges
 
@@ -1763,18 +1685,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_delete_edges SimpleGraph.deleteEdges_deleteEdgesₓ'. -/
 @[simp]
 theorem deleteEdges_deleteEdges (s s' : Set (Sym2 V)) :
-    (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') :=
-  by
-  ext
-  simp [and_assoc', not_or]
+    (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') := by ext; simp [and_assoc', not_or]
 #align simple_graph.delete_edges_delete_edges SimpleGraph.deleteEdges_deleteEdges
 
 #print SimpleGraph.deleteEdges_empty_eq /-
 @[simp]
-theorem deleteEdges_empty_eq : G.deleteEdges ∅ = G :=
-  by
-  ext
-  simp
+theorem deleteEdges_empty_eq : G.deleteEdges ∅ = G := by ext; simp
 #align simple_graph.delete_edges_empty_eq SimpleGraph.deleteEdges_empty_eq
 -/
 
@@ -1785,16 +1701,11 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G (Set.univ.{u1} (Sym2.{u1} V))) (Bot.bot.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toBot.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V))))))
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ_eqₓ'. -/
 @[simp]
-theorem deleteEdges_univ_eq : G.deleteEdges Set.univ = ⊥ :=
-  by
-  ext
-  simp
+theorem deleteEdges_univ_eq : G.deleteEdges Set.univ = ⊥ := by ext; simp
 #align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ_eq
 
 #print SimpleGraph.deleteEdges_le /-
-theorem deleteEdges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G :=
-  by
-  intro
+theorem deleteEdges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by intro ;
   simp (config := { contextual := true })
 #align simple_graph.delete_edges_le SimpleGraph.deleteEdges_le
 -/
@@ -1815,9 +1726,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) (s : Set.{u1} (Sym2.{u1} V)), Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G s) (SimpleGraph.deleteEdges.{u1} V G (Inter.inter.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instInterSet.{u1} (Sym2.{u1} V)) s (SimpleGraph.edgeSet.{u1} V G)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_eq_inter_edge_set SimpleGraph.deleteEdges_eq_inter_edgeSetₓ'. -/
 theorem deleteEdges_eq_inter_edgeSet (s : Set (Sym2 V)) :
-    G.deleteEdges s = G.deleteEdges (s ∩ G.edgeSetEmbedding) :=
-  by
-  ext
+    G.deleteEdges s = G.deleteEdges (s ∩ G.edgeSetEmbedding) := by ext;
   simp (config := { contextual := true }) [imp_false]
 #align simple_graph.delete_edges_eq_inter_edge_set SimpleGraph.deleteEdges_eq_inter_edgeSet
 
@@ -1828,9 +1737,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) {H : SimpleGraph.{u1} V}, (LE.le.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instLESimpleGraph.{u1} V) H G) -> (Eq.{succ u1} (SimpleGraph.{u1} V) (SimpleGraph.deleteEdges.{u1} V G (SDiff.sdiff.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instSDiffSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G) (SimpleGraph.edgeSet.{u1} V H))) H)
 Case conversion may be inaccurate. Consider using '#align simple_graph.delete_edges_sdiff_eq_of_le SimpleGraph.deleteEdges_sdiff_eq_of_leₓ'. -/
 theorem deleteEdges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) :
-    G.deleteEdges (G.edgeSetEmbedding \ H.edgeSetEmbedding) = H :=
-  by
-  ext (v w)
+    G.deleteEdges (G.edgeSetEmbedding \ H.edgeSetEmbedding) = H := by ext (v w);
   constructor <;> simp (config := { contextual := true }) [@h v w]
 #align simple_graph.delete_edges_sdiff_eq_of_le SimpleGraph.deleteEdges_sdiff_eq_of_le
 
@@ -1841,10 +1748,7 @@ but is expected to have type
   forall {V : Type.{u1}} (G : SimpleGraph.{u1} V) (s : Set.{u1} (Sym2.{u1} V)), Eq.{succ u1} (Set.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V (SimpleGraph.deleteEdges.{u1} V G s)) (SDiff.sdiff.{u1} (Set.{u1} (Sym2.{u1} V)) (Set.instSDiffSet.{u1} (Sym2.{u1} V)) (SimpleGraph.edgeSet.{u1} V G) s)
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_set_delete_edges SimpleGraph.edgeSet_deleteEdgesₓ'. -/
 theorem edgeSet_deleteEdges (s : Set (Sym2 V)) :
-    (G.deleteEdges s).edgeSetEmbedding = G.edgeSetEmbedding \ s :=
-  by
-  ext e
-  refine' Sym2.ind _ e
+    (G.deleteEdges s).edgeSetEmbedding = G.edgeSetEmbedding \ s := by ext e; refine' Sym2.ind _ e;
   simp
 #align simple_graph.edge_set_delete_edges SimpleGraph.edgeSet_deleteEdges
 
@@ -1856,10 +1760,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align simple_graph.edge_finset_delete_edges SimpleGraph.edgeFinset_deleteEdgesₓ'. -/
 theorem edgeFinset_deleteEdges [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
     (s : Finset (Sym2 V)) [DecidableRel (G.deleteEdges s).Adj] :
-    (G.deleteEdges s).edgeFinset = G.edgeFinset \ s :=
-  by
-  ext e
-  simp [edge_set_delete_edges]
+    (G.deleteEdges s).edgeFinset = G.edgeFinset \ s := by ext e; simp [edge_set_delete_edges]
 #align simple_graph.edge_finset_delete_edges SimpleGraph.edgeFinset_deleteEdges
 
 section DeleteFar
@@ -1945,10 +1846,8 @@ theorem map_adj (f : V ↪ W) (G : SimpleGraph V) (u v : W) :
 -/
 
 #print SimpleGraph.map_monotone /-
-theorem map_monotone (f : V ↪ W) : Monotone (SimpleGraph.map f) :=
-  by
-  rintro G G' h _ _ ⟨u, v, ha, rfl, rfl⟩
-  exact ⟨_, _, h ha, rfl, rfl⟩
+theorem map_monotone (f : V ↪ W) : Monotone (SimpleGraph.map f) := by
+  rintro G G' h _ _ ⟨u, v, ha, rfl, rfl⟩; exact ⟨_, _, h ha, rfl, rfl⟩
 #align simple_graph.map_monotone SimpleGraph.map_monotone
 -/
 
@@ -1965,19 +1864,14 @@ protected def comap (f : V → W) (G : SimpleGraph W) : SimpleGraph V
 -/
 
 #print SimpleGraph.comap_monotone /-
-theorem comap_monotone (f : V ↪ W) : Monotone (SimpleGraph.comap f) :=
-  by
-  intro G G' h _ _ ha
+theorem comap_monotone (f : V ↪ W) : Monotone (SimpleGraph.comap f) := by intro G G' h _ _ ha;
   exact h ha
 #align simple_graph.comap_monotone SimpleGraph.comap_monotone
 -/
 
 #print SimpleGraph.comap_map_eq /-
 @[simp]
-theorem comap_map_eq (f : V ↪ W) (G : SimpleGraph V) : (G.map f).comap f = G :=
-  by
-  ext
-  simp
+theorem comap_map_eq (f : V ↪ W) (G : SimpleGraph V) : (G.map f).comap f = G := by ext; simp
 #align simple_graph.comap_map_eq SimpleGraph.comap_map_eq
 -/
 
@@ -2003,18 +1897,13 @@ theorem comap_surjective (f : V ↪ W) : Function.Surjective (SimpleGraph.comap 
 #print SimpleGraph.map_le_iff_le_comap /-
 theorem map_le_iff_le_comap (f : V ↪ W) (G : SimpleGraph V) (G' : SimpleGraph W) :
     G.map f ≤ G' ↔ G ≤ G'.comap f :=
-  ⟨fun h u v ha => h ⟨_, _, ha, rfl, rfl⟩,
-    by
-    rintro h _ _ ⟨u, v, ha, rfl, rfl⟩
-    exact h ha⟩
+  ⟨fun h u v ha => h ⟨_, _, ha, rfl, rfl⟩, by rintro h _ _ ⟨u, v, ha, rfl, rfl⟩; exact h ha⟩
 #align simple_graph.map_le_iff_le_comap SimpleGraph.map_le_iff_le_comap
 -/
 
 #print SimpleGraph.map_comap_le /-
-theorem map_comap_le (f : V ↪ W) (G : SimpleGraph W) : (G.comap f).map f ≤ G :=
-  by
-  rw [map_le_iff_le_comap]
-  exact le_refl _
+theorem map_comap_le (f : V ↪ W) (G : SimpleGraph W) : (G.comap f).map f ≤ G := by
+  rw [map_le_iff_le_comap]; exact le_refl _
 #align simple_graph.map_comap_le SimpleGraph.map_comap_le
 -/
 
@@ -2168,19 +2057,15 @@ def incidenceFinset [DecidableEq V] : Finset (Sym2 V) :=
 #print SimpleGraph.card_incidenceSet_eq_degree /-
 @[simp]
 theorem card_incidenceSet_eq_degree [DecidableEq V] :
-    Fintype.card (G.incidenceSet v) = G.degree v :=
-  by
-  rw [Fintype.card_congr (G.incidence_set_equiv_neighbor_set v)]
-  simp
+    Fintype.card (G.incidenceSet v) = G.degree v := by
+  rw [Fintype.card_congr (G.incidence_set_equiv_neighbor_set v)]; simp
 #align simple_graph.card_incidence_set_eq_degree SimpleGraph.card_incidenceSet_eq_degree
 -/
 
 #print SimpleGraph.card_incidenceFinset_eq_degree /-
 @[simp]
 theorem card_incidenceFinset_eq_degree [DecidableEq V] : (G.incidenceFinset v).card = G.degree v :=
-  by
-  rw [← G.card_incidence_set_eq_degree]
-  apply Set.toFinset_card
+  by rw [← G.card_incidence_set_eq_degree]; apply Set.toFinset_card
 #align simple_graph.card_incidence_finset_eq_degree SimpleGraph.card_incidenceFinset_eq_degree
 -/
 
@@ -2239,10 +2124,8 @@ theorem IsRegularOfDegree.degree_eq {d : ℕ} (h : G.IsRegularOfDegree d) (v : V
 
 #print SimpleGraph.IsRegularOfDegree.compl /-
 theorem IsRegularOfDegree.compl [Fintype V] [DecidableEq V] {G : SimpleGraph V} [DecidableRel G.Adj]
-    {k : ℕ} (h : G.IsRegularOfDegree k) : Gᶜ.IsRegularOfDegree (Fintype.card V - 1 - k) :=
-  by
-  intro v
-  rw [degree_compl, h v]
+    {k : ℕ} (h : G.IsRegularOfDegree k) : Gᶜ.IsRegularOfDegree (Fintype.card V - 1 - k) := by
+  intro v; rw [degree_compl, h v]
 #align simple_graph.is_regular_of_degree.compl SimpleGraph.IsRegularOfDegree.compl
 -/
 
@@ -2254,20 +2137,13 @@ variable [Fintype V]
 
 #print SimpleGraph.neighborSetFintype /-
 instance neighborSetFintype [DecidableRel G.Adj] (v : V) : Fintype (G.neighborSet v) :=
-  @Subtype.fintype _ _
-    (by
-      simp_rw [mem_neighbor_set]
-      infer_instance)
-    _
+  @Subtype.fintype _ _ (by simp_rw [mem_neighbor_set]; infer_instance) _
 #align simple_graph.neighbor_set_fintype SimpleGraph.neighborSetFintype
 -/
 
 #print SimpleGraph.neighborFinset_eq_filter /-
 theorem neighborFinset_eq_filter {v : V} [DecidableRel G.Adj] :
-    G.neighborFinset v = Finset.univ.filterₓ (G.Adj v) :=
-  by
-  ext
-  simp
+    G.neighborFinset v = Finset.univ.filterₓ (G.Adj v) := by ext; simp
 #align simple_graph.neighbor_finset_eq_filter SimpleGraph.neighborFinset_eq_filter
 -/
 
@@ -2310,10 +2186,7 @@ but is expected to have type
   forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V], SimpleGraph.IsRegularOfDegree.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) (fun (v : V) => SimpleGraph.neighborSetFintype.{u1} V (Top.top.{u1} (SimpleGraph.{u1} V) (CompleteLattice.toTop.{u1} (SimpleGraph.{u1} V) (Order.Coframe.toCompleteLattice.{u1} (SimpleGraph.{u1} V) (CompleteDistribLattice.toCoframe.{u1} (SimpleGraph.{u1} V) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (SimpleGraph.{u1} V) (SimpleGraph.completeBooleanAlgebra.{u1} V)))))) _inst_1 (fun (a : V) (b : V) => SimpleGraph.Top.adjDecidable.{u1} V (fun (a : V) (b : V) => _inst_2 a b) a b) v) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.is_regular_of_degree.top SimpleGraph.IsRegularOfDegree.topₓ'. -/
 theorem IsRegularOfDegree.top [DecidableEq V] :
-    (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) :=
-  by
-  intro v
-  simp
+    (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) := by intro v; simp
 #align simple_graph.is_regular_of_degree.top SimpleGraph.IsRegularOfDegree.top
 
 #print SimpleGraph.minDegree /-
@@ -2355,11 +2228,8 @@ degree. Note the assumption that the graph is nonempty is necessary as long as `
 defined to be a natural.
 -/
 theorem le_minDegree_of_forall_le_degree [DecidableRel G.Adj] [Nonempty V] (k : ℕ)
-    (h : ∀ v, k ≤ G.degree v) : k ≤ G.minDegree :=
-  by
-  rcases G.exists_minimal_degree_vertex with ⟨v, hv⟩
-  rw [hv]
-  apply h
+    (h : ∀ v, k ≤ G.degree v) : k ≤ G.minDegree := by
+  rcases G.exists_minimal_degree_vertex with ⟨v, hv⟩; rw [hv]; apply h
 #align simple_graph.le_min_degree_of_forall_le_degree SimpleGraph.le_minDegree_of_forall_le_degree
 -/
 
@@ -2852,20 +2722,14 @@ theorem coe_induceHom : ⇑(InduceHom φ φst) = Set.MapsTo.restrict φ s t φst
 #print SimpleGraph.induceHom_id /-
 @[simp]
 theorem induceHom_id (G : SimpleGraph V) (s) :
-    InduceHom (Hom.id : G →g G) (Set.mapsTo_id s) = Hom.id :=
-  by
-  ext x
-  rfl
+    InduceHom (Hom.id : G →g G) (Set.mapsTo_id s) = Hom.id := by ext x; rfl
 #align simple_graph.induce_hom_id SimpleGraph.induceHom_id
 -/
 
 #print SimpleGraph.induceHom_comp /-
 @[simp]
 theorem induceHom_comp :
-    (InduceHom ψ ψtr).comp (InduceHom φ φst) = InduceHom (ψ.comp φ) (ψtr.comp φst) :=
-  by
-  ext x
-  rfl
+    (InduceHom ψ ψtr).comp (InduceHom φ φst) = InduceHom (ψ.comp φ) (ψtr.comp φst) := by ext x; rfl
 #align simple_graph.induce_hom_comp SimpleGraph.induceHom_comp
 -/
 

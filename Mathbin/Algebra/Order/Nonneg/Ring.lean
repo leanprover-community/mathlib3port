@@ -154,11 +154,7 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     csSup_empty :=
       (Function.funext_iff.1 (@subset_sSup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
-        Subtype.eq <| by
-          rw [bot_eq]
-          cases' h.lt_or_eq with h2 h2
-          · simp [h2.not_le]
-          simp [h2] }
+        Subtype.eq <| by rw [bot_eq]; cases' h.lt_or_eq with h2 h2; · simp [h2.not_le]; simp [h2] }
 #align nonneg.conditionally_complete_linear_order_bot Nonneg.conditionallyCompleteLinearOrderBot
 
 /- warning: nonneg.inhabited -> Nonneg.inhabited is a dubious translation:
@@ -620,10 +616,7 @@ Case conversion may be inaccurate. Consider using '#align nonneg.canonically_ord
 instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
     CanonicallyOrderedCommSemiring { x : α // 0 ≤ x } :=
   { Nonneg.canonicallyOrderedAddMonoid, Nonneg.orderedCommSemiring with
-    eq_zero_or_eq_zero_of_mul_eq_zero :=
-      by
-      rintro ⟨a, ha⟩ ⟨b, hb⟩
-      simp }
+    eq_zero_or_eq_zero_of_mul_eq_zero := by rintro ⟨a, ha⟩ ⟨b, hb⟩; simp }
 #align nonneg.canonically_ordered_comm_semiring Nonneg.canonicallyOrderedCommSemiring
 
 /- warning: nonneg.canonically_linear_ordered_add_monoid -> Nonneg.canonicallyLinearOrderedAddMonoid is a dubious translation:
@@ -680,9 +673,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)}, Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)) (Nonneg.toNonneg.{u1} α _inst_1 _inst_2 (Subtype.val.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x) a)) a
 Case conversion may be inaccurate. Consider using '#align nonneg.to_nonneg_coe Nonneg.toNonneg_coeₓ'. -/
 @[simp]
-theorem toNonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a :=
-  by
-  cases' a with a ha
+theorem toNonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by cases' a with a ha;
   exact to_nonneg_of_nonneg ha
 #align nonneg.to_nonneg_coe Nonneg.toNonneg_coe
 
@@ -693,10 +684,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : α} {b : Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)}, Iff (LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)) (Nonneg.toNonneg.{u1} α _inst_1 _inst_2 a) b) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) a (Subtype.val.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x) b))
 Case conversion may be inaccurate. Consider using '#align nonneg.to_nonneg_le Nonneg.toNonneg_leₓ'. -/
 @[simp]
-theorem toNonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b :=
-  by
-  cases' b with b hb
-  simp [to_nonneg, hb]
+theorem toNonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
+  cases' b with b hb; simp [to_nonneg, hb]
 #align nonneg.to_nonneg_le Nonneg.toNonneg_le
 
 /- warning: nonneg.to_nonneg_lt -> Nonneg.toNonneg_lt is a dubious translation:
@@ -706,10 +695,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)} {b : α}, Iff (LT.lt.{u1} (Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)) (Subtype.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x)) a (Nonneg.toNonneg.{u1} α _inst_1 _inst_2 b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (Subtype.val.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) x) a) b)
 Case conversion may be inaccurate. Consider using '#align nonneg.to_nonneg_lt Nonneg.toNonneg_ltₓ'. -/
 @[simp]
-theorem toNonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b :=
-  by
-  cases' a with a ha
-  simp [to_nonneg, ha.not_lt]
+theorem toNonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
+  cases' a with a ha; simp [to_nonneg, ha.not_lt]
 #align nonneg.to_nonneg_lt Nonneg.toNonneg_lt
 
 /- warning: nonneg.has_sub -> Nonneg.sub is a dubious translation:
@@ -743,8 +730,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α], OrderedSub.{u1} (Subtype.{succ u1} α (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) x)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (fun (x : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) x)) (Nonneg.add.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))) (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) (OrderedAddCommGroup.to_covariantClass_left_le.{u1} α (StrictOrderedRing.toOrderedAddCommGroup.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (Nonneg.sub.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))) (LinearOrderedRing.toLinearOrder.{u1} α _inst_1) (Ring.toSub.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align nonneg.has_ordered_sub Nonneg.orderedSubₓ'. -/
 instance orderedSub [LinearOrderedRing α] : OrderedSub { x : α // 0 ≤ x } :=
-  ⟨by
-    rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
+  ⟨by rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩;
     simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le,
       Subtype.coe_mk]⟩
 #align nonneg.has_ordered_sub Nonneg.orderedSub

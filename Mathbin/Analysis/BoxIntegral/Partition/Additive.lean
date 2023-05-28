@@ -106,10 +106,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {M : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} M] {I₀ : WithTop.{u2} (BoxIntegral.Box.{u2} ι)}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (BoxIntegral.BoxAdditiveMap.{u2, u1} ι M _inst_1 I₀) ((BoxIntegral.Box.{u2} ι) -> M) (fun (f : BoxIntegral.BoxAdditiveMap.{u2, u1} ι M _inst_1 I₀) (x : BoxIntegral.Box.{u2} ι) => BoxIntegral.BoxAdditiveMap.toFun.{u2, u1} ι M _inst_1 I₀ f x)
 Case conversion may be inaccurate. Consider using '#align box_integral.box_additive_map.coe_injective BoxIntegral.BoxAdditiveMap.coe_injectiveₓ'. -/
-theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x :=
-  by
-  rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
-  rfl
+theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x := by
+  rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g); rfl
 #align box_integral.box_additive_map.coe_injective BoxIntegral.BoxAdditiveMap.coe_injective
 
 /- warning: box_integral.box_additive_map.coe_inj -> BoxIntegral.BoxAdditiveMap.coe_inj is a dubious translation:
@@ -197,8 +195,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
   refine' ⟨f, _⟩
   replace hf : ∀ I : box ι, ↑I ≤ I₀ → ∀ s, (∑ J in (split_many I s).boxes, f J) = f I
   · intro I hI s
-    induction' s using Finset.induction_on with a s ha ihs
-    · simp
+    induction' s using Finset.induction_on with a s ha ihs; · simp
     rw [split_many_insert, inf_split, ← ihs, bUnion_boxes, sum_bUnion_boxes]
     refine' Finset.sum_congr rfl fun J' hJ' => _
     by_cases h : a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
@@ -294,8 +291,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
         simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ←
           WithBot.some_eq_coe, Option.elim', box.face, (· ∘ ·), update_noteq (Fin.succAbove_ne _ _)]
         abel
-      · clear j
-        intro j x hx
+      · clear j; intro j x hx
         have : (J.face i : WithTop (box (Fin n))) ≤ I₀.face i :=
           WithTop.coe_le_coe.2 (face_mono hJ i)
         rw [le_iff_Icc, @box.Icc_eq_pi _ I₀] at hJ

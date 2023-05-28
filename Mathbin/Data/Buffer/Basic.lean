@@ -94,10 +94,7 @@ theorem toList_toBuffer (l : List α) : l.toBuffer.toList = l :=
 #align buffer.to_list_to_buffer Buffer.toList_toBuffer
 
 @[simp]
-theorem toList_toArray (b : Buffer α) : b.to_array.toList = b.toList :=
-  by
-  cases b
-  simp [to_list]
+theorem toList_toArray (b : Buffer α) : b.to_array.toList = b.toList := by cases b; simp [to_list]
 #align buffer.to_list_to_array Buffer.toList_toArray
 
 @[simp]
@@ -114,9 +111,7 @@ theorem toBuffer_cons (c : α) (l : List α) : (c :: l).toBuffer = [c].toBuffer.
 #align buffer.to_buffer_cons Buffer.toBuffer_cons
 
 @[simp]
-theorem size_pushBack (b : Buffer α) (a : α) : (b.pushBack a).size = b.size + 1 :=
-  by
-  cases b
+theorem size_pushBack (b : Buffer α) (a : α) : (b.pushBack a).size = b.size + 1 := by cases b;
   simp [size, push_back]
 #align buffer.size_push_back Buffer.size_pushBack
 
@@ -148,22 +143,13 @@ theorem size_singleton (a : α) : [a].toBuffer.size = 1 :=
 #align buffer.size_singleton Buffer.size_singleton
 
 theorem read_pushBack_left (b : Buffer α) (a : α) {i : ℕ} (h : i < b.size) :
-    (b.pushBack a).read
-        ⟨i, by
-          convert Nat.lt_succ_of_lt h
-          simp⟩ =
-      b.read ⟨i, h⟩ :=
-  by
-  cases b
-  convert Array'.read_pushBack_left _
-  simp
+    (b.pushBack a).read ⟨i, by convert Nat.lt_succ_of_lt h; simp⟩ = b.read ⟨i, h⟩ := by cases b;
+  convert Array'.read_pushBack_left _; simp
 #align buffer.read_push_back_left Buffer.read_pushBack_left
 
 @[simp]
-theorem read_pushBack_right (b : Buffer α) (a : α) : (b.pushBack a).read ⟨b.size, by simp⟩ = a :=
-  by
-  cases b
-  convert Array'.read_pushBack_right
+theorem read_pushBack_right (b : Buffer α) (a : α) : (b.pushBack a).read ⟨b.size, by simp⟩ = a := by
+  cases b; convert Array'.read_pushBack_right
 #align buffer.read_push_back_right Buffer.read_pushBack_right
 
 theorem read_appendList_left' (b : Buffer α) (l : List α) {i : ℕ} (h : i < (b.appendList l).size)
@@ -172,10 +158,7 @@ theorem read_appendList_left' (b : Buffer α) (l : List α) {i : ℕ} (h : i < (
   induction' l with hd tl hl generalizing b
   · rfl
   · have hb : i < ((b.push_back hd).appendList tl).size := by convert h using 1
-    have hb' : i < (b.push_back hd).size :=
-      by
-      convert Nat.lt_succ_of_lt h'
-      simp
+    have hb' : i < (b.push_back hd).size := by convert Nat.lt_succ_of_lt h'; simp
     have : (append_list b (hd :: tl)).read ⟨i, h⟩ = read ((push_back b hd).appendList tl) ⟨i, hb⟩ :=
       rfl
     simp [this, hl _ hb hb', read_push_back_left _ _ h']
@@ -219,15 +202,8 @@ theorem read_to_buffer' (l : List α) {i : ℕ} (h : i < l.toBuffer.size) (h' : 
 
 @[simp]
 theorem read_toBuffer (l : List α) (i) :
-    l.toBuffer.read i =
-      l.nthLe i
-        (by
-          convert i.property
-          simp) :=
-  by
-  convert read_to_buffer' _ _ _
-  · simp
-  · simpa using i.property
+    l.toBuffer.read i = l.nthLe i (by convert i.property; simp) := by convert read_to_buffer' _ _ _;
+  · simp; · simpa using i.property
 #align buffer.read_to_buffer Buffer.read_toBuffer
 
 theorem nthLe_to_list' (b : Buffer α) {i : ℕ} (h h') : b.toList.nthLe i h = b.read ⟨i, h'⟩ :=

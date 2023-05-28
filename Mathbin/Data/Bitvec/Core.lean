@@ -398,11 +398,8 @@ theorem toNat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
   conv in add_lsb x b => rw [← h]; clear h
   simp
   induction' xs with x xs generalizing x
-  · simp
-    unfold List.foldl add_lsb
-    simp [Nat.mul_succ]
-  · simp
-    apply xs_ih
+  · simp; unfold List.foldl add_lsb; simp [Nat.mul_succ]
+  · simp; apply xs_ih
 #align bitvec.to_nat_append Bitvec.toNat_append
 -/
 
@@ -434,8 +431,7 @@ theorem ofNat_succ {k n : ℕ} :
 theorem toNat_ofNat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
   by
   induction' k with k ih generalizing n
-  · simp [Nat.mod_one]
-    rfl
+  · simp [Nat.mod_one]; rfl
   · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]
 #align bitvec.to_nat_of_nat Bitvec.toNat_ofNat
 -/

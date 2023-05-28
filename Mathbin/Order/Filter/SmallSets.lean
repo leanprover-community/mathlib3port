@@ -46,10 +46,8 @@ def smallSets (l : Filter α) : Filter (Set α) :=
 -/
 
 #print Filter.smallSets_eq_generate /-
-theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) :=
-  by
-  simp_rw [generate_eq_binfi, small_sets, iInf_image]
-  rfl
+theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) := by
+  simp_rw [generate_eq_binfi, small_sets, iInf_image]; rfl
 #align filter.small_sets_eq_generate Filter.smallSets_eq_generate
 -/
 

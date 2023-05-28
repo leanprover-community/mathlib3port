@@ -101,9 +101,7 @@ Case conversion may be inaccurate. Consider using '#align linear_pmap.is_closabl
 theorem IsClosable.leIsClosable {f g : E →ₗ.[R] F} (hf : f.IsClosable) (hfg : g ≤ f) :
     g.IsClosable := by
   cases' hf with f' hf
-  have : g.graph.topological_closure ≤ f'.graph :=
-    by
-    rw [← hf]
+  have : g.graph.topological_closure ≤ f'.graph := by rw [← hf];
     exact Submodule.topologicalClosure_mono (le_graph_of_le hfg)
   refine' ⟨g.graph.topological_closure.to_linear_pmap _, _⟩
   · intro x hx hx'

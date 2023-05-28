@@ -59,9 +59,7 @@ if they are equal upon evaluating them on an arbitrary assignment of the variabl
 theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) :
     p = q :=
   by
-  suffices ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0
-    by
-    rw [← sub_eq_zero, this (p - q)]
+  suffices ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0 by rw [← sub_eq_zero, this (p - q)];
     simp only [h, RingHom.map_sub, forall_const, sub_self]
   clear h p q
   intro p h

@@ -135,12 +135,8 @@ def Iso.mk {α β : NonemptyFinLinOrdCat.{u}} (e : α ≃o β) : α ≅ β
     where
   hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply x
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply x
+  hom_inv_id' := by ext; exact e.symm_apply_apply x
+  inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align NonemptyFinLinOrd.iso.mk NonemptyFinLinOrdCat.Iso.mk
 
 #print NonemptyFinLinOrdCat.dual /-
@@ -178,9 +174,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
   let g₁ : X ⟶ A := ⟨fun x => a₁, fun x₁ x₂ h => by rfl⟩
   let g₂ : X ⟶ A := ⟨fun x => a₂, fun x₁ x₂ h => by rfl⟩
   change g₁ (ULift.up (0 : Fin 1)) = g₂ (ULift.up (0 : Fin 1))
-  have eq : g₁ ≫ f = g₂ ≫ f := by
-    ext x
-    exact h
+  have eq : g₁ ≫ f = g₂ ≫ f := by ext x; exact h
   rw [cancel_mono] at eq
   rw [Eq]
 #align NonemptyFinLinOrd.mono_iff_injective NonemptyFinLinOrdCat.mono_iff_injective
@@ -219,10 +213,8 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
       simp only [comp_apply, OrderHom.coe_fun_mk]
       split_ifs with h₁ h₂ h₂
       any_goals rfl
-      · exfalso
-        exact h₂ (le_of_lt h₁)
-      · exfalso
-        exact hm a (eq_of_le_of_not_lt h₂ h₁)
+      · exfalso; exact h₂ (le_of_lt h₁)
+      · exfalso; exact hm a (eq_of_le_of_not_lt h₂ h₁)
     simpa only [OrderHom.coe_fun_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
       Fin.one_eq_zero_iff, Nat.succ_succ_ne_one] using h
   · intro h
@@ -240,8 +232,7 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
       exact Nonempty.intro ⟨(hf y).some, (hf y).choose_spec⟩
     let φ : Y → X := fun y => (H y).some.1
     have hφ : ∀ y : Y, f (φ y) = y := fun y => (H y).some.2
-    refine' is_split_epi.mk' ⟨⟨φ, _⟩, _⟩
-    swap
+    refine' is_split_epi.mk' ⟨⟨φ, _⟩, _⟩; swap
     · ext b
       apply hφ
     · intro a b
@@ -260,9 +251,7 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
     let I : NonemptyFinLinOrdCat.{u} := ⟨Set.image (coeFn f) ⊤, ⟨⟩⟩
     let e : X ⟶ I := ⟨fun x => ⟨f x, ⟨x, by tidy⟩⟩, fun x₁ x₂ h => f.monotone h⟩
     let m : I ⟶ Y := ⟨fun y => y, by tidy⟩
-    haveI : epi e := by
-      rw [epi_iff_surjective]
-      tidy
+    haveI : epi e := by rw [epi_iff_surjective]; tidy
     haveI : strong_epi e := strong_epi_of_epi e
     haveI : mono m := concrete_category.mono_of_injective _ (by tidy)
     exact

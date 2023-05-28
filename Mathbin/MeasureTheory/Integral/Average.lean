@@ -151,9 +151,7 @@ theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi 
 #align measure_theory.average_pair MeasureTheory.average_pair
 
 theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) :
-    ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ :=
-  by
-  haveI := Fact.mk h.lt_top
+    ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ := by haveI := Fact.mk h.lt_top;
   rw [← measure_smul_average, restrict_apply_univ]
 #align measure_theory.measure_smul_set_average MeasureTheory.measure_smul_set_average
 

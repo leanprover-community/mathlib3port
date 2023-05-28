@@ -127,12 +127,7 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
   carrier :=
     { f |
       ∀ {m n} (h : m ≤ n),
-        liftQ _ (mkQ _)
-            (by
-              rw [ker_mkq]
-              exact smul_mono (Ideal.pow_le_pow h) le_rfl)
-            (f n) =
-          f m }
+        liftQ _ (mkQ _) (by rw [ker_mkq]; exact smul_mono (Ideal.pow_le_pow h) le_rfl) (f n) = f m }
   zero_mem' m n hmn := by rw [Pi.zero_apply, Pi.zero_apply, LinearMap.map_zero]
   add_mem' f g hf hg m n hmn := by
     rw [Pi.add_apply, Pi.add_apply, LinearMap.map_add, hf hmn, hg hmn]
@@ -162,10 +157,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_Hausdorff.subsingleton IsHausdorff.subsingletonₓ'. -/
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
-    eq_of_sub_eq_zero <|
-      h.haus (x - y) fun n => by
-        rw [Ideal.top_pow, top_smul]
-        exact SModEq.top⟩
+    eq_of_sub_eq_zero <| h.haus (x - y) fun n => by rw [Ideal.top_pow, top_smul]; exact SModEq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
 
 variable (M)
@@ -236,10 +228,7 @@ def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
     map_le_iff_le_comap.1 <|
       h.iInf_pow_smul ▸
         le_iInf fun n =>
-          le_trans (map_mono <| iInf_le _ n) <|
-            by
-            rw [map_smul'']
-            exact smul_mono le_rfl le_top
+          le_trans (map_mono <| iInf_le _ n) <| by rw [map_smul'']; exact smul_mono le_rfl le_top
 #align Hausdorffification.lift Hausdorffification.lift
 -/
 
@@ -279,8 +268,7 @@ Case conversion may be inaccurate. Consider using '#align is_precomplete.bot IsP
 instance bot : IsPrecomplete (⊥ : Ideal R) M :=
   by
   refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
-  · rw [pow_zero, Ideal.one_eq_top, top_smul]
-    exact SModEq.top
+  · rw [pow_zero, Ideal.one_eq_top, top_smul]; exact SModEq.top
   specialize hf (Nat.le_add_left 1 n)
   rw [pow_one, bot_smul, SModEq.bot] at hf; rw [hf]
 #align is_precomplete.bot IsPrecomplete.bot
@@ -292,10 +280,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Type.{u2}) [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)], IsPrecomplete.{u1, u2} R _inst_1 (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) M _inst_2 _inst_3
 Case conversion may be inaccurate. Consider using '#align is_precomplete.top IsPrecomplete.topₓ'. -/
 instance top : IsPrecomplete (⊤ : Ideal R) M :=
-  ⟨fun f hf =>
-    ⟨0, fun n => by
-      rw [Ideal.top_pow, top_smul]
-      exact SModEq.top⟩⟩
+  ⟨fun f hf => ⟨0, fun n => by rw [Ideal.top_pow, top_smul]; exact SModEq.top⟩⟩
 #align is_precomplete.top IsPrecomplete.top
 
 #print IsPrecomplete.of_subsingleton /-

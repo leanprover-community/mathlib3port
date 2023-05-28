@@ -254,10 +254,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} β] {f : Nat -> β}, (Filter.IsBoundedUnder.{u1, 0} β Nat (fun (x._@.Mathlib.Order.LiminfLimsup._hyg.1516 : β) (x._@.Mathlib.Order.LiminfLimsup._hyg.1518 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_1))) x._@.Mathlib.Order.LiminfLimsup._hyg.1516 x._@.Mathlib.Order.LiminfLimsup._hyg.1518) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) f) -> (BddAbove.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_1)) (Set.range.{u1, 1} β Nat f))
 Case conversion may be inaccurate. Consider using '#align filter.is_bounded_under.bdd_above_range Filter.IsBoundedUnder.bddAbove_rangeₓ'. -/
 theorem IsBoundedUnder.bddAbove_range [SemilatticeSup β] {f : ℕ → β}
-    (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) :=
-  by
-  rw [← Nat.cofinite_eq_atTop] at hf
-  exact hf.bdd_above_range_of_cofinite
+    (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) := by
+  rw [← Nat.cofinite_eq_atTop] at hf; exact hf.bdd_above_range_of_cofinite
 #align filter.is_bounded_under.bdd_above_range Filter.IsBoundedUnder.bddAbove_range
 
 /- warning: filter.is_bounded_under.bdd_below_range -> Filter.IsBoundedUnder.bddBelow_range is a dubious translation:
@@ -984,10 +982,8 @@ theorem blimsup_congr {f : Filter β} {u v : β → α} {p : β → Prop} (h : �
   rw [blimsup_eq]
   congr with b
   refine' eventually_congr (h.mono fun x hx => ⟨fun h₁ h₂ => _, fun h₁ h₂ => _⟩)
-  · rw [← hx h₂]
-    exact h₁ h₂
-  · rw [hx h₂]
-    exact h₁ h₂
+  · rw [← hx h₂]; exact h₁ h₂
+  · rw [hx h₂]; exact h₁ h₂
 #align filter.blimsup_congr Filter.blimsup_congr
 -/
 
@@ -1399,9 +1395,7 @@ theorem liminf_eq_sSup_sInf {ι R : Type _} (F : Filter ι) [CompleteLattice R] 
 #print Filter.liminf_nat_add /-
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : liminf (fun i => f (i + k)) atTop = liminf f atTop :=
-  by
-  simp_rw [liminf_eq_supr_infi_of_nat]
-  exact iSup_iInf_ge_nat_add f k
+  by simp_rw [liminf_eq_supr_infi_of_nat]; exact iSup_iInf_ge_nat_add f k
 #align filter.liminf_nat_add Filter.liminf_nat_add
 -/
 

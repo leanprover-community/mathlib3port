@@ -43,10 +43,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat}, Iff (Eq.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Nat.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semiring.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (DivisionSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semifield.toDivisionSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Field.toSemifield.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.instFieldZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) Nat.fact_prime_two))))) n) (OfNat.ofNat.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 1 (One.toOfNat1.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semiring.toOne.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (DivisionSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semifield.toDivisionSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Field.toSemifield.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.instFieldZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) Nat.fact_prime_two)))))))) (Odd.{0} Nat Nat.semiring n)
 Case conversion may be inaccurate. Consider using '#align zmod.eq_one_iff_odd ZMod.eq_one_iff_oddₓ'. -/
-theorem eq_one_iff_odd {n : ℕ} : (n : ZMod 2) = 1 ↔ Odd n :=
-  by
-  rw [← @Nat.cast_one (ZMod 2), ZMod.eq_iff_modEq_nat, Nat.odd_iff, Nat.ModEq]
-  norm_num
+theorem eq_one_iff_odd {n : ℕ} : (n : ZMod 2) = 1 ↔ Odd n := by
+  rw [← @Nat.cast_one (ZMod 2), ZMod.eq_iff_modEq_nat, Nat.odd_iff, Nat.ModEq]; norm_num
 #align zmod.eq_one_iff_odd ZMod.eq_one_iff_odd
 
 /- warning: zmod.ne_zero_iff_odd -> ZMod.ne_zero_iff_odd is a dubious translation:
@@ -56,9 +54,7 @@ but is expected to have type
   forall {n : Nat}, Iff (Ne.{1} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Nat.cast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semiring.toNatCast.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (DivisionSemiring.toSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semifield.toDivisionSemiring.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Field.toSemifield.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.instFieldZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) Nat.fact_prime_two))))) n) (OfNat.ofNat.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Zero.toOfNat0.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommMonoidWithZero.toZero.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (CommGroupWithZero.toCommMonoidWithZero.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Semifield.toCommGroupWithZero.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (Field.toSemifield.{0} (ZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (ZMod.instFieldZMod (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) Nat.fact_prime_two)))))))) (Odd.{0} Nat Nat.semiring n)
 Case conversion may be inaccurate. Consider using '#align zmod.ne_zero_iff_odd ZMod.ne_zero_iff_oddₓ'. -/
 theorem ne_zero_iff_odd {n : ℕ} : (n : ZMod 2) ≠ 0 ↔ Odd n := by
-  constructor <;>
-    · contrapose
-      simp [eq_zero_iff_even]
+  constructor <;> · contrapose; simp [eq_zero_iff_even]
 #align zmod.ne_zero_iff_odd ZMod.ne_zero_iff_odd
 
 end ZMod

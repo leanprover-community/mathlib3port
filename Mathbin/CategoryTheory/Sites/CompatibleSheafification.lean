@@ -144,10 +144,8 @@ theorem whiskerRight_toSheafify_sheafifyCompIso_hom :
 
 @[simp, reassoc]
 theorem toSheafify_comp_sheafifyCompIso_inv :
-    J.toSheafify _ ≫ (J.sheafifyCompIso F P).inv = whiskerRight (J.toSheafify _) _ :=
-  by
-  rw [iso.comp_inv_eq]
-  simp
+    J.toSheafify _ ≫ (J.sheafifyCompIso F P).inv = whiskerRight (J.toSheafify _) _ := by
+  rw [iso.comp_inv_eq]; simp
 #align category_theory.grothendieck_topology.to_sheafify_comp_sheafify_comp_iso_inv CategoryTheory.GrothendieckTopology.toSheafify_comp_sheafifyCompIso_inv
 
 section

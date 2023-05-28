@@ -1027,9 +1027,7 @@ theorem eq_univ_of_forall {s : Set α} : (∀ x, x ∈ s) → s = univ :=
 -/
 
 #print Set.Nonempty.eq_univ /-
-theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ :=
-  by
-  rintro ⟨x, hx⟩
+theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ := by rintro ⟨x, hx⟩;
   refine' eq_univ_of_forall fun y => by rwa [Subsingleton.elim y x]
 #align set.nonempty.eq_univ Set.Nonempty.eq_univ
 -/
@@ -3529,9 +3527,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) s
 Case conversion may be inaccurate. Consider using '#align set.diff_union_inter Set.diff_union_interₓ'. -/
 @[simp]
-theorem diff_union_inter (s t : Set α) : s \ t ∪ s ∩ t = s :=
-  by
-  rw [union_comm]
+theorem diff_union_inter (s t : Set α) : s \ t ∪ s ∩ t = s := by rw [union_comm];
   exact sup_inf_sdiff _ _
 #align set.diff_union_inter Set.diff_union_inter
 
@@ -3687,10 +3683,8 @@ but is expected to have type
   forall {α : Type.{u1}} {x : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) x t))
 Case conversion may be inaccurate. Consider using '#align set.diff_singleton_subset_iff Set.diff_singleton_subset_iffₓ'. -/
 @[simp]
-theorem diff_singleton_subset_iff {x : α} {s t : Set α} : s \ {x} ⊆ t ↔ s ⊆ insert x t :=
-  by
-  rw [← union_singleton, union_comm]
-  apply diff_subset_iff
+theorem diff_singleton_subset_iff {x : α} {s t : Set α} : s \ {x} ⊆ t ↔ s ⊆ insert x t := by
+  rw [← union_singleton, union_comm]; apply diff_subset_iff
 #align set.diff_singleton_subset_iff Set.diff_singleton_subset_iff
 
 /- warning: set.subset_diff_singleton -> Set.subset_diff_singleton is a dubious translation:
@@ -3770,9 +3764,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {t : Set.{u1} α} (s : Set.{u1} α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a t) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s) t) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.insert_diff_of_mem Set.insert_diff_of_memₓ'. -/
 @[simp]
-theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t :=
-  by
-  ext
+theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t := by ext;
   constructor <;> simp (config := { contextual := true }) [or_imp, h]
 #align set.insert_diff_of_mem Set.insert_diff_of_mem
 
@@ -3800,10 +3792,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {a : α} {s : Set.{u1} α}, (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) -> (Eq.{succ u1} (Set.{u1} α) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) s)
 Case conversion may be inaccurate. Consider using '#align set.insert_diff_self_of_not_mem Set.insert_diff_self_of_not_memₓ'. -/
-theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s :=
-  by
-  ext
-  simp [and_iff_left_of_imp fun hx : x ∈ s => show x ≠ a from fun hxa => h <| hxa ▸ hx]
+theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s := by
+  ext; simp [and_iff_left_of_imp fun hx : x ∈ s => show x ≠ a from fun hxa => h <| hxa ▸ hx]
 #align set.insert_diff_self_of_not_mem Set.insert_diff_self_of_not_mem
 
 /- warning: set.insert_diff_eq_singleton -> Set.insert_diff_eq_singleton is a dubious translation:
@@ -4196,9 +4186,7 @@ theorem powerset_univ : 𝒫(univ : Set α) = univ :=
 
 #print Set.powerset_singleton /-
 /-- The powerset of a singleton contains only `∅` and the singleton itself. -/
-theorem powerset_singleton (x : α) : 𝒫({x} : Set α) = {∅, {x}} :=
-  by
-  ext y
+theorem powerset_singleton (x : α) : 𝒫({x} : Set α) = {∅, {x}} := by ext y;
   rw [mem_powerset_iff, subset_singleton_iff_eq, mem_insert_iff, mem_singleton_iff]
 #align set.powerset_singleton Set.powerset_singleton
 -/
@@ -4408,11 +4396,8 @@ but is expected to have type
   forall {α : Type.{u1}} (t : Set.{u1} α) (s₁ : Set.{u1} α) (s₂ : Set.{u1} α) (s₁' : Set.{u1} α) (s₂' : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.ite.{u1} α t (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁' s₂')) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.ite.{u1} α t s₁ s₁') (Set.ite.{u1} α t s₂ s₂'))
 Case conversion may be inaccurate. Consider using '#align set.ite_inter_inter Set.ite_inter_interₓ'. -/
 theorem ite_inter_inter (t s₁ s₂ s₁' s₂' : Set α) :
-    t.ite (s₁ ∩ s₂) (s₁' ∩ s₂') = t.ite s₁ s₁' ∩ t.ite s₂ s₂' :=
-  by
-  ext x
-  simp only [Set.ite, Set.mem_inter_iff, Set.mem_diff, Set.mem_union]
-  itauto
+    t.ite (s₁ ∩ s₂) (s₁' ∩ s₂') = t.ite s₁ s₁' ∩ t.ite s₂ s₂' := by ext x;
+  simp only [Set.ite, Set.mem_inter_iff, Set.mem_diff, Set.mem_union]; itauto
 #align set.ite_inter_inter Set.ite_inter_inter
 
 /- warning: set.ite_inter -> Set.ite_inter is a dubious translation:
@@ -4509,9 +4494,7 @@ theorem Subsingleton.eq_empty_or_singleton (hs : s.Subsingleton) : s = ∅ ∨ �
 
 #print Set.Subsingleton.induction_on /-
 theorem Subsingleton.induction_on {p : Set α → Prop} (hs : s.Subsingleton) (he : p ∅)
-    (h₁ : ∀ x, p {x}) : p s :=
-  by
-  rcases hs.eq_empty_or_singleton with (rfl | ⟨x, rfl⟩)
+    (h₁ : ∀ x, p {x}) : p s := by rcases hs.eq_empty_or_singleton with (rfl | ⟨x, rfl⟩);
   exacts[he, h₁ _]
 #align set.subsingleton.induction_on Set.Subsingleton.induction_on
 -/
@@ -4593,10 +4576,8 @@ theorem Subsingleton.coe_sort {s : Set α} : s.Subsingleton → Subsingleton s :
 #print Set.subsingleton_coe_of_subsingleton /-
 /-- The `coe_sort` of a set `s` in a subsingleton type is a subsingleton.
 For the corresponding result for `subtype`, see `subtype.subsingleton`. -/
-instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsingleton s :=
-  by
-  rw [s.subsingleton_coe]
-  exact subsingleton_of_subsingleton
+instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsingleton s := by
+  rw [s.subsingleton_coe]; exact subsingleton_of_subsingleton
 #align set.subsingleton_coe_of_subsingleton Set.subsingleton_coe_of_subsingleton
 -/
 
@@ -4799,9 +4780,7 @@ theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H =>
 -/
 
 #print Set.Nontrivial.ne_singleton /-
-theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H =>
-  by
-  rw [H] at hs
+theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by rw [H] at hs;
   exact not_nontrivial_singleton hs
 #align set.nontrivial.ne_singleton Set.Nontrivial.ne_singleton
 -/
@@ -4894,10 +4873,8 @@ protected theorem subsingleton_or_nontrivial (s : Set α) : s.Subsingleton ∨ s
 -/
 
 #print Set.eq_singleton_or_nontrivial /-
-theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ s.Nontrivial :=
-  by
-  rw [← subsingleton_iff_singleton ha]
-  exact s.subsingleton_or_nontrivial
+theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ s.Nontrivial := by
+  rw [← subsingleton_iff_singleton ha]; exact s.subsingleton_or_nontrivial
 #align set.eq_singleton_or_nontrivial Set.eq_singleton_or_nontrivial
 -/
 
@@ -5082,10 +5059,7 @@ def inclusion (h : s ⊆ t) : s → t := fun x : s => (⟨x, h x.2⟩ : t)
 
 #print Set.inclusion_self /-
 @[simp]
-theorem inclusion_self (x : s) : inclusion Subset.rfl x = x :=
-  by
-  cases x
-  rfl
+theorem inclusion_self (x : s) : inclusion Subset.rfl x = x := by cases x; rfl
 #align set.inclusion_self Set.inclusion_self
 -/
 
@@ -5103,20 +5077,15 @@ theorem inclusion_mk {h : s ⊆ t} (a : α) (ha : a ∈ s) : inclusion h ⟨a, h
 -/
 
 #print Set.inclusion_right /-
-theorem inclusion_right (h : s ⊆ t) (x : t) (m : (x : α) ∈ s) : inclusion h ⟨x, m⟩ = x :=
-  by
-  cases x
-  rfl
+theorem inclusion_right (h : s ⊆ t) (x : t) (m : (x : α) ∈ s) : inclusion h ⟨x, m⟩ = x := by
+  cases x; rfl
 #align set.inclusion_right Set.inclusion_right
 -/
 
 #print Set.inclusion_inclusion /-
 @[simp]
 theorem inclusion_inclusion (hst : s ⊆ t) (htu : t ⊆ u) (x : s) :
-    inclusion htu (inclusion hst x) = inclusion (hst.trans htu) x :=
-  by
-  cases x
-  rfl
+    inclusion htu (inclusion hst x) = inclusion (hst.trans htu) x := by cases x; rfl
 #align set.inclusion_inclusion Set.inclusion_inclusion
 -/
 

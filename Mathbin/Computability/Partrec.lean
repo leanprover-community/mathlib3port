@@ -64,17 +64,14 @@ def rfindX : { n // true ∈ p n ∧ ∀ m < n, false ∈ p m } :=
         rcases H with ⟨n, h₁, h₂⟩
         rcases lt_trichotomy m n with (h₃ | h₃ | h₃)
         · exact h₂ _ h₃
-        · rw [h₃]
-          exact h₁.fst
+        · rw [h₃]; exact h₁.fst
         · injection mem_unique h₁ (al _ h₃)
       cases e : (p m).get pm
       · suffices
         exact IH _ ⟨rfl, this⟩ fun n h => this _ (le_of_lt_succ h)
-        intro n h
-        cases' h.lt_or_eq_dec with h h
+        intro n h; cases' h.lt_or_eq_dec with h h
         · exact al _ h
-        · rw [h]
-          exact ⟨_, e⟩
+        · rw [h]; exact ⟨_, e⟩
       · exact ⟨m, ⟨_, e⟩, al⟩)
 #align nat.rfind_x Nat.rfindX
 -/
@@ -291,9 +288,7 @@ theorem ppred : Partrec fun n => ppred n :=
         eq_none_iff.2 fun a ⟨⟨m, h, _⟩, _⟩ => by
           simpa [show 0 ≠ m.succ by intro h <;> injection h] using h
     · refine' eq_some_iff.2 _
-      simp
-      intro m h
-      simp [ne_of_gt h]
+      simp; intro m h; simp [ne_of_gt h]
 #align nat.partrec.ppred Nat.Partrec.ppred
 -/
 
@@ -901,12 +896,9 @@ theorem nat_casesOn_right {f : α → ℕ} {g : α → σ} {h : α → ℕ →. 
     by
     simp; cases f a <;> simp
     refine' ext fun b => ⟨fun H => _, fun H => _⟩
-    · rcases mem_bind_iff.1 H with ⟨c, h₁, h₂⟩
-      exact h₂
-    · have : ∀ m, (Nat.rec (Part.some (g a)) (fun y IH => IH.bind fun _ => h a n) m).Dom :=
-        by
-        intro
-        induction m <;> simp [*, H.fst]
+    · rcases mem_bind_iff.1 H with ⟨c, h₁, h₂⟩; exact h₂
+    · have : ∀ m, (Nat.rec (Part.some (g a)) (fun y IH => IH.bind fun _ => h a n) m).Dom := by
+        intro ; induction m <;> simp [*, H.fst]
       exact ⟨⟨this n, H.fst⟩, H.snd⟩
 #align partrec.nat_cases_right Partrec.nat_casesOn_right
 -/
@@ -1248,8 +1240,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
       · rwa [← am]
       rcases am with ⟨a₂, am₂, fa₂⟩
       exact IH _ am₂ (PFun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
-    cases n <;> simp [F] at h₂
-    · cases h₂
+    cases n <;> simp [F] at h₂; · cases h₂
     rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
     · cases' h₁ (Nat.lt_succ_self _) with a' h
       injection mem_unique h h₂
@@ -1261,20 +1252,17 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
       rcases this _ h 0 (by simp [F]) with ⟨n, hn₁, hn₂⟩
       exact ⟨_, ⟨⟨_, hn₁⟩, fun m mn => hn₂ m mn (Nat.zero_le _)⟩, hn₁⟩
     intro a₁ h₁
-    apply PFun.fixInduction h₁
-    intro a₂ h₂ IH k hk
+    apply PFun.fixInduction h₁; intro a₂ h₂ IH k hk
     rcases PFun.mem_fix_iff.1 h₂ with (h₂ | ⟨a₃, am₃, fa₃⟩)
     · refine' ⟨k.succ, _, fun m mk km => ⟨a₂, _⟩⟩
-      · simp [F]
-        exact Or.inr ⟨_, hk, h₂⟩
+      · simp [F]; exact Or.inr ⟨_, hk, h₂⟩
       · rwa [le_antisymm (Nat.le_of_lt_succ mk) km]
     · rcases IH _ am₃ k.succ _ with ⟨n, hn₁, hn₂⟩
       · refine' ⟨n, hn₁, fun m mn km => _⟩
         cases' km.lt_or_eq_dec with km km
         · exact hn₂ _ mn km
         · exact km ▸ ⟨_, hk⟩
-      · simp [F]
-        exact ⟨_, hk, am₃⟩
+      · simp [F]; exact ⟨_, hk, am₃⟩
 #align partrec.fix_aux Partrec.fix_aux
 
 /- warning: partrec.fix -> Partrec.fix is a dubious translation:

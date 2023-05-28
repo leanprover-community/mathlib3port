@@ -253,8 +253,7 @@ protected theorem of_int (z : ℤ) : padicNorm p z ≤ 1 :=
     · refine' zpow_le_one_of_nonpos _ _
       · exact_mod_cast le_of_lt hp.1.one_lt
       · rw [padicValRat.of_int, neg_nonpos]
-        norm_cast
-        simp
+        norm_cast; simp
     exact_mod_cast hz
 #align padic_norm.of_int padicNorm.of_int
 
@@ -290,8 +289,7 @@ protected theorem nonarchimedean {q r : ℚ} :
     padicNorm p (q + r) ≤ max (padicNorm p q) (padicNorm p r) :=
   by
   wlog hle : padicValRat p q ≤ padicValRat p r generalizing q r
-  · rw [add_comm, max_comm]
-    exact this (le_of_not_le hle)
+  · rw [add_comm, max_comm]; exact this (le_of_not_le hle)
   exact nonarchimedean_aux hle
 #align padic_norm.nonarchimedean padicNorm.nonarchimedean
 
@@ -335,8 +333,7 @@ theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     padicNorm p (q + r) = max (padicNorm p q) (padicNorm p r) :=
   by
   wlog hlt : padicNorm p r < padicNorm p q
-  · rw [add_comm, max_comm]
-    exact this hne.symm (hne.lt_or_lt.resolve_right hlt)
+  · rw [add_comm, max_comm]; exact this hne.symm (hne.lt_or_lt.resolve_right hlt)
   have : padicNorm p q ≤ max (padicNorm p (q + r)) (padicNorm p r) :=
     calc
       padicNorm p q = padicNorm p (q + r - r) := by congr <;> ring
@@ -375,9 +372,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
   by
   unfold padicNorm; split_ifs with hz
   · norm_cast  at hz
-    have : 0 ≤ (p ^ n : ℚ) := by
-      apply pow_nonneg
-      exact_mod_cast le_of_lt hp.1.Pos
+    have : 0 ≤ (p ^ n : ℚ) := by apply pow_nonneg; exact_mod_cast le_of_lt hp.1.Pos
     simp [hz, this]
   · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,
       padicValInt.of_ne_one_ne_zero hp.1.ne_one _]
@@ -407,12 +402,10 @@ theorem int_eq_one_iff (m : ℤ) : padicNorm p m = 1 ↔ ¬(p : ℤ) ∣ m :=
   · simp only [padicNorm]
     split_ifs
     · rw [inv_lt_zero, ← Nat.cast_zero, Nat.cast_lt]
-      intro h
-      exact (Nat.not_lt_zero p h).elim
+      intro h; exact (Nat.not_lt_zero p h).elim
     · have : 1 < (p : ℚ) := by norm_cast <;> exact Nat.Prime.one_lt (Fact.out _ : Nat.Prime p)
       rw [← zpow_neg_one, zpow_lt_iff_lt this]
-      have : 0 ≤ padicValRat p m
-      simp only [of_int, Nat.cast_nonneg]
+      have : 0 ≤ padicValRat p m; simp only [of_int, Nat.cast_nonneg]
       intro h
       rw [← zpow_zero (p : ℚ), zpow_inj] <;> linarith
 #align padic_norm.int_eq_one_iff padicNorm.int_eq_one_iff

@@ -54,26 +54,18 @@ theorem zero_bot (n : ℕ) : Ico 0 n = range n := by rw [Ico, tsub_zero, range_e
 
 #print List.Ico.length /-
 @[simp]
-theorem length (n m : ℕ) : length (Ico n m) = m - n :=
-  by
-  dsimp [Ico]
-  simp only [length_range']
+theorem length (n m : ℕ) : length (Ico n m) = m - n := by dsimp [Ico]; simp only [length_range']
 #align list.Ico.length List.Ico.length
 -/
 
 #print List.Ico.pairwise_lt /-
-theorem pairwise_lt (n m : ℕ) : Pairwise (· < ·) (Ico n m) :=
-  by
-  dsimp [Ico]
+theorem pairwise_lt (n m : ℕ) : Pairwise (· < ·) (Ico n m) := by dsimp [Ico];
   simp only [pairwise_lt_range']
 #align list.Ico.pairwise_lt List.Ico.pairwise_lt
 -/
 
 #print List.Ico.nodup /-
-theorem nodup (n m : ℕ) : Nodup (Ico n m) :=
-  by
-  dsimp [Ico]
-  simp only [nodup_range']
+theorem nodup (n m : ℕ) : Nodup (Ico n m) := by dsimp [Ico]; simp only [nodup_range']
 #align list.Ico.nodup List.Ico.nodup
 -/
 
@@ -163,36 +155,26 @@ theorem bagInter_consecutive (n m l : ℕ) : List.bagInter (Ico n m) (Ico m l) =
 
 #print List.Ico.succ_singleton /-
 @[simp]
-theorem succ_singleton {n : ℕ} : Ico n (n + 1) = [n] :=
-  by
-  dsimp [Ico]
-  simp [add_tsub_cancel_left]
+theorem succ_singleton {n : ℕ} : Ico n (n + 1) = [n] := by dsimp [Ico]; simp [add_tsub_cancel_left]
 #align list.Ico.succ_singleton List.Ico.succ_singleton
 -/
 
 #print List.Ico.succ_top /-
-theorem succ_top {n m : ℕ} (h : n ≤ m) : Ico n (m + 1) = Ico n m ++ [m] :=
-  by
-  rwa [← succ_singleton, append_consecutive]
-  exact Nat.le_succ _
+theorem succ_top {n m : ℕ} (h : n ≤ m) : Ico n (m + 1) = Ico n m ++ [m] := by
+  rwa [← succ_singleton, append_consecutive]; exact Nat.le_succ _
 #align list.Ico.succ_top List.Ico.succ_top
 -/
 
 #print List.Ico.eq_cons /-
-theorem eq_cons {n m : ℕ} (h : n < m) : Ico n m = n :: Ico (n + 1) m :=
-  by
-  rw [← append_consecutive (Nat.le_succ n) h, succ_singleton]
-  rfl
+theorem eq_cons {n m : ℕ} (h : n < m) : Ico n m = n :: Ico (n + 1) m := by
+  rw [← append_consecutive (Nat.le_succ n) h, succ_singleton]; rfl
 #align list.Ico.eq_cons List.Ico.eq_cons
 -/
 
 #print List.Ico.pred_singleton /-
 @[simp]
-theorem pred_singleton {m : ℕ} (h : 0 < m) : Ico (m - 1) m = [m - 1] :=
-  by
-  dsimp [Ico]
-  rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]
-  simp
+theorem pred_singleton {m : ℕ} (h : 0 < m) : Ico (m - 1) m = [m - 1] := by dsimp [Ico];
+  rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]; simp
 #align list.Ico.pred_singleton List.Ico.pred_singleton
 -/
 
@@ -200,10 +182,8 @@ theorem pred_singleton {m : ℕ} (h : 0 < m) : Ico (m - 1) m = [m - 1] :=
 theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (Ico n m) :=
   by
   by_cases n < m
-  · rw [eq_cons h]
-    exact chain_succ_range' _ _
-  · rw [eq_nil_of_le (le_of_not_gt h)]
-    trivial
+  · rw [eq_cons h]; exact chain_succ_range' _ _
+  · rw [eq_nil_of_le (le_of_not_gt h)]; trivial
 #align list.Ico.chain'_succ List.Ico.chain'_succ
 -/
 
@@ -348,15 +328,11 @@ theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filterₓ fun x 
 theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ Ico a b :=
   by
   by_cases h₁ : n < a
-  · left
-    exact h₁
+  · left; exact h₁
   · right
     by_cases h₂ : n ∈ Ico a b
-    · right
-      exact h₂
-    · left
-      simp only [Ico.mem, not_and, not_lt] at *
-      exact h₂ h₁
+    · right; exact h₂
+    · left; simp only [Ico.mem, not_and, not_lt] at *; exact h₂ h₁
 #align list.Ico.trichotomy List.Ico.trichotomy
 -/
 

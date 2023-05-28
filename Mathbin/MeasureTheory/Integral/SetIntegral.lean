@@ -276,8 +276,7 @@ theorem integral_iUnion_ae {ι : Type _} [Countable ι] {s : ι → Set α}
 theorem set_integral_eq_zero_of_ae_eq_zero (ht_eq : ∀ᵐ x ∂μ, x ∈ t → f x = 0) :
     (∫ x in t, f x ∂μ) = 0 :=
   by
-  by_cases hf : ae_strongly_measurable f (μ.restrict t)
-  swap
+  by_cases hf : ae_strongly_measurable f (μ.restrict t); swap
   · rw [integral_undef]
     contrapose! hf
     exact hf.1
@@ -303,9 +302,7 @@ theorem integral_union_eq_left_of_ae_aux (ht_eq : ∀ᵐ x ∂μ.restrict t, f x
     (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ :=
   by
   let k := f ⁻¹' {0}
-  have hk : MeasurableSet k := by
-    borelize E
-    exact haux.measurable (measurable_set_singleton _)
+  have hk : MeasurableSet k := by borelize E; exact haux.measurable (measurable_set_singleton _)
   have h's : integrable_on f s μ := H.mono (subset_union_left _ _) le_rfl
   have A : ∀ u : Set α, (∫ x in u ∩ k, f x ∂μ) = 0 := fun u =>
     set_integral_eq_zero_of_forall_eq_zero fun x hx => hx.2
@@ -321,15 +318,9 @@ theorem integral_union_eq_left_of_ae_aux (ht_eq : ∀ᵐ x ∂μ.restrict t, f x
 theorem integral_union_eq_left_of_ae (ht_eq : ∀ᵐ x ∂μ.restrict t, f x = 0) :
     (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ :=
   by
-  have ht : integrable_on f t μ :=
-    by
-    apply integrable_on_zero.congr_fun_ae
-    symm
-    exact ht_eq
-  by_cases H : integrable_on f (s ∪ t) μ
-  swap
-  · rw [integral_undef H, integral_undef]
-    simpa [integrable_on_union, ht] using H
+  have ht : integrable_on f t μ := by apply integrable_on_zero.congr_fun_ae; symm; exact ht_eq
+  by_cases H : integrable_on f (s ∪ t) μ; swap
+  · rw [integral_undef H, integral_undef]; simpa [integrable_on_union, ht] using H
   let f' := H.1.mk f
   calc
     (∫ x : α in s ∪ t, f x ∂μ) = ∫ x : α in s ∪ t, f' x ∂μ := integral_congr_ae H.1.ae_eq_mk
@@ -361,16 +352,12 @@ theorem set_integral_eq_of_subset_of_ae_diff_eq_zero_aux (hts : s ⊆ t)
     (h'aux : IntegrableOn f t μ) : (∫ x in t, f x ∂μ) = ∫ x in s, f x ∂μ :=
   by
   let k := f ⁻¹' {0}
-  have hk : MeasurableSet k := by
-    borelize E
-    exact haux.measurable (measurable_set_singleton _)
+  have hk : MeasurableSet k := by borelize E; exact haux.measurable (measurable_set_singleton _)
   calc
     (∫ x in t, f x ∂μ) = (∫ x in t ∩ k, f x ∂μ) + ∫ x in t \ k, f x ∂μ := by
       rw [integral_inter_add_diff hk h'aux]
-    _ = ∫ x in t \ k, f x ∂μ :=
-      by
-      rw [set_integral_eq_zero_of_forall_eq_zero fun x hx => _, zero_add]
-      exact hx.2
+    _ = ∫ x in t \ k, f x ∂μ := by
+      rw [set_integral_eq_zero_of_forall_eq_zero fun x hx => _, zero_add]; exact hx.2
     _ = ∫ x in s \ k, f x ∂μ := by
       apply set_integral_congr_set_ae
       filter_upwards [h't]with x hx
@@ -445,11 +432,8 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] {f : α → E}
     (hf : AEStronglyMeasurable f μ) :
     (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
   by
-  have h_union : { x | f x ≤ 0 } = { x | f x < 0 } ∪ { x | f x = 0 } :=
-    by
-    ext
-    simp_rw [Set.mem_union, Set.mem_setOf_eq]
-    exact le_iff_lt_or_eq
+  have h_union : { x | f x ≤ 0 } = { x | f x < 0 } ∪ { x | f x = 0 } := by ext;
+    simp_rw [Set.mem_union, Set.mem_setOf_eq]; exact le_iff_lt_or_eq
   rw [h_union]
   have B : null_measurable_set { x | f x = 0 } μ :=
     hf.null_measurable_set_eq_fun ae_strongly_measurable_zero
@@ -481,12 +465,8 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
       rw [Real.norm_eq_abs, abs_eq_neg_self.mpr _]
       rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx
       linarith
-    _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
-      by
-      rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]
-      congr
-      ext1 x
-      simp
+    _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
+      rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]; congr ; ext1 x; simp
     
 #align measure_theory.integral_norm_eq_pos_sub_neg MeasureTheory.integral_norm_eq_pos_sub_neg
 
@@ -753,9 +733,7 @@ include hf hg
 
 -- why do I need this include, but we don't need it in other lemmas?
 theorem set_integral_mono_on_ae (hs : MeasurableSet s) (h : ∀ᵐ x ∂μ, x ∈ s → f x ≤ g x) :
-    (∫ a in s, f a ∂μ) ≤ ∫ a in s, g a ∂μ :=
-  by
-  refine' set_integral_mono_ae_restrict hf hg _
+    (∫ a in s, f a ∂μ) ≤ ∫ a in s, g a ∂μ := by refine' set_integral_mono_ae_restrict hf hg _;
   rwa [eventually_le, ae_restrict_iff' hs]
 #align measure_theory.set_integral_mono_on_ae MeasureTheory.set_integral_mono_on_ae
 
@@ -858,9 +836,7 @@ theorem integrableOn_iUnion_of_summable_integral_norm {f : α → E} {s : β →
     Summable fun b : β =>
       (⟨∫ a : α in s b, ‖f a‖₊ ∂μ, set_integral_nonneg (hs b) fun a ha => NNReal.coe_nonneg _⟩ :
         NNReal) :=
-    by
-    rw [← NNReal.summable_coe]
-    exact h
+    by rw [← NNReal.summable_coe]; exact h
   have S'' := ENNReal.tsum_coe_eq S'.has_sum
   simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert ENNReal.ofReal_lt_top
@@ -988,11 +964,7 @@ def lpToLpRestrictClm (μ : Measure α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (
   @LinearMap.mkContinuous 𝕜 𝕜 (lp F p μ) (lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
     ⟨fun f => Memℒp.toLp f ((lp.memℒp f).restrict s), fun f g => lp_toLp_restrict_add f g s,
       fun c f => lp_toLp_restrict_smul c f s⟩
-    1
-    (by
-      intro f
-      rw [one_mul]
-      exact norm_Lp_to_Lp_restrict_le s f)
+    1 (by intro f; rw [one_mul]; exact norm_Lp_to_Lp_restrict_le s f)
 #align measure_theory.Lp_to_Lp_restrict_clm MeasureTheory.lpToLpRestrictClm
 
 variable {α F 𝕜}
@@ -1149,9 +1121,7 @@ theorem set_integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) {s : Set α} (
 #align continuous_linear_map.set_integral_comp_Lp ContinuousLinearMap.set_integral_compLp
 
 theorem continuous_integral_comp_L1 (L : E →L[𝕜] F) :
-    Continuous fun φ : α →₁[μ] E => ∫ a : α, L (φ a) ∂μ :=
-  by
-  rw [← funext L.integral_comp_Lp]
+    Continuous fun φ : α →₁[μ] E => ∫ a : α, L (φ a) ∂μ := by rw [← funext L.integral_comp_Lp];
   exact continuous_integral.comp (L.comp_LpL 1 μ).Continuous
 #align continuous_linear_map.continuous_integral_comp_L1 ContinuousLinearMap.continuous_integral_comp_L1
 
@@ -1423,9 +1393,7 @@ theorem Integrable.simpleFunc_mul (g : SimpleFunc β ℝ) (hf : Integrable f μ)
 #align measure_theory.integrable.simple_func_mul MeasureTheory.Integrable.simpleFunc_mul
 
 theorem Integrable.simpleFunc_mul' (hm : m ≤ m0) (g : @SimpleFunc β m ℝ) (hf : Integrable f μ) :
-    Integrable (g * f) μ :=
-  by
-  rw [← simple_func.coe_to_larger_space_eq hm g]
+    Integrable (g * f) μ := by rw [← simple_func.coe_to_larger_space_eq hm g];
   exact hf.simple_func_mul (g.to_larger_space hm)
 #align measure_theory.integrable.simple_func_mul' MeasureTheory.Integrable.simpleFunc_mul'
 

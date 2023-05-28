@@ -573,9 +573,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.map_comp_map Option.map_comp_mapₓ'. -/
 @[simp]
 theorem map_comp_map (f : α → β) (g : β → γ) : Option.map g ∘ Option.map f = Option.map (g ∘ f) :=
-  by
-  ext x
-  rw [comp_map]
+  by ext x; rw [comp_map]
 #align option.map_comp_map Option.map_comp_map
 
 /- warning: option.mem_map_of_mem -> Option.mem_map_of_mem is a dubious translation:
@@ -709,11 +707,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {p : α -> Prop} (f : forall (a : α), (p a) -> β) (x : Option.{u2} α) {a : α} (h : forall (a : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x) -> (p a)) (ha : Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x), Membership.mem.{u1, u1} β (Option.{u1} β) (Option.instMembershipOption.{u1} β) (f a (h a ha)) (Option.pmap.{u2, u1} α β (fun (a : α) => p a) f x h)
 Case conversion may be inaccurate. Consider using '#align option.mem_pmem Option.mem_pmemₓ'. -/
-theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h :=
-  by
-  rw [mem_def] at ha⊢
-  subst ha
-  rfl
+theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
+  rw [mem_def] at ha⊢; subst ha; rfl
 #align option.mem_pmem Option.mem_pmem
 
 /- warning: option.pmap_map -> Option.pmap_map is a dubious translation:
@@ -1210,8 +1205,7 @@ theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
 theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α :=
   by
   fconstructor
-  · intro h
-    exact ⟨Option.get h⟩
+  · intro h; exact ⟨Option.get h⟩
   · intro h
     dsimp only [choice]
     rw [dif_pos h]

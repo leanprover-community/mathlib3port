@@ -51,9 +51,7 @@ theorem TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_Group [T2Space 
   obtain ⟨y, hy⟩ := K.interior_nonempty
   let F := Homeomorph.mulLeft (x * y⁻¹)
   refine' ⟨F '' K, _, K.is_compact.image F.continuous⟩
-  suffices F.symm ⁻¹' K ∈ 𝓝 x by
-    convert this
-    apply Equiv.image_eq_preimage
+  suffices F.symm ⁻¹' K ∈ 𝓝 x by convert this; apply Equiv.image_eq_preimage
   apply ContinuousAt.preimage_mem_nhds F.symm.continuous.continuous_at
   have : F.symm x = y := by simp [F, Homeomorph.mulLeft_symm]
   rw [this]

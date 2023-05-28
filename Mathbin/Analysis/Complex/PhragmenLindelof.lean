@@ -81,8 +81,7 @@ theorem isBigO_sub_exp_exp {a : ℝ} {f g : ℂ → E} {l : Filter ℂ} {u : ℂ
     exact
       mul_le_mul hB (Real.exp_le_exp.2 <| mul_le_mul_of_nonneg_right hc <| abs_nonneg _)
         (Real.exp_pos _).le hB₀
-  rcases hBf with ⟨cf, hcf, Bf, hOf⟩
-  rcases hBg with ⟨cg, hcg, Bg, hOg⟩
+  rcases hBf with ⟨cf, hcf, Bf, hOf⟩; rcases hBg with ⟨cg, hcg, Bg, hOg⟩
   refine' ⟨max cf cg, max_lt hcf hcg, max 0 (max Bf Bg), _⟩
   refine' (hOf.trans_le <| this _ _ _).sub (hOg.trans_le <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
@@ -111,8 +110,7 @@ theorem isBigO_sub_exp_rpow {a : ℝ} {f g : ℂ → E} {l : Filter ℂ}
     exact
       mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc)
         (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₀
-  rcases hBf with ⟨cf, hcf, Bf, hOf⟩
-  rcases hBg with ⟨cg, hcg, Bg, hOg⟩
+  rcases hBf with ⟨cf, hcf, Bf, hOf⟩; rcases hBg with ⟨cg, hcg, Bg, hOg⟩
   refine' ⟨max cf cg, max_lt hcf hcg, max 0 (max Bf Bg), _⟩
   refine' (hOf.trans <| this _ _ _).sub (hOg.trans <| this _ _ _)
   exacts[le_max_left _ _, le_max_left _ _, (le_max_left _ _).trans (le_max_right _ _),
@@ -148,10 +146,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
   by
   -- If `im z = a` or `im z = b`, then we apply `hle_a` or `hle_b`, otherwise `im z ∈ Ioo a b`.
   rw [le_iff_eq_or_lt] at hza hzb
-  cases' hza with hza hza
-  · exact hle_a _ hza.symm
-  cases' hzb with hzb hzb
-  · exact hle_b _ hzb
+  cases' hza with hza hza; · exact hle_a _ hza.symm
+  cases' hzb with hzb hzb; · exact hle_b _ hzb
   -- WLOG, `0 < C`.
   suffices
     ∀ C' : ℝ,
@@ -161,8 +157,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     · refine' ((norm_nonneg (f (a * I))).trans (hle_a _ _)).trans_lt hC'
       rw [mul_I_im, of_real_re]
     exacts[(hle_a _ hw).trans hC'.le, (hle_b _ hw).trans hC'.le]
-  clear! C
-  intro C hC₀ hle_a hle_b
+  clear! C; intro C hC₀ hle_a hle_b
   -- After a change of variables, we deal with the strip `a - b < im z < a + b` instead
   -- of `a < im z < b`
   obtain ⟨a, b, rfl, rfl⟩ : ∃ a' b', a = a' - b' ∧ b = a' + b' :=
@@ -184,10 +179,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     by
     refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
-    simp
-    infer_instance
-  filter_upwards [self_mem_nhdsWithin]with ε ε₀
-  change ε < 0 at ε₀
+    simp; infer_instance
+  filter_upwards [self_mem_nhdsWithin]with ε ε₀; change ε < 0 at ε₀
   -- An upper estimate on `‖g ε w‖` that will be used in two branches of the proof.
   obtain ⟨δ, δ₀, hδ⟩ :
     ∃ δ : ℝ,
@@ -262,10 +255,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     · rw [closure_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne] at hwc
       rw [norm_smul, ← one_mul C]
       exact mul_le_mul (hg₁ _ him) (him.by_cases (hle_a _) (hle_b _)) (norm_nonneg _) zero_le_one
-    · replace hw : w ∈ {-R, R} ×ℂ Icc (a - b) (a + b)
-      exact hw.resolve_left fun h => him h.2
-      have hw' := eq_endpoints_or_mem_Ioo_of_mem_Icc hw.2
-      rw [← or_assoc] at hw'
+    · replace hw : w ∈ {-R, R} ×ℂ Icc (a - b) (a + b); exact hw.resolve_left fun h => him h.2
+      have hw' := eq_endpoints_or_mem_Ioo_of_mem_Icc hw.2; rw [← or_assoc] at hw'
       exact hR _ ((abs_eq hR₀.le).2 hw.1.symm) (hw'.resolve_left him)
   · rw [closure_re_prod_im, closure_Ioo hab.ne, closure_Ioo (neg_lt_self hR₀).Ne]
     exact ⟨abs_le.1 hzR.le, ⟨hza.le, hzb.le⟩⟩
@@ -348,9 +339,7 @@ theorem vertical_strip (hfd : DiffContOnCl ℂ f (re ⁻¹' Ioo a b))
     (hzb : re z ≤ b) : ‖f z‖ ≤ C :=
   by
   suffices ‖(fun z => f (z * -I)) (z * I)‖ ≤ C by simpa [mul_assoc] using this
-  have H : maps_to (fun z => z * -I) (im ⁻¹' Ioo a b) (re ⁻¹' Ioo a b) :=
-    by
-    intro z hz
+  have H : maps_to (fun z => z * -I) (im ⁻¹' Ioo a b) (re ⁻¹' Ioo a b) := by intro z hz;
     simpa using hz
   refine'
     horizontal_strip (hfd.comp (differentiable_id.mul_const _).DiffContOnCl H) _
@@ -438,7 +427,7 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C :=
   by
   -- The case `z = 0` is trivial.
-  rcases eq_or_ne z 0 with (rfl | hzne)
+  rcases eq_or_ne z 0 with (rfl | hzne);
   · exact hre 0 le_rfl
   -- Otherwise, `z = e ^ ζ` for some `ζ : ℂ`, `0 < Im ζ < π / 2`.
   obtain ⟨ζ, hζ, rfl⟩ : ∃ ζ : ℂ, ζ.im ∈ Icc 0 (π / 2) ∧ exp ζ = z :=
@@ -489,8 +478,7 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       rw [hz, _root_.abs_of_nonneg hx, mul_comm _ c]
       exact mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.exp_pos _).le
   · -- If `ζ.im = 0`, then `complex.exp ζ` is a positive real number
-    intro ζ hζ
-    lift ζ to ℝ using hζ
+    intro ζ hζ; lift ζ to ℝ using hζ
     rw [comp_app, ← of_real_exp]
     exact hre _ (Real.exp_pos _).le
   · -- If `ζ.im = π / 2`, then `complex.exp ζ` is a purely imaginary number with positive `im`
@@ -558,8 +546,7 @@ theorem quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, x ≤ 0 → ‖f x‖ ≤ C) (him : ∀ x : ℝ, 0 ≤ x → ‖f (x * I)‖ ≤ C) (hz_re : z.re ≤ 0)
     (hz_im : 0 ≤ z.im) : ‖f z‖ ≤ C :=
   by
-  obtain ⟨z, rfl⟩ : ∃ z', z' * I = z
-  exact ⟨z / I, div_mul_cancel _ I_ne_zero⟩
+  obtain ⟨z, rfl⟩ : ∃ z', z' * I = z; exact ⟨z / I, div_mul_cancel _ I_ne_zero⟩
   simp only [mul_I_re, mul_I_im, neg_nonpos] at hz_re hz_im
   change ‖(f ∘ (· * I)) z‖ ≤ C
   have H : maps_to (· * I) (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Ioi 0) :=
@@ -633,8 +620,7 @@ theorem quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, x ≤ 0 → ‖f x‖ ≤ C) (him : ∀ x : ℝ, x ≤ 0 → ‖f (x * I)‖ ≤ C) (hz_re : z.re ≤ 0)
     (hz_im : z.im ≤ 0) : ‖f z‖ ≤ C :=
   by
-  obtain ⟨z, rfl⟩ : ∃ z', -z' = z
-  exact ⟨-z, neg_neg z⟩
+  obtain ⟨z, rfl⟩ : ∃ z', -z' = z; exact ⟨-z, neg_neg z⟩
   simp only [neg_re, neg_im, neg_nonpos] at hz_re hz_im
   change ‖(f ∘ Neg.neg) z‖ ≤ C
   have H : maps_to Neg.neg (Ioi 0 ×ℂ Ioi 0) (Iio 0 ×ℂ Iio 0) :=
@@ -710,8 +696,7 @@ theorem quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
     (hre : ∀ x : ℝ, 0 ≤ x → ‖f x‖ ≤ C) (him : ∀ x : ℝ, x ≤ 0 → ‖f (x * I)‖ ≤ C) (hz_re : 0 ≤ z.re)
     (hz_im : z.im ≤ 0) : ‖f z‖ ≤ C :=
   by
-  obtain ⟨z, rfl⟩ : ∃ z', -z' = z
-  exact ⟨-z, neg_neg z⟩
+  obtain ⟨z, rfl⟩ : ∃ z', -z' = z; exact ⟨-z, neg_neg z⟩
   simp only [neg_re, neg_im, neg_nonpos, neg_nonneg] at hz_re hz_im
   change ‖(f ∘ Neg.neg) z‖ ≤ C
   have H : maps_to Neg.neg (Iio 0 ×ℂ Ioi 0) (Ioi 0 ×ℂ Iio 0) :=
@@ -821,8 +806,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       refine' hd.continuous_on.comp continuous_of_real.continuous_on fun x hx => _
       rwa [closure_set_of_lt_re]
     by_cases h₀ : ∀ x : ℝ, 0 ≤ x → f x = 0
-    · refine' ⟨0, le_rfl, fun y hy => _⟩
-      rw [h₀ y hy, h₀ 0 le_rfl]
+    · refine' ⟨0, le_rfl, fun y hy => _⟩; rw [h₀ y hy, h₀ 0 le_rfl]
     push_neg  at h₀
     rcases h₀ with ⟨x₀, hx₀, hne⟩
     have hlt : ‖(0 : E)‖ < ‖f x₀‖ := by rwa [norm_zero, norm_pos_iff]
@@ -883,17 +867,12 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     by
     refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
-    simp
-    infer_instance
-  filter_upwards [self_mem_nhdsWithin]with ε ε₀
-  change ε < 0 at ε₀
-  set g : ℂ → E := fun z => exp (ε * z) • f z
-  change ‖g z‖ ≤ C
+    simp; infer_instance
+  filter_upwards [self_mem_nhdsWithin]with ε ε₀; change ε < 0 at ε₀
+  set g : ℂ → E := fun z => exp (ε * z) • f z; change ‖g z‖ ≤ C
   replace hd : DiffContOnCl ℂ g { z : ℂ | 0 < z.re }
   exact (differentiable_id.const_mul _).cexp.DiffContOnCl.smul hd
-  have hgn : ∀ z, ‖g z‖ = expR (ε * z.re) * ‖f z‖ :=
-    by
-    intro z
+  have hgn : ∀ z, ‖g z‖ = expR (ε * z.re) * ‖f z‖ := by intro z;
     rw [norm_smul, norm_eq_abs, abs_exp, of_real_mul_re]
   refine' right_half_plane_of_tendsto_zero_on_real hd _ _ (fun y => _) hz
   · refine' Exists₃.imp (fun c hc B hO => (is_O.of_bound 1 _).trans hO) hexp
@@ -934,9 +913,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
       eq_on.of_subset_closure this hd.continuous_on continuousOn_const subset_closure subset.rfl
   -- Consider $g_n(z)=e^{nz}f(z)$.
   set g : ℕ → ℂ → E := fun n z => exp z ^ n • f z
-  have hg : ∀ n z, ‖g n z‖ = expR z.re ^ n * ‖f z‖ :=
-    by
-    intro n z
+  have hg : ∀ n z, ‖g n z‖ = expR z.re ^ n * ‖f z‖ := by intro n z;
     simp only [norm_smul, norm_eq_abs, Complex.abs_pow, abs_exp]
   intro z hz
   -- Since `e^{nz} → ∞` as `n → ∞`, it suffices to show that each `g_n` is bounded from above by `C`
@@ -958,8 +935,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
     refine' ((is_O_refl (fun z : ℂ => expR z.re ^ n) _).mul hO.norm_left).trans (is_O.of_bound 1 _)
     simp only [← Real.exp_nat_mul, ← Real.exp_add, Real.norm_of_nonneg (Real.exp_pos _).le,
       Real.exp_le_exp, add_mul, eventually_inf_principal, eventually_comap, one_mul]
-    filter_upwards [eventually_ge_at_top (1 : ℝ)]with r hr z hzr hre
-    subst r
+    filter_upwards [eventually_ge_at_top (1 : ℝ)]with r hr z hzr hre; subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
     ·
       calc
@@ -971,8 +947,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
       exact
         mul_le_mul (le_max_left _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_left _ _))
           (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) (le_max_right _ _)
-  · rw [tendsto_zero_iff_norm_tendsto_zero]
-    simp only [hg]
+  · rw [tendsto_zero_iff_norm_tendsto_zero]; simp only [hg]
     exact hre n
   · rw [hg, of_real_mul_re, I_re, MulZeroClass.mul_zero, Real.exp_zero, one_pow, one_mul]
     exact hC y
@@ -1010,8 +985,7 @@ theorem eqOn_right_half_plane_of_superexponential_decay {g : ℂ → E}
         c₁ ≤ c₂ →
           B₁ ≤ B₂ → 0 ≤ B₂ → (fun z => expR (B₁ * abs z ^ c₁)) =O[l] fun z => expR (B₂ * abs z ^ c₂)
       by
-      rcases hfexp with ⟨cf, hcf, Bf, hOf⟩
-      rcases hgexp with ⟨cg, hcg, Bg, hOg⟩
+      rcases hfexp with ⟨cf, hcf, Bf, hOf⟩; rcases hgexp with ⟨cg, hcg, Bg, hOg⟩
       refine' ⟨max cf cg, max_lt hcf hcg, max 0 (max Bf Bg), _⟩
       refine' is_O.sub (hOf.trans <| this _ _ _) (hOg.trans <| this _ _ _) <;> simp
     intro c₁ c₂ B₁ B₂ hc hB hB₂
@@ -1021,8 +995,7 @@ theorem eqOn_right_half_plane_of_superexponential_decay {g : ℂ → E}
     exact
       mul_le_mul hB (Real.rpow_le_rpow_of_exponent_le hz hc)
         (Real.rpow_nonneg_of_nonneg (complex.abs.nonneg _) _) hB₂
-  · rcases hfim with ⟨Cf, hCf⟩
-    rcases hgim with ⟨Cg, hCg⟩
+  · rcases hfim with ⟨Cf, hCf⟩; rcases hgim with ⟨Cg, hCg⟩
     exact ⟨Cf + Cg, fun x => norm_sub_le_of_le (hCf x) (hCg x)⟩
 #align phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eqOn_right_half_plane_of_superexponential_decay
 

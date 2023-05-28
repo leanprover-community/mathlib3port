@@ -131,16 +131,12 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.noncomm_pi_
 def noncommPiCoprod : (∀ i : ι, N i) →* M
     where
   toFun f := Finset.univ.noncommProd (fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
-  map_one' := by
-    apply (Finset.noncommProd_eq_pow_card _ _ _ _ _).trans (one_pow _)
-    simp
+  map_one' := by apply (Finset.noncommProd_eq_pow_card _ _ _ _ _).trans (one_pow _); simp
   map_mul' f g := by
     classical
       convert@Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
-      · ext i
-        exact map_mul (ϕ i) (f i) (g i)
-      · rintro i - j - h
-        exact hcomm h _ _
+      · ext i; exact map_mul (ϕ i) (f i) (g i)
+      · rintro i - j - h; exact hcomm h _ _
 #align monoid_hom.noncomm_pi_coprod MonoidHom.noncommPiCoprod
 #align add_monoid_hom.noncomm_pi_coprod AddMonoidHom.noncommPiCoprod
 
@@ -160,11 +156,8 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
   rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ (Finset.not_mem_erase i _)]
   rw [Pi.mulSingle_eq_same]
   rw [Finset.noncommProd_eq_pow_card]
-  · rw [one_pow]
-    exact mul_one _
-  · intro j hj
-    simp only [Finset.mem_erase] at hj
-    simp [hj]
+  · rw [one_pow]; exact mul_one _
+  · intro j hj; simp only [Finset.mem_erase] at hj; simp [hj]
 #align monoid_hom.noncomm_pi_coprod_mul_single MonoidHom.noncommPiCoprod_mulSingle
 #align add_monoid_hom.noncomm_pi_coprod_single AddMonoidHom.noncommPiCoprod_single
 
@@ -182,9 +175,7 @@ def noncommPiCoprodEquiv :
   invFun f :=
     ⟨fun i => f.comp (MonoidHom.single N i), fun i j hij x y =>
       Commute.map (Pi.mulSingle_commute hij x y) f⟩
-  left_inv ϕ := by
-    ext
-    simp
+  left_inv ϕ := by ext; simp
   right_inv f := pi_ext fun i x => by simp
 #align monoid_hom.noncomm_pi_coprod_equiv MonoidHom.noncommPiCoprodEquiv
 #align add_monoid_hom.noncomm_pi_coprod_equiv AddMonoidHom.noncommPiCoprodEquiv
@@ -203,8 +194,7 @@ theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι,
     · rintro x ⟨f, rfl⟩
       refine' Submonoid.noncommProd_mem _ _ _ _ _
       intro i hi
-      apply Submonoid.mem_sSup_of_mem
-      · use i
+      apply Submonoid.mem_sSup_of_mem; · use i
       simp
     · refine' iSup_le _
       rintro i x ⟨y, rfl⟩
@@ -248,8 +238,7 @@ theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (
     · rintro x ⟨f, rfl⟩
       refine' Subgroup.noncommProd_mem _ _ _
       intro i hi
-      apply Subgroup.mem_sSup_of_mem
-      · use i
+      apply Subgroup.mem_sSup_of_mem; · use i
       simp
     · refine' iSup_le _
       rintro i x ⟨y, rfl⟩
@@ -298,19 +287,13 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     dsimp at hxi hxp
     rw [iSup_subtype', ← noncomm_pi_coprod_range] at hxp
     rotate_left
-    · intro _ _ hj
-      apply hcomm
-      exact hj ∘ Subtype.ext
+    · intro _ _ hj; apply hcomm; exact hj ∘ Subtype.ext
     cases' hxp with g hgf
     cases' hxi with g' hg'f
-    have hxi : orderOf f ∣ Fintype.card (H i) :=
-      by
-      rw [← hg'f]
+    have hxi : orderOf f ∣ Fintype.card (H i) := by rw [← hg'f];
       exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
-    have hxp : orderOf f ∣ ∏ j : { j // j ≠ i }, Fintype.card (H j) :=
-      by
-      rw [← hgf, ← Fintype.card_pi]
-      exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
+    have hxp : orderOf f ∣ ∏ j : { j // j ≠ i }, Fintype.card (H j) := by
+      rw [← hgf, ← Fintype.card_pi]; exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
     change f = 1
     rw [← pow_one f, ← orderOf_dvd_iff_pow_eq_one]
     convert← Nat.dvd_gcd hxp hxi
@@ -348,9 +331,7 @@ include hcomm
 Case conversion may be inaccurate. Consider using '#align subgroup.commute_subtype_of_commute Subgroup.commute_subtype_of_commuteₓ'. -/
 @[to_additive]
 theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
-    ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) :=
-  by
-  rintro ⟨x, hx⟩ ⟨y, hy⟩
+    ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) := by rintro ⟨x, hx⟩ ⟨y, hy⟩;
   exact hcomm i j hne x y hx hy
 #align subgroup.commute_subtype_of_commute Subgroup.commute_subtype_of_commute
 #align add_subgroup.commute_subtype_of_commute AddSubgroup.commute_subtype_of_commute
@@ -408,8 +389,7 @@ theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Indepen
   by
   apply MonoidHom.injective_noncommPiCoprod_of_independent
   · simpa using hind
-  · intro i
-    exact Subtype.coe_injective
+  · intro i; exact Subtype.coe_injective
 #align subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncommPiCoprod_of_independent
 #align add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncommPiCoprod_of_independent
 

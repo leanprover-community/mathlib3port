@@ -64,10 +64,7 @@ theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
   by
   suffices ContinuousOn (fun x => sin x / cos x) { x | cos x ≠ 0 }
     by
-    have h_eq : (fun x => sin x / cos x) = tan :=
-      by
-      ext1 x
-      rw [tan_eq_sin_div_cos]
+    have h_eq : (fun x => sin x / cos x) = tan := by ext1 x; rw [tan_eq_sin_div_cos]
     rwa [h_eq] at this
   exact continuous_on_sin.div continuous_on_cos fun x => id
 #align real.continuous_on_tan Real.continuousOn_tan
@@ -94,10 +91,7 @@ theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
       mul_le_mul_right (half_pos pi_pos)]
     have hr_le : r ≤ -1 := by rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
     rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
-    · norm_num
-      rw [← Int.cast_one, ← Int.cast_neg]
-      norm_cast
-      exact hr_le
+    · norm_num; rw [← Int.cast_one, ← Int.cast_neg]; norm_cast; exact hr_le
     · exact zero_lt_two
 #align real.continuous_on_tan_Ioo Real.continuousOn_tan_Ioo
 

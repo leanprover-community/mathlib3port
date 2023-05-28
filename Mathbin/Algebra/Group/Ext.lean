@@ -47,11 +47,8 @@ theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m
     { toFun := id
       map_one' := h₁
       map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
-  have hpow : m₁.npow = m₂.npow := by
-    ext (n x)
-    exact @MonoidHom.map_pow M M m₁ m₂ f x n
-  cases m₁
-  cases m₂
+  have hpow : m₁.npow = m₂.npow := by ext (n x); exact @MonoidHom.map_pow M M m₁ m₂ f x n
+  cases m₁; cases m₂
   congr <;> assumption
 #align monoid.ext Monoid.ext
 #align add_monoid.ext AddMonoid.ext
@@ -198,10 +195,8 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
   have hdiv : m₁.div = m₂.div := by
     ext (a b)
     exact @map_div' M M _ m₁ m₂ _ f (congr_fun h_inv) a b
-  cases m₁
-  cases m₂
-  congr
-  exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
+  cases m₁; cases m₂
+  congr ; exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 #align div_inv_monoid.ext DivInvMonoid.ext
 #align sub_neg_monoid.ext SubNegMonoid.ext
 

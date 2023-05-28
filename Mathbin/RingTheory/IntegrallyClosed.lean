@@ -161,11 +161,9 @@ theorem mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) {g : K[X]} (hg :
   · rw [lifts_iff_coeff_lifts, ← RingHom.coe_range, Subalgebra.range_algebraMap] at this
     refine' (lifts_iff_coeff_lifts _).2 fun n => _
     rw [← RingHom.coe_range, Subalgebra.range_algebraMap]
-    obtain ⟨p, hp, he⟩ := set_like.mem_coe.mp (this n)
-    use p, hp
+    obtain ⟨p, hp, he⟩ := set_like.mem_coe.mp (this n); use p, hp
     rw [IsScalarTower.algebraMap_eq R K, coeff_map, ← eval₂_map, eval₂_at_apply] at he
-    rw [eval₂_eq_eval_map]
-    apply (injective_iff_map_eq_zero _).1 _ _ he
+    rw [eval₂_eq_eval_map]; apply (injective_iff_map_eq_zero _).1 _ _ he
     · apply RingHom.injective
   rw [IsScalarTower.algebraMap_eq R K _, ← map_map]
   refine' Multiset.mem_of_le (roots.le_of_dvd ((hf.map _).map _).NeZero _) ha
@@ -216,10 +214,7 @@ theorem eq_map_mul_c_of_dvd [IsIntegrallyClosed R] {f : R[X]} (hf : f.Monic) {g 
       (Algebra.botEquivOfInjective <| IsFractionRing.injective R <| K)
   have :
     (algebraMap R _).comp algeq.to_alg_hom.to_ring_hom = (integralClosure R _).toSubring.Subtype :=
-    by
-    ext
-    conv_rhs => rw [← algeq.symm_apply_apply x]
-    rfl
+    by ext; conv_rhs => rw [← algeq.symm_apply_apply x]; rfl
   have H :=
     (mem_lifts _).1
       (mem_lifts_of_monic_of_dvd_map K hf (monic_mul_leading_coeff_inv g_ne_0) g_mul_dvd)

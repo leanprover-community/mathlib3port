@@ -157,10 +157,8 @@ section Add
 Case conversion may be inaccurate. Consider using '#align has_strict_fderiv_at.add HasStrictFDerivAt.addₓ'. -/
 theorem HasStrictFDerivAt.add (hf : HasStrictFDerivAt f f' x) (hg : HasStrictFDerivAt g g' x) :
     HasStrictFDerivAt (fun y => f y + g y) (f' + g') x :=
-  (hf.add hg).congr_left fun y =>
-    by
-    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]
-    abel
+  (hf.add hg).congr_left fun y => by
+    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]; abel
 #align has_strict_fderiv_at.add HasStrictFDerivAt.add
 
 /- warning: has_fderiv_at_filter.add -> HasFDerivAtFilter.add is a dubious translation:
@@ -168,10 +166,8 @@ theorem HasStrictFDerivAt.add (hf : HasStrictFDerivAt f f' x) (hg : HasStrictFDe
 Case conversion may be inaccurate. Consider using '#align has_fderiv_at_filter.add HasFDerivAtFilter.addₓ'. -/
 theorem HasFDerivAtFilter.add (hf : HasFDerivAtFilter f f' x L) (hg : HasFDerivAtFilter g g' x L) :
     HasFDerivAtFilter (fun y => f y + g y) (f' + g') x L :=
-  (hf.add hg).congr_left fun _ =>
-    by
-    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]
-    abel
+  (hf.add hg).congr_left fun _ => by
+    simp only [LinearMap.sub_apply, LinearMap.add_apply, map_sub, map_add, add_apply]; abel
 #align has_fderiv_at_filter.add HasFDerivAtFilter.add
 
 /- warning: has_fderiv_within_at.add -> HasFDerivWithinAt.add is a dubious translation:

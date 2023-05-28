@@ -172,10 +172,7 @@ but is expected to have type
   forall {V : Type.{u1}} {G : SimpleGraph.{u1} V} [_inst_1 : DecidableEq.{succ u1} V] [_inst_2 : Fintype.{u1} (Set.Elem.{u1} (Sym2.{u1} V) (SimpleGraph.edgeSet.{u1} V G))] {u : V} {v : V} {p : SimpleGraph.Walk.{u1} V G u v} (h : SimpleGraph.Walk.IsEulerian.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p), Eq.{succ u1} (Finset.{u1} (Sym2.{u1} V)) (SimpleGraph.Walk.IsTrail.edgesFinset.{u1} V G u v p (SimpleGraph.Walk.IsEulerian.isTrail.{u1} V G (fun (a : V) (b : V) => _inst_1 a b) u v p h)) (SimpleGraph.edgeFinset.{u1} V G _inst_2)
 Case conversion may be inaccurate. Consider using '#align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edgesFinset_eqₓ'. -/
 theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSetEmbedding] {u v : V} {p : G.Walk u v}
-    (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset :=
-  by
-  ext e
-  simp [h.mem_edges_iff]
+    (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset := by ext e; simp [h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.edges_finset_eq SimpleGraph.Walk.IsEulerian.edgesFinset_eq
 
 #print SimpleGraph.Walk.IsEulerian.even_degree_iff /-

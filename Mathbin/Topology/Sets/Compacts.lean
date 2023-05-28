@@ -53,10 +53,7 @@ variable {α}
 
 instance : SetLike (Compacts α) α where
   coe := Compacts.carrier
-  coe_injective' s t h := by
-    cases s
-    cases t
-    congr
+  coe_injective' s t h := by cases s; cases t; congr
 
 #print TopologicalSpace.Compacts.isCompact /-
 protected theorem isCompact (s : Compacts α) : IsCompact (s : Set α) :=
@@ -212,12 +209,8 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β
     where
   toFun := Compacts.map f f.Continuous
   invFun := Compacts.map _ f.symm.Continuous
-  left_inv s := by
-    ext1
-    simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
-  right_inv s := by
-    ext1
-    simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
+  left_inv s := by ext1; simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
+  right_inv s := by ext1; simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
 #align topological_space.compacts.equiv TopologicalSpace.Compacts.equiv
 -/
 
@@ -306,10 +299,7 @@ namespace NonemptyCompacts
 instance : SetLike (NonemptyCompacts α) α
     where
   coe s := s.carrier
-  coe_injective' s t h := by
-    obtain ⟨⟨_, _⟩, _⟩ := s
-    obtain ⟨⟨_, _⟩, _⟩ := t
-    congr
+  coe_injective' s t h := by obtain ⟨⟨_, _⟩, _⟩ := s; obtain ⟨⟨_, _⟩, _⟩ := t; congr
 
 #print TopologicalSpace.NonemptyCompacts.isCompact /-
 protected theorem isCompact (s : NonemptyCompacts α) : IsCompact (s : Set α) :=
@@ -442,10 +432,7 @@ namespace PositiveCompacts
 instance : SetLike (PositiveCompacts α) α
     where
   coe s := s.carrier
-  coe_injective' s t h := by
-    obtain ⟨⟨_, _⟩, _⟩ := s
-    obtain ⟨⟨_, _⟩, _⟩ := t
-    congr
+  coe_injective' s t h := by obtain ⟨⟨_, _⟩, _⟩ := s; obtain ⟨⟨_, _⟩, _⟩ := t; congr
 
 #print TopologicalSpace.PositiveCompacts.isCompact /-
 protected theorem isCompact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
@@ -631,10 +618,7 @@ namespace CompactOpens
 instance : SetLike (CompactOpens α) α
     where
   coe s := s.carrier
-  coe_injective' s t h := by
-    obtain ⟨⟨_, _⟩, _⟩ := s
-    obtain ⟨⟨_, _⟩, _⟩ := t
-    congr
+  coe_injective' s t h := by obtain ⟨⟨_, _⟩, _⟩ := s; obtain ⟨⟨_, _⟩, _⟩ := t; congr
 
 #print TopologicalSpace.CompactOpens.isCompact /-
 protected theorem isCompact (s : CompactOpens α) : IsCompact (s : Set α) :=

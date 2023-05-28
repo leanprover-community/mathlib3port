@@ -153,8 +153,7 @@ theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q 
 theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q :=
   by
   constructor <;> intro h1
-  · cases' h1 with v h1
-    cases' h1 with h1 h1 <;> [left;right] <;> refine' ⟨v, _⟩ <;> assumption
+  · cases' h1 with v h1; cases' h1 with h1 h1 <;> [left;right] <;> refine' ⟨v, _⟩ <;> assumption
   · cases' h1 with h1 h1 <;> cases' h1 with v h1 <;> refine' ⟨v, _⟩ <;> [left;right] <;> assumption
 #align omega.nat.preform.sat_or Omega.Nat.Preform.sat_or
 

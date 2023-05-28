@@ -106,9 +106,7 @@ theorem NormedAddGroupHom.completion_def (f : NormedAddGroupHom G H) (x : Comple
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.completion_coe_to_fun NormedAddGroupHom.completion_coe_to_funₓ'. -/
 @[simp]
 theorem NormedAddGroupHom.completion_coe_to_fun (f : NormedAddGroupHom G H) :
-    (f.Completion : Completion G → Completion H) = Completion.map f :=
-  by
-  ext x
+    (f.Completion : Completion G → Completion H) = Completion.map f := by ext x;
   exact NormedAddGroupHom.completion_def f x
 #align normed_add_group_hom.completion_coe_to_fun NormedAddGroupHom.completion_coe_to_fun
 

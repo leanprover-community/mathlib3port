@@ -107,9 +107,7 @@ this lemma characterises it.
 theorem ι_colimitLimitToLimitColimit_π (j) (k) :
     colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
-  by
-  dsimp [colimit_limit_to_limit_colimit]
-  simp
+  by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π
 
 /- warning: category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply -> CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply is a dubious translation:
@@ -120,9 +118,7 @@ theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (
     limit.π (curry.obj F ⋙ colim) j
         (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
-  by
-  dsimp [colimit_limit_to_limit_colimit]
-  simp
+  by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply
 
 /- warning: category_theory.limits.colimit_limit_to_limit_colimit_cone -> CategoryTheory.Limits.colimitLimitToLimitColimitCone is a dubious translation:

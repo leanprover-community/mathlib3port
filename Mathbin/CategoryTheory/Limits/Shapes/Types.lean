@@ -352,31 +352,22 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
       congr 1
       exact set.compl_range_inr.symm
     · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr :=
-        by
-        rw [eq_compl_iff_is_compl.mpr h₃.symm]
-        exact fun _ => or_not
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
+        rw [eq_compl_iff_is_compl.mpr h₃.symm]; exact fun _ => or_not
       refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
       · intro T f g x
         exact
           if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
           else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
-      · intro T f g
-        ext x
-        dsimp
-        simp [h₁.eq_iff]
-      · intro T f g
-        ext x
-        dsimp
+      · intro T f g; ext x; dsimp; simp [h₁.eq_iff]
+      · intro T f g; ext x; dsimp
         simp only [forall_exists_index, Equiv.ofInjective_symm_apply, dif_ctx_congr,
           dite_eq_right_iff]
         intro y e
         have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
         rw [disjoint_iff.mp h₃.1] at this
         exact this.elim
-      · rintro T _ _ m rfl rfl
-        ext x
-        dsimp
+      · rintro T _ _ m rfl rfl; ext x; dsimp
         split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 #align category_theory.limits.types.binary_cofan_is_colimit_iff CategoryTheory.Limits.Types.binaryCofan_isColimit_iff
 
@@ -579,9 +570,7 @@ def coequalizerColimit : Limits.ColimitCocone (parallelPair f g)
     Cofork.ofπ (Quot.mk (CoequalizerRel f g)) (funext fun x => Quot.sound (CoequalizerRel.Rel x))
   IsColimit :=
     Cofork.IsColimit.mk' _ fun s =>
-      ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) =>
-          by
-          cases h
+      ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) => by cases h;
           exact congr_fun s.condition h_1,
         rfl, fun m hm => funext fun x => Quot.inductionOn x (congr_fun hm : _)⟩
 #align category_theory.limits.types.coequalizer_colimit CategoryTheory.Limits.Types.coequalizerColimit
@@ -594,11 +583,8 @@ then `π ⁻¹' (π '' U) = U`.
 theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ π = g ≫ π)
     (h : IsColimit (Cofork.ofπ π e)) (U : Set Y) (H : f ⁻¹' U = g ⁻¹' U) : π ⁻¹' (π '' U) = U :=
   by
-  have lem : ∀ x y, coequalizer_rel f g x y → (x ∈ U ↔ y ∈ U) :=
-    by
-    rintro _ _ ⟨x⟩
-    change x ∈ f ⁻¹' U ↔ x ∈ g ⁻¹' U
-    congr 2
+  have lem : ∀ x y, coequalizer_rel f g x y → (x ∈ U ↔ y ∈ U) := by rintro _ _ ⟨x⟩;
+    change x ∈ f ⁻¹' U ↔ x ∈ g ⁻¹' U; congr 2
   have eqv : _root_.equivalence fun x y => x ∈ U ↔ y ∈ U := by tidy
   ext
   constructor

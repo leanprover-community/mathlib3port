@@ -216,18 +216,14 @@ instance isIso_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : IsIso f.unop :=
 
 #print CategoryTheory.op_inv /-
 @[simp]
-theorem op_inv {X Y : C} (f : X ⟶ Y) [IsIso f] : (inv f).op = inv f.op :=
-  by
-  ext
+theorem op_inv {X Y : C} (f : X ⟶ Y) [IsIso f] : (inv f).op = inv f.op := by ext;
   rw [← op_comp, is_iso.inv_hom_id, op_id]
 #align category_theory.op_inv CategoryTheory.op_inv
 -/
 
 #print CategoryTheory.unop_inv /-
 @[simp]
-theorem unop_inv {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : (inv f).unop = inv f.unop :=
-  by
-  ext
+theorem unop_inv {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : (inv f).unop = inv f.unop := by ext;
   rw [← unop_comp, is_iso.inv_hom_id, unop_id]
 #align category_theory.unop_inv CategoryTheory.unop_inv
 -/
@@ -374,10 +370,7 @@ def rightOpLeftOpIso (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp ≅ F :=
 #print CategoryTheory.Functor.rightOp_leftOp_eq /-
 /-- Whenever possible, it is advisable to use the isomorphism `right_op_left_op_iso`
 instead of this equality of functors. -/
-theorem rightOp_leftOp_eq (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp = F :=
-  by
-  cases F
-  rfl
+theorem rightOp_leftOp_eq (F : Cᵒᵖ ⥤ D) : F.rightOp.leftOp = F := by cases F; rfl
 #align category_theory.functor.right_op_left_op_eq CategoryTheory.Functor.rightOp_leftOp_eq
 -/
 
@@ -682,10 +675,7 @@ def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
   inverse := e.inverse.op
   unitIso := (NatIso.op e.unitIso).symm
   counitIso := (NatIso.op e.counitIso).symm
-  functor_unitIso_comp' X := by
-    apply Quiver.Hom.unop_inj
-    dsimp
-    simp
+  functor_unitIso_comp' X := by apply Quiver.Hom.unop_inj; dsimp; simp
 #align category_theory.equivalence.op CategoryTheory.Equivalence.op
 
 /- warning: category_theory.equivalence.unop -> CategoryTheory.Equivalence.unop is a dubious translation:
@@ -702,10 +692,7 @@ def unop (e : Cᵒᵖ ≌ Dᵒᵖ) : C ≌ D where
   inverse := e.inverse.unop
   unitIso := (NatIso.unop e.unitIso).symm
   counitIso := (NatIso.unop e.counitIso).symm
-  functor_unitIso_comp' X := by
-    apply Quiver.Hom.op_inj
-    dsimp
-    simp
+  functor_unitIso_comp' X := by apply Quiver.Hom.op_inj; dsimp; simp
 #align category_theory.equivalence.unop CategoryTheory.Equivalence.unop
 
 end Equivalence
@@ -760,12 +747,8 @@ def isoOpEquiv (A B : Cᵒᵖ) : (A ≅ B) ≃ (B.unop ≅ A.unop)
     where
   toFun f := f.unop
   invFun g := g.op
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 #align category_theory.iso_op_equiv CategoryTheory.isoOpEquiv
 -/
 

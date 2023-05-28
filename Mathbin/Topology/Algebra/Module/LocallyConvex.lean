@@ -245,11 +245,8 @@ but is expected to have type
   forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_3 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1) _inst_2] {t₁ : TopologicalSpace.{u2} E} {t₂ : TopologicalSpace.{u2} E}, (LocallyConvexSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 t₁) -> (LocallyConvexSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 t₂) -> (LocallyConvexSpace.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3 (Inf.inf.{u2} (TopologicalSpace.{u2} E) (Lattice.toInf.{u2} (TopologicalSpace.{u2} E) (ConditionallyCompleteLattice.toLattice.{u2} (TopologicalSpace.{u2} E) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} E) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} E)))) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align locally_convex_space_inf locallyConvexSpace_infₓ'. -/
 theorem locallyConvexSpace_inf {t₁ t₂ : TopologicalSpace E} (h₁ : @LocallyConvexSpace 𝕜 E _ _ _ t₁)
-    (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁ ⊓ t₂) :=
-  by
-  rw [inf_eq_iInf]
-  refine' locallyConvexSpace_iInf fun b => _
-  cases b <;> assumption
+    (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁ ⊓ t₂) := by
+  rw [inf_eq_iInf]; refine' locallyConvexSpace_iInf fun b => _; cases b <;> assumption
 #align locally_convex_space_inf locallyConvexSpace_inf
 
 /- warning: locally_convex_space_induced -> locallyConvexSpace_induced is a dubious translation:

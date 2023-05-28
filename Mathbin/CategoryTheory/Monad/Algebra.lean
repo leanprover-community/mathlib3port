@@ -148,9 +148,7 @@ def isoMk {A B : Algebra T} (h : A.A ≅ B.A) (w : (T : C ⥤ C).map h.Hom ≫ B
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv
-      h' := by
-        rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
-        simp }
+      h' := by rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]; simp }
 #align category_theory.monad.algebra.iso_mk CategoryTheory.Monad.Algebra.isoMk
 
 end Algebra
@@ -197,13 +195,8 @@ def adj : T.free ⊣ T.forget :=
         { toFun := fun f => T.η.app X ≫ f.f
           invFun := fun f =>
             { f := T.map f ≫ Y.a
-              h' := by
-                dsimp
-                simp [← Y.assoc, ← T.μ.naturality_assoc] }
-          left_inv := fun f => by
-            ext
-            dsimp
-            simp
+              h' := by dsimp; simp [← Y.assoc, ← T.μ.naturality_assoc] }
+          left_inv := fun f => by ext; dsimp; simp
           right_inv := fun f =>
             by
             dsimp only [forget_obj, monad_to_functor_eq_coe]
@@ -217,10 +210,7 @@ def adj : T.free ⊣ T.forget :=
 -/
 theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{   f := inv f.f
-        h' := by
-          rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]
-          simp },
-      by tidy⟩⟩
+        h' := by rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]; simp }, by tidy⟩⟩
 #align category_theory.monad.algebra_iso_of_iso CategoryTheory.Monad.algebra_iso_of_iso
 -/
 
@@ -284,12 +274,8 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
   obj A :=
     { A := A.A
       a := h.app A.A ≫ A.a
-      unit' := by
-        dsimp
-        simp [A.unit]
-      assoc' := by
-        dsimp
-        simp [A.assoc] }
+      unit' := by dsimp; simp [A.unit]
+      assoc' := by dsimp; simp [A.assoc] }
   map A₁ A₂ f := { f := f.f }
 #align category_theory.monad.algebra_functor_of_monad_hom CategoryTheory.Monad.algebraFunctorOfMonadHom
 
@@ -304,16 +290,8 @@ The identity monad morphism induces the identity functor from the category of al
 -/
 @[simps (config := { rhsMd := semireducible })]
 def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙 T₁) ≅ 𝟭 _ :=
-  NatIso.ofComponents
-    (fun X =>
-      Algebra.isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
-    simp
+  NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext;
+    dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_id CategoryTheory.Monad.algebraFunctorOfMonadHomId
 
 /- warning: category_theory.monad.algebra_functor_of_monad_hom_comp -> CategoryTheory.Monad.algebraFunctorOfMonadHomComp is a dubious translation:
@@ -327,16 +305,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.monad.
 @[simps (config := { rhsMd := semireducible })]
 def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     algebraFunctorOfMonadHom (f ≫ g) ≅ algebraFunctorOfMonadHom g ⋙ algebraFunctorOfMonadHom f :=
-  NatIso.ofComponents
-    (fun X =>
-      Algebra.isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp))
-    fun X Y f => by
-    ext
-    dsimp
-    simp
+  NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext;
+    dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_comp CategoryTheory.Monad.algebraFunctorOfMonadHomComp
 
 /- warning: category_theory.monad.algebra_functor_of_monad_hom_eq -> CategoryTheory.Monad.algebraFunctorOfMonadHomEq is a dubious translation:
@@ -353,16 +323,8 @@ lemmas about.
 @[simps (config := { rhsMd := semireducible })]
 def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : f = g) :
     algebraFunctorOfMonadHom f ≅ algebraFunctorOfMonadHom g :=
-  NatIso.ofComponents
-    (fun X =>
-      Algebra.isoMk (Iso.refl _)
-        (by
-          dsimp
-          simp [h]))
-    fun X Y f => by
-    ext
-    dsimp
-    simp
+  NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp [h])) fun X Y f => by
+    ext; dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_eq CategoryTheory.Monad.algebraFunctorOfMonadHomEq
 
 /- warning: category_theory.monad.algebra_equiv_of_iso_monads -> CategoryTheory.Monad.algebraEquivOfIsoMonads is a dubious translation:
@@ -507,9 +469,7 @@ def isoMk {A B : Coalgebra G} (h : A.A ≅ B.A) (w : A.a ≫ (G : C ⥤ C).map h
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv
-      h' := by
-        rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]
-        simp }
+      h' := by rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]; simp }
 #align category_theory.comonad.coalgebra.iso_mk CategoryTheory.Comonad.Coalgebra.isoMk
 
 end Coalgebra
@@ -555,12 +515,9 @@ def adj : G.forget ⊣ G.cofree :=
       homEquiv := fun X Y =>
         { toFun := fun f =>
             { f := X.a ≫ G.map f
-              h' := by
-                dsimp
-                simp [← coalgebra.coassoc_assoc] }
+              h' := by dsimp; simp [← coalgebra.coassoc_assoc] }
           invFun := fun g => g.f ≫ G.ε.app Y
-          left_inv := fun f => by
-            dsimp
+          left_inv := fun f => by dsimp;
             rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc]
           right_inv := fun g => by
             ext1; dsimp
@@ -574,10 +531,7 @@ def adj : G.forget ⊣ G.cofree :=
 -/
 theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{   f := inv f.f
-        h' := by
-          rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]
-          simp },
-      by tidy⟩⟩
+        h' := by rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]; simp }, by tidy⟩⟩
 #align category_theory.comonad.coalgebra_iso_of_iso CategoryTheory.Comonad.coalgebra_iso_of_iso
 -/
 

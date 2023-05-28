@@ -233,12 +233,8 @@ def recolorOfEquiv {α β : Type _} (f : α ≃ β) : G.Coloring α ≃ G.Colori
     where
   toFun := G.recolorOfEmbedding f.toEmbedding
   invFun := G.recolorOfEmbedding f.symm.toEmbedding
-  left_inv C := by
-    ext v
-    apply Equiv.symm_apply_apply
-  right_inv C := by
-    ext v
-    apply Equiv.apply_symm_apply
+  left_inv C := by ext v; apply Equiv.symm_apply_apply
+  right_inv C := by ext v; apply Equiv.apply_symm_apply
 #align simple_graph.recolor_of_equiv SimpleGraph.recolorOfEquiv
 -/
 
@@ -355,8 +351,7 @@ theorem colorable_chromaticNumber {m : ℕ} (hc : G.Colorable m) : G.Colorable G
 
 #print SimpleGraph.colorable_chromaticNumber_of_fintype /-
 theorem colorable_chromaticNumber_of_fintype (G : SimpleGraph V) [Finite V] :
-    G.Colorable G.chromaticNumber := by
-  cases nonempty_fintype V
+    G.Colorable G.chromaticNumber := by cases nonempty_fintype V;
   exact colorable_chromatic_number G.colorable_of_fintype
 #align simple_graph.colorable_chromatic_number_of_fintype SimpleGraph.colorable_chromaticNumber_of_fintype
 -/

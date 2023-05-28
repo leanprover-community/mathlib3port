@@ -74,8 +74,7 @@ theorem HasFDerivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} {L' : Filter 
   by
   let eq₁ := (g'.isBigO_comp _ _).trans_isLittleO hf
   let eq₂ := (hg.comp_tendsto hL).trans_isBigO hf.isBigO_sub
-  refine' eq₂.triangle (eq₁.congr_left fun x' => _)
-  simp
+  refine' eq₂.triangle (eq₁.congr_left fun x' => _); simp
 #align has_fderiv_at_filter.comp HasFDerivAtFilter.comp
 
 /- A readable version of the previous theorem,
@@ -198,11 +197,8 @@ Case conversion may be inaccurate. Consider using '#align fderiv_within_fderiv_w
 theorem fderivWithin_fderivWithin {g : F → G} {f : E → F} {x : E} {y : F} {s : Set E} {t : Set F}
     (hg : DifferentiableWithinAt 𝕜 g t y) (hf : DifferentiableWithinAt 𝕜 f s x) (h : MapsTo f s t)
     (hxs : UniqueDiffWithinAt 𝕜 s x) (hy : f x = y) (v : E) :
-    fderivWithin 𝕜 g t y (fderivWithin 𝕜 f s x v) = fderivWithin 𝕜 (g ∘ f) s x v :=
-  by
-  subst y
-  rw [fderivWithin.comp x hg hf h hxs]
-  rfl
+    fderivWithin 𝕜 g t y (fderivWithin 𝕜 f s x v) = fderivWithin 𝕜 (g ∘ f) s x v := by subst y;
+  rw [fderivWithin.comp x hg hf h hxs]; rfl
 #align fderiv_within_fderiv_within fderivWithin_fderivWithin
 
 /- warning: fderiv_within.comp₃ -> fderivWithin.comp₃ is a dubious translation:

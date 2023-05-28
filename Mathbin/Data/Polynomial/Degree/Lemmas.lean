@@ -275,10 +275,8 @@ theorem coeff_add_eq_left_of_lt (qn : q.natDegree < n) : (p + q).coeff n = p.coe
 -/
 
 #print Polynomial.coeff_add_eq_right_of_lt /-
-theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.coeff n :=
-  by
-  rw [add_comm]
-  exact coeff_add_eq_left_of_lt pn
+theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.coeff n := by
+  rw [add_comm]; exact coeff_add_eq_left_of_lt pn
 #align polynomial.coeff_add_eq_right_of_lt Polynomial.coeff_add_eq_right_of_lt
 -/
 
@@ -498,8 +496,7 @@ theorem natDegree_comp : natDegree (p.comp q) = natDegree p * natDegree q :=
   ·
     rw [degree_le_zero_iff.mp (nat_degree_eq_zero_iff_degree_le_zero.mp q0), comp_C, nat_degree_C,
       nat_degree_C, MulZeroClass.mul_zero]
-  · by_cases p0 : p = 0
-    · simp only [p0, zero_comp, nat_degree_zero, MulZeroClass.zero_mul]
+  · by_cases p0 : p = 0; · simp only [p0, zero_comp, nat_degree_zero, MulZeroClass.zero_mul]
     refine' le_antisymm nat_degree_comp_le (le_nat_degree_of_ne_zero _)
     simp only [coeff_comp_degree_mul_degree q0, p0, mul_eq_zero, leading_coeff_eq_zero, or_self_iff,
       ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero q0), pow_ne_zero, Ne.def, not_false_iff]

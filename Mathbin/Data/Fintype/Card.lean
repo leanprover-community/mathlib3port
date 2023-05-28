@@ -136,10 +136,7 @@ theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s 
 
 #print Fintype.card_of_subtype /-
 theorem card_of_subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x)
-    [Fintype { x // p x }] : card { x // p x } = s.card :=
-  by
-  rw [← subtype_card s H]
-  congr
+    [Fintype { x // p x }] : card { x // p x } = s.card := by rw [← subtype_card s H]; congr
 #align fintype.card_of_subtype Fintype.card_of_subtype
 -/
 
@@ -236,8 +233,7 @@ the specialization to `fin`.
 -/
 noncomputable def equivOfCardEq (h : card α = card β) : α ≃ β :=
   by
-  letI := Classical.decEq α
-  letI := Classical.decEq β
+  letI := Classical.decEq α; letI := Classical.decEq β
   exact (trunc_equiv_of_card_eq h).out
 #align fintype.equiv_of_card_eq Fintype.equivOfCardEq
 -/
@@ -316,9 +312,7 @@ theorem Finset.eq_univ_of_card [Fintype α] (s : Finset α) (hs : s.card = Finty
 #print Finset.card_eq_iff_eq_univ /-
 theorem Finset.card_eq_iff_eq_univ [Fintype α] (s : Finset α) :
     s.card = Fintype.card α ↔ s = Finset.univ :=
-  ⟨s.eq_univ_of_card, by
-    rintro rfl
-    exact Finset.card_univ⟩
+  ⟨s.eq_univ_of_card, by rintro rfl; exact Finset.card_univ⟩
 #align finset.card_eq_iff_eq_univ Finset.card_eq_iff_eq_univ
 -/
 
@@ -591,10 +585,8 @@ theorem Finite.of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : S
 #print Finite.exists_univ_list /-
 theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ ∀ x : α, x ∈ l :=
   by
-  cases nonempty_fintype α
-  obtain ⟨l, e⟩ := Quotient.exists_rep (@univ α _).1
-  have := And.intro univ.2 mem_univ_val
-  exact ⟨_, by rwa [← e] at this⟩
+  cases nonempty_fintype α; obtain ⟨l, e⟩ := Quotient.exists_rep (@univ α _).1
+  have := And.intro univ.2 mem_univ_val; exact ⟨_, by rwa [← e] at this⟩
 #align finite.exists_univ_list Finite.exists_univ_list
 -/
 
@@ -1054,10 +1046,7 @@ noncomputable def equivOfFintypeSelfEmbedding [Finite α] (e : α ↪ α) : α �
 #print Function.Embedding.equiv_of_fintype_self_embedding_to_embedding /-
 @[simp]
 theorem equiv_of_fintype_self_embedding_to_embedding [Finite α] (e : α ↪ α) :
-    e.equivOfFintypeSelfEmbedding.toEmbedding = e :=
-  by
-  ext
-  rfl
+    e.equivOfFintypeSelfEmbedding.toEmbedding = e := by ext; rfl
 #align function.embedding.equiv_of_fintype_self_embedding_to_embedding Function.Embedding.equiv_of_fintype_self_embedding_to_embedding
 -/
 
@@ -1199,9 +1188,7 @@ theorem Fintype.card_subtype_mono (p q : α → Prop) (h : p ≤ q) [Fintype { x
 theorem Fintype.card_compl_eq_card_compl [Finite α] (p q : α → Prop) [Fintype { x // p x }]
     [Fintype { x // ¬p x }] [Fintype { x // q x }] [Fintype { x // ¬q x }]
     (h : Fintype.card { x // p x } = Fintype.card { x // q x }) :
-    Fintype.card { x // ¬p x } = Fintype.card { x // ¬q x } :=
-  by
-  cases nonempty_fintype α
+    Fintype.card { x // ¬p x } = Fintype.card { x // ¬q x } := by cases nonempty_fintype α;
   simp only [Fintype.card_subtype_compl, h]
 #align fintype.card_compl_eq_card_compl Fintype.card_compl_eq_card_compl
 -/

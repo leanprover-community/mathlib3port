@@ -495,8 +495,7 @@ theorem Submartingale.sum_mul_upcrossingStrat_le [FiniteMeasure μ] (hf : Submar
           (integrable_finset_sum _ fun i hi => hf.integrable _))
         _
     convert(hf.sum_upcrossing_strat_mul a b N).Integrable n
-    ext
-    simp
+    ext; simp
   rw [h₂, sub_nonneg] at h₁
   refine' le_trans h₁ _
   simp_rw [Finset.sum_range_sub, integral_sub' (hf.integrable _) (hf.integrable _)]
@@ -517,9 +516,7 @@ theorem upcrossingsBefore_zero : upcrossingsBefore a b f 0 ω = 0 := by simp [up
 #align measure_theory.upcrossings_before_zero MeasureTheory.upcrossingsBefore_zero
 
 @[simp]
-theorem upcrossingsBefore_zero' : upcrossingsBefore a b f 0 = 0 :=
-  by
-  ext ω
+theorem upcrossingsBefore_zero' : upcrossingsBefore a b f 0 = 0 := by ext ω;
   exact upcrossings_before_zero
 #align measure_theory.upcrossings_before_zero' MeasureTheory.upcrossingsBefore_zero'
 
@@ -575,8 +572,7 @@ theorem crossing_eq_crossing_of_lowerCrossingTime_lt {M : ℕ} (hNM : N ≤ M)
     simp only [lower_crossing_time, eq_comm, this]
     refine' hitting_eq_hitting_of_exists hNM _
     rw [lower_crossing_time, hitting_lt_iff _ le_rfl] at h
-    swap
-    · infer_instance
+    swap; · infer_instance
     obtain ⟨j, hj₁, hj₂⟩ := h
     exact ⟨j, ⟨hj₁.1, hj₁.2.le⟩, hj₂⟩
 #align measure_theory.crossing_eq_crossing_of_lower_crossing_time_lt MeasureTheory.crossing_eq_crossing_of_lowerCrossingTime_lt

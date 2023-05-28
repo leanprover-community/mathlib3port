@@ -61,10 +61,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {ι : Type.{u3}} [_inst_1 : MetricSpace.{u1} β] {n : Nat} {j : ι} {f : ι -> α -> β} {g : α -> β} [_inst_2 : Preorder.{u3} ι] {x : α}, Iff (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (MeasureTheory.Egorov.notConvergentSeq.{u2, u1, u3} α β ι _inst_1 _inst_2 f g n j)) (Exists.{succ u3} ι (fun (k : ι) => Exists.{0} (LE.le.{u3} ι (Preorder.toLE.{u3} ι _inst_2) j k) (fun (hk : LE.le.{u3} ι (Preorder.toLE.{u3} ι _inst_2) j k) => LT.lt.{0} Real Real.instLTReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Nat.cast.{0} Real Real.natCast n) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) (Dist.dist.{u1} β (PseudoMetricSpace.toDist.{u1} β (MetricSpace.toPseudoMetricSpace.{u1} β _inst_1)) (f k x) (g x)))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iffₓ'. -/
 theorem mem_notConvergentSeq_iff [Preorder ι] {x : α} :
-    x ∈ notConvergentSeq f g n j ↔ ∃ (k : _)(hk : j ≤ k), 1 / (n + 1 : ℝ) < dist (f k x) (g x) :=
-  by
-  simp_rw [not_convergent_seq, mem_Union]
-  rfl
+    x ∈ notConvergentSeq f g n j ↔ ∃ (k : _)(hk : j ≤ k), 1 / (n + 1 : ℝ) < dist (f k x) (g x) := by
+  simp_rw [not_convergent_seq, mem_Union]; rfl
 #align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iff
 
 /- warning: measure_theory.egorov.not_convergent_seq_antitone -> MeasureTheory.Egorov.notConvergentSeq_antitone is a dubious translation:

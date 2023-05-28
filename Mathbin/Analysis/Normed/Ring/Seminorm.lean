@@ -190,13 +190,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_seminorm.seminorm_one_eq_one_iff_ne_zero RingSeminorm.seminorm_one_eq_one_iff_ne_zeroₓ'. -/
 theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :=
   by
-  refine'
-    ⟨fun h =>
-      ne_zero_iff.mpr
-        ⟨1, by
-          rw [h]
-          exact one_ne_zero⟩,
-      fun h => _⟩
+  refine' ⟨fun h => ne_zero_iff.mpr ⟨1, by rw [h]; exact one_ne_zero⟩, fun h => _⟩
   obtain hp0 | hp0 := (map_nonneg p (1 : R)).eq_or_gt
   · cases h (ext fun x => (map_nonneg _ _).antisymm' _)
     simpa only [hp0, mul_one, MulZeroClass.mul_zero] using map_mul_le_mul p x 1

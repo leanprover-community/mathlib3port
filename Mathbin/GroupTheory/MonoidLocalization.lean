@@ -176,21 +176,14 @@ def r' : Con (M × S) :=
     simp only [Submonoid.coe_mul]
     calc
       (t₂ * t₁ * b.2 : M) * (c.2 * a.1) = t₂ * c.2 * (t₁ * (b.2 * a.1)) := by ac_rfl
-      _ = t₁ * a.2 * (t₂ * (c.2 * b.1)) := by
-        rw [ht₁]
-        ac_rfl
-      _ = t₂ * t₁ * b.2 * (a.2 * c.1) := by
-        rw [ht₂]
-        ac_rfl
+      _ = t₁ * a.2 * (t₂ * (c.2 * b.1)) := by rw [ht₁]; ac_rfl
+      _ = t₂ * t₁ * b.2 * (a.2 * c.1) := by rw [ht₂]; ac_rfl
       
   · rintro a b c d ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
     use t₂ * t₁
     calc
       (t₂ * t₁ : M) * (b.2 * d.2 * (a.1 * c.1)) = t₂ * (d.2 * c.1) * (t₁ * (b.2 * a.1)) := by ac_rfl
-      _ = (t₂ * t₁ : M) * (a.2 * c.2 * (b.1 * d.1)) :=
-        by
-        rw [ht₁, ht₂]
-        ac_rfl
+      _ = (t₂ * t₁ : M) * (a.2 * c.2 * (b.1 * d.1)) := by rw [ht₁, ht₂]; ac_rfl
       
 #align localization.r' Localization.r'
 #align add_localization.r' AddLocalization.r'
@@ -353,11 +346,7 @@ def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
         (Eq.ndrec (f a b) (mk_eq_mk_iff.mpr h) : p (mk c d)) = f c d)
     (x) : p x :=
   Quot.rec (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.eta : (y.1, y.2) = y))
-    (fun y z h => by
-      cases y
-      cases z
-      exact H h)
-    x
+    (fun y z h => by cases y; cases z; exact H h) x
 #align localization.rec Localization.rec
 #align add_localization.rec AddLocalization.rec
 
@@ -551,10 +540,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))} (a : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))) x S)), Eq.{succ u1} (Localization.{u1} M _inst_1 S) (Localization.mk.{u1} M _inst_1 S (Subtype.val.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) S)) a) a) (OfNat.ofNat.{u1} (Localization.{u1} M _inst_1 S) 1 (One.toOfNat1.{u1} (Localization.{u1} M _inst_1 S) (Localization.instOneLocalization.{u1} M _inst_1 S)))
 Case conversion may be inaccurate. Consider using '#align localization.mk_self Localization.mk_selfₓ'. -/
 @[to_additive]
-theorem mk_self (a : S) : mk (a : M) a = 1 := by
-  symm
-  rw [← mk_one, mk_eq_mk_iff]
-  exact one_rel a
+theorem mk_self (a : S) : mk (a : M) a = 1 := by symm; rw [← mk_one, mk_eq_mk_iff]; exact one_rel a
 #align localization.mk_self Localization.mk_self
 #align add_localization.mk_self AddLocalization.mk_self
 
@@ -596,9 +582,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))} {R : Type.{u2}} [_inst_4 : SMul.{u2, u1} R M] [_inst_5 : IsScalarTower.{u2, u1, u1} R M M _inst_4 (MulAction.toSMul.{u1, u1} M M (CommMonoid.toMonoid.{u1} M _inst_1) (Monoid.toMulAction.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) _inst_4] (c : R) (a : M) (b : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))) x S)), Eq.{succ u1} (Localization.{u1} M _inst_1 S) (HSMul.hSMul.{u2, u1, u1} R (Localization.{u1} M _inst_1 S) (Localization.{u1} M _inst_1 S) (instHSMul.{u2, u1} R (Localization.{u1} M _inst_1 S) (Localization.instSMulLocalization.{u1, u2} M _inst_1 S R _inst_4 _inst_5)) c (Localization.mk.{u1} M _inst_1 S a b)) (Localization.mk.{u1} M _inst_1 S (HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M _inst_4) c a) b)
 Case conversion may be inaccurate. Consider using '#align localization.smul_mk Localization.smul_mkₓ'. -/
 theorem smul_mk [SMul R M] [IsScalarTower R M M] (c : R) (a b) :
-    c • (mk a b : Localization S) = mk (c • a) b :=
-  by
-  unfold SMul.smul Localization.smul
+    c • (mk a b : Localization S) = mk (c • a) b := by unfold SMul.smul Localization.smul;
   apply lift_on_mk
 #align localization.smul_mk Localization.smul_mk
 
@@ -650,16 +634,9 @@ instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower R�
 
 instance [Monoid R] [MulAction R M] [IsScalarTower R M M] : MulAction R (Localization S)
     where
-  one_smul :=
-    Localization.ind <|
-      Prod.rec <| by
-        intros
-        simp only [Localization.smul_mk, one_smul]
+  one_smul := Localization.ind <| Prod.rec <| by intros ; simp only [Localization.smul_mk, one_smul]
   mul_smul s₁ s₂ :=
-    Localization.ind <|
-      Prod.rec <| by
-        intros
-        simp only [Localization.smul_mk, mul_smul]
+    Localization.ind <| Prod.rec <| by intros ; simp only [Localization.smul_mk, mul_smul]
 
 instance [Monoid R] [MulDistribMulAction R M] [IsScalarTower R M M] :
     MulDistribMulAction R (Localization S)
@@ -716,12 +693,8 @@ but is expected to have type
   forall {M : Type.{u2}} [_inst_1 : CommMonoid.{u2} M] {S : Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))} {N : Type.{u1}} [_inst_2 : CommMonoid.{u1} N] {f : Submonoid.LocalizationMap.{u2, u1} M _inst_1 S N _inst_2} {g : Submonoid.LocalizationMap.{u2, u1} M _inst_1 S N _inst_2}, (forall (x : M), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => N) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2)) (MonoidHom.monoidHomClass.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))))) (Submonoid.LocalizationMap.toMap.{u2, u1} M _inst_1 S N _inst_2 f) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M N (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1))) (MulOneClass.toMul.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))) M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2)) (MonoidHom.monoidHomClass.{u2, u1} M N (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M _inst_1)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_2))))) (Submonoid.LocalizationMap.toMap.{u2, u1} M _inst_1 S N _inst_2 g) x)) -> (Eq.{max (succ u2) (succ u1)} (Submonoid.LocalizationMap.{u2, u1} M _inst_1 S N _inst_2) f g)
 Case conversion may be inaccurate. Consider using '#align submonoid.localization_map.ext Submonoid.LocalizationMap.extₓ'. -/
 @[ext, to_additive]
-theorem ext {f g : LocalizationMap S N} (h : ∀ x, f.toMap x = g.toMap x) : f = g :=
-  by
-  rcases f with ⟨⟨⟩⟩
-  rcases g with ⟨⟨⟩⟩
-  simp only
-  exact funext h
+theorem ext {f g : LocalizationMap S N} (h : ∀ x, f.toMap x = g.toMap x) : f = g := by
+  rcases f with ⟨⟨⟩⟩; rcases g with ⟨⟨⟩⟩; simp only; exact funext h
 #align submonoid.localization_map.ext Submonoid.LocalizationMap.ext
 #align add_submonoid.localization_map.ext AddSubmonoid.LocalizationMap.ext
 
@@ -2795,10 +2768,7 @@ instance [LinearOrderedCancelCommMonoid α] {s : Submonoid α} :
   {
     Localization.orderedCancelCommMonoid with
     le_total := fun a b =>
-      Localization.induction_on₂ a b fun _ _ =>
-        by
-        simp_rw [mk_le_mk]
-        exact le_total _ _
+      Localization.induction_on₂ a b fun _ _ => by simp_rw [mk_le_mk]; exact le_total _ _
     decidableLe := @Localization.decidableLE α _ _ LE.le.decidable
     decidableLt := @Localization.decidableLT α _ _ LT.lt.decidable
     decidableLt := Localization.decidableEq }

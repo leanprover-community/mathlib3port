@@ -77,9 +77,7 @@ instance (priority := 100) ofAssociativeRing : LieRing A
     simp only [Ring.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_comm, add_left_comm,
       forall_const, eq_self_iff_true, neg_add_rev]
   lie_self := by simp only [Ring.lie_def, forall_const, sub_self]
-  leibniz_lie x y z := by
-    repeat' rw [Ring.lie_def]
-    noncomm_ring
+  leibniz_lie x y z := by repeat' rw [Ring.lie_def]; noncomm_ring
 #align lie_ring.of_associative_ring LieRing.ofAssociativeRing
 
 theorem of_associative_ring_bracket (x y : A) : ⁅x, y⁆ = x * y - y * x :=
@@ -205,10 +203,8 @@ theorem to_lieHom_comp : (g.comp f : A →ₗ⁅R⁆ C) = (g : B →ₗ⁅R⁆ C
   rfl
 #align alg_hom.to_lie_hom_comp AlgHom.to_lieHom_comp
 
-theorem to_lieHom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g :=
-  by
-  ext a
-  exact LieHom.congr_fun h a
+theorem to_lieHom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g := by
+  ext a; exact LieHom.congr_fun h a
 #align alg_hom.to_lie_hom_injective AlgHom.to_lieHom_injective
 
 end AlgHom
@@ -235,15 +231,9 @@ def LieModule.toEndomorphism : L →ₗ⁅R⁆ Module.End R M
     { toFun := fun m => ⁅x, m⁆
       map_add' := lie_add x
       map_smul' := fun t => lie_smul t x }
-  map_add' x y := by
-    ext m
-    apply add_lie
-  map_smul' t x := by
-    ext m
-    apply smul_lie
-  map_lie' x y := by
-    ext m
-    apply lie_lie
+  map_add' x y := by ext m; apply add_lie
+  map_smul' t x := by ext m; apply smul_lie
+  map_lie' x y := by ext m; apply lie_lie
 #align lie_module.to_endomorphism LieModule.toEndomorphism
 
 /-- The adjoint action of a Lie algebra on itself. -/
@@ -258,10 +248,7 @@ theorem LieAlgebra.ad_apply (x y : L) : LieAlgebra.ad R L x y = ⁅x, y⁆ :=
 
 @[simp]
 theorem LieModule.toEndomorphism_module_end :
-    LieModule.toEndomorphism R (Module.End R M) M = LieHom.id :=
-  by
-  ext (g m)
-  simp [lie_eq_smul]
+    LieModule.toEndomorphism R (Module.End R M) M = LieHom.id := by ext (g m); simp [lie_eq_smul]
 #align lie_module.to_endomorphism_module_End LieModule.toEndomorphism_module_end
 
 theorem LieSubalgebra.toEndomorphism_eq (K : LieSubalgebra R L) {x : K} :
@@ -299,9 +286,7 @@ theorem toEndomorphism_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M))
 
 @[simp]
 theorem toEndomorphism_restrict_eq_toEndomorphism (h := N.toEndomorphism_comp_subtype_mem x) :
-    (toEndomorphism R L M x).restrict h = toEndomorphism R L N x :=
-  by
-  ext
+    (toEndomorphism R L M x).restrict h = toEndomorphism R L N x := by ext;
   simp [LinearMap.restrict_apply]
 #align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.toEndomorphism_restrict_eq_toEndomorphism
 
@@ -310,9 +295,7 @@ end LieSubmodule
 open LieAlgebra
 
 theorem LieAlgebra.ad_eq_lmul_left_sub_lmul_right (A : Type v) [Ring A] [Algebra R A] :
-    (ad R A : A → Module.End R A) = LinearMap.mulLeft R - LinearMap.mulRight R :=
-  by
-  ext (a b)
+    (ad R A : A → Module.End R A) = LinearMap.mulLeft R - LinearMap.mulRight R := by ext (a b);
   simp [LieRing.of_associative_ring_bracket]
 #align lie_algebra.ad_eq_lmul_left_sub_lmul_right LieAlgebra.ad_eq_lmul_left_sub_lmul_right
 
@@ -331,9 +314,7 @@ def lieSubalgebraOfSubalgebra (R : Type u) [CommRing R] (A : Type v) [Ring A] [A
     (A' : Subalgebra R A) : LieSubalgebra R A :=
   { A'.toSubmodule with
     lie_mem' := fun x y hx hy => by
-      change ⁅x, y⁆ ∈ A'
-      change x ∈ A' at hx
-      change y ∈ A' at hy
+      change ⁅x, y⁆ ∈ A'; change x ∈ A' at hx; change y ∈ A' at hy
       rw [LieRing.of_associative_ring_bracket]
       have hxy := A'.mul_mem hx hy
       have hyx := A'.mul_mem hy hx

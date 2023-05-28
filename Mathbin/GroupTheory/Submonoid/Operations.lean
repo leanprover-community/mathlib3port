@@ -1573,12 +1573,9 @@ theorem le_prod_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
   constructor
   · intro h
     constructor
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).1
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).2
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
-    exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).1
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).2
+  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h; exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 #align submonoid.le_prod_iff Submonoid.le_prod_iff
 #align add_submonoid.le_prod_iff AddSubmonoid.le_prod_iff
 
@@ -1595,19 +1592,11 @@ theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
   constructor
   · intro h
     constructor
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨hx, Submonoid.one_mem _⟩
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨Submonoid.one_mem _, hx⟩
+    · rintro _ ⟨x, hx, rfl⟩; apply h; exact ⟨hx, Submonoid.one_mem _⟩
+    · rintro _ ⟨x, hx, rfl⟩; apply h; exact ⟨Submonoid.one_mem _, hx⟩
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : inl M N x1 ∈ u := by
-      apply hH
-      simpa using h1
-    have h2' : inr M N x2 ∈ u := by
-      apply hK
-      simpa using h2
+    have h1' : inl M N x1 ∈ u := by apply hH; simpa using h1
+    have h2' : inr M N x2 ∈ u := by apply hK; simpa using h2
     simpa using Submonoid.mul_mem _ h1' h2'
 #align submonoid.prod_le_iff Submonoid.prod_le_iff
 #align add_submonoid.prod_le_iff AddSubmonoid.prod_le_iff
@@ -1971,9 +1960,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N], Eq.{succ u2} (Submonoid.{u2} M _inst_1) (MonoidHom.mker.{u2, u1, max u2 u1} M N _inst_1 _inst_2 (MonoidHom.{u2, u1} M N _inst_1 _inst_2) (MonoidHom.monoidHomClass.{u2, u1} M N _inst_1 _inst_2) (OfNat.ofNat.{max u2 u1} (MonoidHom.{u2, u1} M N _inst_1 _inst_2) 1 (One.toOfNat1.{max u2 u1} (MonoidHom.{u2, u1} M N _inst_1 _inst_2) (instOneMonoidHom.{u2, u1} M N _inst_1 _inst_2)))) (Top.top.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instTopSubmonoid.{u2} M _inst_1))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.mker_one MonoidHom.mker_oneₓ'. -/
 @[simp, to_additive]
-theorem mker_one : (1 : M →* N).mker = ⊤ := by
-  ext
-  simp [mem_mker]
+theorem mker_one : (1 : M →* N).mker = ⊤ := by ext; simp [mem_mker]
 #align monoid_hom.mker_one MonoidHom.mker_one
 #align add_monoid_hom.mker_zero AddMonoidHom.mker_zero
 
@@ -2011,9 +1998,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N], Eq.{succ u2} (Submonoid.{u2} M _inst_1) (MonoidHom.mker.{u2, max u2 u1, max u2 u1} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2) (MonoidHom.{u2, max u1 u2} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (MonoidHom.monoidHomClass.{u2, max u2 u1} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (MonoidHom.inl.{u2, u1} M N _inst_1 _inst_2)) (Bot.bot.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instBotSubmonoid.{u2} M _inst_1))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.mker_inl MonoidHom.mker_inlₓ'. -/
 @[simp, to_additive]
-theorem mker_inl : (inl M N).mker = ⊥ := by
-  ext x
-  simp [mem_mker]
+theorem mker_inl : (inl M N).mker = ⊥ := by ext x; simp [mem_mker]
 #align monoid_hom.mker_inl MonoidHom.mker_inl
 #align add_monoid_hom.mker_inl AddMonoidHom.mker_inl
 
@@ -2024,9 +2009,7 @@ but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N], Eq.{succ u2} (Submonoid.{u2} N _inst_2) (MonoidHom.mker.{u2, max u1 u2, max u1 u2} N (Prod.{u1, u2} M N) _inst_2 (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2) (MonoidHom.{u2, max u2 u1} N (Prod.{u1, u2} M N) _inst_2 (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2)) (MonoidHom.monoidHomClass.{u2, max u1 u2} N (Prod.{u1, u2} M N) _inst_2 (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2)) (MonoidHom.inr.{u1, u2} M N _inst_1 _inst_2)) (Bot.bot.{u2} (Submonoid.{u2} N _inst_2) (Submonoid.instBotSubmonoid.{u2} N _inst_2))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.mker_inr MonoidHom.mker_inrₓ'. -/
 @[simp, to_additive]
-theorem mker_inr : (inr M N).mker = ⊥ := by
-  ext x
-  simp [mem_mker]
+theorem mker_inr : (inr M N).mker = ⊥ := by ext x; simp [mem_mker]
 #align monoid_hom.mker_inr MonoidHom.mker_inr
 #align add_monoid_hom.mker_inr AddMonoidHom.mker_inr
 
@@ -2070,10 +2053,7 @@ def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f
 Case conversion may be inaccurate. Consider using '#align monoid_hom.submonoid_map_surjective MonoidHom.submonoidMap_surjectiveₓ'. -/
 @[to_additive]
 theorem submonoidMap_surjective (f : M →* N) (M' : Submonoid M) :
-    Function.Surjective (f.submonoidMap M') :=
-  by
-  rintro ⟨_, x, hx, rfl⟩
-  exact ⟨⟨x, hx⟩, rfl⟩
+    Function.Surjective (f.submonoidMap M') := by rintro ⟨_, x, hx, rfl⟩; exact ⟨⟨x, hx⟩, rfl⟩
 #align monoid_hom.submonoid_map_surjective MonoidHom.submonoidMap_surjective
 #align add_monoid_hom.add_submonoid_map_surjective AddMonoidHom.addSubmonoidMap_surjective
 
@@ -2375,10 +2355,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.equiv_map_of_injective_coe_mul_equiv Submonoid.equivMapOfInjective_coe_mulEquivₓ'. -/
 @[simp, to_additive]
 theorem Submonoid.equivMapOfInjective_coe_mulEquiv (e : M ≃* N) :
-    S.equivMapOfInjective (e : M →* N) (EquivLike.injective e) = e.submonoidMap S :=
-  by
-  ext
-  rfl
+    S.equivMapOfInjective (e : M →* N) (EquivLike.injective e) = e.submonoidMap S := by ext; rfl
 #align submonoid.equiv_map_of_injective_coe_mul_equiv Submonoid.equivMapOfInjective_coe_mulEquiv
 #align add_submonoid.equiv_map_of_injective_coe_add_equiv AddSubmonoid.equivMapOfInjective_coe_addEquiv
 

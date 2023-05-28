@@ -458,10 +458,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [rα : NonUnitalNonAssocSemiring.{u1} α] [rβ : NonUnitalNonAssocSemiring.{u3} β] [rγ : NonUnitalNonAssocSemiring.{u2} γ] (g : NonUnitalRingHom.{u3, u2} β γ rβ rγ), Eq.{max (succ u1) (succ u2)} (NonUnitalRingHom.{u1, u2} α γ rα rγ) (NonUnitalRingHom.comp.{u1, u3, u2} α β γ rα rβ rγ g (OfNat.ofNat.{max u1 u3} (NonUnitalRingHom.{u1, u3} α β rα rβ) 0 (Zero.toOfNat0.{max u1 u3} (NonUnitalRingHom.{u1, u3} α β rα rβ) (NonUnitalRingHom.instZeroNonUnitalRingHom.{u1, u3} α β rα rβ)))) (OfNat.ofNat.{max u1 u2} (NonUnitalRingHom.{u1, u2} α γ rα rγ) 0 (Zero.toOfNat0.{max u1 u2} (NonUnitalRingHom.{u1, u2} α γ rα rγ) (NonUnitalRingHom.instZeroNonUnitalRingHom.{u1, u2} α γ rα rγ)))
 Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.comp_zero NonUnitalRingHom.comp_zeroₓ'. -/
 @[simp]
-theorem comp_zero (g : β →ₙ+* γ) : g.comp (0 : α →ₙ+* β) = 0 :=
-  by
-  ext
-  simp
+theorem comp_zero (g : β →ₙ+* γ) : g.comp (0 : α →ₙ+* β) = 0 := by ext; simp
 #align non_unital_ring_hom.comp_zero NonUnitalRingHom.comp_zero
 
 /- warning: non_unital_ring_hom.zero_comp -> NonUnitalRingHom.zero_comp is a dubious translation:
@@ -471,10 +468,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [rα : NonUnitalNonAssocSemiring.{u3} α] [rβ : NonUnitalNonAssocSemiring.{u2} β] [rγ : NonUnitalNonAssocSemiring.{u1} γ] (f : NonUnitalRingHom.{u3, u2} α β rα rβ), Eq.{max (succ u3) (succ u1)} (NonUnitalRingHom.{u3, u1} α γ rα rγ) (NonUnitalRingHom.comp.{u3, u2, u1} α β γ rα rβ rγ (OfNat.ofNat.{max u2 u1} (NonUnitalRingHom.{u2, u1} β γ rβ rγ) 0 (Zero.toOfNat0.{max u2 u1} (NonUnitalRingHom.{u2, u1} β γ rβ rγ) (NonUnitalRingHom.instZeroNonUnitalRingHom.{u2, u1} β γ rβ rγ))) f) (OfNat.ofNat.{max u3 u1} (NonUnitalRingHom.{u3, u1} α γ rα rγ) 0 (Zero.toOfNat0.{max u3 u1} (NonUnitalRingHom.{u3, u1} α γ rα rγ) (NonUnitalRingHom.instZeroNonUnitalRingHom.{u3, u1} α γ rα rγ)))
 Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.zero_comp NonUnitalRingHom.zero_compₓ'. -/
 @[simp]
-theorem zero_comp (f : α →ₙ+* β) : (0 : β →ₙ+* γ).comp f = 0 :=
-  by
-  ext
-  rfl
+theorem zero_comp (f : α →ₙ+* β) : (0 : β →ₙ+* γ).comp f = 0 := by ext; rfl
 #align non_unital_ring_hom.zero_comp NonUnitalRingHom.zero_comp
 
 omit rγ
@@ -1377,10 +1371,7 @@ theorem coe_fn_mkRingHomOfMulSelfOfTwoNeZero (h h_two h_one) :
 Case conversion may be inaccurate. Consider using '#align add_monoid_hom.coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZeroₓ'. -/
 @[simp]
 theorem coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero (h h_two h_one) :
-    (f.mkRingHomOfMulSelfOfTwoNeZero h h_two h_one : β →+ α) = f :=
-  by
-  ext
-  rfl
+    (f.mkRingHomOfMulSelfOfTwoNeZero h h_two h_one : β →+ α) = f := by ext; rfl
 #align add_monoid_hom.coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero
 
 end AddMonoidHom

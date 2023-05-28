@@ -117,9 +117,7 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
     · rw [iterate_succ_apply']
       exact mul_le_mul_left' (pow_le_pow_of_le_left (by norm_num) (by norm_num) _) _
     calc
-      1 = ε ^ 5 / 4 * (4 / ε ^ 5) :=
-        by
-        rw [mul_comm, div_mul_div_cancel 4 (pow_pos hε 5).ne']
+      1 = ε ^ 5 / 4 * (4 / ε ^ 5) := by rw [mul_comm, div_mul_div_cancel 4 (pow_pos hε 5).ne'];
         norm_num
       _ < ε ^ 5 / 4 * (⌊4 / ε ^ 5⌋₊ + 1) :=
         ((mul_lt_mul_left <| by positivity).2 (Nat.lt_floor_add_one _))

@@ -118,9 +118,7 @@ def toGraph [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGra
 #align matrix.is_adj_matrix.to_graph Matrix.IsAdjMatrix.toGraph
 
 instance [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : IsAdjMatrix A) :
-    DecidableRel h.toGraph.Adj := by
-  simp only [to_graph]
-  infer_instance
+    DecidableRel h.toGraph.Adj := by simp only [to_graph]; infer_instance
 
 end IsAdjMatrix
 
@@ -144,18 +142,14 @@ theorem compl_apply_diag [Zero α] [One α] (i : V) : A.compl i i = 0 := by simp
 
 #print Matrix.compl_apply /-
 @[simp]
-theorem compl_apply [Zero α] [One α] (i j : V) : A.compl i j = 0 ∨ A.compl i j = 1 :=
-  by
-  unfold compl
-  split_ifs <;> simp
+theorem compl_apply [Zero α] [One α] (i j : V) : A.compl i j = 0 ∨ A.compl i j = 1 := by
+  unfold compl; split_ifs <;> simp
 #align matrix.compl_apply Matrix.compl_apply
 -/
 
 #print Matrix.isSymm_compl /-
 @[simp]
-theorem isSymm_compl [Zero α] [One α] (h : A.IsSymm) : A.compl.IsSymm :=
-  by
-  ext
+theorem isSymm_compl [Zero α] [One α] (h : A.IsSymm) : A.compl.IsSymm := by ext;
   simp [compl, h.apply, eq_comm]
 #align matrix.is_symm_compl Matrix.isSymm_compl
 -/
@@ -225,9 +219,7 @@ theorem adjMatrix_apply (v w : V) [Zero α] [One α] :
 
 #print SimpleGraph.transpose_adjMatrix /-
 @[simp]
-theorem transpose_adjMatrix [Zero α] [One α] : (G.adjMatrix α)ᵀ = G.adjMatrix α :=
-  by
-  ext
+theorem transpose_adjMatrix [Zero α] [One α] : (G.adjMatrix α)ᵀ = G.adjMatrix α := by ext;
   simp [adj_comm]
 #align simple_graph.transpose_adj_matrix SimpleGraph.transpose_adjMatrix
 -/

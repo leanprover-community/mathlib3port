@@ -78,10 +78,7 @@ theorem minimals_empty : minimals r ∅ = ∅ :=
 @[simp]
 theorem maximals_singleton : maximals r {a} = {a} :=
   (maximals_subset _ _).antisymm <|
-    singleton_subset_iff.2 <|
-      ⟨rfl, by
-        rintro b (rfl : b = a)
-        exact id⟩
+    singleton_subset_iff.2 <| ⟨rfl, by rintro b (rfl : b = a); exact id⟩
 #align maximals_singleton maximals_singleton
 -/
 
@@ -138,10 +135,7 @@ theorem minimals_antichain : IsAntichain r (minimals r s) :=
 end IsAntisymm
 
 #print maximals_eq_minimals /-
-theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s :=
-  by
-  congr
-  ext (a b)
+theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s := by congr ; ext (a b);
   exact comm
 #align maximals_eq_minimals maximals_eq_minimals
 -/
@@ -163,20 +157,14 @@ theorem Set.Subsingleton.minimals_eq (h : s.Subsingleton) : minimals r s = s :=
 #print maximals_mono /-
 theorem maximals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     maximals r₂ s ⊆ maximals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by
-    have := eq_of_mem_maximals ha hb (h _ _ hab)
-    subst this
-    exact hab⟩
+  ⟨ha.1, fun b hb hab => by have := eq_of_mem_maximals ha hb (h _ _ hab); subst this; exact hab⟩
 #align maximals_mono maximals_mono
 -/
 
 #print minimals_mono /-
 theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     minimals r₂ s ⊆ minimals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by
-    have := eq_of_mem_minimals ha hb (h _ _ hab)
-    subst this
-    exact hab⟩
+  ⟨ha.1, fun b hb hab => by have := eq_of_mem_minimals ha hb (h _ _ hab); subst this; exact hab⟩
 #align minimals_mono minimals_mono
 -/
 
@@ -247,20 +235,14 @@ theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
 #print IsAntichain.maximals_eq /-
 theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
   (maximals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by
-      have := h.eq ha hb hab
-      subst this
-      exact hab⟩
+    ⟨ha, fun b hb hab => by have := h.eq ha hb hab; subst this; exact hab⟩
 #align is_antichain.maximals_eq IsAntichain.maximals_eq
 -/
 
 #print IsAntichain.minimals_eq /-
 theorem IsAntichain.minimals_eq (h : IsAntichain r s) : minimals r s = s :=
   (minimals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by
-      have := h.eq hb ha hab
-      subst this
-      exact hab⟩
+    ⟨ha, fun b hb hab => by have := h.eq hb ha hab; subst this; exact hab⟩
 #align is_antichain.minimals_eq IsAntichain.minimals_eq
 -/
 

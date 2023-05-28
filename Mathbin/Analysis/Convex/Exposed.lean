@@ -99,10 +99,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} 𝕜] [_inst_2 : OrderedRing.{u2} 𝕜] [_inst_3 : AddCommMonoid.{u1} E] [_inst_4 : TopologicalSpace.{u1} E] [_inst_5 : Module.{u2, u1} 𝕜 E (OrderedSemiring.toSemiring.{u2} 𝕜 (OrderedRing.toOrderedSemiring.{u2} 𝕜 _inst_2)) _inst_3] {A : Set.{u1} E}, IsExposed.{u2, u1} 𝕜 E _inst_1 (OrderedSemiring.toSemiring.{u2} 𝕜 (OrderedRing.toOrderedSemiring.{u2} 𝕜 _inst_2)) (PartialOrder.toPreorder.{u2} 𝕜 (OrderedRing.toPartialOrder.{u2} 𝕜 _inst_2)) _inst_3 _inst_4 _inst_5 A (EmptyCollection.emptyCollection.{u1} (Set.{u1} E) (Set.instEmptyCollectionSet.{u1} E))
 Case conversion may be inaccurate. Consider using '#align is_exposed_empty isExposed_emptyₓ'. -/
-theorem isExposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ =>
-  by
-  exfalso
-  exact hx
+theorem isExposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ => by exfalso; exact hx
 #align is_exposed_empty isExposed_empty
 
 namespace IsExposed

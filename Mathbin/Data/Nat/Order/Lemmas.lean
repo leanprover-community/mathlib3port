@@ -86,8 +86,7 @@ theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy
     apply Nat.eq_mul_of_div_eq_left (dvd_mul_of_dvd_left hy x)
     rw [eq_comm, mul_comm, Nat.mul_div_assoc _ hy]
     exact Nat.eq_mul_of_div_eq_right hx h
-  · intro h
-    rw [h]
+  · intro h; rw [h]
 #align nat.div_eq_iff_eq_of_dvd_dvd Nat.div_eq_iff_eq_of_dvd_dvd
 -/
 
@@ -118,10 +117,8 @@ protected theorem dvd_one {n : ℕ} : n ∣ 1 ↔ n = 1 :=
 
 #print Nat.not_two_dvd_bit1 /-
 @[simp]
-protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ bit1 n :=
-  by
-  rw [bit1, Nat.dvd_add_right two_dvd_bit0, Nat.dvd_one]
-  cc
+protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ bit1 n := by
+  rw [bit1, Nat.dvd_add_right two_dvd_bit0, Nat.dvd_one]; cc
 #align nat.not_two_dvd_bit1 Nat.not_two_dvd_bit1
 -/
 
@@ -316,10 +313,8 @@ theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → P
 -/
 
 #print Nat.div_lt_div_of_lt_of_dvd /-
-theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d :=
-  by
-  rw [Nat.lt_div_iff_mul_lt hdb]
-  exact lt_of_le_of_lt (mul_div_le a d) h
+theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by
+  rw [Nat.lt_div_iff_mul_lt hdb]; exact lt_of_le_of_lt (mul_div_le a d) h
 #align nat.div_lt_div_of_lt_of_dvd Nat.div_lt_div_of_lt_of_dvd
 -/
 

@@ -116,8 +116,7 @@ instance (priority := 10) Bitraversable.isLawfulTraversable [IsLawfulBitraversab
   by
   constructor <;> intros <;> simp [traverse, comp_tsnd, functor_norm]
   · rfl
-  · simp [tsnd_eq_snd_id]
-    rfl
+  · simp [tsnd_eq_snd_id]; rfl
   · simp [tsnd, binaturality, Function.comp, functor_norm]
 #align bitraversable.is_lawful_traversable Bitraversable.isLawfulTraversable
 
@@ -146,8 +145,7 @@ instance [IsLawfulTraversable F] [IsLawfulTraversable G] [IsLawfulBitraversable 
     simp [bitraverse, Bicompl.bitraverse, bimap, traverse_id, bitraverse_id_id, comp_bitraverse,
       functor_norm]
   · simp [traverse_eq_map_id', bitraverse_eq_bimap_id]
-  · revert x
-    dsimp only [bicompl]
+  · revert x; dsimp only [bicompl]
     simp [binaturality, naturality_pf]
 
 end Bicompl
@@ -167,11 +165,8 @@ instance : Bitraversable (bicompr F t) where bitraverse := @Bicompr.bitraverse t
 instance [IsLawfulTraversable F] [IsLawfulBitraversable t] : IsLawfulBitraversable (bicompr F t) :=
   by
   constructor <;> intros <;> simp [bitraverse, Bicompr.bitraverse, bitraverse_id_id, functor_norm]
-  · simp [bitraverse_eq_bimap_id', traverse_eq_map_id']
-    rfl
-  · revert x
-    dsimp only [bicompr]
-    intro
+  · simp [bitraverse_eq_bimap_id', traverse_eq_map_id']; rfl
+  · revert x; dsimp only [bicompr]; intro
     simp [naturality, binaturality']
 
 end Bicompr

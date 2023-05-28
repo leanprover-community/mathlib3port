@@ -363,12 +363,8 @@ theorem torsionBySet_eq_torsionBySet_span : torsionBySet R M s = torsionBySet R 
   by
   refine' le_antisymm (fun x hx => _) (torsion_by_set_le_torsion_by_set_of_subset subset_span)
   rw [mem_torsion_by_set_iff] at hx⊢
-  suffices Ideal.span s ≤ Ideal.torsionOf R M x
-    by
-    rintro ⟨a, ha⟩
-    exact this ha
-  rw [Ideal.span_le]
-  exact fun a ha => hx ⟨a, ha⟩
+  suffices Ideal.span s ≤ Ideal.torsionOf R M x by rintro ⟨a, ha⟩; exact this ha
+  rw [Ideal.span_le]; exact fun a ha => hx ⟨a, ha⟩
 #align submodule.torsion_by_set_eq_torsion_by_span Submodule.torsionBySet_eq_torsionBySet_span
 -/
 
@@ -399,9 +395,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.torsion_by_one Submodule.torsionBy_oneₓ'. -/
 @[simp]
 theorem torsionBy_one : torsionBy R M 1 = ⊥ :=
-  eq_bot_iff.mpr fun _ h => by
-    rw [mem_torsion_by_iff, one_smul] at h
-    exact h
+  eq_bot_iff.mpr fun _ h => by rw [mem_torsion_by_iff, one_smul] at h; exact h
 #align submodule.torsion_by_one Submodule.torsionBy_one
 
 /- warning: submodule.torsion_by_univ -> Submodule.torsionBySet_univ is a dubious translation:
@@ -444,10 +438,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align module.is_torsion_by_set_iff_torsion_by_set_eq_top Module.isTorsionBySet_iff_torsionBySet_eq_topₓ'. -/
 theorem isTorsionBySet_iff_torsionBySet_eq_top :
     IsTorsionBySet R M s ↔ Submodule.torsionBySet R M s = ⊤ :=
-  ⟨fun h => eq_top_iff.mpr fun _ _ => (mem_torsionBySet_iff _ _).mpr <| @h _, fun h x =>
-    by
-    rw [← mem_torsion_by_set_iff, h]
-    trivial⟩
+  ⟨fun h => eq_top_iff.mpr fun _ _ => (mem_torsionBySet_iff _ _).mpr <| @h _, fun h x => by
+    rw [← mem_torsion_by_set_iff, h]; trivial⟩
 #align module.is_torsion_by_set_iff_torsion_by_set_eq_top Module.isTorsionBySet_iff_torsionBySet_eq_top
 
 /- warning: module.is_torsion_by_iff_torsion_by_eq_top -> Module.isTorsionBy_iff_torsionBy_eq_top is a dubious translation:
@@ -566,16 +558,9 @@ theorem iSup_torsionBySet_ideal_eq_torsionBySet_iInf :
     (⨆ i ∈ S, torsionBySet R M <| p i) = torsionBySet R M ↑(⨅ i ∈ S, p i) :=
   by
   cases' S.eq_empty_or_nonempty with h h
-  · rw [h]
-    convert iSup_emptyset
-    convert torsion_by_univ
-    convert top_coe
-    exact iInf_emptyset
+  · rw [h]; convert iSup_emptyset; convert torsion_by_univ; convert top_coe; exact iInf_emptyset
   apply le_antisymm
-  · apply iSup_le _
-    intro i
-    apply iSup_le _
-    intro is
+  · apply iSup_le _; intro i; apply iSup_le _; intro is
     apply torsion_by_set_le_torsion_by_set_of_subset
     exact (iInf_le (fun i => ⨅ H : i ∈ S, p i) i).trans (iInf_le _ is)
   · intro x hx
@@ -585,22 +570,14 @@ theorem iSup_torsionBySet_ideal_eq_torsionBySet_iInf :
         ((Ideal.eq_top_iff_one _).mp <| (Ideal.iSup_iInf_eq_top_iff_pairwise h _).mpr hp)
     refine' ⟨fun i => ⟨(μ i : R) • x, _⟩, _⟩
     · rw [mem_torsion_by_set_iff] at hx⊢
-      rintro ⟨a, ha⟩
-      rw [smul_smul]
-      suffices : a * μ i ∈ ⨅ i ∈ S, p i
-      exact hx ⟨_, this⟩
-      rw [mem_infi]
-      intro j
-      rw [mem_infi]
-      intro hj
+      rintro ⟨a, ha⟩; rw [smul_smul]
+      suffices : a * μ i ∈ ⨅ i ∈ S, p i; exact hx ⟨_, this⟩
+      rw [mem_infi]; intro j; rw [mem_infi]; intro hj
       by_cases ij : j = i
-      · rw [ij]
-        exact Ideal.mul_mem_right _ _ ha
-      · have := coe_mem (μ i)
-        simp only [mem_infi] at this
+      · rw [ij]; exact Ideal.mul_mem_right _ _ ha
+      · have := coe_mem (μ i); simp only [mem_infi] at this
         exact Ideal.mul_mem_left _ _ (this j hj ij)
-    · simp_rw [coe_mk]
-      rw [← Finset.sum_smul, hμ, one_smul]
+    · simp_rw [coe_mk]; rw [← Finset.sum_smul, hμ, one_smul]
 #align submodule.supr_torsion_by_ideal_eq_torsion_by_infi Submodule.iSup_torsionBySet_ideal_eq_torsionBySet_iInf
 
 /- warning: submodule.sup_indep_torsion_by_ideal -> Submodule.supIndep_torsionBySet_ideal is a dubious translation:
@@ -639,11 +616,7 @@ theorem iSup_torsionBy_eq_torsionBy_prod :
   rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ←
     Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf, ←
     supr_torsion_by_ideal_eq_torsion_by_infi]
-  · congr
-    ext : 1
-    congr
-    ext : 1
-    exact (torsion_by_span_singleton_eq _).symm
+  · congr ; ext : 1; congr ; ext : 1; exact (torsion_by_span_singleton_eq _).symm
   · exact fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime _ _).mpr (hq hi hj ij)
 #align submodule.supr_torsion_by_eq_torsion_by_prod Submodule.iSup_torsionBy_eq_torsionBy_prod
 
@@ -840,12 +813,7 @@ theorem mem_torsion_iff (x : M) : x ∈ torsion R M ↔ ∃ a : R⁰, a • x = 
 
 @[simps]
 instance : SMul S (torsion' R M S) :=
-  ⟨fun s x =>
-    ⟨s • x, by
-      obtain ⟨x, a, h⟩ := x
-      use a
-      dsimp
-      rw [smul_comm, h, smul_zero]⟩⟩
+  ⟨fun s x => ⟨s • x, by obtain ⟨x, a, h⟩ := x; use a; dsimp; rw [smul_comm, h, smul_zero]⟩⟩
 
 instance : DistribMulAction S (torsion' R M S) :=
   Subtype.coe_injective.DistribMulAction (torsion' R M S).Subtype.toAddMonoidHom fun (c : S) x =>
@@ -862,10 +830,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.is_torsion'_iff_torsion'_eq_top Submodule.isTorsion'_iff_torsion'_eq_topₓ'. -/
 /-- A `S`-torsion module is a module whose `S`-torsion submodule is the full space. -/
 theorem isTorsion'_iff_torsion'_eq_top : IsTorsion' M S ↔ torsion' R M S = ⊤ :=
-  ⟨fun h => eq_top_iff.mpr fun _ _ => @h _, fun h x =>
-    by
-    rw [← @mem_torsion'_iff R, h]
-    trivial⟩
+  ⟨fun h => eq_top_iff.mpr fun _ _ => @h _, fun h x => by rw [← @mem_torsion'_iff R, h]; trivial⟩
 #align submodule.is_torsion'_iff_torsion'_eq_top Submodule.isTorsion'_iff_torsion'_eq_top
 
 /- warning: submodule.torsion'_is_torsion' -> Submodule.torsion'_isTorsion' is a dubious translation:
@@ -981,23 +946,18 @@ theorem noZeroSMulDivisors_iff_torsion_eq_bot : NoZeroSMulDivisors R M ↔ torsi
   by
   constructor <;> intro h
   · haveI : NoZeroSMulDivisors R M := h
-    rw [eq_bot_iff]
-    rintro x ⟨a, hax⟩
+    rw [eq_bot_iff]; rintro x ⟨a, hax⟩
     change (a : R) • x = 0 at hax
     cases' eq_zero_or_eq_zero_of_smul_eq_zero hax with h0 h0
-    · exfalso
-      exact nonZeroDivisors.coe_ne_zero a h0
-    · exact h0
+    · exfalso; exact nonZeroDivisors.coe_ne_zero a h0; · exact h0
   ·
     exact
       {
         eq_zero_or_eq_zero_of_smul_eq_zero := fun a x hax =>
           by
           by_cases ha : a = 0
-          · left
-            exact ha
-          · right
-            rw [← mem_bot _, ← h]
+          · left; exact ha
+          · right; rw [← mem_bot _, ← h]
             exact ⟨⟨a, mem_nonZeroDivisors_of_ne_zero ha⟩, hax⟩ }
 #align submodule.no_zero_smul_divisors_iff_torsion_eq_bot Submodule.noZeroSMulDivisors_iff_torsion_eq_bot
 
@@ -1121,11 +1081,10 @@ theorem torsionBy_eq_span_singleton {R : Type _} [CommRing R] (a b : R) (ha : a 
   ext x; rw [mem_torsion_by_iff, mem_span_singleton]
   obtain ⟨x, rfl⟩ := mk_surjective x; constructor <;> intro h
   · rw [← mk_eq_mk, ← quotient.mk_smul, quotient.mk_eq_zero, mem_span_singleton] at h
-    obtain ⟨c, h⟩ := h
+    obtain ⟨c, h⟩ := h;
     rw [smul_eq_mul, smul_eq_mul, mul_comm, mul_assoc, mul_cancel_left_mem_nonZeroDivisors ha,
       mul_comm] at h
-    use c
-    rw [← h, ← mk_eq_mk, ← quotient.mk_smul, smul_eq_mul, mk_eq_mk]
+    use c; rw [← h, ← mk_eq_mk, ← quotient.mk_smul, smul_eq_mul, mk_eq_mk]
   · obtain ⟨c, h⟩ := h
     rw [← h, smul_comm, ← mk_eq_mk, ← quotient.mk_smul,
       (quotient.mk_eq_zero _).mpr <| mem_span_singleton_self _, smul_zero]

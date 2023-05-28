@@ -114,14 +114,8 @@ variable {I f}
 instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)}
     [∀ i, Module (f i) (g i)] : Module (∀ i, f i) (∀ i, g i)
     where
-  add_smul := by
-    intros
-    ext1
-    apply add_smul
-  zero_smul := by
-    intros
-    ext1
-    apply zero_smul
+  add_smul := by intros ; ext1; apply add_smul
+  zero_smul := by intros ; ext1; apply zero_smul
 #align pi.module' Pi.module'
 -/
 

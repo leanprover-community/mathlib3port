@@ -164,13 +164,9 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       linarith
     refine' ⟨M⁻¹ * δ n, by positivity, fun i hi x => _⟩
     calc
-      ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ :=
-        by
-        rw [iteratedFderiv_const_smul_apply]
-        exact (g_smooth n).of_le le_top
-      _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ :=
-        by
-        rw [norm_smul, Real.norm_of_nonneg]
+      ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ := by
+        rw [iteratedFderiv_const_smul_apply]; exact (g_smooth n).of_le le_top
+      _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ := by rw [norm_smul, Real.norm_of_nonneg];
         positivity
       _ ≤ M⁻¹ * δ n * M := (mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity))
       _ = δ n := by field_simp [M_pos.ne']
@@ -193,8 +189,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
         exact g_s n hx
       simp only [this, MulZeroClass.mul_zero, tsum_zero]
     · intro x hx
-      obtain ⟨n, hn⟩ : ∃ n, x ∈ support (g n)
-      exact s_g x hx
+      obtain ⟨n, hn⟩ : ∃ n, x ∈ support (g n); exact s_g x hx
       have I : 0 < r n * g n x := mul_pos (rpos n) (lt_of_le_of_ne (g_nonneg n x) (Ne.symm hn))
       exact ne_of_gt (tsum_pos (S x) (fun i => mul_nonneg (rpos i).le (g_nonneg i x)) n I)
   · refine'
@@ -260,8 +255,7 @@ theorem u_exists :
         simpa using hx
       simp only [mem_support, Classical.not_not] at I1 I2
       simp only [I1, I2, add_zero, zero_div]
-  · intro x
-    simp only [add_comm, neg_neg]
+  · intro x; simp only [add_comm, neg_neg]
 #align exists_cont_diff_bump_base.u_exists ExistsContDiffBumpBase.u_exists
 
 variable {E}
@@ -317,8 +311,7 @@ theorem u_int_pos : 0 < ∫ x : E, u x ∂μ :=
   by
   refine' (integral_pos_iff_support_of_nonneg u_nonneg _).mpr _
   · exact (u_continuous E).integrable_of_hasCompactSupport (u_compact_support E)
-  · rw [u_support]
-    exact measure_ball_pos _ _ zero_lt_one
+  · rw [u_support]; exact measure_ball_pos _ _ zero_lt_one
 #align exists_cont_diff_bump_base.u_int_pos ExistsContDiffBumpBase.u_int_pos
 
 variable {E}
@@ -330,9 +323,7 @@ def w (D : ℝ) (x : E) : ℝ :=
 #align exists_cont_diff_bump_base.W ExistsContDiffBumpBase.w
 
 theorem w_def (D : ℝ) :
-    (w D : E → ℝ) = fun x => ((∫ x : E, u x ∂μ) * |D| ^ finrank ℝ E)⁻¹ • u (D⁻¹ • x) :=
-  by
-  ext1 x
+    (w D : E → ℝ) = fun x => ((∫ x : E, u x ∂μ) * |D| ^ finrank ℝ E)⁻¹ • u (D⁻¹ • x) := by ext1 x;
   rfl
 #align exists_cont_diff_bump_base.W_def ExistsContDiffBumpBase.w_def
 
@@ -408,9 +399,7 @@ theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
     intro h'y
     linarith only [mem_ball.1 (C hy), h'y]
   have Bx : φ x = 1 := B _ (mem_ball_self Dpos)
-  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by
-    rw [Bx]
-    exact B
+  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
   rw [convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_right, W_integral E Dpos, Bx,
     one_mul]
@@ -430,9 +419,7 @@ theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ b
       linarith only [h'y]
     exact hx (C (mem_ball_comm.1 hy))
   have Bx : φ x = 0 := B _ (mem_ball_self Dpos)
-  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by
-    rw [Bx]
-    exact B
+  have B' : ∀ y, y ∈ ball x D → φ y = φ x := by rw [Bx]; exact B
   rw [convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, Bx, MulZeroClass.mul_zero, integral_const]
 #align exists_cont_diff_bump_base.Y_eq_zero_of_not_mem_ball ExistsContDiffBumpBase.y_eq_zero_of_not_mem_ball
@@ -531,8 +518,7 @@ theorem y_smooth : ContDiffOn ℝ ⊤ (uncurry y) (Ioo (0 : ℝ) 1 ×ˢ (univ : 
       simp_rw [← Real.norm_eq_abs]
       apply @ContDiffOn.norm ℝ
       · exact contDiffOn_fst
-      · intro x hx
-        exact ne_of_gt hx.1.1
+      · intro x hx; exact ne_of_gt hx.1.1
     · apply (u_smooth E).comp_contDiffOn
       exact ContDiffOn.smul (cont_diff_on_fst.inv fun x hx => ne_of_gt hx.1.1) contDiffOn_snd
 #align exists_cont_diff_bump_base.Y_smooth ExistsContDiffBumpBase.y_smooth
@@ -554,10 +540,7 @@ instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
   by
   refine' ⟨⟨_⟩⟩
   borelize E
-  have IR : ∀ R : ℝ, 1 < R → 0 < (R - 1) / (R + 1) :=
-    by
-    intro R hR
-    apply div_pos <;> linarith
+  have IR : ∀ R : ℝ, 1 < R → 0 < (R - 1) / (R + 1) := by intro R hR; apply div_pos <;> linarith
   exact
     { toFun := fun R x => if 1 < R then Y ((R - 1) / (R + 1)) (((R + 1) / 2)⁻¹ • x) else 0
       mem_Icc := fun R x => by
@@ -605,9 +588,7 @@ instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
         calc
           2 / (R + 1) * ‖x‖ ≤ 2 / (R + 1) * 1 :=
             mul_le_mul_of_nonneg_left hx (div_nonneg zero_le_two A.le)
-          _ = 1 - (R - 1) / (R + 1) := by
-            field_simp [A.ne']
-            ring
+          _ = 1 - (R - 1) / (R + 1) := by field_simp [A.ne'] ; ring
           
       support := fun R hR => by
         have A : 0 < (R + 1) / 2 := by linarith

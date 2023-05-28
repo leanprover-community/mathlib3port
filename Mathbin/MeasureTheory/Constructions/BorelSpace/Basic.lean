@@ -155,12 +155,10 @@ theorem borel_eq_generateFrom_Iio : borel α = generateFrom (range Iio) :=
   · rw [borel_eq_generateFrom_of_subbasis (@OrderTopology.topology_eq_generate_intervals α _ _ _)]
     letI : MeasurableSpace α := MeasurableSpace.generateFrom (range Iio)
     have H : ∀ a : α, MeasurableSet (Iio a) := fun a => generate_measurable.basic _ ⟨_, rfl⟩
-    refine' generate_from_le _
-    rintro _ ⟨a, rfl | rfl⟩ <;> [skip;apply H]
+    refine' generate_from_le _; rintro _ ⟨a, rfl | rfl⟩ <;> [skip;apply H]
     by_cases h : ∃ a', ∀ b, a < b ↔ a' ≤ b
     · rcases h with ⟨a', ha'⟩
-      rw [(_ : Ioi a = Iio a'ᶜ)]
-      · exact (H _).compl
+      rw [(_ : Ioi a = Iio a'ᶜ)]; · exact (H _).compl
       simp [Set.ext_iff, ha']
     · rcases is_open_Union_countable (fun a' : { a' : α // a < a' } => { b | a'.1 < b }) fun a' =>
           isOpen_lt' _ with ⟨v, ⟨hv⟩, vu⟩
@@ -173,8 +171,7 @@ theorem borel_eq_generateFrom_Iio : borel α = generateFrom (range Iio) :=
         · exact ⟨a', h₁, le_of_lt h₂⟩
         refine' not_imp_comm.1 (fun h => _) h
         exact ⟨x, fun b => ⟨fun ab => le_of_not_lt fun h' => h ⟨b, ab, h'⟩, lt_of_lt_of_le ax⟩⟩
-      rw [this]
-      skip
+      rw [this]; skip
       apply MeasurableSet.iUnion
       exact fun _ => (H _).compl
   · rw [forall_range_iff]
@@ -337,18 +334,14 @@ instance (priority := 100) BorelSpace.opensMeasurable {α : Type _} [Topological
 #print Subtype.borelSpace /-
 instance Subtype.borelSpace {α : Type _} [TopologicalSpace α] [MeasurableSpace α]
     [hα : BorelSpace α] (s : Set α) : BorelSpace s :=
-  ⟨by
-    rw [hα.1, Subtype.instMeasurableSpace, ← borel_comap]
-    rfl⟩
+  ⟨by rw [hα.1, Subtype.instMeasurableSpace, ← borel_comap]; rfl⟩
 #align subtype.borel_space Subtype.borelSpace
 -/
 
 #print Subtype.opensMeasurableSpace /-
 instance Subtype.opensMeasurableSpace {α : Type _} [TopologicalSpace α] [MeasurableSpace α]
     [h : OpensMeasurableSpace α] (s : Set α) : OpensMeasurableSpace s :=
-  ⟨by
-    rw [borel_comap]
-    exact comap_mono h.1⟩
+  ⟨by rw [borel_comap]; exact comap_mono h.1⟩
 #align subtype.opens_measurable_space Subtype.opensMeasurableSpace
 -/
 
@@ -440,9 +433,7 @@ but is expected to have type
   forall {γ : Type.{u2}} {δ : Type.{u1}} [_inst_7 : TopologicalSpace.{u2} γ] [_inst_8 : MeasurableSpace.{u2} γ] [_inst_9 : BorelSpace.{u2} γ _inst_7 _inst_8] [_inst_13 : MeasurableSpace.{u1} δ] {f : δ -> γ}, (forall (s : Set.{u2} γ), (IsOpen.{u2} γ _inst_7 s) -> (MeasurableSet.{u1} δ _inst_13 (Set.preimage.{u1, u2} δ γ f s))) -> (Measurable.{u1, u2} δ γ _inst_13 _inst_8 f)
 Case conversion may be inaccurate. Consider using '#align measurable_of_is_open measurable_of_isOpenₓ'. -/
 theorem measurable_of_isOpen {f : δ → γ} (hf : ∀ s, IsOpen s → MeasurableSet (f ⁻¹' s)) :
-    Measurable f := by
-  rw [‹BorelSpace γ›.measurable_eq]
-  exact measurable_generateFrom hf
+    Measurable f := by rw [‹BorelSpace γ›.measurable_eq]; exact measurable_generateFrom hf
 #align measurable_of_is_open measurable_of_isOpen
 
 /- warning: measurable_of_is_closed -> measurable_of_isClosed is a dubious translation:
@@ -634,10 +625,8 @@ instance nhdsWithin_Iic_isMeasurablyGenerated : (𝓝[Iic b] a).IsMeasurablyGene
 -/
 
 #print nhdsWithin_Icc_isMeasurablyGenerated /-
-instance nhdsWithin_Icc_isMeasurablyGenerated : IsMeasurablyGenerated (𝓝[Icc a b] x) :=
-  by
-  rw [← Ici_inter_Iic, nhdsWithin_inter]
-  infer_instance
+instance nhdsWithin_Icc_isMeasurablyGenerated : IsMeasurablyGenerated (𝓝[Icc a b] x) := by
+  rw [← Ici_inter_Iic, nhdsWithin_inter]; infer_instance
 #align nhds_within_Icc_is_measurably_generated nhdsWithin_Icc_isMeasurablyGenerated
 -/
 
@@ -829,9 +818,7 @@ theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace 
   rcases hd.exists_countable_dense_subset_bot_top with ⟨t, hts, hc, htd, htb, htt⟩
   by_cases ha : ∀ b < a, (Ioo b a).Nonempty
   · convert_to MeasurableSet (⋃ (l ∈ t) (u ∈ t) (hlu : l < u) (hu : u ≤ a), Ico l u)
-    · ext y
-      simp only [mem_Union, mem_Iio, mem_Ico]
-      constructor
+    · ext y; simp only [mem_Union, mem_Iio, mem_Ico]; constructor
       · intro hy
         rcases htd.exists_le' (fun b hb => htb _ hb (hbot b hb)) y with ⟨l, hlt, hly⟩
         rcases htd.exists_mem_open isOpen_Ioo (ha y hy) with ⟨u, hut, hyu, hua⟩
@@ -847,8 +834,7 @@ theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace 
     · symm
       simp only [← Ici_inter_Iio, ← Union_inter, inter_eq_right_iff_subset, subset_def, mem_Union,
         mem_Ici, mem_Iio]
-      intro x hx
-      rcases htd.exists_le' (fun b hb => htb _ hb (hbot b hb)) x with ⟨z, hzt, hzx⟩
+      intro x hx; rcases htd.exists_le' (fun b hb => htb _ hb (hbot b hb)) x with ⟨z, hzt, hzx⟩
       exact ⟨z, hzt, hzx.trans_lt hx, hzx⟩
     · refine' MeasurableSet.biUnion hc fun x hx => MeasurableSet.iUnion fun hlt => _
       exact generate_measurable.basic _ ⟨x, hts hx, a, ha, hlt, mem_singleton _⟩
@@ -984,16 +970,13 @@ theorem ext_of_Ico' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
     measure.ext_of_generate_from_of_cover_subset
       (borel_space.measurable_eq.trans (borel_eq_generateFrom_Ico α)) (isPiSystem_Ico id id) _ this
       _ _ _
-  · rintro _ ⟨l, -, u, -, h, rfl⟩
-    exact ⟨l, u, h, rfl⟩
+  · rintro _ ⟨l, -, u, -, h, rfl⟩; exact ⟨l, u, h, rfl⟩
   · refine' sUnion_eq_univ_iff.2 fun x => _
     rcases hsd.exists_le' hsb x with ⟨l, hls, hlx⟩
     rcases hsd.exists_gt x with ⟨u, hus, hxu⟩
     exact ⟨_, ⟨l, hls, u, hus, hlx.trans_lt hxu, rfl⟩, hlx, hxu⟩
-  · rintro _ ⟨l, -, u, -, hlt, rfl⟩
-    exact hμ hlt
-  · rintro _ ⟨l, u, hlt, rfl⟩
-    exact h hlt
+  · rintro _ ⟨l, -, u, -, hlt, rfl⟩; exact hμ hlt
+  · rintro _ ⟨l, u, hlt, rfl⟩; exact h hlt
 #align measure_theory.measure.ext_of_Ico' MeasureTheory.Measure.ext_of_Ico'
 
 /- warning: measure_theory.measure.ext_of_Ioc' -> MeasureTheory.Measure.ext_of_Ioc' is a dubious translation:
@@ -1056,8 +1039,7 @@ theorem ext_of_Iic {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
     simp only [← bsupr_measure_Iic hsc (hsd.exists_ge' hst) this, h]
   rw [← Iic_diff_Iic, measure_diff (Iic_subset_Iic.2 hlt.le) measurableSet_Iic,
     measure_diff (Iic_subset_Iic.2 hlt.le) measurableSet_Iic, h a, h b]
-  · rw [← h a]
-    exact (measure_lt_top μ _).Ne
+  · rw [← h a]; exact (measure_lt_top μ _).Ne
   · exact (measure_lt_top μ _).Ne
 #align measure_theory.measure.ext_of_Iic MeasureTheory.Measure.ext_of_Iic
 -/
@@ -1615,12 +1597,9 @@ private theorem ae_measurable.is_lub_of_nonempty {ι} (hι : Nonempty ι) {μ : 
 theorem AEMeasurable.isLUB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α} {g : δ → α}
     (hf : ∀ i, AEMeasurable (f i) μ) (hg : ∀ᵐ b ∂μ, IsLUB { a | ∃ i, f i b = a } (g b)) :
     AEMeasurable g μ := by
-  by_cases hμ : μ = 0
-  · rw [hμ]
-    exact aemeasurable_zero_measure
+  by_cases hμ : μ = 0; · rw [hμ]; exact aemeasurable_zero_measure
   have : μ.ae.ne_bot := by simpa [ne_bot_iff]
-  by_cases hι : Nonempty ι
-  · exact ae_measurable.is_lub_of_nonempty hι hf hg
+  by_cases hι : Nonempty ι; · exact ae_measurable.is_lub_of_nonempty hι hf hg
   suffices ∃ x, g =ᵐ[μ] fun y => g x by
     exact ⟨fun y => g this.some, measurable_const, this.some_spec⟩
   have h_empty : ∀ x, { a : α | ∃ i : ι, f i x = a } = ∅ :=
@@ -1852,8 +1831,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_bsupr measu
 theorem measurable_biSup {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) : Measurable fun b => ⨆ i ∈ s, f i b :=
   by
-  haveI : Encodable s := hs.to_encodable
-  simp only [iSup_subtype']
+  haveI : Encodable s := hs.to_encodable; simp only [iSup_subtype']
   exact measurable_iSup fun i => hf i
 #align measurable_bsupr measurable_biSup
 
@@ -1880,8 +1858,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_binfi measu
 theorem measurable_biInf {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
     (hf : ∀ i, Measurable (f i)) : Measurable fun b => ⨅ i ∈ s, f i b :=
   by
-  haveI : Encodable s := hs.to_encodable
-  simp only [iInf_subtype']
+  haveI : Encodable s := hs.to_encodable; simp only [iInf_subtype']
   exact measurable_iInf fun i => hf i
 #align measurable_binfi measurable_biInf
 
@@ -1971,8 +1948,7 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
   by
   cases' eq_empty_or_nonempty s with h2s h2s
   · simp [h2s, measurable_const]
-  · apply measurable_of_Iic
-    intro y
+  · apply measurable_of_Iic; intro y
     simp_rw [preimage, mem_Iic, csSup_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
     exact MeasurableSet.biInter hs fun i hi => measurableSet_le (hf i) measurable_const
 #align measurable_cSup measurable_cSup
@@ -2510,11 +2486,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.measure_ext_Ioo_rat Real.measure_ext_Ioo_ratₓ'. -/
 theorem measure_ext_Ioo_rat {μ ν : Measure ℝ} [LocallyFiniteMeasure μ]
     (h : ∀ a b : ℚ, μ (Ioo a b) = ν (Ioo a b)) : μ = ν :=
-  (finiteSpanningSetsInIooRat μ).ext borel_eq_generateFrom_Ioo_rat isPiSystem_Ioo_rat <|
-    by
-    simp only [mem_Union, mem_singleton_iff]
-    rintro _ ⟨a, b, -, rfl⟩
-    apply h
+  (finiteSpanningSetsInIooRat μ).ext borel_eq_generateFrom_Ioo_rat isPiSystem_Ioo_rat <| by
+    simp only [mem_Union, mem_singleton_iff]; rintro _ ⟨a, b, -, rfl⟩; apply h
 #align real.measure_ext_Ioo_rat Real.measure_ext_Ioo_rat
 
 /- warning: real.borel_eq_generate_from_Iio_rat -> Real.borel_eq_generateFrom_Iio_rat is a dubious translation:
@@ -2529,8 +2502,7 @@ theorem borel_eq_generateFrom_Iio_rat : borel ℝ = generateFrom (⋃ a : ℚ, {
   refine' le_antisymm _ _
   · rw [borel_eq_generate_from_Ioo_rat]
     refine' generate_from_le fun t => _
-    simp only [mem_Union, mem_singleton_iff]
-    rintro ⟨a, b, h, rfl⟩
+    simp only [mem_Union, mem_singleton_iff]; rintro ⟨a, b, h, rfl⟩
     rw [(Set.ext fun x => _ : Ioo (a : ℝ) b = (⋃ c > a, Iio cᶜ) ∩ Iio b)]
     · have hg : ∀ q : ℚ, measurable_set[g] (Iio q) := fun q =>
         generate_measurable.basic (Iio q) (by simp)
@@ -2542,9 +2514,7 @@ theorem borel_eq_generateFrom_Iio_rat : borel ℝ = generateFrom (⋃ a : ℚ, {
       rcases exists_rat_btwn h with ⟨c, ac, cx⟩
       exact ⟨c, Rat.cast_lt.1 ac, cx.le⟩
   · refine' MeasurableSpace.generateFrom_le fun _ => _
-    simp only [mem_Union, mem_singleton_iff]
-    rintro ⟨r, rfl⟩
-    exact measurableSet_Iio
+    simp only [mem_Union, mem_singleton_iff]; rintro ⟨r, rfl⟩; exact measurableSet_Iio
 #align real.borel_eq_generate_from_Iio_rat Real.borel_eq_generateFrom_Iio_rat
 
 end Real
@@ -2827,8 +2797,7 @@ Case conversion may be inaccurate. Consider using '#align measurable.ennreal_tsu
 theorem Measurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0∞} (h : ∀ i, Measurable (f i)) :
     Measurable fun x => ∑' i, f i x :=
   by
-  simp_rw [ENNReal.tsum_eq_iSup_sum]
-  apply measurable_iSup
+  simp_rw [ENNReal.tsum_eq_iSup_sum]; apply measurable_iSup
   exact fun s => s.measurable_sum fun i _ => h i
 #align measurable.ennreal_tsum Measurable.ennreal_tsum
 
@@ -2870,8 +2839,7 @@ Case conversion may be inaccurate. Consider using '#align ae_measurable.ennreal_
 theorem AEMeasurable.ennreal_tsum {ι} [Countable ι] {f : ι → α → ℝ≥0∞} {μ : Measure α}
     (h : ∀ i, AEMeasurable (f i) μ) : AEMeasurable (fun x => ∑' i, f i x) μ :=
   by
-  simp_rw [ENNReal.tsum_eq_iSup_sum]
-  apply aemeasurable_iSup
+  simp_rw [ENNReal.tsum_eq_iSup_sum]; apply aemeasurable_iSup
   exact fun s => Finset.aemeasurable_sum s fun i _ => h i
 #align ae_measurable.ennreal_tsum AEMeasurable.ennreal_tsum
 

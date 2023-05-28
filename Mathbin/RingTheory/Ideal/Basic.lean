@@ -478,10 +478,8 @@ theorem IsPrime.mem_or_mem_of_mul_eq_zero {I : Ideal α} (hI : I.IsPrime) {x y :
 theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ) (H : r ^ n ∈ I) :
     r ∈ I := by
   induction' n with n ih
-  · rw [pow_zero] at H
-    exact (mt (eq_top_iff_one _).2 hI.1).elim H
-  · rw [pow_succ] at H
-    exact Or.cases_on (hI.mem_or_mem H) id ih
+  · rw [pow_zero] at H; exact (mt (eq_top_iff_one _).2 hI.1).elim H
+  · rw [pow_succ] at H; exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 -/
 
@@ -673,14 +671,8 @@ theorem span_pair_add_mul_left {R : Type u} [CommRing R] {x y : R} (z : R) :
   ext
   rw [mem_span_pair, mem_span_pair]
   exact
-    ⟨fun ⟨a, b, h⟩ =>
-      ⟨a, b + a * z, by
-        rw [← h]
-        ring1⟩,
-      fun ⟨a, b, h⟩ =>
-      ⟨a, b - a * z, by
-        rw [← h]
-        ring1⟩⟩
+    ⟨fun ⟨a, b, h⟩ => ⟨a, b + a * z, by rw [← h]; ring1⟩, fun ⟨a, b, h⟩ =>
+      ⟨a, b - a * z, by rw [← h]; ring1⟩⟩
 #align ideal.span_pair_add_mul_left Ideal.span_pair_add_mul_left
 
 /- warning: ideal.span_pair_add_mul_right -> Ideal.span_pair_add_mul_right is a dubious translation:
@@ -1020,9 +1012,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ideal.is_prime.mul_mem_iff_mem_or_mem Ideal.IsPrime.mul_mem_iff_mem_or_memₓ'. -/
 theorem IsPrime.mul_mem_iff_mem_or_mem {I : Ideal α} (hI : I.IsPrime) :
     ∀ {x y : α}, x * y ∈ I ↔ x ∈ I ∨ y ∈ I := fun x y =>
-  ⟨hI.mem_or_mem, by
-    rintro (h | h)
-    exacts[I.mul_mem_right y h, I.mul_mem_left x h]⟩
+  ⟨hI.mem_or_mem, by rintro (h | h); exacts[I.mul_mem_right y h, I.mul_mem_left x h]⟩
 #align ideal.is_prime.mul_mem_iff_mem_or_mem Ideal.IsPrime.mul_mem_iff_mem_or_mem
 
 #print Ideal.IsPrime.pow_mem_iff_mem /-
@@ -1076,8 +1066,7 @@ theorem sum_pow_mem_span_pow {ι} (s : Finset ι) (f : ι → α) (n : ℕ) :
     (∑ i in s, f i) ^ (s.card * n + 1) ∈ span ((fun i => f i ^ (n + 1)) '' s) :=
   by
   convert pow_multiset_sum_mem_span_pow (s.1.map f) n
-  · rw [Multiset.card_map]
-    rfl
+  · rw [Multiset.card_map]; rfl
   rw [Multiset.map_map, Multiset.toFinset_map, Finset.val_toFinset, Finset.coe_image]
 #align ideal.sum_pow_mem_span_pow Ideal.sum_pow_mem_span_pow
 
@@ -1182,8 +1171,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.span_singleton_n
 @[simp]
 theorem span_singleton_neg (x : α) : (span {-x} : Ideal α) = span {x} :=
   by
-  ext
-  simp only [mem_span_singleton']
+  ext; simp only [mem_span_singleton']
   exact ⟨fun ⟨y, h⟩ => ⟨-y, h ▸ neg_mul_comm y x⟩, fun ⟨y, h⟩ => ⟨-y, h ▸ neg_mul_neg y x⟩⟩
 #align ideal.span_singleton_neg Ideal.span_singleton_neg
 
@@ -1259,10 +1247,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.mul_sub_mul_mem 
 theorem mul_sub_mul_mem {R : Type _} [CommRing R] (I : Ideal R) {a b c d : R} (h1 : a - b ∈ I)
     (h2 : c - d ∈ I) : a * c - b * d ∈ I :=
   by
-  rw [show a * c - b * d = (a - b) * c + b * (c - d)
-      by
-      rw [sub_mul, mul_sub]
-      abel]
+  rw [show a * c - b * d = (a - b) * c + b * (c - d) by rw [sub_mul, mul_sub]; abel]
   exact I.add_mem (I.mul_mem_right _ h1) (I.mul_mem_left _ h2)
 #align ideal.mul_sub_mul_mem Ideal.mul_sub_mul_mem
 
@@ -1466,15 +1451,10 @@ theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : 
 theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ nonunits α) :
     ∃ I : Ideal α, I.IsMaximal ∧ a ∈ I :=
   by
-  have : Ideal.span ({a} : Set α) ≠ ⊤ := by
-    intro H
-    rw [Ideal.span_singleton_eq_top] at H
+  have : Ideal.span ({a} : Set α) ≠ ⊤ := by intro H; rw [Ideal.span_singleton_eq_top] at H;
     contradiction
   rcases Ideal.exists_le_maximal _ this with ⟨I, Imax, H⟩
-  use I, Imax
-  apply H
-  apply Ideal.subset_span
-  exact Set.mem_singleton a
+  use I, Imax; apply H; apply Ideal.subset_span; exact Set.mem_singleton a
 #align exists_max_ideal_of_mem_nonunits exists_max_ideal_of_mem_nonunits
 -/
 

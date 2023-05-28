@@ -53,13 +53,9 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
   by
   let t : ℕ → ℕ → R := fun n m => x ^ m * y ^ (n - m) * choose n m
   change (x + y) ^ n = ∑ m in range (n + 1), t n m
-  have h_first : ∀ n, t n 0 = y ^ n := fun n =>
-    by
-    dsimp [t]
+  have h_first : ∀ n, t n 0 = y ^ n := fun n => by dsimp [t];
     rw [choose_zero_right, pow_zero, Nat.cast_one, mul_one, one_mul]
-  have h_last : ∀ n, t n n.succ = 0 := fun n =>
-    by
-    dsimp [t]
+  have h_last : ∀ n, t n n.succ = 0 := fun n => by dsimp [t];
     rw [choose_succ_self, Nat.cast_zero, MulZeroClass.mul_zero]
   have h_middle :
     ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ :=
@@ -77,8 +73,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
         rw [pow_succ y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
   induction' n with n ih
   · rw [pow_zero, sum_range_succ, range_zero, sum_empty, zero_add]
-    dsimp [t]
-    rw [pow_zero, pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
+    dsimp [t]; rw [pow_zero, pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
   · rw [sum_range_succ', h_first]
     rw [sum_congr rfl (h_middle n), sum_add_distrib, add_assoc]
     rw [pow_succ (x + y), ih, add_mul, mul_sum, mul_sum]
@@ -149,9 +144,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
         · linarith
       _ = ∑ i in range (2 * m + 2), choose (2 * m + 1) i := (sum_range_add_sum_Ico _ (by linarith))
       _ = 2 ^ (2 * m + 1) := (sum_range_choose (2 * m + 1))
-      _ = 2 * 4 ^ m := by
-        rw [pow_succ, pow_mul]
-        rfl
+      _ = 2 * 4 ^ m := by rw [pow_succ, pow_mul]; rfl
       
 #align nat.sum_range_choose_halfway Nat.sum_range_choose_halfway
 -/

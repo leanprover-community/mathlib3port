@@ -206,18 +206,10 @@ def lsum [Semiring S] [Module S N] [SMulCommClass R S N] :
             sum_add_hom_single, sum_add_hom_single, LinearMap.toAddMonoidHom_coe,
             LinearMap.map_smul] }
   invFun F i := F.comp (lsingle i)
-  left_inv F := by
-    ext (x y)
-    simp
-  right_inv F := by
-    ext (x y)
-    simp
-  map_add' F G := by
-    ext (x y)
-    simp
-  map_smul' c F := by
-    ext
-    simp
+  left_inv F := by ext (x y); simp
+  right_inv F := by ext (x y); simp
+  map_add' F G := by ext (x y); simp
+  map_smul' c F := by ext; simp
 #align dfinsupp.lsum Dfinsupp.lsum
 
 /- warning: dfinsupp.lsum_single -> Dfinsupp.lsum_single is a dubious translation:
@@ -519,35 +511,19 @@ theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
     rw [Submodule.mem_iSup_iff_exists_dfinsupp']
     constructor <;> rintro ⟨μ, hμ⟩
     · use fun i => ⟨μ i, (iSup_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
-      rw [← hμ]
-      symm
-      apply Finset.sum_subset
-      · intro x
-        contrapose
-        intro hx
+      rw [← hμ]; symm; apply Finset.sum_subset
+      · intro x; contrapose; intro hx
         rw [mem_support_iff, not_ne_iff]
-        ext
-        rw [coe_zero, ← mem_bot R]
-        convert coe_mem (μ x)
-        symm
-        exact iSup_neg hx
-      · intro x _ hx
-        rw [mem_support_iff, not_ne_iff] at hx
-        rw [hx]
-        rfl
+        ext; rw [coe_zero, ← mem_bot R]; convert coe_mem (μ x)
+        symm; exact iSup_neg hx
+      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx; rw [hx]; rfl
     · refine' ⟨Dfinsupp.mk s _, _⟩
-      · rintro ⟨i, hi⟩
-        refine' ⟨μ i, _⟩
-        rw [iSup_pos]
-        · exact coe_mem _
-        · exact hi
+      · rintro ⟨i, hi⟩; refine' ⟨μ i, _⟩
+        rw [iSup_pos]; · exact coe_mem _; · exact hi
       simp only [Dfinsupp.sum]
       rw [Finset.sum_subset support_mk_subset, ← hμ]
       exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
-      · intro x _ hx
-        rw [mem_support_iff, not_ne_iff] at hx
-        rw [hx]
-        rfl
+      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx; rw [hx]; rfl
 #align submodule.mem_supr_finset_iff_exists_sum Submodule.mem_iSup_finset_iff_exists_sum
 
 end Submodule
@@ -621,9 +597,7 @@ theorem lsum_comp_mapRange_toSpanSingleton [∀ m : R, Decidable (m ≠ 0)] (p :
               _ →ₗ[R] _).comp
           (finsuppLequivDfinsupp R : (ι →₀ R) ≃ₗ[R] _).toLinearMap) =
       Finsupp.total ι N R v :=
-  by
-  ext
-  simp
+  by ext; simp
 #align complete_lattice.lsum_comp_map_range_to_span_singleton CompleteLattice.lsum_comp_mapRange_toSpanSingleton
 
 end Semiring
@@ -663,8 +637,7 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
     by
     -- Lean can't find this without our help
     letI : AddCommGroup (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
-    rw [LinearMap.ker_eq_bot] at this
-    exact this
+    rw [LinearMap.ker_eq_bot] at this; exact this
   rw [LinearMap.ker_eq_bot']
   intro m hm
   ext i : 1

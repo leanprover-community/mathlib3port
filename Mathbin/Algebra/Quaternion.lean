@@ -814,10 +814,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (c₁ : R) (c₂ : R) [_inst_2 : StrongRankCondition.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))], Eq.{succ (succ u1)} Cardinal.{u1} (Module.rank.{u1, u1} R (QuaternionAlgebra.{u1} R c₁ c₂) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (Ring.toNonAssocRing.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instRing.{u1} R _inst_1 c₁ c₂))))) (Algebra.toModule.{u1, u1} R (QuaternionAlgebra.{u1} R c₁ c₂) (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instRing.{u1} R _inst_1 c₁ c₂)) (QuaternionAlgebra.instAlgebraQuaternionAlgebraToSemiringInstRing.{u1, u1} R R _inst_1 c₁ c₂ (CommRing.toCommSemiring.{u1} R _inst_1) (Algebra.id.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (OfNat.ofNat.{succ u1} Cardinal.{u1} 4 (instOfNat.{succ u1} Cardinal.{u1} 4 Cardinal.instNatCastCardinal.{u1} (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align quaternion_algebra.rank_eq_four QuaternionAlgebra.rank_eq_fourₓ'. -/
-theorem rank_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 :=
-  by
-  rw [rank_eq_card_basis (basis_one_i_j_k c₁ c₂), Fintype.card_fin]
-  norm_num
+theorem rank_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 := by
+  rw [rank_eq_card_basis (basis_one_i_j_k c₁ c₂), Fintype.card_fin]; norm_num
 #align quaternion_algebra.rank_eq_four QuaternionAlgebra.rank_eq_four
 
 /- warning: quaternion_algebra.finrank_eq_four -> QuaternionAlgebra.finrank_eq_four is a dubious translation:
@@ -1134,9 +1132,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {c₁ : R} {c₂ : R} (a : QuaternionAlgebra.{u1} R c₁ c₂), Eq.{succ u1} (QuaternionAlgebra.{u1} R c₁ c₂) (HMul.hMul.{u1, u1, u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.{u1} R c₁ c₂) (instHMul.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instMulQuaternionAlgebra.{u1} R _inst_1 c₁ c₂)) a (Star.star.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instStarQuaternionAlgebra.{u1} R _inst_1 c₁ c₂) a)) (QuaternionAlgebra.coe.{u1} R _inst_1 c₁ c₂ (QuaternionAlgebra.re.{u1} R c₁ c₂ (HMul.hMul.{u1, u1, u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.{u1} R c₁ c₂) (instHMul.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instMulQuaternionAlgebra.{u1} R _inst_1 c₁ c₂)) a (Star.star.{u1} (QuaternionAlgebra.{u1} R c₁ c₂) (QuaternionAlgebra.instStarQuaternionAlgebra.{u1} R _inst_1 c₁ c₂) a))))
 Case conversion may be inaccurate. Consider using '#align quaternion_algebra.mul_star_eq_coe QuaternionAlgebra.mul_star_eq_coeₓ'. -/
-theorem mul_star_eq_coe : a * star a = (a * star a).re :=
-  by
-  rw [← star_comm_self']
+theorem mul_star_eq_coe : a * star a = (a * star a).re := by rw [← star_comm_self'];
   exact a.star_mul_eq_coe
 #align quaternion_algebra.mul_star_eq_coe QuaternionAlgebra.mul_star_eq_coe
 
@@ -2382,9 +2378,7 @@ theorem normSq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align quaternion.norm_sq_nonneg Quaternion.normSq_nonnegₓ'. -/
 @[simp]
-theorem normSq_nonneg : 0 ≤ normSq a := by
-  rw [norm_sq_def']
-  apply_rules [sq_nonneg, add_nonneg]
+theorem normSq_nonneg : 0 ≤ normSq a := by rw [norm_sq_def']; apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_nonneg Quaternion.normSq_nonneg
 
 /- warning: quaternion.norm_sq_le_zero -> Quaternion.normSq_le_zero is a dubious translation:
@@ -2596,11 +2590,8 @@ private theorem pow_four [Infinite R] : (#R) ^ 4 = (#R) :=
 
 #print Cardinal.mk_quaternionAlgebra /-
 /-- The cardinality of a quaternion algebra, as a type. -/
-theorem mk_quaternionAlgebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 :=
-  by
-  rw [mk_congr (QuaternionAlgebra.equivProd c₁ c₂)]
-  simp only [mk_prod, lift_id]
-  ring
+theorem mk_quaternionAlgebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 := by
+  rw [mk_congr (QuaternionAlgebra.equivProd c₁ c₂)]; simp only [mk_prod, lift_id]; ring
 #align cardinal.mk_quaternion_algebra Cardinal.mk_quaternionAlgebra
 -/
 

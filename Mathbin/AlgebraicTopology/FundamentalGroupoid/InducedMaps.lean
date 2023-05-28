@@ -98,11 +98,8 @@ include hfg
 
 /-- If `f(p(t) = g(q(t))` for two paths `p` and `q`, then the induced path homotopy classes
 `f(p)` and `g(p)` are the same as well, despite having a priori different types -/
-theorem hEq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) :=
-  by
-  simp only [map_eq, ← Path.Homotopic.map_lift]
-  apply Path.Homotopic.hpath_hext
-  exact hfg
+theorem hEq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) := by
+  simp only [map_eq, ← Path.Homotopic.map_lift]; apply Path.Homotopic.hpath_hext; exact hfg
 #align continuous_map.homotopy.heq_path_of_eq_image ContinuousMap.Homotopy.hEq_path_of_eq_image
 
 private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [Path.source]
@@ -110,10 +107,8 @@ private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [
 private theorem end_path : f x₁ = g x₃ := by convert hfg 1 <;> simp only [Path.target]
 
 theorem eq_path_of_eq_image :
-    (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm :=
-  by
-  rw [functor.conj_eq_to_hom_iff_heq]
-  exact heq_path_of_eq_image hfg
+    (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm := by
+  rw [functor.conj_eq_to_hom_iff_heq]; exact heq_path_of_eq_image hfg
 #align continuous_map.homotopy.eq_path_of_eq_image ContinuousMap.Homotopy.eq_path_of_eq_image
 
 end Casts
@@ -218,9 +213,7 @@ theorem eq_diag_path :
   by
   rw [H.apply_zero_path, H.apply_one_path, H.eval_at_eq, H.eval_at_eq]
   dsimp only [prod_to_prod_Top_I]
-  constructor <;>
-    · slice_lhs 2 5 => simp [← CategoryTheory.Functor.map_comp]
-      rfl
+  constructor <;> · slice_lhs 2 5 => simp [← CategoryTheory.Functor.map_comp]; rfl
 #align continuous_map.homotopy.eq_diag_path ContinuousMap.Homotopy.eq_diag_path
 
 end ContinuousMap.Homotopy

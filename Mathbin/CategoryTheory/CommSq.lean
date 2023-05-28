@@ -224,18 +224,14 @@ end LiftStruct
 #print CategoryTheory.CommSq.subsingleton_liftStruct_of_epi /-
 instance subsingleton_liftStruct_of_epi (sq : CommSq f i p g) [Epi i] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by
-    ext
-    simp only [← cancel_epi i, lift_struct.fac_left]⟩
+  ⟨fun l₁ l₂ => by ext; simp only [← cancel_epi i, lift_struct.fac_left]⟩
 #align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_liftStruct_of_epi
 -/
 
 #print CategoryTheory.CommSq.subsingleton_liftStruct_of_mono /-
 instance subsingleton_liftStruct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by
-    ext
-    simp only [← cancel_mono p, lift_struct.fac_right]⟩
+  ⟨fun l₁ l₂ => by ext; simp only [← cancel_mono p, lift_struct.fac_right]⟩
 #align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_liftStruct_of_mono
 -/
 
@@ -270,9 +266,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : C} {B : C} {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A X} {i : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B} {p : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} {g : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) B Y} (sq : CategoryTheory.CommSq.{u2, u1} C _inst_1 A X B Y f i p g), Iff (CategoryTheory.CommSq.HasLift.{u2, u1} C _inst_1 A B X Y f i p g sq) (Nonempty.{succ u1} (CategoryTheory.CommSq.LiftStruct.{u2, u1} C _inst_1 A B X Y f i p g sq))
 Case conversion may be inaccurate. Consider using '#align category_theory.comm_sq.has_lift.iff CategoryTheory.CommSq.HasLift.iffₓ'. -/
-theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct :=
-  by
-  constructor
+theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct := by constructor;
   exacts[fun h => h.exists_lift, fun h => mk h]
 #align category_theory.comm_sq.has_lift.iff CategoryTheory.CommSq.HasLift.iff
 

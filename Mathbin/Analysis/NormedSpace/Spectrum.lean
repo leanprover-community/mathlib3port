@@ -85,9 +85,7 @@ theorem SpectralRadius.of_subsingleton [Subsingleton A] (a : A) : spectralRadius
 #align spectrum.spectral_radius.of_subsingleton spectrum.SpectralRadius.of_subsingleton
 
 @[simp]
-theorem spectralRadius_zero : spectralRadius 𝕜 (0 : A) = 0 :=
-  by
-  nontriviality A
+theorem spectralRadius_zero : spectralRadius 𝕜 (0 : A) = 0 := by nontriviality A;
   simp [spectralRadius]
 #align spectrum.spectral_radius_zero spectrum.spectralRadius_zero
 
@@ -147,10 +145,8 @@ protected theorem isCompact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
   Metric.isCompact_of_isClosed_bounded (spectrum.isClosed a) (is_bounded a)
 #align spectrum.is_compact spectrum.isCompact
 
-theorem spectralRadius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ :=
-  by
-  refine' iSup₂_le fun k hk => _
-  exact_mod_cast norm_le_norm_of_mem hk
+theorem spectralRadius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ := by
+  refine' iSup₂_le fun k hk => _; exact_mod_cast norm_le_norm_of_mem hk
 #align spectrum.spectral_radius_le_nnnorm spectrum.spectralRadius_le_nnnorm
 
 theorem exists_nnnorm_eq_spectralRadius_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) :
@@ -635,9 +631,7 @@ def equivAlgHom : characterSpace 𝕜 A ≃ (A →ₐ[𝕜] 𝕜)
   toFun := toAlgHom
   invFun f :=
     { val := f.toContinuousLinearMap
-      property := by
-        rw [eq_set_map_one_map_mul]
-        exact ⟨map_one f, map_mul f⟩ }
+      property := by rw [eq_set_map_one_map_mul]; exact ⟨map_one f, map_mul f⟩ }
   left_inv f := Subtype.ext <| ContinuousLinearMap.ext fun x => rfl
   right_inv f := AlgHom.ext fun x => rfl
 #align weak_dual.character_space.equiv_alg_hom WeakDual.characterSpace.equivAlgHom

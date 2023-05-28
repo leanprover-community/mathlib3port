@@ -111,9 +111,7 @@ instance : Fintype (IndexSet Δ) :=
       induction Δ₁ using Opposite.rec'
       induction Δ₂ using Opposite.rec'
       simp only at h₁
-      have h₂ : Δ₁ = Δ₂ := by
-        ext1
-        simpa only [Fin.mk_eq_mk] using h₁.1
+      have h₂ : Δ₁ = Δ₂ := by ext1; simpa only [Fin.mk_eq_mk] using h₁.1
       subst h₂
       refine' ext _ _ rfl _
       ext : 2
@@ -359,10 +357,8 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u2, u1} C _inst_1} (s : SimplicialObject.Splitting.{u1, u2} C _inst_1 _inst_2 X) (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (SimplicialObject.Splitting.N.{u1, u2} C _inst_1 _inst_2 X s (SimplexCategory.len (Opposite.unop.{1} SimplexCategory (Sigma.fst.{0, 0} (Opposite.{1} SimplexCategory) (fun (Δ' : Opposite.{1} SimplexCategory) => Subtype.{1} (Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (Opposite.unop.{1} SimplexCategory Δ')) (fun (α : Quiver.Hom.{1, 0} SimplexCategory (CategoryTheory.CategoryStruct.toQuiver.{0, 0} SimplexCategory (CategoryTheory.Category.toCategoryStruct.{0, 0} SimplexCategory SimplexCategory.smallCategory)) (Opposite.unop.{1} SimplexCategory (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (Opposite.unop.{1} SimplexCategory Δ')) => CategoryTheory.Epi.{0, 0} SimplexCategory SimplexCategory.smallCategory (Opposite.unop.{1} SimplexCategory (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (Opposite.unop.{1} SimplexCategory Δ') α)) (SimplicialObject.Splitting.IndexSet.id (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))))))) (Prefunctor.obj.{1, succ u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.CategoryStruct.toQuiver.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.toCategoryStruct.{0, 0} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{0, u2, 0, u1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X) (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)))) (SimplicialObject.Splitting.ιSummand.{u1, u2} C _inst_1 _inst_2 X s (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)) (SimplicialObject.Splitting.IndexSet.id (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n)))) (SimplicialObject.Splitting.ι.{u1, u2} C _inst_1 _inst_2 X s n)
 Case conversion may be inaccurate. Consider using '#align simplicial_object.splitting.ι_summand_id SimplicialObject.Splitting.ιSummand_idₓ'. -/
-theorem ιSummand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n :=
-  by
-  erw [ι_summand_eq, X.map_id, comp_id]
-  rfl
+theorem ιSummand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n := by
+  erw [ι_summand_eq, X.map_id, comp_id]; rfl
 #align simplicial_object.splitting.ι_summand_id SimplicialObject.Splitting.ιSummand_id
 
 /- warning: simplicial_object.splitting.φ -> SimplicialObject.Splitting.φ is a dubious translation:
@@ -522,9 +518,7 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
   by
   rcases Φ₁ with ⟨F₁, f₁, c₁⟩
   rcases Φ₂ with ⟨F₂, f₂, c₂⟩
-  have h' : f₁ = f₂ := by
-    ext
-    apply h
+  have h' : f₁ = f₂ := by ext; apply h
   subst h'
   simp only [eq_self_iff_true, and_true_iff]
   apply S₁.s.hom_ext

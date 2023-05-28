@@ -63,21 +63,10 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
           mul_assoc' := congr_app A.mul_assoc X }
       map := fun X Y f =>
         { Hom := A.pt.map f
-          one_hom' := by
-            rw [← A.one.naturality, tensor_unit_map]
-            dsimp
-            rw [category.id_comp]
-          mul_hom' := by
-            dsimp
-            rw [← A.mul.naturality, tensor_obj_map] }
-      map_id' := fun X => by
-        ext
-        dsimp
-        rw [CategoryTheory.Functor.map_id]
-      map_comp' := fun X Y Z f g => by
-        ext
-        dsimp
-        rw [functor.map_comp] }
+          one_hom' := by rw [← A.one.naturality, tensor_unit_map]; dsimp; rw [category.id_comp]
+          mul_hom' := by dsimp; rw [← A.mul.naturality, tensor_obj_map] }
+      map_id' := fun X => by ext; dsimp; rw [CategoryTheory.Functor.map_id]
+      map_comp' := fun X Y Z f g => by ext; dsimp; rw [functor.map_comp] }
   map A B f :=
     {
       app := fun X =>
@@ -96,27 +85,15 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
     { pt := F ⋙ Mon_.forget D
       one := { app := fun X => (F.obj X).one }
       mul := { app := fun X => (F.obj X).mul }
-      one_mul' := by
-        ext X
-        exact (F.obj X).one_mul
-      mul_one' := by
-        ext X
-        exact (F.obj X).mul_one
-      mul_assoc' := by
-        ext X
-        exact (F.obj X).mul_assoc }
+      one_mul' := by ext X; exact (F.obj X).one_mul
+      mul_one' := by ext X; exact (F.obj X).mul_one
+      mul_assoc' := by ext X; exact (F.obj X).mul_assoc }
   map F G α :=
     { Hom :=
         { app := fun X => (α.app X).Hom
           naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) }
-      one_hom' := by
-        ext x
-        dsimp
-        rw [(α.app x).OneHom]
-      mul_hom' := by
-        ext x
-        dsimp
-        rw [(α.app x).MulHom] }
+      one_hom' := by ext x; dsimp; rw [(α.app x).OneHom]
+      mul_hom' := by ext x; dsimp; rw [(α.app x).MulHom] }
 #align category_theory.monoidal.Mon_functor_category_equivalence.inverse CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverse
 
 /-- The unit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
@@ -127,23 +104,12 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
     (fun A =>
       { Hom :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by
-              ext X
-              dsimp
-              simp only [category.comp_id]
-            mul_hom' := by
-              ext X
-              dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] }
+            one_hom' := by ext X; dsimp; simp only [category.comp_id]
+            mul_hom' := by ext X; dsimp; simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by
-              ext X
-              dsimp
-              simp only [category.comp_id]
-            mul_hom' := by
-              ext X
-              dsimp
+            one_hom' := by ext X; dsimp; simp only [category.comp_id]
+            mul_hom' := by ext X; dsimp;
               simp only [tensor_id, category.id_comp, category.comp_id] } })
     fun A B f => by
     ext X
@@ -210,9 +176,7 @@ def inverse : (C ⥤ CommMon_ D) ⥤ CommMon_ (C ⥤ D)
     where
   obj F :=
     { (monFunctorCategoryEquivalence C D).inverse.obj (F ⋙ CommMon_.forget₂Mon_ D) with
-      mul_comm' := by
-        ext X
-        exact (F.obj X).mul_comm }
+      mul_comm' := by ext X; exact (F.obj X).mul_comm }
   map F G α := (monFunctorCategoryEquivalence C D).inverse.map (whiskerRight α _)
 #align category_theory.monoidal.CommMon_functor_category_equivalence.inverse CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.inverse
 
@@ -224,23 +188,12 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
     (fun A =>
       { Hom :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by
-              ext X
-              dsimp
-              simp only [category.comp_id]
-            mul_hom' := by
-              ext X
-              dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] }
+            one_hom' := by ext X; dsimp; simp only [category.comp_id]
+            mul_hom' := by ext X; dsimp; simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by
-              ext X
-              dsimp
-              simp only [category.comp_id]
-            mul_hom' := by
-              ext X
-              dsimp
+            one_hom' := by ext X; dsimp; simp only [category.comp_id]
+            mul_hom' := by ext X; dsimp;
               simp only [tensor_id, category.id_comp, category.comp_id] } })
     fun A B f => by
     ext X

@@ -125,9 +125,7 @@ protected def op (X : HomologicalComplex V c) : HomologicalComplex Vᵒᵖ c.sym
   pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
-  d_comp_d' := by
-    intros
-    rw [← op_comp, X.d_comp_d, op_zero]
+  d_comp_d' := by intros ; rw [← op_comp, X.d_comp_d, op_zero]
 #align homological_complex.op HomologicalComplex.op
 -/
 
@@ -139,9 +137,7 @@ protected def opSymm (X : HomologicalComplex V c.symm) : HomologicalComplex Vᵒ
   pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
-  d_comp_d' := by
-    intros
-    rw [← op_comp, X.d_comp_d, op_zero]
+  d_comp_d' := by intros ; rw [← op_comp, X.d_comp_d, op_zero]
 #align homological_complex.op_symm HomologicalComplex.opSymm
 -/
 
@@ -153,9 +149,7 @@ protected def unop (X : HomologicalComplex Vᵒᵖ c) : HomologicalComplex V c.s
   pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
-  d_comp_d' := by
-    intros
-    rw [← unop_comp, X.d_comp_d, unop_zero]
+  d_comp_d' := by intros ; rw [← unop_comp, X.d_comp_d, unop_zero]
 #align homological_complex.unop HomologicalComplex.unop
 -/
 
@@ -167,9 +161,7 @@ protected def unopSymm (X : HomologicalComplex Vᵒᵖ c.symm) : HomologicalComp
   pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
-  d_comp_d' := by
-    intros
-    rw [← unop_comp, X.d_comp_d, unop_zero]
+  d_comp_d' := by intros ; rw [← unop_comp, X.d_comp_d, unop_zero]
 #align homological_complex.unop_symm HomologicalComplex.unopSymm
 -/
 

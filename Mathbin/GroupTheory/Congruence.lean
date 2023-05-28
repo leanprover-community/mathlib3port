@@ -202,12 +202,8 @@ variable {c}
 /-- The map sending a congruence relation to its underlying binary relation is injective. -/
 @[to_additive
       "The map sending an additive congruence relation to its underlying binary relation\nis injective."]
-theorem ext' {c d : Con M} (H : c.R = d.R) : c = d :=
-  by
-  rcases c with ⟨⟨⟩⟩
-  rcases d with ⟨⟨⟩⟩
-  cases H
-  congr
+theorem ext' {c d : Con M} (H : c.R = d.R) : c = d := by rcases c with ⟨⟨⟩⟩; rcases d with ⟨⟨⟩⟩;
+  cases H; congr
 #align con.ext' Con.ext'
 #align add_con.ext' AddCon.ext'
 -/
@@ -256,9 +252,7 @@ theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
 def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M
     where
   toSetoid := Setoid.ker f
-  mul' _ _ _ _ h1 h2 := by
-    dsimp [Setoid.ker, on_fun] at *
-    rw [h, h1, h2, h]
+  mul' _ _ _ _ h1 h2 := by dsimp [Setoid.ker, on_fun] at *; rw [h, h1, h2, h]
 #align con.mul_ker Con.mulKer
 #align add_con.add_ker AddCon.addKer
 -/
@@ -524,10 +518,7 @@ Case conversion may be inaccurate. Consider using '#align con.Inf_def Con.sInf_d
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
 theorem sInf_def (S : Set (Con M)) : ⇑(sInf S) = sInf (@Set.image (Con M) (M → M → Prop) coeFn S) :=
-  by
-  ext
-  simp only [sInf_image, iInf_apply, iInf_Prop_eq]
-  rfl
+  by ext; simp only [sInf_image, iInf_apply, iInf_Prop_eq]; rfl
 #align con.Inf_def Con.sInf_def
 #align add_con.Inf_def AddCon.sInf_def
 
@@ -1247,9 +1238,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_unique Con.li
 @[to_additive "The uniqueness part of the universal property for quotients of `add_monoid`s."]
 theorem lift_unique (H : c ≤ ker f) (g : c.Quotient →* P) (Hg : g.comp c.mk' = f) :
     g = c.lift f H :=
-  lift_funext g (c.lift f H) fun x => by
-    subst f
-    rfl
+  lift_funext g (c.lift f H) fun x => by subst f; rfl
 #align con.lift_unique Con.lift_unique
 #align add_con.lift_unique AddCon.lift_unique
 

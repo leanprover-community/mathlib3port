@@ -196,9 +196,7 @@ theorem Finset.measurableSet_biUnion {f : β → Set α} (s : Finset β)
 
 #print MeasurableSet.sUnion /-
 theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
-    MeasurableSet (⋃₀ s) := by
-  rw [sUnion_eq_bUnion]
-  exact MeasurableSet.biUnion hs h
+    MeasurableSet (⋃₀ s) := by rw [sUnion_eq_bUnion]; exact MeasurableSet.biUnion hs h
 #align measurable_set.sUnion MeasurableSet.sUnion
 -/
 
@@ -212,9 +210,7 @@ theorem Set.Finite.measurableSet_sUnion {s : Set (Set α)} (hs : s.Finite)
 #print MeasurableSet.iInter /-
 theorem MeasurableSet.iInter [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋂ b, f b) :=
-  MeasurableSet.compl_iff.1 <| by
-    rw [compl_Inter]
-    exact MeasurableSet.iUnion fun b => (h b).compl
+  MeasurableSet.compl_iff.1 <| by rw [compl_Inter]; exact MeasurableSet.iUnion fun b => (h b).compl
 #align measurable_set.Inter MeasurableSet.iInter
 -/
 
@@ -226,8 +222,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_set.bInter MeasurableSet.biInterₓ'. -/
 theorem MeasurableSet.biInter {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  MeasurableSet.compl_iff.1 <| by
-    rw [compl_Inter₂]
+  MeasurableSet.compl_iff.1 <| by rw [compl_Inter₂];
     exact MeasurableSet.biUnion hs fun b hb => (h b hb).compl
 #align measurable_set.bInter MeasurableSet.biInter
 
@@ -255,9 +250,7 @@ theorem Finset.measurableSet_biInter {f : β → Set α} (s : Finset β)
 
 #print MeasurableSet.sInter /-
 theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
-    MeasurableSet (⋂₀ s) := by
-  rw [sInter_eq_bInter]
-  exact MeasurableSet.biInter hs h
+    MeasurableSet (⋂₀ s) := by rw [sInter_eq_bInter]; exact MeasurableSet.biInter hs h
 #align measurable_set.sInter MeasurableSet.sInter
 -/
 
@@ -276,8 +269,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_set.union MeasurableSet.unionₓ'. -/
 @[simp]
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
-    MeasurableSet (s₁ ∪ s₂) := by
-  rw [union_eq_Union]
+    MeasurableSet (s₁ ∪ s₂) := by rw [union_eq_Union];
   exact MeasurableSet.iUnion (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align measurable_set.union MeasurableSet.union
 
@@ -289,8 +281,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_set.inter MeasurableSet.interₓ'. -/
 @[simp]
 theorem MeasurableSet.inter {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
-    MeasurableSet (s₁ ∩ s₂) := by
-  rw [inter_eq_compl_compl_union_compl]
+    MeasurableSet (s₁ ∩ s₂) := by rw [inter_eq_compl_compl_union_compl];
   exact (h₁.compl.union h₂.compl).compl
 #align measurable_set.inter MeasurableSet.inter
 
@@ -328,20 +319,14 @@ theorem MeasurableSet.ite {t s₁ s₂ : Set α} (ht : MeasurableSet t) (h₁ : 
 
 #print MeasurableSet.ite' /-
 theorem MeasurableSet.ite' {s t : Set α} {p : Prop} (hs : p → MeasurableSet s)
-    (ht : ¬p → MeasurableSet t) : MeasurableSet (ite p s t) :=
-  by
-  split_ifs
-  exacts[hs h, ht h]
+    (ht : ¬p → MeasurableSet t) : MeasurableSet (ite p s t) := by split_ifs; exacts[hs h, ht h]
 #align measurable_set.ite' MeasurableSet.ite'
 -/
 
 #print MeasurableSet.cond /-
 @[simp]
 theorem MeasurableSet.cond {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂)
-    {i : Bool} : MeasurableSet (cond i s₁ s₂) :=
-  by
-  cases i
-  exacts[h₂, h₁]
+    {i : Bool} : MeasurableSet (cond i s₁ s₂) := by cases i; exacts[h₂, h₁]
 #align measurable_set.cond MeasurableSet.cond
 -/
 
@@ -391,10 +376,7 @@ theorem MeasurableSpace.ext :
 @[ext]
 theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
     m₁ = m₂ ↔ ∀ s : Set α, measurable_set[m₁] s ↔ measurable_set[m₂] s :=
-  ⟨by
-    rintro rfl
-    intro s
-    rfl, MeasurableSpace.ext⟩
+  ⟨by rintro rfl; intro s; rfl, MeasurableSpace.ext⟩
 #align measurable_space.ext_iff MeasurableSpace.ext_iff
 -/
 
@@ -519,9 +501,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_space.gener
 theorem generateFrom_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀ t ∈ C, p t)
     (h_empty : p ∅) (h_compl : ∀ t, p t → p (tᶜ))
     (h_Union : ∀ f : ℕ → Set α, (∀ n, p (f n)) → p (⋃ i, f i)) {s : Set α}
-    (hs : measurable_set[generateFrom C] s) : p s :=
-  by
-  induction hs
+    (hs : measurable_set[generateFrom C] s) : p s := by induction hs;
   exacts[hC _ hs_H, h_empty, h_compl _ hs_ih, h_Union hs_f hs_ih]
 #align measurable_space.generate_from_induction MeasurableSpace.generateFrom_induction
 
@@ -564,10 +544,7 @@ protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generate
 #print MeasurableSpace.mkOfClosure_sets /-
 theorem mkOfClosure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateFrom s] t } = s} :
     MeasurableSpace.mkOfClosure s hs = generateFrom s :=
-  MeasurableSpace.ext fun t =>
-    show t ∈ s ↔ _ by
-      conv_lhs => rw [← hs]
-      rfl
+  MeasurableSpace.ext fun t => show t ∈ s ↔ _ by conv_lhs => rw [← hs]; rfl
 #align measurable_space.mk_of_closure_sets MeasurableSpace.mkOfClosure_sets
 -/
 
@@ -647,10 +624,8 @@ but is expected to have type
   forall {α : Type.{u1}}, Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instSingletonSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))) (Bot.bot.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toBot.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align measurable_space.generate_from_singleton_empty MeasurableSpace.generateFrom_singleton_emptyₓ'. -/
 @[simp]
-theorem generateFrom_singleton_empty : generateFrom {∅} = (⊥ : MeasurableSpace α) :=
-  by
-  rw [eq_bot_iff, generate_from_le_iff]
-  simp
+theorem generateFrom_singleton_empty : generateFrom {∅} = (⊥ : MeasurableSpace α) := by
+  rw [eq_bot_iff, generate_from_le_iff]; simp
 #align measurable_space.generate_from_singleton_empty MeasurableSpace.generateFrom_singleton_empty
 
 /- warning: measurable_space.generate_from_singleton_univ -> MeasurableSpace.generateFrom_singleton_univ is a dubious translation:
@@ -660,10 +635,8 @@ but is expected to have type
   forall {α : Type.{u1}}, Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instSingletonSet.{u1} (Set.{u1} α)) (Set.univ.{u1} α))) (Bot.bot.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toBot.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align measurable_space.generate_from_singleton_univ MeasurableSpace.generateFrom_singleton_univₓ'. -/
 @[simp]
-theorem generateFrom_singleton_univ : generateFrom {Set.univ} = (⊥ : MeasurableSpace α) :=
-  by
-  rw [eq_bot_iff, generate_from_le_iff]
-  simp
+theorem generateFrom_singleton_univ : generateFrom {Set.univ} = (⊥ : MeasurableSpace α) := by
+  rw [eq_bot_iff, generate_from_le_iff]; simp
 #align measurable_space.generate_from_singleton_univ MeasurableSpace.generateFrom_singleton_univ
 
 /- warning: measurable_space.measurable_set_bot_iff -> MeasurableSpace.measurableSet_bot_iff is a dubious translation:
@@ -785,11 +758,8 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} (m : ι -> (MeasurableSpace.{u2} α)), Eq.{succ u2} (MeasurableSpace.{u2} α) (iSup.{u2, u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (n : ι) => m n)) (MeasurableSpace.generateFrom.{u2} α (setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => Exists.{u1} ι (fun (n : ι) => MeasurableSet.{u2} α (m n) s))))
 Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_iSup_eqₓ'. -/
 theorem measurableSpace_iSup_eq (m : ι → MeasurableSpace α) :
-    (⨆ n, m n) = generateFrom { s | ∃ n, measurable_set[m n] s } :=
-  by
-  ext s
-  rw [measurable_set_supr]
-  rfl
+    (⨆ n, m n) = generateFrom { s | ∃ n, measurable_set[m n] s } := by ext s;
+  rw [measurable_set_supr]; rfl
 #align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_iSup_eq
 
 /- warning: measurable_space.generate_from_Union_measurable_set -> MeasurableSpace.generateFrom_iUnion_measurableSet is a dubious translation:

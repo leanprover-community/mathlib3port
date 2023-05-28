@@ -208,13 +208,9 @@ def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFin
     {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
     (G : D ⥤ C) [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C)
     (adj : G ⊣ F) : Abelian C := by
-  haveI := has_kernels F G i
-  haveI := has_cokernels F G i adj
-  have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) :=
-    by
-    intro X Y f
-    rw [← coimage_iso_image_hom F G i adj f]
-    infer_instance
+  haveI := has_kernels F G i; haveI := has_cokernels F G i adj
+  have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by intro X Y f;
+    rw [← coimage_iso_image_hom F G i adj f]; infer_instance
   apply abelian.of_coimage_image_comparison_is_iso
 #align category_theory.abelian_of_adjunction CategoryTheory.abelianOfAdjunction
 -/

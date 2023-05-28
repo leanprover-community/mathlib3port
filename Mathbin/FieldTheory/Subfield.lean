@@ -821,10 +821,7 @@ variable (f : K →+* L)
 /-- The preimage of a subfield along a ring homomorphism is a subfield. -/
 def comap (s : Subfield L) : Subfield K :=
   { s.toSubring.comap f with
-    inv_mem' := fun x hx =>
-      show f x⁻¹ ∈ s by
-        rw [map_inv₀ f]
-        exact s.inv_mem hx }
+    inv_mem' := fun x hx => show f x⁻¹ ∈ s by rw [map_inv₀ f]; exact s.inv_mem hx }
 #align subfield.comap Subfield.comap
 -/
 
@@ -864,9 +861,7 @@ theorem comap_comap (s : Subfield M) (g : L →+* M) (f : K →+* L) :
 /-- The image of a subfield along a ring homomorphism is a subfield. -/
 def map (s : Subfield K) : Subfield L :=
   { s.toSubring.map f with
-    inv_mem' := by
-      rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, s.inv_mem hx, map_inv₀ f x⟩ }
+    inv_mem' := by rintro _ ⟨x, hx, rfl⟩; exact ⟨x⁻¹, s.inv_mem hx, map_inv₀ f x⟩ }
 #align subfield.map Subfield.map
 -/
 
@@ -960,10 +955,7 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u1}} {L : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : Field.{u2} L] (f : RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))), Eq.{succ u2} (Subfield.{u2} L _inst_2) (RingHom.fieldRange.{u1, u2} K L _inst_1 _inst_2 f) (Subfield.map.{u1, u2} K L _inst_1 _inst_2 f (Top.top.{u1} (Subfield.{u1} K _inst_1) (Subfield.instTopSubfield.{u1} K _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring_hom.field_range_eq_map RingHom.fieldRange_eq_mapₓ'. -/
-theorem fieldRange_eq_map : f.fieldRange = Subfield.map f ⊤ :=
-  by
-  ext
-  simp
+theorem fieldRange_eq_map : f.fieldRange = Subfield.map f ⊤ := by ext; simp
 #align ring_hom.field_range_eq_map RingHom.fieldRange_eq_map
 
 #print RingHom.map_fieldRange /-

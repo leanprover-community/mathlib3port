@@ -307,9 +307,7 @@ theorem iInter_compactOpen_gen_subset_compactConvNhd (hK : IsCompact K) (hV : V 
     calc
       f '' (K ∩ closure (U x)) ⊆ f '' closure (U x) := image_subset _ (inter_subset_right _ _)
       _ ⊆ closure (f '' U x) := f.continuous.continuous_on.image_closure
-      _ ⊆ closure (ball (f x) Z) := by
-        apply closure_mono
-        simp
+      _ ⊆ closure (ball (f x) Z) := by apply closure_mono; simp
       _ ⊆ ball (f x) W := hZW
       
   refine'

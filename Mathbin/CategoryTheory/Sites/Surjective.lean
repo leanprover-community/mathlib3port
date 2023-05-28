@@ -140,8 +140,7 @@ theorem IsLocallySurjective.comp {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} {f₁ : F₁ �
   apply J.superset_covering this
   apply J.bind_covering
   · apply h₂
-  · intros
-    apply h₁
+  · intros ; apply h₁
 #align category_theory.is_locally_surjective.comp CategoryTheory.IsLocallySurjective.comp
 
 section

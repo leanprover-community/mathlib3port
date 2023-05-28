@@ -77,10 +77,8 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map [μ.IsMulLeft
         measure.map_apply meas_π (measurableSet_preimage (measurable_const_smul g) hA),
         measure.restrict_apply₀' 𝓕meas, measure.restrict_apply₀' 𝓕meas]
       set π_preA := π ⁻¹' A
-      have : QuotientGroup.mk ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = Mul.mul g ⁻¹' π_preA :=
-        by
-        ext1
-        simp
+      have : QuotientGroup.mk ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = Mul.mul g ⁻¹' π_preA := by
+        ext1; simp
       rw [this]
       have : μ (Mul.mul g ⁻¹' π_preA ∩ 𝓕) = μ (π_preA ∩ Mul.mul g⁻¹ ⁻¹' 𝓕) :=
         by
@@ -93,8 +91,7 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map [μ.IsMulLeft
         rw [measure_preimage_mul]
       rw [this]
       have h𝓕_translate_fundom : is_fundamental_domain Γ.opposite (g • 𝓕) μ := h𝓕.smul_of_comm g
-      rw [h𝓕.measure_set_eq h𝓕_translate_fundom meas_πA, ← preimage_smul_inv]
-      rfl
+      rw [h𝓕.measure_set_eq h𝓕_translate_fundom meas_πA, ← preimage_smul_inv]; rfl
       rintro ⟨γ, γ_in_Γ⟩
       ext
       have : π (x * MulOpposite.unop γ) = π x := by simpa [QuotientGroup.eq'] using γ_in_Γ
@@ -141,9 +138,7 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal
   have meas_π : Measurable π := continuous_quotient_mk.measurable
   have 𝓕meas : null_measurable_set 𝓕 μ := h𝓕.null_measurable_set
   haveI : is_finite_measure (μ.restrict 𝓕) :=
-    ⟨by
-      rw [measure.restrict_apply₀' 𝓕meas, univ_inter]
-      exact h𝓕_finite⟩
+    ⟨by rw [measure.restrict_apply₀' 𝓕meas, univ_inter]; exact h𝓕_finite⟩
   -- the measure is left-invariant, so by the uniqueness of Haar measure it's enough to show that
   -- it has the stated size on the reference compact set `K`.
   haveI : (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)).IsMulLeftInvariant :=

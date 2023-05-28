@@ -78,12 +78,8 @@ def toNat : WType Natβ → ℕ
 
 #print WType.leftInverse_nat /-
 theorem leftInverse_nat : Function.LeftInverse ofNat toNat
-  | WType.mk nat_α.zero f => by
-    simp
-    tidy
-  | WType.mk nat_α.succ f => by
-    simp
-    tidy
+  | WType.mk nat_α.zero f => by simp; tidy
+  | WType.mk nat_α.succ f => by simp; tidy
 #align W_type.left_inv_nat WType.leftInverse_nat
 -/
 
@@ -189,12 +185,8 @@ def toList : WType (Listβ γ) → List γ
 
 #print WType.leftInverse_list /-
 theorem leftInverse_list : Function.LeftInverse (ofList γ) (toList _)
-  | WType.mk list_α.nil f => by
-    simp
-    tidy
-  | WType.mk (list_α.cons x) f => by
-    simp
-    tidy
+  | WType.mk list_α.nil f => by simp; tidy
+  | WType.mk (list_α.cons x) f => by simp; tidy
 #align W_type.left_inv_list WType.leftInverse_list
 -/
 

@@ -373,10 +373,7 @@ theorem hasInitial_of_isCoseparating [WellPowered C] [HasLimits C] {𝒢 : Set C
     suffices is_split_epi (equalizer.ι f g) by exact eq_of_epi_equalizer
     exact
       is_split_epi.mk'
-        ⟨subobject.of_le_mk _ (equalizer.ι f g ≫ subobject.arrow _) bot_le,
-          by
-          ext
-          simp⟩
+        ⟨subobject.of_le_mk _ (equalizer.ι f g ≫ subobject.arrow _) bot_le, by ext; simp⟩
 #align category_theory.has_initial_of_is_coseparating CategoryTheory.hasInitial_of_isCoseparating
 -/
 
@@ -600,9 +597,7 @@ theorem IsCospearator.isCodetector [Balanced C] {G : C} : IsCoseparator G → Is
 theorem isSeparator_def (G : C) :
     IsSeparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   ⟨fun hG X Y f g hfg =>
-    hG _ _ fun H hH h => by
-      obtain rfl := Set.mem_singleton_iff.1 hH
-      exact hfg h,
+    hG _ _ fun H hH h => by obtain rfl := Set.mem_singleton_iff.1 hH; exact hfg h,
     fun hG X Y f g hfg => hG _ _ fun h => hfg _ (Set.mem_singleton _) _⟩
 #align category_theory.is_separator_def CategoryTheory.isSeparator_def
 -/
@@ -618,9 +613,7 @@ theorem IsSeparator.def {G : C} :
 theorem isCoseparator_def (G : C) :
     IsCoseparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   ⟨fun hG X Y f g hfg =>
-    hG _ _ fun H hH h => by
-      obtain rfl := Set.mem_singleton_iff.1 hH
-      exact hfg h,
+    hG _ _ fun H hH h => by obtain rfl := Set.mem_singleton_iff.1 hH; exact hfg h,
     fun hG X Y f g hfg => hG _ _ fun h => hfg _ (Set.mem_singleton _) _⟩
 #align category_theory.is_coseparator_def CategoryTheory.isCoseparator_def
 -/
@@ -635,10 +628,7 @@ theorem IsCoseparator.def {G : C} :
 #print CategoryTheory.isDetector_def /-
 theorem isDetector_def (G : C) :
     IsDetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
-  ⟨fun hG X Y f hf =>
-    hG _ fun H hH h => by
-      obtain rfl := Set.mem_singleton_iff.1 hH
-      exact hf h,
+  ⟨fun hG X Y f hf => hG _ fun H hH h => by obtain rfl := Set.mem_singleton_iff.1 hH; exact hf h,
     fun hG X Y f hf => hG _ fun h => hf _ (Set.mem_singleton _) _⟩
 #align category_theory.is_detector_def CategoryTheory.isDetector_def
 -/
@@ -653,10 +643,7 @@ theorem IsDetector.def {G : C} :
 #print CategoryTheory.isCodetector_def /-
 theorem isCodetector_def (G : C) :
     IsCodetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
-  ⟨fun hG X Y f hf =>
-    hG _ fun H hH h => by
-      obtain rfl := Set.mem_singleton_iff.1 hH
-      exact hf h,
+  ⟨fun hG X Y f hf => hG _ fun H hH h => by obtain rfl := Set.mem_singleton_iff.1 hH; exact hf h,
     fun hG X Y f hf => hG _ fun h => hf _ (Set.mem_singleton _) _⟩
 #align category_theory.is_codetector_def CategoryTheory.isCodetector_def
 -/

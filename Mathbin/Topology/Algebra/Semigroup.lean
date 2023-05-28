@@ -74,8 +74,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     ⟨⋂₀ c, ⟨isClosed_sInter fun t ht => (hcs ht).1, _, fun m hm m' hm' => _⟩, fun s hs =>
       Set.sInter_subset_of_mem hs⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
-    · rw [Set.sInter_empty]
-      apply Set.univ_nonempty
+    · rw [Set.sInter_empty]; apply Set.univ_nonempty
     convert@IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
         (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq]

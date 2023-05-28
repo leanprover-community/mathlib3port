@@ -72,10 +72,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {s : Set.{u1} M} {t : Set.{u1} M} {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)}, (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) s (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) S)) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) t (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) S)) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (HMul.hMul.{u1, u1, u1} (Set.{u1} M) (Set.{u1} M) (Set.{u1} M) (instHMul.{u1} (Set.{u1} M) (Set.mul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))) s t) (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) S))
 Case conversion may be inaccurate. Consider using '#align submonoid.mul_subset Submonoid.mul_subsetₓ'. -/
 @[to_additive]
-theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S :=
-  by
-  rintro _ ⟨p, q, hp, hq, rfl⟩
-  exact Submonoid.mul_mem _ (hs hp) (ht hq)
+theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S := by
+  rintro _ ⟨p, q, hp, hq, rfl⟩; exact Submonoid.mul_mem _ (hs hp) (ht hq)
 #align submonoid.mul_subset Submonoid.mul_subset
 #align add_submonoid.add_subset AddSubmonoid.add_subset
 
@@ -168,14 +166,9 @@ open Pointwise
 protected def inv : Inv (Submonoid G)
     where inv S :=
     { carrier := (S : Set G)⁻¹
-      one_mem' :=
-        show (1 : G)⁻¹ ∈ S by
-          rw [inv_one]
-          exact S.one_mem
+      one_mem' := show (1 : G)⁻¹ ∈ S by rw [inv_one]; exact S.one_mem
       mul_mem' := fun a b (ha : a⁻¹ ∈ S) (hb : b⁻¹ ∈ S) =>
-        show (a * b)⁻¹ ∈ S by
-          rw [mul_inv_rev]
-          exact S.mul_mem hb ha }
+        show (a * b)⁻¹ ∈ S by rw [mul_inv_rev]; exact S.mul_mem hb ha }
 #align submonoid.has_inv Submonoid.inv
 #align add_submonoid.has_neg AddSubmonoid.neg
 -/
@@ -351,9 +344,7 @@ This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (Submonoid M)
     where
   smul a S := S.map (MulDistribMulAction.toMonoidEnd _ M a)
-  one_smul S := by
-    ext
-    simp
+  one_smul S := by ext; simp
   mul_smul a₁ a₂ S :=
     (congr_arg (fun f : Monoid.End M => S.map f) (MonoidHom.map_mul _ _ _)).trans
       (S.map_map _ _).symm
@@ -967,8 +958,7 @@ Case conversion may be inaccurate. Consider using '#align add_submonoid.closure_
 theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) :=
   by
   apply le_antisymm
-  · rw [mul_le]
-    intro a ha b hb
+  · rw [mul_le]; intro a ha b hb
     apply closure_induction ha
     on_goal 1 =>
       intros ; apply closure_induction hb
@@ -979,8 +969,7 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
         solve_by_elim (config :=
           { max_depth := 4
             discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
-  · rw [closure_le]
-    rintro _ ⟨a, b, ha, hb, rfl⟩
+  · rw [closure_le]; rintro _ ⟨a, b, ha, hb, rfl⟩
     exact mul_mem_mul (subset_closure ha) (subset_closure hb)
 #align add_submonoid.closure_mul_closure AddSubmonoid.closure_mul_closure
 
@@ -1053,9 +1042,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_3 : NonUnitalNonAssocSemiring.{u1} R] {M : AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))} {N : AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))}, HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) (HMul.hMul.{u1, u1, u1} (Set.{u1} R) (Set.{u1} R) (Set.{u1} R) (instHMul.{u1} (Set.{u1} R) (Set.mul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R _inst_3))) (SetLike.coe.{u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) R (AddSubmonoid.instSetLikeAddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) M) (SetLike.coe.{u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) R (AddSubmonoid.instSetLikeAddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) N)) (SetLike.coe.{u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) R (AddSubmonoid.instSetLikeAddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) (HMul.hMul.{u1, u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) (instHMul.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R _inst_3)))) (AddSubmonoid.mul.{u1} R _inst_3)) M N))
 Case conversion may be inaccurate. Consider using '#align add_submonoid.mul_subset_mul AddSubmonoid.mul_subset_mulₓ'. -/
 theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) :=
-  by
-  rintro _ ⟨i, j, hi, hj, rfl⟩
-  exact mul_mem_mul hi hj
+  by rintro _ ⟨i, j, hi, hj, rfl⟩; exact mul_mem_mul hi hj
 #align add_submonoid.mul_subset_mul AddSubmonoid.mul_subset_mul
 
 end NonUnitalNonAssocSemiring

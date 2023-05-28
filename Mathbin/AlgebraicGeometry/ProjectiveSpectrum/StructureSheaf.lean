@@ -128,10 +128,8 @@ theorem addMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x :
           (mul_mem sa_mem rb_mem)⟩,
       ⟨sa * sb, mul_mem sa_mem sb_mem⟩, fun y => ⟨fun h => _, _⟩⟩
   · cases' (y : ProjectiveSpectrum.top 𝒜).IsPrime.mem_or_mem h with h h
-    · obtain ⟨nin, -⟩ := wa ⟨y, (opens.inf_le_left Va Vb y).2⟩
-      exact nin h
-    · obtain ⟨nin, -⟩ := wb ⟨y, (opens.inf_le_right Va Vb y).2⟩
-      exact nin h
+    · obtain ⟨nin, -⟩ := wa ⟨y, (opens.inf_le_left Va Vb y).2⟩; exact nin h
+    · obtain ⟨nin, -⟩ := wb ⟨y, (opens.inf_le_right Va Vb y).2⟩; exact nin h
   · simp only [add_mul, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
@@ -161,10 +159,8 @@ theorem mulMem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x :
       ⟨ra * rb, SetLike.mul_mem_graded ra_mem rb_mem⟩,
       ⟨sa * sb, SetLike.mul_mem_graded sa_mem sb_mem⟩, fun y => ⟨fun h => _, _⟩⟩
   · cases' (y : ProjectiveSpectrum.top 𝒜).IsPrime.mem_or_mem h with h h
-    · choose nin hy using wa ⟨y, (opens.inf_le_left Va Vb y).2⟩
-      exact nin h
-    · choose nin hy using wb ⟨y, (opens.inf_le_right Va Vb y).2⟩
-      exact nin h
+    · choose nin hy using wa ⟨y, (opens.inf_le_left Va Vb y).2⟩; exact nin h
+    · choose nin hy using wb ⟨y, (opens.inf_le_right Va Vb y).2⟩; exact nin h
   · simp only [Pi.mul_apply, RingHom.map_mul]
     choose nin1 hy1 using wa (opens.inf_le_left Va Vb y)
     choose nin2 hy2 using wb (opens.inf_le_right Va Vb y)
@@ -306,16 +302,12 @@ theorem stalkToFiberRingHom_germ' (U : Opens (ProjectiveSpectrum.top 𝒜))
 @[simp]
 theorem stalkToFiberRingHom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : U)
     (s : (Proj.structureSheaf 𝒜).1.obj (op U)) :
-    stalkToFiberRingHom 𝒜 x ((Proj.structureSheaf 𝒜).Presheaf.germ x s) = s.1 x :=
-  by
-  cases x
+    stalkToFiberRingHom 𝒜 x ((Proj.structureSheaf 𝒜).Presheaf.germ x s) = s.1 x := by cases x;
   exact stalk_to_fiber_ring_hom_germ' 𝒜 U _ _ _
 #align algebraic_geometry.stalk_to_fiber_ring_hom_germ AlgebraicGeometry.stalkToFiberRingHom_germ
 
 theorem HomogeneousLocalization.mem_basicOpen (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
-    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den :=
-  by
-  rw [ProjectiveSpectrum.mem_basicOpen]
+    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den := by rw [ProjectiveSpectrum.mem_basicOpen];
   exact f.denom_mem
 #align algebraic_geometry.homogeneous_localization.mem_basic_open AlgebraicGeometry.HomogeneousLocalization.mem_basicOpen
 

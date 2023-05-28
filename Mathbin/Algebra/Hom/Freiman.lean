@@ -510,29 +510,17 @@ theorem div_comp (f₁ f₂ : B →*[n] G) (g : A →*[n] β) {hf hf₁ hf₂} :
 @[to_additive "`α →+[n] β` is an `add_comm_monoid`."]
 instance : CommMonoid (A →*[n] β) where
   mul := (· * ·)
-  mul_assoc a b c := by
-    ext
-    apply mul_assoc
+  mul_assoc a b c := by ext; apply mul_assoc
   one := 1
-  one_mul a := by
-    ext
-    apply one_mul
-  mul_one a := by
-    ext
-    apply mul_one
-  mul_comm a b := by
-    ext
-    apply mul_comm
+  one_mul a := by ext; apply one_mul
+  mul_one a := by ext; apply mul_one
+  mul_comm a b := by ext; apply mul_comm
   npow m f :=
     { toFun := fun x => f x ^ m
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_pow, prod_map_pow, map_prod_eq_map_prod f hsA htA hs ht h] }
-  npow_zero f := by
-    ext x
-    exact pow_zero _
-  npow_succ n f := by
-    ext x
-    exact pow_succ _ _
+  npow_zero f := by ext x; exact pow_zero _
+  npow_succ n f := by ext x; exact pow_succ _ _
 
 /-- If `β` is a commutative group, then `A →*[n] β` is a commutative group too. -/
 @[to_additive
@@ -541,28 +529,15 @@ instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
   { FreimanHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by
-      intros
-      ext
-      apply div_eq_mul_inv
-    mul_left_inv := by
-      intros
-      ext
-      apply mul_left_inv
+    div_eq_mul_inv := by intros ; ext; apply div_eq_mul_inv
+    mul_left_inv := by intros ; ext; apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
           rw [prod_map_zpow, prod_map_zpow, map_prod_eq_map_prod f hsA htA hs ht h] }
-    zpow_zero' := fun f => by
-      ext x
-      exact zpow_zero _
-    zpow_succ' := fun n f => by
-      ext x
-      simp_rw [zpow_ofNat, pow_succ, mul_apply, coe_mk]
-    zpow_neg' := fun n f => by
-      ext x
-      simp_rw [zpow_negSucc, zpow_ofNat]
-      rfl }
+    zpow_zero' := fun f => by ext x; exact zpow_zero _
+    zpow_succ' := fun n f => by ext x; simp_rw [zpow_ofNat, pow_succ, mul_apply, coe_mk]
+    zpow_neg' := fun n f => by ext x; simp_rw [zpow_negSucc, zpow_ofNat]; rfl }
 
 end FreimanHom
 
@@ -647,8 +622,7 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
     exact mul_right_cancel this
   replace ha := hsA _ ha
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
-  rotate_left 2
-  assumption
+  rotate_left 2; assumption
   -- Can't infer `A` and `n` from the context, so do it manually.
   · rw [mem_add] at hx
     refine' hx.elim (hsA _) fun h => _

@@ -130,9 +130,7 @@ theorem isIntegrallyClosed_iff' :
       ∀ p : R[X], p.Monic → (Irreducible p ↔ Irreducible (p.map <| algebraMap R K)) :=
   by
   constructor
-  · intro hR p hp
-    letI := hR
-    exact monic.irreducible_iff_irreducible_map_fraction_map hp
+  · intro hR p hp; letI := hR; exact monic.irreducible_iff_irreducible_map_fraction_map hp
   · intro H
     refine'
       (isIntegrallyClosed_iff K).mpr fun x hx =>

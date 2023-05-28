@@ -92,9 +92,7 @@ def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f)
     change m t j = s.π.app ⟨j⟩ t
     rw [← w ⟨j⟩]
     rfl
-  fac s j := by
-    cases j
-    tidy
+  fac s j := by cases j; tidy
 #align ωCPO.has_products.is_product ωCPO.HasProducts.isProduct
 
 instance (J : Type v) (f : J → ωCPO.{v}) : HasProduct f :=
@@ -132,10 +130,8 @@ def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
   Fork.IsLimit.mk' _ fun s =>
     ⟨{  toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩
         monotone' := fun x y h => s.ι.Monotone h
-        cont := fun x => Subtype.ext (s.ι.Continuous x) },
+        cont := fun x => Subtype.ext (s.ι.Continuous x) }, by ext; rfl, fun m hm =>
       by
-      ext
-      rfl, fun m hm => by
       ext
       apply continuous_hom.congr_fun hm⟩
 #align ωCPO.has_equalizers.is_equalizer ωCPO.HasEqualizers.isEqualizer

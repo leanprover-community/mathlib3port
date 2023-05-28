@@ -1249,8 +1249,7 @@ theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
   Exists.cases_on h fun u h' =>
     Exists.cases_on h' fun t ⟨hu, ht⟩ => by
       by_cases hs : s = 0
-      · apply is_st_iff_abs_sub_lt_delta.mpr
-        intro d hd
+      · apply is_st_iff_abs_sub_lt_delta.mpr; intro d hd
         have hys' : _ :=
           is_st_iff_abs_sub_lt_delta.mp hys (d / t)
             (div_pos hd (coe_pos.1 (lt_of_le_of_lt (abs_nonneg x) ht)))
@@ -1478,8 +1477,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align hyperreal.infinitesimal_sub_is_st Hyperreal.IsSt.infinitesimal_subₓ'. -/
 theorem Hyperreal.IsSt.infinitesimal_sub {x : ℝ*} {r : ℝ} (hxr : IsSt x r) :
     Infinitesimal (x - r) :=
-  show IsSt (x - r) 0 by
-    rw [sub_eq_add_neg, ← add_neg_self r]
+  show IsSt (x - r) 0 by rw [sub_eq_add_neg, ← add_neg_self r];
     exact is_st_add hxr (is_st_refl_real (-r))
 #align hyperreal.infinitesimal_sub_is_st Hyperreal.IsSt.infinitesimal_sub
 

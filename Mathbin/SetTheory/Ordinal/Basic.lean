@@ -141,10 +141,7 @@ instance : Inhabited WellOrder :=
 
 #print WellOrder.eta /-
 @[simp]
-theorem eta (o : WellOrder) : mk o.α o.R o.wo = o :=
-  by
-  cases o
-  rfl
+theorem eta (o : WellOrder) : mk o.α o.R o.wo = o := by cases o; rfl
 #align Well_order.eta WellOrder.eta
 -/
 
@@ -220,10 +217,7 @@ def typein (r : α → α → Prop) [IsWellOrder α r] (a : α) : Ordinal :=
 
 #print Ordinal.type_def' /-
 @[simp]
-theorem type_def' (w : WellOrder) : ⟦w⟧ = type w.R :=
-  by
-  cases w
-  rfl
+theorem type_def' (w : WellOrder) : ⟦w⟧ = type w.R := by cases w; rfl
 #align ordinal.type_def' Ordinal.type_def'
 -/
 
@@ -641,10 +635,8 @@ lean 3 declaration is
 but is expected to have type
   forall {o : Ordinal.{u1}} (i : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)), LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.typein.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (fun (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.4069 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.4071 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) => LT.lt.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Preorder.toLT.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (PartialOrder.toPreorder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (SemilatticeInf.toPartialOrder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Lattice.toSemilatticeInf.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (DistribLattice.toLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (instDistribLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (linearOrderOut.{u1} o))))))) x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.4069 x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.4071) (isWellOrder_out_lt.{u1} o) i) o
 Case conversion may be inaccurate. Consider using '#align ordinal.typein_lt_self Ordinal.typein_lt_selfₓ'. -/
-theorem typein_lt_self {o : Ordinal} (i : o.out.α) : typein (· < ·) i < o :=
-  by
-  simp_rw [← type_lt o]
-  apply typein_lt_type
+theorem typein_lt_self {o : Ordinal} (i : o.out.α) : typein (· < ·) i < o := by
+  simp_rw [← type_lt o]; apply typein_lt_type
 #align ordinal.typein_lt_self Ordinal.typein_lt_self
 
 #print Ordinal.typein_top /-
@@ -695,8 +687,7 @@ theorem typein_lt_typein (r : α → α → Prop) [IsWellOrder α r] {a b : α} 
       let g' := f.trans (PrincipalSeg.ofElement r b)
       have : g'.top = f'.top := by rw [Subsingleton.elim f' g']
       exact this
-    rw [← this]
-    exact f.top.2, fun h =>
+    rw [← this]; exact f.top.2, fun h =>
     ⟨PrincipalSeg.codRestrict _ (PrincipalSeg.ofElement r a) (fun x => @trans _ r _ _ _ _ x.2 h) h⟩⟩
 #align ordinal.typein_lt_typein Ordinal.typein_lt_typein
 
@@ -739,17 +730,14 @@ Case conversion may be inaccurate. Consider using '#align ordinal.enum Ordinal.e
 def enum (r : α → α → Prop) [IsWellOrder α r] (o) : o < type r → α :=
   Quot.recOn' o (fun ⟨β, s, _⟩ h => (Classical.choice h).top) fun ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨h⟩ =>
     by
-    skip
-    refine' funext fun H₂ : type t < type r => _
+    skip; refine' funext fun H₂ : type t < type r => _
     have H₁ : type s < type r := by rwa [type_eq.2 ⟨h⟩]
     have :
       ∀ {o e} (H : o < type r),
         @Eq.ndrec (fun o : Ordinal => o < type r → α)
             (fun h : type s < type r => (Classical.choice h).top) e H =
           (Classical.choice H₁).top :=
-      by
-      intros
-      subst e
+      by intros ; subst e
     exact (this H₂).trans (PrincipalSeg.top_eq h (Classical.choice H₁) (Classical.choice H₂))
 #align ordinal.enum Ordinal.enum
 
@@ -815,12 +803,7 @@ theorem relIso_enum' {α β : Type u} {r : α → α → Prop} {s : β → β �
 Case conversion may be inaccurate. Consider using '#align ordinal.rel_iso_enum Ordinal.relIso_enumₓ'. -/
 theorem relIso_enum {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r]
     [IsWellOrder β s] (f : r ≃r s) (o : Ordinal) (hr : o < type r) :
-    f (enum r o hr) =
-      enum s o
-        (by
-          convert hr using 1
-          apply Quotient.sound
-          exact ⟨f.symm⟩) :=
+    f (enum r o hr) = enum s o (by convert hr using 1; apply Quotient.sound; exact ⟨f.symm⟩) :=
   relIso_enum' _ _ _ _
 #align ordinal.rel_iso_enum Ordinal.relIso_enum
 
@@ -1113,10 +1096,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.lift_le Ordinal.lift_leₓ'. -/
 @[simp]
 theorem lift_le {a b : Ordinal} : lift.{u, v} a ≤ lift b ↔ a ≤ b :=
-  inductionOn a fun α r _ =>
-    inductionOn b fun β s _ => by
-      rw [← lift_umax]
-      exact lift_type_le
+  inductionOn a fun α r _ => inductionOn b fun β s _ => by rw [← lift_umax]; exact lift_type_le
 #align ordinal.lift_le Ordinal.lift_le
 
 /- warning: ordinal.lift_inj -> Ordinal.lift_inj is a dubious translation:
@@ -1442,10 +1422,7 @@ instance : LinearOrder Ordinal :=
               rw [← typein_top f, ← typein_top g, le_iff_lt_or_eq, le_iff_lt_or_eq,
                 typein_lt_typein, typein_lt_typein]
               rcases trichotomous_of (Sum.Lex r₁ r₂) g.top f.top with (h | h | h) <;>
-                [exact Or.inl (Or.inl h);·
-                  left
-                  right
-                  rw [h];exact Or.inr (Or.inl h)])
+                [exact Or.inl (Or.inl h);· left; right; rw [h];exact Or.inr (Or.inl h)])
           h₁ h₂
     decidableLe := Classical.decRel _ }
 
@@ -1518,19 +1495,13 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
         · exact f; · exact fun _ => t
         · rcases a with (a | _) <;> rcases b with (b | _)
           · simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
-          · intro
-            rw [hf]
-            exact ⟨_, rfl⟩
+          · intro ; rw [hf]; exact ⟨_, rfl⟩
           · exact False.elim ∘ Sum.lex_inr_inl
           · exact False.elim ∘ Sum.lex_inr_inr.1
         · rcases a with (a | _)
-          · intro h
-            have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
-            cases' this with w h
-            exact ⟨Sum.inl w, h⟩
-          · intro h
-            cases' (hf b).1 h with w h
-            exact ⟨Sum.inl w, h⟩⟩
+          · intro h; have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
+            cases' this with w h; exact ⟨Sum.inl w, h⟩
+          · intro h; cases' (hf b).1 h with w h; exact ⟨Sum.inl w, h⟩⟩
 
 instance : NoMaxOrder Ordinal :=
   ⟨fun a => ⟨_, succ_le_iff'.1 le_rfl⟩⟩
@@ -1717,10 +1688,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.typein_le_typein' Ordinal.typein_le_typein'ₓ'. -/
 @[simp]
 theorem typein_le_typein' (o : Ordinal) {x x' : o.out.α} :
-    typein (· < ·) x ≤ typein (· < ·) x' ↔ x ≤ x' :=
-  by
-  rw [typein_le_typein]
-  exact not_lt
+    typein (· < ·) x ≤ typein (· < ·) x' ↔ x ≤ x' := by rw [typein_le_typein]; exact not_lt
 #align ordinal.typein_le_typein' Ordinal.typein_le_typein'
 
 /- warning: ordinal.enum_le_enum -> Ordinal.enum_le_enum is a dubious translation:
@@ -1751,33 +1719,22 @@ but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop} [_inst_1 : IsWellOrder.{u1} α r] (h0 : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) (Ordinal.type.{u1} α r _inst_1)) (a : α), Not (r a (Ordinal.enum.{u1} α r _inst_1 (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) h0))
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_zero_le Ordinal.enum_zero_leₓ'. -/
 theorem enum_zero_le {r : α → α → Prop} [IsWellOrder α r] (h0 : 0 < type r) (a : α) :
-    ¬r a (enum r 0 h0) := by
-  rw [← enum_typein r a, enum_le_enum r]
-  apply Ordinal.zero_le
+    ¬r a (enum r 0 h0) := by rw [← enum_typein r a, enum_le_enum r]; apply Ordinal.zero_le
 #align ordinal.enum_zero_le Ordinal.enum_zero_le
 
 /- warning: ordinal.enum_zero_le' -> Ordinal.enum_zero_le' is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_zero_le' Ordinal.enum_zero_le'ₓ'. -/
 theorem enum_zero_le' {o : Ordinal} (h0 : 0 < o) (a : o.out.α) :
-    @enum o.out.α (· < ·) _ 0 (by rwa [type_lt]) ≤ a :=
-  by
-  rw [← not_lt]
-  apply enum_zero_le
+    @enum o.out.α (· < ·) _ 0 (by rwa [type_lt]) ≤ a := by rw [← not_lt]; apply enum_zero_le
 #align ordinal.enum_zero_le' Ordinal.enum_zero_le'
 
 /- warning: ordinal.le_enum_succ -> Ordinal.le_enum_succ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align ordinal.le_enum_succ Ordinal.le_enum_succₓ'. -/
 theorem le_enum_succ {o : Ordinal} (a : (succ o).out.α) :
-    a ≤
-      @enum (succ o).out.α (· < ·) _ o
-        (by
-          rw [type_lt]
-          exact lt_succ o) :=
-  by
-  rw [← enum_typein (· < ·) a, enum_le_enum', ← lt_succ_iff]
-  apply typein_lt_self
+    a ≤ @enum (succ o).out.α (· < ·) _ o (by rw [type_lt]; exact lt_succ o) := by
+  rw [← enum_typein (· < ·) a, enum_le_enum', ← lt_succ_iff]; apply typein_lt_self
 #align ordinal.le_enum_succ Ordinal.le_enum_succ
 
 /- warning: ordinal.enum_inj -> Ordinal.enum_inj is a dubious translation:
@@ -1793,8 +1750,8 @@ theorem enum_inj {r : α → α → Prop} [IsWellOrder α r] {o₁ o₂ : Ordina
     by_contra hne
     cases' lt_or_gt_of_ne hne with hlt hlt <;> apply (IsWellOrder.isIrrefl r).1
     · rwa [← @enum_lt_enum α r _ o₁ o₂ h₁ h₂, h] at hlt
-    · change _ < _ at hlt
-      rwa [← @enum_lt_enum α r _ o₂ o₁ h₂ h₁, h] at hlt, fun h => by simp_rw [h]⟩
+    · change _ < _ at hlt; rwa [← @enum_lt_enum α r _ o₂ o₁ h₂ h₁, h] at hlt, fun h => by
+    simp_rw [h]⟩
 #align ordinal.enum_inj Ordinal.enum_inj
 
 /- warning: ordinal.enum_iso -> Ordinal.enumIso is a dubious translation:
@@ -1811,9 +1768,7 @@ def enumIso (r : α → α → Prop) [IsWellOrder α r] : Subrel (· < ·) (· <
   invFun x := ⟨typein r x, typein_lt_type r x⟩
   left_inv := fun ⟨o, h⟩ => Subtype.ext_val (typein_enum _ _)
   right_inv h := enum_typein _ _
-  map_rel_iff' := by
-    rintro ⟨a, _⟩ ⟨b, _⟩
-    apply enum_lt_enum
+  map_rel_iff' := by rintro ⟨a, _⟩ ⟨b, _⟩; apply enum_lt_enum
 #align ordinal.enum_iso Ordinal.enumIso
 
 /- warning: ordinal.enum_iso_out -> Ordinal.enumIsoOut is a dubious translation:
@@ -1826,16 +1781,11 @@ Case conversion may be inaccurate. Consider using '#align ordinal.enum_iso_out O
 @[simps]
 noncomputable def enumIsoOut (o : Ordinal) : Set.Iio o ≃o o.out.α
     where
-  toFun x :=
-    enum (· < ·) x.1 <| by
-      rw [type_lt]
-      exact x.2
+  toFun x := enum (· < ·) x.1 <| by rw [type_lt]; exact x.2
   invFun x := ⟨typein (· < ·) x, typein_lt_self x⟩
   left_inv := fun ⟨o', h⟩ => Subtype.ext_val (typein_enum _ _)
   right_inv h := enum_typein _ _
-  map_rel_iff' := by
-    rintro ⟨a, _⟩ ⟨b, _⟩
-    apply enum_le_enum'
+  map_rel_iff' := by rintro ⟨a, _⟩ ⟨b, _⟩; apply enum_le_enum'
 #align ordinal.enum_iso_out Ordinal.enumIsoOut
 
 /- warning: ordinal.out_order_bot_of_pos -> Ordinal.outOrderBotOfPos is a dubious translation:
@@ -1909,12 +1859,9 @@ def lift.principalSeg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· < 
     refine' fun b => induction_on b _; intro β s _
     rw [univ, ← lift_umax]; constructor <;> intro h
     · rw [← lift_id (type s)] at h⊢
-      cases' lift_type_lt.1 h with f
-      cases' f with f a hf
-      exists a
-      revert hf
-      apply induction_on a
-      intro α r _ hf
+      cases' lift_type_lt.1 h with f; cases' f with f a hf
+      exists a; revert hf
+      apply induction_on a; intro α r _ hf
       refine'
         lift_type_eq.{u, max (u + 1) v, max (u + 1) v}.2
           ⟨(RelIso.ofSurjective (RelEmbedding.ofMonotone _ _) _).symm⟩
@@ -1922,15 +1869,10 @@ def lift.principalSeg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· < 
       · refine' fun a b h => (typein_lt_typein r).1 _
         rw [typein_enum, typein_enum]
         exact f.map_rel_iff.2 h
-      · intro a'
-        cases' (hf _).1 (typein_lt_type _ a') with b e
-        exists b
-        simp
-        simp [e]
-    · cases' h with a e
-      rw [← e]
-      apply induction_on a
-      intro α r _
+      · intro a'; cases' (hf _).1 (typein_lt_type _ a') with b e
+        exists b; simp; simp [e]
+    · cases' h with a e; rw [← e]
+      apply induction_on a; intro α r _
       exact lift_type_lt.{u, u + 1, max (u + 1) v}.2 ⟨typein.principal_seg r⟩⟩
 #align ordinal.lift.principal_seg Ordinal.lift.principalSeg
 
@@ -2037,7 +1979,7 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
     Ordinal.inductionOn o fun β s _ => by
       let ⟨r, _, e⟩ := ord_eq α
       skip; simp only [card_type]; constructor <;> intro h
-      · rw [e] at h
+      · rw [e] at h;
         exact
           let ⟨f⟩ := h
           ⟨f.toEmbedding⟩
@@ -2193,9 +2135,7 @@ but is expected to have type
   forall {α : Type.{u1}} (r : α -> α -> Prop) [_inst_1 : IsWellOrder.{u1} α r] (x : α), (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (Ordinal.type.{u1} α r _inst_1)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Ordinal.card.{u1} (Ordinal.typein.{u1} α r _inst_1 x)) (Cardinal.mk.{u1} α))
 Case conversion may be inaccurate. Consider using '#align cardinal.card_typein_lt Cardinal.card_typein_ltₓ'. -/
 theorem card_typein_lt (r : α → α → Prop) [IsWellOrder α r] (x : α) (h : ord (#α) = type r) :
-    card (typein r x) < (#α) := by
-  rw [← lt_ord, h]
-  apply typein_lt_type
+    card (typein r x) < (#α) := by rw [← lt_ord, h]; apply typein_lt_type
 #align cardinal.card_typein_lt Cardinal.card_typein_lt
 
 /- warning: cardinal.card_typein_out_lt -> Cardinal.card_typein_out_lt is a dubious translation:
@@ -2204,16 +2144,12 @@ lean 3 declaration is
 but is expected to have type
   forall (c : Cardinal.{u1}) (x : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Ordinal.card.{u1} (Ordinal.typein.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (fun (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16644 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16646 : WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) => LT.lt.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Preorder.toLT.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (PartialOrder.toPreorder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (SemilatticeInf.toPartialOrder.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (Lattice.toSemilatticeInf.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (DistribLattice.toLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (instDistribLattice.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} (Cardinal.ord.{u1} c))) (linearOrderOut.{u1} (Cardinal.ord.{u1} c)))))))) x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16644 x._@.Mathlib.SetTheory.Ordinal.Basic._hyg.16646) (isWellOrder_out_lt.{u1} (Cardinal.ord.{u1} c)) x)) c
 Case conversion may be inaccurate. Consider using '#align cardinal.card_typein_out_lt Cardinal.card_typein_out_ltₓ'. -/
-theorem card_typein_out_lt (c : Cardinal) (x : c.ord.out.α) : card (typein (· < ·) x) < c :=
-  by
-  rw [← lt_ord]
-  apply typein_lt_self
+theorem card_typein_out_lt (c : Cardinal) (x : c.ord.out.α) : card (typein (· < ·) x) < c := by
+  rw [← lt_ord]; apply typein_lt_self
 #align cardinal.card_typein_out_lt Cardinal.card_typein_out_lt
 
 #print Cardinal.ord_injective /-
-theorem ord_injective : Injective ord := by
-  intro c c' h
-  rw [← card_ord c, ← card_ord c', h]
+theorem ord_injective : Injective ord := by intro c c' h; rw [← card_ord c, ← card_ord c', h]
 #align cardinal.ord_injective Cardinal.ord_injective
 -/
 
@@ -2384,10 +2320,8 @@ but is expected to have type
   forall {o : Ordinal.{u1}} {n : Nat}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} n) (Ordinal.card.{u1} o)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.cast.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) n) o)
 Case conversion may be inaccurate. Consider using '#align ordinal.nat_lt_card Ordinal.nat_lt_cardₓ'. -/
 @[simp]
-theorem nat_lt_card {o} {n : ℕ} : (n : Cardinal) < card o ↔ (n : Ordinal) < o :=
-  by
-  rw [← succ_le_iff, ← succ_le_iff, ← nat_succ, nat_le_card]
-  rfl
+theorem nat_lt_card {o} {n : ℕ} : (n : Cardinal) < card o ↔ (n : Ordinal) < o := by
+  rw [← succ_le_iff, ← succ_le_iff, ← nat_succ, nat_le_card]; rfl
 #align ordinal.nat_lt_card Ordinal.nat_lt_card
 
 /- warning: ordinal.card_lt_nat -> Ordinal.card_lt_nat is a dubious translation:

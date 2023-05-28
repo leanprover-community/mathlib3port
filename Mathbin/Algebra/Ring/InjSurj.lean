@@ -319,14 +319,8 @@ protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β
   { hf.InvolutiveNeg _ neg,
     ‹Mul
         β› with
-    neg_mul :=
-      hf.Forall₂.2 fun x y => by
-        erw [← neg, ← mul, neg_mul, neg, mul]
-        rfl
-    mul_neg :=
-      hf.Forall₂.2 fun x y => by
-        erw [← neg, ← mul, mul_neg, neg, mul]
-        rfl }
+    neg_mul := hf.Forall₂.2 fun x y => by erw [← neg, ← mul, neg_mul, neg, mul]; rfl
+    mul_neg := hf.Forall₂.2 fun x y => by erw [← neg, ← mul, mul_neg, neg, mul]; rfl }
 #align function.surjective.has_distrib_neg Function.Surjective.hasDistribNeg
 
 namespace AddOpposite

@@ -233,8 +233,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
     split_ifs <;> norm_num [h]
   rw [← h1.nat_degree_map f]
   obtain hi | hi := lt_or_le (map f p).natDegree i
-  · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]
-    positivity
+  · rw [coeff_eq_zero_of_nat_degree_lt hi, norm_zero]; positivity
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff,
     one_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul]
   apply ((norm_multiset_sum_le _).trans <| sum_le_card_nsmul _ _ fun r hr => _).trans

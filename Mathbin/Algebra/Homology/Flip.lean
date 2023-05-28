@@ -46,16 +46,12 @@ def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
   pt i :=
     { pt := fun j => (C.pt j).pt i
       d := fun j j' => (C.d j j').f i
-      shape' := fun j j' w => by
-        rw [C.shape j j' w]
-        simp
+      shape' := fun j j' w => by rw [C.shape j j' w]; simp
       d_comp_d' := fun j₁ j₂ j₃ _ _ => congr_hom (C.d_comp_d j₁ j₂ j₃) i }
   d i i' :=
     { f := fun j => (C.pt j).d i i'
       comm' := fun j j' h => ((C.d j j').comm i i').symm }
-  shape' i i' w := by
-    ext j
-    exact (C.X j).shape i i' w
+  shape' i i' w := by ext j; exact (C.X j).shape i i' w
 #align homological_complex.flip_obj HomologicalComplex.flipObj
 -/
 
@@ -85,20 +81,11 @@ def flipEquivalenceUnitIso :
     (fun C =>
       { Hom :=
           { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
-            comm' := fun i j h => by
-              ext
-              dsimp
-              simp only [category.id_comp, category.comp_id] }
+            comm' := fun i j h => by ext; dsimp; simp only [category.id_comp, category.comp_id] }
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
-            comm' := fun i j h => by
-              ext
-              dsimp
-              simp only [category.id_comp, category.comp_id] } })
-    fun X Y f => by
-    ext
-    dsimp
-    simp only [category.id_comp, category.comp_id]
+            comm' := fun i j h => by ext; dsimp; simp only [category.id_comp, category.comp_id] } })
+    fun X Y f => by ext; dsimp; simp only [category.id_comp, category.comp_id]
 #align homological_complex.flip_equivalence_unit_iso HomologicalComplex.flipEquivalenceUnitIso
 -/
 
@@ -111,20 +98,11 @@ def flipEquivalenceCounitIso :
     (fun C =>
       { Hom :=
           { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
-            comm' := fun i j h => by
-              ext
-              dsimp
-              simp only [category.id_comp, category.comp_id] }
+            comm' := fun i j h => by ext; dsimp; simp only [category.id_comp, category.comp_id] }
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.pt i).pt j) }
-            comm' := fun i j h => by
-              ext
-              dsimp
-              simp only [category.id_comp, category.comp_id] } })
-    fun X Y f => by
-    ext
-    dsimp
-    simp only [category.id_comp, category.comp_id]
+            comm' := fun i j h => by ext; dsimp; simp only [category.id_comp, category.comp_id] } })
+    fun X Y f => by ext; dsimp; simp only [category.id_comp, category.comp_id]
 #align homological_complex.flip_equivalence_counit_iso HomologicalComplex.flipEquivalenceCounitIso
 -/
 

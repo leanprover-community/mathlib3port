@@ -304,11 +304,7 @@ protected theorem leftMulMatrix (pb : PowerBasis A S) :
     rw [add_comm, aeval_eq_sum_range, Finset.sum_range_succ, ← leading_coeff,
       pb.minpoly_gen_monic.leading_coeff, one_smul, nat_degree_minpoly_gen, Finset.sum_range]
   · rw [Fintype.sum_eq_single (⟨↑k + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
-    · rfl
-    · rfl
-    intro x hx
-    rw [if_neg, zero_smul]
-    apply mt Fin.ext hx
+    · rfl; · rfl; intro x hx; rw [if_neg, zero_smul]; apply mt Fin.ext hx
 #align power_basis.left_mul_matrix PowerBasis.leftMulMatrix
 -/
 
@@ -464,14 +460,8 @@ noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
     S ≃ₐ[A] S' :=
   AlgEquiv.ofAlgHom (pb.lift pb'.gen h₂) (pb'.lift pb.gen h₁)
-    (by
-      ext x
-      obtain ⟨f, hf, rfl⟩ := pb'.exists_eq_aeval' x
-      simp)
-    (by
-      ext x
-      obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval' x
-      simp)
+    (by ext x; obtain ⟨f, hf, rfl⟩ := pb'.exists_eq_aeval' x; simp)
+    (by ext x; obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval' x; simp)
 #align power_basis.equiv_of_root PowerBasis.equivOfRoot
 -/
 
@@ -569,8 +559,7 @@ theorem linearIndependent_pow [Algebra K S] (x : S) :
     LinearIndependent K fun i : Fin (minpoly K x).natDegree => x ^ (i : ℕ) :=
   by
   by_cases IsIntegral K x; swap
-  · rw [minpoly.eq_zero h, nat_degree_zero]
-    exact linearIndependent_empty_type
+  · rw [minpoly.eq_zero h, nat_degree_zero]; exact linearIndependent_empty_type
   refine' Fintype.linearIndependent_iff.2 fun g hg i => _
   simp only at hg
   simp_rw [Algebra.smul_def, ← aeval_monomial, ← map_sum] at hg
@@ -639,9 +628,7 @@ theorem minpolyGen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') :
 Case conversion may be inaccurate. Consider using '#align power_basis.equiv_of_root_map PowerBasis.equivOfRoot_mapₓ'. -/
 @[simp]
 theorem equivOfRoot_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) :
-    pb.equivOfRoot (pb.map e) h₁ h₂ = e := by
-  ext x
-  obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
+    pb.equivOfRoot (pb.map e) h₁ h₂ = e := by ext x; obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x;
   simp [aeval_alg_equiv]
 #align power_basis.equiv_of_root_map PowerBasis.equivOfRoot_map
 

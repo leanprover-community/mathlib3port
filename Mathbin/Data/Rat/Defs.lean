@@ -98,10 +98,8 @@ def [anonymous] (n : ℤ) : ℕ+ → ℚ
       by
       have : Int.natAbs (n / ↑g) = n' / g :=
         by
-        cases' Int.natAbs_eq n with e e <;> rw [e]
-        · rfl
-        rw [Int.neg_ediv_of_dvd, Int.natAbs_neg]
-        · rfl
+        cases' Int.natAbs_eq n with e e <;> rw [e]; · rfl
+        rw [Int.neg_ediv_of_dvd, Int.natAbs_neg]; · rfl
         exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
       rw [this]
       exact Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_right _ dpos)⟩
@@ -199,10 +197,7 @@ Case conversion may be inaccurate. Consider using '#align rat.mk_eq_zero Rat.div
 @[simp]
 theorem divInt_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 :=
   by
-  refine'
-    ⟨fun h => _, by
-      rintro rfl
-      simp⟩
+  refine' ⟨fun h => _, by rintro rfl; simp⟩
   have : ∀ {a b}, mk_pnat a b = 0 → a = 0 :=
     by
     rintro a ⟨b, h⟩ e
@@ -211,8 +206,7 @@ theorem divInt_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 :=
   cases' b with b <;> simp only [mk, mk_nat, Int.ofNat_eq_coe, dite_eq_left_iff] at h
   · simp only [mt (congr_arg Int.ofNat) b0, not_false_iff, forall_true_left] at h
     exact this h
-  · apply neg_injective
-    simp [this h]
+  · apply neg_injective; simp [this h]
 #align rat.mk_eq_zero Rat.divInt_eq_zero
 
 /- warning: rat.mk_ne_zero -> Rat.divInt_ne_zero is a dubious translation:
@@ -249,8 +243,7 @@ theorem divInt_eq_iff :
     · change -a * ↑d = c * b.succ ↔ a * d = c * -b.succ
       constructor <;> intro h <;> apply neg_injective <;> simpa [left_distrib, eq_comm] using h
     · change -a * d.succ = -c * b.succ ↔ a * -d.succ = c * -b.succ
-      simp [left_distrib, sub_eq_add_neg]
-      cc
+      simp [left_distrib, sub_eq_add_neg]; cc
   intros ; simp [mk_pnat]; constructor <;> intro h
   · cases' h with ha hb
     have ha := by
@@ -295,8 +288,7 @@ theorem divInt_eq_iff :
     have gd0 := Nat.gcd_pos_of_pos_right c hd
     apply Nat.le_of_dvd
     apply (Nat.le_div_iff_mul_le gd0).2
-    simp
-    apply Nat.le_of_dvd hd (Nat.gcd_dvd_right _ _)
+    simp; apply Nat.le_of_dvd hd (Nat.gcd_dvd_right _ _)
     apply (Nat.coprime_div_gcd_div_gcd gb0).symm.dvd_of_dvd_mul_left
     refine' ⟨c / c.gcd d, _⟩
     rw [← Nat.mul_div_assoc _ (Nat.gcd_dvd_left _ _), ← Nat.mul_div_assoc _ (Nat.gcd_dvd_right _ _)]
@@ -314,9 +306,7 @@ Case conversion may be inaccurate. Consider using '#align rat.div_mk_div_cancel_
 @[simp]
 theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. b :=
   by
-  by_cases b0 : b = 0;
-  · subst b0
-    simp
+  by_cases b0 : b = 0; · subst b0; simp
   apply (mk_eq (mul_ne_zero b0 c0) b0).2; simp [mul_comm, mul_assoc]
 #align rat.div_mk_div_cancel_left Rat.divInt_mul_right
 
@@ -453,10 +443,7 @@ Case conversion may be inaccurate. Consider using '#align rat.neg_def Rat.neg_de
 @[simp]
 theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
   by
-  by_cases b0 : b = 0;
-  · subst b0
-    simp
-    rfl
+  by_cases b0 : b = 0; · subst b0; simp; rfl
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   show Rat.mk' _ _ _ _ = _; rw [num_denom']
   have d0 := ne_of_gt (Int.ofNat_lt.2 h₁)
@@ -524,26 +511,15 @@ Case conversion may be inaccurate. Consider using '#align rat.inv_def Rat.inv_de
 @[simp]
 theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
   by
-  by_cases a0 : a = 0
-  · subst a0
-    simp
-    rfl
-  by_cases b0 : b = 0
-  · subst b0
-    simp
-    rfl
-  generalize ha : a /. b = x
-  cases' x with n d h c
-  rw [num_denom'] at ha
+  by_cases a0 : a = 0; · subst a0; simp; rfl
+  by_cases b0 : b = 0; · subst b0; simp; rfl
+  generalize ha : a /. b = x; cases' x with n d h c; rw [num_denom'] at ha
   refine' Eq.trans (_ : Rat.inv ⟨n, d, h, c⟩ = d /. n) _
   · cases' n with n <;> [cases' n with n;skip]
     · rfl
     · change Int.ofNat n.succ with (n + 1 : ℕ)
-      unfold Rat.inv
-      rw [num_denom']
-    · unfold Rat.inv
-      rw [num_denom']
-      rfl
+      unfold Rat.inv; rw [num_denom']
+    · unfold Rat.inv; rw [num_denom']; rfl
   have n0 : n ≠ 0 := by
     rintro rfl
     rw [Rat.zero_divInt, mk_eq_zero b0] at ha
@@ -597,10 +573,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_zero_one Rat.divInt_zero_oneₓ'. -/
 @[simp]
 theorem divInt_zero_one : 0 /. 1 = 0 :=
-  show [anonymous] _ _ = _ by
-    rw [mk_pnat]
-    simp
-    rfl
+  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_zero_one Rat.divInt_zero_one
 
 /- warning: rat.mk_one_one -> Rat.divInt_one_one is a dubious translation:
@@ -611,10 +584,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_one_one Rat.divInt_one_oneₓ'. -/
 @[simp]
 theorem divInt_one_one : 1 /. 1 = 1 :=
-  show [anonymous] _ _ = _ by
-    rw [mk_pnat]
-    simp
-    rfl
+  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_one_one Rat.divInt_one_one
 
 /- warning: rat.mk_neg_one_one -> Rat.divInt_neg_one_one is a dubious translation:
@@ -625,25 +595,18 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_neg_one_one Rat.divInt_neg_one_oneₓ'. -/
 @[simp]
 theorem divInt_neg_one_one : -1 /. 1 = -1 :=
-  show [anonymous] _ _ = _ by
-    rw [mk_pnat]
-    simp
-    rfl
+  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_neg_one_one Rat.divInt_neg_one_one
 
 #print Rat.mul_one /-
 protected theorem mul_one : a * 1 = a :=
-  numDenCasesOn' a fun n d h => by
-    rw [← mk_one_one]
-    simp [h, -mk_one_one]
+  numDenCasesOn' a fun n d h => by rw [← mk_one_one]; simp [h, -mk_one_one]
 #align rat.mul_one Rat.mul_one
 -/
 
 #print Rat.one_mul /-
 protected theorem one_mul : 1 * a = a :=
-  numDenCasesOn' a fun n d h => by
-    rw [← mk_one_one]
-    simp [h, -mk_one_one]
+  numDenCasesOn' a fun n d h => by rw [← mk_one_one]; simp [h, -mk_one_one]
 #align rat.one_mul Rat.one_mul
 -/
 
@@ -679,10 +642,8 @@ protected theorem mul_add : a * (b + c) = a * b + a * c := by
 -/
 
 #print Rat.zero_ne_one /-
-protected theorem zero_ne_one : 0 ≠ (1 : ℚ) :=
-  by
-  rw [ne_comm, ← mk_one_one, mk_ne_zero one_ne_zero]
-  exact one_ne_zero
+protected theorem zero_ne_one : 0 ≠ (1 : ℚ) := by
+  rw [ne_comm, ← mk_one_one, mk_ne_zero one_ne_zero]; exact one_ne_zero
 #align rat.zero_ne_one Rat.zero_ne_one
 -/
 
@@ -690,12 +651,7 @@ protected theorem zero_ne_one : 0 ≠ (1 : ℚ) :=
 protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
   numDenCasesOn' a fun n d h a0 =>
     by
-    have n0 : n ≠ 0 :=
-      mt
-        (by
-          rintro rfl
-          simp)
-        a0
+    have n0 : n ≠ 0 := mt (by rintro rfl; simp) a0
     simpa [h, n0, mul_comm] using @div_mk_div_cancel_left 1 1 _ n0
 #align rat.mul_inv_cancel Rat.mul_inv_cancel
 -/
@@ -956,9 +912,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.add_mk Rat.add_divIntₓ'. -/
 protected theorem add_divInt (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
   if h : c = 0 then by simp [h]
-  else by
-    rw [add_def h h, mk_eq h (mul_ne_zero h h)]
-    simp [add_mul, mul_assoc]
+  else by rw [add_def h h, mk_eq h (mul_ne_zero h h)]; simp [add_mul, mul_assoc]
 #align rat.add_mk Rat.add_divInt
 
 /- warning: rat.mk_eq_div -> Rat.divInt_eq_div is a dubious translation:
@@ -1031,11 +985,8 @@ theorem num_div_den (r : ℚ) : (r.num / r.den : ℚ) = r := by
 #align rat.num_div_denom Rat.num_div_den
 
 #print Rat.coe_int_num_of_den_eq_one /-
-theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.den = 1) : ↑q.num = q :=
-  by
-  conv_rhs => rw [← @num_denom q, hq]
-  rw [coe_int_eq_mk]
-  rfl
+theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.den = 1) : ↑q.num = q := by
+  conv_rhs => rw [← @num_denom q, hq]; rw [coe_int_eq_mk]; rfl
 #align rat.coe_int_num_of_denom_eq_one Rat.coe_int_num_of_den_eq_one
 -/
 

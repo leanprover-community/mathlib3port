@@ -133,8 +133,7 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
   obtain ⟨n, m, hneq, heq⟩ :=
     Fintype.exists_ne_map_eq_of_card_lt
       (fun n : Fin (Fintype.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
-  wlog hle : (n : ℕ) ≤ m
-  · exact this hlen hx _ _ hneq.symm HEq.symm (le_of_not_le hle)
+  wlog hle : (n : ℕ) ≤ m; · exact this hlen hx _ _ hneq.symm HEq.symm (le_of_not_le hle)
   have hm : (m : ℕ) ≤ Fintype.card σ := Fin.is_le m
   dsimp at heq
   refine'

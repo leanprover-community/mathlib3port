@@ -101,8 +101,7 @@ theorem pi.cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
   by
   ext (a' h')
   by_cases a' = a
-  · subst h
-    rw [pi.cons_same]
+  · subst h; rw [pi.cons_same]
   · rw [pi.cons_ne _ h]
 #align multiset.pi.cons_eta Multiset.pi.cons_eta
 
@@ -140,14 +139,11 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (β a)) : Multiset (∀ a ∈ m, �
       by_cases eq : a = a'
       · subst Eq
       · simp [map_bind, bind_bind (t a') (t a)]
-        apply bind_hcongr
-        · rw [cons_swap a a']
+        apply bind_hcongr; · rw [cons_swap a a']
         intro b hb
-        apply bind_hcongr
-        · rw [cons_swap a a']
+        apply bind_hcongr; · rw [cons_swap a a']
         intro b' hb'
-        apply map_hcongr
-        · rw [cons_swap a a']
+        apply map_hcongr; · rw [cons_swap a a']
         intro f hf
         exact pi.cons_swap Eq)
 #align multiset.pi Multiset.pi
@@ -224,10 +220,8 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (β a)) :
   constructor
   · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
     by_cases a' = a
-    · subst h
-      rwa [pi.cons_same]
-    · rw [pi.cons_ne _ h]
-      apply hf'
+    · subst h; rwa [pi.cons_same]
+    · rw [pi.cons_ne _ h]; apply hf'
   · intro hf
     refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩
     rw [pi.cons_eta]

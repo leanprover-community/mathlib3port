@@ -106,8 +106,7 @@ def preservesPullbackSymmetry : PreservesLimit (cospan g f) G
     apply pullback_cone.flip_is_limit
     apply (is_limit_map_cone_pullback_cone_equiv _ _).toFun
     · apply (config := { instances := false }) preserves_limit.preserves
-      · dsimp
-        infer_instance
+      · dsimp; infer_instance
       apply pullback_cone.flip_is_limit
       apply is_limit.of_iso_limit _ (pullback_cone.iso_mk _)
       exact (is_limit.postcompose_hom_equiv (diagramIsoCospan.{v₁} _) _).invFun hc
@@ -249,8 +248,7 @@ def preservesPushoutSymmetry : PreservesColimit (span g f) G
     apply pushout_cocone.flip_is_colimit
     apply (is_colimit_map_cocone_pushout_cocone_equiv _ _).toFun
     · apply (config := { instances := false }) preserves_colimit.preserves
-      · dsimp
-        infer_instance
+      · dsimp; infer_instance
       apply pushout_cocone.flip_is_colimit
       apply is_colimit.of_iso_colimit _ (pushout_cocone.iso_mk _)
       exact (is_colimit.precompose_hom_equiv (diagramIsoSpan.{v₁} _) _).invFun hc
@@ -288,10 +286,8 @@ def PreservesPushout.iso : pushout (G.map f) (G.map g) ≅ G.obj (pushout f g) :
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_pushout.inl_iso_hom CategoryTheory.Limits.PreservesPushout.inl_iso_homₓ'. -/
 @[reassoc]
 theorem PreservesPushout.inl_iso_hom :
-    pushout.inl ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inl :=
-  by
-  delta preserves_pushout.iso
-  simp
+    pushout.inl ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inl := by
+  delta preserves_pushout.iso; simp
 #align category_theory.limits.preserves_pushout.inl_iso_hom CategoryTheory.Limits.PreservesPushout.inl_iso_hom
 
 /- warning: category_theory.limits.preserves_pushout.inr_iso_hom -> CategoryTheory.Limits.PreservesPushout.inr_iso_hom is a dubious translation:
@@ -299,10 +295,8 @@ theorem PreservesPushout.inl_iso_hom :
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.preserves_pushout.inr_iso_hom CategoryTheory.Limits.PreservesPushout.inr_iso_homₓ'. -/
 @[reassoc]
 theorem PreservesPushout.inr_iso_hom :
-    pushout.inr ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inr :=
-  by
-  delta preserves_pushout.iso
-  simp
+    pushout.inr ≫ (PreservesPushout.iso G f g).Hom = G.map pushout.inr := by
+  delta preserves_pushout.iso; simp
 #align category_theory.limits.preserves_pushout.inr_iso_hom CategoryTheory.Limits.PreservesPushout.inr_iso_hom
 
 /- warning: category_theory.limits.preserves_pushout.inl_iso_inv -> CategoryTheory.Limits.PreservesPushout.inl_iso_inv is a dubious translation:

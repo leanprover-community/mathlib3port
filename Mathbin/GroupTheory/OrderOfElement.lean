@@ -103,10 +103,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (x : G), Iff (IsOfFinOrder.{u1} G _inst_1 x) (Exists.{1} Nat (fun (n : Nat) => And (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) x n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align is_of_fin_order_iff_pow_eq_one isOfFinOrder_iff_pow_eq_oneₓ'. -/
 @[to_additive isOfFinAddOrder_iff_nsmul_eq_zero]
-theorem isOfFinOrder_iff_pow_eq_one (x : G) : IsOfFinOrder x ↔ ∃ n, 0 < n ∧ x ^ n = 1 :=
-  by
-  convert Iff.rfl
-  simp [isPeriodicPt_mul_iff_pow_eq_one]
+theorem isOfFinOrder_iff_pow_eq_one (x : G) : IsOfFinOrder x ↔ ∃ n, 0 < n ∧ x ^ n = 1 := by
+  convert Iff.rfl; simp [isPeriodicPt_mul_iff_pow_eq_one]
 #align is_of_fin_order_iff_pow_eq_one isOfFinOrder_iff_pow_eq_one
 #align is_of_fin_add_order_iff_nsmul_eq_zero isOfFinAddOrder_iff_nsmul_eq_zero
 
@@ -135,10 +133,8 @@ Case conversion may be inaccurate. Consider using '#align is_of_fin_order_iff_co
 /-- Elements of finite order are of finite order in submonoids.-/
 @[to_additive isOfFinAddOrder_iff_coe
       "Elements of finite order are of finite order in\nsubmonoids."]
-theorem isOfFinOrder_iff_coe (H : Submonoid G) (x : H) : IsOfFinOrder x ↔ IsOfFinOrder (x : G) :=
-  by
-  rw [isOfFinOrder_iff_pow_eq_one, isOfFinOrder_iff_pow_eq_one]
-  norm_cast
+theorem isOfFinOrder_iff_coe (H : Submonoid G) (x : H) : IsOfFinOrder x ↔ IsOfFinOrder (x : G) := by
+  rw [isOfFinOrder_iff_pow_eq_one, isOfFinOrder_iff_pow_eq_one]; norm_cast
 #align is_of_fin_order_iff_coe isOfFinOrder_iff_coe
 #align is_of_fin_add_order_iff_coe isOfFinAddOrder_iff_coe
 
@@ -278,12 +274,8 @@ theorem orderOf_eq_iff {n} (h : 0 < n) :
   by
   simp_rw [Ne, ← isPeriodicPt_mul_iff_pow_eq_one, orderOf, minimal_period]
   split_ifs with h1
-  · rw [find_eq_iff, exists_prop_of_true h]
-    push_neg
-    rfl
-  · rw [iff_false_left h.ne]
-    rintro ⟨h', -⟩
-    exact h1 ⟨n, h, h'⟩
+  · rw [find_eq_iff, exists_prop_of_true h]; push_neg; rfl
+  · rw [iff_false_left h.ne]; rintro ⟨h', -⟩; exact h1 ⟨n, h, h'⟩
 #align order_of_eq_iff orderOf_eq_iff
 #align add_order_of_eq_iff addOrderOf_eq_iff
 
@@ -396,10 +388,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_of_map_dvd orderOf_map_dvdₓ'. -/
 @[to_additive addOrderOf_map_dvd]
 theorem orderOf_map_dvd {H : Type _} [Monoid H] (ψ : G →* H) (x : G) : orderOf (ψ x) ∣ orderOf x :=
-  by
-  apply orderOf_dvd_of_pow_eq_one
-  rw [← map_pow, pow_orderOf_eq_one]
-  apply map_one
+  by apply orderOf_dvd_of_pow_eq_one; rw [← map_pow, pow_orderOf_eq_one]; apply map_one
 #align order_of_map_dvd orderOf_map_dvd
 #align add_order_of_map_dvd addOrderOf_map_dvd
 
@@ -566,8 +555,7 @@ Case conversion may be inaccurate. Consider using '#align commute.order_of_dvd_l
 theorem orderOf_dvd_lcm_mul : orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y)) :=
   by
   by_cases h0 : orderOf x = 0
-  · rw [h0, lcm_zero_left]
-    apply dvd_zero
+  · rw [h0, lcm_zero_left]; apply dvd_zero
   conv_lhs =>
     rw [← one_mul y, ← pow_orderOf_eq_one x, ← succ_pred_eq_of_pos (Nat.pos_of_ne_zero h0),
       pow_succ', mul_assoc]
@@ -940,9 +928,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_of_fin_order.of_mem_zpowers IsOfFinOrder.of_mem_zpowersₓ'. -/
 @[to_additive IsOfFinAddOrder.of_mem_zmultiples]
 theorem IsOfFinOrder.of_mem_zpowers (h : IsOfFinOrder x) (h' : y ∈ Subgroup.zpowers x) :
-    IsOfFinOrder y := by
-  obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp h'
-  exact h.zpow
+    IsOfFinOrder y := by obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp h'; exact h.zpow
 #align is_of_fin_order.of_mem_zpowers IsOfFinOrder.of_mem_zpowers
 #align is_of_fin_add_order.of_mem_zmultiples IsOfFinAddOrder.of_mem_zmultiples
 
@@ -1031,11 +1017,7 @@ theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n 
     (∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
           (Finset.univ.filterₓ fun x : G => orderOf x = m).card) =
         _ :=
-      (Finset.card_biUnion
-          (by
-            intros
-            apply Finset.disjoint_filter.2
-            cc)).symm
+      (Finset.card_biUnion (by intros ; apply Finset.disjoint_filter.2; cc)).symm
     _ = _ :=
       congr_arg Finset.card
         (Finset.ext
@@ -1530,10 +1512,8 @@ Case conversion may be inaccurate. Consider using '#align image_range_order_of i
 /-- TODO: Generalise to `submonoid.powers`.-/
 @[to_additive image_range_addOrderOf, nolint to_additive_doc]
 theorem image_range_orderOf [DecidableEq G] :
-    Finset.image (fun i => x ^ i) (Finset.range (orderOf x)) = (zpowers x : Set G).toFinset :=
-  by
-  ext x
-  rw [Set.mem_toFinset, SetLike.mem_coe, mem_zpowers_iff_mem_range_orderOf]
+    Finset.image (fun i => x ^ i) (Finset.range (orderOf x)) = (zpowers x : Set G).toFinset := by
+  ext x; rw [Set.mem_toFinset, SetLike.mem_coe, mem_zpowers_iff_mem_range_orderOf]
 #align image_range_order_of image_range_orderOf
 #align image_range_add_order_of image_range_addOrderOf
 

@@ -79,11 +79,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     ext U0
     constructor
     · rintro ⟨j, V, hV, rfl⟩
-      let U : ∀ i, Set (F.obj i) := fun i =>
-        if h : i = j then by
-          rw [h]
-          exact V
-        else Set.univ
+      let U : ∀ i, Set (F.obj i) := fun i => if h : i = j then by rw [h]; exact V else Set.univ
       refine' ⟨U, {j}, _, _⟩
       · rintro i h
         rw [Finset.mem_singleton] at h

@@ -167,9 +167,7 @@ between `M₂` and `M₃`. -/
 protected def compLeft (f : M₂ →ₗ[R] M₃) (I : Type _) : (I → M₂) →ₗ[R] I → M₃ :=
   { f.toAddMonoidHom.compLeft I with
     toFun := fun h => f ∘ h
-    map_smul' := fun c h => by
-      ext x
-      exact f.map_smul' c (h x) }
+    map_smul' := fun c h => by ext x; exact f.map_smul' c (h x) }
 #align linear_map.comp_left LinearMap.compLeft
 -/
 
@@ -214,9 +212,7 @@ def lsum (S) [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι] [Semir
   invFun f i := f.comp (single i)
   map_add' f g := by simp only [Pi.add_apply, add_comp, Finset.sum_add_distrib]
   map_smul' c f := by simp only [Pi.smul_apply, smul_comp, Finset.smul_sum, RingHom.id_apply]
-  left_inv f := by
-    ext (i x)
-    simp [apply_single]
+  left_inv f := by ext (i x); simp [apply_single]
   right_inv f := by
     ext
     suffices f (∑ j, Pi.single j (x j)) = f x by simpa [apply_single]
@@ -420,10 +416,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Semiring.{u2} R] {φ : ι -> Type.{u1}} [_inst_2 : forall (i : ι), AddCommMonoid.{u1} (φ i)] [_inst_3 : forall (i : ι), Module.{u2, u1} R (φ i) _inst_1 (_inst_2 i)] {I : Set.{u3} ι} {p : forall (i : ι), Submodule.{u2, u1} R (φ i) _inst_1 (_inst_2 i) (_inst_3 i)}, Eq.{max (succ u3) (succ u1)} (Submodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (iInf.{max u3 u1, succ u3} (Submodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (Submodule.instInfSetSubmodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) ι (fun (i : ι) => iInf.{max u3 u1, 0} (Submodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (Submodule.instInfSetSubmodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i I) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i I) => Submodule.comap.{u2, u2, max u3 u1, u1, max u3 u1} R R (forall (i : ι), φ i) (φ i) _inst_1 _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (LinearMap.{u2, u2, max u1 u3, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (forall (i : ι), φ i) (φ i) (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i)) (LinearMap.semilinearMapClass.{u2, u2, max u3 u1, u1} R R (forall (i : ι), φ i) (φ i) _inst_1 _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (LinearMap.proj.{u2, u3, u1} R ι _inst_1 (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i) i) (p i)))) (Submodule.pi.{u2, u3, u1} R ι _inst_1 (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i) I p)
 Case conversion may be inaccurate. Consider using '#align submodule.binfi_comap_proj Submodule.biInf_comap_projₓ'. -/
-theorem biInf_comap_proj : (⨅ i ∈ I, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi I p :=
-  by
-  ext x
-  simp
+theorem biInf_comap_proj : (⨅ i ∈ I, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi I p := by
+  ext x; simp
 #align submodule.binfi_comap_proj Submodule.biInf_comap_proj
 
 /- warning: submodule.infi_comap_proj -> Submodule.iInf_comap_proj is a dubious translation:
@@ -432,10 +426,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {ι : Type.{u3}} [_inst_1 : Semiring.{u2} R] {φ : ι -> Type.{u1}} [_inst_2 : forall (i : ι), AddCommMonoid.{u1} (φ i)] [_inst_3 : forall (i : ι), Module.{u2, u1} R (φ i) _inst_1 (_inst_2 i)] {p : forall (i : ι), Submodule.{u2, u1} R (φ i) _inst_1 (_inst_2 i) (_inst_3 i)}, Eq.{max (succ u3) (succ u1)} (Submodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (iInf.{max u3 u1, succ u3} (Submodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) (Submodule.instInfSetSubmodule.{u2, max u3 u1} R (forall (i : ι), φ i) _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i))) ι (fun (i : ι) => Submodule.comap.{u2, u2, max u3 u1, u1, max u3 u1} R R (forall (i : ι), φ i) (φ i) _inst_1 _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (LinearMap.{u2, u2, max u1 u3, u1} R R _inst_1 _inst_1 (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)) (forall (i : ι), φ i) (φ i) (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i)) (LinearMap.semilinearMapClass.{u2, u2, max u3 u1, u1} R R (forall (i : ι), φ i) (φ i) _inst_1 _inst_1 (Pi.addCommMonoid.{u3, u1} ι (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i)) (_inst_2 i) (Pi.module.{u3, u1, u2} ι (fun (i : ι) => φ i) R _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) (_inst_3 i) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (LinearMap.proj.{u2, u3, u1} R ι _inst_1 (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i) i) (p i))) (Submodule.pi.{u2, u3, u1} R ι _inst_1 (fun (i : ι) => φ i) (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i) (Set.univ.{u3} ι) p)
 Case conversion may be inaccurate. Consider using '#align submodule.infi_comap_proj Submodule.iInf_comap_projₓ'. -/
-theorem iInf_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi Set.univ p :=
-  by
-  ext x
-  simp
+theorem iInf_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi Set.univ p := by
+  ext x; simp
 #align submodule.infi_comap_proj Submodule.iInf_comap_proj
 
 /- warning: submodule.supr_map_single -> Submodule.iSup_map_single is a dubious translation:
@@ -470,8 +462,7 @@ theorem le_comap_single_pi [DecidableEq ι] (p : ∀ i, Submodule R (φ i)) {i} 
   rintro j -
   by_cases h : j = i
   · rwa [h, LinearMap.coe_single, Pi.single_eq_same]
-  · rw [LinearMap.coe_single, Pi.single_eq_of_ne h]
-    exact (p j).zero_mem
+  · rw [LinearMap.coe_single, Pi.single_eq_of_ne h]; exact (p j).zero_mem
 #align submodule.le_comap_single_pi Submodule.le_comap_single_pi
 
 end Submodule
@@ -495,9 +486,7 @@ def piCongrRight (e : ∀ i, φ i ≃ₗ[R] ψ i) : (∀ i, φ i) ≃ₗ[R] ∀ 
       (e j).toAddEquiv with
     toFun := fun f i => e i (f i)
     invFun := fun f i => (e i).symm (f i)
-    map_smul' := fun c f => by
-      ext
-      simp }
+    map_smul' := fun c f => by ext; simp }
 #align linear_equiv.Pi_congr_right LinearEquiv.piCongrRight
 -/
 
@@ -620,12 +609,8 @@ def sumArrowLequivProdArrow (α β R M : Type _) [Semiring R] [AddCommMonoid M] 
   {
     Equiv.sumArrowEquivProdArrow α β
       M with
-    map_add' := by
-      intro f g
-      ext <;> rfl
-    map_smul' := by
-      intro r f
-      ext <;> rfl }
+    map_add' := by intro f g; ext <;> rfl
+    map_smul' := by intro r f; ext <;> rfl }
 #align linear_equiv.sum_arrow_lequiv_prod_arrow LinearEquiv.sumArrowLequivProdArrow
 
 /- warning: linear_equiv.sum_arrow_lequiv_prod_arrow_apply_fst -> LinearEquiv.sumArrowLequivProdArrow_apply_fst is a dubious translation:

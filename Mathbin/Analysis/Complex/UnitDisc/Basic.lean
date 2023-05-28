@@ -106,9 +106,7 @@ but is expected to have type
   forall (z : Complex.UnitDisc), Ne.{1} Complex (Subtype.val.{1} Complex (fun (x : Complex) => Membership.mem.{0, 0} Complex (Set.{0} Complex) (Set.instMembershipSet.{0} Complex) x (Metric.ball.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))) (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))) z) (Neg.neg.{0} Complex Complex.instNegComplex (OfNat.ofNat.{0} Complex 1 (One.toOfNat1.{0} Complex Complex.instOneComplex)))
 Case conversion may be inaccurate. Consider using '#align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_oneₓ'. -/
 theorem coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-  ne_of_apply_ne abs <| by
-    rw [abs.map_neg, map_one]
-    exact z.abs_ne_one
+  ne_of_apply_ne abs <| by rw [abs.map_neg, map_one]; exact z.abs_ne_one
 #align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_one
 
 /- warning: complex.unit_disc.one_add_coe_ne_zero -> Complex.UnitDisc.one_add_coe_ne_zero is a dubious translation:

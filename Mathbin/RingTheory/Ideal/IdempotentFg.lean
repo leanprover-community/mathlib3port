@@ -34,10 +34,7 @@ theorem isIdempotentElem_iff_of_fg {R : Type _} [CommRing R] (I : Ideal R) (h : 
   constructor
   · intro e
     obtain ⟨r, hr, hr'⟩ :=
-      Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I I h
-        (by
-          rw [smul_eq_mul]
-          exact e.ge)
+      Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I I h (by rw [smul_eq_mul]; exact e.ge)
     simp_rw [smul_eq_mul] at hr'
     refine' ⟨r, hr' r hr, antisymm _ ((Submodule.span_singleton_le_iff_mem _ _).mpr hr)⟩
     intro x hx

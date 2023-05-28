@@ -140,9 +140,7 @@ protected noncomputable def succ {r : α → α → Prop} (wf : WellFounded r) (
 
 #print WellFounded.lt_succ /-
 protected theorem lt_succ {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) :
-    r x (wf.succ x) := by
-  rw [WellFounded.succ, dif_pos h]
-  apply min_mem
+    r x (wf.succ x) := by rw [WellFounded.succ, dif_pos h]; apply min_mem
 #align well_founded.lt_succ WellFounded.lt_succ
 -/
 
@@ -153,18 +151,14 @@ protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {
     (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x :=
   by
   constructor
-  · intro h'
+  · intro h';
     have : ¬r x y := by
-      intro hy
-      rw [WellFounded.succ, dif_pos] at h'
+      intro hy; rw [WellFounded.succ, dif_pos] at h'
       exact wo.wf.not_lt_min _ h hy h'
     rcases trichotomous_of r x y with (hy | hy | hy)
-    exfalso
-    exact this hy
-    right
-    exact hy.symm
-    left
-    exact hy
+    exfalso; exact this hy
+    right; exact hy.symm
+    left; exact hy
   rintro (hy | rfl); exact trans hy (wo.wf.lt_succ h); exact wo.wf.lt_succ h
 #align well_founded.lt_succ_iff WellFounded.lt_succ_iff
 -/
@@ -188,9 +182,7 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
     (hg : StrictMono g) (hfg : Set.range f = Set.range g) {b : β} (H : ∀ a < b, f a = g a) :
     f b ≤ g b :=
   by
-  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by
-    rw [hfg]
-    exact Set.mem_range_self b
+  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by rw [hfg]; exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
   · rw [H c hcb] at hc
     rw [hg.injective hc] at hcb
@@ -223,11 +215,8 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β], (WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1325 : β) (x._@.Mathlib.Order.WellFounded._hyg.1327 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.1325 x._@.Mathlib.Order.WellFounded._hyg.1327)) -> (forall {f : β -> β}, (StrictMono.{u1, u1} β β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) f) -> (forall (n : β), LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) n (f n)))
 Case conversion may be inaccurate. Consider using '#align well_founded.self_le_of_strict_mono WellFounded.self_le_of_strictMonoₓ'. -/
-theorem self_le_of_strictMono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n :=
-  by
-  by_contra' h₁
-  have h₂ := h.min_mem _ h₁
-  exact h.not_lt_min _ h₁ (hf h₂) h₂
+theorem self_le_of_strictMono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n := by by_contra' h₁;
+  have h₂ := h.min_mem _ h₁; exact h.not_lt_min _ h₁ (hf h₂) h₂
 #align well_founded.self_le_of_strict_mono WellFounded.self_le_of_strictMono
 
 end LinearOrder

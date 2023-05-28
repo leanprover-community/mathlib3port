@@ -96,11 +96,8 @@ theorem componentComplMk_mem (G : SimpleGraph V) {v : V} (vK : v ∉ K) : v ∈ 
 
 #print SimpleGraph.componentComplMk_eq_of_adj /-
 theorem componentComplMk_eq_of_adj (G : SimpleGraph V) {v w : V} (vK : v ∉ K) (wK : w ∉ K)
-    (a : G.adj v w) : G.componentComplMk vK = G.componentComplMk wK :=
-  by
-  rw [connected_component.eq]
-  apply adj.reachable
-  exact a
+    (a : G.adj v w) : G.componentComplMk vK = G.componentComplMk wK := by
+  rw [connected_component.eq]; apply adj.reachable; exact a
 #align simple_graph.component_compl_mk_eq_of_adj SimpleGraph.componentComplMk_eq_of_adj
 -/
 
@@ -115,19 +112,15 @@ protected def lift {β : Sort _} (f : ∀ ⦃v⦄ (hv : v ∉ K), β)
   ConnectedComponent.lift (fun vv => f vv.Prop) fun v w p =>
     by
     induction' p with _ u v w a q ih
-    · rintro _
-      rfl
-    · rintro h'
-      exact (h u.prop v.prop a).trans (ih h'.of_cons)
+    · rintro _; rfl
+    · rintro h'; exact (h u.prop v.prop a).trans (ih h'.of_cons)
 #align simple_graph.component_compl.lift SimpleGraph.ComponentCompl.lift
 -/
 
 #print SimpleGraph.ComponentCompl.ind /-
 protected theorem ind {β : G.ComponentCompl K → Prop}
-    (f : ∀ ⦃v⦄ (hv : v ∉ K), β (G.componentComplMk hv)) : ∀ C : G.ComponentCompl K, β C :=
-  by
-  apply connected_component.ind
-  exact fun ⟨v, vnK⟩ => f vnK
+    (f : ∀ ⦃v⦄ (hv : v ∉ K), β (G.componentComplMk hv)) : ∀ C : G.ComponentCompl K, β C := by
+  apply connected_component.ind; exact fun ⟨v, vnK⟩ => f vnK
 #align simple_graph.component_compl.ind SimpleGraph.ComponentCompl.ind
 -/
 
@@ -196,9 +189,7 @@ protected theorem pairwise_disjoint :
 -/
 theorem mem_of_adj : ∀ {C : G.ComponentCompl K} (c d : V), c ∈ C → d ∉ K → G.adj c d → d ∈ C :=
   fun C c d ⟨cnK, h⟩ dnK cd =>
-  ⟨dnK, by
-    rw [← h, connected_component.eq]
-    exact adj.reachable cd.symm⟩
+  ⟨dnK, by rw [← h, connected_component.eq]; exact adj.reachable cd.symm⟩
 #align simple_graph.component_compl.mem_of_adj SimpleGraph.ComponentCompl.mem_of_adj
 -/
 
@@ -237,10 +228,8 @@ def hom (h : K ⊆ L) (C : G.ComponentCompl L) : G.ComponentCompl K :=
 -/
 
 #print SimpleGraph.ComponentCompl.subset_hom /-
-theorem subset_hom (C : G.ComponentCompl L) (h : K ⊆ L) : (C : Set V) ⊆ (C.hom h : Set V) :=
-  by
-  rintro c ⟨cL, rfl⟩
-  exact ⟨fun h' => cL (h h'), rfl⟩
+theorem subset_hom (C : G.ComponentCompl L) (h : K ⊆ L) : (C : Set V) ⊆ (C.hom h : Set V) := by
+  rintro c ⟨cL, rfl⟩; exact ⟨fun h' => cL (h h'), rfl⟩
 #align simple_graph.component_compl.subset_hom SimpleGraph.ComponentCompl.subset_hom
 -/
 
@@ -274,25 +263,19 @@ theorem hom_eq_iff_not_disjoint (C : G.ComponentCompl L) (h : K ⊆ L) (D : G.Co
     exact ⟨x, ⟨xnL, rfl⟩, ⟨fun xK => xnL (h xK), rfl⟩⟩
   · apply C.ind fun x xnL => _
     rintro ⟨x, ⟨_, e₁⟩, _, rfl⟩
-    rw [← e₁]
-    rfl
+    rw [← e₁]; rfl
 #align simple_graph.component_compl.hom_eq_iff_not_disjoint SimpleGraph.ComponentCompl.hom_eq_iff_not_disjoint
 
 #print SimpleGraph.ComponentCompl.hom_refl /-
-theorem hom_refl (C : G.ComponentCompl L) : C.hom (subset_refl L) = C :=
-  by
-  change C.map _ = C
+theorem hom_refl (C : G.ComponentCompl L) : C.hom (subset_refl L) = C := by change C.map _ = C;
   erw [induce_hom_id G (Lᶜ), connected_component.map_id]
 #align simple_graph.component_compl.hom_refl SimpleGraph.ComponentCompl.hom_refl
 -/
 
 #print SimpleGraph.ComponentCompl.hom_trans /-
 theorem hom_trans (C : G.ComponentCompl L) (h : K ⊆ L) (h' : M ⊆ K) :
-    C.hom (h'.trans h) = (C.hom h).hom h' :=
-  by
-  change C.map _ = (C.map _).map _
-  erw [connected_component.map_comp, induce_hom_comp]
-  rfl
+    C.hom (h'.trans h) = (C.hom h).hom h' := by change C.map _ = (C.map _).map _;
+  erw [connected_component.map_comp, induce_hom_comp]; rfl
 #align simple_graph.component_compl.hom_trans SimpleGraph.ComponentCompl.hom_trans
 -/
 

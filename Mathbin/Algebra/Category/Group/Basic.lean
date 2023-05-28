@@ -126,10 +126,7 @@ theorem one_apply (G H : GroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align Group.ext GroupCat.extₓ'. -/
 @[ext, to_additive]
-theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
-  by
-  ext1
-  apply w
+theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by ext1; apply w
 #align Group.ext GroupCat.ext
 #align AddGroup.ext AddGroupCat.ext
 
@@ -254,9 +251,7 @@ theorem one_apply (G H : CommGroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align CommGroup.ext CommGroupCat.extₓ'. -/
 @[ext, to_additive]
-theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
-  by
-  ext1
+theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by ext1;
   apply w
 #align CommGroup.ext CommGroupCat.ext
 #align AddCommGroup.ext AddCommGroupCat.ext

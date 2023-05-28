@@ -121,11 +121,9 @@ theorem sign_eq_zero_iff {r : ℝ} : sign r = 0 ↔ r = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · rw [sign_of_neg hn, neg_eq_zero] at h
-    exact (one_ne_zero h).elim
+  · rw [sign_of_neg hn, neg_eq_zero] at h; exact (one_ne_zero h).elim
   · rfl
-  · rw [sign_of_pos hp] at h
-    exact (one_ne_zero h).elim
+  · rw [sign_of_pos hp] at h; exact (one_ne_zero h).elim
 #align real.sign_eq_zero_iff Real.sign_eq_zero_iff
 
 /- warning: real.sign_int_cast -> Real.sign_int_cast is a dubious translation:
@@ -197,12 +195,9 @@ Case conversion may be inaccurate. Consider using '#align real.inv_sign Real.inv
 theorem inv_sign (r : ℝ) : (sign r)⁻¹ = sign r :=
   by
   obtain hn | hz | hp := sign_apply_eq r
-  · rw [hn]
-    norm_num
-  · rw [hz]
-    exact inv_zero
-  · rw [hp]
-    exact inv_one
+  · rw [hn]; norm_num
+  · rw [hz]; exact inv_zero
+  · rw [hp]; exact inv_one
 #align real.inv_sign Real.inv_sign
 
 /- warning: real.sign_inv -> Real.sign_inv is a dubious translation:

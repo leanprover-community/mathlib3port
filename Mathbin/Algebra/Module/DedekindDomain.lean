@@ -52,19 +52,15 @@ theorem isInternal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI 
     rw [← Finset.inf_eq_iInf, IsDedekindDomain.inf_prime_pow_eq_prod, ← Finset.prod_multiset_count,
       ← associated_iff_eq]
     · exact factors_prod hI
-    · exact prime_of_mem
-    · exact fun _ _ _ _ ij => ij
-  · intro p hp q hq pq
-    dsimp
+    · exact prime_of_mem; · exact fun _ _ _ _ ij => ij
+  · intro p hp q hq pq; dsimp
     rw [irreducible_pow_sup]
     · suffices (normalized_factors _).count p = 0 by rw [this, zero_min, pow_zero, Ideal.one_eq_top]
       · rw [Multiset.count_eq_zero,
           normalized_factors_of_irreducible_pow (prime_of_mem q hq).Irreducible,
           Multiset.mem_replicate]
         exact fun H => pq <| H.2.trans <| normalize_eq q
-    · rw [← Ideal.zero_eq_bot]
-      apply pow_ne_zero
-      exact (prime_of_mem q hq).NeZero
+    · rw [← Ideal.zero_eq_bot]; apply pow_ne_zero; exact (prime_of_mem q hq).NeZero
     · exact (prime_of_mem p hp).Irreducible
 #align submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.isInternal_prime_power_torsion_of_is_torsion_by_ideal
 

@@ -84,8 +84,7 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
     (h : ∀ z ∈ sphere (0 : E) r, ‖f z‖ ≤ c) (z : E) : ‖f z‖ ≤ c / r * ‖z‖ :=
   by
   by_cases z_zero : z = 0
-  · rw [z_zero]
-    simp only [LinearMap.map_zero, norm_zero, MulZeroClass.mul_zero]
+  · rw [z_zero]; simp only [LinearMap.map_zero, norm_zero, MulZeroClass.mul_zero]
   set z₁ := (r * ‖z‖⁻¹ : 𝕜) • z with hz₁
   have norm_f_z₁ : ‖f z₁‖ ≤ c := by
     apply h

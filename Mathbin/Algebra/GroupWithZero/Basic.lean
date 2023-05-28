@@ -264,12 +264,8 @@ Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zer
 -- see Note [lower instance priority]
 instance (priority := 10) CancelMonoidWithZero.to_noZeroDivisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 => by
-    by_cases a = 0
-    · left
-      exact h
-    right
-    apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h
-    rw [ab0, MulZeroClass.mul_zero]⟩
+    by_cases a = 0; · left; exact h; right
+    apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h; rw [ab0, MulZeroClass.mul_zero]⟩
 #align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_noZeroDivisors
 
 /- warning: mul_left_inj' -> mul_left_inj' is a dubious translation:

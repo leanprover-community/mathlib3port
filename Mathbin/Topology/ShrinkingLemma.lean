@@ -194,11 +194,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)} (c : ι) (i : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s), Membership.mem.{max u2 u1, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (Set.instMembershipSet.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (ShrinkingLemma.PartialRefinement.find.{u1, u2} ι X _inst_1 _inst_2 u s i c) s
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.find_mem ShrinkingLemma.PartialRefinement.find_memₓ'. -/
-theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c Ne i ∈ c :=
-  by
-  rw [find]
-  split_ifs
-  exacts[h.some_spec.fst, ne.some_spec]
+theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c Ne i ∈ c := by
+  rw [find]; split_ifs; exacts[h.some_spec.fst, ne.some_spec]
 #align shrinking_lemma.partial_refinement.find_mem ShrinkingLemma.PartialRefinement.find_mem
 
 /- warning: shrinking_lemma.partial_refinement.mem_find_carrier_iff -> ShrinkingLemma.PartialRefinement.mem_find_carrier_iff is a dubious translation:
@@ -298,20 +295,14 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
     IsClosed.inter hs (isClosed_biInter fun _ _ => isClosed_compl_iff.2 <| v.is_open _)
   rcases normal_exists_closure_subset C (v.is_open i) I with ⟨vi, ovi, hvi, cvi⟩
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
-  · intro j
-    by_cases h : j = i <;> simp [h, ovi, v.is_open]
+  · intro j; by_cases h : j = i <;> simp [h, ovi, v.is_open]
   · refine' fun x hx => mem_Union.2 _
     rcases em (∃ (j : _)(_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
-    · use j
-      rwa [update_noteq hji]
-    · push_neg  at h
-      use i
-      rw [update_same]
-      exact hvi ⟨hx, mem_bInter h⟩
+    · use j; rwa [update_noteq hji]
+    · push_neg  at h; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
-    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
-      exact v.closure_subset hj
+    · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact v.closure_subset hj
   · intro j hj
     rw [mem_insert_iff, not_or] at hj
     rw [update_noteq hj.1, v.apply_eq hj.2]

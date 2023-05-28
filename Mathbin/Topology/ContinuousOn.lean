@@ -357,11 +357,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhdsWithin.{u1} α _inst_1 a s) (nhds.{u1} α _inst_1 a)
 Case conversion may be inaccurate. Consider using '#align nhds_within_le_nhds nhdsWithin_le_nhdsₓ'. -/
-theorem nhdsWithin_le_nhds {a : α} {s : Set α} : 𝓝[s] a ≤ 𝓝 a :=
-  by
-  rw [← nhdsWithin_univ]
-  apply nhdsWithin_le_of_mem
-  exact univ_mem
+theorem nhdsWithin_le_nhds {a : α} {s : Set α} : 𝓝[s] a ≤ 𝓝 a := by rw [← nhdsWithin_univ];
+  apply nhdsWithin_le_of_mem; exact univ_mem
 #align nhds_within_le_nhds nhdsWithin_le_nhds
 
 /- warning: nhds_within_eq_nhds_within' -> nhdsWithin_eq_nhds_within' is a dubious translation:
@@ -403,9 +400,7 @@ theorem preimage_nhds_within_coinduced {π : α → β} {s : Set β} {t : Set α
     (ht : IsOpen t)
     (hs :
       s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
-    π ⁻¹' s ∈ 𝓝 a := by
-  rw [← ht.nhds_within_eq h]
-  exact preimage_nhdsWithin_coinduced' h ht hs
+    π ⁻¹' s ∈ 𝓝 a := by rw [← ht.nhds_within_eq h]; exact preimage_nhdsWithin_coinduced' h ht hs
 #align preimage_nhds_within_coinduced preimage_nhds_within_coinduced
 -/
 
@@ -425,10 +420,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (a : α) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Sup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) (nhdsWithin.{u1} α _inst_1 a s) (nhdsWithin.{u1} α _inst_1 a t))
 Case conversion may be inaccurate. Consider using '#align nhds_within_union nhdsWithin_unionₓ'. -/
-theorem nhdsWithin_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a ⊔ 𝓝[t] a :=
-  by
-  delta nhdsWithin
-  rw [← inf_sup_left, sup_principal]
+theorem nhdsWithin_union (a : α) (s t : Set α) : 𝓝[s ∪ t] a = 𝓝[s] a ⊔ 𝓝[t] a := by
+  delta nhdsWithin; rw [← inf_sup_left, sup_principal]
 #align nhds_within_union nhdsWithin_union
 
 /- warning: nhds_within_bUnion -> nhdsWithin_biUnion is a dubious translation:
@@ -469,10 +462,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (a : α) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhdsWithin.{u1} α _inst_1 a s) (nhdsWithin.{u1} α _inst_1 a t))
 Case conversion may be inaccurate. Consider using '#align nhds_within_inter nhdsWithin_interₓ'. -/
-theorem nhdsWithin_inter (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓝[t] a :=
-  by
-  delta nhdsWithin
-  rw [inf_left_comm, inf_assoc, inf_principal, ← inf_assoc, inf_idem]
+theorem nhdsWithin_inter (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓝[t] a := by
+  delta nhdsWithin; rw [inf_left_comm, inf_assoc, inf_principal, ← inf_assoc, inf_idem]
 #align nhds_within_inter nhdsWithin_inter
 
 /- warning: nhds_within_inter' -> nhdsWithin_inter' is a dubious translation:
@@ -481,9 +472,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (a : α) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) (Inf.inf.{u1} (Filter.{u1} α) (Filter.instInfFilter.{u1} α) (nhdsWithin.{u1} α _inst_1 a s) (Filter.principal.{u1} α t))
 Case conversion may be inaccurate. Consider using '#align nhds_within_inter' nhdsWithin_inter'ₓ'. -/
-theorem nhdsWithin_inter' (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓟 t :=
-  by
-  delta nhdsWithin
+theorem nhdsWithin_inter' (a : α) (s t : Set α) : 𝓝[s ∩ t] a = 𝓝[s] a ⊓ 𝓟 t := by delta nhdsWithin;
   rw [← inf_principal, inf_assoc]
 #align nhds_within_inter' nhdsWithin_inter'
 
@@ -493,10 +482,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s (nhdsWithin.{u1} α _inst_1 a t)) -> (Eq.{succ u1} (Filter.{u1} α) (nhdsWithin.{u1} α _inst_1 a (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) (nhdsWithin.{u1} α _inst_1 a t))
 Case conversion may be inaccurate. Consider using '#align nhds_within_inter_of_mem nhdsWithin_inter_of_memₓ'. -/
-theorem nhdsWithin_inter_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[s ∩ t] a = 𝓝[t] a :=
-  by
-  rw [nhdsWithin_inter, inf_eq_right]
-  exact nhdsWithin_le_of_mem h
+theorem nhdsWithin_inter_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[s ∩ t] a = 𝓝[t] a := by
+  rw [nhdsWithin_inter, inf_eq_right]; exact nhdsWithin_le_of_mem h
 #align nhds_within_inter_of_mem nhdsWithin_inter_of_mem
 
 /- warning: nhds_within_inter_of_mem' -> nhdsWithin_inter_of_mem' is a dubious translation:
@@ -569,10 +556,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nhds_within_prod_eq nhdsWithin_prod_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhdsWithin_prod_eq {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
-    (a : α) (b : β) (s : Set α) (t : Set β) : 𝓝[s ×ˢ t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b :=
-  by
-  delta nhdsWithin
-  rw [nhds_prod_eq, ← Filter.prod_inf_prod, Filter.prod_principal_principal]
+    (a : α) (b : β) (s : Set α) (t : Set β) : 𝓝[s ×ˢ t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b := by
+  delta nhdsWithin; rw [nhds_prod_eq, ← Filter.prod_inf_prod, Filter.prod_principal_principal]
 #align nhds_within_prod_eq nhdsWithin_prod_eq
 
 /- warning: nhds_within_prod -> nhdsWithin_prod is a dubious translation:
@@ -585,9 +570,7 @@ Case conversion may be inaccurate. Consider using '#align nhds_within_prod nhdsW
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhdsWithin_prod {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
     {s u : Set α} {t v : Set β} {a : α} {b : β} (hu : u ∈ 𝓝[s] a) (hv : v ∈ 𝓝[t] b) :
-    u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by
-  rw [nhdsWithin_prod_eq]
-  exact prod_mem_prod hu hv
+    u ×ˢ v ∈ 𝓝[s ×ˢ t] (a, b) := by rw [nhdsWithin_prod_eq]; exact prod_mem_prod hu hv
 #align nhds_within_prod nhdsWithin_prod
 
 /- warning: nhds_within_pi_eq' -> nhdsWithin_pi_eq' is a dubious translation:
@@ -1139,9 +1122,7 @@ theorem continuousOn_iff' {f : α → β} {s : Set α} :
     intro t
     rw [isOpen_induced_iff, Set.restrict_eq, Set.preimage_comp]
     simp only [Subtype.preimage_coe_eq_preimage_coe_iff]
-    constructor <;>
-      · rintro ⟨u, ou, useq⟩
-        exact ⟨u, ou, useq.symm⟩
+    constructor <;> · rintro ⟨u, ou, useq⟩; exact ⟨u, ou, useq.symm⟩
   rw [continuousOn_iff_continuous_restrict, continuous_def] <;> simp only [this]
 #align continuous_on_iff' continuousOn_iff'
 
@@ -1218,8 +1199,7 @@ theorem continuous_of_cover_nhds {ι : Sort _} {f : α → β} {s : ι → Set �
   continuous_iff_continuousAt.mpr fun x =>
     by
     let ⟨i, hi⟩ := hs x
-    rw [ContinuousAt, ← nhdsWithin_eq_nhds.2 hi]
-    exact hf _ _ (mem_of_mem_nhds hi)
+    rw [ContinuousAt, ← nhdsWithin_eq_nhds.2 hi]; exact hf _ _ (mem_of_mem_nhds hi)
 #align continuous_of_cover_nhds continuous_of_cover_nhds
 
 /- warning: continuous_on_empty -> continuousOn_empty is a dubious translation:
@@ -1526,8 +1506,7 @@ theorem IsOpenMap.continuousOn_image_of_leftInvOn {f : α → β} {s : Set α}
     ContinuousOn finv (f '' s) :=
   by
   refine' continuousOn_iff'.2 fun t ht => ⟨f '' (t ∩ s), _, _⟩
-  · rw [← image_restrict]
-    exact h _ (ht.preimage continuous_subtype_val)
+  · rw [← image_restrict]; exact h _ (ht.preimage continuous_subtype_val)
   · rw [inter_eq_self_of_subset_left (image_subset f (inter_subset_right t s)), hleft.image_inter']
 #align is_open_map.continuous_on_image_of_left_inv_on IsOpenMap.continuousOn_image_of_leftInvOn
 
@@ -1993,8 +1972,7 @@ theorem continuousOn_open_of_generateFrom {β : Type _} {s : Set α} {T : Set (S
   intro t ht
   induction' ht with u hu u v Tu Tv hu hv U hU hU'
   · exact h u hu
-  · simp only [preimage_univ, inter_univ]
-    exact hs
+  · simp only [preimage_univ, inter_univ]; exact hs
   · have : s ∩ f ⁻¹' (u ∩ v) = s ∩ f ⁻¹' u ∩ (s ∩ f ⁻¹' v) := by
       rw [preimage_inter, inter_assoc, inter_left_comm _ s, ← inter_assoc s s, inter_self]
     rw [this]
@@ -2245,11 +2223,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (p : Prop) {f : α -> β} {g : α -> β} [_inst_5 : Decidable p], (p -> (Continuous.{u2, u1} α β _inst_1 _inst_2 f)) -> ((Not p) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 g)) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => ite.{succ u1} β p _inst_5 (f a) (g a)))
 Case conversion may be inaccurate. Consider using '#align continuous_if_const continuous_if_constₓ'. -/
 theorem continuous_if_const (p : Prop) {f g : α → β} [Decidable p] (hf : p → Continuous f)
-    (hg : ¬p → Continuous g) : Continuous fun a => if p then f a else g a :=
-  by
-  split_ifs
-  exact hf h
-  exact hg h
+    (hg : ¬p → Continuous g) : Continuous fun a => if p then f a else g a := by split_ifs;
+  exact hf h; exact hg h
 #align continuous_if_const continuous_if_const
 
 /- warning: continuous.if_const -> Continuous.if_const is a dubious translation:
@@ -2328,10 +2303,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {s' : Set.{u1} α} {t : Set.{u1} α}, (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (frontier.{u1} α _inst_1 t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s' (frontier.{u1} α _inst_1 t))) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.ite.{u1} α t s s') (closure.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s' (closure.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))))
 Case conversion may be inaccurate. Consider using '#align ite_inter_closure_compl_eq_of_inter_frontier_eq ite_inter_closure_compl_eq_of_inter_frontier_eqₓ'. -/
 theorem ite_inter_closure_compl_eq_of_inter_frontier_eq {s s' t : Set α}
-    (ht : s ∩ frontier t = s' ∩ frontier t) : t.ite s s' ∩ closure (tᶜ) = s' ∩ closure (tᶜ) :=
-  by
-  rw [← ite_compl, ite_inter_closure_eq_of_inter_frontier_eq]
-  rwa [frontier_compl, eq_comm]
+    (ht : s ∩ frontier t = s' ∩ frontier t) : t.ite s s' ∩ closure (tᶜ) = s' ∩ closure (tᶜ) := by
+  rw [← ite_compl, ite_inter_closure_eq_of_inter_frontier_eq]; rwa [frontier_compl, eq_comm]
 #align ite_inter_closure_compl_eq_of_inter_frontier_eq ite_inter_closure_compl_eq_of_inter_frontier_eq
 
 /- warning: continuous_on_piecewise_ite' -> continuousOn_piecewise_ite' is a dubious translation:
@@ -2470,11 +2443,6 @@ Case conversion may be inaccurate. Consider using '#align continuous_within_at_p
 theorem continuousWithinAt_prod_iff {f : α → β × γ} {s : Set α} {x : α} :
     ContinuousWithinAt f s x ↔
       ContinuousWithinAt (Prod.fst ∘ f) s x ∧ ContinuousWithinAt (Prod.snd ∘ f) s x :=
-  ⟨fun h => ⟨h.fst, h.snd⟩, by
-    rintro ⟨h1, h2⟩
-    convert h1.prod h2
-    ext
-    rfl
-    rfl⟩
+  ⟨fun h => ⟨h.fst, h.snd⟩, by rintro ⟨h1, h2⟩; convert h1.prod h2; ext; rfl; rfl⟩
 #align continuous_within_at_prod_iff continuousWithinAt_prod_iff
 

@@ -188,11 +188,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
     rw [IntermediateField.mem_fixingSubgroup_iff]
     intro x hx
     change σ (g (σ⁻¹ x)) = x
-    have h_in_F : σ⁻¹ x ∈ F :=
-      ⟨x, hx, by
-        dsimp
-        rw [← AlgEquiv.invFun_eq_symm]
-        rfl⟩
+    have h_in_F : σ⁻¹ x ∈ F := ⟨x, hx, by dsimp; rw [← AlgEquiv.invFun_eq_symm]; rfl⟩
     have h_g_fix : g (σ⁻¹ x) = σ⁻¹ x :=
       by
       rw [Subgroup.mem_carrier, IntermediateField.mem_fixingSubgroup_iff F g] at hg

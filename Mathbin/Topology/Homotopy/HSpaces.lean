@@ -109,16 +109,8 @@ instance (priority := 600) hSpace (G : Type u) [TopologicalSpace G] [Group G] [T
   hmul := ⟨Function.uncurry Mul.mul, continuous_mul⟩
   e := 1
   hmul_e_e := one_mul 1
-  eHmul :=
-    (HomotopyRel.refl _ _).cast rfl
-      (by
-        ext1
-        apply one_mul)
-  hmulE :=
-    (HomotopyRel.refl _ _).cast rfl
-      (by
-        ext1
-        apply mul_one)
+  eHmul := (HomotopyRel.refl _ _).cast rfl (by ext1; apply one_mul)
+  hmulE := (HomotopyRel.refl _ _).cast rfl (by ext1; apply mul_one)
 #align topological_group.H_space TopologicalGroup.hSpace
 #align topological_add_group.H_space TopologicalAddGroup.H_space
 
@@ -156,9 +148,7 @@ theorem qRight_zero_left (θ : I) : qRight (0, θ) = 0 :=
 
 theorem qRight_one_left (θ : I) : qRight (1, θ) = 1 :=
   Set.projIcc_of_right_le _ <|
-    (le_div_iff <| add_pos zero_lt_one).2 <| by
-      dsimp only
-      rw [coe_one, one_mul, mul_one]
+    (le_div_iff <| add_pos zero_lt_one).2 <| by dsimp only; rw [coe_one, one_mul, mul_one];
       apply add_le_add_left (le_one _)
 #align unit_interval.Q_right_one_left unitInterval.qRight_one_left
 
@@ -166,21 +156,12 @@ theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 /
   by
   simp only [Q_right, coe_zero, add_zero, div_one]
   split_ifs
-  · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]
-    exacts[rfl, ⟨t.2.1, h⟩]
-  · rw [(Set.projIcc_eq_right _).2]
-    · rfl
-    · linarith
-    · exact zero_lt_one
+  · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]; exacts[rfl, ⟨t.2.1, h⟩]
+  · rw [(Set.projIcc_eq_right _).2]; · rfl; · linarith; · exact zero_lt_one
 #align unit_interval.Q_right_zero_right unitInterval.qRight_zero_right
 
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
-  Eq.trans
-      (by
-        rw [Q_right]
-        congr
-        apply mul_div_cancel_left
-        exact two_ne_zero) <|
+  Eq.trans (by rw [Q_right]; congr ; apply mul_div_cancel_left; exact two_ne_zero) <|
     Set.projIcc_val zero_le_one _
 #align unit_interval.Q_right_one_right unitInterval.qRight_one_right
 
@@ -198,12 +179,8 @@ def delayReflRight (θ : I) (γ : Path x y) : Path x y
     where
   toFun t := γ (qRight (t, θ))
   continuous_toFun := γ.Continuous.comp (continuous_qRight.comp <| Continuous.Prod.mk_left θ)
-  source' := by
-    dsimp only
-    rw [Q_right_zero_left, γ.source]
-  target' := by
-    dsimp only
-    rw [Q_right_one_left, γ.target]
+  source' := by dsimp only; rw [Q_right_zero_left, γ.source]
+  target' := by dsimp only; rw [Q_right_one_left, γ.target]
 #align path.delay_refl_right Path.delayReflRight
 
 theorem continuous_delayReflRight : Continuous fun p : I × Path x y => delayReflRight p.1 p.2 :=
@@ -222,9 +199,7 @@ theorem delayReflRight_zero (γ : Path x y) : delayReflRight 0 γ = γ.trans (Pa
   exacts[if_neg h, if_pos h]
 #align path.delay_refl_right_zero Path.delayReflRight_zero
 
-theorem delayReflRight_one (γ : Path x y) : delayReflRight 1 γ = γ :=
-  by
-  ext t
+theorem delayReflRight_one (γ : Path x y) : delayReflRight 1 γ = γ := by ext t;
   exact congr_arg γ (Q_right_one_right t)
 #align path.delay_refl_right_one Path.delayReflRight_one
 
@@ -261,16 +236,12 @@ instance (x : X) : HSpace (Path x x)
     { toHomotopy :=
         ⟨⟨fun p : I × Path x x => delayReflLeft p.1 p.2, continuous_delayReflLeft⟩,
           delayReflLeft_zero, delayReflLeft_one⟩
-      prop' := by
-        rintro t _ (rfl : _ = _)
-        exact ⟨refl_trans_refl.symm, rfl⟩ }
+      prop' := by rintro t _ (rfl : _ = _); exact ⟨refl_trans_refl.symm, rfl⟩ }
   hmulE :=
     { toHomotopy :=
         ⟨⟨fun p : I × Path x x => delayReflRight p.1 p.2, continuous_delayReflRight⟩,
           delayReflRight_zero, delayReflRight_one⟩
-      prop' := by
-        rintro t _ (rfl : _ = _)
-        exact ⟨refl_trans_refl.symm, rfl⟩ }
+      prop' := by rintro t _ (rfl : _ = _); exact ⟨refl_trans_refl.symm, rfl⟩ }
 
 end Path
 

@@ -316,10 +316,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_4 : AddCommMonoid.{u1} R] (A : Matrix.{0, 0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) R), Eq.{succ u1} R (Matrix.trace.{0, u1} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) R (Fin.fintype (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) _inst_4 A) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R _inst_4)))) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddCommMonoid.toAddMonoid.{u1} R _inst_4)))) (A (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))) (A (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 1 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 1 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (A (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 2 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 2 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))) (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) 2 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)) 2 (NeZero.succ (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))))
 Case conversion may be inaccurate. Consider using '#align matrix.trace_fin_three Matrix.trace_fin_threeₓ'. -/
-theorem trace_fin_three (A : Matrix (Fin 3) (Fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 :=
-  by
-  rw [← add_zero (A 2 2), add_assoc]
-  rfl
+theorem trace_fin_three (A : Matrix (Fin 3) (Fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 := by
+  rw [← add_zero (A 2 2), add_assoc]; rfl
 #align matrix.trace_fin_three Matrix.trace_fin_three
 
 end Fin

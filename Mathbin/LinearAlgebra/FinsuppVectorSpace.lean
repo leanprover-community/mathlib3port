@@ -106,18 +106,13 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
               not_forall] }
       left_inv := fun g => by
-        ext i
-        rw [← (b i).repr.Injective.eq_iff]
-        ext x
+        ext i; rw [← (b i).repr.Injective.eq_iff]; ext x
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
       right_inv := fun g => by
         ext ⟨i, x⟩
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
-      map_add' := fun g h => by
-        ext ⟨i, x⟩
-        simp only [coe_mk, add_apply, LinearEquiv.map_add]
-      map_smul' := fun c h => by
-        ext ⟨i, x⟩
+      map_add' := fun g h => by ext ⟨i, x⟩; simp only [coe_mk, add_apply, LinearEquiv.map_add]
+      map_smul' := fun c h => by ext ⟨i, x⟩;
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
 #align finsupp.basis Finsupp.basis
 

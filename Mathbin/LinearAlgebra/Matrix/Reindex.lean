@@ -95,9 +95,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.reindex_linear_
 theorem reindexLinearEquiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
     (reindexLinearEquiv R A e₁ e₂).trans (reindexLinearEquiv R A e₁' e₂') =
       (reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') : _ ≃ₗ[R] _) :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align matrix.reindex_linear_equiv_trans Matrix.reindexLinearEquiv_trans
 
 /- warning: matrix.reindex_linear_equiv_comp -> Matrix.reindexLinearEquiv_comp is a dubious translation:
@@ -106,9 +104,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.reindex_linear_
 theorem reindexLinearEquiv_comp (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
     reindexLinearEquiv R A e₁' e₂' ∘ reindexLinearEquiv R A e₁ e₂ =
       reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') :=
-  by
-  rw [← reindex_linear_equiv_trans]
-  rfl
+  by rw [← reindex_linear_equiv_trans]; rfl
 #align matrix.reindex_linear_equiv_comp Matrix.reindexLinearEquiv_comp
 
 /- warning: matrix.reindex_linear_equiv_comp_apply -> Matrix.reindexLinearEquiv_comp_apply is a dubious translation:

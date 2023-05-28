@@ -119,10 +119,7 @@ theorem toFun_eq_coe (f : A →ₐ[R] B) : f.toFun = f :=
 instance : AlgHomClass (A →ₐ[R] B) R A B
     where
   coe := toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
   map_add := map_add'
   map_zero := map_zero'
   map_mul := map_mul'
@@ -514,10 +511,7 @@ def ofLinearMap (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x
 Case conversion may be inaccurate. Consider using '#align alg_hom.of_linear_map_to_linear_map AlgHom.ofLinearMap_toLinearMapₓ'. -/
 @[simp]
 theorem ofLinearMap_toLinearMap (map_one) (map_mul) :
-    ofLinearMap φ.toLinearMap map_one map_mul = φ :=
-  by
-  ext
-  rfl
+    ofLinearMap φ.toLinearMap map_one map_mul = φ := by ext; rfl
 #align alg_hom.of_linear_map_to_linear_map AlgHom.ofLinearMap_toLinearMap
 
 /- warning: alg_hom.to_linear_map_of_linear_map -> AlgHom.toLinearMap_ofLinearMap is a dubious translation:
@@ -525,10 +519,7 @@ theorem ofLinearMap_toLinearMap (map_one) (map_mul) :
 Case conversion may be inaccurate. Consider using '#align alg_hom.to_linear_map_of_linear_map AlgHom.toLinearMap_ofLinearMapₓ'. -/
 @[simp]
 theorem toLinearMap_ofLinearMap (f : A →ₗ[R] B) (map_one) (map_mul) :
-    toLinearMap (ofLinearMap f map_one map_mul) = f :=
-  by
-  ext
-  rfl
+    toLinearMap (ofLinearMap f map_one map_mul) = f := by ext; rfl
 #align alg_hom.to_linear_map_of_linear_map AlgHom.toLinearMap_ofLinearMap
 
 /- warning: alg_hom.of_linear_map_id -> AlgHom.ofLinearMap_id is a dubious translation:

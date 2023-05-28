@@ -238,12 +238,8 @@ between `⨁ i, M i` and `Π i, M i`. -/
 def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
   { Dfinsupp.equivFunOnFintype with
     toFun := coeFn
-    map_add' := fun f g => by
-      ext
-      simp only [add_apply, Pi.add_apply]
-    map_smul' := fun c f => by
-      ext
-      simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
+    map_add' := fun f g => by ext; simp only [add_apply, Pi.add_apply]
+    map_smul' := fun c f => by ext; simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 #align direct_sum.linear_equiv_fun_on_fintype DirectSum.linearEquivFunOnFintype
 
 variable {ι M}
@@ -278,10 +274,7 @@ theorem linearEquivFunOnFintype_symm_single [Fintype ι] [DecidableEq ι] (i : �
 Case conversion may be inaccurate. Consider using '#align direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linearEquivFunOnFintype_symm_coeₓ'. -/
 @[simp]
 theorem linearEquivFunOnFintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
-    (linearEquivFunOnFintype R ι M).symm f = f :=
-  by
-  ext
-  simp [linear_equiv_fun_on_fintype]
+    (linearEquivFunOnFintype R ι M).symm f = f := by ext; simp [linear_equiv_fun_on_fintype]
 #align direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linearEquivFunOnFintype_symm_coe
 
 /- warning: direct_sum.lid -> DirectSum.lid is a dubious translation:

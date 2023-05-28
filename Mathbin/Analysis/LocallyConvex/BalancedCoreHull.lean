@@ -165,9 +165,7 @@ Case conversion may be inaccurate. Consider using '#align balanced.hull_subset_o
 /-- The balanced hull of `s` is minimal in the sense that it is contained in any balanced superset
 `t` of `s`. -/
 theorem Balanced.balancedHull_subset_of_subset (ht : Balanced 𝕜 t) (h : s ⊆ t) :
-    balancedHull 𝕜 s ⊆ t := fun x hx =>
-  by
-  obtain ⟨r, hr, y, hy, rfl⟩ := mem_balancedHull_iff.1 hx
+    balancedHull 𝕜 s ⊆ t := fun x hx => by obtain ⟨r, hr, y, hy, rfl⟩ := mem_balancedHull_iff.1 hx;
   exact ht.smul_mem hr (h hy)
 #align balanced.hull_subset_of_subset Balanced.balancedHull_subset_of_subset
 

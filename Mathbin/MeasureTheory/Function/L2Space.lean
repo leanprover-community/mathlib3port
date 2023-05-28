@@ -79,23 +79,17 @@ theorem Memℒp.const_inner (c : E) {f : α → E} (hf : Memℒp f p μ) : Mem�
 
 theorem Memℒp.inner_const {f : α → E} (hf : Memℒp f p μ) (c : E) : Memℒp (fun a => ⟪f a, c⟫) p μ :=
   hf.of_le_mul (AEStronglyMeasurable.inner hf.1 aestronglyMeasurable_const)
-    (eventually_of_forall fun x => by
-      rw [mul_comm]
-      exact norm_inner_le_norm _ _)
+    (eventually_of_forall fun x => by rw [mul_comm]; exact norm_inner_le_norm _ _)
 #align measure_theory.mem_ℒp.inner_const MeasureTheory.Memℒp.inner_const
 
 variable {f : α → E}
 
 theorem Integrable.const_inner (c : E) (hf : Integrable f μ) : Integrable (fun x => ⟪c, f x⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.const_inner c
+  by rw [← mem_ℒp_one_iff_integrable] at hf⊢; exact hf.const_inner c
 #align measure_theory.integrable.const_inner MeasureTheory.Integrable.const_inner
 
 theorem Integrable.inner_const (hf : Integrable f μ) (c : E) : Integrable (fun x => ⟪f x, c⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.inner_const c
+  by rw [← mem_ℒp_one_iff_integrable] at hf⊢; exact hf.inner_const c
 #align measure_theory.integrable.inner_const MeasureTheory.Integrable.inner_const
 
 variable [CompleteSpace E] [NormedSpace ℝ E]
@@ -112,10 +106,8 @@ variable (𝕜)
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E) (hf : Integrable f μ)
-    (hf_int : ∀ c : E, (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 :=
-  by
-  specialize hf_int (∫ x, f x ∂μ)
-  rwa [integral_inner hf, inner_self_eq_zero] at hf_int
+    (hf_int : ∀ c : E, (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 := by
+  specialize hf_int (∫ x, f x ∂μ); rwa [integral_inner hf, inner_self_eq_zero] at hf_int
 #align integral_eq_zero_of_forall_integral_inner_eq_zero integral_eq_zero_of_forall_integral_inner_eq_zero
 
 end InnerProductSpace
@@ -201,9 +193,7 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
     AEEqFun.mk (fun x => ⟪f x, g x⟫)
         ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)) ∈
       lp 𝕜 1 μ :=
-  by
-  simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
-  exact snorm_inner_lt_top f g
+  by simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]; exact snorm_inner_lt_top f g
 #align measure_theory.L2.mem_L1_inner MeasureTheory.L2.mem_L1_inner
 
 theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
@@ -289,10 +279,8 @@ variable {𝕜}
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs (1 : 𝕜)` and
 a real or complex function `f` is equal to the integral of `f` over `s`. -/
 theorem inner_indicatorConstLp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (f : lp 𝕜 2 μ) :
-    ⟪indicatorConstLp 2 hs hμs (1 : 𝕜), f⟫ = ∫ x in s, f x ∂μ :=
-  by
-  rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]
-  simp
+    ⟪indicatorConstLp 2 hs hμs (1 : 𝕜), f⟫ = ∫ x in s, f x ∂μ := by
+  rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]; simp
 #align measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2.inner_indicatorConstLp_one
 
 end IndicatorConstLp

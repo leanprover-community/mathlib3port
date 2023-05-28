@@ -195,10 +195,7 @@ structure HasFtaylorSeriesUpToOn (n : ℕ∞) (f : E → F) (p : E → FormalMul
 #align has_ftaylor_series_up_to_on HasFtaylorSeriesUpToOn
 
 theorem HasFtaylorSeriesUpToOn.zero_eq' (h : HasFtaylorSeriesUpToOn n f p s) {x : E} (hx : x ∈ s) :
-    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
-  by
-  rw [← h.zero_eq x hx]
-  symm
+    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by rw [← h.zero_eq x hx]; symm;
   exact ContinuousMultilinearMap.uncurry0_curry0 _
 #align has_ftaylor_series_up_to_on.zero_eq' HasFtaylorSeriesUpToOn.zero_eq'
 
@@ -239,12 +236,8 @@ theorem hasFtaylorSeriesUpToOn_zero_iff :
       ⟨H.2, fun m hm => False.elim (not_le.2 hm bot_le), _⟩⟩
   intro m hm
   obtain rfl : m = 0 := by exact_mod_cast hm.antisymm (zero_le _)
-  have : ∀ x ∈ s, p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
-    by
-    intro x hx
-    rw [← H.2 x hx]
-    symm
-    exact ContinuousMultilinearMap.uncurry0_curry0 _
+  have : ∀ x ∈ s, p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by intro x hx;
+    rw [← H.2 x hx]; symm; exact ContinuousMultilinearMap.uncurry0_curry0 _
   rw [continuousOn_congr this, LinearIsometryEquiv.comp_continuousOn_iff]
   exact H.1
 #align has_ftaylor_series_up_to_on_zero_iff hasFtaylorSeriesUpToOn_zero_iff
@@ -253,8 +246,7 @@ theorem hasFtaylorSeriesUpToOn_top_iff :
     HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ n : ℕ, HasFtaylorSeriesUpToOn n f p s :=
   by
   constructor
-  · intro H n
-    exact H.of_le le_top
+  · intro H n; exact H.of_le le_top
   · intro H
     constructor
     · exact (H 0).zero_eq
@@ -283,11 +275,8 @@ series is a derivative of `f`. -/
 theorem HasFtaylorSeriesUpToOn.hasFDerivWithinAt (h : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n)
     (hx : x ∈ s) : HasFDerivWithinAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x :=
   by
-  have A : ∀ y ∈ s, f y = (continuousMultilinearCurryFin0 𝕜 E F) (p y 0) :=
-    by
-    intro y hy
-    rw [← h.zero_eq y hy]
-    rfl
+  have A : ∀ y ∈ s, f y = (continuousMultilinearCurryFin0 𝕜 E F) (p y 0) := by intro y hy;
+    rw [← h.zero_eq y hy]; rfl
   suffices H :
     HasFDerivWithinAt (fun y => continuousMultilinearCurryFin0 𝕜 E F (p y 0))
       (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x
@@ -372,12 +361,9 @@ theorem hasFtaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
   · intro H
     refine' ⟨H.zero_eq, H.fderiv_within 0 (WithTop.coe_lt_coe.2 (Nat.succ_pos n)), _⟩
     constructor
-    · intro x hx
-      rfl
+    · intro x hx; rfl
     · intro m(hm : (m : ℕ∞) < n)x(hx : x ∈ s)
-      have A : (m.succ : ℕ∞) < n.succ :=
-        by
-        rw [WithTop.coe_lt_coe] at hm⊢
+      have A : (m.succ : ℕ∞) < n.succ := by rw [WithTop.coe_lt_coe] at hm⊢;
         exact nat.lt_succ_iff.mpr hm
       change
         HasFDerivWithinAt
@@ -391,9 +377,7 @@ theorem hasFtaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
           (p x (Nat.succ (Nat.succ m))) (cons y v)
       rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
     · intro m(hm : (m : ℕ∞) ≤ n)
-      have A : (m.succ : ℕ∞) ≤ n.succ :=
-        by
-        rw [WithTop.coe_le_coe] at hm⊢
+      have A : (m.succ : ℕ∞) ≤ n.succ := by rw [WithTop.coe_le_coe] at hm⊢;
         exact nat.pred_le_iff.mp hm
       change
         ContinuousOn
@@ -406,9 +390,7 @@ theorem hasFtaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
     · intro m(hm : (m : ℕ∞) < n.succ)x(hx : x ∈ s)
       cases m
       · exact Hfderiv_zero x hx
-      · have A : (m : ℕ∞) < n := by
-          rw [WithTop.coe_lt_coe] at hm⊢
-          exact Nat.lt_of_succ_lt_succ hm
+      · have A : (m : ℕ∞) < n := by rw [WithTop.coe_lt_coe] at hm⊢; exact Nat.lt_of_succ_lt_succ hm
         have :
           HasFDerivWithinAt
             ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ)
@@ -426,9 +408,7 @@ theorem hasFtaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
       · have : DifferentiableOn 𝕜 (fun x => p x 0) s := fun x hx =>
           (Hfderiv_zero x hx).DifferentiableWithinAt
         exact this.continuous_on
-      · have A : (m : ℕ∞) ≤ n := by
-          rw [WithTop.coe_le_coe] at hm⊢
-          exact nat.lt_succ_iff.mp hm
+      · have A : (m : ℕ∞) ≤ n := by rw [WithTop.coe_le_coe] at hm⊢; exact nat.lt_succ_iff.mp hm
         have :
           ContinuousOn
             ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ) s :=
@@ -883,11 +863,7 @@ theorem iteratedFderivWithin_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 
       ∀ y ∈ s,
         iteratedFderivWithin 𝕜 n.succ f s y =
           (I ∘ iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) y :=
-      by
-      intro y hy
-      ext m
-      rw [@IH m y hy]
-      rfl
+      by intro y hy; ext m; rw [@IH m y hy]; rfl
     calc
       (iteratedFderivWithin 𝕜 (n + 2) f s x : (Fin (n + 2) → E) → F) m =
           (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n.succ f s) s x : E → E[×n + 1]→L[𝕜] F) (m 0)
@@ -902,9 +878,7 @@ theorem iteratedFderivWithin_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 
           (I ∘ fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x :
               E → E[×n + 1]→L[𝕜] F)
             (m 0) (tail m) :=
-        by
-        rw [LinearIsometryEquiv.comp_fderivWithin _ (hs x hx)]
-        rfl
+        by rw [LinearIsometryEquiv.comp_fderivWithin _ (hs x hx)]; rfl
       _ =
           (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) s x :
               E → E[×n]→L[𝕜] E →L[𝕜] F)
@@ -913,9 +887,7 @@ theorem iteratedFderivWithin_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 
       _ =
           iteratedFderivWithin 𝕜 (Nat.succ n) (fun y => fderivWithin 𝕜 f s y) s x (init m)
             (m (last (n + 1))) :=
-        by
-        rw [iteratedFderivWithin_succ_apply_left, tail_init_eq_init_tail]
-        rfl
+        by rw [iteratedFderivWithin_succ_apply_left, tail_init_eq_init_tail]; rfl
       
 #align iterated_fderiv_within_succ_apply_right iteratedFderivWithin_succ_apply_right
 
@@ -926,10 +898,7 @@ theorem iteratedFderivWithin_succ_eq_comp_right {n : ℕ} (hs : UniqueDiffOn �
       (continuousMultilinearCurryRightEquiv' 𝕜 n E F ∘
           iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s)
         x :=
-  by
-  ext m
-  rw [iteratedFderivWithin_succ_apply_right hs hx]
-  rfl
+  by ext m; rw [iteratedFderivWithin_succ_apply_right hs hx]; rfl
 #align iterated_fderiv_within_succ_eq_comp_right iteratedFderivWithin_succ_eq_comp_right
 
 theorem norm_iteratedFderivWithin_fderivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
@@ -1321,10 +1290,7 @@ structure HasFtaylorSeriesUpTo (n : ℕ∞) (f : E → F) (p : E → FormalMulti
 #align has_ftaylor_series_up_to HasFtaylorSeriesUpTo
 
 theorem HasFtaylorSeriesUpTo.zero_eq' (h : HasFtaylorSeriesUpTo n f p) (x : E) :
-    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
-  by
-  rw [← h.zero_eq x]
-  symm
+    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by rw [← h.zero_eq x]; symm;
   exact ContinuousMultilinearMap.uncurry0_curry0 _
 #align has_ftaylor_series_up_to.zero_eq' HasFtaylorSeriesUpTo.zero_eq'
 
@@ -1358,10 +1324,7 @@ theorem HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn (h : HasFtaylorSeriesUpTo n 
 #align has_ftaylor_series_up_to.has_ftaylor_series_up_to_on HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn
 
 theorem HasFtaylorSeriesUpTo.ofLe (h : HasFtaylorSeriesUpTo n f p) (hmn : m ≤ n) :
-    HasFtaylorSeriesUpTo m f p :=
-  by
-  rw [← hasFtaylorSeriesUpToOn_univ_iff] at h⊢
-  exact h.of_le hmn
+    HasFtaylorSeriesUpTo m f p := by rw [← hasFtaylorSeriesUpToOn_univ_iff] at h⊢; exact h.of_le hmn
 #align has_ftaylor_series_up_to.of_le HasFtaylorSeriesUpTo.ofLe
 
 theorem HasFtaylorSeriesUpTo.continuous (h : HasFtaylorSeriesUpTo n f p) : Continuous f :=
@@ -1556,10 +1519,8 @@ theorem contDiff_zero : ContDiff 𝕜 0 f ↔ Continuous f :=
   exact contDiffOn_zero
 #align cont_diff_zero contDiff_zero
 
-theorem contDiffAt_zero : ContDiffAt 𝕜 0 f x ↔ ∃ u ∈ 𝓝 x, ContinuousOn f u :=
-  by
-  rw [← contDiffWithinAt_univ]
-  simp [contDiffWithinAt_zero, nhdsWithin_univ]
+theorem contDiffAt_zero : ContDiffAt 𝕜 0 f x ↔ ∃ u ∈ 𝓝 x, ContinuousOn f u := by
+  rw [← contDiffWithinAt_univ]; simp [contDiffWithinAt_zero, nhdsWithin_univ]
 #align cont_diff_at_zero contDiffAt_zero
 
 theorem contDiffAt_one_iff :
@@ -1592,10 +1553,8 @@ theorem ContDiff.differentiable (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) : Differe
   differentiableOn_univ.1 <| (contDiffOn_univ.2 h).DifferentiableOn hn
 #align cont_diff.differentiable ContDiff.differentiable
 
-theorem contDiff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤ n → ContDiff 𝕜 m f :=
-  by
-  simp_rw [← contDiffOn_univ]
-  exact contDiffOn_iff_forall_nat_le
+theorem contDiff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤ n → ContDiff 𝕜 m f := by
+  simp_rw [← contDiffOn_univ]; exact contDiffOn_iff_forall_nat_le
 #align cont_diff_iff_forall_nat_le contDiff_iff_forall_nat_le
 
 /-- A function is `C^(n+1)` iff it has a `C^n` derivative. -/
@@ -1641,9 +1600,7 @@ theorem norm_iteratedFderiv_zero : ‖iteratedFderiv 𝕜 0 f x‖ = ‖f x‖ :
   rw [iteratedFderiv_zero_eq_comp, LinearIsometryEquiv.norm_map]
 #align norm_iterated_fderiv_zero norm_iteratedFderiv_zero
 
-theorem iteratedFderiv_with_zero_eq : iteratedFderivWithin 𝕜 0 f s = iteratedFderiv 𝕜 0 f :=
-  by
-  ext
+theorem iteratedFderiv_with_zero_eq : iteratedFderivWithin 𝕜 0 f s = iteratedFderiv 𝕜 0 f := by ext;
   rfl
 #align iterated_fderiv_with_zero_eq iteratedFderiv_with_zero_eq
 
@@ -1695,8 +1652,7 @@ theorem iteratedFderivWithin_univ {n : ℕ} :
     iteratedFderivWithin 𝕜 n f univ = iteratedFderiv 𝕜 n f :=
   by
   induction' n with n IH
-  · ext x
-    simp
+  · ext x; simp
   · ext (x m)
     rw [iteratedFderiv_succ_apply_left, iteratedFderivWithin_succ_apply_left, IH, fderivWithin_univ]
 #align iterated_fderiv_within_univ iteratedFderivWithin_univ
@@ -1741,10 +1697,7 @@ theorem iteratedFderiv_succ_eq_comp_right {n : ℕ} :
     iteratedFderiv 𝕜 (n + 1) f x =
       (continuousMultilinearCurryRightEquiv' 𝕜 n E F ∘ iteratedFderiv 𝕜 n fun y => fderiv 𝕜 f y)
         x :=
-  by
-  ext m
-  rw [iteratedFderiv_succ_apply_right]
-  rfl
+  by ext m; rw [iteratedFderiv_succ_apply_right]; rfl
 #align iterated_fderiv_succ_eq_comp_right iteratedFderiv_succ_eq_comp_right
 
 theorem norm_iteratedFderiv_fderiv {n : ℕ} :
@@ -1754,10 +1707,8 @@ theorem norm_iteratedFderiv_fderiv {n : ℕ} :
 
 @[simp]
 theorem iteratedFderiv_one_apply (m : Fin 1 → E) :
-    (iteratedFderiv 𝕜 1 f x : (Fin 1 → E) → F) m = (fderiv 𝕜 f x : E → F) (m 0) :=
-  by
-  rw [iteratedFderiv_succ_apply_right, iteratedFderiv_zero_apply]
-  rfl
+    (iteratedFderiv 𝕜 1 f x : (Fin 1 → E) → F) m = (fderiv 𝕜 f x : E → F) (m 0) := by
+  rw [iteratedFderiv_succ_apply_right, iteratedFderiv_zero_apply]; rfl
 #align iterated_fderiv_one_apply iteratedFderiv_one_apply
 
 /-- When a function is `C^n` in a set `s` of unique differentiability, it admits
@@ -1768,8 +1719,7 @@ theorem contDiff_iff_ftaylorSeries :
   constructor
   · rw [← contDiffOn_univ, ← hasFtaylorSeriesUpToOn_univ_iff, ← ftaylorSeriesWithin_univ]
     exact fun h => ContDiffOn.ftaylorSeriesWithin h uniqueDiffOn_univ
-  · intro h
-    exact ⟨ftaylorSeries 𝕜 f, h⟩
+  · intro h; exact ⟨ftaylorSeries 𝕜 f, h⟩
 #align cont_diff_iff_ftaylor_series contDiff_iff_ftaylorSeries
 
 theorem contDiff_iff_continuous_differentiable :

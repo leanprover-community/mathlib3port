@@ -1259,13 +1259,9 @@ theorem lt_toNNReal_iff_coe_lt {r : ℝ≥0} {p : ℝ} : r < Real.toNNReal p ↔
   by
   cases le_total 0 p
   · rw [← NNReal.coe_lt_coe, Real.coe_toNNReal p h]
-  · rw [to_nnreal_eq_zero.2 h]
-    constructor
-    · intro
-      have := not_lt_of_le (zero_le r)
-      contradiction
-    · intro rp
-      have : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_lt (NNReal.coe_nonneg _) rp)
+  · rw [to_nnreal_eq_zero.2 h]; constructor
+    · intro ; have := not_lt_of_le (zero_le r); contradiction
+    · intro rp; have : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_lt (NNReal.coe_nonneg _) rp)
       contradiction
 #align real.lt_to_nnreal_iff_coe_lt Real.lt_toNNReal_iff_coe_lt
 
@@ -1832,9 +1828,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} [_inst_1 : IsEmpty.{u1} ι] (f : ι -> NNReal), Eq.{1} NNReal (iInf.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι (fun (i : ι) => f i)) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))
 Case conversion may be inaccurate. Consider using '#align nnreal.infi_empty NNReal.iInf_emptyₓ'. -/
-theorem iInf_empty [IsEmpty ι] (f : ι → ℝ≥0) : (⨅ i, f i) = 0 :=
-  by
-  rw [← NNReal.coe_eq, coe_infi]
+theorem iInf_empty [IsEmpty ι] (f : ι → ℝ≥0) : (⨅ i, f i) = 0 := by rw [← NNReal.coe_eq, coe_infi];
   exact Real.ciInf_empty _
 #align nnreal.infi_empty NNReal.iInf_empty
 
@@ -1845,10 +1839,8 @@ but is expected to have type
   forall {α : Sort.{u1}}, Eq.{1} NNReal (iInf.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) α (fun (i : α) => OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))
 Case conversion may be inaccurate. Consider using '#align nnreal.infi_const_zero NNReal.iInf_const_zeroₓ'. -/
 @[simp]
-theorem iInf_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ≥0)) = 0 :=
-  by
-  rw [← NNReal.coe_eq, coe_infi]
-  exact Real.ciInf_const_zero
+theorem iInf_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ≥0)) = 0 := by
+  rw [← NNReal.coe_eq, coe_infi]; exact Real.ciInf_const_zero
 #align nnreal.infi_const_zero NNReal.iInf_const_zero
 
 /- warning: nnreal.infi_mul -> NNReal.iInf_mul is a dubious translation:
@@ -1891,10 +1883,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} (f : ι -> NNReal) (a : NNReal), Eq.{1} NNReal (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (iSup.{0, u1} NNReal (ConditionallyCompleteLattice.toSupSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι (fun (i : ι) => f i)) a) (iSup.{0, u1} NNReal (ConditionallyCompleteLattice.toSupSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι (fun (i : ι) => HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (f i) a))
 Case conversion may be inaccurate. Consider using '#align nnreal.supr_mul NNReal.iSup_mulₓ'. -/
-theorem iSup_mul (f : ι → ℝ≥0) (a : ℝ≥0) : (⨆ i, f i) * a = ⨆ i, f i * a :=
-  by
-  rw [mul_comm, mul_supr]
-  simp_rw [mul_comm]
+theorem iSup_mul (f : ι → ℝ≥0) (a : ℝ≥0) : (⨆ i, f i) * a = ⨆ i, f i * a := by
+  rw [mul_comm, mul_supr]; simp_rw [mul_comm]
 #align nnreal.supr_mul NNReal.iSup_mul
 
 /- warning: nnreal.supr_div -> NNReal.iSup_div is a dubious translation:
@@ -1915,10 +1905,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] {a : NNReal} {g : NNReal} {h : ι -> NNReal}, (forall (j : ι), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) a (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) g (h j))) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) a (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) g (iInf.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι h)))
 Case conversion may be inaccurate. Consider using '#align nnreal.le_mul_infi NNReal.le_mul_iInfₓ'. -/
-theorem le_mul_iInf {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, a ≤ g * h j) : a ≤ g * iInf h :=
-  by
-  rw [mul_infi]
-  exact le_ciInf H
+theorem le_mul_iInf {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, a ≤ g * h j) : a ≤ g * iInf h := by
+  rw [mul_infi]; exact le_ciInf H
 #align nnreal.le_mul_infi NNReal.le_mul_iInf
 
 /- warning: nnreal.mul_supr_le -> NNReal.mul_iSup_le is a dubious translation:
@@ -1927,10 +1915,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} {_inst_1 : NNReal} {a : NNReal} {g : ι -> NNReal}, (forall (ᾰ : ι), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) a (g ᾰ)) _inst_1) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) a (iSup.{0, u1} NNReal (ConditionallyCompleteLattice.toSupSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι g)) _inst_1)
 Case conversion may be inaccurate. Consider using '#align nnreal.mul_supr_le NNReal.mul_iSup_leₓ'. -/
-theorem mul_iSup_le {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, g * h j ≤ a) : g * iSup h ≤ a :=
-  by
-  rw [mul_supr]
-  exact ciSup_le H
+theorem mul_iSup_le {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, g * h j ≤ a) : g * iSup h ≤ a := by
+  rw [mul_supr]; exact ciSup_le H
 #align nnreal.mul_supr_le NNReal.mul_iSup_le
 
 /- warning: nnreal.le_infi_mul -> NNReal.le_iInf_mul is a dubious translation:
@@ -1939,10 +1925,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] {a : NNReal} {g : ι -> NNReal} {h : NNReal}, (forall (i : ι), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) a (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (g i) h)) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) a (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (iInf.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι g) h))
 Case conversion may be inaccurate. Consider using '#align nnreal.le_infi_mul NNReal.le_iInf_mulₓ'. -/
-theorem le_iInf_mul {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, a ≤ g i * h) : a ≤ iInf g * h :=
-  by
-  rw [infi_mul]
-  exact le_ciInf H
+theorem le_iInf_mul {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, a ≤ g i * h) : a ≤ iInf g * h := by
+  rw [infi_mul]; exact le_ciInf H
 #align nnreal.le_infi_mul NNReal.le_iInf_mul
 
 /- warning: nnreal.supr_mul_le -> NNReal.iSup_mul_le is a dubious translation:
@@ -1951,10 +1935,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u1}} {_inst_1 : NNReal} {a : ι -> NNReal} {g : NNReal}, (forall (i : ι), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (a i) g) _inst_1) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) (iSup.{0, u1} NNReal (ConditionallyCompleteLattice.toSupSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι a) g) _inst_1)
 Case conversion may be inaccurate. Consider using '#align nnreal.supr_mul_le NNReal.iSup_mul_leₓ'. -/
-theorem iSup_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, g i * h ≤ a) : iSup g * h ≤ a :=
-  by
-  rw [supr_mul]
-  exact ciSup_le H
+theorem iSup_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, g i * h ≤ a) : iSup g * h ≤ a := by
+  rw [supr_mul]; exact ciSup_le H
 #align nnreal.supr_mul_le NNReal.iSup_mul_le
 
 /- warning: nnreal.le_infi_mul_infi -> NNReal.le_iInf_mul_iInf is a dubious translation:
@@ -2040,15 +2022,9 @@ namespace Real
 @[pp_nodot]
 def nnabs : ℝ →*₀ ℝ≥0 where
   toFun x := ⟨|x|, abs_nonneg x⟩
-  map_zero' := by
-    ext
-    simp
-  map_one' := by
-    ext
-    simp
-  map_mul' x y := by
-    ext
-    simp [abs_mul]
+  map_zero' := by ext; simp
+  map_one' := by ext; simp
+  map_mul' x y := by ext; simp [abs_mul]
 #align real.nnabs Real.nnabs
 -/
 
@@ -2070,9 +2046,7 @@ but is expected to have type
   forall {x : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x) -> (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Real) => NNReal) x) (FunLike.coe.{1, 1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real (fun (_x : Real) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Real) => NNReal) _x) (MulHomClass.toFunLike.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulOneClass.toMul.{0} Real (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))) (MulOneClass.toMul.{0} NNReal (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))) (MonoidHomClass.toMulHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) (MonoidWithZeroHomClass.toMonoidHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)) (MonoidWithZeroHom.monoidWithZeroHomClass.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))))) Real.nnabs x) (Real.toNNReal x))
 Case conversion may be inaccurate. Consider using '#align real.nnabs_of_nonneg Real.nnabs_of_nonnegₓ'. -/
 @[simp]
-theorem nnabs_of_nonneg {x : ℝ} (h : 0 ≤ x) : nnabs x = toNNReal x :=
-  by
-  ext
+theorem nnabs_of_nonneg {x : ℝ} (h : 0 ≤ x) : nnabs x = toNNReal x := by ext;
   simp [coe_to_nnreal x h, abs_of_nonneg h]
 #align real.nnabs_of_nonneg Real.nnabs_of_nonneg
 
@@ -2101,9 +2075,7 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Int), Eq.{1} NNReal (Nat.cast.{0} NNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} NNReal instNNRealCanonicallyOrderedCommSemiring) (Int.natAbs n)) (FunLike.coe.{1, 1, 1} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real (fun (_x : Real) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : Real) => NNReal) _x) (MulHomClass.toFunLike.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulOneClass.toMul.{0} Real (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)))) (MulOneClass.toMul.{0} NNReal (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))) (MonoidHomClass.toMulHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (MulZeroOneClass.toMulOneClass.{0} Real (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring))) (MulZeroOneClass.toMulOneClass.{0} NNReal (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) (MonoidWithZeroHomClass.toMonoidHomClass.{0, 0, 0} (MonoidWithZeroHom.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring))) Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)) (MonoidWithZeroHom.monoidWithZeroHomClass.{0, 0} Real NNReal (NonAssocSemiring.toMulZeroOneClass.{0} Real (Semiring.toNonAssocSemiring.{0} Real Real.semiring)) (NonAssocSemiring.toMulZeroOneClass.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal instNNRealSemiring)))))) Real.nnabs (Int.cast.{0} Real Real.intCast n))
 Case conversion may be inaccurate. Consider using '#align real.cast_nat_abs_eq_nnabs_cast Real.cast_natAbs_eq_nnabs_castₓ'. -/
-theorem cast_natAbs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n :=
-  by
-  ext
+theorem cast_natAbs_eq_nnabs_cast (n : ℤ) : (n.natAbs : ℝ≥0) = nnabs n := by ext;
   rw [NNReal.coe_nat_cast, Int.cast_natAbs, Real.coe_nnabs]
 #align real.cast_nat_abs_eq_nnabs_cast Real.cast_natAbs_eq_nnabs_cast
 

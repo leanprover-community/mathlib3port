@@ -150,10 +150,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (b : α), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (toIcoMod.{u1} α _inst_1 hα p hp (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) b) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p)
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_mem_Ico' toIcoMod_mem_Ico'ₓ'. -/
-theorem toIcoMod_mem_Ico' (b : α) : toIcoMod hp 0 b ∈ Set.Ico 0 p :=
-  by
-  convert toIcoMod_mem_Ico hp 0 b
-  exact (zero_add p).symm
+theorem toIcoMod_mem_Ico' (b : α) : toIcoMod hp 0 b ∈ Set.Ico 0 p := by
+  convert toIcoMod_mem_Ico hp 0 b; exact (zero_add p).symm
 #align to_Ico_mod_mem_Ico' toIcoMod_mem_Ico'
 
 /- warning: to_Ioc_mod_mem_Ioc -> toIocMod_mem_Ioc is a dubious translation:
@@ -401,10 +399,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α), Eq.{succ u1} α (toIcoMod.{u1} α _inst_1 hα p hp a a) a
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_apply_left toIcoMod_apply_leftₓ'. -/
 @[simp]
-theorem toIcoMod_apply_left (a : α) : toIcoMod hp a a = a :=
-  by
-  rw [toIcoMod_eq_iff hp, Set.left_mem_Ico]
-  exact ⟨lt_add_of_pos_right _ hp, 0, by simp⟩
+theorem toIcoMod_apply_left (a : α) : toIcoMod hp a a = a := by
+  rw [toIcoMod_eq_iff hp, Set.left_mem_Ico]; exact ⟨lt_add_of_pos_right _ hp, 0, by simp⟩
 #align to_Ico_mod_apply_left toIcoMod_apply_left
 
 /- warning: to_Ioc_mod_apply_left -> toIocMod_apply_left is a dubious translation:
@@ -414,10 +410,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α), Eq.{succ u1} α (toIocMod.{u1} α _inst_1 hα p hp a a) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)
 Case conversion may be inaccurate. Consider using '#align to_Ioc_mod_apply_left toIocMod_apply_leftₓ'. -/
 @[simp]
-theorem toIocMod_apply_left (a : α) : toIocMod hp a a = a + p :=
-  by
-  rw [toIocMod_eq_iff hp, Set.right_mem_Ioc]
-  exact ⟨lt_add_of_pos_right _ hp, -1, by simp⟩
+theorem toIocMod_apply_left (a : α) : toIocMod hp a a = a + p := by
+  rw [toIocMod_eq_iff hp, Set.right_mem_Ioc]; exact ⟨lt_add_of_pos_right _ hp, -1, by simp⟩
 #align to_Ioc_mod_apply_left toIocMod_apply_left
 
 /- warning: to_Ico_div_apply_right -> toIcoDiv_apply_right is a dubious translation:
@@ -446,10 +440,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α), Eq.{succ u1} α (toIcoMod.{u1} α _inst_1 hα p hp a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)) a
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_apply_right toIcoMod_apply_rightₓ'. -/
-theorem toIcoMod_apply_right (a : α) : toIcoMod hp a (a + p) = a :=
-  by
-  rw [toIcoMod_eq_iff hp, Set.left_mem_Ico]
-  exact ⟨lt_add_of_pos_right _ hp, 1, by simp⟩
+theorem toIcoMod_apply_right (a : α) : toIcoMod hp a (a + p) = a := by
+  rw [toIcoMod_eq_iff hp, Set.left_mem_Ico]; exact ⟨lt_add_of_pos_right _ hp, 1, by simp⟩
 #align to_Ico_mod_apply_right toIcoMod_apply_right
 
 /- warning: to_Ioc_mod_apply_right -> toIocMod_apply_right is a dubious translation:
@@ -458,10 +450,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α), Eq.{succ u1} α (toIocMod.{u1} α _inst_1 hα p hp a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)
 Case conversion may be inaccurate. Consider using '#align to_Ioc_mod_apply_right toIocMod_apply_rightₓ'. -/
-theorem toIocMod_apply_right (a : α) : toIocMod hp a (a + p) = a + p :=
-  by
-  rw [toIocMod_eq_iff hp, Set.right_mem_Ioc]
-  exact ⟨lt_add_of_pos_right _ hp, 0, by simp⟩
+theorem toIocMod_apply_right (a : α) : toIocMod hp a (a + p) = a + p := by
+  rw [toIocMod_eq_iff hp, Set.right_mem_Ioc]; exact ⟨lt_add_of_pos_right _ hp, 0, by simp⟩
 #align to_Ioc_mod_apply_right toIocMod_apply_right
 
 /- warning: to_Ico_div_add_zsmul -> toIcoDiv_add_zsmul is a dubious translation:
@@ -822,10 +812,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α) (b : α) (m : Int), Eq.{succ u1} α (toIcoMod.{u1} α _inst_1 hα p hp a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) b (HSMul.hSMul.{0, u1, u1} Int α α (instHSMul.{0, u1} Int α (SubNegMonoid.SMulInt.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))) m p))) (toIcoMod.{u1} α _inst_1 hα p hp a b)
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_add_zsmul toIcoMod_add_zsmulₓ'. -/
 @[simp]
-theorem toIcoMod_add_zsmul (a b : α) (m : ℤ) : toIcoMod hp a (b + m • p) = toIcoMod hp a b :=
-  by
-  rw [toIcoMod, toIcoDiv_add_zsmul, toIcoMod, add_smul]
-  abel
+theorem toIcoMod_add_zsmul (a b : α) (m : ℤ) : toIcoMod hp a (b + m • p) = toIcoMod hp a b := by
+  rw [toIcoMod, toIcoDiv_add_zsmul, toIcoMod, add_smul]; abel
 #align to_Ico_mod_add_zsmul toIcoMod_add_zsmul
 
 /- warning: to_Ico_mod_add_zsmul' -> toIcoMod_add_zsmul' is a dubious translation:
@@ -847,10 +835,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α) (b : α) (m : Int), Eq.{succ u1} α (toIocMod.{u1} α _inst_1 hα p hp a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) b (HSMul.hSMul.{0, u1, u1} Int α α (instHSMul.{0, u1} Int α (SubNegMonoid.SMulInt.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))) m p))) (toIocMod.{u1} α _inst_1 hα p hp a b)
 Case conversion may be inaccurate. Consider using '#align to_Ioc_mod_add_zsmul toIocMod_add_zsmulₓ'. -/
 @[simp]
-theorem toIocMod_add_zsmul (a b : α) (m : ℤ) : toIocMod hp a (b + m • p) = toIocMod hp a b :=
-  by
-  rw [toIocMod, toIocDiv_add_zsmul, toIocMod, add_smul]
-  abel
+theorem toIocMod_add_zsmul (a b : α) (m : ℤ) : toIocMod hp a (b + m • p) = toIocMod hp a b := by
+  rw [toIocMod, toIocDiv_add_zsmul, toIocMod, add_smul]; abel
 #align to_Ioc_mod_add_zsmul toIocMod_add_zsmul
 
 /- warning: to_Ioc_mod_add_zsmul' -> toIocMod_add_zsmul' is a dubious translation:
@@ -1135,10 +1121,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α) (b : α), Eq.{succ u1} α (toIcoMod.{u1} α _inst_1 hα p hp a (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) b)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))) p (toIocMod.{u1} α _inst_1 hα p hp (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) a) b))
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_neg toIcoMod_negₓ'. -/
-theorem toIcoMod_neg (a b : α) : toIcoMod hp a (-b) = p - toIocMod hp (-a) b :=
-  by
-  simp_rw [toIcoMod, toIocMod, toIcoDiv_neg, neg_smul, add_smul]
-  abel
+theorem toIcoMod_neg (a b : α) : toIcoMod hp a (-b) = p - toIocMod hp (-a) b := by
+  simp_rw [toIcoMod, toIocMod, toIcoDiv_neg, neg_smul, add_smul]; abel
 #align to_Ico_mod_neg toIcoMod_neg
 
 /- warning: to_Ico_mod_neg' -> toIcoMod_neg' is a dubious translation:
@@ -1157,10 +1141,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) (a : α) (b : α), Eq.{succ u1} α (toIocMod.{u1} α _inst_1 hα p hp a (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) b)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))) p (toIcoMod.{u1} α _inst_1 hα p hp (Neg.neg.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) a) b))
 Case conversion may be inaccurate. Consider using '#align to_Ioc_mod_neg toIocMod_negₓ'. -/
-theorem toIocMod_neg (a b : α) : toIocMod hp a (-b) = p - toIcoMod hp (-a) b :=
-  by
-  simp_rw [toIocMod, toIcoMod, toIocDiv_neg, neg_smul, add_smul]
-  abel
+theorem toIocMod_neg (a b : α) : toIocMod hp a (-b) = p - toIcoMod hp (-a) b := by
+  simp_rw [toIocMod, toIcoMod, toIocDiv_neg, neg_smul, add_smul]; abel
 #align to_Ioc_mod_neg toIocMod_neg
 
 /- warning: to_Ioc_mod_neg' -> toIocMod_neg' is a dubious translation:
@@ -1281,9 +1263,7 @@ theorem tfae_modEq :
       ((toIcoMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ico_self hi, i, (sub_add_cancel b _).symm⟩).trans
         ((toIocMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ioc_self hi, i, (sub_add_cancel b _).symm⟩).symm
   tfae_have 4 → 3
-  · intro h
-    rw [← h, Ne, eq_comm, add_right_eq_self]
-    exact hp.ne'
+  · intro h; rw [← h, Ne, eq_comm, add_right_eq_self]; exact hp.ne'
   tfae_have 1 → 4
   · intro h
     rw [h, eq_comm, toIocMod_eq_iff, Set.right_mem_Ioc]
@@ -1454,10 +1434,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) {a : α} {b : α}, Iff (Eq.{succ u1} α (toIcoMod.{u1} α _inst_1 hα p hp a b) b) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)))
 Case conversion may be inaccurate. Consider using '#align to_Ico_mod_eq_self toIcoMod_eq_selfₓ'. -/
-theorem toIcoMod_eq_self : toIcoMod hp a b = b ↔ b ∈ Set.Ico a (a + p) :=
-  by
-  rw [toIcoMod_eq_iff, and_iff_left]
-  exact ⟨0, by simp⟩
+theorem toIcoMod_eq_self : toIcoMod hp a b = b ↔ b ∈ Set.Ico a (a + p) := by
+  rw [toIcoMod_eq_iff, and_iff_left]; exact ⟨0, by simp⟩
 #align to_Ico_mod_eq_self toIcoMod_eq_self
 
 /- warning: to_Ioc_mod_eq_self -> toIocMod_eq_self is a dubious translation:
@@ -1466,10 +1444,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α] [hα : Archimedean.{u1} α (LinearOrderedAddCommMonoid.toOrderedAddCommMonoid.{u1} α (LinearOrderedCancelAddCommMonoid.toLinearOrderedAddCommMonoid.{u1} α (LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid.{u1} α _inst_1)))] {p : α} (hp : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))))) p) {a : α} {b : α}, Iff (Eq.{succ u1} α (toIocMod.{u1} α _inst_1 hα p hp a b) b) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))))) a p)))
 Case conversion may be inaccurate. Consider using '#align to_Ioc_mod_eq_self toIocMod_eq_selfₓ'. -/
-theorem toIocMod_eq_self : toIocMod hp a b = b ↔ b ∈ Set.Ioc a (a + p) :=
-  by
-  rw [toIocMod_eq_iff, and_iff_left]
-  exact ⟨0, by simp⟩
+theorem toIocMod_eq_self : toIocMod hp a b = b ↔ b ∈ Set.Ioc a (a + p) := by
+  rw [toIocMod_eq_iff, and_iff_left]; exact ⟨0, by simp⟩
 #align to_Ioc_mod_eq_self toIocMod_eq_self
 
 /- warning: to_Ico_mod_to_Ico_mod -> toIcoMod_toIcoMod is a dubious translation:

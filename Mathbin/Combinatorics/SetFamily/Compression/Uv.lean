@@ -434,9 +434,7 @@ theorem card_compress (hUV : u.card = v.card) (A : Finset α) : (compress u v A)
 #align uv.card_compress UV.card_compress
 
 private theorem aux (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x) (v.eraseₓ y) 𝒜) :
-    v = ∅ → u = ∅ := by
-  rintro rfl
-  refine' eq_empty_of_forall_not_mem fun a ha => _
+    v = ∅ → u = ∅ := by rintro rfl; refine' eq_empty_of_forall_not_mem fun a ha => _;
   obtain ⟨_, ⟨⟩, -⟩ := huv a ha
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » s) -/
@@ -452,14 +450,12 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
       s ∈ (∂ ) 𝒜' → s ∉ (∂ ) 𝒜 → u ⊆ s ∧ Disjoint v s ∧ (s ∪ v) \ u ∈ (∂ ) 𝒜 ∧ (s ∪ v) \ u ∉ (∂ ) 𝒜'
   · rintro s hs'
     rw [mem_compression]
-    by_cases hs : s ∈ 𝒜.shadow
-    swap
+    by_cases hs : s ∈ 𝒜.shadow; swap
     · obtain ⟨hus, hvs, h, _⟩ := H _ hs' hs
       exact Or.inr ⟨hs, _, h, compress_of_disjoint_of_le' hvs hus⟩
     refine' Or.inl ⟨hs, _⟩
     rw [compress]
-    split_ifs with huvs
-    swap
+    split_ifs with huvs; swap
     · exact hs
     rw [mem_shadow_iff] at hs'
     obtain ⟨t, Ht, a, hat, rfl⟩ := hs'

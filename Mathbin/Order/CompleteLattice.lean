@@ -433,9 +433,7 @@ def completeLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 : InfSet α]
     le_top := fun a => (isGLB_sInf ∅).2 <| by simp
     sup := fun a b => sInf { x | a ≤ x ∧ b ≤ x }
     inf := fun a b => sInf {a, b}
-    le_inf := fun a b c hab hac => by
-      apply (isGLB_sInf _).2
-      simp [*]
+    le_inf := fun a b c hab hac => by apply (isGLB_sInf _).2; simp [*]
     inf_le_right := fun a b => (isGLB_sInf _).1 <| mem_insert_of_mem _ <| mem_singleton _
     inf_le_left := fun a b => (isGLB_sInf _).1 <| mem_insert _ _
     sup_le := fun a b c hac hbc => (isGLB_sInf _).1 <| by simp [*]
@@ -825,11 +823,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α}, (Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s) (Bot.bot.{u1} α (CompleteLattice.toBot.{u1} α _inst_1))) -> (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Bot.bot.{u1} α (CompleteLattice.toBot.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align eq_singleton_bot_of_Sup_eq_bot_of_nonempty eq_singleton_bot_of_sSup_eq_bot_of_nonemptyₓ'. -/
 theorem eq_singleton_bot_of_sSup_eq_bot_of_nonempty {s : Set α} (h_sup : sSup s = ⊥)
-    (hne : s.Nonempty) : s = {⊥} :=
-  by
-  rw [Set.eq_singleton_iff_nonempty_unique_mem]
-  rw [sSup_eq_bot] at h_sup
-  exact ⟨hne, h_sup⟩
+    (hne : s.Nonempty) : s = {⊥} := by rw [Set.eq_singleton_iff_nonempty_unique_mem];
+  rw [sSup_eq_bot] at h_sup; exact ⟨hne, h_sup⟩
 #align eq_singleton_bot_of_Sup_eq_bot_of_nonempty eq_singleton_bot_of_sSup_eq_bot_of_nonempty
 
 /- warning: eq_singleton_top_of_Inf_eq_top_of_nonempty -> eq_singleton_top_of_sInf_eq_top_of_nonempty is a dubious translation:
@@ -1005,9 +1000,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Sort.{u3}} {ι' : Sort.{u2}} [_inst_1 : SupSet.{u1} α] {f : ι -> α} {g : ι' -> α} (h : ι -> ι'), (Function.Surjective.{u3, u2} ι ι' h) -> (forall (x : ι), Eq.{succ u1} α (g (h x)) (f x)) -> (Eq.{succ u1} α (iSup.{u1, u3} α _inst_1 ι (fun (x : ι) => f x)) (iSup.{u1, u2} α _inst_1 ι' (fun (y : ι') => g y)))
 Case conversion may be inaccurate. Consider using '#align function.surjective.supr_congr Function.Surjective.iSup_congrₓ'. -/
 protected theorem Function.Surjective.iSup_congr {g : ι' → α} (h : ι → ι') (h1 : Surjective h)
-    (h2 : ∀ x, g (h x) = f x) : (⨆ x, f x) = ⨆ y, g y :=
-  by
-  convert h1.supr_comp g
+    (h2 : ∀ x, g (h x) = f x) : (⨆ x, f x) = ⨆ y, g y := by convert h1.supr_comp g;
   exact (funext h2).symm
 #align function.surjective.supr_congr Function.Surjective.iSup_congr
 
@@ -1025,11 +1018,8 @@ protected theorem Equiv.iSup_congr {g : ι' → α} (e : ι ≃ ι') (h : ∀ x,
 #print iSup_congr_Prop /-
 @[congr]
 theorem iSup_congr_Prop {p q : Prop} {f₁ : p → α} {f₂ : q → α} (pq : p ↔ q)
-    (f : ∀ x, f₁ (pq.mpr x) = f₂ x) : iSup f₁ = iSup f₂ :=
-  by
-  obtain rfl := propext pq
-  congr with x
-  apply f
+    (f : ∀ x, f₁ (pq.mpr x) = f₂ x) : iSup f₁ = iSup f₂ := by obtain rfl := propext pq;
+  congr with x; apply f
 #align supr_congr_Prop iSup_congr_Prop
 -/
 
@@ -1834,9 +1824,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {s : Set.{u1} α} {f : α -> β}, (Antitone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))) (f (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s)) (iInf.{u2, succ u1} β (CompleteLattice.toInfSet.{u2} β _inst_2) α (fun (a : α) => iInf.{u2, 0} β (CompleteLattice.toInfSet.{u2} β _inst_2) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => f a))))
 Case conversion may be inaccurate. Consider using '#align antitone.map_Sup_le Antitone.map_sSup_leₓ'. -/
 theorem Antitone.map_sSup_le [CompleteLattice β] {s : Set α} {f : α → β} (hf : Antitone f) :
-    f (sSup s) ≤ ⨅ a ∈ s, f a := by
-  rw [sSup_eq_iSup]
-  exact hf.map_supr₂_le _
+    f (sSup s) ≤ ⨅ a ∈ s, f a := by rw [sSup_eq_iSup]; exact hf.map_supr₂_le _
 #align antitone.map_Sup_le Antitone.map_sSup_le
 
 /- warning: monotone.map_Inf_le -> Monotone.map_sInf_le is a dubious translation:
@@ -2146,11 +2134,7 @@ end
 -/
 @[simp]
 theorem iSup_iSup_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨆ x, ⨆ h : x = b, f x h) = f b rfl :=
-  (@le_iSup₂ _ _ _ _ f b rfl).antisymm'
-    (iSup_le fun c =>
-      iSup_le <| by
-        rintro rfl
-        rfl)
+  (@le_iSup₂ _ _ _ _ f b rfl).antisymm' (iSup_le fun c => iSup_le <| by rintro rfl; rfl)
 #align supr_supr_eq_left iSup_iSup_eq_left
 
 /- warning: infi_infi_eq_left -> iInf_iInf_eq_left is a dubious translation:
@@ -2172,10 +2156,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align supr_supr_eq_right iSup_iSup_eq_rightₓ'. -/
 @[simp]
 theorem iSup_iSup_eq_right {b : β} {f : ∀ x : β, b = x → α} : (⨆ x, ⨆ h : b = x, f x h) = f b rfl :=
-  (le_iSup₂ b rfl).antisymm'
-    (iSup₂_le fun c => by
-      rintro rfl
-      rfl)
+  (le_iSup₂ b rfl).antisymm' (iSup₂_le fun c => by rintro rfl; rfl)
 #align supr_supr_eq_right iSup_iSup_eq_right
 
 /- warning: infi_infi_eq_right -> iInf_iInf_eq_right is a dubious translation:
@@ -2714,10 +2695,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : β -> α) (i₀ : β), Eq.{succ u2} α (iSup.{u2, succ u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) β (fun (i : β) => f i)) (Sup.sup.{u2} α (SemilatticeSup.toSup.{u2} α (Lattice.toSemilatticeSup.{u2} α (CompleteLattice.toLattice.{u2} α _inst_1))) (f i₀) (iSup.{u2, succ u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) β (fun (i : β) => iSup.{u2, 0} α (CompleteLattice.toSupSet.{u2} α _inst_1) (Ne.{succ u1} β i i₀) (fun (h : Ne.{succ u1} β i i₀) => f i))))
 Case conversion may be inaccurate. Consider using '#align supr_split_single iSup_split_singleₓ'. -/
-theorem iSup_split_single (f : β → α) (i₀ : β) : (⨆ i, f i) = f i₀ ⊔ ⨆ (i) (h : i ≠ i₀), f i :=
-  by
-  convert iSup_split _ _
-  simp
+theorem iSup_split_single (f : β → α) (i₀ : β) : (⨆ i, f i) = f i₀ ⊔ ⨆ (i) (h : i ≠ i₀), f i := by
+  convert iSup_split _ _; simp
 #align supr_split_single iSup_split_single
 
 /- warning: infi_split_single -> iInf_split_single is a dubious translation:
@@ -3012,9 +2991,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bsupr_prod biSup_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem biSup_prod {f : β × γ → α} {s : Set β} {t : Set γ} :
-    (⨆ x ∈ s ×ˢ t, f x) = ⨆ (a ∈ s) (b ∈ t), f (a, b) :=
-  by
-  simp_rw [iSup_prod, mem_prod, iSup_and]
+    (⨆ x ∈ s ×ˢ t, f x) = ⨆ (a ∈ s) (b ∈ t), f (a, b) := by simp_rw [iSup_prod, mem_prod, iSup_and];
   exact iSup_congr fun _ => iSup_comm
 #align bsupr_prod biSup_prod
 
@@ -3158,12 +3135,7 @@ Case conversion may be inaccurate. Consider using '#align supr_ge_eq_supr_nat_ad
 theorem iSup_ge_eq_iSup_nat_add (u : ℕ → α) (n : ℕ) : (⨆ i ≥ n, u i) = ⨆ i, u (i + n) :=
   by
   apply le_antisymm <;> simp only [iSup_le_iff]
-  ·
-    exact fun i hi =>
-      le_sSup
-        ⟨i - n, by
-          dsimp only
-          rw [Nat.sub_add_cancel hi]⟩
+  · exact fun i hi => le_sSup ⟨i - n, by dsimp only; rw [Nat.sub_add_cancel hi]⟩
   · exact fun i => le_sSup ⟨i + n, iSup_pos (Nat.le_add_left _ _)⟩
 #align supr_ge_eq_supr_nat_add iSup_ge_eq_iSup_nat_add
 
@@ -3253,10 +3225,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> α), Eq.{succ u1} α (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (i : Nat) => iInf.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (GT.gt.{0} Nat instLTNat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (fun (H : GT.gt.{0} Nat instLTNat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) => f i))) (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (i : Nat) => f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align infi_nat_gt_zero_eq iInf_nat_gt_zero_eqₓ'. -/
-theorem iInf_nat_gt_zero_eq (f : ℕ → α) : (⨅ i > 0, f i) = ⨅ i, f (i + 1) :=
-  by
-  rw [← iInf_range, Nat.range_succ]
-  simp only [mem_set_of]
+theorem iInf_nat_gt_zero_eq (f : ℕ → α) : (⨅ i > 0, f i) = ⨅ i, f (i + 1) := by
+  rw [← iInf_range, Nat.range_succ]; simp only [mem_set_of]
 #align infi_nat_gt_zero_eq iInf_nat_gt_zero_eq
 
 /- warning: supr_nat_gt_zero_eq -> iSup_nat_gt_zero_eq is a dubious translation:
@@ -3445,10 +3415,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} (α -> Prop)) {a : α}, Iff (SupSet.sSup.{u1} (α -> Prop) (Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toSupSet.{0} Prop Prop.completeLattice)) s a) (Exists.{succ u1} (α -> Prop) (fun (r : α -> Prop) => And (Membership.mem.{u1, u1} (α -> Prop) (Set.{u1} (α -> Prop)) (Set.instMembershipSet.{u1} (α -> Prop)) r s) (r a)))
 Case conversion may be inaccurate. Consider using '#align unary_relation_Sup_iff unary_relation_sSup_iffₓ'. -/
 theorem unary_relation_sSup_iff {α : Type _} (s : Set (α → Prop)) {a : α} :
-    sSup s a ↔ ∃ r : α → Prop, r ∈ s ∧ r a :=
-  by
-  unfold Sup
-  simp [← eq_iff_iff]
+    sSup s a ↔ ∃ r : α → Prop, r ∈ s ∧ r a := by unfold Sup; simp [← eq_iff_iff]
 #align unary_relation_Sup_iff unary_relation_sSup_iff
 
 /- warning: unary_relation_Inf_iff -> unary_relation_sInf_iff is a dubious translation:
@@ -3458,10 +3425,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} (α -> Prop)) {a : α}, Iff (InfSet.sInf.{u1} (α -> Prop) (Pi.infSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toInfSet.{0} Prop Prop.completeLattice)) s a) (forall (r : α -> Prop), (Membership.mem.{u1, u1} (α -> Prop) (Set.{u1} (α -> Prop)) (Set.instMembershipSet.{u1} (α -> Prop)) r s) -> (r a))
 Case conversion may be inaccurate. Consider using '#align unary_relation_Inf_iff unary_relation_sInf_iffₓ'. -/
 theorem unary_relation_sInf_iff {α : Type _} (s : Set (α → Prop)) {a : α} :
-    sInf s a ↔ ∀ r : α → Prop, r ∈ s → r a :=
-  by
-  unfold Inf
-  simp [← eq_iff_iff]
+    sInf s a ↔ ∀ r : α → Prop, r ∈ s → r a := by unfold Inf; simp [← eq_iff_iff]
 #align unary_relation_Inf_iff unary_relation_sInf_iff
 
 /- warning: binary_relation_Sup_iff -> binary_relation_sSup_iff is a dubious translation:
@@ -3471,10 +3435,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{max u2 u1} (α -> β -> Prop)) {a : α} {b : β}, Iff (SupSet.sSup.{max u2 u1} (α -> β -> Prop) (Pi.supSet.{u2, u1} α (fun (ᾰ : α) => β -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} β (fun (ᾰ : β) => Prop) (fun (i : β) => CompleteLattice.toSupSet.{0} Prop Prop.completeLattice))) s a b) (Exists.{max (succ u2) (succ u1)} (α -> β -> Prop) (fun (r : α -> β -> Prop) => And (Membership.mem.{max u2 u1, max u2 u1} (α -> β -> Prop) (Set.{max u2 u1} (α -> β -> Prop)) (Set.instMembershipSet.{max u2 u1} (α -> β -> Prop)) r s) (r a b)))
 Case conversion may be inaccurate. Consider using '#align binary_relation_Sup_iff binary_relation_sSup_iffₓ'. -/
 theorem binary_relation_sSup_iff {α β : Type _} (s : Set (α → β → Prop)) {a : α} {b : β} :
-    sSup s a b ↔ ∃ r : α → β → Prop, r ∈ s ∧ r a b :=
-  by
-  unfold Sup
-  simp [← eq_iff_iff]
+    sSup s a b ↔ ∃ r : α → β → Prop, r ∈ s ∧ r a b := by unfold Sup; simp [← eq_iff_iff]
 #align binary_relation_Sup_iff binary_relation_sSup_iff
 
 /- warning: binary_relation_Inf_iff -> binary_relation_sInf_iff is a dubious translation:
@@ -3484,10 +3445,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{max u2 u1} (α -> β -> Prop)) {a : α} {b : β}, Iff (InfSet.sInf.{max u2 u1} (α -> β -> Prop) (Pi.infSet.{u2, u1} α (fun (ᾰ : α) => β -> Prop) (fun (i : α) => Pi.infSet.{u1, 0} β (fun (ᾰ : β) => Prop) (fun (i : β) => CompleteLattice.toInfSet.{0} Prop Prop.completeLattice))) s a b) (forall (r : α -> β -> Prop), (Membership.mem.{max u2 u1, max u2 u1} (α -> β -> Prop) (Set.{max u2 u1} (α -> β -> Prop)) (Set.instMembershipSet.{max u2 u1} (α -> β -> Prop)) r s) -> (r a b))
 Case conversion may be inaccurate. Consider using '#align binary_relation_Inf_iff binary_relation_sInf_iffₓ'. -/
 theorem binary_relation_sInf_iff {α β : Type _} (s : Set (α → β → Prop)) {a : α} {b : β} :
-    sInf s a b ↔ ∀ r : α → β → Prop, r ∈ s → r a b :=
-  by
-  unfold Inf
-  simp [← eq_iff_iff]
+    sInf s a b ↔ ∀ r : α → β → Prop, r ∈ s → r a b := by unfold Inf; simp [← eq_iff_iff]
 #align binary_relation_Inf_iff binary_relation_sInf_iff
 
 section CompleteLattice

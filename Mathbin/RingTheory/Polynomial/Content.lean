@@ -404,8 +404,7 @@ theorem primPart_ne_zero (p : R[X]) : p.primPart ≠ 0 :=
 theorem natDegree_primPart (p : R[X]) : p.primPart.natDegree = p.natDegree :=
   by
   by_cases h : C p.content = 0
-  · rw [C_eq_zero, content_eq_zero_iff] at h
-    simp [h]
+  · rw [C_eq_zero, content_eq_zero_iff] at h; simp [h]
   conv_rhs =>
     rw [p.eq_C_content_mul_prim_part, nat_degree_mul h p.prim_part_ne_zero, nat_degree_C, zero_add]
 #align polynomial.nat_degree_prim_part Polynomial.natDegree_primPart
@@ -605,9 +604,7 @@ theorem exists_primitive_lcm_of_isPrimitive {p q : R[X]} (hp : p.IsPrimitive) (h
     clear s
     by_contra' con
     rcases Nat.find_spec Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
-    have s0 : s ≠ 0 := by
-      contrapose! rs
-      simp [rs]
+    have s0 : s ≠ 0 := by contrapose! rs; simp [rs]
     have hs :=
       Nat.find_min' h
         ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps,
@@ -688,10 +685,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] [_inst_3 : NormalizedGCDMonoid.{u1} R (IsDomain.toCancelCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) _inst_2)] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) {q : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))}, (Ne.{succ u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) q (OfNat.ofNat.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) 0 (Zero.toOfNat0.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.zero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (GCDMonoid.gcd.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (IsDomain.toCancelCommMonoidWithZero.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.commSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Polynomial.instIsDomainPolynomialToSemiringSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) (NormalizedGCDMonoid.toGCDMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (IsDomain.toCancelCommMonoidWithZero.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Polynomial.commSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (Polynomial.instIsDomainPolynomialToSemiringSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) (Polynomial.normalizedGcdMonoid.{u1} R _inst_1 _inst_2 _inst_3)) p q)) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) q))
 Case conversion may be inaccurate. Consider using '#align polynomial.degree_gcd_le_right Polynomial.degree_gcd_le_rightₓ'. -/
-theorem degree_gcd_le_right (p) {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree :=
-  by
-  rw [gcd_comm]
-  exact degree_gcd_le_left hq p
+theorem degree_gcd_le_right (p) {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree := by
+  rw [gcd_comm]; exact degree_gcd_le_left hq p
 #align polynomial.degree_gcd_le_right Polynomial.degree_gcd_le_right
 
 end NormalizedGCDMonoid

@@ -131,14 +131,12 @@ theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y :=
   by
   ext j
   by_cases h : j = 0
-  · rw [h]
-    simp [Ne.symm (succ_ne_zero i)]
+  · rw [h]; simp [Ne.symm (succ_ne_zero i)]
   · let j' := pred j h
     have : j'.succ = j := succ_pred j h
     rw [← this, cons_succ]
     by_cases h' : j' = i
-    · rw [h']
-      simp
+    · rw [h']; simp
     · have : j'.succ ≠ i.succ := by rwa [Ne.def, succ_inj]
       rw [update_noteq h', update_noteq this, cons_succ]
 #align fin.cons_update Fin.cons_update
@@ -198,8 +196,7 @@ theorem update_cons_zero : update (cons x p) 0 z = cons z p :=
   by
   ext j
   by_cases h : j = 0
-  · rw [h]
-    simp
+  · rw [h]; simp
   · simp only [h, update_noteq, Ne.def, not_false_iff]
     let j' := pred j h
     have : j'.succ = j := succ_pred j h
@@ -218,8 +215,7 @@ theorem cons_self_tail : cons (q 0) (tail q) = q :=
   by
   ext j
   by_cases h : j = 0
-  · rw [h]
-    simp
+  · rw [h]; simp
   · let j' := pred j h
     have : j'.succ = j := succ_pred j h
     rw [← this, tail, cons_succ]
@@ -345,10 +341,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.tail_update_zero Fin.tail_update_zeroₓ'. -/
 /-- Updating the first element of a tuple does not change the tail. -/
 @[simp]
-theorem tail_update_zero : tail (update q 0 z) = tail q :=
-  by
-  ext j
-  simp [tail, Fin.succ_ne_zero]
+theorem tail_update_zero : tail (update q 0 z) = tail q := by ext j; simp [tail, Fin.succ_ne_zero]
 #align fin.tail_update_zero Fin.tail_update_zero
 
 /- warning: fin.tail_update_succ -> Fin.tail_update_succ is a dubious translation:
@@ -363,8 +356,7 @@ theorem tail_update_succ : tail (update q i.succ y) = update (tail q) i y :=
   by
   ext j
   by_cases h : j = i
-  · rw [h]
-    simp [tail]
+  · rw [h]; simp [tail]
   · simp [tail, (Fin.succ_injective n).Ne h, h]
 #align fin.tail_update_succ Fin.tail_update_succ
 
@@ -378,8 +370,7 @@ theorem comp_cons {α : Type _} {β : Type _} (g : α → β) (y : α) (q : Fin 
     g ∘ cons y q = cons (g y) (g ∘ q) := by
   ext j
   by_cases h : j = 0
-  · rw [h]
-    rfl
+  · rw [h]; rfl
   · let j' := pred j h
     have : j'.succ = j := succ_pred j h
     rw [← this, cons_succ, comp_app, cons_succ]
@@ -392,9 +383,7 @@ but is expected to have type
   forall {n : Nat} {α : Type.{u2}} {β : Type.{u1}} (g : α -> β) (q : (Fin (Nat.succ n)) -> α), Eq.{succ u1} ((Fin n) -> β) (Function.comp.{1, succ u2, succ u1} (Fin n) α β g (Fin.tail.{u2} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => α) q)) (Fin.tail.{u1} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => β) (Function.comp.{1, succ u2, succ u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) α β g q))
 Case conversion may be inaccurate. Consider using '#align fin.comp_tail Fin.comp_tailₓ'. -/
 theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Fin n.succ → α) :
-    g ∘ tail q = tail (g ∘ q) := by
-  ext j
-  simp [tail]
+    g ∘ tail q = tail (g ∘ q) := by ext j; simp [tail]
 #align fin.comp_tail Fin.comp_tail
 
 /- warning: fin.le_cons -> Fin.le_cons is a dubious translation:
@@ -796,10 +785,7 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
         · exact heq_of_cast_eq C2 rfl
       rw [E1, E2]
       exact eq_rec_compose _ _ _
-    · have : ¬cast_lt j h = i := by
-        intro E
-        apply h'
-        rw [← E, cast_succ_cast_lt]
+    · have : ¬cast_lt j h = i := by intro E; apply h'; rw [← E, cast_succ_cast_lt]
       simp [h', this, snoc, h]
   · rw [eq_last_of_not_lt h]
     simp [Ne.symm (ne_of_lt (cast_succ_lt_last i))]
@@ -848,9 +834,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.init_update_last Fin.init_update_lastₓ'. -/
 /-- Updating the last element of a tuple does not change the beginning. -/
 @[simp]
-theorem init_update_last : init (update q (last n) z) = init q :=
-  by
-  ext j
+theorem init_update_last : init (update q (last n) z) = init q := by ext j;
   simp [init, ne_of_lt, cast_succ_lt_last]
 #align fin.init_update_last Fin.init_update_last
 
@@ -863,8 +847,7 @@ theorem init_update_castSucc : init (update q i.cast_succ y) = update (init q) i
   by
   ext j
   by_cases h : j = i
-  · rw [h]
-    simp [init]
+  · rw [h]; simp [init]
   · simp [init, h]
 #align fin.init_update_cast_succ Fin.init_update_castSucc
 
@@ -872,9 +855,7 @@ theorem init_update_castSucc : init (update q i.cast_succ y) = update (init q) i
 /-- `tail` and `init` commute. We state this lemma in a non-dependent setting, as otherwise it
 would involve a cast to convince Lean that the two types are equal, making it harder to use. -/
 theorem tail_init_eq_init_tail {β : Type _} (q : Fin (n + 2) → β) : tail (init q) = init (tail q) :=
-  by
-  ext i
-  simp [tail, init, cast_succ_fin_succ]
+  by ext i; simp [tail, init, cast_succ_fin_succ]
 #align fin.tail_init_eq_init_tail Fin.tail_init_eq_init_tail
 -/
 
@@ -886,8 +867,7 @@ theorem cons_snoc_eq_snoc_cons {β : Type _} (a : β) (q : Fin n → β) (b : β
   by
   ext i
   by_cases h : i = 0
-  · rw [h]
-    rfl
+  · rw [h]; rfl
   set j := pred i h with ji
   have : i = j.succ := by rw [ji, succ_pred]
   rw [this, cons_succ]
@@ -943,9 +923,7 @@ but is expected to have type
   forall {n : Nat} {α : Type.{u2}} {β : Type.{u1}} (g : α -> β) (q : (Fin (Nat.succ n)) -> α), Eq.{succ u1} ((Fin n) -> β) (Function.comp.{1, succ u2, succ u1} (Fin n) α β g (Fin.init.{u2} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => α) q)) (Fin.init.{u1} n (fun (ᾰ : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => β) (Function.comp.{1, succ u2, succ u1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) α β g q))
 Case conversion may be inaccurate. Consider using '#align fin.comp_init Fin.comp_initₓ'. -/
 theorem comp_init {α : Type _} {β : Type _} (g : α → β) (q : Fin n.succ → α) :
-    g ∘ init q = init (g ∘ q) := by
-  ext j
-  simp [init]
+    g ∘ init q = init (g ∘ q) := by ext j; simp [init]
 #align fin.comp_init Fin.comp_init
 
 end TupleRight
@@ -1115,8 +1093,7 @@ theorem insertNth_last (x : α (last n)) (p : ∀ j : Fin n, α ((last n).succAb
   ext j
   apply eq_of_hEq
   trans snoc (fun j => _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ
-  · rw [snoc_cast_succ]
-    exact (cast_hEq _ _).symm
+  · rw [snoc_cast_succ]; exact (cast_hEq _ _).symm
   · apply congr_arg_heq
     rw [succ_above_last]
 #align fin.insert_nth_last Fin.insertNth_last

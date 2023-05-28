@@ -80,10 +80,7 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
 #align witt_vector.map_fun.injective WittVector.mapFun.injective
 
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
-  ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n,
-    by
-    ext n
-    dsimp [map_fun]
+  ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by ext n; dsimp [map_fun];
     rw [Classical.choose_spec (hf (x.coeff n))]⟩
 #align witt_vector.map_fun.surjective WittVector.mapFun.surjective
 

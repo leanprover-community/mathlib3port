@@ -96,13 +96,10 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       (hasDerivAt_pow (2 * n) x) (pow_ne_zero _ hx) using
     1
   rw [div_eq_div_iff]
-  · have := pow_ne_zero 2 hx
-    field_simp only
+  · have := pow_ne_zero 2 hx; field_simp only
     cases n
-    · simp only [MulZeroClass.mul_zero, Nat.cast_zero, mul_one]
-      ring
-    · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]
-      ring
+    · simp only [MulZeroClass.mul_zero, Nat.cast_zero, mul_one]; ring
+    · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]; ring
   all_goals apply_rules [pow_ne_zero]
 #align exp_neg_inv_glue.f_aux_deriv expNegInvGlue.f_aux_deriv
 
@@ -552,9 +549,7 @@ protected theorem ContDiffAt.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBu
 
 theorem ContDiff.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBump (c x)} (hc : ContDiff ℝ n c)
     (hr : ContDiff ℝ n fun x => (f x).R) (hR : ContDiff ℝ n fun x => (f x).r)
-    (hg : ContDiff ℝ n g) : ContDiff ℝ n fun x => f x (g x) :=
-  by
-  rw [contDiff_iff_contDiffAt] at *
+    (hg : ContDiff ℝ n g) : ContDiff ℝ n fun x => f x (g x) := by rw [contDiff_iff_contDiffAt] at *;
   exact fun x => (hc x).ContDiffBump (hr x) (hR x) (hg x)
 #align cont_diff.cont_diff_bump ContDiff.contDiffBump
 

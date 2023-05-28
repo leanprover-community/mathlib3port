@@ -110,9 +110,7 @@ theorem seqRight_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then 
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) :
-    image₂ f s t = f <$> s <*> t := by
-  ext
-  simp [mem_sup]
+    image₂ f s t = f <$> s <*> t := by ext; simp [mem_sup]
 #align finset.image₂_def Finset.image₂_def
 -/
 
@@ -122,8 +120,7 @@ instance : LawfulApplicative Finset :=
     seqLeft_eq := fun α β s t => by
       rw [seq_def, fmap_def, seq_left_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
-      · simp_rw [if_pos rfl, image_empty]
-        exact (sup_bot _).symm
+      · simp_rw [if_pos rfl, image_empty]; exact (sup_bot _).symm
       · ext a
         rw [if_neg ht.ne_empty, mem_sup]
         refine' ⟨fun ha => ⟨const β a, mem_image_of_mem _ ha, mem_image_const_self.2 ht⟩, _⟩
@@ -197,9 +194,7 @@ instance : LawfulMonad Finset :=
     bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _
     bind_map_eq_seq := fun α β t s => rfl
     pure_bind := fun α β t s => sup_singleton
-    bind_assoc := fun α β γ s f g => by
-      convert sup_bUnion _ _
-      exact sup_eq_bUnion _ _ }
+    bind_assoc := fun α β γ s f g => by convert sup_bUnion _ _; exact sup_eq_bUnion _ _ }
 
 end Monad
 
@@ -239,10 +234,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_5 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Id.{u1} (Finset.{u1} α)) (Finset.traverse.{u1} α α Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) instCommApplicativeIdToApplicativeInstMonadId.{u1} (fun (a : α) (b : α) => _inst_5 a b) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α) s) s
 Case conversion may be inaccurate. Consider using '#align finset.id_traverse Finset.id_traverseₓ'. -/
 @[simp]
-theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s :=
-  by
-  rw [traverse, Multiset.id_traverse]
-  exact s.val_to_finset
+theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
+  rw [traverse, Multiset.id_traverse]; exact s.val_to_finset
 #align finset.id_traverse Finset.id_traverse
 
 open Classical

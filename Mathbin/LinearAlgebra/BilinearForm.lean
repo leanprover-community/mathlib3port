@@ -223,11 +223,8 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (BilinForm.{u2, u1} R M _inst_1 _inst_2 _inst_3) (M -> M -> R) (BilinForm.bilin.{u2, u1} R M _inst_1 _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align bilin_form.coe_injective BilinForm.coe_injectiveₓ'. -/
 -- TODO: instantiate `fun_like`
-theorem coe_injective : Function.Injective (coeFn : BilinForm R M → M → M → R) := fun B D h =>
-  by
-  cases B
-  cases D
-  congr
+theorem coe_injective : Function.Injective (coeFn : BilinForm R M → M → M → R) := fun B D h => by
+  cases B; cases D; congr
 #align bilin_form.coe_injective BilinForm.coe_injective
 
 /- warning: bilin_form.ext -> BilinForm.ext is a dubious translation:
@@ -238,9 +235,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bilin_form.ext BilinForm.extₓ'. -/
 @[ext]
 theorem ext (H : ∀ x y : M, B x y = D x y) : B = D :=
-  coe_injective <| by
-    funext
-    exact H _ _
+  coe_injective <| by funext; exact H _ _
 #align bilin_form.ext BilinForm.ext
 
 /- warning: bilin_form.congr_fun -> BilinForm.congr_fun is a dubious translation:
@@ -470,12 +465,8 @@ def flipHomAux [Algebra R₂ R] : BilinForm R M →ₗ[R₂] BilinForm R M
       bilin_smul_left := fun a x y => A.bilin_smul_right a y x
       bilin_add_right := fun x y z => A.bilin_add_left y z x
       bilin_smul_right := fun a x y => A.bilin_smul_left a y x }
-  map_add' A₁ A₂ := by
-    ext
-    simp
-  map_smul' c A := by
-    ext
-    simp
+  map_add' A₁ A₂ := by ext; simp
+  map_smul' c A := by ext; simp
 #align bilin_form.flip_hom_aux BilinForm.flipHomAux
 
 variable {R₂}
@@ -484,9 +475,7 @@ variable {R₂}
 <too large>
 Case conversion may be inaccurate. Consider using '#align bilin_form.flip_flip_aux BilinForm.flip_flip_auxₓ'. -/
 theorem flip_flip_aux [Algebra R₂ R] (A : BilinForm R M) : (flipHomAux R₂) (flipHomAux R₂ A) = A :=
-  by
-  ext (A x y)
-  simp [flip_hom_aux]
+  by ext (A x y); simp [flip_hom_aux]
 #align bilin_form.flip_flip_aux BilinForm.flip_flip_aux
 
 variable (R₂)
@@ -521,10 +510,7 @@ theorem flip_apply [Algebra R₂ R] (A : BilinForm R M) (x y : M) : flipHom R₂
 <too large>
 Case conversion may be inaccurate. Consider using '#align bilin_form.flip_flip BilinForm.flip_flipₓ'. -/
 theorem flip_flip [Algebra R₂ R] :
-    (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) :=
-  by
-  ext (A x y)
-  simp
+    (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by ext (A x y); simp
 #align bilin_form.flip_flip BilinForm.flip_flip
 
 /- warning: bilin_form.flip' -> BilinForm.flip' is a dubious translation:
@@ -714,12 +700,8 @@ def LinearMap.toBilinAux (f : M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) : BilinF
 def BilinForm.toLin : BilinForm R₂ M₂ ≃ₗ[R₂] M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂ :=
   { BilinForm.toLinHom R₂ with
     invFun := LinearMap.toBilinAux
-    left_inv := fun B => by
-      ext
-      simp [LinearMap.toBilinAux]
-    right_inv := fun B => by
-      ext
-      simp [LinearMap.toBilinAux] }
+    left_inv := fun B => by ext; simp [LinearMap.toBilinAux]
+    right_inv := fun B => by ext; simp [LinearMap.toBilinAux] }
 #align bilin_form.to_lin BilinForm.toLin
 -/
 
@@ -893,9 +875,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bilin_form.comp_id_left BilinForm.comp_id_leftₓ'. -/
 @[simp]
 theorem comp_id_left (B : BilinForm R M) (r : M →ₗ[R] M) : B.comp LinearMap.id r = B.compRight r :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align bilin_form.comp_id_left BilinForm.comp_id_left
 
 /- warning: bilin_form.comp_id_right -> BilinForm.comp_id_right is a dubious translation:
@@ -906,9 +886,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bilin_form.comp_id_right BilinForm.comp_id_rightₓ'. -/
 @[simp]
 theorem comp_id_right (B : BilinForm R M) (l : M →ₗ[R] M) : B.comp l LinearMap.id = B.compLeft l :=
-  by
-  ext
-  rfl
+  by ext; rfl
 #align bilin_form.comp_id_right BilinForm.comp_id_right
 
 /- warning: bilin_form.comp_left_id -> BilinForm.compLeft_id is a dubious translation:
@@ -918,10 +896,7 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2] (B : BilinForm.{u2, u1} R M _inst_1 _inst_2 _inst_3), Eq.{max (succ u2) (succ u1)} (BilinForm.{u2, u1} R M _inst_1 _inst_2 _inst_3) (BilinForm.compLeft.{u2, u1} R M _inst_1 _inst_2 _inst_3 B (LinearMap.id.{u2, u1} R M _inst_1 _inst_2 _inst_3)) B
 Case conversion may be inaccurate. Consider using '#align bilin_form.comp_left_id BilinForm.compLeft_idₓ'. -/
 @[simp]
-theorem compLeft_id (B : BilinForm R M) : B.compLeft LinearMap.id = B :=
-  by
-  ext
-  rfl
+theorem compLeft_id (B : BilinForm R M) : B.compLeft LinearMap.id = B := by ext; rfl
 #align bilin_form.comp_left_id BilinForm.compLeft_id
 
 /- warning: bilin_form.comp_right_id -> BilinForm.compRight_id is a dubious translation:
@@ -931,10 +906,7 @@ but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommMonoid.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 _inst_2] (B : BilinForm.{u2, u1} R M _inst_1 _inst_2 _inst_3), Eq.{max (succ u2) (succ u1)} (BilinForm.{u2, u1} R M _inst_1 _inst_2 _inst_3) (BilinForm.compRight.{u2, u1} R M _inst_1 _inst_2 _inst_3 B (LinearMap.id.{u2, u1} R M _inst_1 _inst_2 _inst_3)) B
 Case conversion may be inaccurate. Consider using '#align bilin_form.comp_right_id BilinForm.compRight_idₓ'. -/
 @[simp]
-theorem compRight_id (B : BilinForm R M) : B.compRight LinearMap.id = B :=
-  by
-  ext
-  rfl
+theorem compRight_id (B : BilinForm R M) : B.compRight LinearMap.id = B := by ext; rfl
 #align bilin_form.comp_right_id BilinForm.compRight_id
 
 /- warning: bilin_form.comp_id_id -> BilinForm.comp_id_id is a dubious translation:
@@ -946,10 +918,7 @@ Case conversion may be inaccurate. Consider using '#align bilin_form.comp_id_id 
 -- Shortcut for `comp_id_{left,right}` followed by `comp_{right,left}_id`,
 -- has to be declared after the former two to get the right priority
 @[simp]
-theorem comp_id_id (B : BilinForm R M) : B.comp LinearMap.id LinearMap.id = B :=
-  by
-  ext
-  rfl
+theorem comp_id_id (B : BilinForm R M) : B.comp LinearMap.id LinearMap.id = B := by ext; rfl
 #align bilin_form.comp_id_id BilinForm.comp_id_id
 
 /- warning: bilin_form.comp_inj -> BilinForm.comp_inj is a dubious translation:
@@ -961,10 +930,8 @@ theorem comp_inj (B₁ B₂ : BilinForm R M') {l r : M →ₗ[R] M'} (hₗ : Fun
   constructor <;> intro h
   · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
     ext
-    cases' hₗ x with x' hx
-    subst hx
-    cases' hᵣ y with y' hy
-    subst hy
+    cases' hₗ x with x' hx; subst hx
+    cases' hᵣ y with y' hy; subst hy
     rw [← comp_apply, ← comp_apply, h]
   ·-- B₁ = B₂ → B₁.comp l r = B₂.comp l r
     subst h
@@ -1008,11 +975,8 @@ theorem congr_apply (e : M₂ ≃ₗ[R₂] M₂') (B : BilinForm R₂ M₂) (x y
 <too large>
 Case conversion may be inaccurate. Consider using '#align bilin_form.congr_symm BilinForm.congr_symmₓ'. -/
 @[simp]
-theorem congr_symm (e : M₂ ≃ₗ[R₂] M₂') : (congr e).symm = congr e.symm :=
-  by
-  ext (B x y)
-  simp only [congr_apply, LinearEquiv.symm_symm]
-  rfl
+theorem congr_symm (e : M₂ ≃ₗ[R₂] M₂') : (congr e).symm = congr e.symm := by ext (B x y);
+  simp only [congr_apply, LinearEquiv.symm_symm]; rfl
 #align bilin_form.congr_symm BilinForm.congr_symm
 
 /- warning: bilin_form.congr_refl -> BilinForm.congr_refl is a dubious translation:
@@ -1649,12 +1613,8 @@ theorem isAdjointPair_iff_compLeft_eq_compRight (f g : Module.End R M) :
     IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g :=
   by
   constructor <;> intro h
-  · ext (x y)
-    rw [comp_left_apply, comp_right_apply]
-    apply h
-  · intro x y
-    rw [← comp_left_apply, ← comp_right_apply]
-    rw [h]
+  · ext (x y); rw [comp_left_apply, comp_right_apply]; apply h
+  · intro x y; rw [← comp_left_apply, ← comp_right_apply]; rw [h]
 #align bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right BilinForm.isAdjointPair_iff_compLeft_eq_compRight
 
 /- warning: bilin_form.is_adjoint_pair_zero -> BilinForm.isAdjointPair_zero is a dubious translation:
@@ -1763,13 +1723,9 @@ Case conversion may be inaccurate. Consider using '#align bilin_form.is_pair_sel
 theorem isPairSelfAdjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.End R₂ M₂) :
     IsPairSelfAdjoint B₂ F₂ f ↔ IsPairSelfAdjoint (B₂.comp ↑e ↑e) (F₂.comp ↑e ↑e) (e.symm.conj f) :=
   by
-  have hₗ : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.comp_left f).comp ↑e ↑e :=
-    by
-    ext
+  have hₗ : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.comp_left f).comp ↑e ↑e := by ext;
     simp [LinearEquiv.symm_conj_apply]
-  have hᵣ : (B₂.comp ↑e ↑e).compRight (e.symm.conj f) = (B₂.comp_right f).comp ↑e ↑e :=
-    by
-    ext
+  have hᵣ : (B₂.comp ↑e ↑e).compRight (e.symm.conj f) = (B₂.comp_right f).comp ↑e ↑e := by ext;
     simp [LinearEquiv.conj_apply]
   have he : Function.Surjective (⇑(↑e : M₂' →ₗ[R₂] M₂) : M₂' → M₂) := e.surjective
   show BilinForm.IsAdjointPair _ _ _ _ ↔ BilinForm.IsAdjointPair _ _ _ _
@@ -1837,10 +1793,8 @@ def skewAdjointSubmodule :=
 Case conversion may be inaccurate. Consider using '#align bilin_form.mem_skew_adjoint_submodule BilinForm.mem_skewAdjointSubmoduleₓ'. -/
 @[simp]
 theorem mem_skewAdjointSubmodule (f : Module.End R₃ M₃) :
-    f ∈ B₃.skewAdjointSubmodule ↔ B₃.IsSkewAdjoint f :=
-  by
-  rw [is_skew_adjoint_iff_neg_self_adjoint]
-  exact Iff.rfl
+    f ∈ B₃.skewAdjointSubmodule ↔ B₃.IsSkewAdjoint f := by
+  rw [is_skew_adjoint_iff_neg_self_adjoint]; exact Iff.rfl
 #align bilin_form.mem_skew_adjoint_submodule BilinForm.mem_skewAdjointSubmodule
 
 end LinearAdjoints
@@ -1915,8 +1869,7 @@ theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : �
   · rw [Finset.sum_singleton] at this⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
-    change B x (μ x • x) = 0 at this
-    rw [smul_right] at this
+    change B x (μ x • x) = 0 at this; rw [smul_right] at this
     exact Or.elim (zero_eq_mul.mp this.symm) id fun hfalse => False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
 #align bilin_form.span_singleton_inf_orthogonal_eq_bot BilinForm.span_singleton_inf_orthogonal_eq_bot
@@ -2062,12 +2015,9 @@ theorem nondegenerate_iff_ker_eq_bot {B : BilinForm R₂ M₂} : B.Nondegenerate
   rw [LinearMap.ker_eq_bot']
   constructor <;> intro h
   · refine' fun m hm => h _ fun x => _
-    rw [← to_lin_apply, hm]
-    rfl
-  · intro m hm
-    apply h
-    ext x
-    exact hm x
+    rw [← to_lin_apply, hm]; rfl
+  · intro m hm; apply h
+    ext x; exact hm x
 #align bilin_form.nondegenerate_iff_ker_eq_bot BilinForm.nondegenerate_iff_ker_eq_bot
 
 /- warning: bilin_form.nondegenerate.ker_eq_bot -> BilinForm.Nondegenerate.ker_eq_bot is a dubious translation:
@@ -2141,12 +2091,8 @@ theorem iIsOrtho.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontrivi
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_left, smul_left] at hB
   rw [Finset.sum_eq_single i] at hB
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
-  · intro j hj hij
-    convert MulZeroClass.mul_zero _ using 2
-    exact hO hij
-  · intro hi
-    convert MulZeroClass.zero_mul _ using 2
-    exact finsupp.not_mem_support_iff.mp hi
+  · intro j hj hij; convert MulZeroClass.mul_zero _ using 2; exact hO hij
+  · intro hi; convert MulZeroClass.zero_mul _ using 2; exact finsupp.not_mem_support_iff.mp hi
 #align bilin_form.is_Ortho.nondegenerate_iff_not_is_ortho_basis_self BilinForm.iIsOrtho.nondegenerate_iff_not_isOrtho_basis_self
 
 section
@@ -2163,12 +2109,10 @@ theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K
     · intro y _
       rw [is_ortho, b]
       change (B.to_lin.dom_restrict W) ⟨x, hx⟩ y = 0
-      rw [hker]
-      rfl
+      rw [hker]; rfl
   · simp_rw [Submodule.mem_map, LinearMap.mem_ker]
     refine' ⟨⟨x, hx.1⟩, _, rfl⟩
-    ext y
-    change B x y = 0
+    ext y; change B x y = 0
     rw [b]
     exact hx.2 _ Submodule.mem_top
 #align bilin_form.to_lin_restrict_ker_eq_inf_orthogonal BilinForm.toLin_restrict_ker_eq_inf_orthogonal

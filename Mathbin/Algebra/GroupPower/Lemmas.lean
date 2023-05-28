@@ -44,12 +44,9 @@ section Monoid
 theorem nsmul_one [AddMonoidWithOne A] : ∀ n : ℕ, n • (1 : A) = n :=
   by
   refine' eq_natCast' (⟨_, _, _⟩ : ℕ →+ A) _
-  · show 0 • (1 : A) = 0
-    simp [zero_nsmul]
-  · show ∀ x y : ℕ, (x + y) • (1 : A) = x • 1 + y • 1
-    simp [add_nsmul]
-  · show 1 • (1 : A) = 1
-    simp
+  · show 0 • (1 : A) = 0; simp [zero_nsmul]
+  · show ∀ x y : ℕ, (x + y) • (1 : A) = x • 1 + y • 1; simp [add_nsmul]
+  · show 1 • (1 : A) = 1; simp
 #align nsmul_one nsmul_one
 -/
 
@@ -181,10 +178,8 @@ theorem smul_pow [MulAction M N] [IsScalarTower M N N] [SMulCommClass M N N] (k 
 theorem smul_pow' [MulDistribMulAction M N] (x : M) (m : N) (n : ℕ) : x • m ^ n = (x • m) ^ n :=
   by
   induction' n with n ih
-  · rw [pow_zero, pow_zero]
-    exact smul_one x
-  · rw [pow_succ, pow_succ]
-    exact (smul_mul' x m (m ^ n)).trans (congr_arg _ ih)
+  · rw [pow_zero, pow_zero]; exact smul_one x
+  · rw [pow_succ, pow_succ]; exact (smul_mul' x m (m ^ n)).trans (congr_arg _ ih)
 #align smul_pow' smul_pow'
 -/
 
@@ -208,9 +203,7 @@ variable [DivisionMonoid α]
 -- and therefore the more "natural" choice of lemma, is reversed.
 @[to_additive mul_zsmul']
 theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
-  | (m : ℕ), (n : ℕ) => by
-    rw [zpow_ofNat, zpow_ofNat, ← pow_mul, ← zpow_ofNat]
-    rfl
+  | (m : ℕ), (n : ℕ) => by rw [zpow_ofNat, zpow_ofNat, ← pow_mul, ← zpow_ofNat]; rfl
   | (m : ℕ), -[n+1] =>
     by
     rw [zpow_ofNat, zpow_negSucc, ← pow_mul, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_ofNat]
@@ -246,8 +239,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_bit0 zpow_bit0ₓ
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
   | (n : ℕ) => by simp only [zpow_ofNat, ← Int.ofNat_bit0, pow_bit0]
   | -[n+1] => by
-    simp [← mul_inv_rev, ← pow_bit0]
-    rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
+    simp [← mul_inv_rev, ← pow_bit0]; rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
 #align zpow_bit0 zpow_bit0
 #align bit0_zsmul bit0_zsmul
@@ -336,11 +328,10 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (b : G) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align mul_self_zpow mul_self_zpowₓ'. -/
 @[to_additive add_zsmul_self]
-theorem mul_self_zpow (b : G) (m : ℤ) : b * b ^ m = b ^ (m + 1) :=
-  by
+theorem mul_self_zpow (b : G) (m : ℤ) : b * b ^ m = b ^ (m + 1) := by
   conv_lhs =>
     congr
-    rw [← zpow_one b]
+    rw [← zpow_one b];
   rw [← zpow_add, add_comm]
 #align mul_self_zpow mul_self_zpow
 #align add_zsmul_self add_zsmul_self
@@ -352,12 +343,11 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (b : G) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m) b) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align mul_zpow_self mul_zpow_selfₓ'. -/
 @[to_additive add_self_zsmul]
-theorem mul_zpow_self (b : G) (m : ℤ) : b ^ m * b = b ^ (m + 1) :=
-  by
+theorem mul_zpow_self (b : G) (m : ℤ) : b ^ m * b = b ^ (m + 1) := by
   conv_lhs =>
     congr
     skip
-    rw [← zpow_one b]
+    rw [← zpow_one b];
   rw [← zpow_add, add_comm]
 #align mul_zpow_self mul_zpow_self
 #align add_self_zsmul add_self_zsmul
@@ -495,9 +485,7 @@ theorem zpow_strictMono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n := 
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ < a ^ m * a ^ (n - m) := (mul_lt_mul_left' (one_lt_zpow' ha <| sub_pos_of_lt h) _)
-    _ = a ^ n := by
-      rw [← zpow_add]
-      simp
+    _ = a ^ n := by rw [← zpow_add]; simp
     
 #align zpow_strict_mono_right zpow_strictMono_right
 #align zsmul_strict_mono_left zsmul_strictMono_left
@@ -513,9 +501,7 @@ theorem zpow_mono_right (ha : 1 ≤ a) : Monotone fun n : ℤ => a ^ n := fun m 
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ ≤ a ^ m * a ^ (n - m) := (mul_le_mul_left' (one_le_zpow ha <| sub_nonneg_of_le h) _)
-    _ = a ^ n := by
-      rw [← zpow_add]
-      simp
+    _ = a ^ n := by rw [← zpow_add]; simp
     
 #align zpow_mono_right zpow_mono_right
 #align zsmul_mono_left zsmul_mono_left
@@ -572,20 +558,16 @@ variable (α)
 
 #print zpow_strictMono_left /-
 @[to_additive zsmul_strictMono_right]
-theorem zpow_strictMono_left (hn : 0 < n) : StrictMono ((· ^ n) : α → α) := fun a b hab =>
-  by
-  rw [← one_lt_div', ← div_zpow]
-  exact one_lt_zpow' (one_lt_div'.2 hab) hn
+theorem zpow_strictMono_left (hn : 0 < n) : StrictMono ((· ^ n) : α → α) := fun a b hab => by
+  rw [← one_lt_div', ← div_zpow]; exact one_lt_zpow' (one_lt_div'.2 hab) hn
 #align zpow_strict_mono_left zpow_strictMono_left
 #align zsmul_strict_mono_right zsmul_strictMono_right
 -/
 
 #print zpow_mono_left /-
 @[to_additive zsmul_mono_right]
-theorem zpow_mono_left (hn : 0 ≤ n) : Monotone ((· ^ n) : α → α) := fun a b hab =>
-  by
-  rw [← one_le_div', ← div_zpow]
-  exact one_le_zpow (one_le_div'.2 hab) hn
+theorem zpow_mono_left (hn : 0 ≤ n) : Monotone ((· ^ n) : α → α) := fun a b hab => by
+  rw [← one_le_div', ← div_zpow]; exact one_le_zpow (one_le_div'.2 hab) hn
 #align zpow_mono_left zpow_mono_left
 #align zsmul_mono_right zsmul_mono_right
 -/
@@ -807,8 +789,7 @@ instance NonUnitalNonAssocSemiring.nat_isScalarTower [NonUnitalNonAssocSemiring 
 theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
   by
   induction' m with m ih
-  · rw [pow_zero, pow_zero]
-    exact Nat.cast_one
+  · rw [pow_zero, pow_zero]; exact Nat.cast_one
   · rw [pow_succ', pow_succ', Nat.cast_mul, ih]
 #align nat.cast_pow Nat.cast_pow
 -/
@@ -842,10 +823,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bit0_mul bit0_mulₓ'. -/
 -- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.
 -- They are used by the `noncomm_ring` tactic, to normalise expressions before passing to `abel`.
-theorem bit0_mul [NonUnitalNonAssocRing R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) :=
-  by
-  dsimp [bit0]
-  rw [add_mul, add_zsmul, one_zsmul]
+theorem bit0_mul [NonUnitalNonAssocRing R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) := by
+  dsimp [bit0]; rw [add_mul, add_zsmul, one_zsmul]
 #align bit0_mul bit0_mul
 
 /- warning: mul_bit0 -> mul_bit0 is a dubious translation:
@@ -854,10 +833,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} R] {n : R} {r : R}, Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) r (bit0.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) n)) (HSMul.hSMul.{0, u1, u1} Int R R (instHSMul.{0, u1} Int R (SubNegMonoid.SMulInt.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddCommGroup.toAddGroup.{u1} R (NonUnitalNonAssocRing.toAddCommGroup.{u1} R _inst_1))))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R _inst_1)) r n))
 Case conversion may be inaccurate. Consider using '#align mul_bit0 mul_bit0ₓ'. -/
-theorem mul_bit0 [NonUnitalNonAssocRing R] {n r : R} : r * bit0 n = (2 : ℤ) • (r * n) :=
-  by
-  dsimp [bit0]
-  rw [mul_add, add_zsmul, one_zsmul]
+theorem mul_bit0 [NonUnitalNonAssocRing R] {n r : R} : r * bit0 n = (2 : ℤ) • (r * n) := by
+  dsimp [bit0]; rw [mul_add, add_zsmul, one_zsmul]
 #align mul_bit0 mul_bit0
 
 /- warning: bit1_mul -> bit1_mul is a dubious translation:
@@ -866,9 +843,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] {n : R} {r : R}, Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))) (bit1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))) n) r) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))))) (HSMul.hSMul.{0, u1, u1} Int R R (instHSMul.{0, u1} Int R (SubNegMonoid.SMulInt.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1)))))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))) n r)) r)
 Case conversion may be inaccurate. Consider using '#align bit1_mul bit1_mulₓ'. -/
-theorem bit1_mul [NonAssocRing R] {n r : R} : bit1 n * r = (2 : ℤ) • (n * r) + r :=
-  by
-  dsimp [bit1]
+theorem bit1_mul [NonAssocRing R] {n r : R} : bit1 n * r = (2 : ℤ) • (n * r) + r := by dsimp [bit1];
   rw [add_mul, bit0_mul, one_mul]
 #align bit1_mul bit1_mul
 
@@ -878,9 +853,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] {n : R} {r : R}, Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))) r (bit1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))) n)) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))))) (HSMul.hSMul.{0, u1, u1} Int R R (instHSMul.{0, u1} Int R (SubNegMonoid.SMulInt.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1)))))) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1))) r n)) r)
 Case conversion may be inaccurate. Consider using '#align mul_bit1 mul_bit1ₓ'. -/
-theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n) + r :=
-  by
-  dsimp [bit1]
+theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n) + r := by dsimp [bit1];
   rw [mul_add, mul_bit0, mul_one]
 #align mul_bit1 mul_bit1
 
@@ -1204,11 +1177,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Int), LE.le.{0} Int Int.instLEInt (Nat.cast.{0} Int instNatCastInt (Int.natAbs a)) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))
 Case conversion may be inaccurate. Consider using '#align int.abs_le_self_sq Int.natAbs_le_self_sqₓ'. -/
-theorem natAbs_le_self_sq (a : ℤ) : (Int.natAbs a : ℤ) ≤ a ^ 2 :=
-  by
-  rw [← Int.natAbs_sq a, sq]
-  norm_cast
-  apply Nat.le_mul_self
+theorem natAbs_le_self_sq (a : ℤ) : (Int.natAbs a : ℤ) ≤ a ^ 2 := by rw [← Int.natAbs_sq a, sq];
+  norm_cast; apply Nat.le_mul_self
 #align int.abs_le_self_sq Int.natAbs_le_self_sq
 
 alias abs_le_self_sq ← abs_le_self_pow_two
@@ -1258,9 +1228,7 @@ of `multiplicative.of_add 1`. -/
 def powersHom [Monoid M] : M ≃ (Multiplicative ℕ →* M)
     where
   toFun x :=
-    ⟨fun n => x ^ n.toAdd, by
-      convert pow_zero x
-      exact toAdd_one, fun m n => pow_add x m n⟩
+    ⟨fun n => x ^ n.toAdd, by convert pow_zero x; exact toAdd_one, fun m n => pow_add x m n⟩
   invFun f := f (Multiplicative.ofAdd 1)
   left_inv := pow_one
   right_inv f := MonoidHom.ext fun n => by simp [← f.map_pow, ← ofAdd_nsmul]

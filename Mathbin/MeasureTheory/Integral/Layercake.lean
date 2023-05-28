@@ -128,18 +128,15 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
             MulZeroClass.zero_mul, mem_Ioc, false_and_iff]
     simp_rw [aux₁]
     rw [lintegral_const_mul']
-    swap
+    swap;
     · apply ENNReal.mul_ne_top ENNReal.ofReal_ne_top
       by_cases s ∈ Ioi (0 : ℝ) <;> · simp [h]
     simp_rw [show
         (fun a => (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f a)) = fun a =>
           { a : α | s ≤ f a }.indicator (fun _ => 1) a
-        by
-        funext a
-        by_cases s ≤ f a <;> simp [h]]
+        by funext a; by_cases s ≤ f a <;> simp [h]]
     rw [lintegral_indicator]
-    swap
-    · exact f_mble measurableSet_Ici
+    swap; · exact f_mble measurableSet_Ici
     rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
       mul_assoc,
       show

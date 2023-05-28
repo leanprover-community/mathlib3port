@@ -54,14 +54,8 @@ def toMonad (h : L ⊣ R) : Monad C where
   toFunctor := L ⋙ R
   η' := h.Unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
-  assoc' X := by
-    dsimp
-    rw [← R.map_comp]
-    simp
-  right_unit' X := by
-    dsimp
-    rw [← R.map_comp]
-    simp
+  assoc' X := by dsimp; rw [← R.map_comp]; simp
+  right_unit' X := by dsimp; rw [← R.map_comp]; simp
 #align category_theory.adjunction.to_monad CategoryTheory.Adjunction.toMonad
 -/
 
@@ -75,14 +69,8 @@ def toComonad (h : L ⊣ R) : Comonad D
   toFunctor := R ⋙ L
   ε' := h.counit
   δ' := whiskerRight (whiskerLeft R h.Unit) L
-  coassoc' X := by
-    dsimp
-    rw [← L.map_comp]
-    simp
-  right_counit' X := by
-    dsimp
-    rw [← L.map_comp]
-    simp
+  coassoc' X := by dsimp; rw [← L.map_comp]; simp
+  right_counit' X := by dsimp; rw [← L.map_comp]; simp
 #align category_theory.adjunction.to_comonad CategoryTheory.Adjunction.toComonad
 -/
 
@@ -95,13 +83,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.adjunc
 /-- The monad induced by the Eilenberg-Moore adjunction is the original monad.  -/
 @[simps]
 def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
-  MonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy))
-    (fun X => by
-      dsimp
-      simp)
-    fun X => by
-    dsimp
-    simp
+  MonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy)) (fun X => by dsimp; simp)
+    fun X => by dsimp; simp
 #align category_theory.adjunction.adj_to_monad_iso CategoryTheory.Adjunction.adjToMonadIso
 
 /- warning: category_theory.adjunction.adj_to_comonad_iso -> CategoryTheory.Adjunction.adjToComonadIso is a dubious translation:
@@ -113,13 +96,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.adjunc
 /-- The comonad induced by the Eilenberg-Moore adjunction is the original comonad. -/
 @[simps]
 def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=
-  ComonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy))
-    (fun X => by
-      dsimp
-      simp)
-    fun X => by
-    dsimp
-    simp
+  ComonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy)) (fun X => by dsimp; simp)
+    fun X => by dsimp; simp
 #align category_theory.adjunction.adj_to_comonad_iso CategoryTheory.Adjunction.adjToComonadIso
 
 end Adjunction
@@ -137,15 +115,10 @@ def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra
   obj X :=
     { A := R.obj X
       a := R.map (h.counit.app X)
-      assoc' := by
-        dsimp
-        rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
-        rfl }
+      assoc' := by dsimp; rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]; rfl }
   map X Y f :=
     { f := R.map f
-      h' := by
-        dsimp
-        rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
+      h' := by dsimp; rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
 #align category_theory.monad.comparison CategoryTheory.Monad.comparison
 -/
 
@@ -191,16 +164,10 @@ def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra
   obj X :=
     { A := L.obj X
       a := L.map (h.Unit.app X)
-      coassoc' := by
-        dsimp
-        rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
-        rfl }
+      coassoc' := by dsimp; rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]; rfl }
   map X Y f :=
     { f := L.map f
-      h' := by
-        dsimp
-        rw [← L.map_comp]
-        simp }
+      h' := by dsimp; rw [← L.map_comp]; simp }
 #align category_theory.comonad.comparison CategoryTheory.Comonad.comparison
 -/
 
@@ -266,10 +233,8 @@ noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
 
 #print CategoryTheory.μ_iso_of_reflective /-
 -- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
-instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ :=
-  by
-  dsimp
-  infer_instance
+instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ := by
+  dsimp; infer_instance
 #align category_theory.μ_iso_of_reflective CategoryTheory.μ_iso_of_reflective
 -/
 

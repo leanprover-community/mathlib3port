@@ -112,15 +112,9 @@ instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
     Dfinsupp.partialOrder
       α with
     inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem
-    inf_le_left := fun f g i => by
-      rw [zip_with_apply]
-      exact inf_le_left
-    inf_le_right := fun f g i => by
-      rw [zip_with_apply]
-      exact inf_le_right
-    le_inf := fun f g h hf hg i => by
-      rw [zip_with_apply]
-      exact le_inf (hf i) (hg i) }
+    inf_le_left := fun f g i => by rw [zip_with_apply]; exact inf_le_left
+    inf_le_right := fun f g i => by rw [zip_with_apply]; exact inf_le_right
+    le_inf := fun f g h hf hg i => by rw [zip_with_apply]; exact le_inf (hf i) (hg i) }
 
 /- warning: dfinsupp.inf_apply -> Dfinsupp.inf_apply is a dubious translation:
 lean 3 declaration is
@@ -138,15 +132,9 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
     Dfinsupp.partialOrder
       α with
     sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem
-    le_sup_left := fun f g i => by
-      rw [zip_with_apply]
-      exact le_sup_left
-    le_sup_right := fun f g i => by
-      rw [zip_with_apply]
-      exact le_sup_right
-    sup_le := fun f g h hf hg i => by
-      rw [zip_with_apply]
-      exact sup_le (hf i) (hg i) }
+    le_sup_left := fun f g i => by rw [zip_with_apply]; exact le_sup_left
+    le_sup_right := fun f g i => by rw [zip_with_apply]; exact le_sup_right
+    sup_le := fun f g h hf hg i => by rw [zip_with_apply]; exact sup_le (hf i) (hg i) }
 
 /- warning: dfinsupp.sup_apply -> Dfinsupp.sup_apply is a dubious translation:
 lean 3 declaration is
@@ -172,9 +160,7 @@ end Zero
 
 instance (α : ι → Type _) [∀ i, OrderedAddCommMonoid (α i)] : OrderedAddCommMonoid (Π₀ i, α i) :=
   { Dfinsupp.addCommMonoid, Dfinsupp.partialOrder α with
-    add_le_add_left := fun a b h c i =>
-      by
-      rw [add_apply, add_apply]
+    add_le_add_left := fun a b h c i => by rw [add_apply, add_apply];
       exact add_le_add_left (h i) (c i) }
 
 instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] :
@@ -188,9 +174,7 @@ instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] :
 
 instance [∀ i, OrderedAddCommMonoid (α i)] [∀ i, ContravariantClass (α i) (α i) (· + ·) (· ≤ ·)] :
     ContravariantClass (Π₀ i, α i) (Π₀ i, α i) (· + ·) (· ≤ ·) :=
-  ⟨fun f g h H i => by
-    specialize H i
-    rw [add_apply, add_apply] at H
+  ⟨fun f g h H i => by specialize H i; rw [add_apply, add_apply] at H;
     exact le_of_add_le_add_left H⟩
 
 section CanonicallyOrderedAddMonoid
@@ -297,32 +281,21 @@ theorem tsub_apply (f g : Π₀ i, α i) (i : ι) : (f - g) i = f i - g i :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align dfinsupp.coe_tsub Dfinsupp.coe_tsubₓ'. -/
 @[simp]
-theorem coe_tsub (f g : Π₀ i, α i) : ⇑(f - g) = f - g :=
-  by
-  ext i
-  exact tsub_apply f g i
+theorem coe_tsub (f g : Π₀ i, α i) : ⇑(f - g) = f - g := by ext i; exact tsub_apply f g i
 #align dfinsupp.coe_tsub Dfinsupp.coe_tsub
 
 variable (α)
 
 instance : OrderedSub (Π₀ i, α i) :=
-  ⟨fun n m k =>
-    forall_congr' fun i => by
-      rw [add_apply, tsub_apply]
-      exact tsub_le_iff_right⟩
+  ⟨fun n m k => forall_congr' fun i => by rw [add_apply, tsub_apply]; exact tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
   { Dfinsupp.orderBot α,
     Dfinsupp.orderedAddCommMonoid
       α with
     exists_add_of_le := fun f g h =>
-      ⟨g - f, by
-        ext i
-        rw [add_apply, tsub_apply]
-        exact (add_tsub_cancel_of_le <| h i).symm⟩
-    le_self_add := fun f g i => by
-      rw [add_apply]
-      exact le_self_add }
+      ⟨g - f, by ext i; rw [add_apply, tsub_apply]; exact (add_tsub_cancel_of_le <| h i).symm⟩
+    le_self_add := fun f g i => by rw [add_apply]; exact le_self_add }
 
 variable {α} [DecidableEq ι]
 

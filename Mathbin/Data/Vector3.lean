@@ -45,11 +45,8 @@ def nil : Vector3 α 0 :=
 
 /-- The vector cons operation -/
 @[match_pattern]
-def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i =>
-  by
-  refine' i.cases' _ _
-  exact a
-  exact v
+def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by refine' i.cases' _ _;
+  exact a; exact v
 #align vector3.cons Vector3.cons
 
 -- mathport name: vector.list
@@ -288,18 +285,12 @@ theorem vectorAllp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp 
   by
   refine' v.rec_on _ _
   · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
-  · simp
+  · simp;
     refine' fun n a v IH =>
       (and_congr_right fun _ => IH).trans
-        ⟨fun ⟨pa, h⟩ i => by
-          refine' i.cases' _ _
-          exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
-    · have h0 := h fz
-      simp at h0
-      exact h0
-    · have hs := h (fs i)
-      simp at hs
-      exact hs
+        ⟨fun ⟨pa, h⟩ i => by refine' i.cases' _ _; exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
+    · have h0 := h fz; simp at h0; exact h0
+    · have hs := h (fs i); simp at hs; exact hs
 #align vector_allp_iff_forall vectorAllp_iff_forall
 
 theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n}

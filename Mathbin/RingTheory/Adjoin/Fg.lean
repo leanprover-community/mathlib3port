@@ -56,16 +56,10 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.FG) (h2 : (adjoin (adjoin R s) t
     rintro _ ⟨x, y, hx, hy, rfl⟩
     change x * y ∈ _
     refine' Subalgebra.mul_mem _ _ _
-    · have : x ∈ (adjoin R s).toSubmodule := by
-        rw [← hp']
-        exact subset_span hx
+    · have : x ∈ (adjoin R s).toSubmodule := by rw [← hp']; exact subset_span hx
       exact adjoin_mono (Set.subset_union_left _ _) this
-    have : y ∈ (adjoin (adjoin R s) t).toSubmodule :=
-      by
-      rw [← hq']
-      exact subset_span hy
-    change y ∈ adjoin R (s ∪ t)
-    rwa [adjoin_union_eq_adjoin_adjoin]
+    have : y ∈ (adjoin (adjoin R s) t).toSubmodule := by rw [← hq']; exact subset_span hy
+    change y ∈ adjoin R (s ∪ t); rwa [adjoin_union_eq_adjoin_adjoin]
   · intro r hr
     change r ∈ adjoin R (s ∪ t) at hr
     rw [adjoin_union_eq_adjoin_adjoin] at hr
@@ -75,8 +69,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.FG) (h2 : (adjoin (adjoin R s) t
     have := @Finsupp.total_apply A A (adjoin R s)
     rw [this, Finsupp.sum]
     refine' sum_mem _
-    intro z hz
-    change (l z).1 * _ ∈ _
+    intro z hz; change (l z).1 * _ ∈ _
     have : (l z).1 ∈ (adjoin R s).toSubmodule := (l z).2
     rw [← hp', ← Set.image_id p, Finsupp.mem_span_image_iff_total R] at this
     rcases this with ⟨l2, hlp, hl⟩
@@ -84,10 +77,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.FG) (h2 : (adjoin (adjoin R s) t
     rw [this] at hl
     rw [← hl, Finsupp.sum_mul]
     refine' sum_mem _
-    intro t ht
-    change _ * _ ∈ _
-    rw [smul_mul_assoc]
-    refine' smul_mem _ _ _
+    intro t ht; change _ * _ ∈ _; rw [smul_mul_assoc]; refine' smul_mem _ _ _
     exact subset_span ⟨t, z, hlp ht, hlq hz, rfl⟩
 #align algebra.fg_trans Algebra.fg_trans
 
@@ -137,9 +127,7 @@ theorem fg_of_fg_toSubmodule {S : Subalgebra R A} : S.toSubmodule.FG → S.FG :=
     le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
       show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
         span_le.mpr (fun x hx => Algebra.subset_adjoin hx)
-          (show x ∈ span R ↑t by
-            rw [ht]
-            exact hx)⟩
+          (show x ∈ span R ↑t by rw [ht]; exact hx)⟩
 #align subalgebra.fg_of_fg_to_submodule Subalgebra.fg_of_fg_toSubmodule
 
 #print Subalgebra.fg_of_noetherian /-
@@ -157,9 +145,7 @@ Case conversion may be inaccurate. Consider using '#align subalgebra.fg_of_submo
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).FG) : (⊤ : Subalgebra R A).FG :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    toSubmodule.Injective <|
-      by
-      rw [Algebra.top_toSubmodule, eq_top_iff, ← hs, span_le]
+    toSubmodule.Injective <| by rw [Algebra.top_toSubmodule, eq_top_iff, ← hs, span_le];
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
@@ -203,7 +189,7 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
     map_injective hf <|
       by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
-      rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
+      rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top];
       exact map_mono le_top⟩
 #align subalgebra.fg_of_fg_map Subalgebra.fg_of_fg_map
 -/
@@ -215,13 +201,8 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : Semiring.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 _inst_2] (S : Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3), Iff (Subalgebra.FG.{u1, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Top.top.{u2} (Subalgebra.{u1, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S)) (CompleteLattice.toTop.{u2} (Subalgebra.{u1, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S)) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R (Subtype.{succ u2} A (fun (x : A) => Membership.mem.{u2, u2} A (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) (SetLike.instMembership.{u2, u2} (Subalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3) A (Subalgebra.instSetLikeSubalgebra.{u1, u2} R A _inst_1 _inst_2 _inst_3)) x S)) _inst_1 (Subalgebra.toSemiring.{u1, u2} R A _inst_1 _inst_2 _inst_3 S) (Subalgebra.algebra.{u1, u2} R A _inst_1 _inst_2 _inst_3 S))))) (Subalgebra.FG.{u1, u2} R A _inst_1 _inst_2 _inst_3 S)
 Case conversion may be inaccurate. Consider using '#align subalgebra.fg_top Subalgebra.fg_topₓ'. -/
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).FG ↔ S.FG :=
-  ⟨fun h => by
-    rw [← S.range_val, ← Algebra.map_top]
-    exact fg.map _ h, fun h =>
-    fg_of_fg_map _ S.val Subtype.val_injective <|
-      by
-      rw [Algebra.map_top, range_val]
-      exact h⟩
+  ⟨fun h => by rw [← S.range_val, ← Algebra.map_top]; exact fg.map _ h, fun h =>
+    fg_of_fg_map _ S.val Subtype.val_injective <| by rw [Algebra.map_top, range_val]; exact h⟩
 #align subalgebra.fg_top Subalgebra.fg_top
 
 /- warning: subalgebra.induction_on_adjoin -> Subalgebra.induction_on_adjoin is a dubious translation:

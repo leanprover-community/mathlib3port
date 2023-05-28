@@ -53,9 +53,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.to_alist_keys_to_finset Finsupp.toAList_keys_toFinsetₓ'. -/
 @[simp]
 theorem toAList_keys_toFinset [DecidableEq α] (f : α →₀ M) : f.toAList.keys.toFinset = f.support :=
-  by
-  ext
-  simp [to_alist, AList.mem_keys, AList.keys, List.keys]
+  by ext; simp [to_alist, AList.mem_keys, AList.keys, List.keys]
 #align finsupp.to_alist_keys_to_finset Finsupp.toAList_keys_toFinset
 
 /- warning: finsupp.mem_to_alist -> Finsupp.mem_toAlist is a dubious translation:
@@ -124,9 +122,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] [_inst_2 : DecidableEq.{succ u2} α] {l : AList.{u2, u1} α (fun (x : α) => M)} {a : α} {x : M}, (Ne.{succ u1} M x (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) -> (Iff (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (AList.lookupFinsupp.{u2, u1} α M _inst_1 l) a) x) (Membership.mem.{u1, u1} M (Option.{u1} M) (Option.instMembershipOption.{u1} M) x (AList.lookup.{u2, u1} α (fun (x : α) => M) (fun (a : α) (b : α) => _inst_2 a b) a l)))
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_eq_iff_of_ne_zero AList.lookupFinsupp_eq_iff_of_ne_zeroₓ'. -/
 theorem lookupFinsupp_eq_iff_of_ne_zero [DecidableEq α] {l : AList fun x : α => M} {a : α} {x : M}
-    (hx : x ≠ 0) : l.lookupFinsupp a = x ↔ x ∈ l.dlookup a :=
-  by
-  rw [lookup_finsupp_apply]
+    (hx : x ≠ 0) : l.lookupFinsupp a = x ↔ x ∈ l.dlookup a := by rw [lookup_finsupp_apply];
   cases' lookup a l with m <;> simp [hx.symm]
 #align alist.lookup_finsupp_eq_iff_of_ne_zero AList.lookupFinsupp_eq_iff_of_ne_zero
 
@@ -137,10 +133,8 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] [_inst_2 : DecidableEq.{succ u2} α] {l : AList.{u2, u1} α (fun (x : α) => M)} {a : α}, Iff (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (AList.lookupFinsupp.{u2, u1} α M _inst_1 l) a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1))) (Or (Not (Membership.mem.{u2, max u2 u1} α (AList.{u2, u1} α (fun (x : α) => M)) (AList.instMembershipAList.{u2, u1} α (fun (x : α) => M)) a l)) (Membership.mem.{u1, u1} M (Option.{u1} M) (Option.instMembershipOption.{u1} M) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1)) (AList.lookup.{u2, u1} α (fun (x : α) => M) (fun (a : α) (b : α) => _inst_2 a b) a l)))
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_eq_zero_iff AList.lookupFinsupp_eq_zero_iffₓ'. -/
 theorem lookupFinsupp_eq_zero_iff [DecidableEq α] {l : AList fun x : α => M} {a : α} :
-    l.lookupFinsupp a = 0 ↔ a ∉ l ∨ (0 : M) ∈ l.dlookup a :=
-  by
-  rw [lookup_finsupp_apply, ← lookup_eq_none]
-  cases' lookup a l with m <;> simp
+    l.lookupFinsupp a = 0 ↔ a ∉ l ∨ (0 : M) ∈ l.dlookup a := by
+  rw [lookup_finsupp_apply, ← lookup_eq_none]; cases' lookup a l with m <;> simp
 #align alist.lookup_finsupp_eq_zero_iff AList.lookupFinsupp_eq_zero_iff
 
 /- warning: alist.empty_lookup_finsupp -> AList.empty_lookupFinsupp is a dubious translation:
@@ -164,9 +158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align alist.insert_lookup_finsupp AList.insert_lookupFinsuppₓ'. -/
 @[simp]
 theorem insert_lookupFinsupp [DecidableEq α] (l : AList fun x : α => M) (a : α) (m : M) :
-    (l.insert a m).lookupFinsupp = l.lookupFinsupp.update a m :=
-  by
-  ext b
+    (l.insert a m).lookupFinsupp = l.lookupFinsupp.update a m := by ext b;
   by_cases h : b = a <;> simp [h]
 #align alist.insert_lookup_finsupp AList.insert_lookupFinsupp
 

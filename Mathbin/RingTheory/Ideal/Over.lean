@@ -83,8 +83,7 @@ theorem exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem {r : S}
     ∀ (p_ne_zero : p ≠ 0) (hp : p.eval₂ f r = 0), ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
   by
   refine' p.rec_on_horner _ _ _
-  · intro h
-    contradiction
+  · intro h; contradiction
   · intro p a coeff_eq_zero a_ne_zero ih p_ne_zero hp
     refine' ⟨0, _, coeff_zero_mem_comap_of_root_mem hr hp⟩
     simp [coeff_eq_zero, a_ne_zero]

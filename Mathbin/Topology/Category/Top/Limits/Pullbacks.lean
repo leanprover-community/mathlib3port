@@ -57,10 +57,7 @@ abbrev pullbackSnd (f : X ⟶ Z) (g : Y ⟶ Z) : TopCat.of { p : X × Y // f p.1
 #print TopCat.pullbackCone /-
 /-- The explicit pullback cone of `X, Y` given by `{ p : X × Y // f p.1 = g p.2 }`. -/
 def pullbackCone (f : X ⟶ Z) (g : Y ⟶ Z) : PullbackCone f g :=
-  PullbackCone.mk (pullbackFst f g) (pullbackSnd f g)
-    (by
-      ext ⟨x, h⟩
-      simp [h])
+  PullbackCone.mk (pullbackFst f g) (pullbackSnd f g) (by ext ⟨x, h⟩; simp [h])
 #align Top.pullback_cone TopCat.pullbackCone
 -/
 
@@ -76,12 +73,8 @@ def pullbackConeIsLimit (f : X ⟶ Z) (g : Y ⟶ Z) : IsLimit (pullbackCone f g)
           toFun := fun x =>
             ⟨⟨s.fst x, s.snd x⟩, by simpa using concrete_category.congr_hom s.condition x⟩ }
       refine' ⟨_, _, _⟩
-      · ext
-        delta pullback_cone
-        simp
-      · ext
-        delta pullback_cone
-        simp
+      · ext; delta pullback_cone; simp
+      · ext; delta pullback_cone; simp
       · intro m h₁ h₂
         ext x
         · simpa using concrete_category.congr_hom h₁ x
@@ -226,8 +219,7 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
   by
   ext
   constructor
-  · rintro ⟨y, rfl⟩
-    simp
+  · rintro ⟨y, rfl⟩; simp
   rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
   have : f₁ x₁ = f₂ x₂ := by
     apply (TopCat.mono_iff_injective _).mp H₃
@@ -421,9 +413,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
       { toFun := coe
         invFun := fun x =>
-          ⟨x, by
-            rw [pullback_fst_range]
-            exact ⟨_, (H (Set.mem_range_self x)).choose_spec.symm⟩⟩
+          ⟨x, by rw [pullback_fst_range]; exact ⟨_, (H (Set.mem_range_self x)).choose_spec.symm⟩⟩
         left_inv := fun ⟨_, _⟩ => rfl
         right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
@@ -441,9 +431,7 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (h
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
       { toFun := coe
         invFun := fun x =>
-          ⟨x, by
-            rw [pullback_snd_range]
-            exact ⟨_, (H (Set.mem_range_self x)).choose_spec⟩⟩
+          ⟨x, by rw [pullback_snd_range]; exact ⟨_, (H (Set.mem_range_self x)).choose_spec⟩⟩
         left_inv := fun ⟨_, _⟩ => rfl
         right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
@@ -525,8 +513,7 @@ theorem coequalizer_isOpen_iff (F : WalkingParallelPair ⥤ TopCat.{u})
   by
   rw [colimit_isOpen_iff.{u}]
   constructor
-  · intro H
-    exact H _
+  · intro H; exact H _
   · intro H j
     cases j
     · rw [← colimit.w F walking_parallel_pair_hom.left]

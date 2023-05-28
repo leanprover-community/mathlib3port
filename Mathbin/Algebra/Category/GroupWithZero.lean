@@ -100,12 +100,8 @@ def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply _
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply _
+  hom_inv_id' := by ext; exact e.symm_apply_apply _
+  inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align GroupWithZero.iso.mk GroupWithZeroCat.Iso.mk
 
 end GroupWithZeroCat

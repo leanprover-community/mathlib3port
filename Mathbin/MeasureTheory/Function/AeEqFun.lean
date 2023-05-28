@@ -317,10 +317,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] (g : β -> γ) (hg : Continuous.{u3, u2} β γ _inst_2 _inst_3 g) (f : MeasureTheory.AEEqFun.{u1, u3} α β _inst_1 _inst_2 μ), Filter.EventuallyEq.{u1, u2} α γ (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (MeasureTheory.AEEqFun.cast.{u1, u2} α γ _inst_1 μ _inst_3 (MeasureTheory.AEEqFun.comp.{u1, u3, u2} α β γ _inst_1 μ _inst_2 _inst_3 g hg f)) (Function.comp.{succ u1, succ u3, succ u2} α β γ g (MeasureTheory.AEEqFun.cast.{u1, u3} α β _inst_1 μ _inst_2 f))
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.coe_fn_comp MeasureTheory.AEEqFun.coeFn_compₓ'. -/
-theorem coeFn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : comp g hg f =ᵐ[μ] g ∘ f :=
-  by
-  rw [comp_eq_mk]
-  apply coe_fn_mk
+theorem coeFn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : comp g hg f =ᵐ[μ] g ∘ f := by
+  rw [comp_eq_mk]; apply coe_fn_mk
 #align measure_theory.ae_eq_fun.coe_fn_comp MeasureTheory.AEEqFun.coeFn_comp
 
 section CompMeasurable
@@ -362,10 +360,7 @@ theorem compMeasurable_eq_mk (g : β → γ) (hg : Measurable g) (f : α →ₘ[
 <too large>
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.coe_fn_comp_measurable MeasureTheory.AEEqFun.coeFn_compMeasurableₓ'. -/
 theorem coeFn_compMeasurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
-    compMeasurable g hg f =ᵐ[μ] g ∘ f :=
-  by
-  rw [comp_measurable_eq_mk]
-  apply coe_fn_mk
+    compMeasurable g hg f =ᵐ[μ] g ∘ f := by rw [comp_measurable_eq_mk]; apply coe_fn_mk
 #align measure_theory.ae_eq_fun.coe_fn_comp_measurable MeasureTheory.AEEqFun.coeFn_compMeasurable
 
 end CompMeasurable
@@ -411,10 +406,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : MeasurableSpace.{u3} α] {μ : MeasureTheory.Measure.{u3} α _inst_1} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u1} γ] (f : MeasureTheory.AEEqFun.{u3, u2} α β _inst_1 _inst_2 μ) (g : MeasureTheory.AEEqFun.{u3, u1} α γ _inst_1 _inst_3 μ), Filter.EventuallyEq.{u3, max u2 u1} α (Prod.{u2, u1} β γ) (MeasureTheory.Measure.ae.{u3} α _inst_1 μ) (MeasureTheory.AEEqFun.cast.{u3, max u2 u1} α (Prod.{u2, u1} β γ) _inst_1 μ (instTopologicalSpaceProd.{u2, u1} β γ _inst_2 _inst_3) (MeasureTheory.AEEqFun.pair.{u3, u2, u1} α β γ _inst_1 μ _inst_2 _inst_3 f g)) (fun (x : α) => Prod.mk.{u2, u1} β γ (MeasureTheory.AEEqFun.cast.{u3, u2} α β _inst_1 μ _inst_2 f x) (MeasureTheory.AEEqFun.cast.{u3, u1} α γ _inst_1 μ _inst_3 g x))
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.coe_fn_pair MeasureTheory.AEEqFun.coeFn_pairₓ'. -/
-theorem coeFn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) :=
-  by
-  rw [pair_eq_mk]
-  apply coe_fn_mk
+theorem coeFn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) := by
+  rw [pair_eq_mk]; apply coe_fn_mk
 #align measure_theory.ae_eq_fun.coe_fn_pair MeasureTheory.AEEqFun.coeFn_pair
 
 /- warning: measure_theory.ae_eq_fun.comp₂ -> MeasureTheory.AEEqFun.comp₂ is a dubious translation:
@@ -475,9 +468,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u2}} [_inst_1 : MeasurableSpace.{u1} α] {μ : MeasureTheory.Measure.{u1} α _inst_1} [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u4} γ] [_inst_4 : TopologicalSpace.{u2} δ] (g : β -> γ -> δ) (hg : Continuous.{max u4 u3, u2} (Prod.{u3, u4} β γ) δ (instTopologicalSpaceProd.{u3, u4} β γ _inst_2 _inst_3) _inst_4 (Function.uncurry.{u3, u4, u2} β γ δ g)) (f₁ : MeasureTheory.AEEqFun.{u1, u3} α β _inst_1 _inst_2 μ) (f₂ : MeasureTheory.AEEqFun.{u1, u4} α γ _inst_1 _inst_3 μ), Filter.EventuallyEq.{u1, u2} α δ (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (MeasureTheory.AEEqFun.cast.{u1, u2} α δ _inst_1 μ _inst_4 (MeasureTheory.AEEqFun.comp₂.{u1, u3, u4, u2} α β γ δ _inst_1 μ _inst_2 _inst_3 _inst_4 g hg f₁ f₂)) (fun (a : α) => g (MeasureTheory.AEEqFun.cast.{u1, u3} α β _inst_1 μ _inst_2 f₁ a) (MeasureTheory.AEEqFun.cast.{u1, u4} α γ _inst_1 μ _inst_3 f₂ a))
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.coe_fn_comp₂ MeasureTheory.AEEqFun.coeFn_comp₂ₓ'. -/
 theorem coeFn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
-    (f₂ : α →ₘ[μ] γ) : comp₂ g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
-  by
-  rw [comp₂_eq_mk]
+    (f₂ : α →ₘ[μ] γ) : comp₂ g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) := by rw [comp₂_eq_mk];
   apply coe_fn_mk
 #align measure_theory.ae_eq_fun.coe_fn_comp₂ MeasureTheory.AEEqFun.coeFn_comp₂
 
@@ -533,10 +524,8 @@ theorem comp₂Measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurry
 <too large>
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AEEqFun.coeFn_comp₂Measurableₓ'. -/
 theorem coeFn_comp₂Measurable (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
-    (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
-  by
-  rw [comp₂_measurable_eq_mk]
-  apply coe_fn_mk
+    (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) := by
+  rw [comp₂_measurable_eq_mk]; apply coe_fn_mk
 #align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AEEqFun.coeFn_comp₂Measurable
 
 end
@@ -714,12 +703,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] {μ : MeasureTheory.Measure.{u2} α _inst_1} [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : SemilatticeSup.{u1} β] [_inst_6 : ContinuousSup.{u1} β _inst_2 (SemilatticeSup.toSup.{u1} β _inst_5)] (f : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (g : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ), LE.le.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (Preorder.toLE.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instPreorder.{u2, u1} α β _inst_1 μ _inst_2 (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_5)))) f (Sup.sup.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instSup.{u2, u1} α β _inst_1 μ _inst_2 _inst_5 _inst_6) f g)
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.le_sup_left MeasureTheory.AEEqFun.le_sup_leftₓ'. -/
-protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f ⊔ g :=
-  by
-  rw [← coe_fn_le]
-  filter_upwards [coe_fn_sup f g]with _ ha
-  rw [ha]
-  exact le_sup_left
+protected theorem le_sup_left (f g : α →ₘ[μ] β) : f ≤ f ⊔ g := by rw [← coe_fn_le];
+  filter_upwards [coe_fn_sup f g]with _ ha; rw [ha]; exact le_sup_left
 #align measure_theory.ae_eq_fun.le_sup_left MeasureTheory.AEEqFun.le_sup_left
 
 /- warning: measure_theory.ae_eq_fun.le_sup_right -> MeasureTheory.AEEqFun.le_sup_right is a dubious translation:
@@ -728,12 +713,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] {μ : MeasureTheory.Measure.{u2} α _inst_1} [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : SemilatticeSup.{u1} β] [_inst_6 : ContinuousSup.{u1} β _inst_2 (SemilatticeSup.toSup.{u1} β _inst_5)] (f : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (g : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ), LE.le.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (Preorder.toLE.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instPreorder.{u2, u1} α β _inst_1 μ _inst_2 (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_5)))) g (Sup.sup.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instSup.{u2, u1} α β _inst_1 μ _inst_2 _inst_5 _inst_6) f g)
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.le_sup_right MeasureTheory.AEEqFun.le_sup_rightₓ'. -/
-protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f ⊔ g :=
-  by
-  rw [← coe_fn_le]
-  filter_upwards [coe_fn_sup f g]with _ ha
-  rw [ha]
-  exact le_sup_right
+protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f ⊔ g := by rw [← coe_fn_le];
+  filter_upwards [coe_fn_sup f g]with _ ha; rw [ha]; exact le_sup_right
 #align measure_theory.ae_eq_fun.le_sup_right MeasureTheory.AEEqFun.le_sup_right
 
 /- warning: measure_theory.ae_eq_fun.sup_le -> MeasureTheory.AEEqFun.sup_le is a dubious translation:
@@ -774,12 +755,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] {μ : MeasureTheory.Measure.{u2} α _inst_1} [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : SemilatticeInf.{u1} β] [_inst_6 : ContinuousInf.{u1} β _inst_2 (SemilatticeInf.toInf.{u1} β _inst_5)] (f : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (g : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ), LE.le.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (Preorder.toLE.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instPreorder.{u2, u1} α β _inst_1 μ _inst_2 (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β _inst_5)))) (Inf.inf.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instInf.{u2, u1} α β _inst_1 μ _inst_2 _inst_5 _inst_6) f g) f
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.inf_le_left MeasureTheory.AEEqFun.inf_le_leftₓ'. -/
-protected theorem inf_le_left (f g : α →ₘ[μ] β) : f ⊓ g ≤ f :=
-  by
-  rw [← coe_fn_le]
-  filter_upwards [coe_fn_inf f g]with _ ha
-  rw [ha]
-  exact inf_le_left
+protected theorem inf_le_left (f g : α →ₘ[μ] β) : f ⊓ g ≤ f := by rw [← coe_fn_le];
+  filter_upwards [coe_fn_inf f g]with _ ha; rw [ha]; exact inf_le_left
 #align measure_theory.ae_eq_fun.inf_le_left MeasureTheory.AEEqFun.inf_le_left
 
 /- warning: measure_theory.ae_eq_fun.inf_le_right -> MeasureTheory.AEEqFun.inf_le_right is a dubious translation:
@@ -788,12 +765,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] {μ : MeasureTheory.Measure.{u2} α _inst_1} [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : SemilatticeInf.{u1} β] [_inst_6 : ContinuousInf.{u1} β _inst_2 (SemilatticeInf.toInf.{u1} β _inst_5)] (f : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (g : MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ), LE.le.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (Preorder.toLE.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instPreorder.{u2, u1} α β _inst_1 μ _inst_2 (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β _inst_5)))) (Inf.inf.{max u2 u1} (MeasureTheory.AEEqFun.{u2, u1} α β _inst_1 _inst_2 μ) (MeasureTheory.AEEqFun.instInf.{u2, u1} α β _inst_1 μ _inst_2 _inst_5 _inst_6) f g) g
 Case conversion may be inaccurate. Consider using '#align measure_theory.ae_eq_fun.inf_le_right MeasureTheory.AEEqFun.inf_le_rightₓ'. -/
-protected theorem inf_le_right (f g : α →ₘ[μ] β) : f ⊓ g ≤ g :=
-  by
-  rw [← coe_fn_le]
-  filter_upwards [coe_fn_inf f g]with _ ha
-  rw [ha]
-  exact inf_le_right
+protected theorem inf_le_right (f g : α →ₘ[μ] β) : f ⊓ g ≤ g := by rw [← coe_fn_le];
+  filter_upwards [coe_fn_inf f g]with _ ha; rw [ha]; exact inf_le_right
 #align measure_theory.ae_eq_fun.inf_le_right MeasureTheory.AEEqFun.inf_le_right
 
 /- warning: measure_theory.ae_eq_fun.le_inf -> MeasureTheory.AEEqFun.le_inf is a dubious translation:

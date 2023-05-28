@@ -252,11 +252,7 @@ theorem unit_naturality {X Y : C} (f : X ⟶ Y) :
 Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.hom_equiv_apply_eq CategoryTheory.Adjunction.homEquiv_apply_eqₓ'. -/
 theorem homEquiv_apply_eq {A : C} {B : D} (f : F.obj A ⟶ B) (g : A ⟶ G.obj B) :
     adj.homEquiv A B f = g ↔ f = (adj.homEquiv A B).symm g :=
-  ⟨fun h => by
-    cases h
-    simp, fun h => by
-    cases h
-    simp⟩
+  ⟨fun h => by cases h; simp, fun h => by cases h; simp⟩
 #align category_theory.adjunction.hom_equiv_apply_eq CategoryTheory.Adjunction.homEquiv_apply_eq
 
 /- warning: category_theory.adjunction.eq_hom_equiv_apply -> CategoryTheory.Adjunction.eq_homEquiv_apply is a dubious translation:
@@ -264,11 +260,7 @@ theorem homEquiv_apply_eq {A : C} {B : D} (f : F.obj A ⟶ B) (g : A ⟶ G.obj B
 Case conversion may be inaccurate. Consider using '#align category_theory.adjunction.eq_hom_equiv_apply CategoryTheory.Adjunction.eq_homEquiv_applyₓ'. -/
 theorem eq_homEquiv_apply {A : C} {B : D} (f : F.obj A ⟶ B) (g : A ⟶ G.obj B) :
     g = adj.homEquiv A B f ↔ (adj.homEquiv A B).symm g = f :=
-  ⟨fun h => by
-    cases h
-    simp, fun h => by
-    cases h
-    simp⟩
+  ⟨fun h => by cases h; simp, fun h => by cases h; simp⟩
 #align category_theory.adjunction.eq_hom_equiv_apply CategoryTheory.Adjunction.eq_homEquiv_apply
 
 end
@@ -690,15 +682,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.equiva
 simply use `e.symm.to_adjunction`. -/
 def toAdjunction (e : C ≌ D) : e.Functor ⊣ e.inverse :=
   mkOfUnitCounit
-    ⟨e.Unit, e.counit, by
-      ext
-      dsimp
-      simp only [id_comp]
-      exact e.functor_unit_comp _, by
-      ext
-      dsimp
-      simp only [id_comp]
-      exact e.unit_inverse_comp _⟩
+    ⟨e.Unit, e.counit, by ext; dsimp; simp only [id_comp]; exact e.functor_unit_comp _, by ext;
+      dsimp; simp only [id_comp]; exact e.unit_inverse_comp _⟩
 #align category_theory.equivalence.to_adjunction CategoryTheory.Equivalence.toAdjunction
 
 /- warning: category_theory.equivalence.as_equivalence_to_adjunction_unit -> CategoryTheory.Equivalence.asEquivalence_toAdjunction_unit is a dubious translation:

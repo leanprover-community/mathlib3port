@@ -98,12 +98,8 @@ theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = 
   by
   funext a b; apply propext
   constructor
-  · intro h
-    induction h
-    · rfl
-    simp only [*] <;> constructor <;> rfl
-  · rintro rfl
-    exact forall₂_refl _
+  · intro h; induction h; · rfl; simp only [*] <;> constructor <;> rfl
+  · rintro rfl; exact forall₂_refl _
 #align list.forall₂_eq_eq_eq List.forall₂_eq_eq_eq
 -/
 
@@ -322,8 +318,7 @@ theorem forall₂_iff_zip {l₁ l₂} :
     by
     cases' h with h₁ h₂
     induction' l₁ with a l₁ IH generalizing l₂
-    · cases length_eq_zero.1 h₁.symm
-      constructor
+    · cases length_eq_zero.1 h₁.symm; constructor
     · cases' l₂ with b l₂ <;> injection h₁ with h₁
       exact forall₂.cons (h₂ <| Or.inl rfl) (IH h₁ fun a b h => h₂ <| Or.inr h)⟩
 #align list.forall₂_iff_zip List.forall₂_iff_zip
@@ -435,10 +430,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.forall₂_reverse_iff List.forall₂_reverse_iffₓ'. -/
 @[simp]
 theorem forall₂_reverse_iff {l₁ l₂} : Forall₂ R (reverse l₁) (reverse l₂) ↔ Forall₂ R l₁ l₂ :=
-  Iff.intro
-    (fun h => by
-      rw [← reverse_reverse l₁, ← reverse_reverse l₂]
-      exact rel_reverse h)
+  Iff.intro (fun h => by rw [← reverse_reverse l₁, ← reverse_reverse l₂]; exact rel_reverse h)
     fun h => rel_reverse h
 #align list.forall₂_reverse_iff List.forall₂_reverse_iff
 

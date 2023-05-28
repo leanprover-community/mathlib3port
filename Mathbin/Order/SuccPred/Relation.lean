@@ -38,12 +38,10 @@ Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_succ
 theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
     (hnm : n ≤ m) : ReflTransGen r n m := by
   revert h; refine' Succ.rec _ _ hnm
-  · intro h
-    exact refl_trans_gen.refl
+  · intro h; exact refl_trans_gen.refl
   · intro m hnm ih h
     have : refl_trans_gen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le <| le_succ m⟩
-    cases' (le_succ m).eq_or_lt with hm hm
-    · rwa [← hm]
+    cases' (le_succ m).eq_or_lt with hm hm; · rwa [← hm]
     exact this.tail (h m ⟨hnm, hm⟩)
 #align refl_trans_gen_of_succ_of_le reflTransGen_of_succ_of_le
 
@@ -56,9 +54,7 @@ Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_succ
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
-    (hmn : m ≤ n) : ReflTransGen r n m :=
-  by
-  rw [← refl_trans_gen_swap]
+    (hmn : m ≤ n) : ReflTransGen r n m := by rw [← refl_trans_gen_swap];
   exact reflTransGen_of_succ_of_le (swap r) h hmn
 #align refl_trans_gen_of_succ_of_ge reflTransGen_of_succ_of_ge
 

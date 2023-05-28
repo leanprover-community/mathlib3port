@@ -87,9 +87,7 @@ protected def map (f : α → β) (m : MeasurableSpace α) : MeasurableSpace β
   MeasurableSet' s := measurable_set[m] <| f ⁻¹' s
   measurable_set_empty := m.measurable_set_empty
   measurable_set_compl s hs := m.measurable_set_compl _ hs
-  measurable_set_iUnion f hf := by
-    rw [preimage_Union]
-    exact m.measurable_set_Union _ hf
+  measurable_set_iUnion f hf := by rw [preimage_Union]; exact m.measurable_set_Union _ hf
 #align measurable_space.map MeasurableSpace.map
 -/
 
@@ -463,8 +461,7 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
   by
   cases isEmpty_or_nonempty β
   · exact measurable_of_empty f
-  · convert measurable_const
-    exact funext fun x => hf x h.some
+  · convert measurable_const; exact funext fun x => hf x h.some
 #align measurable_const' measurable_const'
 
 /- warning: measurable_nat_cast -> measurable_natCast is a dubious translation:
@@ -598,9 +595,7 @@ theorem Measurable.measurable_of_countable_ne [MeasurableSingletonClass α] (hf 
     simp [← inter_union_distrib_left]
   rw [this]
   apply MeasurableSet.union (h.mono (inter_subset_right _ _)).MeasurableSet
-  have : g ⁻¹' t ∩ { x : α | f x = g x } = f ⁻¹' t ∩ { x : α | f x = g x } :=
-    by
-    ext x
+  have : g ⁻¹' t ∩ { x : α | f x = g x } = f ⁻¹' t ∩ { x : α | f x = g x } := by ext x;
     simp (config := { contextual := true })
   rw [this]
   exact (hf ht).inter h.measurable_set.of_compl
@@ -1021,13 +1016,8 @@ Case conversion may be inaccurate. Consider using '#align measurable.prod Measur
 theorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a).1)
     (hf₂ : Measurable fun a => (f a).2) : Measurable f :=
   Measurable.of_le_map <|
-    sup_le
-      (by
-        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]
-        exact hf₁)
-      (by
-        rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]
-        exact hf₂)
+    sup_le (by rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]; exact hf₁)
+      (by rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]; exact hf₂)
 #align measurable.prod Measurable.prod
 
 /- warning: measurable.prod_mk -> Measurable.prod_mk is a dubious translation:
@@ -1126,10 +1116,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_swap_iff measurable_swap_iffₓ'. -/
 theorem measurable_swap_iff {mγ : MeasurableSpace γ} {f : α × β → γ} :
     Measurable (f ∘ Prod.swap) ↔ Measurable f :=
-  ⟨fun hf => by
-    convert hf.comp measurable_swap
-    ext ⟨x, y⟩
-    rfl, fun hf => hf.comp measurable_swap⟩
+  ⟨fun hf => by convert hf.comp measurable_swap; ext ⟨x, y⟩; rfl, fun hf => hf.comp measurable_swap⟩
 #align measurable_swap_iff measurable_swap_iff
 
 /- warning: measurable_set.prod -> MeasurableSet.prod is a dubious translation:
@@ -1184,10 +1171,7 @@ theorem measurableSet_prod {s : Set α} {t : Set β} :
 #print measurableSet_swap_iff /-
 theorem measurableSet_swap_iff {s : Set (α × β)} :
     MeasurableSet (Prod.swap ⁻¹' s) ↔ MeasurableSet s :=
-  ⟨fun hs => by
-    convert measurable_swap hs
-    ext ⟨x, y⟩
-    rfl, fun hs => measurable_swap hs⟩
+  ⟨fun hs => by convert measurable_swap hs; ext ⟨x, y⟩; rfl, fun hs => measurable_swap hs⟩
 #align measurable_set_swap_iff measurableSet_swap_iff
 -/
 
@@ -1258,9 +1242,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
     have : x ∈ t (Nat.find (P x)) :=
       by
       have B : x ∈ t (Nat.find (P x)) ∪ (⋃ k, t k)ᶜ := Nat.find_spec (P x)
-      have B' : (∀ i : ℕ, x ∉ t i) ↔ False :=
-        by
-        simp only [iff_false_iff, not_forall, not_not_mem]
+      have B' : (∀ i : ℕ, x ∉ t i) ↔ False := by simp only [iff_false_iff, not_forall, not_not_mem];
         exact ⟨n, hx⟩
       simpa only [B', mem_union, mem_Inter, or_false_iff, compl_Union, mem_compl_iff] using B
     congr
@@ -1342,10 +1324,7 @@ theorem measurable_update (f : ∀ a : δ, π a) {a : δ} [DecidableEq δ] : Mea
   by
   apply measurable_pi_lambda
   intro x; by_cases hx : x = a
-  · cases hx
-    convert measurable_id
-    ext
-    simp
+  · cases hx; convert measurable_id; ext; simp
   simp_rw [update_noteq hx]; apply measurable_const
 #align measurable_update measurable_update
 
@@ -1359,9 +1338,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.pi Meas
   lemmas, like `measurable_set.prod`. -/
 @[measurability]
 theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Countable)
-    (ht : ∀ i ∈ s, MeasurableSet (t i)) : MeasurableSet (s.pi t) :=
-  by
-  rw [pi_def]
+    (ht : ∀ i ∈ s, MeasurableSet (t i)) : MeasurableSet (s.pi t) := by rw [pi_def];
   exact MeasurableSet.biInter hs fun i hi => measurable_pi_apply _ (ht i hi)
 #align measurable_set.pi MeasurableSet.pi
 
@@ -1487,8 +1464,7 @@ theorem measurable_tProd_elim [DecidableEq δ] :
     ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : TProd π l => v.elim hi
   | i::is, j, hj => by
     by_cases hji : j = i
-    · subst hji
-      simp [measurable_fst]
+    · subst hji; simp [measurable_fst]
     · rw [funext <| tprod.elim_of_ne _ hji]
       exact (measurable_tProd_elim (hj.resolve_left hji)).comp measurable_snd
 #align measurable_tprod_elim measurable_tProd_elim
@@ -1511,9 +1487,7 @@ but is expected to have type
   forall {δ : Type.{u_1}} {π : δ -> Type.{u_2}} [_inst_1 : forall (x : δ), MeasurableSpace.{u_2} (π x)] (l : List.{u_1} δ) {s : forall (i : δ), Set.{u_2} (π i)}, (forall (i : δ), MeasurableSet.{u_2} (π i) (_inst_1 i) (s i)) -> (MeasurableSet.{u_2} (List.TProd.{u_1, u_2} δ (fun (i : δ) => π i) l) (TProd.instMeasurableSpace.{u_1, u_2} δ (fun (i : δ) => π i) (fun (x : δ) => _inst_1 x) l) (Set.tprod.{u_1, u_2} δ (fun (i : δ) => π i) l s))
 Case conversion may be inaccurate. Consider using '#align measurable_set.tprod MeasurableSet.tProdₓ'. -/
 theorem MeasurableSet.tProd (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
-    MeasurableSet (Set.tprod l s) := by
-  induction' l with i l ih
-  exact MeasurableSet.univ
+    MeasurableSet (Set.tprod l s) := by induction' l with i l ih; exact MeasurableSet.univ;
   exact (hs i).Prod ih
 #align measurable_set.tprod MeasurableSet.tProd
 
@@ -1583,14 +1557,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_set.inl_image MeasurableSet.inl_imageₓ'. -/
 theorem MeasurableSet.inl_image {s : Set α} (hs : MeasurableSet s) :
     MeasurableSet (Sum.inl '' s : Set (Sum α β)) :=
-  ⟨show MeasurableSet (Sum.inl ⁻¹' _) by
-      rwa [preimage_image_eq]
-      exact fun a b => Sum.inl.inj,
+  ⟨show MeasurableSet (Sum.inl ⁻¹' _) by rwa [preimage_image_eq]; exact fun a b => Sum.inl.inj,
     have : Sum.inr ⁻¹' (Sum.inl '' s : Set (Sum α β)) = ∅ :=
       eq_empty_of_subset_empty fun x ⟨y, hy, Eq⟩ => by contradiction
-    show MeasurableSet (Sum.inr ⁻¹' _) by
-      rw [this]
-      exact MeasurableSet.empty⟩
+    show MeasurableSet (Sum.inr ⁻¹' _) by rw [this]; exact MeasurableSet.empty⟩
 #align measurable_set.inl_image MeasurableSet.inl_image
 
 /- warning: measurable_set_inr_image -> measurableSet_inr_image is a dubious translation:
@@ -1603,12 +1573,8 @@ theorem measurableSet_inr_image {s : Set β} (hs : MeasurableSet s) :
     MeasurableSet (Sum.inr '' s : Set (Sum α β)) :=
   ⟨have : Sum.inl ⁻¹' (Sum.inr '' s : Set (Sum α β)) = ∅ :=
       eq_empty_of_subset_empty fun x ⟨y, hy, Eq⟩ => by contradiction
-    show MeasurableSet (Sum.inl ⁻¹' _) by
-      rw [this]
-      exact MeasurableSet.empty,
-    show MeasurableSet (Sum.inr ⁻¹' _) by
-      rwa [preimage_image_eq]
-      exact fun a b => Sum.inr.inj⟩
+    show MeasurableSet (Sum.inl ⁻¹' _) by rw [this]; exact MeasurableSet.empty,
+    show MeasurableSet (Sum.inr ⁻¹' _) by rwa [preimage_image_eq]; exact fun a b => Sum.inr.inj⟩
 #align measurable_set_inr_image measurableSet_inr_image
 
 omit m
@@ -1620,9 +1586,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {mβ : MeasurableSpace.{u1} β} [_inst_1 : MeasurableSpace.{u2} α], MeasurableSet.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instMeasurableSpace.{u2, u1} α β _inst_1 mβ) (Set.range.{max u2 u1, succ u2} (Sum.{u2, u1} α β) α (Sum.inl.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align measurable_set_range_inl measurableSet_range_inlₓ'. -/
 theorem measurableSet_range_inl [MeasurableSpace α] :
-    MeasurableSet (range Sum.inl : Set (Sum α β)) :=
-  by
-  rw [← image_univ]
+    MeasurableSet (range Sum.inl : Set (Sum α β)) := by rw [← image_univ];
   exact measurable_set.univ.inl_image
 #align measurable_set_range_inl measurableSet_range_inl
 
@@ -1633,9 +1597,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {mβ : MeasurableSpace.{u1} β} [_inst_1 : MeasurableSpace.{u2} α], MeasurableSet.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instMeasurableSpace.{u2, u1} α β _inst_1 mβ) (Set.range.{max u2 u1, succ u1} (Sum.{u2, u1} α β) β (Sum.inr.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align measurable_set_range_inr measurableSet_range_inrₓ'. -/
 theorem measurableSet_range_inr [MeasurableSpace α] :
-    MeasurableSet (range Sum.inr : Set (Sum α β)) :=
-  by
-  rw [← image_univ]
+    MeasurableSet (range Sum.inr : Set (Sum α β)) := by rw [← image_univ];
   exact measurableSet_inr_image MeasurableSet.univ
 #align measurable_set_range_inr measurableSet_range_inr
 
@@ -1717,10 +1679,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {mα : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β}, (MeasurableEmbedding.{u2, u1} α β mα _inst_1 f) -> (MeasurableSet.{u1} β _inst_1 (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align measurable_embedding.measurable_set_range MeasurableEmbedding.measurableSet_rangeₓ'. -/
-theorem measurableSet_range (hf : MeasurableEmbedding f) : MeasurableSet (range f) :=
-  by
-  rw [← image_univ]
-  exact hf.measurable_set_image' MeasurableSet.univ
+theorem measurableSet_range (hf : MeasurableEmbedding f) : MeasurableSet (range f) := by
+  rw [← image_univ]; exact hf.measurable_set_image' MeasurableSet.univ
 #align measurable_embedding.measurable_set_range MeasurableEmbedding.measurableSet_range
 
 /- warning: measurable_embedding.measurable_set_preimage -> MeasurableEmbedding.measurableSet_preimage is a dubious translation:
@@ -1759,8 +1719,7 @@ theorem measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} {g' : β 
   refine' measurable_of_restrict_of_restrict_compl hf.measurable_set_range _ _
   · rw [restrict_extend_range]
     simpa only [range_splitting] using hg.comp hf.measurable_range_splitting
-  · rw [restrict_extend_compl_range]
-    exact hg'.comp measurable_subtype_coe
+  · rw [restrict_extend_compl_range]; exact hg'.comp measurable_subtype_coe
 #align measurable_embedding.measurable_extend MeasurableEmbedding.measurable_extend
 
 /- warning: measurable_embedding.exists_measurable_extend -> MeasurableEmbedding.exists_measurable_extend is a dubious translation:
@@ -1924,10 +1883,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β], Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) (Equiv.{succ u2, succ u1} α β) (MeasurableEquiv.toEquiv.{u2, u1} α β _inst_1 _inst_2)
 Case conversion may be inaccurate. Consider using '#align measurable_equiv.to_equiv_injective MeasurableEquiv.toEquiv_injectiveₓ'. -/
-theorem toEquiv_injective : Injective (toEquiv : α ≃ᵐ β → α ≃ β) :=
-  by
-  rintro ⟨e₁, _, _⟩ ⟨e₂, _, _⟩ (rfl : e₁ = e₂)
-  rfl
+theorem toEquiv_injective : Injective (toEquiv : α ≃ᵐ β → α ≃ β) := by
+  rintro ⟨e₁, _, _⟩ ⟨e₂, _, _⟩ (rfl : e₁ = e₂); rfl
 #align measurable_equiv.to_equiv_injective MeasurableEquiv.toEquiv_injective
 
 /- warning: measurable_equiv.ext -> MeasurableEquiv.ext is a dubious translation:
@@ -2121,14 +2078,8 @@ protected theorem measurableEmbedding (e : α ≃ᵐ β) : MeasurableEmbedding e
 protected def cast {α β} [i₁ : MeasurableSpace α] [i₂ : MeasurableSpace β] (h : α = β)
     (hi : HEq i₁ i₂) : α ≃ᵐ β where
   toEquiv := Equiv.cast h
-  measurable_to_fun := by
-    subst h
-    subst hi
-    exact measurable_id
-  measurable_inv_fun := by
-    subst h
-    subst hi
-    exact measurable_id
+  measurable_to_fun := by subst h; subst hi; exact measurable_id
+  measurable_inv_fun := by subst h; subst hi; exact measurable_id
 #align measurable_equiv.cast MeasurableEquiv.cast
 -/
 
@@ -2246,14 +2197,10 @@ def Set.rangeInl : (range Sum.inl : Set (Sum α β)) ≃ᵐ α
     match ab with
     | ⟨Sum.inl a, _⟩ => a
     | ⟨Sum.inr b, p⟩ =>
-      have : False := by
-        cases p
-        contradiction
+      have : False := by cases p; contradiction
       this.elim
   invFun a := ⟨Sum.inl a, a, rfl⟩
-  left_inv := by
-    rintro ⟨ab, a, rfl⟩
-    rfl
+  left_inv := by rintro ⟨ab, a, rfl⟩; rfl
   right_inv a := rfl
   measurable_to_fun s (hs : MeasurableSet s) :=
     by
@@ -2272,14 +2219,10 @@ def Set.rangeInr : (range Sum.inr : Set (Sum α β)) ≃ᵐ β
     match ab with
     | ⟨Sum.inr b, _⟩ => b
     | ⟨Sum.inl a, p⟩ =>
-      have : False := by
-        cases p
-        contradiction
+      have : False := by cases p; contradiction
       this.elim
   invFun b := ⟨Sum.inr b, b, rfl⟩
-  left_inv := by
-    rintro ⟨ab, b, rfl⟩
-    rfl
+  left_inv := by rintro ⟨ab, b, rfl⟩; rfl
   right_inv b := rfl
   measurable_to_fun s (hs : MeasurableSet s) :=
     by
@@ -2309,14 +2252,12 @@ def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [Measura
       refine' (prod_congr Set.range_inl (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inl
-      ext ⟨a, c⟩
-      rfl
+      ext ⟨a, c⟩; rfl
     · refine' (Set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr Set.range_inr (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inr
-      ext ⟨b, c⟩
-      rfl
+      ext ⟨b, c⟩; rfl
   measurable_inv_fun :=
     measurable_sum ((measurable_inl.comp measurable_fst).prod_mk measurable_snd)
       ((measurable_inr.comp measurable_fst).prod_mk measurable_snd)
@@ -2551,8 +2492,7 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
   rw [mem_Inter] at hx
   apply hy
   rw [(inj_on_of_injective hf.injective _).image_iInter_eq]
-  swap
-  · infer_instance
+  swap; · infer_instance
   rw [mem_Inter]
   intro n
   specialize hx n.succ

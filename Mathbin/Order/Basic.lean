@@ -1319,9 +1319,7 @@ Case conversion may be inaccurate. Consider using '#align associative_of_commuta
 `(a ○ b) ○ c ≤ a ○ (b ○ c)` for all `a`, `b`, `c`. -/
 theorem associative_of_commutative_of_le {f : α → α → α} (comm : Commutative f)
     (assoc : ∀ a b c, f (f a b) c ≤ f a (f b c)) : Associative f := fun a b c =>
-  le_antisymm (assoc _ _ _) <| by
-    rw [comm, comm b, comm _ c, comm a]
-    exact assoc _ _ _
+  le_antisymm (assoc _ _ _) <| by rw [comm, comm b, comm _ c, comm a]; exact assoc _ _ _
 #align associative_of_commutative_of_le associative_of_commutative_of_le
 
 end PartialOrder
@@ -1335,8 +1333,7 @@ Case conversion may be inaccurate. Consider using '#align preorder.to_has_le_inj
 @[ext]
 theorem Preorder.toLE_injective {α : Type _} : Function.Injective (@Preorder.toHasLe α) :=
   fun A B h => by
-  cases A
-  cases B
+  cases A; cases B
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
@@ -1348,12 +1345,8 @@ theorem Preorder.toLE_injective {α : Type _} : Function.Injective (@Preorder.to
 #print PartialOrder.toPreorder_injective /-
 @[ext]
 theorem PartialOrder.toPreorder_injective {α : Type _} :
-    Function.Injective (@PartialOrder.toPreorder α) := fun A B h =>
-  by
-  cases A
-  cases B
-  injection h
-  congr
+    Function.Injective (@PartialOrder.toPreorder α) := fun A B h => by cases A; cases B;
+  injection h; congr
 #align partial_order.to_preorder_injective PartialOrder.toPreorder_injective
 -/
 
@@ -1384,9 +1377,7 @@ theorem Preorder.ext {α} {A B : Preorder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by
-  ext (x y)
-  exact H x y
+    A = B := by ext (x y); exact H x y
 #align preorder.ext Preorder.ext
 
 /- warning: partial_order.ext -> PartialOrder.ext is a dubious translation:
@@ -1401,9 +1392,7 @@ theorem PartialOrder.ext {α} {A B : PartialOrder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by
-  ext (x y)
-  exact H x y
+    A = B := by ext (x y); exact H x y
 #align partial_order.ext PartialOrder.ext
 
 /- warning: linear_order.ext -> LinearOrder.ext is a dubious translation:
@@ -1418,9 +1407,7 @@ theorem LinearOrder.ext {α} {A B : LinearOrder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by
-  ext (x y)
-  exact H x y
+    A = B := by ext (x y); exact H x y
 #align linear_order.ext LinearOrder.ext
 
 #print Order.Preimage /-
@@ -1640,9 +1627,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} [_inst_2 : Nonempty.{succ u2} ι], (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a b) -> (LT.lt.{max u2 u1} (forall (i : ι), π i) (Preorder.toLT.{max u2 u1} (forall (i : ι), π i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => _inst_1 i))) a b)
 Case conversion may be inaccurate. Consider using '#align lt_of_strong_lt lt_of_strongLTₓ'. -/
-theorem lt_of_strongLT [Nonempty ι] (h : a ≺ b) : a < b :=
-  by
-  inhabit ι
+theorem lt_of_strongLT [Nonempty ι] (h : a ≺ b) : a < b := by inhabit ι;
   exact Pi.lt_def.2 ⟨le_of_strongLT h, default, h _⟩
 #align lt_of_strong_lt lt_of_strongLT
 
@@ -2000,16 +1985,8 @@ def LinearOrder.lift {α β} [LinearOrder β] [Sup α] [Inf α] (f : α → β) 
     DecidableEq := fun x y => decidable_of_iff (f x = f y) inj.eq_iff
     min := (· ⊓ ·)
     max := (· ⊔ ·)
-    min_def := by
-      ext (x y)
-      apply inj
-      rw [hinf, min_def, minDefault, apply_ite f]
-      rfl
-    max_def := by
-      ext (x y)
-      apply inj
-      rw [hsup, max_def, maxDefault, apply_ite f]
-      rfl }
+    min_def := by ext (x y); apply inj; rw [hinf, min_def, minDefault, apply_ite f]; rfl
+    max_def := by ext (x y); apply inj; rw [hsup, max_def, maxDefault, apply_ite f]; rfl }
 #align linear_order.lift LinearOrder.lift
 
 #print LinearOrder.lift' /-
@@ -2265,10 +2242,7 @@ instance OrderDual.denselyOrdered (α : Type u) [LT α] [DenselyOrdered α] : De
 #print denselyOrdered_orderDual /-
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
-  ⟨by
-    convert@OrderDual.denselyOrdered αᵒᵈ _
-    cases ‹LT α›
-    rfl, @OrderDual.denselyOrdered α _⟩
+  ⟨by convert@OrderDual.denselyOrdered αᵒᵈ _; cases ‹LT α›; rfl, @OrderDual.denselyOrdered α _⟩
 #align densely_ordered_order_dual denselyOrdered_orderDual
 -/
 

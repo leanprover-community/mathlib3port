@@ -277,10 +277,7 @@ theorem div_tendsto_atTop_of_degree_gt' (hdeg : Q.degree < P.degree)
     (hpos : 0 < P.leadingCoeff / Q.leadingCoeff) :
     Tendsto (fun x => eval x P / eval x Q) atTop atTop :=
   by
-  have hQ : Q ≠ 0 := fun h =>
-    by
-    simp only [h, div_zero, leading_coeff_zero] at hpos
-    linarith
+  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hpos; linarith
   rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atTop _
   apply tendsto.const_mul_at_top hpos
@@ -311,10 +308,7 @@ theorem div_tendsto_atBot_of_degree_gt' (hdeg : Q.degree < P.degree)
     (hneg : P.leadingCoeff / Q.leadingCoeff < 0) :
     Tendsto (fun x => eval x P / eval x Q) atTop atBot :=
   by
-  have hQ : Q ≠ 0 := fun h =>
-    by
-    simp only [h, div_zero, leading_coeff_zero] at hneg
-    linarith
+  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hneg; linarith
   rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atBot _
   apply tendsto.neg_const_mul_at_top hneg

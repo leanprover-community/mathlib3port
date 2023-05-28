@@ -199,9 +199,7 @@ instance IsScalarTower.opposite_mid {M N} [Mul N] [SMul M N] [SMulCommClass M N 
 @[to_additive]
 instance SMulCommClass.opposite_mid {M N} [Mul N] [SMul M N] [IsScalarTower M N N] :
     SMulCommClass M Nᵐᵒᵖ N :=
-  ⟨fun x y z => by
-    induction y using MulOpposite.rec'
-    simp [smul_mul_assoc]⟩
+  ⟨fun x y z => by induction y using MulOpposite.rec'; simp [smul_mul_assoc]⟩
 #align smul_comm_class.opposite_mid SMulCommClass.opposite_mid
 #align vadd_comm_class.opposite_mid VAddCommClass.opposite_mid
 -/

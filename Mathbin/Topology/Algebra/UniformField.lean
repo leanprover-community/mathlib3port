@@ -235,11 +235,7 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
       let i : K →+* L := K.subtype
       have hi : UniformInducing i := uniform_embedding_subtype_coe.to_uniform_inducing
       rw [← hi.cauchy_map_iff] at F_cau⊢
-      rw [map_comm
-          (show (i ∘ fun x => x⁻¹) = (fun x => x⁻¹) ∘ i
-            by
-            ext
-            rfl)]
+      rw [map_comm (show (i ∘ fun x => x⁻¹) = (fun x => x⁻¹) ∘ i by ext; rfl)]
       apply CompletableTopField.nice _ F_cau
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
 #align subfield.completable_top_field Subfield.completableTopField

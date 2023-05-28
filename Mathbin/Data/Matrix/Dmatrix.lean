@@ -93,10 +93,7 @@ Case conversion may be inaccurate. Consider using '#align dmatrix.map_map DMatri
 @[simp]
 theorem map_map {M : DMatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
     {f : ∀ ⦃i j⦄, α i j → β i j} {g : ∀ ⦃i j⦄, β i j → γ i j} :
-    (M.map f).map g = M.map fun i j x => g (f x) :=
-  by
-  ext
-  simp
+    (M.map f).map g = M.map fun i j x => g (f x) := by ext; simp
 #align dmatrix.map_map DMatrix.map_map
 
 #print DMatrix.transpose /-
@@ -215,9 +212,7 @@ Case conversion may be inaccurate. Consider using '#align dmatrix.map_zero DMatr
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
     {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : DMatrix m n α).map f = 0 :=
-  by
-  ext
-  simp [h]
+  by ext; simp [h]
 #align dmatrix.map_zero DMatrix.map_zero
 
 /- warning: dmatrix.map_add -> DMatrix.map_add is a dubious translation:
@@ -225,9 +220,7 @@ theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Ze
 Case conversion may be inaccurate. Consider using '#align dmatrix.map_add DMatrix.map_addₓ'. -/
 theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
-    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j :=
-  by
-  ext
+    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by ext;
   simp
 #align dmatrix.map_add DMatrix.map_add
 
@@ -236,25 +229,19 @@ theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j
 Case conversion may be inaccurate. Consider using '#align dmatrix.map_sub DMatrix.map_subₓ'. -/
 theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
-    ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j :=
-  by
-  ext
+    ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by ext;
   simp
 #align dmatrix.map_sub DMatrix.map_sub
 
 #print DMatrix.subsingleton_of_empty_left /-
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (DMatrix m n α) :=
-  ⟨fun M N => by
-    ext
-    exact isEmptyElim i⟩
+  ⟨fun M N => by ext; exact isEmptyElim i⟩
 #align dmatrix.subsingleton_of_empty_left DMatrix.subsingleton_of_empty_left
 -/
 
 #print DMatrix.subsingleton_of_empty_right /-
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (DMatrix m n α) :=
-  ⟨fun M N => by
-    ext
-    exact isEmptyElim j⟩
+  ⟨fun M N => by ext; exact isEmptyElim j⟩
 #align dmatrix.subsingleton_of_empty_right DMatrix.subsingleton_of_empty_right
 -/
 

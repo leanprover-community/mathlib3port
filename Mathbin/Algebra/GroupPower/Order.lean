@@ -67,9 +67,7 @@ Case conversion may be inaccurate. Consider using '#align one_le_pow_of_one_le' 
 @[to_additive nsmul_nonneg]
 theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by simp
-  | k + 1 => by
-    rw [pow_succ]
-    exact one_le_mul H (one_le_pow_of_one_le' k)
+  | k + 1 => by rw [pow_succ]; exact one_le_mul H (one_le_pow_of_one_le' k)
 #align one_le_pow_of_one_le' one_le_pow_of_one_le'
 #align nsmul_nonneg nsmul_nonneg
 
@@ -180,9 +178,7 @@ Case conversion may be inaccurate. Consider using '#align left.one_le_pow_of_le 
 @[to_additive Left.pow_nonneg]
 theorem Left.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
   | 0 => (pow_zero x).ge
-  | n + 1 => by
-    rw [pow_succ]
-    exact Left.one_le_mul hx Left.one_le_pow_of_le
+  | n + 1 => by rw [pow_succ]; exact Left.one_le_mul hx Left.one_le_pow_of_le
 #align left.one_le_pow_of_le Left.one_le_pow_of_le
 #align left.pow_nonneg Left.pow_nonneg
 
@@ -195,9 +191,7 @@ Case conversion may be inaccurate. Consider using '#align left.pow_le_one_of_le 
 @[to_additive Left.pow_nonpos]
 theorem Left.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
   | 0 => (pow_zero _).le
-  | n + 1 => by
-    rw [pow_succ]
-    exact Left.mul_le_one hx Left.pow_le_one_of_le
+  | n + 1 => by rw [pow_succ]; exact Left.mul_le_one hx Left.pow_le_one_of_le
 #align left.pow_le_one_of_le Left.pow_le_one_of_le
 #align left.pow_nonpos Left.pow_nonpos
 
@@ -216,9 +210,7 @@ Case conversion may be inaccurate. Consider using '#align right.one_le_pow_of_le
 @[to_additive Right.pow_nonneg]
 theorem Right.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
   | 0 => (pow_zero _).ge
-  | n + 1 => by
-    rw [pow_succ]
-    exact Right.one_le_mul hx Right.one_le_pow_of_le
+  | n + 1 => by rw [pow_succ]; exact Right.one_le_mul hx Right.one_le_pow_of_le
 #align right.one_le_pow_of_le Right.one_le_pow_of_le
 #align right.pow_nonneg Right.pow_nonneg
 
@@ -231,9 +223,7 @@ Case conversion may be inaccurate. Consider using '#align right.pow_le_one_of_le
 @[to_additive Right.pow_nonpos]
 theorem Right.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
   | 0 => (pow_zero _).le
-  | n + 1 => by
-    rw [pow_succ]
-    exact Right.mul_le_one hx Right.pow_le_one_of_le
+  | n + 1 => by rw [pow_succ]; exact Right.mul_le_one hx Right.pow_le_one_of_le
 #align right.pow_le_one_of_le Right.pow_le_one_of_le
 #align right.pow_nonpos Right.pow_nonpos
 
@@ -254,8 +244,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono.pow_right'
 theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → StrictMono fun a => f a ^ n
   | 0, hn => (hn rfl).elim
   | 1, hn => by simpa
-  | Nat.succ <| Nat.succ n, hn => by
-    simp_rw [pow_succ _ (n + 1)]
+  | Nat.succ <| Nat.succ n, hn => by simp_rw [pow_succ _ (n + 1)];
     exact hf.mul' (StrictMono.pow_right' n.succ_ne_zero)
 #align strict_mono.pow_right' StrictMono.pow_right'
 #align strict_mono.nsmul_left StrictMono.nsmul_left
@@ -289,9 +278,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.pow_right Mon
 @[to_additive Monotone.nsmul_left]
 theorem Monotone.pow_right {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monotone fun a => f a ^ n
   | 0 => by simpa using monotone_const
-  | n + 1 => by
-    simp_rw [pow_succ]
-    exact hf.mul' (Monotone.pow_right _)
+  | n + 1 => by simp_rw [pow_succ]; exact hf.mul' (Monotone.pow_right _)
 #align monotone.pow_right Monotone.pow_right
 #align monotone.nsmul_left Monotone.nsmul_left
 
@@ -318,10 +305,7 @@ Case conversion may be inaccurate. Consider using '#align left.pow_lt_one_of_lt 
 @[to_additive Left.pow_neg]
 theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n)
     (h : x < 1) : x ^ n < 1 :=
-  Nat.le_induction ((pow_one _).trans_lt h)
-    (fun n _ ih => by
-      rw [pow_succ]
-      exact mul_lt_one h ih)
+  Nat.le_induction ((pow_one _).trans_lt h) (fun n _ ih => by rw [pow_succ]; exact mul_lt_one h ih)
     _ (Nat.succ_le_iff.2 hn)
 #align left.pow_lt_one_of_lt Left.pow_lt_one_of_lt
 #align left.pow_neg Left.pow_neg
@@ -336,10 +320,7 @@ Case conversion may be inaccurate. Consider using '#align right.pow_lt_one_of_lt
 theorem Right.pow_lt_one_of_lt [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M}
     (hn : 0 < n) (h : x < 1) : x ^ n < 1 :=
   Nat.le_induction ((pow_one _).trans_lt h)
-    (fun n _ ih => by
-      rw [pow_succ]
-      exact Right.mul_lt_one h ih)
-    _ (Nat.succ_le_iff.2 hn)
+    (fun n _ ih => by rw [pow_succ]; exact Right.mul_lt_one h ih) _ (Nat.succ_le_iff.2 hn)
 #align right.pow_lt_one_of_lt Right.pow_lt_one_of_lt
 #align right.pow_neg Right.pow_neg
 
@@ -465,8 +446,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align min_lt_max_of_mul_lt_mul min_lt_max_of_mul_lt_mulₓ'. -/
 @[to_additive]
 theorem min_lt_max_of_mul_lt_mul {a b c d : M} (h : a * b < c * d) : min a b < max c d :=
-  lt_of_pow_lt_pow' 2 <| by
-    simp_rw [pow_two]
+  lt_of_pow_lt_pow' 2 <| by simp_rw [pow_two];
     exact
       (mul_le_mul' inf_le_left inf_le_right).trans_lt
         (h.trans_le <| mul_le_mul' le_sup_left le_sup_right)
@@ -626,9 +606,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zero_pow_le_one zero_pow_le_oneₓ'. -/
 theorem zero_pow_le_one : ∀ n : ℕ, (0 : R) ^ n ≤ 1
   | 0 => (pow_zero _).le
-  | n + 1 => by
-    rw [zero_pow n.succ_pos]
-    exact zero_le_one
+  | n + 1 => by rw [zero_pow n.succ_pos]; exact zero_le_one
 #align zero_pow_le_one zero_pow_le_one
 
 /- warning: pow_add_pow_le -> pow_add_pow_le is a dubious translation:
@@ -645,15 +623,12 @@ theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y 
   have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
   have h2 := add_nonneg hx hy
   calc
-    x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) :=
-      by
-      rw [pow_succ _ n, pow_succ _ n]
-      exact le_add_of_nonneg_right h1
+    x ^ n.succ + y ^ n.succ ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
+      rw [pow_succ _ n, pow_succ _ n]; exact le_add_of_nonneg_right h1
     _ = (x + y) * (x ^ n + y ^ n) := by
       rw [add_mul, mul_add, mul_add, add_comm (y * x ^ n), ← add_assoc, ← add_assoc,
         add_assoc (x * x ^ n) (x * y ^ n), add_comm (x * y ^ n) (y * y ^ n), ← add_assoc]
-    _ ≤ (x + y) ^ n.succ := by
-      rw [pow_succ _ n]
+    _ ≤ (x + y) ^ n.succ := by rw [pow_succ _ n];
       exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
     
 #align pow_add_pow_le pow_add_pow_le
@@ -677,8 +652,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pow_lt_one pow_lt_oneₓ'. -/
 theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) : ∀ {n : ℕ} (hn : n ≠ 0), a ^ n < 1
   | 0, h => (h rfl).elim
-  | n + 1, h => by
-    rw [pow_succ]
+  | n + 1, h => by rw [pow_succ];
     exact mul_lt_one_of_nonneg_of_lt_one_left h₀ h₁ (pow_le_one _ h₀ h₁.le)
 #align pow_lt_one pow_lt_one
 
@@ -690,8 +664,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align one_le_pow_of_one_le one_le_pow_of_one_leₓ'. -/
 theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by rw [pow_zero]
-  | n + 1 => by
-    rw [pow_succ]
+  | n + 1 => by rw [pow_succ];
     simpa only [mul_one] using
       mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_trans zero_le_one H)
 #align one_le_pow_of_one_le one_le_pow_of_one_le
@@ -703,8 +676,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} R] {a : R}, (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1)))) a) -> (Monotone.{0, u1} Nat R (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} R (OrderedSemiring.toPartialOrder.{u1} R _inst_1)) (fun (n : Nat) => HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_mono pow_monoₓ'. -/
 theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
-  monotone_nat_of_le_succ fun n => by
-    rw [pow_succ]
+  monotone_nat_of_le_succ fun n => by rw [pow_succ];
     exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
 #align pow_mono pow_mono
 
@@ -750,9 +722,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align one_lt_pow one_lt_powₓ'. -/
 theorem one_lt_pow (ha : 1 < a) : ∀ {n : ℕ} (hn : n ≠ 0), 1 < a ^ n
   | 0, h => (h rfl).elim
-  | n + 1, h => by
-    rw [pow_succ]
-    exact one_lt_mul_of_lt_of_le ha (one_le_pow_of_one_le ha.le _)
+  | n + 1, h => by rw [pow_succ]; exact one_lt_mul_of_lt_of_le ha (one_le_pow_of_one_le ha.le _)
 #align one_lt_pow one_lt_pow
 
 end OrderedSemiring
@@ -876,10 +846,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} R] {a : R}, (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
 Case conversion may be inaccurate. Consider using '#align sq_pos_of_pos sq_pos_of_posₓ'. -/
-theorem sq_pos_of_pos (ha : 0 < a) : 0 < a ^ 2 :=
-  by
-  rw [sq]
-  exact mul_pos ha ha
+theorem sq_pos_of_pos (ha : 0 < a) : 0 < a ^ 2 := by rw [sq]; exact mul_pos ha ha
 #align sq_pos_of_pos sq_pos_of_pos
 
 end StrictOrderedSemiring
@@ -1063,9 +1030,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} R] {a : R} {b : R}, (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))))) b) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))))) a a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))))) b b)) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R _inst_1)))) a b)
 Case conversion may be inaccurate. Consider using '#align lt_of_mul_self_lt_mul_self lt_of_mul_self_lt_mul_selfₓ'. -/
-theorem lt_of_mul_self_lt_mul_self (hb : 0 ≤ b) : a * a < b * b → a < b :=
-  by
-  simp_rw [← sq]
+theorem lt_of_mul_self_lt_mul_self (hb : 0 ≤ b) : a * a < b * b → a < b := by simp_rw [← sq];
   exact lt_of_pow_lt_pow _ hb
 #align lt_of_mul_self_lt_mul_self lt_of_mul_self_lt_mul_self
 
@@ -1112,9 +1077,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] (a : R) (n : Nat), LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a (bit0.{0} Nat instAddNat n))
 Case conversion may be inaccurate. Consider using '#align pow_bit0_nonneg pow_bit0_nonnegₓ'. -/
-theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n :=
-  by
-  rw [pow_bit0]
+theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by rw [pow_bit0];
   exact mul_self_nonneg _
 #align pow_bit0_nonneg pow_bit0_nonneg
 
@@ -1421,9 +1384,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} M] {a : M} {m : Nat} {n : Nat}, (LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} M (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} M (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} M _inst_1)))))) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (InvOneClass.toOne.{u1} M (DivInvOneMonoid.toInvOneClass.{u1} M (DivisionMonoid.toDivInvOneMonoid.{u1} M (DivisionCommMonoid.toDivisionMonoid.{u1} M (CommGroupWithZero.toDivisionCommMonoid.{u1} M (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} M _inst_1)))))))) a) -> (LT.lt.{0} Nat instLTNat m n) -> (LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} M (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} M (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} M _inst_1)))))) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M (CommGroupWithZero.toGroupWithZero.{u1} M (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} M _inst_1)))))) a m) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M (CommGroupWithZero.toGroupWithZero.{u1} M (LinearOrderedCommGroupWithZero.toCommGroupWithZero.{u1} M _inst_1)))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_lt_pow₀ pow_lt_pow₀ₓ'. -/
-theorem pow_lt_pow₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n :=
-  by
-  induction' hmn with n hmn ih
+theorem pow_lt_pow₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n := by induction' hmn with n hmn ih;
   exacts[pow_lt_pow_succ ha, lt_trans ih (pow_lt_pow_succ ha)]
 #align pow_lt_pow₀ pow_lt_pow₀
 

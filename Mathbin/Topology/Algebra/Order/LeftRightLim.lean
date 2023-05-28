@@ -156,8 +156,7 @@ theorem le_leftLim (h : x < y) : f x ≤ leftLim f y :=
   letI : TopologicalSpace α := Preorder.topology α
   haveI : OrderTopology α := ⟨rfl⟩
   rcases eq_or_ne (𝓝[<] y) ⊥ with (h' | h')
-  · rw [leftLim_eq_of_eq_bot _ h']
-    exact hf h.le
+  · rw [leftLim_eq_of_eq_bot _ h']; exact hf h.le
   rw [left_lim_eq_Sup hf h']
   refine' le_csSup ⟨f y, _⟩ (mem_image_of_mem _ h)
   simp only [upperBounds, mem_image, mem_Iio, forall_exists_index, and_imp,

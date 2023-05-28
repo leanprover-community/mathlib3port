@@ -118,9 +118,7 @@ theorem mem_iff {r : R} {a : A} : r ∈ σ a ↔ ¬IsUnit (↑ₐ r - a) :=
   Iff.rfl
 #align spectrum.mem_iff spectrum.mem_iff
 
-theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) :=
-  by
-  apply not_iff_not.mp
+theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) := by apply not_iff_not.mp;
   simp [Set.not_not_mem, mem_iff]
 #align spectrum.not_mem_iff spectrum.not_mem_iff
 
@@ -236,8 +234,7 @@ theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a :=
   rw [smul_mem_smul_iff]
   constructor
   · exact fun h => ⟨r⁻¹ • x, ⟨h, by simp⟩⟩
-  · rintro ⟨_, _, x'_eq⟩
-    simpa [← x'_eq]
+  · rintro ⟨_, _, x'_eq⟩; simpa [← x'_eq]
 #align spectrum.unit_smul_eq_smul spectrum.unit_smul_eq_smul
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
@@ -279,9 +276,7 @@ theorem star_mem_resolventSet_iff {r : R} {a : A} :
       star_star, star_one] using IsUnit.star h
 #align spectrum.star_mem_resolvent_set_iff spectrum.star_mem_resolventSet_iff
 
-protected theorem map_star (a : A) : σ (star a) = star (σ a) :=
-  by
-  ext
+protected theorem map_star (a : A) : σ (star a) = star (σ a) := by ext;
   simpa only [Set.mem_star, mem_iff, not_iff_not] using star_mem_resolvent_set_iff.symm
 #align spectrum.map_star spectrum.map_star
 
@@ -487,10 +482,7 @@ convenience. -/
 theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
   simpa only [aeval_X_pow, eval_pow, eval_X] using
-    map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X])
-      (by
-        rw_mod_cast [degree_X_pow]
-        exact hn)
+    map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X]) (by rw_mod_cast [degree_X_pow]; exact hn)
 #align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
 
 /-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
@@ -509,10 +501,7 @@ theorem nonempty_of_isAlgClosed_of_finiteDimensional [IsAlgClosed 𝕜] [Nontriv
     [I : FiniteDimensional 𝕜 A] (a : A) : ∃ k : 𝕜, k ∈ σ a :=
   by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 I) a
-  have nu : ¬IsUnit (aeval a p) := by
-    rw [← aeval_def] at h_eval_p
-    rw [h_eval_p]
-    simp
+  have nu : ¬IsUnit (aeval a p) := by rw [← aeval_def] at h_eval_p; rw [h_eval_p]; simp
   rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu
   obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
   exact ⟨k, hk⟩

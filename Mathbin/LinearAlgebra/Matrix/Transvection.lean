@@ -223,10 +223,8 @@ structure TransvectionStruct where
   c : R
 #align matrix.transvection_struct Matrix.TransvectionStruct
 
-instance [Nontrivial n] : Nonempty (TransvectionStruct n R) :=
-  by
-  choose x y hxy using exists_pair_ne n
-  exact ⟨⟨x, y, hxy, 0⟩⟩
+instance [Nontrivial n] : Nonempty (TransvectionStruct n R) := by
+  choose x y hxy using exists_pair_ne n; exact ⟨⟨x, y, hxy, 0⟩⟩
 
 namespace TransvectionStruct
 
@@ -303,10 +301,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Type.{u1}} {R : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} n] [_inst_4 : CommRing.{u2} R] [_inst_5 : Fintype.{u1} n] (t : Matrix.TransvectionStruct.{u2, u1} n R), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n R) (Matrix.mul.{u2, u1, u1, u1} n n n R _inst_5 (NonUnitalNonAssocRing.toMul.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_4)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_4))))) (Matrix.TransvectionStruct.toMatrix.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) _inst_4 (Matrix.TransvectionStruct.inv.{u2, u1} n R _inst_4 t)) (Matrix.TransvectionStruct.toMatrix.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) _inst_4 t)) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n R) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} n n R) (Matrix.one.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_4))) (Semiring.toOne.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_4))))))
 Case conversion may be inaccurate. Consider using '#align matrix.transvection_struct.inv_mul Matrix.TransvectionStruct.inv_mulₓ'. -/
-theorem inv_mul (t : TransvectionStruct n R) : t.inv.toMatrix ⬝ t.toMatrix = 1 :=
-  by
-  rcases t with ⟨⟩
-  simp [to_matrix, transvection_mul_transvection_same, t_hij]
+theorem inv_mul (t : TransvectionStruct n R) : t.inv.toMatrix ⬝ t.toMatrix = 1 := by
+  rcases t with ⟨⟩; simp [to_matrix, transvection_mul_transvection_same, t_hij]
 #align matrix.transvection_struct.inv_mul Matrix.TransvectionStruct.inv_mul
 
 /- warning: matrix.transvection_struct.mul_inv -> Matrix.TransvectionStruct.mul_inv is a dubious translation:
@@ -315,10 +311,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Type.{u1}} {R : Type.{u2}} [_inst_2 : DecidableEq.{succ u1} n] [_inst_4 : CommRing.{u2} R] [_inst_5 : Fintype.{u1} n] (t : Matrix.TransvectionStruct.{u2, u1} n R), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n R) (Matrix.mul.{u2, u1, u1, u1} n n n R _inst_5 (NonUnitalNonAssocRing.toMul.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_4)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} R (NonAssocRing.toNonUnitalNonAssocRing.{u2} R (Ring.toNonAssocRing.{u2} R (CommRing.toRing.{u2} R _inst_4))))) (Matrix.TransvectionStruct.toMatrix.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) _inst_4 t) (Matrix.TransvectionStruct.toMatrix.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) _inst_4 (Matrix.TransvectionStruct.inv.{u2, u1} n R _inst_4 t))) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n R) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} n n R) (Matrix.one.{u2, u1} n R (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R (CommRing.toCommSemiring.{u2} R _inst_4))) (Semiring.toOne.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_4))))))
 Case conversion may be inaccurate. Consider using '#align matrix.transvection_struct.mul_inv Matrix.TransvectionStruct.mul_invₓ'. -/
-theorem mul_inv (t : TransvectionStruct n R) : t.toMatrix ⬝ t.inv.toMatrix = 1 :=
-  by
-  rcases t with ⟨⟩
-  simp [to_matrix, transvection_mul_transvection_same, t_hij]
+theorem mul_inv (t : TransvectionStruct n R) : t.toMatrix ⬝ t.inv.toMatrix = 1 := by
+  rcases t with ⟨⟩; simp [to_matrix, transvection_mul_transvection_same, t_hij]
 #align matrix.transvection_struct.mul_inv Matrix.TransvectionStruct.mul_inv
 
 /- warning: matrix.transvection_struct.reverse_inv_prod_mul_prod -> Matrix.TransvectionStruct.reverse_inv_prod_mul_prod is a dubious translation:
@@ -584,16 +578,10 @@ theorem listTransvecCol_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i : F
       by simp [list_transvec_col]
     simp only [Matrix.mul_assoc, A, Matrix.mul_eq_mul, List.prod_cons]
     by_cases h : n' = i
-    · have hni : n = i := by
-        cases i
-        simp only [Fin.mk_eq_mk] at h
-        simp [h]
+    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h; simp [h]
       rw [h, transvection_mul_apply_same, IH, list_transvec_col_mul_last_row_drop _ _ hn, ← hni]
       field_simp [hM]
-    · have hni : n ≠ i := by
-        rintro rfl
-        cases i
-        simpa using h
+    · have hni : n ≠ i := by rintro rfl; cases i; simpa using h
       simp only [transvection_mul_apply_of_ne, Ne.def, not_false_iff, Ne.symm h]
       rw [IH]
       rcases le_or_lt (n + 1) i with (hi | hi)
@@ -621,9 +609,7 @@ theorem mul_listTransvecRow_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk :
       (list_transvec_row M).get? k =
         ↑(transvection (inr Unit.unit) (inl k')
             (-M (inr Unit.unit) (inl k') / M (inr Unit.unit) (inr Unit.unit))) :=
-      by
-      simp only [list_transvec_row, List.ofFnNthVal, hkr, dif_pos, List.get?_ofFn]
-      rfl
+      by simp only [list_transvec_row, List.ofFnNthVal, hkr, dif_pos, List.get?_ofFn]; rfl
     simp only [List.take_succ, ← Matrix.mul_assoc, this, List.prod_append, Matrix.mul_one,
       Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]
     rw [mul_transvection_apply_of_ne, IH hkr.le]
@@ -674,24 +660,16 @@ theorem mul_listTransvecRow_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i : F
       (list_transvec_row M).get? n =
         ↑(transvection (inr Unit.unit) (inl n')
             (-M (inr Unit.unit) (inl n') / M (inr Unit.unit) (inr Unit.unit))) :=
-      by
-      simp only [list_transvec_row, List.ofFnNthVal, hnr, dif_pos, List.get?_ofFn]
-      rfl
+      by simp only [list_transvec_row, List.ofFnNthVal, hnr, dif_pos, List.get?_ofFn]; rfl
     simp only [List.take_succ, A, ← Matrix.mul_assoc, List.prod_append, Matrix.mul_one,
       Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]
     by_cases h : n' = i
-    · have hni : n = i := by
-        cases i
-        simp only [Fin.mk_eq_mk] at h
-        simp only [h, coe_mk]
+    · have hni : n = i := by cases i; simp only [Fin.mk_eq_mk] at h; simp only [h, coe_mk]
       have : ¬n.succ ≤ i := by simp only [← hni, n.lt_succ_self, not_le]
       simp only [h, mul_transvection_apply_same, List.take, if_false,
         mul_list_transvec_row_last_col_take _ _ hnr.le, hni.le, this, if_true, IH hnr.le]
       field_simp [hM]
-    · have hni : n ≠ i := by
-        rintro rfl
-        cases i
-        simpa using h
+    · have hni : n ≠ i := by rintro rfl; cases i; simpa using h
       simp only [IH hnr.le, Ne.def, mul_transvection_apply_of_ne, not_false_iff, Ne.symm h]
       rcases le_or_lt (n + 1) i with (hi | hi)
       · simp [hi, n.le_succ.trans hi, if_true]
@@ -784,8 +762,7 @@ theorem exists_isTwoBlockDiagonal_list_transvec_mul_mul_list_transvec
     ∃ L L' : List (TransvectionStruct (Sum (Fin r) Unit) 𝕜),
       IsTwoBlockDiagonal ((L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod) :=
   by
-  by_cases H : is_two_block_diagonal M
-  · refine' ⟨List.nil, List.nil, by simpa using H⟩
+  by_cases H : is_two_block_diagonal M; · refine' ⟨List.nil, List.nil, by simpa using H⟩
   -- we have already proved this when the last coefficient is nonzero
   by_cases hM : M (inr star) (inr star) ≠ 0
   · exact exists_is_two_block_diagonal_of_ne_zero M hM
@@ -852,9 +829,7 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
     congr
     · exact hM.1
     · exact hM.2
-    · ext (⟨⟩⟨⟩)
-      rw [hc, to_blocks₂₂, of_apply]
-      rfl
+    · ext (⟨⟩⟨⟩); rw [hc, to_blocks₂₂, of_apply]; rfl
   rw [this]
   simp [h₀]
 #align matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
@@ -981,9 +956,7 @@ theorem diagonal_transvection_induction (P : Matrix n n 𝕜 → Prop) (M : Matr
   suffices H :
     ∀ (L₁ L₂ : List (transvection_struct n 𝕜)) (E : Matrix n n 𝕜),
       P E → P ((L₁.map to_matrix).Prod ⬝ E ⬝ (L₂.map to_matrix).Prod)
-  · rw [h]
-    apply H L L'
-    exact PD
+  · rw [h]; apply H L L'; exact PD
   intro L₁ L₂ E PE
   induction' L₁ with t L₁ IH
   · simp only [Matrix.one_mul, List.prod_nil, List.map]
@@ -1015,9 +988,7 @@ theorem diagonal_transvection_induction_of_det_ne_zero (P : Matrix n n 𝕜 → 
   have : Q M := by
     apply diagonal_transvection_induction Q M
     · intro D hD
-      have detD : det (diagonal D) ≠ 0 := by
-        rw [hD]
-        exact hMdet
+      have detD : det (diagonal D) ≠ 0 := by rw [hD]; exact hMdet
       exact ⟨detD, hdiag _ detD⟩
     · intro t
       exact ⟨by simp, htransvec t⟩

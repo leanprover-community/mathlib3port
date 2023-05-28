@@ -36,9 +36,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] [_inst_3 : One.{u3} γ] (c : α) (f : β -> γ), Eq.{succ u2} (Set.{u2} β) (Function.mulSupport.{u2, u3} β γ _inst_3 (fun (x : β) => f (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) c) x))) (HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) c (Function.mulSupport.{u2, u3} β γ _inst_3 f))
 Case conversion may be inaccurate. Consider using '#align mul_support_comp_inv_smul mulSupport_comp_inv_smulₓ'. -/
 theorem mulSupport_comp_inv_smul [One γ] (c : α) (f : β → γ) :
-    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
-  by
-  ext x
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by ext x;
   simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support]
 #align mul_support_comp_inv_smul mulSupport_comp_inv_smul
 
@@ -49,9 +47,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] [_inst_3 : Zero.{u3} γ] (c : α) (f : β -> γ), Eq.{succ u2} (Set.{u2} β) (Function.support.{u2, u3} β γ _inst_3 (fun (x : β) => f (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) c) x))) (HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) c (Function.support.{u2, u3} β γ _inst_3 f))
 Case conversion may be inaccurate. Consider using '#align support_comp_inv_smul support_comp_inv_smulₓ'. -/
 theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) :
-    (support fun x => f (c⁻¹ • x)) = c • support f :=
-  by
-  ext x
+    (support fun x => f (c⁻¹ • x)) = c • support f := by ext x;
   simp only [mem_smul_set_iff_inv_smul_mem, mem_support]
 #align support_comp_inv_smul support_comp_inv_smul
 
@@ -70,9 +66,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : GroupWithZero.{u2} α] [_inst_2 : MulAction.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1))] [_inst_3 : One.{u3} γ] {c : α}, (Ne.{succ u2} α c (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1))))) -> (forall (f : β -> γ), Eq.{succ u1} (Set.{u1} β) (Function.mulSupport.{u1, u3} β γ _inst_3 (fun (x : β) => f (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1)) _inst_2)) (Inv.inv.{u2} α (GroupWithZero.toInv.{u2} α _inst_1) c) x))) (HSMul.hSMul.{u2, u1, u1} α (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} α (Set.{u1} β) (Set.smulSet.{u2, u1} α β (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1)) _inst_2))) c (Function.mulSupport.{u1, u3} β γ _inst_3 f)))
 Case conversion may be inaccurate. Consider using '#align mul_support_comp_inv_smul₀ mulSupport_comp_inv_smul₀ₓ'. -/
 theorem mulSupport_comp_inv_smul₀ [One γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
-  by
-  ext x
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by ext x;
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_mul_support]
 #align mul_support_comp_inv_smul₀ mulSupport_comp_inv_smul₀
 
@@ -83,9 +77,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : GroupWithZero.{u2} α] [_inst_2 : MulAction.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1))] [_inst_3 : Zero.{u3} γ] {c : α}, (Ne.{succ u2} α c (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1))))) -> (forall (f : β -> γ), Eq.{succ u1} (Set.{u1} β) (Function.support.{u1, u3} β γ _inst_3 (fun (x : β) => f (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1)) _inst_2)) (Inv.inv.{u2} α (GroupWithZero.toInv.{u2} α _inst_1) c) x))) (HSMul.hSMul.{u2, u1, u1} α (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} α (Set.{u1} β) (Set.smulSet.{u2, u1} α β (MulAction.toSMul.{u2, u1} α β (MonoidWithZero.toMonoid.{u2} α (GroupWithZero.toMonoidWithZero.{u2} α _inst_1)) _inst_2))) c (Function.support.{u1, u3} β γ _inst_3 f)))
 Case conversion may be inaccurate. Consider using '#align support_comp_inv_smul₀ support_comp_inv_smul₀ₓ'. -/
 theorem support_comp_inv_smul₀ [Zero γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (support fun x => f (c⁻¹ • x)) = c • support f :=
-  by
-  ext x
+    (support fun x => f (c⁻¹ • x)) = c • support f := by ext x;
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_support]
 #align support_comp_inv_smul₀ support_comp_inv_smul₀
 

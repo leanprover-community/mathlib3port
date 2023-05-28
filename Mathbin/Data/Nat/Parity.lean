@@ -259,10 +259,8 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 /-- If `m` and `n` are natural numbers, then the natural number `m^n` is even
 if and only if `m` is even and `n` is positive. -/
 @[parity_simps]
-theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 :=
-  by
-  induction' n with n ih <;> simp [*, pow_succ', even_mul]
-  tauto
+theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
+  induction' n with n ih <;> simp [*, pow_succ', even_mul]; tauto
 #align nat.even_pow Nat.even_pow
 -/
 
@@ -352,28 +350,20 @@ theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n := fun h =>
 -/
 
 #print Nat.two_mul_div_two_add_one_of_odd /-
-theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n :=
-  by
-  rw [mul_comm]
-  convert Nat.div_add_mod' n 2
-  rw [odd_iff.mp h]
+theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n := by rw [mul_comm];
+  convert Nat.div_add_mod' n 2; rw [odd_iff.mp h]
 #align nat.two_mul_div_two_add_one_of_odd Nat.two_mul_div_two_add_one_of_odd
 -/
 
 #print Nat.div_two_mul_two_add_one_of_odd /-
-theorem div_two_mul_two_add_one_of_odd (h : Odd n) : n / 2 * 2 + 1 = n :=
-  by
-  convert Nat.div_add_mod' n 2
-  rw [odd_iff.mp h]
+theorem div_two_mul_two_add_one_of_odd (h : Odd n) : n / 2 * 2 + 1 = n := by
+  convert Nat.div_add_mod' n 2; rw [odd_iff.mp h]
 #align nat.div_two_mul_two_add_one_of_odd Nat.div_two_mul_two_add_one_of_odd
 -/
 
 #print Nat.one_add_div_two_mul_two_of_odd /-
-theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n :=
-  by
-  rw [add_comm]
-  convert Nat.div_add_mod' n 2
-  rw [odd_iff.mp h]
+theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by rw [add_comm];
+  convert Nat.div_add_mod' n 2; rw [odd_iff.mp h]
 #align nat.one_add_div_two_mul_two_of_odd Nat.one_add_div_two_mul_two_of_odd
 -/
 

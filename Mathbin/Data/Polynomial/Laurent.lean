@@ -210,9 +210,7 @@ theorem T_zero : (T 0 : R[T;T⁻¹]) = 1 :=
 -/
 
 #print LaurentPolynomial.T_add /-
-theorem T_add (m n : ℤ) : (T (m + n) : R[T;T⁻¹]) = T m * T n :=
-  by
-  convert single_mul_single.symm
+theorem T_add (m n : ℤ) : (T (m + n) : R[T;T⁻¹]) = T m * T n := by convert single_mul_single.symm;
   simp [T]
 #align laurent_polynomial.T_add LaurentPolynomial.T_add
 -/
@@ -368,11 +366,8 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
   have B : ∀ s : Finset ℤ, M (s.Sum fun n : ℤ => C (p.to_fun n) * T n) :=
     by
     apply Finset.induction
-    · convert h_C 0
-      simp only [Finset.sum_empty, _root_.map_zero]
-    · intro n s ns ih
-      rw [Finset.sum_insert ns]
-      exact h_add A ih
+    · convert h_C 0; simp only [Finset.sum_empty, _root_.map_zero]
+    · intro n s ns ih; rw [Finset.sum_insert ns]; exact h_add A ih
   convert B p.support
   ext a
   simp_rw [← single_eq_C_mul_T, Finset.sum_apply', single_apply, Finset.sum_ite_eq']

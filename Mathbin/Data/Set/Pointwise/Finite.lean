@@ -106,11 +106,8 @@ Case conversion may be inaccurate. Consider using '#align set.decidable_mem_pow 
 instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
     DecidablePred (· ∈ s ^ n) := by
   induction' n with n ih
-  · simp_rw [pow_zero, mem_one]
-    infer_instance
-  · letI := ih
-    rw [pow_succ]
-    infer_instance
+  · simp_rw [pow_zero, mem_one]; infer_instance
+  · letI := ih; rw [pow_succ]; infer_instance
 #align set.decidable_mem_pow Set.decidableMemPow
 #align set.decidable_mem_nsmul Set.decidableMemNSMul
 

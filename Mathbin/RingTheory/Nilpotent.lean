@@ -92,10 +92,8 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u2}} [_inst_1 : MonoidWithZero.{u2} R] [_inst_2 : MonoidWithZero.{u2} S] {r : R} {F : Type.{u1}} [_inst_3 : MonoidWithZeroHomClass.{u1, u2, u2} F R S (MonoidWithZero.toMulZeroOneClass.{u2} R _inst_1) (MonoidWithZero.toMulZeroOneClass.{u2} S _inst_2)], (IsNilpotent.{u2} R (MonoidWithZero.toZero.{u2} R _inst_1) (Monoid.Pow.{u2} R (MonoidWithZero.toMonoid.{u2} R _inst_1)) r) -> (forall (f : F), IsNilpotent.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) r) (MonoidWithZero.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) r) _inst_2) (Monoid.Pow.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) r) (MonoidWithZero.toMonoid.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) r) _inst_2)) (FunLike.coe.{succ u1, succ u2, succ u2} F R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{u1, u2, u2} F R S (MulOneClass.toMul.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R (MonoidWithZero.toMulZeroOneClass.{u2} R _inst_1))) (MulOneClass.toMul.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (MonoidWithZero.toMulZeroOneClass.{u2} S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u2, u2} F R S (MulZeroOneClass.toMulOneClass.{u2} R (MonoidWithZero.toMulZeroOneClass.{u2} R _inst_1)) (MulZeroOneClass.toMulOneClass.{u2} S (MonoidWithZero.toMulZeroOneClass.{u2} S _inst_2)) (MonoidWithZeroHomClass.toMonoidHomClass.{u1, u2, u2} F R S (MonoidWithZero.toMulZeroOneClass.{u2} R _inst_1) (MonoidWithZero.toMulZeroOneClass.{u2} S _inst_2) _inst_3))) f r))
 Case conversion may be inaccurate. Consider using '#align is_nilpotent.map IsNilpotent.mapₓ'. -/
 theorem IsNilpotent.map [MonoidWithZero R] [MonoidWithZero S] {r : R} {F : Type _}
-    [MonoidWithZeroHomClass F R S] (hr : IsNilpotent r) (f : F) : IsNilpotent (f r) :=
-  by
-  use hr.some
-  rw [← map_pow, hr.some_spec, map_zero]
+    [MonoidWithZeroHomClass F R S] (hr : IsNilpotent r) (f : F) : IsNilpotent (f r) := by
+  use hr.some; rw [← map_pow, hr.some_spec, map_zero]
 #align is_nilpotent.map IsNilpotent.map
 
 #print IsReduced /-
@@ -183,10 +181,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} R], Iff (IsRadical.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (MonoidWithZero.toSemigroupWithZero.{u1} R _inst_1))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1)) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1)))) (IsReduced.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align zero_is_radical_iff zero_isRadical_iffₓ'. -/
-theorem zero_isRadical_iff [MonoidWithZero R] : IsRadical (0 : R) ↔ IsReduced R :=
-  by
-  simp_rw [isReduced_iff, IsNilpotent, exists_imp, ← zero_dvd_iff]
-  exact forall_swap
+theorem zero_isRadical_iff [MonoidWithZero R] : IsRadical (0 : R) ↔ IsReduced R := by
+  simp_rw [isReduced_iff, IsNilpotent, exists_imp, ← zero_dvd_iff]; exact forall_swap
 #align zero_is_radical_iff zero_isRadical_iff
 
 #print isRadical_iff_span_singleton /-
@@ -265,9 +261,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {x : R} {y : R} [_inst_1 : Semiring.{u1} R], (Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) x y) -> (IsNilpotent.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) y) -> (IsNilpotent.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) x y))
 Case conversion may be inaccurate. Consider using '#align commute.is_nilpotent_mul_right Commute.isNilpotent_mul_rightₓ'. -/
-theorem isNilpotent_mul_right (h : IsNilpotent y) : IsNilpotent (x * y) :=
-  by
-  rw [h_comm.eq]
+theorem isNilpotent_mul_right (h : IsNilpotent y) : IsNilpotent (x * y) := by rw [h_comm.eq];
   exact h_comm.symm.is_nilpotent_mul_left h
 #align commute.is_nilpotent_mul_right Commute.isNilpotent_mul_right
 
@@ -335,10 +329,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {x : R} [_inst_1 : CommSemiring.{u1} R], Iff (IsNilpotent.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) x) (forall (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)), (Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) J) -> (Membership.mem.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) R (Submodule.setLike.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) x J))
 Case conversion may be inaccurate. Consider using '#align nilpotent_iff_mem_prime nilpotent_iff_mem_primeₓ'. -/
-theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J :=
-  by
-  rw [← mem_nilradical, nilradical_eq_sInf, Submodule.mem_sInf]
-  rfl
+theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
+  rw [← mem_nilradical, nilradical_eq_sInf, Submodule.mem_sInf]; rfl
 #align nilpotent_iff_mem_prime nilpotent_iff_mem_prime
 
 /- warning: nilradical_le_prime -> nilradical_le_prime is a dubious translation:

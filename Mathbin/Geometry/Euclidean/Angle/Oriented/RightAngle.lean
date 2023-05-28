@@ -575,8 +575,7 @@ of a rotation of another by `π / 2`. -/
 theorem oangle_add_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ) :
     o.oangle (x + r • o.rotation (π / 2 : ℝ) x) (r • o.rotation (π / 2 : ℝ) x) = Real.arctan r⁻¹ :=
   by
-  by_cases hr : r = 0
-  · simp [hr]
+  by_cases hr : r = 0; · simp [hr]
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, ←
     neg_neg ((π / 2 : ℝ) : Real.Angle), ← rotation_neg_orientation_eq_neg, add_comm]
   have hx : x = r⁻¹ • (-o).rotation (π / 2 : ℝ) (r • (-o).rotation (-(π / 2 : ℝ)) x) := by simp [hr]
@@ -605,8 +604,7 @@ of a rotation of another by `π / 2`, version subtracting vectors. -/
 theorem oangle_sub_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ) :
     o.oangle (r • o.rotation (π / 2 : ℝ) x) (r • o.rotation (π / 2 : ℝ) x - x) = Real.arctan r⁻¹ :=
   by
-  by_cases hr : r = 0
-  · simp [hr]
+  by_cases hr : r = 0; · simp [hr]
   have hx : -x = r⁻¹ • o.rotation (π / 2 : ℝ) (r • o.rotation (π / 2 : ℝ) x) := by
     simp [hr, ← Real.Angle.coe_add]
   rw [sub_eq_add_neg, hx, o.oangle_add_right_smul_rotation_pi_div_two]
@@ -618,8 +616,7 @@ of a rotation of another by `π / 2`, version subtracting vectors. -/
 theorem oangle_sub_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ) :
     o.oangle (x - r • o.rotation (π / 2 : ℝ) x) x = Real.arctan r :=
   by
-  by_cases hr : r = 0
-  · simp [hr]
+  by_cases hr : r = 0; · simp [hr]
   have hx : x = r⁻¹ • o.rotation (π / 2 : ℝ) (-(r • o.rotation (π / 2 : ℝ) x)) := by
     simp [hr, ← Real.Angle.coe_add]
   rw [sub_eq_add_neg, add_comm]

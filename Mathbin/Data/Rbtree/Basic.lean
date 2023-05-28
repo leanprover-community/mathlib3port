@@ -80,10 +80,7 @@ theorem isSearchable_of_isSearchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     induction t <;> intros <;>
       run_tac
         is_searchable_tactic
-    · cases lo <;> simp_all [lift]
-      apply lt_of_lt_of_incomp
-      assumption
-      exact ⟨hc.2, hc.1⟩
+    · cases lo <;> simp_all [lift]; apply lt_of_lt_of_incomp; assumption; exact ⟨hc.2, hc.1⟩
     all_goals apply t_ih_rchild hc hs_hs₂
 #align rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.isSearchable_of_isSearchable_of_incomp
 
@@ -96,10 +93,7 @@ theorem isSearchable_of_incomp_of_isSearchable [IsStrictWeakOrder α lt] {t} :
     induction t <;> intros <;>
       run_tac
         is_searchable_tactic
-    · cases hi <;> simp_all [lift]
-      apply lt_of_incomp_of_lt
-      assumption
-      assumption
+    · cases hi <;> simp_all [lift]; apply lt_of_incomp_of_lt; assumption; assumption
     all_goals apply t_ih_lchild hc hs_hs₁
 #align rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.isSearchable_of_incomp_of_isSearchable
 
@@ -111,9 +105,7 @@ theorem isSearchable_some_low_of_isSearchable_of_lt {t} [IsTrans α lt] :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · cases hi <;> simp_all [lift]
-    apply trans_of lt hlt
-    assumption
+  · cases hi <;> simp_all [lift]; apply trans_of lt hlt; assumption
   all_goals apply t_ih_lchild hlt hs_hs₁
 #align rbnode.is_searchable_some_low_of_is_searchable_of_lt Rbnode.isSearchable_some_low_of_isSearchable_of_lt
 
@@ -136,10 +128,7 @@ theorem isSearchable_some_high_of_isSearchable_of_lt {t} [IsTrans α lt] :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · cases lo <;> simp_all [lift]
-    apply trans_of lt
-    assumption
-    assumption
+  · cases lo <;> simp_all [lift]; apply trans_of lt; assumption; assumption
   all_goals apply t_ih_rchild hlt hs_hs₂
 #align rbnode.is_searchable_some_high_of_is_searchable_of_lt Rbnode.isSearchable_some_high_of_isSearchable_of_lt
 
@@ -162,46 +151,29 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
     case leaf => simp [mem]
     all_goals
       -- red_node and black_node are identical
-      intro lo hi h₁ h₂
+      intro lo hi h₁ h₂;
       cases h₁
       simp only [mem] at h₂
-      have val_hi : lift lt (some t_val) hi :=
-        by
-        apply lo_lt_hi
-        assumption
-      have lo_val : lift lt lo (some t_val) :=
-        by
-        apply lo_lt_hi
-        assumption
+      have val_hi : lift lt (some t_val) hi := by apply lo_lt_hi; assumption
+      have lo_val : lift lt lo (some t_val) := by apply lo_lt_hi; assumption
       cases_type*or.1
-      · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) :=
-          by
-          apply t_ih_lchild
-          assumption
-          assumption
+      · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by apply t_ih_lchild;
+          assumption; assumption
         cases' h₃ with lo_x x_val
         constructor
-        show lift lt lo (some x)
-        · assumption
+        show lift lt lo (some x); · assumption
         show lift lt (some x) hi
         · cases' hi with hi <;> simp [lift] at *
           apply trans_of lt x_val val_hi
       · cases h₂
         cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
-        · apply lt_of_incomp_of_lt _ val_hi
-          simp [*]
-        · apply lt_of_lt_of_incomp lo_val
-          simp [*]
+        · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+        · apply lt_of_lt_of_incomp lo_val; simp [*]
         constructor
-        · apply lt_of_lt_of_incomp lo_val
-          simp [*]
-        · apply lt_of_incomp_of_lt _ val_hi
-          simp [*]
-      · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi :=
-          by
-          apply t_ih_rchild
-          assumption
-          assumption
+        · apply lt_of_lt_of_incomp lo_val; simp [*]
+        · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+      · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by apply t_ih_rchild;
+          assumption; assumption
         cases' h₃ with val_x x_hi
         cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
         · assumption
@@ -258,8 +230,7 @@ theorem depth_min : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → n ≤ depth 
   case red_rb =>
     simp [depth]
     have : min (depth min h_l) (depth min h_r) ≥ h_n := by apply le_min <;> assumption
-    apply le_succ_of_le
-    assumption
+    apply le_succ_of_le; assumption
   case black_rb =>
     simp [depth]
     apply succ_le_succ
@@ -290,8 +261,7 @@ theorem depth_max' : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → depth max t
     have : depth max h_r ≤ 2 * h_n + 1 := le_trans h_ih_rb_r (upper_le _ _)
     suffices new : max (depth max h_l) (depth max h_r) + 1 ≤ 2 * h_n + 2 * 1
     · simp_all [depth, upper, succ_eq_add_one, Nat.left_distrib]
-    apply succ_le_succ
-    apply max_le <;> assumption
+    apply succ_le_succ; apply max_le <;> assumption
 #align rbnode.depth_max' Rbnode.depth_max'
 
 theorem depth_max {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * n + 1 :=
@@ -300,14 +270,9 @@ theorem depth_max {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤
 
 theorem balanced {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * depth min t + 1 :=
   by
-  have : 2 * depth min t + 1 ≥ 2 * n + 1 :=
-    by
-    apply succ_le_succ
-    apply Nat.mul_le_mul_left
+  have : 2 * depth min t + 1 ≥ 2 * n + 1 := by apply succ_le_succ; apply Nat.mul_le_mul_left;
     apply depth_min h
-  apply le_trans
-  apply depth_max h
-  apply this
+  apply le_trans; apply depth_max h; apply this
 #align rbnode.balanced Rbnode.balanced
 
 end Rbnode

@@ -150,8 +150,7 @@ theorem sum_bernoulli (n : ℕ) :
     LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
-    rintro x H
-    rw [mem_range] at H
+    rintro x H; rw [mem_range] at H
     rw [eq_comm]
     exact ne_of_lt (Nat.lt_of_lt_of_le one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))
   rw [sum_bernoulli]
@@ -186,25 +185,20 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
     · rw [Nat.sub_sub_self (mem_range_le hx)]
     · rw [← choose_symm (mem_range_le hx)]
-  · norm_cast
-    apply succ_ne_zero _
+  · norm_cast; apply succ_ne_zero _
 #align polynomial.sum_range_pow_eq_bernoulli_sub Polynomial.sum_range_pow_eq_bernoulli_sub
 
 /-- Rearrangement of `polynomial.sum_range_pow_eq_bernoulli_sub`. -/
 theorem bernoulli_succ_eval (n p : ℕ) :
-    (bernoulli p.succ).eval n = bernoulli p.succ + (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p :=
-  by
-  apply eq_add_of_sub_eq'
-  rw [sum_range_pow_eq_bernoulli_sub]
+    (bernoulli p.succ).eval n = bernoulli p.succ + (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p := by
+  apply eq_add_of_sub_eq'; rw [sum_range_pow_eq_bernoulli_sub]
 #align polynomial.bernoulli_succ_eval Polynomial.bernoulli_succ_eval
 
 theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
     (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) :=
   by
   apply Nat.strong_induction_on n fun d hd => _
-  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by
-    norm_cast
-    exact d.succ_ne_zero
+  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by norm_cast; exact d.succ_ne_zero
   apply (mul_right_inj' nz).1
   rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul,
     bernoulli_eq_sub_sum, eval_sub, eval_finset_sum]

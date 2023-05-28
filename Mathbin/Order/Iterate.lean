@@ -97,10 +97,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α} {x : Nat -> α} {y : Nat -> α}, (Monotone.{u1, u1} α α _inst_1 _inst_1 f) -> (forall (n : Nat), (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (y (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f (x k)))) -> (forall (k : Nat), (LT.lt.{0} Nat instLTNat k n) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (f (y k)) (y (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) k (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) (x n) (y n)))
 Case conversion may be inaccurate. Consider using '#align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_leₓ'. -/
 theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
-    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n :=
-  by
-  cases n
-  exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
+    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
+  cases n; exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 #align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_le
 
 /- warning: monotone.seq_lt_seq_of_le_of_lt -> Monotone.seq_lt_seq_of_le_of_lt is a dubious translation:
@@ -218,9 +216,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : α -> α}, (LE.le.{u1} (α -> α) (Pi.hasLe.{u1, u1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u1} α _inst_1)) (id.{succ u1} α) f) -> (Monotone.{0, u1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u1, u1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u1} α f m))
 Case conversion may be inaccurate. Consider using '#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_leₓ'. -/
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
-  monotone_nat_of_le_succ fun n x => by
-    rw [iterate_succ_apply']
-    exact h _
+  monotone_nat_of_le_succ fun n x => by rw [iterate_succ_apply']; exact h _
 #align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
 
 /- warning: function.antitone_iterate_of_le_id -> Function.antitone_iterate_of_le_id is a dubious translation:
@@ -362,9 +358,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.monotone_iter
 /-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
 theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => (f^[n]) x :=
-  monotone_nat_of_le_succ fun n => by
-    rw [iterate_succ_apply]
-    exact hf.iterate n hx
+  monotone_nat_of_le_succ fun n => by rw [iterate_succ_apply]; exact hf.iterate n hx
 #align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
 
 /- warning: monotone.antitone_iterate_of_map_le -> Monotone.antitone_iterate_of_map_le is a dubious translation:
@@ -395,9 +389,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono.strict_mon
 form a strictly monotone sequence. -/
 theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
     StrictMono fun n => (f^[n]) x :=
-  strictMono_nat_of_lt_succ fun n => by
-    rw [iterate_succ_apply]
-    exact hf.iterate n hx
+  strictMono_nat_of_lt_succ fun n => by rw [iterate_succ_apply]; exact hf.iterate n hx
 #align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map
 
 /- warning: strict_mono.strict_anti_iterate_of_map_lt -> StrictMono.strictAnti_iterate_of_map_lt is a dubious translation:

@@ -127,10 +127,8 @@ but is expected to have type
   forall {Ω : Type.{u1}} {m : MeasurableSpace.{u1} Ω} (μ : MeasureTheory.Measure.{u1} Ω m) {s : Set.{u1} Ω}, (MeasurableSet.{u1} Ω m s) -> (forall (t : Set.{u1} Ω), Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} Ω (MeasureTheory.Measure.toOuterMeasure.{u1} Ω m (ProbabilityTheory.cond.{u1} Ω m μ s)) t) (HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) (Inv.inv.{0} ENNReal ENNReal.instInvENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} Ω (MeasureTheory.Measure.toOuterMeasure.{u1} Ω m μ) s)) (MeasureTheory.OuterMeasure.measureOf.{u1} Ω (MeasureTheory.Measure.toOuterMeasure.{u1} Ω m μ) (Inter.inter.{u1} (Set.{u1} Ω) (Set.instInterSet.{u1} Ω) s t))))
 Case conversion may be inaccurate. Consider using '#align probability_theory.cond_apply ProbabilityTheory.cond_applyₓ'. -/
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
-theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) :=
-  by
-  rw [cond, measure.smul_apply, measure.restrict_apply' hms, Set.inter_comm]
-  rfl
+theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
+  rw [cond, measure.smul_apply, measure.restrict_apply' hms, Set.inter_comm]; rfl
 #align probability_theory.cond_apply ProbabilityTheory.cond_apply
 
 #print ProbabilityTheory.cond_inter_self /-

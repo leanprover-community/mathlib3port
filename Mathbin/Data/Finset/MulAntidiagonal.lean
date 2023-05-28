@@ -34,10 +34,8 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} [_inst_1 : OrderedCancelCommMonoid.{u1} α], (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1)) s) -> (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1)) t) -> (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} (Set.{u1} α) (Set.{u1} α) (Set.{u1} α) (instHMul.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (RightCancelMonoid.toMonoid.{u1} α (CancelMonoid.toRightCancelMonoid.{u1} α (CancelCommMonoid.toCancelMonoid.{u1} α (OrderedCancelCommMonoid.toCancelCommMonoid.{u1} α _inst_1)))))))) s t))
 Case conversion may be inaccurate. Consider using '#align set.is_pwo.mul Set.IsPwo.mulₓ'. -/
 @[to_additive]
-theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) :=
-  by
-  rw [← image_mul_prod]
-  exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
+theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) := by
+  rw [← image_mul_prod]; exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
 #align set.is_pwo.mul Set.IsPwo.mul
 #align set.is_pwo.add Set.IsPwo.add
 
@@ -142,9 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.support_mul_antidiagonal_subset_mul Finset.support_mulAntidiagonal_subset_mulₓ'. -/
 @[to_additive]
 theorem support_mulAntidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
-  fun a ⟨b, hb⟩ => by
-  rw [mem_mul_antidiagonal] at hb
-  exact ⟨b.1, b.2, hb⟩
+  fun a ⟨b, hb⟩ => by rw [mem_mul_antidiagonal] at hb; exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mulAntidiagonal_subset_mul
 #align finset.support_add_antidiagonal_subset_add Finset.support_addAntidiagonal_subset_add
 

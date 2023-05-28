@@ -56,16 +56,10 @@ theorem impartial_def {G : PGame} :
 
 namespace Impartial
 
-instance impartial_zero : Impartial 0 :=
-  by
-  rw [impartial_def]
-  dsimp
-  simp
+instance impartial_zero : Impartial 0 := by rw [impartial_def]; dsimp; simp
 #align pgame.impartial.impartial_zero PGame.Impartial.impartial_zero
 
-instance impartial_star : Impartial star :=
-  by
-  rw [impartial_def]
+instance impartial_star : Impartial star := by rw [impartial_def];
   simpa using impartial.impartial_zero
 #align pgame.impartial.impartial_star PGame.Impartial.impartial_star
 
@@ -176,17 +170,13 @@ theorem mk'_add_self : ⟦G⟧ + ⟦G⟧ = 0 :=
 #align pgame.impartial.mk_add_self PGame.Impartial.mk'_add_self
 
 /-- This lemma doesn't require `H` to be impartial. -/
-theorem equiv_iff_add_equiv_zero (H : PGame) : (H ≈ G) ↔ (H + G ≈ 0) :=
-  by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iff _ _ _ (-⟦G⟧)]
-  simpa
+theorem equiv_iff_add_equiv_zero (H : PGame) : (H ≈ G) ↔ (H + G ≈ 0) := by
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_right_cancel_iff _ _ _ (-⟦G⟧)]; simpa
 #align pgame.impartial.equiv_iff_add_equiv_zero PGame.Impartial.equiv_iff_add_equiv_zero
 
 /-- This lemma doesn't require `H` to be impartial. -/
-theorem equiv_iff_add_equiv_zero' (H : PGame) : (G ≈ H) ↔ (G + H ≈ 0) :=
-  by
-  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iff _ _ _ (-⟦G⟧), eq_comm]
-  simpa
+theorem equiv_iff_add_equiv_zero' (H : PGame) : (G ≈ H) ↔ (G + H ≈ 0) := by
+  rw [equiv_iff_game_eq, equiv_iff_game_eq, ← @add_left_cancel_iff _ _ _ (-⟦G⟧), eq_comm]; simpa
 #align pgame.impartial.equiv_iff_add_equiv_zero' PGame.Impartial.equiv_iff_add_equiv_zero'
 
 theorem le_zero_iff {G : PGame} [G.Impartial] : G ≤ 0 ↔ 0 ≤ G := by

@@ -30,9 +30,7 @@ variable {α β : Type _} {n : ℕ} (a a' : α)
 
 #print Vector.get_mem /-
 @[simp]
-theorem get_mem (i : Fin n) (v : Vector α n) : v.get? i ∈ v.toList :=
-  by
-  rw [nth_eq_nth_le]
+theorem get_mem (i : Fin n) (v : Vector α n) : v.get? i ∈ v.toList := by rw [nth_eq_nth_le];
   exact List.nthLe_mem _ _ _
 #align vector.nth_mem Vector.get_mem
 -/

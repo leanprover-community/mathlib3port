@@ -178,14 +178,10 @@ instance : Group (unitary R) :=
     mul_left_inv := star_mul_self }
 
 instance : InvolutiveStar (unitary R) :=
-  ⟨fun _ => by
-    ext
-    simp only [coe_star, star_star]⟩
+  ⟨fun _ => by ext; simp only [coe_star, star_star]⟩
 
 instance : StarSemigroup (unitary R) :=
-  ⟨fun _ _ => by
-    ext
-    simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
+  ⟨fun _ _ => by ext; simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
 
 instance : Inhabited (unitary R) :=
   ⟨1⟩
@@ -304,10 +300,7 @@ section Ring
 variable [Ring R] [StarRing R]
 
 instance : Neg (unitary R)
-    where neg U :=
-    ⟨-U, by
-      simp_rw [mem_iff, star_neg, neg_mul_neg]
-      exact U.prop⟩
+    where neg U := ⟨-U, by simp_rw [mem_iff, star_neg, neg_mul_neg]; exact U.prop⟩
 
 /- warning: unitary.coe_neg -> unitary.coe_neg is a dubious translation:
 <too large>

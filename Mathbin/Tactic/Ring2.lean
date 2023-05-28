@@ -276,10 +276,8 @@ theorem cseval_addConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Horn
   · rcases cs with ⟨n, rfl⟩
     refine' ⟨⟨n + Num.pos k, by simp [add_comm] <;> rfl⟩, _⟩
     cases n <;> simp!
-  · rcases B cs.2 with ⟨csb, h⟩
-    simp! [*, cs.1]
-    rw [← Tactic.Ring.horner_add_const, add_comm]
-    rw [add_comm]
+  · rcases B cs.2 with ⟨csb, h⟩; simp! [*, cs.1]
+    rw [← Tactic.Ring.horner_add_const, add_comm]; rw [add_comm]
 #align tactic.ring2.horner_expr.cseval_add_const Tactic.Ring2.HornerExpr.cseval_addConst
 
 theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
@@ -289,10 +287,8 @@ theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : Is
   cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
   · simp! [*, Tactic.Ring.horner]
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
-  · refine' ⟨⟨h₁.1, h₂⟩, Eq.symm _⟩
-    simp! [*]
-    apply Tactic.Ring.horner_horner
-    simp
+  · refine' ⟨⟨h₁.1, h₂⟩, Eq.symm _⟩; simp! [*]
+    apply Tactic.Ring.horner_horner; simp
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
 #align tactic.ring2.horner_expr.cseval_horner' Tactic.Ring2.HornerExpr.cseval_horner'
 
@@ -343,8 +339,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       · apply add_comm
     · have : (horner a₂ x₁ (Num.pos k) 0).IsCs := ⟨csa₂, 0, rfl⟩
       simp [B₁ csb₁ csb₂, A₁ csa₁ this]
-      symm
-      apply Tactic.Ring.horner_add_horner_lt
+      symm; apply Tactic.Ring.horner_add_horner_lt
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
         simpa using congr_arg (coe : ZNum → ℤ) e
@@ -366,16 +361,11 @@ theorem cseval_mulConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Horn
     exact ⟨cs, (mul_one _).symm⟩
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
-    suffices
-    refine' ⟨⟨n * k, this⟩, _⟩
-    swap
-    · cases n <;> cases k <;> rfl
-    rw [show _ from this]
-    simp!
-  · cases cs
-    simp! [*]
-    symm
-    apply Tactic.Ring.horner_mul_const <;> rfl
+    suffices; refine' ⟨⟨n * k, this⟩, _⟩
+    swap; · cases n <;> cases k <;> rfl
+    rw [show _ from this]; simp!
+  · cases cs; simp! [*]
+    symm; apply Tactic.Ring.horner_mul_const <;> rfl
 #align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mulConst
 
 theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
@@ -392,11 +382,9 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   cases' A₂ csa₂ with csA₂ hA₂
   cases PosNum.cmp x₁ x₂ <;> simp!
   · simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
-    symm
-    apply Tactic.Ring.horner_mul_const <;> rfl
+    symm; apply Tactic.Ring.horner_mul_const <;> rfl
   · cases' cseval_horner' t _ x₁ n₂ 0 csA₂ ⟨0, rfl⟩ with csh₁ h₁
-    cases C
-    split_ifs
+    cases C; split_ifs
     · subst b₂
       refine' ⟨csh₁, h₁.trans (Eq.symm _)⟩
       apply Tactic.Ring.horner_mul_horner_zero <;> try rfl
@@ -407,11 +395,9 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
         apply Tactic.Ring.horner_mul_horner <;> try rfl
         simp! [*]
       exact ⟨csA₁, (B₁ csb₁ csb₂).1⟩
-  · simp [A₂ csa₂, B₂ csb₂]
-    rw [mul_comm, eq_comm]
+  · simp [A₂ csa₂, B₂ csb₂]; rw [mul_comm, eq_comm]
     apply Tactic.Ring.horner_const_mul
-    · apply mul_comm
-    · rfl
+    · apply mul_comm; · rfl
 #align tactic.ring2.horner_expr.cseval_mul Tactic.Ring2.HornerExpr.cseval_mul
 
 theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :

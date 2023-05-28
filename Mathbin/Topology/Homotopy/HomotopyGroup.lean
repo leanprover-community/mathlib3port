@@ -104,10 +104,7 @@ namespace GenLoop
 instance funLike : FunLike (GenLoop n x) (I^ n) fun _ => X
     where
   coe f := f.1
-  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h =>
-    by
-    congr
-    exact h
+  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by congr ; exact h
 #align gen_loop.fun_like GenLoop.funLike
 
 @[ext]
@@ -184,9 +181,7 @@ local notation "π" => HomotopyGroup
 def genLoopZeroEquiv : GenLoop 0 x ≃ X where
   toFun f := f 0
   invFun x := ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0ₓ⟩
-  left_inv f := by
-    ext1
-    exact congr_arg f (Subsingleton.elim _ _)
+  left_inv f := by ext1; exact congr_arg f (Subsingleton.elim _ _)
   right_inv _ := rfl
 #align gen_loop_zero_equiv genLoopZeroEquiv
 
@@ -214,10 +209,7 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
 def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x
     where
   toFun p :=
-    Path.mk
-      ⟨fun t => p fun _ => t, by
-        continuity
-        exact p.1.2⟩
+    Path.mk ⟨fun t => p fun _ => t, by continuity; exact p.1.2⟩
       (p.boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
   invFun p :=
     { toFun := fun c => p c.headI
@@ -225,12 +217,8 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x
         by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
         exacts[p.source, p.target] }
-  left_inv p := by
-    ext1
-    exact congr_arg p y.one_char.symm
-  right_inv p := by
-    ext
-    rfl
+  left_inv p := by ext1; exact congr_arg p y.one_char.symm
+  right_inv p := by ext; rfl
 #align gen_loop_one_equiv_path_self genLoopOneEquivPathSelf
 
 /-- The first homotopy group at `x` is equivalent to the fundamental group,
@@ -249,17 +237,11 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x :=
         map_one_left' := fun _ => by convert H.apply_one _
         prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
     ⟨{  toFun := fun tx => H (tx.fst, tx.snd.head)
-        map_zero_left' := fun y => by
-          convert H.apply_zero _
-          exact y.one_char
-        map_one_left' := fun y => by
-          convert H.apply_one _
-          exact y.one_char
+        map_zero_left' := fun y => by convert H.apply_zero _; exact y.one_char
+        map_one_left' := fun y => by convert H.apply_one _; exact y.one_char
         prop' := fun t y ⟨i, iH⟩ => by
           cases Unique.eq_default i; constructor
-          · convert H.eq_fst _ _
-            exacts[y.one_char, iH]
-          · convert H.eq_snd _ _
-            exacts[y.one_char, iH] }⟩]
+          · convert H.eq_fst _ _; exacts[y.one_char, iH]
+          · convert H.eq_snd _ _; exacts[y.one_char, iH] }⟩]
 #align pi1_equiv_fundamental_group pi1EquivFundamentalGroup
 

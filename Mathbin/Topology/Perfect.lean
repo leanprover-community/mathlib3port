@@ -144,8 +144,7 @@ theorem Preperfect.perfect_closure (hC : Preperfect C) : Perfect (closure C) :=
 /-- In a T1 space, being preperfect is equivalent to having perfect closure.-/
 theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (closure C) :=
   by
-  constructor <;> intro h
-  · exact h.perfect_closure
+  constructor <;> intro h; · exact h.perfect_closure
   intro x xC
   have H : AccPt x (𝓟 (closure C)) := h.acc _ (subset_closure xC)
   rw [accPt_iff_frequently] at *

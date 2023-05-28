@@ -131,8 +131,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
     refine' h.resolve_right fun hp => _
     specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom
-    rw [pow_eq_zero hp, map_zero, norm_zero] at hx
-    norm_num at hx
+    rw [pow_eq_zero hp, map_zero, norm_zero] at hx; norm_num at hx
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
 #align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
@@ -175,9 +174,7 @@ theorem conjugate_coe_eq (φ : K →+* ℂ) (x : K) : (conjugate φ) x = conj (�
   rfl
 #align number_field.complex_embedding.conjugate_coe_eq NumberField.ComplexEmbedding.conjugate_coe_eq
 
-theorem place_conjugate (φ : K →+* ℂ) : place (conjugate φ) = place φ :=
-  by
-  ext
+theorem place_conjugate (φ : K →+* ℂ) : place (conjugate φ) = place φ := by ext;
   simp only [place_apply, norm_eq_abs, abs_conj, conjugate_coe_eq]
 #align number_field.complex_embedding.place_conjugate NumberField.ComplexEmbedding.place_conjugate
 
@@ -212,9 +209,8 @@ theorem IsReal.coe_embedding_apply {φ : K →+* ℂ} (hφ : IsReal φ) (x : K) 
     exact RingHom.congr_fun hφ x
 #align number_field.complex_embedding.is_real.coe_embedding_apply NumberField.ComplexEmbedding.IsReal.coe_embedding_apply
 
-theorem IsReal.place_embedding {φ : K →+* ℂ} (hφ : IsReal φ) : place hφ.Embedding = place φ :=
-  by
-  ext x
+theorem IsReal.place_embedding {φ : K →+* ℂ} (hφ : IsReal φ) : place hφ.Embedding = place φ := by
+  ext x;
   simp only [place_apply, Real.norm_eq_abs, ← abs_of_real, norm_eq_abs, hφ.coe_embedding_apply x]
 #align number_field.complex_embedding.is_real.place_embedding NumberField.ComplexEmbedding.IsReal.place_embedding
 
@@ -329,12 +325,10 @@ theorem mk_eq_iff {φ ψ : K →+* ℂ} : mk φ = mk ψ ↔ φ = ψ ∨ ComplexE
         rfl
       exact congr_fun (congr_arg coeFn h₀) _
     cases Complex.uniformContinuous_ringHom_eq_id_or_conj φ.field_range hlip.uniform_continuous
-    · left
-      ext1 x
+    · left; ext1 x
       convert(congr_fun h (ι x)).symm
       exact (RingEquiv.apply_symm_apply ι.symm x).symm
-    · right
-      ext1 x
+    · right; ext1 x
       convert(congr_fun h (ι x)).symm
       exact (RingEquiv.apply_symm_apply ι.symm x).symm
   · rintro (⟨h⟩ | ⟨h⟩)
@@ -392,10 +386,8 @@ theorem not_isComplex_iff_isReal {w : InfinitePlace K} : ¬IsComplex w ↔ IsRea
   rw [← not_is_real_iff_is_complex, Classical.not_not]
 #align number_field.infinite_place.not_is_complex_iff_is_real NumberField.InfinitePlace.not_isComplex_iff_isReal
 
-theorem isReal_or_isComplex (w : InfinitePlace K) : IsReal w ∨ IsComplex w :=
-  by
-  rw [← not_is_real_iff_is_complex]
-  exact em _
+theorem isReal_or_isComplex (w : InfinitePlace K) : IsReal w ∨ IsComplex w := by
+  rw [← not_is_real_iff_is_complex]; exact em _
 #align number_field.infinite_place.is_real_or_is_complex NumberField.InfinitePlace.isReal_or_isComplex
 
 /-- For `w` a real infinite place, return the corresponding embedding as a morphism `K →+* ℝ`. -/
@@ -413,10 +405,7 @@ theorem IsReal.place_embedding_apply {w : InfinitePlace K} (hw : IsReal w) (x : 
 
 @[simp]
 theorem IsReal.abs_embedding_apply {w : InfinitePlace K} (hw : IsReal w) (x : K) :
-    |IsReal.embedding hw x| = w x :=
-  by
-  rw [← is_real.place_embedding_apply hw x]
-  congr
+    |IsReal.embedding hw x| = w x := by rw [← is_real.place_embedding_apply hw x]; congr
 #align number_field.infinite_place.is_real.abs_embedding_apply NumberField.InfinitePlace.IsReal.abs_embedding_apply
 
 variable (K)

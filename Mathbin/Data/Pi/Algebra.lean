@@ -451,8 +451,7 @@ theorem apply_mulSingle₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 
     (y : g i) (j : I) : f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j :=
   by
   by_cases h : j = i
-  · subst h
-    simp only [mul_single_eq_same]
+  · subst h; simp only [mul_single_eq_same]
   · simp only [mul_single_eq_of_ne h, hf']
 #align pi.apply_mul_single₂ Pi.apply_mulSingle₂
 #align pi.apply_single₂ Pi.apply_single₂
@@ -685,10 +684,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (a : α -> γ) (a' : α -> γ) (b : β -> γ) (b' : β -> γ) [_inst_1 : Mul.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (HMul.hMul.{max u2 u3, max u2 u3, max u2 u3} (α -> γ) (α -> γ) (α -> γ) (instHMul.{max u2 u3} (α -> γ) (Pi.instMul.{u2, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))) a a') (HMul.hMul.{max u1 u3, max u1 u3, max u1 u3} (β -> γ) (β -> γ) (β -> γ) (instHMul.{max u1 u3} (β -> γ) (Pi.instMul.{u1, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1))) b b')) (HMul.hMul.{max (max u2 u1) u3, max (max u2 u1) u3, max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) (instHMul.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instMul.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (ᾰ : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))) (Sum.elim.{u2, u1, succ u3} α β γ a b) (Sum.elim.{u2, u1, succ u3} α β γ a' b'))
 Case conversion may be inaccurate. Consider using '#align sum.elim_mul_mul Sum.elim_mul_mulₓ'. -/
 @[to_additive]
-theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' :=
-  by
-  ext x
-  cases x <;> rfl
+theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' := by
+  ext x; cases x <;> rfl
 #align sum.elim_mul_mul Sum.elim_mul_mul
 #align sum.elim_add_add Sum.elim_add_add
 
@@ -699,10 +696,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (a : α -> γ) (a' : α -> γ) (b : β -> γ) (b' : β -> γ) [_inst_1 : Div.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (HDiv.hDiv.{max u2 u3, max u2 u3, max u2 u3} (α -> γ) (α -> γ) (α -> γ) (instHDiv.{max u2 u3} (α -> γ) (Pi.instDiv.{u2, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))) a a') (HDiv.hDiv.{max u1 u3, max u1 u3, max u1 u3} (β -> γ) (β -> γ) (β -> γ) (instHDiv.{max u1 u3} (β -> γ) (Pi.instDiv.{u1, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1))) b b')) (HDiv.hDiv.{max (max u2 u1) u3, max (max u2 u1) u3, max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) (instHDiv.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instDiv.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (ᾰ : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))) (Sum.elim.{u2, u1, succ u3} α β γ a b) (Sum.elim.{u2, u1, succ u3} α β γ a' b'))
 Case conversion may be inaccurate. Consider using '#align sum.elim_div_div Sum.elim_div_divₓ'. -/
 @[to_additive]
-theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' :=
-  by
-  ext x
-  cases x <;> rfl
+theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' := by
+  ext x; cases x <;> rfl
 #align sum.elim_div_div Sum.elim_div_div
 #align sum.elim_sub_sub Sum.elim_sub_sub
 

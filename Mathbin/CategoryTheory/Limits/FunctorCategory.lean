@@ -103,10 +103,7 @@ def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
   pt :=
     { obj := fun k => (c k).Cone.pt
       map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩
-      map_id' := fun k =>
-        (c k).IsLimit.hom_ext fun j => by
-          dsimp
-          simp
+      map_id' := fun k => (c k).IsLimit.hom_ext fun j => by dsimp; simp
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₃).IsLimit.hom_ext fun j => by simp }
   π :=
     { app := fun j => { app := fun k => (c k).Cone.π.app j }
@@ -184,10 +181,7 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
   pt :=
     { obj := fun k => (c k).Cocone.pt
       map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩
-      map_id' := fun k =>
-        (c k).IsColimit.hom_ext fun j => by
-          dsimp
-          simp
+      map_id' := fun k => (c k).IsColimit.hom_ext fun j => by dsimp; simp
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₁).IsColimit.hom_ext fun j => by simp }
   ι :=
     { app := fun j => { app := fun k => (c k).Cocone.ι.app j }
@@ -313,10 +307,7 @@ theorem limit_map_limitObjIsoLimitCompEvaluation_hom [HasLimitsOfShape J C] {i j
     (F : J ⥤ K ⥤ C) (f : i ⟶ j) :
     (limit F).map f ≫ (limitObjIsoLimitCompEvaluation _ _).Hom =
       (limitObjIsoLimitCompEvaluation _ _).Hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
-  by
-  ext
-  dsimp
-  simp
+  by ext; dsimp; simp
 #align category_theory.limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom CategoryTheory.Limits.limit_map_limitObjIsoLimitCompEvaluation_hom
 
 /- warning: category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map -> CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_inv_limit_map is a dubious translation:
@@ -408,10 +399,7 @@ theorem colimitObjIsoColimitCompEvaluation_inv_colimit_map [HasColimitsOfShape J
     (colimitObjIsoColimitCompEvaluation _ _).inv ≫ (colimit F).map f =
       colimMap (whiskerLeft _ ((evaluation _ _).map f)) ≫
         (colimitObjIsoColimitCompEvaluation _ _).inv :=
-  by
-  ext
-  dsimp
-  simp
+  by ext; dsimp; simp
 #align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_inv_colimit_map
 
 /- warning: category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom -> CategoryTheory.Limits.colimit_map_colimitObjIsoColimitCompEvaluation_hom is a dubious translation:

@@ -300,11 +300,8 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u2}} {δ : Type.{u1}} {r : α -> β -> Prop} {p : γ -> δ -> Prop} {s : Multiset.{u4} α} {t : Multiset.{u3} β} {f : α -> (Multiset.{u2} γ)} {g : β -> (Multiset.{u1} δ)}, (Relator.LiftFun.{succ u4, succ u3, succ u2, succ u1} α β (Multiset.{u2} γ) (Multiset.{u1} δ) r (Multiset.Rel.{u2, u1} γ δ p) f g) -> (Multiset.Rel.{u4, u3} α β r s t) -> (Multiset.Rel.{u2, u1} γ δ p (Multiset.bind.{u4, u2} α γ s f) (Multiset.bind.{u3, u1} β δ t g))
 Case conversion may be inaccurate. Consider using '#align multiset.rel_bind Multiset.rel_bindₓ'. -/
 theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α → Multiset γ}
-    {g : β → Multiset δ} (h : (r ⇒ Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) :=
-  by
-  apply rel_join
-  rw [rel_map]
-  exact hst.mono fun a ha b hb hr => h hr
+    {g : β → Multiset δ} (h : (r ⇒ Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
+  apply rel_join; rw [rel_map]; exact hst.mono fun a ha b hb hr => h hr
 #align multiset.rel_bind Multiset.rel_bind
 
 /- warning: multiset.count_sum -> Multiset.count_sum is a dubious translation:
@@ -387,10 +384,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (l₁ : List.{u2} α) (l₂ : List.{u1} β), Eq.{max (succ u2) (succ u1)} (Multiset.{max u1 u2} (Prod.{u2, u1} α β)) (Multiset.product.{u2, u1} α β (Multiset.ofList.{u2} α l₁) (Multiset.ofList.{u1} β l₂)) (Multiset.ofList.{max u2 u1} (Prod.{u2, u1} α β) (List.product.{u2, u1} α β l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align multiset.coe_product Multiset.coe_productₓ'. -/
 @[simp]
-theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ :=
-  by
-  rw [product, List.product, ← coe_bind]
-  simp
+theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ := by
+  rw [product, List.product, ← coe_bind]; simp
 #align multiset.coe_product Multiset.coe_product
 
 /- warning: multiset.zero_product -> Multiset.zero_product is a dubious translation:

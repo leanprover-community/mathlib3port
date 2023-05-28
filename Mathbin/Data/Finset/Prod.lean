@@ -128,18 +128,14 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Finset.{u2} α} {t : Finset.{u1} β} [_inst_1 : DecidableEq.{succ u2} α], (Finset.Nonempty.{u1} β t) -> (Eq.{succ u2} (Finset.{u2} α) (Finset.image.{max u1 u2, u2} (Prod.{u2, u1} α β) α (fun (a : α) (b : α) => _inst_1 a b) (Prod.fst.{u2, u1} α β) (Finset.product.{u2, u1} α β s t)) s)
 Case conversion may be inaccurate. Consider using '#align finset.product_image_fst Finset.product_image_fstₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem product_image_fst [DecidableEq α] (ht : t.Nonempty) : (s ×ˢ t).image Prod.fst = s :=
-  by
-  ext i
-  simp [mem_image, ht.bex]
+theorem product_image_fst [DecidableEq α] (ht : t.Nonempty) : (s ×ˢ t).image Prod.fst = s := by
+  ext i; simp [mem_image, ht.bex]
 #align finset.product_image_fst Finset.product_image_fst
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.product_image_snd /-
-theorem product_image_snd [DecidableEq β] (ht : s.Nonempty) : (s ×ˢ t).image Prod.snd = t :=
-  by
-  ext i
-  simp [mem_image, ht.bex]
+theorem product_image_snd [DecidableEq β] (ht : s.Nonempty) : (s ×ˢ t).image Prod.snd = t := by
+  ext i; simp [mem_image, ht.bex]
 #align finset.product_image_snd Finset.product_image_snd
 -/
 
@@ -197,9 +193,7 @@ Case conversion may be inaccurate. Consider using '#align finset.map_swap_produc
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_swap_product (s : Finset α) (t : Finset β) :
     (t ×ˢ s).map ⟨Prod.swap, Prod.swap_injective⟩ = s ×ˢ t :=
-  coe_injective <| by
-    push_cast
-    exact Set.image_swap_prod _ _
+  coe_injective <| by push_cast ; exact Set.image_swap_prod _ _
 #align finset.map_swap_product Finset.map_swap_product
 
 /- warning: finset.image_swap_product -> Finset.image_swap_product is a dubious translation:
@@ -213,9 +207,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_swap_prod
 @[simp]
 theorem image_swap_product [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     (t ×ˢ s).image Prod.swap = s ×ˢ t :=
-  coe_injective <| by
-    push_cast
-    exact Set.image_swap_prod _ _
+  coe_injective <| by push_cast ; exact Set.image_swap_prod _ _
 #align finset.image_swap_product Finset.image_swap_product
 
 /- warning: finset.product_eq_bUnion -> Finset.product_eq_biUnion is a dubious translation:
@@ -283,8 +275,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product 
 theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
     ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ∧ q x.2) = s.filterₓ p ×ˢ t.filterₓ q :=
   by
-  ext ⟨a, b⟩
-  simp only [mem_filter, mem_product]
+  ext ⟨a, b⟩; simp only [mem_filter, mem_product]
   exact and_and_and_comm (a ∈ s) (b ∈ t) (p a) (q b)
 #align finset.filter_product Finset.filter_product
 
@@ -325,14 +316,10 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
   by
   classical
     rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
-    · apply congr_arg
-      ext ⟨a, b⟩
-      simp only [filter_union_right, mem_filter, mem_product]
+    · apply congr_arg; ext ⟨a, b⟩; simp only [filter_union_right, mem_filter, mem_product]
       constructor <;> intro h <;> use h.1
       simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
-      cases h.2 <;>
-        · try simp at h_1
-          simp [h_1]
+      cases h.2 <;> · try simp at h_1; simp [h_1]
     · apply Finset.disjoint_filter_filter'
       exact (disjoint_compl_right.inf_left _).inf_right _
 #align finset.filter_product_card Finset.filter_product_card
@@ -426,9 +413,7 @@ Case conversion may be inaccurate. Consider using '#align finset.singleton_produ
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk a, Prod.mk.inj_left _⟩ :=
-  by
-  ext ⟨x, y⟩
-  simp [and_left_comm, eq_comm]
+  by ext ⟨x, y⟩; simp [and_left_comm, eq_comm]
 #align finset.singleton_product Finset.singleton_product
 
 /- warning: finset.product_singleton -> Finset.product_singleton is a dubious translation:
@@ -439,10 +424,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.product_singleton Finset.product_singletonₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ :=
-  by
-  ext ⟨x, y⟩
-  simp [and_left_comm, eq_comm]
+theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ := by
+  ext ⟨x, y⟩; simp [and_left_comm, eq_comm]
 #align finset.product_singleton Finset.product_singleton
 
 /- warning: finset.singleton_product_singleton -> Finset.singleton_product_singleton is a dubious translation:
@@ -467,10 +450,8 @@ Case conversion may be inaccurate. Consider using '#align finset.union_product F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s') ×ˢ t = s ×ˢ t ∪ s' ×ˢ t :=
-  by
-  ext ⟨x, y⟩
-  simp only [or_and_right, mem_union, mem_product]
+theorem union_product [DecidableEq α] [DecidableEq β] : (s ∪ s') ×ˢ t = s ×ˢ t ∪ s' ×ˢ t := by
+  ext ⟨x, y⟩; simp only [or_and_right, mem_union, mem_product]
 #align finset.union_product Finset.union_product
 
 /- warning: finset.product_union -> Finset.product_union is a dubious translation:
@@ -483,10 +464,8 @@ Case conversion may be inaccurate. Consider using '#align finset.product_union F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem product_union [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∪ t') = s ×ˢ t ∪ s ×ˢ t' :=
-  by
-  ext ⟨x, y⟩
-  simp only [and_or_left, mem_union, mem_product]
+theorem product_union [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∪ t') = s ×ˢ t ∪ s ×ˢ t' := by
+  ext ⟨x, y⟩; simp only [and_or_left, mem_union, mem_product]
 #align finset.product_union Finset.product_union
 
 /- warning: finset.inter_product -> Finset.inter_product is a dubious translation:
@@ -498,10 +477,8 @@ Case conversion may be inaccurate. Consider using '#align finset.inter_product F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem inter_product [DecidableEq α] [DecidableEq β] : (s ∩ s') ×ˢ t = s ×ˢ t ∩ s' ×ˢ t :=
-  by
-  ext ⟨x, y⟩
-  simp only [← and_and_right, mem_inter, mem_product]
+theorem inter_product [DecidableEq α] [DecidableEq β] : (s ∩ s') ×ˢ t = s ×ˢ t ∩ s' ×ˢ t := by
+  ext ⟨x, y⟩; simp only [← and_and_right, mem_inter, mem_product]
 #align finset.inter_product Finset.inter_product
 
 /- warning: finset.product_inter -> Finset.product_inter is a dubious translation:
@@ -513,10 +490,8 @@ Case conversion may be inaccurate. Consider using '#align finset.product_inter F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem product_inter [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∩ t') = s ×ˢ t ∩ s ×ˢ t' :=
-  by
-  ext ⟨x, y⟩
-  simp only [← and_and_left, mem_inter, mem_product]
+theorem product_inter [DecidableEq α] [DecidableEq β] : s ×ˢ (t ∩ t') = s ×ˢ t ∩ s ×ˢ t' := by
+  ext ⟨x, y⟩; simp only [← and_and_left, mem_inter, mem_product]
 #align finset.product_inter Finset.product_inter
 
 /- warning: finset.product_inter_product -> Finset.product_inter_product is a dubious translation:
@@ -529,9 +504,7 @@ Case conversion may be inaccurate. Consider using '#align finset.product_inter_p
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_inter_product [DecidableEq α] [DecidableEq β] :
-    s ×ˢ t ∩ s' ×ˢ t' = (s ∩ s') ×ˢ (t ∩ t') :=
-  by
-  ext ⟨x, y⟩
+    s ×ˢ t ∩ s' ×ˢ t' = (s ∩ s') ×ˢ (t ∩ t') := by ext ⟨x, y⟩;
   simp only [and_assoc', and_left_comm, mem_inter, mem_product]
 #align finset.product_inter_product Finset.product_inter_product
 
@@ -607,18 +580,16 @@ variable {s} {x : α × α}
 @[simp]
 theorem mem_diag : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 :=
   by
-  simp only [diag, mem_filter, mem_product]
+  simp only [diag, mem_filter, mem_product];
   constructor <;> intro h <;> simp only [h, and_true_iff, eq_self_iff_true, and_self_iff]
-  rw [← h.2]
-  exact h.1
+  rw [← h.2]; exact h.1
 #align finset.mem_diag Finset.mem_diag
 -/
 
 #print Finset.mem_offDiag /-
 @[simp]
-theorem mem_offDiag : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 :=
-  by
-  simp only [off_diag, mem_filter, mem_product]
+theorem mem_offDiag : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 := by
+  simp only [off_diag, mem_filter, mem_product];
   constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_self_iff]
 #align finset.mem_off_diag Finset.mem_offDiag
 -/
@@ -636,18 +607,11 @@ theorem coe_offDiag : (s.offDiag : Set (α × α)) = (s : Set α).offDiag :=
 @[simp]
 theorem diag_card : (diag s).card = s.card :=
   by
-  suffices diag s = s.image fun a => (a, a) by
-    rw [this]
-    apply card_image_of_inj_on
+  suffices diag s = s.image fun a => (a, a) by rw [this]; apply card_image_of_inj_on;
     exact fun x1 h1 x2 h2 h3 => (Prod.mk.inj h3).1
-  ext ⟨a₁, a₂⟩
-  rw [mem_diag]
-  constructor <;> intro h <;> rw [Finset.mem_image] at *
+  ext ⟨a₁, a₂⟩; rw [mem_diag]; constructor <;> intro h <;> rw [Finset.mem_image] at *
   · use a₁, h.1, prod.mk.inj_iff.mpr ⟨rfl, h.2⟩
-  · rcases h with ⟨a, h1, h2⟩
-    have h := Prod.mk.inj h2
-    rw [← h.1, ← h.2]
-    use h1
+  · rcases h with ⟨a, h1, h2⟩; have h := Prod.mk.inj h2; rw [← h.1, ← h.2]; use h1
 #align finset.diag_card Finset.diag_card
 -/
 
@@ -655,12 +619,8 @@ theorem diag_card : (diag s).card = s.card :=
 @[simp]
 theorem offDiag_card : (offDiag s).card = s.card * s.card - s.card :=
   by
-  suffices (diag s).card + (off_diag s).card = s.card * s.card
-    by
-    nth_rw 3 [← s.diag_card]
-    simp only [diag_card] at *
-    rw [tsub_eq_of_eq_add_rev]
-    rw [this]
+  suffices (diag s).card + (off_diag s).card = s.card * s.card by nth_rw 3 [← s.diag_card];
+    simp only [diag_card] at *; rw [tsub_eq_of_eq_add_rev]; rw [this]
   rw [← card_product]
   apply filter_card_add_filter_neg_card_eq_card
 #align finset.off_diag_card Finset.offDiag_card
@@ -757,9 +717,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (Inter.inter.{u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.instInterFinset.{u1} (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) a b)) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s) (Finset.offDiag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
 Case conversion may be inaccurate. Consider using '#align finset.off_diag_inter Finset.offDiag_interₓ'. -/
 theorem offDiag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
-  coe_injective <| by
-    push_cast
-    exact Set.offDiag_inter _ _
+  coe_injective <| by push_cast ; exact Set.offDiag_inter _ _
 #align finset.off_diag_inter Finset.offDiag_inter
 
 /- warning: finset.diag_union -> Finset.diag_union is a dubious translation:
@@ -768,9 +726,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.diag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (Union.union.{u1} (Finset.{u1} (Prod.{u1, u1} α α)) (Finset.instUnionFinset.{u1} (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) a b)) (Finset.diag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s) (Finset.diag.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
 Case conversion may be inaccurate. Consider using '#align finset.diag_union Finset.diag_unionₓ'. -/
-theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag :=
-  by
-  ext ⟨i, j⟩
+theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by ext ⟨i, j⟩;
   simp only [mem_diag, mem_union, or_and_right]
 #align finset.diag_union Finset.diag_union
 
@@ -786,9 +742,7 @@ Case conversion may be inaccurate. Consider using '#align finset.off_diag_union 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem offDiag_union (h : Disjoint s t) :
     (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
-  coe_injective <| by
-    push_cast
-    exact Set.offDiag_union (disjoint_coe.2 h)
+  coe_injective <| by push_cast ; exact Set.offDiag_union (disjoint_coe.2 h)
 #align finset.off_diag_union Finset.offDiag_union
 
 variable (a : α)

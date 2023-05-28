@@ -304,10 +304,7 @@ but is expected to have type
   forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] [_inst_2 : CategoryTheory.ConcreteCategory.{u2, u1, u3} C _inst_1] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) X Y) [_inst_3 : CategoryTheory.IsIso.{u1, u3} C _inst_1 X Y f], Function.Bijective.{succ u2, succ u2} (Prefunctor.obj.{succ u1, succ u2, u3, succ u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Type.{u2} (CategoryTheory.CategoryStruct.toQuiver.{u2, succ u2} Type.{u2} (CategoryTheory.Category.toCategoryStruct.{u2, succ u2} Type.{u2} CategoryTheory.types.{u2})) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, succ u2} C _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.forget.{u3, u2, u1} C _inst_1 _inst_2)) X) (Prefunctor.obj.{succ u1, succ u2, u3, succ u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Type.{u2} (CategoryTheory.CategoryStruct.toQuiver.{u2, succ u2} Type.{u2} (CategoryTheory.Category.toCategoryStruct.{u2, succ u2} Type.{u2} CategoryTheory.types.{u2})) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, succ u2} C _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.forget.{u3, u2, u1} C _inst_1 _inst_2)) Y) (Prefunctor.map.{succ u1, succ u2, u3, succ u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) Type.{u2} (CategoryTheory.CategoryStruct.toQuiver.{u2, succ u2} Type.{u2} (CategoryTheory.Category.toCategoryStruct.{u2, succ u2} Type.{u2} CategoryTheory.types.{u2})) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, succ u2} C _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.forget.{u3, u2, u1} C _inst_1 _inst_2)) X Y f)
 Case conversion may be inaccurate. Consider using '#align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_isIsoₓ'. -/
 theorem ConcreteCategory.bijective_of_isIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
-    Function.Bijective ((forget C).map f) :=
-  by
-  rw [← is_iso_iff_bijective]
-  infer_instance
+    Function.Bijective ((forget C).map f) := by rw [← is_iso_iff_bijective]; infer_instance
 #align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_isIso
 
 #print CategoryTheory.ConcreteCategory.hasCoeToFun_Type /-
@@ -351,9 +348,7 @@ instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCat
 instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
     [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesMonomorphisms] :
     (forget₂ C D).PreservesMonomorphisms :=
-  have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms :=
-    by
-    simp only [has_forget₂.forget_comp]
+  have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms := by simp only [has_forget₂.forget_comp];
     infer_instance
   functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preservesMonomorphisms
@@ -363,9 +358,7 @@ instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C
 instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
     [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesEpimorphisms] :
     (forget₂ C D).PreservesEpimorphisms :=
-  have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms :=
-    by
-    simp only [has_forget₂.forget_comp]
+  have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms := by simp only [has_forget₂.forget_comp];
     infer_instance
   functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preservesEpimorphisms

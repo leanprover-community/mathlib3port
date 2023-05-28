@@ -59,20 +59,14 @@ instance : Linear k (FdRep k G) := by infer_instance
 instance : CoeSort (FdRep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
-instance (V : FdRep k G) : AddCommGroup V :=
-  by
-  change AddCommGroup ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
-  infer_instance
+instance (V : FdRep k G) : AddCommGroup V := by
+  change AddCommGroup ((forget₂ (FdRep k G) (FgModule k)).obj V).obj; infer_instance
 
-instance (V : FdRep k G) : Module k V :=
-  by
-  change Module k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
-  infer_instance
+instance (V : FdRep k G) : Module k V := by
+  change Module k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj; infer_instance
 
-instance (V : FdRep k G) : FiniteDimensional k V :=
-  by
-  change FiniteDimensional k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
-  infer_instance
+instance (V : FdRep k G) : FiniteDimensional k V := by
+  change FiniteDimensional k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj; infer_instance
 
 /-- All hom spaces are finite dimensional. -/
 instance (V W : FdRep k G) : FiniteDimensional k (V ⟶ W) :=
@@ -107,9 +101,7 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
 instance : HasForget₂ (FdRep k G) (Rep k G)
     where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
 
-theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ :=
-  by
-  ext (g v)
+theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ := by ext (g v);
   rfl
 #align fdRep.forget₂_ρ FdRep.forget₂_ρ
 
@@ -142,12 +134,8 @@ def forget₂HomLinearEquiv (X Y : FdRep k G) :
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨(forget₂ (FgModule k) (ModuleCat k)).map f.hom, f.comm⟩
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 #align fdRep.forget₂_hom_linear_equiv FdRep.forget₂HomLinearEquiv
 
 end FdRep
@@ -157,10 +145,8 @@ namespace FdRep
 variable {k G : Type u} [Field k] [Group G]
 
 -- Verify that the right rigid structure is available when the monoid is a group.
-noncomputable instance : RightRigidCategory (FdRep k G) :=
-  by
-  change right_rigid_category (Action (FgModule k) (GroupCat.of G))
-  infer_instance
+noncomputable instance : RightRigidCategory (FdRep k G) := by
+  change right_rigid_category (Action (FgModule k) (GroupCat.of G)); infer_instance
 
 end FdRep
 

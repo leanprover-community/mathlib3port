@@ -62,10 +62,8 @@ but is expected to have type
   Continuous.{0, 0} Complex Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) Complex.sin
 Case conversion may be inaccurate. Consider using '#align complex.continuous_sin Complex.continuous_sinₓ'. -/
 @[continuity]
-theorem continuous_sin : Continuous sin :=
-  by
-  change Continuous fun z => (exp (-z * I) - exp (z * I)) * I / 2
-  continuity
+theorem continuous_sin : Continuous sin := by
+  change Continuous fun z => (exp (-z * I) - exp (z * I)) * I / 2; continuity
 #align complex.continuous_sin Complex.continuous_sin
 
 /- warning: complex.continuous_on_sin -> Complex.continuousOn_sin is a dubious translation:
@@ -85,10 +83,8 @@ but is expected to have type
   Continuous.{0, 0} Complex Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) Complex.cos
 Case conversion may be inaccurate. Consider using '#align complex.continuous_cos Complex.continuous_cosₓ'. -/
 @[continuity]
-theorem continuous_cos : Continuous cos :=
-  by
-  change Continuous fun z => (exp (z * I) + exp (-z * I)) / 2
-  continuity
+theorem continuous_cos : Continuous cos := by
+  change Continuous fun z => (exp (z * I) + exp (-z * I)) / 2; continuity
 #align complex.continuous_cos Complex.continuous_cos
 
 /- warning: complex.continuous_on_cos -> Complex.continuousOn_cos is a dubious translation:
@@ -108,9 +104,7 @@ but is expected to have type
   Continuous.{0, 0} Complex Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) Complex.sinh
 Case conversion may be inaccurate. Consider using '#align complex.continuous_sinh Complex.continuous_sinhₓ'. -/
 @[continuity]
-theorem continuous_sinh : Continuous sinh :=
-  by
-  change Continuous fun z => (exp z - exp (-z)) / 2
+theorem continuous_sinh : Continuous sinh := by change Continuous fun z => (exp z - exp (-z)) / 2;
   continuity
 #align complex.continuous_sinh Complex.continuous_sinh
 
@@ -121,9 +115,7 @@ but is expected to have type
   Continuous.{0, 0} Complex Complex (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) (UniformSpace.toTopologicalSpace.{0} Complex (PseudoMetricSpace.toUniformSpace.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex)))))) Complex.cosh
 Case conversion may be inaccurate. Consider using '#align complex.continuous_cosh Complex.continuous_coshₓ'. -/
 @[continuity]
-theorem continuous_cosh : Continuous cosh :=
-  by
-  change Continuous fun z => (exp z + exp (-z)) / 2
+theorem continuous_cosh : Continuous cosh := by change Continuous fun z => (exp z + exp (-z)) / 2;
   continuity
 #align complex.continuous_cosh Complex.continuous_cosh
 
@@ -1134,17 +1126,13 @@ theorem range_sin : range sin = (Icc (-1) 1 : Set ℝ) :=
 #align real.range_sin Real.range_sin
 
 #print Real.range_cos_infinite /-
-theorem range_cos_infinite : (range Real.cos).Infinite :=
-  by
-  rw [Real.range_cos]
+theorem range_cos_infinite : (range Real.cos).Infinite := by rw [Real.range_cos];
   exact Icc_infinite (by norm_num)
 #align real.range_cos_infinite Real.range_cos_infinite
 -/
 
 #print Real.range_sin_infinite /-
-theorem range_sin_infinite : (range Real.sin).Infinite :=
-  by
-  rw [Real.range_sin]
+theorem range_sin_infinite : (range Real.sin).Infinite := by rw [Real.range_sin];
   exact Icc_infinite (by norm_num)
 #align real.range_sin_infinite Real.range_sin_infinite
 -/
@@ -1220,8 +1208,7 @@ theorem sqrtTwoAddSeries_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
   | n + 1 => by
     refine' lt_of_lt_of_le _ (sqrt_sq zero_lt_two.le).le
     rw [sqrt_two_add_series, sqrt_lt_sqrt_iff, ← lt_sub_iff_add_lt']
-    · refine' (sqrt_two_add_series_lt_two n).trans_le _
-      norm_num
+    · refine' (sqrt_two_add_series_lt_two n).trans_le _; norm_num
     · exact add_nonneg zero_le_two (sqrt_two_add_series_zero_nonneg n)
 #align real.sqrt_two_add_series_lt_two Real.sqrtTwoAddSeries_lt_two
 
@@ -1266,12 +1253,8 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSe
       try exact this
     apply add_nonneg; norm_num; apply sqrt_two_add_series_zero_nonneg; norm_num
     apply le_of_lt; apply cos_pos_of_mem_Ioo ⟨_, _⟩
-    · trans (0 : ℝ)
-      rw [neg_lt_zero]
-      apply pi_div_two_pos
-      apply div_pos pi_pos
-      apply pow_pos
-      norm_num
+    · trans (0 : ℝ); rw [neg_lt_zero]; apply pi_div_two_pos
+      apply div_pos pi_pos; apply pow_pos; norm_num
     apply div_lt_div' (le_refl π) _ pi_pos _
     refine' lt_of_le_of_lt (le_of_eq (pow_one _).symm) _
     apply pow_lt_pow; norm_num; apply Nat.succ_lt_succ; apply Nat.succ_pos; all_goals norm_num
@@ -1309,19 +1292,10 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
   by
   symm; rw [div_eq_iff_mul_eq]; symm
   rw [sqrt_eq_iff_sq_eq, mul_pow, sin_sq_pi_over_two_pow_succ, sub_mul]
-  · congr
-    norm_num
-    rw [mul_comm]
-    convert mul_div_cancel' _ _
-    norm_num
-    norm_num
-  · rw [sub_nonneg]
-    apply le_of_lt
-    apply sqrt_two_add_series_lt_two
+  · congr ; norm_num; rw [mul_comm]; convert mul_div_cancel' _ _; norm_num; norm_num
+  · rw [sub_nonneg]; apply le_of_lt; apply sqrt_two_add_series_lt_two
   apply le_of_lt; apply mul_pos; apply sin_pos_of_pos_of_lt_pi
-  · apply div_pos pi_pos
-    apply pow_pos
-    norm_num
+  · apply div_pos pi_pos; apply pow_pos; norm_num
   refine' lt_of_lt_of_le _ (le_of_eq (div_one _)); rw [div_lt_div_left]
   refine' lt_of_le_of_lt (le_of_eq (pow_zero 2).symm) _
   apply pow_lt_pow; norm_num; apply Nat.succ_pos; apply pi_pos
@@ -1331,89 +1305,57 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
 
 #print Real.cos_pi_div_four /-
 @[simp]
-theorem cos_pi_div_four : cos (π / 4) = sqrt 2 / 2 :=
-  by
-  trans cos (π / 2 ^ 2)
-  congr
-  norm_num
+theorem cos_pi_div_four : cos (π / 4) = sqrt 2 / 2 := by trans cos (π / 2 ^ 2); congr ; norm_num;
   simp
 #align real.cos_pi_div_four Real.cos_pi_div_four
 -/
 
 #print Real.sin_pi_div_four /-
 @[simp]
-theorem sin_pi_div_four : sin (π / 4) = sqrt 2 / 2 :=
-  by
-  trans sin (π / 2 ^ 2)
-  congr
-  norm_num
+theorem sin_pi_div_four : sin (π / 4) = sqrt 2 / 2 := by trans sin (π / 2 ^ 2); congr ; norm_num;
   simp
 #align real.sin_pi_div_four Real.sin_pi_div_four
 -/
 
 #print Real.cos_pi_div_eight /-
 @[simp]
-theorem cos_pi_div_eight : cos (π / 8) = sqrt (2 + sqrt 2) / 2 :=
-  by
-  trans cos (π / 2 ^ 3)
-  congr
-  norm_num
-  simp
+theorem cos_pi_div_eight : cos (π / 8) = sqrt (2 + sqrt 2) / 2 := by trans cos (π / 2 ^ 3); congr ;
+  norm_num; simp
 #align real.cos_pi_div_eight Real.cos_pi_div_eight
 -/
 
 #print Real.sin_pi_div_eight /-
 @[simp]
-theorem sin_pi_div_eight : sin (π / 8) = sqrt (2 - sqrt 2) / 2 :=
-  by
-  trans sin (π / 2 ^ 3)
-  congr
-  norm_num
-  simp
+theorem sin_pi_div_eight : sin (π / 8) = sqrt (2 - sqrt 2) / 2 := by trans sin (π / 2 ^ 3); congr ;
+  norm_num; simp
 #align real.sin_pi_div_eight Real.sin_pi_div_eight
 -/
 
 #print Real.cos_pi_div_sixteen /-
 @[simp]
-theorem cos_pi_div_sixteen : cos (π / 16) = sqrt (2 + sqrt (2 + sqrt 2)) / 2 :=
-  by
-  trans cos (π / 2 ^ 4)
-  congr
-  norm_num
-  simp
+theorem cos_pi_div_sixteen : cos (π / 16) = sqrt (2 + sqrt (2 + sqrt 2)) / 2 := by
+  trans cos (π / 2 ^ 4); congr ; norm_num; simp
 #align real.cos_pi_div_sixteen Real.cos_pi_div_sixteen
 -/
 
 #print Real.sin_pi_div_sixteen /-
 @[simp]
-theorem sin_pi_div_sixteen : sin (π / 16) = sqrt (2 - sqrt (2 + sqrt 2)) / 2 :=
-  by
-  trans sin (π / 2 ^ 4)
-  congr
-  norm_num
-  simp
+theorem sin_pi_div_sixteen : sin (π / 16) = sqrt (2 - sqrt (2 + sqrt 2)) / 2 := by
+  trans sin (π / 2 ^ 4); congr ; norm_num; simp
 #align real.sin_pi_div_sixteen Real.sin_pi_div_sixteen
 -/
 
 #print Real.cos_pi_div_thirty_two /-
 @[simp]
-theorem cos_pi_div_thirty_two : cos (π / 32) = sqrt (2 + sqrt (2 + sqrt (2 + sqrt 2))) / 2 :=
-  by
-  trans cos (π / 2 ^ 5)
-  congr
-  norm_num
-  simp
+theorem cos_pi_div_thirty_two : cos (π / 32) = sqrt (2 + sqrt (2 + sqrt (2 + sqrt 2))) / 2 := by
+  trans cos (π / 2 ^ 5); congr ; norm_num; simp
 #align real.cos_pi_div_thirty_two Real.cos_pi_div_thirty_two
 -/
 
 #print Real.sin_pi_div_thirty_two /-
 @[simp]
-theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sqrt 2))) / 2 :=
-  by
-  trans sin (π / 2 ^ 5)
-  congr
-  norm_num
-  simp
+theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sqrt 2))) / 2 := by
+  trans sin (π / 2 ^ 5); congr ; norm_num; simp
 #align real.sin_pi_div_thirty_two Real.sin_pi_div_thirty_two
 -/
 
@@ -1425,9 +1367,7 @@ theorem cos_pi_div_three : cos (π / 3) = 1 / 2 :=
   by
   have h₁ : (2 * cos (π / 3) - 1) ^ 2 * (2 * cos (π / 3) + 2) = 0 :=
     by
-    have : cos (3 * (π / 3)) = cos π := by
-      congr 1
-      ring
+    have : cos (3 * (π / 3)) = cos π := by congr 1; ring
     linarith [cos_pi, cos_three_mul (π / 3)]
   cases' mul_eq_zero.mp h₁ with h h
   · linarith [pow_eq_zero h]
@@ -1462,10 +1402,7 @@ theorem sq_cos_pi_div_six : cos (π / 6) ^ 2 = 3 / 4 :=
 @[simp]
 theorem cos_pi_div_six : cos (π / 6) = sqrt 3 / 2 :=
   by
-  suffices sqrt 3 = cos (π / 6) * 2
-    by
-    field_simp [(by norm_num : 0 ≠ 2)]
-    exact this.symm
+  suffices sqrt 3 = cos (π / 6) * 2 by field_simp [(by norm_num : 0 ≠ 2)] ; exact this.symm
   rw [sqrt_eq_iff_sq_eq]
   · have h1 := (mul_right_inj' (by norm_num : (4 : ℝ) ≠ 0)).mpr sq_cos_pi_div_six
     rw [← sub_eq_zero] at h1⊢
@@ -1763,10 +1700,8 @@ lean 3 declaration is
 but is expected to have type
   Filter.Tendsto.{0, 0} Real Real Real.sin (nhdsWithin.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (Set.Iio.{0} Real Real.instPreorderReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.tendsto_sin_pi_div_two Real.tendsto_sin_pi_div_twoₓ'. -/
-theorem tendsto_sin_pi_div_two : Tendsto sin (𝓝[<] (π / 2)) (𝓝 1) :=
-  by
-  convert continuous_sin.continuous_within_at
-  simp
+theorem tendsto_sin_pi_div_two : Tendsto sin (𝓝[<] (π / 2)) (𝓝 1) := by
+  convert continuous_sin.continuous_within_at; simp
 #align real.tendsto_sin_pi_div_two Real.tendsto_sin_pi_div_two
 
 /- warning: real.tendsto_cos_pi_div_two -> Real.tendsto_cos_pi_div_two is a dubious translation:
@@ -1778,8 +1713,7 @@ Case conversion may be inaccurate. Consider using '#align real.tendsto_cos_pi_di
 theorem tendsto_cos_pi_div_two : Tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) :=
   by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · convert continuous_cos.continuous_within_at
-    simp
+  · convert continuous_cos.continuous_within_at; simp
   ·
     filter_upwards [Ioo_mem_nhdsWithin_Iio
         (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))]with x hx using cos_pos_of_mem_Ioo hx
@@ -1803,10 +1737,8 @@ lean 3 declaration is
 but is expected to have type
   Filter.Tendsto.{0, 0} Real Real Real.sin (nhdsWithin.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Neg.neg.{0} Real Real.instNegReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))) (Set.Ioi.{0} Real Real.instPreorderReal (Neg.neg.{0} Real Real.instNegReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))))) (nhds.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))
 Case conversion may be inaccurate. Consider using '#align real.tendsto_sin_neg_pi_div_two Real.tendsto_sin_neg_pi_div_twoₓ'. -/
-theorem tendsto_sin_neg_pi_div_two : Tendsto sin (𝓝[>] (-(π / 2))) (𝓝 (-1)) :=
-  by
-  convert continuous_sin.continuous_within_at
-  simp
+theorem tendsto_sin_neg_pi_div_two : Tendsto sin (𝓝[>] (-(π / 2))) (𝓝 (-1)) := by
+  convert continuous_sin.continuous_within_at; simp
 #align real.tendsto_sin_neg_pi_div_two Real.tendsto_sin_neg_pi_div_two
 
 /- warning: real.tendsto_cos_neg_pi_div_two -> Real.tendsto_cos_neg_pi_div_two is a dubious translation:
@@ -1818,8 +1750,7 @@ Case conversion may be inaccurate. Consider using '#align real.tendsto_cos_neg_p
 theorem tendsto_cos_neg_pi_div_two : Tendsto cos (𝓝[>] (-(π / 2))) (𝓝[>] 0) :=
   by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · convert continuous_cos.continuous_within_at
-    simp
+  · convert continuous_cos.continuous_within_at; simp
   ·
     filter_upwards [Ioo_mem_nhdsWithin_Ioi
         (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))]with x hx using cos_pos_of_mem_Ioo hx

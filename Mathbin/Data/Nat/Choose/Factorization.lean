@@ -45,12 +45,9 @@ variable {p n k : ℕ}
 -/
 theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :=
   by
-  by_cases h : (choose n k).factorization p = 0
-  · simp [h]
+  by_cases h : (choose n k).factorization p = 0; · simp [h]
   have hp : p.prime := Not.imp_symm (choose n k).factorization_eq_zero_of_non_prime h
-  have hkn : k ≤ n := by
-    refine' le_of_not_lt fun hnk => h _
-    simp [choose_eq_zero_of_lt hnk]
+  have hkn : k ≤ n := by refine' le_of_not_lt fun hnk => h _; simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast]
   refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
@@ -119,8 +116,7 @@ theorem factorization_centralBinom_of_two_mul_self_lt_three_mul (n_big : 2 < n) 
     (big : 2 * n < 3 * p) : (centralBinom n).factorization p = 0 :=
   by
   refine' factorization_choose_of_lt_three_mul _ p_le_n (p_le_n.trans _) big
-  · rintro rfl
-    linarith
+  · rintro rfl; linarith
   · rw [two_mul, add_tsub_cancel_left]
 #align nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_centralBinom_of_two_mul_self_lt_three_mul
 -/
@@ -175,8 +171,7 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
     rw [Finset.mem_range]
     contrapose! hp
     rw [Finsupp.mem_support_iff, Classical.not_not, factorization_choose_eq_zero_of_lt hp]
-  · intro p _ h2
-    simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
+  · intro p _ h2; simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
 #align nat.prod_pow_factorization_choose Nat.prod_pow_factorization_choose
 -/
 

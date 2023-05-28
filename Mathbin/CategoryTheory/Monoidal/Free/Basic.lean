@@ -157,21 +157,10 @@ instance categoryFreeMonoidalCategory : Category.{u} (F C)
     where
   Hom X Y := Quotient (FreeMonoidalCategory.setoidHom X Y)
   id X := ⟦FreeMonoidalCategory.Hom.id _⟧
-  comp X Y Z f g :=
-    Quotient.map₂ Hom.comp
-      (by
-        intro f f' hf g g' hg
-        exact comp hf hg)
-      f g
-  id_comp' := by
-    rintro X Y ⟨f⟩
-    exact Quotient.sound (id_comp f)
-  comp_id' := by
-    rintro X Y ⟨f⟩
-    exact Quotient.sound (comp_id f)
-  assoc' := by
-    rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
-    exact Quotient.sound (assoc f g h)
+  comp X Y Z f g := Quotient.map₂ Hom.comp (by intro f f' hf g g' hg; exact comp hf hg) f g
+  id_comp' := by rintro X Y ⟨f⟩; exact Quotient.sound (id_comp f)
+  comp_id' := by rintro X Y ⟨f⟩; exact Quotient.sound (comp_id f)
+  assoc' := by rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩; exact Quotient.sound (assoc f g h)
 #align category_theory.free_monoidal_category.category_free_monoidal_category CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory
 -/
 
@@ -179,29 +168,20 @@ instance : MonoidalCategory (F C)
     where
   tensorObj X Y := FreeMonoidalCategory.tensor X Y
   tensorHom X₁ Y₁ X₂ Y₂ :=
-    Quotient.map₂ Hom.tensor <| by
-      intro _ _ h _ _ h'
-      exact hom_equiv.tensor h h'
+    Quotient.map₂ Hom.tensor <| by intro _ _ h _ _ h'; exact hom_equiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id
-  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by
-    rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
+  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩;
     exact Quotient.sound (tensor_comp _ _ _ _)
   tensorUnit := FreeMonoidalCategory.Unit
   associator X Y Z :=
     ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
-  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ :=
-    by
-    rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
+  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ := by rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩;
     exact Quotient.sound (associator_naturality _ _ _)
   leftUnitor X := ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotient.sound l_hom_inv, Quotient.sound l_inv_hom⟩
-  leftUnitor_naturality' X Y := by
-    rintro ⟨f⟩
-    exact Quotient.sound (l_naturality _)
+  leftUnitor_naturality' X Y := by rintro ⟨f⟩; exact Quotient.sound (l_naturality _)
   rightUnitor X :=
     ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
-  rightUnitor_naturality' X Y := by
-    rintro ⟨f⟩
-    exact Quotient.sound (ρ_naturality _)
+  rightUnitor_naturality' X Y := by rintro ⟨f⟩; exact Quotient.sound (ρ_naturality _)
   pentagon' W X Y Z := Quotient.sound pentagon
   triangle' X Y := Quotient.sound triangle
 
@@ -372,26 +352,21 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :
       · simp only [project_map_aux, category.comp_id]
       · simp only [project_map_aux, category.id_comp]
       · simp only [project_map_aux, category.assoc]
-      · simp only [project_map_aux, monoidal_category.tensor_id]
-        rfl
+      · simp only [project_map_aux, monoidal_category.tensor_id]; rfl
       · simp only [project_map_aux, monoidal_category.tensor_comp]
       · simp only [project_map_aux, iso.hom_inv_id]
       · simp only [project_map_aux, iso.inv_hom_id]
       · simp only [project_map_aux, monoidal_category.associator_naturality]
       · simp only [project_map_aux, iso.hom_inv_id]
       · simp only [project_map_aux, iso.inv_hom_id]
-      · simp only [project_map_aux]
-        dsimp [project_obj]
+      · simp only [project_map_aux]; dsimp [project_obj]
         exact monoidal_category.right_unitor_naturality _
       · simp only [project_map_aux, iso.hom_inv_id]
       · simp only [project_map_aux, iso.inv_hom_id]
-      · simp only [project_map_aux]
-        dsimp [project_obj]
+      · simp only [project_map_aux]; dsimp [project_obj]
         exact monoidal_category.left_unitor_naturality _
-      · simp only [project_map_aux]
-        exact monoidal_category.pentagon _ _ _ _
-      · simp only [project_map_aux]
-        exact monoidal_category.triangle _ _)
+      · simp only [project_map_aux]; exact monoidal_category.pentagon _ _ _ _
+      · simp only [project_map_aux]; exact monoidal_category.triangle _ _)
 #align category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
 -/
 

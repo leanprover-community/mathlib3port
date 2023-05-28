@@ -405,10 +405,7 @@ but is expected to have type
   forall {J : Type.{u2}} {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] {B : C} {objs : J -> C} (arrows : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) (objs j) B) [_inst_2 : CategoryTheory.Limits.HasWidePullback.{u2, u3, u1} J C _inst_1 B objs arrows] {X : C} (f : Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X B) (fs : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X (objs j)) (w : forall (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X B) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) X (objs j) B (fs j) (arrows j)) f) (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X (objs j)) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) X (CategoryTheory.Limits.widePullback.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) (fun (j : J) => arrows j) _inst_2) (objs j) (CategoryTheory.Limits.WidePullback.lift.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) (fun (j : J) => arrows j) _inst_2 X f fs w) (CategoryTheory.Limits.WidePullback.π.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2 j)) (fs j)
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.wide_pullback.lift_π CategoryTheory.Limits.WidePullback.lift_πₓ'. -/
 @[simp, reassoc]
-theorem lift_π (j : J) : lift f fs w ≫ π arrows j = fs _ :=
-  by
-  simp
-  rfl
+theorem lift_π (j : J) : lift f fs w ≫ π arrows j = fs _ := by simp; rfl
 #align category_theory.limits.wide_pullback.lift_π CategoryTheory.Limits.WidePullback.lift_π
 
 /- warning: category_theory.limits.wide_pullback.lift_base -> CategoryTheory.Limits.WidePullback.lift_base is a dubious translation:
@@ -418,10 +415,7 @@ but is expected to have type
   forall {J : Type.{u2}} {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] {B : C} {objs : J -> C} (arrows : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) (objs j) B) [_inst_2 : CategoryTheory.Limits.HasWidePullback.{u2, u3, u1} J C _inst_1 B objs arrows] {X : C} (f : Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X B) (fs : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X (objs j)) (w : forall (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X B) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) X (objs j) B (fs j) (arrows j)) f), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) X B) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) X (CategoryTheory.Limits.widePullback.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) (fun (j : J) => arrows j) _inst_2) B (CategoryTheory.Limits.WidePullback.lift.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) (fun (j : J) => arrows j) _inst_2 X f fs w) (CategoryTheory.Limits.WidePullback.base.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2)) f
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.wide_pullback.lift_base CategoryTheory.Limits.WidePullback.lift_baseₓ'. -/
 @[simp, reassoc]
-theorem lift_base : lift f fs w ≫ base arrows = f :=
-  by
-  simp
-  rfl
+theorem lift_base : lift f fs w ≫ base arrows = f := by simp; rfl
 #align category_theory.limits.wide_pullback.lift_base CategoryTheory.Limits.WidePullback.lift_base
 
 /- warning: category_theory.limits.wide_pullback.eq_lift_of_comp_eq -> CategoryTheory.Limits.WidePullback.eq_lift_of_comp_eq is a dubious translation:
@@ -523,10 +517,7 @@ but is expected to have type
   forall {J : Type.{u2}} {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] {B : C} {objs : J -> C} (arrows : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B (objs j)) [_inst_2 : CategoryTheory.Limits.HasWidePushout.{u2, u3, u1} J C _inst_1 B objs arrows] {X : C} (f : Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B X) (fs : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) (objs j) X) (w : forall (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B X) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) B (objs j) X (arrows j) (fs j)) f) (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) (objs j) X) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) (objs j) (CategoryTheory.Limits.widePushout.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2) X (CategoryTheory.Limits.WidePushout.ι.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2 j) (CategoryTheory.Limits.WidePushout.desc.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2 X f fs w)) (fs j)
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.wide_pushout.ι_desc CategoryTheory.Limits.WidePushout.ι_descₓ'. -/
 @[simp, reassoc]
-theorem ι_desc (j : J) : ι arrows j ≫ desc f fs w = fs _ :=
-  by
-  simp
-  rfl
+theorem ι_desc (j : J) : ι arrows j ≫ desc f fs w = fs _ := by simp; rfl
 #align category_theory.limits.wide_pushout.ι_desc CategoryTheory.Limits.WidePushout.ι_desc
 
 /- warning: category_theory.limits.wide_pushout.head_desc -> CategoryTheory.Limits.WidePushout.head_desc is a dubious translation:
@@ -536,10 +527,7 @@ but is expected to have type
   forall {J : Type.{u2}} {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u3, u1} C] {B : C} {objs : J -> C} (arrows : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B (objs j)) [_inst_2 : CategoryTheory.Limits.HasWidePushout.{u2, u3, u1} J C _inst_1 B objs arrows] {X : C} (f : Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B X) (fs : forall (j : J), Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) (objs j) X) (w : forall (j : J), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B X) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) B (objs j) X (arrows j) (fs j)) f), Eq.{succ u3} (Quiver.Hom.{succ u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1)) B X) (CategoryTheory.CategoryStruct.comp.{u3, u1} C (CategoryTheory.Category.toCategoryStruct.{u3, u1} C _inst_1) B (CategoryTheory.Limits.widePushout.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2) X (CategoryTheory.Limits.WidePushout.head.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2) (CategoryTheory.Limits.WidePushout.desc.{u2, u3, u1} J C _inst_1 B (fun (j : J) => objs j) arrows _inst_2 X f fs w)) f
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.wide_pushout.head_desc CategoryTheory.Limits.WidePushout.head_descₓ'. -/
 @[simp, reassoc]
-theorem head_desc : head arrows ≫ desc f fs w = f :=
-  by
-  simp
-  rfl
+theorem head_desc : head arrows ≫ desc f fs w = f := by simp; rfl
 #align category_theory.limits.wide_pushout.head_desc CategoryTheory.Limits.WidePushout.head_desc
 
 /- warning: category_theory.limits.wide_pushout.eq_desc_of_comp_eq -> CategoryTheory.Limits.WidePushout.eq_desc_of_comp_eq is a dubious translation:
@@ -564,11 +552,7 @@ theorem eq_desc_of_comp_eq (g : widePushout _ _ arrows ⟶ X) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.wide_pushout.hom_eq_desc CategoryTheory.Limits.WidePushout.hom_eq_descₓ'. -/
 theorem hom_eq_desc (g : widePushout _ _ arrows ⟶ X) :
-    g =
-      desc (head arrows ≫ g) (fun j => ι arrows j ≫ g) fun j =>
-        by
-        rw [← category.assoc]
-        simp :=
+    g = desc (head arrows ≫ g) (fun j => ι arrows j ≫ g) fun j => by rw [← category.assoc]; simp :=
   by
   apply eq_desc_of_comp_eq
   tidy

@@ -156,10 +156,8 @@ theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [Coun
     (f.limsup fun a : α => g.liminf fun b : β => u a b) ≤
       g.liminf fun b => f.limsup fun a => u a b :=
   by
-  have h1 : ∀ᶠ a in f, ∀ b, u a b ≤ f.limsup fun a' => u a' b :=
-    by
-    rw [eventually_countable_forall]
-    exact fun b => ENNReal.eventually_le_limsup fun a => u a b
+  have h1 : ∀ᶠ a in f, ∀ b, u a b ≤ f.limsup fun a' => u a' b := by
+    rw [eventually_countable_forall]; exact fun b => ENNReal.eventually_le_limsup fun a => u a b
   refine' sInf_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
   run_tac
     filter.is_bounded_default

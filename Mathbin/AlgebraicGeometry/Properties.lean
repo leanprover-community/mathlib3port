@@ -45,8 +45,7 @@ instance : QuasiSober X.carrier :=
   by
   apply (config := { instances := false })
     quasiSober_of_open_cover (Set.range fun x => Set.range <| (X.affine_cover.map x).1.base)
-  · rintro ⟨_, i, rfl⟩
-    exact (X.affine_cover.is_open i).base_open.open_range
+  · rintro ⟨_, i, rfl⟩; exact (X.affine_cover.is_open i).base_open.open_range
   · rintro ⟨_, i, rfl⟩
     exact
       @OpenEmbedding.quasiSober _ _ _
@@ -54,8 +53,7 @@ instance : QuasiSober X.carrier :=
               (X.affine_cover.is_open i).base_open.toEmbedding).symm.OpenEmbedding
         PrimeSpectrum.quasiSober
   · rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
-    intro x
-    exact ⟨_, ⟨_, rfl⟩, X.affine_cover.covers x⟩
+    intro x; exact ⟨_, ⟨_, rfl⟩, X.affine_cover.covers x⟩
 
 /-- A scheme `X` is reduced if all `𝒪ₓ(U)` are reduced. -/
 class IsReduced : Prop where
@@ -91,9 +89,7 @@ theorem isReducedOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersi
     IsReduced X := by
   constructor
   intro U
-  have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) :=
-    by
-    ext1
+  have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) := by ext1;
     exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
   exact
@@ -105,12 +101,9 @@ theorem isReducedOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersi
 instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) :=
   by
   apply (config := { instances := false }) is_reduced_of_stalk_is_reduced
-  intro x
-  dsimp
-  have : _root_.is_reduced (CommRingCat.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) :=
-    by
-    dsimp
-    infer_instance
+  intro x; dsimp
+  have : _root_.is_reduced (CommRingCat.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
+    dsimp; infer_instance
   exact
     isReduced_of_injective (structure_sheaf.stalk_iso R x).Hom
       (structure_sheaf.stalk_iso R x).commRingCatIsoToRingEquiv.Injective
@@ -123,18 +116,14 @@ theorem affine_isReduced_iff (R : CommRingCat) :
   skip
   have :
     _root_.is_reduced (LocallyRingedSpace.Γ.obj (op <| Spec.to_LocallyRingedSpace.obj <| op R)) :=
-    by
-    change _root_.is_reduced ((Scheme.Spec.obj <| op R).Presheaf.obj <| op ⊤)
-    infer_instance
+    by change _root_.is_reduced ((Scheme.Spec.obj <| op R).Presheaf.obj <| op ⊤); infer_instance
   exact
     isReduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingCatIsoToRingEquiv.Injective
 #align algebraic_geometry.affine_is_reduced_iff AlgebraicGeometry.affine_isReduced_iff
 
 theorem isReducedOfIsAffineIsReduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] :
     IsReduced X :=
-  haveI : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) :=
-    by
-    rw [affine_is_reduced_iff]
+  haveI : IsReduced (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by rw [affine_is_reduced_iff];
     exact h
   is_reduced_of_open_immersion X.iso_Spec.hom
 #align algebraic_geometry.is_reduced_of_is_affine_is_reduced AlgebraicGeometry.isReducedOfIsAffineIsReduced
@@ -201,14 +190,8 @@ theorem eq_zero_of_basicOpen_eq_bot {X : Scheme} [hX : IsReduced X] {U : Opens X
     refine' ⟨_, _, e, rfl, _⟩
     rintro H hX s hs ⟨_, x, rfl⟩
     haveI := is_reduced_of_open_immersion f
-    specialize
-      H (f.1.c.app _ s) _
-        ⟨x, by
-          rw [opens.mem_mk, e]
-          trivial⟩
-    · rw [← Scheme.preimage_basic_open, hs]
-      ext1
-      simp [opens.map]
+    specialize H (f.1.c.app _ s) _ ⟨x, by rw [opens.mem_mk, e]; trivial⟩
+    · rw [← Scheme.preimage_basic_open, hs]; ext1; simp [opens.map]
     · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
       apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
       erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
@@ -254,8 +237,7 @@ instance (priority := 900) isReducedOfIsIntegral [IsIntegral X] : IsReduced X :=
     haveI := CommRingCat.subsingleton_of_isTerminal (X.sheaf.is_terminal_of_eq_empty this)
     change _root_.is_reduced (X.sheaf.val.obj (op U))
     infer_instance
-  · haveI : Nonempty U := by simpa
-    infer_instance
+  · haveI : Nonempty U := by simpa; infer_instance
 #align algebraic_geometry.is_reduced_of_is_integral AlgebraicGeometry.isReducedOfIsIntegral
 
 instance is_irreducible_of_isIntegral [IsIntegral X] : IrreducibleSpace X.carrier :=
@@ -284,14 +266,12 @@ instance is_irreducible_of_isIntegral [IsIntegral X] : IrreducibleSpace X.carrie
     · rintro ⟨hS, hT⟩
       cases h₁ (show x ∈ ⊤ by trivial)
       exacts[hS h, hT h]
-    · intro x
-      exact x.rec _
+    · intro x; exact x.rec _
 #align algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_isIntegral
 
 theorem isIntegralOfIsIrreducibleIsReduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
     IsIntegral X := by
-  constructor
-  intro U hU
+  constructor; intro U hU
   haveI := (@LocallyRingedSpace.component_nontrivial X.to_LocallyRingedSpace U hU).1
   have :
     NoZeroDivisors
@@ -322,9 +302,7 @@ theorem isIntegralOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmers
     [Nonempty X.carrier] : IsIntegral X := by
   constructor
   intro U hU
-  have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) :=
-    by
-    ext1
+  have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) := by ext1;
     exact (Set.preimage_image_eq _ H.base_open.inj).symm
   rw [this]
   have : IsDomain (Y.presheaf.obj (op (H.base_open.is_open_map.functor.obj U))) :=
@@ -355,9 +333,7 @@ theorem affine_isIntegral_iff (R : CommRingCat) :
 
 theorem isIntegralOfIsAffineIsDomain [IsAffine X] [Nonempty X.carrier]
     [h : IsDomain (X.Presheaf.obj (op ⊤))] : IsIntegral X :=
-  haveI : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) :=
-    by
-    rw [affine_is_integral_iff]
+  haveI : IsIntegral (Scheme.Spec.obj (op (Scheme.Γ.obj (op X)))) := by rw [affine_is_integral_iff];
     exact h
   is_integral_of_open_immersion X.iso_Spec.hom
 #align algebraic_geometry.is_integral_of_is_affine_is_domain AlgebraicGeometry.isIntegralOfIsAffineIsDomain

@@ -105,10 +105,8 @@ theorem convex_closedBall (a : E) (r : ℝ) : Convex ℝ (Metric.closedBall a r)
 -/
 
 #print Convex.thickening /-
-theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickening δ s) :=
-  by
-  rw [← add_ball_zero]
-  exact hs.add (convex_ball 0 _)
+theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickening δ s) := by
+  rw [← add_ball_zero]; exact hs.add (convex_ball 0 _)
 #align convex.thickening Convex.thickening
 -/
 

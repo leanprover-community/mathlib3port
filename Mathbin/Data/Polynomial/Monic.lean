@@ -57,10 +57,7 @@ theorem not_monic_zero_iff : ¬Monic (0 : R[X]) ↔ (0 : R) ≠ 1 :=
 #print Polynomial.monic_zero_iff_subsingleton' /-
 theorem monic_zero_iff_subsingleton' :
     Monic (0 : R[X]) ↔ (∀ f g : R[X], f = g) ∧ ∀ a b : R, a = b :=
-  Polynomial.monic_zero_iff_subsingleton.trans
-    ⟨by
-      intro
-      simp, fun h => subsingleton_iff.mpr h.2⟩
+  Polynomial.monic_zero_iff_subsingleton.trans ⟨by intro ; simp, fun h => subsingleton_iff.mpr h.2⟩
 #align polynomial.monic_zero_iff_subsingleton' Polynomial.monic_zero_iff_subsingleton'
 -/
 
@@ -109,8 +106,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {p : Polynomial.{u1} R _inst_1} {b : R}, (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) b (Polynomial.leadingCoeff.{u1} R _inst_1 p)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R _inst_1)))) -> (Polynomial.Monic.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) b) (Polynomial.{u1} R _inst_1) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) b) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) b) (Polynomial.mul'.{u1} R _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) b) p))
 Case conversion may be inaccurate. Consider using '#align polynomial.monic_C_mul_of_mul_leading_coeff_eq_one Polynomial.monic_C_mul_of_mul_leadingCoeff_eq_oneₓ'. -/
 theorem monic_C_mul_of_mul_leadingCoeff_eq_one {b : R} (hp : b * p.leadingCoeff = 1) :
-    Monic (C b * p) := by
-  nontriviality
+    Monic (C b * p) := by nontriviality;
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 #align polynomial.monic_C_mul_of_mul_leading_coeff_eq_one Polynomial.monic_C_mul_of_mul_leadingCoeff_eq_one
 
@@ -121,8 +117,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {p : Polynomial.{u1} R _inst_1} {b : R}, (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Polynomial.leadingCoeff.{u1} R _inst_1 p) b) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Semiring.toOne.{u1} R _inst_1)))) -> (Polynomial.Monic.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} (Polynomial.{u1} R _inst_1) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) b) (Polynomial.{u1} R _inst_1) (instHMul.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.mul'.{u1} R _inst_1)) p (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) b)))
 Case conversion may be inaccurate. Consider using '#align polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_C_of_leadingCoeff_mul_eq_oneₓ'. -/
 theorem monic_mul_C_of_leadingCoeff_mul_eq_one {b : R} (hp : p.leadingCoeff * b = 1) :
-    Monic (p * C b) := by
-  nontriviality
+    Monic (p * C b) := by nontriviality;
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 #align polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_C_of_leadingCoeff_mul_eq_one
 
@@ -178,9 +173,7 @@ theorem Monic.mul (hp : Monic p) (hq : Monic q) : Monic (p * q) :=
 #print Polynomial.Monic.pow /-
 theorem Monic.pow (hp : Monic p) : ∀ n : ℕ, Monic (p ^ n)
   | 0 => monic_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact hp.mul (monic.pow n)
+  | n + 1 => by rw [pow_succ]; exact hp.mul (monic.pow n)
 #align polynomial.monic.pow Polynomial.Monic.pow
 -/
 
@@ -229,16 +222,11 @@ namespace Monic
 theorem natDegree_eq_zero_iff_eq_one (hp : p.Monic) : p.natDegree = 0 ↔ p = 1 :=
   by
   constructor <;> intro h
-  swap
-  · rw [h]
-    exact nat_degree_one
+  swap; · rw [h]; exact nat_degree_one
   have : p = C (p.coeff 0) := by
     rw [← Polynomial.degree_le_zero_iff]
     rwa [Polynomial.natDegree_eq_zero_iff_degree_le_zero] at h
-  rw [this]
-  convert C_1
-  rw [← h]
-  apply hp
+  rw [this]; convert C_1; rw [← h]; apply hp
 #align polynomial.monic.nat_degree_eq_zero_iff_eq_one Polynomial.Monic.natDegree_eq_zero_iff_eq_one
 -/
 
@@ -419,8 +407,7 @@ theorem Monic.nextCoeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : �
   refine' Multiset.induction_on t _ fun a t ih ht => _
   · simp only [Multiset.not_mem_zero, forall_prop_of_true, forall_prop_of_false, Multiset.map_zero,
       Multiset.prod_zero, Multiset.sum_zero, not_false_iff, forall_true_iff]
-    rw [← C_1]
-    rw [next_coeff_C_eq_zero]
+    rw [← C_1]; rw [next_coeff_C_eq_zero]
   · rw [Multiset.map_cons, Multiset.prod_cons, Multiset.map_cons, Multiset.sum_cons,
       monic.next_coeff_mul, ih]
     exacts[fun i hi => ht i (Multiset.mem_cons_of_mem hi), ht a (Multiset.mem_cons_self _ _),
@@ -620,10 +607,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)} {q : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)}, (Polynomial.Monic.{u1} R (Ring.toSemiring.{u1} R _inst_1) p) -> (LT.lt.{0} (WithBot.{0} Nat) (Preorder.toLT.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R (Ring.toSemiring.{u1} R _inst_1) q) (Polynomial.degree.{u1} R (Ring.toSemiring.{u1} R _inst_1) p)) -> (Polynomial.Monic.{u1} R (Ring.toSemiring.{u1} R _inst_1) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (instHSub.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.sub.{u1} R _inst_1)) p q))
 Case conversion may be inaccurate. Consider using '#align polynomial.monic.sub_of_left Polynomial.Monic.sub_of_leftₓ'. -/
 theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) :=
-  by
-  rw [sub_eq_add_neg]
-  apply hp.add_of_left
-  rwa [degree_neg]
+  by rw [sub_eq_add_neg]; apply hp.add_of_left; rwa [degree_neg]
 #align polynomial.monic.sub_of_left Polynomial.Monic.sub_of_left
 
 /- warning: polynomial.monic.sub_of_right -> Polynomial.Monic.sub_of_right is a dubious translation:

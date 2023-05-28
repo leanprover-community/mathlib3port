@@ -189,9 +189,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (m : MeasureTheory.OuterMeasure.{u2} α) {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall {t : β -> (Set.{u2} α)}, Iff (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α m (Set.iUnion.{u2, succ u1} α β (fun (i : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) => t i)))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (forall (i : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) i s) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u2} α m (t i)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.bUnion_null_iff MeasureTheory.OuterMeasure.biUnion_null_iffₓ'. -/
 theorem biUnion_null_iff (m : OuterMeasure α) {s : Set β} (hs : s.Countable) {t : β → Set α} :
-    m (⋃ i ∈ s, t i) = 0 ↔ ∀ i ∈ s, m (t i) = 0 :=
-  by
-  haveI := hs.to_encodable
+    m (⋃ i ∈ s, t i) = 0 ↔ ∀ i ∈ s, m (t i) = 0 := by haveI := hs.to_encodable;
   rw [bUnion_eq_Union, Union_null_iff, SetCoe.forall']
 #align measure_theory.outer_measure.bUnion_null_iff MeasureTheory.OuterMeasure.biUnion_null_iff
 
@@ -305,10 +303,8 @@ theorem iUnion_nat_of_monotone_of_tsum_ne_top (m : OuterMeasure α) {s : ℕ →
   have h' : Monotone s := @monotone_nat_of_le_succ (Set α) _ _ h_mono
   simp only [diff_subset_iff, Union_subset_iff]
   intro i x hx
-  rcases Nat.findX ⟨i, hx⟩ with ⟨j, hj, hlt⟩
-  clear hx i
-  cases' le_or_lt j n with hjn hnj
-  · exact Or.inl (h' hjn hj)
+  rcases Nat.findX ⟨i, hx⟩ with ⟨j, hj, hlt⟩; clear hx i
+  cases' le_or_lt j n with hjn hnj; · exact Or.inl (h' hjn hj)
   have : j - (n + 1) + n + 1 = j := by rw [add_assoc, tsub_add_cancel_of_le hnj.nat_succ_le]
   refine' Or.inr (mem_Union.2 ⟨j - (n + 1), _, hlt _ _⟩)
   · rwa [this]
@@ -322,9 +318,7 @@ but is expected to have type
   forall {α : Type.{u1}} {m : MeasureTheory.OuterMeasure.{u1} α} {t : Set.{u1} α} (s : Set.{u1} α), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α m t) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α m (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t s)) (MeasureTheory.OuterMeasure.measureOf.{u1} α m (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) t s)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.le_inter_add_diff MeasureTheory.OuterMeasure.le_inter_add_diffₓ'. -/
 theorem le_inter_add_diff {m : OuterMeasure α} {t : Set α} (s : Set α) :
-    m t ≤ m (t ∩ s) + m (t \ s) := by
-  convert m.union _ _
-  rw [inter_union_diff t s]
+    m t ≤ m (t ∩ s) + m (t \ s) := by convert m.union _ _; rw [inter_union_diff t s]
 #align measure_theory.outer_measure.le_inter_add_diff MeasureTheory.OuterMeasure.le_inter_add_diff
 
 /- warning: measure_theory.outer_measure.diff_null -> MeasureTheory.OuterMeasure.diff_null is a dubious translation:
@@ -355,11 +349,7 @@ theorem union_null (m : OuterMeasure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 0
 
 #print MeasureTheory.OuterMeasure.coe_fn_injective /-
 theorem coe_fn_injective : Injective fun (μ : OuterMeasure α) (s : Set α) => μ s := fun μ₁ μ₂ h =>
-  by
-  cases μ₁
-  cases μ₂
-  congr
-  exact h
+  by cases μ₁; cases μ₂; congr ; exact h
 #align measure_theory.outer_measure.coe_fn_injective MeasureTheory.OuterMeasure.coe_fn_injective
 -/
 
@@ -788,9 +778,7 @@ def comap {β} (f : α → β) : OuterMeasure β →ₗ[ℝ≥0∞] OuterMeasure
     { measureOf := fun s => m (f '' s)
       Empty := by simp
       mono := fun s t h => m.mono <| image_subset f h
-      iUnion_nat := fun s => by
-        rw [image_Union]
-        apply m.Union_nat }
+      iUnion_nat := fun s => by rw [image_Union]; apply m.Union_nat }
   map_add' m₁ m₂ := rfl
   map_smul' c m := rfl
 #align measure_theory.outer_measure.comap MeasureTheory.OuterMeasure.comap
@@ -843,9 +831,7 @@ theorem restrict_apply (s t : Set α) (m : OuterMeasure α) : restrict s m t = m
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.restrict_mono MeasureTheory.OuterMeasure.restrict_monoₓ'. -/
 @[mono]
 theorem restrict_mono {s t : Set α} (h : s ⊆ t) {m m' : OuterMeasure α} (hm : m ≤ m') :
-    restrict s m ≤ restrict t m' := fun u =>
-  by
-  simp only [restrict_apply]
+    restrict s m ≤ restrict t m' := fun u => by simp only [restrict_apply];
   exact (hm _).trans (m'.mono <| inter_subset_inter_right _ h)
 #align measure_theory.outer_measure.restrict_mono MeasureTheory.OuterMeasure.restrict_mono
 
@@ -1156,8 +1142,7 @@ theorem comap_ofFunction {β} (f : β → α) (h : Monotone m ∨ Surjective f) 
       OuterMeasure.ofFunction (fun s => m (f '' s)) (by rwa [Set.image_empty]) :=
   by
   refine' le_antisymm (le_of_function.2 fun s => _) fun s => _
-  · rw [comap_apply]
-    apply of_function_le
+  · rw [comap_apply]; apply of_function_le
   · rw [comap_apply, of_function_apply, of_function_apply]
     refine' iInf_mono' fun t => ⟨fun k => f ⁻¹' t k, _⟩
     refine' iInf_mono' fun ht => _
@@ -1173,9 +1158,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.outer_m
 theorem map_ofFunction_le {β} (f : α → β) :
     map f (OuterMeasure.ofFunction m m_empty) ≤
       OuterMeasure.ofFunction (fun s => m (f ⁻¹' s)) m_empty :=
-  le_ofFunction.2 fun s => by
-    rw [map_apply]
-    apply of_function_le
+  le_ofFunction.2 fun s => by rw [map_apply]; apply of_function_le
 #align measure_theory.outer_measure.map_of_function_le MeasureTheory.OuterMeasure.map_ofFunction_le
 
 /- warning: measure_theory.outer_measure.map_of_function -> MeasureTheory.OuterMeasure.map_ofFunction is a dubious translation:
@@ -1254,9 +1237,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.outer_m
 theorem boundedBy_eq_ofFunction (m_empty : m ∅ = 0) (s : Set α) :
     boundedBy m s = OuterMeasure.ofFunction m m_empty s :=
   by
-  have : (fun s : Set α => ⨆ h : s.Nonempty, m s) = m :=
-    by
-    ext1 t
+  have : (fun s : Set α => ⨆ h : s.Nonempty, m s) = m := by ext1 t;
     cases' t.eq_empty_or_nonempty with h h <;> simp [h, not_nonempty_empty, m_empty]
   simp [bounded_by, this]
 #align measure_theory.outer_measure.bounded_by_eq_of_function MeasureTheory.OuterMeasure.boundedBy_eq_ofFunction
@@ -1309,11 +1290,8 @@ but is expected to have type
   forall {α : Type.{u1}} {m : (Set.{u1} α) -> ENNReal} {μ : MeasureTheory.OuterMeasure.{u1} α}, Iff (LE.le.{u1} (MeasureTheory.OuterMeasure.{u1} α) (Preorder.toLE.{u1} (MeasureTheory.OuterMeasure.{u1} α) (PartialOrder.toPreorder.{u1} (MeasureTheory.OuterMeasure.{u1} α) (MeasureTheory.OuterMeasure.instPartialOrder.{u1} α))) μ (MeasureTheory.OuterMeasure.boundedBy.{u1} α m)) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α μ s) (m s)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.le_bounded_by' MeasureTheory.OuterMeasure.le_boundedBy'ₓ'. -/
 theorem le_boundedBy' {μ : OuterMeasure α} :
-    μ ≤ boundedBy m ↔ ∀ s : Set α, s.Nonempty → μ s ≤ m s :=
-  by
-  rw [le_bounded_by, forall_congr']
-  intro s
-  cases' s.eq_empty_or_nonempty with h h <;> simp [h]
+    μ ≤ boundedBy m ↔ ∀ s : Set α, s.Nonempty → μ s ≤ m s := by rw [le_bounded_by, forall_congr'];
+  intro s; cases' s.eq_empty_or_nonempty with h h <;> simp [h]
 #align measure_theory.outer_measure.le_bounded_by' MeasureTheory.OuterMeasure.le_boundedBy'
 
 #print MeasureTheory.OuterMeasure.boundedBy_top /-
@@ -1628,12 +1606,9 @@ theorem ofFunction_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ :
       (add_le_add ((iInf_le_of_le fun i => f i ∩ s) <| iInf_le _ _)
         ((iInf_le_of_le fun i => f i \ s) <| iInf_le _ _))
       _
-  · rw [← Union_inter]
-    exact inter_subset_inter_left _ hf
-  · rw [← Union_diff]
-    exact diff_subset_diff_left hf
-  · rw [← ENNReal.tsum_add]
-    exact ENNReal.tsum_le_tsum fun i => hs _
+  · rw [← Union_inter]; exact inter_subset_inter_left _ hf
+  · rw [← Union_diff]; exact diff_subset_diff_left hf
+  · rw [← ENNReal.tsum_add]; exact ENNReal.tsum_le_tsum fun i => hs _
 #align measure_theory.outer_measure.of_function_caratheodory MeasureTheory.OuterMeasure.ofFunction_caratheodory
 
 /- warning: measure_theory.outer_measure.bounded_by_caratheodory -> MeasureTheory.OuterMeasure.boundedBy_caratheodory is a dubious translation:
@@ -1648,9 +1623,7 @@ theorem boundedBy_caratheodory {m : Set α → ℝ≥0∞} {s : Set α}
   apply of_function_caratheodory; intro t
   cases' t.eq_empty_or_nonempty with h h
   · simp [h, not_nonempty_empty]
-  · convert le_trans _ (hs t)
-    · simp [h]
-    exact add_le_add iSup_const_le iSup_const_le
+  · convert le_trans _ (hs t); · simp [h]; exact add_le_add iSup_const_le iSup_const_le
 #align measure_theory.outer_measure.bounded_by_caratheodory MeasureTheory.OuterMeasure.boundedBy_caratheodory
 
 /- warning: measure_theory.outer_measure.zero_caratheodory -> MeasureTheory.OuterMeasure.zero_caratheodory is a dubious translation:
@@ -1757,9 +1730,7 @@ theorem sInf_eq_boundedBy_sInfGen (m : Set (OuterMeasure α)) :
   refine' le_antisymm _ _
   · refine' le_bounded_by.2 fun s => le_iInf₂ fun μ hμ => _
     exact (show Inf m ≤ μ from sInf_le hμ) s
-  · refine' le_sInf _
-    intro μ hμ t
-    refine' le_trans (bounded_by_le t) (iInf₂_le μ hμ)
+  · refine' le_sInf _; intro μ hμ t; refine' le_trans (bounded_by_le t) (iInf₂_le μ hμ)
 #align measure_theory.outer_measure.Inf_eq_bounded_by_Inf_gen MeasureTheory.OuterMeasure.sInf_eq_boundedBy_sInfGen
 
 /- warning: measure_theory.outer_measure.supr_Inf_gen_nonempty -> MeasureTheory.OuterMeasure.iSup_sInfGen_nonempty is a dubious translation:
@@ -1820,10 +1791,8 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.outer_m
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem iInf_apply {ι} [Nonempty ι] (m : ι → OuterMeasure α) (s : Set α) :
-    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i, m i (t n) :=
-  by
-  rw [iInf, sInf_apply (range_nonempty m)]
-  simp only [iInf_range]
+    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i, m i (t n) := by
+  rw [iInf, sInf_apply (range_nonempty m)]; simp only [iInf_range]
 #align measure_theory.outer_measure.infi_apply MeasureTheory.OuterMeasure.iInf_apply
 
 /- warning: measure_theory.outer_measure.infi_apply' -> MeasureTheory.OuterMeasure.iInf_apply' is a dubious translation:
@@ -1836,10 +1805,8 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.outer_m
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem iInf_apply' {ι} (m : ι → OuterMeasure α) {s : Set α} (hs : s.Nonempty) :
-    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i, m i (t n) :=
-  by
-  rw [iInf, Inf_apply' hs]
-  simp only [iInf_range]
+    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i, m i (t n) := by
+  rw [iInf, Inf_apply' hs]; simp only [iInf_range]
 #align measure_theory.outer_measure.infi_apply' MeasureTheory.OuterMeasure.iInf_apply'
 
 /- warning: measure_theory.outer_measure.binfi_apply -> MeasureTheory.OuterMeasure.biInf_apply is a dubious translation:
@@ -1852,10 +1819,8 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.outer_m
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem biInf_apply {ι} {I : Set ι} (hI : I.Nonempty) (m : ι → OuterMeasure α) (s : Set α) :
-    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i ∈ I, m i (t n) :=
-  by
-  haveI := hI.to_subtype
-  simp only [← iInf_subtype'', iInf_apply]
+    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ iUnion t), ∑' n, ⨅ i ∈ I, m i (t n) := by
+  haveI := hI.to_subtype; simp only [← iInf_subtype'', iInf_apply]
 #align measure_theory.outer_measure.binfi_apply MeasureTheory.OuterMeasure.biInf_apply
 
 /- warning: measure_theory.outer_measure.binfi_apply' -> MeasureTheory.OuterMeasure.biInf_apply' is a dubious translation:
@@ -1924,11 +1889,8 @@ theorem map_iInf_comap {ι β} [Nonempty ι] {f : α → β} (m : ι → OuterMe
 <too large>
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.map_binfi_comap MeasureTheory.OuterMeasure.map_biInf_comapₓ'. -/
 theorem map_biInf_comap {ι β} {I : Set ι} (hI : I.Nonempty) {f : α → β} (m : ι → OuterMeasure β) :
-    map f (⨅ i ∈ I, comap f (m i)) = ⨅ i ∈ I, map f (comap f (m i)) :=
-  by
-  haveI := hI.to_subtype
-  rw [← iInf_subtype'', ← iInf_subtype'']
-  exact map_infi_comap _
+    map f (⨅ i ∈ I, comap f (m i)) = ⨅ i ∈ I, map f (comap f (m i)) := by haveI := hI.to_subtype;
+  rw [← iInf_subtype'', ← iInf_subtype'']; exact map_infi_comap _
 #align measure_theory.outer_measure.map_binfi_comap MeasureTheory.OuterMeasure.map_biInf_comap
 
 /- warning: measure_theory.outer_measure.restrict_infi_restrict -> MeasureTheory.OuterMeasure.restrict_iInf_restrict is a dubious translation:
@@ -1956,11 +1918,8 @@ theorem restrict_iInf {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure �
 <too large>
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.restrict_binfi MeasureTheory.OuterMeasure.restrict_biInfₓ'. -/
 theorem restrict_biInf {ι} {I : Set ι} (hI : I.Nonempty) (s : Set α) (m : ι → OuterMeasure α) :
-    restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) :=
-  by
-  haveI := hI.to_subtype
-  rw [← iInf_subtype'', ← iInf_subtype'']
-  exact restrict_infi _ _
+    restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by haveI := hI.to_subtype;
+  rw [← iInf_subtype'', ← iInf_subtype'']; exact restrict_infi _ _
 #align measure_theory.outer_measure.restrict_binfi MeasureTheory.OuterMeasure.restrict_biInf
 
 /- warning: measure_theory.outer_measure.restrict_Inf_eq_Inf_restrict -> MeasureTheory.OuterMeasure.restrict_sInf_eq_sInf_restrict is a dubious translation:
@@ -2041,11 +2000,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {P : α -> Prop} (m : forall (s : α), (P s) -> ENNReal) {s : α} (h : P s), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (m s h) (MeasureTheory.extend.{u1} α (fun (s : α) => P s) m s)
 Case conversion may be inaccurate. Consider using '#align measure_theory.le_extend MeasureTheory.le_extendₓ'. -/
-theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s :=
-  by
-  simp only [extend, le_iInf_iff]
-  intro
-  rfl
+theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s := by simp only [extend, le_iInf_iff];
+  intro ; rfl
 #align measure_theory.le_extend MeasureTheory.le_extend
 
 #print MeasureTheory.extend_congr /-
@@ -2108,10 +2064,7 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.extend_
 theorem extend_iUnion_nat {f : ℕ → Set α} (hm : ∀ i, P (f i))
     (mU : m (⋃ i, f i) (PU hm) = ∑' i, m (f i) (hm i)) :
     extend m (⋃ i, f i) = ∑' i, extend m (f i) :=
-  (extend_eq _ _).trans <|
-    mU.trans <| by
-      congr with i
-      rw [extend_eq]
+  (extend_eq _ _).trans <| mU.trans <| by congr with i; rw [extend_eq]
 #align measure_theory.extend_Union_nat MeasureTheory.extend_iUnion_nat
 
 section Subadditive
@@ -2129,8 +2082,7 @@ theorem extend_iUnion_le_tsum_nat' (s : ℕ → Set α) : extend m (⋃ i, s i) 
   by_cases h : ∀ i, P (s i)
   · rw [extend_eq _ (PU h), congr_arg tsum _]
     · apply msU h
-    funext i
-    apply extend_eq _ (h i)
+    funext i; apply extend_eq _ (h i)
   · cases' not_forall.1 h with i hi
     exact le_trans (le_iInf fun h => hi.elim h) (ENNReal.le_tsum i)
 #align measure_theory.extend_Union_le_tsum_nat' MeasureTheory.extend_iUnion_le_tsum_nat'
@@ -2147,12 +2099,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {P : (Set.{u1} α) -> Prop} {m : forall (s : Set.{u1} α), (P s) -> ENNReal}, (forall {{s₁ : Set.{u1} α}} {{s₂ : Set.{u1} α}} (hs₁ : P s₁) (hs₂ : P s₂), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₁ s₂) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (m s₁ hs₁) (m s₂ hs₂))) -> (forall {{s₁ : Set.{u1} α}} {{s₂ : Set.{u1} α}}, (P s₁) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₁ s₂) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.extend.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => P s) m s₁) (MeasureTheory.extend.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => P s) m s₂)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.extend_mono' MeasureTheory.extend_mono'ₓ'. -/
-theorem extend_mono' ⦃s₁ s₂ : Set α⦄ (h₁ : P s₁) (hs : s₁ ⊆ s₂) : extend m s₁ ≤ extend m s₂ :=
-  by
-  refine' le_iInf _
-  intro h₂
-  rw [extend_eq m h₁]
-  exact m_mono h₁ h₂ hs
+theorem extend_mono' ⦃s₁ s₂ : Set α⦄ (h₁ : P s₁) (hs : s₁ ⊆ s₂) : extend m s₁ ≤ extend m s₂ := by
+  refine' le_iInf _; intro h₂; rw [extend_eq m h₁]; exact m_mono h₁ h₂ hs
 #align measure_theory.extend_mono' MeasureTheory.extend_mono'
 
 end Mono
@@ -2274,17 +2222,12 @@ theorem inducedOuterMeasure_eq_iInf (s : Set α) :
     inducedOuterMeasure m P0 m0 s = ⨅ (t : Set α) (ht : P t) (h : s ⊆ t), m t ht :=
   by
   apply le_antisymm
-  · simp only [le_iInf_iff]
-    intro t ht hs
+  · simp only [le_iInf_iff]; intro t ht hs
     refine' le_trans (mono' _ hs) _
     exact le_of_eq (induced_outer_measure_eq' _ msU m_mono _)
-  · refine' le_iInf _
-    intro f
-    refine' le_iInf _
-    intro hf
+  · refine' le_iInf _; intro f; refine' le_iInf _; intro hf
     refine' le_trans _ (extend_Union_le_tsum_nat' _ msU _)
-    refine' le_iInf _
-    intro h2f
+    refine' le_iInf _; intro h2f
     refine' iInf_le_of_le _ (iInf_le_of_le h2f <| iInf_le _ hf)
 #align measure_theory.induced_outer_measure_eq_infi MeasureTheory.inducedOuterMeasure_eq_iInf
 
@@ -2345,16 +2288,9 @@ theorem inducedOuterMeasure_caratheodory (s : Set α) :
   by
   rw [is_caratheodory_iff_le]
   constructor
-  · intro h t ht
-    exact h t
-  · intro h u
-    conv_rhs => rw [induced_outer_measure_eq_infi _ msU m_mono]
-    refine' le_iInf _
-    intro t
-    refine' le_iInf _
-    intro ht
-    refine' le_iInf _
-    intro h2t
+  · intro h t ht; exact h t
+  · intro h u; conv_rhs => rw [induced_outer_measure_eq_infi _ msU m_mono]
+    refine' le_iInf _; intro t; refine' le_iInf _; intro ht; refine' le_iInf _; intro h2t
     refine' le_trans _ (le_trans (h t ht) <| le_of_eq <| induced_outer_measure_eq' _ msU m_mono ht)
     refine'
       add_le_add (mono' _ <| Set.inter_subset_inter_left _ h2t)
@@ -2470,11 +2406,7 @@ theorem trim_eq {s : Set α} (hs : MeasurableSet s) : m.trim s = m s :=
 
 #print MeasureTheory.OuterMeasure.trim_congr /-
 theorem trim_congr {m₁ m₂ : OuterMeasure α} (H : ∀ {s : Set α}, MeasurableSet s → m₁ s = m₂ s) :
-    m₁.trim = m₂.trim := by
-  unfold trim
-  congr
-  funext s hs
-  exact H hs
+    m₁.trim = m₂.trim := by unfold trim; congr ; funext s hs; exact H hs
 #align measure_theory.outer_measure.trim_congr MeasureTheory.OuterMeasure.trim_congr
 -/
 
@@ -2519,9 +2451,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MeasurableSpace.{u1} α] (m : MeasureTheory.OuterMeasure.{u1} α) (s : Set.{u1} α), Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.OuterMeasure.trim.{u1} α _inst_1 m) s) (iInf.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Set.{u1} α) (fun (t : Set.{u1} α) => iInf.{0, 0} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) (fun (st : HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) => iInf.{0, 0} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (MeasurableSet.{u1} α _inst_1 t) (fun (ht : MeasurableSet.{u1} α _inst_1 t) => MeasureTheory.OuterMeasure.measureOf.{u1} α m t))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.trim_eq_infi MeasureTheory.OuterMeasure.trim_eq_iInfₓ'. -/
-theorem trim_eq_iInf (s : Set α) : m.trim s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), m t :=
-  by
-  simp (config := { singlePass := true }) only [iInf_comm]
+theorem trim_eq_iInf (s : Set α) : m.trim s = ⨅ (t) (st : s ⊆ t) (ht : MeasurableSet t), m t := by
+  simp (config := { singlePass := true }) only [iInf_comm];
   exact
     induced_outer_measure_eq_infi MeasurableSet.iUnion (fun f _ => m.Union_nat f)
       (fun _ _ _ _ h => m.mono h) s
@@ -2702,8 +2633,7 @@ theorem restrict_trim {μ : OuterMeasure α} {s : Set α} (hs : MeasurableSet s)
   refine' le_antisymm (fun t => _) (le_trim_iff.2 fun t ht => _)
   · rw [restrict_apply]
     rcases μ.exists_measurable_superset_eq_trim (t ∩ s) with ⟨t', htt', ht', hμt'⟩
-    rw [← hμt']
-    rw [inter_subset] at htt'
+    rw [← hμt']; rw [inter_subset] at htt'
     refine' (mono' _ htt').trans _
     rw [trim_eq _ (hs.compl.union ht'), restrict_apply, union_inter_distrib_right, compl_inter_self,
       Set.empty_union]

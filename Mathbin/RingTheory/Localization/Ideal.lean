@@ -105,9 +105,7 @@ theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjo
   replace h : algebraMap R S (s * a) = algebraMap R S b := by
     simpa only [← map_mul, mul_comm] using h
   obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
-  have : ↑c * ↑s * a ∈ I := by
-    rw [mul_assoc, hc]
-    exact I.mul_mem_left c b.2
+  have : ↑c * ↑s * a ∈ I := by rw [mul_assoc, hc]; exact I.mul_mem_left c b.2
   exact (hI.mem_or_mem this).resolve_left fun hsc => hM.le_bot ⟨(c * s).2, hsc⟩
 #align is_localization.comap_map_of_is_prime_disjoint IsLocalization.comap_map_of_isPrime_disjoint
 

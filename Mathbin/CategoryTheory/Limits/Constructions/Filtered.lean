@@ -75,8 +75,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
       uniq := fun s m h => by
         ext (t⟨⟨j, hj⟩⟩)
         convert h j using 1
-        · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]
-          rfl
+        · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]; rfl
         · tidy }
 #align category_theory.limits.coproducts_from_finite_filtered.lift_to_finset_colimit_cocone CategoryTheory.Limits.CoproductsFromFiniteFiltered.liftToFinsetColimitCocone
 -/

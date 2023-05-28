@@ -88,12 +88,8 @@ def Iso.mk {α β : BoolAlg.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by
-    ext
-    exact e.symm_apply_apply _
-  inv_hom_id' := by
-    ext
-    exact e.apply_symm_apply _
+  hom_inv_id' := by ext; exact e.symm_apply_apply _
+  inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align BoolAlg.iso.mk BoolAlg.Iso.mk
 
 /-- `order_dual` as a functor. -/

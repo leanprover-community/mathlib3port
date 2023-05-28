@@ -297,10 +297,7 @@ theorem cyclesMap_arrow (f : C₁ ⟶ C₂) (i : ι) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align cycles_map_id cyclesMap_idₓ'. -/
 @[simp]
-theorem cyclesMap_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ :=
-  by
-  dsimp only [cyclesMap]
-  simp
+theorem cyclesMap_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ := by dsimp only [cyclesMap]; simp
 #align cycles_map_id cyclesMap_id
 
 /- warning: cycles_map_comp -> cyclesMap_comp is a dubious translation:
@@ -308,9 +305,7 @@ theorem cyclesMap_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ :=
 Case conversion may be inaccurate. Consider using '#align cycles_map_comp cyclesMap_compₓ'. -/
 @[simp]
 theorem cyclesMap_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
-    cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i :=
-  by
-  dsimp only [cyclesMap]
+    cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i := by dsimp only [cyclesMap];
   simp [subobject.factor_thru_right]
 #align cycles_map_comp cyclesMap_comp
 
@@ -374,9 +369,7 @@ variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 Case conversion may be inaccurate. Consider using '#align boundaries_to_cycles_naturality boundariesToCycles_naturalityₓ'. -/
 @[simp, reassoc]
 theorem boundariesToCycles_naturality (i : ι) :
-    boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i :=
-  by
-  ext
+    boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i := by ext;
   simp
 #align boundaries_to_cycles_naturality boundariesToCycles_naturality
 

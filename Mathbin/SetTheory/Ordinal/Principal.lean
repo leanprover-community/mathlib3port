@@ -97,8 +97,7 @@ theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordin
   by
   induction' n with n hn
   · rwa [Function.iterate_zero]
-  · rw [Function.iterate_succ']
-    exact ho hao hn
+  · rw [Function.iterate_succ']; exact ho hao hn
 #align ordinal.principal.iterate_lt Ordinal.Principal.iterate_lt
 
 /- warning: ordinal.op_eq_self_of_principal -> Ordinal.op_eq_self_of_principal is a dubious translation:
@@ -352,14 +351,11 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
     have := lt_opow_succ_log_self one_lt_omega o
     rw [opow_succ, lt_mul_of_limit omega_is_limit] at this
     rcases this with ⟨a, ao, h'⟩
-    rcases lt_omega.1 ao with ⟨n, rfl⟩
-    clear ao
-    revert h'
-    apply not_lt_of_le
+    rcases lt_omega.1 ao with ⟨n, rfl⟩; clear ao
+    revert h'; apply not_lt_of_le
     suffices e : (omega^log omega o) * ↑n + o = o
     · simpa only [e] using le_add_right ((omega^log omega o) * ↑n) o
-    induction' n with n IH
-    · simp only [Nat.cast_zero, MulZeroClass.mul_zero, zero_add]
+    induction' n with n IH; · simp only [Nat.cast_zero, MulZeroClass.mul_zero, zero_add]
     simp only [Nat.cast_succ, mul_add_one, add_assoc, this, IH]
 #align ordinal.principal_add_iff_zero_or_omega_opow Ordinal.principal_add_iff_zero_or_omega_opow
 
@@ -374,11 +370,9 @@ theorem opow_principal_add_of_principal_add {a} (ha : Principal (· + ·) a) (b 
   by
   rcases principal_add_iff_zero_or_omega_opow.1 ha with (rfl | ⟨c, rfl⟩)
   · rcases eq_or_ne b 0 with (rfl | hb)
-    · rw [opow_zero]
-      exact principal_add_one
+    · rw [opow_zero]; exact principal_add_one
     · rwa [zero_opow hb]
-  · rw [← opow_mul]
-    exact principal_add_omega_opow _
+  · rw [← opow_mul]; exact principal_add_omega_opow _
 #align ordinal.opow_principal_add_of_principal_add Ordinal.opow_principal_add_of_principal_add
 
 /- warning: ordinal.add_absorp -> Ordinal.add_absorp is a dubious translation:
@@ -426,9 +420,7 @@ lean 3 declaration is
 but is expected to have type
   Ordinal.Principal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3104 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3106 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3104 x._@.Mathlib.SetTheory.Ordinal.Principal._hyg.3106) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))
 Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_one Ordinal.principal_mul_oneₓ'. -/
-theorem principal_mul_one : Principal (· * ·) 1 :=
-  by
-  rw [principal_one_iff]
+theorem principal_mul_one : Principal (· * ·) 1 := by rw [principal_one_iff];
   exact MulZeroClass.zero_mul _
 #align ordinal.principal_mul_one Ordinal.principal_mul_one
 
@@ -509,8 +501,7 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
         rwa [lt_succ_iff] at this
       · rwa [← succ_le_iff, succ_zero] at ha₀
     · exact op_eq_self_of_principal hao (mul_is_normal ha₀) h (principal_mul_is_limit ho h)
-  · rcases eq_or_ne a 0 with (rfl | ha)
-    · rwa [MulZeroClass.zero_mul]
+  · rcases eq_or_ne a 0 with (rfl | ha); · rwa [MulZeroClass.zero_mul]
     rw [← Ordinal.pos_iff_ne_zero] at ha
     rw [← h a ha hao]
     exact (mul_is_normal ha).StrictMono hbo
@@ -524,9 +515,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.principal_mul_omega Ordinal.principal_mul_omegaₓ'. -/
 theorem principal_mul_omega : Principal (· * ·) omega := fun a b ha hb =>
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
-    rw [← nat_cast_mul]
-    apply nat_lt_omega
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by rw [← nat_cast_mul]; apply nat_lt_omega
 #align ordinal.principal_mul_omega Ordinal.principal_mul_omega
 
 /- warning: ordinal.mul_omega -> Ordinal.mul_omega is a dubious translation:
@@ -570,9 +559,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.mul_omega_opow
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
     a * (omega^omega^b) = (omega^omega^b) :=
   by
-  by_cases b0 : b = 0;
-  · rw [b0, opow_zero, opow_one] at h⊢
-    exact mul_omega a0 h
+  by_cases b0 : b = 0; · rw [b0, opow_zero, opow_one] at h⊢; exact mul_omega a0 h
   refine'
     le_antisymm _
       (by simpa only [one_mul] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
@@ -676,9 +663,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.principal_opow_omega Ordinal.principal_opow_omegaₓ'. -/
 theorem principal_opow_omega : Principal (·^·) omega := fun a b ha hb =>
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
-    simp_rw [← nat_cast_opow]
-    apply nat_lt_omega
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by simp_rw [← nat_cast_opow]; apply nat_lt_omega
 #align ordinal.principal_opow_omega Ordinal.principal_opow_omega
 
 /- warning: ordinal.opow_omega -> Ordinal.opow_omega is a dubious translation:

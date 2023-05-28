@@ -126,19 +126,13 @@ def LinearMap.toMatrixRight' : ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ] 
     where
   toFun f i j := f (stdBasis R (fun _ => R) i 1) j
   invFun := Matrix.vecMulLinear
-  right_inv M := by
-    ext (i j)
-    simp only [Matrix.vecMul_stdBasis, Matrix.vecMulLinear_apply]
+  right_inv M := by ext (i j); simp only [Matrix.vecMul_stdBasis, Matrix.vecMulLinear_apply]
   left_inv f := by
     apply (Pi.basisFun R m).ext
     intro j; ext i
     simp only [Pi.basisFun_apply, Matrix.vecMul_stdBasis, Matrix.vecMulLinear_apply]
-  map_add' f g := by
-    ext (i j)
-    simp only [Pi.add_apply, LinearMap.add_apply]
-  map_smul' c f := by
-    ext (i j)
-    simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
+  map_add' f g := by ext (i j); simp only [Pi.add_apply, LinearMap.add_apply]
+  map_smul' c f := by ext (i j); simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
 #align linear_map.to_matrix_right' LinearMap.toMatrixRight'
 -/
 
@@ -184,9 +178,7 @@ theorem Matrix.toLinearMapRight'_mul_apply [Fintype l] [DecidableEq l] (M : Matr
 <too large>
 Case conversion may be inaccurate. Consider using '#align matrix.to_linear_map_right'_one Matrix.toLinearMapRight'_oneₓ'. -/
 @[simp]
-theorem Matrix.toLinearMapRight'_one : Matrix.toLinearMapRight' (1 : Matrix m m R) = id :=
-  by
-  ext
+theorem Matrix.toLinearMapRight'_one : Matrix.toLinearMapRight' (1 : Matrix m m R) = id := by ext;
   simp [LinearMap.one_apply, std_basis_apply]
 #align matrix.to_linear_map_right'_one Matrix.toLinearMapRight'_one
 
@@ -296,9 +288,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {n : Type.{u2}} [_inst_2 : Fintype.{u2} n] [_inst_3 : DecidableEq.{succ u2} n], Eq.{max (succ u1) (succ u2)} (LinearMap.{u1, u1, max u1 u2, max u1 u2} R R (CommSemiring.toSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u1} R _inst_1) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (n -> R) (n -> R) (Pi.addCommMonoid.{u2, u1} n (fun (ᾰ : n) => R) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (Pi.addCommMonoid.{u2, u1} n (fun (ᾰ : n) => R) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (Pi.module.{u2, u1, u1} n (fun (a._@.Mathlib.LinearAlgebra.Matrix.ToLin._hyg.1177 : n) => R) R (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (fun (i : n) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (Pi.module.{u2, u1, u1} n (fun (a._@.Mathlib.LinearAlgebra.Matrix.ToLin._hyg.1180 : n) => R) R (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (fun (i : n) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Matrix.mulVecLin.{u1, u2, u2} R _inst_1 n n _inst_2 (OfNat.ofNat.{max u1 u2} (Matrix.{u2, u2, u1} n n R) 1 (One.toOfNat1.{max u1 u2} (Matrix.{u2, u2, u1} n n R) (Matrix.one.{u1, u2} n R (fun (a : n) (b : n) => _inst_3 a b) (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R _inst_1)) (Semiring.toOne.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) (LinearMap.id.{u1, max u1 u2} R (n -> R) (CommSemiring.toSemiring.{u1} R _inst_1) (Pi.addCommMonoid.{u2, u1} n (fun (ᾰ : n) => R) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) (Pi.module.{u2, u1, u1} n (fun (a._@.Mathlib.LinearAlgebra.Matrix.ToLin._hyg.1177 : n) => R) R (CommSemiring.toSemiring.{u1} R _inst_1) (fun (i : n) => NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (fun (i : n) => Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align matrix.mul_vec_lin_one Matrix.mulVecLin_oneₓ'. -/
 @[simp]
-theorem Matrix.mulVecLin_one [DecidableEq n] : Matrix.mulVecLin (1 : Matrix n n R) = id :=
-  by
-  ext
+theorem Matrix.mulVecLin_one [DecidableEq n] : Matrix.mulVecLin (1 : Matrix n n R) = id := by ext;
   simp [LinearMap.one_apply, std_basis_apply]
 #align matrix.mul_vec_lin_one Matrix.mulVecLin_one
 
@@ -355,18 +345,13 @@ def LinearMap.toMatrix' : ((n → R) →ₗ[R] m → R) ≃ₗ[R] Matrix m n R
     where
   toFun f := of fun i j => f (stdBasis R (fun _ => R) j 1) i
   invFun := Matrix.mulVecLin
-  right_inv M := by
-    ext (i j)
-    simp only [Matrix.mulVec_stdBasis, Matrix.mulVecLin_apply, of_apply]
+  right_inv M := by ext (i j); simp only [Matrix.mulVec_stdBasis, Matrix.mulVecLin_apply, of_apply]
   left_inv f := by
     apply (Pi.basisFun R n).ext
     intro j; ext i
     simp only [Pi.basisFun_apply, Matrix.mulVec_stdBasis, Matrix.mulVecLin_apply, of_apply]
-  map_add' f g := by
-    ext (i j)
-    simp only [Pi.add_apply, LinearMap.add_apply, of_apply]
-  map_smul' c f := by
-    ext (i j)
+  map_add' f g := by ext (i j); simp only [Pi.add_apply, LinearMap.add_apply, of_apply]
+  map_smul' c f := by ext (i j);
     simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply, of_apply]
 #align linear_map.to_matrix' LinearMap.toMatrix'
 -/
@@ -457,10 +442,8 @@ theorem Matrix.toLin'_one : Matrix.toLin' (1 : Matrix n n R) = id :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_matrix'_id LinearMap.toMatrix'_idₓ'. -/
 @[simp]
-theorem LinearMap.toMatrix'_id : LinearMap.toMatrix' (LinearMap.id : (n → R) →ₗ[R] n → R) = 1 :=
-  by
-  ext
-  rw [Matrix.one_apply, LinearMap.toMatrix'_apply, id_apply]
+theorem LinearMap.toMatrix'_id : LinearMap.toMatrix' (LinearMap.id : (n → R) →ₗ[R] n → R) = 1 := by
+  ext; rw [Matrix.one_apply, LinearMap.toMatrix'_apply, id_apply]
 #align linear_map.to_matrix'_id LinearMap.toMatrix'_id
 
 /- warning: matrix.to_lin'_mul -> Matrix.toLin'_mul is a dubious translation:
@@ -820,8 +803,7 @@ theorem Matrix.toLin_self (M : Matrix m n R) (i : n) :
   rw [Matrix.toLin_apply, Finset.sum_congr rfl fun j hj => _]
   rw [Basis.repr_self, Matrix.mulVec, dot_product, Finset.sum_eq_single i, Finsupp.single_eq_same,
     mul_one]
-  · intro i' _ i'_ne
-    rw [Finsupp.single_eq_of_ne i'_ne.symm, MulZeroClass.mul_zero]
+  · intro i' _ i'_ne; rw [Finsupp.single_eq_of_ne i'_ne.symm, MulZeroClass.mul_zero]
   · intros
     have := Finset.mem_univ i
     contradiction
@@ -1202,8 +1184,7 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
   map_one' := by rw [AlgHom.map_one, LinearMap.toMatrix_one]
   map_add' x y := by rw [AlgHom.map_add, LinearEquiv.map_add]
   map_mul' x y := by rw [AlgHom.map_mul, LinearMap.toMatrix_mul, Matrix.mul_eq_mul]
-  commutes' r := by
-    ext
+  commutes' r := by ext;
     rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_eq_diagonal, Pi.algebraMap_def,
       Algebra.id.map_eq_self]
 #align algebra.left_mul_matrix Algebra.leftMulMatrix
@@ -1328,9 +1309,7 @@ def algEquivMatrix' [Fintype n] : Module.End R (n → R) ≃ₐ[R] Matrix n n R 
     commutes' := fun r =>
       by
       change (r • (LinearMap.id : Module.End R _)).toMatrix' = r • 1
-      rw [← LinearMap.toMatrix'_id]
-      rfl
-      infer_instance }
+      rw [← LinearMap.toMatrix'_id]; rfl; infer_instance }
 #align alg_equiv_matrix' algEquivMatrix'
 
 /- warning: linear_equiv.alg_conj -> LinearEquiv.algConj is a dubious translation:

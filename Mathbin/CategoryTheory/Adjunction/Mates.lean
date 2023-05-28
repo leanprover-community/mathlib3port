@@ -123,9 +123,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.transf
 theorem transferNatTrans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transferNatTrans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ =
       f.app _ ≫ H.map (adj₁.counit.app Y) :=
-  by
-  erw [functor.map_comp]
-  simp
+  by erw [functor.map_comp]; simp
 #align category_theory.transfer_nat_trans_counit CategoryTheory.transferNatTrans_counit
 
 /- warning: category_theory.unit_transfer_nat_trans -> CategoryTheory.unit_transferNatTrans is a dubious translation:
@@ -203,21 +201,16 @@ theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
 
 #print CategoryTheory.transferNatTransSelf_id /-
 @[simp]
-theorem transferNatTransSelf_id : transferNatTransSelf adj₁ adj₁ (𝟙 _) = 𝟙 _ :=
-  by
-  ext
-  dsimp [transfer_nat_trans_self, transfer_nat_trans]
-  simp
+theorem transferNatTransSelf_id : transferNatTransSelf adj₁ adj₁ (𝟙 _) = 𝟙 _ := by ext;
+  dsimp [transfer_nat_trans_self, transfer_nat_trans]; simp
 #align category_theory.transfer_nat_trans_self_id CategoryTheory.transferNatTransSelf_id
 -/
 
 #print CategoryTheory.transferNatTransSelf_symm_id /-
 -- See library note [dsimp, simp]
 @[simp]
-theorem transferNatTransSelf_symm_id : (transferNatTransSelf adj₁ adj₁).symm (𝟙 _) = 𝟙 _ :=
-  by
-  rw [Equiv.symm_apply_eq]
-  simp
+theorem transferNatTransSelf_symm_id : (transferNatTransSelf adj₁ adj₁).symm (𝟙 _) = 𝟙 _ := by
+  rw [Equiv.symm_apply_eq]; simp
 #align category_theory.transfer_nat_trans_self_symm_id CategoryTheory.transferNatTransSelf_symm_id
 -/
 
@@ -258,9 +251,7 @@ theorem transferNatTransSelf_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) 
 theorem transferNatTransSelf_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
       (transferNatTransSelf adj₃ adj₁).symm (g ≫ f) :=
-  by
-  rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
-  simp
+  by rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]; simp
 #align category_theory.transfer_nat_trans_self_symm_comp CategoryTheory.transferNatTransSelf_symm_comp
 -/
 

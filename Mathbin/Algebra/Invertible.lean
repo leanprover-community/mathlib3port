@@ -168,15 +168,11 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : α) (b : α) [_inst_2 : Invertible.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) a] [_inst_3 : Invertible.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) b], (Eq.{succ u1} α a b) -> (Eq.{succ u1} α (Invertible.invOf.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) a _inst_2) (Invertible.invOf.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) b _inst_3))
 Case conversion may be inaccurate. Consider using '#align invertible_unique invertible_uniqueₓ'. -/
 theorem invertible_unique {α : Type u} [Monoid α] (a b : α) [Invertible a] [Invertible b]
-    (h : a = b) : ⅟ a = ⅟ b := by
-  apply invOf_eq_right_inv
-  rw [h, mul_invOf_self]
+    (h : a = b) : ⅟ a = ⅟ b := by apply invOf_eq_right_inv; rw [h, mul_invOf_self]
 #align invertible_unique invertible_unique
 
 instance [Monoid α] (a : α) : Subsingleton (Invertible a) :=
-  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by
-    congr
-    exact left_inv_eq_right_inv hba hac⟩
+  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by congr ; exact left_inv_eq_right_inv hba hac⟩
 
 /- warning: invertible.copy -> Invertible.copy is a dubious translation:
 lean 3 declaration is
@@ -645,9 +641,7 @@ Case conversion may be inaccurate. Consider using '#align map_inv_of map_invOf�
 before applying this lemma. -/
 theorem map_invOf {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [Monoid S]
     [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] [Invertible (f r)] : f (⅟ r) = ⅟ (f r) :=
-  by
-  letI := Invertible.map f r
-  convert rfl
+  by letI := Invertible.map f r; convert rfl
 #align map_inv_of map_invOf
 
 /- warning: invertible.of_left_inverse -> Invertible.ofLeftInverse is a dubious translation:

@@ -82,9 +82,7 @@ but is expected to have type
   forall {σ : Type.{u2}} {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R], Eq.{max (succ u2) (succ u1)} (AlgHom.{u1, max u1 u2, max u1 u2} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.expand.{u2, u1} σ R _inst_1 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (AlgHom.id.{u1, max u1 u2} R (MvPolynomial.{u2, u1} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.expand_one MvPolynomial.expand_oneₓ'. -/
 @[simp]
-theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) :=
-  by
-  ext1 f
+theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) := by ext1 f;
   rw [expand_one_apply, AlgHom.id_apply]
 #align mv_polynomial.expand_one MvPolynomial.expand_one
 
@@ -92,10 +90,7 @@ theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.expand_comp_bind₁ MvPolynomial.expand_comp_bind₁ₓ'. -/
 theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
-    (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) :=
-  by
-  apply alg_hom_ext
-  intro i
+    (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) := by apply alg_hom_ext; intro i;
   simp only [AlgHom.comp_apply, bind₁_X_right]
 #align mv_polynomial.expand_comp_bind₁ MvPolynomial.expand_comp_bind₁
 
@@ -133,9 +128,7 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.rename_c
 theorem rename_comp_expand (f : σ → τ) (p : ℕ) :
     (rename f).comp (expand p) =
       (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) :=
-  by
-  ext1 φ
-  simp only [rename_expand, AlgHom.comp_apply]
+  by ext1 φ; simp only [rename_expand, AlgHom.comp_apply]
 #align mv_polynomial.rename_comp_expand MvPolynomial.rename_comp_expand
 
 end MvPolynomial

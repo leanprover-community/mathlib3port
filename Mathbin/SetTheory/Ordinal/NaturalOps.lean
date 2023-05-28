@@ -335,9 +335,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nadd.{u1} b c)) (Or (Exists.{succ (succ u1)} Ordinal.{u1} (fun (b' : Ordinal.{u1}) => And (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b' b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nadd.{u1} b' c)))) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (c' : Ordinal.{u1}) => And (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c' c) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nadd.{u1} b c')))))
 Case conversion may be inaccurate. Consider using '#align ordinal.lt_nadd_iff Ordinal.lt_nadd_iffₓ'. -/
-theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' :=
-  by
-  rw [nadd_def]
+theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by rw [nadd_def];
   simp [lt_blsub_iff]
 #align ordinal.lt_nadd_iff Ordinal.lt_nadd_iff
 
@@ -347,9 +345,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nadd.{u1} b c) a) (And (forall (b' : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b' b) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nadd.{u1} b' c) a)) (forall (c' : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c' c) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nadd.{u1} b c') a)))
 Case conversion may be inaccurate. Consider using '#align ordinal.nadd_le_iff Ordinal.nadd_le_iffₓ'. -/
-theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a :=
-  by
-  rw [nadd_def]
+theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a := by rw [nadd_def];
   simp [blsub_le_iff]
 #align ordinal.nadd_le_iff Ordinal.nadd_le_iff
 
@@ -566,9 +562,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariantClass_leₓ'. -/
 instance add_contravariantClass_le :
     ContravariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
-  ⟨fun a b c h => by
-    by_contra' h'
-    exact h.not_lt (add_lt_add_left h' a)⟩
+  ⟨fun a b c h => by by_contra' h'; exact h.not_lt (add_lt_add_left h' a)⟩
 #align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariantClass_le
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
@@ -627,10 +621,7 @@ but is expected to have type
   forall (n : Nat), Eq.{succ (succ u1)} NatOrdinal.{u1} (FunLike.coe.{succ (succ u1), succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Ordinal.{u1} NatOrdinal.{u1} (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Ordinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Ordinal.{u1}) => LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : NatOrdinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : NatOrdinal.{u1}) => LE.le.{succ u1} NatOrdinal.{u1} (Preorder.toLE.{succ u1} NatOrdinal.{u1} (PartialOrder.toPreorder.{succ u1} NatOrdinal.{u1} (SemilatticeInf.toPartialOrder.{succ u1} NatOrdinal.{u1} (Lattice.toSemilatticeInf.{succ u1} NatOrdinal.{u1} (DistribLattice.toLattice.{succ u1} NatOrdinal.{u1} (instDistribLattice.{succ u1} NatOrdinal.{u1} NatOrdinal.linearOrder.{u1})))))) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) Ordinal.{u1} (fun (_x : Ordinal.{u1}) => NatOrdinal.{u1}) (RelHomClass.toFunLike.{succ u1, succ u1, succ u1} (RelIso.{succ u1, succ u1} Ordinal.{u1} NatOrdinal.{u1} (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Ordinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Ordinal.{u1}) => LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : NatOrdinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : NatOrdinal.{u1}) => LE.le.{succ u1} NatOrdinal.{u1} (Preorder.toLE.{succ u1} NatOrdinal.{u1} (PartialOrder.toPreorder.{succ u1} NatOrdinal.{u1} (SemilatticeInf.toPartialOrder.{succ u1} NatOrdinal.{u1} (Lattice.toSemilatticeInf.{succ u1} NatOrdinal.{u1} (DistribLattice.toLattice.{succ u1} NatOrdinal.{u1} (instDistribLattice.{succ u1} NatOrdinal.{u1} NatOrdinal.linearOrder.{u1})))))) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302)) Ordinal.{u1} NatOrdinal.{u1} (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Ordinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Ordinal.{u1}) => LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : NatOrdinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : NatOrdinal.{u1}) => LE.le.{succ u1} NatOrdinal.{u1} (Preorder.toLE.{succ u1} NatOrdinal.{u1} (PartialOrder.toPreorder.{succ u1} NatOrdinal.{u1} (SemilatticeInf.toPartialOrder.{succ u1} NatOrdinal.{u1} (Lattice.toSemilatticeInf.{succ u1} NatOrdinal.{u1} (DistribLattice.toLattice.{succ u1} NatOrdinal.{u1} (instDistribLattice.{succ u1} NatOrdinal.{u1} NatOrdinal.linearOrder.{u1})))))) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (RelIso.instRelHomClassRelIso.{succ u1, succ u1} Ordinal.{u1} NatOrdinal.{u1} (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Ordinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Ordinal.{u1}) => LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : NatOrdinal.{u1}) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : NatOrdinal.{u1}) => LE.le.{succ u1} NatOrdinal.{u1} (Preorder.toLE.{succ u1} NatOrdinal.{u1} (PartialOrder.toPreorder.{succ u1} NatOrdinal.{u1} (SemilatticeInf.toPartialOrder.{succ u1} NatOrdinal.{u1} (Lattice.toSemilatticeInf.{succ u1} NatOrdinal.{u1} (DistribLattice.toLattice.{succ u1} NatOrdinal.{u1} (instDistribLattice.{succ u1} NatOrdinal.{u1} NatOrdinal.linearOrder.{u1})))))) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302))) Ordinal.toNatOrdinal.{u1} (Nat.cast.{succ u1} Ordinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} Ordinal.{u1} Ordinal.addMonoidWithOne.{u1}) n)) (Nat.cast.{succ u1} NatOrdinal.{u1} (AddMonoidWithOne.toNatCast.{succ u1} NatOrdinal.{u1} NatOrdinal.addMonoidWithOne.{u1}) n)
 Case conversion may be inaccurate. Consider using '#align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_natₓ'. -/
 @[simp]
-theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n :=
-  by
-  rw [← to_ordinal_cast_nat n]
-  rfl
+theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by rw [← to_ordinal_cast_nat n]; rfl
 #align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_nat
 
 /- warning: ordinal.lt_of_nadd_lt_nadd_left -> Ordinal.lt_of_nadd_lt_nadd_left is a dubious translation:

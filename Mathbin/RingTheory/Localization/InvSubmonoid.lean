@@ -63,10 +63,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (M : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (S : Type.{u2}) [_inst_2 : CommRing.{u2} S] [_inst_3 : Algebra.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))] [_inst_5 : IsLocalization.{u1, u2} R (CommRing.toCommSemiring.{u1} R _inst_1) M S (CommRing.toCommSemiring.{u2} S _inst_2) _inst_3], LE.le.{u2} (Submonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) (Preorder.toLE.{u2} (Submonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) (PartialOrder.toPreorder.{u2} (Submonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Submonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Submonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))) (Submonoid.instCompleteLatticeSubmonoid.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))))))) (Submonoid.map.{u1, u2, max u1 u2} R S (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))))) (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))) (RingHomClass.toMonoidHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))) R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))) (RingHom.instRingHomClassRingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2))))) (algebraMap.{u1, u2} R S (CommRing.toCommSemiring.{u1} R _inst_1) (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)) _inst_3) M) (IsUnit.submonoid.{u2} S (MonoidWithZero.toMonoid.{u2} S (Semiring.toMonoidWithZero.{u2} S (CommSemiring.toSemiring.{u2} S (CommRing.toCommSemiring.{u2} S _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align is_localization.submonoid_map_le_is_unit IsLocalization.submonoid_map_le_is_unitₓ'. -/
-theorem submonoid_map_le_is_unit : M.map (algebraMap R S) ≤ IsUnit.submonoid S :=
-  by
-  rintro _ ⟨a, ha, rfl⟩
-  exact IsLocalization.map_units S ⟨_, ha⟩
+theorem submonoid_map_le_is_unit : M.map (algebraMap R S) ≤ IsUnit.submonoid S := by
+  rintro _ ⟨a, ha, rfl⟩; exact IsLocalization.map_units S ⟨_, ha⟩
 #align is_localization.submonoid_map_le_is_unit IsLocalization.submonoid_map_le_is_unit
 
 /- warning: is_localization.equiv_inv_submonoid -> IsLocalization.equivInvSubmonoid is a dubious translation:
@@ -115,11 +113,8 @@ theorem mul_toInvSubmonoid (m : M) : algebraMap R S m * (toInvSubmonoid M S m : 
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localization.smul_to_inv_submonoid IsLocalization.smul_toInvSubmonoidₓ'. -/
 @[simp]
-theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 :=
-  by
-  convert mul_to_inv_submonoid M S m
-  rw [← Algebra.smul_def]
-  rfl
+theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 := by
+  convert mul_to_inv_submonoid M S m; rw [← Algebra.smul_def]; rfl
 #align is_localization.smul_to_inv_submonoid IsLocalization.smul_toInvSubmonoid
 
 variable {S}
@@ -138,10 +133,8 @@ theorem surj'' (z : S) : ∃ (r : R)(m : M), z = r • toInvSubmonoid M S m :=
 /- warning: is_localization.to_inv_submonoid_eq_mk' -> IsLocalization.toInvSubmonoid_eq_mk' is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localization.to_inv_submonoid_eq_mk' IsLocalization.toInvSubmonoid_eq_mk'ₓ'. -/
-theorem toInvSubmonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x :=
-  by
-  rw [← (IsLocalization.map_units S x).mul_left_inj]
-  simp
+theorem toInvSubmonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x := by
+  rw [← (IsLocalization.map_units S x).mul_left_inj]; simp
 #align is_localization.to_inv_submonoid_eq_mk' IsLocalization.toInvSubmonoid_eq_mk'
 
 /- warning: is_localization.mem_inv_submonoid_iff_exists_mk' -> IsLocalization.mem_invSubmonoid_iff_exists_mk' is a dubious translation:

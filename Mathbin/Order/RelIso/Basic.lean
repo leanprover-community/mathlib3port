@@ -135,10 +135,7 @@ namespace RelHom
 
 instance : RelHomClass (r →r s) r s where
   coe o := o.toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    congr
+  coe_injective' f g h := by cases f; cases g; congr
   map_rel := map_rel'
 
 /-- Auxiliary instance if `rel_hom_class.to_fun_like.to_has_coe_to_fun` isn't found -/
@@ -335,10 +332,7 @@ instance : CoeFun (r ↪r s) fun _ => α → β :=
 -- TODO: define and instantiate a `rel_embedding_class` when `embedding_like` is defined
 instance : RelHomClass (r ↪r s) r s where
   coe := coeFn
-  coe_injective' f g h := by
-    rcases f with ⟨⟨⟩⟩
-    rcases g with ⟨⟨⟩⟩
-    congr
+  coe_injective' f g h := by rcases f with ⟨⟨⟩⟩; rcases g with ⟨⟨⟩⟩; congr
   map_rel f a b := Iff.mpr (map_rel_iff' f)
 
 #print RelEmbedding.Simps.apply /-
@@ -507,10 +501,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelEmbedding.{u2, u1} α β r s), Eq.{succ u2} (α -> α -> Prop) r (Order.Preimage.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelEmbedding.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelEmbedding.{u2, u1} α β r s) α β r s (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β r s)) f) s)
 Case conversion may be inaccurate. Consider using '#align rel_embedding.eq_preimage RelEmbedding.eq_preimageₓ'. -/
-theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s :=
-  by
-  ext (a b)
-  exact f.map_rel_iff.symm
+theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by ext (a b); exact f.map_rel_iff.symm
 #align rel_embedding.eq_preimage RelEmbedding.eq_preimage
 
 /- warning: rel_embedding.is_irrefl -> RelEmbedding.isIrrefl is a dubious translation:
@@ -742,8 +733,7 @@ theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
   constructor
   · exact RelHomClass.acc (Quotient.mkRelHom H) a
   · intro ac
-    induction' ac with _ H IH
-    dsimp at IH
+    induction' ac with _ H IH; dsimp at IH
     refine' ⟨_, fun q h => _⟩
     obtain ⟨a', rfl⟩ := q.exists_rep
     exact IH a' h
@@ -825,8 +815,7 @@ def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b
     refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
       exact fun h => @irrefl _ s _ _ (by simpa [e] using H _ _ h)
   · refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
-    · subst e
-      exact irrefl _ h
+    · subst e; exact irrefl _ h
     · exact asymm (H _ _ h') h
 #align rel_embedding.of_monotone RelEmbedding.ofMonotone
 -/
@@ -979,9 +968,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelIso.{u2, u1} α β r s) (Equiv.{succ u2, succ u1} α β) (RelIso.toEquiv.{u2, u1} α β r s)
 Case conversion may be inaccurate. Consider using '#align rel_iso.to_equiv_injective RelIso.toEquiv_injectiveₓ'. -/
 theorem toEquiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
-  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by
-    congr
-    exact h
+  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by congr ; exact h
 #align rel_iso.to_equiv_injective RelIso.toEquiv_injective
 
 instance : Coe (r ≃r s) (r ↪r s) :=
@@ -1129,10 +1116,7 @@ theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
 @[simps toEquiv apply]
 protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β)
     (h₂ : HEq r s) : r ≃r s :=
-  ⟨Equiv.cast h₁, fun a b => by
-    subst h₁
-    rw [eq_of_hEq h₂]
-    rfl⟩
+  ⟨Equiv.cast h₁, fun a b => by subst h₁; rw [eq_of_hEq h₂]; rfl⟩
 #align rel_iso.cast RelIso.cast
 -/
 
@@ -1157,9 +1141,7 @@ protected theorem cast_refl {α : Type u} {r : α → α → Prop} (h₁ : α = 
 protected theorem cast_trans {α β γ : Type u} {r : α → α → Prop} {s : β → β → Prop}
     {t : γ → γ → Prop} (h₁ : α = β) (h₁' : β = γ) (h₂ : HEq r s) (h₂' : HEq s t) :
     (RelIso.cast h₁ h₂).trans (RelIso.cast h₁' h₂') = RelIso.cast (h₁.trans h₁') (h₂.trans h₂') :=
-  ext fun x => by
-    subst h₁
-    rfl
+  ext fun x => by subst h₁; rfl
 #align rel_iso.cast_trans RelIso.cast_trans
 -/
 

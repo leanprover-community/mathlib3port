@@ -74,8 +74,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
     · intro x hx y hy hxy
       obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ := by rwa [hns]
       obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
-      rw [g'g _, g'g _] at hxy
-      rw [hxy]
+      rw [g'g _, g'g _] at hxy; rw [hxy]
     · intro x hx y hy hxy
       obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _] at hxy
@@ -126,10 +125,8 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
           have : insert f s ∈ sets := fun x hx y hy =>
             by
             cases hx <;> cases hy; · simp [hx, hy]
-            · subst x
-              exact fun i e => (hf i y hy e.symm).elim
-            · subst y
-              exact fun i e => (hf i x hx e).elim
+            · subst x; exact fun i e => (hf i y hy e.symm).elim
+            · subst y; exact fun i e => (hf i x hx e).elim
             · exact hs x hx y hy
           ms _ this (subset_insert f s) ▸ mem_insert _ _
         let ⟨i⟩ := I

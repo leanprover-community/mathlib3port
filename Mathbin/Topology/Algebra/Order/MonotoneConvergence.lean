@@ -263,8 +263,7 @@ instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
   have B : tendsto (fun x : s => (x : α × β).2) at_top (𝓝 b) :=
     tendsto_atTop_isLUB (monotone_snd.restrict s) h.2
   convert A.prod_mk_nhds B
-  ext1 ⟨⟨x, y⟩, h⟩
-  rfl
+  ext1 ⟨⟨x, y⟩, h⟩; rfl
 
 instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β] [InfConvergenceClass α]
     [InfConvergenceClass β] : InfConvergenceClass (α × β) :=

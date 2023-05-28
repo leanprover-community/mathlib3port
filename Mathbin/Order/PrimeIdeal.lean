@@ -164,10 +164,7 @@ but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (IF : Order.Ideal.PrimePair.{u1} P _inst_1), Order.Ideal.IsPrime.{u1} P _inst_1 (Order.Ideal.PrimePair.I.{u1} P _inst_1 IF)
 Case conversion may be inaccurate. Consider using '#align order.ideal.prime_pair.I_is_prime Order.Ideal.PrimePair.I_isPrimeₓ'. -/
 theorem PrimePair.I_isPrime (IF : PrimePair P) : IsPrime IF.i :=
-  { IF.I_isProper with
-    compl_filter := by
-      rw [IF.compl_I_eq_F]
-      exact IF.F.is_pfilter }
+  { IF.I_isProper with compl_filter := by rw [IF.compl_I_eq_F]; exact IF.F.is_pfilter }
 #align order.ideal.prime_pair.I_is_prime Order.Ideal.PrimePair.I_isPrime
 
 end Preorder
@@ -351,10 +348,7 @@ def IsPrime.toPrimePair {F : PFilter P} (h : IsPrime F) : Ideal.PrimePair P :=
 
 #print Order.Ideal.PrimePair.F_isPrime /-
 theorem Order.Ideal.PrimePair.F_isPrime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
-  {
-    compl_ideal := by
-      rw [IF.compl_F_eq_I]
-      exact IF.I.is_ideal }
+  { compl_ideal := by rw [IF.compl_F_eq_I]; exact IF.I.is_ideal }
 #align order.ideal.prime_pair.F_is_prime Order.Ideal.PrimePair.F_isPrime
 -/
 

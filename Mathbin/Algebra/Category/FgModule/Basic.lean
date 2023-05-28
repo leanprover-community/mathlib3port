@@ -69,18 +69,13 @@ instance : Inhabited (FgModule R) :=
 
 /-- Lift an unbundled finitely generated module to `fgModule R`. -/
 def of (V : Type u) [AddCommGroup V] [Module R V] [Module.Finite R V] : FgModule R :=
-  ⟨ModuleCat.of R V, by
-    change Module.Finite R V
-    infer_instance⟩
+  ⟨ModuleCat.of R V, by change Module.Finite R V; infer_instance⟩
 #align fgModule.of FgModule.of
 
 instance (V : FgModule R) : Module.Finite R V.obj :=
   V.property
 
-instance : HasForget₂ (FgModule.{u} R) (ModuleCat.{u} R) :=
-  by
-  dsimp [FgModule]
-  infer_instance
+instance : HasForget₂ (FgModule.{u} R) (ModuleCat.{u} R) := by dsimp [FgModule]; infer_instance
 
 instance : Full (forget₂ (FgModule R) (ModuleCat.{u} R)) where preimage X Y f := f
 
@@ -100,12 +95,8 @@ def LinearEquiv.toFgModuleIso {V W : Type u} [AddCommGroup V] [Module R V] [Modu
     where
   Hom := e.toLinearMap
   inv := e.symm.toLinearMap
-  hom_inv_id' := by
-    ext
-    exact e.left_inv x
-  inv_hom_id' := by
-    ext
-    exact e.right_inv x
+  hom_inv_id' := by ext; exact e.left_inv x
+  inv_hom_id' := by ext; exact e.right_inv x
 #align linear_equiv.to_fgModule_iso LinearEquiv.toFgModuleIso
 
 end Ring
@@ -136,22 +127,16 @@ def forget₂Monoidal : MonoidalFunctor (FgModule R) (ModuleCat.{u} R) :=
   MonoidalCategory.fullMonoidalSubcategoryInclusion _
 #align fgModule.forget₂_monoidal FgModule.forget₂Monoidal
 
-instance forget₂Monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor :=
-  by
-  dsimp [forget₂_monoidal]
-  infer_instance
+instance forget₂Monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor := by
+  dsimp [forget₂_monoidal]; infer_instance
 #align fgModule.forget₂_monoidal_faithful FgModule.forget₂Monoidal_faithful
 
-instance forget₂Monoidal_additive : (forget₂Monoidal R).toFunctor.Additive :=
-  by
-  dsimp [forget₂_monoidal]
-  infer_instance
+instance forget₂Monoidal_additive : (forget₂Monoidal R).toFunctor.Additive := by
+  dsimp [forget₂_monoidal]; infer_instance
 #align fgModule.forget₂_monoidal_additive FgModule.forget₂Monoidal_additive
 
-instance forget₂Monoidal_linear : (forget₂Monoidal R).toFunctor.Linear R :=
-  by
-  dsimp [forget₂_monoidal]
-  infer_instance
+instance forget₂Monoidal_linear : (forget₂Monoidal R).toFunctor.Linear R := by
+  dsimp [forget₂_monoidal]; infer_instance
 #align fgModule.forget₂_monoidal_linear FgModule.forget₂Monoidal_linear
 
 theorem Iso.conj_eq_conj {V W : FgModule R} (i : V ≅ W) (f : End V) :

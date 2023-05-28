@@ -91,12 +91,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
         apply ENNReal.tsum_le_tsum fun p => _
         refine' ENNReal.tsum_le_tsum fun q => measure_mono _
         exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
-      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) :=
-        by
-        congr
-        ext1 p
-        congr
-        ext1 q
+      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) := by congr ; ext1 p; congr ; ext1 q;
         exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
       _ = 0 := by simp only [tsum_zero]
       
@@ -112,8 +107,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
     apply (iInf_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases H : x ∈ u' i
-      swap
-      · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
+      swap; · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
       simp only [H, piecewise_eq_of_mem]
       contrapose! hx
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=

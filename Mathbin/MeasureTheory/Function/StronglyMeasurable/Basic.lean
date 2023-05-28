@@ -170,9 +170,7 @@ theorem Subsingleton.stronglyMeasurable {α β} [MeasurableSpace α] [Topologica
   by
   let f_sf : α →ₛ β := ⟨f, fun x => _, Set.Subsingleton.finite Set.subsingleton_of_subsingleton⟩
   · exact ⟨fun n => f_sf, fun x => tendsto_const_nhds⟩
-  · have h_univ : f ⁻¹' {x} = Set.univ := by
-      ext1 y
-      simp
+  · have h_univ : f ⁻¹' {x} = Set.univ := by ext1 y; simp
     rw [h_univ]
     exact MeasurableSet.univ
 #align measure_theory.subsingleton.strongly_measurable MeasureTheory.Subsingleton.stronglyMeasurable
@@ -236,8 +234,7 @@ theorem stronglyMeasurable_const' {α β} {m : MeasurableSpace α} [TopologicalS
   by
   cases isEmpty_or_nonempty α
   · exact strongly_measurable_of_is_empty f
-  · convert strongly_measurable_const
-    exact funext fun x => hf x h.some
+  · convert strongly_measurable_const; exact funext fun x => hf x h.some
 #align measure_theory.strongly_measurable_const' MeasureTheory.stronglyMeasurable_const'
 
 /- warning: measure_theory.subsingleton.strongly_measurable' -> MeasureTheory.Subsingleton.stronglyMeasurable' is a dubious translation:
@@ -419,16 +416,12 @@ theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
     refine' fun n => (measure_bUnion_finset_le _ _).trans_lt _
     refine' ennreal.sum_lt_top_iff.mpr fun y hy => _
     rw [simple_func.restrict_preimage_singleton _ ((hS_meas n).inter ht)]
-    swap
-    · rw [Finset.mem_filter] at hy
-      exact hy.2
+    swap; · rw [Finset.mem_filter] at hy; exact hy.2
     refine' (measure_mono (Set.inter_subset_left _ _)).trans_lt _
     have h_lt_top := measure_spanning_sets_lt_top (μ.restrict t) n
     rwa [measure.restrict_apply' ht] at h_lt_top
   · by_cases hxt : x ∈ t
-    swap
-    · rw [funext fun n => h_fs_t_compl n x hxt, hft_zero x hxt]
-      exact tendsto_const_nhds
+    swap; · rw [funext fun n => h_fs_t_compl n x hxt, hft_zero x hxt]; exact tendsto_const_nhds
     have h : tendsto (fun n => (f_approx n) x) at_top (𝓝 (f x)) := hf_meas.tendsto_approx x
     obtain ⟨n₁, hn₁⟩ : ∃ n, ∀ m, n ≤ m → fs m x = f_approx m x :=
       by
@@ -507,9 +500,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.strongly_measurable.measurable_set_mul_support MeasureTheory.StronglyMeasurable.measurableSet_mulSupportₓ'. -/
 @[to_additive]
 theorem measurableSet_mulSupport {m : MeasurableSpace α} [One β] [TopologicalSpace β]
-    [MetrizableSpace β] (hf : StronglyMeasurable f) : MeasurableSet (mulSupport f) :=
-  by
-  borelize β
+    [MetrizableSpace β] (hf : StronglyMeasurable f) : MeasurableSet (mulSupport f) := by borelize β;
   exact measurableSet_mulSupport hf.measurable
 #align measure_theory.strongly_measurable.measurable_set_mul_support MeasureTheory.StronglyMeasurable.measurableSet_mulSupport
 #align measure_theory.strongly_measurable.measurable_set_support MeasureTheory.StronglyMeasurable.measurableSet_support
@@ -794,9 +785,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.strongly_measurable_prod' Multiset.stronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Multiset.stronglyMeasurable_prod' (l : Multiset (α → M))
-    (hl : ∀ f ∈ l, StronglyMeasurable f) : StronglyMeasurable l.Prod :=
-  by
-  rcases l with ⟨l⟩
+    (hl : ∀ f ∈ l, StronglyMeasurable f) : StronglyMeasurable l.Prod := by rcases l with ⟨l⟩;
   simpa using l.strongly_measurable_prod' (by simpa using hl)
 #align multiset.strongly_measurable_prod' Multiset.stronglyMeasurable_prod'
 #align multiset.strongly_measurable_sum' Multiset.stronglyMeasurable_sum'
@@ -931,17 +920,12 @@ theorem stronglyMeasurable_iff_measurable_separable {m : MeasurableSpace α} [To
   rintro ⟨H, H'⟩
   letI := pseudo_metrizable_space_pseudo_metric β
   let g := cod_restrict f (closure (range f)) fun x => subset_closure (mem_range_self x)
-  have fg : f = (coe : closure (range f) → β) ∘ g :=
-    by
-    ext x
-    rfl
+  have fg : f = (coe : closure (range f) → β) ∘ g := by ext x; rfl
   have T : MeasurableEmbedding (coe : closure (range f) → β) :=
     by
     apply ClosedEmbedding.measurableEmbedding
     exact closedEmbedding_subtype_val isClosed_closure
-  have g_meas : Measurable g := by
-    rw [fg] at H
-    exact T.measurable_comp_iff.1 H
+  have g_meas : Measurable g := by rw [fg] at H; exact T.measurable_comp_iff.1 H
   have : second_countable_topology (closure (range f)) :=
     by
     suffices separable_space (closure (range f)) by
@@ -1338,15 +1322,11 @@ theorem stronglyMeasurable_of_measurableSpace_le_on {α E} {m m₂ : MeasurableS
         refine' MeasurableSet.union (hs _ (hs_m.inter _)) _
         · exact @simple_func.measurable_set_fiber _ _ m _ _
         by_cases hx : x = 0
-        · suffices g_seq_s n ⁻¹' {x} ∩ sᶜ = sᶜ by
-            rw [this]
-            exact hs_m₂.compl
+        · suffices g_seq_s n ⁻¹' {x} ∩ sᶜ = sᶜ by rw [this]; exact hs_m₂.compl
           ext1 y
           rw [hx, Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff]
           exact ⟨fun h => h.2, fun h => ⟨hg_seq_zero y h n, h⟩⟩
-        · suffices g_seq_s n ⁻¹' {x} ∩ sᶜ = ∅ by
-            rw [this]
-            exact MeasurableSet.empty
+        · suffices g_seq_s n ⁻¹' {x} ∩ sᶜ = ∅ by rw [this]; exact MeasurableSet.empty
           ext1 y
           simp only [mem_inter_iff, mem_preimage, mem_singleton_iff, mem_compl_iff,
             mem_empty_iff_false, iff_false_iff, not_and, not_not_mem]
@@ -1378,8 +1358,7 @@ theorem exists_spanning_measurableSet_norm_le [SeminormedAddCommGroup β] {m m0 
   let norm_sets := fun n : ℕ => { x | ‖f x‖ ≤ n }
   have norm_sets_spanning : (⋃ n, norm_sets n) = Set.univ :=
     by
-    ext1 x
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
+    ext1 x; simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
     exact ⟨⌈‖f x‖⌉₊, Nat.le_ceil ‖f x‖⟩
   let sets n := sigma_finite_sets n ∩ norm_sets n
   have h_meas : ∀ n, measurable_set[m] (sets n) :=
@@ -2089,10 +2068,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.ae_strongly_measurable_prod' Multiset.aestronglyMeasurable_prod'ₓ'. -/
 @[to_additive]
 theorem Multiset.aestronglyMeasurable_prod' (l : Multiset (α → M))
-    (hl : ∀ f ∈ l, AEStronglyMeasurable f μ) : AEStronglyMeasurable l.Prod μ :=
-  by
-  rcases l with ⟨l⟩
-  simpa using l.ae_strongly_measurable_prod' (by simpa using hl)
+    (hl : ∀ f ∈ l, AEStronglyMeasurable f μ) : AEStronglyMeasurable l.Prod μ := by
+  rcases l with ⟨l⟩; simpa using l.ae_strongly_measurable_prod' (by simpa using hl)
 #align multiset.ae_strongly_measurable_prod' Multiset.aestronglyMeasurable_prod'
 #align multiset.ae_strongly_measurable_sum' Multiset.aestronglyMeasurable_sum'
 
@@ -2513,10 +2490,8 @@ theorem aestronglyMeasurable_sum_measure_iff [PseudoMetrizableSpace β] {m : Mea
 #print aestronglyMeasurable_add_measure_iff /-
 @[simp]
 theorem aestronglyMeasurable_add_measure_iff [PseudoMetrizableSpace β] {ν : Measure α} :
-    AEStronglyMeasurable f (μ + ν) ↔ AEStronglyMeasurable f μ ∧ AEStronglyMeasurable f ν :=
-  by
-  rw [← sum_cond, aestronglyMeasurable_sum_measure_iff, Bool.forall_bool, and_comm]
-  rfl
+    AEStronglyMeasurable f (μ + ν) ↔ AEStronglyMeasurable f μ ∧ AEStronglyMeasurable f ν := by
+  rw [← sum_cond, aestronglyMeasurable_sum_measure_iff, Bool.forall_bool, and_comm]; rfl
 #align ae_strongly_measurable_add_measure_iff aestronglyMeasurable_add_measure_iff
 -/
 

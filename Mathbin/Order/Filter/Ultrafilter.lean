@@ -420,11 +420,7 @@ theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (larg
 #print Ultrafilter.comap_id /-
 @[simp]
 theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := injective_id)
-    (h₁ : range id ∈ f :=
-      (by
-        rw [range_id]
-        exact univ_mem)) :
-    f.comap h₀ h₁ = f :=
+    (h₁ : range id ∈ f := (by rw [range_id]; exact univ_mem)) : f.comap h₀ h₁ = f :=
   coe_injective comap_id
 #align ultrafilter.comap_id Ultrafilter.comap_id
 -/
@@ -437,9 +433,7 @@ theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀
     (large₀ : range n ∈ f) (inj₁ : Injective m) (large₁ : range m ∈ f.comap inj₀ large₀)
     (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
     (large₂ : range (n ∘ m) ∈ f :=
-      (by
-        rw [range_comp]
-        exact image_mem_of_mem_comap large₀ large₁)) :
+      (by rw [range_comp]; exact image_mem_of_mem_comap large₀ large₁)) :
     (f.comap inj₀ large₀).comap inj₁ large₁ = f.comap inj₂ large₂ :=
   coe_injective comap_comap
 #align ultrafilter.comap_comap Ultrafilter.comap_comap

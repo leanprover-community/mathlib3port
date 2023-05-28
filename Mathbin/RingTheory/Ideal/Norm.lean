@@ -342,23 +342,19 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
         (int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _))
       _ = abs_norm I := this
       
-  have ha : ∀ i, f (b' i) = a i • b' i := by
-    intro i
+  have ha : ∀ i, f (b' i) = a i • b' i := by intro i;
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
   have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i :=
     by
-    intro x
-    simp_rw [ab.mem_ideal_iff', ab_eq]
+    intro x; simp_rw [ab.mem_ideal_iff', ab_eq]
     have : ∀ (c : ι → ℤ) (i), b'.repr (∑ j : ι, c j • a j • b' j) i = a i * c i :=
       by
       intro c i
       simp only [← MulAction.mul_smul, b'.repr_sum_self, mul_comm]
     constructor
-    · rintro ⟨c, rfl⟩ i
-      exact ⟨c i, this c i⟩
+    · rintro ⟨c, rfl⟩ i; exact ⟨c i, this c i⟩
     · rintro ha
-      choose c hc using ha
-      exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
+      choose c hc using ha; exact ⟨c, b'.ext_elem fun i => trans (hc i) (this c i).symm⟩
   -- `det f` is equal to `∏ i, a i`,
   letI := Classical.decEq ι
   calc
@@ -371,8 +367,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
     _ = abs_norm I := (Submodule.cardQuot_apply _).symm
     
   -- since `linear_map.to_matrix b' b' f` is the diagonal matrix with `a` along the diagonal.
-  · congr
-    ext (i j)
+  · congr ; ext (i j)
     rw [LinearMap.toMatrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single,
       smul_eq_mul, mul_one]
     by_cases h : i = j

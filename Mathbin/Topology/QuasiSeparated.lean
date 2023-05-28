@@ -90,16 +90,12 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
   · symm
     rw [← Set.preimage_inter, Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact (Set.inter_subset_left _ _).trans (hU.trans (Set.image_subset_range _ _))
-  · intro x hx
-    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]
-    exact hU hx
+  · intro x hx; rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]; exact hU hx
   · rw [h.is_compact_iff_is_compact_image]
     convert hU''
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact hU.trans (Set.image_subset_range _ _)
-  · intro x hx
-    rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]
-    exact hV hx
+  · intro x hx; rw [← (h.inj.inj_on _).mem_image_iff (Set.subset_univ _) trivial]; exact hV hx
   · rw [h.is_compact_iff_is_compact_image]
     convert hV''
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]

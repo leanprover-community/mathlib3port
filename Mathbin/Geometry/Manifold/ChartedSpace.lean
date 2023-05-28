@@ -229,13 +229,8 @@ theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : LocalHo
 #print StructureGroupoid.partialOrder /-
 /-- Partial order on the set of groupoids, given by inclusion of the members of the groupoid -/
 instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
-  PartialOrder.lift StructureGroupoid.members fun a b h =>
-    by
-    cases a
-    cases b
-    dsimp at h
-    induction h
-    rfl
+  PartialOrder.lift StructureGroupoid.members fun a b h => by cases a; cases b; dsimp at h;
+    induction h; rfl
 #align structure_groupoid.partial_order StructureGroupoid.partialOrder
 -/
 
@@ -270,8 +265,7 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
   id_mem' := mem_union_left _ rfl
   locality' e he := by
     cases' e.source.eq_empty_or_nonempty with h h
-    · right
-      exact h
+    · right; exact h
     · left
       rcases h with ⟨x, hx⟩
       rcases he x hx with ⟨s, open_s, xs, hs⟩
@@ -282,13 +276,9 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
       cases hs
       · replace hs : LocalHomeomorph.restr e s = LocalHomeomorph.refl H
         · simpa only using hs
-        have : (e.restr s).source = univ := by
-          rw [hs]
-          simp
+        have : (e.restr s).source = univ := by rw [hs]; simp
         change e.to_local_equiv.source ∩ interior s = univ at this
-        have : univ ⊆ interior s := by
-          rw [← this]
-          exact inter_subset_right _ _
+        have : univ ⊆ interior s := by rw [← this]; exact inter_subset_right _ _
         have : s = univ := by rwa [open_s.interior_eq, univ_subset_iff] at this
         simpa only [this, restr_univ] using hs
       · exfalso
@@ -365,16 +355,14 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H
       rcases he x xu with ⟨s, s_open, xs, hs⟩
       refine' ⟨s, s_open, xs, _⟩
       convert hs.1 using 1
-      dsimp [LocalHomeomorph.restr]
-      rw [s_open.interior_eq]
+      dsimp [LocalHomeomorph.restr]; rw [s_open.interior_eq]
     · apply PG.locality e.open_target fun x xu => _
       rcases he (e.symm x) (e.map_target xu) with ⟨s, s_open, xs, hs⟩
       refine' ⟨e.target ∩ e.symm ⁻¹' s, _, ⟨xu, xs⟩, _⟩
       · exact ContinuousOn.preimage_open_of_open e.continuous_inv_fun e.open_target s_open
       · rw [← inter_assoc, inter_self]
         convert hs.2 using 1
-        dsimp [LocalHomeomorph.restr]
-        rw [s_open.interior_eq]
+        dsimp [LocalHomeomorph.restr]; rw [s_open.interior_eq]
   eq_on_source' e e' he ee' := by
     constructor
     · apply PG.congr e'.open_source ee'.2
@@ -489,10 +477,8 @@ def idRestrGroupoid : StructureGroupoid H
     intro x hx
     rcases h x hx with ⟨s, hs, hxs, s', hs', hes'⟩
     have hes : x ∈ (e.restr s).source := by
-      rw [e.restr_source]
-      refine' ⟨hx, _⟩
-      rw [hs.interior_eq]
-      exact hxs
+      rw [e.restr_source]; refine' ⟨hx, _⟩
+      rw [hs.interior_eq]; exact hxs
     simpa only [mfld_simps] using LocalHomeomorph.EqOnSource.eqOn hes' hes
   eq_on_source' := by
     rintro e e' ⟨s, hs, hse⟩ hee'
@@ -913,13 +899,8 @@ lean 3 declaration is
 but is expected to have type
   forall {H : Type.{u2}} {H' : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_4 : TopologicalSpace.{u1} H'], Eq.{max (succ u2) (succ u1)} (ChartedSpace.{max u1 u2, max u1 u2} (ModelProd.{u2, u1} H H') (instTopologicalSpaceModelProd.{u2, u1} H _inst_1 H' _inst_4) (Prod.{u2, u1} H H') (instTopologicalSpaceProd.{u2, u1} H H' _inst_1 _inst_4)) (prodChartedSpace.{u2, u2, u1, u1} H _inst_1 H _inst_1 (chartedSpaceSelf.{u2} H _inst_1) H' _inst_4 H' _inst_4 (chartedSpaceSelf.{u1} H' _inst_4)) (chartedSpaceSelf.{max u1 u2} (Prod.{u2, u1} H H') (instTopologicalSpaceProd.{u2, u1} H H' _inst_1 _inst_4))
 Case conversion may be inaccurate. Consider using '#align charted_space_self_prod chartedSpaceSelf_prodₓ'. -/
-theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') :=
-  by
-  ext1
-  · simp [prodChartedSpace, atlas]
-  · ext1
-    simp [chartAt_self_eq]
-    rfl
+theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') := by ext1;
+  · simp [prodChartedSpace, atlas]; · ext1; simp [chartAt_self_eq]; rfl
 #align charted_space_self_prod chartedSpaceSelf_prod
 
 end prodChartedSpace
@@ -1047,10 +1028,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
       have A :
         e' ∘ e.symm ⁻¹' s ∩ (e.target ∩ e.symm ⁻¹' e'.source) =
           e.target ∩ (e' ∘ e.symm ⁻¹' s ∩ e.symm ⁻¹' e'.source) :=
-        by
-        rw [← inter_assoc, ← inter_assoc]
-        congr 1
-        exact inter_comm _ _
+        by rw [← inter_assoc, ← inter_assoc]; congr 1; exact inter_comm _ _
       simpa [LocalEquiv.trans_source, preimage_inter, preimage_comp.symm, A] using this }
 #align charted_space_core.local_homeomorph ChartedSpaceCore.localHomeomorph
 -/
@@ -1217,9 +1195,7 @@ theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph
   let s := e.target ∩ e.symm ⁻¹' f.source
   have hs : IsOpen s := by
     apply e.symm.continuous_to_fun.preimage_open_of_open <;> apply open_source
-  have xs : x ∈ s := by
-    dsimp at hx
-    simp [s, hx]
+  have xs : x ∈ s := by dsimp at hx; simp [s, hx]
   refine' ⟨s, hs, xs, _⟩
   have A : e.symm ≫ₕ f ∈ G := (mem_maximalAtlas_iff.1 he f (chart_mem_atlas _ _)).1
   have B : f.symm ≫ₕ e' ∈ G := (mem_maximalAtlas_iff.1 he' f (chart_mem_atlas _ _)).2
@@ -1386,12 +1362,8 @@ instance : ChartedSpace H s
     where
   atlas := ⋃ x : s, {@LocalHomeomorph.subtypeRestr _ _ _ _ (chartAt H x.1) s ⟨x⟩}
   chartAt x := @LocalHomeomorph.subtypeRestr _ _ _ _ (chartAt H x.1) s ⟨x⟩
-  mem_chart_source x := by
-    simp only [mfld_simps]
-    exact mem_chart_source H x.1
-  chart_mem_atlas x := by
-    simp only [mem_Union, mem_singleton_iff]
-    use x
+  mem_chart_source x := by simp only [mfld_simps]; exact mem_chart_source H x.1
+  chart_mem_atlas x := by simp only [mem_Union, mem_singleton_iff]; use x
 
 /-- If a groupoid `G` is `closed_under_restriction`, then an open subset of a space which is
 `has_groupoid G` is naturally `has_groupoid G`. -/

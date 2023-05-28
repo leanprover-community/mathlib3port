@@ -134,13 +134,9 @@ instance : MvQPF (Comp F G)
   repr α :=
     MvPFunctor.comp.mk ∘
       repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ Comp.get
-  abs_repr := by
-    intros
-    simp [(· ∘ ·), MvFunctor.map_map, (· ⊚ ·), abs_repr]
+  abs_repr := by intros ; simp [(· ∘ ·), MvFunctor.map_map, (· ⊚ ·), abs_repr]
   abs_map := by
-    intros
-    simp [(· ∘ ·)]
-    rw [← abs_map]
+    intros ; simp [(· ∘ ·)]; rw [← abs_map]
     simp [MvFunctor.id_map, (· ⊚ ·), map_mk, MvPFunctor.comp.get_map, abs_map, MvFunctor.map_map,
       abs_repr]
 

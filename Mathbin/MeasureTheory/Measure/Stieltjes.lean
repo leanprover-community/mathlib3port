@@ -64,8 +64,7 @@ theorem iInf_Ioi_eq_iInf_rat_gt {f : ℝ → ℝ} (x : ℝ) (hf : BddBelow (f ''
     · exact ⟨y, hxy⟩
     · refine' ⟨hf.some, fun z => _⟩
       rintro ⟨u, rfl⟩
-      suffices hfu : f u ∈ f '' Ioi x
-      exact hf.some_spec hfu
+      suffices hfu : f u ∈ f '' Ioi x; exact hf.some_spec hfu
       exact ⟨u, u.prop, rfl⟩
     · refine' hf_mono (le_trans _ hyq.le)
       norm_cast
@@ -432,8 +431,7 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) :=
     le_antisymm (iInf_le_of_le a <| iInf₂_le b subset.rfl)
       (le_iInf fun a' => le_iInf fun b' => le_iInf fun h => ENNReal.coe_le_coe.2 _)
   cases' le_or_lt b a with ab ab
-  · rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]
-    apply zero_le
+  · rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]; apply zero_le
   cases' (Ioc_subset_Ioc_iff ab).1 h with h₁ h₂
   exact Real.toNNReal_le_toNNReal (sub_le_sub (f.mono h₁) (f.mono h₂))
 #align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
@@ -496,10 +494,8 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
   clear ss b
   refine' fun s => Finset.strongInductionOn s fun s IH b cv => _
   cases' le_total b a with ab ab
-  · rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
-    exact zero_le _
-  have := cv ⟨ab, le_rfl⟩
-  simp at this
+  · rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]; exact zero_le _
+  have := cv ⟨ab, le_rfl⟩; simp at this
   rcases this with ⟨i, is, cb, bd⟩
   rw [← Finset.insert_erase is] at cv⊢
   rw [Finset.coe_insert, bUnion_insert] at cv
@@ -533,10 +529,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
     will get an open interval `(p i, q' i)` covering `s i` with `f (q' i) - f (p i)` within `ε' i`
     of the `f`-length of `s i`. -/
   refine'
-    le_antisymm
-      (by
-        rw [← f.length_Ioc]
-        apply outer_le_length)
+    le_antisymm (by rw [← f.length_Ioc]; apply outer_le_length)
       (le_iInf₂ fun s hs => ENNReal.le_of_forall_pos_le_add fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by simpa using εpos.ne'
@@ -676,10 +669,8 @@ but is expected to have type
   forall (f : StieltjesFunction) (a : Real) (b : Real), Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{0} Real (MeasureTheory.Measure.toOuterMeasure.{0} Real Real.measurableSpace (StieltjesFunction.measure f)) (Set.Ioc.{0} Real Real.instPreorderReal a b)) (ENNReal.ofReal (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (StieltjesFunction.toFun f b) (StieltjesFunction.toFun f a)))
 Case conversion may be inaccurate. Consider using '#align stieltjes_function.measure_Ioc StieltjesFunction.measure_Iocₓ'. -/
 @[simp]
-theorem measure_Ioc (a b : ℝ) : f.Measure (Ioc a b) = ofReal (f b - f a) :=
-  by
-  rw [StieltjesFunction.measure]
-  exact f.outer_Ioc a b
+theorem measure_Ioc (a b : ℝ) : f.Measure (Ioc a b) = ofReal (f b - f a) := by
+  rw [StieltjesFunction.measure]; exact f.outer_Ioc a b
 #align stieltjes_function.measure_Ioc StieltjesFunction.measure_Ioc
 
 /- warning: stieltjes_function.measure_singleton -> StieltjesFunction.measure_singleton is a dubious translation:

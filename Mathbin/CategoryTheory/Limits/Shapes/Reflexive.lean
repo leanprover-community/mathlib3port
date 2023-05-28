@@ -152,9 +152,7 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 instance (B : D) :
     IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
   IsReflexivePair.mk' (F.map (adj.Unit.app (G.obj B)))
-    (by
-      rw [← F.map_comp, adj.right_triangle_components]
-      apply F.map_id)
+    (by rw [← F.map_comp, adj.right_triangle_components]; apply F.map_id)
     adj.left_triangle_components
 
 namespace Limits

@@ -50,10 +50,8 @@ but is expected to have type
   forall {R : Type.{u1}} {a : R} [_inst_1 : Monoid.{u1} R] (n : Nat), (IsRightRegular.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) a) -> (IsRightRegular.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R _inst_1)) a n))
 Case conversion may be inaccurate. Consider using '#align is_right_regular.pow IsRightRegular.powₓ'. -/
 /-- Any power of a right-regular element is right-regular. -/
-theorem IsRightRegular.pow (n : ℕ) (rra : IsRightRegular a) : IsRightRegular (a ^ n) :=
-  by
-  rw [IsRightRegular, ← mul_right_iterate]
-  exact rra.iterate n
+theorem IsRightRegular.pow (n : ℕ) (rra : IsRightRegular a) : IsRightRegular (a ^ n) := by
+  rw [IsRightRegular, ← mul_right_iterate]; exact rra.iterate n
 #align is_right_regular.pow IsRightRegular.pow
 
 /- warning: is_regular.pow -> IsRegular.pow is a dubious translation:

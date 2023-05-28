@@ -266,9 +266,7 @@ theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = s
 
 #print Encodable.decode₂_encode /-
 @[simp]
-theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
-  by
-  ext
+theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a := by ext;
   simp [mem_decode₂, eq_comm]
 #align encodable.decode₂_encode Encodable.decode₂_encode
 -/
@@ -424,10 +422,7 @@ theorem decode_one : decode Bool 1 = some true :=
 #print Encodable.decode_ge_two /-
 theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
   by
-  suffices decode_sum n = none by
-    change (decode_sum n).map _ = none
-    rw [this]
-    rfl
+  suffices decode_sum n = none by change (decode_sum n).map _ = none; rw [this]; rfl
   have : 1 ≤ div2 n := by
     rw [div2_val, Nat.le_div_iff_mul_le]
     exacts[h, by decide]

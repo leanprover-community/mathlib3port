@@ -133,10 +133,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} (h : LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) (x : Set.Elem.{u1} α (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)), Eq.{succ u1} (Set.Elem.{u1} α (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)) (Set.projIcc.{u1} α _inst_1 a b h (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b)) x)) x
 Case conversion may be inaccurate. Consider using '#align set.proj_Icc_coe Set.projIcc_valₓ'. -/
 @[simp]
-theorem projIcc_val (x : Icc a b) : projIcc a b h x = x :=
-  by
-  cases x
-  apply proj_Icc_of_mem
+theorem projIcc_val (x : Icc a b) : projIcc a b h x = x := by cases x; apply proj_Icc_of_mem
 #align set.proj_Icc_coe Set.projIcc_val
 
 /- warning: set.proj_Icc_surj_on -> Set.projIcc_surjOn is a dubious translation:

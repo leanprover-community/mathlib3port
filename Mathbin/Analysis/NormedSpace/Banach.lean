@@ -127,8 +127,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
   · refine' mul_nonneg (mul_nonneg (mul_nonneg _ (norm_nonneg _)) (by norm_num)) _
     exacts[inv_nonneg.2 (div_nonneg (le_of_lt εpos) (by norm_num)), n.cast_nonneg]
   · by_cases hy : y = 0
-    · use 0
-      simp [hy]
+    · use 0; simp [hy]
     · rcases rescale_to_shell hc (half_pos εpos) hy with ⟨d, hd, ydlt, leyd, dinv⟩
       let δ := ‖d‖ * ‖y‖ / 4
       have δpos : 0 < δ := div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy)) (by norm_num)
@@ -138,9 +137,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
       rcases(mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
       rw [← xz₁] at h₁
       rw [mem_ball, dist_eq_norm, sub_zero] at hx₁
-      have : a ∈ ball a ε := by
-        simp
-        exact εpos
+      have : a ∈ ball a ε := by simp; exact εpos
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₂, z₂im, h₂⟩
       rcases(mem_image _ _ _).1 z₂im with ⟨x₂, hx₂, xz₂⟩
       rw [← xz₂] at h₂
@@ -148,18 +145,13 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
       let x := x₁ - x₂
       have I : ‖f x - d • y‖ ≤ 2 * δ :=
         calc
-          ‖f x - d • y‖ = ‖f x₁ - (a + d • y) - (f x₂ - a)‖ :=
-            by
-            congr 1
-            simp only [x, f.map_sub]
+          ‖f x - d • y‖ = ‖f x₁ - (a + d • y) - (f x₂ - a)‖ := by congr 1; simp only [x, f.map_sub];
             abel
           _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := (norm_sub_le _ _)
           _ ≤ δ + δ := by
             apply add_le_add
-            · rw [← dist_eq_norm, dist_comm]
-              exact le_of_lt h₁
-            · rw [← dist_eq_norm, dist_comm]
-              exact le_of_lt h₂
+            · rw [← dist_eq_norm, dist_comm]; exact le_of_lt h₁
+            · rw [← dist_eq_norm, dist_comm]; exact le_of_lt h₂
           _ = 2 * δ := (two_mul _).symm
           
       have J : ‖f (d⁻¹ • x) - y‖ ≤ 1 / 2 * ‖y‖ :=
@@ -172,12 +164,8 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             apply mul_le_mul_of_nonneg_left I
             rw [inv_nonneg]
             exact norm_nonneg _
-          _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by
-            simp only [δ]
-            ring
-          _ = ‖y‖ / 2 := by
-            rw [inv_mul_cancel, one_mul]
-            simp [norm_eq_zero, hd]
+          _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by simp only [δ]; ring
+          _ = ‖y‖ / 2 := by rw [inv_mul_cancel, one_mul]; simp [norm_eq_zero, hd]
           _ = 1 / 2 * ‖y‖ := by ring
           
       rw [← dist_eq_norm] at J
@@ -295,9 +283,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
   rw [← this]
   have : x + w ∈ ball x ε :=
     calc
-      dist (x + w) x = ‖w‖ := by
-        rw [dist_eq_norm]
-        simp
+      dist (x + w) x = ‖w‖ := by rw [dist_eq_norm]; simp
       _ ≤ C * ‖z - y‖ := wnorm
       _ < C * (ε / C) := by
         apply mul_lt_mul_of_pos_left _ Cpos
@@ -469,9 +455,7 @@ theorem coeFn_ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : Lin
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.coe_of_bijective ContinuousLinearEquiv.coe_ofBijectiveₓ'. -/
 theorem coe_ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj : LinearMap.range f = ⊤) :
-    ↑(ofBijective f hinj hsurj) = f := by
-  ext
-  rfl
+    ↑(ofBijective f hinj hsurj) = f := by ext; rfl
 #align continuous_linear_equiv.coe_of_bijective ContinuousLinearEquiv.coe_ofBijective
 
 /- warning: continuous_linear_equiv.of_bijective_symm_apply_apply -> ContinuousLinearEquiv.ofBijective_symm_apply_apply is a dubious translation:
@@ -617,10 +601,7 @@ theorem coeFn_ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_of_is_closed_graph ContinuousLinearMap.coe_ofIsClosedGraphₓ'. -/
 theorem coe_ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) :
-    ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
-  by
-  ext
-  rfl
+    ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by ext; rfl
 #align continuous_linear_map.coe_of_is_closed_graph ContinuousLinearMap.coe_ofIsClosedGraph
 
 /- warning: continuous_linear_map.of_seq_closed_graph -> ContinuousLinearMap.ofSeqClosedGraph is a dubious translation:
@@ -650,10 +631,7 @@ theorem coeFn_ofSeqClosedGraph
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_of_seq_closed_graph ContinuousLinearMap.coe_ofSeqClosedGraphₓ'. -/
 theorem coe_ofSeqClosedGraph
     (hg : ∀ (u : ℕ → E) (x y), Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
-    ↑(ContinuousLinearMap.ofSeqClosedGraph hg) = g :=
-  by
-  ext
-  rfl
+    ↑(ContinuousLinearMap.ofSeqClosedGraph hg) = g := by ext; rfl
 #align continuous_linear_map.coe_of_seq_closed_graph ContinuousLinearMap.coe_ofSeqClosedGraph
 
 end ContinuousLinearMap

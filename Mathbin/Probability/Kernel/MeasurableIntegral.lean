@@ -94,12 +94,8 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
       ext1 a
       rw [measure_Union]
       · intro i j hij s hsi hsj b hbs
-        have habi : {(a, b)} ⊆ f i := by
-          rw [Set.singleton_subset_iff]
-          exact hsi hbs
-        have habj : {(a, b)} ⊆ f j := by
-          rw [Set.singleton_subset_iff]
-          exact hsj hbs
+        have habi : {(a, b)} ⊆ f i := by rw [Set.singleton_subset_iff]; exact hsi hbs
+        have habj : {(a, b)} ⊆ f j := by rw [Set.singleton_subset_iff]; exact hsj hbs
         simpa only [Set.bot_eq_empty, Set.le_eq_subset, Set.singleton_subset_iff,
           Set.mem_empty_iff_false] using h_disj hij habi habj
       · exact fun i => (@measurable_prod_mk_left α β _ _ a) _ (hf_meas i)
@@ -121,10 +117,8 @@ theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
 theorem measurable_kernel_prod_mk_left' [IsSFiniteKernel η] {s : Set (β × γ)} (hs : MeasurableSet s)
     (a : α) : Measurable fun b => η (a, b) (Prod.mk b ⁻¹' s) :=
   by
-  have : ∀ b, Prod.mk b ⁻¹' s = { c | ((a, b), c) ∈ { p : (α × β) × γ | (p.1.2, p.2) ∈ s } } :=
-    by
-    intro b
-    rfl
+  have : ∀ b, Prod.mk b ⁻¹' s = { c | ((a, b), c) ∈ { p : (α × β) × γ | (p.1.2, p.2) ∈ s } } := by
+    intro b; rfl
   simp_rw [this]
   refine' (measurable_kernel_prod_mk_left _).comp measurable_prod_mk_left
   exact (measurable_fst.snd.prod_mk measurable_snd) hs
@@ -189,9 +183,7 @@ theorem Measurable.lintegral_kernel_prod_right' {f : α × β → ℝ≥0∞} (h
     Measurable fun a => ∫⁻ b, f (a, b) ∂κ a :=
   by
   refine' Measurable.lintegral_kernel_prod_right _
-  have : (uncurry fun (a : α) (b : β) => f (a, b)) = f :=
-    by
-    ext x
+  have : (uncurry fun (a : α) (b : β) => f (a, b)) = f := by ext x;
     rw [← @Prod.mk.eta _ _ x, uncurry_apply_pair]
   rwa [this]
 #align measurable.lintegral_kernel_prod_right' Measurable.lintegral_kernel_prod_right'
@@ -207,10 +199,8 @@ theorem Measurable.lintegral_kernel_prod_right'' {f : β × γ → ℝ≥0∞} (
 #align measurable.lintegral_kernel_prod_right'' Measurable.lintegral_kernel_prod_right''
 
 theorem Measurable.set_lintegral_kernel_prod_right {f : α → β → ℝ≥0∞} (hf : Measurable (uncurry f))
-    {s : Set β} (hs : MeasurableSet s) : Measurable fun a => ∫⁻ b in s, f a b ∂κ a :=
-  by
-  simp_rw [← lintegral_restrict κ hs]
-  exact hf.lintegral_kernel_prod_right
+    {s : Set β} (hs : MeasurableSet s) : Measurable fun a => ∫⁻ b in s, f a b ∂κ a := by
+  simp_rw [← lintegral_restrict κ hs]; exact hf.lintegral_kernel_prod_right
 #align measurable.set_lintegral_kernel_prod_right Measurable.set_lintegral_kernel_prod_right
 
 theorem Measurable.lintegral_kernel_prod_left' {f : β × α → ℝ≥0∞} (hf : Measurable f) :
@@ -224,10 +214,8 @@ theorem Measurable.lintegral_kernel_prod_left {f : β → α → ℝ≥0∞} (hf
 #align measurable.lintegral_kernel_prod_left Measurable.lintegral_kernel_prod_left
 
 theorem Measurable.set_lintegral_kernel_prod_left {f : β → α → ℝ≥0∞} (hf : Measurable (uncurry f))
-    {s : Set β} (hs : MeasurableSet s) : Measurable fun b => ∫⁻ a in s, f a b ∂κ b :=
-  by
-  simp_rw [← lintegral_restrict κ hs]
-  exact hf.lintegral_kernel_prod_left
+    {s : Set β} (hs : MeasurableSet s) : Measurable fun b => ∫⁻ a in s, f a b ∂κ b := by
+  simp_rw [← lintegral_restrict κ hs]; exact hf.lintegral_kernel_prod_left
 #align measurable.set_lintegral_kernel_prod_left Measurable.set_lintegral_kernel_prod_left
 
 theorem Measurable.lintegral_kernel {f : β → ℝ≥0∞} (hf : Measurable f) :
@@ -273,16 +261,11 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
       { x | integrable (f x) (κ x) }.indicator fun x => (s' n x).integral (κ x)
     have hf' : ∀ n, strongly_measurable (f' n) :=
       by
-      intro n
-      refine' strongly_measurable.indicator _ (measurable_set_kernel_integrable hf)
+      intro n; refine' strongly_measurable.indicator _ (measurable_set_kernel_integrable hf)
       have : ∀ x, ((s' n x).range.filterₓ fun x => x ≠ 0) ⊆ (s n).range :=
         by
-        intro x
-        refine' Finset.Subset.trans (Finset.filter_subset _ _) _
-        intro y
-        simp_rw [simple_func.mem_range]
-        rintro ⟨z, rfl⟩
-        exact ⟨(x, z), rfl⟩
+        intro x; refine' Finset.Subset.trans (Finset.filter_subset _ _) _; intro y
+        simp_rw [simple_func.mem_range]; rintro ⟨z, rfl⟩; exact ⟨(x, z), rfl⟩
       simp only [simple_func.integral_eq_sum_of_subset (this _)]
       refine' Finset.stronglyMeasurable_sum _ fun x _ => _
       refine' (Measurable.ennreal_toReal _).StronglyMeasurable.smul_const _
@@ -291,16 +274,12 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
       exact (s n).measurableSet_fiber x
     have h2f' : tendsto f' at_top (𝓝 fun x : α => ∫ y : β, f x y ∂κ x) :=
       by
-      rw [tendsto_pi_nhds]
-      intro x
+      rw [tendsto_pi_nhds]; intro x
       by_cases hfx : integrable (f x) (κ x)
       · have : ∀ n, integrable (s' n x) (κ x) := by
-          intro n
-          apply (hfx.norm.add hfx.norm).mono' (s' n x).AEStronglyMeasurable
-          apply eventually_of_forall
-          intro y
-          simp_rw [s', simple_func.coe_comp]
-          exact simple_func.norm_approx_on_zero_le _ _ (x, y) n
+          intro n; apply (hfx.norm.add hfx.norm).mono' (s' n x).AEStronglyMeasurable
+          apply eventually_of_forall; intro y
+          simp_rw [s', simple_func.coe_comp]; exact simple_func.norm_approx_on_zero_le _ _ (x, y) n
         simp only [f', hfx, simple_func.integral_eq_integral _ (this _), indicator_of_mem,
           mem_set_of_eq]
         refine'
@@ -317,9 +296,7 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
 #align measure_theory.strongly_measurable.integral_kernel_prod_right MeasureTheory.StronglyMeasurable.integral_kernel_prod_right
 
 theorem StronglyMeasurable.integral_kernel_prod_right' ⦃f : α × β → E⦄ (hf : StronglyMeasurable f) :
-    StronglyMeasurable fun x => ∫ y, f (x, y) ∂κ x :=
-  by
-  rw [← uncurry_curry f] at hf
+    StronglyMeasurable fun x => ∫ y, f (x, y) ∂κ x := by rw [← uncurry_curry f] at hf;
   exact hf.integral_kernel_prod_right
 #align measure_theory.strongly_measurable.integral_kernel_prod_right' MeasureTheory.StronglyMeasurable.integral_kernel_prod_right'
 

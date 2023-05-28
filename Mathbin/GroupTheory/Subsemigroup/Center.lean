@@ -173,8 +173,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_center₀ 
 theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M :=
   by
   obtain rfl | ha0 := eq_or_ne a 0
-  · rw [inv_zero]
-    exact zero_mem_center M
+  · rw [inv_zero]; exact zero_mem_center M
   rcases IsUnit.mk0 _ ha0 with ⟨a, rfl⟩
   rw [← Units.val_inv_eq_inv_val]
   exact center_units_subset (inv_mem_center (subset_center_units ha))

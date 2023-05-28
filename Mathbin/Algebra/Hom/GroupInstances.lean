@@ -47,12 +47,8 @@ instance [MulOneClass M] [CommMonoid N] : CommMonoid (M →* N)
     { toFun := fun x => f x ^ n
       map_one' := by simp
       map_mul' := fun x y => by simp [mul_pow] }
-  npow_zero f := by
-    ext x
-    simp
-  npow_succ n f := by
-    ext x
-    simp [pow_succ]
+  npow_zero f := by ext x; simp
+  npow_succ n f := by ext x; simp [pow_succ]
 
 /-- If `G` is a commutative group, then `M →* G` is a commutative group too. -/
 @[to_additive
@@ -61,24 +57,15 @@ instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by
-      intros
-      ext
-      apply div_eq_mul_inv
+    div_eq_mul_inv := by intros ; ext; apply div_eq_mul_inv
     mul_left_inv := by intros <;> ext <;> apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n
         map_one' := by simp
         map_mul' := fun x y => by simp [mul_zpow] }
-    zpow_zero' := fun f => by
-      ext x
-      simp
-    zpow_succ' := fun n f => by
-      ext x
-      simp [zpow_ofNat, pow_succ]
-    zpow_neg' := fun n f => by
-      ext x
-      simp }
+    zpow_zero' := fun f => by ext x; simp
+    zpow_succ' := fun n f => by ext x; simp [zpow_ofNat, pow_succ]
+    zpow_neg' := fun n f => by ext x; simp }
 
 instance [AddCommMonoid M] : AddCommMonoid (AddMonoid.End M) :=
   AddMonoidHom.addCommMonoid
@@ -250,12 +237,8 @@ def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] : (N →* P) →* (M �
     { toFun := g.comp
       map_one' := comp_one g
       map_mul' := comp_mul g }
-  map_one' := by
-    ext1 f
-    exact one_comp f
-  map_mul' g₁ g₂ := by
-    ext1 f
-    exact mul_comp g₁ g₂ f
+  map_one' := by ext1 f; exact one_comp f
+  map_mul' g₁ g₂ := by ext1 f; exact mul_comp g₁ g₂ f
 #align monoid_hom.comp_hom MonoidHom.compHom
 #align add_monoid_hom.comp_hom AddMonoidHom.compHom
 -/

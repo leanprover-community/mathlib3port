@@ -38,10 +38,8 @@ theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} :
     IsOpenImmersion f ↔ OpenEmbedding f.1.base ∧ ∀ x, IsIso (PresheafedSpace.stalkMap f.1 x) :=
   by
   constructor
-  · intro h
-    exact ⟨h.1, inferInstance⟩
-  · rintro ⟨h₁, h₂⟩
-    exact is_open_immersion.of_stalk_iso f h₁
+  · intro h; exact ⟨h.1, inferInstance⟩
+  · rintro ⟨h₁, h₂⟩; exact is_open_immersion.of_stalk_iso f h₁
 #align algebraic_geometry.is_open_immersion_iff_stalk AlgebraicGeometry.isOpenImmersion_iff_stalk
 
 theorem isOpenImmersion_stableUnderComposition :
@@ -59,8 +57,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
   by
   constructor
   · exact is_open_immersion_respects_iso
-  · intros
-    infer_instance
+  · intros ; infer_instance
   · intro X Y f 𝒰 H
     rw [is_open_immersion_iff_stalk]
     constructor
@@ -106,9 +103,7 @@ theorem IsOpenImmersion.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCove
 
 theorem isOpenImmersion_stableUnderBaseChange :
     MorphismProperty.StableUnderBaseChange @IsOpenImmersion :=
-  MorphismProperty.StableUnderBaseChange.mk isOpenImmersion_respectsIso <|
-    by
-    intro X Y Z f g H
+  MorphismProperty.StableUnderBaseChange.mk isOpenImmersion_respectsIso <| by intro X Y Z f g H;
     infer_instance
 #align algebraic_geometry.is_open_immersion_stable_under_base_change AlgebraicGeometry.isOpenImmersion_stableUnderBaseChange
 

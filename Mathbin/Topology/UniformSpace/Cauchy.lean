@@ -603,8 +603,7 @@ theorem isComplete_iUnion_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ 
     rcases mem_Union.1 (htS hx) with ⟨i, hi⟩
     refine' ⟨i, fun y hy => _⟩
     rcases mem_Union.1 (htS hy) with ⟨j, hj⟩
-    convert hj
-    exact hd i j x hi y hj (htU <| mk_mem_prod hx hy)
+    convert hj; exact hd i j x hi y hj (htU <| mk_mem_prod hx hy)
   rcases hs i l hl (le_principal_iff.2 <| mem_of_superset htl hi) with ⟨x, hxs, hlx⟩
   exact ⟨x, mem_Union.2 ⟨i, hxs⟩, hlx⟩
 #align is_complete_Union_separated isComplete_iUnion_separated
@@ -718,10 +717,7 @@ theorem cauchySeq_tendsto_of_isComplete [SemilatticeSup β] {K : Set α} (h₁ :
   h₁ _ h₃ <|
     le_principal_iff.2 <|
       mem_map_iff_exists_image.2
-        ⟨univ, univ_mem, by
-          simp only [image_univ]
-          rintro _ ⟨n, rfl⟩
-          exact h₂ n⟩
+        ⟨univ, univ_mem, by simp only [image_univ]; rintro _ ⟨n, rfl⟩; exact h₂ n⟩
 #align cauchy_seq_tendsto_of_is_complete cauchySeq_tendsto_of_isComplete
 
 /- warning: cauchy.le_nhds_Lim -> Cauchy.le_nhds_lim is a dubious translation:
@@ -777,8 +773,7 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
   · haveI : Fintype u := (fk.inter_of_left _).Fintype
     exact finite_range f
   · intro x xs
-    obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r
-    exact mem_Union₂.1 (ks xs)
+    obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r; exact mem_Union₂.1 (ks xs)
     rw [bUnion_range, mem_Union]
     set z : ↥u := ⟨y, hy, ⟨x, xs, xy⟩⟩
     exact ⟨z, rU <| mem_compRel.2 ⟨y, xy, rs (hfr z)⟩⟩
@@ -1154,9 +1149,7 @@ variable (α)
 
 #print UniformSpace.firstCountableTopology /-
 instance (priority := 100) firstCountableTopology : FirstCountableTopology α :=
-  ⟨fun a => by
-    rw [nhds_eq_comap_uniformity]
-    infer_instance⟩
+  ⟨fun a => by rw [nhds_eq_comap_uniformity]; infer_instance⟩
 #align uniform_space.first_countable_topology UniformSpace.firstCountableTopology
 -/
 

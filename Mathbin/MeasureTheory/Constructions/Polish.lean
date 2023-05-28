@@ -226,9 +226,7 @@ theorem AnalyticSet.iUnion [Countable ι] {s : ι → Set α} (hs : ∀ n, Analy
     analytic_set_iff_exists_polish_space_range.1 (hs n)
   skip
   let γ := Σn, β n
-  let F : γ → α := by
-    rintro ⟨n, x⟩
-    exact f n x
+  let F : γ → α := by rintro ⟨n, x⟩; exact f n x
   have F_cont : Continuous F := continuous_sigma f_cont
   have F_range : range F = ⋃ n, s n :=
     by
@@ -640,9 +638,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
     -- let `z` be its limit.
     let z := limUnder at_top y
     have y_lim : tendsto y at_top (𝓝 z) := cauchy_y.tendsto_lim
-    suffices f z = x by
-      rw [← this]
-      exact mem_range_self _
+    suffices f z = x by rw [← this]; exact mem_range_self _
     -- assume for a contradiction that `f z ≠ x`.
     by_contra' hne
     -- introduce disjoint open sets `v` and `w` separating `f z` from `x`.
@@ -725,17 +721,11 @@ theorem MeasurableSet.image_of_measurable_injOn [SecondCountableTopology β] (hs
     f_meas.exists_continuous
   have M : measurable_set[@borel γ t'] s :=
     @Continuous.measurable γ γ t' (@borel γ t')
-      (@BorelSpace.opensMeasurable γ t' (@borel γ t')
-        (by
-          constructor
-          rfl))
-      tγ _ _ _ (continuous_id_of_le t't) s hs
+      (@BorelSpace.opensMeasurable γ t' (@borel γ t') (by constructor; rfl)) tγ _ _ _
+      (continuous_id_of_le t't) s hs
   exact
-    @MeasurableSet.image_of_continuousOn_injOn γ t' t'_polish (@borel γ t')
-      (by
-        constructor
-        rfl)
-      β _ _ _ _ s f M (@Continuous.continuousOn γ β t' tβ f s f_cont) f_inj
+    @MeasurableSet.image_of_continuousOn_injOn γ t' t'_polish (@borel γ t') (by constructor; rfl) β
+      _ _ _ _ s f M (@Continuous.continuousOn γ β t' tβ f s f_cont) f_inj
 #align measurable_set.image_of_measurable_inj_on MeasurableSet.image_of_measurable_injOn
 -/
 
@@ -802,19 +792,12 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
   have C : @Continuous γ γ t' tγ id := continuous_id_of_le t't
   -- therefore, it is also a measurable embedding, by the Lusin-Souslin theorem
   have E :=
-    @Continuous.measurableEmbedding γ t' t'_polish (@borel γ t')
-      (by
-        constructor
-        rfl)
-      γ tγ (PolishSpace.t2Space γ) _ _ id C injective_id
+    @Continuous.measurableEmbedding γ t' t'_polish (@borel γ t') (by constructor; rfl) γ tγ
+      (PolishSpace.t2Space γ) _ _ id C injective_id
   -- the set `s` is measurable for `t'` as it is closed.
   have M : @MeasurableSet γ (@borel γ t') s :=
     @IsClosed.measurableSet γ s t' (@borel γ t')
-      (@BorelSpace.opensMeasurable γ t' (@borel γ t')
-        (by
-          constructor
-          rfl))
-      s_closed
+      (@BorelSpace.opensMeasurable γ t' (@borel γ t') (by constructor; rfl)) s_closed
   -- therefore, its image under the measurable embedding `id` is also measurable for `tγ`.
   convert E.measurable_set_image.2 M
   simp only [id.def, image_id']
@@ -837,9 +820,7 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
     MeasurableSet { x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c) } :=
   by
   by_cases hl : l.ne_bot
-  swap;
-  · rw [not_ne_bot] at hl
-    simp [hl]
+  swap; · rw [not_ne_bot] at hl; simp [hl]
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]

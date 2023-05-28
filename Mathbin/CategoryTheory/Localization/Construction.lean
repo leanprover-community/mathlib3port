@@ -256,9 +256,7 @@ def objEquiv : C ≃ W.Localization where
   toFun := W.Q.obj
   invFun X := X.as.obj
   left_inv X := rfl
-  right_inv := by
-    rintro ⟨⟨X⟩⟩
-    rfl
+  right_inv := by rintro ⟨⟨X⟩⟩; rfl
 #align category_theory.localization.construction.obj_equiv CategoryTheory.Localization.Construction.objEquiv
 -/
 
@@ -279,8 +277,7 @@ theorem morphismProperty_is_top (P : MorphismProperty W.Localization)
   constructor
   · intro hf
     simp only [Pi.top_apply]
-  · intro hf
-    clear hf
+  · intro hf; clear hf
     let G : _ ⥤ W.localization := quotient.functor _
     suffices
       ∀ (X₁ X₂ : C)

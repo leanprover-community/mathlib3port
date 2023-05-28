@@ -188,19 +188,13 @@ theorem right_inv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightIn
 
 #print Isometry.preimage_emetric_closedBall /-
 theorem preimage_emetric_closedBall (h : Isometry f) (x : α) (r : ℝ≥0∞) :
-    f ⁻¹' EMetric.closedBall (f x) r = EMetric.closedBall x r :=
-  by
-  ext y
-  simp [h.edist_eq]
+    f ⁻¹' EMetric.closedBall (f x) r = EMetric.closedBall x r := by ext y; simp [h.edist_eq]
 #align isometry.preimage_emetric_closed_ball Isometry.preimage_emetric_closedBall
 -/
 
 #print Isometry.preimage_emetric_ball /-
 theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
-    f ⁻¹' EMetric.ball (f x) r = EMetric.ball x r :=
-  by
-  ext y
-  simp [h.edist_eq]
+    f ⁻¹' EMetric.ball (f x) r = EMetric.ball x r := by ext y; simp [h.edist_eq]
 #align isometry.preimage_emetric_ball Isometry.preimage_emetric_ball
 -/
 
@@ -212,10 +206,8 @@ theorem ediam_image (hf : Isometry f) (s : Set α) : EMetric.diam (f '' s) = EMe
 -/
 
 #print Isometry.ediam_range /-
-theorem ediam_range (hf : Isometry f) : EMetric.diam (range f) = EMetric.diam (univ : Set α) :=
-  by
-  rw [← image_univ]
-  exact hf.ediam_image univ
+theorem ediam_range (hf : Isometry f) : EMetric.diam (range f) = EMetric.diam (univ : Set α) := by
+  rw [← image_univ]; exact hf.ediam_image univ
 #align isometry.ediam_range Isometry.ediam_range
 -/
 
@@ -312,19 +304,14 @@ theorem diam_image (hf : Isometry f) (s : Set α) : Metric.diam (f '' s) = Metri
 -/
 
 #print Isometry.diam_range /-
-theorem diam_range (hf : Isometry f) : Metric.diam (range f) = Metric.diam (univ : Set α) :=
-  by
-  rw [← image_univ]
-  exact hf.diam_image univ
+theorem diam_range (hf : Isometry f) : Metric.diam (range f) = Metric.diam (univ : Set α) := by
+  rw [← image_univ]; exact hf.diam_image univ
 #align isometry.diam_range Isometry.diam_range
 -/
 
 #print Isometry.preimage_setOf_dist /-
 theorem preimage_setOf_dist (hf : Isometry f) (x : α) (p : ℝ → Prop) :
-    f ⁻¹' { y | p (dist y (f x)) } = { y | p (dist y x) } :=
-  by
-  ext y
-  simp [hf.dist_eq]
+    f ⁻¹' { y | p (dist y (f x)) } = { y | p (dist y x) } := by ext y; simp [hf.dist_eq]
 #align isometry.preimage_set_of_dist Isometry.preimage_setOf_dist
 -/
 
@@ -546,9 +533,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : EMetric.diam (h '' s) = EM
 
 #print IsometryEquiv.toEquiv_injective /-
 theorem toEquiv_injective : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
-  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by
-    dsimp at H
-    subst e₁
+  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by dsimp at H; subst e₁
 #align isometry_equiv.to_equiv_inj IsometryEquiv.toEquiv_injective
 -/
 
@@ -943,10 +928,8 @@ protected theorem completeSpace [CompleteSpace β] (e : α ≃ᵢ β) : Complete
 -/
 
 #print IsometryEquiv.completeSpace_iff /-
-theorem completeSpace_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β :=
-  by
-  constructor <;> intro H
-  exacts[e.symm.complete_space, e.complete_space]
+theorem completeSpace_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β := by
+  constructor <;> intro H; exacts[e.symm.complete_space, e.complete_space]
 #align isometry_equiv.complete_space_iff IsometryEquiv.completeSpace_iff
 -/
 

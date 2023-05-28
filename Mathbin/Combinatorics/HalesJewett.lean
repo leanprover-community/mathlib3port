@@ -234,9 +234,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align combinatorics.line.vertical_apply Combinatorics.Line.vertical_applyₓ'. -/
 @[simp]
 theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) :
-    l.vertical v x = Sum.elim v (l x) := by
-  funext i
-  cases i <;> rfl
+    l.vertical v x = Sum.elim v (l x) := by funext i; cases i <;> rfl
 #align combinatorics.line.vertical_apply Combinatorics.Line.vertical_apply
 
 /- warning: combinatorics.line.horizontal_apply -> Combinatorics.Line.horizontal_apply is a dubious translation:
@@ -247,9 +245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align combinatorics.line.horizontal_apply Combinatorics.Line.horizontal_applyₓ'. -/
 @[simp]
 theorem horizontal_apply {α ι ι'} (l : Line α ι) (v : ι' → α) (x : α) :
-    l.horizontal v x = Sum.elim (l x) v := by
-  funext i
-  cases i <;> rfl
+    l.horizontal v x = Sum.elim (l x) v := by funext i; cases i <;> rfl
 #align combinatorics.line.horizontal_apply Combinatorics.Line.horizontal_apply
 
 /- warning: combinatorics.line.prod_apply -> Combinatorics.Line.prod_apply is a dubious translation:
@@ -260,9 +256,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align combinatorics.line.prod_apply Combinatorics.Line.prod_applyₓ'. -/
 @[simp]
 theorem prod_apply {α ι ι'} (l : Line α ι) (l' : Line α ι') (x : α) :
-    l.Prod l' x = Sum.elim (l x) (l' x) := by
-  funext i
-  cases i <;> rfl
+    l.Prod l' x = Sum.elim (l x) (l' x) := by funext i; cases i <;> rfl
 #align combinatorics.line.prod_apply Combinatorics.Line.prod_apply
 
 /- warning: combinatorics.line.diagonal_apply -> Combinatorics.Line.diagonal_apply is a dubious translation:
@@ -298,8 +292,7 @@ private theorem [anonymous] :
       -- This deals with the degenerate case where `α` is empty.
       intro κ _
       by_cases h : Nonempty κ
-      · skip
-        exact ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, PEmpty.rec _⟩⟩
+      · skip; exact ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, PEmpty.rec _⟩⟩
       · exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec _)⟩).elim⟩)
     (by
       -- Now we have to show that the theorem holds for `option α` if it holds for `α`.
@@ -364,9 +357,7 @@ private theorem [anonymous] :
       -- If so then this is a `C'`-monochromatic line and we are done.
       · obtain ⟨p, p_mem, hp⟩ := h
         refine' Or.inr (mono_of_mono ⟨p.line, p.color, _⟩)
-        rintro (_ | _)
-        rw [hp, s.is_focused p p_mem]
-        apply p.has_color
+        rintro (_ | _); rw [hp, s.is_focused p p_mem]; apply p.has_color
       -- If not, we get `r+1` color focused lines by taking the product of the `r` lines with `l'` and
       -- adding to this the vertical line obtained by the focus point and `l`.
       refine'
@@ -424,8 +415,7 @@ theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finse
   refine'
     ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getD 0, c,
       _⟩
-  · rw [hs, Finset.sep_def, Finset.mem_filter]
-    exact ⟨Finset.mem_univ _, l.proper.some_spec⟩
+  · rw [hs, Finset.sep_def, Finset.mem_filter]; exact ⟨Finset.mem_univ _, l.proper.some_spec⟩
   intro x xs
   rw [← hl ⟨x, xs⟩]
   clear hl; congr

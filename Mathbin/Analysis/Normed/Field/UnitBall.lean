@@ -142,9 +142,7 @@ theorem coe_pow_unitClosedBall [SeminormedRing 𝕜] [NormOneClass 𝕜] (x : cl
 def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid 𝕜
     where
   carrier := sphere (0 : 𝕜) 1
-  mul_mem' x y hx hy := by
-    rw [mem_sphere_zero_iff_norm] at *
-    simp [*]
+  mul_mem' x y hx hy := by rw [mem_sphere_zero_iff_norm] at *; simp [*]
   one_mem' := mem_sphere_zero_iff_norm.2 norm_one
 #align submonoid.unit_sphere Submonoid.unitSphere
 -/

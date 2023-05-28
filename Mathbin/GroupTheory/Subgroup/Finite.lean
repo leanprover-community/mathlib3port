@@ -168,9 +168,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.fintype_bot Subgroup.fintypeBotₓ'. -/
 @[to_additive]
 instance fintypeBot : Fintype (⊥ : Subgroup G) :=
-  ⟨{1}, by
-    rintro ⟨x, ⟨hx⟩⟩
-    exact Finset.mem_singleton_self _⟩
+  ⟨{1}, by rintro ⟨x, ⟨hx⟩⟩; exact Finset.mem_singleton_self _⟩
 #align subgroup.fintype_bot Subgroup.fintypeBot
 #align add_subgroup.fintype_bot AddSubgroup.fintypeBot
 
@@ -297,28 +295,20 @@ theorem pi_mem_of_mulSingle_mem_aux [DecidableEq η] (I : Finset η) {H : Subgro
       by
       ext j
       by_cases heq : j = i
-      · subst HEq
-        simp
+      · subst HEq; simp
       · simp [HEq]
-    rw [this]
-    clear this
+    rw [this]; clear this
     apply mul_mem
     · apply ih <;> clear ih
       · intro j hj
         by_cases heq : j = i
-        · subst HEq
-          simp
-        · simp [HEq]
-          apply h1 j
-          simpa [HEq] using hj
+        · subst HEq; simp
+        · simp [HEq]; apply h1 j; simpa [HEq] using hj
       · intro j hj
-        have : j ≠ i := by
-          rintro rfl
-          contradiction
+        have : j ≠ i := by rintro rfl; contradiction
         simp [this]
         exact h2 _ (Finset.mem_insert_of_mem hj)
-    · apply h2
-      simp
+    · apply h2; simp
 #align subgroup.pi_mem_of_mul_single_mem_aux Subgroup.pi_mem_of_mulSingle_mem_aux
 #align add_subgroup.pi_mem_of_single_mem_aux AddSubgroup.pi_mem_of_single_mem_aux
 
@@ -350,9 +340,7 @@ theorem pi_le_iff [DecidableEq η] [Finite η] {H : ∀ i, Subgroup (f i)} {J : 
     pi univ H ≤ J ↔ ∀ i : η, map (MonoidHom.single f i) (H i) ≤ J :=
   by
   constructor
-  · rintro h i _ ⟨x, hx, rfl⟩
-    apply h
-    simpa using hx
+  · rintro h i _ ⟨x, hx, rfl⟩; apply h; simpa using hx
   · exact fun h x hx => pi_mem_of_mul_single_mem x fun i => h i (mem_map_of_mem _ (hx i trivial))
 #align subgroup.pi_le_iff Subgroup.pi_le_iff
 #align add_subgroup.pi_le_iff AddSubgroup.pi_le_iff

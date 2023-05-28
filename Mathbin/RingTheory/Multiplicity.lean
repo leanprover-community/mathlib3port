@@ -95,19 +95,13 @@ theorem Int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) 
   · repeat' rw [← finite_iff_dom, finite_def]
     norm_cast
   · intro h1 h2
-    apply _root_.le_antisymm <;>
-      · apply Nat.find_mono
-        norm_cast
-        simp
+    apply _root_.le_antisymm <;> · apply Nat.find_mono; norm_cast; simp
 #align multiplicity.int.coe_nat_multiplicity multiplicity.Int.coe_nat_multiplicity
 
 #print multiplicity.not_finite_iff_forall /-
 theorem not_finite_iff_forall {a b : α} : ¬Finite a b ↔ ∀ n : ℕ, a ^ n ∣ b :=
   ⟨fun h n =>
-    Nat.casesOn n
-      (by
-        rw [pow_zero]
-        exact one_dvd _)
+    Nat.casesOn n (by rw [pow_zero]; exact one_dvd _)
       (by simpa [Finite, Classical.not_not] using h),
     by simp [Finite, multiplicity, Classical.not_not] <;> tauto⟩
 #align multiplicity.not_finite_iff_forall multiplicity.not_finite_iff_forall
@@ -139,15 +133,10 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.RingTheory.Multiplicity._hyg.761 : α) (x._@.Mathlib.RingTheory.Multiplicity._hyg.763 : α) => Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) x._@.Mathlib.RingTheory.Multiplicity._hyg.761 x._@.Mathlib.RingTheory.Multiplicity._hyg.763)] {a : α} {b : α} {k : Nat}, (LE.le.{0} PartENat PartENat.instLEPartENat (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) k) (multiplicity.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) a b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) a k) b)
 Case conversion may be inaccurate. Consider using '#align multiplicity.pow_dvd_of_le_multiplicity multiplicity.pow_dvd_of_le_multiplicityₓ'. -/
 theorem pow_dvd_of_le_multiplicity {a b : α} {k : ℕ} :
-    (k : PartENat) ≤ multiplicity a b → a ^ k ∣ b :=
-  by
-  rw [← PartENat.some_eq_natCast]
+    (k : PartENat) ≤ multiplicity a b → a ^ k ∣ b := by rw [← PartENat.some_eq_natCast];
   exact
-    Nat.casesOn k
-      (fun _ => by
-        rw [pow_zero]
-        exact one_dvd _)
-      fun k ⟨h₁, h₂⟩ => by_contradiction fun hk => Nat.find_min _ (lt_of_succ_le (h₂ ⟨k, hk⟩)) hk
+    Nat.casesOn k (fun _ => by rw [pow_zero]; exact one_dvd _) fun k ⟨h₁, h₂⟩ =>
+      by_contradiction fun hk => Nat.find_min _ (lt_of_succ_le (h₂ ⟨k, hk⟩)) hk
 #align multiplicity.pow_dvd_of_le_multiplicity multiplicity.pow_dvd_of_le_multiplicity
 
 #print multiplicity.pow_multiplicity_dvd /-
@@ -250,10 +239,7 @@ theorem eq_coe_iff {a b : α} {n : ℕ} :
       let ⟨h₁, h₂⟩ := eq_some_iff.1 h
       h₂ ▸
         ⟨pow_multiplicity_dvd _,
-          IsGreatest
-            (by
-              rw [PartENat.lt_coe_iff]
-              exact ⟨h₁, lt_succ_self _⟩)⟩,
+          IsGreatest (by rw [PartENat.lt_coe_iff]; exact ⟨h₁, lt_succ_self _⟩)⟩,
       fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm <| unique' h.1 h.2⟩⟩
 #align multiplicity.eq_coe_iff multiplicity.eq_coe_iff
 
@@ -263,13 +249,7 @@ theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n �
     by
     simp only [Classical.not_not]
     exact
-      ⟨fun h n =>
-        Nat.casesOn n
-          (by
-            rw [pow_zero]
-            exact one_dvd _)
-          fun n => h _,
-        fun h n => h _⟩
+      ⟨fun h n => Nat.casesOn n (by rw [pow_zero]; exact one_dvd _) fun n => h _, fun h n => h _⟩
 #align multiplicity.eq_top_iff multiplicity.eq_top_iff
 -/
 
@@ -312,10 +292,8 @@ theorem unit_left (a : α) (u : αˣ) : multiplicity (u : α) a = ⊤ :=
 -/
 
 #print multiplicity.multiplicity_eq_zero /-
-theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b :=
-  by
-  rw [← Nat.cast_zero, eq_coe_iff]
-  simp
+theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b := by
+  rw [← Nat.cast_zero, eq_coe_iff]; simp
 #align multiplicity.multiplicity_eq_zero multiplicity.multiplicity_eq_zero
 -/
 
@@ -443,11 +421,7 @@ theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b :=
       or_iff_not_imp_right.2 fun hb =>
         have ha : a ≠ 0 := fun ha => by simpa [ha] using h 1
         by_contradiction fun ha1 : a ≠ 1 =>
-          have ha_gt_one : 1 < a :=
-            lt_of_not_ge fun ha' => by
-              clear h
-              revert ha ha1
-              decide!
+          have ha_gt_one : 1 < a := lt_of_not_ge fun ha' => by clear h; revert ha ha1; decide!
           not_lt_of_ge (le_of_dvd (Nat.pos_of_ne_zero hb) (h b)) (lt_pow_self ha_gt_one b),
       fun h => by cases h <;> simp [*]⟩
 #align multiplicity.finite_nat_iff multiplicity.finite_nat_iff
@@ -477,9 +451,7 @@ variable [DecidableRel ((· ∣ ·) : α → α → Prop)]
 #print multiplicity.isUnit_right /-
 theorem isUnit_right {a b : α} (ha : ¬IsUnit a) (hb : IsUnit b) : multiplicity a b = 0 :=
   eq_coe_iff.2
-    ⟨show a ^ 0 ∣ b by simp only [pow_zero, one_dvd],
-      by
-      rw [pow_one]
+    ⟨show a ^ 0 ∣ b by simp only [pow_zero, one_dvd], by rw [pow_one];
       exact fun h => mt (isUnit_of_dvd_unit h) ha hb⟩
 #align multiplicity.is_unit_right multiplicity.isUnit_right
 -/
@@ -673,16 +645,12 @@ theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity
   apply le_antisymm
   · apply PartENat.le_of_lt_add_one
     cases' part_enat.ne_top_iff.mp (PartENat.ne_top_of_lt h) with k hk
-    rw [hk]
-    rw_mod_cast [multiplicity_lt_iff_neg_dvd, dvd_add_right]
+    rw [hk]; rw_mod_cast [multiplicity_lt_iff_neg_dvd, dvd_add_right]
     intro h_dvd
-    apply multiplicity.is_greatest _ h_dvd
-    rw [hk]
-    apply_mod_cast Nat.lt_succ_self
+    apply multiplicity.is_greatest _ h_dvd; rw [hk]; apply_mod_cast Nat.lt_succ_self
     rw [pow_dvd_iff_le_multiplicity, Nat.cast_add, ← hk, Nat.cast_one]
     exact PartENat.add_one_le_of_lt h
-  · convert min_le_multiplicity_add
-    rw [min_eq_right (le_of_lt h)]
+  · convert min_le_multiplicity_add; rw [min_eq_right (le_of_lt h)]
 #align multiplicity.multiplicity_add_of_gt multiplicity.multiplicity_add_of_gt
 
 /- warning: multiplicity.multiplicity_sub_of_gt -> multiplicity.multiplicity_sub_of_gt is a dubious translation:
@@ -706,11 +674,9 @@ theorem multiplicity_add_eq_min {p a b : α} (h : multiplicity p a ≠ multiplic
     multiplicity p (a + b) = min (multiplicity p a) (multiplicity p b) :=
   by
   rcases lt_trichotomy (multiplicity p a) (multiplicity p b) with (hab | hab | hab)
-  · rw [add_comm, multiplicity_add_of_gt hab, min_eq_left]
-    exact le_of_lt hab
+  · rw [add_comm, multiplicity_add_of_gt hab, min_eq_left]; exact le_of_lt hab
   · contradiction
-  · rw [multiplicity_add_of_gt hab, min_eq_right]
-    exact le_of_lt hab
+  · rw [multiplicity_add_of_gt hab, min_eq_right]; exact le_of_lt hab
 #align multiplicity.multiplicity_add_eq_min multiplicity.multiplicity_add_eq_min
 
 end Ring
@@ -806,9 +772,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.RingTheory.Multiplicity._hyg.7164 : α) (x._@.Mathlib.RingTheory.Multiplicity._hyg.7166 : α) => Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) x._@.Mathlib.RingTheory.Multiplicity._hyg.7164 x._@.Mathlib.RingTheory.Multiplicity._hyg.7166)] {a : α}, (Not (IsUnit.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) a)) -> (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) -> (Eq.{1} PartENat (multiplicity.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) (fun (a : α) (b : α) => _inst_2 a b) a a) (OfNat.ofNat.{0} PartENat 1 (One.toOfNat1.{0} PartENat PartENat.instOnePartENat)))
 Case conversion may be inaccurate. Consider using '#align multiplicity.multiplicity_self multiplicity.multiplicity_selfₓ'. -/
 @[simp]
-theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplicity a a = 1 :=
-  by
-  rw [← Nat.cast_one]
+theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplicity a a = 1 := by
+  rw [← Nat.cast_one];
   exact
     eq_coe_iff.2
       ⟨by simp, fun ⟨b, hb⟩ =>
@@ -933,10 +898,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.RingTheory.Multiplicity._hyg.8514 : α) (x._@.Mathlib.RingTheory.Multiplicity._hyg.8516 : α) => Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) x._@.Mathlib.RingTheory.Multiplicity._hyg.8514 x._@.Mathlib.RingTheory.Multiplicity._hyg.8516)] {p : α}, (Ne.{succ u1} α p (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) -> (Not (IsUnit.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) p)) -> (forall (n : Nat), Eq.{1} PartENat (multiplicity.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) (fun (a : α) (b : α) => _inst_2 a b) p (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n)) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) n))
 Case conversion may be inaccurate. Consider using '#align multiplicity.multiplicity_pow_self multiplicity.multiplicity_pow_selfₓ'. -/
 theorem multiplicity_pow_self {p : α} (h0 : p ≠ 0) (hu : ¬IsUnit p) (n : ℕ) :
-    multiplicity p (p ^ n) = n := by
-  rw [eq_coe_iff]
-  use dvd_rfl
-  rw [pow_dvd_pow_iff h0 hu]
+    multiplicity p (p ^ n) = n := by rw [eq_coe_iff]; use dvd_rfl; rw [pow_dvd_pow_iff h0 hu];
   apply Nat.not_succ_le_self
 #align multiplicity.multiplicity_pow_self multiplicity.multiplicity_pow_self
 

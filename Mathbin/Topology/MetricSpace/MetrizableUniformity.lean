@@ -140,12 +140,10 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
     simpa only [*, max_eq_right, MulZeroClass.mul_zero] using hd a b c c
   haveI : IsTrans X fun x y => d x y = 0 := ⟨hd₀_trans⟩
   induction' hn : length l using Nat.strong_induction_on with n ihn generalizing x y l
-  simp only at ihn
-  subst n
+  simp only at ihn; subst n
   set L := zip_with d (x::l) (l ++ [y])
   have hL_len : length L = length l + 1 := by simp
-  cases' eq_or_ne (d x y) 0 with hd₀ hd₀
-  · simp only [hd₀, zero_le]
+  cases' eq_or_ne (d x y) 0 with hd₀ hd₀; · simp only [hd₀, zero_le]
   rsuffices ⟨z, z', hxz, hzz', hz'y⟩ : ∃ z z' : X, d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_le hxz (max_le hzz' hz'y)) _)
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
@@ -168,8 +166,7 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
   have hM_ltx : M < length (x::l) := lt_length_left_of_zip_with hM_lt
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
   refine' ⟨(x::l).nthLe M hM_ltx, (l ++ [y]).nthLe M hM_lty, _, _, _⟩
-  · cases M
-    · simp [dist_self]
+  · cases M; · simp [dist_self]
     rw [Nat.succ_le_iff] at hMl
     have hMl' : length (take M l) = M := (length_take _ _).trans (min_eq_left hMl.le)
     simp only [nth_le]
@@ -225,17 +222,14 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     letI := UniformSpace.separationSetoid X
     set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.find h else 0
     have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
-      intro x y
-      dsimp only [d]
+      intro x y; dsimp only [d]
       refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
       simp only [true_imp_iff]
       split_ifs with h
-      · rw [← not_forall] at h
-        simp [h, pow_eq_zero_iff']
+      · rw [← not_forall] at h; simp [h, pow_eq_zero_iff']
       · simpa only [not_exists, Classical.not_not, eq_self_iff_true, true_iff_iff] using h
     have hd_symm : ∀ x y, d x y = d y x := by
-      intro x y
-      dsimp only [d]
+      intro x y; dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
     have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨half_pos one_pos, NNReal.half_lt_self one_ne_zero⟩
     letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
@@ -243,8 +237,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=
       by
       intro x y n
-      simp only [d]
-      split_ifs with h
+      simp only [d]; split_ifs with h
       · rw [(strictAnti_pow hr.1 hr.2).le_iff_le, Nat.find_le_iff]
         exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
       · push_neg  at h
@@ -287,18 +280,13 @@ protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace 
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
 instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
-    [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X :=
-  by
-  letI := UniformSpace.pseudoMetricSpace X
-  infer_instance
+    [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X := by
+  letI := UniformSpace.pseudoMetricSpace X; infer_instance
 #align uniform_space.pseudo_metrizable_space UniformSpace.pseudoMetrizableSpace
 
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
 theorem UniformSpace.metrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
-    TopologicalSpace.MetrizableSpace X :=
-  by
-  letI := UniformSpace.metricSpace X
-  infer_instance
+    TopologicalSpace.MetrizableSpace X := by letI := UniformSpace.metricSpace X; infer_instance
 #align uniform_space.metrizable_space UniformSpace.metrizableSpace
 

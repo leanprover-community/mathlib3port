@@ -96,9 +96,7 @@ theorem star_preimage [Star α] : Star.star ⁻¹' s = s⋆ :=
 
 #print Set.image_star /-
 @[simp]
-theorem image_star [InvolutiveStar α] : Star.star '' s = s⋆ :=
-  by
-  simp only [← star_preimage]
+theorem image_star [InvolutiveStar α] : Star.star '' s = s⋆ := by simp only [← star_preimage];
   rw [image_eq_preimage_of_inverse] <;> intro <;> simp only [star_star]
 #align set.image_star Set.image_star
 -/
@@ -176,9 +174,7 @@ theorem Finite.star [InvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.Fini
 -/
 
 #print Set.star_singleton /-
-theorem star_singleton {β : Type _} [InvolutiveStar β] (x : β) : ({x} : Set β)⋆ = {x⋆} :=
-  by
-  ext1 y
+theorem star_singleton {β : Type _} [InvolutiveStar β] (x : β) : ({x} : Set β)⋆ = {x⋆} := by ext1 y;
   rw [mem_star, mem_singleton_iff, mem_singleton_iff, star_eq_iff_star_eq, eq_comm]
 #align set.star_singleton Set.star_singleton
 -/
@@ -207,10 +203,7 @@ protected theorem star_add [AddMonoid α] [StarAddMonoid α] (s t : Set α) : (s
 
 @[simp]
 instance [Star α] [TrivialStar α] : TrivialStar (Set α)
-    where star_trivial s := by
-    rw [← star_preimage]
-    ext1
-    simp [star_trivial]
+    where star_trivial s := by rw [← star_preimage]; ext1; simp [star_trivial]
 
 /- warning: set.star_inv -> Set.star_inv is a dubious translation:
 lean 3 declaration is
@@ -218,9 +211,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : StarSemigroup.{u1} α (Monoid.toSemigroup.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))] (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Star.star.{u1} (Set.{u1} α) (Set.star.{u1} α (InvolutiveStar.toStar.{u1} α (StarSemigroup.toInvolutiveStar.{u1} α (Monoid.toSemigroup.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) _inst_2))) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))) s)) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))) (Star.star.{u1} (Set.{u1} α) (Set.star.{u1} α (InvolutiveStar.toStar.{u1} α (StarSemigroup.toInvolutiveStar.{u1} α (Monoid.toSemigroup.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) _inst_2))) s))
 Case conversion may be inaccurate. Consider using '#align set.star_inv Set.star_invₓ'. -/
-protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ :=
-  by
-  ext
+protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by ext;
   simp only [mem_star, mem_inv, star_inv]
 #align set.star_inv Set.star_inv
 
@@ -230,9 +221,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionSemiring.{u1} α] [_inst_2 : StarRing.{u1} α (Semiring.toNonUnitalSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α _inst_1))] (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Star.star.{u1} (Set.{u1} α) (Set.star.{u1} α (InvolutiveStar.toStar.{u1} α (StarAddMonoid.toInvolutiveStar.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α _inst_1))))) (StarRing.toStarAddMonoid.{u1} α (Semiring.toNonUnitalSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α _inst_1)) _inst_2)))) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (DivisionSemiring.toInv.{u1} α _inst_1)) s)) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (DivisionSemiring.toInv.{u1} α _inst_1)) (Star.star.{u1} (Set.{u1} α) (Set.star.{u1} α (InvolutiveStar.toStar.{u1} α (StarAddMonoid.toInvolutiveStar.{u1} α (AddMonoidWithOne.toAddMonoid.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α _inst_1))))) (StarRing.toStarAddMonoid.{u1} α (Semiring.toNonUnitalSemiring.{u1} α (DivisionSemiring.toSemiring.{u1} α _inst_1)) _inst_2)))) s))
 Case conversion may be inaccurate. Consider using '#align set.star_inv' Set.star_inv'ₓ'. -/
-protected theorem star_inv' [DivisionSemiring α] [StarRing α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ :=
-  by
-  ext
+protected theorem star_inv' [DivisionSemiring α] [StarRing α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by ext;
   simp only [mem_star, mem_inv, star_inv']
 #align set.star_inv' Set.star_inv'
 

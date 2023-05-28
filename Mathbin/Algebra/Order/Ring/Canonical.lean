@@ -78,9 +78,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'ₓ'. -/
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
-  by
-  rw [add_comm (a • d), add_comm (a • c)]
-  exact mul_add_mul_le_mul_add_mul hba hdc
+  by rw [add_comm (a • d), add_comm (a • c)]; exact mul_add_mul_le_mul_add_mul hba hdc
 #align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'
 
 /- warning: mul_add_mul_lt_mul_add_mul -> mul_add_mul_lt_mul_add_mul is a dubious translation:
@@ -106,9 +104,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'ₓ'. -/
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d :=
-  by
-  rw [add_comm (a • d), add_comm (a • c)]
-  exact mul_add_mul_lt_mul_add_mul hba hdc
+  by rw [add_comm (a • d), add_comm (a • c)]; exact mul_add_mul_lt_mul_add_mul hba hdc
 #align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'
 
 end ExistsAddOfLE
@@ -199,8 +195,7 @@ protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b 
   ·
     rw [tsub_eq_zero_iff_le.2 hbc, MulZeroClass.mul_zero,
       tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
-  · apply h.eq_tsub_of_add_eq
-    rw [← mul_add, tsub_add_cancel_of_le hcb]
+  · apply h.eq_tsub_of_add_eq; rw [← mul_add, tsub_add_cancel_of_le hcb]
 #align add_le_cancellable.mul_tsub AddLECancellable.mul_tsub
 
 /- warning: add_le_cancellable.tsub_mul -> AddLECancellable.tsub_mul is a dubious translation:
@@ -209,10 +204,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α] {a : α} {b : α} {c : α} [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) _inst_2] [_inst_4 : IsTotal.{u1} α (fun (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1047 : α) (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1049 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1047 x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1049)], (AddLECancellable.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) b c)) -> (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) a b) c) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) b c)))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.tsub_mul AddLECancellable.tsub_mulₓ'. -/
-protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c :=
-  by
-  simp only [mul_comm _ c] at *
-  exact h.mul_tsub
+protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c := by
+  simp only [mul_comm _ c] at *; exact h.mul_tsub
 #align add_le_cancellable.tsub_mul AddLECancellable.tsub_mul
 
 end AddLECancellable

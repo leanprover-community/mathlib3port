@@ -93,10 +93,7 @@ theorem stoppedValue_stoppedValue_leastGe (f : ℕ → Ω → ℝ) (π : Ω → 
     (hπn : ∀ ω, π ω ≤ n) :
     stoppedValue (fun i => stoppedValue f (leastGe f r i)) π =
       stoppedValue (stoppedProcess f (leastGe f r n)) π :=
-  by
-  ext1 ω
-  simp_rw [stopped_process, stopped_value]
-  rw [least_ge_eq_min _ _ _ hπn]
+  by ext1 ω; simp_rw [stopped_process, stopped_value]; rw [least_ge_eq_min _ _ _ hπn]
 #align measure_theory.stopped_value_stopped_value_least_ge MeasureTheory.stoppedValue_stoppedValue_leastGe
 
 theorem Submartingale.stoppedValue_leastGe [FiniteMeasure μ] (hf : Submartingale f ℱ μ) (r : ℝ) :

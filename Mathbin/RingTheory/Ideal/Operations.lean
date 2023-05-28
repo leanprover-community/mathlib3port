@@ -93,17 +93,13 @@ theorem mem_annihilator_span (s : Set M) (r : R) :
   by
   rw [Submodule.mem_annihilator]
   constructor
-  · intro h n
-    exact h _ (Submodule.subset_span n.prop)
+  · intro h n; exact h _ (Submodule.subset_span n.prop)
   · intro h n hn
     apply Submodule.span_induction hn
-    · intro x hx
-      exact h ⟨x, hx⟩
+    · intro x hx; exact h ⟨x, hx⟩
     · exact smul_zero _
-    · intro x y hx hy
-      rw [smul_add, hx, hy, zero_add]
-    · intro a x hx
-      rw [smul_comm, hx, smul_zero]
+    · intro x y hx hy; rw [smul_add, hx, hy, zero_add]
+    · intro a x hx; rw [smul_comm, hx, smul_zero]
 #align submodule.mem_annihilator_span Submodule.mem_annihilator_span
 
 /- warning: submodule.mem_annihilator_span_singleton -> Submodule.mem_annihilator_span_singleton is a dubious translation:
@@ -420,9 +416,7 @@ theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t �
 theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) :
     (Ideal.span {r} : Ideal R) • N = r • N :=
   by
-  have : span R (⋃ (t : M) (x : t ∈ N), {r • t}) = r • N :=
-    by
-    convert span_eq _
+  have : span R (⋃ (t : M) (x : t ∈ N), {r • t}) = r • N := by convert span_eq _;
     exact (Set.image_eq_iUnion _ (N : Set M)).symm
   conv_lhs => rw [← span_eq N, span_smul_span]
   simpa
@@ -438,9 +432,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.mem_of_span_
 theorem mem_of_span_top_of_smul_mem (M' : Submodule R M) (s : Set R) (hs : Ideal.span s = ⊤) (x : M)
     (H : ∀ r : s, (r : R) • x ∈ M') : x ∈ M' :=
   by
-  suffices (⊤ : Ideal R) • span R ({x} : Set M) ≤ M'
-    by
-    rw [top_smul] at this
+  suffices (⊤ : Ideal R) • span R ({x} : Set M) ≤ M' by rw [top_smul] at this;
     exact this (subset_span (Set.mem_singleton x))
   rw [← hs, span_smul_span, span_le]
   simpa using H
@@ -509,10 +501,7 @@ theorem mem_ideal_smul_span_iff_exists_sum {ι : Type _} (f : ι → M) (x : M) 
     rintro x ⟨y, hy, x, ⟨i, rfl⟩, rfl⟩
     refine' ⟨Finsupp.single i y, fun j => _, _⟩
     · letI := Classical.decEq ι
-      rw [Finsupp.single_apply]
-      split_ifs
-      · assumption
-      · exact I.zero_mem
+      rw [Finsupp.single_apply]; split_ifs; · assumption; · exact I.zero_mem
     refine' @Finsupp.sum_single_index ι R M _ _ i _ (fun i y => y • f i) _
     simp
   · exact ⟨0, fun i => I.zero_mem, Finsupp.sum_zero_index⟩
@@ -747,9 +736,7 @@ theorem prod_mem_prod {ι : Type _} {s : Finset ι} {I : ι → Ideal R} {x : ι
     (∀ i ∈ s, x i ∈ I i) → (∏ i in s, x i) ∈ ∏ i in s, I i := by
   classical
     apply Finset.induction_on s
-    · intro
-      rw [Finset.prod_empty, Finset.prod_empty, one_eq_top]
-      exact Submodule.mem_top
+    · intro ; rw [Finset.prod_empty, Finset.prod_empty, one_eq_top]; exact Submodule.mem_top
     · intro a s ha IH h
       rw [Finset.prod_insert ha, Finset.prod_insert ha]
       exact
@@ -860,9 +847,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (S : Set.{u1} R) (T : Set.{u1} R), Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (HMul.hMul.{u1, u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHMul.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.instMulIdealToSemiring.{u1} R _inst_1)) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) S) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) T)) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (HMul.hMul.{u1, u1, u1} (Set.{u1} R) (Set.{u1} R) (Set.{u1} R) (instHMul.{u1} (Set.{u1} R) (Set.mul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))) S T))
 Case conversion may be inaccurate. Consider using '#align ideal.span_mul_span' Ideal.span_mul_span'ₓ'. -/
-theorem span_mul_span' (S T : Set R) : span S * span T = span (S * T) :=
-  by
-  unfold span
+theorem span_mul_span' (S T : Set R) : span S * span T = span (S * T) := by unfold span;
   rw [Submodule.span_mul_span]
 #align ideal.span_mul_span' Ideal.span_mul_span'
 
@@ -873,9 +858,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (r : R) (s : R), Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (HMul.hMul.{u1, u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHMul.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.instMulIdealToSemiring.{u1} R _inst_1)) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Singleton.singleton.{u1, u1} R (Set.{u1} R) (Set.instSingletonSet.{u1} R) r)) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Singleton.singleton.{u1, u1} R (Set.{u1} R) (Set.instSingletonSet.{u1} R) s))) (Ideal.span.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Singleton.singleton.{u1, u1} R (Set.{u1} R) (Set.instSingletonSet.{u1} R) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) r s)))
 Case conversion may be inaccurate. Consider using '#align ideal.span_singleton_mul_span_singleton Ideal.span_singleton_mul_span_singletonₓ'. -/
 theorem span_singleton_mul_span_singleton (r s : R) :
-    span {r} * span {s} = (span {r * s} : Ideal R) :=
-  by
-  unfold span
+    span {r} * span {s} = (span {r * s} : Ideal R) := by unfold span;
   rw [Submodule.span_mul_span, Set.singleton_mul_singleton]
 #align ideal.span_singleton_mul_span_singleton Ideal.span_singleton_mul_span_singleton
 
@@ -1140,8 +1123,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.multiset_prod_le
 theorem multiset_prod_le_inf {s : Multiset (Ideal R)} : s.Prod ≤ s.inf := by
   classical
     refine' s.induction_on _ _
-    · rw [Multiset.inf_zero]
-      exact le_top
+    · rw [Multiset.inf_zero]; exact le_top
     intro a s ih
     rw [Multiset.prod_cons, Multiset.inf_cons]
     exact le_trans mul_le_inf (inf_le_inf le_rfl ih)
@@ -1192,9 +1174,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {K : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)}, (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I K) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) -> (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I (HMul.hMul.{u1, u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHMul.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.instMulIdealToSemiring.{u1} R _inst_1)) J K)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I J))
 Case conversion may be inaccurate. Consider using '#align ideal.sup_mul_eq_of_coprime_right Ideal.sup_mul_eq_of_coprime_rightₓ'. -/
-theorem sup_mul_eq_of_coprime_right (h : I ⊔ K = ⊤) : I ⊔ J * K = I ⊔ J :=
-  by
-  rw [mul_comm]
+theorem sup_mul_eq_of_coprime_right (h : I ⊔ K = ⊤) : I ⊔ J * K = I ⊔ J := by rw [mul_comm];
   exact sup_mul_eq_of_coprime_left h
 #align ideal.sup_mul_eq_of_coprime_right Ideal.sup_mul_eq_of_coprime_right
 
@@ -1204,9 +1184,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {K : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)}, (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I J) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) -> (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHMul.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.instMulIdealToSemiring.{u1} R _inst_1)) I K) J) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) K J))
 Case conversion may be inaccurate. Consider using '#align ideal.mul_sup_eq_of_coprime_left Ideal.mul_sup_eq_of_coprime_leftₓ'. -/
-theorem mul_sup_eq_of_coprime_left (h : I ⊔ J = ⊤) : I * K ⊔ J = K ⊔ J :=
-  by
-  rw [sup_comm] at h
+theorem mul_sup_eq_of_coprime_left (h : I ⊔ J = ⊤) : I * K ⊔ J = K ⊔ J := by rw [sup_comm] at h;
   rw [sup_comm, sup_mul_eq_of_coprime_left h, sup_comm]
 #align ideal.mul_sup_eq_of_coprime_left Ideal.mul_sup_eq_of_coprime_left
 
@@ -1216,9 +1194,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {K : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)}, (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) K J) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) -> (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) (HMul.hMul.{u1, u1, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHMul.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Ideal.instMulIdealToSemiring.{u1} R _inst_1)) I K) J) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I J))
 Case conversion may be inaccurate. Consider using '#align ideal.mul_sup_eq_of_coprime_right Ideal.mul_sup_eq_of_coprime_rightₓ'. -/
-theorem mul_sup_eq_of_coprime_right (h : K ⊔ J = ⊤) : I * K ⊔ J = I ⊔ J :=
-  by
-  rw [sup_comm] at h
+theorem mul_sup_eq_of_coprime_right (h : K ⊔ J = ⊤) : I * K ⊔ J = I ⊔ J := by rw [sup_comm] at h;
   rw [sup_comm, sup_mul_eq_of_coprime_right h, sup_comm]
 #align ideal.mul_sup_eq_of_coprime_right Ideal.mul_sup_eq_of_coprime_right
 
@@ -1275,10 +1251,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {n : Nat}, (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I J) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) -> (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) Nat (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHPow.{u1, 0} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.idemSemiring.{u1, u1} R _inst_1 R (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1))))))) J n)) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align ideal.sup_pow_eq_top Ideal.sup_pow_eq_topₓ'. -/
-theorem sup_pow_eq_top {n : ℕ} (h : I ⊔ J = ⊤) : I ⊔ J ^ n = ⊤ :=
-  by
-  rw [← Finset.card_range n, ← Finset.prod_const]
-  exact sup_prod_eq_top fun _ _ => h
+theorem sup_pow_eq_top {n : ℕ} (h : I ⊔ J = ⊤) : I ⊔ J ^ n = ⊤ := by
+  rw [← Finset.card_range n, ← Finset.prod_const]; exact sup_prod_eq_top fun _ _ => h
 #align ideal.sup_pow_eq_top Ideal.sup_pow_eq_top
 
 /- warning: ideal.pow_sup_eq_top -> Ideal.pow_sup_eq_top is a dubious translation:
@@ -1287,10 +1261,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)} {n : Nat}, (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) I J) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) -> (Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Sup.sup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (SemilatticeSup.toSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemCommSemiring.toSemilatticeSup.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule.{u1, u1} R _inst_1 R _inst_1 (Algebra.id.{u1} R _inst_1)))) (HPow.hPow.{u1, 0, u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) Nat (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (instHPow.{u1, 0} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) Nat (Monoid.Pow.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (MonoidWithZero.toMonoid.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toMonoidWithZero.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (IdemSemiring.toSemiring.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.idemSemiring.{u1, u1} R _inst_1 R (CommSemiring.toSemiring.{u1} R _inst_1) (Algebra.id.{u1} R _inst_1))))))) I n) J) (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align ideal.pow_sup_eq_top Ideal.pow_sup_eq_topₓ'. -/
-theorem pow_sup_eq_top {n : ℕ} (h : I ⊔ J = ⊤) : I ^ n ⊔ J = ⊤ :=
-  by
-  rw [← Finset.card_range n, ← Finset.prod_const]
-  exact prod_sup_eq_top fun _ _ => h
+theorem pow_sup_eq_top {n : ℕ} (h : I ⊔ J = ⊤) : I ^ n ⊔ J = ⊤ := by
+  rw [← Finset.card_range n, ← Finset.prod_const]; exact prod_sup_eq_top fun _ _ => h
 #align ideal.pow_sup_eq_top Ideal.pow_sup_eq_top
 
 /- warning: ideal.pow_sup_pow_eq_top -> Ideal.pow_sup_pow_eq_top is a dubious translation:
@@ -1428,10 +1400,8 @@ Case conversion may be inaccurate. Consider using '#align ideal.pow_mono Ideal.p
 theorem pow_mono {I J : Ideal R} (e : I ≤ J) (n : ℕ) : I ^ n ≤ J ^ n :=
   by
   induction n
-  · rw [pow_zero, pow_zero]
-    exact rfl.le
-  · rw [pow_succ, pow_succ]
-    exact Ideal.mul_mono e n_ih
+  · rw [pow_zero, pow_zero]; exact rfl.le
+  · rw [pow_succ, pow_succ]; exact Ideal.mul_mono e n_ih
 #align ideal.pow_mono Ideal.pow_mono
 
 /- warning: ideal.mul_eq_bot -> Ideal.mul_eq_bot is a dubious translation:
@@ -1748,9 +1718,7 @@ theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
       Or.cases_on (lt_or_eq_of_le <| Nat.le_of_lt_succ H)
         (fun H =>
           calc
-            radical (I ^ (n + 1)) = radical I ⊓ radical (I ^ n) :=
-              by
-              rw [pow_succ]
+            radical (I ^ (n + 1)) = radical I ⊓ radical (I ^ n) := by rw [pow_succ];
               exact radical_mul _ _
             _ = radical I ⊓ radical I := by rw [ih H]
             _ = radical I := inf_idem
@@ -1899,8 +1867,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
   generalize hn : s.card = n; intro h
   induction' n with n ih generalizing a b s
   · clear hp
-    rw [Finset.card_eq_zero] at hn
-    subst hn
+    rw [Finset.card_eq_zero] at hn; subst hn
     rw [Finset.coe_empty, Set.biUnion_empty, Set.union_empty, subset_union] at h
     simpa only [exists_prop, Finset.not_mem_empty, false_and_iff, exists_false, or_false_iff]
   classical
@@ -1912,26 +1879,20 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
     · obtain ⟨j, hjt, hfji⟩ : ∃ j ∈ t, f j ≤ f i := Ht
       obtain ⟨u, hju, rfl⟩ : ∃ u, j ∉ u ∧ insert j u = t :=
         ⟨t.erase j, t.not_mem_erase j, Finset.insert_erase hjt⟩
-      have hp' : ∀ k ∈ insert i u, is_prime (f k) :=
-        by
-        rw [Finset.forall_mem_insert] at hp⊢
+      have hp' : ∀ k ∈ insert i u, is_prime (f k) := by rw [Finset.forall_mem_insert] at hp⊢;
         exact ⟨hp.1, hp.2.2⟩
       have hiu : i ∉ u := mt Finset.mem_insert_of_mem hit
-      have hn' : (insert i u).card = n :=
-        by
-        rwa [Finset.card_insert_of_not_mem] at hn⊢
+      have hn' : (insert i u).card = n := by rwa [Finset.card_insert_of_not_mem] at hn⊢;
         exacts[hiu, hju]
       have h' : (I : Set R) ⊆ f a ∪ f b ∪ ⋃ k ∈ (↑(insert i u) : Set ι), f k :=
         by
-        rw [Finset.coe_insert] at h⊢
-        rw [Finset.coe_insert] at h
+        rw [Finset.coe_insert] at h⊢; rw [Finset.coe_insert] at h
         simp only [Set.biUnion_insert] at h⊢
         rw [← Set.union_assoc ↑(f i)] at h
         erw [Set.union_eq_self_of_subset_right hfji] at h
         exact h
       specialize ih a b (insert i u) hp' hn' h'
-      refine' ih.imp id (Or.imp id (Exists.imp fun k => _))
-      simp only [exists_prop]
+      refine' ih.imp id (Or.imp id (Exists.imp fun k => _)); simp only [exists_prop]
       exact And.imp (fun hk => Finset.insert_subset_insert i (Finset.subset_insert j u) hk) id
     by_cases Ha : f a ≤ f i
     · have h' : (I : Set R) ⊆ f i ∪ f b ∪ ⋃ j ∈ (↑t : Set ι), f j :=
@@ -1940,8 +1901,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
           Set.union_right_comm ↑(f a)] at h
         erw [Set.union_eq_self_of_subset_left Ha] at h
         exact h
-      specialize ih i b t hp.2 hn h'
-      right
+      specialize ih i b t hp.2 hn h'; right
       rcases ih with (ih | ih | ⟨k, hkt, ih⟩)
       · exact Or.inr ⟨i, Finset.mem_insert_self i t, ih⟩
       · exact Or.inl ih
@@ -1968,16 +1928,9 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
       exact ⟨⟨⟨Hi, Ha⟩, Hb⟩, Ht⟩
     rcases Set.not_subset.1 this with ⟨r, ⟨⟨⟨hrI, hra⟩, hrb⟩, hr⟩, hri⟩
     by_cases HI : (I : Set R) ⊆ f a ∪ f b ∪ ⋃ j ∈ (↑t : Set ι), f j
-    · specialize ih hp.2 hn HI
-      rcases ih with (ih | ih | ⟨k, hkt, ih⟩)
-      · left
-        exact ih
-      · right
-        left
-        exact ih
-      · right
-        right
-        exact ⟨k, Finset.mem_insert_of_mem hkt, ih⟩
+    · specialize ih hp.2 hn HI; rcases ih with (ih | ih | ⟨k, hkt, ih⟩)
+      · left; exact ih; · right; left; exact ih
+      · right; right; exact ⟨k, Finset.mem_insert_of_mem hkt, ih⟩
     exfalso
     rcases Set.not_subset.1 HI with ⟨s, hsI, hs⟩
     rw [Finset.coe_insert, Set.biUnion_insert] at h
@@ -1986,8 +1939,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
     · exact hs (Or.inl <| Or.inl <| add_sub_cancel' r s ▸ (f a).sub_mem ha hra)
     · exact hs (Or.inl <| Or.inr <| add_sub_cancel' r s ▸ (f b).sub_mem hb hrb)
     · exact hri (add_sub_cancel r s ▸ (f i).sub_mem hi hsi)
-    · rw [Set.mem_iUnion₂] at ht
-      rcases ht with ⟨j, hjt, hj⟩
+    · rw [Set.mem_iUnion₂] at ht; rcases ht with ⟨j, hjt, hj⟩
       simp only [Finset.inf_eq_iInf, SetLike.mem_coe, Submodule.mem_iInf] at hr
       exact hs (Or.inr <| Set.mem_biUnion hjt <| add_sub_cancel' r s ▸ (f j).sub_mem hj <| hr j hjt)
 #align ideal.subset_union_prime' Ideal.subset_union_prime'
@@ -2013,16 +1965,14 @@ theorem subset_union_prime {R : Type u} [CommRing R] {s : Finset ι} {f : ι →
       by_cases hbt : b ∈ t
       · obtain ⟨u, hbu, rfl⟩ : ∃ u, b ∉ u ∧ insert b u = t :=
           ⟨t.erase b, Finset.not_mem_erase b t, Finset.insert_erase hbt⟩
-        have hp' : ∀ i ∈ u, is_prime (f i) := by
-          intro i hiu
+        have hp' : ∀ i ∈ u, is_prime (f i) := by intro i hiu;
           refine' hp i (Finset.mem_insert_of_mem (Finset.mem_insert_of_mem hiu)) _ _ <;>
               rintro rfl <;>
             solve_by_elim only [Finset.mem_insert_of_mem, *]
         rw [Finset.coe_insert, Finset.coe_insert, Set.biUnion_insert, Set.biUnion_insert, ←
           Set.union_assoc, subset_union_prime' hp', bex_def] at h
         rwa [Finset.exists_mem_insert, Finset.exists_mem_insert]
-      · have hp' : ∀ j ∈ t, is_prime (f j) := by
-          intro j hj
+      · have hp' : ∀ j ∈ t, is_prime (f j) := by intro j hj;
           refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;> rintro rfl <;>
             solve_by_elim only [Finset.mem_insert_of_mem, *]
         rw [Finset.coe_insert, Set.biUnion_insert, ← Set.union_self (f a : Set R),
@@ -2031,23 +1981,20 @@ theorem subset_union_prime {R : Type u} [CommRing R] {s : Finset ι} {f : ι →
     · by_cases hbs : b ∈ s
       · obtain ⟨t, hbt, rfl⟩ : ∃ t, b ∉ t ∧ insert b t = s :=
           ⟨s.erase b, Finset.not_mem_erase b s, Finset.insert_erase hbs⟩
-        have hp' : ∀ j ∈ t, is_prime (f j) := by
-          intro j hj
+        have hp' : ∀ j ∈ t, is_prime (f j) := by intro j hj;
           refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;> rintro rfl <;>
             solve_by_elim only [Finset.mem_insert_of_mem, *]
         rw [Finset.coe_insert, Set.biUnion_insert, ← Set.union_self (f b : Set R),
           subset_union_prime' hp', ← or_assoc', or_self_iff, bex_def] at h
         rwa [Finset.exists_mem_insert]
       cases' s.eq_empty_or_nonempty with hse hsne
-      · subst hse
-        rw [Finset.coe_empty, Set.biUnion_empty, Set.subset_empty_iff] at h
+      · subst hse; rw [Finset.coe_empty, Set.biUnion_empty, Set.subset_empty_iff] at h
         have : (I : Set R) ≠ ∅ := Set.Nonempty.ne_empty (Set.nonempty_of_mem I.zero_mem)
         exact absurd h this
       · cases' hsne.bex with i his
         obtain ⟨t, hit, rfl⟩ : ∃ t, i ∉ t ∧ insert i t = s :=
           ⟨s.erase i, Finset.not_mem_erase i s, Finset.insert_erase his⟩
-        have hp' : ∀ j ∈ t, is_prime (f j) := by
-          intro j hj
+        have hp' : ∀ j ∈ t, is_prime (f j) := by intro j hj;
           refine' hp j (Finset.mem_insert_of_mem hj) _ _ <;> rintro rfl <;>
             solve_by_elim only [Finset.mem_insert_of_mem, *]
         rw [Finset.coe_insert, Set.biUnion_insert, ← Set.union_self (f i : Set R),
@@ -2578,16 +2525,14 @@ theorem smul_top_eq_map {R S : Type _} [CommSemiring R] [CommSemiring S] [Algebr
     rw [← mul_one (algebraMap R S x), ← Algebra.smul_def]
     exact Submodule.smul_mem_smul hx Submodule.mem_top
   · exact Submodule.zero_mem _
-  · intro x y
-    exact Submodule.add_mem _
+  · intro x y; exact Submodule.add_mem _
   intro a x hx
   refine' Submodule.smul_induction_on hx _ _
   · intro r hr s hs
     rw [smul_comm]
     exact Submodule.smul_mem_smul hr Submodule.mem_top
   · intro x y hx hy
-    rw [smul_add]
-    exact Submodule.add_mem _ hx hy
+    rw [smul_add]; exact Submodule.add_mem _ hx hy
 #align ideal.smul_top_eq_map Ideal.smul_top_eq_map
 
 /- warning: ideal.coe_restrict_scalars -> Ideal.coe_restrictScalars is a dubious translation:
@@ -3057,9 +3002,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} {F : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : CommRing.{u3} S] [rc : RingHomClass.{u1, u2, u3} F R S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)))] (f : F) (K : Ideal.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))), Eq.{succ u2} (Ideal.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Ideal.comap.{u2, u3, u1} R S F (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)) rc f (Ideal.radical.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2) K)) (Ideal.radical.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1) (Ideal.comap.{u2, u3, u1} R S F (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)) rc f K))
 Case conversion may be inaccurate. Consider using '#align ideal.comap_radical Ideal.comap_radicalₓ'. -/
-theorem comap_radical : comap f (radical K) = radical (comap f K) :=
-  by
-  ext
+theorem comap_radical : comap f (radical K) = radical (comap f K) := by ext;
   simpa only [radical, mem_comap, map_pow]
 #align ideal.comap_radical Ideal.comap_radical
 
@@ -3071,10 +3014,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} {F : Type.{u1}} [_inst_1 : CommRing.{u2} R] [_inst_2 : CommRing.{u3} S] [rc : RingHomClass.{u1, u2, u3} F R S (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1))) (Semiring.toNonAssocSemiring.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)))] (f : F) {K : Ideal.{u3} S (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2))}, (Ideal.IsRadical.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2) K) -> (Ideal.IsRadical.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1) (Ideal.comap.{u2, u3, u1} R S F (CommSemiring.toSemiring.{u2} R (CommRing.toCommSemiring.{u2} R _inst_1)) (CommSemiring.toSemiring.{u3} S (CommRing.toCommSemiring.{u3} S _inst_2)) rc f K))
 Case conversion may be inaccurate. Consider using '#align ideal.is_radical.comap Ideal.IsRadical.comapₓ'. -/
-theorem IsRadical.comap (hK : K.IsRadical) : (comap f K).IsRadical :=
-  by
-  rw [← hK.radical, comap_radical]
-  apply radical_is_radical
+theorem IsRadical.comap (hK : K.IsRadical) : (comap f K).IsRadical := by
+  rw [← hK.radical, comap_radical]; apply radical_is_radical
 #align ideal.is_radical.comap Ideal.IsRadical.comap
 
 variable {I J L}
@@ -3110,10 +3051,8 @@ Case conversion may be inaccurate. Consider using '#align ideal.le_comap_pow Ide
 theorem le_comap_pow (n : ℕ) : K.comap f ^ n ≤ (K ^ n).comap f :=
   by
   induction n
-  · rw [pow_zero, pow_zero, Ideal.one_eq_top, Ideal.one_eq_top]
-    exact rfl.le
-  · rw [pow_succ, pow_succ]
-    exact (Ideal.mul_mono_right n_ih).trans (Ideal.le_comap_mul f)
+  · rw [pow_zero, pow_zero, Ideal.one_eq_top, Ideal.one_eq_top]; exact rfl.le
+  · rw [pow_succ, pow_succ]; exact (Ideal.mul_mono_right n_ih).trans (Ideal.le_comap_mul f)
 #align ideal.le_comap_pow Ideal.le_comap_pow
 
 omit rc
@@ -3165,8 +3104,7 @@ theorem isPrimary_inf {I J : Ideal R} (hi : IsPrimary I) (hj : IsPrimary J)
     cases' hi.2 hxyi with hxi hyi; cases' hj.2 hxyj with hxj hyj
     · exact Or.inl ⟨hxi, hxj⟩
     · exact Or.inr hyj
-    · rw [hij] at hyi
-      exact Or.inr hyi⟩
+    · rw [hij] at hyi; exact Or.inr hyi⟩
 #align ideal.is_primary_inf Ideal.isPrimary_inf
 -/
 
@@ -3205,10 +3143,8 @@ theorem finsuppTotal_apply (f : ι →₀ I) : finsuppTotal ι M I v f = f.Sum f
 <too large>
 Case conversion may be inaccurate. Consider using '#align ideal.finsupp_total_apply_eq_of_fintype Ideal.finsuppTotal_apply_eq_of_fintypeₓ'. -/
 theorem finsuppTotal_apply_eq_of_fintype [Fintype ι] (f : ι →₀ I) :
-    finsuppTotal ι M I v f = ∑ i, (f i : R) • v i :=
-  by
-  rw [finsupp_total_apply, Finsupp.sum_fintype]
-  exact fun _ => zero_smul _ _
+    finsuppTotal ι M I v f = ∑ i, (f i : R) • v i := by
+  rw [finsupp_total_apply, Finsupp.sum_fintype]; exact fun _ => zero_smul _ _
 #align ideal.finsupp_total_apply_eq_of_fintype Ideal.finsuppTotal_apply_eq_of_fintype
 
 /- warning: ideal.range_finsupp_total -> Ideal.range_finsuppTotal is a dubious translation:
@@ -3223,10 +3159,7 @@ theorem range_finsuppTotal : (finsuppTotal ι M I v).range = I • Submodule.spa
   classical
     refine' ⟨a.map_range (fun r => if h : r ∈ I then ⟨r, h⟩ else 0) (by split_ifs <;> rfl), _⟩
     rw [finsupp_total_apply, Finsupp.sum_mapRange_index]
-    · apply Finsupp.sum_congr
-      intro i _
-      rw [dif_pos (ha i)]
-      rfl
+    · apply Finsupp.sum_congr; intro i _; rw [dif_pos (ha i)]; rfl
     · exact fun _ => zero_smul _ _
 #align ideal.range_finsupp_total Ideal.range_finsuppTotal
 
@@ -3247,10 +3180,7 @@ noncomputable def basisSpanSingleton (b : Basis ι R S) {x : S} (hx : x ≠ 0) :
     Basis ι R (span ({x} : Set S)) :=
   b.map <|
     LinearEquiv.ofInjective (Algebra.lmul R S x) (LinearMap.mul_injective hx) ≪≫ₗ
-        LinearEquiv.ofEq _ _
-          (by
-            ext
-            simp [mem_span_singleton', mul_comm]) ≪≫ₗ
+        LinearEquiv.ofEq _ _ (by ext; simp [mem_span_singleton', mul_comm]) ≪≫ₗ
       (Submodule.restrictScalarsEquiv R S S (Ideal.span ({x} : Set S))).restrictScalars R
 #align ideal.basis_span_singleton Ideal.basisSpanSingleton
 
@@ -3381,9 +3311,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} {F : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : Semiring.{u3} S] [rcf : RingHomClass.{u1, u2, u3} F R S (Semiring.toNonAssocSemiring.{u2} R _inst_1) (Semiring.toNonAssocSemiring.{u3} S _inst_2)] [_inst_4 : Nontrivial.{u3} S] (f : F), Not (Membership.mem.{u2, u2} R (Ideal.{u2} R _inst_1) (SetLike.instMembership.{u2, u2} (Ideal.{u2} R _inst_1) R (Submodule.setLike.{u2, u2} R R _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1))) (Semiring.toModule.{u2} R _inst_1))) (OfNat.ofNat.{u2} R 1 (One.toOfNat1.{u2} R (Semiring.toOne.{u2} R _inst_1))) (RingHom.ker.{u2, u3, u1} R S F _inst_1 _inst_2 rcf f))
 Case conversion may be inaccurate. Consider using '#align ring_hom.not_one_mem_ker RingHom.not_one_mem_kerₓ'. -/
 /-- If the target is not the zero ring, then one is not in the kernel.-/
-theorem not_one_mem_ker [Nontrivial S] (f : F) : (1 : R) ∉ ker f :=
-  by
-  rw [mem_ker, map_one]
+theorem not_one_mem_ker [Nontrivial S] (f : F) : (1 : R) ∉ ker f := by rw [mem_ker, map_one];
   exact one_ne_zero
 #align ring_hom.not_one_mem_ker RingHom.not_one_mem_ker
 
@@ -3413,10 +3341,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} {F : Type.{u1}} [_inst_1 : Ring.{u2} R] [_inst_2 : Semiring.{u3} S] [rc : RingHomClass.{u1, u2, u3} F R S (Semiring.toNonAssocSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S _inst_2)] (f : F), Iff (Function.Injective.{succ u2, succ u3} R S (FunLike.coe.{succ u1, succ u2, succ u3} F R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{u1, u2, u3} F R S (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u3} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} S (Semiring.toNonAssocSemiring.{u3} S _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{u1, u2, u3} F R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} S (Semiring.toNonAssocSemiring.{u3} S _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u1, u2, u3} F R S (Semiring.toNonAssocSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S _inst_2) rc))) f)) (Eq.{succ u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (RingHom.ker.{u2, u3, u1} R S F (Ring.toSemiring.{u2} R _inst_1) _inst_2 rc f) (Bot.bot.{u2} (Ideal.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (Submodule.instBotSubmodule.{u2, u2} R R (Ring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (Ring.toSemiring.{u2} R _inst_1)))) (Semiring.toModule.{u2} R (Ring.toSemiring.{u2} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align ring_hom.injective_iff_ker_eq_bot RingHom.injective_iff_ker_eq_botₓ'. -/
-theorem injective_iff_ker_eq_bot : Function.Injective f ↔ ker f = ⊥ :=
-  by
-  rw [SetLike.ext'_iff, ker_eq, Set.ext_iff]
-  exact injective_iff_map_eq_zero' f
+theorem injective_iff_ker_eq_bot : Function.Injective f ↔ ker f = ⊥ := by
+  rw [SetLike.ext'_iff, ker_eq, Set.ext_iff]; exact injective_iff_map_eq_zero' f
 #align ring_hom.injective_iff_ker_eq_bot RingHom.injective_iff_ker_eq_bot
 
 /- warning: ring_hom.ker_eq_bot_iff_eq_zero -> RingHom.ker_eq_bot_iff_eq_zero is a dubious translation:
@@ -3481,9 +3407,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.ker_is_prime 
 /-- The kernel of a homomorphism to a domain is a prime ideal. -/
 theorem ker_isPrime {F : Type _} [Ring R] [Ring S] [IsDomain S] [RingHomClass F R S] (f : F) :
     (ker f).IsPrime :=
-  ⟨by
-    rw [Ne.def, Ideal.eq_top_iff_one]
-    exact not_one_mem_ker f, fun x y => by
+  ⟨by rw [Ne.def, Ideal.eq_top_iff_one]; exact not_one_mem_ker f, fun x y => by
     simpa only [mem_ker, map_mul] using @eq_zero_or_eq_zero_of_mul_eq_zero S _ _ _ _ _⟩
 #align ring_hom.ker_is_prime RingHom.ker_isPrime
 

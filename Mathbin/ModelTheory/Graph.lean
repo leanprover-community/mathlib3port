@@ -125,10 +125,7 @@ variable {V}
 #print SimpleGraph.simpleGraphOfStructure /-
 @[simp]
 theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
-    @simpleGraphOfStructure V G.Structure _ = G :=
-  by
-  ext
-  rfl
+    @simpleGraphOfStructure V G.Structure _ = G := by ext; rfl
 #align simple_graph.simple_graph_of_structure SimpleGraph.simpleGraphOfStructure
 -/
 

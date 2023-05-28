@@ -236,10 +236,8 @@ theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤
 Case conversion may be inaccurate. Consider using '#align smul_add_smul_le_smul_add_smul' smul_add_smul_le_smul_add_smul'ₓ'. -/
 /-- Binary **rearrangement inequality**. -/
 theorem smul_add_smul_le_smul_add_smul' [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M}
-    (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
-  by
-  rw [add_comm (a • d), add_comm (a • c)]
-  exact smul_add_smul_le_smul_add_smul hba hdc
+    (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
+  rw [add_comm (a • d), add_comm (a • c)]; exact smul_add_smul_le_smul_add_smul hba hdc
 #align smul_add_smul_le_smul_add_smul' smul_add_smul_le_smul_add_smul'
 
 /- warning: smul_add_smul_lt_smul_add_smul -> smul_add_smul_lt_smul_add_smul is a dubious translation:
@@ -263,9 +261,7 @@ Case conversion may be inaccurate. Consider using '#align smul_add_smul_lt_smul_
 /-- Binary strict **rearrangement inequality**. -/
 theorem smul_add_smul_lt_smul_add_smul' [CovariantClass M M (· + ·) (· < ·)]
     [ContravariantClass M M (· + ·) (· < ·)] {a b : k} {c d : M} (hba : b < a) (hdc : d < c) :
-    a • d + b • c < a • c + b • d :=
-  by
-  rw [add_comm (a • d), add_comm (a • c)]
+    a • d + b • c < a • c + b • d := by rw [add_comm (a • d), add_comm (a • c)];
   exact smul_add_smul_lt_smul_add_smul hba hdc
 #align smul_add_smul_lt_smul_add_smul' smul_add_smul_lt_smul_add_smul'
 
@@ -288,37 +284,29 @@ theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :
 /- warning: inv_smul_le_iff_of_neg -> inv_smul_le_iff_of_neg is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align inv_smul_le_iff_of_neg inv_smul_le_iff_of_negₓ'. -/
-theorem inv_smul_le_iff_of_neg (h : c < 0) : c⁻¹ • a ≤ b ↔ c • b ≤ a :=
-  by
-  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
-  infer_instance
+theorem inv_smul_le_iff_of_neg (h : c < 0) : c⁻¹ • a ≤ b ↔ c • b ≤ a := by
+  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]; infer_instance
 #align inv_smul_le_iff_of_neg inv_smul_le_iff_of_neg
 
 /- warning: inv_smul_lt_iff_of_neg -> inv_smul_lt_iff_of_neg is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align inv_smul_lt_iff_of_neg inv_smul_lt_iff_of_negₓ'. -/
-theorem inv_smul_lt_iff_of_neg (h : c < 0) : c⁻¹ • a < b ↔ c • b < a :=
-  by
-  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
-  infer_instance
+theorem inv_smul_lt_iff_of_neg (h : c < 0) : c⁻¹ • a < b ↔ c • b < a := by
+  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]; infer_instance
 #align inv_smul_lt_iff_of_neg inv_smul_lt_iff_of_neg
 
 /- warning: smul_inv_le_iff_of_neg -> smul_inv_le_iff_of_neg is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align smul_inv_le_iff_of_neg smul_inv_le_iff_of_negₓ'. -/
-theorem smul_inv_le_iff_of_neg (h : c < 0) : a ≤ c⁻¹ • b ↔ b ≤ c • a :=
-  by
-  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
-  infer_instance
+theorem smul_inv_le_iff_of_neg (h : c < 0) : a ≤ c⁻¹ • b ↔ b ≤ c • a := by
+  rw [← smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne]; infer_instance
 #align smul_inv_le_iff_of_neg smul_inv_le_iff_of_neg
 
 /- warning: smul_inv_lt_iff_of_neg -> smul_inv_lt_iff_of_neg is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align smul_inv_lt_iff_of_neg smul_inv_lt_iff_of_negₓ'. -/
-theorem smul_inv_lt_iff_of_neg (h : c < 0) : a < c⁻¹ • b ↔ b < c • a :=
-  by
-  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]
-  infer_instance
+theorem smul_inv_lt_iff_of_neg (h : c < 0) : a < c⁻¹ • b ↔ b < c • a := by
+  rw [← smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne]; infer_instance
 #align smul_inv_lt_iff_of_neg smul_inv_lt_iff_of_neg
 
 variable (M)

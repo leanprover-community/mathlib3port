@@ -319,9 +319,7 @@ instance semiring : Semiring (⨁ i, A i) :=
     mul_assoc := mul_assoc A
     natCast := fun n => of _ _ (GSemiring.natCast n)
     natCast_zero := by rw [gsemiring.nat_cast_zero, map_zero]
-    natCast_succ := fun n => by
-      rw [gsemiring.nat_cast_succ, map_add]
-      rfl }
+    natCast_succ := fun n => by rw [gsemiring.nat_cast_succ, map_add]; rfl }
 #align direct_sum.semiring DirectSum.semiring
 -/
 

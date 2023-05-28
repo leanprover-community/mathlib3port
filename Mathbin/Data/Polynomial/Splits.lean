@@ -265,8 +265,7 @@ theorem roots_ne_zero_of_splits' {f : K[X]} (hs : Splits i f) (hf0 : natDegree (
   let ⟨x, hx⟩ := exists_root_of_splits' i hs fun h => hf0 <| natDegree_eq_of_degree_eq_some h
   fun h => by
   rw [← eval_map] at hx
-  cases h.subst ((mem_roots _).2 hx)
-  exact ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero hf0)
+  cases h.subst ((mem_roots _).2 hx); exact ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zero hf0)
 #align polynomial.roots_ne_zero_of_splits' Polynomial.roots_ne_zero_of_splits'
 -/
 
@@ -308,10 +307,8 @@ theorem natDegree_eq_card_roots' {p : K[X]} {i : K →+* L} (hsplit : Splits i p
   by_contra
   have h' : (map (RingHom.id L) q).natDegree ≠ 0 := by simp [h]
   have := roots_ne_zero_of_splits' (RingHom.id L) (splits_of_splits_mul' _ _ hsplit).2 h'
-  · rw [map_id] at this
-    exact this hr
-  · rw [map_id]
-    exact mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq
+  · rw [map_id] at this; exact this hr
+  · rw [map_id]; exact mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq
 #align polynomial.nat_degree_eq_card_roots' Polynomial.natDegree_eq_card_roots'
 
 /- warning: polynomial.degree_eq_card_roots' -> Polynomial.degree_eq_card_roots' is a dubious translation:
@@ -364,9 +361,7 @@ theorem splits_of_splits_mul {f g : K[X]} (hfg : f * g ≠ 0) (h : Splits i (f *
 
 #print Polynomial.splits_of_splits_of_dvd /-
 theorem splits_of_splits_of_dvd {f g : K[X]} (hf0 : f ≠ 0) (hf : Splits i f) (hgf : g ∣ f) :
-    Splits i g := by
-  obtain ⟨f, rfl⟩ := hgf
-  exact (splits_of_splits_mul i hf0 hf).1
+    Splits i g := by obtain ⟨f, rfl⟩ := hgf; exact (splits_of_splits_mul i hf0 hf).1
 #align polynomial.splits_of_splits_of_dvd Polynomial.splits_of_splits_of_dvd
 -/
 
@@ -421,10 +416,8 @@ theorem degree_eq_one_of_irreducible_of_splits {p : K[X]} (hp : Irreducible p)
     (hp_splits : Splits (RingHom.id K) p) : p.degree = 1 :=
   by
   rcases hp_splits with ⟨⟩
-  · exfalso
-    simp_all
-  · apply hp_splits hp
-    simp
+  · exfalso; simp_all
+  · apply hp_splits hp; simp
 #align polynomial.degree_eq_one_of_irreducible_of_splits Polynomial.degree_eq_one_of_irreducible_of_splits
 
 /- warning: polynomial.exists_root_of_splits -> Polynomial.exists_root_of_splits is a dubious translation:
@@ -501,10 +494,8 @@ but is expected to have type
   forall {K : Type.{u1}} {L : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : Field.{u2} L] (i : RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) {f : Polynomial.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))}, (Polynomial.Splits.{u1, u1} K K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) _inst_1 (RingHom.id.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))))) f) -> (Eq.{succ u2} (Multiset.{u2} L) (Polynomial.roots.{u2} L (EuclideanDomain.toCommRing.{u2} L (Field.toEuclideanDomain.{u2} L _inst_2)) (Field.isDomain.{u2} L _inst_2) (Polynomial.map.{u1, u2} K L (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))) (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))) i f)) (Multiset.map.{u1, u2} K L (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) K (fun (_x : K) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : K) => L) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) K L (NonUnitalNonAssocSemiring.toMul.{u1} K (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))))) (NonUnitalNonAssocSemiring.toMul.{u2} L (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} L (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2)))))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) K L (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} K (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} L (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2)))) (RingHom.instRingHomClassRingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1)))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2)))))))) i) (Polynomial.roots.{u1} K (EuclideanDomain.toCommRing.{u1} K (Field.toEuclideanDomain.{u1} K _inst_1)) (Field.isDomain.{u1} K _inst_1) f)))
 Case conversion may be inaccurate. Consider using '#align polynomial.roots_map Polynomial.roots_mapₓ'. -/
 theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots = f.roots.map i :=
-  (roots_map_of_injective_of_card_eq_natDegree i.Injective <|
-      by
-      convert(nat_degree_eq_card_roots hf).symm
-      rw [map_id]).symm
+  (roots_map_of_injective_of_card_eq_natDegree i.Injective <| by
+      convert(nat_degree_eq_card_roots hf).symm; rw [map_id]).symm
 #align polynomial.roots_map Polynomial.roots_map
 
 #print Polynomial.image_rootSet /-
@@ -659,8 +650,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.splits_iff_
 theorem splits_iff_card_roots {p : K[X]} : Splits (RingHom.id K) p ↔ p.roots.card = p.natDegree :=
   by
   constructor
-  · intro H
-    rw [nat_degree_eq_card_roots H, map_id]
+  · intro H; rw [nat_degree_eq_card_roots H, map_id]
   · intro hroots
     rw [splits_iff_exists_multiset (RingHom.id K)]
     use p.roots

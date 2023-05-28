@@ -251,11 +251,8 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
   simp only [mul_eq_dfinsupp_sum, Dfinsupp.sum_apply]
   iterate 2 rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr ; ext
   dsimp only; split_ifs
-  · subst h
-    rw [of_eq_same]
-    rfl
-  · rw [of_eq_of_ne _ _ _ _ h]
-    rfl
+  · subst h; rw [of_eq_same]; rfl
+  · rw [of_eq_of_ne _ _ _ _ h]; rfl
 #align direct_sum.coe_mul_apply_eq_dfinsupp_sum DirectSum.coe_mul_apply_eq_dfinsupp_sum
 
 /- warning: direct_sum.coe_of_mul_apply_aux -> DirectSum.coe_of_mul_apply_aux is a dubious translation:
@@ -268,8 +265,7 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]
-      exact Dfinsupp.sum_zero
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact Dfinsupp.sum_zero
     simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs
     rfl
@@ -285,8 +281,7 @@ theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i,
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]
-      exact Dfinsupp.sum_zero
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact Dfinsupp.sum_zero
     simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs
     rfl
@@ -326,8 +321,7 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]
-      exact Dfinsupp.sum_zero
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact Dfinsupp.sum_zero
     · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
       exact h ((self_le_add_right i x).trans_eq H)
 #align direct_sum.coe_of_mul_apply_of_not_le DirectSum.coe_of_mul_apply_of_not_le
@@ -341,8 +335,7 @@ theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]
-      exact Dfinsupp.sum_zero
+    · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact Dfinsupp.sum_zero
     · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
       exact h ((self_le_add_left i x).trans_eq H)
 #align direct_sum.coe_mul_of_apply_of_not_le DirectSum.coe_mul_of_apply_of_not_le
@@ -371,9 +364,7 @@ theorem coe_of_mul_apply_of_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h 
 <too large>
 Case conversion may be inaccurate. Consider using '#align direct_sum.coe_mul_of_apply DirectSum.coe_mul_of_applyₓ'. -/
 theorem coe_mul_of_apply (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) [Decidable (i ≤ n)] :
-    ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 :=
-  by
-  split_ifs
+    ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 := by split_ifs;
   exacts[coe_mul_of_apply_of_le _ _ _ n h, coe_mul_of_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_mul_of_apply DirectSum.coe_mul_of_apply
 
@@ -381,9 +372,7 @@ theorem coe_mul_of_apply (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) [Decidabl
 <too large>
 Case conversion may be inaccurate. Consider using '#align direct_sum.coe_of_mul_apply DirectSum.coe_of_mul_applyₓ'. -/
 theorem coe_of_mul_apply {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) [Decidable (i ≤ n)] :
-    ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 :=
-  by
-  split_ifs
+    ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 := by split_ifs;
   exacts[coe_of_mul_apply_of_le _ _ _ n h, coe_of_mul_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_of_mul_apply DirectSum.coe_of_mul_apply
 
@@ -426,12 +415,8 @@ theorem setLike.coe_galgebra_toFun [AddMonoid ι] [CommSemiring S] [Semiring R] 
 instance nat_power_gradedMonoid [CommSemiring S] [Semiring R] [Algebra S R] (p : Submodule S R) :
     SetLike.GradedMonoid fun i : ℕ => p ^ i
     where
-  one_mem := by
-    rw [← one_le, pow_zero]
-    exact le_rfl
-  mul_mem i j p q hp hq := by
-    rw [pow_add]
-    exact Submodule.mul_mem_mul hp hq
+  one_mem := by rw [← one_le, pow_zero]; exact le_rfl
+  mul_mem i j p q hp hq := by rw [pow_add]; exact Submodule.mul_mem_mul hp hq
 #align submodule.nat_power_graded_monoid Submodule.nat_power_gradedMonoid
 -/
 

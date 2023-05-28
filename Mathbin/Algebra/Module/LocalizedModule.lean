@@ -139,9 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localized_module.induction_on LocalizedModule.induction_onₓ'. -/
 @[elab_as_elim]
 theorem induction_on {β : LocalizedModule S M → Prop} (h : ∀ (m : M) (s : S), β (mk m s)) :
-    ∀ x : LocalizedModule S M, β x := by
-  rintro ⟨⟨m, s⟩⟩
-  exact h m s
+    ∀ x : LocalizedModule S M, β x := by rintro ⟨⟨m, s⟩⟩; exact h m s
 #align localized_module.induction_on LocalizedModule.induction_on
 
 /- warning: localized_module.induction_on₂ -> LocalizedModule.induction_on₂ is a dubious translation:
@@ -152,10 +150,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localized_module.induction_on₂ LocalizedModule.induction_on₂ₓ'. -/
 @[elab_as_elim]
 theorem induction_on₂ {β : LocalizedModule S M → LocalizedModule S M → Prop}
-    (h : ∀ (m m' : M) (s s' : S), β (mk m s) (mk m' s')) : ∀ x y, β x y :=
-  by
-  rintro ⟨⟨m, s⟩⟩ ⟨⟨m', s'⟩⟩
-  exact h m m' s s'
+    (h : ∀ (m m' : M) (s s' : S), β (mk m s) (mk m' s')) : ∀ x y, β x y := by
+  rintro ⟨⟨m, s⟩⟩ ⟨⟨m', s'⟩⟩; exact h m m' s s'
 #align localized_module.induction_on₂ LocalizedModule.induction_on₂
 
 /- warning: localized_module.lift_on -> LocalizedModule.liftOn is a dubious translation:
@@ -290,17 +286,13 @@ instance {M : Type _} [AddCommGroup M] [Module R M] : AddCommGroup (LocalizedMod
     show AddCommMonoid (LocalizedModule S M) by
       infer_instance with
     neg := fun p =>
-      liftOn p (fun x => LocalizedModule.mk (-x.1) x.2) fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ =>
-        by
-        rw [mk_eq]
-        exact ⟨u, by simpa⟩
+      liftOn p (fun x => LocalizedModule.mk (-x.1) x.2) fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => by
+        rw [mk_eq]; exact ⟨u, by simpa⟩
     add_left_neg := fun p =>
       by
       obtain ⟨⟨m, s⟩, rfl : mk m s = p⟩ := Quotient.exists_rep p
       change
-        ((mk m s).liftOn (fun x => mk (-x.1) x.2) fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ =>
-              by
-              rw [mk_eq]
+        ((mk m s).liftOn (fun x => mk (-x.1) x.2) fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨u, hu⟩ => by rw [mk_eq];
               exact ⟨u, by simpa⟩) +
             mk m s =
           0
@@ -514,10 +506,7 @@ instance isModule : Module (Localization S) (LocalizedModule S M)
 Case conversion may be inaccurate. Consider using '#align localized_module.mk_cancel_common_left LocalizedModule.mk_cancel_common_leftₓ'. -/
 @[simp]
 theorem mk_cancel_common_left (s' s : S) (m : M) : mk (s' • m) (s' * s) = mk m s :=
-  mk_eq.mpr
-    ⟨1, by
-      simp only [mul_smul, one_smul]
-      rw [smul_comm]⟩
+  mk_eq.mpr ⟨1, by simp only [mul_smul, one_smul]; rw [smul_comm]⟩
 #align localized_module.mk_cancel_common_left LocalizedModule.mk_cancel_common_left
 
 /- warning: localized_module.mk_cancel -> LocalizedModule.mk_cancel is a dubious translation:
@@ -653,15 +642,9 @@ def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M
         intro m₁ m₂ t₁ t₂
         simp only [mk_add_mk, LocalizedModule.liftOn_mk, mul_smul, ← smul_add, mul_assoc,
           mk_cancel_common_left s]
-        rw [show s * (t₁ * t₂) = t₁ * (s * t₂) by
-            ext
-            simp only [Submonoid.coe_mul]
-            ring])
+        rw [show s * (t₁ * t₂) = t₁ * (s * t₂) by ext; simp only [Submonoid.coe_mul]; ring])
       y
-  map_smul' r x :=
-    x.inductionOn <| by
-      intros
-      simp [LocalizedModule.liftOn_mk, smul'_mk]
+  map_smul' r x := x.inductionOn <| by intros ; simp [LocalizedModule.liftOn_mk, smul'_mk]
 #align localized_module.div_by LocalizedModule.divBy
 
 /- warning: localized_module.div_by_mul_by -> LocalizedModule.divBy_mul_by is a dubious translation:
@@ -732,18 +715,13 @@ noncomputable def lift' (g : M →ₗ[R] M'')
   m.liftOn (fun p => (h <| p.2).Unit⁻¹ <| g p.1) fun ⟨m, s⟩ ⟨m', s'⟩ ⟨c, eq1⟩ =>
     by
     generalize_proofs h1 h2
-    erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← h2.unit⁻¹.1.map_smul]
-    symm
-    erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff]
-    dsimp
-    have : c • s • g m' = c • s' • g m :=
-      by
-      erw [← g.map_smul, ← g.map_smul, ← g.map_smul, ← g.map_smul, eq1]
-      rfl
+    erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← h2.unit⁻¹.1.map_smul]; symm
+    erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff]; dsimp
+    have : c • s • g m' = c • s' • g m := by
+      erw [← g.map_smul, ← g.map_smul, ← g.map_smul, ← g.map_smul, eq1]; rfl
     have : Function.Injective (h c).Unit.inv :=
       by
-      rw [Function.injective_iff_hasLeftInverse]
-      refine' ⟨(h c).Unit, _⟩
+      rw [Function.injective_iff_hasLeftInverse]; refine' ⟨(h c).Unit, _⟩
       intro x
       change ((h c).Unit.1 * (h c).Unit.inv) x = x
       simp only [Units.inv_eq_val_inv, IsUnit.mul_val_inv, LinearMap.one_apply]
@@ -871,10 +849,7 @@ instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule
     ⟨⟨algebraMap R (Module.End R (LocalizedModule S M)) s, LocalizedModule.divBy s,
         FunLike.ext _ _ <| LocalizedModule.mul_by_divBy s,
         FunLike.ext _ _ <| LocalizedModule.divBy_mul_by s⟩,
-      FunLike.ext _ _ fun p =>
-        p.inductionOn <| by
-          intros
-          rfl⟩
+      FunLike.ext _ _ fun p => p.inductionOn <| by intros ; rfl⟩
   surj p :=
     p.inductionOn
       (by
@@ -935,12 +910,8 @@ theorem fromLocalizedModule'_add (x y : LocalizedModule S M) :
         h3.unit⁻¹.1.map_smul, map_add]
       congr 1
       all_goals erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff']
-      · dsimp
-        erw [mul_smul, f.map_smul]
-        rfl
-      · dsimp
-        erw [mul_comm, f.map_smul, mul_smul]
-        rfl)
+      · dsimp; erw [mul_smul, f.map_smul]; rfl
+      · dsimp; erw [mul_comm, f.map_smul, mul_smul]; rfl)
     x y
 #align is_localized_module.from_localized_module'_add IsLocalizedModule.fromLocalizedModule'_add
 
@@ -1008,10 +979,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_localized_module.from_localized_module.surj IsLocalizedModule.fromLocalizedModule.surjₓ'. -/
 theorem fromLocalizedModule.surj : Function.Surjective <| fromLocalizedModule S f := fun x =>
   let ⟨⟨m, s⟩, eq1⟩ := IsLocalizedModule.surj S f x
-  ⟨LocalizedModule.mk m s,
-    by
-    rw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← eq1]
-    rfl⟩
+  ⟨LocalizedModule.mk m s, by
+    rw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← eq1]; rfl⟩
 #align is_localized_module.from_localized_module.surj IsLocalizedModule.fromLocalizedModule.surj
 
 /- warning: is_localized_module.from_localized_module.bij -> IsLocalizedModule.fromLocalizedModule.bij is a dubious translation:
@@ -1119,9 +1088,7 @@ theorem lift_unique (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R 
     show (iso S f).toLinearMap.comp (iso S f).symm.toLinearMap = LinearMap.id from _,
     LinearMap.comp_id]
   · rw [LinearEquiv.comp_toLinearMap_symm_eq, LinearMap.id_comp]
-  · rw [LinearMap.comp_assoc, ← hl]
-    congr 1
-    ext x
+  · rw [LinearMap.comp_assoc, ← hl]; congr 1; ext x
     erw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, one_smul]
 #align is_localized_module.lift_unique IsLocalizedModule.lift_unique
 
@@ -1152,10 +1119,8 @@ theorem is_universal :
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.ring_hom_ext IsLocalizedModule.ringHom_extₓ'. -/
 theorem ringHom_ext (map_unit : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
-    ⦃j k : M' →ₗ[R] M''⦄ (h : j.comp f = k.comp f) : j = k :=
-  by
-  rw [← lift_unique S f (k.comp f) map_unit j h, lift_unique]
-  rfl
+    ⦃j k : M' →ₗ[R] M''⦄ (h : j.comp f = k.comp f) : j = k := by
+  rw [← lift_unique S f (k.comp f) map_unit j h, lift_unique]; rfl
 #align is_localized_module.ring_hom_ext IsLocalizedModule.ringHom_ext
 
 #print IsLocalizedModule.linearEquiv /-
@@ -1197,9 +1162,7 @@ noncomputable def mk' (m : M) (s : S) : M' :=
 /- warning: is_localized_module.mk'_smul -> IsLocalizedModule.mk'_smul is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_smul IsLocalizedModule.mk'_smulₓ'. -/
-theorem mk'_smul (r : R) (m : M) (s : S) : mk' f (r • m) s = r • mk' f m s :=
-  by
-  delta mk'
+theorem mk'_smul (r : R) (m : M) (s : S) : mk' f (r • m) s = r • mk' f m s := by delta mk';
   rw [← LocalizedModule.smul'_mk, LinearMap.map_smul]
 #align is_localized_module.mk'_smul IsLocalizedModule.mk'_smul
 
@@ -1207,9 +1170,7 @@ theorem mk'_smul (r : R) (m : M) (s : S) : mk' f (r • m) s = r • mk' f m s :
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_add_mk' IsLocalizedModule.mk'_add_mk'ₓ'. -/
 theorem mk'_add_mk' (m₁ m₂ : M) (s₁ s₂ : S) :
-    mk' f m₁ s₁ + mk' f m₂ s₂ = mk' f (s₂ • m₁ + s₁ • m₂) (s₁ * s₂) :=
-  by
-  delta mk'
+    mk' f m₁ s₁ + mk' f m₂ s₂ = mk' f (s₂ • m₁ + s₁ • m₂) (s₁ * s₂) := by delta mk';
   rw [← map_add, LocalizedModule.mk_add_mk]
 #align is_localized_module.mk'_add_mk' IsLocalizedModule.mk'_add_mk'
 
@@ -1229,9 +1190,7 @@ variable (S)
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_one IsLocalizedModule.mk'_oneₓ'. -/
 @[simp]
-theorem mk'_one (m : M) : mk' f m (1 : S) = f m :=
-  by
-  delta mk'
+theorem mk'_one (m : M) : mk' f m (1 : S) = f m := by delta mk';
   rw [from_localized_module_mk, Module.End_algebraMap_isUnit_inv_apply_eq_iff, Submonoid.coe_one,
     one_smul]
 #align is_localized_module.mk'_one IsLocalizedModule.mk'_one
@@ -1242,11 +1201,8 @@ variable {S}
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel IsLocalizedModule.mk'_cancelₓ'. -/
 @[simp]
-theorem mk'_cancel (m : M) (s : S) : mk' f (s • m) s = f m :=
-  by
-  delta mk'
-  rw [LocalizedModule.mk_cancel, ← mk'_one S f]
-  rfl
+theorem mk'_cancel (m : M) (s : S) : mk' f (s • m) s = f m := by delta mk';
+  rw [LocalizedModule.mk_cancel, ← mk'_one S f]; rfl
 #align is_localized_module.mk'_cancel IsLocalizedModule.mk'_cancel
 
 /- warning: is_localized_module.mk'_cancel' -> IsLocalizedModule.mk'_cancel' is a dubious translation:
@@ -1261,9 +1217,7 @@ theorem mk'_cancel' (m : M) (s : S) : s • mk' f m s = f m := by
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel_left IsLocalizedModule.mk'_cancel_leftₓ'. -/
 @[simp]
-theorem mk'_cancel_left (m : M) (s₁ s₂ : S) : mk' f (s₁ • m) (s₁ * s₂) = mk' f m s₂ :=
-  by
-  delta mk'
+theorem mk'_cancel_left (m : M) (s₁ s₂ : S) : mk' f (s₁ • m) (s₁ * s₂) = mk' f m s₂ := by delta mk';
   rw [LocalizedModule.mk_cancel_common_left]
 #align is_localized_module.mk'_cancel_left IsLocalizedModule.mk'_cancel_left
 
@@ -1271,10 +1225,8 @@ theorem mk'_cancel_left (m : M) (s₁ s₂ : S) : mk' f (s₁ • m) (s₁ * s�
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_cancel_right IsLocalizedModule.mk'_cancel_rightₓ'. -/
 @[simp]
-theorem mk'_cancel_right (m : M) (s₁ s₂ : S) : mk' f (s₂ • m) (s₁ * s₂) = mk' f m s₁ :=
-  by
-  delta mk'
-  rw [LocalizedModule.mk_cancel_common_right]
+theorem mk'_cancel_right (m : M) (s₁ s₂ : S) : mk' f (s₂ • m) (s₁ * s₂) = mk' f m s₁ := by
+  delta mk'; rw [LocalizedModule.mk_cancel_common_right]
 #align is_localized_module.mk'_cancel_right IsLocalizedModule.mk'_cancel_right
 
 /- warning: is_localized_module.mk'_add -> IsLocalizedModule.mk'_add is a dubious translation:
@@ -1305,10 +1257,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))} {M : Type.{u3}} {M' : Type.{u2}} [_inst_9 : AddCommGroup.{u3} M] [_inst_10 : AddCommGroup.{u2} M'] [_inst_11 : Module.{u1, u3} R M (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} M _inst_9)] [_inst_12 : Module.{u1, u2} R M' (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10)] (f : LinearMap.{u1, u1, u3, u2} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12) [_inst_13 : IsLocalizedModule.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f] (m : M) (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) x S)), Eq.{succ u2} M' (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 (Neg.neg.{u3} M (NegZeroClass.toNeg.{u3} M (SubNegZeroMonoid.toNegZeroClass.{u3} M (SubtractionMonoid.toSubNegZeroMonoid.{u3} M (SubtractionCommMonoid.toSubtractionMonoid.{u3} M (AddCommGroup.toDivisionAddCommMonoid.{u3} M _inst_9))))) m) s) (Neg.neg.{u2} M' (NegZeroClass.toNeg.{u2} M' (SubNegZeroMonoid.toNegZeroClass.{u2} M' (SubtractionMonoid.toSubNegZeroMonoid.{u2} M' (SubtractionCommMonoid.toSubtractionMonoid.{u2} M' (AddCommGroup.toDivisionAddCommMonoid.{u2} M' _inst_10))))) (IsLocalizedModule.mk'.{u1, u3, u2} R _inst_1 S M M' (AddCommGroup.toAddCommMonoid.{u3} M _inst_9) (AddCommGroup.toAddCommMonoid.{u2} M' _inst_10) _inst_11 _inst_12 f _inst_13 m s))
 Case conversion may be inaccurate. Consider using '#align is_localized_module.mk'_neg IsLocalizedModule.mk'_negₓ'. -/
 theorem mk'_neg {M M' : Type _} [AddCommGroup M] [AddCommGroup M'] [Module R M] [Module R M']
-    (f : M →ₗ[R] M') [IsLocalizedModule S f] (m : M) (s : S) : mk' f (-m) s = -mk' f m s :=
-  by
-  delta mk'
-  rw [LocalizedModule.mk_neg, map_neg]
+    (f : M →ₗ[R] M') [IsLocalizedModule S f] (m : M) (s : S) : mk' f (-m) s = -mk' f m s := by
+  delta mk'; rw [LocalizedModule.mk_neg, map_neg]
 #align is_localized_module.mk'_neg IsLocalizedModule.mk'_neg
 
 /- warning: is_localized_module.mk'_sub -> IsLocalizedModule.mk'_sub is a dubious translation:
@@ -1428,25 +1378,18 @@ theorem mkOfAlgebra {R S S' : Type _} [CommRing R] [CommRing S] [CommRing S'] [A
   by
   replace h₃ := fun x =>
     Iff.intro (h₃ x) fun ⟨⟨m, hm⟩, e⟩ =>
-      (h₁ m hm).mul_left_cancel <| by
-        rw [← Algebra.smul_def]
+      (h₁ m hm).mul_left_cancel <| by rw [← Algebra.smul_def];
         simpa [Submonoid.smul_def] using f.congr_arg e
   constructor
   · intro x
     rw [Module.End_isUnit_iff]
     constructor
-    · rintro a b (e : x • a = x • b)
-      simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
+    · rintro a b (e : x • a = x • b); simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
       exact (h₁ x x.2).mul_left_cancel e
-    · intro a
-      refine' ⟨((h₁ x x.2).Unit⁻¹ : _) * a, _⟩
-      change (x : R) • (_ * a) = _
+    · intro a; refine' ⟨((h₁ x x.2).Unit⁻¹ : _) * a, _⟩; change (x : R) • (_ * a) = _
       rw [Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]
   · exact h₂
-  · intros
-    dsimp
-    rw [eq_comm, ← sub_eq_zero, ← map_sub, h₃]
-    simp_rw [smul_sub, sub_eq_zero]
+  · intros ; dsimp; rw [eq_comm, ← sub_eq_zero, ← map_sub, h₃]; simp_rw [smul_sub, sub_eq_zero]
 #align is_localized_module.mk_of_algebra IsLocalizedModule.mkOfAlgebra
 
 end Algebra

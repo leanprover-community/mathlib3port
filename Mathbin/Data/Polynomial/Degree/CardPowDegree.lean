@@ -50,16 +50,9 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
     pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree
-    nonneg' := fun p => by
-      dsimp
-      split_ifs
-      · rfl
-      exact pow_nonneg (Int.ofNat_zero_le _) _
+    nonneg' := fun p => by dsimp; split_ifs; · rfl; exact pow_nonneg (Int.ofNat_zero_le _) _
     eq_zero' := fun p =>
-      ite_eq_left_iff.trans <|
-        ⟨fun h => by
-          contrapose! h
-          exact ⟨h, (pow_pos _).ne'⟩, absurd⟩
+      ite_eq_left_iff.trans <| ⟨fun h => by contrapose! h; exact ⟨h, (pow_pos _).ne'⟩, absurd⟩
     add_le' := fun p q => by
       by_cases hp : p = 0; · simp [hp]
       by_cases hq : q = 0; · simp [hq]

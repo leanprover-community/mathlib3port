@@ -501,12 +501,10 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
   refine' ⟨π₁.disj_union π₂.to_prepartition this, _, _⟩
   · suffices ↑I \ π.Union ∪ π.Union \ (π.filter p).iUnion = ↑I \ (π.filter p).iUnion by simpa [*]
     have : (π.filter p).iUnion ⊆ π.Union := bUnion_subset_bUnion_left (Finset.filter_subset _ _)
-    ext x
-    fconstructor
+    ext x; fconstructor
     · rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
       exacts[⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
-    · rintro ⟨hxI, hxp⟩
-      by_cases hxπ : x ∈ π.Union
+    · rintro ⟨hxI, hxp⟩; by_cases hxπ : x ∈ π.Union
       exacts[Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
   · have : (π.filter fun J => ¬p J).distortion ≤ c := (distortion_filter_le _ _).trans (hπ.3 hD)
     simpa [hc]
@@ -529,8 +527,7 @@ theorem biUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepa
   · rw [prepartition.distortion_bUnion_tagged, Finset.sup_le_iff]
     exact fun J hJ => (h J hJ).3 hD
   · refine' ⟨_, _, hc hD⟩
-    rw [π.Union_compl, ← π.Union_bUnion_partition hp]
-    rfl
+    rw [π.Union_compl, ← π.Union_bUnion_partition hp]; rfl
 #align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.biUnionTagged_memBaseSet
 
 /- warning: box_integral.integration_params.r_cond.mono -> BoxIntegral.IntegrationParams.RCond.mono is a dubious translation:
@@ -682,8 +679,7 @@ theorem tendsto_embedBox_toFilteriUnion_top (l : IntegrationParams) (h : I ≤ J
   refine' ⟨r, hr, fun π hπ => _⟩
   rw [mem_set_of_eq, prepartition.Union_top] at hπ
   refine' ⟨⟨hπ.1.1, hπ.1.2, fun hD => le_trans (hπ.1.3 hD) (le_max_left _ _), fun hD => _⟩, _⟩
-  · refine' ⟨_, π₀.Union_compl.trans _, le_max_right _ _⟩
-    congr 1
+  · refine' ⟨_, π₀.Union_compl.trans _, le_max_right _ _⟩; congr 1
     exact (prepartition.Union_single h).trans hπ.2.symm
   · exact hπ.2.trans (prepartition.Union_single _).symm
 #align box_integral.integration_params.tendsto_embed_box_to_filter_Union_top BoxIntegral.IntegrationParams.tendsto_embedBox_toFilteriUnion_top

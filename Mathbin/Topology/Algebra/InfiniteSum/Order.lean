@@ -173,12 +173,7 @@ Case conversion may be inaccurate. Consider using '#align le_has_sum le_hasSum�
 theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ f b') : f i ≤ a :=
   calc
     f i = ∑ i in {i}, f i := Finset.sum_singleton.symm
-    _ ≤ a :=
-      sum_le_hasSum _
-        (by
-          convert hb
-          simp)
-        hf
+    _ ≤ a := sum_le_hasSum _ (by convert hb; simp) hf
     
 #align le_has_sum le_hasSum
 
@@ -360,9 +355,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : OrderedAddCommGroup.{u2} α] [_inst_2 : TopologicalSpace.{u2} α] [_inst_3 : TopologicalAddGroup.{u2} α _inst_2 (AddCommGroup.toAddGroup.{u2} α (OrderedAddCommGroup.toAddCommGroup.{u2} α _inst_1))] [_inst_4 : OrderClosedTopology.{u2} α _inst_2 (PartialOrder.toPreorder.{u2} α (OrderedAddCommGroup.toPartialOrder.{u2} α _inst_1))] {g : ι -> α}, (Summable.{u2, u1} α ι (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} α (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} α _inst_1)) _inst_2 g) -> (forall (i : ι), LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommGroup.toPartialOrder.{u2} α _inst_1))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (SubtractionCommMonoid.toSubtractionMonoid.{u2} α (AddCommGroup.toDivisionAddCommMonoid.{u2} α (OrderedAddCommGroup.toAddCommGroup.{u2} α _inst_1)))))))) (g i)) -> (forall (i : ι), (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommGroup.toPartialOrder.{u2} α _inst_1))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (SubtractionCommMonoid.toSubtractionMonoid.{u2} α (AddCommGroup.toDivisionAddCommMonoid.{u2} α (OrderedAddCommGroup.toAddCommGroup.{u2} α _inst_1)))))))) (g i)) -> (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommGroup.toPartialOrder.{u2} α _inst_1))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (SubtractionCommMonoid.toSubtractionMonoid.{u2} α (AddCommGroup.toDivisionAddCommMonoid.{u2} α (OrderedAddCommGroup.toAddCommGroup.{u2} α _inst_1)))))))) (tsum.{u2, u1} α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} α (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u2} α _inst_1)) _inst_2 ι (fun (i : ι) => g i))))
 Case conversion may be inaccurate. Consider using '#align tsum_pos tsum_posₓ'. -/
 theorem tsum_pos (hsum : Summable g) (hg : ∀ i, 0 ≤ g i) (i : ι) (hi : 0 < g i) : 0 < ∑' i, g i :=
-  by
-  rw [← tsum_zero]
-  exact tsum_lt_tsum hg hi summable_zero hsum
+  by rw [← tsum_zero]; exact tsum_lt_tsum hg hi summable_zero hsum
 #align tsum_pos tsum_pos
 
 /- warning: has_sum_zero_iff_of_nonneg -> hasSum_zero_iff_of_nonneg is a dubious translation:

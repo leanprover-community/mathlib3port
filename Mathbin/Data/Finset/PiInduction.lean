@@ -56,19 +56,14 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
   cases nonempty_fintype ι
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f; subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
-  · convert h0
-    simpa [funext_iff] using he
+  · convert h0; simpa [funext_iff] using he
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
-    set g := update f i ((f i).eraseₓ x) with hg
-    clear_value g
-    have hx' : x ∉ g i := by
-      rw [hg, update_same]
-      apply not_mem_erase
+    set g := update f i ((f i).eraseₓ x) with hg; clear_value g
+    have hx' : x ∉ g i := by rw [hg, update_same]; apply not_mem_erase
     obtain rfl : f = update g i (insert x (g i)) := by
       rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]
-    clear hg
-    rw [update_same, erase_insert hx'] at hr
+    clear hg; rw [update_same, erase_insert hx'] at hr
     refine' step _ _ _ hr (ihs (univ.sigma g) _ _ rfl)
     rw [ssubset_iff_of_subset (sigma_mono (subset.refl _) _)]
     exacts[⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,

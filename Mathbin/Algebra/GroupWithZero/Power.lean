@@ -103,9 +103,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] (z : Int), (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{succ u1} G₀ (HPow.hPow.{u1, 0, u1} G₀ Int G₀ (instHPow.{u1, 0} G₀ Int (DivInvMonoid.Pow.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ _inst_1))) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) z) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align zero_zpow zero_zpowₓ'. -/
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
-  | (n : ℕ), h => by
-    rw [zpow_ofNat, zero_pow']
-    simpa using h
+  | (n : ℕ), h => by rw [zpow_ofNat, zero_pow']; simpa using h
   | -[n+1], h => by simp
 #align zero_zpow zero_zpow
 
@@ -284,12 +282,8 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) -> (forall (z : Int), Ne.{succ u1} G₀ (HPow.hPow.{u1, 0, u1} G₀ Int G₀ (instHPow.{u1, 0} G₀ Int (DivInvMonoid.Pow.{u1} G₀ (GroupWithZero.toDivInvMonoid.{u1} G₀ _inst_1))) a z) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zeroₓ'. -/
 theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
-  | (n : ℕ) => by
-    rw [zpow_ofNat]
-    exact pow_ne_zero _ ha
-  | -[n+1] => by
-    rw [zpow_negSucc]
-    exact inv_ne_zero (pow_ne_zero _ ha)
+  | (n : ℕ) => by rw [zpow_ofNat]; exact pow_ne_zero _ ha
+  | -[n+1] => by rw [zpow_negSucc]; exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
 
 /- warning: zpow_sub₀ -> zpow_sub₀ is a dubious translation:

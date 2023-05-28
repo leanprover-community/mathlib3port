@@ -99,8 +99,7 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
     all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
     · rw [hr j h₂, if_pos (h₁ h₂)]
     · rfl
-    · rw [Set.mem_setOf, not_imp] at h₁
-      rw [hr j h₁.1, if_neg h₁.2]
+    · rw [Set.mem_setOf, not_imp] at h₁; rw [hr j h₁.1, if_neg h₁.2]
     · rw [hr j h₁.1, if_pos h₁.2]
     · rw [hr j h₂, if_neg fun h' => h₁ ⟨h₂, h'⟩]
     · rfl
@@ -146,9 +145,7 @@ theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠
   generalize ht : x.support = t; revert x
   classical
     induction' t using Finset.induction with b t hb ih
-    · intro x ht
-      rw [support_eq_empty.1 ht]
-      exact fun _ => lex.acc_zero hbot
+    · intro x ht; rw [support_eq_empty.1 ht]; exact fun _ => lex.acc_zero hbot
     refine' fun x ht h => lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
     refine' ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => _
     rw [erase_ne (ha.ne_of_not_mem hb)]
@@ -182,8 +179,7 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
     obtain rfl | hij := eq_or_ne i j
     · exact ha _ hs
     by_cases r j i
-    · rw [hr j h, single_eq_of_ne hij, single_zero]
-      exact lex.acc_zero hbot
+    · rw [hr j h, single_eq_of_ne hij, single_zero]; exact lex.acc_zero hbot
     · exact ih _ ⟨h, hij.symm⟩ _
 #align dfinsupp.lex.acc_single Dfinsupp.Lex.acc_single
 
@@ -251,9 +247,7 @@ theorem Pi.Lex.wellFounded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, We
     WellFounded (Pi.Lex r s) :=
   by
   obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
-  · convert empty_wf
-    ext1 x
-    exact (h.1 x).elim
+  · convert empty_wf; ext1 x; exact (h.1 x).elim
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
   haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
   refine' InvImage.wf equiv_fun_on_fintype.symm (lex.well_founded' (fun i a => _) hs _)
@@ -321,8 +315,7 @@ protected theorem Dfinsupp.wellFoundedLT [∀ i, Zero (α i)] [∀ i, Preorder (
     · haveI := IsStrictOrder.swap (@WellOrderingRel ι)
       obtain ⟨i, he, hl⟩ := lex_lt_of_lt_of_preorder well_ordering_rel.swap h
       exact ⟨i, fun j hj => Quot.sound (he j hj), hl⟩
-    · rintro i ⟨a⟩
-      apply hbot
+    · rintro i ⟨a⟩; apply hbot
     exacts[IsWellFounded.wf, IsTrichotomous.swap _, IsWellFounded.wf]⟩
 #align dfinsupp.well_founded_lt Dfinsupp.wellFoundedLT
 
@@ -347,9 +340,7 @@ instance Pi.wellFoundedLT [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, Well
     WellFoundedLT (∀ i, α i) :=
   ⟨by
     obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
-    · convert empty_wf
-      ext1 x
-      exact (h.1 x).elim
+    · convert empty_wf; ext1 x; exact (h.1 x).elim
     letI : ∀ i, Zero (α i) := fun i => ⟨(hw i).wf.min ⊤ ⟨x i, trivial⟩⟩
     haveI := Fintype.ofFinite ι
     refine' InvImage.wf equiv_fun_on_fintype.symm (Dfinsupp.wellFoundedLT fun i a => _).wf

@@ -49,10 +49,7 @@ theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
 #print Finset.coe_powerset /-
 @[simp, norm_cast]
 theorem coe_powerset (s : Finset α) :
-    (s.powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).powerset :=
-  by
-  ext
-  simp
+    (s.powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).powerset := by ext; simp
 #align finset.coe_powerset Finset.coe_powerset
 -/
 
@@ -121,9 +118,7 @@ theorem card_powerset (s : Finset α) : card (powerset s) = 2 ^ card s :=
 
 #print Finset.not_mem_of_mem_powerset_of_not_mem /-
 theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t ∈ s.powerset)
-    (h : a ∉ s) : a ∉ t := by
-  apply mt _ h
-  apply mem_powerset.1 ht
+    (h : a ∉ s) : a ∉ t := by apply mt _ h; apply mem_powerset.1 ht
 #align finset.not_mem_of_mem_powerset_of_not_mem Finset.not_mem_of_mem_powerset_of_not_mem
 -/
 
@@ -206,10 +201,8 @@ theorem mem_ssubsets {s t : Finset α} : t ∈ s.ssubsets ↔ t ⊂ s := by
 -/
 
 #print Finset.empty_mem_ssubsets /-
-theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets :=
-  by
-  rw [mem_ssubsets, ssubset_iff_subset_ne]
-  exact ⟨empty_subset s, h.ne_empty.symm⟩
+theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets := by
+  rw [mem_ssubsets, ssubset_iff_subset_ne]; exact ⟨empty_subset s, h.ne_empty.symm⟩
 #align finset.empty_mem_ssubsets Finset.empty_mem_ssubsets
 -/
 
@@ -291,10 +284,7 @@ theorem card_powersetLen (n : ℕ) (s : Finset α) : card (powersetLen n s) = Na
 theorem powersetLen_zero (s : Finset α) : Finset.powersetLen 0 s = {∅} :=
   by
   ext; rw [mem_powerset_len, mem_singleton, card_eq_zero]
-  refine'
-    ⟨fun h => h.2, fun h => by
-      rw [h]
-      exact ⟨empty_subset s, rfl⟩⟩
+  refine' ⟨fun h => h.2, fun h => by rw [h]; exact ⟨empty_subset s, rfl⟩⟩
 #align finset.powerset_len_zero Finset.powersetLen_zero
 -/
 
@@ -312,10 +302,7 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
 Case conversion may be inaccurate. Consider using '#align finset.powerset_len_eq_filter Finset.powersetLen_eq_filterₓ'. -/
 theorem powersetLen_eq_filter {n} {s : Finset α} :
-    powersetLen n s = (powerset s).filterₓ fun x => x.card = n :=
-  by
-  ext
-  simp [mem_powerset_len]
+    powersetLen n s = (powerset s).filterₓ fun x => x.card = n := by ext; simp [mem_powerset_len]
 #align finset.powerset_len_eq_filter Finset.powersetLen_eq_filter
 
 #print Finset.powersetLen_succ_insert /-

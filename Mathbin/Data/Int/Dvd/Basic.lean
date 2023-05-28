@@ -38,8 +38,7 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
         eq_coe_of_zero_le
           (@nonneg_of_mul_nonneg_right ℤ _ m a (by simp [ae.symm]) (by simpa using m0l)) with
         k e
-      subst a
-      exact ⟨k, Int.ofNat.inj ae⟩,
+      subst a; exact ⟨k, Int.ofNat.inj ae⟩,
     fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.ofNat_mul]⟩
 #align int.coe_nat_dvd Int.coe_nat_dvd
 

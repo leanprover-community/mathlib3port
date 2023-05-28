@@ -136,9 +136,7 @@ theorem dedup_idempotent {m : Multiset α} : m.dedup.dedup = m.dedup :=
 #print Multiset.dedup_bind_dedup /-
 @[simp]
 theorem dedup_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
-    (m.dedup.bind f).dedup = (m.bind f).dedup :=
-  by
-  ext x
+    (m.dedup.bind f).dedup = (m.bind f).dedup := by ext x;
   simp_rw [count_dedup, mem_bind, mem_dedup]
 #align multiset.dedup_bind_dedup Multiset.dedup_bind_dedup
 -/

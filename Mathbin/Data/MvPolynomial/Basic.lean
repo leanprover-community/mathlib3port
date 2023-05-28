@@ -591,8 +591,7 @@ theorem induction_on_monomial {M : MvPolynomial σ R → Prop} (h_C : ∀ a, M (
   by
   intro s a
   apply @Finsupp.induction σ ℕ _ _ s
-  · show M (monomial 0 a)
-    exact h_C a
+  · show M (monomial 0 a); exact h_C a
   · intro n e p hpn he ih
     have : ∀ e : ℕ, M (monomial p a * X n ^ e) :=
       by
@@ -665,9 +664,7 @@ theorem induction_on {M : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.ring_hom_ext MvPolynomial.ringHom_extₓ'. -/
 theorem ringHom_ext {A : Type _} [Semiring A] {f g : MvPolynomial σ R →+* A}
-    (hC : ∀ r, f (C r) = g (C r)) (hX : ∀ i, f (X i) = g (X i)) : f = g :=
-  by
-  ext
+    (hC : ∀ r, f (C r) = g (C r)) (hX : ∀ i, f (X i) = g (X i)) : f = g := by ext;
   exacts[hC _, hX _]
 #align mv_polynomial.ring_hom_ext MvPolynomial.ringHom_ext
 
@@ -1253,16 +1250,11 @@ theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ
     · conv_rhs => rw [← coeff_mul_monomial _ s]
       congr with t
       rw [tsub_add_cancel_of_le h]
-    · rw [← not_mem_support_iff]
-      intro hm
-      apply h
-      have H := support_mul _ _ hm
-      simp only [Finset.mem_biUnion] at H
+    · rw [← not_mem_support_iff]; intro hm; apply h
+      have H := support_mul _ _ hm; simp only [Finset.mem_biUnion] at H
       rcases H with ⟨j, hj, i', hi', H⟩
-      rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi'
-      subst i'
-      rw [Finset.mem_singleton] at H
-      subst m
+      rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi'; subst i'
+      rw [Finset.mem_singleton] at H; subst m
       exact le_add_left le_rfl
 #align mv_polynomial.coeff_mul_monomial' MvPolynomial.coeff_mul_monomial'
 
@@ -1311,9 +1303,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {p : MvPolynomial.{u1, u2} σ R _inst_1}, Iff (Eq.{max (succ u2) (succ u1)} (MvPolynomial.{u1, u2} σ R _inst_1) p (OfNat.ofNat.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) 0 (Zero.toOfNat0.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommMonoidWithZero.toZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toCommMonoidWithZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) (forall (d : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)), Eq.{succ u2} R (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d p) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.eq_zero_iff MvPolynomial.eq_zero_iffₓ'. -/
-theorem eq_zero_iff {p : MvPolynomial σ R} : p = 0 ↔ ∀ d, coeff d p = 0 :=
-  by
-  rw [ext_iff]
+theorem eq_zero_iff {p : MvPolynomial σ R} : p = 0 ↔ ∀ d, coeff d p = 0 := by rw [ext_iff];
   simp only [coeff_zero]
 #align mv_polynomial.eq_zero_iff MvPolynomial.eq_zero_iff
 
@@ -1323,10 +1313,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {p : MvPolynomial.{u1, u2} σ R _inst_1}, Iff (Ne.{max (succ u2) (succ u1)} (MvPolynomial.{u1, u2} σ R _inst_1) p (OfNat.ofNat.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) 0 (Zero.toOfNat0.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommMonoidWithZero.toZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toCommMonoidWithZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) (Exists.{succ u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (d : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => Ne.{succ u2} R (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d p) (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.ne_zero_iff MvPolynomial.ne_zero_iffₓ'. -/
-theorem ne_zero_iff {p : MvPolynomial σ R} : p ≠ 0 ↔ ∃ d, coeff d p ≠ 0 :=
-  by
-  rw [Ne.def, eq_zero_iff]
-  push_neg
+theorem ne_zero_iff {p : MvPolynomial σ R} : p ≠ 0 ↔ ∃ d, coeff d p ≠ 0 := by
+  rw [Ne.def, eq_zero_iff]; push_neg
 #align mv_polynomial.ne_zero_iff MvPolynomial.ne_zero_iff
 
 /- warning: mv_polynomial.support_eq_empty -> MvPolynomial.support_eq_empty is a dubious translation:
@@ -1359,9 +1347,7 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.C_dvd_if
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ ∀ i, r ∣ φ.coeff i :=
   by
   constructor
-  · rintro ⟨φ, rfl⟩ c
-    rw [coeff_C_mul]
-    apply dvd_mul_right
+  · rintro ⟨φ, rfl⟩ c; rw [coeff_C_mul]; apply dvd_mul_right
   · intro h
     choose c hc using h
     classical
@@ -1373,8 +1359,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : MvPolynomial σ R) : C r ∣ φ ↔ �
       simp only [coeff_C_mul, coeff_sum, coeff_monomial, Finset.sum_ite_eq', c']
       split_ifs with hi hi
       · rw [hc]
-      · rw [not_mem_support_iff] at hi
-        rwa [MulZeroClass.mul_zero]
+      · rw [not_mem_support_iff] at hi; rwa [MulZeroClass.mul_zero]
 #align mv_polynomial.C_dvd_iff_dvd_coeff MvPolynomial.C_dvd_iff_dvd_coeff
 
 end Coeff
@@ -1458,10 +1443,8 @@ but is expected to have type
   forall (R : Type.{u2}) (σ : Type.{u1}) [_inst_1 : CommSemiring.{u2} R], Eq.{succ u2} (RingHom.{u2, u2} R R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (RingHom.comp.{u2, max u1 u2, u2} R (MvPolynomial.{u1, u2} σ R _inst_1) R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))) (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (MvPolynomial.constantCoeff.{u2, u1} R σ _inst_1) (MvPolynomial.C.{u2, u1} R σ _inst_1)) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.constant_coeff_comp_C MvPolynomial.constantCoeff_comp_Cₓ'. -/
 @[simp]
-theorem constantCoeff_comp_C : constantCoeff.comp (C : R →+* MvPolynomial σ R) = RingHom.id R :=
-  by
-  ext x
-  exact constant_coeff_C σ x
+theorem constantCoeff_comp_C : constantCoeff.comp (C : R →+* MvPolynomial σ R) = RingHom.id R := by
+  ext x; exact constant_coeff_C σ x
 #align mv_polynomial.constant_coeff_comp_C MvPolynomial.constantCoeff_comp_C
 
 /- warning: mv_polynomial.constant_coeff_comp_algebra_map -> MvPolynomial.constantCoeff_comp_algebraMap is a dubious translation:
@@ -1534,10 +1517,8 @@ but is expected to have type
   forall {R : Type.{u2}} {S₁ : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] [_inst_2 : CommSemiring.{u3} S₁] [_inst_3 : Fintype.{u1} σ] (g : RingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) (x : σ -> S₁) (f : MvPolynomial.{u1, u2} σ R _inst_1), Eq.{succ u3} S₁ (MvPolynomial.eval₂.{u2, u3, u1} R S₁ σ _inst_1 _inst_2 g x f) (Finset.sum.{u3, u1} S₁ (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} S₁ (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} S₁ (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2)))) (MvPolynomial.support.{u2, u1} R σ _inst_1 f) (fun (d : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => HMul.hMul.{u3, u3, u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) S₁ ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (instHMul.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (NonUnitalNonAssocSemiring.toMul.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (Semiring.toNonAssocSemiring.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (CommSemiring.toSemiring.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) _inst_2))))) (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (RingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S₁) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (RingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) R S₁ (NonUnitalNonAssocSemiring.toMul.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u3} S₁ (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} S₁ (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u3, u2, u3} (RingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) R S₁ (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} S₁ (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u3, u2, u3} (RingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))) R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2)) (RingHom.instRingHomClassRingHom.{u2, u3} R S₁ (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (Semiring.toNonAssocSemiring.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2)))))) g (MvPolynomial.coeff.{u2, u1} R σ _inst_1 d f)) (Finset.prod.{u3, u1} S₁ σ (CommSemiring.toCommMonoid.{u3} S₁ _inst_2) (Finset.univ.{u1} σ _inst_3) (fun (i : σ) => HPow.hPow.{u3, 0, u3} S₁ ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) i) S₁ (instHPow.{u3, 0} S₁ ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) i) (Monoid.Pow.{u3} S₁ (MonoidWithZero.toMonoid.{u3} S₁ (Semiring.toMonoidWithZero.{u3} S₁ (CommSemiring.toSemiring.{u3} S₁ _inst_2))))) (x i) (FunLike.coe.{succ u1, succ u1, 1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (_x : σ) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) _x) (Finsupp.funLike.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) d i)))))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_eq' MvPolynomial.eval₂_eq'ₓ'. -/
 theorem eval₂_eq' [Fintype σ] (g : R →+* S₁) (x : σ → S₁) (f : MvPolynomial σ R) :
-    f.eval₂ g x = ∑ d in f.support, g (f.coeff d) * ∏ i, x i ^ d i :=
-  by
-  simp only [eval₂_eq, ← Finsupp.prod_pow]
-  rfl
+    f.eval₂ g x = ∑ d in f.support, g (f.coeff d) * ∏ i, x i ^ d i := by
+  simp only [eval₂_eq, ← Finsupp.prod_pow]; rfl
 #align mv_polynomial.eval₂_eq' MvPolynomial.eval₂_eq'
 
 /- warning: mv_polynomial.eval₂_zero -> MvPolynomial.eval₂_zero is a dubious translation:
@@ -1614,8 +1595,7 @@ theorem eval₂_mul_monomial :
     apply MvPolynomial.induction_on p
     · intro a' s a
       simp [C_mul_monomial, eval₂_monomial, f.map_mul]
-    · intro p q ih_p ih_q
-      simp [add_mul, eval₂_add, ih_p, ih_q]
+    · intro p q ih_p ih_q; simp [add_mul, eval₂_add, ih_p, ih_q]
     · intro p n ih s a
       exact
         calc
@@ -1657,9 +1637,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_pow MvPolynomial.eval₂_powₓ'. -/
 @[simp]
 theorem eval₂_pow {p : MvPolynomial σ R} : ∀ {n : ℕ}, (p ^ n).eval₂ f g = p.eval₂ f g ^ n
-  | 0 => by
-    rw [pow_zero, pow_zero]
-    exact eval₂_one _ _
+  | 0 => by rw [pow_zero, pow_zero]; exact eval₂_one _ _
   | n + 1 => by rw [pow_add, pow_one, pow_add, pow_one, eval₂_mul, eval₂_pow]
 #align mv_polynomial.eval₂_pow MvPolynomial.eval₂_pow
 
@@ -1726,20 +1704,16 @@ theorem comp_eval₂Hom [CommSemiring S₂] (f : R →+* S₁) (g : σ → S₁)
     φ.comp (eval₂Hom f g) = eval₂Hom (φ.comp f) fun i => φ (g i) :=
   by
   apply MvPolynomial.ringHom_ext
-  · intro r
-    rw [RingHom.comp_apply, eval₂_hom_C, eval₂_hom_C, RingHom.comp_apply]
-  · intro i
-    rw [RingHom.comp_apply, eval₂_hom_X', eval₂_hom_X']
+  · intro r; rw [RingHom.comp_apply, eval₂_hom_C, eval₂_hom_C, RingHom.comp_apply]
+  · intro i; rw [RingHom.comp_apply, eval₂_hom_X', eval₂_hom_X']
 #align mv_polynomial.comp_eval₂_hom MvPolynomial.comp_eval₂Hom
 
 /- warning: mv_polynomial.map_eval₂_hom -> MvPolynomial.map_eval₂Hom is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_eval₂_hom MvPolynomial.map_eval₂Homₓ'. -/
 theorem map_eval₂Hom [CommSemiring S₂] (f : R →+* S₁) (g : σ → S₁) (φ : S₁ →+* S₂)
-    (p : MvPolynomial σ R) : φ (eval₂Hom f g p) = eval₂Hom (φ.comp f) (fun i => φ (g i)) p :=
-  by
-  rw [← comp_eval₂_hom]
-  rfl
+    (p : MvPolynomial σ R) : φ (eval₂Hom f g p) = eval₂Hom (φ.comp f) (fun i => φ (g i)) p := by
+  rw [← comp_eval₂_hom]; rfl
 #align mv_polynomial.map_eval₂_hom MvPolynomial.map_eval₂Hom
 
 /- warning: mv_polynomial.eval₂_hom_monomial -> MvPolynomial.eval₂Hom_monomial is a dubious translation:
@@ -2014,10 +1988,8 @@ theorem map_map [CommSemiring S₂] (g : S₁ →+* S₂) (p : MvPolynomial σ R
   (eval₂_comp_left (map g) (C.comp f) X p).trans <|
     by
     congr
-    · ext1 a
-      simp only [map_C, comp_app, RingHom.coe_comp]
-    · ext1 n
-      simp only [map_X, comp_app]
+    · ext1 a; simp only [map_C, comp_app, RingHom.coe_comp]
+    · ext1 n; simp only [map_X, comp_app]
 #align mv_polynomial.map_map MvPolynomial.map_map
 
 /- warning: mv_polynomial.eval₂_eq_eval_map -> MvPolynomial.eval₂_eq_eval_map is a dubious translation:
@@ -2030,10 +2002,8 @@ theorem eval₂_eq_eval_map (g : σ → S₁) (p : MvPolynomial σ R) : p.eval�
   dsimp at h
   rw [h]
   congr
-  · ext1 a
-    simp only [coe_eval₂_hom, RingHom.id_apply, comp_app, eval₂_C, RingHom.coe_comp]
-  · ext1 n
-    simp only [comp_app, eval₂_X]
+  · ext1 a; simp only [coe_eval₂_hom, RingHom.id_apply, comp_app, eval₂_C, RingHom.coe_comp]
+  · ext1 n; simp only [comp_app, eval₂_X]
 #align mv_polynomial.eval₂_eq_eval_map MvPolynomial.eval₂_eq_eval_map
 
 /- warning: mv_polynomial.eval₂_comp_right -> MvPolynomial.eval₂_comp_right is a dubious translation:
@@ -2043,10 +2013,8 @@ theorem eval₂_comp_right {S₂} [CommSemiring S₂] (k : S₁ →+* S₂) (f :
     k (eval₂ f g p) = eval₂ k (k ∘ g) (map f p) :=
   by
   apply MvPolynomial.induction_on p
-  · intro r
-    rw [eval₂_C, map_C, eval₂_C]
-  · intro p q hp hq
-    rw [eval₂_add, k.map_add, (map f).map_add, eval₂_add, hp, hq]
+  · intro r; rw [eval₂_C, map_C, eval₂_C]
+  · intro p q hp hq; rw [eval₂_add, k.map_add, (map f).map_add, eval₂_add, hp, hq]
   · intro p s hp
     rw [eval₂_mul, k.map_mul, (map f).map_mul, eval₂_mul, map_X, hp, eval₂_X, eval₂_X]
 #align mv_polynomial.eval₂_comp_right MvPolynomial.eval₂_comp_right
@@ -2058,10 +2026,8 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
     map f (eval₂ C g p) = eval₂ C (map f ∘ g) (map f p) :=
   by
   apply MvPolynomial.induction_on p
-  · intro r
-    rw [eval₂_C, map_C, map_C, eval₂_C]
-  · intro p q hp hq
-    rw [eval₂_add, (map f).map_add, hp, hq, (map f).map_add, eval₂_add]
+  · intro r; rw [eval₂_C, map_C, map_C, eval₂_C]
+  · intro p q hp hq; rw [eval₂_add, (map f).map_add, hp, hq, (map f).map_add, eval₂_add]
   · intro p s hp
     rw [eval₂_mul, (map f).map_mul, hp, (map f).map_mul, map_X, eval₂_mul, eval₂_X, eval₂_X]
 #align mv_polynomial.map_eval₂ MvPolynomial.map_eval₂
@@ -2072,20 +2038,11 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.coeff_ma
 theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map f p) = f (coeff m p) := by
   classical
     apply MvPolynomial.induction_on p <;> clear p
-    · intro r m
-      rw [map_C]
-      simp only [coeff_C]
-      split_ifs
-      · rfl
-      rw [f.map_zero]
-    · intro p q hp hq m
-      simp only [hp, hq, (map f).map_add, coeff_add]
-      rw [f.map_add]
-    · intro p i hp m
-      simp only [hp, (map f).map_mul, map_X]
+    · intro r m; rw [map_C]; simp only [coeff_C]; split_ifs; · rfl; rw [f.map_zero]
+    · intro p q hp hq m; simp only [hp, hq, (map f).map_add, coeff_add]; rw [f.map_add]
+    · intro p i hp m; simp only [hp, (map f).map_mul, map_X]
       simp only [hp, mem_support_iff, coeff_mul_X']
-      split_ifs
-      · rfl
+      split_ifs; · rfl
       rw [f.map_zero]
 #align mv_polynomial.coeff_map MvPolynomial.coeff_map
 
@@ -2334,10 +2291,7 @@ theorem aeval_C (r : R) : aeval f (C r) = algebraMap R S₁ r :=
 /- warning: mv_polynomial.aeval_unique -> MvPolynomial.aeval_unique is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_unique MvPolynomial.aeval_uniqueₓ'. -/
-theorem aeval_unique (φ : MvPolynomial σ R →ₐ[R] S₁) : φ = aeval (φ ∘ X) :=
-  by
-  ext i
-  simp
+theorem aeval_unique (φ : MvPolynomial σ R →ₐ[R] S₁) : φ = aeval (φ ∘ X) := by ext i; simp
 #align mv_polynomial.aeval_unique MvPolynomial.aeval_unique
 
 /- warning: mv_polynomial.aeval_X_left -> MvPolynomial.aeval_X_left is a dubious translation:
@@ -2361,10 +2315,7 @@ theorem aeval_X_left_apply (p : MvPolynomial σ R) : aeval X p = p :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.comp_aeval MvPolynomial.comp_aevalₓ'. -/
 theorem comp_aeval {B : Type _} [CommSemiring B] [Algebra R B] (φ : S₁ →ₐ[R] B) :
-    φ.comp (aeval f) = aeval fun i => φ (f i) :=
-  by
-  ext i
-  simp
+    φ.comp (aeval f) = aeval fun i => φ (f i) := by ext i; simp
 #align mv_polynomial.comp_aeval MvPolynomial.comp_aeval
 
 /- warning: mv_polynomial.map_aeval -> MvPolynomial.map_aeval is a dubious translation:
@@ -2372,10 +2323,8 @@ theorem comp_aeval {B : Type _} [CommSemiring B] [Algebra R B] (φ : S₁ →ₐ
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.map_aeval MvPolynomial.map_aevalₓ'. -/
 @[simp]
 theorem map_aeval {B : Type _} [CommSemiring B] (g : σ → S₁) (φ : S₁ →+* B) (p : MvPolynomial σ R) :
-    φ (aeval g p) = eval₂Hom (φ.comp (algebraMap R S₁)) (fun i => φ (g i)) p :=
-  by
-  rw [← comp_eval₂_hom]
-  rfl
+    φ (aeval g p) = eval₂Hom (φ.comp (algebraMap R S₁)) (fun i => φ (g i)) p := by
+  rw [← comp_eval₂_hom]; rfl
 #align mv_polynomial.map_aeval MvPolynomial.map_aeval
 
 /- warning: mv_polynomial.eval₂_hom_zero -> MvPolynomial.eval₂Hom_zero is a dubious translation:
@@ -2638,9 +2587,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_tower_id MvPolynomial.aevalTower_idₓ'. -/
 @[simp]
 theorem aevalTower_id : aevalTower (AlgHom.id S S) = (aeval : (σ → S) → MvPolynomial σ S →ₐ[S] S) :=
-  by
-  ext
-  simp only [aeval_tower_X, aeval_X]
+  by ext; simp only [aeval_tower_X, aeval_X]
 #align mv_polynomial.aeval_tower_id MvPolynomial.aevalTower_id
 
 /- warning: mv_polynomial.aeval_tower_of_id -> MvPolynomial.aevalTower_ofId is a dubious translation:
@@ -2651,9 +2598,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.aeval_tower_of_id MvPolynomial.aevalTower_ofIdₓ'. -/
 @[simp]
 theorem aevalTower_ofId :
-    aevalTower (Algebra.ofId S A) = (aeval : (σ → A) → MvPolynomial σ S →ₐ[S] A) :=
-  by
-  ext
+    aevalTower (Algebra.ofId S A) = (aeval : (σ → A) → MvPolynomial σ S →ₐ[S] A) := by ext;
   simp only [aeval_X, aeval_tower_X]
 #align mv_polynomial.aeval_tower_of_id MvPolynomial.aevalTower_ofId
 

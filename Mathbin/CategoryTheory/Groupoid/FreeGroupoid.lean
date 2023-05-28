@@ -121,16 +121,12 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
   · simp only [Quiver.Path.reverse]
     fapply EqvGen.trans
     · exact q ≫ q.reverse
-    · apply EqvGen.symm
-      apply EqvGen.rel
+    · apply EqvGen.symm; apply EqvGen.rel
       have :
         quotient.comp_closure red_step (q ≫ 𝟙 _ ≫ q.reverse)
           (q ≫ (f.to_path ≫ (Quiver.reverse f).toPath) ≫ q.reverse) :=
-        by
-        apply quotient.comp_closure.intro
-        apply red_step.step
-      have that : q.cons f = q.comp f.to_path := by rfl
-      rw [that]
+        by apply quotient.comp_closure.intro; apply red_step.step
+      have that : q.cons f = q.comp f.to_path := by rfl; rw [that]
       simp only [category.assoc, category.id_comp] at this⊢
       simp only [category_struct.comp, Quiver.Path.comp_assoc] at this⊢
       exact this
@@ -180,10 +176,8 @@ theorem of_eq :
       (Quiver.Symmetrify.of ⋙q Paths.of).comp (Quotient.functor <| @redStep V _).toPrefunctor :=
   by
   apply Prefunctor.ext; rotate_left
-  · rintro X
-    rfl
-  · rintro X Y f
-    rfl
+  · rintro X; rfl
+  · rintro X Y f; rfl
 #align category_theory.groupoid.free.of_eq CategoryTheory.Groupoid.Free.of_eq
 -/
 
@@ -228,10 +222,8 @@ theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V �
   apply quotient.lift_unique
   apply paths.lift_unique
   fapply @Quiver.Symmetrify.lift_unique _ _ _ _ _ _ _ _ _
-  · rw [← functor.to_prefunctor_comp]
-    exact hΦ
-  · constructor
-    rintro X Y f
+  · rw [← functor.to_prefunctor_comp]; exact hΦ
+  · constructor; rintro X Y f
     simp only [← functor.to_prefunctor_comp, Prefunctor.comp_map, paths.of_map, inv_eq_inv]
     change
       Φ.map (inv ((quotient.functor red_step).toPrefunctor.map f.to_path)) =

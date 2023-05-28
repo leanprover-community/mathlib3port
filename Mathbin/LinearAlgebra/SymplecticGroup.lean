@@ -240,9 +240,7 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
     rw [Matrix.det_transpose]
     exact huA
   calc
-    Aᵀ ⬝ J l R ⬝ A = (-Aᵀ) ⬝ (J l R)⁻¹ ⬝ A := by
-      rw [J_inv]
-      simp
+    Aᵀ ⬝ J l R ⬝ A = (-Aᵀ) ⬝ (J l R)⁻¹ ⬝ A := by rw [J_inv]; simp
     _ = (-Aᵀ) ⬝ (A ⬝ J l R ⬝ Aᵀ)⁻¹ ⬝ A := by rw [hA]
     _ = (-Aᵀ ⬝ (Aᵀ⁻¹ ⬝ (J l R)⁻¹)) ⬝ A⁻¹ ⬝ A := by
       simp only [Matrix.mul_inv_rev, Matrix.mul_assoc, Matrix.neg_mul]
@@ -292,9 +290,7 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -J l R ⬝ Aᵀ ⬝ 
   calc
     -J l R ⬝ Aᵀ ⬝ J l R ⬝ A = (-J l R) ⬝ (Aᵀ ⬝ J l R ⬝ A) := by
       simp only [Matrix.mul_assoc, Matrix.neg_mul]
-    _ = (-J l R) ⬝ J l R := by
-      rw [mem_iff'] at hA
-      rw [hA]
+    _ = (-J l R) ⬝ J l R := by rw [mem_iff'] at hA; rw [hA]
     _ = (-1 : R) • J l R ⬝ J l R := by simp only [Matrix.neg_mul, neg_smul, one_smul]
     _ = (-1 : R) • -1 := by rw [J_squared]
     _ = 1 := by simp only [neg_smul_neg, one_smul]

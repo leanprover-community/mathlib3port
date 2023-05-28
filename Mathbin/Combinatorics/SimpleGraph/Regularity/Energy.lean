@@ -75,9 +75,7 @@ theorem energy_le_one : P.energy G ≤ 1 :=
         sum_le_card_nsmul _ _ 1 fun uv _ =>
           (sq_le_one_iff <| G.edgeDensity_nonneg _ _).2 <| G.edgeDensity_le_one _ _
       _ = P.parts.offDiag.card := (Nat.smul_one_eq_coe _)
-      _ ≤ _ := by
-        rw [off_diag_card, one_mul, ← Nat.cast_pow, Nat.cast_le, sq]
-        exact tsub_le_self
+      _ ≤ _ := by rw [off_diag_card, one_mul, ← Nat.cast_pow, Nat.cast_le, sq]; exact tsub_le_self
       
 #align finpartition.energy_le_one Finpartition.energy_le_one
 
@@ -90,9 +88,7 @@ Case conversion may be inaccurate. Consider using '#align finpartition.coe_energ
 @[simp, norm_cast]
 theorem coe_energy {𝕜 : Type _} [LinearOrderedField 𝕜] :
     (P.energy G : 𝕜) = (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2 :=
-  by
-  rw [energy]
-  norm_cast
+  by rw [energy]; norm_cast
 #align finpartition.coe_energy Finpartition.coe_energy
 
 end Finpartition

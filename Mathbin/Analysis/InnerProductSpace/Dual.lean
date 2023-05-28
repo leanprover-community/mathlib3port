@@ -153,10 +153,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         have h₂ : ℓ z * ⟪z, x⟫ = ℓ x * ⟪z, z⟫ :=
           haveI h₃ :=
             calc
-              0 = ⟪z, ℓ z • x - ℓ x • z⟫ :=
-                by
-                rw [(Y.mem_orthogonal' z).mp hz]
-                exact h₁
+              0 = ⟪z, ℓ z • x - ℓ x • z⟫ := by rw [(Y.mem_orthogonal' z).mp hz]; exact h₁
               _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by rw [inner_sub_right]
               _ = ℓ z * ⟪z, x⟫ - ℓ x * ⟪z, z⟫ := by simp [inner_smul_right]
               

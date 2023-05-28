@@ -98,10 +98,7 @@ lean 3 declaration is
 but is expected to have type
   forall {b : ENNReal}, IsOpen.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (Set.Ico.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (CompleteSemilatticeInf.toPartialOrder.{0} ENNReal (CompleteLattice.toCompleteSemilatticeInf.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)) b)
 Case conversion may be inaccurate. Consider using '#align ennreal.is_open_Ico_zero ENNReal.isOpen_Ico_zeroₓ'. -/
-theorem isOpen_Ico_zero : IsOpen (Ico 0 b) :=
-  by
-  rw [ENNReal.Ico_eq_Iio]
-  exact isOpen_Iio
+theorem isOpen_Ico_zero : IsOpen (Ico 0 b) := by rw [ENNReal.Ico_eq_Iio]; exact isOpen_Iio
 #align ennreal.is_open_Ico_zero ENNReal.isOpen_Ico_zero
 
 /- warning: ennreal.open_embedding_coe -> ENNReal.openEmbedding_coe is a dubious translation:
@@ -111,9 +108,7 @@ but is expected to have type
   OpenEmbedding.{0, 0} NNReal ENNReal NNReal.instTopologicalSpaceNNReal ENNReal.instTopologicalSpaceENNReal ENNReal.some
 Case conversion may be inaccurate. Consider using '#align ennreal.open_embedding_coe ENNReal.openEmbedding_coeₓ'. -/
 theorem openEmbedding_coe : OpenEmbedding (coe : ℝ≥0 → ℝ≥0∞) :=
-  ⟨embedding_coe, by
-    convert is_open_ne_top
-    ext (x | _) <;> simp [none_eq_top, some_eq_coe]⟩
+  ⟨embedding_coe, by convert is_open_ne_top; ext (x | _) <;> simp [none_eq_top, some_eq_coe]⟩
 #align ennreal.open_embedding_coe ENNReal.openEmbedding_coe
 
 /- warning: ennreal.coe_range_mem_nhds -> ENNReal.coe_range_mem_nhds is a dubious translation:
@@ -464,14 +459,9 @@ theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x + ε) �
   rw [_root_.mem_nhds_iff]
   by_cases x0 : x = 0
   · use Iio (x + ε)
-    have : Iio (x + ε) ⊆ Icc (x - ε) (x + ε)
-    intro a
-    rw [x0]
-    simpa using le_of_lt
-    use this
-    exact ⟨isOpen_Iio, mem_Iio_self_add xt ε0⟩
-  · use Ioo (x - ε) (x + ε)
-    use Ioo_subset_Icc_self
+    have : Iio (x + ε) ⊆ Icc (x - ε) (x + ε); intro a; rw [x0]; simpa using le_of_lt
+    use this; exact ⟨isOpen_Iio, mem_Iio_self_add xt ε0⟩
+  · use Ioo (x - ε) (x + ε); use Ioo_subset_Icc_self
     exact ⟨isOpen_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
 #align ennreal.Icc_mem_nhds ENNReal.Icc_mem_nhds
 
@@ -496,9 +486,7 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε
     have xxb : x - (x - b) = b := sub_sub_cancel xt bx.le
     refine' iInf_le_of_le (x - b) (iInf_le_of_le xb_pos _)
     simp only [mem_principal, le_principal_iff]
-    intro y
-    rintro ⟨h₁, h₂⟩
-    rw [xxb] at h₁
+    intro y; rintro ⟨h₁, h₂⟩; rw [xxb] at h₁;
     calc
       a < b := ab
       _ ≤ y := h₁
@@ -508,9 +496,7 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε
     have xbx : x + (b - x) = b := add_tsub_cancel_of_le xb.le
     refine' iInf_le_of_le (b - x) (iInf_le_of_le bx_pos _)
     simp only [mem_principal, le_principal_iff]
-    intro y
-    rintro ⟨h₁, h₂⟩
-    rw [xbx] at h₂
+    intro y; rintro ⟨h₁, h₂⟩; rw [xbx] at h₂;
     calc
       y ≤ b := h₂
       _ < a := ba
@@ -588,8 +574,7 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
     Tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 - p.2) (𝓝 (a, b)) (𝓝 (a - b)) :=
   by
   cases a <;> cases b
-  · simp only [eq_self_iff_true, not_true, Ne.def, none_eq_top, or_self_iff] at h
-    contradiction
+  · simp only [eq_self_iff_true, not_true, Ne.def, none_eq_top, or_self_iff] at h; contradiction
   · simp only [some_eq_coe, WithTop.top_sub_coe, none_eq_top]
     apply tendsto_nhds_top_iff_nnreal.2 fun n => _
     rw [nhds_prod_eq, eventually_prod_iff]
@@ -653,8 +638,7 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
     refine' this.mono fun c hc => _
     exact (ENNReal.div_mul_cancel hε.ne' coe_ne_top).symm.trans_lt (mul_lt_mul hc.1 hc.2)
   cases a
-  · simp [none_eq_top] at hb
-    simp [none_eq_top, ht b hb, top_mul, hb]
+  · simp [none_eq_top] at hb; simp [none_eq_top, ht b hb, top_mul, hb]
   cases b
   · simp [none_eq_top] at ha
     simp [*, nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, (· ∘ ·),
@@ -1050,10 +1034,8 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {m : α -> ENNReal} {a : ENNReal} {b : ENNReal}, (Filter.Tendsto.{u1, 0} α ENNReal m f (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal b)) -> (Or (Ne.{1} ENNReal b (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Ne.{1} ENNReal a (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) -> (Filter.Tendsto.{u1, 0} α ENNReal (fun (b : α) => HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) a (m b)) f (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) a b)))
 Case conversion may be inaccurate. Consider using '#align ennreal.tendsto.const_div ENNReal.Tendsto.const_divₓ'. -/
 protected theorem Tendsto.const_div {f : Filter α} {m : α → ℝ≥0∞} {a b : ℝ≥0∞}
-    (hm : Tendsto m f (𝓝 b)) (hb : b ≠ ⊤ ∨ a ≠ ⊤) : Tendsto (fun b => a / m b) f (𝓝 (a / b)) :=
-  by
-  apply tendsto.const_mul (ENNReal.tendsto_inv_iff.2 hm)
-  simp [hb]
+    (hm : Tendsto m f (𝓝 b)) (hb : b ≠ ⊤ ∨ a ≠ ⊤) : Tendsto (fun b => a / m b) f (𝓝 (a / b)) := by
+  apply tendsto.const_mul (ENNReal.tendsto_inv_iff.2 hm); simp [hb]
 #align ennreal.tendsto.const_div ENNReal.Tendsto.const_div
 
 /- warning: ennreal.tendsto.div_const -> ENNReal.Tendsto.div_const is a dubious translation:
@@ -1063,10 +1045,8 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {m : α -> ENNReal} {a : ENNReal} {b : ENNReal}, (Filter.Tendsto.{u1, 0} α ENNReal m f (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal a)) -> (Or (Ne.{1} ENNReal a (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) (Ne.{1} ENNReal b (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero)))) -> (Filter.Tendsto.{u1, 0} α ENNReal (fun (x : α) => HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) (m x) b) f (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) a b)))
 Case conversion may be inaccurate. Consider using '#align ennreal.tendsto.div_const ENNReal.Tendsto.div_constₓ'. -/
 protected theorem Tendsto.div_const {f : Filter α} {m : α → ℝ≥0∞} {a b : ℝ≥0∞}
-    (hm : Tendsto m f (𝓝 a)) (ha : a ≠ 0 ∨ b ≠ 0) : Tendsto (fun x => m x / b) f (𝓝 (a / b)) :=
-  by
-  apply tendsto.mul_const hm
-  simp [ha]
+    (hm : Tendsto m f (𝓝 a)) (ha : a ≠ 0 ∨ b ≠ 0) : Tendsto (fun x => m x / b) f (𝓝 (a / b)) := by
+  apply tendsto.mul_const hm; simp [ha]
 #align ennreal.tendsto.div_const ENNReal.Tendsto.div_const
 
 /- warning: ennreal.tendsto_inv_nat_nhds_zero -> ENNReal.tendsto_inv_nat_nhds_zero is a dubious translation:
@@ -1097,10 +1077,8 @@ but is expected to have type
   forall {a : ENNReal} {ι : Sort.{u1}} {p : ι -> Prop}, (Exists.{u1} ι (fun (i : ι) => p i)) -> (forall {f : ι -> ENNReal}, Eq.{1} ENNReal (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (iSup.{0, u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (p i) (fun (hi : p i) => f i))) a) (iSup.{0, u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (p i) (fun (hi : p i) => HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) (f i) a))))
 Case conversion may be inaccurate. Consider using '#align ennreal.bsupr_add' ENNReal.biSup_add'ₓ'. -/
 theorem biSup_add' {ι : Sort _} {p : ι → Prop} (h : ∃ i, p i) {f : ι → ℝ≥0∞} :
-    (⨆ (i) (hi : p i), f i) + a = ⨆ (i) (hi : p i), f i + a :=
-  by
-  haveI : Nonempty { i // p i } := nonempty_subtype.2 h
-  simp only [iSup_subtype', supr_add]
+    (⨆ (i) (hi : p i), f i) + a = ⨆ (i) (hi : p i), f i + a := by
+  haveI : Nonempty { i // p i } := nonempty_subtype.2 h; simp only [iSup_subtype', supr_add]
 #align ennreal.bsupr_add' ENNReal.biSup_add'
 
 /- warning: ennreal.add_bsupr' -> ENNReal.add_biSup' is a dubious translation:
@@ -1175,10 +1153,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.bsupr_add_bsupr_le' ENNReal.biSup_add_biSup_le'ₓ'. -/
 theorem biSup_add_biSup_le' {ι ι'} {p : ι → Prop} {q : ι' → Prop} (hp : ∃ i, p i) (hq : ∃ j, q j)
     {f : ι → ℝ≥0∞} {g : ι' → ℝ≥0∞} {a : ℝ≥0∞} (h : ∀ (i) (hi : p i) (j) (hj : q j), f i + g j ≤ a) :
-    ((⨆ (i) (hi : p i), f i) + ⨆ (j) (hj : q j), g j) ≤ a :=
-  by
-  simp_rw [bsupr_add' hp, add_bsupr' hq]
-  exact iSup₂_le fun i hi => iSup₂_le (h i hi)
+    ((⨆ (i) (hi : p i), f i) + ⨆ (j) (hj : q j), g j) ≤ a := by
+  simp_rw [bsupr_add' hp, add_bsupr' hq]; exact iSup₂_le fun i hi => iSup₂_le (h i hi)
 #align ennreal.bsupr_add_bsupr_le' ENNReal.biSup_add_biSup_le'
 
 /- warning: ennreal.bsupr_add_bsupr_le -> ENNReal.biSup_add_biSup_le is a dubious translation:
@@ -1248,8 +1224,7 @@ Case conversion may be inaccurate. Consider using '#align ennreal.mul_supr ENNRe
 theorem mul_iSup {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * iSup f = ⨆ i, a * f i :=
   by
   by_cases hf : ∀ i, f i = 0
-  · obtain rfl : f = fun _ => 0
-    exact funext hf
+  · obtain rfl : f = fun _ => 0; exact funext hf
     simp only [supr_zero_eq_zero, MulZeroClass.mul_zero]
   · refine' (monotone_id.const_mul' _).map_iSup_of_continuousAt _ (MulZeroClass.mul_zero a)
     refine' ENNReal.Tendsto.const_mul tendsto_id (Or.inl _)
@@ -1880,10 +1855,8 @@ but is expected to have type
   forall (f : Nat -> ENNReal), Filter.Tendsto.{0, 0} Nat ENNReal (fun (n : Nat) => Finset.sum.{0, 0} ENNReal Nat (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) (Finset.range n) (fun (i : Nat) => f i)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (tsum.{0, 0} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal Nat (fun (n : Nat) => f n)))
 Case conversion may be inaccurate. Consider using '#align ennreal.tendsto_nat_tsum ENNReal.tendsto_nat_tsumₓ'. -/
 theorem tendsto_nat_tsum (f : ℕ → ℝ≥0∞) :
-    Tendsto (fun n : ℕ => ∑ i in Finset.range n, f i) atTop (𝓝 (∑' n, f n)) :=
-  by
-  rw [← has_sum_iff_tendsto_nat]
-  exact ennreal.summable.has_sum
+    Tendsto (fun n : ℕ => ∑ i in Finset.range n, f i) atTop (𝓝 (∑' n, f n)) := by
+  rw [← has_sum_iff_tendsto_nat]; exact ennreal.summable.has_sum
 #align ennreal.tendsto_nat_tsum ENNReal.tendsto_nat_tsum
 
 /- warning: ennreal.to_nnreal_apply_of_tsum_ne_top -> ENNReal.toNNReal_apply_of_tsum_ne_top is a dubious translation:
@@ -1931,8 +1904,7 @@ but is expected to have type
   forall {f : Nat -> ENNReal}, (Ne.{1} ENNReal (tsum.{0, 0} ENNReal (LinearOrderedAddCommMonoid.toAddCommMonoid.{0} ENNReal (LinearOrderedAddCommMonoidWithTop.toLinearOrderedAddCommMonoid.{0} ENNReal ENNReal.instLinearOrderedAddCommMonoidWithTopENNReal)) ENNReal.instTopologicalSpaceENNReal Nat (fun (x : Nat) => f x)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Filter.Tendsto.{0, 0} Nat ENNReal f (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} ENNReal ENNReal.instTopologicalSpaceENNReal (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))))
 Case conversion may be inaccurate. Consider using '#align ennreal.tendsto_at_top_zero_of_tsum_ne_top ENNReal.tendsto_atTop_zero_of_tsum_ne_topₓ'. -/
 theorem tendsto_atTop_zero_of_tsum_ne_top {f : ℕ → ℝ≥0∞} (hf : (∑' x, f x) ≠ ∞) :
-    Tendsto f atTop (𝓝 0) := by
-  rw [← Nat.cofinite_eq_atTop]
+    Tendsto f atTop (𝓝 0) := by rw [← Nat.cofinite_eq_atTop];
   exact tendsto_cofinite_zero_of_tsum_ne_top hf
 #align ennreal.tendsto_at_top_zero_of_tsum_ne_top ENNReal.tendsto_atTop_zero_of_tsum_ne_top
 
@@ -1976,11 +1948,8 @@ theorem tsum_sub {f : ℕ → ℝ≥0∞} {g : ℕ → ℝ≥0∞} (h₁ : (∑'
   by
   have h₃ : (∑' i, f i - g i) = (∑' i, f i - g i + g i) - ∑' i, g i := by
     rw [ENNReal.tsum_add, ENNReal.add_sub_cancel_right h₁]
-  have h₄ : (fun i => f i - g i + g i) = f := by
-    ext n
-    rw [tsub_add_cancel_of_le (h₂ n)]
-  rw [h₄] at h₃
-  apply h₃
+  have h₄ : (fun i => f i - g i + g i) = f := by ext n; rw [tsub_add_cancel_of_le (h₂ n)]
+  rw [h₄] at h₃; apply h₃
 #align ennreal.tsum_sub ENNReal.tsum_sub
 
 /- warning: ennreal.tsum_mono_subtype -> ENNReal.tsum_mono_subtype is a dubious translation:
@@ -2006,10 +1975,7 @@ Case conversion may be inaccurate. Consider using '#align ennreal.tsum_union_le 
 theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
     (∑' x : s ∪ t, f x) ≤ (∑' x : s, f x) + ∑' x : t, f x :=
   calc
-    (∑' x : s ∪ t, f x) = ∑' x : s ∪ t \ s, f x :=
-      by
-      apply tsum_congr_subtype
-      rw [union_diff_self]
+    (∑' x : s ∪ t, f x) = ∑' x : s ∪ t \ s, f x := by apply tsum_congr_subtype; rw [union_diff_self]
     _ = (∑' x : s, f x) + ∑' x : t \ s, f x :=
       (tsum_union_disjoint disjoint_sdiff_self_right ENNReal.summable ENNReal.summable)
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
@@ -2072,8 +2038,7 @@ theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) 
     (∑' n, f (n + 1)) = ∞ :=
   by
   rw [← tsum_eq_tsum_of_hasSum_iff_hasSum fun _ => (notMemRangeEquiv 1).hasSum_iff]
-  swap
-  · infer_instance
+  swap; · infer_instance
   have h₁ :
     ((∑' b : { n // n ∈ Finset.range 1 }, f b) + ∑' b : { n // n ∉ Finset.range 1 }, f b) =
       ∑' b, f b :=
@@ -2162,9 +2127,7 @@ theorem tendsto_toReal_iff {ι} {fi : Filter ι} {f : ι → ℝ≥0∞} (hf : �
     (hx : x ≠ ∞) : fi.Tendsto (fun n => (f n).toReal) (𝓝 x.toReal) ↔ fi.Tendsto f (𝓝 x) :=
   by
   refine' ⟨fun h => _, fun h => tendsto.comp (ENNReal.tendsto_toReal hx) h⟩
-  have h_eq : f = fun n => ENNReal.ofReal (f n).toReal :=
-    by
-    ext1 n
+  have h_eq : f = fun n => ENNReal.ofReal (f n).toReal := by ext1 n;
     rw [ENNReal.ofReal_toReal (hf n)]
   rw [h_eq, ← ENNReal.ofReal_toReal hx]
   exact ENNReal.tendsto_ofReal h
@@ -2470,10 +2433,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {g : α -> NNReal}, (Summable.{0, u1} NNReal α (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal instNNRealStrictOrderedSemiring)) NNReal.instTopologicalSpaceNNReal g) -> (forall (i : α), (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) (g i)) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) (tsum.{0, u1} NNReal (OrderedCancelAddCommMonoid.toAddCommMonoid.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal instNNRealStrictOrderedSemiring)) NNReal.instTopologicalSpaceNNReal α (fun (b : α) => g b))))
 Case conversion may be inaccurate. Consider using '#align nnreal.tsum_pos NNReal.tsum_posₓ'. -/
-theorem tsum_pos {g : α → ℝ≥0} (hg : Summable g) (i : α) (hi : 0 < g i) : 0 < ∑' b, g b :=
-  by
-  rw [← tsum_zero]
-  exact tsum_lt_tsum (fun a => zero_le _) hi hg
+theorem tsum_pos {g : α → ℝ≥0} (hg : Summable g) (i : α) (hi : 0 < g i) : 0 < ∑' b, g b := by
+  rw [← tsum_zero]; exact tsum_lt_tsum (fun a => zero_le _) hi hg
 #align nnreal.tsum_pos NNReal.tsum_pos
 
 /- warning: nnreal.tsum_eq_add_tsum_ite -> NNReal.tsum_eq_add_tsum_ite is a dubious translation:
@@ -2678,10 +2639,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : α -> Type.{u2}} {f : (Sigma.{u1, u2} α (fun (x : α) => β x)) -> Real}, (forall (x : Sigma.{u1, u2} α (fun (x : α) => β x)), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (f x)) -> (Iff (Summable.{0, max u1 u2} Real (Sigma.{u1, u2} α (fun (x : α) => β x)) Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) f) (And (forall (x : α), Summable.{0, u2} Real (β x) Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (y : β x) => f (Sigma.mk.{u1, u2} α (fun (x : α) => β x) x y))) (Summable.{0, u1} Real α Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (fun (x : α) => tsum.{0, u2} Real Real.instAddCommMonoidReal (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (β x) (fun (y : β x) => f (Sigma.mk.{u1, u2} α (fun (x : α) => β x) x y))))))
 Case conversion may be inaccurate. Consider using '#align summable_sigma_of_nonneg summable_sigma_of_nonnegₓ'. -/
 theorem summable_sigma_of_nonneg {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :
-    Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑' y, f ⟨x, y⟩ :=
-  by
-  lift f to (Σx, β x) → ℝ≥0 using hf
-  exact_mod_cast NNReal.summable_sigma
+    Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑' y, f ⟨x, y⟩ := by
+  lift f to (Σx, β x) → ℝ≥0 using hf; exact_mod_cast NNReal.summable_sigma
 #align summable_sigma_of_nonneg summable_sigma_of_nonneg
 
 /- warning: summable_of_sum_le -> summable_of_sum_le is a dubious translation:
@@ -2868,8 +2827,7 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
     · have : f =ᶠ[𝓝 x] fun _ => ∞ :=
         by
         filter_upwards [EMetric.ball_mem_nhds x ENNReal.coe_lt_top]
-        refine' fun y (hy : edist y x < ⊤) => _
-        rw [edist_comm] at hy
+        refine' fun y (hy : edist y x < ⊤) => _; rw [edist_comm] at hy
         simpa [hx, ENNReal.mul_ne_top hC hy.ne] using h x y
       exact this.continuous_at
     · refine' (ENNReal.tendsto_nhds hx).2 fun ε (ε0 : 0 < ε) => _

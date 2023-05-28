@@ -321,10 +321,7 @@ def inv : ℤ_[p] → ℤ_[p]
 instance : CharZero ℤ_[p]
     where cast_injective m n h :=
     Nat.cast_injective <|
-      show (m : ℚ_[p]) = n by
-        rw [Subtype.ext_iff] at h
-        norm_cast  at h
-        exact h
+      show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h; norm_cast  at h; exact h
 
 /- warning: padic_int.coe_int_eq -> PadicInt.coe_int_eq is a dubious translation:
 lean 3 declaration is
@@ -469,10 +466,7 @@ Case conversion may be inaccurate. Consider using '#align padic_int.norm_pow Pad
 @[simp]
 theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ‖z ^ n‖ = ‖z‖ ^ n
   | 0 => by simp
-  | k + 1 => by
-    rw [pow_succ, pow_succ, norm_mul]
-    congr
-    apply norm_pow
+  | k + 1 => by rw [pow_succ, pow_succ, norm_mul]; congr ; apply norm_pow
 #align padic_int.norm_pow PadicInt.norm_pow
 
 /- warning: padic_int.nonarchimedean -> PadicInt.nonarchimedean is a dubious translation:
@@ -734,9 +728,7 @@ theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) :
   by
   have : ‖↑p ^ n * c‖ = ‖(p ^ n : ℤ_[p])‖ * ‖c‖ := norm_mul _ _
   have aux : ↑p ^ n * c ≠ 0 := by
-    contrapose! hc
-    rw [mul_eq_zero] at hc
-    cases hc
+    contrapose! hc; rw [mul_eq_zero] at hc; cases hc
     · refine' (hp.1.NeZero _).elim
       exact_mod_cast pow_eq_zero hc
     · exact hc
@@ -929,9 +921,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k hk
   simp only [Int.ofNat_le, zpow_neg, zpow_ofNat]
-  have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by
-    apply pow_pos
-    exact_mod_cast hp.1.Pos
+  have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by apply pow_pos; exact_mod_cast hp.1.Pos
   rw [inv_le_inv (aux _) (aux _)]
   have : p ^ n ≤ p ^ k ↔ n ≤ k := (pow_strictMono_right hp.1.one_lt).le_iff_le
   rw [← this]
@@ -951,11 +941,9 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
   rw [Ideal.mem_span_singleton]
   constructor
   · rintro ⟨c, rfl⟩
-    suffices c ≠ 0 by
-      rw [valuation_p_pow_mul _ _ this, le_add_iff_nonneg_right]
+    suffices c ≠ 0 by rw [valuation_p_pow_mul _ _ this, le_add_iff_nonneg_right];
       apply valuation_nonneg
-    contrapose! hx
-    rw [hx, MulZeroClass.mul_zero]
+    contrapose! hx; rw [hx, MulZeroClass.mul_zero]
   · rw [unit_coeff_spec hx]
     lift x.valuation to ℕ using x.valuation_nonneg with k hk
     simp only [Int.natAbs_ofNat, Units.isUnit, IsUnit.dvd_mul_left, Int.ofNat_le]
@@ -1059,8 +1047,7 @@ theorem maximalIdeal_eq_span_p : maximalIdeal ℤ_[p] = Ideal.span {p} :=
   · intro x hx
     simp only [LocalRing.mem_maximalIdeal, mem_nonunits] at hx
     rwa [Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
-  · rw [Ideal.span_le, Set.singleton_subset_iff]
-    exact p_nonnunit
+  · rw [Ideal.span_le, Set.singleton_subset_iff]; exact p_nonnunit
 #align padic_int.maximal_ideal_eq_span_p PadicInt.maximalIdeal_eq_span_p
 
 /- warning: padic_int.prime_p -> PadicInt.prime_p is a dubious translation:
@@ -1109,21 +1096,14 @@ instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p]
     simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, SModEq.sub_mem, maximal_ideal_eq_span_p,
       Ideal.span_singleton_pow, ← norm_le_pow_iff_mem_span_pow] at hx⊢
     let x' : CauSeq ℤ_[p] norm := ⟨x, _⟩; swap
-    · intro ε hε
-      obtain ⟨m, hm⟩ := exists_pow_neg_lt p hε
-      refine' ⟨m, fun n hn => lt_of_le_of_lt _ hm⟩
-      rw [← neg_sub, norm_neg]
-      exact hx hn
+    · intro ε hε; obtain ⟨m, hm⟩ := exists_pow_neg_lt p hε
+      refine' ⟨m, fun n hn => lt_of_le_of_lt _ hm⟩; rw [← neg_sub, norm_neg]; exact hx hn
     · refine' ⟨x'.lim, fun n => _⟩
-      have : (0 : ℝ) < p ^ (-n : ℤ) := by
-        apply zpow_pos_of_pos
-        exact_mod_cast hp.1.Pos
+      have : (0 : ℝ) < p ^ (-n : ℤ) := by apply zpow_pos_of_pos; exact_mod_cast hp.1.Pos
       obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this
       by_cases hin : i ≤ n
       · exact (hi i le_rfl n hin).le
-      · push_neg  at hin
-        specialize hi i le_rfl i le_rfl
-        specialize hx hin.le
+      · push_neg  at hin; specialize hi i le_rfl i le_rfl; specialize hx hin.le
         have := nonarchimedean (x n - x i) (x i - x'.lim)
         rw [sub_add_sub_cancel] at this
         refine' this.trans (max_le_iff.mpr ⟨hx, hi.le⟩)

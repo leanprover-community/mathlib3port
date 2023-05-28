@@ -76,10 +76,7 @@ def iso_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≅ Y
 
 #print CategoryTheory.subsingleton_iso /-
 instance subsingleton_iso {X Y : C} : Subsingleton (X ≅ Y) :=
-  ⟨by
-    intro i₁ i₂
-    ext1
-    apply Subsingleton.elim⟩
+  ⟨by intro i₁ i₂; ext1; apply Subsingleton.elim⟩
 #align category_theory.subsingleton_iso CategoryTheory.subsingleton_iso
 -/
 

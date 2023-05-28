@@ -27,9 +27,7 @@ open TensorProduct Algebra.TensorProduct
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
   Function.Surjective f
 
-theorem surjective_stableUnderComposition : StableUnderComposition surjective :=
-  by
-  introv R hf hg
+theorem surjective_stableUnderComposition : StableUnderComposition surjective := by introv R hf hg;
   exact hg.comp hf
 #align ring_hom.surjective_stable_under_composition RingHom.surjective_stableUnderComposition
 
@@ -48,12 +46,9 @@ theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
     skip
     induction' x using TensorProduct.induction_on with x y x y ex ey
     · exact ⟨0, map_zero _⟩
-    · obtain ⟨y, rfl⟩ := h y
-      use y • x
-      dsimp
+    · obtain ⟨y, rfl⟩ := h y; use y • x; dsimp
       rw [TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
-    · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey
-      exact ⟨x + y, map_add _ x y⟩
+    · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey; exact ⟨x + y, map_add _ x y⟩
 #align ring_hom.surjective_stable_under_base_change RingHom.surjective_stableUnderBaseChange
 
 open BigOperators
@@ -67,16 +62,11 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
   rw [← Algebra.range_top_iff_surjective, eq_top_iff]
   rintro x -
   obtain ⟨l, hl⟩ :=
-    (Finsupp.mem_span_iff_total R s 1).mp
-      (show _ ∈ Ideal.span s by
-        rw [hs]
-        trivial)
+    (Finsupp.mem_span_iff_total R s 1).mp (show _ ∈ Ideal.span s by rw [hs]; trivial)
   fapply
     Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem _ l.support (fun x : s => f x) fun x : s =>
       f (l x)
-  · dsimp only
-    simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]
-    exact f.congr_arg hl
+  · dsimp only; simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]; exact f.congr_arg hl
   · exact fun _ => Set.mem_range_self _
   · exact fun _ => Set.mem_range_self _
   · intro r

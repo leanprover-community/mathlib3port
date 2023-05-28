@@ -140,9 +140,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Semiring.{u1} R] {p : Polynomial.{u1} R _inst_1} {q : Polynomial.{u1} R _inst_1} [_inst_2 : Semiring.{u2} S] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) (x : S), Eq.{succ u2} S (Polynomial.eval₂.{u1, u2} R S _inst_1 _inst_2 f x (HAdd.hAdd.{u1, u1, u1} (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHAdd.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.add'.{u1} R _inst_1)) p q)) (HAdd.hAdd.{u2, u2, u2} S S S (instHAdd.{u2} S (Distrib.toAdd.{u2} S (NonUnitalNonAssocSemiring.toDistrib.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S _inst_2))))) (Polynomial.eval₂.{u1, u2} R S _inst_1 _inst_2 f x p) (Polynomial.eval₂.{u1, u2} R S _inst_1 _inst_2 f x q))
 Case conversion may be inaccurate. Consider using '#align polynomial.eval₂_add Polynomial.eval₂_addₓ'. -/
 @[simp]
-theorem eval₂_add : (p + q).eval₂ f x = p.eval₂ f x + q.eval₂ f x :=
-  by
-  simp only [eval₂_eq_sum]
+theorem eval₂_add : (p + q).eval₂ f x = p.eval₂ f x + q.eval₂ f x := by simp only [eval₂_eq_sum];
   apply sum_add_index <;> simp [add_mul]
 #align polynomial.eval₂_add Polynomial.eval₂_add
 
@@ -262,10 +260,8 @@ theorem eval₂_finset_sum (s : Finset ι) (g : ι → R[X]) (x : S) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align polynomial.eval₂_of_finsupp Polynomial.eval₂_ofFinsuppₓ'. -/
 theorem eval₂_ofFinsupp {f : R →+* S} {x : S} {p : AddMonoidAlgebra R ℕ} :
-    eval₂ f x (⟨p⟩ : R[X]) = liftNC (↑f) (powersHom S x) p :=
-  by
-  simp only [eval₂_eq_sum, Sum, to_finsupp_sum, support, coeff]
-  rfl
+    eval₂ f x (⟨p⟩ : R[X]) = liftNC (↑f) (powersHom S x) p := by
+  simp only [eval₂_eq_sum, Sum, to_finsupp_sum, support, coeff]; rfl
 #align polynomial.eval₂_of_finsupp Polynomial.eval₂_ofFinsupp
 
 /- warning: polynomial.eval₂_mul_noncomm -> Polynomial.eval₂_mul_noncomm is a dubious translation:
@@ -510,10 +506,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {p : Polynomial.{u1} R _inst_1} {x : R}, Eq.{succ u1} R (Polynomial.eval.{u1} R _inst_1 x p) (Polynomial.sum.{u1, u1} R _inst_1 R (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) p (fun (e : Nat) (a : R) => HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) a (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) x e)))
 Case conversion may be inaccurate. Consider using '#align polynomial.eval_eq_sum Polynomial.eval_eq_sumₓ'. -/
-theorem eval_eq_sum : p.eval x = p.Sum fun e a => a * x ^ e :=
-  by
-  rw [eval, eval₂_eq_sum]
-  rfl
+theorem eval_eq_sum : p.eval x = p.Sum fun e a => a * x ^ e := by rw [eval, eval₂_eq_sum]; rfl
 #align polynomial.eval_eq_sum Polynomial.eval_eq_sum
 
 /- warning: polynomial.eval_eq_sum_range -> Polynomial.eval_eq_sum_range is a dubious translation:
@@ -981,10 +974,8 @@ theorem monomial_comp (n : ℕ) : (monomial n a).comp p = C a * p ^ n :=
 theorem mul_X_comp : (p * X).comp r = p.comp r * r :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp only [hp, hq, add_mul, add_comp]
-  · intro n b
-    simp only [pow_succ', mul_assoc, monomial_mul_X, monomial_comp]
+  · intro p q hp hq; simp only [hp, hq, add_mul, add_comp]
+  · intro n b; simp only [pow_succ', mul_assoc, monomial_mul_X, monomial_comp]
 #align polynomial.mul_X_comp Polynomial.mul_X_comp
 -/
 
@@ -1018,10 +1009,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.C_mul_comp 
 theorem C_mul_comp : (C a * p).comp r = C a * p.comp r :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp [hp, hq, mul_add]
-  · intro n b
-    simp [mul_assoc]
+  · intro p q hp hq; simp [hp, hq, mul_add]
+  · intro n b; simp [mul_assoc]
 #align polynomial.C_mul_comp Polynomial.C_mul_comp
 
 #print Polynomial.nat_cast_mul_comp /-
@@ -1076,8 +1065,7 @@ theorem smul_comp [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (s : S
 theorem comp_assoc {R : Type _} [CommSemiring R] (φ ψ χ : R[X]) :
     (φ.comp ψ).comp χ = φ.comp (ψ.comp χ) := by
   apply Polynomial.induction_on φ <;>
-    · intros
-      simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ', ← mul_assoc]
+    · intros ; simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ', ← mul_assoc]
 #align polynomial.comp_assoc Polynomial.comp_assoc
 -/
 
@@ -1164,9 +1152,7 @@ protected theorem map_one : (1 : R[X]).map f = 1 :=
 
 #print Polynomial.map_mul /-
 @[simp]
-protected theorem map_mul : (p * q).map f = p.map f * q.map f :=
-  by
-  rw [map, eval₂_mul_noncomm]
+protected theorem map_mul : (p * q).map f = p.map f * q.map f := by rw [map, eval₂_mul_noncomm];
   exact fun k => (commute_X _).symm
 #align polynomial.map_mul Polynomial.map_mul
 -/
@@ -1285,10 +1271,8 @@ theorem map_id : p.map (RingHom.id _) = p := by simp [Polynomial.ext_iff, coeff_
 theorem eval₂_eq_eval_map {x : S} : p.eval₂ f x = (p.map f).eval x :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp [hp, hq]
-  · intro n r
-    simp
+  · intro p q hp hq; simp [hp, hq]
+  · intro n r; simp
 #align polynomial.eval₂_eq_eval_map Polynomial.eval₂_eq_eval_map
 -/
 
@@ -1462,11 +1446,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.mem_map_sra
 theorem mem_map_rangeS {p : S[X]} : p ∈ (mapRingHom f).srange ↔ ∀ n, p.coeff n ∈ f.srange :=
   by
   constructor
-  · rintro ⟨p, rfl⟩ n
-    rw [coe_map_ring_hom, coeff_map]
-    exact Set.mem_range_self _
-  · intro h
-    rw [p.as_sum_range_C_mul_X_pow]
+  · rintro ⟨p, rfl⟩ n; rw [coe_map_ring_hom, coeff_map]; exact Set.mem_range_self _
+  · intro h; rw [p.as_sum_range_C_mul_X_pow]
     refine' (map_ring_hom f).srange.sum_mem _
     intro i hi
     rcases h i with ⟨c, hc⟩
@@ -1541,10 +1522,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.eval_one_ma
 theorem eval_one_map (f : R →+* S) (p : R[X]) : (p.map f).eval 1 = f (p.eval 1) :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
-  · intro n r
-    simp only [one_pow, mul_one, eval_monomial, map_monomial]
+  · intro p q hp hq; simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
+  · intro n r; simp only [one_pow, mul_one, eval_monomial, map_monomial]
 #align polynomial.eval_one_map Polynomial.eval_one_map
 
 /- warning: polynomial.eval_nat_cast_map -> Polynomial.eval_nat_cast_map is a dubious translation:
@@ -1557,10 +1536,8 @@ Case conversion may be inaccurate. Consider using '#align polynomial.eval_nat_ca
 theorem eval_nat_cast_map (f : R →+* S) (p : R[X]) (n : ℕ) : (p.map f).eval n = f (p.eval n) :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
-  · intro n r
-    simp only [map_natCast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
+  · intro p q hp hq; simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
+  · intro n r; simp only [map_natCast f, eval_monomial, map_monomial, f.map_pow, f.map_mul]
 #align polynomial.eval_nat_cast_map Polynomial.eval_nat_cast_map
 
 /- warning: polynomial.eval_int_cast_map -> Polynomial.eval_int_cast_map is a dubious translation:
@@ -1574,10 +1551,8 @@ theorem eval_int_cast_map {R S : Type _} [Ring R] [Ring S] (f : R →+* S) (p : 
     (p.map f).eval i = f (p.eval i) :=
   by
   apply Polynomial.induction_on' p
-  · intro p q hp hq
-    simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
-  · intro n r
-    simp only [map_intCast, eval_monomial, map_monomial, map_pow, map_mul]
+  · intro p q hp hq; simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
+  · intro n r; simp only [map_intCast, eval_monomial, map_monomial, map_pow, map_mul]
 #align polynomial.eval_int_cast_map Polynomial.eval_int_cast_map
 
 end Map
@@ -1701,10 +1676,8 @@ theorem eval_pow (n : ℕ) : (p ^ n).eval x = p.eval x ^ n :=
 theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) :=
   by
   apply Polynomial.induction_on' p
-  · intro r s hr hs
-    simp [add_comp, hr, hs]
-  · intro n a
-    simp
+  · intro r s hr hs; simp [add_comp, hr, hs]
+  · intro n a; simp
 #align polynomial.eval_comp Polynomial.eval_comp
 -/
 

@@ -126,10 +126,8 @@ def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ)
     refine'
       (AlgEquiv.ofAlgHom (MvPolynomial.rename e) (MvPolynomial.rename e.symm) _ _).toRingEquiv.trans
         _
-    · ext
-      simp
-    · ext
-      simp
+    · ext; simp
+    · ext; simp
     exact hw.1.aevalEquiv.toRingEquiv
   exact IsAlgClosure.equivOfEquiv K L e
 #align is_alg_closed.equiv_of_transcendence_basis IsAlgClosed.equivOfTranscendenceBasis

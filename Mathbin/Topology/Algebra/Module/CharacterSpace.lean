@@ -64,9 +64,7 @@ theorem coe_coe (φ : characterSpace 𝕜 A) : ⇑(φ : WeakDual 𝕜 A) = φ :=
 instance : ContinuousLinearMapClass (characterSpace 𝕜 A) 𝕜 A 𝕜
     where
   coe φ := (φ : A → 𝕜)
-  coe_injective' φ ψ h := by
-    ext
-    exact congr_fun h x
+  coe_injective' φ ψ h := by ext; exact congr_fun h x
   map_smulₛₗ φ := (φ : WeakDual 𝕜 A).map_smul
   map_add φ := (φ : WeakDual 𝕜 A).map_add
   map_continuous φ := (φ : WeakDual 𝕜 A).cont
@@ -118,10 +116,7 @@ variable (𝕜 A)
 theorem union_zero :
     characterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y } :=
   le_antisymm
-    (by
-      rintro φ (hφ | h₀)
-      · exact hφ.2
-      · exact fun x y => by simp [Set.eq_of_mem_singleton h₀])
+    (by rintro φ (hφ | h₀); · exact hφ.2; · exact fun x y => by simp [Set.eq_of_mem_singleton h₀])
     fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
@@ -240,20 +235,11 @@ def gelfandTransform : A →ₐ[𝕜] C(characterSpace 𝕜 A, 𝕜)
   toFun a :=
     { toFun := fun φ => φ a
       continuous_toFun := (eval_continuous a).comp continuous_induced_dom }
-  map_one' := by
-    ext
-    simp only [coe_mk, coe_one, Pi.one_apply, map_one a]
-  map_mul' a b := by
-    ext
-    simp only [map_mul, coe_mk, coe_mul, Pi.mul_apply]
-  map_zero' := by
-    ext
-    simp only [map_zero, coe_mk, coe_mul, coe_zero, Pi.zero_apply]
-  map_add' a b := by
-    ext
-    simp only [map_add, coe_mk, coe_add, Pi.add_apply]
-  commutes' k := by
-    ext
+  map_one' := by ext; simp only [coe_mk, coe_one, Pi.one_apply, map_one a]
+  map_mul' a b := by ext; simp only [map_mul, coe_mk, coe_mul, Pi.mul_apply]
+  map_zero' := by ext; simp only [map_zero, coe_mk, coe_mul, coe_zero, Pi.zero_apply]
+  map_add' a b := by ext; simp only [map_add, coe_mk, coe_add, Pi.add_apply]
+  commutes' k := by ext;
     simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply, coe_mk,
       algebraMap_apply, Algebra.id.smul_eq_mul, mul_one]
 #align weak_dual.gelfand_transform WeakDual.gelfandTransform

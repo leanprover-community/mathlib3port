@@ -127,27 +127,17 @@ theorem bit_ne_zero (b) {n} (h : n ≠ 0) : bit b n ≠ 0 := by
 -/
 
 #print Nat.bit0_mod_two /-
-theorem bit0_mod_two : bit0 n % 2 = 0 :=
-  by
-  rw [Nat.mod_two_of_bodd]
-  simp
+theorem bit0_mod_two : bit0 n % 2 = 0 := by rw [Nat.mod_two_of_bodd]; simp
 #align nat.bit0_mod_two Nat.bit0_mod_two
 -/
 
 #print Nat.bit1_mod_two /-
-theorem bit1_mod_two : bit1 n % 2 = 1 :=
-  by
-  rw [Nat.mod_two_of_bodd]
-  simp
+theorem bit1_mod_two : bit1 n % 2 = 1 := by rw [Nat.mod_two_of_bodd]; simp
 #align nat.bit1_mod_two Nat.bit1_mod_two
 -/
 
 #print Nat.pos_of_bit0_pos /-
-theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n :=
-  by
-  cases n
-  cases h
-  apply succ_pos
+theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n := by cases n; cases h; apply succ_pos
 #align nat.pos_of_bit0_pos Nat.pos_of_bit0_pos
 -/
 
@@ -200,12 +190,8 @@ protected theorem bit0_eq_zero {n : ℕ} : bit0 n = 0 ↔ n = 0 :=
 -/
 
 #print Nat.bit_eq_zero_iff /-
-theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = false :=
-  by
-  constructor
-  · cases b <;> simp [Nat.bit, Nat.bit0_eq_zero]
-  rintro ⟨rfl, rfl⟩
-  rfl
+theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = false := by constructor;
+  · cases b <;> simp [Nat.bit, Nat.bit0_eq_zero]; rintro ⟨rfl, rfl⟩; rfl
 #align nat.bit_eq_zero_iff Nat.bit_eq_zero_iff
 -/
 
@@ -223,11 +209,9 @@ theorem binaryRec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bi
     rw [binary_rec_zero]
     simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
     exact h.symm
-  · generalize_proofs e
-    revert e
+  · generalize_proofs e; revert e
     rw [bodd_bit, div2_bit]
-    intros
-    rfl
+    intros ; rfl
 #align nat.binary_rec_eq' Nat.binaryRec_eq'
 -/
 
@@ -238,11 +222,7 @@ theorem binaryRec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bi
 def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = true) → C n → C (bit b n)) :
     ∀ n, C n :=
   binaryRec z fun b n ih =>
-    if h : n = 0 → b = true then f b n h ih
-    else by
-      convert z
-      rw [bit_eq_zero_iff]
-      simpa using h
+    if h : n = 0 → b = true then f b n h ih else by convert z; rw [bit_eq_zero_iff]; simpa using h
 #align nat.binary_rec' Nat.binaryRec'
 -/
 
@@ -251,11 +231,7 @@ def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = true)
 @[elab_as_elim]
 def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) :
     ∀ n, C n :=
-  binaryRec' z₀ fun b n h ih =>
-    if h' : n = 0 then by
-      rw [h', h h']
-      exact z₁
-    else f b n h' ih
+  binaryRec' z₀ fun b n h ih => if h' : n = 0 then by rw [h', h h']; exact z₁ else f b n h' ih
 #align nat.binary_rec_from_one Nat.binaryRecFromOne
 -/
 
@@ -268,9 +244,7 @@ theorem zero_bits : bits 0 = [] := by simp [Nat.bits]
 #print Nat.bits_append_bit /-
 @[simp]
 theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = true) : (bit b n).bits = b :: n.bits :=
-  by
-  rw [Nat.bits, binary_rec_eq']
-  simpa
+  by rw [Nat.bits, binary_rec_eq']; simpa
 #align nat.bits_append_bit Nat.bits_append_bit
 -/
 
@@ -290,10 +264,7 @@ theorem bit1_bits (n : ℕ) : (bit1 n).bits = true :: n.bits :=
 
 #print Nat.one_bits /-
 @[simp]
-theorem one_bits : Nat.bits 1 = [true] :=
-  by
-  convert bit1_bits 0
-  simp
+theorem one_bits : Nat.bits 1 = [true] := by convert bit1_bits 0; simp
 #align nat.one_bits Nat.one_bits
 -/
 

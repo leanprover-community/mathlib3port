@@ -56,8 +56,7 @@ theorem Ioi_zero_eq_map : Ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
-    · intro j _
-      exact ⟨j, rfl⟩
+    · intro j _; exact ⟨j, rfl⟩
   · rintro ⟨i, _, rfl⟩
     exact succ_pos _
 #align fin.Ioi_zero_eq_map Fin.Ioi_zero_eq_map
@@ -93,8 +92,7 @@ theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmbedding _).to
     · rintro ⟨⟨⟩⟩
     · intro i hi
       refine' ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
-  · rintro ⟨i, hi, rfl⟩
-    simpa
+  · rintro ⟨i, hi, rfl⟩; simpa
 #align fin.Ioi_succ Fin.Ioi_succ
 
 /- warning: fin.Iio_cast_succ -> Fin.Iio_castSucc is a dubious translation:

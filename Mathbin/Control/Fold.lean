@@ -327,12 +327,8 @@ open Function hiding const
 def mapFold [Monoid α] [Monoid β] (f : α →* β) : ApplicativeTransformation (Const α) (Const β)
     where
   app x := f
-  preserves_seq' := by
-    intros
-    simp only [f.map_mul, (· <*> ·)]
-  preserves_pure' := by
-    intros
-    simp only [f.map_one, pure]
+  preserves_seq' := by intros ; simp only [f.map_mul, (· <*> ·)]
+  preserves_pure' := by intros ; simp only [f.map_one, pure]
 #align traversable.map_fold Traversable.mapFold
 -/
 
@@ -432,11 +428,8 @@ theorem foldr.ofFreeMonoid_comp_of (f : β → α → α) :
 Case conversion may be inaccurate. Consider using '#align traversable.mfoldl.of_free_monoid_comp_of Traversable.foldlm.ofFreeMonoid_comp_ofₓ'. -/
 @[simp]
 theorem foldlm.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : α → β → m α) :
-    foldlM.ofFreeMonoid f ∘ FreeMonoid.of = foldlM.mk ∘ flip f :=
-  by
-  ext1 x
-  simp [(· ∘ ·), mfoldl.of_free_monoid, mfoldl.mk, flip]
-  rfl
+    foldlM.ofFreeMonoid f ∘ FreeMonoid.of = foldlM.mk ∘ flip f := by ext1 x;
+  simp [(· ∘ ·), mfoldl.of_free_monoid, mfoldl.mk, flip]; rfl
 #align traversable.mfoldl.of_free_monoid_comp_of Traversable.foldlm.ofFreeMonoid_comp_of
 
 /- warning: traversable.mfoldr.of_free_monoid_comp_of -> Traversable.foldrm.ofFreeMonoid_comp_of is a dubious translation:
@@ -447,9 +440,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align traversable.mfoldr.of_free_monoid_comp_of Traversable.foldrm.ofFreeMonoid_comp_ofₓ'. -/
 @[simp]
 theorem foldrm.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : β → α → m α) :
-    foldrM.ofFreeMonoid f ∘ FreeMonoid.of = foldrM.mk ∘ f :=
-  by
-  ext
+    foldrM.ofFreeMonoid f ∘ FreeMonoid.of = foldrM.mk ∘ f := by ext;
   simp [(· ∘ ·), mfoldr.of_free_monoid, mfoldr.mk, flip]
 #align traversable.mfoldr.of_free_monoid_comp_of Traversable.foldrm.ofFreeMonoid_comp_of
 

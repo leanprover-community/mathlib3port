@@ -173,8 +173,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : AddCommGroup.{u1} E] [_inst_2 : Module.{0, u1} Real E Real.semiring (AddCommGroup.toAddCommMonoid.{u1} E _inst_1)], Eq.{succ u1} (E -> Real) (gauge.{u1} E _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u1} (Set.{u1} E) (Set.instEmptyCollectionSet.{u1} E))) (OfNat.ofNat.{u1} (E -> Real) 0 (Zero.toOfNat0.{u1} (E -> Real) (Pi.instZero.{u1, 0} E (fun (x : E) => Real) (fun (i : E) => Real.instZeroReal))))
 Case conversion may be inaccurate. Consider using '#align gauge_empty gauge_emptyₓ'. -/
 @[simp]
-theorem gauge_empty : gauge (∅ : Set E) = 0 := by
-  ext
+theorem gauge_empty : gauge (∅ : Set E) = 0 := by ext;
   simp only [gauge_def', Real.sInf_empty, mem_empty_iff_false, Pi.zero_apply, sep_false]
 #align gauge_empty gauge_empty
 
@@ -184,10 +183,8 @@ lean 3 declaration is
 but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : AddCommGroup.{u1} E] [_inst_2 : Module.{0, u1} Real E Real.semiring (AddCommGroup.toAddCommMonoid.{u1} E _inst_1)] {s : Set.{u1} E}, (HasSubset.Subset.{u1} (Set.{u1} E) (Set.instHasSubsetSet.{u1} E) s (OfNat.ofNat.{u1} (Set.{u1} E) 0 (Zero.toOfNat0.{u1} (Set.{u1} E) (Set.zero.{u1} E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E _inst_1))))))))) -> (Eq.{succ u1} (E -> Real) (gauge.{u1} E _inst_1 _inst_2 s) (OfNat.ofNat.{u1} (E -> Real) 0 (Zero.toOfNat0.{u1} (E -> Real) (Pi.instZero.{u1, 0} E (fun (x : E) => Real) (fun (i : E) => Real.instZeroReal)))))
 Case conversion may be inaccurate. Consider using '#align gauge_of_subset_zero gauge_of_subset_zeroₓ'. -/
-theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 :=
-  by
-  obtain rfl | rfl := subset_singleton_iff_eq.1 h
-  exacts[gauge_empty, gauge_zero']
+theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 := by
+  obtain rfl | rfl := subset_singleton_iff_eq.1 h; exacts[gauge_empty, gauge_zero']
 #align gauge_of_subset_zero gauge_of_subset_zero
 
 /- warning: gauge_nonneg -> gauge_nonneg is a dubious translation:
@@ -493,10 +490,8 @@ theorem gauge_norm_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (‖
 <too large>
 Case conversion may be inaccurate. Consider using '#align gauge_smul gauge_smulₓ'. -/
 /-- If `s` is balanced, then the Minkowski functional is ℂ-homogeneous. -/
-theorem gauge_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (r • x) = ‖r‖ * gauge s x :=
-  by
-  rw [← smul_eq_mul, ← gauge_smul_of_nonneg (norm_nonneg r), gauge_norm_smul hs]
-  infer_instance
+theorem gauge_smul (hs : Balanced 𝕜 s) (r : 𝕜) (x : E) : gauge s (r • x) = ‖r‖ * gauge s x := by
+  rw [← smul_eq_mul, ← gauge_smul_of_nonneg (norm_nonneg r), gauge_norm_smul hs]; infer_instance
 #align gauge_smul gauge_smul
 
 end IsROrC

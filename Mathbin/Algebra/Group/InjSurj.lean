@@ -586,13 +586,8 @@ protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [SMul �
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₂ :=
   { hf.AddMonoid f zero add nsmul with
     natCast := coe
-    natCast_zero := by
-      rw [← nat_cast, Nat.cast_zero, zero]
-      rfl
-    natCast_succ := fun n =>
-      by
-      rw [← nat_cast, Nat.cast_succ, add, one, nat_cast]
-      rfl
+    natCast_zero := by rw [← nat_cast, Nat.cast_zero, zero]; rfl
+    natCast_succ := fun n => by rw [← nat_cast, Nat.cast_succ, add, one, nat_cast]; rfl
     one := 1 }
 #align function.surjective.add_monoid_with_one Function.Surjective.addMonoidWithOne
 
@@ -721,9 +716,7 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
       zsmul with
     intCast := coe
     intCast_ofNat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
-    intCast_negSucc := fun n =>
-      by
-      rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast]
+    intCast_negSucc := fun n => by rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast];
       rfl }
 #align function.surjective.add_group_with_one Function.Surjective.addGroupWithOne
 

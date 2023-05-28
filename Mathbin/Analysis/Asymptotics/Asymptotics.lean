@@ -173,9 +173,7 @@ but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α}, (Filter.Eventually.{u3} α (fun (x : α) => LE.le.{0} Real Real.instLEReal (Norm.norm.{u2} E _inst_1 (f x)) (Norm.norm.{u1} F _inst_2 (g x))) l) -> (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.of_bound' Asymptotics.IsBigO.of_bound'ₓ'. -/
 theorem IsBigO.of_bound' (h : ∀ᶠ x in l, ‖f x‖ ≤ ‖g x‖) : f =O[l] g :=
-  IsBigO.of_bound 1 <| by
-    simp_rw [one_mul]
-    exact h
+  IsBigO.of_bound 1 <| by simp_rw [one_mul]; exact h
 #align asymptotics.is_O.of_bound' Asymptotics.IsBigO.of_bound'
 
 /- warning: asymptotics.is_O.bound -> Asymptotics.IsBigO.bound is a dubious translation:
@@ -581,10 +579,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {l : Filter.{u3} α} {f₁ : α -> E} {f₂ : α -> E} {g₁ : α -> F} {g₂ : α -> F}, (Filter.EventuallyEq.{u3, u2} α E l f₁ f₂) -> (Filter.EventuallyEq.{u3, u1} α F l g₁ g₂) -> (Iff (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l f₁ g₁) (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l f₂ g₂))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_congr Asymptotics.isBigO_congrₓ'. -/
-theorem isBigO_congr (hf : f₁ =ᶠ[l] f₂) (hg : g₁ =ᶠ[l] g₂) : f₁ =O[l] g₁ ↔ f₂ =O[l] g₂ :=
-  by
-  unfold is_O
-  exact exists_congr fun c => is_O_with_congr rfl hf hg
+theorem isBigO_congr (hf : f₁ =ᶠ[l] f₂) (hg : g₁ =ᶠ[l] g₂) : f₁ =O[l] g₁ ↔ f₂ =O[l] g₂ := by
+  unfold is_O; exact exists_congr fun c => is_O_with_congr rfl hf hg
 #align asymptotics.is_O_congr Asymptotics.isBigO_congr
 
 /- warning: asymptotics.is_O.congr' -> Asymptotics.IsBigO.congr' is a dubious translation:
@@ -634,10 +630,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {l : Filter.{u3} α} {f₁ : α -> E} {f₂ : α -> E} {g₁ : α -> F} {g₂ : α -> F}, (Filter.EventuallyEq.{u3, u2} α E l f₁ f₂) -> (Filter.EventuallyEq.{u3, u1} α F l g₁ g₂) -> (Iff (Asymptotics.IsLittleO.{u3, u2, u1} α E F _inst_1 _inst_2 l f₁ g₁) (Asymptotics.IsLittleO.{u3, u2, u1} α E F _inst_1 _inst_2 l f₂ g₂))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_congr Asymptotics.isLittleO_congrₓ'. -/
-theorem isLittleO_congr (hf : f₁ =ᶠ[l] f₂) (hg : g₁ =ᶠ[l] g₂) : f₁ =o[l] g₁ ↔ f₂ =o[l] g₂ :=
-  by
-  unfold is_o
-  exact forall₂_congr fun c hc => is_O_with_congr (Eq.refl c) hf hg
+theorem isLittleO_congr (hf : f₁ =ᶠ[l] f₂) (hg : g₁ =ᶠ[l] g₂) : f₁ =o[l] g₁ ↔ f₂ =o[l] g₂ := by
+  unfold is_o; exact forall₂_congr fun c hc => is_O_with_congr (Eq.refl c) hf hg
 #align asymptotics.is_o_congr Asymptotics.isLittleO_congr
 
 /- warning: asymptotics.is_o.congr' -> Asymptotics.IsLittleO.congr' is a dubious translation:
@@ -775,9 +769,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_with_map Asymptotics.isBigOWith_mapₓ'. -/
 @[simp]
 theorem isBigOWith_map {k : β → α} {l : Filter β} :
-    IsBigOWith c (map k l) f g ↔ IsBigOWith c l (f ∘ k) (g ∘ k) :=
-  by
-  unfold is_O_with
+    IsBigOWith c (map k l) f g ↔ IsBigOWith c l (f ∘ k) (g ∘ k) := by unfold is_O_with;
   exact eventually_map
 #align asymptotics.is_O_with_map Asymptotics.isBigOWith_map
 
@@ -973,9 +965,7 @@ but is expected to have type
   forall {α : Type.{u1}} {E : Type.{u3}} {F : Type.{u2}} [_inst_1 : Norm.{u3} E] [_inst_2 : Norm.{u2} F] {f : α -> E} {g : α -> F} (l : Filter.{u1} α), (forall (x : α), LE.le.{0} Real Real.instLEReal (Norm.norm.{u3} E _inst_1 (f x)) (Norm.norm.{u2} F _inst_2 (g x))) -> (Asymptotics.IsBigOWith.{u1, u3, u2} α E F _inst_1 _inst_2 (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_with_of_le Asymptotics.isBigOWith_of_leₓ'. -/
 theorem isBigOWith_of_le (hfg : ∀ x, ‖f x‖ ≤ ‖g x‖) : IsBigOWith 1 l f g :=
-  isBigOWith_of_le' l fun x => by
-    rw [one_mul]
-    exact hfg x
+  isBigOWith_of_le' l fun x => by rw [one_mul]; exact hfg x
 #align asymptotics.is_O_with_of_le Asymptotics.isBigOWith_of_le
 
 /- warning: asymptotics.is_O_of_le' -> Asymptotics.isBigO_of_le' is a dubious translation:
@@ -1330,9 +1320,7 @@ but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, Iff (Asymptotics.IsBigO.{u3, u2, 0} α E Real _inst_1 Real.norm l f (fun (x : α) => Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (g' x))) (Asymptotics.IsBigO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_norm_right Asymptotics.isBigO_norm_rightₓ'. -/
 @[simp]
-theorem isBigO_norm_right : (f =O[l] fun x => ‖g' x‖) ↔ f =O[l] g' :=
-  by
-  unfold is_O
+theorem isBigO_norm_right : (f =O[l] fun x => ‖g' x‖) ↔ f =O[l] g' := by unfold is_O;
   exact exists_congr fun _ => is_O_with_norm_right
 #align asymptotics.is_O_norm_right Asymptotics.isBigO_norm_right
 
@@ -1386,9 +1374,7 @@ but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, Iff (Asymptotics.IsLittleO.{u3, u2, 0} α E Real _inst_1 Real.norm l f (fun (x : α) => Norm.norm.{u1} F' (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) (g' x))) (Asymptotics.IsLittleO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_norm_right Asymptotics.isLittleO_norm_rightₓ'. -/
 @[simp]
-theorem isLittleO_norm_right : (f =o[l] fun x => ‖g' x‖) ↔ f =o[l] g' :=
-  by
-  unfold is_o
+theorem isLittleO_norm_right : (f =o[l] fun x => ‖g' x‖) ↔ f =o[l] g' := by unfold is_o;
   exact forall₂_congr fun _ _ => is_O_with_norm_right
 #align asymptotics.is_o_norm_right Asymptotics.isLittleO_norm_right
 
@@ -1496,9 +1482,7 @@ but is expected to have type
   forall {α : Type.{u3}} {F : Type.{u2}} {E' : Type.{u1}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u1} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, Iff (Asymptotics.IsBigO.{u3, 0, u2} α Real F Real.norm _inst_2 l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g) (Asymptotics.IsBigO.{u3, u1, u2} α E' F (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) _inst_2 l f' g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_norm_left Asymptotics.isBigO_norm_leftₓ'. -/
 @[simp]
-theorem isBigO_norm_left : (fun x => ‖f' x‖) =O[l] g ↔ f' =O[l] g :=
-  by
-  unfold is_O
+theorem isBigO_norm_left : (fun x => ‖f' x‖) =O[l] g ↔ f' =O[l] g := by unfold is_O;
   exact exists_congr fun _ => is_O_with_norm_left
 #align asymptotics.is_O_norm_left Asymptotics.isBigO_norm_left
 
@@ -1552,9 +1536,7 @@ but is expected to have type
   forall {α : Type.{u3}} {F : Type.{u2}} {E' : Type.{u1}} [_inst_2 : Norm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u1} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, Iff (Asymptotics.IsLittleO.{u3, 0, u2} α Real F Real.norm _inst_2 l (fun (x : α) => Norm.norm.{u1} E' (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) (f' x)) g) (Asymptotics.IsLittleO.{u3, u1, u2} α E' F (SeminormedAddCommGroup.toNorm.{u1} E' _inst_4) _inst_2 l f' g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_norm_left Asymptotics.isLittleO_norm_leftₓ'. -/
 @[simp]
-theorem isLittleO_norm_left : (fun x => ‖f' x‖) =o[l] g ↔ f' =o[l] g :=
-  by
-  unfold is_o
+theorem isLittleO_norm_left : (fun x => ‖f' x‖) =o[l] g ↔ f' =o[l] g := by unfold is_o;
   exact forall₂_congr fun _ _ => is_O_with_norm_left
 #align asymptotics.is_o_norm_left Asymptotics.isLittleO_norm_left
 
@@ -1798,9 +1780,7 @@ but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, Iff (Asymptotics.IsBigO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f (fun (x : α) => Neg.neg.{u1} F' (NegZeroClass.toNeg.{u1} F' (SubNegZeroMonoid.toNegZeroClass.{u1} F' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F' (AddCommGroup.toDivisionAddCommMonoid.{u1} F' (SeminormedAddCommGroup.toAddCommGroup.{u1} F' _inst_5)))))) (g' x))) (Asymptotics.IsBigO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_neg_right Asymptotics.isBigO_neg_rightₓ'. -/
 @[simp]
-theorem isBigO_neg_right : (f =O[l] fun x => -g' x) ↔ f =O[l] g' :=
-  by
-  unfold is_O
+theorem isBigO_neg_right : (f =O[l] fun x => -g' x) ↔ f =O[l] g' := by unfold is_O;
   exact exists_congr fun _ => is_O_with_neg_right
 #align asymptotics.is_O_neg_right Asymptotics.isBigO_neg_right
 
@@ -1827,9 +1807,7 @@ but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F' : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_5 : SeminormedAddCommGroup.{u1} F'] {f : α -> E} {g' : α -> F'} {l : Filter.{u3} α}, Iff (Asymptotics.IsLittleO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f (fun (x : α) => Neg.neg.{u1} F' (NegZeroClass.toNeg.{u1} F' (SubNegZeroMonoid.toNegZeroClass.{u1} F' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F' (AddCommGroup.toDivisionAddCommMonoid.{u1} F' (SeminormedAddCommGroup.toAddCommGroup.{u1} F' _inst_5)))))) (g' x))) (Asymptotics.IsLittleO.{u3, u2, u1} α E F' _inst_1 (SeminormedAddCommGroup.toNorm.{u1} F' _inst_5) l f g')
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_neg_right Asymptotics.isLittleO_neg_rightₓ'. -/
 @[simp]
-theorem isLittleO_neg_right : (f =o[l] fun x => -g' x) ↔ f =o[l] g' :=
-  by
-  unfold is_o
+theorem isLittleO_neg_right : (f =o[l] fun x => -g' x) ↔ f =o[l] g' := by unfold is_o;
   exact forall₂_congr fun _ _ => is_O_with_neg_right
 #align asymptotics.is_o_neg_right Asymptotics.isLittleO_neg_right
 
@@ -1883,9 +1861,7 @@ but is expected to have type
   forall {α : Type.{u3}} {F : Type.{u1}} {E' : Type.{u2}} [_inst_2 : Norm.{u1} F] [_inst_4 : SeminormedAddCommGroup.{u2} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, Iff (Asymptotics.IsBigO.{u3, u2, u1} α E' F (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) _inst_2 l (fun (x : α) => Neg.neg.{u2} E' (NegZeroClass.toNeg.{u2} E' (SubNegZeroMonoid.toNegZeroClass.{u2} E' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E' (AddCommGroup.toDivisionAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4)))))) (f' x)) g) (Asymptotics.IsBigO.{u3, u2, u1} α E' F (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) _inst_2 l f' g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_neg_left Asymptotics.isBigO_neg_leftₓ'. -/
 @[simp]
-theorem isBigO_neg_left : (fun x => -f' x) =O[l] g ↔ f' =O[l] g :=
-  by
-  unfold is_O
+theorem isBigO_neg_left : (fun x => -f' x) =O[l] g ↔ f' =O[l] g := by unfold is_O;
   exact exists_congr fun _ => is_O_with_neg_left
 #align asymptotics.is_O_neg_left Asymptotics.isBigO_neg_left
 
@@ -1912,9 +1888,7 @@ but is expected to have type
   forall {α : Type.{u3}} {F : Type.{u1}} {E' : Type.{u2}} [_inst_2 : Norm.{u1} F] [_inst_4 : SeminormedAddCommGroup.{u2} E'] {g : α -> F} {f' : α -> E'} {l : Filter.{u3} α}, Iff (Asymptotics.IsLittleO.{u3, u2, u1} α E' F (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) _inst_2 l (fun (x : α) => Neg.neg.{u2} E' (NegZeroClass.toNeg.{u2} E' (SubNegZeroMonoid.toNegZeroClass.{u2} E' (SubtractionMonoid.toSubNegZeroMonoid.{u2} E' (SubtractionCommMonoid.toSubtractionMonoid.{u2} E' (AddCommGroup.toDivisionAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4)))))) (f' x)) g) (Asymptotics.IsLittleO.{u3, u2, u1} α E' F (SeminormedAddCommGroup.toNorm.{u2} E' _inst_4) _inst_2 l f' g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_neg_left Asymptotics.isLittleO_neg_leftₓ'. -/
 @[simp]
-theorem isLittleO_neg_left : (fun x => -f' x) =o[l] g ↔ f' =o[l] g :=
-  by
-  unfold is_o
+theorem isLittleO_neg_left : (fun x => -f' x) =o[l] g ↔ f' =o[l] g := by unfold is_o;
   exact forall₂_congr fun _ _ => is_O_with_neg_left
 #align asymptotics.is_o_neg_left Asymptotics.isLittleO_neg_left
 
@@ -2784,9 +2758,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_one_iff Asymptotics.isBigO_one_iffₓ'. -/
 @[simp]
 theorem isBigO_one_iff : f =O[l] (fun x => 1 : α → F) ↔ IsBoundedUnder (· ≤ ·) l fun x => ‖f x‖ :=
-  by
-  simp only [is_O_iff, norm_one, mul_one]
-  rfl
+  by simp only [is_O_iff, norm_one, mul_one]; rfl
 #align asymptotics.is_O_one_iff Asymptotics.isBigO_one_iff
 
 /- warning: filter.is_bounded_under.is_O_one -> Filter.IsBoundedUnder.isBigO_one is a dubious translation:
@@ -3524,8 +3496,7 @@ Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_const
 theorem isBigO_const_smul_left {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =O[l] g ↔ f' =O[l] g :=
   by
   have cne0 : ‖c‖ ≠ 0 := mt norm_eq_zero.mp hc
-  rw [← is_O_norm_left]
-  simp only [norm_smul]
+  rw [← is_O_norm_left]; simp only [norm_smul]
   rw [is_O_const_mul_left_iff cne0, is_O_norm_left]
 #align asymptotics.is_O_const_smul_left Asymptotics.isBigO_const_smul_left
 
@@ -3535,8 +3506,7 @@ Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_const
 theorem isLittleO_const_smul_left {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =o[l] g ↔ f' =o[l] g :=
   by
   have cne0 : ‖c‖ ≠ 0 := mt norm_eq_zero.mp hc
-  rw [← is_o_norm_left]
-  simp only [norm_smul]
+  rw [← is_o_norm_left]; simp only [norm_smul]
   rw [is_o_const_mul_left_iff cne0, is_o_norm_left]
 #align asymptotics.is_o_const_smul_left Asymptotics.isLittleO_const_smul_left
 
@@ -3546,8 +3516,7 @@ Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_const
 theorem isBigO_const_smul_right {c : 𝕜} (hc : c ≠ 0) : (f =O[l] fun x => c • f' x) ↔ f =O[l] f' :=
   by
   have cne0 : ‖c‖ ≠ 0 := mt norm_eq_zero.mp hc
-  rw [← is_O_norm_right]
-  simp only [norm_smul]
+  rw [← is_O_norm_right]; simp only [norm_smul]
   rw [is_O_const_mul_right_iff cne0, is_O_norm_right]
 #align asymptotics.is_O_const_smul_right Asymptotics.isBigO_const_smul_right
 
@@ -3558,8 +3527,7 @@ theorem isLittleO_const_smul_right {c : 𝕜} (hc : c ≠ 0) :
     (f =o[l] fun x => c • f' x) ↔ f =o[l] f' :=
   by
   have cne0 : ‖c‖ ≠ 0 := mt norm_eq_zero.mp hc
-  rw [← is_o_norm_right]
-  simp only [norm_smul]
+  rw [← is_o_norm_right]; simp only [norm_smul]
   rw [is_o_const_mul_right_iff cne0, is_o_norm_right]
 #align asymptotics.is_o_const_smul_right Asymptotics.isLittleO_const_smul_right
 
@@ -3966,8 +3934,7 @@ theorem isLittleO_iff_exists_eq_mul :
   by
   constructor
   · exact fun h => ⟨fun x => u x / v x, h.tendsto_div_nhds_zero, h.eventually_mul_div_cancel.symm⟩
-  · unfold is_o
-    rintro ⟨φ, hφ, huvφ⟩ c hpos
+  · unfold is_o; rintro ⟨φ, hφ, huvφ⟩ c hpos
     rw [NormedAddCommGroup.tendsto_nhds_zero] at hφ
     exact is_O_with_of_eq_mul _ ((hφ c hpos).mono fun x => le_of_lt) huvφ
 #align asymptotics.is_o_iff_exists_eq_mul Asymptotics.isLittleO_iff_exists_eq_mul
@@ -4076,10 +4043,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u1}} [_inst_12 : NormedField.{u1} 𝕜] {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) n) -> (Asymptotics.IsLittleO.{u1, u1, u1} 𝕜 𝕜 𝕜 (NormedField.toNorm.{u1} 𝕜 _inst_12) (NormedField.toNorm.{u1} 𝕜 _inst_12) (nhds.{u1} 𝕜 (UniformSpace.toTopologicalSpace.{u1} 𝕜 (PseudoMetricSpace.toUniformSpace.{u1} 𝕜 (SeminormedRing.toPseudoMetricSpace.{u1} 𝕜 (SeminormedCommRing.toSeminormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_12)))))) (OfNat.ofNat.{u1} 𝕜 0 (Zero.toOfNat0.{u1} 𝕜 (CommMonoidWithZero.toZero.{u1} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u1} 𝕜 (Semifield.toCommGroupWithZero.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_12)))))))) (fun (x : 𝕜) => HPow.hPow.{u1, 0, u1} 𝕜 Nat 𝕜 (instHPow.{u1, 0} 𝕜 Nat (Monoid.Pow.{u1} 𝕜 (MonoidWithZero.toMonoid.{u1} 𝕜 (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_12)))))))) x n) (fun (x : 𝕜) => x))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o_pow_id Asymptotics.isLittleO_pow_idₓ'. -/
-theorem isLittleO_pow_id {n : ℕ} (h : 1 < n) : (fun x : 𝕜 => x ^ n) =o[𝓝 0] fun x => x :=
-  by
-  convert is_o_pow_pow h
-  simp only [pow_one]
+theorem isLittleO_pow_id {n : ℕ} (h : 1 < n) : (fun x : 𝕜 => x ^ n) =o[𝓝 0] fun x => x := by
+  convert is_o_pow_pow h; simp only [pow_one]
 #align asymptotics.is_o_pow_id Asymptotics.isLittleO_pow_id
 
 /- warning: asymptotics.is_o_norm_pow_id -> Asymptotics.isLittleO_norm_pow_id is a dubious translation:
@@ -4110,10 +4075,8 @@ but is expected to have type
   forall {E'' : Type.{u2}} {F'' : Type.{u1}} [_inst_7 : NormedAddCommGroup.{u2} E''] [_inst_8 : NormedAddCommGroup.{u1} F''] {f : E'' -> F''} {x₀ : E''} {n : Nat}, (Asymptotics.IsBigO.{u2, u1, 0} E'' F'' Real (NormedAddCommGroup.toNorm.{u1} F'' _inst_8) Real.norm (nhds.{u2} E'' (UniformSpace.toTopologicalSpace.{u2} E'' (PseudoMetricSpace.toUniformSpace.{u2} E'' (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E'' (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E'' _inst_7)))) x₀) f (fun (x : E'') => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Norm.norm.{u2} E'' (NormedAddCommGroup.toNorm.{u2} E'' _inst_7) (HSub.hSub.{u2, u2, u2} E'' E'' E'' (instHSub.{u2} E'' (SubNegMonoid.toSub.{u2} E'' (AddGroup.toSubNegMonoid.{u2} E'' (NormedAddGroup.toAddGroup.{u2} E'' (NormedAddCommGroup.toNormedAddGroup.{u2} E'' _inst_7))))) x x₀)) n)) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Eq.{succ u1} F'' (f x₀) (OfNat.ofNat.{u1} F'' 0 (Zero.toOfNat0.{u1} F'' (NegZeroClass.toZero.{u1} F'' (SubNegZeroMonoid.toNegZeroClass.{u1} F'' (SubtractionMonoid.toSubNegZeroMonoid.{u1} F'' (SubtractionCommMonoid.toSubtractionMonoid.{u1} F'' (AddCommGroup.toDivisionAddCommMonoid.{u1} F'' (NormedAddCommGroup.toAddCommGroup.{u1} F'' _inst_8)))))))))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.eq_zero_of_norm_pow Asymptotics.IsBigO.eq_zero_of_norm_powₓ'. -/
 theorem IsBigO.eq_zero_of_norm_pow {f : E'' → F''} {x₀ : E''} {n : ℕ}
-    (h : f =O[𝓝 x₀] fun x => ‖x - x₀‖ ^ n) (hn : 0 < n) : f x₀ = 0 :=
-  by
-  rw [← nhdsWithin_univ] at h
-  exact h.eq_zero_of_norm_pow_within (mem_univ _) hn
+    (h : f =O[𝓝 x₀] fun x => ‖x - x₀‖ ^ n) (hn : 0 < n) : f x₀ = 0 := by
+  rw [← nhdsWithin_univ] at h; exact h.eq_zero_of_norm_pow_within (mem_univ _) hn
 #align asymptotics.is_O.eq_zero_of_norm_pow Asymptotics.IsBigO.eq_zero_of_norm_pow
 
 /- warning: asymptotics.is_o_pow_sub_pow_sub -> Asymptotics.isLittleO_pow_sub_pow_sub is a dubious translation:
@@ -4347,9 +4310,7 @@ Case conversion may be inaccurate. Consider using '#align local_homeomorph.is_O_
 theorem isBigOWith_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E}
     {g : β → F} {C : ℝ} : IsBigOWith C (𝓝 b) f g ↔ IsBigOWith C (𝓝 (e.symm b)) (f ∘ e) (g ∘ e) :=
   ⟨fun h =>
-    h.comp_tendsto <| by
-      convert e.continuous_at (e.map_target hb)
-      exact (e.right_inv hb).symm,
+    h.comp_tendsto <| by convert e.continuous_at (e.map_target hb); exact (e.right_inv hb).symm,
     fun h =>
     (h.comp_tendsto (e.continuousAt_symm hb)).congr' rfl
       ((e.eventually_right_inverse hb).mono fun x hx => congr_arg f hx)
@@ -4364,9 +4325,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.is_O_congr LocalHomeomorph.isBigO_congrₓ'. -/
 /-- Transfer `is_O` over a `local_homeomorph`. -/
 theorem isBigO_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} :
-    f =O[𝓝 b] g ↔ (f ∘ e) =O[𝓝 (e.symm b)] (g ∘ e) :=
-  by
-  unfold is_O
+    f =O[𝓝 b] g ↔ (f ∘ e) =O[𝓝 (e.symm b)] (g ∘ e) := by unfold is_O;
   exact exists_congr fun C => e.is_O_with_congr hb
 #align local_homeomorph.is_O_congr LocalHomeomorph.isBigO_congr
 
@@ -4378,9 +4337,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_homeomorph.is_o_congr LocalHomeomorph.isLittleO_congrₓ'. -/
 /-- Transfer `is_o` over a `local_homeomorph`. -/
 theorem isLittleO_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E}
-    {g : β → F} : f =o[𝓝 b] g ↔ (f ∘ e) =o[𝓝 (e.symm b)] (g ∘ e) :=
-  by
-  unfold is_o
+    {g : β → F} : f =o[𝓝 b] g ↔ (f ∘ e) =o[𝓝 (e.symm b)] (g ∘ e) := by unfold is_o;
   exact forall₂_congr fun c hc => e.is_O_with_congr hb
 #align local_homeomorph.is_o_congr LocalHomeomorph.isLittleO_congr
 
@@ -4414,9 +4371,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_O_congr Homeomorph.isBigO_congrₓ'. -/
 /-- Transfer `is_O` over a `homeomorph`. -/
 theorem isBigO_congr (e : α ≃ₜ β) {b : β} {f : β → E} {g : β → F} :
-    f =O[𝓝 b] g ↔ (f ∘ e) =O[𝓝 (e.symm b)] (g ∘ e) :=
-  by
-  unfold is_O
+    f =O[𝓝 b] g ↔ (f ∘ e) =O[𝓝 (e.symm b)] (g ∘ e) := by unfold is_O;
   exact exists_congr fun C => e.is_O_with_congr
 #align homeomorph.is_O_congr Homeomorph.isBigO_congr
 
@@ -4428,9 +4383,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_o_congr Homeomorph.isLittleO_congrₓ'. -/
 /-- Transfer `is_o` over a `homeomorph`. -/
 theorem isLittleO_congr (e : α ≃ₜ β) {b : β} {f : β → E} {g : β → F} :
-    f =o[𝓝 b] g ↔ (f ∘ e) =o[𝓝 (e.symm b)] (g ∘ e) :=
-  by
-  unfold is_o
+    f =o[𝓝 b] g ↔ (f ∘ e) =o[𝓝 (e.symm b)] (g ∘ e) := by unfold is_o;
   exact forall₂_congr fun c hc => e.is_O_with_congr
 #align homeomorph.is_o_congr Homeomorph.isLittleO_congr
 

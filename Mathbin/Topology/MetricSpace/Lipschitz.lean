@@ -69,10 +69,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PseudoMetricSpace.{u1} α] [_inst_2 : PseudoMetricSpace.{u2} β] {K : NNReal} {f : α -> β}, Iff (LipschitzWith.{u1, u2} α β (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1) (PseudoMetricSpace.toPseudoEMetricSpace.{u2} β _inst_2) K f) (forall (x : α) (y : α), LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} β (PseudoMetricSpace.toDist.{u2} β _inst_2) (f x) (f y)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (NNReal.toReal K) (Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align lipschitz_with_iff_dist_le_mul lipschitzWith_iff_dist_le_mulₓ'. -/
 theorem lipschitzWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
-    {f : α → β} : LipschitzWith K f ↔ ∀ x y, dist (f x) (f y) ≤ K * dist x y :=
-  by
-  simp only [LipschitzWith, edist_nndist, dist_nndist]
-  norm_cast
+    {f : α → β} : LipschitzWith K f ↔ ∀ x y, dist (f x) (f y) ≤ K * dist x y := by
+  simp only [LipschitzWith, edist_nndist, dist_nndist]; norm_cast
 #align lipschitz_with_iff_dist_le_mul lipschitzWith_iff_dist_le_mul
 
 /- warning: lipschitz_with.dist_le_mul -> LipschitzWith.dist_le_mul is a dubious translation:
@@ -122,10 +120,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lipschitz_on_with_iff_dist_le_mul lipschitzOnWith_iff_dist_le_mulₓ'. -/
 theorem lipschitzOnWith_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {s : Set α} {f : α → β} :
-    LipschitzOnWith K f s ↔ ∀ x ∈ s, ∀ y ∈ s, dist (f x) (f y) ≤ K * dist x y :=
-  by
-  simp only [LipschitzOnWith, edist_nndist, dist_nndist]
-  norm_cast
+    LipschitzOnWith K f s ↔ ∀ x ∈ s, ∀ y ∈ s, dist (f x) (f y) ≤ K * dist x y := by
+  simp only [LipschitzOnWith, edist_nndist, dist_nndist]; norm_cast
 #align lipschitz_on_with_iff_dist_le_mul lipschitzOnWith_iff_dist_le_mul
 
 /- warning: lipschitz_on_with.dist_le_mul -> LipschitzOnWith.dist_le_mul is a dubious translation:
@@ -503,9 +499,7 @@ endomorphism. -/
 protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0)
     (h : ∀ i, LipschitzWith (K i) (f i)) : ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
   | [] => by simpa using LipschitzWith.id
-  | i::l => by
-    simp only [List.map_cons, List.prod_cons]
-    exact (h i).mul (list_prod l)
+  | i::l => by simp only [List.map_cons, List.prod_cons]; exact (h i).mul (list_prod l)
 #align lipschitz_with.list_prod LipschitzWith.list_prod
 
 /- warning: lipschitz_with.pow -> LipschitzWith.pow is a dubious translation:
@@ -517,9 +511,7 @@ Case conversion may be inaccurate. Consider using '#align lipschitz_with.pow Lip
 protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :
     ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.End α)
   | 0 => by simpa only [pow_zero] using LipschitzWith.id
-  | n + 1 => by
-    rw [pow_succ, pow_succ]
-    exact h.mul (pow n)
+  | n + 1 => by rw [pow_succ, pow_succ]; exact h.mul (pow n)
 #align lipschitz_with.pow LipschitzWith.pow
 
 end Emetric
@@ -718,9 +710,7 @@ theorem diam_image_le (hf : LipschitzWith K f) (s : Set α) (hs : Metric.Bounded
 
 #print LipschitzWith.dist_left /-
 protected theorem dist_left (y : α) : LipschitzWith 1 fun x => dist x y :=
-  LipschitzWith.of_le_add fun x z => by
-    rw [add_comm]
-    apply dist_triangle
+  LipschitzWith.of_le_add fun x z => by rw [add_comm]; apply dist_triangle
 #align lipschitz_with.dist_left LipschitzWith.dist_left
 -/
 

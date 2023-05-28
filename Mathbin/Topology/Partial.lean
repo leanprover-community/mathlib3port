@@ -37,11 +37,8 @@ theorem rtendsto_nhds {r : Rel β α} {l : Filter β} {a : α} :
 
 #print rtendsto'_nhds /-
 theorem rtendsto'_nhds {r : Rel β α} {l : Filter β} {a : α} :
-    Rtendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Preimage s ∈ l :=
-  by
-  rw [rtendsto'_def]
-  apply all_mem_nhds_filter
-  apply Rel.preimage_mono
+    Rtendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Preimage s ∈ l := by rw [rtendsto'_def];
+  apply all_mem_nhds_filter; apply Rel.preimage_mono
 #align rtendsto'_nhds rtendsto'_nhds
 -/
 
@@ -108,9 +105,7 @@ theorem pcontinuous_iff' {f : α →. β} :
     rw [ptendsto'_def] at this
     exact this s hs
   show f.preimage s ∈ 𝓝 x
-  apply h'
-  rw [mem_nhds_iff]
-  exact ⟨s, Set.Subset.refl _, os, ys⟩
+  apply h'; rw [mem_nhds_iff]; exact ⟨s, Set.Subset.refl _, os, ys⟩
 #align pcontinuous_iff' pcontinuous_iff'
 
 /- warning: continuous_within_at_iff_ptendsto_res -> continuousWithinAt_iff_ptendsto_res is a dubious translation:

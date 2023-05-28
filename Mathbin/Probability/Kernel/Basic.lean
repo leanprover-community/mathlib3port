@@ -184,11 +184,7 @@ instance (priority := 100) IsMarkovKernel.isFiniteKernel [h : IsMarkovKernel κ]
 namespace Kernel
 
 @[ext]
-theorem ext {η : kernel α β} (h : ∀ a, κ a = η a) : κ = η :=
-  by
-  ext1
-  ext1 a
-  exact h a
+theorem ext {η : kernel α β} (h : ∀ a, κ a = η a) : κ = η := by ext1; ext1 a; exact h a
 #align probability_theory.kernel.ext ProbabilityTheory.kernel.ext
 
 theorem ext_iff {η : kernel α β} : κ = η ↔ ∀ a, κ a = η a :=
@@ -252,17 +248,12 @@ theorem sum_zero [Countable ι] : (kernel.sum fun i : ι => (0 : kernel α β)) 
 #align probability_theory.kernel.sum_zero ProbabilityTheory.kernel.sum_zero
 
 theorem sum_comm [Countable ι] (κ : ι → ι → kernel α β) :
-    (kernel.sum fun n => kernel.sum (κ n)) = kernel.sum fun m => kernel.sum fun n => κ n m :=
-  by
-  ext (a s hs)
-  simp_rw [sum_apply]
-  rw [measure.sum_comm]
+    (kernel.sum fun n => kernel.sum (κ n)) = kernel.sum fun m => kernel.sum fun n => κ n m := by
+  ext (a s hs); simp_rw [sum_apply]; rw [measure.sum_comm]
 #align probability_theory.kernel.sum_comm ProbabilityTheory.kernel.sum_comm
 
 @[simp]
-theorem sum_fintype [Fintype ι] (κ : ι → kernel α β) : kernel.sum κ = ∑ i, κ i :=
-  by
-  ext (a s hs)
+theorem sum_fintype [Fintype ι] (κ : ι → kernel α β) : kernel.sum κ = ∑ i, κ i := by ext (a s hs);
   simp only [sum_apply' κ a hs, finset_sum_apply' _ κ a s, tsum_fintype]
 #align probability_theory.kernel.sum_fintype ProbabilityTheory.kernel.sum_fintype
 
@@ -285,15 +276,11 @@ class ProbabilityTheory.IsSFiniteKernel (κ : kernel α β) : Prop where
 
 instance (priority := 100) IsFiniteKernel.isSFiniteKernel [h : IsFiniteKernel κ] :
     IsSFiniteKernel κ :=
-  ⟨⟨fun n => if n = 0 then κ else 0, fun n => by
-      split_ifs
-      exact h
-      infer_instance, by
+  ⟨⟨fun n => if n = 0 then κ else 0, fun n => by split_ifs; exact h; infer_instance,
+      by
       ext (a s hs)
       rw [kernel.sum_apply' _ _ hs]
-      have : (fun i => ((ite (i = 0) κ 0) a) s) = fun i => ite (i = 0) (κ a s) 0 :=
-        by
-        ext1 i
+      have : (fun i => ((ite (i = 0) κ 0) a) s) = fun i => ite (i = 0) (κ a s) 0 := by ext1 i;
         split_ifs <;> rfl
       rw [this, tsum_ite_eq]⟩⟩
 #align probability_theory.kernel.is_finite_kernel.is_s_finite_kernel ProbabilityTheory.kernel.IsFiniteKernel.isSFiniteKernel
@@ -328,8 +315,7 @@ theorem IsSFiniteKernel.finset_sum {κs : ι → kernel α β} (I : Finset ι)
     (h : ∀ i ∈ I, IsSFiniteKernel (κs i)) : IsSFiniteKernel (∑ i in I, κs i) := by
   classical
     induction' I using Finset.induction with i I hi_nmem_I h_ind h
-    · rw [Finset.sum_empty]
-      infer_instance
+    · rw [Finset.sum_empty]; infer_instance
     · rw [Finset.sum_insert hi_nmem_I]
       haveI : is_s_finite_kernel (κs i) := h i (Finset.mem_insert_self _ _)
       have : is_s_finite_kernel (∑ x : ι in I, κs x) :=
@@ -394,9 +380,7 @@ theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : S
 
 instance isMarkovKernel_deterministic {f : α → β} (hf : Measurable f) :
     IsMarkovKernel (deterministic f hf) :=
-  ⟨fun a => by
-    rw [deterministic_apply hf]
-    infer_instance⟩
+  ⟨fun a => by rw [deterministic_apply hf]; infer_instance⟩
 #align probability_theory.kernel.is_markov_kernel_deterministic ProbabilityTheory.kernel.isMarkovKernel_deterministic
 
 theorem lintegral_deterministic' {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
@@ -542,9 +526,7 @@ theorem restrict_apply' (κ : kernel α β) (hs : MeasurableSet s) (a : α) (ht 
 #align probability_theory.kernel.restrict_apply' ProbabilityTheory.kernel.restrict_apply'
 
 @[simp]
-theorem restrict_univ : kernel.restrict κ MeasurableSet.univ = κ :=
-  by
-  ext1 a
+theorem restrict_univ : kernel.restrict κ MeasurableSet.univ = κ := by ext1 a;
   rw [kernel.restrict_apply, measure.restrict_univ]
 #align probability_theory.kernel.restrict_univ ProbabilityTheory.kernel.restrict_univ
 
@@ -672,16 +654,12 @@ theorem piecewise_apply (a : α) : piecewise hs κ η a = if a ∈ s then κ a e
 #align probability_theory.kernel.piecewise_apply ProbabilityTheory.kernel.piecewise_apply
 
 theorem piecewise_apply' (a : α) (t : Set β) :
-    piecewise hs κ η a t = if a ∈ s then κ a t else η a t :=
-  by
-  rw [piecewise_apply]
+    piecewise hs κ η a t = if a ∈ s then κ a t else η a t := by rw [piecewise_apply];
   split_ifs <;> rfl
 #align probability_theory.kernel.piecewise_apply' ProbabilityTheory.kernel.piecewise_apply'
 
 instance IsMarkovKernel.piecewise [IsMarkovKernel κ] [IsMarkovKernel η] :
-    IsMarkovKernel (piecewise hs κ η) :=
-  by
-  refine' ⟨fun a => ⟨_⟩⟩
+    IsMarkovKernel (piecewise hs κ η) := by refine' ⟨fun a => ⟨_⟩⟩;
   rw [piecewise_apply', measure_univ, measure_univ, if_t_t]
 #align probability_theory.kernel.is_markov_kernel.piecewise ProbabilityTheory.kernel.IsMarkovKernel.piecewise
 
@@ -704,35 +682,27 @@ instance IsSFiniteKernel.piecewise [IsSFiniteKernel κ] [IsSFiniteKernel η] :
 #align probability_theory.kernel.is_s_finite_kernel.piecewise ProbabilityTheory.kernel.IsSFiniteKernel.piecewise
 
 theorem lintegral_piecewise (a : α) (g : β → ℝ≥0∞) :
-    (∫⁻ b, g b ∂piecewise hs κ η a) = if a ∈ s then ∫⁻ b, g b ∂κ a else ∫⁻ b, g b ∂η a :=
-  by
-  simp_rw [piecewise_apply]
-  split_ifs <;> rfl
+    (∫⁻ b, g b ∂piecewise hs κ η a) = if a ∈ s then ∫⁻ b, g b ∂κ a else ∫⁻ b, g b ∂η a := by
+  simp_rw [piecewise_apply]; split_ifs <;> rfl
 #align probability_theory.kernel.lintegral_piecewise ProbabilityTheory.kernel.lintegral_piecewise
 
 theorem set_lintegral_piecewise (a : α) (g : β → ℝ≥0∞) (t : Set β) :
     (∫⁻ b in t, g b ∂piecewise hs κ η a) =
       if a ∈ s then ∫⁻ b in t, g b ∂κ a else ∫⁻ b in t, g b ∂η a :=
-  by
-  simp_rw [piecewise_apply]
-  split_ifs <;> rfl
+  by simp_rw [piecewise_apply]; split_ifs <;> rfl
 #align probability_theory.kernel.set_lintegral_piecewise ProbabilityTheory.kernel.set_lintegral_piecewise
 
 theorem integral_piecewise {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (a : α) (g : β → E) :
-    (∫ b, g b ∂piecewise hs κ η a) = if a ∈ s then ∫ b, g b ∂κ a else ∫ b, g b ∂η a :=
-  by
-  simp_rw [piecewise_apply]
-  split_ifs <;> rfl
+    (∫ b, g b ∂piecewise hs κ η a) = if a ∈ s then ∫ b, g b ∂κ a else ∫ b, g b ∂η a := by
+  simp_rw [piecewise_apply]; split_ifs <;> rfl
 #align probability_theory.kernel.integral_piecewise ProbabilityTheory.kernel.integral_piecewise
 
 theorem set_integral_piecewise {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (a : α) (g : β → E) (t : Set β) :
     (∫ b in t, g b ∂piecewise hs κ η a) =
       if a ∈ s then ∫ b in t, g b ∂κ a else ∫ b in t, g b ∂η a :=
-  by
-  simp_rw [piecewise_apply]
-  split_ifs <;> rfl
+  by simp_rw [piecewise_apply]; split_ifs <;> rfl
 #align probability_theory.kernel.set_integral_piecewise ProbabilityTheory.kernel.set_integral_piecewise
 
 end Piecewise

@@ -197,29 +197,20 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
     C x := by
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
-  rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
-  clear hx
-  induction' L with hd tl ih
-  · exact h0
+  rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩; clear hx
+  induction' L with hd tl ih; · exact h0
   rw [List.forall_mem_cons] at HL
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
-  replace HL := HL.1
-  clear ih tl
+  replace HL := HL.1; clear ih tl
   rsuffices ⟨L, HL', HP | HP⟩ :
     ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact h1
+  · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact h1
     rw [List.forall_mem_cons] at HL'
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact hneg1
+  · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact hneg1
     rw [List.prod_cons, neg_mul_eq_mul_neg]
     rw [List.forall_mem_cons] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
@@ -304,17 +295,14 @@ theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
     (by
       rintro _ ⟨x, hx, rfl⟩
       apply in_closure.rec_on hx <;> intros
-      · rw [f.map_one]
-        apply closure.is_subring.to_is_submonoid.one_mem
+      · rw [f.map_one]; apply closure.is_subring.to_is_submonoid.one_mem
       · rw [f.map_neg, f.map_one]
         apply closure.is_subring.to_is_add_subgroup.neg_mem
         apply closure.is_subring.to_is_submonoid.one_mem
       · rw [f.map_mul]
         apply closure.is_subring.to_is_submonoid.mul_mem <;>
           solve_by_elim [subset_closure, Set.mem_image_of_mem]
-      · rw [f.map_add]
-        apply closure.is_subring.to_is_add_submonoid.add_mem
-        assumption')
+      · rw [f.map_add]; apply closure.is_subring.to_is_add_submonoid.add_mem; assumption')
     (closure_subset (RingHom.isSubring_image _ closure.isSubring) <|
       Set.image_subset _ subset_closure)
 #align ring.image_closure Ring.image_closure

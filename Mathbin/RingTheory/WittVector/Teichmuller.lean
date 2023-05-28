@@ -72,22 +72,13 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     tsub_zero]
   · rfl
   · intro i hi h0
-    convert MulZeroClass.mul_zero _
-    convert zero_pow _
-    · cases i
-      · contradiction
-      · rfl
+    convert MulZeroClass.mul_zero _; convert zero_pow _
+    · cases i; · contradiction; · rfl
     · exact pow_pos hp.1.Pos _
-  · rw [Finset.mem_range]
-    intro h
-    exact (h (Nat.succ_pos n)).elim
+  · rw [Finset.mem_range]; intro h; exact (h (Nat.succ_pos n)).elim
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
-    map f (teichmullerFun p r) = teichmullerFun p (f r) :=
-  by
-  ext n
-  cases n
-  · rfl
+    map f (teichmullerFun p r) = teichmullerFun p (f r) := by ext n; cases n; · rfl;
   · exact f.map_zero
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
@@ -113,10 +104,8 @@ def teichmuller : R →* 𝕎 R where
   toFun := teichmullerFun p
   map_one' := by
     ext ⟨⟩
-    · rw [one_coeff_zero]
-      rfl
-    · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_pos n)]
-      rfl
+    · rw [one_coeff_zero]; rfl
+    · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_pos n)]; rfl
   map_mul' := by
     intro x y
     rcases counit_surjective R x with ⟨x, rfl⟩
@@ -135,10 +124,7 @@ theorem teichmuller_coeff_pos (r : R) : ∀ (n : ℕ) (hn : 0 < n), (teichmuller
 #align witt_vector.teichmuller_coeff_pos WittVector.teichmuller_coeff_pos
 
 @[simp]
-theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by
-  ext ⟨⟩ <;>
-    · rw [zero_coeff]
-      rfl
+theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by ext ⟨⟩ <;> · rw [zero_coeff]; rfl
 #align witt_vector.teichmuller_zero WittVector.teichmuller_zero
 
 /-- `teichmuller` is a natural transformation. -/

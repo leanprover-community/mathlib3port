@@ -158,8 +158,7 @@ theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 :=
   constructor
   · intro h
     by_contra hf
-    unfold norm at h
-    split_ifs  at h
+    unfold norm at h; split_ifs  at h
     apply hf
     intro ε hε
     exists stationary_point hf
@@ -476,10 +475,7 @@ private theorem norm_eq_of_equiv_aux {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : �
   have hpeq : padicNorm p ((f - g) i) = max (padicNorm p (f i)) (padicNorm p (g i)) := by
     rwa [padicNorm.neg] at hpnem
   rw [hpeq, max_eq_left_of_lt hlt] at hN'
-  have : padicNorm p (f i) < padicNorm p (f i) :=
-    by
-    apply lt_of_lt_of_le hN'
-    apply sub_le_self
+  have : padicNorm p (f i) < padicNorm p (f i) := by apply lt_of_lt_of_le hN'; apply sub_le_self;
     apply padicNorm.nonneg
   exact lt_irrefl _ this
 
@@ -565,16 +561,10 @@ theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (
       hf <| equiv_zero_of_val_eq_of_equiv_zero (by simp only [h, forall_const, eq_self_iff_true]) hg
     simp only [hg, hf, norm, dif_neg, not_false_iff]
     let i := max (stationary_point hf) (stationary_point hg)
-    have hpf : padicNorm p (f (stationary_point hf)) = padicNorm p (f i) :=
-      by
-      apply stationary_point_spec
-      apply le_max_left
-      exact le_rfl
-    have hpg : padicNorm p (g (stationary_point hg)) = padicNorm p (g i) :=
-      by
-      apply stationary_point_spec
-      apply le_max_right
-      exact le_rfl
+    have hpf : padicNorm p (f (stationary_point hf)) = padicNorm p (f i) := by
+      apply stationary_point_spec; apply le_max_left; exact le_rfl
+    have hpg : padicNorm p (g (stationary_point hg)) = padicNorm p (g i) := by
+      apply stationary_point_spec; apply le_max_right; exact le_rfl
     rw [hpf, hpg, h]
 #align padic_seq.norm_eq PadicSeq.norm_eq
 -/
@@ -733,10 +723,7 @@ theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
 #align padic.coe_inj Padic.coe_inj
 
 instance : CharZero ℚ_[p] :=
-  ⟨fun m n => by
-    rw [← Rat.cast_coe_nat]
-    norm_cast
-    exact id⟩
+  ⟨fun m n => by rw [← Rat.cast_coe_nat]; norm_cast; exact id⟩
 
 /- warning: padic.coe_add -> Padic.coe_add is a dubious translation:
 lean 3 declaration is
@@ -866,11 +853,8 @@ theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, pa
   by_contra' h
   cases' cauchy₂ f hε with N hN
   rcases h N with ⟨i, hi, hge⟩
-  have hne : ¬f - const (padicNorm p) (f i) ≈ 0 :=
-    by
-    intro h
-    unfold PadicSeq.norm at hge <;> split_ifs  at hge
-    exact not_lt_of_ge hge hε
+  have hne : ¬f - const (padicNorm p) (f i) ≈ 0 := by intro h;
+    unfold PadicSeq.norm at hge <;> split_ifs  at hge; exact not_lt_of_ge hge hε
   unfold PadicSeq.norm at hge <;> split_ifs  at hge
   apply not_le_of_gt _ hge
   cases' em (N ≤ stationary_point hne) with hgen hngen
@@ -991,8 +975,7 @@ theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
   rw [right_distrib]
   apply le_add_of_le_of_nonneg
   · exact (div_le_iff hε).mp (le_trans (le_of_lt hN) (by exact_mod_cast hi))
-  · apply le_of_lt
-    simpa
+  · apply le_of_lt; simpa
 #align padic.exi_rat_seq_conv Padic.exi_rat_seq_conv
 
 /- warning: padic.exi_rat_seq_conv_cauchy -> Padic.exi_rat_seq_conv_cauchy is a dubious translation:
@@ -1016,8 +999,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
   · apply lt_of_le_of_lt
     · apply padic_norm_e.add_le
     · have : (3 : ℚ) ≠ 0 := by norm_num
-      have : ε = ε / 3 + ε / 3 + ε / 3 := by
-        field_simp [this]
+      have : ε = ε / 3 + ε / 3 + ε / 3 := by field_simp [this] ;
         simp only [bit0, bit1, mul_add, mul_one]
       rw [this]
       apply add_lt_add
@@ -1433,8 +1415,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align padic.complete Padic.completeₓ'. -/
 instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   by
-  constructor
-  intro f
+  constructor; intro f
   have cau_seq_norm_e : IsCauSeq padicNormE f :=
     by
     intro ε hε
@@ -1446,10 +1427,8 @@ instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   intro ε hε
   cases' exists_rat_btwn hε with ε' hε'
   norm_cast  at hε'
-  cases' hq ε' hε'.1 with N hN
-  exists N
-  intro i hi
-  let h := hN i hi
+  cases' hq ε' hε'.1 with N hN; exists N
+  intro i hi; let h := hN i hi
   unfold norm
   rw_mod_cast [padic_norm_e.map_sub]
   refine' lt_trans _ hε'.2
@@ -1523,10 +1502,7 @@ Case conversion may be inaccurate. Consider using '#align padic.valuation_one Pa
 theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
   by
   change dite (CauSeq.const (padicNorm p) 1 ≈ _) _ _ = _
-  have h : ¬CauSeq.const (padicNorm p) 1 ≈ 0 :=
-    by
-    intro H
-    erw [const_equiv p] at H
+  have h : ¬CauSeq.const (padicNorm p) 1 ≈ 0 := by intro H; erw [const_equiv p] at H;
     exact one_ne_zero H
   rw [dif_neg h]
   simp
@@ -1717,12 +1693,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align padic.norm_le_pow_iff_norm_lt_pow_add_one Padic.norm_le_pow_iff_norm_lt_pow_add_oneₓ'. -/
 theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ ≤ p ^ n ↔ ‖x‖ < p ^ (n + 1) :=
   by
-  have aux : ∀ n : ℤ, 0 < (p ^ n : ℝ) :=
-    by
-    apply Nat.zpow_pos_of_pos
-    exact hp.1.Pos
-  by_cases hx0 : x = 0
-  · simp [hx0, norm_zero, aux, le_of_lt (aux _)]
+  have aux : ∀ n : ℤ, 0 < (p ^ n : ℝ) := by apply Nat.zpow_pos_of_pos; exact hp.1.Pos
+  by_cases hx0 : x = 0; · simp [hx0, norm_zero, aux, le_of_lt (aux _)]
   rw [norm_eq_pow_val hx0]
   have h1p : 1 < (p : ℝ) := by exact_mod_cast hp.1.one_lt
   have H := zpow_strictMono h1p

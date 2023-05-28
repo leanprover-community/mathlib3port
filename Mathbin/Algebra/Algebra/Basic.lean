@@ -398,8 +398,7 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
           haveI := Q
           algebraMap R A r) :
     P = Q := by
-  rcases P with @⟨⟨P⟩⟩
-  rcases Q with @⟨⟨Q⟩⟩
+  rcases P with @⟨⟨P⟩⟩; rcases Q with @⟨⟨Q⟩⟩
   congr
   · funext r a
     replace w := congr_arg (fun s => s * a) (w r)
@@ -633,10 +632,8 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}}, (Nat -> R -> A) -> Nat -> (List.{u1} R) -> (List.{u2} A)
 Case conversion may be inaccurate. Consider using '#align algebra.bit1_smul_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a :=
-  by
-  simp only [bit0, bit1, add_smul, smul_add, one_smul]
-  abel
+theorem [anonymous] : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a := by
+  simp only [bit0, bit1, add_smul, smul_add, one_smul]; abel
 #align algebra.bit1_smul_bit1 [anonymous]
 
 end
@@ -936,9 +933,7 @@ instance : Algebra R Aᵐᵒᵖ :=
       R with
     toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _
     smul_def' := fun c x =>
-      unop_injective <| by
-        dsimp
-        simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop]
+      unop_injective <| by dsimp; simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop]
     commutes' := fun r =>
       MulOpposite.rec' fun x => by dsimp <;> simp only [← op_mul, Algebra.commutes] }
 
@@ -1108,9 +1103,7 @@ instance (priority := 99) algebraNat : Algebra ℕ R
 
 #print nat_algebra_subsingleton /-
 instance nat_algebra_subsingleton : Subsingleton (Algebra ℕ R) :=
-  ⟨fun P Q => by
-    ext
-    simp⟩
+  ⟨fun P Q => by ext; simp⟩
 #align nat_algebra_subsingleton nat_algebra_subsingleton
 -/
 
@@ -1213,9 +1206,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R], Subsingleton.{succ u1} (Algebra.{0, u1} Int R Int.instCommSemiringInt (Ring.toSemiring.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align int_algebra_subsingleton int_algebra_subsingletonₓ'. -/
 instance int_algebra_subsingleton : Subsingleton (Algebra ℤ R) :=
-  ⟨fun P Q => by
-    ext
-    simp⟩
+  ⟨fun P Q => by ext; simp⟩
 #align int_algebra_subsingleton int_algebra_subsingleton
 
 end Int
@@ -1254,10 +1245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align no_zero_smul_divisors.algebra_map_injective NoZeroSMulDivisors.algebraMap_injectiveₓ'. -/
 theorem algebraMap_injective [CommRing R] [Ring A] [Nontrivial A] [Algebra R A]
     [NoZeroSMulDivisors R A] : Function.Injective (algebraMap R A) :=
-  suffices Function.Injective fun c : R => c • (1 : A)
-    by
-    convert this
-    ext
+  suffices Function.Injective fun c : R => c • (1 : A) by convert this; ext;
     rw [Algebra.smul_def, mul_one]
   smul_left_injective R one_ne_zero
 #align no_zero_smul_divisors.algebra_map_injective NoZeroSMulDivisors.algebraMap_injective

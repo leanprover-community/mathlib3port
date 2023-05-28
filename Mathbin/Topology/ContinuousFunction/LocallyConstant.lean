@@ -39,12 +39,8 @@ monoid hom. -/
 def toContinuousMapMonoidHom [Monoid Y] [ContinuousMul Y] : LocallyConstant X Y →* C(X, Y)
     where
   toFun := coe
-  map_one' := by
-    ext
-    simp
-  map_mul' x y := by
-    ext
-    simp
+  map_one' := by ext; simp
+  map_mul' x y := by ext; simp
 #align locally_constant.to_continuous_map_monoid_hom LocallyConstant.toContinuousMapMonoidHom
 #align locally_constant.to_continuous_map_add_monoid_hom LocallyConstant.toContinuousMapAddMonoidHom
 
@@ -60,12 +56,8 @@ def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module
     [ContinuousAdd Y] [ContinuousConstSMul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
     where
   toFun := coe
-  map_add' x y := by
-    ext
-    simp
-  map_smul' x y := by
-    ext
-    simp
+  map_add' x y := by ext; simp
+  map_smul' x y := by ext; simp
 #align locally_constant.to_continuous_map_linear_map LocallyConstant.toContinuousMapLinearMap
 
 /- warning: locally_constant.to_continuous_map_alg_hom -> LocallyConstant.toContinuousMapAlgHom is a dubious translation:
@@ -80,21 +72,11 @@ def toContinuousMapAlgHom (R : Type _) [CommSemiring R] [Semiring Y] [Algebra R 
     [TopologicalSemiring Y] : LocallyConstant X Y →ₐ[R] C(X, Y)
     where
   toFun := coe
-  map_one' := by
-    ext
-    simp
-  map_mul' x y := by
-    ext
-    simp
-  map_zero' := by
-    ext
-    simp
-  map_add' x y := by
-    ext
-    simp
-  commutes' r := by
-    ext x
-    simp [Algebra.smul_def]
+  map_one' := by ext; simp
+  map_mul' x y := by ext; simp
+  map_zero' := by ext; simp
+  map_add' x y := by ext; simp
+  commutes' r := by ext x; simp [Algebra.smul_def]
 #align locally_constant.to_continuous_map_alg_hom LocallyConstant.toContinuousMapAlgHom
 
 end LocallyConstant

@@ -201,9 +201,7 @@ noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
     { toFun := fun z => ![z.re, z.im]
       invFun := fun c => c 0 + c 1 • I
       left_inv := fun z => by simp
-      right_inv := fun c => by
-        ext i
-        fin_cases i <;> simp
+      right_inv := fun c => by ext i; fin_cases i <;> simp
       map_add' := fun z z' => by simp
       -- why does `simp` not know how to apply `smul_cons`, which is a `@[simp]` lemma, here?
       map_smul' := fun c z => by simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
@@ -342,9 +340,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rank_real_of_complex rank_real_of_complexₓ'. -/
 theorem rank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
     Module.rank ℝ E = 2 * Module.rank ℂ E :=
-  Cardinal.lift_inj.1 <|
-    by
-    rw [← lift_rank_mul_lift_rank ℝ ℂ E, Complex.rank_real_complex]
+  Cardinal.lift_inj.1 <| by rw [← lift_rank_mul_lift_rank ℝ ℂ E, Complex.rank_real_complex];
     simp [bit0]
 #align rank_real_of_complex rank_real_of_complex
 
@@ -622,11 +618,9 @@ def skewAdjoint.negISMul : skewAdjoint A →ₗ[ℝ] selfAdjoint A
     ⟨-I • a, by
       simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I,
         skewAdjoint.star_val_eq, neg_smul_neg]⟩
-  map_add' a b := by
-    ext
-    simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
+  map_add' a b := by ext; simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
   map_smul' a b := by
-    ext
+    ext;
     simp only [neg_smul, skewAdjoint.val_smul, AddSubgroup.coe_mk, RingHom.id_apply,
       selfAdjoint.val_smul, smul_neg, neg_inj]
     rw [smul_comm]
@@ -678,9 +672,7 @@ scoped[ComplexStarModule] notation "ℑ" => imaginaryPart
 <too large>
 Case conversion may be inaccurate. Consider using '#align real_part_apply_coe realPart_apply_coeₓ'. -/
 @[simp]
-theorem realPart_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) :=
-  by
-  unfold realPart
+theorem realPart_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) := by unfold realPart;
   simp only [selfAdjointPart_apply_coe, invOf_eq_inv]
 #align real_part_apply_coe realPart_apply_coe
 
@@ -710,9 +702,7 @@ theorem realPart_add_I_smul_imaginaryPart (a : A) : (ℜ a + I • ℑ a : A) = 
 <too large>
 Case conversion may be inaccurate. Consider using '#align real_part_I_smul realPart_I_smulₓ'. -/
 @[simp]
-theorem realPart_I_smul (a : A) : ℜ (I • a) = -ℑ a :=
-  by
-  ext
+theorem realPart_I_smul (a : A) : ℜ (I • a) = -ℑ a := by ext;
   simp [smul_comm I, smul_sub, sub_eq_add_neg, add_comm]
 #align real_part_I_smul realPart_I_smul
 
@@ -720,28 +710,21 @@ theorem realPart_I_smul (a : A) : ℜ (I • a) = -ℑ a :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align imaginary_part_I_smul imaginaryPart_I_smulₓ'. -/
 @[simp]
-theorem imaginaryPart_I_smul (a : A) : ℑ (I • a) = ℜ a :=
-  by
-  ext
-  simp [smul_comm I, smul_smul I]
+theorem imaginaryPart_I_smul (a : A) : ℑ (I • a) = ℜ a := by ext; simp [smul_comm I, smul_smul I]
 #align imaginary_part_I_smul imaginaryPart_I_smul
 
 /- warning: real_part_smul -> realPart_smul is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align real_part_smul realPart_smulₓ'. -/
-theorem realPart_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a :=
-  by
-  nth_rw 1 [← re_add_im z]
-  simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
+theorem realPart_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a := by
+  nth_rw 1 [← re_add_im z]; simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
 #align real_part_smul realPart_smul
 
 /- warning: imaginary_part_smul -> imaginaryPart_smul is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align imaginary_part_smul imaginaryPart_smulₓ'. -/
-theorem imaginaryPart_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a :=
-  by
-  nth_rw 1 [← re_add_im z]
-  simp [-re_add_im, add_smul, ← smul_smul]
+theorem imaginaryPart_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a := by
+  nth_rw 1 [← re_add_im z]; simp [-re_add_im, add_smul, ← smul_smul]
 #align imaginary_part_smul imaginaryPart_smul
 
 end RealImaginaryPart

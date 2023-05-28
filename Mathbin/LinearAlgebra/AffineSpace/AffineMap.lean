@@ -673,9 +673,7 @@ theorem linear_injective_iff (f : P1 →ᵃ[k] P2) :
     Function.Injective f.linear ↔ Function.Injective f :=
   by
   obtain ⟨p⟩ := (inferInstance : Nonempty P1)
-  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p :=
-    by
-    ext v
+  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p := by ext v;
     simp [f.map_vadd, vadd_vsub_assoc]
   rw [h, Equiv.comp_injective, Equiv.injective_comp]
 #align affine_map.linear_injective_iff AffineMap.linear_injective_iff
@@ -688,9 +686,7 @@ theorem linear_surjective_iff (f : P1 →ᵃ[k] P2) :
     Function.Surjective f.linear ↔ Function.Surjective f :=
   by
   obtain ⟨p⟩ := (inferInstance : Nonempty P1)
-  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p :=
-    by
-    ext v
+  have h : ⇑f.linear = (Equiv.vaddConst (f p)).symm ∘ f ∘ Equiv.vaddConst p := by ext v;
     simp [f.map_vadd, vadd_vsub_assoc]
   rw [h, Equiv.comp_surjective, Equiv.surjective_comp]
 #align affine_map.linear_surjective_iff AffineMap.linear_surjective_iff
@@ -948,10 +944,7 @@ but is expected to have type
   forall {k : Type.{u3}} {V1 : Type.{u2}} {P1 : Type.{u1}} [_inst_1 : Ring.{u3} k] [_inst_2 : AddCommGroup.{u2} V1] [_inst_3 : Module.{u3, u2} k V1 (Ring.toSemiring.{u3} k _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V1 _inst_2)] [_inst_4 : AddTorsor.{u2, u1} V1 P1 (AddCommGroup.toAddGroup.{u2} V1 _inst_2)] (p₀ : P1) (p₁ : P1), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (AffineMap.{u3, u3, u3, u2, u1} k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u3} k _inst_1) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_1)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_1))) _inst_2 _inst_3 _inst_4) (AffineMap.lineMap.{u3, u2, u1} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_4 p₀ p₁) (AffineMap.comp.{u3, u3, u3, u3, u3, u2, u1} k k k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u3} k _inst_1) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_1)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_1))) (Ring.toAddCommGroup.{u3} k _inst_1) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_1)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_1))) _inst_2 _inst_3 _inst_4 (AffineMap.lineMap.{u3, u2, u1} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_4 p₁ p₀) (AffineMap.lineMap.{u3, u3, u3} k k k _inst_1 (Ring.toAddCommGroup.{u3} k _inst_1) (Semiring.toModule.{u3} k (Ring.toSemiring.{u3} k _inst_1)) (addGroupIsAddTorsor.{u3} k (AddGroupWithOne.toAddGroup.{u3} k (Ring.toAddGroupWithOne.{u3} k _inst_1))) (OfNat.ofNat.{u3} k 1 (One.toOfNat1.{u3} k (Semiring.toOne.{u3} k (Ring.toSemiring.{u3} k _inst_1)))) (OfNat.ofNat.{u3} k 0 (Zero.toOfNat0.{u3} k (MonoidWithZero.toZero.{u3} k (Semiring.toMonoidWithZero.{u3} k (Ring.toSemiring.{u3} k _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align affine_map.line_map_symm AffineMap.lineMap_symmₓ'. -/
 theorem lineMap_symm (p₀ p₁ : P1) :
-    lineMap p₀ p₁ = (lineMap p₁ p₀).comp (lineMap (1 : k) (0 : k)) :=
-  by
-  rw [comp_line_map]
-  simp
+    lineMap p₀ p₁ = (lineMap p₁ p₀).comp (lineMap (1 : k) (0 : k)) := by rw [comp_line_map]; simp
 #align affine_map.line_map_symm AffineMap.lineMap_symm
 
 /- warning: affine_map.line_map_apply_one_sub -> AffineMap.lineMap_apply_one_sub is a dubious translation:
@@ -960,11 +953,8 @@ lean 3 declaration is
 but is expected to have type
   forall {k : Type.{u2}} {V1 : Type.{u1}} {P1 : Type.{u3}} [_inst_1 : Ring.{u2} k] [_inst_2 : AddCommGroup.{u1} V1] [_inst_3 : Module.{u2, u1} k V1 (Ring.toSemiring.{u2} k _inst_1) (AddCommGroup.toAddCommMonoid.{u1} V1 _inst_2)] [_inst_4 : AddTorsor.{u1, u3} V1 P1 (AddCommGroup.toAddGroup.{u1} V1 _inst_2)] (p₀ : P1) (p₁ : P1) (c : k), Eq.{succ u3} ((fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : k) => P1) (HSub.hSub.{u2, u2, u2} k k k (instHSub.{u2} k (Ring.toSub.{u2} k _inst_1)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (Ring.toSemiring.{u2} k _inst_1)))) c)) (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), succ u2, succ u3} (AffineMap.{u2, u2, u2, u1, u3} k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u2} k _inst_1) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_1))) _inst_2 _inst_3 _inst_4) k (fun (_x : k) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : k) => P1) _x) (AffineMap.funLike.{u2, u2, u2, u1, u3} k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u2} k _inst_1) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_1))) _inst_2 _inst_3 _inst_4) (AffineMap.lineMap.{u2, u1, u3} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_4 p₀ p₁) (HSub.hSub.{u2, u2, u2} k k k (instHSub.{u2} k (Ring.toSub.{u2} k _inst_1)) (OfNat.ofNat.{u2} k 1 (One.toOfNat1.{u2} k (Semiring.toOne.{u2} k (Ring.toSemiring.{u2} k _inst_1)))) c)) (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), succ u2, succ u3} (AffineMap.{u2, u2, u2, u1, u3} k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u2} k _inst_1) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_1))) _inst_2 _inst_3 _inst_4) k (fun (_x : k) => (fun (a._@.Mathlib.LinearAlgebra.AffineSpace.AffineMap._hyg.1003 : k) => P1) _x) (AffineMap.funLike.{u2, u2, u2, u1, u3} k k k V1 P1 _inst_1 (Ring.toAddCommGroup.{u2} k _inst_1) (Semiring.toModule.{u2} k (Ring.toSemiring.{u2} k _inst_1)) (addGroupIsAddTorsor.{u2} k (AddGroupWithOne.toAddGroup.{u2} k (Ring.toAddGroupWithOne.{u2} k _inst_1))) _inst_2 _inst_3 _inst_4) (AffineMap.lineMap.{u2, u1, u3} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_4 p₁ p₀) c)
 Case conversion may be inaccurate. Consider using '#align affine_map.line_map_apply_one_sub AffineMap.lineMap_apply_one_subₓ'. -/
-theorem lineMap_apply_one_sub (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ (1 - c) = lineMap p₁ p₀ c :=
-  by
-  rw [line_map_symm p₀, comp_apply]
-  congr
-  simp [line_map_apply]
+theorem lineMap_apply_one_sub (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ (1 - c) = lineMap p₁ p₀ c := by
+  rw [line_map_symm p₀, comp_apply]; congr ; simp [line_map_apply]
 #align affine_map.line_map_apply_one_sub AffineMap.lineMap_apply_one_sub
 
 /- warning: affine_map.line_map_vsub_left -> AffineMap.lineMap_vsub_left is a dubious translation:
@@ -1159,13 +1149,8 @@ def toConstProdLinearMap : (V1 →ᵃ[k] V2) ≃ₗ[R] V2 × (V1 →ₗ[k] V2)
     where
   toFun f := ⟨f 0, f.linear⟩
   invFun p := p.2.toAffineMap + const k V1 p.1
-  left_inv f := by
-    ext
-    rw [f.decomp]
-    simp
-  right_inv := by
-    rintro ⟨v, f⟩
-    ext <;> simp
+  left_inv f := by ext; rw [f.decomp]; simp
+  right_inv := by rintro ⟨v, f⟩; ext <;> simp
   map_add' := by simp
   map_smul' := by simp
 #align affine_map.to_const_prod_linear_map AffineMap.toConstProdLinearMap
@@ -1216,10 +1201,7 @@ but is expected to have type
   forall {k : Type.{u1}} {V1 : Type.{u3}} {P1 : Type.{u2}} [_inst_1 : CommRing.{u1} k] [_inst_2 : AddCommGroup.{u3} V1] [_inst_3 : AddTorsor.{u3, u2} V1 P1 (AddCommGroup.toAddGroup.{u3} V1 _inst_2)] [_inst_5 : Module.{u1, u3} k V1 (CommSemiring.toSemiring.{u1} k (CommRing.toCommSemiring.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V1 _inst_2)] (c : P1), Eq.{max (succ u3) (succ u2)} (AffineMap.{u1, u3, u2, u3, u2} k V1 P1 V1 P1 (CommRing.toRing.{u1} k _inst_1) _inst_2 _inst_5 _inst_3 _inst_2 _inst_5 _inst_3) (AffineMap.homothety.{u1, u3, u2} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_5 c (OfNat.ofNat.{u1} k 1 (One.toOfNat1.{u1} k (Semiring.toOne.{u1} k (CommSemiring.toSemiring.{u1} k (CommRing.toCommSemiring.{u1} k _inst_1)))))) (AffineMap.id.{u1, u3, u2} k V1 P1 (CommRing.toRing.{u1} k _inst_1) _inst_2 _inst_5 _inst_3)
 Case conversion may be inaccurate. Consider using '#align affine_map.homothety_one AffineMap.homothety_oneₓ'. -/
 @[simp]
-theorem homothety_one (c : P1) : homothety c (1 : k) = id k P1 :=
-  by
-  ext p
-  simp [homothety_apply]
+theorem homothety_one (c : P1) : homothety c (1 : k) = id k P1 := by ext p; simp [homothety_apply]
 #align affine_map.homothety_one AffineMap.homothety_one
 
 #print AffineMap.homothety_apply_same /-
@@ -1255,9 +1237,7 @@ but is expected to have type
   forall {k : Type.{u1}} {V1 : Type.{u3}} {P1 : Type.{u2}} [_inst_1 : CommRing.{u1} k] [_inst_2 : AddCommGroup.{u3} V1] [_inst_3 : AddTorsor.{u3, u2} V1 P1 (AddCommGroup.toAddGroup.{u3} V1 _inst_2)] [_inst_5 : Module.{u1, u3} k V1 (CommSemiring.toSemiring.{u1} k (CommRing.toCommSemiring.{u1} k _inst_1)) (AddCommGroup.toAddCommMonoid.{u3} V1 _inst_2)] (c : P1), Eq.{max (succ u3) (succ u2)} (AffineMap.{u1, u3, u2, u3, u2} k V1 P1 V1 P1 (CommRing.toRing.{u1} k _inst_1) _inst_2 _inst_5 _inst_3 _inst_2 _inst_5 _inst_3) (AffineMap.homothety.{u1, u3, u2} k V1 P1 _inst_1 _inst_2 _inst_3 _inst_5 c (OfNat.ofNat.{u1} k 0 (Zero.toOfNat0.{u1} k (CommMonoidWithZero.toZero.{u1} k (CommSemiring.toCommMonoidWithZero.{u1} k (CommRing.toCommSemiring.{u1} k _inst_1)))))) (AffineMap.const.{u1, u3, u2, u3, u2} k V1 P1 V1 P1 (CommRing.toRing.{u1} k _inst_1) _inst_2 _inst_5 _inst_3 _inst_2 _inst_5 _inst_3 c)
 Case conversion may be inaccurate. Consider using '#align affine_map.homothety_zero AffineMap.homothety_zeroₓ'. -/
 @[simp]
-theorem homothety_zero (c : P1) : homothety c (0 : k) = const k P1 c :=
-  by
-  ext p
+theorem homothety_zero (c : P1) : homothety c (0 : k) = const k P1 c := by ext p;
   simp [homothety_apply]
 #align affine_map.homothety_zero AffineMap.homothety_zero
 
@@ -1323,10 +1303,8 @@ Case conversion may be inaccurate. Consider using '#align convex.combo_affine_ap
 /-- Applying an affine map to an affine combination of two points yields an affine combination of
 the images. -/
 theorem Convex.combo_affine_apply {x y : E} {a b : 𝕜} {f : E →ᵃ[𝕜] F} (h : a + b = 1) :
-    f (a • x + b • y) = a • f x + b • f y :=
-  by
-  simp only [Convex.combo_eq_smul_sub_add h, ← vsub_eq_sub]
-  exact f.apply_line_map _ _ _
+    f (a • x + b • y) = a • f x + b • f y := by
+  simp only [Convex.combo_eq_smul_sub_add h, ← vsub_eq_sub]; exact f.apply_line_map _ _ _
 #align convex.combo_affine_apply Convex.combo_affine_apply
 
 end

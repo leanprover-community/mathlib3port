@@ -120,9 +120,7 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
       have : tendsto (fun y : ℝ => y + 1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + 1 * (x - x) ^ 2)) :=
         tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul 1)
       simpa using this
-    · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
-        by
-        apply Ioo_mem_nhdsWithin_Iio
+    · have : Ioo (x - 1) x ∈ 𝓝[<] x := by apply Ioo_mem_nhdsWithin_Iio;
         exact ⟨by linarith, le_refl _⟩
       filter_upwards [this]
       rintro y ⟨hy : x - 1 < y, h'y : y < x⟩
@@ -183,9 +181,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
         have : tendsto (fun y : ℝ => y + -1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + -1 * (x - x) ^ 2)) :=
           tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul (-1))
         simpa using this
-      · have : Ioo x (x + 1) ∈ 𝓝[>] x :=
-          by
-          apply Ioo_mem_nhdsWithin_Ioi
+      · have : Ioo x (x + 1) ∈ 𝓝[>] x := by apply Ioo_mem_nhdsWithin_Ioi;
           exact ⟨le_refl _, by linarith⟩
         filter_upwards [this]
         rintro y ⟨hy : x < y, h'y : y < x + 1⟩
@@ -218,9 +214,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
         have : tendsto (fun y : ℝ => y + -1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + -1 * (x - x) ^ 2)) :=
           tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul (-1))
         simpa using this
-      · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
-          by
-          apply Ioo_mem_nhdsWithin_Iio
+      · have : Ioo (x - 1) x ∈ 𝓝[<] x := by apply Ioo_mem_nhdsWithin_Iio;
           exact ⟨by linarith, le_refl _⟩
         filter_upwards [this]
         rintro y ⟨hy : x - 1 < y, h'y : y < x⟩

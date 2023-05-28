@@ -76,10 +76,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemifield.{u1} α] {a : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (forall (n : Int), LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedCommSemiring.toLinearOrderedSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommGroupWithZero.toCommMonoidWithZero.{u1} α (Semifield.toCommGroupWithZero.{u1} α (LinearOrderedSemifield.toSemifield.{u1} α _inst_1)))))) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (GroupWithZero.toDivInvMonoid.{u1} α (DivisionSemiring.toGroupWithZero.{u1} α (Semifield.toDivisionSemiring.{u1} α (LinearOrderedSemifield.toSemifield.{u1} α _inst_1)))))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (DivisionSemiring.toSemiring.{u1} α (Semifield.toDivisionSemiring.{u1} α (LinearOrderedSemifield.toSemifield.{u1} α _inst_1)))) a) n))
 Case conversion may be inaccurate. Consider using '#align nat.zpow_pos_of_pos Nat.zpow_pos_of_posₓ'. -/
-protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n :=
-  by
-  apply zpow_pos_of_pos
-  exact_mod_cast h
+protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n := by
+  apply zpow_pos_of_pos; exact_mod_cast h
 #align nat.zpow_pos_of_pos Nat.zpow_pos_of_pos
 
 /- warning: nat.zpow_ne_zero_of_pos -> Nat.zpow_ne_zero_of_pos is a dubious translation:
@@ -280,10 +278,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align zpow_bit0_pos_iff zpow_bit0_pos_iffₓ'. -/
 @[simp]
 theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
-  ⟨by
-    rintro h rfl
-    refine' (zero_zpow _ _).not_gt h
-    rwa [bit0_ne_zero], fun h => zpow_bit0_pos h _⟩
+  ⟨by rintro h rfl; refine' (zero_zpow _ _).not_gt h; rwa [bit0_ne_zero], fun h =>
+    zpow_bit0_pos h _⟩
 #align zpow_bit0_pos_iff zpow_bit0_pos_iff
 
 /- warning: zpow_bit1_neg_iff -> zpow_bit1_neg_iff is a dubious translation:

@@ -417,9 +417,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 Case conversion may be inaccurate. Consider using '#align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_componentsₓ'. -/
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x :=
-  by
-  rw [← cocone_naturality F f]
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
 

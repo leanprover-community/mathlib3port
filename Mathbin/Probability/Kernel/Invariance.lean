@@ -115,8 +115,7 @@ theorem lintegral_mapMeasure (κ : kernel α β) [IsSFiniteKernel κ] (μ : Meas
   by
   by_cases hα : Nonempty α
   · have := const_apply μ hα.some
-    swap
-    infer_instance
+    swap; infer_instance
     conv_rhs => rw [← this]
     rw [← lintegral_comp _ _ _ hf, ← comp_const_apply_eq_map_measure κ μ hα.some]
   · haveI := not_nonempty_iff.1 hα

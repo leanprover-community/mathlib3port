@@ -79,9 +79,7 @@ class IsCyclic (α : Type u) [Group α] : Prop where
 #print isCyclic_of_subsingleton /-
 @[to_additive isAddCyclic_of_subsingleton]
 instance (priority := 100) isCyclic_of_subsingleton [Group α] [Subsingleton α] : IsCyclic α :=
-  ⟨⟨1, fun x => by
-      rw [Subsingleton.elim x 1]
-      exact mem_zpowers 1⟩⟩
+  ⟨⟨1, fun x => by rw [Subsingleton.elim x 1]; exact mem_zpowers 1⟩⟩
 #align is_cyclic_of_subsingleton isCyclic_of_subsingleton
 #align is_add_cyclic_of_subsingleton isAddCyclic_of_subsingleton
 -/
@@ -153,11 +151,7 @@ theorem isCyclic_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [
       · rw [Fintype.card_eq_one_iff] at this
         cases' this with t ht
         suffices g = 1 by contradiction
-        have hgt :=
-          ht
-            ⟨g, by
-              change g ∈ Subgroup.zpowers g
-              exact Subgroup.mem_zpowers g⟩
+        have hgt := ht ⟨g, by change g ∈ Subgroup.zpowers g; exact Subgroup.mem_zpowers g⟩
         rw [← ht 1] at hgt
         change (⟨_, _⟩ : Subgroup.zpowers g) = ⟨_, _⟩ at hgt
         simpa using hgt
@@ -249,11 +243,8 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
         let ⟨k, hk⟩ := hg x
         have hk₁ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ zpowers (g ^ Nat.find hex) :=
           ⟨k / Nat.find hex, by rw [← zpow_ofNat, zpow_mul]⟩
-        have hk₂ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ H :=
-          by
-          rw [zpow_mul]
-          apply H.zpow_mem
-          exact_mod_cast (Nat.find_spec hex).2
+        have hk₂ : g ^ ((Nat.find hex : ℤ) * (k / Nat.find hex)) ∈ H := by rw [zpow_mul];
+          apply H.zpow_mem; exact_mod_cast (Nat.find_spec hex).2
         have hk₃ : g ^ (k % Nat.find hex) ∈ H :=
           (Subgroup.mul_mem_cancel_right H hk₂).1 <| by
             rw [← zpow_add, Int.emod_add_ediv, hk] <;> exact hx
@@ -319,10 +310,8 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
     _ ≤ n := by
       let ⟨m, hm⟩ := Nat.gcd_dvd_right n (Fintype.card α)
       have hm0 : 0 < m :=
-        Nat.pos_of_ne_zero fun hm0 =>
-          by
-          rw [hm0, MulZeroClass.mul_zero, Fintype.card_eq_zero_iff] at hm
-          exact hm.elim' 1
+        Nat.pos_of_ne_zero fun hm0 => by
+          rw [hm0, MulZeroClass.mul_zero, Fintype.card_eq_zero_iff] at hm; exact hm.elim' 1
       simp only [Set.toFinset_card, SetLike.coe_sort_coe]
       rw [← orderOf_eq_card_zpowers, orderOf_pow g, orderOf_eq_card_of_forall_mem_zpowers hg]
       rw [hm]
@@ -343,9 +332,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_cyclic.exists_monoid_generator IsCyclic.exists_monoid_generatorₓ'. -/
 @[to_additive]
 theorem IsCyclic.exists_monoid_generator [Finite α] [IsCyclic α] :
-    ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x :=
-  by
-  simp_rw [mem_powers_iff_mem_zpowers]
+    ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x := by simp_rw [mem_powers_iff_mem_zpowers];
   exact IsCyclic.exists_generator α
 #align is_cyclic.exists_monoid_generator IsCyclic.exists_monoid_generator
 #align is_add_cyclic.exists_add_monoid_generator IsAddCyclic.exists_addMonoid_generator
@@ -468,19 +455,14 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
       by
       rw [eq_comm]
       refine' sum_subset (erase_subset _ _) fun m hm₁ hm₂ => _
-      have : m = d := by
-        contrapose! hm₂
-        exact mem_erase_of_ne_of_mem hm₂ hm₁
+      have : m = d := by contrapose! hm₂; exact mem_erase_of_ne_of_mem hm₂ hm₁
       simp [this, h0]
     _ ≤ ∑ m in c.divisors.erase d, φ m :=
       by
       refine' sum_le_sum fun m hm => _
-      have hmc : m ∣ c := by
-        simp only [mem_erase, mem_divisors] at hm
-        tauto
+      have hmc : m ∣ c := by simp only [mem_erase, mem_divisors] at hm; tauto
       rcases(Filter (fun a : α => orderOf a = m) univ).card.eq_zero_or_pos with (h1 | h1)
-      · simp [h1]
-      · simp [card_order_of_eq_totient_aux₁ hn hmc h1]
+      · simp [h1]; · simp [card_order_of_eq_totient_aux₁ hn hmc h1]
     _ < ∑ m in c.divisors, φ m :=
       (sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos (pos_of_dvd_of_pos hd hc0)))
     _ = c := sum_totient _

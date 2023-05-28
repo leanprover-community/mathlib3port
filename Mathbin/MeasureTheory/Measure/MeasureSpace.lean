@@ -475,10 +475,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α}, (MeasurableSet.{u1} α m s) -> (Ne.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) s) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSub) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) (Set.univ.{u1} α)) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m μ) s)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure_compl MeasureTheory.measure_complₓ'. -/
-theorem measure_compl (h₁ : MeasurableSet s) (h_fin : μ s ≠ ∞) : μ (sᶜ) = μ univ - μ s :=
-  by
-  rw [compl_eq_univ_diff]
-  exact measure_diff (subset_univ s) h₁ h_fin
+theorem measure_compl (h₁ : MeasurableSet s) (h_fin : μ s ≠ ∞) : μ (sᶜ) = μ univ - μ s := by
+  rw [compl_eq_univ_diff]; exact measure_diff (subset_univ s) h₁ h_fin
 #align measure_theory.measure_compl MeasureTheory.measure_compl
 
 /- warning: measure_theory.union_ae_eq_left_iff_ae_subset -> MeasureTheory.union_ae_eq_left_iff_ae_subset is a dubious translation:
@@ -567,8 +565,7 @@ theorem measure_iUnion_congr_of_subset [Countable β] {s : β → Set α} {t : �
               ((subset_Union _ _).trans <| subset_to_measurable _ _)
         
     · exact (measurable_set_to_measurable _ _).inter (measurable_set_to_measurable _ _)
-    · rw [measure_to_measurable]
-      exact htop b
+    · rw [measure_to_measurable]; exact htop b
   calc
     μ (⋃ b, t b) ≤ μ (⋃ b, M (t b)) := measure_mono (Union_mono fun b => subset_to_measurable _ _)
     _ = μ (⋃ b, M (t b) ∩ M (⋃ b, s b)) := (measure_congr (EventuallyEq.countable_iUnion H).symm)
@@ -602,9 +599,7 @@ theorem measure_iUnion_toMeasurable [Countable β] (s : β → Set α) :
 
 #print MeasureTheory.measure_biUnion_toMeasurable /-
 theorem measure_biUnion_toMeasurable {I : Set β} (hc : I.Countable) (s : β → Set α) :
-    μ (⋃ b ∈ I, toMeasurable μ (s b)) = μ (⋃ b ∈ I, s b) :=
-  by
-  haveI := hc.to_encodable
+    μ (⋃ b ∈ I, toMeasurable μ (s b)) = μ (⋃ b ∈ I, s b) := by haveI := hc.to_encodable;
   simp only [bUnion_eq_Union, measure_Union_to_measurable]
 #align measure_theory.measure_bUnion_to_measurable MeasureTheory.measure_biUnion_toMeasurable
 -/
@@ -643,9 +638,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.sum_measure_le_measure_univ MeasureTheory.sum_measure_le_measure_univₓ'. -/
 theorem sum_measure_le_measure_univ {s : Finset ι} {t : ι → Set α}
     (h : ∀ i ∈ s, MeasurableSet (t i)) (H : Set.PairwiseDisjoint (↑s) t) :
-    (∑ i in s, μ (t i)) ≤ μ (univ : Set α) :=
-  by
-  rw [← measure_bUnion_finset H h]
+    (∑ i in s, μ (t i)) ≤ μ (univ : Set α) := by rw [← measure_bUnion_finset H h];
   exact measure_mono (subset_univ _)
 #align measure_theory.sum_measure_le_measure_univ MeasureTheory.sum_measure_le_measure_univ
 
@@ -1171,9 +1164,7 @@ theorem coe_zero {m : MeasurableSpace α} : ⇑(0 : Measure α) = 0 :=
 #align measure_theory.measure.coe_zero MeasureTheory.Measure.coe_zero
 
 instance [IsEmpty α] {m : MeasurableSpace α} : Subsingleton (Measure α) :=
-  ⟨fun μ ν => by
-    ext1 s hs
-    simp only [eq_empty_of_is_empty s, measure_empty]⟩
+  ⟨fun μ ν => by ext1 s hs; simp only [eq_empty_of_is_empty s, measure_empty]⟩
 
 #print MeasureTheory.Measure.eq_zero_of_isEmpty /-
 theorem eq_zero_of_isEmpty [IsEmpty α] {m : MeasurableSpace α} (μ : Measure α) : μ = 0 :=
@@ -2034,9 +2025,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.le_comap_apply MeasureTheory.Measure.le_comap_applyₓ'. -/
 theorem le_comap_apply {β} [MeasurableSpace α] {mβ : MeasurableSpace β} (f : α → β) (μ : Measure β)
     (hfi : Injective f) (hf : ∀ s, MeasurableSet s → NullMeasurableSet (f '' s) μ) (s : Set α) :
-    μ (f '' s) ≤ comap f μ s :=
-  by
-  rw [comap, dif_pos (And.intro hfi hf)]
+    μ (f '' s) ≤ comap f μ s := by rw [comap, dif_pos (And.intro hfi hf)];
   exact le_to_measure_apply _ _ _
 #align measure_theory.measure.le_comap_apply MeasureTheory.Measure.le_comap_apply
 
@@ -2076,16 +2065,10 @@ theorem ae_eq_image_of_ae_eq_comap {β} [MeasurableSpace α] {mβ : MeasurableSp
     {s t : Set α} (hst : s =ᵐ[comap f μ] t) : f '' s =ᵐ[μ] f '' t :=
   by
   rw [eventually_eq, ae_iff] at hst⊢
-  have h_eq_α : { a : α | ¬s a = t a } = s \ t ∪ t \ s :=
-    by
-    ext1 x
-    simp only [eq_iff_iff, mem_set_of_eq, mem_union, mem_diff]
-    tauto
-  have h_eq_β : { a : β | ¬(f '' s) a = (f '' t) a } = f '' s \ f '' t ∪ f '' t \ f '' s :=
-    by
-    ext1 x
-    simp only [eq_iff_iff, mem_set_of_eq, mem_union, mem_diff]
-    tauto
+  have h_eq_α : { a : α | ¬s a = t a } = s \ t ∪ t \ s := by ext1 x;
+    simp only [eq_iff_iff, mem_set_of_eq, mem_union, mem_diff]; tauto
+  have h_eq_β : { a : β | ¬(f '' s) a = (f '' t) a } = f '' s \ f '' t ∪ f '' t \ f '' s := by
+    ext1 x; simp only [eq_iff_iff, mem_set_of_eq, mem_union, mem_diff]; tauto
   rw [← Set.image_diff hfi, ← Set.image_diff hfi, ← Set.image_union] at h_eq_β
   rw [h_eq_β]
   rw [h_eq_α] at hst
@@ -2100,8 +2083,7 @@ theorem NullMeasurableSet.image {β} [MeasurableSpace α] {mβ : MeasurableSpace
   by
   refine' ⟨to_measurable μ (f '' to_measurable (μ.comap f) s), measurable_set_to_measurable _ _, _⟩
   refine' eventually_eq.trans _ (null_measurable_set.to_measurable_ae_eq _).symm
-  swap
-  · exact hf _ (measurable_set_to_measurable _ _)
+  swap; · exact hf _ (measurable_set_to_measurable _ _)
   have h : to_measurable (comap f μ) s =ᵐ[comap f μ] s :=
     @null_measurable_set.to_measurable_ae_eq _ _ (μ.comap f : Measure α) s hs
   exact ae_eq_image_of_ae_eq_comap f μ hfi hf h.symm
@@ -2202,8 +2184,7 @@ theorem Subtype.volume_def : (volume : Measure s) = volume.comap Subtype.val :=
 theorem Subtype.volume_univ (hs : NullMeasurableSet s) : volume (univ : Set s) = volume s :=
   by
   rw [subtype.volume_def, comap_apply₀ _ _ _ _ measurable_set.univ.null_measurable_set]
-  · congr
-    simp only [Subtype.val_eq_coe, image_univ, Subtype.range_coe_subtype, set_of_mem_eq]
+  · congr ; simp only [Subtype.val_eq_coe, image_univ, Subtype.range_coe_subtype, set_of_mem_eq]
   · exact Subtype.coe_injective
   · exact fun t => measurable_set.null_measurable_set_subtype_coe hs
 #align measure_theory.measure.subtype.volume_univ MeasureTheory.Measure.Subtype.volume_univ
@@ -2963,10 +2944,8 @@ theorem ext_of_generateFrom_of_iUnion (C : Set (Set α)) (B : ℕ → Set α) (h
     (h_eq : ∀ s ∈ C, μ s = ν s) : μ = ν :=
   by
   refine' ext_of_generate_from_of_cover_subset hA hC _ (countable_range B) h1B _ h_eq
-  · rintro _ ⟨i, rfl⟩
-    apply h2B
-  · rintro _ ⟨i, rfl⟩
-    apply hμB
+  · rintro _ ⟨i, rfl⟩; apply h2B
+  · rintro _ ⟨i, rfl⟩; apply hμB
 #align measure_theory.measure.ext_of_generate_from_of_Union MeasureTheory.Measure.ext_of_generateFrom_of_iUnion
 
 section Dirac
@@ -3142,11 +3121,8 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} {m0 : MeasurableSpace.{u2} α} {ι' : Type.{u3}} (μ : ι -> ι' -> (MeasureTheory.Measure.{u2} α m0)), Eq.{succ u2} (MeasureTheory.Measure.{u2} α m0) (MeasureTheory.Measure.sum.{u2, u1} α ι m0 (fun (n : ι) => MeasureTheory.Measure.sum.{u2, u3} α ι' m0 (μ n))) (MeasureTheory.Measure.sum.{u2, u3} α ι' m0 (fun (m : ι') => MeasureTheory.Measure.sum.{u2, u1} α ι m0 (fun (n : ι) => μ n m)))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.sum_comm MeasureTheory.Measure.sum_commₓ'. -/
 theorem sum_comm {ι' : Type _} (μ : ι → ι' → Measure α) :
-    (sum fun n => sum (μ n)) = sum fun m => sum fun n => μ n m :=
-  by
-  ext1 s hs
-  simp_rw [sum_apply _ hs]
-  rw [ENNReal.tsum_comm]
+    (sum fun n => sum (μ n)) = sum fun m => sum fun n => μ n m := by ext1 s hs;
+  simp_rw [sum_apply _ hs]; rw [ENNReal.tsum_comm]
 #align measure_theory.measure.sum_comm MeasureTheory.Measure.sum_comm
 
 #print MeasureTheory.Measure.ae_sum_iff /-
@@ -3169,9 +3145,7 @@ theorem ae_sum_iff' {μ : ι → Measure α} {p : α → Prop} (h : MeasurableSe
 
 #print MeasureTheory.Measure.sum_fintype /-
 @[simp]
-theorem sum_fintype [Fintype ι] (μ : ι → Measure α) : sum μ = ∑ i, μ i :=
-  by
-  ext1 s hs
+theorem sum_fintype [Fintype ι] (μ : ι → Measure α) : sum μ = ∑ i, μ i := by ext1 s hs;
   simp only [sum_apply, finset_sum_apply, hs, tsum_fintype]
 #align measure_theory.measure.sum_fintype MeasureTheory.Measure.sum_fintype
 -/
@@ -3727,9 +3701,8 @@ but is expected to have type
   forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {ν : MeasureTheory.Measure.{u1} α m0}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (MeasureTheory.Measure.ae.{u1} α m0 μ) (MeasureTheory.Measure.ae.{u1} α m0 ν)) (MeasureTheory.Measure.AbsolutelyContinuous.{u1} α m0 μ ν)
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.ae_le_iff_absolutely_continuous MeasureTheory.Measure.ae_le_iff_absolutelyContinuousₓ'. -/
 theorem ae_le_iff_absolutelyContinuous : μ.ae ≤ ν.ae ↔ μ ≪ ν :=
-  ⟨fun h s => by
-    rw [measure_zero_iff_ae_nmem, measure_zero_iff_ae_nmem]
-    exact fun hs => h hs, fun h s hs => h hs⟩
+  ⟨fun h s => by rw [measure_zero_iff_ae_nmem, measure_zero_iff_ae_nmem]; exact fun hs => h hs,
+    fun h s hs => h hs⟩
 #align measure_theory.measure.ae_le_iff_absolutely_continuous MeasureTheory.Measure.ae_le_iff_absolutelyContinuous
 
 /- warning: has_le.le.absolutely_continuous_of_ae -> LE.le.absolutelyContinuous_of_ae is a dubious translation:
@@ -3846,9 +3819,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.quasi_measure_preserving.comp MeasureTheory.Measure.QuasiMeasurePreserving.compₓ'. -/
 protected theorem comp {g : β → γ} {f : α → β} (hg : QuasiMeasurePreserving g μb μc)
     (hf : QuasiMeasurePreserving f μa μb) : QuasiMeasurePreserving (g ∘ f) μa μc :=
-  ⟨hg.Measurable.comp hf.Measurable, by
-    rw [← map_map hg.1 hf.1]
-    exact (hf.2.map hg.1).trans hg.2⟩
+  ⟨hg.Measurable.comp hf.Measurable, by rw [← map_map hg.1 hf.1]; exact (hf.2.map hg.1).trans hg.2⟩
 #align measure_theory.measure.quasi_measure_preserving.comp MeasureTheory.Measure.QuasiMeasurePreserving.comp
 
 #print MeasureTheory.Measure.QuasiMeasurePreserving.iterate /-
@@ -3953,14 +3924,11 @@ theorem image_zpow_ae_eq {s : Set α} {e : α ≃ α} (he : QuasiMeasurePreservi
     ⇑(e ^ k) '' s =ᵐ[μ] s := by
   rw [Equiv.image_eq_preimage]
   obtain ⟨k, rfl | rfl⟩ := k.eq_coe_or_neg
-  · replace hs : ⇑e⁻¹ ⁻¹' s =ᵐ[μ] s
-    · rwa [Equiv.image_eq_preimage] at hs
+  · replace hs : ⇑e⁻¹ ⁻¹' s =ᵐ[μ] s; · rwa [Equiv.image_eq_preimage] at hs
     replace he' : ⇑e⁻¹^[k] ⁻¹' s =ᵐ[μ] s := he'.preimage_iterate_ae_eq k hs
     rwa [Equiv.Perm.iterate_eq_pow e⁻¹ k, inv_pow e k] at he'
   · rw [zpow_neg, zpow_ofNat]
-    replace hs : e ⁻¹' s =ᵐ[μ] s
-    · convert he.preimage_ae_eq hs.symm
-      rw [Equiv.preimage_image]
+    replace hs : e ⁻¹' s =ᵐ[μ] s; · convert he.preimage_ae_eq hs.symm; rw [Equiv.preimage_image]
     replace he : ⇑e^[k] ⁻¹' s =ᵐ[μ] s := he.preimage_iterate_ae_eq k hs
     rwa [Equiv.Perm.iterate_eq_pow e k] at he
 #align measure_theory.measure.quasi_measure_preserving.image_zpow_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.image_zpow_ae_eq
@@ -3979,8 +3947,7 @@ theorem limsup_preimage_iterate_ae_eq {f : α → α} (hf : QuasiMeasurePreservi
       s :=
   haveI : ∀ n, (preimage f^[n]) s =ᵐ[μ] s := by
     intro n
-    induction' n with n ih
-    · simp
+    induction' n with n ih; · simp
     simpa only [iterate_succ', comp_app] using ae_eq_trans (hf.ae_eq ih) hs
   (limsup_ae_eq_of_forall_ae_eq (fun n => (preimage f^[n]) s) this).trans (ae_eq_refl _)
 #align measure_theory.measure.quasi_measure_preserving.limsup_preimage_iterate_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.limsup_preimage_iterate_ae_eq
@@ -4058,9 +4025,7 @@ theorem pairwise_aedisjoint_of_aedisjoint_forall_ne_one {G α : Type _} [Group G
   by
   intro g₁ g₂ hg
   let g := g₂⁻¹ * g₁
-  replace hg : g ≠ 1
-  · rw [Ne.def, inv_mul_eq_one]
-    exact hg.symm
+  replace hg : g ≠ 1; · rw [Ne.def, inv_mul_eq_one]; exact hg.symm
   have : (· • ·) g₂⁻¹ ⁻¹' (g • s ∩ s) = g₁ • s ∩ g₂ • s := by
     rw [preimage_eq_iff_eq_image (MulAction.bijective g₂⁻¹), image_smul, smul_set_inter, smul_smul,
       smul_smul, inv_mul_self, one_smul]
@@ -4673,8 +4638,7 @@ theorem biSup_measure_Iic [Preorder α] {s : Set α} (hsc : s.Countable)
     (hst : ∀ x : α, ∃ y ∈ s, x ≤ y) (hdir : DirectedOn (· ≤ ·) s) : (⨆ x ∈ s, μ (Iic x)) = μ univ :=
   by
   rw [← measure_bUnion_eq_supr hsc]
-  · congr
-    exact Union₂_eq_univ_iff.2 hst
+  · congr ; exact Union₂_eq_univ_iff.2 hst
   · exact directedOn_iff_directed.2 (hdir.directed_coe.mono_comp _ fun x y => Iic_subset_Iic.2)
 #align measure_theory.bsupr_measure_Iic MeasureTheory.biSup_measure_Iic
 
@@ -4781,9 +4745,7 @@ theorem ae_dirac_iff {a : α} {p : α → Prop} (hp : MeasurableSet { x | p x })
 
 #print MeasureTheory.ae_dirac_eq /-
 @[simp]
-theorem ae_dirac_eq [MeasurableSingletonClass α] (a : α) : (dirac a).ae = pure a :=
-  by
-  ext s
+theorem ae_dirac_eq [MeasurableSingletonClass α] (a : α) : (dirac a).ae = pure a := by ext s;
   simp [mem_ae_iff, imp_false]
 #align measure_theory.ae_dirac_eq MeasureTheory.ae_dirac_eq
 -/
@@ -4920,10 +4882,8 @@ instance finiteMeasureZero : FiniteMeasure (0 : Measure α) :=
 -/
 
 #print MeasureTheory.finiteMeasureOfIsEmpty /-
-instance (priority := 100) finiteMeasureOfIsEmpty [IsEmpty α] : FiniteMeasure μ :=
-  by
-  rw [eq_zero_of_is_empty μ]
-  infer_instance
+instance (priority := 100) finiteMeasureOfIsEmpty [IsEmpty α] : FiniteMeasure μ := by
+  rw [eq_zero_of_is_empty μ]; infer_instance
 #align measure_theory.is_finite_measure_of_is_empty MeasureTheory.finiteMeasureOfIsEmpty
 -/
 
@@ -4993,11 +4953,8 @@ theorem Measure.finiteMeasureMap {m : MeasurableSpace α} (μ : Measure α) [Fin
     (f : α → β) : FiniteMeasure (μ.map f) :=
   by
   by_cases hf : AEMeasurable f μ
-  · constructor
-    rw [map_apply_of_ae_measurable hf MeasurableSet.univ]
-    exact measure_lt_top μ _
-  · rw [map_of_not_ae_measurable hf]
-    exact MeasureTheory.finiteMeasureZero
+  · constructor; rw [map_apply_of_ae_measurable hf MeasurableSet.univ]; exact measure_lt_top μ _
+  · rw [map_of_not_ae_measurable hf]; exact MeasureTheory.finiteMeasureZero
 #align measure_theory.measure.is_finite_measure_map MeasureTheory.Measure.finiteMeasureMap
 
 /- warning: measure_theory.measure_univ_nnreal_eq_zero -> MeasureTheory.measureUnivNNReal_eq_zero is a dubious translation:
@@ -5403,12 +5360,8 @@ but is expected to have type
   forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {γ : Type.{u2}} (f : α -> γ) (g : α -> γ) (s : Set.{u1} α), (Eq.{1} ENNReal (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (OfNat.ofNat.{0} ENNReal 0 (Zero.toOfNat0.{0} ENNReal instENNRealZero))) -> (Filter.EventuallyEq.{u1, u2} α γ (MeasureTheory.Measure.ae.{u1} α m0 μ) (fun (x : α) => ite.{succ u2} γ (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (Classical.propDecidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) (f x) (g x)) f)
 Case conversion may be inaccurate. Consider using '#align measure_theory.ite_ae_eq_of_measure_compl_zero MeasureTheory.ite_ae_eq_of_measure_compl_zeroₓ'. -/
 theorem ite_ae_eq_of_measure_compl_zero {γ} (f : α → γ) (g : α → γ) (s : Set α)
-    (hs_zero : μ (sᶜ) = 0) : (fun x => ite (x ∈ s) (f x) (g x)) =ᵐ[μ] f :=
-  by
-  filter_upwards [hs_zero]
-  intros
-  split_ifs
-  rfl
+    (hs_zero : μ (sᶜ) = 0) : (fun x => ite (x ∈ s) (f x) (g x)) =ᵐ[μ] f := by
+  filter_upwards [hs_zero]; intros ; split_ifs; rfl
 #align measure_theory.ite_ae_eq_of_measure_compl_zero MeasureTheory.ite_ae_eq_of_measure_compl_zero
 
 namespace Measure
@@ -5497,9 +5450,7 @@ def Measure.toFiniteSpanningSetsIn (μ : Measure α) [h : SigmaFinite μ] :
     where
   Set n := toMeasurable μ (h.out.some.Set n)
   set_mem n := measurableSet_toMeasurable _ _
-  Finite n := by
-    rw [measure_to_measurable]
-    exact h.out.some.finite n
+  Finite n := by rw [measure_to_measurable]; exact h.out.some.finite n
   spanning := eq_univ_of_subset (iUnion_mono fun n => subset_toMeasurable _ _) h.out.some.spanning
 #align measure_theory.measure.to_finite_spanning_sets_in MeasureTheory.Measure.toFiniteSpanningSetsIn
 -/
@@ -5826,9 +5777,7 @@ theorem measure_toMeasurable_inter_of_cover {s : Set α} (hs : MeasurableSet s) 
     refine' ⟨t', tt', MeasurableSet.iUnion fun n => measurable_set_to_measurable μ _, fun u hu => _⟩
     apply le_antisymm _ (measure_mono (inter_subset_inter tt' subset.rfl))
     calc
-      μ (t' ∩ u) ≤ ∑' n, μ (to_measurable μ (t ∩ disjointed w n) ∩ u) :=
-        by
-        rw [ht', Union_inter]
+      μ (t' ∩ u) ≤ ∑' n, μ (to_measurable μ (t ∩ disjointed w n) ∩ u) := by rw [ht', Union_inter];
         exact measure_Union_le _
       _ = ∑' n, μ (t ∩ disjointed w n ∩ u) := by
         congr 1
@@ -5892,10 +5841,7 @@ that `t` has finite measure), see `measure_to_measurable_inter`. -/
 theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s)
     (t : Set α) : μ (toMeasurable μ t ∩ s) = μ (t ∩ s) :=
   by
-  have : t ⊆ ⋃ n, spanning_sets μ n :=
-    by
-    rw [Union_spanning_sets]
-    exact subset_univ _
+  have : t ⊆ ⋃ n, spanning_sets μ n := by rw [Union_spanning_sets]; exact subset_univ _
   apply measure_to_measurable_inter_of_cover hs this fun n => ne_of_lt _
   calc
     μ (t ∩ spanning_sets μ n) ≤ μ (spanning_sets μ n) := measure_mono (inter_subset_right _ _)
@@ -6019,18 +5965,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.sigma_finite_bot_iff MeasureTheory.sigmaFinite_bot_iffₓ'. -/
 theorem sigmaFinite_bot_iff (μ : @Measure α ⊥) : SigmaFinite μ ↔ FiniteMeasure μ :=
   by
-  refine'
-    ⟨fun h => ⟨_⟩, fun h => by
-      haveI := h
-      infer_instance⟩
+  refine' ⟨fun h => ⟨_⟩, fun h => by haveI := h; infer_instance⟩
   haveI : sigma_finite μ := h
   let s := spanning_sets μ
   have hs_univ : (⋃ i, s i) = Set.univ := Union_spanning_sets μ
   have hs_meas : ∀ i, measurable_set[⊥] (s i) := measurable_spanning_sets μ
   simp_rw [MeasurableSpace.measurableSet_bot_iff] at hs_meas
   by_cases h_univ_empty : Set.univ = ∅
-  · rw [h_univ_empty, measure_empty]
-    exact ennreal.zero_ne_top.lt_top
+  · rw [h_univ_empty, measure_empty]; exact ennreal.zero_ne_top.lt_top
   obtain ⟨i, hsi⟩ : ∃ i, s i = Set.univ :=
     by
     by_contra h_not_univ
@@ -6064,17 +6006,14 @@ instance sum.sigmaFinite {ι} [Finite ι] (μ : ι → Measure α) [∀ i, Sigma
   · rw [sum_apply _ (this n), tsum_fintype, ENNReal.sum_lt_top_iff]
     rintro i -
     exact (measure_mono <| Inter_subset _ i).trans_lt (measure_spanning_sets_lt_top (μ i) n)
-  · rw [Union_Inter_of_monotone]
-    simp_rw [Union_spanning_sets, Inter_univ]
+  · rw [Union_Inter_of_monotone]; simp_rw [Union_spanning_sets, Inter_univ]
     exact fun i => monotone_spanning_sets (μ i)
 #align measure_theory.sum.sigma_finite MeasureTheory.sum.sigmaFinite
 -/
 
 #print MeasureTheory.Add.sigmaFinite /-
 instance Add.sigmaFinite (μ ν : Measure α) [SigmaFinite μ] [SigmaFinite ν] : SigmaFinite (μ + ν) :=
-  by
-  rw [← sum_cond]
-  refine' @sum.sigma_finite _ _ _ _ _ (Bool.rec _ _) <;> simpa
+  by rw [← sum_cond]; refine' @sum.sigma_finite _ _ _ _ _ (Bool.rec _ _) <;> simpa
 #align measure_theory.add.sigma_finite MeasureTheory.Add.sigmaFinite
 -/
 
@@ -6844,11 +6783,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (e : MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2), Function.Injective.{succ u2, succ u1} (MeasureTheory.Measure.{u2} α _inst_1) (MeasureTheory.Measure.{u1} β _inst_2) (MeasureTheory.Measure.map.{u2, u1} α β _inst_2 _inst_1 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (MeasurableEquiv.instEquivLike.{u2, u1} α β _inst_1 _inst_2))) e))
 Case conversion may be inaccurate. Consider using '#align measurable_equiv.map_measurable_equiv_injective MeasurableEquiv.map_measurableEquiv_injectiveₓ'. -/
-theorem map_measurableEquiv_injective (e : α ≃ᵐ β) : Injective (map e) :=
-  by
-  intro μ₁ μ₂ hμ
-  apply_fun map e.symm  at hμ
-  simpa [map_symm_map e] using hμ
+theorem map_measurableEquiv_injective (e : α ≃ᵐ β) : Injective (map e) := by intro μ₁ μ₂ hμ;
+  apply_fun map e.symm  at hμ; simpa [map_symm_map e] using hμ
 #align measurable_equiv.map_measurable_equiv_injective MeasurableEquiv.map_measurableEquiv_injective
 
 /- warning: measurable_equiv.map_apply_eq_iff_map_symm_apply_eq -> MeasurableEquiv.map_apply_eq_iff_map_symm_apply_eq is a dubious translation:
@@ -6878,9 +6814,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u1} β] (f : MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) (μ : MeasureTheory.Measure.{u2} α _inst_1), Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (MeasurableEquiv.instEquivLike.{u2, u1} α β _inst_1 _inst_2))) f) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) (MeasureTheory.Measure.ae.{u1} β _inst_2 (MeasureTheory.Measure.map.{u2, u1} α β _inst_2 _inst_1 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (MeasurableEquiv.{u2, u1} α β _inst_1 _inst_2) α β (MeasurableEquiv.instEquivLike.{u2, u1} α β _inst_1 _inst_2))) f) μ))
 Case conversion may be inaccurate. Consider using '#align measurable_equiv.map_ae MeasurableEquiv.map_aeₓ'. -/
-theorem map_ae (f : α ≃ᵐ β) (μ : Measure α) : Filter.map f μ.ae = (map f μ).ae :=
-  by
-  ext s
+theorem map_ae (f : α ≃ᵐ β) (μ : Measure α) : Filter.map f μ.ae = (map f μ).ae := by ext s;
   simp_rw [mem_map, mem_ae_iff, ← preimage_compl, f.map_apply]
 #align measurable_equiv.map_ae MeasurableEquiv.map_ae
 
@@ -6957,9 +6891,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {s : Set.{u1} α} (hm : LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instLEMeasurableSpace.{u1} α) m m0), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m0 μ) s) (MeasureTheory.OuterMeasure.measureOf.{u1} α (MeasureTheory.Measure.toOuterMeasure.{u1} α m (MeasureTheory.Measure.trim.{u1} α m m0 μ hm)) s)
 Case conversion may be inaccurate. Consider using '#align measure_theory.le_trim MeasureTheory.le_trimₓ'. -/
-theorem le_trim (hm : m ≤ m0) : μ s ≤ μ.trim hm s :=
-  by
-  simp_rw [measure.trim]
+theorem le_trim (hm : m ≤ m0) : μ s ≤ μ.trim hm s := by simp_rw [measure.trim];
   exact @le_to_measure_apply _ m _ _ _
 #align measure_theory.le_trim MeasureTheory.le_trim
 
@@ -7028,9 +6960,7 @@ theorem restrict_trim (hm : m ≤ m0) (μ : Measure α) (hs : @MeasurableSet α 
 
 #print MeasureTheory.finiteMeasure_trim /-
 instance finiteMeasure_trim (hm : m ≤ m0) [FiniteMeasure μ] : FiniteMeasure (μ.trim hm)
-    where measure_univ_lt_top :=
-    by
-    rw [trim_measurable_set_eq hm (@MeasurableSet.univ _ m)]
+    where measure_univ_lt_top := by rw [trim_measurable_set_eq hm (@MeasurableSet.univ _ m)];
     exact measure_lt_top _ _
 #align measure_theory.is_finite_measure_trim MeasureTheory.finiteMeasure_trim
 -/
@@ -7094,10 +7024,8 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
     (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝 x)) : ∃ (U : _)(_ : U ⊇ s), IsOpen U ∧ μ U < ∞ :=
   by
   refine' IsCompact.induction_on h _ _ _ _
-  · use ∅
-    simp [Superset]
-  · rintro s t hst ⟨U, htU, hUo, hU⟩
-    exact ⟨U, hst.trans htU, hUo, hU⟩
+  · use ∅; simp [Superset]
+  · rintro s t hst ⟨U, htU, hUo, hU⟩; exact ⟨U, hst.trans htU, hUo, hU⟩
   · rintro s t ⟨U, hsU, hUo, hU⟩ ⟨V, htV, hVo, hV⟩
     refine'
       ⟨U ∪ V, union_subset_union hsU htV, hUo.union hVo,
@@ -7208,8 +7136,7 @@ irreducible_def MeasureTheory.Measure.finiteSpanningSetsInOpen' [TopologicalSpac
   [SecondCountableTopology α] {m : MeasurableSpace α} (μ : Measure α) [LocallyFiniteMeasure μ] :
   μ.FiniteSpanningSetsIn { K | IsOpen K } :=
   by
-  suffices H : Nonempty (μ.finite_spanning_sets_in { K | IsOpen K })
-  exact H.some
+  suffices H : Nonempty (μ.finite_spanning_sets_in { K | IsOpen K }); exact H.some
   cases isEmpty_or_nonempty α
   ·
     exact
@@ -7226,8 +7153,7 @@ irreducible_def MeasureTheory.Measure.finiteSpanningSetsInOpen' [TopologicalSpac
     by_contra h'T
     simp only [not_nonempty_iff_eq_empty.1 h'T, sUnion_empty] at hT
     simpa only [← hT] using mem_univ (default : α)
-  obtain ⟨f, hf⟩ : ∃ f : ℕ → Set α, T = range f
-  exact T_count.exists_eq_range T_ne
+  obtain ⟨f, hf⟩ : ∃ f : ℕ → Set α, T = range f; exact T_count.exists_eq_range T_ne
   have fS : ∀ n, f n ∈ S := by
     intro n
     apply TS
@@ -7380,8 +7306,7 @@ theorem map_restrict_ae_le_map_indicator_ae [Zero β] (hs : MeasurableSet s) :
   by
   intro t
   by_cases ht : (0 : β) ∈ t
-  · rw [mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem ht hs]
-    exact id
+  · rw [mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem ht hs]; exact id
   rw [mem_map_indicator_ae_iff_of_zero_nmem ht, mem_map_restrict_ae_iff hs]
   exact fun h => measure_mono_null ((Set.inter_subset_left _ _).trans (Set.subset_union_left _ _)) h
 #align map_restrict_ae_le_map_indicator_ae map_restrict_ae_le_map_indicator_ae

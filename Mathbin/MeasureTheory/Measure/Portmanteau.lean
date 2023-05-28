@@ -327,10 +327,8 @@ theorem measure_of_cont_bdd_of_tendsto_indicator [TopologicalSpace Ω] [OpensMea
     Tendsto (fun n => lintegral μ fun ω => fs n ω) atTop (𝓝 (μ E)) :=
   by
   have fs_lim' :
-    ∀ ω, tendsto (fun n : ℕ => (fs n ω : ℝ≥0)) at_top (𝓝 (indicator E (fun x => (1 : ℝ≥0)) ω)) :=
-    by
-    rw [tendsto_pi_nhds] at fs_lim
-    exact fun ω => fs_lim ω
+    ∀ ω, tendsto (fun n : ℕ => (fs n ω : ℝ≥0)) at_top (𝓝 (indicator E (fun x => (1 : ℝ≥0)) ω)) := by
+    rw [tendsto_pi_nhds] at fs_lim; exact fun ω => fs_lim ω
   apply
     measure_of_cont_bdd_of_tendsto_filter_indicator μ E_mble fs
       (eventually_of_forall fun n => eventually_of_forall (fs_bdd n)) (eventually_of_forall fs_lim')

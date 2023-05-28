@@ -82,12 +82,9 @@ def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C
   map_id' X := by rfl
   map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _
-    · rw [category.comp_id]
-      rfl
+    · rw [category.comp_id]; rfl
     · have : f ≫ g'.cons p = (f ≫ g').cons p := by apply Quiver.Path.comp_cons
-      rw [this]
-      simp only
-      rw [ih, category.assoc]
+      rw [this]; simp only; rw [ih, category.assoc]
 #align category_theory.paths.lift CategoryTheory.Paths.lift
 -/
 
@@ -123,10 +120,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_toPathₓ'. -/
 @[simp]
 theorem lift_toPath {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
-    (lift φ).map f.toPath = φ.map f :=
-  by
-  dsimp [Quiver.Hom.toPath, lift]
-  simp
+    (lift φ).map f.toPath = φ.map f := by dsimp [Quiver.Hom.toPath, lift]; simp
 #align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_toPath
 
 /- warning: category_theory.paths.lift_spec -> CategoryTheory.Paths.lift_spec is a dubious translation:
@@ -138,10 +132,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.paths.
 theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunctor = φ :=
   by
   apply Prefunctor.ext; rotate_left
-  · rintro X
-    rfl
-  · rintro X Y f
-    rcases φ with ⟨φo, φm⟩
+  · rintro X; rfl
+  · rintro X Y f; rcases φ with ⟨φo, φm⟩
     dsimp [lift, Quiver.Hom.toPath]
     simp only [category.id_comp]
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
@@ -157,13 +149,11 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
   by
   subst_vars
   apply Functor.ext; rotate_left
-  · rintro X
-    rfl
+  · rintro X; rfl
   · rintro X Y f
     dsimp [lift]
     induction' f with _ _ p f' ih
-    · simp only [category.comp_id]
-      apply Functor.map_id
+    · simp only [category.comp_id]; apply Functor.map_id
     · simp only [category.comp_id, category.id_comp] at ih⊢
       have : Φ.map (p.cons f') = Φ.map p ≫ Φ.map f'.to_path := by
         convert functor.map_comp Φ p f'.to_path
@@ -186,8 +176,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
     · erw [F.map_id, G.map_id, category.id_comp, eq_to_hom_trans, eq_to_hom_refl]
     · erw [F.map_comp g e.to_path, G.map_comp g e.to_path, ih, h]
       simp only [category.id_comp, eq_to_hom_refl, eq_to_hom_trans_assoc, category.assoc]
-  · intro X
-    rw [h_obj]
+  · intro X; rw [h_obj]
 #align category_theory.paths.ext_functor CategoryTheory.Paths.ext_functor
 
 end Paths
@@ -311,10 +300,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
   Functor := quotientPathsTo C
   inverse := toQuotientPaths C
   unitIso :=
-    NatIso.ofComponents
-      (fun X => by
-        cases X
-        rfl)
+    NatIso.ofComponents (fun X => by cases X; rfl)
       (by
         intros
         cases X; cases Y
@@ -325,12 +311,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
         apply quotient.comp_closure.of
         simp [paths_hom_rel])
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
-  functor_unitIso_comp' := by
-    intros
-    cases X
-    dsimp
-    simp
-    rfl
+  functor_unitIso_comp' := by intros ; cases X; dsimp; simp; rfl
 #align category_theory.quotient_paths_equiv CategoryTheory.quotientPathsEquiv
 
 end

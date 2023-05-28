@@ -62,9 +62,7 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
     by
     let B' : structured_arrow A G := structured_arrow.mk ((⊥_ structured_arrow A G).Hom ≫ G.map g)
     let g' : ⊥_ structured_arrow A G ⟶ B' := structured_arrow.hom_mk g rfl
-    have : initial.to _ = g' := by
-      apply colimit.hom_ext
-      rintro ⟨⟨⟩⟩
+    have : initial.to _ = g' := by apply colimit.hom_ext; rintro ⟨⟨⟩⟩
     change comma_morphism.right (initial.to B') = _
     rw [this]
     rfl
@@ -129,9 +127,7 @@ def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
     let B' : costructured_arrow G A :=
       costructured_arrow.mk (G.map g ≫ (⊤_ costructured_arrow G A).Hom)
     let g' : B' ⟶ ⊤_ costructured_arrow G A := costructured_arrow.hom_mk g rfl
-    have : terminal.from _ = g' := by
-      apply limit.hom_ext
-      rintro ⟨⟨⟩⟩
+    have : terminal.from _ = g' := by apply limit.hom_ext; rintro ⟨⟨⟩⟩
     change comma_morphism.left (terminal.from B') = _
     rw [this]
     rfl
@@ -144,9 +140,7 @@ It is shown that it is a right adjoint in `adjunction_of_structured_arrow_initia
 -/
 def rightAdjointOfCostructuredArrowTerminals : C ⥤ D :=
   Adjunction.rightAdjointOfEquiv (rightAdjointOfCostructuredArrowTerminalsAux G) fun B₁ B₂ A f g =>
-    by
-    rw [← Equiv.eq_symm_apply]
-    simp
+    by rw [← Equiv.eq_symm_apply]; simp
 #align category_theory.right_adjoint_of_costructured_arrow_terminals CategoryTheory.rightAdjointOfCostructuredArrowTerminals
 -/
 

@@ -186,9 +186,7 @@ private theorem restrict_nonpos_seq_succ (n : ℕ) :
   rw [restrict_nonpos_seq]
 
 private theorem restrict_nonpos_seq_subset (n : ℕ) : restrictNonposSeq s i n ⊆ i := by
-  cases n <;>
-    · rw [restrict_nonpos_seq]
-      exact some_exists_one_div_lt_subset'
+  cases n <;> · rw [restrict_nonpos_seq]; exact some_exists_one_div_lt_subset'
 
 private theorem restrict_nonpos_seq_lt (n : ℕ) (hn : ¬s ≤[i \ ⋃ k ≤ n, restrictNonposSeq s i k] 0) :
     (1 / (findExistsOneDivLt s (i \ ⋃ k ≤ n, restrictNonposSeq s i k) + 1) : ℝ) <
@@ -201,8 +199,7 @@ private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
     (hn : ¬s ≤[i \ ⋃ k < n, restrictNonposSeq s i k] 0) : 0 < s (restrictNonposSeq s i n) :=
   by
   cases n
-  · rw [restrict_nonpos_seq]
-    rw [← @Set.diff_empty _ i] at hi₂
+  · rw [restrict_nonpos_seq]; rw [← @Set.diff_empty _ i] at hi₂
     rcases some_exists_one_div_lt_spec hi₂ with ⟨_, _, h⟩
     exact lt_trans Nat.one_div_pos_of_nat h
   · rw [restrict_nonpos_seq_succ]
@@ -264,18 +261,15 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
       rw [sub_neg]
       exact lt_of_lt_of_le hi₂ this
     refine' tsum_nonneg _
-    intro l
-    by_cases l < k
+    intro l; by_cases l < k
     · convert h₁ _ h
       ext x
       rw [Set.mem_iUnion, exists_prop, and_iff_right_iff_imp]
       exact fun _ => h
     · convert le_of_eq s.empty.symm
-      ext
-      simp only [exists_prop, Set.mem_empty_iff_false, Set.mem_iUnion, not_and, iff_false_iff]
+      ext; simp only [exists_prop, Set.mem_empty_iff_false, Set.mem_iUnion, not_and, iff_false_iff]
       exact fun h' => False.elim (h h')
-  · intro
-    exact MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
+  · intro ; exact MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
   · intro a b hab
     refine' set.disjoint_Union_left.mpr fun ha => _
     refine' set.disjoint_Union_right.mpr fun hb => _
@@ -292,11 +286,9 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 :=
   by
   have hi₁ : MeasurableSet i := by_contradiction fun h => ne_of_lt hi <| s.not_measurable h
-  by_cases s ≤[i] 0
-  · exact ⟨i, hi₁, Set.Subset.refl _, h, hi⟩
+  by_cases s ≤[i] 0; · exact ⟨i, hi₁, Set.Subset.refl _, h, hi⟩
   by_cases hn : ∀ n : ℕ, ¬s ≤[i \ ⋃ l < n, restrict_nonpos_seq s i l] 0
-  swap
-  · exact exists_subset_restrict_nonpos' hi₁ hi hn
+  swap; · exact exists_subset_restrict_nonpos' hi₁ hi hn
   set A := i \ ⋃ l, restrict_nonpos_seq s i l with hA
   set bdd : ℕ → ℕ := fun n => find_exists_one_div_lt s (i \ ⋃ k ≤ n, restrict_nonpos_seq s i k) with
     hbdd
@@ -331,16 +323,13 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     by
     simp only [one_div] at h₃'
     exact Summable.tendsto_atTop_of_pos h₃' fun n => Nat.cast_add_one_pos (bdd n)
-  have h₄ : tendsto (fun n => (bdd n : ℝ)) at_top at_top :=
-    by
-    convert at_top.tendsto_at_top_add_const_right (-1) h₃
-    simp
+  have h₄ : tendsto (fun n => (bdd n : ℝ)) at_top at_top := by
+    convert at_top.tendsto_at_top_add_const_right (-1) h₃; simp
   have A_meas : MeasurableSet A :=
     hi₁.diff (MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _)
   refine' ⟨A, A_meas, Set.diff_subset _ _, _, h₂.trans_lt hi⟩
   by_contra hnn
-  rw [restrict_le_restrict_iff _ _ A_meas] at hnn
-  push_neg  at hnn
+  rw [restrict_le_restrict_iff _ _ A_meas] at hnn; push_neg  at hnn
   obtain ⟨E, hE₁, hE₂, hE₃⟩ := hnn
   have : ∃ k, 1 ≤ bdd k ∧ 1 / (bdd k : ℝ) < s E :=
     by
@@ -358,14 +347,12 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
   have hA' : A ⊆ i \ ⋃ l ≤ k, restrict_nonpos_seq s i l :=
     by
     apply Set.diff_subset_diff_right
-    intro x
-    simp only [Set.mem_iUnion]
+    intro x; simp only [Set.mem_iUnion]
     rintro ⟨n, _, hn₂⟩
     exact ⟨n, hn₂⟩
   refine'
     find_exists_one_div_lt_min (hn' k) (Buffer.lt_aux_2 hk₁) ⟨E, Set.Subset.trans hE₂ hA', hE₁, _⟩
-  convert hk₂
-  norm_cast
+  convert hk₂; norm_cast
   exact tsub_add_cancel_of_le hk₁
 #align measure_theory.signed_measure.exists_subset_restrict_nonpos MeasureTheory.SignedMeasure.exists_subset_restrict_nonpos
 
@@ -448,8 +435,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
     rw [← hA₃,
       of_union (Set.disjoint_of_subset_right (Set.Subset.trans hD hC₁) disjoint_compl_right) hA₁
         hD₁]
-    linarith
-    infer_instance
+    linarith; infer_instance
   refine' not_le.2 this _
   refine' csInf_le bdd_below_measure_of_negatives ⟨A ∪ D, ⟨_, _⟩, rfl⟩
   · exact hA₁.union hD₁

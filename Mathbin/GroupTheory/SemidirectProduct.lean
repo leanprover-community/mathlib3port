@@ -417,10 +417,7 @@ Case conversion may be inaccurate. Consider using '#align semidirect_product.hom
 /-- Two maps out of the semidirect product are equal if they're equal after composition
   with both `inl` and `inr` -/
 theorem hom_ext {f g : N ⋊[φ] G →* H} (hl : f.comp inl = g.comp inl)
-    (hr : f.comp inr = g.comp inr) : f = g :=
-  by
-  rw [lift_unique f, lift_unique g]
-  simp only [*]
+    (hr : f.comp inr = g.comp inr) : f = g := by rw [lift_unique f, lift_unique g]; simp only [*]
 #align semidirect_product.hom_ext SemidirectProduct.hom_ext
 
 end lift

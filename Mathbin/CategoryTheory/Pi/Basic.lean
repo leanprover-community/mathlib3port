@@ -147,12 +147,8 @@ but is expected to have type
   forall {I : Type.{u3}} (C : I -> Type.{u1}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u1} (C i)] {J : Type.{u3}} {D : J -> Type.{u1}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u1} (D j)] (s : Sum.{u3, u3} I J), CategoryTheory.Category.{u2, u1} (Sum.elim.{u3, u3, succ (succ u1)} I J Type.{u1} C D s)
 Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.Pi.sumElimCategoryₓₓ'. -/
 instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
-  | Sum.inl i => by
-    dsimp
-    infer_instance
-  | Sum.inr j => by
-    dsimp
-    infer_instance
+  | Sum.inl i => by dsimp; infer_instance
+  | Sum.inr j => by dsimp; infer_instance
 #align category_theory.pi.sum_elim_category CategoryTheory.Pi.sumElimCategoryₓ
 
 /- warning: category_theory.pi.sum -> CategoryTheory.Pi.sum is a dubious translation:
@@ -182,11 +178,7 @@ variable {C}
 pair of corresponding components. -/
 @[simps]
 def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
-  ⟨f.Hom i, f.inv i, by
-    dsimp
-    rw [← comp_apply, iso.hom_inv_id, id_apply],
-    by
-    dsimp
+  ⟨f.Hom i, f.inv i, by dsimp; rw [← comp_apply, iso.hom_inv_id, id_apply], by dsimp;
     rw [← comp_apply, iso.inv_hom_id, id_apply]⟩
 #align category_theory.pi.iso_app CategoryTheory.Pi.isoApp
 -/
@@ -248,10 +240,7 @@ section EqToHom
 #print CategoryTheory.Functor.eqToHom_proj /-
 @[simp]
 theorem eqToHom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
-    (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) :=
-  by
-  subst h
-  rfl
+    (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) := by subst h; rfl
 #align category_theory.functor.eq_to_hom_proj CategoryTheory.Functor.eqToHom_proj
 -/
 
@@ -273,16 +262,10 @@ theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ Pi.eval C i = f i :=
 theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ Pi.eval C i = f' ⋙ Pi.eval C i) : f = f' :=
   by
   apply Functor.ext; swap
-  · intro X
-    ext i
-    specialize h i
-    have := congr_obj h X
-    simpa
-  · intro x y p
-    ext i
-    specialize h i
-    have := congr_hom h p
-    simpa
+  · intro X; ext i; specialize h i
+    have := congr_obj h X; simpa
+  · intro x y p; ext i; specialize h i
+    have := congr_hom h p; simpa
 #align category_theory.functor.pi_ext CategoryTheory.Functor.pi_ext
 -/
 

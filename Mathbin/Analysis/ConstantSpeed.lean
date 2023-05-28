@@ -96,8 +96,7 @@ theorem hasConstantSpeedOnWith_iff_variationOnFromTo_eq :
         ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), variationOnFromTo f s x y = l * (y - x) :=
   by
   constructor
-  · rintro h
-    refine' ⟨h.has_locally_bounded_variation_on, fun x xs y ys => _⟩
+  · rintro h; refine' ⟨h.has_locally_bounded_variation_on, fun x xs y ys => _⟩
     rw [hasConstantSpeedOnWith_iff_ordered] at h
     rcases le_total x y with (xy | yx)
     ·
@@ -119,18 +118,15 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
   rw [hasConstantSpeedOnWith_iff_ordered] at hfs hft⊢
   rintro z (zs | zt) y (ys | yt) zy
   · have : (s ∪ t) ∩ Icc z y = s ∩ Icc z y := by
-      ext w
-      constructor
+      ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
         · exact ⟨ws, zw, wy⟩
         · exact ⟨(le_antisymm (wy.trans (hs.2 ys)) (ht.2 wt)).symm ▸ hs.1, zw, wy⟩
-      · rintro ⟨ws, zwy⟩
-        exact ⟨Or.inl ws, zwy⟩
+      · rintro ⟨ws, zwy⟩; exact ⟨Or.inl ws, zwy⟩
     rw [this, hfs zs ys zy]
   · have : (s ∪ t) ∩ Icc z y = s ∩ Icc z x ∪ t ∩ Icc x y :=
       by
-      ext w
-      constructor
+      ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
         exacts[Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
       · rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
@@ -145,13 +141,11 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
     simp only [Icc_self, sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
     exact evariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
   · have : (s ∪ t) ∩ Icc z y = t ∩ Icc z y := by
-      ext w
-      constructor
+      ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
         · exact ⟨le_antisymm ((ht.2 zt).trans zw) (hs.2 ws) ▸ ht.1, zw, wy⟩
         · exact ⟨wt, zw, wy⟩
-      · rintro ⟨wt, zwy⟩
-        exact ⟨Or.inr wt, zwy⟩
+      · rintro ⟨wt, zwy⟩; exact ⟨Or.inr wt, zwy⟩
     rw [this, hft zt yt zy]
 #align has_constant_speed_on_with.union HasConstantSpeedOnWith.union
 

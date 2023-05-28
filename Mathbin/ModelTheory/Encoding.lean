@@ -351,11 +351,9 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
           · exact lt_of_lt_of_le i.is_lt (ge_of_eq (length_fin_range _))
           · rw [length_map, length_fin_range]
             exact i.2
-        rw [dif_pos]
-        swap
+        rw [dif_pos]; swap
         · exact fun i => Option.isSome_iff_exists.2 ⟨⟨_, ts i⟩, h i⟩
-        rw [dif_pos]
-        swap
+        rw [dif_pos]; swap
         · intro i
           obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eq.1 (h i)
           rw [h2]

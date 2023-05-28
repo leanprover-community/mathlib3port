@@ -385,11 +385,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_mono.maximal_preimage_top StrictMono.maximal_preimage_topₓ'. -/
 theorem StrictMono.maximal_preimage_top [LinearOrder α] [Preorder β] [OrderTop β] {f : α → β}
     (H : StrictMono f) {a} (h_top : f a = ⊤) (x : α) : x ≤ a :=
-  H.maximal_of_maximal_image
-    (fun p => by
-      rw [h_top]
-      exact le_top)
-    x
+  H.maximal_of_maximal_image (fun p => by rw [h_top]; exact le_top) x
 #align strict_mono.maximal_preimage_top StrictMono.maximal_preimage_top
 
 /- warning: order_top.ext_top -> OrderTop.ext_top is a dubious translation:
@@ -784,11 +780,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_mono.minimal_preimage_bot StrictMono.minimal_preimage_botₓ'. -/
 theorem StrictMono.minimal_preimage_bot [LinearOrder α] [PartialOrder β] [OrderBot β] {f : α → β}
     (H : StrictMono f) {a} (h_bot : f a = ⊥) (x : α) : a ≤ x :=
-  H.minimal_of_minimal_image
-    (fun p => by
-      rw [h_bot]
-      exact bot_le)
-    x
+  H.minimal_of_minimal_image (fun p => by rw [h_bot]; exact bot_le) x
 #align strict_mono.minimal_preimage_bot StrictMono.minimal_preimage_bot
 
 /- warning: order_bot.ext_bot -> OrderBot.ext_bot is a dubious translation:
@@ -1232,10 +1224,7 @@ Case conversion may be inaccurate. Consider using '#align order_top.lift OrderTo
 @[reducible]
 def OrderTop.lift [LE α] [Top α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_top : f ⊤ = ⊤) : OrderTop α :=
-  ⟨⊤, fun a =>
-    map_le _ _ <| by
-      rw [map_top]
-      exact le_top⟩
+  ⟨⊤, fun a => map_le _ _ <| by rw [map_top]; exact le_top⟩
 #align order_top.lift OrderTop.lift
 
 /- warning: order_bot.lift -> OrderBot.lift is a dubious translation:
@@ -1249,10 +1238,7 @@ Case conversion may be inaccurate. Consider using '#align order_bot.lift OrderBo
 @[reducible]
 def OrderBot.lift [LE α] [Bot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_bot : f ⊥ = ⊥) : OrderBot α :=
-  ⟨⊥, fun a =>
-    map_le _ _ <| by
-      rw [map_bot]
-      exact bot_le⟩
+  ⟨⊥, fun a => map_le _ _ <| by rw [map_bot]; exact bot_le⟩
 #align order_bot.lift OrderBot.lift
 
 /- warning: bounded_order.lift -> BoundedOrder.lift is a dubious translation:

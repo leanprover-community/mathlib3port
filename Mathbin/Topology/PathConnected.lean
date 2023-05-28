@@ -189,19 +189,13 @@ def symm (γ : Path x y) : Path y x where
 
 #print Path.symm_symm /-
 @[simp]
-theorem symm_symm {γ : Path x y} : γ.symm.symm = γ :=
-  by
-  ext
-  simp
+theorem symm_symm {γ : Path x y} : γ.symm.symm = γ := by ext; simp
 #align path.symm_symm Path.symm_symm
 -/
 
 #print Path.refl_symm /-
 @[simp]
-theorem refl_symm {a : X} : (Path.refl a).symm = Path.refl a :=
-  by
-  ext
-  rfl
+theorem refl_symm {a : X} : (Path.refl a).symm = Path.refl a := by ext; rfl
 #align path.refl_symm Path.refl_symm
 -/
 
@@ -465,8 +459,7 @@ theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.
   · refine' congr_arg _ (Subtype.ext _)
     have h : 2 - 2 * (t : ℝ) - 1 = 1 - 2 * t := by linarith
     norm_num [mul_sub, h]
-  · exfalso
-    linarith [unitInterval.nonneg t, unitInterval.le_one t]
+  · exfalso; linarith [unitInterval.nonneg t, unitInterval.le_one t]
 #align path.trans_symm Path.trans_symm
 -/
 
@@ -523,9 +516,7 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
         unfold_coes
         change t ≠ 0 at h
         have ht0 := lt_of_le_of_ne ht0 h.symm
-        have : ¬(t + 1) / 2 ≤ 1 / 2 := by
-          rw [not_le]
-          linarith
+        have : ¬(t + 1) / 2 ≤ 1 / 2 := by rw [not_le]; linarith
         simp only [comp_app, if_false, this]
         ring_nf
         rwa [γ₂.extend_extends]
@@ -550,9 +541,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align path.map_coe Path.map_coeₓ'. -/
 @[simp]
 theorem map_coe (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y} (h : Continuous f) :
-    (γ.map h : I → Y) = f ∘ γ := by
-  ext t
-  rfl
+    (γ.map h : I → Y) = f ∘ γ := by ext t; rfl
 #align path.map_coe Path.map_coe
 
 /- warning: path.map_symm -> Path.map_symm is a dubious translation:
@@ -575,19 +564,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align path.map_trans Path.map_transₓ'. -/
 @[simp]
 theorem map_trans (γ : Path x y) (γ' : Path y z) {Y : Type _} [TopologicalSpace Y] {f : X → Y}
-    (h : Continuous f) : (γ.trans γ').map h = (γ.map h).trans (γ'.map h) :=
-  by
-  ext t
-  rw [trans_apply, map_coe, comp_app, trans_apply]
-  split_ifs <;> rfl
+    (h : Continuous f) : (γ.trans γ').map h = (γ.map h).trans (γ'.map h) := by ext t;
+  rw [trans_apply, map_coe, comp_app, trans_apply]; split_ifs <;> rfl
 #align path.map_trans Path.map_trans
 
 #print Path.map_id /-
 @[simp]
-theorem map_id (γ : Path x y) : γ.map continuous_id = γ :=
-  by
-  ext
-  rfl
+theorem map_id (γ : Path x y) : γ.map continuous_id = γ := by ext; rfl
 #align path.map_id Path.map_id
 -/
 
@@ -600,9 +583,7 @@ Case conversion may be inaccurate. Consider using '#align path.map_map Path.map_
 @[simp]
 theorem map_map (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {Z : Type _} [TopologicalSpace Z]
     {f : X → Y} (hf : Continuous f) {g : Y → Z} (hg : Continuous g) :
-    (γ.map hf).map hg = γ.map (hg.comp hf) := by
-  ext
-  rfl
+    (γ.map hf).map hg = γ.map (hg.comp hf) := by ext; rfl
 #align path.map_map Path.map_map
 
 #print Path.cast /-
@@ -858,8 +839,7 @@ def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t
     norm_cast
     split_ifs with h₁ h₂ h₃ h₄
     · simp [γ.extend_of_le_zero h₁]
-    · congr
-      linarith
+    · congr ; linarith
     · have h₄ : t₁ ≤ 0 := le_of_lt (by simpa using h₂)
       simp [γ.extend_of_le_zero h₄, γ.extend_of_le_zero h₁]
     all_goals rfl
@@ -1014,10 +994,7 @@ theorem coe_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀
 
 #print Path.reparam_id /-
 @[simp]
-theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ :=
-  by
-  ext
-  rfl
+theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ := by ext; rfl
 #align path.reparam_id Path.reparam_id
 -/
 
@@ -1428,12 +1405,8 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
     induction' n with n hn
     · use Path.refl (p' 0)
       · constructor
-        · rintro i hi
-          rw [le_zero_iff.mp hi]
-          exact ⟨0, rfl⟩
-        · rw [range_subset_iff]
-          rintro x
-          exact hp' 0 le_rfl
+        · rintro i hi; rw [le_zero_iff.mp hi]; exact ⟨0, rfl⟩
+        · rw [range_subset_iff]; rintro x; exact hp' 0 le_rfl
     · rcases hn fun i hi => hp' i <| Nat.le_succ_of_le hi with ⟨γ₀, hγ₀⟩
       rcases h.joined_in (p' n) (hp' n n.le_succ) (p' <| n + 1) (hp' (n + 1) <| le_rfl) with
         ⟨γ₁, hγ₁⟩
@@ -1455,22 +1428,15 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
         apply union_subset hγ₀.2
         rw [range_subset_iff]
         exact hγ₁
-  have hpp' : ∀ k < n + 1, p k = p' k := by
-    intro k hk
-    simp only [p', hk, dif_pos]
-    congr
-    ext
-    rw [Fin.val_cast_of_lt hk]
-    norm_cast
+  have hpp' : ∀ k < n + 1, p k = p' k := by intro k hk; simp only [p', hk, dif_pos]; congr ; ext;
+    rw [Fin.val_cast_of_lt hk]; norm_cast
   use γ.cast (hpp' 0 n.zero_lt_succ) (hpp' n n.lt_succ_self)
   simp only [γ.cast_coe]
   refine' And.intro hγ.2 _
   rintro ⟨i, hi⟩
   suffices p ⟨i, hi⟩ = p' i by convert hγ.1 i (Nat.le_of_lt_succ hi)
   rw [← hpp' i hi]
-  suffices i = i % n.succ by
-    congr
-    assumption
+  suffices i = i % n.succ by congr ; assumption
   rw [Nat.mod_eq_of_lt hi]
 #align is_path_connected.exists_path_through_family IsPathConnected.exists_path_through_family
 

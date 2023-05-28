@@ -469,16 +469,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align char_p.neg_one_ne_one CharP.neg_one_ne_oneₓ'. -/
 theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) :=
   by
-  suffices (2 : R) ≠ 0 by
-    symm
-    rw [Ne.def, ← sub_eq_zero, sub_neg_eq_add]
-    exact this
+  suffices (2 : R) ≠ 0 by symm; rw [Ne.def, ← sub_eq_zero, sub_neg_eq_add]; exact this
   intro h
   rw [show (2 : R) = (2 : ℕ) by norm_cast] at h
   have := (CharP.cast_eq_zero_iff R p 2).mp h
   have := Nat.le_of_dvd (by decide) this
-  rw [fact_iff] at *
-  linarith
+  rw [fact_iff] at *; linarith
 #align char_p.neg_one_ne_one CharP.neg_one_ne_one
 
 /- warning: char_p.neg_one_pow_char -> CharP.neg_one_pow_char is a dubious translation:
@@ -714,11 +710,8 @@ but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : IsReduced.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))] (p : Nat) [_inst_3 : Fact (Nat.Prime p)] [_inst_4 : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) p], Function.Injective.{succ u1, succ u1} R R (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => R) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) R R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) R R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (RingHom.instRingHomClassRingHom.{u1, u1} R R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))))) (frobenius.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) p _inst_3 _inst_4))
 Case conversion may be inaccurate. Consider using '#align frobenius_inj frobenius_injₓ'. -/
 theorem frobenius_inj [CommRing R] [IsReduced R] (p : ℕ) [Fact p.Prime] [CharP R p] :
-    Function.Injective (frobenius R p) := fun x h H =>
-  by
-  rw [← sub_eq_zero] at H⊢
-  rw [← frobenius_sub] at H
-  exact IsReduced.eq_zero _ ⟨_, H⟩
+    Function.Injective (frobenius R p) := fun x h H => by rw [← sub_eq_zero] at H⊢;
+  rw [← frobenius_sub] at H; exact IsReduced.eq_zero _ ⟨_, H⟩
 #align frobenius_inj frobenius_inj
 
 /- warning: is_square_of_char_two' -> isSquare_of_charTwo' is a dubious translation:
@@ -730,8 +723,7 @@ Case conversion may be inaccurate. Consider using '#align is_square_of_char_two'
 /-- If `ring_char R = 2`, where `R` is a finite reduced commutative ring,
 then every `a : R` is a square. -/
 theorem isSquare_of_charTwo' {R : Type _} [Finite R] [CommRing R] [IsReduced R] [CharP R 2]
-    (a : R) : IsSquare a := by
-  cases nonempty_fintype R
+    (a : R) : IsSquare a := by cases nonempty_fintype R;
   exact
     Exists.imp (fun b h => pow_two b ▸ Eq.symm h)
       (((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).Surjective a)
@@ -916,11 +908,7 @@ theorem false_of_nontrivial_of_char_one [Nontrivial R] [CharP R 1] : False :=
 -/
 
 #print CharP.ringChar_ne_one /-
-theorem ringChar_ne_one [Nontrivial R] : ringChar R ≠ 1 :=
-  by
-  intro h
-  apply zero_ne_one' R
-  symm
+theorem ringChar_ne_one [Nontrivial R] : ringChar R ≠ 1 := by intro h; apply zero_ne_one' R; symm;
   rw [← Nat.cast_one, ringChar.spec, h]
 #align char_p.ring_char_ne_one CharP.ringChar_ne_one
 -/
@@ -1020,8 +1008,7 @@ theorem charP_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 
         apply hR _ (Nat.mod_lt _ _) h
         rw [← hn, Fintype.card_pos_iff]
         exact ⟨0⟩
-      · rintro ⟨k, rfl⟩
-        rw [Nat.cast_mul, H, MulZeroClass.zero_mul] }
+      · rintro ⟨k, rfl⟩; rw [Nat.cast_mul, H, MulZeroClass.zero_mul] }
 #align char_p_of_ne_zero charP_of_ne_zero
 
 /- warning: char_p_of_prime_pow_injective -> charP_of_prime_pow_injective is a dubious translation:
@@ -1033,13 +1020,10 @@ Case conversion may be inaccurate. Consider using '#align char_p_of_prime_pow_in
 theorem charP_of_prime_pow_injective (R) [Ring R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
     (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) :=
   by
-  obtain ⟨c, hc⟩ := CharP.exists R
-  skip
+  obtain ⟨c, hc⟩ := CharP.exists R; skip
   have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, CharP.cast_card_eq_zero]
   obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
-  obtain rfl : i = n := by
-    apply hR i hi
-    rw [← Nat.cast_pow, ← hc, CharP.cast_eq_zero]
+  obtain rfl : i = n := by apply hR i hi; rw [← Nat.cast_pow, ← hc, CharP.cast_eq_zero]
   rwa [← hc]
 #align char_p_of_prime_pow_injective charP_of_prime_pow_injective
 
@@ -1101,8 +1085,7 @@ theorem Int.cast_injOn_of_ringChar_ne_two {R : Type _} [NonAssocRing R] [Nontriv
   have hh : a - b = 1 ∨ b - a = 1 ∨ a - b = 2 ∨ b - a = 2 :=
     by
     rcases ha with (ha | ha | ha) <;> rcases hb with (hb | hb | hb)
-    pick_goal 5
-    pick_goal 9
+    pick_goal 5; pick_goal 9
     -- move goals with `a = b` to the front
     iterate 3 rw [ha, hb, sub_self] at hf; tauto
     -- 6 goals remain
@@ -1110,14 +1093,10 @@ theorem Int.cast_injOn_of_ringChar_ne_two {R : Type _} [NonAssocRing R] [Nontriv
   have h' : ((a - b : ℤ) : R) = 0 := by exact_mod_cast sub_eq_zero_of_eq h
   have h'' : ((b - a : ℤ) : R) = 0 := by exact_mod_cast sub_eq_zero_of_eq h.symm
   rcases hh with (hh | hh | hh | hh)
-  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h'
-    exact one_ne_zero h'
-  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h''
-    exact one_ne_zero h''
-  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h'
-    exact Ring.two_ne_zero hR h'
-  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h''
-    exact Ring.two_ne_zero hR h''
+  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h'; exact one_ne_zero h'
+  · rw [hh, (by norm_cast : ((1 : ℤ) : R) = 1)] at h''; exact one_ne_zero h''
+  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h'; exact Ring.two_ne_zero hR h'
+  · rw [hh, (by norm_cast : ((2 : ℤ) : R) = 2)] at h''; exact Ring.two_ne_zero hR h''
 #align int.cast_inj_on_of_ring_char_ne_two Int.cast_injOn_of_ringChar_ne_two
 
 end

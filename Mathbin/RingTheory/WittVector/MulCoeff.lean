@@ -255,9 +255,7 @@ theorem peval_polyOfInterest (n : ℕ) (x y : 𝕎 k) :
     map_sub]
   rw [sub_sub, add_comm (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.C ↑p := by rw [eq_intCast, Int.cast_ofNat]
-  have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p :=
-    by
-    intros
+  have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by intros ;
     rw [mvpz, MvPolynomial.eval₂_C]
   simp [wittPolynomial_eq_sum_c_mul_x_pow, aeval, eval₂_rename, this, mul_coeff, peval, map_natCast,
     map_add, map_pow, map_mul]

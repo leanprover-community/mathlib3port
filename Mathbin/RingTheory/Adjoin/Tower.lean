@@ -54,10 +54,7 @@ theorem adjoin_restrictScalars (C D E : Type _) [CommSemiring C] [CommSemiring D
   suffices
     Set.range (algebraMap D E) =
       Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E)
-    by
-    ext x
-    change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
-    rw [this]
+    by ext x; change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S); rw [this]
   ext x
   constructor
   · rintro ⟨y, hy⟩
@@ -128,10 +125,8 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : 
     ∃ B₀ : Subalgebra A B, B₀.FG ∧ (⊤ : Submodule B₀ C).FG :=
   by
   cases' hAC with x hx
-  cases' hBC with y hy
-  have := hy
-  simp_rw [eq_top_iff', mem_span_finset] at this
-  choose f hf
+  cases' hBC with y hy; have := hy
+  simp_rw [eq_top_iff', mem_span_finset] at this; choose f hf
   let s : Finset B := Finset.image₂ f (x ∪ y * y) y
   have hxy :
     ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
@@ -146,15 +141,11 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : 
         span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) ≤
       span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
     by
-    rw [span_mul_span, span_le, coe_insert]
-    rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
-    · rw [mul_one]
-      exact subset_span (Set.mem_insert _ _)
-    · rw [one_mul]
-      exact subset_span (Set.mem_insert_of_mem _ hyj)
-    · rw [mul_one]
-      exact subset_span (Set.mem_insert_of_mem _ hyi)
-    · rw [← hf (yi * yj)]
+    rw [span_mul_span, span_le, coe_insert]; rintro _ ⟨yi, yj, rfl | hyi, rfl | hyj, rfl⟩
+    · rw [mul_one]; exact subset_span (Set.mem_insert _ _)
+    · rw [one_mul]; exact subset_span (Set.mem_insert_of_mem _ hyj)
+    · rw [mul_one]; exact subset_span (Set.mem_insert_of_mem _ hyi)
+    · rw [← hf (yi * yj)];
       exact
         SetLike.mem_coe.2
           (sum_mem fun yk hyk =>

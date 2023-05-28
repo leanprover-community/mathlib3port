@@ -209,10 +209,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.noncomm_prod_cons Multiset.noncommProd_consₓ'. -/
 @[simp, to_additive]
 theorem noncommProd_cons (s : Multiset α) (a : α) (comm) :
-    noncommProd (a ::ₘ s) comm = a * noncommProd s (comm.mono fun _ => mem_cons_of_mem) :=
-  by
-  induction s using Quotient.inductionOn
-  simp
+    noncommProd (a ::ₘ s) comm = a * noncommProd s (comm.mono fun _ => mem_cons_of_mem) := by
+  induction s using Quotient.inductionOn; simp
 #align multiset.noncomm_prod_cons Multiset.noncommProd_cons
 #align multiset.noncomm_sum_cons Multiset.noncommSum_cons
 
@@ -252,10 +250,7 @@ theorem noncommProd_add (s t : Multiset α) (comm) :
     noncommProd (s + t) comm =
       noncommProd s (comm.mono <| subset_of_le <| s.le_add_right t) *
         noncommProd t (comm.mono <| subset_of_le <| t.le_add_left s) :=
-  by
-  rcases s with ⟨⟩
-  rcases t with ⟨⟩
-  simp
+  by rcases s with ⟨⟩; rcases t with ⟨⟩; simp
 #align multiset.noncomm_prod_add Multiset.noncommProd_add
 #align multiset.noncomm_sum_add Multiset.noncommSum_add
 
@@ -351,9 +346,7 @@ given a proof that `*` commutes on all elements `f x` for `x ∈ s`. -/
       "Sum of a `s : finset α` mapped with `f : α → β` with `[add_monoid β]`,\ngiven a proof that `+` commutes on all elements `f x` for `x ∈ s`."]
 def noncommProd (s : Finset α) (f : α → β)
     (comm : (s : Set α).Pairwise fun a b => Commute (f a) (f b)) : β :=
-  (s.1.map f).noncommProd <| by
-    simp_rw [Multiset.mem_map]
-    rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ _
+  (s.1.map f).noncommProd <| by simp_rw [Multiset.mem_map]; rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ _;
     exact comm.of_refl ha hb
 #align finset.noncomm_prod Finset.noncommProd
 #align finset.noncomm_sum Finset.noncommSum
@@ -365,10 +358,7 @@ Case conversion may be inaccurate. Consider using '#align finset.noncomm_prod_co
 theorem noncommProd_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s₁ = s₂) (h₂ : ∀ x ∈ s₂, f x = g x)
     (comm) :
     noncommProd s₁ f comm =
-      noncommProd s₂ g fun x hx y hy h =>
-        by
-        rw [← h₂ _ hx, ← h₂ _ hy]
-        subst h₁
+      noncommProd s₂ g fun x hx y hy h => by rw [← h₂ _ hx, ← h₂ _ hy]; subst h₁;
         exact comm hx hy h :=
   by simp_rw [noncomm_prod, Multiset.map_congr (congr_arg _ h₁) h₂]
 #align finset.noncomm_prod_congr Finset.noncommProd_congr
@@ -434,12 +424,8 @@ theorem noncommProd_insert_of_not_mem' [DecidableEq α] (s : Finset α) (a : α)
 #print Finset.noncommProd_singleton /-
 @[simp, to_additive]
 theorem noncommProd_singleton (a : α) (f : α → β) :
-    noncommProd ({a} : Finset α) f
-        (by
-          norm_cast
-          exact Set.pairwise_singleton _ _) =
-      f a :=
-  by simp [noncomm_prod, ← Multiset.cons_zero]
+    noncommProd ({a} : Finset α) f (by norm_cast; exact Set.pairwise_singleton _ _) = f a := by
+  simp [noncomm_prod, ← Multiset.cons_zero]
 #align finset.noncomm_prod_singleton Finset.noncommProd_singleton
 #align finset.noncomm_sum_singleton Finset.noncommSum_singleton
 -/
@@ -595,9 +581,7 @@ theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
   rw [← insert_erase (mem_univ i), noncomm_prod_insert_of_not_mem' _ _ _ _ (not_mem_erase _ _),
     noncomm_prod_eq_pow_card, one_pow]
   · simp
-  · intro i h
-    simp at h
-    simp [h]
+  · intro i h; simp at h; simp [h]
 #align finset.noncomm_prod_mul_single Finset.noncommProd_mul_single
 #align finset.noncomm_sum_single Finset.noncommSum_single
 

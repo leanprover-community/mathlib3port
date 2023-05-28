@@ -69,9 +69,8 @@ are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single b
 dependently-typed version would still be true, but the proof would need a dependently-typed
 version of `dom_dom_congr`. -/
 theorem Basis.ext_multilinear [Finite ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
-    (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
-  by
-  cases nonempty_fintype ι
+    (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
+  cases nonempty_fintype ι;
   exact
     (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp
       (Basis.ext_multilinear_fin (fun i => e) fun i => h (i ∘ _))

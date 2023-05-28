@@ -96,9 +96,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.is_max Order.IsSuccLimit.isMaxₓ'. -/
-protected theorem IsSuccLimit.isMax (h : IsSuccLimit (succ a)) : IsMax a :=
-  by
-  by_contra H
+protected theorem IsSuccLimit.isMax (h : IsSuccLimit (succ a)) : IsMax a := by by_contra H;
   exact h a (covby_succ_of_not_is_max H)
 #align order.is_succ_limit.is_max Order.IsSuccLimit.isMax
 
@@ -108,10 +106,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) -> (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_succ_of_not_is_max Order.not_isSuccLimit_succ_of_not_isMaxₓ'. -/
-theorem not_isSuccLimit_succ_of_not_isMax (ha : ¬IsMax a) : ¬IsSuccLimit (succ a) :=
-  by
-  contrapose! ha
-  exact ha.is_max
+theorem not_isSuccLimit_succ_of_not_isMax (ha : ¬IsMax a) : ¬IsSuccLimit (succ a) := by
+  contrapose! ha; exact ha.is_max
 #align order.not_is_succ_limit_succ_of_not_is_max Order.not_isSuccLimit_succ_of_not_isMax
 
 section NoMaxOrder
@@ -124,9 +120,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α _inst_1 _inst_2 b) a)
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.succ_ne Order.IsSuccLimit.succ_neₓ'. -/
-theorem IsSuccLimit.succ_ne (h : IsSuccLimit a) (b : α) : succ b ≠ a :=
-  by
-  rintro rfl
+theorem IsSuccLimit.succ_ne (h : IsSuccLimit a) (b : α) : succ b ≠ a := by rintro rfl;
   exact not_isMax _ h.is_max
 #align order.is_succ_limit.succ_ne Order.IsSuccLimit.succ_ne
 
@@ -219,10 +213,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.mem_range_succ_of_not_is_succ_limit Order.mem_range_succ_of_not_isSuccLimitₓ'. -/
 /-- See `not_is_succ_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
-theorem mem_range_succ_of_not_isSuccLimit (h : ¬IsSuccLimit a) : a ∈ range (@succ α _ _) :=
-  by
-  cases' not_is_succ_limit_iff.1 h with b hb
-  exact ⟨b, hb.2⟩
+theorem mem_range_succ_of_not_isSuccLimit (h : ¬IsSuccLimit a) : a ∈ range (@succ α _ _) := by
+  cases' not_is_succ_limit_iff.1 h with b hb; exact ⟨b, hb.2⟩
 #align order.mem_range_succ_of_not_is_succ_limit Order.mem_range_succ_of_not_isSuccLimit
 
 /- warning: order.is_succ_limit_of_succ_lt -> Order.isSuccLimit_of_succ_lt is a dubious translation:
@@ -350,10 +342,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (Set.range.{u1, succ u1} α α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_iff' Order.not_isSuccLimit_iff'ₓ'. -/
-theorem not_isSuccLimit_iff' : ¬IsSuccLimit a ↔ a ∈ range (@succ α _ _) :=
-  by
-  simp_rw [is_succ_limit_iff_succ_ne, not_forall, not_ne_iff]
-  rfl
+theorem not_isSuccLimit_iff' : ¬IsSuccLimit a ↔ a ∈ range (@succ α _ _) := by
+  simp_rw [is_succ_limit_iff_succ_ne, not_forall, not_ne_iff]; rfl
 #align order.not_is_succ_limit_iff' Order.not_isSuccLimit_iff'
 
 end NoMaxOrder
@@ -483,9 +473,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_min Order.IsPredLimit.isMinₓ'. -/
-protected theorem IsPredLimit.isMin (h : IsPredLimit (pred a)) : IsMin a :=
-  by
-  by_contra H
+protected theorem IsPredLimit.isMin (h : IsPredLimit (pred a)) : IsMin a := by by_contra H;
   exact h a (pred_covby_of_not_is_min H)
 #align order.is_pred_limit.is_min Order.IsPredLimit.isMin
 
@@ -495,10 +483,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) -> (Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)))
 Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_pred_of_not_is_min Order.not_isPredLimit_pred_of_not_isMinₓ'. -/
-theorem not_isPredLimit_pred_of_not_isMin (ha : ¬IsMin a) : ¬IsPredLimit (pred a) :=
-  by
-  contrapose! ha
-  exact ha.is_min
+theorem not_isPredLimit_pred_of_not_isMin (ha : ¬IsMin a) : ¬IsPredLimit (pred a) := by
+  contrapose! ha; exact ha.is_min
 #align order.not_is_pred_limit_pred_of_not_is_min Order.not_isPredLimit_pred_of_not_isMin
 
 section NoMinOrder
@@ -511,9 +497,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.pred.{u1} α _inst_1 _inst_2 b) a)
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.pred_ne Order.IsPredLimit.pred_neₓ'. -/
-theorem IsPredLimit.pred_ne (h : IsPredLimit a) (b : α) : pred b ≠ a :=
-  by
-  rintro rfl
+theorem IsPredLimit.pred_ne (h : IsPredLimit a) (b : α) : pred b ≠ a := by rintro rfl;
   exact not_isMin _ h.is_min
 #align order.is_pred_limit.pred_ne Order.IsPredLimit.pred_ne
 
@@ -586,10 +570,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Exists.{succ u1} α (fun (b : α) => And (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)) (Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)))
 Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_iff Order.not_isPredLimit_iffₓ'. -/
-theorem not_isPredLimit_iff : ¬IsPredLimit a ↔ ∃ b, ¬IsMin b ∧ pred b = a :=
-  by
-  rw [← is_succ_limit_to_dual_iff]
-  exact not_is_succ_limit_iff
+theorem not_isPredLimit_iff : ¬IsPredLimit a ↔ ∃ b, ¬IsMin b ∧ pred b = a := by
+  rw [← is_succ_limit_to_dual_iff]; exact not_is_succ_limit_iff
 #align order.not_is_pred_limit_iff Order.not_isPredLimit_iff
 
 /- warning: order.mem_range_pred_of_not_is_pred_limit -> Order.mem_range_pred_of_not_isPredLimit is a dubious translation:
@@ -600,10 +582,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.mem_range_pred_of_not_is_pred_limit Order.mem_range_pred_of_not_isPredLimitₓ'. -/
 /-- See `not_is_pred_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
-theorem mem_range_pred_of_not_isPredLimit (h : ¬IsPredLimit a) : a ∈ range (@pred α _ _) :=
-  by
-  cases' not_is_pred_limit_iff.1 h with b hb
-  exact ⟨b, hb.2⟩
+theorem mem_range_pred_of_not_isPredLimit (h : ¬IsPredLimit a) : a ∈ range (@pred α _ _) := by
+  cases' not_is_pred_limit_iff.1 h with b hb; exact ⟨b, hb.2⟩
 #align order.mem_range_pred_of_not_is_pred_limit Order.mem_range_pred_of_not_isPredLimit
 
 /- warning: order.is_pred_limit_of_pred_lt -> Order.isPredLimit_of_pred_lt is a dubious translation:

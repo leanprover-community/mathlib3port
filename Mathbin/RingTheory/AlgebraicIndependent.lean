@@ -123,9 +123,7 @@ Case conversion may be inaccurate. Consider using '#align algebraic_independent_
 theorem algebraicIndependent_empty_type_iff [IsEmpty ι] :
     AlgebraicIndependent R x ↔ Injective (algebraMap R A) :=
   by
-  have : aeval x = (Algebra.ofId R A).comp (@isEmptyAlgEquiv R ι _ _).toAlgHom :=
-    by
-    ext i
+  have : aeval x = (Algebra.ofId R A).comp (@isEmptyAlgEquiv R ι _ _).toAlgHom := by ext i;
     exact IsEmpty.elim' ‹IsEmpty ι› i
   rw [AlgebraicIndependent, this, ←
     injective.of_comp_iff' _ (@is_empty_alg_equiv R ι _ _).Bijective]
@@ -160,9 +158,7 @@ theorem linearIndependent : LinearIndependent R x :=
   by
   rw [linearIndependent_iff_injective_total]
   have : Finsupp.total ι A R x = (MvPolynomial.aeval x).toLinearMap.comp (Finsupp.total ι _ R X) :=
-    by
-    ext
-    simp
+    by ext; simp
   rw [this]
   refine' hx.comp _
   rw [← linearIndependent_iff_injective_total]
@@ -780,11 +776,7 @@ theorem AlgebraicIndependent.isTranscendenceBasis_iff {ι : Type w} {R : Type u}
   · intro p
     use i
     intro w i' h
-    specialize
-      p w (coe : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩)
-        (by
-          ext
-          simp)
+    specialize p w (coe : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩) (by ext; simp)
     have q := congr_arg (fun s => (coe : w → A) '' s) p.range_eq
     dsimp at q
     rw [← image_univ, image_image] at q
@@ -803,16 +795,12 @@ theorem IsTranscendenceBasis.isAlgebraic [Nontrivial R] (hx : IsTranscendenceBas
   intro a
   rw [← not_iff_comm.1 (hx.1.option_iff _).symm]
   intro ai
-  have h₁ : range x ⊆ range fun o : Option ι => o.elim a x :=
-    by
-    rintro x ⟨y, rfl⟩
+  have h₁ : range x ⊆ range fun o : Option ι => o.elim a x := by rintro x ⟨y, rfl⟩;
     exact ⟨some y, rfl⟩
   have h₂ : range x ≠ range fun o : Option ι => o.elim a x :=
     by
     intro h
-    have : a ∈ range x := by
-      rw [h]
-      exact ⟨none, rfl⟩
+    have : a ∈ range x := by rw [h]; exact ⟨none, rfl⟩
     rcases this with ⟨b, rfl⟩
     have : some b = none := ai.injective rfl
     simpa

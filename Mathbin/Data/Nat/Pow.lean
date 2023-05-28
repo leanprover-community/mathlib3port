@@ -82,9 +82,7 @@ theorem lt_two_pow (n : ℕ) : n < 2 ^ n :=
 -/
 
 #print Nat.one_le_pow /-
-theorem one_le_pow (n m : ℕ) (h : 0 < m) : 1 ≤ m ^ n :=
-  by
-  rw [← one_pow n]
+theorem one_le_pow (n m : ℕ) (h : 0 < m) : 1 ≤ m ^ n := by rw [← one_pow n];
   exact Nat.pow_le_pow_of_le_left h n
 #align nat.one_le_pow Nat.one_le_pow
 -/
@@ -102,9 +100,7 @@ theorem one_le_two_pow (n : ℕ) : 1 ≤ 2 ^ n :=
 -/
 
 #print Nat.one_lt_pow /-
-theorem one_lt_pow (n m : ℕ) (h₀ : 0 < n) (h₁ : 1 < m) : 1 < m ^ n :=
-  by
-  rw [← one_pow n]
+theorem one_lt_pow (n m : ℕ) (h₀ : 0 < n) (h₁ : 1 < m) : 1 < m ^ n := by rw [← one_pow n];
   exact pow_lt_pow_of_lt_left h₁ h₀
 #align nat.one_lt_pow Nat.one_lt_pow
 -/
@@ -212,9 +208,7 @@ theorem pow_left_injective {m : ℕ} (k : 1 ≤ m) : Function.Injective fun x : 
 -/
 
 #print Nat.sq_sub_sq /-
-theorem sq_sub_sq (a b : ℕ) : a ^ 2 - b ^ 2 = (a + b) * (a - b) :=
-  by
-  rw [sq, sq]
+theorem sq_sub_sq (a b : ℕ) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by rw [sq, sq];
   exact Nat.mul_self_sub_mul_self_eq a b
 #align nat.sq_sub_sq Nat.sq_sub_sq
 -/
@@ -272,10 +266,8 @@ theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w
 theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} (w : 0 < x), x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
   | x + 1, w => by
     constructor
-    · intro a
-      exact le_of_dvd (pow_pos (succ_pos x) l) a
-    · intro a
-      cases' x with x
+    · intro a; exact le_of_dvd (pow_pos (succ_pos x) l) a
+    · intro a; cases' x with x
       · simp only [one_pow]
       · have le := (pow_le_iff_le_right (Nat.le_add_left _ _)).mp a
         use (x + 2) ^ (l - k)

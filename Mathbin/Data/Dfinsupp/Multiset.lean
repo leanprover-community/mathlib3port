@@ -142,13 +142,8 @@ Case conversion may be inaccurate. Consider using '#align multiset.equiv_dfinsup
 /-- `multiset.to_dfinsupp` as an `add_equiv`. -/
 @[simps apply symm_apply]
 def equivDfinsupp : Multiset α ≃+ Π₀ a : α, ℕ :=
-  AddMonoidHom.toAddEquiv Multiset.toDfinsupp Dfinsupp.toMultiset
-    (by
-      ext x : 1
-      simp)
-    (by
-      refine' @Dfinsupp.addHom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
-      simp)
+  AddMonoidHom.toAddEquiv Multiset.toDfinsupp Dfinsupp.toMultiset (by ext x : 1; simp)
+    (by refine' @Dfinsupp.addHom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _; simp)
 #align multiset.equiv_dfinsupp Multiset.equivDfinsupp
 
 /- warning: multiset.to_dfinsupp_to_multiset -> Multiset.toDfinsupp_toMultiset is a dubious translation:

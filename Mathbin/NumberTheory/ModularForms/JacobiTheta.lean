@@ -43,10 +43,8 @@ theorem norm_exp_mul_sq_le {z : ℂ} (hz : 0 < z.im) (n : ℤ) :
   · rw [Complex.norm_eq_abs, Complex.abs_exp]
     have : (↑π * I * n ^ 2 * z).re = -π * z.im * n ^ 2 :=
       by
-      rw [(by
-          push_cast
-          ring : ↑π * I * n ^ 2 * z = ↑(π * n ^ 2) * (z * I)),
-        of_real_mul_re, mul_I_re]
+      rw [(by push_cast ; ring : ↑π * I * n ^ 2 * z = ↑(π * n ^ 2) * (z * I)), of_real_mul_re,
+        mul_I_re]
       ring
     obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (sq_nonneg n)
     rw [this, exp_mul, ← Int.cast_pow, rpow_int_cast, hm, zpow_ofNat]
@@ -61,8 +59,7 @@ theorem exists_summable_bound_exp_mul_sq {R : ℝ} (hR : 0 < R) :
   by
   let y := rexp (-π * R)
   have h : y < 1 := exp_lt_one_iff.mpr (mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hR)
-  refine' ⟨fun n => y ^ n.natAbs, summable_int_of_summable_nat _ _, fun τ hτ n => _⟩
-  pick_goal 3
+  refine' ⟨fun n => y ^ n.natAbs, summable_int_of_summable_nat _ _, fun τ hτ n => _⟩; pick_goal 3
   · refine' (norm_exp_mul_sq_le (hR.trans_le hτ) n).trans _
     refine' pow_le_pow_of_le_left (exp_pos _).le (real.exp_le_exp.mpr _) _
     rwa [mul_le_mul_left_of_neg (neg_lt_zero.mpr pi_pos)]
@@ -81,10 +78,8 @@ theorem jacobiTheta_two_add (z : ℂ) : jacobiTheta (2 + z) = jacobiTheta z :=
   by
   refine' tsum_congr fun n => _
   suffices cexp (↑π * I * ↑n ^ 2 * 2) = 1 by rw [mul_add, Complex.exp_add, this, one_mul]
-  rw [(by
-      push_cast
-      ring : ↑π * I * ↑n ^ 2 * 2 = ↑(n ^ 2) * (2 * π * I)),
-    Complex.exp_int_mul, Complex.exp_two_pi_mul_I, one_zpow]
+  rw [(by push_cast ; ring : ↑π * I * ↑n ^ 2 * 2 = ↑(n ^ 2) * (2 * π * I)), Complex.exp_int_mul,
+    Complex.exp_two_pi_mul_I, one_zpow]
 #align jacobi_theta_two_add jacobiTheta_two_add
 
 theorem jacobiTheta_t_sq_smul (τ : ℍ) : jacobiTheta ↑(ModularGroup.T ^ 2 • τ) = jacobiTheta τ :=
@@ -186,8 +181,7 @@ theorem isBigO_at_im_infty_jacobiTheta_sub_one :
   · exact le_mul_of_one_le_right pi_pos.le (hz.symm ▸ hy)
   · rw [sub_pos, exp_lt_one_iff, neg_mul, neg_lt_zero]
     exact mul_pos pi_pos (hz.symm ▸ zero_lt_one.trans_le hy)
-  · rw [sub_pos, exp_lt_one_iff, neg_lt_zero]
-    exact pi_pos
+  · rw [sub_pos, exp_lt_one_iff, neg_lt_zero]; exact pi_pos
 #align is_O_at_im_infty_jacobi_theta_sub_one isBigO_at_im_infty_jacobiTheta_sub_one
 
 theorem differentiableAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : DifferentiableAt ℂ jacobiTheta z :=

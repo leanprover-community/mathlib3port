@@ -276,11 +276,7 @@ theorem top_orthogonal_eq_bot : (⊤ : Submodule 𝕜 E)ᗮ = ⊥ :=
   by
   ext
   rw [mem_bot, mem_orthogonal]
-  exact
-    ⟨fun h => inner_self_eq_zero.mp (h x mem_top),
-      by
-      rintro rfl
-      simp⟩
+  exact ⟨fun h => inner_self_eq_zero.mp (h x mem_top), by rintro rfl; simp⟩
 #align submodule.top_orthogonal_eq_bot Submodule.top_orthogonal_eq_bot
 
 /- warning: submodule.bot_orthogonal_eq_top -> Submodule.bot_orthogonal_eq_top is a dubious translation:
@@ -305,10 +301,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.orthogonal_e
 @[simp]
 theorem orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
   by
-  refine'
-    ⟨_, by
-      rintro rfl
-      exact bot_orthogonal_eq_top⟩
+  refine' ⟨_, by rintro rfl; exact bot_orthogonal_eq_top⟩
   intro h
   have : K ⊓ Kᗮ = ⊥ := K.orthogonal_disjoint.eq_bot
   rwa [h, inf_comm, top_inf_eq] at this

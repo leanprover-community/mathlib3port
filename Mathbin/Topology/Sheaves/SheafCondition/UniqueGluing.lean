@@ -144,10 +144,8 @@ theorem compatible_iff_leftRes_eq_rightRes (sf : piOpens F U) :
     exact h i j
   · intro i j
     convert congr_arg (limits.pi.π (fun p : ι × ι => F.obj (op (U p.1 ⊓ U p.2))) (i, j)) h
-    · rw [left_res, types.pi_lift_π_apply]
-      rfl
-    · rw [right_res, types.pi_lift_π_apply]
-      rfl
+    · rw [left_res, types.pi_lift_π_apply]; rfl
+    · rw [right_res, types.pi_lift_π_apply]; rfl
 #align Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes
 -/
 
@@ -318,20 +316,12 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t :=
   by
   let sf : ∀ i : ι, F.1.obj (op (U i)) := fun i => F.1.map (opens.le_supr U i).op s
-  have sf_compatible : is_compatible _ U sf :=
-    by
-    intro i j
-    simp_rw [← comp_apply, ← F.1.map_comp]
+  have sf_compatible : is_compatible _ U sf := by intro i j; simp_rw [← comp_apply, ← F.1.map_comp];
     rfl
   obtain ⟨gl, -, gl_uniq⟩ := F.exists_unique_gluing U sf sf_compatible
   trans gl
-  · apply gl_uniq
-    intro i
-    rfl
-  · symm
-    apply gl_uniq
-    intro i
-    rw [← h]
+  · apply gl_uniq; intro i; rfl
+  · symm; apply gl_uniq; intro i; rw [← h]
 #align Top.sheaf.eq_of_locally_eq TopCat.Sheaf.eq_of_locally_eq
 
 /- warning: Top.sheaf.eq_of_locally_eq' -> TopCat.Sheaf.eq_of_locally_eq' is a dubious translation:
@@ -363,9 +353,7 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
   classical
     fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
     · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
-    · refine' le_trans hcover _
-      rw [sup_le_iff]
-      constructor
+    · refine' le_trans hcover _; rw [sup_le_iff]; constructor
       · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
       · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
     · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]

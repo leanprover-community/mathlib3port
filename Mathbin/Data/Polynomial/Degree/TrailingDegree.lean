@@ -164,17 +164,10 @@ theorem trailingDegree_eq_iff_natTrailingDegree_eq_of_pos {p : R[X]} {n : ℕ} (
     p.trailingDegree = n ↔ p.natTrailingDegree = n :=
   by
   constructor
-  · intro H
-    rwa [← trailing_degree_eq_iff_nat_trailing_degree_eq]
-    rintro rfl
-    rw [trailing_degree_zero] at H
-    exact Option.noConfusion H
-  · intro H
-    rwa [trailing_degree_eq_iff_nat_trailing_degree_eq]
-    rintro rfl
-    rw [nat_trailing_degree_zero] at H
-    rw [H] at hn
-    exact lt_irrefl _ hn
+  · intro H; rwa [← trailing_degree_eq_iff_nat_trailing_degree_eq]; rintro rfl
+    rw [trailing_degree_zero] at H; exact Option.noConfusion H
+  · intro H; rwa [trailing_degree_eq_iff_nat_trailing_degree_eq]; rintro rfl
+    rw [nat_trailing_degree_zero] at H; rw [H] at hn; exact lt_irrefl _ hn
 #align polynomial.trailing_degree_eq_iff_nat_trailing_degree_eq_of_pos Polynomial.trailingDegree_eq_iff_natTrailingDegree_eq_of_pos
 -/
 
@@ -196,9 +189,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.nat_trailin
 @[simp]
 theorem natTrailingDegree_le_trailingDegree : ↑(natTrailingDegree p) ≤ trailingDegree p :=
   by
-  by_cases hp : p = 0;
-  · rw [hp, trailing_degree_zero]
-    exact le_top
+  by_cases hp : p = 0; · rw [hp, trailing_degree_zero]; exact le_top
   rw [trailing_degree_eq_nat_trailing_degree hp]
   exact le_rfl
 #align polynomial.nat_trailing_degree_le_trailing_degree Polynomial.natTrailingDegree_le_trailingDegree
@@ -230,9 +221,7 @@ theorem natTrailingDegree_le_of_ne_zero (h : coeff p n ≠ 0) : natTrailingDegre
   by
   rw [← WithTop.coe_le_coe, ← trailing_degree_eq_nat_trailing_degree]
   · exact le_trailing_degree_of_ne_zero h
-  · intro h
-    subst h
-    exact h rfl
+  · intro h; subst h; exact h rfl
 #align polynomial.nat_trailing_degree_le_of_ne_zero Polynomial.natTrailingDegree_le_of_ne_zero
 
 /- warning: polynomial.trailing_degree_le_trailing_degree -> Polynomial.trailingDegree_le_trailingDegree is a dubious translation:
@@ -245,10 +234,8 @@ theorem trailingDegree_le_trailingDegree (h : coeff q (natTrailingDegree p) ≠ 
     trailingDegree q ≤ trailingDegree p :=
   by
   by_cases hp : p = 0
-  · rw [hp]
-    exact le_top
-  · rw [trailing_degree_eq_nat_trailing_degree hp]
-    exact le_trailing_degree_of_ne_zero h
+  · rw [hp]; exact le_top
+  · rw [trailing_degree_eq_nat_trailing_degree hp]; exact le_trailing_degree_of_ne_zero h
 #align polynomial.trailing_degree_le_trailing_degree Polynomial.trailingDegree_le_trailingDegree
 
 #print Polynomial.trailingDegree_ne_of_natTrailingDegree_ne /-
@@ -280,9 +267,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.nat_trailin
 theorem natTrailingDegree_le_natTrailingDegree {hq : q ≠ 0}
     (hpq : p.trailingDegree ≤ q.trailingDegree) : p.natTrailingDegree ≤ q.natTrailingDegree :=
   by
-  by_cases hp : p = 0;
-  · rw [hp, nat_trailing_degree_zero]
-    exact zero_le _
+  by_cases hp : p = 0; · rw [hp, nat_trailing_degree_zero]; exact zero_le _
   rwa [trailing_degree_eq_nat_trailing_degree hp, trailing_degree_eq_nat_trailing_degree hq,
     WithTop.coe_le_coe] at hpq
 #align polynomial.nat_trailing_degree_le_nat_trailing_degree Polynomial.natTrailingDegree_le_natTrailingDegree
@@ -402,9 +387,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (n : Nat) (a : R), LE.le.{0} ENat (Preorder.toLE.{0} ENat (PartialOrder.toPreorder.{0} ENat (OrderedSemiring.toPartialOrder.{0} ENat (OrderedCommSemiring.toOrderedSemiring.{0} ENat (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENat instENatCanonicallyOrderedCommSemiring))))) (Nat.cast.{0} ENat (CanonicallyOrderedCommSemiring.toNatCast.{0} ENat instENatCanonicallyOrderedCommSemiring) n) (Polynomial.trailingDegree.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (Polynomial.mul'.{u1} R _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) a) (HPow.hPow.{u1, 0, u1} (Polynomial.{u1} R _inst_1) Nat (Polynomial.{u1} R _inst_1) (instHPow.{u1, 0} (Polynomial.{u1} R _inst_1) Nat (Monoid.Pow.{u1} (Polynomial.{u1} R _inst_1) (MonoidWithZero.toMonoid.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))))) (Polynomial.X.{u1} R _inst_1) n)))
 Case conversion may be inaccurate. Consider using '#align polynomial.le_trailing_degree_C_mul_X_pow Polynomial.le_trailingDegree_C_mul_X_powₓ'. -/
 theorem le_trailingDegree_C_mul_X_pow (n : ℕ) (a : R) : (n : ℕ∞) ≤ trailingDegree (C a * X ^ n) :=
-  by
-  rw [C_mul_X_pow_eq_monomial]
-  exact le_trailing_degree_monomial
+  by rw [C_mul_X_pow_eq_monomial]; exact le_trailing_degree_monomial
 #align polynomial.le_trailing_degree_C_mul_X_pow Polynomial.le_trailingDegree_C_mul_X_pow
 
 /- warning: polynomial.coeff_eq_zero_of_trailing_degree_lt -> Polynomial.coeff_eq_zero_of_trailingDegree_lt is a dubious translation:
@@ -427,8 +410,7 @@ theorem coeff_eq_zero_of_lt_natTrailingDegree {p : R[X]} {n : ℕ} (h : n < p.na
     p.coeff n = 0 := by
   apply coeff_eq_zero_of_trailing_degree_lt
   by_cases hp : p = 0
-  · rw [hp, trailing_degree_zero]
-    exact WithTop.coe_lt_top n
+  · rw [hp, trailing_degree_zero]; exact WithTop.coe_lt_top n
   · rwa [trailing_degree_eq_nat_trailing_degree hp, WithTop.coe_lt_coe]
 #align polynomial.coeff_eq_zero_of_lt_nat_trailing_degree Polynomial.coeff_eq_zero_of_lt_natTrailingDegree
 
@@ -733,19 +715,13 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (c : R), Eq.{succ u1} R (Polynomial.nextCoeffUp.{u1} R _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) c)) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align polynomial.next_coeff_up_C_eq_zero Polynomial.nextCoeffUp_C_eq_zeroₓ'. -/
 @[simp]
-theorem nextCoeffUp_C_eq_zero (c : R) : nextCoeffUp (C c) = 0 :=
-  by
-  rw [next_coeff_up]
-  simp
+theorem nextCoeffUp_C_eq_zero (c : R) : nextCoeffUp (C c) = 0 := by rw [next_coeff_up]; simp
 #align polynomial.next_coeff_up_C_eq_zero Polynomial.nextCoeffUp_C_eq_zero
 
 #print Polynomial.nextCoeffUp_of_pos_natTrailingDegree /-
 theorem nextCoeffUp_of_pos_natTrailingDegree (p : R[X]) (hp : 0 < p.natTrailingDegree) :
-    nextCoeffUp p = p.coeff (p.natTrailingDegree + 1) :=
-  by
-  rw [next_coeff_up, if_neg]
-  contrapose! hp
-  simpa
+    nextCoeffUp p = p.coeff (p.natTrailingDegree + 1) := by rw [next_coeff_up, if_neg];
+  contrapose! hp; simpa
 #align polynomial.next_coeff_up_of_pos_nat_trailing_degree Polynomial.nextCoeffUp_of_pos_natTrailingDegree
 -/
 

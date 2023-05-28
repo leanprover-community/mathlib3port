@@ -233,16 +233,12 @@ def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMor
         IsLimit.ofIsoLimit
             ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
-          Cones.ext (Iso.refl _) fun j => by
-            rcases j with ⟨⟨⟩⟩
-            tidy
+          Cones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩; tidy
       IsColimit :=
         IsColimit.ofIsoColimit
             ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) <|
-          Cocones.ext (Iso.refl _) fun j => by
-            rcases j with ⟨⟨⟩⟩
-            tidy }
+          Cocones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩; tidy }
 #align category_theory.limits.preserves_binary_biproduct_of_preserves_biproduct CategoryTheory.Limits.preservesBinaryBiproductOfPreservesBiproduct
 -/
 
@@ -602,20 +598,16 @@ variable {J : Type w₁} (f : J → C) [HasBiproduct f] [PreservesBiproduct f F]
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.biproduct.map_lift_map_biprod CategoryTheory.Limits.biproduct.map_lift_mapBiprodₓ'. -/
 theorem biproduct.map_lift_mapBiprod (g : ∀ j, W ⟶ f j) :
-    F.map (biproduct.lift g) ≫ (F.mapBiproduct f).hom = biproduct.lift fun j => F.map (g j) :=
-  by
-  ext
-  simp [← F.map_comp]
+    F.map (biproduct.lift g) ≫ (F.mapBiproduct f).hom = biproduct.lift fun j => F.map (g j) := by
+  ext; simp [← F.map_comp]
 #align category_theory.limits.biproduct.map_lift_map_biprod CategoryTheory.Limits.biproduct.map_lift_mapBiprod
 
 /- warning: category_theory.limits.biproduct.map_biproduct_inv_map_desc -> CategoryTheory.Limits.biproduct.mapBiproduct_inv_map_desc is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.biproduct.map_biproduct_inv_map_desc CategoryTheory.Limits.biproduct.mapBiproduct_inv_map_descₓ'. -/
 theorem biproduct.mapBiproduct_inv_map_desc (g : ∀ j, f j ⟶ W) :
-    (F.mapBiproduct f).inv ≫ F.map (biproduct.desc g) = biproduct.desc fun j => F.map (g j) :=
-  by
-  ext
-  simp [← F.map_comp]
+    (F.mapBiproduct f).inv ≫ F.map (biproduct.desc g) = biproduct.desc fun j => F.map (g j) := by
+  ext; simp [← F.map_comp]
 #align category_theory.limits.biproduct.map_biproduct_inv_map_desc CategoryTheory.Limits.biproduct.mapBiproduct_inv_map_desc
 
 /- warning: category_theory.limits.biproduct.map_biproduct_hom_desc -> CategoryTheory.Limits.biproduct.mapBiproduct_hom_desc is a dubious translation:

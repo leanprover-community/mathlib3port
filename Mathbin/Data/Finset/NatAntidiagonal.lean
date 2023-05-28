@@ -100,9 +100,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
                 ⟨Nat.succ, Nat.succ_injective⟩)) <|
           by simp)
         (by simp) :=
-  by
-  simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]
-  rfl
+  by simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]; rfl
 #align finset.nat.antidiagonal_succ_succ' Finset.Nat.antidiagonal_succ_succ'
 -/
 
@@ -169,10 +167,7 @@ Case conversion may be inaccurate. Consider using '#align finset.nat.filter_snd_
 theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
   by
-  have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m :=
-    by
-    ext
-    simp
+  have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m := by ext; simp
   rw [← map_swap_antidiagonal]
   simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
 #align finset.nat.filter_snd_eq_antidiagonal Finset.Nat.filter_snd_eq_antidiagonal

@@ -77,10 +77,8 @@ theorem rotation_symm (a : circle) : (rotation a).symm = rotation a⁻¹ :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align rotation_trans rotation_transₓ'. -/
 @[simp]
-theorem rotation_trans (a b : circle) : (rotation a).trans (rotation b) = rotation (b * a) :=
-  by
-  ext1
-  simp
+theorem rotation_trans (a b : circle) : (rotation a).trans (rotation b) = rotation (b * a) := by
+  ext1; simp
 #align rotation_trans rotation_trans
 
 /- warning: rotation_ne_conj_lie -> rotation_ne_conjLie is a dubious translation:
@@ -188,8 +186,7 @@ theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
     · rw [← I_re]
       exact @LinearIsometry.re_apply_eq_re f.to_linear_isometry h I
     · apply @LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry
-      intro z
-      rw [@LinearIsometry.re_apply_eq_re f.to_linear_isometry h]
+      intro z; rw [@LinearIsometry.re_apply_eq_re f.to_linear_isometry h]
   refine' h0.imp (fun h' : f I = I => _) fun h' : f I = -I => _ <;>
     · apply LinearIsometryEquiv.toLinearEquiv_injective
       apply complex.basis_one_I.ext'

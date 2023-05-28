@@ -105,33 +105,20 @@ instance preorder (α β : Type _) [Preorder α] [Preorder β] : Preorder (α ×
         constructor
         · rintro (⟨_, _, hlt⟩ | ⟨_, hlt⟩)
           · constructor
-            · left
-              assumption
+            · left; assumption
             · rintro ⟨⟩
-              · apply lt_asymm hlt
-                assumption
+              · apply lt_asymm hlt; assumption
               · apply lt_irrefl _ hlt
           · constructor
-            · right
-              rw [lt_iff_le_not_le] at hlt
-              exact hlt.1
+            · right; rw [lt_iff_le_not_le] at hlt; exact hlt.1
             · rintro ⟨⟩
-              · apply lt_irrefl a₁
-                assumption
-              · rw [lt_iff_le_not_le] at hlt
-                apply hlt.2
-                assumption
+              · apply lt_irrefl a₁; assumption
+              · rw [lt_iff_le_not_le] at hlt; apply hlt.2; assumption
         · rintro ⟨⟨⟩, h₂r⟩
-          · left
-            assumption
-          · right
-            rw [lt_iff_le_not_le]
-            constructor
+          · left; assumption
+          · right; rw [lt_iff_le_not_le]; constructor
             · assumption
-            · intro h
-              apply h₂r
-              right
-              exact h }
+            · intro h; apply h₂r; right; exact h }
 #align prod.lex.preorder Prod.Lex.preorder
 -/
 
@@ -245,10 +232,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
 Case conversion may be inaccurate. Consider using '#align prod.lex.no_max_order_of_left Prod.Lex.noMaxOrder_of_leftₓ'. -/
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α ×ₗ β) :=
-  ⟨by
-    rintro ⟨a, b⟩
-    obtain ⟨c, h⟩ := exists_gt a
-    exact ⟨⟨c, b⟩, left _ _ h⟩⟩
+  ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_max_order_of_left Prod.Lex.noMaxOrder_of_left
 
 /- warning: prod.lex.no_min_order_of_left -> Prod.Lex.noMinOrder_of_left is a dubious translation:
@@ -258,10 +242,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
 Case conversion may be inaccurate. Consider using '#align prod.lex.no_min_order_of_left Prod.Lex.noMinOrder_of_leftₓ'. -/
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α ×ₗ β) :=
-  ⟨by
-    rintro ⟨a, b⟩
-    obtain ⟨c, h⟩ := exists_lt a
-    exact ⟨⟨c, b⟩, left _ _ h⟩⟩
+  ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_min_order_of_left Prod.Lex.noMinOrder_of_left
 
 /- warning: prod.lex.no_max_order_of_right -> Prod.Lex.noMaxOrder_of_right is a dubious translation:
@@ -271,10 +252,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
 Case conversion may be inaccurate. Consider using '#align prod.lex.no_max_order_of_right Prod.Lex.noMaxOrder_of_rightₓ'. -/
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α ×ₗ β) :=
-  ⟨by
-    rintro ⟨a, b⟩
-    obtain ⟨c, h⟩ := exists_gt b
-    exact ⟨⟨a, c⟩, right _ h⟩⟩
+  ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_max_order_of_right Prod.Lex.noMaxOrder_of_right
 
 /- warning: prod.lex.no_min_order_of_right -> Prod.Lex.noMinOrder_of_right is a dubious translation:
@@ -284,10 +262,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Lex.{max u2 u1} (Prod.{u1, u2} α β)) (Prod.Lex.instLT.{u1, u2} α β (Preorder.toLT.{u1} α _inst_1) (Preorder.toLT.{u2} β _inst_2))
 Case conversion may be inaccurate. Consider using '#align prod.lex.no_min_order_of_right Prod.Lex.noMinOrder_of_rightₓ'. -/
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α ×ₗ β) :=
-  ⟨by
-    rintro ⟨a, b⟩
-    obtain ⟨c, h⟩ := exists_lt b
-    exact ⟨⟨a, c⟩, right _ h⟩⟩
+  ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_min_order_of_right Prod.Lex.noMinOrder_of_right
 
 end Prod.Lex

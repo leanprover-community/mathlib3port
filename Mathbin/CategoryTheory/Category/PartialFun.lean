@@ -172,8 +172,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
                   by
                   change Option.elim' _ _ (dite _ _ _) = _
                   split_ifs
-                  · rw [h]
-                    rfl
+                  · rw [h]; rfl
                   · rfl }
               rfl)
           fun X Y f =>

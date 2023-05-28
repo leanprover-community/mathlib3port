@@ -167,9 +167,7 @@ instance isArtinian_pi {R ι : Type _} [Finite ι] :
     (by
       intro α β e hα M _ _ _ _
       exact isArtinian_of_linearEquiv (LinearEquiv.piCongrLeft R M e))
-    (by
-      intro M _ _ _ _
-      infer_instance)
+    (by intro M _ _ _ _; infer_instance)
     (by
       intro α _ ih M _ _ _ _
       exact isArtinian_of_linearEquiv (LinearEquiv.piOptionEquivProd R).symm)
@@ -221,10 +219,7 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
     by_contradiction fun hf =>
       (RelEmbedding.wellFounded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
-  have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s :=
-    by
-    rintro n x ⟨y, hy₁, rfl⟩
-    exact (f y).2
+  have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | b ≤ m }) ≤ span R (coe ∘ f '' { m | a ≤ m }) :=
     by
     intro a b
@@ -270,10 +265,8 @@ theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (
 Case conversion may be inaccurate. Consider using '#align monotone_stabilizes_iff_artinian monotone_stabilizes_iff_artinianₓ'. -/
 /-- A module is Artinian iff every decreasing chain of submodules stabilizes. -/
 theorem monotone_stabilizes_iff_artinian :
-    (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M :=
-  by
-  rw [isArtinian_iff_wellFounded]
-  exact well_founded.monotone_chain_condition.symm
+    (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M := by
+  rw [isArtinian_iff_wellFounded]; exact well_founded.monotone_chain_condition.symm
 #align monotone_stabilizes_iff_artinian monotone_stabilizes_iff_artinian
 
 namespace IsArtinian
@@ -315,10 +308,7 @@ theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   simp_rw [eq_top_iff', mem_sup]
   intro x
-  have : (f ^ (n + 1)) x ∈ (f ^ (n + 1 + n + 1)).range :=
-    by
-    rw [← w]
-    exact mem_range_self _
+  have : (f ^ (n + 1)) x ∈ (f ^ (n + 1 + n + 1)).range := by rw [← w]; exact mem_range_self _
   rcases this with ⟨y, hy⟩
   use x - (f ^ (n + 1)) y
   constructor
@@ -395,8 +385,7 @@ theorem range_smul_pow_stabilizes (r : R) :
           (r ^ n • LinearMap.id : M →ₗ[R] M).range = (r ^ m • LinearMap.id : M →ₗ[R] M).range :=
   monotone_stabilizes
     ⟨fun n => (r ^ n • LinearMap.id : M →ₗ[R] M).range, fun n m h x ⟨y, hy⟩ =>
-      ⟨r ^ (m - n) • y, by
-        dsimp at hy⊢
+      ⟨r ^ (m - n) • y, by dsimp at hy⊢;
         rw [← smul_assoc, smul_eq_mul, ← pow_add, ← hy, add_tsub_cancel_of_le h]⟩⟩
 #align is_artinian.range_smul_pow_stabilizes IsArtinian.range_smul_pow_stabilizes
 -/
@@ -518,18 +507,14 @@ theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M
   refine' @isArtinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isArtinian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
-    · intro f g
-      apply Subtype.eq
+    · intro f g; apply Subtype.eq
       change (∑ i in s.attach, (f i + g i) • _) = _
-      simp only [add_smul, Finset.sum_add_distrib]
-      rfl
-    · intro c f
-      apply Subtype.eq
+      simp only [add_smul, Finset.sum_add_distrib]; rfl
+    · intro c f; apply Subtype.eq
       change (∑ i in s.attach, (c • f i) • _) = _
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
-  rintro ⟨n, hn⟩
-  change n ∈ N at hn
+  rintro ⟨n, hn⟩; change n ∈ N at hn
   rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
@@ -610,8 +595,7 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
   suffices J = ⊤ by
     have hJ : J • Jac ^ n = ⊥ := annihilator_smul (Jac ^ n)
     simpa only [this, top_smul, Ideal.zero_eq_bot] using hJ
-  by_contra hJ
-  change J ≠ ⊤ at hJ
+  by_contra hJ; change J ≠ ⊤ at hJ
   rcases IsArtinian.set_has_minimal { J' : Ideal R | J < J' } ⟨⊤, hJ.lt_top⟩ with
     ⟨J', hJJ' : J < J', hJ' : ∀ I, J < I → ¬I < J'⟩
   rcases SetLike.exists_of_lt hJJ' with ⟨x, hxJ', hxJ⟩

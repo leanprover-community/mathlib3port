@@ -132,12 +132,10 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ (I : Box (
   refine' congr_arg₂ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
     have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
-    exact (this.has_box_integral ⊥ rfl).integral_eq
-    infer_instance
+    exact (this.has_box_integral ⊥ rfl).integral_eq; infer_instance
   · have := box.continuous_on_face_Icc (Hc i) (Set.left_mem_Icc.2 (I.lower_le_upper i))
     have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
-    exact (this.has_box_integral ⊥ rfl).integral_eq
-    infer_instance
+    exact (this.has_box_integral ⊥ rfl).integral_eq; infer_instance
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁
 
 /-- An auxiliary lemma for
@@ -347,9 +345,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
           ∫ x in Icc (eL a ∘ i.succAbove) (eL b ∘ i.succAbove),
             f i (eL.symm <| i.insertNth (eL a i) x) :=
   have he_emb : MeasurableEmbedding eL := eL.toHomeomorph.toMeasurableEquiv.MeasurableEmbedding
-  have hIcc : eL ⁻¹' Icc (eL a) (eL b) = Icc a b :=
-    by
-    ext1 x
+  have hIcc : eL ⁻¹' Icc (eL a) (eL b) = Icc a b := by ext1 x;
     simp only [Set.mem_preimage, Set.mem_Icc, he_ord]
   have hIcc' : Icc (eL a) (eL b) = eL.symm ⁻¹' Icc a b := by rw [← hIcc, eL.symm_preimage_preimage]
   calc
@@ -433,8 +429,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
           (fun _ => F') s hs a b hle (fun i => Hc) (fun x hx i => Hd x hx) _ _ _
       · exact fun x y => (OrderIso.funUnique (Fin 1) ℝ).symm.le_iff_le
       · exact (volume_preserving_fun_unique (Fin 1) ℝ).symm _
-      · intro x
-        rw [Fin.sum_univ_one, hF', e_symm, Pi.single_eq_same, one_smul]
+      · intro x; rw [Fin.sum_univ_one, hF', e_symm, Pi.single_eq_same, one_smul]
       · rw [intervalIntegrable_iff_integrable_Ioc_of_le hle] at Hi
         exact Hi.congr_set_ae Ioc_ae_eq_Icc.symm
     _ = f b - f a := by
@@ -502,9 +497,7 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       · exact Fin.forall_fin_two.2 ⟨Hcf, Hcg⟩
       · rw [Icc_prod_eq, interior_prod_eq, interior_Icc, interior_Icc] at hx
         exact Fin.forall_fin_two.2 ⟨Hdf x hx, Hdg x hx⟩
-      · intro x
-        rw [Fin.sum_univ_two]
-        simp
+      · intro x; rw [Fin.sum_univ_two]; simp
     _ =
         ((∫ y in Icc a.2 b.2, f (b.1, y)) - ∫ y in Icc a.2 b.2, f (a.1, y)) +
           ((∫ x in Icc a.1 b.1, g (x, b.2)) - ∫ x in Icc a.1 b.1, g (x, a.2)) :=
@@ -560,14 +553,12 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
   · specialize this b₁ a₁
     rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
     simp only [intervalIntegral.integral_symm b₁ a₁]
-    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₁))).trans _
-    abel
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₁))).trans _; abel
   wlog h₂ : a₂ ≤ b₂ generalizing a₂ b₂
   · specialize this b₂ a₂
     rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
-    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₂))).trans _
-    abel
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₂))).trans _; abel
   simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at Hcf Hcg Hdf Hdg Hi
   calc
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =

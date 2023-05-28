@@ -167,9 +167,7 @@ lean 3 declaration is
 but is expected to have type
   LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) Cardinal.continuum.{u1}
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph_one_le_continuum Cardinal.aleph_one_le_continuumₓ'. -/
-theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 :=
-  by
-  rw [← succ_aleph_0]
+theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 := by rw [← succ_aleph_0];
   exact Order.succ_le_of_lt aleph_0_lt_continuum
 #align cardinal.aleph_one_le_continuum Cardinal.aleph_one_le_continuum
 

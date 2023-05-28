@@ -58,21 +58,13 @@ instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedComm
     [ContinuousConstSMul α α] : HasUpperLowerClosure α
     where
   isUpperSet_closure s h x y hxy hx :=
-    closure_mono (h.smul_subset <| one_le_div'.2 hxy) <|
-      by
-      rw [closure_smul]
+    closure_mono (h.smul_subset <| one_le_div'.2 hxy) <| by rw [closure_smul];
       exact ⟨x, hx, div_mul_cancel' _ _⟩
   isLowerSet_closure s h x y hxy hx :=
-    closure_mono (h.smul_subset <| div_le_one'.2 hxy) <|
-      by
-      rw [closure_smul]
+    closure_mono (h.smul_subset <| div_le_one'.2 hxy) <| by rw [closure_smul];
       exact ⟨x, hx, div_mul_cancel' _ _⟩
-  isOpen_upperClosure s hs := by
-    rw [← mul_one s, ← mul_upperClosure]
-    exact hs.mul_right
-  isOpen_lowerClosure s hs := by
-    rw [← mul_one s, ← mul_lowerClosure]
-    exact hs.mul_right
+  isOpen_upperClosure s hs := by rw [← mul_one s, ← mul_upperClosure]; exact hs.mul_right
+  isOpen_lowerClosure s hs := by rw [← mul_one s, ← mul_lowerClosure]; exact hs.mul_right
 #align ordered_comm_group.to_has_upper_lower_closure OrderedCommGroup.to_hasUpperLowerClosure
 #align ordered_add_comm_group.to_has_upper_lower_closure OrderedAddCommGroup.to_hasUpperLowerClosure
 
@@ -137,10 +129,8 @@ oooooxx
 oooooxx
 ```
 -/
-protected theorem IsUpperSet.interior (h : IsUpperSet s) : IsUpperSet (interior s) :=
-  by
-  rw [← isLowerSet_compl, ← closure_compl]
-  exact h.compl.closure
+protected theorem IsUpperSet.interior (h : IsUpperSet s) : IsUpperSet (interior s) := by
+  rw [← isLowerSet_compl, ← closure_compl]; exact h.compl.closure
 #align is_upper_set.interior IsUpperSet.interior
 
 /- warning: is_lower_set.interior -> IsLowerSet.interior is a dubious translation:

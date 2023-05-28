@@ -360,10 +360,8 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {B : C}, Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) (CategoryTheory.Subobject.mk.{u1, u2} C _inst_1 B B (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) B) (CategoryTheory.instMonoIdToCategoryStruct.{u1, u2} C _inst_1 B))) B) (CategoryTheory.Iso.hom.{u1, u2} C _inst_1 (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) (CategoryTheory.Subobject.mk.{u1, u2} C _inst_1 B B (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) B) (CategoryTheory.instMonoIdToCategoryStruct.{u1, u2} C _inst_1 B))) B (CategoryTheory.Subobject.underlyingIso.{u1, u2} C _inst_1 B B (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) B) (CategoryTheory.instMonoIdToCategoryStruct.{u1, u2} C _inst_1 B))) (CategoryTheory.Subobject.arrow.{u1, u2} C _inst_1 B (Top.top.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (OrderTop.toTop.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) (CategoryTheory.Subobject.orderTop.{u1, u2} C _inst_1 B))))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlyingIso_top_homₓ'. -/
-theorem underlyingIso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : Subobject B).arrow :=
-  by
-  convert underlying_iso_hom_comp_eq_mk (𝟙 B)
-  simp only [comp_id]
+theorem underlyingIso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : Subobject B).arrow := by
+  convert underlying_iso_hom_comp_eq_mk (𝟙 B); simp only [comp_id]
 #align category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlyingIso_top_hom
 
 /- warning: category_theory.subobject.top_arrow_is_iso -> CategoryTheory.Subobject.top_arrow_isIso is a dubious translation:
@@ -372,10 +370,8 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {B : C}, CategoryTheory.IsIso.{u1, u2} C _inst_1 (Prefunctor.obj.{max (succ u2) (succ u1), succ u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{max u2 u1, u1, max u2 u1, u2} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.smallCategory.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) C _inst_1 (CategoryTheory.Subobject.underlying.{u1, u2} C _inst_1 B)) (Top.top.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (OrderTop.toTop.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) (CategoryTheory.Subobject.orderTop.{u1, u2} C _inst_1 B)))) B (CategoryTheory.Subobject.arrow.{u1, u2} C _inst_1 B (Top.top.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (OrderTop.toTop.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) (CategoryTheory.Subobject.orderTop.{u1, u2} C _inst_1 B))))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.top_arrow_is_iso CategoryTheory.Subobject.top_arrow_isIsoₓ'. -/
-instance top_arrow_isIso {B : C} : IsIso (⊤ : Subobject B).arrow :=
-  by
-  rw [← underlying_iso_top_hom]
-  infer_instance
+instance top_arrow_isIso {B : C} : IsIso (⊤ : Subobject B).arrow := by
+  rw [← underlying_iso_top_hom]; infer_instance
 #align category_theory.subobject.top_arrow_is_iso CategoryTheory.Subobject.top_arrow_isIso
 
 /- warning: category_theory.subobject.underlying_iso_inv_top_arrow -> CategoryTheory.Subobject.underlyingIso_inv_top_arrow is a dubious translation:
@@ -418,10 +414,8 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.Mono.{u1, u2} C _inst_1 X Y f], Iff (CategoryTheory.IsIso.{u1, u2} C _inst_1 X Y f) (Eq.{max (succ u2) (succ u1)} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (CategoryTheory.Subobject.mk.{u1, u2} C _inst_1 Y X f _inst_3) (Top.top.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (OrderTop.toTop.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 Y) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 Y))) (CategoryTheory.Subobject.orderTop.{u1, u2} C _inst_1 Y))))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.is_iso_iff_mk_eq_top CategoryTheory.Subobject.isIso_iff_mk_eq_topₓ'. -/
 theorem isIso_iff_mk_eq_top {X Y : C} (f : X ⟶ Y) [Mono f] : IsIso f ↔ mk f = ⊤ :=
-  ⟨fun _ => mk_eq_mk_of_comm _ _ (as_iso f) (category.comp_id _), fun h =>
-    by
-    rw [← of_mk_le_mk_comp h.le, category.comp_id]
-    exact is_iso.of_iso (iso_of_mk_eq_mk _ _ h)⟩
+  ⟨fun _ => mk_eq_mk_of_comm _ _ (as_iso f) (category.comp_id _), fun h => by
+    rw [← of_mk_le_mk_comp h.le, category.comp_id]; exact is_iso.of_iso (iso_of_mk_eq_mk _ _ h)⟩
 #align category_theory.subobject.is_iso_iff_mk_eq_top CategoryTheory.Subobject.isIso_iff_mk_eq_top
 
 /- warning: category_theory.subobject.is_iso_arrow_iff_eq_top -> CategoryTheory.Subobject.isIso_arrow_iff_eq_top is a dubious translation:
@@ -586,11 +580,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] [_inst_4 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] {A : C} {B : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B), Iff (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 A B (Bot.bot.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (OrderBot.toBot.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 B) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 B))) (CategoryTheory.Subobject.orderBot.{u1, u2} C _inst_1 (CategoryTheory.Limits.HasZeroObject.hasInitial.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Limits.HasZeroObject.initialMonoClass.{u1, u2} C _inst_1 _inst_3) B))) f) (Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B) f (OfNat.ofNat.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B) 0 (Zero.toOfNat0.{u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B) (CategoryTheory.Limits.HasZeroMorphisms.Zero.{u1, u2} C _inst_1 _inst_4 A B))))
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.bot_factors_iff_zero CategoryTheory.Subobject.bot_factors_iff_zeroₓ'. -/
 theorem bot_factors_iff_zero {A B : C} (f : A ⟶ B) : (⊥ : Subobject B).Factors f ↔ f = 0 :=
-  ⟨by
-    rintro ⟨h, rfl⟩
-    simp, by
-    rintro rfl
-    exact ⟨0, by simp⟩⟩
+  ⟨by rintro ⟨h, rfl⟩; simp, by rintro rfl; exact ⟨0, by simp⟩⟩
 #align category_theory.subobject.bot_factors_iff_zero CategoryTheory.Subobject.bot_factors_iff_zero
 
 /- warning: category_theory.subobject.mk_eq_bot_iff_zero -> CategoryTheory.Subobject.mk_eq_bot_iff_zero is a dubious translation:
@@ -737,8 +727,7 @@ theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
   classical
     apply Finset.induction_on s
     · simp [top_factors]
-    · intro i s nm ih
-      simp [ih]
+    · intro i s nm ih; simp [ih]
 #align category_theory.subobject.finset_inf_factors CategoryTheory.Subobject.finset_inf_factors
 
 /- warning: category_theory.subobject.finset_inf_arrow_factors -> CategoryTheory.Subobject.finset_inf_arrow_factors is a dubious translation:
@@ -757,8 +746,7 @@ theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → 
     · rintro _ ⟨⟩
     · intro i s nm ih j m
       rw [Finset.inf_insert]
-      simp only [Finset.mem_insert] at m
-      rcases m with (rfl | m)
+      simp only [Finset.mem_insert] at m; rcases m with (rfl | m)
       · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
         exact factors_comp_arrow _
       · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
@@ -894,8 +882,7 @@ theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
     · rintro ⟨_, ⟨⟨⟩, _⟩⟩
     · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
       simp only [Finset.sup_insert]
-      simp at m
-      rcases m with (rfl | m)
+      simp at m; rcases m with (rfl | m)
       · exact sup_factors_of_factors_left h
       · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
 #align category_theory.subobject.finset_sup_factors CategoryTheory.Subobject.finset_sup_factors
@@ -949,13 +936,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.subobj
 def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) :
     Cone (wideCospan s) :=
   WidePullbackShape.mkCone f.arrow
-    (fun j =>
-      underlying.map
-        (homOfLE
-          (k _
-            (by
-              rcases j with ⟨-, ⟨g, ⟨m, rfl⟩⟩⟩
-              simpa using m))))
+    (fun j => underlying.map (homOfLE (k _ (by rcases j with ⟨-, ⟨g, ⟨m, rfl⟩⟩⟩; simpa using m))))
     (by tidy)
 #align category_theory.subobject.le_Inf_cone CategoryTheory.Subobject.leInfCone
 
@@ -1097,9 +1078,7 @@ theorem le_sSup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s 
     refine' _ ≫ sigma.ι _ ⟨equivShrink _ f, by simpa [Set.mem_image] using H⟩
     exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
   · dsimp [Sup, small_coproduct_desc]
-    simp
-    dsimp
-    simp
+    simp; dsimp; simp
 #align category_theory.subobject.le_Sup CategoryTheory.Subobject.le_sSup
 
 /- warning: category_theory.subobject.symm_apply_mem_iff_mem_image -> CategoryTheory.Subobject.symm_apply_mem_iff_mem_image is a dubious translation:
@@ -1110,9 +1089,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_imageₓ'. -/
 theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set α) (x : β) :
     e.symm x ∈ s ↔ x ∈ e '' s :=
-  ⟨fun h => ⟨e.symm x, h, by simp⟩, by
-    rintro ⟨a, m, rfl⟩
-    simpa using m⟩
+  ⟨fun h => ⟨e.symm x, h, by simp⟩, by rintro ⟨a, m, rfl⟩; simpa using m⟩
 #align category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_image
 
 /- warning: category_theory.subobject.Sup_le -> CategoryTheory.Subobject.sSup_le is a dubious translation:
@@ -1130,12 +1107,7 @@ theorem sSup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈
       rintro ⟨g, m⟩
       refine' underlying.map (hom_of_le (k _ _))
       simpa [symm_apply_mem_iff_mem_image] using m
-    · ext j
-      rcases j with ⟨j, m⟩
-      dsimp [small_coproduct_desc]
-      simp
-      dsimp
-      simp
+    · ext j; rcases j with ⟨j, m⟩; dsimp [small_coproduct_desc]; simp; dsimp; simp
   · dsimp [Sup]
     simp
 #align category_theory.subobject.Sup_le CategoryTheory.Subobject.sSup_le
@@ -1191,23 +1163,13 @@ def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic
     ⟨Subobject.mk (Z.arrow ≫ Y.arrow),
       Set.mem_Iic.mpr (le_of_comm ((underlyingIso _).Hom ≫ Z.arrow) (by simp))⟩
   invFun Z := Subobject.mk (ofLE _ _ Z.2)
-  left_inv Z :=
-    mk_eq_of_comm _ (underlyingIso _)
-      (by
-        ext
-        simp)
+  left_inv Z := mk_eq_of_comm _ (underlyingIso _) (by ext; simp)
   right_inv Z :=
-    Subtype.ext
-      (mk_eq_of_comm _ (underlyingIso _)
-        (by
-          dsimp
-          simp [← iso.eq_inv_comp]))
+    Subtype.ext (mk_eq_of_comm _ (underlyingIso _) (by dsimp; simp [← iso.eq_inv_comp]))
   map_rel_iff' W Z :=
     ⟨fun h =>
       le_of_comm ((underlyingIso _).inv ≫ ofLE _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)
-        (by
-          ext
-          simp),
+        (by ext; simp),
       fun h =>
       Subtype.mk_le_mk.mpr
         (le_of_comm ((underlyingIso _).Hom ≫ ofLE _ _ h ≫ (underlyingIso _).inv) (by simp))⟩

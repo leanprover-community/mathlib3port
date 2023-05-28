@@ -180,16 +180,10 @@ theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type
     Then, it suffices to prove that it is compatible when restricted onto `u(c'.X.right)`.
     -/
   let c' := is_cofiltered.cone (structured_arrow_cone.to_diagram c ⋙ structured_arrow.pre _ _ _)
-  have eq₁ : f₁ = (c'.X.hom ≫ G.map (c'.π.app left).right) ≫ eq_to_hom (by simp) :=
-    by
-    erw [← (c'.π.app left).w]
-    dsimp
-    simp
-  have eq₂ : f₂ = (c'.X.hom ≫ G.map (c'.π.app right).right) ≫ eq_to_hom (by simp) :=
-    by
-    erw [← (c'.π.app right).w]
-    dsimp
-    simp
+  have eq₁ : f₁ = (c'.X.hom ≫ G.map (c'.π.app left).right) ≫ eq_to_hom (by simp) := by
+    erw [← (c'.π.app left).w]; dsimp; simp
+  have eq₂ : f₂ = (c'.X.hom ≫ G.map (c'.π.app right).right) ≫ eq_to_hom (by simp) := by
+    erw [← (c'.π.app right).w]; dsimp; simp
   conv_lhs => rw [eq₁]
   conv_rhs => rw [eq₂]
   simp only [op_comp, functor.map_comp, types_comp_apply, eq_to_hom_op, eq_to_hom_map]
@@ -272,12 +266,8 @@ def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : Cov
     Sheaf K A ⥤ Sheaf J A where
   obj ℱ := pullbackSheaf hG₁ hG₂ ℱ
   map _ _ f := ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
-  map_id' ℱ := by
-    ext1
-    apply ((whiskering_left _ _ _).obj G.op).map_id
-  map_comp' _ _ _ f g := by
-    ext1
-    apply ((whiskering_left _ _ _).obj G.op).map_comp
+  map_id' ℱ := by ext1; apply ((whiskering_left _ _ _).obj G.op).map_id
+  map_comp' _ _ _ f g := by ext1; apply ((whiskering_left _ _ _).obj G.op).map_comp
 #align category_theory.sites.pullback CategoryTheory.Sites.pullback
 -/
 

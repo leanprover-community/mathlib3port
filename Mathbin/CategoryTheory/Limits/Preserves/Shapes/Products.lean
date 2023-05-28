@@ -58,12 +58,10 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
   refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
-    cones.ext (iso.refl _) fun j =>
-      by
+    cones.ext (iso.refl _) fun j => by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
-      dsimp
-      simp
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
+      dsimp; simp
 #align category_theory.limits.is_limit_map_cone_fan_mk_equiv CategoryTheory.Limits.isLimitMapConeFanMkEquiv
 
 /- warning: category_theory.limits.is_limit_fan_mk_obj_of_is_limit -> CategoryTheory.Limits.isLimitFanMkObjOfIsLimit is a dubious translation:
@@ -180,12 +178,10 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
   refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
   refine'
-    cocones.ext (iso.refl _) fun j =>
-      by
+    cocones.ext (iso.refl _) fun j => by
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
-      dsimp
-      simp
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
+      dsimp; simp
 #align category_theory.limits.is_colimit_map_cocone_cofan_mk_equiv CategoryTheory.Limits.isColimitMapCoconeCofanMkEquiv
 
 /- warning: category_theory.limits.is_colimit_cofan_mk_obj_of_is_colimit -> CategoryTheory.Limits.isColimitCofanMkObjOfIsColimit is a dubious translation:

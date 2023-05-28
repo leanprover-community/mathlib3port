@@ -148,10 +148,8 @@ theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type _} [Finite m] [Finite n] (σ 
     obtain ⟨y, hy⟩ := h ⟨l, rfl⟩
     rw [← hx, σ.inv_apply_self] at hy
     exact absurd hy Sum.inl_ne_inr
-  · rintro ⟨a, ha⟩
-    exact ⟨r, rfl⟩
-  · rintro ⟨a, ha⟩
-    exact ⟨l, rfl⟩
+  · rintro ⟨a, ha⟩; exact ⟨r, rfl⟩
+  · rintro ⟨a, ha⟩; exact ⟨l, rfl⟩
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨r, rfl⟩
     rw [← hx, σ.inv_apply_self] at hy
@@ -170,18 +168,13 @@ theorem mem_sumCongrHom_range_of_perm_mapsTo_inl {m n : Type _} [Finite m] [Fini
   cases nonempty_fintype m
   cases nonempty_fintype n
   classical
-    have h1 : ∀ x : Sum m n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x :=
-      by
-      rintro x ⟨a, ha⟩
-      apply h
-      rw [← ha]
-      exact ⟨a, rfl⟩
+    have h1 : ∀ x : Sum m n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x := by
+      rintro x ⟨a, ha⟩; apply h; rw [← ha]; exact ⟨a, rfl⟩
     have h3 : ∀ x : Sum m n, (∃ b : n, Sum.inr b = x) → ∃ b : n, Sum.inr b = σ x :=
       by
       rintro x ⟨b, hb⟩
       apply (perm_maps_to_inl_iff_maps_to_inr σ).mp h
-      rw [← hb]
-      exact ⟨b, rfl⟩
+      rw [← hb]; exact ⟨b, rfl⟩
     let σ₁' := subtype_perm_of_fintype σ h1
     let σ₂' := subtype_perm_of_fintype σ h3
     let σ₁ := perm_congr (Equiv.ofInjective _ Sum.inl_injective).symm σ₁'

@@ -242,24 +242,18 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory
   unitIso :=
     NatIso.ofComponents (fun X => (asIso <| (ofRightAdjoint i).counit.app X).symm)
       (by
-        intro X Y f
-        dsimp
-        simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
+        intro X Y f; dsimp; simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
         exact ((of_right_adjoint i).counit.naturality _).symm)
   counitIso :=
     NatIso.ofComponents
       (fun X => by
-        refine' iso.symm <| as_iso _
-        exact (of_right_adjoint i).Unit.app X.obj
+        refine' iso.symm <| as_iso _; exact (of_right_adjoint i).Unit.app X.obj
         apply (config := { instances := false }) is_iso_of_reflects_iso _ i.ess_image_inclusion
         exact functor.ess_image.unit_is_iso X.property)
       (by
-        intro X Y f
-        dsimp
-        rw [is_iso.comp_inv_eq, assoc]
+        intro X Y f; dsimp; rw [is_iso.comp_inv_eq, assoc]
         have h := ((of_right_adjoint i).Unit.naturality f).symm
-        rw [functor.id_map] at h
-        erw [← h, is_iso.inv_hom_id_assoc, functor.comp_map])
+        rw [functor.id_map] at h; erw [← h, is_iso.inv_hom_id_assoc, functor.comp_map])
 #align category_theory.equiv_ess_image_of_reflective CategoryTheory.equivEssImageOfReflective
 
 end CategoryTheory

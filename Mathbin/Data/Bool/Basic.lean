@@ -517,15 +517,9 @@ instance : LinearOrder Bool where
   decidableLe := inferInstance
   DecidableEq := inferInstance
   max := or
-  max_def := by
-    funext x y
-    revert x y
-    exact by decide
+  max_def := by funext x y; revert x y; exact by decide
   min := and
-  min_def := by
-    funext x y
-    revert x y
-    exact by decide
+  min_def := by funext x y; revert x y; exact by decide
 
 /- warning: bool.ff_le -> Bool.false_le is a dubious translation:
 lean 3 declaration is
@@ -655,11 +649,9 @@ Case conversion may be inaccurate. Consider using '#align bool.of_nat_le_of_nat 
 theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
-  · subst m
-    have h := le_antisymm h (Nat.zero_le _)
+  · subst m; have h := le_antisymm h (Nat.zero_le _)
     contradiction
-  · left
-    rfl
+  · left; rfl
 #align bool.of_nat_le_of_nat Bool.ofNat_le_ofNat
 
 /- warning: bool.to_nat_le_to_nat -> Bool.toNat_le_toNat is a dubious translation:
@@ -681,9 +673,7 @@ theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by
 #print Bool.injective_iff /-
 @[simp]
 theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f false ≠ f true :=
-  ⟨fun Hinj Heq => false_ne_true (Hinj Heq), fun H x y hxy =>
-    by
-    cases x <;> cases y
+  ⟨fun Hinj Heq => false_ne_true (Hinj Heq), fun H x y hxy => by cases x <;> cases y;
     exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
 #align bool.injective_iff Bool.injective_iff
 -/

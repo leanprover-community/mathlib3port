@@ -560,10 +560,8 @@ theorem Pairwise.sublists' {R} :
 
 #print List.pairwise_sublists /-
 theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
-    Pairwise (fun l₁ l₂ => Lex R (reverse l₁) (reverse l₂)) (sublists l) :=
-  by
-  have := (pairwise_reverse.2 H).sublists'
-  rwa [sublists'_reverse, pairwise_map] at this
+    Pairwise (fun l₁ l₂ => Lex R (reverse l₁) (reverse l₂)) (sublists l) := by
+  have := (pairwise_reverse.2 H).sublists'; rwa [sublists'_reverse, pairwise_map] at this
 #align list.pairwise_sublists List.pairwise_sublists
 -/
 
@@ -623,9 +621,7 @@ theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l
   by
   rw [revzip]
   apply List.reverseRecOn l
-  · intro l₁ l₂ h
-    simp at h
-    simp [h]
+  · intro l₁ l₂ h; simp at h; simp [h]
   · intro l a IH l₁ l₂ h
     rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
         h <;>
@@ -646,8 +642,7 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip 
   by
   rw [revzip]
   induction' l with a l IH <;> intro l₁ l₂ h
-  · simp at h
-    simp [h]
+  · simp at h; simp [h]
   · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
         h <;> [simp at h;simp]
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', h, rfl⟩)

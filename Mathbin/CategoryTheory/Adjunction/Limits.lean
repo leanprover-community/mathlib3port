@@ -364,10 +364,7 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     (t : ((cocones J D).obj (op (K ⋙ F))).obj Y) : (G ⋙ (cocones J C).obj (op K)).obj Y
     where
   app j := (adj.homEquiv (K.obj j) Y) (t.app j)
-  naturality' j j' f := by
-    erw [← adj.hom_equiv_naturality_left, t.naturality]
-    dsimp
-    simp
+  naturality' j j' f := by erw [← adj.hom_equiv_naturality_left, t.naturality]; dsimp; simp
 #align category_theory.adjunction.cocones_iso_component_hom CategoryTheory.Adjunction.coconesIsoComponentHom
 
 /- warning: category_theory.adjunction.cocones_iso_component_inv -> CategoryTheory.Adjunction.coconesIsoComponentInv is a dubious translation:

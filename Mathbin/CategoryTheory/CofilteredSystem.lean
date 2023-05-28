@@ -229,8 +229,7 @@ theorem eventualRange_eq_range_precomp (f : i ⟶ j) (g : j ⟶ k)
   by
   apply subset_antisymm
   · apply Inter₂_subset
-  · rw [h, F.map_comp]
-    apply range_comp_subset_range
+  · rw [h, F.map_comp]; apply range_comp_subset_range
 #align category_theory.functor.eventual_range_eq_range_precomp CategoryTheory.Functor.eventualRange_eq_range_precomp
 
 /- warning: category_theory.functor.is_mittag_leffler_of_surjective -> CategoryTheory.Functor.isMittagLeffler_of_surjective is a dubious translation:
@@ -260,13 +259,8 @@ def toPreimages : J ⥤ Type v where
       rw [mem_Inter] at h⊢; intro f
       rw [← mem_preimage, preimage_preimage]
       convert h (g ≫ f); rw [F.map_comp]; rfl
-  map_id' j := by
-    simp_rw [F.map_id]
-    ext
-    rfl
-  map_comp' j k l f g := by
-    simp_rw [F.map_comp]
-    rfl
+  map_id' j := by simp_rw [F.map_id]; ext; rfl
+  map_comp' j k l f g := by simp_rw [F.map_comp]; rfl
 #align category_theory.functor.to_preimages CategoryTheory.Functor.toPreimages
 
 /- warning: category_theory.functor.to_preimages_finite -> CategoryTheory.Functor.toPreimages_finite is a dubious translation:
@@ -352,9 +346,7 @@ theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).
     obtain ⟨j₂, f₂, h₂⟩ := F.is_mittag_leffler_iff_eventual_range.1 h j₁
     refine' ⟨j₂, f₂ ≫ f₁, fun j₃ f₃ => _⟩
     rintro _ ⟨⟨x, hx⟩, rfl⟩
-    have : F.map f₂ x ∈ F.eventual_range j₁ := by
-      rw [h₂]
-      exact ⟨_, rfl⟩
+    have : F.map f₂ x ∈ F.eventual_range j₁ := by rw [h₂]; exact ⟨_, rfl⟩
     obtain ⟨y, hy, h₃⟩ := h.subset_image_eventual_range F (f₃ ≫ f₂) this
     refine' ⟨⟨y, mem_Inter.2 fun g₂ => _⟩, Subtype.ext _⟩
     · obtain ⟨j₄, f₄, h₄⟩ := cone_maps g₂ ((f₃ ≫ f₂) ≫ g₁)
@@ -399,13 +391,8 @@ def toEventualRanges : J ⥤ Type v
     where
   obj j := F.eventualRange j
   map i j f := (F.eventualRange_mapsTo f).restrict _ _ _
-  map_id' i := by
-    simp_rw [F.map_id]
-    ext
-    rfl
-  map_comp' _ _ _ _ _ := by
-    simp_rw [F.map_comp]
-    rfl
+  map_id' i := by simp_rw [F.map_id]; ext; rfl
+  map_comp' _ _ _ _ _ := by simp_rw [F.map_comp]; rfl
 #align category_theory.functor.to_eventual_ranges CategoryTheory.Functor.toEventualRanges
 -/
 
@@ -433,12 +420,8 @@ def toEventualRangesSectionsEquiv : F.toEventualRanges.sections ≃ F.sections
   toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.Prop f⟩
   invFun s :=
     ⟨fun j => ⟨_, mem_iInter₂.2 fun i f => ⟨_, s.Prop f⟩⟩, fun i j f => Subtype.ext <| s.Prop f⟩
-  left_inv _ := by
-    ext
-    rfl
-  right_inv _ := by
-    ext
-    rfl
+  left_inv _ := by ext; rfl
+  right_inv _ := by ext; rfl
 #align category_theory.functor.to_eventual_ranges_sections_equiv CategoryTheory.Functor.toEventualRangesSectionsEquiv
 
 /- warning: category_theory.functor.surjective_to_eventual_ranges -> CategoryTheory.Functor.surjective_toEventualRanges is a dubious translation:
@@ -452,10 +435,8 @@ If `F` satisfies the Mittag-Leffler condition, its restriction to eventual range
 functor.
 -/
 theorem surjective_toEventualRanges (h : F.IsMittagLeffler) ⦃i j⦄ (f : i ⟶ j) :
-    (F.toEventualRanges.map f).Surjective := fun ⟨x, hx⟩ =>
-  by
-  obtain ⟨y, hy, rfl⟩ := h.subset_image_eventual_range F f hx
-  exact ⟨⟨y, hy⟩, rfl⟩
+    (F.toEventualRanges.map f).Surjective := fun ⟨x, hx⟩ => by
+  obtain ⟨y, hy, rfl⟩ := h.subset_image_eventual_range F f hx; exact ⟨⟨y, hy⟩, rfl⟩
 #align category_theory.functor.surjective_to_eventual_ranges CategoryTheory.Functor.surjective_toEventualRanges
 
 /- warning: category_theory.functor.to_eventual_ranges_nonempty -> CategoryTheory.Functor.toEventualRanges_nonempty is a dubious translation:
@@ -469,8 +450,7 @@ theorem toEventualRanges_nonempty (h : F.IsMittagLeffler) [∀ j : J, Nonempty (
     Nonempty (F.toEventualRanges.obj j) :=
   by
   let ⟨i, f, h⟩ := F.isMittagLeffler_iff_eventualRange.1 h j
-  rw [to_eventual_ranges_obj, h]
-  infer_instance
+  rw [to_eventual_ranges_obj, h]; infer_instance
 #align category_theory.functor.to_eventual_ranges_nonempty CategoryTheory.Functor.toEventualRanges_nonempty
 
 /- warning: category_theory.functor.thin_diagram_of_surjective -> CategoryTheory.Functor.thin_diagram_of_surjective is a dubious translation:
@@ -544,8 +524,7 @@ theorem eval_section_surjective_of_surjective (i : J) :
   refine' ⟨⟨fun j => (sec j).val, fun j k jk => by simpa [Subtype.ext_iff] using h jk⟩, _⟩
   · have := (sec i).Prop
     simp only [mem_Inter, mem_preimage, mem_singleton_iff] at this
-    replace this := this (𝟙 i)
-    rwa [map_id_apply] at this
+    replace this := this (𝟙 i); rwa [map_id_apply] at this
 #align category_theory.functor.eval_section_surjective_of_surjective CategoryTheory.Functor.eval_section_surjective_of_surjective
 
 /- warning: category_theory.functor.eventually_injective -> CategoryTheory.Functor.eventually_injective is a dubious translation:

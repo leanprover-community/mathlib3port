@@ -62,11 +62,9 @@ theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 �
   have := (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha
   constructor <;> intro h₂
   · apply nonneg_of_mul_nonneg_left _ d0
-    rw [this]
-    exact mul_nonneg h₂ (le_of_lt h)
+    rw [this]; exact mul_nonneg h₂ (le_of_lt h)
   · apply nonneg_of_mul_nonneg_left _ h
-    rw [← this]
-    exact mul_nonneg h₂ (Int.ofNat_zero_le _)
+    rw [← this]; exact mul_nonneg h₂ (Int.ofNat_zero_le _)
 #align rat.mk_nonneg Rat.divInt_nonneg
 
 #print Rat.nonneg_add /-
@@ -241,8 +239,7 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :
     by
     constructor <;> intro h
     · exact lt_iff_le_and_ne.elim_right ⟨h.left, this.elim_left h.right⟩
-    · have tmp := lt_iff_le_and_ne.elim_left h
-      exact ⟨tmp.left, this.elim_right tmp.right⟩
+    · have tmp := lt_iff_le_and_ne.elim_left h; exact ⟨tmp.left, this.elim_right tmp.right⟩
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 #align rat.lt_def Rat.lt_def
 
@@ -337,8 +334,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   simp only [lt_iff_le_not_le]
   apply and_congr
   · simp [div_num_denom, Rat.le_def b_pos d_pos]
-  · apply not_congr
-    simp [div_num_denom, Rat.le_def d_pos b_pos]
+  · apply not_congr; simp [div_num_denom, Rat.le_def d_pos b_pos]
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
 
 /- warning: rat.lt_one_iff_num_lt_denom -> Rat.lt_one_iff_num_lt_denom is a dubious translation:

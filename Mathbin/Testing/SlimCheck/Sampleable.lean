@@ -536,15 +536,10 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
     else
       if hkn' : k = n then
         have : 1 < xs.sizeOf := by
-          subst_vars
-          cases xs
-          · contradiction
-          unfold_wf
-          apply lt_of_lt_of_le
-          show 1 < 1 + SizeOf.sizeOf xs_hd + 1
-          · linarith
-          · mono
-            apply list.one_le_sizeof
+          subst_vars; cases xs; · contradiction
+          unfold_wf; apply lt_of_lt_of_le
+          show 1 < 1 + SizeOf.sizeOf xs_hd + 1; · linarith
+          · mono; apply list.one_le_sizeof
         LazyList.singleton ⟨[], this⟩
       else
         have h₂ : k < xs.length := hn ▸ lt_of_le_of_ne (le_of_not_gt hkn) hkn'

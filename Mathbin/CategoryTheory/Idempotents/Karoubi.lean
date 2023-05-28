@@ -109,8 +109,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.idempo
 theorem hom_ext_iff {P Q : Karoubi C} {f g : Hom P Q} : f = g ↔ f.f = g.f :=
   by
   constructor
-  · intro h
-    rw [h]
+  · intro h; rw [h]
   · ext
 #align category_theory.idempotents.karoubi.hom_ext CategoryTheory.Idempotents.Karoubi.hom_ext_iff
 
@@ -213,9 +212,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eqToHom_fₓ'. -/
 @[simp]
 theorem eqToHom_f {P Q : Karoubi C} (h : P = Q) :
-    Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
-  by
-  subst h
+    Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) := by subst h;
   simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
 #align category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eqToHom_f
 
@@ -251,20 +248,12 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q)
       congr
       exacts[f.comm, g.comm]⟩
   zero := ⟨0, by simp only [comp_zero, zero_comp]⟩
-  zero_add f := by
-    ext
-    simp only [zero_add]
-  add_zero f := by
-    ext
-    simp only [add_zero]
+  zero_add f := by ext; simp only [zero_add]
+  add_zero f := by ext; simp only [add_zero]
   add_assoc f g h' := by simp only [add_assoc]
-  add_comm f g := by
-    ext
-    apply_rules [add_comm]
+  add_comm f g := by ext; apply_rules [add_comm]
   neg f := ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
-  add_left_neg f := by
-    ext
-    apply_rules [add_left_neg]
+  add_left_neg f := by ext; apply_rules [add_left_neg]
 
 namespace Karoubi
 
@@ -407,9 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.decomp_id CategoryTheory.Idempotents.Karoubi.decompIdₓ'. -/
 /-- The formal direct factor of `P.X` given by the idempotent `P.p` in the category `C`
 is actually a direct factor in the category `karoubi C`. -/
-theorem decompId (P : Karoubi C) : 𝟙 P = decompId_i P ≫ decompId_p P :=
-  by
-  ext
+theorem decompId (P : Karoubi C) : 𝟙 P = decompId_i P ≫ decompId_p P := by ext;
   simp only [comp_f, id_eq, P.idem, decomp_id_i, decomp_id_p]
 #align category_theory.idempotents.karoubi.decomp_id CategoryTheory.Idempotents.Karoubi.decompId
 
@@ -419,9 +406,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (P : CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1), Eq.{succ u1} (Quiver.Hom.{succ u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1))) (Prefunctor.obj.{succ u1, succ u1, u2, max u2 u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P)) (Prefunctor.obj.{succ u1, succ u1, u2, max u2 u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P))) (Prefunctor.map.{succ u1, succ u1, u2, max u2 u1} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u2, max u2 u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.p.{u2, u1} C _inst_1 P)) (CategoryTheory.CategoryStruct.comp.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u1, max u2 u1} (CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.mk.{u2, u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P)) (CategoryTheory.Idempotents.Karoubi.coe.proof_1.{u1, u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P))) P (CategoryTheory.Idempotents.Karoubi.mk.{u2, u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.CategoryStruct.id.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P)) (CategoryTheory.Idempotents.Karoubi.coe.proof_1.{u1, u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P))) (CategoryTheory.Idempotents.Karoubi.decompId_p.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.decompId_i.{u2, u1} C _inst_1 P))
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.decomp_p CategoryTheory.Idempotents.Karoubi.decomp_pₓ'. -/
-theorem decomp_p (P : Karoubi C) : (toKaroubi C).map P.p = decompId_p P ≫ decompId_i P :=
-  by
-  ext
+theorem decomp_p (P : Karoubi C) : (toKaroubi C).map P.p = decompId_p P ≫ decompId_i P := by ext;
   simp only [comp_f, decomp_id_p_f, decomp_id_i_f, P.idem, to_karoubi_map_f]
 #align category_theory.idempotents.karoubi.decomp_p CategoryTheory.Idempotents.Karoubi.decomp_p
 
@@ -431,28 +416,20 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] (X : C), Eq.{succ u2} (Quiver.Hom.{succ u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X) (CategoryTheory.Idempotents.Karoubi.mk.{u1, u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u1, u2} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X)) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) (CategoryTheory.Idempotents.Karoubi.X.{u1, u2} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X))) (CategoryTheory.Idempotents.Karoubi.coe.proof_1.{u2, u1} C _inst_1 (CategoryTheory.Idempotents.Karoubi.X.{u1, u2} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X))))) (CategoryTheory.Idempotents.Karoubi.decompId_i.{u1, u2} C _inst_1 (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X)) (CategoryTheory.CategoryStruct.id.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1)) (Prefunctor.obj.{succ u2, succ u2, u1, max u1 u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, max u1 u2} C _inst_1 (CategoryTheory.Idempotents.Karoubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.instCategoryKaroubi.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.toKaroubi.{u1, u2} C _inst_1)) X))
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.decomp_id_i_to_karoubi CategoryTheory.Idempotents.Karoubi.decompId_i_toKaroubiₓ'. -/
-theorem decompId_i_toKaroubi (X : C) : decompId_i ((toKaroubi C).obj X) = 𝟙 _ :=
-  by
-  ext
-  rfl
+theorem decompId_i_toKaroubi (X : C) : decompId_i ((toKaroubi C).obj X) = 𝟙 _ := by ext; rfl
 #align category_theory.idempotents.karoubi.decomp_id_i_to_karoubi CategoryTheory.Idempotents.Karoubi.decompId_i_toKaroubi
 
 /- warning: category_theory.idempotents.karoubi.decomp_id_p_to_karoubi -> CategoryTheory.Idempotents.Karoubi.decompId_p_toKaroubi is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.decomp_id_p_to_karoubi CategoryTheory.Idempotents.Karoubi.decompId_p_toKaroubiₓ'. -/
-theorem decompId_p_toKaroubi (X : C) : decompId_p ((toKaroubi C).obj X) = 𝟙 _ :=
-  by
-  ext
-  rfl
+theorem decompId_p_toKaroubi (X : C) : decompId_p ((toKaroubi C).obj X) = 𝟙 _ := by ext; rfl
 #align category_theory.idempotents.karoubi.decomp_id_p_to_karoubi CategoryTheory.Idempotents.Karoubi.decompId_p_toKaroubi
 
 /- warning: category_theory.idempotents.karoubi.decomp_id_i_naturality -> CategoryTheory.Idempotents.Karoubi.decompId_i_naturality is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decompId_i_naturalityₓ'. -/
 theorem decompId_i_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
-    f ≫ decompId_i _ = decompId_i _ ≫ ⟨f.f, by erw [comp_id, id_comp]⟩ :=
-  by
-  ext
+    f ≫ decompId_i _ = decompId_i _ ≫ ⟨f.f, by erw [comp_id, id_comp]⟩ := by ext;
   simp only [comp_f, decomp_id_i_f, karoubi.comp_p, karoubi.p_comp]
 #align category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decompId_i_naturality
 
@@ -462,9 +439,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.idempo
 theorem decompId_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     decompId_p P ≫ f =
       (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.pt : Karoubi C) ⟶ Q.pt) ≫ decompId_p Q :=
-  by
-  ext
-  simp only [comp_f, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
+  by ext; simp only [comp_f, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
 #align category_theory.idempotents.karoubi.decomp_id_p_naturality CategoryTheory.Idempotents.Karoubi.decompId_p_naturality
 
 /- warning: category_theory.idempotents.karoubi.zsmul_hom -> CategoryTheory.Idempotents.Karoubi.zsmul_hom is a dubious translation:

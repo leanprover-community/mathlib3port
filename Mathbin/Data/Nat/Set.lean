@@ -30,10 +30,7 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} (Set.{0} Nat) (Union.union.{0} (Set.{0} Nat) (Set.instUnionSet.{0} Nat) (Singleton.singleton.{0, 0} Nat (Set.{0} Nat) (Set.instSingletonSet.{0} Nat) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Set.range.{0, 1} Nat Nat Nat.succ)) (Set.univ.{0} Nat)
 Case conversion may be inaccurate. Consider using '#align nat.zero_union_range_succ Nat.zero_union_range_succₓ'. -/
-theorem zero_union_range_succ : {0} ∪ range succ = univ :=
-  by
-  ext n
-  cases n <;> simp
+theorem zero_union_range_succ : {0} ∪ range succ = univ := by ext n; cases n <;> simp
 #align nat.zero_union_range_succ Nat.zero_union_range_succ
 
 #print Nat.range_succ /-

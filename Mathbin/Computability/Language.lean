@@ -348,10 +348,8 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
   induction' n with n ihn generalizing x
   · simp only [mem_one, pow_zero, length_eq_zero]
     constructor
-    · rintro rfl
-      exact ⟨[], rfl, rfl, fun y h => h.elim⟩
-    · rintro ⟨_, rfl, rfl, _⟩
-      rfl
+    · rintro rfl; exact ⟨[], rfl, rfl, fun y h => h.elim⟩
+    · rintro ⟨_, rfl, rfl, _⟩; rfl
   · simp only [pow_succ, mem_mul, ihn]
     constructor
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
@@ -372,10 +370,8 @@ theorem kstar_eq_iSup_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
   ext x
   simp only [mem_kstar, mem_supr, mem_pow]
   constructor
-  · rintro ⟨S, rfl, hS⟩
-    exact ⟨_, S, rfl, rfl, hS⟩
-  · rintro ⟨_, S, rfl, rfl, hS⟩
-    exact ⟨S, rfl, hS⟩
+  · rintro ⟨S, rfl, hS⟩; exact ⟨_, S, rfl, rfl, hS⟩
+  · rintro ⟨_, S, rfl, rfl, hS⟩; exact ⟨S, rfl, hS⟩
 #align language.kstar_eq_supr_pow Language.kstar_eq_iSup_pow
 
 /- warning: language.map_kstar -> Language.map_kstar is a dubious translation:

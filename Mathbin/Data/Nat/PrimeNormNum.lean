@@ -67,10 +67,8 @@ theorem minFacHelper_1 {n k k' : ℕ} (e : k + 1 = k') (np : Nat.minFac (bit1 n)
   refine'
     ⟨Nat.succ_pos _,
       (lt_of_le_of_ne (lt_of_le_of_ne _ _ : k + 1 + k < _) min_fac_ne_bit0.symm : bit0 (k + 1) < _)⟩
-  · rw [add_right_comm]
-    exact h.2
-  · rw [add_right_comm]
-    exact np.symm
+  · rw [add_right_comm]; exact h.2
+  · rw [add_right_comm]; exact np.symm
 #align tactic.norm_num.min_fac_helper_1 Tactic.NormNum.minFacHelper_1
 
 theorem minFacHelper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1 k))

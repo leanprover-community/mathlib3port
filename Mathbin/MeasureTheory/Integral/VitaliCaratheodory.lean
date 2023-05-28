@@ -196,8 +196,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
         refine' add_le_add _ hδ.le
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_refl]
-        · intro n
-          exact (simple_func.measurable _).coe_nnreal_ennreal.AEMeasurable
+        · intro n; exact (simple_func.measurable _).coe_nnreal_ennreal.AEMeasurable
       
 #align measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lowerSemicontinuous_lintegral_ge
 
@@ -253,9 +252,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable [SigmaFinite 
     · have := le_g1 x
       simp only [h, Set.indicator_of_mem, top_le_iff] at this
       simp [this]
-    · have : f x = fmeas.mk f x := by
-        rw [Set.compl_subset_comm] at hs
-        exact hs h
+    · have : f x = fmeas.mk f x := by rw [Set.compl_subset_comm] at hs; exact hs h
       rw [this]
       exact (f_lt_g0 x).trans_le le_self_add
   ·
@@ -290,12 +287,10 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : �
   by
   have fmeas : AEMeasurable f μ :=
     by
-    convert fint.ae_strongly_measurable.real_to_nnreal.ae_measurable
-    ext1 x
+    convert fint.ae_strongly_measurable.real_to_nnreal.ae_measurable; ext1 x
     simp only [Real.toNNReal_coe]
   lift ε to ℝ≥0 using εpos.le
-  obtain ⟨δ, δpos, hδε⟩ : ∃ δ : ℝ≥0, 0 < δ ∧ δ < ε
-  exact exists_between εpos
+  obtain ⟨δ, δpos, hδε⟩ : ∃ δ : ℝ≥0, 0 < δ ∧ δ < ε; exact exists_between εpos
   have int_f_ne_top : (∫⁻ a : α, f a ∂μ) ≠ ∞ :=
     (has_finite_integral_iff_of_nnreal.1 fint.has_finite_integral).Ne
   rcases exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable μ f fmeas
@@ -327,11 +322,9 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : �
         _ < ENNReal.toReal (∫⁻ a : α, f a ∂μ) + ε := (add_lt_add_left hδε _)
         _ = (∫⁻ a : α, ENNReal.ofReal ↑(f a) ∂μ).toReal + ε := by simp
         
-    · apply Filter.eventually_of_forall fun x => _
-      simp
+    · apply Filter.eventually_of_forall fun x => _; simp
     · exact fmeas.coe_nnreal_real.ae_strongly_measurable
-    · apply Filter.eventually_of_forall fun x => _
-      simp
+    · apply Filter.eventually_of_forall fun x => _; simp
     · apply gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable
 #align measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lowerSemicontinuous_integral_gt_nNReal
 
@@ -467,14 +460,11 @@ theorem exists_upperSemicontinuous_le_integral_le (f : α → ℝ≥0)
     · rw [sub_le_iff_le_add]
       convert ENNReal.toReal_mono _ gint
       · simp
-      · rw [ENNReal.toReal_add Ig.ne ENNReal.coe_ne_top]
-        simp
+      · rw [ENNReal.toReal_add Ig.ne ENNReal.coe_ne_top]; simp
       · simpa using Ig.ne
-    · apply Filter.eventually_of_forall
-      simp
+    · apply Filter.eventually_of_forall; simp
     · exact gcont.measurable.coe_nnreal_real.ae_measurable.ae_strongly_measurable
-    · apply Filter.eventually_of_forall
-      simp
+    · apply Filter.eventually_of_forall; simp
     · exact fint.ae_strongly_measurable
 #align measure_theory.exists_upper_semicontinuous_le_integral_le MeasureTheory.exists_upperSemicontinuous_le_integral_le
 
@@ -513,7 +503,7 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
     convert gp_integrable.sub gm_integrable
     ext x
     simp
-  show (∫ x : α, (g x).toReal ∂μ) < (∫ x : α, f x ∂μ) + ε
+  show (∫ x : α, (g x).toReal ∂μ) < (∫ x : α, f x ∂μ) + ε;
   exact
     calc
       (∫ x : α, (g x).toReal ∂μ) = ∫ x : α, EReal.toReal (gp x) - EReal.toReal (gm x) ∂μ :=
@@ -528,13 +518,9 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
         convert gpint
         simp only [EReal.toReal_coe_ennreal]
       _ ≤ (∫ x : α, ↑(fp x) ∂μ) + ↑δ - ((∫ x : α, fm x ∂μ) - δ) := (sub_le_sub_left gmint _)
-      _ = (∫ x : α, f x ∂μ) + 2 * δ :=
-        by
-        simp_rw [integral_eq_integral_pos_part_sub_integral_neg_part hf, fp, fm]
-        ring
-      _ = (∫ x : α, f x ∂μ) + ε := by
-        congr 1
-        field_simp [δ, mul_comm]
+      _ = (∫ x : α, f x ∂μ) + 2 * δ := by
+        simp_rw [integral_eq_integral_pos_part_sub_integral_neg_part hf, fp, fm]; ring
+      _ = (∫ x : α, f x ∂μ) + ε := by congr 1; field_simp [δ, mul_comm]
       
   show ∀ᵐ x : α ∂μ, g x < ⊤
   · filter_upwards [gp_lt_top]with _ hx
@@ -545,8 +531,7 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   · intro x
     rw [EReal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (f x)]
     refine' EReal.sub_lt_sub_of_lt_of_le _ _ _ _
-    · simp only [EReal.coe_ennreal_lt_coe_ennreal_iff, coe_coe]
-      exact fp_lt_gp x
+    · simp only [EReal.coe_ennreal_lt_coe_ennreal_iff, coe_coe]; exact fp_lt_gp x
     · simp only [ENNReal.coe_le_coe, EReal.coe_ennreal_le_coe_ennreal_iff, coe_coe]
       exact gm_le_fm x
     · simp only [EReal.coe_ennreal_ne_bot, Ne.def, not_false_iff, coe_coe]

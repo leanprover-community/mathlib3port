@@ -103,11 +103,7 @@ the projection `.sieves`.
 -/
 @[ext]
 theorem ext {J₁ J₂ : GrothendieckTopology C} (h : (J₁ : ∀ X : C, Set (Sieve X)) = J₂) : J₁ = J₂ :=
-  by
-  cases J₁
-  cases J₂
-  congr
-  apply h
+  by cases J₁; cases J₂; congr ; apply h
 #align category_theory.grothendieck_topology.ext CategoryTheory.GrothendieckTopology.ext
 -/
 
@@ -362,8 +358,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.grothe
 theorem isGLB_sInf (s : Set (GrothendieckTopology C)) : IsGLB s (sInf s) :=
   by
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
-  · intros
-    rfl
+  · intros ; rfl
   · exact isGLB_sInf _
 #align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_sInf
 
@@ -752,11 +747,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.cover.bind_to_base CategoryTheory.GrothendieckTopology.Cover.bindToBaseₓ'. -/
 /-- The canonical moprhism from `S.bind T` to `T`. -/
 def bindToBase {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
-  homOfLE <| by
-    rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
-    rw [← h3]
-    apply sieve.downward_closed
-    exact h1
+  homOfLE <| by rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩; rw [← h3]; apply sieve.downward_closed; exact h1
 #align category_theory.grothendieck_topology.cover.bind_to_base CategoryTheory.GrothendieckTopology.Cover.bindToBase
 
 #print CategoryTheory.GrothendieckTopology.Cover.Arrow.middle /-

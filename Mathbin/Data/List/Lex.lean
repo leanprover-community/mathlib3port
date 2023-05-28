@@ -179,8 +179,7 @@ theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : le
     · apply nil
     · exact (not_lt_of_ge H).elim (succ_pos _)
     · by_cases ab : a = b
-      · subst b
-        apply cons
+      · subst b; apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
       · exact Rel ab⟩
 #align decidable.list.lex.ne_iff Decidable.List.Lex.ne_iff

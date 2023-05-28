@@ -204,18 +204,14 @@ alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
 
 #print Bornology.isBounded_empty /-
 @[simp]
-theorem isBounded_empty : IsBounded (∅ : Set α) :=
-  by
-  rw [is_bounded_def, compl_empty]
+theorem isBounded_empty : IsBounded (∅ : Set α) := by rw [is_bounded_def, compl_empty];
   exact univ_mem
 #align bornology.is_bounded_empty Bornology.isBounded_empty
 -/
 
 #print Bornology.isBounded_singleton /-
 @[simp]
-theorem isBounded_singleton : IsBounded ({x} : Set α) :=
-  by
-  rw [is_bounded_def]
+theorem isBounded_singleton : IsBounded ({x} : Set α) := by rw [is_bounded_def];
   exact le_cofinite _ (finite_singleton x).compl_mem_cofinite
 #align bornology.is_bounded_singleton Bornology.isBounded_singleton
 -/
@@ -317,9 +313,7 @@ theorem ext_iff' {t t' : Bornology α} :
 #print Bornology.ext_iff_isBounded /-
 theorem ext_iff_isBounded {t t' : Bornology α} :
     t = t' ↔ ∀ s, @IsBounded α t s ↔ @IsBounded α t' s :=
-  ⟨fun h s => h ▸ Iff.rfl, fun h => by
-    ext
-    simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
+  ⟨fun h s => h ▸ Iff.rfl, fun h => by ext; simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
 #align bornology.ext_iff_is_bounded Bornology.ext_iff_isBounded
 -/
 

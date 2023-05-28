@@ -100,15 +100,14 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisFi
   simp_rw [Algebra.mem_adjoin_iff]
   intro x hx
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `zmod p`.
-  cases p
+  cases p;
   cases hp
   apply Subring.closure_induction hx <;> clear! x <;> simp_rw [mem_root_set_of_ne aux]
   · rintro x (⟨r, rfl⟩ | hx)
     · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
       rw [← map_pow, ZMod.pow_card_pow, sub_self]
     · dsimp only [GaloisField] at hx
-      rwa [mem_root_set_of_ne aux] at hx
-      infer_instance
+      rwa [mem_root_set_of_ne aux] at hx; infer_instance
   · dsimp only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
     simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff,
@@ -143,7 +142,7 @@ theorem splits_zMod_x_pow_sub_x : Splits (RingHom.id (ZMod p)) (X ^ p - X) :=
     exact (ZMod.card p).symm
   have h2 := FiniteField.x_pow_card_sub_x_natDegree_eq (ZMod p) hp
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `zmod p`.
-  cases p
+  cases p;
   cases hp
   rw [splits_iff_card_roots, h1, ← Finset.card_def, Finset.card_univ, h2, ZMod.card]
 #align galois_field.splits_zmod_X_pow_sub_X GaloisField.splits_zMod_x_pow_sub_x
@@ -151,10 +150,7 @@ theorem splits_zMod_x_pow_sub_x : Splits (RingHom.id (ZMod p)) (X ^ p - X) :=
 /-- A Galois field with exponent 1 is equivalent to `zmod` -/
 def equivZmodP : GaloisField p 1 ≃ₐ[ZMod p] ZMod p :=
   have h : (X ^ p ^ 1 : (ZMod p)[X]) = X ^ Fintype.card (ZMod p) := by rw [pow_one, ZMod.card p]
-  have inst : IsSplittingField (ZMod p) (ZMod p) (X ^ p ^ 1 - X) :=
-    by
-    rw [h]
-    infer_instance
+  have inst : IsSplittingField (ZMod p) (ZMod p) (X ^ p ^ 1 - X) := by rw [h]; infer_instance
   (is_splitting_field.alg_equiv (ZMod p) (X ^ p ^ 1 - X : (ZMod p)[X])).symm
 #align galois_field.equiv_zmod_p GaloisField.equivZmodP
 
@@ -198,12 +194,8 @@ variable {K : Type _} [Field K] [Fintype K] {K' : Type _} [Field K'] [Fintype K'
 def algEquivOfCardEq (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K] [Algebra (ZMod p) K']
     (hKK' : Fintype.card K = Fintype.card K') : K ≃ₐ[ZMod p] K' :=
   by
-  have : CharP K p := by
-    rw [← Algebra.charP_iff (ZMod p) K p]
-    exact ZMod.charP p
-  have : CharP K' p := by
-    rw [← Algebra.charP_iff (ZMod p) K' p]
-    exact ZMod.charP p
+  have : CharP K p := by rw [← Algebra.charP_iff (ZMod p) K p]; exact ZMod.charP p
+  have : CharP K' p := by rw [← Algebra.charP_iff (ZMod p) K' p]; exact ZMod.charP p
   choose n a hK using FiniteField.card K p
   choose n' a' hK' using FiniteField.card K' p
   rw [hK, hK'] at hKK'

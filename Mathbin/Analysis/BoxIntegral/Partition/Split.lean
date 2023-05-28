@@ -128,11 +128,8 @@ theorem splitLower_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.uppe
     (h' : ∀ j, I.lower j < update I.upper i x j :=
       (forall_update_iff I.upper fun j y => I.lower j < y).2
         ⟨h.1, fun j hne => I.lower_lt_upper _⟩) :
-    I.splitLower i x = (⟨I.lower, update I.upper i x, h'⟩ : Box ι) :=
-  by
-  simp only [split_lower, mk'_eq_coe, min_eq_left h.2.le]
-  use rfl
-  congr
+    I.splitLower i x = (⟨I.lower, update I.upper i x, h'⟩ : Box ι) := by
+  simp only [split_lower, mk'_eq_coe, min_eq_left h.2.le]; use rfl; congr
 #align box_integral.box.split_lower_def BoxIntegral.Box.splitLower_def
 
 #print BoxIntegral.Box.splitUpper /-
@@ -206,11 +203,8 @@ theorem splitUpper_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.uppe
     (h' : ∀ j, update I.lower i x j < I.upper j :=
       (forall_update_iff I.lower fun j y => y < I.upper j).2
         ⟨h.2, fun j hne => I.lower_lt_upper _⟩) :
-    I.splitUpper i x = (⟨update I.lower i x, I.upper, h'⟩ : Box ι) :=
-  by
-  simp only [split_upper, mk'_eq_coe, max_eq_left h.1.le]
-  refine' ⟨_, rfl⟩
-  congr
+    I.splitUpper i x = (⟨update I.lower i x, I.upper, h'⟩ : Box ι) := by
+  simp only [split_upper, mk'_eq_coe, max_eq_left h.1.le]; refine' ⟨_, rfl⟩; congr
 #align box_integral.box.split_upper_def BoxIntegral.Box.splitUpper_def
 
 /- warning: box_integral.box.disjoint_split_lower_split_upper -> BoxIntegral.Box.disjoint_splitLower_splitUpper is a dubious translation:
@@ -233,8 +227,7 @@ theorem splitLower_ne_splitUpper (I : Box ι) (i : ι) (x : ℝ) :
     I.splitLower i x ≠ I.splitUpper i x :=
   by
   cases le_or_lt x (I.lower i)
-  · rw [split_upper_eq_self.2 h, split_lower_eq_bot.2 h]
-    exact WithBot.bot_ne_coe
+  · rw [split_upper_eq_self.2 h, split_lower_eq_bot.2 h]; exact WithBot.bot_ne_coe
   · refine' (disjoint_split_lower_split_upper I i x).Ne _
     rwa [Ne.def, split_lower_eq_bot, not_le]
 #align box_integral.box.split_lower_ne_split_upper BoxIntegral.Box.splitLower_ne_splitUpper
@@ -332,10 +325,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_leₓ'. -/
 theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
     (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
-  (mem_split_iff'.1 h₁).resolve_right fun H =>
-    by
-    rw [← box.mem_coe, H] at h₂
-    exact h₃.not_lt h₂.2
+  (mem_split_iff'.1 h₁).resolve_right fun H => by rw [← box.mem_coe, H] at h₂; exact h₃.not_lt h₂.2
 #align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le
 
 /- warning: box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem -> BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem is a dubious translation:
@@ -346,10 +336,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_memₓ'. -/
 theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
     (h₃ : x < y i) : (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
-  (mem_split_iff'.1 h₁).resolve_left fun H =>
-    by
-    rw [← box.mem_coe, H] at h₂
-    exact h₃.not_le h₂.2
+  (mem_split_iff'.1 h₁).resolve_left fun H => by rw [← box.mem_coe, H] at h₂; exact h₃.not_le h₂.2
 #align box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem
 
 #print BoxIntegral.Prepartition.restrict_split /-
@@ -525,10 +512,8 @@ Case conversion may be inaccurate. Consider using '#align box_integral.prepartit
 `split_many I s ≤ π`. -/
 theorem IsPartition.exists_splitMany_le {I : Box ι} {π : Prepartition I} (h : IsPartition π) :
     ∃ s, splitMany I s ≤ π :=
-  (eventually_splitMany_inf_eq_filter π).exists.imp fun s hs =>
-    by
-    rwa [h.Union_eq, filter_of_true, inf_eq_right] at hs
-    exact fun J hJ => le_of_mem _ hJ
+  (eventually_splitMany_inf_eq_filter π).exists.imp fun s hs => by
+    rwa [h.Union_eq, filter_of_true, inf_eq_right] at hs; exact fun J hJ => le_of_mem _ hJ
 #align box_integral.prepartition.is_partition.exists_split_many_le BoxIntegral.Prepartition.IsPartition.exists_splitMany_le
 
 /- warning: box_integral.prepartition.exists_Union_eq_diff -> BoxIntegral.Prepartition.exists_iUnion_eq_diff is a dubious translation:
@@ -569,11 +554,8 @@ theorem iUnion_compl (π : Prepartition I) : π.compl.iUnion = I \ π.iUnion :=
 #print BoxIntegral.Prepartition.compl_congr /-
 /-- Since the definition of `box_integral.prepartition.compl` uses `Exists.some`,
 the result depends only on `π.Union`. -/
-theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.iUnion = π₂.iUnion) : π₁.compl = π₂.compl :=
-  by
-  dsimp only [compl]
-  congr 1
-  rw [h]
+theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.iUnion = π₂.iUnion) : π₁.compl = π₂.compl := by
+  dsimp only [compl]; congr 1; rw [h]
 #align box_integral.prepartition.compl_congr BoxIntegral.Prepartition.compl_congr
 -/
 

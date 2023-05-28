@@ -68,9 +68,7 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
   tensorObj X Y := ⟨X.1 ⊗ Y.1, prop_tensor X.2 Y.2⟩
   tensorHom X₁ Y₁ X₂ Y₂ f g := by
     change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
-    change X₁.1 ⟶ Y₁.1 at f
-    change X₂.1 ⟶ Y₂.1 at g
-    exact f ⊗ g
+    change X₁.1 ⟶ Y₁.1 at f; change X₂.1 ⟶ Y₂.1 at g; exact f ⊗ g
   tensorUnit := ⟨𝟙_ C, prop_id⟩
   associator X Y Z :=
     ⟨(α_ X.1 Y.1 Z.1).Hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1),
@@ -171,9 +169,7 @@ instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
 def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C
     where
   toMonoidalFunctor := fullMonoidalSubcategoryInclusion P
-  braided' X Y := by
-    rw [is_iso.eq_inv_comp]
-    tidy
+  braided' X Y := by rw [is_iso.eq_inv_comp]; tidy
 #align category_theory.monoidal_category.full_braided_subcategory_inclusion CategoryTheory.MonoidalCategory.fullBraidedSubcategoryInclusion
 
 instance fullBraidedSubcategory.full : Full (fullBraidedSubcategoryInclusion P).toFunctor :=
@@ -193,9 +189,7 @@ def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
     BraidedFunctor (FullSubcategory P) (FullSubcategory P')
     where
   toMonoidalFunctor := fullMonoidalSubcategory.map h
-  braided' X Y := by
-    rw [is_iso.eq_inv_comp]
-    tidy
+  braided' X Y := by rw [is_iso.eq_inv_comp]; tidy
 #align category_theory.monoidal_category.full_braided_subcategory.map CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map
 
 instance fullBraidedSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
@@ -251,14 +245,8 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
                 counit :=
                   { app := fun Y => (ihom.ev X.1).app Y.1
                     naturality' := fun Y Z f => ihom.ev_naturality X.1 f }
-                left_triangle := by
-                  ext Y
-                  simp
-                  exact ihom.ev_coev X.1 Y.1
-                right_triangle := by
-                  ext Y
-                  simp
-                  exact ihom.coev_ev X.1 Y.1 } } }
+                left_triangle := by ext Y; simp; exact ihom.ev_coev X.1 Y.1
+                right_triangle := by ext Y; simp; exact ihom.coev_ev X.1 Y.1 } } }
 #align category_theory.monoidal_category.full_monoidal_closed_subcategory CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory
 
 @[simp]

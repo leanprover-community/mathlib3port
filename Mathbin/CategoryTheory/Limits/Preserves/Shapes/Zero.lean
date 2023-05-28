@@ -85,9 +85,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_eq_zero_iff CategoryTheory.Functor.map_eq_zero_iffₓ'. -/
 theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
     F.map f = 0 ↔ f = 0 :=
-  ⟨F.zero_of_map_zero _, by
-    rintro rfl
-    exact F.map_zero _ _⟩
+  ⟨F.zero_of_map_zero _, by rintro rfl; exact F.map_zero _ _⟩
 #align category_theory.functor.map_eq_zero_iff CategoryTheory.Functor.map_eq_zero_iff
 
 #print CategoryTheory.Functor.preservesZeroMorphisms_of_isLeftAdjoint /-
@@ -100,8 +98,7 @@ instance (priority := 100) preservesZeroMorphisms_of_isLeftAdjoint (F : C ⥤ D)
       _ = F.map 0 ≫ F.map ((right_adjoint F).map (0 : F.obj X ⟶ _)) ≫ adj.counit.app (F.obj Y) := _
       _ = 0 := _
       
-    · rw [adjunction.left_triangle_components]
-      exact (category.comp_id _).symm
+    · rw [adjunction.left_triangle_components]; exact (category.comp_id _).symm
     · simp only [← category.assoc, ← F.map_comp, zero_comp]
     · simp only [adjunction.counit_naturality, comp_zero]
 #align category_theory.functor.preserves_zero_morphisms_of_is_left_adjoint CategoryTheory.Functor.preservesZeroMorphisms_of_isLeftAdjoint

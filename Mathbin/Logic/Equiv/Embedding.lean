@@ -47,20 +47,11 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
       rintro (a₁ | b₁) (a₂ | b₂) f_eq <;>
         simp only [Equiv.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
       · rw [f.injective f_eq]
-      · simp! only at f_eq
-        exfalso
-        exact disj.le_bot ⟨⟨a₁, by simp⟩, ⟨b₂, by simp [f_eq]⟩⟩
-      · simp! only at f_eq
-        exfalso
-        exact disj.le_bot ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
+      · simp! only at f_eq; exfalso; exact disj.le_bot ⟨⟨a₁, by simp⟩, ⟨b₂, by simp [f_eq]⟩⟩
+      · simp! only at f_eq; exfalso; exact disj.le_bot ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
       · rw [g.injective f_eq]⟩
-  left_inv f := by
-    dsimp only
-    ext
-    cases x <;> simp!
-  right_inv := fun ⟨⟨f, g⟩, _⟩ => by
-    simp only [Prod.mk.inj_iff]
-    constructor <;> ext <;> simp!
+  left_inv f := by dsimp only; ext; cases x <;> simp!
+  right_inv := fun ⟨⟨f, g⟩, _⟩ => by simp only [Prod.mk.inj_iff]; constructor <;> ext <;> simp!
 #align equiv.sum_embedding_equiv_prod_embedding_disjoint Equiv.sumEmbeddingEquivProdEmbeddingDisjoint
 -/
 
@@ -113,10 +104,7 @@ def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] : (α ↪ β) ≃ β
     where
   toFun f := f default
   invFun x := ⟨fun _ => x, fun _ _ _ => Subsingleton.elim _ _⟩
-  left_inv _ := by
-    ext
-    simp_rw [Function.Embedding.coeFn_mk]
-    congr
+  left_inv _ := by ext; simp_rw [Function.Embedding.coeFn_mk]; congr
   right_inv _ := by simp
 #align equiv.unique_embedding_equiv_result Equiv.uniqueEmbeddingEquivResult
 -/

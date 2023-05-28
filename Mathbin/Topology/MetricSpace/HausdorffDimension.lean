@@ -94,9 +94,7 @@ open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional 
 variable {ι X Y : Type _} [EMetricSpace X] [EMetricSpace Y]
 
 /-- Hausdorff dimension of a set in an (e)metric space. -/
-noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ :=
-  by
-  borelize X
+noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ := by borelize X;
   exact ⨆ (d : ℝ≥0) (hd : @hausdorff_measure X _ _ ⟨rfl⟩ d s = ∞), d
 #align dimH dimH
 
@@ -111,9 +109,7 @@ variable [MeasurableSpace X] [BorelSpace X]
 
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
-theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞), d :=
-  by
-  borelize X
+theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞), d := by borelize X;
   rw [dimH]
 #align dimH_def dimH_def
 
@@ -134,9 +130,7 @@ theorem dimH_le_of_hausdorffMeasure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d]
 #align dimH_le_of_hausdorff_measure_ne_top dimH_le_of_hausdorffMeasure_ne_top
 
 theorem le_dimH_of_hausdorffMeasure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d] s = ∞) : ↑d ≤ dimH s :=
-  by
-  rw [dimH_def]
-  exact le_iSup₂ d h
+  by rw [dimH_def]; exact le_iSup₂ d h
 #align le_dimH_of_hausdorff_measure_eq_top le_dimH_of_hausdorffMeasure_eq_top
 
 theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 :=
@@ -276,9 +270,7 @@ theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsup dimH (𝓝[s] x).sm
     exact eventually_small_sets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
   · refine' le_of_forall_ge_of_dense fun r hr => _
     rcases exists_mem_nhdsWithin_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
-    refine' le_iSup₂_of_le x hxs _
-    rw [limsup_eq]
-    refine' le_sInf fun b hb => _
+    refine' le_iSup₂_of_le x hxs _; rw [limsup_eq]; refine' le_sInf fun b hb => _
     rcases eventually_small_sets.1 hb with ⟨t, htx, ht⟩
     exact (hxr t htx).le.trans (ht t subset.rfl)
 #align bsupr_limsup_dimH bsupr_limsup_dimH
@@ -291,8 +283,7 @@ theorem iSup_limsup_dimH (s : Set X) : (⨆ x, limsup dimH (𝓝[s] x).smallSets
   refine' le_antisymm (iSup_le fun x => _) _
   · refine' Limsup_le_of_le (by infer_param) (eventually_map.2 _)
     exact eventually_small_sets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
-  · rw [← bsupr_limsup_dimH]
-    exact iSup₂_le_iSup _ _
+  · rw [← bsupr_limsup_dimH]; exact iSup₂_le_iSup _ _
 #align supr_limsup_dimH iSup_limsup_dimH
 
 end
@@ -311,8 +302,7 @@ theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) :
   refine' dimH_le fun d hd => _
   have := h.hausdorff_measure_image_le hr d.coe_nonneg
   rw [hd, ENNReal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
-  have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by
-    contrapose this
+  have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by contrapose this;
     exact ENNReal.mul_ne_top ENNReal.coe_ne_top this
   rw [ENNReal.le_div_iff_mul_le, mul_comm, ← ENNReal.coe_mul]
   exacts[le_dimH_of_hausdorffMeasure_eq_top Hrd, Or.inl (mt ENNReal.coe_eq_zero.1 hr.ne'),
@@ -522,9 +512,7 @@ theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finra
   rw [← e.dimH_image]
   refine' le_antisymm _ _
   · exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
-  · have : e '' s ∈ 𝓝 (e x) := by
-      rw [← e.map_nhds_eq]
-      exact image_mem_map h
+  · have : e '' s ∈ 𝓝 (e x) := by rw [← e.map_nhds_eq]; exact image_mem_map h
     rcases metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
     simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
 #align real.dimH_of_mem_nhds Real.dimH_of_mem_nhds

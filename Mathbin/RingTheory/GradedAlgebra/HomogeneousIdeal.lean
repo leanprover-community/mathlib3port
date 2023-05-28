@@ -257,10 +257,7 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x)
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.homogeneous_span _ _ fun x h =>
-      by
-      rw [Subtype.image_preimage_coe] at h
-      exact h.2⟩
+    Ideal.homogeneous_span _ _ fun x h => by rw [Subtype.image_preimage_coe] at h; exact h.2⟩
 #align ideal.homogeneous_core Ideal.homogeneousCore
 -/
 
@@ -476,9 +473,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {σ : Type.{u1}} {A : Type.{u3}} [_inst_1 : Semiring.{u3} A] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : AddMonoid.{u2} ι] [_inst_4 : SetLike.{u1, u3} σ A] [_inst_5 : AddSubmonoidClass.{u1, u3} σ A (AddMonoid.toAddZeroClass.{u3} A (AddMonoidWithOne.toAddMonoid.{u3} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u3} A (NonAssocSemiring.toAddCommMonoidWithOne.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))))) _inst_4] {𝒜 : ι -> σ} [_inst_6 : GradedRing.{u2, u3, u1} ι A σ (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_1 _inst_4 _inst_5 𝒜] {ℐ : Set.{u3} (Ideal.{u3} A _inst_1)}, (forall (I : Ideal.{u3} A _inst_1), (Membership.mem.{u3, u3} (Ideal.{u3} A _inst_1) (Set.{u3} (Ideal.{u3} A _inst_1)) (Set.instMembershipSet.{u3} (Ideal.{u3} A _inst_1)) I ℐ) -> (Ideal.IsHomogeneous.{u2, u1, u3} ι σ A _inst_1 _inst_4 _inst_5 𝒜 (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_6 I)) -> (Ideal.IsHomogeneous.{u2, u1, u3} ι σ A _inst_1 _inst_4 _inst_5 𝒜 (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_6 (SupSet.sSup.{u3} (Ideal.{u3} A _inst_1) (ConditionallyCompleteLattice.toSupSet.{u3} (Ideal.{u3} A _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u3} (Ideal.{u3} A _inst_1) (Submodule.completeLattice.{u3, u3} A A _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))) (Semiring.toModule.{u3} A _inst_1)))) ℐ))
 Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.sSupₓ'. -/
 theorem sSup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sSup ℐ).Homogeneous 𝒜 :=
-  by
-  rw [sSup_eq_iSup]
-  exact supr₂ h
+  by rw [sSup_eq_iSup]; exact supr₂ h
 #align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.sSup
 
 /- warning: ideal.is_homogeneous.Inf -> Ideal.IsHomogeneous.sInf is a dubious translation:
@@ -488,9 +483,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {σ : Type.{u1}} {A : Type.{u3}} [_inst_1 : Semiring.{u3} A] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : AddMonoid.{u2} ι] [_inst_4 : SetLike.{u1, u3} σ A] [_inst_5 : AddSubmonoidClass.{u1, u3} σ A (AddMonoid.toAddZeroClass.{u3} A (AddMonoidWithOne.toAddMonoid.{u3} A (AddCommMonoidWithOne.toAddMonoidWithOne.{u3} A (NonAssocSemiring.toAddCommMonoidWithOne.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))))) _inst_4] {𝒜 : ι -> σ} [_inst_6 : GradedRing.{u2, u3, u1} ι A σ (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_1 _inst_4 _inst_5 𝒜] {ℐ : Set.{u3} (Ideal.{u3} A _inst_1)}, (forall (I : Ideal.{u3} A _inst_1), (Membership.mem.{u3, u3} (Ideal.{u3} A _inst_1) (Set.{u3} (Ideal.{u3} A _inst_1)) (Set.instMembershipSet.{u3} (Ideal.{u3} A _inst_1)) I ℐ) -> (Ideal.IsHomogeneous.{u2, u1, u3} ι σ A _inst_1 _inst_4 _inst_5 𝒜 (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_6 I)) -> (Ideal.IsHomogeneous.{u2, u1, u3} ι σ A _inst_1 _inst_4 _inst_5 𝒜 (fun (a : ι) (b : ι) => _inst_2 a b) _inst_3 _inst_6 (InfSet.sInf.{u3} (Ideal.{u3} A _inst_1) (Submodule.instInfSetSubmodule.{u3, u3} A A _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u3} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} A (Semiring.toNonAssocSemiring.{u3} A _inst_1))) (Semiring.toModule.{u3} A _inst_1)) ℐ))
 Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.sInfₓ'. -/
 theorem sInf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sInf ℐ).Homogeneous 𝒜 :=
-  by
-  rw [sInf_eq_iInf]
-  exact infi₂ h
+  by rw [sInf_eq_iInf]; exact infi₂ h
 #align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.sInf
 
 end Ideal.IsHomogeneous
@@ -936,14 +929,8 @@ theorem Ideal.homogeneousHull_eq_iSup :
     I.homogeneousHull 𝒜 =
       ⨆ i,
         ⟨Ideal.span (GradedRing.proj 𝒜 i '' I),
-          Ideal.homogeneous_span 𝒜 _
-            (by
-              rintro _ ⟨x, -, rfl⟩
-              apply SetLike.homogeneous_coe)⟩ :=
-  by
-  ext1
-  rw [Ideal.toIdeal_homogeneousHull_eq_iSup, to_ideal_supr]
-  rfl
+          Ideal.homogeneous_span 𝒜 _ (by rintro _ ⟨x, -, rfl⟩; apply SetLike.homogeneous_coe)⟩ :=
+  by ext1; rw [Ideal.toIdeal_homogeneousHull_eq_iSup, to_ideal_supr]; rfl
 #align ideal.homogeneous_hull_eq_supr Ideal.homogeneousHull_eq_iSup
 
 end HomogeneousHull

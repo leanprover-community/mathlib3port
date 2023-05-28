@@ -796,10 +796,7 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [Complet
 instance : FrameHomClass (FrameHom α β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
-    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f; obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g; congr
   map_sSup f := f.map_Sup'
   map_inf f := f.map_inf'
   map_top f := f.map_top'
@@ -1482,10 +1479,8 @@ theorem Set.image_sSup {f : α → β} (s : Set (Set α)) : f '' sSup s = sSup (
   ext b
   simp only [Sup_eq_sUnion, mem_image, mem_sUnion, exists_prop, sUnion_image, mem_Union]
   constructor
-  · rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
-    exact ⟨t, ht₁, a, ht₂, rfl⟩
-  · rintro ⟨t, ht₁, a, ht₂, rfl⟩
-    exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
+  · rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩; exact ⟨t, ht₁, a, ht₂, rfl⟩
+  · rintro ⟨t, ht₁, a, ht₂, rfl⟩; exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
 #align set.image_Sup Set.image_sSup
 
 /- warning: Sup_hom.set_image -> sSupHom.setImage is a dubious translation:

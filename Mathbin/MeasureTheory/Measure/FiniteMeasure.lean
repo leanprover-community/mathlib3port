@@ -187,11 +187,8 @@ theorem mass_nonzero_iff (μ : FiniteMeasureCat Ω) : μ.mass ≠ 0 ↔ μ ≠ 0
 
 @[ext]
 theorem eq_of_forall_measure_apply_eq (μ ν : FiniteMeasureCat Ω)
-    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν :=
-  by
-  ext1
-  ext1 s s_mble
-  exact h s s_mble
+    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by ext1;
+  ext1 s s_mble; exact h s s_mble
 #align measure_theory.finite_measure.eq_of_forall_measure_apply_eq MeasureTheory.FiniteMeasureCat.eq_of_forall_measure_apply_eq
 
 theorem eq_of_forall_apply_eq (μ ν : FiniteMeasureCat Ω)
@@ -228,24 +225,17 @@ theorem coe_smul (c : R) (μ : FiniteMeasureCat Ω) : ↑(c • μ) = (c • ↑
 #align measure_theory.finite_measure.coe_smul MeasureTheory.FiniteMeasureCat.coe_smul
 
 @[simp, norm_cast]
-theorem coeFn_zero : (⇑(0 : FiniteMeasureCat Ω) : Set Ω → ℝ≥0) = (0 : Set Ω → ℝ≥0) :=
-  by
-  funext
-  rfl
+theorem coeFn_zero : (⇑(0 : FiniteMeasureCat Ω) : Set Ω → ℝ≥0) = (0 : Set Ω → ℝ≥0) := by funext; rfl
 #align measure_theory.finite_measure.coe_fn_zero MeasureTheory.FiniteMeasureCat.coeFn_zero
 
 @[simp, norm_cast]
 theorem coeFn_add (μ ν : FiniteMeasureCat Ω) : (⇑(μ + ν) : Set Ω → ℝ≥0) = (⇑μ + ⇑ν : Set Ω → ℝ≥0) :=
-  by
-  funext
-  simp [← ENNReal.coe_eq_coe]
+  by funext; simp [← ENNReal.coe_eq_coe]
 #align measure_theory.finite_measure.coe_fn_add MeasureTheory.FiniteMeasureCat.coeFn_add
 
 @[simp, norm_cast]
 theorem coeFn_smul [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteMeasureCat Ω) :
-    (⇑(c • μ) : Set Ω → ℝ≥0) = c • (⇑μ : Set Ω → ℝ≥0) :=
-  by
-  funext
+    (⇑(c • μ) : Set Ω → ℝ≥0) = c • (⇑μ : Set Ω → ℝ≥0) := by funext;
   simp [← ENNReal.coe_eq_coe, ENNReal.coe_smul]
 #align measure_theory.finite_measure.coe_fn_smul MeasureTheory.FiniteMeasureCat.coeFn_smul
 
@@ -370,9 +360,7 @@ theorem Zero.testAgainstNn_apply (f : Ω →ᵇ ℝ≥0) : (0 : FiniteMeasureCat
   simp only [test_against_nn, coe_zero, lintegral_zero_measure, ENNReal.zero_toNNReal]
 #align measure_theory.finite_measure.zero.test_against_nn_apply MeasureTheory.FiniteMeasureCat.Zero.testAgainstNn_apply
 
-theorem Zero.testAgainstNn : (0 : FiniteMeasureCat Ω).testAgainstNn = 0 :=
-  by
-  funext
+theorem Zero.testAgainstNn : (0 : FiniteMeasureCat Ω).testAgainstNn = 0 := by funext;
   simp only [zero.test_against_nn_apply, Pi.zero_apply]
 #align measure_theory.finite_measure.zero.test_against_nn MeasureTheory.FiniteMeasureCat.Zero.testAgainstNn
 
@@ -420,9 +408,7 @@ theorem testAgainstNn_lipschitz_estimate (μ : FiniteMeasureCat Ω) (f g : Ω �
     apply (NNReal.le_add_nndist (f ω) (g ω)).trans
     rw [add_le_add_iff_left]
     exact dist_le_coe.mp (le_dist ω)
-  have le : (f ω : ℝ≥0∞) ≤ (g ω : ℝ≥0∞) + nndist f g :=
-    by
-    rw [← ENNReal.coe_add]
+  have le : (f ω : ℝ≥0∞) ≤ (g ω : ℝ≥0∞) + nndist f g := by rw [← ENNReal.coe_add];
     exact ENNReal.coe_mono le'
   rwa [coe_nnreal_ennreal_nndist] at le
 #align measure_theory.finite_measure.test_against_nn_lipschitz_estimate MeasureTheory.FiniteMeasureCat.testAgainstNn_lipschitz_estimate
@@ -488,10 +474,8 @@ theorem continuous_testAgainstNn_eval (f : Ω →ᵇ ℝ≥0) :
 #align measure_theory.finite_measure.continuous_test_against_nn_eval MeasureTheory.FiniteMeasureCat.continuous_testAgainstNn_eval
 
 /-- The total mass of a finite measure depends continuously on the measure. -/
-theorem continuous_mass : Continuous fun μ : FiniteMeasureCat Ω => μ.mass :=
-  by
-  simp_rw [← test_against_nn_one]
-  exact continuous_test_against_nn_eval 1
+theorem continuous_mass : Continuous fun μ : FiniteMeasureCat Ω => μ.mass := by
+  simp_rw [← test_against_nn_one]; exact continuous_test_against_nn_eval 1
 #align measure_theory.finite_measure.continuous_mass MeasureTheory.FiniteMeasureCat.continuous_mass
 
 /-- Convergence of finite measures implies the convergence of their total masses. -/
@@ -511,18 +495,14 @@ theorem tendsto_iff_forall_toWeakDualBcnn_tendsto {γ : Type _} {F : Filter γ}
     {μs : γ → FiniteMeasureCat Ω} {μ : FiniteMeasureCat Ω} :
     Tendsto μs F (𝓝 μ) ↔
       ∀ f : Ω →ᵇ ℝ≥0, Tendsto (fun i => (μs i).toWeakDualBcnn f) F (𝓝 (μ.toWeakDualBcnn f)) :=
-  by
-  rw [tendsto_iff_weak_star_tendsto, tendsto_iff_forall_eval_tendsto_topDualPairing]
-  rfl
+  by rw [tendsto_iff_weak_star_tendsto, tendsto_iff_forall_eval_tendsto_topDualPairing]; rfl
 #align measure_theory.finite_measure.tendsto_iff_forall_to_weak_dual_bcnn_tendsto MeasureTheory.FiniteMeasureCat.tendsto_iff_forall_toWeakDualBcnn_tendsto
 
 theorem tendsto_iff_forall_testAgainstNn_tendsto {γ : Type _} {F : Filter γ}
     {μs : γ → FiniteMeasureCat Ω} {μ : FiniteMeasureCat Ω} :
     Tendsto μs F (𝓝 μ) ↔
       ∀ f : Ω →ᵇ ℝ≥0, Tendsto (fun i => (μs i).testAgainstNn f) F (𝓝 (μ.testAgainstNn f)) :=
-  by
-  rw [finite_measure.tendsto_iff_forall_to_weak_dual_bcnn_tendsto]
-  rfl
+  by rw [finite_measure.tendsto_iff_forall_to_weak_dual_bcnn_tendsto]; rfl
 #align measure_theory.finite_measure.tendsto_iff_forall_test_against_nn_tendsto MeasureTheory.FiniteMeasureCat.tendsto_iff_forall_testAgainstNn_tendsto
 
 /-- If the total masses of finite measures tend to zero, then the measures tend to

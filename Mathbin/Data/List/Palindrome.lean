@@ -80,9 +80,7 @@ theorem iff_reverse_eq {l : List α} : Palindrome l ↔ reverse l = l :=
 -/
 
 #print List.Palindrome.append_reverse /-
-theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) :=
-  by
-  apply of_reverse_eq
+theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by apply of_reverse_eq;
   rw [reverse_append, reverse_reverse]
 #align list.palindrome.append_reverse List.Palindrome.append_reverse
 -/

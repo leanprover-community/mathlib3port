@@ -132,10 +132,8 @@ theorem Ideal.span_singleton_generator (I : Ideal R) [I.IsPrincipal] :
 
 #print Submodule.IsPrincipal.generator_mem /-
 @[simp]
-theorem generator_mem (S : Submodule R M) [S.IsPrincipal] : generator S ∈ S :=
-  by
-  conv_rhs => rw [← span_singleton_generator S]
-  exact subset_span (mem_singleton _)
+theorem generator_mem (S : Submodule R M) [S.IsPrincipal] : generator S ∈ S := by
+  conv_rhs => rw [← span_singleton_generator S]; exact subset_span (mem_singleton _)
 #align submodule.is_principal.generator_mem Submodule.IsPrincipal.generator_mem
 -/
 
@@ -186,9 +184,7 @@ theorem prime_generator_of_isPrime (S : Ideal R) [Submodule.IsPrincipal S] [is_p
 Case conversion may be inaccurate. Consider using '#align submodule.is_principal.generator_map_dvd_of_mem Submodule.IsPrincipal.generator_map_dvd_of_memₓ'. -/
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.map ϕ).IsPrincipal] {x : M}
-    (hx : x ∈ N) : generator (N.map ϕ) ∣ ϕ x :=
-  by
-  rw [← mem_iff_generator_dvd, Submodule.mem_map]
+    (hx : x ∈ N) : generator (N.map ϕ) ∣ ϕ x := by rw [← mem_iff_generator_dvd, Submodule.mem_map];
   exact ⟨x, hx, rfl⟩
 #align submodule.is_principal.generator_map_dvd_of_mem Submodule.IsPrincipal.generator_map_dvd_of_mem
 
@@ -198,10 +194,8 @@ Case conversion may be inaccurate. Consider using '#align submodule.is_principal
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_submoduleImage_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
     [(ϕ.submoduleImage N).IsPrincipal] {x : M} (hx : x ∈ N) :
-    generator (ϕ.submoduleImage N) ∣ ϕ ⟨x, hNO hx⟩ :=
-  by
-  rw [← mem_iff_generator_dvd, LinearMap.mem_submoduleImage_of_le hNO]
-  exact ⟨x, hx, rfl⟩
+    generator (ϕ.submoduleImage N) ∣ ϕ ⟨x, hNO hx⟩ := by
+  rw [← mem_iff_generator_dvd, LinearMap.mem_submoduleImage_of_le hNO]; exact ⟨x, hx, rfl⟩
 #align submodule.is_principal.generator_submodule_image_dvd_of_mem Submodule.IsPrincipal.generator_submoduleImage_dvd_of_mem
 
 end CommRing
@@ -229,8 +223,7 @@ theorem to_maximal_ideal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S :
       intro T x hST hxS hxT
       cases' (mem_iff_generator_dvd _).1 (hST <| generator_mem S) with z hz
       cases hpi.mem_or_mem (show generator T * z ∈ S from hz ▸ generator_mem S)
-      · have hTS : T ≤ S
-        rwa [← T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
+      · have hTS : T ≤ S; rwa [← T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
         exact (hxS <| hTS hxT).elim
       cases' (mem_iff_generator_dvd _).1 h with y hy
       have : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS
@@ -277,9 +270,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 :=
                       by
                       simp only [not_and_or, Set.mem_setOf_eq, not_ne_iff] at this
-                      cases this
-                      cases this ((mod_mem_iff hmin.1).2 hx)
-                      exact this
+                      cases this; cases this ((mod_mem_iff hmin.1).2 hx); exact this
                     simp [*]),
               fun hx =>
               let ⟨y, hy⟩ := Ideal.mem_span_singleton.1 hx
@@ -570,8 +561,7 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
   by
   refine' or_iff_not_imp_left.2 fun h' => _
   apply isCoprime_of_dvd
-  · rintro ⟨rfl, rfl⟩
-    simpa using h
+  · rintro ⟨rfl, rfl⟩; simpa using h
   · rintro z nu nz ⟨w, rfl⟩ dy
     refine' h' (dvd_trans _ dy)
     simpa using mul_dvd_mul_left z (isUnit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
@@ -589,9 +579,7 @@ theorem isCoprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
   apply isCoprime_of_dvd x y nonzero
   intro z znu znz zx zy
   obtain ⟨i, h1, h2⟩ := WfDvdMonoid.exists_irreducible_factor znu znz
-  apply H i h1 <;>
-    · apply dvd_trans h2
-      assumption
+  apply H i h1 <;> · apply dvd_trans h2; assumption
 #align is_coprime_of_irreducible_dvd isCoprime_of_irreducible_dvd
 
 /- warning: is_coprime_of_prime_dvd -> isCoprime_of_prime_dvd is a dubious translation:

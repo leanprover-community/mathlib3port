@@ -71,13 +71,9 @@ theorem lt_iff_toList_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList
     · exact iff_of_false Bool.false_ne_true (not_lt_of_lt List.Lex.nil)
     · dsimp [iterator.has_next, iterator.curr, iterator.next]
       split_ifs
-      · subst b
-        exact IH.trans list.lex.cons_iff.symm
-      · simp
-        refine' ⟨List.Lex.rel, fun e => _⟩
-        cases e
-        · cases h rfl
-        assumption
+      · subst b; exact IH.trans list.lex.cons_iff.symm
+      · simp; refine' ⟨List.Lex.rel, fun e => _⟩
+        cases e; · cases h rfl; assumption
 #align string.lt_iff_to_list_lt String.lt_iff_toList_lt
 
 #print String.LE /-
@@ -131,10 +127,7 @@ theorem toList_empty : "".toList = [] :=
 #align string.to_list_empty String.toList_empty
 
 #print String.asString_inv_toList /-
-theorem asString_inv_toList (s : String) : s.toList.asString = s :=
-  by
-  cases s
-  rfl
+theorem asString_inv_toList (s : String) : s.toList.asString = s := by cases s; rfl
 #align string.as_string_inv_to_list String.asString_inv_toList
 -/
 
@@ -191,15 +184,9 @@ instance : LinearOrder String where
   decidableLe := String.decidableLE
   DecidableEq := by infer_instance
   le_refl a := le_iff_toList_le.2 le_rfl
-  le_trans a b c := by
-    simp only [le_iff_to_list_le]
-    exact fun h₁ h₂ => h₁.trans h₂
-  le_total a b := by
-    simp only [le_iff_to_list_le]
-    exact le_total _ _
-  le_antisymm a b := by
-    simp only [le_iff_to_list_le, ← to_list_inj]
-    apply le_antisymm
+  le_trans a b c := by simp only [le_iff_to_list_le]; exact fun h₁ h₂ => h₁.trans h₂
+  le_total a b := by simp only [le_iff_to_list_le]; exact le_total _ _
+  le_antisymm a b := by simp only [le_iff_to_list_le, ← to_list_inj]; apply le_antisymm
   lt_iff_le_not_le a b := by simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_le]
 
 end String
@@ -207,10 +194,8 @@ end String
 open String
 
 #print List.toList_inv_asString /-
-theorem List.toList_inv_asString (l : List Char) : l.asString.toList = l :=
-  by
-  cases hl : l.as_string
-  exact StringImp.mk.inj hl.symm
+theorem List.toList_inv_asString (l : List Char) : l.asString.toList = l := by
+  cases hl : l.as_string; exact StringImp.mk.inj hl.symm
 #align list.to_list_inv_as_string List.toList_inv_asString
 -/
 

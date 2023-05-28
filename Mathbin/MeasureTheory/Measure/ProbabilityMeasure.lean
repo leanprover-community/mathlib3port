@@ -185,11 +185,8 @@ theorem nonempty_of_probabilityMeasureCat (μ : ProbabilityMeasureCat Ω) : None
 
 @[ext]
 theorem eq_of_forall_measure_apply_eq (μ ν : ProbabilityMeasureCat Ω)
-    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν :=
-  by
-  ext1
-  ext1 s s_mble
-  exact h s s_mble
+    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by ext1;
+  ext1 s s_mble; exact h s s_mble
 #align measure_theory.probability_measure.eq_of_forall_measure_apply_eq MeasureTheory.ProbabilityMeasureCat.eq_of_forall_measure_apply_eq
 
 theorem eq_of_forall_apply_eq (μ ν : ProbabilityMeasureCat Ω)

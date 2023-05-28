@@ -474,10 +474,7 @@ theorem congr_apply (e : G ≃* H) (he : G'.map ↑e = H') (x : G) :
 Case conversion may be inaccurate. Consider using '#align quotient_group.congr_refl QuotientGroup.congr_reflₓ'. -/
 @[simp]
 theorem congr_refl (he : G'.map (MulEquiv.refl G : G →* G) = G' := Subgroup.map_id G') :
-    congr G' G' (MulEquiv.refl G) he = MulEquiv.refl (G ⧸ G') :=
-  by
-  ext ⟨x⟩
-  rfl
+    congr G' G' (MulEquiv.refl G) he = MulEquiv.refl (G ⧸ G') := by ext ⟨x⟩; rfl
 #align quotient_group.congr_refl QuotientGroup.congr_refl
 
 /- warning: quotient_group.congr_symm -> QuotientGroup.congr_symm is a dubious translation:
@@ -702,12 +699,7 @@ def equivQuotientSubgroupOfOfEq {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A
     [hBN : (B'.subgroupOf B).Normal] (h' : A' = B') (h : A = B) :
     A ⧸ A'.subgroupOf A ≃* B ⧸ B'.subgroupOf B :=
   MonoidHom.toMulEquiv (quotientMapSubgroupOfOfLe h'.le h.le) (quotientMapSubgroupOfOfLe h'.ge h.ge)
-    (by
-      ext ⟨x, hx⟩
-      rfl)
-    (by
-      ext ⟨x, hx⟩
-      rfl)
+    (by ext ⟨x, hx⟩; rfl) (by ext ⟨x, hx⟩; rfl)
 #align quotient_group.equiv_quotient_subgroup_of_of_eq QuotientGroup.equivQuotientSubgroupOfOfEq
 #align quotient_add_group.equiv_quotient_add_subgroup_of_of_eq QuotientAddGroup.equivQuotientAddSubgroupOfOfEq
 
@@ -780,10 +772,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.equiv_q
 theorem equivQuotientZPowOfEquiv_refl :
     MulEquiv.refl (A ⧸ (zpowGroupHom n : A →* A).range) =
       equivQuotientZPowOfEquiv (MulEquiv.refl A) n :=
-  by
-  ext x
-  rw [← Quotient.out_eq' x]
-  rfl
+  by ext x; rw [← Quotient.out_eq' x]; rfl
 #align quotient_group.equiv_quotient_zpow_of_equiv_refl QuotientGroup.equivQuotientZPowOfEquiv_refl
 #align quotient_add_group.equiv_quotient_zsmul_of_equiv_refl QuotientAddGroup.equivQuotientZSMulOfEquiv_refl
 
@@ -804,10 +793,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.equiv_q
 theorem equivQuotientZPowOfEquiv_trans :
     (equivQuotientZPowOfEquiv e n).trans (equivQuotientZPowOfEquiv d n) =
       equivQuotientZPowOfEquiv (e.trans d) n :=
-  by
-  ext x
-  rw [← Quotient.out_eq' x]
-  rfl
+  by ext x; rw [← Quotient.out_eq' x]; rfl
 #align quotient_group.equiv_quotient_zpow_of_equiv_trans QuotientGroup.equivQuotientZPowOfEquiv_trans
 #align quotient_add_group.equiv_quotient_zsmul_of_equiv_trans QuotientAddGroup.equivQuotientZSMulOfEquiv_trans
 
@@ -874,8 +860,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.quotien
 def quotientQuotientEquivQuotientAux : (G ⧸ N) ⧸ M.map (mk' N) →* G ⧸ M :=
   lift (M.map (mk' N)) (map N M (MonoidHom.id G) h)
     (by
-      rintro _ ⟨x, hx, rfl⟩
-      rw [map_mk' N M _ _ x]
+      rintro _ ⟨x, hx, rfl⟩; rw [map_mk' N M _ _ x]
       exact (QuotientGroup.eq_one_iff _).mpr hx)
 #align quotient_group.quotient_quotient_equiv_quotient_aux QuotientGroup.quotientQuotientEquivQuotientAux
 #align quotient_add_group.quotient_quotient_equiv_quotient_aux QuotientAddGroup.quotientQuotientEquivQuotientAux
@@ -911,13 +896,8 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.quotien
       "**Noether's third isomorphism theorem** for additive groups:\n`(A / N) / (M / N) ≃+ A / M`."]
 def quotientQuotientEquivQuotient : (G ⧸ N) ⧸ M.map (QuotientGroup.mk' N) ≃* G ⧸ M :=
   MonoidHom.toMulEquiv (quotientQuotientEquivQuotientAux N M h)
-    (QuotientGroup.map _ _ (QuotientGroup.mk' N) (Subgroup.le_comap_map _ _))
-    (by
-      ext
-      simp)
-    (by
-      ext
-      simp)
+    (QuotientGroup.map _ _ (QuotientGroup.mk' N) (Subgroup.le_comap_map _ _)) (by ext; simp)
+    (by ext; simp)
 #align quotient_group.quotient_quotient_equiv_quotient QuotientGroup.quotientQuotientEquivQuotient
 #align quotient_add_group.quotient_quotient_equiv_quotient QuotientAddGroup.quotientQuotientEquivQuotient
 

@@ -181,9 +181,7 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
       (NatIso.ofComponents app
           @naturality).inv with
       app := fun X => (app X).inv
-      unit' := by
-        dsimp
-        rw [← Unit, assoc, iso.hom_inv_id, comp_id]
+      unit' := by dsimp; rw [← Unit, assoc, iso.hom_inv_id, comp_id]
       tensor' := fun X Y => by
         dsimp
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id,
@@ -253,11 +251,7 @@ def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 -/
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalUnit F) :=
-  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) :=
-    by
-    intros
-    dsimp
-    infer_instance
+  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) := by intros ; dsimp; infer_instance
   monoidal_nat_iso.is_iso_of_is_iso_app _
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -293,10 +287,7 @@ def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 -/
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalCounit F) :=
-  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) :=
-    by
-    intros
-    dsimp
+  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) := by intros ; dsimp;
     infer_instance
   monoidal_nat_iso.is_iso_of_is_iso_app _
 

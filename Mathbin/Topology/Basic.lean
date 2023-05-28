@@ -129,12 +129,8 @@ theorem isOpen_mk {p h₁ h₂ h₃} {s : Set α} : is_open[⟨p, h₁, h₂, h�
 
 #print topologicalSpace_eq /-
 @[ext]
-theorem topologicalSpace_eq {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g :=
-  by
-  cases f
-  cases g
-  congr
-  exact h
+theorem topologicalSpace_eq {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g := by
+  cases f; cases g; congr ; exact h
 #align topological_space_eq topologicalSpace_eq
 -/
 
@@ -170,9 +166,7 @@ end
 #print topologicalSpace_eq_iff /-
 theorem topologicalSpace_eq_iff {t t' : TopologicalSpace α} :
     t = t' ↔ ∀ s, is_open[t] s ↔ is_open[t'] s :=
-  ⟨fun h s => h ▸ Iff.rfl, fun h => by
-    ext
-    exact h _⟩
+  ⟨fun h s => h ▸ Iff.rfl, fun h => by ext; exact h _⟩
 #align topological_space_eq_iff topologicalSpace_eq_iff
 -/
 
@@ -282,18 +276,14 @@ theorem isOpen_compl_iff {s : Set α} : IsOpen (sᶜ) ↔ IsClosed s :=
 
 #print isClosed_empty /-
 @[simp]
-theorem isClosed_empty : IsClosed (∅ : Set α) :=
-  by
-  rw [← isOpen_compl_iff, compl_empty]
+theorem isClosed_empty : IsClosed (∅ : Set α) := by rw [← isOpen_compl_iff, compl_empty];
   exact isOpen_univ
 #align is_closed_empty isClosed_empty
 -/
 
 #print isClosed_univ /-
 @[simp]
-theorem isClosed_univ : IsClosed (univ : Set α) :=
-  by
-  rw [← isOpen_compl_iff, compl_univ]
+theorem isClosed_univ : IsClosed (univ : Set α) := by rw [← isOpen_compl_iff, compl_univ];
   exact isOpen_empty
 #align is_closed_univ isClosed_univ
 -/
@@ -304,11 +294,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} [_inst_1 : TopologicalSpace.{u1} α], (IsClosed.{u1} α _inst_1 s₁) -> (IsClosed.{u1} α _inst_1 s₂) -> (IsClosed.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂))
 Case conversion may be inaccurate. Consider using '#align is_closed.union IsClosed.unionₓ'. -/
-theorem IsClosed.union : IsClosed s₁ → IsClosed s₂ → IsClosed (s₁ ∪ s₂) := fun h₁ h₂ =>
-  by
-  rw [← isOpen_compl_iff] at *
-  rw [compl_union]
-  exact IsOpen.inter h₁ h₂
+theorem IsClosed.union : IsClosed s₁ → IsClosed s₂ → IsClosed (s₁ ∪ s₂) := fun h₁ h₂ => by
+  rw [← isOpen_compl_iff] at *; rw [compl_union]; exact IsOpen.inter h₁ h₂
 #align is_closed.union IsClosed.union
 
 #print isClosed_sInter /-
@@ -367,11 +354,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} [_inst_1 : TopologicalSpace.{u1} α], (IsClosed.{u1} α _inst_1 s₁) -> (IsClosed.{u1} α _inst_1 s₂) -> (IsClosed.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂))
 Case conversion may be inaccurate. Consider using '#align is_closed.inter IsClosed.interₓ'. -/
-theorem IsClosed.inter (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed (s₁ ∩ s₂) :=
-  by
-  rw [← isOpen_compl_iff] at *
-  rw [compl_inter]
-  exact IsOpen.union h₁ h₂
+theorem IsClosed.inter (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed (s₁ ∩ s₂) := by
+  rw [← isOpen_compl_iff] at *; rw [compl_inter]; exact IsOpen.union h₁ h₂
 #align is_closed.inter IsClosed.inter
 
 /- warning: is_closed.sdiff -> IsClosed.sdiff is a dubious translation:
@@ -396,9 +380,7 @@ theorem isClosed_biUnion {s : Set β} {f : β → Set α} (hs : s.Finite) :
 
 #print isClosed_iUnion /-
 theorem isClosed_iUnion [Finite ι] {s : ι → Set α} (h : ∀ i, IsClosed (s i)) :
-    IsClosed (⋃ i, s i) :=
-  by
-  simp only [← isOpen_compl_iff, compl_Union] at *
+    IsClosed (⋃ i, s i) := by simp only [← isOpen_compl_iff, compl_Union] at *;
   exact isOpen_iInter h
 #align is_closed_Union isClosed_iUnion
 -/
@@ -559,9 +541,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align interior_Inter interior_iInterₓ'. -/
 @[simp]
 theorem interior_iInter {ι : Type _} [Finite ι] (f : ι → Set α) :
-    interior (⋂ i, f i) = ⋂ i, interior (f i) :=
-  by
-  cases nonempty_fintype ι
+    interior (⋂ i, f i) = ⋂ i, interior (f i) := by cases nonempty_fintype ι;
   convert finset.univ.interior_Inter f <;> simp
 #align interior_Inter interior_iInter
 
@@ -837,9 +817,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closure_Union closure_iUnionₓ'. -/
 @[simp]
 theorem closure_iUnion {ι : Type _} [Finite ι] (f : ι → Set α) :
-    closure (⋃ i, f i) = ⋃ i, closure (f i) :=
-  by
-  cases nonempty_fintype ι
+    closure (⋃ i, f i) = ⋃ i, closure (f i) := by cases nonempty_fintype ι;
   convert finset.univ.closure_bUnion f <;> simp
 #align closure_Union closure_iUnion
 
@@ -1081,8 +1059,7 @@ theorem dense_compl_singleton_iff_not_open {x : α} : Dense ({x}ᶜ : Set α) �
   · intro hd ho
     exact (hd.inter_open_nonempty _ ho (singleton_nonempty _)).ne_empty (inter_compl_self _)
   · refine' fun ho => dense_iff_inter_open.2 fun U hU hne => inter_compl_nonempty_iff.2 fun hUx => _
-    obtain rfl : U = {x}
-    exact eq_singleton_iff_nonempty_unique_mem.2 ⟨hne, hUx⟩
+    obtain rfl : U = {x}; exact eq_singleton_iff_nonempty_unique_mem.2 ⟨hne, hUx⟩
     exact ho hU
 #align dense_compl_singleton_iff_not_open dense_compl_singleton_iff_not_open
 
@@ -1315,9 +1292,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (frontier.{u1} α _inst_1 s) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (interior.{u1} α _inst_1 s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (interior.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))))
 Case conversion may be inaccurate. Consider using '#align frontier_eq_inter_compl_interior frontier_eq_inter_compl_interiorₓ'. -/
 theorem frontier_eq_inter_compl_interior {s : Set α} : frontier s = interior sᶜ ∩ interior (sᶜ)ᶜ :=
-  by
-  rw [← frontier_compl, ← closure_compl]
-  rfl
+  by rw [← frontier_compl, ← closure_compl]; rfl
 #align frontier_eq_inter_compl_interior frontier_eq_inter_compl_interior
 
 /- warning: compl_frontier_eq_union_interior -> compl_frontier_eq_union_interior is a dubious translation:
@@ -1887,10 +1862,8 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} (x : α) (F : Filter.{u1} ι) (u : ι -> α), Iff (MapClusterPt.{u2, u1} α _inst_1 ι x F u) (forall (s : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s (nhds.{u2} α _inst_1 x)) -> (Filter.Frequently.{u1} ι (fun (a : ι) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (u a) s) F))
 Case conversion may be inaccurate. Consider using '#align map_cluster_pt_iff mapClusterPt_iffₓ'. -/
 theorem mapClusterPt_iff {ι : Type _} (x : α) (F : Filter ι) (u : ι → α) :
-    MapClusterPt x F u ↔ ∀ s ∈ 𝓝 x, ∃ᶠ a in F, u a ∈ s :=
-  by
-  simp_rw [MapClusterPt, ClusterPt, inf_ne_bot_iff_frequently_left, frequently_map]
-  rfl
+    MapClusterPt x F u ↔ ∀ s ∈ 𝓝 x, ∃ᶠ a in F, u a ∈ s := by
+  simp_rw [MapClusterPt, ClusterPt, inf_ne_bot_iff_frequently_left, frequently_map]; rfl
 #align map_cluster_pt_iff mapClusterPt_iff
 
 /- warning: map_cluster_pt_of_comp -> mapClusterPt_of_comp is a dubious translation:
@@ -2582,11 +2555,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {g : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (x : α), Eq.{succ u1} β (f x) (g x)) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 g)
 Case conversion may be inaccurate. Consider using '#align continuous.congr Continuous.congrₓ'. -/
-theorem Continuous.congr {f g : α → β} (h : Continuous f) (h' : ∀ x, f x = g x) : Continuous g :=
-  by
-  convert h
-  ext
-  rw [h']
+theorem Continuous.congr {f g : α → β} (h : Continuous f) (h' : ∀ x, f x = g x) : Continuous g := by
+  convert h; ext; rw [h']
 #align continuous.congr Continuous.congr
 
 #print ContinuousAt /-
@@ -2920,9 +2890,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {s : Set.{u2} α}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (closure.{u2} α _inst_1 s) (Set.preimage.{u2, u1} α β f (closure.{u1} β _inst_2 (Set.image.{u2, u1} α β f s))))
 Case conversion may be inaccurate. Consider using '#align closure_subset_preimage_closure_image closure_subset_preimage_closure_imageₓ'. -/
 theorem closure_subset_preimage_closure_image {f : α → β} {s : Set α} (h : Continuous f) :
-    closure s ⊆ f ⁻¹' closure (f '' s) :=
-  by
-  rw [← Set.image_subset_iff]
+    closure s ⊆ f ⁻¹' closure (f '' s) := by rw [← Set.image_subset_iff];
   exact image_closure_subset_closure_image h
 #align closure_subset_preimage_closure_image closure_subset_preimage_closure_image
 
@@ -3013,9 +2981,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u2} α}, (Dense.{u2} α _inst_1 s) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Set.range.{u1, succ u2} β α f) (closure.{u1} β _inst_2 (Set.image.{u2, u1} α β f s))))
 Case conversion may be inaccurate. Consider using '#align continuous.range_subset_closure_image_dense Continuous.range_subset_closure_image_denseₓ'. -/
 theorem Continuous.range_subset_closure_image_dense {f : α → β} (hf : Continuous f) {s : Set α}
-    (hs : Dense s) : range f ⊆ closure (f '' s) :=
-  by
-  rw [← image_univ, ← hs.closure_eq]
+    (hs : Dense s) : range f ⊆ closure (f '' s) := by rw [← image_univ, ← hs.closure_eq];
   exact image_closure_subset_closure_image hf
 #align continuous.range_subset_closure_image_dense Continuous.range_subset_closure_image_dense
 
@@ -3036,9 +3002,7 @@ Case conversion may be inaccurate. Consider using '#align dense_range.subset_clo
 /-- If `f` has dense range and `s` is an open set in the codomain of `f`, then the image of the
 preimage of `s` under `f` is dense in `s`. -/
 theorem DenseRange.subset_closure_image_preimage_of_isOpen (hf : DenseRange f) {s : Set β}
-    (hs : IsOpen s) : s ⊆ closure (f '' (f ⁻¹' s)) :=
-  by
-  rw [image_preimage_eq_inter_range]
+    (hs : IsOpen s) : s ⊆ closure (f '' (f ⁻¹' s)) := by rw [image_preimage_eq_inter_range];
   exact hf.open_subset_closure_inter hs
 #align dense_range.subset_closure_image_preimage_of_is_open DenseRange.subset_closure_image_preimage_of_isOpen
 
@@ -3060,9 +3024,7 @@ Case conversion may be inaccurate. Consider using '#align dense_range.comp Dense
 /-- Composition of a continuous map with dense range and a function with dense range has dense
 range. -/
 theorem DenseRange.comp {g : β → γ} {f : κ → β} (hg : DenseRange g) (hf : DenseRange f)
-    (cg : Continuous g) : DenseRange (g ∘ f) :=
-  by
-  rw [DenseRange, range_comp]
+    (cg : Continuous g) : DenseRange (g ∘ f) := by rw [DenseRange, range_comp];
   exact hg.dense_image cg hf
 #align dense_range.comp DenseRange.comp
 

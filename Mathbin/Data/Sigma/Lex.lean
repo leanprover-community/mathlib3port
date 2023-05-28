@@ -121,9 +121,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u2, u1} ι (fun (i : ι) => α i)} {b : Sigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) (Function.swap.{succ u2, succ u2, 1} ι ι (fun (ᾰ : ι) (ᾰ : ι) => Prop) r) s a b) (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r (fun (i : ι) => Function.swap.{succ u1, succ u1, 1} (α i) (α i) (fun (ᾰ : α i) (ᾰ : α i) => Prop) (s i)) b a)
 Case conversion may be inaccurate. Consider using '#align sigma.lex_swap Sigma.lex_swapₓ'. -/
 theorem lex_swap : Lex r.symm s a b ↔ Lex r (fun i => (s i).symm) b a := by
-  constructor <;>
-    · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩)
-      exacts[lex.left _ _ h, lex.right _ _ h]
+  constructor <;> · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩); exacts[lex.left _ _ h, lex.right _ _ h]
 #align sigma.lex_swap Sigma.lex_swap
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=

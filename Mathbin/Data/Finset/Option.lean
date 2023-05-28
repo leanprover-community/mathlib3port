@@ -139,18 +139,13 @@ theorem mem_eraseNone {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ 
 
 #print Finset.eraseNone_eq_biUnion /-
 theorem eraseNone_eq_biUnion [DecidableEq α] (s : Finset (Option α)) :
-    s.eraseNone = s.biUnion Option.toFinset := by
-  ext
-  simp
+    s.eraseNone = s.biUnion Option.toFinset := by ext; simp
 #align finset.erase_none_eq_bUnion Finset.eraseNone_eq_biUnion
 -/
 
 #print Finset.eraseNone_map_some /-
 @[simp]
-theorem eraseNone_map_some (s : Finset α) : (s.map Embedding.some).eraseNone = s :=
-  by
-  ext
-  simp
+theorem eraseNone_map_some (s : Finset α) : (s.map Embedding.some).eraseNone = s := by ext; simp
 #align finset.erase_none_map_some Finset.eraseNone_map_some
 -/
 
@@ -171,38 +166,26 @@ theorem coe_eraseNone (s : Finset (Option α)) : (s.eraseNone : Set α) = some �
 #print Finset.eraseNone_union /-
 @[simp]
 theorem eraseNone_union [DecidableEq (Option α)] [DecidableEq α] (s t : Finset (Option α)) :
-    (s ∪ t).eraseNone = s.eraseNone ∪ t.eraseNone :=
-  by
-  ext
-  simp
+    (s ∪ t).eraseNone = s.eraseNone ∪ t.eraseNone := by ext; simp
 #align finset.erase_none_union Finset.eraseNone_union
 -/
 
 #print Finset.eraseNone_inter /-
 @[simp]
 theorem eraseNone_inter [DecidableEq (Option α)] [DecidableEq α] (s t : Finset (Option α)) :
-    (s ∩ t).eraseNone = s.eraseNone ∩ t.eraseNone :=
-  by
-  ext
-  simp
+    (s ∩ t).eraseNone = s.eraseNone ∩ t.eraseNone := by ext; simp
 #align finset.erase_none_inter Finset.eraseNone_inter
 -/
 
 #print Finset.eraseNone_empty /-
 @[simp]
-theorem eraseNone_empty : (∅ : Finset (Option α)).eraseNone = ∅ :=
-  by
-  ext
-  simp
+theorem eraseNone_empty : (∅ : Finset (Option α)).eraseNone = ∅ := by ext; simp
 #align finset.erase_none_empty Finset.eraseNone_empty
 -/
 
 #print Finset.eraseNone_none /-
 @[simp]
-theorem eraseNone_none : ({none} : Finset (Option α)).eraseNone = ∅ :=
-  by
-  ext
-  simp
+theorem eraseNone_none : ({none} : Finset (Option α)).eraseNone = ∅ := by ext; simp
 #align finset.erase_none_none Finset.eraseNone_none
 -/
 
@@ -239,10 +222,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (OrderHom.toFun.{u1, u1} (Finset.{u1} (Option.{u1} α)) (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α))) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.eraseNone.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α))))) (Finset.{u1} α) (fun (_x : Finset.{u1} α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Finset.{u1} α) => Finset.{u1} (Option.{u1} α)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α))))) (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Finset.{u1} (Option.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Finset.{u1} (Option.{u1} α)) => LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Finset.{u1} (Option.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Finset.{u1} (Option.{u1} α)) => LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Finset.insertNone.{u1} α) s)) s
 Case conversion may be inaccurate. Consider using '#align finset.erase_none_insert_none Finset.eraseNone_insertNoneₓ'. -/
 @[simp]
-theorem eraseNone_insertNone (s : Finset α) : eraseNone (insertNone s) = s :=
-  by
-  ext
-  simp
+theorem eraseNone_insertNone (s : Finset α) : eraseNone (insertNone s) = s := by ext; simp
 #align finset.erase_none_insert_none Finset.eraseNone_insertNone
 
 end Finset

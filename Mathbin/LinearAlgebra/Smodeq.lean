@@ -150,10 +150,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : Type.{u1}} [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {U : Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3} {x₁ : M} {x₂ : M} {y₁ : M} {y₂ : M}, (SModEq.{u2, u1} R _inst_1 M _inst_2 _inst_3 U x₁ y₁) -> (SModEq.{u2, u1} R _inst_1 M _inst_2 _inst_3 U x₂ y₂) -> (SModEq.{u2, u1} R _inst_1 M _inst_2 _inst_3 U (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_2)))))) x₁ x₂) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (SubNegMonoid.toAddMonoid.{u1} M (AddGroup.toSubNegMonoid.{u1} M (AddCommGroup.toAddGroup.{u1} M _inst_2)))))) y₁ y₂))
 Case conversion may be inaccurate. Consider using '#align smodeq.add SModEq.addₓ'. -/
-theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] :=
-  by
-  rw [SModEq.def] at hxy₁ hxy₂⊢
-  simp_rw [quotient.mk_add, hxy₁, hxy₂]
+theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] := by
+  rw [SModEq.def] at hxy₁ hxy₂⊢; simp_rw [quotient.mk_add, hxy₁, hxy₂]
 #align smodeq.add SModEq.add
 
 /- warning: smodeq.smul -> SModEq.smul is a dubious translation:
@@ -162,9 +160,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {M : Type.{u1}} [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] {U : Submodule.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3} {x : M} {y : M}, (SModEq.{u2, u1} R _inst_1 M _inst_2 _inst_3 U x y) -> (forall (c : R), SModEq.{u2, u1} R _inst_1 M _inst_2 _inst_3 U (HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M (SMulZeroClass.toSMul.{u2, u1} R M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1))) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (Module.toMulActionWithZero.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3))))) c x) (HSMul.hSMul.{u2, u1, u1} R M M (instHSMul.{u2, u1} R M (SMulZeroClass.toSMul.{u2, u1} R M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1))) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R (Ring.toSemiring.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (Module.toMulActionWithZero.{u2, u1} R M (Ring.toSemiring.{u2} R _inst_1) (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3))))) c y))
 Case conversion may be inaccurate. Consider using '#align smodeq.smul SModEq.smulₓ'. -/
-theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] :=
-  by
-  rw [SModEq.def] at hxy⊢
+theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by rw [SModEq.def] at hxy⊢;
   simp_rw [quotient.mk_smul, hxy]
 #align smodeq.smul SModEq.smul
 

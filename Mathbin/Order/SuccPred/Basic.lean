@@ -873,9 +873,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b)
 Case conversion may be inaccurate. Consider using '#align order.succ_eq_iff_covby Order.succ_eq_iff_covbyₓ'. -/
 theorem succ_eq_iff_covby : succ a = b ↔ a ⋖ b :=
-  ⟨by
-    rintro rfl
-    exact covby_succ _, Covby.succ_eq⟩
+  ⟨by rintro rfl; exact covby_succ _, Covby.succ_eq⟩
 #align order.succ_eq_iff_covby Order.succ_eq_iff_covby
 
 /- warning: order.Iio_succ_eq_insert -> Order.Iio_succ_eq_insert is a dubious translation:
@@ -1613,9 +1611,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α} [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b)
 Case conversion may be inaccurate. Consider using '#align order.pred_eq_iff_covby Order.pred_eq_iff_covbyₓ'. -/
 theorem pred_eq_iff_covby : pred b = a ↔ a ⋖ b :=
-  ⟨by
-    rintro rfl
-    exact pred_covby _, Covby.pred_eq⟩
+  ⟨by rintro rfl; exact pred_covby _, Covby.pred_eq⟩
 #align order.pred_eq_iff_covby Order.pred_eq_iff_covby
 
 /- warning: order.Ioi_pred_eq_insert -> Order.Ioi_pred_eq_insert is a dubious translation:
@@ -2377,8 +2373,7 @@ theorem Succ.rec {P : α → Prop} {m : α} (h0 : P m) (h1 : ∀ n, m ≤ n → 
   obtain ⟨n, rfl⟩ := hmn.exists_succ_iterate; clear hmn
   induction' n with n ih
   · exact h0
-  · rw [Function.iterate_succ_apply']
-    exact h1 _ (id_le_iterate_of_id_le le_succ n m) ih
+  · rw [Function.iterate_succ_apply']; exact h1 _ (id_le_iterate_of_id_le le_succ n m) ih
 #align succ.rec Succ.rec
 
 /- warning: succ.rec_iff -> Succ.rec_iff is a dubious translation:

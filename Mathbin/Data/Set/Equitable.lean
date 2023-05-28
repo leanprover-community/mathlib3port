@@ -92,9 +92,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} β] {s : Set.{u2} α}, (Set.Subsingleton.{u2} α s) -> (forall (f : α -> β), Set.EquitableOn.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedSemiring.toPartialOrder.{u1} β _inst_1))) (Distrib.toAdd.{u1} β (NonUnitalNonAssocSemiring.toDistrib.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1))))) (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1)) s f)
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.equitable_on Set.Subsingleton.equitableOnₓ'. -/
 theorem Subsingleton.equitableOn {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
-  fun i j hi hj => by
-  rw [hs hi hj]
-  exact le_add_of_nonneg_right zero_le_one
+  fun i j hi hj => by rw [hs hi hj]; exact le_add_of_nonneg_right zero_le_one
 #align set.subsingleton.equitable_on Set.Subsingleton.equitableOn
 
 /- warning: set.equitable_on_singleton -> Set.equitableOn_singleton is a dubious translation:

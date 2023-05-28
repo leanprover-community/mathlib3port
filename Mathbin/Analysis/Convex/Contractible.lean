@@ -45,10 +45,8 @@ protected theorem StarConvex.contractibleSpace (h : StarConvex ℝ x s) (hne : s
             ((continuous_const.sub continuous_subtype_val.fst').smul
               continuous_subtype_val.snd')).subtype_mk
         _
-  · ext1
-    simp
-  · ext1
-    simp
+  · ext1; simp
+  · ext1; simp
 #align star_convex.contractible_space StarConvex.contractibleSpace
 
 /- warning: convex.contractible_space -> Convex.contractibleSpace is a dubious translation:

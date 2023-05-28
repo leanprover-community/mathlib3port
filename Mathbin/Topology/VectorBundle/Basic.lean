@@ -111,8 +111,7 @@ protected def symmₗ (e : Pretrivialization F (π E)) [e.isLinear R] (b : B) : 
     exact
       (((e.linear R hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
           congr_arg Prod.snd <| e.apply_mk_symm hb v).isLinear
-  · rw [e.coe_symm_of_not_mem hb]
-    exact (0 : F →ₗ[R] E b).isLinear
+  · rw [e.coe_symm_of_not_mem hb]; exact (0 : F →ₗ[R] E b).isLinear
 #align pretrivialization.symmₗ Pretrivialization.symmₗ
 -/
 
@@ -144,10 +143,8 @@ variable {R}
 <too large>
 Case conversion may be inaccurate. Consider using '#align pretrivialization.coe_linear_map_at Pretrivialization.coe_linearMapAtₓ'. -/
 theorem coe_linearMapAt (e : Pretrivialization F (π E)) [e.isLinear R] (b : B) :
-    ⇑(e.linearMapAt R b) = fun y => if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 :=
-  by
-  rw [Pretrivialization.linearMapAt]
-  split_ifs <;> rfl
+    ⇑(e.linearMapAt R b) = fun y => if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 := by
+  rw [Pretrivialization.linearMapAt]; split_ifs <;> rfl
 #align pretrivialization.coe_linear_map_at Pretrivialization.coe_linearMapAt
 
 /- warning: pretrivialization.coe_linear_map_at_of_mem -> Pretrivialization.coe_linearMapAt_of_mem is a dubious translation:
@@ -194,20 +191,16 @@ theorem linearMapAt_eq_zero (e : Pretrivialization F (π E)) [e.isLinear R] {b :
 <too large>
 Case conversion may be inaccurate. Consider using '#align pretrivialization.symmₗ_linear_map_at Pretrivialization.symmₗ_linearMapAtₓ'. -/
 theorem symmₗ_linearMapAt (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
-    (hb : b ∈ e.baseSet) (y : E b) : e.symmₗ R b (e.linearMapAt R b y) = y :=
-  by
-  rw [e.linear_map_at_def_of_mem hb]
-  exact (e.linear_equiv_at R b hb).left_inv y
+    (hb : b ∈ e.baseSet) (y : E b) : e.symmₗ R b (e.linearMapAt R b y) = y := by
+  rw [e.linear_map_at_def_of_mem hb]; exact (e.linear_equiv_at R b hb).left_inv y
 #align pretrivialization.symmₗ_linear_map_at Pretrivialization.symmₗ_linearMapAt
 
 /- warning: pretrivialization.linear_map_at_symmₗ -> Pretrivialization.linearMapAt_symmₗ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align pretrivialization.linear_map_at_symmₗ Pretrivialization.linearMapAt_symmₗₓ'. -/
 theorem linearMapAt_symmₗ (e : Pretrivialization F (π E)) [e.isLinear R] {b : B}
-    (hb : b ∈ e.baseSet) (y : F) : e.linearMapAt R b (e.symmₗ R b y) = y :=
-  by
-  rw [e.linear_map_at_def_of_mem hb]
-  exact (e.linear_equiv_at R b hb).right_inv y
+    (hb : b ∈ e.baseSet) (y : F) : e.linearMapAt R b (e.symmₗ R b y) = y := by
+  rw [e.linear_map_at_def_of_mem hb]; exact (e.linear_equiv_at R b hb).right_inv y
 #align pretrivialization.linear_map_at_symmₗ Pretrivialization.linearMapAt_symmₗ
 
 end Pretrivialization
@@ -380,8 +373,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
           e.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y =>
             mk_mem_prod hb.1 (mem_univ y)
         exact fun y => e'.mem_source.mpr hb.2
-      · rw [dif_neg hb]
-        exact continuous_id
+      · rw [dif_neg hb]; exact continuous_id
     continuous_invFun := by
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
@@ -390,8 +382,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
           e'.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y =>
             mk_mem_prod hb.2 (mem_univ y)
         exact fun y => e.mem_source.mpr hb.1
-      · rw [dif_neg hb]
-        exact continuous_id }
+      · rw [dif_neg hb]; exact continuous_id }
 #align trivialization.coord_changeL Trivialization.coordChangeL
 -/
 
@@ -445,8 +436,7 @@ theorem mk_coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLi
   by
   ext
   · rw [e.mk_symm hb.1 y, e'.coe_fst', e.proj_symm_apply' hb.1]
-    rw [e.proj_symm_apply' hb.1]
-    exact hb.2
+    rw [e.proj_symm_apply' hb.1]; exact hb.2
   · exact e.coord_changeL_apply e' hb y
 #align trivialization.mk_coord_changeL Trivialization.mk_coordChangeL
 
@@ -655,10 +645,7 @@ Case conversion may be inaccurate. Consider using '#align trivialization.continu
 @[simp]
 theorem continuousLinearEquivAt_apply' (e : Trivialization F (π E)) [e.isLinear R]
     (x : TotalSpace E) (hx : x ∈ e.source) :
-    e.continuousLinearEquivAt R x.proj (e.mem_source.1 hx) x.2 = (e x).2 :=
-  by
-  cases x
-  rfl
+    e.continuousLinearEquivAt R x.proj (e.mem_source.1 hx) x.2 = (e x).2 := by cases x; rfl
 #align trivialization.continuous_linear_equiv_at_apply' Trivialization.continuousLinearEquivAt_apply'
 
 variable (R)
@@ -710,10 +697,7 @@ theorem comp_continuousLinearEquivAt_eq_coord_change (e e' : Trivialization F (�
     [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
     (e.continuousLinearEquivAt R b hb.1).symm.trans (e'.continuousLinearEquivAt R b hb.2) =
       coordChangeL R e e' b :=
-  by
-  ext v
-  rw [coord_changeL_apply e e' hb]
-  rfl
+  by ext v; rw [coord_changeL_apply e e' hb]; rfl
 #align trivialization.comp_continuous_linear_equiv_at_eq_coord_change Trivialization.comp_continuousLinearEquivAt_eq_coord_change
 
 end Trivialization
@@ -791,9 +775,7 @@ Case conversion may be inaccurate. Consider using '#align vector_bundle_core.coo
 theorem coordChange_linear_comp (i j k : ι) :
     ∀ x ∈ Z.baseSet i ∩ Z.baseSet j ∩ Z.baseSet k,
       (Z.coordChange j k x).comp (Z.coordChange i j x) = Z.coordChange i k x :=
-  fun x hx => by
-  ext v
-  exact Z.coord_change_comp i j k x hx v
+  fun x hx => by ext v; exact Z.coord_change_comp i j k x hx v
 #align vector_bundle_core.coord_change_linear_comp VectorBundleCore.coordChange_linear_comp
 
 /- warning: vector_bundle_core.index -> VectorBundleCore.Index is a dubious translation:
@@ -1028,10 +1010,8 @@ but is expected to have type
   forall {R : Type.{u2}} {B : Type.{u4}} {F : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u2} R] [_inst_4 : NormedAddCommGroup.{u3} F] [_inst_5 : NormedSpace.{u2, u3} R F (NontriviallyNormedField.toNormedField.{u2} R _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)] [_inst_6 : TopologicalSpace.{u4} B] {ι : Type.{u1}} (Z : VectorBundleCore.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι) (b : B) (a : F), Membership.mem.{max u4 u3, max u4 u3} (Sigma.{u4, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x)) (Set.{max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Set.instMembershipSet.{max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z))) (Sigma.mk.{u4, u3} B (fun (x : B) => VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z x) b a) (LocalEquiv.source.{max u4 u3, max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u4, u3} B F) (LocalHomeomorph.toLocalEquiv.{max u4 u3, max u4 u3} (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (Prod.{u4, u3} B F) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (instTopologicalSpaceProd.{u4, u3} B F _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4))))) (Trivialization.toLocalHomeomorph.{u4, u3, max u4 u3} B F (Bundle.TotalSpace.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) _inst_6 (UniformSpace.toTopologicalSpace.{u3} F (PseudoMetricSpace.toUniformSpace.{u3} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u3} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u3} F _inst_4)))) (VectorBundleCore.toTopologicalSpace.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z) (Bundle.TotalSpace.proj.{u4, u3} B (VectorBundleCore.Fiber.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z)) (VectorBundleCore.localTrivAt.{u2, u4, u3, u1} R B F _inst_1 _inst_4 _inst_5 _inst_6 ι Z b))))
 Case conversion may be inaccurate. Consider using '#align vector_bundle_core.mem_source_at VectorBundleCore.mem_source_atₓ'. -/
 @[simp, mfld_simps]
-theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source :=
-  by
-  rw [local_triv_at, mem_local_triv_source]
-  exact Z.mem_base_set_at b
+theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source := by
+  rw [local_triv_at, mem_local_triv_source]; exact Z.mem_base_set_at b
 #align vector_bundle_core.mem_source_at VectorBundleCore.mem_source_at
 
 /- warning: vector_bundle_core.local_triv_at_apply -> VectorBundleCore.localTrivAt_apply is a dubious translation:
@@ -1134,11 +1114,8 @@ theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
 Case conversion may be inaccurate. Consider using '#align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmLₓ'. -/
 @[simp, mfld_simps]
 theorem localTriv_symmL {b : B} (hb : b ∈ Z.baseSet i) :
-    (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b :=
-  by
-  ext1 v
-  rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]
-  exacts[rfl, hb]
+    (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b := by ext1 v;
+  rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]; exacts[rfl, hb]
 #align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmL
 
 /- warning: vector_bundle_core.trivialization_at_symmL -> VectorBundleCore.trivializationAt_symmL is a dubious translation:
@@ -1249,8 +1226,7 @@ theorem mk_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (
   by
   ext
   · rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
-    rw [e.proj_symm_apply' hb.1]
-    exact hb.2
+    rw [e.proj_symm_apply' hb.1]; exact hb.2
   · exact a.coord_change_apply he he' hb v
 #align vector_prebundle.mk_coord_change VectorPrebundle.mk_coordChange
 

@@ -263,11 +263,7 @@ theorem finrank_eq_zero_of_basis_imp_not_finite
 #print finrank_eq_zero_of_basis_imp_false /-
 theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) :
     finrank K V = 0 :=
-  finrank_eq_zero_of_basis_imp_not_finite fun s b hs =>
-    h hs.toFinset
-      (by
-        convert b
-        simp)
+  finrank_eq_zero_of_basis_imp_not_finite fun s b hs => h hs.toFinset (by convert b; simp)
 #align finrank_eq_zero_of_basis_imp_false finrank_eq_zero_of_basis_imp_false
 -/
 
@@ -311,9 +307,7 @@ but is expected to have type
   forall {R : Type.{u3}} {M : Type.{u2}} {M₂ : Type.{u1}} [_inst_6 : Ring.{u3} R] [_inst_7 : AddCommGroup.{u2} M] [_inst_8 : AddCommGroup.{u1} M₂] [_inst_9 : Module.{u3, u2} R M (Ring.toSemiring.{u3} R _inst_6) (AddCommGroup.toAddCommMonoid.{u2} M _inst_7)] [_inst_10 : Module.{u3, u1} R M₂ (Ring.toSemiring.{u3} R _inst_6) (AddCommGroup.toAddCommMonoid.{u1} M₂ _inst_8)], (LinearEquiv.{u3, u3, u2, u1} R R (Ring.toSemiring.{u3} R _inst_6) (Ring.toSemiring.{u3} R _inst_6) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (Ring.toSemiring.{u3} R _inst_6))) (RingHom.id.{u3} R (Semiring.toNonAssocSemiring.{u3} R (Ring.toSemiring.{u3} R _inst_6))) (RingHomInvPair.ids.{u3} R (Ring.toSemiring.{u3} R _inst_6)) (RingHomInvPair.ids.{u3} R (Ring.toSemiring.{u3} R _inst_6)) M M₂ (AddCommGroup.toAddCommMonoid.{u2} M _inst_7) (AddCommGroup.toAddCommMonoid.{u1} M₂ _inst_8) _inst_9 _inst_10) -> (Eq.{1} Nat (FiniteDimensional.finrank.{u3, u2} R M (Ring.toSemiring.{u3} R _inst_6) _inst_7 _inst_9) (FiniteDimensional.finrank.{u3, u1} R M₂ (Ring.toSemiring.{u3} R _inst_6) _inst_8 _inst_10))
 Case conversion may be inaccurate. Consider using '#align linear_equiv.finrank_eq LinearEquiv.finrank_eqₓ'. -/
 /-- The dimension of a finite dimensional space is preserved under linear equivalence. -/
-theorem finrank_eq (f : M ≃ₗ[R] M₂) : finrank R M = finrank R M₂ :=
-  by
-  unfold finrank
+theorem finrank_eq (f : M ≃ₗ[R] M₂) : finrank R M = finrank R M₂ := by unfold finrank;
   rw [← Cardinal.toNat_lift, f.lift_rank_eq, Cardinal.toNat_lift]
 #align linear_equiv.finrank_eq LinearEquiv.finrank_eq
 
@@ -374,9 +368,7 @@ but is expected to have type
   forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : Ring.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Eq.{1} Nat (FiniteDimensional.finrank.{u1, u2} K (Subtype.{succ u2} V (fun (x : V) => Membership.mem.{u2, u2} V (Submodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) V (Submodule.setLike.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)) x (Top.top.{u2} (Submodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (Submodule.instTopSubmodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (Ring.toSemiring.{u1} K _inst_1) (Submodule.addCommGroup.{u1, u2} K V _inst_1 _inst_2 _inst_3 (Top.top.{u2} (Submodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (Submodule.instTopSubmodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3))) (Submodule.module.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3 (Top.top.{u2} (Submodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (Submodule.instTopSubmodule.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3)))) (FiniteDimensional.finrank.{u1, u2} K V (Ring.toSemiring.{u1} K _inst_1) _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align finrank_top finrank_topₓ'. -/
 @[simp]
-theorem finrank_top : finrank K (⊤ : Submodule K V) = finrank K V :=
-  by
-  unfold finrank
+theorem finrank_top : finrank K (⊤ : Submodule K V) = finrank K V := by unfold finrank;
   simp [rank_top]
 #align finrank_top finrank_top
 
@@ -457,9 +449,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finrank_range_le_card finrank_range_le_cardₓ'. -/
 theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
     (Set.range b).finrank K ≤ Fintype.card ι :=
-  (finrank_span_le_card _).trans <| by
-    rw [Set.toFinset_range]
-    exact Finset.card_image_le
+  (finrank_span_le_card _).trans <| by rw [Set.toFinset_range]; exact Finset.card_image_le
 #align finrank_range_le_card finrank_range_le_card
 
 /- warning: finrank_span_eq_card -> finrank_span_eq_card is a dubious translation:
@@ -609,10 +599,7 @@ theorem linearIndependent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b
     have hs : ⊤ ≤ span K (Set.range b') := by
       intro x
       have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
-      have hf : f '' Set.range b' = Set.range b :=
-        by
-        ext x
-        simp [Set.mem_image, Set.mem_range]
+      have hf : f '' Set.range b' = Set.range b := by ext x; simp [Set.mem_image, Set.mem_range]
       rw [hf] at h
       have hx : (x : V) ∈ span K (Set.range b) := x.property
       conv at hx =>
@@ -731,11 +718,7 @@ theorem finrank_le_one (v : V) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank
   by
   haveI := nontrivial_of_invariantBasisNumber K
   rcases eq_or_ne v 0 with (rfl | hn)
-  · haveI :=
-      subsingleton_of_forall_eq (0 : V) fun w =>
-        by
-        obtain ⟨c, rfl⟩ := h w
-        simp
+  · haveI := subsingleton_of_forall_eq (0 : V) fun w => by obtain ⟨c, rfl⟩ := h w; simp
     rw [finrank_zero_of_subsingleton]
     exact zero_le_one
   · exact (finrank_eq_one v hn h).le
@@ -769,10 +752,8 @@ theorem Subalgebra.finrank_toSubmodule (S : Subalgebra F E) :
 
 #print subalgebra_top_rank_eq_submodule_top_rank /-
 theorem subalgebra_top_rank_eq_submodule_top_rank :
-    Module.rank F (⊤ : Subalgebra F E) = Module.rank F (⊤ : Submodule F E) :=
-  by
-  rw [← Algebra.top_toSubmodule]
-  rfl
+    Module.rank F (⊤ : Subalgebra F E) = Module.rank F (⊤ : Submodule F E) := by
+  rw [← Algebra.top_toSubmodule]; rfl
 #align subalgebra_top_rank_eq_submodule_top_rank subalgebra_top_rank_eq_submodule_top_rank
 -/
 
@@ -780,17 +761,13 @@ theorem subalgebra_top_rank_eq_submodule_top_rank :
 <too large>
 Case conversion may be inaccurate. Consider using '#align subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrankₓ'. -/
 theorem subalgebra_top_finrank_eq_submodule_top_finrank :
-    finrank F (⊤ : Subalgebra F E) = finrank F (⊤ : Submodule F E) :=
-  by
-  rw [← Algebra.top_toSubmodule]
-  rfl
+    finrank F (⊤ : Subalgebra F E) = finrank F (⊤ : Submodule F E) := by
+  rw [← Algebra.top_toSubmodule]; rfl
 #align subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
 
 #print Subalgebra.rank_top /-
-theorem Subalgebra.rank_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E :=
-  by
-  rw [subalgebra_top_rank_eq_submodule_top_rank]
-  exact rank_top F E
+theorem Subalgebra.rank_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E := by
+  rw [subalgebra_top_rank_eq_submodule_top_rank]; exact rank_top F E
 #align subalgebra.rank_top Subalgebra.rank_top
 -/
 

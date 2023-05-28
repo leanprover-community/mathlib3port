@@ -76,10 +76,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [Topo
 instance : ContinuousOpenMapClass (α →CO β) α β
     where
   coe f := f.toFun
-  coe_injective' f g h := by
-    obtain ⟨⟨_, _⟩, _⟩ := f
-    obtain ⟨⟨_, _⟩, _⟩ := g
-    congr
+  coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f; obtain ⟨⟨_, _⟩, _⟩ := g; congr
   map_continuous f := f.continuous_toFun
   map_open f := f.map_open'
 

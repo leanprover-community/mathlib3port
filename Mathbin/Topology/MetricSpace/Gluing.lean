@@ -130,8 +130,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         by
         refine'
           Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
-        intro x y hx
-        simpa
+        intro x y hx; simpa
       rw [this, comp]
       refine' ciInf_mono (B _ _) fun p => _
       calc
@@ -153,8 +152,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         by
         refine'
           Monotone.map_ciInf_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
-        intro x y hx
-        simpa
+        intro x y hx; simpa
       rw [this, comp]
       refine' ciInf_mono (B _ _) fun p => _
       calc
@@ -176,8 +174,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         by
         refine'
           Monotone.map_ciInf_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
-        intro x y hx
-        simpa
+        intro x y hx; simpa
       rw [this, comp]
       refine' ciInf_mono (B _ _) fun p => _
       calc
@@ -199,8 +196,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         by
         refine'
           Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
-        intro x y hx
-        simpa
+        intro x y hx; simpa
       rw [this, comp]
       refine' ciInf_mono (B _ _) fun p => _
       calc
@@ -216,10 +212,8 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       exact exists_lt_of_ciInf_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist z (Φ q) + dist y (Ψ q) < (⨅ p, dist z (Φ p) + dist y (Ψ p)) + δ / 2
       exact exists_lt_of_ciInf_lt (by linarith)
-      have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε :=
-        by
-        have := le_trans (le_abs_self _) (H p q)
-        · linarith
+      have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε := by
+        have := le_trans (le_abs_self _) (H p q); · linarith
       calc
         dist x z ≤ dist x (Φ p) + dist (Φ p) (Φ q) + dist (Φ q) z := dist_triangle4 _ _ _ _
         _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by
@@ -236,10 +230,8 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       exact exists_lt_of_ciInf_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist y (Φ q) + dist z (Ψ q) < (⨅ p, dist y (Φ p) + dist z (Ψ p)) + δ / 2
       exact exists_lt_of_ciInf_lt (by linarith)
-      have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε :=
-        by
-        have := le_trans (neg_le_abs_self _) (H p q)
-        · linarith
+      have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε := by
+        have := le_trans (neg_le_abs_self _) (H p q); · linarith
       calc
         dist x z ≤ dist x (Ψ p) + dist (Ψ p) (Ψ q) + dist (Ψ q) z := dist_triangle4 _ _ _ _
         _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by
@@ -611,13 +603,11 @@ Since there is an arbitrary choice in this construction, it is not an instance b
 protected def metricSpace : MetricSpace (Σi, E i) :=
   by
   refine' MetricSpace.ofDistTopology sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
-  · rintro ⟨i, x⟩
-    simp [sigma.dist]
+  · rintro ⟨i, x⟩; simp [sigma.dist]
   · rintro ⟨i, x⟩ ⟨j, y⟩
     rcases eq_or_ne i j with (rfl | h)
     · simp [sigma.dist, dist_comm]
-    · simp only [sigma.dist, dist_comm, h, h.symm, not_false_iff, dif_neg]
-      abel
+    · simp only [sigma.dist, dist_comm, h, h.symm, not_false_iff, dif_neg]; abel
   · rintro ⟨i, x⟩ ⟨j, y⟩
     rcases eq_or_ne i j with (rfl | hij)
     · simp [sigma.dist]
@@ -625,9 +615,7 @@ protected def metricSpace : MetricSpace (Σi, E i) :=
       apply (lt_irrefl (1 : ℝ) _).elim
       calc
         1 ≤ sigma.dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
-        _ < 1 := by
-          rw [h]
-          exact zero_lt_one
+        _ < 1 := by rw [h]; exact zero_lt_one
         
 #align metric.sigma.metric_space Metric.Sigma.metricSpace
 -/
@@ -793,10 +781,7 @@ theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) 
   by
   induction' m with m hm
   · intro hx hy
-    have A : max x.1 y.1 = 0 :=
-      by
-      rw [nonpos_iff_eq_zero.1 hx, nonpos_iff_eq_zero.1 hy]
-      simp
+    have A : max x.1 y.1 = 0 := by rw [nonpos_iff_eq_zero.1 hx, nonpos_iff_eq_zero.1 hy]; simp
     unfold inductive_limit_dist
     congr <;> simp only [A]
   · intro hx hy

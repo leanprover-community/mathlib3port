@@ -157,24 +157,8 @@ def generateEquivalenceOpensLe :
       map := fun _ _ g => Over.homMk g }
   unitIso :=
     eqToIso <|
-      CategoryTheory.Functor.ext
-        (by
-          rintro ⟨⟨_, _⟩, _⟩
-          dsimp
-          congr <;> ext)
-        (by
-          intros
-          ext)
-  counitIso :=
-    eqToIso <|
-      CategoryTheory.Functor.hext
-        (by
-          intro
-          ext
-          rfl)
-        (by
-          intros
-          rfl)
+      CategoryTheory.Functor.ext (by rintro ⟨⟨_, _⟩, _⟩; dsimp; congr <;> ext) (by intros ; ext)
+  counitIso := eqToIso <| CategoryTheory.Functor.hext (by intro ; ext; rfl) (by intros ; rfl)
 #align Top.presheaf.generate_equivalence_opens_le TopCat.Presheaf.generateEquivalenceOpensLe
 
 /- warning: Top.presheaf.whisker_iso_map_generate_cocone -> TopCat.Presheaf.whiskerIsoMapGenerateCocone is a dubious translation:
@@ -190,20 +174,12 @@ def whiskerIsoMapGenerateCocone :
     where
   Hom :=
     { Hom := F.map (eqToHom (congr_arg op hY.symm))
-      w' := fun j => by
-        erw [← F.map_comp]
-        congr }
+      w' := fun j => by erw [← F.map_comp]; congr }
   inv :=
     { Hom := F.map (eqToHom (congr_arg op hY))
-      w' := fun j => by
-        erw [← F.map_comp]
-        congr }
-  hom_inv_id' := by
-    ext
-    simp [eq_to_hom_map]
-  inv_hom_id' := by
-    ext
-    simp [eq_to_hom_map]
+      w' := fun j => by erw [← F.map_comp]; congr }
+  hom_inv_id' := by ext; simp [eq_to_hom_map]
+  inv_hom_id' := by ext; simp [eq_to_hom_map]
 #align Top.presheaf.whisker_iso_map_generate_cocone TopCat.Presheaf.whiskerIsoMapGenerateCocone
 
 /- warning: Top.presheaf.is_limit_opens_le_equiv_generate₁ -> TopCat.Presheaf.isLimitOpensLeEquivGenerate₁ is a dubious translation:
@@ -250,15 +226,10 @@ theorem isSheaf_iff_isSheafOpensLeCover : F.IsSheaf ↔ F.IsSheafOpensLeCover :=
   by
   refine' (presheaf.is_sheaf_iff_is_limit _ _).trans _
   constructor
-  · intro h ι U
-    rw [(is_limit_opens_le_equiv_generate₁ F U rfl).nonempty_congr]
-    apply h
-    apply presieve_of_covering.mem_grothendieck_topology
-  · intro h Y S
-    rw [← sieve.generate_sieve S]
-    intro hS
-    rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]
-    apply h
+  · intro h ι U; rw [(is_limit_opens_le_equiv_generate₁ F U rfl).nonempty_congr]
+    apply h; apply presieve_of_covering.mem_grothendieck_topology
+  · intro h Y S; rw [← sieve.generate_sieve S]; intro hS
+    rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]; apply h
 #align Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.isSheaf_iff_isSheafOpensLeCover
 -/
 

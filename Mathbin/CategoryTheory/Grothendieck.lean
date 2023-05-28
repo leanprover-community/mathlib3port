@@ -175,11 +175,7 @@ theorem id_fiber' (X : Grothendieck F) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck.congr CategoryTheory.Grothendieck.congrₓ'. -/
 theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
-    f.fiber = eqToHom (by subst h) ≫ g.fiber :=
-  by
-  subst h
-  dsimp
-  simp
+    f.fiber = eqToHom (by subst h) ≫ g.fiber := by subst h; dsimp; simp
 #align category_theory.grothendieck.congr CategoryTheory.Grothendieck.congr
 
 section
@@ -249,32 +245,12 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ typeToCat) ≌ G.Elements
   Functor := grothendieckTypeToCatFunctor G
   inverse := grothendieckTypeToCatInverse G
   unitIso :=
-    NatIso.ofComponents
-      (fun X => by
-        rcases X with ⟨_, ⟨⟩⟩
-        exact iso.refl _)
-      (by
-        rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩
-        dsimp at *
-        subst f
-        ext
-        simp)
+    NatIso.ofComponents (fun X => by rcases X with ⟨_, ⟨⟩⟩; exact iso.refl _)
+      (by rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩; dsimp at *; subst f; ext; simp)
   counitIso :=
-    NatIso.ofComponents
-      (fun X => by
-        cases X
-        exact iso.refl _)
-      (by
-        rintro ⟨⟩ ⟨⟩ ⟨f, e⟩
-        dsimp at *
-        subst e
-        ext
-        simp)
-  functor_unitIso_comp' := by
-    rintro ⟨_, ⟨⟩⟩
-    dsimp
-    simp
-    rfl
+    NatIso.ofComponents (fun X => by cases X; exact iso.refl _)
+      (by rintro ⟨⟩ ⟨⟩ ⟨f, e⟩; dsimp at *; subst e; ext; simp)
+  functor_unitIso_comp' := by rintro ⟨_, ⟨⟩⟩; dsimp; simp; rfl
 #align category_theory.grothendieck.grothendieck_Type_to_Cat CategoryTheory.Grothendieck.grothendieckTypeToCat
 
 end Grothendieck

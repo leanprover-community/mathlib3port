@@ -80,9 +80,7 @@ Case conversion may be inaccurate. Consider using '#align cubic.C_mul_prod_X_sub
 theorem C_mul_prod_X_sub_C_eq [CommRing S] {w x y z : S} :
     C w * (X - C x) * (X - C y) * (X - C z) =
       toPoly ⟨w, w * -(x + y + z), w * (x * y + x * z + y * z), w * -(x * y * z)⟩ :=
-  by
-  simp only [to_poly, C_neg, C_add, C_mul]
-  ring1
+  by simp only [to_poly, C_neg, C_add, C_mul]; ring1
 #align cubic.C_mul_prod_X_sub_C_eq Cubic.C_mul_prod_X_sub_C_eq
 
 /- warning: cubic.prod_X_sub_C_eq -> Cubic.prod_X_sub_C_eq is a dubious translation:
@@ -269,11 +267,8 @@ Case conversion may be inaccurate. Consider using '#align cubic.to_poly_eq_zero_
 theorem toPoly_eq_zero_iff (P : Cubic R) : P.toPoly = 0 ↔ P = 0 := by rw [← zero, to_poly_injective]
 #align cubic.to_poly_eq_zero_iff Cubic.toPoly_eq_zero_iff
 
-private theorem ne_zero (h0 : P.a ≠ 0 ∨ P.b ≠ 0 ∨ P.c ≠ 0 ∨ P.d ≠ 0) : P.toPoly ≠ 0 :=
-  by
-  contrapose! h0
-  rw [(to_poly_eq_zero_iff P).mp h0]
-  exact ⟨rfl, rfl, rfl, rfl⟩
+private theorem ne_zero (h0 : P.a ≠ 0 ∨ P.b ≠ 0 ∨ P.c ≠ 0 ∨ P.d ≠ 0) : P.toPoly ≠ 0 := by
+  contrapose! h0; rw [(to_poly_eq_zero_iff P).mp h0]; exact ⟨rfl, rfl, rfl, rfl⟩
 
 /- warning: cubic.ne_zero_of_a_ne_zero -> Cubic.ne_zero_of_a_ne_zero is a dubious translation:
 lean 3 declaration is
@@ -407,11 +402,7 @@ theorem leadingCoeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d 
 theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic :=
   by
   nontriviality
-  rw [monic,
-    leading_coeff_of_a_ne_zero <| by
-      rw [ha]
-      exact one_ne_zero,
-    ha]
+  rw [monic, leading_coeff_of_a_ne_zero <| by rw [ha]; exact one_ne_zero, ha]
 #align cubic.monic_of_a_eq_one Cubic.monic_of_a_eq_one
 -/
 
@@ -430,11 +421,7 @@ Case conversion may be inaccurate. Consider using '#align cubic.monic_of_b_eq_on
 theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic :=
   by
   nontriviality
-  rw [monic,
-    leading_coeff_of_b_ne_zero ha <| by
-      rw [hb]
-      exact one_ne_zero,
-    hb]
+  rw [monic, leading_coeff_of_b_ne_zero ha <| by rw [hb]; exact one_ne_zero, hb]
 #align cubic.monic_of_b_eq_one Cubic.monic_of_b_eq_one
 
 /- warning: cubic.monic_of_b_eq_one' -> Cubic.monic_of_b_eq_one' is a dubious translation:
@@ -456,11 +443,7 @@ Case conversion may be inaccurate. Consider using '#align cubic.monic_of_c_eq_on
 theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPoly.Monic :=
   by
   nontriviality
-  rw [monic,
-    leading_coeff_of_c_ne_zero ha hb <| by
-      rw [hc]
-      exact one_ne_zero,
-    hc]
+  rw [monic, leading_coeff_of_c_ne_zero ha hb <| by rw [hc]; exact one_ne_zero, hc]
 #align cubic.monic_of_c_eq_one Cubic.monic_of_c_eq_one
 
 /- warning: cubic.monic_of_c_eq_one' -> Cubic.monic_of_c_eq_one' is a dubious translation:
@@ -904,12 +887,7 @@ theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3
   by
   apply (to_finset_card_le P.to_poly.roots).trans
   by_cases hP : P.to_poly = 0
-  ·
-    exact
-      (card_roots' P.to_poly).trans
-        (by
-          rw [hP, nat_degree_zero]
-          exact zero_le 3)
+  · exact (card_roots' P.to_poly).trans (by rw [hP, nat_degree_zero]; exact zero_le 3)
   · exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
 #align cubic.card_roots_le Cubic.card_roots_le
 -/

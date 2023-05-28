@@ -77,10 +77,8 @@ theorem AffineBasis.interior_convexHull {ι E : Type _} [Finite ι] [NormedAddCo
     simp [this]
   · -- The positive-dimensional case.
     haveI : FiniteDimensional ℝ E := b.finite_dimensional
-    have : convexHull ℝ (range b) = ⋂ i, b.coord i ⁻¹' Ici 0 :=
-      by
-      rw [b.convex_hull_eq_nonneg_coord, set_of_forall]
-      rfl
+    have : convexHull ℝ (range b) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
+      rw [b.convex_hull_eq_nonneg_coord, set_of_forall]; rfl
     ext
     simp only [this, interior_iInter, ←
       IsOpenMap.preimage_interior_eq_interior_preimage (isOpenMap_barycentric_coord b _)
@@ -117,9 +115,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
   classical
     let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
     refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
-    · intro p hp
-      use ⟨p, ht₁ hp⟩
-      simp [w, hp]
+    · intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
     · rintro y ⟨⟨p, hp⟩, rfl⟩
       by_cases hps : p ∈ s <;>
           simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,

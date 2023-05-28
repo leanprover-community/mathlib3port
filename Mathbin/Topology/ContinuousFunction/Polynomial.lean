@@ -78,10 +78,8 @@ theorem aeval_continuousMap_apply (g : R[X]) (f : C(α, R)) (x : α) :
     ((Polynomial.aeval f) g) x = g.eval (f x) :=
   by
   apply Polynomial.induction_on' g
-  · intro p q hp hq
-    simp [hp, hq]
-  · intro n a
-    simp [Pi.pow_apply]
+  · intro p q hp hq; simp [hp, hq]
+  · intro n a; simp [Pi.pow_apply]
 #align polynomial.aeval_continuous_map_apply Polynomial.aeval_continuousMap_apply
 
 end
@@ -104,24 +102,11 @@ Case conversion may be inaccurate. Consider using '#align polynomial.to_continuo
 def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R)
     where
   toFun p := p.toContinuousMap
-  map_zero' := by
-    ext
-    simp
-  map_add' := by
-    intros
-    ext
-    simp
-  map_one' := by
-    ext
-    simp
-  map_mul' := by
-    intros
-    ext
-    simp
-  commutes' := by
-    intros
-    ext
-    simp [Algebra.algebraMap_eq_smul_one]
+  map_zero' := by ext; simp
+  map_add' := by intros ; ext; simp
+  map_one' := by ext; simp
+  map_mul' := by intros ; ext; simp
+  commutes' := by intros ; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_alg_hom Polynomial.toContinuousMapAlgHom
 
 /- warning: polynomial.to_continuous_map_on_alg_hom -> Polynomial.toContinuousMapOnAlgHom is a dubious translation:
@@ -136,24 +121,11 @@ Case conversion may be inaccurate. Consider using '#align polynomial.to_continuo
 def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R)
     where
   toFun p := p.toContinuousMapOn X
-  map_zero' := by
-    ext
-    simp
-  map_add' := by
-    intros
-    ext
-    simp
-  map_one' := by
-    ext
-    simp
-  map_mul' := by
-    intros
-    ext
-    simp
-  commutes' := by
-    intros
-    ext
-    simp [Algebra.algebraMap_eq_smul_one]
+  map_zero' := by ext; simp
+  map_add' := by intros ; ext; simp
+  map_one' := by ext; simp
+  map_mul' := by intros ; ext; simp
+  commutes' := by intros ; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_on_alg_hom Polynomial.toContinuousMapOnAlgHom
 
 end
@@ -183,10 +155,8 @@ def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
 Case conversion may be inaccurate. Consider using '#align polynomial_functions_coe polynomialFunctions_coeₓ'. -/
 @[simp]
 theorem polynomialFunctions_coe (X : Set R) :
-    (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) :=
-  by
-  ext
-  simp [polynomialFunctions]
+    (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) := by
+  ext; simp [polynomialFunctions]
 #align polynomial_functions_coe polynomialFunctions_coe
 
 #print polynomialFunctions_separatesPoints /-
@@ -238,8 +208,7 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
         simp only [iccHomeoI_symm_apply_coe, Subtype.coe_mk]
         replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm
         simp only [mul_add]
-        field_simp
-        ring
+        field_simp; ring
       · change _ + _ ∈ I
         rw [mul_comm (b - a)⁻¹, ← neg_mul, ← add_mul, ← sub_eq_add_neg]
         have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
@@ -253,8 +222,7 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
     let q := p.comp ((b - a) • Polynomial.X + Polynomial.C a)
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
-    · ext x
-      simp [mul_comm]
+    · ext x; simp [mul_comm]
 #align polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_compRightAlgHom_iccHomeoI
 
 end

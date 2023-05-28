@@ -103,8 +103,7 @@ theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra 
   change Function.Injective (Ideal.Quotient.mkₐ R I).comp
   revert _RB
   apply Ideal.IsNilpotent.induction_on I hI
-  · intro B _ I hI _
-    exact formally_unramified.comp_injective I hI
+  · intro B _ I hI _; exact formally_unramified.comp_injective I hI
   · intro B _ I J hIJ h₁ h₂ _ g₁ g₂ e
     apply h₁
     apply h₂
@@ -149,8 +148,7 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
   change Function.Surjective (Ideal.Quotient.mkₐ R I).comp
   revert _RB
   apply Ideal.IsNilpotent.induction_on I hI
-  · intro B _ I hI _
-    exact formally_smooth.comp_surjective I hI
+  · intro B _ I hI _; exact formally_smooth.comp_surjective I hI
   · intro B _ I J hIJ h₁ h₂ _ g
     let this : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
       {
@@ -399,8 +397,7 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
     dsimp at e⊢
     rw [← e]
     rfl
-  · rintro ⟨g, hg⟩
-    exact formally_smooth.of_split f g hg
+  · rintro ⟨g, hg⟩; exact formally_smooth.of_split f g hg
 #align algebra.formally_smooth.iff_split_surjection Algebra.FormallySmooth.iff_split_surjection
 
 end OfSurjective
@@ -427,8 +424,7 @@ theorem FormallyUnramified.iff_subsingleton_kaehlerDifferential :
     FormallyUnramified R S ↔ Subsingleton (Ω[S⁄R]) :=
   by
   constructor
-  · intros
-    infer_instance
+  · intros ; infer_instance
   · intro H
     constructor
     intro B _ _ I hI f₁ f₂ e

@@ -51,8 +51,7 @@ theorem evenOddRec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ 
   convert binary_rec_eq _ ff n
   · exact (bit0_eq_two_mul _).symm
   · exact (bit0_eq_two_mul _).symm
-  · apply heq_of_cast_eq
-    rfl
+  · apply heq_of_cast_eq; rfl
   · exact H
 #align nat.even_odd_rec_even Nat.evenOddRec_even
 -/
@@ -66,8 +65,7 @@ theorem evenOddRec_odd (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i
   convert binary_rec_eq _ tt n
   · exact (bit0_eq_two_mul _).symm
   · exact (bit0_eq_two_mul _).symm
-  · apply heq_of_cast_eq
-    rfl
+  · apply heq_of_cast_eq; rfl
   · exact H
 #align nat.even_odd_rec_odd Nat.evenOddRec_odd
 -/

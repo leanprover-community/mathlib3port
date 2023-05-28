@@ -262,9 +262,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup_indep.bUnio
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.biUnion [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
-    (s.biUnion g).SupIndep f := by
-  rw [← sup_eq_bUnion]
-  exact hs.sup hg
+    (s.biUnion g).SupIndep f := by rw [← sup_eq_bUnion]; exact hs.sup hg
 #align finset.sup_indep.bUnion Finset.SupIndep.biUnion
 
 end DistribLattice
@@ -392,10 +390,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Set.image.{u2, u1} ι α t (setOf.{u2} ι (fun (j : ι) => Ne.{succ u2} ι j i)))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def' CompleteLattice.independent_def'ₓ'. -/
-theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' { j | j ≠ i })) :=
-  by
-  simp_rw [sSup_image]
-  rfl
+theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' { j | j ≠ i })) := by
+  simp_rw [sSup_image]; rfl
 #align complete_lattice.independent_def' CompleteLattice.independent_def'
 
 /- warning: complete_lattice.independent_def'' -> CompleteLattice.independent_def'' is a dubious translation:
@@ -406,10 +402,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def'' CompleteLattice.independent_def''ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def'' :
-    Independent t ↔ ∀ i, Disjoint (t i) (sSup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) :=
-  by
-  rw [independent_def']
-  tidy
+    Independent t ↔ ∀ i, Disjoint (t i) (sSup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) := by
+  rw [independent_def']; tidy
 #align complete_lattice.independent_def'' CompleteLattice.independent_def''
 
 #print CompleteLattice.independent_empty /-
@@ -497,8 +491,7 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
     by
     replace ht := (ht i).mono_right this
     rwa [h, disjoint_self] at ht
-  replace contra : j ≠ i
-  · exact Ne.symm contra
+  replace contra : j ≠ i; · exact Ne.symm contra
   exact le_iSup₂ j contra
 #align complete_lattice.independent.injective CompleteLattice.Independent.injective
 

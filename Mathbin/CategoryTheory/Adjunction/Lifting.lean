@@ -114,9 +114,7 @@ it has a coequalizer.
 instance (X : B) :
     IsReflexivePair (F'.map (U.map (adj₁.counit.app X))) (otherMap _ _ adj₁ adj₂ X) :=
   IsReflexivePair.mk' (F'.map (adj₁.Unit.app (U.obj X)))
-    (by
-      rw [← F'.map_comp, adj₁.right_triangle_components]
-      apply F'.map_id)
+    (by rw [← F'.map_comp, adj₁.right_triangle_components]; apply F'.map_id)
     (by
       dsimp [other_map]
       rw [← F'.map_comp_assoc, U.map_comp, adj₁.unit_naturality_assoc,

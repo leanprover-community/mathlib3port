@@ -60,10 +60,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_map_proj_Icc 
 theorem quotientMap_projIcc : QuotientMap (projIcc a b h) :=
   quotientMap_iff.2
     ⟨projIcc_surjective h, fun s =>
-      ⟨fun hs => hs.Preimage continuous_projIcc, fun hs =>
-        ⟨_, hs, by
-          ext
-          simp⟩⟩⟩
+      ⟨fun hs => hs.Preimage continuous_projIcc, fun hs => ⟨_, hs, by ext; simp⟩⟩⟩
 #align quotient_map_proj_Icc quotientMap_projIcc
 
 /- warning: continuous_Icc_extend_iff -> continuous_IccExtend_iff is a dubious translation:

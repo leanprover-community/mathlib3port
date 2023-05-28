@@ -113,10 +113,8 @@ theorem mem_idealOfSet {s : Set X} {f : C(X, R)} :
   Iff.rfl
 #align continuous_map.mem_ideal_of_set ContinuousMap.mem_idealOfSet
 
-theorem not_mem_idealOfSet {s : Set X} {f : C(X, R)} : f ∉ idealOfSet R s ↔ ∃ x ∈ sᶜ, f x ≠ 0 :=
-  by
-  simp_rw [mem_ideal_of_set, exists_prop]
-  push_neg
+theorem not_mem_idealOfSet {s : Set X} {f : C(X, R)} : f ∉ idealOfSet R s ↔ ∃ x ∈ sᶜ, f x ≠ 0 := by
+  simp_rw [mem_ideal_of_set, exists_prop]; push_neg
 #align continuous_map.not_mem_ideal_of_set ContinuousMap.not_mem_idealOfSet
 
 /-- Given an ideal `I` of `C(X, R)`, construct the set of points for which every function in the
@@ -131,10 +129,8 @@ theorem not_mem_setOfIdeal {I : Ideal C(X, R)} {x : X} :
 #align continuous_map.not_mem_set_of_ideal ContinuousMap.not_mem_setOfIdeal
 
 theorem mem_setOfIdeal {I : Ideal C(X, R)} {x : X} :
-    x ∈ setOfIdeal I ↔ ∃ f ∈ I, (f : C(X, R)) x ≠ 0 :=
-  by
-  simp_rw [set_of_ideal, Set.mem_compl_iff, Set.mem_setOf, exists_prop]
-  push_neg
+    x ∈ setOfIdeal I ↔ ∃ f ∈ I, (f : C(X, R)) x ≠ 0 := by
+  simp_rw [set_of_ideal, Set.mem_compl_iff, Set.mem_setOf, exists_prop]; push_neg
 #align continuous_map.mem_set_of_ideal ContinuousMap.mem_setOfIdeal
 
 theorem setOfIdeal_open [T2Space R] (I : Ideal C(X, R)) : IsOpen (setOfIdeal I) :=
@@ -286,8 +282,7 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
       ext
       simp only [coe_zero, Pi.zero_apply, ContinuousMap.coe_coe, ContinuousMap.coe_comp, map_zero,
         Pi.comp_zero]
-    · rintro s₁ s₂ hs ⟨g, hI, hgt⟩
-      exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
+    · rintro s₁ s₂ hs ⟨g, hI, hgt⟩; exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
     · rintro s₁ s₂ ⟨g₁, hI₁, hgt₁⟩ ⟨g₂, hI₂, hgt₂⟩
       refine' ⟨g₁ + g₂, _, fun x hx => _⟩
       · convert I.add_mem hI₁ hI₂
@@ -450,9 +445,7 @@ def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜))
     ⟨{  toFun := fun f => f x
         map_add' := fun f g => rfl
         map_smul' := fun z f => rfl
-        cont := continuous_eval_const' x },
-      by
-      rw [character_space.eq_set_map_one_map_mul]
+        cont := continuous_eval_const' x }, by rw [character_space.eq_set_map_one_map_mul];
       exact ⟨rfl, fun f g => rfl⟩⟩
   continuous_toFun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
 #align weak_dual.character_space.continuous_map_eval WeakDual.characterSpace.continuousMapEval

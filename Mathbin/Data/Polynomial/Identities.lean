@@ -58,10 +58,8 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
     calc
       (x + y) ^ (n + 2) = (x + y) * (x + y) ^ (n + 1) := by ring
       _ = (x + y) * (x ^ (n + 1) + ↑(n + 1) * x ^ (n + 1 - 1) * y + z * y ^ 2) := by rw [hz]
-      _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 :=
-        by
-        push_cast
-        ring!
+      _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 := by
+        push_cast ; ring!
       
 #align polynomial.pow_add_expansion Polynomial.powAddExpansion
 
@@ -85,9 +83,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
       ((f.Sum fun e a => a * x ^ e) + f.Sum fun e a => a * e * x ^ (e - 1) * y) +
         f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
-  by
-  rw [poly_binom_aux2]
-  simp [left_distrib, sum_add, mul_assoc]
+  by rw [poly_binom_aux2]; simp [left_distrib, sum_add, mul_assoc]
 
 /- warning: polynomial.binom_expansion -> Polynomial.binomExpansion is a dubious translation:
 <too large>
@@ -103,8 +99,7 @@ def binomExpansion (f : R[X]) (x y : R) :
   rw [poly_binom_aux3]
   congr
   · rw [← eval_eq_sum]
-  · rw [derivative_eval]
-    exact finset.sum_mul.symm
+  · rw [derivative_eval]; exact finset.sum_mul.symm
   · exact finset.sum_mul.symm
 #align polynomial.binom_expansion Polynomial.binomExpansion
 

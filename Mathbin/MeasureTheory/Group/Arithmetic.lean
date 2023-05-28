@@ -292,8 +292,7 @@ instance Monoid.measurablePow (M : Type _) [Monoid M] [MeasurableSpace M] [Measu
       by
       induction' n with n ih
       · simp only [pow_zero, ← Pi.one_def, measurable_one]
-      · simp only [pow_succ]
-        exact measurable_id.mul ih⟩
+      · simp only [pow_succ]; exact measurable_id.mul ih⟩
 #align monoid.has_measurable_pow Monoid.measurablePow
 
 section Pow
@@ -601,9 +600,7 @@ theorem measurableSet_eq_fun_of_countable {m : MeasurableSpace α} {E} [Measurab
     [MeasurableSingletonClass E] [Countable E] {f g : α → E} (hf : Measurable f)
     (hg : Measurable g) : MeasurableSet { x | f x = g x } :=
   by
-  have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } :=
-    by
-    ext1 x
+  have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by ext1 x;
     simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff, exists_eq_right']
   rw [this]
   refine' MeasurableSet.iUnion fun j => MeasurableSet.inter _ _
@@ -658,14 +655,8 @@ Case conversion may be inaccurate. Consider using '#align has_measurable_div_of_
 instance (priority := 100) measurableDiv_of_mul_inv (G : Type _) [MeasurableSpace G]
     [DivInvMonoid G] [MeasurableMul G] [MeasurableInv G] : MeasurableDiv G
     where
-  measurable_div_const c := by
-    convert measurable_inv.const_mul c
-    ext1
-    apply div_eq_mul_inv
-  measurable_div_const c := by
-    convert measurable_id.mul_const c⁻¹
-    ext1
-    apply div_eq_mul_inv
+  measurable_div_const c := by convert measurable_inv.const_mul c; ext1; apply div_eq_mul_inv
+  measurable_div_const c := by convert measurable_id.mul_const c⁻¹; ext1; apply div_eq_mul_inv
 #align has_measurable_div_of_mul_inv measurableDiv_of_mul_inv
 #align has_measurable_sub_of_add_neg measurableSub_of_add_neg
 
@@ -776,10 +767,8 @@ instance DivInvMonoid.measurableZpow (G : Type u) [DivInvMonoid G] [MeasurableSp
     [MeasurableMul₂ G] [MeasurableInv G] : MeasurablePow G ℤ :=
   ⟨measurable_from_prod_countable fun n => by
       cases' n with n n
-      · simp_rw [zpow_ofNat]
-        exact measurable_id.pow_const _
-      · simp_rw [zpow_negSucc]
-        exact (measurable_id.pow_const (n + 1)).inv⟩
+      · simp_rw [zpow_ofNat]; exact measurable_id.pow_const _
+      · simp_rw [zpow_negSucc]; exact (measurable_id.pow_const (n + 1)).inv⟩
 #align div_inv_monoid.has_measurable_zpow DivInvMonoid.measurableZpow
 
 /- warning: has_measurable_div₂_of_mul_inv -> measurableDiv₂_of_mul_inv is a dubious translation:
@@ -791,9 +780,7 @@ Case conversion may be inaccurate. Consider using '#align has_measurable_div₂_
 @[to_additive]
 instance (priority := 100) measurableDiv₂_of_mul_inv (G : Type _) [MeasurableSpace G]
     [DivInvMonoid G] [MeasurableMul₂ G] [MeasurableInv G] : MeasurableDiv₂ G :=
-  ⟨by
-    simp only [div_eq_mul_inv]
-    exact measurable_fst.mul measurable_snd.inv⟩
+  ⟨by simp only [div_eq_mul_inv]; exact measurable_fst.mul measurable_snd.inv⟩
 #align has_measurable_div₂_of_mul_inv measurableDiv₂_of_mul_inv
 #align has_measurable_div₂_of_add_neg measurableDiv₂_of_add_neg
 
@@ -1020,8 +1007,7 @@ instance AddMonoid.measurableSMul_nat₂ (M : Type _) [AddMonoid M] [MeasurableS
     refine' measurable_from_prod_countable fun n => _
     induction' n with n ih
     · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
-    · simp only [succ_nsmul]
-      exact measurable_id.add ih⟩
+    · simp only [succ_nsmul]; exact measurable_id.add ih⟩
 #align add_monoid.has_measurable_smul_nat₂ AddMonoid.measurableSMul_nat₂
 
 /- warning: sub_neg_monoid.has_measurable_smul_int₂ -> SubNegMonoid.measurableSMul_int₂ is a dubious translation:
@@ -1037,10 +1023,8 @@ instance SubNegMonoid.measurableSMul_int₂ (M : Type _) [SubNegMonoid M] [Measu
     suffices Measurable fun p : M × ℤ => p.2 • p.1 by apply this.comp measurable_swap
     refine' measurable_from_prod_countable fun n => _
     induction' n with n n ih
-    · simp only [ofNat_zsmul]
-      exact measurable_const_smul _
-    · simp only [negSucc_zsmul]
-      exact (measurable_const_smul _).neg⟩
+    · simp only [ofNat_zsmul]; exact measurable_const_smul _
+    · simp only [negSucc_zsmul]; exact (measurable_const_smul _).neg⟩
 #align sub_neg_monoid.has_measurable_smul_int₂ SubNegMonoid.measurableSMul_int₂
 
 end Smul
@@ -1319,9 +1303,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.measurable_prod' Multiset.measurable_prod'ₓ'. -/
 @[measurability, to_additive]
 theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f ∈ l, Measurable f) :
-    Measurable l.Prod := by
-  rcases l with ⟨l⟩
-  simpa using l.measurable_prod' (by simpa using hl)
+    Measurable l.Prod := by rcases l with ⟨l⟩; simpa using l.measurable_prod' (by simpa using hl)
 #align multiset.measurable_prod' Multiset.measurable_prod'
 #align multiset.measurable_sum' Multiset.measurable_sum'
 
@@ -1333,8 +1315,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.ae_measurable_prod' Multiset.aemeasurable_prod'ₓ'. -/
 @[measurability, to_additive]
 theorem Multiset.aemeasurable_prod' (l : Multiset (α → M)) (hl : ∀ f ∈ l, AEMeasurable f μ) :
-    AEMeasurable l.Prod μ := by
-  rcases l with ⟨l⟩
+    AEMeasurable l.Prod μ := by rcases l with ⟨l⟩;
   simpa using l.ae_measurable_prod' (by simpa using hl)
 #align multiset.ae_measurable_prod' Multiset.aemeasurable_prod'
 #align multiset.ae_measurable_sum' Multiset.aemeasurable_sum'

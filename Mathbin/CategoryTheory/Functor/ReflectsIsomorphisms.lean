@@ -72,9 +72,7 @@ instance (priority := 100) reflectsIsomorphisms_of_full_and_faithful (F : C ⥤ 
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] :
     ReflectsIsomorphisms (F ⋙ G) :=
-  ⟨fun _ _ f (hf : IsIso (G.map _)) => by
-    skip
-    haveI := is_iso_of_reflects_iso (F.map f) G
+  ⟨fun _ _ f (hf : IsIso (G.map _)) => by skip; haveI := is_iso_of_reflects_iso (F.map f) G;
     exact is_iso_of_reflects_iso f F⟩
 
 #print CategoryTheory.reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms /-

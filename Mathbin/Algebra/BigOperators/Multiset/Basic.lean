@@ -188,9 +188,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (m : Multiset.{u1} α) (n : Nat), Eq.{succ u1} α (Multiset.prod.{u1} α _inst_1 (HSMul.hSMul.{0, u1, u1} Nat (Multiset.{u1} α) (Multiset.{u1} α) (instHSMul.{0, u1} Nat (Multiset.{u1} α) (AddMonoid.SMul.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) n m)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Multiset.prod.{u1} α _inst_1 m) n)
 Case conversion may be inaccurate. Consider using '#align multiset.prod_nsmul Multiset.prod_nsmulₓ'. -/
 theorem prod_nsmul (m : Multiset α) : ∀ n : ℕ, (n • m).Prod = m.Prod ^ n
-  | 0 => by
-    rw [zero_nsmul, pow_zero]
-    rfl
+  | 0 => by rw [zero_nsmul, pow_zero]; rfl
   | n + 1 => by rw [add_nsmul, one_nsmul, pow_add, pow_one, prod_add, prod_nsmul n]
 #align multiset.prod_nsmul Multiset.prod_nsmul
 
@@ -263,10 +261,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.prod_hom' Multiset.prod_hom'ₓ'. -/
 @[to_additive]
 theorem prod_hom' [CommMonoid β] (s : Multiset ι) {F : Type _} [MonoidHomClass F α β] (f : F)
-    (g : ι → α) : (s.map fun i => f <| g i).Prod = f (s.map g).Prod :=
-  by
-  convert(s.map g).prod_hom f
-  exact (map_map _ _ _).symm
+    (g : ι → α) : (s.map fun i => f <| g i).Prod = f (s.map g).Prod := by
+  convert(s.map g).prod_hom f; exact (map_map _ _ _).symm
 #align multiset.prod_hom' Multiset.prod_hom'
 #align multiset.sum_hom' Multiset.sum_hom'
 
@@ -332,10 +328,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_neg Multiset.prod_map_negₓ'. -/
 @[simp]
 theorem prod_map_neg [HasDistribNeg α] (s : Multiset α) :
-    (s.map Neg.neg).Prod = (-1) ^ s.card * s.Prod :=
-  by
-  refine' Quotient.ind _ s
-  simp
+    (s.map Neg.neg).Prod = (-1) ^ s.card * s.Prod := by refine' Quotient.ind _ s; simp
 #align multiset.prod_map_neg Multiset.prod_map_neg
 
 #print Multiset.prod_map_pow /-
@@ -404,10 +397,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Multiset.prod.{u1} α _inst_1 s) (Multiset.prod.{u1} α _inst_1 t))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_dvd_prod_of_le Multiset.prod_dvd_prod_of_leₓ'. -/
-theorem prod_dvd_prod_of_le (h : s ≤ t) : s.Prod ∣ t.Prod :=
-  by
-  obtain ⟨z, rfl⟩ := exists_add_of_le h
-  simp only [prod_add, dvd_mul_right]
+theorem prod_dvd_prod_of_le (h : s ≤ t) : s.Prod ∣ t.Prod := by
+  obtain ⟨z, rfl⟩ := exists_add_of_le h; simp only [prod_add, dvd_mul_right]
 #align multiset.prod_dvd_prod_of_le Multiset.prod_dvd_prod_of_le
 
 end CommMonoid
@@ -478,9 +469,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) (CommMonoidWithZero.toZero.{u1} α _inst_1)] [_inst_3 : Nontrivial.{u1} α] {s : Multiset.{u1} α}, Iff (Eq.{succ u1} α (Multiset.prod.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α _inst_1) s) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α _inst_1)))) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α _inst_1))) s)
 Case conversion may be inaccurate. Consider using '#align multiset.prod_eq_zero_iff Multiset.prod_eq_zero_iffₓ'. -/
 theorem prod_eq_zero_iff : s.Prod = 0 ↔ (0 : α) ∈ s :=
-  Quotient.inductionOn s fun l => by
-    rw [quot_mk_to_coe, coe_prod]
-    exact List.prod_eq_zero_iff
+  Quotient.inductionOn s fun l => by rw [quot_mk_to_coe, coe_prod]; exact List.prod_eq_zero_iff
 #align multiset.prod_eq_zero_iff Multiset.prod_eq_zero_iff
 
 /- warning: multiset.prod_ne_zero -> Multiset.prod_ne_zero is a dubious translation:
@@ -518,10 +507,8 @@ but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DivisionCommMonoid.{u2} α] {m : Multiset.{u1} ι} {f : ι -> α}, Eq.{succ u2} α (Multiset.prod.{u2} α (DivisionCommMonoid.toCommMonoid.{u2} α _inst_1) (Multiset.map.{u1, u2} ι α (fun (i : ι) => Inv.inv.{u2} α (InvOneClass.toInv.{u2} α (DivInvOneMonoid.toInvOneClass.{u2} α (DivisionMonoid.toDivInvOneMonoid.{u2} α (DivisionCommMonoid.toDivisionMonoid.{u2} α _inst_1)))) (f i)) m)) (Inv.inv.{u2} α (InvOneClass.toInv.{u2} α (DivInvOneMonoid.toInvOneClass.{u2} α (DivisionMonoid.toDivInvOneMonoid.{u2} α (DivisionCommMonoid.toDivisionMonoid.{u2} α _inst_1)))) (Multiset.prod.{u2} α (DivisionCommMonoid.toCommMonoid.{u2} α _inst_1) (Multiset.map.{u1, u2} ι α f m)))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_inv Multiset.prod_map_invₓ'. -/
 @[simp, to_additive]
-theorem prod_map_inv : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ :=
-  by
-  convert(m.map f).prod_map_inv'
-  rw [map_map]
+theorem prod_map_inv : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ := by
+  convert(m.map f).prod_map_inv'; rw [map_map]
 #align multiset.prod_map_inv Multiset.prod_map_inv
 #align multiset.sum_map_neg Multiset.sum_map_neg
 
@@ -539,11 +526,8 @@ theorem prod_map_div : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map
 
 #print Multiset.prod_map_zpow /-
 @[to_additive]
-theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod ^ n :=
-  by
-  convert(m.map f).prod_hom (zpowGroupHom _ : α →* α)
-  rw [map_map]
-  rfl
+theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod ^ n := by
+  convert(m.map f).prod_hom (zpowGroupHom _ : α →* α); rw [map_map]; rfl
 #align multiset.prod_map_zpow Multiset.prod_map_zpow
 #align multiset.sum_map_zsmul Multiset.sum_map_zsmul
 -/
@@ -582,9 +566,7 @@ variable [Semiring α]
 
 #print Multiset.dvd_sum /-
 theorem dvd_sum {a : α} {s : Multiset α} : (∀ x ∈ s, a ∣ x) → a ∣ s.Sum :=
-  Multiset.induction_on s (fun _ => dvd_zero _) fun x s ih h =>
-    by
-    rw [sum_cons]
+  Multiset.induction_on s (fun _ => dvd_zero _) fun x s ih h => by rw [sum_cons];
     exact dvd_add (h _ (mem_cons_self _ _)) (ih fun y hy => h _ <| mem_cons.2 <| Or.inr hy)
 #align multiset.dvd_sum Multiset.dvd_sum
 -/
@@ -712,10 +694,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCommMonoid.{u1} α] {s : Multiset.{u1} α} {a : α}, (forall (x : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) x s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α _inst_1))) a x)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α _inst_1))) (HPow.hPow.{u1, 0, u1} α ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) s) α (instHPow.{u1, 0} α ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) s) (Monoid.Pow.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α _inst_1)))) a (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s)) (Multiset.prod.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align multiset.pow_card_le_prod Multiset.pow_card_le_prodₓ'. -/
 @[to_additive card_nsmul_le_sum]
-theorem pow_card_le_prod (h : ∀ x ∈ s, a ≤ x) : a ^ s.card ≤ s.Prod :=
-  by
-  rw [← Multiset.prod_replicate, ← Multiset.map_const]
-  exact prod_map_le_prod _ h
+theorem pow_card_le_prod (h : ∀ x ∈ s, a ≤ x) : a ^ s.card ≤ s.Prod := by
+  rw [← Multiset.prod_replicate, ← Multiset.map_const]; exact prod_map_le_prod _ h
 #align multiset.pow_card_le_prod Multiset.pow_card_le_prod
 #align multiset.card_nsmul_le_sum Multiset.card_nsmul_le_sum
 
@@ -731,9 +711,7 @@ theorem prod_nonneg [OrderedCommSemiring α] {m : Multiset α} (h : ∀ a ∈ m,
     0 ≤ m.Prod := by
   revert h
   refine' m.induction_on _ _
-  · rintro -
-    rw [prod_zero]
-    exact zero_le_one
+  · rintro -; rw [prod_zero]; exact zero_le_one
   intro a s hs ih
   rw [prod_cons]
   exact mul_nonneg (ih _ <| mem_cons_self _ _) (hs fun a ha => ih _ <| mem_cons_of_mem ha)

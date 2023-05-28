@@ -201,10 +201,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_2 : Ring.{u1} R] {a : AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)} {b : AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)}, Eq.{succ u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.ofFinsupp.{u1} R (Ring.toSemiring.{u1} R _inst_2) (HSub.hSub.{u1, u1, u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (instHSub.{u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (Ring.toSub.{u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (AddMonoidAlgebra.ring.{u1, 0} R Nat _inst_2 Nat.addMonoid))) a b)) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (instHSub.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.sub.{u1} R _inst_2)) (Polynomial.ofFinsupp.{u1} R (Ring.toSemiring.{u1} R _inst_2) a) (Polynomial.ofFinsupp.{u1} R (Ring.toSemiring.{u1} R _inst_2) b))
 Case conversion may be inaccurate. Consider using '#align polynomial.of_finsupp_sub Polynomial.ofFinsupp_subₓ'. -/
 @[simp]
-theorem ofFinsupp_sub {R : Type u} [Ring R] {a b} : (⟨a - b⟩ : R[X]) = ⟨a⟩ - ⟨b⟩ :=
-  by
-  rw [sub_eq_add_neg, of_finsupp_add, of_finsupp_neg]
-  rfl
+theorem ofFinsupp_sub {R : Type u} [Ring R] {a b} : (⟨a - b⟩ : R[X]) = ⟨a⟩ - ⟨b⟩ := by
+  rw [sub_eq_add_neg, of_finsupp_add, of_finsupp_neg]; rfl
 #align polynomial.of_finsupp_sub Polynomial.ofFinsupp_sub
 
 #print Polynomial.ofFinsupp_mul /-
@@ -262,11 +260,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (a : Polynomial.{u1} R _inst_1) (b : Polynomial.{u1} R _inst_1), Eq.{succ u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (Polynomial.toFinsupp.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHAdd.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.add'.{u1} R _inst_1)) a b)) (HAdd.hAdd.{u1, u1, u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (instHAdd.{u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (Distrib.toAdd.{u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (AddMonoidAlgebra.nonUnitalNonAssocSemiring.{u1, 0} R Nat _inst_1 instAddNat)))) (Polynomial.toFinsupp.{u1} R _inst_1 a) (Polynomial.toFinsupp.{u1} R _inst_1 b))
 Case conversion may be inaccurate. Consider using '#align polynomial.to_finsupp_add Polynomial.toFinsupp_addₓ'. -/
 @[simp]
-theorem toFinsupp_add (a b : R[X]) : (a + b).toFinsupp = a.toFinsupp + b.toFinsupp :=
-  by
-  cases a
-  cases b
-  rw [← of_finsupp_add]
+theorem toFinsupp_add (a b : R[X]) : (a + b).toFinsupp = a.toFinsupp + b.toFinsupp := by cases a;
+  cases b; rw [← of_finsupp_add]
 #align polynomial.to_finsupp_add Polynomial.toFinsupp_add
 
 /- warning: polynomial.to_finsupp_neg -> Polynomial.toFinsupp_neg is a dubious translation:
@@ -276,10 +271,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_2 : Ring.{u1} R] (a : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)), Eq.{succ u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.toFinsupp.{u1} R (Ring.toSemiring.{u1} R _inst_2) (Neg.neg.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_2)) (Polynomial.neg'.{u1} R _inst_2) a)) (Neg.neg.{u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (Ring.toNeg.{u1} (AddMonoidAlgebra.{u1, 0} R Nat (Ring.toSemiring.{u1} R _inst_2)) (AddMonoidAlgebra.ring.{u1, 0} R Nat _inst_2 Nat.addMonoid)) (Polynomial.toFinsupp.{u1} R (Ring.toSemiring.{u1} R _inst_2) a))
 Case conversion may be inaccurate. Consider using '#align polynomial.to_finsupp_neg Polynomial.toFinsupp_negₓ'. -/
 @[simp]
-theorem toFinsupp_neg {R : Type u} [Ring R] (a : R[X]) : (-a).toFinsupp = -a.toFinsupp :=
-  by
-  cases a
-  rw [← of_finsupp_neg]
+theorem toFinsupp_neg {R : Type u} [Ring R] (a : R[X]) : (-a).toFinsupp = -a.toFinsupp := by
+  cases a; rw [← of_finsupp_neg]
 #align polynomial.to_finsupp_neg Polynomial.toFinsupp_neg
 
 /- warning: polynomial.to_finsupp_sub -> Polynomial.toFinsupp_sub is a dubious translation:
@@ -290,19 +283,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.to_finsupp_sub Polynomial.toFinsupp_subₓ'. -/
 @[simp]
 theorem toFinsupp_sub {R : Type u} [Ring R] (a b : R[X]) :
-    (a - b).toFinsupp = a.toFinsupp - b.toFinsupp :=
-  by
-  rw [sub_eq_add_neg, ← to_finsupp_neg, ← to_finsupp_add]
-  rfl
+    (a - b).toFinsupp = a.toFinsupp - b.toFinsupp := by
+  rw [sub_eq_add_neg, ← to_finsupp_neg, ← to_finsupp_add]; rfl
 #align polynomial.to_finsupp_sub Polynomial.toFinsupp_sub
 
 #print Polynomial.toFinsupp_mul /-
 @[simp]
-theorem toFinsupp_mul (a b : R[X]) : (a * b).toFinsupp = a.toFinsupp * b.toFinsupp :=
-  by
-  cases a
-  cases b
-  rw [← of_finsupp_mul]
+theorem toFinsupp_mul (a b : R[X]) : (a * b).toFinsupp = a.toFinsupp * b.toFinsupp := by cases a;
+  cases b; rw [← of_finsupp_mul]
 #align polynomial.to_finsupp_mul Polynomial.toFinsupp_mul
 -/
 
@@ -320,9 +308,7 @@ theorem toFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b : R[X]) :
 
 #print Polynomial.toFinsupp_pow /-
 @[simp]
-theorem toFinsupp_pow (a : R[X]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ n :=
-  by
-  cases a
+theorem toFinsupp_pow (a : R[X]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ n := by cases a;
   rw [← of_finsupp_pow]
 #align polynomial.to_finsupp_pow Polynomial.toFinsupp_pow
 -/
@@ -421,15 +407,11 @@ instance {S} [Semiring S] [Module S R] : Module S R[X] :=
 
 instance {S₁ S₂} [SMulZeroClass S₁ R] [SMulZeroClass S₂ R] [SMulCommClass S₁ S₂ R] :
     SMulCommClass S₁ S₂ R[X] :=
-  ⟨by
-    rintro _ _ ⟨⟩
-    simp_rw [← of_finsupp_smul, smul_comm]⟩
+  ⟨by rintro _ _ ⟨⟩; simp_rw [← of_finsupp_smul, smul_comm]⟩
 
 instance {S₁ S₂} [SMul S₁ S₂] [SMulZeroClass S₁ R] [SMulZeroClass S₂ R] [IsScalarTower S₁ S₂ R] :
     IsScalarTower S₁ S₂ R[X] :=
-  ⟨by
-    rintro _ _ ⟨⟩
-    simp_rw [← of_finsupp_smul, smul_assoc]⟩
+  ⟨by rintro _ _ ⟨⟩; simp_rw [← of_finsupp_smul, smul_assoc]⟩
 
 /- warning: polynomial.is_scalar_tower_right -> Polynomial.isScalarTower_right is a dubious translation:
 lean 3 declaration is
@@ -446,16 +428,10 @@ instance isScalarTower_right {α K : Type _} [Semiring K] [DistribSMul α K] [Is
 
 instance {S} [SMulZeroClass S R] [SMulZeroClass Sᵐᵒᵖ R] [IsCentralScalar S R] :
     IsCentralScalar S R[X] :=
-  ⟨by
-    rintro _ ⟨⟩
-    simp_rw [← of_finsupp_smul, op_smul_eq_smul]⟩
+  ⟨by rintro _ ⟨⟩; simp_rw [← of_finsupp_smul, op_smul_eq_smul]⟩
 
 instance [Subsingleton R] : Unique R[X] :=
-  { Polynomial.inhabited with
-    uniq := by
-      rintro ⟨x⟩
-      refine' congr_arg of_finsupp _
-      simp }
+  { Polynomial.inhabited with uniq := by rintro ⟨x⟩; refine' congr_arg of_finsupp _; simp }
 
 variable (R)
 
@@ -528,10 +504,7 @@ theorem support_zero : (0 : R[X]).support = ∅ :=
 
 #print Polynomial.support_eq_empty /-
 @[simp]
-theorem support_eq_empty : p.support = ∅ ↔ p = 0 :=
-  by
-  rcases p with ⟨⟩
-  simp [support]
+theorem support_eq_empty : p.support = ∅ ↔ p = 0 := by rcases p with ⟨⟩; simp [support]
 #align polynomial.support_eq_empty Polynomial.support_eq_empty
 -/
 
@@ -983,9 +956,7 @@ def coeff : R[X] → ℕ → R
 -/
 
 #print Polynomial.coeff_injective /-
-theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) :=
-  by
-  rintro ⟨p⟩ ⟨q⟩
+theorem coeff_injective : Injective (coeff : R[X] → ℕ → R) := by rintro ⟨p⟩ ⟨q⟩;
   simp only [coeff, FunLike.coe_fn_eq, imp_self]
 #align polynomial.coeff_injective Polynomial.coeff_injective
 -/
@@ -1008,10 +979,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {a : R} {m : Nat} {n : Nat} [_inst_1 : Semiring.{u1} R], Eq.{succ u1} R (Polynomial.coeff.{u1} R _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (LinearMap.{u1, u1, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R _inst_1) (Polynomial.module.{u1, u1} R _inst_1 R _inst_1 (Semiring.toModule.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : R) => Polynomial.{u1} R _inst_1) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u1, u1} R R R (Polynomial.{u1} R _inst_1) _inst_1 _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R _inst_1) (Polynomial.module.{u1, u1} R _inst_1 R _inst_1 (Semiring.toModule.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Polynomial.monomial.{u1} R _inst_1 n) a) m) (ite.{succ u1} R (Eq.{1} Nat n m) (instDecidableEqNat n m) a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_monomial Polynomial.coeff_monomialₓ'. -/
-theorem coeff_monomial : coeff (monomial n a) m = if n = m then a else 0 :=
-  by
-  simp only [← of_finsupp_single, coeff, LinearMap.coe_mk]
-  rw [Finsupp.single_apply]
+theorem coeff_monomial : coeff (monomial n a) m = if n = m then a else 0 := by
+  simp only [← of_finsupp_single, coeff, LinearMap.coe_mk]; rw [Finsupp.single_apply]
 #align polynomial.coeff_monomial Polynomial.coeff_monomial
 
 /- warning: polynomial.coeff_zero -> Polynomial.coeff_zero is a dubious translation:
@@ -1027,10 +996,7 @@ theorem coeff_zero (n : ℕ) : coeff (0 : R[X]) n = 0 :=
 
 #print Polynomial.coeff_one_zero /-
 @[simp]
-theorem coeff_one_zero : coeff (1 : R[X]) 0 = 1 :=
-  by
-  rw [← monomial_zero_one, coeff_monomial]
-  simp
+theorem coeff_one_zero : coeff (1 : R[X]) 0 = 1 := by rw [← monomial_zero_one, coeff_monomial]; simp
 #align polynomial.coeff_one_zero Polynomial.coeff_one_zero
 -/
 
@@ -1089,10 +1055,7 @@ but is expected to have type
   forall {R : Type.{u1}} {n : Nat} [_inst_1 : Semiring.{u1} R] {p : Polynomial.{u1} R _inst_1}, Iff (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) n (Polynomial.support.{u1} R _inst_1 p)) (Ne.{succ u1} R (Polynomial.coeff.{u1} R _inst_1 p n) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align polynomial.mem_support_iff Polynomial.mem_support_iffₓ'. -/
 @[simp]
-theorem mem_support_iff : n ∈ p.support ↔ p.coeff n ≠ 0 :=
-  by
-  rcases p with ⟨⟩
-  simp
+theorem mem_support_iff : n ∈ p.support ↔ p.coeff n ≠ 0 := by rcases p with ⟨⟩; simp
 #align polynomial.mem_support_iff Polynomial.mem_support_iff
 
 /- warning: polynomial.not_mem_support_iff -> Polynomial.not_mem_support_iff is a dubious translation:
@@ -1110,9 +1073,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {a : R} {n : Nat} [_inst_1 : Semiring.{u1} R], Eq.{succ u1} R (Polynomial.coeff.{u1} R _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) a) n) (ite.{succ u1} R (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_C Polynomial.coeff_Cₓ'. -/
-theorem coeff_C : coeff (C a) n = ite (n = 0) a 0 :=
-  by
-  convert coeff_monomial using 2
+theorem coeff_C : coeff (C a) n = ite (n = 0) a 0 := by convert coeff_monomial using 2;
   simp [eq_comm]
 #align polynomial.coeff_C Polynomial.coeff_C
 
@@ -1223,9 +1184,7 @@ theorem C_ne_zero : C a ≠ 0 ↔ a ≠ 0 :=
 
 #print Polynomial.subsingleton_iff_subsingleton /-
 theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
-  ⟨@Injective.subsingleton _ _ _ C_injective, by
-    intro
-    infer_instance⟩
+  ⟨@Injective.subsingleton _ _ _ C_injective, by intro ; infer_instance⟩
 #align polynomial.subsingleton_iff_subsingleton Polynomial.subsingleton_iff_subsingleton
 -/
 
@@ -1242,11 +1201,8 @@ theorem forall_eq_iff_forall_eq : (∀ f g : R[X], f = g) ↔ ∀ a b : R, a = b
 -/
 
 #print Polynomial.ext_iff /-
-theorem ext_iff {p q : R[X]} : p = q ↔ ∀ n, coeff p n = coeff q n :=
-  by
-  rcases p with ⟨⟩
-  rcases q with ⟨⟩
-  simp [coeff, Finsupp.ext_iff]
+theorem ext_iff {p q : R[X]} : p = q ↔ ∀ n, coeff p n = coeff q n := by rcases p with ⟨⟩;
+  rcases q with ⟨⟩; simp [coeff, Finsupp.ext_iff]
 #align polynomial.ext_iff Polynomial.ext_iff
 -/
 
@@ -1280,9 +1236,7 @@ theorem addSubmonoid_closure_setOf_eq_monomial :
 Case conversion may be inaccurate. Consider using '#align polynomial.add_hom_ext Polynomial.addHom_extₓ'. -/
 theorem addHom_ext {M : Type _} [AddMonoid M] {f g : R[X] →+ M}
     (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=
-  AddMonoidHom.eq_of_eqOn_denseM addSubmonoid_closure_setOf_eq_monomial <|
-    by
-    rintro p ⟨n, a, rfl⟩
+  AddMonoidHom.eq_of_eqOn_denseM addSubmonoid_closure_setOf_eq_monomial <| by rintro p ⟨n, a, rfl⟩;
     exact h n a
 #align polynomial.add_hom_ext Polynomial.addHom_ext
 
@@ -1336,10 +1290,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (n : Nat) (a : R), HasSubset.Subset.{0} (Finset.{0} Nat) (Finset.instHasSubsetFinset.{0} Nat) (Polynomial.support.{u1} R _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (LinearMap.{u1, u1, u1, u1} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R _inst_1) (Polynomial.module.{u1, u1} R _inst_1 R _inst_1 (Semiring.toModule.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : R) => Polynomial.{u1} R _inst_1) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u1, u1} R R R (Polynomial.{u1} R _inst_1) _inst_1 _inst_1 (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R _inst_1) (Polynomial.module.{u1, u1} R _inst_1 R _inst_1 (Semiring.toModule.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Polynomial.monomial.{u1} R _inst_1 n) a)) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) n)
 Case conversion may be inaccurate. Consider using '#align polynomial.support_monomial' Polynomial.support_monomial'ₓ'. -/
-theorem support_monomial' (n) (a : R) : (monomial n a).support ⊆ singleton n :=
-  by
-  rw [← of_finsupp_single, support]
-  exact Finsupp.support_single_subset
+theorem support_monomial' (n) (a : R) : (monomial n a).support ⊆ singleton n := by
+  rw [← of_finsupp_single, support]; exact Finsupp.support_single_subset
 #align polynomial.support_monomial' Polynomial.support_monomial'
 
 /- warning: polynomial.support_C_mul_X -> Polynomial.support_C_mul_X is a dubious translation:
@@ -1691,10 +1643,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (p : Polynomial.{u1} R _inst_1) (n : Nat), Eq.{succ u1} (AddMonoidAlgebra.{u1, 0} R Nat _inst_1) (Polynomial.toFinsupp.{u1} R _inst_1 (Polynomial.erase.{u1} R _inst_1 n p)) (Finsupp.erase.{0, u1} Nat R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) n (Polynomial.toFinsupp.{u1} R _inst_1 p))
 Case conversion may be inaccurate. Consider using '#align polynomial.to_finsupp_erase Polynomial.toFinsupp_eraseₓ'. -/
 @[simp]
-theorem toFinsupp_erase (p : R[X]) (n : ℕ) : toFinsupp (p.eraseₓ n) = p.toFinsupp.eraseₓ n :=
-  by
-  rcases p with ⟨⟩
-  simp only [erase]
+theorem toFinsupp_erase (p : R[X]) (n : ℕ) : toFinsupp (p.eraseₓ n) = p.toFinsupp.eraseₓ n := by
+  rcases p with ⟨⟩; simp only [erase]
 #align polynomial.to_finsupp_erase Polynomial.toFinsupp_erase
 
 /- warning: polynomial.of_finsupp_erase -> Polynomial.ofFinsupp_erase is a dubious translation:
@@ -1705,10 +1655,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.of_finsupp_erase Polynomial.ofFinsupp_eraseₓ'. -/
 @[simp]
 theorem ofFinsupp_erase (p : AddMonoidAlgebra R ℕ) (n : ℕ) :
-    (⟨p.eraseₓ n⟩ : R[X]) = (⟨p⟩ : R[X]).eraseₓ n :=
-  by
-  rcases p with ⟨⟩
-  simp only [erase]
+    (⟨p.eraseₓ n⟩ : R[X]) = (⟨p⟩ : R[X]).eraseₓ n := by rcases p with ⟨⟩; simp only [erase]
 #align polynomial.of_finsupp_erase Polynomial.ofFinsupp_erase
 
 /- warning: polynomial.support_erase -> Polynomial.support_erase is a dubious translation:
@@ -1718,10 +1665,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (p : Polynomial.{u1} R _inst_1) (n : Nat), Eq.{1} (Finset.{0} Nat) (Polynomial.support.{u1} R _inst_1 (Polynomial.erase.{u1} R _inst_1 n p)) (Finset.erase.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (Polynomial.support.{u1} R _inst_1 p) n)
 Case conversion may be inaccurate. Consider using '#align polynomial.support_erase Polynomial.support_eraseₓ'. -/
 @[simp]
-theorem support_erase (p : R[X]) (n : ℕ) : support (p.eraseₓ n) = (support p).eraseₓ n :=
-  by
-  rcases p with ⟨⟩
-  simp only [support, erase, support_erase]
+theorem support_erase (p : R[X]) (n : ℕ) : support (p.eraseₓ n) = (support p).eraseₓ n := by
+  rcases p with ⟨⟩; simp only [support, erase, support_erase]
 #align polynomial.support_erase Polynomial.support_erase
 
 /- warning: polynomial.monomial_add_erase -> Polynomial.monomial_add_erase is a dubious translation:
@@ -1841,9 +1786,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (p : Polynomial.{u1} R _inst_1) (n : Nat), Eq.{succ u1} (Polynomial.{u1} R _inst_1) (Polynomial.update.{u1} R _inst_1 p n (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))))) (Polynomial.erase.{u1} R _inst_1 n p)
 Case conversion may be inaccurate. Consider using '#align polynomial.update_zero_eq_erase Polynomial.update_zero_eq_eraseₓ'. -/
 @[simp]
-theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.eraseₓ n :=
-  by
-  ext
+theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.eraseₓ n := by ext;
   rw [coeff_update_apply, coeff_erase]
 #align polynomial.update_zero_eq_erase Polynomial.update_zero_eq_erase
 
@@ -1914,9 +1857,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (n : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) (Neg.neg.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.neg'.{u1} R _inst_1) p) n) (Neg.neg.{u1} R (Ring.toNeg.{u1} R _inst_1) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p n))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_neg Polynomial.coeff_negₓ'. -/
 @[simp]
-theorem coeff_neg (p : R[X]) (n : ℕ) : coeff (-p) n = -coeff p n :=
-  by
-  rcases p with ⟨⟩
+theorem coeff_neg (p : R[X]) (n : ℕ) : coeff (-p) n = -coeff p n := by rcases p with ⟨⟩;
   rw [← of_finsupp_neg, coeff, coeff, Finsupp.neg_apply]
 #align polynomial.coeff_neg Polynomial.coeff_neg
 
@@ -1927,11 +1868,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (q : Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (n : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) (HSub.hSub.{u1, u1, u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (instHSub.{u1} (Polynomial.{u1} R (Ring.toSemiring.{u1} R _inst_1)) (Polynomial.sub.{u1} R _inst_1)) p q) n) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_1)) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) p n) (Polynomial.coeff.{u1} R (Ring.toSemiring.{u1} R _inst_1) q n))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_sub Polynomial.coeff_subₓ'. -/
 @[simp]
-theorem coeff_sub (p q : R[X]) (n : ℕ) : coeff (p - q) n = coeff p n - coeff q n :=
-  by
-  rcases p with ⟨⟩
-  rcases q with ⟨⟩
-  rw [← of_finsupp_sub, coeff, coeff, coeff, Finsupp.sub_apply]
+theorem coeff_sub (p q : R[X]) (n : ℕ) : coeff (p - q) n = coeff p n - coeff q n := by
+  rcases p with ⟨⟩; rcases q with ⟨⟩; rw [← of_finsupp_sub, coeff, coeff, coeff, Finsupp.sub_apply]
 #align polynomial.coeff_sub Polynomial.coeff_sub
 
 /- warning: polynomial.monomial_neg -> Polynomial.monomial_neg is a dubious translation:
@@ -1944,9 +1882,7 @@ theorem monomial_neg (n : ℕ) (a : R) : monomial n (-a) = -monomial n a := by
 
 #print Polynomial.support_neg /-
 @[simp]
-theorem support_neg {p : R[X]} : (-p).support = p.support :=
-  by
-  rcases p with ⟨⟩
+theorem support_neg {p : R[X]} : (-p).support = p.support := by rcases p with ⟨⟩;
   rw [← of_finsupp_neg, support, support, Finsupp.support_neg]
 #align polynomial.support_neg Polynomial.support_neg
 -/

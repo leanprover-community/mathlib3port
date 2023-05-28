@@ -59,13 +59,11 @@ private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldl (argAux r) (so
       simp only [foldl_append, foldl_cons, foldl_nil, arg_aux]
       cases hf : foldl (arg_aux r) (some a) tl
       · simp (config := { contextual := true })
-      · dsimp only
-        split_ifs
+      · dsimp only; split_ifs
         · simp (config := { contextual := true })
         · -- `finish [ih _ _ hf]` closes this goal
           rcases ih _ _ hf with (rfl | H)
-          · simp only [mem_cons_iff, mem_append, mem_singleton, Option.mem_def]
-            tauto
+          · simp only [mem_cons_iff, mem_append, mem_singleton, Option.mem_def]; tauto
           · apply fun hm => Or.inr (list.mem_append.mpr <| Or.inl _)
             exact option.mem_some_iff.mp hm ▸ H)
 

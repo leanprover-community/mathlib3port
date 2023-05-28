@@ -107,10 +107,8 @@ theorem HasDerivWithinAt.pow (hc : HasDerivWithinAt c c' s x) :
 #align has_deriv_within_at.pow HasDerivWithinAt.pow
 
 theorem HasDerivAt.pow (hc : HasDerivAt c c' x) :
-    HasDerivAt (fun y => c y ^ n) ((n : 𝕜) * c x ^ (n - 1) * c') x :=
-  by
-  rw [← hasDerivWithinAt_univ] at *
-  exact hc.pow n
+    HasDerivAt (fun y => c y ^ n) ((n : 𝕜) * c x ^ (n - 1) * c') x := by
+  rw [← hasDerivWithinAt_univ] at *; exact hc.pow n
 #align has_deriv_at.pow HasDerivAt.pow
 
 theorem derivWithin_pow' (hc : DifferentiableWithinAt 𝕜 c s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :

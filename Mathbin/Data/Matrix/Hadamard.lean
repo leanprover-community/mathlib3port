@@ -184,9 +184,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : MulZeroOneClass.{u2} α] (M : Matrix.{u1, u1, u2} n n α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.hadamard.{u2, u1, u1} α n n (MulZeroClass.toMul.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α _inst_2)) M (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (MulZeroOneClass.toZero.{u2} α _inst_2) (MulOneClass.toOne.{u2} α (MulZeroOneClass.toMulOneClass.{u2} α _inst_2)))))) (Matrix.diagonal.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (MulZeroOneClass.toZero.{u2} α _inst_2) (fun (i : n) => M i i))
 Case conversion may be inaccurate. Consider using '#align matrix.hadamard_one Matrix.hadamard_oneₓ'. -/
-theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i :=
-  by
-  ext
+theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i := by ext;
   by_cases h : i = j <;> simp [h]
 #align matrix.hadamard_one Matrix.hadamard_one
 
@@ -196,9 +194,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {n : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : MulZeroOneClass.{u2} α] (M : Matrix.{u1, u1, u2} n n α), Eq.{max (succ u2) (succ u1)} (Matrix.{u1, u1, u2} n n α) (Matrix.hadamard.{u2, u1, u1} α n n (MulZeroClass.toMul.{u2} α (MulZeroOneClass.toMulZeroClass.{u2} α _inst_2)) (OfNat.ofNat.{max u2 u1} (Matrix.{u1, u1, u2} n n α) 1 (One.toOfNat1.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (MulZeroOneClass.toZero.{u2} α _inst_2) (MulOneClass.toOne.{u2} α (MulZeroOneClass.toMulOneClass.{u2} α _inst_2))))) M) (Matrix.diagonal.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (MulZeroOneClass.toZero.{u2} α _inst_2) (fun (i : n) => M i i))
 Case conversion may be inaccurate. Consider using '#align matrix.one_hadamard Matrix.one_hadamardₓ'. -/
-theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonal fun i => M i i :=
-  by
-  ext
+theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonal fun i => M i i := by ext;
   by_cases h : i = j <;> simp [h]
 #align matrix.one_hadamard Matrix.one_hadamard
 

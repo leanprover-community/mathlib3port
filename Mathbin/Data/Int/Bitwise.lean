@@ -104,10 +104,8 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | -[n+1] => by
     refine' Eq.trans _ (congr_arg neg_succ_of_nat n.bodd_add_div2)
     dsimp [bodd]; cases Nat.bodd n <;> dsimp [cond, not, div2, Int.mul]
-    · change -[2 * Nat.div2 n+1] = _
-      rw [zero_add]
-    · rw [zero_add, add_comm]
-      rfl
+    · change -[2 * Nat.div2 n+1] = _; rw [zero_add]
+    · rw [zero_add, add_comm]; rfl
 #align int.bodd_add_div2 Int.bodd_add_div2
 -/
 
@@ -131,11 +129,8 @@ theorem bit1_val (n : ℤ) : bit1 n = 2 * n + 1 :=
 -/
 
 #print Int.bit_val /-
-theorem bit_val (b n) : bit b n = 2 * n + cond b 1 0 :=
-  by
-  cases b
-  apply (bit0_val n).trans (add_zero _).symm
-  apply bit1_val
+theorem bit_val (b n) : bit b n = 2 * n + cond b 1 0 := by cases b;
+  apply (bit0_val n).trans (add_zero _).symm; apply bit1_val
 #align int.bit_val Int.bit_val
 -/
 

@@ -140,10 +140,7 @@ theorem IsSRGWith.card_neighborFinset_union_of_adj {v w : V} (h : G.IsSRGWith n 
 theorem compl_neighborFinset_sdiff_inter_eq {v w : V} :
     G.neighborFinset vᶜ \ {v} ∩ (G.neighborFinset wᶜ \ {w}) =
       (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) :=
-  by
-  ext
-  rw [← not_iff_not]
-  simp [imp_iff_not_or, or_assoc', or_comm', or_left_comm]
+  by ext; rw [← not_iff_not]; simp [imp_iff_not_or, or_assoc', or_comm', or_left_comm]
 #align simple_graph.compl_neighbor_finset_sdiff_inter_eq SimpleGraph.compl_neighborFinset_sdiff_inter_eq
 -/
 
@@ -157,8 +154,7 @@ theorem sdiff_compl_neighborFinset_inter_eq {v w : V} (h : G.Adj v w) :
     mem_inter, mem_singleton]
   rintro hnv hnw (rfl | rfl)
   · exact hnv h
-  · apply hnw
-    rwa [adj_comm]
+  · apply hnw; rwa [adj_comm]
 #align simple_graph.sdiff_compl_neighbor_finset_inter_eq SimpleGraph.sdiff_compl_neighborFinset_inter_eq
 -/
 

@@ -162,10 +162,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_2 : DecidableEq.{succ u1} n] [_inst_3 : CommRing.{u2} α] (A : Matrix.{u1, u1, u2} n n α) [_inst_4 : Invertible.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A)] [_inst_5 : Invertible.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.instMulMatrix.{u2, u1} n α _inst_1 (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))))) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) A], Eq.{max (succ u1) (succ u2)} (Matrix.{u1, u1, u2} n n α) (Invertible.invOf.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.instMulMatrix.{u2, u1} n α _inst_1 (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))))) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) A _inst_5) (HSMul.hSMul.{u2, max u1 u2, max u1 u2} α (Matrix.{u1, u1, u2} n n α) (Matrix.{u1, u1, u2} n n α) (instHSMul.{u2, max u1 u2} α (Matrix.{u1, u1, u2} n n α) (Matrix.smul.{u2, u1, u1, u2} n n α α (Algebra.toSMul.{u2, u2} α α (CommRing.toCommSemiring.{u2} α _inst_3) (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)) (Algebra.id.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))))) (Invertible.invOf.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A) _inst_4) (Matrix.adjugate.{u1, u2} n α (fun (a : n) (b : n) => _inst_2 a b) _inst_1 _inst_3 A))
 Case conversion may be inaccurate. Consider using '#align matrix.inv_of_eq Matrix.invOf_eqₓ'. -/
-theorem invOf_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate :=
-  by
-  letI := invertible_of_det_invertible A
-  convert(rfl : ⅟ A = _)
+theorem invOf_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate := by
+  letI := invertible_of_det_invertible A; convert(rfl : ⅟ A = _)
 #align matrix.inv_of_eq Matrix.invOf_eq
 
 /- warning: matrix.det_invertible_of_left_inverse -> Matrix.detInvertibleOfLeftInverse is a dubious translation:
@@ -213,10 +211,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_2 : DecidableEq.{succ u1} n] [_inst_3 : CommRing.{u2} α] (A : Matrix.{u1, u1, u2} n n α) [_inst_4 : Invertible.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.instMulMatrix.{u2, u1} n α _inst_1 (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))))) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) A] [_inst_5 : Invertible.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A)], Eq.{succ u2} α (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 (Invertible.invOf.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.instMulMatrix.{u2, u1} n α _inst_1 (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))))) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_2 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) A _inst_4)) (Invertible.invOf.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A) _inst_5)
 Case conversion may be inaccurate. Consider using '#align matrix.det_inv_of Matrix.det_invOfₓ'. -/
-theorem det_invOf [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det :=
-  by
-  letI := det_invertible_of_invertible A
-  convert(rfl : _ = ⅟ A.det)
+theorem det_invOf [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det := by
+  letI := det_invertible_of_invertible A; convert(rfl : _ = ⅟ A.det)
 #align matrix.det_inv_of Matrix.det_invOf
 
 /- warning: matrix.invertible_equiv_det_invertible -> Matrix.invertibleEquivDetInvertible is a dubious translation:
@@ -428,10 +424,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_2 : DecidableEq.{succ u1} n] [_inst_3 : CommRing.{u2} α] (A : Matrix.{u1, u1, u2} n n α), (IsUnit.{u2} α (MonoidWithZero.toMonoid.{u2} α (Semiring.toMonoidWithZero.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A)) -> (IsUnit.{u2} α (MonoidWithZero.toMonoid.{u2} α (Semiring.toMonoidWithZero.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 (Matrix.transpose.{u2, u1, u1} n n α A)))
 Case conversion may be inaccurate. Consider using '#align matrix.is_unit_det_transpose Matrix.isUnit_det_transposeₓ'. -/
-theorem isUnit_det_transpose (h : IsUnit A.det) : IsUnit Aᵀ.det :=
-  by
-  rw [det_transpose]
-  exact h
+theorem isUnit_det_transpose (h : IsUnit A.det) : IsUnit Aᵀ.det := by rw [det_transpose]; exact h
 #align matrix.is_unit_det_transpose Matrix.isUnit_det_transpose
 
 /-! ### A noncomputable `has_inv` instance  -/
@@ -565,10 +558,7 @@ theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 :=
   rw [← inv_of_eq_nonsing_inv, Matrix.invOf_mul_self]
 #align matrix.nonsing_inv_mul Matrix.nonsing_inv_mul
 
-instance [Invertible A] : Invertible A⁻¹ :=
-  by
-  rw [← inv_of_eq_nonsing_inv]
-  infer_instance
+instance [Invertible A] : Invertible A⁻¹ := by rw [← inv_of_eq_nonsing_inv]; infer_instance
 
 /- warning: matrix.inv_inv_of_invertible -> Matrix.inv_inv_of_invertible is a dubious translation:
 lean 3 declaration is
@@ -748,8 +738,7 @@ Case conversion may be inaccurate. Consider using '#align matrix.det_nonsing_inv
 theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det :=
   by
   by_cases h : IsUnit A.det
-  · cases h.nonempty_invertible
-    letI := invertible_of_det_invertible A
+  · cases h.nonempty_invertible; letI := invertible_of_det_invertible A
     rw [Ring.inverse_invertible, ← inv_of_eq_nonsing_inv, det_inv_of]
   cases isEmpty_or_nonempty n
   · rw [det_is_empty, det_is_empty, Ring.inverse_one]
@@ -824,10 +813,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : Fintype.{u1} n] [_inst_2 : DecidableEq.{succ u1} n] [_inst_3 : CommRing.{u2} α] (A : Matrix.{u1, u1, u2} n n α) [_inst_4 : Invertible.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α (CommRing.toRing.{u2} α _inst_3)))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A)], Eq.{max (succ u1) (succ u2)} (Units.{max u2 u1} (Matrix.{u1, u1, u2} n n α) (MonoidWithZero.toMonoid.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Semiring.toMonoidWithZero.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.semiring.{u2, u1} n α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)) _inst_1 (fun (a : n) (b : n) => _inst_2 a b))))) (Matrix.unitOfDetInvertible.{u1, u2} n α _inst_1 (fun (a : n) (b : n) => _inst_2 a b) _inst_3 A _inst_4) (Matrix.nonsingInvUnit.{u1, u2} n α _inst_1 (fun (a : n) (b : n) => _inst_2 a b) _inst_3 A (isUnit_of_invertible.{u2} α (MonoidWithZero.toMonoid.{u2} α (Semiring.toMonoidWithZero.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_3)))) (Matrix.det.{u2, u1} n (fun (a : n) (b : n) => _inst_2 a b) _inst_1 α _inst_3 A) _inst_4))
 Case conversion may be inaccurate. Consider using '#align matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unitOfDetInvertible_eq_nonsingInvUnitₓ'. -/
 theorem unitOfDetInvertible_eq_nonsingInvUnit [Invertible A.det] :
-    unitOfDetInvertible A = nonsingInvUnit A (isUnit_of_invertible _) :=
-  by
-  ext
-  rfl
+    unitOfDetInvertible A = nonsingInvUnit A (isUnit_of_invertible _) := by ext; rfl
 #align matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unitOfDetInvertible_eq_nonsingInvUnit
 
 variable {A} {B}

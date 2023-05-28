@@ -443,8 +443,7 @@ theorem cospherical_or_collinear_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P
     · rw [he,
         Set.insert_eq_self.2
           (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _)))]
-      by_cases hl : Collinear ℝ ({p₂, p₃, p₄} : Set P)
-      · exact Or.inr hl
+      by_cases hl : Collinear ℝ ({p₂, p₃, p₄} : Set P); · exact Or.inr hl
       rw [or_iff_left hl]
       let t : Affine.Triangle ℝ P := ⟨![p₂, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hl⟩
       rw [cospherical_iff_exists_sphere]

@@ -144,12 +144,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.inv_mem_centralizer₀ Set.inv_mem_centralizer₀ₓ'. -/
 @[simp]
 theorem inv_mem_centralizer₀ [GroupWithZero M] (ha : a ∈ centralizer S) : a⁻¹ ∈ centralizer S :=
-  (eq_or_ne a 0).elim
-    (fun h => by
-      rw [h, inv_zero]
-      exact zero_mem_centralizer S)
-    fun ha0 c hc => by
-    rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc]
+  (eq_or_ne a 0).elim (fun h => by rw [h, inv_zero]; exact zero_mem_centralizer S) fun ha0 c hc =>
+    by rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc]
 #align set.inv_mem_centralizer₀ Set.inv_mem_centralizer₀
 
 /- warning: set.div_mem_centralizer -> Set.div_mem_centralizer is a dubious translation:

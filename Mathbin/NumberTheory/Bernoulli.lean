@@ -97,10 +97,8 @@ but is expected to have type
   forall (n : Nat), Eq.{1} Rat (bernoulli' n) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n k)) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) k)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli' k))))
 Case conversion may be inaccurate. Consider using '#align bernoulli'_def bernoulli'_defₓ'. -/
 theorem bernoulli'_def (n : ℕ) :
-    bernoulli' n = 1 - ∑ k in range n, n.choose k / (n - k + 1) * bernoulli' k :=
-  by
-  rw [bernoulli'_def', ← Fin.sum_univ_eq_sum_range]
-  rfl
+    bernoulli' n = 1 - ∑ k in range n, n.choose k / (n - k + 1) * bernoulli' k := by
+  rw [bernoulli'_def', ← Fin.sum_univ_eq_sum_range]; rfl
 #align bernoulli'_def bernoulli'_def
 
 /- warning: bernoulli'_spec -> bernoulli'_spec is a dubious translation:
@@ -138,37 +136,25 @@ section Examples
 
 #print bernoulli'_zero /-
 @[simp]
-theorem bernoulli'_zero : bernoulli' 0 = 1 :=
-  by
-  rw [bernoulli'_def]
-  norm_num
+theorem bernoulli'_zero : bernoulli' 0 = 1 := by rw [bernoulli'_def]; norm_num
 #align bernoulli'_zero bernoulli'_zero
 -/
 
 #print bernoulli'_one /-
 @[simp]
-theorem bernoulli'_one : bernoulli' 1 = 1 / 2 :=
-  by
-  rw [bernoulli'_def]
-  norm_num
+theorem bernoulli'_one : bernoulli' 1 = 1 / 2 := by rw [bernoulli'_def]; norm_num
 #align bernoulli'_one bernoulli'_one
 -/
 
 #print bernoulli'_two /-
 @[simp]
-theorem bernoulli'_two : bernoulli' 2 = 1 / 6 :=
-  by
-  rw [bernoulli'_def]
-  norm_num [sum_range_succ]
+theorem bernoulli'_two : bernoulli' 2 = 1 / 6 := by rw [bernoulli'_def]; norm_num [sum_range_succ]
 #align bernoulli'_two bernoulli'_two
 -/
 
 #print bernoulli'_three /-
 @[simp]
-theorem bernoulli'_three : bernoulli' 3 = 0 :=
-  by
-  rw [bernoulli'_def]
-  norm_num [sum_range_succ]
+theorem bernoulli'_three : bernoulli' 3 = 0 := by rw [bernoulli'_def]; norm_num [sum_range_succ]
 #align bernoulli'_three bernoulli'_three
 -/
 
@@ -194,14 +180,11 @@ Case conversion may be inaccurate. Consider using '#align sum_bernoulli' sum_ber
 @[simp]
 theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * bernoulli' k) = n :=
   by
-  cases n
-  · simp
+  cases n; · simp
   suffices
     ((n + 1 : ℚ) * ∑ k in range n, ↑(n.choose k) / (n - k + 1) * bernoulli' k) =
       ∑ x in range n, ↑(n.succ.choose x) * bernoulli' x
-    by
-    rw_mod_cast [sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]
-    ring
+    by rw_mod_cast [sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]; ring
   simp_rw [mul_sum, ← mul_assoc]
   refine' sum_congr rfl fun k hk => _
   congr
@@ -227,7 +210,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   by
   ext n
   -- constant coefficient is a special case
-  cases n
+  cases n;
   · simp
   rw [bernoulli'PowerSeries, coeff_mul, mul_comm X, sum_antidiagonal_succ']
   suffices (∑ p in antidiagonal n, bernoulli' p.1 / p.1! * ((p.2 + 1) * p.2!)⁻¹) = n !⁻¹ by
@@ -244,8 +227,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   field_simp [mul_comm _ (bernoulli' i), mul_assoc, add_choose]
   rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_char_zero, cast_mul]
-  assumption
-  rwa [Nat.cast_succ]
+  assumption; rwa [Nat.cast_succ]
 #align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_one
 
 #print bernoulli'_odd_eq_zero /-
@@ -315,10 +297,8 @@ Case conversion may be inaccurate. Consider using '#align sum_bernoulli sum_bern
 theorem sum_bernoulli (n : ℕ) :
     (∑ k in range n, (n.choose k : ℚ) * bernoulli k) = if n = 1 then 1 else 0 :=
   by
-  cases n
-  · simp
-  cases n
-  · simp
+  cases n; · simp
+  cases n; · simp
   suffices (∑ i in range n, ↑((n + 2).choose (i + 2)) * bernoulli (i + 2)) = n / 2
     by
     simp only [this, sum_range_succ', cast_succ, bernoulli_one, bernoulli_zero, choose_one_right,
@@ -327,8 +307,7 @@ theorem sum_bernoulli (n : ℕ) :
   have f := sum_bernoulli' n.succ.succ
   simp_rw [sum_range_succ', bernoulli'_one, choose_one_right, cast_succ, ← eq_sub_iff_add_eq] at f
   convert f
-  · funext x
-    rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
+  · funext x; rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
   · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
     ring
 #align sum_bernoulli sum_bernoulli
@@ -486,7 +465,7 @@ theorem sum_Ico_pow (n p : ℕ) :
   by
   rw [← Nat.cast_succ]
   -- dispose of the trivial case
-  cases p
+  cases p;
   · simp
   let f i := bernoulli i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
   let f' i := bernoulli' i * p.succ.succ.choose i * n ^ (p.succ.succ - i) / p.succ.succ
@@ -526,9 +505,7 @@ theorem sum_Ico_pow (n p : ℕ) :
     -- convert from `bernoulli` to `bernoulli'`
         _ =
         (∑ i in range p, f' i.succ.succ) + f' 1 + f' 0 :=
-      by
-      simp only [f, f']
-      simpa [h1, fun i => show i + 2 = i + 1 + 1 from rfl]
+      by simp only [f, f']; simpa [h1, fun i => show i + 2 = i + 1 + 1 from rfl]
     -- rejoin the first two terms of the sum
         _ =
         ∑ i in range p.succ.succ, f' i :=

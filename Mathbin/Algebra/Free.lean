@@ -93,10 +93,7 @@ def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x))
 #print FreeMagma.hom_ext /-
 @[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
-  FunLike.ext _ _ fun x =>
-    recOnMul x (congr_fun h) <| by
-      intros
-      simp only [map_mul, *]
+  FunLike.ext _ _ fun x => recOnMul x (congr_fun h) <| by intros ; simp only [map_mul, *]
 #align free_magma.hom_ext FreeMagma.hom_ext
 #align free_add_magma.hom_ext FreeAddMagma.hom_ext
 -/
@@ -138,12 +135,8 @@ def lift : (α → β) ≃ (FreeMagma α →ₙ* β)
     { toFun := liftAux f
       map_mul' := fun x y => rfl }
   invFun F := F ∘ of
-  left_inv f := by
-    ext
-    rfl
-  right_inv F := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv F := by ext; rfl
 #align free_magma.lift FreeMagma.lift
 #align free_add_magma.lift FreeAddMagma.lift
 -/
@@ -1210,10 +1203,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_magma.to_free_semigroup_comp_map FreeMagma.toFreeSemigroup_comp_mapₓ'. -/
 @[to_additive]
 theorem toFreeSemigroup_comp_map (f : α → β) :
-    toFreeSemigroup.comp (map f) = (FreeSemigroup.map f).comp toFreeSemigroup :=
-  by
-  ext1
-  rfl
+    toFreeSemigroup.comp (map f) = (FreeSemigroup.map f).comp toFreeSemigroup := by ext1; rfl
 #align free_magma.to_free_semigroup_comp_map FreeMagma.toFreeSemigroup_comp_map
 
 #print FreeMagma.toFreeSemigroup_map /-
@@ -1246,12 +1236,6 @@ Case conversion may be inaccurate. Consider using '#align free_magma_assoc_quoti
 def FreeMagmaAssocQuotientEquiv (α : Type u) :
     Magma.AssocQuotient (FreeMagma α) ≃* FreeSemigroup α :=
   (Magma.AssocQuotient.lift FreeMagma.toFreeSemigroup).toMulEquiv
-    (FreeSemigroup.lift (Magma.AssocQuotient.of ∘ FreeMagma.of))
-    (by
-      ext
-      rfl)
-    (by
-      ext1
-      rfl)
+    (FreeSemigroup.lift (Magma.AssocQuotient.of ∘ FreeMagma.of)) (by ext; rfl) (by ext1; rfl)
 #align free_magma_assoc_quotient_equiv FreeMagmaAssocQuotientEquiv
 

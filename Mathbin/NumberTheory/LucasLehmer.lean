@@ -131,8 +131,7 @@ theorem sMod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i :=
   by
   cases i <;> dsimp [s_mod]
   · exact sup_eq_right.mp rfl
-  · apply Int.emod_nonneg
-    exact mersenne_int_ne_zero p w
+  · apply Int.emod_nonneg; exact mersenne_int_ne_zero p w
 #align lucas_lehmer.s_mod_nonneg LucasLehmer.sMod_nonneg
 -/
 
@@ -170,8 +169,7 @@ Case conversion may be inaccurate. Consider using '#align lucas_lehmer.s_zmod_eq
 theorem sZMod_eq_s (p' : ℕ) (i : ℕ) : sZMod (p' + 2) i = (s i : ZMod (2 ^ (p' + 2) - 1)) :=
   by
   induction' i with i ih
-  · dsimp [s, s_zmod]
-    norm_num
+  · dsimp [s, s_zmod]; norm_num
   · push_cast [s, s_zmod, ih]
 #align lucas_lehmer.s_zmod_eq_s LucasLehmer.sZMod_eq_s
 
@@ -234,9 +232,7 @@ theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
     apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
     exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
-  · intro h
-    rw [h]
-    simp
+  · intro h; rw [h]; simp
 #align lucas_lehmer.residue_eq_zero_iff_s_mod_eq_zero LucasLehmer.residue_eq_zero_iff_sMod_eq_zero
 
 #print LucasLehmer.LucasLehmerTest /-
@@ -413,22 +409,14 @@ but is expected to have type
   forall {q : Type.{u}} {x : Type.{v}}, (Nat -> q -> x) -> Nat -> (List.{u} q) -> (List.{v} x)
 Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.bit1_snd [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : X q) : (bit1 x).2 = bit0 x.2 :=
-  by
-  dsimp [bit1]
-  simp
+theorem [anonymous] (x : X q) : (bit1 x).2 = bit0 x.2 := by dsimp [bit1]; simp
 #align lucas_lehmer.X.bit1_snd [anonymous]
 
 instance : Monoid (X q) :=
   {
     (inferInstance :
-      Mul
-        (X
-          q)) with
-    mul_assoc := fun x y z => by
-      ext <;>
-        · dsimp
-          ring
+      Mul (X q)) with
+    mul_assoc := fun x y z => by ext <;> · dsimp; ring
     one := ⟨1, 0⟩
     one_mul := fun x => by ext <;> simp
     mul_one := fun x => by ext <;> simp }
@@ -448,10 +436,7 @@ lean 3 declaration is
 but is expected to have type
   forall {q : PNat} (x : LucasLehmer.X q) (y : LucasLehmer.X q) (z : LucasLehmer.X q), Eq.{1} (LucasLehmer.X q) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) x (HAdd.hAdd.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHAdd.{0} (LucasLehmer.X q) (AddZeroClass.toAdd.{0} (LucasLehmer.X q) (AddMonoid.toAddZeroClass.{0} (LucasLehmer.X q) (AddMonoidWithOne.toAddMonoid.{0} (LucasLehmer.X q) (AddGroupWithOne.toAddMonoidWithOne.{0} (LucasLehmer.X q) (LucasLehmer.X.instAddGroupWithOneX q)))))) y z)) (HAdd.hAdd.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHAdd.{0} (LucasLehmer.X q) (AddZeroClass.toAdd.{0} (LucasLehmer.X q) (AddMonoid.toAddZeroClass.{0} (LucasLehmer.X q) (AddMonoidWithOne.toAddMonoid.{0} (LucasLehmer.X q) (AddGroupWithOne.toAddMonoidWithOne.{0} (LucasLehmer.X q) (LucasLehmer.X.instAddGroupWithOneX q)))))) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) x y) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) x z))
 Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.left_distrib LucasLehmer.X.left_distribₓ'. -/
-theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
-  ext <;>
-    · dsimp
-      ring
+theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by ext <;> · dsimp; ring
 #align lucas_lehmer.X.left_distrib LucasLehmer.X.left_distrib
 
 /- warning: lucas_lehmer.X.right_distrib -> LucasLehmer.X.right_distrib is a dubious translation:
@@ -460,10 +445,7 @@ lean 3 declaration is
 but is expected to have type
   forall {q : PNat} (x : LucasLehmer.X q) (y : LucasLehmer.X q) (z : LucasLehmer.X q), Eq.{1} (LucasLehmer.X q) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) (HAdd.hAdd.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHAdd.{0} (LucasLehmer.X q) (AddZeroClass.toAdd.{0} (LucasLehmer.X q) (AddMonoid.toAddZeroClass.{0} (LucasLehmer.X q) (AddMonoidWithOne.toAddMonoid.{0} (LucasLehmer.X q) (AddGroupWithOne.toAddMonoidWithOne.{0} (LucasLehmer.X q) (LucasLehmer.X.instAddGroupWithOneX q)))))) x y) z) (HAdd.hAdd.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHAdd.{0} (LucasLehmer.X q) (AddZeroClass.toAdd.{0} (LucasLehmer.X q) (AddMonoid.toAddZeroClass.{0} (LucasLehmer.X q) (AddMonoidWithOne.toAddMonoid.{0} (LucasLehmer.X q) (AddGroupWithOne.toAddMonoidWithOne.{0} (LucasLehmer.X q) (LucasLehmer.X.instAddGroupWithOneX q)))))) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) x z) (HMul.hMul.{0, 0, 0} (LucasLehmer.X q) (LucasLehmer.X q) (LucasLehmer.X q) (instHMul.{0} (LucasLehmer.X q) (LucasLehmer.X.instMulX q)) y z))
 Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.right_distrib LucasLehmer.X.right_distribₓ'. -/
-theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
-  ext <;>
-    · dsimp
-      ring
+theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by ext <;> · dsimp; ring
 #align lucas_lehmer.X.right_distrib LucasLehmer.X.right_distrib
 
 instance : Ring (X q) :=
@@ -473,16 +455,10 @@ instance : Ring (X q) :=
     right_distrib := right_distrib }
 
 instance : CommRing (X q) :=
-  { (inferInstance : Ring (X q)) with
-    mul_comm := fun x y => by
-      ext <;>
-        · dsimp
-          ring }
+  { (inferInstance : Ring (X q)) with mul_comm := fun x y => by ext <;> · dsimp; ring }
 
 instance [Fact (1 < (q : ℕ))] : Nontrivial (X q) :=
-  ⟨⟨0, 1, fun h => by
-      injection h with h1 _
-      exact zero_ne_one h1⟩⟩
+  ⟨⟨0, 1, fun h => by injection h with h1 _; exact zero_ne_one h1⟩⟩
 
 /- warning: lucas_lehmer.X.nat_coe_fst -> LucasLehmer.X.nat_coe_fst is a dubious translation:
 lean 3 declaration is
@@ -656,9 +632,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
   simp at H
   interval_cases; clear H
   · -- If q = 1, we get a contradiction from 2^p = 2
-    dsimp [q] at h
-    injection h with h'
-    clear h
+    dsimp [q] at h; injection h with h'; clear h
     simp [mersenne] at h'
     exact
       lt_irrefl 2
@@ -668,9 +642,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
           _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
           )
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
-    dsimp [q] at h
-    injection h with h'
-    clear h
+    dsimp [q] at h; injection h with h'; clear h
     rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
@@ -839,9 +811,7 @@ but is expected to have type
   forall {p : Nat} {a : Int} {i : Nat} {b : Int} {c : Int}, (Eq.{1} Int (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2)) p) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) a) -> (Eq.{1} Int (LucasLehmer.sMod p i) b) -> (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b b) (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) a) c) -> (Eq.{1} Int (LucasLehmer.sMod p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) c)
 Case conversion may be inaccurate. Consider using '#align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succₓ'. -/
 theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
-    (h3 : (b * b - 2) % a = c) : sMod p (i + 1) = c :=
-  by
-  dsimp [s_mod, mersenne]
+    (h3 : (b * b - 2) % a = c) : sMod p (i + 1) = c := by dsimp [s_mod, mersenne];
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 

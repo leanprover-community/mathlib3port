@@ -375,10 +375,7 @@ theorem Mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
 -/
 
 #print PSet.func_mem /-
-theorem func_mem (x : PSet) (i : x.type) : x.Func i ∈ x :=
-  by
-  cases x
-  apply mem.mk
+theorem func_mem (x : PSet) (i : x.type) : x.Func i ∈ x := by cases x; apply mem.mk
 #align pSet.func_mem PSet.func_mem
 -/
 
@@ -652,9 +649,7 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
     ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).Func c))⟩ =>
       have : Func (A a) c ∈ mk (A a).type (A a).Func := Mem.mk (A a).Func c
       ⟨_, Mem.mk _ _, (Mem.congr_left e).2 (by rwa [eta] at this)⟩,
-      fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ =>
-      by
-      rw [← eta (A a)] at e
+      fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ => by rw [← eta (A a)] at e;
       exact
         let ⟨βt, tβ⟩ := e
         let ⟨c, bc⟩ := βt b
@@ -665,10 +660,7 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print PSet.toSet_sUnion /-
 @[simp]
-theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
-  by
-  ext
-  simp
+theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) := by ext; simp
 #align pSet.to_set_sUnion PSet.toSet_sUnion
 -/
 
@@ -1141,17 +1133,12 @@ theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
 -/
 
 #print ZFSet.eq_empty /-
-theorem eq_empty (x : ZFSet.{u}) : x = ∅ ↔ ∀ y : ZFSet.{u}, y ∉ x :=
-  by
-  rw [ext_iff]
-  simp
+theorem eq_empty (x : ZFSet.{u}) : x = ∅ ↔ ∀ y : ZFSet.{u}, y ∉ x := by rw [ext_iff]; simp
 #align Set.eq_empty ZFSet.eq_empty
 -/
 
 #print ZFSet.eq_empty_or_nonempty /-
-theorem eq_empty_or_nonempty (u : ZFSet) : u = ∅ ∨ u.Nonempty :=
-  by
-  rw [eq_empty, ← not_exists]
+theorem eq_empty_or_nonempty (u : ZFSet) : u = ∅ ∨ u.Nonempty := by rw [eq_empty, ← not_exists];
   apply em'
 #align Set.eq_empty_or_nonempty ZFSet.eq_empty_or_nonempty
 -/
@@ -1215,10 +1202,7 @@ theorem mem_insert_of_mem {y z : ZFSet} (x) (h : z ∈ y) : z ∈ insert x y :=
 
 #print ZFSet.toSet_insert /-
 @[simp]
-theorem toSet_insert (x y : ZFSet) : (insert x y).toSet = insert x y.toSet :=
-  by
-  ext
-  simp
+theorem toSet_insert (x y : ZFSet) : (insert x y).toSet = insert x y.toSet := by ext; simp
 #align Set.to_set_insert ZFSet.toSet_insert
 -/
 
@@ -1232,10 +1216,7 @@ theorem mem_singleton {x y : ZFSet.{u}} : x ∈ @singleton ZFSet.{u} ZFSet.{u} _
 
 #print ZFSet.toSet_singleton /-
 @[simp]
-theorem toSet_singleton (x : ZFSet) : ({x} : ZFSet).toSet = {x} :=
-  by
-  ext
-  simp
+theorem toSet_singleton (x : ZFSet) : ({x} : ZFSet).toSet = {x} := by ext; simp
 #align Set.to_set_singleton ZFSet.toSet_singleton
 -/
 
@@ -1305,19 +1286,14 @@ instance : Sep ZFSet ZFSet :=
 theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@Quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
-      ⟨⟨a, by
-          rw [mk_func] at h
-          rwa [mk_func, ← ZFSet.sound h]⟩,
-        h⟩⟩
+      ⟨⟨a, by rw [mk_func] at h; rwa [mk_func, ← ZFSet.sound h]⟩, h⟩⟩
 #align Set.mem_sep ZFSet.mem_sep
 -/
 
 #print ZFSet.toSet_sep /-
 @[simp]
 theorem toSet_sep (a : ZFSet) (p : ZFSet → Prop) : { x ∈ a | p x }.toSet = { x ∈ a.toSet | p x } :=
-  by
-  ext
-  simp
+  by ext; simp
 #align Set.to_set_sep ZFSet.toSet_sep
 -/
 
@@ -1361,10 +1337,7 @@ theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : 
       have : PSet.Equiv ((A a).Func c) ((B b).Func (Eq.ndrec d (Eq.symm eb))) :=
         match A a, B b, ea, eb, c, d, hd with
         | _, _, rfl, rfl, x, y, hd => hd
-      ⟨⟨b, by
-          rw [mk_func]
-          exact Eq.ndrec d (Eq.symm eb)⟩,
-        this⟩
+      ⟨⟨b, by rw [mk_func]; exact Eq.ndrec d (Eq.symm eb)⟩, this⟩
 #align Set.sUnion_lem ZFSet.sUnion_lem
 -/
 
@@ -1421,9 +1394,7 @@ theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.sUnion_empty /-
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : ZFSet) = ∅ := by
-  ext
-  simp
+theorem sUnion_empty : ⋃₀ (∅ : ZFSet) = ∅ := by ext; simp
 #align Set.sUnion_empty ZFSet.sUnion_empty
 -/
 
@@ -1479,20 +1450,15 @@ theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.toSet_sUnion /-
 @[simp]
-theorem toSet_sUnion (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
-  by
-  ext
-  simp
+theorem toSet_sUnion (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) := by ext; simp
 #align Set.to_set_sUnion ZFSet.toSet_sUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.toSet_sInter /-
-theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
-  by
-  ext
-  simp [mem_sInter h]
+theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) := by
+  ext; simp [mem_sInter h]
 #align Set.to_set_sInter ZFSet.toSet_sInter
 -/
 
@@ -1549,11 +1515,8 @@ but is expected to have type
   forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Union.union.{succ u1} ZFSet.{u1} ZFSet.instUnionZFSet.{u1} x y)) (Union.union.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instUnionSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
 Case conversion may be inaccurate. Consider using '#align Set.to_set_union ZFSet.toSet_unionₓ'. -/
 @[simp]
-theorem toSet_union (x y : ZFSet.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet :=
-  by
-  unfold Union.union
-  rw [ZFSet.union]
-  simp
+theorem toSet_union (x y : ZFSet.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet := by unfold Union.union;
+  rw [ZFSet.union]; simp
 #align Set.to_set_union ZFSet.toSet_union
 
 /- warning: Set.to_set_inter -> ZFSet.toSet_inter is a dubious translation:
@@ -1563,12 +1526,8 @@ but is expected to have type
   forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (Inter.inter.{succ u1} ZFSet.{u1} ZFSet.instInterZFSet.{u1} x y)) (Inter.inter.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instInterSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
 Case conversion may be inaccurate. Consider using '#align Set.to_set_inter ZFSet.toSet_interₓ'. -/
 @[simp]
-theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet :=
-  by
-  unfold Inter.inter
-  rw [ZFSet.inter]
-  ext
-  simp
+theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet := by unfold Inter.inter;
+  rw [ZFSet.inter]; ext; simp
 #align Set.to_set_inter ZFSet.toSet_inter
 
 /- warning: Set.to_set_sdiff -> ZFSet.toSet_sdiff is a dubious translation:
@@ -1578,19 +1537,13 @@ but is expected to have type
   forall (x : ZFSet.{u1}) (y : ZFSet.{u1}), Eq.{succ (succ u1)} (Set.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} (SDiff.sdiff.{succ u1} ZFSet.{u1} ZFSet.instSDiffZFSet.{u1} x y)) (SDiff.sdiff.{succ u1} (Set.{succ u1} ZFSet.{u1}) (Set.instSDiffSet.{succ u1} ZFSet.{u1}) (ZFSet.toSet.{u1} x) (ZFSet.toSet.{u1} y))
 Case conversion may be inaccurate. Consider using '#align Set.to_set_sdiff ZFSet.toSet_sdiffₓ'. -/
 @[simp]
-theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet :=
-  by
-  change { z ∈ x | z ∉ y }.toSet = _
-  ext
-  simp
+theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet := by
+  change { z ∈ x | z ∉ y }.toSet = _; ext; simp
 #align Set.to_set_sdiff ZFSet.toSet_sdiff
 
 #print ZFSet.mem_union /-
 @[simp]
-theorem mem_union {x y z : ZFSet.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :=
-  by
-  rw [← mem_to_set]
-  simp
+theorem mem_union {x y z : ZFSet.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y := by rw [← mem_to_set]; simp
 #align Set.mem_union ZFSet.mem_union
 -/
 
@@ -1717,9 +1670,7 @@ theorem mem_image :
 #print ZFSet.toSet_image /-
 @[simp]
 theorem toSet_image (f : ZFSet → ZFSet) [H : Definable 1 f] (x : ZFSet) :
-    (image f x).toSet = f '' x.toSet := by
-  ext
-  simp
+    (image f x).toSet = f '' x.toSet := by ext; simp
 #align Set.to_set_image ZFSet.toSet_image
 -/
 
@@ -1747,10 +1698,8 @@ theorem mem_range {α : Type u} {f : α → ZFSet.{max u v}} {x : ZFSet.{max u v
 
 #print ZFSet.toSet_range /-
 @[simp]
-theorem toSet_range {α : Type u} (f : α → ZFSet.{max u v}) : (range f).toSet = Set.range f :=
-  by
-  ext
-  simp
+theorem toSet_range {α : Type u} (f : α → ZFSet.{max u v}) : (range f).toSet = Set.range f := by
+  ext; simp
 #align Set.to_set_range ZFSet.toSet_range
 -/
 
@@ -1788,8 +1737,7 @@ theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
   rcases e with ⟨a, ax, b, bY, rfl, pab⟩
   simp only [mem_powerset, subset_def, mem_union, pair, mem_pair]
   rintro u (rfl | rfl) v <;> simp only [mem_singleton, mem_pair]
-  · rintro rfl
-    exact Or.inl ax
+  · rintro rfl; exact Or.inl ax
   · rintro (rfl | rfl) <;> [left;right] <;> assumption
 #align Set.mem_pair_sep ZFSet.mem_pairSep
 
@@ -2138,10 +2086,7 @@ def congToClass (x : Set Class.{u}) : Class.{u} :=
 
 #print Class.congToClass_empty /-
 @[simp]
-theorem congToClass_empty : congToClass ∅ = ∅ :=
-  by
-  ext
-  simp [Cong_to_Class]
+theorem congToClass_empty : congToClass ∅ = ∅ := by ext; simp [Cong_to_Class]
 #align Class.Cong_to_Class_empty Class.congToClass_empty
 -/
 
@@ -2154,10 +2099,7 @@ def classToCong (x : Class.{u}) : Set Class.{u} :=
 
 #print Class.classToCong_empty /-
 @[simp]
-theorem classToCong_empty : classToCong ∅ = ∅ :=
-  by
-  ext
-  simp [Class_to_Cong]
+theorem classToCong_empty : classToCong ∅ = ∅ := by ext; simp [Class_to_Cong]
 #align Class.Class_to_Cong_empty Class.classToCong_empty
 -/
 
@@ -2192,9 +2134,7 @@ prefix:110 "⋂₀ " => Class.sInter
 
 #print Class.ofSet.inj /-
 theorem ofSet.inj {x y : ZFSet.{u}} (h : (x : Class.{u}) = y) : x = y :=
-  ZFSet.ext fun z => by
-    change (x : Class.{u}) z ↔ (y : Class.{u}) z
-    rw [h]
+  ZFSet.ext fun z => by change (x : Class.{u}) z ↔ (y : Class.{u}) z; rw [h]
 #align Class.of_Set.inj Class.ofSet.inj
 -/
 
@@ -2354,10 +2294,8 @@ theorem coe_sInter {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.mem_of_mem_sInter /-
-theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
-  by
-  obtain ⟨w, rfl, hw⟩ := hy
-  exact coe_mem.2 (hw z hz)
+theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z := by
+  obtain ⟨w, rfl, hw⟩ := hy; exact coe_mem.2 (hw z hz)
 #align Class.mem_of_mem_sInter Class.mem_of_mem_sInter
 -/
 
@@ -2377,20 +2315,14 @@ theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sUnion_empty /-
 @[simp]
-theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
-  by
-  ext
-  simp
+theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ := by ext; simp
 #align Class.sUnion_empty Class.sUnion_empty
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Class.sInter_empty /-
 @[simp]
-theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ :=
-  by
-  ext
-  simp [sInter, ← univ]
+theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ := by ext; simp [sInter, ← univ]
 #align Class.sInter_empty Class.sInter_empty
 -/
 
@@ -2461,15 +2393,11 @@ namespace ZFSet
 @[simp]
 theorem map_fval {f : ZFSet.{u} → ZFSet.{u}} [H : PSet.Definable 1 f] {x y : ZFSet.{u}}
     (h : y ∈ x) : (ZFSet.map f x ′ y : Class.{u}) = f y :=
-  Class.iota_val _ _ fun z =>
-    by
-    rw [Class.toSet_of_ZFSet, Class.coe_apply, mem_map]
+  Class.iota_val _ _ fun z => by rw [Class.toSet_of_ZFSet, Class.coe_apply, mem_map];
     exact
       ⟨fun ⟨w, wz, pr⟩ => by
         let ⟨wy, fw⟩ := ZFSet.pair_injective pr
-        rw [← fw, wy], fun e => by
-        subst e
-        exact ⟨_, h, rfl⟩⟩
+        rw [← fw, wy], fun e => by subst e; exact ⟨_, h, rfl⟩⟩
 #align Set.map_fval ZFSet.map_fval
 -/
 

@@ -131,12 +131,8 @@ variable {L L'} {L'' : Language}
 #print FirstOrder.Language.LHom.funext /-
 @[ext]
 protected theorem funext {F G : L →ᴸ L'} (h_fun : F.onFunction = G.onFunction)
-    (h_rel : F.onRelation = G.onRelation) : F = G :=
-  by
-  cases' F with Ff Fr
-  cases' G with Gf Gr
-  simp only [*]
-  exact And.intro h_fun h_rel
+    (h_rel : F.onRelation = G.onRelation) : F = G := by cases' F with Ff Fr; cases' G with Gf Gr;
+  simp only [*]; exact And.intro h_fun h_rel
 #align first_order.language.Lhom.funext FirstOrder.Language.LHom.funext
 -/
 
@@ -176,19 +172,13 @@ local infixl:60 " ∘ " => LHom.comp
 
 #print FirstOrder.Language.LHom.id_comp /-
 @[simp]
-theorem id_comp (F : L →ᴸ L') : LHom.id L' ∘ F = F :=
-  by
-  cases F
-  rfl
+theorem id_comp (F : L →ᴸ L') : LHom.id L' ∘ F = F := by cases F; rfl
 #align first_order.language.Lhom.id_comp FirstOrder.Language.LHom.id_comp
 -/
 
 #print FirstOrder.Language.LHom.comp_id /-
 @[simp]
-theorem comp_id (F : L →ᴸ L') : F ∘ LHom.id L = F :=
-  by
-  cases F
-  rfl
+theorem comp_id (F : L →ᴸ L') : F ∘ LHom.id L = F := by cases F; rfl
 #align first_order.language.Lhom.comp_id FirstOrder.Language.LHom.comp_id
 -/
 

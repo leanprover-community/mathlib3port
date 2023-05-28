@@ -79,10 +79,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {r : R -> R -> Prop} {{a : R}} {{b : R}} {{c : R}}, (RingQuot.Rel.{u1} R _inst_1 r b c) -> (RingQuot.Rel.{u1} R _inst_1 r (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) a b) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) a c))
 Case conversion may be inaccurate. Consider using '#align ring_quot.rel.add_right RingQuot.Rel.add_rightₓ'. -/
-theorem Rel.add_right {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a + b) (a + c) :=
-  by
-  rw [add_comm a b, add_comm a c]
-  exact rel.add_left h
+theorem Rel.add_right {r : R → R → Prop} ⦃a b c : R⦄ (h : Rel r b c) : Rel r (a + b) (a + c) := by
+  rw [add_comm a b, add_comm a c]; exact rel.add_left h
 #align ring_quot.rel.add_right RingQuot.Rel.add_right
 
 /- warning: ring_quot.rel.neg -> RingQuot.Rel.neg is a dubious translation:
@@ -297,11 +295,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (r : R -> R -> Prop) {a : R} {b : R}, Eq.{succ u1} (RingQuot.{u1} R _inst_1 r) (HAdd.hAdd.{u1, u1, u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.{u1} R _inst_1 r) (RingQuot.{u1} R _inst_1 r) (instHAdd.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instAddRingQuot.{u1} R _inst_1 r)) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) a)) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) b))) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) a b)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.add_quot RingQuot.add_quotₓ'. -/
-theorem add_quot {a b} : (⟨Quot.mk _ a⟩ + ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a + b)⟩ :=
-  by
-  show add r _ _ = _
-  rw [add]
-  rfl
+theorem add_quot {a b} : (⟨Quot.mk _ a⟩ + ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a + b)⟩ := by
+  show add r _ _ = _; rw [add]; rfl
 #align ring_quot.add_quot RingQuot.add_quot
 
 /- warning: ring_quot.mul_quot -> RingQuot.mul_quot is a dubious translation:
@@ -310,11 +305,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (r : R -> R -> Prop) {a : R} {b : R}, Eq.{succ u1} (RingQuot.{u1} R _inst_1 r) (HMul.hMul.{u1, u1, u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.{u1} R _inst_1 r) (RingQuot.{u1} R _inst_1 r) (instHMul.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instMulRingQuot.{u1} R _inst_1 r)) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) a)) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) b))) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) a b)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.mul_quot RingQuot.mul_quotₓ'. -/
-theorem mul_quot {a b} : (⟨Quot.mk _ a⟩ * ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a * b)⟩ :=
-  by
-  show mul r _ _ = _
-  rw [mul]
-  rfl
+theorem mul_quot {a b} : (⟨Quot.mk _ a⟩ * ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a * b)⟩ := by
+  show mul r _ _ = _; rw [mul]; rfl
 #align ring_quot.mul_quot RingQuot.mul_quot
 
 /- warning: ring_quot.pow_quot -> RingQuot.pow_quot is a dubious translation:
@@ -323,10 +315,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (r : R -> R -> Prop) {a : R} {n : Nat}, Eq.{succ u1} (RingQuot.{u1} R _inst_1 r) (HPow.hPow.{u1, 0, u1} (RingQuot.{u1} R _inst_1 r) Nat (RingQuot.{u1} R _inst_1 r) (instHPow.{u1, 0} (RingQuot.{u1} R _inst_1 r) Nat (RingQuot.instPowRingQuotNat.{u1} R _inst_1 r)) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) a)) n) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) a n)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.pow_quot RingQuot.pow_quotₓ'. -/
-theorem pow_quot {a} {n : ℕ} : (⟨Quot.mk _ a⟩ ^ n : RingQuot r) = ⟨Quot.mk _ (a ^ n)⟩ :=
-  by
-  show npow r _ _ = _
-  rw [npow]
+theorem pow_quot {a} {n : ℕ} : (⟨Quot.mk _ a⟩ ^ n : RingQuot r) = ⟨Quot.mk _ (a ^ n)⟩ := by
+  show npow r _ _ = _; rw [npow]
 #align ring_quot.pow_quot RingQuot.pow_quot
 
 /- warning: ring_quot.neg_quot -> RingQuot.neg_quot is a dubious translation:
@@ -336,11 +326,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_5 : Ring.{u1} R] (r : R -> R -> Prop) {a : R}, Eq.{succ u1} (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (Neg.neg.{u1} (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (RingQuot.instNegRingQuotToSemiring.{u1} R _inst_5 r) (RingQuot.mk.{u1} R (Ring.toSemiring.{u1} R _inst_5) r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) a))) (RingQuot.mk.{u1} R (Ring.toSemiring.{u1} R _inst_5) r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (Neg.neg.{u1} R (Ring.toNeg.{u1} R _inst_5) a)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.neg_quot RingQuot.neg_quotₓ'. -/
 theorem neg_quot {R : Type u₁} [Ring R] (r : R → R → Prop) {a} :
-    (-⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (-a)⟩ :=
-  by
-  show neg r _ = _
-  rw [neg]
-  rfl
+    (-⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (-a)⟩ := by show neg r _ = _; rw [neg]; rfl
 #align ring_quot.neg_quot RingQuot.neg_quot
 
 /- warning: ring_quot.sub_quot -> RingQuot.sub_quot is a dubious translation:
@@ -350,11 +336,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_5 : Ring.{u1} R] (r : R -> R -> Prop) {a : R} {b : R}, Eq.{succ u1} (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (HSub.hSub.{u1, u1, u1} (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (instHSub.{u1} (RingQuot.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (RingQuot.instSubRingQuotToSemiring.{u1} R _inst_5 r)) (RingQuot.mk.{u1} R (Ring.toSemiring.{u1} R _inst_5) r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) a)) (RingQuot.mk.{u1} R (Ring.toSemiring.{u1} R _inst_5) r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) b))) (RingQuot.mk.{u1} R (Ring.toSemiring.{u1} R _inst_5) r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R (Ring.toSemiring.{u1} R _inst_5) r) (HSub.hSub.{u1, u1, u1} R R R (instHSub.{u1} R (Ring.toSub.{u1} R _inst_5)) a b)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.sub_quot RingQuot.sub_quotₓ'. -/
 theorem sub_quot {R : Type u₁} [Ring R] (r : R → R → Prop) {a b} :
-    (⟨Quot.mk _ a⟩ - ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a - b)⟩ :=
-  by
-  show sub r _ _ = _
-  rw [sub]
-  rfl
+    (⟨Quot.mk _ a⟩ - ⟨Quot.mk _ b⟩ : RingQuot r) = ⟨Quot.mk _ (a - b)⟩ := by show sub r _ _ = _;
+  rw [sub]; rfl
 #align ring_quot.sub_quot RingQuot.sub_quot
 
 /- warning: ring_quot.smul_quot -> RingQuot.smul_quot is a dubious translation:
@@ -364,11 +347,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {S : Type.{u2}} [_inst_2 : CommSemiring.{u2} S] (r : R -> R -> Prop) [_inst_5 : Algebra.{u2, u1} S R _inst_2 _inst_1] {n : S} {a : R}, Eq.{succ u1} (RingQuot.{u1} R _inst_1 r) (HSMul.hSMul.{u2, u1, u1} S (RingQuot.{u1} R _inst_1 r) (RingQuot.{u1} R _inst_1 r) (instHSMul.{u2, u1} S (RingQuot.{u1} R _inst_1 r) (RingQuot.instSMulRingQuot.{u1, u2} R _inst_1 S _inst_2 r _inst_5)) n (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) a))) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) (HSMul.hSMul.{u2, u1, u1} S R R (instHSMul.{u2, u1} S R (Algebra.toSMul.{u2, u1} S R _inst_2 _inst_1 _inst_5)) n a)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.smul_quot RingQuot.smul_quotₓ'. -/
 theorem smul_quot [Algebra S R] {n : S} {a : R} :
-    (n • ⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (n • a)⟩ :=
-  by
-  show smul r _ _ = _
-  rw [smul]
-  rfl
+    (n • ⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (n • a)⟩ := by show smul r _ _ = _; rw [smul]; rfl
 #align ring_quot.smul_quot RingQuot.smul_quot
 
 instance (r : R → R → Prop) : Semiring (RingQuot r)
@@ -380,80 +359,37 @@ instance (r : R → R → Prop) : Semiring (RingQuot r)
   natCast := natCast r
   natCast_zero := by simp [Nat.cast, nat_cast, ← zero_quot]
   natCast_succ := by simp [Nat.cast, nat_cast, ← one_quot, add_quot]
-  add_assoc := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [add_quot, add_assoc]
-  zero_add := by
-    rintro ⟨⟨⟩⟩
-    simp [add_quot, ← zero_quot]
-  add_zero := by
-    rintro ⟨⟨⟩⟩
-    simp [add_quot, ← zero_quot]
-  zero_mul := by
-    rintro ⟨⟨⟩⟩
-    simp [mul_quot, ← zero_quot]
-  mul_zero := by
-    rintro ⟨⟨⟩⟩
-    simp [mul_quot, ← zero_quot]
-  add_comm := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [add_quot, add_comm]
-  mul_assoc := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [mul_quot, mul_assoc]
-  one_mul := by
-    rintro ⟨⟨⟩⟩
-    simp [mul_quot, ← one_quot]
-  mul_one := by
-    rintro ⟨⟨⟩⟩
-    simp [mul_quot, ← one_quot]
-  left_distrib := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [mul_quot, add_quot, left_distrib]
-  right_distrib := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [mul_quot, add_quot, right_distrib]
+  add_assoc := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [add_quot, add_assoc]
+  zero_add := by rintro ⟨⟨⟩⟩; simp [add_quot, ← zero_quot]
+  add_zero := by rintro ⟨⟨⟩⟩; simp [add_quot, ← zero_quot]
+  zero_mul := by rintro ⟨⟨⟩⟩; simp [mul_quot, ← zero_quot]
+  mul_zero := by rintro ⟨⟨⟩⟩; simp [mul_quot, ← zero_quot]
+  add_comm := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [add_quot, add_comm]
+  mul_assoc := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [mul_quot, mul_assoc]
+  one_mul := by rintro ⟨⟨⟩⟩; simp [mul_quot, ← one_quot]
+  mul_one := by rintro ⟨⟨⟩⟩; simp [mul_quot, ← one_quot]
+  left_distrib := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [mul_quot, add_quot, left_distrib]
+  right_distrib := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [mul_quot, add_quot, right_distrib]
   npow n x := x ^ n
-  npow_zero := by
-    rintro ⟨⟨⟩⟩
-    simp [pow_quot, ← one_quot]
-  npow_succ := by
-    rintro n ⟨⟨⟩⟩
-    simp [pow_quot, mul_quot, pow_succ]
+  npow_zero := by rintro ⟨⟨⟩⟩; simp [pow_quot, ← one_quot]
+  npow_succ := by rintro n ⟨⟨⟩⟩; simp [pow_quot, mul_quot, pow_succ]
   nsmul := (· • ·)
-  nsmul_zero := by
-    rintro ⟨⟨⟩⟩
-    simp [smul_quot, ← zero_quot]
-  nsmul_succ := by
-    rintro n ⟨⟨⟩⟩
-    simp [smul_quot, add_quot, add_mul, add_comm]
+  nsmul_zero := by rintro ⟨⟨⟩⟩; simp [smul_quot, ← zero_quot]
+  nsmul_succ := by rintro n ⟨⟨⟩⟩; simp [smul_quot, add_quot, add_mul, add_comm]
 
 instance {R : Type u₁} [Ring R] (r : R → R → Prop) : Ring (RingQuot r) :=
   { RingQuot.semiring r with
     neg := Neg.neg
-    add_left_neg := by
-      rintro ⟨⟨⟩⟩
-      simp [neg_quot, add_quot, ← zero_quot]
+    add_left_neg := by rintro ⟨⟨⟩⟩; simp [neg_quot, add_quot, ← zero_quot]
     sub := Sub.sub
-    sub_eq_add_neg := by
-      rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-      simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg]
+    sub_eq_add_neg := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg]
     zsmul := (· • ·)
-    zsmul_zero' := by
-      rintro ⟨⟨⟩⟩
-      simp [smul_quot, ← zero_quot]
-    zsmul_succ' := by
-      rintro n ⟨⟨⟩⟩
-      simp [smul_quot, add_quot, add_mul, add_comm]
-    zsmul_neg' := by
-      rintro n ⟨⟨⟩⟩
-      simp [smul_quot, neg_quot, add_mul] }
+    zsmul_zero' := by rintro ⟨⟨⟩⟩; simp [smul_quot, ← zero_quot]
+    zsmul_succ' := by rintro n ⟨⟨⟩⟩; simp [smul_quot, add_quot, add_mul, add_comm]
+    zsmul_neg' := by rintro n ⟨⟨⟩⟩; simp [smul_quot, neg_quot, add_mul] }
 
 instance {R : Type u₁} [CommSemiring R] (r : R → R → Prop) : CommSemiring (RingQuot r) :=
-  { RingQuot.semiring r with
-    mul_comm := by
-      rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-      simp [mul_quot, mul_comm] }
+  { RingQuot.semiring r with mul_comm := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [mul_quot, mul_comm] }
 
 instance {R : Type u₁} [CommRing R] (r : R → R → Prop) : CommRing (RingQuot r) :=
   { RingQuot.commSemiring r, RingQuot.ring r with }
@@ -469,12 +405,8 @@ instance [Algebra S R] (r : R → R → Prop) : Algebra S (RingQuot r)
   map_mul' := by simp [mul_quot]
   map_zero' := by simp [← zero_quot]
   map_add' := by simp [add_quot]
-  commutes' r := by
-    rintro ⟨⟨a⟩⟩
-    simp [Algebra.commutes, mul_quot]
-  smul_def' r := by
-    rintro ⟨⟨a⟩⟩
-    simp [smul_quot, Algebra.smul_def, mul_quot]
+  commutes' r := by rintro ⟨⟨a⟩⟩; simp [Algebra.commutes, mul_quot]
+  smul_def' r := by rintro ⟨⟨a⟩⟩; simp [smul_quot, Algebra.smul_def, mul_quot]
 
 /- warning: ring_quot.mk_ring_hom -> RingQuot.mkRingHom is a dubious translation:
 lean 3 declaration is
@@ -508,11 +440,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (r : R -> R -> Prop), Function.Surjective.{succ u1, succ u1} R (RingQuot.{u1} R _inst_1 r) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => RingQuot.{u1} R _inst_1 r) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r))) R (RingQuot.{u1} R _inst_1 r) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (RingQuot.{u1} R _inst_1 r) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r))) R (RingQuot.{u1} R _inst_1 r) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r))) R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r)) (RingHom.instRingHomClassRingHom.{u1, u1} R (RingQuot.{u1} R _inst_1 r) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (RingQuot.{u1} R _inst_1 r) (RingQuot.instSemiring.{u1} R _inst_1 r)))))) (RingQuot.mkRingHom.{u1} R _inst_1 r))
 Case conversion may be inaccurate. Consider using '#align ring_quot.mk_ring_hom_surjective RingQuot.mkRingHom_surjectiveₓ'. -/
-theorem mkRingHom_surjective (r : R → R → Prop) : Function.Surjective (mkRingHom r) :=
-  by
-  dsimp [mk_ring_hom]
-  rintro ⟨⟨⟩⟩
-  simp
+theorem mkRingHom_surjective (r : R → R → Prop) : Function.Surjective (mkRingHom r) := by
+  dsimp [mk_ring_hom]; rintro ⟨⟨⟩⟩; simp
 #align ring_quot.mk_ring_hom_surjective RingQuot.mkRingHom_surjective
 
 /- warning: ring_quot.ring_quot_ext -> RingQuot.ringQuot_ext is a dubious translation:
@@ -556,23 +485,12 @@ irreducible_def lift {r : R → R → Prop} :
               case mul_right _ _ _ _ r' => simp [r'])
             x.toQuot
         map_zero' := by simp [← zero_quot, f.map_zero]
-        map_add' := by
-          rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-          simp [add_quot, f.map_add x y]
+        map_add' := by rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩; simp [add_quot, f.map_add x y]
         map_one' := by simp [← one_quot, f.map_one]
-        map_mul' := by
-          rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-          simp [mul_quot, f.map_mul x y] }
-    invFun := fun F =>
-      ⟨F.comp (mkRingHom r), fun x y h => by
-        dsimp
-        rw [mk_ring_hom_rel h]⟩
-    left_inv := fun f => by
-      ext
-      simp [mk_ring_hom]
-    right_inv := fun F => by
-      ext
-      simp [mk_ring_hom] }
+        map_mul' := by rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩; simp [mul_quot, f.map_mul x y] }
+    invFun := fun F => ⟨F.comp (mkRingHom r), fun x y h => by dsimp; rw [mk_ring_hom_rel h]⟩
+    left_inv := fun f => by ext; simp [mk_ring_hom]
+    right_inv := fun F => by ext; simp [mk_ring_hom] }
 #align ring_quot.lift RingQuot.lift
 
 /- warning: ring_quot.lift_mk_ring_hom_apply -> RingQuot.lift_mkRingHom_apply is a dubious translation:
@@ -580,10 +498,7 @@ irreducible_def lift {r : R → R → Prop} :
 Case conversion may be inaccurate. Consider using '#align ring_quot.lift_mk_ring_hom_apply RingQuot.lift_mkRingHom_applyₓ'. -/
 @[simp]
 theorem lift_mkRingHom_apply (f : R →+* T) {r : R → R → Prop} (w : ∀ ⦃x y⦄, r x y → f x = f y) (x) :
-    lift ⟨f, w⟩ (mkRingHom r x) = f x :=
-  by
-  simp_rw [lift, mk_ring_hom]
-  rfl
+    lift ⟨f, w⟩ (mkRingHom r x) = f x := by simp_rw [lift, mk_ring_hom]; rfl
 #align ring_quot.lift_mk_ring_hom_apply RingQuot.lift_mkRingHom_apply
 
 /- warning: ring_quot.lift_unique -> RingQuot.lift_unique is a dubious translation:
@@ -591,21 +506,14 @@ theorem lift_mkRingHom_apply (f : R →+* T) {r : R → R → Prop} (w : ∀ ⦃
 Case conversion may be inaccurate. Consider using '#align ring_quot.lift_unique RingQuot.lift_uniqueₓ'. -/
 -- note this is essentially `lift.symm_apply_eq.mp h`
 theorem lift_unique (f : R →+* T) {r : R → R → Prop} (w : ∀ ⦃x y⦄, r x y → f x = f y)
-    (g : RingQuot r →+* T) (h : g.comp (mkRingHom r) = f) : g = lift ⟨f, w⟩ :=
-  by
-  ext
-  simp [h]
+    (g : RingQuot r →+* T) (h : g.comp (mkRingHom r) = f) : g = lift ⟨f, w⟩ := by ext; simp [h]
 #align ring_quot.lift_unique RingQuot.lift_unique
 
 /- warning: ring_quot.eq_lift_comp_mk_ring_hom -> RingQuot.eq_lift_comp_mkRingHom is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align ring_quot.eq_lift_comp_mk_ring_hom RingQuot.eq_lift_comp_mkRingHomₓ'. -/
 theorem eq_lift_comp_mkRingHom {r : R → R → Prop} (f : RingQuot r →+* T) :
-    f =
-      lift
-        ⟨f.comp (mkRingHom r), fun x y h => by
-          dsimp
-          rw [mk_ring_hom_rel h]⟩ :=
+    f = lift ⟨f.comp (mkRingHom r), fun x y h => by dsimp; rw [mk_ring_hom_rel h]⟩ :=
   by
   conv_lhs => rw [← lift.apply_symm_apply f]
   rw [lift]
@@ -662,10 +570,8 @@ def idealQuotientToRingQuot (r : B → B → Prop) : B ⧸ Ideal.ofRel r →+* R
         rw [← sub_eq_iff_eq_add] at su
         rw [← su, RingHom.map_sub, mk_ring_hom_rel h, sub_self]
       · simp
-      · intro a b ha hb
-        simp [ha, hb]
-      · intro a x hx
-        simp [hx])
+      · intro a b ha hb; simp [ha, hb]
+      · intro a x hx; simp [hx])
 #align ring_quot.ideal_quotient_to_ring_quot RingQuot.idealQuotientToRingQuot
 
 /- warning: ring_quot.ideal_quotient_to_ring_quot_apply -> RingQuot.idealQuotientToRingQuot_apply is a dubious translation:
@@ -714,12 +620,9 @@ theorem Rel.star ⦃a b : R⦄ (h : Rel r a b) : Rel r (star a) (star b) :=
   by
   induction h
   · exact rel.of (hr _ _ h_h)
-  · rw [star_add, star_add]
-    exact rel.add_left h_ih
-  · rw [star_mul, star_mul]
-    exact rel.mul_right h_ih
-  · rw [star_mul, star_mul]
-    exact rel.mul_left h_ih
+  · rw [star_add, star_add]; exact rel.add_left h_ih
+  · rw [star_mul, star_mul]; exact rel.mul_right h_ih
+  · rw [star_mul, star_mul]; exact rel.mul_left h_ih
 #align ring_quot.rel.star RingQuot.Rel.star
 -/
 
@@ -733,11 +636,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (r : R -> R -> Prop) [_inst_6 : StarRing.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)] (hr : forall (a : R) (b : R), (r a b) -> (r (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1) _inst_6))) a) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1) _inst_6))) b))) {a : R}, Eq.{succ u1} (RingQuot.{u1} R _inst_1 r) (_private.Mathlib.Algebra.RingQuot.0.RingQuot.star'.{u1} R _inst_1 r _inst_6 hr (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) a))) (RingQuot.mk.{u1} R _inst_1 r (Quot.mk.{succ u1} R (RingQuot.Rel.{u1} R _inst_1 r) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1) _inst_6))) a)))
 Case conversion may be inaccurate. Consider using '#align ring_quot.star'_quot RingQuot.star'_quotₓ'. -/
 theorem star'_quot (hr : ∀ a b, r a b → r (star a) (star b)) {a} :
-    (star' r hr ⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (star a)⟩ :=
-  by
-  show star' r _ _ = _
-  rw [star']
-  rfl
+    (star' r hr ⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (star a)⟩ := by show star' r _ _ = _;
+  rw [star']; rfl
 #align ring_quot.star'_quot RingQuot.star'_quot
 
 /- warning: ring_quot.star_ring -> RingQuot.starRing is a dubious translation:
@@ -751,15 +651,9 @@ def starRing {R : Type u₁} [Semiring R] [StarRing R] (r : R → R → Prop)
     (hr : ∀ a b, r a b → r (star a) (star b)) : StarRing (RingQuot r)
     where
   unit := star' r hr
-  star_involutive := by
-    rintro ⟨⟨⟩⟩
-    simp [star'_quot]
-  star_mul := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [star'_quot, mul_quot, star_mul]
-  star_add := by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-    simp [star'_quot, add_quot, star_add]
+  star_involutive := by rintro ⟨⟨⟩⟩; simp [star'_quot]
+  star_mul := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [star'_quot, mul_quot, star_mul]
+  star_add := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩; simp [star'_quot, add_quot, star_add]
 #align ring_quot.star_ring RingQuot.starRing
 
 end StarRing
@@ -777,20 +671,15 @@ Case conversion may be inaccurate. Consider using '#align ring_quot.mk_alg_hom R
 /-- The quotient map from an `S`-algebra to its quotient, as a homomorphism of `S`-algebras.
 -/
 irreducible_def mkAlgHom (s : A → A → Prop) : A →ₐ[S] RingQuot s :=
-  { mkRingHom s with
-    commutes' := fun r => by
-      simp [mk_ring_hom]
-      rfl }
+  { mkRingHom s with commutes' := fun r => by simp [mk_ring_hom]; rfl }
 #align ring_quot.mk_alg_hom RingQuot.mkAlgHom
 
 /- warning: ring_quot.mk_alg_hom_coe -> RingQuot.mkAlgHom_coe is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align ring_quot.mk_alg_hom_coe RingQuot.mkAlgHom_coeₓ'. -/
 @[simp]
-theorem mkAlgHom_coe (s : A → A → Prop) : (mkAlgHom S s : A →+* RingQuot s) = mkRingHom s :=
-  by
-  simp_rw [mk_alg_hom, mk_ring_hom]
-  rfl
+theorem mkAlgHom_coe (s : A → A → Prop) : (mkAlgHom S s : A →+* RingQuot s) = mkRingHom s := by
+  simp_rw [mk_alg_hom, mk_ring_hom]; rfl
 #align ring_quot.mk_alg_hom_coe RingQuot.mkAlgHom_coe
 
 #print RingQuot.mkAlgHom_rel /-
@@ -800,12 +689,8 @@ theorem mkAlgHom_rel {s : A → A → Prop} {x y : A} (w : s x y) : mkAlgHom S s
 -/
 
 #print RingQuot.mkAlgHom_surjective /-
-theorem mkAlgHom_surjective (s : A → A → Prop) : Function.Surjective (mkAlgHom S s) :=
-  by
-  dsimp [mk_alg_hom, mk_ring_hom]
-  rintro ⟨⟨a⟩⟩
-  use a
-  rfl
+theorem mkAlgHom_surjective (s : A → A → Prop) : Function.Surjective (mkAlgHom S s) := by
+  dsimp [mk_alg_hom, mk_ring_hom]; rintro ⟨⟨a⟩⟩; use a; rfl
 #align ring_quot.mk_alg_hom_surjective RingQuot.mkAlgHom_surjective
 -/
 
@@ -845,45 +730,28 @@ irreducible_def liftAlgHom {s : A → A → Prop} :
               case mul_right _ _ _ _ r' => simp [r'])
             x.toQuot
         map_zero' := by simp [← zero_quot, f.map_zero]
-        map_add' := by
-          rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-          simp [add_quot, f.map_add x y]
+        map_add' := by rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩; simp [add_quot, f.map_add x y]
         map_one' := by simp [← one_quot, f.map_one]
-        map_mul' := by
-          rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩
-          simp [mul_quot, f.map_mul x y]
-        commutes' := by
-          rintro x
-          simp [← one_quot, smul_quot, Algebra.algebraMap_eq_smul_one] }
-    invFun := fun F =>
-      ⟨F.comp (mkAlgHom S s), fun _ _ h => by
-        dsimp
-        erw [mk_alg_hom_rel S h]⟩
-    left_inv := fun f => by
-      ext
-      simp [mk_alg_hom, mk_ring_hom]
-    right_inv := fun F => by
-      ext
-      simp [mk_alg_hom, mk_ring_hom] }
+        map_mul' := by rintro ⟨⟨x⟩⟩ ⟨⟨y⟩⟩; simp [mul_quot, f.map_mul x y]
+        commutes' := by rintro x; simp [← one_quot, smul_quot, Algebra.algebraMap_eq_smul_one] }
+    invFun := fun F => ⟨F.comp (mkAlgHom S s), fun _ _ h => by dsimp; erw [mk_alg_hom_rel S h]⟩
+    left_inv := fun f => by ext; simp [mk_alg_hom, mk_ring_hom]
+    right_inv := fun F => by ext; simp [mk_alg_hom, mk_ring_hom] }
 #align ring_quot.lift_alg_hom RingQuot.liftAlgHom
 -/
 
 #print RingQuot.liftAlgHom_mkAlgHom_apply /-
 @[simp]
 theorem liftAlgHom_mkAlgHom_apply (f : A →ₐ[S] B) {s : A → A → Prop}
-    (w : ∀ ⦃x y⦄, s x y → f x = f y) (x) : (liftAlgHom S ⟨f, w⟩) ((mkAlgHom S s) x) = f x :=
-  by
-  simp_rw [lift_alg_hom, mk_alg_hom, mk_ring_hom]
-  rfl
+    (w : ∀ ⦃x y⦄, s x y → f x = f y) (x) : (liftAlgHom S ⟨f, w⟩) ((mkAlgHom S s) x) = f x := by
+  simp_rw [lift_alg_hom, mk_alg_hom, mk_ring_hom]; rfl
 #align ring_quot.lift_alg_hom_mk_alg_hom_apply RingQuot.liftAlgHom_mkAlgHom_apply
 -/
 
 #print RingQuot.liftAlgHom_unique /-
 -- note this is essentially `(lift_alg_hom S).symm_apply_eq.mp h`
 theorem liftAlgHom_unique (f : A →ₐ[S] B) {s : A → A → Prop} (w : ∀ ⦃x y⦄, s x y → f x = f y)
-    (g : RingQuot s →ₐ[S] B) (h : g.comp (mkAlgHom S s) = f) : g = liftAlgHom S ⟨f, w⟩ :=
-  by
-  ext
+    (g : RingQuot s →ₐ[S] B) (h : g.comp (mkAlgHom S s) = f) : g = liftAlgHom S ⟨f, w⟩ := by ext;
   simp [h]
 #align ring_quot.lift_alg_hom_unique RingQuot.liftAlgHom_unique
 -/
@@ -892,11 +760,7 @@ theorem liftAlgHom_unique (f : A →ₐ[S] B) {s : A → A → Prop} (w : ∀ �
 <too large>
 Case conversion may be inaccurate. Consider using '#align ring_quot.eq_lift_alg_hom_comp_mk_alg_hom RingQuot.eq_liftAlgHom_comp_mkAlgHomₓ'. -/
 theorem eq_liftAlgHom_comp_mkAlgHom {s : A → A → Prop} (f : RingQuot s →ₐ[S] B) :
-    f =
-      liftAlgHom S
-        ⟨f.comp (mkAlgHom S s), fun x y h => by
-          dsimp
-          erw [mk_alg_hom_rel S h]⟩ :=
+    f = liftAlgHom S ⟨f.comp (mkAlgHom S s), fun x y h => by dsimp; erw [mk_alg_hom_rel S h]⟩ :=
   by
   conv_lhs => rw [← (lift_alg_hom S).apply_symm_apply f]
   rw [lift_alg_hom]

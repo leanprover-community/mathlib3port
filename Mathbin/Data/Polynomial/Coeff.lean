@@ -57,11 +57,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (p : Polynomial.{u1} R _inst_1) (q : Polynomial.{u1} R _inst_1) (n : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R _inst_1 (HAdd.hAdd.{u1, u1, u1} (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHAdd.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.add'.{u1} R _inst_1)) p q) n) (HAdd.hAdd.{u1, u1, u1} R R R (instHAdd.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) (Polynomial.coeff.{u1} R _inst_1 p n) (Polynomial.coeff.{u1} R _inst_1 q n))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_add Polynomial.coeff_addₓ'. -/
 @[simp]
-theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q n :=
-  by
-  rcases p with ⟨⟩
-  rcases q with ⟨⟩
-  simp_rw [← of_finsupp_add, coeff]
+theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q n := by
+  rcases p with ⟨⟩; rcases q with ⟨⟩; simp_rw [← of_finsupp_add, coeff];
   exact Finsupp.add_apply _ _ _
 #align polynomial.coeff_add Polynomial.coeff_add
 
@@ -83,9 +80,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_smul Polynomial.coeff_smulₓ'. -/
 @[simp]
 theorem coeff_smul [SMulZeroClass S R] (r : S) (p : R[X]) (n : ℕ) :
-    coeff (r • p) n = r • coeff p n := by
-  rcases p with ⟨⟩
-  simp_rw [← of_finsupp_smul, coeff]
+    coeff (r • p) n = r • coeff p n := by rcases p with ⟨⟩; simp_rw [← of_finsupp_smul, coeff];
   exact Finsupp.smul_apply _ _ _
 #align polynomial.coeff_smul Polynomial.coeff_smul
 
@@ -156,9 +151,7 @@ theorem finset_sum_coeff {ι : Type _} (s : Finset ι) (f : ι → R[X]) (n : �
 
 #print Polynomial.coeff_sum /-
 theorem coeff_sum [Semiring S] (n : ℕ) (f : ℕ → R → S[X]) :
-    coeff (p.Sum f) n = p.Sum fun a b => coeff (f a b) n :=
-  by
-  rcases p with ⟨⟩
+    coeff (p.Sum f) n = p.Sum fun a b => coeff (f a b) n := by rcases p with ⟨⟩;
   simp [Polynomial.sum, support, coeff]
 #align polynomial.coeff_sum Polynomial.coeff_sum
 -/
@@ -238,11 +231,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (x : R) (k : Nat) (n : Nat), Eq.{succ u1} R (Polynomial.coeff.{u1} R _inst_1 (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) x) (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) x) (Polynomial.mul'.{u1} R _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) x) (HPow.hPow.{u1, 0, u1} (Polynomial.{u1} R _inst_1) Nat (Polynomial.{u1} R _inst_1) (instHPow.{u1, 0} (Polynomial.{u1} R _inst_1) Nat (Monoid.Pow.{u1} (Polynomial.{u1} R _inst_1) (MonoidWithZero.toMonoid.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toMonoidWithZero.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))))) (Polynomial.X.{u1} R _inst_1) k)) n) (ite.{succ u1} R (Eq.{1} Nat n k) (instDecidableEqNat n k) x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align polynomial.coeff_C_mul_X_pow Polynomial.coeff_C_mul_X_powₓ'. -/
 theorem coeff_C_mul_X_pow (x : R) (k n : ℕ) :
-    coeff (C x * X ^ k : R[X]) n = if n = k then x else 0 :=
-  by
-  rw [C_mul_X_pow_eq_monomial, coeff_monomial]
-  congr 1
-  simp [eq_comm]
+    coeff (C x * X ^ k : R[X]) n = if n = k then x else 0 := by
+  rw [C_mul_X_pow_eq_monomial, coeff_monomial]; congr 1; simp [eq_comm]
 #align polynomial.coeff_C_mul_X_pow Polynomial.coeff_C_mul_X_pow
 
 /- warning: polynomial.coeff_C_mul_X -> Polynomial.coeff_C_mul_X is a dubious translation:
@@ -275,9 +265,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] (a : R) (f : Polynomial.{u1} R _inst_1), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (Polynomial.{u1} R _inst_1) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) a) (Polynomial.mul'.{u1} R _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => Polynomial.{u1} R _inst_1) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1))) R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)) (RingHom.instRingHomClassRingHom.{u1, u1} R (Polynomial.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u1} (Polynomial.{u1} R _inst_1) (Polynomial.semiring.{u1} R _inst_1)))))) (Polynomial.C.{u1} R _inst_1) a) f) (HSMul.hSMul.{u1, u1, u1} R (Polynomial.{u1} R _inst_1) (Polynomial.{u1} R _inst_1) (instHSMul.{u1, u1} R (Polynomial.{u1} R _inst_1) (SMulZeroClass.toSMul.{u1, u1} R (Polynomial.{u1} R _inst_1) (Polynomial.zero.{u1} R _inst_1) (Polynomial.smulZeroClass.{u1, u1} R _inst_1 R (SMulWithZero.toSMulZeroClass.{u1, u1} R R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) (MulZeroClass.toSMulWithZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))))))) a f)
 Case conversion may be inaccurate. Consider using '#align polynomial.C_mul' Polynomial.C_mul'ₓ'. -/
-theorem C_mul' (a : R) (f : R[X]) : C a * f = a • f :=
-  by
-  ext
+theorem C_mul' (a : R) (f : R[X]) : C a * f = a • f := by ext;
   rw [coeff_C_mul, coeff_smul, smul_eq_mul]
 #align polynomial.C_mul' Polynomial.C_mul'
 
@@ -366,12 +354,8 @@ end Fewnomials
 theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.X ^ n) (d + n) = coeff p d :=
   by
   rw [coeff_mul, sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]
-    rintro rfl
-    apply h2
-    rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1
-    subst h1
+  · rintro ⟨i, j⟩ h1 h2; rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]; rintro rfl; apply h2
+    rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1; subst h1
   · exact fun h1 => (h1 (nat.mem_antidiagonal.2 rfl)).elim
 #align polynomial.coeff_mul_X_pow Polynomial.coeff_mul_X_pow
 -/
@@ -507,8 +491,7 @@ theorem coeff_X_add_C_pow (r : R) (n k : ℕ) :
   · intro _ _ h
     simp [coeff_X_pow, h.symm]
   · simp only [coeff_X_pow_self, one_mul, not_lt, Finset.mem_range]
-    intro h
-    rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, MulZeroClass.mul_zero]
+    intro h; rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, MulZeroClass.mul_zero]
 #align polynomial.coeff_X_add_C_pow Polynomial.coeff_X_add_C_pow
 
 #print Polynomial.coeff_X_add_one_pow /-
@@ -532,9 +515,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.C_dvd_iff_d
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ.coeff i :=
   by
   constructor
-  · rintro ⟨φ, rfl⟩ c
-    rw [coeff_C_mul]
-    apply dvd_mul_right
+  · rintro ⟨φ, rfl⟩ c; rw [coeff_C_mul]; apply dvd_mul_right
   · intro h
     choose c hc using h
     classical
@@ -546,8 +527,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ
         Finset.sum_ite_eq']
       split_ifs with hi hi
       · rw [hc]
-      · rw [Classical.not_not] at hi
-        rwa [MulZeroClass.mul_zero]
+      · rw [Classical.not_not] at hi; rwa [MulZeroClass.mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 
 /- warning: polynomial.coeff_bit0_mul -> Polynomial.coeff_bit0_mul is a dubious translation:
@@ -616,8 +596,7 @@ theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m 
   · intro h
     apply_fun fun p => p.coeff 0  at h
     simpa using h
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align polynomial.nat_cast_inj Polynomial.nat_cast_inj
 -/
 
@@ -645,8 +624,7 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[
   · intro h
     apply_fun fun p => p.coeff 0  at h
     simpa using h
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align polynomial.int_cast_inj Polynomial.int_cast_inj
 
 end cast

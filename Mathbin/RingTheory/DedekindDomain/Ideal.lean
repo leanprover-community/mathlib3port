@@ -86,10 +86,7 @@ theorem inv_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
 #align fractional_ideal.inv_nonzero FractionalIdeal.inv_nonzero
 
 theorem coe_inv_of_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
-    (↑J⁻¹ : Submodule R₁ K) = IsLocalization.coeSubmodule K ⊤ / J :=
-  by
-  rwa [inv_nonzero _]
-  rfl
+    (↑J⁻¹ : Submodule R₁ K) = IsLocalization.coeSubmodule K ⊤ / J := by rwa [inv_nonzero _]; rfl;
   assumption
 #align fractional_ideal.coe_inv_of_nonzero FractionalIdeal.coe_inv_of_nonzero
 
@@ -99,10 +96,8 @@ theorem mem_inv_iff (hI : I ≠ 0) {x : K} : x ∈ I⁻¹ ↔ ∀ y ∈ I, x * y
   mem_div_iff_of_nonzero hI
 #align fractional_ideal.mem_inv_iff FractionalIdeal.mem_inv_iff
 
-theorem inv_anti_mono (hI : I ≠ 0) (hJ : J ≠ 0) (hIJ : I ≤ J) : J⁻¹ ≤ I⁻¹ := fun x =>
-  by
-  simp only [mem_inv_iff hI, mem_inv_iff hJ]
-  exact fun h y hy => h y (hIJ hy)
+theorem inv_anti_mono (hI : I ≠ 0) (hJ : J ≠ 0) (hIJ : I ≤ J) : J⁻¹ ≤ I⁻¹ := fun x => by
+  simp only [mem_inv_iff hI, mem_inv_iff hJ]; exact fun h y hy => h y (hIJ hy)
 #align fractional_ideal.inv_anti_mono FractionalIdeal.inv_anti_mono
 
 theorem le_self_mul_inv {I : FractionalIdeal R₁⁰ K} (hI : I ≤ (1 : FractionalIdeal R₁⁰ K)) :
@@ -282,9 +277,7 @@ theorem FractionalIdeal.adjoinIntegral_eq_one_of_isUnit [Algebra A K] [IsFractio
     (hx : IsIntegral A x) (hI : IsUnit (adjoinIntegral A⁰ x hx)) : adjoinIntegral A⁰ x hx = 1 :=
   by
   set I := adjoin_integral A⁰ x hx
-  have mul_self : I * I = I := by
-    apply coe_to_submodule_injective
-    simp
+  have mul_self : I * I = I := by apply coe_to_submodule_injective; simp
   convert congr_arg (· * I⁻¹) mul_self <;>
     simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_one]
 #align fractional_ideal.adjoin_integral_eq_one_of_is_unit FractionalIdeal.adjoinIntegral_eq_one_of_isUnit
@@ -311,8 +304,7 @@ theorem isNoetherianRing : IsNoetherianRing A :=
   by
   refine' is_noetherian_ring_iff.mpr ⟨fun I : Ideal A => _⟩
   by_cases hI : I = ⊥
-  · rw [hI]
-    apply Submodule.fg_bot
+  · rw [hI]; apply Submodule.fg_bot
   have hI : (I : FractionalIdeal A⁰ (FractionRing A)) ≠ 0 := coe_ideal_ne_zero.mpr hI
   exact I.fg_of_is_unit (IsFractionRing.injective A (FractionRing A)) (h.is_unit hI)
 #align is_dedekind_domain_inv.is_noetherian_ring IsDedekindDomainInv.isNoetherianRing
@@ -400,9 +392,7 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
       (fun Z => (Z.map PrimeSpectrum.asIdeal).Prod ≤ I ∧ (Z.map PrimeSpectrum.asIdeal).Prod ≠ ⊥)
       ⟨Z₀, hZ₀⟩
   have hZM : Multiset.prod (Z.map PrimeSpectrum.asIdeal) ≤ M := le_trans hZI hIM
-  have hZ0 : Z ≠ 0 := by
-    rintro rfl
-    simpa [hM.ne_top] using hZM
+  have hZ0 : Z ≠ 0 := by rintro rfl; simpa [hM.ne_top] using hZM
   obtain ⟨_, hPZ', hPM⟩ := (hM.is_prime.multiset_prod_le (mt multiset.map_eq_zero.mp hZ0)).mp hZM
   -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ'
@@ -498,8 +488,7 @@ theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I
   by_cases hI1 : I = ⊤
   · rw [hI1, coe_ideal_top, one_mul, inv_one]
   by_cases hNF : IsField A
-  · letI := hNF.to_field
-    rcases hI1 (I.eq_bot_or_top.resolve_left hI0) with ⟨⟩
+  · letI := hNF.to_field; rcases hI1 (I.eq_bot_or_top.resolve_left hI0) with ⟨⟩
   -- We'll show a contradiction with `exists_not_mem_one_of_ne_bot`:
   -- `J⁻¹ = (I * I⁻¹)⁻¹` cannot have an element `x ∉ 1`, so it must equal `1`.
   obtain ⟨J, hJ⟩ : ∃ J : Ideal A, (J : FractionalIdeal A⁰ K) = I * I⁻¹ :=
@@ -531,8 +520,7 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
   -- We'll show `1 ≤ J⁻¹ = (I * I⁻¹)⁻¹ ≤ 1`.
   apply mul_inv_cancel_of_le_one hI0
   by_cases hJ0 : (I * I⁻¹ : FractionalIdeal A⁰ K) = 0
-  · rw [hJ0, inv_zero']
-    exact zero_le _
+  · rw [hJ0, inv_zero']; exact zero_le _
   intro x hx
   -- In particular, we'll show all `x ∈ J⁻¹` are integral.
   suffices x ∈ integralClosure A K by
@@ -546,10 +534,8 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
     by
     intro b hb
     rw [mem_inv_iff] at hx⊢
-    swap
-    · exact coe_ideal_ne_zero.mpr hI0
-    swap
-    · exact hJ0
+    swap; · exact coe_ideal_ne_zero.mpr hI0
+    swap; · exact hJ0
     simp only [mul_assoc, mul_comm b] at hx⊢
     intro y hy
     exact hx _ (mul_mem_mul hy hb)
@@ -563,11 +549,9 @@ theorem coe_ideal_mul_inv [h : IsDedekindDomain A] (I : Ideal A) (hI0 : I ≠ �
   refine' Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ _
   clear hi
   induction' i with i ih
-  · rw [pow_zero]
-    exact one_mem_inv_coe_ideal hI0
+  · rw [pow_zero]; exact one_mem_inv_coe_ideal hI0
   · show x ^ i.succ ∈ (I⁻¹ : FractionalIdeal A⁰ K)
-    rw [pow_succ]
-    exact x_mul_mem _ ih
+    rw [pow_succ]; exact x_mul_mem _ ih
 #align fractional_ideal.coe_ideal_mul_inv FractionalIdeal.coe_ideal_mul_inv
 
 /-- Nonzero fractional ideals in a Dedekind domain are units.
@@ -595,7 +579,7 @@ theorem mul_right_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ :
     ∀ {I I'}, I * J ≤ I' * J ↔ I ≤ I' := by
   intro I I'
   constructor
-  · intro h
+  · intro h;
     convert mul_right_mono J⁻¹ h <;> rw [mul_assoc, FractionalIdeal.mul_inv_cancel hJ, mul_one]
   · exact fun h => mul_right_mono J h
 #align fractional_ideal.mul_right_le_iff FractionalIdeal.mul_right_le_iff
@@ -854,16 +838,10 @@ theorem Ideal.exist_integer_multiples_not_mem {J : Ideal A} (hJ : J ≠ ⊤) {ι
       -- And if all `a`-multiples of `I` are an element of `J`,
       -- then `a` is actually an element of `J / I`, contradiction.
       refine' (mem_div_iff_of_nonzero hI0).mpr fun y hy => Submodule.span_induction hy _ _ _ _
-      · rintro _ ⟨i, hi, rfl⟩
-        exact hpI i hi
-      · rw [MulZeroClass.mul_zero]
-        exact Submodule.zero_mem _
-      · intro x y hx hy
-        rw [mul_add]
-        exact Submodule.add_mem _ hx hy
-      · intro b x hx
-        rw [mul_smul_comm]
-        exact Submodule.smul_mem _ b hx
+      · rintro _ ⟨i, hi, rfl⟩; exact hpI i hi
+      · rw [MulZeroClass.mul_zero]; exact Submodule.zero_mem _
+      · intro x y hx hy; rw [mul_add]; exact Submodule.add_mem _ hx hy
+      · intro b x hx; rw [mul_smul_comm]; exact Submodule.smul_mem _ b hx
   -- To show the inclusion of `J / I` into `I⁻¹ = 1 / I`, note that `J < I`.
   calc
     ↑J / I = ↑J * I⁻¹ := div_eq_mul_inv (↑J) I
@@ -1306,9 +1284,7 @@ open Classical
 theorem Ideal.count_normalizedFactors_eq {p x : Ideal R} [hp : p.IsPrime] {n : ℕ} (hle : x ≤ p ^ n)
     (hlt : ¬x ≤ p ^ (n + 1)) : (normalizedFactors x).count p = n :=
   count_normalizedFactors_eq' ((Ideal.isPrime_iff_bot_or_prime.mp hp).imp_right Prime.irreducible)
-    (by
-      haveI : Unique (Ideal R)ˣ := Ideal.uniqueUnits
-      apply normalize_eq)
+    (by haveI : Unique (Ideal R)ˣ := Ideal.uniqueUnits; apply normalize_eq)
     (by convert ideal.dvd_iff_le.mpr hle) (by convert mt Ideal.le_of_dvd hlt)
 #align ideal.count_normalized_factors_eq Ideal.count_normalizedFactors_eq
 
@@ -1383,8 +1359,7 @@ theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f 
             (Ideal.le_of_pow_le_prime hPa)).trans
         ((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq _).mp
             (Ideal.le_of_pow_le_prime hPb)).symm)
-  · rintro rfl
-    contradiction
+  · rintro rfl; contradiction
   · exact (Prime a (Finset.mem_insert_self a s)).NeZero
   · exact (Prime b (Finset.mem_insert_of_mem hb)).NeZero
 #align is_dedekind_domain.inf_prime_pow_eq_prod IsDedekindDomain.inf_prime_pow_eq_prod

@@ -82,9 +82,7 @@ theorem zero_right (x : M) : SameRay R x 0 :=
 
 #print SameRay.of_subsingleton /-
 @[nontriviality]
-theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y :=
-  by
-  rw [Subsingleton.elim x 0]
+theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y := by rw [Subsingleton.elim x 0];
   exact zero_left _
 #align same_ray.of_subsingleton SameRay.of_subsingleton
 -/
@@ -186,9 +184,7 @@ Case conversion may be inaccurate. Consider using '#align same_ray_nonneg_smul_r
 theorem SameRay.sameRay_nonneg_smul_right (v : M) {r : R} (h : 0 ≤ r) : SameRay R v (r • v) :=
   Or.inr <|
     h.eq_or_lt.imp (fun h => h ▸ zero_smul R v) fun h =>
-      ⟨r, 1, h, by
-        nontriviality R
-        exact zero_lt_one, (one_smul _ _).symm⟩
+      ⟨r, 1, h, by nontriviality R; exact zero_lt_one, (one_smul _ _).symm⟩
 #align same_ray_nonneg_smul_right SameRay.sameRay_nonneg_smul_right
 
 /- warning: same_ray_pos_smul_right -> SameRay.sameRay_pos_smul_right is a dubious translation:
@@ -944,12 +940,10 @@ theorem sameRay_or_sameRay_neg_iff_not_linearIndependent {x y : M} :
   · rcases h with ((hx0 | hy0 | ⟨r₁, r₂, hr₁, hr₂, h⟩) | (hx0 | hy0 | ⟨r₁, r₂, hr₁, hr₂, h⟩))
     · exact False.elim (hx hx0)
     · exact False.elim (hy hy0)
-    · refine' ⟨![r₁, -r₂], _⟩
-      simp [h, hr₁.ne.symm]
+    · refine' ⟨![r₁, -r₂], _⟩; simp [h, hr₁.ne.symm]
     · exact False.elim (hx hx0)
     · exact False.elim (hy (neg_eq_zero.1 hy0))
-    · refine' ⟨![r₁, r₂], _⟩
-      simp [h, hr₁.ne.symm]
+    · refine' ⟨![r₁, r₂], _⟩; simp [h, hr₁.ne.symm]
   · rcases h with ⟨m, hm, hmne⟩
     change m 0 • x + m 1 • y = 0 at hm
     rw [add_eq_zero_iff_eq_neg] at hm
@@ -958,19 +952,15 @@ theorem sameRay_or_sameRay_neg_iff_not_linearIndependent {x y : M} :
     · refine'
         Or.inr (Or.inr (Or.inr ⟨-m 0, -m 1, Left.neg_pos_iff.2 hm0, Left.neg_pos_iff.2 hm1, _⟩))
       simp [hm]
-    · exfalso
-      simpa [hm1, hx, hm0.ne] using hm
+    · exfalso; simpa [hm1, hx, hm0.ne] using hm
     · refine' Or.inl (Or.inr (Or.inr ⟨-m 0, m 1, Left.neg_pos_iff.2 hm0, hm1, _⟩))
       simp [hm]
-    · exfalso
-      simpa [hm0, hy, hm1.ne] using hm
+    · exfalso; simpa [hm0, hy, hm1.ne] using hm
     · refine' False.elim (not_and_or.2 hmne ⟨hm0, hm1⟩)
-    · exfalso
-      simpa [hm0, hy, hm1.ne.symm] using hm
+    · exfalso; simpa [hm0, hy, hm1.ne.symm] using hm
     · refine' Or.inl (Or.inr (Or.inr ⟨m 0, -m 1, hm0, Left.neg_pos_iff.2 hm1, _⟩))
       simp [hm]
-    · exfalso
-      simpa [hm1, hx, hm0.ne.symm] using hm
+    · exfalso; simpa [hm1, hx, hm0.ne.symm] using hm
     · refine' Or.inr (Or.inr (Or.inr ⟨m 0, m 1, hm0, hm1, _⟩))
       simp [hm]
 #align same_ray_or_same_ray_neg_iff_not_linear_independent sameRay_or_sameRay_neg_iff_not_linearIndependent
@@ -1057,10 +1047,8 @@ theorem exists_eq_smul_add (h : SameRay R v₁ v₂) :
     ∃ a b : R, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ v₁ = a • (v₁ + v₂) ∧ v₂ = b • (v₁ + v₂) :=
   by
   rcases h with (rfl | rfl | ⟨r₁, r₂, h₁, h₂, H⟩)
-  · use 0, 1
-    simp
-  · use 1, 0
-    simp
+  · use 0, 1; simp
+  · use 1, 0; simp
   · have h₁₂ : 0 < r₁ + r₂ := add_pos h₁ h₂
     refine'
       ⟨r₂ / (r₁ + r₂), r₁ / (r₁ + r₂), div_nonneg h₂.le h₁₂.le, div_nonneg h₁.le h₁₂.le, _, _, _⟩

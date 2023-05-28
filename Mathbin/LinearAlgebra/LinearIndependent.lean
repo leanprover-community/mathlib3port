@@ -501,8 +501,7 @@ theorem linearIndependent_comp_subtype {s : Set ι} :
   · intro h l hl
     refine' Finsupp.embDomain_eq_zero.1 (h (l.emb_domain <| Function.Embedding.subtype s) _ _)
     · suffices ∀ i hi, ¬l ⟨i, hi⟩ = 0 → i ∈ s by simpa
-      intros
-      assumption
+      intros ; assumption
     · rwa [Finsupp.embDomain_eq_mapDomain, Finsupp.sum_mapDomain_index]
       exacts[fun _ => zero_smul _ _, fun _ _ _ => add_smul _ _ _]
 #align linear_independent_comp_subtype linearIndependent_comp_subtype
@@ -615,8 +614,7 @@ theorem linearIndependent_iUnion_of_directed {η : Type _} {s : η → Set M} (h
     rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
     exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
   · refine' (linearIndependent_empty _ _).mono _
-    rintro _ ⟨_, ⟨i, _⟩, _⟩
-    exact hη ⟨i⟩
+    rintro _ ⟨_, ⟨i, _⟩, _⟩; exact hη ⟨i⟩
 #align linear_independent_Union_of_directed linearIndependent_iUnion_of_directed
 -/
 
@@ -761,8 +759,7 @@ theorem LinearIndependent.group_smul {G : Type _} [hG : Group G] [DistribMulActi
   · dsimp only
     exact (hgs i hi).symm ▸ smul_zero _
   · rw [← hsum, Finset.sum_congr rfl _]
-    intros
-    erw [Pi.smul_apply, smul_assoc, smul_comm]
+    intros ; erw [Pi.smul_apply, smul_assoc, smul_comm]
 #align linear_independent.group_smul LinearIndependent.group_smul
 
 /- warning: linear_independent.units_smul -> LinearIndependent.units_smul is a dubious translation:
@@ -819,11 +816,7 @@ theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ring R] [Nontr
     rw [range_comp, ← @image_univ _ _ w] at p
     exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
   · intro p w i' h
-    specialize
-      p w (coe : w → M) i' (fun i => ⟨v i, range_subset_iff.mp h i⟩)
-        (by
-          ext
-          simp)
+    specialize p w (coe : w → M) i' (fun i => ⟨v i, range_subset_iff.mp h i⟩) (by ext; simp)
     have q := congr_arg (fun s => (coe : w → M) '' s) p.range_eq
     dsimp at q
     rw [← image_univ, image_image] at q
@@ -1465,13 +1458,9 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
               _ = (∑ i in insert a s, (g i • i : G → L)) 1 :=
                 by
                 rw [Finset.sum_eq_single a]
-                · intro i his hia
-                  rw [Finset.mem_insert] at his
+                · intro i his hia; rw [Finset.mem_insert] at his
                   rw [h3 i (his.resolve_left hia), zero_smul]
-                · intro haas
-                  exfalso
-                  apply haas
-                  exact Finset.mem_insert_self a s
+                · intro haas; exfalso; apply haas; exact Finset.mem_insert_self a s
               _ = 0 := by rw [hg] <;> rfl
               
           (-- Now we're done; the last two facts together imply that `g` vanishes on every element
@@ -1585,9 +1574,7 @@ theorem mem_span_insert_exchange :
   simp [mem_span_insert]
   rintro a z hz rfl h
   refine' ⟨a⁻¹, -a⁻¹ • z, smul_mem _ _ hz, _⟩
-  have a0 : a ≠ 0 := by
-    rintro rfl
-    simp_all
+  have a0 : a ≠ 0 := by rintro rfl; simp_all
   simp [a0, smul_add, smul_smul]
 #align mem_span_insert_exchange mem_span_insert_exchange
 

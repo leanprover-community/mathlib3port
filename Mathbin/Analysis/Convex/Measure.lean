@@ -56,22 +56,17 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
           H _ (hs.inter (convex_ball _ _)) _ (bounded_ball.mono (inter_subset_right _ _))
       rw [interior_inter, is_open_ball.interior_eq]
       exact ⟨hx, mem_ball_self (add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one)⟩
-    refine' measure_mono_null (fun y hy => _) this
-    clear this
+    refine' measure_mono_null (fun y hy => _) this; clear this
     set N : ℕ := ⌊dist y x⌋₊
     refine' mem_Union.2 ⟨N, _⟩
-    have hN : y ∈ B N := by
-      simp only [B, N]
-      simp [Nat.lt_floor_add_one]
-    suffices : y ∈ frontier (s ∩ B N) ∩ B N
-    exact this.1
+    have hN : y ∈ B N := by simp only [B, N]; simp [Nat.lt_floor_add_one]
+    suffices : y ∈ frontier (s ∩ B N) ∩ B N; exact this.1
     rw [frontier_inter_open_inter is_open_ball]
     exact ⟨hy, hN⟩
-  clear hx hs s
-  intro s hs hx hb
+  clear hx hs s; intro s hs hx hb
   /- Since `s` is bounded, we have `μ (interior s) ≠ ∞`, hence it suffices to prove
     `μ (closure s) ≤ μ (interior s)`. -/
-  replace hb : μ (interior s) ≠ ∞
+  replace hb : μ (interior s) ≠ ∞;
   exact (hb.mono interior_subset).measure_lt_top.Ne
   suffices μ (closure s) ≤ μ (interior s) by
     rwa [frontier, measure_diff interior_subset_closure is_open_interior.measurable_set hb,

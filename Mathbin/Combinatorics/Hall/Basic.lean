@@ -190,9 +190,7 @@ finite set is finite. -/
 instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop)
     [∀ a : α, Fintype (Rel.image r {a})] (A : Finset α) : Fintype (Rel.image r A) :=
   by
-  have h : Rel.image r A = (A.bUnion fun a => (Rel.image r {a}).toFinset : Set β) :=
-    by
-    ext
+  have h : Rel.image r A = (A.bUnion fun a => (Rel.image r {a}).toFinset : Set β) := by ext;
     simp [Rel.image]
   rw [h]
   apply FinsetCoe.fintype

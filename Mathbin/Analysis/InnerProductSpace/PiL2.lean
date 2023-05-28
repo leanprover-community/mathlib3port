@@ -403,10 +403,8 @@ protected theorem coe_toBasis_repr_apply (b : OrthonormalBasis ι 𝕜 E) (x : E
     LinearIsometryEquiv.coe_toLinearEquiv]
 #align orthonormal_basis.coe_to_basis_repr_apply OrthonormalBasis.coe_toBasis_repr_apply
 
-protected theorem sum_repr (b : OrthonormalBasis ι 𝕜 E) (x : E) : (∑ i, b.repr x i • b i) = x :=
-  by
-  simp_rw [← b.coe_to_basis_repr_apply, ← b.coe_to_basis]
-  exact b.to_basis.sum_repr x
+protected theorem sum_repr (b : OrthonormalBasis ι 𝕜 E) (x : E) : (∑ i, b.repr x i • b i) = x := by
+  simp_rw [← b.coe_to_basis_repr_apply, ← b.coe_to_basis]; exact b.to_basis.sum_repr x
 #align orthonormal_basis.sum_repr OrthonormalBasis.sum_repr
 
 protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanSpace 𝕜 ι) :
@@ -740,10 +738,7 @@ theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 (co
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
   let fu : ↥u ≃ ↥u₀ := Equiv.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
-  have hfu : (coe : u → E) = (coe : u₀ → E) ∘ fu :=
-    by
-    ext
-    simp
+  have hfu : (coe : u → E) = (coe : u₀ → E) ∘ fu := by ext; simp
   have hu : Orthonormal 𝕜 (coe : u → E) := by simpa [hfu] using hu₀.comp _ fu.injective
   refine' ⟨u, OrthonormalBasis.mkOfOrthogonalEqBot hu _, _, _⟩
   · simpa using hu₀_max

@@ -117,8 +117,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
     by
     intro hε
     rw [inter_eq_left_iff_subset, Real.closedBall_eq_Icc, zero_sub, zero_add]
-    rintro y ⟨hy₁, hy₂⟩
-    constructor <;> linarith
+    rintro y ⟨hy₁, hy₂⟩; constructor <;> linarith
   have h₂ :
     coe ⁻¹' Metric.closedBall (0 : AddCircle T) ε ∩ I =
       if ε < T / 2 then Metric.closedBall (0 : ℝ) ε else I :=
@@ -185,10 +184,8 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
   · rw [← map_comap_subtype_coe m _]
     exact MeasurableEmbedding.lintegral_map (MeasurableEmbedding.subtype_coe m) _
   · congr 1
-    have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=
-      by
-      ext1 x
-      rfl
+    have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) := by
+      ext1 x; rfl
     simp_rw [this, ← map_map AddCircle.measurable_mk' measurable_subtype_coe, ←
       map_comap_subtype_coe m]
     rfl
@@ -206,9 +203,7 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
   simp only [measurable_equiv_Ioc, equiv_Ioc, QuotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this
   rw [← (AddCircle.measurePreserving_mk T t).map_eq, set_integral_eq_subtype m, ← this]
-  have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=
-    by
-    ext1 x
+  have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) := by ext1 x;
     rfl
   simp_rw [this, ← map_map AddCircle.measurable_mk' measurable_subtype_coe, ←
     map_comap_subtype_coe m]
@@ -338,10 +333,7 @@ theorem intervalIntegral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
   cases' n with n n
   · simp [← this n]
   · conv_rhs => rw [negSucc_zsmul]
-    have h₀ : Int.negSucc n • T + (n + 1) • T = 0 :=
-      by
-      simp
-      linarith
+    have h₀ : Int.negSucc n • T + (n + 1) • T = 0 := by simp; linarith
     rw [integral_symm, ← (hf.nsmul (n + 1)).funext, neg_inj]
     simp_rw [integral_comp_add_right, h₀, zero_add, this (n + 1), add_comm T,
       hf.interval_integral_add_eq ((n + 1) • T) 0, zero_add]

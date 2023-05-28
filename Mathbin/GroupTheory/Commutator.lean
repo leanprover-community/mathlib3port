@@ -364,7 +364,7 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
   · rw [commutator_le]
     rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
     exact ⟨commutator_mem_commutator hp₁ hq₁, commutator_mem_commutator hp₂ hq₂⟩
-  · rw [prod_le_iff]
+  · rw [prod_le_iff];
     constructor <;>
       · rw [map_commutator]
         apply commutator_mono <;>
@@ -402,16 +402,14 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
   by
   classical
     apply le_antisymm (commutator_pi_pi_le H K)
-    · rw [pi_le_iff]
-      intro i hi
+    · rw [pi_le_iff]; intro i hi
       rw [map_commutator]
       apply commutator_mono <;>
         · rw [le_pi_iff]
           intro j hj
           rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
           by_cases h : j = i
-          · subst h
-            simpa using hx
+          · subst h; simpa using hx
           · simp [h, one_mem]
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
 

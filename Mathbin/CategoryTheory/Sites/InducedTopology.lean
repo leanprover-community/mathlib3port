@@ -89,10 +89,7 @@ then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 def inducedTopology : GrothendieckTopology C
     where
   sieves X S := K _ (S.functorPushforward G)
-  top_mem' X := by
-    change K _ _
-    rw [sieve.functor_pushforward_top]
-    exact K.top_mem _
+  top_mem' X := by change K _ _; rw [sieve.functor_pushforward_top]; exact K.top_mem _
   pullback_stable' X Y S f hS :=
     by
     have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).functorPullback G :=

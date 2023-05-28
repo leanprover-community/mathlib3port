@@ -60,9 +60,7 @@ but is expected to have type
   Eq.{1} (Set.{0} Real) (Set.range.{0, 1} Real Real Real.arcsin) (Set.Icc.{0} Real Real.instPreorderReal (Neg.neg.{0} Real Real.instNegReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))))
 Case conversion may be inaccurate. Consider using '#align real.range_arcsin Real.range_arcsinₓ'. -/
 @[simp]
-theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
-  by
-  rw [arcsin, range_comp coe]
+theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) := by rw [arcsin, range_comp coe];
   simp [Icc]
 #align real.range_arcsin Real.range_arcsin
 
@@ -541,11 +539,8 @@ but is expected to have type
   forall {x : Real}, Iff (LE.le.{0} Real Real.instLEReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))) (Real.arcsin x)) (LE.le.{0} Real Real.instLEReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.sqrt (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) x)
 Case conversion may be inaccurate. Consider using '#align real.pi_div_four_le_arcsin Real.pi_div_four_le_arcsinₓ'. -/
 @[simp]
-theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x :=
-  by
-  rw [← sin_pi_div_four, le_arcsin_iff_sin_le']
-  have := pi_pos
-  constructor <;> linarith
+theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x := by
+  rw [← sin_pi_div_four, le_arcsin_iff_sin_le']; have := pi_pos; constructor <;> linarith
 #align real.pi_div_four_le_arcsin Real.pi_div_four_le_arcsin
 
 /- warning: real.maps_to_sin_Ioo -> Real.mapsTo_sin_Ioo is a dubious translation:
@@ -622,13 +617,9 @@ theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / sqrt (1 - x ^ 2) :=
   by
   rw [tan_eq_sin_div_cos, cos_arcsin]
   by_cases hx₁ : -1 ≤ x; swap
-  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
-    rw [h]
-    simp
+  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith); rw [h]; simp
   by_cases hx₂ : x ≤ 1; swap
-  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
-    rw [h]
-    simp
+  · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith); rw [h]; simp
   rw [sin_arcsin hx₁ hx₂]
 #align real.tan_arcsin Real.tan_arcsin
 
@@ -879,12 +870,8 @@ but is expected to have type
   forall {x : Real}, Iff (LE.le.{0} Real Real.instLEReal (Real.arccos x) (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) Real.pi (OfNat.ofNat.{0} Real 4 (instOfNat.{0} Real 4 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))))) (LE.le.{0} Real Real.instLEReal (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) (Real.sqrt (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) x)
 Case conversion may be inaccurate. Consider using '#align real.arccos_le_pi_div_four Real.arccos_le_pi_div_fourₓ'. -/
 @[simp]
-theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x :=
-  by
-  rw [arccos, ← pi_div_four_le_arcsin]
-  constructor <;>
-    · intro
-      linarith
+theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := by
+  rw [arccos, ← pi_div_four_le_arcsin]; constructor <;> · intro ; linarith
 #align real.arccos_le_pi_div_four Real.arccos_le_pi_div_four
 
 #print Real.continuous_arccos /-

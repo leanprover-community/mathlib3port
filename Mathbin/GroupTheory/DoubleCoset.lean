@@ -211,9 +211,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1) (K : Subgroup.{u1} G _inst_1) (a : G) (b : G), Iff (Eq.{succ u1} (Doset.Quotient.{u1} G _inst_1 (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) H) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) K)) (Doset.mk.{u1} G _inst_1 H K a) (Doset.mk.{u1} G _inst_1 H K b)) (Exists.{succ u1} G (fun (h : G) => And (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) h H) (Exists.{succ u1} G (fun (k : G) => And (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) k K) (Eq.{succ u1} G b (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) h a) k))))))
 Case conversion may be inaccurate. Consider using '#align doset.eq Doset.eqₓ'. -/
 theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ h ∈ H, ∃ k ∈ K, b = h * a * k :=
-  by
-  rw [Quotient.eq'']
-  apply rel_iff
+  by rw [Quotient.eq'']; apply rel_iff
 #align doset.eq Doset.eq
 
 /- warning: doset.out_eq' -> Doset.out_eq' is a dubious translation:

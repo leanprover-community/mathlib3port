@@ -83,8 +83,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
     e.has_fderiv_at.comp_has_deriv_at c
       (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
   calc
-    ‖deriv f c‖ = ‖deriv (e ∘ f) c‖ := by
-      rw [this.deriv]
+    ‖deriv f c‖ = ‖deriv (e ∘ f) c‖ := by rw [this.deriv];
       exact (UniformSpace.Completion.norm_coe _).symm
     _ ≤ C / R :=
       norm_deriv_le_aux hR (e.differentiable.comp_diff_cont_on_cl hd) fun z hz =>
@@ -95,10 +94,8 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
 theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : Bounded (range f))
     (z w : ℂ) : f z = f w := by
-  suffices : ∀ c, deriv f c = 0
-  exact is_const_of_deriv_eq_zero hf this z w
-  clear z w
-  intro c
+  suffices : ∀ c, deriv f c = 0; exact is_const_of_deriv_eq_zero hf this z w
+  clear z w; intro c
   obtain ⟨C, C₀, hC⟩ : ∃ C > (0 : ℝ), ∀ z, ‖f z‖ ≤ C :=
     by
     rcases bounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩

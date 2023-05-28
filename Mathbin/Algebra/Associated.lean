@@ -134,13 +134,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align comap_prime comap_primeₓ'. -/
 theorem comap_prime (hinv : ∀ a, g (f a : β) = a) (hp : Prime (f p)) : Prime p :=
   ⟨fun h => hp.1 <| by simp [h], fun h => hp.2.1 <| h.map f, fun a b h => by
-    refine'
-        (hp.2.2 (f a) (f b) <| by
-              convert map_dvd f h
-              simp).imp
-          _ _ <;>
-      · intro h
-        convert← map_dvd g h <;> apply hinv⟩
+    refine' (hp.2.2 (f a) (f b) <| by convert map_dvd f h; simp).imp _ _ <;>
+      · intro h; convert← map_dvd g h <;> apply hinv⟩
 #align comap_prime comap_prime
 
 /- warning: mul_equiv.prime_iff -> MulEquiv.prime_iff is a dubious translation:
@@ -184,8 +179,7 @@ theorem Prime.pow_dvd_of_dvd_mul_left [CancelCommMonoidWithZero α] {p a b : α}
     (n : ℕ) (h : ¬p ∣ a) (h' : p ^ n ∣ a * b) : p ^ n ∣ b :=
   by
   induction' n with n ih
-  · rw [pow_zero]
-    exact one_dvd b
+  · rw [pow_zero]; exact one_dvd b
   · obtain ⟨c, rfl⟩ := ih (dvd_trans (pow_dvd_pow p n.le_succ) h')
     rw [pow_succ']
     apply mul_dvd_mul_left _ ((hp.dvd_or_dvd _).resolve_left h)
@@ -199,9 +193,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {a : α} {b : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall (n : Nat), (Not (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) a b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) a))
 Case conversion may be inaccurate. Consider using '#align prime.pow_dvd_of_dvd_mul_right Prime.pow_dvd_of_dvd_mul_rightₓ'. -/
 theorem Prime.pow_dvd_of_dvd_mul_right [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p)
-    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a :=
-  by
-  rw [mul_comm] at h'
+    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a := by rw [mul_comm] at h';
   exact hp.pow_dvd_of_dvd_mul_left n h h'
 #align prime.pow_dvd_of_dvd_mul_right Prime.pow_dvd_of_dvd_mul_right
 
@@ -491,11 +483,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α}, (Irreducible.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a) -> (Not (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a))
 Case conversion may be inaccurate. Consider using '#align irreducible.not_square Irreducible.not_squareₓ'. -/
-theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a :=
-  by
-  rintro ⟨b, rfl⟩
-  simp only [irreducible_mul_iff, or_self_iff] at ha
-  exact ha.1.not_unit ha.2
+theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by rintro ⟨b, rfl⟩;
+  simp only [irreducible_mul_iff, or_self_iff] at ha; exact ha.1.not_unit ha.2
 #align irreducible.not_square Irreducible.not_square
 
 /- warning: is_square.not_irreducible -> IsSquare.not_irreducible is a dubious translation:
@@ -901,10 +890,7 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   rcases hba with ⟨d, a_eq⟩
   by_cases ha0 : a = 0
   · simp_all
-  have hac0 : a * c ≠ 0 := by
-    intro con
-    rw [Con, MulZeroClass.zero_mul] at a_eq
-    apply ha0 a_eq
+  have hac0 : a * c ≠ 0 := by intro con; rw [Con, MulZeroClass.zero_mul] at a_eq; apply ha0 a_eq
   have : a * (c * d) = a * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
   have : a * c * (d * c) = a * c * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
@@ -966,10 +952,7 @@ protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~�
   ⟨h.neZero_iff.1 hp.NeZero,
     let ⟨u, hu⟩ := h
     ⟨fun ⟨v, hv⟩ => hp.not_unit ⟨v * u⁻¹, by simp [hv, hu.symm]⟩,
-      hu ▸ by
-        simp [Units.mul_right_dvd]
-        intro a b
-        exact hp.dvd_or_dvd⟩⟩
+      hu ▸ by simp [Units.mul_right_dvd]; intro a b; exact hp.dvd_or_dvd⟩⟩
 #align associated.prime Associated.prime
 -/
 
@@ -1107,18 +1090,13 @@ theorem units_eq_one (u : αˣ) : u = 1 :=
 theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y :=
   by
   constructor
-  · rintro ⟨c, rfl⟩
-    rw [units_eq_one c, Units.val_one, mul_one]
-  · rintro rfl
-    rfl
+  · rintro ⟨c, rfl⟩; rw [units_eq_one c, Units.val_one, mul_one]
+  · rintro rfl; rfl
 #align associated_iff_eq associated_iff_eq
 -/
 
 #print associated_eq_eq /-
-theorem associated_eq_eq : (Associated : α → α → Prop) = Eq :=
-  by
-  ext
-  rw [associated_iff_eq]
+theorem associated_eq_eq : (Associated : α → α → Prop) = Eq := by ext; rw [associated_iff_eq]
 #align associated_eq_eq associated_eq_eq
 -/
 
@@ -1137,18 +1115,14 @@ variable {R : Type _} [CancelCommMonoidWithZero R] [Unique Rˣ] {p₁ p₂ : R} 
 
 #print eq_of_prime_pow_eq /-
 theorem eq_of_prime_pow_eq (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ :=
-  by
-  rw [← associated_iff_eq] at h⊢
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h⊢;
   apply h.of_pow_associated_of_prime hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq eq_of_prime_pow_eq
 -/
 
 #print eq_of_prime_pow_eq' /-
 theorem eq_of_prime_pow_eq' (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₂)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ :=
-  by
-  rw [← associated_iff_eq] at h⊢
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h⊢;
   apply h.of_pow_associated_of_prime' hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq' eq_of_prime_pow_eq'
 -/
@@ -1255,10 +1229,7 @@ theorem exists_rep [Monoid α] (a : Associates α) : ∃ a0 : α, Associates.mk 
 instance [Monoid α] [Subsingleton α] : Unique (Associates α)
     where
   default := 1
-  uniq a := by
-    apply Quotient.recOnSubsingleton₂
-    intro a b
-    congr
+  uniq a := by apply Quotient.recOnSubsingleton₂; intro a b; congr
 
 #print Associates.mk_injective /-
 theorem mk_injective [Monoid α] [Unique (Units α)] : Function.Injective (@Associates.mk α _) :=
@@ -1587,13 +1558,9 @@ variable [CommMonoidWithZero α]
 instance : CommMonoidWithZero (Associates α) :=
   { Associates.commMonoid,
     Associates.hasZero with
-    zero_mul := by
-      rintro ⟨a⟩
-      show Associates.mk (0 * a) = Associates.mk 0
+    zero_mul := by rintro ⟨a⟩; show Associates.mk (0 * a) = Associates.mk 0;
       rw [MulZeroClass.zero_mul]
-    mul_zero := by
-      rintro ⟨a⟩
-      show Associates.mk (a * 0) = Associates.mk 0
+    mul_zero := by rintro ⟨a⟩; show Associates.mk (a * 0) = Associates.mk 0;
       rw [MulZeroClass.mul_zero] }
 
 instance : OrderTop (Associates α) where
@@ -1628,12 +1595,9 @@ theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p :=
   by
   rw [Prime, _root_.prime, forall_associated]
   trans
-  · apply and_congr
-    rfl
-    apply and_congr
-    rfl
-    apply forall_congr'
-    intro a
+  · apply and_congr; rfl
+    apply and_congr; rfl
+    apply forall_congr'; intro a
     exact forall_associated
   apply and_congr mk_ne_zero
   apply and_congr
@@ -1675,8 +1639,7 @@ theorem mk_dvdNotUnit_mk_iff {a b : α} :
   rw [DvdNotUnit, DvdNotUnit, mk_ne_zero]
   apply and_congr_right; intro ane0
   constructor
-  · contrapose!
-    rw [forall_associated]
+  · contrapose!; rw [forall_associated]
     intro h x hx hbax
     rw [mk_mul_mk, mk_eq_mk_iff_associated] at hbax
     cases' hbax with u hu
@@ -1700,10 +1663,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.dvd_not_unit_of_lt Associates.dvdNotUnit_of_ltₓ'. -/
 theorem dvdNotUnit_of_lt {a b : Associates α} (hlt : a < b) : DvdNotUnit a b :=
   by
-  constructor;
-  · rintro rfl
-    apply not_lt_of_le _ hlt
-    apply dvd_zero
+  constructor; · rintro rfl; apply not_lt_of_le _ hlt; apply dvd_zero
   rcases hlt with ⟨⟨x, rfl⟩, ndvd⟩
   refine' ⟨x, _, rfl⟩
   contrapose! ndvd

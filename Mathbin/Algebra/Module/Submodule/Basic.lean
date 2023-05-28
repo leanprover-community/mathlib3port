@@ -487,9 +487,7 @@ instance : AddCommMonoid p :=
 #print Submodule.module' /-
 instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
   refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
-    · intros
-      apply SetCoe.ext
-      simp [smul_add, add_smul, mul_smul]
+    · intros ; apply SetCoe.ext; simp [smul_add, add_smul, mul_smul]
 #align submodule.module' Submodule.module'
 -/
 
@@ -884,9 +882,7 @@ variable [AddCommGroup M] [Module R M] {b : ι → M}
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.not_mem_of_ortho Submodule.not_mem_of_orthoₓ'. -/
 theorem not_mem_of_ortho {x : M} {N : Submodule R M}
-    (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) : x ∉ N :=
-  by
-  intro hx
+    (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) : x ∉ N := by intro hx;
   simpa using ortho (-1) x hx
 #align submodule.not_mem_of_ortho Submodule.not_mem_of_ortho
 

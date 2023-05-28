@@ -109,16 +109,10 @@ instance hasLimit_parallelPair {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) :
           Fork.IsLimit.mk _
             (fun c =>
               NormedAddGroupHom.ker.lift (Fork.ι c) _ <|
-                show NormedAddGroupHom.compHom (f - g) c.ι = 0
-                  by
-                  rw [AddMonoidHom.map_sub, AddMonoidHom.sub_apply, sub_eq_zero]
-                  exact c.condition)
-            (fun c => NormedAddGroupHom.ker.incl_comp_lift _ _ _) fun c g h =>
-            by
-            ext x
-            dsimp
-            rw [← h]
-            rfl }
+                show NormedAddGroupHom.compHom (f - g) c.ι = 0 by
+                  rw [AddMonoidHom.map_sub, AddMonoidHom.sub_apply, sub_eq_zero]; exact c.condition)
+            (fun c => NormedAddGroupHom.ker.incl_comp_lift _ _ _) fun c g h => by ext x; dsimp;
+            rw [← h]; rfl }
 #align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroup.hasLimit_parallelPair
 
 instance : Limits.HasEqualizers.{u, u + 1} SemiNormedGroup :=
@@ -206,10 +200,7 @@ theorem comp_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
 @[simp]
 theorem explicitCokernelπ_apply_dom_eq_zero {X Y : SemiNormedGroup.{u}} {f : X ⟶ Y} (x : X) :
     (explicitCokernelπ f) (f x) = 0 :=
-  show (f ≫ explicitCokernelπ f) x = 0
-    by
-    rw [comp_explicit_cokernel_π]
-    rfl
+  show (f ≫ explicitCokernelπ f) x = 0 by rw [comp_explicit_cokernel_π]; rfl
 #align SemiNormedGroup.explicit_cokernel_π_apply_dom_eq_zero SemiNormedGroup.explicitCokernelπ_apply_dom_eq_zero
 
 @[simp, reassoc]
@@ -257,10 +248,7 @@ theorem explicitCokernel_hom_ext {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y}
     e₁ = e₂ := by
   let g : Y ⟶ Z := explicit_cokernel_π f ≫ e₂
   have w : f ≫ g = 0 := by simp
-  have : e₂ = explicit_cokernel_desc w :=
-    by
-    apply explicit_cokernel_desc_unique
-    rfl
+  have : e₂ = explicit_cokernel_desc w := by apply explicit_cokernel_desc_unique; rfl
   rw [this]
   apply explicit_cokernel_desc_unique
   exact h

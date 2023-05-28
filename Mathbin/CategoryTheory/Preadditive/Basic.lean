@@ -128,9 +128,7 @@ instance fullSubcategory (Z : C → Prop) : Preadditive.{v} (FullSubcategory Z)
   comp_add P Q R f g g' := comp_add _ _ _ _ _ _
 #align category_theory.preadditive.full_subcategory CategoryTheory.Preadditive.fullSubcategory
 
-instance (X : C) : AddCommGroup (End X) := by
-  dsimp [End]
-  infer_instance
+instance (X : C) : AddCommGroup (End X) := by dsimp [End]; infer_instance
 
 instance (X : C) : Ring (End X) :=
   { (inferInstance : AddCommGroup (End X)),

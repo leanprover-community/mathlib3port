@@ -188,9 +188,7 @@ theorem range_mkQ_cokernelIsoRangeQuotient_inv :
 <too large>
 Case conversion may be inaccurate. Consider using '#align Module.cokernel_π_ext ModuleCat.cokernel_π_extₓ'. -/
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
-    cokernel.π f x = cokernel.π f y := by
-  subst w
-  simp
+    cokernel.π f x = cokernel.π f y := by subst w; simp
 #align Module.cokernel_π_ext ModuleCat.cokernel_π_ext
 
 end ModuleCat

@@ -615,12 +615,8 @@ def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐ
   invFun f :=
     { toFun := unop ∘ f ∘ op
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext x
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext x; simp
 #align mul_hom.op MulHom.op
 #align add_hom.op AddHom.op
 -/
@@ -649,12 +645,8 @@ def AddHom.mulOp {M N} [Add M] [Add N] : AddHom M N ≃ AddHom Mᵐᵒᵖ Nᵐ�
   invFun f :=
     { toFun := unop ∘ f ∘ op
       map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align add_hom.mul_op AddHom.mulOp
 -/
 
@@ -683,12 +675,8 @@ def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] : (M →* N) ≃ (Mᵐᵒ
     { toFun := unop ∘ f ∘ op
       map_one' := congr_arg unop f.map_one
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext x
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext x; simp
 #align monoid_hom.op MonoidHom.op
 #align add_monoid_hom.op AddMonoidHom.op
 -/
@@ -718,12 +706,8 @@ def AddMonoidHom.mulOp {M N} [AddZeroClass M] [AddZeroClass N] : (M →+ N) ≃ 
     { toFun := unop ∘ f ∘ op
       map_zero' := congr_arg unop f.map_zero
       map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align add_monoid_hom.mul_op AddMonoidHom.mulOp
 -/
 
@@ -743,12 +727,8 @@ def AddEquiv.mulOp {α β} [Add α] [Add β] : α ≃+ β ≃ (αᵐᵒᵖ ≃+ 
     where
   toFun f := opAddEquiv.symm.trans (f.trans opAddEquiv)
   invFun f := opAddEquiv.trans (f.trans opAddEquiv.symm)
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align add_equiv.mul_op AddEquiv.mulOp
 -/
 
@@ -777,12 +757,8 @@ def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* β�
       left_inv := fun x => by simp
       right_inv := fun x => by simp
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    simp
+  left_inv f := by ext; rfl
+  right_inv f := by ext; simp
 #align mul_equiv.op MulEquiv.op
 #align add_equiv.op AddEquiv.op
 -/

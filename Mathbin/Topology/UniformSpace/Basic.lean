@@ -897,19 +897,13 @@ theorem ball_inter_right (x : β) (V W : Set (β × β)) : ball x (V ∩ W) ⊆ 
 #print mem_ball_symmetry /-
 theorem mem_ball_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x y} :
     x ∈ ball y V ↔ y ∈ ball x V :=
-  show (x, y) ∈ Prod.swap ⁻¹' V ↔ (x, y) ∈ V
-    by
-    unfold SymmetricRel at hV
-    rw [hV]
+  show (x, y) ∈ Prod.swap ⁻¹' V ↔ (x, y) ∈ V by unfold SymmetricRel at hV; rw [hV]
 #align mem_ball_symmetry mem_ball_symmetry
 -/
 
 #print ball_eq_of_symmetry /-
 theorem ball_eq_of_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x} :
-    ball x V = { y | (y, x) ∈ V } := by
-  ext y
-  rw [mem_ball_symmetry hV]
-  exact Iff.rfl
+    ball x V = { y | (y, x) ∈ V } := by ext y; rw [mem_ball_symmetry hV]; exact Iff.rfl
 #align ball_eq_of_symmetry ball_eq_of_symmetry
 -/
 
@@ -968,27 +962,21 @@ theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} :
     · exact fun y hy => refl_mem_uniformity hy rfl
     · refine' is_open_uniformity.mpr fun y hy => _
       rcases comp_mem_uniformity_sets hy with ⟨t, ht, tr⟩
-      filter_upwards [ht]
-      rintro ⟨a, b⟩ hp' rfl
-      filter_upwards [ht]
-      rintro ⟨a', b'⟩ hp'' rfl
+      filter_upwards [ht]; rintro ⟨a, b⟩ hp' rfl
+      filter_upwards [ht]; rintro ⟨a', b'⟩ hp'' rfl
       exact @tr (a, b') ⟨a', hp', hp''⟩ rfl
 #align mem_nhds_uniformity_iff_right mem_nhds_uniformity_iff_right
 -/
 
 #print mem_nhds_uniformity_iff_left /-
 theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} :
-    s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α :=
-  by
-  rw [uniformity_eq_symm, mem_nhds_uniformity_iff_right]
-  rfl
+    s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α := by
+  rw [uniformity_eq_symm, mem_nhds_uniformity_iff_right]; rfl
 #align mem_nhds_uniformity_iff_left mem_nhds_uniformity_iff_left
 -/
 
 #print nhds_eq_comap_uniformity /-
-theorem nhds_eq_comap_uniformity {x : α} : 𝓝 x = (𝓤 α).comap (Prod.mk x) :=
-  by
-  ext s
+theorem nhds_eq_comap_uniformity {x : α} : 𝓝 x = (𝓤 α).comap (Prod.mk x) := by ext s;
   rw [mem_nhds_uniformity_iff_right, mem_comap_prod_mk]
 #align nhds_eq_comap_uniformity nhds_eq_comap_uniformity
 -/
@@ -1013,9 +1001,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {x : α}, Filter.HasBasis.{u2, u1} α ι (nhds.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) x) p (fun (i : ι) => UniformSpace.ball.{u2} α x (s i)))
 Case conversion may be inaccurate. Consider using '#align nhds_basis_uniformity' nhds_basis_uniformity'ₓ'. -/
 theorem nhds_basis_uniformity' {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
-    {x : α} : (𝓝 x).HasBasis p fun i => ball x (s i) :=
-  by
-  rw [nhds_eq_comap_uniformity]
+    {x : α} : (𝓝 x).HasBasis p fun i => ball x (s i) := by rw [nhds_eq_comap_uniformity];
   exact h.comap (Prod.mk x)
 #align nhds_basis_uniformity' nhds_basis_uniformity'
 
@@ -1253,10 +1239,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {x : α} {g : (Set.{u1} α) -> (Filter.{u2} β)}, (Monotone.{u1, u2} (Set.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β)) g) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.lift.{u1, u2} α β (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x) g) (Filter.lift.{u1, u2} (Prod.{u1, u1} α α) β (uniformity.{u1} α _inst_1) (fun (s : Set.{u1} (Prod.{u1, u1} α α)) => g (UniformSpace.ball.{u1} α x s))))
 Case conversion may be inaccurate. Consider using '#align lift_nhds_left lift_nhds_leftₓ'. -/
 theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
-    (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g (ball x s) :=
-  by
-  rw [nhds_eq_comap_uniformity, comap_lift_eq2 hg]
-  rfl
+    (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g (ball x s) := by
+  rw [nhds_eq_comap_uniformity, comap_lift_eq2 hg]; rfl
 #align lift_nhds_left lift_nhds_left
 
 /- warning: lift_nhds_right -> lift_nhds_right is a dubious translation:
@@ -1266,10 +1250,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u1} α] {x : α} {g : (Set.{u1} α) -> (Filter.{u2} β)}, (Monotone.{u1, u2} (Set.{u1} α) (Filter.{u2} β) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β)) g) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.lift.{u1, u2} α β (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) x) g) (Filter.lift.{u1, u2} (Prod.{u1, u1} α α) β (uniformity.{u1} α _inst_1) (fun (s : Set.{u1} (Prod.{u1, u1} α α)) => g (setOf.{u1} α (fun (y : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α y x) s)))))
 Case conversion may be inaccurate. Consider using '#align lift_nhds_right lift_nhds_rightₓ'. -/
 theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
-    (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } :=
-  by
-  rw [nhds_eq_comap_uniformity', comap_lift_eq2 hg]
-  rfl
+    (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } := by
+  rw [nhds_eq_comap_uniformity', comap_lift_eq2 hg]; rfl
 #align lift_nhds_right lift_nhds_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1296,10 +1278,8 @@ theorem nhds_eq_uniformity_prod {a b : α} :
       (𝓤 α).lift' fun s : Set (α × α) => { y : α | (y, a) ∈ s } ×ˢ { y : α | (b, y) ∈ s } :=
   by
   rw [nhds_prod_eq, nhds_nhds_eq_uniformity_uniformity_prod, lift_lift'_same_eq_lift']
-  · intro s
-    exact monotone_const.set_prod monotone_preimage
-  · intro t
-    exact monotone_preimage.set_prod monotone_const
+  · intro s; exact monotone_const.set_prod monotone_preimage
+  · intro t; exact monotone_preimage.set_prod monotone_const
 #align nhds_eq_uniformity_prod nhds_eq_uniformity_prod
 
 /- warning: nhdset_of_mem_uniformity -> nhdset_of_mem_uniformity is a dubious translation:
@@ -1879,9 +1859,7 @@ theorem uniformity_comap [UniformSpace β] (f : α → β) :
 
 #print uniformSpace_comap_id /-
 @[simp]
-theorem uniformSpace_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id :=
-  by
-  ext : 2
+theorem uniformSpace_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id := by ext : 2;
   rw [uniformity_comap, Prod.map_id, comap_id]
 #align uniform_space_comap_id uniformSpace_comap_id
 -/
@@ -1893,9 +1871,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {uγ : UniformSpace.{u1} γ} {f : α -> β} {g : β -> γ}, Eq.{succ u3} (UniformSpace.{u3} α) (UniformSpace.comap.{u3, u1} α γ (Function.comp.{succ u3, succ u2, succ u1} α β γ g f) uγ) (UniformSpace.comap.{u3, u2} α β f (UniformSpace.comap.{u2, u1} β γ g uγ))
 Case conversion may be inaccurate. Consider using '#align uniform_space.comap_comap UniformSpace.comap_comapₓ'. -/
 theorem UniformSpace.comap_comap {α β γ} [uγ : UniformSpace γ] {f : α → β} {g : β → γ} :
-    UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) :=
-  by
-  ext1
+    UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) := by ext1;
   simp only [uniformity_comap, comap_comap, Prod.map_comp_map]
 #align uniform_space.comap_comap UniformSpace.comap_comap
 
@@ -2212,18 +2188,14 @@ theorem uniformContinuous_toAdd : UniformContinuous (toAdd : Multiplicative α �
 -/
 
 #print uniformity_additive /-
-theorem uniformity_additive : 𝓤 (Additive α) = (𝓤 α).map (Prod.map ofMul ofMul) :=
-  by
-  convert map_id.symm
-  exact Prod.map_id
+theorem uniformity_additive : 𝓤 (Additive α) = (𝓤 α).map (Prod.map ofMul ofMul) := by
+  convert map_id.symm; exact Prod.map_id
 #align uniformity_additive uniformity_additive
 -/
 
 #print uniformity_multiplicative /-
-theorem uniformity_multiplicative : 𝓤 (Multiplicative α) = (𝓤 α).map (Prod.map ofAdd ofAdd) :=
-  by
-  convert map_id.symm
-  exact Prod.map_id
+theorem uniformity_multiplicative : 𝓤 (Multiplicative α) = (𝓤 α).map (Prod.map ofAdd ofAdd) := by
+  convert map_id.symm; exact Prod.map_id
 #align uniformity_multiplicative uniformity_multiplicative
 -/
 
@@ -2758,13 +2730,11 @@ theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
   · refine' (@isOpen_iff_mem_nhds α _ _).2 fun a ha => mem_nhds_uniformity_iff_right.2 _
     rcases mem_map_iff_exists_image.1 (hs _ ha).1 with ⟨t, ht, st⟩
     refine' mem_of_superset ht _
-    rintro p pt rfl
-    exact st ⟨_, pt, rfl⟩ rfl
+    rintro p pt rfl; exact st ⟨_, pt, rfl⟩ rfl
   · refine' (@isOpen_iff_mem_nhds β _ _).2 fun b hb => mem_nhds_uniformity_iff_right.2 _
     rcases mem_map_iff_exists_image.1 (hs _ hb).2 with ⟨t, ht, st⟩
     refine' mem_of_superset ht _
-    rintro p pt rfl
-    exact st ⟨_, pt, rfl⟩ rfl
+    rintro p pt rfl; exact st ⟨_, pt, rfl⟩ rfl
 #align open_of_uniformity_sum_aux open_of_uniformity_sum_aux
 
 #print Sum.uniformSpace /-
@@ -2814,8 +2784,7 @@ theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} 
     apply (𝓤 α).sets_of_superset hm'
     rintro ⟨x, y⟩ hp rfl
     refine' ⟨i, m', hm', fun z hz => h (monotone_id.comp_rel monotone_const mm' _)⟩
-    dsimp [-mem_compRel] at hz⊢
-    rw [compRel_assoc]
+    dsimp [-mem_compRel] at hz⊢; rw [compRel_assoc]
     exact ⟨y, hp, hz⟩
   have hu₂ : s ⊆ ⋃ n ∈ 𝓤 α, u n := by
     intro x hx

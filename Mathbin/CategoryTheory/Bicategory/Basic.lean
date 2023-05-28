@@ -313,9 +313,7 @@ instance whiskerLeft_isIso (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso �
 #print CategoryTheory.Bicategory.inv_whiskerLeft /-
 @[simp]
 theorem inv_whiskerLeft (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso η] : inv (f ◁ η) = f ◁ inv η :=
-  by
-  ext
-  simp only [← whisker_left_comp, whisker_left_id, is_iso.hom_inv_id]
+  by ext; simp only [← whisker_left_comp, whisker_left_id, is_iso.hom_inv_id]
 #align category_theory.bicategory.inv_whisker_left CategoryTheory.Bicategory.inv_whiskerLeft
 -/
 
@@ -338,8 +336,7 @@ instance whiskerRight_isIso {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso 
 #print CategoryTheory.Bicategory.inv_whiskerRight /-
 @[simp]
 theorem inv_whiskerRight {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso η] :
-    inv (η ▷ h) = inv η ▷ h := by
-  ext
+    inv (η ▷ h) = inv η ▷ h := by ext;
   simp only [← comp_whisker_right, id_whisker_right, is_iso.hom_inv_id]
 #align category_theory.bicategory.inv_whisker_right CategoryTheory.Bicategory.inv_whiskerRight
 -/
@@ -358,9 +355,7 @@ theorem pentagon_inv (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
 theorem pentagon_inv_inv_hom_hom_inv (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
     (α_ f (g ≫ h) i).inv ≫ (α_ f g h).inv ▷ i ≫ (α_ (f ≫ g) h i).Hom =
       f ◁ (α_ g h i).Hom ≫ (α_ f g (h ≫ i)).inv :=
-  by
-  rw [← cancel_epi (f ◁ (α_ g h i).inv), ← cancel_mono (α_ (f ≫ g) h i).inv]
-  simp
+  by rw [← cancel_epi (f ◁ (α_ g h i).inv), ← cancel_mono (α_ (f ≫ g) h i).inv]; simp
 #align category_theory.bicategory.pentagon_inv_inv_hom_hom_inv CategoryTheory.Bicategory.pentagon_inv_inv_hom_hom_inv
 -/
 
@@ -396,9 +391,7 @@ theorem pentagon_hom_hom_inv_hom_hom (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (
 theorem pentagon_hom_inv_inv_inv_hom (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
     (α_ f g (h ≫ i)).Hom ≫ f ◁ (α_ g h i).inv ≫ (α_ f (g ≫ h) i).inv =
       (α_ (f ≫ g) h i).inv ≫ (α_ f g h).Hom ▷ i :=
-  by
-  rw [← cancel_epi (α_ f g (h ≫ i)).inv, ← cancel_mono ((α_ f g h).inv ▷ i)]
-  simp
+  by rw [← cancel_epi (α_ f g (h ≫ i)).inv, ← cancel_mono ((α_ f g h).inv ▷ i)]; simp
 #align category_theory.bicategory.pentagon_hom_inv_inv_inv_hom CategoryTheory.Bicategory.pentagon_hom_inv_inv_inv_hom
 -/
 

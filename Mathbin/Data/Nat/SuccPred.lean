@@ -73,18 +73,14 @@ theorem pred_eq_pred : Order.pred = pred :=
 #print Nat.succ_iterate /-
 theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
-  | n + 1 => by
-    rw [Function.iterate_succ', add_succ]
-    exact congr_arg _ n.succ_iterate
+  | n + 1 => by rw [Function.iterate_succ', add_succ]; exact congr_arg _ n.succ_iterate
 #align nat.succ_iterate Nat.succ_iterate
 -/
 
 #print Nat.pred_iterate /-
 theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
-  | n + 1 => by
-    rw [Function.iterate_succ', sub_succ]
-    exact congr_arg _ n.pred_iterate
+  | n + 1 => by rw [Function.iterate_succ', sub_succ]; exact congr_arg _ n.pred_iterate
 #align nat.pred_iterate Nat.pred_iterate
 -/
 

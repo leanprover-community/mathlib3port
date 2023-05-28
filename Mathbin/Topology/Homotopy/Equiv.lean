@@ -100,14 +100,8 @@ def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y
     where
   toFun := ⟨h⟩
   invFun := ⟨h.symm⟩
-  left_inv := by
-    convert ContinuousMap.Homotopic.refl _
-    ext
-    simp
-  right_inv := by
-    convert ContinuousMap.Homotopic.refl _
-    ext
-    simp
+  left_inv := by convert ContinuousMap.Homotopic.refl _; ext; simp
+  right_inv := by convert ContinuousMap.Homotopic.refl _; ext; simp
 #align homeomorph.to_homotopy_equiv Homeomorph.toHomotopyEquiv
 -/
 

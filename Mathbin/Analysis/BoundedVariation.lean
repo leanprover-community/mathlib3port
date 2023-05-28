@@ -334,8 +334,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         have B : ¬i + 1 ≤ n := fun h => A (i.le_succ.trans h)
         simp only [A, B, if_false]
     refine' ⟨v, n + 2, hv, vs, (mem_image _ _ _).2 ⟨n + 1, _, _⟩, _⟩
-    · rw [mem_Iio]
-      exact Nat.lt_succ_self (n + 1)
+    · rw [mem_Iio]; exact Nat.lt_succ_self (n + 1)
     · have : ¬n + 1 ≤ n := Nat.not_succ_le_self n
       simp only [this, ite_eq_right_iff, IsEmpty.forall_iff]
     ·
@@ -368,9 +367,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       simp only [hi, this, if_true]
       exact hu (Nat.le_succ _)
     · have A : i < N := hi ▸ i.lt_succ_self
-      have B : ¬i + 1 < N := by
-        rw [← hi]
-        exact fun h => h.Ne rfl
+      have B : ¬i + 1 < N := by rw [← hi]; exact fun h => h.Ne rfl
       rw [if_pos A, if_neg B, if_pos hi]
       have T := Nat.find_min exists_N A
       push_neg  at T
@@ -384,8 +381,7 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
       · exact hN.2.le.trans (hu (le_of_not_lt A))
       · exact hu (Nat.pred_le _)
   refine' ⟨w, n + 1, hw, ws, (mem_image _ _ _).2 ⟨N, hN.1.trans_lt (Nat.lt_succ_self n), _⟩, _⟩
-  · dsimp only [w]
-    rw [if_neg (lt_irrefl N), if_pos rfl]
+  · dsimp only [w]; rw [if_neg (lt_irrefl N), if_pos rfl]
   rcases eq_or_lt_of_le (zero_le N) with (Npos | Npos)
   ·
     calc
@@ -445,17 +441,12 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
             by
             rw [← h, add_assoc, add_comm] at hi
             exact Nat.not_succ_le_self i (i.succ.le_succ.trans hi.left)
-          have C : ¬1 + i < N := fun h => by
-            rw [add_comm] at h
+          have C : ¬1 + i < N := fun h => by rw [add_comm] at h;
             exact hi.left.not_lt (i.lt_succ_self.trans h)
-          have D : ¬1 + i = N := fun h =>
-            by
-            rw [← h, add_comm, Nat.succ_le_iff] at hi
+          have D : ¬1 + i = N := fun h => by rw [← h, add_comm, Nat.succ_le_iff] at hi;
             exact hi.left.ne rfl
           rw [if_neg A, if_neg B, if_neg C, if_neg D]
-          congr 3 <;>
-            · rw [add_comm, Nat.sub_one]
-              apply Nat.pred_succ
+          congr 3 <;> · rw [add_comm, Nat.sub_one]; apply Nat.pred_succ
       _ =
           (∑ i in Finset.Ico 0 (N - 1), edist (f (w (i + 1))) (f (w i))) +
               edist (f (w (N + 1))) (f (w (N - 1))) +
@@ -520,8 +511,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
     split_ifs
     · exact hu hij
     · apply h _ (us _) _ (vt _)
-    · exfalso
-      exact h_1 (hij.trans h_2)
+    · exfalso; exact h_1 (hij.trans h_2)
     · apply hv (tsub_le_tsub hij le_rfl)
   calc
     ((∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) +
@@ -600,24 +590,19 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
         by
         refine' add_le_add _ _
         · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
-          rcases vst i with (h | h)
-          · exact h
+          rcases vst i with (h | h); · exact h
           have : v i = x := by
             apply le_antisymm
-            · rw [← Nx]
-              exact hv hi.2
+            · rw [← Nx]; exact hv hi.2
             · exact ht.2 h
           rw [this]
           exact hs.1
         · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
-          rcases vst i with (h | h)
-          swap
-          · exact h
+          rcases vst i with (h | h); swap; · exact h
           have : v i = x := by
             apply le_antisymm
             · exact hs.2 h
-            · rw [← Nx]
-              exact hv hi.1
+            · rw [← Nx]; exact hv hi.1
           rw [this]
           exact ht.1
       

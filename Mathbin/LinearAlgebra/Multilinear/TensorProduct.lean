@@ -80,18 +80,10 @@ def domCoprod' :
       MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) :=
   TensorProduct.lift <|
     LinearMap.mk₂ R domCoprod
-      (fun m₁ m₂ n => by
-        ext
-        simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
-      (fun c m n => by
-        ext
-        simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
-      (fun m n₁ n₂ => by
-        ext
-        simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
-      fun c m n => by
-      ext
-      simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
+      (fun m₁ m₂ n => by ext; simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
+      (fun c m n => by ext; simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
+      (fun m n₁ n₂ => by ext; simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
+      fun c m n => by ext; simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 -/
 

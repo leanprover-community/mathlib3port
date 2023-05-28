@@ -135,9 +135,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.mono_of_mono_app CategoryTheory.NatTrans.mono_of_mono_appₓ'. -/
 /-- A natural transformation is a monomorphism if each component is. -/
 theorem mono_of_mono_app (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
-  ⟨fun H g h eq => by
-    ext X
-    rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
+  ⟨fun H g h eq => by ext X; rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.mono_of_mono_app CategoryTheory.NatTrans.mono_of_mono_app
 
 /- warning: category_theory.nat_trans.epi_of_epi_app -> CategoryTheory.NatTrans.epi_of_epi_app is a dubious translation:
@@ -148,9 +146,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.epi_of_epi_app CategoryTheory.NatTrans.epi_of_epi_appₓ'. -/
 /-- A natural transformation is an epimorphism if each component is. -/
 theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
-  ⟨fun H g h eq => by
-    ext X
-    rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
+  ⟨fun H g h eq => by ext X; rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.epi_of_epi_app CategoryTheory.NatTrans.epi_of_epi_app
 
 #print CategoryTheory.NatTrans.hcomp /-
@@ -175,10 +171,8 @@ but is expected to have type
   forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] {E : Type.{u6}} [_inst_3 : CategoryTheory.Category.{u3, u6} E] {F : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2} {H : CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_3} (α : Quiver.Hom.{max (succ u4) (succ u2), max (max (max u4 u5) u1) u2} (CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u4 u2, max (max (max u4 u5) u1) u2} (CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u4 u2, max (max (max u4 u5) u1) u2} (CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u1, u2, u4, u5} C _inst_1 D _inst_2))) F G) (X : C), Eq.{succ u3} (Quiver.Hom.{succ u3, u6} E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (Prefunctor.obj.{succ u1, succ u3, u4, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F H)) X) (Prefunctor.obj.{succ u1, succ u3, u4, u6} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 G H)) X)) (CategoryTheory.NatTrans.app.{u1, u3, u4, u6} C _inst_1 E _inst_3 (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F H) (CategoryTheory.Functor.comp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 G H) (CategoryTheory.NatTrans.hcomp.{u1, u2, u3, u4, u5, u6} C _inst_1 D _inst_2 E _inst_3 F G H H α (CategoryTheory.CategoryStruct.id.{max u5 u3, max (max (max u5 u6) u2) u3} (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_3) (CategoryTheory.Category.toCategoryStruct.{max u5 u3, max (max (max u5 u6) u2) u3} (CategoryTheory.Functor.{u2, u3, u5, u6} D _inst_2 E _inst_3) (CategoryTheory.Functor.category.{u2, u3, u5, u6} D _inst_2 E _inst_3)) H)) X) (Prefunctor.map.{succ u2, succ u3, u5, u6} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) E (CategoryTheory.CategoryStruct.toQuiver.{u3, u6} E (CategoryTheory.Category.toCategoryStruct.{u3, u6} E _inst_3)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u5, u6} D _inst_2 E _inst_3 H) (Prefunctor.obj.{succ u1, succ u2, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u4, u5} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u2, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u4, u5} C _inst_1 D _inst_2 G) X) (CategoryTheory.NatTrans.app.{u1, u2, u4, u5} C _inst_1 D _inst_2 F G α X))
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_trans.hcomp_id_app CategoryTheory.NatTrans.hcomp_id_appₓ'. -/
 @[simp]
-theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) :=
-  by
-  dsimp
-  simp
+theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) := by
+  dsimp; simp
 #align category_theory.nat_trans.hcomp_id_app CategoryTheory.NatTrans.hcomp_id_app
 
 /- warning: category_theory.nat_trans.id_hcomp_app -> CategoryTheory.NatTrans.id_hcomp_app is a dubious translation:

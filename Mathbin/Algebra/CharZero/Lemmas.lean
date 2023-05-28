@@ -43,9 +43,7 @@ def castEmbedding : ℕ ↪ R :=
 #print Nat.cast_pow_eq_one /-
 @[simp]
 theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
-    (q : R) ^ n = 1 ↔ q = 1 := by
-  rw [← cast_pow, cast_eq_one]
-  exact pow_eq_one_iff hn
+    (q : R) ^ n = 1 ↔ q = 1 := by rw [← cast_pow, cast_eq_one]; exact pow_eq_one_iff hn
 #align nat.cast_pow_eq_one Nat.cast_pow_eq_one
 -/
 
@@ -117,10 +115,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1))] [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))] {a : R}, Iff (Eq.{succ u1} R (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)))) (bit0.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) a)) (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align zero_eq_bit0 zero_eq_bit0ₓ'. -/
 @[simp]
-theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 :=
-  by
-  rw [eq_comm]
-  exact bit0_eq_zero
+theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 := by rw [eq_comm]; exact bit0_eq_zero
 #align zero_eq_bit0 zero_eq_bit0
 
 /- warning: bit0_ne_zero -> bit0_ne_zero is a dubious translation:
@@ -257,10 +252,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocRing.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1)))] [_inst_3 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (NonAssocRing.toAddCommGroupWithOne.{u1} R _inst_1)))] {a : R}, Iff (Eq.{succ u1} R (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1))) (bit1.{u1} R (NonAssocRing.toOne.{u1} R _inst_1) (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R _inst_1)))) a)) (Eq.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align one_eq_bit1 one_eq_bit1ₓ'. -/
 @[simp]
-theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 :=
-  by
-  rw [eq_comm]
-  exact bit1_eq_one
+theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 := by rw [eq_comm]; exact bit1_eq_one
 #align one_eq_bit1 one_eq_bit1
 
 end

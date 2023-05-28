@@ -109,11 +109,8 @@ theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i 
   rw [← (homeo_of_iso (multicoequalizer.iso_coequalizer 𝖣.diagram).symm).isOpen_preimage]
   rw [coequalizer_is_open_iff, colimit_isOpen_iff.{u}]
   constructor
-  · intro h j
-    exact h ⟨j⟩
-  · intro h j
-    cases j
-    exact h j
+  · intro h j; exact h ⟨j⟩
+  · intro h j; cases j; exact h j
 #align Top.glue_data.is_open_iff TopCat.GlueData.isOpen_iff
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
@@ -132,10 +129,8 @@ theorem rel_equiv : Equivalence D.Rel :=
     rintro a b (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
     exacts[Or.inl rfl, Or.inr ⟨D.t _ _ x, by simp [e₁, e₂]⟩],
     by
-    rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
-    exact id
-    rintro (⟨⟨⟩⟩ | ⟨y, e₃, e₄⟩)
-    exact Or.inr ⟨x, e₁, e₂⟩
+    rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩); exact id
+    rintro (⟨⟨⟩⟩ | ⟨y, e₃, e₄⟩); exact Or.inr ⟨x, e₁, e₂⟩
     let z := (pullback_iso_prod_subtype (D.f j i) (D.f j k)).inv ⟨⟨_, _⟩, e₂.trans e₃.symm⟩
     have eq₁ : (D.t j i) ((pullback.fst : _ ⟶ D.V _) z) = x := by simp
     have eq₂ : (pullback.snd : _ ⟶ D.V _) z = y := pullback_iso_prod_subtype_inv_snd_apply _ _ _
@@ -144,11 +139,8 @@ theorem rel_equiv : Equivalence D.Rel :=
     use (pullback.fst : _ ⟶ D.V (i, k)) (D.t' _ _ _ z)
     dsimp only at *
     substs e₁ e₃ e₄ eq₁ eq₂
-    have h₁ : D.t' j i k ≫ pullback.fst ≫ D.f i k = pullback.fst ≫ D.t j i ≫ D.f i j :=
-      by
-      rw [← 𝖣.t_fac_assoc]
-      congr 1
-      exact pullback.condition
+    have h₁ : D.t' j i k ≫ pullback.fst ≫ D.f i k = pullback.fst ≫ D.t j i ≫ D.f i j := by
+      rw [← 𝖣.t_fac_assoc]; congr 1; exact pullback.condition
     have h₂ : D.t' j i k ≫ pullback.fst ≫ D.t i k ≫ D.f k i = pullback.snd ≫ D.t j k ≫ D.f k j :=
       by
       rw [← 𝖣.t_fac_assoc]
@@ -211,17 +203,9 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
       CategoryTheory.Limits.colimit.ι_desc_apply, cofan.mk_ι_app, sigma_iso_sigma_hom_ι_apply,
       ContinuousMap.toFun_eq_coe]
     erw [sigma_iso_sigma_hom_ι_apply, sigma_iso_sigma_hom_ι_apply]
-    exact
-      Or.inr
-        ⟨y, by
-          dsimp [glue_data.diagram]
-          simp⟩
+    exact Or.inr ⟨y, by dsimp [glue_data.diagram]; simp⟩
   · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
-    rfl
-    dsimp only at *
-    subst e₁
-    subst e₂
-    simp
+    rfl; dsimp only at *; subst e₁; subst e₂; simp
 #align Top.glue_data.ι_eq_iff_rel TopCat.GlueData.ι_eq_iff_rel
 
 theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) :=
@@ -229,10 +213,7 @@ theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) :=
   intro x y h
   rcases(D.ι_eq_iff_rel _ _ _ _).mp h with (⟨⟨⟩⟩ | ⟨_, e₁, e₂⟩)
   · rfl
-  · dsimp only at *
-    cases e₁
-    cases e₂
-    simp
+  · dsimp only at *; cases e₁; cases e₂; simp
 #align Top.glue_data.ι_injective TopCat.GlueData.ι_injective
 
 instance ι_mono (i : D.J) : Mono (𝖣.ι i) :=
@@ -247,9 +228,7 @@ theorem image_inter (i j : D.J) :
   · rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
     obtain ⟨⟨⟩⟩ | ⟨y, e₁, e₂⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
     · exact ⟨inv (D.f i i) x₁, by simp [eq₁]⟩
-    · dsimp only at *
-      substs e₁ eq₁
-      exact ⟨y, by simp⟩
+    · dsimp only at *; substs e₁ eq₁; exact ⟨y, by simp⟩
   · rintro ⟨x, hx⟩
     exact ⟨⟨D.f i j x, hx⟩, ⟨D.f j i (D.t _ _ x), by simp [← hx]⟩⟩
 #align Top.glue_data.image_inter TopCat.GlueData.image_inter
@@ -336,15 +315,11 @@ theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i)
   have := h.cocycle j i j x _
   rw [h.t_id] at this
   convert Subtype.eq this
-  · ext
-    rfl
+  · ext; rfl
   all_goals rw [h.V_id]; trivial
 #align Top.glue_data.mk_core.t_inv TopCat.GlueData.MkCore.t_inv
 
-instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) :=
-  by
-  use h.t j i
-  constructor <;> ext1
+instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by use h.t j i; constructor <;> ext1;
   exacts[h.t_inv _ _ _, h.t_inv _ _ _]
 
 /-- (Implementation) the restricted transition map to be fed into `glue_data`. -/
@@ -372,10 +347,7 @@ def mk' (h : MkCore.{u}) : TopCat.GlueData
   f_id i := (h.v_id i).symm ▸ IsIso.of_iso (Opens.inclusionTopIso (h.U i))
   f_open := fun i j : h.J => (h.V i j).OpenEmbedding
   t := h.t
-  t_id i := by
-    ext
-    rw [h.t_id]
-    rfl
+  t_id i := by ext; rw [h.t_id]; rfl
   t' := h.t'
   t_fac i j k := by
     delta mk_core.t'
@@ -410,13 +382,8 @@ def ofOpenSubsets : TopCat.GlueData.{u} :=
       U := fun i => (Opens.toTopCat <| TopCat.of α).obj (U i)
       V := fun i j => (Opens.map <| Opens.inclusion _).obj (U j)
       t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩
-      v_id := fun i => by
-        ext
-        cases U i
-        simp
-      t_id := fun i => by
-        ext
-        rfl
+      v_id := fun i => by ext; cases U i; simp
+      t_id := fun i => by ext; rfl
       t_inter := fun i j k x hx => hx
       cocycle := fun i j k x h => rfl }
 #align Top.glue_data.of_open_subsets TopCat.GlueData.ofOpenSubsets
@@ -426,11 +393,7 @@ This map is an open embedding (`from_open_subsets_glue_open_embedding`),
 and its range is `⋃ i, (U i : set α)` (`range_from_open_subsets_glue`).
 -/
 def fromOpenSubsetsGlue : (ofOpenSubsets U).toGlueData.glued ⟶ TopCat.of α :=
-  Multicoequalizer.desc _ _ (fun x => Opens.inclusion _)
-    (by
-      rintro ⟨i, j⟩
-      ext x
-      rfl)
+  Multicoequalizer.desc _ _ (fun x => Opens.inclusion _) (by rintro ⟨i, j⟩; ext x; rfl)
 #align Top.glue_data.from_open_subsets_glue TopCat.GlueData.fromOpenSubsetsGlue
 
 @[simp, elementwise]

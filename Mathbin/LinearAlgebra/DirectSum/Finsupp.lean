@@ -71,20 +71,17 @@ theorem finsuppTensorFinsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommG
   by
   apply Finsupp.induction_linear f
   · simp
-  · intro f₁ f₂ hf₁ hf₂
-    simp [add_tmul, hf₁, hf₂]
+  · intro f₁ f₂ hf₁ hf₂; simp [add_tmul, hf₁, hf₂]
   · intro i' m
     apply Finsupp.induction_linear g
     · simp
-    · intro g₁ g₂ hg₁ hg₂
-      simp [tmul_add, hg₁, hg₂]
+    · intro g₁ g₂ hg₁ hg₂; simp [tmul_add, hg₁, hg₂]
     · intro k' n
       simp only [finsuppTensorFinsupp_single]
       simp only [Finsupp.single_apply]
       -- split_ifs; finish can close the goal from here
       by_cases h1 : (i', k') = (i, k)
-      · simp only [Prod.mk.inj_iff] at h1
-        simp [h1]
+      · simp only [Prod.mk.inj_iff] at h1; simp [h1]
       · simp only [h1, if_false]
         simp only [Prod.mk.inj_iff, not_and_or] at h1
         cases h1 <;> simp [h1]
@@ -128,9 +125,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp_tensor_finsupp
 theorem finsuppTensorFinsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
     finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) =
       Finsupp.single (a, b) (r₁ * r₂) :=
-  by
-  ext ⟨a', b'⟩
-  simp [Finsupp.single_apply, ite_and]
+  by ext ⟨a', b'⟩; simp [Finsupp.single_apply, ite_and]
 #align finsupp_tensor_finsupp'_single_tmul_single finsuppTensorFinsupp'_single_tmul_single
 
 end TensorProduct

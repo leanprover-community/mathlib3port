@@ -185,9 +185,7 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
           ℝ)) =
       ∑ x in P.parts.off_diag,
         G.edge_density x.1 x.2 ^ 2 - ε ^ 5 / 25 + if G.is_uniform ε x.1 x.2 then 0 else ε ^ 4 / 3 :=
-    by
-    convert sum_attach
-    rfl
+    by convert sum_attach; rfl
   rw [this, sum_add_distrib, sum_sub_distrib, sum_const, nsmul_eq_mul, sum_ite, sum_const_zero,
     zero_add, sum_const, nsmul_eq_mul, ← Finpartition.nonUniforms]
   rw [Finpartition.IsUniform, not_le] at hPG

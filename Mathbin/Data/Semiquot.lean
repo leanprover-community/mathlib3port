@@ -416,9 +416,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiquot.pure_is_pure Semiquot.pure_isPureₓ'. -/
 @[simp]
 theorem pure_isPure (a : α) : IsPure (pure a)
-  | b, ab, c, ac => by
-    rw [mem_pure] at ab ac
-    cc
+  | b, ab, c, ac => by rw [mem_pure] at ab ac; cc
 #align semiquot.pure_is_pure Semiquot.pure_isPure
 
 /- warning: semiquot.is_pure_iff -> Semiquot.isPure_iff is a dubious translation:

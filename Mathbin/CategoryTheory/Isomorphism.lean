@@ -316,10 +316,8 @@ theorem comp_inv_eq_id (α : X ≅ Y) {f : X ⟶ Y} : f ≫ α.inv = 𝟙 X ↔ 
 -/
 
 #print CategoryTheory.Iso.hom_eq_inv /-
-theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.Hom = β.inv ↔ β.Hom = α.inv :=
-  by
-  erw [inv_eq_inv α.symm β, eq_comm]
-  rfl
+theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.Hom = β.inv ↔ β.Hom = α.inv := by
+  erw [inv_eq_inv α.symm β, eq_comm]; rfl
 #align category_theory.iso.hom_eq_inv CategoryTheory.Iso.hom_eq_inv
 -/
 
@@ -471,44 +469,31 @@ instance (priority := 900) comp_isIso [IsIso f] [IsIso h] : IsIso (f ≫ h) :=
 
 #print CategoryTheory.IsIso.inv_id /-
 @[simp]
-theorem inv_id : inv (𝟙 X) = 𝟙 X := by
-  ext
-  simp
+theorem inv_id : inv (𝟙 X) = 𝟙 X := by ext; simp
 #align category_theory.is_iso.inv_id CategoryTheory.IsIso.inv_id
 -/
 
 #print CategoryTheory.IsIso.inv_comp /-
 @[simp]
-theorem inv_comp [IsIso f] [IsIso h] : inv (f ≫ h) = inv h ≫ inv f :=
-  by
-  ext
-  simp
+theorem inv_comp [IsIso f] [IsIso h] : inv (f ≫ h) = inv h ≫ inv f := by ext; simp
 #align category_theory.is_iso.inv_comp CategoryTheory.IsIso.inv_comp
 -/
 
 #print CategoryTheory.IsIso.inv_inv /-
 @[simp]
-theorem inv_inv [IsIso f] : inv (inv f) = f := by
-  ext
-  simp
+theorem inv_inv [IsIso f] : inv (inv f) = f := by ext; simp
 #align category_theory.is_iso.inv_inv CategoryTheory.IsIso.inv_inv
 -/
 
 #print CategoryTheory.IsIso.Iso.inv_inv /-
 @[simp]
-theorem Iso.inv_inv (f : X ≅ Y) : inv f.inv = f.Hom :=
-  by
-  ext
-  simp
+theorem Iso.inv_inv (f : X ≅ Y) : inv f.inv = f.Hom := by ext; simp
 #align category_theory.is_iso.iso.inv_inv CategoryTheory.IsIso.Iso.inv_inv
 -/
 
 #print CategoryTheory.IsIso.Iso.inv_hom /-
 @[simp]
-theorem Iso.inv_hom (f : X ≅ Y) : inv f.Hom = f.inv :=
-  by
-  ext
-  simp
+theorem Iso.inv_hom (f : X ≅ Y) : inv f.Hom = f.inv := by ext; simp
 #align category_theory.is_iso.iso.inv_hom CategoryTheory.IsIso.Iso.inv_hom
 -/
 
@@ -542,35 +527,25 @@ theorem eq_comp_inv (α : X ⟶ Y) [IsIso α] {f : Z ⟶ Y} {g : Z ⟶ X} : g = 
 
 #print CategoryTheory.IsIso.of_isIso_comp_left /-
 theorem of_isIso_comp_left {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [IsIso (f ≫ g)] :
-    IsIso g := by
-  rw [← id_comp g, ← inv_hom_id f, assoc]
-  infer_instance
+    IsIso g := by rw [← id_comp g, ← inv_hom_id f, assoc]; infer_instance
 #align category_theory.is_iso.of_is_iso_comp_left CategoryTheory.IsIso.of_isIso_comp_left
 -/
 
 #print CategoryTheory.IsIso.of_isIso_comp_right /-
 theorem of_isIso_comp_right {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [IsIso (f ≫ g)] :
-    IsIso f := by
-  rw [← comp_id f, ← hom_inv_id g, ← assoc]
-  infer_instance
+    IsIso f := by rw [← comp_id f, ← hom_inv_id g, ← assoc]; infer_instance
 #align category_theory.is_iso.of_is_iso_comp_right CategoryTheory.IsIso.of_isIso_comp_right
 -/
 
 #print CategoryTheory.IsIso.of_isIso_fac_left /-
 theorem of_isIso_fac_left {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [IsIso f] [hh : IsIso h]
-    (w : f ≫ g = h) : IsIso g := by
-  rw [← w] at hh
-  haveI := hh
-  exact of_is_iso_comp_left f g
+    (w : f ≫ g = h) : IsIso g := by rw [← w] at hh; haveI := hh; exact of_is_iso_comp_left f g
 #align category_theory.is_iso.of_is_iso_fac_left CategoryTheory.IsIso.of_isIso_fac_left
 -/
 
 #print CategoryTheory.IsIso.of_isIso_fac_right /-
 theorem of_isIso_fac_right {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [IsIso g] [hh : IsIso h]
-    (w : f ≫ g = h) : IsIso f := by
-  rw [← w] at hh
-  haveI := hh
-  exact of_is_iso_comp_right f g
+    (w : f ≫ g = h) : IsIso f := by rw [← w] at hh; haveI := hh; exact of_is_iso_comp_right f g
 #align category_theory.is_iso.of_is_iso_fac_right CategoryTheory.IsIso.of_isIso_fac_right
 -/
 
@@ -617,18 +592,14 @@ theorem comp_inv_eq_id (g : X ⟶ Y) [IsIso g] {f : X ⟶ Y} : f ≫ inv g = �
 -/
 
 #print CategoryTheory.isIso_of_hom_comp_eq_id /-
-theorem isIso_of_hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : g ≫ f = 𝟙 X) : IsIso f :=
-  by
-  rw [(hom_comp_eq_id _).mp h]
-  infer_instance
+theorem isIso_of_hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : g ≫ f = 𝟙 X) : IsIso f := by
+  rw [(hom_comp_eq_id _).mp h]; infer_instance
 #align category_theory.is_iso_of_hom_comp_eq_id CategoryTheory.isIso_of_hom_comp_eq_id
 -/
 
 #print CategoryTheory.isIso_of_comp_hom_eq_id /-
-theorem isIso_of_comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : f ≫ g = 𝟙 Y) : IsIso f :=
-  by
-  rw [(comp_hom_eq_id _).mp h]
-  infer_instance
+theorem isIso_of_comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : f ≫ g = 𝟙 Y) : IsIso f := by
+  rw [(comp_hom_eq_id _).mp h]; infer_instance
 #align category_theory.is_iso_of_comp_hom_eq_id CategoryTheory.isIso_of_comp_hom_eq_id
 -/
 
@@ -789,10 +760,8 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2) {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.IsIso.{u1, u2} C _inst_1 X Y f], Eq.{succ u4} (Quiver.Hom.{succ u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X)) (Prefunctor.map.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y X (CategoryTheory.inv.{u1, u2} C _inst_1 X Y f _inst_3)) (CategoryTheory.inv.{u4, u3} D _inst_2 (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y) (Prefunctor.map.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X Y f) (CategoryTheory.Functor.map_isIso.{u1, u2, u3, u4} C _inst_1 X Y D _inst_2 F f _inst_3))
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_inv CategoryTheory.Functor.map_invₓ'. -/
 @[simp]
-theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) = inv (F.map f) :=
-  by
-  ext
-  simp [← F.map_comp]
+theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) = inv (F.map f) := by
+  ext; simp [← F.map_comp]
 #align category_theory.functor.map_inv CategoryTheory.Functor.map_inv
 
 /- warning: category_theory.functor.map_hom_inv -> CategoryTheory.Functor.map_hom_inv is a dubious translation:

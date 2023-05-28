@@ -128,10 +128,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left.inv_le_one_iff Left.inv_le_one_iffₓ'. -/
 /-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.neg_nonpos_iff "Uses `left` co(ntra)variant."]
-theorem Left.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
-  by
-  rw [← mul_le_mul_iff_left a]
-  simp
+theorem Left.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a := by rw [← mul_le_mul_iff_left a]; simp
 #align left.inv_le_one_iff Left.inv_le_one_iff
 #align left.neg_nonpos_iff Left.neg_nonpos_iff
 
@@ -143,10 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left.one_le_inv_iff Left.one_le_inv_iffₓ'. -/
 /-- Uses `left` co(ntra)variant. -/
 @[simp, to_additive Left.nonneg_neg_iff "Uses `left` co(ntra)variant."]
-theorem Left.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
-  by
-  rw [← mul_le_mul_iff_left a]
-  simp
+theorem Left.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by rw [← mul_le_mul_iff_left a]; simp
 #align left.one_le_inv_iff Left.one_le_inv_iff
 #align left.nonneg_neg_iff Left.nonneg_neg_iff
 
@@ -157,10 +151,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.645 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.647 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.645 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.647) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.660 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.662 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.660 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.662)] {a : α} {b : α} {c : α}, Iff (LE.le.{u1} α _inst_2 b (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) c)) (LE.le.{u1} α _inst_2 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b) c)
 Case conversion may be inaccurate. Consider using '#align le_inv_mul_iff_mul_le le_inv_mul_iff_mul_leₓ'. -/
 @[simp, to_additive]
-theorem le_inv_mul_iff_mul_le : b ≤ a⁻¹ * c ↔ a * b ≤ c :=
-  by
-  rw [← mul_le_mul_iff_left a]
-  simp
+theorem le_inv_mul_iff_mul_le : b ≤ a⁻¹ * c ↔ a * b ≤ c := by rw [← mul_le_mul_iff_left a]; simp
 #align le_inv_mul_iff_mul_le le_inv_mul_iff_mul_le
 #align le_neg_add_iff_add_le le_neg_add_iff_add_le
 
@@ -263,10 +254,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LT.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1482 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1484 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1482 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1484) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1497 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1499 : α) => LT.lt.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1497 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.1499)] {a : α} {b : α} {c : α}, Iff (LT.lt.{u1} α _inst_2 b (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) c)) (LT.lt.{u1} α _inst_2 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) a b) c)
 Case conversion may be inaccurate. Consider using '#align lt_inv_mul_iff_mul_lt lt_inv_mul_iff_mul_ltₓ'. -/
 @[simp, to_additive]
-theorem lt_inv_mul_iff_mul_lt : b < a⁻¹ * c ↔ a * b < c :=
-  by
-  rw [← mul_lt_mul_iff_left a]
-  simp
+theorem lt_inv_mul_iff_mul_lt : b < a⁻¹ * c ↔ a * b < c := by rw [← mul_lt_mul_iff_left a]; simp
 #align lt_inv_mul_iff_mul_lt lt_inv_mul_iff_mul_lt
 #align lt_neg_add_iff_add_lt lt_neg_add_iff_add_lt
 
@@ -344,10 +332,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right.inv_le_one_iff Right.inv_le_one_iffₓ'. -/
 /-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.neg_nonpos_iff "Uses `right` co(ntra)variant."]
-theorem Right.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
-  by
-  rw [← mul_le_mul_iff_right a]
-  simp
+theorem Right.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a := by rw [← mul_le_mul_iff_right a]; simp
 #align right.inv_le_one_iff Right.inv_le_one_iff
 #align right.neg_nonpos_iff Right.neg_nonpos_iff
 
@@ -359,10 +344,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right.one_le_inv_iff Right.one_le_inv_iffₓ'. -/
 /-- Uses `right` co(ntra)variant. -/
 @[simp, to_additive Right.nonneg_neg_iff "Uses `right` co(ntra)variant."]
-theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
-  by
-  rw [← mul_le_mul_iff_right a]
-  simp
+theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by rw [← mul_le_mul_iff_right a]; simp
 #align right.one_le_inv_iff Right.one_le_inv_iff
 #align right.nonneg_neg_iff Right.nonneg_neg_iff
 
@@ -580,10 +562,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4084 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4086 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4084 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4086) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4099 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4101 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4099 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4101)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4121 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4123 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4121 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4123)) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4136 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4138 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4136 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4138)] {a : α} {b : α}, Iff (LE.le.{u1} α _inst_2 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (LE.le.{u1} α _inst_2 b a)
 Case conversion may be inaccurate. Consider using '#align inv_le_inv_iff inv_le_inv_iffₓ'. -/
 @[simp, to_additive]
-theorem inv_le_inv_iff : a⁻¹ ≤ b⁻¹ ↔ b ≤ a :=
-  by
-  rw [← mul_le_mul_iff_left a, ← mul_le_mul_iff_right b]
-  simp
+theorem inv_le_inv_iff : a⁻¹ ≤ b⁻¹ ↔ b ≤ a := by
+  rw [← mul_le_mul_iff_left a, ← mul_le_mul_iff_right b]; simp
 #align inv_le_inv_iff inv_le_inv_iff
 #align neg_le_neg_iff neg_le_neg_iff
 
@@ -654,10 +634,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LT.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4674 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4676 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4674 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4676) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4689 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4691 : α) => LT.lt.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4689 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4691)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4711 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4713 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4711 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4713)) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4726 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4728 : α) => LT.lt.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4726 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.4728)] {a : α} {b : α}, Iff (LT.lt.{u1} α _inst_2 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (LT.lt.{u1} α _inst_2 b a)
 Case conversion may be inaccurate. Consider using '#align inv_lt_inv_iff inv_lt_inv_iffₓ'. -/
 @[simp, to_additive]
-theorem inv_lt_inv_iff : a⁻¹ < b⁻¹ ↔ b < a :=
-  by
-  rw [← mul_lt_mul_iff_left a, ← mul_lt_mul_iff_right b]
-  simp
+theorem inv_lt_inv_iff : a⁻¹ < b⁻¹ ↔ b < a := by
+  rw [← mul_lt_mul_iff_left a, ← mul_lt_mul_iff_right b]; simp
 #align inv_lt_inv_iff inv_lt_inv_iff
 #align neg_lt_neg_iff neg_lt_neg_iff
 
@@ -2144,11 +2122,7 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : TotalPositiveCone α) 
   {
     OrderedAddCommGroup.mkOfPositiveCone
       C.toPositiveCone with
-    le_total := fun a b => by
-      convert C.nonneg_total (b - a)
-      change C.nonneg _ = _
-      congr
-      simp
+    le_total := fun a b => by convert C.nonneg_total (b - a); change C.nonneg _ = _; congr ; simp
     decidableLe := fun a b => C.nonnegDecidable _ }
 #align linear_ordered_add_comm_group.mk_of_positive_cone LinearOrderedAddCommGroup.mkOfPositiveCone
 -/

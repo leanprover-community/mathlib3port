@@ -278,9 +278,7 @@ instance : EuclideanDomain ℤ[i] :=
     GaussianInt.nontrivial with
     Quotient := (· / ·)
     remainder := (· % ·)
-    quotient_zero := by
-      simp [div_def]
-      rfl
+    quotient_zero := by simp [div_def]; rfl
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def]
     R := _
     r_wellFounded := measure_wf (Int.natAbs ∘ norm)

@@ -230,10 +230,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_bot countableInterFilter_botₓ'. -/
-instance countableInterFilter_bot : CountableInterFilter (⊥ : Filter α) :=
-  by
-  rw [← principal_empty]
-  apply countableInterFilter_principal
+instance countableInterFilter_bot : CountableInterFilter (⊥ : Filter α) := by
+  rw [← principal_empty]; apply countableInterFilter_principal
 #align countable_Inter_filter_bot countableInterFilter_bot
 
 /- warning: countable_Inter_filter_top -> countableInterFilter_top is a dubious translation:
@@ -242,9 +240,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}}, CountableInterFilter.{u1} α (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))
 Case conversion may be inaccurate. Consider using '#align countable_Inter_filter_top countableInterFilter_topₓ'. -/
-instance countableInterFilter_top : CountableInterFilter (⊤ : Filter α) :=
-  by
-  rw [← principal_univ]
+instance countableInterFilter_top : CountableInterFilter (⊤ : Filter α) := by rw [← principal_univ];
   apply countableInterFilter_principal
 #align countable_Inter_filter_top countableInterFilter_top
 

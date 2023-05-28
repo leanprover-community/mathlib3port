@@ -449,8 +449,7 @@ theorem mem_generatePiSystem_iUnion_elim' {α β} {g : β → Set (Set α)} {s :
   by
   have : t ∈ generatePiSystem (⋃ b : Subtype s, (g ∘ Subtype.val) b) :=
     by
-    suffices h1 : (⋃ b : Subtype s, (g ∘ Subtype.val) b) = ⋃ b ∈ s, g b
-    · rwa [h1]
+    suffices h1 : (⋃ b : Subtype s, (g ∘ Subtype.val) b) = ⋃ b ∈ s, g b; · rwa [h1]
     ext x
     simp only [exists_prop, Set.mem_iUnion, Function.comp_apply, Subtype.exists, Subtype.coe_mk]
     rfl
@@ -459,7 +458,7 @@ theorem mem_generatePiSystem_iUnion_elim' {α β} {g : β → Set (Set α)} {s :
     ⟨T, ⟨f, ⟨rfl, h_t'⟩⟩⟩
   refine'
     ⟨T.image Subtype.val, Function.extend Subtype.val f fun b : β => (∅ : Set α), by simp, _, _⟩
-  · ext a
+  · ext a;
     constructor <;>
       · simp only [Set.mem_iInter, Subtype.forall, Finset.set_biInter_finset_image]
         intro h1 b h_b h_b_in_T
@@ -508,9 +507,7 @@ theorem piiUnionInter_singleton (π : ι → Set (Set α)) (i : ι) :
   · rintro ⟨t, hti, f, hfπ, rfl⟩
     simp only [subset_singleton_iff, Finset.mem_coe] at hti
     by_cases hi : i ∈ t
-    · have ht_eq_i : t = {i} := by
-        ext1 x
-        rw [Finset.mem_singleton]
+    · have ht_eq_i : t = {i} := by ext1 x; rw [Finset.mem_singleton];
         exact ⟨fun h => hti x h, fun h => h.symm ▸ hi⟩
       simp only [ht_eq_i, Finset.mem_singleton, Inter_Inter_eq_left]
       exact Or.inl (hfπ i hi)
@@ -549,10 +546,7 @@ theorem piiUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
   congr with (i x)
   simp_rw [Set.mem_iInter]
   exact
-    ⟨fun h hit => by
-      rw [← hft_eq i hit]
-      exact h hit, fun h hit => by
-      rw [hft_eq i hit]
+    ⟨fun h hit => by rw [← hft_eq i hit]; exact h hit, fun h hit => by rw [hft_eq i hit];
       exact h hit⟩
 #align pi_Union_Inter_singleton_left piiUnionInter_singleton_left
 
@@ -671,10 +665,7 @@ Case conversion may be inaccurate. Consider using '#align subset_pi_Union_Inter 
 theorem subset_piiUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (his : i ∈ S) :
     π i ⊆ piiUnionInter π S :=
   by
-  have h_ss : {i} ⊆ S := by
-    intro j hj
-    rw [mem_singleton_iff] at hj
-    rwa [hj]
+  have h_ss : {i} ⊆ S := by intro j hj; rw [mem_singleton_iff] at hj; rwa [hj]
   refine' subset.trans _ (piiUnionInter_mono_right h_ss)
   rw [piiUnionInter_singleton]
   exact subset_union_left _ _
@@ -800,10 +791,8 @@ but is expected to have type
   forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {β : Type.{u2}} [_inst_1 : Countable.{succ u2} β] {f : β -> (Set.{u1} α)}, (Pairwise.{u2} β (Function.onFun.{succ u2, succ u1, 1} β (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : β), MeasurableSpace.DynkinSystem.Has.{u1} α d (f i)) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Set.iUnion.{u1, succ u2} α β (fun (i : β) => f i)))
 Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_Union MeasurableSpace.DynkinSystem.has_iUnionₓ'. -/
 theorem has_iUnion {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoint on f))
-    (h : ∀ i, d.Has (f i)) : d.Has (⋃ i, f i) :=
-  by
-  cases nonempty_encodable β
-  rw [← Encodable.iUnion_decode₂]
+    (h : ∀ i, d.Has (f i)) : d.Has (⋃ i, f i) := by cases nonempty_encodable β;
+  rw [← Encodable.iUnion_decode₂];
   exact
     d.has_Union_nat (Encodable.iUnion_decode₂_disjoint_on hd) fun n =>
       Encodable.iUnion_decode₂_cases d.has_empty h
@@ -816,8 +805,7 @@ but is expected to have type
   forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s₁ s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂))
 Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.has_unionₓ'. -/
 theorem has_union {s₁ s₂ : Set α} (h₁ : d.Has s₁) (h₂ : d.Has s₂) (h : Disjoint s₁ s₂) :
-    d.Has (s₁ ∪ s₂) := by
-  rw [union_eq_Union]
+    d.Has (s₁ ∪ s₂) := by rw [union_eq_Union];
   exact d.has_Union (pairwise_disjoint_on_bool.2 h) (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.has_union
 
@@ -886,12 +874,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {C : Set.{u1} (Set.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C s)
 Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generateHas_complₓ'. -/
-theorem generateHas_compl {C : Set (Set α)} {s : Set α} : GenerateHas C (sᶜ) ↔ GenerateHas C s :=
-  by
-  refine' ⟨_, generate_has.compl⟩
-  intro h
-  convert generate_has.compl h
-  simp
+theorem generateHas_compl {C : Set (Set α)} {s : Set α} : GenerateHas C (sᶜ) ↔ GenerateHas C s := by
+  refine' ⟨_, generate_has.compl⟩; intro h; convert generate_has.compl h; simp
 #align measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generateHas_compl
 
 #print MeasurableSpace.DynkinSystem.generate /-
@@ -1032,21 +1016,12 @@ theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : Measura
       ∀ f : ℕ → Set α,
         Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃ i, f i)) :
     ∀ ⦃t⦄, MeasurableSet t → C t :=
-  have eq : MeasurableSet = DynkinSystem.GenerateHas s :=
-    by
-    rw [h_eq, dynkin_system.generate_from_eq h_inter]
-    rfl
+  have eq : MeasurableSet = DynkinSystem.GenerateHas s := by
+    rw [h_eq, dynkin_system.generate_from_eq h_inter]; rfl
   fun t ht =>
   have : DynkinSystem.GenerateHas s t := by rwa [Eq] at ht
-  this.recOn h_basic h_empty
-    (fun t ht =>
-      h_compl t <| by
-        rw [Eq]
-        exact ht)
-    fun f hf ht =>
-    h_union f hf fun i => by
-      rw [Eq]
-      exact ht _
+  this.recOn h_basic h_empty (fun t ht => h_compl t <| by rw [Eq]; exact ht) fun f hf ht =>
+    h_union f hf fun i => by rw [Eq]; exact ht _
 #align measurable_space.induction_on_inter MeasurableSpace.induction_on_inter
 
 end MeasurableSpace

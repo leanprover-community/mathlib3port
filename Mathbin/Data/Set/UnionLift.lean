@@ -142,10 +142,7 @@ theorem iUnionLift_unary (u : T → T) (ui : ∀ i, S i → S i)
   subst hT'
   cases' Set.mem_iUnion.1 x.prop with i hi
   rw [Union_lift_of_mem x hi, ← h i]
-  have : x = Set.inclusion (Set.subset_iUnion S i) ⟨x, hi⟩ :=
-    by
-    cases x
-    rfl
+  have : x = Set.inclusion (Set.subset_iUnion S i) ⟨x, hi⟩ := by cases x; rfl
   have hx' : (Set.inclusion (Set.subset_iUnion S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
   conv_lhs => rw [this, hui, Union_lift_inclusion]
 #align set.Union_lift_unary Set.iUnionLift_unary
@@ -172,14 +169,8 @@ theorem iUnionLift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
   cases' Set.mem_iUnion.1 y.prop with j hj
   rcases dir i j with ⟨k, hik, hjk⟩
   rw [Union_lift_of_mem x (hik hi), Union_lift_of_mem y (hjk hj), ← h k]
-  have hx : x = Set.inclusion (Set.subset_iUnion S k) ⟨x, hik hi⟩ :=
-    by
-    cases x
-    rfl
-  have hy : y = Set.inclusion (Set.subset_iUnion S k) ⟨y, hjk hj⟩ :=
-    by
-    cases y
-    rfl
+  have hx : x = Set.inclusion (Set.subset_iUnion S k) ⟨x, hik hi⟩ := by cases x; rfl
+  have hy : y = Set.inclusion (Set.subset_iUnion S k) ⟨y, hjk hj⟩ := by cases y; rfl
   have hxy : (Set.inclusion (Set.subset_iUnion S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]

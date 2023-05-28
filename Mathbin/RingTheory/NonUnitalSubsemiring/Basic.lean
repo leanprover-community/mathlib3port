@@ -639,10 +639,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} [_inst_1 : NonUnitalNonAssocSemiring.{u2} R] [_inst_2 : NonUnitalNonAssocSemiring.{u3} S] {F : Type.{u1}} [_inst_4 : NonUnitalRingHomClass.{u1, u2, u3} F R S _inst_1 _inst_2] (f : F), Eq.{succ u3} (NonUnitalSubsemiring.{u3} S _inst_2) (NonUnitalRingHom.srange.{u2, u3, u1} R S _inst_1 _inst_2 F _inst_4 f) (NonUnitalSubsemiring.map.{u2, u3, u1} R S _inst_1 _inst_2 F _inst_4 f (Top.top.{u2} (NonUnitalSubsemiring.{u2} R _inst_1) (NonUnitalSubsemiring.instTopNonUnitalSubsemiring.{u2} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.srange_eq_map NonUnitalRingHom.srange_eq_mapₓ'. -/
-theorem srange_eq_map : @srange R S _ _ _ _ f = (⊤ : NonUnitalSubsemiring R).map f :=
-  by
-  ext
-  simp
+theorem srange_eq_map : @srange R S _ _ _ _ f = (⊤ : NonUnitalSubsemiring R).map f := by ext; simp
 #align non_unital_ring_hom.srange_eq_map NonUnitalRingHom.srange_eq_map
 
 /- warning: non_unital_ring_hom.mem_srange_self -> NonUnitalRingHom.mem_srange_self is a dubious translation:

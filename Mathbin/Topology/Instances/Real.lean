@@ -76,10 +76,7 @@ instance : UniformAddGroup ℝ :=
 instance : TopologicalAddGroup ℝ := by infer_instance
 
 instance : ProperSpace ℝ
-    where isCompact_closedBall x r :=
-    by
-    rw [Real.closedBall_eq_Icc]
-    apply is_compact_Icc
+    where isCompact_closedBall x r := by rw [Real.closedBall_eq_Icc]; apply is_compact_Icc
 
 instance : SecondCountableTopology ℝ :=
   secondCountable_of_proper
@@ -98,10 +95,8 @@ theorem Real.isTopologicalBasis_Ioo_rat :
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨Ioo q p, by
-      simp only [mem_Union]
-      exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
-      h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
+    ⟨Ioo q p, by simp only [mem_Union]; exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩,
+      ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ => h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 #align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_rat
 
 /- warning: real.cocompact_eq -> Real.cocompact_eq is a dubious translation:

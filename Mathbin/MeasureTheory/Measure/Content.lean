@@ -128,11 +128,8 @@ lean 3 declaration is
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] (μ : MeasureTheory.Content.{u1} G _inst_1) (K₁ : TopologicalSpace.Compacts.{u1} G _inst_1) (K₂ : TopologicalSpace.Compacts.{u1} G _inst_1), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) ((fun (s : TopologicalSpace.Compacts.{u1} G _inst_1) => ENNReal.some (MeasureTheory.Content.toFun.{u1} G _inst_1 μ s)) (Sup.sup.{u1} (TopologicalSpace.Compacts.{u1} G _inst_1) (TopologicalSpace.Compacts.instSupCompacts.{u1} G _inst_1) K₁ K₂)) (HAdd.hAdd.{0, 0, 0} ENNReal ENNReal ENNReal (instHAdd.{0} ENNReal (Distrib.toAdd.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)))))))) ((fun (s : TopologicalSpace.Compacts.{u1} G _inst_1) => ENNReal.some (MeasureTheory.Content.toFun.{u1} G _inst_1 μ s)) K₁) ((fun (s : TopologicalSpace.Compacts.{u1} G _inst_1) => ENNReal.some (MeasureTheory.Content.toFun.{u1} G _inst_1 μ s)) K₂))
 Case conversion may be inaccurate. Consider using '#align measure_theory.content.sup_le MeasureTheory.Content.sup_leₓ'. -/
-theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁ ⊔ K₂) ≤ μ K₁ + μ K₂ :=
-  by
-  simp only [apply_eq_coe_to_fun]
-  norm_cast
-  exact μ.sup_le' _ _
+theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁ ⊔ K₂) ≤ μ K₁ + μ K₂ := by
+  simp only [apply_eq_coe_to_fun]; norm_cast; exact μ.sup_le' _ _
 #align measure_theory.content.sup_le MeasureTheory.Content.sup_le
 
 /- warning: measure_theory.content.lt_top -> MeasureTheory.Content.lt_top is a dubious translation:
@@ -197,14 +194,9 @@ theorem innerContent_of_isCompact {K : Set G} (h1K : IsCompact K) (h2K : IsOpen 
 #print MeasureTheory.Content.innerContent_bot /-
 theorem innerContent_bot : μ.innerContent ⊥ = 0 :=
   by
-  refine' le_antisymm _ (zero_le _)
-  rw [← μ.empty]
+  refine' le_antisymm _ (zero_le _); rw [← μ.empty]
   refine' iSup₂_le fun K hK => _
-  have : K = ⊥ := by
-    ext1
-    rw [subset_empty_iff.mp hK, compacts.coe_bot]
-  rw [this]
-  rfl
+  have : K = ⊥ := by ext1; rw [subset_empty_iff.mp hK, compacts.coe_bot]; rw [this]; rfl
 #align measure_theory.content.inner_content_bot MeasureTheory.Content.innerContent_bot
 -/
 
@@ -254,29 +246,22 @@ theorem innerContent_iSup_nat [T2Space G] (U : ℕ → Opens G) :
   by
   have h3 : ∀ (t : Finset ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) :=
     by
-    intro t K
-    refine' Finset.induction_on t _ _
+    intro t K; refine' Finset.induction_on t _ _
     · simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
-    · intro n s hn ih
-      rw [Finset.sup_insert, Finset.sum_insert hn]
+    · intro n s hn ih; rw [Finset.sup_insert, Finset.sum_insert hn]
       exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
   refine' iSup₂_le fun K hK => _
-  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).IsOpen) _
-  swap
+  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).IsOpen) _; swap
   · rwa [← opens.coe_supr]
   rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).IsOpen)
       (by simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩
   let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
   convert le_trans (h3 t L) _
-  · ext1
-    rw [compacts.coe_finset_sup, Finset.sup_eq_iSup]
-    exact h3K'
+  · ext1; rw [compacts.coe_finset_sup, Finset.sup_eq_iSup]; exact h3K'
   refine' le_trans (Finset.sum_le_sum _) (ENNReal.sum_le_tsum t)
-  intro i hi
-  refine' le_trans _ (le_iSup _ (L i))
-  refine' le_trans _ (le_iSup _ (h2K' i))
-  rfl
+  intro i hi; refine' le_trans _ (le_iSup _ (L i))
+  refine' le_trans _ (le_iSup _ (h2K' i)); rfl
 #align measure_theory.content.inner_content_Sup_nat MeasureTheory.Content.innerContent_iSup_nat
 
 /- warning: measure_theory.content.inner_content_Union_nat -> MeasureTheory.Content.innerContent_iUnion_nat is a dubious translation:
@@ -289,10 +274,8 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.content
   This is the "unbundled" version of `inner_content_Sup_nat`.
   It required for the API of `induced_outer_measure`. -/
 theorem innerContent_iUnion_nat [T2Space G] ⦃U : ℕ → Set G⦄ (hU : ∀ i : ℕ, IsOpen (U i)) :
-    μ.innerContent ⟨⋃ i : ℕ, U i, isOpen_iUnion hU⟩ ≤ ∑' i : ℕ, μ.innerContent ⟨U i, hU i⟩ :=
-  by
-  have := μ.inner_content_Sup_nat fun i => ⟨U i, hU i⟩
-  rwa [opens.supr_def] at this
+    μ.innerContent ⟨⋃ i : ℕ, U i, isOpen_iUnion hU⟩ ≤ ∑' i : ℕ, μ.innerContent ⟨U i, hU i⟩ := by
+  have := μ.inner_content_Sup_nat fun i => ⟨U i, hU i⟩; rwa [opens.supr_def] at this
 #align measure_theory.content.inner_content_Union_nat MeasureTheory.Content.innerContent_iUnion_nat
 
 /- warning: measure_theory.content.inner_content_comap -> MeasureTheory.Content.innerContent_comap is a dubious translation:
@@ -335,8 +318,7 @@ theorem innerContent_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolog
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G)
     (hK : μ K ≠ 0) (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U :=
   by
-  have : (interior (U : Set G)).Nonempty
-  rwa [U.is_open.interior_eq]
+  have : (interior (U : Set G)).Nonempty; rwa [U.is_open.interior_eq]
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
   suffices μ K ≤ s.card * μ.inner_content U by
     exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
@@ -552,23 +534,16 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
   rw [μ.outer_measure_caratheodory]
   intro U'
   rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (U'.is_open.inter hU)]
-  simp only [inner_content, iSup_subtype']
-  rw [opens.coe_mk]
+  simp only [inner_content, iSup_subtype']; rw [opens.coe_mk]
   haveI : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
   rw [ENNReal.iSup_add]
-  refine' iSup_le _
-  rintro ⟨L, hL⟩
-  simp only [subset_inter_iff] at hL
+  refine' iSup_le _; rintro ⟨L, hL⟩; simp only [subset_inter_iff] at hL
   have : ↑U' \ U ⊆ U' \ L := diff_subset_diff_right hL.2
   refine' le_trans (add_le_add_left (μ.outer_measure.mono' this) _) _
   rw [μ.outer_measure_of_is_open (↑U' \ L) (IsOpen.sdiff U'.2 L.2.IsClosed)]
-  simp only [inner_content, iSup_subtype']
-  rw [opens.coe_mk]
+  simp only [inner_content, iSup_subtype']; rw [opens.coe_mk]
   haveI : Nonempty { M : compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
-  rw [ENNReal.add_iSup]
-  refine' iSup_le _
-  rintro ⟨M, hM⟩
-  simp only [subset_diff] at hM
+  rw [ENNReal.add_iSup]; refine' iSup_le _; rintro ⟨M, hM⟩; simp only [subset_diff] at hM
   have : (↑(L ⊔ M) : Set G) ⊆ U' := by
     simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_self_iff]
   rw [μ.outer_measure_of_is_open (↑U') U'.2]

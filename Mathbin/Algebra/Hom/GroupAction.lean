@@ -358,18 +358,14 @@ protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x 
 <too large>
 Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.toMulActionHom_injectiveₓ'. -/
 theorem toMulActionHom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) : f = g :=
-  by
-  ext a
-  exact MulActionHom.congr_fun h a
+  by ext a; exact MulActionHom.congr_fun h a
 #align distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.toMulActionHom_injective
 
 /- warning: distrib_mul_action_hom.to_add_monoid_hom_injective -> DistribMulActionHom.toAddMonoidHom_injective is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injectiveₓ'. -/
-theorem toAddMonoidHom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g :=
-  by
-  ext a
-  exact AddMonoidHom.congr_fun h a
+theorem toAddMonoidHom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g := by
+  ext a; exact AddMonoidHom.congr_fun h a
 #align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injective
 
 /- warning: distrib_mul_action_hom.map_zero -> DistribMulActionHom.map_zero is a dubious translation:
@@ -514,9 +510,7 @@ variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
 #print DistribMulActionHom.ext_ring /-
 @[ext]
-theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g :=
-  by
-  ext x
+theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by ext x;
   rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
 #align distrib_mul_action_hom.ext_ring DistribMulActionHom.ext_ring
 -/

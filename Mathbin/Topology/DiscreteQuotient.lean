@@ -155,9 +155,7 @@ theorem proj_continuous : Continuous S.proj :=
 
 instance : DiscreteTopology S :=
   singletons_open_iff_discrete.1 <|
-    S.proj_surjective.forall.2 fun x =>
-      by
-      rw [← S.proj_quotient_map.is_open_preimage, fiber_eq]
+    S.proj_surjective.forall.2 fun x => by rw [← S.proj_quotient_map.is_open_preimage, fiber_eq];
       exact S.is_open_set_of_rel _
 
 #print DiscreteQuotient.proj_isLocallyConstant /-
@@ -185,9 +183,7 @@ theorem isClosed_preimage (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
 -/
 
 #print DiscreteQuotient.isClopen_setOf_rel /-
-theorem isClopen_setOf_rel (x : X) : IsClopen (setOf (S.Rel x)) :=
-  by
-  rw [← fiber_eq]
+theorem isClopen_setOf_rel (x : X) : IsClopen (setOf (S.Rel x)) := by rw [← fiber_eq];
   apply is_clopen_preimage
 #align discrete_quotient.is_clopen_set_of_rel DiscreteQuotient.isClopen_setOf_rel
 -/
@@ -230,10 +226,7 @@ def comap (S : DiscreteQuotient Y) : DiscreteQuotient X
 
 #print DiscreteQuotient.comap_id /-
 @[simp]
-theorem comap_id : S.comap (ContinuousMap.id X) = S :=
-  by
-  ext
-  rfl
+theorem comap_id : S.comap (ContinuousMap.id X) = S := by ext; rfl
 #align discrete_quotient.comap_id DiscreteQuotient.comap_id
 -/
 
@@ -277,9 +270,7 @@ def ofLE (h : A ≤ B) : A → B :=
 
 #print DiscreteQuotient.ofLE_refl /-
 @[simp]
-theorem ofLE_refl : ofLE (le_refl A) = id := by
-  ext ⟨⟩
-  rfl
+theorem ofLE_refl : ofLE (le_refl A) = id := by ext ⟨⟩; rfl
 #align discrete_quotient.of_le_refl DiscreteQuotient.ofLE_refl
 -/
 
@@ -296,9 +287,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align discrete_quotient.of_le_of_le DiscreteQuotient.ofLE_ofLEₓ'. -/
 @[simp]
 theorem ofLE_ofLE (h₁ : A ≤ B) (h₂ : B ≤ C) (x : A) : ofLE h₂ (ofLE h₁ x) = ofLE (h₁.trans h₂) x :=
-  by
-  rcases x with ⟨⟩
-  rfl
+  by rcases x with ⟨⟩; rfl
 #align discrete_quotient.of_le_of_le DiscreteQuotient.ofLE_ofLE
 
 /- warning: discrete_quotient.of_le_comp_of_le -> DiscreteQuotient.ofLE_comp_ofLE is a dubious translation:
@@ -507,10 +496,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align discrete_quotient.map_comp DiscreteQuotient.map_compₓ'. -/
 @[simp]
 theorem map_comp (h1 : LEComap g B C) (h2 : LEComap f A B) :
-    map (g.comp f) (h1.comp h2) = map g h1 ∘ map f h2 :=
-  by
-  ext ⟨⟩
-  rfl
+    map (g.comp f) (h1.comp h2) = map g h1 ∘ map f h2 := by ext ⟨⟩; rfl
 #align discrete_quotient.map_comp DiscreteQuotient.map_comp
 
 /- warning: discrete_quotient.of_le_map -> DiscreteQuotient.ofLE_map is a dubious translation:
@@ -521,10 +507,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align discrete_quotient.of_le_map DiscreteQuotient.ofLE_mapₓ'. -/
 @[simp]
 theorem ofLE_map (cond : LEComap f A B) (h : B ≤ B') (a : A) :
-    ofLE h (map f cond a) = map f (cond.mono le_rfl h) a :=
-  by
-  rcases a with ⟨⟩
-  rfl
+    ofLE h (map f cond a) = map f (cond.mono le_rfl h) a := by rcases a with ⟨⟩; rfl
 #align discrete_quotient.of_le_map DiscreteQuotient.ofLE_map
 
 /- warning: discrete_quotient.of_le_comp_map -> DiscreteQuotient.ofLE_comp_map is a dubious translation:
@@ -547,10 +530,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align discrete_quotient.map_of_le DiscreteQuotient.map_ofLEₓ'. -/
 @[simp]
 theorem map_ofLE (cond : LEComap f A B) (h : A' ≤ A) (c : A') :
-    map f cond (ofLE h c) = map f (cond.mono h le_rfl) c :=
-  by
-  rcases c with ⟨⟩
-  rfl
+    map f cond (ofLE h c) = map f (cond.mono h le_rfl) c := by rcases c with ⟨⟩; rfl
 #align discrete_quotient.map_of_le DiscreteQuotient.map_ofLE
 
 /- warning: discrete_quotient.map_comp_of_le -> DiscreteQuotient.map_comp_ofLE is a dubious translation:
@@ -648,10 +628,7 @@ but is expected to have type
   forall {α : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (f : LocallyConstant.{u1, u2} X α _inst_1), Eq.{max (succ u2) (succ u1)} (X -> α) (Function.comp.{succ u1, succ u1, succ u2} X (Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) α (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (LocallyConstant.{u1, u2} (Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) α (DiscreteQuotient.instTopologicalSpaceQuotientToSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) (Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) (fun (_x : Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) => α) _x) (LocallyConstant.instFunLikeLocallyConstant.{u1, u2} (Quotient.{succ u1} X (DiscreteQuotient.toSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) α (DiscreteQuotient.instTopologicalSpaceQuotientToSetoid.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) (LocallyConstant.lift.{u2, u1} α X _inst_1 f)) (DiscreteQuotient.proj.{u1} X _inst_1 (LocallyConstant.discreteQuotient.{u2, u1} α X _inst_1 f))) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (LocallyConstant.{u1, u2} X α _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.5691 : X) => α) _x) (LocallyConstant.instFunLikeLocallyConstant.{u1, u2} X α _inst_1) f)
 Case conversion may be inaccurate. Consider using '#align locally_constant.lift_comp_proj LocallyConstant.lift_comp_projₓ'. -/
 @[simp]
-theorem lift_comp_proj : f.lift ∘ f.DiscreteQuotient.proj = f :=
-  by
-  ext
-  rfl
+theorem lift_comp_proj : f.lift ∘ f.DiscreteQuotient.proj = f := by ext; rfl
 #align locally_constant.lift_comp_proj LocallyConstant.lift_comp_proj
 
 end LocallyConstant

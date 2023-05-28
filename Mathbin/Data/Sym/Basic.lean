@@ -179,10 +179,8 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.ofVector.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v)) (Sym.cons.{u1} α n a (Sym.ofVector.{u1} α n v))
 Case conversion may be inaccurate. Consider using '#align sym.of_vector_cons Sym.of_vector_consₓ'. -/
 @[simp]
-theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) :=
-  by
-  cases v
-  rfl
+theorem of_vector_cons (a : α) (v : Vector α n) : ↑(Vector.cons a v) = a ::ₛ (↑v : Sym α n) := by
+  cases v; rfl
 #align sym.of_vector_cons Sym.of_vector_cons
 
 /-- `α ∈ s` means that `a` appears as one of the factors in `s`.
@@ -261,9 +259,7 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} (a : α) (v : Vector.{u1} α n), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a (Sym.ofVector.{u1} α n v)) (Sym.ofVector.{u1} α (Nat.succ n) (Vector.cons.{u1} α n a v))
 Case conversion may be inaccurate. Consider using '#align sym.cons_of_coe_eq Sym.cons_of_coe_eqₓ'. -/
 theorem cons_of_coe_eq (a : α) (v : Vector α n) : a ::ₛ (↑v : Sym α n) = ↑(a ::ᵥ v) :=
-  Subtype.ext <| by
-    cases v
-    rfl
+  Subtype.ext <| by cases v; rfl
 #align sym.cons_of_coe_eq Sym.cons_of_coe_eq
 
 /- warning: sym.sound -> Sym.sound is a dubious translation:
@@ -293,11 +289,7 @@ def erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : Sym α 
 Case conversion may be inaccurate. Consider using '#align sym.erase_mk Sym.erase_mkₓ'. -/
 @[simp]
 theorem erase_mk [DecidableEq α] (m : Multiset α) (hc : m.card = n + 1) (a : α) (h : a ∈ m) :
-    (mk m hc).eraseₓ a h =
-      mk (m.eraseₓ a)
-        (by
-          rw [Multiset.card_erase_of_mem h, hc]
-          rfl) :=
+    (mk m hc).eraseₓ a h = mk (m.eraseₓ a) (by rw [Multiset.card_erase_of_mem h, hc]; rfl) :=
   rfl
 #align sym.erase_mk Sym.erase_mk
 
@@ -367,10 +359,7 @@ def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Sym.cons_equiv_eq_equiv_cons /-
 theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n) :
-    (a::symEquivSym' s) = symEquivSym' (a ::ₛ s) :=
-  by
-  rcases s with ⟨⟨l⟩, _⟩
-  rfl
+    (a::symEquivSym' s) = symEquivSym' (a ::ₛ s) := by rcases s with ⟨⟨l⟩, _⟩; rfl
 #align sym.cons_equiv_eq_equiv_cons Sym.cons_equiv_eq_equiv_cons
 -/
 
@@ -490,9 +479,7 @@ instance inhabitedSym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
 -/
 
 instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=
-  ⟨fun s => by
-    obtain ⟨a, -⟩ := exists_mem s
-    exact isEmptyElim a⟩
+  ⟨fun s => by obtain ⟨a, -⟩ := exists_mem s; exact isEmptyElim a⟩
 
 instance (n : ℕ) [Unique α] : Unique (Sym α n) :=
   Unique.mk' _
@@ -778,10 +765,7 @@ theorem append_inj_left {s s' : Sym α n} (t : Sym α n') : s.append t = s'.appe
 
 #print Sym.append_comm /-
 theorem append_comm (s : Sym α n') (s' : Sym α n') :
-    s.append s' = Sym.cast (add_comm _ _) (s'.append s) :=
-  by
-  ext
-  simp [append, add_comm]
+    s.append s' = Sym.cast (add_comm _ _) (s'.append s) := by ext; simp [append, add_comm]
 #align sym.append_comm Sym.append_comm
 -/
 
@@ -865,10 +849,8 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
       dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.val_mk]
       ext b; rw [count_add, count_filter, Sym.coe_replicate, count_replicate]
       obtain rfl | h := eq_or_ne a b
-      · rw [if_pos rfl, if_neg (Classical.not_not.2 rfl), zero_add]
-        rfl
-      · rw [if_pos h, if_neg h.symm, add_zero]
-        rfl)
+      · rw [if_pos rfl, if_neg (Classical.not_not.2 rfl), zero_add]; rfl
+      · rw [if_pos h, if_neg h.symm, add_zero]; rfl)
 #align sym.fill_filter_ne Sym.fill_filterNe
 -/
 
@@ -881,9 +863,7 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α 
     (by
       dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
-      · intro b hb
-        rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
-        exact hb.2 hb.1.2.symm
+      · intro b hb; rw [mem_filter, Sym.mem_coe, mem_replicate] at hb; exact hb.2 hb.1.2.symm
       · exact fun b hb => (hb.ne_of_not_mem h).symm)
 #align sym.filter_ne_fill Sym.filter_ne_fill
 

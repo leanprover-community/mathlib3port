@@ -129,10 +129,8 @@ theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g
 /- warning: is_conformal_map.injective -> IsConformalMap.injective is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align is_conformal_map.injective IsConformalMap.injectiveₓ'. -/
-protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f :=
-  by
-  rcases h with ⟨c, hc, li, rfl⟩
-  exact (smul_right_injective _ hc).comp li.injective
+protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f := by
+  rcases h with ⟨c, hc, li, rfl⟩; exact (smul_right_injective _ hc).comp li.injective
 #align is_conformal_map.injective IsConformalMap.injective
 
 /- warning: is_conformal_map.ne_zero -> IsConformalMap.ne_zero is a dubious translation:

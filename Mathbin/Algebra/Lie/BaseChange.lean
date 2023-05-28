@@ -76,8 +76,7 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 :=
         zero_add, add_zero, add_comm, this]
     apply z₁.induction_on
     · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
-    · intro a₁ l₁
-      apply z₂.induction_on
+    · intro a₁ l₁; apply z₂.induction_on
       · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
       · intro a₂ l₂
         simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul,
@@ -98,8 +97,7 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ =
     · intro a₂ l₂
       apply z.induction_on
       · simp only [LinearMap.map_zero, add_zero]
-      · intro a₃ l₃
-        simp only [bracket'_tmul]
+      · intro a₃ l₃; simp only [bracket'_tmul]
         rw [mul_left_comm a₂ a₁ a₃, mul_assoc, leibniz_lie, TensorProduct.tmul_add]
       · intro u₁ u₂ h₁ h₂
         simp only [add_add_add_comm, h₁, h₂, LinearMap.map_add]
@@ -119,8 +117,7 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
   by
   apply x.induction_on
   · simp only [zero_lie, smul_zero]
-  · intro a₁ l₁
-    apply y.induction_on
+  · intro a₁ l₁; apply y.induction_on
     · simp only [lie_zero, smul_zero]
     · intro a₂ l₂
       simp only [bracket_def, bracket', TensorProduct.smul_tmul', mul_left_comm a₁ a a₂,

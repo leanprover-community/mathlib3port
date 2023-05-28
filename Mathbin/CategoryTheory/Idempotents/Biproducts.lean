@@ -110,8 +110,7 @@ theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproduct
                 comp_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
               split_ifs
-              · exfalso
-                exact h2 h.symm
+              · exfalso; exact h2 h.symm
               · simp only [zero_comp]
             · intro h
               exfalso
@@ -119,10 +118,7 @@ theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproduct
             · simp only [biproducts.bicone_π_f, comp_f, biproduct.ι_map, assoc,
                 biproducts.bicone_ι_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
-              split_ifs
-              swap
-              · exfalso
-                exact h rfl
+              split_ifs; swap; · exfalso; exact h rfl
               simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
 #align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_hasFiniteBiproducts
 

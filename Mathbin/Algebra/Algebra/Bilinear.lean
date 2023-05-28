@@ -189,15 +189,9 @@ Case conversion may be inaccurate. Consider using '#align non_unital_alg_hom.lmu
 
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
 def NonUnitalAlgHom.lmul : A →ₙₐ[R] End R A :=
-  {
-    mul R A with
-    map_mul' := by
-      intro a b
-      ext c
-      exact mul_assoc a b c
-    map_zero' := by
-      ext a
-      exact MulZeroClass.zero_mul a }
+  { mul R A with
+    map_mul' := by intro a b; ext c; exact mul_assoc a b c
+    map_zero' := by ext a; exact MulZeroClass.zero_mul a }
 #align non_unital_alg_hom.lmul NonUnitalAlgHom.lmul
 
 variable {R A}
@@ -213,9 +207,7 @@ theorem NonUnitalAlgHom.coe_lmul_eq_mul : ⇑(NonUnitalAlgHom.lmul R A) = mul R 
 /- warning: linear_map.commute_mul_left_right -> LinearMap.commute_mulLeft_right is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.commute_mul_left_right LinearMap.commute_mulLeft_rightₓ'. -/
-theorem commute_mulLeft_right (a b : A) : Commute (mulLeft R a) (mulRight R b) :=
-  by
-  ext c
+theorem commute_mulLeft_right (a b : A) : Commute (mulLeft R a) (mulRight R b) := by ext c;
   exact (mul_assoc a c b).symm
 #align linear_map.commute_mul_left_right LinearMap.commute_mulLeft_right
 
@@ -223,9 +215,7 @@ theorem commute_mulLeft_right (a b : A) : Commute (mulLeft R a) (mulRight R b) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.mul_left_mul LinearMap.mulLeft_mulₓ'. -/
 @[simp]
-theorem mulLeft_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft R b) :=
-  by
-  ext
+theorem mulLeft_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft R b) := by ext;
   simp only [mul_left_apply, comp_apply, mul_assoc]
 #align linear_map.mul_left_mul LinearMap.mulLeft_mul
 
@@ -233,9 +223,7 @@ theorem mulLeft_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft 
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.mul_right_mul LinearMap.mulRight_mulₓ'. -/
 @[simp]
-theorem mulRight_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulRight R a) :=
-  by
-  ext
+theorem mulRight_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulRight R a) := by ext;
   simp only [mul_right_apply, comp_apply, mul_assoc]
 #align linear_map.mul_right_mul LinearMap.mulRight_mul
 
@@ -256,23 +244,11 @@ the algebra.
 
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
 def Algebra.lmul : A →ₐ[R] End R A :=
-  {
-    LinearMap.mul R
-      A with
-    map_one' := by
-      ext a
-      exact one_mul a
-    map_mul' := by
-      intro a b
-      ext c
-      exact mul_assoc a b c
-    map_zero' := by
-      ext a
-      exact MulZeroClass.zero_mul a
-    commutes' := by
-      intro r
-      ext a
-      exact (Algebra.smul_def r a).symm }
+  { LinearMap.mul R A with
+    map_one' := by ext a; exact one_mul a
+    map_mul' := by intro a b; ext c; exact mul_assoc a b c
+    map_zero' := by ext a; exact MulZeroClass.zero_mul a
+    commutes' := by intro r; ext a; exact (Algebra.smul_def r a).symm }
 #align algebra.lmul Algebra.lmul
 
 variable {R A}
@@ -295,8 +271,7 @@ theorem mulLeft_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 :=
   by
   constructor <;> intro h
   · rw [← mul_one a, ← mul_left_apply a 1, h, LinearMap.zero_apply]
-  · rw [h]
-    exact mul_left_zero_eq_zero
+  · rw [h]; exact mul_left_zero_eq_zero
 #align linear_map.mul_left_eq_zero_iff LinearMap.mulLeft_eq_zero_iff
 
 /- warning: linear_map.mul_right_eq_zero_iff -> LinearMap.mulRight_eq_zero_iff is a dubious translation:
@@ -310,24 +285,19 @@ theorem mulRight_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 :=
   by
   constructor <;> intro h
   · rw [← one_mul a, ← mul_right_apply a 1, h, LinearMap.zero_apply]
-  · rw [h]
-    exact mul_right_zero_eq_zero
+  · rw [h]; exact mul_right_zero_eq_zero
 #align linear_map.mul_right_eq_zero_iff LinearMap.mulRight_eq_zero_iff
 
 #print LinearMap.mulLeft_one /-
 @[simp]
-theorem mulLeft_one : mulLeft R (1 : A) = LinearMap.id :=
-  by
-  ext
+theorem mulLeft_one : mulLeft R (1 : A) = LinearMap.id := by ext;
   simp only [LinearMap.id_coe, one_mul, id.def, mul_left_apply]
 #align linear_map.mul_left_one LinearMap.mulLeft_one
 -/
 
 #print LinearMap.mulRight_one /-
 @[simp]
-theorem mulRight_one : mulRight R (1 : A) = LinearMap.id :=
-  by
-  ext
+theorem mulRight_one : mulRight R (1 : A) = LinearMap.id := by ext;
   simp only [LinearMap.id_coe, mul_one, id.def, mul_right_apply]
 #align linear_map.mul_right_one LinearMap.mulRight_one
 -/

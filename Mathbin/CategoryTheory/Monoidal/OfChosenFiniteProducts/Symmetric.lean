@@ -49,9 +49,7 @@ theorem braiding_naturality {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
   by
   dsimp [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext;
-  rintro ⟨⟨⟩⟩ <;>
-    · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
-      simp
+  rintro ⟨⟨⟩⟩ <;> · dsimp [limits.is_limit.cone_point_unique_up_to_iso]; simp
 #align category_theory.monoidal_of_chosen_finite_products.braiding_naturality CategoryTheory.monoidalOfChosenFiniteProducts.braiding_naturality
 
 theorem hexagon_forward (X Y Z : C) :
@@ -65,12 +63,9 @@ theorem hexagon_forward (X Y Z : C) :
   by
   dsimp [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext; rintro ⟨⟨⟩⟩
-  · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
-    simp
-  · apply (ℬ _ _).IsLimit.hom_ext
-    rintro ⟨⟨⟩⟩ <;>
-      · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
-        simp
+  · dsimp [limits.is_limit.cone_point_unique_up_to_iso]; simp
+  · apply (ℬ _ _).IsLimit.hom_ext;
+    rintro ⟨⟨⟩⟩ <;> · dsimp [limits.is_limit.cone_point_unique_up_to_iso]; simp
 #align category_theory.monoidal_of_chosen_finite_products.hexagon_forward CategoryTheory.monoidalOfChosenFiniteProducts.hexagon_forward
 
 theorem hexagon_reverse (X Y Z : C) :
@@ -84,7 +79,7 @@ theorem hexagon_reverse (X Y Z : C) :
   by
   dsimp [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext; rintro ⟨⟨⟩⟩
-  · apply (ℬ _ _).IsLimit.hom_ext
+  · apply (ℬ _ _).IsLimit.hom_ext;
     rintro ⟨⟨⟩⟩ <;>
       · dsimp [binary_fan.associator_of_limit_cone, binary_fan.associator,
           limits.is_limit.cone_point_unique_up_to_iso]
@@ -101,9 +96,7 @@ theorem symmetry (X Y : C) :
   by
   dsimp [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext;
-  rintro ⟨⟨⟩⟩ <;>
-    · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
-      simp
+  rintro ⟨⟨⟩⟩ <;> · dsimp [limits.is_limit.cone_point_unique_up_to_iso]; simp
 #align category_theory.monoidal_of_chosen_finite_products.symmetry CategoryTheory.monoidalOfChosenFiniteProducts.symmetry
 
 end MonoidalOfChosenFiniteProducts

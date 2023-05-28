@@ -129,9 +129,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne_zero.of_injective NeZero.of_injectiveₓ'. -/
 theorem of_injective {R M} [Zero R] {r : R} [NeZero r] [Zero M] [ZeroHomClass F R M] {f : F}
     (hf : Function.Injective f) : NeZero (f r) :=
-  ⟨by
-    rw [← ZeroHomClass.map_zero f]
-    exact hf.ne (Ne r)⟩
+  ⟨by rw [← ZeroHomClass.map_zero f]; exact hf.ne (Ne r)⟩
 #align ne_zero.of_injective NeZero.of_injective
 
 end NeZero
@@ -2284,10 +2282,8 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : One.{u3} M] [_inst_2 : One.{u2} N] [_inst_3 : One.{u1} P] (f : OneHom.{u2, u1} N P _inst_2 _inst_3), Eq.{max (succ u3) (succ u1)} (OneHom.{u3, u1} M P _inst_1 _inst_3) (OneHom.comp.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f (OfNat.ofNat.{max u3 u2} (OneHom.{u3, u2} M N _inst_1 _inst_2) 1 (One.toOfNat1.{max u3 u2} (OneHom.{u3, u2} M N _inst_1 _inst_2) (instOneOneHom.{u3, u2} M N _inst_1 _inst_2)))) (OfNat.ofNat.{max u3 u1} (OneHom.{u3, u1} M P _inst_1 _inst_3) 1 (One.toOfNat1.{max u3 u1} (OneHom.{u3, u1} M P _inst_1 _inst_3) (instOneOneHom.{u3, u1} M P _inst_1 _inst_3)))
 Case conversion may be inaccurate. Consider using '#align one_hom.comp_one OneHom.comp_oneₓ'. -/
 @[simp, to_additive]
-theorem OneHom.comp_one [One M] [One N] [One P] (f : OneHom N P) : f.comp (1 : OneHom M N) = 1 :=
-  by
-  ext
-  simp only [OneHom.map_one, OneHom.coe_comp, Function.comp_apply, OneHom.one_apply]
+theorem OneHom.comp_one [One M] [One N] [One P] (f : OneHom N P) : f.comp (1 : OneHom M N) = 1 := by
+  ext; simp only [OneHom.map_one, OneHom.coe_comp, Function.comp_apply, OneHom.one_apply]
 #align one_hom.comp_one OneHom.comp_one
 #align zero_hom.comp_zero ZeroHom.comp_zero
 
@@ -2357,8 +2353,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_hom.comp_mul MulHom.comp_mulₓ'. -/
 @[to_additive]
 theorem comp_mul [Mul M] [CommSemigroup N] [CommSemigroup P] (g : N →ₙ* P) (f₁ f₂ : M →ₙ* N) :
-    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
-  ext
+    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by ext;
   simp only [mul_apply, Function.comp_apply, map_mul, coe_comp]
 #align mul_hom.comp_mul MulHom.comp_mul
 #align add_hom.comp_add AddHom.comp_add
@@ -2420,9 +2415,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.comp_one MonoidHom.comp_oneₓ'. -/
 @[simp, to_additive]
 theorem comp_one [MulOneClass M] [MulOneClass N] [MulOneClass P] (f : N →* P) :
-    f.comp (1 : M →* N) = 1 := by
-  ext
-  simp only [map_one, coe_comp, Function.comp_apply, one_apply]
+    f.comp (1 : M →* N) = 1 := by ext; simp only [map_one, coe_comp, Function.comp_apply, one_apply]
 #align monoid_hom.comp_one MonoidHom.comp_one
 #align add_monoid_hom.comp_zero AddMonoidHom.comp_zero
 
@@ -2447,8 +2440,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.comp_mul MonoidHom.comp_mulₓ'. -/
 @[to_additive]
 theorem comp_mul [MulOneClass M] [CommMonoid N] [CommMonoid P] (g : N →* P) (f₁ f₂ : M →* N) :
-    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
-  ext
+    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by ext;
   simp only [mul_apply, Function.comp_apply, map_mul, coe_comp]
 #align monoid_hom.comp_mul MonoidHom.comp_mul
 #align add_monoid_hom.comp_add AddMonoidHom.comp_add
@@ -2578,9 +2570,7 @@ def ofMapMulInv {H : Type _} [Group H] (f : G → H)
     calc
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
         simp only [one_mul, inv_one, ← map_div, inv_inv]
-      _ = f x * f y := by
-        simp only [map_div]
-        simp only [mul_right_inv, one_mul, inv_inv]
+      _ = f x * f y := by simp only [map_div]; simp only [mul_right_inv, one_mul, inv_inv]
       
 #align monoid_hom.of_map_mul_inv MonoidHom.ofMapMulInv
 #align add_monoid_hom.of_map_add_neg AddMonoidHom.ofMapAddNeg
@@ -2655,8 +2645,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.inv_comp MonoidHom.inv_compₓ'. -/
 @[simp, to_additive]
 theorem inv_comp {M N A} {mM : MulOneClass M} {gN : MulOneClass N} {gA : CommGroup A} (φ : N →* A)
-    (ψ : M →* N) : φ⁻¹.comp ψ = (φ.comp ψ)⁻¹ := by
-  ext
+    (ψ : M →* N) : φ⁻¹.comp ψ = (φ.comp ψ)⁻¹ := by ext;
   simp only [Function.comp_apply, inv_apply, coe_comp]
 #align monoid_hom.inv_comp MonoidHom.inv_comp
 #align add_monoid_hom.neg_comp AddMonoidHom.neg_comp
@@ -2669,8 +2658,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.comp_inv MonoidHom.comp_invₓ'. -/
 @[simp, to_additive]
 theorem comp_inv {M A B} {mM : MulOneClass M} {mA : CommGroup A} {mB : CommGroup B} (φ : A →* B)
-    (ψ : M →* A) : φ.comp ψ⁻¹ = (φ.comp ψ)⁻¹ := by
-  ext
+    (ψ : M →* A) : φ.comp ψ⁻¹ = (φ.comp ψ)⁻¹ := by ext;
   simp only [Function.comp_apply, inv_apply, map_inv, coe_comp]
 #align monoid_hom.comp_inv MonoidHom.comp_inv
 #align add_monoid_hom.comp_neg AddMonoidHom.comp_neg

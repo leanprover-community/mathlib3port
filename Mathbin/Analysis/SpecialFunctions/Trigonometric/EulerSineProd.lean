@@ -47,10 +47,8 @@ theorem antideriv_cos_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
   have b : HasDerivAt (fun y : ℂ => Complex.sin (y * (2 * z))) _ ↑x :=
     HasDerivAt.comp x (Complex.hasDerivAt_sin (x * (2 * z))) a
   convert b.comp_of_real.div_const (2 * z)
-  · ext1 x
-    rw [mul_comm _ (2 * z)]
-  · field_simp
-    rw [mul_comm _ (2 * z)]
+  · ext1 x; rw [mul_comm _ (2 * z)]
+  · field_simp; rw [mul_comm _ (2 * z)]
 #align euler_sine.antideriv_cos_comp_const_mul EulerSine.antideriv_cos_comp_const_mul
 
 theorem antideriv_sin_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
@@ -60,11 +58,8 @@ theorem antideriv_sin_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
   have b : HasDerivAt (fun y : ℂ => Complex.cos (y * (2 * z))) _ ↑x :=
     HasDerivAt.comp x (Complex.hasDerivAt_cos (x * (2 * z))) a
   convert(b.comp_of_real.div_const (2 * z)).neg
-  · ext1 x
-    rw [mul_comm _ (2 * z)]
-    field_simp
-  · field_simp
-    rw [mul_comm _ (2 * z)]
+  · ext1 x; rw [mul_comm _ (2 * z)]; field_simp
+  · field_simp; rw [mul_comm _ (2 * z)]
 #align euler_sine.antideriv_sin_comp_const_mul EulerSine.antideriv_sin_comp_const_mul
 
 theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
@@ -82,15 +77,13 @@ theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
     convert HasDerivAt.comp x (hasDerivAt_pow _ _) b using 1
     ring
   convert integral_mul_deriv_eq_deriv_mul der1 (fun x hx => antideriv_cos_comp_const_mul hz x) _ _
-  · ext1 x
-    rw [mul_comm]
+  · ext1 x; rw [mul_comm]
   · rw [Complex.ofReal_zero, MulZeroClass.mul_zero, Complex.sin_zero, zero_div,
       MulZeroClass.mul_zero, sub_zero, cos_pi_div_two, Complex.ofReal_zero,
       zero_pow (by positivity : 0 < n), MulZeroClass.zero_mul, zero_sub, ← integral_neg, ←
       integral_const_mul]
     refine' integral_congr fun x hx => _
-    field_simp
-    ring
+    field_simp; ring
   · apply Continuous.intervalIntegrable
     exact
       (continuous_const.mul (complex.continuous_of_real.comp continuous_sin)).mul
@@ -113,8 +106,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     intro x hx
     have c := HasDerivAt.comp (x : ℂ) (hasDerivAt_pow (n - 1) _) (Complex.hasDerivAt_cos x)
     convert((Complex.hasDerivAt_sin x).mul c).comp_of_real using 1
-    · ext1 y
-      simp only [Complex.ofReal_sin, Complex.ofReal_cos]
+    · ext1 y; simp only [Complex.ofReal_sin, Complex.ofReal_cos]
     · simp only [Complex.ofReal_cos, Complex.ofReal_sin]
       rw [mul_neg, mul_neg, ← sub_eq_add_neg, Function.comp_apply]
       congr 1
@@ -144,8 +136,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
         continuous_const.mul
           ((complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)).mul
             ((complex.continuous_of_real.comp continuous_cos).pow (n - 2)))
-    · apply Nat.sub_pos_of_lt
-      exact one_lt_two.trans_le hn
+    · apply Nat.sub_pos_of_lt; exact one_lt_two.trans_le hn
     refine' integral_congr fun x hx => _
     dsimp only
     -- get rid of real trig functions and divions by 2 * z:
@@ -170,17 +161,12 @@ theorem integral_cos_mul_cos_pow (hn : 2 ≤ n) (hz : z ≠ 0) :
     ((1 - 4 * z ^ 2 / n ^ 2) * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n) =
       (n - 1 : ℂ) / n * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ (n - 2) :=
   by
-  have nne : (n : ℂ) ≠ 0 := by
-    contrapose! hn
-    rw [Nat.cast_eq_zero] at hn
-    rw [hn]
+  have nne : (n : ℂ) ≠ 0 := by contrapose! hn; rw [Nat.cast_eq_zero] at hn; rw [hn];
     exact zero_lt_two
   have := integral_cos_mul_cos_pow_aux hn hz
   rw [integral_sin_mul_sin_mul_cos_pow_eq hn hz, sub_eq_neg_add, mul_add, ← sub_eq_iff_eq_add] at
     this
-  convert congr_arg (fun u : ℂ => -u * (2 * z) ^ 2 / n ^ 2) this using 1 <;>
-    · field_simp
-      ring
+  convert congr_arg (fun u : ℂ => -u * (2 * z) ^ 2 / n ^ 2) this using 1 <;> · field_simp; ring
 #align euler_sine.integral_cos_mul_cos_pow EulerSine.integral_cos_mul_cos_pow
 
 /-- Note this also holds for `z = 0`, but we do not need this case for `sin_pi_mul_eq`. -/
@@ -195,10 +181,8 @@ theorem integral_cos_mul_cos_pow_even (n : ℕ) (hz : z ≠ 0) :
     nth_rw_rhs 3 [← mul_one (2 : ℂ)]
     rw [← mul_add, mul_pow, ← div_div]
     ring
-  · push_cast
-    ring
-  · push_cast
-    ring
+  · push_cast ; ring
+  · push_cast ; ring
 #align euler_sine.integral_cos_mul_cos_pow_even EulerSine.integral_cos_mul_cos_pow_even
 
 /-- Relate the integral `cos x ^ n` over `[0, π/2]` to the integral of `sin x ^ n` over `[0, π]`,
@@ -245,10 +229,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
       integral_one, sub_zero]
     rw [integral_cos_mul_complex (mul_ne_zero two_ne_zero hz), Complex.ofReal_zero,
       MulZeroClass.mul_zero, Complex.sin_zero, zero_div, sub_zero,
-      (by
-        push_cast
-        field_simp
-        ring : 2 * z * ↑(π / 2) = π * z)]
+      (by push_cast ; field_simp; ring : 2 * z * ↑(π / 2) = π * z)]
     field_simp [complex.of_real_ne_zero.mpr pi_pos.ne']
     ring
   · rw [hn, Finset.prod_range_succ]
@@ -295,10 +276,8 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
       have : 2 * (n : ℂ) + 2 ≠ 0 :=
         by
         convert(Nat.cast_add_one_ne_zero (2 * n + 1) : (↑(2 * n + 1) + 1 : ℂ) ≠ 0) using 1
-        push_cast
-        ring
-      field_simp
-      ring
+        push_cast ; ring
+      field_simp; ring
     convert integral_cos_mul_cos_pow_even n hz
     rw [Nat.cast_succ]
 #align euler_sine.sin_pi_mul_eq EulerSine.sin_pi_mul_eq
@@ -325,9 +304,7 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
     cos_lt_cos_of_nonneg_of_le_pi_div_two (le_refl 0) hy.2 (lt_of_le_of_ne hy.1 hy'.symm)
   have c_nonneg : ∀ x : ℝ, x ∈ Icc 0 (π / 2) → 0 ≤ cos x := fun x hx =>
     cos_nonneg_of_mem_Icc ((Icc_subset_Icc_left (neg_nonpos_of_nonneg pi_div_two_pos.le)) hx)
-  have c_zero_pos : 0 < cos 0 := by
-    rw [cos_zero]
-    exact zero_lt_one
+  have c_zero_pos : 0 < cos 0 := by rw [cos_zero]; exact zero_lt_one
   have zero_mem : (0 : ℝ) ∈ closure (interior (Icc 0 (π / 2))) :=
     by
     rw [interior_Icc, closure_Ioo pi_div_two_pos.ne, left_mem_Icc]
@@ -363,9 +340,7 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
   have : ContinuousOn (fun x : ℝ => Complex.cos (2 * z * x)) (Icc 0 (π / 2)) :=
     (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)).ContinuousOn
   convert tendsto_integral_cos_pow_mul_div this
-  · ext1 n
-    congr 2 with x : 1
-    rw [mul_comm]
+  · ext1 n; congr 2 with x : 1; rw [mul_comm]
   · rw [Complex.ofReal_zero, MulZeroClass.mul_zero, Complex.cos_zero]
 #align complex.tendsto_euler_sin_prod Complex.tendsto_euler_sin_prod
 

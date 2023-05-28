@@ -167,10 +167,8 @@ theorem finite_coproduct_eq_finset_sup [SemilatticeSup α] [OrderBot α] {ι : T
 -- see Note [lower instance priority]
 instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts α :=
   by
-  have : ∀ x y : α, has_limit (pair x y) :=
-    by
-    letI := hasFiniteLimits_of_hasFiniteLimits_of_size.{u} α
-    infer_instance
+  have : ∀ x y : α, has_limit (pair x y) := by
+    letI := hasFiniteLimits_of_hasFiniteLimits_of_size.{u} α; infer_instance
   apply has_binary_products_of_has_limit_pair
 
 /- warning: category_theory.limits.complete_lattice.prod_eq_inf -> CategoryTheory.Limits.CompleteLattice.prod_eq_inf is a dubious translation:
@@ -198,10 +196,8 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
 -- see Note [lower instance priority]
 instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproducts α :=
   by
-  have : ∀ x y : α, has_colimit (pair x y) :=
-    by
-    letI := hasFiniteColimits_of_hasFiniteColimits_of_size.{u} α
-    infer_instance
+  have : ∀ x y : α, has_colimit (pair x y) := by
+    letI := hasFiniteColimits_of_hasFiniteColimits_of_size.{u} α; infer_instance
   apply has_binary_coproducts_of_has_colimit_pair
 
 /- warning: category_theory.limits.complete_lattice.coprod_eq_sup -> CategoryTheory.Limits.CompleteLattice.coprod_eq_sup is a dubious translation:

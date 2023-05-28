@@ -233,8 +233,7 @@ theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α]
   by
   refine' ⟨fun x y h => _⟩
   by_cases hx : x = 0
-  · left
-    exact hx
+  · left; exact hx
   · right
     rw [← sub_zero (x * y), ← MulZeroClass.mul_zero x, ← mul_sub] at h
     convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
@@ -251,8 +250,7 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
     NoZeroDivisors α := by
   refine' ⟨fun x y h => _⟩
   by_cases hy : y = 0
-  · right
-    exact hy
+  · right; exact hy
   · left
     rw [← sub_zero (x * y), ← MulZeroClass.zero_mul y, ← sub_mul] at h
     convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h

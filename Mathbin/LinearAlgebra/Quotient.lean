@@ -51,11 +51,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Ring.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] (p : Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) {x : M} {y : M}, Iff (Setoid.r.{succ u2} M (Submodule.quotientRel.{u1, u2} R M _inst_1 _inst_2 _inst_3 p) x y) (Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) M (Submodule.setLike.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)) (HSub.hSub.{u2, u2, u2} M M M (instHSub.{u2} M (SubNegMonoid.toSub.{u2} M (AddGroup.toSubNegMonoid.{u2} M (AddCommGroup.toAddGroup.{u2} M _inst_2)))) x y) p)
 Case conversion may be inaccurate. Consider using '#align submodule.quotient_rel_r_def Submodule.quotientRel_r_defₓ'. -/
 theorem quotientRel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
-  Iff.trans
-    (by
-      rw [left_rel_apply, sub_eq_add_neg, neg_add, neg_neg]
-      rfl)
-    neg_mem_iff
+  Iff.trans (by rw [left_rel_apply, sub_eq_add_neg, neg_add, neg_neg]; rfl) neg_mem_iff
 #align submodule.quotient_rel_r_def Submodule.quotientRel_r_def
 
 #print Submodule.hasQuotient /-
@@ -379,10 +375,7 @@ theorem restrictScalarsEquiv_symm_mk [Ring S] [SMul S R] [Module S M] [IsScalarT
 end Module
 
 #print Submodule.Quotient.mk_surjective /-
-theorem mk_surjective : Function.Surjective (@mk _ _ _ _ _ p) :=
-  by
-  rintro ⟨x⟩
-  exact ⟨x, rfl⟩
+theorem mk_surjective : Function.Surjective (@mk _ _ _ _ _ p) := by rintro ⟨x⟩; exact ⟨x, rfl⟩
 #align submodule.quotient.mk_surjective Submodule.Quotient.mk_surjective
 -/
 
@@ -460,9 +453,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Ring.{u1} R] [_inst_2 : AddCommGroup.{u2} M] [_inst_3 : Module.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2)] {p : Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3}, Iff (Nonempty.{succ u2} (Unique.{succ u2} (HasQuotient.Quotient.{u2, u2} M (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (Submodule.hasQuotient.{u1, u2} R M _inst_1 _inst_2 _inst_3) p))) (Eq.{succ u2} (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) p (Top.top.{u2} (Submodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3) (Submodule.instTopSubmodule.{u1, u2} R M (Ring.toSemiring.{u1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u2} M _inst_2) _inst_3)))
 Case conversion may be inaccurate. Consider using '#align submodule.unique_quotient_iff_eq_top Submodule.unique_quotient_iff_eq_topₓ'. -/
 theorem unique_quotient_iff_eq_top : Nonempty (Unique (M ⧸ p)) ↔ p = ⊤ :=
-  ⟨fun ⟨h⟩ => subsingleton_quotient_iff_eq_top.mp (@Unique.subsingleton h),
-    by
-    rintro rfl
+  ⟨fun ⟨h⟩ => subsingleton_quotient_iff_eq_top.mp (@Unique.subsingleton h), by rintro rfl;
     exact ⟨quotient_top.unique⟩⟩
 #align submodule.unique_quotient_iff_eq_top Submodule.unique_quotient_iff_eq_top
 
@@ -666,9 +657,7 @@ theorem mapQ_mkQ (f : M →ₛₗ[τ₁₂] M₂) {h} : (mapQ p q f h).comp p.mk
 Case conversion may be inaccurate. Consider using '#align submodule.mapq_zero Submodule.mapQ_zeroₓ'. -/
 @[simp]
 theorem mapQ_zero (h : p ≤ q.comap (0 : M →ₛₗ[τ₁₂] M₂) := (by simp)) :
-    p.mapQ q (0 : M →ₛₗ[τ₁₂] M₂) h = 0 := by
-  ext
-  simp
+    p.mapQ q (0 : M →ₛₗ[τ₁₂] M₂) h = 0 := by ext; simp
 #align submodule.mapq_zero Submodule.mapQ_zero
 
 /- warning: submodule.mapq_comp -> Submodule.mapQ_comp is a dubious translation:
@@ -681,24 +670,15 @@ theorem mapQ_comp {R₃ M₃ : Type _} [Ring R₃] [AddCommGroup M₃] [Module R
     (p₃ : Submodule R₃ M₃) {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃} [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
     (f : M →ₛₗ[τ₁₂] M₂) (g : M₂ →ₛₗ[τ₂₃] M₃) (hf : p ≤ p₂.comap f) (hg : p₂ ≤ p₃.comap g)
     (h := hf.trans (comap_mono hg)) :
-    p.mapQ p₃ (g.comp f) h = (p₂.mapQ p₃ g hg).comp (p.mapQ p₂ f hf) :=
-  by
-  ext
-  simp
+    p.mapQ p₃ (g.comp f) h = (p₂.mapQ p₃ g hg).comp (p.mapQ p₂ f hf) := by ext; simp
 #align submodule.mapq_comp Submodule.mapQ_comp
 
 /- warning: submodule.mapq_id -> Submodule.mapQ_id is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.mapq_id Submodule.mapQ_idₓ'. -/
 @[simp]
-theorem mapQ_id
-    (h : p ≤ p.comap LinearMap.id :=
-      (by
-        rw [comap_id]
-        exact le_refl _)) :
-    p.mapQ p LinearMap.id h = LinearMap.id := by
-  ext
-  simp
+theorem mapQ_id (h : p ≤ p.comap LinearMap.id := (by rw [comap_id]; exact le_refl _)) :
+    p.mapQ p LinearMap.id h = LinearMap.id := by ext; simp
 #align submodule.mapq_id Submodule.mapQ_id
 
 /- warning: submodule.mapq_pow -> Submodule.mapQ_pow is a dubious translation:
@@ -796,14 +776,10 @@ theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂]
   suffices (span R₂ s).comap f ≤ span R (f ⁻¹' s) by exact le_antisymm (span_preimage_le f s) this
   have hk : ker f ≤ span R (f ⁻¹' s) :=
     by
-    let y := Classical.choose h₀
-    have hy : y ∈ s := Classical.choose_spec h₀
-    rw [ker_le_iff]
-    use y, h₁ hy
-    rw [← Set.singleton_subset_iff] at hy
+    let y := Classical.choose h₀; have hy : y ∈ s := Classical.choose_spec h₀
+    rw [ker_le_iff]; use y, h₁ hy; rw [← Set.singleton_subset_iff] at hy
     exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
-  rw [← left_eq_sup] at hk
-  rw [f.range_coe] at h₁
+  rw [← left_eq_sup] at hk; rw [f.range_coe] at h₁
   rw [hk, ← LinearMap.map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]
   exact inf_le_right
 #align submodule.span_preimage_eq Submodule.span_preimage_eq
@@ -963,16 +939,10 @@ theorem coe_quotEquivOfEqBot_symm (hp : p = ⊥) :
 /-- Quotienting by equal submodules gives linearly equivalent quotients. -/
 def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
   {
-    @Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _) fun a b =>
-      by
-      subst h
+    @Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _) fun a b => by subst h;
       rfl with
-    map_add' := by
-      rintro ⟨x⟩ ⟨y⟩
-      rfl
-    map_smul' := by
-      rintro x ⟨y⟩
-      rfl }
+    map_add' := by rintro ⟨x⟩ ⟨y⟩; rfl
+    map_smul' := by rintro x ⟨y⟩; rfl }
 #align submodule.quot_equiv_of_eq Submodule.quotEquivOfEq
 -/
 
@@ -1012,12 +982,8 @@ the natural map $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \} \to Hom(M/p, M₂/q)$ is l
 def mapQLinear : compatibleMaps p q →ₗ[R] M ⧸ p →ₗ[R] M₂ ⧸ q
     where
   toFun f := mapQ _ _ f.val f.property
-  map_add' x y := by
-    ext
-    rfl
-  map_smul' c f := by
-    ext
-    rfl
+  map_add' x y := by ext; rfl
+  map_smul' c f := by ext; rfl
 #align submodule.mapq_linear Submodule.mapQLinear
 -/
 

@@ -149,10 +149,8 @@ lean 3 declaration is
 but is expected to have type
   forall (K : Type.{u2}) (L : Type.{u1}) [_inst_1 : Field.{u2} K] [_inst_2 : CommSemiring.{u1} L] [_inst_3 : Nontrivial.{u1} L] [_inst_4 : Algebra.{u2, u1} K L (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_1)) (CommSemiring.toSemiring.{u1} L _inst_2)], Eq.{1} Nat (ringChar.{u2} K (Semiring.toNonAssocSemiring.{u2} K (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_1))))) (ringChar.{u1} L (Semiring.toNonAssocSemiring.{u1} L (CommSemiring.toSemiring.{u1} L _inst_2)))
 Case conversion may be inaccurate. Consider using '#align algebra.ring_char_eq Algebra.ringChar_eqₓ'. -/
-theorem Algebra.ringChar_eq : ringChar K = ringChar L :=
-  by
-  rw [ringChar.eq_iff, Algebra.charP_iff K L]
-  apply ringChar.charP
+theorem Algebra.ringChar_eq : ringChar K = ringChar L := by
+  rw [ringChar.eq_iff, Algebra.charP_iff K L]; apply ringChar.charP
 #align algebra.ring_char_eq Algebra.ringChar_eq
 
 end

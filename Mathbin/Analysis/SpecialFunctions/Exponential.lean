@@ -230,9 +230,7 @@ theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
     tendsto_nhds_unique x.exp'.tendsto_limit (exp_series_div_summable ℝ x).HasSum.tendsto_sum_nat
 #align complex.exp_eq_exp_ℂ Complex.exp_eq_exp_ℂ
 
-theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ :=
-  by
-  ext x
+theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ := by ext x;
   exact_mod_cast congr_fun Complex.exp_eq_exp_ℂ x
 #align real.exp_eq_exp_ℝ Real.exp_eq_exp_ℝ
 

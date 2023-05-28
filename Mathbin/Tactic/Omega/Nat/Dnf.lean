@@ -41,12 +41,10 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
   run_tac
     preform.induce sorry
   · apply List.exists_mem_cons_of
-    constructor
-    rw [List.forall_mem_singleton]
+    constructor; rw [List.forall_mem_singleton]
     cases' h0 with ht hs
     simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
-    rw [h2, add_neg_self]
-    apply List.forall_mem_nil
+    rw [h2, add_neg_self]; apply List.forall_mem_nil
   · apply List.exists_mem_cons_of
     constructor
     apply List.forall_mem_nil
@@ -147,14 +145,11 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c
   have h6 : nonnegate c ∈ dnf p := by
-    simp only [dnf]
-    rw [List.mem_map]
+    simp only [dnf]; rw [List.mem_map]
     refine' ⟨c, h4, rfl⟩
-  refine' ⟨h6, _⟩
-  cases' c with eqs les
+  refine' ⟨h6, _⟩; cases' c with eqs les
   simp only [nonnegate, clause.holds]
-  constructor
-  apply h5.left
+  constructor; apply h5.left
   rw [List.forall_mem_append]
   apply And.intro (holds_nonneg_consts _) h5.right
   intro x

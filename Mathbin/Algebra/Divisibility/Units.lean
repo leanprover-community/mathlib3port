@@ -75,10 +75,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.dvd_mul_left Units.dvd_mul_leftₓ'. -/
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
-theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b :=
-  by
-  rw [mul_comm]
-  apply dvd_mul_right
+theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b := by rw [mul_comm]; apply dvd_mul_right
 #align units.dvd_mul_left Units.dvd_mul_left
 
 /- warning: units.mul_left_dvd -> Units.mul_left_dvd is a dubious translation:
@@ -89,10 +86,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.mul_left_dvd Units.mul_left_dvdₓ'. -/
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
-theorem mul_left_dvd : ↑u * a ∣ b ↔ a ∣ b :=
-  by
-  rw [mul_comm]
-  apply mul_right_dvd
+theorem mul_left_dvd : ↑u * a ∣ b ↔ a ∣ b := by rw [mul_comm]; apply mul_right_dvd
 #align units.mul_left_dvd Units.mul_left_dvd
 
 end CommMonoid
@@ -110,9 +104,7 @@ include hu
 #print IsUnit.dvd /-
 /-- Units of a monoid divide any element of the monoid. -/
 @[simp]
-theorem dvd : u ∣ a := by
-  rcases hu with ⟨u, rfl⟩
-  apply Units.coe_dvd
+theorem dvd : u ∣ a := by rcases hu with ⟨u, rfl⟩; apply Units.coe_dvd
 #align is_unit.dvd IsUnit.dvd
 -/
 
@@ -123,10 +115,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : α}, (IsUnit.{u1} α _inst_1 u) -> (Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b u)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align is_unit.dvd_mul_right IsUnit.dvd_mul_rightₓ'. -/
 @[simp]
-theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
-  by
-  rcases hu with ⟨u, rfl⟩
-  apply Units.dvd_mul_right
+theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b := by rcases hu with ⟨u, rfl⟩; apply Units.dvd_mul_right
 #align is_unit.dvd_mul_right IsUnit.dvd_mul_right
 
 /- warning: is_unit.mul_right_dvd -> IsUnit.mul_right_dvd is a dubious translation:
@@ -137,10 +126,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_dvd IsUnit.mul_right_dvdₓ'. -/
 /-- In a monoid, an element a divides an element b iff all associates of `a` divide `b`.-/
 @[simp]
-theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b :=
-  by
-  rcases hu with ⟨u, rfl⟩
-  apply Units.mul_right_dvd
+theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b := by rcases hu with ⟨u, rfl⟩; apply Units.mul_right_dvd
 #align is_unit.mul_right_dvd IsUnit.mul_right_dvd
 
 end Monoid
@@ -160,10 +146,7 @@ Case conversion may be inaccurate. Consider using '#align is_unit.dvd_mul_left I
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
 @[simp]
-theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b :=
-  by
-  rcases hu with ⟨u, rfl⟩
-  apply Units.dvd_mul_left
+theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b := by rcases hu with ⟨u, rfl⟩; apply Units.dvd_mul_left
 #align is_unit.dvd_mul_left IsUnit.dvd_mul_left
 
 /- warning: is_unit.mul_left_dvd -> IsUnit.mul_left_dvd is a dubious translation:
@@ -175,10 +158,7 @@ Case conversion may be inaccurate. Consider using '#align is_unit.mul_left_dvd I
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
 @[simp]
-theorem mul_left_dvd : u * a ∣ b ↔ a ∣ b :=
-  by
-  rcases hu with ⟨u, rfl⟩
-  apply Units.mul_left_dvd
+theorem mul_left_dvd : u * a ∣ b ↔ a ∣ b := by rcases hu with ⟨u, rfl⟩; apply Units.mul_left_dvd
 #align is_unit.mul_left_dvd IsUnit.mul_left_dvd
 
 end CommMonoid

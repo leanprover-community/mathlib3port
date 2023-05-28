@@ -194,10 +194,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (a : α), Function.Injective.{succ u1, max (succ u2) (succ u1)} β (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β a)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_left Prod.mk.inj_leftₓ'. -/
-theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) :=
-  by
-  intro b₁ b₂ h
-  simpa only [true_and_iff, Prod.mk.inj_iff, eq_self_iff_true] using h
+theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
+  intro b₁ b₂ h; simpa only [true_and_iff, Prod.mk.inj_iff, eq_self_iff_true] using h
 #align prod.mk.inj_left Prod.mk.inj_left
 
 /- warning: prod.mk.inj_right -> Prod.mk.inj_right is a dubious translation:
@@ -207,9 +205,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (b : β), Function.Injective.{succ u2, max (succ u2) (succ u1)} α (Prod.{u2, u1} α β) (fun (a : α) => Prod.mk.{u2, u1} α β a b)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_right Prod.mk.inj_rightₓ'. -/
 theorem mk.inj_right {α β : Type _} (b : β) :
-    Function.Injective (fun a => Prod.mk a b : α → α × β) :=
-  by
-  intro b₁ b₂ h
+    Function.Injective (fun a => Prod.mk a b : α → α × β) := by intro b₁ b₂ h;
   · simpa only [and_true_iff, eq_self_iff_true, mk.inj_iff] using h
 #align prod.mk.inj_right Prod.mk.inj_right
 

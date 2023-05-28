@@ -149,10 +149,8 @@ theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) 
           (algebraMap O F).map_zero.symm ▸ (v.zero_iff.1 <| le_zero_iff.1 (v.map_zero ▸ hy ▸ h))
       hx.symm ▸ dvd_zero y)
     fun hy : algebraMap O F y ≠ 0 =>
-    have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 :=
-      by
-      rw [← v.map_one, ← inv_mul_cancel hy, v.map_mul, v.map_mul]
-      exact mul_le_mul_left' h _
+    have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 := by
+      rw [← v.map_one, ← inv_mul_cancel hy, v.map_mul, v.map_mul]; exact mul_le_mul_left' h _
     let ⟨z, hz⟩ := hv.3 this
     ⟨z, hv.1 <| ((algebraMap O F).map_mul y z).symm ▸ hz.symm ▸ (mul_inv_cancel_left₀ hy _).symm⟩
 #align valuation.integers.dvd_of_le Valuation.Integers.dvd_of_le

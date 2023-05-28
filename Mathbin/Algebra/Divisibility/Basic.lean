@@ -258,9 +258,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] {a : α} {b : α}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α b (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1))) c a)))
 Case conversion may be inaccurate. Consider using '#align dvd_iff_exists_eq_mul_left dvd_iff_exists_eq_mul_leftₓ'. -/
 theorem dvd_iff_exists_eq_mul_left : a ∣ b ↔ ∃ c, b = c * a :=
-  ⟨exists_eq_mul_left_of_dvd, by
-    rintro ⟨c, rfl⟩
-    exact ⟨c, mul_comm _ _⟩⟩
+  ⟨exists_eq_mul_left_of_dvd, by rintro ⟨c, rfl⟩; exact ⟨c, mul_comm _ _⟩⟩
 #align dvd_iff_exists_eq_mul_left dvd_iff_exists_eq_mul_left
 
 /- warning: dvd.elim_left -> Dvd.elim_left is a dubious translation:
@@ -348,9 +346,7 @@ theorem mul_dvd_mul_right (h : a ∣ b) (c : α) : a * c ∣ b * c :=
 #print pow_dvd_pow_of_dvd /-
 theorem pow_dvd_pow_of_dvd {a b : α} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
   | 0 => by rw [pow_zero, pow_zero]
-  | n + 1 => by
-    rw [pow_succ, pow_succ]
-    exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
+  | n + 1 => by rw [pow_succ, pow_succ]; exact mul_dvd_mul h (pow_dvd_pow_of_dvd n)
 #align pow_dvd_pow_of_dvd pow_dvd_pow_of_dvd
 -/
 

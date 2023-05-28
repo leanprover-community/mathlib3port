@@ -149,19 +149,13 @@ def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y
 
 #print TopCat.of_isoOfHomeo /-
 @[simp]
-theorem of_isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f :=
-  by
-  ext
-  rfl
+theorem of_isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f := by ext; rfl
 #align Top.of_iso_of_homeo TopCat.of_isoOfHomeo
 -/
 
 #print TopCat.of_homeoOfIso /-
 @[simp]
-theorem of_homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f :=
-  by
-  ext
-  rfl
+theorem of_homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f := by ext; rfl
 #align Top.of_homeo_of_iso TopCat.of_homeoOfIso
 -/
 

@@ -368,10 +368,8 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → �
 #print Finset.prod_toFinset_eq_subtype /-
 @[to_additive]
 theorem Finset.prod_toFinset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop)
-    [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a :=
-  by
-  rw [← Finset.prod_subtype]
-  simp
+    [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a := by
+  rw [← Finset.prod_subtype]; simp
 #align finset.prod_to_finset_eq_subtype Finset.prod_toFinset_eq_subtype
 #align finset.sum_to_finset_eq_subtype Finset.sum_toFinset_eq_subtype
 -/

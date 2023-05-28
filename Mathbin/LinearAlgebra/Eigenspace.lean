@@ -137,14 +137,8 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
   calc
     eigenspace f (-q.coeff 0 / q.leadingCoeff) =
         (q.leadingCoeff • f - algebraMap K (End K V) (-q.coeff 0)).ker :=
-      by
-      rw [eigenspace_div]
-      intro h
-      rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq
-      cases hq
-    _ = (aeval f (C q.leadingCoeff * X + C (q.coeff 0))).ker :=
-      by
-      rw [C_mul', aeval_def]
+      by rw [eigenspace_div]; intro h; rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq; cases hq
+    _ = (aeval f (C q.leadingCoeff * X + C (q.coeff 0))).ker := by rw [C_mul', aeval_def];
       simp [algebraMap, Algebra.toRingHom]
     _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
     
@@ -163,10 +157,8 @@ theorem aeval_apply_of_hasEigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     (h : f.HasEigenvector μ x) : aeval f p x = p.eval μ • x :=
   by
   apply p.induction_on
-  · intro a
-    simp [Module.algebraMap_end_apply]
-  · intro p q hp hq
-    simp [hp, hq, add_smul]
+  · intro a; simp [Module.algebraMap_end_apply]
+  · intro p q hp hq; simp [hp, hq, add_smul]
   · intro n a hna
     rw [mul_comm, pow_succ, mul_assoc, AlgHom.map_mul, LinearMap.mul_apply, mul_comm, hna]
     simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
@@ -321,9 +313,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
           (μ - μ₀) • l μ = l' μ := by
             simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.mapRange_apply,
               Dfinsupp.mapRange.linearMap_apply]
-          _ = 0 := by
-            rw [l'_eq_0]
-            rfl
+          _ = 0 := by rw [l'_eq_0]; rfl
           
       -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
       have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 :=
@@ -545,14 +535,9 @@ theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End
           ((f - algebraMap _ _ μ) ^ finrank K V *
               (f - algebraMap K (End K V) μ) ^ finrank K V).ker :=
         by simpa only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
-      _ = f.generalized_eigenspace μ (finrank K V + finrank K V) :=
-        by
-        rw [← pow_add]
-        rfl
-      _ = f.generalized_eigenspace μ (finrank K V) :=
-        by
-        rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]
-        linarith
+      _ = f.generalized_eigenspace μ (finrank K V + finrank K V) := by rw [← pow_add]; rfl
+      _ = f.generalized_eigenspace μ (finrank K V) := by
+        rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]; linarith
       
   rw [disjoint_iff_inf_le, generalized_eigenrange, LinearMap.range_eq_map,
     Submodule.map_inf_eq_map_inf_comap, top_inf_eq, h]
@@ -604,11 +589,7 @@ theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V
   · rw [← top_le_iff]
     simp only [finrank_eq_zero.1 (Eq.trans (finrank_top _ _) h_dim), bot_le]
   -- Otherwise the vector space is nontrivial.
-  · haveI : Nontrivial V :=
-      finrank_pos_iff.1
-        (by
-          rw [h_dim]
-          apply Nat.zero_lt_succ)
+  · haveI : Nontrivial V := finrank_pos_iff.1 (by rw [h_dim]; apply Nat.zero_lt_succ)
     -- Hence, `f` has an eigenvalue `μ₀`.
     obtain ⟨μ₀, hμ₀⟩ : ∃ μ₀, f.has_eigenvalue μ₀ := exists_eigenvalue f
     -- We define `ES` to be the generalized eigenspace

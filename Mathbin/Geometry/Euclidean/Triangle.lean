@@ -376,14 +376,8 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
     calc
       dist a b ^ 2 + dist a c ^ 2 =
           2 / dist b c * (dist a b ^ 2 * (2⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) :=
-        by
-        field_simp
-        ring
-      _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) :=
-        by
-        rw [hm]
-        field_simp
-        ring
+        by field_simp; ring
+      _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by rw [hm]; field_simp; ring
       
 #align euclidean_geometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq EuclideanGeometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq
 
@@ -396,19 +390,15 @@ theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠
     dist a' c' ^ 2 =
         dist a' b' ^ 2 + dist c' b' ^ 2 - 2 * dist a' b' * dist c' b' * Real.cos (∠ a' b' c') :=
       by simp [pow_two, law_cos a' b' c']
-    _ = r ^ 2 * (dist a b ^ 2 + dist c b ^ 2 - 2 * dist a b * dist c b * Real.cos (∠ a b c)) :=
-      by
-      rw [h, hab, hcb]
-      ring
+    _ = r ^ 2 * (dist a b ^ 2 + dist c b ^ 2 - 2 * dist a b * dist c b * Real.cos (∠ a b c)) := by
+      rw [h, hab, hcb]; ring
     _ = (r * dist a c) ^ 2 := by simp [pow_two, ← law_cos a b c, mul_pow]
     
   by_cases hab₁ : a = b
   · have hab'₁ : a' = b' := by
       rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, MulZeroClass.mul_zero r]
     rw [hab₁, hab'₁, dist_comm b' c', dist_comm b c, hcb]
-  · have h1 : 0 ≤ r * dist a b := by
-      rw [← hab]
-      exact dist_nonneg
+  · have h1 : 0 ≤ r * dist a b := by rw [← hab]; exact dist_nonneg
     have h2 : 0 ≤ r := nonneg_of_mul_nonneg_left h1 (dist_pos.mpr hab₁)
     exact (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'
 #align euclidean_geometry.dist_mul_of_eq_angle_of_dist_mul EuclideanGeometry.dist_mul_of_eq_angle_of_dist_mul

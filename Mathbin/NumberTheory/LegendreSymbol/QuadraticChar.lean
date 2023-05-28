@@ -138,9 +138,7 @@ def quadraticChar : MulChar F ℤ where
   toFun := quadraticCharFun F
   map_one' := quadraticCharFun_one
   map_mul' := quadraticCharFun_mul
-  map_nonunit' a ha := by
-    rw [of_not_not (mt Ne.isUnit ha)]
-    exact quadraticCharFun_zero
+  map_nonunit' a ha := by rw [of_not_not (mt Ne.isUnit ha)]; exact quadraticCharFun_zero
 #align quadratic_char quadraticChar
 
 variable {F}
@@ -235,11 +233,8 @@ theorem quadraticChar_isQuadratic : (quadraticChar F).IsQuadratic :=
   by
   intro a
   by_cases ha : a = 0
-  · left
-    rw [ha]
-    exact quadraticChar_zero
-  · right
-    exact quadraticChar_dichotomy ha
+  · left; rw [ha]; exact quadraticChar_zero
+  · right; exact quadraticChar_dichotomy ha
 #align quadratic_char_is_quadratic quadraticChar_isQuadratic
 
 variable {F}
@@ -249,10 +244,7 @@ when the domain has odd characteristic. -/
 theorem quadraticChar_isNontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial :=
   by
   rcases quadraticChar_exists_neg_one hF with ⟨a, ha⟩
-  have hu : IsUnit a := by
-    by_contra hf
-    rw [map_nonunit _ hf] at ha
-    norm_num at ha
+  have hu : IsUnit a := by by_contra hf; rw [map_nonunit _ hf] at ha; norm_num at ha
   refine' ⟨hu.unit, (_ : quadraticChar F a ≠ 1)⟩
   rw [ha]
   norm_num
@@ -454,15 +446,10 @@ theorem FiniteField.isSquare_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fa
     IsSquare (p : F) ↔ quadraticChar (ZMod p) (χ₄ (Fintype.card F) * Fintype.card F) ≠ -1 := by
   classical
     by_cases hFp : ringChar F = p
-    · rw [show (p : F) = 0 by
-          rw [← hFp]
-          exact ringChar.Nat.cast_ringChar]
+    · rw [show (p : F) = 0 by rw [← hFp]; exact ringChar.Nat.cast_ringChar]
       simp only [isSquare_zero, Ne.def, true_iff_iff, map_mul]
       obtain ⟨n, _, hc⟩ := FiniteField.card F (ringChar F)
-      have hchar : ringChar F = ringChar (ZMod p) :=
-        by
-        rw [hFp]
-        exact (ring_char_zmod_n p).symm
+      have hchar : ringChar F = ringChar (ZMod p) := by rw [hFp]; exact (ring_char_zmod_n p).symm
       conv =>
         congr
         lhs

@@ -172,10 +172,7 @@ theorem comp_hasFDerivWithinAt_iff {f : G → E} {s : Set G} {x : G} {f' : G →
     HasFDerivWithinAt (iso ∘ f) ((iso : E →L[𝕜] F).comp f') s x ↔ HasFDerivWithinAt f f' s x :=
   by
   refine' ⟨fun H => _, fun H => iso.has_fderiv_at.comp_has_fderiv_within_at x H⟩
-  have A : f = iso.symm ∘ iso ∘ f :=
-    by
-    rw [← Function.comp.assoc, iso.symm_comp_self]
-    rfl
+  have A : f = iso.symm ∘ iso ∘ f := by rw [← Function.comp.assoc, iso.symm_comp_self]; rfl
   have B : f' = (iso.symm : F →L[𝕜] E).comp ((iso : E →L[𝕜] F).comp f') := by
     rw [← ContinuousLinearMap.comp_assoc, iso.coe_symm_comp_coe, ContinuousLinearMap.id_comp]
   rw [A, B]
@@ -295,10 +292,7 @@ theorem comp_right_hasFDerivWithinAt_iff {f : F → G} {s : Set F} {x : E} {f' :
   by
   refine' ⟨fun H => _, fun H => H.comp x iso.has_fderiv_within_at (maps_to_preimage _ s)⟩
   rw [← iso.symm_apply_apply x] at H
-  have A : f = (f ∘ iso) ∘ iso.symm :=
-    by
-    rw [Function.comp.assoc, iso.self_comp_symm]
-    rfl
+  have A : f = (f ∘ iso) ∘ iso.symm := by rw [Function.comp.assoc, iso.self_comp_symm]; rfl
   have B : f' = (f'.comp (iso : E →L[𝕜] F)).comp (iso.symm : F →L[𝕜] E) := by
     rw [ContinuousLinearMap.comp_assoc, iso.coe_comp_coe_symm, ContinuousLinearMap.comp_id]
   rw [A, B]
@@ -343,9 +337,7 @@ theorem comp_right_fderivWithin {f : F → G} {s : Set F} {x : E}
   by
   by_cases h : DifferentiableWithinAt 𝕜 f s (iso x)
   · exact (iso.comp_right_has_fderiv_within_at_iff.2 h.has_fderiv_within_at).fderivWithin hxs
-  · have : ¬DifferentiableWithinAt 𝕜 (f ∘ iso) (iso ⁻¹' s) x :=
-      by
-      intro h'
+  · have : ¬DifferentiableWithinAt 𝕜 (f ∘ iso) (iso ⁻¹' s) x := by intro h';
       exact h (iso.comp_right_differentiable_within_at_iff.1 h')
     rw [fderivWithin_zero_of_not_differentiableWithinAt h,
       fderivWithin_zero_of_not_differentiableWithinAt this, ContinuousLinearMap.zero_comp]
@@ -542,8 +534,7 @@ theorem HasStrictFDerivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜]
     by
     refine' ((f'.symm : F →L[𝕜] E).isBigO_comp _ _).congr (fun x => _) fun _ => rfl
     simp
-  refine' this.trans_is_o _
-  clear this
+  refine' this.trans_is_o _; clear this
   refine'
     ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) (eventually_of_forall fun _ => rfl)).trans_isBigO
       _
@@ -571,8 +562,7 @@ theorem HasFDerivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g
     by
     refine' ((f'.symm : F →L[𝕜] E).isBigO_comp _ _).congr (fun x => _) fun _ => rfl
     simp
-  refine' this.trans_is_o _
-  clear this
+  refine' this.trans_is_o _; clear this
   refine'
     ((hf.comp_tendsto hg).symm.congr' (hfg.mono _) (eventually_of_forall fun _ => rfl)).trans_isBigO
       _
@@ -658,8 +648,7 @@ theorem has_fderiv_at_filter_real_equiv {L : Filter E} :
       Tendsto (fun x' : E => ‖x' - x‖⁻¹ • (f x' - f x - f' (x' - x))) L (𝓝 0) :=
   by
   symm
-  rw [tendsto_iff_norm_tendsto_zero]
-  refine' tendsto_congr fun x' => _
+  rw [tendsto_iff_norm_tendsto_zero]; refine' tendsto_congr fun x' => _
   have : ‖x' - x‖⁻¹ ≥ 0 := inv_nonneg.mpr (norm_nonneg _)
   simp [norm_smul, abs_of_nonneg this]
 #align has_fderiv_at_filter_real_equiv has_fderiv_at_filter_real_equiv

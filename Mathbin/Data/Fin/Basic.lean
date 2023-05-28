@@ -281,18 +281,13 @@ theorem [anonymous] (a : Fin n) : a.val = a :=
 /-- Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,
 then they coincide (in the heq sense). -/
 protected theorem heq_fun_iff {α : Sort _} {k l : ℕ} (h : k = l) {f : Fin k → α} {g : Fin l → α} :
-    HEq f g ↔ ∀ i : Fin k, f i = g ⟨(i : ℕ), h ▸ i.2⟩ :=
-  by
-  subst h
-  simp [Function.funext_iff]
+    HEq f g ↔ ∀ i : Fin k, f i = g ⟨(i : ℕ), h ▸ i.2⟩ := by subst h; simp [Function.funext_iff]
 #align fin.heq_fun_iff Fin.heq_fun_iff
 -/
 
 #print Fin.heq_ext_iff /-
 protected theorem heq_ext_iff {k l : ℕ} (h : k = l) {i : Fin k} {j : Fin l} :
-    HEq i j ↔ (i : ℕ) = (j : ℕ) := by
-  subst h
-  simp [coe_eq_coe]
+    HEq i j ↔ (i : ℕ) = (j : ℕ) := by subst h; simp [coe_eq_coe]
 #align fin.heq_ext_iff Fin.heq_ext_iff
 -/
 
@@ -573,10 +568,8 @@ Case conversion may be inaccurate. Consider using '#align fin.eq_zero_or_eq_succ
 theorem eq_zero_or_eq_succ {n : ℕ} (i : Fin (n + 1)) : i = 0 ∨ ∃ j : Fin n, i = j.succ :=
   by
   rcases i with ⟨_ | j, h⟩
-  · left
-    rfl
-  · right
-    exact ⟨⟨j, Nat.lt_of_succ_lt_succ h⟩, rfl⟩
+  · left; rfl
+  · right; exact ⟨⟨j, Nat.lt_of_succ_lt_succ h⟩, rfl⟩
 #align fin.eq_zero_or_eq_succ Fin.eq_zero_or_eq_succ
 
 /- warning: fin.eq_succ_of_ne_zero -> Fin.eq_succ_of_ne_zero is a dubious translation:
@@ -989,10 +982,7 @@ theorem val_add_eq_ite {n : ℕ} (a b : Fin n) :
 #align fin.coe_add_eq_ite Fin.val_add_eq_ite
 
 #print Fin.val_bit0 /-
-theorem val_bit0 {n : ℕ} (k : Fin n) : ((bit0 k : Fin n) : ℕ) = bit0 (k : ℕ) % n :=
-  by
-  cases k
-  rfl
+theorem val_bit0 {n : ℕ} (k : Fin n) : ((bit0 k : Fin n) : ℕ) = bit0 (k : ℕ) % n := by cases k; rfl
 #align fin.coe_bit0 Fin.val_bit0
 -/
 
@@ -1023,9 +1013,7 @@ Case conversion may be inaccurate. Consider using '#align fin.last_add_one Fin.l
 @[simp]
 theorem last_add_one : ∀ n, last n + 1 = 0
   | 0 => Subsingleton.elim _ _
-  | n + 1 => by
-    ext
-    rw [coe_add, coe_zero, coe_last, coe_one, Nat.mod_self]
+  | n + 1 => by ext; rw [coe_add, coe_zero, coe_last, coe_one, Nat.mod_self]
 #align fin.last_add_one Fin.last_add_one
 
 /- warning: fin.coe_add_one -> Fin.val_add_one is a dubious translation:
@@ -1161,10 +1149,8 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Nat), Eq.{1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.cast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (AddMonoidWithOne.toNatCast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instAddMonoidWithOneFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (NeZero.succ n))) n) (Fin.last n)
 Case conversion may be inaccurate. Consider using '#align fin.coe_nat_eq_last Fin.cast_nat_eq_lastₓ'. -/
-theorem cast_nat_eq_last (n) : (n : Fin (n + 1)) = Fin.last n :=
-  by
-  rw [← Fin.ofNat_eq_val, Fin.ofNat, Fin.last]
-  simp only [Nat.mod_eq_of_lt n.lt_succ_self]
+theorem cast_nat_eq_last (n) : (n : Fin (n + 1)) = Fin.last n := by
+  rw [← Fin.ofNat_eq_val, Fin.ofNat, Fin.last]; simp only [Nat.mod_eq_of_lt n.lt_succ_self]
 #align fin.coe_nat_eq_last Fin.cast_nat_eq_last
 
 /- warning: fin.le_coe_last -> Fin.le_val_last is a dubious translation:
@@ -1173,10 +1159,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))), LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) i (Nat.cast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (AddMonoidWithOne.toNatCast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instAddMonoidWithOneFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (NeZero.succ n))) n)
 Case conversion may be inaccurate. Consider using '#align fin.le_coe_last Fin.le_val_lastₓ'. -/
-theorem le_val_last (i : Fin (n + 1)) : i ≤ n :=
-  by
-  rw [Fin.cast_nat_eq_last]
-  exact Fin.le_last i
+theorem le_val_last (i : Fin (n + 1)) : i ≤ n := by rw [Fin.cast_nat_eq_last]; exact Fin.le_last i
 #align fin.le_coe_last Fin.le_val_last
 
 end OfNatCoe
@@ -1230,8 +1213,7 @@ theorem zero_eq_one_iff [NeZero n] : (0 : Fin n) = 1 ↔ n = 1 :=
     have := congr_arg (coe : Fin n → ℕ) h
     simp only [Fin.val_zero, ← Nat.dvd_iff_mod_eq_zero, Fin.val_one', @eq_comm _ 0] at this
     exact eq_one_of_dvd_one this
-  · rintro rfl
-    rfl
+  · rintro rfl; rfl
 #align fin.zero_eq_one_iff Fin.zero_eq_one_iff
 
 /- warning: fin.one_eq_zero_iff -> Fin.one_eq_zero_iff is a dubious translation:
@@ -1385,10 +1367,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (i : Nat) (h : LT.lt.{0} Nat instLTNat i n), LT.lt.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLTFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n))) (Fin.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Nat.succ i) (add_lt_add_right.{0} Nat instAddNat instLTNat (AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toAddCancelMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring) (OrderedAddCommMonoid.to_covariantClass_right.{0} Nat (OrderedSemiring.toOrderedAddCommMonoid.{0} Nat Nat.orderedSemiring))) i n h (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align fin.mk_succ_pos Fin.mk_succ_posₓ'. -/
-theorem mk_succ_pos (i : ℕ) (h : i < n) : (0 : Fin (n + 1)) < ⟨i.succ, add_lt_add_right h 1⟩ :=
-  by
-  rw [lt_iff_coe_lt_coe, coe_zero]
-  exact Nat.succ_pos i
+theorem mk_succ_pos (i : ℕ) (h : i < n) : (0 : Fin (n + 1)) < ⟨i.succ, add_lt_add_right h 1⟩ := by
+  rw [lt_iff_coe_lt_coe, coe_zero]; exact Nat.succ_pos i
 #align fin.mk_succ_pos Fin.mk_succ_pos
 
 #print Fin.one_lt_succ_succ /-
@@ -1396,8 +1376,7 @@ theorem one_lt_succ_succ (a : Fin n) : (1 : Fin (n + 2)) < a.succ.succ :=
   by
   cases n
   · exact finZeroElim a
-  · rw [← succ_zero_eq_one, succ_lt_succ_iff]
-    exact succ_pos a
+  · rw [← succ_zero_eq_one, succ_lt_succ_iff]; exact succ_pos a
 #align fin.one_lt_succ_succ Fin.one_lt_succ_succ
 -/
 
@@ -1650,10 +1629,7 @@ theorem cast_trans {k : ℕ} (h : n = m) (h' : m = k) {i : Fin n} :
 
 #print Fin.cast_refl /-
 @[simp]
-theorem cast_refl (h : n = n := rfl) : cast h = OrderIso.refl (Fin n) :=
-  by
-  ext
-  rfl
+theorem cast_refl (h : n = n := rfl) : cast h = OrderIso.refl (Fin n) := by ext; rfl
 #align fin.cast_refl Fin.cast_refl
 -/
 
@@ -1671,10 +1647,7 @@ theorem castLE_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} :
 #print Fin.cast_to_equiv /-
 /-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
-theorem cast_to_equiv (h : n = m) : (cast h).toEquiv = Equiv.cast (h ▸ rfl) :=
-  by
-  subst h
-  simp
+theorem cast_to_equiv (h : n = m) : (cast h).toEquiv = Equiv.cast (h ▸ rfl) := by subst h; simp
 #align fin.cast_to_equiv Fin.cast_to_equiv
 -/
 
@@ -1686,10 +1659,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.cast_eq_cast Fin.cast_eq_castₓ'. -/
 /-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
-theorem cast_eq_cast (h : n = m) : (cast h : Fin n → Fin m) = cast (h ▸ rfl) :=
-  by
-  subst h
-  ext
+theorem cast_eq_cast (h : n = m) : (cast h : Fin n → Fin m) = cast (h ▸ rfl) := by subst h; ext;
   simp
 #align fin.cast_eq_cast Fin.cast_eq_cast
 
@@ -1858,9 +1828,7 @@ theorem castSucc_mk (n i : ℕ) (h : i < n) : castSucc ⟨i, h⟩ = ⟨i, Nat.lt
 Case conversion may be inaccurate. Consider using '#align fin.cast_cast_succ Fin.cast_castSuccₓ'. -/
 @[simp]
 theorem cast_castSucc {n' : ℕ} {h : n + 1 = n' + 1} {i : Fin n} :
-    cast h (castSucc i) = castSucc (cast (Nat.succ_injective h) i) :=
-  by
-  ext
+    cast h (castSucc i) = castSucc (cast (Nat.succ_injective h) i) := by ext;
   simp only [coe_cast, coe_cast_succ]
 #align fin.cast_cast_succ Fin.cast_castSucc
 
@@ -2064,10 +2032,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} {a : Fin n}, LT.lt.{0} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) a) (instLTFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Fin.castSucc n) a) (Fin.succ n a)
 Case conversion may be inaccurate. Consider using '#align fin.lt_succ Fin.lt_succₓ'. -/
-theorem lt_succ : a.cast_succ < a.succ :=
-  by
-  rw [cast_succ, lt_iff_coe_lt_coe, coe_cast_add, coe_succ]
-  exact lt_add_one a.val
+theorem lt_succ : a.cast_succ < a.succ := by
+  rw [cast_succ, lt_iff_coe_lt_coe, coe_cast_add, coe_succ]; exact lt_add_one a.val
 #align fin.lt_succ Fin.lt_succ
 
 /- warning: fin.range_cast_succ -> Fin.range_castSucc is a dubious translation:
@@ -2125,10 +2091,7 @@ but is expected to have type
   forall {n : Nat} {i : Fin n}, Eq.{1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) i) (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (Fin.addNat n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i) (Fin.succ n i)
 Case conversion may be inaccurate. Consider using '#align fin.add_nat_one Fin.addNat_oneₓ'. -/
 @[simp]
-theorem addNat_one {i : Fin n} : addNat 1 i = i.succ :=
-  by
-  ext
-  rw [coe_add_nat, coe_succ]
+theorem addNat_one {i : Fin n} : addNat 1 i = i.succ := by ext; rw [coe_add_nat, coe_succ]
 #align fin.add_nat_one Fin.addNat_one
 
 /- warning: fin.le_coe_add_nat -> Fin.le_coe_addNat is a dubious translation:
@@ -2233,9 +2196,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat}, Eq.{1} (OrderEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n)) (instLEFin n) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n))) (Fin.natAdd (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (RelIso.toRelEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1285 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.1287 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.1285 x._@.Mathlib.Order.Hom.Basic._hyg.1287) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1300 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n)) (x._@.Mathlib.Order.Hom.Basic._hyg.1302 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n)) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n)) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n)) x._@.Mathlib.Order.Hom.Basic._hyg.1300 x._@.Mathlib.Order.Hom.Basic._hyg.1302) (Fin.cast n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n) (Eq.symm.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (OfNat.ofNat.{0} Nat 0 (Zero.toOfNat0.{0} Nat (AddZeroClass.toZero.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) n) n (zero_add.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) n))))
 Case conversion may be inaccurate. Consider using '#align fin.nat_add_zero Fin.natAdd_zeroₓ'. -/
-theorem natAdd_zero {n : ℕ} : Fin.natAdd 0 = (Fin.cast (zero_add n).symm).toRelEmbedding :=
-  by
-  ext
+theorem natAdd_zero {n : ℕ} : Fin.natAdd 0 = (Fin.cast (zero_add n).symm).toRelEmbedding := by ext;
   apply zero_add
 #align fin.nat_add_zero Fin.natAdd_zero
 
@@ -2345,10 +2306,7 @@ but is expected to have type
   forall {n : Nat} (j : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (h : Ne.{1} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) j (OfNat.ofNat.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) 0 (Fin.instOfNatFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) 0 (NeZero.succ n)))), Eq.{1} Nat (Fin.val n (Fin.pred n j h)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) j) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align fin.coe_pred Fin.coe_predₓ'. -/
 @[simp]
-theorem coe_pred (j : Fin (n + 1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 :=
-  by
-  cases j
-  rfl
+theorem coe_pred (j : Fin (n + 1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 := by cases j; rfl
 #align fin.coe_pred Fin.coe_pred
 
 #print Fin.succ_pred /-
@@ -2366,10 +2324,7 @@ but is expected to have type
   forall {n : Nat} (i : Fin n) {h : Ne.{1} (Fin (Nat.succ n)) (Fin.succ n i) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))}, Eq.{1} (Fin n) (Fin.pred n (Fin.succ n i) h) i
 Case conversion may be inaccurate. Consider using '#align fin.pred_succ Fin.pred_succₓ'. -/
 @[simp]
-theorem pred_succ (i : Fin n) {h : i.succ ≠ 0} : i.succ.pred h = i :=
-  by
-  cases i
-  rfl
+theorem pred_succ (i : Fin n) {h : i.succ ≠ 0} : i.succ.pred h = i := by cases i; rfl
 #align fin.pred_succ Fin.pred_succ
 
 /- warning: fin.pred_eq_iff_eq_succ -> Fin.pred_eq_iff_eq_succ is a dubious translation:
@@ -2455,9 +2410,7 @@ theorem pred_add_one (i : Fin (n + 2)) (h : (i : ℕ) < n + 1) :
 #print Fin.subNat /-
 /-- `sub_nat i h` subtracts `m` from `i`, generalizes `fin.pred`. -/
 def subNat (m) (i : Fin (n + m)) (h : m ≤ (i : ℕ)) : Fin n :=
-  ⟨(i : ℕ) - m, by
-    rw [tsub_lt_iff_right h]
-    exact i.is_lt⟩
+  ⟨(i : ℕ) - m, by rw [tsub_lt_iff_right h]; exact i.is_lt⟩
 #align fin.sub_nat Fin.subNat
 -/
 
@@ -2793,9 +2746,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))} {b : Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))}, (Iff (Eq.{1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (Eq.{1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) b (OfNat.ofNat.{0} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) 0 (Fin.instOfNatFin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) 0 (NeZero.succ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))) -> (Eq.{1} (Fin (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) a b)
 Case conversion may be inaccurate. Consider using '#align fin.fin_two_eq_of_eq_zero_iff Fin.fin_two_eq_of_eq_zero_iffₓ'. -/
-theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b :=
-  by
-  revert a b
+theorem fin_two_eq_of_eq_zero_iff {a b : Fin 2} (h : a = 0 ↔ b = 0) : a = b := by revert a b;
   simp [forall_fin_two]
 #align fin.fin_two_eq_of_eq_zero_iff Fin.fin_two_eq_of_eq_zero_iff
 
@@ -2926,8 +2877,7 @@ theorem addCases_right {m n : ℕ} {C : Fin (m + n) → Sort _} (hleft : ∀ i, 
   by
   have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
-  refine' eq_of_hEq ((eq_rec_hEq _ _).trans _)
-  congr 1
+  refine' eq_of_hEq ((eq_rec_hEq _ _).trans _); congr 1
   simp
 #align fin.add_cases_right Fin.addCases_right
 
@@ -3018,10 +2968,8 @@ instance (n : ℕ) [NeZero n] : AddCommGroup (Fin n) :=
       n with
     add_left_neg := fun ⟨a, ha⟩ =>
       Fin.ext <|
-        trans (Nat.mod_add_mod _ _ _) <|
-          by
-          rw [Fin.val_mk, Fin.val_zero, tsub_add_cancel_of_le, Nat.mod_self]
-          exact le_of_lt ha
+        trans (Nat.mod_add_mod _ _ _) <| by
+          rw [Fin.val_mk, Fin.val_zero, tsub_add_cancel_of_le, Nat.mod_self]; exact le_of_lt ha
     sub_eq_add_neg := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
       Fin.ext <| show (a + (n - b)) % n = (a + (n - b) % n) % n by simp
     sub := Fin.sub }
@@ -3189,9 +3137,7 @@ Case conversion may be inaccurate. Consider using '#align fin.succ_above_below F
 /-- Embedding `i : fin n` into `fin (n + 1)` with a hole around `p : fin (n + 1)`
 embeds `i` by `cast_succ` when the resulting `i.cast_succ < p`. -/
 theorem succAbove_below (p : Fin (n + 1)) (i : Fin n) (h : i.cast_succ < p) :
-    p.succAbove i = i.cast_succ := by
-  rw [succ_above]
-  exact if_pos h
+    p.succAbove i = i.cast_succ := by rw [succ_above]; exact if_pos h
 #align fin.succ_above_below Fin.succAbove_below
 
 /- warning: fin.succ_above_ne_zero_zero -> Fin.succAbove_ne_zero_zero is a dubious translation:
@@ -3250,9 +3196,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.succ_above_last Fin.succAbove_lastₓ'. -/
 /-- Embedding `fin n` into `fin (n + 1)` with a hole around `last n` embeds by `cast_succ`. -/
 @[simp]
-theorem succAbove_last : succAbove (Fin.last n) = castSucc :=
-  by
-  ext
+theorem succAbove_last : succAbove (Fin.last n) = castSucc := by ext;
   simp only [succ_above_below, cast_succ_lt_last]
 #align fin.succ_above_last Fin.succAbove_last
 
@@ -3367,10 +3311,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.succ_above_cast_lt Fin.succAbove_castLTₓ'. -/
 @[simp]
 theorem succAbove_castLT {x y : Fin (n + 1)} (h : x < y)
-    (hx : x.1 < n := lt_of_lt_of_le h y.le_last) : y.succAbove (x.castLT hx) = x :=
-  by
-  rw [succ_above_below, cast_succ_cast_lt]
-  exact h
+    (hx : x.1 < n := lt_of_lt_of_le h y.le_last) : y.succAbove (x.castLT hx) = x := by
+  rw [succ_above_below, cast_succ_cast_lt]; exact h
 #align fin.succ_above_cast_lt Fin.succAbove_castLT
 
 /- warning: fin.succ_above_pred -> Fin.succAbove_pred is a dubious translation:
@@ -3378,9 +3320,7 @@ theorem succAbove_castLT {x y : Fin (n + 1)} (h : x < y)
 Case conversion may be inaccurate. Consider using '#align fin.succ_above_pred Fin.succAbove_predₓ'. -/
 @[simp]
 theorem succAbove_pred {x y : Fin (n + 1)} (h : x < y) (hy : y ≠ 0 := (x.zero_le.trans_lt h).ne') :
-    x.succAbove (y.pred hy) = y :=
-  by
-  rw [succ_above_above, succ_pred]
+    x.succAbove (y.pred hy) = y := by rw [succ_above_above, succ_pred];
   simpa [le_iff_coe_le_coe] using Nat.le_pred_of_lt h
 #align fin.succ_above_pred Fin.succAbove_pred
 
@@ -3605,8 +3545,7 @@ theorem predAbove_right_monotone (p : Fin n) : Monotone p.predAbove := fun a b H
       _ ≤ _ := Nat.pred_le _
       _ ≤ _ := H
       
-  · simp at ha
-    exact le_pred_of_lt (lt_of_le_of_lt ha hb)
+  · simp at ha; exact le_pred_of_lt (lt_of_le_of_lt ha hb)
   · exact H
 #align fin.pred_above_right_monotone Fin.predAbove_right_monotone
 
@@ -3647,11 +3586,7 @@ theorem castPred_zero : castPred (0 : Fin (n + 2)) = 0 :=
 
 #print Fin.castPred_one /-
 @[simp]
-theorem castPred_one : castPred (1 : Fin (n + 2)) = 1 :=
-  by
-  cases n
-  apply Subsingleton.elim
-  rfl
+theorem castPred_one : castPred (1 : Fin (n + 2)) = 1 := by cases n; apply Subsingleton.elim; rfl
 #align fin.cast_pred_one Fin.castPred_one
 -/
 
@@ -3752,14 +3687,8 @@ theorem succAbove_predAbove {p : Fin n} {i : Fin (n + 1)} (h : i ≠ p.cast_succ
   rcases p with ⟨p, _⟩
   rcases i with ⟨i, _⟩
   cases' lt_or_le i p with H H
-  · rw [dif_neg]
-    rw [if_pos]
-    rfl
-    exact H
-    simp
-    apply le_of_lt H
-  · rw [dif_pos]
-    rw [if_neg]
+  · rw [dif_neg]; rw [if_pos]; rfl; exact H; simp; apply le_of_lt H
+  · rw [dif_pos]; rw [if_neg]
     pick_goal 3
     -- For some reason `simp` doesn't fire fully unless we discharge the third goal.
     · exact lt_of_le_of_ne H (Ne.symm h)
@@ -3796,10 +3725,8 @@ theorem predAbove_succAbove (p : Fin n) (i : Fin n) : p.predAbove (p.cast_succ.s
 <too large>
 Case conversion may be inaccurate. Consider using '#align fin.cast_succ_pred_eq_pred_cast_succ Fin.castSucc_pred_eq_pred_castSuccₓ'. -/
 theorem castSucc_pred_eq_pred_castSucc {a : Fin (n + 1)} (ha : a ≠ 0)
-    (ha' := a.castSucc_ne_zero_iff.mpr ha) : (a.pred ha).cast_succ = a.cast_succ.pred ha' :=
-  by
-  cases a
-  rfl
+    (ha' := a.castSucc_ne_zero_iff.mpr ha) : (a.pred ha).cast_succ = a.cast_succ.pred ha' := by
+  cases a; rfl
 #align fin.cast_succ_pred_eq_pred_cast_succ Fin.castSucc_pred_eq_pred_castSucc
 
 /- warning: fin.pred_succ_above_pred -> Fin.pred_succAbove_pred is a dubious translation:

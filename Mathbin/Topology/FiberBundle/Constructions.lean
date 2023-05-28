@@ -72,8 +72,7 @@ def trivialization : Trivialization F (π (Bundle.Trivial B F))
   continuous_toFun :=
     by
     rw [← continuous_iff_continuousOn_univ, continuous_iff_le_induced]
-    simp only [Prod.topologicalSpace, induced_inf, induced_compose]
-    exact le_rfl
+    simp only [Prod.topologicalSpace, induced_inf, induced_compose]; exact le_rfl
   continuous_invFun :=
     by
     rw [← continuous_iff_continuousOn_univ, continuous_iff_le_induced]
@@ -119,10 +118,7 @@ instance fiberBundle : FiberBundle F (Bundle.Trivial B F)
   trivialization_mem_atlas x := mem_singleton _
   totalSpaceMk_inducing b :=
     ⟨by
-      have : (fun x : trivial B F b => x) = @id F :=
-        by
-        ext x
-        rfl
+      have : (fun x : trivial B F b => x) = @id F := by ext x; rfl
       simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp,
         total_space.proj, induced_const, top_inf_eq, trivial.proj_snd, id.def,
         trivial.topological_space, this, induced_id]⟩
@@ -482,8 +478,7 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π E)) (f : K) 
   right_inv' x h := by
     simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h
     simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
-  open_source := by
-    simp_rw [e.source_eq, ← preimage_comp]
+  open_source := by simp_rw [e.source_eq, ← preimage_comp];
     exact
       ((map_continuous f).comp <| Pullback.continuous_proj E f).isOpen_preimage _ e.open_base_set
   open_target := ((map_continuous f).isOpen_preimage _ e.open_baseSet).Prod isOpen_univ
@@ -501,10 +496,7 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π E)) (f : K) 
       continuous_on_fst.prod
         (e.continuous_on_symm.comp ((map_continuous f).Prod_map continuous_id).ContinuousOn
           subset.rfl)
-  source_eq := by
-    dsimp only
-    rw [e.source_eq]
-    rfl
+  source_eq := by dsimp only; rw [e.source_eq]; rfl
   target_eq := rfl
   proj_toFun y h := rfl
 #align trivialization.pullback Trivialization.pullback

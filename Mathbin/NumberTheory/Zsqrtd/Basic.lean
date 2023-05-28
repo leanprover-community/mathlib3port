@@ -585,8 +585,7 @@ theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcd a.re a.im) :
   obtain ⟨re, im, H1, Hre, Him⟩ := Int.exists_gcd_one hgcd
   rw [mul_comm] at Hre Him
   refine' ⟨⟨re, im⟩, _, _⟩
-  · rw [smul_val, ext, ← Hre, ← Him]
-    constructor <;> rfl
+  · rw [smul_val, ext, ← Hre, ← Him]; constructor <;> rfl
   · rw [← Int.gcd_eq_one_iff_coprime, H1]
 #align zsqrtd.exists_coprime_of_gcd_pos Zsqrtd.exists_coprime_of_gcd_pos
 
@@ -754,10 +753,8 @@ theorem norm_nat_cast (n : ℕ) : norm n = n * n :=
 
 #print Zsqrtd.norm_mul /-
 @[simp]
-theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m :=
-  by
-  simp only [norm, mul_im, mul_re]
-  ring
+theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m := by
+  simp only [norm, mul_im, mul_re]; ring
 #align zsqrtd.norm_mul Zsqrtd.norm_mul
 -/
 
@@ -868,8 +865,7 @@ theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z
     · exact ha
     · rw [neg_eq_zero, mul_eq_zero] at hb
       exact hb.resolve_left hd.ne
-  · rintro rfl
-    exact norm_zero
+  · rintro rfl; exact norm_zero
 #align zsqrtd.norm_eq_zero_iff Zsqrtd.norm_eq_zero_iff
 -/
 
@@ -982,9 +978,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
   · refine' nonnegg_cases_left fun i h => sq_le_of_le _ _ (nonnegg_neg_pos.1 ha)
     · exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro h))
     · apply Nat.le_add_right
-  · dsimp
-    rw [add_comm, add_comm ↑y]
-    exact nonneg_add_lem hb ha
+  · dsimp; rw [add_comm, add_comm ↑y]; exact nonneg_add_lem hb ha
   ·
     simpa [add_comm] using
       nonnegg_neg_pos.2 (sq_le_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
@@ -1401,9 +1395,7 @@ def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R)
   toFun r :=
     { toFun := fun a => a.1 + a.2 * (r : R)
       map_zero' := by simp
-      map_add' := fun a b => by
-        simp
-        ring
+      map_add' := fun a b => by simp; ring
       map_one' := by simp
       map_mul' := fun a b =>
         by
@@ -1414,12 +1406,8 @@ def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R)
         simp [this, r.prop]
         ring }
   invFun f := ⟨f sqrtd, by rw [← f.map_mul, dmuld, map_intCast]⟩
-  left_inv r := by
-    ext
-    simp
-  right_inv f := by
-    ext
-    simp
+  left_inv r := by ext; simp
+  right_inv f := by ext; simp
 #align zsqrtd.lift Zsqrtd.lift
 
 /- warning: zsqrtd.lift_injective -> Zsqrtd.lift_injective is a dubious translation:

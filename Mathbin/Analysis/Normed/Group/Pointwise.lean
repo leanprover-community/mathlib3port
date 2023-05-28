@@ -56,10 +56,8 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedGroup.{u1} E] {s : Set.{u1} E}, (Metric.Bounded.{u1} E (SeminormedGroup.toPseudoMetricSpace.{u1} E _inst_1) s) -> (Metric.Bounded.{u1} E (SeminormedGroup.toPseudoMetricSpace.{u1} E _inst_1) (Inv.inv.{u1} (Set.{u1} E) (Set.inv.{u1} E (InvOneClass.toInv.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (Group.toDivisionMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E _inst_1)))))) s))
 Case conversion may be inaccurate. Consider using '#align metric.bounded.inv Metric.Bounded.invₓ'. -/
 @[to_additive]
-theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ :=
-  by
-  simp_rw [bounded_iff_forall_norm_le', ← image_inv, ball_image_iff, norm_inv']
-  exact id
+theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ := by
+  simp_rw [bounded_iff_forall_norm_le', ← image_inv, ball_image_iff, norm_inv']; exact id
 #align metric.bounded.inv Metric.Bounded.inv
 #align metric.bounded.neg Metric.Bounded.neg
 
@@ -107,20 +105,16 @@ variable (ε δ s t x y)
 
 #print inv_thickening /-
 @[simp, to_additive]
-theorem inv_thickening : (thickening δ s)⁻¹ = thickening δ s⁻¹ :=
-  by
-  simp_rw [thickening, ← infEdist_inv]
-  rfl
+theorem inv_thickening : (thickening δ s)⁻¹ = thickening δ s⁻¹ := by
+  simp_rw [thickening, ← infEdist_inv]; rfl
 #align inv_thickening inv_thickening
 #align neg_thickening neg_thickening
 -/
 
 #print inv_cthickening /-
 @[simp, to_additive]
-theorem inv_cthickening : (cthickening δ s)⁻¹ = cthickening δ s⁻¹ :=
-  by
-  simp_rw [cthickening, ← infEdist_inv]
-  rfl
+theorem inv_cthickening : (cthickening δ s)⁻¹ = cthickening δ s⁻¹ := by
+  simp_rw [cthickening, ← infEdist_inv]; rfl
 #align inv_cthickening inv_cthickening
 #align neg_cthickening neg_cthickening
 -/
@@ -132,10 +126,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (δ : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (Inv.inv.{u1} (Set.{u1} E) (Set.inv.{u1} E (InvOneClass.toInv.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1))))))) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) x δ)) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (Inv.inv.{u1} E (InvOneClass.toInv.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1)))))) x) δ)
 Case conversion may be inaccurate. Consider using '#align inv_ball inv_ballₓ'. -/
 @[simp, to_additive]
-theorem inv_ball : (ball x δ)⁻¹ = ball x⁻¹ δ :=
-  by
-  simp_rw [ball, ← dist_inv]
-  rfl
+theorem inv_ball : (ball x δ)⁻¹ = ball x⁻¹ δ := by simp_rw [ball, ← dist_inv]; rfl
 #align inv_ball inv_ball
 #align neg_ball neg_ball
 
@@ -146,10 +137,8 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (δ : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (Inv.inv.{u1} (Set.{u1} E) (Set.inv.{u1} E (InvOneClass.toInv.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1))))))) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) x δ)) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (Inv.inv.{u1} E (InvOneClass.toInv.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1)))))) x) δ)
 Case conversion may be inaccurate. Consider using '#align inv_closed_ball inv_closedBallₓ'. -/
 @[simp, to_additive]
-theorem inv_closedBall : (closedBall x δ)⁻¹ = closedBall x⁻¹ δ :=
-  by
-  simp_rw [closed_ball, ← dist_inv]
-  rfl
+theorem inv_closedBall : (closedBall x δ)⁻¹ = closedBall x⁻¹ δ := by
+  simp_rw [closed_ball, ← dist_inv]; rfl
 #align inv_closed_ball inv_closedBall
 #align neg_closed_ball neg_closedBall
 
@@ -252,9 +241,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (δ : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (HSMul.hSMul.{u1, u1, u1} E (Set.{u1} E) (Set.{u1} E) (instHSMul.{u1, u1} E (Set.{u1} E) (Set.smulSet.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))))) x (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (OfNat.ofNat.{u1} E 1 (One.toOfNat1.{u1} E (InvOneClass.toOne.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1)))))))) δ)) (Metric.ball.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) x δ)
 Case conversion may be inaccurate. Consider using '#align smul_ball_one smul_ball_oneₓ'. -/
 @[to_additive]
-theorem smul_ball_one : x • ball 1 δ = ball x δ :=
-  by
-  ext
+theorem smul_ball_one : x • ball 1 δ = ball x δ := by ext;
   simp [mem_smul_set_iff_inv_smul_mem, inv_mul_eq_div, dist_eq_norm_div]
 #align smul_ball_one smul_ball_one
 #align vadd_ball_zero vadd_ball_zero
@@ -363,9 +350,7 @@ Case conversion may be inaccurate. Consider using '#align vadd_closed_ball_zero 
 -- versions.)
 @[simp]
 theorem vadd_closedBall_zero {E : Type _} [SeminormedAddCommGroup E] (δ : ℝ) (x : E) :
-    x +ᵥ Metric.closedBall 0 δ = Metric.closedBall x δ :=
-  by
-  ext
+    x +ᵥ Metric.closedBall 0 δ = Metric.closedBall x δ := by ext;
   simp [mem_vadd_set_iff_neg_vadd_mem, neg_add_eq_sub, dist_eq_norm_sub]
 #align vadd_closed_ball_zero vadd_closedBall_zero
 
@@ -376,9 +361,7 @@ but is expected to have type
   forall {E : Type.{u1}} [_inst_1 : SeminormedCommGroup.{u1} E] (δ : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (HSMul.hSMul.{u1, u1, u1} E (Set.{u1} E) (Set.{u1} E) (instHSMul.{u1, u1} E (Set.{u1} E) (Set.smulSet.{u1, u1} E E (MulAction.toSMul.{u1, u1} E E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))) (Monoid.toMulAction.{u1} E (DivInvMonoid.toMonoid.{u1} E (Group.toDivInvMonoid.{u1} E (SeminormedGroup.toGroup.{u1} E (SeminormedCommGroup.toSeminormedGroup.{u1} E _inst_1)))))))) x (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) (OfNat.ofNat.{u1} E 1 (One.toOfNat1.{u1} E (InvOneClass.toOne.{u1} E (DivInvOneMonoid.toInvOneClass.{u1} E (DivisionMonoid.toDivInvOneMonoid.{u1} E (DivisionCommMonoid.toDivisionMonoid.{u1} E (CommGroup.toDivisionCommMonoid.{u1} E (SeminormedCommGroup.toCommGroup.{u1} E _inst_1)))))))) δ)) (Metric.closedBall.{u1} E (SeminormedCommGroup.toPseudoMetricSpace.{u1} E _inst_1) x δ)
 Case conversion may be inaccurate. Consider using '#align smul_closed_ball_one smul_closedBall_oneₓ'. -/
 @[simp]
-theorem smul_closedBall_one : x • closedBall 1 δ = closedBall x δ :=
-  by
-  ext
+theorem smul_closedBall_one : x • closedBall 1 δ = closedBall x δ := by ext;
   simp [mem_smul_set_iff_inv_smul_mem, inv_mul_eq_div, dist_eq_norm_div]
 #align smul_closed_ball_one smul_closedBall_one
 

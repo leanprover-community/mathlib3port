@@ -85,11 +85,8 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u2} X] [_inst_2 : PseudoEMetricSpace.{u1} Y] (C : NNReal) (r : NNReal) (f : X -> Y) (x : X), HolderOnWith.{u2, u1} X Y _inst_1 _inst_2 C r f (Singleton.singleton.{u2, u2} X (Set.{u2} X) (Set.instSingletonSet.{u2} X) x)
 Case conversion may be inaccurate. Consider using '#align holder_on_with_singleton holderOnWith_singletonₓ'. -/
 @[simp]
-theorem holderOnWith_singleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} :=
-  by
-  rintro a (rfl : a = x) b (rfl : b = a)
-  rw [edist_self]
-  exact zero_le _
+theorem holderOnWith_singleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} := by
+  rintro a (rfl : a = x) b (rfl : b = a); rw [edist_self]; exact zero_le _
 #align holder_on_with_singleton holderOnWith_singleton
 
 /- warning: set.subsingleton.holder_on_with -> Set.Subsingleton.holderOnWith is a dubious translation:

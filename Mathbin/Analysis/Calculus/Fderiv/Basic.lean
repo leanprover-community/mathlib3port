@@ -302,9 +302,7 @@ theorem HasFDerivWithinAt.lim (h : HasFDerivWithinAt f f' s x) {α : Type _} (l 
   have :
     (fun n => c n • (f (x + d n) - f x - f' (d n)) + f' (c n • d n)) = fun n =>
       c n • (f (x + d n) - f x) :=
-    by
-    ext n
-    simp [smul_add, smul_sub]
+    by ext n; simp [smul_add, smul_sub]
   rwa [this, zero_add] at L3
 #align has_fderiv_within_at.lim HasFDerivWithinAt.lim
 
@@ -350,10 +348,8 @@ theorem hasFDerivAtFilter_iff_tendsto :
     HasFDerivAtFilter f f' x L ↔
       Tendsto (fun x' => ‖x' - x‖⁻¹ * ‖f x' - f x - f' (x' - x)‖) L (𝓝 0) :=
   by
-  have h : ∀ x', ‖x' - x‖ = 0 → ‖f x' - f x - f' (x' - x)‖ = 0 := fun x' hx' =>
-    by
-    rw [sub_eq_zero.1 (norm_eq_zero.1 hx')]
-    simp
+  have h : ∀ x', ‖x' - x‖ = 0 → ‖f x' - f x - f' (x' - x)‖ = 0 := fun x' hx' => by
+    rw [sub_eq_zero.1 (norm_eq_zero.1 hx')]; simp
   unfold HasFDerivAtFilter
   rw [← is_o_norm_left, ← is_o_norm_right, is_o_iff_tendsto h]
   exact tendsto_congr fun _ => div_eq_inv_mul _ _
@@ -501,10 +497,8 @@ but is expected to have type
   forall {𝕜 : Type.{u3}} [_inst_1 : NontriviallyNormedField.{u3} 𝕜] {E : Type.{u2}} [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)] {F : Type.{u1}} [_inst_4 : NormedAddCommGroup.{u1} F] [_inst_5 : NormedSpace.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)] {f : E -> F} {f' : ContinuousLinearMap.{u3, u3, u2, u1} 𝕜 𝕜 (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))) (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))) (RingHom.id.{u3} 𝕜 (Semiring.toNonAssocSemiring.{u3} 𝕜 (DivisionSemiring.toSemiring.{u3} 𝕜 (Semifield.toDivisionSemiring.{u3} 𝕜 (Field.toSemifield.{u3} 𝕜 (NormedField.toField.{u3} 𝕜 (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1))))))) E (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)))) (AddCommGroup.toAddCommMonoid.{u2} E (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) F (UniformSpace.toTopologicalSpace.{u1} F (PseudoMetricSpace.toUniformSpace.{u1} F (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} F (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4)))) (AddCommGroup.toAddCommMonoid.{u1} F (NormedAddCommGroup.toAddCommGroup.{u1} F _inst_4)) (NormedSpace.toModule.{u3, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3) (NormedSpace.toModule.{u3, u1} 𝕜 F (NontriviallyNormedField.toNormedField.{u3} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} F _inst_4) _inst_5)} {x : E}, Iff (HasFDerivWithinAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f f' (Set.univ.{u2} E) x) (HasFDerivAt.{u3, u2, u1} 𝕜 _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f f' x)
 Case conversion may be inaccurate. Consider using '#align has_fderiv_within_at_univ hasFDerivWithinAt_univₓ'. -/
 @[simp]
-theorem hasFDerivWithinAt_univ : HasFDerivWithinAt f f' univ x ↔ HasFDerivAt f f' x :=
-  by
-  simp only [HasFDerivWithinAt, nhdsWithin_univ]
-  rfl
+theorem hasFDerivWithinAt_univ : HasFDerivWithinAt f f' univ x ↔ HasFDerivAt f f' x := by
+  simp only [HasFDerivWithinAt, nhdsWithin_univ]; rfl
 #align has_fderiv_within_at_univ hasFDerivWithinAt_univ
 
 /- warning: has_fderiv_within_at.has_fderiv_at_of_univ -> HasFDerivWithinAt.hasFDerivAt_of_univ is a dubious translation:
@@ -803,9 +797,7 @@ theorem DifferentiableOn.eventually_differentiableAt (h : DifferentiableOn 𝕜 
 /- warning: has_fderiv_at.fderiv -> HasFDerivAt.fderiv is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align has_fderiv_at.fderiv HasFDerivAt.fderivₓ'. -/
-theorem HasFDerivAt.fderiv (h : HasFDerivAt f f' x) : fderiv 𝕜 f x = f' :=
-  by
-  ext
+theorem HasFDerivAt.fderiv (h : HasFDerivAt f f' x) : fderiv 𝕜 f x = f' := by ext;
   rw [h.unique h.differentiable_at.has_fderiv_at]
 #align has_fderiv_at.fderiv HasFDerivAt.fderiv
 
@@ -1118,8 +1110,7 @@ theorem HasFDerivAtFilter.tendsto_nhds (hL : L ≤ 𝓝 x) (h : HasFDerivAtFilte
   have : tendsto (fun x' => f x' - f x) L (𝓝 0) :=
     by
     refine' h.is_O_sub.trans_tendsto (tendsto.mono_left _ hL)
-    rw [← sub_self x]
-    exact tendsto_id.sub tendsto_const_nhds
+    rw [← sub_self x]; exact tendsto_id.sub tendsto_const_nhds
   have := tendsto.add this tendsto_const_nhds
   rw [zero_add (f x)] at this
   exact this.congr (by simp only [sub_add_cancel, eq_self_iff_true, forall_const])
@@ -1833,10 +1824,7 @@ theorem fderiv_const_apply (c : F) : fderiv 𝕜 (fun y => c) x = 0 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align fderiv_const fderiv_constₓ'. -/
 @[simp]
-theorem fderiv_const (c : F) : (fderiv 𝕜 fun y : E => c) = 0 :=
-  by
-  ext m
-  rw [fderiv_const_apply]
+theorem fderiv_const (c : F) : (fderiv 𝕜 fun y : E => c) = 0 := by ext m; rw [fderiv_const_apply];
   rfl
 #align fderiv_const fderiv_const
 

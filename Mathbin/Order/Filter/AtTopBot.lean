@@ -2649,10 +2649,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α], Filter.Tendsto.{u1, u1} α (Prod.{u1, u1} α α) (fun (a : α) => Prod.mk.{u1, u1} α α a a) (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (Filter.atBot.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_bot_diagonal Filter.tendsto_atBot_diagonalₓ'. -/
-theorem tendsto_atBot_diagonal [SemilatticeInf α] : Tendsto (fun a : α => (a, a)) atBot atBot :=
-  by
-  rw [← prod_at_bot_at_bot_eq]
-  exact tendsto_id.prod_mk tendsto_id
+theorem tendsto_atBot_diagonal [SemilatticeInf α] : Tendsto (fun a : α => (a, a)) atBot atBot := by
+  rw [← prod_at_bot_at_bot_eq]; exact tendsto_id.prod_mk tendsto_id
 #align filter.tendsto_at_bot_diagonal Filter.tendsto_atBot_diagonal
 
 /- warning: filter.tendsto_at_top_diagonal -> Filter.tendsto_atTop_diagonal is a dubious translation:
@@ -2661,10 +2659,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α], Filter.Tendsto.{u1, u1} α (Prod.{u1, u1} α α) (fun (a : α) => Prod.mk.{u1, u1} α α a a) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) (Filter.atTop.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_top_diagonal Filter.tendsto_atTop_diagonalₓ'. -/
-theorem tendsto_atTop_diagonal [SemilatticeSup α] : Tendsto (fun a : α => (a, a)) atTop atTop :=
-  by
-  rw [← prod_at_top_at_top_eq]
-  exact tendsto_id.prod_mk tendsto_id
+theorem tendsto_atTop_diagonal [SemilatticeSup α] : Tendsto (fun a : α => (a, a)) atTop atTop := by
+  rw [← prod_at_top_at_top_eq]; exact tendsto_id.prod_mk tendsto_id
 #align filter.tendsto_at_top_diagonal Filter.tendsto_atTop_diagonal
 
 /- warning: filter.tendsto.prod_map_prod_at_bot -> Filter.Tendsto.prod_map_prod_atBot is a dubious translation:
@@ -2675,10 +2671,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.prod_map_prod_at_bot Filter.Tendsto.prod_map_prod_atBotₓ'. -/
 theorem Tendsto.prod_map_prod_atBot [SemilatticeInf γ] {F : Filter α} {G : Filter β} {f : α → γ}
     {g : β → γ} (hf : Tendsto f F atBot) (hg : Tendsto g G atBot) :
-    Tendsto (Prod.map f g) (F ×ᶠ G) atBot :=
-  by
-  rw [← prod_at_bot_at_bot_eq]
-  exact hf.prod_map hg
+    Tendsto (Prod.map f g) (F ×ᶠ G) atBot := by rw [← prod_at_bot_at_bot_eq]; exact hf.prod_map hg
 #align filter.tendsto.prod_map_prod_at_bot Filter.Tendsto.prod_map_prod_atBot
 
 /- warning: filter.tendsto.prod_map_prod_at_top -> Filter.Tendsto.prod_map_prod_atTop is a dubious translation:
@@ -2689,10 +2682,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.prod_map_prod_at_top Filter.Tendsto.prod_map_prod_atTopₓ'. -/
 theorem Tendsto.prod_map_prod_atTop [SemilatticeSup γ] {F : Filter α} {G : Filter β} {f : α → γ}
     {g : β → γ} (hf : Tendsto f F atTop) (hg : Tendsto g G atTop) :
-    Tendsto (Prod.map f g) (F ×ᶠ G) atTop :=
-  by
-  rw [← prod_at_top_at_top_eq]
-  exact hf.prod_map hg
+    Tendsto (Prod.map f g) (F ×ᶠ G) atTop := by rw [← prod_at_top_at_top_eq]; exact hf.prod_map hg
 #align filter.tendsto.prod_map_prod_at_top Filter.Tendsto.prod_map_prod_atTop
 
 /- warning: filter.tendsto.prod_at_bot -> Filter.Tendsto.prod_atBot is a dubious translation:
@@ -2703,9 +2693,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.prod_at_bot Filter.Tendsto.prod_atBotₓ'. -/
 theorem Tendsto.prod_atBot [SemilatticeInf α] [SemilatticeInf γ] {f g : α → γ}
     (hf : Tendsto f atBot atBot) (hg : Tendsto g atBot atBot) :
-    Tendsto (Prod.map f g) atBot atBot :=
-  by
-  rw [← prod_at_bot_at_bot_eq]
+    Tendsto (Prod.map f g) atBot atBot := by rw [← prod_at_bot_at_bot_eq];
   exact hf.prod_map_prod_at_bot hg
 #align filter.tendsto.prod_at_bot Filter.Tendsto.prod_atBot
 
@@ -2717,9 +2705,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.prod_at_top Filter.Tendsto.prod_atTopₓ'. -/
 theorem Tendsto.prod_atTop [SemilatticeSup α] [SemilatticeSup γ] {f g : α → γ}
     (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :
-    Tendsto (Prod.map f g) atTop atTop :=
-  by
-  rw [← prod_at_top_at_top_eq]
+    Tendsto (Prod.map f g) atTop atTop := by rw [← prod_at_top_at_top_eq];
   exact hf.prod_map_prod_at_top hg
 #align filter.tendsto.prod_at_top Filter.Tendsto.prod_atTop
 
@@ -3354,11 +3340,8 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} {x : α -> ι} {f : Filter.{u2} ι} {l : Filter.{u1} α}, Iff (Filter.Tendsto.{u1, u2} α ι x l f) (forall (s : Set.{u2} ι), (Membership.mem.{u2, u2} (Set.{u2} ι) (Filter.{u2} ι) (instMembershipSetFilter.{u2} ι) s f) -> (Filter.Eventually.{u1} α (fun (n : α) => Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) (x n) s) l))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_iff_forall_eventually_mem Filter.tendsto_iff_forall_eventually_memₓ'. -/
 theorem tendsto_iff_forall_eventually_mem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
-    Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s :=
-  by
-  rw [tendsto_def]
-  refine' forall_congr' fun s => imp_congr_right fun hsf => _
-  rfl
+    Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s := by rw [tendsto_def];
+  refine' forall_congr' fun s => imp_congr_right fun hsf => _; rfl
 #align filter.tendsto_iff_forall_eventually_mem Filter.tendsto_iff_forall_eventually_mem
 
 /- warning: filter.not_tendsto_iff_exists_frequently_nmem -> Filter.not_tendsto_iff_exists_frequently_nmem is a dubious translation:
@@ -3403,10 +3386,7 @@ theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → 
     [hl : l.IsCountablyGenerated] :
     (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in atTop, p (x n) :=
   by
-  have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n :=
-    by
-    rw [not_frequently]
-    simp_rw [Classical.not_not]
+  have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n := by rw [not_frequently]; simp_rw [Classical.not_not]
   rw [this, frequently_iff_seq_frequently]
   push_neg
   simp_rw [not_frequently, Classical.not_not]

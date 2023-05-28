@@ -280,9 +280,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 Case conversion may be inaccurate. Consider using '#align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_componentsₓ'. -/
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x :=
-  by
-  rw [← cocone_naturality F f]
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
 
@@ -409,18 +407,12 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
   Hom :=
     cokernel.desc f (mk' _)
       (by
-        ext
-        apply Quotient.sound
-        apply left_rel_apply.mpr
-        fconstructor
-        exact -x
+        ext; apply Quotient.sound; apply left_rel_apply.mpr; fconstructor; exact -x
         simp only [add_zero, AddMonoidHom.map_neg])
   inv :=
     QuotientAddGroup.lift _ (cokernel.π f)
       (by
-        intro x H_1
-        cases H_1
-        induction H_1_h
+        intro x H_1; cases H_1; induction H_1_h
         simp only [cokernel.condition_apply, zero_apply])
   -- obviously can take care of the next goals, but it is really slow
   hom_inv_id' := by ext1;

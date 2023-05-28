@@ -147,8 +147,7 @@ theorem map_zsmul_zpow {R' : Type v} [CommGroup R'] (ψ : AddChar R R') (n : ℤ
 instance commGroup : CommGroup (AddChar R R') :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
-    mul_left_inv := fun ψ => by
-      ext
+    mul_left_inv := fun ψ => by ext;
       rw [MonoidHom.mul_apply, MonoidHom.one_apply, inv_apply, ← map_add_mul, add_left_neg,
         map_zero_one] }
 #align add_char.comm_group AddChar.commGroup
@@ -300,9 +299,7 @@ theorem zMod_char_isNontrivial_iff (n : ℕ+) (ψ : AddChar (ZMod n) C) : IsNont
   refine' ⟨_, fun h => ⟨1, h⟩⟩
   contrapose!
   rintro h₁ ⟨a, ha⟩
-  have ha₁ : a = a.val • 1 := by
-    rw [nsmul_eq_mul, mul_one]
-    exact (ZMod.nat_cast_zmod_val a).symm
+  have ha₁ : a = a.val • 1 := by rw [nsmul_eq_mul, mul_one]; exact (ZMod.nat_cast_zmod_val a).symm
   rw [ha₁, map_nsmul_pow, h₁, one_pow] at ha
   exact ha rfl
 #align add_char.zmod_char_is_nontrivial_iff AddChar.zMod_char_isNontrivial_iff

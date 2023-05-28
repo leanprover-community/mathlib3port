@@ -278,9 +278,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         let yy : costructured_arrow ι (ι.obj y) := costructured_arrow.mk (𝟙 _)
         let fff : xx ⟶ yy :=
           costructured_arrow.hom_mk ff
-            (by
-              simp only [costructured_arrow.mk_hom_eq_self]
-              erw [category.comp_id])
+            (by simp only [costructured_arrow.mk_hom_eq_self]; erw [category.comp_id])
         erw [colimit.w (diagram ι F (ι.obj y)) fff]
         congr
         simp }

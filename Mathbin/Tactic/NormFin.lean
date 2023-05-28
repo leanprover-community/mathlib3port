@@ -72,10 +72,7 @@ theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a 
   h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
 #align tactic.norm_fin.normalize_fin_lt.of Tactic.NormFin.NormalizeFinLt.of
 
-theorem NormalizeFin.zero (n : ℕ) [NeZero n] : NormalizeFin n 0 0 :=
-  by
-  rw [normalize_fin]
-  norm_num
+theorem NormalizeFin.zero (n : ℕ) [NeZero n] : NormalizeFin n 0 0 := by rw [normalize_fin]; norm_num
 #align tactic.norm_fin.normalize_fin.zero Tactic.NormFin.NormalizeFin.zero
 
 theorem NormalizeFinLt.zero (n : ℕ) [NeZero n] : NormalizeFinLt n 0 0 :=

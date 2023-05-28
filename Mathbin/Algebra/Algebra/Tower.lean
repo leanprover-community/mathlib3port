@@ -384,15 +384,9 @@ open IsScalarTower
 theorem smul_mem_span_smul_of_mem {s : Set S} {t : Set A} {k : S} (hks : k ∈ span R s) {x : A}
     (hx : x ∈ t) : k • x ∈ span R (s • t) :=
   span_induction hks (fun c hc => subset_span <| Set.mem_smul.2 ⟨c, x, hc, hx, rfl⟩)
-    (by
-      rw [zero_smul]
-      exact zero_mem _)
-    (fun c₁ c₂ ih₁ ih₂ => by
-      rw [add_smul]
-      exact add_mem ih₁ ih₂)
-    fun b c hc => by
-    rw [IsScalarTower.smul_assoc]
-    exact smul_mem _ _ hc
+    (by rw [zero_smul]; exact zero_mem _)
+    (fun c₁ c₂ ih₁ ih₂ => by rw [add_smul]; exact add_mem ih₁ ih₂) fun b c hc => by
+    rw [IsScalarTower.smul_assoc]; exact smul_mem _ _ hc
 #align submodule.smul_mem_span_smul_of_mem Submodule.smul_mem_span_smul_of_mem
 -/
 
@@ -404,13 +398,9 @@ Case conversion may be inaccurate. Consider using '#align submodule.smul_mem_spa
 theorem smul_mem_span_smul {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S} {x : A}
     (hx : x ∈ span R t) : k • x ∈ span R (s • t) :=
   span_induction hx (fun x hx => smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hx)
-    (by
-      rw [smul_zero]
-      exact zero_mem _)
-    (fun x y ihx ihy => by
-      rw [smul_add]
-      exact add_mem ihx ihy)
-    fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
+    (by rw [smul_zero]; exact zero_mem _)
+    (fun x y ihx ihy => by rw [smul_add]; exact add_mem ihx ihy) fun c x hx =>
+    smul_comm c k x ▸ smul_mem _ _ hx
 #align submodule.smul_mem_span_smul Submodule.smul_mem_span_smul
 
 /- warning: submodule.smul_mem_span_smul' -> Submodule.smul_mem_span_smul' is a dubious translation:
@@ -421,15 +411,10 @@ theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S
   span_induction hx
     (fun x hx => by
       let ⟨p, q, hp, hq, hpq⟩ := Set.mem_smul.1 hx
-      rw [← hpq, smul_smul]
-      exact smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hq)
-    (by
-      rw [smul_zero]
-      exact zero_mem _)
-    (fun x y ihx ihy => by
-      rw [smul_add]
-      exact add_mem ihx ihy)
-    fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
+      rw [← hpq, smul_smul]; exact smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hq)
+    (by rw [smul_zero]; exact zero_mem _)
+    (fun x y ihx ihy => by rw [smul_add]; exact add_mem ihx ihy) fun c x hx =>
+    smul_comm c k x ▸ smul_mem _ _ hx
 #align submodule.smul_mem_span_smul' Submodule.smul_mem_span_smul'
 
 /- warning: submodule.span_smul_of_span_eq_top -> Submodule.span_smul_of_span_eq_top is a dubious translation:
@@ -481,10 +466,8 @@ theorem span_algebraMap_image_of_tower {S T : Type _} [CommSemiring S] [Semiring
 Case conversion may be inaccurate. Consider using '#align submodule.map_mem_span_algebra_map_image Submodule.map_mem_span_algebraMap_imageₓ'. -/
 theorem map_mem_span_algebraMap_image {S T : Type _} [CommSemiring S] [Semiring T] [Algebra R S]
     [Algebra R T] [Algebra S T] [IsScalarTower R S T] (x : S) (a : Set S)
-    (hx : x ∈ Submodule.span R a) : algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) :=
-  by
-  rw [span_algebra_map_image_of_tower, mem_map]
-  exact ⟨x, hx, rfl⟩
+    (hx : x ∈ Submodule.span R a) : algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) := by
+  rw [span_algebra_map_image_of_tower, mem_map]; exact ⟨x, hx, rfl⟩
 #align submodule.map_mem_span_algebra_map_image Submodule.map_mem_span_algebraMap_image
 
 end Algebra

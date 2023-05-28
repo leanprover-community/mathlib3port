@@ -86,10 +86,7 @@ lean 3 declaration is
 but is expected to have type
   forall {K : NNReal}, Ne.{1} ENNReal (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSub) (OfNat.ofNat.{0} ENNReal 1 (One.toOfNat1.{0} ENNReal (CanonicallyOrderedCommSemiring.toOne.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))) (ENNReal.some K)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))
 Case conversion may be inaccurate. Consider using '#align contracting_with.one_sub_K_ne_top ContractingWith.one_sub_K_ne_topₓ'. -/
-theorem one_sub_K_ne_top : (1 : ℝ≥0∞) - K ≠ ∞ :=
-  by
-  norm_cast
-  exact ENNReal.coe_ne_top
+theorem one_sub_K_ne_top : (1 : ℝ≥0∞) - K ≠ ∞ := by norm_cast; exact ENNReal.coe_ne_top
 #align contracting_with.one_sub_K_ne_top ContractingWith.one_sub_K_ne_top
 
 /- warning: contracting_with.edist_inequality -> ContractingWith.edist_inequality is a dubious translation:
@@ -230,10 +227,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : EMetricSpace.{u1} α] [cs : CompleteSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1))] {K : NNReal} {f : α -> α} (hf : ContractingWith.{u1} α _inst_1 K f) {x : α} (hx : Ne.{1} ENNReal (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) x (f x)) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))), LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) x (ContractingWith.efixedPoint.{u1} α _inst_1 cs K f hf x hx)) (HDiv.hDiv.{0, 0, 0} ENNReal ENNReal ENNReal (instHDiv.{0} ENNReal (DivInvMonoid.toDiv.{0} ENNReal ENNReal.instDivInvMonoidENNReal)) (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α _inst_1)) x (f x)) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSub) (OfNat.ofNat.{0} ENNReal 1 (One.toOfNat1.{0} ENNReal (CanonicallyOrderedCommSemiring.toOne.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal))) (ENNReal.some K)))
 Case conversion may be inaccurate. Consider using '#align contracting_with.edist_efixed_point_le ContractingWith.edist_efixedPoint_leₓ'. -/
 theorem edist_efixedPoint_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
-    edist x (efixedPoint f hf x hx) ≤ edist x (f x) / (1 - K) :=
-  by
-  convert hf.apriori_edist_iterate_efixed_point_le hx 0
-  simp only [pow_zero, mul_one]
+    edist x (efixedPoint f hf x hx) ≤ edist x (f x) / (1 - K) := by
+  convert hf.apriori_edist_iterate_efixed_point_le hx 0; simp only [pow_zero, mul_one]
 #align contracting_with.edist_efixed_point_le ContractingWith.edist_efixedPoint_le
 
 /- warning: contracting_with.edist_efixed_point_lt_top -> ContractingWith.edist_efixedPoint_lt_top is a dubious translation:
@@ -262,9 +257,7 @@ theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx :
       (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
     try apply efixed_point_is_fixed_pt
   change edist_lt_top_setoid.rel _ _
-  trans x;
-  · symm
-    exact hf.edist_efixed_point_lt_top hx
+  trans x; · symm; exact hf.edist_efixed_point_lt_top hx
   trans y
   exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 #align contracting_with.efixed_point_eq_of_edist_lt_top ContractingWith.efixedPoint_eq_of_edist_lt_top
@@ -285,8 +278,7 @@ theorem exists_fixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s
   haveI := hsc.complete_space_coe
   rcases hf.exists_fixed_point ⟨x, hxs⟩ hx with ⟨y, hfy, h_tendsto, hle⟩
   refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
-  · convert(continuous_subtype_coe.tendsto _).comp h_tendsto
-    ext n
+  · convert(continuous_subtype_coe.tendsto _).comp h_tendsto; ext n
     simp only [(· ∘ ·), maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
   · convert hle n
     rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
@@ -408,9 +400,7 @@ theorem efixedPoint_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α} 
       (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
     try apply efixed_point_is_fixed_pt'
   change edist_lt_top_setoid.rel _ _
-  trans x;
-  · symm
-    apply edist_efixed_point_lt_top'
+  trans x; · symm; apply edist_efixed_point_lt_top'
   trans y
   exact lt_top_iff_ne_top.2 hxy
   apply edist_efixed_point_lt_top'
@@ -539,10 +529,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align contracting_with.aposteriori_dist_iterate_fixed_point_le ContractingWith.aposteriori_dist_iterate_fixedPoint_leₓ'. -/
 /-- Aposteriori estimates on the convergence of iterates to the fixed point. -/
 theorem aposteriori_dist_iterate_fixedPoint_le (x n) :
-    dist ((f^[n]) x) (fixedPoint f hf) ≤ dist ((f^[n]) x) ((f^[n + 1]) x) / (1 - K) :=
-  by
-  rw [iterate_succ']
-  apply hf.dist_fixed_point_le
+    dist ((f^[n]) x) (fixedPoint f hf) ≤ dist ((f^[n]) x) ((f^[n + 1]) x) / (1 - K) := by
+  rw [iterate_succ']; apply hf.dist_fixed_point_le
 #align contracting_with.aposteriori_dist_iterate_fixed_point_le ContractingWith.aposteriori_dist_iterate_fixedPoint_le
 
 /- warning: contracting_with.apriori_dist_iterate_fixed_point_le -> ContractingWith.apriori_dist_iterate_fixedPoint_le is a dubious translation:

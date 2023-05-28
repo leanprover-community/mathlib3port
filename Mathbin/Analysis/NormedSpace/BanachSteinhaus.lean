@@ -148,9 +148,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       AddMonoidHomClass.continuous_of_bound (linearMapOfTendsto _ _ h) C' fun x =>
         le_of_forall_pos_lt_add fun ε ε_pos => _
     cases' metric.tendsto_at_top.mp (tendsto_pi_nhds.mp h x) ε ε_pos with n hn
-    have lt_ε : ‖g n x - f x‖ < ε := by
-      rw [← dist_eq_norm]
-      exact hn n (le_refl n)
+    have lt_ε : ‖g n x - f x‖ < ε := by rw [← dist_eq_norm]; exact hn n (le_refl n)
     calc
       ‖f x‖ ≤ ‖g n x‖ + ‖g n x - f x‖ := norm_le_insert _ _
       _ < ‖g n‖ * ‖x‖ + ε := by linarith [lt_ε, (g n).le_op_norm x]

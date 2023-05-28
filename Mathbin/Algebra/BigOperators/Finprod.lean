@@ -147,10 +147,8 @@ Case conversion may be inaccurate. Consider using '#align finprod_eq_prod_plift_
 @[to_additive]
 theorem finprod_eq_prod_pLift_of_mulSupport_subset {f : α → M} {s : Finset (PLift α)}
     (hs : mulSupport (f ∘ PLift.down) ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i.down :=
-  finprod_eq_prod_pLift_of_mulSupport_toFinset_subset (s.finite_toSet.Subset hs) fun x hx =>
-    by
-    rw [finite.mem_to_finset] at hx
-    exact hs hx
+  finprod_eq_prod_pLift_of_mulSupport_toFinset_subset (s.finite_toSet.Subset hs) fun x hx => by
+    rw [finite.mem_to_finset] at hx; exact hs hx
 #align finprod_eq_prod_plift_of_mul_support_subset finprod_eq_prod_pLift_of_mulSupport_subset
 #align finsum_eq_sum_plift_of_support_subset finsum_eq_sum_pLift_of_support_subset
 
@@ -176,10 +174,7 @@ but is expected to have type
   forall {M : Type.{u1}} {α : Sort.{u2}} [_inst_1 : CommMonoid.{u1} M] [_inst_3 : IsEmpty.{u2} α] (f : α -> M), Eq.{succ u1} M (finprod.{u1, u2} M α _inst_1 (fun (i : α) => f i)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align finprod_of_is_empty finprod_of_isEmptyₓ'. -/
 @[to_additive]
-theorem finprod_of_isEmpty [IsEmpty α] (f : α → M) : (∏ᶠ i, f i) = 1 :=
-  by
-  rw [← finprod_one]
-  congr
+theorem finprod_of_isEmpty [IsEmpty α] (f : α → M) : (∏ᶠ i, f i) = 1 := by rw [← finprod_one]; congr
 #align finprod_of_is_empty finprod_of_isEmpty
 #align finsum_of_is_empty finsum_of_isEmpty
 
@@ -208,8 +203,7 @@ theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f
   by
   have : mul_support (f ∘ PLift.down) ⊆ ({PLift.up a} : Finset (PLift α)) :=
     by
-    intro x
-    contrapose
+    intro x; contrapose
     simpa [PLift.eq_up_iff_down_eq] using ha x.down
   rw [finprod_eq_prod_pLift_of_mulSupport_subset this, Finset.prod_singleton]
 #align finprod_eq_single finprod_eq_single
@@ -242,10 +236,8 @@ theorem finprod_eq_dif {p : Prop} [Decidable p] (f : p → M) :
     (∏ᶠ i, f i) = if h : p then f h else 1 :=
   by
   split_ifs
-  · haveI : Unique p := ⟨⟨h⟩, fun _ => rfl⟩
-    exact finprod_unique f
-  · haveI : IsEmpty p := ⟨h⟩
-    exact finprod_of_isEmpty f
+  · haveI : Unique p := ⟨⟨h⟩, fun _ => rfl⟩; exact finprod_unique f
+  · haveI : IsEmpty p := ⟨h⟩; exact finprod_of_isEmpty f
 #align finprod_eq_dif finprod_eq_dif
 #align finsum_eq_dif finsum_eq_dif
 
@@ -276,9 +268,7 @@ theorem finprod_congr {f g : α → M} (h : ∀ x, f x = g x) : finprod f = finp
 #print finprod_congr_Prop /-
 @[congr, to_additive]
 theorem finprod_congr_Prop {p q : Prop} {f : p → M} {g : q → M} (hpq : p = q)
-    (hfg : ∀ h : q, f (hpq.mpr h) = g h) : finprod f = finprod g :=
-  by
-  subst q
+    (hfg : ∀ h : q, f (hpq.mpr h) = g h) : finprod f = finprod g := by subst q;
   exact finprod_congr hfg
 #align finprod_congr_Prop finprod_congr_Prop
 #align finsum_congr_Prop finsum_congr_Prop
@@ -496,10 +486,8 @@ theorem finprod_eq_prod_of_mulSupport_subset (f : α → M) {s : Finset α} (h :
     by
     rw [mul_support_comp_eq_preimage]
     exact (equiv.plift.symm.image_eq_preimage _).symm
-  have : mul_support (f ∘ PLift.down) ⊆ s.map equiv.plift.symm.to_embedding :=
-    by
-    rw [A, Finset.coe_map]
-    exact image_subset _ h
+  have : mul_support (f ∘ PLift.down) ⊆ s.map equiv.plift.symm.to_embedding := by
+    rw [A, Finset.coe_map]; exact image_subset _ h
   rw [finprod_eq_prod_pLift_of_mulSupport_subset this]
   simp
 #align finprod_eq_prod_of_mul_support_subset finprod_eq_prod_of_mulSupport_subset
@@ -598,10 +586,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
     (h : ∀ {x}, f x ≠ 1 → (p x ↔ x ∈ t)) : (∏ᶠ (i) (hi : p i), f i) = ∏ i in t, f i :=
   by
   set s := { x | p x }
-  have : mul_support (s.mul_indicator f) ⊆ t :=
-    by
-    rw [Set.mulSupport_mulIndicator]
-    intro x hx
+  have : mul_support (s.mul_indicator f) ⊆ t := by rw [Set.mulSupport_mulIndicator]; intro x hx;
     exact (h hx.2).1 hx.1
   erw [finprod_mem_def, finprod_eq_prod_of_mulSupport_subset _ this]
   refine' Finset.prod_congr rfl fun x hx => mul_indicator_apply_eq_self.2 fun hxs => _
@@ -918,10 +903,8 @@ Case conversion may be inaccurate. Consider using '#align finprod_mem_of_eq_on_o
 /-- If a function `f` equals `1` on a set `s`, then the product of `f i` over `i ∈ s` equals `1`. -/
 @[to_additive
       "If a function `f` equals `0` on a set `s`, then the product of `f i` over `i ∈ s`\nequals `0`."]
-theorem finprod_mem_of_eqOn_one (hf : s.EqOn f 1) : (∏ᶠ i ∈ s, f i) = 1 :=
-  by
-  rw [← finprod_mem_one s]
-  exact finprod_mem_congr rfl hf
+theorem finprod_mem_of_eqOn_one (hf : s.EqOn f 1) : (∏ᶠ i ∈ s, f i) = 1 := by
+  rw [← finprod_mem_one s]; exact finprod_mem_congr rfl hf
 #align finprod_mem_of_eq_on_one finprod_mem_of_eqOn_one
 #align finsum_mem_of_eq_on_zero finsum_mem_of_eqOn_zero
 
@@ -1299,10 +1282,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finprod_mem_pair finprod_mem_pairₓ'. -/
 /-- The product of `f i` over `i ∈ {a, b}`, `a ≠ b`, is equal to `f a * f b`. -/
 @[to_additive "The sum of `f i` over `i ∈ {a, b}`, `a ≠ b`, is equal to `f a + f b`."]
-theorem finprod_mem_pair (h : a ≠ b) : (∏ᶠ i ∈ ({a, b} : Set α), f i) = f a * f b :=
-  by
-  rw [finprod_mem_insert, finprod_mem_singleton]
-  exacts[h, finite_singleton b]
+theorem finprod_mem_pair (h : a ≠ b) : (∏ᶠ i ∈ ({a, b} : Set α), f i) = f a * f b := by
+  rw [finprod_mem_insert, finprod_mem_singleton]; exacts[h, finite_singleton b]
 #align finprod_mem_pair finprod_mem_pair
 #align finsum_mem_pair finsum_mem_pair
 
@@ -1578,10 +1559,8 @@ over `a ∈ ⋃₀ t` is the product over `s ∈ t` of the products of `f a` ove
 @[to_additive
       "If `t` is a finite set of pairwise disjoint finite sets, then the sum of `f a` over\n`a ∈ ⋃₀ t` is the sum over `s ∈ t` of the sums of `f a` over `a ∈ s`."]
 theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀ : t.Finite)
-    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀ t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a :=
-  by
-  rw [Set.sUnion_eq_biUnion]
-  exact finprod_mem_biUnion h ht₀ ht₁
+    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀ t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a := by
+  rw [Set.sUnion_eq_biUnion]; exact finprod_mem_biUnion h ht₀ ht₁
 #align finprod_mem_sUnion finprod_mem_sUnion
 #align finsum_mem_sUnion finsum_mem_sUnion
 
@@ -1869,13 +1848,8 @@ Case conversion may be inaccurate. Consider using '#align finprod_curry₃ finpr
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 @[to_additive]
 theorem finprod_curry₃ {γ : Type _} (f : α × β × γ → M) (h : (mulSupport f).Finite) :
-    (∏ᶠ abc, f abc) = ∏ᶠ (a) (b) (c), f (a, b, c) :=
-  by
-  rw [finprod_curry f h]
-  congr
-  ext a
-  rw [finprod_curry]
-  simp [h]
+    (∏ᶠ abc, f abc) = ∏ᶠ (a) (b) (c), f (a, b, c) := by rw [finprod_curry f h]; congr ; ext a;
+  rw [finprod_curry]; simp [h]
 #align finprod_curry₃ finprod_curry₃
 #align finsum_curry₃ finsum_curry₃
 

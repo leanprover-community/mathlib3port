@@ -480,10 +480,7 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular_of_mul
 /-- An element admitting a left inverse is left-regular. -/
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]
 theorem isLeftRegular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
-  @IsLeftRegular.of_mul R _ _ _
-    (by
-      rw [h]
-      exact is_regular_one.left)
+  @IsLeftRegular.of_mul R _ _ _ (by rw [h]; exact is_regular_one.left)
 #align is_left_regular_of_mul_eq_one isLeftRegular_of_mul_eq_one
 #align is_add_left_regular_of_add_eq_zero isAddLeftRegular_of_add_eq_zero
 
@@ -496,10 +493,7 @@ Case conversion may be inaccurate. Consider using '#align is_right_regular_of_mu
 /-- An element admitting a right inverse is right-regular. -/
 @[to_additive "An element admitting a right additive opposite is add-right-regular."]
 theorem isRightRegular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
-  IsRightRegular.of_mul
-    (by
-      rw [h]
-      exact is_regular_one.right)
+  IsRightRegular.of_mul (by rw [h]; exact is_regular_one.right)
 #align is_right_regular_of_mul_eq_one isRightRegular_of_mul_eq_one
 #align is_add_right_regular_of_add_eq_zero isAddRightRegular_of_add_eq_zero
 

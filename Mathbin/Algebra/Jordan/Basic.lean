@@ -213,8 +213,7 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
           L (a * a) + L (b * b) + L (c * c) + 2 • L (a * b) + 2 • L (c * a) + 2 • L (b * c)⁆ :=
       by
       rw [two_smul, two_smul, two_smul]
-      simp only [lie_add, add_lie, commute_lmul_lmul_sq, zero_add, add_zero]
-      abel
+      simp only [lie_add, add_lie, commute_lmul_lmul_sq, zero_add, add_zero]; abel
     _ =
         ⁅L a, L (a * a)⁆ + ⁅L a, L (b * b)⁆ + ⁅L a, L (c * c)⁆ + ⁅L a, 2 • L (a * b)⁆ +
                 ⁅L a, 2 • L (c * a)⁆ +

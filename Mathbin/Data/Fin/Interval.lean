@@ -220,10 +220,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ici.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a) (Finset.fin n (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) n))
 Case conversion may be inaccurate. Consider using '#align fin.Ici_eq_finset_subtype Fin.Ici_eq_finset_subtypeₓ'. -/
-theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).Fin n :=
-  by
-  ext
-  simp
+theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).Fin n := by ext; simp
 #align fin.Ici_eq_finset_subtype Fin.Ici_eq_finset_subtype
 
 /- warning: fin.Ioi_eq_finset_subtype -> Fin.Ioi_eq_finset_subtype is a dubious translation:
@@ -232,10 +229,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a) (Finset.fin n (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) n))
 Case conversion may be inaccurate. Consider using '#align fin.Ioi_eq_finset_subtype Fin.Ioi_eq_finset_subtypeₓ'. -/
-theorem Ioi_eq_finset_subtype : Ioi a = (Ioc (a : ℕ) n).Fin n :=
-  by
-  ext
-  simp
+theorem Ioi_eq_finset_subtype : Ioi a = (Ioc (a : ℕ) n).Fin n := by ext; simp
 #align fin.Ioi_eq_finset_subtype Fin.Ioi_eq_finset_subtype
 
 /- warning: fin.Iic_eq_finset_subtype -> Fin.Iic_eq_finset_subtype is a dubious translation:
@@ -325,11 +319,8 @@ but is expected to have type
   forall {n : Nat} (a : Fin n), (Fin n) -> (Eq.{1} Nat (Finset.card.{0} (Fin n) (Finset.Ici.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n (Fin.val n a)))
 Case conversion may be inaccurate. Consider using '#align fin.card_Ici Fin.card_Iciₓ'. -/
 @[simp]
-theorem card_Ici : (Ici a).card = n - a := by
-  cases n
-  · exact Fin.elim0 a
-  rw [← card_map, map_subtype_embedding_Ici, Nat.card_Icc]
-  rfl
+theorem card_Ici : (Ici a).card = n - a := by cases n; · exact Fin.elim0 a;
+  rw [← card_map, map_subtype_embedding_Ici, Nat.card_Icc]; rfl
 #align fin.card_Ici Fin.card_Ici
 
 /- warning: fin.card_Ioi -> Fin.card_Ioi is a dubious translation:

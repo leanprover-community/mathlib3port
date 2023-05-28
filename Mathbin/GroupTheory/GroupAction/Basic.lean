@@ -307,11 +307,7 @@ theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
 /-- The action of a group on an orbit is transitive. -/
 @[to_additive "The action of an additive group on an orbit is transitive."]
 instance (x : β) : IsPretransitive α (orbit α x) :=
-  ⟨by
-    rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
-    use b * a⁻¹
-    ext1
-    simp [mul_smul]⟩
+  ⟨by rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩; use b * a⁻¹; ext1; simp [mul_smul]⟩
 
 #print MulAction.orbit_eq_iff /-
 @[to_additive]
@@ -455,11 +451,8 @@ theorem orbitRel.Quotient.orbit_mk (b : β) :
 #print MulAction.orbitRel.Quotient.mem_orbit /-
 @[to_additive]
 theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} :
-    b ∈ x.orbit ↔ Quotient.mk'' b = x :=
-  by
-  induction x using Quotient.inductionOn'
-  rw [Quotient.eq'']
-  rfl
+    b ∈ x.orbit ↔ Quotient.mk'' b = x := by induction x using Quotient.inductionOn';
+  rw [Quotient.eq'']; rfl
 #align mul_action.orbit_rel.quotient.mem_orbit MulAction.orbitRel.Quotient.mem_orbit
 #align add_action.orbit_rel.quotient.mem_orbit AddAction.orbitRel.Quotient.mem_orbit
 -/

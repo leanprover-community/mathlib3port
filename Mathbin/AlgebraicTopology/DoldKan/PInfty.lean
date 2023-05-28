@@ -104,10 +104,7 @@ theorem PInfty_f (n : ℕ) : (PInfty.f n : X _[n] ⟶ X _[n]) = (P n).f n :=
 
 #print AlgebraicTopology.DoldKan.QInfty_f_0 /-
 @[simp]
-theorem QInfty_f_0 : (QInfty.f 0 : X _[0] ⟶ X _[0]) = 0 :=
-  by
-  dsimp [Q_infty]
-  simp only [sub_self]
+theorem QInfty_f_0 : (QInfty.f 0 : X _[0] ⟶ X _[0]) = 0 := by dsimp [Q_infty]; simp only [sub_self]
 #align algebraic_topology.dold_kan.Q_infty_f_0 AlgebraicTopology.DoldKan.QInfty_f_0
 -/
 
@@ -144,10 +141,7 @@ theorem PInfty_f_idem (n : ℕ) : (PInfty.f n : X _[n] ⟶ _) ≫ PInfty.f n = P
 
 #print AlgebraicTopology.DoldKan.PInfty_idem /-
 @[simp, reassoc]
-theorem PInfty_idem : (PInfty : K[X] ⟶ _) ≫ PInfty = PInfty :=
-  by
-  ext n
-  exact P_infty_f_idem n
+theorem PInfty_idem : (PInfty : K[X] ⟶ _) ≫ PInfty = PInfty := by ext n; exact P_infty_f_idem n
 #align algebraic_topology.dold_kan.P_infty_idem AlgebraicTopology.DoldKan.PInfty_idem
 -/
 
@@ -160,10 +154,7 @@ theorem QInfty_f_idem (n : ℕ) : (QInfty.f n : X _[n] ⟶ _) ≫ QInfty.f n = Q
 
 #print AlgebraicTopology.DoldKan.QInfty_idem /-
 @[simp, reassoc]
-theorem QInfty_idem : (QInfty : K[X] ⟶ _) ≫ QInfty = QInfty :=
-  by
-  ext n
-  exact Q_infty_f_idem n
+theorem QInfty_idem : (QInfty : K[X] ⟶ _) ≫ QInfty = QInfty := by ext n; exact Q_infty_f_idem n
 #align algebraic_topology.dold_kan.Q_infty_idem AlgebraicTopology.DoldKan.QInfty_idem
 -/
 
@@ -179,9 +170,7 @@ theorem PInfty_f_comp_QInfty_f (n : ℕ) : (PInfty.f n : X _[n] ⟶ _) ≫ QInft
 
 #print AlgebraicTopology.DoldKan.PInfty_comp_QInfty /-
 @[simp, reassoc]
-theorem PInfty_comp_QInfty : (PInfty : K[X] ⟶ _) ≫ QInfty = 0 :=
-  by
-  ext n
+theorem PInfty_comp_QInfty : (PInfty : K[X] ⟶ _) ≫ QInfty = 0 := by ext n;
   apply P_infty_f_comp_Q_infty_f
 #align algebraic_topology.dold_kan.P_infty_comp_Q_infty AlgebraicTopology.DoldKan.PInfty_comp_QInfty
 -/
@@ -198,9 +187,7 @@ theorem QInfty_f_comp_PInfty_f (n : ℕ) : (QInfty.f n : X _[n] ⟶ _) ≫ PInft
 
 #print AlgebraicTopology.DoldKan.QInfty_comp_PInfty /-
 @[simp, reassoc]
-theorem QInfty_comp_PInfty : (QInfty : K[X] ⟶ _) ≫ PInfty = 0 :=
-  by
-  ext n
+theorem QInfty_comp_PInfty : (QInfty : K[X] ⟶ _) ≫ PInfty = 0 := by ext n;
   apply Q_infty_f_comp_P_infty_f
 #align algebraic_topology.dold_kan.Q_infty_comp_P_infty AlgebraicTopology.DoldKan.QInfty_comp_PInfty
 -/
@@ -209,9 +196,7 @@ theorem QInfty_comp_PInfty : (QInfty : K[X] ⟶ _) ≫ PInfty = 0 :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.P_infty_add_Q_infty AlgebraicTopology.DoldKan.PInfty_add_QInftyₓ'. -/
 @[simp]
-theorem PInfty_add_QInfty : (PInfty : K[X] ⟶ _) + QInfty = 𝟙 _ :=
-  by
-  dsimp only [Q_infty]
+theorem PInfty_add_QInfty : (PInfty : K[X] ⟶ _) + QInfty = 𝟙 _ := by dsimp only [Q_infty];
   simp only [add_sub_cancel'_right]
 #align algebraic_topology.dold_kan.P_infty_add_Q_infty AlgebraicTopology.DoldKan.PInfty_add_QInfty
 
@@ -231,9 +216,7 @@ the functor `alternating_face_map_complex C`. -/
 def natTransPInfty : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C
     where
   app _ := PInfty
-  naturality' X Y f := by
-    ext n
-    exact P_infty_f_naturality n f
+  naturality' X Y f := by ext n; exact P_infty_f_naturality n f
 #align algebraic_topology.dold_kan.nat_trans_P_infty AlgebraicTopology.DoldKan.natTransPInfty
 -/
 

@@ -142,9 +142,7 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
   -- We prove it by using the closed graph theorem
   refine' T.continuous_of_seq_closed_graph fun u x y hu hTu => _
   rw [← sub_eq_zero, ← @inner_self_eq_zero 𝕜]
-  have hlhs : ∀ k : ℕ, ⟪T (u k) - T x, y - T x⟫ = ⟪u k - x, T (y - T x)⟫ :=
-    by
-    intro k
+  have hlhs : ∀ k : ℕ, ⟪T (u k) - T x, y - T x⟫ = ⟪u k - x, T (y - T x)⟫ := by intro k;
     rw [← T.map_sub, hT]
   refine' tendsto_nhds_unique ((hTu.sub_const _).inner tendsto_const_nhds) _
   simp_rw [hlhs]

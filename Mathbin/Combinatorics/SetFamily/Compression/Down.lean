@@ -142,39 +142,29 @@ theorem memberSubfamily_union_nonMemberSubfamily (a : α) (𝒜 : Finset (Finset
 
 #print Finset.memberSubfamily_memberSubfamily /-
 @[simp]
-theorem memberSubfamily_memberSubfamily : (𝒜.memberSubfamily a).memberSubfamily a = ∅ :=
-  by
-  ext
+theorem memberSubfamily_memberSubfamily : (𝒜.memberSubfamily a).memberSubfamily a = ∅ := by ext;
   simp
 #align finset.member_subfamily_member_subfamily Finset.memberSubfamily_memberSubfamily
 -/
 
 #print Finset.memberSubfamily_nonMemberSubfamily /-
 @[simp]
-theorem memberSubfamily_nonMemberSubfamily : (𝒜.nonMemberSubfamily a).memberSubfamily a = ∅ :=
-  by
-  ext
-  simp
+theorem memberSubfamily_nonMemberSubfamily : (𝒜.nonMemberSubfamily a).memberSubfamily a = ∅ := by
+  ext; simp
 #align finset.member_subfamily_non_member_subfamily Finset.memberSubfamily_nonMemberSubfamily
 -/
 
 #print Finset.nonMemberSubfamily_memberSubfamily /-
 @[simp]
 theorem nonMemberSubfamily_memberSubfamily :
-    (𝒜.memberSubfamily a).nonMemberSubfamily a = 𝒜.memberSubfamily a :=
-  by
-  ext
-  simp
+    (𝒜.memberSubfamily a).nonMemberSubfamily a = 𝒜.memberSubfamily a := by ext; simp
 #align finset.non_member_subfamily_member_subfamily Finset.nonMemberSubfamily_memberSubfamily
 -/
 
 #print Finset.nonMemberSubfamily_nonMemberSubfamily /-
 @[simp]
 theorem nonMemberSubfamily_nonMemberSubfamily :
-    (𝒜.nonMemberSubfamily a).nonMemberSubfamily a = 𝒜.nonMemberSubfamily a :=
-  by
-  ext
-  simp
+    (𝒜.nonMemberSubfamily a).nonMemberSubfamily a = 𝒜.nonMemberSubfamily a := by ext; simp
 #align finset.non_member_subfamily_non_member_subfamily Finset.nonMemberSubfamily_nonMemberSubfamily
 -/
 

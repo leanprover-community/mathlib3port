@@ -316,8 +316,7 @@ def ιInvAppπApp {i : D.J} (U : Opens (D.U i).carrier) (j) :
   · refine'
       D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)
     rw [functor.op_obj]
-    congr 1
-    ext1
+    congr 1; ext1
     dsimp only [functor.op_obj, opens.map_coe, unop_op, IsOpenMap.functor_obj_coe]
     rw [Set.preimage_preimage]
     change (D.f j k ≫ 𝖣.ι j).base ⁻¹' _ = _
@@ -337,15 +336,11 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
           naturality' := fun X Y f' => by
             induction X using Opposite.rec'
             induction Y using Opposite.rec'
-            let f : Y ⟶ X := f'.unop
-            have : f' = f.op := rfl
-            clear_value f
-            subst this
+            let f : Y ⟶ X := f'.unop; have : f' = f.op := rfl; clear_value f; subst this
             rcases f with (_ | ⟨j, k⟩ | ⟨j, k⟩)
             · erw [category.id_comp, CategoryTheory.Functor.map_id]
               rw [category.comp_id]
-            · erw [category.id_comp]
-              congr 1
+            · erw [category.id_comp]; congr 1
             erw [category.id_comp]
             -- It remains to show that the blue is equal to red + green in the original diagram.
             -- The proof strategy is illustrated in ![this diagram](https://i.imgur.com/mBzV1Rx.png)
@@ -472,9 +467,7 @@ instance componentwise_diagram_π_isIso (i : D.J) (U : Opens (D.U i).carrier) :
 instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i)
     where
   base_open := D.ι_openEmbedding i
-  c_iso U := by
-    erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
-    infer_instance
+  c_iso U := by erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]; infer_instance
 #align algebraic_geometry.PresheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.PresheafedSpace.GlueData.ιIsOpenImmersion
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
@@ -506,10 +499,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
     · rw [← cancel_mono (𝖣.ι j), category.assoc, ← (𝖣.vPullbackCone i j).condition]
       conv_rhs => rw [← s.condition]
       erw [is_open_immersion.lift_fac_assoc]
-    · intro m e₁ e₂
-      rw [← cancel_mono (D.f i j)]
-      erw [e₁]
-      rw [is_open_immersion.lift_fac]
+    · intro m e₁ e₂; rw [← cancel_mono (D.f i j)]; erw [e₁]; rw [is_open_immersion.lift_fac]
 #align algebraic_geometry.PresheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.PresheafedSpace.GlueData.vPullbackConeIsLimit
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
@@ -575,10 +565,8 @@ theorem ι_isoPresheafedSpace_inv (i : D.J) :
   𝖣.ι_gluedIso_inv _ _
 #align algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpace.GlueData.ι_isoPresheafedSpace_inv
 
-instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
-  by
-  rw [← D.ι_iso_PresheafedSpace_inv]
-  infer_instance
+instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+  rw [← D.ι_iso_PresheafedSpace_inv]; infer_instance
 #align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpace.GlueData.ι_isOpenImmersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
@@ -653,8 +641,7 @@ theorem ι_isoSheafedSpace_inv (i : D.J) :
 
 instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
   by
-  delta is_open_immersion
-  rw [← D.ι_iso_SheafedSpace_inv]
+  delta is_open_immersion; rw [← D.ι_iso_SheafedSpace_inv]
   apply PresheafedSpace.is_open_immersion.comp
 #align algebraic_geometry.LocallyRingedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.LocallyRingedSpace.GlueData.ι_isOpenImmersion
 

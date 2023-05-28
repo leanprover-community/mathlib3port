@@ -647,9 +647,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel_inl_inl Sum.liftRel_inl_inlₓ'. -/
 @[simp]
 theorem liftRel_inl_inl : LiftRel r s (inl a) (inl c) ↔ r a c :=
-  ⟨fun h => by
-    cases h
-    assumption, LiftRel.inl⟩
+  ⟨fun h => by cases h; assumption, LiftRel.inl⟩
 #align sum.lift_rel_inl_inl Sum.liftRel_inl_inl
 
 /- warning: sum.not_lift_rel_inl_inr -> Sum.not_liftRel_inl_inr is a dubious translation:
@@ -682,9 +680,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel_inr_inr Sum.liftRel_inr_inrₓ'. -/
 @[simp]
 theorem liftRel_inr_inr : LiftRel r s (inr b) (inr d) ↔ s b d :=
-  ⟨fun h => by
-    cases h
-    assumption, LiftRel.inr⟩
+  ⟨fun h => by cases h; assumption, LiftRel.inr⟩
 #align sum.lift_rel_inr_inr Sum.liftRel_inr_inr
 
 instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
@@ -701,9 +697,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u1}} {r₁ : α -> γ -> Prop} {r₂ : α -> γ -> Prop} {s₁ : β -> δ -> Prop} {s₂ : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u2, u1} γ δ}, (forall (a : α) (b : γ), (r₁ a b) -> (r₂ a b)) -> (forall (a : β) (b : δ), (s₁ a b) -> (s₂ a b)) -> (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r₁ s₁ x y) -> (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r₂ s₂ x y)
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel.mono Sum.LiftRel.monoₓ'. -/
 theorem LiftRel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b)
-    (h : LiftRel r₁ s₁ x y) : LiftRel r₂ s₂ x y :=
-  by
-  cases h
+    (h : LiftRel r₁ s₁ x y) : LiftRel r₂ s₂ x y := by cases h;
   exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
 #align sum.lift_rel.mono Sum.LiftRel.mono
 
@@ -734,9 +728,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u1}} {r : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u2, u1} γ δ}, (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r s x y) -> (Sum.LiftRel.{u4, u3, u1, u2} β α δ γ s r (Sum.swap.{u3, u4} α β x) (Sum.swap.{u2, u1} γ δ y))
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel.swap Sum.LiftRel.swapₓ'. -/
-protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.symm y.symm :=
-  by
-  cases h
+protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.symm y.symm := by cases h;
   exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
 #align sum.lift_rel.swap Sum.LiftRel.swap
 
@@ -748,9 +740,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel_swap_iff Sum.liftRel_swap_iffₓ'. -/
 @[simp]
 theorem liftRel_swap_iff : LiftRel s r x.symm y.symm ↔ LiftRel r s x y :=
-  ⟨fun h => by
-    rw [← swap_swap x, ← swap_swap y]
-    exact h.swap, LiftRel.swap⟩
+  ⟨fun h => by rw [← swap_swap x, ← swap_swap y]; exact h.swap, LiftRel.swap⟩
 #align sum.lift_rel_swap_iff Sum.liftRel_swap_iff
 
 end LiftRel
@@ -777,18 +767,14 @@ variable {r r₁ r₂ : α → α → Prop} {s s₁ s₂ : β → β → Prop} {
 #print Sum.lex_inl_inl /-
 @[simp]
 theorem lex_inl_inl : Lex r s (inl a₁) (inl a₂) ↔ r a₁ a₂ :=
-  ⟨fun h => by
-    cases h
-    assumption, Lex.inl⟩
+  ⟨fun h => by cases h; assumption, Lex.inl⟩
 #align sum.lex_inl_inl Sum.lex_inl_inl
 -/
 
 #print Sum.lex_inr_inr /-
 @[simp]
 theorem lex_inr_inr : Lex r s (inr b₁) (inr b₂) ↔ s b₁ b₂ :=
-  ⟨fun h => by
-    cases h
-    assumption, Lex.inr⟩
+  ⟨fun h => by cases h; assumption, Lex.inr⟩
 #align sum.lex_inr_inr Sum.lex_inr_inr
 -/
 
@@ -806,9 +792,7 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
   | inr b, inr d => decidable_of_iff' _ lex_inr_inr
 
 #print Sum.LiftRel.lex /-
-protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b :=
-  by
-  cases h
+protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by cases h;
   exacts[lex.inl ‹_›, lex.inr ‹_›]
 #align sum.lift_rel.lex Sum.LiftRel.lex
 -/
@@ -820,9 +804,7 @@ theorem liftRel_subrelation_lex : Subrelation (LiftRel r s) (Lex r s) := fun a b
 
 #print Sum.Lex.mono /-
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) :
-    Lex r₂ s₂ x y := by
-  cases h
-  exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
+    Lex r₂ s₂ x y := by cases h; exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
 #align sum.lex.mono Sum.Lex.mono
 -/
 
@@ -975,9 +957,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u1}} (c : γ), Eq.{max (max (succ u2) (succ u3)) (succ u1)} ((Sum.{u2, u3} α β) -> γ) (Sum.elim.{u2, u3, succ u1} α β γ (Function.const.{succ u1, succ u2} γ α c) (Function.const.{succ u1, succ u3} γ β c)) (Function.const.{succ u1, max (succ u2) (succ u3)} γ (Sum.{u2, u3} α β) c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_const_const Sum.elim_const_constₓ'. -/
 theorem elim_const_const (c : γ) : Sum.elim (const _ c : α → γ) (const _ c : β → γ) = const _ c :=
-  by
-  ext x
-  cases x <;> rfl
+  by ext x; cases x <;> rfl
 #align sum.elim_const_const Sum.elim_const_const
 
 /- warning: sum.elim_lam_const_lam_const -> Sum.elim_lam_const_lam_const is a dubious translation:
@@ -1003,8 +983,7 @@ theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : 
   by
   ext x; cases x
   · by_cases h : x = i
-    · subst h
-      simp
+    · subst h; simp
     · simp [h]
   · simp
 #align sum.elim_update_left Sum.elim_update_left
@@ -1021,8 +1000,7 @@ theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g :
   ext x; cases x
   · simp
   · by_cases h : x = i
-    · subst h
-      simp
+    · subst h; simp
     · simp [h]
 #align sum.elim_update_right Sum.elim_update_right
 

@@ -64,8 +64,7 @@ theorem saturated_iff_zpow {H : Subgroup G} :
   · rintro hH ⟨n⟩ g hgn
     · simp only [Int.coe_nat_eq_zero, Int.ofNat_eq_coe, zpow_ofNat] at hgn⊢
       exact hH hgn
-    · suffices g ^ (n + 1) ∈ H by
-        refine' (hH this).imp _ id
+    · suffices g ^ (n + 1) ∈ H by refine' (hH this).imp _ id;
         simp only [IsEmpty.forall_iff, Nat.succ_ne_zero]
       simpa only [inv_mem_iff, zpow_negSucc] using hgn
   · intro h n g hgn

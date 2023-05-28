@@ -86,18 +86,9 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C)
     where
   whiskerLeft X Y Z f g h η := eqToHom (congr_arg₂ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
   whiskerRight X Y Z f g η h := eqToHom (congr_arg₂ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
-  associator W X Y Z f g h :=
-    eqToIso <| by
-      unfold_projs
-      simp only [category.assoc]
-  leftUnitor X Y f :=
-    eqToIso <| by
-      unfold_projs
-      simp only [category.id_comp, mk_as]
-  rightUnitor X Y f :=
-    eqToIso <| by
-      unfold_projs
-      simp only [category.comp_id, mk_as]
+  associator W X Y Z f g h := eqToIso <| by unfold_projs; simp only [category.assoc]
+  leftUnitor X Y f := eqToIso <| by unfold_projs; simp only [category.id_comp, mk_as]
+  rightUnitor X Y f := eqToIso <| by unfold_projs; simp only [category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
 -/
 
@@ -105,21 +96,9 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C)
 /-- A locally discrete bicategory is strict. -/
 instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
     where
-  id_comp' := by
-    intros
-    ext1
-    unfold_projs
-    apply category.id_comp
-  comp_id' := by
-    intros
-    ext1
-    unfold_projs
-    apply category.comp_id
-  assoc' := by
-    intros
-    ext1
-    unfold_projs
-    apply category.assoc
+  id_comp' := by intros ; ext1; unfold_projs; apply category.id_comp
+  comp_id' := by intros ; ext1; unfold_projs; apply category.comp_id
+  assoc' := by intros ; ext1; unfold_projs; apply category.assoc
 #align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
 -/
 

@@ -76,12 +76,8 @@ theorem div_eq_quo_add_rem_div_add_rem_div (f : R[X]) {g₁ g₂ : R[X]} (hg₁ 
   refine'
     ⟨f * d /ₘ g₁ + f * c /ₘ g₂, f * d %ₘ g₁, f * c %ₘ g₂, degree_mod_by_monic_lt _ hg₁,
       degree_mod_by_monic_lt _ hg₂, _⟩
-  have hg₁' : (↑g₁ : K) ≠ 0 := by
-    norm_cast
-    exact hg₁.ne_zero_of_ne zero_ne_one
-  have hg₂' : (↑g₂ : K) ≠ 0 := by
-    norm_cast
-    exact hg₂.ne_zero_of_ne zero_ne_one
+  have hg₁' : (↑g₁ : K) ≠ 0 := by norm_cast; exact hg₁.ne_zero_of_ne zero_ne_one
+  have hg₂' : (↑g₂ : K) ≠ 0 := by norm_cast; exact hg₂.ne_zero_of_ne zero_ne_one
   have hfc := mod_by_monic_add_div (f * c) hg₂
   have hfd := mod_by_monic_add_div (f * d) hg₁
   field_simp
@@ -127,8 +123,7 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type _} {g : ι → R[X]} {s
     norm_cast  at hf IH⊢
     rw [Finset.prod_insert hab, hf, IH, Finset.sum_insert hab, if_pos rfl]
     trans (↑(q₀ + q : R[X]) : K) + (↑r₁ / ↑(g a) + ∑ i : ι in b, ↑(r i) / ↑(g i))
-    · push_cast
-      ring
+    · push_cast ; ring
     congr 2
     refine' Finset.sum_congr rfl fun x hxb => _
     rw [if_neg]

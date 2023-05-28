@@ -138,8 +138,7 @@ is more convenient to show a given cofork is a coequalizer by showing it is spli
 def IsSplitCoequalizer.isCoequalizer {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) :
     IsColimit t.asCofork :=
   Cofork.IsColimit.mk' _ fun s =>
-    ⟨t.rightSection ≫ s.π, by
-      dsimp
+    ⟨t.rightSection ≫ s.π, by dsimp;
       rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by
       simp [← hm]⟩
 #align category_theory.is_split_coequalizer.is_coequalizer CategoryTheory.IsSplitCoequalizer.isCoequalizer

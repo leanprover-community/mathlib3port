@@ -101,7 +101,7 @@ theorem dualTensorHom_apply (f : Module.Dual R M) (m : M) (n : N) :
 theorem transpose_dualTensorHom (f : Module.Dual R M) (m : M) :
     Dual.transpose (dualTensorHom R M M (f ⊗ₜ m)) = dualTensorHom R _ _ (Dual.eval R M m ⊗ₜ f) :=
   by
-  ext (f' m')
+  ext (f' m');
   simp only [dual.transpose_apply, coe_comp, Function.comp_apply, dualTensorHom_apply,
     LinearMap.map_smulₛₗ, RingHom.id_apply, Algebra.id.smul_eq_mul, dual.eval_apply, smul_apply]
   exact mul_comm _ _

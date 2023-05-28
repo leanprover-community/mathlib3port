@@ -121,9 +121,7 @@ Case conversion may be inaccurate. Consider using '#align Top.presheaf.covering_
     then we get back the original presieve `R`. -/
 @[simp]
 theorem covering_presieve_eq_self {Y : Opens X} (R : Presieve Y) :
-    presieveOfCoveringAux (coveringOfPresieve Y R) Y = R :=
-  by
-  ext (Z f)
+    presieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by ext (Z f);
   exact ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
 #align Top.presheaf.covering_presieve_eq_self TopCat.Presheaf.covering_presieve_eq_self
 
@@ -310,10 +308,8 @@ def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op
 Case conversion may be inaccurate. Consider using '#align Top.sheaf.extend_hom_app TopCat.Sheaf.extend_hom_appₓ'. -/
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
-    (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) :=
-  by
-  nth_rw 2 [← (restrict_hom_equiv_hom F F' h).left_inv α]
-  rfl
+    (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) := by
+  nth_rw 2 [← (restrict_hom_equiv_hom F F' h).left_inv α]; rfl
 #align Top.sheaf.extend_hom_app TopCat.Sheaf.extend_hom_app
 
 include h
@@ -321,11 +317,8 @@ include h
 /- warning: Top.sheaf.hom_ext -> TopCat.Sheaf.hom_ext is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align Top.sheaf.hom_ext TopCat.Sheaf.hom_extₓ'. -/
-theorem hom_ext {α β : F ⟶ F'.1} (he : ∀ i, α.app (op (B i)) = β.app (op (B i))) : α = β :=
-  by
-  apply (restrict_hom_equiv_hom F F' h).symm.Injective
-  ext i
-  exact he i.unop
+theorem hom_ext {α β : F ⟶ F'.1} (he : ∀ i, α.app (op (B i)) = β.app (op (B i))) : α = β := by
+  apply (restrict_hom_equiv_hom F F' h).symm.Injective; ext i; exact he i.unop
 #align Top.sheaf.hom_ext TopCat.Sheaf.hom_ext
 
 end TopCat.Sheaf

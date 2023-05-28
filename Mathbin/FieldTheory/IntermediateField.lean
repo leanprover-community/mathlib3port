@@ -74,9 +74,7 @@ def toSubfield : Subfield L :=
 -/
 
 instance : SetLike (IntermediateField K L) L :=
-  ⟨fun S => S.toSubalgebra.carrier, by
-    rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
-    congr ⟩
+  ⟨fun S => S.toSubalgebra.carrier, by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩; congr ⟩
 
 instance : SubfieldClass (IntermediateField K L) L
     where
@@ -520,10 +518,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align to_subalgebra_to_intermediate_field toSubalgebra_toIntermediateFieldₓ'. -/
 @[simp]
 theorem toSubalgebra_toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) :
-    (S.toIntermediateField inv_mem).toSubalgebra = S :=
-  by
-  ext
-  rfl
+    (S.toIntermediateField inv_mem).toSubalgebra = S := by ext; rfl
 #align to_subalgebra_to_intermediate_field toSubalgebra_toIntermediateField
 
 /- warning: to_intermediate_field_to_subalgebra -> toIntermediateField_toSubalgebra is a dubious translation:
@@ -534,10 +529,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align to_intermediate_field_to_subalgebra toIntermediateField_toSubalgebraₓ'. -/
 @[simp]
 theorem toIntermediateField_toSubalgebra (S : IntermediateField K L) :
-    (S.toSubalgebra.toIntermediateField fun x => S.inv_mem) = S :=
-  by
-  ext
-  rfl
+    (S.toSubalgebra.toIntermediateField fun x => S.inv_mem) = S := by ext; rfl
 #align to_intermediate_field_to_subalgebra toIntermediateField_toSubalgebra
 
 /- warning: subalgebra.to_intermediate_field' -> Subalgebra.toIntermediateField' is a dubious translation:
@@ -566,10 +558,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align to_subalgebra_to_intermediate_field' toSubalgebra_toIntermediateField'ₓ'. -/
 @[simp]
 theorem toSubalgebra_toIntermediateField' (S : Subalgebra K L) (hS : IsField S) :
-    (S.toIntermediateField' hS).toSubalgebra = S :=
-  by
-  ext
-  rfl
+    (S.toIntermediateField' hS).toSubalgebra = S := by ext; rfl
 #align to_subalgebra_to_intermediate_field' toSubalgebra_toIntermediateField'
 
 /- warning: to_intermediate_field'_to_subalgebra -> toIntermediateField'_toSubalgebra is a dubious translation:
@@ -580,10 +569,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align to_intermediate_field'_to_subalgebra toIntermediateField'_toSubalgebraₓ'. -/
 @[simp]
 theorem toIntermediateField'_toSubalgebra (S : IntermediateField K L) :
-    S.toSubalgebra.toIntermediateField' (Field.toIsField S) = S :=
-  by
-  ext
-  rfl
+    S.toSubalgebra.toIntermediateField' (Field.toIsField S) = S := by ext; rfl
 #align to_intermediate_field'_to_subalgebra toIntermediateField'_toSubalgebra
 
 /- warning: subfield.to_intermediate_field -> Subfield.toIntermediateField is a dubious translation:
@@ -734,9 +720,7 @@ def map (f : L →ₐ[K] L') (S : IntermediateField K L) : IntermediateField K L
   {
     S.toSubalgebra.map
       f with
-    inv_mem' := by
-      rintro _ ⟨x, hx, rfl⟩
-      exact ⟨x⁻¹, S.inv_mem hx, map_inv₀ f x⟩
+    inv_mem' := by rintro _ ⟨x, hx, rfl⟩; exact ⟨x⁻¹, S.inv_mem hx, map_inv₀ f x⟩
     neg_mem' := fun x hx => (S.toSubalgebra.map f).neg_mem hx }
 #align intermediate_field.map IntermediateField.map
 -/
@@ -905,8 +889,7 @@ theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScala
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
   · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
   · simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
-    left
-    rfl
+    left; rfl
 #align intermediate_field.aeval_coe IntermediateField.aeval_coe
 
 /- warning: intermediate_field.coe_is_integral_iff -> IntermediateField.coe_isIntegral_iff is a dubious translation:
@@ -985,9 +968,7 @@ but is expected to have type
   forall {K : Type.{u2}} {L : Type.{u1}} [_inst_1 : Field.{u2} K] [_inst_2 : Field.{u1} L] [_inst_4 : Algebra.{u2, u1} K L (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_1)) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_2)))] {S : IntermediateField.{u2, u1} K L _inst_1 _inst_2 _inst_4} {S' : IntermediateField.{u2, u1} K L _inst_1 _inst_2 _inst_4}, (Eq.{succ u1} (Subalgebra.{u2, u1} K L (Semifield.toCommSemiring.{u2} K (Field.toSemifield.{u2} K _inst_1)) (DivisionSemiring.toSemiring.{u1} L (Semifield.toDivisionSemiring.{u1} L (Field.toSemifield.{u1} L _inst_2))) _inst_4) (IntermediateField.toSubalgebra.{u2, u1} K L _inst_1 _inst_2 _inst_4 S) (IntermediateField.toSubalgebra.{u2, u1} K L _inst_1 _inst_2 _inst_4 S')) -> (Eq.{succ u1} (IntermediateField.{u2, u1} K L _inst_1 _inst_2 _inst_4) S S')
 Case conversion may be inaccurate. Consider using '#align intermediate_field.to_subalgebra_injective IntermediateField.toSubalgebra_injectiveₓ'. -/
 theorem toSubalgebra_injective {S S' : IntermediateField K L}
-    (h : S.toSubalgebra = S'.toSubalgebra) : S = S' :=
-  by
-  ext
+    (h : S.toSubalgebra = S'.toSubalgebra) : S = S' := by ext;
   rw [← mem_to_subalgebra, ← mem_to_subalgebra, h]
 #align intermediate_field.to_subalgebra_injective IntermediateField.toSubalgebra_injective
 
@@ -1170,10 +1151,8 @@ variable {F} {E}
 
 #print IntermediateField.toSubalgebra_eq_iff /-
 @[simp]
-theorem toSubalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E :=
-  by
-  rw [SetLike.ext_iff, SetLike.ext'_iff, Set.ext_iff]
-  rfl
+theorem toSubalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E := by
+  rw [SetLike.ext_iff, SetLike.ext'_iff, Set.ext_iff]; rfl
 #align intermediate_field.to_subalgebra_eq_iff IntermediateField.toSubalgebra_eq_iff
 -/
 

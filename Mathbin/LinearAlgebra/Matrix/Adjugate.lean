@@ -166,8 +166,7 @@ theorem cramer_one : cramer (1 : Matrix n n α) = 1 :=
   ext (i j)
   convert congr_fun (cramer_row_self (1 : Matrix n n α) (Pi.single i 1) i _) j
   · simp
-  · intro j
-    rw [Matrix.one_eq_pi_single, Pi.single_comm]
+  · intro j; rw [Matrix.one_eq_pi_single, Pi.single_comm]
 #align matrix.cramer_one Matrix.cramer_one
 
 /- warning: matrix.cramer_smul -> Matrix.cramer_smul is a dubious translation:
@@ -219,10 +218,7 @@ theorem sum_cramer_apply {β} (s : Finset β) (f : n → β → α) (i : n) :
   calc
     (∑ x in s, cramer A (fun j => f j x) i) = (∑ x in s, cramer A fun j => f j x) i :=
       (Finset.sum_apply i s _).symm
-    _ = cramer A (fun j : n => ∑ x in s, f j x) i :=
-      by
-      rw [sum_cramer, cramer_apply]
-      congr with j
+    _ = cramer A (fun j : n => ∑ x in s, f j x) i := by rw [sum_cramer, cramer_apply]; congr with j;
       apply Finset.sum_apply
     
 #align matrix.sum_cramer_apply Matrix.sum_cramer_apply
@@ -352,13 +348,9 @@ theorem cramer_eq_adjugate_mulVec (A : Matrix n n α) (b : n → α) :
   by
   nth_rw 2 [← A.transpose_transpose]
   rw [← adjugate_transpose, adjugate_def]
-  have : b = ∑ i, b i • Pi.single i 1 :=
-    by
-    refine' (pi_eq_sum_univ b).trans _
-    congr with j
+  have : b = ∑ i, b i • Pi.single i 1 := by refine' (pi_eq_sum_univ b).trans _; congr with j;
     simp [Pi.single_apply, eq_comm]
-  nth_rw 1 [this]
-  ext k
+  nth_rw 1 [this]; ext k
   simp [mul_vec, dot_product, mul_comm]
 #align matrix.cramer_eq_adjugate_mul_vec Matrix.cramer_eq_adjugate_mulVec
 
@@ -469,9 +461,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} n] [_inst_2 : Fintype.{u1} n] [_inst_5 : CommRing.{u2} α], Eq.{max (succ u1) (succ u2)} (Matrix.{u1, u1, u2} n n α) (Matrix.adjugate.{u1, u2} n α (fun (a : n) (b : n) => _inst_1 a b) _inst_2 _inst_5 (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} n n α) 1 (One.toOfNat1.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_5))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_5))))))) (OfNat.ofNat.{max u1 u2} (Matrix.{u1, u1, u2} n n α) 1 (One.toOfNat1.{max u1 u2} (Matrix.{u1, u1, u2} n n α) (Matrix.one.{u2, u1} n α (fun (a : n) (b : n) => _inst_1 a b) (CommMonoidWithZero.toZero.{u2} α (CommSemiring.toCommMonoidWithZero.{u2} α (CommRing.toCommSemiring.{u2} α _inst_5))) (Semiring.toOne.{u2} α (CommSemiring.toSemiring.{u2} α (CommRing.toCommSemiring.{u2} α _inst_5))))))
 Case conversion may be inaccurate. Consider using '#align matrix.adjugate_one Matrix.adjugate_oneₓ'. -/
 @[simp]
-theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 :=
-  by
-  ext
+theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 := by ext;
   simp [adjugate_def, Matrix.one_apply, Pi.single_apply, eq_comm]
 #align matrix.adjugate_one Matrix.adjugate_one
 

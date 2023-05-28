@@ -830,10 +830,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : GCDMonoid.{u1} α _inst_1] {m : α} {n : α} {k : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) k (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) m n)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) k (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) m (GCDMonoid.gcd.{u1} α _inst_1 _inst_2 k n)))
 Case conversion may be inaccurate. Consider using '#align dvd_mul_gcd_of_dvd_mul dvd_mul_gcd_of_dvd_mulₓ'. -/
-theorem dvd_mul_gcd_of_dvd_mul [GCDMonoid α] {m n k : α} (H : k ∣ m * n) : k ∣ m * gcd k n :=
-  by
-  rw [mul_comm] at H⊢
-  exact dvd_gcd_mul_of_dvd_mul H
+theorem dvd_mul_gcd_of_dvd_mul [GCDMonoid α] {m n k : α} (H : k ∣ m * n) : k ∣ m * gcd k n := by
+  rw [mul_comm] at H⊢; exact dvd_gcd_mul_of_dvd_mul H
 #align dvd_mul_gcd_of_dvd_mul dvd_mul_gcd_of_dvd_mul
 
 /- warning: exists_dvd_and_dvd_of_dvd_mul -> exists_dvd_and_dvd_of_dvd_mul is a dubious translation:
@@ -943,23 +941,15 @@ theorem pow_dvd_of_mul_eq_pow [GCDMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 
     apply isUnit_of_dvd_one
     trans gcd d₁ b ^ k
     · exact gcd_pow_left_dvd_pow_gcd
-    · apply IsUnit.dvd
-      apply IsUnit.pow
-      apply isUnit_of_dvd_one
+    · apply IsUnit.dvd; apply IsUnit.pow; apply isUnit_of_dvd_one
       apply dvd_trans _ hab.dvd
       apply gcd_dvd_gcd hd₁ (dvd_refl b)
-  have h2 : d₁ ^ k ∣ a * b := by
-    use d₂ ^ k
-    rw [h, hc]
-    exact mul_pow d₁ d₂ k
+  have h2 : d₁ ^ k ∣ a * b := by use d₂ ^ k; rw [h, hc]; exact mul_pow d₁ d₂ k
   rw [mul_comm] at h2
   have h3 : d₁ ^ k ∣ a := by
     apply (dvd_gcd_mul_of_dvd_mul h2).trans
     rw [IsUnit.mul_left_dvd _ _ _ h1]
-  have h4 : d₁ ^ k ≠ 0 := by
-    intro hdk
-    rw [hdk] at h3
-    apply absurd (zero_dvd_iff.mp h3) ha
+  have h4 : d₁ ^ k ≠ 0 := by intro hdk; rw [hdk] at h3; apply absurd (zero_dvd_iff.mp h3) ha
   exact ⟨h4, h3⟩
 #align pow_dvd_of_mul_eq_pow pow_dvd_of_mul_eq_pow
 
@@ -973,31 +963,21 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
     {k : ℕ} (h : a * b = c ^ k) : ∃ d : α, Associated (d ^ k) a :=
   by
   cases subsingleton_or_nontrivial α
-  · use 0
-    rw [Subsingleton.elim a (0 ^ k)]
+  · use 0; rw [Subsingleton.elim a (0 ^ k)]
   by_cases ha : a = 0
-  · use 0
-    rw [ha]
+  · use 0; rw [ha]
     obtain rfl | hk := k.eq_zero_or_pos
-    · exfalso
-      revert h
-      rw [ha, MulZeroClass.zero_mul, pow_zero]
-      apply zero_ne_one
+    · exfalso; revert h; rw [ha, MulZeroClass.zero_mul, pow_zero]; apply zero_ne_one
     · rw [zero_pow hk]
   by_cases hb : b = 0
-  · use 1
-    rw [one_pow]
+  · use 1; rw [one_pow]
     apply (associated_one_iff_is_unit.mpr hab).symm.trans
     rw [hb]
     exact gcd_zero_right' a
   obtain rfl | hk := k.eq_zero_or_pos
-  · use 1
-    rw [pow_zero] at h⊢
-    use Units.mkOfMulEqOne _ _ h
+  · use 1; rw [pow_zero] at h⊢; use Units.mkOfMulEqOne _ _ h
     rw [Units.val_mkOfMulEqOne, one_mul]
-  have hc : c ∣ a * b := by
-    rw [h]
-    exact dvd_pow_self _ hk.ne'
+  have hc : c ∣ a * b := by rw [h]; exact dvd_pow_self _ hk.ne'
   obtain ⟨d₁, d₂, hd₁, hd₂, hc⟩ := exists_dvd_and_dvd_of_dvd_mul hc
   use d₁
   obtain ⟨h0₁, ⟨a', ha'⟩⟩ := pow_dvd_of_mul_eq_pow ha hab h hc hd₁
@@ -1006,10 +986,8 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
   obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂
   rw [ha', hb', hc, mul_pow] at h
   have h' : a' * b' = 1 := by
-    apply (mul_right_inj' h0₁).mp
-    rw [mul_one]
-    apply (mul_right_inj' h0₂).mp
-    rw [← h]
+    apply (mul_right_inj' h0₁).mp; rw [mul_one]
+    apply (mul_right_inj' h0₂).mp; rw [← h]
     rw [mul_assoc, mul_comm a', ← mul_assoc _ b', ← mul_assoc b', mul_comm b']
   use Units.mkOfMulEqOne _ _ h'
   rw [Units.val_mkOfMulEqOne, ha']
@@ -1397,9 +1375,7 @@ theorem prime_of_irreducible [GCDMonoid α] {x : α} (hi : Irreducible x) : Prim
     ⟨hi.1, fun a b h => by
       cases' gcd_dvd_left x a with y hy
       cases' hi.is_unit_or_is_unit hy with hu hu
-      · right
-        trans gcd (x * b) (a * b)
-        apply dvd_gcd (dvd_mul_right x b) h
+      · right; trans gcd (x * b) (a * b); apply dvd_gcd (dvd_mul_right x b) h
         rw [(gcd_mul_right' b x a).dvd_iff_dvd_left]
         exact (associated_unit_mul_left _ _ hu).Dvd
       · left
@@ -1453,8 +1429,7 @@ instance subsingleton_gcdMonoid_of_unique_units : Subsingleton (GCDMonoid α) :=
       ext (a b)
       refine' associated_iff_eq.mp (associated_of_dvd_dvd _ _) <;>
         apply lcm_dvd_iff.2 ⟨dvd_lcm_left _ _, dvd_lcm_right _ _⟩
-    cases g₁
-    cases g₂
+    cases g₁; cases g₂
     dsimp only at hgcd hlcm
     simp only [hgcd, hlcm]⟩
 #align subsingleton_gcd_monoid_of_unique_units subsingleton_gcdMonoid_of_unique_units
@@ -1615,8 +1590,7 @@ noncomputable def gcdMonoidOfGCD [DecidableEq α] (gcd : α → α → α)
       · rw [← Classical.choose_spec ((gcd_dvd_left a b).trans (Dvd.intro b rfl))]
     lcm_zero_left := fun a => if_pos rfl
     lcm_zero_right := fun a => by
-      split_ifs with a0
-      · rfl
+      split_ifs with a0; · rfl
       have h := (Classical.choose_spec ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl))).symm
       have a0' : gcd a 0 ≠ 0 := by
         contrapose! a0
@@ -1677,8 +1651,7 @@ noncomputable def normalizedGCDMonoidOfGCD [NormalizationMonoid α] [DecidableEq
         exact normalize_associated (a * b)
     lcm_zero_left := fun a => if_pos rfl
     lcm_zero_right := fun a => by
-      split_ifs with a0
-      · rfl
+      split_ifs with a0; · rfl
       rw [← normalize_eq_zero] at a0
       have h :=
         (Classical.choose_spec
@@ -1709,8 +1682,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
     lcm_zero_right := fun a => eq_zero_of_zero_dvd (dvd_lcm_right _ _)
     gcd_dvd_left := fun a b => by
       split_ifs with h h_1
-      · rw [h]
-        apply dvd_zero
+      · rw [h]; apply dvd_zero
       · exact dvd_rfl
       have h0 : lcm a b ≠ 0 := by
         intro con
@@ -1723,8 +1695,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
     gcd_dvd_right := fun a b => by
       split_ifs with h h_1
       · exact dvd_rfl
-      · rw [h_1]
-        apply dvd_zero
+      · rw [h_1]; apply dvd_zero
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
@@ -1799,8 +1770,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
     lcm_zero_right := fun a => eq_zero_of_zero_dvd (dvd_lcm_right _ _)
     gcd_dvd_left := fun a b => by
       split_ifs
-      · rw [h]
-        apply dvd_zero
+      · rw [h]; apply dvd_zero
       · exact (normalize_associated _).Dvd
       have h0 : lcm a b ≠ 0 := by
         intro con
@@ -1813,8 +1783,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
     gcd_dvd_right := fun a b => by
       split_ifs
       · exact (normalize_associated _).Dvd
-      · rw [h_1]
-        apply dvd_zero
+      · rw [h_1]; apply dvd_zero
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
@@ -1907,19 +1876,11 @@ instance (priority := 100) : NormalizedGCDMonoid G₀
   normUnit x := if h : x = 0 then 1 else (Units.mk0 x h)⁻¹
   normUnit_zero := dif_pos rfl
   normUnit_mul x y x0 y0 := Units.eq_iff.1 (by simp [x0, y0, mul_comm])
-  normUnit_coe_units u := by
-    rw [dif_neg (Units.ne_zero _), Units.mk0_val]
-    infer_instance
+  normUnit_coe_units u := by rw [dif_neg (Units.ne_zero _), Units.mk0_val]; infer_instance
   gcd a b := if a = 0 ∧ b = 0 then 0 else 1
   lcm a b := if a = 0 ∨ b = 0 then 0 else 1
-  gcd_dvd_left a b := by
-    split_ifs with h
-    · rw [h.1]
-    · exact one_dvd _
-  gcd_dvd_right a b := by
-    split_ifs with h
-    · rw [h.2]
-    · exact one_dvd _
+  gcd_dvd_left a b := by split_ifs with h; · rw [h.1]; · exact one_dvd _
+  gcd_dvd_right a b := by split_ifs with h; · rw [h.2]; · exact one_dvd _
   dvd_gcd a b c hac hab := by
     split_ifs with h; · apply dvd_zero
     cases' not_and_distrib.mp h with h h <;>

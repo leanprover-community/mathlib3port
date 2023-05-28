@@ -421,24 +421,20 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     simp at h₂
     cases' h₂ with h₂ h₃
     cases' e : (f a).get h₂ with b' a' <;> simp [e] at h₃
-    · subst b'
-      refine' Or.inl ⟨h₂, e⟩
+    · subst b'; refine' Or.inl ⟨h₂, e⟩
     · exact Or.inr ⟨a', ⟨_, e⟩, Part.mem_assert _ h₃⟩, fun h =>
     by
     simp [fix]
     rcases h with (⟨h₁, h₂⟩ | ⟨a', h, h₃⟩)
     · refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique ⟨h₁, h₂⟩ h'
-      · rw [WellFounded.fixF_eq]
-        simp [h₁, h₂]
-    · simp [fix] at h₃
-      cases' h₃ with h₃ h₄
+      · rw [WellFounded.fixF_eq]; simp [h₁, h₂]
+    · simp [fix] at h₃; cases' h₃ with h₃ h₄
       refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique h h' with e
         exact e ▸ h₃
       · cases' h with h₁ h₂
-        rw [WellFounded.fixF_eq]
-        simp [h₁, h₂, h₄]⟩
+        rw [WellFounded.fixF_eq]; simp [h₁, h₂, h₄]⟩
 #align pfun.mem_fix_iff PFun.mem_fix_iff
 
 /- warning: pfun.fix_stop -> PFun.fix_stop is a dubious translation:
@@ -448,10 +444,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : PFun.{u2, max u2 u1} α (Sum.{u1, u2} β α)} {b : β} {a : α}, (Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} β α) (Part.{max u2 u1} (Sum.{u1, u2} β α)) (Part.instMembershipPart.{max u1 u2} (Sum.{u1, u2} β α)) (Sum.inl.{u1, u2} β α b) (f a)) -> (Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) b (PFun.fix.{u2, u1} α β f a))
 Case conversion may be inaccurate. Consider using '#align pfun.fix_stop PFun.fix_stopₓ'. -/
 /-- If advancing one step from `a` leads to `b : β`, then `f.fix a = b` -/
-theorem fix_stop {f : α →. Sum β α} {b : β} {a : α} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a :=
-  by
-  rw [PFun.mem_fix_iff]
-  exact Or.inl hb
+theorem fix_stop {f : α →. Sum β α} {b : β} {a : α} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a := by
+  rw [PFun.mem_fix_iff]; exact Or.inl hb
 #align pfun.fix_stop PFun.fix_stop
 
 /- warning: pfun.fix_fwd_eq -> PFun.fix_fwd_eq is a dubious translation:
@@ -464,14 +458,8 @@ Case conversion may be inaccurate. Consider using '#align pfun.fix_fwd_eq PFun.f
 theorem fix_fwd_eq {f : α →. Sum β α} {a a' : α} (ha' : Sum.inr a' ∈ f a) : f.fix a = f.fix a' :=
   by
   ext b; constructor
-  · intro h
-    obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'
-    exact e'
-  · intro h
-    rw [PFun.mem_fix_iff]
-    right
-    use a'
-    exact ⟨ha', h⟩
+  · intro h; obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'; exact e'
+  · intro h; rw [PFun.mem_fix_iff]; right; use a'; exact ⟨ha', h⟩
 #align pfun.fix_fwd_eq PFun.fix_fwd_eq
 
 /- warning: pfun.fix_fwd -> PFun.fix_fwd is a dubious translation:
@@ -505,12 +493,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.fix_induction_spec PFun.fixInduction_specₓ'. -/
 theorem fixInduction_spec {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') :
-    @fixInduction _ _ C _ _ _ h H = H a h fun a' h' => fixInduction (fix_fwd h h') H :=
-  by
-  unfold fix_induction
-  generalize_proofs ha
-  induction ha
-  rfl
+    @fixInduction _ _ C _ _ _ h H = H a h fun a' h' => fixInduction (fix_fwd h h') H := by
+  unfold fix_induction; generalize_proofs ha; induction ha; rfl
 #align pfun.fix_induction_spec PFun.fixInduction_spec
 
 #print PFun.fixInduction' /-
@@ -524,9 +508,7 @@ def fixInduction' {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} 
   by
   refine' fix_induction h fun a' h ih => _
   cases' e : (f a').get (dom_of_mem_fix h) with b' a'' <;> replace e : _ ∈ f a' := ⟨_, e⟩
-  · apply hbase
-    convert e
-    exact Part.mem_unique h (fix_stop e)
+  · apply hbase; convert e; exact Part.mem_unique h (fix_stop e)
   · exact hind _ _ (fix_fwd h e) e (ih _ e)
 #align pfun.fix_induction' PFun.fixInduction'
 -/
@@ -540,11 +522,8 @@ Case conversion may be inaccurate. Consider using '#align pfun.fix_induction'_st
 theorem fixInduction'_stop {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (fa : Sum.inl b ∈ f a) (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) :
-    @fixInduction' _ _ C _ _ _ h hbase hind = hbase a fa :=
-  by
-  unfold fix_induction'
-  rw [fix_induction_spec]
-  simp [Part.get_eq_of_mem fa]
+    @fixInduction' _ _ C _ _ _ h hbase hind = hbase a fa := by unfold fix_induction';
+  rw [fix_induction_spec]; simp [Part.get_eq_of_mem fa]
 #align pfun.fix_induction'_stop PFun.fixInduction'_stop
 
 /- warning: pfun.fix_induction'_fwd -> PFun.fixInduction'_fwd is a dubious translation:
@@ -557,11 +536,8 @@ theorem fixInduction'_fwd {C : α → Sort _} {f : α →. Sum β α} {b : β} {
     (h' : b ∈ f.fix a') (fa : Sum.inr a' ∈ f a)
     (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) :
-    @fixInduction' _ _ C _ _ _ h hbase hind = hind a a' h' fa (fixInduction' h' hbase hind) :=
-  by
-  unfold fix_induction'
-  rw [fix_induction_spec]
-  simpa [Part.get_eq_of_mem fa]
+    @fixInduction' _ _ C _ _ _ h hbase hind = hind a a' h' fa (fixInduction' h' hbase hind) := by
+  unfold fix_induction'; rw [fix_induction_spec]; simpa [Part.get_eq_of_mem fa]
 #align pfun.fix_induction'_fwd PFun.fixInduction'_fwd
 
 variable (f : α →. β)
@@ -764,11 +740,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (t : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (PFun.core.{u2, u1} α β (PFun.res.{u2, u1} α β f s) t) (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) (Set.preimage.{u2, u1} α β f t))
 Case conversion may be inaccurate. Consider using '#align pfun.core_res PFun.core_resₓ'. -/
-theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).core t = sᶜ ∪ f ⁻¹' t :=
-  by
-  ext
-  rw [mem_core_res]
-  by_cases h : x ∈ s <;> simp [h]
+theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).core t = sᶜ ∪ f ⁻¹' t := by ext;
+  rw [mem_core_res]; by_cases h : x ∈ s <;> simp [h]
 #align pfun.core_res PFun.core_res
 
 end

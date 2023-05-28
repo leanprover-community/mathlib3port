@@ -117,8 +117,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     let nB := g.denominators (n + 1)
     have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) :=
       abs_sub_convergents_le not_terminated_at_n
-    suffices : 1 / (B * nB) < ε
-    exact lt_of_le_of_lt abs_v_sub_conv_le this
+    suffices : 1 / (B * nB) < ε; exact lt_of_le_of_lt abs_v_sub_conv_le this
     -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division
     have nB_ineq : (fib (n + 2) : K) ≤ nB :=
       haveI : ¬g.terminated_at (n + 1 - 1) := not_terminated_at_n
@@ -135,8 +134,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
         haveI : (0 : K) < fib (n + 2) := by exact_mod_cast fib_pos (n + 1).zero_lt_succ
         lt_of_lt_of_le this nB_ineq
       solve_by_elim [mul_pos]
-    suffices : 1 < ε * (B * nB)
-    exact (div_lt_iff zero_lt_mul_conts).right this
+    suffices : 1 < ε * (B * nB); exact (div_lt_iff zero_lt_mul_conts).right this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
     have one_lt_ε_mul_N : 1 < ε * n :=
       by
@@ -145,10 +143,9 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
       have : ε * N' ≤ ε * n :=
         (mul_le_mul_left ε_pos).right (le_trans this (by exact_mod_cast n_ge_N))
       exact lt_of_lt_of_le one_lt_ε_mul_N' this
-    suffices : ε * n ≤ ε * (B * nB)
-    exact lt_of_lt_of_le one_lt_ε_mul_N this
+    suffices : ε * n ≤ ε * (B * nB); exact lt_of_lt_of_le one_lt_ε_mul_N this
     -- cancel `ε`
-    suffices : (n : K) ≤ B * nB
+    suffices : (n : K) ≤ B * nB;
     exact (mul_le_mul_left ε_pos).right this
     show (n : K) ≤ B * nB
     calc

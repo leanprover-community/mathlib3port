@@ -65,10 +65,7 @@ variable [TopologicalSpace V] [AddCommGroup V] [Module ℝ V]
 instance : SetLike (ConvexBody V) V
     where
   coe := ConvexBody.carrier
-  coe_injective' K L h := by
-    cases K
-    cases L
-    congr
+  coe_injective' K L h := by cases K; cases L; congr
 
 #print ConvexBody.convex /-
 protected theorem convex (K : ConvexBody V) : Convex ℝ (K : Set V) :=
@@ -112,16 +109,10 @@ instance : AddMonoid (ConvexBody V)
   add K L :=
     ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact,
       K.Nonempty.add L.Nonempty⟩
-  add_assoc K L M := by
-    ext
-    simp only [coe_mk, Set.image2_add, add_assoc]
+  add_assoc K L M := by ext; simp only [coe_mk, Set.image2_add, add_assoc]
   zero := ⟨0, convex_singleton 0, isCompact_singleton, Set.singleton_nonempty 0⟩
-  zero_add K := by
-    ext
-    simp only [coe_mk, Set.image2_add, zero_add]
-  add_zero K := by
-    ext
-    simp only [coe_mk, Set.image2_add, add_zero]
+  zero_add K := by ext; simp only [coe_mk, Set.image2_add, zero_add]
+  add_zero K := by ext; simp only [coe_mk, Set.image2_add, add_zero]
 
 /- warning: convex_body.coe_add -> ConvexBody.coe_add is a dubious translation:
 <too large>
@@ -143,10 +134,7 @@ instance : Inhabited (ConvexBody V) :=
   ⟨0⟩
 
 instance : AddCommMonoid (ConvexBody V) :=
-  { ConvexBody.addMonoid with
-    add_comm := fun K L => by
-      ext
-      simp only [coe_add, add_comm] }
+  { ConvexBody.addMonoid with add_comm := fun K L => by ext; simp only [coe_add, add_comm] }
 
 end ContinuousAdd
 
@@ -167,18 +155,10 @@ variable [ContinuousAdd V]
 instance : DistribMulAction ℝ (ConvexBody V)
     where
   toSMul := ConvexBody.hasSmul
-  one_smul K := by
-    ext
-    simp only [coe_smul, one_smul]
-  mul_smul c d K := by
-    ext
-    simp only [coe_smul, mul_smul]
-  smul_add c K L := by
-    ext
-    simp only [coe_smul, coe_add, smul_add]
-  smul_zero c := by
-    ext
-    simp only [coe_smul, coe_zero, smul_zero]
+  one_smul K := by ext; simp only [coe_smul, one_smul]
+  mul_smul c d K := by ext; simp only [coe_smul, mul_smul]
+  smul_add c K L := by ext; simp only [coe_smul, coe_add, smul_add]
+  smul_zero c := by ext; simp only [coe_smul, coe_zero, smul_zero]
 
 /- warning: convex_body.coe_smul' -> ConvexBody.coe_smul' is a dubious translation:
 <too large>
@@ -196,9 +176,7 @@ instance : Module ℝ≥0 (ConvexBody V)
     ext1
     simp only [coe_smul, coe_add]
     exact Convex.add_smul K.convex (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)
-  zero_smul K := by
-    ext1
-    exact Set.zero_smul_set K.nonempty
+  zero_smul K := by ext1; exact Set.zero_smul_set K.nonempty
 
 end TVS
 
@@ -237,9 +215,7 @@ theorem hausdorffDist_coe : Metric.hausdorffDist (K : Set V) L = dist K L :=
 
 #print ConvexBody.hausdorffEdist_coe /-
 @[simp, norm_cast]
-theorem hausdorffEdist_coe : EMetric.hausdorffEdist (K : Set V) L = edist K L :=
-  by
-  rw [edist_dist]
+theorem hausdorffEdist_coe : EMetric.hausdorffEdist (K : Set V) L = edist K L := by rw [edist_dist];
   exact (ENNReal.ofReal_toReal Hausdorff_edist_ne_top).symm
 #align convex_body.Hausdorff_edist_coe ConvexBody.hausdorffEdist_coe
 -/

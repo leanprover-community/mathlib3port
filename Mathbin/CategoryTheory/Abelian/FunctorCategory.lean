@@ -112,11 +112,8 @@ theorem coimageImageComparison_app' :
 Case conversion may be inaccurate. Consider using '#align category_theory.abelian.functor_category.functor_category_is_iso_coimage_image_comparison CategoryTheory.Abelian.FunctorCategory.functor_category_isIso_coimageImageComparisonₓ'. -/
 instance functor_category_isIso_coimageImageComparison : IsIso (Abelian.coimageImageComparison α) :=
   by
-  have : ∀ X : C, is_iso ((abelian.coimage_image_comparison α).app X) :=
-    by
-    intros
-    rw [coimage_image_comparison_app']
-    infer_instance
+  have : ∀ X : C, is_iso ((abelian.coimage_image_comparison α).app X) := by intros ;
+    rw [coimage_image_comparison_app']; infer_instance
   apply nat_iso.is_iso_of_is_iso_app
 #align category_theory.abelian.functor_category.functor_category_is_iso_coimage_image_comparison CategoryTheory.Abelian.FunctorCategory.functor_category_isIso_coimageImageComparison
 

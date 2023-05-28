@@ -332,10 +332,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : Bl
   · simp
   let k := (univ.image b).max' (univ_nonempty.image _)
   rw [two_block_triangular_det' M fun i => b i = k]
-  · have : univ.image b = insert k ((univ.image b).eraseₓ k) :=
-      by
-      rw [insert_erase]
-      apply max'_mem
+  · have : univ.image b = insert k ((univ.image b).eraseₓ k) := by rw [insert_erase]; apply max'_mem
     rw [this, prod_insert (not_mem_erase _ _)]
     refine' congr_arg _ _
     let b' := fun i : { a // b a ≠ k } => b ↑i
@@ -391,9 +388,7 @@ but is expected to have type
   forall {m : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommRing.{u2} R] [_inst_2 : DecidableEq.{succ u1} m] [_inst_3 : Fintype.{u1} m] [_inst_6 : LinearOrder.{u1} m] (M : Matrix.{u1, u1, u2} m m R), (Matrix.BlockTriangular.{u2, u1, u1} (OrderDual.{u1} m) m R _inst_1 (OrderDual.instLTOrderDual.{u1} m (Preorder.toLT.{u1} m (PartialOrder.toPreorder.{u1} m (SemilatticeInf.toPartialOrder.{u1} m (Lattice.toSemilatticeInf.{u1} m (DistribLattice.toLattice.{u1} m (instDistribLattice.{u1} m _inst_6))))))) M (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} m (OrderDual.{u1} m)) m (fun (_x : m) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : m) => OrderDual.{u1} m) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} m (OrderDual.{u1} m)) (OrderDual.toDual.{u1} m))) -> (Eq.{succ u2} R (Matrix.det.{u2, u1} m (fun (a : m) (b : m) => _inst_2 a b) _inst_3 R _inst_1 M) (Finset.prod.{u2, u1} R m (CommRing.toCommMonoid.{u2} R _inst_1) (Finset.univ.{u1} m _inst_3) (fun (i : m) => M i i)))
 Case conversion may be inaccurate. Consider using '#align matrix.det_of_lower_triangular Matrix.det_of_lowerTriangularₓ'. -/
 theorem det_of_lowerTriangular [LinearOrder m] (M : Matrix m m R) (h : M.BlockTriangular toDual) :
-    M.det = ∏ i : m, M i i := by
-  rw [← det_transpose]
-  exact det_of_upper_triangular h.transpose
+    M.det = ∏ i : m, M i i := by rw [← det_transpose]; exact det_of_upper_triangular h.transpose
 #align matrix.det_of_lower_triangular Matrix.det_of_lowerTriangular
 
 /-! ### Invertible -/
@@ -463,9 +458,7 @@ theorem toBlock_inverse_eq_zero [LinearOrder α] [Invertible M] (hM : BlockTrian
     simpa using hM (lt_of_lt_of_le j.2 <| le_of_not_lt i.2)
   have h_mul_eq_zero : M⁻¹.toBlock q p ⬝ M.to_block p p = 0 := by simpa [h_zero] using h_sum
   haveI : Invertible (M.to_block p p) := hM.invertible_to_block k
-  have : (fun i => k ≤ b i) = q := by
-    ext
-    exact not_lt.symm
+  have : (fun i => k ≤ b i) = q := by ext; exact not_lt.symm
   rw [this, ← Matrix.zero_mul (M.to_block p p)⁻¹, ← h_mul_eq_zero,
     mul_inv_cancel_right_of_invertible]
 #align matrix.to_block_inverse_eq_zero Matrix.toBlock_inverse_eq_zero

@@ -89,8 +89,7 @@ protected theorem lawfulFunctor' [F : Functor t']
     LawfulFunctor t' :=
   by
   have : F = Equiv.functor := by
-    cases F
-    dsimp [Equiv.functor]
+    cases F; dsimp [Equiv.functor]
     congr <;> ext <;> [rw [← h₀];rw [← h₁]]
   subst this
   exact Equiv.lawfulFunctor
@@ -219,12 +218,9 @@ protected def isLawfulTraversable' [_i : Traversable t']
     -- h₂ needs a `is_lawful_applicative` assumption
     refine' { to_lawfulFunctor := Equiv.lawfulFunctor' eqv @h₀ @h₁.. } <;>
     intros
-  · rw [h₂, Equiv.id_traverse]
-    infer_instance
-  · rw [h₂, Equiv.comp_traverse f g x, h₂]
-    congr
-    rw [h₂]
-    all_goals infer_instance
+  · rw [h₂, Equiv.id_traverse]; infer_instance
+  · rw [h₂, Equiv.comp_traverse f g x, h₂]; congr
+    rw [h₂]; all_goals infer_instance
   · rw [h₂, Equiv.traverse_eq_map_id, h₀] <;> infer_instance
   · rw [h₂, Equiv.naturality, h₂] <;> infer_instance
 #align equiv.is_lawful_traversable' Equiv.isLawfulTraversable'

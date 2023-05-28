@@ -85,16 +85,8 @@ theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)}
     (t : IsLimit c) : IsLimit (raiseCone c)
     where
-  lift s :=
-    Over.homMk (t.lift ((forget B).mapCone s))
-      (by
-        dsimp
-        simp)
-  uniq s m K := by
-    ext1
-    apply t.hom_ext
-    intro j
-    simp [← K j]
+  lift s := Over.homMk (t.lift ((forget B).mapCone s)) (by dsimp; simp)
+  uniq s m K := by ext1; apply t.hom_ext; intro j; simp [← K j]
 #align category_theory.over.creates_connected.raised_cone_is_limit CategoryTheory.Over.CreatesConnected.raisedConeIsLimit
 -/
 

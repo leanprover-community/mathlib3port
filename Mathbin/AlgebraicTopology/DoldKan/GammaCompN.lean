@@ -66,11 +66,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
 #print AlgebraicTopology.DoldKan.Γ₀'CompNondegComplexFunctor /-
 /-- The natural isomorphism `(Γ₀.splitting K).nondeg_complex ≅ K` for `K : chain_complex C ℕ`. -/
 def Γ₀'CompNondegComplexFunctor : Γ₀' ⋙ Split.nondegComplexFunctor ≅ 𝟭 (ChainComplex C ℕ) :=
-  NatIso.ofComponents Γ₀NondegComplexIso fun X Y f =>
-    by
-    ext n
-    dsimp
-    simp only [comp_id, id_comp]
+  NatIso.ofComponents Γ₀NondegComplexIso fun X Y f => by ext n; dsimp; simp only [comp_id, id_comp]
 #align algebraic_topology.dold_kan.Γ₀'_comp_nondeg_complex_functor AlgebraicTopology.DoldKan.Γ₀'CompNondegComplexFunctor
 -/
 
@@ -110,9 +106,7 @@ theorem N₁Γ₀_hom_app (K : ChainComplex C ℕ) :
     N₁Γ₀.Hom.app K =
       (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv ≫
         (toKaroubi _).map (Γ₀NondegComplexIso K).Hom :=
-  by
-  change (N₁Γ₀.app K).Hom = _
-  simpa only [N₁Γ₀_app]
+  by change (N₁Γ₀.app K).Hom = _; simpa only [N₁Γ₀_app]
 #align algebraic_topology.dold_kan.N₁Γ₀_hom_app AlgebraicTopology.DoldKan.N₁Γ₀_hom_app
 
 /- warning: algebraic_topology.dold_kan.N₁Γ₀_inv_app -> AlgebraicTopology.DoldKan.N₁Γ₀_inv_app is a dubious translation:
@@ -122,9 +116,7 @@ theorem N₁Γ₀_inv_app (K : ChainComplex C ℕ) :
     N₁Γ₀.inv.app K =
       (toKaroubi _).map (Γ₀NondegComplexIso K).inv ≫
         (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom :=
-  by
-  change (N₁Γ₀.app K).inv = _
-  simpa only [N₁Γ₀_app]
+  by change (N₁Γ₀.app K).inv = _; simpa only [N₁Γ₀_app]
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app AlgebraicTopology.DoldKan.N₁Γ₀_inv_app
 
 /- warning: algebraic_topology.dold_kan.N₁Γ₀_hom_app_f_f -> AlgebraicTopology.DoldKan.N₁Γ₀_hom_app_f_f is a dubious translation:
@@ -132,10 +124,8 @@ theorem N₁Γ₀_inv_app (K : ChainComplex C ℕ) :
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.N₁Γ₀_hom_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_hom_app_f_fₓ'. -/
 @[simp]
 theorem N₁Γ₀_hom_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
-    (N₁Γ₀.Hom.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv.f.f n :=
-  by
-  rw [N₁Γ₀_hom_app]
-  apply comp_id
+    (N₁Γ₀.Hom.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv.f.f n := by
+  rw [N₁Γ₀_hom_app]; apply comp_id
 #align algebraic_topology.dold_kan.N₁Γ₀_hom_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_hom_app_f_f
 
 /- warning: algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f -> AlgebraicTopology.DoldKan.N₁Γ₀_inv_app_f_f is a dubious translation:
@@ -143,10 +133,8 @@ theorem N₁Γ₀_hom_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_inv_app_f_fₓ'. -/
 @[simp]
 theorem N₁Γ₀_inv_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
-    (N₁Γ₀.inv.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom.f.f n :=
-  by
-  rw [N₁Γ₀_inv_app]
-  apply id_comp
+    (N₁Γ₀.inv.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom.f.f n := by
+  rw [N₁Γ₀_inv_app]; apply id_comp
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_inv_app_f_f
 
 /- warning: algebraic_topology.dold_kan.N₂Γ₂_to_karoubi -> AlgebraicTopology.DoldKan.N₂Γ₂_toKaroubi is a dubious translation:

@@ -61,9 +61,7 @@ theorem tendsto_sum_pi_div_four :
       simp only [NNReal.coe_nat_cast, Function.comp_apply, NNReal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
-          (by
-            norm_cast
-            simp only [Nat.succ_ne_zero, not_false_iff]),
+          (by norm_cast; simp only [Nat.succ_ne_zero, not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
     · simp only [add_zero, add_right_neg]
   -- (2) We convert the limit in our goal to an inequality
@@ -77,8 +75,7 @@ theorem tendsto_sum_pi_div_four :
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
     convert f_bound
-    simp only [f]
-    simp [b]
+    simp only [f]; simp [b]
   -- We show that `U` is indeed in [0,1]
   have hU1 : (U : ℝ) ≤ 1 := by
     by_cases hk : k = 0
@@ -86,14 +83,10 @@ theorem tendsto_sum_pi_div_four :
     ·
       exact
         rpow_le_one_of_one_le_of_nonpos
-          (by
-            norm_cast
-            exact nat.succ_le_iff.mpr (Nat.pos_of_ne_zero hk))
+          (by norm_cast; exact nat.succ_le_iff.mpr (Nat.pos_of_ne_zero hk))
           (le_of_lt
             (@div_neg_of_neg_of_pos _ _ (-(1 : ℝ)) (2 * k + 1) (neg_neg_iff_pos.mpr zero_lt_one)
-              (by
-                norm_cast
-                exact Nat.succ_pos')))
+              (by norm_cast; exact Nat.succ_pos')))
   have hU2 := NNReal.coe_nonneg U
   -- (4) We compute the derivative of `f`, denoted by `f'`
   let f' := fun x : ℝ => (-x ^ 2) ^ k / (1 + x ^ 2)
@@ -110,11 +103,7 @@ theorem tendsto_sum_pi_div_four :
         ring
       · simp only [Nat.add_succ_sub_one, add_zero, mul_one, id.def, Nat.cast_bit0, Nat.cast_add,
           Nat.cast_one, Nat.cast_mul]
-        rw [← mul_assoc,
-          @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
-            (by
-              norm_cast
-              linarith),
+        rw [← mul_assoc, @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _ (by norm_cast; linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
         ring_nf
     convert(has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
@@ -160,10 +149,7 @@ theorem tendsto_sum_pi_div_four :
     _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
       (le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2))
     _ = 1 - U + U ^ (2 * k) * U := by ring
-    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) :=
-      by
-      rw [← pow_succ' (U : ℝ) (2 * k)]
-      norm_cast
+    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by rw [← pow_succ' (U : ℝ) (2 * k)]; norm_cast
     
 #align real.tendsto_sum_pi_div_four Real.tendsto_sum_pi_div_four
 

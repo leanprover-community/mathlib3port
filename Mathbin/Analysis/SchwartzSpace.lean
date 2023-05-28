@@ -294,8 +294,7 @@ instance hasNsmul : SMul ℕ 𝓢(E, F) :=
       smooth' := (f.smooth _).const_smul c
       decay' :=
         by
-        have : c • (f : E → F) = (c : ℝ) • f := by
-          ext x
+        have : c • (f : E → F) = (c : ℝ) • f := by ext x;
           simp only [Pi.smul_apply, ← nsmul_eq_smul_cast]
         simp only [this]
         exact ((c : ℝ) • f).decay' }⟩
@@ -307,8 +306,7 @@ instance hasZsmul : SMul ℤ 𝓢(E, F) :=
       smooth' := (f.smooth _).const_smul c
       decay' :=
         by
-        have : c • (f : E → F) = (c : ℝ) • f := by
-          ext x
+        have : c • (f : E → F) = (c : ℝ) • f := by ext x;
           simp only [Pi.smul_apply, ← zsmul_eq_smul_cast]
         simp only [this]
         exact ((c : ℝ) • f).decay' }⟩
@@ -421,9 +419,7 @@ theorem coe_coeHom : (coeHom E F : 𝓢(E, F) → E → F) = coeFn :=
   rfl
 #align schwartz_map.coe_coe_hom SchwartzMap.coe_coeHom
 
-theorem coeHom_injective : Function.Injective (coeHom E F) :=
-  by
-  rw [coe_coe_hom]
+theorem coeHom_injective : Function.Injective (coeHom E F) := by rw [coe_coe_hom];
   exact FunLike.coe_injective
 #align schwartz_map.coe_hom_injective SchwartzMap.coeHom_injective
 
@@ -748,12 +744,8 @@ variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 def toBoundedContinuousFunctionLm : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F
     where
   toFun f := f.toBoundedContinuousFunction
-  map_add' f g := by
-    ext
-    exact add_apply
-  map_smul' a f := by
-    ext
-    exact smul_apply
+  map_add' f g := by ext; exact add_apply
+  map_smul' a f := by ext; exact smul_apply
 #align schwartz_map.to_bounded_continuous_function_lm SchwartzMap.toBoundedContinuousFunctionLm
 
 @[simp]

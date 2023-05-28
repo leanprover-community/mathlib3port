@@ -75,9 +75,7 @@ def Coe.addMonoidHom : AddMonoidHom (R_hat R K) (K_hat R K)
     where
   toFun := coe
   map_zero' := rfl
-  map_add' x y := by
-    ext v
-    simp only [coe_apply, Pi.add_apply, Subring.coe_add]
+  map_add' x y := by ext v; simp only [coe_apply, Pi.add_apply, Subring.coe_add]
 #align dedekind_domain.finite_integral_adeles.coe.add_monoid_hom DedekindDomain.FiniteIntegralAdeles.Coe.addMonoidHom
 
 /-- The inclusion of `R_hat` in `K_hat` as a ring homomorphism. -/
@@ -86,10 +84,7 @@ def Coe.ringHom : RingHom (R_hat R K) (K_hat R K) :=
   { Coe.addMonoidHom R K with
     toFun := coe
     map_one' := rfl
-    map_mul' := fun x y => by
-      ext p
-      simp only [Pi.mul_apply, Subring.coe_mul]
-      rfl }
+    map_mul' := fun x y => by ext p; simp only [Pi.mul_apply, Subring.coe_mul]; rfl }
 #align dedekind_domain.finite_integral_adeles.coe.ring_hom DedekindDomain.FiniteIntegralAdeles.Coe.ringHom
 
 end FiniteIntegralAdeles
@@ -181,16 +176,11 @@ theorem zero : (0 : K_hat R K).IsFiniteAdele :=
   have h_empty :
     { v : height_one_spectrum R | ¬(0 : v.adicCompletion K) ∈ v.adicCompletionIntegers K } = ∅ :=
     by
-    ext v
-    rw [mem_empty_iff_false, iff_false_iff]
-    intro hv
-    rw [mem_set_of_eq] at hv
-    apply hv
-    rw [mem_adic_completion_integers]
+    ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
+    rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
     have h_zero : (Valued.v (0 : v.adic_completion K) : WithZero (Multiplicative ℤ)) = 0 :=
       valued.v.map_zero'
-    rw [h_zero]
-    exact zero_le_one' _
+    rw [h_zero]; exact zero_le_one' _
   simp_rw [Pi.zero_apply, h_empty]
   exact finite_empty
 #align dedekind_domain.prod_adic_completions.is_finite_adele.zero DedekindDomain.ProdAdicCompletions.IsFiniteAdele.zero
@@ -239,12 +229,8 @@ theorem one : (1 : K_hat R K).IsFiniteAdele :=
   have h_empty :
     { v : height_one_spectrum R | ¬(1 : v.adicCompletion K) ∈ v.adicCompletionIntegers K } = ∅ :=
     by
-    ext v
-    rw [mem_empty_iff_false, iff_false_iff]
-    intro hv
-    rw [mem_set_of_eq] at hv
-    apply hv
-    rw [mem_adic_completion_integers]
+    ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
+    rw [mem_set_of_eq] at hv; apply hv; rw [mem_adic_completion_integers]
     exact le_of_eq valued.v.map_one'
   simp_rw [Pi.one_apply, h_empty]
   exact finite_empty

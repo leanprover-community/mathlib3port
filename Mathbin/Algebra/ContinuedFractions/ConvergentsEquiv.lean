@@ -192,13 +192,13 @@ theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squashSeq :
   case some =>
     induction' n with m IH generalizing s gp_succ_n
     case zero =>
-      obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head
+      obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head;
       exact s.ge_stable zero_le_one s_succ_nth_eq
       have : (squash_seq s 0).headI = some ⟨gp_head.a, gp_head.b + gp_succ_n.a / gp_succ_n.b⟩ :=
         squash_seq_nth_of_not_terminated s_head_eq s_succ_nth_eq
       simp [*, convergents'_aux, seq.head, seq.nth_tail]
     case succ =>
-      obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head
+      obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head;
       exact s.ge_stable (m + 2).zero_le s_succ_nth_eq
       suffices
         gp_head.a / (gp_head.b + convergents'_aux s.tail (m + 2)) =
@@ -314,7 +314,7 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
   cases' Decidable.em (g.terminated_at n) with terminated_at_n not_terminated_at_n
   · have : squash_gcf g n = g := squash_gcf_eq_self_of_terminated terminated_at_n
     simp only [this, convergents_stable_of_terminated n.le_succ terminated_at_n]
-  · obtain ⟨⟨a, b⟩, s_nth_eq⟩ : ∃ gp_n, g.s.nth n = some gp_n
+  · obtain ⟨⟨a, b⟩, s_nth_eq⟩ : ∃ gp_n, g.s.nth n = some gp_n;
     exact option.ne_none_iff_exists'.mp not_terminated_at_n
     have b_ne_zero : b ≠ 0 := nth_part_denom_ne_zero (part_denom_eq_s_b s_nth_eq)
     cases' n with n'
@@ -339,15 +339,11 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
       let g' := squash_gcf g (n' + 1)
       set pred_conts := g.continuants_aux (n' + 1) with succ_n'th_conts_aux_eq
       set ppred_conts := g.continuants_aux n' with n'th_conts_aux_eq
-      let pA := pred_conts.a
-      let pB := pred_conts.b
-      let ppA := ppred_conts.a
-      let ppB := ppred_conts.b
+      let pA := pred_conts.a; let pB := pred_conts.b
+      let ppA := ppred_conts.a; let ppB := ppred_conts.b
       set pred_conts' := g'.continuants_aux (n' + 1) with succ_n'th_conts_aux_eq'
       set ppred_conts' := g'.continuants_aux n' with n'th_conts_aux_eq'
-      let pA' := pred_conts'.a
-      let pB' := pred_conts'.b
-      let ppA' := ppred_conts'.a
+      let pA' := pred_conts'.a; let pB' := pred_conts'.b; let ppA' := ppred_conts'.a
       let ppB' := ppred_conts'.b
       -- first compute the convergent of the squashed gcf
       have :
@@ -416,8 +412,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
     cases' Decidable.em (terminated_at g n) with terminated_at_n not_terminated_at_n
     · have g'_eq_g : g' = g := squash_gcf_eq_self_of_terminated terminated_at_n
       rw [convergents_stable_of_terminated n.le_succ terminated_at_n, g'_eq_g, IH _]
-      intro _ _ m_lt_n s_mth_eq
-      exact s_pos (Nat.lt.step m_lt_n) s_mth_eq
+      intro _ _ m_lt_n s_mth_eq; exact s_pos (Nat.lt.step m_lt_n) s_mth_eq
     · suffices g.convergents (n + 1) = g'.convergents n
         by
         -- invoke the IH for the squashed gcf
@@ -427,9 +422,9 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
         cases' m_lt_n with n succ_m_lt_n
         · -- the difficult case at the squashed position: we first obtain the values from
           -- the sequence
-          obtain ⟨gp_succ_m, s_succ_mth_eq⟩ : ∃ gp_succ_m, g.s.nth (m + 1) = some gp_succ_m
+          obtain ⟨gp_succ_m, s_succ_mth_eq⟩ : ∃ gp_succ_m, g.s.nth (m + 1) = some gp_succ_m;
           exact option.ne_none_iff_exists'.mp not_terminated_at_n
-          obtain ⟨gp_m, mth_s_eq⟩ : ∃ gp_m, g.s.nth m = some gp_m
+          obtain ⟨gp_m, mth_s_eq⟩ : ∃ gp_m, g.s.nth m = some gp_m;
           exact g.s.ge_stable m.le_succ s_succ_mth_eq
           -- we then plug them into the recurrence
           suffices 0 < gp_m.a ∧ 0 < gp_m.b + gp_succ_m.a / gp_succ_m.b
@@ -450,7 +445,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
       have : ∀ ⦃b⦄, g.partial_denominators.nth n = some b → b ≠ 0 :=
         by
         intro b nth_part_denom_eq
-        obtain ⟨gp, s_nth_eq, ⟨refl⟩⟩ : ∃ gp, g.s.nth n = some gp ∧ gp.b = b
+        obtain ⟨gp, s_nth_eq, ⟨refl⟩⟩ : ∃ gp, g.s.nth n = some gp ∧ gp.b = b;
         exact exists_s_b_of_part_denom nth_part_denom_eq
         exact (ne_of_lt (s_pos (lt_add_one n) s_nth_eq).right).symm
       exact succ_nth_convergent_eq_squash_gcf_nth_convergent this

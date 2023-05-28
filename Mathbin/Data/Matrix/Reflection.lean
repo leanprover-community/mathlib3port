@@ -124,10 +124,8 @@ theorem transposeᵣ_eq : ∀ {m n} (A : Matrix (Fin m) (Fin n) α), transpose�
     Matrix.ext fun i j => by
       simp_rw [transposeᵣ, transposeᵣ_eq]
       refine' i.cases _ fun i => _
-      · dsimp
-        rw [FinVec.map_eq]
-      · simp only [of_apply, Matrix.cons_val_succ]
-        rfl
+      · dsimp; rw [FinVec.map_eq]
+      · simp only [of_apply, Matrix.cons_val_succ]; rfl
 #align matrix.transposeᵣ_eq Matrix.transposeᵣ_eq
 -/
 

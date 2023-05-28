@@ -621,11 +621,7 @@ namespace Hom
 instance funLike : FunLike (M →[L] N) M fun _ => N
     where
   coe := Hom.toFun
-  coe_injective' f g h := by
-    cases f
-    cases g
-    cases h
-    rfl
+  coe_injective' f g h := by cases f; cases g; cases h; rfl
 #align first_order.language.hom.fun_like FirstOrder.Language.Hom.funLike
 -/
 
@@ -891,9 +887,7 @@ theorem coeFn_ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Inject
 #print FirstOrder.Language.Embedding.ofInjective_toHom /-
 @[simp]
 theorem ofInjective_toHom [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
-    (ofInjective hf).toHom = f := by
-  ext
-  simp
+    (ofInjective hf).toHom = f := by ext; simp
 #align first_order.language.embedding.of_injective_to_hom FirstOrder.Language.Embedding.ofInjective_toHom
 -/
 
@@ -959,9 +953,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_toHomₓ'. -/
 @[simp]
 theorem comp_toHom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
-    (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom :=
-  by
-  ext
+    (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom := by ext;
   simp only [coe_to_hom, comp_apply, hom.comp_apply]
 #align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_toHom
 

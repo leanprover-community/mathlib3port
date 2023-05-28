@@ -239,10 +239,8 @@ theorem range_inl : range (inl R M M₂) = ker (snd R M M₂) :=
   ext x
   simp only [mem_ker, mem_range]
   constructor
-  · rintro ⟨y, rfl⟩
-    rfl
-  · intro h
-    exact ⟨x.fst, Prod.ext rfl h.symm⟩
+  · rintro ⟨y, rfl⟩; rfl
+  · intro h; exact ⟨x.fst, Prod.ext rfl h.symm⟩
 #align linear_map.range_inl LinearMap.range_inl
 
 /- warning: linear_map.ker_snd -> LinearMap.ker_snd is a dubious translation:
@@ -266,10 +264,8 @@ theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) :=
   ext x
   simp only [mem_ker, mem_range]
   constructor
-  · rintro ⟨y, rfl⟩
-    rfl
-  · intro h
-    exact ⟨x.snd, Prod.ext h.symm rfl⟩
+  · rintro ⟨y, rfl⟩; rfl
+  · intro h; exact ⟨x.snd, Prod.ext h.symm rfl⟩
 #align linear_map.range_inr LinearMap.range_inr
 
 /- warning: linear_map.ker_fst -> LinearMap.ker_fst is a dubious translation:
@@ -473,12 +469,9 @@ def coprodEquiv [Module S M₃] [SMulCommClass R S M₃] :
   invFun f := (f.comp (inl _ _ _), f.comp (inr _ _ _))
   left_inv f := by simp only [Prod.mk.eta, coprod_inl, coprod_inr]
   right_inv f := by simp only [← comp_coprod, comp_id, coprod_inl_inr]
-  map_add' a b := by
-    ext
+  map_add' a b := by ext;
     simp only [Prod.snd_add, add_apply, coprod_apply, Prod.fst_add, add_add_add_comm]
-  map_smul' r a := by
-    dsimp
-    ext
+  map_smul' r a := by dsimp; ext;
     simp only [smul_add, smul_apply, Prod.smul_snd, Prod.smul_fst, coprod_apply]
 #align linear_map.coprod_equiv LinearMap.coprodEquiv
 
@@ -761,8 +754,7 @@ theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Su
     (q : Submodule R M₂) : map (coprod f g) (p.Prod q) = map f p ⊔ map g q :=
   by
   refine' le_antisymm _ (sup_le (map_le_iff_le_comap.2 _) (map_le_iff_le_comap.2 _))
-  · rw [SetLike.le_def]
-    rintro _ ⟨x, ⟨h₁, h₂⟩, rfl⟩
+  · rw [SetLike.le_def]; rintro _ ⟨x, ⟨h₁, h₂⟩, rfl⟩
     exact mem_sup.2 ⟨_, ⟨_, h₁, rfl⟩, _, ⟨_, h₂, rfl⟩, rfl⟩
   · exact fun x hx => ⟨(x, 0), by simp [hx]⟩
   · exact fun x hx => ⟨(0, x), by simp [hx]⟩
@@ -832,9 +824,7 @@ theorem range_prod_le (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) :
 Case conversion may be inaccurate. Consider using '#align linear_map.ker_prod_ker_le_ker_coprod LinearMap.ker_prod_ker_le_ker_coprodₓ'. -/
 theorem ker_prod_ker_le_ker_coprod {M₂ : Type _} [AddCommGroup M₂] [Module R M₂] {M₃ : Type _}
     [AddCommGroup M₃] [Module R M₃] (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) :
-    (ker f).Prod (ker g) ≤ ker (f.coprod g) :=
-  by
-  rintro ⟨y, z⟩
+    (ker f).Prod (ker g) ≤ ker (f.coprod g) := by rintro ⟨y, z⟩;
   simp (config := { contextual := true })
 #align linear_map.ker_prod_ker_le_ker_coprod LinearMap.ker_prod_ker_le_ker_coprod
 
@@ -886,9 +876,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M₂] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_2] [_inst_5 : Module.{u1, u3} R M₂ _inst_1 _inst_3] (p : Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_4), Eq.{max (succ u2) (succ u3)} (Submodule.{u1, max u2 u3} R (Prod.{u2, u3} M M₂) _inst_1 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) (Submodule.map.{u1, u1, u2, max u2 u3, max u2 u3} R R M (Prod.{u2, u3} M M₂) _inst_1 _inst_1 _inst_2 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_4 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHomSurjective.ids.{u1} R _inst_1) (LinearMap.{u1, u1, u2, max u3 u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) M (Prod.{u2, u3} M M₂) _inst_2 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_4 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) (LinearMap.semilinearMapClass.{u1, u1, u2, max u2 u3} R R M (Prod.{u2, u3} M M₂) _inst_1 _inst_1 _inst_2 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_4 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (LinearMap.inl.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) p) (Submodule.prod.{u1, u2, u3} R M _inst_1 _inst_2 _inst_4 p M₂ _inst_3 _inst_5 (Bot.bot.{u3} (Submodule.{u1, u3} R M₂ _inst_1 _inst_3 _inst_5) (Submodule.instBotSubmodule.{u1, u3} R M₂ _inst_1 _inst_3 _inst_5)))
 Case conversion may be inaccurate. Consider using '#align submodule.map_inl Submodule.map_inlₓ'. -/
 @[simp]
-theorem map_inl : p.map (inl R M M₂) = prod p ⊥ :=
-  by
-  ext ⟨x, y⟩
+theorem map_inl : p.map (inl R M M₂) = prod p ⊥ := by ext ⟨x, y⟩;
   simp only [and_left_comm, eq_comm, mem_map, Prod.mk.inj_iff, inl_apply, mem_bot, exists_eq_left',
     mem_prod]
 #align submodule.map_inl Submodule.map_inl
@@ -1032,10 +1020,7 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u1}) (M : Type.{u2}) (M₂ : Type.{u3}) [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M₂] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_2] [_inst_5 : Module.{u1, u3} R M₂ _inst_1 _inst_3], Eq.{succ u3} (Submodule.{u1, u3} R M₂ _inst_1 _inst_3 _inst_5) (Submodule.map.{u1, u1, max u2 u3, u3, max u2 u3} R R (Prod.{u2, u3} M M₂) M₂ _inst_1 _inst_1 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_3 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_5 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHomSurjective.ids.{u1} R _inst_1) (LinearMap.{u1, u1, max u3 u2, u3} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Prod.{u2, u3} M M₂) M₂ (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_3 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_5) (LinearMap.semilinearMapClass.{u1, u1, max u2 u3, u3} R R (Prod.{u2, u3} M M₂) M₂ _inst_1 _inst_1 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_3 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_5 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (LinearMap.snd.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (Submodule.fst.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) (Bot.bot.{u3} (Submodule.{u1, u3} R M₂ _inst_1 _inst_3 _inst_5) (Submodule.instBotSubmodule.{u1, u3} R M₂ _inst_1 _inst_3 _inst_5))
 Case conversion may be inaccurate. Consider using '#align submodule.fst_map_snd Submodule.fst_map_sndₓ'. -/
-theorem fst_map_snd : (Submodule.fst R M M₂).map (LinearMap.snd R M M₂) = ⊥ :=
-  by
-  tidy
-  exact 0
+theorem fst_map_snd : (Submodule.fst R M M₂).map (LinearMap.snd R M M₂) = ⊥ := by tidy; exact 0
 #align submodule.fst_map_snd Submodule.fst_map_snd
 
 /- warning: submodule.snd -> Submodule.snd is a dubious translation:
@@ -1070,10 +1055,7 @@ lean 3 declaration is
 but is expected to have type
   forall (R : Type.{u1}) (M : Type.{u2}) (M₂ : Type.{u3}) [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : AddCommMonoid.{u3} M₂] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_2] [_inst_5 : Module.{u1, u3} R M₂ _inst_1 _inst_3], Eq.{succ u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_4) (Submodule.map.{u1, u1, max u2 u3, u2, max u2 u3} R R (Prod.{u2, u3} M M₂) M _inst_1 _inst_1 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_2 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_4 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHomSurjective.ids.{u1} R _inst_1) (LinearMap.{u1, u1, max u3 u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Prod.{u2, u3} M M₂) M (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_2 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_4) (LinearMap.semilinearMapClass.{u1, u1, max u2 u3, u2} R R (Prod.{u2, u3} M M₂) M _inst_1 _inst_1 (Prod.instAddCommMonoidSum.{u2, u3} M M₂ _inst_2 _inst_3) _inst_2 (Prod.module.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) _inst_4 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (LinearMap.fst.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5) (Submodule.snd.{u1, u2, u3} R M M₂ _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) (Bot.bot.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 _inst_4) (Submodule.instBotSubmodule.{u1, u2} R M _inst_1 _inst_2 _inst_4))
 Case conversion may be inaccurate. Consider using '#align submodule.snd_map_fst Submodule.snd_map_fstₓ'. -/
-theorem snd_map_fst : (Submodule.snd R M M₂).map (LinearMap.fst R M M₂) = ⊥ :=
-  by
-  tidy
-  exact 0
+theorem snd_map_fst : (Submodule.snd R M M₂).map (LinearMap.fst R M M₂) = ⊥ := by tidy; exact 0
 #align submodule.snd_map_fst Submodule.snd_map_fst
 
 /- warning: submodule.snd_map_snd -> Submodule.snd_map_snd is a dubious translation:
@@ -1119,12 +1101,9 @@ theorem le_prod_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submod
   constructor
   · intro h
     constructor
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).1
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).2
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
-    exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).1
+    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩; exact (h hy1).2
+  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h; exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 #align submodule.le_prod_iff Submodule.le_prod_iff
 
 /- warning: submodule.prod_le_iff -> Submodule.prod_le_iff is a dubious translation:
@@ -1136,19 +1115,11 @@ theorem prod_le_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submod
   constructor
   · intro h
     constructor
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨hx, zero_mem p₂⟩
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨zero_mem p₁, hx⟩
+    · rintro _ ⟨x, hx, rfl⟩; apply h; exact ⟨hx, zero_mem p₂⟩
+    · rintro _ ⟨x, hx, rfl⟩; apply h; exact ⟨zero_mem p₁, hx⟩
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : (LinearMap.inl R _ _) x1 ∈ q := by
-      apply hH
-      simpa using h1
-    have h2' : (LinearMap.inr R _ _) x2 ∈ q := by
-      apply hK
-      simpa using h2
+    have h1' : (LinearMap.inl R _ _) x1 ∈ q := by apply hH; simpa using h1
+    have h2' : (LinearMap.inr R _ _) x2 ∈ q := by apply hK; simpa using h2
     simpa using add_mem h1' h2'
 #align submodule.prod_le_iff Submodule.prod_le_iff
 

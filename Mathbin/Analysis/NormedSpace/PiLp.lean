@@ -182,9 +182,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {β : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_2 : forall (i : ι), EDist.{u1} (β i)] (f : PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (g : PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β), Eq.{1} ENNReal (EDist.edist.{max u2 u1} (PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (PiLp.instEDistPiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β _inst_1 (fun (i : ι) => _inst_2 i)) f g) (iSup.{0, succ u2} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => EDist.edist.{u1} (β i) (_inst_2 i) (f i) (g i)))
 Case conversion may be inaccurate. Consider using '#align pi_Lp.edist_eq_supr PiLp.edist_eq_iSupₓ'. -/
-theorem edist_eq_iSup (f g : PiLp ∞ β) : edist f g = ⨆ i, edist (f i) (g i) :=
-  by
-  dsimp [edist]
+theorem edist_eq_iSup (f g : PiLp ∞ β) : edist f g = ⨆ i, edist (f i) (g i) := by dsimp [edist];
   exact if_neg ENNReal.top_ne_zero
 #align pi_Lp.edist_eq_supr PiLp.edist_eq_iSup
 
@@ -275,9 +273,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_2 : forall (i : ι), Dist.{u1} (α i)] (f : PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι α) (g : PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι α), Eq.{1} Real (Dist.dist.{max u2 u1} (PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι α) (PiLp.instDistPiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι α _inst_1 (fun (i : ι) => _inst_2 i)) f g) (iSup.{0, succ u2} Real Real.instSupSetReal ι (fun (i : ι) => Dist.dist.{u1} (α i) (_inst_2 i) (f i) (g i)))
 Case conversion may be inaccurate. Consider using '#align pi_Lp.dist_eq_csupr PiLp.dist_eq_iSupₓ'. -/
-theorem dist_eq_iSup (f g : PiLp ∞ α) : dist f g = ⨆ i, dist (f i) (g i) :=
-  by
-  dsimp [dist]
+theorem dist_eq_iSup (f g : PiLp ∞ α) : dist f g = ⨆ i, dist (f i) (g i) := by dsimp [dist];
   exact if_neg ENNReal.top_ne_zero
 #align pi_Lp.dist_eq_csupr PiLp.dist_eq_iSup
 
@@ -319,9 +315,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {β : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_2 : forall (i : ι), Norm.{u1} (β i)] [_inst_3 : forall (i : ι), Zero.{u1} (β i)] (f : PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β), Eq.{1} Real (Norm.norm.{max u2 u1} (PiLp.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (PiLp.hasNorm.{u2, u1} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β _inst_1 (fun (i : ι) => _inst_2 i) (fun (i : ι) => _inst_3 i)) f) (iSup.{0, succ u2} Real Real.instSupSetReal ι (fun (i : ι) => Norm.norm.{u1} (β i) (_inst_2 i) (f i)))
 Case conversion may be inaccurate. Consider using '#align pi_Lp.norm_eq_csupr PiLp.norm_eq_ciSupₓ'. -/
-theorem norm_eq_ciSup (f : PiLp ∞ β) : ‖f‖ = ⨆ i, ‖f i‖ :=
-  by
-  dsimp [norm]
+theorem norm_eq_ciSup (f : PiLp ∞ β) : ‖f‖ = ⨆ i, ‖f i‖ := by dsimp [norm];
   exact if_neg ENNReal.top_ne_zero
 #align pi_Lp.norm_eq_csupr PiLp.norm_eq_ciSup
 
@@ -459,8 +453,7 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
           · refine' ENNReal.toReal_le_of_le_ofReal (Real.sSup_nonneg _ _) (iSup_le fun i => _)
             · rintro - ⟨i, rfl⟩
               exact dist_nonneg
-            · unfold edist
-              rw [PseudoMetricSpace.edist_dist]
+            · unfold edist; rw [PseudoMetricSpace.edist_dist]
               exact ENNReal.ofReal_le_ofReal (le_ciSup (Fintype.bddAbove_range _) i)
     · have A : ∀ i, edist (f i) (g i) ^ p.to_real ≠ ⊤ := fun i =>
         ENNReal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
@@ -647,9 +640,7 @@ Case conversion may be inaccurate. Consider using '#align pi_Lp.nndist_eq_sum Pi
 theorem nndist_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)]
     (hp : p ≠ ∞) (x y : PiLp p β) :
     nndist x y = (∑ i : ι, nndist (x i) (y i) ^ p.toReal) ^ (1 / p.toReal) :=
-  Subtype.ext <| by
-    push_cast
-    exact dist_eq_sum (p.to_real_pos_iff_ne_top.mpr hp) _ _
+  Subtype.ext <| by push_cast ; exact dist_eq_sum (p.to_real_pos_iff_ne_top.mpr hp) _ _
 #align pi_Lp.nndist_eq_sum PiLp.nndist_eq_sum
 
 /- warning: pi_Lp.nndist_eq_supr -> PiLp.nndist_eq_iSup is a dubious translation:
@@ -660,9 +651,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi_Lp.nndist_eq_supr PiLp.nndist_eq_iSupₓ'. -/
 theorem nndist_eq_iSup {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp ∞ β) :
     nndist x y = ⨆ i, nndist (x i) (y i) :=
-  Subtype.ext <| by
-    push_cast
-    exact dist_eq_csupr _ _
+  Subtype.ext <| by push_cast ; exact dist_eq_csupr _ _
 #align pi_Lp.nndist_eq_supr PiLp.nndist_eq_iSup
 
 /- warning: pi_Lp.lipschitz_with_equiv -> PiLp.lipschitzWith_equiv is a dubious translation:
@@ -712,10 +701,7 @@ instance seminormedAddCommGroup [∀ i, SeminormedAddCommGroup (β i)] :
     dist_eq := fun x y => by
       rcases p.dichotomy with (rfl | h)
       · simpa only [dist_eq_csupr, norm_eq_csupr, dist_eq_norm]
-      · have : p ≠ ∞ := by
-          intro hp
-          rw [hp, ENNReal.top_toReal] at h
-          linarith
+      · have : p ≠ ∞ := by intro hp; rw [hp, ENNReal.top_toReal] at h; linarith
         simpa only [dist_eq_sum (zero_lt_one.trans_le h), norm_eq_sum (zero_lt_one.trans_le h),
           dist_eq_norm] }
 #align pi_Lp.seminormed_add_comm_group PiLp.seminormedAddCommGroup
@@ -739,9 +725,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi_Lp.nnnorm_eq_sum PiLp.nnnorm_eq_sumₓ'. -/
 theorem nnnorm_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} (hp : p ≠ ∞)
     [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp p β) :
-    ‖f‖₊ = (∑ i, ‖f i‖₊ ^ p.toReal) ^ (1 / p.toReal) :=
-  by
-  ext
+    ‖f‖₊ = (∑ i, ‖f i‖₊ ^ p.toReal) ^ (1 / p.toReal) := by ext;
   simp [NNReal.coe_sum, norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
 #align pi_Lp.nnnorm_eq_sum PiLp.nnnorm_eq_sum
 
@@ -752,9 +736,7 @@ but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {β : ι -> Type.{u2}} [_inst_3 : forall (i : ι), SeminormedAddCommGroup.{u2} (β i)] (f : PiLp.{u1, u2} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β), Eq.{1} NNReal (NNNorm.nnnorm.{max u1 u2} (PiLp.{u1, u2} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (SeminormedAddGroup.toNNNorm.{max u1 u2} (PiLp.{u1, u2} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (SeminormedAddCommGroup.toSeminormedAddGroup.{max u1 u2} (PiLp.{u1, u2} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β) (PiLp.seminormedAddCommGroup.{u1, u2} (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))) ι β _inst_1 fact_one_le_top_ennreal (fun (i : ι) => _inst_3 i)))) f) (iSup.{0, succ u1} NNReal (ConditionallyCompleteLattice.toSupSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι (fun (i : ι) => NNNorm.nnnorm.{u2} (β i) (SeminormedAddGroup.toNNNorm.{u2} (β i) (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} (β i) (_inst_3 i))) (f i)))
 Case conversion may be inaccurate. Consider using '#align pi_Lp.nnnorm_eq_csupr PiLp.nnnorm_eq_ciSupₓ'. -/
 theorem nnnorm_eq_ciSup {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp ∞ β) :
-    ‖f‖₊ = ⨆ i, ‖f i‖₊ := by
-  ext
-  simp [NNReal.coe_iSup, norm_eq_csupr]
+    ‖f‖₊ = ⨆ i, ‖f i‖₊ := by ext; simp [NNReal.coe_iSup, norm_eq_csupr]
 #align pi_Lp.nnnorm_eq_csupr PiLp.nnnorm_eq_ciSup
 
 /- warning: pi_Lp.norm_eq_of_nat -> PiLp.norm_eq_of_nat is a dubious translation:
@@ -779,11 +761,8 @@ but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {β : ι -> Type.{u2}} [_inst_3 : forall (i : ι), SeminormedAddCommGroup.{u2} (β i)] (x : PiLp.{u1, u2} (OfNat.ofNat.{0} ENNReal 2 (instOfNat.{0} ENNReal 2 (CanonicallyOrderedCommSemiring.toNatCast.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) ι β), Eq.{1} Real (Norm.norm.{max u1 u2} (PiLp.{u1, u2} (OfNat.ofNat.{0} ENNReal 2 (instOfNat.{0} ENNReal 2 (CanonicallyOrderedCommSemiring.toNatCast.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) ι β) (PiLp.hasNorm.{u1, u2} (OfNat.ofNat.{0} ENNReal 2 (instOfNat.{0} ENNReal 2 (CanonicallyOrderedCommSemiring.toNatCast.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) ι β _inst_1 (fun (i : ι) => SeminormedAddCommGroup.toNorm.{u2} (β i) (_inst_3 i)) (fun (i : ι) => NegZeroClass.toZero.{u2} (β i) (SubNegZeroMonoid.toNegZeroClass.{u2} (β i) (SubtractionMonoid.toSubNegZeroMonoid.{u2} (β i) (SubtractionCommMonoid.toSubtractionMonoid.{u2} (β i) (AddCommGroup.toDivisionAddCommMonoid.{u2} (β i) (SeminormedAddCommGroup.toAddCommGroup.{u2} (β i) (_inst_3 i)))))))) x) (Real.sqrt (Finset.sum.{0, u1} Real ι Real.instAddCommMonoidReal (Finset.univ.{u1} ι _inst_1) (fun (i : ι) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (Norm.norm.{u2} (β i) (SeminormedAddCommGroup.toNorm.{u2} (β i) (_inst_3 i)) (x i)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align pi_Lp.norm_eq_of_L2 PiLp.norm_eq_of_L2ₓ'. -/
 theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
-    ‖x‖ = sqrt (∑ i : ι, ‖x i‖ ^ 2) :=
-  by
-  convert norm_eq_of_nat 2 (by norm_cast) _
-  rw [sqrt_eq_rpow]
-  norm_cast
+    ‖x‖ = sqrt (∑ i : ι, ‖x i‖ ^ 2) := by convert norm_eq_of_nat 2 (by norm_cast) _;
+  rw [sqrt_eq_rpow]; norm_cast
 #align pi_Lp.norm_eq_of_L2 PiLp.norm_eq_of_L2
 
 /- warning: pi_Lp.nnnorm_eq_of_L2 -> PiLp.nnnorm_eq_of_L2 is a dubious translation:
@@ -791,9 +770,7 @@ theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 Case conversion may be inaccurate. Consider using '#align pi_Lp.nnnorm_eq_of_L2 PiLp.nnnorm_eq_of_L2ₓ'. -/
 theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
     ‖x‖₊ = NNReal.sqrt (∑ i : ι, ‖x i‖₊ ^ 2) :=
-  Subtype.ext <| by
-    push_cast
-    exact norm_eq_of_L2 x
+  Subtype.ext <| by push_cast ; exact norm_eq_of_L2 x
 #align pi_Lp.nnnorm_eq_of_L2 PiLp.nnnorm_eq_of_L2
 
 /- warning: pi_Lp.norm_sq_eq_of_L2 -> PiLp.norm_sq_eq_of_L2 is a dubious translation:
@@ -826,9 +803,7 @@ theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 Case conversion may be inaccurate. Consider using '#align pi_Lp.nndist_eq_of_L2 PiLp.nndist_eq_of_L2ₓ'. -/
 theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
-  Subtype.ext <| by
-    push_cast
-    exact dist_eq_of_L2 _ _
+  Subtype.ext <| by push_cast ; exact dist_eq_of_L2 _ _
 #align pi_Lp.nndist_eq_of_L2 PiLp.nndist_eq_of_L2
 
 /- warning: pi_Lp.edist_eq_of_L2 -> PiLp.edist_eq_of_L2 is a dubious translation:

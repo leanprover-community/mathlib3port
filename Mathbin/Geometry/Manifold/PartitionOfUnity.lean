@@ -249,9 +249,7 @@ theorem smooth_toPartitionOfUnity {E : Type uE} [NormedAddCommGroup E] [NormedSp
     [TopologicalSpace M] [ChartedSpace H M] {s : Set M} (f : BumpCovering ι M s)
     (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
-    (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <|
-      by
-      simp only [mul_support_one_sub]
+    (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <| by simp only [mul_support_one_sub];
       exact f.locally_finite
 #align bump_covering.smooth_to_partition_of_unity BumpCovering.smooth_toPartitionOfUnity
 
@@ -368,9 +366,7 @@ theorem mem_chartAt_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
 #align smooth_bump_covering.mem_chart_at_source_of_eq_one SmoothBumpCovering.mem_chartAt_source_of_eq_one
 
 theorem mem_extChartAt_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
-    x ∈ (extChartAt I (fs.c i)).source :=
-  by
-  rw [extChartAt_source]
+    x ∈ (extChartAt I (fs.c i)).source := by rw [extChartAt_source];
   exact fs.mem_chart_at_source_of_eq_one h
 #align smooth_bump_covering.mem_ext_chart_at_source_of_eq_one SmoothBumpCovering.mem_extChartAt_source_of_eq_one
 

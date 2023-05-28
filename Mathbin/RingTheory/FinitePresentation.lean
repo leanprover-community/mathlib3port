@@ -107,8 +107,7 @@ theorem equiv (hfp : FinitePresentation R A) (e : A ≃ₐ[R] B) : FinitePresent
   constructor
   · exact Function.Surjective.comp e.surjective hf.1
   suffices hker : (AlgHom.comp (↑e) f).toRingHom.ker = f.to_ring_hom.ker
-  · rw [hker]
-    exact hf.2
+  · rw [hker]; exact hf.2
   · have hco : (AlgHom.comp (↑e) f).toRingHom = RingHom.comp (↑e.to_ring_equiv) f.to_ring_hom :=
       by
       have h : (AlgHom.comp (↑e) f).toRingHom = e.to_alg_hom.to_ring_hom.comp f.to_ring_hom := rfl
@@ -274,8 +273,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
         by
         rw [adjoin_union_eq_adjoin_adjoin, ← Subalgebra.restrictScalars_top R]
         congr 1
-        swap
-        · exact Subalgebra.isScalarTower_mid _
+        swap; · exact Subalgebra.isScalarTower_mid _
         rw [adjoin_algebra_map, ht]
         apply Subalgebra.restrictScalars_injective R
         rw [← adjoin_restrict_scalars, adjoin_range_X, Subalgebra.restrictScalars_top,
@@ -284,9 +282,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
       refine' ⟨s.image (map (algebraMap R A)) ∪ t.attach.image g, _⟩
       rw [Finset.coe_union, Finset.coe_image, Finset.coe_image, Finset.attach_eq_univ,
         Finset.coe_univ, Set.image_univ]
-      let s₀ := _
-      let I := _
-      change Ideal.span s₀ = I
+      let s₀ := _; let I := _; change Ideal.span s₀ = I
       have leI : Ideal.span s₀ ≤ I := by
         rw [Ideal.span_le]
         rintro _ (⟨x, hx, rfl⟩ | ⟨⟨x, hx⟩, rfl⟩)
@@ -300,8 +296,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
       apply leI.antisymm
       intro x hx
       rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom] at hx
-      let s₀ := _
-      change x ∈ Ideal.span s₀
+      let s₀ := _; change x ∈ Ideal.span s₀
       have :
         x ∈
           (map (algebraMap R A) : _ →+* AX).srange.toAddSubmonoid ⊔
@@ -320,11 +315,8 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
               exact Set.mem_range_self ⟨x, hx⟩
           · apply AddSubmonoid.mem_sup_left
             exact ⟨X i, map_X _ _⟩
-        · intro r
-          apply AddSubmonoid.mem_sup_left
-          exact ⟨C r, map_C _ _⟩
-        · intro _ _ h₁ h₂
-          exact add_mem h₁ h₂
+        · intro r; apply AddSubmonoid.mem_sup_left; exact ⟨C r, map_C _ _⟩
+        · intro _ _ h₁ h₂; exact add_mem h₁ h₂
         · intro x₁ x₂ h₁ h₂
           obtain ⟨_, ⟨p₁, rfl⟩, q₁, hq₁, rfl⟩ := add_submonoid.mem_sup.mp h₁
           obtain ⟨_, ⟨p₂, rfl⟩, q₂, hq₂, rfl⟩ := add_submonoid.mem_sup.mp h₂
@@ -335,11 +327,8 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
       obtain ⟨_, ⟨p, rfl⟩, q, hq, rfl⟩ := add_submonoid.mem_sup.mp this
       rw [map_add, aeval_map_algebra_map, ← aeval_unique, show aeval (f ∘ X) q = 0 from leI hq,
         add_zero] at hx
-      suffices Ideal.span (s : Set RX) ≤ (Ideal.span s₀).comap (map <| algebraMap R A)
-        by
-        refine' add_mem _ hq
-        rw [hs] at this
-        exact this hx
+      suffices Ideal.span (s : Set RX) ≤ (Ideal.span s₀).comap (map <| algebraMap R A) by
+        refine' add_mem _ hq; rw [hs] at this; exact this hx
       rw [Ideal.span_le]
       intro x hx
       apply Ideal.subset_span
@@ -365,17 +354,14 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     refine' ⟨finset.univ.image g' ∪ s.image aeval_h, _⟩
     simp only [Finset.coe_image, Finset.coe_union, Finset.coe_univ, Set.image_univ]
     have hh' : ∀ x, f (aeval_h x) = f' x := by
-      intro x
-      rw [← f.coe_to_ring_hom, map_aeval]
-      simp_rw [AlgHom.coe_toRingHom, hh]
+      intro x; rw [← f.coe_to_ring_hom, map_aeval]; simp_rw [AlgHom.coe_toRingHom, hh]
       rw [AlgHom.comp_algebraMap, ← aeval_eq_eval₂_hom, ← aeval_unique]
     let s' := Set.range g' ∪ aeval_h '' s
     have leI : Ideal.span s' ≤ f.to_ring_hom.ker :=
       by
       rw [Ideal.span_le]
       rintro _ (⟨i, rfl⟩ | ⟨x, hx, rfl⟩)
-      · change f (g' i) = 0
-        rw [map_sub, ← hg, hh', sub_self]
+      · change f (g' i) = 0; rw [map_sub, ← hg, hh', sub_self]
       · change f (aeval_h x) = 0
         rw [hh']
         change x ∈ f'.to_ring_hom.ker
@@ -385,10 +371,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     intro x hx
     have : x ∈ aeval_h.range.to_add_submonoid ⊔ (Ideal.span s').toAddSubmonoid :=
       by
-      have : x ∈ adjoin R (Set.range X : Set RXn) :=
-        by
-        rw [adjoin_range_X]
-        trivial
+      have : x ∈ adjoin R (Set.range X : Set RXn) := by rw [adjoin_range_X]; trivial
       apply adjoin_induction this
       · rintro _ ⟨i, rfl⟩
         rw [← sub_add_cancel (X i) (aeval h (g i)), add_comm]
@@ -397,11 +380,8 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
         · apply Submodule.subset_span
           apply Set.mem_union_left
           exact Set.mem_range_self _
-      · intro r
-        apply AddSubmonoid.mem_sup_left
-        exact ⟨C r, aeval_C _ _⟩
-      · intro _ _ h₁ h₂
-        exact add_mem h₁ h₂
+      · intro r; apply AddSubmonoid.mem_sup_left; exact ⟨C r, aeval_C _ _⟩
+      · intro _ _ h₁ h₂; exact add_mem h₁ h₂
       · intro p₁ p₂ h₁ h₂
         obtain ⟨_, ⟨x₁, rfl⟩, y₁, hy₁, rfl⟩ := add_submonoid.mem_sup.mp h₁
         obtain ⟨_, ⟨x₂, rfl⟩, y₂, hy₂, rfl⟩ := add_submonoid.mem_sup.mp h₂
@@ -413,10 +393,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     refine' add_mem _ hy
     simp only [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, map_add,
       show f y = 0 from leI hy, add_zero, hh'] at hx
-    suffices Ideal.span (s : Set RXm) ≤ (Ideal.span s').comap aeval_h
-      by
-      apply this
-      rwa [hs]
+    suffices Ideal.span (s : Set RXm) ≤ (Ideal.span s').comap aeval_h by apply this; rwa [hs]
     rw [Ideal.span_le]
     intro x hx
     apply Submodule.subset_span
@@ -504,9 +481,7 @@ but is expected to have type
   forall {A : Type.{u2}} {B : Type.{u1}} [_inst_1 : CommRing.{u2} A] [_inst_2 : CommRing.{u1} B] (f : RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))), (Function.Surjective.{succ u2, succ u1} A B (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) A (fun (_x : A) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : A) => B) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) A B (NonUnitalNonAssocSemiring.toMul.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} B (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} B (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2))))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) A B (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} B (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2))) (RingHom.instRingHomClassRingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2))))))) f)) -> (Ideal.FG.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)) (RingHom.ker.{u2, u1, max u2 u1} A B (RingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1)) (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)) (RingHom.instRingHomClassRingHom.{u2, u1} A B (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_1))) (Semiring.toNonAssocSemiring.{u1} B (CommSemiring.toSemiring.{u1} B (CommRing.toCommSemiring.{u1} B _inst_2)))) f)) -> (RingHom.FinitePresentation.{u2, u1} A B _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align ring_hom.finite_presentation.of_surjective RingHom.FinitePresentation.of_surjectiveₓ'. -/
 theorem of_surjective (f : A →+* B) (hf : Surjective f) (hker : f.ker.FG) : f.FinitePresentation :=
-  by
-  rw [← f.comp_id]
-  exact (id A).comp_surjective hf hker
+  by rw [← f.comp_id]; exact (id A).comp_surjective hf hker
 #align ring_hom.finite_presentation.of_surjective RingHom.FinitePresentation.of_surjective
 
 /- warning: ring_hom.finite_presentation.of_finite_type -> RingHom.FinitePresentation.of_finiteType is a dubious translation:

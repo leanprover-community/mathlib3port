@@ -107,9 +107,7 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : CommRing.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))] (𝒜 : Nat -> (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) (Algebra.toModule.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3))) [_inst_4 : GradedAlgebra.{0, u1, u2} Nat R A (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.addMonoid _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3 𝒜] (s : Set.{u2} A), Eq.{succ u2} (Set.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 (SetLike.coe.{u2, u2} (Ideal.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))) A (Submodule.setLike.{u2, u2} A A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))))) (Semiring.toModule.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)))) (Ideal.span.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) s))) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 s)
 Case conversion may be inaccurate. Consider using '#align projective_spectrum.zero_locus_span ProjectiveSpectrum.zeroLocus_spanₓ'. -/
 @[simp]
-theorem zeroLocus_span (s : Set A) : zeroLocus 𝒜 (Ideal.span s) = zeroLocus 𝒜 s :=
-  by
-  ext x
+theorem zeroLocus_span (s : Set A) : zeroLocus 𝒜 (Ideal.span s) = zeroLocus 𝒜 s := by ext x;
   exact (Submodule.gi _ _).gc s x.as_homogeneous_ideal.to_ideal
 #align projective_spectrum.zero_locus_span ProjectiveSpectrum.zeroLocus_span
 
@@ -477,10 +475,8 @@ but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : CommRing.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))] (𝒜 : Nat -> (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) (Algebra.toModule.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3))) [_inst_4 : GradedAlgebra.{0, u1, u2} Nat R A (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.addMonoid _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3 𝒜] (s : Set.{u2} A) (s' : Set.{u2} A), Eq.{succ u2} (Set.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (Union.union.{u2} (Set.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (Set.instUnionSet.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 s) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 s')) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 (SetLike.coe.{u2, u2} (Ideal.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))) A (Submodule.setLike.{u2, u2} A A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))))) (Semiring.toModule.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)))) (Inf.inf.{u2} (Ideal.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))) (Submodule.instInfSubmodule.{u2, u2} A A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} A (Semiring.toNonAssocSemiring.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))))) (Semiring.toModule.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)))) (Ideal.span.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) s) (Ideal.span.{u2} A (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) s'))))
 Case conversion may be inaccurate. Consider using '#align projective_spectrum.union_zero_locus ProjectiveSpectrum.union_zeroLocusₓ'. -/
 theorem union_zeroLocus (s s' : Set A) :
-    zeroLocus 𝒜 s ∪ zeroLocus 𝒜 s' = zeroLocus 𝒜 (Ideal.span s ⊓ Ideal.span s' : Ideal A) :=
-  by
-  rw [zero_locus_inf]
-  simp
+    zeroLocus 𝒜 s ∪ zeroLocus 𝒜 s' = zeroLocus 𝒜 (Ideal.span s ⊓ Ideal.span s' : Ideal A) := by
+  rw [zero_locus_inf]; simp
 #align projective_spectrum.union_zero_locus ProjectiveSpectrum.union_zeroLocus
 
 /- warning: projective_spectrum.zero_locus_mul_ideal -> ProjectiveSpectrum.zeroLocus_mul_ideal is a dubious translation:
@@ -564,9 +560,7 @@ instance zariskiTopology : TopologicalSpace (ProjectiveSpectrum 𝒜) :=
       have hf : ∀ i : Zs, ↑i = zero_locus 𝒜 (f i) := fun i => (Classical.choose_spec (h i.2)).symm
       simp only [hf]
       exact ⟨_, zero_locus_Union 𝒜 _⟩)
-    (by
-      rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩
-      exact ⟨_, (union_zero_locus 𝒜 s t).symm⟩)
+    (by rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩; exact ⟨_, (union_zero_locus 𝒜 s t).symm⟩)
 #align projective_spectrum.zariski_topology ProjectiveSpectrum.zariskiTopology
 
 /- warning: projective_spectrum.Top -> ProjectiveSpectrum.top is a dubious translation:
@@ -606,10 +600,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : CommRing.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))] (𝒜 : Nat -> (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) (Algebra.toModule.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3))) [_inst_4 : GradedAlgebra.{0, u1, u2} Nat R A (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.addMonoid _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3 𝒜] (s : Set.{u2} A), IsClosed.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zeroLocus.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 s)
 Case conversion may be inaccurate. Consider using '#align projective_spectrum.is_closed_zero_locus ProjectiveSpectrum.isClosed_zeroLocusₓ'. -/
-theorem isClosed_zeroLocus (s : Set A) : IsClosed (zeroLocus 𝒜 s) :=
-  by
-  rw [is_closed_iff_zero_locus]
-  exact ⟨s, rfl⟩
+theorem isClosed_zeroLocus (s : Set A) : IsClosed (zeroLocus 𝒜 s) := by
+  rw [is_closed_iff_zero_locus]; exact ⟨s, rfl⟩
 #align projective_spectrum.is_closed_zero_locus ProjectiveSpectrum.isClosed_zeroLocus
 
 /- warning: projective_spectrum.zero_locus_vanishing_ideal_eq_closure -> ProjectiveSpectrum.zeroLocus_vanishingIdeal_eq_closure is a dubious translation:
@@ -735,10 +727,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : CommRing.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))] (𝒜 : Nat -> (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) (Algebra.toModule.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3))) [_inst_4 : GradedAlgebra.{0, u1, u2} Nat R A (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.addMonoid _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3 𝒜] (f : A) (g : A), LE.le.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (Preorder.toLE.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (PartialOrder.toPreorder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (OmegaCompletePartialOrder.toPartialOrder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)))))) (ProjectiveSpectrum.basicOpen.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (NonUnitalNonAssocRing.toMul.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) f g)) (ProjectiveSpectrum.basicOpen.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 f)
 Case conversion may be inaccurate. Consider using '#align projective_spectrum.basic_open_mul_le_left ProjectiveSpectrum.basicOpen_mul_le_leftₓ'. -/
-theorem basicOpen_mul_le_left (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 𝒜 f :=
-  by
-  rw [basic_open_mul 𝒜 f g]
-  exact inf_le_left
+theorem basicOpen_mul_le_left (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 𝒜 f := by
+  rw [basic_open_mul 𝒜 f g]; exact inf_le_left
 #align projective_spectrum.basic_open_mul_le_left ProjectiveSpectrum.basicOpen_mul_le_left
 
 /- warning: projective_spectrum.basic_open_mul_le_right -> ProjectiveSpectrum.basicOpen_mul_le_right is a dubious translation:
@@ -747,10 +737,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {A : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : CommRing.{u2} A] [_inst_3 : Algebra.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2))] (𝒜 : Nat -> (Submodule.{u1, u2} R A (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} A (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) (Algebra.toModule.{u1, u2} R A _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3))) [_inst_4 : GradedAlgebra.{0, u1, u2} Nat R A (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) Nat.addMonoid _inst_1 (CommSemiring.toSemiring.{u2} A (CommRing.toCommSemiring.{u2} A _inst_2)) _inst_3 𝒜] (f : A) (g : A), LE.le.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (Preorder.toLE.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (PartialOrder.toPreorder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (OmegaCompletePartialOrder.toPartialOrder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (TopologicalSpace.Opens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u2} (ProjectiveSpectrum.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4) (ProjectiveSpectrum.zariskiTopology.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4)))))) (ProjectiveSpectrum.basicOpen.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 (HMul.hMul.{u2, u2, u2} A A A (instHMul.{u2} A (NonUnitalNonAssocRing.toMul.{u2} A (NonAssocRing.toNonUnitalNonAssocRing.{u2} A (Ring.toNonAssocRing.{u2} A (CommRing.toRing.{u2} A _inst_2))))) f g)) (ProjectiveSpectrum.basicOpen.{u1, u2} R A _inst_1 _inst_2 _inst_3 𝒜 _inst_4 g)
 Case conversion may be inaccurate. Consider using '#align projective_spectrum.basic_open_mul_le_right ProjectiveSpectrum.basicOpen_mul_le_rightₓ'. -/
-theorem basicOpen_mul_le_right (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 𝒜 g :=
-  by
-  rw [basic_open_mul 𝒜 f g]
-  exact inf_le_right
+theorem basicOpen_mul_le_right (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 𝒜 g := by
+  rw [basic_open_mul 𝒜 f g]; exact inf_le_right
 #align projective_spectrum.basic_open_mul_le_right ProjectiveSpectrum.basicOpen_mul_le_right
 
 /- warning: projective_spectrum.basic_open_pow -> ProjectiveSpectrum.basicOpen_pow is a dubious translation:

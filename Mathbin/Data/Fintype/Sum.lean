@@ -101,8 +101,7 @@ theorem image_subtype_univ_ssubset_image_univ [Fintype α] [DecidableEq β] (k :
     exact hy ▸ mem_image_of_mem b (mem_univ y)
   · intro h
     rw [mem_image] at hk
-    rcases hk with ⟨k', _, hk'⟩
-    subst hk'
+    rcases hk with ⟨k', _, hk'⟩; subst hk'
     have := h (mem_image_of_mem b (mem_univ k'))
     rw [mem_image] at this
     rcases this with ⟨j, hj, hj'⟩

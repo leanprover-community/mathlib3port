@@ -64,10 +64,7 @@ satisfying `p`. -/
 protected theorem wf : (∃ x, p x) → WellFounded (Upto.GT p)
   | ⟨x, h⟩ =>
     by
-    suffices upto.gt p = Measure fun y : Nat.Upto p => x - y.val
-      by
-      rw [this]
-      apply measure_wf
+    suffices upto.gt p = Measure fun y : Nat.Upto p => x - y.val by rw [this]; apply measure_wf
     ext (⟨a, ha⟩⟨b, _⟩)
     dsimp [Measure, InvImage, upto.gt]
     rw [tsub_lt_tsub_iff_left_of_le]

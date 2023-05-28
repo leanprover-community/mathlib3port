@@ -171,8 +171,7 @@ but is expected to have type
   forall {σ : Type.{u3}} {τ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {f : σ -> τ} (hf : Function.Injective.{succ u3, succ u1} σ τ f), Eq.{max (succ u3) (succ u2)} (AlgHom.{u2, max u2 u3, max u3 u2} R (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.{u3, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (AlgHom.comp.{u2, max u2 u3, max u1 u2, max u3 u2} R (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.{u1, u2} τ R _inst_1) (MvPolynomial.{u3, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u2} (MvPolynomial.{u1, u2} τ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R τ _inst_1)) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)) (MvPolynomial.killCompl.{u3, u1, u2} σ τ R _inst_1 f hf) (MvPolynomial.rename.{u3, u1, u2} σ τ R _inst_1 f)) (AlgHom.id.{u2, max u3 u2} R (MvPolynomial.{u3, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u3, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u3} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u3} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.kill_compl_comp_rename MvPolynomial.killCompl_comp_renameₓ'. -/
 theorem killCompl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
-  algHom_ext fun i => by
-    dsimp
+  algHom_ext fun i => by dsimp;
     rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.ofInjective_symm_apply]
 #align mv_polynomial.kill_compl_comp_rename MvPolynomial.killCompl_comp_rename
 
@@ -244,9 +243,7 @@ variable (f : R →+* S) (k : σ → τ) (g : τ → S) (p : MvPolynomial σ R)
 
 #print MvPolynomial.eval₂_rename /-
 theorem eval₂_rename : (rename k p).eval₂ f g = p.eval₂ f (g ∘ k) := by
-  apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  apply MvPolynomial.induction_on p <;> · intros ; simp [*]
 #align mv_polynomial.eval₂_rename MvPolynomial.eval₂_rename
 -/
 
@@ -269,9 +266,7 @@ theorem aeval_rename [Algebra R S] : aeval g (rename k p) = aeval (g ∘ k) p :=
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.rename_eval₂ MvPolynomial.rename_eval₂ₓ'. -/
 theorem rename_eval₂ (g : τ → MvPolynomial σ R) :
     rename k (p.eval₂ C (g ∘ k)) = (rename k p).eval₂ C (rename k ∘ g) := by
-  apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  apply MvPolynomial.induction_on p <;> · intros ; simp [*]
 #align mv_polynomial.rename_eval₂ MvPolynomial.rename_eval₂
 
 /- warning: mv_polynomial.rename_prodmk_eval₂ -> MvPolynomial.rename_prod_mk_eval₂ is a dubious translation:
@@ -279,9 +274,7 @@ theorem rename_eval₂ (g : τ → MvPolynomial σ R) :
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.rename_prodmk_eval₂ MvPolynomial.rename_prod_mk_eval₂ₓ'. -/
 theorem rename_prod_mk_eval₂ (j : τ) (g : σ → MvPolynomial σ R) :
     rename (Prod.mk j) (p.eval₂ C g) = p.eval₂ C fun x => rename (Prod.mk j) (g x) := by
-  apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  apply MvPolynomial.induction_on p <;> · intros ; simp [*]
 #align mv_polynomial.rename_prodmk_eval₂ MvPolynomial.rename_prod_mk_eval₂
 
 /- warning: mv_polynomial.eval₂_rename_prodmk -> MvPolynomial.eval₂_rename_prod_mk is a dubious translation:
@@ -289,9 +282,7 @@ theorem rename_prod_mk_eval₂ (j : τ) (g : σ → MvPolynomial σ R) :
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.eval₂_rename_prodmk MvPolynomial.eval₂_rename_prod_mkₓ'. -/
 theorem eval₂_rename_prod_mk (g : σ × τ → S) (i : σ) (p : MvPolynomial τ R) :
     (rename (Prod.mk i) p).eval₂ f g = eval₂ f (fun j => g (i, j)) p := by
-  apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  apply MvPolynomial.induction_on p <;> · intros ; simp [*]
 #align mv_polynomial.eval₂_rename_prodmk MvPolynomial.eval₂_rename_prod_mk
 
 /- warning: mv_polynomial.eval_rename_prodmk -> MvPolynomial.eval_rename_prod_mk is a dubious translation:
@@ -312,23 +303,20 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
     ∃ (s : Finset σ)(q : MvPolynomial { x // x ∈ s } R), p = rename coe q := by
   classical
     apply induction_on p
-    · intro r
-      exact ⟨∅, C r, by rw [rename_C]⟩
+    · intro r; exact ⟨∅, C r, by rw [rename_C]⟩
     · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
       refine' ⟨s ∪ t, ⟨_, _⟩⟩
       ·
         refine' rename (Subtype.map id _) p + rename (Subtype.map id _) q <;>
           simp (config := { contextual := true }) only [id.def, true_or_iff, or_true_iff,
             Finset.mem_union, forall_true_iff]
-      · simp only [rename_rename, AlgHom.map_add]
-        rfl
+      · simp only [rename_rename, AlgHom.map_add]; rfl
     · rintro p n ⟨s, p, rfl⟩
       refine' ⟨insert n s, ⟨_, _⟩⟩
       · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
         simp (config := { contextual := true }) only [id.def, or_true_iff, Finset.mem_insert,
           forall_true_iff]
-      · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]
-        rfl
+      · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]; rfl
 #align mv_polynomial.exists_finset_rename MvPolynomial.exists_finset_rename
 
 /- warning: mv_polynomial.exists_finset_rename₂ -> MvPolynomial.exists_finset_rename₂ is a dubious translation:
@@ -390,8 +378,7 @@ theorem coeff_rename_mapDomain (f : σ → τ) (hf : Injective f) (φ : MvPolyno
     · intro u r
       rw [rename_monomial, coeff_monomial, coeff_monomial]
       simp only [(Finsupp.mapDomain_injective hf).eq_iff]
-    · intros
-      simp only [*, AlgHom.map_add, coeff_add]
+    · intros ; simp only [*, AlgHom.map_add, coeff_add]
 #align mv_polynomial.coeff_rename_map_domain MvPolynomial.coeff_rename_mapDomain
 
 /- warning: mv_polynomial.coeff_rename_eq_zero -> MvPolynomial.coeff_rename_eq_zero is a dubious translation:
@@ -414,10 +401,8 @@ theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ �
 <too large>
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.coeff_rename_ne_zero MvPolynomial.coeff_rename_ne_zeroₓ'. -/
 theorem coeff_rename_ne_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)
-    (h : (rename f φ).coeff d ≠ 0) : ∃ u : σ →₀ ℕ, u.mapDomain f = d ∧ φ.coeff u ≠ 0 :=
-  by
-  contrapose! h
-  apply coeff_rename_eq_zero _ _ _ h
+    (h : (rename f φ).coeff d ≠ 0) : ∃ u : σ →₀ ℕ, u.mapDomain f = d ∧ φ.coeff u ≠ 0 := by
+  contrapose! h; apply coeff_rename_eq_zero _ _ _ h
 #align mv_polynomial.coeff_rename_ne_zero MvPolynomial.coeff_rename_ne_zero
 
 /- warning: mv_polynomial.constant_coeff_rename -> MvPolynomial.constantCoeff_rename is a dubious translation:
@@ -428,12 +413,9 @@ theorem constantCoeff_rename {τ : Type _} (f : σ → τ) (φ : MvPolynomial σ
     constantCoeff (rename f φ) = constantCoeff φ :=
   by
   apply φ.induction_on
-  · intro a
-    simp only [constant_coeff_C, rename_C]
-  · intro p q hp hq
-    simp only [hp, hq, RingHom.map_add, AlgHom.map_add]
-  · intro p n hp
-    simp only [hp, rename_X, constant_coeff_X, RingHom.map_mul, AlgHom.map_mul]
+  · intro a; simp only [constant_coeff_C, rename_C]
+  · intro p q hp hq; simp only [hp, hq, RingHom.map_add, AlgHom.map_add]
+  · intro p n hp; simp only [hp, rename_X, constant_coeff_X, RingHom.map_mul, AlgHom.map_mul]
 #align mv_polynomial.constant_coeff_rename MvPolynomial.constantCoeff_rename
 
 end Coeff

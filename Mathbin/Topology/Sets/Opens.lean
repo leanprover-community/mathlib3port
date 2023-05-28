@@ -135,10 +135,7 @@ protected theorem isOpen (U : Opens α) : IsOpen (U : Set α) :=
 
 #print TopologicalSpace.Opens.mk_coe /-
 @[simp]
-theorem mk_coe (U : Opens α) : mk (↑U) U.IsOpen = U :=
-  by
-  cases U
-  rfl
+theorem mk_coe (U : Opens α) : mk (↑U) U.IsOpen = U := by cases U; rfl
 #align topological_space.opens.mk_coe TopologicalSpace.Opens.mk_coe
 -/
 
@@ -303,10 +300,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} (s : ι -> (TopologicalSpace.Opens.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.Opens.{u1} α _inst_1) (iSup.{u1, u2} (TopologicalSpace.Opens.{u1} α _inst_1) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1))) ι (fun (i : ι) => s i)) (TopologicalSpace.Opens.mk.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => SetLike.coe.{u1, u1} (TopologicalSpace.Opens.{u1} α _inst_1) α (TopologicalSpace.Opens.instSetLikeOpens.{u1} α _inst_1) (s i))) (isOpen_iUnion.{u1, u2} α ι _inst_1 (fun (i : ι) => SetLike.coe.{u1, u1} (TopologicalSpace.Opens.{u1} α _inst_1) α (TopologicalSpace.Opens.instSetLikeOpens.{u1} α _inst_1) (s i)) (fun (i : ι) => TopologicalSpace.Opens.is_open'.{u1} α _inst_1 (s i))))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.supr_def TopologicalSpace.Opens.iSup_defₓ'. -/
 theorem iSup_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, isOpen_iUnion fun i => (s i).2⟩ :=
-  by
-  ext
-  simp only [iSup, coe_Sup, bUnion_range]
-  rfl
+  by ext; simp only [iSup, coe_Sup, bUnion_range]; rfl
 #align topological_space.opens.supr_def TopologicalSpace.Opens.iSup_def
 
 /- warning: topological_space.opens.supr_mk -> TopologicalSpace.Opens.iSup_mk is a dubious translation:
@@ -317,10 +311,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.supr_mk TopologicalSpace.Opens.iSup_mkₓ'. -/
 @[simp]
 theorem iSup_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
-    (⨆ i, ⟨s i, h i⟩ : Opens α) = ⟨⋃ i, s i, isOpen_iUnion h⟩ :=
-  by
-  rw [supr_def]
-  simp
+    (⨆ i, ⟨s i, h i⟩ : Opens α) = ⟨⋃ i, s i, isOpen_iUnion h⟩ := by rw [supr_def]; simp
 #align topological_space.opens.supr_mk TopologicalSpace.Opens.iSup_mk
 
 /- warning: topological_space.opens.coe_supr -> TopologicalSpace.Opens.coe_iSup is a dubious translation:
@@ -341,10 +332,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {x : α} {s : ι -> (TopologicalSpace.Opens.{u1} α _inst_1)}, Iff (Membership.mem.{u1, u1} α (TopologicalSpace.Opens.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (TopologicalSpace.Opens.{u1} α _inst_1) α (TopologicalSpace.Opens.instSetLikeOpens.{u1} α _inst_1)) x (iSup.{u1, u2} (TopologicalSpace.Opens.{u1} α _inst_1) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.Opens.{u1} α _inst_1) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} α _inst_1))) ι s)) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} α (TopologicalSpace.Opens.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (TopologicalSpace.Opens.{u1} α _inst_1) α (TopologicalSpace.Opens.instSetLikeOpens.{u1} α _inst_1)) x (s i)))
 Case conversion may be inaccurate. Consider using '#align topological_space.opens.mem_supr TopologicalSpace.Opens.mem_iSupₓ'. -/
 @[simp]
-theorem mem_iSup {ι} {x : α} {s : ι → Opens α} : x ∈ iSup s ↔ ∃ i, x ∈ s i :=
-  by
-  rw [← SetLike.mem_coe]
-  simp
+theorem mem_iSup {ι} {x : α} {s : ι → Opens α} : x ∈ iSup s ↔ ∃ i, x ∈ s i := by
+  rw [← SetLike.mem_coe]; simp
 #align topological_space.opens.mem_supr TopologicalSpace.Opens.mem_iSup
 
 /- warning: topological_space.opens.mem_Sup -> TopologicalSpace.Opens.mem_sSup is a dubious translation:
@@ -432,13 +421,9 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
   · rintro ⟨sU, hU⟩ x hx
     rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
     refine' ⟨V, H₁, _⟩
-    cases V
-    dsimp at H₂
-    subst H₂
-    exact hsV
+    cases V; dsimp at H₂; subst H₂; exact hsV
   · refine' is_topological_basis_of_open_of_nhds _ _
-    · rintro sU ⟨U, ⟨H₁, rfl⟩⟩
-      exact U.2
+    · rintro sU ⟨U, ⟨H₁, rfl⟩⟩; exact U.2
     · intro x sU hx hsU
       rcases@h (⟨sU, hsU⟩ : opens α) x hx with ⟨V, hV, H⟩
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
@@ -477,9 +462,7 @@ theorem IsBasis.isCompact_open_iff_eq_finite_iUnion {ι : Type _} (b : ι → Op
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i :=
   by
   apply isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis fun i : ι => (b i).1
-  · convert hb
-    ext
-    simp
+  · convert hb; ext; simp
   · exact hb'
 #align topological_space.opens.is_basis.is_compact_open_iff_eq_finite_Union TopologicalSpace.Opens.IsBasis.isCompact_open_iff_eq_finite_iUnion
 -/
@@ -505,8 +488,7 @@ theorem isCompactElement_iff (s : Opens α) :
       H (fun i => U i) (fun i => (U i).IsOpen) (by simpa using show (s : Set α) ⊆ ↑(iSup U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.iUnion_subset_iff]
-    show ∀ i ∈ t, U i ≤ t.sup U
-    exact fun i => Finset.le_sup
+    show ∀ i ∈ t, U i ≤ t.sup U; exact fun i => Finset.le_sup
 #align topological_space.opens.is_compact_element_iff TopologicalSpace.Opens.isCompactElement_iff
 
 /- warning: topological_space.opens.comap -> TopologicalSpace.Opens.comap is a dubious translation:
@@ -602,14 +584,8 @@ def Homeomorph.opensCongr (f : α ≃ₜ β) : Opens α ≃o Opens β
     where
   toFun := Opens.comap f.symm.toContinuousMap
   invFun := Opens.comap f.toContinuousMap
-  left_inv := by
-    intro U
-    ext1
-    exact f.to_equiv.preimage_symm_preimage _
-  right_inv := by
-    intro U
-    ext1
-    exact f.to_equiv.symm_preimage_preimage _
+  left_inv := by intro U; ext1; exact f.to_equiv.preimage_symm_preimage _
+  right_inv := by intro U; ext1; exact f.to_equiv.symm_preimage_preimage _
   map_rel_iff' U V := by
     simp only [← SetLike.coe_subset_coe] <;> exact f.symm.surjective.preimage_subset_preimage_iff
 #align homeomorph.opens_congr Homeomorph.opensCongr

@@ -489,9 +489,7 @@ theorem add_descFactorial_eq_ascFactorial (n : ℕ) :
 for the version using ℕ-division. -/
 theorem factorial_mul_descFactorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n.descFactorial k = n !
   | n, 0 => fun _ => by rw [desc_factorial_zero, mul_one, tsub_zero]
-  | 0, succ k => fun h => by
-    exfalso
-    exact not_succ_le_zero k h
+  | 0, succ k => fun h => by exfalso; exact not_succ_le_zero k h
   | succ n, succ k => fun h => by
     rw [succ_desc_factorial_succ, succ_sub_succ, ← mul_assoc, mul_comm (n - k)!, mul_assoc,
       factorial_mul_desc_factorial (Nat.succ_le_succ_iff.1 h), factorial_succ]
@@ -544,9 +542,7 @@ theorem pow_sub_lt_descFactorial {n : ℕ} :
     ∀ {k : ℕ}, 2 ≤ k → k ≤ n → (n + 1 - k) ^ k < n.descFactorial k
   | 0 => by rintro ⟨⟩
   | 1 => by rintro (_ | ⟨⟨⟩⟩)
-  | k + 2 => fun _ h => by
-    rw [succ_sub_succ]
-    exact pow_sub_lt_desc_factorial' h
+  | k + 2 => fun _ h => by rw [succ_sub_succ]; exact pow_sub_lt_desc_factorial' h
 #align nat.pow_sub_lt_desc_factorial Nat.pow_sub_lt_descFactorial
 -/
 

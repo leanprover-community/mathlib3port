@@ -49,16 +49,9 @@ theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.s
     (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
   by
   rw [mem_skew_adjoint_submodule] at *
-  have hfg : is_adjoint_pair B B (f * g) (g * f) :=
-    by
-    rw [← neg_mul_neg g f]
-    exact hf.mul hg
-  have hgf : is_adjoint_pair B B (g * f) (f * g) :=
-    by
-    rw [← neg_mul_neg f g]
-    exact hg.mul hf
-  change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f))
-  rw [neg_sub]
+  have hfg : is_adjoint_pair B B (f * g) (g * f) := by rw [← neg_mul_neg g f]; exact hf.mul hg
+  have hgf : is_adjoint_pair B B (g * f) (f * g) := by rw [← neg_mul_neg f g]; exact hg.mul hf
+  change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
   exact hfg.sub hgf
 #align bilin_form.is_skew_adjoint_bracket BilinForm.is_skew_adjoint_bracket
 

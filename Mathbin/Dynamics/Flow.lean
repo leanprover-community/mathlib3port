@@ -154,10 +154,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align flow.ext Flow.extₓ'. -/
 @[ext]
 theorem ext : ∀ {ϕ₁ ϕ₂ : Flow τ α}, (∀ t x, ϕ₁ t x = ϕ₂ t x) → ϕ₁ = ϕ₂
-  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by
-    congr
-    funext
-    exact h _ _
+  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by congr ; funext; exact h _ _
 #align flow.ext Flow.ext
 
 /- warning: flow.continuous -> Flow.continuous is a dubious translation:

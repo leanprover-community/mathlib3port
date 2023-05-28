@@ -86,9 +86,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : LinearOrder.{u1} ι] (i : ι), LE.le.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))) i (LinearLocallyFiniteOrder.succFn.{u1} ι _inst_1 i)
 Case conversion may be inaccurate. Consider using '#align linear_locally_finite_order.le_succ_fn LinearLocallyFiniteOrder.le_succFnₓ'. -/
-theorem le_succFn (i : ι) : i ≤ succFn i :=
-  by
-  rw [le_isGLB_iff (succ_fn_spec i), mem_lowerBounds]
+theorem le_succFn (i : ι) : i ≤ succFn i := by rw [le_isGLB_iff (succ_fn_spec i), mem_lowerBounds];
   exact fun x hx => le_of_lt hx
 #align linear_locally_finite_order.le_succ_fn LinearLocallyFiniteOrder.le_succFn
 
@@ -139,11 +137,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : LinearOrder.{u1} ι] (i : ι) (j : ι), (LT.lt.{u1} ι (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))) i j) -> (LE.le.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))) (LinearLocallyFiniteOrder.succFn.{u1} ι _inst_1 i) j)
 Case conversion may be inaccurate. Consider using '#align linear_locally_finite_order.succ_fn_le_of_lt LinearLocallyFiniteOrder.succFn_le_of_ltₓ'. -/
-theorem succFn_le_of_lt (i j : ι) (hij : i < j) : succFn i ≤ j :=
-  by
-  have h := succ_fn_spec i
-  rw [IsGLB, IsGreatest, mem_lowerBounds] at h
-  exact h.1 j hij
+theorem succFn_le_of_lt (i j : ι) (hij : i < j) : succFn i ≤ j := by have h := succ_fn_spec i;
+  rw [IsGLB, IsGreatest, mem_lowerBounds] at h; exact h.1 j hij
 #align linear_locally_finite_order.succ_fn_le_of_lt LinearLocallyFiniteOrder.succFn_le_of_lt
 
 /- warning: linear_locally_finite_order.le_of_lt_succ_fn -> LinearLocallyFiniteOrder.le_of_lt_succFn is a dubious translation:
@@ -180,9 +175,7 @@ instance (priority := 100) LinearLocallyFiniteOrder.isSuccArchimedean [LocallyFi
     by
     rw [le_iff_lt_or_eq] at hij
     cases hij
-    swap
-    · refine' ⟨0, _⟩
-      simpa only [Function.iterate_zero, id.def] using hij
+    swap; · refine' ⟨0, _⟩; simpa only [Function.iterate_zero, id.def] using hij
     by_contra h
     push_neg  at h
     have h_lt : ∀ n, (succ^[n]) i < j := by
@@ -222,8 +215,7 @@ instance (priority := 100) LinearOrder.isPredArchimedean_of_isSuccArchimedean [S
     · simp only [Function.iterate_zero, id.def]
     · rw [pred_succ_iterate_of_not_is_max]
       rw [Nat.succ_sub_succ_eq_sub, tsub_zero]
-      suffices : (succ^[n]) i < (succ^[n.succ]) i
-      exact not_isMax_of_lt this
+      suffices : (succ^[n]) i < (succ^[n.succ]) i; exact not_isMax_of_lt this
       refine' lt_of_le_of_ne _ _
       · rw [Function.iterate_succ']
         exact le_succ _
@@ -282,10 +274,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : LinearOrder.{u1} ι] [_inst_2 : SuccOrder.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))] [_inst_3 : IsSuccArchimedean.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1))))) _inst_2] [_inst_4 : PredOrder.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))] {i0 : ι} (i : ι), (LE.le.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))) i0 i) -> (Eq.{succ u1} ι (Nat.iterate.{succ u1} ι (Order.succ.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1))))) _inst_2) (Int.toNat (toZ.{u1} ι _inst_1 _inst_2 _inst_3 _inst_4 i0 i)) i0) i)
 Case conversion may be inaccurate. Consider using '#align iterate_succ_to_Z iterate_succ_toZₓ'. -/
-theorem iterate_succ_toZ (i : ι) (hi : i0 ≤ i) : (succ^[(toZ i0 i).toNat]) i0 = i :=
-  by
-  rw [toZ_of_ge hi, Int.toNat_coe_nat]
-  exact Nat.find_spec (exists_succ_iterate_of_le hi)
+theorem iterate_succ_toZ (i : ι) (hi : i0 ≤ i) : (succ^[(toZ i0 i).toNat]) i0 = i := by
+  rw [toZ_of_ge hi, Int.toNat_coe_nat]; exact Nat.find_spec (exists_succ_iterate_of_le hi)
 #align iterate_succ_to_Z iterate_succ_toZ
 
 /- warning: iterate_pred_to_Z -> iterate_pred_toZ is a dubious translation:
@@ -306,10 +296,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} [_inst_1 : LinearOrder.{u1} ι] [_inst_2 : SuccOrder.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))] [_inst_3 : IsSuccArchimedean.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1))))) _inst_2] [_inst_4 : PredOrder.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))] {i0 : ι} {i : ι}, (LE.le.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_1)))))) i0 i) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (toZ.{u1} ι _inst_1 _inst_2 _inst_3 _inst_4 i0 i))
 Case conversion may be inaccurate. Consider using '#align to_Z_nonneg toZ_nonnegₓ'. -/
-theorem toZ_nonneg (hi : i0 ≤ i) : 0 ≤ toZ i0 i :=
-  by
-  rw [toZ_of_ge hi]
-  exact Nat.cast_nonneg _
+theorem toZ_nonneg (hi : i0 ≤ i) : 0 ≤ toZ i0 i := by rw [toZ_of_ge hi]; exact Nat.cast_nonneg _
 #align to_Z_nonneg toZ_nonneg
 
 /- warning: to_Z_neg -> toZ_neg is a dubious translation:
@@ -321,8 +308,7 @@ Case conversion may be inaccurate. Consider using '#align to_Z_neg toZ_negₓ'. 
 theorem toZ_neg (hi : i < i0) : toZ i0 i < 0 :=
   by
   refine' lt_of_le_of_ne _ _
-  · rw [toZ_of_lt hi, neg_nonpos]
-    exact Nat.cast_nonneg _
+  · rw [toZ_of_lt hi, neg_nonpos]; exact Nat.cast_nonneg _
   · by_contra
     have h_eq := iterate_pred_toZ i hi
     rw [← h_eq, h] at hi
@@ -395,8 +381,7 @@ theorem toZ_iterate_pred_of_not_isMin (n : ℕ) (hn : ¬IsMin ((pred^[n]) i0)) :
     rw [Int.toNat_eq_max, toZ_of_lt this, max_eq_left, neg_neg]
     rw [neg_neg]
     exact Nat.cast_nonneg _
-  · suffices : IsMin ((pred^[n.succ]) i0)
-    exact absurd this hn
+  · suffices : IsMin ((pred^[n.succ]) i0); exact absurd this hn
     exact is_min_iterate_pred_of_eq_of_ne h_eq.symm (Ne.symm hmn)
 #align to_Z_iterate_pred_of_not_is_min toZ_iterate_pred_of_not_isMin
 
@@ -586,9 +571,7 @@ def orderIsoNatOfLinearSuccPredArch [NoMaxOrder ι] [OrderBot ι] : ι ≃o ℕ
     where
   toFun i := (toZ ⊥ i).toNat
   invFun n := (succ^[n]) ⊥
-  left_inv i := by
-    simp_rw [if_pos (toZ_nonneg bot_le)]
-    exact iterate_succ_toZ i bot_le
+  left_inv i := by simp_rw [if_pos (toZ_nonneg bot_le)]; exact iterate_succ_toZ i bot_le
   right_inv n := by
     simp_rw [if_pos bot_le]
     rw [toZ_iterate_succ]

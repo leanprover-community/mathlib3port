@@ -286,22 +286,15 @@ theorem coe_toGL (A : unitaryGroup n α) : ↑(toGL A) = toLin' A :=
 <too large>
 Case conversion may be inaccurate. Consider using '#align matrix.unitary_group.to_GL_one Matrix.UnitaryGroup.toGL_oneₓ'. -/
 @[simp]
-theorem toGL_one : toGL (1 : unitaryGroup n α) = 1 :=
-  by
-  ext1 v i
-  rw [coe_to_GL, to_lin'_one]
-  rfl
+theorem toGL_one : toGL (1 : unitaryGroup n α) = 1 := by ext1 v i; rw [coe_to_GL, to_lin'_one]; rfl
 #align matrix.unitary_group.to_GL_one Matrix.UnitaryGroup.toGL_one
 
 /- warning: matrix.unitary_group.to_GL_mul -> Matrix.UnitaryGroup.toGL_mul is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align matrix.unitary_group.to_GL_mul Matrix.UnitaryGroup.toGL_mulₓ'. -/
 @[simp]
-theorem toGL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B :=
-  by
-  ext1 v i
-  rw [coe_to_GL, to_lin'_mul]
-  rfl
+theorem toGL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B := by ext1 v i;
+  rw [coe_to_GL, to_lin'_mul]; rfl
 #align matrix.unitary_group.to_GL_mul Matrix.UnitaryGroup.toGL_mul
 
 /- warning: matrix.unitary_group.embedding_GL -> Matrix.UnitaryGroup.embeddingGL is a dubious translation:

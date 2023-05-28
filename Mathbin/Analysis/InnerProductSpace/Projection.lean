@@ -106,10 +106,8 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   have norm_tendsto : tendsto (fun n => ‖u - w n‖) at_top (nhds δ) :=
     by
     have h : tendsto (fun n : ℕ => δ) at_top (nhds δ) := tendsto_const_nhds
-    have h' : tendsto (fun n : ℕ => δ + 1 / (n + 1)) at_top (nhds δ) :=
-      by
-      convert h.add tendsto_one_div_add_atTop_nhds_0_nat
-      simp only [add_zero]
+    have h' : tendsto (fun n : ℕ => δ + 1 / (n + 1)) at_top (nhds δ) := by
+      convert h.add tendsto_one_div_add_atTop_nhds_0_nat; simp only [add_zero]
     exact tendsto_of_tendsto_of_tendsto_of_le_of_le h h' (fun x => δ_le _) fun x => le_of_lt (hw _)
   -- Step 2: Prove that the sequence `w : ℕ → K` is a Cauchy sequence
   have seq_is_cauchy : CauchySeq fun n => (w n : F) :=
@@ -120,17 +118,14 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
     use fun n => sqrt (b n)
     constructor
     -- first goal :  `∀ (n : ℕ), 0 ≤ sqrt (b n)`
-    intro n
+    intro n;
     exact sqrt_nonneg _
     constructor
     -- second goal : `∀ (n m N : ℕ), N ≤ n → N ≤ m → dist ↑(w n) ↑(w m) ≤ sqrt (b N)`
     intro p q N hp hq
-    let wp := (w p : F)
-    let wq := (w q : F)
-    let a := u - wq
-    let b := u - wp
-    let half := 1 / (2 : ℝ)
-    let div := 1 / ((N : ℝ) + 1)
+    let wp := (w p : F); let wq := (w q : F)
+    let a := u - wq; let b := u - wp
+    let half := 1 / (2 : ℝ); let div := 1 / ((N : ℝ) + 1)
     have :
       4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ + ‖wp - wq‖ * ‖wp - wq‖ =
         2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) :=
@@ -141,9 +136,7 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
         _ =
             absR (2 : ℝ) * ‖u - half • (wq + wp)‖ * (absR (2 : ℝ) * ‖u - half • (wq + wp)‖) +
               ‖wp - wq‖ * ‖wp - wq‖ :=
-          by
-          rw [_root_.abs_of_nonneg]
-          exact zero_le_two
+          by rw [_root_.abs_of_nonneg]; exact zero_le_two
         _ =
             ‖(2 : ℝ) • (u - half • (wq + wp))‖ * ‖(2 : ℝ) • (u - half • (wq + wp))‖ +
               ‖wp - wq‖ * ‖wp - wq‖ :=
@@ -154,16 +147,13 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
             one_add_one_eq_two, add_smul]
           simp only [one_smul]
           have eq₁ : wp - wq = a - b := (sub_sub_sub_cancel_left _ _ _).symm
-          have eq₂ : u + u - (wq + wp) = a + b
-          show u + u - (wq + wp) = u - wq + (u - wp)
-          abel
+          have eq₂ : u + u - (wq + wp) = a + b; show u + u - (wq + wp) = u - wq + (u - wp); abel
           rw [eq₁, eq₂]
         _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm ℝ _ _
         
     have eq : δ ≤ ‖u - half • (wq + wp)‖ := by
       rw [smul_add]
-      apply δ_le'
-      apply h₂
+      apply δ_le'; apply h₂
       repeat' exact Subtype.mem _
       repeat' exact le_of_lt one_half_pos
       exact add_halves 1
@@ -178,15 +168,12 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
       mul_self_le_mul_self (norm_nonneg _)
         (le_trans (le_of_lt <| hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _))
     rw [dist_eq_norm]
-    apply nonneg_le_nonneg_of_sq_le_sq
-    · exact sqrt_nonneg _
+    apply nonneg_le_nonneg_of_sq_le_sq; · exact sqrt_nonneg _
     rw [mul_self_sqrt]
     calc
       ‖wp - wq‖ * ‖wp - wq‖ =
           2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ :=
-        by
-        rw [← this]
-        simp
+        by rw [← this]; simp
       _ ≤ 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * δ * δ := (sub_le_sub_left eq₁ _)
       _ ≤ 2 * ((δ + div) * (δ + div) + (δ + div) * (δ + div)) - 4 * δ * δ :=
         (sub_le_sub_right (mul_le_mul_of_nonneg_left (add_le_add eq₂ eq₂') (by norm_num)) _)
@@ -197,8 +184,7 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
         (mul_nonneg (mul_nonneg (by norm_num) nat.one_div_pos_of_nat.le) nat.one_div_pos_of_nat.le)
     -- third goal : `tendsto (λ (n : ℕ), sqrt (b n)) at_top (𝓝 0)`
     apply tendsto.comp
-    · convert continuous_sqrt.continuous_at
-      exact sqrt_zero.symm
+    · convert continuous_sqrt.continuous_at; exact sqrt_zero.symm
     have eq₁ : tendsto (fun n : ℕ => 8 * δ * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
       convert(@tendsto_const_nhds _ _ _ (8 * δ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
@@ -212,13 +198,11 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
       by
       convert this.mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [MulZeroClass.mul_zero]
-    convert eq₁.add eq₂
-    simp only [add_zero]
+    convert eq₁.add eq₂; simp only [add_zero]
   -- Step 3: By completeness of `K`, let `w : ℕ → K` converge to some `v : K`.
   -- Prove that it satisfies all requirements.
   rcases cauchySeq_tendsto_of_isComplete h₁ (fun n => _) seq_is_cauchy with ⟨v, hv, w_tendsto⟩
-  use v
-  use hv
+  use v; use hv
   have h_cont : Continuous fun v => ‖u - v‖ :=
     Continuous.comp continuous_norm (Continuous.sub continuous_const continuous_id)
   have : tendsto (fun n => ‖u - w n‖) at_top (nhds ‖u - v‖)
@@ -240,20 +224,12 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
   Iff.intro
     (by
       intro eq w hw
-      let δ := ⨅ w : K, ‖u - w‖
-      let p := ⟪u - v, w - v⟫_ℝ
-      let q := ‖w - v‖ ^ 2
+      let δ := ⨅ w : K, ‖u - w‖; let p := ⟪u - v, w - v⟫_ℝ; let q := ‖w - v‖ ^ 2
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       have zero_le_δ : 0 ≤ δ
-      apply le_ciInf
-      intro
-      exact norm_nonneg _
+      apply le_ciInf; intro ; exact norm_nonneg _
       have δ_le : ∀ w : K, δ ≤ ‖u - w‖
-      intro w
-      apply ciInf_le
-      use (0 : ℝ)
-      rintro _ ⟨_, rfl⟩
-      exact norm_nonneg _
+      intro w; apply ciInf_le; use (0 : ℝ); rintro _ ⟨_, rfl⟩; exact norm_nonneg _
       have δ_le' : ∀ w ∈ K, δ ≤ ‖u - w‖ := fun w hw => δ_le ⟨w, hw⟩
       have : ∀ θ : ℝ, 0 < θ → θ ≤ 1 → 2 * p ≤ θ * q
       intro θ hθ₁ hθ₂
@@ -289,7 +265,7 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       rw [eq₁, le_add_iff_nonneg_right] at this
       have eq₂ :
         θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) =
-          θ * (θ * ‖w - v‖ ^ 2 - 2 * inner (u - v) (w - v))
+          θ * (θ * ‖w - v‖ ^ 2 - 2 * inner (u - v) (w - v));
       ring
       rw [eq₂] at this
       have := le_of_sub_nonneg (nonneg_of_mul_nonneg_right this hθ₁)
@@ -301,12 +277,8 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
         linarith
         exact this
       · have q_pos : 0 < q
-        apply lt_of_le_of_ne
-        exact sq_nonneg _
-        intro h
-        exact hq h.symm
-        by_contra hp
-        rw [not_le] at hp
+        apply lt_of_le_of_ne; exact sq_nonneg _; intro h; exact hq h.symm
+        by_contra hp; rw [not_le] at hp
         let θ := min (1 : ℝ) (p / q)
         have eq₁ : θ * q ≤ p :=
           calc
@@ -324,28 +296,18 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       intro h
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       apply le_antisymm
-      · apply le_ciInf
-        intro w
+      · apply le_ciInf; intro w
         apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
         have := h w w.2
         calc
           ‖u - v‖ * ‖u - v‖ ≤ ‖u - v‖ * ‖u - v‖ - 2 * inner (u - v) ((w : F) - v) := by linarith
-          _ ≤ ‖u - v‖ ^ 2 - 2 * inner (u - v) ((w : F) - v) + ‖(w : F) - v‖ ^ 2 :=
-            by
-            rw [sq]
-            refine' le_add_of_nonneg_right _
-            exact sq_nonneg _
+          _ ≤ ‖u - v‖ ^ 2 - 2 * inner (u - v) ((w : F) - v) + ‖(w : F) - v‖ ^ 2 := by rw [sq];
+            refine' le_add_of_nonneg_right _; exact sq_nonneg _
           _ = ‖u - v - (w - v)‖ ^ 2 := (@norm_sub_sq ℝ _ _ _ _ _ _).symm
-          _ = ‖u - w‖ * ‖u - w‖ := by
-            have : u - v - (w - v) = u - w
-            abel
-            rw [this, sq]
+          _ = ‖u - w‖ * ‖u - w‖ := by have : u - v - (w - v) = u - w; abel; rw [this, sq]
           
       · show (⨅ w : K, ‖u - w‖) ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
-        apply ciInf_le
-        use 0
-        rintro y ⟨z, rfl⟩
-        exact norm_nonneg _)
+        apply ciInf_le; use 0; rintro y ⟨z, rfl⟩; exact norm_nonneg _)
 #align norm_eq_infi_iff_real_inner_le_zero norm_eq_iInf_iff_real_inner_le_zero
 
 variable (K : Submodule 𝕜 E)
@@ -382,25 +344,20 @@ theorem norm_eq_iInf_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F
   Iff.intro
     (by
       intro h
-      have h : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 :=
-        by
-        rwa [norm_eq_iInf_iff_real_inner_le_zero] at h
+      have h : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 := by rwa [norm_eq_iInf_iff_real_inner_le_zero] at h;
         exacts[K.convex, hv]
       intro w hw
       have le : ⟪u - v, w⟫_ℝ ≤ 0
       let w' := w + v
       have : w' ∈ K := Submodule.add_mem _ hw hv
       have h₁ := h w' this
-      have h₂ : w' - v = w
-      simp only [add_neg_cancel_right, sub_eq_add_neg]
-      rw [h₂] at h₁
-      exact h₁
+      have h₂ : w' - v = w; simp only [add_neg_cancel_right, sub_eq_add_neg]
+      rw [h₂] at h₁; exact h₁
       have ge : ⟪u - v, w⟫_ℝ ≥ 0
       let w'' := -w + v
       have : w'' ∈ K := Submodule.add_mem _ (Submodule.neg_mem _ hw) hv
       have h₁ := h w'' this
-      have h₂ : w'' - v = -w
-      simp only [neg_inj, add_neg_cancel_right, sub_eq_add_neg]
+      have h₂ : w'' - v = -w; simp only [neg_inj, add_neg_cancel_right, sub_eq_add_neg]
       rw [h₂, inner_neg_right] at h₁
       linarith
       exact le_antisymm le GE.ge)
@@ -436,7 +393,7 @@ theorem norm_eq_iInf_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
     intro w hw
     apply ext
     · simp [A w hw]
-    · symm
+    · symm;
       calc
         im (0 : 𝕜) = 0 := im.map_zero
         _ = re ⟪u - v, -I • w⟫ := (A _ (K.smul_mem (-I) hw)).symm
@@ -636,9 +593,7 @@ theorem eq_orthogonalProjection_of_eq_submodule {K' : Submodule 𝕜 E} [Complet
 Case conversion may be inaccurate. Consider using '#align orthogonal_projection_mem_subspace_eq_self orthogonalProjection_mem_subspace_eq_selfₓ'. -/
 /-- The orthogonal projection sends elements of `K` to themselves. -/
 @[simp]
-theorem orthogonalProjection_mem_subspace_eq_self (v : K) : orthogonalProjection K v = v :=
-  by
-  ext
+theorem orthogonalProjection_mem_subspace_eq_self (v : K) : orthogonalProjection K v = v := by ext;
   apply eq_orthogonalProjection_of_mem_of_inner_eq_zero <;> simp
 #align orthogonal_projection_mem_subspace_eq_self orthogonalProjection_mem_subspace_eq_self
 
@@ -728,9 +683,7 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
     use ⟪v, w⟫
   · intro x hx
     obtain ⟨c, rfl⟩ := submodule.mem_span_singleton.mp hx
-    have hv : ↑‖v‖ ^ 2 = ⟪v, v⟫ := by
-      norm_cast
-      simp [@norm_sq_eq_inner 𝕜]
+    have hv : ↑‖v‖ ^ 2 = ⟪v, v⟫ := by norm_cast; simp [@norm_sq_eq_inner 𝕜]
     simp [inner_sub_left, inner_smul_left, inner_smul_right, map_div₀, mul_comm, hv,
       InnerProductSpace.conj_symm, hv]
 #align smul_orthogonal_projection_singleton smul_orthogonalProjection_singleton
@@ -759,10 +712,8 @@ theorem orthogonalProjection_singleton {v : E} (w : E) :
 Case conversion may be inaccurate. Consider using '#align orthogonal_projection_unit_singleton orthogonalProjection_unit_singletonₓ'. -/
 /-- Formula for orthogonal projection onto a single unit vector. -/
 theorem orthogonalProjection_unit_singleton {v : E} (hv : ‖v‖ = 1) (w : E) :
-    (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v :=
-  by
-  rw [← smul_orthogonalProjection_singleton 𝕜 w]
-  simp [hv]
+    (orthogonalProjection (𝕜 ∙ v) w : E) = ⟪v, w⟫ • v := by
+  rw [← smul_orthogonalProjection_singleton 𝕜 w]; simp [hv]
 #align orthogonal_projection_unit_singleton orthogonalProjection_unit_singleton
 
 end orthogonalProjection
@@ -1039,9 +990,7 @@ theorem eq_orthogonalProjection_of_mem_orthogonal' [CompleteSpace K] {u v z : E}
 Case conversion may be inaccurate. Consider using '#align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonalComplement_eq_zeroₓ'. -/
 /-- The orthogonal projection onto `K` of an element of `Kᗮ` is zero. -/
 theorem orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero [CompleteSpace K] {v : E}
-    (hv : v ∈ Kᗮ) : orthogonalProjection K v = 0 :=
-  by
-  ext
+    (hv : v ∈ Kᗮ) : orthogonalProjection K v = 0 := by ext;
   convert eq_orthogonalProjection_of_mem_orthogonal _ _ <;> simp [hv]
 #align orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero
 
@@ -1339,9 +1288,7 @@ theorem id_eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace 
     [CompleteSpace K] :
     ContinuousLinearMap.id 𝕜 E =
       K.subtypeL.comp (orthogonalProjection K) + Kᗮ.subtypeL.comp (orthogonalProjection Kᗮ) :=
-  by
-  ext w
-  exact eq_sum_orthogonalProjection_self_orthogonalComplement K w
+  by ext w; exact eq_sum_orthogonalProjection_self_orthogonalComplement K w
 #align id_eq_sum_orthogonal_projection_self_orthogonal_complement id_eq_sum_orthogonalProjection_self_orthogonalComplement
 -/
 
@@ -1439,10 +1386,8 @@ Case conversion may be inaccurate. Consider using '#align submodule.finrank_add_
 /-- Given a finite-dimensional space `E` and subspace `K`, the dimensions of `K` and `Kᗮ` add to
 that of `E`. -/
 theorem Submodule.finrank_add_finrank_orthogonal' [FiniteDimensional 𝕜 E] {K : Submodule 𝕜 E}
-    {n : ℕ} (h_dim : finrank 𝕜 K + n = finrank 𝕜 E) : finrank 𝕜 Kᗮ = n :=
-  by
-  rw [← add_right_inj (finrank 𝕜 K)]
-  simp [Submodule.finrank_add_finrank_orthogonal, h_dim]
+    {n : ℕ} (h_dim : finrank 𝕜 K + n = finrank 𝕜 E) : finrank 𝕜 Kᗮ = n := by
+  rw [← add_right_inj (finrank 𝕜 K)]; simp [Submodule.finrank_add_finrank_orthogonal, h_dim]
 #align submodule.finrank_add_finrank_orthogonal' Submodule.finrank_add_finrank_orthogonal'
 
 attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ

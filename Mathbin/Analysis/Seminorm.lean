@@ -638,10 +638,7 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {p q : Seminorm �
 Case conversion may be inaccurate. Consider using '#align seminorm.bdd_below_range_add Seminorm.bddBelow_range_addₓ'. -/
 /-- Auxiliary lemma to show that the infimum of seminorms is well-defined. -/
 theorem bddBelow_range_add : BddBelow (range fun u => p u + q (x - u)) :=
-  ⟨0, by
-    rintro _ ⟨x, rfl⟩
-    dsimp
-    positivity⟩
+  ⟨0, by rintro _ ⟨x, rfl⟩; dsimp; positivity⟩
 #align seminorm.bdd_below_range_add Seminorm.bddBelow_range_add
 
 noncomputable instance : Inf (Seminorm 𝕜 E)
@@ -967,8 +964,7 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : AddCommGroup.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] (p : Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) {c : NNReal}, (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) c) -> (forall (r : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (Seminorm.ball.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 (HSMul.hSMul.{0, u1, u1} NNReal (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (instHSMul.{0, u1} NNReal (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (Seminorm.instSMul.{0, u2, u1} NNReal 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3 Seminorm.smul_nnreal_real (Algebra.toSMul.{0, 0} NNReal NNReal instNNRealCommSemiring instNNRealSemiring (Algebra.id.{0} NNReal instNNRealCommSemiring)) (IsScalarTower.left.{0, 0} NNReal Real (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (NNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{0} Real (MulActionWithZero.toMulAction.{0, 0} Real Real Real.instMonoidWithZeroReal Real.instZeroReal (MonoidWithZero.toMulActionWithZero.{0} Real Real.instMonoidWithZeroReal)))))) c p) x r) (Seminorm.ball.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 p x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) r (NNReal.toReal c))))
 Case conversion may be inaccurate. Consider using '#align seminorm.ball_smul Seminorm.ball_smulₓ'. -/
 theorem ball_smul (p : Seminorm 𝕜 E) {c : NNReal} (hc : 0 < c) (r : ℝ) (x : E) :
-    (c • p).ball x r = p.ball x (r / c) := by
-  ext
+    (c • p).ball x r = p.ball x (r / c) := by ext;
   rw [mem_ball, mem_ball, smul_apply, NNReal.smul_def, smul_eq_mul, mul_comm,
     lt_div_iff (nnreal.coe_pos.mpr hc)]
 #align seminorm.ball_smul Seminorm.ball_smul
@@ -980,9 +976,7 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : AddCommGroup.{u1} E] [_inst_3 : SMul.{u2, u1} 𝕜 E] (p : Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) {c : NNReal}, (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)) c) -> (forall (r : Real) (x : E), Eq.{succ u1} (Set.{u1} E) (Seminorm.closedBall.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 (HSMul.hSMul.{0, u1, u1} NNReal (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (instHSMul.{0, u1} NNReal (Seminorm.{u2, u1} 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3) (Seminorm.instSMul.{0, u2, u1} NNReal 𝕜 E _inst_1 (AddCommGroup.toAddGroup.{u1} E _inst_2) _inst_3 Seminorm.smul_nnreal_real (Algebra.toSMul.{0, 0} NNReal NNReal instNNRealCommSemiring instNNRealSemiring (Algebra.id.{0} NNReal instNNRealCommSemiring)) (IsScalarTower.left.{0, 0} NNReal Real (MonoidWithZero.toMonoid.{0} NNReal (Semiring.toMonoidWithZero.{0} NNReal instNNRealSemiring)) (NNReal.instMulActionNNRealToMonoidToMonoidWithZeroInstNNRealSemiring.{0} Real (MulActionWithZero.toMulAction.{0, 0} Real Real Real.instMonoidWithZeroReal Real.instZeroReal (MonoidWithZero.toMulActionWithZero.{0} Real Real.instMonoidWithZeroReal)))))) c p) x r) (Seminorm.closedBall.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3 p x (HDiv.hDiv.{0, 0, 0} Real Real Real (instHDiv.{0} Real (LinearOrderedField.toDiv.{0} Real Real.instLinearOrderedFieldReal)) r (NNReal.toReal c))))
 Case conversion may be inaccurate. Consider using '#align seminorm.closed_ball_smul Seminorm.closedBall_smulₓ'. -/
 theorem closedBall_smul (p : Seminorm 𝕜 E) {c : NNReal} (hc : 0 < c) (r : ℝ) (x : E) :
-    (c • p).closedBall x r = p.closedBall x (r / c) :=
-  by
-  ext
+    (c • p).closedBall x r = p.closedBall x (r / c) := by ext;
   rw [mem_closed_ball, mem_closed_ball, smul_apply, NNReal.smul_def, smul_eq_mul, mul_comm,
     le_div_iff (nnreal.coe_pos.mpr hc)]
 #align seminorm.closed_ball_smul Seminorm.closedBall_smul
@@ -1488,9 +1482,7 @@ theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 
 <too large>
 Case conversion may be inaccurate. Consider using '#align seminorm.neg_ball Seminorm.neg_ballₓ'. -/
 @[simp]
-theorem neg_ball (p : Seminorm 𝕜 E) (r : ℝ) (x : E) : -ball p x r = ball p (-x) r :=
-  by
-  ext
+theorem neg_ball (p : Seminorm 𝕜 E) (r : ℝ) (x : E) : -ball p x r = ball p (-x) r := by ext;
   rw [mem_neg, mem_ball, mem_ball, ← neg_add', sub_neg_eq_add, map_neg_eq_map]
 #align seminorm.neg_ball Seminorm.neg_ball
 
@@ -1745,9 +1737,7 @@ theorem coe_normSeminorm : ⇑(normSeminorm 𝕜 E) = norm :=
 
 #print ball_normSeminorm /-
 @[simp]
-theorem ball_normSeminorm : (normSeminorm 𝕜 E).ball = Metric.ball :=
-  by
-  ext (x r y)
+theorem ball_normSeminorm : (normSeminorm 𝕜 E).ball = Metric.ball := by ext (x r y);
   simp only [Seminorm.mem_ball, Metric.mem_ball, coe_normSeminorm, dist_eq_norm]
 #align ball_norm_seminorm ball_normSeminorm
 -/
@@ -1761,10 +1751,8 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u1} E] [_inst_3 : NormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Absorbent.{u2, u1} 𝕜 E (SeminormedCommRing.toSeminormedRing.{u2} 𝕜 (NormedCommRing.toSeminormedCommRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_1))) (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3))))) (Metric.ball.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_2) (OfNat.ofNat.{u1} E 0 (Zero.toOfNat0.{u1} E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))))) r))
 Case conversion may be inaccurate. Consider using '#align absorbent_ball_zero absorbent_ball_zeroₓ'. -/
 /-- Balls at the origin are absorbent. -/
-theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (Metric.ball (0 : E) r) :=
-  by
-  rw [← ball_normSeminorm 𝕜]
-  exact (normSeminorm _ _).absorbent_ball_zero hr
+theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (Metric.ball (0 : E) r) := by
+  rw [← ball_normSeminorm 𝕜]; exact (normSeminorm _ _).absorbent_ball_zero hr
 #align absorbent_ball_zero absorbent_ball_zero
 
 /- warning: absorbent_ball -> absorbent_ball is a dubious translation:
@@ -1774,10 +1762,8 @@ but is expected to have type
   forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_2] {r : Real} {x : E}, (LT.lt.{0} Real Real.instLTReal (Norm.norm.{u2} E (SeminormedAddCommGroup.toNorm.{u2} E _inst_2) x) r) -> (Absorbent.{u1, u2} 𝕜 E (SeminormedCommRing.toSeminormedRing.{u1} 𝕜 (NormedCommRing.toSeminormedCommRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 _inst_1))) (SMulZeroClass.toSMul.{u1, u2} 𝕜 E (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)))))) (SMulWithZero.toSMulZeroClass.{u1, u2} 𝕜 E (CommMonoidWithZero.toZero.{u1} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u1} 𝕜 (Semifield.toCommGroupWithZero.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)))))) (MulActionWithZero.toSMulWithZero.{u1, u2} 𝕜 E (Semiring.toMonoidWithZero.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)))))) (Module.toMulActionWithZero.{u1, u2} 𝕜 E (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_2)) (NormedSpace.toModule.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3))))) (Metric.ball.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E _inst_2) x r))
 Case conversion may be inaccurate. Consider using '#align absorbent_ball absorbent_ballₓ'. -/
 /-- Balls containing the origin are absorbent. -/
-theorem absorbent_ball (hx : ‖x‖ < r) : Absorbent 𝕜 (Metric.ball x r) :=
-  by
-  rw [← ball_normSeminorm 𝕜]
-  exact (normSeminorm _ _).absorbent_ball hx
+theorem absorbent_ball (hx : ‖x‖ < r) : Absorbent 𝕜 (Metric.ball x r) := by
+  rw [← ball_normSeminorm 𝕜]; exact (normSeminorm _ _).absorbent_ball hx
 #align absorbent_ball absorbent_ball
 
 /- warning: balanced_ball_zero -> balanced_ball_zero is a dubious translation:
@@ -1787,9 +1773,7 @@ but is expected to have type
   forall {𝕜 : Type.{u2}} {E : Type.{u1}} [_inst_1 : NormedField.{u2} 𝕜] [_inst_2 : SeminormedAddCommGroup.{u1} E] [_inst_3 : NormedSpace.{u2, u1} 𝕜 E _inst_1 _inst_2] {r : Real}, Balanced.{u2, u1} 𝕜 E (SeminormedCommRing.toSeminormedRing.{u2} 𝕜 (NormedCommRing.toSeminormedCommRing.{u2} 𝕜 (NormedField.toNormedCommRing.{u2} 𝕜 _inst_1))) (SMulZeroClass.toSMul.{u2, u1} 𝕜 E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (SMulWithZero.toSMulZeroClass.{u2, u1} 𝕜 E (CommMonoidWithZero.toZero.{u2} 𝕜 (CommGroupWithZero.toCommMonoidWithZero.{u2} 𝕜 (Semifield.toCommGroupWithZero.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (MulActionWithZero.toSMulWithZero.{u2, u1} 𝕜 E (Semiring.toMonoidWithZero.{u2} 𝕜 (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1))))) (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))) (Module.toMulActionWithZero.{u2, u1} 𝕜 E (DivisionSemiring.toSemiring.{u2} 𝕜 (Semifield.toDivisionSemiring.{u2} 𝕜 (Field.toSemifield.{u2} 𝕜 (NormedField.toField.{u2} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)) (NormedSpace.toModule.{u2, u1} 𝕜 E _inst_1 _inst_2 _inst_3))))) (Metric.ball.{u1} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} E _inst_2) (OfNat.ofNat.{u1} E 0 (Zero.toOfNat0.{u1} E (NegZeroClass.toZero.{u1} E (SubNegZeroMonoid.toNegZeroClass.{u1} E (SubtractionMonoid.toSubNegZeroMonoid.{u1} E (SubtractionCommMonoid.toSubtractionMonoid.{u1} E (AddCommGroup.toDivisionAddCommMonoid.{u1} E (SeminormedAddCommGroup.toAddCommGroup.{u1} E _inst_2)))))))) r)
 Case conversion may be inaccurate. Consider using '#align balanced_ball_zero balanced_ball_zeroₓ'. -/
 /-- Balls at the origin are balanced. -/
-theorem balanced_ball_zero : Balanced 𝕜 (Metric.ball (0 : E) r) :=
-  by
-  rw [← ball_normSeminorm 𝕜]
+theorem balanced_ball_zero : Balanced 𝕜 (Metric.ball (0 : E) r) := by rw [← ball_normSeminorm 𝕜];
   exact (normSeminorm _ _).balanced_ball_zero r
 #align balanced_ball_zero balanced_ball_zero
 

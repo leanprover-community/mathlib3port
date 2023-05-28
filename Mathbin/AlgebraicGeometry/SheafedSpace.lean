@@ -159,18 +159,8 @@ theorem id_c (X : SheafedSpace C) :
 Case conversion may be inaccurate. Consider using '#align algebraic_geometry.SheafedSpace.id_c_app AlgebraicGeometry.SheafedSpace.id_c_appₓ'. -/
 @[simp]
 theorem id_c_app (X : SheafedSpace C) (U) :
-    (𝟙 X : X ⟶ X).c.app U =
-      eqToHom
-        (by
-          induction U using Opposite.rec'
-          cases U
-          rfl) :=
-  by
-  induction U using Opposite.rec'
-  cases U
-  simp only [id_c]
-  dsimp
-  simp
+    (𝟙 X : X ⟶ X).c.app U = eqToHom (by induction U using Opposite.rec'; cases U; rfl) := by
+  induction U using Opposite.rec'; cases U; simp only [id_c]; dsimp; simp
 #align algebraic_geometry.SheafedSpace.id_c_app AlgebraicGeometry.SheafedSpace.id_c_app
 
 /- warning: algebraic_geometry.SheafedSpace.comp_base -> AlgebraicGeometry.SheafedSpace.comp_base is a dubious translation:

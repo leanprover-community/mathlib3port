@@ -119,9 +119,7 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) :
   · exact False.elim (h rfl)
   by_cases h' : n = 0
   · subst h'
-    rw [show b = tt by
-        revert h
-        cases b <;> simp]
+    rw [show b = tt by revert h; cases b <;> simp]
     refine' ⟨0, ⟨by rw [test_bit_zero], fun j hj => _⟩⟩
     obtain ⟨j', rfl⟩ := exists_eq_succ_of_ne_zero (ne_of_gt hj)
     rw [test_bit_succ, zero_test_bit]
@@ -357,8 +355,7 @@ theorem lxor'_trichotomy {a b c : ℕ} (h : a ≠ lxor' b c) :
   by
   set v := lxor a (lxor b c) with hv
   -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
-  have hab : lxor a b = lxor c v := by
-    rw [hv]
+  have hab : lxor a b = lxor c v := by rw [hv];
     conv_rhs =>
       rw [lxor_comm]
       simp [lxor_assoc]
@@ -381,15 +378,7 @@ theorem lxor'_trichotomy {a b c : ℕ} (h : a ≠ lxor' b c) :
   -- If, say, `a` has a one bit at position `i`, then `a xor v` has a zero bit at position `i`, but
       -- the same bits as `a` in positions greater than `j`, so `a xor v < a`.
       rcases this with (h | h | h) <;>
-      [·
-        left
-        rw [hbc];·
-        right
-        left
-        rw [hac];·
-        right
-        right
-        rw [hab]] <;>
+      [· left; rw [hbc];· right; left; rw [hac];· right; right; rw [hab]] <;>
     exact lt_of_test_bit i (by simp [h, hi]) h fun j hj => by simp [hi' _ hj]
 #align nat.lxor_trichotomy Nat.lxor'_trichotomy
 -/

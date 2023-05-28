@@ -552,8 +552,7 @@ theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
   refine' is_open_iff_mem_nhds.mpr fun a ha => _
   filter_upwards [eventually_nhds_nhds_within.mpr ha]with b hb
   by_cases a = b
-  · subst h
-    exact hb
+  · subst h; exact hb
   · rw [(Ne.symm h).nhdsWithin_compl_singleton] at hb
     exact hb.filter_mono nhdsWithin_le_nhds
 #align is_open_set_of_eventually_nhds_within isOpen_setOf_eventually_nhdsWithin
@@ -1002,10 +1001,8 @@ theorem nhdsSet_le_iff [T1Space α] {s t : Set α} : 𝓝ˢ s ≤ 𝓝ˢ t ↔ s
 
 #print nhdsSet_inj_iff /-
 @[simp]
-theorem nhdsSet_inj_iff [T1Space α] {s t : Set α} : 𝓝ˢ s = 𝓝ˢ t ↔ s = t :=
-  by
-  simp_rw [le_antisymm_iff]
-  exact and_congr nhdsSet_le_iff nhdsSet_le_iff
+theorem nhdsSet_inj_iff [T1Space α] {s t : Set α} : 𝓝ˢ s = 𝓝ˢ t ↔ s = t := by
+  simp_rw [le_antisymm_iff]; exact and_congr nhdsSet_le_iff nhdsSet_le_iff
 #align nhds_set_inj_iff nhdsSet_inj_iff
 -/
 
@@ -2052,16 +2049,12 @@ theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact
       ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
     rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
     refine' ⟨update K x K₁, _, _, _⟩
-    · intro i
-      by_cases hi : i = x
+    · intro i; by_cases hi : i = x
       · simp only [update_same, hi, h1K₁]
-      · rw [← Ne.def] at hi
-        simp only [update_noteq hi, h1K]
-    · intro i
-      by_cases hi : i = x
+      · rw [← Ne.def] at hi; simp only [update_noteq hi, h1K]
+    · intro i; by_cases hi : i = x
       · simp only [update_same, hi, h2K₁]
-      · rw [← Ne.def] at hi
-        simp only [update_noteq hi, h2K]
+      · rw [← Ne.def] at hi; simp only [update_noteq hi, h2K]
     · simp only [set_bUnion_insert_update _ hx, hK, h3K]
 #align is_compact.finite_compact_cover IsCompact.finite_compact_cover
 
@@ -2382,10 +2375,7 @@ theorem isClosed_setOf_inseparable : IsClosed { p : α × α | Inseparable p.1 p
 #print Inducing.regularSpace /-
 protected theorem Inducing.regularSpace [TopologicalSpace β] {f : β → α} (hf : Inducing f) :
     RegularSpace β :=
-  RegularSpace.ofBasis
-    (fun b => by
-      rw [hf.nhds_eq_comap b]
-      exact (closed_nhds_basis _).comap _)
+  RegularSpace.ofBasis (fun b => by rw [hf.nhds_eq_comap b]; exact (closed_nhds_basis _).comap _)
     fun b s hs => hs.2.Preimage hf.Continuous
 #align inducing.regular_space Inducing.regularSpace
 -/
@@ -2438,9 +2428,7 @@ but is expected to have type
   forall {X : Type.{u1}} {t₁ : TopologicalSpace.{u1} X} {t₂ : TopologicalSpace.{u1} X}, (RegularSpace.{u1} X t₁) -> (RegularSpace.{u1} X t₂) -> (RegularSpace.{u1} X (Inf.inf.{u1} (TopologicalSpace.{u1} X) (Lattice.toInf.{u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toLattice.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X)))) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align regular_space.inf RegularSpace.infₓ'. -/
 theorem RegularSpace.inf {X} {t₁ t₂ : TopologicalSpace X} (h₁ : @RegularSpace X t₁)
-    (h₂ : @RegularSpace X t₂) : @RegularSpace X (t₁ ⊓ t₂) :=
-  by
-  rw [inf_eq_iInf]
+    (h₂ : @RegularSpace X t₂) : @RegularSpace X (t₁ ⊓ t₂) := by rw [inf_eq_iInf];
   exact regularSpace_iInf (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align regular_space.inf RegularSpace.inf
 
@@ -2793,8 +2781,7 @@ theorem connectedComponent_eq_iInter_clopen [T2Space α] [CompactSpace α] (x : 
           (mem_of_subset_of_mem (subset.trans hab (union_subset_union hau hbv))
             (mem_Inter.2 fun i => i.2.2)) with
         h1 h1
-      · exfalso
-        exact h h1
+      · exfalso; exact h h1
       · exact h1
     right
     suffices (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, ↑Z) ⊆ v
@@ -2844,8 +2831,7 @@ variable [T2Space α] [CompactSpace α]
 theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ TotallySeparatedSpace α :=
   by
   constructor
-  · intro h
-    constructor
+  · intro h; constructor
     rintro x - y -
     contrapose!
     intro hyp
@@ -2997,8 +2983,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
       IsClopen U ∧ connectedComponent a ∩ U = ∅ ∧ connectedComponent b ⊆ U ∧ coe ⁻¹' V = U :=
     by
     cases' is_closed_connected_component.is_compact.elim_finite_subfamily_closed _ _ h with fin_a ha
-    swap
-    · exact fun Z => Z.2.1.2
+    swap; · exact fun Z => Z.2.1.2
     -- This clopen and its complement will separate the connected components of `a` and `b`
     set U : Set α := ⋂ (i : { Z // IsClopen Z ∧ b ∈ Z }) (H : i ∈ fin_a), i
     have hU : IsClopen U := isClopen_biInter_finset fun i j => i.2.1

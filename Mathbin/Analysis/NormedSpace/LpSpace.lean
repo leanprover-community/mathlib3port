@@ -252,10 +252,8 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
           (F i).coe_nonneg
 #align mem_ℓp.add Memℓp.add
 
-theorem sub {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (f - g) p :=
-  by
-  rw [sub_eq_add_neg]
-  exact hf.add hg.neg
+theorem sub {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (f - g) p := by
+  rw [sub_eq_add_neg]; exact hf.add hg.neg
 #align mem_ℓp.sub Memℓp.sub
 
 theorem finset_sum {ι} (s : Finset ι) {f : ι → ∀ i, E i} (hf : ∀ i ∈ s, Memℓp (f i) p) :
@@ -473,10 +471,7 @@ theorem norm_zero : ‖(0 : lp E p)‖ = 0 :=
 
 theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
   classical
-    refine'
-      ⟨fun h => _, by
-        rintro rfl
-        exact norm_zero⟩
+    refine' ⟨fun h => _, by rintro rfl; exact norm_zero⟩
     rcases p.trichotomy with (rfl | rfl | hp)
     · ext i
       have : { i : α | ¬f i = 0 } = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
@@ -776,10 +771,7 @@ protected theorem star_apply (f : lp E p) (i : α) : star f i = star (f i) :=
   rfl
 #align lp.star_apply lp.star_apply
 
-instance : InvolutiveStar (lp E p)
-    where star_involutive x := by
-    ext
-    simp
+instance : InvolutiveStar (lp E p) where star_involutive x := by ext; simp
 
 instance : StarAddMonoid (lp E p) where star_add f g := ext <| star_add _ _
 
@@ -857,9 +849,7 @@ variable [∀ i, StarRing (B i)] [∀ i, NormedStarGroup (B i)]
 
 instance inftyStarRing : StarRing (lp B ∞) :=
   {
-    show StarAddMonoid (lp B ∞)
-      by
-      letI : ∀ i, StarAddMonoid (B i) := fun i => inferInstance
+    show StarAddMonoid (lp B ∞) by letI : ∀ i, StarAddMonoid (B i) := fun i => inferInstance;
       infer_instance with
     star_mul := fun f g => ext <| star_mul (_ : ∀ i, B i) _ }
 #align lp.infty_star_ring lp.inftyStarRing
@@ -893,9 +883,7 @@ instance PreLp.ring : Ring (PreLp B) :=
 variable [∀ i, NormOneClass (B i)]
 
 theorem one_memℓp_infty : Memℓp (1 : ∀ i, B i) ∞ :=
-  ⟨1, by
-    rintro i ⟨i, rfl⟩
-    exact norm_one.le⟩
+  ⟨1, by rintro i ⟨i, rfl⟩; exact norm_one.le⟩
 #align one_mem_ℓp_infty one_memℓp_infty
 
 variable (B)
@@ -963,9 +951,7 @@ variable {I : Type _} {B : I → Type _} [∀ i, NormedCommRing (B i)] [∀ i, N
 
 instance inftyCommRing : CommRing (lp B ∞) :=
   { lp.inftyRing with
-    mul_comm := fun f g => by
-      ext
-      simp only [lp.infty_coeFn_mul, Pi.mul_apply, mul_comm] }
+    mul_comm := fun f g => by ext; simp only [lp.infty_coeFn_mul, Pi.mul_apply, mul_comm] }
 #align lp.infty_comm_ring lp.inftyCommRing
 
 instance inftyNormedCommRing : NormedCommRing (lp B ∞) :=

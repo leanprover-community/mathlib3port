@@ -127,11 +127,10 @@ theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
       rcases mk'_surjective I.prime_compl y with ⟨ry, sy, hry⟩
       rcases mk'_surjective I.prime_compl z with ⟨rz, sz, hrz⟩
       rw [← hrx, ← hry, ← hrz, ← mk'_add, ← mk'_mul, ← mk'_self S I.prime_compl.one_mem] at hxyz
-      rw [← hrx] at hx
-      rw [← hry] at hy
+      rw [← hrx] at hx; rw [← hry] at hy
       obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz
       simp only [mul_one, one_mul, Submonoid.coe_mul, Subtype.coe_mk] at ht
-      suffices : ↑t * (↑sx * ↑sy * ↑sz) ∈ I
+      suffices : ↑t * (↑sx * ↑sy * ↑sz) ∈ I;
       exact
         not_or_of_not (mt hp.mem_or_mem <| not_or_of_not sx.2 sy.2) sz.2
           (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_left t.2)
@@ -301,9 +300,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.le_comap_prime_compl_iff Localization.le_comap_primeCompl_iffₓ'. -/
 theorem le_comap_primeCompl_iff {J : Ideal P} [hJ : J.IsPrime] {f : R →+* P} :
     I.primeCompl ≤ J.primeCompl.comap f ↔ J.comap f ≤ I :=
-  ⟨fun h x hx => by
-    contrapose! hx
-    exact h hx, fun h x hx hfxJ => hx (h hfxJ)⟩
+  ⟨fun h x hx => by contrapose! hx; exact h hx, fun h x hx hfxJ => hx (h hfxJ)⟩
 #align localization.le_comap_prime_compl_iff Localization.le_comap_primeCompl_iff
 
 variable (I)

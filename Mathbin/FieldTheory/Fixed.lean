@@ -92,9 +92,7 @@ variable (M)
 /-- The subfield of fixed points by a monoid action. -/
 def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixedPoints M F)
-    (by
-      ext z
-      simp [fixed_points, FixedBy.subfield, iInf, Subfield.mem_sInf])
+    (by ext z; simp [fixed_points, FixedBy.subfield, iInf, Subfield.mem_sInf])
 #align fixed_points.subfield FixedPoints.subfield
 
 instance : IsInvariantSubfield M (FixedPoints.subfield M F)
@@ -135,10 +133,8 @@ theorem linearIndependent_smul_of_linearIndependent {s : Finset F} :
   refine' Finset.induction_on s (fun _ => linearIndependent_empty_type) fun a s has ih hs => _
   rw [coe_insert] at hs⊢
   rw [linearIndependent_insert (mt mem_coe.1 has)] at hs
-  rw [linearIndependent_insert' (mt mem_coe.1 has)]
-  refine' ⟨ih hs.1, fun ha => _⟩
-  rw [Finsupp.mem_span_image_iff_total] at ha
-  rcases ha with ⟨l, hl, hla⟩
+  rw [linearIndependent_insert' (mt mem_coe.1 has)]; refine' ⟨ih hs.1, fun ha => _⟩
+  rw [Finsupp.mem_span_image_iff_total] at ha; rcases ha with ⟨l, hl, hla⟩
   rw [Finsupp.total_apply_of_mem_supported F hl] at hla
   suffices ∀ i ∈ s, l i ∈ FixedPoints.subfield G F
     by
@@ -154,8 +150,7 @@ theorem linearIndependent_smul_of_linearIndependent {s : Finset F} :
           (mem_attach _ _) :
         _)
   refine' (@sum_attach _ _ s _ fun i => (g • l i - l i) • MulAction.toFun G F i).trans _
-  ext g'
-  dsimp only
+  ext g'; dsimp only
   conv_lhs =>
     rw [sum_apply]
     congr
@@ -190,9 +185,7 @@ def minpoly : Polynomial (FixedPoints.subfield G F) :=
 
 namespace minpoly
 
-theorem monic : (minpoly G F x).Monic :=
-  by
-  simp only [minpoly, Polynomial.monic_toSubring]
+theorem monic : (minpoly G F x).Monic := by simp only [minpoly, Polynomial.monic_toSubring];
   exact prodXSubSmul.monic G F x
 #align fixed_points.minpoly.monic FixedPoints.minpoly.monic
 
@@ -236,12 +229,8 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
 theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Monic) (hg : g.Monic)
     (hfg : f * g = minpoly G F x) : f = 1 ∨ g = 1 :=
   by
-  have hf2 : f ∣ minpoly G F x := by
-    rw [← hfg]
-    exact dvd_mul_right _ _
-  have hg2 : g ∣ minpoly G F x := by
-    rw [← hfg]
-    exact dvd_mul_left _ _
+  have hf2 : f ∣ minpoly G F x := by rw [← hfg]; exact dvd_mul_right _ _
+  have hg2 : g ∣ minpoly G F x := by rw [← hfg]; exact dvd_mul_left _ _
   have := eval₂ G F x
   rw [← hfg, Polynomial.eval₂_mul, mul_eq_zero] at this
   cases this
@@ -265,10 +254,8 @@ end minpoly
 
 end Fintype
 
-theorem isIntegral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x :=
-  by
-  cases nonempty_fintype G
-  exact ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
+theorem isIntegral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x := by
+  cases nonempty_fintype G; exact ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
 #align fixed_points.is_integral FixedPoints.isIntegral
 
 section Fintype
@@ -313,9 +300,7 @@ instance separable : IsSeparable (FixedPoints.subfield G F) F :=
     exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
 #align fixed_points.separable FixedPoints.separable
 
-instance : FiniteDimensional (subfield G F) F :=
-  by
-  cases nonempty_fintype G
+instance : FiniteDimensional (subfield G F) F := by cases nonempty_fintype G;
   exact
     IsNoetherian.iff_fg.1
       (IsNoetherian.iff_rank_lt_aleph0.2 <| (rank_le_card G F).trans_lt <| Cardinal.nat_lt_aleph0 _)

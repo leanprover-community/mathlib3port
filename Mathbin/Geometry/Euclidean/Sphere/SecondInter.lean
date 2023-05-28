@@ -95,8 +95,7 @@ theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
     s.secondInter p v = p ↔ ⟪v, p -ᵥ s.center⟫ = 0 :=
   by
   refine' ⟨fun hp => _, fun hp => _⟩
-  · by_cases hv : v = 0
-    · simp [hv]
+  · by_cases hv : v = 0; · simp [hv]
     rwa [sphere.second_inter, eq_comm, eq_vadd_iff_vsub_eq, vsub_self, eq_comm, smul_eq_zero,
       or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
       or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
@@ -117,8 +116,7 @@ theorem Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem {s : Spher
     rcases hp' with ⟨r, hr⟩
     rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
     subst hr
-    by_cases hv : v = 0
-    · simp [hv]
+    by_cases hv : v = 0; · simp [hv]
     rw [sphere.second_inter]
     rw [mem_sphere] at h hp
     rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h
@@ -241,9 +239,7 @@ theorem Sphere.sbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
   by
   refine' ⟨sphere.wbtw_second_inter hp hp'.le, _, _⟩
-  · rintro rfl
-    rw [mem_sphere] at hp
-    simpa [hp] using hp'
+  · rintro rfl; rw [mem_sphere] at hp; simpa [hp] using hp'
   · rintro h
     rw [h, mem_sphere.1 ((sphere.second_inter_mem _).2 hp)] at hp'
     exact lt_irrefl _ hp'

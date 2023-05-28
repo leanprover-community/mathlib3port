@@ -91,10 +91,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complex.range_exp Complex.range_expₓ'. -/
 @[simp]
 theorem range_exp : range exp = {0}ᶜ :=
-  Set.ext fun x =>
-    ⟨by
-      rintro ⟨x, rfl⟩
-      exact exp_ne_zero x, fun hx => ⟨log x, exp_log hx⟩⟩
+  Set.ext fun x => ⟨by rintro ⟨x, rfl⟩; exact exp_ne_zero x, fun hx => ⟨log x, exp_log hx⟩⟩
 #align complex.range_exp Complex.range_exp
 
 /- warning: complex.log_exp -> Complex.log_exp is a dubious translation:
@@ -287,8 +284,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
-  · rintro ⟨n, rfl⟩
-    exact (exp_periodic.int_mul n).Eq.trans exp_zero
+  · rintro ⟨n, rfl⟩; exact (exp_periodic.int_mul n).Eq.trans exp_zero
 #align complex.exp_eq_one_iff Complex.exp_eq_one_iff
 
 /- warning: complex.exp_eq_exp_iff_exp_sub_eq_one -> Complex.exp_eq_exp_iff_exp_sub_eq_one is a dubious translation:
@@ -324,8 +320,7 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
     · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
-    · push_neg  at hne
-      simp [preimage, hne]
+    · push_neg  at hne; simp [preimage, hne]
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
 -/
 
@@ -349,8 +344,7 @@ theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
         tendsto_const_nhds)
   convert this
   · simp [sub_eq_add_neg]
-  · lift z to ℝ using him
-    simpa using hre.ne
+  · lift z to ℝ using him; simpa using hre.ne
 #align complex.tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero
 
 /- warning: complex.continuous_within_at_log_of_re_neg_of_im_zero -> Complex.continuousWithinAt_log_of_re_neg_of_im_zero is a dubious translation:
@@ -369,8 +363,7 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
             continuous_within_at_arg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
-  · lift z to ℝ using him
-    simpa using hre.ne
+  · lift z to ℝ using him; simpa using hre.ne
 #align complex.continuous_within_at_log_of_re_neg_of_im_zero Complex.continuousWithinAt_log_of_re_neg_of_im_zero
 
 /- warning: complex.tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero -> Complex.tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero is a dubious translation:

@@ -68,11 +68,7 @@ variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 instance : AddMonoidHomClass (Derivation R A M) A M
     where
   coe D := D.toFun
-  coe_injective' D1 D2 h := by
-    cases D1
-    cases D2
-    congr
-    exact FunLike.coe_injective h
+  coe_injective' D1 D2 h := by cases D1; cases D2; congr ; exact FunLike.coe_injective h
   map_add D := D.toLinearMap.map_add'
   map_zero D := D.toLinearMap.map_zero
 
@@ -304,12 +300,8 @@ def LinearMap.compDer : Derivation R A M →ₗ[R] Derivation R A N
       leibniz' := fun a b => by
         simp only [coe_fn_coe, LinearMap.comp_apply, LinearMap.map_add, leibniz,
           LinearMap.coe_restrictScalars, LinearMap.map_smul] }
-  map_add' D₁ D₂ := by
-    ext
-    exact LinearMap.map_add _ _ _
-  map_smul' r D := by
-    ext
-    exact LinearMap.map_smul _ _ _
+  map_add' D₁ D₂ := by ext; exact LinearMap.map_add _ _ _
+  map_smul' r D := by ext; exact LinearMap.map_smul _ _ _
 #align linear_map.comp_der LinearMap.compDer
 
 @[simp]
@@ -327,24 +319,16 @@ theorem coe_comp : (f.compDer D : A → N) = (f : M →ₗ[R] N).comp (D : A →
 def llcomp : (M →ₗ[A] N) →ₗ[A] Derivation R A M →ₗ[R] Derivation R A N
     where
   toFun f := f.compDer
-  map_add' f₁ f₂ := by
-    ext
-    rfl
-  map_smul' r D := by
-    ext
-    rfl
+  map_add' f₁ f₂ := by ext; rfl
+  map_smul' r D := by ext; rfl
 #align derivation.llcomp Derivation.llcomp
 
 /-- Pushing a derivation foward through a linear equivalence is an equivalence. -/
 def LinearEquiv.compDer : Derivation R A M ≃ₗ[R] Derivation R A N :=
   { e.toLinearMap.compDer with
     invFun := e.symm.toLinearMap.compDer
-    left_inv := fun D => by
-      ext a
-      exact e.symm_apply_apply (D a)
-    right_inv := fun D => by
-      ext a
-      exact e.apply_symm_apply (D a) }
+    left_inv := fun D => by ext a; exact e.symm_apply_apply (D a)
+    right_inv := fun D => by ext a; exact e.apply_symm_apply (D a) }
 #align linear_equiv.comp_der LinearEquiv.compDer
 
 end PushForward
@@ -514,27 +498,14 @@ theorem commutator_apply : ⁅D1, D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
 
 instance : LieRing (Derivation R A A)
     where
-  add_lie d e f := by
-    ext a
-    simp only [commutator_apply, add_apply, map_add]
-    ring
-  lie_add d e f := by
-    ext a
-    simp only [commutator_apply, add_apply, map_add]
-    ring
-  lie_self d := by
-    ext a
-    simp only [commutator_apply, add_apply, map_add]
-    ring_nf
-  leibniz_lie d e f := by
-    ext a
-    simp only [commutator_apply, add_apply, sub_apply, map_sub]
-    ring
+  add_lie d e f := by ext a; simp only [commutator_apply, add_apply, map_add]; ring
+  lie_add d e f := by ext a; simp only [commutator_apply, add_apply, map_add]; ring
+  lie_self d := by ext a; simp only [commutator_apply, add_apply, map_add]; ring_nf
+  leibniz_lie d e f := by ext a; simp only [commutator_apply, add_apply, sub_apply, map_sub]; ring
 
 instance : LieAlgebra R (Derivation R A A) :=
   { Derivation.module with
-    lie_smul := fun r d e => by
-      ext a
+    lie_smul := fun r d e => by ext a;
       simp only [commutator_apply, map_smul, smul_sub, smul_apply] }
 
 end LieStructures
@@ -585,19 +556,10 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
         _ with
       map_one_eq_zero' := _
       leibniz' := _ }
-  · rw [e]
-    ext
-    rfl
-  · ext
-    change f 1 - algebraMap A B 1 = 0
-    rw [map_one, map_one, sub_self]
+  · rw [e]; ext; rfl
+  · ext; change f 1 - algebraMap A B 1 = 0; rw [map_one, map_one, sub_self]
   · intro x y
-    let F :=
-      diffToIdealOfQuotientCompEq I f (IsScalarTower.toAlgHom R A B)
-        (by
-          rw [e]
-          ext
-          rfl)
+    let F := diffToIdealOfQuotientCompEq I f (IsScalarTower.toAlgHom R A B) (by rw [e]; ext; rfl)
     have : (f x - algebraMap A B x) * (f y - algebraMap A B y) = 0 :=
       by
       rw [← Ideal.mem_bot, ← hI, pow_two]
@@ -629,9 +591,7 @@ def liftOfDerivationToSquareZero (f : Derivation R A I) : A →ₐ[R] B :=
     map_one' := by rw [map_one, f.map_one_eq_zero, Submodule.coe_zero, zero_add]
     map_mul' := fun x y =>
       by
-      have : (f x : B) * f y = 0 :=
-        by
-        rw [← Ideal.mem_bot, ← hI, pow_two]
+      have : (f x : B) * f y = 0 := by rw [← Ideal.mem_bot, ← hI, pow_two];
         convert Ideal.mul_mem_mul (f x).2 (f y).2 using 1
       simp only [map_mul, f.leibniz, add_mul, mul_add, Submodule.coe_add,
         Submodule.coe_smul_of_tower, Algebra.smul_def, this]
@@ -664,14 +624,9 @@ def derivationToSquareZeroEquivLift :
   refine'
     ⟨fun d => ⟨liftOfDerivationToSquareZero I hI d, _⟩, fun f =>
       (derivationToSquareZeroOfLift I hI f.1 f.2 : _), _, _⟩
-  · ext x
-    exact liftOfDerivationToSquareZero_mk_apply I hI d x
-  · intro d
-    ext x
-    exact add_sub_cancel (d x : B) (algebraMap A B x)
-  · rintro ⟨f, hf⟩
-    ext x
-    exact sub_add_cancel (f x) (algebraMap A B x)
+  · ext x; exact liftOfDerivationToSquareZero_mk_apply I hI d x
+  · intro d; ext x; exact add_sub_cancel (d x : B) (algebraMap A B x)
+  · rintro ⟨f, hf⟩; ext x; exact sub_add_cancel (f x) (algebraMap A B x)
 #align derivation_to_square_zero_equiv_lift derivationToSquareZeroEquivLift
 
 end ToSquareZero

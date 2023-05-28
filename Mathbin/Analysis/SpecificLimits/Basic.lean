@@ -61,9 +61,7 @@ but is expected to have type
   Filter.Tendsto.{0, 0} Nat NNReal (fun (n : Nat) => Inv.inv.{0} NNReal (CanonicallyLinearOrderedSemifield.toInv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal) (Nat.cast.{0} NNReal (CanonicallyOrderedCommSemiring.toNatCast.{0} NNReal instNNRealCanonicallyOrderedCommSemiring) n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (nhds.{0} NNReal NNReal.instTopologicalSpaceNNReal (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero)))
 Case conversion may be inaccurate. Consider using '#align nnreal.tendsto_inverse_at_top_nhds_0_nat NNReal.tendsto_inverse_atTop_nhds_0_natₓ'. -/
 theorem NNReal.tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
-  by
-  rw [← NNReal.tendsto_coe]
-  exact tendsto_inverse_atTop_nhds_0_nat
+  by rw [← NNReal.tendsto_coe]; exact tendsto_inverse_atTop_nhds_0_nat
 #align nnreal.tendsto_inverse_at_top_nhds_0_nat NNReal.tendsto_inverse_atTop_nhds_0_nat
 
 /- warning: nnreal.tendsto_const_div_at_top_nhds_0_nat -> NNReal.tendsto_const_div_atTop_nhds_0_nat is a dubious translation:
@@ -383,10 +381,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum_geometric_two_le sum_geometric_two_leₓ'. -/
 theorem sum_geometric_two_le (n : ℕ) : (∑ i : ℕ in range n, (1 / (2 : ℝ)) ^ i) ≤ 2 :=
   by
-  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by
-    intro i
-    apply pow_nonneg
-    norm_num
+  have : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i := by intro i; apply pow_nonneg; norm_num
   convert sum_le_tsum (range n) (fun i _ => this i) summable_geometric_two
   exact tsum_geometric_two.symm
 #align sum_geometric_two_le sum_geometric_two_le
@@ -412,8 +407,7 @@ theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)�
   by
   have A : Summable fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0 := by
     apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
-      · intro i
-        by_cases hi : n ≤ i <;> simp [hi]
+      · intro i; by_cases hi : n ≤ i <;> simp [hi]
   have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
     Finset.sum_eq_zero fun i hi =>
       ite_eq_right_iff.2 fun h => (lt_irrefl _ ((Finset.mem_range.1 hi).trans_le h)).elim
@@ -430,9 +424,7 @@ Case conversion may be inaccurate. Consider using '#align has_sum_geometric_two'
 theorem hasSum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a :=
   by
   convert HasSum.mul_left (a / 2) (hasSum_geometric_of_lt_1 (le_of_lt one_half_pos) one_half_lt_one)
-  · funext n
-    simp
-    rfl
+  · funext n; simp; rfl
   · norm_num
 #align has_sum_geometric_two' hasSum_geometric_two'
 
@@ -797,10 +789,8 @@ def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) (ι) [Encodable ι] :
   refine' ⟨f ∘ Encodable.encode, fun i => f0 _, _⟩
   rcases hf.summable.comp_injective (@Encodable.encode_injective ι _) with ⟨c, hg⟩
   refine' ⟨c, hg, hasSum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
-  · intro i _
-    exact le_of_lt (f0 _)
-  · intro n
-    exact le_rfl
+  · intro i _; exact le_of_lt (f0 _)
+  · intro n; exact le_rfl
 #align pos_sum_of_encodable posSumOfEncodable
 
 /- warning: set.countable.exists_pos_has_sum_le -> Set.Countable.exists_pos_hasSum_le is a dubious translation:
@@ -815,8 +805,7 @@ theorem Set.Countable.exists_pos_hasSum_le {ι : Type _} {s : Set ι} (hs : s.Co
   haveI := hs.to_encodable
   rcases posSumOfEncodable hε s with ⟨f, hf0, ⟨c, hfc, hcε⟩⟩
   refine' ⟨fun i => if h : i ∈ s then f ⟨i, h⟩ else 1, fun i => _, ⟨c, _, hcε⟩⟩
-  · split_ifs
-    exacts[hf0 _, zero_lt_one]
+  · split_ifs; exacts[hf0 _, zero_lt_one]
   · simpa only [Subtype.coe_prop, dif_pos, Subtype.coe_eta]
 #align set.countable.exists_pos_has_sum_le Set.Countable.exists_pos_hasSum_le
 
@@ -943,9 +932,7 @@ theorem tendsto_factorial_div_pow_self_atTop : Tendsto (fun n => n ! / n ^ n : �
           intro x hx <;>
         rw [Finset.mem_range] at hx
       · refine' mul_nonneg _ (inv_nonneg.mpr _) <;> norm_cast <;> linarith
-      · refine' (div_le_one <| by exact_mod_cast hn).mpr _
-        norm_cast
-        linarith)
+      · refine' (div_le_one <| by exact_mod_cast hn).mpr _; norm_cast; linarith)
 #align tendsto_factorial_div_pow_self_at_top tendsto_factorial_div_pow_self_atTop
 
 /-!

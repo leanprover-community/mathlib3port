@@ -45,10 +45,8 @@ but is expected to have type
   forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1}) (j : J), Monoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} MonCat.{max u2 u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1}))) j)
 Case conversion may be inaccurate. Consider using '#align Mon.monoid_obj MonCat.monoidObjₓ'. -/
 @[to_additive]
-instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonCat).obj j) :=
-  by
-  change Monoid (F.obj j)
-  infer_instance
+instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonCat).obj j) := by
+  change Monoid (F.obj j); infer_instance
 #align Mon.monoid_obj MonCat.monoidObj
 #align AddMon.add_monoid_obj AddMonCat.addMonoidObj
 
@@ -199,10 +197,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align CommMon.comm_monoid_obj CommMonCat.commMonoidObjₓ'. -/
 @[to_additive]
 instance commMonoidObj (F : J ⥤ CommMonCat.{max v u}) (j) :
-    CommMonoid ((F ⋙ forget CommMonCat).obj j) :=
-  by
-  change CommMonoid (F.obj j)
-  infer_instance
+    CommMonoid ((F ⋙ forget CommMonCat).obj j) := by change CommMonoid (F.obj j); infer_instance
 #align CommMon.comm_monoid_obj CommMonCat.commMonoidObj
 #align AddCommMon.add_comm_monoid_obj AddCommMonCat.addCommMonoidObj
 

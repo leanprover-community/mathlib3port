@@ -142,9 +142,7 @@ theorem map_succ' (a : Fin (n + 1) → ℕ) : map d a = a 0 + map d (a ∘ Fin.s
   map_succ _
 #align behrend.map_succ' Behrend.map_succ'
 
-theorem map_monotone (d : ℕ) : Monotone (map d : (Fin n → ℕ) → ℕ) := fun x y h =>
-  by
-  dsimp
+theorem map_monotone (d : ℕ) : Monotone (map d : (Fin n → ℕ) → ℕ) := fun x y h => by dsimp;
   exact sum_le_sum fun i _ => Nat.mul_le_mul_right _ <| h i
 #align behrend.map_monotone Behrend.map_monotone
 

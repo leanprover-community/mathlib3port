@@ -661,9 +661,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α}, (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) a) -> (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.inv IsUnit.invₓ'. -/
 @[to_additive]
-theorem inv : IsUnit a → IsUnit a⁻¹ := by
-  rintro ⟨u, rfl⟩
-  rw [← Units.val_inv_eq_inv_val]
+theorem inv : IsUnit a → IsUnit a⁻¹ := by rintro ⟨u, rfl⟩; rw [← Units.val_inv_eq_inv_val];
   exact Units.isUnit _
 #align is_unit.inv IsUnit.inv
 #align is_add_unit.neg IsAddUnit.neg
@@ -675,9 +673,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α} {b : α}, (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) a) -> (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) b) -> (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) a b))
 Case conversion may be inaccurate. Consider using '#align is_unit.div IsUnit.divₓ'. -/
 @[to_additive]
-theorem div (ha : IsUnit a) (hb : IsUnit b) : IsUnit (a / b) :=
-  by
-  rw [div_eq_mul_inv]
+theorem div (ha : IsUnit a) (hb : IsUnit b) : IsUnit (a / b) := by rw [div_eq_mul_inv];
   exact ha.mul hb.inv
 #align is_unit.div IsUnit.div
 #align is_add_unit.sub IsAddUnit.sub
@@ -689,10 +685,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α} {b : α} {c : α}, (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) c) -> (Iff (Eq.{succ u1} α (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) a c) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) b c)) (Eq.{succ u1} α a b))
 Case conversion may be inaccurate. Consider using '#align is_unit.div_left_inj IsUnit.div_left_injₓ'. -/
 @[to_additive]
-protected theorem div_left_inj (h : IsUnit c) : a / c = b / c ↔ a = b :=
-  by
-  simp_rw [div_eq_mul_inv]
-  exact Units.mul_left_inj h.inv.unit'
+protected theorem div_left_inj (h : IsUnit c) : a / c = b / c ↔ a = b := by
+  simp_rw [div_eq_mul_inv]; exact Units.mul_left_inj h.inv.unit'
 #align is_unit.div_left_inj IsUnit.div_left_inj
 #align is_add_unit.sub_left_inj IsAddUnit.sub_left_inj
 

@@ -84,10 +84,7 @@ instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :
 #align pgame.unique_pow_half_succ_right_moves PGame.uniquePowHalfSuccRightMoves
 
 @[simp]
-theorem birthday_half : birthday (powHalf 1) = 2 :=
-  by
-  rw [birthday_def]
-  dsimp
+theorem birthday_half : birthday (powHalf 1) = 2 := by rw [birthday_def]; dsimp;
   simpa using Order.le_succ (1 : Ordinal)
 #align pgame.birthday_half PGame.birthday_half
 
@@ -120,10 +117,8 @@ theorem powHalf_succ_lt_one (n : ℕ) : powHalf (n + 1) < 1 :=
   (powHalf_succ_lt_powHalf n).trans_le <| powHalf_le_one n
 #align pgame.pow_half_succ_lt_one PGame.powHalf_succ_lt_one
 
-theorem powHalf_pos (n : ℕ) : 0 < powHalf n :=
-  by
-  rw [← lf_iff_lt numeric_zero (numeric_pow_half n), zero_lf_le]
-  simp
+theorem powHalf_pos (n : ℕ) : 0 < powHalf n := by
+  rw [← lf_iff_lt numeric_zero (numeric_pow_half n), zero_lf_le]; simp
 #align pgame.pow_half_pos PGame.powHalf_pos
 
 theorem zero_le_powHalf (n : ℕ) : 0 ≤ powHalf n :=
@@ -145,12 +140,10 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
           pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _
           _ < pow_half n := pow_half_succ_lt_pow_half n
           
-    · cases n
-      · rintro ⟨⟩
+    · cases n; · rintro ⟨⟩
       rintro ⟨⟩
       apply lf_of_move_right_le
-      swap
-      exact Sum.inl default
+      swap; exact Sum.inl default
       calc
         pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
           add_le_add_left (pow_half_succ_le_pow_half _) _
@@ -197,10 +190,8 @@ theorem powHalf_zero : powHalf 0 = 1 :=
 #align surreal.pow_half_zero Surreal.powHalf_zero
 
 @[simp]
-theorem double_powHalf_succ_eq_powHalf (n : ℕ) : 2 • powHalf n.succ = powHalf n :=
-  by
-  rw [two_nsmul]
-  exact Quotient.sound (PGame.add_powHalf_succ_self_eq_powHalf n)
+theorem double_powHalf_succ_eq_powHalf (n : ℕ) : 2 • powHalf n.succ = powHalf n := by
+  rw [two_nsmul]; exact Quotient.sound (PGame.add_powHalf_succ_self_eq_powHalf n)
 #align surreal.double_pow_half_succ_eq_pow_half Surreal.double_powHalf_succ_eq_powHalf
 
 @[simp]
@@ -237,16 +228,14 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
     m₁ • powHalf y₂ = m₂ • powHalf y₁ := by
   revert m₁ m₂
   wlog h : y₁ ≤ y₂
-  · intro m₁ m₂ aux
-    exact (this (le_of_not_le h) aux.symm).symm
+  · intro m₁ m₂ aux; exact (this (le_of_not_le h) aux.symm).symm
   intro m₁ m₂ h₂
   obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h
   rw [add_comm, pow_add, ← mul_assoc, mul_eq_mul_right_iff] at h₂
   cases h₂
   · rw [h₂, add_comm, zsmul_pow_two_pow_half m₂ c y₁]
   · have := Nat.one_le_pow y₁ 2 Nat.succ_pos'
-    norm_cast  at h₂
-    linarith
+    norm_cast  at h₂; linarith
 #align surreal.dyadic_aux Surreal.dyadic_aux
 
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
@@ -293,9 +282,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
 theorem dyadicMap_apply (m : ℤ) (p : Submonoid.powers (2 : ℤ)) :
     dyadicMap (IsLocalization.mk' (Localization (Submonoid.powers 2)) m p) =
       m • powHalf (Submonoid.log p) :=
-  by
-  rw [← Localization.mk_eq_mk']
-  rfl
+  by rw [← Localization.mk_eq_mk']; rfl
 #align surreal.dyadic_map_apply Surreal.dyadicMap_apply
 
 @[simp]

@@ -179,8 +179,7 @@ theorem isClosed_iff {X : Compactum} (S : Set X) :
     contradiction
   · intro h1 F h2
     specialize h1 F
-    cases F.mem_or_compl_mem S
-    exacts[absurd (h1 h) h2, h]
+    cases F.mem_or_compl_mem S; exacts[absurd (h1 h) h2, h]
 #align Compactum.is_closed_iff Compactum.isClosed_iff
 
 instance {X : Compactum} : CompactSpace X :=
@@ -414,9 +413,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
     [T2Space X] : Compactum where
   A := X
   a := Ultrafilter.lim
-  unit' := by
-    ext x
-    exact lim_eq (pure_le_nhds _)
+  unit' := by ext x; exact lim_eq (pure_le_nhds _)
   assoc' := by
     ext FF
     change Ultrafilter (Ultrafilter X) at FF
@@ -484,16 +481,11 @@ def isoOfTopologicalSpace {D : CompHaus} :
   Hom :=
     { toFun := id
       continuous_toFun :=
-        continuous_def.2 fun _ h => by
-          rw [isOpen_iff_ultrafilter'] at h
-          exact h }
+        continuous_def.2 fun _ h => by rw [isOpen_iff_ultrafilter'] at h; exact h }
   inv :=
     { toFun := id
       continuous_toFun :=
-        continuous_def.2 fun _ h1 => by
-          rw [isOpen_iff_ultrafilter']
-          intro _ h2
-          exact h1 _ h2 }
+        continuous_def.2 fun _ h1 => by rw [isOpen_iff_ultrafilter']; intro _ h2; exact h1 _ h2 }
 #align Compactum_to_CompHaus.iso_of_topological_space compactumToCompHaus.isoOfTopologicalSpace
 
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/
@@ -516,11 +508,7 @@ end compactumToCompHaus
 `Compactum_to_CompHaus`. -/
 def compactumToCompHausCompForget :
     compactumToCompHaus ⋙ CategoryTheory.forget CompHaus ≅ Compactum.forget :=
-  (NatIso.ofComponents fun X => eqToIso rfl) <|
-    by
-    intro X Y f
-    dsimp
-    simpa
+  (NatIso.ofComponents fun X => eqToIso rfl) <| by intro X Y f; dsimp; simpa
 #align Compactum_to_CompHaus_comp_forget compactumToCompHausCompForget
 
 /-

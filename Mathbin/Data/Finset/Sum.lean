@@ -89,10 +89,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Finset.{u1} α) (t : Finset.{u2} β), Disjoint.{max u2 u1} (Finset.{max u2 u1} (Sum.{u1, u2} α β)) (Finset.partialOrder.{max u1 u2} (Sum.{u1, u2} α β)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{max u1 u2} (Sum.{u1, u2} α β)) (Finset.map.{u1, max u2 u1} α (Sum.{u1, u2} α β) (Function.Embedding.inl.{u1, u2} α β) s) (Finset.map.{u2, max u1 u2} β (Sum.{u1, u2} α β) (Function.Embedding.inr.{u1, u2} α β) t)
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_map_inl_map_inr Finset.disjoint_map_inl_map_inrₓ'. -/
-theorem disjoint_map_inl_map_inr : Disjoint (s.map Embedding.inl) (t.map Embedding.inr) :=
-  by
-  simp_rw [disjoint_left, mem_map]
-  rintro x ⟨a, _, rfl⟩ ⟨b, _, ⟨⟩⟩
+theorem disjoint_map_inl_map_inr : Disjoint (s.map Embedding.inl) (t.map Embedding.inr) := by
+  simp_rw [disjoint_left, mem_map]; rintro x ⟨a, _, rfl⟩ ⟨b, _, ⟨⟩⟩
 #align finset.disjoint_map_inl_map_inr Finset.disjoint_map_inl_map_inr
 
 /- warning: finset.map_inl_disj_union_map_inr -> Finset.map_inl_disjUnion_map_inr is a dubious translation:

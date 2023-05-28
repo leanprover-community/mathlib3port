@@ -335,10 +335,7 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
         let f : d ⟶ d' := hd'.lift_cone_morphism d
         have : (cones.functoriality K F).map f = i.inv :=
           (hd.of_iso_limit i.symm).uniq_cone_morphism
-        haveI : is_iso ((cones.functoriality K F).map f) :=
-          by
-          rw [this]
-          infer_instance
+        haveI : is_iso ((cones.functoriality K F).map f) := by rw [this]; infer_instance
         haveI : is_iso f := is_iso_of_reflects_iso f (cones.functoriality K F)
         exact is_limit.of_iso_limit hd' (as_iso f).symm }
 #align category_theory.creates_limit_of_reflects_iso CategoryTheory.createsLimitOfReflectsIso
@@ -402,10 +399,7 @@ def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
     { pt
       π :=
         { app := fun j => F.preimage (i.Hom ≫ l.π.app j)
-          naturality' := fun Y Z f =>
-            F.map_injective <| by
-              dsimp
-              simpa using (l.w f).symm } }
+          naturality' := fun Y Z f => F.map_injective <| by dsimp; simpa using (l.w f).symm } }
     (Cones.ext i fun j => by simp only [functor.image_preimage, functor.map_cone_π_app])
 #align category_theory.creates_limit_of_fully_faithful_of_iso' CategoryTheory.createsLimitOfFullyFaithfulOfIso'
 
@@ -475,10 +469,7 @@ def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphism
         let f : d' ⟶ d := hd'.desc_cocone_morphism d
         have : (cocones.functoriality K F).map f = i.hom :=
           (hd.of_iso_colimit i.symm).uniq_cocone_morphism
-        haveI : is_iso ((cocones.functoriality K F).map f) :=
-          by
-          rw [this]
-          infer_instance
+        haveI : is_iso ((cocones.functoriality K F).map f) := by rw [this]; infer_instance
         haveI := is_iso_of_reflects_iso f (cocones.functoriality K F)
         exact is_colimit.of_iso_colimit hd' (as_iso f) }
 #align category_theory.creates_colimit_of_reflects_iso CategoryTheory.createsColimitOfReflectsIso
@@ -546,9 +537,7 @@ def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
       ι :=
         { app := fun j => F.preimage (l.ι.app j ≫ i.inv)
           naturality' := fun Y Z f =>
-            F.map_injective <| by
-              dsimp
-              simpa [← cancel_mono i.hom] using l.w f } }
+            F.map_injective <| by dsimp; simpa [← cancel_mono i.hom] using l.w f } }
     (Cocones.ext i fun j => by simp)
 #align category_theory.creates_colimit_of_fully_faithful_of_iso' CategoryTheory.createsColimitOfFullyFaithfulOfIso'
 
@@ -612,10 +601,7 @@ def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K
         validLift :=
           F.mapConePostcompose ≪≫
             (Cones.postcompose (isoWhiskerRight h F).Hom).mapIso (liftedLimitMapsToOriginal t') ≪≫
-              Cones.ext (Iso.refl _) fun j => by
-                dsimp
-                rw [category.assoc, ← F.map_comp]
-                simp } }
+              Cones.ext (Iso.refl _) fun j => by dsimp; rw [category.assoc, ← F.map_comp]; simp } }
 #align category_theory.creates_limit_of_iso_diagram CategoryTheory.createsLimitOfIsoDiagram
 -/
 
@@ -660,10 +646,7 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
           F.mapCoconePrecompose ≪≫
             (Cocones.precompose (isoWhiskerRight h F).inv).mapIso
                 (liftedColimitMapsToOriginal t') ≪≫
-              Cocones.ext (Iso.refl _) fun j => by
-                dsimp
-                rw [← F.map_comp_assoc]
-                simp } }
+              Cocones.ext (Iso.refl _) fun j => by dsimp; rw [← F.map_comp_assoc]; simp } }
 #align category_theory.creates_colimit_of_iso_diagram CategoryTheory.createsColimitOfIsoDiagram
 -/
 

@@ -91,9 +91,7 @@ theorem toSeminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
 <too large>
 Case conversion may be inaccurate. Consider using '#align linear_map.to_seminorm_comp LinearMap.toSeminorm_compₓ'. -/
 theorem toSeminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
-    f.toSeminorm.comp g = (f.comp g).toSeminorm :=
-  by
-  ext
+    f.toSeminorm.comp g = (f.comp g).toSeminorm := by ext;
   simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
 #align linear_map.to_seminorm_comp LinearMap.toSeminorm_comp
 

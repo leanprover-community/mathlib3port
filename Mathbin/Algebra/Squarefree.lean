@@ -287,9 +287,7 @@ theorem Squarefree.isRadical {x : R} (hx : Squarefree x) : IsRadical x :=
     And.right <|
       (dvd_gcd_iff x x y).1
         (by
-          by_cases gcd x y = 0;
-          · rw [h]
-            apply dvd_zero
+          by_cases gcd x y = 0; · rw [h]; apply dvd_zero
           replace hy := ((dvd_gcd_iff x x _).2 ⟨dvd_rfl, hy⟩).trans gcd_pow_right_dvd_pow_gcd
           obtain ⟨z, hz⟩ := gcd_dvd_left x y
           nth_rw 1 [hz] at hy⊢
@@ -307,10 +305,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_radical_iff_squarefree_or_zero isRadical_iff_squarefree_or_zeroₓ'. -/
 theorem isRadical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
   ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
-    Or.ndrec Squarefree.isRadical <| by
-      rintro rfl
-      rw [zero_isRadical_iff]
-      infer_instance⟩
+    Or.ndrec Squarefree.isRadical <| by rintro rfl; rw [zero_isRadical_iff]; infer_instance⟩
 #align is_radical_iff_squarefree_or_zero isRadical_iff_squarefree_or_zero
 
 /- warning: is_radical_iff_squarefree_of_ne_zero -> isRadical_iff_squarefree_of_ne_zero is a dubious translation:
@@ -349,11 +344,9 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
       · rw [← normalize_normalized_factor _ hmem]
         rw [multiplicity_eq_count_normalized_factors ha x0] at h
         assumption_mod_cast
-      · have := ha.1
-        contradiction
+      · have := ha.1; contradiction
     · simp [Multiset.count_eq_zero_of_not_mem hmem]
-  · rw [or_iff_not_imp_right]
-    intro hu
+  · rw [or_iff_not_imp_right]; intro hu
     by_cases h0 : a = 0
     · simp [h0, x0]
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩

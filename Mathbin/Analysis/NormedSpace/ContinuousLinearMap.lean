@@ -71,9 +71,7 @@ is generalized to the case of any finite dimensional domain
 in `linear_map.to_continuous_linear_map`. -/
 def LinearMap.toContinuousLinearMap₁ (f : 𝕜 →ₗ[𝕜] E) : 𝕜 →L[𝕜] E :=
   f.mkContinuous ‖f 1‖ fun x =>
-    le_of_eq <| by
-      conv_lhs => rw [← mul_one x]
-      rw [← smul_eq_mul, f.map_smul, norm_smul, mul_comm]
+    le_of_eq <| by conv_lhs => rw [← mul_one x]; rw [← smul_eq_mul, f.map_smul, norm_smul, mul_comm]
 #align linear_map.to_continuous_linear_map₁ LinearMap.toContinuousLinearMap₁
 -/
 
@@ -301,10 +299,7 @@ but is expected to have type
   forall (𝕜 : Type.{u1}) {E : Type.{u2}} [_inst_1 : NormedField.{u1} 𝕜] [_inst_3 : SeminormedAddCommGroup.{u2} E] [_inst_4 : NormedSpace.{u1, u2} 𝕜 E _inst_1 _inst_3] (x : E) (c : 𝕜), Eq.{1} Real (Norm.norm.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : 𝕜) => E) c) (SeminormedAddCommGroup.toNorm.{u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : 𝕜) => E) c) _inst_3) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (LinearMap.{u1, u1, u1, u2} 𝕜 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))))) 𝕜 E (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))))) (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_3)) (Semiring.toModule.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))) (NormedSpace.toModule.{u1, u2} 𝕜 E _inst_1 _inst_3 _inst_4)) 𝕜 (fun (_x : 𝕜) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6193 : 𝕜) => E) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u1, u2} 𝕜 𝕜 𝕜 E (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))))) (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_3)) (Semiring.toModule.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))) (NormedSpace.toModule.{u1, u2} 𝕜 E _inst_1 _inst_3 _inst_4) (RingHom.id.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1))))))) (LinearMap.toSpanSingleton.{u1, u2} 𝕜 E (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (Field.toSemifield.{u1} 𝕜 (NormedField.toField.{u1} 𝕜 _inst_1)))) (AddCommGroup.toAddCommMonoid.{u2} E (SeminormedAddCommGroup.toAddCommGroup.{u2} E _inst_3)) (NormedSpace.toModule.{u1, u2} 𝕜 E _inst_1 _inst_3 _inst_4) x) c)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Norm.norm.{u2} E (SeminormedAddCommGroup.toNorm.{u2} E _inst_3) x) (Norm.norm.{u1} 𝕜 (NormedField.toNorm.{u1} 𝕜 _inst_1) c))
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.toSpanSingleton_homothetyₓ'. -/
 theorem toSpanSingleton_homothety (x : E) (c : 𝕜) :
-    ‖LinearMap.toSpanSingleton 𝕜 E x c‖ = ‖x‖ * ‖c‖ :=
-  by
-  rw [mul_comm]
-  exact norm_smul _ _
+    ‖LinearMap.toSpanSingleton 𝕜 E x c‖ = ‖x‖ * ‖c‖ := by rw [mul_comm]; exact norm_smul _ _
 #align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.toSpanSingleton_homothety
 
 #print ContinuousLinearMap.toSpanSingleton /-
@@ -326,17 +321,13 @@ theorem toSpanSingleton_apply (x : E) (r : 𝕜) : toSpanSingleton 𝕜 x r = r 
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.toSpanSingleton_addₓ'. -/
 theorem toSpanSingleton_add (x y : E) :
-    toSpanSingleton 𝕜 (x + y) = toSpanSingleton 𝕜 x + toSpanSingleton 𝕜 y :=
-  by
-  ext1
+    toSpanSingleton 𝕜 (x + y) = toSpanSingleton 𝕜 x + toSpanSingleton 𝕜 y := by ext1;
   simp [to_span_singleton_apply]
 #align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.toSpanSingleton_add
 
 #print ContinuousLinearMap.toSpanSingleton_smul' /-
 theorem toSpanSingleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
-    (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x :=
-  by
-  ext1
+    (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x := by ext1;
   rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
 #align continuous_linear_map.to_span_singleton_smul' ContinuousLinearMap.toSpanSingleton_smul'
 -/

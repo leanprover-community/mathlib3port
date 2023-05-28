@@ -150,12 +150,8 @@ Case conversion may be inaccurate. Consider using '#align pow_mem pow_memₓ'. -
 @[to_additive]
 theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M}
     (hx : x ∈ S) : ∀ n : ℕ, x ^ n ∈ S
-  | 0 => by
-    rw [pow_zero]
-    exact OneMemClass.one_mem S
-  | n + 1 => by
-    rw [pow_succ]
-    exact MulMemClass.mul_mem hx (pow_mem n)
+  | 0 => by rw [pow_zero]; exact OneMemClass.one_mem S
+  | n + 1 => by rw [pow_succ]; exact MulMemClass.mul_mem hx (pow_mem n)
 #align pow_mem pow_mem
 #align nsmul_mem nsmul_mem
 
@@ -328,9 +324,7 @@ instance : Top (Submonoid M) :=
 instance : Bot (Submonoid M) :=
   ⟨{  carrier := {1}
       one_mem' := Set.mem_singleton 1
-      mul_mem' := fun a b ha hb =>
-        by
-        simp only [Set.mem_singleton_iff] at *
+      mul_mem' := fun a b ha hb => by simp only [Set.mem_singleton_iff] at *;
         rw [ha, hb, mul_one] }⟩
 
 @[to_additive]
@@ -928,10 +922,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M
     where
   carrier := setOf IsUnit
   one_mem' := by simp only [isUnit_one, Set.mem_setOf_eq]
-  mul_mem' := by
-    intro a b ha hb
-    rw [Set.mem_setOf_eq] at *
-    exact IsUnit.mul ha hb
+  mul_mem' := by intro a b ha hb; rw [Set.mem_setOf_eq] at *; exact IsUnit.mul ha hb
 #align is_unit.submonoid IsUnit.submonoid
 #align is_add_unit.add_submonoid IsAddUnit.addSubmonoid
 -/

@@ -102,9 +102,7 @@ but is expected to have type
   forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β], Eq.{max (succ u2) (succ u1)} (SimpleGraph.{max u1 u2} (Prod.{u2, u1} α β)) (SimpleGraph.hasse.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) (SimpleGraph.boxProd.{u2, u1} α β (SimpleGraph.hasse.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (SimpleGraph.hasse.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)))
 Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_prod SimpleGraph.hasse_prodₓ'. -/
 @[simp]
-theorem hasse_prod : hasse (α × β) = hasse α □ hasse β :=
-  by
-  ext (x y)
+theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by ext (x y);
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
     or_or_or_comm]
 #align simple_graph.hasse_prod SimpleGraph.hasse_prod

@@ -261,11 +261,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 #print Vector.tail_ofFn /-
 @[simp]
 theorem tail_ofFn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
-  (ofFn_get _).symm.trans <| by
-    congr
-    funext i
-    cases i
-    simp
+  (ofFn_get _).symm.trans <| by congr ; funext i; cases i; simp
 #align vector.tail_of_fn Vector.tail_ofFn
 -/
 
@@ -317,15 +313,9 @@ theorem nodup_iff_injective_get {v : Vector α n} : v.toList.Nodup ↔ Function.
   simp only [List.nodup_iff_nthLe_inj]
   constructor
   · intro h i j hij
-    cases i
-    cases j
-    ext
-    apply h
-    simpa
+    cases i; cases j; ext; apply h; simpa
   · intro h i j hi hj hij
-    have := @h ⟨i, hi⟩ ⟨j, hj⟩
-    simp [nth_eq_nth_le] at *
-    tauto
+    have := @h ⟨i, hi⟩ ⟨j, hj⟩; simp [nth_eq_nth_le] at *; tauto
 #align vector.nodup_iff_nth_inj Vector.nodup_iff_injective_get
 -/
 
@@ -352,9 +342,7 @@ theorem toList_reverse {v : Vector α n} : v.reverse.toList = v.toList.reverse :
 
 #print Vector.reverse_reverse /-
 @[simp]
-theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v :=
-  by
-  cases v
+theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v := by cases v;
   simp [Vector.reverse]
 #align vector.reverse_reverse Vector.reverse_reverse
 -/
@@ -654,8 +642,7 @@ def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Ve
     (h_nil : C nil nil) (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a ::ᵥ x) (b ::ᵥ y)) :
     C v w := by
   induction' n with n ih generalizing v w
-  · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
-    rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
+  · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩; rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
   · rcases v with ⟨_ | ⟨a, v⟩, _⟩
     cases v_property
@@ -675,8 +662,7 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a ::ᵥ x) (b ::ᵥ y) (c ::ᵥ z)) :
     C u v w := by
   induction' n with n ih generalizing u v w
-  · rcases u with ⟨_ | ⟨-, -⟩, - | -⟩
-    rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
+  · rcases u with ⟨_ | ⟨-, -⟩, - | -⟩; rcases v with ⟨_ | ⟨-, -⟩, - | -⟩;
     rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
   · rcases u with ⟨_ | ⟨a, u⟩, _⟩
@@ -751,16 +737,13 @@ theorem removeNth_insertNth' {v : Vector α (n + 1)} :
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert(List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm
-      · convert(Nat.succ_pred_eq_of_pos _).symm
-        exact lt_of_le_of_lt (zero_le _) h
+      · convert(Nat.succ_pred_eq_of_pos _).symm; exact lt_of_le_of_lt (zero_le _) h
       · apply remove_nth_val
-      · convert hi
-        exact v.2
+      · convert hi; exact v.2
       · exact Nat.le_pred_of_lt h
     · convert(List.insertNth_removeNth_of_le i j _ _ _).symm
       · apply remove_nth_val
-      · convert hi
-        exact v.2
+      · convert hi; exact v.2
       · simpa using h
 #align vector.remove_nth_insert_nth' Vector.removeNth_insertNth'
 
@@ -775,8 +758,7 @@ theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     simp only [insert_nth_val, Fin.val_succ, Fin.castSucc, [anonymous], Fin.coe_castAdd]
     apply List.insertNth_comm
     · assumption
-    · rw [hl]
-      exact Nat.le_of_succ_le_succ j.2
+    · rw [hl]; exact Nat.le_of_succ_le_succ j.2
 #align vector.insert_nth_comm Vector.insertNth_comm
 
 end InsertNth

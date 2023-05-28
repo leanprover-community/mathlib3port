@@ -428,9 +428,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.preimage_mul_right_ball EMetric.preimage_mul_right_ballₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_right_ball [IsometricSMul Gᵐᵒᵖ G] (a b : G) (r : ℝ≥0∞) :
-    (fun x => x * a) ⁻¹' ball b r = ball (b / a) r :=
-  by
-  rw [div_eq_mul_inv]
+    (fun x => x * a) ⁻¹' ball b r = ball (b / a) r := by rw [div_eq_mul_inv];
   exact preimage_smul_ball (MulOpposite.op a) b r
 #align emetric.preimage_mul_right_ball EMetric.preimage_mul_right_ball
 #align emetric.preimage_add_right_ball EMetric.preimage_add_right_ball
@@ -456,9 +454,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.preimage_mul_right_closed_ball EMetric.preimage_mul_right_closedBallₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_right_closedBall [IsometricSMul Gᵐᵒᵖ G] (a b : G) (r : ℝ≥0∞) :
-    (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r :=
-  by
-  rw [div_eq_mul_inv]
+    (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r := by rw [div_eq_mul_inv];
   exact preimage_smul_closed_ball (MulOpposite.op a) b r
 #align emetric.preimage_mul_right_closed_ball EMetric.preimage_mul_right_closedBall
 #align emetric.preimage_add_right_closed_ball EMetric.preimage_add_right_closedBall
@@ -691,9 +687,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.preimage_mul_right_ball Metric.preimage_mul_right_ballₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_right_ball [IsometricSMul Gᵐᵒᵖ G] (a b : G) (r : ℝ) :
-    (fun x => x * a) ⁻¹' ball b r = ball (b / a) r :=
-  by
-  rw [div_eq_mul_inv]
+    (fun x => x * a) ⁻¹' ball b r = ball (b / a) r := by rw [div_eq_mul_inv];
   exact preimage_smul_ball (MulOpposite.op a) b r
 #align metric.preimage_mul_right_ball Metric.preimage_mul_right_ball
 #align metric.preimage_add_right_ball Metric.preimage_add_right_ball
@@ -719,9 +713,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align metric.preimage_mul_right_closed_ball Metric.preimage_mul_right_closedBallₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_right_closedBall [IsometricSMul Gᵐᵒᵖ G] (a b : G) (r : ℝ) :
-    (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r :=
-  by
-  rw [div_eq_mul_inv]
+    (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r := by rw [div_eq_mul_inv];
   exact preimage_smul_closed_ball (MulOpposite.op a) b r
 #align metric.preimage_mul_right_closed_ball Metric.preimage_mul_right_closedBall
 #align metric.preimage_add_right_closed_ball Metric.preimage_add_right_closedBall

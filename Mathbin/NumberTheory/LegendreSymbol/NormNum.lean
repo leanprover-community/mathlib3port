@@ -104,10 +104,8 @@ theorem JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ) (hb' : (b : �
 #align norm_num.jacobi_sym.mod_left NormNum.JacobiSym.mod_left
 
 theorem jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab) (hr : jacobiSymNat ab b = r) :
-    jacobiSymNat a b = r :=
-  by
-  rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]
-  rfl
+    jacobiSymNat a b = r := by
+  rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]; rfl
 #align norm_num.jacobi_sym_nat.mod_left NormNum.jacobiSymNat.mod_left
 
 /-- The symbol vanishes when both entries are even (and `b ≠ 0`). -/

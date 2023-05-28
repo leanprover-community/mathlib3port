@@ -54,12 +54,8 @@ group must itself have order `p-1`, which only happens when `p` is prime.
 theorem lucas_primality (p : ℕ) (a : ZMod p) (ha : a ^ (p - 1) = 1)
     (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime :=
   by
-  have h0 : p ≠ 0 := by
-    rintro ⟨⟩
-    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
-  have h1 : p ≠ 1 := by
-    rintro ⟨⟩
-    exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
+  have h0 : p ≠ 0 := by rintro ⟨⟩; exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
+  have h1 : p ≠ 1 := by rintro ⟨⟩; exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
   have hp1 : 1 < p := lt_of_le_of_ne h0.bot_lt h1.symm
   have order_of_a : orderOf a = p - 1 :=
     by

@@ -193,8 +193,7 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyComp
     set T' : ∀ n, Set ↥(Kdiff (n + 1) ∩ s) := fun n => T n
     -- Finally, we take the union of all these coverings
     refine' ⟨Σn, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
-    · rintro ⟨n, x, hx⟩
-      exact ⟨x.2.2, hrp _ _⟩
+    · rintro ⟨n, x, hx⟩; exact ⟨x.2.2, hrp _ _⟩
     · refine' fun x hx => mem_Union.2 _
       rcases mem_Union₂.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
       exact ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩
@@ -204,8 +203,7 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyComp
           IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
       have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
         (finite_le_nat _).biUnion fun k hk => finite_range _
-      apply this.subset
-      rintro ⟨k, c, hc⟩
+      apply this.subset; rintro ⟨k, c, hc⟩
       simp only [mem_Union, mem_set_of_eq, mem_image, Subtype.coe_mk]
       rintro ⟨x, hxB : x ∈ B c (r k c), hxK⟩
       refine' ⟨k, _, ⟨c, hc⟩, rfl⟩
@@ -278,7 +276,7 @@ theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace 
     /- For each `x ∈ s` we choose open disjoint `u x ∋ x` and `v x ⊇ t`. The sets `u x` form an
         open covering of `s`. We choose a locally finite refinement `u' : s → set X`, then `⋃ i, u' i`
         and `(closure (⋃ i, u' i))ᶜ` are disjoint open neighborhoods of `s` and `t`. -/
-    intro s t hs ht H
+    intro s t hs ht H;
     choose u v hu hv hxu htv huv using SetCoe.forall'.1 H
     rcases precise_refinement_set hs u hu fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu _⟩ with
       ⟨u', hu'o, hcov', hu'fin, hsub⟩

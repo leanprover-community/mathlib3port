@@ -967,12 +967,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.pow_mem_pow Filter.pow_mem_powₓ'. -/
 @[to_additive]
 theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
-  | 0 => by
-    rw [pow_zero]
-    exact one_mem_one
-  | n + 1 => by
-    rw [pow_succ]
-    exact mul_mem_mul hs (pow_mem_pow _)
+  | 0 => by rw [pow_zero]; exact one_mem_one
+  | n + 1 => by rw [pow_succ]; exact mul_mem_mul hs (pow_mem_pow _)
 #align filter.pow_mem_pow Filter.pow_mem_pow
 #align filter.nsmul_mem_nsmul Filter.nsmul_mem_nsmul
 
@@ -1950,9 +1946,7 @@ instance isScalarTower [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α 
 @[to_additive]
 instance isScalarTower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Filter β) (Filter γ) :=
-  ⟨fun a f g => by
-    refine' (map_map₂_distrib_left fun _ _ => _).symm
-    exact (smul_assoc a _ _).symm⟩
+  ⟨fun a f g => by refine' (map_map₂_distrib_left fun _ _ => _).symm; exact (smul_assoc a _ _).symm⟩
 #align filter.is_scalar_tower' Filter.isScalarTower'
 #align filter.vadd_assoc_class' Filter.vaddAssocClass'
 -/

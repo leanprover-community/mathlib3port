@@ -151,9 +151,7 @@ but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : Semiring.{u1} R] {C : Type.{u2}} {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u2} C] [_inst_3 : CategoryTheory.Category.{u5, u3} D] [_inst_4 : CategoryTheory.Preadditive.{u4, u2} C _inst_2] [_inst_5 : CategoryTheory.Linear.{u1, u4, u2} R _inst_1 C _inst_2 _inst_4] [_inst_6 : CategoryTheory.Preadditive.{u5, u3} D _inst_3] [_inst_7 : CategoryTheory.Linear.{u1, u5, u3} R _inst_1 D _inst_3 _inst_6] (e : CategoryTheory.Equivalence.{u4, u5, u2, u3} C D _inst_2 _inst_3) [_inst_8 : CategoryTheory.Functor.Additive.{u2, u3, u4, u5} C D _inst_2 _inst_3 _inst_4 _inst_6 (CategoryTheory.Equivalence.functor.{u4, u5, u2, u3} C D _inst_2 _inst_3 e)] [_inst_9 : CategoryTheory.Functor.Linear.{u1, u2, u3, u4, u5} R _inst_1 C D _inst_2 _inst_3 _inst_4 _inst_6 _inst_5 _inst_7 (CategoryTheory.Equivalence.functor.{u4, u5, u2, u3} C D _inst_2 _inst_3 e) _inst_8], CategoryTheory.Functor.Linear.{u1, u3, u2, u5, u4} R _inst_1 D C _inst_3 _inst_2 _inst_6 _inst_4 _inst_7 _inst_5 (CategoryTheory.Equivalence.inverse.{u4, u5, u2, u3} C D _inst_2 _inst_3 e) (CategoryTheory.Equivalence.inverse_additive.{u2, u3, u4, u5} C D _inst_2 _inst_3 _inst_4 _inst_6 e _inst_8)
 Case conversion may be inaccurate. Consider using '#align category_theory.equivalence.inverse_linear CategoryTheory.Equivalence.inverseLinearₓ'. -/
 instance inverseLinear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] : e.inverse.Linear R
-    where map_smul' X Y r f := by
-    apply e.functor.map_injective
-    simp
+    where map_smul' X Y r f := by apply e.functor.map_injective; simp
 #align category_theory.equivalence.inverse_linear CategoryTheory.Equivalence.inverseLinear
 
 end Equivalence

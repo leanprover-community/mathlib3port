@@ -184,9 +184,7 @@ but is expected to have type
   forall {Γ₀ : Type.{u1}} [_inst_1 : LinearOrderedCommGroupWithZero.{u1} Γ₀] {x : Γ₀}, (Ne.{succ u1} Γ₀ x (OfNat.ofNat.{u1} Γ₀ 0 (Zero.toOfNat0.{u1} Γ₀ (LinearOrderedCommMonoidWithZero.toZero.{u1} Γ₀ (LinearOrderedCommGroupWithZero.toLinearOrderedCommMonoidWithZero.{u1} Γ₀ _inst_1))))) -> (Filter.HasBasis.{u1, 1} Γ₀ Unit (nhds.{u1} Γ₀ (WithZeroTopology.topologicalSpace.{u1} Γ₀ _inst_1) x) (fun (i : Unit) => True) (fun (i : Unit) => Singleton.singleton.{u1, u1} Γ₀ (Set.{u1} Γ₀) (Set.instSingletonSet.{u1} Γ₀) x))
 Case conversion may be inaccurate. Consider using '#align with_zero_topology.has_basis_nhds_of_ne_zero WithZeroTopology.hasBasis_nhds_of_ne_zeroₓ'. -/
 theorem hasBasis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) :
-    HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
-  by
-  rw [nhds_of_ne_zero h]
+    HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} := by rw [nhds_of_ne_zero h];
   exact has_basis_pure _
 #align with_zero_topology.has_basis_nhds_of_ne_zero WithZeroTopology.hasBasis_nhds_of_ne_zero
 
@@ -333,9 +331,7 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
 attribute [scoped instance] WithZeroTopology.continuousMul
 
 protected theorem hasContinuousInv₀ : HasContinuousInv₀ Γ₀ :=
-  ⟨fun γ h => by
-    rw [ContinuousAt, nhds_of_ne_zero h]
-    exact pure_le_nhds γ⁻¹⟩
+  ⟨fun γ h => by rw [ContinuousAt, nhds_of_ne_zero h]; exact pure_le_nhds γ⁻¹⟩
 #align with_zero_topology.has_continuous_inv₀ WithZeroTopology.hasContinuousInv₀
 
 attribute [scoped instance] WithZeroTopology.hasContinuousInv₀

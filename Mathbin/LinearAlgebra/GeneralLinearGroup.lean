@@ -84,15 +84,9 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
     where
   toFun := toLinearEquiv
   invFun := ofLinearEquiv
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
-  map_mul' x y := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
+  map_mul' x y := by ext; rfl
 #align linear_map.general_linear_group.general_linear_equiv LinearMap.GeneralLinearGroup.generalLinearEquiv
 
 /- warning: linear_map.general_linear_group.general_linear_equiv_to_linear_map -> LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap is a dubious translation:
@@ -100,10 +94,7 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
 Case conversion may be inaccurate. Consider using '#align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMapₓ'. -/
 @[simp]
 theorem generalLinearEquiv_to_linearMap (f : GeneralLinearGroup R M) :
-    (generalLinearEquiv R M f : M →ₗ[R] M) = f :=
-  by
-  ext
-  rfl
+    (generalLinearEquiv R M f : M →ₗ[R] M) = f := by ext; rfl
 #align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap
 
 /- warning: linear_map.general_linear_group.coe_fn_general_linear_equiv -> LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv is a dubious translation:

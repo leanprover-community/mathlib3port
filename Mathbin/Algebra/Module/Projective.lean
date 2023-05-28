@@ -144,14 +144,10 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) :=
     simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prod_map_apply, map_zero,
       coprod_apply, lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp,
       total_map_domain]
-  · rw [← fst_apply _, apply_total R]
-    exact hsP x
-  · rw [← snd_apply _, apply_total R]
-    exact Finsupp.total_zero_apply _ (sP x)
-  · rw [← fst_apply _, apply_total R]
-    exact Finsupp.total_zero_apply _ (sQ x)
-  · rw [← snd_apply _, apply_total R]
-    exact hsQ x
+  · rw [← fst_apply _, apply_total R]; exact hsP x
+  · rw [← snd_apply _, apply_total R]; exact Finsupp.total_zero_apply _ (sP x)
+  · rw [← fst_apply _, apply_total R]; exact Finsupp.total_zero_apply _ (sQ x)
+  · rw [← snd_apply _, apply_total R]; exact hsQ x
 
 variable {ι : Type _} (A : ι → Type _) [∀ i : ι, AddCommMonoid (A i)] [∀ i : ι, Module R (A i)]
 
@@ -175,12 +171,10 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
     rw [← Dfinsupp.lapply_apply j, apply_total R]
     obtain rfl | hij := eq_or_ne i j
     · convert(hs i) x
-      · ext
-        simp
+      · ext; simp
       · simp
     · convert Finsupp.total_zero_apply _ ((s i) x)
-      · ext
-        simp [hij]
+      · ext; simp [hij]
       · simp [hij]
 
 end Semiring

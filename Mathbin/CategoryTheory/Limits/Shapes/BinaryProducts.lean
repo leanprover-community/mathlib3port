@@ -340,11 +340,8 @@ def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y)
         m = lift f g) :
     IsLimit s :=
   IsLimit.mk (fun t => lift (BinaryFan.fst t) (BinaryFan.snd t))
-    (by
-      rintro t (rfl | rfl)
-      · exact hl₁ _ _
-      · exact hl₂ _ _)
-    fun t m h => uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
+    (by rintro t (rfl | rfl); · exact hl₁ _ _; · exact hl₂ _ _) fun t m h =>
+    uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 #align category_theory.limits.binary_fan.is_limit.mk CategoryTheory.Limits.BinaryFan.IsLimit.mk
 
 /- warning: category_theory.limits.binary_fan.is_limit.hom_ext -> CategoryTheory.Limits.BinaryFan.IsLimit.hom_ext is a dubious translation:
@@ -421,11 +418,8 @@ def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y)
         m = desc f g) :
     IsColimit s :=
   IsColimit.mk (fun t => desc (BinaryCofan.inl t) (BinaryCofan.inr t))
-    (by
-      rintro t (rfl | rfl)
-      · exact hd₁ _ _
-      · exact hd₂ _ _)
-    fun t m h => uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
+    (by rintro t (rfl | rfl); · exact hd₁ _ _; · exact hd₂ _ _) fun t m h =>
+    uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 #align category_theory.limits.binary_cofan.is_colimit.mk CategoryTheory.Limits.BinaryCofan.IsColimit.mk
 
 /- warning: category_theory.limits.binary_cofan.is_colimit.hom_ext -> CategoryTheory.Limits.BinaryCofan.IsColimit.hom_ext is a dubious translation:
@@ -552,9 +546,7 @@ def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : 
         m = lift s) :
     IsLimit (BinaryFan.mk fst snd) :=
   { lift
-    fac := fun s j => by
-      rcases j with ⟨⟨⟩⟩
-      exacts[fac_left s, fac_right s]
+    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts[fac_left s, fac_right s]
     uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_fan.is_limit_mk CategoryTheory.Limits.BinaryFan.isLimitMk
 -/
@@ -572,9 +564,7 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
         m = desc s) :
     IsColimit (BinaryCofan.mk inl inr) :=
   { desc
-    fac := fun s j => by
-      rcases j with ⟨⟨⟩⟩
-      exacts[fac_left s, fac_right s]
+    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts[fac_left s, fac_right s]
     uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_cofan.is_colimit_mk CategoryTheory.Limits.BinaryCofan.isColimitMk
 -/
@@ -662,12 +652,9 @@ noncomputable def BinaryFan.isLimitCompLeftIso {X Y X' : C} (c : BinaryFan X Y) 
   by
   fapply binary_fan.is_limit_mk
   · exact fun s => h.lift (binary_fan.mk (s.fst ≫ inv f) s.snd)
-  · intro s
-    simp
-  · intro s
-    simp
-  · intro s m e₁ e₂
-    apply binary_fan.is_limit.hom_ext h <;> simpa
+  · intro s; simp
+  · intro s; simp
+  · intro s m e₁ e₂; apply binary_fan.is_limit.hom_ext h <;> simpa
 #align category_theory.limits.binary_fan.is_limit_comp_left_iso CategoryTheory.Limits.BinaryFan.isLimitCompLeftIso
 
 /- warning: category_theory.limits.binary_fan.is_limit_comp_right_iso -> CategoryTheory.Limits.BinaryFan.isLimitCompRightIso is a dubious translation:
@@ -735,14 +722,11 @@ noncomputable def BinaryCofan.isColimitCompLeftIso {X Y X' : C} (c : BinaryCofan
   by
   fapply binary_cofan.is_colimit_mk
   · exact fun s => h.desc (binary_cofan.mk (inv f ≫ s.inl) s.inr)
-  · intro s
-    simp
-  · intro s
-    simp
+  · intro s; simp
+  · intro s; simp
   · intro s m e₁ e₂
     apply binary_cofan.is_colimit.hom_ext h
-    · rw [← cancel_epi f]
-      simpa using e₁
+    · rw [← cancel_epi f]; simpa using e₁
     · simpa
 #align category_theory.limits.binary_cofan.is_colimit_comp_left_iso CategoryTheory.Limits.BinaryCofan.isColimitCompLeftIso
 
@@ -823,11 +807,7 @@ abbrev coprod.inr {X Y : C} [HasBinaryCoproduct X Y] : Y ⟶ X ⨿ Y :=
 /-- The binary fan constructed from the projection maps is a limit. -/
 def prodIsProd (X Y : C) [HasBinaryProduct X Y] :
     IsLimit (BinaryFan.mk (prod.fst : X ⨯ Y ⟶ X) prod.snd) :=
-  (limit.isLimit _).ofIsoLimit
-    (Cones.ext (Iso.refl _)
-      (by
-        rintro (_ | _)
-        tidy))
+  (limit.isLimit _).ofIsoLimit (Cones.ext (Iso.refl _) (by rintro (_ | _); tidy))
 #align category_theory.limits.prod_is_prod CategoryTheory.Limits.prodIsProd
 -/
 
@@ -835,11 +815,7 @@ def prodIsProd (X Y : C) [HasBinaryProduct X Y] :
 /-- The binary cofan constructed from the coprojection maps is a colimit. -/
 def coprodIsCoprod (X Y : C) [HasBinaryCoproduct X Y] :
     IsColimit (BinaryCofan.mk (coprod.inl : X ⟶ X ⨿ Y) coprod.inr) :=
-  (colimit.isColimit _).ofIsoColimit
-    (Cocones.ext (Iso.refl _)
-      (by
-        rintro (_ | _)
-        tidy))
+  (colimit.isColimit _).ofIsoColimit (Cocones.ext (Iso.refl _) (by rintro (_ | _); tidy))
 #align category_theory.limits.coprod_is_coprod CategoryTheory.Limits.coprodIsCoprod
 -/
 
@@ -1045,10 +1021,8 @@ theorem prod.lift_map {V W X Y Z : C} [HasBinaryProduct W X] [HasBinaryProduct Y
 #print CategoryTheory.Limits.prod.lift_fst_comp_snd_comp /-
 @[simp]
 theorem prod.lift_fst_comp_snd_comp {W X Y Z : C} [HasBinaryProduct W Y] [HasBinaryProduct X Z]
-    (g : W ⟶ X) (g' : Y ⟶ Z) : prod.lift (prod.fst ≫ g) (prod.snd ≫ g') = prod.map g g' :=
-  by
-  rw [← prod.lift_map]
-  simp
+    (g : W ⟶ X) (g' : Y ⟶ Z) : prod.lift (prod.fst ≫ g) (prod.snd ≫ g') = prod.map g g' := by
+  rw [← prod.lift_map]; simp
 #align category_theory.limits.prod.lift_fst_comp_snd_comp CategoryTheory.Limits.prod.lift_fst_comp_snd_comp
 -/
 
@@ -1111,10 +1085,8 @@ instance prod.map_mono {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g 
     [Mono g] [HasBinaryProduct W X] [HasBinaryProduct Y Z] : Mono (prod.map f g) :=
   ⟨fun A i₁ i₂ h => by
     ext
-    · rw [← cancel_mono f]
-      simpa using congr_arg (fun f => f ≫ Prod.fst) h
-    · rw [← cancel_mono g]
-      simpa using congr_arg (fun f => f ≫ Prod.snd) h⟩
+    · rw [← cancel_mono f]; simpa using congr_arg (fun f => f ≫ Prod.fst) h
+    · rw [← cancel_mono g]; simpa using congr_arg (fun f => f ≫ Prod.snd) h⟩
 #align category_theory.limits.prod.map_mono CategoryTheory.Limits.prod.map_mono
 -/
 
@@ -1203,9 +1175,7 @@ theorem coprod.map_desc {S T U V W : C} [HasBinaryCoproduct U W] [HasBinaryCopro
 @[simp]
 theorem coprod.desc_comp_inl_comp_inr {W X Y Z : C} [HasBinaryCoproduct W Y]
     [HasBinaryCoproduct X Z] (g : W ⟶ X) (g' : Y ⟶ Z) :
-    coprod.desc (g ≫ coprod.inl) (g' ≫ coprod.inr) = coprod.map g g' :=
-  by
-  rw [← coprod.map_desc]
+    coprod.desc (g ≫ coprod.inl) (g' ≫ coprod.inr) = coprod.map g g' := by rw [← coprod.map_desc];
   simp
 #align category_theory.limits.coprod.desc_comp_inl_comp_inr CategoryTheory.Limits.coprod.desc_comp_inl_comp_inr
 -/
@@ -1269,10 +1239,8 @@ instance coprod.map_epi {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g
     [Epi g] [HasBinaryCoproduct W X] [HasBinaryCoproduct Y Z] : Epi (coprod.map f g) :=
   ⟨fun A i₁ i₂ h => by
     ext
-    · rw [← cancel_epi f]
-      simpa using congr_arg (fun f => coprod.inl ≫ f) h
-    · rw [← cancel_epi g]
-      simpa using congr_arg (fun f => coprod.inr ≫ f) h⟩
+    · rw [← cancel_epi f]; simpa using congr_arg (fun f => coprod.inl ≫ f) h
+    · rw [← cancel_epi g]; simpa using congr_arg (fun f => coprod.inr ≫ f) h⟩
 #align category_theory.limits.coprod.map_epi CategoryTheory.Limits.coprod.map_epi
 -/
 
@@ -1900,21 +1868,10 @@ def Over.coprod [HasBinaryCoproducts C] {A : C} : Over A ⥤ Over A ⥤ Over A
   map f₁ f₂ k :=
     { app := fun g =>
         Over.homMk (coprod.map k.left (𝟙 _))
-          (by
-            dsimp
-            rw [coprod.map_desc, category.id_comp, over.w k])
-      naturality' := fun f g k => by
-        ext <;>
-          · dsimp
-            simp }
-  map_id' X := by
-    ext <;>
-      · dsimp
-        simp
-  map_comp' X Y Z f g := by
-    ext <;>
-      · dsimp
-        simp
+          (by dsimp; rw [coprod.map_desc, category.id_comp, over.w k])
+      naturality' := fun f g k => by ext <;> · dsimp; simp }
+  map_id' X := by ext <;> · dsimp; simp
+  map_comp' X Y Z f g := by ext <;> · dsimp; simp
 #align category_theory.over.coprod CategoryTheory.Over.coprod
 -/
 

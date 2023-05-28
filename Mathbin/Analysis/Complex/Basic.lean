@@ -132,10 +132,8 @@ lean 3 declaration is
 but is expected to have type
   forall (z : Complex) (w : Complex), Eq.{1} Real (Dist.dist.{0} Complex (PseudoMetricSpace.toDist.{0} Complex (SeminormedRing.toPseudoMetricSpace.{0} Complex (SeminormedCommRing.toSeminormedRing.{0} Complex (NormedCommRing.toSeminormedCommRing.{0} Complex (NormedField.toNormedCommRing.{0} Complex Complex.instNormedFieldComplex))))) z w) (Real.sqrt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Complex.re z) (Complex.re w)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (Complex.im z) (Complex.im w)) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align complex.dist_eq_re_im Complex.dist_eq_re_imₓ'. -/
-theorem dist_eq_re_im (z w : ℂ) : dist z w = Real.sqrt ((z.re - w.re) ^ 2 + (z.im - w.im) ^ 2) :=
-  by
-  rw [sq, sq]
-  rfl
+theorem dist_eq_re_im (z w : ℂ) : dist z w = Real.sqrt ((z.re - w.re) ^ 2 + (z.im - w.im) ^ 2) := by
+  rw [sq, sq]; rfl
 #align complex.dist_eq_re_im Complex.dist_eq_re_im
 
 /- warning: complex.dist_mk -> Complex.dist_mk is a dubious translation:
@@ -278,10 +276,7 @@ but is expected to have type
   forall (r : Rat), Eq.{1} Real (Norm.norm.{0} Complex Complex.instNormComplex (Rat.cast.{0} Complex (Field.toRatCast.{0} Complex Complex.instFieldComplex) r)) (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Rat.cast.{0} Real Real.ratCast r))
 Case conversion may be inaccurate. Consider using '#align complex.norm_rat Complex.norm_ratₓ'. -/
 @[simp]
-theorem norm_rat (r : ℚ) : ‖(r : ℂ)‖ = |(r : ℝ)| :=
-  by
-  rw [← of_real_rat_cast]
-  exact norm_real _
+theorem norm_rat (r : ℚ) : ‖(r : ℂ)‖ = |(r : ℝ)| := by rw [← of_real_rat_cast]; exact norm_real _
 #align complex.norm_rat Complex.norm_rat
 
 /- warning: complex.norm_nat -> Complex.norm_nat is a dubious translation:
@@ -559,20 +554,15 @@ Case conversion may be inaccurate. Consider using '#align complex.restrict_scala
 theorem restrictScalars_one_smulRight' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
       reClm.smul_right x + I • imClm.smul_right x :=
-  by
-  ext ⟨a, b⟩
-  simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
+  by ext ⟨a, b⟩; simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
 #align complex.restrict_scalars_one_smul_right' Complex.restrictScalars_one_smulRight'
 
 /- warning: complex.restrict_scalars_one_smul_right -> Complex.restrictScalars_one_smulRight is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align complex.restrict_scalars_one_smul_right Complex.restrictScalars_one_smulRightₓ'. -/
 theorem restrictScalars_one_smulRight (x : ℂ) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 :=
-  by
-  ext1 z
-  dsimp
-  apply mul_comm
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
+  ext1 z; dsimp; apply mul_comm
 #align complex.restrict_scalars_one_smul_right Complex.restrictScalars_one_smulRight
 
 /- warning: complex.conj_lie -> Complex.conjLie is a dubious translation:

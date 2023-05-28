@@ -152,8 +152,7 @@ theorem indepCat_limsup_atTop_self (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s
     rintro t ⟨a, ha⟩
     obtain ⟨b, hb⟩ : ∃ b, a < b := exists_gt a
     refine' ⟨b, fun c hc hct => _⟩
-    suffices : ∀ i ∈ t, i < c
-    exact lt_irrefl c (this c hct)
+    suffices : ∀ i ∈ t, i < c; exact lt_irrefl c (this c hct)
     exact fun i hi => (ha hi).trans_lt (hb.trans_le hc)
   · exact Monotone.directed_le fun i j hij k hki => le_trans hki hij
   · exact fun n => ⟨n, le_rfl⟩
@@ -185,8 +184,7 @@ theorem indepCat_limsup_atBot_self (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s
     rintro t ⟨a, ha⟩
     obtain ⟨b, hb⟩ : ∃ b, b < a := exists_lt a
     refine' ⟨b, fun c hc hct => _⟩
-    suffices : ∀ i ∈ t, c < i
-    exact lt_irrefl c (this c hct)
+    suffices : ∀ i ∈ t, c < i; exact lt_irrefl c (this c hct)
     exact fun i hi => hc.trans_lt (hb.trans_le (ha hi))
   · exact directed_of_inf fun i j hij k hki => hij.trans hki
   · exact fun n => ⟨n, le_rfl⟩

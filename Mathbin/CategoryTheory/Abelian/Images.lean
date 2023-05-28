@@ -131,10 +131,7 @@ in which this is always an isomorphism, is abelian.
 See <https://stacks.math.columbia.edu/tag/0107>
 -/
 def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
-  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) <|
-    by
-    ext
-    simp
+  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) <| by ext; simp
 #align category_theory.abelian.coimage_image_comparison CategoryTheory.Abelian.coimageImageComparison
 -/
 
@@ -142,18 +139,13 @@ def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
 /-- An alternative formulation of the canonical map from the abelian coimage to the abelian image.
 -/
 def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
-  kernel.lift (cokernel.π f) (cokernel.desc (kernel.ι f) f (by simp))
-    (by
-      ext
-      simp)
+  kernel.lift (cokernel.π f) (cokernel.desc (kernel.ι f) f (by simp)) (by ext; simp)
 #align category_theory.abelian.coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison'
 -/
 
 #print CategoryTheory.Abelian.coimageImageComparison_eq_coimageImageComparison' /-
 theorem coimageImageComparison_eq_coimageImageComparison' :
-    coimageImageComparison f = coimageImageComparison' f :=
-  by
-  ext
+    coimageImageComparison f = coimageImageComparison' f := by ext;
   simp [coimage_image_comparison, coimage_image_comparison']
 #align category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison_eq_coimageImageComparison'
 -/

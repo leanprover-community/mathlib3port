@@ -228,10 +228,7 @@ theorem infty_not_mem_image_coe {s : Set X} : ∞ ∉ (coe : X → Alexandroff X
 
 #print Alexandroff.coe_preimage_infty /-
 @[simp]
-theorem coe_preimage_infty : (coe : X → Alexandroff X) ⁻¹' {∞} = ∅ :=
-  by
-  ext
-  simp
+theorem coe_preimage_infty : (coe : X → Alexandroff X) ⁻¹' {∞} = ∅ := by ext; simp
 #align alexandroff.coe_preimage_infty Alexandroff.coe_preimage_infty
 -/
 
@@ -441,10 +438,8 @@ lean 3 declaration is
 but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X], IsClosed.{u1} (Alexandroff.{u1} X) (Alexandroff.instTopologicalSpaceAlexandroff.{u1} X _inst_1) (Singleton.singleton.{u1, u1} (Alexandroff.{u1} X) (Set.{u1} (Alexandroff.{u1} X)) (Set.instSingletonSet.{u1} (Alexandroff.{u1} X)) (Alexandroff.infty.{u1} X))
 Case conversion may be inaccurate. Consider using '#align alexandroff.is_closed_infty Alexandroff.isClosed_inftyₓ'. -/
-theorem isClosed_infty : IsClosed ({∞} : Set (Alexandroff X)) :=
-  by
-  rw [← compl_range_coe, isClosed_compl_iff]
-  exact is_open_range_coe
+theorem isClosed_infty : IsClosed ({∞} : Set (Alexandroff X)) := by
+  rw [← compl_range_coe, isClosed_compl_iff]; exact is_open_range_coe
 #align alexandroff.is_closed_infty Alexandroff.isClosed_infty
 
 /- warning: alexandroff.nhds_coe_eq -> Alexandroff.nhds_coe_eq is a dubious translation:
@@ -525,10 +520,8 @@ but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NoncompactSpace.{u1} X _inst_1], Filter.NeBot.{u1} (Alexandroff.{u1} X) (nhdsWithin.{u1} (Alexandroff.{u1} X) (Alexandroff.instTopologicalSpaceAlexandroff.{u1} X _inst_1) (Alexandroff.infty.{u1} X) (HasCompl.compl.{u1} (Set.{u1} (Alexandroff.{u1} X)) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} (Alexandroff.{u1} X)) (Set.instBooleanAlgebraSet.{u1} (Alexandroff.{u1} X))) (Singleton.singleton.{u1, u1} (Alexandroff.{u1} X) (Set.{u1} (Alexandroff.{u1} X)) (Set.instSingletonSet.{u1} (Alexandroff.{u1} X)) (Alexandroff.infty.{u1} X))))
 Case conversion may be inaccurate. Consider using '#align alexandroff.nhds_within_compl_infty_ne_bot Alexandroff.nhdsWithin_compl_infty_neBotₓ'. -/
 /-- If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
-instance nhdsWithin_compl_infty_neBot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) :=
-  by
-  rw [nhds_within_compl_infty_eq]
-  infer_instance
+instance nhdsWithin_compl_infty_neBot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) := by
+  rw [nhds_within_compl_infty_eq]; infer_instance
 #align alexandroff.nhds_within_compl_infty_ne_bot Alexandroff.nhdsWithin_compl_infty_neBot
 
 /- warning: alexandroff.nhds_within_compl_ne_bot -> Alexandroff.nhdsWithin_compl_neBot is a dubious translation:

@@ -67,10 +67,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.zip_with_tail Vector.zipWith_tailₓ'. -/
 @[simp]
 theorem zipWith_tail (x : Vector α n) (y : Vector β n) :
-    (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail :=
-  by
-  ext
-  simp [nth_tail]
+    (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail := by ext; simp [nth_tail]
 #align vector.zip_with_tail Vector.zipWith_tail
 
 /- warning: vector.prod_mul_prod_eq_prod_zip_with -> Vector.prod_mul_prod_eq_prod_zipWith is a dubious translation:

@@ -65,14 +65,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.coyone
 def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X)
     where
   desc s x := s.ι.app (unop X) (𝟙 _)
-  fac s Y := by
-    ext f
-    convert congr_fun (s.w f).symm (𝟙 (unop X))
-    simp
-  uniq s m w := by
-    ext ⟨⟩
-    rw [← w]
-    simp
+  fac s Y := by ext f; convert congr_fun (s.w f).symm (𝟙 (unop X)); simp
+  uniq s m w := by ext ⟨⟩; rw [← w]; simp
 #align category_theory.coyoneda.colimit_cocone_is_colimit CategoryTheory.Coyoneda.colimitCoconeIsColimit
 
 instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
@@ -120,8 +114,7 @@ instance yonedaPreservesLimits (X : C) : PreservesLimits (yoneda.obj X)
                 funext fun x =>
                   by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
-                  · dsimp
-                    simp [← s.w α]
+                  · dsimp; simp [← s.w α]
                   -- See library note [dsimp, simp]
                   · exact Quiver.Hom.unop_inj (congr_fun (w j) x) } } }
 #align category_theory.yoneda_preserves_limits CategoryTheory.yonedaPreservesLimits
@@ -140,11 +133,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj X
         {
           preserves := fun c t =>
             { lift := fun s x =>
-                t.lift
-                  ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α =>
-                    by
-                    dsimp
-                    simp [← s.w α]⟩
+                t.lift ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by dsimp; simp [← s.w α]⟩
               -- See library note [dsimp, simp]
               fac := fun s j => funext fun x => t.fac _ _
               uniq := fun s m w =>

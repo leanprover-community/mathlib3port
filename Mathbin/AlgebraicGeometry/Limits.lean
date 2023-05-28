@@ -59,10 +59,7 @@ def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
 #align algebraic_geometry.Scheme.empty_to AlgebraicGeometry.Scheme.emptyTo
 
 @[ext]
-theorem Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g :=
-  by
-  ext a
-  exact PEmpty.elim a
+theorem Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g := by ext a; exact PEmpty.elim a
 #align algebraic_geometry.Scheme.empty_ext AlgebraicGeometry.Scheme.empty_ext
 
 theorem Scheme.eq_emptyTo {X : Scheme.{u}} (f : ∅ ⟶ X) : f = Scheme.emptyTo X :=
@@ -95,24 +92,17 @@ instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ 
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply openEmbedding_of_continuous_injective_open
     · continuity
-    · rintro (i : X.carrier)
-      exact isEmptyElim i
-    · intro U hU
-      convert isOpen_empty
-      ext
-      apply (iff_false_iff _).mpr
+    · rintro (i : X.carrier); exact isEmptyElim i
+    · intro U hU; convert isOpen_empty; ext; apply (iff_false_iff _).mpr
       exact fun x => isEmptyElim (show X.carrier from x.some)
-  · rintro (i : X.carrier)
-    exact isEmptyElim i
+  · rintro (i : X.carrier); exact isEmptyElim i
 #align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersion_of_isEmpty
 
 instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty Y.carrier] :
     IsIso f :=
   by
   haveI : IsEmpty X.carrier := ⟨fun x => isEmptyElim (show Y.carrier from f.1.base x)⟩
-  have : epi f.1.base := by
-    rw [TopCat.epi_iff_surjective]
-    rintro (x : Y.carrier)
+  have : epi f.1.base := by rw [TopCat.epi_iff_surjective]; rintro (x : Y.carrier);
     exact isEmptyElim x
   apply is_open_immersion.to_iso
 #align algebraic_geometry.is_iso_of_is_empty AlgebraicGeometry.isIso_of_isEmpty

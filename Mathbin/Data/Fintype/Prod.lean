@@ -44,10 +44,7 @@ Case conversion may be inaccurate. Consider using '#align set.to_finset_prod Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem toFinset_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] [Fintype (s ×ˢ t)] :
-    (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset :=
-  by
-  ext
-  simp
+    (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset := by ext; simp
 #align set.to_finset_prod Set.toFinset_prod
 
 #print Set.toFinset_off_diag /-

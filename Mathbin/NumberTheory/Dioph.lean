@@ -87,16 +87,12 @@ inductive IsPoly : ((α → ℕ) → ℤ) → Prop
   | mul : ∀ {f g : (α → ℕ) → ℤ}, IsPoly f → IsPoly g → IsPoly fun x => f x * g x
 #align is_poly IsPoly
 
-theorem IsPoly.neg {f : (α → ℕ) → ℤ} : IsPoly f → IsPoly (-f) :=
-  by
-  rw [← zero_sub]
+theorem IsPoly.neg {f : (α → ℕ) → ℤ} : IsPoly f → IsPoly (-f) := by rw [← zero_sub];
   exact (IsPoly.const 0).sub
 #align is_poly.neg IsPoly.neg
 
-theorem IsPoly.add {f g : (α → ℕ) → ℤ} (hf : IsPoly f) (hg : IsPoly g) : IsPoly (f + g) :=
-  by
-  rw [← sub_neg_eq_add]
-  exact hf.sub hg.neg
+theorem IsPoly.add {f g : (α → ℕ) → ℤ} (hf : IsPoly f) (hg : IsPoly g) : IsPoly (f + g) := by
+  rw [← sub_neg_eq_add]; exact hf.sub hg.neg
 #align is_poly.add IsPoly.add
 
 /-- The type of multivariate integer polynomials -/
@@ -405,8 +401,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                       funext fun s => by cases' s with a b <;> rfl] <;>
                   exact hm,
                 by
-                refine' List.All₂.imp (fun q hq => _) hn
-                dsimp [(· ∘ ·)]
+                refine' List.All₂.imp (fun q hq => _) hn; dsimp [(· ∘ ·)]
                 rw [show
                       (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n
                       from funext fun s => by cases' s with a b <;> rfl] <;>
@@ -417,8 +412,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                       funext fun s => by cases' s with a b <;> rfl] at
                     hl⟩,
                 ⟨t ∘ inr, by
-                  refine' List.All₂.imp (fun q hq => _) hr
-                  dsimp [(· ∘ ·)] at hq
+                  refine' List.All₂.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq
                   rwa [show
                       (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) =
                         v ⊗ t ∘ inr
@@ -507,9 +501,7 @@ theorem diophFn_iff_pFun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α 
 #align dioph.dioph_fn_iff_pfun Dioph.diophFn_iff_pFun
 
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
-  of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none)) fun v =>
-    by
-    dsimp
+  of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none)) fun v => by dsimp;
     exact Int.eq_natAbs_iff_mul_eq_zero
 #align dioph.abs_poly_dioph Dioph.abs_poly_dioph
 
@@ -553,11 +545,7 @@ attribute [local reducible] Vector3
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem diophFn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : Vector3 ℕ n → ℕ}
     (df : DiophFn f) : Dioph { v : Vector3 ℕ n | (f v::v) ∈ S } :=
-  ext (diophFn_comp1 (reindex_dioph _ (none::some) d) df) fun v =>
-    by
-    dsimp
-    congr
-    ext x
+  ext (diophFn_comp1 (reindex_dioph _ (none::some) d) df) fun v => by dsimp; congr ; ext x;
     cases x <;> rfl
 #align dioph.dioph_fn_vec_comp1 Dioph.diophFn_vec_comp1
 
@@ -591,13 +579,8 @@ theorem diophFn_compn :
     ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} (d : Dioph S) {f : Vector3 ((α → ℕ) → ℕ) n}
       (df : VectorAllp DiophFn f), Dioph { v : α → ℕ | (v ⊗ fun i => f i v) ∈ S }
   | 0, S, d, f => fun df =>
-    ext (reindex_dioph _ (id ⊗ Fin2.elim0) d) fun v =>
-      by
-      dsimp
-      congr
-      ext x
-      obtain _ | _ | _ := x
-      rfl
+    ext (reindex_dioph _ (id ⊗ Fin2.elim0) d) fun v => by dsimp; congr ; ext x;
+      obtain _ | _ | _ := x; rfl
   | succ n, S, d, f =>
     f.consElim fun f fl => by
       simp <;>
@@ -606,18 +589,10 @@ theorem diophFn_compn :
             ext
               (dioph_fn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none::some ∘ inr) d) <|
                 reindex_dioph_fn inl df)
-              fun v => by
-              dsimp
-              congr
-              ext x
-              obtain _ | _ | _ := x <;> rfl
+              fun v => by dsimp; congr ; ext x; obtain _ | _ | _ := x <;> rfl
           have : Dioph { v | (v ⊗ f v::fun i : Fin2 n => fl i v) ∈ S } :=
             @dioph_fn_compn n (fun v => S (v ∘ inl ⊗ f (v ∘ inl)::v ∘ inr)) this _ dfl
-          ext this fun v => by
-            dsimp
-            congr
-            ext x
-            obtain _ | _ | _ := x <;> rfl
+          ext this fun v => by dsimp; congr ; ext x; obtain _ | _ | _ := x <;> rfl
 #align dioph.dioph_fn_compn Dioph.diophFn_compn
 
 theorem dioph_comp {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)
@@ -715,9 +690,7 @@ theorem lt_dioph : Dioph { v | f v < g v } :=
 scoped infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph { v | f v ≠ g v } :=
-  ext (df D< dg D∨ dg D< df) fun v => by
-    dsimp
-    exact lt_or_lt_iff_ne
+  ext (df D< dg D∨ dg D< df) fun v => by dsimp; exact lt_or_lt_iff_ne
 #align dioph.ne_dioph Dioph.ne_dioph
 
 -- mathport name: ne_dioph

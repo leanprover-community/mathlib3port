@@ -62,8 +62,7 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.FG G] :
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
     @Module.equiv_free_prod_directSum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
   refine' ⟨n, ι, fι, fun i => (p i).natAbs, fun i => _, e, ⟨_⟩⟩
-  · rw [← Int.prime_iff_natAbs_prime, ← GCDMonoid.irreducible_iff_prime]
-    exact hp i
+  · rw [← Int.prime_iff_natAbs_prime, ← GCDMonoid.irreducible_iff_prime]; exact hp i
   exact
     f.to_add_equiv.trans
       ((AddEquiv.refl _).prodCongr <|

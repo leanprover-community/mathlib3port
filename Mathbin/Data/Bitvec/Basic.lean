@@ -58,21 +58,15 @@ theorem toNat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n :=
   cases' v with xs h
   dsimp [Bitvec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h
-  generalize xs.reverse = ys at h⊢
-  clear xs
+  generalize xs.reverse = ys at h⊢; clear xs
   induction ys generalizing n
   · simp [← h]
   · simp only [← h, pow_add, flip, List.length, List.foldr, pow_one]
     rw [add_lsb_eq_twice_add_one]
     trans 2 * List.foldr (fun (x : Bool) (y : ℕ) => add_lsb y x) 0 ys_tl + 2 * 1
-    · ac_mono
-      rw [two_mul]
-      mono
-      cases ys_hd <;> simp
-    · rw [← left_distrib]
-      ac_mono
-      exact ys_ih rfl
-      norm_num
+    · ac_mono; rw [two_mul]; mono; cases ys_hd <;> simp
+    · rw [← left_distrib]; ac_mono
+      exact ys_ih rfl; norm_num
 #align bitvec.to_nat_lt Bitvec.toNat_lt
 -/
 
@@ -109,16 +103,12 @@ theorem ofNat_toNat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
   rw [← List.reverse_reverse xs, List.foldl_reverse]
   generalize xs.reverse = ys at h⊢; clear xs
   induction ys generalizing n
-  · cases h
-    simp [Bitvec.ofNat]
-  · simp only [← Nat.succ_eq_add_one, List.length] at h
-    subst n
+  · cases h; simp [Bitvec.ofNat]
+  · simp only [← Nat.succ_eq_add_one, List.length] at h; subst n
     simp only [Bitvec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
       Vector.toList_append, List.foldr]
     erw [add_lsb_div_two, to_bool_add_lsb_mod_two]
-    congr
-    apply ys_ih
-    rfl
+    congr ; apply ys_ih; rfl
 #align bitvec.of_nat_to_nat Bitvec.ofNat_toNat
 -/
 
@@ -145,10 +135,8 @@ but is expected to have type
   forall {n : Nat} {i : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)} {j : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)}, (LE.le.{0} (Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) (instLEFin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) i j) -> (LE.le.{0} (Bitvec n) (Preorder.toLE.{0} (Bitvec n) (Bitvec.instPreorderBitvec n)) (Bitvec.ofFin n i) (Bitvec.ofFin n j))
 Case conversion may be inaccurate. Consider using '#align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_leₓ'. -/
 theorem ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
-  show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat
-    by
-    simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]
-    exact h
+  show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
+    simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]; exact h
 #align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_le
 
 #print Bitvec.toFin_ofFin /-

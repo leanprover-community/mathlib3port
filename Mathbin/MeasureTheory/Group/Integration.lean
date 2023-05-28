@@ -159,9 +159,7 @@ theorem Integrable.comp_mul_right {f : G → F} [IsMulRightInvariant μ] (hf : I
 
 @[to_additive]
 theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ)
-    (g : G) : Integrable (fun t => f (t / g)) μ :=
-  by
-  simp_rw [div_eq_mul_inv]
+    (g : G) : Integrable (fun t => f (t / g)) μ := by simp_rw [div_eq_mul_inv];
   exact hf.comp_mul_right g⁻¹
 #align measure_theory.integrable.comp_div_right MeasureTheory.Integrable.comp_div_right
 #align measure_theory.integrable.comp_sub_right MeasureTheory.Integrable.comp_sub_right

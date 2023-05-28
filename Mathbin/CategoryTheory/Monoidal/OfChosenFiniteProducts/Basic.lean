@@ -197,12 +197,10 @@ def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bin
     · exact w ⟨walking_pair.left⟩
     · specialize w ⟨walking_pair.right⟩
       simp at w
-      rw [← w]
-      simp
+      rw [← w]; simp
     · specialize w ⟨walking_pair.right⟩
       simp at w
-      rw [← w]
-      simp
+      rw [← w]; simp
 #align category_theory.limits.is_limit.assoc CategoryTheory.Limits.IsLimit.assoc
 -/
 
@@ -246,12 +244,7 @@ def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s
           { pt
             π := { app := Discrete.rec (PEmpty.rec _) } })
         (𝟙 X))
-  hom_inv_id' := by
-    apply Q.hom_ext
-    rintro ⟨⟨⟩⟩
-    · apply P.hom_ext
-      rintro ⟨⟨⟩⟩
-    · simp
+  hom_inv_id' := by apply Q.hom_ext; rintro ⟨⟨⟩⟩; · apply P.hom_ext; rintro ⟨⟨⟩⟩; · simp
 #align category_theory.limits.binary_fan.left_unitor CategoryTheory.Limits.BinaryFan.leftUnitor
 -/
 
@@ -269,12 +262,7 @@ def BinaryFan.rightUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit 
         (P.lift
           { pt
             π := { app := Discrete.rec (PEmpty.rec _) } }))
-  hom_inv_id' := by
-    apply Q.hom_ext
-    rintro ⟨⟨⟩⟩
-    · simp
-    · apply P.hom_ext
-      rintro ⟨⟨⟩⟩
+  hom_inv_id' := by apply Q.hom_ext; rintro ⟨⟨⟩⟩; · simp; · apply P.hom_ext; rintro ⟨⟨⟩⟩
 #align category_theory.limits.binary_fan.right_unitor CategoryTheory.Limits.BinaryFan.rightUnitor
 -/
 
@@ -315,20 +303,14 @@ def tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y ⟶ 
 
 #print CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_id /-
 theorem tensor_id (X₁ X₂ : C) : tensorHom ℬ (𝟙 X₁) (𝟙 X₂) = 𝟙 (tensorObj ℬ X₁ X₂) := by
-  apply is_limit.hom_ext (ℬ _ _).IsLimit;
-  rintro ⟨⟨⟩⟩ <;>
-    · dsimp [tensor_hom]
-      simp
+  apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩ <;> · dsimp [tensor_hom]; simp
 #align category_theory.monoidal_of_chosen_finite_products.tensor_id CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_id
 -/
 
 #print CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_comp /-
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
     (g₂ : Y₂ ⟶ Z₂) : tensorHom ℬ (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom ℬ f₁ f₂ ≫ tensorHom ℬ g₁ g₂ := by
-  apply is_limit.hom_ext (ℬ _ _).IsLimit;
-  rintro ⟨⟨⟩⟩ <;>
-    · dsimp [tensor_hom]
-      simp
+  apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩ <;> · dsimp [tensor_hom]; simp
 #align category_theory.monoidal_of_chosen_finite_products.tensor_comp CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_comp
 -/
 
@@ -343,11 +325,9 @@ theorem pentagon (W X Y Z : C) :
   dsimp [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩
   · simp
-  · apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟨⟩⟩
+  · apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩
     · simp
-    apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟨⟩⟩
+    apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩
     · simp
     · simp
 #align category_theory.monoidal_of_chosen_finite_products.pentagon CategoryTheory.MonoidalOfChosenFiniteProducts.pentagon
@@ -392,8 +372,7 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ �
   dsimp [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩
   · simp
-  · apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟨⟩⟩
+  · apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩
     · simp
     · simp
 #align category_theory.monoidal_of_chosen_finite_products.associator_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.associator_naturality

@@ -67,9 +67,7 @@ structure LeftSplit : Prop where
 theorem LeftSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
   { Mono := by
       obtain ⟨φ, hφ⟩ := h.left_split
-      haveI : mono (f ≫ φ) := by
-        rw [hφ]
-        infer_instance
+      haveI : mono (f ≫ φ) := by rw [hφ]; infer_instance
       exact mono_of_mono f φ
     Epi := h.Epi
     exact := h.exact }
@@ -92,9 +90,7 @@ structure RightSplit : Prop where
 theorem RightSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
   { Epi := by
       obtain ⟨χ, hχ⟩ := h.right_split
-      haveI : epi (χ ≫ g) := by
-        rw [hχ]
-        infer_instance
+      haveI : epi (χ ≫ g) := by rw [hχ]; infer_instance
       exact epi_of_epi χ g
     Mono := h.Mono
     exact := h.exact }
@@ -136,14 +132,8 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       by
       let ψ : (kernel_subobject g : 𝒜) ⟶ image_subobject f :=
         subobject.arrow _ ≫ φ ≫ factor_thru_image_subobject f
-      suffices ψ ≫ imageToKernel f g hfg = 𝟙 _
-        by
-        convert epi_of_epi ψ _
-        rw [this]
-        infer_instance
-      rw [← cancel_mono (subobject.arrow _)]
-      swap
-      · infer_instance
+      suffices ψ ≫ imageToKernel f g hfg = 𝟙 _ by convert epi_of_epi ψ _; rw [this]; infer_instance
+      rw [← cancel_mono (subobject.arrow _)]; swap; · infer_instance
       simp only [imageToKernel_arrow, image_subobject_arrow_comp, category.id_comp, category.assoc]
       calc
         (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
@@ -163,9 +153,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝒜 : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} 𝒜] {A : 𝒜} {B : 𝒜} {C : 𝒜} {f : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) A B} {g : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) B C} [_inst_2 : CategoryTheory.Preadditive.{u1, u2} 𝒜 _inst_1] [_inst_3 : CategoryTheory.Limits.HasKernels.{u1, u2} 𝒜 _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2)] [_inst_4 : CategoryTheory.Limits.HasImages.{u1, u2} 𝒜 _inst_1], (CategoryTheory.Split.{u2, u1} 𝒜 _inst_1 A B C f g _inst_2) -> (CategoryTheory.Exact.{u1, u2} 𝒜 _inst_1 _inst_4 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2) _inst_3 A B C f g)
 Case conversion may be inaccurate. Consider using '#align category_theory.split.exact CategoryTheory.Split.exactₓ'. -/
-theorem Split.exact (h : Split f g) : Exact f g :=
-  by
-  obtain ⟨φ, χ, -, -, h1, -, h2⟩ := h
+theorem Split.exact (h : Split f g) : Exact f g := by obtain ⟨φ, χ, -, -, h1, -, h2⟩ := h;
   exact exact_of_split h1 h2
 #align category_theory.split.exact CategoryTheory.Split.exact
 
@@ -176,14 +164,10 @@ but is expected to have type
   forall {𝒜 : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} 𝒜] {A : 𝒜} {B : 𝒜} {C : 𝒜} {f : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) A B} {g : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) B C} [_inst_2 : CategoryTheory.Preadditive.{u1, u2} 𝒜 _inst_1] [_inst_3 : CategoryTheory.Limits.HasKernels.{u1, u2} 𝒜 _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2)] [_inst_4 : CategoryTheory.Limits.HasImages.{u1, u2} 𝒜 _inst_1], (CategoryTheory.Split.{u2, u1} 𝒜 _inst_1 A B C f g _inst_2) -> (CategoryTheory.LeftSplit.{u2, u1} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2) _inst_3 _inst_4)
 Case conversion may be inaccurate. Consider using '#align category_theory.split.left_split CategoryTheory.Split.leftSplitₓ'. -/
 theorem Split.leftSplit (h : Split f g) : LeftSplit f g :=
-  { LeftSplit := by
-      obtain ⟨φ, χ, h1, -⟩ := h
-      exact ⟨φ, h1⟩
+  { LeftSplit := by obtain ⟨φ, χ, h1, -⟩ := h; exact ⟨φ, h1⟩
     Epi := by
       obtain ⟨φ, χ, -, h2, -⟩ := h
-      have : epi (χ ≫ g) := by
-        rw [h2]
-        infer_instance
+      have : epi (χ ≫ g) := by rw [h2]; infer_instance
       exact epi_of_epi χ g
     exact := h.exact }
 #align category_theory.split.left_split CategoryTheory.Split.leftSplit
@@ -195,14 +179,10 @@ but is expected to have type
   forall {𝒜 : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} 𝒜] {A : 𝒜} {B : 𝒜} {C : 𝒜} {f : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) A B} {g : Quiver.Hom.{succ u1, u2} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u1, u2} 𝒜 _inst_1)) B C} [_inst_2 : CategoryTheory.Preadditive.{u1, u2} 𝒜 _inst_1] [_inst_3 : CategoryTheory.Limits.HasKernels.{u1, u2} 𝒜 _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2)] [_inst_4 : CategoryTheory.Limits.HasImages.{u1, u2} 𝒜 _inst_1], (CategoryTheory.Split.{u2, u1} 𝒜 _inst_1 A B C f g _inst_2) -> (CategoryTheory.RightSplit.{u2, u1} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} 𝒜 _inst_1 _inst_2) _inst_3 _inst_4)
 Case conversion may be inaccurate. Consider using '#align category_theory.split.right_split CategoryTheory.Split.rightSplitₓ'. -/
 theorem Split.rightSplit (h : Split f g) : RightSplit f g :=
-  { RightSplit := by
-      obtain ⟨φ, χ, -, h1, -⟩ := h
-      exact ⟨χ, h1⟩
+  { RightSplit := by obtain ⟨φ, χ, -, h1, -⟩ := h; exact ⟨χ, h1⟩
     Mono := by
       obtain ⟨φ, χ, h1, -⟩ := h
-      have : mono (f ≫ φ) := by
-        rw [h1]
-        infer_instance
+      have : mono (f ≫ φ) := by rw [h1]; infer_instance
       exact mono_of_mono f φ
     exact := h.exact }
 #align category_theory.split.right_split CategoryTheory.Split.rightSplit
@@ -306,27 +286,19 @@ def retraction : B ⟶ A :=
 
 #print CategoryTheory.Splitting.section_π /-
 @[simp, reassoc]
-theorem section_π : h.section ≫ g = 𝟙 C :=
-  by
-  delta splitting.section
-  simp
+theorem section_π : h.section ≫ g = 𝟙 C := by delta splitting.section; simp
 #align category_theory.splitting.section_π CategoryTheory.Splitting.section_π
 -/
 
 #print CategoryTheory.Splitting.ι_retraction /-
 @[simp, reassoc]
-theorem ι_retraction : f ≫ h.retraction = 𝟙 A :=
-  by
-  delta retraction
-  simp
+theorem ι_retraction : f ≫ h.retraction = 𝟙 A := by delta retraction; simp
 #align category_theory.splitting.ι_retraction CategoryTheory.Splitting.ι_retraction
 -/
 
 #print CategoryTheory.Splitting.section_retraction /-
 @[simp, reassoc]
-theorem section_retraction : h.section ≫ h.retraction = 0 :=
-  by
-  delta splitting.section retraction
+theorem section_retraction : h.section ≫ h.retraction = 0 := by delta splitting.section retraction;
   simp
 #align category_theory.splitting.section_retraction CategoryTheory.Splitting.section_retraction
 -/
@@ -388,13 +360,9 @@ protected theorem epi : Epi g :=
 #align category_theory.splitting.epi CategoryTheory.Splitting.epi
 -/
 
-instance : Mono h.section := by
-  delta splitting.section
-  infer_instance
+instance : Mono h.section := by delta splitting.section; infer_instance
 
-instance : Epi h.retraction := by
-  delta retraction
-  apply epi_comp
+instance : Epi h.retraction := by delta retraction; apply epi_comp
 
 end HasZeroMorphisms
 
@@ -488,8 +456,7 @@ protected theorem exact : Exact f g :=
   · refine' arrow.iso_mk (iso.refl _) h.iso _
     simp only [iso.refl_hom, arrow.mk_hom, category.id_comp, comp_iso_eq_inl]
   · refine' arrow.iso_mk h.iso (iso.refl _) _
-    dsimp
-    simp
+    dsimp; simp
   · rfl
 #align category_theory.splitting.exact CategoryTheory.Splitting.exact
 -/

@@ -145,28 +145,22 @@ theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
 
 #print Multiset.lcm_ndunion /-
 @[simp]
-theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm :=
-  by
-  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
-  simp
+theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm := by
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]; simp
 #align multiset.lcm_ndunion Multiset.lcm_ndunion
 -/
 
 #print Multiset.lcm_union /-
 @[simp]
-theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm :=
-  by
-  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
-  simp
+theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm := by
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]; simp
 #align multiset.lcm_union Multiset.lcm_union
 -/
 
 #print Multiset.lcm_ndinsert /-
 @[simp]
-theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GCDMonoid.lcm a s.lcm :=
-  by
-  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]
-  simp
+theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GCDMonoid.lcm a s.lcm := by
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]; simp
 #align multiset.lcm_ndinsert Multiset.lcm_ndinsert
 -/
 
@@ -279,8 +273,7 @@ theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = nor
   by
   refine' s.induction_on _ fun b s ih => _
   · simp_rw [map_zero, gcd_zero, MulZeroClass.mul_zero]
-  · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]
-    rw [ih]
+  · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]; rw [ih]
     apply ((normalize_associated a).mul_right _).gcd_eq_right
 #align multiset.gcd_map_mul Multiset.gcd_map_mul
 
@@ -302,28 +295,22 @@ theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
 
 #print Multiset.gcd_ndunion /-
 @[simp]
-theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd :=
-  by
-  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
-  simp
+theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd := by
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]; simp
 #align multiset.gcd_ndunion Multiset.gcd_ndunion
 -/
 
 #print Multiset.gcd_union /-
 @[simp]
-theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd :=
-  by
-  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
-  simp
+theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd := by
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]; simp
 #align multiset.gcd_union Multiset.gcd_union
 -/
 
 #print Multiset.gcd_ndinsert /-
 @[simp]
-theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GCDMonoid.gcd a s.gcd :=
-  by
-  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
-  simp
+theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GCDMonoid.gcd a s.gcd := by
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]; simp
 #align multiset.gcd_ndinsert Multiset.gcd_ndinsert
 -/
 
@@ -339,9 +326,7 @@ theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)
     (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
   ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by
         conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <|
-    by
-    contrapose! hs
-    exact s.gcd_eq_zero_iff.1 hs
+    by contrapose! hs; exact s.gcd_eq_zero_iff.1 hs
 #align multiset.extract_gcd' Multiset.extract_gcd'
 
 /- warning: multiset.extract_gcd -> Multiset.extract_gcd is a dubious translation:
@@ -360,13 +345,10 @@ theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
       rw [dedup_nsmul (card_pos.2 hs).ne', dedup_singleton, gcd_singleton]
       exact ⟨⟨rfl, h⟩, normalize_one⟩
     · choose f hf using @gcd_dvd _ _ _ s
-      have := _
-      push_neg  at h
+      have := _; push_neg  at h
       refine' ⟨s.pmap @f fun _ => id, this, extract_gcd' s _ h this⟩
-      rw [map_pmap]
-      conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
-      congr with (x hx)
-      rw [id, ← hf hx]
+      rw [map_pmap]; conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
+      congr with (x hx); rw [id, ← hf hx]
 #align multiset.extract_gcd Multiset.extract_gcd
 
 end Gcd

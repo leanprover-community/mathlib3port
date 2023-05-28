@@ -148,11 +148,8 @@ theorem mono_set (hst : s ⊆ t) (hf : ApproximatesLinearOn f f' t c) :
 theorem approximatesLinearOn_iff_lipschitzOnWith {f : E → F} {f' : E →L[𝕜] F} {s : Set E}
     {c : ℝ≥0} : ApproximatesLinearOn f f' s c ↔ LipschitzOnWith c (f - f') s :=
   by
-  have : ∀ x y, f x - f y - f' (x - y) = (f - f') x - (f - f') y :=
-    by
-    intro x y
-    simp only [map_sub, Pi.sub_apply]
-    abel
+  have : ∀ x y, f x - f y - f' (x - y) = (f - f') x - (f - f') y := by intro x y;
+    simp only [map_sub, Pi.sub_apply]; abel
   simp only [this, lipschitzOnWith_iff_norm_sub_le, ApproximatesLinearOn]
 #align approximates_linear_on.approximates_linear_on_iff_lipschitz_on_with ApproximatesLinearOn.approximatesLinearOn_iff_lipschitzOnWith
 
@@ -213,15 +210,10 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       (mem_closed_ball.1 hy).trans (mul_nonpos_of_nonpos_of_nonneg (by linarith) ε0)
     simp only [dist_le_zero] at this
     rw [this]
-  have If' : (0 : ℝ) < f'symm.nnnorm := by
-    rw [← inv_pos]
-    exact (NNReal.coe_nonneg _).trans_lt hc
+  have If' : (0 : ℝ) < f'symm.nnnorm := by rw [← inv_pos]; exact (NNReal.coe_nonneg _).trans_lt hc
   have Icf' : (c : ℝ) * f'symm.nnnorm < 1 := by rwa [inv_eq_one_div, lt_div_iff If'] at hc
   have Jf' : (f'symm.nnnorm : ℝ) ≠ 0 := ne_of_gt If'
-  have Jcf' : (1 : ℝ) - c * f'symm.nnnorm ≠ 0 :=
-    by
-    apply ne_of_gt
-    linarith
+  have Jcf' : (1 : ℝ) - c * f'symm.nnnorm ≠ 0 := by apply ne_of_gt; linarith
   /- We have to show that `y` can be written as `f x` for some `x ∈ closed_ball b ε`.
     The idea of the proof is to apply the Banach contraction principle to the map
     `g : x ↦ x + f'symm (y - f x)`, as a fixed point of this map satisfies `f x = y`.
@@ -255,10 +247,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     set v := f'symm (y - f z) with hv
     calc
       dist (f (g z)) y = ‖f (z + v) - y‖ := by rw [dist_eq_norm]
-      _ = ‖f (z + v) - f z - f' v + f' v - (y - f z)‖ :=
-        by
-        congr 1
-        abel
+      _ = ‖f (z + v) - f z - f' v + f' v - (y - f z)‖ := by congr 1; abel
       _ = ‖f (z + v) - f z - f' (z + v - z)‖ := by
         simp only [ContinuousLinearMap.NonlinearRightInverse.right_inv, add_sub_cancel',
           sub_add_cancel]
@@ -280,9 +269,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     by
     intro n w hw
     apply hw.trans
-    rw [div_mul_eq_mul_div, div_le_iff]
-    swap
-    · linarith
+    rw [div_mul_eq_mul_div, div_le_iff]; swap; · linarith
     calc
       (f'symm.nnnorm : ℝ) * (1 - (c * f'symm.nnnorm) ^ n) * dist (f b) y =
           f'symm.nnnorm * dist (f b) y * (1 - (c * f'symm.nnnorm) ^ n) :=
@@ -296,9 +283,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         by
         rw [mul_one]
         exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (NNReal.coe_nonneg _)
-      _ = ε * (1 - c * f'symm.nnnorm) := by
-        field_simp
-        ring
+      _ = ε * (1 - c * f'symm.nnnorm) := by field_simp; ring
       
   /- Main inductive control: `f (u n)` becomes exponentially close to `y`, and therefore
     `dist (u (n+1)) (u n)` becomes exponentally small, making it possible to get an inductive
@@ -311,8 +296,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
           f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n) / (1 - c * f'symm.nnnorm) * dist (f b) y :=
     by
     intro n
-    induction' n with n IH
-    · simp [hu, le_refl]
+    induction' n with n IH; · simp [hu, le_refl]
     rw [usucc]
     have Ign :
       dist (g (u n)) b ≤
@@ -329,9 +313,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         _ =
             f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n.succ) / (1 - c * f'symm.nnnorm) *
               dist (f b) y :=
-          by
-          field_simp [Jcf']
-          ring
+          by field_simp [Jcf'] ; ring
         
     refine' ⟨_, Ign⟩
     calc
@@ -382,9 +364,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
 theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse)
     (hs : IsOpen s) (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : IsOpen (f '' s) :=
   by
-  cases' hc with hE hc;
-  · skip
-    apply isOpen_discrete
+  cases' hc with hE hc; · skip; apply isOpen_discrete
   simp only [isOpen_iff_mem_nhds, nhds_basis_closed_ball.mem_iff, ball_image_iff] at hs⊢
   intro x hx
   rcases hs x hx with ⟨ε, ε0, hε⟩
@@ -454,9 +434,7 @@ protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' 
   · haveI : Subsingleton F := (Equiv.subsingleton_congr f'.to_linear_equiv.to_equiv).1 hE
     exact surjective_to_subsingleton _
   · apply forall_of_forall_mem_closed_ball (fun y : F => ∃ a, f a = y) (f 0) _
-    have hc' : (0 : ℝ) < N⁻¹ - c := by
-      rw [sub_pos]
-      exact hc
+    have hc' : (0 : ℝ) < N⁻¹ - c := by rw [sub_pos]; exact hc
     let p : ℝ → Prop := fun R => closed_ball (f 0) R ⊆ Set.range f
     have hp : ∀ᶠ r : ℝ in at_top, p ((N⁻¹ - c) * r) :=
       by
@@ -510,9 +488,7 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
       apply_rules [mul_le_mul_of_nonneg_left, NNReal.coe_nonneg]
       rw [← dist_eq_norm, ← dist_eq_norm]
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
-    _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ‖A x' - A y'‖ :=
-      by
-      simp only [norm_sub_rev, Nonneg.coe_mul]
+    _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ‖A x' - A y'‖ := by simp only [norm_sub_rev, Nonneg.coe_mul];
       ring
     
 #align approximates_linear_on.to_inv ApproximatesLinearOn.to_inv

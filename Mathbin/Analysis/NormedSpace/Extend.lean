@@ -79,8 +79,7 @@ noncomputable def extendTo𝕜' (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 :
     by
     intro x
     simp only [fc]
-    cases' @I_mul_I_ax 𝕜 _ with h h
-    · simp [h]
+    cases' @I_mul_I_ax 𝕜 _ with h h; · simp [h]
     rw [mul_sub, ← mul_assoc, smul_smul, h]
     simp only [neg_mul, LinearMap.map_neg, one_mul, one_smul, mul_neg, of_real_neg, neg_smul,
       sub_neg_eq_add, add_comm]

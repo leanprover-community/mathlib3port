@@ -78,8 +78,7 @@ theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [
 instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] :
     Module.Finite R (Matrix ι₁ ι₂ R) :=
   by
-  cases nonempty_fintype ι₁
-  cases nonempty_fintype ι₂
+  cases nonempty_fintype ι₁; cases nonempty_fintype ι₂
   exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
 #align module.finite.matrix Module.Finite.matrix
 -/

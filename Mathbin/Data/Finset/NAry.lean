@@ -91,10 +91,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.card_image₂_iff Finset.card_image₂_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem card_image₂_iff :
-    (image₂ f s t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × β)).InjOn fun x => f x.1 x.2 :=
-  by
-  rw [← card_product, ← coe_product]
-  exact card_image_iff
+    (image₂ f s t).card = s.card * t.card ↔ (s ×ˢ t : Set (α × β)).InjOn fun x => f x.1 x.2 := by
+  rw [← card_product, ← coe_product]; exact card_image_iff
 #align finset.card_image₂_iff Finset.card_image₂_iff
 
 /- warning: finset.card_image₂ -> Finset.card_image₂ is a dubious translation:
@@ -134,10 +132,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {s' : Finset.{u3} α} {t : Finset.{u2} β} {t' : Finset.{u2} β}, (HasSubset.Subset.{u3} (Finset.{u3} α) (Finset.instHasSubsetFinset.{u3} α) s s') -> (HasSubset.Subset.{u2} (Finset.{u2} β) (Finset.instHasSubsetFinset.{u2} β) t t') -> (HasSubset.Subset.{u1} (Finset.{u1} γ) (Finset.instHasSubsetFinset.{u1} γ) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t'))
 Case conversion may be inaccurate. Consider using '#align finset.image₂_subset Finset.image₂_subsetₓ'. -/
-theorem image₂_subset (hs : s ⊆ s') (ht : t ⊆ t') : image₂ f s t ⊆ image₂ f s' t' :=
-  by
-  rw [← coe_subset, coe_image₂, coe_image₂]
-  exact image2_subset hs ht
+theorem image₂_subset (hs : s ⊆ s') (ht : t ⊆ t') : image₂ f s t ⊆ image₂ f s' t' := by
+  rw [← coe_subset, coe_image₂, coe_image₂]; exact image2_subset hs ht
 #align finset.image₂_subset Finset.image₂_subset
 
 /- warning: finset.image₂_subset_left -> Finset.image₂_subset_left is a dubious translation:
@@ -229,10 +225,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {t : Finset.{u1} β}, Iff (Finset.Nonempty.{u3} γ (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)) (And (Finset.Nonempty.{u2} α s) (Finset.Nonempty.{u1} β t))
 Case conversion may be inaccurate. Consider using '#align finset.image₂_nonempty_iff Finset.image₂_nonempty_iffₓ'. -/
 @[simp]
-theorem image₂_nonempty_iff : (image₂ f s t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
-  by
-  rw [← coe_nonempty, coe_image₂]
-  exact image2_nonempty_iff
+theorem image₂_nonempty_iff : (image₂ f s t).Nonempty ↔ s.Nonempty ∧ t.Nonempty := by
+  rw [← coe_nonempty, coe_image₂]; exact image2_nonempty_iff
 #align finset.image₂_nonempty_iff Finset.image₂_nonempty_iff
 
 /- warning: finset.nonempty.image₂ -> Finset.Nonempty.image₂ is a dubious translation:
@@ -346,9 +340,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u3} α} {s' : Finset.{u3} α} {t : Finset.{u1} β} [_inst_9 : DecidableEq.{succ u3} α], Eq.{succ u2} (Finset.{u2} γ) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f (Union.union.{u3} (Finset.{u3} α) (Finset.instUnionFinset.{u3} α (fun (a : α) (b : α) => _inst_9 a b)) s s') t) (Union.union.{u2} (Finset.{u2} γ) (Finset.instUnionFinset.{u2} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u3, u1, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s' t))
 Case conversion may be inaccurate. Consider using '#align finset.image₂_union_left Finset.image₂_union_leftₓ'. -/
 theorem image₂_union_left [DecidableEq α] : image₂ f (s ∪ s') t = image₂ f s t ∪ image₂ f s' t :=
-  coe_injective <| by
-    push_cast
-    exact image2_union_left
+  coe_injective <| by push_cast ; exact image2_union_left
 #align finset.image₂_union_left Finset.image₂_union_left
 
 /- warning: finset.image₂_union_right -> Finset.image₂_union_right is a dubious translation:
@@ -358,9 +350,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : DecidableEq.{succ u2} γ] {f : α -> β -> γ} {s : Finset.{u1} α} {t : Finset.{u3} β} {t' : Finset.{u3} β} [_inst_9 : DecidableEq.{succ u3} β], Eq.{succ u2} (Finset.{u2} γ) (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s (Union.union.{u3} (Finset.{u3} β) (Finset.instUnionFinset.{u3} β (fun (a : β) (b : β) => _inst_9 a b)) t t')) (Union.union.{u2} (Finset.{u2} γ) (Finset.instUnionFinset.{u2} γ (fun (a : γ) (b : γ) => _inst_3 a b)) (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u1, u3, u2} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t'))
 Case conversion may be inaccurate. Consider using '#align finset.image₂_union_right Finset.image₂_union_rightₓ'. -/
 theorem image₂_union_right [DecidableEq β] : image₂ f s (t ∪ t') = image₂ f s t ∪ image₂ f s t' :=
-  coe_injective <| by
-    push_cast
-    exact image2_union_right
+  coe_injective <| by push_cast ; exact image2_union_right
 #align finset.image₂_union_right Finset.image₂_union_right
 
 /- warning: finset.image₂_insert_left -> Finset.image₂_insert_left is a dubious translation:
@@ -372,9 +362,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image₂_insert
 @[simp]
 theorem image₂_insert_left [DecidableEq α] :
     image₂ f (insert a s) t = (t.image fun b => f a b) ∪ image₂ f s t :=
-  coe_injective <| by
-    push_cast
-    exact image2_insert_left
+  coe_injective <| by push_cast ; exact image2_insert_left
 #align finset.image₂_insert_left Finset.image₂_insert_left
 
 /- warning: finset.image₂_insert_right -> Finset.image₂_insert_right is a dubious translation:
@@ -386,9 +374,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image₂_insert
 @[simp]
 theorem image₂_insert_right [DecidableEq β] :
     image₂ f s (insert b t) = (s.image fun a => f a b) ∪ image₂ f s t :=
-  coe_injective <| by
-    push_cast
-    exact image2_insert_right
+  coe_injective <| by push_cast ; exact image2_insert_right
 #align finset.image₂_insert_right Finset.image₂_insert_right
 
 /- warning: finset.image₂_inter_left -> Finset.image₂_inter_left is a dubious translation:
@@ -399,9 +385,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_left Finset.image₂_inter_leftₓ'. -/
 theorem image₂_inter_left [DecidableEq α] (hf : Injective2 f) :
     image₂ f (s ∩ s') t = image₂ f s t ∩ image₂ f s' t :=
-  coe_injective <| by
-    push_cast
-    exact image2_inter_left hf
+  coe_injective <| by push_cast ; exact image2_inter_left hf
 #align finset.image₂_inter_left Finset.image₂_inter_left
 
 /- warning: finset.image₂_inter_right -> Finset.image₂_inter_right is a dubious translation:
@@ -412,9 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_right Finset.image₂_inter_rightₓ'. -/
 theorem image₂_inter_right [DecidableEq β] (hf : Injective2 f) :
     image₂ f s (t ∩ t') = image₂ f s t ∩ image₂ f s t' :=
-  coe_injective <| by
-    push_cast
-    exact image2_inter_right hf
+  coe_injective <| by push_cast ; exact image2_inter_right hf
 #align finset.image₂_inter_right Finset.image₂_inter_right
 
 /- warning: finset.image₂_inter_subset_left -> Finset.image₂_inter_subset_left is a dubious translation:
@@ -425,9 +407,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_subset_left Finset.image₂_inter_subset_leftₓ'. -/
 theorem image₂_inter_subset_left [DecidableEq α] :
     image₂ f (s ∩ s') t ⊆ image₂ f s t ∩ image₂ f s' t :=
-  coe_subset.1 <| by
-    push_cast
-    exact image2_inter_subset_left
+  coe_subset.1 <| by push_cast ; exact image2_inter_subset_left
 #align finset.image₂_inter_subset_left Finset.image₂_inter_subset_left
 
 /- warning: finset.image₂_inter_subset_right -> Finset.image₂_inter_subset_right is a dubious translation:
@@ -438,9 +418,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_subset_right Finset.image₂_inter_subset_rightₓ'. -/
 theorem image₂_inter_subset_right [DecidableEq β] :
     image₂ f s (t ∩ t') ⊆ image₂ f s t ∩ image₂ f s t' :=
-  coe_subset.1 <| by
-    push_cast
-    exact image2_inter_subset_right
+  coe_subset.1 <| by push_cast ; exact image2_inter_subset_right
 #align finset.image₂_inter_subset_right Finset.image₂_inter_subset_right
 
 /- warning: finset.image₂_congr -> Finset.image₂_congr is a dubious translation:
@@ -450,9 +428,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_3 : DecidableEq.{succ u1} γ] {f : α -> β -> γ} {f' : α -> β -> γ} {s : Finset.{u3} α} {t : Finset.{u2} β}, (forall (a : α), (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) -> (forall (b : β), (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b t) -> (Eq.{succ u1} γ (f a b) (f' a b)))) -> (Eq.{succ u1} (Finset.{u1} γ) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t) (Finset.image₂.{u3, u2, u1} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f' s t))
 Case conversion may be inaccurate. Consider using '#align finset.image₂_congr Finset.image₂_congrₓ'. -/
 theorem image₂_congr (h : ∀ a ∈ s, ∀ b ∈ t, f a b = f' a b) : image₂ f s t = image₂ f' s t :=
-  coe_injective <| by
-    push_cast
-    exact image2_congr h
+  coe_injective <| by push_cast ; exact image2_congr h
 #align finset.image₂_congr Finset.image₂_congr
 
 /- warning: finset.image₂_congr' -> Finset.image₂_congr' is a dubious translation:
@@ -570,16 +546,12 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {t : Finset.{u1} β}, Eq.{succ u3} (Finset.{u3} γ) (Finset.biUnion.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) s (fun (a : α) => Finset.image.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (f a) t)) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_left Finset.biUnion_image_leftₓ'. -/
 theorem biUnion_image_left : (s.biUnion fun a => t.image <| f a) = image₂ f s t :=
-  coe_injective <| by
-    push_cast
-    exact Set.iUnion_image_left _
+  coe_injective <| by push_cast ; exact Set.iUnion_image_left _
 #align finset.bUnion_image_left Finset.biUnion_image_left
 
 #print Finset.biUnion_image_right /-
 theorem biUnion_image_right : (t.biUnion fun b => s.image fun a => f a b) = image₂ f s t :=
-  coe_injective <| by
-    push_cast
-    exact Set.iUnion_image_right _
+  coe_injective <| by push_cast ; exact Set.iUnion_image_right _
 #align finset.bUnion_image_right Finset.biUnion_image_right
 -/
 
@@ -602,17 +574,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_image₂ Finset.image_image₂ₓ'. -/
 theorem image_image₂ (f : α → β → γ) (g : γ → δ) :
     (image₂ f s t).image g = image₂ (fun a b => g (f a b)) s t :=
-  coe_injective <| by
-    push_cast
-    exact image_image2 _ _
+  coe_injective <| by push_cast ; exact image_image2 _ _
 #align finset.image_image₂ Finset.image_image₂
 
 #print Finset.image₂_image_left /-
 theorem image₂_image_left (f : γ → β → δ) (g : α → γ) :
     image₂ f (s.image g) t = image₂ (fun a b => f (g a) b) s t :=
-  coe_injective <| by
-    push_cast
-    exact image2_image_left _ _
+  coe_injective <| by push_cast ; exact image2_image_left _ _
 #align finset.image₂_image_left Finset.image₂_image_left
 -/
 
@@ -624,9 +592,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_image_right Finset.image₂_image_rightₓ'. -/
 theorem image₂_image_right (f : α → γ → δ) (g : β → γ) :
     image₂ f s (t.image g) = image₂ (fun a b => f a (g b)) s t :=
-  coe_injective <| by
-    push_cast
-    exact image2_image_right _ _
+  coe_injective <| by push_cast ; exact image2_image_right _ _
 #align finset.image₂_image_right Finset.image₂_image_right
 
 /- warning: finset.image₂_mk_eq_product -> Finset.image₂_mk_eq_product is a dubious translation:
@@ -674,9 +640,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_swap Finset.image₂_swapₓ'. -/
 theorem image₂_swap (f : α → β → γ) (s : Finset α) (t : Finset β) :
     image₂ f s t = image₂ (fun a b => f b a) t s :=
-  coe_injective <| by
-    push_cast
-    exact image2_swap _ _ _
+  coe_injective <| by push_cast ; exact image2_swap _ _ _
 #align finset.image₂_swap Finset.image₂_swap
 
 /- warning: finset.image₂_left -> Finset.image₂_left is a dubious translation:
@@ -687,17 +651,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_left Finset.image₂_leftₓ'. -/
 @[simp]
 theorem image₂_left [DecidableEq α] (h : t.Nonempty) : image₂ (fun x y => x) s t = s :=
-  coe_injective <| by
-    push_cast
-    exact image2_left h
+  coe_injective <| by push_cast ; exact image2_left h
 #align finset.image₂_left Finset.image₂_left
 
 #print Finset.image₂_right /-
 @[simp]
 theorem image₂_right [DecidableEq β] (h : s.Nonempty) : image₂ (fun x y => y) s t = t :=
-  coe_injective <| by
-    push_cast
-    exact image2_right h
+  coe_injective <| by push_cast ; exact image2_right h
 #align finset.image₂_right Finset.image₂_right
 -/
 
@@ -710,9 +670,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image₂_assoc 
 theorem image₂_assoc {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ} {f' : α → ε' → ε}
     {g' : β → γ → ε'} (h_assoc : ∀ a b c, f (g a b) c = f' a (g' b c)) :
     image₂ f (image₂ g s t) u = image₂ f' s (image₂ g' t u) :=
-  coe_injective <| by
-    push_cast
-    exact image2_assoc h_assoc
+  coe_injective <| by push_cast ; exact image2_assoc h_assoc
 #align finset.image₂_assoc Finset.image₂_assoc
 
 /- warning: finset.image₂_comm -> Finset.image₂_comm is a dubious translation:
@@ -734,9 +692,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image₂_left_c
 theorem image₂_left_comm {γ : Type _} {u : Finset γ} {f : α → δ → ε} {g : β → γ → δ}
     {f' : α → γ → δ'} {g' : β → δ' → ε} (h_left_comm : ∀ a b c, f a (g b c) = g' b (f' a c)) :
     image₂ f s (image₂ g t u) = image₂ g' t (image₂ f' s u) :=
-  coe_injective <| by
-    push_cast
-    exact image2_left_comm h_left_comm
+  coe_injective <| by push_cast ; exact image2_left_comm h_left_comm
 #align finset.image₂_left_comm Finset.image₂_left_comm
 
 /- warning: finset.image₂_right_comm -> Finset.image₂_right_comm is a dubious translation:
@@ -748,9 +704,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image₂_right_
 theorem image₂_right_comm {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ}
     {f' : α → γ → δ'} {g' : δ' → β → ε} (h_right_comm : ∀ a b c, f (g a b) c = g' (f' a c) b) :
     image₂ f (image₂ g s t) u = image₂ g' (image₂ f' s u) t :=
-  coe_injective <| by
-    push_cast
-    exact image2_right_comm h_right_comm
+  coe_injective <| by push_cast ; exact image2_right_comm h_right_comm
 #align finset.image₂_right_comm Finset.image₂_right_comm
 
 /- warning: finset.image₂_image₂_image₂_comm -> Finset.image₂_image₂_image₂_comm is a dubious translation:
@@ -761,9 +715,7 @@ theorem image₂_image₂_image₂_comm {γ δ : Type _} {u : Finset γ} {v : Fi
     {f' : ε' → ζ' → ν} {g' : α → γ → ε'} {h' : β → δ → ζ'}
     (h_comm : ∀ a b c d, f (g a b) (h c d) = f' (g' a c) (h' b d)) :
     image₂ f (image₂ g s t) (image₂ h u v) = image₂ f' (image₂ g' s u) (image₂ h' t v) :=
-  coe_injective <| by
-    push_cast
-    exact image2_image2_image2_comm h_comm
+  coe_injective <| by push_cast ; exact image2_image2_image2_comm h_comm
 #align finset.image₂_image₂_image₂_comm Finset.image₂_image₂_image₂_comm
 
 /- warning: finset.image_image₂_distrib -> Finset.image_image₂_distrib is a dubious translation:
@@ -775,9 +727,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_image₂_
 theorem image_image₂_distrib {g : γ → δ} {f' : α' → β' → δ} {g₁ : α → α'} {g₂ : β → β'}
     (h_distrib : ∀ a b, g (f a b) = f' (g₁ a) (g₂ b)) :
     (image₂ f s t).image g = image₂ f' (s.image g₁) (t.image g₂) :=
-  coe_injective <| by
-    push_cast
-    exact image_image2_distrib h_distrib
+  coe_injective <| by push_cast ; exact image_image2_distrib h_distrib
 #align finset.image_image₂_distrib Finset.image_image₂_distrib
 
 /- warning: finset.image_image₂_distrib_left -> Finset.image_image₂_distrib_left is a dubious translation:
@@ -790,9 +740,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_image₂_
 theorem image_image₂_distrib_left {g : γ → δ} {f' : α' → β → δ} {g' : α → α'}
     (h_distrib : ∀ a b, g (f a b) = f' (g' a) b) :
     (image₂ f s t).image g = image₂ f' (s.image g') t :=
-  coe_injective <| by
-    push_cast
-    exact image_image2_distrib_left h_distrib
+  coe_injective <| by push_cast ; exact image_image2_distrib_left h_distrib
 #align finset.image_image₂_distrib_left Finset.image_image₂_distrib_left
 
 /- warning: finset.image_image₂_distrib_right -> Finset.image_image₂_distrib_right is a dubious translation:
@@ -805,9 +753,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_image₂_
 theorem image_image₂_distrib_right {g : γ → δ} {f' : α → β' → δ} {g' : β → β'}
     (h_distrib : ∀ a b, g (f a b) = f' a (g' b)) :
     (image₂ f s t).image g = image₂ f' s (t.image g') :=
-  coe_injective <| by
-    push_cast
-    exact image_image2_distrib_right h_distrib
+  coe_injective <| by push_cast ; exact image_image2_distrib_right h_distrib
 #align finset.image_image₂_distrib_right Finset.image_image₂_distrib_right
 
 /- warning: finset.image₂_image_left_comm -> Finset.image₂_image_left_comm is a dubious translation:
@@ -844,9 +790,7 @@ theorem image₂_distrib_subset_left {γ : Type _} {u : Finset γ} {f : α → �
     {f₁ : α → β → β'} {f₂ : α → γ → γ'} {g' : β' → γ' → ε}
     (h_distrib : ∀ a b c, f a (g b c) = g' (f₁ a b) (f₂ a c)) :
     image₂ f s (image₂ g t u) ⊆ image₂ g' (image₂ f₁ s t) (image₂ f₂ s u) :=
-  coe_subset.1 <| by
-    push_cast
-    exact Set.image2_distrib_subset_left h_distrib
+  coe_subset.1 <| by push_cast ; exact Set.image2_distrib_subset_left h_distrib
 #align finset.image₂_distrib_subset_left Finset.image₂_distrib_subset_left
 
 /- warning: finset.image₂_distrib_subset_right -> Finset.image₂_distrib_subset_right is a dubious translation:
@@ -857,9 +801,7 @@ theorem image₂_distrib_subset_right {γ : Type _} {u : Finset γ} {f : δ → 
     {f₁ : α → γ → α'} {f₂ : β → γ → β'} {g' : α' → β' → ε}
     (h_distrib : ∀ a b c, f (g a b) c = g' (f₁ a c) (f₂ b c)) :
     image₂ f (image₂ g s t) u ⊆ image₂ g' (image₂ f₁ s u) (image₂ f₂ t u) :=
-  coe_subset.1 <| by
-    push_cast
-    exact Set.image2_distrib_subset_right h_distrib
+  coe_subset.1 <| by push_cast ; exact Set.image2_distrib_subset_right h_distrib
 #align finset.image₂_distrib_subset_right Finset.image₂_distrib_subset_right
 
 /- warning: finset.image_image₂_antidistrib -> Finset.image_image₂_antidistrib is a dubious translation:
@@ -870,9 +812,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_image₂_antidistrib Finset.image_image₂_antidistribₓ'. -/
 theorem image_image₂_antidistrib {g : γ → δ} {f' : β' → α' → δ} {g₁ : β → β'} {g₂ : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g₁ b) (g₂ a)) :
-    (image₂ f s t).image g = image₂ f' (t.image g₁) (s.image g₂) :=
-  by
-  rw [image₂_swap f]
+    (image₂ f s t).image g = image₂ f' (t.image g₁) (s.image g₂) := by rw [image₂_swap f];
   exact image_image₂_distrib fun _ _ => h_antidistrib _ _
 #align finset.image_image₂_antidistrib Finset.image_image₂_antidistrib
 
@@ -886,9 +826,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_image₂_
 theorem image_image₂_antidistrib_left {g : γ → δ} {f' : β' → α → δ} {g' : β → β'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g' b) a) :
     (image₂ f s t).image g = image₂ f' (t.image g') s :=
-  coe_injective <| by
-    push_cast
-    exact image_image2_antidistrib_left h_antidistrib
+  coe_injective <| by push_cast ; exact image_image2_antidistrib_left h_antidistrib
 #align finset.image_image₂_antidistrib_left Finset.image_image₂_antidistrib_left
 
 /- warning: finset.image_image₂_antidistrib_right -> Finset.image_image₂_antidistrib_right is a dubious translation:
@@ -901,9 +839,7 @@ Case conversion may be inaccurate. Consider using '#align finset.image_image₂_
 theorem image_image₂_antidistrib_right {g : γ → δ} {f' : β → α' → δ} {g' : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' b (g' a)) :
     (image₂ f s t).image g = image₂ f' t (s.image g') :=
-  coe_injective <| by
-    push_cast
-    exact image_image2_antidistrib_right h_antidistrib
+  coe_injective <| by push_cast ; exact image_image2_antidistrib_right h_antidistrib
 #align finset.image_image₂_antidistrib_right Finset.image_image₂_antidistrib_right
 
 /- warning: finset.image₂_image_left_anticomm -> Finset.image₂_image_left_anticomm is a dubious translation:
@@ -959,9 +895,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_union_subset_union Finset.image₂_inter_union_subset_unionₓ'. -/
 theorem image₂_inter_union_subset_union :
     image₂ f (s ∩ s') (t ∪ t') ⊆ image₂ f s t ∪ image₂ f s' t' :=
-  coe_subset.1 <| by
-    push_cast
-    exact Set.image2_inter_union_subset_union
+  coe_subset.1 <| by push_cast ; exact Set.image2_inter_union_subset_union
 #align finset.image₂_inter_union_subset_union Finset.image₂_inter_union_subset_union
 
 /- warning: finset.image₂_union_inter_subset_union -> Finset.image₂_union_inter_subset_union is a dubious translation:
@@ -972,9 +906,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_union_inter_subset_union Finset.image₂_union_inter_subset_unionₓ'. -/
 theorem image₂_union_inter_subset_union :
     image₂ f (s ∪ s') (t ∩ t') ⊆ image₂ f s t ∪ image₂ f s' t' :=
-  coe_subset.1 <| by
-    push_cast
-    exact Set.image2_union_inter_subset_union
+  coe_subset.1 <| by push_cast ; exact Set.image2_union_inter_subset_union
 #align finset.image₂_union_inter_subset_union Finset.image₂_union_inter_subset_union
 
 /- warning: finset.image₂_inter_union_subset -> Finset.image₂_inter_union_subset is a dubious translation:
@@ -985,9 +917,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_inter_union_subset Finset.image₂_inter_union_subsetₓ'. -/
 theorem image₂_inter_union_subset {f : α → α → β} {s t : Finset α} (hf : ∀ a b, f a b = f b a) :
     image₂ f (s ∩ t) (s ∪ t) ⊆ image₂ f s t :=
-  coe_subset.1 <| by
-    push_cast
-    exact image2_inter_union_subset hf
+  coe_subset.1 <| by push_cast ; exact image2_inter_union_subset hf
 #align finset.image₂_inter_union_subset Finset.image₂_inter_union_subset
 
 /- warning: finset.image₂_union_inter_subset -> Finset.image₂_union_inter_subset is a dubious translation:
@@ -998,9 +928,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image₂_union_inter_subset Finset.image₂_union_inter_subsetₓ'. -/
 theorem image₂_union_inter_subset {f : α → α → β} {s t : Finset α} (hf : ∀ a b, f a b = f b a) :
     image₂ f (s ∪ t) (s ∩ t) ⊆ image₂ f s t :=
-  coe_subset.1 <| by
-    push_cast
-    exact image2_union_inter_subset hf
+  coe_subset.1 <| by push_cast ; exact image2_union_inter_subset hf
 #align finset.image₂_union_inter_subset Finset.image₂_union_inter_subset
 
 end Finset

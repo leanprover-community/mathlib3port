@@ -159,9 +159,7 @@ theorem numLeaves_eq_numNodes_succ (x : Tree α) : x.numLeaves = x.numNodes + 1 
 -/
 
 #print Tree.numLeaves_pos /-
-theorem numLeaves_pos (x : Tree α) : 0 < x.numLeaves :=
-  by
-  rw [num_leaves_eq_num_nodes_succ]
+theorem numLeaves_pos (x : Tree α) : 0 < x.numLeaves := by rw [num_leaves_eq_num_nodes_succ];
   exact x.num_nodes.zero_lt_succ
 #align tree.num_leaves_pos Tree.numLeaves_pos
 -/

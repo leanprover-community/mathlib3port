@@ -72,11 +72,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {S : Type.{u2}} [_inst_2 : CommSemiring.{u2} S] [_inst_3 : Algebra.{u1, u2} R S _inst_1 (CommSemiring.toSemiring.{u2} S _inst_2)] (x : R) [_inst_5 : IsLocalization.Away.{u1, u2} R _inst_1 x S _inst_2 _inst_3], Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (HMul.hMul.{u2, u2, u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (instHMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (NonUnitalNonAssocSemiring.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (Semiring.toNonAssocSemiring.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (CommSemiring.toSemiring.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) _inst_2))))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2))) R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2)) (RingHom.instRingHomClassRingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Semiring.toNonAssocSemiring.{u2} S (CommSemiring.toSemiring.{u2} S _inst_2)))))) (algebraMap.{u1, u2} R S _inst_1 (CommSemiring.toSemiring.{u2} S _inst_2) _inst_3) x) (IsLocalization.Away.invSelf.{u1, u2} R _inst_1 ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) _inst_2 _inst_3 x _inst_5)) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) 1 (One.toOfNat1.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (Semiring.toOne.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) (CommSemiring.toSemiring.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2397 : R) => S) x) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_localization.away.mul_inv_self IsLocalization.Away.mul_invSelfₓ'. -/
 @[simp]
-theorem mul_invSelf : algebraMap R S x * invSelf x = 1 :=
-  by
-  convert IsLocalization.mk'_mul_mk'_eq_one _ 1
-  symm
-  apply IsLocalization.mk'_one
+theorem mul_invSelf : algebraMap R S x * invSelf x = 1 := by
+  convert IsLocalization.mk'_mul_mk'_eq_one _ 1; symm; apply IsLocalization.mk'_one
 #align is_localization.away.mul_inv_self IsLocalization.Away.mul_invSelf
 
 variable {g : R →+* P}
@@ -141,11 +138,7 @@ Case conversion may be inaccurate. Consider using '#align is_localization.away.m
 noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S]
     [IsLocalization.Away (f r) Q] : S →+* Q :=
   IsLocalization.map Q f
-    (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f
-      by
-      rintro x ⟨n, rfl⟩
-      use n
-      simp)
+    (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f by rintro x ⟨n, rfl⟩; use n; simp)
 #align is_localization.away.map IsLocalization.Away.map
 
 end Away
@@ -210,19 +203,13 @@ Case conversion may be inaccurate. Consider using '#align is_localization.away_o
 theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
     [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
     IsLocalization.Away r S :=
-  { map_units := by
-      rintro ⟨_, n, rfl⟩
-      exact (algebraMap R S).isUnit_map (hr.pow _)
-    surj := fun z => by
-      obtain ⟨z', rfl⟩ := H.2 z
-      exact ⟨⟨z', 1⟩, by simp⟩
+  { map_units := by rintro ⟨_, n, rfl⟩; exact (algebraMap R S).isUnit_map (hr.pow _)
+    surj := fun z => by obtain ⟨z', rfl⟩ := H.2 z; exact ⟨⟨z', 1⟩, by simp⟩
     eq_iff_exists := fun x y => by
       erw [H.1.eq_iff]
       constructor
-      · rintro rfl
-        exact ⟨1, rfl⟩
-      · rintro ⟨⟨_, n, rfl⟩, e⟩
-        exact (hr.pow _).mul_right_inj.mp e }
+      · rintro rfl; exact ⟨1, rfl⟩
+      · rintro ⟨⟨_, n, rfl⟩, e⟩; exact (hr.pow _).mul_right_inj.mp e }
 #align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_isUnit_of_bijective
 
 end AtUnits

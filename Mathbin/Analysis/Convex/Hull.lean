@@ -229,10 +229,7 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convexHull 𝕜 _
   exact
     subset.antisymm (subset_convexHull 𝕜 _) fun y hy =>
-      ⟨convexHull_min (diff_subset _ _) hs hy,
-        by
-        rintro (rfl : y = x)
-        exact hx hy⟩
+      ⟨convexHull_min (diff_subset _ _) hs hy, by rintro (rfl : y = x); exact hx hy⟩
 #align convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convexHull_remove
 
 /- warning: is_linear_map.convex_hull_image -> IsLinearMap.convexHull_image is a dubious translation:
@@ -321,10 +318,8 @@ lean 3 declaration is
 but is expected to have type
   forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedRing.{u1} 𝕜] [_inst_2 : AddCommGroup.{u2} E] [_inst_4 : Module.{u1, u2} 𝕜 E (OrderedSemiring.toSemiring.{u1} 𝕜 (OrderedRing.toOrderedSemiring.{u1} 𝕜 _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2)] (s : Set.{u2} E), Eq.{succ u2} (Set.{u2} E) (OrderHom.toFun.{u2, u2} (Set.{u2} E) (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (ClosureOperator.toOrderHom.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (convexHull.{u1, u2} 𝕜 E (OrderedRing.toOrderedSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)) (Neg.neg.{u2} (Set.{u2} E) (Set.neg.{u2} E (NegZeroClass.toNeg.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2)))))) s)) (Neg.neg.{u2} (Set.{u2} E) (Set.neg.{u2} E (NegZeroClass.toNeg.{u2} E (SubNegZeroMonoid.toNegZeroClass.{u2} E (SubtractionMonoid.toSubNegZeroMonoid.{u2} E (SubtractionCommMonoid.toSubtractionMonoid.{u2} E (AddCommGroup.toDivisionAddCommMonoid.{u2} E _inst_2)))))) (OrderHom.toFun.{u2, u2} (Set.{u2} E) (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (ClosureOperator.toOrderHom.{u2} (Set.{u2} E) (PartialOrder.toPreorder.{u2} (Set.{u2} E) (OmegaCompletePartialOrder.toPartialOrder.{u2} (Set.{u2} E) (CompleteLattice.instOmegaCompletePartialOrder.{u2} (Set.{u2} E) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} E) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} E) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} E) (Set.instCompleteBooleanAlgebraSet.{u2} E))))))) (convexHull.{u1, u2} 𝕜 E (OrderedRing.toOrderedSemiring.{u1} 𝕜 _inst_1) (AddCommGroup.toAddCommMonoid.{u2} E _inst_2) _inst_4)) s))
 Case conversion may be inaccurate. Consider using '#align convex_hull_neg convexHull_negₓ'. -/
-theorem convexHull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s :=
-  by
-  simp_rw [← image_neg]
-  exact (AffineMap.image_convexHull _ <| -1).symm
+theorem convexHull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s := by
+  simp_rw [← image_neg]; exact (AffineMap.image_convexHull _ <| -1).symm
 #align convex_hull_neg convexHull_neg
 
 end AddCommGroup

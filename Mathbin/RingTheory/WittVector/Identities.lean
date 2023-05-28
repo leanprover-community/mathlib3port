@@ -44,9 +44,7 @@ include hp
 noncomputable section
 
 /-- The composition of Frobenius and Verschiebung is multiplication by `p`. -/
-theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p :=
-  by
-  ghost_calc x
+theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p := by ghost_calc x;
   ghost_simp [mul_comm]
 #align witt_vector.frobenius_verschiebung WittVector.frobenius_verschiebung
 
@@ -88,9 +86,7 @@ theorem coeff_p [CharP R p] (i : ℕ) : (p : 𝕎 R).coeff i = if i = 1 then 1 e
 #align witt_vector.coeff_p WittVector.coeff_p
 
 @[simp]
-theorem coeff_p_zero [CharP R p] : (p : 𝕎 R).coeff 0 = 0 :=
-  by
-  rw [coeff_p, if_neg]
+theorem coeff_p_zero [CharP R p] : (p : 𝕎 R).coeff 0 = 0 := by rw [coeff_p, if_neg];
   exact zero_ne_one
 #align witt_vector.coeff_p_zero WittVector.coeff_p_zero
 
@@ -98,9 +94,7 @@ theorem coeff_p_zero [CharP R p] : (p : 𝕎 R).coeff 0 = 0 :=
 theorem coeff_p_one [CharP R p] : (p : 𝕎 R).coeff 1 = 1 := by rw [coeff_p, if_pos rfl]
 #align witt_vector.coeff_p_one WittVector.coeff_p_one
 
-theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 :=
-  by
-  intro h
+theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 := by intro h;
   simpa only [h, zero_coeff, zero_ne_one] using coeff_p_one p R
 #align witt_vector.p_nonzero WittVector.p_nonzero
 
@@ -112,9 +106,7 @@ variable {p R}
 
 /-- The “projection formula” for Frobenius and Verschiebung. -/
 theorem verschiebung_mul_frobenius (x y : 𝕎 R) :
-    verschiebung (x * frobenius y) = verschiebung x * y :=
-  by
-  ghost_calc x y
+    verschiebung (x * frobenius y) = verschiebung x * y := by ghost_calc x y;
   rintro ⟨⟩ <;> ghost_simp [mul_assoc]
 #align witt_vector.verschiebung_mul_frobenius WittVector.verschiebung_mul_frobenius
 
@@ -162,8 +154,7 @@ theorem iterate_verschiebung_mul_left (x y : 𝕎 R) (i : ℕ) :
   by
   induction' i with i ih generalizing y
   · simp
-  · rw [iterate_succ_apply', ← verschiebung_mul_frobenius, ih, iterate_succ_apply']
-    rfl
+  · rw [iterate_succ_apply', ← verschiebung_mul_frobenius, ih, iterate_succ_apply']; rfl
 #align witt_vector.iterate_verschiebung_mul_left WittVector.iterate_verschiebung_mul_left
 
 section CharP

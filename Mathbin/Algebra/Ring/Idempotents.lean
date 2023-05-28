@@ -122,9 +122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_idempotent_elem.pow IsIdempotentElem.powₓ'. -/
 theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n) :=
   Nat.recOn n ((pow_zero p).symm ▸ one) fun n ih =>
-    show p ^ n.succ * p ^ n.succ = p ^ n.succ
-      by
-      nth_rw 3 [← h.eq]
+    show p ^ n.succ * p ^ n.succ = p ^ n.succ by nth_rw 3 [← h.eq];
       rw [← sq, ← sq, ← pow_mul, ← pow_mul']
 #align is_idempotent_elem.pow IsIdempotentElem.pow
 

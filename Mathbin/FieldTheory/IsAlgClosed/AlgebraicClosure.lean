@@ -261,11 +261,8 @@ instance algebraOfStep (n) : Algebra (Step k n) (AlgebraicClosure k) :=
 
 theorem ofStep_succ (n : ℕ) : (ofStep k (n + 1)).comp (toStepSucc k n) = ofStep k n :=
   RingHom.ext fun x =>
-    show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLe k i j h) _ _ = _
-      by
-      convert Ring.DirectLimit.of_f n.le_succ x
-      ext x
-      exact (Nat.leRecOn_succ' x).symm
+    show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLe k i j h) _ _ = _ by
+      convert Ring.DirectLimit.of_f n.le_succ x; ext x; exact (Nat.leRecOn_succ' x).symm
 #align algebraic_closure.of_step_succ AlgebraicClosure.ofStep_succ
 
 theorem exists_ofStep (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=

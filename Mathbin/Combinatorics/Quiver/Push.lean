@@ -87,9 +87,7 @@ the pushforward quiver structure `push σ`. -/
 def lift : Push σ ⥤q W' where
   obj := τ
   map :=
-    @PushQuiver.rec V _ W σ (fun X Y f => τ X ⟶ τ Y) fun X Y f =>
-      by
-      rw [← h X, ← h Y]
+    @PushQuiver.rec V _ W σ (fun X Y f => τ X ⟶ τ Y) fun X Y f => by rw [← h X, ← h Y];
       exact φ.map f
 #align quiver.push.lift Quiver.Push.lift
 -/
@@ -113,12 +111,8 @@ Case conversion may be inaccurate. Consider using '#align quiver.push.lift_comp 
 theorem lift_comp : of σ ⋙q lift σ φ τ h = φ :=
   by
   fapply Prefunctor.ext
-  · rintro
-    simp only [Prefunctor.comp_obj]
-    symm
-    exact h X
-  · rintro _ _ f
-    simp only [Prefunctor.comp_map]
+  · rintro; simp only [Prefunctor.comp_obj]; symm; exact h X
+  · rintro _ _ f; simp only [Prefunctor.comp_map]
     apply eq_of_hEq
     iterate 2 apply (cast_hEq _ _).trans
     symm
@@ -136,12 +130,8 @@ theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : of σ
     Φ = lift σ φ τ h := by
   dsimp only [of, lift]
   fapply Prefunctor.ext
-  · rintro
-    simp_rw [← Φ₀]
-  · rintro _ _ ⟨⟩
-    subst_vars
-    simp only [Prefunctor.comp_map, cast_eq]
-    rfl
+  · rintro; simp_rw [← Φ₀]
+  · rintro _ _ ⟨⟩; subst_vars; simp only [Prefunctor.comp_map, cast_eq]; rfl
 #align quiver.push.lift_unique Quiver.Push.lift_unique
 
 end Push

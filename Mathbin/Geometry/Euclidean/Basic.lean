@@ -188,10 +188,8 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
     rw [← mul_self_inj_of_nonneg dist_nonneg dist_nonneg, dist_smul_vadd_sq, ← sub_eq_zero,
       add_sub_assoc, dist_eq_norm_vsub V p₁ p₂, ← real_inner_self_eq_norm_mul_norm, sub_self]
   have hvi : ⟪v, v⟫ ≠ 0 := by simpa using hv
-  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * ⟪v, p₁ -ᵥ p₂⟫ * (2 * ⟪v, p₁ -ᵥ p₂⟫) :=
-    by
-    rw [discrim]
-    ring
+  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * ⟪v, p₁ -ᵥ p₂⟫ * (2 * ⟪v, p₁ -ᵥ p₂⟫) := by
+    rw [discrim]; ring
   rw [quadratic_eq_zero_iff hvi hd, add_left_neg, zero_div, neg_mul_eq_neg_mul, ←
     mul_sub_right_distrib, sub_eq_add_neg, ← mul_two, mul_assoc, mul_div_assoc, mul_div_mul_left,
     mul_div_assoc]
@@ -226,8 +224,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     · intro i j hij
       fin_cases i <;> fin_cases j <;> try exact False.elim (hij rfl)
       · exact ho
-      · rw [real_inner_comm]
-        exact ho
+      · rw [real_inner_comm]; exact ho
   have hbs : Submodule.span ℝ (Set.range b) = s.direction :=
     by
     refine' eq_of_le_of_finrank_eq _ _
@@ -658,10 +655,8 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
       (norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2)
           (Submodule.smul_mem _ _ hv)))
-    _ = ‖(p1 -ᵥ p2 : V)‖ * ‖(p1 -ᵥ p2 : V)‖ + |r1 - r2| * |r1 - r2| * ‖v‖ * ‖v‖ :=
-      by
-      rw [norm_smul, Real.norm_eq_abs]
-      ring
+    _ = ‖(p1 -ᵥ p2 : V)‖ * ‖(p1 -ᵥ p2 : V)‖ + |r1 - r2| * |r1 - r2| * ‖v‖ * ‖v‖ := by
+      rw [norm_smul, Real.norm_eq_abs]; ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (‖v‖ * ‖v‖) := by
       rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assoc]
     
@@ -738,10 +733,7 @@ Case conversion may be inaccurate. Consider using '#align euclidean_geometry.ref
 /-- Reflection is its own inverse. -/
 @[simp]
 theorem reflection_symm (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
-    (reflection s).symm = reflection s := by
-  ext
-  rw [← (reflection s).Injective.eq_iff]
-  simp
+    (reflection s).symm = reflection s := by ext; rw [← (reflection s).Injective.eq_iff]; simp
 #align euclidean_geometry.reflection_symm EuclideanGeometry.reflection_symm
 
 /- warning: euclidean_geometry.reflection_involutive -> EuclideanGeometry.reflection_involutive is a dubious translation:

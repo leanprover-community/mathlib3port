@@ -160,10 +160,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : MulZeroOneClass.{u2} R] {a : α} {e : Sym2.{u1} α} [_inst_2 : Nontrivial.{u2} R], Iff (Eq.{succ u2} R (SimpleGraph.incMatrix.{u2, u1} R α G (MulZeroOneClass.toZero.{u2} R _inst_1) (MulOneClass.toOne.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R _inst_1)) a e) (OfNat.ofNat.{u2} R 1 (One.toOfNat1.{u2} R (MulOneClass.toOne.{u2} R (MulZeroOneClass.toMulOneClass.{u2} R _inst_1))))) (Membership.mem.{u1, u1} (Sym2.{u1} α) (Set.{u1} (Sym2.{u1} α)) (Set.instMembershipSet.{u1} (Sym2.{u1} α)) e (SimpleGraph.incidenceSet.{u1} α G a))
 Case conversion may be inaccurate. Consider using '#align simple_graph.inc_matrix_apply_eq_one_iff SimpleGraph.incMatrix_apply_eq_one_iffₓ'. -/
-theorem incMatrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidenceSet a :=
-  by
-  convert one_ne_zero.ite_eq_left_iff
-  infer_instance
+theorem incMatrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidenceSet a := by
+  convert one_ne_zero.ite_eq_left_iff; infer_instance
 #align simple_graph.inc_matrix_apply_eq_one_iff SimpleGraph.incMatrix_apply_eq_one_iff
 
 end MulZeroOneClass

@@ -175,10 +175,7 @@ theorem nonempty_hom_of_forall_finite_subgraph_hom [Finite W]
   refine' ⟨⟨fun v => _, _⟩⟩
   ·-- Map each vertex using the homomorphism provided for its singleton subgraph.
     exact
-      (u (Opposite.op (singleton_finsubgraph v))).toFun
-        ⟨v, by
-          unfold singleton_finsubgraph
-          simp⟩
+      (u (Opposite.op (singleton_finsubgraph v))).toFun ⟨v, by unfold singleton_finsubgraph; simp⟩
   · -- Prove that the above mapping preserves adjacency.
     intro v v' e
     /- The homomorphism for each edge's singleton subgraph agrees with those for its source and

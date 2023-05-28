@@ -49,14 +49,8 @@ instance algebra : Algebra R (A × B) :=
     RingHom.prod (algebraMap R A)
       (algebraMap R
         B) with
-    commutes' := by
-      rintro r ⟨a, b⟩
-      dsimp
-      rw [commutes r a, commutes r b]
-    smul_def' := by
-      rintro r ⟨a, b⟩
-      dsimp
-      rw [Algebra.smul_def r a, Algebra.smul_def r b] }
+    commutes' := by rintro r ⟨a, b⟩; dsimp; rw [commutes r a, commutes r b]
+    smul_def' := by rintro r ⟨a, b⟩; dsimp; rw [Algebra.smul_def r a, Algebra.smul_def r b] }
 #align prod.algebra Prod.algebra
 
 variable {R A B}

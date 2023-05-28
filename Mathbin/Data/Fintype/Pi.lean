@@ -56,9 +56,7 @@ theorem mem_piFinset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFins
 @[simp]
 theorem coe_piFinset (t : ∀ a, Finset (δ a)) :
     (piFinset t : Set (∀ a, δ a)) = Set.pi Set.univ fun a => t a :=
-  Set.ext fun x => by
-    rw [Set.mem_univ_pi]
-    exact Fintype.mem_piFinset
+  Set.ext fun x => by rw [Set.mem_univ_pi]; exact Fintype.mem_piFinset
 #align fintype.coe_pi_finset Fintype.coe_piFinset
 -/
 
@@ -157,9 +155,6 @@ Case conversion may be inaccurate. Consider using '#align finset.univ_pi_univ Fi
 @[simp]
 theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :
-    (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ :=
-  by
-  ext
-  simp
+    (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ := by ext; simp
 #align finset.univ_pi_univ Finset.univ_pi_univ
 

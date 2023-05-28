@@ -68,10 +68,7 @@ def homogeneousSubmodule [CommSemiring R] (n : ℕ) : Submodule R (MvPolynomial 
   zero_mem' d hd := False.elim (hd <| coeff_zero _)
   add_mem' a b ha hb c hc := by
     rw [coeff_add] at hc
-    obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 :=
-      by
-      contrapose! hc
-      simp only [hc, add_zero]
+    obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 := by contrapose! hc; simp only [hc, add_zero]
     · exact ha h
     · exact hb h
 #align mv_polynomial.homogeneous_submodule MvPolynomial.homogeneousSubmodule
@@ -118,8 +115,7 @@ theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
     contrapose! H
     by_cases h : coeff d φ = 0 <;>
       simp_all only [Ne.def, not_false_iff, MulZeroClass.zero_mul, MulZeroClass.mul_zero]
-  specialize hφ aux.1
-  specialize hψ aux.2
+  specialize hφ aux.1; specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde
   classical
     have hd' : d.support ⊆ d.support ∪ e.support := Finset.subset_union_left _ _
@@ -148,8 +144,7 @@ theorem isHomogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑ 
   classical
     rw [coeff_monomial] at hc
     split_ifs  at hc with h
-    · subst c
-      exact hn
+    · subst c; exact hn
     · contradiction
 #align mv_polynomial.is_homogeneous_monomial MvPolynomial.isHomogeneous_monomial
 
@@ -290,8 +285,7 @@ theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : 
   classical
     revert h
     apply Finset.induction_on s
-    · intro
-      simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
+    · intro ; simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
     · intro i s his IH h
       simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
       apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
@@ -438,8 +432,7 @@ theorem homogeneousComponent_eq_zero (h : φ.totalDegree < n) : homogeneousCompo
   by
   apply homogeneous_component_eq_zero'
   rw [total_degree, Finset.sup_lt_iff] at h
-  · intro d hd
-    exact ne_of_lt (h d hd)
+  · intro d hd; exact ne_of_lt (h d hd)
   · exact lt_of_le_of_lt (Nat.zero_le _) h
 #align mv_polynomial.homogeneous_component_eq_zero MvPolynomial.homogeneousComponent_eq_zero
 

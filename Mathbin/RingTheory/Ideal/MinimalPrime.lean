@@ -73,16 +73,12 @@ theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.mi
     simp_rw [← @eq_comm _ p] at h₃
     exact ⟨p, ⟨h₁, fun a b c => (h₃ a b c).le⟩, h₂⟩
   apply zorn_nonempty_partialOrder₀
-  swap
-  · refine' ⟨show J.is_prime by infer_instance, e⟩
+  swap; · refine' ⟨show J.is_prime by infer_instance, e⟩
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
   refine'
     ⟨OrderDual.toDual (Inf c),
       ⟨Ideal.sInf_isPrime_of_isChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
-  · rw [OrderDual.ofDual_toDual]
-    convert le_sInf _
-    intro x hx
-    exact (hc hx).2
+  · rw [OrderDual.ofDual_toDual]; convert le_sInf _; intro x hx; exact (hc hx).2
   · rintro z hz
     rw [OrderDual.le_toDual]
     exact sInf_le hz
@@ -139,8 +135,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
     convert(IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
             (Localization <| p.prime_compl.map f) hf).Ne
         one_ne_zero
-    · rw [map_one]
-    · rw [map_zero]
+    · rw [map_one]; · rw [map_zero]
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (Localization (Submonoid.map f p.prime_compl))
   skip
   refine' ⟨M.comap (algebraMap S <| Localization (Submonoid.map f p.prime_compl)), inferInstance, _⟩
@@ -170,14 +165,8 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
   by
   haveI := H.1.1
   let f' := I.Quotient.mk.comp f
-  have e : (I.Quotient.mk.comp f).ker = I.comap f :=
-    by
-    ext1
-    exact Submodule.Quotient.mk_eq_zero _
-  have : (I.Quotient.mk.comp f).ker.Quotient.mk.ker ≤ p :=
-    by
-    rw [Ideal.mk_ker, e]
-    exact H.1.2
+  have e : (I.Quotient.mk.comp f).ker = I.comap f := by ext1; exact Submodule.Quotient.mk_eq_zero _
+  have : (I.Quotient.mk.comp f).ker.Quotient.mk.ker ≤ p := by rw [Ideal.mk_ker, e]; exact H.1.2
   obtain ⟨p', hp₁, hp₂⟩ :=
     Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective
       (I.Quotient.mk.comp f).ker_lift_injective (p.map (I.Quotient.mk.comp f).ker.Quotient.mk) _
@@ -189,8 +178,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
         Ideal.Quotient.mk_surjective,
       eq_comm, sup_eq_left]
   refine' ⟨⟨_, bot_le⟩, _⟩
-  · apply Ideal.map_isPrime_of_surjective _ this
-    exact Ideal.Quotient.mk_surjective
+  · apply Ideal.map_isPrime_of_surjective _ this; exact Ideal.Quotient.mk_surjective
   · rintro q ⟨hq, -⟩ hq'
     rw [←
       Ideal.map_comap_of_surjective (I.Quotient.mk.comp f).ker.Quotient.mk
@@ -199,8 +187,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     skip
     apply H.2
     · refine' ⟨inferInstance, (ideal.mk_ker.trans e).symm.trans_le (Ideal.comap_mono bot_le)⟩
-    · refine' (Ideal.comap_mono hq').trans _
-      rw [Ideal.comap_map_of_surjective]
+    · refine' (Ideal.comap_mono hq').trans _; rw [Ideal.comap_map_of_surjective]
       exacts[sup_le rfl.le this, Ideal.Quotient.mk_surjective]
 #align ideal.exists_comap_eq_of_mem_minimal_primes Ideal.exists_comap_eq_of_mem_minimalPrimes
 
@@ -254,11 +241,8 @@ theorem Ideal.comap_minimalPrimes_eq_of_surjective {f : R →+* S} (hf : Functio
   by
   ext J
   constructor
-  · intro H
-    obtain ⟨p, h, rfl⟩ := Ideal.exists_minimalPrimes_comap_eq f J H
-    exact ⟨p, h, rfl⟩
-  · rintro ⟨J, hJ, rfl⟩
-    exact Ideal.mimimal_primes_comap_of_surjective hf hJ
+  · intro H; obtain ⟨p, h, rfl⟩ := Ideal.exists_minimalPrimes_comap_eq f J H; exact ⟨p, h, rfl⟩
+  · rintro ⟨J, hJ, rfl⟩; exact Ideal.mimimal_primes_comap_of_surjective hf hJ
 #align ideal.comap_minimal_primes_eq_of_surjective Ideal.comap_minimalPrimes_eq_of_surjective
 
 /- warning: ideal.minimal_primes_eq_comap -> Ideal.minimalPrimes_eq_comap is a dubious translation:
@@ -293,8 +277,7 @@ theorem Ideal.minimalPrimes_eq_subsingleton_self [I.IsPrime] : I.minimalPrimes =
   ext J
   constructor
   · exact fun H => (H.2 ⟨inferInstance, rfl.le⟩ H.1.2).antisymm H.1.2
-  · rintro (rfl : J = I)
-    refine' ⟨⟨inferInstance, rfl.le⟩, fun _ h _ => h.2⟩
+  · rintro (rfl : J = I); refine' ⟨⟨inferInstance, rfl.le⟩, fun _ h _ => h.2⟩
 #align ideal.minimal_primes_eq_subsingleton_self Ideal.minimalPrimes_eq_subsingleton_self
 -/
 

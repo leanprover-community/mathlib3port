@@ -55,10 +55,8 @@ theorem continuous_algebraMap_iff_smul :
     Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 :=
   by
   refine' ⟨fun h => _, fun h => _⟩
-  · simp only [Algebra.smul_def]
-    exact (h.comp continuous_fst).mul continuous_snd
-  · rw [algebra_map_eq_smul_one']
-    exact h.comp (continuous_id.prod_mk continuous_const)
+  · simp only [Algebra.smul_def]; exact (h.comp continuous_fst).mul continuous_snd
+  · rw [algebra_map_eq_smul_one']; exact h.comp (continuous_id.prod_mk continuous_const)
 #align continuous_algebra_map_iff_smul continuous_algebraMap_iff_smul
 
 /- warning: continuous_algebra_map -> continuous_algebraMap is a dubious translation:
@@ -273,9 +271,7 @@ variable {R}
 instance [T2Space A] {x : A} : CommRing (Algebra.elementalAlgebra R x) :=
   Subalgebra.commRingTopologicalClosure _
     letI : CommRing (Algebra.adjoin R ({x} : Set A)) :=
-      Algebra.adjoinCommRingOfComm R fun y hy z hz =>
-        by
-        rw [mem_singleton_iff] at hy hz
+      Algebra.adjoinCommRingOfComm R fun y hy z hz => by rw [mem_singleton_iff] at hy hz;
         rw [hy, hz]
     fun _ _ => mul_comm _ _
 

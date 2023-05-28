@@ -219,14 +219,8 @@ theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ �
     (hgs : ∀ t ∈ Ico a b, g t ∈ s t) (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
   by
-  have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 :=
-    by
-    intros
-    rw [dist_self]
-  have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 :=
-    by
-    intros
-    rw [dist_self]
+  have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 := by intros ; rw [dist_self]
+  have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 := by intros ; rw [dist_self]
   intro t ht
   have :=
     dist_le_of_approx_trajectories_ODE_of_mem_set hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht

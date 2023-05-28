@@ -78,10 +78,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1077 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1079 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1077 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1079) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1092 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1094 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1092 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1094)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1114 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1116 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1114 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1116)) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1129 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1131 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1129 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1131)] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s) -> (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))) s)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) s)))
 Case conversion may be inaccurate. Consider using '#align cSup_inv csSup_invₓ'. -/
 @[to_additive]
-theorem csSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : sSup s⁻¹ = (sInf s)⁻¹ :=
-  by
-  rw [← image_inv]
-  exact ((OrderIso.inv α).map_csInf' hs₀ hs₁).symm
+theorem csSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : sSup s⁻¹ = (sInf s)⁻¹ := by
+  rw [← image_inv]; exact ((OrderIso.inv α).map_csInf' hs₀ hs₁).symm
 #align cSup_inv csSup_inv
 #align cSup_neg csSup_neg
 
@@ -92,10 +90,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1222 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1224 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1222 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1224) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1237 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1239 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1237 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1239)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1259 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1261 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1259 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1261)) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1274 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.1276 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.1274 x._@.Mathlib.Algebra.Order.Pointwise._hyg.1276)] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s) -> (Eq.{succ u1} α (InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))) s)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) s)))
 Case conversion may be inaccurate. Consider using '#align cInf_inv csInf_invₓ'. -/
 @[to_additive]
-theorem csInf_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : sInf s⁻¹ = (sSup s)⁻¹ :=
-  by
-  rw [← image_inv]
-  exact ((OrderIso.inv α).map_csSup' hs₀ hs₁).symm
+theorem csInf_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : sInf s⁻¹ = (sSup s)⁻¹ := by
+  rw [← image_inv]; exact ((OrderIso.inv α).map_csSup' hs₀ hs₁).symm
 #align cInf_inv csInf_inv
 #align cInf_neg csInf_neg
 
@@ -203,9 +199,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.172 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.174 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.172 x._@.Mathlib.Algebra.Order.Pointwise._hyg.174) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.187 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.189 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.187 x._@.Mathlib.Algebra.Order.Pointwise._hyg.189)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.209 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.211 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.209 x._@.Mathlib.Algebra.Order.Pointwise._hyg.211)) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.224 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.226 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.224 x._@.Mathlib.Algebra.Order.Pointwise._hyg.226)] (s : Set.{u1} α), Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))) s)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align Sup_inv sSup_invₓ'. -/
 @[to_additive]
-theorem sSup_inv (s : Set α) : sSup s⁻¹ = (sInf s)⁻¹ :=
-  by
-  rw [← image_inv, sSup_image]
+theorem sSup_inv (s : Set α) : sSup s⁻¹ = (sInf s)⁻¹ := by rw [← image_inv, sSup_image];
   exact ((OrderIso.inv α).map_sInf _).symm
 #align Sup_inv sSup_inv
 #align Sup_neg sSup_neg
@@ -217,9 +211,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.316 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.318 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.316 x._@.Mathlib.Algebra.Order.Pointwise._hyg.318) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.331 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.333 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.331 x._@.Mathlib.Algebra.Order.Pointwise._hyg.333)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.353 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.355 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.353 x._@.Mathlib.Algebra.Order.Pointwise._hyg.355)) (fun (x._@.Mathlib.Algebra.Order.Pointwise._hyg.368 : α) (x._@.Mathlib.Algebra.Order.Pointwise._hyg.370 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.Pointwise._hyg.368 x._@.Mathlib.Algebra.Order.Pointwise._hyg.370)] (s : Set.{u1} α), Eq.{succ u1} α (InfSet.sInf.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Inv.inv.{u1} (Set.{u1} α) (Set.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2))))) s)) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align Inf_inv sInf_invₓ'. -/
 @[to_additive]
-theorem sInf_inv (s : Set α) : sInf s⁻¹ = (sSup s)⁻¹ :=
-  by
-  rw [← image_inv, sInf_image]
+theorem sInf_inv (s : Set α) : sInf s⁻¹ = (sSup s)⁻¹ := by rw [← image_inv, sInf_image];
   exact ((OrderIso.inv α).map_sSup _).symm
 #align Inf_inv sInf_inv
 #align Inf_neg sInf_neg
@@ -295,8 +287,7 @@ theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) :=
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioo]
   constructor
-  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-    constructor
+  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩; constructor
     exact (mul_lt_mul_left hr).mpr a_h_left_left
     exact (mul_lt_mul_left hr).mpr a_h_left_right
   · rintro ⟨a_left, a_right⟩
@@ -316,8 +307,7 @@ theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) :=
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Icc]
   constructor
-  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-    constructor
+  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩; constructor
     exact (mul_le_mul_left hr).mpr a_h_left_left
     exact (mul_le_mul_left hr).mpr a_h_left_right
   · rintro ⟨a_left, a_right⟩
@@ -337,8 +327,7 @@ theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) :=
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ico]
   constructor
-  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-    constructor
+  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩; constructor
     exact (mul_le_mul_left hr).mpr a_h_left_left
     exact (mul_lt_mul_left hr).mpr a_h_left_right
   · rintro ⟨a_left, a_right⟩
@@ -358,8 +347,7 @@ theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) :=
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioc]
   constructor
-  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩
-    constructor
+  · rintro ⟨a, ⟨a_h_left_left, a_h_left_right⟩, rfl⟩; constructor
     exact (mul_lt_mul_left hr).mpr a_h_left_left
     exact (mul_le_mul_left hr).mpr a_h_left_right
   · rintro ⟨a_left, a_right⟩

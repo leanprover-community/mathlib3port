@@ -77,19 +77,10 @@ open MonoidalCategory
 def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : SymmetricCategory C
     where
   braiding X Y := Limits.prod.braiding X Y
-  braiding_naturality' X X' Y Y' f g := by
-    dsimp [tensor_hom]
-    simp
-  hexagon_forward' X Y Z := by
-    dsimp [monoidal_of_has_finite_products]
-    simp
-  hexagon_reverse' X Y Z := by
-    dsimp [monoidal_of_has_finite_products]
-    simp
-  symmetry' X Y := by
-    dsimp
-    simp
-    rfl
+  braiding_naturality' X X' Y Y' f g := by dsimp [tensor_hom]; simp
+  hexagon_forward' X Y Z := by dsimp [monoidal_of_has_finite_products]; simp
+  hexagon_reverse' X Y Z := by dsimp [monoidal_of_has_finite_products]; simp
+  symmetry' X Y := by dsimp; simp; rfl
 #align category_theory.symmetric_of_has_finite_products CategoryTheory.symmetricOfHasFiniteProducts
 
 end
@@ -176,19 +167,10 @@ open MonoidalCategory
 def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : SymmetricCategory C
     where
   braiding := Limits.coprod.braiding
-  braiding_naturality' X X' Y Y' f g := by
-    dsimp [tensor_hom]
-    simp
-  hexagon_forward' X Y Z := by
-    dsimp [monoidal_of_has_finite_coproducts]
-    simp
-  hexagon_reverse' X Y Z := by
-    dsimp [monoidal_of_has_finite_coproducts]
-    simp
-  symmetry' X Y := by
-    dsimp
-    simp
-    rfl
+  braiding_naturality' X X' Y Y' f g := by dsimp [tensor_hom]; simp
+  hexagon_forward' X Y Z := by dsimp [monoidal_of_has_finite_coproducts]; simp
+  hexagon_reverse' X Y Z := by dsimp [monoidal_of_has_finite_coproducts]; simp
+  symmetry' X Y := by dsimp; simp; rfl
 #align category_theory.symmetric_of_has_finite_coproducts CategoryTheory.symmetricOfHasFiniteCoproducts
 
 end

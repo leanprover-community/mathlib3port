@@ -170,12 +170,8 @@ theorem uniformContinuous_mul : UniformContinuous fun p : α × α => p.1 * p.2 
 @[to_additive UniformContinuous.const_nsmul]
 theorem UniformContinuous.pow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
     ∀ n : ℕ, UniformContinuous fun x => f x ^ n
-  | 0 => by
-    simp_rw [pow_zero]
-    exact uniformContinuous_const
-  | n + 1 => by
-    simp_rw [pow_succ]
-    exact hf.mul (UniformContinuous.pow_const n)
+  | 0 => by simp_rw [pow_zero]; exact uniformContinuous_const
+  | n + 1 => by simp_rw [pow_succ]; exact hf.mul (UniformContinuous.pow_const n)
 #align uniform_continuous.pow_const UniformContinuous.pow_const
 #align uniform_continuous.const_nsmul UniformContinuous.const_nsmul
 -/
@@ -192,12 +188,8 @@ theorem uniformContinuous_pow_const (n : ℕ) : UniformContinuous fun x : α => 
 @[to_additive UniformContinuous.const_zsmul]
 theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : UniformContinuous f) :
     ∀ n : ℤ, UniformContinuous fun x => f x ^ n
-  | (n : ℕ) => by
-    simp_rw [zpow_ofNat]
-    exact hf.pow_const _
-  | -[n+1] => by
-    simp_rw [zpow_negSucc]
-    exact (hf.pow_const _).inv
+  | (n : ℕ) => by simp_rw [zpow_ofNat]; exact hf.pow_const _
+  | -[n+1] => by simp_rw [zpow_negSucc]; exact (hf.pow_const _).inv
 #align uniform_continuous.zpow_const UniformContinuous.zpow_const
 #align uniform_continuous.const_zsmul UniformContinuous.const_zsmul
 -/
@@ -312,9 +304,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align uniform_group_infi uniformGroup_iInfₓ'. -/
 @[to_additive]
 theorem uniformGroup_iInf {ι : Sort _} {us' : ι → UniformSpace β}
-    (h' : ∀ i, @UniformGroup β (us' i) _) : @UniformGroup β (⨅ i, us' i) _ :=
-  by
-  rw [← sInf_range]
+    (h' : ∀ i, @UniformGroup β (us' i) _) : @UniformGroup β (⨅ i, us' i) _ := by rw [← sInf_range];
   exact uniformGroup_sInf (set.forall_range_iff.mpr h')
 #align uniform_group_infi uniformGroup_iInf
 #align uniform_add_group_infi uniformAddGroup_iInf
@@ -322,11 +312,8 @@ theorem uniformGroup_iInf {ι : Sort _} {us' : ι → UniformSpace β}
 #print uniformGroup_inf /-
 @[to_additive]
 theorem uniformGroup_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β u₁ _)
-    (h₂ : @UniformGroup β u₂ _) : @UniformGroup β (u₁ ⊓ u₂) _ :=
-  by
-  rw [inf_eq_iInf]
-  refine' uniformGroup_iInf fun b => _
-  cases b <;> assumption
+    (h₂ : @UniformGroup β u₂ _) : @UniformGroup β (u₁ ⊓ u₂) _ := by rw [inf_eq_iInf];
+  refine' uniformGroup_iInf fun b => _; cases b <;> assumption
 #align uniform_group_inf uniformGroup_inf
 #align uniform_add_group_inf uniformAddGroup_inf
 -/
@@ -376,8 +363,7 @@ theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 
   · intro s hs
     rcases mem_uniformity_of_uniformContinuous_invariant uniformContinuous_mul hs with ⟨t, ht, hts⟩
     refine' ⟨_, ht, _⟩
-    rintro ⟨a, b⟩
-    simpa [subset_def] using hts 1 (b / a) a
+    rintro ⟨a, b⟩; simpa [subset_def] using hts 1 (b / a) a
 #align uniformity_eq_comap_nhds_one uniformity_eq_comap_nhds_one
 #align uniformity_eq_comap_nhds_zero uniformity_eq_comap_nhds_zero
 
@@ -389,10 +375,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_nhds_one_swapped uniformity_eq_comap_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_nhds_one_swapped :
-    𝓤 α = comap (fun x : α × α => x.1 / x.2) (𝓝 (1 : α)) :=
-  by
-  rw [← comap_swap_uniformity, uniformity_eq_comap_nhds_one, comap_comap, (· ∘ ·)]
-  rfl
+    𝓤 α = comap (fun x : α × α => x.1 / x.2) (𝓝 (1 : α)) := by
+  rw [← comap_swap_uniformity, uniformity_eq_comap_nhds_one, comap_comap, (· ∘ ·)]; rfl
 #align uniformity_eq_comap_nhds_one_swapped uniformity_eq_comap_nhds_one_swapped
 #align uniformity_eq_comap_nhds_zero_swapped uniformity_eq_comap_nhds_zero_swapped
 
@@ -435,9 +419,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align uniform_group.uniformity_countably_generated UniformGroup.uniformity_countably_generatedₓ'. -/
 @[to_additive]
 theorem UniformGroup.uniformity_countably_generated [(𝓝 (1 : α)).IsCountablyGenerated] :
-    (𝓤 α).IsCountablyGenerated :=
-  by
-  rw [uniformity_eq_comap_nhds_one]
+    (𝓤 α).IsCountablyGenerated := by rw [uniformity_eq_comap_nhds_one];
   exact Filter.comap.isCountablyGenerated _ _
 #align uniform_group.uniformity_countably_generated UniformGroup.uniformity_countably_generated
 #align uniform_add_group.uniformity_countably_generated UniformAddGroup.uniformity_countably_generated
@@ -468,10 +450,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align uniformity_eq_comap_inv_mul_nhds_one_swapped uniformity_eq_comap_inv_mul_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem uniformity_eq_comap_inv_mul_nhds_one_swapped :
-    𝓤 α = comap (fun x : α × α => x.2⁻¹ * x.1) (𝓝 (1 : α)) :=
-  by
-  rw [← comap_swap_uniformity, uniformity_eq_comap_inv_mul_nhds_one, comap_comap, (· ∘ ·)]
-  rfl
+    𝓤 α = comap (fun x : α × α => x.2⁻¹ * x.1) (𝓝 (1 : α)) := by
+  rw [← comap_swap_uniformity, uniformity_eq_comap_inv_mul_nhds_one, comap_comap, (· ∘ ·)]; rfl
 #align uniformity_eq_comap_inv_mul_nhds_one_swapped uniformity_eq_comap_inv_mul_nhds_one_swapped
 #align uniformity_eq_comap_neg_add_nhds_zero_swapped uniformity_eq_comap_neg_add_nhds_zero_swapped
 
@@ -485,10 +465,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one Filter.HasBasis.uniformity_of_nhds_oneₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2 / x.1 ∈ U i } :=
-  by
-  rw [uniformity_eq_comap_nhds_one]
-  exact h.comap _
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2 / x.1 ∈ U i } := by
+  rw [uniformity_eq_comap_nhds_one]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one Filter.HasBasis.uniformity_of_nhds_one
 #align filter.has_basis.uniformity_of_nhds_zero Filter.HasBasis.uniformity_of_nhds_zero
 
@@ -501,9 +479,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.unifo
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1⁻¹ * x.2 ∈ U i } :=
-  by
-  rw [uniformity_eq_comap_inv_mul_nhds_one]
-  exact h.comap _
+  by rw [uniformity_eq_comap_inv_mul_nhds_one]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mul
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add Filter.HasBasis.uniformity_of_nhds_zero_neg_add
 
@@ -515,10 +491,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swappedₓ'. -/
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1 / x.2 ∈ U i } :=
-  by
-  rw [uniformity_eq_comap_nhds_one_swapped]
-  exact h.comap _
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1 / x.2 ∈ U i } := by
+  rw [uniformity_eq_comap_nhds_one_swapped]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_swapped Filter.HasBasis.uniformity_of_nhds_zero_swapped
 
@@ -531,9 +505,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.unifo
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → Prop} {U : ι → Set α}
     (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2⁻¹ * x.1 ∈ U i } :=
-  by
-  rw [uniformity_eq_comap_inv_mul_nhds_one_swapped]
-  exact h.comap _
+  by rw [uniformity_eq_comap_inv_mul_nhds_one_swapped]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
 
@@ -867,10 +839,8 @@ def TopologicalGroup.toUniformSpace : UniformSpace G
     refine' exists₂_congr fun t ht => _
     show (fun y : G => y / a) ⁻¹' t ⊆ S ↔ (fun p : G × G => p.snd / p.fst) ⁻¹' t ⊆ S' a
     constructor
-    · rintro h ⟨x, y⟩ hx rfl
-      exact h hx
-    · rintro h x hx
-      exact @h (a, x) hx rfl
+    · rintro h ⟨x, y⟩ hx rfl; exact h hx
+    · rintro h x hx; exact @h (a, x) hx rfl
 #align topological_group.to_uniform_space TopologicalGroup.toUniformSpace
 #align topological_add_group.to_uniform_space TopologicalAddGroup.toUniformSpace
 -/
@@ -1232,9 +1202,7 @@ private theorem [anonymous] (x₀ : α) (y₀ : γ) :
   rcases this with ⟨U₁, U₁_nhd, V₁, V₁_nhd, H⟩
   obtain ⟨x₁, x₁_in⟩ : U₁.nonempty := (de.comap_nhds_ne_bot _).nonempty_of_mem U₁_nhd
   obtain ⟨y₁, y₁_in⟩ : V₁.nonempty := (df.comap_nhds_ne_bot _).nonempty_of_mem V₁_nhd
-  have cont_flip : Continuous fun p : δ × β => φ.flip p.1 p.2 :=
-    by
-    show Continuous (Φ ∘ Prod.swap)
+  have cont_flip : Continuous fun p : δ × β => φ.flip p.1 p.2 := by show Continuous (Φ ∘ Prod.swap);
     exact hφ.comp continuous_swap
   rcases extend_Z_bilin_aux de df hφ W_nhd x₀ y₁ with ⟨U₂, U₂_nhd, HU⟩
   rcases extend_Z_bilin_aux df de cont_flip W_nhd y₀ x₁ with ⟨V₂, V₂_nhd, HV⟩
@@ -1242,9 +1210,7 @@ private theorem [anonymous] (x₀ : α) (y₀ : γ) :
   rintro x ⟨xU₁, xU₂⟩ x' ⟨x'U₁, x'U₂⟩ y ⟨yV₁, yV₂⟩ y' ⟨y'V₁, y'V₂⟩
   have key_formula :
     φ x' y' - φ x y = φ (x' - x) y₁ + φ (x' - x) (y' - y₁) + φ x₁ (y' - y) + φ (x - x₁) (y' - y) :=
-    by
-    simp
-    abel
+    by simp; abel
   rw [key_formula]
   have h₁ := HU x xU₂ x' x'U₂
   have h₂ := H x xU₁ x' x'U₁ y₁ y₁_in y' y'V₁
@@ -1423,10 +1389,8 @@ quotient obtained via other means.  -/
       "The quotient `G ⧸ N` of a complete first countable uniform additive group\n`G` by a normal additive subgroup is itself complete. Consequently, quotients of Banach spaces by\nsubspaces are complete. In constrast to `quotient_add_group.complete_space'`, in this version\n`G` is already equipped with a uniform structure.\n[N. Bourbaki, *General Topology*, IX.3.1 Proposition 4][bourbaki1966b]\n\nEven though `G` is equipped with a uniform structure, the quotient `G ⧸ N` does not inherit a\nuniform structure, so it is still provided manually via `topological_add_group.to_uniform_space`.\nIn the most common use case ─ quotients of normed additive commutative groups by subgroups ─\nsignificant care was taken so that the uniform structure inherent in that setting coincides\n(definitionally) with the uniform structure provided here."]
 instance QuotientGroup.completeSpace (G : Type u) [Group G] [us : UniformSpace G] [UniformGroup G]
     [FirstCountableTopology G] (N : Subgroup G) [N.normal] [hG : CompleteSpace G] :
-    @CompleteSpace (G ⧸ N) (TopologicalGroup.toUniformSpace (G ⧸ N)) :=
-  by
-  rw [← @UniformGroup.toUniformSpace_eq _ us _ _] at hG
-  infer_instance
+    @CompleteSpace (G ⧸ N) (TopologicalGroup.toUniformSpace (G ⧸ N)) := by
+  rw [← @UniformGroup.toUniformSpace_eq _ us _ _] at hG; infer_instance
 #align quotient_group.complete_space QuotientGroup.completeSpace
 #align quotient_add_group.complete_space QuotientAddGroup.completeSpace
 -/

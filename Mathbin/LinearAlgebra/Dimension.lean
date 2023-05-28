@@ -463,9 +463,7 @@ def basisFintypeOfFiniteSpans (w : Set M) [Fintype w] (s : span R w = ⊤) {ι :
   -- Now there is some `x : ι` not in `S`, since `ι` is infinite.
   obtain ⟨x, nm⟩ := Infinite.exists_not_mem_finset S
   -- However it must be in the span of the finite subset,
-  have k' : b x ∈ span R bS := by
-    rw [k]
-    exact mem_top
+  have k' : b x ∈ span R bS := by rw [k]; exact mem_top
   -- giving the desire contradiction.
   refine' b.linear_independent.not_mem_span_image _ k'
   exact nm
@@ -501,20 +499,15 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
     simpa [w] using congr_arg (fun m => (b.repr m) b') p
   have r'' : range v ≠ range v' := by
     intro e
-    have p : b b' ∈ range v' := by
-      use none
-      rfl
+    have p : b b' ∈ range v' := by use none; rfl
     rw [← e] at p
     exact r' p
   have inj' : injective v' := by
     rintro (_ | k) (_ | k) z
     · rfl
-    · exfalso
-      exact r' ⟨k, z.symm⟩
-    · exfalso
-      exact r' ⟨k, z⟩
-    · congr
-      exact i.injective z
+    · exfalso; exact r' ⟨k, z.symm⟩
+    · exfalso; exact r' ⟨k, z⟩
+    · congr ; exact i.injective z
   -- The key step in the proof is checking that this strictly larger family is linearly independent.
   have i' : LinearIndependent R (coe : range v' → M) :=
     by
@@ -661,9 +654,7 @@ theorem rank_zero_iff_forall_zero : Module.rank R M = 0 ↔ ∀ x : M, x = 0 :=
     obtain ⟨x, hx⟩ := h
     letI : Nontrivial M := nontrivial_of_ne _ _ hx
     exact rank_pos.ne'
-  · have : (⊤ : Submodule R M) = ⊥ := by
-      ext x
-      simp [h x]
+  · have : (⊤ : Submodule R M) = ⊥ := by ext x; simp [h x]
     rw [← rank_top, this, rank_bot]
 #align rank_zero_iff_forall_zero rank_zero_iff_forall_zero
 
@@ -1050,11 +1041,7 @@ theorem Basis.mk_eq_rank'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.ran
   · trans
     swap
     apply le_ciSup (Cardinal.bddAbove_range.{v, v} _)
-    exact
-      ⟨Set.range v, by
-        convert v.reindex_range.linear_independent
-        ext
-        simp⟩
+    exact ⟨Set.range v, by convert v.reindex_range.linear_independent; ext; simp⟩
     exact (Cardinal.mk_range_eq v v.injective).ge
   · apply ciSup_le'
     rintro ⟨s, li⟩
@@ -1179,9 +1166,7 @@ theorem rank_span {v : ι → M} (hv : LinearIndependent R v) :
 
 #print rank_span_set /-
 theorem rank_span_set {s : Set M} (hs : LinearIndependent R (fun x => x : s → M)) :
-    Module.rank R ↥(span R s) = (#s) :=
-  by
-  rw [← @set_of_mem_eq _ s, ← Subtype.range_coe_subtype]
+    Module.rank R ↥(span R s) = (#s) := by rw [← @set_of_mem_eq _ s, ← Subtype.range_coe_subtype];
   exact rank_span hs
 #align rank_span_set rank_span_set
 -/
@@ -1592,10 +1577,8 @@ theorem Submodule.rank_sup_add_rank_inf_eq (s t : Submodule K V) :
 <too large>
 Case conversion may be inaccurate. Consider using '#align submodule.rank_add_le_rank_add_rank Submodule.rank_add_le_rank_add_rankₓ'. -/
 theorem Submodule.rank_add_le_rank_add_rank (s t : Submodule K V) :
-    Module.rank K (s ⊔ t : Submodule K V) ≤ Module.rank K s + Module.rank K t :=
-  by
-  rw [← Submodule.rank_sup_add_rank_inf_eq]
-  exact self_le_add_right _ _
+    Module.rank K (s ⊔ t : Submodule K V) ≤ Module.rank K s + Module.rank K t := by
+  rw [← Submodule.rank_sup_add_rank_inf_eq]; exact self_le_add_right _ _
 #align submodule.rank_add_le_rank_add_rank Submodule.rank_add_le_rank_add_rank
 
 end
@@ -1684,9 +1667,7 @@ theorem rank_le_one_iff : Module.rank K V ≤ 1 ↔ ∃ v₀ : V, ∀ v, ∃ r :
       have hv : v ∈ (⊤ : Submodule K V) := mem_top
       rwa [← h', mem_span_singleton] at hv
   · rintro ⟨v₀, hv₀⟩
-    have h : (K ∙ v₀) = ⊤ := by
-      ext
-      simp [mem_span_singleton, hv₀]
+    have h : (K ∙ v₀) = ⊤ := by ext; simp [mem_span_singleton, hv₀]
     rw [← rank_top, ← h]
     refine' (rank_span_le _).trans_eq _
     simp
@@ -1918,9 +1899,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
   refine' ⟨fun h => _, _⟩
   · rcases le_rank_iff_exists_linearIndependent.1 h with ⟨s, rfl, si⟩
     refine' ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, _⟩
-    replace fg : ∀ x, f (g x) = x
-    · intro x
-      convert congr_arg Subtype.val (fg x)
+    replace fg : ∀ x, f (g x) = x; · intro x; convert congr_arg Subtype.val (fg x)
     replace si : LinearIndependent K fun x : s => f (g x)
     · simpa only [fg] using si.map' _ (ker_subtype _)
     exact si.image_of_comp s g f

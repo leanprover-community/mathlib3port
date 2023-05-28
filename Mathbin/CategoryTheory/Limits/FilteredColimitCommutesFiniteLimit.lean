@@ -276,7 +276,7 @@ theorem colimitLimitToLimitColimit_surjective :
       -- This representative is meant to be an element of a limit,
       -- so we need to construct a family of elements in `F.obj (j, k'')` for varying `j`,
       -- then show that are coherent with respect to morphisms in the `j` direction.
-      apply Limit.mk.{v, v}
+      apply Limit.mk.{v, v};
       swap
       ·-- We construct the elements as the images of the `y j`.
         exact fun j => F.map (⟨𝟙 j, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)⟩ : (j, k j) ⟶ (j, k'')) (y j)
@@ -327,10 +327,8 @@ Case conversion may be inaccurate. Consider using '#align category_theory.limits
 instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) :=
   by
-  have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom :=
-    by
-    dsimp only [colimit_limit_to_limit_colimit_cone]
-    infer_instance
+  have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom := by
+    dsimp only [colimit_limit_to_limit_colimit_cone]; infer_instance
   apply cones.cone_iso_of_hom_iso
 #align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimitLimitToLimitColimitCone_iso
 

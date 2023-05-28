@@ -101,10 +101,7 @@ instance : EquivLike (α ≃ β) α β where
   inv := invFun
   left_inv := left_inv
   right_inv := right_inv
-  coe_injective' e₁ e₂ h₁ h₂ := by
-    cases e₁
-    cases e₂
-    congr
+  coe_injective' e₁ e₂ h₁ h₂ := by cases e₁; cases e₂; congr
 
 instance : CoeFun (α ≃ β) fun _ => α → β :=
   ⟨toFun⟩
@@ -344,11 +341,7 @@ protected def unique [Unique β] (e : α ≃ β) : Unique α :=
 #print Equiv.cast /-
 /-- Equivalence between equal types. -/
 protected def cast {α β : Sort _} (h : α = β) : α ≃ β :=
-  ⟨cast h, cast h.symm, fun x => by
-    cases h
-    rfl, fun x => by
-    cases h
-    rfl⟩
+  ⟨cast h, cast h.symm, fun x => by cases h; rfl, fun x => by cases h; rfl⟩
 #align equiv.cast Equiv.cast
 -/
 
@@ -480,17 +473,13 @@ theorem cast_refl {α} (h : α = α := rfl) : Equiv.cast h = Equiv.refl α :=
 @[simp]
 theorem cast_trans {α β γ} (h : α = β) (h2 : β = γ) :
     (Equiv.cast h).trans (Equiv.cast h2) = Equiv.cast (h.trans h2) :=
-  ext fun x => by
-    substs h h2
-    rfl
+  ext fun x => by substs h h2; rfl
 #align equiv.cast_trans Equiv.cast_trans
 -/
 
 #print Equiv.cast_eq_iff_heq /-
-theorem cast_eq_iff_heq {α β} (h : α = β) {a : α} {b : β} : Equiv.cast h a = b ↔ HEq a b :=
-  by
-  subst h
-  simp
+theorem cast_eq_iff_heq {α β} (h : α = β) {a : α} {b : β} : Equiv.cast h a = b ↔ HEq a b := by
+  subst h; simp
 #align equiv.cast_eq_iff_heq Equiv.cast_eq_iff_heq
 -/
 
@@ -521,10 +510,7 @@ but is expected to have type
   forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.symm.{u2, u1} β α (Equiv.symm.{u1, u2} α β e)) e
 Case conversion may be inaccurate. Consider using '#align equiv.symm_symm Equiv.symm_symmₓ'. -/
 @[simp]
-theorem symm_symm (e : α ≃ β) : e.symm.symm = e :=
-  by
-  cases e
-  rfl
+theorem symm_symm (e : α ≃ β) : e.symm.symm = e := by cases e; rfl
 #align equiv.symm_symm Equiv.symm_symm
 
 /- warning: equiv.trans_refl -> Equiv.trans_refl is a dubious translation:
@@ -534,10 +520,7 @@ but is expected to have type
   forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u2, u2} α β β e (Equiv.refl.{u2} β)) e
 Case conversion may be inaccurate. Consider using '#align equiv.trans_refl Equiv.trans_reflₓ'. -/
 @[simp]
-theorem trans_refl (e : α ≃ β) : e.trans (Equiv.refl β) = e :=
-  by
-  cases e
-  rfl
+theorem trans_refl (e : α ≃ β) : e.trans (Equiv.refl β) = e := by cases e; rfl
 #align equiv.trans_refl Equiv.trans_refl
 
 #print Equiv.refl_symm /-
@@ -554,10 +537,7 @@ but is expected to have type
   forall {α : Sort.{u1}} {β : Sort.{u2}} (e : Equiv.{u1, u2} α β), Eq.{max (max 1 u1) u2} (Equiv.{u1, u2} α β) (Equiv.trans.{u1, u1, u2} α α β (Equiv.refl.{u1} α) e) e
 Case conversion may be inaccurate. Consider using '#align equiv.refl_trans Equiv.refl_transₓ'. -/
 @[simp]
-theorem refl_trans (e : α ≃ β) : (Equiv.refl α).trans e = e :=
-  by
-  cases e
-  rfl
+theorem refl_trans (e : α ≃ β) : (Equiv.refl α).trans e = e := by cases e; rfl
 #align equiv.refl_trans Equiv.refl_trans
 
 #print Equiv.symm_trans_self /-
@@ -642,12 +622,8 @@ Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr Equi
 /-- If `α` is equivalent to `β` and `γ` is equivalent to `δ`, then the type of equivalences `α ≃ γ`
 is equivalent to the type of equivalences `β ≃ δ`. -/
 def equivCongr {δ} (ab : α ≃ β) (cd : γ ≃ δ) : α ≃ γ ≃ (β ≃ δ) :=
-  ⟨fun ac => (ab.symm.trans ac).trans cd, fun bd => ab.trans <| bd.trans <| cd.symm, fun ac =>
-    by
-    ext x
-    simp, fun ac => by
-    ext x
-    simp⟩
+  ⟨fun ac => (ab.symm.trans ac).trans cd, fun bd => ab.trans <| bd.trans <| cd.symm, fun ac => by
+    ext x; simp, fun ac => by ext x; simp⟩
 #align equiv.equiv_congr Equiv.equivCongr
 
 /- warning: equiv.equiv_congr_refl -> Equiv.equivCongr_refl is a dubious translation:
@@ -657,10 +633,8 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}}, Eq.{max (max 1 u2) u1} (Equiv.{max (max 1 u1) u2, max (max 1 u1) u2} (Equiv.{u2, u1} α β) (Equiv.{u2, u1} α β)) (Equiv.equivCongr.{u2, u2, u1, u1} α α β β (Equiv.refl.{u2} α) (Equiv.refl.{u1} β)) (Equiv.refl.{max (max 1 u1) u2} (Equiv.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_refl Equiv.equivCongr_reflₓ'. -/
 @[simp]
-theorem equivCongr_refl {α β} : (Equiv.refl α).equivCongr (Equiv.refl β) = Equiv.refl (α ≃ β) :=
-  by
-  ext
-  rfl
+theorem equivCongr_refl {α β} : (Equiv.refl α).equivCongr (Equiv.refl β) = Equiv.refl (α ≃ β) := by
+  ext; rfl
 #align equiv.equiv_congr_refl Equiv.equivCongr_refl
 
 /- warning: equiv.equiv_congr_symm -> Equiv.equivCongr_symm is a dubious translation:
@@ -671,10 +645,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_symm Equiv.equivCongr_symmₓ'. -/
 @[simp]
 theorem equivCongr_symm {δ} (ab : α ≃ β) (cd : γ ≃ δ) :
-    (ab.equivCongr cd).symm = ab.symm.equivCongr cd.symm :=
-  by
-  ext
-  rfl
+    (ab.equivCongr cd).symm = ab.symm.equivCongr cd.symm := by ext; rfl
 #align equiv.equiv_congr_symm Equiv.equivCongr_symm
 
 /- warning: equiv.equiv_congr_trans -> Equiv.equivCongr_trans is a dubious translation:
@@ -685,9 +656,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_congr_trans Equiv.equivCongr_transₓ'. -/
 @[simp]
 theorem equivCongr_trans {δ ε ζ} (ab : α ≃ β) (de : δ ≃ ε) (bc : β ≃ γ) (ef : ε ≃ ζ) :
-    (ab.equivCongr de).trans (bc.equivCongr ef) = (ab.trans bc).equivCongr (de.trans ef) :=
-  by
-  ext
+    (ab.equivCongr de).trans (bc.equivCongr ef) = (ab.trans bc).equivCongr (de.trans ef) := by ext;
   rfl
 #align equiv.equiv_congr_trans Equiv.equivCongr_trans
 
@@ -789,10 +758,7 @@ but is expected to have type
   forall {α' : Type.{u2}} {β' : Type.{u1}} (e : Equiv.{succ u2, succ u1} α' β') (p : Equiv.Perm.{succ u2} α') (p' : Equiv.Perm.{succ u2} α'), Eq.{succ u1} (Equiv.{succ u1, succ u1} β' β') (Equiv.trans.{succ u1, succ u1, succ u1} β' β' β' (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) p')) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.Perm.{succ u2} α') (fun (_x : Equiv.Perm.{succ u2} α') => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Equiv.Perm.{succ u2} α') => Equiv.Perm.{succ u1} β') _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (Equiv.Perm.{succ u2} α') (Equiv.Perm.{succ u1} β')) (Equiv.permCongr.{u2, u1} α' β' e) (Equiv.trans.{succ u2, succ u2, succ u2} α' α' α' p p'))
 Case conversion may be inaccurate. Consider using '#align equiv.perm_congr_trans Equiv.permCongr_transₓ'. -/
 theorem permCongr_trans (p p' : Equiv.Perm α') :
-    (e.permCongr p).trans (e.permCongr p') = e.permCongr (p.trans p') :=
-  by
-  ext
-  simp
+    (e.permCongr p).trans (e.permCongr p') = e.permCongr (p.trans p') := by ext; simp
 #align equiv.perm_congr_trans Equiv.permCongr_trans
 
 end PermCongr
@@ -917,9 +883,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.arrow_congr_comp Equiv.arrowCongr_compₓ'. -/
 theorem arrowCongr_comp {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _} (ea : α₁ ≃ α₂) (eb : β₁ ≃ β₂) (ec : γ₁ ≃ γ₂)
     (f : α₁ → β₁) (g : β₁ → γ₁) :
-    arrowCongr ea ec (g ∘ f) = arrowCongr eb ec g ∘ arrowCongr ea eb f :=
-  by
-  ext
+    arrowCongr ea ec (g ∘ f) = arrowCongr eb ec g ∘ arrowCongr ea eb f := by ext;
   simp only [comp, arrow_congr_apply, eb.symm_apply_apply]
 #align equiv.arrow_congr_comp Equiv.arrowCongr_comp
 
@@ -1098,12 +1062,7 @@ theorem symm_comp_eq {α β γ} (e : α ≃ β) (f : γ → α) (g : γ → β) 
 #print Equiv.punitEquivPUnit /-
 /-- `punit` sorts in any two universes are equivalent. -/
 def punitEquivPUnit : PUnit.{v} ≃ PUnit.{w} :=
-  ⟨fun _ => PUnit.unit, fun _ => PUnit.unit, fun u =>
-    by
-    cases u
-    rfl, fun u => by
-    cases u
-    rfl⟩
+  ⟨fun _ => PUnit.unit, fun _ => PUnit.unit, fun u => by cases u; rfl, fun u => by cases u; rfl⟩
 #align equiv.punit_equiv_punit Equiv.punitEquivPUnit
 -/
 
@@ -1119,13 +1078,8 @@ section
 #print Equiv.arrowPUnitEquivPUnit /-
 /-- The sort of maps to `punit.{v}` is equivalent to `punit.{w}`. -/
 def arrowPUnitEquivPUnit (α : Sort _) : (α → PUnit.{v}) ≃ PUnit.{w} :=
-  ⟨fun f => PUnit.unit, fun u f => PUnit.unit, fun f =>
-    by
-    funext x
-    cases f x
-    rfl, fun u => by
-    cases u
-    rfl⟩
+  ⟨fun f => PUnit.unit, fun u f => PUnit.unit, fun f => by funext x; cases f x; rfl, fun u => by
+    cases u; rfl⟩
 #align equiv.arrow_punit_equiv_punit Equiv.arrowPUnitEquivPUnit
 -/
 
@@ -1137,10 +1091,7 @@ def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a
     where
   toFun := eval a
   invFun x b := cast (congr_arg β <| Subsingleton.elim a b) x
-  left_inv f :=
-    funext fun b => by
-      rw [Subsingleton.elim b a]
-      rfl
+  left_inv f := funext fun b => by rw [Subsingleton.elim b a]; rfl
   right_inv b := rfl
 #align equiv.Pi_subsingleton Equiv.piSubsingleton
 -/
@@ -1170,10 +1121,7 @@ def trueArrowEquiv (α : Sort _) : (True → α) ≃ α :=
 #print Equiv.arrowPUnitOfIsEmpty /-
 /-- The sort of maps from a type that `is_empty` is equivalent to `punit`. -/
 def arrowPUnitOfIsEmpty (α β : Sort _) [IsEmpty α] : (α → β) ≃ PUnit.{u} :=
-  ⟨fun f => PUnit.unit, fun u => isEmptyElim, fun f => funext isEmptyElim, fun u =>
-    by
-    cases u
-    rfl⟩
+  ⟨fun f => PUnit.unit, fun u => isEmptyElim, fun f => funext isEmptyElim, fun u => by cases u; rfl⟩
 #align equiv.arrow_punit_of_is_empty Equiv.arrowPUnitOfIsEmpty
 -/
 
@@ -1240,10 +1188,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_rig
 theorem psigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
     (psigmaCongrRight F).trans (psigmaCongrRight G) = psigmaCongrRight fun a => (F a).trans (G a) :=
-  by
-  ext1 x
-  cases x
-  rfl
+  by ext1 x; cases x; rfl
 #align equiv.psigma_congr_right_trans Equiv.psigmaCongrRight_trans
 
 /- warning: equiv.psigma_congr_right_symm -> Equiv.psigmaCongrRight_symm is a dubious translation:
@@ -1254,11 +1199,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_right_symm Equiv.psigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem psigmaCongrRight_symm {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) :
-    (psigmaCongrRight F).symm = psigmaCongrRight fun a => (F a).symm :=
-  by
-  ext1 x
-  cases x
-  rfl
+    (psigmaCongrRight F).symm = psigmaCongrRight fun a => (F a).symm := by ext1 x; cases x; rfl
 #align equiv.psigma_congr_right_symm Equiv.psigmaCongrRight_symm
 
 /- warning: equiv.psigma_congr_right_refl -> Equiv.psigmaCongrRight_refl is a dubious translation:
@@ -1269,11 +1210,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.psigma_congr_right_refl Equiv.psigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem psigmaCongrRight_refl {α} {β : α → Sort _} :
-    (psigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σ'a, β a) :=
-  by
-  ext1 x
-  cases x
-  rfl
+    (psigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σ'a, β a) := by ext1 x; cases x; rfl
 #align equiv.psigma_congr_right_refl Equiv.psigmaCongrRight_refl
 
 #print Equiv.sigmaCongrRight /-
@@ -1296,11 +1233,8 @@ Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_righ
 @[simp]
 theorem sigmaCongrRight_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a)
     (G : ∀ a, β₂ a ≃ β₃ a) :
-    (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) :=
-  by
-  ext1 x
-  cases x
-  rfl
+    (sigmaCongrRight F).trans (sigmaCongrRight G) = sigmaCongrRight fun a => (F a).trans (G a) := by
+  ext1 x; cases x; rfl
 #align equiv.sigma_congr_right_trans Equiv.sigmaCongrRight_trans
 
 /- warning: equiv.sigma_congr_right_symm -> Equiv.sigmaCongrRight_symm is a dubious translation:
@@ -1311,11 +1245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_symm Equiv.sigmaCongrRight_symmₓ'. -/
 @[simp]
 theorem sigmaCongrRight_symm {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) :
-    (sigmaCongrRight F).symm = sigmaCongrRight fun a => (F a).symm :=
-  by
-  ext1 x
-  cases x
-  rfl
+    (sigmaCongrRight F).symm = sigmaCongrRight fun a => (F a).symm := by ext1 x; cases x; rfl
 #align equiv.sigma_congr_right_symm Equiv.sigmaCongrRight_symm
 
 /- warning: equiv.sigma_congr_right_refl -> Equiv.sigmaCongrRight_refl is a dubious translation:
@@ -1326,11 +1256,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.sigma_congr_right_refl Equiv.sigmaCongrRight_reflₓ'. -/
 @[simp]
 theorem sigmaCongrRight_refl {α} {β : α → Type _} :
-    (sigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) :=
-  by
-  ext1 x
-  cases x
-  rfl
+    (sigmaCongrRight fun a => Equiv.refl (β a)) = Equiv.refl (Σa, β a) := by ext1 x; cases x; rfl
 #align equiv.sigma_congr_right_refl Equiv.sigmaCongrRight_refl
 
 #print Equiv.psigmaEquivSubtype /-
@@ -1339,12 +1265,8 @@ def psigmaEquivSubtype {α : Type v} (P : α → Prop) : (Σ'i, P i) ≃ Subtype
     where
   toFun x := ⟨x.1, x.2⟩
   invFun x := ⟨x.1, x.2⟩
-  left_inv x := by
-    cases x
-    rfl
-  right_inv x := by
-    cases x
-    rfl
+  left_inv x := by cases x; rfl
+  right_inv x := by cases x; rfl
 #align equiv.psigma_equiv_subtype Equiv.psigmaEquivSubtype
 -/
 
@@ -1513,9 +1435,7 @@ protected theorem forall_congr {p : α → Prop} {q : β → Prop} (f : α ≃ �
     (h : ∀ {x}, p x ↔ q (f x)) : (∀ x, p x) ↔ ∀ y, q y :=
   by
   constructor <;> intro h₂ x
-  · rw [← f.right_inv x]
-    apply h.mp
-    apply h₂
+  · rw [← f.right_inv x]; apply h.mp; apply h₂
   apply h.mpr; apply h₂
 #align equiv.forall_congr Equiv.forall_congr
 -/
@@ -1633,14 +1553,8 @@ protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α 
     Quot.map e.symm fun b₁ b₂ h =>
       (Eq (e.symm b₁) (e.symm b₂)).2
         ((e.apply_symm_apply b₁).symm ▸ (e.apply_symm_apply b₂).symm ▸ h)
-  left_inv := by
-    rintro ⟨a⟩
-    dsimp only [Quot.map]
-    simp only [Equiv.symm_apply_apply]
-  right_inv := by
-    rintro ⟨a⟩
-    dsimp only [Quot.map]
-    simp only [Equiv.apply_symm_apply]
+  left_inv := by rintro ⟨a⟩; dsimp only [Quot.map]; simp only [Equiv.symm_apply_apply]
+  right_inv := by rintro ⟨a⟩; dsimp only [Quot.map]; simp only [Equiv.apply_symm_apply]
 #align quot.congr Quot.congr
 -/
 

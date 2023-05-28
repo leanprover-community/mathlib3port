@@ -186,12 +186,8 @@ instance : Full typeToCat.{u}
   witness' := by
     intro X Y F
     apply Functor.ext
-    · intro x y f
-      dsimp
-      ext
-    · rintro ⟨x⟩
-      ext
-      rfl
+    · intro x y f; dsimp; ext
+    · rintro ⟨x⟩; ext; rfl
 
 end CategoryTheory
 

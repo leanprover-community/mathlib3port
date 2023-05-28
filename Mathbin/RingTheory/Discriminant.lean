@@ -91,9 +91,7 @@ theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
     have : (trace_matrix A b).mulVec g = 0 := by
       ext i
-      have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) :=
-        by
-        intro j
+      have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by intro j;
         simp [mul_comm]
       simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
         this j, ← LinearMap.map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
@@ -339,9 +337,7 @@ theorem discr_mul_isIntegral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsIntegr
   have H :
     (trace_matrix K B.basis).det • (trace_matrix K B.basis).mulVec (B.basis.equiv_fun z) =
       (trace_matrix K B.basis).det • fun i => trace K L (z * B.basis i) :=
-    by
-    congr
-    exact trace_matrix_of_basis_mul_vec _ _
+    by congr ; exact trace_matrix_of_basis_mul_vec _ _
   have cramer := mul_vec_cramer (trace_matrix K B.basis) fun i => trace K L (z * B.basis i)
   suffices ∀ i, ((trace_matrix K B.basis).det • B.basis.equiv_fun z) i ∈ (⊥ : Subalgebra R K)
     by

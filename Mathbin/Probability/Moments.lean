@@ -93,20 +93,14 @@ theorem centralMoment_one [ProbabilityMeasure μ] : centralMoment X 1 μ = 0 :=
     have : ¬integrable (fun x => X x - integral μ X) μ :=
       by
       refine' fun h_sub => h_int _
-      have h_add : X = (fun x => X x - integral μ X) + fun x => integral μ X :=
-        by
-        ext1 x
-        simp
+      have h_add : X = (fun x => X x - integral μ X) + fun x => integral μ X := by ext1 x; simp
       rw [h_add]
       exact h_sub.add (integrable_const _)
     rw [integral_undef this]
 #align probability_theory.central_moment_one ProbabilityTheory.centralMoment_one
 
 theorem centralMoment_two_eq_variance [FiniteMeasure μ] (hX : Memℒp X 2 μ) :
-    centralMoment X 2 μ = variance X μ :=
-  by
-  rw [hX.variance_eq]
-  rfl
+    centralMoment X 2 μ = variance X μ := by rw [hX.variance_eq]; rfl
 #align probability_theory.central_moment_two_eq_variance ProbabilityTheory.centralMoment_two_eq_variance
 
 section MomentGeneratingFunction
@@ -370,9 +364,7 @@ theorem measure_ge_le_exp_mul_mgf [FiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
         exp (t * ε) * (μ { ω | exp (t * ε) ≤ exp (t * X ω) }).toReal ≤ μ[fun ω => exp (t * X ω)] :=
         mul_meas_ge_le_integral_of_nonneg (fun x => (exp_pos _).le) h_int _
       rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]
-    _ = exp (-t * ε) * mgf X μ t := by
-      rw [neg_mul, exp_neg]
-      rfl
+    _ = exp (-t * ε) * mgf X μ t := by rw [neg_mul, exp_neg]; rfl
     
 #align probability_theory.measure_ge_le_exp_mul_mgf ProbabilityTheory.measure_ge_le_exp_mul_mgf
 

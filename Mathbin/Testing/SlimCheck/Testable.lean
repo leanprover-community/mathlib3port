@@ -449,28 +449,14 @@ def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (v
 /-- testable instance for a property iterating over the element of a list -/
 instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] :
     ∀ xs : List α, Testable (NamedBinder var <| ∀ x, NamedBinder var' <| x ∈ xs → β x)
-  | [] =>
-    ⟨fun tracing min =>
-      return <|
-        success <|
-          PSum.inr
-            (by
-              introv x h
-              cases h)⟩
+  | [] => ⟨fun tracing min => return <| success <| PSum.inr (by introv x h; cases h)⟩
   | x::xs =>
     ⟨fun cfg min => do
       let r ← Testable.run (β x) cfg min
       trace_if_giveup cfg var x r <|
           match r with
           | failure _ _ _ =>
-            return <|
-              add_var_to_counter_example var x
-                (by
-                  intro h
-                  apply h
-                  left
-                  rfl)
-                r
+            return <| add_var_to_counter_example var x (by intro h; apply h; left; rfl) r
           | success hp => do
             let rs ← @testable.run _ (test_forall_in_list xs) cfg min
             return <|
@@ -478,13 +464,11 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
                   (by
                     intro h i h'
                     apply h
-                    right
-                    apply h')
+                    right; apply h')
                   rs
                   (combine
                     (PSum.inr <| by
-                      intro j h
-                      simp only [ball_cons, named_binder]
+                      intro j h; simp only [ball_cons, named_binder]
                       constructor <;> assumption)
                     hp)
           | gave_up n => do
@@ -505,10 +489,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
 testable instances. -/
 def combineTestable (p : Prop) (t : List <| Testable p) (h : 0 < t.length) : Testable p :=
   ⟨fun cfg min =>
-    have : 0 < length (map (fun t => @Testable.run _ t cfg min) t) :=
-      by
-      rw [length_map]
-      apply h
+    have : 0 < length (map (fun t => @Testable.run _ t cfg min) t) := by rw [length_map]; apply h
     Gen.oneOf (List.map (fun t => @Testable.run _ t cfg min) t) this⟩
 #align slim_check.combine_testable SlimCheck.combineTestable
 

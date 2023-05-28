@@ -64,8 +64,7 @@ theorem hasStrictDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     convert this using 1
     rw [sq, mul_inv, inv_inv, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ←
       zpow_add₀ hx]
-    congr
-    abel
+    congr ; abel
   · simp only [hm, zpow_zero, Int.cast_zero, MulZeroClass.zero_mul, hasStrictDerivAt_const]
   · exact this m hm
 #align has_strict_deriv_at_zpow hasStrictDerivAt_zpow
@@ -100,8 +99,7 @@ theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m 
   by_cases H : x ≠ 0 ∨ 0 ≤ m
   · exact (hasDerivAt_zpow m x H).deriv
   · rw [deriv_zero_of_not_differentiableAt (mt differentiableAt_zpow.1 H)]
-    push_neg  at H
-    rcases H with ⟨rfl, hm⟩
+    push_neg  at H; rcases H with ⟨rfl, hm⟩
     rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, MulZeroClass.mul_zero]
 #align deriv_zpow deriv_zpow
 

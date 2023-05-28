@@ -129,10 +129,8 @@ Case conversion may be inaccurate. Consider using '#align is_localization.exists
 
 This version multiplies `a` on the left, matching the argument order in the `has_smul` instance.
 -/
-theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a) :=
-  by
-  simp_rw [Algebra.smul_def, mul_comm _ a]
-  apply exists_integer_multiple'
+theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a) := by
+  simp_rw [Algebra.smul_def, mul_comm _ a]; apply exists_integer_multiple'
 #align is_localization.exists_integer_multiple IsLocalization.exists_integer_multiple
 
 /- warning: is_localization.exist_integer_multiples -> IsLocalization.exist_integer_multiples is a dubious translation:

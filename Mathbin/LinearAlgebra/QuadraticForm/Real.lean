@@ -39,9 +39,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (SignType.sign ∘ w)) :=
   by
   let u i := if h : w i = 0 then (1 : ℝˣ) else Units.mk0 (w i) h
-  have hu' : ∀ i : ι, (SignType.sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 :=
-    by
-    intro i
+  have hu' : ∀ i : ι, (SignType.sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 := by intro i;
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
   convert(weighted_sum_squares ℝ w).isometryBasisRepr
       ((Pi.basisFun ℝ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hu' i).Unit)
@@ -59,8 +57,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     rw [Pi.basisFun_apply, LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply,
       Function.update_noteq hij.symm, Pi.zero_apply, smul_eq_mul, smul_eq_mul,
       MulZeroClass.mul_zero, MulZeroClass.mul_zero]
-    intro hj'
-    exact False.elim (hj' hj)
+    intro hj'; exact False.elim (hj' hj)
   simp_rw [Basis.unitsSMul_apply]
   erw [hsum]
   simp only [u, Function.comp, smul_eq_mul]
@@ -74,9 +71,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
             u j *
           v j *
         v j
-    by
-    erw [← mul_assoc, this]
-    ring
+    by erw [← mul_assoc, this]; ring
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by ring, Real.rpow_neg_one, mul_inv, inv_sign,
     mul_assoc (SignType.sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]

@@ -334,9 +334,7 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
 #print dvd_pow /-
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
   | 0, hn => (hn rfl).elim
-  | n + 1, hn => by
-    rw [pow_succ]
-    exact hxy.mul_right _
+  | n + 1, hn => by rw [pow_succ]; exact hxy.mul_right _
 #align dvd_pow dvd_pow
 -/
 
@@ -398,10 +396,7 @@ open Int
 
 #print zpow_one /-
 @[simp, to_additive one_zsmul]
-theorem zpow_one (a : G) : a ^ (1 : ℤ) = a :=
-  by
-  convert pow_one a using 1
-  exact zpow_ofNat a 1
+theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by convert pow_one a using 1; exact zpow_ofNat a 1
 #align zpow_one zpow_one
 #align one_zsmul one_zsmul
 -/
@@ -413,10 +408,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a a)
 Case conversion may be inaccurate. Consider using '#align zpow_two zpow_twoₓ'. -/
 @[to_additive two_zsmul]
-theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a :=
-  by
-  convert pow_two a using 1
-  exact zpow_ofNat a 2
+theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by convert pow_two a using 1; exact zpow_ofNat a 2
 #align zpow_two zpow_two
 #align two_zsmul two_zsmul
 
@@ -486,12 +478,8 @@ Case conversion may be inaccurate. Consider using '#align zpow_neg zpow_negₓ'.
 @[simp, to_additive neg_zsmul]
 theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ (-n) = (a ^ n)⁻¹
   | (n + 1 : ℕ) => DivInvMonoid.zpow_neg' _ _
-  | 0 => by
-    change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
-    simp
-  | -[n+1] => by
-    rw [zpow_negSucc, inv_inv, ← zpow_ofNat]
-    rfl
+  | 0 => by change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹; simp
+  | -[n+1] => by rw [zpow_negSucc, inv_inv, ← zpow_ofNat]; rfl
 #align zpow_neg zpow_neg
 #align neg_zsmul neg_zsmul
 

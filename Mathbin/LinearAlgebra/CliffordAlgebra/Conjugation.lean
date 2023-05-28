@@ -57,9 +57,7 @@ theorem involute_ι (m : M) : involute (ι Q m) = -ι Q m :=
 #align clifford_algebra.involute_ι CliffordAlgebra.involute_ι
 
 @[simp]
-theorem involute_comp_involute : involute.comp involute = AlgHom.id R (CliffordAlgebra Q) :=
-  by
-  ext
+theorem involute_comp_involute : involute.comp involute = AlgHom.id R (CliffordAlgebra Q) := by ext;
   simp
 #align clifford_algebra.involute_comp_involute CliffordAlgebra.involute_comp_involute
 

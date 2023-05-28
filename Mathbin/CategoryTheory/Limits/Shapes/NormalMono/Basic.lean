@@ -166,10 +166,7 @@ def normalMonoOfMono [NormalMonoCategory C] (f : X ⟶ Y) [Mono f] : NormalMono 
 #print CategoryTheory.regularMonoCategoryOfNormalMonoCategory /-
 instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] :
     RegularMonoCategory C
-    where regularMonoOfMono _ _ f _ :=
-    by
-    haveI := normal_mono_of_mono f
-    infer_instance
+    where regularMonoOfMono _ _ f _ := by haveI := normal_mono_of_mono f; infer_instance
 #align category_theory.regular_mono_category_of_normal_mono_category CategoryTheory.regularMonoCategoryOfNormalMonoCategory
 -/
 
@@ -351,10 +348,7 @@ def normalEpiOfEpi [NormalEpiCategory C] (f : X ⟶ Y) [Epi f] : NormalEpi f :=
 #print CategoryTheory.regularEpiCategoryOfNormalEpiCategory /-
 instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] :
     RegularEpiCategory C
-    where regularEpiOfEpi _ _ f _ :=
-    by
-    haveI := normal_epi_of_epi f
-    infer_instance
+    where regularEpiOfEpi _ _ f _ := by haveI := normal_epi_of_epi f; infer_instance
 #align category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
 -/
 

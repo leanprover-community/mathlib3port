@@ -587,10 +587,7 @@ theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSub
   { mul_mem := fun a₁ a₂ ⟨b₁, hb₁, eq₁⟩ ⟨b₂, hb₂, eq₂⟩ =>
       ⟨b₁ * b₂, hs.mul_mem hb₁ hb₂, by simp [eq₁, eq₂, hf.map_mul]⟩
     one_mem := ⟨1, hs.to_isSubmonoid.one_mem, hf.map_one⟩
-    inv_mem := fun a ⟨b, hb, Eq⟩ =>
-      ⟨b⁻¹, hs.inv_mem hb, by
-        rw [hf.map_inv]
-        simp [*]⟩ }
+    inv_mem := fun a ⟨b, hb, Eq⟩ => ⟨b⁻¹, hs.inv_mem hb, by rw [hf.map_inv]; simp [*]⟩ }
 #align is_group_hom.image_subgroup IsGroupHom.image_subgroup
 #align is_add_group_hom.image_add_subgroup IsAddGroupHom.image_addSubgroup
 
@@ -853,8 +850,7 @@ theorem image_closure [Group H] {f : G → H} (hf : IsGroupHom f) (s : Set G) :
       · rw [hf.to_is_monoid_hom.map_one]
         apply IsSubmonoid.one_mem (closure.is_subgroup _).to_isSubmonoid
       · rw [hf.map_inv]
-        apply IsSubgroup.inv_mem (closure.is_subgroup _)
-        assumption
+        apply IsSubgroup.inv_mem (closure.is_subgroup _); assumption
       · rw [hf.to_is_monoid_hom.map_mul]
         solve_by_elim [IsSubmonoid.mul_mem (closure.is_subgroup _).to_isSubmonoid] )
     (closure_subset (hf.image_subgroup <| closure.isSubgroup _) <|

@@ -889,9 +889,7 @@ def normSq : ℂ →*₀ ℝ where
   toFun z := z.re * z.re + z.im * z.im
   map_zero' := by simp
   map_one' := by simp
-  map_mul' z w := by
-    dsimp
-    ring
+  map_mul' z w := by dsimp; ring
 #align complex.norm_sq Complex.normSq
 -/
 
@@ -1746,9 +1744,7 @@ but is expected to have type
   forall (z : Complex), LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Complex.re z)) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring) Complex (fun (f : Complex) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Complex) => Real) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring) Complex Real (Distrib.toAdd.{0} Complex (NonUnitalNonAssocSemiring.toDistrib.{0} Complex (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Complex (Semiring.toNonAssocSemiring.{0} Complex Complex.instSemiringComplex)))) (Distrib.toAdd.{0} Real (NonUnitalNonAssocSemiring.toDistrib.{0} Real (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Real (Semiring.toNonAssocSemiring.{0} Real (OrderedSemiring.toSemiring.{0} Real Real.orderedSemiring))))) (Preorder.toLE.{0} Real (PartialOrder.toPreorder.{0} Real (OrderedSemiring.toPartialOrder.{0} Real Real.orderedSemiring))) (AbsoluteValue.subadditiveHomClass.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring)) Complex.abs z)
 Case conversion may be inaccurate. Consider using '#align complex.abs_re_le_abs Complex.abs_re_le_absₓ'. -/
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
-  Real.abs_le_sqrt <| by
-    rw [norm_sq_apply, ← sq]
-    exact le_add_of_nonneg_right (mul_self_nonneg _)
+  Real.abs_le_sqrt <| by rw [norm_sq_apply, ← sq]; exact le_add_of_nonneg_right (mul_self_nonneg _)
 #align complex.abs_re_le_abs Complex.abs_re_le_abs
 
 /- warning: complex.abs_im_le_abs -> Complex.abs_im_le_abs is a dubious translation:
@@ -1758,9 +1754,7 @@ but is expected to have type
   forall (z : Complex), LE.le.{0} Real Real.instLEReal (Abs.abs.{0} Real (Neg.toHasAbs.{0} Real Real.instNegReal Real.instSupReal) (Complex.im z)) (FunLike.coe.{1, 1, 1} (AbsoluteValue.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring) Complex (fun (f : Complex) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.99 : Complex) => Real) f) (SubadditiveHomClass.toFunLike.{0, 0, 0} (AbsoluteValue.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring) Complex Real (Distrib.toAdd.{0} Complex (NonUnitalNonAssocSemiring.toDistrib.{0} Complex (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Complex (Semiring.toNonAssocSemiring.{0} Complex Complex.instSemiringComplex)))) (Distrib.toAdd.{0} Real (NonUnitalNonAssocSemiring.toDistrib.{0} Real (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Real (Semiring.toNonAssocSemiring.{0} Real (OrderedSemiring.toSemiring.{0} Real Real.orderedSemiring))))) (Preorder.toLE.{0} Real (PartialOrder.toPreorder.{0} Real (OrderedSemiring.toPartialOrder.{0} Real Real.orderedSemiring))) (AbsoluteValue.subadditiveHomClass.{0, 0} Complex Real Complex.instSemiringComplex Real.orderedSemiring)) Complex.abs z)
 Case conversion may be inaccurate. Consider using '#align complex.abs_im_le_abs Complex.abs_im_le_absₓ'. -/
 theorem abs_im_le_abs (z : ℂ) : |z.im| ≤ abs z :=
-  Real.abs_le_sqrt <| by
-    rw [norm_sq_apply, ← sq, ← sq]
-    exact le_add_of_nonneg_left (sq_nonneg _)
+  Real.abs_le_sqrt <| by rw [norm_sq_apply, ← sq, ← sq]; exact le_add_of_nonneg_left (sq_nonneg _)
 #align complex.abs_im_le_abs Complex.abs_im_le_abs
 
 /- warning: complex.re_le_abs -> Complex.re_le_abs is a dubious translation:
@@ -1837,8 +1831,7 @@ theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|)
   cases' z with x y
   simp only [abs_apply, norm_sq_mk, ← sq]
   wlog hle : |x| ≤ |y|
-  · rw [add_comm, max_comm]
-    exact this _ _ (le_of_not_le hle)
+  · rw [add_comm, max_comm]; exact this _ _ (le_of_not_le hle)
   calc
     Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) :=
       Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
@@ -1909,10 +1902,7 @@ protected def partialOrder : PartialOrder ℂ
     where
   le z w := z.re ≤ w.re ∧ z.im = w.im
   lt z w := z.re < w.re ∧ z.im = w.im
-  lt_iff_le_not_le z w := by
-    dsimp
-    rw [lt_iff_le_not_le]
-    tauto
+  lt_iff_le_not_le z w := by dsimp; rw [lt_iff_le_not_le]; tauto
   le_refl x := ⟨le_rfl, rfl⟩
   le_trans x y z h₁ h₂ := ⟨h₁.1.trans h₂.1, h₁.2.trans h₂.2⟩
   le_antisymm z w h₁ h₂ := ext (h₁.1.antisymm h₂.1) h₁.2
@@ -2031,10 +2021,7 @@ lean 3 declaration is
 but is expected to have type
   forall {r : Real} {z : Complex}, (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (Complex.ofReal' r) z) -> (Eq.{1} Complex z (Complex.ofReal' (Complex.re z)))
 Case conversion may be inaccurate. Consider using '#align complex.eq_re_of_real_le Complex.eq_re_ofReal_leₓ'. -/
-theorem eq_re_ofReal_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :=
-  by
-  ext
-  rfl
+theorem eq_re_ofReal_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re := by ext; rfl;
   simp only [← (Complex.le_def.1 hz).2, Complex.zero_im, Complex.ofReal_im]
 #align complex.eq_re_of_real_le Complex.eq_re_ofReal_le
 
@@ -2062,12 +2049,8 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
     nonneg_iff := fun r =>
       by
       refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
-      · have h₁ : 0 ≤ r.re := by
-          rw [le_def] at hr
-          exact hr.1
-        have h₂ : r.im = 0 := by
-          rw [le_def] at hr
-          exact hr.2.symm
+      · have h₁ : 0 ≤ r.re := by rw [le_def] at hr; exact hr.1
+        have h₂ : r.im = 0 := by rw [le_def] at hr; exact hr.2.symm
         ext
         ·
           simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re,

@@ -127,15 +127,12 @@ theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
   by
   ext n
   cases n
-  · dsimp
-    simp only [comp_id]
+  · dsimp; simp only [comp_id]
   · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_P_eq_self
 #align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_PInfty
 
 instance : Mono (inclusionOfMooreComplexMap X) :=
-  ⟨fun Y f₁ f₂ hf => by
-    ext n
-    exact HomologicalComplex.congr_hom hf n⟩
+  ⟨fun Y f₁ f₂ hf => by ext n; exact HomologicalComplex.congr_hom hf n⟩
 
 /- warning: algebraic_topology.dold_kan.split_mono_inclusion_of_Moore_complex_map -> AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMap is a dubious translation:
 <too large>
@@ -174,8 +171,7 @@ def N₁_iso_normalizedMooreComplex_comp_toKaroubi : N₁ ≅ normalizedMooreCom
     { app := fun X =>
         { f := inclusionOfMooreComplexMap X
           comm := by erw [inclusion_of_Moore_complex_map_comp_P_infty, id_comp] }
-      naturality' := fun X Y f => by
-        ext
+      naturality' := fun X Y f => by ext;
         simp only [functor.comp_map, normalized_Moore_complex_map, karoubi.comp_f, to_karoubi_map_f,
           HomologicalComplex.comp_f, normalized_Moore_complex.map_f,
           inclusion_of_Moore_complex_map_f, factor_thru_arrow, N₁_map_f,

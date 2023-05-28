@@ -147,8 +147,7 @@ theorem one_opow (a : Ordinal) : (1^a) = 1 :=
   by
   apply limit_rec_on a
   · simp only [opow_zero]
-  · intro _ ih
-    simp only [opow_succ, ih, mul_one]
+  · intro _ ih; simp only [opow_succ, ih, mul_one]
   refine' fun b l IH => eq_of_forall_ge_iff fun c => _
   rw [opow_le_of_limit Ordinal.one_ne_zero l]
   exact ⟨fun H => by simpa only [opow_zero] using H 0 l.pos, fun H b' h => by rwa [IH _ h]⟩
@@ -165,8 +164,7 @@ theorem opow_pos {a : Ordinal} (b) (a0 : 0 < a) : 0 < (a^b) :=
   have h0 : 0 < (a^0) := by simp only [opow_zero, zero_lt_one]
   apply limit_rec_on b
   · exact h0
-  · intro b IH
-    rw [opow_succ]
+  · intro b IH; rw [opow_succ]
     exact mul_pos IH a0
   · exact fun b l _ => (lt_opow_of_limit (Ordinal.pos_iff_ne_zero.1 a0) l).2 ⟨0, l.Pos, h0⟩
 #align ordinal.opow_pos Ordinal.opow_pos
@@ -258,8 +256,7 @@ theorem opow_le_opow_right {a b c : Ordinal} (h₁ : 0 < a) (h₂ : b ≤ c) : (
   by
   cases' lt_or_eq_of_le (one_le_iff_pos.2 h₁) with h₁ h₁
   · exact (opow_le_opow_iff_right h₁).2 h₂
-  · subst a
-    simp only [one_opow]
+  · subst a; simp only [one_opow]
 #align ordinal.opow_le_opow_right Ordinal.opow_le_opow_right
 
 /- warning: ordinal.opow_le_opow_left -> Ordinal.opow_le_opow_left is a dubious translation:
@@ -271,15 +268,12 @@ Case conversion may be inaccurate. Consider using '#align ordinal.opow_le_opow_l
 theorem opow_le_opow_left {a b : Ordinal} (c) (ab : a ≤ b) : (a^c) ≤ (b^c) :=
   by
   by_cases a0 : a = 0
-  · subst a
-    by_cases c0 : c = 0
-    · subst c
-      simp only [opow_zero]
+  · subst a; by_cases c0 : c = 0
+    · subst c; simp only [opow_zero]
     · simp only [zero_opow c0, Ordinal.zero_le]
   · apply limit_rec_on c
     · simp only [opow_zero]
-    · intro c IH
-      simpa only [opow_succ] using mul_le_mul' IH ab
+    · intro c IH; simpa only [opow_succ] using mul_le_mul' IH ab
     ·
       exact fun c l IH =>
         (opow_le_of_limit a0 l).2 fun b' h =>
@@ -320,9 +314,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a b) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} c)) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} c)))
 Case conversion may be inaccurate. Consider using '#align ordinal.opow_lt_opow_left_of_succ Ordinal.opow_lt_opow_left_of_succₓ'. -/
-theorem opow_lt_opow_left_of_succ {a b c : Ordinal} (ab : a < b) : (a^succ c) < (b^succ c) :=
-  by
-  rw [opow_succ, opow_succ]
+theorem opow_lt_opow_left_of_succ {a b c : Ordinal} (ab : a < b) : (a^succ c) < (b^succ c) := by
+  rw [opow_succ, opow_succ];
   exact
     (mul_le_mul_right' (opow_le_opow_left c ab.le) a).trans_lt
       (mul_lt_mul_of_pos_left ab (opow_pos c ((Ordinal.zero_le a).trans_lt ab)))
@@ -337,8 +330,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.opow_add Ordin
 theorem opow_add (a b c : Ordinal) : (a^b + c) = (a^b) * (a^c) :=
   by
   rcases eq_or_ne a 0 with (rfl | a0)
-  · rcases eq_or_ne c 0 with (rfl | c0)
-    · simp
+  · rcases eq_or_ne c 0 with (rfl | c0); · simp
     have : b + c ≠ 0 := ((Ordinal.pos_iff_ne_zero.2 c0).trans_le (le_add_left _ _)).ne'
     simp only [zero_opow c0, zero_opow this, MulZeroClass.mul_zero]
   rcases eq_or_lt_of_le (one_le_iff_ne_zero.2 a0) with (rfl | a1)
@@ -403,12 +395,10 @@ theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) :=
   by_cases b0 : b = 0; · simp only [b0, MulZeroClass.zero_mul, opow_zero, one_opow]
   by_cases a0 : a = 0
   · subst a
-    by_cases c0 : c = 0
-    · simp only [c0, MulZeroClass.mul_zero, opow_zero]
+    by_cases c0 : c = 0; · simp only [c0, MulZeroClass.mul_zero, opow_zero]
     simp only [zero_opow b0, zero_opow c0, zero_opow (mul_ne_zero b0 c0)]
   cases' eq_or_lt_of_le (one_le_iff_ne_zero.2 a0) with a1 a1
-  · subst a1
-    simp only [one_opow]
+  · subst a1; simp only [one_opow]
   apply limit_rec_on c
   · simp only [MulZeroClass.mul_zero, opow_zero]
   · intro c IH

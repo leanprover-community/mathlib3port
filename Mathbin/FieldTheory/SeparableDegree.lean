@@ -181,8 +181,7 @@ theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X])
     haveI : Fact q.prime := fact_iff.2 hF_hprime
     apply contraction_degree_eq_or_insep q g g' m m'
     rw [hm, hm']
-    exact hg
-    exact (Classical.choose_spec hf).1
+    exact hg; exact (Classical.choose_spec hf).1
 #align polynomial.is_separable_contraction.degree_eq Polynomial.IsSeparableContraction.degree_eq
 -/
 

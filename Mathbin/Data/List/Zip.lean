@@ -165,9 +165,7 @@ theorem all₂_zipWith {f : α → β → γ} {p : γ → Prop} :
     ∀ {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂),
       All₂ p (zipWith f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
   | [], [], _ => by simp
-  | a :: l₁, b :: l₂, h => by
-    simp only [length_cons, add_left_inj] at h
-    simp [all₂_zip_with h]
+  | a :: l₁, b :: l₂, h => by simp only [length_cons, add_left_inj] at h; simp [all₂_zip_with h]
 #align list.all₂_zip_with List.all₂_zipWith
 
 /- warning: list.lt_length_left_of_zip_with -> List.lt_length_left_of_zipWith is a dubious translation:
@@ -177,9 +175,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {i : Nat} {l : List.{u3} α} {l' : List.{u2} β}, (LT.lt.{0} Nat instLTNat i (List.length.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l l'))) -> (LT.lt.{0} Nat instLTNat i (List.length.{u3} α l))
 Case conversion may be inaccurate. Consider using '#align list.lt_length_left_of_zip_with List.lt_length_left_of_zipWithₓ'. -/
 theorem lt_length_left_of_zipWith {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
-    (h : i < (zipWith f l l').length) : i < l.length :=
-  by
-  rw [length_zip_with, lt_min_iff] at h
+    (h : i < (zipWith f l l').length) : i < l.length := by rw [length_zip_with, lt_min_iff] at h;
   exact h.left
 #align list.lt_length_left_of_zip_with List.lt_length_left_of_zipWith
 
@@ -190,9 +186,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {i : Nat} {l : List.{u3} α} {l' : List.{u2} β}, (LT.lt.{0} Nat instLTNat i (List.length.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l l'))) -> (LT.lt.{0} Nat instLTNat i (List.length.{u2} β l'))
 Case conversion may be inaccurate. Consider using '#align list.lt_length_right_of_zip_with List.lt_length_right_of_zipWithₓ'. -/
 theorem lt_length_right_of_zipWith {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
-    (h : i < (zipWith f l l').length) : i < l'.length :=
-  by
-  rw [length_zip_with, lt_min_iff] at h
+    (h : i < (zipWith f l l').length) : i < l'.length := by rw [length_zip_with, lt_min_iff] at h;
   exact h.right
 #align list.lt_length_right_of_zip_with List.lt_length_right_of_zipWith
 
@@ -289,9 +283,7 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u1}} {δ : Type.{u3}} (f : α -> β -> γ) (g : δ -> α) (l : List.{u3} δ) (l' : List.{u2} β), Eq.{succ u1} (List.{u1} γ) (List.zipWith.{u4, u2, u1} α β γ f (List.map.{u3, u4} δ α g l) l') (List.zipWith.{u3, u2, u1} δ β γ (Function.comp.{succ u3, succ u4, max (succ u1) (succ u2)} δ α (β -> γ) f g) l l')
 Case conversion may be inaccurate. Consider using '#align list.zip_with_map_left List.zipWith_map_leftₓ'. -/
 theorem zipWith_map_left (f : α → β → γ) (g : δ → α) (l : List δ) (l' : List β) :
-    zipWith f (l.map g) l' = zipWith (f ∘ g) l l' :=
-  by
-  convert zip_with_map f g id l l'
+    zipWith f (l.map g) l' = zipWith (f ∘ g) l l' := by convert zip_with_map f g id l l';
   exact Eq.symm (List.map_id _)
 #align list.zip_with_map_left List.zipWith_map_left
 
@@ -302,10 +294,8 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u1}} {γ : Type.{u2}} {δ : Type.{u3}} (f : α -> β -> γ) (l : List.{u4} α) (g : δ -> β) (l' : List.{u3} δ), Eq.{succ u2} (List.{u2} γ) (List.zipWith.{u4, u1, u2} α β γ f l (List.map.{u3, u1} δ β g l')) (List.zipWith.{u4, u3, u2} α δ γ (fun (x : α) => Function.comp.{succ u3, succ u1, succ u2} δ β γ (f x) g) l l')
 Case conversion may be inaccurate. Consider using '#align list.zip_with_map_right List.zipWith_map_rightₓ'. -/
 theorem zipWith_map_right (f : α → β → γ) (l : List α) (g : δ → β) (l' : List δ) :
-    zipWith f l (l'.map g) = zipWith (fun x => f x ∘ g) l l' :=
-  by
-  convert List.zipWith_map f id g l l'
-  exact Eq.symm (List.map_id _)
+    zipWith f l (l'.map g) = zipWith (fun x => f x ∘ g) l l' := by
+  convert List.zipWith_map f id g l l'; exact Eq.symm (List.map_id _)
 #align list.zip_with_map_right List.zipWith_map_right
 
 /- warning: list.zip_map' -> List.zip_map' is a dubious translation:
@@ -357,12 +347,8 @@ Case conversion may be inaccurate. Consider using '#align list.map_fst_zip List.
 theorem map_fst_zip :
     ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l₂.length → map Prod.fst (zip l₁ l₂) = l₁
   | [], bs, _ => rfl
-  | a :: as, b :: bs, h => by
-    simp at h
-    simp! [*]
-  | a :: as, [], h => by
-    simp at h
-    contradiction
+  | a :: as, b :: bs, h => by simp at h; simp! [*]
+  | a :: as, [], h => by simp at h; contradiction
 #align list.map_fst_zip List.map_fst_zip
 
 /- warning: list.map_snd_zip -> List.map_snd_zip is a dubious translation:
@@ -373,15 +359,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.map_snd_zip List.map_snd_zipₓ'. -/
 theorem map_snd_zip :
     ∀ (l₁ : List α) (l₂ : List β), l₂.length ≤ l₁.length → map Prod.snd (zip l₁ l₂) = l₂
-  | _, [], _ => by
-    rw [zip_nil_right]
-    rfl
-  | [], b :: bs, h => by
-    simp at h
-    contradiction
-  | a :: as, b :: bs, h => by
-    simp at h
-    simp! [*]
+  | _, [], _ => by rw [zip_nil_right]; rfl
+  | [], b :: bs, h => by simp at h; contradiction
+  | a :: as, b :: bs, h => by simp at h; simp! [*]
 #align list.map_snd_zip List.map_snd_zip
 
 /- warning: list.unzip_nil -> List.unzip_nil is a dubious translation:
@@ -512,11 +492,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} (f : α -> β), Eq.{max (succ u2) (succ u1)} (List.{max u1 u2} (Prod.{u2, u1} α β)) (List.map.{u2, max u1 u2} α (Prod.{u2, u1} α β) (fun (x : α) => Prod.mk.{u2, u1} α β x (f x)) l) (List.zip.{u2, u1} α β l (List.map.{u2, u1} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.map_prod_left_eq_zip List.map_prod_left_eq_zipₓ'. -/
 theorem map_prod_left_eq_zip {l : List α} (f : α → β) :
-    (l.map fun x => (x, f x)) = l.zip (l.map f) :=
-  by
-  rw [← zip_map']
-  congr
-  exact map_id _
+    (l.map fun x => (x, f x)) = l.zip (l.map f) := by rw [← zip_map']; congr ; exact map_id _
 #align list.map_prod_left_eq_zip List.map_prod_left_eq_zip
 
 /- warning: list.map_prod_right_eq_zip -> List.map_prod_right_eq_zip is a dubious translation:
@@ -526,11 +502,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {l : List.{u2} α} (f : α -> β), Eq.{max (succ u2) (succ u1)} (List.{max u2 u1} (Prod.{u1, u2} β α)) (List.map.{u2, max u2 u1} α (Prod.{u1, u2} β α) (fun (x : α) => Prod.mk.{u1, u2} β α (f x) x) l) (List.zip.{u1, u2} β α (List.map.{u2, u1} α β f l) l)
 Case conversion may be inaccurate. Consider using '#align list.map_prod_right_eq_zip List.map_prod_right_eq_zipₓ'. -/
 theorem map_prod_right_eq_zip {l : List α} (f : α → β) :
-    (l.map fun x => (f x, x)) = (l.map f).zip l :=
-  by
-  rw [← zip_map']
-  congr
-  exact map_id _
+    (l.map fun x => (f x, x)) = (l.map f).zip l := by rw [← zip_map']; congr ; exact map_id _
 #align list.map_prod_right_eq_zip List.map_prod_right_eq_zip
 
 /- warning: list.zip_with_comm -> List.zipWith_comm is a dubious translation:
@@ -568,9 +540,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> α -> β), (forall (x : α) (y : α), Eq.{succ u1} β (f x y) (f y x)) -> (forall (l : List.{u2} α) (l' : List.{u2} α), Eq.{succ u1} (List.{u1} β) (List.zipWith.{u2, u2, u1} α α β f l l') (List.zipWith.{u2, u2, u1} α α β f l' l))
 Case conversion may be inaccurate. Consider using '#align list.zip_with_comm_of_comm List.zipWith_comm_of_commₓ'. -/
 theorem zipWith_comm_of_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x) (l l' : List α) :
-    zipWith f l l' = zipWith f l' l := by
-  rw [zip_with_comm]
-  simp only [comm]
+    zipWith f l l' = zipWith f l' l := by rw [zip_with_comm]; simp only [comm]
 #align list.zip_with_comm_of_comm List.zipWith_comm_of_comm
 
 /- warning: list.zip_with_same -> List.zipWith_same is a dubious translation:
@@ -742,10 +712,8 @@ theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : �
   by
   cases z
   rw [zip, nth_zip_with_eq_some]; constructor
-  · rintro ⟨x, y, h₀, h₁, h₂⟩
-    cc
-  · rintro ⟨h₀, h₁⟩
-    exact ⟨_, _, h₀, h₁, rfl⟩
+  · rintro ⟨x, y, h₀, h₁, h₂⟩; cc
+  · rintro ⟨h₀, h₁⟩; exact ⟨_, _, h₀, h₁, rfl⟩
 #align list.nth_zip_eq_some List.get?_zip_eq_some
 
 /- warning: list.nth_le_zip_with -> List.nthLe_zipWith is a dubious translation:

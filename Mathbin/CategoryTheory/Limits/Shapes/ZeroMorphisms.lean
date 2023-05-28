@@ -150,18 +150,14 @@ section
 variable {C} [HasZeroMorphisms C]
 
 #print CategoryTheory.Limits.zero_of_comp_mono /-
-theorem zero_of_comp_mono {X Y Z : C} {f : X ⟶ Y} (g : Y ⟶ Z) [Mono g] (h : f ≫ g = 0) : f = 0 :=
-  by
-  rw [← zero_comp, cancel_mono] at h
-  exact h
+theorem zero_of_comp_mono {X Y Z : C} {f : X ⟶ Y} (g : Y ⟶ Z) [Mono g] (h : f ≫ g = 0) : f = 0 := by
+  rw [← zero_comp, cancel_mono] at h; exact h
 #align category_theory.limits.zero_of_comp_mono CategoryTheory.Limits.zero_of_comp_mono
 -/
 
 #print CategoryTheory.Limits.zero_of_epi_comp /-
-theorem zero_of_epi_comp {X Y Z : C} (f : X ⟶ Y) {g : Y ⟶ Z} [Epi f] (h : f ≫ g = 0) : g = 0 :=
-  by
-  rw [← comp_zero, cancel_epi] at h
-  exact h
+theorem zero_of_epi_comp {X Y Z : C} (f : X ⟶ Y) {g : Y ⟶ Z} [Epi f] (h : f ≫ g = 0) : g = 0 := by
+  rw [← comp_zero, cancel_epi] at h; exact h
 #align category_theory.limits.zero_of_epi_comp CategoryTheory.Limits.zero_of_epi_comp
 -/
 
@@ -235,17 +231,13 @@ theorem of_epi_zero (X Y : C) [Epi (0 : X ⟶ Y)] : IsZero Y :=
 -/
 
 #print CategoryTheory.Limits.IsZero.of_mono_eq_zero /-
-theorem of_mono_eq_zero {X Y : C} (f : X ⟶ Y) [Mono f] (h : f = 0) : IsZero X :=
-  by
-  subst h
+theorem of_mono_eq_zero {X Y : C} (f : X ⟶ Y) [Mono f] (h : f = 0) : IsZero X := by subst h;
   apply of_mono_zero X Y
 #align category_theory.limits.is_zero.of_mono_eq_zero CategoryTheory.Limits.IsZero.of_mono_eq_zero
 -/
 
 #print CategoryTheory.Limits.IsZero.of_epi_eq_zero /-
-theorem of_epi_eq_zero {X Y : C} (f : X ⟶ Y) [Epi f] (h : f = 0) : IsZero Y :=
-  by
-  subst h
+theorem of_epi_eq_zero {X Y : C} (f : X ⟶ Y) [Epi f] (h : f = 0) : IsZero Y := by subst h;
   apply of_epi_zero X Y
 #align category_theory.limits.is_zero.of_epi_eq_zero CategoryTheory.Limits.IsZero.of_epi_eq_zero
 -/
@@ -255,11 +247,8 @@ theorem iff_isSplitMono_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsZero
   by
   rw [iff_id_eq_zero]
   constructor
-  · intro h
-    rw [← category.id_comp f, h, zero_comp]
-  · intro h
-    rw [← is_split_mono.id f]
-    simp [h]
+  · intro h; rw [← category.id_comp f, h, zero_comp]
+  · intro h; rw [← is_split_mono.id f]; simp [h]
 #align category_theory.limits.is_zero.iff_is_split_mono_eq_zero CategoryTheory.Limits.IsZero.iff_isSplitMono_eq_zero
 -/
 
@@ -268,19 +257,15 @@ theorem iff_isSplitEpi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero Y
   by
   rw [iff_id_eq_zero]
   constructor
-  · intro h
-    rw [← category.comp_id f, h, comp_zero]
-  · intro h
-    rw [← is_split_epi.id f]
-    simp [h]
+  · intro h; rw [← category.comp_id f, h, comp_zero]
+  · intro h; rw [← is_split_epi.id f]; simp [h]
 #align category_theory.limits.is_zero.iff_is_split_epi_eq_zero CategoryTheory.Limits.IsZero.iff_isSplitEpi_eq_zero
 -/
 
 #print CategoryTheory.Limits.IsZero.of_mono /-
 theorem of_mono {X Y : C} (f : X ⟶ Y) [Mono f] (i : IsZero Y) : IsZero X :=
   by
-  have hf := i.eq_zero_of_tgt f
-  subst hf
+  have hf := i.eq_zero_of_tgt f; subst hf
   exact is_zero.of_mono_zero X Y
 #align category_theory.limits.is_zero.of_mono CategoryTheory.Limits.IsZero.of_mono
 -/
@@ -288,8 +273,7 @@ theorem of_mono {X Y : C} (f : X ⟶ Y) [Mono f] (i : IsZero Y) : IsZero X :=
 #print CategoryTheory.Limits.IsZero.of_epi /-
 theorem of_epi {X Y : C} (f : X ⟶ Y) [Epi f] (i : IsZero X) : IsZero Y :=
   by
-  have hf := i.eq_zero_of_src f
-  subst hf
+  have hf := i.eq_zero_of_src f; subst hf
   exact is_zero.of_epi_zero X Y
 #align category_theory.limits.is_zero.of_epi CategoryTheory.Limits.IsZero.of_epi
 -/
@@ -308,14 +292,8 @@ end IsZero
 def IsZero.hasZeroMorphisms {O : C} (hO : IsZero O) : HasZeroMorphisms C
     where
   Zero X Y := { zero := hO.from X ≫ hO.to Y }
-  zero_comp X Y Z f := by
-    rw [category.assoc]
-    congr
-    apply hO.eq_of_src
-  comp_zero X Y Z f := by
-    rw [← category.assoc]
-    congr
-    apply hO.eq_of_tgt
+  zero_comp X Y Z f := by rw [category.assoc]; congr ; apply hO.eq_of_src
+  comp_zero X Y Z f := by rw [← category.assoc]; congr ; apply hO.eq_of_tgt
 #align category_theory.limits.is_zero.has_zero_morphisms CategoryTheory.Limits.IsZero.hasZeroMorphisms
 -/
 
@@ -337,14 +315,8 @@ open ZeroObject
 def zeroMorphismsOfZeroObject : HasZeroMorphisms C
     where
   Zero X Y := { zero := (default : X ⟶ 0) ≫ default }
-  zero_comp X Y Z f := by
-    dsimp only [Zero.zero]
-    rw [category.assoc]
-    congr
-  comp_zero X Y Z f := by
-    dsimp only [Zero.zero]
-    rw [← category.assoc]
-    congr
+  zero_comp X Y Z f := by dsimp only [Zero.zero]; rw [category.assoc]; congr
+  comp_zero X Y Z f := by dsimp only [Zero.zero]; rw [← category.assoc]; congr
 #align category_theory.limits.has_zero_object.zero_morphisms_of_zero_object CategoryTheory.Limits.HasZeroObject.zeroMorphismsOfZeroObject
 -/
 
@@ -564,18 +536,14 @@ def isoZeroOfEpiZero {X Y : C} (h : Epi (0 : X ⟶ Y)) : Y ≅ 0
 
 #print CategoryTheory.Limits.isoZeroOfMonoEqZero /-
 /-- If a monomorphism out of `X` is zero, then `X ≅ 0`. -/
-def isoZeroOfMonoEqZero {X Y : C} {f : X ⟶ Y} [Mono f] (h : f = 0) : X ≅ 0 :=
-  by
-  subst h
+def isoZeroOfMonoEqZero {X Y : C} {f : X ⟶ Y} [Mono f] (h : f = 0) : X ≅ 0 := by subst h;
   apply iso_zero_of_mono_zero ‹_›
 #align category_theory.limits.iso_zero_of_mono_eq_zero CategoryTheory.Limits.isoZeroOfMonoEqZero
 -/
 
 #print CategoryTheory.Limits.isoZeroOfEpiEqZero /-
 /-- If an epimorphism in to `Y` is zero, then `Y ≅ 0`. -/
-def isoZeroOfEpiEqZero {X Y : C} {f : X ⟶ Y} [Epi f] (h : f = 0) : Y ≅ 0 :=
-  by
-  subst h
+def isoZeroOfEpiEqZero {X Y : C} {f : X ⟶ Y} [Epi f] (h : f = 0) : Y ≅ 0 := by subst h;
   apply iso_zero_of_epi_zero ‹_›
 #align category_theory.limits.iso_zero_of_epi_eq_zero CategoryTheory.Limits.isoZeroOfEpiEqZero
 -/
@@ -610,10 +578,8 @@ the identities on both `X` and `Y` are zero.
 def isIsoZeroEquiv (X Y : C) : IsIso (0 : X ⟶ Y) ≃ 𝟙 X = 0 ∧ 𝟙 Y = 0
     where
   toFun := by
-    intro i
-    rw [← is_iso.hom_inv_id (0 : X ⟶ Y)]
-    rw [← is_iso.inv_hom_id (0 : X ⟶ Y)]
-    simp
+    intro i; rw [← is_iso.hom_inv_id (0 : X ⟶ Y)]
+    rw [← is_iso.inv_hom_id (0 : X ⟶ Y)]; simp
   invFun h := ⟨⟨(0 : Y ⟶ X), by tidy⟩⟩
   left_inv := by tidy
   right_inv := by tidy
@@ -642,12 +608,10 @@ def isIsoZeroEquivIsoZero (X Y : C) : IsIso (0 : X ⟶ Y) ≃ (X ≅ 0) × (Y �
   refine' (is_iso_zero_equiv X Y).trans _
   symm
   fconstructor
-  · rintro ⟨eX, eY⟩
-    fconstructor
+  · rintro ⟨eX, eY⟩; fconstructor
     exact (id_zero_equiv_iso_zero X).symm eX
     exact (id_zero_equiv_iso_zero Y).symm eY
-  · rintro ⟨hX, hY⟩
-    fconstructor
+  · rintro ⟨hX, hY⟩; fconstructor
     exact (id_zero_equiv_iso_zero X) hX
     exact (id_zero_equiv_iso_zero Y) hY
   · tidy
@@ -781,9 +745,7 @@ because `f = g` only implies `image f ≅ image g`.
 -/
 @[simp]
 theorem image.ι_zero' [HasEqualizers C] {X Y : C} {f : X ⟶ Y} (h : f = 0) [HasImage f] :
-    image.ι f = 0 := by
-  rw [image.eq_fac h]
-  simp
+    image.ι f = 0 := by rw [image.eq_fac h]; simp
 #align category_theory.limits.image.ι_zero' CategoryTheory.Limits.image.ι_zero'
 -/
 

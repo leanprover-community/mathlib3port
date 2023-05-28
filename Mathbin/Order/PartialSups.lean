@@ -84,8 +84,7 @@ Case conversion may be inaccurate. Consider using '#align le_partial_sups_of_le 
 theorem le_partialSups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m ≤ partialSups f n :=
   by
   induction' n with n ih
-  · cases h
-    exact le_rfl
+  · cases h; exact le_rfl
   · cases' h with h h
     · exact le_sup_right
     · exact (ih h).trans le_sup_left

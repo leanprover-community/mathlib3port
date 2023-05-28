@@ -65,16 +65,11 @@ theorem ContinuousSMul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup M]
       rintro ⟨a, m⟩
       simp [sub_smul, smul_sub]
       abel
-    rw [funext key]
-    clear key
+    rw [funext key]; clear key
     refine' tendsto_const_nhds.add (tendsto.add (tendsto.add _ _) _)
     · rw [sub_self, zero_smul]
       apply (hmulleft m₀).comp
-      rw [show (fun p : R × M => p.1 - a₀) = (fun a => a - a₀) ∘ Prod.fst
-          by
-          ext
-          rfl,
-        nhds_prod_eq]
+      rw [show (fun p : R × M => p.1 - a₀) = (fun a => a - a₀) ∘ Prod.fst by ext; rfl, nhds_prod_eq]
       have : tendsto (fun a => a - a₀) (𝓝 a₀) (𝓝 0) :=
         by
         rw [← sub_self a₀]
@@ -82,11 +77,7 @@ theorem ContinuousSMul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup M]
       exact this.comp tendsto_fst
     · rw [sub_self, smul_zero]
       apply (hmulright a₀).comp
-      rw [show (fun p : R × M => p.2 - m₀) = (fun m => m - m₀) ∘ Prod.snd
-          by
-          ext
-          rfl,
-        nhds_prod_eq]
+      rw [show (fun p : R × M => p.2 - m₀) = (fun m => m - m₀) ∘ Prod.snd by ext; rfl, nhds_prod_eq]
       have : tendsto (fun m => m - m₀) (𝓝 m₀) (𝓝 0) :=
         by
         rw [← sub_self m₀]
@@ -96,9 +87,7 @@ theorem ContinuousSMul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup M]
         show
           (fun p : R × M => (p.fst - a₀) • (p.snd - m₀)) =
             (fun p : R × M => p.1 • p.2) ∘ Prod.map (fun a => a - a₀) fun m => m - m₀
-          by
-          ext
-          rfl]
+          by ext; rfl]
       apply hmul.comp (tendsto.prod_map _ _) <;>
         · rw [← sub_self]
           exact tendsto_id.sub tendsto_const_nhds⟩
@@ -326,10 +315,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.dense_iff_topological_closure_eq_top Submodule.dense_iff_topologicalClosure_eq_topₓ'. -/
 /-- A subspace is dense iff its topological closure is the entire space. -/
 theorem Submodule.dense_iff_topologicalClosure_eq_top {s : Submodule R M} :
-    Dense (s : Set M) ↔ s.topologicalClosure = ⊤ :=
-  by
-  rw [← SetLike.coe_set_eq, dense_iff_closure_eq]
-  simp
+    Dense (s : Set M) ↔ s.topologicalClosure = ⊤ := by
+  rw [← SetLike.coe_set_eq, dense_iff_closure_eq]; simp
 #align submodule.dense_iff_topological_closure_eq_top Submodule.dense_iff_topologicalClosure_eq_top
 
 instance {M' : Type _} [AddCommMonoid M'] [Module R M'] [UniformSpace M'] [ContinuousAdd M']
@@ -369,10 +356,8 @@ theorem LinearMap.continuous_on_pi {ι : Type _} {R : Type _} {M : Type _} [Fini
   classical
     -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
     -- function.
-    have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 :=
-      by
-      ext x
-      exact f.pi_apply_eq_sum_univ x
+    have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
+      ext x; exact f.pi_apply_eq_sum_univ x
     rw [this]
     refine' continuous_finset_sum _ fun i hi => _
     exact (continuous_apply i).smul continuous_const
@@ -589,12 +574,8 @@ theorem [anonymous] (f : M₁ →SL[σ₁₂] M₂) : f.toLinearMap = f :=
 /- warning: continuous_linear_map.coe_injective -> ContinuousLinearMap.coe_injective is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.coe_injective ContinuousLinearMap.coe_injectiveₓ'. -/
-theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) :=
-  by
-  intro f g H
-  cases f
-  cases g
-  congr
+theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) := by
+  intro f g H; cases f; cases g; congr
 #align continuous_linear_map.coe_injective ContinuousLinearMap.coe_injective
 
 instance : ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁ M₂
@@ -940,9 +921,7 @@ instance uniqueOfRight [Subsingleton M₂] : Unique (M₁ →SL[σ₁₂] M₂) 
 /- warning: continuous_linear_map.exists_ne_zero -> ContinuousLinearMap.exists_ne_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.exists_ne_zero ContinuousLinearMap.exists_ne_zeroₓ'. -/
-theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 :=
-  by
-  by_contra' h
+theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 := by by_contra' h;
   exact hf (ContinuousLinearMap.ext h)
 #align continuous_linear_map.exists_ne_zero ContinuousLinearMap.exists_ne_zero
 
@@ -1050,12 +1029,8 @@ instance : AddCommMonoid (M₁ →SL[σ₁₂] M₂)
   add_assoc := by
     intros <;> ext <;> apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm]
   nsmul := (· • ·)
-  nsmul_zero f := by
-    ext
-    simp
-  nsmul_succ n f := by
-    ext
-    simp [Nat.succ_eq_one_add, add_smul]
+  nsmul_zero f := by ext; simp
+  nsmul_succ n f := by ext; simp [Nat.succ_eq_one_add, add_smul]
 
 /- warning: continuous_linear_map.coe_sum -> ContinuousLinearMap.coe_sum is a dubious translation:
 <too large>
@@ -1147,20 +1122,14 @@ include σ₁₃
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.comp_zero ContinuousLinearMap.comp_zeroₓ'. -/
 @[simp]
-theorem comp_zero (g : M₂ →SL[σ₂₃] M₃) : g.comp (0 : M₁ →SL[σ₁₂] M₂) = 0 :=
-  by
-  ext
-  simp
+theorem comp_zero (g : M₂ →SL[σ₂₃] M₃) : g.comp (0 : M₁ →SL[σ₁₂] M₂) = 0 := by ext; simp
 #align continuous_linear_map.comp_zero ContinuousLinearMap.comp_zero
 
 /- warning: continuous_linear_map.zero_comp -> ContinuousLinearMap.zero_comp is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.zero_comp ContinuousLinearMap.zero_compₓ'. -/
 @[simp]
-theorem zero_comp (f : M₁ →SL[σ₁₂] M₂) : (0 : M₂ →SL[σ₂₃] M₃).comp f = 0 :=
-  by
-  ext
-  simp
+theorem zero_comp (f : M₁ →SL[σ₁₂] M₂) : (0 : M₂ →SL[σ₂₃] M₃).comp f = 0 := by ext; simp
 #align continuous_linear_map.zero_comp ContinuousLinearMap.zero_comp
 
 /- warning: continuous_linear_map.comp_add -> ContinuousLinearMap.comp_add is a dubious translation:
@@ -1168,10 +1137,7 @@ theorem zero_comp (f : M₁ →SL[σ₁₂] M₂) : (0 : M₂ →SL[σ₂₃] M�
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.comp_add ContinuousLinearMap.comp_addₓ'. -/
 @[simp]
 theorem comp_add [ContinuousAdd M₂] [ContinuousAdd M₃] (g : M₂ →SL[σ₂₃] M₃)
-    (f₁ f₂ : M₁ →SL[σ₁₂] M₂) : g.comp (f₁ + f₂) = g.comp f₁ + g.comp f₂ :=
-  by
-  ext
-  simp
+    (f₁ f₂ : M₁ →SL[σ₁₂] M₂) : g.comp (f₁ + f₂) = g.comp f₁ + g.comp f₂ := by ext; simp
 #align continuous_linear_map.comp_add ContinuousLinearMap.comp_add
 
 /- warning: continuous_linear_map.add_comp -> ContinuousLinearMap.add_comp is a dubious translation:
@@ -1179,9 +1145,7 @@ theorem comp_add [ContinuousAdd M₂] [ContinuousAdd M₃] (g : M₂ →SL[σ₂
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.add_comp ContinuousLinearMap.add_compₓ'. -/
 @[simp]
 theorem add_comp [ContinuousAdd M₃] (g₁ g₂ : M₂ →SL[σ₂₃] M₃) (f : M₁ →SL[σ₁₂] M₂) :
-    (g₁ + g₂).comp f = g₁.comp f + g₂.comp f := by
-  ext
-  simp
+    (g₁ + g₂).comp f = g₁.comp f + g₂.comp f := by ext; simp
 #align continuous_linear_map.add_comp ContinuousLinearMap.add_comp
 
 omit σ₁₃
@@ -1733,9 +1697,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_linear_map.
 theorem smulRight_comp [ContinuousMul R₁] {x : M₂} {c : R₁} :
     (smulRight (1 : R₁ →L[R₁] R₁) x).comp (smulRight (1 : R₁ →L[R₁] R₁) c) =
       smulRight (1 : R₁ →L[R₁] R₁) (c • x) :=
-  by
-  ext
-  simp [mul_smul]
+  by ext; simp [mul_smul]
 #align continuous_linear_map.smul_right_comp ContinuousLinearMap.smulRight_comp
 
 end Semiring
@@ -1780,10 +1742,8 @@ theorem pi_apply (f : ∀ i, M →L[R] φ i) (c : M) (i : ι) : pi f c i = f i c
 /- warning: continuous_linear_map.pi_eq_zero -> ContinuousLinearMap.pi_eq_zero is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.pi_eq_zero ContinuousLinearMap.pi_eq_zeroₓ'. -/
-theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 :=
-  by
-  simp only [ext_iff, pi_apply, Function.funext_iff]
-  exact forall_swap
+theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 := by
+  simp only [ext_iff, pi_apply, Function.funext_iff]; exact forall_swap
 #align continuous_linear_map.pi_eq_zero ContinuousLinearMap.pi_eq_zero
 
 /- warning: continuous_linear_map.pi_zero -> ContinuousLinearMap.pi_zero is a dubious translation:
@@ -1968,15 +1928,9 @@ instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
             sub_eq_add_neg := _
             nsmul := (· • ·)
             zsmul := (· • ·)
-            zsmul_zero' := fun f => by
-              ext
-              simp
-            zsmul_succ' := fun n f => by
-              ext
-              simp [add_smul, add_comm]
-            zsmul_neg' := fun n f => by
-              ext
-              simp [Nat.succ_eq_add_one, add_smul].. } <;>
+            zsmul_zero' := fun f => by ext; simp
+            zsmul_succ' := fun n f => by ext; simp [add_smul, add_comm]
+            zsmul_neg' := fun n f => by ext; simp [Nat.succ_eq_add_one, add_smul].. } <;>
         intros <;>
       ext <;>
     apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm, sub_eq_add_neg]
@@ -2011,10 +1965,7 @@ end
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.comp_neg ContinuousLinearMap.comp_negₓ'. -/
 @[simp]
 theorem comp_neg [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₂] [TopologicalAddGroup M₃]
-    (g : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁₂] M₂) : g.comp (-f) = -g.comp f :=
-  by
-  ext
-  simp
+    (g : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁₂] M₂) : g.comp (-f) = -g.comp f := by ext; simp
 #align continuous_linear_map.comp_neg ContinuousLinearMap.comp_neg
 
 /- warning: continuous_linear_map.neg_comp -> ContinuousLinearMap.neg_comp is a dubious translation:
@@ -2022,10 +1973,7 @@ theorem comp_neg [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddG
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.neg_comp ContinuousLinearMap.neg_compₓ'. -/
 @[simp]
 theorem neg_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₃] (g : M₂ →SL[σ₂₃] M₃)
-    (f : M →SL[σ₁₂] M₂) : (-g).comp f = -g.comp f :=
-  by
-  ext
-  simp
+    (f : M →SL[σ₁₂] M₂) : (-g).comp f = -g.comp f := by ext; simp
 #align continuous_linear_map.neg_comp ContinuousLinearMap.neg_comp
 
 /- warning: continuous_linear_map.comp_sub -> ContinuousLinearMap.comp_sub is a dubious translation:
@@ -2033,10 +1981,8 @@ theorem neg_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddG
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.comp_sub ContinuousLinearMap.comp_subₓ'. -/
 @[simp]
 theorem comp_sub [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₂] [TopologicalAddGroup M₃]
-    (g : M₂ →SL[σ₂₃] M₃) (f₁ f₂ : M →SL[σ₁₂] M₂) : g.comp (f₁ - f₂) = g.comp f₁ - g.comp f₂ :=
-  by
-  ext
-  simp
+    (g : M₂ →SL[σ₂₃] M₃) (f₁ f₂ : M →SL[σ₁₂] M₂) : g.comp (f₁ - f₂) = g.comp f₁ - g.comp f₂ := by
+  ext; simp
 #align continuous_linear_map.comp_sub ContinuousLinearMap.comp_sub
 
 /- warning: continuous_linear_map.sub_comp -> ContinuousLinearMap.sub_comp is a dubious translation:
@@ -2044,10 +1990,7 @@ theorem comp_sub [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddG
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.sub_comp ContinuousLinearMap.sub_compₓ'. -/
 @[simp]
 theorem sub_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₃] (g₁ g₂ : M₂ →SL[σ₂₃] M₃)
-    (f : M →SL[σ₁₂] M₂) : (g₁ - g₂).comp f = g₁.comp f - g₂.comp f :=
-  by
-  ext
-  simp
+    (f : M →SL[σ₁₂] M₂) : (g₁ - g₂).comp f = g₁.comp f - g₂.comp f := by ext; simp
 #align continuous_linear_map.sub_comp ContinuousLinearMap.sub_comp
 
 instance [TopologicalAddGroup M] : Ring (M →L[R] M) :=
@@ -2063,8 +2006,7 @@ theorem smulRight_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n : 
     smulRight (1 : R →L[R] R) c ^ n = smulRight (1 : R →L[R] R) (c ^ n) :=
   by
   induction' n with n ihn
-  · ext
-    simp
+  · ext; simp
   · rw [pow_succ, ihn, mul_def, smul_right_comp, smul_eq_mul, pow_succ']
 #align continuous_linear_map.smul_right_one_pow ContinuousLinearMap.smulRight_one_pow
 
@@ -2169,9 +2111,7 @@ variable [DistribMulAction S N₂] [ContinuousConstSMul S N₂] [SMulCommClass R
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.comp_smul ContinuousLinearMap.comp_smulₓ'. -/
 @[simp]
 theorem comp_smul [LinearMap.CompatibleSMul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
-    (fₗ : M →L[R] N₂) : hₗ.comp (c • fₗ) = c • hₗ.comp fₗ :=
-  by
-  ext x
+    (fₗ : M →L[R] N₂) : hₗ.comp (c • fₗ) = c • hₗ.comp fₗ := by ext x;
   exact hₗ.map_smul_of_tower c (fₗ x)
 #align continuous_linear_map.comp_smul ContinuousLinearMap.comp_smul
 
@@ -2183,8 +2123,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_linear_map.
 @[simp]
 theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ M₃] [ContinuousConstSMul R₂ M₂]
     [ContinuousConstSMul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
-    h.comp (c • f) = σ₂₃ c • h.comp f := by
-  ext x
+    h.comp (c • f) = σ₂₃ c • h.comp f := by ext x;
   simp only [coe_smul', coe_comp', Function.comp_apply, Pi.smul_apply,
     ContinuousLinearMap.map_smulₛₗ]
 #align continuous_linear_map.comp_smulₛₗ ContinuousLinearMap.comp_smulₛₗ
@@ -2228,10 +2167,8 @@ def prodEquiv : (M →L[R] N₂) × (M →L[R] N₃) ≃ (M →L[R] N₂ × N₃
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_map.prod_ext_iff ContinuousLinearMap.prod_ext_iffₓ'. -/
 theorem prod_ext_iff {f g : M × N₂ →L[R] N₃} :
-    f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) :=
-  by
-  simp only [← coe_inj, LinearMap.prod_ext_iff]
-  rfl
+    f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) := by
+  simp only [← coe_inj, LinearMap.prod_ext_iff]; rfl
 #align continuous_linear_map.prod_ext_iff ContinuousLinearMap.prod_ext_iff
 
 /- warning: continuous_linear_map.prod_ext -> ContinuousLinearMap.prod_ext is a dubious translation:
@@ -2312,13 +2249,8 @@ sending `f` to `λ e, c e • f`. See also `continuous_linear_map.smul_rightL`. 
 def smulRightₗ (c : M →L[R] S) : M₂ →ₗ[T] M →L[R] M₂
     where
   toFun := c.smul_right
-  map_add' x y := by
-    ext e
-    apply smul_add
-  map_smul' a x := by
-    ext e
-    dsimp
-    apply smul_comm
+  map_add' x y := by ext e; apply smul_add
+  map_smul' a x := by ext e; dsimp; apply smul_comm
 #align continuous_linear_map.smul_rightₗ ContinuousLinearMap.smulRightₗ
 
 /- warning: continuous_linear_map.coe_smul_rightₗ -> ContinuousLinearMap.coe_smulRightₗ is a dubious translation:
@@ -2480,10 +2412,7 @@ instance : ContinuousSemilinearEquivClass (M₁ ≃SL[σ₁₂] M₂) σ₁₂ M
   coe f := f
   inv f := f.invFun
   coe_injective' f g h₁ h₂ := by
-    cases' f with f' _
-    cases' g with g' _
-    cases f'
-    cases g'
+    cases' f with f' _; cases' g with g' _; cases f'; cases g'
     congr
   left_inv f := f.left_inv
   right_inv f := f.right_inv
@@ -2754,10 +2683,8 @@ include σ₂₁
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.symm_to_linear_equiv ContinuousLinearEquiv.symm_toLinearEquivₓ'. -/
 @[simp]
-theorem symm_toLinearEquiv (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.toLinearEquiv = e.toLinearEquiv.symm :=
-  by
-  ext
-  rfl
+theorem symm_toLinearEquiv (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.toLinearEquiv = e.toLinearEquiv.symm := by
+  ext; rfl
 #align continuous_linear_equiv.symm_to_linear_equiv ContinuousLinearEquiv.symm_toLinearEquiv
 
 /- warning: continuous_linear_equiv.symm_to_homeomorph -> ContinuousLinearEquiv.symm_toHomeomorph is a dubious translation:
@@ -2816,10 +2743,7 @@ include σ₁₃
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.trans_to_linear_equiv ContinuousLinearEquiv.trans_toLinearEquivₓ'. -/
 @[simp]
 theorem trans_toLinearEquiv (e₁ : M₁ ≃SL[σ₁₂] M₂) (e₂ : M₂ ≃SL[σ₂₃] M₃) :
-    (e₁.trans e₂).toLinearEquiv = e₁.toLinearEquiv.trans e₂.toLinearEquiv :=
-  by
-  ext
-  rfl
+    (e₁.trans e₂).toLinearEquiv = e₁.toLinearEquiv.trans e₂.toLinearEquiv := by ext; rfl
 #align continuous_linear_equiv.trans_to_linear_equiv ContinuousLinearEquiv.trans_toLinearEquiv
 
 omit σ₁₃ σ₂₁ σ₃₂ σ₃₁
@@ -2982,9 +2906,7 @@ include σ₂₁
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.symm_comp_self ContinuousLinearEquiv.symm_comp_selfₓ'. -/
 @[simp]
-theorem symm_comp_self (e : M₁ ≃SL[σ₁₂] M₂) : (e.symm : M₂ → M₁) ∘ (e : M₁ → M₂) = id :=
-  by
-  ext x
+theorem symm_comp_self (e : M₁ ≃SL[σ₁₂] M₂) : (e.symm : M₂ → M₁) ∘ (e : M₁ → M₂) = id := by ext x;
   exact symm_apply_apply e x
 #align continuous_linear_equiv.symm_comp_self ContinuousLinearEquiv.symm_comp_self
 
@@ -2992,9 +2914,7 @@ theorem symm_comp_self (e : M₁ ≃SL[σ₁₂] M₂) : (e.symm : M₂ → M₁
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.self_comp_symm ContinuousLinearEquiv.self_comp_symmₓ'. -/
 @[simp]
-theorem self_comp_symm (e : M₁ ≃SL[σ₁₂] M₂) : (e : M₁ → M₂) ∘ (e.symm : M₂ → M₁) = id :=
-  by
-  ext x
+theorem self_comp_symm (e : M₁ ≃SL[σ₁₂] M₂) : (e : M₁ → M₂) ∘ (e.symm : M₂ → M₁) = id := by ext x;
   exact apply_symm_apply e x
 #align continuous_linear_equiv.self_comp_symm ContinuousLinearEquiv.self_comp_symm
 
@@ -3002,10 +2922,7 @@ theorem self_comp_symm (e : M₁ ≃SL[σ₁₂] M₂) : (e : M₁ → M₂) ∘
 <too large>
 Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.symm_symm ContinuousLinearEquiv.symm_symmₓ'. -/
 @[simp]
-theorem symm_symm (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.symm = e :=
-  by
-  ext x
-  rfl
+theorem symm_symm (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.symm = e := by ext x; rfl
 #align continuous_linear_equiv.symm_symm ContinuousLinearEquiv.symm_symm
 
 omit σ₂₁
@@ -3145,18 +3062,10 @@ instance automorphismGroup : Group (M₁ ≃L[R₁] M₁)
   mul f g := g.trans f
   one := ContinuousLinearEquiv.refl R₁ M₁
   inv f := f.symm
-  mul_assoc f g h := by
-    ext
-    rfl
-  mul_one f := by
-    ext
-    rfl
-  one_mul f := by
-    ext
-    rfl
-  mul_left_inv f := by
-    ext
-    exact f.left_inv x
+  mul_assoc f g h := by ext; rfl
+  mul_one f := by ext; rfl
+  one_mul f := by ext; rfl
+  mul_left_inv f := by ext; exact f.left_inv x
 #align continuous_linear_equiv.automorphism_group ContinuousLinearEquiv.automorphismGroup
 -/
 
@@ -3294,14 +3203,8 @@ def ofUnit (f : (M →L[R] M)ˣ) : M ≃L[R] M
       map_add' := by simp
       map_smul' := by simp
       invFun := f.inv
-      left_inv := fun x =>
-        show (f.inv * f.val) x = x by
-          rw [f.inv_val]
-          simp
-      right_inv := fun x =>
-        show (f.val * f.inv) x = x by
-          rw [f.val_inv]
-          simp }
+      left_inv := fun x => show (f.inv * f.val) x = x by rw [f.inv_val]; simp
+      right_inv := fun x => show (f.val * f.inv) x = x by rw [f.val_inv]; simp }
   continuous_toFun := f.val.Continuous
   continuous_invFun := f.inv.Continuous
 #align continuous_linear_equiv.of_unit ContinuousLinearEquiv.ofUnit
@@ -3316,12 +3219,8 @@ Case conversion may be inaccurate. Consider using '#align continuous_linear_equi
 def toUnit (f : M ≃L[R] M) : (M →L[R] M)ˣ where
   val := f
   inv := f.symm
-  val_inv := by
-    ext
-    simp
-  inv_val := by
-    ext
-    simp
+  val_inv := by ext; simp
+  inv_val := by ext; simp
 #align continuous_linear_equiv.to_unit ContinuousLinearEquiv.toUnit
 
 variable (R M)
@@ -3335,15 +3234,9 @@ def unitsEquiv : (M →L[R] M)ˣ ≃* M ≃L[R] M
     where
   toFun := ofUnit
   invFun := toUnit
-  left_inv f := by
-    ext
-    rfl
-  right_inv f := by
-    ext
-    rfl
-  map_mul' x y := by
-    ext
-    rfl
+  left_inv f := by ext; rfl
+  right_inv f := by ext; rfl
+  map_mul' x y := by ext; rfl
 #align continuous_linear_equiv.units_equiv ContinuousLinearEquiv.unitsEquiv
 
 /- warning: continuous_linear_equiv.units_equiv_apply -> ContinuousLinearEquiv.unitsEquiv_apply is a dubious translation:
@@ -3601,9 +3494,7 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
     rcases h₁ with ⟨F, hF⟩
     use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
     ext
-    dsimp
-    rw [coeFn_coe_base' F, hF]
-    simp
+    dsimp; rw [coeFn_coe_base' F, hF]; simp
 #align continuous_linear_map.to_ring_inverse ContinuousLinearMap.to_ring_inverse
 
 /- warning: continuous_linear_map.ring_inverse_eq_map_inverse -> ContinuousLinearMap.ring_inverse_eq_map_inverse is a dubious translation:

@@ -91,8 +91,7 @@ theorem Inducing.pseudoMetrizableSpace [PseudoMetrizableSpace Y] {f : X → Y} (
 instance (priority := 100) PseudoMetrizableSpace.firstCountableTopology
     [h : PseudoMetrizableSpace X] : TopologicalSpace.FirstCountableTopology X :=
   by
-  rcases h with ⟨_, hm⟩
-  rw [← hm]
+  rcases h with ⟨_, hm⟩; rw [← hm]
   exact
     @UniformSpace.firstCountableTopology X PseudoMetricSpace.toUniformSpace
       Emetric.Uniformity.Filter.isCountablyGenerated
@@ -110,8 +109,7 @@ instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
 instance pseudoMetrizableSpace_pi [∀ i, PseudoMetrizableSpace (π i)] :
     PseudoMetrizableSpace (∀ i, π i) :=
   by
-  cases nonempty_fintype ι
-  letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
+  cases nonempty_fintype ι; letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
   infer_instance
 #align topological_space.pseudo_metrizable_space_pi TopologicalSpace.pseudoMetrizableSpace_pi
 -/
@@ -149,10 +147,8 @@ noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : M
 -/
 
 #print TopologicalSpace.t2Space_of_metrizableSpace /-
-instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Space X :=
-  by
-  letI : MetricSpace X := metrizable_space_metric X
-  infer_instance
+instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Space X := by
+  letI : MetricSpace X := metrizable_space_metric X; infer_instance
 #align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2Space_of_metrizableSpace
 -/
 
@@ -186,11 +182,8 @@ instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpa
 -/
 
 #print TopologicalSpace.metrizableSpace_pi /-
-instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) :=
-  by
-  cases nonempty_fintype ι
-  letI := fun i => metrizable_space_metric (π i)
-  infer_instance
+instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) := by
+  cases nonempty_fintype ι; letI := fun i => metrizable_space_metric (π i); infer_instance
 #align topological_space.metrizable_space_pi TopologicalSpace.metrizableSpace_pi
 -/
 
@@ -216,7 +209,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   haveI : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
   -- with the discrete topology and deal with `s →ᵇ ℝ` instead.
-  letI : TopologicalSpace s := ⊥
+  letI : TopologicalSpace s := ⊥;
   haveI : DiscreteTopology s := ⟨rfl⟩
   rsuffices ⟨f, hf⟩ : ∃ f : X → s →ᵇ ℝ, Embedding f
   ·

@@ -126,8 +126,7 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
       rw [ContDiffWithinAtProp, ContDiffWithinAtProp, this]
       symm
       apply contDiffWithinAt_inter
-      have : u ∈ 𝓝 (I.symm (I x)) := by
-        rw [ModelWithCorners.left_inv]
+      have : u ∈ 𝓝 (I.symm (I x)) := by rw [ModelWithCorners.left_inv];
         exact IsOpen.mem_nhds u_open xu
       apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this
     right_invariance' := by
@@ -138,8 +137,7 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I := by simp only [hx, mfld_simps]
       have := ((mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this).of_le le_top
       convert(h.comp' _ this).mono_of_mem _ using 1
-      · ext y
-        simp only [mfld_simps]
+      · ext y; simp only [mfld_simps]
       refine'
         mem_nhds_within.mpr
           ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
@@ -159,11 +157,8 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
         simp only [hx, mfld_simps]
       have := ((mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A).of_le le_top
       convert this.comp _ h _
-      · ext y
-        simp only [mfld_simps]
-      · intro y hy
-        simp only [mfld_simps] at hy
-        simpa only [hy, mfld_simps] using hs hy.1 }
+      · ext y; simp only [mfld_simps]
+      · intro y hy; simp only [mfld_simps] at hy; simpa only [hy, mfld_simps] using hs hy.1 }
 #align cont_diff_within_at_local_invariant_prop cont_diff_within_at_localInvariantProp
 
 theorem contDiffWithinAtProp_mono_of_mem (n : ℕ∞) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : s ∈ 𝓝[t] x)
@@ -209,10 +204,7 @@ theorem contMdiffAt_iff {n : ℕ∞} {f : M → M'} {x : M} :
       ContinuousAt f x ∧
         ContDiffWithinAt 𝕜 n (extChartAt I' (f x) ∘ f ∘ (extChartAt I x).symm) (range I)
           (extChartAt I x x) :=
-  liftPropAt_iff.trans <|
-    by
-    rw [ContDiffWithinAtProp, preimage_univ, univ_inter]
-    rfl
+  liftPropAt_iff.trans <| by rw [ContDiffWithinAtProp, preimage_univ, univ_inter]; rfl
 #align cont_mdiff_at_iff contMdiffAt_iff
 
 /-- Abbreviation for `cont_mdiff_at I I' ⊤ f x`. See also documentation for `smooth`. -/
@@ -850,10 +842,8 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
       rcases mem_nhdsWithin.1 (h.1.preimage_mem_nhdsWithin this) with ⟨u, u_open, xu, hu⟩
       refine' ⟨u ∩ (chart_at H x).source, _, ⟨xu, mem_chart_source _ _⟩, _, _⟩
       · exact IsOpen.inter u_open (LocalHomeomorph.open_source _)
-      · intro y hy
-        exact hy.2
-      · intro y hy
-        exact hu ⟨hy.1.1, hy.2⟩
+      · intro y hy; exact hy.2
+      · intro y hy; exact hu ⟨hy.1.1, hy.2⟩
     have h' : ContMdiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
     simp only [ContMdiffWithinAt, lift_prop_within_at, ContDiffWithinAtProp] at h'
     -- let `u` be a good neighborhood in the chart where the function is smooth
@@ -1655,10 +1645,8 @@ theorem smooth_iff_proj_smooth {f : M → M' × N'} :
     Smooth I (I'.Prod J') f ↔ Smooth I I' (Prod.fst ∘ f) ∧ Smooth I J' (Prod.snd ∘ f) :=
   by
   constructor
-  · intro h
-    exact ⟨smooth_fst.comp h, smooth_snd.comp h⟩
-  · rintro ⟨h_fst, h_snd⟩
-    simpa only [Prod.mk.eta] using h_fst.prod_mk h_snd
+  · intro h; exact ⟨smooth_fst.comp h, smooth_snd.comp h⟩
+  · rintro ⟨h_fst, h_snd⟩; simpa only [Prod.mk.eta] using h_fst.prod_mk h_snd
 #align smooth_iff_proj_smooth smooth_iff_proj_smooth
 
 theorem smooth_prod_assoc :
@@ -1671,17 +1659,13 @@ end Projections
 theorem contMdiffWithinAt_prod_iff (f : M → M' × N') {s : Set M} {x : M} :
     ContMdiffWithinAt I (I'.Prod J') n f s x ↔
       ContMdiffWithinAt I I' n (Prod.fst ∘ f) s x ∧ ContMdiffWithinAt I J' n (Prod.snd ∘ f) s x :=
-  by
-  refine' ⟨fun h => ⟨h.fst, h.snd⟩, fun h => _⟩
-  simpa only [Prod.mk.eta] using h.1.prod_mk h.2
+  by refine' ⟨fun h => ⟨h.fst, h.snd⟩, fun h => _⟩; simpa only [Prod.mk.eta] using h.1.prod_mk h.2
 #align cont_mdiff_within_at_prod_iff contMdiffWithinAt_prod_iff
 
 theorem contMdiffAt_prod_iff (f : M → M' × N') {x : M} :
     ContMdiffAt I (I'.Prod J') n f x ↔
       ContMdiffAt I I' n (Prod.fst ∘ f) x ∧ ContMdiffAt I J' n (Prod.snd ∘ f) x :=
-  by
-  simp_rw [← contMdiffWithinAt_univ]
-  exact contMdiffWithinAt_prod_iff f
+  by simp_rw [← contMdiffWithinAt_univ]; exact contMdiffWithinAt_prod_iff f
 #align cont_mdiff_at_prod_iff contMdiffAt_prod_iff
 
 section Prod_map
@@ -1830,10 +1814,8 @@ theorem ContMdiffWithinAt.clm_comp {g : M → F₁ →L[𝕜] F₃} {f : M → F
     ContMdiffWithinAt I 𝓘(𝕜, F₂ →L[𝕜] F₃) n (fun x => (g x).comp (f x)) s x :=
   @ContDiffWithinAt.comp_contMdiffWithinAt _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     (fun x : (F₁ →L[𝕜] F₃) × (F₂ →L[𝕜] F₁) => x.1.comp x.2) (fun x => (g x, f x)) s _ x
-    (by
-      apply ContDiff.contDiffAt
-      exact cont_diff_fst.clm_comp contDiff_snd)
-    (hg.prod_mk_space hf) (by simp_rw [preimage_univ, subset_univ])
+    (by apply ContDiff.contDiffAt; exact cont_diff_fst.clm_comp contDiff_snd) (hg.prod_mk_space hf)
+    (by simp_rw [preimage_univ, subset_univ])
 #align cont_mdiff_within_at.clm_comp ContMdiffWithinAt.clm_comp
 
 theorem ContMdiffAt.clm_comp {g : M → F₁ →L[𝕜] F₃} {f : M → F₂ →L[𝕜] F₁} {x : M}
@@ -1859,10 +1841,8 @@ theorem ContMdiffWithinAt.clm_apply {g : M → F₁ →L[𝕜] F₂} {f : M → 
     ContMdiffWithinAt I 𝓘(𝕜, F₂) n (fun x => g x (f x)) s x :=
   @ContDiffWithinAt.comp_contMdiffWithinAt _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     (fun x : (F₁ →L[𝕜] F₂) × F₁ => x.1 x.2) (fun x => (g x, f x)) s _ x
-    (by
-      apply ContDiff.contDiffAt
-      exact cont_diff_fst.clm_apply contDiff_snd)
-    (hg.prod_mk_space hf) (by simp_rw [preimage_univ, subset_univ])
+    (by apply ContDiff.contDiffAt; exact cont_diff_fst.clm_apply contDiff_snd) (hg.prod_mk_space hf)
+    (by simp_rw [preimage_univ, subset_univ])
 #align cont_mdiff_within_at.clm_apply ContMdiffWithinAt.clm_apply
 
 theorem ContMdiffAt.clm_apply {g : M → F₁ →L[𝕜] F₂} {f : M → F₁} {x : M}
@@ -2064,20 +2044,17 @@ theorem is_local_structomorph_on_contDiffGroupoid_iff (f : LocalHomeomorph M M')
         apply eq_on.symm
         refine' e.is_image_source_target.symm_eq_on_of_inter_eq_of_eq_on _ _
         · rw [inter_self, inter_eq_right_iff_subset.mpr h2e]
-        rw [inter_self]
-        exact hef.symm
+        rw [inter_self]; exact hef.symm
       have h2 : e.target ⊆ (c.symm ≫ₕ f ≫ₕ c').target :=
         by
-        intro x hx
-        rw [← e.right_inv hx, ← hef (e.symm.maps_to hx)]
+        intro x hx; rw [← e.right_inv hx, ← hef (e.symm.maps_to hx)]
         exact LocalHomeomorph.mapsTo _ (h2e <| e.symm.maps_to hx)
       rw [inter_self] at h1
       rwa [inter_eq_right_iff_subset.mpr]
       refine' h2.trans _
       mfld_set_tac
     refine' ⟨e.symm, StructureGroupoid.symm _ he, h3e, _⟩
-    rw [h2X]
-    exact e.maps_to hex
+    rw [h2X]; exact e.maps_to hex
   · -- We now show the converse: a local homeomorphism `f : M → M'` which is smooth in both
     -- directions is a local structomorphism.  We do this by proposing
     -- `((chart_at H x).symm.trans f).trans (chart_at H (f x))` as a candidate for a structomorphism

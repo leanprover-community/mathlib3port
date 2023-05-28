@@ -167,8 +167,7 @@ theorem map_frobeniusPoly (n : ℕ) :
   by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_mul, RingHom.map_pow, map_C, map_X, eq_intCast,
     Int.cast_ofNat, frobenius_poly_rat]
-  apply Nat.strong_induction_on n
-  clear n
+  apply Nat.strong_induction_on n; clear n
   intro n IH
   rw [xInTermsOfW_eq]
   simp only [AlgHom.map_sum, AlgHom.map_sub, AlgHom.map_mul, AlgHom.map_pow, bind₁_C_right]
@@ -207,10 +206,7 @@ theorem map_frobeniusPoly (n : ℕ) :
     ((p ^ (n - i)).choose (j + 1) * p ^ (j - v p ⟨j + 1, j.succ_pos⟩) * p * p ^ n : ℚ) =
       p ^ j * p * ((p ^ (n - i)).choose (j + 1) * p ^ i) * p ^ (n - i - v p ⟨j + 1, j.succ_pos⟩)
     by
-    have aux : ∀ k : ℕ, (p ^ k : ℚ) ≠ 0 := by
-      intro
-      apply pow_ne_zero
-      exact_mod_cast hp.1.NeZero
+    have aux : ∀ k : ℕ, (p ^ k : ℚ) ≠ 0 := by intro ; apply pow_ne_zero; exact_mod_cast hp.1.NeZero
     simpa [aux, -one_div, field_simps] using this.symm
   rw [mul_comm _ (p : ℚ), mul_assoc, mul_assoc, ← pow_add, map_frobenius_poly.key₂ p hi.le hj]
   ring
@@ -252,10 +248,7 @@ variable (p)
 See also `frobenius_is_poly`. -/
 @[is_poly]
 theorem frobeniusFunIsPoly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
-  ⟨⟨frobeniusPoly p, by
-      intros
-      funext n
-      apply coeff_frobenius_fun⟩⟩
+  ⟨⟨frobeniusPoly p, by intros ; funext n; apply coeff_frobenius_fun⟩⟩
 #align witt_vector.frobenius_fun_is_poly WittVector.frobeniusFunIsPoly
 
 variable {p}
@@ -356,14 +349,9 @@ def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
           R) with
     toFun := WittVector.frobenius
     invFun := map (pthRoot R p)
-    left_inv := fun f =>
-      ext fun n => by
-        rw [frobenius_eq_map_frobenius]
-        exact pthRoot_frobenius _
+    left_inv := fun f => ext fun n => by rw [frobenius_eq_map_frobenius]; exact pthRoot_frobenius _
     right_inv := fun f =>
-      ext fun n => by
-        rw [frobenius_eq_map_frobenius]
-        exact frobenius_pthRoot _ }
+      ext fun n => by rw [frobenius_eq_map_frobenius]; exact frobenius_pthRoot _ }
 #align witt_vector.frobenius_equiv WittVector.frobeniusEquiv
 
 theorem frobenius_bijective [PerfectRing R p] :

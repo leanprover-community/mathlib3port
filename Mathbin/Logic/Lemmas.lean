@@ -102,9 +102,7 @@ theorem ite_ite_distrib_right : ite p (ite q a b) c = ite q (ite p a c) (ite p b
 
 #print Prop.forall /-
 theorem Prop.forall {f : Prop → Prop} : (∀ p, f p) ↔ f True ∧ f False :=
-  ⟨fun h => ⟨h _, h _⟩, by
-    rintro ⟨h₁, h₀⟩ p
-    by_cases hp : p <;> simp only [hp] <;> assumption⟩
+  ⟨fun h => ⟨h _, h _⟩, by rintro ⟨h₁, h₀⟩ p; by_cases hp : p <;> simp only [hp] <;> assumption⟩
 #align Prop.forall Prop.forall
 -/
 

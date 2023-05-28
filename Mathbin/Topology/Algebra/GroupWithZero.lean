@@ -348,8 +348,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
   by
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
   by_cases hga : g a = 0
-  · rw [ContinuousAt]
-    simp_rw [comp_app, hga, div_zero]
+  · rw [ContinuousAt]; simp_rw [comp_app, hga, div_zero]
     exact (h2h hga).comp (continuous_at_id.prod_mk tendsto_top)
   · exact ContinuousAt.comp (hh hga) (continuous_at_id.prod (hf.div hg hga))
 #align continuous_at.comp_div_cases ContinuousAt.comp_div_cases

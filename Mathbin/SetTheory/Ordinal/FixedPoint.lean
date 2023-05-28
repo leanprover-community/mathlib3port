@@ -159,10 +159,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} [_inst_1 : Nonempty.{succ u1} ι], (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ u1} ι (fun (i : ι) => LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) (f i b))) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_family_le_apply Ordinal.nfpFamily_le_applyₓ'. -/
 theorem nfpFamily_le_apply [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
-    (∃ i, nfpFamily f a ≤ f i b) ↔ nfpFamily f a ≤ b :=
-  by
-  rw [← not_iff_not]
-  push_neg
+    (∃ i, nfpFamily f a ≤ f i b) ↔ nfpFamily f a ≤ b := by rw [← not_iff_not]; push_neg;
   exact apply_lt_nfp_family_iff H
 #align ordinal.nfp_family_le_apply Ordinal.nfpFamily_le_apply
 
@@ -176,11 +173,9 @@ theorem nfpFamily_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : �
     nfpFamily f a ≤ b :=
   sup_le fun l => by
     by_cases hι : IsEmpty ι
-    · skip
-      rwa [Unique.eq_default l]
+    · skip; rwa [Unique.eq_default l]
     · haveI := not_isEmpty_iff.1 hι
-      induction' l with i l IH generalizing a
-      · exact ab
+      induction' l with i l IH generalizing a; · exact ab
       exact (H i (IH ab)).trans (h i)
 #align ordinal.nfp_family_le_fp Ordinal.nfpFamily_le_fp
 
@@ -287,10 +282,8 @@ theorem derivFamily_fp {i} (H : IsNormal (f i)) (o : Ordinal.{max u v}) :
     f i (derivFamily f o) = derivFamily f o :=
   by
   refine' limit_rec_on o _ (fun o IH => _) _
-  · rw [deriv_family_zero]
-    exact nfp_family_fp H 0
-  · rw [deriv_family_succ]
-    exact nfp_family_fp H _
+  · rw [deriv_family_zero]; exact nfp_family_fp H 0
+  · rw [deriv_family_succ]; exact nfp_family_fp H _
   · intro o l IH
     rw [deriv_family_limit _ l,
       IsNormal.bsup.{max u v, u, max u v} H (fun a _ => deriv_family f a) l.1]
@@ -314,13 +307,11 @@ theorem le_iff_derivFamily (H : ∀ i, IsNormal (f i)) {a} :
       limit_rec_on o (fun h₁ => ⟨0, le_antisymm _ h₁⟩) (fun o IH h₁ => _) fun o l IH h₁ => _
     · rw [deriv_family_zero]
       exact nfp_family_le_fp (fun i => (H i).Monotone) (Ordinal.zero_le _) ha
-    · cases le_or_lt a (deriv_family f o)
-      · exact IH h
+    · cases le_or_lt a (deriv_family f o); · exact IH h
       refine' ⟨succ o, le_antisymm _ h₁⟩
       rw [deriv_family_succ]
       exact nfp_family_le_fp (fun i => (H i).Monotone) (succ_le_of_lt h) ha
-    · cases eq_or_lt_of_le h₁
-      · exact ⟨_, h.symm⟩
+    · cases eq_or_lt_of_le h₁; · exact ⟨_, h.symm⟩
       rw [deriv_family_limit _ l, ← not_le, bsup_le_iff, not_ball] at h
       exact
         let ⟨o', h, hl⟩ := h
@@ -485,12 +476,8 @@ but is expected to have type
   forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ (succ u1)} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) (f i hi b)))) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_le_apply Ordinal.nfpBFamily_le_applyₓ'. -/
 theorem nfpBFamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
-    (∃ i hi, nfpBFamily o f a ≤ f i hi b) ↔ nfpBFamily o f a ≤ b :=
-  by
-  rw [← not_iff_not]
-  push_neg
-  convert apply_lt_nfp_bfamily_iff ho H
-  simp only [not_le]
+    (∃ i hi, nfpBFamily o f a ≤ f i hi b) ↔ nfpBFamily o f a ≤ b := by rw [← not_iff_not]; push_neg;
+  convert apply_lt_nfp_bfamily_iff ho H; simp only [not_le]
 #align ordinal.nfp_bfamily_le_apply Ordinal.nfpBFamily_le_apply
 
 /- warning: ordinal.nfp_bfamily_le_fp -> Ordinal.nfpBFamily_le_fp is a dubious translation:
@@ -511,12 +498,8 @@ but is expected to have type
   forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u2 u1}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.nfpBFamily.{u1, u2} o f a)) (Ordinal.nfpBFamily.{u1, u2} o f a))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_fp Ordinal.nfpBFamily_fpₓ'. -/
 theorem nfpBFamily_fp {i hi} (H : IsNormal (f i hi)) (a) :
-    f i hi (nfpBFamily o f a) = nfpBFamily o f a :=
-  by
-  rw [← family_of_bfamily_enum o f]
-  apply nfp_family_fp
-  rw [family_of_bfamily_enum]
-  exact H
+    f i hi (nfpBFamily o f a) = nfpBFamily o f a := by rw [← family_of_bfamily_enum o f];
+  apply nfp_family_fp; rw [family_of_bfamily_enum]; exact H
 #align ordinal.nfp_bfamily_fp Ordinal.nfpBFamily_fp
 
 /- warning: ordinal.apply_le_nfp_bfamily -> Ordinal.apply_le_nfpBFamily is a dubious translation:
@@ -556,9 +539,8 @@ Case conversion may be inaccurate. Consider using '#align ordinal.fp_bfamily_unb
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
     (⋂ (i) (hi), Function.fixedPoints (f i hi)).Unbounded (· < ·) := fun a =>
-  ⟨_, by
-    rw [Set.mem_iInter₂]
-    exact fun i hi => nfp_bfamily_fp (H i hi) _, (le_nfpBFamily f a).not_lt⟩
+  ⟨_, by rw [Set.mem_iInter₂]; exact fun i hi => nfp_bfamily_fp (H i hi) _,
+    (le_nfpBFamily f a).not_lt⟩
 #align ordinal.fp_bfamily_unbounded Ordinal.fp_bfamily_unbounded
 
 /- warning: ordinal.deriv_bfamily -> Ordinal.derivBFamily is a dubious translation:
@@ -603,12 +585,8 @@ but is expected to have type
   forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.derivBFamily.{u1, u2} o f a)) (Ordinal.derivBFamily.{u1, u2} o f a))
 Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily_fp Ordinal.derivBFamily_fpₓ'. -/
 theorem derivBFamily_fp {i hi} (H : IsNormal (f i hi)) (a : Ordinal) :
-    f i hi (derivBFamily o f a) = derivBFamily o f a :=
-  by
-  rw [← family_of_bfamily_enum o f]
-  apply deriv_family_fp
-  rw [family_of_bfamily_enum]
-  exact H
+    f i hi (derivBFamily o f a) = derivBFamily o f a := by rw [← family_of_bfamily_enum o f];
+  apply deriv_family_fp; rw [family_of_bfamily_enum]; exact H
 #align ordinal.deriv_bfamily_fp Ordinal.derivBFamily_fp
 
 /- warning: ordinal.le_iff_deriv_bfamily -> Ordinal.le_iff_derivBFamily is a dubious translation:
@@ -707,9 +685,7 @@ lean 3 declaration is
 but is expected to have type
   forall (f : Ordinal.{u1} -> Ordinal.{u1}) (a : Ordinal.{u1}) (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) (Ordinal.nfp.{u1} f a)
 Case conversion may be inaccurate. Consider using '#align ordinal.iterate_le_nfp Ordinal.iterate_le_nfpₓ'. -/
-theorem iterate_le_nfp (f a n) : (f^[n]) a ≤ nfp f a :=
-  by
-  rw [← sup_iterate_eq_nfp]
+theorem iterate_le_nfp (f a n) : (f^[n]) a ≤ nfp f a := by rw [← sup_iterate_eq_nfp];
   exact le_sup _ n
 #align ordinal.iterate_le_nfp Ordinal.iterate_le_nfp
 
@@ -729,9 +705,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nfp.{u1} f b)) (Exists.{1} Nat (fun (n : Nat) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n b)))
 Case conversion may be inaccurate. Consider using '#align ordinal.lt_nfp Ordinal.lt_nfpₓ'. -/
-theorem lt_nfp {a b} : a < nfp f b ↔ ∃ n, a < (f^[n]) b :=
-  by
-  rw [← sup_iterate_eq_nfp]
+theorem lt_nfp {a b} : a < nfp f b ↔ ∃ n, a < (f^[n]) b := by rw [← sup_iterate_eq_nfp];
   exact lt_sup
 #align ordinal.lt_nfp Ordinal.lt_nfp
 
@@ -741,9 +715,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b) (forall (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) b)
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_le_iff Ordinal.nfp_le_iffₓ'. -/
-theorem nfp_le_iff {a b} : nfp f a ≤ b ↔ ∀ n, (f^[n]) a ≤ b :=
-  by
-  rw [← sup_iterate_eq_nfp]
+theorem nfp_le_iff {a b} : nfp f a ≤ b ↔ ∀ n, (f^[n]) a ≤ b := by rw [← sup_iterate_eq_nfp];
   exact sup_le_iff
 #align ordinal.nfp_le_iff Ordinal.nfp_le_iff
 
@@ -835,10 +807,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.fp_unbounded Ordinal.fp_unboundedₓ'. -/
 /-- The fixed point lemma for normal functions: any normal function has an unbounded set of
 fixed points. -/
-theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· < ·) :=
-  by
-  convert fp_family_unbounded fun _ : Unit => H
-  exact (Set.iInter_const _).symm
+theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· < ·) := by
+  convert fp_family_unbounded fun _ : Unit => H; exact (Set.iInter_const _).symm
 #align ordinal.fp_unbounded Ordinal.fp_unbounded
 
 #print Ordinal.deriv /-
@@ -915,10 +885,8 @@ theorem IsNormal.fp_iff_deriv {f} (H : IsNormal f) {a} : f a = a ↔ ∃ o, deri
 
 #print Ordinal.deriv_eq_enumOrd /-
 /-- `ordinal.deriv` enumerates the fixed points of a normal function. -/
-theorem deriv_eq_enumOrd (H : IsNormal f) : deriv f = enumOrd (Function.fixedPoints f) :=
-  by
-  convert deriv_family_eq_enum_ord fun _ : Unit => H
-  exact (Set.iInter_const _).symm
+theorem deriv_eq_enumOrd (H : IsNormal f) : deriv f = enumOrd (Function.fixedPoints f) := by
+  convert deriv_family_eq_enum_ord fun _ : Unit => H; exact (Set.iInter_const _).symm
 #align ordinal.deriv_eq_enum_ord Ordinal.deriv_eq_enumOrd
 -/
 
@@ -988,10 +956,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
 Case conversion may be inaccurate. Consider using '#align ordinal.add_le_right_iff_mul_omega_le Ordinal.add_le_right_iff_mul_omega_leₓ'. -/
-theorem add_le_right_iff_mul_omega_le {a b : Ordinal} : a + b ≤ b ↔ a * omega ≤ b :=
-  by
-  rw [← add_eq_right_iff_mul_omega_le]
-  exact (add_is_normal a).le_iff_eq
+theorem add_le_right_iff_mul_omega_le {a b : Ordinal} : a + b ≤ b ↔ a * omega ≤ b := by
+  rw [← add_eq_right_iff_mul_omega_le]; exact (add_is_normal a).le_iff_eq
 #align ordinal.add_le_right_iff_mul_omega_le Ordinal.add_le_right_iff_mul_omega_le
 
 /- warning: ordinal.deriv_add_eq_mul_omega_add -> Ordinal.deriv_add_eq_mul_omega_add is a dubious translation:
@@ -1027,9 +993,7 @@ Case conversion may be inaccurate. Consider using '#align ordinal.nfp_mul_one Or
 theorem nfp_mul_one {a : Ordinal} (ha : 0 < a) : nfp ((· * ·) a) 1 = (a^omega) :=
   by
   rw [← sup_iterate_eq_nfp, ← sup_opow_nat]
-  · dsimp
-    congr
-    funext
+  · dsimp; congr ; funext
     induction' n with n hn
     · rw [Nat.cast_zero, opow_zero, iterate_zero_apply]
     nth_rw 2 [Nat.succ_eq_one_add]
@@ -1151,9 +1115,7 @@ but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) (Dvd.dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.mul_le_right_iff_opow_omega_dvd Ordinal.mul_le_right_iff_opow_omega_dvdₓ'. -/
 theorem mul_le_right_iff_opow_omega_dvd {a b : Ordinal} (ha : 0 < a) : a * b ≤ b ↔ (a^omega) ∣ b :=
-  by
-  rw [← mul_eq_right_iff_opow_omega_dvd]
-  exact (mul_is_normal ha).le_iff_eq
+  by rw [← mul_eq_right_iff_opow_omega_dvd]; exact (mul_is_normal ha).le_iff_eq
 #align ordinal.mul_le_right_iff_opow_omega_dvd Ordinal.mul_le_right_iff_opow_omega_dvd
 
 /- warning: ordinal.nfp_mul_opow_omega_add -> Ordinal.nfp_mul_opow_omega_add is a dubious translation:

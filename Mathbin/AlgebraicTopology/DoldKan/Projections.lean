@@ -82,10 +82,7 @@ def Q (q : ℕ) : K[X] ⟶ K[X] :=
 /- warning: algebraic_topology.dold_kan.P_add_Q -> AlgebraicTopology.DoldKan.P_add_Q is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.P_add_Q AlgebraicTopology.DoldKan.P_add_Qₓ'. -/
-theorem P_add_Q (q : ℕ) : P q + Q q = 𝟙 K[X] :=
-  by
-  rw [Q]
-  abel
+theorem P_add_Q (q : ℕ) : P q + Q q = 𝟙 K[X] := by rw [Q]; abel
 #align algebraic_topology.dold_kan.P_add_Q AlgebraicTopology.DoldKan.P_add_Q
 
 /- warning: algebraic_topology.dold_kan.P_add_Q_f -> AlgebraicTopology.DoldKan.P_add_Q_f is a dubious translation:
@@ -105,11 +102,8 @@ theorem Q_zero : (Q 0 : K[X] ⟶ _) = 0 :=
 /- warning: algebraic_topology.dold_kan.Q_eq -> AlgebraicTopology.DoldKan.Q_succ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Q_eq AlgebraicTopology.DoldKan.Q_succₓ'. -/
-theorem Q_succ (q : ℕ) : (Q (q + 1) : K[X] ⟶ _) = Q q - P q ≫ hσ q :=
-  by
-  unfold Q P
-  simp only [comp_add, comp_id]
-  abel
+theorem Q_succ (q : ℕ) : (Q (q + 1) : K[X] ⟶ _) = Q q - P q ≫ hσ q := by unfold Q P;
+  simp only [comp_add, comp_id]; abel
 #align algebraic_topology.dold_kan.Q_eq AlgebraicTopology.DoldKan.Q_succ
 
 #print AlgebraicTopology.DoldKan.Q_f_0_eq /-
@@ -131,13 +125,8 @@ Case conversion may be inaccurate. Consider using '#align algebraic_topology.dol
 /-- This lemma expresses the vanishing of
 `(P q).f (n+1) ≫ X.δ k : X _[n+1] ⟶ X _[n]` when `k≠0` and `k≥n-q+2` -/
 theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((P q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1])
-  | 0 => fun n j hj₁ => by
-    exfalso
-    have hj₂ := Fin.is_lt j
-    linarith
-  | q + 1 => fun n => by
-    unfold P
-    exact (of_P q n).induction
+  | 0 => fun n j hj₁ => by exfalso; have hj₂ := Fin.is_lt j; linarith
+  | q + 1 => fun n => by unfold P; exact (of_P q n).induction
 #align algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_P
 
 /- warning: algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self -> AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self is a dubious translation:
@@ -204,19 +193,13 @@ theorem Q_f_idem (q n : ℕ) : ((Q q).f n : X _[n] ⟶ _) ≫ (Q q).f n = (Q q).
 
 #print AlgebraicTopology.DoldKan.P_idem /-
 @[simp, reassoc]
-theorem P_idem (q : ℕ) : (P q : K[X] ⟶ K[X]) ≫ P q = P q :=
-  by
-  ext n
-  exact P_f_idem q n
+theorem P_idem (q : ℕ) : (P q : K[X] ⟶ K[X]) ≫ P q = P q := by ext n; exact P_f_idem q n
 #align algebraic_topology.dold_kan.P_idem AlgebraicTopology.DoldKan.P_idem
 -/
 
 #print AlgebraicTopology.DoldKan.Q_idem /-
 @[simp, reassoc]
-theorem Q_idem (q : ℕ) : (Q q : K[X] ⟶ K[X]) ≫ Q q = Q q :=
-  by
-  ext n
-  exact Q_f_idem q n
+theorem Q_idem (q : ℕ) : (Q q : K[X] ⟶ K[X]) ≫ Q q = Q q := by ext n; exact Q_f_idem q n
 #align algebraic_topology.dold_kan.Q_idem AlgebraicTopology.DoldKan.Q_idem
 -/
 

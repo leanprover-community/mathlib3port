@@ -74,10 +74,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.193 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.195 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.193 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.195) (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.208 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.210 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.208 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.210)] [_inst_4 : ExistsMulOfLE.{u1} α (MulOneClass.toMul.{u1} α _inst_1) (Preorder.toLE.{u1} α _inst_2)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) a b) -> (Exists.{succ u1} α (fun (c : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1))) c) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) a c) b)))
 Case conversion may be inaccurate. Consider using '#align exists_one_lt_mul_of_lt' exists_one_lt_mul_of_lt'ₓ'. -/
 @[to_additive]
-theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b :=
-  by
-  obtain ⟨c, rfl⟩ := exists_mul_of_le h.le
-  exact ⟨c, one_lt_of_lt_mul_right h, rfl⟩
+theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b := by
+  obtain ⟨c, rfl⟩ := exists_mul_of_le h.le; exact ⟨c, one_lt_of_lt_mul_right h, rfl⟩
 #align exists_one_lt_mul_of_lt' exists_one_lt_mul_of_lt'
 #align exists_pos_add_of_lt' exists_pos_add_of_lt'
 
@@ -225,9 +223,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} α] {a : α} {b : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) b a)
 Case conversion may be inaccurate. Consider using '#align le_mul_self le_mul_selfₓ'. -/
 @[to_additive]
-theorem le_mul_self : a ≤ b * a := by
-  rw [mul_comm]
-  exact le_self_mul
+theorem le_mul_self : a ≤ b * a := by rw [mul_comm]; exact le_self_mul
 #align le_mul_self le_mul_self
 #align le_add_self le_add_self
 
@@ -311,9 +307,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_iff_exists_mul le_iff_exists_mulₓ'. -/
 @[to_additive]
 theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
-  ⟨exists_mul_of_le, by
-    rintro ⟨c, rfl⟩
-    exact le_self_mul⟩
+  ⟨exists_mul_of_le, by rintro ⟨c, rfl⟩; exact le_self_mul⟩
 #align le_iff_exists_mul le_iff_exists_mul
 #align le_iff_exists_add le_iff_exists_add
 
@@ -474,12 +468,8 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
   apply exists_congr; intro c
   rw [and_congr_left_iff, gt_iff_lt]; rintro rfl
   constructor
-  · rw [one_lt_iff_ne_one]
-    apply mt
-    rintro rfl
-    rw [mul_one]
-  · rw [← (self_le_mul_right a c).lt_iff_ne]
-    apply lt_mul_of_one_lt_right'
+  · rw [one_lt_iff_ne_one]; apply mt; rintro rfl; rw [mul_one]
+  · rw [← (self_le_mul_right a c).lt_iff_ne]; apply lt_mul_of_one_lt_right'
 #align lt_iff_exists_mul lt_iff_exists_mul
 #align lt_iff_exists_add lt_iff_exists_add
 

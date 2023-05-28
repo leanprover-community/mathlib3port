@@ -101,10 +101,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.pt) : Cone (toDiagram (F.mapCone c) ⋙ ma
   pt := mk f
   π :=
     { app := fun j => homMk (c.π.app j) rfl
-      naturality' := fun j k g => by
-        ext
-        dsimp
-        simp }
+      naturality' := fun j k g => by ext; dsimp; simp }
 #align category_theory.structured_arrow_cone.to_cone CategoryTheory.StructuredArrowCone.toCone
 
 end StructuredArrowCone
@@ -277,14 +274,10 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
   -- We can make two cones over the diagram of `s` via `f₁` and `f₂`.
   let α₁ : to_diagram (F.map_cone c) ⋙ map f₁ ⟶ to_diagram s :=
     { app := fun X => eq_to_hom (by simp [← h₁])
-      naturality' := fun _ _ _ => by
-        ext
-        simp }
+      naturality' := fun _ _ _ => by ext; simp }
   let α₂ : to_diagram (F.map_cone c) ⋙ map f₂ ⟶ to_diagram s :=
     { app := fun X => eq_to_hom (by simp [← h₂])
-      naturality' := fun _ _ _ => by
-        ext
-        simp }
+      naturality' := fun _ _ _ => by ext; simp }
   let c₁ : cone (to_diagram s ⋙ pre s.X K F) :=
     (cones.postcompose (whisker_right α₁ (pre s.X K F) : _)).obj (to_cone F c f₁)
   let c₂ : cone (to_diagram s ⋙ pre s.X K F) :=
@@ -301,26 +294,13 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     injection c₀.π.naturality (bicone_hom.left j) with _ e₁
     injection c₀.π.naturality (bicone_hom.right j) with _ e₂
     simpa using e₁.symm.trans e₂
-  have : c.extend g₁.right = c.extend g₂.right :=
-    by
-    unfold cone.extend
-    congr 1
-    ext x
-    apply this
+  have : c.extend g₁.right = c.extend g₂.right := by unfold cone.extend; congr 1; ext x; apply this
   -- And thus they are equal as `c` is the limit.
   have : g₁.right = g₂.right
   calc
-    g₁.right = hc.lift (c.extend g₁.right) :=
-      by
-      apply hc.uniq (c.extend _)
-      tidy
-    _ = hc.lift (c.extend g₂.right) := by
-      congr
-      exact this
-    _ = g₂.right := by
-      symm
-      apply hc.uniq (c.extend _)
-      tidy
+    g₁.right = hc.lift (c.extend g₁.right) := by apply hc.uniq (c.extend _); tidy
+    _ = hc.lift (c.extend g₂.right) := by congr ; exact this
+    _ = g₂.right := by symm; apply hc.uniq (c.extend _); tidy
     
   -- Finally, since `fᵢ` factors through `F(gᵢ)`, the result follows.
   calc
@@ -364,10 +344,8 @@ noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D)
   invFun _ := flat_of_preserves_finite_limits F
   left_inv _ := proof_irrel _ _
   right_inv x := by
-    cases x
-    unfold preserves_finite_limits_of_flat
-    dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
-    congr
+    cases x; unfold preserves_finite_limits_of_flat
+    dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr
 #align category_theory.preserves_finite_limits_iff_flat CategoryTheory.preservesFiniteLimitsIffFlat
 -/
 

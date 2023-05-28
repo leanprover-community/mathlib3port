@@ -139,11 +139,7 @@ theorem leOfHom_homOfLE {x y : X} (h : x ≤ y) : h.Hom.le = h :=
 
 #print CategoryTheory.homOfLE_leOfHom /-
 @[simp]
-theorem homOfLE_leOfHom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
-  by
-  cases h
-  cases h
-  rfl
+theorem homOfLE_leOfHom {x y : X} (h : x ⟶ y) : h.le.Hom = h := by cases h; cases h; rfl
 #align category_theory.hom_of_le_le_of_hom CategoryTheory.homOfLE_leOfHom
 -/
 

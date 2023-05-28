@@ -158,8 +158,7 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
   have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x :=
     by
     refine' Finset.prod_filter_of_ne fun p hp h => _
-    contrapose! h
-    dsimp only [f]
+    contrapose! h; dsimp only [f]
     rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
   rw [centralBinom_factorization_small n n_big no_prime, ← this, ←
     Finset.prod_filter_mul_prod_filter_not S (· ≤ sqrt (2 * n))]

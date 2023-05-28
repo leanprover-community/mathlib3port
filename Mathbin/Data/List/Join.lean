@@ -80,11 +80,8 @@ theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List
 #align list.join_filter_ne_nil List.join_filter_ne_nil
 
 #print List.join_join /-
-theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join :=
-  by
-  induction l
-  simp
-  simp [l_ih]
+theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join := by induction l;
+  simp; simp [l_ih]
 #align list.join_join List.join_join
 -/
 
@@ -149,10 +146,8 @@ theorem drop_take_succ_eq_cons_nthLe (L : List α) {i : ℕ} (hi : i < L.length)
     (L.take (i + 1)).drop i = [nthLe L i hi] :=
   by
   induction L generalizing i
-  · simp only [length] at hi
-    exact (Nat.not_succ_le_zero i hi).elim
-  cases i
-  · simp
+  · simp only [length] at hi; exact (Nat.not_succ_le_zero i hi).elim
+  cases i; · simp
   have : i < L_tl.length := by
     simp at hi
     exact Nat.lt_of_succ_lt_succ hi

@@ -403,12 +403,8 @@ theorem map_id (S : ConvexCone 𝕜 E) : S.map LinearMap.id = S :=
 def comap (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 F) : ConvexCone 𝕜 E
     where
   carrier := f ⁻¹' S
-  smul_mem' c hc x hx := by
-    rw [mem_preimage, f.map_smul c]
-    exact S.smul_mem hc hx
-  add_mem' x hx y hy := by
-    rw [mem_preimage, f.map_add]
-    exact S.add_mem hx hy
+  smul_mem' c hc x hx := by rw [mem_preimage, f.map_smul c]; exact S.smul_mem hc hx
+  add_mem' x hx y hy := by rw [mem_preimage, f.map_add]; exact S.add_mem hx hy
 #align convex_cone.comap ConvexCone.comap
 -/
 
@@ -716,11 +712,7 @@ theorem mem_add {K₁ K₂ : ConvexCone 𝕜 E} {a : E} :
 #align convex_cone.mem_add ConvexCone.mem_add
 
 instance : AddZeroClass (ConvexCone 𝕜 E) :=
-  ⟨0, Add.add, fun _ => by
-    ext
-    simp, fun _ => by
-    ext
-    simp⟩
+  ⟨0, Add.add, fun _ => by ext; simp, fun _ => by ext; simp⟩
 
 instance : AddCommSemigroup (ConvexCone 𝕜 E)
     where
@@ -1150,9 +1142,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     (hp_dense : ∀ y, ∃ x : p.domain, (x : E) + y ∈ s) :
     ∃ q ≥ p, q.domain = ⊤ ∧ ∀ x : q.domain, (x : E) ∈ s → 0 ≤ q x :=
   by
-  replace hp_nonneg : p ∈ { p | _ };
-  · rw [mem_set_of_eq]
-    exact hp_nonneg
+  replace hp_nonneg : p ∈ { p | _ }; · rw [mem_set_of_eq]; exact hp_nonneg
   obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partialOrder₀ _ _ _ hp_nonneg
   · refine' ⟨q, hpq, _, hqs⟩
     contrapose! hq
@@ -1173,8 +1163,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     rcases(mem_Sup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
     have : f ≤ LinearPMap.sSup c c_chain.directed_on := LinearPMap.le_sSup _ hfc
     convert← hcs hfc ⟨x, hfx⟩ hxs
-    apply this.2
-    rfl
+    apply this.2; rfl
 #align riesz_extension.exists_top RieszExtension.exists_top
 
 end riesz_extension
@@ -1227,8 +1216,7 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
   · intro x y
     simpa only [Subtype.coe_mk, Subtype.coe_eta] using g_eq ⟨(x, y), ⟨x.2, trivial⟩⟩
   · refine' ⟨-g.comp (inl ℝ E ℝ), _, _⟩ <;> simp only [neg_apply, inl_apply, comp_apply]
-    · intro x
-      simp [g_eq x 0]
+    · intro x; simp [g_eq x 0]
     · intro x
       have A : (x, N x) = (x, 0) + (0, N x) := by simp
       have B := g_nonneg ⟨x, N x⟩ (le_refl (N x))

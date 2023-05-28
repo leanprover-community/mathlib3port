@@ -57,10 +57,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align hamming_dist_self hammingDist_selfₓ'. -/
 /-- Corresponds to `dist_self`. -/
 @[simp]
-theorem hammingDist_self (x : ∀ i, β i) : hammingDist x x = 0 :=
-  by
-  rw [hammingDist, card_eq_zero, filter_eq_empty_iff]
-  exact fun _ _ H => H rfl
+theorem hammingDist_self (x : ∀ i, β i) : hammingDist x x = 0 := by
+  rw [hammingDist, card_eq_zero, filter_eq_empty_iff]; exact fun _ _ H => H rfl
 #align hamming_dist_self hammingDist_self
 
 /- warning: hamming_dist_nonneg -> hammingDist_nonneg is a dubious translation:
@@ -112,9 +110,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align hamming_dist_triangle_left hammingDist_triangle_leftₓ'. -/
 /-- Corresponds to `dist_triangle_left`. -/
 theorem hammingDist_triangle_left (x y z : ∀ i, β i) :
-    hammingDist x y ≤ hammingDist z x + hammingDist z y :=
-  by
-  rw [hammingDist_comm z]
+    hammingDist x y ≤ hammingDist z x + hammingDist z y := by rw [hammingDist_comm z];
   exact hammingDist_triangle _ _ _
 #align hamming_dist_triangle_left hammingDist_triangle_left
 
@@ -126,9 +122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align hamming_dist_triangle_right hammingDist_triangle_rightₓ'. -/
 /-- Corresponds to `dist_triangle_right`. -/
 theorem hammingDist_triangle_right (x y z : ∀ i, β i) :
-    hammingDist x y ≤ hammingDist x z + hammingDist y z :=
-  by
-  rw [hammingDist_comm y]
+    hammingDist x y ≤ hammingDist x z + hammingDist y z := by rw [hammingDist_comm y];
   exact hammingDist_triangle _ _ _
 #align hamming_dist_triangle_right hammingDist_triangle_right
 
@@ -139,9 +133,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {β : ι -> Type.{u1}} [_inst_1 : Fintype.{u2} ι] [_inst_2 : forall (i : ι), DecidableEq.{succ u1} (β i)], Eq.{max (succ u2) (succ u1)} ((forall (i : ι), β i) -> (forall (i : ι), β i) -> Nat) (Function.swap.{max (succ u2) (succ u1), max (succ u2) (succ u1), 1} (forall (i : ι), β i) (forall (i : ι), β i) (fun (x : forall (i : ι), β i) (y : forall (i : ι), β i) => Nat) (hammingDist.{u2, u1} ι β _inst_1 (fun (i : ι) (a : β i) (b : β i) => _inst_2 i a b))) (hammingDist.{u2, u1} ι (fun (i : ι) => β i) _inst_1 (fun (i : ι) (a : β i) (b : β i) => _inst_2 i a b))
 Case conversion may be inaccurate. Consider using '#align swap_hamming_dist swap_hammingDistₓ'. -/
 /-- Corresponds to `swap_dist`. -/
-theorem swap_hammingDist : swap (@hammingDist _ β _ _) = hammingDist :=
-  by
-  funext x y
+theorem swap_hammingDist : swap (@hammingDist _ β _ _) = hammingDist := by funext x y;
   exact hammingDist_comm _ _
 #align swap_hamming_dist swap_hammingDist
 
@@ -166,9 +158,7 @@ Case conversion may be inaccurate. Consider using '#align hamming_dist_eq_zero h
 /-- Corresponds to `dist_eq_zero`. -/
 @[simp]
 theorem hammingDist_eq_zero {x y : ∀ i, β i} : hammingDist x y = 0 ↔ x = y :=
-  ⟨eq_of_hammingDist_eq_zero, fun H => by
-    rw [H]
-    exact hammingDist_self _⟩
+  ⟨eq_of_hammingDist_eq_zero, fun H => by rw [H]; exact hammingDist_self _⟩
 #align hamming_dist_eq_zero hammingDist_eq_zero
 
 /- warning: hamming_zero_eq_dist -> hamming_zero_eq_dist is a dubious translation:
@@ -392,20 +382,14 @@ but is expected to have type
   forall {ι : Type.{u1}} {β : ι -> Type.{u3}} [_inst_1 : Fintype.{u1} ι] [_inst_2 : forall (i : ι), DecidableEq.{succ u3} (β i)] {γ : ι -> Type.{u2}} [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (γ i)] [_inst_4 : forall (i : ι), Zero.{u3} (β i)] [_inst_5 : forall (i : ι), Zero.{u2} (γ i)] (f : forall (i : ι), (γ i) -> (β i)) {x : forall (i : ι), γ i}, (forall (i : ι), Eq.{succ u3} (β i) (f i (OfNat.ofNat.{u2} (γ i) 0 (Zero.toOfNat0.{u2} (γ i) (_inst_5 i)))) (OfNat.ofNat.{u3} (β i) 0 (Zero.toOfNat0.{u3} (β i) (_inst_4 i)))) -> (LE.le.{0} Nat instLENat (hammingNorm.{u1, u3} ι (fun (i : ι) => β i) _inst_1 (fun (i : ι) (a : β i) (b : β i) => _inst_2 i a b) (fun (i : ι) => _inst_4 i) (fun (i : ι) => f i (x i))) (hammingNorm.{u1, u2} ι (fun (i : ι) => γ i) _inst_1 (fun (i : ι) (a : γ i) (b : γ i) => _inst_3 i a b) (fun (i : ι) => _inst_5 i) x))
 Case conversion may be inaccurate. Consider using '#align hamming_norm_comp_le_hamming_norm hammingNorm_comp_le_hammingNormₓ'. -/
 theorem hammingNorm_comp_le_hammingNorm (f : ∀ i, γ i → β i) {x : ∀ i, γ i} (hf : ∀ i, f i 0 = 0) :
-    (hammingNorm fun i => f i (x i)) ≤ hammingNorm x :=
-  by
-  convert hammingDist_comp_le_hammingDist f
-  simp_rw [hf]
-  rfl
+    (hammingNorm fun i => f i (x i)) ≤ hammingNorm x := by
+  convert hammingDist_comp_le_hammingDist f; simp_rw [hf]; rfl
 #align hamming_norm_comp_le_hamming_norm hammingNorm_comp_le_hammingNorm
 
 #print hammingNorm_comp /-
 theorem hammingNorm_comp (f : ∀ i, γ i → β i) {x : ∀ i, γ i} (hf₁ : ∀ i, Injective (f i))
-    (hf₂ : ∀ i, f i 0 = 0) : (hammingNorm fun i => f i (x i)) = hammingNorm x :=
-  by
-  convert hammingDist_comp f hf₁
-  simp_rw [hf₂]
-  rfl
+    (hf₂ : ∀ i, f i 0 = 0) : (hammingNorm fun i => f i (x i)) = hammingNorm x := by
+  convert hammingDist_comp f hf₁; simp_rw [hf₂]; rfl
 #align hamming_norm_comp hammingNorm_comp
 -/
 
@@ -702,15 +686,9 @@ theorem dist_eq_hammingDist (x y : Hamming β) :
 instance : PseudoMetricSpace (Hamming β) :=
   {
     Hamming.hasDist with
-    dist_self := by
-      push_cast
-      exact_mod_cast hammingDist_self
-    dist_comm := by
-      push_cast
-      exact_mod_cast hammingDist_comm
-    dist_triangle := by
-      push_cast
-      exact_mod_cast hammingDist_triangle
+    dist_self := by push_cast ; exact_mod_cast hammingDist_self
+    dist_comm := by push_cast ; exact_mod_cast hammingDist_comm
+    dist_triangle := by push_cast ; exact_mod_cast hammingDist_triangle
     toUniformSpace := ⊥
     uniformity_dist :=
       uniformity_dist_of_mem_uniformity _ _ fun s =>
@@ -747,9 +725,7 @@ theorem nndist_eq_hammingDist (x y : Hamming β) :
 
 instance : MetricSpace (Hamming β) :=
   { Hamming.pseudoMetricSpace with
-    eq_of_dist_eq_zero := by
-      push_cast
-      exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
+    eq_of_dist_eq_zero := by push_cast ; exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
 
 instance [∀ i, Zero (β i)] : Norm (Hamming β) :=
   ⟨fun x => hammingNorm (ofHamming x)⟩
@@ -766,10 +742,7 @@ theorem norm_eq_hammingNorm [∀ i, Zero (β i)] (x : Hamming β) : ‖x‖ = ha
 #align hamming.norm_eq_hamming_norm Hamming.norm_eq_hammingNorm
 
 instance [∀ i, AddCommGroup (β i)] : SeminormedAddCommGroup (Hamming β) :=
-  { Pi.addCommGroup with
-    dist_eq := by
-      push_cast
-      exact_mod_cast hammingDist_eq_hammingNorm }
+  { Pi.addCommGroup with dist_eq := by push_cast ; exact_mod_cast hammingDist_eq_hammingNorm }
 
 /- warning: hamming.nnnorm_eq_hamming_norm -> Hamming.nnnorm_eq_hammingNorm is a dubious translation:
 lean 3 declaration is

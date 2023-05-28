@@ -245,9 +245,7 @@ theorem AffineIndependent.existsUnique_dist_eq {ι : Type _} [hne : Nonempty ι]
       convert ha.not_mem_affine_span_diff i Set.univ
       change (Set.range fun i2 : { x | x ≠ i } => p i2) = _
       rw [← Set.image_eq_range]
-      congr with j
-      simp
-      rfl
+      congr with j; simp; rfl
 #align affine_independent.exists_unique_dist_eq AffineIndependent.existsUnique_dist_eq
 
 end EuclideanGeometry
@@ -980,14 +978,10 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
     hp₁ hp₂
   obtain ⟨r₁, p₁o, hp₁o, hp₁⟩ := hp₁
   obtain ⟨r₂, p₂o, hp₂o, hp₂⟩ := hp₂
-  obtain rfl : ↑(s.orthogonal_projection_span p₁) = p₁o :=
-    by
-    subst hp₁
+  obtain rfl : ↑(s.orthogonal_projection_span p₁) = p₁o := by subst hp₁;
     exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₁o
   rw [h₁'] at hp₁
-  obtain rfl : ↑(s.orthogonal_projection_span p₂) = p₂o :=
-    by
-    subst hp₂
+  obtain rfl : ↑(s.orthogonal_projection_span p₂) = p₂o := by subst hp₂;
     exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₂o
   rw [h₂'] at hp₂
   have h : s.points 0 ∈ span_s := mem_affineSpan ℝ (Set.mem_range_self _)

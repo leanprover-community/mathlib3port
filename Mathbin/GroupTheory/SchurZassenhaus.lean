@@ -294,12 +294,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
   apply Nat.strong_induction_on n
   rintro n ih G _ _ rfl N _ hN
   refine' not_forall_not.mp fun h3 => _
-  haveI :=
-    schur_zassenhaus_induction.step7 hN
-      (fun G' _ _ hG' => by
-        apply ih _ hG'
-        rfl)
-      h3
+  haveI := schur_zassenhaus_induction.step7 hN (fun G' _ _ hG' => by apply ih _ hG'; rfl) h3
   rw [← Nat.card_eq_fintype_card] at hN
   exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
 

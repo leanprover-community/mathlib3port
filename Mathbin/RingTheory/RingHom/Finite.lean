@@ -23,9 +23,7 @@ open TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
-theorem finite_stableUnderComposition : StableUnderComposition @Finite :=
-  by
-  introv R hf hg
+theorem finite_stableUnderComposition : StableUnderComposition @Finite := by introv R hf hg;
   exact hg.comp hf
 #align ring_hom.finite_stable_under_composition RingHom.finite_stableUnderComposition
 
@@ -42,18 +40,9 @@ theorem finite_stableUnderBaseChange : StableUnderBaseChange @Finite :=
   classical
     introv h
     skip
-    replace h : Module.Finite R T := by
-      convert h
-      ext
-      rw [Algebra.smul_def]
-      rfl
-    suffices Module.Finite S (S ⊗[R] T)
-      by
-      change Module.Finite _ _
-      convert this
-      ext
-      rw [Algebra.smul_def]
-      rfl
+    replace h : Module.Finite R T := by convert h; ext; rw [Algebra.smul_def]; rfl
+    suffices Module.Finite S (S ⊗[R] T) by change Module.Finite _ _; convert this; ext;
+      rw [Algebra.smul_def]; rfl
     exact inferInstance
 #align ring_hom.finite_stable_under_base_change RingHom.finite_stableUnderBaseChange
 

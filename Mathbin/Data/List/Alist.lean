@@ -484,9 +484,7 @@ Case conversion may be inaccurate. Consider using '#align alist.insert_rec_empty
 @[simp]
 theorem insertRec_empty {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) :
-    @insertRec α β _ C H0 IH ∅ = H0 :=
-  by
-  change @insert_rec α β _ C H0 IH ⟨[], _⟩ = H0
+    @insertRec α β _ C H0 IH ∅ = H0 := by change @insert_rec α β _ C H0 IH ⟨[], _⟩ = H0;
   rw [insert_rec]
 #align alist.insert_rec_empty AList.insertRec_empty
 
@@ -666,22 +664,13 @@ theorem union_comm_of_disjoint {s₁ s₂ : AList β} (h : Disjoint s₁ s₂) :
       intros ; simp
       constructor <;> intro h'
       cases h'
-      · right
-        refine' ⟨_, h'⟩
-        apply h
-        rw [keys, ← List.dlookup_isSome, h']
-        exact rfl
-      · left
-        rw [h'.2]
+      · right; refine' ⟨_, h'⟩
+        apply h; rw [keys, ← List.dlookup_isSome, h']; exact rfl
+      · left; rw [h'.2]
       cases h'
-      · right
-        refine' ⟨_, h'⟩
-        intro h''
-        apply h _ h''
-        rw [keys, ← List.dlookup_isSome, h']
-        exact rfl
-      · left
-        rw [h'.2])
+      · right; refine' ⟨_, h'⟩; intro h''
+        apply h _ h''; rw [keys, ← List.dlookup_isSome, h']; exact rfl
+      · left; rw [h'.2])
 #align alist.union_comm_of_disjoint AList.union_comm_of_disjoint
 -/
 

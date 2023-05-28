@@ -120,8 +120,7 @@ theorem mem_pi {s : Set (∀ i, α i)} :
   by
   constructor
   · simp only [pi, mem_infi', mem_comap, pi_def]
-    rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
-    choose t htf htV using hVf
+    rintro ⟨I, If, V, hVf, hVI, rfl, -⟩; choose t htf htV using hVf
     exact ⟨I, If, t, htf, Inter₂_mono fun i _ => htV i⟩
   · rintro ⟨I, If, t, htf, hts⟩
     exact mem_of_superset (pi_mem_pi If fun i _ => htf i) hts
@@ -145,9 +144,7 @@ theorem mem_of_pi_mem_pi [∀ i, NeBot (f i)] {I : Set ι} (h : I.pi s ∈ pi f)
   refine' mem_of_superset (htf i) fun x hx => _
   have : ∀ i, (t i).Nonempty := fun i => nonempty_of_mem (htf i)
   choose g hg
-  have : update g i x ∈ I'.pi t := by
-    intro j hj
-    rcases eq_or_ne j i with (rfl | hne) <;> simp [*]
+  have : update g i x ∈ I'.pi t := by intro j hj; rcases eq_or_ne j i with (rfl | hne) <;> simp [*]
   simpa using hts this i hi
 #align filter.mem_of_pi_mem_pi Filter.mem_of_pi_mem_pi
 -/
@@ -183,8 +180,7 @@ Case conversion may be inaccurate. Consider using '#align filter.pi_inf_principa
 theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ :=
   by
   constructor
-  · simp only [inf_principal_eq_bot, mem_pi]
-    contrapose!
+  · simp only [inf_principal_eq_bot, mem_pi]; contrapose!
     rintro (hsf : ∀ i, ∃ᶠ x in f i, x ∈ s i) I If t htf hts
     have : ∀ i, (s i ∩ t i).Nonempty := fun i => ((hsf i).and_eventually (htf i)).exists
     choose x hxs hxt

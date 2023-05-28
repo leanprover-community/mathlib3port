@@ -299,9 +299,7 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
   calc
     w.im * (1 - exp (-dist z w)) =
         dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) :=
-      by
-      rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]
-      ring
+      by rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]; ring
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
     
 #align upper_half_plane.le_dist_coe UpperHalfPlane.le_dist_coe

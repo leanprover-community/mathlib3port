@@ -51,9 +51,7 @@ but is expected to have type
   forall {X : Type.{u3}} {Y : Type.{u2}} {Z : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} X] [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : TopologicalSpace.{u1} Z] {f : ContinuousMap.{u3, u2} X Y _inst_1 _inst_2}, (ContinuousMap.Nullhomotopic.{u3, u2} X Y _inst_1 _inst_2 f) -> (forall (g : ContinuousMap.{u2, u1} Y Z _inst_2 _inst_3), ContinuousMap.Nullhomotopic.{u3, u1} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u3, u2, u1} X Y Z _inst_1 _inst_2 _inst_3 g f))
 Case conversion may be inaccurate. Consider using '#align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_rightₓ'. -/
 theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, Z)) :
-    (g.comp f).Nullhomotopic := by
-  cases' hf with y hy
-  use g y
+    (g.comp f).Nullhomotopic := by cases' hf with y hy; use g y;
   exact homotopic.hcomp hy (homotopic.refl g)
 #align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_right
 
@@ -64,9 +62,7 @@ but is expected to have type
   forall {X : Type.{u1}} {Y : Type.{u3}} {Z : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u3} Y] [_inst_3 : TopologicalSpace.{u2} Z] {f : ContinuousMap.{u3, u2} Y Z _inst_2 _inst_3}, (ContinuousMap.Nullhomotopic.{u3, u2} Y Z _inst_2 _inst_3 f) -> (forall (g : ContinuousMap.{u1, u3} X Y _inst_1 _inst_2), ContinuousMap.Nullhomotopic.{u1, u2} X Z _inst_1 _inst_3 (ContinuousMap.comp.{u1, u3, u2} X Y Z _inst_1 _inst_2 _inst_3 f g))
 Case conversion may be inaccurate. Consider using '#align continuous_map.nullhomotopic.comp_left ContinuousMap.Nullhomotopic.comp_leftₓ'. -/
 theorem Nullhomotopic.comp_left {f : C(Y, Z)} (hf : f.Nullhomotopic) (g : C(X, Y)) :
-    (f.comp g).Nullhomotopic := by
-  cases' hf with y hy
-  use y
+    (f.comp g).Nullhomotopic := by cases' hf with y hy; use y;
   exact homotopic.hcomp (homotopic.refl g) hy
 #align continuous_map.nullhomotopic.comp_left ContinuousMap.Nullhomotopic.comp_left
 
@@ -99,18 +95,14 @@ theorem id_nullhomotopic (X : Type _) [TopologicalSpace X] [ContractibleSpace X]
 theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
     ContractibleSpace Y ↔ (ContinuousMap.id Y).Nullhomotopic :=
   by
-  constructor;
-  · intro
-    apply id_nullhomotopic
+  constructor; · intro ; apply id_nullhomotopic
   rintro ⟨p, h⟩
   refine_struct
     {
       hequiv_unit :=
         ⟨{  toFun := ContinuousMap.const _ ()
             invFun := ContinuousMap.const _ p }⟩ }
-  · exact h.symm;
-  · convert homotopic.refl (ContinuousMap.id Unit)
-    ext
+  · exact h.symm; · convert homotopic.refl (ContinuousMap.id Unit); ext
 #align contractible_iff_id_nullhomotopic contractible_iff_id_nullhomotopic
 -/
 
@@ -131,11 +123,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractibleSpace_iffₓ'. -/
 protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
-  ⟨by
-    intro h
-    exact e.symm.contractible_space, by
-    intro h
-    exact e.contractible_space⟩
+  ⟨by intro h; exact e.symm.contractible_space, by intro h; exact e.contractible_space⟩
 #align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractibleSpace_iff
 
 #print Homeomorph.contractibleSpace /-

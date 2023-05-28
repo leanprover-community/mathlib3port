@@ -213,8 +213,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     intro ε hε
     obtain ⟨k, h_k⟩ : ∃ k : ℕ, 2⁻¹ ^ k < ε := exists_pow_lt_of_lt_one hε (by norm_num)
     refine' ⟨k + 1, (le_of_eq _).trans_lt h_k⟩
-    rw [pow_add]
-    ring
+    rw [pow_add]; ring
   set ns := exists_seq_tendsto_ae.seq_tendsto_ae_seq hfg
   use ns
   let S k := { x | 2⁻¹ ^ k ≤ dist (f (ns k) x) (g x) }
@@ -332,10 +331,8 @@ theorem tendstoInMeasure_of_tendsto_snorm_of_ne_top (hp_ne_zero : p ≠ 0) (hp_n
   refine'
     tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable hp_ne_zero hp_ne_top
       (fun i => (hf i).stronglyMeasurable_mk) hg.strongly_measurable_mk _
-  have : (fun n => snorm ((hf n).mk (f n) - hg.mk g) p μ) = fun n => snorm (f n - g) p μ :=
-    by
-    ext1 n
-    refine' snorm_congr_ae (eventually_eq.sub (hf n).ae_eq_mk.symm hg.ae_eq_mk.symm)
+  have : (fun n => snorm ((hf n).mk (f n) - hg.mk g) p μ) = fun n => snorm (f n - g) p μ := by
+    ext1 n; refine' snorm_congr_ae (eventually_eq.sub (hf n).ae_eq_mk.symm hg.ae_eq_mk.symm)
   rw [this]
   exact hfg
 #align measure_theory.tendsto_in_measure_of_tendsto_snorm_of_ne_top MeasureTheory.tendstoInMeasure_of_tendsto_snorm_of_ne_top

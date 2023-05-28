@@ -94,9 +94,7 @@ instance : Group (QuaternionGroup n) where
     simp only [neg_mul, one_mul, Int.cast_one, zsmul_eq_mul, Int.cast_neg, add_right_inj]
     calc
       -(n : ZMod (2 * n)) = 0 - n := by rw [zero_sub]
-      _ = 2 * n - n := by
-        norm_cast
-        simp
+      _ = 2 * n - n := by norm_cast; simp
       _ = n := by ring
       
   one := one
@@ -164,10 +162,7 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
     | DihedralGroup.sr j => xa j
   left_inv := by rintro (k | k) <;> rfl
   right_inv := by rintro (k | k) <;> rfl
-  map_mul' := by
-    rintro (k | k) (l | l) <;>
-      · dsimp
-        simp
+  map_mul' := by rintro (k | k) (l | l) <;> · dsimp; simp
 #align quaternion_group.quaternion_group_zero_equiv_dihedral_group_zero QuaternionGroup.quaternionGroupZeroEquivDihedralGroupZero
 
 /-- If `0 < n`, then `quaternion_group n` is a finite group.
@@ -190,8 +185,7 @@ theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n :=
 theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k :=
   by
   induction' k with k IH
-  · rw [Nat.cast_zero]
-    rfl
+  · rw [Nat.cast_zero]; rfl
   · rw [pow_succ, IH, a_mul_a]
     congr 1
     norm_cast

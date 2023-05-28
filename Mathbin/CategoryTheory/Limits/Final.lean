@@ -239,16 +239,8 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
   apply
     @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _
       (structured_arrow.mk k₀) z
-  · intro j₁ j₂ f a
-    fapply h₁ _ _ _ _ f.right _ a
-    convert f.w.symm
-    dsimp
-    simp
-  · intro j₁ j₂ f a
-    fapply h₂ _ _ _ _ f.right _ a
-    convert f.w.symm
-    dsimp
-    simp
+  · intro j₁ j₂ f a; fapply h₁ _ _ _ _ f.right _ a; convert f.w.symm; dsimp; simp
+  · intro j₁ j₂ f a; fapply h₂ _ _ _ _ f.right _ a; convert f.w.symm; dsimp; simp
 #align category_theory.functor.final.induction CategoryTheory.Functor.Final.induction
 
 variable {F G}
@@ -290,14 +282,8 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← w]
-    rw [← s.w f] at h
-    simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← w] at h
-    rw [← s.w f]
-    simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← w]; rw [← s.w f] at h; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← w] at h; rw [← s.w f]; simpa using h
   · exact s.w (𝟙 _)
 #align category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
 
@@ -506,9 +492,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
     dsimp at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂
-    have e : y₁ = y₂ := by
-      apply (I d).toEquiv.Injective
-      ext
+    have e : y₁ = y₂ := by apply (I d).toEquiv.Injective; ext
     have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
     exact zigzag_of_eqv_gen_quot_rel t⟩
@@ -572,16 +556,8 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
   apply
     @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _
       (costructured_arrow.mk k₀) z
-  · intro j₁ j₂ f a
-    fapply h₁ _ _ _ _ f.left _ a
-    convert f.w
-    dsimp
-    simp
-  · intro j₁ j₂ f a
-    fapply h₂ _ _ _ _ f.left _ a
-    convert f.w
-    dsimp
-    simp
+  · intro j₁ j₂ f a; fapply h₁ _ _ _ _ f.left _ a; convert f.w; dsimp; simp
+  · intro j₁ j₂ f a; fapply h₂ _ _ _ _ f.left _ a; convert f.w; dsimp; simp
 #align category_theory.functor.initial.induction CategoryTheory.Functor.Initial.induction
 
 variable {F G}
@@ -626,14 +602,8 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← s.w f]
-    rw [← w] at h
-    simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← s.w f] at h
-    rw [← w]
-    simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f]; rw [← w] at h; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f] at h; rw [← w]; simpa using h
   · exact s.w (𝟙 _)
 #align category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
 

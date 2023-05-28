@@ -89,14 +89,8 @@ theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f * g) x = f x 
 instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
   { LocallyConstant.hasOne,
     LocallyConstant.hasMul with
-    one_mul := by
-      intros
-      ext
-      simp only [mul_apply, one_apply, one_mul]
-    mul_one := by
-      intros
-      ext
-      simp only [mul_apply, one_apply, mul_one] }
+    one_mul := by intros ; ext; simp only [mul_apply, one_apply, one_mul]
+    mul_one := by intros ; ext; simp only [mul_apply, one_apply, mul_one] }
 
 /- warning: locally_constant.coe_fn_monoid_hom -> LocallyConstant.coeFnMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -133,14 +127,8 @@ def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
   { LocallyConstant.hasZero,
     LocallyConstant.hasMul with
-    zero_mul := by
-      intros
-      ext
-      simp only [mul_apply, zero_apply, MulZeroClass.zero_mul]
-    mul_zero := by
-      intros
-      ext
-      simp only [mul_apply, zero_apply, MulZeroClass.mul_zero] }
+    zero_mul := by intros ; ext; simp only [mul_apply, zero_apply, MulZeroClass.zero_mul]
+    mul_zero := by intros ; ext; simp only [mul_apply, zero_apply, MulZeroClass.mul_zero] }
 
 instance [MulZeroOneClass Y] : MulZeroOneClass (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.mulOneClass with }
@@ -218,22 +206,14 @@ theorem div_apply [Div Y] (f g : LocallyConstant X Y) (x : X) : (f / g) x = f x 
 
 @[to_additive]
 instance [Semigroup Y] : Semigroup (LocallyConstant X Y) :=
-  { LocallyConstant.hasMul with
-    mul_assoc := by
-      intros
-      ext
-      simp only [mul_apply, mul_assoc] }
+  { LocallyConstant.hasMul with mul_assoc := by intros ; ext; simp only [mul_apply, mul_assoc] }
 
 instance [SemigroupWithZero Y] : SemigroupWithZero (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.semigroup with }
 
 @[to_additive]
 instance [CommSemigroup Y] : CommSemigroup (LocallyConstant X Y) :=
-  { LocallyConstant.semigroup with
-    mul_comm := by
-      intros
-      ext
-      simp only [mul_apply, mul_comm] }
+  { LocallyConstant.semigroup with mul_comm := by intros ; ext; simp only [mul_apply, mul_comm] }
 
 @[to_additive]
 instance [Monoid Y] : Monoid (LocallyConstant X Y) :=
@@ -254,14 +234,8 @@ instance [CommMonoid Y] : CommMonoid (LocallyConstant X Y) :=
 instance [Group Y] : Group (LocallyConstant X Y) :=
   { LocallyConstant.monoid, LocallyConstant.hasInv,
     LocallyConstant.hasDiv with
-    mul_left_inv := by
-      intros
-      ext
-      simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
-    div_eq_mul_inv := by
-      intros
-      ext
-      simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
+    mul_left_inv := by intros ; ext; simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
+    div_eq_mul_inv := by intros ; ext; simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
 
 @[to_additive]
 instance [CommGroup Y] : CommGroup (LocallyConstant X Y) :=
@@ -270,14 +244,8 @@ instance [CommGroup Y] : CommGroup (LocallyConstant X Y) :=
 instance [Distrib Y] : Distrib (LocallyConstant X Y) :=
   { LocallyConstant.hasAdd,
     LocallyConstant.hasMul with
-    left_distrib := by
-      intros
-      ext
-      simp only [mul_apply, add_apply, mul_add]
-    right_distrib := by
-      intros
-      ext
-      simp only [mul_apply, add_apply, add_mul] }
+    left_distrib := by intros ; ext; simp only [mul_apply, add_apply, mul_add]
+    right_distrib := by intros ; ext; simp only [mul_apply, add_apply, add_mul] }
 
 instance [NonUnitalNonAssocSemiring Y] : NonUnitalNonAssocSemiring (LocallyConstant X Y) :=
   { LocallyConstant.addCommMonoid, LocallyConstant.hasMul, LocallyConstant.distrib,
@@ -367,14 +335,8 @@ variable [CommSemiring R] [Semiring Y] [Algebra R Y]
 instance : Algebra R (LocallyConstant X Y)
     where
   toRingHom := constRingHom.comp <| algebraMap R Y
-  commutes' := by
-    intros
-    ext
-    exact Algebra.commutes' _ _
-  smul_def' := by
-    intros
-    ext
-    exact Algebra.smul_def' _ _
+  commutes' := by intros ; ext; exact Algebra.commutes' _ _
+  smul_def' := by intros ; ext; exact Algebra.smul_def' _ _
 
 /- warning: locally_constant.coe_algebra_map -> LocallyConstant.coe_algebraMap is a dubious translation:
 <too large>

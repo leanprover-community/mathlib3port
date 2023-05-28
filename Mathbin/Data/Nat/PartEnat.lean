@@ -185,10 +185,8 @@ but is expected to have type
   forall {P : PartENat -> Prop} (a : PartENat), (P (Top.top.{0} PartENat PartENat.instTopPartENat)) -> (forall (n : Nat), P (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) n)) -> (P a)
 Case conversion may be inaccurate. Consider using '#align part_enat.cases_on PartENat.casesOnₓ'. -/
 @[elab_as_elim]
-protected theorem casesOn {P : PartENat → Prop} : ∀ a : PartENat, P ⊤ → (∀ n : ℕ, P n) → P a :=
-  by
-  simp only [← some_eq_coe]
-  exact PartENat.casesOn'
+protected theorem casesOn {P : PartENat → Prop} : ∀ a : PartENat, P ⊤ → (∀ n : ℕ, P n) → P a := by
+  simp only [← some_eq_coe]; exact PartENat.casesOn'
 #align part_enat.cases_on PartENat.casesOn
 
 #print PartENat.top_add /-
@@ -211,9 +209,7 @@ but is expected to have type
   forall {x : PartENat} (h : Part.Dom.{0} Nat x), Eq.{1} PartENat (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) (Part.get.{0} Nat x h)) x
 Case conversion may be inaccurate. Consider using '#align part_enat.coe_get PartENat.natCast_getₓ'. -/
 @[simp]
-theorem natCast_get {x : PartENat} (h : x.Dom) : (x.get h : PartENat) = x :=
-  by
-  rw [← some_eq_coe]
+theorem natCast_get {x : PartENat} (h : x.Dom) : (x.get h : PartENat) = x := by rw [← some_eq_coe];
   exact Part.ext' (iff_of_true trivial h) fun _ _ => rfl
 #align part_enat.coe_get PartENat.natCast_get
 
@@ -245,10 +241,7 @@ but is expected to have type
   forall {x : Nat} {y : PartENat} (h : Part.Dom.{0} Nat (HAdd.hAdd.{0, 0, 0} PartENat PartENat PartENat (instHAdd.{0} PartENat PartENat.instAddPartENat) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) x) y)), Eq.{1} Nat (Part.get.{0} Nat (HAdd.hAdd.{0, 0, 0} PartENat PartENat PartENat (instHAdd.{0} PartENat PartENat.instAddPartENat) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) x) y) h) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) x (Part.get.{0} Nat y (And.right (Part.Dom.{0} Nat (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) x)) (Part.Dom.{0} Nat y) h)))
 Case conversion may be inaccurate. Consider using '#align part_enat.coe_add_get PartENat.coe_add_getₓ'. -/
 theorem coe_add_get {x : ℕ} {y : PartENat} (h : ((x : PartENat) + y).Dom) :
-    get ((x : PartENat) + y) h = x + get y h.2 :=
-  by
-  simp only [← some_eq_coe] at h⊢
-  rfl
+    get ((x : PartENat) + y) h = x + get y h.2 := by simp only [← some_eq_coe] at h⊢; rfl
 #align part_enat.coe_add_get PartENat.coe_add_get
 
 #print PartENat.get_add /-
@@ -305,9 +298,7 @@ lean 3 declaration is
 but is expected to have type
   forall {x : PartENat} {y : Nat}, (LE.le.{0} PartENat PartENat.instLEPartENat x (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) y)) -> (Part.Dom.{0} Nat x)
 Case conversion may be inaccurate. Consider using '#align part_enat.dom_of_le_coe PartENat.dom_of_le_natCastₓ'. -/
-theorem dom_of_le_natCast {x : PartENat} {y : ℕ} (h : x ≤ y) : x.Dom :=
-  by
-  rw [← some_eq_coe] at h
+theorem dom_of_le_natCast {x : PartENat} {y : ℕ} (h : x ≤ y) : x.Dom := by rw [← some_eq_coe] at h;
   exact dom_of_le_some h
 #align part_enat.dom_of_le_coe PartENat.dom_of_le_natCast
 
@@ -317,9 +308,7 @@ instance decidableLe (x y : PartENat) [Decidable x.Dom] [Decidable y.Dom] : Deci
     decidable_of_decidable_of_iff
         (show Decidable (∀ hy : (y : PartENat).Dom, x.get hx ≤ (y : PartENat).get hy) from
           forallPropDecidable _) <|
-      by
-      dsimp [(· ≤ ·)]
-      simp only [hx, exists_prop_of_true, forall_true_iff]
+      by dsimp [(· ≤ ·)]; simp only [hx, exists_prop_of_true, forall_true_iff]
   else
     if hy : y.Dom then isFalse fun h => hx <| dom_of_le_of_dom h hy
     else isTrue ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
@@ -368,19 +357,14 @@ theorem lt_def (x y : PartENat) : x < y ↔ ∃ hx : x.Dom, ∀ hy : y.Dom, x.ge
   constructor
   · rintro ⟨⟨hyx, H⟩, h⟩
     by_cases hx : x.dom
-    · use hx
-      intro hy
-      specialize H hy
-      specialize h fun _ => hy
-      rw [not_forall] at h
-      cases' h with hx' h
-      rw [not_le] at h
-      exact h
+    · use hx; intro hy
+      specialize H hy; specialize h fun _ => hy
+      rw [not_forall] at h; cases' h with hx' h
+      rw [not_le] at h; exact h
     · specialize h fun hx' => (hx hx').elim
-      rw [not_forall] at h
-      cases' h with hx' h
+      rw [not_forall] at h; cases' h with hx' h
       exact (hx hx').elim
-  · rintro ⟨hx, H⟩
+  · rintro ⟨hx, H⟩;
     exact ⟨⟨fun _ => hx, fun hy => (H hy).le⟩, fun hxy h => not_lt_of_le (h _) (H _)⟩
 #align part_enat.lt_def PartENat.lt_def
 
@@ -391,9 +375,7 @@ but is expected to have type
   forall {x : Nat} {y : Nat}, Iff (LE.le.{0} PartENat PartENat.instLEPartENat (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) x) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) y)) (LE.le.{0} Nat instLENat x y)
 Case conversion may be inaccurate. Consider using '#align part_enat.coe_le_coe PartENat.coe_le_coeₓ'. -/
 @[simp, norm_cast]
-theorem coe_le_coe {x y : ℕ} : (x : PartENat) ≤ y ↔ x ≤ y :=
-  by
-  rw [← some_eq_coe, ← some_eq_coe]
+theorem coe_le_coe {x y : ℕ} : (x : PartENat) ≤ y ↔ x ≤ y := by rw [← some_eq_coe, ← some_eq_coe];
   exact ⟨fun ⟨_, h⟩ => h trivial, fun h => ⟨fun _ => trivial, fun _ => h⟩⟩
 #align part_enat.coe_le_coe PartENat.coe_le_coe
 
@@ -602,12 +584,8 @@ Case conversion may be inaccurate. Consider using '#align part_enat.eq_top_iff_f
 theorem eq_top_iff_forall_lt (x : PartENat) : x = ⊤ ↔ ∀ n : ℕ, (n : PartENat) < x :=
   by
   constructor
-  · rintro rfl n
-    exact coe_lt_top _
-  · contrapose!
-    rw [ne_top_iff]
-    rintro ⟨n, rfl⟩
-    exact ⟨n, irrefl _⟩
+  · rintro rfl n; exact coe_lt_top _
+  · contrapose!; rw [ne_top_iff]; rintro ⟨n, rfl⟩; exact ⟨n, irrefl _⟩
 #align part_enat.eq_top_iff_forall_lt PartENat.eq_top_iff_forall_lt
 
 /- warning: part_enat.eq_top_iff_forall_le -> PartENat.eq_top_iff_forall_le is a dubious translation:
@@ -629,10 +607,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align part_enat.pos_iff_one_le PartENat.pos_iff_one_leₓ'. -/
 theorem pos_iff_one_le {x : PartENat} : 0 < x ↔ 1 ≤ x :=
   PartENat.casesOn x (by simp only [iff_true_iff, le_top, coe_lt_top, ← @Nat.cast_zero PartENat])
-    fun n =>
-    by
-    rw [← Nat.cast_zero, ← Nat.cast_one, PartENat.coe_lt_coe, PartENat.coe_le_coe]
-    rfl
+    fun n => by rw [← Nat.cast_zero, ← Nat.cast_one, PartENat.coe_lt_coe, PartENat.coe_le_coe]; rfl
 #align part_enat.pos_iff_one_le PartENat.pos_iff_one_le
 
 instance : IsTotal PartENat (· ≤ ·)
@@ -704,8 +679,7 @@ protected theorem add_lt_add_right {x y z : PartENat} (h : x < y) (hz : z ≠ �
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
   rcases ne_top_iff.mp hz with ⟨k, rfl⟩
   induction' y using PartENat.casesOn with n
-  · rw [top_add]
-    apply_mod_cast coe_lt_top
+  · rw [top_add]; apply_mod_cast coe_lt_top
   norm_cast  at h; apply_mod_cast add_lt_add_right h
 #align part_enat.add_lt_add_right PartENat.add_lt_add_right
 
@@ -735,10 +709,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : PartENat} {y : PartENat}, (Ne.{1} PartENat x (Top.top.{0} PartENat PartENat.instTopPartENat)) -> (Iff (LT.lt.{0} PartENat (Preorder.toLT.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) x (HAdd.hAdd.{0, 0, 0} PartENat PartENat PartENat (instHAdd.{0} PartENat PartENat.instAddPartENat) x y)) (LT.lt.{0} PartENat (Preorder.toLT.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) (OfNat.ofNat.{0} PartENat 0 (Zero.toOfNat0.{0} PartENat PartENat.instZeroPartENat)) y))
 Case conversion may be inaccurate. Consider using '#align part_enat.lt_add_iff_pos_right PartENat.lt_add_iff_pos_rightₓ'. -/
-protected theorem lt_add_iff_pos_right {x y : PartENat} (hx : x ≠ ⊤) : x < x + y ↔ 0 < y :=
-  by
-  conv_rhs => rw [← PartENat.add_lt_add_iff_left hx]
-  rw [add_zero]
+protected theorem lt_add_iff_pos_right {x y : PartENat} (hx : x ≠ ⊤) : x < x + y ↔ 0 < y := by
+  conv_rhs => rw [← PartENat.add_lt_add_iff_left hx]; rw [add_zero]
 #align part_enat.lt_add_iff_pos_right PartENat.lt_add_iff_pos_right
 
 /- warning: part_enat.lt_add_one -> PartENat.lt_add_one is a dubious translation:
@@ -747,11 +719,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : PartENat}, (Ne.{1} PartENat x (Top.top.{0} PartENat PartENat.instTopPartENat)) -> (LT.lt.{0} PartENat (Preorder.toLT.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) x (HAdd.hAdd.{0, 0, 0} PartENat PartENat PartENat (instHAdd.{0} PartENat PartENat.instAddPartENat) x (OfNat.ofNat.{0} PartENat 1 (One.toOfNat1.{0} PartENat PartENat.instOnePartENat))))
 Case conversion may be inaccurate. Consider using '#align part_enat.lt_add_one PartENat.lt_add_oneₓ'. -/
-theorem lt_add_one {x : PartENat} (hx : x ≠ ⊤) : x < x + 1 :=
-  by
-  rw [PartENat.lt_add_iff_pos_right hx]
-  norm_cast
-  norm_num
+theorem lt_add_one {x : PartENat} (hx : x ≠ ⊤) : x < x + 1 := by
+  rw [PartENat.lt_add_iff_pos_right hx]; norm_cast; norm_num
 #align part_enat.lt_add_one PartENat.lt_add_one
 
 /- warning: part_enat.le_of_lt_add_one -> PartENat.le_of_lt_add_one is a dubious translation:
@@ -804,9 +773,7 @@ theorem lt_add_one_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x < y + 1 ↔ x �
   by
   constructor; exact le_of_lt_add_one
   intro h; rcases ne_top_iff.mp hx with ⟨m, rfl⟩
-  induction' y using PartENat.casesOn with n;
-  · rw [top_add]
-    apply coe_lt_top
+  induction' y using PartENat.casesOn with n; · rw [top_add]; apply coe_lt_top
   apply_mod_cast Nat.lt_succ_of_le; apply_mod_cast h
 #align part_enat.lt_add_one_iff_lt PartENat.lt_add_one_iff_lt
 
@@ -1130,10 +1097,7 @@ theorem lt_find_iff (n : ℕ) : (n : PartENat) < find P ↔ ∀ m ≤ n, ¬P m :
   refine' ⟨_, lt_find P n⟩
   intro h m hm
   by_cases H : (find P).Dom
-  · apply Nat.find_min H
-    rw [coe_lt_iff] at h
-    specialize h H
-    exact lt_of_le_of_lt hm h
+  · apply Nat.find_min H; rw [coe_lt_iff] at h; specialize h H; exact lt_of_le_of_lt hm h
   · exact not_exists.mp H m
 #align part_enat.lt_find_iff PartENat.lt_find_iff
 
@@ -1143,9 +1107,7 @@ lean 3 declaration is
 but is expected to have type
   forall (P : Nat -> Prop) [_inst_1 : DecidablePred.{1} Nat P] (n : Nat), (P n) -> (LE.le.{0} PartENat PartENat.instLEPartENat (PartENat.find P (fun (a : Nat) => _inst_1 a)) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) n))
 Case conversion may be inaccurate. Consider using '#align part_enat.find_le PartENat.find_leₓ'. -/
-theorem find_le (n : ℕ) (h : P n) : find P ≤ n :=
-  by
-  rw [le_coe_iff]
+theorem find_le (n : ℕ) (h : P n) : find P ≤ n := by rw [le_coe_iff];
   refine' ⟨⟨_, h⟩, @Nat.find_min' P _ _ _ h⟩
 #align part_enat.find_le PartENat.find_le
 

@@ -87,9 +87,7 @@ theorem right_adjoint_hasLift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq
   exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
 #align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_hasLift_iff
 
-instance [HasLift sq] : HasLift (sq.rightAdjoint adj) :=
-  by
-  rw [right_adjoint_has_lift_iff]
+instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by rw [right_adjoint_has_lift_iff];
   infer_instance
 
 end
@@ -146,9 +144,7 @@ theorem left_adjoint_hasLift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :
   exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
 #align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_hasLift_iff
 
-instance [HasLift sq] : HasLift (sq.leftAdjoint adj) :=
-  by
-  rw [left_adjoint_has_lift_iff]
+instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by rw [left_adjoint_has_lift_iff];
   infer_instance
 
 end

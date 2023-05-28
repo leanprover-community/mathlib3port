@@ -171,10 +171,7 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R], Eq.{succ u1} (Multiset.{u1} σ) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (OfNat.ofNat.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) 0 (Zero.toOfNat0.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommMonoidWithZero.toZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toCommMonoidWithZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) (OfNat.ofNat.{u1} (Multiset.{u1} σ) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} σ) (Multiset.instZeroMultiset.{u1} σ)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_zero MvPolynomial.degrees_zeroₓ'. -/
 @[simp]
-theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 :=
-  by
-  rw [← C_0]
-  exact degrees_C 0
+theorem degrees_zero : degrees (0 : MvPolynomial σ R) = 0 := by rw [← C_0]; exact degrees_C 0
 #align mv_polynomial.degrees_zero MvPolynomial.degrees_zero
 
 /- warning: mv_polynomial.degrees_one -> MvPolynomial.degrees_one is a dubious translation:
@@ -216,8 +213,7 @@ theorem degrees_sum {ι : Type _} [DecidableEq σ] (s : Finset ι) (f : ι → M
     (∑ i in s, f i).degrees ≤ s.sup fun i => (f i).degrees := by
   classical
     refine' s.induction _ _
-    · simp only [Finset.sum_empty, Finset.sup_empty, degrees_zero]
-      exact le_rfl
+    · simp only [Finset.sum_empty, Finset.sup_empty, degrees_zero]; exact le_rfl
     · intro i s his ih
       rw [Finset.sup_insert, Finset.sum_insert his]
       exact le_trans (degrees_add _ _) (sup_le_sup_left ih _)
@@ -321,8 +317,7 @@ theorem degrees_add_of_disjoint [DecidableEq σ] {p q : MvPolynomial σ R}
   · apply degrees_add
   · apply Multiset.union_le
     · apply le_degrees_add h
-    · rw [add_comm]
-      apply le_degrees_add h.symm
+    · rw [add_comm]; apply le_degrees_add h.symm
 #align mv_polynomial.degrees_add_of_disjoint MvPolynomial.degrees_add_of_disjoint
 
 /- warning: mv_polynomial.degrees_map -> MvPolynomial.degrees_map is a dubious translation:
@@ -522,8 +517,7 @@ theorem vars_mul [DecidableEq σ] (φ ψ : MvPolynomial σ R) : (φ * ψ).vars �
   simp only [mem_vars, Finset.mem_union]
   rintro ⟨d, hd, hi⟩
   rw [mem_support_iff, coeff_mul] at hd
-  contrapose! hd
-  cases hd
+  contrapose! hd; cases hd
   rw [Finset.sum_eq_zero]
   rintro ⟨d₁, d₂⟩ H
   rw [Finsupp.mem_antidiagonal] at H
@@ -531,13 +525,9 @@ theorem vars_mul [DecidableEq σ] (φ ψ : MvPolynomial σ R) : (φ * ψ).vars �
   obtain H | H : i ∈ d₁.support ∨ i ∈ d₂.support := by
     simpa only [Finset.mem_union] using Finsupp.support_add hi
   · suffices coeff d₁ φ = 0 by simp [this]
-    rw [coeff, ← Finsupp.not_mem_support_iff]
-    intro
-    solve_by_elim
+    rw [coeff, ← Finsupp.not_mem_support_iff]; intro ; solve_by_elim
   · suffices coeff d₂ ψ = 0 by simp [this]
-    rw [coeff, ← Finsupp.not_mem_support_iff]
-    intro
-    solve_by_elim
+    rw [coeff, ← Finsupp.not_mem_support_iff]; intro ; solve_by_elim
 #align mv_polynomial.vars_mul MvPolynomial.vars_mul
 
 /- warning: mv_polynomial.vars_one -> MvPolynomial.vars_one is a dubious translation:
@@ -699,10 +689,7 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1) [_inst_3 : DecidableEq.{succ u1} σ], Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (Finset.biUnion.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (a : σ) (b : σ) => _inst_3 a b) (MvPolynomial.support.{u2, u1} R σ _inst_1 p) (Finsupp.support.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_biUnion_supportₓ'. -/
 theorem vars_eq_support_biUnion_support [DecidableEq σ] :
-    p.vars = p.support.biUnion Finsupp.support :=
-  by
-  ext i
-  rw [mem_vars, Finset.mem_biUnion]
+    p.vars = p.support.biUnion Finsupp.support := by ext i; rw [mem_vars, Finset.mem_biUnion]
 #align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_biUnion_support
 
 end Map
@@ -1041,10 +1028,8 @@ theorem totalDegree_mul (a b : MvPolynomial σ R) :
       rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
       rw [Finsupp.sum_add_index']
       · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
-      · intro a
-        rfl
-      · intro a b₁ b₂
-        rfl
+      · intro a; rfl
+      · intro a b₁ b₂; rfl
 #align mv_polynomial.total_degree_mul MvPolynomial.totalDegree_mul
 
 /- warning: mv_polynomial.total_degree_smul_le -> MvPolynomial.totalDegree_smul_le is a dubious translation:
@@ -1171,10 +1156,7 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
     n * Fintype.card σ = ∑ s : σ, n := by
       rw [Finset.sum_const, Nat.nsmul_eq_mul, mul_comm, Finset.card_univ]
     _ ≤ ∑ s, d s := (Finset.sum_le_sum fun s _ => h s)
-    _ ≤ d.sum fun i e => e := by
-      rw [Finsupp.sum_fintype]
-      intros
-      rfl
+    _ ≤ d.sum fun i e => e := by rw [Finsupp.sum_fintype]; intros ; rfl
     _ ≤ f.total_degree := Finset.le_sup hd
     
 #align mv_polynomial.exists_degree_lt MvPolynomial.exists_degree_lt
@@ -1189,10 +1171,8 @@ theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ �
     (h : f.totalDegree < ∑ i in d.support, d i) : coeff d f = 0 := by
   classical
     rw [total_degree, Finset.sup_lt_iff] at h
-    · specialize h d
-      rw [mem_support_iff] at h
-      refine' not_not.mp (mt h _)
-      exact lt_irrefl _
+    · specialize h d; rw [mem_support_iff] at h
+      refine' not_not.mp (mt h _); exact lt_irrefl _
     · exact lt_of_le_of_lt (Nat.zero_le _) h
 #align mv_polynomial.coeff_eq_zero_of_total_degree_lt MvPolynomial.coeff_eq_zero_of_totalDegree_lt
 
@@ -1245,15 +1225,13 @@ theorem eval₂Hom_eq_constantCoeff_of_vars (f : R →+* S) {g : σ → S} {p : 
       by
       rw [constant_coeff_eq, coeff, ← Finsupp.not_mem_support_iff] at h0
       rw [Finset.nonempty_iff_ne_empty, Ne.def, Finsupp.support_eq_empty]
-      rintro rfl
-      contradiction
+      rintro rfl; contradiction
     rw [Finsupp.prod, Finset.prod_eq_zero hi, MulZeroClass.mul_zero]
     rw [hp, zero_pow (Nat.pos_of_ne_zero <| finsupp.mem_support_iff.mp hi)]
     rw [mem_vars]
     exact ⟨d, hd, hi⟩
   · rw [constant_coeff_eq, coeff, ← Ne.def, ← Finsupp.mem_support_iff] at h0
-    intro
-    contradiction
+    intro ; contradiction
 #align mv_polynomial.eval₂_hom_eq_constant_coeff_of_vars MvPolynomial.eval₂Hom_eq_constantCoeff_of_vars
 
 /- warning: mv_polynomial.aeval_eq_constant_coeff_of_vars -> MvPolynomial.aeval_eq_constantCoeff_of_vars is a dubious translation:
@@ -1282,9 +1260,7 @@ theorem eval₂Hom_congr' {f₁ f₂ : R →+* S} {g₁ g₂ : σ → S} {p₁ p
   simp only [Finsupp.prod]
   apply Finset.prod_congr rfl
   intro i hi
-  have : i ∈ p.vars := by
-    rw [mem_vars]
-    exact ⟨d, hd, hi⟩
+  have : i ∈ p.vars := by rw [mem_vars]; exact ⟨d, hd, hi⟩
   rw [h i this this]
 #align mv_polynomial.eval₂_hom_congr' MvPolynomial.eval₂Hom_congr'
 

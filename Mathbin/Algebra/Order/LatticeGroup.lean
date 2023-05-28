@@ -491,8 +491,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     _ = a * (1 ⊓ b / a) := by rw [← mul_inf 1 (b / a) a]
     _ = a * (b / a ⊓ 1) := by rw [inf_comm]
     _ = a * ((a / b)⁻¹ ⊓ 1) := by
-      rw [div_eq_mul_inv]
-      nth_rw 1 [← inv_inv b]
+      rw [div_eq_mul_inv]; nth_rw 1 [← inv_inv b]
       rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
     _ = a * ((a / b)⁻¹ ⊓ 1⁻¹) := by rw [inv_one]
     _ = a / (a / b ⊔ 1) := by rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
@@ -563,9 +562,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2981 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2983 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2981 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2983) (fun (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2996 : α) (x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2998 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2996 x._@.Mathlib.Algebra.Order.LatticeGroup._hyg.2998)] (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))))) (Abs.abs.{u1} α (Inv.toHasAbs.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1))) a)
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.one_le_abs LatticeOrderedCommGroup.one_le_absₓ'. -/
 @[to_additive abs_nonneg]
-theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤ |a| :=
-  by
-  rw [← m_pos_abs]
+theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤ |a| := by rw [← m_pos_abs];
   exact one_le_pos _
 #align lattice_ordered_comm_group.one_le_abs LatticeOrderedCommGroup.one_le_abs
 #align lattice_ordered_comm_group.abs_nonneg LatticeOrderedCommGroup.abs_nonneg
@@ -651,13 +648,11 @@ def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [Comm
       constructor
       · rw [inv_mul_le_iff_le_mul, ← inf_mul_sup x y]
         apply mul_le_mul'
-        · apply inf_le_inf_left
-          apply inf_le_left
+        · apply inf_le_inf_left; apply inf_le_left
         · apply inf_le_left
       · rw [inv_mul_le_iff_le_mul, ← inf_mul_sup x z]
         apply mul_le_mul'
-        · apply inf_le_inf_left
-          apply inf_le_right
+        · apply inf_le_inf_left; apply inf_le_right
         · apply inf_le_right }
 #align lattice_ordered_comm_group.lattice_ordered_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedCommGroupToDistribLattice
 #align lattice_ordered_comm_group.lattice_ordered_add_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedAddCommGroupToDistribLattice
@@ -704,10 +699,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 -- pos_of_nonneg
 /-- If `a` is positive, then it is equal to its positive component `a⁺`. -/
 @[to_additive "If `a` is positive, then it is equal to its positive component `a⁺`."]
-theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a :=
-  by
-  rw [m_pos_part_def]
-  exact sup_of_le_left h
+theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a := by rw [m_pos_part_def]; exact sup_of_le_left h
 #align lattice_ordered_comm_group.pos_of_one_le LatticeOrderedCommGroup.pos_of_one_le
 #align lattice_ordered_comm_group.pos_of_nonneg LatticeOrderedCommGroup.pos_of_nonneg
 
@@ -748,9 +740,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : CommGroup.{u1} α] (a : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) a)) -> (Eq.{succ u1} α (NegPart.neg.{u1} α (LatticeOrderedCommGroup.hasOneLatticeHasNegPart.{u1} α _inst_1 _inst_2) a) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (DivisionCommMonoid.toDivisionMonoid.{u1} α (CommGroup.toDivisionCommMonoid.{u1} α _inst_2))))) a))
 Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_group.neg_of_one_le_inv LatticeOrderedCommGroup.neg_of_one_le_invₓ'. -/
 @[to_additive neg_of_inv_nonneg]
-theorem neg_of_one_le_inv (a : α) (h : 1 ≤ a⁻¹) : a⁻ = a⁻¹ :=
-  by
-  rw [neg_eq_pos_inv]
+theorem neg_of_one_le_inv (a : α) (h : 1 ≤ a⁻¹) : a⁻ = a⁻¹ := by rw [neg_eq_pos_inv];
   exact pos_of_one_le _ h
 #align lattice_ordered_comm_group.neg_of_one_le_inv LatticeOrderedCommGroup.neg_of_one_le_inv
 #align lattice_ordered_comm_group.neg_of_inv_nonneg LatticeOrderedCommGroup.neg_of_inv_nonneg

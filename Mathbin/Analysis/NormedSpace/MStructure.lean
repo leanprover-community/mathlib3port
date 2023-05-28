@@ -106,9 +106,7 @@ but is expected to have type
   forall {X : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u2} X] {M : Type.{u1}} [_inst_2 : Ring.{u1} M] [_inst_3 : Module.{u1, u2} M X (Ring.toSemiring.{u1} M _inst_2) (AddCommGroup.toAddCommMonoid.{u2} X (NormedAddCommGroup.toAddCommGroup.{u2} X _inst_1))] {P : M}, (IsLprojection.{u2, u1} X _inst_1 M _inst_2 _inst_3 P) -> (IsLprojection.{u2, u1} X _inst_1 M _inst_2 _inst_3 (HSub.hSub.{u1, u1, u1} M M M (instHSub.{u1} M (Ring.toSub.{u1} M _inst_2)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Semiring.toOne.{u1} M (Ring.toSemiring.{u1} M _inst_2)))) P))
 Case conversion may be inaccurate. Consider using '#align is_Lprojection.Lcomplement IsLprojection.Lcomplementₓ'. -/
 theorem Lcomplement {P : M} (h : IsLprojection X P) : IsLprojection X (1 - P) :=
-  ⟨h.proj.one_sub, fun x => by
-    rw [add_comm, sub_sub_cancel]
-    exact h.Lnorm x⟩
+  ⟨h.proj.one_sub, fun x => by rw [add_comm, sub_sub_cancel]; exact h.Lnorm x⟩
 #align is_Lprojection.Lcomplement IsLprojection.Lcomplement
 
 /- warning: is_Lprojection.Lcomplement_iff -> IsLprojection.Lcomplement_iff is a dubious translation:
@@ -172,8 +170,7 @@ theorem commute [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : 
         _ = P * (1 - Q) - (Q * P - Q * P * Q) := by noncomm_ring
         
     rwa [eq_sub_iff_add_eq, add_right_eq_self, sub_eq_zero] at e1
-  show P * Q = Q * P
-  · rw [QP_eq_QPQ, PR_eq_RPR Q h₂]
+  show P * Q = Q * P; · rw [QP_eq_QPQ, PR_eq_RPR Q h₂]
 #align is_Lprojection.commute IsLprojection.commute
 
 /- warning: is_Lprojection.mul -> IsLprojection.mul is a dubious translation:
@@ -281,9 +278,7 @@ instance [FaithfulSMul M X] : PartialOrder { P : M // IsLprojection X P }
     where
   le P Q := (↑P : M) = ↑(P ⊓ Q)
   le_refl P := by simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
-  le_trans P Q R h₁ h₂ := by
-    simp only [coe_inf] at h₁ h₂⊢
-    rw [h₁, mul_assoc, ← h₂]
+  le_trans P Q R h₁ h₂ := by simp only [coe_inf] at h₁ h₂⊢; rw [h₁, mul_assoc, ← h₂]
   le_antisymm P Q h₁ h₂ := Subtype.eq (by convert(P.prop.commute Q.prop).Eq)
 
 /- warning: is_Lprojection.le_def -> IsLprojection.le_def is a dubious translation:

@@ -76,12 +76,8 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v}
           map_zero' := Limits.zero_comp
           map_add' := fun g g' => add_comp _ _ _ _ _ _ }
       naturality' := fun X X' g => AddCommGroupCat.ext _ _ _ _ fun x => Category.assoc _ _ _ }
-  map_id' X := by
-    ext
-    simp
-  map_comp' X Y Z f g := by
-    ext
-    simp
+  map_id' X := by ext; simp
+  map_comp' X Y Z f g := by ext; simp
 #align category_theory.preadditive_yoneda CategoryTheory.preadditiveYoneda
 -/
 
@@ -120,12 +116,8 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v}
           map_add' := fun g g' => comp_add _ _ _ _ _ _ }
       naturality' := fun Y Y' g =>
         AddCommGroupCat.ext _ _ _ _ fun x => Eq.symm <| Category.assoc _ _ _ }
-  map_id' X := by
-    ext
-    simp
-  map_comp' X Y Z f g := by
-    ext
-    simp
+  map_id' X := by ext; simp
+  map_comp' X Y Z f g := by ext; simp
 #align category_theory.preadditive_coyoneda CategoryTheory.preadditiveCoyoneda
 -/
 

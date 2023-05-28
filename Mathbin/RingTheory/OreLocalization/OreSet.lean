@@ -117,10 +117,7 @@ instance oreSetBot : OreSet (⊥ : Submonoid R)
       subst h⟩
   oreNum r _ := r
   oreDenom _ s := s
-  ore_eq _ s := by
-    rcases s with ⟨s, hs⟩
-    rw [Submonoid.mem_bot] at hs
-    simp [hs]
+  ore_eq _ s := by rcases s with ⟨s, hs⟩; rw [Submonoid.mem_bot] at hs; simp [hs]
 #align ore_localization.ore_set_bot OreLocalization.oreSetBot
 
 #print OreLocalization.oreSetComm /-

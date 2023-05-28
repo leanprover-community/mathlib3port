@@ -140,10 +140,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
           summable_one_div_pow_of_le
           m1 fun j => Nat.le.intro rfl)
     _ = ∑' i, (1 / m) ^ i * (1 / m ^ (n + 1)!) :=-- split the sum in the exponent and massage
-    by
-      congr
-      ext i
-      rw [pow_add, ← div_div, div_eq_mul_one_div, one_div_pow]
+    by congr ; ext i; rw [pow_add, ← div_div, div_eq_mul_one_div, one_div_pow]
     -- factor the constant `(1 / m ^ (n + 1)!)` out of the series
         _ =
         (∑' i, (1 / m) ^ i) * (1 / m ^ (n + 1)!) :=
@@ -207,12 +204,8 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
 theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
   by
   -- two useful inequalities
-  have mZ1 : 1 < (m : ℤ) := by
-    norm_cast
-    exact one_lt_two.trans_le hm
-  have m1 : 1 < (m : ℝ) := by
-    norm_cast
-    exact one_lt_two.trans_le hm
+  have mZ1 : 1 < (m : ℤ) := by norm_cast; exact one_lt_two.trans_le hm
+  have m1 : 1 < (m : ℝ) := by norm_cast; exact one_lt_two.trans_le hm
   intro n
   -- the first `n` terms sum to `p / m ^ k!`
   rcases liouville_number_rat_initial_terms (zero_lt_two.trans_le hm) n with ⟨p, hp⟩

@@ -285,13 +285,8 @@ theorem map_rightUnitor (X : C) :
 /-- The tensorator as a natural isomorphism. -/
 noncomputable def μNatIso :
     Functor.prod F.toFunctor F.toFunctor ⋙ tensor D ≅ tensor C ⋙ F.toFunctor :=
-  NatIso.ofComponents
-    (by
-      intros
-      apply F.μ_iso)
-    (by
-      intros
-      apply F.to_lax_monoidal_functor.μ_natural)
+  NatIso.ofComponents (by intros ; apply F.μ_iso)
+    (by intros ; apply F.to_lax_monoidal_functor.μ_natural)
 #align category_theory.monoidal_functor.μ_nat_iso CategoryTheory.MonoidalFunctor.μNatIso
 -/
 
@@ -365,10 +360,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.monoid
 @[simps]
 noncomputable def commTensorLeft (X : C) :
     F.toFunctor ⋙ tensorLeft (F.toFunctor.obj X) ≅ tensorLeft X ⋙ F.toFunctor :=
-  NatIso.ofComponents (fun Y => F.μIso X Y) fun Y Z f =>
-    by
-    convert F.μ_natural' (𝟙 _) f
-    simp
+  NatIso.ofComponents (fun Y => F.μIso X Y) fun Y Z f => by convert F.μ_natural' (𝟙 _) f; simp
 #align category_theory.monoidal_functor.comm_tensor_left CategoryTheory.MonoidalFunctor.commTensorLeft
 
 /- warning: category_theory.monoidal_functor.comm_tensor_right -> CategoryTheory.MonoidalFunctor.commTensorRight is a dubious translation:
@@ -381,10 +373,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.monoid
 @[simps]
 noncomputable def commTensorRight (X : C) :
     F.toFunctor ⋙ tensorRight (F.toFunctor.obj X) ≅ tensorRight X ⋙ F.toFunctor :=
-  NatIso.ofComponents (fun Y => F.μIso Y X) fun Y Z f =>
-    by
-    convert F.μ_natural' f (𝟙 _)
-    simp
+  NatIso.ofComponents (fun Y => F.μIso Y X) fun Y Z f => by convert F.μ_natural' f (𝟙 _); simp
 #align category_theory.monoidal_functor.comm_tensor_right CategoryTheory.MonoidalFunctor.commTensorRight
 
 end
@@ -524,20 +513,14 @@ theorem prod'_toFunctor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor 
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.lax_monoidal_functor.prod'_ε CategoryTheory.LaxMonoidalFunctor.prod'_εₓ'. -/
 @[simp]
-theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) :=
-  by
-  dsimp [prod']
-  simp
+theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by dsimp [prod']; simp
 #align category_theory.lax_monoidal_functor.prod'_ε CategoryTheory.LaxMonoidalFunctor.prod'_ε
 
 /- warning: category_theory.lax_monoidal_functor.prod'_μ -> CategoryTheory.LaxMonoidalFunctor.prod'_μ is a dubious translation:
 <too large>
 Case conversion may be inaccurate. Consider using '#align category_theory.lax_monoidal_functor.prod'_μ CategoryTheory.LaxMonoidalFunctor.prod'_μₓ'. -/
 @[simp]
-theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) :=
-  by
-  dsimp [prod']
-  simp
+theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by dsimp [prod']; simp
 #align category_theory.lax_monoidal_functor.prod'_μ CategoryTheory.LaxMonoidalFunctor.prod'_μ
 
 end LaxMonoidalFunctor
@@ -553,12 +536,8 @@ def comp : MonoidalFunctor.{v₁, v₃} C E :=
   {
     F.toLaxMonoidalFunctor.comp
       G.toLaxMonoidalFunctor with
-    ε_isIso := by
-      dsimp
-      infer_instance
-    μ_isIso := by
-      dsimp
-      infer_instance }
+    ε_isIso := by dsimp; infer_instance
+    μ_isIso := by dsimp; infer_instance }
 #align category_theory.monoidal_functor.comp CategoryTheory.MonoidalFunctor.comp
 -/
 
@@ -669,12 +648,8 @@ noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toF
     MonoidalFunctor D C
     where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
-  ε_isIso := by
-    dsimp [equivalence.to_adjunction]
-    infer_instance
-  μ_isIso X Y := by
-    dsimp [equivalence.to_adjunction]
-    infer_instance
+  ε_isIso := by dsimp [equivalence.to_adjunction]; infer_instance
+  μ_isIso X Y := by dsimp [equivalence.to_adjunction]; infer_instance
 #align category_theory.monoidal_inverse CategoryTheory.monoidalInverse
 -/
 
