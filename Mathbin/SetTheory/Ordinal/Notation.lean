@@ -979,14 +979,12 @@ private theorem exists_lt_add {α} [hα : Nonempty α] {o : Ordinal} {f : α →
   · rw [← Ordinal.add_sub_cancel_of_le h', add_lt_add_iff_left] at h
     refine' (H h).imp fun i H => _
     rwa [← Ordinal.add_sub_cancel_of_le h', add_lt_add_iff_left]
-#align onote.exists_lt_add onote.exists_lt_add
 
 private theorem exists_lt_mul_omega' {o : Ordinal} ⦃a⦄ (h : a < o * ω) : ∃ i : ℕ, a < o * ↑i + o :=
   by
   obtain ⟨i, hi, h'⟩ := (lt_mul_of_limit omega_is_limit).1 h
   obtain ⟨i, rfl⟩ := lt_omega.1 hi
   exact ⟨i, h'.trans_le (le_add_right _ _)⟩
-#align onote.exists_lt_mul_omega' onote.exists_lt_mul_omega'
 
 -- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
@@ -996,7 +994,6 @@ private theorem exists_lt_omega_opow' {α} {o b : Ordinal} (hb : 1 < b) (ho : o.
   by
   obtain ⟨d, hd, h'⟩ := (lt_opow_of_limit (zero_lt_one.trans hb).ne' ho).1 h
   exact (H hd).imp fun i hi => h'.trans <| (opow_lt_opow_iff_right hb).2 hi
-#align onote.exists_lt_omega_opow' onote.exists_lt_omega_opow'
 
 /-- The property satisfied by `fundamental_sequence o`:
   * `inl none` means `o = 0`

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.dihedral
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.GroupTheory.Exponent
 
 /-!
 # Dihedral Groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the dihedral groups `dihedral_group n`, with elements `r i` and `sr i` for `i : zmod n`.
 
@@ -45,13 +48,11 @@ private def mul : DihedralGroup n → DihedralGroup n → DihedralGroup n
   | r i, sr j => sr (j - i)
   | sr i, r j => sr (i + j)
   | sr i, sr j => r (j - i)
-#align dihedral_group.mul dihedral_group.mul
 
 /-- The identity `1` is the rotation by `0`.
 -/
 private def one : DihedralGroup n :=
   r 0
-#align dihedral_group.one dihedral_group.one
 
 instance : Inhabited (DihedralGroup n) :=
   ⟨one⟩
@@ -61,7 +62,6 @@ instance : Inhabited (DihedralGroup n) :=
 private def inv : DihedralGroup n → DihedralGroup n
   | r i => r (-i)
   | sr i => sr i
-#align dihedral_group.inv dihedral_group.inv
 
 /-- The group structure on `dihedral_group n`.
 -/
@@ -149,7 +149,6 @@ private def fintype_helper : Sum (ZMod n) (ZMod n) ≃ DihedralGroup n
     | Sum.inr j => sr j
   left_inv := by rintro (x | x) <;> rfl
   right_inv := by rintro (x | x) <;> rfl
-#align dihedral_group.fintype_helper dihedral_group.fintype_helper
 
 /-- If `0 < n`, then `dihedral_group n` is a finite group.
 -/

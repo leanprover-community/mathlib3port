@@ -1392,7 +1392,6 @@ open Primrec
 
 private def prim : Primcodable (List β) :=
   ⟨H⟩
-#align prim prim
 
 private theorem list_cases' {f : α → List β} {g : α → σ} {h : α → β × List β → σ}
     (hf :
@@ -1412,7 +1411,6 @@ private theorem list_cases' {f : α → List β} {g : α → σ} {h : α → β 
             option_cases snd (hg.comp fst) (hh.comp₂ (fst.comp₂ Primrec₂.left) Primrec₂.right)).comp
       Primrec.id (encode_iff.2 hf)
   option_some_iff.1 <| this.of_eq fun a => by cases' f a with b l <;> simp [encodek] <;> rfl
-#align list_cases' list_cases'
 
 private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ × β → σ}
     (hf :
@@ -1447,14 +1445,12 @@ private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ 
       simp
       cases' l with b l <;> simp [IH]
     rw [this, List.take_all_of_le (length_le_encode _)]
-#align list_foldl' list_foldl'
 
 private theorem list_cons' :
     haveI := prim H
     Primrec₂ (@List.cons β) :=
   letI := prim H
   encode_iff.1 (succ.comp <| primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))
-#align list_cons' list_cons'
 
 private theorem list_reverse' :
     haveI := prim H
@@ -1464,7 +1460,6 @@ private theorem list_reverse' :
     (suffices ∀ l r, List.foldl (fun (s : List β) (b : β) => b :: s) r l = List.reverseAux l r from
       fun l => this l []
     fun l => by induction l <;> simp [*, List.reverseAux])
-#align list_reverse' list_reverse'
 
 end
 

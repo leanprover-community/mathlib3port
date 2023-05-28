@@ -43,12 +43,10 @@ open Tactic Expr
               | q( $ ( lhs ) ↔ $ ( rhs ) ) => pure ( lhs , rhs )
               | expr.pi n bi a b => do let l ← mk_local' n bi a simp_lhs_rhs ( b l )
               | ty => pure ( ty , q( True ) )
-#align simp_lhs_rhs simp_lhs_rhs
 
 /-- `simp_lhs ty` returns the left-hand side of a simp lemma with type `ty`. -/
 private unsafe def simp_lhs (ty : expr) : tactic expr :=
   Prod.fst <$> simp_lhs_rhs ty
-#align simp_lhs simp_lhs
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -84,17 +82,14 @@ private unsafe def simp_lhs (ty : expr) : tactic expr :=
                       else
                       pure lhs
               | ty => pure ty
-#align simp_is_conditional_core simp_is_conditional_core
 
 /-- `simp_is_conditional ty` returns true iff the simp lemma with type `ty` is conditional.
 -/
 private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
   Option.isNone <$> simp_is_conditional_core ty
-#align simp_is_conditional simp_is_conditional
 
 private unsafe def heuristic_simp_lemma_extraction (prf : expr) : tactic (List Name) :=
   prf.list_constant.toList.filterM is_simp_lemma
-#align heuristic_simp_lemma_extraction heuristic_simp_lemma_extraction
 
 /-- Checks whether two expressions are equal for the simplifier. That is,
 they are reducibly-definitional equal, and they have the same head symbol. -/
@@ -236,7 +231,6 @@ private unsafe def simp_var_head (d : declaration) : tactic (Option String) := d
     pure none
   let head_sym ← pp head_sym
   pure <| format.to_string <| "Left-hand side has variable as head symbol: " ++ head_sym
-#align simp_var_head simp_var_head
 
 /-- A linter for simp lemmas whose lhs has a variable as head symbol,
 and which hence never fire.
@@ -273,7 +267,6 @@ private unsafe def simp_comm (d : declaration) : tactic (Option String) := do
         ← succeeds <| unify lhs' rhs' transparency.reducible |
         pure none
       pure <| "should not be marked simp"
-#align simp_comm simp_comm
 
 /-- A linter for commutativity lemmas that are marked simp. -/
 @[linter]

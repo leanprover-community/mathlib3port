@@ -195,7 +195,6 @@ and of themselves, so we mark them as `private`.
 private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)]
     [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
-#align W_type.W_type' W_type.W_type'
 
 variable [∀ a : α, Encodable (β a)]
 
@@ -206,7 +205,6 @@ private def encodable_zero : Encodable (WType' β 0) :=
     cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
-#align W_type.encodable_zero W_type.encodable_zero
 
 private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
   | ⟨t, h⟩ => by
@@ -214,14 +212,12 @@ private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
     have h₀ : ∀ i : β a, WType.depth (f i) ≤ n := fun i =>
       Nat.le_of_lt_succ (lt_of_lt_of_le (WType.depth_lt_depth_mk a f i) h)
     exact ⟨a, fun i : β a => ⟨f i, h₀ i⟩⟩
-#align W_type.f W_type.f
 
 private def finv (n : ℕ) : (Σa : α, β a → WType' β n) → WType' β (n + 1)
   | ⟨a, f⟩ =>
     let f' := fun i : β a => (f i).val
     have : WType.depth ⟨a, f'⟩ ≤ n + 1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
     ⟨⟨a, f'⟩, this⟩
-#align W_type.finv W_type.finv
 
 variable [Encodable α]
 
@@ -230,7 +226,6 @@ private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (
     (by
       rintro ⟨⟨_, _⟩, _⟩
       rfl)
-#align W_type.encodable_succ W_type.encodable_succ
 
 /-- `W_type` is encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
 encodable. -/

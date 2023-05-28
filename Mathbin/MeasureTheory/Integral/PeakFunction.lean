@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.peak_function
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit 13b0d72fd8533ba459ac66e9a885e35ffabb32b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
   filter_upwards [tendsto_uniformly_on_iff.1 (hlφ u u_open x₀u) 1 zero_lt_one, hiφ]with i hi h'i
   have A : integrable_on (fun x => φ i x • g x) (s \ u) μ :=
     by
-    apply integrable.smul_of_top_right (hmg.mono (diff_subset _ _) le_rfl)
+    refine' integrable.smul_of_top_right (hmg.mono (diff_subset _ _) le_rfl) _
     apply
       mem_ℒp_top_of_bound
         ((integrable_of_integral_eq_one h'i).AEStronglyMeasurable.mono_set (diff_subset _ _)) 1

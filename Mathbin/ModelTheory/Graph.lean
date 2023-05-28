@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.graph
-! leanprover-community/mathlib commit e56b8fea84d60fe434632b9d3b829ee685fb0c8f
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Combinatorics.SimpleGraph.Basic
 
 /-!
 # First-Ordered Structures in Graph Theory
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines first-order languages, structures, and theories in graph theory.
 
 ## Main Definitions

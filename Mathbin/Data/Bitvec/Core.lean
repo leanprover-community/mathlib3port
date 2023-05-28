@@ -457,7 +457,6 @@ end Conversion
 
 private def repr {n : Nat} : Bitvec n → String
   | ⟨bs, p⟩ => "0b" ++ (bs.map fun b : Bool => if b then '1' else '0').asString
-#align bitvec.repr bitvec.repr
 
 instance (n : Nat) : Repr (Bitvec n) :=
   ⟨repr⟩

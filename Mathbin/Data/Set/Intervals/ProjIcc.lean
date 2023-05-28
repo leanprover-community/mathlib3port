@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.intervals.proj_Icc
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 42e9a1fd3a99e10f82830349ba7f4f10e8961c2a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,6 +275,19 @@ Case conversion may be inaccurate. Consider using '#align set.Icc_extend_coe Set
 theorem Icc_extend_coe (f : Icc a b → β) (x : Icc a b) : IccExtend h f x = f x :=
   congr_arg f <| projIcc_val h x
 #align set.Icc_extend_coe Set.Icc_extend_coe
+
+/-- If `f : α → β` is a constant both on $(-∞, a]$ and on $[b, +∞)$, then the extension of this
+function from $[a, b]$ to the whole line is equal to the original function. -/
+theorem iccExtend_eq_self (f : α → β) (ha : ∀ x < a, f x = f a) (hb : ∀ x, b < x → f x = f b) :
+    IccExtend h (f ∘ coe) = f := by
+  ext x
+  cases' lt_or_le x a with hxa hax
+  · simp [Icc_extend_of_le_left _ _ hxa.le, ha x hxa]
+  · cases' le_or_lt x b with hxb hbx
+    · lift x to Icc a b using ⟨hax, hxb⟩
+      rw [Icc_extend_coe]
+    · simp [Icc_extend_of_right_le _ _ hbx.le, hb x hbx]
+#align set.Icc_extend_eq_self Set.iccExtend_eq_self
 
 end Set
 

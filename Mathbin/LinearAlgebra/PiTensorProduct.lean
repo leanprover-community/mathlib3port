@@ -609,26 +609,22 @@ private def tmul : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) →ₗ[R] ⨂
       map_add' := fun a b => by simp only [LinearEquiv.map_add, LinearMap.map_add]
       map_smul' := fun r a => by
         simp only [LinearEquiv.map_smul, LinearMap.map_smul, RingHom.id_apply] }
-#align pi_tensor_product.tmul pi_tensor_product.tmul
 
 private theorem tmul_apply (a : ι → M) (b : ι₂ → M) :
     tmul ((⨂ₜ[R] i, a i) ⊗ₜ[R] ⨂ₜ[R] i, b i) = ⨂ₜ[R] i, Sum.elim a b i :=
   by
   erw [TensorProduct.lift.tmul, PiTensorProduct.lift.tprod, PiTensorProduct.lift.tprod]
   rfl
-#align pi_tensor_product.tmul_apply pi_tensor_product.tmul_apply
 
 /-- Expand `pi_tensor_product` into a `tensor_product` of two factors. -/
 private def tmul_symm : (⨂[R] i : Sum ι ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
   -- by using tactic mode, we avoid the need for a lot of `@`s and `_`s
     PiTensorProduct.lift <|
     by apply MultilinearMap.domCoprod <;> [exact tprod R;exact tprod R]
-#align pi_tensor_product.tmul_symm pi_tensor_product.tmul_symm
 
 private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :
     tmulSymm (⨂ₜ[R] i, a i) = (⨂ₜ[R] i, a (Sum.inl i)) ⊗ₜ[R] ⨂ₜ[R] i, a (Sum.inr i) :=
   PiTensorProduct.lift.tprod _
-#align pi_tensor_product.tmul_symm_apply pi_tensor_product.tmul_symm_apply
 
 variable (R M)
 

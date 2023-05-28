@@ -183,7 +183,7 @@ theorem diagonalSucc_inv_single_single (g : G) (f : Gⁿ) (a b : k) :
   dsimp only [diagonal_succ]
   simp only [iso.trans_inv, iso.symm_inv, iso.refl_inv, tensor_iso_inv, Action.tensorHom,
     Action.comp_hom, ModuleCat.comp_def, LinearMap.comp_apply, as_iso_hom, functor.map_iso_inv,
-    ModuleCat.monoidalCategory.hom_apply, linearization_trivial_iso_inv_hom_apply,
+    ModuleCat.MonoidalCategory.hom_apply, linearization_trivial_iso_inv_hom_apply,
     linearization_μ_hom, Action.id_hom ((linearization k G).obj _), Action_diagonal_succ_inv_apply,
     ModuleCat.id_apply, LinearEquiv.coe_toLinearMap,
     finsuppTensorFinsupp'_single_tmul_single k (Action.leftRegular G).V,

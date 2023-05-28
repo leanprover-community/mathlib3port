@@ -48,7 +48,6 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
         failed
     | nil => undefined
   | some new => return (mkStrName old.getPrefix new.toString)
-#align name_lemma name_lemma
 
 /--
 `restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.

@@ -430,7 +430,6 @@ private theorem aux₀ {v : ℤ} (hv : 0 < v) : (0 : ℝ) < v ∧ (0 : ℝ) < 2 
   ⟨cast_pos.mpr hv, by
     norm_cast
     linarith⟩
-#align real.aux₀ real.aux₀
 
 -- In the following, we assume that `ass ξ u v` holds and `v ≥ 2`.
 variable {ξ : ℝ} {u v : ℤ} (hv : 2 ≤ v) (h : ContfracLegendre.Ass ξ u v)
@@ -457,7 +456,6 @@ private theorem aux₁ : 0 < fract ξ :=
     cases is_unit_iff.mp (is_coprime_self.mp (is_coprime.mul_left_iff.mp hcop).2) <;> linarith
   norm_cast  at H
   linarith only [hv, H]
-#align real.aux₁ real.aux₁
 
 -- An auxiliary lemma for the inductive step.
 private theorem aux₂ : 0 < u - ⌊ξ⌋ * v ∧ u - ⌊ξ⌋ * v < v :=
@@ -495,7 +493,6 @@ private theorem aux₂ : 0 < u - ⌊ξ⌋ * v ∧ u - ⌊ξ⌋ * v < v :=
     · rw [hf] at huv_cop
       simp only [isCoprime_zero_left, isCoprime_self, is_unit_iff] at huv_cop
       cases huv_cop <;> linarith only [hv, huv_cop]
-#align real.aux₂ real.aux₂
 
 -- The key step: the relevant inequality persists in the inductive step.
 private theorem aux₃ :
@@ -548,7 +545,6 @@ private theorem aux₃ :
       rwa [inv_le_inv (mul_pos (mul_pos Hu Hv') hξ₀) <| mul_pos Hu Hu', mul_assoc,
         mul_le_mul_left Hu]
     
-#align real.aux₃ real.aux₃
 
 -- The conditions `ass ξ u v` persist in the inductive step.
 private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋ * v) :=
@@ -569,7 +565,6 @@ private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋
     rw [Huv, ← sub_sub, sub_lt_iff_lt_add, self_sub_floor, Hv] at h'
     rwa [lt_sub_iff_add_lt', (by ring : (v : ℝ) + -(1 / 2) = (2 * v - 1) / 2),
       lt_inv (div_pos hv₀' zero_lt_two) (aux₁ hv h), inv_div]
-#align real.invariant real.invariant
 
 omit h hv
 

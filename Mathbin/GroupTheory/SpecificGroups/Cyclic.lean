@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.cyclic
-! leanprover-community/mathlib commit 0f6670b8af2dff699de1c0b4b49039b31bc13c46
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.GroupTheory.Exponent
 
 /-!
 # Cyclic groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A group `G` is called cyclic if there exists an element `g : G` such that every element of `G` is of
 the form `g ^ n` for some `n : ℕ`. This file only deals with the predicate on a group to be cyclic.
@@ -74,13 +77,13 @@ class IsCyclic (α : Type u) [Group α] : Prop where
 -/
 
 #print isCyclic_of_subsingleton /-
-@[to_additive is_add_cyclic_of_subsingleton]
+@[to_additive isAddCyclic_of_subsingleton]
 instance (priority := 100) isCyclic_of_subsingleton [Group α] [Subsingleton α] : IsCyclic α :=
   ⟨⟨1, fun x => by
       rw [Subsingleton.elim x 1]
       exact mem_zpowers 1⟩⟩
 #align is_cyclic_of_subsingleton isCyclic_of_subsingleton
-#align is_add_cyclic_of_subsingleton is_add_cyclic_of_subsingleton
+#align is_add_cyclic_of_subsingleton isAddCyclic_of_subsingleton
 -/
 
 #print IsCyclic.commGroup /-
@@ -120,7 +123,7 @@ theorem MonoidHom.map_cyclic {G : Type _} [Group G] [h : IsCyclic G] (σ : G →
 #align monoid_add_hom.map_add_cyclic MonoidAddHom.map_add_cyclic
 
 #print isCyclic_of_orderOf_eq_card /-
-@[to_additive is_add_cyclic_of_orderOf_eq_card]
+@[to_additive isAddCyclic_of_orderOf_eq_card]
 theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fintype.card α) :
     IsCyclic α := by
   classical
@@ -129,12 +132,12 @@ theorem isCyclic_of_orderOf_eq_card [Fintype α] (x : α) (hx : orderOf x = Fint
     rw [← Fintype.card_congr (Equiv.Set.univ α), orderOf_eq_card_zpowers] at hx
     exact Set.eq_of_subset_of_card_le (Set.subset_univ _) (ge_of_eq hx)
 #align is_cyclic_of_order_of_eq_card isCyclic_of_orderOf_eq_card
-#align is_add_cyclic_of_order_of_eq_card is_add_cyclic_of_orderOf_eq_card
+#align is_add_cyclic_of_order_of_eq_card isAddCyclic_of_orderOf_eq_card
 -/
 
 #print isCyclic_of_prime_card /-
 /-- A finite group of prime order is cyclic. -/
-@[to_additive is_add_cyclic_of_prime_card "A finite group of prime order is cyclic."]
+@[to_additive isAddCyclic_of_prime_card "A finite group of prime order is cyclic."]
 theorem isCyclic_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [hp : Fact p.Prime]
     (h : Fintype.card α = p) : IsCyclic α :=
   ⟨by
@@ -164,7 +167,7 @@ theorem isCyclic_of_prime_card {α : Type u} [Group α] [Fintype α] {p : ℕ} [
         rw [Subgroup.eq_top_of_card_eq _ this]
         exact Subgroup.mem_top _⟩
 #align is_cyclic_of_prime_card isCyclic_of_prime_card
-#align is_add_cyclic_of_prime_card is_add_cyclic_of_prime_card
+#align is_add_cyclic_of_prime_card isAddCyclic_of_prime_card
 -/
 
 /- warning: order_of_eq_card_of_forall_mem_zpowers -> orderOf_eq_card_of_forall_mem_zpowers is a dubious translation:
@@ -217,11 +220,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : Group.{u1} α], IsCyclic.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_2)) x (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.instBotSubgroup.{u1} α _inst_2)))) (Subgroup.toGroup.{u1} α _inst_2 (Bot.bot.{u1} (Subgroup.{u1} α _inst_2) (Subgroup.instBotSubgroup.{u1} α _inst_2)))
 Case conversion may be inaccurate. Consider using '#align bot.is_cyclic Bot.isCyclicₓ'. -/
-@[to_additive Bot.is_add_cyclic]
+@[to_additive Bot.isAddCyclic]
 instance Bot.isCyclic {α : Type u} [Group α] : IsCyclic (⊥ : Subgroup α) :=
   ⟨⟨1, fun x => ⟨0, Subtype.eq <| (zpow_zero (1 : α)).trans <| Eq.symm (Subgroup.mem_bot.1 x.2)⟩⟩⟩
 #align bot.is_cyclic Bot.isCyclic
-#align bot.is_add_cyclic Bot.is_add_cyclic
+#align bot.is_add_cyclic Bot.isAddCyclic
 
 /- warning: subgroup.is_cyclic -> Subgroup.isCyclic is a dubious translation:
 lean 3 declaration is
@@ -229,7 +232,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : Group.{u1} α] [_inst_3 : IsCyclic.{u1} α _inst_2] (H : Subgroup.{u1} α _inst_2), IsCyclic.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_2) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_2) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_2)) x H)) (Subgroup.toGroup.{u1} α _inst_2 H)
 Case conversion may be inaccurate. Consider using '#align subgroup.is_cyclic Subgroup.isCyclicₓ'. -/
-@[to_additive AddSubgroup.is_add_cyclic]
+@[to_additive AddSubgroup.isAddCyclic]
 instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup α) : IsCyclic H :=
   haveI := Classical.propDecidable
   let ⟨g, hg⟩ := IsCyclic.exists_generator α
@@ -278,7 +281,7 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
         ⟨fun h => by simp at * <;> tauto, fun h => by rw [Subgroup.mem_bot.1 h] <;> exact H.one_mem⟩
     clear _let_match <;> subst this <;> infer_instance
 #align subgroup.is_cyclic Subgroup.isCyclic
-#align add_subgroup.is_add_cyclic AddSubgroup.is_add_cyclic
+#align add_subgroup.is_add_cyclic AddSubgroup.isAddCyclic
 
 open Finset Nat
 
@@ -408,7 +411,6 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
           fun _ _ h => Subtype.eq (Subtype.mk.inj h))
       _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
-#align card_pow_eq_one_eq_order_of_aux card_pow_eq_one_eq_order_of_aux
 
 open Nat
 
@@ -440,7 +442,6 @@ private theorem card_order_of_eq_totient_aux₁ :
     rw [← filter_dvd_eq_divisors hd0, sum_card_orderOf_eq_card_pow_eq_one hd0,
       filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
   simpa [← cons_self_proper_divisors hd0, ← h1] using h2
-#align card_order_of_eq_totient_aux₁ card_order_of_eq_totient_aux₁
 
 /- warning: card_order_of_eq_totient_aux₂ -> card_orderOf_eq_totient_aux₂ is a dubious translation:
 lean 3 declaration is
@@ -627,7 +628,7 @@ section CommGroup
 
 variable [CommGroup α] [IsSimpleGroup α]
 
-@[to_additive IsSimpleAddGroup.is_add_cyclic]
+@[to_additive IsSimpleAddGroup.isAddCyclic]
 instance (priority := 100) : IsCyclic α :=
   by
   cases' subsingleton_or_nontrivial α with hi hi <;> haveI := hi
@@ -675,7 +676,7 @@ end CommGroup
 end IsSimpleGroup
 
 #print CommGroup.is_simple_iff_isCyclic_and_prime_card /-
-@[to_additive AddCommGroup.is_simple_iff_is_add_cyclic_and_prime_card]
+@[to_additive AddCommGroup.is_simple_iff_isAddCyclic_and_prime_card]
 theorem CommGroup.is_simple_iff_isCyclic_and_prime_card [Fintype α] [CommGroup α] :
     IsSimpleGroup α ↔ IsCyclic α ∧ (Fintype.card α).Prime :=
   by
@@ -686,7 +687,7 @@ theorem CommGroup.is_simple_iff_isCyclic_and_prime_card [Fintype α] [CommGroup 
     haveI : Fact (Fintype.card α).Prime := ⟨hp⟩
     exact isSimpleGroup_of_prime_card rfl
 #align comm_group.is_simple_iff_is_cyclic_and_prime_card CommGroup.is_simple_iff_isCyclic_and_prime_card
-#align add_comm_group.is_simple_iff_is_add_cyclic_and_prime_card AddCommGroup.is_simple_iff_is_add_cyclic_and_prime_card
+#align add_comm_group.is_simple_iff_is_add_cyclic_and_prime_card AddCommGroup.is_simple_iff_isAddCyclic_and_prime_card
 -/
 
 section Exponent

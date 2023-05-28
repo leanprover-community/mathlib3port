@@ -48,18 +48,15 @@ private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
   TensorProduct.curry <|
     TensorProduct.map (LinearMap.mul' R _) (LieModule.toModuleHom R L L : L ⊗[R] L →ₗ[R] L) ∘ₗ
       ↑(TensorProduct.tensorTensorTensorComm R A L A L)
-#align lie_algebra.extend_scalars.bracket' lie_algebra.extend_scalars.bracket'
 
 @[simp]
 private theorem bracket'_tmul (s t : A) (x y : L) :
     bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x, y⁆ := by simp [bracket']
-#align lie_algebra.extend_scalars.bracket'_tmul lie_algebra.extend_scalars.bracket'_tmul
 
 instance : Bracket (A ⊗[R] L) (A ⊗[R] L) where bracket x y := bracket' R A L x y
 
 private theorem bracket_def (x y : A ⊗[R] L) : ⁅x, y⁆ = bracket' R A L x y :=
   rfl
-#align lie_algebra.extend_scalars.bracket_def lie_algebra.extend_scalars.bracket_def
 
 @[simp]
 theorem bracket_tmul (s t : A) (x y : L) : ⁅s ⊗ₜ[R] x, t ⊗ₜ[R] y⁆ = (s * t) ⊗ₜ ⁅x, y⁆ := by
@@ -89,7 +86,6 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 :=
         simp only [hy₁, hy₂, add_add_add_comm, add_zero, LinearMap.add_apply, LinearMap.map_add]
     · intro y₁ y₂ hy₁ hy₂
       simp only [add_add_add_comm, hy₁, hy₂, add_zero, LinearMap.add_apply, LinearMap.map_add]
-#align lie_algebra.extend_scalars.bracket_lie_self lie_algebra.extend_scalars.bracket_lie_self
 
 private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ :=
   by
@@ -111,7 +107,6 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ =
       simp only [add_add_add_comm, h₁, h₂, LinearMap.add_apply, LinearMap.map_add]
   · intro u₁ u₂ h₁ h₂
     simp only [add_add_add_comm, h₁, h₂, LinearMap.add_apply, LinearMap.map_add]
-#align lie_algebra.extend_scalars.bracket_leibniz_lie lie_algebra.extend_scalars.bracket_leibniz_lie
 
 instance : LieRing (A ⊗[R] L)
     where
@@ -136,7 +131,6 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
       simp only [h₁, h₂, smul_add, lie_add]
   · intro z₁ z₂ h₁ h₂
     simp only [h₁, h₂, smul_add, add_lie]
-#align lie_algebra.extend_scalars.bracket_lie_smul lie_algebra.extend_scalars.bracket_lie_smul
 
 instance lieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul := bracket_lie_smul R A L
 #align lie_algebra.extend_scalars.lie_algebra LieAlgebra.ExtendScalars.lieAlgebra

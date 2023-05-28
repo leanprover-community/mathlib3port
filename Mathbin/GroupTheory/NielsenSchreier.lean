@@ -171,7 +171,6 @@ variable {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
 /-- The root of `T`, except its type is `G` instead of the type synonym `T`. -/
 private def root' : G :=
   show T from root T
-#align is_free_groupoid.spanning_tree.root' is_free_groupoid.spanning_tree.root'
 
 #print IsFreeGroupoid.SpanningTree.homOfPath /-
 -- this has to be marked noncomputable, see issue #451.
@@ -298,7 +297,6 @@ end SpanningTree
 private def symgen {G : Type u} [Groupoid.{v} G] [IsFreeGroupoid G] :
     G → Symmetrify (Generators G) :=
   id
-#align is_free_groupoid.symgen is_free_groupoid.symgen
 
 #print IsFreeGroupoid.path_nonempty_of_hom /-
 /-- If there exists a morphism `a → b` in a free groupoid, then there also exists a zigzag

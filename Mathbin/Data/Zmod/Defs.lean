@@ -69,7 +69,6 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin n, a * (b + c) = a 
       _ ≡ a * b + a * c [MOD n] := by rw [mul_add]
       _ ≡ a * b % n + a * c % n [MOD n] := (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm
       )
-#align fin.left_distrib_aux fin.left_distrib_aux
 
 /-- Commutative ring structure on `fin n`. -/
 instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.continuous_map_dense
-! leanprover-community/mathlib commit 13bf7613c96a9fd66a81b9020a82cad9a6ea1fcf
+! leanprover-community/mathlib commit e0736bb5b48bdadbca19dbd857e12bee38ccfbb8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
     simp only [hgv hx, Pi.zero_apply, zero_smul]
   have gc_mem : mem_ℒp (fun x => g x • c) p μ :=
     by
-    apply mem_ℒp.smul_of_top_left (mem_ℒp_top_const _)
+    refine' mem_ℒp.smul_of_top_left (mem_ℒp_top_const _) _
     refine' ⟨g.continuous.ae_strongly_measurable, _⟩
     have : snorm (v.indicator fun x => (1 : ℝ)) p μ < ⊤ :=
       by

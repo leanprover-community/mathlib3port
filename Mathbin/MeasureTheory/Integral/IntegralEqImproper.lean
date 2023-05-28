@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integral_eq_improper
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit b84aee748341da06a6d78491367e2c0e9f15e8a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
 import Mathbin.MeasureTheory.Integral.FundThmCalculus
 import Mathbin.Order.Filter.AtTopBot
 import Mathbin.MeasureTheory.Function.Jacobian
+import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Links between an integral and its "improper" version
@@ -370,7 +371,6 @@ private theorem lintegral_tendsto_of_monotone_of_nat {φ : ℕ → Set α} (hφ 
   have key₃ : ∀ᵐ x : α ∂μ, Tendsto (fun n => F n x) atTop (𝓝 (f x)) := hφ.ae_tendsto_indicator f
   (lintegral_tendsto_of_tendsto_of_monotone key₁ key₂ key₃).congr fun n =>
     lintegral_indicator f (hφ.Measurable n)
-#align measure_theory.lintegral_tendsto_of_monotone_of_nat measure_theory.lintegral_tendsto_of_monotone_of_nat
 
 theorem AeCover.lintegral_tendsto_of_nat {φ : ℕ → Set α} (hφ : AeCover μ atTop φ) {f : α → ℝ≥0∞}
     (hfm : AEMeasurable f μ) : Tendsto (fun i => ∫⁻ x in φ i, f x ∂μ) atTop (𝓝 <| ∫⁻ x, f x ∂μ) :=
@@ -939,7 +939,87 @@ theorem integral_comp_rpow_Ioi_of_pos {g : ℝ → E} {p : ℝ} (hp : 0 < p) :
   funext; congr ; rw [abs_of_nonneg hp.le]
 #align measure_theory.integral_comp_rpow_Ioi_of_pos MeasureTheory.integral_comp_rpow_Ioi_of_pos
 
+theorem integral_comp_mul_left_Ioi (g : ℝ → E) (a : ℝ) {b : ℝ} (hb : 0 < b) :
+    (∫ x in Ioi a, g (b * x)) = |b⁻¹| • ∫ x in Ioi (b * a), g x :=
+  by
+  have : ∀ c : ℝ, MeasurableSet (Ioi c) := fun c => measurableSet_Ioi
+  rw [← integral_indicator (this a), ← integral_indicator (this <| b * a)]
+  convert measure.integral_comp_mul_left _ b
+  ext1 x
+  rw [← indicator_comp_right, preimage_const_mul_Ioi _ hb, mul_div_cancel_left _ hb.ne']
+#align measure_theory.integral_comp_mul_left_Ioi MeasureTheory.integral_comp_mul_left_Ioi
+
+theorem integral_comp_mul_right_Ioi (g : ℝ → E) (a : ℝ) {b : ℝ} (hb : 0 < b) :
+    (∫ x in Ioi a, g (x * b)) = |b⁻¹| • ∫ x in Ioi (a * b), g x := by
+  simpa only [mul_comm] using integral_comp_mul_left_Ioi g a hb
+#align measure_theory.integral_comp_mul_right_Ioi MeasureTheory.integral_comp_mul_right_Ioi
+
 end IoiChangeVariables
+
+section IoiIntegrability
+
+open Real
+
+open Interval
+
+variable {E : Type _} [NormedAddCommGroup E]
+
+/-- The substitution `y = x ^ p` in integrals over `Ioi 0` preserves integrability. -/
+theorem integrableOn_Ioi_comp_rpow_iff [NormedSpace ℝ E] (f : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
+    IntegrableOn (fun x => (|p| * x ^ (p - 1)) • f (x ^ p)) (Ioi 0) ↔ IntegrableOn f (Ioi 0) :=
+  by
+  let S := Ioi (0 : ℝ)
+  have a1 : ∀ x : ℝ, x ∈ S → HasDerivWithinAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) S x :=
+    fun x hx => (has_deriv_at_rpow_const (Or.inl (mem_Ioi.mp hx).ne')).HasDerivWithinAt
+  have a2 : inj_on (fun x : ℝ => x ^ p) S :=
+    by
+    rcases lt_or_gt_of_ne hp with ⟨⟩
+    · apply StrictAntiOn.injOn
+      intro x hx y hy hxy
+      rw [← inv_lt_inv (rpow_pos_of_pos hx p) (rpow_pos_of_pos hy p), ← rpow_neg (le_of_lt hx), ←
+        rpow_neg (le_of_lt hy)]
+      exact rpow_lt_rpow (le_of_lt hx) hxy (neg_pos.mpr h)
+    exact StrictMonoOn.injOn fun x hx y hy hxy => rpow_lt_rpow (mem_Ioi.mp hx).le hxy h
+  have a3 : (fun t : ℝ => t ^ p) '' S = S := by
+    ext1
+    rw [mem_image]
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact rpow_pos_of_pos hy p
+    · intro hx
+      refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
+      rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
+  have := integrable_on_image_iff_integrable_on_abs_deriv_smul measurableSet_Ioi a1 a2 f
+  rw [a3] at this
+  rw [this]
+  refine' integrable_on_congr_fun (fun x hx => _) measurableSet_Ioi
+  simp_rw [abs_mul, abs_of_nonneg (rpow_nonneg_of_nonneg (le_of_lt hx) _)]
+#align measure_theory.integrable_on_Ioi_comp_rpow_iff MeasureTheory.integrableOn_Ioi_comp_rpow_iff
+
+/-- The substitution `y = x ^ p` in integrals over `Ioi 0` preserves integrability (version
+without `|p|` factor) -/
+theorem integrableOn_Ioi_comp_rpow_iff' [NormedSpace ℝ E] (f : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
+    IntegrableOn (fun x => x ^ (p - 1) • f (x ^ p)) (Ioi 0) ↔ IntegrableOn f (Ioi 0) := by
+  simpa only [← integrable_on_Ioi_comp_rpow_iff f hp, mul_smul] using
+    (integrable_smul_iff (abs_pos.mpr hp).ne' _).symm
+#align measure_theory.integrable_on_Ioi_comp_rpow_iff' MeasureTheory.integrableOn_Ioi_comp_rpow_iff'
+
+theorem integrableOn_Ioi_comp_mul_left_iff (f : ℝ → E) (c : ℝ) {a : ℝ} (ha : 0 < a) :
+    IntegrableOn (fun x => f (a * x)) (Ioi c) ↔ IntegrableOn f (Ioi <| a * c) :=
+  by
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet <| Ioi c)]
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet <| Ioi <| a * c)]
+  convert integrable_comp_mul_left_iff ((Ioi (a * c)).indicator f) ha.ne' using 2
+  ext1 x
+  rw [← indicator_comp_right, preimage_const_mul_Ioi _ ha, mul_comm a c, mul_div_cancel _ ha.ne']
+#align measure_theory.integrable_on_Ioi_comp_mul_left_iff MeasureTheory.integrableOn_Ioi_comp_mul_left_iff
+
+theorem integrableOn_Ioi_comp_mul_right_iff (f : ℝ → E) (c : ℝ) {a : ℝ} (ha : 0 < a) :
+    IntegrableOn (fun x => f (x * a)) (Ioi c) ↔ IntegrableOn f (Ioi <| c * a) := by
+  simpa only [mul_comm, MulZeroClass.mul_zero] using integrable_on_Ioi_comp_mul_left_iff f c ha
+#align measure_theory.integrable_on_Ioi_comp_mul_right_iff MeasureTheory.integrableOn_Ioi_comp_mul_right_iff
+
+end IoiIntegrability
 
 end MeasureTheory
 

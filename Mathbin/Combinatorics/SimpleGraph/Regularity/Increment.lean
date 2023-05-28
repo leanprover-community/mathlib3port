@@ -112,7 +112,6 @@ private theorem distinct_pairs_increment :
     hUV.2.2
       (P.disjoint.elim_finset hUV.1 hUV.2.1 i (Finpartition.le _ hUi hi) <|
         Finpartition.le _ hVj hi)
-#align szemeredi_regularity.distinct_pairs_increment szemeredi_regularity.distinct_pairs_increment
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The contribution to `finpartition.energy` of a pair of distinct parts of a finpartition. -/
@@ -120,7 +119,6 @@ private noncomputable def pair_contrib (G : SimpleGraph α) (ε : ℝ) (hP : P.I
     (x : { x // x ∈ P.parts.offDiag }) : ℚ :=
   ∑ i in (chunk hP G ε (mem_offDiag.1 x.2).1).parts ×ˢ (chunk hP G ε (mem_offDiag.1 x.2).2.1).parts,
     G.edgeDensity i.fst i.snd ^ 2
-#align szemeredi_regularity.pair_contrib szemeredi_regularity.pair_contrib
 
 theorem offDiag_pairs_le_increment_energy :
     (∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2) ≤

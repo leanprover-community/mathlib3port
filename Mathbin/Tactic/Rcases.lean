@@ -313,7 +313,6 @@ private unsafe def get_pi_arity_list_aux : expr → tactic (List BinderInfo)
     let r ← get_pi_arity_list_aux new_b
     return (bi :: r)
   | e => return []
-#align tactic.get_pi_arity_list_aux tactic.get_pi_arity_list_aux
 
 /-- Compute the arity of the given (Pi-)type -/
 unsafe def get_pi_arity_list (type : expr) : tactic (List BinderInfo) :=
@@ -354,7 +353,6 @@ private def align {α β} (p : α → β → Prop) [∀ a b, Decidable (p a b)] 
     List α → List β → List (α × β)
   | a :: as, b :: bs => if p a b then (a, b) :: align as bs else align as (b :: bs)
   | _, _ => []
-#align tactic.align tactic.align
 
 /-- Given a local constant `e`, get its type. *But* if `e` does not exist, go find a hypothesis
 with the same pretty name as `e` and get it instead. This is needed because we can sometimes lose
@@ -369,7 +367,6 @@ private unsafe def get_local_and_type (e : expr) : tactic (expr × expr) :=
     let e ← get_local e.local_pp_name
     let t ← infer_type e
     pure (t, e)
-#align tactic.get_local_and_type tactic.get_local_and_type
 
 mutual
   /-- * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.

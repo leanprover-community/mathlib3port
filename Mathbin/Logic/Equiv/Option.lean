@@ -106,17 +106,14 @@ private def remove_none_aux (x : α) : β :=
         intro hn
         rw [Option.not_isSome_iff_eq_none, ← hn] at h
         simpa only using e.injective h
-#align equiv.remove_none_aux equiv.remove_none_aux
 
 private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') :
     some (removeNoneAux e x) = e (some x) := by
   simp [remove_none_aux, option.is_some_iff_exists.mpr h]
-#align equiv.remove_none_aux_some equiv.remove_none_aux_some
 
 private theorem remove_none_aux_none {x : α} (h : e (some x) = none) :
     some (removeNoneAux e x) = e none := by
   simp [remove_none_aux, option.not_is_some_iff_eq_none.mpr h]
-#align equiv.remove_none_aux_none equiv.remove_none_aux_none
 
 private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneAux e x) = x :=
   Option.some_injective _
@@ -131,7 +128,6 @@ private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneA
       · rw [remove_none_aux_some _ ⟨_, h1⟩]
         rw [remove_none_aux_some _ ⟨_, h2⟩]
         simp)
-#align equiv.remove_none_aux_inv equiv.remove_none_aux_inv
 
 #print Equiv.removeNone /-
 /-- Given an equivalence between two `option` types, eliminate `none` from that equivalence by

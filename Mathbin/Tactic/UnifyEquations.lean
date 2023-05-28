@@ -170,7 +170,6 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       let pr ← mk_app no_confusion [tgt, lhs, rhs, h]
       exact pr
       return (none, ns)
-#align tactic.unify_equations.injection_with' tactic.unify_equations.injection_with'
 
 /-- Given `equ : C x₁ ... xₙ = D y₁ ... yₘ` with `C` and `D` constructors of the
 same datatype `I`:

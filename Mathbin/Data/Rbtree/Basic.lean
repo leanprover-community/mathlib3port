@@ -269,12 +269,10 @@ theorem depth_min : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → n ≤ depth 
 private def upper : Color → Nat → Nat
   | red, n => 2 * n + 1
   | black, n => 2 * n
-#align rbnode.upper rbnode.upper
 
 private theorem upper_le : ∀ c n, upper c n ≤ 2 * n + 1
   | red, n => le_refl _
   | black, n => by apply le_succ
-#align rbnode.upper_le rbnode.upper_le
 
 theorem depth_max' : ∀ {c n} {t : Rbnode α}, IsRedBlack t c n → depth max t ≤ upper c n :=
   by

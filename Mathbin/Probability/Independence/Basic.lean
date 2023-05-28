@@ -372,7 +372,6 @@ private theorem indep_sets.indep_aux {m2 : MeasurableSpace Ω} {m : MeasurableSp
     exact measurable_set_generate_from ht
   rw [measure.restrict_apply ht2, measure.smul_apply, Set.inter_comm]
   exact hyp t1 t ht1 ht
-#align probability_theory.indep_sets.indep_aux probability_theory.indep_sets.indep_aux
 
 theorem IndepSetsCat.indepCat {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω} {μ : Measure Ω}
     [ProbabilityMeasure μ] {p1 p2 : Set (Set Ω)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1)

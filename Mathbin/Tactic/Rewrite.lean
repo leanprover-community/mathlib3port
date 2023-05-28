@@ -208,11 +208,9 @@ private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
           let e ← mk_const n
           assoc_rewrite_target e)
         (eq_lemmas eq_lemmas.empty)
-#align tactic.interactive.assoc_rw_goal tactic.interactive.assoc_rw_goal
 
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
   e.fold false fun t _ r => r || t = h
-#align tactic.interactive.uses_hyp tactic.interactive.uses_hyp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
@@ -228,7 +226,6 @@ private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
           let e ← mk_const n
           assoc_rewrite_hyp e hyp >>= assoc_rw_hyp rs)
         (eq_lemmas eq_lemmas.empty)
-#align tactic.interactive.assoc_rw_hyp tactic.interactive.assoc_rw_hyp
 
 private unsafe def assoc_rw_core (rs : parse rw_rules) (loca : parse location) : tactic Unit :=
   ((match loca with
@@ -236,7 +233,6 @@ private unsafe def assoc_rw_core (rs : parse rw_rules) (loca : parse location) :
       | _ => loca.apply (assoc_rw_hyp rs.rules) (assoc_rw_goal rs.rules)) >>
       try reflexivity) >>
     try (returnopt rs.end_pos >>= save_info)
-#align tactic.interactive.assoc_rw_core tactic.interactive.assoc_rw_core
 
 /-- `assoc_rewrite [h₀,← h₁] at ⊢ h₂` behaves like `rewrite [h₀,← h₁] at ⊢ h₂`
 with the exception that associativity is used implicitly to make rewriting

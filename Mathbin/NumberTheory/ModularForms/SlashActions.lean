@@ -125,18 +125,15 @@ private theorem slash_mul (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : f 
         ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) :=
     by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
-#align modular_form.slash_mul modular_form.slash_mul
 
 private theorem add_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
   ext1
   simp only [slash, Pi.add_apply, denom, coe_coe, zpow_neg]
   ring
-#align modular_form.add_slash modular_form.add_slash
 
 private theorem slash_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f :=
   funext <| by simp [slash]
-#align modular_form.slash_one modular_form.slash_one
 
 variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
@@ -149,11 +146,9 @@ private theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : 
   simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.coe_det_apply, Pi.smul_apply,
     Subtype.val_eq_coe, coe_coe]
   ring
-#align modular_form.smul_slash modular_form.smul_slash
 
 private theorem zero_slash (k : ℤ) (A : GL(2, ℝ)⁺) : (0 : ℍ → ℂ) ∣[k]A = 0 :=
   funext fun _ => by simp only [slash, Pi.zero_apply, MulZeroClass.zero_mul]
-#align modular_form.zero_slash modular_form.zero_slash
 
 instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ
     where

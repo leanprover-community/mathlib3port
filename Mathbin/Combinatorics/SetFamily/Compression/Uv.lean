@@ -438,7 +438,6 @@ private theorem aux (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x)
   rintro rfl
   refine' eq_empty_of_forall_not_mem fun a ha => _
   obtain ⟨_, ⟨⟩, -⟩ := huv a ha
-#align uv.aux uv.aux
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ∉ » s) -/
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v` such

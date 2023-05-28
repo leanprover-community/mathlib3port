@@ -114,7 +114,6 @@ attribute [local instance] pullback_of_mono
 private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (prod.lift (𝟙 X) g)] :
     C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
-#align category_theory.normal_mono_category.P category_theory.normal_mono_category.P
 
 /- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalMonoCategory.hasLimit_parallelPair /-
@@ -286,7 +285,6 @@ attribute [local instance] pushout_of_epi
 private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (coprod.desc (𝟙 Y) g)] :
     C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
-#align category_theory.normal_epi_category.Q category_theory.normal_epi_category.Q
 
 /- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalEpiCategory.hasColimit_parallelPair /-

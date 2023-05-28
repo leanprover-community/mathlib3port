@@ -197,7 +197,6 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
     exact hcb.false.elim
   · rw [← hc]
     exact hf.monotone hbc
-#align well_founded.eq_strict_mono_iff_eq_range_aux well_founded.eq_strict_mono_iff_eq_range_aux
 
 include h
 

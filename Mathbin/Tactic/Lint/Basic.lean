@@ -38,11 +38,9 @@ See Note [user attribute parameters]
 -/
 private unsafe def reflect_name_list : has_reflect (List Name)
   | ns => q((id $(expr.mk_app q(Prop) <| ns.map flip expr.const []) : List Name))
-#align reflect_name_list reflect_name_list
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
-#align parse_name_list parse_name_list
 
 attribute [local instance] reflect_name_list
 

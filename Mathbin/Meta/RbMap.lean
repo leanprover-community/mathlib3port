@@ -152,7 +152,6 @@ private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic form
   let fd ← tactic.pp d
   return <|
       (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
-#align native.rb_map.pp_key_data native.rb_map.pp_key_data
 
 unsafe instance : has_to_tactic_format (rb_map key data) :=
   ⟨fun m => do

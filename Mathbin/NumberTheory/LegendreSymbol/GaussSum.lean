@@ -109,7 +109,6 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
   · -- case `b ≠ 0`
     refine' (Fintype.sum_bijective _ (mulLeft_bijective₀ b hb) _ _ fun x => _).symm
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
-#align gauss_sum_mul_aux gauss_sum_mul_aux
 
 /-- We have `gauss_sum χ ψ * gauss_sum χ⁻¹ ψ⁻¹ = fintype.card R`
 when `χ` is nontrivial and `ψ` is primitive (and `R` is a field). -/

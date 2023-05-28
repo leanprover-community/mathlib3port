@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.yoneda.limits
-! leanprover-community/mathlib commit 09f981f72d43749f1fa072deade828d9c1e185bb
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Module.Abelian
 
 /-!
 # The Yoneda embedding for preadditive categories preserves limits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The Yoneda embedding for preadditive categories preserves limits.
 

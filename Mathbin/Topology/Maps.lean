@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.maps
-! leanprover-community/mathlib commit e46da4e335b8671848ac711ccb34b42538c0d800
+! leanprover-community/mathlib commit d91e7f7a7f1c7e9f0e18fdb6bde4f652004c735d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -465,10 +465,16 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, Iff (QuotientMap.{u2, u1} α β _inst_1 _inst_2 f) (And (Function.Surjective.{succ u2, succ u1} α β f) (forall (s : Set.{u1} β), Iff (IsOpen.{u1} β _inst_2 s) (IsOpen.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s))))
 Case conversion may be inaccurate. Consider using '#align quotient_map_iff quotientMap_iffₓ'. -/
-theorem quotientMap_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
+theorem quotientMap_iff [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     QuotientMap f ↔ Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
   and_congr Iff.rfl topologicalSpace_eq_iff
 #align quotient_map_iff quotientMap_iff
+
+theorem quotientMap_iff_closed [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
+    QuotientMap f ↔ Surjective f ∧ ∀ s : Set β, IsClosed s ↔ IsClosed (f ⁻¹' s) :=
+  quotientMap_iff.trans <|
+    Iff.rfl.And <| compl_surjective.forall.trans <| by simp only [isOpen_compl_iff, preimage_compl]
+#align quotient_map_iff_closed quotientMap_iff_closed
 
 namespace QuotientMap
 
@@ -565,8 +571,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (QuotientMap.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} β}, Iff (IsClosed.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s)) (IsClosed.{u1} β _inst_2 s))
 Case conversion may be inaccurate. Consider using '#align quotient_map.is_closed_preimage QuotientMap.isClosed_preimageₓ'. -/
 protected theorem isClosed_preimage (hf : QuotientMap f) {s : Set β} :
-    IsClosed (f ⁻¹' s) ↔ IsClosed s := by
-  simp only [← isOpen_compl_iff, ← preimage_compl, hf.is_open_preimage]
+    IsClosed (f ⁻¹' s) ↔ IsClosed s :=
+  ((quotientMap_iff_closed.1 hf).2 s).symm
 #align quotient_map.is_closed_preimage QuotientMap.isClosed_preimage
 
 end QuotientMap
@@ -903,6 +909,12 @@ Case conversion may be inaccurate. Consider using '#align is_closed_map.closed_r
 theorem closed_range {f : α → β} (hf : IsClosedMap f) : IsClosed (range f) :=
   @image_univ _ _ f ▸ hf _ isClosed_univ
 #align is_closed_map.closed_range IsClosedMap.closed_range
+
+theorem to_quotientMap {f : α → β} (hcl : IsClosedMap f) (hcont : Continuous f)
+    (hsurj : Surjective f) : QuotientMap f :=
+  quotientMap_iff_closed.2
+    ⟨hsurj, fun s => ⟨fun hs => hs.Preimage hcont, fun hs => hsurj.image_preimage s ▸ hcl _ hs⟩⟩
+#align is_closed_map.to_quotient_map IsClosedMap.to_quotientMap
 
 end IsClosedMap
 

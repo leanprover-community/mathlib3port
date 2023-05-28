@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense_lp
-! leanprover-community/mathlib commit 13bf7613c96a9fd66a81b9020a82cad9a6ea1fcf
+! leanprover-community/mathlib commit 5a2df4cd59cb31e97a516d4603a14bed5c2f9425
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -506,7 +506,7 @@ which does not permit this (but has the advantage of working when `E` itself is 
 i.e. has no scalar action). -/
 
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E]
+variable [NormedRing 𝕜] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
 /-- If `E` is a normed space, `Lp.simple_func E p μ` is a `has_smul`. Not declared as an
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
@@ -556,13 +556,22 @@ attribute [local instance] simple_func.module
 
 /-- If `E` is a normed space, `Lp.simple_func E p μ` is a normed space. Not declared as an
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
-protected def normedSpace [Fact (1 ≤ p)] : NormedSpace 𝕜 (lp.simpleFunc E p μ) :=
-  ⟨fun c f => by rw [AddSubgroup.coe_norm, AddSubgroup.coe_norm, coe_smul, norm_smul]⟩
+protected theorem boundedSMul [Fact (1 ≤ p)] : BoundedSMul 𝕜 (lp.simpleFunc E p μ) :=
+  BoundedSMul.of_norm_smul_le fun r f => (norm_smul_le r (f : lp E p μ) : _)
+#align measure_theory.Lp.simple_func.has_bounded_smul MeasureTheory.lp.simpleFunc.boundedSMul
+
+attribute [local instance] simple_func.has_bounded_smul
+
+/-- If `E` is a normed space, `Lp.simple_func E p μ` is a normed space. Not declared as an
+instance as it is (as of writing) used only in the construction of the Bochner integral. -/
+protected def normedSpace {𝕜} [NormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] :
+    NormedSpace 𝕜 (lp.simpleFunc E p μ) :=
+  ⟨norm_smul_le⟩
 #align measure_theory.Lp.simple_func.normed_space MeasureTheory.lp.simpleFunc.normedSpace
 
 end Instances
 
-attribute [local instance] simple_func.module simple_func.normed_space
+attribute [local instance] simple_func.module simple_func.normed_space simple_func.has_bounded_smul
 
 section ToLp
 
@@ -601,7 +610,7 @@ theorem toLp_sub (f g : α →ₛ E) (hf : Memℒp f p μ) (hg : Memℒp g p μ)
   rfl
 #align measure_theory.Lp.simple_func.to_Lp_sub MeasureTheory.lp.simpleFunc.toLp_sub
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E]
+variable [NormedRing 𝕜] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
 theorem toLp_smul (f : α →ₛ E) (hf : Memℒp f p μ) (c : 𝕜) :
     toLp (c • f) (hf.const_smul c) = c • toLp f hf :=
@@ -707,7 +716,7 @@ theorem sub_toSimpleFunc (f g : lp.simpleFunc E p μ) :
   repeat' intro h; rw [h]
 #align measure_theory.Lp.simple_func.sub_to_simple_func MeasureTheory.lp.simpleFunc.sub_toSimpleFunc
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E]
+variable [NormedRing 𝕜] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
 theorem smul_toSimpleFunc (k : 𝕜) (f : lp.simpleFunc E p μ) :
     toSimpleFunc (k • f) =ᵐ[μ] k • toSimpleFunc f :=
@@ -836,7 +845,7 @@ protected theorem denseRange (hp_ne_top : p ≠ ∞) :
   (simpleFunc.denseInducing hp_ne_top).dense
 #align measure_theory.Lp.simple_func.dense_range MeasureTheory.lp.simpleFunc.denseRange
 
-variable [NormedField 𝕜] [NormedSpace 𝕜 E]
+variable [NormedRing 𝕜] [Module 𝕜 E] [BoundedSMul 𝕜 E]
 
 variable (α E 𝕜)
 

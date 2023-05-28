@@ -147,16 +147,16 @@ theorem homOfLE_leOfHom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
 #align category_theory.hom_of_le_le_of_hom CategoryTheory.homOfLE_leOfHom
 -/
 
-/- warning: category_theory.op_hom_of_le -> CategoryTheory.opHomOfLe is a dubious translation:
+/- warning: category_theory.op_hom_of_le -> CategoryTheory.opHomOfLE is a dubious translation:
 lean 3 declaration is
   forall {X : Type.{u1}} [_inst_1 : Preorder.{u1} X] {x : Opposite.{succ u1} X} {y : Opposite.{succ u1} X}, (LE.le.{u1} X (Preorder.toHasLe.{u1} X _inst_1) (Opposite.unop.{succ u1} X x) (Opposite.unop.{succ u1} X y)) -> (Quiver.Hom.{succ u1, u1} (Opposite.{succ u1} X) (Quiver.opposite.{u1, succ u1} X (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} X (CategoryTheory.Category.toCategoryStruct.{u1, u1} X (Preorder.smallCategory.{u1} X _inst_1)))) y x)
 but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : Preorder.{u1} X] {x : Opposite.{succ u1} X} {y : Opposite.{succ u1} X}, (LE.le.{u1} X (Preorder.toLE.{u1} X _inst_1) (Opposite.unop.{succ u1} X x) (Opposite.unop.{succ u1} X y)) -> (Quiver.Hom.{succ u1, u1} (Opposite.{succ u1} X) (Quiver.opposite.{u1, succ u1} X (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} X (CategoryTheory.Category.toCategoryStruct.{u1, u1} X (Preorder.smallCategory.{u1} X _inst_1)))) y x)
-Case conversion may be inaccurate. Consider using '#align category_theory.op_hom_of_le CategoryTheory.opHomOfLeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align category_theory.op_hom_of_le CategoryTheory.opHomOfLEₓ'. -/
 /-- Construct a morphism in the opposite of a preorder category from an inequality. -/
-def opHomOfLe {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
+def opHomOfLE {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
   h.Hom.op
-#align category_theory.op_hom_of_le CategoryTheory.opHomOfLe
+#align category_theory.op_hom_of_le CategoryTheory.opHomOfLE
 
 /- warning: category_theory.le_of_op_hom -> CategoryTheory.le_of_op_hom is a dubious translation:
 lean 3 declaration is

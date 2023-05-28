@@ -31,11 +31,9 @@ attribute [local semireducible] reflected
 @[local instance 9000]
 private unsafe def reflect_name_list : has_reflect (List Name)
   | ns => q((id $(expr.mk_app q(Prop) <| ns.map flip expr.const []) : List Name))
-#align tactic.reflect_name_list tactic.reflect_name_list
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
-#align tactic.parse_name_list tactic.parse_name_list
 
 /-- The `ancestor` attributes is used to record the names of structures which appear in the
 extends clause of a `structure` or `class` declared with `old_structure_cmd` set to true.

@@ -262,7 +262,6 @@ private unsafe def add_local_consts_as_local_hyps_aux :
                    hypothesis which we just created. -/
             add_local_consts_as_local_hyps_aux
             ((var, hyp) :: mappings) rest
-#align tactic.add_local_consts_as_local_hyps_aux tactic.add_local_consts_as_local_hyps_aux
 
 /-- `add_local_consts_as_local_hyps vars` add the given list `vars` of `expr.local_const`s to the
     tactic state. This is harder than it sounds, since the list of local constants which we have
@@ -290,7 +289,6 @@ private unsafe def get_expl_pi_arity_aux : expr → tactic Nat
     let r ← get_expl_pi_arity_aux new_b
     if bi = BinderInfo.default then return (r + 1) else return r
   | e => return 0
-#align tactic.get_expl_pi_arity_aux tactic.get_expl_pi_arity_aux
 
 /-- Compute the arity of explicit arguments of `type`. -/
 unsafe def get_expl_pi_arity (type : expr) : tactic Nat :=
@@ -308,7 +306,6 @@ private unsafe def get_app_fn_args_whnf_aux (md : Transparency) (unfold_ginducti
   match e with
     | expr.app t u => get_app_fn_args_whnf_aux (u :: args) t
     | _ => pure (e, args)
-#align tactic.get_app_fn_args_whnf_aux tactic.get_app_fn_args_whnf_aux
 
 /-- For `e = f x₁ ... xₙ`, `get_app_fn_args_whnf e` returns `(f, [x₁, ..., xₙ])`. `e`
 is normalised as necessary; for example:
@@ -610,7 +607,6 @@ private unsafe def elim_gen_sum_aux : Nat → expr → List expr → tactic (Lis
     let [(_, [h], _), (_, [h'], _)] ← induction e []
     swap
     elim_gen_sum_aux n h' (h :: hs)
-#align tactic.elim_gen_sum_aux tactic.elim_gen_sum_aux
 
 /-- `elim_gen_sum n e` applies cases on `e` `n` times. `e` is assumed to be a local constant whose
 type is a (nested) sum `⊕`. Returns the list of local constants representing the components of `e`.
@@ -801,7 +797,6 @@ private def partition_local_deps_aux {α} [DecidableEq α] (vs : List α) :
   | l :: ls, Acc =>
     if l ∈ vs then Acc.reverse :: partition_local_deps_aux ls [l]
     else partition_local_deps_aux ls (l :: Acc)
-#align tactic.partition_local_deps_aux tactic.partition_local_deps_aux
 
 /-- `partition_local_deps vs`, with `vs` a list of local constants,
 reorders `vs` in the order they appear in the local context together
@@ -1027,7 +1022,6 @@ private unsafe def expanded_field_list' : Name → tactic (Dlist <| Name × Name
           let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
           expanded_field_list' <| e
     return <| Std.DList.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
-#align tactic.expanded_field_list' tactic.expanded_field_list'
 
 open Functor Function
 
@@ -1450,7 +1444,6 @@ unsafe def try_all_sorted {α : Type} (tactics : List (tactic α)) (sort_by : ta
 /-- Return target after instantiating metavars and whnf. -/
 private unsafe def target' : tactic expr :=
   target >>= instantiate_mvars >>= whnf
-#align tactic.target' tactic.target'
 
 -- FIXME check if we can remove `auto_param := ff`
 /-- Just like `split`, `fsplit` applies the constructor when the type of the target is
@@ -1771,7 +1764,6 @@ private unsafe def strip_prefix' (n : Name) : List String → Name → tactic Na
           if n'' = n then pure n' else strip_prefix' (a :: s) p) <|>
         strip_prefix' (a :: s) p
   | s, n@(Name.mk_numeral a p) => pure <| s.foldl (flip Name.mk_string) n
-#align tactic.strip_prefix' tactic.strip_prefix'
 
 /-- Strips unnecessary prefixes from a name, e.g. if a namespace is open. -/
 unsafe def strip_prefix : Name → tactic Name
@@ -2140,7 +2132,6 @@ or call `fconstructor` and try again.
 -/
 private unsafe def use_aux (h : pexpr) : tactic Unit :=
   focus1 (refine h >> done) <|> fconstructor >> use_aux
-#align tactic.use_aux tactic.use_aux
 
 /-- Similar to `existsi`, `use l` will use entries in `l` to instantiate existential obligations
 at the beginning of a target. Unlike `existsi`, the pexprs in `l` are elaborated with respect to
@@ -2501,7 +2492,6 @@ private unsafe def parse_pformat : String → List Char → parser pexpr
     let f ← parse_pformat "" s
     pure ``(to_pfmt $(reflect Acc) ++ to_pfmt $(e) ++ $(f))
   | Acc, c :: s => parse_pformat (Acc.str c) s
-#align tactic.parse_pformat tactic.parse_pformat
 
 /-- See `format!` in `init/meta/interactive_base.lean`.
 
@@ -2604,7 +2594,6 @@ private unsafe def apply_under_n_pis_aux (func arg : pexpr) : ℕ → ℕ → ex
   | n, k + 1, expr.pi nm bi tp bd =>
     expr.pi nm bi (pexpr.of_expr tp) (apply_under_n_pis_aux (n + 1) k bd)
   | n, k + 1, t => apply_under_n_pis_aux n 0 t
-#align tactic.apply_under_n_pis_aux tactic.apply_under_n_pis_aux
 
 /-- Assumes `pi_expr` is of the form `Π x1 ... xn xn+1..., _`.
 Creates a pexpr of the form `Π x1 ... xn, func (arg x1 ... xn)`.

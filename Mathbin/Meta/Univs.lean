@@ -75,7 +75,6 @@ such that it is only used by `tactic.interactive.reflect_name` where we have enf
 manually. -/
 private unsafe def reflected.of {α : Sort _} {a : α} (e : expr) : reflected _ a :=
   e
-#align reflected.of reflected.of
 
 end
 

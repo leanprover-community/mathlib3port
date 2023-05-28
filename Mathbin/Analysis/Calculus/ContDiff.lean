@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiffDef
+import Mathbin.Analysis.Calculus.Deriv.Inverse
 import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Data.Nat.Choose.Cast
@@ -742,7 +743,6 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedAddCommGroup Eu
       exact IH D C (subset_univ _)
   · rw [contDiffOn_top] at hf hg⊢
     exact fun n => Itop n (hg n) (hf n) st
-#align cont_diff_on.comp_same_univ cont_diff_on.comp_same_univ
 
 /-- The composition of `C^n` functions on domains is `C^n`. -/
 theorem ContDiffOn.comp {s : Set E} {t : Set F} {g : F → G} {f : E → F} (hg : ContDiffOn 𝕜 n g t)

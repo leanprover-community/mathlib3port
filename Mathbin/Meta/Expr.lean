@@ -81,7 +81,6 @@ private unsafe def pop_nth_prefix_aux : Name → ℕ → Name × ℕ
   | nm, n =>
     let (pfx, height) := pop_nth_prefix_aux nm.getPrefix n
     if height ≤ n then (anonymous, height + 1) else (nm.updatePrefix pfx, height + 1)
-#align name.pop_nth_prefix_aux name.pop_nth_prefix_aux
 
 /-- Pops the top `n` prefixes from the given name. -/
 unsafe def pop_nth_prefix (nm : Name) (n : ℕ) : Name :=
@@ -97,7 +96,6 @@ unsafe def pop_prefix (n : Name) : Name :=
 private def from_components_aux : Name → List String → Name
   | n, [] => n
   | n, s :: rest => from_components_aux (Name.mk_string s n) rest
-#align name.from_components_aux name.from_components_aux
 
 /-- Build a name from components. For example `from_components ["foo","bar"]` becomes
   ``` `foo.bar``` -/
@@ -992,7 +990,6 @@ private unsafe def all_implicitly_included_variables_aux :
     let (vs, rs, b) :=
       if e.is_implicitly_included_variable vs then (e :: vs, rs, true) else (vs, e :: rs, b)
     all_implicitly_included_variables_aux rest vs rs b
-#align expr.all_implicitly_included_variables_aux expr.all_implicitly_included_variables_aux
 
 /-- `all_implicitly_included_variables es vs` accepts `es`, a list of `expr.local_const`, and `vs`,
     another such list. It returns a list of all variables `e` in `es` or `vs` for which an inclusion
@@ -1333,7 +1330,6 @@ private unsafe def print_thm (nm : Name) (tp : expr) (body : task expr) : tactic
   let tp ← pp tp
   let body ← pp body.get
   return <| "<theorem " ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
-#align declaration.print_thm declaration.print_thm
 
 /-- formats the arguments of a `declaration.defn` -/
 private unsafe def print_defn (nm : Name) (tp : expr) (body : expr) (is_trusted : Bool) :
@@ -1344,7 +1340,6 @@ private unsafe def print_defn (nm : Name) (tp : expr) (body : expr) (is_trusted 
       ("<" ++ if is_trusted then "def " else "meta def ") ++ to_fmt nm ++ " : " ++ tp ++ " := " ++
           body ++
         ">"
-#align declaration.print_defn declaration.print_defn
 
 /-- formats the arguments of a `declaration.cnst` -/
 private unsafe def print_cnst (nm : Name) (tp : expr) (is_trusted : Bool) : tactic format := do
@@ -1352,13 +1347,11 @@ private unsafe def print_cnst (nm : Name) (tp : expr) (is_trusted : Bool) : tact
   return <|
       ("<" ++ if is_trusted then "constant " else "meta constant ") ++ to_fmt nm ++ " : " ++ tp ++
         ">"
-#align declaration.print_cnst declaration.print_cnst
 
 /-- formats the arguments of a `declaration.ax` -/
 private unsafe def print_ax (nm : Name) (tp : expr) : tactic format := do
   let tp ← pp tp
   return <| "<axiom " ++ to_fmt nm ++ " : " ++ tp ++ ">"
-#align declaration.print_ax declaration.print_ax
 
 /-- pretty-prints a `declaration` object. -/
 unsafe def to_tactic_format : declaration → tactic format

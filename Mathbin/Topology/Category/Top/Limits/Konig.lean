@@ -55,11 +55,9 @@ variable (F : J ⥤ TopCat.{u})
 
 private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J) :=
   Σ'(X Y : J)(mX : X ∈ G)(mY : Y ∈ G), X ⟶ Y
-#align Top.finite_diagram_arrow Top.finite_diagram_arrow
 
 private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
   ΣG : Finset J, Finset (FiniteDiagramArrow G)
-#align Top.finite_diagram Top.finite_diagram
 
 /- warning: Top.partial_sections -> TopCat.partialSections is a dubious translation:
 lean 3 declaration is

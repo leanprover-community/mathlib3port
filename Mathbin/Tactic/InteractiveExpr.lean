@@ -112,7 +112,6 @@ private unsafe def elim_part_apps : sf → Expr.Address → sf
   | sf.of_string s, _ => sf.of_string s
   | sf.block i a, Acc => sf.block i <| elim_part_apps a Acc
   | sf.highlight c a, Acc => sf.highlight c <| elim_part_apps a Acc
-#align widget_override.interactive_expression.elim_part_apps widget_override.interactive_expression.elim_part_apps
 
 /-- Post-process an `sf` object to eliminate tags for partial applications by
 pushing the `app_fn` as far into the expression as possible. The effect is

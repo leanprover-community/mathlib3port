@@ -630,7 +630,6 @@ private theorem minimal_period_iterate_eq_div_gcd_aux (h : 0 < gcd (minimalPerio
     apply is_periodic_pt.minimal_period_dvd
     rw [is_periodic_pt, is_fixed_pt, iterate_mul]
     exact is_periodic_pt_minimal_period _ _
-#align function.minimal_period_iterate_eq_div_gcd_aux function.minimal_period_iterate_eq_div_gcd_aux
 
 #print Function.minimalPeriod_iterate_eq_div_gcd /-
 theorem minimalPeriod_iterate_eq_div_gcd (h : n ≠ 0) :

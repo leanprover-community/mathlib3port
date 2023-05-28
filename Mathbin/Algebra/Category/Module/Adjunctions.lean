@@ -113,7 +113,7 @@ theorem left_unitality (X : Type u) :
   ext
   dsimp [ε, μ]
   simp_rw [finsuppTensorFinsupp'_single_tmul_single,
-    ModuleCat.monoidalCategory.leftUnitor_hom_apply, Finsupp.smul_single', mul_one,
+    ModuleCat.MonoidalCategory.leftUnitor_hom_apply, Finsupp.smul_single', mul_one,
     Finsupp.mapDomain_single, CategoryTheory.leftUnitor_hom_apply]
 #align Module.free.left_unitality ModuleCat.free.left_unitality
 
@@ -126,7 +126,7 @@ theorem right_unitality (X : Type u) :
   ext
   dsimp [ε, μ]
   simp_rw [finsuppTensorFinsupp'_single_tmul_single,
-    ModuleCat.monoidalCategory.rightUnitor_hom_apply, Finsupp.smul_single', mul_one,
+    ModuleCat.MonoidalCategory.rightUnitor_hom_apply, Finsupp.smul_single', mul_one,
     Finsupp.mapDomain_single, CategoryTheory.rightUnitor_hom_apply]
 #align Module.free.right_unitality ModuleCat.free.right_unitality
 

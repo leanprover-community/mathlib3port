@@ -161,7 +161,6 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
           ( to_expr ` `( $ ( e ) <*> $ ( x ) ) >>= flip seq_apply_constructor xs )
       | e , Sum.inl x :: xs => Prod.map ( cons <| pure x ) id <$> seq_apply_constructor e xs
       | e , [ ] => return ( [ ] , e )
-#align tactic.interactive.seq_apply_constructor tactic.interactive.seq_apply_constructor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `t -/
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression

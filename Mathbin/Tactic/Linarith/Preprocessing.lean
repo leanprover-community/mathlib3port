@@ -79,7 +79,6 @@ private unsafe
         =>
         do let nprf ← rem_neg prf t let tp ← infer_type nprf rearr_comp_aux nprf tp
       | prf , a => trace a >> fail "couldn't rearrange comp"
-#align linarith.rearr_comp_aux linarith.rearr_comp_aux
 
 /-- `rearr_comp e` takes a proof `e` of an equality, inequality, or negation thereof,
 and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
@@ -166,7 +165,6 @@ unsafe def is_strict_int_prop : expr → Bool
 private unsafe def filter_comparisons_aux : expr → Bool
   | q(¬$(p)) => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
   | tp => tp.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge, `eq]
-#align linarith.filter_comparisons_aux linarith.filter_comparisons_aux
 
 /-- Removes any expressions that are not proofs of inequalities, equalities, or negations thereof.
 -/

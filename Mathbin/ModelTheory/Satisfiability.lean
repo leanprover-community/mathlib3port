@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.satisfiability
-! leanprover-community/mathlib commit d565b3df44619c1498326936be16f1a935df0728
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.ModelTheory.Skolem
 
 /-!
 # First-Order Satisfiability
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file deals with the satisfiability of first-order theories, as well as equivalence over them.
 
 ## Main Definitions

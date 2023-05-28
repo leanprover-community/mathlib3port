@@ -165,13 +165,11 @@ private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ 
   by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_E, h, h']
-#align cartan_matrix.relations.ad_E_of_eq_eq_zero cartan_matrix.relations.ad_E_of_eq_eq_zero
 
 private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 :=
   by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_F, h, h']
-#align cartan_matrix.relations.ad_F_of_eq_eq_zero cartan_matrix.relations.ad_F_of_eq_eq_zero
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/
 def toSet : Set (FreeLieAlgebra R (Generators B)) :=

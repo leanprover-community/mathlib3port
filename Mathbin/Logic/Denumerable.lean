@@ -397,11 +397,9 @@ theorem coe_comp_ofNat_range : Set.range (coe ∘ ofNat s : ℕ → ℕ) = s := 
 
 private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
-#align nat.subtype.to_fun_aux nat.subtype.to_fun_aux
 
 private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filterₓ (· ∈ s)).card := by
   rw [to_fun_aux, List.countp_eq_length_filter] <;> rfl
-#align nat.subtype.to_fun_aux_eq nat.subtype.to_fun_aux_eq
 
 open Finset
 
@@ -430,7 +428,6 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
     conv =>
       rhs
       rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
-#align nat.subtype.right_inverse_aux nat.subtype.right_inverse_aux
 
 #print Nat.Subtype.denumerable /-
 /-- Any infinite set of naturals is denumerable. -/

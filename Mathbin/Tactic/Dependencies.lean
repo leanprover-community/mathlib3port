@@ -561,7 +561,6 @@ private unsafe def reverse_dependencies_of_hyp_name_set_aux (hs : name_set) :
       List.andM [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
     if H_is_revdep then reverse_dependencies_of_hyp_name_set_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_aux Hs revdeps ns
-#align tactic.reverse_dependencies_of_hyp_name_set_aux tactic.reverse_dependencies_of_hyp_name_set_aux
 
 /-- `reverse_dependencies_of_hyp_name_set hs` is the list of reverse dependencies of
 the hypotheses whose unique names appear in `hs`, excluding the `hs` themselves.
@@ -600,7 +599,6 @@ private unsafe def reverse_dependencies_of_hyp_name_set_inclusive_aux :
     if H_is_revdep then
         reverse_dependencies_of_hyp_name_set_inclusive_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_inclusive_aux Hs revdeps ns
-#align tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux
 
 /-- `reverse_dependencies_of_hyp_name_set_inclusive hs` is the list of reverse
 dependencies of the hypotheses whose unique names appear in `hs`, including the

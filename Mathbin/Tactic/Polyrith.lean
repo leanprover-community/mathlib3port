@@ -531,7 +531,6 @@ private unsafe def intersperse_ops_aux : List (Bool × format) → format
   | [] => ""
   | (ff, fmt)::t => " +" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
   | (tt, fmt)::t => " -" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
-#align polyrith.intersperse_ops_aux polyrith.intersperse_ops_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

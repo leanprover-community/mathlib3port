@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module analysis.complex.arg
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.SpecialFunctions.Complex.Arg
 /-!
 # Rays in the complex numbers
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 This file links the definition `same_ray ℝ x y` with the equality of arguments of complex numbers,
 the usual way this is considered.
 
@@ -21,8 +24,8 @@ the usual way this is considered.
 
 * `complex.same_ray_iff` : Two complex numbers are on the same ray iff one of them is zero, or they
   have the same argument.
-* `complex.abs_add_eq/complex.abs_sub_eq`: If two non zero complex numbers have different argument,
-  then the triangle inequality becomes strict.
+* `complex.abs_add_eq/complex.abs_sub_eq`: If two non zero complex numbers have the same argument,
+  then the triangle inequality is an equality.
 
 -/
 

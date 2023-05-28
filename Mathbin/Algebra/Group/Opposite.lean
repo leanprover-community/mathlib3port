@@ -567,31 +567,39 @@ theorem Units.coe_opEquiv_symm {M} [Monoid M] (u : Mˣᵐᵒᵖ) :
 #align units.coe_op_equiv_symm Units.coe_opEquiv_symm
 #align add_units.coe_op_equiv_symm AddUnits.coe_opEquiv_symm
 
+#print IsUnit.op /-
 @[to_additive]
 theorem IsUnit.op {M} [Monoid M] {m : M} (h : IsUnit m) : IsUnit (op m) :=
   let ⟨u, hu⟩ := h
   hu ▸ ⟨Units.opEquiv.symm (op u), rfl⟩
 #align is_unit.op IsUnit.op
 #align is_add_unit.op IsAddUnit.op
+-/
 
+#print IsUnit.unop /-
 @[to_additive]
 theorem IsUnit.unop {M} [Monoid M] {m : Mᵐᵒᵖ} (h : IsUnit m) : IsUnit (unop m) :=
   let ⟨u, hu⟩ := h
   hu ▸ ⟨unop (Units.opEquiv u), rfl⟩
 #align is_unit.unop IsUnit.unop
 #align is_add_unit.unop IsAddUnit.unop
+-/
 
+#print isUnit_op /-
 @[simp, to_additive]
 theorem isUnit_op {M} [Monoid M] {m : M} : IsUnit (op m) ↔ IsUnit m :=
   ⟨IsUnit.unop, IsUnit.op⟩
 #align is_unit_op isUnit_op
-#align is_add_unit_op is_add_unit_op
+#align is_add_unit_op isAddUnit_op
+-/
 
+#print isUnit_unop /-
 @[simp, to_additive]
 theorem isUnit_unop {M} [Monoid M] {m : Mᵐᵒᵖ} : IsUnit (unop m) ↔ IsUnit m :=
   ⟨IsUnit.op, IsUnit.unop⟩
 #align is_unit_unop isUnit_unop
-#align is_add_unit_unop is_add_unit_unop
+#align is_add_unit_unop isAddUnit_unop
+-/
 
 #print MulHom.op /-
 /-- A semigroup homomorphism `M →ₙ* N` can equivalently be viewed as a semigroup homomorphism

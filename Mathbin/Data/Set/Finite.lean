@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 52fa514ec337dd970d71d8de8d0fd68b455a1e54
+! leanprover-community/mathlib commit 5bb9fffd23f9f65b367f5d451da18cc60bf47335
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -754,6 +754,10 @@ end FintypeInstances
 
 end Set
 
+theorem Equiv.set_finite_iff {s : Set α} {t : Set β} (hst : s ≃ t) : s.Finite ↔ t.Finite := by
+  simp_rw [← Set.finite_coe_iff, hst.finite_iff]
+#align equiv.set_finite_iff Equiv.set_finite_iff
+
 /-! ### Finset -/
 
 
@@ -1208,6 +1212,20 @@ theorem Finite.sInter {α : Type _} {s : Set (Set α)} {t : Set α} (ht : t ∈ 
 #align set.finite.sInter Set.Finite.sInter
 -/
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » t) -/
+/-- If sets `s i` are finite for all `i` from a finite set `t` and are empty for `i ∉ t`, then the
+union `⋃ i, s i` is a finite set. -/
+theorem Finite.iUnion {ι : Type _} {s : ι → Set α} {t : Set ι} (ht : t.Finite)
+    (hs : ∀ i ∈ t, (s i).Finite) (he : ∀ (i) (_ : i ∉ t), s i = ∅) : (⋃ i, s i).Finite :=
+  by
+  suffices (⋃ i, s i) ⊆ ⋃ i ∈ t, s i by exact (ht.bUnion hs).Subset this
+  refine' Union_subset fun i x hx => _
+  by_cases hi : i ∈ t
+  · exact mem_bUnion hi hx
+  · rw [he i hi, mem_empty_iff_false] at hx
+    contradiction
+#align set.finite.Union Set.Finite.iUnion
+
 #print Set.Finite.bind /-
 theorem Finite.bind {α β} {s : Set α} {f : α → Set β} (h : s.Finite) (hf : ∀ a ∈ s, (f a).Finite) :
     (s >>= f).Finite :=
@@ -1639,10 +1657,7 @@ theorem finite_subset_iUnion {s : Set α} (hs : s.Finite) {ι} {t : ι → Set �
 #align set.finite_subset_Union Set.finite_subset_iUnion
 
 /- warning: set.eq_finite_Union_of_finite_subset_Union -> Set.eq_finite_iUnion_of_finite_subset_iUnion is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {s : ι -> (Set.{u1} α)} {t : Set.{u1} α}, (Set.Finite.{u1} α t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => s i))) -> (Exists.{succ u2} (Set.{u2} ι) (fun (I : Set.{u2} ι) => And (Set.Finite.{u2} ι I) (Exists.{max (succ u2) (succ u1)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) -> (Set.{u1} α)) (fun (σ : (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) -> (Set.{u1} α)) => And (forall (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))), Set.Finite.{u1} α (σ i)) (And (forall (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (σ i) (s ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))))))) i))) (Eq.{succ u1} (Set.{u1} α) t (Set.iUnion.{u1, succ u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) (fun (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) (setOf.{u2} ι (fun (i : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i I))) => σ i))))))))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {s : ι -> (Set.{u2} α)} {t : Set.{u2} α}, (Set.Finite.{u2} α t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) t (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i))) -> (Exists.{succ u1} (Set.{u1} ι) (fun (I : Set.{u1} ι) => And (Set.Finite.{u1} ι I) (Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))) -> (Set.{u2} α)) (fun (σ : (Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))) -> (Set.{u2} α)) => And (forall (i : Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))), Set.Finite.{u2} α (σ i)) (And (forall (i : Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (σ i) (s (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))) i))) (Eq.{succ u2} (Set.{u2} α) t (Set.iUnion.{u2, succ u1} α (Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))) (fun (i : Set.Elem.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i I))) => σ i))))))))
+<too large>
 Case conversion may be inaccurate. Consider using '#align set.eq_finite_Union_of_finite_subset_Union Set.eq_finite_iUnion_of_finite_subset_iUnionₓ'. -/
 theorem eq_finite_iUnion_of_finite_subset_iUnion {ι} {s : ι → Set α} {t : Set α} (tfin : t.Finite)
     (h : t ⊆ ⋃ i, s i) :

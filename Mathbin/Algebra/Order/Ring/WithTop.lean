@@ -273,7 +273,6 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c :=
     simp only [mul_coe hc]
     cases a <;> cases b
     repeat' first |rfl|exact congr_arg some (add_mul _ _ _)
-#align with_top.distrib' with_top.distrib'
 
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class
 that derives from both `non_assoc_non_unital_semiring` and `canonically_ordered_add_monoid`, both

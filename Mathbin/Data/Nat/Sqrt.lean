@@ -119,7 +119,6 @@ theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
 
 private def is_sqrt (n q : ℕ) : Prop :=
   q * q ≤ n ∧ n < (q + 1) * (q + 1)
-#align nat.is_sqrt nat.is_sqrt
 
 attribute [-simp] mul_eq_mul_left_iff mul_eq_mul_right_iff
 
@@ -151,7 +150,6 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
     rw [← add_assoc, (_ : r * r + _ = _)]
     exact (add_tsub_cancel_of_le hl).symm
     simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_assoc]
-#align nat.sqrt_aux_is_sqrt_lemma nat.sqrt_aux_is_sqrt_lemma
 
 private theorem sqrt_aux_is_sqrt (n) :
     ∀ m r,
@@ -175,7 +173,6 @@ private theorem sqrt_aux_is_sqrt (n) :
       have := sqrt_aux_is_sqrt m (r + 2 ^ (m + 1)) h h₂
       rwa [show (r + 2 ^ (m + 1)) * 2 ^ (m + 1) = 2 * (r + 2 ^ (m + 1)) * 2 ^ m by
           simp [pow_succ, mul_comm, mul_left_comm]]
-#align nat.sqrt_aux_is_sqrt nat.sqrt_aux_is_sqrt
 
 private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
   by
@@ -196,7 +193,6 @@ private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
     apply (@div_lt_iff_lt_mul _ _ 2 (by decide)).1
     rw [div2_val]
     apply lt_succ_self
-#align nat.sqrt_is_sqrt nat.sqrt_is_sqrt
 
 #print Nat.sqrt_le /-
 theorem sqrt_le (n : ℕ) : sqrt n * sqrt n ≤ n :=

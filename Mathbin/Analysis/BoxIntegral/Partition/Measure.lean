@@ -143,7 +143,7 @@ namespace BoxAdditiveMap
 /-- Box-additive map sending each box `I` to the continuous linear endomorphism
 `x ↦ (volume I).to_real • x`. -/
 protected def volume {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] : ι →ᵇᵃ E →L[ℝ] E :=
-  (volume : Measure (ι → ℝ)).toBoxAdditive.toSmul
+  (volume : Measure (ι → ℝ)).toBoxAdditive.toSMul
 #align box_integral.box_additive_map.volume BoxIntegral.BoxAdditiveMap.volume
 
 theorem volume_apply {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :

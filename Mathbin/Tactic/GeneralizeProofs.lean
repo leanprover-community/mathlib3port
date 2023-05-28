@@ -77,7 +77,6 @@ private unsafe def collect_proofs_in :
         collect_proofs_in (expr.instantiate_var e d) ctx nh
     | expr.macro m l => go fun nh => foldlM (fun x e => collect_proofs_in e ctx x) nh l
     | _ => return (ns, hs)
-#align tactic.collect_proofs_in tactic.collect_proofs_in
 
 /-- Generalize proofs in the goal, naming them with the provided list. -/
 unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic Unit := do

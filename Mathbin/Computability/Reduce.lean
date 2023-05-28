@@ -691,7 +691,6 @@ theorem of_le_of {p : α → Prop} {q : β → Prop} : of p ≤ of q ↔ p ≤�
 
 private theorem le_refl (d : ManyOneDegree) : d ≤ d := by
   induction d using ManyOneDegree.ind_on <;> simp
-#align many_one_degree.le_refl many_one_degree.le_refl
 
 private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₁ → d₁ = d₂ :=
   by
@@ -699,7 +698,6 @@ private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂
   induction d₂ using ManyOneDegree.ind_on
   intro hp hq
   simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_and_iff]
-#align many_one_degree.le_antisymm many_one_degree.le_antisymm
 
 private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ :=
   by
@@ -707,7 +705,6 @@ private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d�
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
   apply ManyOneReducible.trans
-#align many_one_degree.le_trans many_one_degree.le_trans
 
 instance : PartialOrder ManyOneDegree where
   le := (· ≤ ·)

@@ -106,10 +106,8 @@ theorem hEq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q�
 #align continuous_map.homotopy.heq_path_of_eq_image ContinuousMap.Homotopy.hEq_path_of_eq_image
 
 private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [Path.source]
-#align continuous_map.homotopy.start_path continuous_map.homotopy.start_path
 
 private theorem end_path : f x₁ = g x₃ := by convert hfg 1 <;> simp only [Path.target]
-#align continuous_map.homotopy.end_path continuous_map.homotopy.end_path
 
 theorem eq_path_of_eq_image :
     (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm :=

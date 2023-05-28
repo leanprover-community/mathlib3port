@@ -26,7 +26,6 @@ private unsafe def match_subexpr (p : pattern) : expr → tactic (List expr)
       | pi _ _ _ b => mk_fresh_name >>= match_subexpr ∘ b.instantiate_var ∘ mk_local
       | lam _ _ _ b => mk_fresh_name >>= match_subexpr ∘ b.instantiate_var ∘ mk_local
       | _ => failed
-#align match_subexpr match_subexpr
 
 private unsafe def match_exact : pexpr → expr → tactic (List expr)
   | p, e => do
@@ -37,7 +36,6 @@ private unsafe def match_exact : pexpr → expr → tactic (List expr)
         let p ← pexpr_to_pattern p₂
         match_subexpr p e
       else match_expr p e
-#align match_exact match_exact
 
 unsafe def expr.get_pis : expr → tactic (List expr × expr)
   | pi n bi d b => do
@@ -61,14 +59,12 @@ private unsafe def match_hyps : List pexpr → List expr → List expr → tacti
     match_hyps ps [] (old_hyps ++ new_hyps)
   | [], _, _ => skip
   | _ :: _, _, [] => failed
-#align match_hyps match_hyps
 
 private unsafe def match_sig (p : pexpr) (e : expr) : tactic Unit := do
   let (p_pis, p) ← p.get_uninst_pis
   let (pis, e) ← e.get_pis
   match_exact p e
   match_hyps p_pis [] pis
-#align match_sig match_sig
 
 private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Unit :=
   try do
@@ -76,7 +72,6 @@ private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Uni
     match_sig pat ty
     let ty ← pp ty
     trace f! "{n }: {ty}"
-#align trace_match trace_match
 
 /-- The `find` command from `tactic.find` allows to find definitions lemmas using
 pattern matching on the type. For instance:

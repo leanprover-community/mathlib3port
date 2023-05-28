@@ -306,7 +306,6 @@ private theorem perfect.small_diam_aux (ε_pos : 0 < ε) {x : α} (xC : x ∈ C)
   apply le_trans (EMetric.diam_mono (inter_subset_left _ _))
   convert EMetric.diam_ball
   rw [mul_comm, ENNReal.div_mul_cancel] <;> norm_num
-#align perfect.small_diam_aux perfect.small_diam_aux
 
 variable (hnonempty : C.Nonempty)
 

@@ -887,7 +887,6 @@ be necessary, and `second_countable_of_polish` should probably
 just be added as an instance soon after the definition of `polish_space`.-/
 private theorem second_countable_of_polish [h : PolishSpace α] : SecondCountableTopology α :=
   h.second_countable
-#align polish_space.second_countable_of_polish polish_space.second_countable_of_polish
 
 attribute [-instance] polishSpace_of_complete_second_countable
 

@@ -40,6 +40,7 @@ variable {V : Type _} (P : Type _)
 
 open FiniteDimensional
 
+#print EuclideanGeometry.Sphere /-
 /-- A `sphere P` bundles a `center` and `radius`. This definition does not require the radius to
 be positive; that should be given as a hypothesis to lemmas that require it. -/
 @[ext]
@@ -47,6 +48,7 @@ structure Sphere [MetricSpace P] where
   center : P
   radius : ℝ
 #align euclidean_geometry.sphere EuclideanGeometry.Sphere
+-/
 
 variable {P}
 
@@ -63,60 +65,83 @@ instance : Coe (Sphere P) (Set P) :=
 instance : Membership P (Sphere P) :=
   ⟨fun p s => p ∈ (s : Set P)⟩
 
+#print EuclideanGeometry.Sphere.mk_center /-
 theorem Sphere.mk_center (c : P) (r : ℝ) : (⟨c, r⟩ : Sphere P).center = c :=
   rfl
 #align euclidean_geometry.sphere.mk_center EuclideanGeometry.Sphere.mk_center
+-/
 
+#print EuclideanGeometry.Sphere.mk_radius /-
 theorem Sphere.mk_radius (c : P) (r : ℝ) : (⟨c, r⟩ : Sphere P).radius = r :=
   rfl
 #align euclidean_geometry.sphere.mk_radius EuclideanGeometry.Sphere.mk_radius
+-/
 
+#print EuclideanGeometry.Sphere.mk_center_radius /-
 @[simp]
 theorem Sphere.mk_center_radius (s : Sphere P) : (⟨s.center, s.radius⟩ : Sphere P) = s := by
   ext <;> rfl
 #align euclidean_geometry.sphere.mk_center_radius EuclideanGeometry.Sphere.mk_center_radius
+-/
 
 theorem Sphere.coe_def (s : Sphere P) : (s : Set P) = Metric.sphere s.center s.radius :=
   rfl
 #align euclidean_geometry.sphere.coe_def EuclideanGeometry.Sphere.coe_def
 
+#print EuclideanGeometry.Sphere.coe_mk /-
 @[simp]
 theorem Sphere.coe_mk (c : P) (r : ℝ) : ↑(⟨c, r⟩ : Sphere P) = Metric.sphere c r :=
   rfl
 #align euclidean_geometry.sphere.coe_mk EuclideanGeometry.Sphere.coe_mk
+-/
 
+#print EuclideanGeometry.Sphere.mem_coe /-
 @[simp]
 theorem Sphere.mem_coe {p : P} {s : Sphere P} : p ∈ (s : Set P) ↔ p ∈ s :=
   Iff.rfl
 #align euclidean_geometry.sphere.mem_coe EuclideanGeometry.Sphere.mem_coe
+-/
 
+#print EuclideanGeometry.mem_sphere /-
 theorem mem_sphere {p : P} {s : Sphere P} : p ∈ s ↔ dist p s.center = s.radius :=
   Iff.rfl
 #align euclidean_geometry.mem_sphere EuclideanGeometry.mem_sphere
+-/
 
+#print EuclideanGeometry.mem_sphere' /-
 theorem mem_sphere' {p : P} {s : Sphere P} : p ∈ s ↔ dist s.center p = s.radius :=
   Metric.mem_sphere'
 #align euclidean_geometry.mem_sphere' EuclideanGeometry.mem_sphere'
+-/
 
+#print EuclideanGeometry.subset_sphere /-
 theorem subset_sphere {ps : Set P} {s : Sphere P} : ps ⊆ s ↔ ∀ p ∈ ps, p ∈ s :=
   Iff.rfl
 #align euclidean_geometry.subset_sphere EuclideanGeometry.subset_sphere
+-/
 
+#print EuclideanGeometry.dist_of_mem_subset_sphere /-
 theorem dist_of_mem_subset_sphere {p : P} {ps : Set P} {s : Sphere P} (hp : p ∈ ps)
     (hps : ps ⊆ (s : Set P)) : dist p s.center = s.radius :=
   mem_sphere.1 (Sphere.mem_coe.1 (Set.mem_of_mem_of_subset hp hps))
 #align euclidean_geometry.dist_of_mem_subset_sphere EuclideanGeometry.dist_of_mem_subset_sphere
+-/
 
+#print EuclideanGeometry.dist_of_mem_subset_mk_sphere /-
 theorem dist_of_mem_subset_mk_sphere {p c : P} {ps : Set P} {r : ℝ} (hp : p ∈ ps)
     (hps : ps ⊆ ↑(⟨c, r⟩ : Sphere P)) : dist p c = r :=
   dist_of_mem_subset_sphere hp hps
 #align euclidean_geometry.dist_of_mem_subset_mk_sphere EuclideanGeometry.dist_of_mem_subset_mk_sphere
+-/
 
+#print EuclideanGeometry.Sphere.ne_iff /-
 theorem Sphere.ne_iff {s₁ s₂ : Sphere P} :
     s₁ ≠ s₂ ↔ s₁.center ≠ s₂.center ∨ s₁.radius ≠ s₂.radius := by
   rw [← not_and_or, ← sphere.ext_iff]
 #align euclidean_geometry.sphere.ne_iff EuclideanGeometry.Sphere.ne_iff
+-/
 
+#print EuclideanGeometry.Sphere.center_eq_iff_eq_of_mem /-
 theorem Sphere.center_eq_iff_eq_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
     s₁.center = s₂.center ↔ s₁ = s₂ :=
   by
@@ -124,35 +149,47 @@ theorem Sphere.center_eq_iff_eq_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p
   rw [mem_sphere] at hs₁ hs₂
   rw [← hs₁, ← hs₂, h]
 #align euclidean_geometry.sphere.center_eq_iff_eq_of_mem EuclideanGeometry.Sphere.center_eq_iff_eq_of_mem
+-/
 
+#print EuclideanGeometry.Sphere.center_ne_iff_ne_of_mem /-
 theorem Sphere.center_ne_iff_ne_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
     s₁.center ≠ s₂.center ↔ s₁ ≠ s₂ :=
   (Sphere.center_eq_iff_eq_of_mem hs₁ hs₂).Not
 #align euclidean_geometry.sphere.center_ne_iff_ne_of_mem EuclideanGeometry.Sphere.center_ne_iff_ne_of_mem
+-/
 
+#print EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere /-
 theorem dist_center_eq_dist_center_of_mem_sphere {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s)
     (hp₂ : p₂ ∈ s) : dist p₁ s.center = dist p₂ s.center := by
   rw [mem_sphere.1 hp₁, mem_sphere.1 hp₂]
 #align euclidean_geometry.dist_center_eq_dist_center_of_mem_sphere EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere
+-/
 
+#print EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere' /-
 theorem dist_center_eq_dist_center_of_mem_sphere' {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s)
     (hp₂ : p₂ ∈ s) : dist s.center p₁ = dist s.center p₂ := by
   rw [mem_sphere'.1 hp₁, mem_sphere'.1 hp₂]
 #align euclidean_geometry.dist_center_eq_dist_center_of_mem_sphere' EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere'
+-/
 
+#print EuclideanGeometry.Cospherical /-
 /-- A set of points is cospherical if they are equidistant from some
 point.  In two dimensions, this is the same thing as being
 concyclic. -/
 def Cospherical (ps : Set P) : Prop :=
   ∃ (center : P)(radius : ℝ), ∀ p ∈ ps, dist p center = radius
 #align euclidean_geometry.cospherical EuclideanGeometry.Cospherical
+-/
 
+#print EuclideanGeometry.cospherical_def /-
 /-- The definition of `cospherical`. -/
 theorem cospherical_def (ps : Set P) :
     Cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀ p ∈ ps, dist p center = radius :=
   Iff.rfl
 #align euclidean_geometry.cospherical_def EuclideanGeometry.cospherical_def
+-/
 
+#print EuclideanGeometry.cospherical_iff_exists_sphere /-
 /-- A set of points is cospherical if and only if they lie in some sphere. -/
 theorem cospherical_iff_exists_sphere {ps : Set P} :
     Cospherical ps ↔ ∃ s : Sphere P, ps ⊆ (s : Set P) :=
@@ -163,31 +200,40 @@ theorem cospherical_iff_exists_sphere {ps : Set P} :
   · rcases h with ⟨s, h⟩
     exact ⟨s.center, s.radius, h⟩
 #align euclidean_geometry.cospherical_iff_exists_sphere EuclideanGeometry.cospherical_iff_exists_sphere
+-/
 
+#print EuclideanGeometry.Sphere.cospherical /-
 /-- The set of points in a sphere is cospherical. -/
 theorem Sphere.cospherical (s : Sphere P) : Cospherical (s : Set P) :=
   cospherical_iff_exists_sphere.2 ⟨s, Set.Subset.rfl⟩
 #align euclidean_geometry.sphere.cospherical EuclideanGeometry.Sphere.cospherical
+-/
 
+#print EuclideanGeometry.Cospherical.subset /-
 /-- A subset of a cospherical set is cospherical. -/
 theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) :
     Cospherical ps₁ := by
   rcases hc with ⟨c, r, hcr⟩
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 #align euclidean_geometry.cospherical.subset EuclideanGeometry.Cospherical.subset
+-/
 
+#print EuclideanGeometry.cospherical_empty /-
 /-- The empty set is cospherical. -/
 theorem cospherical_empty [Nonempty P] : Cospherical (∅ : Set P) :=
   let ⟨p⟩ := ‹Nonempty P›
   ⟨p, 0, fun p => False.elim⟩
 #align euclidean_geometry.cospherical_empty EuclideanGeometry.cospherical_empty
+-/
 
+#print EuclideanGeometry.cospherical_singleton /-
 /-- A single point is cospherical. -/
 theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) :=
   by
   use p
   simp
 #align euclidean_geometry.cospherical_singleton EuclideanGeometry.cospherical_singleton
+-/
 
 end MetricSpace
 
@@ -197,6 +243,12 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTo
 
 include V
 
+/- warning: euclidean_geometry.cospherical_pair -> EuclideanGeometry.cospherical_pair is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : NormedSpace.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1)] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] (p₁ : P) (p₂ : P), EuclideanGeometry.Cospherical.{u2} P _inst_3 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₁ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) p₂))
+but is expected to have type
+  forall {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u2} V] [_inst_2 : NormedSpace.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1)] [_inst_3 : MetricSpace.{u1} P] [_inst_4 : NormedAddTorsor.{u2, u1} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u1} P _inst_3)] (p₁ : P) (p₂ : P), EuclideanGeometry.Cospherical.{u1} P _inst_3 (Insert.insert.{u1, u1} P (Set.{u1} P) (Set.instInsertSet.{u1} P) p₁ (Singleton.singleton.{u1, u1} P (Set.{u1} P) (Set.instSingletonSet.{u1} P) p₂))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pairₓ'. -/
 /-- Two points are cospherical. -/
 theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
   ⟨midpoint ℝ p₁ p₂, ‖(2 : ℝ)‖⁻¹ * dist p₁ p₂,
@@ -206,28 +258,50 @@ theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
     · rw [dist_comm, dist_midpoint_right]⟩
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pair
 
+#print EuclideanGeometry.Concyclic /-
 /-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
 directly in terms of `cospherical` instead of using `concyclic`.) -/
 structure Concyclic (ps : Set P) : Prop where
   Cospherical : Cospherical ps
   Coplanar : Coplanar ℝ ps
 #align euclidean_geometry.concyclic EuclideanGeometry.Concyclic
+-/
 
+#print EuclideanGeometry.Concyclic.subset /-
 /-- A subset of a concyclic set is concyclic. -/
 theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concyclic ps₂) : Concyclic ps₁ :=
   ⟨h.1.Subset hs, h.2.Subset hs⟩
 #align euclidean_geometry.concyclic.subset EuclideanGeometry.Concyclic.subset
+-/
 
+/- warning: euclidean_geometry.concyclic_empty -> EuclideanGeometry.concyclic_empty is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : NormedSpace.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1)] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)], EuclideanGeometry.Concyclic.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 (EmptyCollection.emptyCollection.{u2} (Set.{u2} P) (Set.hasEmptyc.{u2} P))
+but is expected to have type
+  forall {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u2} V] [_inst_2 : NormedSpace.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1)] [_inst_3 : MetricSpace.{u1} P] [_inst_4 : NormedAddTorsor.{u2, u1} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u1} P _inst_3)], EuclideanGeometry.Concyclic.{u2, u1} V P _inst_1 _inst_2 _inst_3 _inst_4 (EmptyCollection.emptyCollection.{u1} (Set.{u1} P) (Set.instEmptyCollectionSet.{u1} P))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_emptyₓ'. -/
 /-- The empty set is concyclic. -/
 theorem concyclic_empty : Concyclic (∅ : Set P) :=
   ⟨cospherical_empty, coplanar_empty ℝ P⟩
 #align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_empty
 
+/- warning: euclidean_geometry.concyclic_singleton -> EuclideanGeometry.concyclic_singleton is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : NormedSpace.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1)] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] (p : P), EuclideanGeometry.Concyclic.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) p)
+but is expected to have type
+  forall {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u2} V] [_inst_2 : NormedSpace.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1)] [_inst_3 : MetricSpace.{u1} P] [_inst_4 : NormedAddTorsor.{u2, u1} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u1} P _inst_3)] (p : P), EuclideanGeometry.Concyclic.{u2, u1} V P _inst_1 _inst_2 _inst_3 _inst_4 (Singleton.singleton.{u1, u1} P (Set.{u1} P) (Set.instSingletonSet.{u1} P) p)
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singletonₓ'. -/
 /-- A single point is concyclic. -/
 theorem concyclic_singleton (p : P) : Concyclic ({p} : Set P) :=
   ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
 #align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singleton
 
+/- warning: euclidean_geometry.concyclic_pair -> EuclideanGeometry.concyclic_pair is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : NormedSpace.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1)] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] (p₁ : P) (p₂ : P), EuclideanGeometry.Concyclic.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₁ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) p₂))
+but is expected to have type
+  forall {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u2} V] [_inst_2 : NormedSpace.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1)] [_inst_3 : MetricSpace.{u1} P] [_inst_4 : NormedAddTorsor.{u2, u1} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u1} P _inst_3)] (p₁ : P) (p₂ : P), EuclideanGeometry.Concyclic.{u2, u1} V P _inst_1 _inst_2 _inst_3 _inst_4 (Insert.insert.{u1, u1} P (Set.{u1} P) (Set.instInsertSet.{u1} P) p₁ (Singleton.singleton.{u1, u1} P (Set.{u1} P) (Set.instSingletonSet.{u1} P) p₂))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclic_pairₓ'. -/
 /-- Two points are concyclic. -/
 theorem concyclic_pair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
   ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
@@ -241,6 +315,7 @@ variable [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P] [Norme
 
 include V
 
+#print EuclideanGeometry.Cospherical.affineIndependent /-
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
     (hps : Set.range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p :=
@@ -281,7 +356,9 @@ theorem Cospherical.affineIndependent {s : Set P} (hs : Cospherical s) {p : Fin 
   have hf12 : f 1 = f 2 := by rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
   exact (by decide : (1 : Fin 3) ≠ 2) (hfi hf12)
 #align euclidean_geometry.cospherical.affine_independent EuclideanGeometry.Cospherical.affineIndependent
+-/
 
+#print EuclideanGeometry.Cospherical.affineIndependent_of_mem_of_ne /-
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent_of_mem_of_ne {s : Set P} (hs : Cospherical s) {p₁ p₂ p₃ : P}
     (h₁ : p₁ ∈ s) (h₂ : p₂ ∈ s) (h₃ : p₃ ∈ s) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
@@ -292,7 +369,9 @@ theorem Cospherical.affineIndependent_of_mem_of_ne {s : Set P} (hs : Cospherical
   · erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
     simp [h₁₂, h₁₃, h₂₃, Function.Injective]
 #align euclidean_geometry.cospherical.affine_independent_of_mem_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_mem_of_ne
+-/
 
+#print EuclideanGeometry.Cospherical.affineIndependent_of_ne /-
 /-- The three points of a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospherical ({p₁, p₂, p₃} : Set P))
     (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) : AffineIndependent ℝ ![p₁, p₂, p₃] :=
@@ -300,7 +379,14 @@ theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospheric
     (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
     (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) h₁₂ h₁₃ h₂₃
 #align euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_ne
+-/
 
+/- warning: euclidean_geometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere -> EuclideanGeometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {p₁ : P} {p₂ : P} {s₁ : EuclideanGeometry.Sphere.{u2} P _inst_3} {s₂ : EuclideanGeometry.Sphere.{u2} P _inst_3}, (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s₁) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₂ s₁) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s₂) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₂ s₂) -> (Eq.{1} Real (Inner.inner.{0, u1} Real V (InnerProductSpace.toHasInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s₂) (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s₁)) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₂ p₁)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {p₁ : P} {p₂ : P} {s₁ : EuclideanGeometry.Sphere.{u2} P _inst_3} {s₂ : EuclideanGeometry.Sphere.{u2} P _inst_3}, (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s₁) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₂ s₁) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s₂) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₂ s₂) -> (Eq.{1} Real (Inner.inner.{0, u1} Real V (InnerProductSpace.toInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s₂) (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s₁)) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₂ p₁)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere EuclideanGeometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphereₓ'. -/
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers
 of those spheres is orthogonal to that between `p₁` and `p₂`; this is a version of
 `inner_vsub_vsub_of_dist_eq_of_dist_eq` for bundled spheres.  (In two dimensions, this says that
@@ -312,6 +398,9 @@ theorem inner_vsub_vsub_of_mem_sphere_of_mem_sphere {p₁ p₂ : P} {s₁ s₂ :
     (dist_center_eq_dist_center_of_mem_sphere hp₁s₂ hp₂s₂)
 #align euclidean_geometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere EuclideanGeometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere
 
+/- warning: euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two -> EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_twoₓ'. -/
 /-- Two spheres intersect in at most two points in a two-dimensional subspace containing their
 centers; this is a version of `eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two` for bundled
 spheres. -/
@@ -324,6 +413,12 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two {s : AffineSubsp
     ((Sphere.center_ne_iff_ne_of_mem hps₁ hps₂).2 hs) hp hp₁s₁ hp₂s₁ hps₁ hp₁s₂ hp₂s₂ hps₂
 #align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two
 
+/- warning: euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two -> EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] [_inst_5 : FiniteDimensional.{0, u1} Real V Real.divisionRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2))], (Eq.{1} Nat (FiniteDimensional.finrank.{0, u1} Real V Real.semiring (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2))) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> (forall {s₁ : EuclideanGeometry.Sphere.{u2} P _inst_3} {s₂ : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P} {p : P}, (Ne.{succ u2} (EuclideanGeometry.Sphere.{u2} P _inst_3) s₁ s₂) -> (Ne.{succ u2} P p₁ p₂) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s₁) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₂ s₁) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p s₁) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s₂) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₂ s₂) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p s₂) -> (Or (Eq.{succ u2} P p p₁) (Eq.{succ u2} P p p₂)))
+but is expected to have type
+  forall {V : Type.{u2}} {P : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u2} V] [_inst_2 : InnerProductSpace.{0, u2} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u1} P] [_inst_4 : NormedAddTorsor.{u2, u1} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u1} P _inst_3)] [_inst_5 : FiniteDimensional.{0, u2} Real V Real.instDivisionRingReal (NormedAddCommGroup.toAddCommGroup.{u2} V _inst_1) (NormedSpace.toModule.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u2} Real V Real.isROrC _inst_1 _inst_2))], (Eq.{1} Nat (FiniteDimensional.finrank.{0, u2} Real V Real.semiring (NormedAddCommGroup.toAddCommGroup.{u2} V _inst_1) (NormedSpace.toModule.{0, u2} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u2} Real V Real.isROrC _inst_1 _inst_2))) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) -> (forall {s₁ : EuclideanGeometry.Sphere.{u1} P _inst_3} {s₂ : EuclideanGeometry.Sphere.{u1} P _inst_3} {p₁ : P} {p₂ : P} {p : P}, (Ne.{succ u1} (EuclideanGeometry.Sphere.{u1} P _inst_3) s₁ s₂) -> (Ne.{succ u1} P p₁ p₂) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p₁ s₁) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p₂ s₁) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p s₁) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p₁ s₂) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p₂ s₂) -> (Membership.mem.{u1, u1} P (EuclideanGeometry.Sphere.{u1} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u1} P _inst_3) p s₂) -> (Or (Eq.{succ u1} P p p₁) (Eq.{succ u1} P p p₂)))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_twoₓ'. -/
 /-- Two spheres intersect in at most two points in two-dimensional space; this is a version of
 `eq_of_dist_eq_of_dist_eq_of_finrank_eq_two` for bundled spheres. -/
 theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ V]
@@ -334,6 +429,12 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ 
     hp₁s₁ hp₂s₁ hps₁ hp₁s₂ hp₂s₂ hps₂
 #align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two
 
+/- warning: euclidean_geometry.inner_pos_or_eq_of_dist_le_radius -> EuclideanGeometry.inner_pos_or_eq_of_dist_le_radius is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Or (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Inner.inner.{0, u1} Real V (InnerProductSpace.toHasInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)))) (Eq.{succ u2} P p₁ p₂))
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Or (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Inner.inner.{0, u1} Real V (InnerProductSpace.toInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)))) (Eq.{succ u2} P p₁ p₂))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_pos_or_eq_of_dist_le_radius EuclideanGeometry.inner_pos_or_eq_of_dist_le_radiusₓ'. -/
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is positive unless the points are equal. -/
 theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -366,6 +467,12 @@ theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ 
       simpa using hp₂'
 #align euclidean_geometry.inner_pos_or_eq_of_dist_le_radius EuclideanGeometry.inner_pos_or_eq_of_dist_le_radius
 
+/- warning: euclidean_geometry.inner_nonneg_of_dist_le_radius -> EuclideanGeometry.inner_nonneg_of_dist_le_radius is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Inner.inner.{0, u1} Real V (InnerProductSpace.toHasInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s))))
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Inner.inner.{0, u1} Real V (InnerProductSpace.toInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s))))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_nonneg_of_dist_le_radius EuclideanGeometry.inner_nonneg_of_dist_le_radiusₓ'. -/
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is nonnegative. -/
 theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -376,6 +483,12 @@ theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p
   · simp
 #align euclidean_geometry.inner_nonneg_of_dist_le_radius EuclideanGeometry.inner_nonneg_of_dist_le_radius
 
+/- warning: euclidean_geometry.inner_pos_of_dist_lt_radius -> EuclideanGeometry.inner_pos_of_dist_lt_radius is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Inner.inner.{0, u1} Real V (InnerProductSpace.toHasInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toHasVsub.{u1, u2} V P (NormedAddGroup.toAddGroup.{u1} V (NormedAddCommGroup.toNormedAddGroup.{u1} V _inst_1)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s))))
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P}, (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Inner.inner.{0, u1} Real V (InnerProductSpace.toInner.{0, u1} Real V Real.isROrC _inst_1 _inst_2) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ p₂) (VSub.vsub.{u1, u2} V P (AddTorsor.toVSub.{u1, u2} V P (SeminormedAddGroup.toAddGroup.{u1} V (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1))) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4)) p₁ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s))))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.inner_pos_of_dist_lt_radius EuclideanGeometry.inner_pos_of_dist_lt_radiusₓ'. -/
 /-- Given a point on a sphere and a point inside it, the inner product between the difference of
 those points and the radius vector is positive. -/
 theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -387,6 +500,12 @@ theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁
   exact (inner_pos_or_eq_of_dist_le_radius hp₁ hp₂.le).resolve_right h
 #align euclidean_geometry.inner_pos_of_dist_lt_radius EuclideanGeometry.inner_pos_of_dist_lt_radius
 
+/- warning: euclidean_geometry.wbtw_of_collinear_of_dist_center_le_radius -> EuclideanGeometry.wbtw_of_collinear_of_dist_center_le_radius is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P} {p₃ : P}, (Collinear.{0, u1, u2} Real V P Real.divisionRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4) (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₁ (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₂ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) p₃)))) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.hasLe (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₃ s) -> (Ne.{succ u2} P p₁ p₃) -> (Wbtw.{0, u1, u2} Real V P Real.orderedRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4) p₁ p₂ p₃)
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P} {p₃ : P}, (Collinear.{0, u1, u2} Real V P Real.instDivisionRingReal (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4) (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) p₁ (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) p₂ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.instSingletonSet.{u2} P) p₃)))) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s) -> (LE.le.{0} Real Real.instLEReal (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₃ s) -> (Ne.{succ u2} P p₁ p₃) -> (Wbtw.{0, u1, u2} Real V P Real.orderedRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4) p₁ p₂ p₃)
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.wbtw_of_collinear_of_dist_center_le_radius EuclideanGeometry.wbtw_of_collinear_of_dist_center_le_radiusₓ'. -/
 /-- Given three collinear points, two on a sphere and one not outside it, the one not outside it
 is weakly between the other two points. -/
 theorem wbtw_of_collinear_of_dist_center_le_radius {s : Sphere P} {p₁ p₂ p₃ : P}
@@ -395,6 +514,12 @@ theorem wbtw_of_collinear_of_dist_center_le_radius {s : Sphere P} {p₁ p₂ p�
   h.wbtw_of_dist_eq_of_dist_le hp₁ hp₂ hp₃ hp₁p₃
 #align euclidean_geometry.wbtw_of_collinear_of_dist_center_le_radius EuclideanGeometry.wbtw_of_collinear_of_dist_center_le_radius
 
+/- warning: euclidean_geometry.sbtw_of_collinear_of_dist_center_lt_radius -> EuclideanGeometry.sbtw_of_collinear_of_dist_center_lt_radius is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P} {p₃ : P}, (Collinear.{0, u1, u2} Real V P Real.divisionRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4) (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₁ (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) p₂ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) p₃)))) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₁ s) -> (LT.lt.{0} Real Real.hasLt (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Membership.Mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.Sphere.hasMem.{u2} P _inst_3) p₃ s) -> (Ne.{succ u2} P p₁ p₃) -> (Sbtw.{0, u1, u2} Real V P Real.orderedRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor'.{u1, u2} V P _inst_1 _inst_3 _inst_4) p₁ p₂ p₃)
+but is expected to have type
+  forall {V : Type.{u1}} {P : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {s : EuclideanGeometry.Sphere.{u2} P _inst_3} {p₁ : P} {p₂ : P} {p₃ : P}, (Collinear.{0, u1, u2} Real V P Real.instDivisionRingReal (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4) (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) p₁ (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) p₂ (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.instSingletonSet.{u2} P) p₃)))) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₁ s) -> (LT.lt.{0} Real Real.instLTReal (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) p₂ (EuclideanGeometry.Sphere.center.{u2} P _inst_3 s)) (EuclideanGeometry.Sphere.radius.{u2} P _inst_3 s)) -> (Membership.mem.{u2, u2} P (EuclideanGeometry.Sphere.{u2} P _inst_3) (EuclideanGeometry.instMembershipSphere.{u2} P _inst_3) p₃ s) -> (Ne.{succ u2} P p₁ p₃) -> (Sbtw.{0, u1, u2} Real V P Real.orderedRing (NormedAddCommGroup.toAddCommGroup.{u1} V _inst_1) (NormedSpace.toModule.{0, u1} Real V Real.normedField (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (InnerProductSpace.toNormedSpace.{0, u1} Real V Real.isROrC _inst_1 _inst_2)) (NormedAddTorsor.toAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3) _inst_4) p₁ p₂ p₃)
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.sbtw_of_collinear_of_dist_center_lt_radius EuclideanGeometry.sbtw_of_collinear_of_dist_center_lt_radiusₓ'. -/
 /-- Given three collinear points, two on a sphere and one inside it, the one inside it is
 strictly between the other two points. -/
 theorem sbtw_of_collinear_of_dist_center_lt_radius {s : Sphere P} {p₁ p₂ p₃ : P}

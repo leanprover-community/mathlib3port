@@ -86,7 +86,6 @@ def glueDist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → 
 private theorem glue_dist_self (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x, glueDist Φ Ψ ε x x = 0
   | inl x => dist_self _
   | inr x => dist_self _
-#align metric.glue_dist_self metric.glue_dist_self
 
 #print Metric.glueDist_glued_points /-
 theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (p : Z) :
@@ -110,7 +109,6 @@ private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) :
   | inr x, inr y => dist_comm _ _
   | inl x, inr y => rfl
   | inr x, inl y => rfl
-#align metric.glue_dist_comm metric.glue_dist_comm
 
 variable [Nonempty Z]
 
@@ -251,7 +249,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ :=
           by linarith
         
-#align metric.glue_dist_triangle metric.glue_dist_triangle
 
 private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε) :
     ∀ p q : Sum X Y, glueDist Φ Ψ ε p q = 0 → p = q
@@ -272,7 +269,6 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     exfalso
     linarith
   | inr x, inr y, h => by rw [eq_of_dist_eq_zero h]
-#align metric.glue_eq_of_dist_eq_zero metric.glue_eq_of_dist_eq_zero
 
 /- warning: metric.glue_metric_approx -> Metric.glueMetricApprox is a dubious translation:
 lean 3 declaration is
@@ -342,7 +338,6 @@ theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
 
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_comm, add_left_comm]
-#align metric.sum.dist_comm metric.sum.dist_comm
 
 /- warning: metric.sum.one_dist_le -> Metric.Sum.one_le_dist_inl_inr is a dubious translation:
 lean 3 declaration is
@@ -381,7 +376,6 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
   · rintro ⟨ε, ε0, H⟩
     constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
       exact ⟨ε, ε0, fun x y h => H _ _ h⟩
-#align metric.sum.mem_uniformity metric.sum.mem_uniformity
 
 #print Metric.metricSpaceSum /-
 /-- The distance on the disjoint union indeed defines a metric space. All the distance properties

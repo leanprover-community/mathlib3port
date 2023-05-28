@@ -15,7 +15,6 @@ import Mathbin.Tactic.Simpa
 private unsafe def loc.to_string_aux : Option Name → String
   | none => "⊢"
   | some x => toString x
-#align loc.to_string_aux loc.to_string_aux
 
 /-- pretty print a `loc` -/
 unsafe def loc.to_string : Loc → String
@@ -87,7 +86,6 @@ private unsafe def squeeze_loc_attr :
   Name := `_squeeze_loc
   parser := fail "this attribute should not be used"
   descr := "table to accumulate multiple `squeeze_simp` suggestions"
-#align tactic.squeeze_loc_attr tactic.squeeze_loc_attr
 
 /-- dummy declaration used as target of `squeeze_loc` attribute -/
 def squeezeLocAttrCarrier :=
@@ -161,7 +159,6 @@ private unsafe def filter_simp_set_aux (tac : Bool → List simp_arg_type → ta
   | x :: xs, ys, ds => do
     let b ← same_result pr (tac true (args ++ xs ++ ys))
     if b then filter_simp_set_aux xs ys (ds x) else filter_simp_set_aux xs (ys x) ds
-#align tactic.filter_simp_set_aux tactic.filter_simp_set_aux
 
 initialize
   registerTraceClass.1 `squeeze.deleted

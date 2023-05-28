@@ -60,7 +60,6 @@ open Tactic.Interactive
 private unsafe def unpack_rule (p : rw_rule) : tactic (expr × Bool) := do
   let r ← to_expr p.rule true false
   return (r, p)
-#align tactic.unpack_rule tactic.unpack_rule
 
 /-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/

@@ -575,11 +575,11 @@ theorem ι_isoPresheafedSpace_inv (i : D.J) :
   𝖣.ι_gluedIso_inv _ _
 #align algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpace.GlueData.ι_isoPresheafedSpace_inv
 
-instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
+instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
   by
   rw [← D.ι_iso_PresheafedSpace_inv]
   infer_instance
-#align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpace.GlueData.ιIsOpenImmersion
+#align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpace.GlueData.ι_isOpenImmersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (SheafedSpace.forget _ ⋙ CategoryTheory.forget TopCat) x

@@ -73,12 +73,10 @@ compact type to `GH_space`. -/
 /-- Equivalence relation identifying two nonempty compact sets which are isometric -/
 private def isometry_rel : NonemptyCompacts ℓ_infty_ℝ → NonemptyCompacts ℓ_infty_ℝ → Prop :=
   fun x y => Nonempty (x ≃ᵢ y)
-#align Gromov_Hausdorff.isometry_rel Gromov_Hausdorff.isometry_rel
 
 /-- This is indeed an equivalence relation -/
 private theorem is_equivalence_isometry_rel : Equivalence IsometryRel :=
   ⟨fun x => ⟨IsometryEquiv.refl _⟩, fun x y ⟨e⟩ => ⟨e.symm⟩, fun x y z ⟨e⟩ ⟨f⟩ => ⟨e.trans f⟩⟩
-#align Gromov_Hausdorff.is_equivalence_isometry_rel Gromov_Hausdorff.is_equivalence_isometry_rel
 
 /-- setoid instance identifying two isometric nonempty compact subspaces of ℓ^∞(ℝ) -/
 instance IsometryRel.setoid : Setoid (NonemptyCompacts ℓ_infty_ℝ) :=

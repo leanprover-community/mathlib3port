@@ -615,7 +615,6 @@ theorem nilpotencyClass_quotient_le (H : Subgroup G) [H.Normal] [h : IsNilpotent
 -- This technical lemma helps with rewriting the subgroup, which occurs in indices
 private theorem comap_center_subst {H₁ H₂ : Subgroup G} [Normal H₁] [Normal H₂] (h : H₁ = H₂) :
     comap (mk' H₁) (center (G ⧸ H₁)) = comap (mk' H₂) (center (G ⧸ H₂)) := by subst h
-#align comap_center_subst comap_center_subst
 
 theorem comap_upperCentralSeries_quotient_center (n : ℕ) :
     comap (mk' (center G)) (upperCentralSeries (G ⧸ center G) n) = upperCentralSeries G n.succ :=

@@ -314,7 +314,6 @@ private theorem one_mul (s : UpperSet α) : 1 * s = s :=
       by
       rw [← smul_eq_mul, ← bUnion_smul_set]
       exact Union₂_subset fun _ => s.upper.smul_subset
-#align upper_set.one_mul upper_set.one_mul
 
 @[to_additive]
 instance : CommMonoid (UpperSet α) :=
@@ -403,7 +402,6 @@ private theorem one_mul (s : LowerSet α) : 1 * s = s :=
       by
       rw [← smul_eq_mul, ← bUnion_smul_set]
       exact Union₂_subset fun _ => s.lower.smul_subset
-#align lower_set.one_mul lower_set.one_mul
 
 @[to_additive]
 instance : CommMonoid (LowerSet α) :=

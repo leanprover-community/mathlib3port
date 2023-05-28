@@ -69,16 +69,13 @@ variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X]
 @[reducible]
 private def prod_space_fun : Type _ :=
   Sum X Y × Sum X Y → ℝ
-#align Gromov_Hausdorff.prod_space_fun Gromov_Hausdorff.prod_space_fun
 
 @[reducible]
 private def Cb : Type _ :=
   BoundedContinuousFunction (Sum X Y × Sum X Y) ℝ
-#align Gromov_Hausdorff.Cb Gromov_Hausdorff.Cb
 
 private def max_var : ℝ≥0 :=
   2 * ⟨diam (univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (univ : Set Y), diam_nonneg⟩
-#align Gromov_Hausdorff.max_var Gromov_Hausdorff.max_var
 
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
@@ -86,7 +83,6 @@ private theorem one_le_max_var : 1 ≤ maxVar X Y :=
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
       apply_rules [add_le_add, mul_le_mul_of_nonneg_left, diam_nonneg] <;> norm_num
     
-#align Gromov_Hausdorff.one_le_max_var Gromov_Hausdorff.one_le_max_var
 
 /- warning: Gromov_Hausdorff.candidates -> GromovHausdorff.candidates is a dubious translation:
 lean 3 declaration is
@@ -110,7 +106,6 @@ def candidates : Set (ProdSpaceFun X Y) :=
 Arzela-Ascoli -/
 private def candidates_b : Set (Cb X Y) :=
   { f : Cb X Y | (f : _ → ℝ) ∈ candidates X Y }
-#align Gromov_Hausdorff.candidates_b Gromov_Hausdorff.candidates_b
 
 end Definitions
 
@@ -143,19 +138,15 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
       apply_rules [add_le_add, mul_le_mul_of_nonneg_right, diam_nonneg, le_refl]
       norm_num; norm_num
     
-#align Gromov_Hausdorff.max_var_bound Gromov_Hausdorff.max_var_bound
 
 private theorem candidates_symm (fA : f ∈ candidates X Y) : f (x, y) = f (y, x) :=
   fA.1.1.1.2 x y
-#align Gromov_Hausdorff.candidates_symm Gromov_Hausdorff.candidates_symm
 
 private theorem candidates_triangle (fA : f ∈ candidates X Y) : f (x, z) ≤ f (x, y) + f (y, z) :=
   fA.1.1.2 x y z
-#align Gromov_Hausdorff.candidates_triangle Gromov_Hausdorff.candidates_triangle
 
 private theorem candidates_refl (fA : f ∈ candidates X Y) : f (x, x) = 0 :=
   fA.1.2 x
-#align Gromov_Hausdorff.candidates_refl Gromov_Hausdorff.candidates_refl
 
 private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :=
   by
@@ -167,21 +158,17 @@ private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :
       _ = 2 * f (x, y) := by ring
       
   · linarith
-#align Gromov_Hausdorff.candidates_nonneg Gromov_Hausdorff.candidates_nonneg
 
 private theorem candidates_dist_inl (fA : f ∈ candidates X Y) (x y : X) :
     f (inl x, inl y) = dist x y :=
   fA.1.1.1.1.1 x y
-#align Gromov_Hausdorff.candidates_dist_inl Gromov_Hausdorff.candidates_dist_inl
 
 private theorem candidates_dist_inr (fA : f ∈ candidates X Y) (x y : Y) :
     f (inr x, inr y) = dist x y :=
   fA.1.1.1.1.2 x y
-#align Gromov_Hausdorff.candidates_dist_inr Gromov_Hausdorff.candidates_dist_inr
 
 private theorem candidates_le_max_var (fA : f ∈ candidates X Y) : f (x, y) ≤ maxVar X Y :=
   fA.2 x y
-#align Gromov_Hausdorff.candidates_le_max_var Gromov_Hausdorff.candidates_le_max_var
 
 /-- candidates are bounded by `max_var X Y` -/
 private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
@@ -220,7 +207,6 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
       _ ≤ maxVar X Y * dist (inr x) (inr y) :=
         mul_le_mul_of_nonneg_right (one_le_maxVar X Y) dist_nonneg
       
-#align Gromov_Hausdorff.candidates_dist_bound Gromov_Hausdorff.candidates_dist_bound
 
 /-- Technical lemma to prove that candidates are Lipschitz -/
 private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
@@ -248,7 +234,6 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
       ring
     _ = 2 * maxVar X Y * dist (x, y) (z, t) := by rfl
     
-#align Gromov_Hausdorff.candidates_lipschitz_aux Gromov_Hausdorff.candidates_lipschitz_aux
 
 /-- Candidates are Lipschitz -/
 private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith (2 * maxVar X Y) f :=
@@ -259,7 +244,6 @@ private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith
   use candidates_lipschitz_aux fA
   rw [dist_comm]
   exact candidates_lipschitz_aux fA
-#align Gromov_Hausdorff.candidates_lipschitz Gromov_Hausdorff.candidates_lipschitz
 
 /- warning: Gromov_Hausdorff.candidates_b_of_candidates -> GromovHausdorff.candidatesBOfCandidates is a dubious translation:
 lean 3 declaration is
@@ -293,7 +277,6 @@ private theorem dist_mem_candidates :
     first
       |constructor|exact fun a y z =>
         dist_triangle_left _ _ _|exact fun x y => by rfl|exact fun x y => max_var_bound
-#align Gromov_Hausdorff.dist_mem_candidates Gromov_Hausdorff.dist_mem_candidates
 
 /- warning: Gromov_Hausdorff.candidates_b_dist -> GromovHausdorff.candidatesBDist is a dubious translation:
 lean 3 declaration is
@@ -319,7 +302,6 @@ theorem candidatesBDist_mem_candidatesB : candidatesBDist X Y ∈ candidatesB X 
 
 private theorem candidates_b_nonempty : (candidatesB X Y).Nonempty :=
   ⟨_, candidatesBDist_mem_candidatesB⟩
-#align Gromov_Hausdorff.candidates_b_nonempty Gromov_Hausdorff.candidates_b_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
@@ -361,7 +343,6 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
           _|apply
         isClosed_iInter
           _|apply I1 _ _|apply I2 _ _|apply I3 _ _|apply I4 _ _ _|apply I5 _|apply I6 _ _|intro x
-#align Gromov_Hausdorff.closed_candidates_b Gromov_Hausdorff.closed_candidates_b
 
 /-- Compactness of candidates (in bounded_continuous_functions) follows. -/
 private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
@@ -377,7 +358,6 @@ private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
       simpa using this
     · rintro x y ⟨f, hf⟩
       exact (candidates_lipschitz hf).dist_le_mul _ _
-#align Gromov_Hausdorff.is_compact_candidates_b Gromov_Hausdorff.is_compact_candidates_b
 
 /- warning: Gromov_Hausdorff.HD -> GromovHausdorff.HD is a dubious translation:
 lean 3 declaration is
@@ -393,10 +373,7 @@ def HD (f : Cb X Y) :=
 #align Gromov_Hausdorff.HD GromovHausdorff.HD
 
 /- warning: Gromov_Hausdorff.HD_below_aux1 -> GromovHausdorff.HD_below_aux1 is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : CompactSpace.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1)))] [_inst_3 : Nonempty.{succ u1} X] [_inst_4 : MetricSpace.{u2} Y] [_inst_5 : CompactSpace.{u2} Y (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))] [_inst_6 : Nonempty.{succ u2} Y] {f : _Private.63012675.Cb.{u1, u2} X Y _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6} (C : Real) {x : X}, BddBelow.{0} Real Real.preorder (Set.range.{0, succ u2} Real Y (fun (y : Y) => HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (_Private.63012675.Cb.{u1, u2} X Y _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6) (fun (_x : BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (Prod.topologicalSpace.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4))))) Real.pseudoMetricSpace) => (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) -> Real) (BoundedContinuousFunction.hasCoeToFun.{max u1 u2, 0} (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (Prod.topologicalSpace.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4))))) Real.pseudoMetricSpace) f (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y y))) C))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {_inst_3 : _private.Mathlib.Topology.MetricSpace.GromovHausdorffRealized.0.GromovHausdorff.Cb.{u1, u2} X Y _inst_1 _inst_2} (_inst_4 : Real) {_inst_5 : X}, BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, succ u2} Real Y (fun (y : Y) => HAdd.hAdd.{0, 0, 0} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y _inst_5) (Sum.inr.{u1, u2} X Y y))) Real ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y _inst_5) (Sum.inr.{u1, u2} X Y y))) (instHAdd.{0} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y _inst_5) (Sum.inr.{u1, u2} X Y y))) Real.instAddReal) (FunLike.coe.{succ (max u1 u2), succ (max u1 u2), 1} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) (fun (a : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => (fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) a) (ContinuousMapClass.toFunLike.{max u1 u2, max u1 u2, 0} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (BoundedContinuousMapClass.toContinuousMapClass.{max u1 u2, max u1 u2, 0} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace (BoundedContinuousFunction.instBoundedContinuousMapClassBoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace))) _inst_3 (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y _inst_5) (Sum.inr.{u1, u2} X Y y))) _inst_4))
+<too large>
 Case conversion may be inaccurate. Consider using '#align Gromov_Hausdorff.HD_below_aux1 GromovHausdorff.HD_below_aux1ₓ'. -/
 /- We will show that HD is continuous on bounded_continuous_functions, to deduce that its
 minimum on the compact set candidates_b is attained. Since it is defined in terms of
@@ -418,13 +395,9 @@ private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) :
     (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := ciInf_le (HD_below_aux1 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
     
-#align Gromov_Hausdorff.HD_bound_aux1 Gromov_Hausdorff.HD_bound_aux1
 
 /- warning: Gromov_Hausdorff.HD_below_aux2 -> GromovHausdorff.HD_below_aux2 is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : CompactSpace.{u1} X (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1)))] [_inst_3 : Nonempty.{succ u1} X] [_inst_4 : MetricSpace.{u2} Y] [_inst_5 : CompactSpace.{u2} Y (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))] [_inst_6 : Nonempty.{succ u2} Y] {f : _Private.63012675.Cb.{u1, u2} X Y _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6} (C : Real) {y : Y}, BddBelow.{0} Real Real.preorder (Set.range.{0, succ u1} Real X (fun (x : X) => HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (coeFn.{succ (max u1 u2), succ (max u1 u2)} (_Private.63012675.Cb.{u1, u2} X Y _inst_1 _inst_2 _inst_3 _inst_4 _inst_5 _inst_6) (fun (_x : BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (Prod.topologicalSpace.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4))))) Real.pseudoMetricSpace) => (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) -> Real) (BoundedContinuousFunction.hasCoeToFun.{max u1 u2, 0} (Prod.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (Prod.topologicalSpace.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4)))) (Sum.topologicalSpace.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_4))))) Real.pseudoMetricSpace) f (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y y))) C))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : MetricSpace.{u1} X] [_inst_2 : MetricSpace.{u2} Y] {_inst_3 : _private.Mathlib.Topology.MetricSpace.GromovHausdorffRealized.0.GromovHausdorff.Cb.{u1, u2} X Y _inst_1 _inst_2} (_inst_4 : Real) {_inst_5 : Y}, BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, succ u1} Real X (fun (x : X) => HAdd.hAdd.{0, 0, 0} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y _inst_5))) Real ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y _inst_5))) (instHAdd.{0} ((fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y _inst_5))) Real.instAddReal) (FunLike.coe.{succ (max u1 u2), succ (max u1 u2), 1} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) (fun (a : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => (fun (a._@.Mathlib.Topology.ContinuousFunction.Bounded._hyg.904 : Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) => Real) a) (ContinuousMapClass.toFunLike.{max u1 u2, max u1 u2, 0} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (BoundedContinuousMapClass.toContinuousMapClass.{max u1 u2, max u1 u2, 0} (BoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace) (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace (BoundedContinuousFunction.instBoundedContinuousMapClassBoundedContinuousFunction.{max u1 u2, 0} (Prod.{max u2 u1, max u2 u1} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y)) Real (instTopologicalSpaceProd.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2)))) (instTopologicalSpaceSum.{u1, u2} X Y (UniformSpace.toTopologicalSpace.{u1} X (PseudoMetricSpace.toUniformSpace.{u1} X (MetricSpace.toPseudoMetricSpace.{u1} X _inst_1))) (UniformSpace.toTopologicalSpace.{u2} Y (PseudoMetricSpace.toUniformSpace.{u2} Y (MetricSpace.toPseudoMetricSpace.{u2} Y _inst_2))))) Real.pseudoMetricSpace))) _inst_3 (Prod.mk.{max u1 u2, max u1 u2} (Sum.{u1, u2} X Y) (Sum.{u1, u2} X Y) (Sum.inl.{u1, u2} X Y x) (Sum.inr.{u1, u2} X Y _inst_5))) _inst_4))
+<too large>
 Case conversion may be inaccurate. Consider using '#align Gromov_Hausdorff.HD_below_aux2 GromovHausdorff.HD_below_aux2ₓ'. -/
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} :
     BddBelow (range fun x : X => f (inl x, inr y) + C) :=
@@ -441,7 +414,6 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) :
     (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := ciInf_le (HD_below_aux2 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
     
-#align Gromov_Hausdorff.HD_bound_aux2 Gromov_Hausdorff.HD_bound_aux2
 
 /- warning: Gromov_Hausdorff.HD_candidates_b_dist_le -> GromovHausdorff.HD_candidatesBDist_le is a dubious translation:
 lean 3 declaration is
@@ -519,7 +491,6 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
     · simpa using HD_bound_aux1 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1, Function.comp]
-#align Gromov_Hausdorff.HD_lipschitz_aux1 Gromov_Hausdorff.HD_lipschitz_aux1
 
 private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     (⨆ y, ⨅ x, f (inl x, inr y)) ≤ (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g :=
@@ -551,17 +522,14 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     · simpa using HD_bound_aux2 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1]
-#align Gromov_Hausdorff.HD_lipschitz_aux2 Gromov_Hausdorff.HD_lipschitz_aux2
 
 private theorem HD_lipschitz_aux3 (f g : Cb X Y) : HD f ≤ HD g + dist f g :=
   max_le (le_trans (HD_lipschitz_aux1 f g) (add_le_add_right (le_max_left _ _) _))
     (le_trans (HD_lipschitz_aux2 f g) (add_le_add_right (le_max_right _ _) _))
-#align Gromov_Hausdorff.HD_lipschitz_aux3 Gromov_Hausdorff.HD_lipschitz_aux3
 
 /-- Conclude that HD, being Lipschitz, is continuous -/
 private theorem HD_continuous : Continuous (HD : Cb X Y → ℝ) :=
   LipschitzWith.continuous (LipschitzWith.of_le_add hD_lipschitz_aux3)
-#align Gromov_Hausdorff.HD_continuous Gromov_Hausdorff.HD_continuous
 
 end Constructions
 
@@ -576,21 +544,17 @@ we can finally select a candidate minimizing HD. This will be the candidate real
 optimal coupling. -/
 private theorem exists_minimizer : ∃ f ∈ candidatesB X Y, ∀ g ∈ candidatesB X Y, HD f ≤ HD g :=
   isCompact_candidatesB.exists_forall_le candidatesB_nonempty hD_continuous.ContinuousOn
-#align Gromov_Hausdorff.exists_minimizer Gromov_Hausdorff.exists_minimizer
 
 private def optimal_GH_dist : Cb X Y :=
   Classical.choose (exists_minimizer X Y)
-#align Gromov_Hausdorff.optimal_GH_dist Gromov_Hausdorff.optimal_GH_dist
 
 private theorem optimal_GH_dist_mem_candidates_b : optimalGHDist X Y ∈ candidatesB X Y := by
   cases Classical.choose_spec (exists_minimizer X Y) <;> assumption
-#align Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b
 
 private theorem HD_optimal_GH_dist_le (g : Cb X Y) (hg : g ∈ candidatesB X Y) :
     HD (optimalGHDist X Y) ≤ HD g :=
   let ⟨Z1, Z2⟩ := Classical.choose_spec (exists_minimizer X Y)
   Z2 g hg
-#align Gromov_Hausdorff.HD_optimal_GH_dist_le Gromov_Hausdorff.HD_optimal_GH_dist_le
 
 #print GromovHausdorff.premetricOptimalGHDist /-
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the

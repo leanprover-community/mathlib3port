@@ -371,7 +371,6 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α}
         j₁.pos_part.to_signed_measure - j₂.neg_part.to_signed_measure
       by exact sub_right_inj.mp this
     convert hj'
-#align measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part
 
 /-- The Jordan decomposition of a signed measure is unique. -/
 theorem toSignedMeasure_injective : Injective <| @JordanDecomposition.toSignedMeasure α _ :=
@@ -483,7 +482,6 @@ private theorem to_jordan_decomposition_smul_real_nonneg (s : SignedMeasure α) 
   lift r to ℝ≥0 using hr
   rw [jordan_decomposition.coe_smul, ← to_jordan_decomposition_smul]
   rfl
-#align measure_theory.signed_measure.to_jordan_decomposition_smul_real_nonneg measure_theory.signed_measure.to_jordan_decomposition_smul_real_nonneg
 
 theorem toJordanDecomposition_smul_real (s : SignedMeasure α) (r : ℝ) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition :=

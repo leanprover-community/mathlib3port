@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.Deriv.Inv
 import Mathbin.Analysis.NormedSpace.BallAction
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 import Mathbin.Analysis.InnerProductSpace.Calculus
@@ -236,7 +237,7 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   set y := orthogonalProjection (ℝ ∙ v)ᗮ x
   have split : ↑x = a • v + ↑y :=
     by
-    convert eq_sum_orthogonalProjection_self_orthogonal_complement (ℝ ∙ v) x
+    convert eq_sum_orthogonalProjection_self_orthogonalComplement (ℝ ∙ v) x
     exact (orthogonalProjection_unit_singleton ℝ hv x).symm
   have hvy : ⟪v, y⟫_ℝ = 0 := submodule.mem_orthogonal_singleton_iff_inner_right.mp y.2
   have pythag : 1 = a ^ 2 + ‖y‖ ^ 2 :=
@@ -291,7 +292,7 @@ theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v
     ring
   convert congr_arg (fun c => c • w) this
   · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
-      orthogonalProjection_orthogonal_complement_singleton_eq_zero v
+      orthogonalProjection_orthogonalComplement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ ∙ v)ᗮ w = w := orthogonalProjection_mem_subspace_eq_self w
     have h₃ : innerSL _ v w = (0 : ℝ) := submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
     have h₄ : innerSL _ v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
@@ -337,7 +338,7 @@ theorem stereographic_target (hv : ‖v‖ = 1) : (stereographic hv).target = Se
 @[simp]
 theorem stereographic_apply_neg (v : sphere (0 : E) 1) :
     stereographic (norm_eq_of_mem_sphere v) (-v) = 0 := by
-  simp [stereographic_apply, orthogonalProjection_orthogonal_complement_singleton_eq_zero]
+  simp [stereographic_apply, orthogonalProjection_orthogonalComplement_singleton_eq_zero]
 #align stereographic_apply_neg stereographic_apply_neg
 
 @[simp]

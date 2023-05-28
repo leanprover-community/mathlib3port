@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.complex.real_deriv
-! leanprover-community/mathlib commit e9be2fa75faa22892937c275e27a91cd558cf8c0
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.ContDiff
+import Mathbin.Analysis.Calculus.Deriv.Linear
 import Mathbin.Analysis.Complex.Conformal
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 
@@ -95,19 +96,19 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 theorem HasStrictDerivAt.complexToReal_fderiv' {f : ℂ → E} {x : ℂ} {f' : E}
     (h : HasStrictDerivAt f f' x) :
     HasStrictFDerivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
-  simpa only [Complex.restrictScalars_one_smul_right'] using
+  simpa only [Complex.restrictScalars_one_smulRight'] using
     h.has_strict_fderiv_at.restrict_scalars ℝ
 #align has_strict_deriv_at.complex_to_real_fderiv' HasStrictDerivAt.complexToReal_fderiv'
 
 theorem HasDerivAt.complexToReal_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
     HasFDerivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
-  simpa only [Complex.restrictScalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
+  simpa only [Complex.restrictScalars_one_smulRight'] using h.has_fderiv_at.restrict_scalars ℝ
 #align has_deriv_at.complex_to_real_fderiv' HasDerivAt.complexToReal_fderiv'
 
 theorem HasDerivWithinAt.complexToReal_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
     (h : HasDerivWithinAt f f' s x) :
     HasFDerivWithinAt f (reClm.smul_right f' + I • imClm.smul_right f') s x := by
-  simpa only [Complex.restrictScalars_one_smul_right'] using
+  simpa only [Complex.restrictScalars_one_smulRight'] using
     h.has_fderiv_within_at.restrict_scalars ℝ
 #align has_deriv_within_at.complex_to_real_fderiv' HasDerivWithinAt.complexToReal_fderiv'
 

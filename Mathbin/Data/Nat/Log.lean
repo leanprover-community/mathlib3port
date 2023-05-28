@@ -313,7 +313,6 @@ private theorem add_pred_div_lt {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : (n + b
   rw [div_lt_iff_lt_mul (zero_lt_one.trans hb), ← succ_le_iff, ← pred_eq_sub_one,
     succ_pred_eq_of_pos (add_pos (zero_lt_one.trans hn) (zero_lt_one.trans hb))]
   exact add_le_mul hn hb
-#align nat.add_pred_div_lt nat.add_pred_div_lt
 
 /-! ### Ceil logarithm -/
 

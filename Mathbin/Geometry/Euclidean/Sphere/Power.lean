@@ -40,6 +40,9 @@ which are used to deduce corresponding results for Euclidean affine spaces.
 -/
 
 
+/- warning: inner_product_geometry.mul_norm_eq_abs_sub_sq_norm -> InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_normₓ'. -/
 theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ x + y = k • (x - y))
     (h₂ : ‖z - y‖ = ‖z + y‖) : ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| :=
   by
@@ -88,6 +91,9 @@ variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 
+/- warning: euclidean_geometry.mul_dist_eq_abs_sub_sq_dist -> EuclideanGeometry.mul_dist_eq_abs_sub_sq_dist is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.mul_dist_eq_abs_sub_sq_dist EuclideanGeometry.mul_dist_eq_abs_sub_sq_distₓ'. -/
 /-- If `P` is a point on the line `AB` and `Q` is equidistant from `A` and `B`, then
 `AP * BP = abs (BQ ^ 2 - PQ ^ 2)`. -/
 theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧ b -ᵥ p = k • (a -ᵥ p))
@@ -104,6 +110,9 @@ theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧
   exact mul_norm_eq_abs_sub_sq_norm hp hq
 #align euclidean_geometry.mul_dist_eq_abs_sub_sq_dist EuclideanGeometry.mul_dist_eq_abs_sub_sq_dist
 
+/- warning: euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical -> EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cosphericalₓ'. -/
 /-- If `A`, `B`, `C`, `D` are cospherical and `P` is on both lines `AB` and `CD`, then
 `AP * BP = CP * DP`. -/
 theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
@@ -119,6 +128,12 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
   all_goals simp
 #align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical
 
+/- warning: euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi -> EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] {P : Type.{u2}} [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {a : P} {b : P} {c : P} {d : P} {p : P}, (EuclideanGeometry.Cospherical.{u2} P _inst_3 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) a (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) b (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) c (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) d))))) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 a p b) Real.pi) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 c p d) Real.pi) -> (Eq.{1} Real (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) a p) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) b p)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) c p) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) d p)))
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] {P : Type.{u2}} [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {a : P} {b : P} {c : P} {d : P} {p : P}, (EuclideanGeometry.Cospherical.{u2} P _inst_3 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) a (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) b (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) c (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.instSingletonSet.{u2} P) d))))) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 a p b) Real.pi) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 c p d) Real.pi) -> (Eq.{1} Real (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) a p) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) b p)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) c p) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) d p)))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_piₓ'. -/
 /-- **Intersecting Chords Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapb : ∠ a p b = π) (hcpd : ∠ c p d = π) :
@@ -129,6 +144,12 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
   exact mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, by linarith, hab⟩ ⟨k₂, by linarith, hcd⟩
 #align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi
 
+/- warning: euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero -> EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] {P : Type.{u2}} [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {a : P} {b : P} {c : P} {d : P} {p : P}, (EuclideanGeometry.Cospherical.{u2} P _inst_3 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) a (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) b (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.hasInsert.{u2} P) c (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.hasSingleton.{u2} P) d))))) -> (Ne.{succ u2} P a b) -> (Ne.{succ u2} P c d) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 a p b) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 c p d) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Eq.{1} Real (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) a p) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) b p)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) c p) (Dist.dist.{u2} P (PseudoMetricSpace.toHasDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) d p)))
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} V] [_inst_2 : InnerProductSpace.{0, u1} Real V Real.isROrC _inst_1] {P : Type.{u2}} [_inst_3 : MetricSpace.{u2} P] [_inst_4 : NormedAddTorsor.{u1, u2} V P (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} V _inst_1) (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)] {a : P} {b : P} {c : P} {d : P} {p : P}, (EuclideanGeometry.Cospherical.{u2} P _inst_3 (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) a (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) b (Insert.insert.{u2, u2} P (Set.{u2} P) (Set.instInsertSet.{u2} P) c (Singleton.singleton.{u2, u2} P (Set.{u2} P) (Set.instSingletonSet.{u2} P) d))))) -> (Ne.{succ u2} P a b) -> (Ne.{succ u2} P c d) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 a p b) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (EuclideanGeometry.angle.{u1, u2} V P _inst_1 _inst_2 _inst_3 _inst_4 c p d) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) a p) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) b p)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) c p) (Dist.dist.{u2} P (PseudoMetricSpace.toDist.{u2} P (MetricSpace.toPseudoMetricSpace.{u2} P _inst_3)) d p)))
+Case conversion may be inaccurate. Consider using '#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zeroₓ'. -/
 /-- **Intersecting Secants Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hab : a ≠ b) (hcd : c ≠ d) (hapb : ∠ a p b = 0)

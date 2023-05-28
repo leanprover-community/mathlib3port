@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.finite
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit ea0bcd84221246c801a6f8fbe8a4372f6d04b176
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -408,7 +408,7 @@ absolute value.
 See also `class_group.fintype_of_admissible_of_algebraic` where `L` is an
 algebraic extension of `R`, that includes some extra assumptions.
 -/
-noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] : Fintype (ClassGroup S) :=
+noncomputable def fintypeOfAdmissibleOfFinite : Fintype (ClassGroup S) :=
   by
   letI := Classical.decEq L
   letI := IsIntegralClosure.isFractionRing_of_finite_extension R K L S

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities_pow
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.Positivity
 
 /-!
 # Mean value inequalities
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove several mean inequalities for finite sums. Versions for integrals of some of
 these inequalities are available in `measure_theory.mean_inequalities`.
@@ -253,7 +256,6 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a
   have ha : a ≤ 1 := (self_le_add_right a b).trans hab
   have hb : b ≤ 1 := (self_le_add_left b a).trans hab
   exact (add_le_add (h_le_one a ha) (h_le_one b hb)).trans hab
-#align nnreal.add_rpow_le_one_of_add_le_one nnreal.add_rpow_le_one_of_add_le_one
 
 /- warning: nnreal.add_rpow_le_rpow_add -> NNReal.add_rpow_le_rpow_add is a dubious translation:
 lean 3 declaration is

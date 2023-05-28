@@ -441,7 +441,6 @@ private theorem is_jacobson_polynomial_of_domain (R : Type _) [CommRing R] [IsDo
         (QuotientMap P C le_rfl) quotient_map_injective x hx _
     -- `convert` is noticeably faster than `exact` here:
     convert is_integral_is_localization_polynomial_quotient P p pP
-#align ideal.polynomial.is_jacobson_polynomial_of_domain ideal.polynomial.is_jacobson_polynomial_of_domain
 
 theorem isJacobson_polynomial_of_isJacobson (hR : IsJacobson R) : IsJacobson R[X] :=
   by
@@ -581,7 +580,6 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
                 (is_maximal_comap_C_of_is_maximal P hP'))).2
     ·-- `convert` here is faster than `exact`, and this proof is near the time limit.
       convert is_integral_is_localization_polynomial_quotient P pX hpX
-#align ideal.polynomial.quotient_mk_comp_C_is_integral_of_jacobson' ideal.polynomial.quotient_mk_comp_C_is_integral_of_jacobson'
 
 /-- If `R` is a Jacobson ring, and `P` is a maximal ideal of `R[X]`,
   then `R → R[X]/P` is an integral map. -/

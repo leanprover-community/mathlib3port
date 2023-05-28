@@ -135,7 +135,6 @@ private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (
   rw [filter_congr_decidable] at t
   refine' t.trans (pow_le_pow (by norm_num) <| tsub_le_tsub_right _ _)
   exact card_image_le.trans (card_le_of_subset <| filter_subset _ _)
-#align szemeredi_regularity.card_nonuniform_witness_sdiff_bUnion_star szemeredi_regularity.card_nonuniform_witness_sdiff_bUnion_star
 
 private theorem one_sub_eps_mul_card_nonuniform_witness_le_card_star (hV : V ∈ P.parts)
     (hUV : U ≠ V) (hunif : ¬G.IsUniform ε U V) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -198,7 +197,6 @@ private theorem one_sub_eps_mul_card_nonuniform_witness_le_card_star (hV : V ∈
         card_sdiff (bUnion_star_subset_nonuniform_witness hP G ε hU V), cast_le]
       exact card_nonuniform_witness_sdiff_bUnion_star hV hUV hunif
     
-#align szemeredi_regularity.one_sub_eps_mul_card_nonuniform_witness_le_card_star szemeredi_regularity.one_sub_eps_mul_card_nonuniform_witness_le_card_star
 
 variable {hP G ε U hU V}
 
@@ -243,7 +241,6 @@ private theorem le_sum_card_subset_chunk_parts (h𝒜 : 𝒜 ⊆ (chunk hP G ε 
   · rw [← (of_subset _ h𝒜 rfl).sum_card_parts, of_subset_parts, ← cast_mul, cast_le]
     exact card_nsmul_le_sum _ _ _ fun x hx => m_le_card_of_mem_chunk_parts <| h𝒜 hx
   · exact_mod_cast card_le_m_add_one_of_mem_chunk_parts (h𝒜 hs)
-#align szemeredi_regularity.le_sum_card_subset_chunk_parts szemeredi_regularity.le_sum_card_subset_chunk_parts
 
 private theorem sum_card_subset_chunk_parts_le (m_pos : (0 : ℝ) < m)
     (h𝒜 : 𝒜 ⊆ (chunk hP G ε hU).parts) (hs : s ∈ 𝒜) :
@@ -255,7 +252,6 @@ private theorem sum_card_subset_chunk_parts_le (m_pos : (0 : ℝ) < m)
     refine' card_bUnion_le_card_mul _ _ _ fun x hx => _
     apply card_le_m_add_one_of_mem_chunk_parts (h𝒜 hx)
   · exact_mod_cast m_le_card_of_mem_chunk_parts (h𝒜 hs)
-#align szemeredi_regularity.sum_card_subset_chunk_parts_le szemeredi_regularity.sum_card_subset_chunk_parts_le
 
 private theorem one_sub_le_m_div_m_add_one_sq [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) :
@@ -271,7 +267,6 @@ private theorem one_sub_le_m_div_m_add_one_sq [Nonempty α]
   norm_num
   apply hundred_div_ε_pow_five_le_m hPα hPε
   positivity
-#align szemeredi_regularity.one_sub_le_m_div_m_add_one_sq szemeredi_regularity.one_sub_le_m_div_m_add_one_sq
 
 private theorem m_add_one_div_m_le_one_add [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -291,7 +286,6 @@ private theorem m_add_one_div_m_le_one_add [Nonempty α]
     div_le_iff (show (0 : ℝ) < 100 ^ 2 by norm_num), mul_assoc, sq]
   refine' mul_le_mul_of_nonneg_left _ (by positivity)
   exact (pow_le_one 5 (by positivity) hε₁).trans (by norm_num)
-#align szemeredi_regularity.m_add_one_div_m_le_one_add szemeredi_regularity.m_add_one_div_m_le_one_add
 
 private theorem density_sub_eps_le_sum_density_div_card [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -329,7 +323,6 @@ private theorem density_sub_eps_le_sum_density_div_card [Nonempty α]
     positivity
   refine' mul_pos (mul_pos _ _) (mul_pos _ _) <;> rw [cast_pos, Finset.card_pos]
   exacts[⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
-#align szemeredi_regularity.density_sub_eps_le_sum_density_div_card szemeredi_regularity.density_sub_eps_le_sum_density_div_card
 
 private theorem sum_density_div_card_le_density_add_eps [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -368,7 +361,6 @@ private theorem sum_density_div_card_le_density_add_eps [Nonempty α]
     · exact ⟨_, hy, nonempty_of_mem_parts _ (hB hy)⟩
   refine' mul_pos (mul_pos _ _) (mul_pos _ _) <;> rw [cast_pos, Finset.card_pos]
   exacts[⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
-#align szemeredi_regularity.sum_density_div_card_le_density_add_eps szemeredi_regularity.sum_density_div_card_le_density_add_eps
 
 private theorem average_density_near_total_density [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -391,7 +383,6 @@ private theorem average_density_near_total_density [Nonempty α]
     exact div_le_div_of_le_left (by positivity) (by norm_num) (by norm_num)
   rw [sub_le_iff_le_add, ← sub_le_iff_le_add']
   apply density_sub_eps_le_sum_density_div_card hPα hPε hA hB
-#align szemeredi_regularity.average_density_near_total_density szemeredi_regularity.average_density_near_total_density
 
 private theorem edge_density_chunk_aux [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -427,7 +418,6 @@ private theorem edge_density_chunk_aux [Nonempty α]
   rw [mul_right_comm, mul_div_left_comm, div_eq_mul_inv (ε ^ 5),
     show (2 : ℝ) / 50 = 25⁻¹ by norm_num]
   exact mul_le_of_le_one_right (by positivity) (by exact_mod_cast G.edge_density_le_one _ _)
-#align szemeredi_regularity.edge_density_chunk_aux szemeredi_regularity.edge_density_chunk_aux
 
 private theorem abs_density_star_sub_density_le_eps (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
     (hε₁ : ε ≤ 1) {hU : U ∈ P.parts} {hV : V ∈ P.parts} (hUV' : U ≠ V) (hUV : ¬G.IsUniform ε U V) :
@@ -442,7 +432,6 @@ private theorem abs_density_star_sub_density_le_eps (hPε : 100 ≤ 4 ^ P.parts.
       (one_sub_eps_mul_card_nonuniform_witness_le_card_star hU hUV'.symm (fun hVU => hUV hVU.symm)
         hPε hε₁)
   linarith
-#align szemeredi_regularity.abs_density_star_sub_density_le_eps szemeredi_regularity.abs_density_star_sub_density_le_eps
 
 private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) (hε₁ : ε ≤ 1) (hU : U ∈ P.parts) (hV : V ∈ P.parts)
@@ -484,7 +473,6 @@ private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P
         div_le_iff hm]
       linarith
     
-#align szemeredi_regularity.eps_le_card_star_div szemeredi_regularity.eps_le_card_star_div
 
 /-!
 ### Final bounds
@@ -538,7 +526,6 @@ private theorem edge_density_star_not_uniform [Nonempty α]
   linarith
   right
   linarith
-#align szemeredi_regularity.edge_density_star_not_uniform szemeredi_regularity.edge_density_star_not_uniform
 
 /-- Lower bound on the edge densities between non-uniform parts of `szemeredi_regularity.increment`.
 -/

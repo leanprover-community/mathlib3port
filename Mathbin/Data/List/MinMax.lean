@@ -68,7 +68,6 @@ private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldl (argAux r) (so
             tauto
           · apply fun hm => Or.inr (list.mem_append.mpr <| Or.inl _)
             exact option.mem_some_iff.mp hm ▸ H)
-#align list.foldl_arg_aux_mem list.foldl_arg_aux_mem
 
 #print List.argAux_self /-
 @[simp]

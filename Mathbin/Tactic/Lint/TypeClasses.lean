@@ -74,7 +74,6 @@ private unsafe def instance_priority (d : declaration) : tactic (Option String) 
               if info = BinderInfo.inst_implicit ∨ tp `out_param then none else some e
           let always_applies := relevant_args expr.is_local_constant ∧ relevant_args
           if always_applies then return <| some "set priority below 1000" else return none
-#align instance_priority instance_priority
 
 library_note "implicit instance arguments"/--
 There are places where typeclass arguments are specified with implicit `{}` brackets instead of
@@ -139,7 +138,6 @@ private unsafe def has_nonempty_instance (d : declaration) : tactic (Option Stri
       let nonempty_insts := insts_tys fun i => i ∈ [`` Nonempty, `` Inhabited, `unique]
       let nonempty_tys := nonempty_insts fun i => i
       if d ∈ nonempty_tys then pure none else pure "nonempty/inhabited/unique instance missing"
-#align has_nonempty_instance has_nonempty_instance
 
 /-- A linter for missing `nonempty` instances. -/
 @[linter]
@@ -164,7 +162,6 @@ private unsafe def impossible_instance (d : declaration) : tactic (Option String
   let _ :: _ ← return bad_arguments |
     return none
   (fun s => some <| "Impossible to infer " ++ s) <$> print_arguments bad_arguments
-#align impossible_instance impossible_instance
 
 /-- A linter object for `impossible_instance`. -/
 @[linter]
@@ -197,7 +194,6 @@ private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Opt
   let _ :: _ ← return bad_arguments |
     return none
   (fun s => some <| "These are not classes. " ++ s) <$> print_arguments bad_arguments
-#align incorrect_type_class_argument incorrect_type_class_argument
 
 /-- A linter object for `incorrect_type_class_argument`. -/
 @[linter]
@@ -227,7 +223,6 @@ private unsafe def dangerous_instance (d : declaration) : tactic (Option String)
     return none
   (fun s => some <| "The following arguments become metavariables. " ++ s) <$>
       print_arguments bad_arguments
-#align dangerous_instance dangerous_instance
 
 /-- A linter object for `dangerous_instance`. -/
 @[linter]
@@ -324,7 +319,6 @@ private unsafe def class_structure (n : Name) : tactic (Option String) := do
       let env ← get_env
       pure <| if env n then none else "is a non-structure or inductive type marked @[class]"
     else pure none
-#align class_structure class_structure
 
 /-- A linter object for `class_structure`. -/
 @[linter]
@@ -351,7 +345,6 @@ private unsafe def has_coe_variable (d : declaration) : tactic (Option String) :
         return <|
           some <| "illegal instance, second argument is variable not occurring in first argument"
       else return none
-#align has_coe_variable has_coe_variable
 
 /-- A linter object for `has_coe_variable`. -/
 @[linter]
@@ -375,7 +368,6 @@ private unsafe def inhabited_nonempty (d : declaration) : tactic (Option String)
     else
       (fun s => some <| "The following `inhabited` instances should be `nonempty`. " ++ s) <$>
         print_arguments inhd_binders
-#align inhabited_nonempty inhabited_nonempty
 
 /-- A linter object for `inhabited_nonempty`. -/
 @[linter]
@@ -409,7 +401,6 @@ private unsafe def decidable_classical (d : declaration) : tactic (Option String
             "The following `decidable` hypotheses should be replaced with\n                      `classical` in the proof. " ++
               s) <$>
         print_arguments deceq_binders
-#align decidable_classical decidable_classical
 
 /-- A linter object for `decidable_classical`. -/
 @[linter]
@@ -482,7 +473,6 @@ private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stri
                 format.line ++
               "and" ++
             trans_inst_2 2
-#align has_coe_to_fun_linter has_coe_to_fun_linter
 
 /-- Linter that checks whether `has_coe_to_fun` instances comply with Note [function coercion]. -/
 @[linter]

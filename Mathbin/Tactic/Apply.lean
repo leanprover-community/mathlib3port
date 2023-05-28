@@ -50,7 +50,6 @@ private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) 
       let b ← is_class type
       return <| r || type `opt_param 2 || type `auto_param 2 || b)
     false
-#align tactic.has_opt_auto_param_inst_for_apply tactic.has_opt_auto_param_inst_for_apply
 
 private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg)
     (ms : List (Name × expr)) : tactic Unit :=
@@ -61,7 +60,6 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg)
           ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >>
             when cfg (try apply_auto_param)
     set_goals gs
-#align tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
 
 private unsafe def retry_apply_aux :
     ∀ (e : expr) (cfg : ApplyCfg), List (Bool × Name × expr) → tactic (List (Name × expr))
@@ -82,11 +80,9 @@ private unsafe def retry_apply_aux :
       let b := b.has_var
       let e ← head_beta <| e v
       retry_apply_aux e cfg ((b, n, v) :: gs)
-#align tactic.retry_apply_aux tactic.retry_apply_aux
 
 private unsafe def retry_apply (e : expr) (cfg : ApplyCfg) : tactic (List (Name × expr)) :=
   apply_core e cfg <|> retry_apply_aux e cfg []
-#align tactic.retry_apply tactic.retry_apply
 
 /-- `apply'` mimics the behavior of `apply_core`. When
 `apply_core` fails, it is retried by providing the term with meta
@@ -128,7 +124,6 @@ private unsafe def relation_tactic (md : Transparency) (op_for : environment →
       fail <|
         tac_name ++
           " tactic failed, target is not a relation application with the expected property."
-#align tactic.relation_tactic tactic.relation_tactic
 
 /-- Similar to `reflexivity` with the difference that `apply'` is used instead of `apply` -/
 unsafe def reflexivity' (md := semireducible) : tactic Unit :=

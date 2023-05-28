@@ -127,7 +127,6 @@ private unsafe def match_rule_head (p : expr) : List expr → expr → expr → 
         failed
       let v ← mk_meta_var d
       match_rule_head (v :: vs) (expr.app e v) (b v)
-#align tactic.interactive.match_rule_head tactic.interactive.match_rule_head
 
 unsafe def pi_head : expr → tactic expr
   | expr.pi n _ t b => do
@@ -520,7 +519,6 @@ open Monad
           let r ← mk_eq_refl v
           solve1 <| tactic.exact ( t v r )
           Prod.mk <$> tactic.intro x <*> tactic.intro h
-#align tactic.interactive.monotonicity.generalize' tactic.interactive.monotonicity.generalize'
 
 private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Unit :=
   focus1 do
@@ -536,7 +534,6 @@ private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Uni
             Prod.snd <$> monotonicity.generalize' h v x)
           vs
     andthen (tac ctx) (vs' (try ∘ tactic.subst))
-#align tactic.interactive.hide_meta_vars tactic.interactive.hide_meta_vars
 
 unsafe def hide_meta_vars' (tac : itactic) : itactic :=
   hide_meta_vars fun _ => tac

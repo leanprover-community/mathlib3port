@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.basic
-! leanprover-community/mathlib commit b76e9f654df09f8a832aeee712511fe5f3e57869
+! leanprover-community/mathlib commit 917c3c072e487b3cccdbfeff17e75b40e45f66cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,6 @@ private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 
   by
   rw [intervalIntegrable_iff_integrable_Ioc_of_le hX]
   exact integrable_on.mono_set (Gamma_integral_convergent hs) Ioc_subset_Ioi_self
-#align complex.Gamma_integrand_interval_integrable complex.Gamma_integrand_interval_integrable
 
 private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => -((-x).exp * x ^ s) : ℝ → ℂ) volume 0 X :=
@@ -190,7 +189,6 @@ private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X 
     simp only [add_sub_cancel, Pi.neg_apply]
   · simp only [add_re, one_re]
     linarith
-#align complex.Gamma_integrand_deriv_integrable_A complex.Gamma_integrand_deriv_integrable_A
 
 private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y : ℝ} (hY : 0 ≤ Y) :
     IntervalIntegrable (fun x : ℝ => (-x).exp * (s * x ^ (s - 1)) : ℝ → ℂ) volume 0 Y :=
@@ -223,7 +221,6 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     rw [abs_of_nonneg (exp_pos _).le, abs_cpow_eq_rpow_re_of_pos hx.1]
     simp
   · exact measurableSet_Ioc
-#align complex.Gamma_integrand_deriv_integrable_B complex.Gamma_integrand_deriv_integrable_B
 
 /-- The recurrence relation for the indefinite version of the `Γ` function. -/
 theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
@@ -478,7 +475,7 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
     HasDerivAt gammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
   by
   rw [Gamma_integral_eq_mellin]
-  convert mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs
+  convert(mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
   · refine' (Continuous.continuousOn _).LocallyIntegrableOn measurableSet_Ioi
     exact continuous_of_real.comp (real.continuous_exp.comp continuous_neg)
   · rw [← is_O_norm_left]

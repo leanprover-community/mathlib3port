@@ -66,13 +66,11 @@ private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
     | n :: ns => do
       write_ref names ns
       return n
-#align tactic.get_next_name tactic.get_next_name
 
 private unsafe def value_known (c : expr) : tactic Bool := do
   let lctx ← local_context
   let lctx ← lctx.mapM infer_type
   return <| c ∈ lctx ∨ q(¬$(c)) ∈ lctx
-#align tactic.value_known tactic.value_known
 
 private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List expr → tactic Unit
   | done => do
@@ -89,7 +87,6 @@ private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List e
           else do
             let n ← get_next_name names
             andthen (split_if1 cond n at_) (try (split_ifs_core (cond :: done)))
-#align tactic.split_ifs_core tactic.split_ifs_core
 
 unsafe def split_ifs (names : List Name) (at_ : Loc := Loc.ns [none]) :=
   using_new_ref names fun names => split_ifs_core at_ names []

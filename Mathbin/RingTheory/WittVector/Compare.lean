@@ -179,22 +179,22 @@ def toPadicInt : 𝕎 (ZMod p) →+* ℤ_[p] :=
 
 theorem zmodEquivTrunc_compat (k₁ k₂ : ℕ) (hk : k₁ ≤ k₂) :
     (TruncatedWittVector.truncate hk).comp
-        ((zmodEquivTrunc p k₂).toRingHom.comp (PadicInt.toZmodPow k₂)) =
-      (zmodEquivTrunc p k₁).toRingHom.comp (PadicInt.toZmodPow k₁) :=
-  by rw [← RingHom.comp_assoc, commutes, RingHom.comp_assoc, PadicInt.zMod_cast_comp_toZmodPow]
+        ((zmodEquivTrunc p k₂).toRingHom.comp (PadicInt.toZModPow k₂)) =
+      (zmodEquivTrunc p k₁).toRingHom.comp (PadicInt.toZModPow k₁) :=
+  by rw [← RingHom.comp_assoc, commutes, RingHom.comp_assoc, PadicInt.zmod_cast_comp_toZModPow]
 #align witt_vector.zmod_equiv_trunc_compat WittVector.zmodEquivTrunc_compat
 
 /-- `from_padic_int` uses `witt_vector.lift` to lift `truncated_witt_vector.zmod_equiv_trunc`
 composed with `padic_int.to_zmod_pow` to a ring hom `ℤ_[p] →+* 𝕎 (zmod p)`.
 -/
 def fromPadicInt : ℤ_[p] →+* 𝕎 (ZMod p) :=
-  (WittVector.lift fun k => (zmodEquivTrunc p k).toRingHom.comp (PadicInt.toZmodPow k)) <|
+  (WittVector.lift fun k => (zmodEquivTrunc p k).toRingHom.comp (PadicInt.toZModPow k)) <|
     zmodEquivTrunc_compat _
 #align witt_vector.from_padic_int WittVector.fromPadicInt
 
 theorem toPadicInt_comp_fromPadicInt : (toPadicInt p).comp (fromPadicInt p) = RingHom.id ℤ_[p] :=
   by
-  rw [← PadicInt.toZmodPow_eq_iff_ext]
+  rw [← PadicInt.toZModPow_eq_iff_ext]
   intro n
   rw [← RingHom.comp_assoc, to_padic_int, PadicInt.lift_spec]
   simp only [from_padic_int, to_zmod_pow, RingHom.comp_id]

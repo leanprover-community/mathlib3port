@@ -37,7 +37,6 @@ private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set)
         | none => some 1
         | some n => some (n + 1)
       get_unused_name_reserved_aux new_suffix
-#align tactic.get_unused_name_reserved_aux tactic.get_unused_name_reserved_aux
 
 /-- `get_unused_name_reserved ns reserved` returns the first name from `ns` that
 occurs neither in `reserved` nor in the environment. If there is no such name in

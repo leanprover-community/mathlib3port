@@ -73,7 +73,6 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   rw [is_root_cyclotomic_iff] at hy
   rw [hy.eq_order_of] at hn
   exact hn.not_le LinearOrderedRing.orderOf_le_two
-#align polynomial.cyclotomic_neg_one_pos polynomial.cyclotomic_neg_one_pos
 
 theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x : R) :
     0 < eval x (cyclotomic n R) :=

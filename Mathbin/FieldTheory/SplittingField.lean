@@ -244,14 +244,12 @@ private theorem nsmul_zero (n : ℕ) :
     ∀ {K : Type u} [Field K],
       ∀ {f : K[X]} (x : splitting_field_aux n f), (0 : ℕ) • x = splitting_field_aux.zero n :=
   Nat.recOn n (fun K fK f => zero_nsmul) fun n ih K fK f => ih
-#align polynomial.splitting_field_aux.nsmul_zero polynomial.splitting_field_aux.nsmul_zero
 
 private theorem nsmul_succ (n : ℕ) :
     ∀ {K : Type u} [Field K],
       ∀ {f : K[X]} (k : ℕ) (x : splitting_field_aux n f),
         (k + 1) • x = splitting_field_aux.add n x (k • x) :=
   Nat.recOn n (fun K fK f n x => succ_nsmul x n) fun n ih K fK f => ih
-#align polynomial.splitting_field_aux.nsmul_succ polynomial.splitting_field_aux.nsmul_succ
 
 instance field (n : ℕ) {K : Type u} [Field K] {f : K[X]} : Field (SplittingFieldAux n f) :=
   by

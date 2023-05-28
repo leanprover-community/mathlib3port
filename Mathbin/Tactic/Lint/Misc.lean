@@ -40,7 +40,6 @@ open Tactic Expr
 /-- The names of `≥` and `>`, mostly disallowed in lemma statements -/
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
-#align illegal_ge_gt illegal_ge_gt
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 20000
@@ -75,7 +74,6 @@ private unsafe def contains_illegal_ge_gt : expr → Bool
   | elet var_name type assignment body =>
     contains_illegal_ge_gt type || contains_illegal_ge_gt assignment || contains_illegal_ge_gt body
   | _ => false
-#align contains_illegal_ge_gt contains_illegal_ge_gt
 
 /-- Checks whether a `>`/`≥` is used in the statement of `d`.
 
@@ -88,7 +86,6 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
     if (d.type.contains_constant fun n => n ∈ illegal_ge_gt) && contains_illegal_ge_gt d.type then
       some "the type contains ≥/>. Use ≤/< instead."
     else none
-#align ge_or_gt_in_statement ge_or_gt_in_statement
 
 -- TODO: the commented out code also checks for classicality in statements, but needs fixing
 -- TODO: this probably needs to also check whether the argument is a variable or @eq <var> _ _
@@ -143,7 +140,6 @@ private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
       else
         let s := (nm.find fun n => nm.count n ≥ 2).iget.toString
         some <| "The namespace `" ++ s ++ "` is duplicated in the name"
-#align dup_namespace dup_namespace
 
 /-- A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
 @[linter]
@@ -172,7 +168,6 @@ private unsafe def check_unused_arguments_aux : List ℕ → ℕ → ℕ → exp
         let b := e.binding_body
         let l' := if b.has_var_idx 0 then l else n :: l
         check_unused_arguments_aux l' (n + 1) n_max b
-#align check_unused_arguments_aux check_unused_arguments_aux
 
 /-- Check which arguments of a declaration are not used.
 Prints a list of natural numbers corresponding to which arguments are not used (e.g.
@@ -215,7 +210,6 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
               if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
           pp b
   return <| some <| ns tt
-#align unused_arguments unused_arguments
 
 /-- A linter object for checking for unused arguments. This is in the default linter set. -/
 @[linter]
@@ -239,13 +233,11 @@ private unsafe def doc_blame_report_defn : declaration → tactic (Option String
   | declaration.defn n _ _ _ _ _ => doc_string n >> return none <|> return "def missing doc string"
   | declaration.cnst n _ _ _ => doc_string n >> return none <|> return "constant missing doc string"
   | _ => return none
-#align doc_blame_report_defn doc_blame_report_defn
 
 /-- Reports definitions and constants that are missing doc strings -/
 private unsafe def doc_blame_report_thm : declaration → tactic (Option String)
   | declaration.thm n _ _ _ => doc_string n >> return none <|> return "theorem missing doc string"
   | _ => return none
-#align doc_blame_report_thm doc_blame_report_thm
 
 /-- A linter for checking definition doc strings -/
 @[linter]
@@ -298,7 +290,6 @@ private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String
                 if is_pattern then none
                 else-- declarations with `@[pattern]` are allowed to be a `def`.
                   "is a def, should be a lemma/theorem"
-#align incorrect_def_lemma incorrect_def_lemma
 
 /-- A linter for checking whether the correct declaration constructor (definition or theorem)
 has been used. -/

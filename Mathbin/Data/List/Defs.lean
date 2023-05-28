@@ -779,7 +779,6 @@ def permutationsAux2 (t : α) (ts : List α) (r : List β) : List α → (List �
 
 private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
   | ⟨l, i⟩ => (length l + length i, length l)
-#align list.meas list.meas
 
 -- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas

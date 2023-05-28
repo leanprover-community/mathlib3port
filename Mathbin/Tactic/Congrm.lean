@@ -104,7 +104,6 @@ private unsafe def extract_subgoals :
     extract_subgoals prf_args kinds pat_args
   | _, _, [] => pure []
   | _, _, _ => fail "unsupported congr lemma"
-#align tactic.extract_subgoals tactic.extract_subgoals
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

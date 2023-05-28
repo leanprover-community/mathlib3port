@@ -357,7 +357,6 @@ include hL
 private noncomputable irreducible_def lift_aux : L →ₐ[K] M :=
   (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp <|
     Eq.recOn (lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top M hL).symm Algebra.toTop
-#align is_alg_closed.lift_aux is_alg_closed.lift_aux
 
 omit hL
 
@@ -378,7 +377,6 @@ private theorem fraction_ring.is_algebraic :
   exact
     (IsFractionRing.isAlgebraic_iff R (FractionRing R) (FractionRing S)).1
       ((IsFractionRing.isAlgebraic_iff' R S (FractionRing S)).1 hS x)
-#align is_alg_closed.fraction_ring.is_algebraic is_alg_closed.fraction_ring.is_algebraic
 
 /-- A (random) homomorphism from an algebraic extension of R into an algebraically
   closed extension of R. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.pairwise_intersections
-! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Algebra.Category.Ring.Constructions
 
 /-!
 # Equivalent formulations of the sheaf condition
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We give an equivalent formulation of the sheaf condition.
 
@@ -53,6 +56,7 @@ namespace TopCat.Presheaf
 
 section
 
+#print TopCat.Presheaf.IsSheafPairwiseIntersections /-
 /-- An alternative formulation of the sheaf condition
 (which we prove equivalent to the usual one below as
 `is_sheaf_iff_is_sheaf_pairwise_intersections`).
@@ -63,7 +67,9 @@ A presheaf is a sheaf if `F` sends the cone `(pairwise.cocone U).op` to a limit 
 def IsSheafPairwiseIntersections (F : Presheaf C X) : Prop :=
   ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (IsLimit (F.mapCone (Pairwise.cocone U).op))
 #align Top.presheaf.is_sheaf_pairwise_intersections TopCat.Presheaf.IsSheafPairwiseIntersections
+-/
 
+#print TopCat.Presheaf.IsSheafPreservesLimitPairwiseIntersections /-
 /-- An alternative formulation of the sheaf condition
 (which we prove equivalent to the usual one below as
 `is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections`).
@@ -75,6 +81,7 @@ A presheaf is a sheaf if `F` preserves the limit of `pairwise.diagram U`.
 def IsSheafPreservesLimitPairwiseIntersections (F : Presheaf C X) : Prop :=
   ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (PreservesLimit (Pairwise.diagram U).op F)
 #align Top.presheaf.is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.IsSheafPreservesLimitPairwiseIntersections
+-/
 
 end
 
@@ -84,6 +91,7 @@ variable {ι : Type w} (U : ι → Opens X)
 
 open CategoryTheory.Pairwise
 
+#print TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj /-
 /-- Implementation detail:
 the object level of `pairwise_to_opens_le_cover : pairwise ι ⥤ opens_le_cover U`
 -/
@@ -92,9 +100,16 @@ def pairwiseToOpensLeCoverObj : Pairwise ι → OpensLeCover U
   | single i => ⟨U i, ⟨i, le_rfl⟩⟩
   | pair i j => ⟨U i ⊓ U j, ⟨i, inf_le_left⟩⟩
 #align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_obj TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj
+-/
 
 open CategoryTheory.Pairwise.Hom
 
+/- warning: Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map -> TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMap is a dubious translation:
+lean 3 declaration is
+  forall {X : TopCat.{u1}} {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))) {V : CategoryTheory.Pairwise.{u1} ι} {W : CategoryTheory.Pairwise.{u1} ι}, (Quiver.Hom.{succ u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Pairwise.CategoryTheory.category.{u1} ι))) V W) -> (Quiver.Hom.{succ u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (TopCat.Presheaf.SheafCondition.OpensLeCover.category.{u1} X ι U))) (TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj.{u1} X ι U V) (TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj.{u1} X ι U W))
+but is expected to have type
+  forall {X : TopCat.{u1}} {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))) {V : CategoryTheory.Pairwise.{u1} ι} {W : CategoryTheory.Pairwise.{u1} ι}, (Quiver.Hom.{succ u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Pairwise.instCategoryPairwise.{u1} ι))) V W) -> (Quiver.Hom.{succ u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (TopCat.Presheaf.SheafCondition.instCategoryOpensLeCover.{u1} X ι U))) (TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj.{u1} X ι U V) (TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj.{u1} X ι U W))
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMapₓ'. -/
 /-- Implementation detail:
 the morphism level of `pairwise_to_opens_le_cover : pairwise ι ⥤ opens_le_cover U`
 -/
@@ -106,6 +121,12 @@ def pairwiseToOpensLeCoverMap :
   | _, _, right i j => homOfLE inf_le_right
 #align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMap
 
+/- warning: Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover -> TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover is a dubious translation:
+lean 3 declaration is
+  forall {X : TopCat.{u1}} {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))), CategoryTheory.Functor.{u1, u1, u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Pairwise.CategoryTheory.category.{u1} ι) (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (TopCat.Presheaf.SheafCondition.OpensLeCover.category.{u1} X ι U)
+but is expected to have type
+  forall {X : TopCat.{u1}} {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))), CategoryTheory.Functor.{u1, u1, u1, u1} (CategoryTheory.Pairwise.{u1} ι) (CategoryTheory.Pairwise.instCategoryPairwise.{u1} ι) (TopCat.Presheaf.SheafCondition.OpensLeCover.{u1} X ι U) (TopCat.Presheaf.SheafCondition.instCategoryOpensLeCover.{u1} X ι U)
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverₓ'. -/
 /-- The category of single and double intersections of the `U i` maps into the category
 of open sets below some `U i`.
 -/
@@ -215,6 +236,9 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
                         right := left i' j' }⟩)
                   List.Chain.nil)))⟩
 
+/- warning: Top.presheaf.sheaf_condition.pairwise_diagram_iso -> TopCat.Presheaf.SheafCondition.pairwiseDiagramIso is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIsoₓ'. -/
 /-- The diagram in `opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
 -/
@@ -224,6 +248,9 @@ def pairwiseDiagramIso : Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ ful
   inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
 #align Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIso
 
+/- warning: Top.presheaf.sheaf_condition.pairwise_cocone_iso -> TopCat.Presheaf.SheafCondition.pairwiseCoconeIso is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.sheaf_condition.pairwise_cocone_iso TopCat.Presheaf.SheafCondition.pairwiseCoconeIsoₓ'. -/
 /--
 The cocone `pairwise.cocone U` with cocone point `supr U` over `pairwise.diagram U` is isomorphic
 to the cocone `opens_le_cover_cocone U` (with the same cocone point)
@@ -242,6 +269,7 @@ open SheafCondition
 
 variable (F : Presheaf C X)
 
+#print TopCat.Presheaf.isSheafOpensLeCover_iff_isSheafPairwiseIntersections /-
 /-- The sheaf condition
 in terms of a limit diagram over all `{ V : opens X // ∃ i, V ≤ U i }`
 is equivalent to the reformulation
@@ -272,7 +300,9 @@ theorem isSheafOpensLeCover_iff_isSheafPairwiseIntersections :
           IsLimit.equivIsoLimit ((Cones.functoriality _ _).mapIso (pairwiseCoconeIso U : _).symm)
         
 #align Top.presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.isSheafOpensLeCover_iff_isSheafPairwiseIntersections
+-/
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafPairwiseIntersections /-
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
@@ -280,7 +310,9 @@ theorem isSheaf_iff_isSheafPairwiseIntersections : F.IsSheaf ↔ F.IsSheafPairwi
   rw [is_sheaf_iff_is_sheaf_opens_le_cover,
     is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections]
 #align Top.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.isSheaf_iff_isSheafPairwiseIntersections
+-/
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafPreservesLimitPairwiseIntersections /-
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of the presheaf preserving the limit of the diagram
 consisting of the `U i` and `U i ⊓ U j`.
@@ -296,6 +328,7 @@ theorem isSheaf_iff_isSheafPreservesLimitPairwiseIntersections :
     haveI := (h U).some
     exact ⟨preserves_limit.preserves (pairwise.cocone_is_colimit U).op⟩
 #align Top.presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.isSheaf_iff_isSheafPreservesLimitPairwiseIntersections
+-/
 
 end TopCat.Presheaf
 
@@ -305,6 +338,9 @@ variable (F : X.Sheaf C) (U V : Opens X)
 
 open CategoryTheory.Limits
 
+/- warning: Top.sheaf.inter_union_pullback_cone -> TopCat.Sheaf.interUnionPullbackCone is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackConeₓ'. -/
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`.
 This is the pullback cone. -/
 def interUnionPullbackCone :
@@ -316,17 +352,26 @@ def interUnionPullbackCone :
       congr )
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
 
+/- warning: Top.sheaf.inter_union_pullback_cone_X -> TopCat.Sheaf.interUnionPullbackCone_pt is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_X TopCat.Sheaf.interUnionPullbackCone_ptₓ'. -/
 @[simp]
 theorem interUnionPullbackCone_pt : (interUnionPullbackCone F U V).pt = F.1.obj (op <| U ⊔ V) :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_X TopCat.Sheaf.interUnionPullbackCone_pt
 
+/- warning: Top.sheaf.inter_union_pullback_cone_fst -> TopCat.Sheaf.interUnionPullbackCone_fst is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_fst TopCat.Sheaf.interUnionPullbackCone_fstₓ'. -/
 @[simp]
 theorem interUnionPullbackCone_fst :
     (interUnionPullbackCone F U V).fst = F.1.map (homOfLE le_sup_left).op :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_fst TopCat.Sheaf.interUnionPullbackCone_fst
 
+/- warning: Top.sheaf.inter_union_pullback_cone_snd -> TopCat.Sheaf.interUnionPullbackCone_snd is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_snd TopCat.Sheaf.interUnionPullbackCone_sndₓ'. -/
 @[simp]
 theorem interUnionPullbackCone_snd :
     (interUnionPullbackCone F U V).snd = F.1.map (homOfLE le_sup_right).op :=
@@ -337,6 +382,9 @@ variable
   (s :
     PullbackCone (F.1.map (homOfLE inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLE inf_le_right).op))
 
+/- warning: Top.sheaf.inter_union_pullback_cone_lift -> TopCat.Sheaf.interUnionPullbackConeLift is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_lift TopCat.Sheaf.interUnionPullbackConeLiftₓ'. -/
 /-- (Implementation).
 Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
 -/
@@ -378,6 +426,9 @@ def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
     convert s.condition.symm
 #align Top.sheaf.inter_union_pullback_cone_lift TopCat.Sheaf.interUnionPullbackConeLift
 
+/- warning: Top.sheaf.inter_union_pullback_cone_lift_left -> TopCat.Sheaf.interUnionPullbackConeLift_left is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.interUnionPullbackConeLift_leftₓ'. -/
 theorem interUnionPullbackConeLift_left :
     interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLE le_sup_left).op = s.fst :=
   by
@@ -387,6 +438,9 @@ theorem interUnionPullbackConeLift_left :
       (op <| pairwise.single (ULift.up walking_pair.left))
 #align Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.interUnionPullbackConeLift_left
 
+/- warning: Top.sheaf.inter_union_pullback_cone_lift_right -> TopCat.Sheaf.interUnionPullbackConeLift_right is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.interUnionPullbackConeLift_rightₓ'. -/
 theorem interUnionPullbackConeLift_right :
     interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLE le_sup_right).op = s.snd :=
   by
@@ -396,6 +450,9 @@ theorem interUnionPullbackConeLift_right :
       (op <| pairwise.single (ULift.up walking_pair.right))
 #align Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.interUnionPullbackConeLift_right
 
+/- warning: Top.sheaf.is_limit_pullback_cone -> TopCat.Sheaf.isLimitPullbackCone is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.is_limit_pullback_cone TopCat.Sheaf.isLimitPullbackConeₓ'. -/
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
   by
@@ -437,6 +494,9 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
       apply inter_union_pullback_cone_lift_right
 #align Top.sheaf.is_limit_pullback_cone TopCat.Sheaf.isLimitPullbackCone
 
+/- warning: Top.sheaf.is_product_of_disjoint -> TopCat.Sheaf.isProductOfDisjoint is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.is_product_of_disjoint TopCat.Sheaf.isProductOfDisjointₓ'. -/
 /-- If `U, V` are disjoint, then `F(U ⊔ V) = F(U) × F(V)`. -/
 def isProductOfDisjoint (h : U ⊓ V = ⊥) :
     IsLimit
@@ -445,12 +505,18 @@ def isProductOfDisjoint (h : U ⊓ V = ⊥) :
   isProductOfIsTerminalIsPullback _ _ _ _ (F.isTerminalOfEqEmpty h) (isLimitPullbackCone F U V)
 #align Top.sheaf.is_product_of_disjoint TopCat.Sheaf.isProductOfDisjoint
 
+/- warning: Top.sheaf.obj_sup_iso_prod_eq_locus -> TopCat.Sheaf.objSupIsoProdEqLocus is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.obj_sup_iso_prod_eq_locus TopCat.Sheaf.objSupIsoProdEqLocusₓ'. -/
 /-- `F(U ⊔ V)` is isomorphic to the `eq_locus` of the two maps `F(U) × F(V) ⟶ F(U ⊓ V)`. -/
 def objSupIsoProdEqLocus {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) :
     F.1.obj (op <| U ⊔ V) ≅ CommRingCat.of (RingHom.eqLocus _ _) :=
   (F.isLimitPullbackCone U V).conePointUniqueUpToIso (CommRingCat.pullbackConeIsLimit _ _)
 #align Top.sheaf.obj_sup_iso_prod_eq_locus TopCat.Sheaf.objSupIsoProdEqLocus
 
+/- warning: Top.sheaf.obj_sup_iso_prod_eq_locus_hom_fst -> TopCat.Sheaf.objSupIsoProdEqLocus_hom_fst is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_fst TopCat.Sheaf.objSupIsoProdEqLocus_hom_fstₓ'. -/
 theorem objSupIsoProdEqLocus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
     ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLE le_sup_left).op x :=
   ConcreteCategory.congr_hom
@@ -459,6 +525,9 @@ theorem objSupIsoProdEqLocus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_fst TopCat.Sheaf.objSupIsoProdEqLocus_hom_fst
 
+/- warning: Top.sheaf.obj_sup_iso_prod_eq_locus_hom_snd -> TopCat.Sheaf.objSupIsoProdEqLocus_hom_snd is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_snd TopCat.Sheaf.objSupIsoProdEqLocus_hom_sndₓ'. -/
 theorem objSupIsoProdEqLocus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
     ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLE le_sup_right).op x :=
   ConcreteCategory.congr_hom
@@ -467,6 +536,9 @@ theorem objSupIsoProdEqLocus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_snd TopCat.Sheaf.objSupIsoProdEqLocus_hom_snd
 
+/- warning: Top.sheaf.obj_sup_iso_prod_eq_locus_inv_fst -> TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_fst TopCat.Sheaf.objSupIsoProdEqLocus_inv_fstₓ'. -/
 theorem objSupIsoProdEqLocus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
     F.1.map (homOfLE le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
   ConcreteCategory.congr_hom
@@ -475,6 +547,9 @@ theorem objSupIsoProdEqLocus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_fst TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst
 
+/- warning: Top.sheaf.obj_sup_iso_prod_eq_locus_inv_snd -> TopCat.Sheaf.objSupIsoProdEqLocus_inv_snd is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_snd TopCat.Sheaf.objSupIsoProdEqLocus_inv_sndₓ'. -/
 theorem objSupIsoProdEqLocus_inv_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
     F.1.map (homOfLE le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
   ConcreteCategory.congr_hom

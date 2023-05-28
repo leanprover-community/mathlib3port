@@ -196,7 +196,6 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.r
   · refine' (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top zero_lt_two _).Ne
     rw [← h_two, ← snorm_eq_snorm' two_ne_zero ENNReal.two_ne_top]
     exact Lp.snorm_lt_top f
-#align measure_theory.L2.norm_sq_eq_inner' measure_theory.L2.norm_sq_eq_inner'
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
     AEEqFun.mk (fun x => ⟪f x, g x⟫)
@@ -221,7 +220,6 @@ private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f
   refine' integral_congr_ae ((coe_fn_add f f').mono fun x hx => _)
   congr
   rwa [Pi.add_apply] at hx
-#align measure_theory.L2.add_left' measure_theory.L2.add_left'
 
 private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫ = conj r * inner f g :=
   by
@@ -230,7 +228,6 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
   rw [smul_eq_mul, ← inner_smul_left]
   congr
   rwa [Pi.smul_apply] at hx
-#align measure_theory.L2.smul_left' measure_theory.L2.smul_left'
 
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E)
     where

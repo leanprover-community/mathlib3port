@@ -260,11 +260,9 @@ theorem ofRat_mul (x y : β) : ofRat (x * y) = (ofRat x * ofRat y : Cauchy abv) 
 
 private theorem zero_def : 0 = (mk 0 : Cauchy abv) :=
   rfl
-#align cau_seq.completion.zero_def cau_seq.completion.zero_def
 
 private theorem one_def : 1 = (mk 1 : Cauchy abv) :=
   rfl
-#align cau_seq.completion.one_def cau_seq.completion.one_def
 
 instance : Ring (Cauchy abv) :=
   Function.Surjective.ring mk (surjective_quotient_mk _) zero_def.symm one_def.symm

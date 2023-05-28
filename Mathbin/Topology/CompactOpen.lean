@@ -142,7 +142,6 @@ private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : 
   ext ⟨f, _⟩
   change g ∘ f '' s ⊆ u ↔ f '' s ⊆ g ⁻¹' u
   rw [image_comp, image_subset_iff]
-#align continuous_map.preimage_gen continuous_map.preimage_gen
 
 /- warning: continuous_map.continuous_comp -> ContinuousMap.continuous_comp is a dubious translation:
 lean 3 declaration is
@@ -164,7 +163,6 @@ private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsO
   ext ⟨g, _⟩
   change g ∘ f '' s ⊆ u ↔ g '' (f '' s) ⊆ u
   rw [Set.image_comp]
-#align continuous_map.image_gen continuous_map.image_gen
 
 /- warning: continuous_map.continuous_comp_left -> ContinuousMap.continuous_comp_left is a dubious translation:
 lean 3 declaration is

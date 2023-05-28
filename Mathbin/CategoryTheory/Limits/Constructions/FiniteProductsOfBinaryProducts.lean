@@ -122,7 +122,6 @@ private theorem has_product_fin : ∀ (n : ℕ) (f : Fin n → C), HasProduct f
   | n + 1 => fun f => by
     haveI := has_product_fin n
     apply has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)⟩
-#align category_theory.has_product_fin category_theory.has_product_fin
 
 #print CategoryTheory.hasFiniteProducts_of_has_binary_and_terminal /-
 /-- If `C` has a terminal object and binary products, then it has finite products. -/
@@ -294,7 +293,6 @@ private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Fin n → C), HasCoproduc
     haveI := has_coproduct_fin n
     apply
       has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
-#align category_theory.has_coproduct_fin category_theory.has_coproduct_fin
 
 #print CategoryTheory.hasFiniteCoproducts_of_has_binary_and_initial /-
 /-- If `C` has an initial object and binary coproducts, then it has finite coproducts. -/

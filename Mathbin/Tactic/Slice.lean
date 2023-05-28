@@ -97,7 +97,6 @@ private unsafe def conv_target' (c : conv Unit) : tactic Unit := do
   replace_target new_t pr
   try tactic.triv
   try (tactic.reflexivity reducible)
-#align tactic.conv_target' tactic.conv_target'
 
 namespace Interactive
 

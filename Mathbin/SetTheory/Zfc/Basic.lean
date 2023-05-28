@@ -428,7 +428,6 @@ private theorem mem_wf_aux : ∀ {x y : PSet.{u}}, Equiv x y → Acc (· ∈ ·)
       have H := ha.trans hc.symm
       rw [mk_func] at H
       exact mem_wf_aux H⟩
-#align pSet.mem_wf_aux pSet.mem_wf_aux
 
 #print PSet.mem_wf /-
 theorem mem_wf : @WellFounded PSet (· ∈ ·) :=

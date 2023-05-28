@@ -72,7 +72,6 @@ private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tacti
   match o opt "" with
     | "" => mk_new o opt
     | s => return <| Name.fromComponents <| s (· = '.')
-#align tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
 
 unsafe def get_name (ns : Name) : tactic Name :=
   get_name_aux ns fun o opt => do
@@ -170,7 +169,6 @@ private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × 
         let is_dead ← is_name_dead n
         if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False)
           else return (tag, True)
-#align tactic.local_cache.internal.def_local.get_with_status_tag_aux tactic.local_cache.internal.def_local.get_with_status_tag_aux
 
 -- Find the latest tag for the name `rn` and report whether it is alive.
 unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=

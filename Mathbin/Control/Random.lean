@@ -157,7 +157,6 @@ namespace Io
 
 private def accum_char (w : ℕ) (c : Char) : ℕ :=
   c.toNat + 256 * w
-#align io.accum_char io.accum_char
 
 /-- create and seed a random number generator -/
 def mkGenerator : Io StdGen := do

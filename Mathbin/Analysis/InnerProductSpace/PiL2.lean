@@ -736,7 +736,7 @@ theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 (co
     ∃ (u : Finset E)(b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe :=
   by
   obtain ⟨u₀, hu₀s, hu₀, hu₀_max⟩ := exists_maximal_orthonormal hv
-  rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hu₀] at hu₀_max
+  rw [maximal_orthonormal_iff_orthogonalComplement_eq_bot hu₀] at hu₀_max
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
   let fu : ↥u ≃ ↥u₀ := Equiv.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
@@ -938,8 +938,8 @@ theorem LinearIsometry.extend_apply (L : S →ₗᵢ[𝕜] V) (s : S) : L.extend
     orthogonalProjection_mem_subspace_eq_self, LinearMap.coe_comp, ContinuousLinearMap.coe_coe,
     Submodule.coeSubtype, LinearMap.add_apply, Submodule.coe_eq_zero,
     LinearIsometryEquiv.map_eq_zero_iff, Submodule.coe_subtypeₗᵢ,
-    orthogonalProjection_mem_subspace_orthogonal_complement_eq_zero,
-    Submodule.orthogonal_orthogonal, Submodule.coe_mem]
+    orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero, Submodule.orthogonal_orthogonal,
+    Submodule.coe_mem]
 #align linear_isometry.extend_apply LinearIsometry.extend_apply
 
 end LinearIsometry

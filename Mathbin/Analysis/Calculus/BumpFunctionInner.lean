@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_inner
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.Deriv.Inv
 import Mathbin.Analysis.Calculus.ExtendDeriv
 import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.InnerProductSpace.Calculus
@@ -261,6 +262,18 @@ protected theorem one : smoothTransition 1 = 1 :=
   one_of_one_le le_rfl
 #align real.smooth_transition.one Real.smoothTransition.one
 
+/-- Since `real.smooth_transition` is constant on $(-∞, 0]$ and $[1, ∞)$, applying it to the
+projection of `x : ℝ` to $[0, 1]$ gives the same result as applying it to `x`. -/
+@[simp]
+protected theorem projIcc :
+    smoothTransition (projIcc (0 : ℝ) 1 zero_le_one x) = smoothTransition x :=
+  by
+  refine'
+    congr_fun (Icc_extend_eq_self zero_le_one smooth_transition (fun x hx => _) fun x hx => _) x
+  · rw [smooth_transition.zero, zero_of_nonpos hx.le]
+  · rw [smooth_transition.one, one_of_one_le hx.le]
+#align real.smooth_transition.proj_Icc Real.smoothTransition.projIcc
+
 theorem le_one (x : ℝ) : smoothTransition x ≤ 1 :=
   (div_le_one (pos_denom x)).2 <| le_add_of_nonneg_right (nonneg _)
 #align real.smooth_transition.le_one Real.smoothTransition.le_one
@@ -290,6 +303,10 @@ protected theorem contDiffAt {x n} : ContDiffAt ℝ n smoothTransition x :=
 protected theorem continuous : Continuous smoothTransition :=
   (@smoothTransition.contDiff 0).Continuous
 #align real.smooth_transition.continuous Real.smoothTransition.continuous
+
+protected theorem continuousAt : ContinuousAt smoothTransition x :=
+  smoothTransition.continuous.ContinuousAt
+#align real.smooth_transition.continuous_at Real.smoothTransition.continuousAt
 
 end SmoothTransition
 

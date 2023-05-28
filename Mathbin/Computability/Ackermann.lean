@@ -119,7 +119,6 @@ private theorem ack_three_aux (n : ℕ) : (ack 3 n : ℤ) = 2 ^ (n + 3) - 3 :=
   · simp [IH, pow_succ]
     rw [mul_sub, sub_add]
     norm_num
-#align ack_three_aux ack_three_aux
 
 #print ack_three /-
 @[simp]
@@ -273,7 +272,6 @@ private theorem ack_strict_mono_left' : ∀ {m₁ m₂} (n), m₁ < m₂ → ack
     exact
       (ack_strict_mono_left' _ <| (add_lt_add_iff_right 1).1 h).trans
         (ack_strictMono_right _ <| ack_strict_mono_left' n h)
-#align ack_strict_mono_left' ack_strict_mono_left'
 
 #print ack_strictMono_left /-
 theorem ack_strictMono_left (n : ℕ) : StrictMono fun m => ack m n := fun m₁ m₂ =>
@@ -357,7 +355,6 @@ private theorem sq_le_two_pow_add_one_minus_three (n : ℕ) : n ^ 2 ≤ 2 ^ (n +
         apply lt_two_pow
       · rw [pow_succ, pow_succ]
         linarith [one_le_pow k 2 zero_lt_two]
-#align sq_le_two_pow_add_one_minus_three sq_le_two_pow_add_one_minus_three
 
 #print ack_add_one_sq_lt_ack_add_three /-
 theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m + 3) n

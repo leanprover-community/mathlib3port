@@ -113,7 +113,6 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
           exact le_rfl)
     
-#align Cauchy.symm_gen Cauchy.symm_gen
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -129,7 +128,6 @@ private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
   (f.val ×ᶠ g.val).sets_of_superset (prod_mem_prod ht₁ ht₄)
     fun ⟨a, b⟩ ⟨(ha : a ∈ t₁), (hb : b ∈ t₄)⟩ =>
     ⟨x, h₁ (show (a, x) ∈ t₁ ×ˢ t₂ from ⟨ha, xt₂⟩), h₂ (show (x, b) ∈ t₃ ×ˢ t₄ from ⟨xt₃, hb⟩)⟩
-#align Cauchy.comp_rel_gen_gen_subset_gen_comp_rel Cauchy.comp_rel_gen_gen_subset_gen_comp_rel
 
 private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) ≤ (𝓤 α).lift' gen :=
   calc
@@ -147,7 +145,6 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
       exact monotone_gen
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rfl
     
-#align Cauchy.comp_gen Cauchy.comp_gen
 
 instance : UniformSpace (CauchyFilter α) :=
   UniformSpace.ofCore

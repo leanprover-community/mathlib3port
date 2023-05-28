@@ -89,7 +89,6 @@ unsafe instance : has_to_format strictness :=
 
 private theorem lt_of_eq_of_lt'' {α} [Preorder α] {b b' a : α} : b = b' → a < b' → a < b :=
   fun h1 h2 => lt_of_lt_of_eq h2 h1.symm
-#align tactic.lt_of_eq_of_lt'' tactic.lt_of_eq_of_lt''
 
 /-- First base case of the `positivity` tactic.  We try `norm_num` to prove directly that an
 expression `e` is positive, nonnegative or non-zero. -/
@@ -192,7 +191,6 @@ unsafe def positivity_fail {α : Type _} (e a b : expr) (pa pb : strictness) : t
 
 private theorem ne_of_ne_of_eq' {α : Type _} {a b c : α} (ha : a ≠ c) (h : a = b) : b ≠ c := by
   rwa [← h]
-#align tactic.positivity.ne_of_ne_of_eq' tactic.positivity.ne_of_ne_of_eq'
 
 /-- Calls `norm_num` on `a` to prove positivity/nonnegativity of `e` assuming `b` is defeq to `e`
 and `p₂ : a ≤ b`. -/
@@ -472,31 +470,25 @@ variable [LinearOrder R] {a b c : R}
 
 private theorem le_min_of_lt_of_le (ha : a < b) (hb : a ≤ c) : a ≤ min b c :=
   le_min ha.le hb
-#align tactic.le_min_of_lt_of_le tactic.le_min_of_lt_of_le
 
 private theorem le_min_of_le_of_lt (ha : a ≤ b) (hb : a < c) : a ≤ min b c :=
   le_min ha hb.le
-#align tactic.le_min_of_le_of_lt tactic.le_min_of_le_of_lt
 
 private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c :=
   by
   rw [min_def]
   split_ifs <;> assumption
-#align tactic.min_ne tactic.min_ne
 
 private theorem min_ne_of_ne_of_lt (ha : a ≠ c) (hb : c < b) : min a b ≠ c :=
   min_ne ha hb.ne'
-#align tactic.min_ne_of_ne_of_lt tactic.min_ne_of_ne_of_lt
 
 private theorem min_ne_of_lt_of_ne (ha : c < a) (hb : b ≠ c) : min a b ≠ c :=
   min_ne ha.ne' hb
-#align tactic.min_ne_of_lt_of_ne tactic.min_ne_of_lt_of_ne
 
 private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c :=
   by
   rw [max_def]
   split_ifs <;> assumption
-#align tactic.max_ne tactic.max_ne
 
 end LinearOrder
 
@@ -588,21 +580,17 @@ variable [OrderedSemiring R] {a b : R}
 
 private theorem mul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a * b :=
   mul_nonneg ha.le hb
-#align tactic.mul_nonneg_of_pos_of_nonneg tactic.mul_nonneg_of_pos_of_nonneg
 
 private theorem mul_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a * b :=
   mul_nonneg ha hb.le
-#align tactic.mul_nonneg_of_nonneg_of_pos tactic.mul_nonneg_of_nonneg_of_pos
 
 private theorem mul_ne_zero_of_pos_of_ne_zero [NoZeroDivisors R] (ha : 0 < a) (hb : b ≠ 0) :
     a * b ≠ 0 :=
   mul_ne_zero ha.ne' hb
-#align tactic.mul_ne_zero_of_pos_of_ne_zero tactic.mul_ne_zero_of_pos_of_ne_zero
 
 private theorem mul_ne_zero_of_ne_zero_of_pos [NoZeroDivisors R] (ha : a ≠ 0) (hb : 0 < b) :
     a * b ≠ 0 :=
   mul_ne_zero ha hb.ne'
-#align tactic.mul_ne_zero_of_ne_zero_of_pos tactic.mul_ne_zero_of_ne_zero_of_pos
 
 end OrderedSemiring
 
@@ -659,19 +647,15 @@ variable [LinearOrderedSemifield R] {a b : R}
 
 private theorem div_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a / b :=
   div_nonneg ha.le hb
-#align tactic.div_nonneg_of_pos_of_nonneg tactic.div_nonneg_of_pos_of_nonneg
 
 private theorem div_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a / b :=
   div_nonneg ha hb.le
-#align tactic.div_nonneg_of_nonneg_of_pos tactic.div_nonneg_of_nonneg_of_pos
 
 private theorem div_ne_zero_of_pos_of_ne_zero (ha : 0 < a) (hb : b ≠ 0) : a / b ≠ 0 :=
   div_ne_zero ha.ne' hb
-#align tactic.div_ne_zero_of_pos_of_ne_zero tactic.div_ne_zero_of_pos_of_ne_zero
 
 private theorem div_ne_zero_of_ne_zero_of_pos (ha : a ≠ 0) (hb : 0 < b) : a / b ≠ 0 :=
   div_ne_zero ha hb.ne'
-#align tactic.div_ne_zero_of_ne_zero_of_pos tactic.div_ne_zero_of_ne_zero_of_pos
 
 end LinearOrderedSemifield
 
@@ -679,19 +663,15 @@ private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a :=
   by
   rw [Int.ediv_self ha.ne']
   exact zero_lt_one
-#align tactic.int_div_self_pos tactic.int_div_self_pos
 
 private theorem int_div_nonneg_of_pos_of_nonneg {a b : ℤ} (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a / b :=
   Int.div_nonneg ha.le hb
-#align tactic.int_div_nonneg_of_pos_of_nonneg tactic.int_div_nonneg_of_pos_of_nonneg
 
 private theorem int_div_nonneg_of_nonneg_of_pos {a b : ℤ} (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ a / b :=
   Int.div_nonneg ha hb.le
-#align tactic.int_div_nonneg_of_nonneg_of_pos tactic.int_div_nonneg_of_nonneg_of_pos
 
 private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < b) : 0 ≤ a / b :=
   Int.div_nonneg ha.le hb.le
-#align tactic.int_div_nonneg_of_pos_of_pos tactic.int_div_nonneg_of_pos_of_pos
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -796,11 +776,9 @@ private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < 
 
 private theorem pow_zero_pos [OrderedSemiring R] [Nontrivial R] (a : R) : 0 < a ^ 0 :=
   zero_lt_one.trans_le (pow_zero a).ge
-#align tactic.pow_zero_pos tactic.pow_zero_pos
 
 private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : ℤ) :=
   zero_lt_one.trans_le (zpow_zero a).ge
-#align tactic.zpow_zero_pos tactic.zpow_zero_pos
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -956,7 +934,6 @@ unsafe def positivity_abs : expr → tactic strictness
 
 private theorem int_nat_abs_pos {n : ℤ} (hn : 0 < n) : 0 < n.natAbs :=
   Int.natAbs_pos_of_ne_zero hn.ne'
-#align tactic.int_nat_abs_pos tactic.int_nat_abs_pos
 
 /-- Extension for the `positivity` tactic: `int.nat_abs` is positive when its input is.
 
@@ -976,41 +953,32 @@ unsafe def positivity_nat_abs : expr → tactic strictness
 
 private theorem nat_cast_pos [OrderedSemiring α] [Nontrivial α] {n : ℕ} : 0 < n → 0 < (n : α) :=
   Nat.cast_pos.2
-#align tactic.nat_cast_pos tactic.nat_cast_pos
 
 private theorem int_coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
   n.cast_nonneg
-#align tactic.int_coe_nat_nonneg tactic.int_coe_nat_nonneg
 
 private theorem int_coe_nat_pos {n : ℕ} : 0 < n → 0 < (n : ℤ) :=
   Nat.cast_pos.2
-#align tactic.int_coe_nat_pos tactic.int_coe_nat_pos
 
 private theorem int_cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : n ≠ 0 → (n : α) ≠ 0 :=
   Int.cast_ne_zero.2
-#align tactic.int_cast_ne_zero tactic.int_cast_ne_zero
 
 private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) :=
   by
   rw [← Int.cast_zero]
   exact Int.cast_mono hn
-#align tactic.int_cast_nonneg tactic.int_cast_nonneg
 
 private theorem int_cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : 0 < n → 0 < (n : α) :=
   Int.cast_pos.2
-#align tactic.int_cast_pos tactic.int_cast_pos
 
 private theorem rat_cast_ne_zero [DivisionRing α] [CharZero α] {q : ℚ} : q ≠ 0 → (q : α) ≠ 0 :=
   Rat.cast_ne_zero.2
-#align tactic.rat_cast_ne_zero tactic.rat_cast_ne_zero
 
 private theorem rat_cast_nonneg [LinearOrderedField α] {q : ℚ} : 0 ≤ q → 0 ≤ (q : α) :=
   Rat.cast_nonneg.2
-#align tactic.rat_cast_nonneg tactic.rat_cast_nonneg
 
 private theorem rat_cast_pos [LinearOrderedField α] {q : ℚ} : 0 < q → 0 < (q : α) :=
   Rat.cast_pos.2
-#align tactic.rat_cast_pos tactic.rat_cast_pos
 
 /-- Extension for the `positivity` tactic: casts from `ℕ`, `ℤ`, `ℚ`. -/
 @[positivity]

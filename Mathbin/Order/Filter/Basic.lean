@@ -658,7 +658,6 @@ section CompleteLattice
   upfront and change the lattice operations for the complete lattice instance. -/
 private def original_complete_lattice : CompleteLattice (Filter α) :=
   @OrderDual.completeLattice _ (giGenerate α).liftCompleteLattice
-#align filter.original_complete_lattice filter.original_complete_lattice
 
 attribute [local instance] original_complete_lattice
 

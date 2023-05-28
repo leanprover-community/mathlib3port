@@ -186,7 +186,6 @@ private unsafe
                                 return ( some ( e' , pr ) )
                         | _ => return none
               | _ => return none
-#align push_neg.transform_negation_step push_neg.transform_negation_step
 
 private unsafe def transform_negation : expr → tactic (Option (expr × expr))
   | e => do
@@ -196,7 +195,6 @@ private unsafe def transform_negation : expr → tactic (Option (expr × expr))
       return (some (e', pr))
     let pr'' ← mk_eq_trans pr pr'
     return (some (e'', pr''))
-#align push_neg.transform_negation push_neg.transform_negation
 
 unsafe def normalize_negations (t : expr) : tactic (expr × expr) := do
   let (_, e, pr) ←

@@ -109,20 +109,20 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
     ext x
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linearMap_apply,
       LinearMap.compr₂_apply, Function.comp_apply, RingHom.map_one,
-      ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
-      ModuleCat.monoidalCategory.leftUnitor_hom_apply]
+      ModuleCat.MonoidalCategory.hom_apply, AlgebraCat.coe_comp,
+      ModuleCat.MonoidalCategory.leftUnitor_hom_apply]
     rw [LinearMap.mul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def]
   mul_one' := by
     ext x
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linearMap_apply,
-      LinearMap.compr₂_apply, Function.comp_apply, ModuleCat.monoidalCategory.hom_apply,
+      LinearMap.compr₂_apply, Function.comp_apply, ModuleCat.MonoidalCategory.hom_apply,
       AlgebraCat.coe_comp]
-    rw [LinearMap.mul'_apply, ModuleCat.monoidalCategory.rightUnitor_hom_apply, ← Algebra.commutes,
+    rw [LinearMap.mul'_apply, ModuleCat.MonoidalCategory.rightUnitor_hom_apply, ← Algebra.commutes,
       ← Algebra.smul_def]
   mul_assoc' := by
     ext (x y z)
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply,
-      Function.comp_apply, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
+      Function.comp_apply, ModuleCat.MonoidalCategory.hom_apply, AlgebraCat.coe_comp,
       monoidal_category.associator_hom_apply]
     simp only [LinearMap.mul'_apply, mul_assoc]
 #align Module.Mon_Module_equivalence_Algebra.inverse_obj ModuleCat.MonModuleEquivalenceAlgebra.inverseObj

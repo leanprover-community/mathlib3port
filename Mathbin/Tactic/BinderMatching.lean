@@ -233,7 +233,6 @@ private unsafe def get_pi_binders_nondep_aux : ℕ → expr → tactic (List (�
   let (rs, rest) ← get_pi_binders_nondep_aux (i + 1) (body.instantiate_var replacement)
   let rs' := if body.has_var then rs else (i, replacement.to_binder) :: rs
   pure (rs', rest)
-#align tactic.get_pi_binders_nondep_aux tactic.get_pi_binders_nondep_aux
 
 /-- `get_pi_binders_nondep e` instantiates all leading Π binders of `e` with fresh
 local constants (like `open_pis`). Returns the remainder of `e` and information

@@ -1402,7 +1402,6 @@ theorem inv_mul_self (a : G) : a⁻¹ * a = 1 :=
 @[to_additive]
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b :=
   left_inv_eq_right_inv (inv_mul_self a) h
-#align inv_eq_of_mul inv_eq_of_mul
 
 /- warning: mul_right_inv -> mul_right_inv is a dubious translation:
 lean 3 declaration is

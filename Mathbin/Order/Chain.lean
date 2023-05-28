@@ -297,7 +297,6 @@ private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc�
     union s hs ih =>
     refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
     exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
-#align chain_closure_succ_total_aux chain_closure_succ_total_aux
 
 private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
     (h : c₁ ⊆ c₂) : c₂ = c₁ ∨ SuccChain r c₁ ⊆ c₂ :=
@@ -319,7 +318,6 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
     obtain h' | h' := ih c₃ hc₃ hc₁ h
     · exact h₁ h'.subset
     · exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
-#align chain_closure_succ_total chain_closure_succ_total
 
 #print ChainClosure.total /-
 theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :

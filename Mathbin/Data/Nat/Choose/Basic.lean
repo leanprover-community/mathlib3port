@@ -375,7 +375,6 @@ private theorem choose_le_middle_of_le_half_left {n r : ℕ} (hr : r ≤ n / 2) 
       (eq_or_lt_of_le a).elim (fun t => t.symm ▸ le_rfl) fun h =>
         (choose_le_succ_of_lt_half_left h).trans (k h))
     hr (fun _ => le_rfl) hr
-#align nat.choose_le_middle_of_le_half_left nat.choose_le_middle_of_le_half_left
 
 #print Nat.choose_le_middle /-
 /-- `choose n r` is maximised when `r` is `n/2`. -/

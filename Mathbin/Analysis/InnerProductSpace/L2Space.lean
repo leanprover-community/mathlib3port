@@ -616,7 +616,7 @@ theorem Orthonormal.exists_hilbertBasis_extension {s : Set E} (hs : Orthonormal 
   let ⟨w, hws, hw_ortho, hw_max⟩ := exists_maximal_orthonormal hs
   ⟨w,
     HilbertBasis.mkOfOrthogonalEqBot hw_ortho
-      (by simpa [maximal_orthonormal_iff_orthogonal_complement_eq_bot hw_ortho] using hw_max),
+      (by simpa [maximal_orthonormal_iff_orthogonalComplement_eq_bot hw_ortho] using hw_max),
     hws, HilbertBasis.coe_of_orthogonal_eq_bot_mk _ _⟩
 #align orthonormal.exists_hilbert_basis_extension Orthonormal.exists_hilbertBasis_extension
 

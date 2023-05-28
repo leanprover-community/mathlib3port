@@ -60,7 +60,6 @@ private unsafe def update_unsed_decls_list :
         let ns := d d
         ns m update_unsed_decls_list
       else pure m
-#align tactic.update_unsed_decls_list tactic.update_unsed_decls_list
 
 /-- In the current file, list all the declaration that are not marked as `@[main_declaration]` and
 that are not referenced by such declarations -/

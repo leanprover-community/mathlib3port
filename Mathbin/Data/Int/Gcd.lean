@@ -153,7 +153,6 @@ parameter (x y : ℕ)
 
 private def P : ℕ × ℤ × ℤ → Prop
   | (r, s, t) => (r : ℤ) = x * s + y * t
-#align nat.P nat.P
 
 #print Nat.xgcd_aux_P /-
 theorem xgcd_aux_P {r r'} :

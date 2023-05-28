@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 62748956a1ece9b26b33243e2e3a2852176666f5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -459,6 +459,7 @@ theorem expHasFpowerSeriesAtZero : HasFpowerSeriesAt (exp 𝕂) (expSeries 𝕂 
   expHasFpowerSeriesOnBall.HasFpowerSeriesAt
 #align exp_has_fpower_series_at_zero expHasFpowerSeriesAtZero
 
+@[continuity]
 theorem exp_continuous : Continuous (exp 𝕂 : 𝔸 → 𝔸) :=
   by
   rw [continuous_iff_continuousOn_univ, ← Metric.eball_top_eq_univ (0 : 𝔸), ←

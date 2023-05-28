@@ -36,7 +36,6 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 @[local nolint instance_priority, local instance 10000]
 private def disable_has_sizeof {α} : SizeOf α :=
   ⟨fun _ => 0⟩
-#align disable_has_sizeof disable_has_sizeof
 
 /-- Left-invariant global derivations.
 

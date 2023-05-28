@@ -278,7 +278,6 @@ local notation "L" => Array'.read bkts bidx
 
 private def bkts' : BucketArray α β n :=
   Array'.write bkts bidx (f L)
-#align hash_map.bkts' hash_map.bkts'
 
 variable (hl : L = u ++ v1 ++ w) (hfl : f L = u ++ v2 ++ w)
 
@@ -769,11 +768,9 @@ open Prod
 
 private def key_data_to_string (a : α) (b : β a) (first : Bool) : String :=
   (if first then "" else ", ") ++ s! "{a } ← {b}"
-#align hash_map.key_data_to_string hash_map.key_data_to_string
 
 private def to_string (m : HashMap α β) : String :=
   "⟨" ++ fst (fold m ("", true) fun p a b => (fst p ++ keyDataToString a b (snd p), false)) ++ "⟩"
-#align hash_map.to_string hash_map.to_string
 
 instance : ToString (HashMap α β) :=
   ⟨toString⟩
@@ -789,7 +786,6 @@ variable [has_to_format α] [∀ a, has_to_format (β a)]
 private unsafe def format_key_data (a : α) (b : β a) (first : Bool) : format :=
   (if first then to_fmt "" else to_fmt "," ++ line) ++ to_fmt a ++ space ++ to_fmt "←" ++ space ++
     to_fmt b
-#align hash_map.format_key_data hash_map.format_key_data
 
 private unsafe def to_format (m : HashMap α β) : format :=
   Group <|
@@ -799,7 +795,6 @@ private unsafe def to_format (m : HashMap α β) : format :=
             (fold m (to_fmt "", true) fun p a b =>
               (fst p ++ format_key_data a b (snd p), false))) ++
       to_fmt "⟩"
-#align hash_map.to_format hash_map.to_format
 
 unsafe instance : has_to_format (HashMap α β) :=
   ⟨to_format⟩

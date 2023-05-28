@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_integral
-! leanprover-community/mathlib commit 639b66d9330da2cd8dd02be1a51b6d10d058e5e4
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
+import Mathbin.Analysis.Calculus.Deriv.Zpow
 import Mathbin.Analysis.NormedSpace.Pointwise
 import Mathbin.Analysis.SpecialFunctions.NonIntegrable
 import Mathbin.Analysis.Analytic.Basic

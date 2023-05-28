@@ -28,7 +28,6 @@ private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e 
       | some (_, expr.local_const _ _ _ _) => none
       | some (_, _) => e.erase_annotations
       | _ => none
-#align tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
 
 /-- `simp_arg_type.to_pexpr` retrieves the `pexpr` underlying the given `simp_arg_type`, if there is
 one. -/
@@ -43,7 +42,6 @@ unsafe def simp_arg_type.to_pexpr : simp_arg_type → Option pexpr
 private unsafe def replace_subexprs_for_simp_arg (e : pexpr) (rules : List (expr × expr)) : pexpr :=
   strip_annotations_from_all_non_local_consts <|
     pexpr.of_expr <| e.unsafe_cast.replace_subexprs rules
-#align tactic.replace_subexprs_for_simp_arg tactic.replace_subexprs_for_simp_arg
 
 /-- `simp_arg_type.replace_subexprs` calls `expr.replace_subexprs` on the underlying `pexpr`, if
 there is one, and then prepares the result for use by the simplifier. -/

@@ -148,7 +148,6 @@ private theorem dist_comm_aux {u v : V} (h : G.Reachable u v) : G.dist u v ≤ G
   obtain ⟨p, hp⟩ := h.symm.exists_walk_of_dist
   rw [← hp, ← walk.length_reverse]
   apply dist_le
-#align simple_graph.dist_comm_aux simple_graph.dist_comm_aux
 
 #print SimpleGraph.dist_comm /-
 theorem dist_comm {u v : V} : G.dist u v = G.dist v u :=

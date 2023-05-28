@@ -389,7 +389,6 @@ private theorem [anonymous] :
         exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
       -- Finally, we really do have `r+1` lines!
       · rw [Multiset.card_cons, Multiset.card_map, sr])
-#align combinatorics.line.exists_mono_in_high_dimension' [anonymous]
 -/
 
 #print Combinatorics.Line.exists_mono_in_high_dimension /-

@@ -143,7 +143,6 @@ section HelperLemmas
 
 private theorem pow_gt_exponent {a : ℕ} (b : ℕ) (h : 2 ≤ a) : b < a ^ b :=
   lt_of_lt_of_le (Nat.lt_two_pow b) <| Nat.pow_le_pow_of_le_left h _
-#align fermat_psp.pow_gt_exponent fermat_psp.pow_gt_exponent
 
 private theorem a_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 2 ≤ (a ^ b - 1) / (a - 1) :=
   by
@@ -152,7 +151,6 @@ private theorem a_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 2 ≤ (a
   rw [Nat.lt_div_iff_mul_lt h₁, mul_one, tsub_lt_tsub_iff_right (Nat.le_of_succ_le ha)]
   convert pow_lt_pow (Nat.lt_of_succ_le ha) hb
   rw [pow_one]
-#align fermat_psp.a_id_helper fermat_psp.a_id_helper
 
 private theorem b_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 < b) : 2 ≤ (a ^ b + 1) / (a + 1) :=
   by
@@ -163,7 +161,6 @@ private theorem b_id_helper {a b : ℕ} (ha : 2 ≤ a) (hb : 2 < b) : 2 ≤ (a ^
     _ = a ^ 3 := by rw [pow_succ' a 2]
     _ ≤ a ^ b := pow_le_pow (Nat.le_of_succ_le ha) hb
     
-#align fermat_psp.b_id_helper fermat_psp.b_id_helper
 
 private theorem AB_id_helper (b p : ℕ) (hb : 2 ≤ b) (hp : Odd p) :
     (b ^ p - 1) / (b - 1) * ((b ^ p + 1) / (b + 1)) = (b ^ (2 * p) - 1) / (b ^ 2 - 1) :=
@@ -173,7 +170,6 @@ private theorem AB_id_helper (b p : ℕ) (hb : 2 ≤ b) (hp : Odd p) :
   convert Nat.div_mul_div_comm q₁ q₂ <;> rw [mul_comm (_ - 1), ← Nat.sq_sub_sq]
   · ring
   · simp
-#align fermat_psp.AB_id_helper fermat_psp.AB_id_helper
 
 /-- Used in the proof of `psp_from_prime_psp`
 -/
@@ -193,7 +189,6 @@ private theorem bp_helper {b p : ℕ} (hb : 0 < b) (hp : 1 ≤ p) :
     _ = (b * b ^ (p - 1) - b * 1) * (b ^ p + b) := by rw [mul_one]
     _ = b * (b ^ (p - 1) - 1) * (b ^ p + b) := by rw [Nat.mul_sub_left_distrib]
     
-#align fermat_psp.bp_helper fermat_psp.bp_helper
 
 end HelperLemmas
 
@@ -210,7 +205,6 @@ because those are the hypotheses for `psp_from_prime_psp`.
 -/
 private def psp_from_prime (b : ℕ) (p : ℕ) : ℕ :=
   (b ^ p - 1) / (b - 1) * ((b ^ p + 1) / (b + 1))
-#align fermat_psp.psp_from_prime fermat_psp.psp_from_prime
 
 /--
 This is a proof that the number produced using `psp_from_prime` is actually pseudoprime to base `b`.
@@ -322,7 +316,6 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   -- We have proved that `A * B ∣ b ^ (2 * p) - 1` and `b ^ (2 * p) - 1 ∣ b ^ (A * B - 1) - 1`.
   -- Therefore, `A * B ∣ b ^ (A * B - 1) - 1`.
   exact dvd_trans ha₇ ha₈
-#align fermat_psp.psp_from_prime_psp fermat_psp.psp_from_prime_psp
 
 /--
 This is a proof that the number produced using `psp_from_prime` is greater than the prime `p` used
@@ -362,7 +355,6 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
   have : 2 + p ≤ 2 * p := by linarith
   have : p ≤ 2 * p - 2 := le_tsub_of_add_le_left this
   exact Nat.lt_of_le_of_lt this (pow_gt_exponent _ b_ge_two)
-#align fermat_psp.psp_from_prime_gt_p fermat_psp.psp_from_prime_gt_p
 
 /-- For all positive bases, there exist Fermat infinite pseudoprimes to that base.
 Given in this form: for all numbers `b ≥ 1` and `m`, there exists a pseudoprime `n` to base `b` such

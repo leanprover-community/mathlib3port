@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
+! leanprover-community/mathlib commit b84aee748341da06a6d78491367e2c0e9f15e8a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1361,26 +1361,41 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
   rfl
 #align measure_theory.integral_image_eq_integral_abs_det_fderiv_smul MeasureTheory.integral_image_eq_integral_abs_det_fderiv_smul
 
+-- Porting note: move this to `topology.algebra.module.basic` when port is over
+theorem det_one_smulRight {𝕜 : Type _} [NormedField 𝕜] (v : 𝕜) :
+    ((1 : 𝕜 →L[𝕜] 𝕜).smul_right v).det = v :=
+  by
+  have : (1 : 𝕜 →L[𝕜] 𝕜).smul_right v = v • (1 : 𝕜 →L[𝕜] 𝕜) :=
+    by
+    ext1 w
+    simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply,
+      Algebra.id.smul_eq_mul, one_mul, ContinuousLinearMap.coe_smul', Pi.smul_apply, mul_one]
+  rw [this, ContinuousLinearMap.det, ContinuousLinearMap.coe_smul]
+  change ((1 : 𝕜 →L[𝕜] 𝕜) : 𝕜 →ₗ[𝕜] 𝕜) with LinearMap.id
+  rw [LinearMap.det_smul, FiniteDimensional.finrank_self, LinearMap.det_id, pow_one, mul_one]
+#align measure_theory.det_one_smul_right MeasureTheory.det_one_smulRight
+
+/-- Integrability in the change of variable formula for differentiable functions (one-variable
+version): if a function `f` is injective and differentiable on a measurable set ``s ⊆ ℝ`, then a
+function `g : ℝ → F` is integrable on `f '' s` if and only if `|(f' x)| • g ∘ f` is integrable on
+`s`. -/
+theorem integrableOn_image_iff_integrableOn_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ} {f' : ℝ → ℝ}
+    (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x) (hf : InjOn f s)
+    (g : ℝ → F) : IntegrableOn g (f '' s) ↔ IntegrableOn (fun x => |f' x| • g (f x)) s := by
+  simpa only [det_one_smul_right] using
+    integrable_on_image_iff_integrable_on_abs_det_fderiv_smul volume hs
+      (fun x hx => (hf' x hx).HasFDerivWithinAt) hf g
+#align measure_theory.integrable_on_image_iff_integrable_on_abs_deriv_smul MeasureTheory.integrableOn_image_iff_integrableOn_abs_deriv_smul
+
 /-- Change of variable formula for differentiable functions (one-variable version): if a function
 `f` is injective and differentiable on a measurable set `s ⊆ ℝ`, then the Bochner integral of a
-function `g : ℝ → F` on `f '' s` coincides with the integral of `|(f' x).det| • g ∘ f` on `s`. -/
+function `g : ℝ → F` on `f '' s` coincides with the integral of `|(f' x)| • g ∘ f` on `s`. -/
 theorem integral_image_eq_integral_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ} {f' : ℝ → ℝ}
     [CompleteSpace F] (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x)
-    (hf : InjOn f s) (g : ℝ → F) : (∫ x in f '' s, g x) = ∫ x in s, |f' x| • g (f x) :=
-  by
-  convert integral_image_eq_integral_abs_det_fderiv_smul volume hs
+    (hf : InjOn f s) (g : ℝ → F) : (∫ x in f '' s, g x) = ∫ x in s, |f' x| • g (f x) := by
+  simpa only [det_one_smul_right] using
+    integral_image_eq_integral_abs_det_fderiv_smul volume hs
       (fun x hx => (hf' x hx).HasFDerivWithinAt) hf g
-  ext1 x
-  rw [(by
-      ext
-      simp : (1 : ℝ →L[ℝ] ℝ).smul_right (f' x) = f' x • (1 : ℝ →L[ℝ] ℝ))]
-  rw [ContinuousLinearMap.det, ContinuousLinearMap.coe_smul]
-  have : ((1 : ℝ →L[ℝ] ℝ) : ℝ →ₗ[ℝ] ℝ) = (1 : ℝ →ₗ[ℝ] ℝ) := by rfl
-  rw [this, LinearMap.det_smul, FiniteDimensional.finrank_self]
-  suffices (1 : ℝ →ₗ[ℝ] ℝ).det = 1 by
-    rw [this]
-    simp
-  exact LinearMap.det_id
 #align measure_theory.integral_image_eq_integral_abs_deriv_smul MeasureTheory.integral_image_eq_integral_abs_deriv_smul
 
 theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}

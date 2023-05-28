@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit 9b33e5f30c5f161e1d1b16b6b9b922bf49943377
+! leanprover-community/mathlib commit 13b0d72fd8533ba459ac66e9a885e35ffabb32b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,9 +405,8 @@ section NormedSpace
 
 variable {𝕜 : Type _}
 
-theorem HasFiniteIntegral.smul' [SMul 𝕜 β] [NNNorm 𝕜] (c : 𝕜) {f : α → β}
-    (h : ∀ (k : 𝕜) (b : β), ‖k • b‖₊ ≤ ‖k‖₊ * ‖b‖₊) :
-    HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ :=
+theorem HasFiniteIntegral.smul [NormedAddCommGroup 𝕜] [SMulZeroClass 𝕜 β] [BoundedSMul 𝕜 β] (c : 𝕜)
+    {f : α → β} : HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ :=
   by
   simp only [has_finite_integral]; intro hfi
   calc
@@ -415,37 +414,31 @@ theorem HasFiniteIntegral.smul' [SMul 𝕜 β] [NNNorm 𝕜] (c : 𝕜) {f : α 
       by
       refine' lintegral_mono _
       intro i
-      exact_mod_cast h c (f i)
+      exact_mod_cast (nnnorm_smul_le c (f i) : _)
     _ < ∞ := by
       rw [lintegral_const_mul']
       exacts[mul_lt_top coe_ne_top hfi.ne, coe_ne_top]
     
-#align measure_theory.has_finite_integral.smul' MeasureTheory.HasFiniteIntegral.smul'
-
-theorem HasFiniteIntegral.smul [NormedField 𝕜] [NormedSpace 𝕜 β] (c : 𝕜) {f : α → β} :
-    HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ :=
-  HasFiniteIntegral.smul' _ fun a b => nnnorm_smul_le a b
 #align measure_theory.has_finite_integral.smul MeasureTheory.HasFiniteIntegral.smul
 
-theorem hasFiniteIntegral_smul_iff [NormedField 𝕜] [NormedSpace 𝕜 β] {c : 𝕜} (hc : c ≠ 0)
-    (f : α → β) : HasFiniteIntegral (c • f) μ ↔ HasFiniteIntegral f μ :=
+theorem hasFiniteIntegral_smul_iff [NormedRing 𝕜] [MulActionWithZero 𝕜 β] [BoundedSMul 𝕜 β] {c : 𝕜}
+    (hc : IsUnit c) (f : α → β) : HasFiniteIntegral (c • f) μ ↔ HasFiniteIntegral f μ :=
   by
+  obtain ⟨c, rfl⟩ := hc
   constructor
   · intro h
-    simpa only [smul_smul, inv_mul_cancel hc, one_smul] using h.smul c⁻¹
+    simpa only [smul_smul, Units.inv_mul, one_smul] using h.smul (↑c⁻¹ : 𝕜)
   exact has_finite_integral.smul _
 #align measure_theory.has_finite_integral_smul_iff MeasureTheory.hasFiniteIntegral_smul_iff
 
 theorem HasFiniteIntegral.const_mul [NormedRing 𝕜] {f : α → 𝕜} (h : HasFiniteIntegral f μ) (c : 𝕜) :
     HasFiniteIntegral (fun x => c * f x) μ :=
-  (HasFiniteIntegral.smul' c nnnorm_mul_le h : _)
+  h.smul c
 #align measure_theory.has_finite_integral.const_mul MeasureTheory.HasFiniteIntegral.const_mul
 
 theorem HasFiniteIntegral.mul_const [NormedRing 𝕜] {f : α → 𝕜} (h : HasFiniteIntegral f μ) (c : 𝕜) :
     HasFiniteIntegral (fun x => f x * c) μ :=
-  (HasFiniteIntegral.smul' (MulOpposite.op c)
-      (fun a b => (nnnorm_mul_le b a.unop).trans_eq <| mul_comm _ _) h :
-    _)
+  h.smul (MulOpposite.op c)
 #align measure_theory.has_finite_integral.mul_const MeasureTheory.HasFiniteIntegral.mul_const
 
 end NormedSpace
@@ -785,8 +778,9 @@ theorem Integrable.essSup_smul {𝕜 : Type _} [NormedField 𝕜] [NormedSpace �
 
 /-- Hölder's inequality for integrable functions: the scalar multiplication of an integrable
 scalar-valued function by a vector-value function with finite essential supremum is integrable. -/
-theorem Integrable.smul_essSup {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] {f : α → 𝕜}
-    (hf : Integrable f μ) {g : α → β} (g_ae_strongly_measurable : AEStronglyMeasurable g μ)
+theorem Integrable.smul_essSup {𝕜 : Type _} [NormedRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β]
+    {f : α → 𝕜} (hf : Integrable f μ) {g : α → β}
+    (g_ae_strongly_measurable : AEStronglyMeasurable g μ)
     (ess_sup_g : essSup (fun x => (‖g x‖₊ : ℝ≥0∞)) μ ≠ ∞) : Integrable (fun x : α => f x • g x) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable] at *
@@ -1057,18 +1051,26 @@ theorem Integrable.neg_part {f : α → ℝ} (hf : Integrable f μ) :
 
 end PosPart
 
-section NormedSpace
+section BoundedSMul
 
-variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
+variable {𝕜 : Type _}
 
-theorem Integrable.smul (c : 𝕜) {f : α → β} (hf : Integrable f μ) : Integrable (c • f) μ :=
+theorem Integrable.smul [NormedAddCommGroup 𝕜] [SMulZeroClass 𝕜 β] [BoundedSMul 𝕜 β] (c : 𝕜)
+    {f : α → β} (hf : Integrable f μ) : Integrable (c • f) μ :=
   ⟨hf.AEStronglyMeasurable.const_smul c, hf.HasFiniteIntegral.smul c⟩
 #align measure_theory.integrable.smul MeasureTheory.Integrable.smul
 
-theorem integrable_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
-    Integrable (c • f) μ ↔ Integrable f μ :=
-  and_congr (aestronglyMeasurable_const_smul_iff₀ hc) (hasFiniteIntegral_smul_iff hc f)
+theorem IsUnit.integrable_smul_iff [NormedRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β] {c : 𝕜}
+    (hc : IsUnit c) (f : α → β) : Integrable (c • f) μ ↔ Integrable f μ :=
+  and_congr hc.aestronglyMeasurable_const_smul_iff (hasFiniteIntegral_smul_iff hc f)
+#align measure_theory.is_unit.integrable_smul_iff MeasureTheory.IsUnit.integrable_smul_iff
+
+theorem integrable_smul_iff [NormedDivisionRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β] {c : 𝕜}
+    (hc : c ≠ 0) (f : α → β) : Integrable (c • f) μ ↔ Integrable f μ :=
+  (IsUnit.mk0 _ hc).integrable_smul_iff f
 #align measure_theory.integrable_smul_iff MeasureTheory.integrable_smul_iff
+
+variable [NormedRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β]
 
 theorem Integrable.smul_of_top_right {f : α → β} {φ : α → 𝕜} (hf : Integrable f μ)
     (hφ : Memℒp φ ∞ μ) : Integrable (φ • f) μ :=
@@ -1089,7 +1091,7 @@ theorem Integrable.smul_const {f : α → 𝕜} (hf : Integrable f μ) (c : β) 
   hf.smul_of_top_left (memℒp_top_const c)
 #align measure_theory.integrable.smul_const MeasureTheory.Integrable.smul_const
 
-end NormedSpace
+end BoundedSMul
 
 section NormedSpaceOverCompleteField
 
@@ -1115,7 +1117,7 @@ variable {𝕜 : Type _} [NormedRing 𝕜] {f : α → 𝕜}
 
 theorem Integrable.const_mul {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
     Integrable (fun x => c * f x) μ :=
-  ⟨h.AEStronglyMeasurable.const_smul c, h.HasFiniteIntegral.const_mul c⟩
+  h.smul c
 #align measure_theory.integrable.const_mul MeasureTheory.Integrable.const_mul
 
 theorem Integrable.const_mul' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
@@ -1125,7 +1127,7 @@ theorem Integrable.const_mul' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜)
 
 theorem Integrable.mul_const {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
     Integrable (fun x => f x * c) μ :=
-  ⟨h.AEStronglyMeasurable.const_smul (MulOpposite.op c), h.HasFiniteIntegral.mul_const c⟩
+  h.smul (MulOpposite.op c)
 #align measure_theory.integrable.mul_const MeasureTheory.Integrable.mul_const
 
 theorem Integrable.mul_const' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
@@ -1135,14 +1137,12 @@ theorem Integrable.mul_const' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜)
 
 theorem integrable_const_mul_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :
     Integrable (fun x => c * f x) μ ↔ Integrable f μ :=
-  let ⟨u, hc⟩ := hc
-  hc ▸ ⟨fun h => by simpa using h.const_mul ↑u⁻¹, fun h => h.const_mul _⟩
+  hc.integrable_smul_iff f
 #align measure_theory.integrable_const_mul_iff MeasureTheory.integrable_const_mul_iff
 
 theorem integrable_mul_const_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :
     Integrable (fun x => f x * c) μ ↔ Integrable f μ :=
-  let ⟨u, hc⟩ := hc
-  hc ▸ ⟨fun h => by simpa using h.mul_const ↑u⁻¹, fun h => h.mul_const _⟩
+  hc.op.integrable_smul_iff f
 #align measure_theory.integrable_mul_const_iff MeasureTheory.integrable_mul_const_iff
 
 theorem Integrable.bdd_mul' {f g : α → 𝕜} {c : ℝ} (hg : Integrable g μ)
@@ -1298,15 +1298,15 @@ theorem Integrable.sub {f g : α →ₘ[μ] β} (hf : Integrable f) (hg : Integr
 
 end
 
-section NormedSpace
+section BoundedSMul
 
-variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
+variable {𝕜 : Type _} [NormedRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β]
 
 theorem Integrable.smul {c : 𝕜} {f : α →ₘ[μ] β} : Integrable f → Integrable (c • f) :=
   induction_on f fun f hfm hfi => (integrable_mk _).2 <| ((integrable_mk hfm).1 hfi).smul _
 #align measure_theory.ae_eq_fun.integrable.smul MeasureTheory.AEEqFun.Integrable.smul
 
-end NormedSpace
+end BoundedSMul
 
 end
 
@@ -1465,7 +1465,7 @@ theorem edist_toL1_zero (f : α → β) (hf : Integrable f μ) :
   simp [edist_eq_coe_nnnorm]
 #align measure_theory.integrable.edist_to_L1_zero MeasureTheory.Integrable.edist_toL1_zero
 
-variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
+variable {𝕜 : Type _} [NormedRing 𝕜] [Module 𝕜 β] [BoundedSMul 𝕜 β]
 
 theorem toL1_smul (f : α → β) (hf : Integrable f μ) (k : 𝕜) :
     toL1 (fun a => k • f a) (hf.smul k) = k • toL1 f hf :=

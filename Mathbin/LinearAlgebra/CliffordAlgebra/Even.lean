@@ -148,7 +148,6 @@ This is the span of elements `f'` such that `∃ x m₂, ∀ m₁, f' m₁ = f m
 private def S : Submodule R (M →ₗ[R] A) :=
   Submodule.span R
     { f' | ∃ x m₂, f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x) }
-#align clifford_algebra.even.lift.S clifford_algebra.even.lift.S
 
 /-- An auxiliary bilinear map that is later passed into `clifford_algebra.fold`. Our desired result
 is stored in the `A` part of the accumulator, while auxiliary recursion state is stored in the `S f`
@@ -179,19 +178,16 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
               rw [LinearMap.map_smul, smul_mul_assoc]))
     (fun m a₁ a₂ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_add _ _ _))
     fun c m a => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
-#align clifford_algebra.even.lift.f_fold clifford_algebra.even.lift.f_fold
 
 @[simp]
 private theorem fst_f_fold_f_fold (m₁ m₂ : M) (x : A × s f) :
     (fFold f m₁ (fFold f m₂ x)).fst = f.bilin m₁ m₂ * x.fst :=
   rfl
-#align clifford_algebra.even.lift.fst_f_fold_f_fold clifford_algebra.even.lift.fst_f_fold_f_fold
 
 @[simp]
 private theorem snd_f_fold_f_fold (m₁ m₂ m₃ : M) (x : A × s f) :
     ((fFold f m₁ (fFold f m₂ x)).snd : M →ₗ[R] A) m₃ = f.bilin m₃ m₁ * (x.snd : M →ₗ[R] A) m₂ :=
   rfl
-#align clifford_algebra.even.lift.snd_f_fold_f_fold clifford_algebra.even.lift.snd_f_fold_f_fold
 
 private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) = Q m • x :=
   by
@@ -211,7 +207,6 @@ private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) =
       rw [LinearMap.add_apply, LinearMap.add_apply, mul_add, smul_add, ihx, ihy]
     · rintro x hx c ihx
       rw [LinearMap.smul_apply, LinearMap.smul_apply, mul_smul_comm, ihx, smul_comm]
-#align clifford_algebra.even.lift.f_fold_f_fold clifford_algebra.even.lift.f_fold_f_fold
 
 /-- The final auxiliary construction for `clifford_algebra.even.lift`. This map is the forwards
 direction of that equivalence, but not in the fully-bundled form. -/

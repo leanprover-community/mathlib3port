@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.projective
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Preadditive.Yoneda.Projective
 
 /-!
 # Abelian categories with enough projectives have projective resolutions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 When `C` is abelian `projective.d f` and `f` are exact.
 Hence, starting from an epimorphism `P ⟶ X`, where `P` is projective,
@@ -38,13 +41,21 @@ open CategoryTheory.Projective
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
+#print CategoryTheory.exact_d_f /-
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
   (Abelian.exact_iff _ _).2 <|
     ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
 #align category_theory.exact_d_f CategoryTheory.exact_d_f
+-/
 
+/- warning: category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective -> CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] (P : C) [hP : CategoryTheory.Projective.{u1, u2} C _inst_1 P], CategoryTheory.Limits.PreservesFiniteColimits.{u1, u1, u2, succ u1} C _inst_1 (ModuleCat.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.CategoryTheory.End.ring.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Opposite.preadditive.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (ModuleCat.moduleCategory.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.CategoryTheory.End.ring.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Opposite.preadditive.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (CategoryTheory.preadditiveCoyonedaObj.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2) (Opposite.op.{succ u2} C P))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] (P : C) [hP : CategoryTheory.Projective.{u1, u2} C _inst_1 P], CategoryTheory.Limits.PreservesFiniteColimits.{u1, u1, u2, succ u1} C _inst_1 (ModuleCat.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.instRingEndToCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.instPreadditiveOppositeOpposite.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (ModuleCat.moduleCategory.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.instRingEndToCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.instPreadditiveOppositeOpposite.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (CategoryTheory.preadditiveCoyonedaObj.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2) (Opposite.op.{succ u2} C P))
+Case conversion may be inaccurate. Consider using '#align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjectiveₓ'. -/
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
     PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) :=
@@ -53,6 +64,12 @@ def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Proj
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
 #align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
 
+/- warning: category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj -> CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] (P : C) [hP : CategoryTheory.Limits.PreservesFiniteColimits.{u1, u1, u2, succ u1} C _inst_1 (ModuleCat.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.CategoryTheory.End.ring.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Opposite.preadditive.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (ModuleCat.moduleCategory.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.CategoryTheory.End.ring.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.Opposite.preadditive.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (CategoryTheory.preadditiveCoyonedaObj.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2) (Opposite.op.{succ u2} C P))], CategoryTheory.Projective.{u1, u2} C _inst_1 P
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] (P : C) [hP : CategoryTheory.Limits.PreservesFiniteColimits.{u1, u1, u2, succ u1} C _inst_1 (ModuleCat.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.instRingEndToCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.instPreadditiveOppositeOpposite.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (ModuleCat.moduleCategory.{u1, u1} (CategoryTheory.End.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.toCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1)) (Opposite.op.{succ u2} C P)) (CategoryTheory.Preadditive.instRingEndToCategoryStruct.{u1, u2} (Opposite.{succ u2} C) (CategoryTheory.Category.opposite.{u1, u2} C _inst_1) (CategoryTheory.instPreadditiveOppositeOpposite.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (Opposite.op.{succ u2} C P))) (CategoryTheory.preadditiveCoyonedaObj.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2) (Opposite.op.{succ u2} C P))], CategoryTheory.Projective.{u1, u2} C _inst_1 P
+Case conversion may be inaccurate. Consider using '#align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObjₓ'. -/
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
     [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P :=
@@ -75,6 +92,7 @@ and the map to the `n`-th object as `projective.d`.
 
 variable [EnoughProjectives C]
 
+#print CategoryTheory.ProjectiveResolution.ofComplex /-
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
 def ofComplex (Z : C) : ChainComplex C ℕ :=
@@ -82,7 +100,14 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
     (Projective.d (Projective.π Z)) fun ⟨X, Y, f⟩ =>
     ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
 #align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolution.ofComplex
+-/
 
+/- warning: category_theory.ProjectiveResolution.of -> CategoryTheory.ProjectiveResolution.of is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Abelian.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.EnoughProjectives.{u1, u2} C _inst_1] (Z : C), CategoryTheory.ProjectiveResolution.{u1, u2} C _inst_1 (CategoryTheory.Abelian.hasZeroObject.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u1, u2} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u1, u2} C _inst_1 _inst_2)) (CategoryTheory.Abelian.hasEqualizers.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.ProjectiveResolution.of._proof_1.{u2, u1} C _inst_1 _inst_2) Z
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Abelian.{u2, u1} C _inst_1] [_inst_3 : CategoryTheory.EnoughProjectives.{u2, u1} C _inst_1] (Z : C), CategoryTheory.ProjectiveResolution.{u2, u1} C _inst_1 (CategoryTheory.Abelian.hasZeroObject.{u2, u1} C _inst_1 _inst_2) (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} C _inst_1 (CategoryTheory.Abelian.toPreadditive.{u2, u1} C _inst_1 _inst_2)) (CategoryTheory.Abelian.hasEqualizers.{u2, u1} C _inst_1 _inst_2) (CategoryTheory.Limits.hasImages_of_hasStrongEpiMonoFactorisations.{u2, u1} C _inst_1 (CategoryTheory.Abelian.instHasStrongEpiMonoFactorisations.{u2, u1} C _inst_1 _inst_2)) Z
+Case conversion may be inaccurate. Consider using '#align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolution.ofₓ'. -/
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
 -/
@@ -115,6 +140,9 @@ namespace HomologicalComplex.Hom
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
+/- warning: homological_complex.hom.to_single₀_ProjectiveResolution -> HomologicalComplex.Hom.toSingle₀ProjectiveResolution is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolutionₓ'. -/
 /-- If `X` is a chain complex of projective objects and we have a quasi-isomorphism `f : X ⟶ Y[0]`,
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}

@@ -428,7 +428,6 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
       by ring
     _ = a + b := by simp only [mul_self, add_self, add_zero]
     
-#align of_boolalg_symm_diff_aux of_boolalg_symm_diff_aux
 
 #print ofBoolAlg_symmDiff /-
 @[simp]

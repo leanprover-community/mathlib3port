@@ -218,7 +218,6 @@ private theorem coevaluation_evaluation :
     (𝟙 V' ⊗ fgModuleCoevaluation K V) ≫ (α_ V' V V').inv ≫ (fgModuleEvaluation K V ⊗ 𝟙 V') =
       (ρ_ V').Hom ≫ (λ_ V').inv :=
   by apply contractLeft_assoc_coevaluation K V.obj
-#align fgModule.coevaluation_evaluation fgModule.coevaluation_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -227,7 +226,6 @@ private theorem evaluation_coevaluation :
         (α_ V (fgModuleDual K V) V).Hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
       (λ_ V).Hom ≫ (ρ_ V).inv :=
   by apply contractLeft_assoc_coevaluation' K V.obj
-#align fgModule.evaluation_coevaluation fgModule.evaluation_coevaluation
 
 instance exactPairing : ExactPairing V (fgModuleDual K V)
     where

@@ -1091,7 +1091,6 @@ private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → �
         use ⟨t.to_jordan_decomposition.neg_part, fun x => ENNReal.ofReal (-f x)⟩
         refine' ⟨hf.neg.ennreal_of_real, htμ.2, _⟩
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] }
-#align measure_theory.signed_measure.have_lebesgue_decomposition_mk' measure_theory.signed_measure.have_lebesgue_decomposition_mk'
 
 theorem haveLebesgueDecomposition_mk (μ : Measure α) {f : α → ℝ} (hf : Measurable f)
     (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
@@ -1123,7 +1122,6 @@ private theorem eq_singular_part' (t : SignedMeasure α) {f : α → ℝ} (hf : 
     · have hfneg : Measurable fun x => ENNReal.ofReal (-f x) := by measurability
       refine' eq_singular_part hfneg htμ.2 _
       rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
-#align measure_theory.signed_measure.eq_singular_part' measure_theory.signed_measure.eq_singular_part'
 
 /-- Given a measure `μ`, signed measures `s` and `t`, and a function `f` such that `t` is
 mutually singular with respect to `μ` and `s = t + μ.with_densityᵥ f`, we have

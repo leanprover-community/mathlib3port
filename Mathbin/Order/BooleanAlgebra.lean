@@ -187,7 +187,6 @@ private theorem sdiff_le' : x \ y ≤ x :=
     x \ y ≤ x ⊓ y ⊔ x \ y := le_sup_right
     _ = x := sup_inf_sdiff x y
     
-#align sdiff_le' sdiff_le'
 
 -- Use `sdiff_sup_self`
 private theorem sdiff_sup_self' : y \ x ⊔ x = y ⊔ x :=
@@ -196,7 +195,6 @@ private theorem sdiff_sup_self' : y \ x ⊔ x = y ⊔ x :=
     _ = y ⊓ x ⊔ y \ x ⊔ x := by ac_rfl
     _ = y ⊔ x := by rw [sup_inf_sdiff]
     
-#align sdiff_sup_self' sdiff_sup_self'
 
 /- warning: sdiff_inf_sdiff -> sdiff_inf_sdiff is a dubious translation:
 lean 3 declaration is

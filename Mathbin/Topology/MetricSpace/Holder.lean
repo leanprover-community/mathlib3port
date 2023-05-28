@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.holder
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 
 /-!
 # Hölder continuous functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define Hölder continuity on a set and on the whole space. We also prove some basic
 properties of Hölder continuous functions.
@@ -194,10 +197,7 @@ theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy :
 #align holder_on_with.edist_le_of_le HolderOnWith.edist_le_of_le
 
 /- warning: holder_on_with.comp -> HolderOnWith.comp is a dubious translation:
-lean 3 declaration is
-  forall {X : Type.{u1}} {Y : Type.{u2}} {Z : Type.{u3}} [_inst_1 : PseudoEMetricSpace.{u1} X] [_inst_2 : PseudoEMetricSpace.{u2} Y] [_inst_3 : PseudoEMetricSpace.{u3} Z] {s : Set.{u1} X} {Cg : NNReal} {rg : NNReal} {g : Y -> Z} {t : Set.{u2} Y}, (HolderOnWith.{u2, u3} Y Z _inst_2 _inst_3 Cg rg g t) -> (forall {Cf : NNReal} {rf : NNReal} {f : X -> Y}, (HolderOnWith.{u1, u2} X Y _inst_1 _inst_2 Cf rf f s) -> (Set.MapsTo.{u1, u2} X Y f s t) -> (HolderOnWith.{u1, u3} X Z _inst_1 _inst_3 (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) Cg (HPow.hPow.{0, 0, 0} NNReal Real NNReal (instHPow.{0, 0} NNReal Real NNReal.Real.hasPow) Cf ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal Real (HasLiftT.mk.{1, 1} NNReal Real (CoeTCₓ.coe.{1, 1} NNReal Real (coeBase.{1, 1} NNReal Real NNReal.Real.hasCoe))) rg))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) rg rf) (Function.comp.{succ u1, succ u2, succ u3} X Y Z g f) s))
-but is expected to have type
-  forall {X : Type.{u1}} {Y : Type.{u3}} {Z : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u1} X] [_inst_2 : PseudoEMetricSpace.{u3} Y] [_inst_3 : PseudoEMetricSpace.{u2} Z] {s : Set.{u1} X} {Cg : NNReal} {rg : NNReal} {g : Y -> Z} {t : Set.{u3} Y}, (HolderOnWith.{u3, u2} Y Z _inst_2 _inst_3 Cg rg g t) -> (forall {Cf : NNReal} {rf : NNReal} {f : X -> Y}, (HolderOnWith.{u1, u3} X Y _inst_1 _inst_2 Cf rf f s) -> (Set.MapsTo.{u1, u3} X Y f s t) -> (HolderOnWith.{u1, u2} X Z _inst_1 _inst_3 (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) Cg (NNReal.rpow Cf (NNReal.toReal rg))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (CanonicallyOrderedCommSemiring.toMul.{0} NNReal instNNRealCanonicallyOrderedCommSemiring)) rg rf) (Function.comp.{succ u1, succ u3, succ u2} X Y Z g f) s))
+<too large>
 Case conversion may be inaccurate. Consider using '#align holder_on_with.comp HolderOnWith.compₓ'. -/
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0}
     {f : X → Y} (hf : HolderOnWith Cf rf f s) (hst : MapsTo f s t) :

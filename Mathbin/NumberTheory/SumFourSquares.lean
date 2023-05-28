@@ -128,7 +128,6 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
       h, mul_add, ← hx, ← hy]
     have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
     simpa only [Fin.sum_univ_four, add_assoc] using this⟩
-#align nat.sum_four_squares_of_two_mul_sum_four_squares nat.sum_four_squares_of_two_mul_sum_four_squares
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
@@ -289,7 +288,6 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
               ring
             
       False.elim <| Nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩
-#align nat.prime_sum_four_squares nat.prime_sum_four_squares
 
 /-- **Four squares theorem** -/
 theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = n

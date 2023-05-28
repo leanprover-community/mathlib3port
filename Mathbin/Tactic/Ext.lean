@@ -209,7 +209,6 @@ attribute [local semireducible] reflected
 @[local instance 9000]
 private unsafe def hacky_name_reflect : has_reflect Name := fun n =>
   q((id $(expr.const n []) : Name))
-#align hacky_name_reflect hacky_name_reflect
 
 @[user_attribute]
 private unsafe def ext_attr_core : user_attribute (name_map Name) Name
@@ -225,7 +224,6 @@ private unsafe def ext_attr_core : user_attribute (name_map Name) Name
             pure (m n ext_l))
           mk_name_map }
   parser := failure
-#align ext_attr_core ext_attr_core
 
 end PerformanceHack
 
@@ -236,7 +234,6 @@ private unsafe def ext_lemma_attr_core : user_attribute
   Name := `_ext_lemma_core
   descr := "(internal attribute used by ext)"
   parser := failure
-#align ext_lemma_attr_core ext_lemma_attr_core
 
 /-- Returns the extensionality lemmas in the environment, as a map from structure
 name to lemma name.
@@ -438,7 +435,6 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
           let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
-#align tactic.try_intros_core tactic.try_intros_core
 
 /-- Try to introduce as many arguments as possible, using the given patterns to destruct the
   introduced variables. Returns the unused patterns. -/

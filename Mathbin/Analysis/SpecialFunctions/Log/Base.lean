@@ -143,7 +143,6 @@ private theorem log_b_ne_zero : log b ≠ 0 :=
   have b_ne_zero : b ≠ 0; linarith
   have b_ne_minus_one : b ≠ -1; linarith
   simp [b_ne_one, b_ne_zero, b_ne_minus_one]
-#align real.log_b_ne_zero real.log_b_ne_zero
 
 /- warning: real.logb_rpow -> Real.logb_rpow is a dubious translation:
 lean 3 declaration is
@@ -254,10 +253,8 @@ variable (hb : 1 < b)
 include hb
 
 private theorem b_pos : 0 < b := by linarith
-#align real.b_pos real.b_pos
 
 private theorem b_ne_one : b ≠ 1 := by linarith
-#align real.b_ne_one real.b_ne_one
 
 /- warning: real.logb_le_logb -> Real.logb_le_logb is a dubious translation:
 lean 3 declaration is
@@ -509,7 +506,6 @@ variable (b_lt_one : b < 1)
 include b_lt_one
 
 private theorem b_ne_one : b ≠ 1 := by linarith
-#align real.b_ne_one real.b_ne_one
 
 include b_pos
 

@@ -4,11 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.fund_thm_calculus
-! leanprover-community/mathlib commit 011cafb4a5bc695875d186e245d6b3df03bf6c40
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Calculus.FderivMeasurable
+import Mathbin.Analysis.Calculus.Deriv.Comp
+import Mathbin.Analysis.Calculus.Deriv.Add
+import Mathbin.Analysis.Calculus.Deriv.Slope
+import Mathbin.Analysis.Calculus.Deriv.Mul
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.MeasureTheory.Integral.VitaliCaratheodory

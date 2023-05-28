@@ -61,7 +61,6 @@ private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [Decid
   | b :: rest, as =>
     let (cs, as) := selectForWhich p b as
     (b, cs) :: collect_by_aux rest as
-#align where.collect_by_aux where.collect_by_aux
 
 /-- Returns the elements of `l` under the image of `p`, collecting together elements with the same
 `β` component, deleting duplicates. -/
@@ -108,7 +107,6 @@ unsafe def compile_variable_list (l : List (Name × BinderInfo × expr)) : tacti
 /-- Strips the namespace prefix `ns` from `n`. -/
 private unsafe def strip_namespace (ns n : Name) : Name :=
   n.replace_prefix ns Name.anonymous
-#align where.strip_namespace where.strip_namespace
 
 /-- `get_open_namespaces ns` returns a list of the open namespaces, given that we are currently in
 the namespace `ns` (which we do not include). -/
@@ -122,7 +120,6 @@ unsafe def get_open_namespaces (ns : Name) : tactic (List Name) := do
 private unsafe def explain_anonymous_name : Name → String
   | Name.anonymous => "[root namespace]"
   | ns => toString ns
-#align where.explain_anonymous_name where.explain_anonymous_name
 
 /-- `#where` output helper which traces the current namespace. -/
 unsafe def build_str_namespace (ns : Name) : lean.parser String :=
@@ -158,13 +155,11 @@ unsafe def build_str_end (ns : Name) : tactic String :=
 /-- `#where` output helper which traces newlines. -/
 private unsafe def append_nl (s : String) (n : ℕ) : tactic String :=
   return <| s ++ (List.asString <| (List.range n).map fun _ => '\n')
-#align where.append_nl where.append_nl
 
 /-- `#where` output helper which traces lines, adding a newline if nonempty. -/
 private unsafe def append_line (s : String) (t : lean.parser String) : lean.parser String := do
   let v ← t
   return <| s ++ v ++ if v = 0 then "" else "\n"
-#align where.append_line where.append_line
 
 /-- `#where` output main function. -/
 unsafe def build_msg : lean.parser String := do

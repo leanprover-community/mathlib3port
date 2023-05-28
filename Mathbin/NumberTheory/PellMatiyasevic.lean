@@ -111,7 +111,6 @@ include a1
 
 private def d :=
   a * a - 1
-#align pell.d pell.d
 
 #print Pell.d_pos /-
 @[simp]

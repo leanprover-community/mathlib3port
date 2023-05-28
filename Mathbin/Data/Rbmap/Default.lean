@@ -24,11 +24,9 @@ private def rbmap_lt_is_swo {α : Type u} {β : Type v} {lt : α → α → Prop
   irrefl _ := irrefl_of lt _
   trans _ _ _ h₁ h₂ := trans_of lt h₁ h₂
   incomp_trans _ _ _ h₁ h₂ := incomp_trans_of lt h₁ h₂
-#align rbmap.rbmap_lt_is_swo rbmap.rbmap_lt_is_swo
 
 private def rbmapLtDec {α : Type u} {β : Type v} {lt : α → α → Prop} [h : DecidableRel lt] :
     DecidableRel (@RbmapLt α β lt) := fun a b => h a.1 b.1
-#align rbmap.rbmap_lt_dec Rbmap.rbmapLtDec
 
 attribute [local instance] rbmap_lt_is_swo rbmap_lt_dec
 
@@ -38,21 +36,17 @@ private theorem to_rbtree_mem {k : α} {m : Rbmap α β lt} : k ∈ m → ∃ v 
   cases' m with n p <;> cases n <;> intro h
   · exact False.elim h
   all_goals exists n_val.2; exact h
-#align rbmap.to_rbtree_mem rbmap.to_rbtree_mem
 
 private theorem eqv_entries_of_eqv_keys {k₁ k₂ : α} (v₁ v₂ : β) :
     k₁ ≈[lt]k₂ → (k₁, v₁) ≈[RbmapLt lt](k₂, v₂) :=
   id
-#align rbmap.eqv_entries_of_eqv_keys rbmap.eqv_entries_of_eqv_keys
 
 private theorem eqv_keys_of_eqv_entries {k₁ k₂ : α} {v₁ v₂ : β} :
     (k₁, v₁) ≈[RbmapLt lt](k₂, v₂) → k₁ ≈[lt]k₂ :=
   id
-#align rbmap.eqv_keys_of_eqv_entries rbmap.eqv_keys_of_eqv_entries
 
 private theorem eqv_entries [IsIrrefl α lt] (k : α) (v₁ v₂ : β) : (k, v₁) ≈[RbmapLt lt](k, v₂) :=
   And.intro (irrefl_of lt k) (irrefl_of lt k)
-#align rbmap.eqv_entries rbmap.eqv_entries
 
 private theorem to_rbmap_mem [IsStrictWeakOrder α lt] {k : α} {v : β} {m : Rbmap α β lt} :
     Rbtree.Mem (k, v) m → k ∈ m :=
@@ -67,7 +61,6 @@ private theorem to_rbmap_mem [IsStrictWeakOrder α lt] {k : α} {v : β} {m : Rb
     exact
       @Rbtree.mem_of_mem_of_eqv _ _ _ ⟨Rbnode.black_node n_lchild n_val n_rchild, p⟩ _ _ h
         (eqv_entries _ _ _)
-#align rbmap.to_rbmap_mem rbmap.to_rbmap_mem
 
 private theorem to_rbtree_mem' [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β lt} (v : β) :
     k ∈ m → Rbtree.Mem (k, v) m := by
@@ -75,7 +68,6 @@ private theorem to_rbtree_mem' [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α 
   cases' to_rbtree_mem h with v' hm
   apply Rbtree.mem_of_mem_of_eqv hm
   apply eqv_entries
-#align rbmap.to_rbtree_mem' rbmap.to_rbtree_mem'
 
 theorem eq_some_of_toValue_eq_some {e : Option (α × β)} {v : β} :
     toValue e = some v → ∃ k, e = some (k, v) :=

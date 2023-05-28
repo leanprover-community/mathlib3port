@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.DiscreteValuationRing.Basic
 
 /-!
 # p-adic integers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the `p`-adic integers `ℤ_[p]` as the subtype of `ℚ_[p]` with norm `≤ 1`.
 We show that `ℤ_[p]`
@@ -568,7 +571,6 @@ theorem norm_p_pow (n : ℕ) : ‖(p : ℤ_[p]) ^ n‖ = p ^ (-n : ℤ) :=
 
 private def cau_seq_to_rat_cau_seq (f : CauSeq ℤ_[p] norm) : CauSeq ℚ_[p] fun a => ‖a‖ :=
   ⟨fun n => f n, fun _ hε => by simpa [norm, norm_def] using f.cauchy hε⟩
-#align padic_int.cau_seq_to_rat_cau_seq padic_int.cau_seq_to_rat_cau_seq
 
 variable (p)
 
@@ -618,7 +620,7 @@ theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ (-(k :
 lean 3 declaration is
   forall (p : Nat) [hp : Fact (Nat.Prime p)] {ε : Rat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) ε) -> (Exists.{1} Nat (fun (k : Nat) => LT.lt.{0} Rat Rat.hasLt (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (NormedRing.toRing.{0} Rat (NormedCommRing.toNormedRing.{0} Rat (NormedField.toNormedCommRing.{0} Rat Rat.normedField)))))))))) p) (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) k))) ε))
 but is expected to have type
-  forall (p : Nat) [hp : Fact (Nat.Prime p)] {ε : Rat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) ε) -> (Exists.{1} Nat (fun (k : Nat) => LT.lt.{0} Real Real.instLTReal (HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) (Nat.cast.{0} Real Real.natCast p) (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int instNatCastInt k))) (Rat.cast.{0} Real Real.ratCast ε)))
+  forall (p : Nat) [hp : Fact (Nat.Prime p)] {ε : Rat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) ε) -> (Exists.{1} Nat (fun (k : Nat) => LT.lt.{0} Rat Rat.instLTRat_1 (HPow.hPow.{0, 0, 0} Rat Int Rat (instHPow.{0, 0} Rat Int (DivInvMonoid.Pow.{0} Rat (DivisionRing.toDivInvMonoid.{0} Rat Rat.divisionRing))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int instNatCastInt k))) ε))
 Case conversion may be inaccurate. Consider using '#align padic_int.exists_pow_neg_lt_rat PadicInt.exists_pow_neg_lt_ratₓ'. -/
 theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ (-(k : ℤ)) < ε :=
   by

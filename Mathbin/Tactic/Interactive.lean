@@ -229,11 +229,9 @@ add_tactic_doc
 private unsafe def generalize_arg_p_aux : pexpr → parser (pexpr × Name)
   | app (app (macro _ [const `eq _]) h) (local_const x _ _ _) => pure (h, x)
   | _ => fail "parse error"
-#align tactic.interactive.generalize_arg_p_aux tactic.interactive.generalize_arg_p_aux
 
 private unsafe def generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr = id" <| parser.pexpr 0 >>= generalize_arg_p_aux
-#align tactic.interactive.generalize_arg_p tactic.interactive.generalize_arg_p
 
 @[nolint def_lemma]
 noncomputable theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
@@ -630,11 +628,9 @@ unsafe def list_cast_of (x tgt : expr) : tactic (List (expr × expr × expr)) :=
 private unsafe def h_generalize_arg_p_aux : pexpr → parser (pexpr × Name)
   | app (app (macro _ [const `heq _]) h) (local_const x _ _ _) => pure (h, x)
   | _ => fail "parse error"
-#align tactic.interactive.h_generalize_arg_p_aux tactic.interactive.h_generalize_arg_p_aux
 
 private unsafe def h_generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr == id" <| parser.pexpr 0 >>= h_generalize_arg_p_aux
-#align tactic.interactive.h_generalize_arg_p tactic.interactive.h_generalize_arg_p
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -870,7 +866,6 @@ private unsafe def opt_dir_with : parser (Option (Bool × Name)) :=
   parser.optional
     (tk "with" *>
       ((fun arrow h => (Option.isSome arrow, h)) <$> parser.optional (tk "<-") <*> ident))
-#align tactic.interactive.opt_dir_with tactic.interactive.opt_dir_with
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -949,7 +944,6 @@ private unsafe def indent_bindents (l r : String) : Option (List Name) → expr 
     let ns := format_names ns
     let margin := l.length + ns.toString.length + " : ".length
     f!"{(← l)}{(← ns)} : {(← format.nest margin e)}{← r}"
-#align tactic.interactive.indent_bindents tactic.interactive.indent_bindents
 
 private unsafe def format_binders : List Name × BinderInfo × expr → tactic format
   | (ns, BinderInfo.default, t) => indent_bindents "(" ")" ns t
@@ -960,7 +954,6 @@ private unsafe def format_binders : List Name × BinderInfo × expr → tactic f
     else indent_bindents "[" "]" [n] t
   | (ns, BinderInfo.inst_implicit, t) => indent_bindents "[" "]" ns t
   | (ns, BinderInfo.aux_decl, t) => indent_bindents "(" ")" ns t
-#align tactic.interactive.format_binders tactic.interactive.format_binders
 
 private unsafe def partition_vars' (s : name_set) :
     List expr → List expr → List expr → tactic (List expr × List expr)
@@ -968,12 +961,10 @@ private unsafe def partition_vars' (s : name_set) :
   | x :: xs, as, bs => do
     let t ← infer_type x
     if t s then partition_vars' xs as (x :: bs) else partition_vars' xs (x :: as) bs
-#align tactic.interactive.partition_vars' tactic.interactive.partition_vars'
 
 private unsafe def partition_vars : tactic (List expr × List expr) := do
   let ls ← local_context
   partition_vars' (name_set.of_list <| ls expr.local_uniq_name) ls [] []
-#align tactic.interactive.partition_vars tactic.interactive.partition_vars
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/

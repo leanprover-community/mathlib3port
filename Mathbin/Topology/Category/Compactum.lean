@@ -196,12 +196,10 @@ instance {X : Compactum} : CompactSpace X :=
 /-- A local definition used only in the proofs. -/
 private def basic {X : Compactum} (A : Set X) : Set (Ultrafilter X) :=
   { F | A ∈ F }
-#align Compactum.basic Compactum.basic
 
 /-- A local definition used only in the proofs. -/
 private def cl {X : Compactum} (A : Set X) : Set X :=
   X.str '' basic A
-#align Compactum.cl Compactum.cl
 
 private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B :=
   by
@@ -212,11 +210,9 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = ba
     exacts[And.left, And.right]
   · rintro ⟨h1, h2⟩
     exact inter_mem h1 h2
-#align Compactum.basic_inter Compactum.basic_inter
 
 private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A := fun a ha =>
   ⟨X.incl a, ha, by simp⟩
-#align Compactum.subset_cl Compactum.subset_cl
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
@@ -284,7 +280,6 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   apply claim4.finite_inter_mem
   intro t ht
   exact finite_inter_closure.basic (@hT t ht)
-#align Compactum.cl_cl Compactum.cl_cl
 
 theorem isClosed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
   by

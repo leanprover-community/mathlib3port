@@ -129,7 +129,6 @@ private def workflow_command_replacements : Char → String
   | '%' => "%25"
   | '\n' => "%0A"
   | c => toString c
-#align workflow_command_replacements workflow_command_replacements
 
 /-- Escape characters that may not be used in a workflow commands, following
 https://github.com/actions/toolkit/blob/7257597d731b34d14090db516d9ea53439300e98/packages/core/src/command.ts#L92-L105

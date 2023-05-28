@@ -202,7 +202,6 @@ private def f :
   | _, α, Fin2.fs i, x =>
     ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
-#align mvfunctor.f mvfunctor.f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def g :
@@ -212,7 +211,6 @@ private def g :
   | _, α, Fin2.fs i, x =>
     ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
-#align mvfunctor.g mvfunctor.g
 
 /- warning: mvfunctor.liftp_last_pred_iff -> MvFunctor.LiftP_PredLast_iff is a dubious translation:
 lean 3 declaration is
@@ -246,7 +244,6 @@ private def f :
   | _, α, Fin2.fs i, x =>
     ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
-#align mvfunctor.f mvfunctor.f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def g :
@@ -257,7 +254,6 @@ private def g :
   | _, α, Fin2.fs i, x =>
     ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
-#align mvfunctor.g mvfunctor.g
 
 /- warning: mvfunctor.liftr_last_rel_iff -> MvFunctor.LiftR_RelLast_iff is a dubious translation:
 lean 3 declaration is

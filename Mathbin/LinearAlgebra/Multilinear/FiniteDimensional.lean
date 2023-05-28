@@ -72,7 +72,6 @@ private theorem free_and_finite :
           Module.Finite.equiv (multilinearCurryLeftEquiv R N M₂)⟩
     cases ih fun i => N i.succ
     exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linearMap _ _⟩
-#align multilinear_map.free_and_finite multilinear_map.free_and_finite
 
 /- warning: module.finite.multilinear_map -> Module.Finite.multilinearMap is a dubious translation:
 lean 3 declaration is

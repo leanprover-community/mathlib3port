@@ -103,7 +103,6 @@ parameter {ι : Type u}(β : ι → Type v)
 @[reducible]
 private def sets :=
   { s : Set (∀ i, β i) | ∀ x ∈ s, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
-#align function.embedding.sets function.embedding.sets
 
 #print Function.Embedding.min_injective /-
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals

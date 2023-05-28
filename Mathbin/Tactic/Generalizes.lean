@@ -181,7 +181,6 @@ private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × N
   | app (app (macro _ [const `eq _]) e) (local_const x _ _ _) => pure (e, x)
   | app (app (macro _ [const `heq _]) e) (local_const x _ _ _) => pure (e, x)
   | _ => failure
-#align tactic.interactive.generalizes_arg_parser_eq tactic.interactive.generalizes_arg_parser_eq
 
 private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × pexpr) :=
   with_desc "(id :)? expr = id" do
@@ -195,11 +194,9 @@ private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × 
         do
         let (arg, arg_name) ← generalizes_arg_parser_eq lhs
         pure (arg_name, none, arg)
-#align tactic.interactive.generalizes_arg_parser tactic.interactive.generalizes_arg_parser
 
 private unsafe def generalizes_args_parser : lean.parser (List (Name × Option Name × pexpr)) :=
   with_desc "[(id :)? expr = id, ...]" <| tk "[" *> sep_by (tk ",") generalizes_arg_parser <* tk "]"
-#align tactic.interactive.generalizes_args_parser tactic.interactive.generalizes_args_parser
 
 /-- Generalizes the target over multiple expressions. For example, given the goal
 

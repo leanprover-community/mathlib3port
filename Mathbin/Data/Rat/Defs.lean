@@ -189,7 +189,6 @@ theorem zero_divInt (n) : 0 /. n = 0 := by cases n <;> simp [mk]
 
 private theorem gcd_abs_dvd_left {a b} : (Nat.gcd (Int.natAbs a) b : ℤ) ∣ a :=
   Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left (Int.natAbs a) b
-#align rat.gcd_abs_dvd_left rat.gcd_abs_dvd_left
 
 /- warning: rat.mk_eq_zero -> Rat.divInt_eq_zero is a dubious translation:
 lean 3 declaration is

@@ -226,7 +226,6 @@ def classicalNormalizeLemmaNames : List Name :=
                                 return ( some ( e' , pr ) )
                         | _ => return none
               | _ => return none
-#align auto.transform_negation_step auto.transform_negation_step
 
 /-- given an expr `e`, returns a new expression and a proof of equality -/
 private unsafe def transform_negation (cfg : AutoConfig) : expr → tactic (Option (expr × expr)) :=
@@ -241,7 +240,6 @@ private unsafe def transform_negation (cfg : AutoConfig) : expr → tactic (Opti
           let pr'' ← mk_eq_trans pr pr'
           return (some (e'', pr''))
     | none => return none
-#align auto.transform_negation auto.transform_negation
 
 unsafe def normalize_negations (cfg : AutoConfig) (h : expr) : tactic Unit := do
   let t ← infer_type h
@@ -426,7 +424,6 @@ unsafe def mk_hinst_lemmas : List expr → smt_tactic hinst_lemmas
 
 private unsafe def report_invalid_em_lemma {α : Type} (n : Name) : smt_tactic α :=
   fail f! "invalid ematch lemma '{n}'"
-#align auto.report_invalid_em_lemma auto.report_invalid_em_lemma
 
 private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bool) (n : Name)
     (hs : hinst_lemmas) (ref : pexpr) : smt_tactic hinst_lemmas := do
@@ -449,7 +446,6 @@ private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bo
           try (tactic.save_type_info e ref)
           return <| hs h) <|>
         report_invalid_em_lemma n
-#align auto.add_hinst_lemma_from_name auto.add_hinst_lemma_from_name
 
 private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : Bool)
     (hs : hinst_lemmas) : pexpr → smt_tactic hinst_lemmas
@@ -459,12 +455,10 @@ private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : B
     let new_e ← to_expr p
     let h ← hinst_lemma.mk_core md new_e lhs_lemma
     return <| hs h
-#align auto.add_hinst_lemma_from_pexpr auto.add_hinst_lemma_from_pexpr
 
 private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma : Bool)
     (ps : List pexpr) (hs : hinst_lemmas) : smt_tactic hinst_lemmas :=
   List.foldlM (add_hinst_lemma_from_pexpr md lhs_lemma) hs ps
-#align auto.add_hinst_lemmas_from_pexprs auto.add_hinst_lemmas_from_pexprs
 
 /-- `done` first attempts to close the goal using `contradiction`. If this fails, it creates an
 SMT state and will repeatedly use `ematch` (using `ematch` lemmas in the environment,
@@ -511,7 +505,6 @@ private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit
             cont case_option.force) >>
           cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
-#align auto.case_cont auto.case_cont
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe

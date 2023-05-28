@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit a33d01f7f8d39883e1ab4b86c9bf21692f1d4356
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Rayleigh
 import Mathbin.Analysis.InnerProductSpace.PiL2
+import Mathbin.Algebra.DirectSum.Decomposition
 
 /-! # Spectral theory of self-adjoint operators
 
@@ -145,7 +146,28 @@ theorem orthogonal_iSup_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspac
 
 include dec_𝕜
 
-/-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
+omit hT
+
+/-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` gives
+an internal direct sum decomposition of `E`.
+
+Note this takes `hT` as a `fact` to allow it to be an instance. -/
+noncomputable instance directSumDecomposition [hT : Fact T.IsSymmetric] :
+    DirectSum.Decomposition fun μ : Eigenvalues T => eigenspace T μ :=
+  haveI h : ∀ μ : eigenvalues T, CompleteSpace (eigenspace T μ) := fun μ => by infer_instance
+  hT.out.orthogonal_family_eigenspaces'.decomposition
+    (submodule.orthogonal_eq_bot_iff.mp hT.out.orthogonal_supr_eigenspaces_eq_bot')
+#align linear_map.is_symmetric.direct_sum_decomposition LinearMap.IsSymmetric.directSumDecomposition
+
+theorem directSum_decompose_apply [hT : Fact T.IsSymmetric] (x : E) (μ : Eigenvalues T) :
+    DirectSum.decompose (fun μ : Eigenvalues T => eigenspace T μ) x μ =
+      orthogonalProjection (eigenspace T μ) x :=
+  rfl
+#align linear_map.is_symmetric.direct_sum_decompose_apply LinearMap.IsSymmetric.directSum_decompose_apply
+
+include hT
+
+/-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` gives
 an internal direct sum decomposition of `E`. -/
 theorem direct_sum_isInternal : DirectSum.IsInternal fun μ : Eigenvalues T => eigenspace T μ :=
   hT.orthogonalFamily_eigenspaces'.isInternal_iff.mpr hT.orthogonal_iSup_eigenspaces_eq_bot'

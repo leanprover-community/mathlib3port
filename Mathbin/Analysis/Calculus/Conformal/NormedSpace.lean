@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.normed_space
-! leanprover-community/mathlib commit e3fb84046afd187b710170887195d50bada934ee
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
 
 /-!
 # Conformal Maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A continuous linear map between real normed spaces `X` and `Y` is `conformal_at` some point `x`
 if it is real differentiable at that point and its differential `is_conformal_linear_map`.

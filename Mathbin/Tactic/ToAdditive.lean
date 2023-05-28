@@ -340,7 +340,6 @@ private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ)
   guard (src_fields = tgt_fields) <|> fail ("Failed to map fields of " ++ src)
   (src_fields tgt_fields).mapM' fun names =>
       guard (names = names) <|> aux_attr (src names) (tgt names) tt prio
-#align to_additive.proceed_fields_aux to_additive.proceed_fields_aux
 
 /-- Add the `aux_attr` attribute to the structure fields of `src`
 so that future uses of `to_additive` will map them to the corresponding `tgt` fields. -/

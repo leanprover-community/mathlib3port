@@ -594,7 +594,6 @@ private theorem le_trans_aux {x y z : PGame}
     x ≤ z :=
   le_of_forall_lf (fun i => PGame.not_le.1 fun h => (h₁ hyz h).not_gf <| hxy.moveLeft_lf i) fun j =>
     PGame.not_le.1 fun h => (h₂ h hxy).not_gf <| hyz.lf_moveRight j
-#align pgame.le_trans_aux pgame.le_trans_aux
 
 instance : Preorder PGame :=
   {
@@ -1766,7 +1765,6 @@ private theorem neg_le_lf_neg_iff : ∀ {x y : PGame.{u}}, (-y ≤ -x ↔ x ≤ 
       apply and_congr <;> exact forall_congr' fun _ => neg_le_lf_neg_iff.2
     · rw [or_comm']
       apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1decreasing_by pgame_wf_tac
-#align pgame.neg_le_lf_neg_iff pgame.neg_le_lf_neg_iff
 
 #print PGame.neg_le_neg_iff /-
 @[simp]
@@ -2324,7 +2322,6 @@ private theorem add_le_add_right' : ∀ {x y z : PGame} (h : x ≤ y), x + z ≤
       exact
         Or.inr ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩decreasing_by
   pgame_wf_tac
-#align pgame.add_le_add_right' pgame.add_le_add_right'
 
 #print PGame.covariantClass_swap_add_le /-
 instance covariantClass_swap_add_le : CovariantClass PGame PGame (swap (· + ·)) (· ≤ ·) :=

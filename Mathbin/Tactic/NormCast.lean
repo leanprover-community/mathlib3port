@@ -148,7 +148,6 @@ unsafe def count_coes : expr → tactic ℕ
 private unsafe def count_internal_coes (e : expr) : tactic ℕ := do
   let ncoes ← count_coes e
   pure <| ncoes - count_head_coes e
-#align norm_cast.count_internal_coes norm_cast.count_internal_coes
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -286,13 +285,10 @@ unsafe def add_lemma (attr : norm_cast_attr_ty) (cache : norm_cast_cache) (decl 
 
 -- special lemmas to handle the ≥, > and ≠ operators
 private theorem ge_from_le {α} [LE α] : ∀ x y : α, x ≥ y ↔ y ≤ x := fun _ _ => Iff.rfl
-#align norm_cast.ge_from_le norm_cast.ge_from_le
 
 private theorem gt_from_lt {α} [LT α] : ∀ x y : α, x > y ↔ y < x := fun _ _ => Iff.rfl
-#align norm_cast.gt_from_lt norm_cast.gt_from_lt
 
 private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y := fun _ _ => Iff.rfl
-#align norm_cast.ne_from_not_eq norm_cast.ne_from_not_eq
 
 /-- `mk_cache names` creates a `norm_cast_cache`. It infers the proper `norm_cast` attributes
 for names in `names`, and collects the lemmas attributed with specific `norm_cast` attributes.
@@ -494,7 +490,6 @@ TODO: a tactic to print the results the discharger fails to proove
 -/
 private unsafe def prove : tactic Unit :=
   assumption
-#align norm_cast.prove norm_cast.prove
 
 /-- Core rewriting function used in the "squash" step, which moves casts upwards
 and eliminates them.
@@ -557,7 +552,6 @@ private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tacti
       guard ¬new_e == e
       return (new_a, new_e, some pr, ff))
     (fun _ _ _ _ _ => failed) `eq e
-#align norm_cast.simplify_top_down' norm_cast.simplify_top_down'
 
 /-- The core simplification routine of `norm_cast`.
 -/

@@ -42,7 +42,7 @@ locally-finite measure. -/
 theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = false)
     {s : Set (ι → ℝ)} (hs : MeasurableSet s) (I : Box ι) (y : E) (μ : Measure (ι → ℝ))
     [LocallyFiniteMeasure μ] :
-    HasIntegral.{u, v, v} I l (s.indicator fun _ => y) μ.toBoxAdditive.toSmul
+    HasIntegral.{u, v, v} I l (s.indicator fun _ => y) μ.toBoxAdditive.toSMul
       ((μ (s ∩ I)).toReal • y) :=
   by
   refine' has_integral_of_mul ‖y‖ fun ε ε0 => _
@@ -108,7 +108,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
 box. -/
 theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E}
     {μ : Measure (ι → ℝ)} [LocallyFiniteMeasure μ] (hf : f =ᵐ[μ.restrict I] 0)
-    (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul 0 :=
+    (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul 0 :=
   by
   /- Each set `{x | n < ‖f x‖ ≤ n + 1}`, `n : ℕ`, has measure zero. We cover it by an open set of
     measure less than `ε / 2 ^ n / (n + 1)`. Then the norm of the integral sum is less than `ε`. -/
@@ -170,8 +170,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
 a.e. equal to `f` on `I`, then `g` has the same integral on `I`.  -/
 theorem HasIntegral.congrAe {l : IntegrationParams} {I : Box ι} {y : E} {f g : (ι → ℝ) → E}
     {μ : Measure (ι → ℝ)} [LocallyFiniteMeasure μ]
-    (hf : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul y) (hfg : f =ᵐ[μ.restrict I] g)
-    (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l g μ.toBoxAdditive.toSmul y :=
+    (hf : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul y) (hfg : f =ᵐ[μ.restrict I] g)
+    (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l g μ.toBoxAdditive.toSMul y :=
   by
   have : g - f =ᵐ[μ.restrict I] 0 := hfg.mono fun x hx => sub_eq_zero.2 hx.symm
   simpa using hf.add (has_integral_zero_of_ae_eq_zero this hl)
@@ -186,7 +186,7 @@ namespace SimpleFunc
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
 theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ]
     (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
-    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (f.integral (μ.restrict I)) :=
+    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (f.integral (μ.restrict I)) :=
   by
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g hd hfi hgi
   ·
@@ -204,7 +204,7 @@ theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ
 integral in the sense of `measure_theory.simple_func.integral`. -/
 theorem box_integral_eq_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ))
     [LocallyFiniteMeasure μ] (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
-    BoxIntegral.integral.{u, v, v} I l f μ.toBoxAdditive.toSmul = f.integral (μ.restrict I) :=
+    BoxIntegral.integral.{u, v, v} I l f μ.toBoxAdditive.toSMul = f.integral (μ.restrict I) :=
   (f.hasBoxIntegral μ I l hl).integral_eq
 #align measure_theory.simple_func.box_integral_eq_integral MeasureTheory.SimpleFunc.box_integral_eq_integral
 
@@ -217,7 +217,7 @@ open TopologicalSpace
 theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
     [LocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams)
     (hl : l.bRiemann = false) :
-    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) :=
+    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (∫ x in I, f x ∂μ) :=
   by
   borelize E
   -- First we replace an `ae_strongly_measurable` function by a measurable one.

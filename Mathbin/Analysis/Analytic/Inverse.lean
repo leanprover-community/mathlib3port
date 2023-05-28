@@ -317,7 +317,6 @@ private theorem left_inv_eq_right_inv_aux (p : FormalMultilinearSeries 𝕜 E F)
     _ = (id 𝕜 E).comp (rightInv p i) := by rw [left_inv_comp p i h]
     _ = rightInv p i := by simp
     
-#align formal_multilinear_series.left_inv_eq_right_inv_aux formal_multilinear_series.left_inv_eq_right_inv_aux
 
 /-- The left inverse and the right inverse of a formal multilinear series coincide. This is not at
 all obvious from their definition, but it follows from uniqueness of inverses (which comes from the

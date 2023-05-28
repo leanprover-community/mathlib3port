@@ -72,6 +72,12 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
+/- warning: Top.presheaf.is_compatible -> TopCat.Presheaf.IsCompatible is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.ConcreteCategory.{u2, u2, u1} C _inst_1] {X : TopCat.{u2}} (F : TopCat.Presheaf.{u2, u2, u1} C _inst_1 X) {ι : Type.{u2}} (U : ι -> (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} (CategoryTheory.ConcreteCategory.hasCoeToSort.{succ u2, u2, u2} TopCat.{u2} TopCat.largeCategory.{u2} TopCat.concreteCategory.{u2}) X) (TopCat.topologicalSpace.{u2} X))), (forall (i : ι), coeSort.{succ u1, succ (succ u2)} C Type.{u2} (CategoryTheory.ConcreteCategory.hasCoeToSort.{u1, u2, u2} C _inst_1 _inst_2) (CategoryTheory.Functor.obj.{u2, u2, u2, u1} (Opposite.{succ u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X))) (CategoryTheory.Category.opposite.{u2, u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)) (Preorder.smallCategory.{u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)) (PartialOrder.toPreorder.{u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)) (SetLike.partialOrder.{u2, u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)) (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopologicalSpace.Opens.setLike.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)))))) C _inst_1 F (Opposite.op.{succ u2} (TopologicalSpace.Opens.{u2} (coeSort.{succ (succ u2), succ (succ u2)} TopCat.{u2} Type.{u2} TopCat.hasCoeToSort.{u2} X) (TopCat.topologicalSpace.{u2} X)) (U i)))) -> Prop
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.ConcreteCategory.{u2, u2, u1} C _inst_1] {X : TopCat.{u2}} (F : TopCat.Presheaf.{u2, u2, u1} C _inst_1 X) {ι : Type.{u2}} (U : ι -> (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))), (forall (i : ι), Prefunctor.obj.{succ u2, succ u2, u1, succ u2} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) Type.{u2} (CategoryTheory.CategoryStruct.toQuiver.{u2, succ u2} Type.{u2} (CategoryTheory.Category.toCategoryStruct.{u2, succ u2} Type.{u2} CategoryTheory.types.{u2})) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, succ u2} C _inst_1 Type.{u2} CategoryTheory.types.{u2} (CategoryTheory.forget.{u1, u2, u2} C _inst_1 _inst_2)) (Prefunctor.obj.{succ u2, succ u2, u2, u1} (Opposite.{succ u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (Opposite.{succ u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (Opposite.{succ u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))) (CategoryTheory.Category.opposite.{u2, u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (Preorder.smallCategory.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (PartialOrder.toPreorder.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (CompleteSemilatticeInf.toPartialOrder.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (CompleteLattice.toCompleteSemilatticeInf.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))))))))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u2, u1} (Opposite.{succ u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))) (CategoryTheory.Category.opposite.{u2, u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (Preorder.smallCategory.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (PartialOrder.toPreorder.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (CompleteSemilatticeInf.toPartialOrder.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (CompleteLattice.toCompleteSemilatticeInf.{u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X))))))) C _inst_1 F) (Opposite.op.{succ u2} (TopologicalSpace.Opens.{u2} (CategoryTheory.Bundled.α.{u2, u2} TopologicalSpace.{u2} X) (TopCat.topologicalSpace_coe.{u2} X)) (U i)))) -> Prop
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_compatible TopCat.Presheaf.IsCompatibleₓ'. -/
 /-- A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
 agree, for all `i` and `j`
 -/
@@ -79,6 +85,9 @@ def IsCompatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
   ∀ i j : ι, F.map (inf_le_left (U i) (U j)).op (sf i) = F.map (inf_le_right (U i) (U j)).op (sf j)
 #align Top.presheaf.is_compatible TopCat.Presheaf.IsCompatible
 
+/- warning: Top.presheaf.is_gluing -> TopCat.Presheaf.IsGluing is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_gluing TopCat.Presheaf.IsGluingₓ'. -/
 /-- A section `s` is a gluing for a family of sections `sf` if it restricts to `sf i` on `U i`,
 for all `i`
 -/
@@ -86,6 +95,7 @@ def IsGluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (iSup U))) : Pro
   ∀ i : ι, F.map (Opens.leSupr U i).op s = sf i
 #align Top.presheaf.is_gluing TopCat.Presheaf.IsGluing
 
+#print TopCat.Presheaf.IsSheafUniqueGluing /-
 /--
 The sheaf condition in terms of unique gluings. A presheaf `F : presheaf C X` satisfies this sheaf
 condition if and only if, for every compatible family of sections `sf : Π i : ι, F.obj (op (U i))`,
@@ -98,6 +108,7 @@ def IsSheafUniqueGluing : Prop :=
   ∀ ⦃ι : Type v⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
     IsCompatible F U sf → ∃! s : F.obj (op (iSup U)), IsGluing F U sf s
 #align Top.presheaf.is_sheaf_unique_gluing TopCat.Presheaf.IsSheafUniqueGluing
+-/
 
 end
 
@@ -105,6 +116,12 @@ section TypeValued
 
 variable {X : TopCat.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens X)
 
+/- warning: Top.presheaf.pi_opens_iso_sections_family -> TopCat.Presheaf.piOpensIsoSectionsFamily is a dubious translation:
+lean 3 declaration is
+  forall {X : TopCat.{u1}} (F : TopCat.Presheaf.{u1, u1, succ u1} Type.{u1} CategoryTheory.types.{u1} X) {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))), CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (TopCat.Presheaf.SheafConditionEqualizerProducts.piOpens.{u1, u1, succ u1} Type.{u1} CategoryTheory.types.{u1} TopCat.Presheaf.piOpensIsoSectionsFamily._proof_1.{u1} X F ι U) (forall (i : ι), CategoryTheory.Functor.obj.{u1, u1, u1, succ u1} (Opposite.{succ u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X))) (CategoryTheory.Category.opposite.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (SetLike.partialOrder.{u1, u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopologicalSpace.Opens.setLike.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)))))) Type.{u1} CategoryTheory.types.{u1} F (Opposite.op.{succ u1} (TopologicalSpace.Opens.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X) (TopCat.topologicalSpace.{u1} X)) (U i)))
+but is expected to have type
+  forall {X : TopCat.{u1}} (F : TopCat.Presheaf.{u1, u1, succ u1} Type.{u1} CategoryTheory.types.{u1} X) {ι : Type.{u1}} (U : ι -> (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))), CategoryTheory.Iso.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (TopCat.Presheaf.SheafConditionEqualizerProducts.piOpens.{u1, u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (fun (J : Type.{u1}) => CategoryTheory.Limits.hasLimitsOfShapeOfHasLimits.{u1, u1, u1, succ u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) CategoryTheory.Limits.Types.instHasLimitsTypeTypes.{u1}) X F ι U) (forall (i : ι), Prefunctor.obj.{succ u1, succ u1, u1, succ u1} (Opposite.{succ u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (Opposite.{succ u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (Opposite.{succ u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))) (CategoryTheory.Category.opposite.{u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))))))))) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, u1, succ u1} (Opposite.{succ u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))) (CategoryTheory.Category.opposite.{u1, u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (Preorder.smallCategory.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteSemilatticeInf.toPartialOrder.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (TopologicalSpace.Opens.instCompleteLatticeOpens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X))))))) Type.{u1} CategoryTheory.types.{u1} F) (Opposite.op.{succ u1} (TopologicalSpace.Opens.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X) (TopCat.topologicalSpace_coe.{u1} X)) (U i)))
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.pi_opens_iso_sections_family TopCat.Presheaf.piOpensIsoSectionsFamilyₓ'. -/
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
 -/
 def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
@@ -113,6 +130,7 @@ def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
     (Types.productLimitCone.{v, v} fun i : ι => F.obj (op (U i))).IsLimit
 #align Top.presheaf.pi_opens_iso_sections_family TopCat.Presheaf.piOpensIsoSectionsFamily
 
+#print TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes /-
 /-- Under the isomorphism `pi_opens_iso_sections_family`, compatibility of sections is the same
 as being equalized by the arrows `left_res` and `right_res` of the equalizer diagram.
 -/
@@ -131,7 +149,11 @@ theorem compatible_iff_leftRes_eq_rightRes (sf : piOpens F U) :
     · rw [right_res, types.pi_lift_π_apply]
       rfl
 #align Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes
+-/
 
+/- warning: Top.presheaf.is_gluing_iff_eq_res -> TopCat.Presheaf.isGluing_iff_eq_res is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.presheaf.is_gluing_iff_eq_res TopCat.Presheaf.isGluing_iff_eq_resₓ'. -/
 /-- Under the isomorphism `pi_opens_iso_sections_family`, being a gluing of a family of
 sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow of the
 equalizer diagram).
@@ -150,6 +172,7 @@ theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (iSup U))) :
     rfl
 #align Top.presheaf.is_gluing_iff_eq_res TopCat.Presheaf.isGluing_iff_eq_res
 
+#print TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types /-
 /-- The "equalizer" sheaf condition can be obtained from the sheaf condition
 in terms of unique gluings.
 -/
@@ -177,7 +200,9 @@ theorem isSheaf_of_isSheafUniqueGluing_types (Fsh : F.IsSheafUniqueGluing) : F.I
     rw [is_gluing_iff_eq_res]
     exact congr_fun hl x
 #align Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types
+-/
 
+#print TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types /-
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
 "equalizer" sheaf condition.
 -/
@@ -200,13 +225,16 @@ theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUnique
     convert hy
     rw [inv_hom_id_apply]
 #align Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types
+-/
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types /-
 /-- For type-valued presheaves, the sheaf condition in terms of unique gluings is equivalent to the
 usual sheaf condition in terms of equalizer diagrams.
 -/
 theorem isSheaf_iff_isSheafUniqueGluing_types : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.intro (isSheafUniqueGluing_of_isSheaf_types F) (isSheaf_of_isSheafUniqueGluing_types F)
 #align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types
+-/
 
 end TypeValued
 
@@ -218,6 +246,7 @@ variable [HasLimits C] [ReflectsIsomorphisms (forget C)] [PreservesLimits (forge
 
 variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing /-
 /-- For presheaves valued in a concrete category, whose forgetful functor reflects isomorphisms and
 preserves limits, the sheaf condition in terms of unique gluings is equivalent to the usual one
 in terms of equalizer diagrams.
@@ -226,6 +255,7 @@ theorem isSheaf_iff_isSheafUniqueGluing : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.trans (isSheaf_iff_isSheaf_comp (forget C) F)
     (isSheaf_iff_isSheafUniqueGluing_types (F ⋙ forget C))
 #align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing
+-/
 
 end
 
@@ -247,6 +277,9 @@ variable [PreservesLimits (ConcreteCategory.forget C)]
 
 variable {X : TopCat.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 
+/- warning: Top.sheaf.exists_unique_gluing -> TopCat.Sheaf.existsUnique_gluing is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.exists_unique_gluing TopCat.Sheaf.existsUnique_gluingₓ'. -/
 /-- A more convenient way of obtaining a unique gluing of sections for a sheaf.
 -/
 theorem existsUnique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
@@ -254,6 +287,9 @@ theorem existsUnique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompati
   (isSheaf_iff_isSheafUniqueGluing F.1).mp F.cond U sf h
 #align Top.sheaf.exists_unique_gluing TopCat.Sheaf.existsUnique_gluing
 
+/- warning: Top.sheaf.exists_unique_gluing' -> TopCat.Sheaf.existsUnique_gluing' is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.exists_unique_gluing' TopCat.Sheaf.existsUnique_gluing'ₓ'. -/
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
@@ -274,6 +310,9 @@ theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover
     · convert gl'_spec i
 #align Top.sheaf.exists_unique_gluing' TopCat.Sheaf.existsUnique_gluing'
 
+/- warning: Top.sheaf.eq_of_locally_eq -> TopCat.Sheaf.eq_of_locally_eq is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.eq_of_locally_eq TopCat.Sheaf.eq_of_locally_eqₓ'. -/
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t :=
@@ -295,6 +334,9 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     rw [← h]
 #align Top.sheaf.eq_of_locally_eq TopCat.Sheaf.eq_of_locally_eq
 
+/- warning: Top.sheaf.eq_of_locally_eq' -> TopCat.Sheaf.eq_of_locally_eq' is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.eq_of_locally_eq' TopCat.Sheaf.eq_of_locally_eq'ₓ'. -/
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
@@ -312,6 +354,9 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
   convert h i
 #align Top.sheaf.eq_of_locally_eq' TopCat.Sheaf.eq_of_locally_eq'
 
+/- warning: Top.sheaf.eq_of_locally_eq₂ -> TopCat.Sheaf.eq_of_locally_eq₂ is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂ₓ'. -/
 theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁ ⊔ U₂)
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
     (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.nat.squarefree
-! leanprover-community/mathlib commit 3c1368cac4abd5a5cbe44317ba7e87379d51ed88
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Int.Basic
 
 /-!
 # Lemmas about squarefreeness of natural numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 A number is squarefree when it is not divisible by any squares except the squares of units.
 
 ## Main Results

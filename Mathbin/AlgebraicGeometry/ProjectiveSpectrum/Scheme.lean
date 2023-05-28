@@ -368,7 +368,6 @@ variable {𝒜} {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m)
 private unsafe def mem_tac : tactic Unit :=
   let b : tactic Unit := sorry
   b <|> sorry
-#align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_tac algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_tac
 
 include f_deg
 

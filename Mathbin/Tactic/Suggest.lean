@@ -310,7 +310,6 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
             script := m
             num_goals := ng
             hyps_used := hyps fun h => h g }
-#align tactic.apply_declaration_script tactic.apply_declaration_script
 
 -- implementation note: we produce a `tactic (mllist tactic application)` first,
 -- because it's easier to work in the tactic monad, but in a moment we squash this
@@ -354,7 +353,6 @@ private unsafe def suggest_core' (opt : suggest_opt := { }) : tactic (ListM tact
         | some s => defs fun d => retrieve <| set_state s >> apply_declaration_script g hyps opt d
         | none => mllist.nil
       return (results results_symm)
-#align tactic.suggest_core' tactic.suggest_core'
 
 /-- The core `suggest` tactic.
 It attempts to apply a declaration from the library,

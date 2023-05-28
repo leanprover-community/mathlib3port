@@ -110,7 +110,6 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := d
                   NewGoals := new_goals.non_dep_only }
             skip)
   all_goals' mono_aux
-#align tactic.mono_aux tactic.mono_aux
 
 unsafe def mono (e : expr) (hs : List expr) : tactic Unit := do
   let t ← target

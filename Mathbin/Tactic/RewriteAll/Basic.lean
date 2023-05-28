@@ -64,7 +64,6 @@ private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : t
   let new_target ← to_expr new_target true false
   let prf' ← to_expr ``(congr_arg $(lam) $(prf)) true false
   tactic.replace_target new_target prf'
-#align tactic.rewrite_all.tracked_rewrite.replace_target_side tactic.rewrite_all.tracked_rewrite.replace_target_side
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe

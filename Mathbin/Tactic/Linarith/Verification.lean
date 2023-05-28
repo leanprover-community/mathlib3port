@@ -51,7 +51,6 @@ private unsafe
     | p , [ ] => p
       | p , [ a ] => ` `( $ ( p ) + $ ( a ) )
       | p , h :: t => add_exprs_aux ` `( $ ( p ) + $ ( h ) ) t
-#align linarith.add_exprs_aux linarith.add_exprs_aux
 
 /-- `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
 If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in the sum.

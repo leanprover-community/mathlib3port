@@ -98,41 +98,35 @@ allowing us to prove `exists_subset_restrict_nonpos`.
 there exists a measurable set `k ⊆ i` such that `1 / (n + 1) < s k`. -/
 private def exists_one_div_lt (s : SignedMeasure α) (i : Set α) (n : ℕ) : Prop :=
   ∃ k : Set α, k ⊆ i ∧ MeasurableSet k ∧ (1 / (n + 1) : ℝ) < s k
-#align measure_theory.signed_measure.exists_one_div_lt measure_theory.signed_measure.exists_one_div_lt
 
 private theorem exists_nat_one_div_lt_measure_of_not_negative (hi : ¬s ≤[i] 0) :
     ∃ n : ℕ, ExistsOneDivLt s i n :=
   let ⟨k, hj₁, hj₂, hj⟩ := exists_pos_measure_of_not_restrict_le_zero s hi
   let ⟨n, hn⟩ := exists_nat_one_div_lt hj
   ⟨n, k, hj₂, hj₁, hn⟩
-#align measure_theory.signed_measure.exists_nat_one_div_lt_measure_of_not_negative measure_theory.signed_measure.exists_nat_one_div_lt_measure_of_not_negative
 
 /-- Given the set `i`, if `i` is not negative, `find_exists_one_div_lt s i` is the
 least natural number `n` such that `exists_one_div_lt s i n`, otherwise, it returns 0. -/
 private def find_exists_one_div_lt (s : SignedMeasure α) (i : Set α) : ℕ :=
   if hi : ¬s ≤[i] 0 then Nat.find (exists_nat_one_div_lt_measure_of_not_negative hi) else 0
-#align measure_theory.signed_measure.find_exists_one_div_lt measure_theory.signed_measure.find_exists_one_div_lt
 
 private theorem find_exists_one_div_lt_spec (hi : ¬s ≤[i] 0) :
     ExistsOneDivLt s i (findExistsOneDivLt s i) :=
   by
   rw [find_exists_one_div_lt, dif_pos hi]
   convert Nat.find_spec _
-#align measure_theory.signed_measure.find_exists_one_div_lt_spec measure_theory.signed_measure.find_exists_one_div_lt_spec
 
 private theorem find_exists_one_div_lt_min (hi : ¬s ≤[i] 0) {m : ℕ}
     (hm : m < findExistsOneDivLt s i) : ¬ExistsOneDivLt s i m :=
   by
   rw [find_exists_one_div_lt, dif_pos hi] at hm
   exact Nat.find_min _ hm
-#align measure_theory.signed_measure.find_exists_one_div_lt_min measure_theory.signed_measure.find_exists_one_div_lt_min
 
 /-- Given the set `i`, if `i` is not negative, `some_exists_one_div_lt` chooses the set
 `k` from `exists_one_div_lt s i (find_exists_one_div_lt s i)`, otherwise, it returns the
 empty set. -/
 private def some_exists_one_div_lt (s : SignedMeasure α) (i : Set α) : Set α :=
   if hi : ¬s ≤[i] 0 then Classical.choose (findExistsOneDivLt_spec hi) else ∅
-#align measure_theory.signed_measure.some_exists_one_div_lt measure_theory.signed_measure.some_exists_one_div_lt
 
 private theorem some_exists_one_div_lt_spec (hi : ¬s ≤[i] 0) :
     someExistsOneDivLt s i ⊆ i ∧
@@ -141,7 +135,6 @@ private theorem some_exists_one_div_lt_spec (hi : ¬s ≤[i] 0) :
   by
   rw [some_exists_one_div_lt, dif_pos hi]
   exact Classical.choose_spec (find_exists_one_div_lt_spec hi)
-#align measure_theory.signed_measure.some_exists_one_div_lt_spec measure_theory.signed_measure.some_exists_one_div_lt_spec
 
 private theorem some_exists_one_div_lt_subset : someExistsOneDivLt s i ⊆ i :=
   by
@@ -152,11 +145,9 @@ private theorem some_exists_one_div_lt_subset : someExistsOneDivLt s i ⊆ i :=
       h
   · rw [some_exists_one_div_lt, dif_neg hi]
     exact Set.empty_subset _
-#align measure_theory.signed_measure.some_exists_one_div_lt_subset measure_theory.signed_measure.some_exists_one_div_lt_subset
 
 private theorem some_exists_one_div_lt_subset' : someExistsOneDivLt s (i \ j) ⊆ i :=
   Set.Subset.trans someExistsOneDivLt_subset (Set.diff_subset _ _)
-#align measure_theory.signed_measure.some_exists_one_div_lt_subset' measure_theory.signed_measure.some_exists_one_div_lt_subset'
 
 private theorem some_exists_one_div_lt_measurable_set : MeasurableSet (someExistsOneDivLt s i) :=
   by
@@ -167,13 +158,11 @@ private theorem some_exists_one_div_lt_measurable_set : MeasurableSet (someExist
       h
   · rw [some_exists_one_div_lt, dif_neg hi]
     exact MeasurableSet.empty
-#align measure_theory.signed_measure.some_exists_one_div_lt_measurable_set measure_theory.signed_measure.some_exists_one_div_lt_measurable_set
 
 private theorem some_exists_one_div_lt_lt (hi : ¬s ≤[i] 0) :
     (1 / (findExistsOneDivLt s i + 1) : ℝ) < s (someExistsOneDivLt s i) :=
   let ⟨_, _, h⟩ := someExistsOneDivLt_spec hi
   h
-#align measure_theory.signed_measure.some_exists_one_div_lt_lt measure_theory.signed_measure.some_exists_one_div_lt_lt
 
 /-- Given the set `i`, `restrict_nonpos_seq s i` is the sequence of sets defined inductively where
 `restrict_nonpos_seq s i 0 = some_exists_one_div_lt s (i \ ∅)` and
@@ -191,18 +180,15 @@ private def restrict_nonpos_seq (s : SignedMeasure α) (i : Set α) : ℕ → Se
         ⋃ k ≤ n,
           have : k < n + 1 := Nat.lt_succ_iff.mpr H
           restrict_nonpos_seq k)
-#align measure_theory.signed_measure.restrict_nonpos_seq measure_theory.signed_measure.restrict_nonpos_seq
 
 private theorem restrict_nonpos_seq_succ (n : ℕ) :
     restrictNonposSeq s i n.succ = someExistsOneDivLt s (i \ ⋃ k ≤ n, restrictNonposSeq s i k) := by
   rw [restrict_nonpos_seq]
-#align measure_theory.signed_measure.restrict_nonpos_seq_succ measure_theory.signed_measure.restrict_nonpos_seq_succ
 
 private theorem restrict_nonpos_seq_subset (n : ℕ) : restrictNonposSeq s i n ⊆ i := by
   cases n <;>
     · rw [restrict_nonpos_seq]
       exact some_exists_one_div_lt_subset'
-#align measure_theory.signed_measure.restrict_nonpos_seq_subset measure_theory.signed_measure.restrict_nonpos_seq_subset
 
 private theorem restrict_nonpos_seq_lt (n : ℕ) (hn : ¬s ≤[i \ ⋃ k ≤ n, restrictNonposSeq s i k] 0) :
     (1 / (findExistsOneDivLt s (i \ ⋃ k ≤ n, restrictNonposSeq s i k) + 1) : ℝ) <
@@ -210,7 +196,6 @@ private theorem restrict_nonpos_seq_lt (n : ℕ) (hn : ¬s ≤[i \ ⋃ k ≤ n, 
   by
   rw [restrict_nonpos_seq_succ]
   apply some_exists_one_div_lt_lt hn
-#align measure_theory.signed_measure.restrict_nonpos_seq_lt measure_theory.signed_measure.restrict_nonpos_seq_lt
 
 private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
     (hn : ¬s ≤[i \ ⋃ k < n, restrictNonposSeq s i k] 0) : 0 < s (restrictNonposSeq s i n) :=
@@ -228,14 +213,12 @@ private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
       exact funext fun x => by rw [Nat.lt_succ_iff]
     rcases some_exists_one_div_lt_spec h₁ with ⟨_, _, h⟩
     exact lt_trans Nat.one_div_pos_of_nat h
-#align measure_theory.signed_measure.measure_of_restrict_nonpos_seq measure_theory.signed_measure.measure_of_restrict_nonpos_seq
 
 private theorem restrict_nonpos_seq_measurable_set (n : ℕ) :
     MeasurableSet (restrictNonposSeq s i n) := by
   cases n <;>
     · rw [restrict_nonpos_seq]
       exact some_exists_one_div_lt_measurable_set
-#align measure_theory.signed_measure.restrict_nonpos_seq_measurable_set measure_theory.signed_measure.restrict_nonpos_seq_measurable_set
 
 private theorem restrict_nonpos_seq_disjoint' {n m : ℕ} (h : n < m) :
     restrictNonposSeq s i n ∩ restrictNonposSeq s i m = ∅ :=
@@ -247,7 +230,6 @@ private theorem restrict_nonpos_seq_disjoint' {n m : ℕ} (h : n < m) :
     exact
       (some_exists_one_div_lt_subset hx₂).2
         (Set.mem_iUnion.2 ⟨n, Set.mem_iUnion.2 ⟨nat.lt_succ_iff.mp h, hx₁⟩⟩)
-#align measure_theory.signed_measure.restrict_nonpos_seq_disjoint' measure_theory.signed_measure.restrict_nonpos_seq_disjoint'
 
 private theorem restrict_nonpos_seq_disjoint : Pairwise (Disjoint on restrictNonposSeq s i) :=
   by
@@ -256,7 +238,6 @@ private theorem restrict_nonpos_seq_disjoint : Pairwise (Disjoint on restrictNon
   rcases lt_or_gt_of_ne h with (h | h)
   · rw [restrict_nonpos_seq_disjoint' h]
   · rw [Set.inter_comm, restrict_nonpos_seq_disjoint' h]
-#align measure_theory.signed_measure.restrict_nonpos_seq_disjoint measure_theory.signed_measure.restrict_nonpos_seq_disjoint
 
 private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ : s i < 0)
     (hn : ¬∀ n : ℕ, ¬s ≤[i \ ⋃ l < n, restrictNonposSeq s i l] 0) :
@@ -305,7 +286,6 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     intro _ hx
     exact restrict_nonpos_seq_subset _ hx
   · infer_instance
-#align measure_theory.signed_measure.exists_subset_restrict_nonpos' measure_theory.signed_measure.exists_subset_restrict_nonpos'
 
 /-- A measurable set of negative measure has a negative subset of negative measure. -/
 theorem exists_subset_restrict_nonpos (hi : s i < 0) :

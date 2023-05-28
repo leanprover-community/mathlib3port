@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit 25580801f04aed44a0daf912d3760d0eaaf6d1bb
+! leanprover-community/mathlib commit c2258f7bf086b17eac0929d635403780c39e239f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,7 +18,7 @@ import Mathbin.Topology.Algebra.Module.CharacterSpace
 /-!
 # Ideals of continuous functions
 
-For a topological ring `R` and a topological space `X` there is a Galois connection between
+For a topological semiring `R` and a topological space `X` there is a Galois connection between
 `ideal C(X, R)` and `set X` given by sending each `I : ideal C(X, R)` to
 `{x : X | ∀ f ∈ I, f x = 0}ᶜ` and mapping `s : set X` to the ideal with carrier
 `{f : C(X, R) | ∀ x ∈ sᶜ, f x = 0}`, and we call these maps `continuous_map.set_of_ideal` and
@@ -81,7 +81,9 @@ open TopologicalSpace
 
 section TopologicalRing
 
-variable {X R : Type _} [TopologicalSpace X] [Ring R] [TopologicalSpace R] [TopologicalRing R]
+variable {X R : Type _} [TopologicalSpace X] [Semiring R]
+
+variable [TopologicalSpace R] [TopologicalSemiring R]
 
 variable (R)
 

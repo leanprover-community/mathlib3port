@@ -343,7 +343,6 @@ theorem xgcdAux_val (x y : R) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
 
 private def P (a b : R) : R × R × R → Prop
   | (r, s, t) => (r : R) = a * s + b * t
-#align euclidean_domain.P euclidean_domain.P
 
 #print EuclideanDomain.xgcdAux_P /-
 theorem xgcdAux_P (a b : R) {r r' : R} :

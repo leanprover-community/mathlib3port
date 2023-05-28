@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit 75e7fca56381d056096ce5d05e938f63a6567828
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.Deriv.Slope
 import Mathbin.Analysis.Calculus.LocalExtr
 import Mathbin.Analysis.Convex.Slope
 import Mathbin.Analysis.Convex.Normed

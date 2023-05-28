@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.NormedSpace.Star.Basic
 
 /-!
 # The Fréchet-Riesz representation theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We consider an inner product space `E` over `𝕜`, which is either `ℝ` or `ℂ`. We define
 `to_dual_map`, a conjugate-linear isometric embedding of `E` into its dual, which maps an element
@@ -60,6 +63,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 -- mathport name: «expr †»
 local postfix:90 "†" => starRingEnd _
 
+#print InnerProductSpace.toDualMap /-
 /-- An element `x` of an inner product space `E` induces an element of the dual space `dual 𝕜 E`,
 the map `λ y, ⟪x, y⟫`; moreover this operation is a conjugate-linear isometric embedding of `E`
 into `dual 𝕜 E`.
@@ -69,20 +73,30 @@ see `to_dual`.
 def toDualMap : E →ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   { innerSL 𝕜 with norm_map' := innerSL_apply_norm _ }
 #align inner_product_space.to_dual_map InnerProductSpace.toDualMap
+-/
 
 variable {E}
 
+/- warning: inner_product_space.to_dual_map_apply -> InnerProductSpace.toDualMap_apply is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.to_dual_map_apply InnerProductSpace.toDualMap_applyₓ'. -/
 @[simp]
 theorem toDualMap_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 #align inner_product_space.to_dual_map_apply InnerProductSpace.toDualMap_apply
 
+/- warning: inner_product_space.innerSL_norm -> InnerProductSpace.innerSL_norm is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.innerSL_norm InnerProductSpace.innerSL_normₓ'. -/
 theorem innerSL_norm [Nontrivial E] : ‖(innerSL 𝕜 : E →L⋆[𝕜] E →L[𝕜] 𝕜)‖ = 1 :=
   show ‖(toDualMap 𝕜 E).toContinuousLinearMap‖ = 1 from LinearIsometry.norm_toContinuousLinearMap _
 #align inner_product_space.innerSL_norm InnerProductSpace.innerSL_norm
 
 variable {𝕜}
 
+/- warning: inner_product_space.ext_inner_left_basis -> InnerProductSpace.ext_inner_left_basis is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.ext_inner_left_basis InnerProductSpace.ext_inner_left_basisₓ'. -/
 theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
     (h : ∀ i : ι, ⟪b i, x⟫ = ⟪b i, y⟫) : x = y :=
   by
@@ -95,6 +109,9 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
   exact congr_arg conj (h i)
 #align inner_product_space.ext_inner_left_basis InnerProductSpace.ext_inner_left_basis
 
+/- warning: inner_product_space.ext_inner_right_basis -> InnerProductSpace.ext_inner_right_basis is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.ext_inner_right_basis InnerProductSpace.ext_inner_right_basisₓ'. -/
 theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
     (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y :=
   by
@@ -106,6 +123,7 @@ theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
 
 variable (𝕜) (E) [CompleteSpace E]
 
+#print InnerProductSpace.toDual /-
 /-- Fréchet-Riesz representation: any `ℓ` in the dual of a Hilbert space `E` is of the form
 `λ u, ⟪y, u⟫` for some `y : E`, i.e. `to_dual_map` is surjective.
 -/
@@ -152,14 +170,21 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
             
         exact h₄)
 #align inner_product_space.to_dual InnerProductSpace.toDual
+-/
 
 variable {𝕜} {E}
 
+/- warning: inner_product_space.to_dual_apply -> InnerProductSpace.toDual_apply is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.to_dual_apply InnerProductSpace.toDual_applyₓ'. -/
 @[simp]
 theorem toDual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 #align inner_product_space.to_dual_apply InnerProductSpace.toDual_apply
 
+/- warning: inner_product_space.to_dual_symm_apply -> InnerProductSpace.toDual_symm_apply is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.to_dual_symm_apply InnerProductSpace.toDual_symm_applyₓ'. -/
 @[simp]
 theorem toDual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x :=
   by
@@ -169,6 +194,7 @@ theorem toDual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual �
 
 variable {E 𝕜}
 
+#print InnerProductSpace.continuousLinearMapOfBilin /-
 /-- Maps a bounded sesquilinear form to its continuous linear map,
 given by interpreting the form as a map `B : E →L⋆[𝕜] normed_space.dual 𝕜 E`
 and dualizing the result using `to_dual`.
@@ -176,17 +202,24 @@ and dualizing the result using `to_dual`.
 def continuousLinearMapOfBilin (B : E →L⋆[𝕜] E →L[𝕜] 𝕜) : E →L[𝕜] E :=
   comp (toDual 𝕜 E).symm.toContinuousLinearEquiv.toContinuousLinearMap B
 #align inner_product_space.continuous_linear_map_of_bilin InnerProductSpace.continuousLinearMapOfBilin
+-/
 
 -- mathport name: «expr ♯»
 local postfix:1024 "♯" => continuousLinearMapOfBilin
 
 variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
+/- warning: inner_product_space.continuous_linear_map_of_bilin_apply -> InnerProductSpace.continuousLinearMapOfBilin_apply is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuousLinearMapOfBilin_applyₓ'. -/
 @[simp]
 theorem continuousLinearMapOfBilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
   simp [continuous_linear_map_of_bilin]
 #align inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuousLinearMapOfBilin_apply
 
+/- warning: inner_product_space.unique_continuous_linear_map_of_bilin -> InnerProductSpace.unique_continuousLinearMapOfBilin is a dubious translation:
+<too large>
+Case conversion may be inaccurate. Consider using '#align inner_product_space.unique_continuous_linear_map_of_bilin InnerProductSpace.unique_continuousLinearMapOfBilinₓ'. -/
 theorem unique_continuousLinearMapOfBilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
     f = B♯ v := by
   refine' ext_inner_right 𝕜 _

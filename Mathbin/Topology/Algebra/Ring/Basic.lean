@@ -486,7 +486,6 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_neg h }
-#align ring_topology.def_Inf ring_topology.def_Inf
 
 /-- Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.

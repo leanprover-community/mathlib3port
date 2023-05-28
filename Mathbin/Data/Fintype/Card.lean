@@ -1489,7 +1489,6 @@ private noncomputable def nat_embedding_aux (α : Type _) [Infinite α] : ℕ �
       (exists_not_mem_finset
         ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux m) fun _ =>
             Multiset.mem_range.1).toFinset)
-#align infinite.nat_embedding_aux infinite.nat_embedding_aux
 
 private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] :
     Function.Injective (natEmbeddingAux α) :=
@@ -1508,7 +1507,6 @@ private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] :
       _
   refine' Multiset.mem_toFinset.2 (Multiset.mem_pmap.2 ⟨m, Multiset.mem_range.2 hmn, _⟩)
   rw [h, nat_embedding_aux]
-#align infinite.nat_embedding_aux_injective infinite.nat_embedding_aux_injective
 
 #print Infinite.natEmbedding /-
 /-- Embedding of `ℕ` into an infinite type. -/
@@ -1675,7 +1673,6 @@ open Positivity
 private theorem card_univ_pos (α : Type _) [Fintype α] [Nonempty α] :
     0 < (Finset.univ : Finset α).card :=
   Finset.univ_nonempty.card_pos
-#align tactic.card_univ_pos tactic.card_univ_pos
 
 /-- Extension for the `positivity` tactic: `finset.card s` is positive if `s` is nonempty. -/
 @[positivity]

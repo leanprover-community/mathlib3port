@@ -367,7 +367,6 @@ theorem minFac_eq : ∀ n, minFac n = if 2 ∣ n then 2 else minFacAux n 3
 
 private def min_fac_prop (n k : ℕ) :=
   2 ≤ k ∧ k ∣ n ∧ ∀ m, 2 ≤ m → m ∣ n → k ≤ m
-#align nat.min_fac_prop nat.min_fac_prop
 
 #print Nat.minFacAux_has_prop /-
 theorem minFacAux_has_prop {n : ℕ} (n2 : 2 ≤ n) :

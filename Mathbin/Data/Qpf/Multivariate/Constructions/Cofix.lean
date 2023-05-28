@@ -257,7 +257,6 @@ private theorem cofix.bisim_aux {α : TypeVec n} (r : Cofix F α → Cofix F α 
     rw [← this, append_fun_comp_id, q.P.comp_map, q.P.comp_map, abs_map, abs_map, abs_map, abs_map,
       h₀]
   refine' ⟨r', this, rxy⟩
-#align mvqpf.cofix.bisim_aux mvqpf.cofix.bisim_aux
 
 /-- Bisimulation principle using `map` and `quot.mk` to match and relate children of two trees. -/
 theorem Cofix.bisim_rel {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)

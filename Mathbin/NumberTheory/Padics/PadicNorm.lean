@@ -277,7 +277,6 @@ private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicVal
           have : padicValRat p q = min (padicValRat p q) (padicValRat p r) := (min_eq_left h).symm
           rw [this]
           apply min_le_padic_val_rat_add <;> assumption
-#align padic_norm.nonarchimedean_aux padic_norm.nonarchimedean_aux
 
 /- warning: padic_norm.nonarchimedean -> padicNorm.nonarchimedean is a dubious translation:
 lean 3 declaration is

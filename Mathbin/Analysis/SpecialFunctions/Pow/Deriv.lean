@@ -5,13 +5,14 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow.deriv
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathbin.Analysis.Calculus.ExtendDeriv
+import Mathbin.Analysis.Calculus.Deriv.Prod
 import Mathbin.Analysis.SpecialFunctions.Log.Deriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 
@@ -164,7 +165,6 @@ private theorem aux :
   simp only [Algebra.id.smul_eq_mul, one_mul, ContinuousLinearMap.one_apply,
     ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.add_apply, Pi.smul_apply,
     ContinuousLinearMap.coe_smul']
-#align aux aux
 
 theorem HasStrictDerivAt.cpow (hf : HasStrictDerivAt f f' x) (hg : HasStrictDerivAt g g' x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :

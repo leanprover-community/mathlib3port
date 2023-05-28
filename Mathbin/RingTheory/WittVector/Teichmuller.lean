@@ -81,7 +81,6 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
   · rw [Finset.mem_range]
     intro h
     exact (h (Nat.succ_pos n)).elim
-#align witt_vector.ghost_component_teichmuller_fun witt_vector.ghost_component_teichmuller_fun
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
     map f (teichmullerFun p r) = teichmullerFun p (f r) :=
@@ -90,7 +89,6 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
   cases n
   · rfl
   · exact f.map_zero
-#align witt_vector.map_teichmuller_fun witt_vector.map_teichmuller_fun
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y :=
@@ -99,7 +97,6 @@ private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
   rw [RingHom.map_mul]
   ext1 n
   simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_pow]
-#align witt_vector.teichmuller_mul_aux₁ witt_vector.teichmuller_mul_aux₁
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y :=
@@ -108,7 +105,6 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
     map_injective (MvPolynomial.map (Int.castRingHom ℚ))
       (MvPolynomial.map_injective _ Int.cast_injective) _
   simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
-#align witt_vector.teichmuller_mul_aux₂ witt_vector.teichmuller_mul_aux₂
 
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.

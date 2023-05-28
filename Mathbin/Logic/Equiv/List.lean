@@ -121,15 +121,12 @@ variable [Encodable α]
 
 private def enle : α → α → Prop :=
   encode ⁻¹'o (· ≤ ·)
-#align encodable.enle encodable.enle
 
 private theorem enle.is_linear_order : IsLinearOrder α Enle :=
   (RelEmbedding.preimage ⟨encode, encode_injective⟩ (· ≤ ·)).IsLinearOrder
-#align encodable.enle.is_linear_order encodable.enle.is_linear_order
 
 private def decidable_enle (a b : α) : Decidable (Enle a b) := by
   unfold enle Order.Preimage <;> infer_instance
-#align encodable.decidable_enle encodable.decidable_enle
 
 attribute [local instance] enle.is_linear_order decidable_enle
 

@@ -108,7 +108,6 @@ private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := d
       f! "expr_lens.congr failed on 
         {pp_f } : {pp_f_t }
         {pp_x_eq } : {pp_x_eq_t}"
-#align expr_lens.trace_congr_error expr_lens.trace_congr_error
 
 /-- Turn an `e : expr_lens` and a proof that `a = b` into a series of `congr_arg` or `congr_fun`
 applications showing that the expressions obtained from `e.fill a` and `e.fill b` are equal. -/
@@ -151,7 +150,6 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
             app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
       pure []
   | none => pure []
-#align expr.app_map_aux expr.app_map_aux
 
 /-- `app_map F e` maps a function `F` which understands `expr_lens`es
 over the given `e : expr` in the natural way;

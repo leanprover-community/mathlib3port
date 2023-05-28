@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.maximal
-! leanprover-community/mathlib commit 052f6013363326d50cb99c6939814a4b8eb7b301
+! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Localization.AsSubring
 
 /-!
 # Maximal spectrum of a commutative ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The maximal spectrum of a commutative ring is the type of all maximal ideals.
 It is naturally a subset of the prime spectrum endowed with the subspace topology.

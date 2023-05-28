@@ -234,7 +234,6 @@ theorem testBit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
-#align int.bitwise_tac int.bitwise_tac
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_or /-

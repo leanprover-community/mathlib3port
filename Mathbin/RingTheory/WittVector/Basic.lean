@@ -195,7 +195,6 @@ This function will be bundled as the ring homomorphism `witt_vector.ghost_map`
 once the ring structure is available,
 but we rely on it to set up the ring structure in the first place. -/
 private def ghost_fun : 𝕎 R → ℕ → R := fun x n => aeval x.coeff (W_ ℤ n)
-#align witt_vector.ghost_fun witt_vector.ghost_fun
 
 section GhostFun
 
@@ -215,48 +214,37 @@ theorem matrix_vecEmpty_coeff {R} (i j) :
 include hp
 
 private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by ghost_fun_tac 0, ![]
-#align witt_vector.ghost_fun_zero witt_vector.ghost_fun_zero
 
 private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by ghost_fun_tac 1, ![]
-#align witt_vector.ghost_fun_one witt_vector.ghost_fun_one
 
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
   ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
-#align witt_vector.ghost_fun_add witt_vector.ghost_fun_add
 
 private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.unaryCast = _ by
     induction i <;>
       simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
-#align witt_vector.ghost_fun_nat_cast witt_vector.ghost_fun_nat_cast
 
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
   ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
-#align witt_vector.ghost_fun_sub witt_vector.ghost_fun_sub
 
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
   ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
-#align witt_vector.ghost_fun_mul witt_vector.ghost_fun_mul
 
 private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac -X 0, ![x.coeff]
-#align witt_vector.ghost_fun_neg witt_vector.ghost_fun_neg
 
 private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.castDef = _ by
     cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
-#align witt_vector.ghost_fun_int_cast witt_vector.ghost_fun_int_cast
 
 private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
   ghost_fun_tac m • X 0, ![x.coeff]
-#align witt_vector.ghost_fun_nsmul witt_vector.ghost_fun_nsmul
 
 private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
   ghost_fun_tac m • X 0, ![x.coeff]
-#align witt_vector.ghost_fun_zsmul witt_vector.ghost_fun_zsmul
 
 private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
   ghost_fun_tac X 0 ^ m, ![x.coeff]
-#align witt_vector.ghost_fun_pow witt_vector.ghost_fun_pow
 
 end GhostFun
 
@@ -280,7 +268,6 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
     have := bind₁_xInTermsOfW_wittPolynomial p R n
     apply_fun aeval x  at this
     simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
-#align witt_vector.ghost_equiv' witt_vector.ghost_equiv'
 
 include hp
 
@@ -290,14 +277,12 @@ private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
   (ghost_equiv' p (MvPolynomial R ℚ)).Injective.CommRing ghost_fun ghost_fun_zero ghost_fun_one
     ghost_fun_add ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul
     ghost_fun_pow ghost_fun_nat_cast ghost_fun_int_cast
-#align witt_vector.comm_ring_aux₁ witt_vector.comm_ring_aux₁
 
 @[local instance]
 private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
   (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
     (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
-#align witt_vector.comm_ring_aux₂ witt_vector.comm_ring_aux₂
 
 attribute [reducible] comm_ring_aux₂
 

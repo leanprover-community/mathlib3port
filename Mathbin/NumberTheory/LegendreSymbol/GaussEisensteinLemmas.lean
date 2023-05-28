@@ -167,7 +167,6 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ← Finset.prod_eq_multiset_prod,
         prod_Ico_id_eq_factorial]
     
-#align zmod.gauss_lemma_aux₁ zmod.gauss_lemma_aux₁
 
 theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
@@ -235,7 +234,6 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
           )
         rfl
     
-#align zmod.eisenstein_lemma_aux₁ zmod.eisenstein_lemma_aux₁
 
 theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
     (hap : (a : ZMod p) ≠ 0) :
@@ -298,7 +296,6 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                   simp (config := { contextual := true }) only [mem_filter, eq_self_iff_true,
                     exists_prop_of_true, mem_sigma, and_self_iff, forall_true_iff, mem_product]⟩
       
-#align zmod.sum_Ico_eq_card_lt zmod.sum_Ico_eq_card_lt
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

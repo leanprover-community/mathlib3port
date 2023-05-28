@@ -134,7 +134,6 @@ theorem isComplement'_stabilizer_of_coprime {α : H.QuotientDiff}
 private theorem exists_right_complement'_of_coprime_aux (hH : Nat.coprime (Nat.card H) H.index) :
     ∃ K : Subgroup G, IsComplement' H K :=
   instNonempty.elim fun α => ⟨stabilizer G α, isComplement'_stabilizer_of_coprime hH⟩
-#align subgroup.exists_right_complement'_of_coprime_aux subgroup.exists_right_complement'_of_coprime_aux
 
 end SchurZassenhausAbelian
 
@@ -178,7 +177,6 @@ include h1 h2 h3
 private theorem step0 : N ≠ ⊥ := by
   rintro rfl
   exact h3 ⊤ is_complement'_bot_top
-#align subgroup.schur_zassenhaus_induction.step0 subgroup.schur_zassenhaus_induction.step0
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ :=
@@ -206,7 +204,6 @@ private theorem step1 (K : Subgroup G) (hK : K ⊔ N = ⊤) : K = ⊤ :=
     rw [hH, ← N.index_mul_card, mul_comm]
   have h8 : (Fintype.card N).coprime (Fintype.card (H.map K.subtype)) := by rwa [hH]
   exact ⟨H.map K.subtype, is_complement'_of_coprime h7 h8⟩
-#align subgroup.schur_zassenhaus_induction.step1 subgroup.schur_zassenhaus_induction.step1
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K = N :=
@@ -241,7 +238,6 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
     rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff,
       QuotientGroup.ker_mk'] at hH
     · exact h4.2 (le_antisymm hK hH)
-#align subgroup.schur_zassenhaus_induction.step2 subgroup.schur_zassenhaus_induction.step2
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ K = ⊤ :=
@@ -255,18 +251,15 @@ private theorem step3 (K : Subgroup N) [(K.map N.Subtype).Normal] : K = ⊥ ∨ 
     rw [← N.subtype_range, N.subtype.range_eq_map]
   have inj := map_injective N.subtype_injective
   rwa [inj.eq_iff, inj.eq_iff] at key
-#align subgroup.schur_zassenhaus_induction.step3 subgroup.schur_zassenhaus_induction.step3
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step4 : (Fintype.card N).minFac.Prime :=
   Nat.minFac_prime (N.one_lt_card_iff_ne_bot.mpr (step0 h1 h2 h3)).ne'
-#align subgroup.schur_zassenhaus_induction.step4 subgroup.schur_zassenhaus_induction.step4
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step5 {P : Sylow (Fintype.card N).minFac N} : P.1 ≠ ⊥ :=
   haveI : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
   P.ne_bot_of_dvd_card (Fintype.card N).minFac_dvd
-#align subgroup.schur_zassenhaus_induction.step5 subgroup.schur_zassenhaus_induction.step5
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step6 : IsPGroup (Fintype.card N).minFac N :=
@@ -277,7 +270,6 @@ private theorem step6 : IsPGroup (Fintype.card N).minFac N :=
   haveI : (P.1.map N.subtype).Normal :=
     normalizer_eq_top.mp (step1 h1 h2 h3 (P.1.map N.subtype).normalizer P.normalizer_sup_eq_top)
   exact (step3 h1 h2 h3 P.1).resolve_left (step5 h1 h2 h3)
-#align subgroup.schur_zassenhaus_induction.step6 subgroup.schur_zassenhaus_induction.step6
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 theorem step7 : IsCommutative N :=
@@ -310,7 +302,6 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
       h3
   rw [← Nat.card_eq_fintype_card] at hN
   exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
-#align subgroup.exists_right_complement'_of_coprime_aux' subgroup.exists_right_complement'_of_coprime_aux'
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a

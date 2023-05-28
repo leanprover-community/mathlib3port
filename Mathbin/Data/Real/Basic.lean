@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
+! leanprover-community/mathlib commit cb42593171ba005beaaf4549fcfe0dece9ada4c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,27 +103,21 @@ def equivCauchy : ℝ ≃ CauSeq.Completion.Cauchy abs :=
 -- irreducible doesn't work for instances: https://github.com/leanprover-community/lean/issues/511
 private irreducible_def zero : ℝ :=
   ⟨0⟩
-#align real.zero real.zero
 
 private irreducible_def one : ℝ :=
   ⟨1⟩
-#align real.one real.one
 
 private irreducible_def add : ℝ → ℝ → ℝ
   | ⟨a⟩, ⟨b⟩ => ⟨a + b⟩
-#align real.add real.add
 
 private irreducible_def neg : ℝ → ℝ
   | ⟨a⟩ => ⟨-a⟩
-#align real.neg real.neg
 
 private irreducible_def mul : ℝ → ℝ → ℝ
   | ⟨a⟩, ⟨b⟩ => ⟨a * b⟩
-#align real.mul real.mul
 
 private noncomputable irreducible_def inv' : ℝ → ℝ
   | ⟨a⟩ => ⟨a⁻¹⟩
-#align real.inv' real.inv'
 
 instance : Zero ℝ :=
   ⟨zero⟩
@@ -473,7 +467,6 @@ private irreducible_def lt : ℝ → ℝ → Prop
       propext <|
         ⟨fun h => lt_of_eq_of_lt (Setoid.symm hf) (lt_of_lt_of_eq h hg), fun h =>
           lt_of_eq_of_lt hf (lt_of_lt_of_eq h (Setoid.symm hg))⟩
-#align real.lt real.lt
 
 instance : LT ℝ :=
   ⟨Lt⟩
@@ -557,14 +550,12 @@ theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
 
 private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
-#align real.le real.le
 
 instance : LE ℝ :=
   ⟨Le⟩
 
 private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
   show Le _ _ ↔ _ by rw [le]
-#align real.le_def real.le_def
 
 /- warning: real.mk_le -> Real.mk_le is a dubious translation:
 lean 3 declaration is
@@ -707,7 +698,6 @@ instance : Nontrivial ℝ :=
 
 private irreducible_def sup : ℝ → ℝ → ℝ
   | ⟨x⟩, ⟨y⟩ => ⟨Quotient.map₂ (· ⊔ ·) (fun x₁ x₂ hx y₁ y₂ hy => sup_equiv_sup hx hy) x y⟩
-#align real.sup real.sup
 
 instance : Sup ℝ :=
   ⟨sup⟩
@@ -737,7 +727,6 @@ theorem mk_sup (a b) : (mk (a ⊔ b) : ℝ) = mk a ⊔ mk b :=
 
 private irreducible_def inf : ℝ → ℝ → ℝ
   | ⟨x⟩, ⟨y⟩ => ⟨Quotient.map₂ (· ⊓ ·) (fun x₁ x₂ hx y₁ y₂ hy => inf_equiv_inf hx hy) x y⟩
-#align real.inf real.inf
 
 instance : Inf ℝ :=
   ⟨inf⟩
@@ -1305,7 +1294,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.Sup_nonneg Real.sSup_nonnegₓ'. -/
 /--
 As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
-suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.
+suffices to show that `S` is bounded below by `0` to show that `0 ≤ Sup S`.
 -/
 theorem sSup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sSup S :=
   by
@@ -1313,6 +1302,30 @@ theorem sSup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sS
   · exact Sup_empty.ge
   · apply dite _ (fun h => le_csSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
 #align real.Sup_nonneg Real.sSup_nonneg
+
+/--
+As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
+suffices to show that `f i` is nonnegative to show that `0 ≤ ⨆ i, f i`.
+-/
+protected theorem iSup_nonneg {ι : Sort _} {f : ι → ℝ} (hf : ∀ i, 0 ≤ f i) : 0 ≤ ⨆ i, f i :=
+  sSup_nonneg _ <| Set.forall_range_iff.2 hf
+#align real.supr_nonneg Real.iSup_nonneg
+
+/--
+As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
+suffices to show that all elements of `S` are bounded by a nonnagative number to show that `Sup S`
+is bounded by this number.
+-/
+protected theorem sSup_le {S : Set ℝ} {a : ℝ} (hS : ∀ x ∈ S, x ≤ a) (ha : 0 ≤ a) : sSup S ≤ a :=
+  by
+  rcases S.eq_empty_or_nonempty with (rfl | hS₂)
+  exacts[Sup_empty.trans_le ha, csSup_le hS₂ hS]
+#align real.Sup_le Real.sSup_le
+
+protected theorem iSup_le {ι : Sort _} {f : ι → ℝ} {a : ℝ} (hS : ∀ i, f i ≤ a) (ha : 0 ≤ a) :
+    (⨆ i, f i) ≤ a :=
+  Real.sSup_le (Set.forall_range_iff.2 hS) ha
+#align real.supr_le Real.iSup_le
 
 /- warning: real.Sup_nonpos -> Real.sSup_nonpos is a dubious translation:
 lean 3 declaration is
@@ -1324,9 +1337,7 @@ Case conversion may be inaccurate. Consider using '#align real.Sup_nonpos Real.s
 bounded above by `0` to show that `Sup S ≤ 0`.
 -/
 theorem sSup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : sSup S ≤ 0 :=
-  by
-  rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Sup_empty.le, csSup_le hS₂ hS]
+  Real.sSup_le hS le_rfl
 #align real.Sup_nonpos Real.sSup_nonpos
 
 /- warning: real.Inf_nonneg -> Real.sInf_nonneg is a dubious translation:

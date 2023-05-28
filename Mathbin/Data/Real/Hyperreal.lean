@@ -495,7 +495,6 @@ private theorem is_st_unique' (x : ℝ*) (r s : ℝ) (hr : IsSt x r) (hs : IsSt 
   norm_cast  at *
   rw [h] at hs'
   exact not_lt_of_lt hs' hr'
-#align hyperreal.is_st_unique' hyperreal.is_st_unique'
 
 #print Hyperreal.IsSt.unique /-
 theorem Hyperreal.IsSt.unique {x : ℝ*} {r s : ℝ} (hr : IsSt x r) (hs : IsSt x s) : r = s :=
@@ -1235,7 +1234,6 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
               _)
           _ = (d : ℝ*) := by rw [mul_one, add_halves]
           
-#align hyperreal.is_st_mul' hyperreal.is_st_mul'
 
 /- warning: hyperreal.is_st_mul -> Hyperreal.IsSt.mul is a dubious translation:
 lean 3 declaration is
@@ -1852,15 +1850,12 @@ open Positivity
 
 private theorem hyperreal_coe_ne_zero {r : ℝ} : r ≠ 0 → (r : ℝ*) ≠ 0 :=
   Hyperreal.coe_ne_zero.2
-#align tactic.hyperreal_coe_ne_zero tactic.hyperreal_coe_ne_zero
 
 private theorem hyperreal_coe_nonneg {r : ℝ} : 0 ≤ r → 0 ≤ (r : ℝ*) :=
   Hyperreal.coe_nonneg.2
-#align tactic.hyperreal_coe_nonneg tactic.hyperreal_coe_nonneg
 
 private theorem hyperreal_coe_pos {r : ℝ} : 0 < r → 0 < (r : ℝ*) :=
   Hyperreal.coe_pos.2
-#align tactic.hyperreal_coe_pos tactic.hyperreal_coe_pos
 
 /-- Extension for the `positivity` tactic: cast from `ℝ` to `ℝ*`. -/
 @[positivity]

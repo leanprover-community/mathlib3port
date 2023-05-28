@@ -50,7 +50,6 @@ private unsafe def join_proofs (r : Name) (o₁ o₂ : Option expr) : tactic (Op
         let pr ← mk_app trans [p₁, p₂]
         return <| some pr
       | none => fail f! "converter failed, relation '{r}' is not transitive"
-#align old_conv.join_proofs old_conv.join_proofs
 
 protected unsafe def seq {α β : Type} (c₁ : old_conv (α → β)) (c₂ : old_conv α) : old_conv β :=
   fun r e => do
@@ -148,7 +147,6 @@ private unsafe def mk_refl_proof (r : Name) (e : expr) : tactic expr := do
       let pr ← mk_app refl [e]
       return pr
     | none => fail f! "converter failed, relation '{r}' is not reflexive"
-#align old_conv.mk_refl_proof old_conv.mk_refl_proof
 
 unsafe def to_tactic (c : old_conv Unit) : Name → expr → tactic (expr × expr) := fun r e => do
   let ⟨u, e₁, o⟩ ← c r e

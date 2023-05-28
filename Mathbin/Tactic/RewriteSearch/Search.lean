@@ -116,7 +116,6 @@ private unsafe def walk_up_parents : Option edge → tactic (List edge)
     let v ← g.vertices.read_t e.from_id
     let edges ← walk_up_parents v.parent
     return (e :: edges)
-#align tactic.rewrite_search.graph.walk_up_parents tactic.rewrite_search.graph.walk_up_parents
 
 /-- Returns two lists that represent a solution. The first list is a path from LHS to some
 interior vertex, the second is a path from the RHS to that interior vertex.
@@ -129,7 +128,6 @@ private unsafe def solution_paths : tactic (List edge × List edge) := do
   match v with
     | side.L => return (path2, path1)
     | side.R => return (path1, path2)
-#align tactic.rewrite_search.graph.solution_paths tactic.rewrite_search.graph.solution_paths
 
 /-- Finds the id of a vertex in a list whose expression is defeq to the provided expression.
 Returns none if there is none.
@@ -142,7 +140,6 @@ private unsafe def find_defeq : expr → List ℕ → tactic (Option ℕ)
           tactic.is_def_eq v exp
           return (some id)) <|>
         find_defeq exp rest
-#align tactic.rewrite_search.graph.find_defeq tactic.rewrite_search.graph.find_defeq
 
 /-- Add the new vertex and edge to the graph, that can be proved in one step starting
 at a given vertex, with a given rewrite expression.
@@ -170,14 +167,12 @@ private unsafe def add_rewrite (v : vertex) (rw : rewrite) : tactic graph := do
           { g with
             vertices := g new_vertex
             vmap := g pp (new_vertex_id :: existing_ids) }
-#align tactic.rewrite_search.graph.add_rewrite tactic.rewrite_search.graph.add_rewrite
 
 /-- Add all single-step rewrites starting at a particular vertex to the graph.
 -/
 private unsafe def expand_vertex (v : vertex) : tactic graph := do
   let rws ← get_rewrites g.rules v.exp g.conf
   List.foldlM (fun g rw => add_rewrite g v rw) g rws
-#align tactic.rewrite_search.graph.expand_vertex tactic.rewrite_search.graph.expand_vertex
 
 /-- Repeatedly expand edges, starting at a given vertex id, until a solution is found.
 -/
@@ -192,7 +187,6 @@ private unsafe def find_solving_edge : graph → ℕ → tactic graph
           | some _ => return g
           | none => find_solving_edge g (vertex_id + 1)
       else fail "search failed: all vertices explored"
-#align tactic.rewrite_search.graph.find_solving_edge tactic.rewrite_search.graph.find_solving_edge
 
 /-- Use `mk_eq_trans` to combine a list of proof expressions into a single proof expression.
 -/
@@ -200,7 +194,6 @@ private unsafe def combine_proofs (proofs : List expr) : tactic expr :=
   match proofs with
   | [] => fail "cannot combine empty proof list"
   | proof :: rest => List.foldlM mk_eq_trans proof rest
-#align tactic.rewrite_search.graph.combine_proofs tactic.rewrite_search.graph.combine_proofs
 
 /-- Construct a proof unit, given a path through the graph.
 This reverses the direction of the proof on the right hand side, with `mk_eq_symm`.
@@ -215,7 +208,6 @@ private unsafe def proof_for_edges : Side × List edge → tactic (Option proof_
     let proof ← combine_proofs proofs
     let hows := edges.map fun e => e.how
     return <| some ⟨proof, s, hows⟩
-#align tactic.rewrite_search.graph.proof_for_edges tactic.rewrite_search.graph.proof_for_edges
 
 /-- Checks to see if an empty series of rewrites will solve this, because it's an expression
 of the form a = a.
@@ -224,7 +216,6 @@ private unsafe def find_trivial_proof : tactic (graph × expr × List proof_unit
   is_def_eq g g
   let exp ← mk_eq_refl g.lhs
   return (g, exp, [])
-#align tactic.rewrite_search.graph.find_trivial_proof tactic.rewrite_search.graph.find_trivial_proof
 
 /-- Run the search to find a proof for the provided graph.
 Normally, this is the only external method needed to run the graph search.

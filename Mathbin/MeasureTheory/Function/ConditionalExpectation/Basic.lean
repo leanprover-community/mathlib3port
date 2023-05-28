@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit e0736bb5b48bdadbca19dbd857e12bee38ccfbb8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -556,6 +556,10 @@ instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] :
   rw [(Lp_meas_subgroup_to_Lp_trim_iso F p μ hm.elim).completeSpace_iff]
   infer_instance
 
+-- For now just no-lint this; lean4's tree-based logging will make this easier to debug.
+-- One possible change might be to generalize `𝕜` from `is_R_or_C` to `normed_field`, as this
+-- result may well hold there.
+@[nolint fails_quickly]
 instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] :
     CompleteSpace (lpMeas F 𝕜 m p μ) :=
   by
@@ -1371,8 +1375,7 @@ theorem condexpIndSmul_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (hs 
     (hμs : μ s ≠ ∞) (c : 𝕜) (x : F) :
     condexpIndSmul hm hs hμs (c • x) = c • condexpIndSmul hm hs hμs x := by
   rw [condexp_ind_smul, condexp_ind_smul, to_span_singleton_smul',
-    (to_span_singleton ℝ x).smul_compLpL_apply c
-      ↑(condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)))]
+    (to_span_singleton ℝ x).smul_compLpL c, smul_apply]
 #align measure_theory.condexp_ind_smul_smul' MeasureTheory.condexpIndSmul_smul'
 
 theorem condexpIndSmul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :

@@ -231,7 +231,6 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
   exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
-#align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p
 
 /-- Two uncountable algebraically closed fields are isomorphic
 if they have the same cardinality and the same characteristic. -/

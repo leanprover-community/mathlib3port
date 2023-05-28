@@ -88,7 +88,6 @@ theorem bind₁_frobeniusPolyRat_wittPolynomial (n : ℕ) :
 for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
   (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gt hp.1.one_lt, n.2⟩
-#align witt_vector.pnat_multiplicity witt_vector.pnat_multiplicity
 
 -- mathport name: exprv
 local notation "v" => pnatMultiplicity

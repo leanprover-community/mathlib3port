@@ -70,13 +70,11 @@ private def mul : QuaternionGroup n → QuaternionGroup n → QuaternionGroup n
   | a i, xa j => xa (j - i)
   | xa i, a j => xa (i + j)
   | xa i, xa j => a (n + j - i)
-#align quaternion_group.mul quaternion_group.mul
 
 /-- The identity `1` is given by `aⁱ`.
 -/
 private def one : QuaternionGroup n :=
   a 0
-#align quaternion_group.one quaternion_group.one
 
 instance : Inhabited (QuaternionGroup n) :=
   ⟨one⟩
@@ -86,7 +84,6 @@ instance : Inhabited (QuaternionGroup n) :=
 private def inv : QuaternionGroup n → QuaternionGroup n
   | a i => a (-i)
   | xa i => xa (n + i)
-#align quaternion_group.inv quaternion_group.inv
 
 /-- The group structure on `quaternion_group n`.
 -/
@@ -155,7 +152,6 @@ private def fintype_helper : Sum (ZMod (2 * n)) (ZMod (2 * n)) ≃ QuaternionGro
     | Sum.inr j => xa j
   left_inv := by rintro (x | x) <;> rfl
   right_inv := by rintro (x | x) <;> rfl
-#align quaternion_group.fintype_helper quaternion_group.fintype_helper
 
 /-- The special case that more or less by definition `quaternion_group 0` is isomorphic to the
 infinite dihedral group. -/

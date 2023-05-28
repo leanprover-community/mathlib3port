@@ -301,7 +301,6 @@ private unsafe
                 )
               <|>
               contra_p_not_p Rs Hs
-#align tactic.contra_p_not_p tactic.contra_p_not_p
 
 unsafe def contradiction_with (r : tauto_state) : tactic Unit :=
   contradiction <|> do

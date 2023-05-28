@@ -82,7 +82,6 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
         [] =>
         skip
       | _ => failed
-#align tactic.fin_cases_at_aux tactic.fin_cases_at_aux
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -144,7 +143,6 @@ namespace Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def hyp :=
   tk "*" *> return none <|> some <$> ident
-#align tactic.interactive.hyp tactic.interactive.hyp
 
 /-- `fin_cases h` performs case analysis on a hypothesis of the form
 `h : A`, where `[fintype A]` is available, or

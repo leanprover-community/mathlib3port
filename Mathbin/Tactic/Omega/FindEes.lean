@@ -44,7 +44,6 @@ unsafe def abort {α : Type} : eqelim α :=
 
 private unsafe def mk_eqelim_state (eqs les : List Term) : tactic EeState :=
   return (EeState.mk eqs les [])
-#align omega.mk_eqelim_state omega.mk_eqelim_state
 
 /-- Get the current list of equality constraints. -/
 unsafe def get_eqs : eqelim (List Term) :=
@@ -111,7 +110,6 @@ local notation t1 " !>>= " t2 "; " t3 => ee_commit t1 t2 t3
 
 private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=
   StateT.lift
-#align omega.of_tactic omega.of_tactic
 
 /-- GCD of all elements of the list. -/
 def gcd : List Int → Nat

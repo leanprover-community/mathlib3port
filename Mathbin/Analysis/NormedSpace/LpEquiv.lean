@@ -80,7 +80,7 @@ theorem equiv_lpPiLp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
   rcases p.trichotomy with (rfl | rfl | h)
   · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]
     rfl
-  · rw [PiLp.norm_eq_csupr, lp.norm_eq_csupr]
+  · rw [PiLp.norm_eq_ciSup, lp.norm_eq_csupr]
     rfl
   · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]
     rfl

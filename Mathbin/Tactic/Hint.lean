@@ -34,7 +34,6 @@ add_tactic_doc
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
   add_decl <| declaration.defn n [] q(tactic String) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
-#align tactic.hint.add_tactic_hint tactic.hint.add_tactic_hint
 
 /-- `add_hint_tactic t` runs the tactic `t` whenever `hint` is invoked.
 The typical use case is `add_hint_tactic "foo"` for some interactive tactic `foo`.

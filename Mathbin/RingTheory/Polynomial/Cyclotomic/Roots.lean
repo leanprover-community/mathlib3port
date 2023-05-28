@@ -109,7 +109,6 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
   refine' ⟨X - C μ, ⟨(∏ x in n.divisors \ {i, n}, cyclotomic x K) * k * j, by ring⟩, _⟩
   simp [Polynomial.isUnit_iff_degree_eq_zero]
   all_goals infer_instance
-#align polynomial.is_root_cyclotomic_iff' polynomial.is_root_cyclotomic_iff'
 
 theorem isRoot_cyclotomic_iff [NeZero (n : R)] {μ : R} :
     IsRoot (cyclotomic n R) μ ↔ IsPrimitiveRoot μ n :=
