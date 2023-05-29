@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit 86d1873c01a723aba6788f0b9051ae3d23b4c1c3
+! leanprover-community/mathlib commit d87199d51218d36a0a42c66c82d147b5a7ff87b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -635,6 +635,10 @@ theorem Ideal.smithCoeffs_ne_zero (b : Basis ι R S) (I : Ideal S) (hI : I ≠ �
   simp [hi]
 #align ideal.smith_coeffs_ne_zero Ideal.smithCoeffs_ne_zero
 
+instance (F : Type u) [CommRing F] [Algebra F R] (b : Basis ι R S) {I : Ideal S} (hI : I ≠ ⊥) (i) :
+    Module F (R ⧸ Ideal.span ({I.smithCoeffs b hI i} : Set R)) := by infer_instance
+
+-- quotient.module' _
 end Ideal
 
 end SmithNormal

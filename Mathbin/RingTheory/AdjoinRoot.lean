@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
+! leanprover-community/mathlib commit 5c4b3d41a84bd2a1d79c7d9265e58a891e71be89
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -441,7 +441,7 @@ instance span_maximal_of_irreducible [Fact (Irreducible f)] : (span {f}).IsMaxim
 
 noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
   { AdjoinRoot.instCommRing f,
-    Ideal.Quotient.field
+    Ideal.Quotient.groupWithZero
       (span {f} : Ideal K[X]) with
     ratCast := fun a => of f (a : K)
     ratCast_mk := fun a b h1 h2 =>

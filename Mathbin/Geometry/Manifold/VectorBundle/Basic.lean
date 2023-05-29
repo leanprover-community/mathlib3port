@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.basic
-! leanprover-community/mathlib commit c89fe2d59ae06402c3f55f978016d1ada444f57e
+! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -415,7 +415,7 @@ end WithTopology
 
 namespace VectorPrebundle
 
-variable {F E}
+variable [∀ x, TopologicalSpace (E x)] {F E}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
 /-- Mixin for a `vector_prebundle` stating smoothness of coordinate changes. -/
@@ -468,8 +468,8 @@ variable (IB)
 
 /-- Make a `smooth_vector_bundle` from a `smooth_vector_prebundle`.  -/
 theorem smoothVectorBundle :
-    @SmoothVectorBundle _ _ F E _ _ _ _ _ _ IB _ _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology
-      a.toFiberBundle a.to_vectorBundle :=
+    @SmoothVectorBundle _ _ F E _ _ _ _ _ _ IB _ _ _ _ _ _ _ a.totalSpaceTopology _ a.toFiberBundle
+      a.to_vectorBundle :=
   {
     smoothOn_coord_change := by
       rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩

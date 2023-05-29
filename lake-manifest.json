@@ -4,15 +4,15 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "52949e686fe7d17c68a3b3a859ef113b90069d6c",
+    "rev": "d650a185019be9e6f287f632a75b75bdb8649d1d",
     "name": "lean3port",
-    "inputRev?": "52949e686fe7d17c68a3b3a859ef113b90069d6c"}},
+    "inputRev?": "d650a185019be9e6f287f632a75b75bdb8649d1d"}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "e7643d6ca5137dc5a70caed6a972d462ccfff2d7",
+    "rev": "e434199145df3abc7a366f89fcca1ebd6b4fa66c",
     "name": "mathlib",
-    "inputRev?": "e7643d6ca5137dc5a70caed6a972d462ccfff2d7"}},
+    "inputRev?": "e434199145df3abc7a366f89fcca1ebd6b4fa66c"}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,

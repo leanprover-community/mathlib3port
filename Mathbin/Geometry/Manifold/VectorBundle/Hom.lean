@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.hom
-! leanprover-community/mathlib commit c89fe2d59ae06402c3f55f978016d1ada444f57e
+! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,16 +28,17 @@ open Bundle Set LocalHomeomorph ContinuousLinearMap Pretrivialization
 open scoped Manifold Bundle
 
 variable {𝕜 B F F₁ F₂ M M₁ M₂ : Type _} {E : B → Type _} {E₁ : B → Type _} {E₂ : B → Type _}
-  [NontriviallyNormedField 𝕜] [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
-  [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace E)]
-  [∀ x, TopologicalSpace (E x)] [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)]
-  [NormedAddCommGroup F₁] [NormedSpace 𝕜 F₁] [TopologicalSpace (TotalSpace E₁)]
-  [∀ x, TopologicalSpace (E₁ x)] [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)]
-  [NormedAddCommGroup F₂] [NormedSpace 𝕜 F₂] [TopologicalSpace (TotalSpace E₂)]
-  [∀ x, TopologicalSpace (E₂ x)] {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB]
-  {HB : Type _} [TopologicalSpace HB] (IB : ModelWithCorners 𝕜 EB HB) [TopologicalSpace B]
-  [ChartedSpace HB B] {EM : Type _} [NormedAddCommGroup EM] [NormedSpace 𝕜 EM] {HM : Type _}
-  [TopologicalSpace HM] {IM : ModelWithCorners 𝕜 EM HM} [TopologicalSpace M] [ChartedSpace HM M]
+  [NontriviallyNormedField 𝕜] [∀ x, AddCommGroup (E x)] [∀ x, Module 𝕜 (E x)] [NormedAddCommGroup F]
+  [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
+  [∀ x, AddCommGroup (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [NormedAddCommGroup F₁] [NormedSpace 𝕜 F₁]
+  [TopologicalSpace (TotalSpace E₁)] [∀ x, TopologicalSpace (E₁ x)] [∀ x, AddCommGroup (E₂ x)]
+  [∀ x, Module 𝕜 (E₂ x)] [NormedAddCommGroup F₂] [NormedSpace 𝕜 F₂]
+  [TopologicalSpace (TotalSpace E₂)] [∀ x, TopologicalSpace (E₂ x)]
+  [_i₁ : ∀ x, TopologicalAddGroup (E₂ x)] [_i₂ : ∀ x, ContinuousSMul 𝕜 (E₂ x)] {EB : Type _}
+  [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type _} [TopologicalSpace HB]
+  (IB : ModelWithCorners 𝕜 EB HB) [TopologicalSpace B] [ChartedSpace HB B] {EM : Type _}
+  [NormedAddCommGroup EM] [NormedSpace 𝕜 EM] {HM : Type _} [TopologicalSpace HM]
+  {IM : ModelWithCorners 𝕜 EM HM} [TopologicalSpace M] [ChartedSpace HM M]
   [Is : SmoothManifoldWithCorners IM M] {n : ℕ∞} [FiberBundle F₁ E₁] [VectorBundle 𝕜 F₁ E₁]
   [FiberBundle F₂ E₂] [VectorBundle 𝕜 F₂ E₂] {e₁ e₁' : Trivialization F₁ (π E₁)}
   {e₂ e₂' : Trivialization F₂ (π E₂)}
@@ -64,10 +65,11 @@ theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
   · intro b hb; ext (L v)
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
       ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compL_apply, flip_apply,
-      ContinuousLinearEquiv.symm_symm]
+      ContinuousLinearEquiv.symm_symm, LinearEquiv.toFun_eq_coe,
+      ContinuousLinearEquiv.arrowCongrₛₗ_apply, ContinuousLinearMap.coe_comp']
 #align smooth_on_continuous_linear_map_coord_change smoothOn_continuousLinearMapCoordChange
 
-variable [∀ x, ContinuousAdd (E₂ x)] [∀ x, ContinuousSMul 𝕜 (E₂ x)]
+include _i₁ _i₂
 
 theorem hom_chart (y₀ y : LE₁E₂) :
     chartAt (ModelProd HB (F₁ →L[𝕜] F₂)) y₀ y =
@@ -109,16 +111,6 @@ instance Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth :
         smoothOn_continuousLinearMapCoordChange IB,
         continuous_linear_map_coord_change_apply (RingHom.id 𝕜) e₁ e₁' e₂ e₂'⟩
 #align bundle.continuous_linear_map.vector_prebundle.is_smooth Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth
-
-/-- Todo: remove this definition. It is probably needed because of the type-class pi bug
-https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/vector.20bundles.20--.20typeclass.20inference.20issue
--/
-@[reducible]
-def SmoothVectorBundle.ContinuousLinearMap.aux (x) :
-    TopologicalSpace (Bundle.ContinuousLinearMap (RingHom.id 𝕜) F₁ E₁ F₂ E₂ x) := by infer_instance
-#align smooth_vector_bundle.continuous_linear_map.aux SmoothVectorBundle.ContinuousLinearMap.aux
-
-attribute [local instance 1] SmoothVectorBundle.ContinuousLinearMap.aux
 
 instance SmoothVectorBundle.continuousLinearMap :
     SmoothVectorBundle (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) F₁ E₁ F₂ E₂) IB :=

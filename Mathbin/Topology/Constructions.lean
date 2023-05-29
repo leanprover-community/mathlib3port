@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 76f9c990d4b7c3dd26b87c4c4b51759e249d9e66
+! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -937,6 +937,18 @@ theorem Inducing.prod_map {f : α → β} {g : γ → δ} (hf : Inducing f) (hg 
     rw [Prod.topologicalSpace, Prod.topologicalSpace, hf.induced, hg.induced, induced_compose,
       induced_compose, induced_inf, induced_compose, induced_compose]⟩
 #align inducing.prod_mk Inducing.prod_map
+
+@[simp]
+theorem inducing_const_prod {a : α} {f : β → γ} : (Inducing fun x => (a, f x)) ↔ Inducing f := by
+  simp_rw [inducing_iff, Prod.topologicalSpace, induced_inf, induced_compose, Function.comp,
+    induced_const, top_inf_eq]
+#align inducing_const_prod inducing_const_prod
+
+@[simp]
+theorem inducing_prod_const {b : β} {f : α → γ} : (Inducing fun x => (f x, b)) ↔ Inducing f := by
+  simp_rw [inducing_iff, Prod.topologicalSpace, induced_inf, induced_compose, Function.comp,
+    induced_const, inf_top_eq]
+#align inducing_prod_const inducing_prod_const
 
 theorem Embedding.prod_map {f : α → β} {g : γ → δ} (hf : Embedding f) (hg : Embedding g) :
     Embedding fun x : α × γ => (f x.1, g x.2) :=
