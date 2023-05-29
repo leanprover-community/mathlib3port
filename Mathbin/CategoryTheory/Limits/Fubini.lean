@@ -53,6 +53,7 @@ variable {C : Type u} [Category.{v} C]
 
 variable (F : J ⥤ K ⥤ C)
 
+#print CategoryTheory.Limits.DiagramOfCones /-
 -- We could try introducing a "dependent functor type" to handle this?
 /-- A structure carrying a diagram of cones over the functors `F.obj j`.
 -/
@@ -65,9 +66,11 @@ structure DiagramOfCones where
       (map (f ≫ g)).Hom = (map f).Hom ≫ (map g).Hom := by
     obviously
 #align category_theory.limits.diagram_of_cones CategoryTheory.Limits.DiagramOfCones
+-/
 
 variable {F}
 
+#print CategoryTheory.Limits.DiagramOfCones.conePoints /-
 /-- Extract the functor `J ⥤ C` consisting of the cone points and the maps between them,
 from a `diagram_of_cones`.
 -/
@@ -79,6 +82,7 @@ def DiagramOfCones.conePoints (D : DiagramOfCones F) : J ⥤ C
   map_id' j := D.id j
   map_comp' j₁ j₂ j₃ f g := D.comp f g
 #align category_theory.limits.diagram_of_cones.cone_points CategoryTheory.Limits.DiagramOfCones.conePoints
+-/
 
 /-- Given a diagram `D` of limit cones over the `F.obj j`, and a cone over `uncurry.obj F`,
 we can construct a cone over the diagram consisting of the cone points from `D`.
@@ -165,6 +169,7 @@ variable (F)
 
 variable [HasLimitsOfShape K C]
 
+#print CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits /-
 /-- Given a functor `F : J ⥤ K ⥤ C`, with all needed limits,
 we can construct a diagram consisting of the limit cone over each functor `F.obj j`,
 and the universal cone morphisms between these.
@@ -175,17 +180,22 @@ noncomputable def DiagramOfCones.mkOfHasLimits : DiagramOfCones F
   obj j := limit.cone (F.obj j)
   map j j' f := { Hom := lim.map (F.map f) }
 #align category_theory.limits.diagram_of_cones.mk_of_has_limits CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits
+-/
 
+#print CategoryTheory.Limits.diagramOfConesInhabited /-
 -- Satisfying the inhabited linter.
 noncomputable instance diagramOfConesInhabited : Inhabited (DiagramOfCones F) :=
   ⟨DiagramOfCones.mkOfHasLimits F⟩
 #align category_theory.limits.diagram_of_cones_inhabited CategoryTheory.Limits.diagramOfConesInhabited
+-/
 
+#print CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits_conePoints /-
 @[simp]
 theorem DiagramOfCones.mkOfHasLimits_conePoints :
     (DiagramOfCones.mkOfHasLimits F).conePoints = F ⋙ lim :=
   rfl
 #align category_theory.limits.diagram_of_cones.mk_of_has_limits_cone_points CategoryTheory.Limits.DiagramOfCones.mkOfHasLimits_conePoints
+-/
 
 variable [HasLimit (uncurry.obj F)]
 
@@ -232,6 +242,7 @@ variable (F) [HasLimitsOfShape J C] [HasLimitsOfShape K C]
 -- With only moderate effort these could be derived if needed:
 variable [HasLimitsOfShape (J × K) C] [HasLimitsOfShape (K × J) C]
 
+#print CategoryTheory.Limits.limitFlipCompLimIsoLimitCompLim /-
 /-- The limit of `F.flip ⋙ lim` is isomorphic to the limit of `F ⋙ lim`. -/
 noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ limit (F ⋙ lim) :=
   (limitUncurryIsoLimitCompLim _).symm ≪≫
@@ -240,6 +251,7 @@ noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ l
           (NatIso.ofComponents (fun _ => by rfl) (by tidy)) ≪≫
         limitUncurryIsoLimitCompLim _
 #align category_theory.limits.limit_flip_comp_lim_iso_limit_comp_lim CategoryTheory.Limits.limitFlipCompLimIsoLimitCompLim
+-/
 
 @[simp, reassoc]
 theorem limitFlipCompLimIsoLimitCompLim_hom_π_π (j) (k) :
