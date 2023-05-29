@@ -67,12 +67,15 @@ theorem mem_gradeBy_iff (f : M → ι) (i : ι) (a : AddMonoidAlgebra R M) :
     a ∈ gradeBy R f i ↔ (a.support : Set M) ⊆ f ⁻¹' {i} := by rfl
 #align add_monoid_algebra.mem_grade_by_iff AddMonoidAlgebra.mem_gradeBy_iff
 
+#print AddMonoidAlgebra.mem_grade_iff /-
 theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a.support ⊆ {m} :=
   by
   rw [← Finset.coe_subset, Finset.coe_singleton]
   rfl
 #align add_monoid_algebra.mem_grade_iff AddMonoidAlgebra.mem_grade_iff
+-/
 
+#print AddMonoidAlgebra.mem_grade_iff' /-
 theorem mem_grade_iff' (m : M) (a : AddMonoidAlgebra R M) :
     a ∈ grade R m ↔
       a ∈ ((Finsupp.lsingle m : R →ₗ[R] M →₀ R).range : Submodule R (AddMonoidAlgebra R M)) :=
@@ -82,6 +85,7 @@ theorem mem_grade_iff' (m : M) (a : AddMonoidAlgebra R M) :
   intro r
   constructor <;> exact Eq.symm
 #align add_monoid_algebra.mem_grade_iff' AddMonoidAlgebra.mem_grade_iff'
+-/
 
 theorem grade_eq_lsingle_range (m : M) : grade R m = (Finsupp.lsingle m : R →ₗ[R] M →₀ R).range :=
   Submodule.ext (mem_grade_iff' R m)
@@ -221,9 +225,11 @@ theorem GradesBy.decompose_single (m : M) (r : R) :
   decomposeAux_single _ _ _
 #align add_monoid_algebra.grades_by.decompose_single AddMonoidAlgebra.GradesBy.decompose_single
 
+#print AddMonoidAlgebra.grade.gradedAlgebra /-
 instance grade.gradedAlgebra : GradedAlgebra (grade R : ι → Submodule _ _) :=
   AddMonoidAlgebra.gradeBy.gradedAlgebra (AddMonoidHom.id _)
 #align add_monoid_algebra.grade.graded_algebra AddMonoidAlgebra.grade.gradedAlgebra
+-/
 
 -- Lean can't find this later without us repeating it
 instance grade.decomposition : DirectSum.Decomposition (grade R : ι → Submodule _ _) := by

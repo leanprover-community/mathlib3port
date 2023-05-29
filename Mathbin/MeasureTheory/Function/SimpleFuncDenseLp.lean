@@ -308,7 +308,7 @@ theorem exists_forall_norm_le (f : α →ₛ F) : ∃ C, ∀ x, ‖f x‖ ≤ C 
 #align measure_theory.simple_func.exists_forall_norm_le MeasureTheory.SimpleFunc.exists_forall_norm_le
 
 theorem memℒp_zero (f : α →ₛ E) (μ : Measure α) : Memℒp f 0 μ :=
-  memℒp_zero_iff_aEStronglyMeasurable.mpr f.AEStronglyMeasurable
+  memℒp_zero_iff_aestronglyMeasurable.mpr f.AEStronglyMeasurable
 #align measure_theory.simple_func.mem_ℒp_zero MeasureTheory.SimpleFunc.memℒp_zero
 
 theorem memℒp_top (f : α →ₛ E) (μ : Measure α) : Memℒp f ∞ μ :=

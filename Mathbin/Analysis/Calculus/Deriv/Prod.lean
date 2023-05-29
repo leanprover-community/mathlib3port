@@ -57,25 +57,33 @@ variable {G : Type w} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 variable {f₂ : 𝕜 → G} {f₂' : G}
 
+#print HasDerivAtFilter.prod /-
 theorem HasDerivAtFilter.prod (hf₁ : HasDerivAtFilter f₁ f₁' x L)
     (hf₂ : HasDerivAtFilter f₂ f₂' x L) : HasDerivAtFilter (fun x => (f₁ x, f₂ x)) (f₁', f₂') x L :=
   hf₁.Prod hf₂
 #align has_deriv_at_filter.prod HasDerivAtFilter.prod
+-/
 
+#print HasDerivWithinAt.prod /-
 theorem HasDerivWithinAt.prod (hf₁ : HasDerivWithinAt f₁ f₁' s x)
     (hf₂ : HasDerivWithinAt f₂ f₂' s x) : HasDerivWithinAt (fun x => (f₁ x, f₂ x)) (f₁', f₂') s x :=
   hf₁.Prod hf₂
 #align has_deriv_within_at.prod HasDerivWithinAt.prod
+-/
 
+#print HasDerivAt.prod /-
 theorem HasDerivAt.prod (hf₁ : HasDerivAt f₁ f₁' x) (hf₂ : HasDerivAt f₂ f₂' x) :
     HasDerivAt (fun x => (f₁ x, f₂ x)) (f₁', f₂') x :=
   hf₁.Prod hf₂
 #align has_deriv_at.prod HasDerivAt.prod
+-/
 
+#print HasStrictDerivAt.prod /-
 theorem HasStrictDerivAt.prod (hf₁ : HasStrictDerivAt f₁ f₁' x) (hf₂ : HasStrictDerivAt f₂ f₂' x) :
     HasStrictDerivAt (fun x => (f₁ x, f₂ x)) (f₁', f₂') x :=
   hf₁.Prod hf₂
 #align has_strict_deriv_at.prod HasStrictDerivAt.prod
+-/
 
 end CartesianProduct
 

@@ -1920,11 +1920,11 @@ theorem aestronglyMeasurable_const_smul_iff (c : G) :
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 #align ae_strongly_measurable_const_smul_iff aestronglyMeasurable_const_smul_iff
 
-theorem IsUnit.aEStronglyMeasurable_const_smul_iff {c : M} (hc : IsUnit c) :
+theorem IsUnit.aestronglyMeasurable_const_smul_iff {c : M} (hc : IsUnit c) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
   let ⟨u, hu⟩ := hc
   hu ▸ aestronglyMeasurable_const_smul_iff u
-#align is_unit.ae_strongly_measurable_const_smul_iff IsUnit.aEStronglyMeasurable_const_smul_iff
+#align is_unit.ae_strongly_measurable_const_smul_iff IsUnit.aestronglyMeasurable_const_smul_iff
 
 theorem aestronglyMeasurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
