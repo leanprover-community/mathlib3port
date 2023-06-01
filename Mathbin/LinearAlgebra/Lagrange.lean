@@ -54,8 +54,8 @@ variable (s : Finset R)
 theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.card)
     (eval_f : ∀ x ∈ s, f.eval x = 0) : f = 0 :=
   by
-  rw [← mem_degree_lt] at degree_f_lt
-  simp_rw [eval_eq_sum_degree_lt_equiv degree_f_lt] at eval_f
+  rw [← mem_degree_lt] at degree_f_lt 
+  simp_rw [eval_eq_sum_degree_lt_equiv degree_f_lt] at eval_f 
   rw [← degree_lt_equiv_eq_zero_iff_eq_zero degree_f_lt]
   exact
     Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero
@@ -78,7 +78,7 @@ theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s
 theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card)
     (degree_g_lt : g.degree < s.card) (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g :=
   by
-  rw [← mem_degree_lt] at degree_f_lt degree_g_lt
+  rw [← mem_degree_lt] at degree_f_lt degree_g_lt 
   refine' eq_of_degree_sub_lt_of_eval_finset_eq _ _ eval_fg
   rw [← mem_degree_lt]; exact Submodule.sub_mem _ degree_f_lt degree_g_lt
 #align polynomial.eq_of_degrees_lt_of_eval_finset_eq Polynomial.eq_of_degrees_lt_of_eval_finset_eq
@@ -95,7 +95,7 @@ variable {ι : Type _} {v : ι → R} (s : Finset ι)
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
     (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
   classical
-    rw [← card_image_of_inj_on hvs] at degree_f_lt
+    rw [← card_image_of_inj_on hvs] at degree_f_lt 
     refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
     intro x hx
     rcases mem_image.mp hx with ⟨_, hj, rfl⟩
@@ -118,7 +118,7 @@ theorem eq_of_degrees_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_f_lt : f
     (degree_g_lt : g.degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g :=
   by
   refine' eq_of_degree_sub_lt_of_eval_index_eq _ hvs _ eval_fg
-  rw [← mem_degree_lt] at degree_f_lt degree_g_lt⊢
+  rw [← mem_degree_lt] at degree_f_lt degree_g_lt ⊢
   exact Submodule.sub_mem _ degree_f_lt degree_g_lt
 #align polynomial.eq_of_degrees_lt_of_eval_index_eq Polynomial.eq_of_degrees_lt_of_eval_index_eq
 -/
@@ -160,7 +160,7 @@ theorem basisDivisor_self : basisDivisor x x = 0 := by
 theorem basisDivisor_inj (hxy : basisDivisor x y = 0) : x = y :=
   by
   simp_rw [basis_divisor, mul_eq_zero, X_sub_C_ne_zero, or_false_iff, C_eq_zero, inv_eq_zero,
-    sub_eq_zero] at hxy
+    sub_eq_zero] at hxy 
   exact hxy
 #align lagrange.basis_divisor_inj Lagrange.basisDivisor_inj
 -/
@@ -462,7 +462,7 @@ def funEquivDegreeLT (hvs : Set.InjOn v s) : degreeLT F s.card ≃ₗ[F] s → F
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
-    rw [mem_degree_lt] at hf
+    rw [mem_degree_lt] at hf 
     nth_rw_rhs 1 [eq_interpolate hvs hf]
     exact interpolate_eq_of_values_eq_on _ _ fun _ hi => if_pos hi
   right_inv := by

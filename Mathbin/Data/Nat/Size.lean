@@ -131,15 +131,15 @@ theorem size_one : size 1 = 1 :=
 @[simp]
 theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = size m + n :=
   by
-  induction' n with n IH <;> simp [shiftl'] at h⊢
+  induction' n with n IH <;> simp [shiftl'] at h ⊢
   rw [size_bit h, Nat.add_succ]
-  by_cases s0 : shiftl' b m n = 0 <;> [skip;rw [IH s0]]
-  rw [s0] at h⊢
+  by_cases s0 : shiftl' b m n = 0 <;> [skip; rw [IH s0]]
+  rw [s0] at h ⊢
   cases b; · exact absurd rfl h
   have : shiftl' tt m n + 1 = 1 := congr_arg (· + 1) s0
-  rw [shiftl'_tt_eq_mul_pow] at this
+  rw [shiftl'_tt_eq_mul_pow] at this 
   obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
-  rw [one_mul] at this
+  rw [one_mul] at this 
   obtain rfl : n = 0 :=
     Nat.eq_zero_of_le_zero
       (le_of_not_gt fun hn => ne_of_gt (pow_lt_pow_of_lt_right (by decide) hn) this)
@@ -197,7 +197,7 @@ theorem size_pos {n : ℕ} : 0 < size n ↔ 0 < n := by rw [lt_size] <;> rfl
 
 #print Nat.size_eq_zero /-
 theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
-  have := @size_pos n <;> simp [pos_iff_ne_zero] at this <;> exact Decidable.not_iff_not.1 this
+  have := @size_pos n <;> simp [pos_iff_ne_zero] at this  <;> exact Decidable.not_iff_not.1 this
 #align nat.size_eq_zero Nat.size_eq_zero
 -/
 

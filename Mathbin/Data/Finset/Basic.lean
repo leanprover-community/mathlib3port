@@ -308,7 +308,7 @@ protected theorem forall_coe {α : Type _} (s : Finset α) (p : s → Prop) :
 #print Finset.exists_coe /-
 @[simp]
 protected theorem exists_coe {α : Type _} (s : Finset α) (p : s → Prop) :
-    (∃ x : s, p x) ↔ ∃ (x : α)(h : x ∈ s), p ⟨x, h⟩ :=
+    (∃ x : s, p x) ↔ ∃ (x : α) (h : x ∈ s), p ⟨x, h⟩ :=
   Subtype.exists
 #align finset.exists_coe Finset.exists_coe
 -/
@@ -1119,7 +1119,7 @@ theorem cons_subset_cons {hs ht} : s.cons a hs ⊆ t.cons a ht ↔ s ⊆ t := by
 -/
 
 #print Finset.ssubset_iff_exists_cons_subset /-
-theorem ssubset_iff_exists_cons_subset : s ⊂ t ↔ ∃ (a : _)(h : a ∉ s), s.cons a h ⊆ t :=
+theorem ssubset_iff_exists_cons_subset : s ⊂ t ↔ ∃ (a : _) (h : a ∉ s), s.cons a h ⊆ t :=
   by
   refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_ssubset_of_subset (ssubset_cons _) h⟩
   obtain ⟨a, hs, ht⟩ := not_subset.1 h.2
@@ -1463,7 +1463,7 @@ theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.ssubset_iff /-
-theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
+theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _) (_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
 #align finset.ssubset_iff Finset.ssubset_iff
 -/
@@ -1560,7 +1560,7 @@ def subtypeInsertEquivOption {t : Finset α} {x : α} (h : x ∉ t) :
   by
   refine'
     { toFun := fun y => if h : ↑y = x then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩
-      invFun := fun y => y.elim ⟨x, mem_insert_self _ _⟩ fun z => ⟨z, mem_insert_of_mem z.2⟩.. }
+      invFun := fun y => y.elim ⟨x, mem_insert_self _ _⟩ fun z => ⟨z, mem_insert_of_mem z.2⟩ .. }
   · intro y; by_cases h : ↑y = x
     simp only [Subtype.ext_iff, h, Option.elim', dif_pos, Subtype.coe_mk]
     simp only [h, Option.elim', dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
@@ -1920,7 +1920,7 @@ theorem DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} {
     {c : Set ι} (hn : c.Nonempty) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α}
     (hs : (s : Set α) ⊆ ⋃ i ∈ c, f i) : ∃ i ∈ c, (s : Set α) ⊆ f i :=
   by
-  rw [Set.biUnion_eq_iUnion] at hs
+  rw [Set.biUnion_eq_iUnion] at hs 
   haveI := hn.coe_sort
   obtain ⟨⟨i, hic⟩, hi⟩ :=
     (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_biUnion hs
@@ -2127,7 +2127,7 @@ theorem inter_singleton_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : s �
 theorem inter_subset_inter {x y s t : Finset α} (h : x ⊆ y) (h' : s ⊆ t) : x ∩ s ⊆ y ∩ t :=
   by
   intro a a_in
-  rw [Finset.mem_inter] at a_in⊢
+  rw [Finset.mem_inter] at a_in ⊢
   exact ⟨h a_in.1, h' a_in.2⟩
 #align finset.inter_subset_inter Finset.inter_subset_inter
 -/
@@ -2402,7 +2402,7 @@ theorem mem_erase_of_ne_of_mem : a ≠ b → a ∈ s → a ∈ erase s b := by
 `a`. -/
 theorem eq_of_mem_of_not_mem_erase (hs : b ∈ s) (hsa : b ∉ s.eraseₓ a) : b = a :=
   by
-  rw [mem_erase, not_and] at hsa
+  rw [mem_erase, not_and] at hsa 
   exact not_imp_not.mp hsa hs
 #align finset.eq_of_mem_of_not_mem_erase Finset.eq_of_mem_of_not_mem_erase
 -/
@@ -2818,7 +2818,7 @@ theorem insert_sdiff_insert (s t : Finset α) (x : α) : insert x s \ insert x t
 theorem sdiff_insert_of_not_mem {x : α} (h : x ∉ s) (t : Finset α) : s \ insert x t = s \ t :=
   by
   refine' subset.antisymm (sdiff_subset_sdiff (subset.refl _) (subset_insert _ _)) fun y hy => _
-  simp only [mem_sdiff, mem_insert, not_or] at hy⊢
+  simp only [mem_sdiff, mem_insert, not_or] at hy ⊢
   exact ⟨hy.1, fun hxy => h <| hxy ▸ hy.1, hy.2⟩
 #align finset.sdiff_insert_of_not_mem Finset.sdiff_insert_of_not_mem
 -/
@@ -3335,7 +3335,7 @@ instance decidableEqPiFinset {β : α → Type _} [h : ∀ a, DecidableEq (β a)
 
 #print Finset.decidableDexistsFinset /-
 instance decidableDexistsFinset {p : ∀ a ∈ s, Prop} [hp : ∀ (a) (h : a ∈ s), Decidable (p a h)] :
-    Decidable (∃ (a : _)(h : a ∈ s), p a h) :=
+    Decidable (∃ (a : _) (h : a ∈ s), p a h) :=
   Multiset.decidableDexistsMultiset
 #align finset.decidable_dexists_finset Finset.decidableDexistsFinset
 -/
@@ -3437,7 +3437,7 @@ theorem filter_eq_empty_iff (s : Finset α) : s.filterₓ p = ∅ ↔ ∀ x ∈ 
   refine' ⟨_, filter_false_of_mem⟩
   intro hs
   injection hs with hs'
-  rwa [filter_eq_nil] at hs'
+  rwa [filter_eq_nil] at hs' 
 #align finset.filter_eq_empty_iff Finset.filter_eq_empty_iff
 -/
 
@@ -4728,7 +4728,7 @@ namespace Equiv
 Inhabited types are equivalent to `option β` for some `β` by identifying `default α` with `none`.
 -/
 def sigmaEquivOptionOfInhabited (α : Type u) [Inhabited α] [DecidableEq α] :
-    Σβ : Type u, α ≃ Option β :=
+    Σ β : Type u, α ≃ Option β :=
   ⟨{ x : α // x ≠ default },
     { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩
       invFun := Option.elim' default coe
@@ -4754,10 +4754,10 @@ theorem disjoint_toFinset {m1 m2 : Multiset α} :
   by
   rw [Finset.disjoint_iff_ne]
   refine' ⟨fun h a ha1 ha2 => _, _⟩
-  · rw [← Multiset.mem_toFinset] at ha1 ha2
+  · rw [← Multiset.mem_toFinset] at ha1 ha2 
     exact h _ ha1 _ ha2 rfl
   · rintro h a ha b hb rfl
-    rw [Multiset.mem_toFinset] at ha hb
+    rw [Multiset.mem_toFinset] at ha hb 
     exact h ha hb
 #align multiset.disjoint_to_finset Multiset.disjoint_toFinset
 

@@ -197,8 +197,8 @@ include h_comm
 
 theorem isNilpotent_sub (hx : IsNilpotent x) (hy : IsNilpotent y) : IsNilpotent (x - y) :=
   by
-  rw [← neg_right_iff] at h_comm
-  rw [← isNilpotent_neg_iff] at hy
+  rw [← neg_right_iff] at h_comm 
+  rw [← isNilpotent_neg_iff] at hy 
   rw [sub_eq_add_neg]
   exact h_comm.is_nilpotent_add hx hy
 #align commute.is_nilpotent_sub Commute.isNilpotent_sub
@@ -249,14 +249,14 @@ variable (R) {A : Type v} [CommSemiring R] [Semiring A] [Algebra R A]
 @[simp]
 theorem isNilpotent_mulLeft_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
-      simp only [mul_left_eq_zero_iff, pow_mul_left] at hn⊢ <;>
+      simp only [mul_left_eq_zero_iff, pow_mul_left] at hn ⊢ <;>
     exact hn
 #align linear_map.is_nilpotent_mul_left_iff LinearMap.isNilpotent_mulLeft_iff
 
 @[simp]
 theorem isNilpotent_mulRight_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
-      simp only [mul_right_eq_zero_iff, pow_mul_right] at hn⊢ <;>
+      simp only [mul_right_eq_zero_iff, pow_mul_right] at hn ⊢ <;>
     exact hn
 #align linear_map.is_nilpotent_mul_right_iff LinearMap.isNilpotent_mulRight_iff
 

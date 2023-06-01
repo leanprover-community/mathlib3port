@@ -190,12 +190,13 @@ theorem toPgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b)
       · exact nadd_lt_nadd_left wf _
     · rw [to_pgame_move_left']
       rcases lt_nadd_iff.1 (to_left_moves_to_pgame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
-          rw [← to_pgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc' <;>
+          rw [← to_pgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc'  <;>
         apply lf_of_le_of_lf hc'
       · apply add_lf_add_right
         rwa [to_pgame_lf_iff]
       · apply add_lf_add_left
-        rwa [to_pgame_lf_iff]decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+        rwa [to_pgame_lf_iff]
+decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.to_pgame_add Ordinal.toPgame_add
 
 @[simp]

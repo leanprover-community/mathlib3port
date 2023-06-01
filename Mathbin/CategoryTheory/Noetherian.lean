@@ -107,7 +107,8 @@ noncomputable def simpleSubobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : 
 /-- The monomorphism from the arbitrary simple subobject of a non-zero artinian object. -/
 noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero X) :
     simpleSubobject h ⟶ X :=
-  (exists_simple_subobject h).some.arrow deriving Mono
+  (exists_simple_subobject h).some.arrow
+deriving Mono
 #align category_theory.simple_subobject_arrow CategoryTheory.simpleSubobjectArrow
 -/
 

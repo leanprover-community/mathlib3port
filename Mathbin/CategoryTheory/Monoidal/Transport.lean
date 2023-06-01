@@ -164,7 +164,8 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D
 /-- A type synonym for `D`, which will carry the transported monoidal structure. -/
 @[nolint unused_arguments]
 def Transported (e : C ≌ D) :=
-  D deriving Category
+  D
+deriving Category
 #align category_theory.monoidal.transported CategoryTheory.Monoidal.Transported
 
 instance (e : C ≌ D) : MonoidalCategory (Transported e) :=
@@ -179,8 +180,8 @@ attribute [local simp] transport_tensor_unit
 
 section
 
-attribute [local simp]
-  transport_tensor_hom transport_associator transport_left_unitor transport_right_unitor
+attribute [local simp] transport_tensor_hom transport_associator transport_left_unitor
+  transport_right_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /--

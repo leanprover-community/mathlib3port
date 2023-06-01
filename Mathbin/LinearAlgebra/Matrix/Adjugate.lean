@@ -472,7 +472,7 @@ theorem det_eq_sum_mul_adjugate_row (A : Matrix n n α) (i : n) :
   suffices det A' = ∑ j : Fin n'.succ, A' (e i) j * adjugate A' j (e i)
     by
     simp_rw [A', det_reindex_self, adjugate_reindex, reindex_apply, submatrix_apply, ← e.sum_comp,
-      Equiv.symm_apply_apply] at this
+      Equiv.symm_apply_apply] at this 
     exact this
   rw [det_succ_row A' (e i)]
   simp_rw [mul_assoc, mul_left_comm _ (A' _ _), ← adjugate_fin_succ_eq_det_submatrix]
@@ -500,7 +500,7 @@ theorem isRegular_of_isLeftRegular_det {A : Matrix n n α} (hA : IsLeftRegular A
     rw [← Matrix.one_mul B, ← Matrix.one_mul C, ← Matrix.smul_mul, ← Matrix.smul_mul, ←
       adjugate_mul, Matrix.mul_assoc, Matrix.mul_assoc, ← mul_eq_mul A, h, mul_eq_mul]
   · intro B C h
-    simp only [mul_eq_mul] at h
+    simp only [mul_eq_mul] at h 
     refine' hA.matrix _
     rw [← Matrix.mul_one B, ← Matrix.mul_one C, ← Matrix.mul_smul, ← Matrix.mul_smul, ←
       mul_adjugate, ← Matrix.mul_assoc, ← Matrix.mul_assoc, h]
@@ -559,7 +559,7 @@ theorem det_smul_adjugate_adjugate (A : Matrix n n α) :
   have : A ⬝ (A.adjugate ⬝ A.adjugate.adjugate) = A ⬝ (A.det ^ (Fintype.card n - 1) • 1) := by
     rw [← adjugate_mul_distrib, adjugate_mul, adjugate_smul, adjugate_one]
   rwa [← Matrix.mul_assoc, mul_adjugate, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul,
-    Matrix.one_mul] at this
+    Matrix.one_mul] at this 
 #align matrix.det_smul_adjugate_adjugate Matrix.det_smul_adjugate_adjugate
 
 /-- Note that this is not true for `fintype.card n = 1` since `1 - 2 = 0` and not `-1`. -/

@@ -50,7 +50,7 @@ section
 
 You should extend this class when you extend `continuous_map`. -/
 class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends FunLike F α fun _ => β where
+    [TopologicalSpace β] extends FunLike F α fun _ => β where
   map_continuous (f : F) : Continuous f
 #align continuous_map_class ContinuousMapClass
 -/

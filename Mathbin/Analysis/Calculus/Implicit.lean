@@ -101,9 +101,9 @@ such that
 * the kernels of the derivatives are complementary subspaces of `E`. -/
 @[nolint has_nonempty_instance]
 structure ImplicitFunctionData (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
-  [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E] (F : Type _) [NormedAddCommGroup F]
-  [NormedSpace 𝕜 F] [CompleteSpace F] (G : Type _) [NormedAddCommGroup G] [NormedSpace 𝕜 G]
-  [CompleteSpace G] where
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E] (F : Type _) [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F] [CompleteSpace F] (G : Type _) [NormedAddCommGroup G] [NormedSpace 𝕜 G]
+    [CompleteSpace G] where
   leftFun : E → F
   leftDeriv : E →L[𝕜] F
   rightFun : E → G
@@ -207,10 +207,10 @@ theorem implicitFunction_hasStrictFDerivAt (g'inv : G →L[𝕜] E)
     HasStrictFDerivAt (φ.implicitFunction (φ.leftFun φ.pt)) g'inv (φ.rightFun φ.pt) :=
   by
   have := φ.has_strict_fderiv_at.to_local_inverse
-  simp only [prod_fun] at this
+  simp only [prod_fun] at this 
   convert this.comp (φ.right_fun φ.pt) ((hasStrictFDerivAt_const _ _).Prod (hasStrictFDerivAt_id _))
   simp only [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_comp', Function.comp_apply] at
-    hg'inv hg'invf⊢
+    hg'inv hg'invf ⊢
   simp [ContinuousLinearEquiv.eq_symm_apply, *]
 #align implicit_function_data.implicit_function_has_strict_fderiv_at ImplicitFunctionData.implicitFunction_hasStrictFDerivAt
 

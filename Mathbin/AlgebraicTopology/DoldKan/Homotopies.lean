@@ -113,7 +113,7 @@ theorem c_mk (i j : ℕ) (h : j + 1 = i) : c.Rel i j :=
 theorem cs_down_0_not_rel_left (j : ℕ) : ¬c.Rel 0 j :=
   by
   intro hj
-  dsimp at hj
+  dsimp at hj 
   apply Nat.not_succ_le_zero j
   rw [Nat.succ_eq_add_one, hj]
 #align algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
@@ -128,7 +128,7 @@ def hσ (q : ℕ) (n : ℕ) : X _[n] ⟶ X _[n + 1] :=
 #print AlgebraicTopology.DoldKan.hσ' /-
 /-- We can turn `hσ` into a datum that can be passed to `null_homotopic_map'`. -/
 def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].pt n ⟶ K[X].pt m) := fun n m hnm =>
-  hσ q n ≫ eqToHom (by congr )
+  hσ q n ≫ eqToHom (by congr)
 #align algebraic_topology.dold_kan.hσ' AlgebraicTopology.DoldKan.hσ'
 -/
 
@@ -141,7 +141,7 @@ theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) :
 theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
     (hσ' q n m hnm : X _[n] ⟶ X _[m]) =
       ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro (Eq.symm ha))⟩) ≫
-        eqToHom (by congr ) :=
+        eqToHom (by congr) :=
   by
   simp only [hσ', hσ]
   split_ifs
@@ -233,7 +233,7 @@ theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
   by
   unfold Hσ
   have eq := HomologicalComplex.congr_hom (map_null_homotopic_map' G (hσ' q)) n
-  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq
+  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq 
   rw [Eq]
   let h := (functor.congr_obj (map_alternating_face_map_complex G) X).symm
   congr

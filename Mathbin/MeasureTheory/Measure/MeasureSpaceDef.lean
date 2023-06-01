@@ -120,12 +120,12 @@ def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
       show inducedOuterMeasure m _ m0 (iUnion f) = ∑' i, inducedOuterMeasure m _ m0 (f i)
         by
         rw [induced_outer_measure_eq m0 mU, mU hf hd]
-        congr ; funext n; rw [induced_outer_measure_eq m0 mU]
+        congr; funext n; rw [induced_outer_measure_eq m0 mU]
     trimmed :=
       show (inducedOuterMeasure m _ m0).trim = inducedOuterMeasure m _ m0
         by
         unfold outer_measure.trim
-        congr ; funext s hs
+        congr; funext s hs
         exact induced_outer_measure_eq m0 mU hs }
 #align measure_theory.measure.of_measurable MeasureTheory.Measure.ofMeasurable
 
@@ -140,7 +140,7 @@ theorem ofMeasurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
 
 #print MeasureTheory.Measure.toOuterMeasure_injective /-
 theorem toOuterMeasure_injective : Injective (toOuterMeasure : Measure α → OuterMeasure α) :=
-  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by congr ; exact h
+  fun ⟨m₁, u₁, h₁⟩ ⟨m₂, u₂, h₂⟩ h => by congr; exact h
 #align measure_theory.measure.to_outer_measure_injective MeasureTheory.Measure.toOuterMeasure_injective
 -/
 
@@ -471,7 +471,7 @@ theorem ae_eq_trans {f g h : α → δ} (h₁ : f =ᵐ[μ] g) (h₂ : g =ᵐ[μ]
 theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x) : f ≤ᵐ[μ] g :=
   by
   rw [Filter.EventuallyLE, ae_iff]
-  rw [ae_iff] at h
+  rw [ae_iff] at h 
   refine' measure_mono_null (fun x hx => _) h
   exact not_lt.2 (le_of_lt (not_le.1 hx))
 #align measure_theory.ae_le_of_ae_lt MeasureTheory.ae_le_of_ae_lt
@@ -629,10 +629,10 @@ If `s` is a null measurable set, then
 we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`.
 This notion is sometimes called a "measurable hull" in the literature. -/
 irreducible_def toMeasurable (μ : Measure α) (s : Set α) : Set α :=
-  if h : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
+  if h : ∃ (t : _) (_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
   else
     if h' :
-        ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then
+        ∃ (t : _) (_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then
       h'.some
     else (exists_measurable_superset μ s).some
 #align measure_theory.to_measurable MeasureTheory.toMeasurable
@@ -642,7 +642,7 @@ irreducible_def toMeasurable (μ : Measure α) (s : Set α) : Set α :=
 theorem subset_toMeasurable (μ : Measure α) (s : Set α) : s ⊆ toMeasurable μ s :=
   by
   rw [to_measurable]; split_ifs with hs h's
-  exacts[hs.some_spec.fst, h's.some_spec.fst, (exists_measurable_superset μ s).choose_spec.1]
+  exacts [hs.some_spec.fst, h's.some_spec.fst, (exists_measurable_superset μ s).choose_spec.1]
 #align measure_theory.subset_to_measurable MeasureTheory.subset_toMeasurable
 -/
 
@@ -657,7 +657,7 @@ theorem ae_le_toMeasurable : s ≤ᵐ[μ] toMeasurable μ s :=
 theorem measurableSet_toMeasurable (μ : Measure α) (s : Set α) : MeasurableSet (toMeasurable μ s) :=
   by
   rw [to_measurable]; split_ifs with hs h's
-  exacts[hs.some_spec.snd.1, h's.some_spec.snd.1, (exists_measurable_superset μ s).choose_spec.2.1]
+  exacts [hs.some_spec.snd.1, h's.some_spec.snd.1, (exists_measurable_superset μ s).choose_spec.2.1]
 #align measure_theory.measurable_set_to_measurable MeasureTheory.measurableSet_toMeasurable
 -/
 

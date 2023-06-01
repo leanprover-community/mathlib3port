@@ -113,12 +113,12 @@ theorem leadingCoeff_det_X_one_add_C (A : Matrix n n α) :
   rw [← @det_one n, ← coeff_det_X_add_C_card _ A, leading_coeff]
   simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
   cases' (nat_degree_det_X_add_C_le 1 A).eq_or_lt with h h
-  · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
+  · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h 
     rw [h]
   · -- contradiction. we have a hypothesis that the degree is less than |n|
     -- but we know that coeff _ n = 1
     have H := coeff_eq_zero_of_nat_degree_lt h
-    rw [coeff_det_X_add_C_card] at H
+    rw [coeff_det_X_add_C_card] at H 
     simpa using H
 #align polynomial.leading_coeff_det_X_one_add_C Polynomial.leadingCoeff_det_X_one_add_C
 

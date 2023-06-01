@@ -46,7 +46,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 /-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 @[nolint has_nonempty_instance]
 structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  α ≃ β where
+    α ≃ β where
   continuous_toFun : Continuous to_fun := by continuity
   continuous_invFun : Continuous inv_fun := by continuity
 #align homeomorph Homeomorph
@@ -638,7 +638,7 @@ def prodSumDistrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
-def sigmaProdDistrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
+def sigmaProdDistrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sigmaProdDistrib σ β).symm
       (continuous_sigma fun i => continuous_sigmaMk.fst'.prod_mk continuous_snd)
@@ -724,7 +724,7 @@ def piEquivPiSubtypeProd (p : ι → Prop) (β : ι → Type _) [∀ i, Topologi
   continuous_invFun :=
     continuous_pi fun j => by
       dsimp only [Equiv.piEquivPiSubtypeProd]; split_ifs
-      exacts[(continuous_apply _).comp continuous_fst, (continuous_apply _).comp continuous_snd]
+      exacts [(continuous_apply _).comp continuous_fst, (continuous_apply _).comp continuous_snd]
 #align homeomorph.pi_equiv_pi_subtype_prod Homeomorph.piEquivPiSubtypeProd
 
 variable [DecidableEq ι] (i : ι)
@@ -740,7 +740,7 @@ def piSplitAt (β : ι → Type _) [∀ j, TopologicalSpace (β j)] :
   continuous_invFun :=
     continuous_pi fun j => by
       dsimp only [Equiv.piSplitAt]
-      split_ifs; subst h; exacts[continuous_fst, (continuous_apply _).comp continuous_snd]
+      split_ifs; subst h; exacts [continuous_fst, (continuous_apply _).comp continuous_snd]
 #align homeomorph.pi_split_at Homeomorph.piSplitAt
 
 /-- A product of copies of a topological space can be split as the binary product of one copy and
@@ -775,7 +775,7 @@ theorem continuous_symm_of_equiv_compact_to_t2 [CompactSpace α] [T2Space β] {f
   rw [continuous_iff_isClosed]
   intro C hC
   have hC' : IsClosed (f '' C) := (hC.is_compact.image hf).IsClosed
-  rwa [Equiv.image_eq_preimage] at hC'
+  rwa [Equiv.image_eq_preimage] at hC' 
 #align continuous.continuous_symm_of_equiv_compact_to_t2 Continuous.continuous_symm_of_equiv_compact_to_t2
 
 #print Continuous.homeoOfEquivCompactToT2 /-

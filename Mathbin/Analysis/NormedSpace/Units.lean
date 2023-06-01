@@ -90,7 +90,7 @@ protected theorem isOpen : IsOpen { x : R | IsUnit x } :=
   rintro x' ⟨x, rfl⟩
   refine' ⟨‖(↑x⁻¹ : R)‖⁻¹, _root_.inv_pos.mpr (Units.norm_pos x⁻¹), _⟩
   intro y hy
-  rw [Metric.mem_ball, dist_eq_norm] at hy
+  rw [Metric.mem_ball, dist_eq_norm] at hy 
   exact (x.unit_of_nearby y hy).IsUnit
 #align units.is_open Units.isOpen
 
@@ -107,7 +107,7 @@ namespace nonunits
 theorem subset_compl_ball : nonunits R ⊆ Metric.ball (1 : R) 1ᶜ :=
   Set.subset_compl_comm.mp fun x hx => by
     simpa [sub_sub_self, Units.oneSub_val] using
-      (Units.oneSub (1 - x) (by rwa [Metric.mem_ball, dist_eq_norm, norm_sub_rev] at hx)).IsUnit
+      (Units.oneSub (1 - x) (by rwa [Metric.mem_ball, dist_eq_norm, norm_sub_rev] at hx )).IsUnit
 #align nonunits.subset_compl_ball nonunits.subset_compl_ball
 
 -- The `nonunits` in a complete normed ring are a closed set
@@ -135,7 +135,7 @@ theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inve
   have hinv : 0 < ‖(↑x⁻¹ : R)‖⁻¹ := by cancel_denoms
   use ‖(↑x⁻¹ : R)‖⁻¹, hinv
   intro t ht
-  simp only [mem_ball, dist_zero_right] at ht
+  simp only [mem_ball, dist_zero_right] at ht 
   have ht' : ‖-↑x⁻¹ * t‖ < 1 :=
     by
     refine' lt_of_le_of_lt (norm_mul_le _ _) _
@@ -144,8 +144,8 @@ theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inve
     cancel_denoms
   have hright := inverse_one_sub (-↑x⁻¹ * t) ht'
   have hleft := inverse_unit (x.add t ht)
-  simp only [neg_mul, sub_neg_eq_add] at hright
-  simp only [Units.add_val] at hleft
+  simp only [neg_mul, sub_neg_eq_add] at hright 
+  simp only [Units.add_val] at hleft 
   simp [hleft, hright, Units.add]
 #align normed_ring.inverse_add NormedRing.inverse_add
 
@@ -155,7 +155,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
   simp only [eventually_iff, Metric.mem_nhds_iff]
   use 1, by norm_num
   intro t ht
-  simp only [mem_ball, dist_zero_right] at ht
+  simp only [mem_ball, dist_zero_right] at ht 
   simp only [inverse_one_sub t ht, Set.mem_setOf_eq]
   have h : 1 = ((range n).Sum fun i => t ^ i) * Units.oneSub t ht + t ^ n :=
     by
@@ -188,7 +188,7 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
   simp only [neg_mul, sub_neg_eq_add]
   intro t h1 h2
   have h := congr_arg (fun a : R => a * ↑x⁻¹) h1
-  dsimp at h
+  dsimp at h 
   convert h
   rw [add_mul, mul_assoc]
   simp [h2.symm]
@@ -199,7 +199,7 @@ theorem inverse_one_sub_norm : (fun t : R => inverse (1 - t)) =O[𝓝 0] (fun t 
   simp only [is_O, is_O_with, eventually_iff, Metric.mem_nhds_iff]
   refine' ⟨‖(1 : R)‖ + 1, (2 : ℝ)⁻¹, by norm_num, _⟩
   intro t ht
-  simp only [ball, dist_zero_right, Set.mem_setOf_eq] at ht
+  simp only [ball, dist_zero_right, Set.mem_setOf_eq] at ht 
   have ht' : ‖t‖ < 1 := by
     have : (2 : ℝ)⁻¹ < 1 := by cancel_denoms
     linarith
@@ -227,7 +227,7 @@ theorem inverse_add_norm (x : Rˣ) : (fun t : R => inverse (↑x + t)) =O[𝓝 0
   refine' (inverse_add x).mp ((hzero.eventually hC).mp (eventually_of_forall _))
   intro t bound iden
   rw [iden]
-  simp at bound
+  simp at bound 
   have hmul := norm_mul_le (inverse (1 + ↑x⁻¹ * t)) ↑x⁻¹
   nlinarith [norm_nonneg (↑x⁻¹ : R)]
 #align normed_ring.inverse_add_norm NormedRing.inverse_add_norm
@@ -255,7 +255,7 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
     simp
   refine' h.mp (hC.mp (eventually_of_forall _))
   intro t _ hLHS
-  simp only [neg_mul] at hLHS
+  simp only [neg_mul] at hLHS 
   rw [hLHS]
   refine' le_trans (norm_mul_le _ _) _
   have h' : ‖(-(↑x⁻¹ * t)) ^ n‖ ≤ ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n :=

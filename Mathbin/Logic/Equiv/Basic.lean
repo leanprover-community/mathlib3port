@@ -493,7 +493,7 @@ def piOptionEquivProd {α : Type _} {β : Option α → Type _} :
 `β` to be types from the same universe, so it cannot by used directly to transfer theorems about
 sigma types to theorems about sum types. In many cases one can use `ulift` to work around this
 difficulty. -/
-def sumEquivSigmaBool (α β : Type u) : Sum α β ≃ Σb : Bool, cond b α β :=
+def sumEquivSigmaBool (α β : Type u) : Sum α β ≃ Σ b : Bool, cond b α β :=
   ⟨fun s => s.elim (fun x => ⟨true, x⟩) fun x => ⟨false, x⟩, fun s =>
     match s with
     | ⟨tt, a⟩ => inl a
@@ -507,7 +507,7 @@ def sumEquivSigmaBool (α β : Type u) : Sum α β ≃ Σb : Bool, cond b α β 
 /-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
 the type of all fibres of `f` and the total space `α`. -/
 @[simps]
-def sigmaFiberEquiv {α β : Type _} (f : α → β) : (Σy : β, { x // f x = y }) ≃ α :=
+def sigmaFiberEquiv {α β : Type _} (f : α → β) : (Σ y : β, { x // f x = y }) ≃ α :=
   ⟨fun x => ↑x.2, fun x => ⟨f x, x, rfl⟩, fun ⟨y, x, rfl⟩ => rfl, fun x => rfl⟩
 #align equiv.sigma_fiber_equiv Equiv.sigmaFiberEquiv
 -/
@@ -527,7 +527,7 @@ def sumCompl {α : Type _} (p : α → Prop) [DecidablePred p] : Sum { a // p a 
     where
   toFun := Sum.elim coe coe
   invFun a := if h : p a then Sum.inl ⟨a, h⟩ else Sum.inr ⟨a, h⟩
-  left_inv := by rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos];rw [dif_neg]]
+  left_inv := by rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos]; rw [dif_neg]]
   right_inv a := by dsimp; split_ifs <;> rfl
 #align equiv.sum_compl Equiv.sumCompl
 -/
@@ -674,7 +674,7 @@ def subtypePreimage : { x : α → β // x ∘ coe = x₀ } ≃ ({ a // ¬p a } 
   toFun (x : { x : α → β // x ∘ coe = x₀ }) a := (x : α → β) a
   invFun x := ⟨fun a => if h : p a then x₀ ⟨a, h⟩ else x ⟨a, h⟩, funext fun ⟨a, h⟩ => dif_pos h⟩
   left_inv := fun ⟨x, hx⟩ =>
-    Subtype.val_injective <| funext fun a => by dsimp; split_ifs <;> [rw [← hx];skip] <;> rfl
+    Subtype.val_injective <| funext fun a => by dsimp; split_ifs <;> [rw [← hx]; skip] <;> rfl
   right_inv x := funext fun ⟨a, h⟩ => show dite (p a) _ _ = _ by dsimp; rw [dif_neg h]
 #align equiv.subtype_preimage Equiv.subtypePreimage
 -/
@@ -721,7 +721,8 @@ theorem piComm_symm {α β} {φ : α → β → Sort _} : (piComm φ).symm = (pi
 to the type of dependent functions of two arguments (i.e., functions to the space of functions).
 
 This is `sigma.curry` and `sigma.uncurry` together as an equiv. -/
-def piCurry {α} {β : α → Sort _} (γ : ∀ a, β a → Sort _) : (∀ x : Σi, β i, γ x.1 x.2) ≃ ∀ a b, γ a b
+def piCurry {α} {β : α → Sort _} (γ : ∀ a, β a → Sort _) :
+    (∀ x : Σ i, β i, γ x.1 x.2) ≃ ∀ a b, γ a b
     where
   toFun := Sigma.curry
   invFun := Sigma.uncurry
@@ -999,7 +1000,7 @@ theorem prodSumDistrib_symm_apply_right {α β γ} (a : α × γ) :
 /-- An indexed sum of disjoint sums of types is equivalent to the sum of the indexed sums. -/
 @[simps]
 def sigmaSumDistrib {ι : Type _} (α β : ι → Type _) :
-    (Σi, Sum (α i) (β i)) ≃ Sum (Σi, α i) (Σi, β i) :=
+    (Σ i, Sum (α i) (β i)) ≃ Sum (Σ i, α i) (Σ i, β i) :=
   ⟨fun p => p.2.map (Sigma.mk p.1) (Sigma.mk p.1),
     Sum.elim (Sigma.map id fun _ => Sum.inl) (Sigma.map id fun _ => Sum.inr), fun p => by
     rcases p with ⟨i, a | b⟩ <;> rfl, fun p => by rcases p with (⟨i, a⟩ | ⟨i, b⟩) <;> rfl⟩
@@ -1009,7 +1010,7 @@ def sigmaSumDistrib {ι : Type _} (α β : ι → Type _) :
 #print Equiv.sigmaProdDistrib /-
 /-- The product of an indexed sum of types (formally, a `sigma`-type `Σ i, α i`) by a type `β` is
 equivalent to the sum of products `Σ i, (α i × β)`. -/
-def sigmaProdDistrib {ι : Type _} (α : ι → Type _) (β : Type _) : (Σi, α i) × β ≃ Σi, α i × β :=
+def sigmaProdDistrib {ι : Type _} (α : ι → Type _) (β : Type _) : (Σ i, α i) × β ≃ Σ i, α i × β :=
   ⟨fun p => ⟨p.1.1, (p.1.2, p.2)⟩, fun p => (⟨p.1, p.2.1⟩, p.2.2), fun p => by
     rcases p with ⟨⟨_, _⟩, _⟩; rfl, fun p => by rcases p with ⟨_, ⟨_, _⟩⟩; rfl⟩
 #align equiv.sigma_prod_distrib Equiv.sigmaProdDistrib
@@ -1017,10 +1018,10 @@ def sigmaProdDistrib {ι : Type _} (α : ι → Type _) (β : Type _) : (Σi, α
 
 #print Equiv.sigmaNatSucc /-
 /-- An equivalence that separates out the 0th fiber of `(Σ (n : ℕ), f n)`. -/
-def sigmaNatSucc (f : ℕ → Type u) : (Σn, f n) ≃ Sum (f 0) (Σn, f (n + 1)) :=
+def sigmaNatSucc (f : ℕ → Type u) : (Σ n, f n) ≃ Sum (f 0) (Σ n, f (n + 1)) :=
   ⟨fun x =>
-    @Sigma.casesOn ℕ f (fun _ => Sum (f 0) (Σn, f (n + 1))) x fun n =>
-      @Nat.casesOn (fun i => f i → Sum (f 0) (Σn : ℕ, f (n + 1))) n (fun x : f 0 => Sum.inl x)
+    @Sigma.casesOn ℕ f (fun _ => Sum (f 0) (Σ n, f (n + 1))) x fun n =>
+      @Nat.casesOn (fun i => f i → Sum (f 0) (Σ n : ℕ, f (n + 1))) n (fun x : f 0 => Sum.inl x)
         fun (n : ℕ) (x : f n.succ) => Sum.inr ⟨n, x⟩,
     Sum.elim (Sigma.mk 0) (Sigma.map Nat.succ fun _ => id), by rintro ⟨n | n, x⟩ <;> rfl, by
     rintro (x | ⟨n, x⟩) <;> rfl⟩
@@ -1237,7 +1238,7 @@ def subtypeUnivEquiv {α : Type u} {p : α → Prop} (h : ∀ x, p x) : Subtype 
 
 /-- A subtype of a sigma-type is a sigma-type over a subtype. -/
 def subtypeSigmaEquiv {α : Type u} (p : α → Type v) (q : α → Prop) :
-    { y : Sigma p // q y.1 } ≃ Σx : Subtype q, p x.1 :=
+    { y : Sigma p // q y.1 } ≃ Σ x : Subtype q, p x.1 :=
   ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, fun ⟨⟨x, h⟩, y⟩ => rfl,
     fun ⟨⟨x, y⟩, h⟩ => rfl⟩
 #align equiv.subtype_sigma_equiv Equiv.subtypeSigmaEquiv
@@ -1245,7 +1246,7 @@ def subtypeSigmaEquiv {α : Type u} (p : α → Type v) (q : α → Prop) :
 /-- A sigma type over a subtype is equivalent to the sigma set over the original type,
 if the fiber is empty outside of the subset -/
 def sigmaSubtypeEquivOfSubset {α : Type u} (p : α → Type v) (q : α → Prop) (h : ∀ x, p x → q x) :
-    (Σx : Subtype q, p x) ≃ Σx : α, p x :=
+    (Σ x : Subtype q, p x) ≃ Σ x : α, p x :=
   (subtypeSigmaEquiv p q).symm.trans <| subtypeUnivEquiv fun x => h x.1 x.2
 #align equiv.sigma_subtype_equiv_of_subset Equiv.sigmaSubtypeEquivOfSubset
 
@@ -1253,9 +1254,9 @@ def sigmaSubtypeEquivOfSubset {α : Type u} (p : α → Type v) (q : α → Prop
 /-- If a predicate `p : β → Prop` is true on the range of a map `f : α → β`, then
 `Σ y : {y // p y}, {x // f x = y}` is equivalent to `α`. -/
 def sigmaSubtypeFiberEquiv {α : Type u} {β : Type v} (f : α → β) (p : β → Prop) (h : ∀ x, p (f x)) :
-    (Σy : Subtype p, { x : α // f x = y }) ≃ α :=
+    (Σ y : Subtype p, { x : α // f x = y }) ≃ α :=
   calc
-    _ ≃ Σy : β, { x : α // f x = y } := sigmaSubtypeEquivOfSubset _ p fun y ⟨x, h'⟩ => h' ▸ h x
+    _ ≃ Σ y : β, { x : α // f x = y } := sigmaSubtypeEquivOfSubset _ p fun y ⟨x, h'⟩ => h' ▸ h x
     _ ≃ α := sigmaFiberEquiv f
     
 #align equiv.sigma_subtype_fiber_equiv Equiv.sigmaSubtypeFiberEquiv
@@ -1265,10 +1266,10 @@ def sigmaSubtypeFiberEquiv {α : Type u} {β : Type v} (f : α → β) (p : β �
 /-- If for each `x` we have `p x ↔ q (f x)`, then `Σ y : {y // q y}, f ⁻¹' {y}` is equivalent
 to `{x // p x}`. -/
 def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p : α → Prop}
-    {q : β → Prop} (h : ∀ x, p x ↔ q (f x)) : (Σy : Subtype q, { x : α // f x = y }) ≃ Subtype p :=
+    {q : β → Prop} (h : ∀ x, p x ↔ q (f x)) : (Σ y : Subtype q, { x : α // f x = y }) ≃ Subtype p :=
   calc
-    (Σy : Subtype q, { x : α // f x = y }) ≃
-        Σy : Subtype q, { x : Subtype p // Subtype.mk (f x) ((h x).1 x.2) = y } :=
+    (Σ y : Subtype q, { x : α // f x = y }) ≃
+        Σ y : Subtype q, { x : Subtype p // Subtype.mk (f x) ((h x).1 x.2) = y } :=
       by
       apply sigma_congr_right
       intro y
@@ -1286,7 +1287,7 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
 /-- A sigma type over an `option` is equivalent to the sigma set over the original type,
 if the fiber is empty at none. -/
 def sigmaOptionEquivOfSome {α : Type u} (p : Option α → Type v) (h : p none → False) :
-    (Σx : Option α, p x) ≃ Σx : α, p (some x) :=
+    (Σ x : Option α, p x) ≃ Σ x : α, p (some x) :=
   haveI h' : ∀ x, p x → x.isSome := by
     intro x
     cases x
@@ -1299,7 +1300,7 @@ def sigmaOptionEquivOfSome {α : Type u} (p : Option α → Type v) (h : p none 
 /-- The `pi`-type `Π i, π i` is equivalent to the type of sections `f : ι → Σ i, π i` of the
 `sigma` type such that for all `i` we have `(f i).fst = i`. -/
 def piEquivSubtypeSigma (ι : Type _) (π : ι → Type _) :
-    (∀ i, π i) ≃ { f : ι → Σi, π i // ∀ i, (f i).1 = i } :=
+    (∀ i, π i) ≃ { f : ι → Σ i, π i // ∀ i, (f i).1 = i } :=
   ⟨fun f => ⟨fun i => ⟨i, f i⟩, fun i => rfl⟩, fun f i => by rw [← f.2 i]; exact (f.1 i).2, fun f =>
     funext fun i => rfl, fun ⟨f, hf⟩ =>
     Subtype.eq <|
@@ -1329,7 +1330,7 @@ def subtypeProdEquivProd {α : Type u} {β : Type v} {p : α → Prop} {q : β �
 #print Equiv.subtypeProdEquivSigmaSubtype /-
 /-- A subtype of a `prod` is equivalent to a sigma type whose fibers are subtypes. -/
 def subtypeProdEquivSigmaSubtype {α β : Type _} (p : α → β → Prop) :
-    { x : α × β // p x.1 x.2 } ≃ Σa, { b : β // p a b }
+    { x : α × β // p x.1 x.2 } ≃ Σ a, { b : β // p a b }
     where
   toFun x := ⟨x.1.1, x.1.2, x.Prop⟩
   invFun x := ⟨⟨x.1, x.2⟩, x.2.Prop⟩
@@ -1371,7 +1372,7 @@ def piSplitAt {α : Type _} [DecidableEq α] (i : α) (β : α → Type _) :
     where
   toFun f := ⟨f i, fun j => f j⟩
   invFun f j := if h : j = i then h.symm.rec f.1 else f.2 ⟨j, h⟩
-  right_inv f := by ext; exacts[dif_pos rfl, (dif_neg x.2).trans (by cases x <;> rfl)]
+  right_inv f := by ext; exacts [dif_pos rfl, (dif_neg x.2).trans (by cases x <;> rfl)]
   left_inv f := by ext; dsimp only; split_ifs; · subst h; · rfl
 #align equiv.pi_split_at Equiv.piSplitAt
 -/
@@ -1925,7 +1926,7 @@ theorem piCongr'_symm_apply_symm_apply (f : ∀ b, Z b) (b : β) :
   generalize_proofs hWb
   revert hWb
   generalize hb : h₁ (h₁.symm b) = b'
-  rw [h₁.apply_symm_apply b] at hb
+  rw [h₁.apply_symm_apply b] at hb 
   subst hb
   simp
 #align equiv.Pi_congr'_symm_apply_symm_apply Equiv.piCongr'_symm_apply_symm_apply

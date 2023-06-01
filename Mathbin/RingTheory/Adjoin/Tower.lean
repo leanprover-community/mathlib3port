@@ -111,7 +111,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : 
   by
   cases' hAC with x hx
   cases' hBC with y hy; have := hy
-  simp_rw [eq_top_iff', mem_span_finset] at this; choose f hf
+  simp_rw [eq_top_iff', mem_span_finset] at this ; choose f hf
   let s : Finset B := Finset.image₂ f (x ∪ y * y) y
   have hxy :
     ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=

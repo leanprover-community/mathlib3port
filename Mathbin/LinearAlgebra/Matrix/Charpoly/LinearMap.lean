@@ -121,7 +121,7 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.End R M} :
   constructor
   · intro h i
     have := LinearMap.congr_fun h (Pi.single i 1)
-    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this
+    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this 
   · intro h
     ext
     simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.fromEnd_apply_single_one,
@@ -150,7 +150,7 @@ theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 :=
 
 theorem Matrix.Represents.add {A A' : Matrix ι ι R} {f f' : Module.End R M} (h : A.Represents b f)
     (h' : Matrix.Represents b A' f') : (A + A').Represents b (f + f') := by
-  delta Matrix.Represents at h h'⊢; rw [map_add, map_add, h, h']
+  delta Matrix.Represents at h h' ⊢; rw [map_add, map_add, h, h']
 #align matrix.represents.add Matrix.Represents.add
 
 theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by delta Matrix.Represents;
@@ -158,7 +158,7 @@ theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by delta
 #align matrix.represents.zero Matrix.Represents.zero
 
 theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.End R M} (h : A.Represents b f)
-    (r : R) : (r • A).Represents b (r • f) := by delta Matrix.Represents at h⊢;
+    (r : R) : (r • A).Represents b (r • f) := by delta Matrix.Represents at h ⊢;
   rw [map_smul, map_smul, h]
 #align matrix.represents.smul Matrix.Represents.smul
 
@@ -216,7 +216,7 @@ theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I :
     dsimp [A]
     intro j
     specialize hbM' (b j)
-    rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM'
+    rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM' 
   exact
     ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_toEnd_of_represents R b hb ⟨A, f, this⟩ this,
       fun i j => (bM' (b j) i).Prop⟩

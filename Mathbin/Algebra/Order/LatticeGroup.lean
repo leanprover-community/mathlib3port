@@ -334,7 +334,7 @@ theorem m_le_iff_pos_le_neg_ge [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   constructor <;> intro h
   · constructor
     · exact sup_le (h.trans (m_le_pos b)) (one_le_pos b)
-    · rw [← inv_le_inv_iff] at h
+    · rw [← inv_le_inv_iff] at h 
       exact sup_le (h.trans (inv_le_neg a)) (one_le_neg a)
   · rw [← pos_div_neg a, ← pos_div_neg b]
     exact div_le_div'' h.1 h.2
@@ -469,7 +469,7 @@ theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a := by rw [m_pos_part_def
 @[to_additive]
 theorem pos_eq_self_of_one_lt_pos {α} [LinearOrder α] [CommGroup α] {x : α} (hx : 1 < x⁺) :
     x⁺ = x := by
-  rw [m_pos_part_def, right_lt_sup, not_le] at hx
+  rw [m_pos_part_def, right_lt_sup, not_le] at hx 
   rw [m_pos_part_def, sup_eq_left]
   exact hx.le
 #align lattice_ordered_comm_group.pos_eq_self_of_one_lt_pos LatticeOrderedCommGroup.pos_eq_self_of_one_lt_pos

@@ -93,7 +93,7 @@ def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x))
 #print FreeMagma.hom_ext /-
 @[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
-  FunLike.ext _ _ fun x => recOnMul x (congr_fun h) <| by intros ; simp only [map_mul, *]
+  FunLike.ext _ _ fun x => recOnMul x (congr_fun h) <| by intros; simp only [map_mul, *]
 #align free_magma.hom_ext FreeMagma.hom_ext
 #align free_add_magma.hom_ext FreeAddMagma.hom_ext
 -/

@@ -128,7 +128,7 @@ unsafe def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse
   nth_rewrite_core [Dir.A] n q l
 #align tactic.interactive.nth_rewrite_rhs tactic.interactive.nth_rewrite_rhs
 
-attribute [inherit_doc.1nth_rewrite] nth_rewrite_lhs nth_rewrite_rhs
+attribute [inherit_doc.1 nth_rewrite] nth_rewrite_lhs nth_rewrite_rhs
 
 add_tactic_doc
   { Name := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs"

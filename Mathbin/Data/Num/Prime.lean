@@ -53,10 +53,10 @@ theorem minFacAux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.
     (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 :=
   by
   induction' fuel with fuel ih generalizing k <;> rw [min_fac_aux, Nat.minFacAux]
-  · rw [if_pos]; rwa [zero_add, Nat.sqrt_lt] at h
+  · rw [if_pos]; rwa [zero_add, Nat.sqrt_lt] at h 
   rw [← mul_to_nat]; simp only [cast_lt, dvd_to_nat, ite_cast]
   congr 2
-  rw [ih] <;> [congr ;convert Nat.lt_succ_of_lt h using 1] <;>
+  rw [ih] <;> [congr; convert Nat.lt_succ_of_lt h using 1] <;>
     simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assoc,
       add_left_comm]
 #align pos_num.min_fac_aux_to_nat PosNum.minFacAux_to_nat

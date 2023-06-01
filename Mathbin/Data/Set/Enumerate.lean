@@ -65,7 +65,7 @@ theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ 
         have : n + 1 = 0 := Nat.eq_zero_of_le_zero hm
         contradiction
       case succ m' =>
-        simp [hs, enumerate] at h⊢
+        simp [hs, enumerate] at h ⊢
         have hm : n ≤ m' := Nat.le_of_succ_le_succ hm
         exact enumerate_eq_none h hm
 #align set.enumerate_eq_none Set.enumerate_eq_none
@@ -91,7 +91,7 @@ theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, 
     (h₁ : enumerate s n₁ = some a) (h₂ : enumerate s n₂ = some a) : n₁ = n₂ :=
   by
   wlog hn : n₁ ≤ n₂
-  · cases' le_total n₁ n₂ with H H <;> [skip;symm] <;> apply_assumption <;> assumption
+  · cases' le_total n₁ n₂ with H H <;> [skip; symm] <;> apply_assumption <;> assumption
   · rcases Nat.le.dest hn with ⟨m, rfl⟩; clear hn
     induction n₁ generalizing s
     case zero =>

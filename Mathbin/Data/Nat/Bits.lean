@@ -122,7 +122,7 @@ theorem bit_add' : ∀ (b : Bool) (n m : ℕ), bit b (n + m) = bit b n + bit fal
 
 #print Nat.bit_ne_zero /-
 theorem bit_ne_zero (b) {n} (h : n ≠ 0) : bit b n ≠ 0 := by
-  cases b <;> [exact Nat.bit0_ne_zero h;exact Nat.bit1_ne_zero _]
+  cases b <;> [exact Nat.bit0_ne_zero h; exact Nat.bit1_ne_zero _]
 #align nat.bit_ne_zero Nat.bit_ne_zero
 -/
 
@@ -207,11 +207,11 @@ theorem binaryRec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bi
   split_ifs with h'
   · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
     rw [binary_rec_zero]
-    simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
+    simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h 
     exact h.symm
   · generalize_proofs e; revert e
     rw [bodd_bit, div2_bit]
-    intros ; rfl
+    intros; rfl
 #align nat.binary_rec_eq' Nat.binaryRec_eq'
 -/
 

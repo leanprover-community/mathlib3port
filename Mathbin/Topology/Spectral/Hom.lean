@@ -85,7 +85,7 @@ section
 
 You should extend this class when you extend `spectral_map`. -/
 class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends FunLike F α fun _ => β where
+    [TopologicalSpace β] extends FunLike F α fun _ => β where
   map_spectral (f : F) : IsSpectralMap f
 #align spectral_map_class SpectralMapClass
 -/

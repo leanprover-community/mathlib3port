@@ -155,8 +155,8 @@ end
 -- In this file, we don't want to use these simp lemmas,
 -- because we first need to show how these new definitions interact
 -- and the proofs fall back on unfolding the definitions and call simp afterwards
-attribute [-simp]
-  aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁ eval₂_hom_id_X_eq_join₂
+attribute [-simp] aeval_eq_bind₁ eval₂_hom_C_eq_bind₁ eval₂_hom_eq_bind₂ aeval_id_eq_join₁
+  eval₂_hom_id_X_eq_join₂
 
 @[simp]
 theorem bind₁_X_right (f : σ → MvPolynomial τ R) (i : σ) : bind₁ f (X i) = f i :=

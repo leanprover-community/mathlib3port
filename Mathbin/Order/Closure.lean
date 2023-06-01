@@ -104,7 +104,7 @@ variable {α} (c : ClosureOperator α)
 #print ClosureOperator.ext /-
 @[ext]
 theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : α → α) → c₁ = c₂
-  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by congr ; exact h
+  | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h => by congr; exact h
 #align closure_operator.ext ClosureOperator.ext
 -/
 
@@ -384,7 +384,7 @@ theorem gc : GaloisConnection l u :=
 
 @[ext]
 theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
-  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by congr ; exact h
+  | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by congr; exact h
 #align lower_adjoint.ext LowerAdjoint.ext
 
 @[mono]

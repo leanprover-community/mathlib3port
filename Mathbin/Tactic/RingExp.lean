@@ -411,7 +411,8 @@ unsafe structure context where
 /-- The `ring_exp_m` monad is used instead of `tactic` to store the context.
 -/
 unsafe def ring_exp_m (α : Type) : Type :=
-  ReaderT context (StateT (List atom) tactic) α deriving Monad, Alternative
+  ReaderT context (StateT (List atom) tactic) α
+deriving Monad, Alternative
 #align tactic.ring_exp.ring_exp_m tactic.ring_exp.ring_exp_m
 
 /-- Access the instance cache.

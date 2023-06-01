@@ -56,7 +56,8 @@ variable {F : Type _} [Field F] (p q : F[X]) (E : Type _) [Field E] [Algebra F E
 
 /-- The Galois group of a polynomial. -/
 def Gal :=
-  p.SplittingField ≃ₐ[F] p.SplittingField deriving Group, Fintype
+  p.SplittingField ≃ₐ[F] p.SplittingField
+deriving Group, Fintype
 #align polynomial.gal Polynomial.Gal
 
 namespace Gal
@@ -158,9 +159,9 @@ theorem mapRoots_bijective [h : Fact (p.Splits (algebraMap F E))] :
     have key :=
       roots_map (IsScalarTower.toAlgHom F p.splitting_field E : p.splitting_field →+* E)
         ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
-    rw [map_map, AlgHom.comp_algebraMap] at key
+    rw [map_map, AlgHom.comp_algebraMap] at key 
     have hy := Subtype.mem y
-    simp only [root_set, Finset.mem_coe, Multiset.mem_toFinset, key, Multiset.mem_map] at hy
+    simp only [root_set, Finset.mem_coe, Multiset.mem_toFinset, key, Multiset.mem_map] at hy 
     rcases hy with ⟨x, hx1, hx2⟩
     exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
 #align polynomial.gal.map_roots_bijective Polynomial.Gal.mapRoots_bijective
@@ -222,8 +223,8 @@ theorem galActionHom_injective [Fact (p.Splits (algebraMap F E))] :
   change
     roots_equiv_roots p E (ϕ • (roots_equiv_roots p E).symm (roots_equiv_roots p E ⟨x, hx⟩)) =
       roots_equiv_roots p E ⟨x, hx⟩ at
-    key
-  rw [Equiv.symm_apply_apply] at key
+    key 
+  rw [Equiv.symm_apply_apply] at key 
   exact subtype.ext_iff.mp (Equiv.injective (roots_equiv_roots p E) key)
 #align polynomial.gal.gal_action_hom_injective Polynomial.Gal.galActionHom_injective
 
@@ -257,10 +258,10 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
   · have : Unique (p * q).Gal := by rw [hpq]; infer_instance
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
   intro f g hfg
-  dsimp only [restrict_prod, restrict_dvd] at hfg
-  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
+  dsimp only [restrict_prod, restrict_dvd] at hfg 
+  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg 
   ext (x hx)
-  rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
+  rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx 
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
   · haveI : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_right p q)⟩
@@ -317,7 +318,7 @@ theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
           ((mul_eq_zero.mp
                 (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right
             hq)
-    rw [← aeval_def, aeval_comp] at hx
+    rw [← aeval_def, aeval_comp] at hx 
     have h_normal : Normal F (r.comp q).SplittingField := splitting_field.normal (r.comp q)
     have qx_int := Normal.isIntegral h_normal (aeval x q)
     exact
@@ -337,7 +338,7 @@ theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
         exact splits_zero _
       · exact False.ndrec _ (hq (by rw [h.2, nat_degree_C]))
     have key := mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂
-    rwa [← mul_comp] at key
+    rwa [← mul_comp] at key 
   exact
     WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _)
       fun _ _ _ h => key2 (key1 h)
@@ -499,8 +500,8 @@ theorem galActionHom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreducibl
             AlgEquiv.ext Complex.conj_conj,
           MonoidHom.map_one, MonoidHom.map_one])
   have key := card_complex_roots_eq_card_real_add_card_not_gal_inv p
-  simp_rw [Set.toFinset_card] at key
-  rw [key, add_le_add_iff_left] at p_roots1 p_roots2
+  simp_rw [Set.toFinset_card] at key 
+  rw [key, add_le_add_iff_left] at p_roots1 p_roots2 
   rw [key, add_right_inj]
   suffices ∀ m : ℕ, 2 ∣ m → 1 ≤ m → m ≤ 3 → m = 2 by exact this n hn p_roots1 p_roots2
   rintro m ⟨k, rfl⟩ h2 h3

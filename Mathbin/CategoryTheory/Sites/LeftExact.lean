@@ -254,7 +254,7 @@ instance : PreservesLimitsOfShape K (presheafToSheaf J D) :=
 instance [HasFiniteLimits D] : PreservesFiniteLimits (presheafToSheaf J D) :=
   by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
-  intros ; skip; infer_instance
+  intros; skip; infer_instance
 
 end CategoryTheory
 

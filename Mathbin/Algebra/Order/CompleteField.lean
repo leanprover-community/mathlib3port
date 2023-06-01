@@ -61,8 +61,8 @@ open scoped Classical Pointwise
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-  "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure",
-  ConditionallyCompleteLinearOrder α
+    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure",
+    ConditionallyCompleteLinearOrder α
 #align conditionally_complete_linear_ordered_field ConditionallyCompleteLinearOrderedField
 
 -- see Note [lower instance priority]
@@ -158,7 +158,7 @@ theorem cutMap_bddAbove (a : α) : BddAbove (cutMap β a) :=
 theorem cutMap_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b :=
   by
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
-  · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
+  · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq 
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
     refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;>
       rwa [coe_mem_cut_map_iff]
@@ -200,7 +200,7 @@ theorem inducedMap_rat (q : ℚ) : inducedMap α β (q : α) = q :=
   by
   refine'
     csSup_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β q) (fun x h => _) fun w h => _
-  · rw [cut_map_coe] at h
+  · rw [cut_map_coe] at h 
     obtain ⟨r, h, rfl⟩ := h
     exact le_of_lt h
   · obtain ⟨q', hwq, hq⟩ := exists_rat_btwn h
@@ -225,7 +225,7 @@ theorem inducedMap_nonneg (ha : 0 ≤ a) : 0 ≤ inducedMap α β a :=
 theorem coe_lt_inducedMap_iff : (q : β) < inducedMap α β a ↔ (q : α) < a :=
   by
   refine' ⟨fun h => _, fun hq => _⟩
-  · rw [← induced_map_rat α] at h
+  · rw [← induced_map_rat α] at h 
     exact (induced_map_mono α β).reflect_lt h
   · obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
     apply lt_csSup_of_lt (cut_map_bdd_above β a) (coe_mem_cut_map_iff.mpr hqa)
@@ -273,7 +273,7 @@ theorem le_inducedMap_mul_self_of_mem_cutMap (ha : 0 < a) (b : β) (hb : b ∈ c
   obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
   trans (q' : β) ^ 2
   exact_mod_cast hqq'.le
-  rw [pow_two] at hqa⊢
+  rw [pow_two] at hqa ⊢
   exact
     mul_self_le_mul_self (by exact_mod_cast hq'.le)
       (le_csSup (cut_map_bdd_above β a) <|
@@ -289,9 +289,9 @@ theorem exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self (ha : 0 < a) (b : �
     rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
     exact mul_self_pos.2 ha.ne'
   obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
-  rw [← cast_pow] at hbq
+  rw [← cast_pow] at hbq 
   refine' ⟨(q ^ 2 : ℚ), coe_mem_cut_map_iff.2 _, hbq⟩
-  rw [pow_two] at hqa⊢
+  rw [pow_two] at hqa ⊢
   push_cast
   obtain ⟨q', hq', hqa'⟩ := lt_induced_map_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
   exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' <| by assumption_mod_cast)

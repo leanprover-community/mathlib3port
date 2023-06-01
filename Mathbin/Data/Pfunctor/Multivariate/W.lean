@@ -244,9 +244,9 @@ theorem w_ind {α : TypeVec n} {C : P.W α → Prop}
   intro x; cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩; dsimp
   intro a f f' ih'
-  dsimp [W_mk] at ih
+  dsimp [W_mk] at ih 
   let ih'' := ih a (P.W_path_dest_left f') fun i => ⟨f i, P.W_path_dest_right f' i⟩
-  dsimp at ih''; rw [W_path_cases_on_eta] at ih''
+  dsimp at ih'' ; rw [W_path_cases_on_eta] at ih'' 
   apply ih''
   apply ih'
 #align mvpfunctor.W_ind MvPFunctor.w_ind

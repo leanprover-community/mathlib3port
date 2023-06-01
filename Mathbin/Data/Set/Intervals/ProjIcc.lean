@@ -73,7 +73,7 @@ theorem projIcc_right : projIcc a b h b = ⟨b, right_mem_Icc.2 h⟩ :=
 theorem projIcc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.mpr h.le⟩ ↔ x ≤ a :=
   by
   refine' ⟨fun h' => _, proj_Icc_of_le_left _⟩
-  simp_rw [Subtype.ext_iff_val, proj_Icc, max_eq_left_iff, min_le_iff, h.not_le, false_or_iff] at h'
+  simp_rw [Subtype.ext_iff_val, proj_Icc, max_eq_left_iff, min_le_iff, h.not_le, false_or_iff] at h' 
   exact h'
 #align set.proj_Icc_eq_left Set.projIcc_eq_left
 -/
@@ -82,7 +82,7 @@ theorem projIcc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.mp
 theorem projIcc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc.mpr h.le⟩ ↔ b ≤ x :=
   by
   refine' ⟨fun h' => _, proj_Icc_of_right_le _⟩
-  simp_rw [Subtype.ext_iff_val, proj_Icc] at h'
+  simp_rw [Subtype.ext_iff_val, proj_Icc] at h' 
   have := ((max_choice _ _).resolve_left (by simp [h.ne', h'])).symm.trans h'
   exact min_eq_left_iff.mp this
 #align set.proj_Icc_eq_right Set.projIcc_eq_right

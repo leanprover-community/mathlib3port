@@ -36,28 +36,28 @@ instance : LocallyFiniteOrder ℕ
   finsetIoo a b := ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩
   finset_mem_Icc a b x :=
     by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range'_1]
     cases le_or_lt a b
     · rw [add_tsub_cancel_of_le (Nat.lt_succ_of_le h).le, Nat.lt_succ_iff]
     · rw [tsub_eq_zero_iff_le.2 (succ_le_of_lt h), add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2)
   finset_mem_Ico a b x :=
     by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range'_1]
     cases le_or_lt a b
     · rw [add_tsub_cancel_of_le h]
     · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.trans hx.2.le)
   finset_mem_Ioc a b x :=
     by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range']
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range'_1]
     cases le_or_lt a b
     · rw [← succ_sub_succ, add_tsub_cancel_of_le (succ_le_succ h), Nat.lt_succ_iff, Nat.succ_le_iff]
     · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
       exact iff_of_false (fun hx => hx.2.not_le hx.1) fun hx => h.not_le (hx.1.le.trans hx.2)
   finset_mem_Ioo a b x :=
     by
-    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range', ← tsub_add_eq_tsub_tsub]
+    rw [Finset.mem_mk, Multiset.mem_coe, List.mem_range'_1, ← tsub_add_eq_tsub_tsub]
     cases le_or_lt (a + 1) b
     · rw [add_tsub_cancel_of_le h, Nat.succ_le_iff]
     · rw [tsub_eq_zero_iff_le.2 h.le, add_zero]
@@ -198,11 +198,11 @@ theorem image_sub_const_Ico (h : c ≤ a) : ((Ico a b).image fun x => x - c) = I
   rw [mem_image]
   constructor
   · rintro ⟨x, hx, rfl⟩
-    rw [mem_Ico] at hx⊢
+    rw [mem_Ico] at hx ⊢
     exact ⟨tsub_le_tsub_right hx.1 _, tsub_lt_tsub_right_of_le (h.trans hx.1) hx.2⟩
   · rintro h
     refine' ⟨x + c, _, add_tsub_cancel_right _ _⟩
-    rw [mem_Ico] at h⊢
+    rw [mem_Ico] at h ⊢
     exact ⟨tsub_le_iff_right.1 h.1, lt_tsub_iff_right.1 h.2⟩
 #align nat.image_sub_const_Ico Nat.image_sub_const_Ico
 
@@ -213,7 +213,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) :
   rw [mem_image, mem_Ico]
   constructor
   · rintro ⟨x, hx, rfl⟩
-    rw [mem_Ico] at hx
+    rw [mem_Ico] at hx 
     refine'
       ⟨_,
         ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt
@@ -224,7 +224,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) :
     · rw [← succ_sub_succ c]
       exact (tsub_le_tsub_iff_left (succ_le_succ <| hx.2.le.trans h)).2 hx.2
   · rintro ⟨hb, ha⟩
-    rw [lt_tsub_iff_left, lt_succ_iff] at ha
+    rw [lt_tsub_iff_left, lt_succ_iff] at ha 
     have hx : x ≤ c := (Nat.le_add_left _ _).trans ha
     refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
     · rw [mem_Ico]
@@ -245,19 +245,19 @@ theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
   induction' n with n ih
   · simp only [zero_add, nat_zero_eq_zero, Ico_zero_eq_range]
     rintro k hk l hl (hkl : k % a = l % a)
-    simp only [Finset.mem_range, Finset.mem_coe] at hk hl
-    rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
+    simp only [Finset.mem_range, Finset.mem_coe] at hk hl 
+    rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl 
   rw [Ico_succ_left_eq_erase_Ico, succ_add, Ico_succ_right_eq_insert_Ico le_self_add]
   rintro k hk l hl (hkl : k % a = l % a)
-  have ha : 0 < a := by by_contra ha; simp only [not_lt, nonpos_iff_eq_zero] at ha;
+  have ha : 0 < a := by by_contra ha; simp only [not_lt, nonpos_iff_eq_zero] at ha ;
     simpa [ha] using hk
-  simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
+  simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl 
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
   · rfl
-  · rw [add_mod_right] at hkl
+  · rw [add_mod_right] at hkl 
     refine' (hln <| ih hl _ hkl.symm).elim
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
-  · rw [add_mod_right] at hkl
+  · rw [add_mod_right] at hkl 
     suffices k = n by contradiction
     refine' ih hk _ hkl
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]

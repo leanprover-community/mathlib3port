@@ -383,17 +383,17 @@ def limitConeOfUnique : LimitCone (Discrete.functor f)
     where
   Cone :=
     { pt := f default
-      π := { app := fun j => eqToHom (by dsimp; congr ) } }
+      π := { app := fun j => eqToHom (by dsimp; congr) } }
   IsLimit :=
     { lift := fun s => s.π.app default
       fac := fun s j =>
         by
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
-        dsimp at w
+        dsimp at w 
         simpa [eq_to_hom_map] using w
       uniq := fun s m w => by
         specialize w default
-        dsimp at w
+        dsimp at w 
         simpa using w }
 #align category_theory.limits.limit_cone_of_unique CategoryTheory.Limits.limitConeOfUnique
 -/
@@ -427,17 +427,17 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
               (by
                 trace
                   "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
-                dsimp; congr ) } }
+                dsimp; congr) } }
   IsColimit :=
     { desc := fun s => s.ι.app default
       fac := fun s j =>
         by
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
-        dsimp at w
+        dsimp at w 
         simpa [eq_to_hom_map] using w
       uniq := fun s m w => by
         specialize w default
-        dsimp at w
+        dsimp at w 
         simpa using w }
 #align category_theory.limits.colimit_cocone_of_unique CategoryTheory.Limits.colimitCoconeOfUnique
 -/

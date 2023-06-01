@@ -1060,7 +1060,7 @@ class LinearOrderedAddCommGroup (α : Type u) extends OrderedAddCommGroup α, Li
   Instances should include number systems with an infinite element adjoined.` -/
 @[protect_proj]
 class LinearOrderedAddCommGroupWithTop (α : Type _) extends LinearOrderedAddCommMonoidWithTop α,
-  SubNegMonoid α, Nontrivial α where
+    SubNegMonoid α, Nontrivial α where
   neg_top : -(⊤ : α) = ⊤
   add_neg_cancel : ∀ a : α, a ≠ ⊤ → a + -a = 0
 #align linear_ordered_add_comm_group_with_top LinearOrderedAddCommGroupWithTop
@@ -1214,7 +1214,7 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : TotalPositiveCone α) 
   {
     OrderedAddCommGroup.mkOfPositiveCone
       C.toPositiveCone with
-    le_total := fun a b => by convert C.nonneg_total (b - a); change C.nonneg _ = _; congr ; simp
+    le_total := fun a b => by convert C.nonneg_total (b - a); change C.nonneg _ = _; congr; simp
     decidableLe := fun a b => C.nonnegDecidable _ }
 #align linear_ordered_add_comm_group.mk_of_positive_cone LinearOrderedAddCommGroup.mkOfPositiveCone
 -/

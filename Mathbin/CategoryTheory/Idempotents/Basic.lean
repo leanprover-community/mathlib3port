@@ -58,7 +58,7 @@ variable (C : Type _) [Category C]
 split as a composition `p = e ≫ i` with `i ≫ e = 𝟙 _` -/
 class IsIdempotentComplete : Prop where
   idempotents_split :
-    ∀ (X : C) (p : X ⟶ X), p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
+    ∀ (X : C) (p : X ⟶ X), p ≫ p = p → ∃ (Y : C) (i : Y ⟶ X) (e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
 #align category_theory.is_idempotent_complete CategoryTheory.IsIdempotentComplete
 -/
 
@@ -83,7 +83,7 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
               constructor
               · erw [assoc, h₂, ← limits.fork.condition s, comp_id]
               · intro m hm
-                rw [fork.ι_of_ι] at hm
+                rw [fork.ι_of_ι] at hm 
                 rw [← hm]
                 simp only [← hm, assoc, h₁]
                 exact (comp_id m).symm }⟩
@@ -135,7 +135,7 @@ theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
 #print CategoryTheory.Idempotents.isIdempotentComplete_of_abelian /-
 /-- An abelian category is idempotent complete. -/
 instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Category D] [Abelian D] :
-    IsIdempotentComplete D := by rw [is_idempotent_complete_iff_idempotents_have_kernels]; intros ;
+    IsIdempotentComplete D := by rw [is_idempotent_complete_iff_idempotents_have_kernels]; intros;
   infer_instance
 #align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.isIdempotentComplete_of_abelian
 -/
@@ -144,8 +144,9 @@ variable {C}
 
 #print CategoryTheory.Idempotents.split_imp_of_iso /-
 theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
-    (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') (h : ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) :
-    ∃ (Y' : C)(i' : Y' ⟶ X')(e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
+    (hpp' : p ≫ φ.Hom = φ.Hom ≫ p')
+    (h : ∃ (Y : C) (i : Y ⟶ X) (e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) :
+    ∃ (Y' : C) (i' : Y' ⟶ X') (e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
   by
   rcases h with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use Y, i ≫ φ.hom, φ.inv ≫ e
@@ -160,8 +161,8 @@ theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
 #print CategoryTheory.Idempotents.split_iff_of_iso /-
 theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
     (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') :
-    (∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) ↔
-      ∃ (Y' : C)(i' : Y' ⟶ X')(e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
+    (∃ (Y : C) (i : Y ⟶ X) (e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) ↔
+      ∃ (Y' : C) (i' : Y' ⟶ X') (e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
   by
   constructor
   · exact split_imp_of_iso φ p p' hpp'

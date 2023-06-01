@@ -331,7 +331,7 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I 
     refine' ⟨⟨J, _⟩, _, _⟩
     · rw [mem_nonZeroDivisors_iff_ne_zero]
       rintro rfl
-      rw [Ideal.zero_eq_bot, Ideal.mul_bot] at hJ
+      rw [Ideal.zero_eq_bot, Ideal.mul_bot] at hJ 
       exact hM (ideal.span_singleton_eq_bot.mp (I.2 _ hJ))
     · rw [ClassGroup.mk0_eq_mk0_iff]
       exact ⟨algebraMap _ _ M, b, hM, b_ne_zero, hJ⟩
@@ -344,10 +344,10 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I 
     exact b_mem
   rw [Ideal.dvd_iff_le, Ideal.mul_le]
   intro r' hr' a ha
-  rw [Ideal.mem_span_singleton] at hr'⊢
+  rw [Ideal.mem_span_singleton] at hr' ⊢
   obtain ⟨q, r, r_mem, lt⟩ := exists_mem_finset_approx' L bS adm h a b_ne_zero
   apply @dvd_of_mul_left_dvd _ _ q
-  simp only [Algebra.smul_def] at lt
+  simp only [Algebra.smul_def] at lt 
   rw [←
     sub_eq_zero.mp (b_min _ (I.1.sub_mem (I.1.mul_mem_left _ ha) (I.1.mul_mem_left _ b_mem)) lt)]
   refine' mul_dvd_mul_right (dvd_trans (RingHom.map_dvd _ _) hr') _

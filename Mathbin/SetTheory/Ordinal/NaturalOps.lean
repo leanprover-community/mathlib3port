@@ -57,7 +57,8 @@ noncomputable section
 #print NatOrdinal /-
 /-- A type synonym for ordinals with natural addition and multiplication. -/
 def NatOrdinal : Type _ :=
-  Ordinal deriving Zero, Inhabited, One, LinearOrder, SuccOrder, WellFoundedRelation
+  Ordinal
+deriving Zero, Inhabited, One, LinearOrder, SuccOrder, WellFoundedRelation
 #align nat_ordinal NatOrdinal
 -/
 
@@ -210,9 +211,8 @@ to normal ordinal addition, it is commutative.
 Natural addition can equivalently be characterized as the ordinal resulting from adding up
 corresponding coefficients in the Cantor normal forms of `a` and `b`. -/
 noncomputable def nadd : Ordinal → Ordinal → Ordinal
-  | a, b =>
-    max (blsub.{u, u} a fun a' h => nadd a' b) (blsub.{u, u} b fun b' h => nadd a b')decreasing_by
-  solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+  | a, b => max (blsub.{u, u} a fun a' h => nadd a' b) (blsub.{u, u} b fun b' h => nadd a b')
+decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd Ordinal.nadd
 -/
 
@@ -270,8 +270,8 @@ variable (a b)
 theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
   | a, b => by
     rw [nadd_def, nadd_def, max_comm]
-    congr <;> ext (c hc) <;> apply nadd_comm decreasing_by
-  solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+    congr <;> ext (c hc) <;> apply nadd_comm
+decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd_comm Ordinal.nadd_comm
 -/
 
@@ -298,8 +298,8 @@ theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
     rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assoc]
     · congr <;> ext (d hd) <;> apply nadd_assoc
     · exact fun i j _ _ h => nadd_le_nadd_left h a
-    · exact fun i j _ _ h => nadd_le_nadd_right h c decreasing_by
-  solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+    · exact fun i j _ _ h => nadd_le_nadd_right h c
+decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd_assoc Ordinal.nadd_assoc
 -/
 

@@ -112,7 +112,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
                 ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
       by
-      congr ; ext (i j); rw [Fin.succAbove_zero, Matrix.cons_val_succ, Fin.val_succ, mul_comm]
+      congr; ext (i j); rw [Fin.succAbove_zero, Matrix.cons_val_succ, Fin.val_succ, mul_comm]
       exact (geom_sum₂_mul (v i.succ) (v 0) (j + 1 : ℕ)).symm
     _ =
         (∏ i : Fin n, v (Fin.succ i) - v 0) *

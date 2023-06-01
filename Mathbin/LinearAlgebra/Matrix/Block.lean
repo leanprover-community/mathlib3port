@@ -153,7 +153,10 @@ end LinearOrder
 theorem upper_two_blockTriangular [Preorder α] (A : Matrix m m R) (B : Matrix m n R)
     (D : Matrix n n R) {a b : α} (hab : a < b) :
     BlockTriangular (fromBlocks A B 0 D) (Sum.elim (fun i => a) fun j => b) := by
-  rintro (c | c) (d | d) hcd <;> first |simpa [hab.not_lt] using hcd|simp
+  rintro (c | c) (d | d) hcd <;>
+    first
+    | simpa [hab.not_lt] using hcd
+    | simp
 #align matrix.upper_two_block_triangular Matrix.upper_two_blockTriangular
 
 /-! ### Determinant -/
@@ -179,7 +182,7 @@ theorem det_toBlock (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
   by
   rw [← Matrix.det_reindex_self (Equiv.sumCompl p).symm M]
   rw [det_apply', det_apply']
-  congr ; ext σ; congr ; ext
+  congr; ext σ; congr; ext
   generalize hy : σ x = y
   cases x <;> cases y <;>
     simp only [Matrix.reindex_apply, to_block_apply, Equiv.symm_symm, Equiv.sumCompl_apply_inr,

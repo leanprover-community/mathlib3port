@@ -61,7 +61,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0)
   have x_ne : x ≠ 0 := by
     intro h
     apply y_ne
-    rw [h, v.map_zero] at key
+    rw [h, v.map_zero] at key 
     exact v.zero_iff.1 key.symm
   have decomp : x⁻¹ - y⁻¹ = x⁻¹ * (y - x) * y⁻¹ := by
     rw [mul_sub_left_distrib, sub_mul, mul_assoc, show y * y⁻¹ = 1 from mul_inv_cancel y_ne,
@@ -96,8 +96,8 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
       use min (γ * (γ' * γ')) γ'
       intro y y_in
       apply hs
-      simp only [mem_set_of_eq] at y_in
-      rw [Units.min_val, Units.val_mul, Units.val_mul] at y_in
+      simp only [mem_set_of_eq] at y_in 
+      rw [Units.min_val, Units.val_mul, Units.val_mul] at y_in 
       exact Valuation.inversion_estimate _ x_ne y_in }
 #align valued.topological_division_ring Valued.topologicalDivisionRing
 
@@ -165,9 +165,9 @@ instance (priority := 100) completable : CompletableTopField K :=
         apply le_of_not_lt _
         intro hyp
         have : x ∈ U ∩ M := ⟨hU hyp, xM⟩
-        rwa [H] at this
+        rwa [H] at this 
       rcases this with ⟨γ₀, M₀, M₀_in, H₀⟩
-      rw [Valued.cauchy_iff] at hF⊢
+      rw [Valued.cauchy_iff] at hF ⊢
       refine' ⟨hF.1.map _, _⟩
       replace hF := hF.2
       intro γ
@@ -183,7 +183,7 @@ instance (priority := 100) completable : CompletableTopField K :=
         replace x_in₀ := H₀ x x_in₀
         replace y_in₀ := H₀ y y_in₀; clear H₀
         apply Valuation.inversion_estimate
-        · have : (v x : Γ₀) ≠ 0 := by intro h; rw [h] at x_in₀; simpa using x_in₀
+        · have : (v x : Γ₀) ≠ 0 := by intro h; rw [h] at x_in₀ ; simpa using x_in₀
           exact (Valuation.ne_zero_iff _).mp this
         · refine' lt_of_lt_of_le H₁ _
           rw [Units.min_val]
@@ -221,7 +221,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       ext x
       rw [Valuation.map_one, mem_preimage, mem_singleton_iff, mem_set_of_eq]
     obtain ⟨V, V_in, hV⟩ : ∃ V ∈ 𝓝 (1 : hat K), ∀ x : K, (x : hat K) ∈ V → (v x : Γ₀) = 1 := by
-      rwa [completion.dense_inducing_coe.nhds_eq_comap, mem_comap] at preimage_one
+      rwa [completion.dense_inducing_coe.nhds_eq_comap, mem_comap] at preimage_one 
     have :
       ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ (x) (_ : x ∈ V') (y) (_ : y ∈ V'), x * y⁻¹ ∈ V :=
       by
@@ -243,7 +243,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       use U ∩ hatKstar, Filter.inter_mem U_in this
       constructor
       · rintro ⟨h, h'⟩
-        rw [mem_compl_singleton_iff] at h'
+        rw [mem_compl_singleton_iff] at h' 
         exact h' rfl
       · rintro x ⟨hx, _⟩ y ⟨hy, _⟩
         apply hU <;> assumption
@@ -260,7 +260,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
         simp only [mul_assoc, inv_mul_cancel h, mul_one]
       have c : Continuous fun x : hat K => x * x₀⁻¹ := continuous_id.mul continuous_const
       rw [image_eq_preimage_of_inverse l r]
-      rw [← mul_inv_cancel h] at V'_in
+      rw [← mul_inv_cancel h] at V'_in 
       exact c.continuous_at V'_in
     have : ∃ z₀ : K, ∃ y₀ ∈ V', coe z₀ = y₀ * x₀ ∧ z₀ ≠ 0 :=
       by
@@ -340,7 +340,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt,
         iff_true_iff]
       apply subset_closure
-      exact ⟨0, by simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_and_iff] ⟩
+      exact ⟨0, by simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_and_iff]⟩
     · exact this h
   intro h
   have hγ₀ : extension ⁻¹' {γ₀} ∈ 𝓝 x :=
@@ -353,7 +353,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     rwa [← hy₂]
   · obtain ⟨y, hy₁, hy₂ : ↑y ∈ s⟩ := completion.dense_range_coe.mem_nhds (inter_mem hγ₀ hs)
     replace hy₁ : v y = γ₀; · simpa using hy₁
-    rw [← hy₁] at hx
+    rw [← hy₁] at hx 
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
 #align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt
 

@@ -156,7 +156,7 @@ theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : 
     (a_not_mem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) : ∃ d : S, ∃ e ∈ P ^ (i + 1), a * d + e = c :=
   by
   suffices eq_b : P ^ i = Ideal.span {a} ⊔ P ^ (i + 1)
-  · rw [eq_b] at c_mem
+  · rw [eq_b] at c_mem 
     simp only [mul_comm a]
     exact ideal.mem_span_singleton_sup.mp c_mem
   refine'
@@ -173,7 +173,7 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
     b ∈ P :=
   by
   simp only [← Ideal.span_singleton_le_iff_mem, ← Ideal.dvd_iff_le, pow_succ, ←
-    Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem⊢
+    Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem ⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_isPrime hP P_prime) ab_mem).resolve_left a_not_mem
 #align ideal.mem_prime_of_mul_mem_pow Ideal.mem_prime_of_mul_mem_pow
 
@@ -367,7 +367,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
     _ = abs_norm I := (Submodule.cardQuot_apply _).symm
     
   -- since `linear_map.to_matrix b' b' f` is the diagonal matrix with `a` along the diagonal.
-  · congr ; ext (i j)
+  · congr; ext (i j)
     rw [LinearMap.toMatrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single,
       smul_eq_mul, mul_one]
     by_cases h : i = j
@@ -569,17 +569,17 @@ theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S
   · rintro a' ha'
     simp only [Set.mem_preimage, submodule_span_eq, ← map_span_norm, SetLike.mem_coe,
       IsLocalization.mem_map_algebraMap_iff (Algebra.algebraMapSubmonoid S M) Sₘ,
-      IsLocalization.mem_map_algebraMap_iff M Rₘ, Prod.exists] at ha'⊢
+      IsLocalization.mem_map_algebraMap_iff M Rₘ, Prod.exists] at ha' ⊢
     obtain ⟨⟨a, ha⟩, ⟨_, ⟨s, hs, rfl⟩⟩, has⟩ := ha'
     refine'
       ⟨⟨Algebra.norm R a, norm_mem_span_norm _ _ ha⟩,
         ⟨s ^ Fintype.card (Module.Free.ChooseBasisIndex R S), pow_mem hs _⟩, _⟩
     swap
-    simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has⊢
-    apply_fun Algebra.norm Rₘ  at has
+    simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has ⊢
+    apply_fun Algebra.norm Rₘ  at has 
     rwa [_root_.map_mul, ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ,
       Algebra.norm_algebraMap_of_basis (b.localization_localization Rₘ M Sₘ),
-      Algebra.norm_localization R M a] at has
+      Algebra.norm_localization R M a] at has 
     all_goals infer_instance
   · intro a ha
     rw [Set.mem_preimage, Function.comp_apply, ← Algebra.norm_localization R M a]

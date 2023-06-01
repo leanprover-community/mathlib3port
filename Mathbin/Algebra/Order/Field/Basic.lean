@@ -222,7 +222,7 @@ theorem mul_le_of_nonneg_of_le_div (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a ≤ b / 
   by
   obtain rfl | hc := hc.eq_or_lt
   · simpa using hb
-  · rwa [le_div_iff hc] at h
+  · rwa [le_div_iff hc] at h 
 #align mul_le_of_nonneg_of_le_div mul_le_of_nonneg_of_le_div
 
 theorem div_le_one_of_le (h : a ≤ b) (hb : 0 ≤ b) : a / b ≤ 1 :=
@@ -538,7 +538,7 @@ theorem add_div_two_lt_right : (a + b) / 2 < b ↔ a < b := by simp [div_lt_iff,
 
 theorem mul_le_mul_of_mul_div_le (h : a * (b / c) ≤ d) (hc : 0 < c) : b * a ≤ d * c :=
   by
-  rw [← mul_div_assoc] at h
+  rw [← mul_div_assoc] at h 
   rwa [mul_comm b, ← div_le_iff hc]
 #align mul_le_mul_of_mul_div_le mul_le_mul_of_mul_div_le
 
@@ -886,12 +886,12 @@ theorem one_div_lt_one_div_of_neg (ha : a < 0) (hb : b < 0) : 1 / a < 1 / b ↔ 
 #align one_div_lt_one_div_of_neg one_div_lt_one_div_of_neg
 
 theorem one_div_lt_neg_one (h1 : a < 0) (h2 : -1 < a) : 1 / a < -1 :=
-  suffices 1 / a < 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this
+  suffices 1 / a < 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this 
   one_div_lt_one_div_of_neg_of_lt h1 h2
 #align one_div_lt_neg_one one_div_lt_neg_one
 
 theorem one_div_le_neg_one (h1 : a < 0) (h2 : -1 ≤ a) : 1 / a ≤ -1 :=
-  suffices 1 / a ≤ 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this
+  suffices 1 / a ≤ 1 / -1 by rwa [one_div_neg_one_eq_neg_one] at this 
   one_div_le_one_div_of_neg_of_le h1 h2
 #align one_div_le_neg_one one_div_le_neg_one
 
@@ -900,13 +900,13 @@ theorem one_div_le_neg_one (h1 : a < 0) (h2 : -1 ≤ a) : 1 / a ≤ -1 :=
 
 theorem sub_self_div_two (a : α) : a - a / 2 = a / 2 :=
   by
-  suffices a / 2 + a / 2 - a / 2 = a / 2 by rwa [add_halves] at this
+  suffices a / 2 + a / 2 - a / 2 = a / 2 by rwa [add_halves] at this 
   rw [add_sub_cancel]
 #align sub_self_div_two sub_self_div_two
 
 theorem div_two_sub_self (a : α) : a / 2 - a = -(a / 2) :=
   by
-  suffices a / 2 - (a / 2 + a / 2) = -(a / 2) by rwa [add_halves] at this
+  suffices a / 2 - (a / 2 + a / 2) = -(a / 2) by rwa [add_halves] at this 
   rw [sub_add_eq_sub_sub, sub_self, zero_sub]
 #align div_two_sub_self div_two_sub_self
 

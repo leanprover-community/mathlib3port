@@ -238,7 +238,8 @@ variable [TopologicalSpace α]
 #print residual /-
 /-- A set `s` is called *residual* if it includes a countable intersection of dense open sets. -/
 def residual (α : Type _) [TopologicalSpace α] : Filter α :=
-  Filter.countableGenerate { t | IsOpen t ∧ Dense t }deriving CountableInterFilter
+  Filter.countableGenerate { t | IsOpen t ∧ Dense t }
+deriving CountableInterFilter
 #align residual residual
 -/
 

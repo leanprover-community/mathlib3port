@@ -366,7 +366,7 @@ variable {p p'}
 
 theorem mem_sup : x ∈ p ⊔ p' ↔ ∃ y ∈ p, ∃ z ∈ p', y + z = x :=
   ⟨fun h => by
-    rw [← span_eq p, ← span_eq p', ← span_union] at h
+    rw [← span_eq p, ← span_eq p', ← span_union] at h 
     apply span_induction h
     · rintro y (h | h)
       · exact ⟨y, h, 0, by simp, by simp⟩
@@ -380,7 +380,7 @@ theorem mem_sup : x ∈ p ⊔ p' ↔ ∃ y ∈ p, ∃ z ∈ p', y + z = x :=
       exact add_mem ((le_sup_left : p ≤ p ⊔ p') hy) ((le_sup_right : p' ≤ p ⊔ p') hz)⟩
 #align submodule.mem_sup Submodule.mem_sup
 
-theorem mem_sup' : x ∈ p ⊔ p' ↔ ∃ (y : p)(z : p'), (y : M) + z = x :=
+theorem mem_sup' : x ∈ p ⊔ p' ↔ ∃ (y : p) (z : p'), (y : M) + z = x :=
   mem_sup.trans <| by simp only [SetLike.exists, coe_mk]
 #align submodule.mem_sup' Submodule.mem_sup'
 
@@ -417,7 +417,7 @@ theorem nontrivial_span_singleton {x : M} (h : x ≠ 0) : Nontrivial (R ∙ x) :
   ⟨by
     use 0, x, Submodule.mem_span_singleton_self x
     intro H
-    rw [eq_comm, Submodule.mk_eq_zero] at H
+    rw [eq_comm, Submodule.mk_eq_zero] at H 
     exact h H⟩
 #align submodule.nontrivial_span_singleton Submodule.nontrivial_span_singleton
 
@@ -487,7 +487,7 @@ theorem disjoint_span_singleton {K E : Type _} [DivisionRing K] [AddCommGroup E]
   obtain ⟨c, rfl⟩ := mem_span_singleton.1 hyx
   by_cases hc : c = 0
   · rw [hc, zero_smul]
-  · rw [s.smul_mem_iff hc] at hy
+  · rw [s.smul_mem_iff hc] at hy 
     rw [H hy, smul_zero]
 #align submodule.disjoint_span_singleton Submodule.disjoint_span_singleton
 
@@ -584,9 +584,9 @@ theorem span_singleton_eq_span_singleton {R M : Type _} [Ring R] [AddCommGroup M
   · intro hxy
     cases' mem_span_singleton.mp (by rw [hxy]; apply mem_span_singleton_self) with v hv
     cases' mem_span_singleton.mp (by rw [← hxy]; apply mem_span_singleton_self) with i hi
-    have vi : v * i = 1 := by rw [← one_smul R y, ← hi, smul_smul] at hv;
+    have vi : v * i = 1 := by rw [← one_smul R y, ← hi, smul_smul] at hv ;
       exact smul_left_injective R hy hv
-    have iv : i * v = 1 := by rw [← one_smul R x, ← hv, smul_smul] at hi;
+    have iv : i * v = 1 := by rw [← one_smul R x, ← hv, smul_smul] at hi ;
       exact smul_left_injective R hx hi
     exact ⟨⟨v, i, vi, iv⟩, hv⟩
   · rintro ⟨v, rfl⟩
@@ -655,7 +655,7 @@ theorem iSup_induction {ι : Sort _} (p : ι → Submodule R M) {C : M → Prop}
     (hx : x ∈ ⨆ i, p i) (hp : ∀ (i), ∀ x ∈ p i, C x) (h0 : C 0)
     (hadd : ∀ x y, C x → C y → C (x + y)) : C x :=
   by
-  rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx
+  rw [← mem_to_add_submonoid, supr_to_add_submonoid] at hx 
   exact AddSubmonoid.iSup_induction _ hx hp h0 hadd
 #align submodule.supr_induction Submodule.iSup_induction
 
@@ -687,7 +687,7 @@ theorem singleton_span_isCompactElement (x : M) :
   intro d hemp hdir hsup
   have : x ∈ Sup d := (set_like.le_def.mp hsup) (mem_span_singleton_self x)
   obtain ⟨y, ⟨hyd, hxy⟩⟩ := (mem_Sup_of_directed hemp hdir).mp this
-  exact ⟨y, ⟨hyd, by simpa only [span_le, singleton_subset_iff] ⟩⟩
+  exact ⟨y, ⟨hyd, by simpa only [span_le, singleton_subset_iff]⟩⟩
 #align submodule.singleton_span_is_compact_element Submodule.singleton_span_isCompactElement
 -/
 
@@ -722,9 +722,9 @@ instance : IsCompactlyGenerated (Submodule R M) :=
 
 /-- A submodule is equal to the supremum of the spans of the submodule's nonzero elements. -/
 theorem submodule_eq_sSup_le_nonzero_spans (p : Submodule R M) :
-    p = sSup { T : Submodule R M | ∃ (m : M)(hm : m ∈ p)(hz : m ≠ 0), T = span R {m} } :=
+    p = sSup { T : Submodule R M | ∃ (m : M) (hm : m ∈ p) (hz : m ≠ 0), T = span R {m} } :=
   by
-  let S := { T : Submodule R M | ∃ (m : M)(hm : m ∈ p)(hz : m ≠ 0), T = span R {m} }
+  let S := { T : Submodule R M | ∃ (m : M) (hm : m ∈ p) (hz : m ≠ 0), T = span R {m} }
   apply le_antisymm
   · intro m hm; by_cases h : m = 0
     · rw [h]; simp
@@ -871,7 +871,7 @@ theorem mem_span_insert' {x y} {s : Set M} :
 
 instance : IsModularLattice (Submodule R M) :=
   ⟨fun x y z xz a ha => by
-    rw [mem_inf, mem_sup] at ha
+    rw [mem_inf, mem_sup] at ha 
     rcases ha with ⟨⟨b, hb, c, hc, rfl⟩, haz⟩
     rw [mem_sup]
     refine' ⟨b, hb, c, mem_inf.2 ⟨hc, _⟩, rfl⟩

@@ -152,7 +152,7 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
   | b :: as, h => by
-    rw [mem_cons_iff] at h; cases h
+    rw [mem_cons_iff] at h ; cases h
     · exists 0; intro d; apply h
     · cases' eq_get_of_mem h with n h2
       exists n + 1; apply h2
@@ -218,7 +218,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} :
   by
   intro h1; by_cases h2 : n < as.length
   · apply get_map h2
-  · rw [not_lt] at h2
+  · rw [not_lt] at h2 
     rw [get_eq_default_of_le _ h2, get_eq_default_of_le, h1]
     rw [length_map]; apply h2
 #align list.func.get_map' List.Func.get_map'
@@ -231,7 +231,7 @@ theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
   intro h1 h2 n
   by_cases h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
-  · rw [not_lt] at h3
+  · rw [not_lt] at h3 
     rw [get_eq_default_of_le _ h3]; apply h1
 #align list.func.forall_val_of_forall_mem List.Func.forall_val_of_forall_mem
 -/
@@ -383,7 +383,7 @@ theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α
   rw [get_add]
   by_cases h : m < length as
   · repeat' rw [@get_map α α ⟨0⟩ ⟨0⟩ _ _ _ h]
-  rw [not_lt] at h
+  rw [not_lt] at h 
   repeat' rw [get_eq_default_of_le m] <;> try rw [length_map]; apply h
   apply zero_add
 #align list.func.map_add_map List.Func.map_add_map

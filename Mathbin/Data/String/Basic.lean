@@ -35,8 +35,8 @@ def ltb : Iterator → Iterator → Bool
           match s₁, h₁ with
           | ⟨_, a :: l⟩, h => Nat.lt_succ_self _
         ltb s₁.next s₂.next
-      else s₁.curr < s₂.curr termination_by'
-  ⟨_, measure_wf fun s => s.1.2.length⟩
+      else s₁.curr < s₂.curr
+termination_by' ⟨_, measure_wf fun s => s.1.2.length⟩
 #align string.ltb String.ltb
 -/
 
@@ -115,7 +115,7 @@ theorem data_singleton (c : Char) : (String.singleton c).toList = [c] :=
 -/
 
 theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.drop 1).toList
-  | ⟨s⟩, h => by cases s <;> [cases h rfl;rfl]
+  | ⟨s⟩, h => by cases s <;> [cases h rfl; rfl]
 #align string.to_list_nonempty String.toList_nonempty
 
 @[simp]
@@ -129,7 +129,7 @@ theorem drop_empty {n : ℕ} : "".drop n = "" :=
   induction' n with n hn
   · rfl
   · rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
-    · rw [hs] at hn
+    · rw [hs] at hn 
       conv_rhs => rw [← hn]
       simp only [popn, mk_iterator, iterator.nextn, iterator.next]
     · simpa only [← to_list_inj] using hs

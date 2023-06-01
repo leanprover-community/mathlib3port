@@ -82,7 +82,7 @@ theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
   cases nonempty_fintype m
   cases nonempty_fintype n
   have h := (Matrix.stdBasis R m n).mk_eq_rank
-  rw [← lift_lift.{max v w u, max v w}, lift_inj] at h
+  rw [← lift_lift.{max v w u, max v w}, lift_inj] at h 
   simpa using h.symm
 #align rank_matrix rank_matrix
 

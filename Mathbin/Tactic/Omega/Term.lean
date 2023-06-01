@@ -19,7 +19,8 @@ namespace Omega
     represents the constant term and the list represents
     the coefficients. -/
 def Term : Type :=
-  Int × List Int deriving Inhabited
+  Int × List Int
+deriving Inhabited
 #align omega.term Omega.Term
 
 unsafe instance : has_reflect Term :=

@@ -90,7 +90,7 @@ theorem spanEval_ne_top : spanEval k ≠ ⊤ :=
     Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
   replace hv := congr_arg (to_splitting_field k v.support) hv
-  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
+  rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv 
   · exact zero_ne_one hv
   intro j hj
   rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, MulZeroClass.mul_zero]
@@ -156,7 +156,7 @@ theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f)
 #align algebraic_closure.adjoin_monic.exists_root AlgebraicClosure.AdjoinMonic.exists_root
 
 /-- The `n`th step of constructing `algebraic_closure`, together with its `field` instance. -/
-def stepAux (n : ℕ) : Σα : Type u, Field α :=
+def stepAux (n : ℕ) : Σ α : Type u, Field α :=
   Nat.recOn n ⟨k, inferInstance⟩ fun n ih => ⟨@AdjoinMonic ih.1 ih.2, @AdjoinMonic.field ih.1 ih.2⟩
 #align algebraic_closure.step_aux AlgebraicClosure.stepAux
 
@@ -276,7 +276,7 @@ theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi :
   have : ∃ n p, Polynomial.map (of_step k n) p = f := by
     convert Ring.DirectLimit.Polynomial.exists_of f
   obtain ⟨n, p, rfl⟩ := this
-  rw [monic_map_iff] at hfm
+  rw [monic_map_iff] at hfm 
   have := hfm.irreducible_of_irreducible_map (of_step k n) p hfi
   obtain ⟨x, hx⟩ := to_step_succ.exists_root k hfm this
   refine' ⟨of_step k (n + 1) x, _⟩

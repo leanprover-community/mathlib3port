@@ -44,7 +44,7 @@ theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms 
       haveI : is_iso ((forget C).map f) :=
         by
         have := has_forget₂.forget_comp
-        dsimp at this
+        dsimp at this 
         rw [← this]
         exact i'
       apply is_iso_of_reflects_iso f (forget C) }

@@ -76,13 +76,13 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
     -- These elements of the colimit have representatives somewhere:
     obtain ⟨kx, x, rfl⟩ := jointly_surjective'.{v, v} x
     obtain ⟨ky, y, rfl⟩ := jointly_surjective'.{v, v} y
-    dsimp at x y
+    dsimp at x y 
     -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
     -- (indexed by `j : J`),
     replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
     -- and they are equations in a filtered colimit,
     -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
-    simp [colimit_eq_iff.{v, v}] at h
+    simp [colimit_eq_iff.{v, v}] at h 
     let k j := (h j).some
     let f : ∀ j, kx ⟶ k j := fun j => (h j).choose_spec.some
     let g : ∀ j, ky ⟶ k j := fun j => (h j).choose_spec.choose_spec.some
@@ -99,12 +99,13 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
     have kxO : kx ∈ O := finset.mem_union.mpr (Or.inr (by simp))
     have kyO : ky ∈ O := finset.mem_union.mpr (Or.inr (by simp))
     have kjO : ∀ j, k j ∈ O := fun j => finset.mem_union.mpr (Or.inl (by simp))
-    let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
       (Finset.univ.image fun j : J =>
           ⟨kx, k j, kxO, finset.mem_union.mpr (Or.inl (by simp)), f j⟩) ∪
         Finset.univ.image fun j : J => ⟨ky, k j, kyO, finset.mem_union.mpr (Or.inl (by simp)), g j⟩
     obtain ⟨S, T, W⟩ := is_filtered.sup_exists O H
-    have fH : ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
+    have fH :
+      ∀ j, (⟨kx, k j, kxO, kjO j, f j⟩ : Σ' (X Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H :=
       fun j =>
       finset.mem_union.mpr
         (Or.inl
@@ -114,7 +115,8 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
             refine' ⟨j, rfl, _⟩
             simp only [heq_iff_eq]
             exact ⟨rfl, rfl, rfl⟩))
-    have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
+    have gH :
+      ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ' (X Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H :=
       fun j =>
       finset.mem_union.mpr
         (Or.inr
@@ -189,7 +191,7 @@ theorem colimitLimitToLimitColimit_surjective :
     -- Because `K` is filtered, we can restate this as saying that
     -- for each such `f`, there is some place to the right of `k'`
     -- where these images of `y j` and `y j'` become equal.
-    simp_rw [colimit_eq_iff.{v, v}] at w
+    simp_rw [colimit_eq_iff.{v, v}] at w 
     -- We take a moment to restate `w` more conveniently.
     let kf : ∀ {j j'} (f : j ⟶ j'), K := fun _ _ f => (w f).some
     let gf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).choose_spec.some
@@ -204,8 +206,8 @@ theorem colimitLimitToLimitColimit_surjective :
         ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) =
           ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
         (w f).choose_spec.choose_spec.choose_spec
-      dsimp at q
-      simp_rw [← functor_to_types.map_comp_apply] at q
+      dsimp at q 
+      simp_rw [← functor_to_types.map_comp_apply] at q 
       convert q <;> simp only [comp_id]
     clear_value kf gf hf
     -- and clean up some things that are no longer needed.
@@ -228,7 +230,7 @@ theorem colimitLimitToLimitColimit_surjective :
             refine' ⟨f, Finset.mem_univ _, _⟩
             rfl))
     have k'O : k' ∈ O := finset.mem_union.mpr (Or.inr (finset.mem_singleton.mpr rfl))
-    let H : Finset (Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : K) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion fun j : J =>
         finset.univ.bUnion fun j' : J =>
           finset.univ.bUnion fun f : j ⟶ j' =>

@@ -116,7 +116,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   prop' t x hx := by
     cases hx
     · rw [hx]; simp [refl_trans_symm_aux]
-    · rw [Set.mem_singleton_iff] at hx
+    · rw [Set.mem_singleton_iff] at hx 
       rw [hx]
       norm_num [refl_trans_symm_aux]
 #align path.homotopy.refl_trans_symm Path.Homotopy.reflTransSymm
@@ -146,7 +146,7 @@ def transReflReparamAux (t : I) : ℝ :=
 theorem continuous_transReflReparamAux : Continuous transReflReparamAux :=
   by
   refine' continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _) _ <;>
-    [continuity;continuity;continuity;continuity;skip]
+    [continuity; continuity; continuity; continuity; skip]
   intro x hx
   norm_num [hx]
 #align path.homotopy.continuous_trans_refl_reparam_aux Path.Homotopy.continuous_transReflReparamAux
@@ -219,7 +219,8 @@ theorem continuous_transAssocReparamAux : Continuous transAssocReparamAux := by
           (continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _)
               _).ContinuousOn
           _ <;>
-      [continuity;continuity;continuity;continuity;continuity;continuity;continuity;skip;skip] <;>
+      [continuity; continuity; continuity; continuity; continuity; continuity; continuity; skip;
+      skip] <;>
     · intro x hx
       norm_num [hx]
 #align path.homotopy.continuous_trans_assoc_reparam_aux Path.Homotopy.continuous_transAssocReparamAux
@@ -267,7 +268,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
   · have h : ¬(1 / 2 : ℝ) * (x + 1) ≤ 1 / 2 := by linarith
     have h' : ¬2 * ((1 / 2 : ℝ) * (x + 1)) - 1 ≤ 1 / 2 := by linarith
     simp only [h₁, h₅, h, h', if_false, dif_neg (show ¬False from id)]
-    congr ; ring
+    congr; ring
 #align path.homotopy.trans_assoc_reparam Path.Homotopy.trans_assoc_reparam
 -/
 

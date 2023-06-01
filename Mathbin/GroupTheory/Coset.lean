@@ -631,15 +631,15 @@ def rightCosetEquivSubgroup (g : α) : rightCoset (↑s) g ≃ s :=
 @[to_additive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
 noncomputable def groupEquivQuotientProdSubgroup : α ≃ (α ⧸ s) × s :=
   calc
-    α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
-    _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
+    α ≃ Σ L : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
+    _ ≃ Σ L : α ⧸ s, leftCoset (Quotient.out' L) s :=
       (Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
           (_root_.subtype fun x : α => Quotient.mk'' x = L) ≃
             _root_.subtype fun x : α => Quotient.mk'' x = Quotient.mk'' _
         simp [-Quotient.eq''])
-    _ ≃ ΣL : α ⧸ s, s := (Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _)
+    _ ≃ Σ L : α ⧸ s, s := (Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _)
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
     
 #align subgroup.group_equiv_quotient_times_subgroup Subgroup.groupEquivQuotientProdSubgroup
@@ -687,7 +687,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
   invFun a :=
     a.2.map' (fun b => f a.1 * b) fun b c h =>
       by
-      rw [left_rel_apply] at h⊢
+      rw [left_rel_apply] at h ⊢
       change (f a.1 * b)⁻¹ * (f a.1 * c) ∈ s
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
   left_inv := by

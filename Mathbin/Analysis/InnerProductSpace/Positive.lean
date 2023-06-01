@@ -56,11 +56,13 @@ variable [CompleteSpace E] [CompleteSpace F]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
+#print ContinuousLinearMap.IsPositive /-
 /-- A continuous linear endomorphism `T` of a Hilbert space is **positive** if it is self adjoint
   and `∀ x, 0 ≤ re ⟪T x, x⟫`. -/
 def IsPositive (T : E →L[𝕜] E) : Prop :=
   IsSelfAdjoint T ∧ ∀ x, 0 ≤ T.reApplyInnerSelf x
 #align continuous_linear_map.is_positive ContinuousLinearMap.IsPositive
+-/
 
 theorem IsPositive.isSelfAdjoint {T : E →L[𝕜] E} (hT : IsPositive T) : IsSelfAdjoint T :=
   hT.1
@@ -114,14 +116,14 @@ theorem IsPositive.conj_orthogonalProjection (U : Submodule 𝕜 E) {T : E →L[
         orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U).IsPositive :=
   by
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
-  rwa [(orthogonalProjection_isSelfAdjoint U).adjoint_eq] at this
+  rwa [(orthogonalProjection_isSelfAdjoint U).adjoint_eq] at this 
 #align continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conj_orthogonalProjection
 
 theorem IsPositive.orthogonalProjection_comp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
     [CompleteSpace U] : (orthogonalProjection U ∘L T ∘L U.subtypeL).IsPositive :=
   by
   have := hT.conj_adjoint (orthogonalProjection U : E →L[𝕜] U)
-  rwa [U.adjoint_orthogonal_projection] at this
+  rwa [U.adjoint_orthogonal_projection] at this 
 #align continuous_linear_map.is_positive.orthogonal_projection_comp ContinuousLinearMap.IsPositive.orthogonalProjection_comp
 
 section Complex

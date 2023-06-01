@@ -172,16 +172,16 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
   map_target' := by
     simp only [min_lt_iff, mem_set_of_eq]; intro z hz; left
-    dsimp [-Subtype.val_eq_coe] at hz; linarith
+    dsimp [-Subtype.val_eq_coe] at hz ; linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
-    simp only [mem_set_of_eq, mem_Icc] at hz h'z
+    simp only [mem_set_of_eq, mem_Icc] at hz h'z 
     simp only [hz, min_eq_left, sub_add_cancel]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp at hz h'z
+    dsimp at hz h'z 
     have A : x + z 0 ≤ y := by linarith
     rw [Subsingleton.elim i 0]
     simp only [A, add_comm, add_sub_cancel', min_eq_left]
@@ -221,16 +221,16 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
   map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
   map_target' := by
     simp only [lt_max_iff, mem_set_of_eq]; intro z hz; left
-    dsimp [-Subtype.val_eq_coe] at hz; linarith
+    dsimp [-Subtype.val_eq_coe] at hz ; linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
-    simp only [mem_set_of_eq, mem_Icc] at hz h'z
+    simp only [mem_set_of_eq, mem_Icc] at hz h'z 
     simp only [hz, sub_eq_add_neg, max_eq_left, add_add_neg_cancel'_right, neg_add_rev, neg_neg]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp at hz h'z
+    dsimp at hz h'z 
     have A : x ≤ y - z 0 := by linarith
     rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_left]
@@ -285,7 +285,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     exact cont_diff_id.neg.add contDiff_const
   apply smoothManifoldWithCorners_of_contDiffOn
   intro e e' he he'
-  simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he'
+  simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he' 
   /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
       either the left chart or the right chart, leaving 4 possibilities that we handle successively.
       -/
@@ -297,8 +297,8 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, update_same,
-      max_eq_left, hz₀, lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂
-    rw [min_eq_left hz₁.le, lt_add_iff_pos_left] at hz₂
+      max_eq_left, hz₀, lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂ 
+    rw [min_eq_left hz₁.le, lt_add_iff_pos_left] at hz₂ 
     ext i
     rw [Subsingleton.elim i 0]
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply,
@@ -308,8 +308,8 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff,
-      update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂
-    rw [lt_sub_comm] at hz₁
+      update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂ 
+    rw [lt_sub_comm] at hz₁ 
     ext i
     rw [Subsingleton.elim i 0]
     simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply,

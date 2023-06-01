@@ -61,7 +61,7 @@ variable {α : Type _}
   The lemma `relation.cut_expand_iff` below converts between this convenient definition
   and the direct translation when `r` is irreflexive. -/
 def CutExpand (r : α → α → Prop) (s' s : Multiset α) : Prop :=
-  ∃ (t : Multiset α)(a : α), (∀ a' ∈ t, r a' a) ∧ s' + {a} = s + t
+  ∃ (t : Multiset α) (a : α), (∀ a' ∈ t, r a' a) ∧ s' + {a} = s + t
 #align relation.cut_expand Relation.CutExpand
 -/
 
@@ -72,10 +72,10 @@ theorem cutExpand_le_invImage_lex [hi : IsIrrefl α r] :
   fun s t ⟨u, a, hr, he⟩ => by
   classical
     refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
-    · apply_fun count b  at he; simp_rw [count_add] at he
+    · apply_fun count b  at he ; simp_rw [count_add] at he 
       convert he <;> convert(add_zero _).symm <;> rw [count_eq_zero] <;> intro hb
-      exacts[h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
-    · apply_fun count a  at he; simp_rw [count_add, count_singleton_self] at he
+      exacts [h.2 (mem_singleton.1 hb), h.1 (hr b hb)]
+    · apply_fun count a  at he ; simp_rw [count_add, count_singleton_self] at he 
       apply Nat.lt_of_succ_le; convert he.le; convert(add_zero _).symm
       exact count_eq_zero.2 fun ha => hi.irrefl a <| hr a ha
 #align relation.cut_expand_le_inv_image_lex Relation.cutExpand_le_invImage_lex
@@ -101,13 +101,13 @@ theorem cutExpand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand
 #print Relation.cutExpand_iff /-
 theorem cutExpand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     CutExpand r s' s ↔
-      ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.eraseₓ a + t :=
+      ∃ (t : Multiset α) (a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.eraseₓ a + t :=
   by
   simp_rw [cut_expand, add_singleton_eq_iff]
   refine' exists₂_congr fun t a => ⟨_, _⟩
   · rintro ⟨ht, ha, rfl⟩
     obtain h | h := mem_add.1 ha
-    exacts[⟨ht, h, t.erase_add_left_pos h⟩, (@irrefl α r _ a (ht a h)).elim]
+    exacts [⟨ht, h, t.erase_add_left_pos h⟩, (@irrefl α r _ a (ht a h)).elim]
   · rintro ⟨ht, h, rfl⟩
     exact ⟨ht, mem_add.2 (Or.inl h), (t.erase_add_left_pos h).symm⟩
 #align relation.cut_expand_iff Relation.cutExpand_iff
@@ -127,10 +127,10 @@ theorem not_cutExpand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
 theorem cutExpand_fibration (r : α → α → Prop) :
     Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 :=
   by
-  rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he⊢
+  rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he ⊢
   classical
     obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
-    rw [add_assoc, mem_add] at ha
+    rw [add_assoc, mem_add] at ha 
     obtain h | h := ha
     · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
       · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]

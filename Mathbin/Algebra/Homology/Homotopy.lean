@@ -555,9 +555,9 @@ variable (e : P ⟶ Q) (zero : P.pt 0 ⟶ Q.pt 1) (comm_zero : e.f 0 = zero ≫ 
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.pt n ⟶ Q.pt (n + 1))(f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
+        Σ' (f : P.pt n ⟶ Q.pt (n + 1)) (f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
           e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)),
-      Σ'f'' : P.pt (n + 2) ⟶ Q.pt (n + 3),
+      Σ' f'' : P.pt (n + 2) ⟶ Q.pt (n + 3),
         e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
 
 include comm_one comm_zero
@@ -576,7 +576,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkInductiveAux₁ :
     ∀ n,
-      Σ'(f : P.pt n ⟶ Q.pt (n + 1))(f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
+      Σ' (f : P.pt n ⟶ Q.pt (n + 1)) (f' : P.pt (n + 1) ⟶ Q.pt (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -591,7 +591,7 @@ section
 -/
 @[simp]
 def mkInductiveAux₂ :
-    ∀ n, Σ'(f : P.xNext n ⟶ Q.pt n)(f' : P.pt n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
+    ∀ n, Σ' (f : P.xNext n ⟶ Q.pt n) (f' : P.pt n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
   | 0 => ⟨0, zero ≫ (Q.xPrevIso rfl).inv, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkInductiveAux₁ e zero comm_zero one comm_one succ n
@@ -680,9 +680,9 @@ variable (e : P ⟶ Q) (zero : P.pt 1 ⟶ Q.pt 0) (comm_zero : e.f 0 = P.d 0 1 �
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.pt (n + 1) ⟶ Q.pt n)(f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
+        Σ' (f : P.pt (n + 1) ⟶ Q.pt n) (f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
           e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'),
-      Σ'f'' : P.pt (n + 3) ⟶ Q.pt (n + 2),
+      Σ' f'' : P.pt (n + 3) ⟶ Q.pt (n + 2),
         e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
 
 include comm_one comm_zero succ
@@ -701,7 +701,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkCoinductiveAux₁ :
     ∀ n,
-      Σ'(f : P.pt (n + 1) ⟶ Q.pt n)(f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
+      Σ' (f : P.pt (n + 1) ⟶ Q.pt n) (f' : P.pt (n + 2) ⟶ Q.pt (n + 1)),
         e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -716,7 +716,7 @@ section
 -/
 @[simp]
 def mkCoinductiveAux₂ :
-    ∀ n, Σ'(f : P.pt n ⟶ Q.xPrev n)(f' : P.xNext n ⟶ Q.pt n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
+    ∀ n, Σ' (f : P.pt n ⟶ Q.xPrev n) (f' : P.xNext n ⟶ Q.pt n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
   | 0 => ⟨0, (P.xNextIso rfl).Hom ≫ zero, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkCoinductiveAux₁ e zero comm_zero one comm_one succ n

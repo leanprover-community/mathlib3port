@@ -105,10 +105,10 @@ theorem sum_right (α) [Finite (Sum α β)] : Finite β :=
 #align finite.sum_right Finite.sum_right
 -/
 
-instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, β a) := by
+instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σ a, β a) := by
   letI := Fintype.ofFinite α; letI := fun a => Fintype.ofFinite (β a); infer_instance
 
-instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ'i, π i) :=
+instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ' i, π i) :=
   of_equiv _ (Equiv.psigmaEquivSigmaPLift π).symm
 
 instance [Finite α] : Finite (Set α) := by cases nonempty_fintype α; infer_instance

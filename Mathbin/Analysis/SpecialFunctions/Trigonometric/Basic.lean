@@ -512,7 +512,7 @@ theorem sin_pos_of_mem_Ioo {x : ℝ} (hx : x ∈ Ioo 0 π) : 0 < sin x :=
 
 theorem sin_nonneg_of_mem_Icc {x : ℝ} (hx : x ∈ Icc 0 π) : 0 ≤ sin x :=
   by
-  rw [← closure_Ioo pi_ne_zero.symm] at hx
+  rw [← closure_Ioo pi_ne_zero.symm] at hx 
   exact
     closure_lt_subset_le continuous_const continuous_sin
       (closure_mono (fun y => sin_pos_of_mem_Ioo) hx)
@@ -653,8 +653,8 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
             Int.ediv_mul_cancel ((Int.dvd_iff_emod_eq_zero _ _).2 hn0)])
         fun hn1 => by
         rw [← Int.emod_add_ediv n 2, hn1, Int.cast_add, Int.cast_one, add_mul, one_mul, add_comm,
-              mul_comm (2 : ℤ), Int.cast_mul, mul_assoc, Int.cast_two] at hn <;>
-            rw [← hn, cos_int_mul_two_pi_add_pi] at h <;>
+              mul_comm (2 : ℤ), Int.cast_mul, mul_assoc, Int.cast_two] at hn  <;>
+            rw [← hn, cos_int_mul_two_pi_add_pi] at h  <;>
           exact absurd h (by norm_num)⟩,
     fun ⟨n, hn⟩ => hn ▸ cos_int_mul_two_pi _⟩
 #align real.cos_eq_one_iff Real.cos_eq_one_iff
@@ -663,9 +663,9 @@ theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : -(2 * π) < x) (hx₂ : x 
     cos x = 1 ↔ x = 0 :=
   ⟨fun h => by
     rcases(cos_eq_one_iff _).1 h with ⟨n, rfl⟩
-    rw [mul_lt_iff_lt_one_left two_pi_pos] at hx₂
-    rw [neg_lt, neg_mul_eq_neg_mul, mul_lt_iff_lt_one_left two_pi_pos] at hx₁
-    norm_cast  at hx₁ hx₂
+    rw [mul_lt_iff_lt_one_left two_pi_pos] at hx₂ 
+    rw [neg_lt, neg_mul_eq_neg_mul, mul_lt_iff_lt_one_left two_pi_pos] at hx₁ 
+    norm_cast  at hx₁ hx₂ 
     obtain rfl : n = 0 := le_antisymm (by linarith) (by linarith)
     simp, fun h => by simp [h]⟩
 #align real.cos_eq_one_iff_of_lt_of_lt Real.cos_eq_one_iff_of_lt_of_lt
@@ -857,7 +857,7 @@ theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / 2 ^ (n + 1)) = sqrtTwoAddSe
     symm; rw [div_eq_iff_mul_eq this]; symm
     rw [sqrt_two_add_series, sqrt_eq_iff_sq_eq, mul_pow, cos_sq, ← mul_div_assoc, Nat.add_succ,
       pow_succ, mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mul]
-    congr ; · norm_num
+    congr; · norm_num
     rw [mul_comm, sq, mul_assoc, ← mul_div_assoc, mul_div_cancel_left, ← mul_div_assoc,
         mul_div_cancel_left] <;>
       try exact this
@@ -880,7 +880,7 @@ theorem sin_sq_pi_over_two_pow_succ (n : ℕ) :
     sin (π / 2 ^ (n + 2)) ^ 2 = 1 / 2 - sqrtTwoAddSeries 0 n / 4 :=
   by
   rw [sin_sq_pi_over_two_pow, sqrt_two_add_series, div_pow, sq_sqrt, add_div, ← sub_sub]
-  congr ; norm_num; norm_num; apply add_nonneg; norm_num; apply sqrt_two_add_series_zero_nonneg
+  congr; norm_num; norm_num; apply add_nonneg; norm_num; apply sqrt_two_add_series_zero_nonneg
 #align real.sin_sq_pi_over_two_pow_succ Real.sin_sq_pi_over_two_pow_succ
 
 #print Real.sin_pi_over_two_pow_succ /-
@@ -890,7 +890,7 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
   by
   symm; rw [div_eq_iff_mul_eq]; symm
   rw [sqrt_eq_iff_sq_eq, mul_pow, sin_sq_pi_over_two_pow_succ, sub_mul]
-  · congr ; norm_num; rw [mul_comm]; convert mul_div_cancel' _ _; norm_num; norm_num
+  · congr; norm_num; rw [mul_comm]; convert mul_div_cancel' _ _; norm_num; norm_num
   · rw [sub_nonneg]; apply le_of_lt; apply sqrt_two_add_series_lt_two
   apply le_of_lt; apply mul_pos; apply sin_pos_of_pos_of_lt_pi
   · apply div_pos pi_pos; apply pow_pos; norm_num
@@ -903,28 +903,28 @@ theorem sin_pi_over_two_pow_succ (n : ℕ) :
 
 #print Real.cos_pi_div_four /-
 @[simp]
-theorem cos_pi_div_four : cos (π / 4) = sqrt 2 / 2 := by trans cos (π / 2 ^ 2); congr ; norm_num;
+theorem cos_pi_div_four : cos (π / 4) = sqrt 2 / 2 := by trans cos (π / 2 ^ 2); congr; norm_num;
   simp
 #align real.cos_pi_div_four Real.cos_pi_div_four
 -/
 
 #print Real.sin_pi_div_four /-
 @[simp]
-theorem sin_pi_div_four : sin (π / 4) = sqrt 2 / 2 := by trans sin (π / 2 ^ 2); congr ; norm_num;
+theorem sin_pi_div_four : sin (π / 4) = sqrt 2 / 2 := by trans sin (π / 2 ^ 2); congr; norm_num;
   simp
 #align real.sin_pi_div_four Real.sin_pi_div_four
 -/
 
 #print Real.cos_pi_div_eight /-
 @[simp]
-theorem cos_pi_div_eight : cos (π / 8) = sqrt (2 + sqrt 2) / 2 := by trans cos (π / 2 ^ 3); congr ;
+theorem cos_pi_div_eight : cos (π / 8) = sqrt (2 + sqrt 2) / 2 := by trans cos (π / 2 ^ 3); congr;
   norm_num; simp
 #align real.cos_pi_div_eight Real.cos_pi_div_eight
 -/
 
 #print Real.sin_pi_div_eight /-
 @[simp]
-theorem sin_pi_div_eight : sin (π / 8) = sqrt (2 - sqrt 2) / 2 := by trans sin (π / 2 ^ 3); congr ;
+theorem sin_pi_div_eight : sin (π / 8) = sqrt (2 - sqrt 2) / 2 := by trans sin (π / 2 ^ 3); congr;
   norm_num; simp
 #align real.sin_pi_div_eight Real.sin_pi_div_eight
 -/
@@ -932,28 +932,28 @@ theorem sin_pi_div_eight : sin (π / 8) = sqrt (2 - sqrt 2) / 2 := by trans sin 
 #print Real.cos_pi_div_sixteen /-
 @[simp]
 theorem cos_pi_div_sixteen : cos (π / 16) = sqrt (2 + sqrt (2 + sqrt 2)) / 2 := by
-  trans cos (π / 2 ^ 4); congr ; norm_num; simp
+  trans cos (π / 2 ^ 4); congr; norm_num; simp
 #align real.cos_pi_div_sixteen Real.cos_pi_div_sixteen
 -/
 
 #print Real.sin_pi_div_sixteen /-
 @[simp]
 theorem sin_pi_div_sixteen : sin (π / 16) = sqrt (2 - sqrt (2 + sqrt 2)) / 2 := by
-  trans sin (π / 2 ^ 4); congr ; norm_num; simp
+  trans sin (π / 2 ^ 4); congr; norm_num; simp
 #align real.sin_pi_div_sixteen Real.sin_pi_div_sixteen
 -/
 
 #print Real.cos_pi_div_thirty_two /-
 @[simp]
 theorem cos_pi_div_thirty_two : cos (π / 32) = sqrt (2 + sqrt (2 + sqrt (2 + sqrt 2))) / 2 := by
-  trans cos (π / 2 ^ 5); congr ; norm_num; simp
+  trans cos (π / 2 ^ 5); congr; norm_num; simp
 #align real.cos_pi_div_thirty_two Real.cos_pi_div_thirty_two
 -/
 
 #print Real.sin_pi_div_thirty_two /-
 @[simp]
 theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2 + sqrt (2 + sqrt 2))) / 2 := by
-  trans sin (π / 2 ^ 5); congr ; norm_num; simp
+  trans sin (π / 2 ^ 5); congr; norm_num; simp
 #align real.sin_pi_div_thirty_two Real.sin_pi_div_thirty_two
 -/
 
@@ -984,7 +984,7 @@ theorem sq_cos_pi_div_six : cos (π / 6) ^ 2 = 3 / 4 :=
     convert cos_sq (π / 6)
     have h2 : 2 * (π / 6) = π / 3 := by cancel_denoms
     rw [h2, cos_pi_div_three]
-  rw [← sub_eq_zero] at h1⊢
+  rw [← sub_eq_zero] at h1 ⊢
   convert h1 using 1
   ring
 #align real.sq_cos_pi_div_six Real.sq_cos_pi_div_six
@@ -994,10 +994,10 @@ theorem sq_cos_pi_div_six : cos (π / 6) ^ 2 = 3 / 4 :=
 @[simp]
 theorem cos_pi_div_six : cos (π / 6) = sqrt 3 / 2 :=
   by
-  suffices sqrt 3 = cos (π / 6) * 2 by field_simp [(by norm_num : 0 ≠ 2)] ; exact this.symm
+  suffices sqrt 3 = cos (π / 6) * 2 by field_simp [(by norm_num : 0 ≠ 2)]; exact this.symm
   rw [sqrt_eq_iff_sq_eq]
   · have h1 := (mul_right_inj' (by norm_num : (4 : ℝ) ≠ 0)).mpr sq_cos_pi_div_six
-    rw [← sub_eq_zero] at h1⊢
+    rw [← sub_eq_zero] at h1 ⊢
     convert h1 using 1
     ring
   · norm_num

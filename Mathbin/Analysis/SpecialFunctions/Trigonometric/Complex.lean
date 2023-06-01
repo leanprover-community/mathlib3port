@@ -69,7 +69,7 @@ theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π
 theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2 :=
   by
   have h := (sin_two_mul θ).symm
-  rw [mul_assoc] at h
+  rw [mul_assoc] at h 
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← MulZeroClass.zero_mul (1 / 2 : ℂ), mul_one_div,
     CancelDenoms.cancel_factors_eq_div h two_ne_zero, mul_comm]
   simpa only [zero_div, MulZeroClass.zero_mul, Ne.def, not_false_iff, field_simps] using
@@ -122,7 +122,7 @@ theorem tan_add {x y : ℂ}
       div_self (cos_ne_zero_iff.mpr h2)]
   · obtain ⟨t, hx, hy, hxy⟩ := tan_int_mul_pi_div_two, t (2 * k + 1), t (2 * l + 1),
       t (2 * k + 1 + (2 * l + 1))
-    simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy
+    simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy 
     rw [hx, hy, add_zero, zero_div, mul_div_assoc, mul_div_assoc, ←
       add_mul (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ← mul_div_assoc, hxy]
 #align complex.tan_add Complex.tan_add
@@ -137,7 +137,7 @@ theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) :=
   by
   by_cases h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
   · rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
-  · rw [not_forall_not] at h
+  · rw [not_forall_not] at h 
     rw [two_mul, two_mul, sq, tan_add (Or.inr ⟨h, h⟩)]
 #align complex.tan_two_mul Complex.tan_two_mul
 
@@ -183,7 +183,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
 theorem cos_surjective : Function.Surjective cos :=
   by
   intro x
-  obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 :=
+  obtain ⟨w, w₀, hw⟩ : ∃ (w : _) (_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 :=
     by
     rcases exists_quadratic_eq_zero one_ne_zero
         ⟨_, (cpow_nat_inv_pow _ two_ne_zero).symm.trans <| pow_two _⟩ with

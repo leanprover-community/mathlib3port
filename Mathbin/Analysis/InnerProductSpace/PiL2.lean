@@ -440,7 +440,7 @@ protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E)
     (∑ i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ :=
   by
   have := congr_arg (innerSL 𝕜 x) (b.sum_repr y)
-  rw [map_sum] at this
+  rw [map_sum] at this 
   convert this
   ext i
   rw [SMulHomClass.map_smul, b.repr_apply_apply, mul_comm]
@@ -575,7 +575,7 @@ protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (
       haveI : FiniteDimensional 𝕜 (span 𝕜 (range v)) :=
         FiniteDimensional.span_of_finite 𝕜 (finite_range v)
       haveI : CompleteSpace (span 𝕜 (range v)) := FiniteDimensional.complete 𝕜 _
-      rwa [orthogonal_eq_bot_iff] at hsp)
+      rwa [orthogonal_eq_bot_iff] at hsp )
 #align orthonormal_basis.mk_of_orthogonal_eq_bot OrthonormalBasis.mkOfOrthogonalEqBot
 
 @[simp]
@@ -702,7 +702,7 @@ theorem OrthonormalBasis.det_to_matrix_orthonormalBasis : ‖a.toBasis.det b‖ 
   have : (norm_sq (a.to_basis.det b) : 𝕜) = 1 := by
     simpa [IsROrC.mul_conj] using
       (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
-  norm_cast  at this
+  norm_cast  at this 
   rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]
 #align orthonormal_basis.det_to_matrix_orthonormal_basis OrthonormalBasis.det_to_matrix_orthonormalBasis
 
@@ -746,7 +746,7 @@ orthonormal basis for `M`. -/
 noncomputable def DirectSum.IsInternal.collectedOrthonormalBasis
     (hV : OrthogonalFamily 𝕜 (fun i => A i) fun i => (A i).subtypeₗᵢ) [DecidableEq ι]
     (hV_sum : DirectSum.IsInternal fun i => A i) {α : ι → Type _} [∀ i, Fintype (α i)]
-    (v_family : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) : OrthonormalBasis (Σi, α i) 𝕜 E :=
+    (v_family : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) : OrthonormalBasis (Σ i, α i) 𝕜 E :=
   (hV_sum.collectedBasis fun i => (v_family i).toBasis).toOrthonormalBasis <| by
     simpa using
       hV.orthonormal_sigma_orthonormal (show ∀ i, Orthonormal 𝕜 (v_family i).toBasis by simp)
@@ -756,7 +756,7 @@ noncomputable def DirectSum.IsInternal.collectedOrthonormalBasis
 theorem DirectSum.IsInternal.collectedOrthonormalBasis_mem [DecidableEq ι]
     (h : DirectSum.IsInternal A) {α : ι → Type _} [∀ i, Fintype (α i)]
     (hV : OrthogonalFamily 𝕜 (fun i => A i) fun i => (A i).subtypeₗᵢ)
-    (v : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) (a : Σi, α i) :
+    (v : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) (a : Σ i, α i) :
     h.collectedOrthonormalBasis hV v a ∈ A a.1 := by
   simp [DirectSum.IsInternal.collectedOrthonormalBasis]
 #align direct_sum.is_internal.collected_orthonormal_basis_mem DirectSum.IsInternal.collectedOrthonormalBasis_mem
@@ -766,10 +766,10 @@ variable [FiniteDimensional 𝕜 E]
 /-- In a finite-dimensional `inner_product_space`, any orthonormal subset can be extended to an
 orthonormal basis. -/
 theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 (coe : v → E)) :
-    ∃ (u : Finset E)(b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe :=
+    ∃ (u : Finset E) (b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe :=
   by
   obtain ⟨u₀, hu₀s, hu₀, hu₀_max⟩ := exists_maximal_orthonormal hv
-  rw [maximal_orthonormal_iff_orthogonalComplement_eq_bot hu₀] at hu₀_max
+  rw [maximal_orthonormal_iff_orthogonalComplement_eq_bot hu₀] at hu₀_max 
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
   let u : Finset E := hu₀_finite.to_finset
   let fu : ↥u ≃ ↥u₀ := Equiv.cast (congr_arg coeSort hu₀_finite.coe_to_finset)
@@ -807,7 +807,7 @@ variable (𝕜 E)
 
 /-- A finite-dimensional inner product space admits an orthonormal basis. -/
 theorem exists_orthonormalBasis :
-    ∃ (w : Finset E)(b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
+    ∃ (w : Finset E) (b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
   let ⟨w, hw, hw', hw''⟩ := (orthonormal_empty 𝕜 E).exists_orthonormalBasis_extension
   ⟨w, hw, hw''⟩
 #align exists_orthonormal_basis exists_orthonormalBasis
@@ -830,7 +830,7 @@ theorem orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
   have : b default = 1 ∨ b default = -1 :=
     by
     have : ‖b default‖ = 1 := b.orthonormal.1 _
-    rwa [Real.norm_eq_abs, abs_eq (zero_le_one : (0 : ℝ) ≤ 1)] at this
+    rwa [Real.norm_eq_abs, abs_eq (zero_le_one : (0 : ℝ) ≤ 1)] at this 
   rw [eq_const_of_unique b]
   refine' this.imp _ _ <;> simp
 #align orthonormal_basis_one_dim orthonormalBasis_one_dim
@@ -848,7 +848,7 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) [DecidableEq ι] {V : ι → Submod
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
   (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
-  (Σi, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
+  (Σ i, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
   let b := hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b.toBasis).symm.trans hn
 #align direct_sum.is_internal.sigma_orthonormal_basis_index_equiv DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv

@@ -47,7 +47,10 @@ namespace HasSum
 variable {a : ℕ → E}
 
 theorem hasSum_at_zero (a : ℕ → E) : HasSum (fun n => (0 : 𝕜) ^ n • a n) (a 0) := by
-  convert hasSum_single 0 fun b h => _ <;> first |simp [Nat.pos_of_ne_zero h]|simp
+  convert hasSum_single 0 fun b h => _ <;>
+    first
+    | simp [Nat.pos_of_ne_zero h]
+    | simp
 #align has_sum.has_sum_at_zero HasSum.hasSum_at_zero
 
 theorem exists_hasSum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m) s)
@@ -58,7 +61,7 @@ theorem exists_hasSum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m
   by_cases h : z = 0
   · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using has_sum_at_zero a)
     exact ⟨a n, by simp [h, hn, this], by simpa [h] using has_sum_at_zero fun m => a (m + n)⟩
-  · refine' ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul] , _⟩
+  · refine' ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul], _⟩
     have h1 : (∑ i in Finset.range n, z ^ i • a i) = 0 :=
       Finset.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
     have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by
@@ -77,7 +80,7 @@ theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) :
   by
   have hpd : deriv f z₀ = p.coeff 1 := hp.deriv
   have hp0 : p.coeff 0 = f z₀ := hp.coeff_zero 1
-  simp only [hasFpowerSeriesAt_iff, apply_eq_pow_smul_coeff, coeff_fslope] at hp⊢
+  simp only [hasFpowerSeriesAt_iff, apply_eq_pow_smul_coeff, coeff_fslope] at hp ⊢
   refine' hp.mono fun x hx => _
   by_cases h : x = 0
   · convert hasSum_single 0 _ <;> intros <;> simp [*]
@@ -111,7 +114,7 @@ theorem eq_pow_order_mul_iterate_dslope (hp : HasFpowerSeriesAt f p z₀) :
     simpa [coeff_eq_zero] using apply_eq_zero_of_lt_order hk
   obtain ⟨s, hs1, hs2⟩ := HasSum.exists_hasSum_smul_of_apply_eq_zero hx2 this
   convert hs1.symm
-  simp only [coeff_iterate_fslope] at hx1
+  simp only [coeff_iterate_fslope] at hx1 
   exact hx1.unique hs2
 #align has_fpower_series_at.eq_pow_order_mul_iterate_dslope HasFpowerSeriesAt.eq_pow_order_mul_iterate_dslope
 
@@ -125,7 +128,7 @@ theorem locally_ne_zero (hp : HasFpowerSeriesAt f p z₀) (h : p ≠ 0) : ∀ᶠ
 #align has_fpower_series_at.locally_ne_zero HasFpowerSeriesAt.locally_ne_zero
 
 theorem locally_zero_iff (hp : HasFpowerSeriesAt f p z₀) : (∀ᶠ z in 𝓝 z₀, f z = 0) ↔ p = 0 :=
-  ⟨fun hf => hp.eq_zero_of_eventually hf, fun h => eventually_eq_zero (by rwa [h] at hp)⟩
+  ⟨fun hf => hp.eq_zero_of_eventually hf, fun h => eventually_eq_zero (by rwa [h] at hp )⟩
 #align has_fpower_series_at.locally_zero_iff HasFpowerSeriesAt.locally_zero_iff
 
 end HasFpowerSeriesAt
@@ -140,7 +143,7 @@ theorem eventually_eq_zero_or_eventually_ne_zero (hf : AnalyticAt 𝕜 f z₀) :
   by
   rcases hf with ⟨p, hp⟩
   by_cases h : p = 0
-  · exact Or.inl (HasFpowerSeriesAt.eventually_eq_zero (by rwa [h] at hp))
+  · exact Or.inl (HasFpowerSeriesAt.eventually_eq_zero (by rwa [h] at hp ))
   · exact Or.inr (hp.locally_ne_zero h)
 #align analytic_at.eventually_eq_zero_or_eventually_ne_zero AnalyticAt.eventually_eq_zero_or_eventually_ne_zero
 

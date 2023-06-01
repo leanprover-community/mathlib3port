@@ -400,7 +400,10 @@ theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSp
   by
   have : ∀ b, CompleteSpace ↥(cond b K Kᗮ) := by
     intro b
-    cases b <;> first |exact orthogonal.complete_space K|assumption
+    cases b <;>
+      first
+      | exact orthogonal.complete_space K
+      | assumption
   refine' IsHilbertSum.mkInternal _ K.orthogonal_family_self _
   refine' le_trans _ (Submodule.le_topologicalClosure _)
   rw [iSup_bool_eq, cond, cond]
@@ -476,7 +479,7 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
   apply b.repr.injective
   letI : NormedSpace 𝕜 ↥(lp (fun i : ι => 𝕜) 2) := by infer_instance
   have : lp.single 2 i (f i * 1) = f i • lp.single 2 i 1 := lp.single_smul 2 i (1 : 𝕜) (f i)
-  rw [mul_one] at this
+  rw [mul_one] at this 
   rw [LinearIsometryEquiv.map_smul, b.repr_self, ← this,
     LinearIsometryEquiv.coe_toContinuousLinearEquiv]
   exact (b.repr.apply_symm_apply (lp.single 2 i (f i))).symm
@@ -612,7 +615,7 @@ theorem OrthonormalBasis.coe_toHilbertBasis [Fintype ι] (b : OrthonormalBasis �
 
 /-- A Hilbert space admits a Hilbert basis extending a given orthonormal subset. -/
 theorem Orthonormal.exists_hilbertBasis_extension {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
-    ∃ (w : Set E)(b : HilbertBasis w 𝕜 E), s ⊆ w ∧ ⇑b = (coe : w → E) :=
+    ∃ (w : Set E) (b : HilbertBasis w 𝕜 E), s ⊆ w ∧ ⇑b = (coe : w → E) :=
   let ⟨w, hws, hw_ortho, hw_max⟩ := exists_maximal_orthonormal hs
   ⟨w,
     HilbertBasis.mkOfOrthogonalEqBot hw_ortho
@@ -623,7 +626,7 @@ theorem Orthonormal.exists_hilbertBasis_extension {s : Set E} (hs : Orthonormal 
 variable (𝕜 E)
 
 /-- A Hilbert space admits a Hilbert basis. -/
-theorem exists_hilbertBasis : ∃ (w : Set E)(b : HilbertBasis w 𝕜 E), ⇑b = (coe : w → E) :=
+theorem exists_hilbertBasis : ∃ (w : Set E) (b : HilbertBasis w 𝕜 E), ⇑b = (coe : w → E) :=
   let ⟨w, hw, hw', hw''⟩ := (orthonormal_empty 𝕜 E).exists_hilbertBasis_extension
   ⟨w, hw, hw''⟩
 #align exists_hilbert_basis exists_hilbertBasis

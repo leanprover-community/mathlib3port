@@ -33,7 +33,7 @@ set_option default_priority 100
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R]
-  [ChartedSpace H R] extends HasSmoothAdd I R : Prop where
+    [ChartedSpace H R] extends HasSmoothAdd I R : Prop where
   smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
 #align smooth_ring SmoothRing
 

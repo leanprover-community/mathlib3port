@@ -285,7 +285,7 @@ section Basis
 
 Note that while this is stated for `dfinsupp` not `direct_sum`, the types are defeq. -/
 noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) :
-    Basis (Σi, η i) R (Π₀ i, M i) :=
+    Basis (Σ i, η i) R (Π₀ i, M i) :=
   Basis.ofRepr
     ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDfinsupp R).symm)
 #align dfinsupp.basis Dfinsupp.basis
@@ -384,14 +384,14 @@ theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
         rw [mem_support_iff, not_ne_iff]
         ext; rw [coe_zero, ← mem_bot R]; convert coe_mem (μ x)
         symm; exact iSup_neg hx
-      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx; rw [hx]; rfl
+      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
     · refine' ⟨Dfinsupp.mk s _, _⟩
       · rintro ⟨i, hi⟩; refine' ⟨μ i, _⟩
         rw [iSup_pos]; · exact coe_mem _; · exact hi
       simp only [Dfinsupp.sum]
       rw [Finset.sum_subset support_mk_subset, ← hμ]
       exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
-      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx; rw [hx]; rfl
+      · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
 #align submodule.mem_supr_finset_iff_exists_sum Submodule.mem_iSup_finset_iff_exists_sum
 
 end Submodule
@@ -482,12 +482,12 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
     Function.Injective (lsum ℕ fun i => (p i).Subtype) :=
   by
   -- simplify everything down to binders over equalities in `N`
-  rw [independent_iff_forall_dfinsupp] at h
+  rw [independent_iff_forall_dfinsupp] at h 
   suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥
     by
     -- Lean can't find this without our help
     letI : AddCommGroup (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
-    rw [LinearMap.ker_eq_bot] at this; exact this
+    rw [LinearMap.ker_eq_bot] at this ; exact this
   rw [LinearMap.ker_eq_bot']
   intro m hm
   ext i : 1
@@ -495,7 +495,7 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
   rw [Dfinsupp.zero_apply, ← neg_eq_zero]
   refine' h i (-m i) m _
   rwa [← erase_add_single i m, LinearMap.map_add, lsum_single, Submodule.subtype_apply,
-    add_eq_zero_iff_eq_neg, ← Submodule.coe_neg] at hm
+    add_eq_zero_iff_eq_neg, ← Submodule.coe_neg] at hm 
 #align complete_lattice.independent.dfinsupp_lsum_injective CompleteLattice.Independent.dfinsupp_lsum_injective
 
 /-- The canonical map out of a direct sum of a family of additive subgroups is injective when the
@@ -503,7 +503,7 @@ additive subgroups are `complete_lattice.independent`. -/
 theorem Independent.dfinsupp_sumAddHom_injective {p : ι → AddSubgroup N} (h : Independent p) :
     Function.Injective (sumAddHom fun i => (p i).Subtype) :=
   by
-  rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)] at h
+  rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)] at h 
   exact h.dfinsupp_lsum_injective
 #align complete_lattice.independent.dfinsupp_sum_add_hom_injective CompleteLattice.Independent.dfinsupp_sumAddHom_injective
 
@@ -541,7 +541,7 @@ theorem Independent.linearIndependent [NoZeroSMulDivisors R N] (p : ι → Submo
         l.to_dfinsupp
     have ha : a = 0 := by
       apply hp.dfinsupp_lsum_injective
-      rwa [← lsum_comp_map_range_to_span_singleton _ hv] at hl
+      rwa [← lsum_comp_map_range_to_span_singleton _ hv] at hl 
     ext i
     apply smul_left_injective R (hv' i)
     have : l i • v i = a i := rfl

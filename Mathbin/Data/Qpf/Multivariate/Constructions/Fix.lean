@@ -191,8 +191,8 @@ theorem wEquiv_map {α β : TypeVec n} (g : α ⟹ β) (x y : q.p.W α) :
   by
   intro h; induction h
   case ind a f' f₀ f₁ h ih => rw [q.P.W_map_W_mk, q.P.W_map_W_mk]; apply Wequiv.ind; apply ih
-  case
-    abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁
+    h =>
     rw [q.P.W_map_W_mk, q.P.W_map_W_mk]; apply Wequiv.abs
     show
       abs (q.P.obj_append1 a₀ (g ⊚ f'₀) fun x => q.P.W_map g (f₀ x)) =
@@ -407,8 +407,8 @@ def Fix.drec {β : Fix F α → Type u}
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm; dsimp [y]; apply fix.ind_rec _ id _ x; intro x' ih
-    rw [fix.rec_eq]; dsimp; simp [append_fun_id_id] at ih
-    congr ;
+    rw [fix.rec_eq]; dsimp; simp [append_fun_id_id] at ih 
+    congr;
     conv =>
       rhs
       rw [← ih];

@@ -272,7 +272,7 @@ to `R` and then extended back up to `S`, the resulting extension equals `x`.
 theorem extend_restrict {x : FamilyOfElements P (generate R)} (t : x.Compatible) :
     (x.restrict (le_generate R)).sieveExtend = x :=
   by
-  rw [compatible_iff_sieve_compatible] at t
+  rw [compatible_iff_sieve_compatible] at t 
   ext (_ _ h); apply (t _ _ _).symm.trans; congr
   exact h.some_spec.some_spec.some_spec.2
 #align category_theory.presieve.extend_restrict CategoryTheory.Presieve.extend_restrict
@@ -285,7 +285,7 @@ equal when restricted to `R`.
 -/
 theorem restrict_inj {x₁ x₂ : FamilyOfElements P (generate R)} (t₁ : x₁.Compatible)
     (t₂ : x₂.Compatible) : x₁.restrict (le_generate R) = x₂.restrict (le_generate R) → x₁ = x₂ :=
-  fun h => by rw [← extend_restrict t₁, ← extend_restrict t₂]; congr ; exact h
+  fun h => by rw [← extend_restrict t₁, ← extend_restrict t₂]; congr; exact h
 #align category_theory.presieve.restrict_inj CategoryTheory.Presieve.restrict_inj
 -/
 
@@ -359,7 +359,7 @@ def FamilyOfElements.pullback (f : Y ⟶ X) (x : FamilyOfElements P S) :
 theorem FamilyOfElements.Compatible.pullback (f : Y ⟶ X) {x : FamilyOfElements P S}
     (h : x.Compatible) : (x.pullback f).Compatible :=
   by
-  simp only [compatible_iff_sieve_compatible] at h⊢
+  simp only [compatible_iff_sieve_compatible] at h ⊢
   intro W Z f₁ f₂ hf
   unfold family_of_elements.pullback
   rw [← h (f₁ ≫ f) f₂ hf]
@@ -478,7 +478,7 @@ theorem isSeparatedFor_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : Pr
   fun x t₁ t₂ h₁ h₂ => by
   have q₁ := h₁ (𝟙 X) (by simp)
   have q₂ := h₂ (𝟙 X) (by simp)
-  simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂
+  simp only [op_id, functor_to_types.map_id_apply] at q₁ q₂ 
   rw [q₁, q₂]
 #align category_theory.presieve.is_separated_for_top CategoryTheory.Presieve.isSeparatedFor_top
 
@@ -560,7 +560,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
   · intro h
     ext (Y⟨f, hf⟩)
     have : _ = x.app Y _ := h f hf
-    rw [yoneda_equiv_naturality] at this
+    rw [yoneda_equiv_naturality] at this 
     rw [← this]
     dsimp
     simp
@@ -885,7 +885,7 @@ The middle object of the fork diagram given in Equation (3) of [MM92], as well a
 of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def FirstObj : Type max v₁ u₁ :=
-  ∏ fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)
+  ∏ fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)
 #align category_theory.equalizer.first_obj CategoryTheory.Equalizer.FirstObj
 -/
 
@@ -894,7 +894,7 @@ def FirstObj : Type max v₁ u₁ :=
 @[simps]
 def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P
     where
-  Hom t Y f hf := Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
+  Hom t Y f hf := Pi.π (fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
     ext (⟨Y, f, hf⟩p)
@@ -929,7 +929,7 @@ namespace Sieve
 to check a family is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun f : Σ(Y Z : _)(g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
+  ∏ fun f : Σ (Y Z : _) (g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
 #align category_theory.equalizer.sieve.second_obj CategoryTheory.Equalizer.Sieve.SecondObj
 -/
 
@@ -937,7 +937,7 @@ def SecondObj : Type max v₁ u₁ :=
 /-- The map `p` of Equations (3,4) [MM92]. -/
 def firstMap : FirstObj P S ⟶ SecondObj P S :=
   Pi.lift fun fg =>
-    Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : ΣY, { f : Y ⟶ X // S f })
+    Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : Σ Y, { f : Y ⟶ X // S f })
 #align category_theory.equalizer.sieve.first_map CategoryTheory.Equalizer.Sieve.firstMap
 -/
 
@@ -972,7 +972,7 @@ theorem compatible_iff (x : FirstObj P S) :
     ext ⟨Y, Z, g, f, hf⟩
     simpa [first_map, second_map] using t _ g hf
   · intro t Y Z f g hf
-    rw [types.limit_ext_iff'] at t
+    rw [types.limit_ext_iff'] at t 
     simpa [first_map, second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
 #align category_theory.equalizer.sieve.compatible_iff CategoryTheory.Equalizer.Sieve.compatible_iff
 -/
@@ -1017,7 +1017,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun fg : (ΣY, { f : Y ⟶ X // R f }) × ΣZ, { g : Z ⟶ X // R g } =>
+  ∏ fun fg : (Σ Y, { f : Y ⟶ X // R f }) × Σ Z, { g : Z ⟶ X // R g } =>
     P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 #align category_theory.equalizer.presieve.second_obj CategoryTheory.Equalizer.Presieve.SecondObj
 -/
@@ -1064,7 +1064,7 @@ theorem compatible_iff (x : FirstObj P R) :
     ext ⟨⟨Y, f, hf⟩, Z, g, hg⟩
     simpa [first_map, second_map] using t hf hg
   · intro t Y Z f g hf hg
-    rw [types.limit_ext_iff'] at t
+    rw [types.limit_ext_iff'] at t 
     simpa [first_map, second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
 #align category_theory.equalizer.presieve.compatible_iff CategoryTheory.Equalizer.Presieve.compatible_iff
 -/

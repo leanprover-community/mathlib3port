@@ -206,7 +206,7 @@ variable [TopologicalSpace α] [NonUnitalNonAssocSemiring α] {f g : ℕ → α}
 `(n, k, l) : Σ (n : ℕ), nat.antidiagonal n ↦ f k * g l` is summable. -/
 theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal :
     (Summable fun x : ℕ × ℕ => f x.1 * g x.2) ↔
-      Summable fun x : Σn : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
+      Summable fun x : Σ n : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
   Nat.sigmaAntidiagonalEquivProd.summable_iff.symm
 #align summable_mul_prod_iff_summable_mul_sigma_antidiagonal summable_mul_prod_iff_summable_mul_sigma_antidiagonal
 
@@ -216,7 +216,7 @@ theorem summable_sum_mul_antidiagonal_of_summable_mul
     (h : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
     Summable fun n => ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 :=
   by
-  rw [summable_mul_prod_iff_summable_mul_sigma_antidiagonal] at h
+  rw [summable_mul_prod_iff_summable_mul_sigma_antidiagonal] at h 
   conv =>
     congr
     ext

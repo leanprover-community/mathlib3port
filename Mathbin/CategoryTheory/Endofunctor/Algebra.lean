@@ -273,7 +273,7 @@ theorem left_inv : strInv h ≫ A.str = 𝟙 _ :=
 theorem right_inv : A.str ≫ strInv h = 𝟙 _ :=
   by
   rw [str_inv, ← (h.to ⟨F.obj A.1, F.map A.str⟩).h, ← F.map_id, ← F.map_comp]
-  congr ; exact left_inv h
+  congr; exact left_inv h
 #align category_theory.endofunctor.algebra.initial.right_inv CategoryTheory.Endofunctor.Algebra.Initial.right_inv
 
 /-- The structure map of the inital algebra is an isomorphism,

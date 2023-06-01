@@ -93,7 +93,7 @@ theorem Directed.strictConvex_iUnion {ι : Sort _} {s : ι → Set E} (hdir : Di
     (hs : ∀ ⦃i : ι⦄, StrictConvex 𝕜 (s i)) : StrictConvex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy hxy a b ha hb hab
-  rw [mem_Union] at hx hy
+  rw [mem_Union] at hx hy 
   obtain ⟨i, hx⟩ := hx
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
@@ -182,7 +182,7 @@ protected theorem Set.OrdConnected.strictConvex {s : Set β} (hs : OrdConnected 
     StrictConvex 𝕜 s :=
   by
   refine' strictConvex_iff_openSegment_subset.2 fun x hx y hy hxy => _
-  cases' hxy.lt_or_lt with hlt hlt <;> [skip;rw [openSegment_symm]] <;>
+  cases' hxy.lt_or_lt with hlt hlt <;> [skip; rw [openSegment_symm]] <;>
     exact
       (openSegment_subset_Ioo hlt).trans
         (is_open_Ioo.subset_interior_iff.2 <| Ioo_subset_Icc_self.trans <| hs.out ‹_› ‹_›)
@@ -245,7 +245,7 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) :
   intro x hx y hy hxy a b ha hb hab
   refine' preimage_interior_subset_interior_preimage (continuous_add_left _) _
   have h := hs hx hy ((add_right_injective _).Ne hxy) ha hb hab
-  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h
+  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h 
 #align strict_convex.preimage_add_right StrictConvex.preimage_add_right
 
 /-- The translation of a strictly convex set is also strictly convex. -/

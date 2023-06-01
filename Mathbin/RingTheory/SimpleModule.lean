@@ -127,7 +127,7 @@ end IsSemisimpleModule
 
 theorem is_semisimple_iff_top_eq_sSup_simples :
     sSup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
-  ⟨is_semisimple_of_sSup_simples_eq_top, by intro ; exact IsSemisimpleModule.sSup_simples_eq_top⟩
+  ⟨is_semisimple_of_sSup_simples_eq_top, by intro; exact IsSemisimpleModule.sSup_simples_eq_top⟩
 #align is_semisimple_iff_top_eq_Sup_simples is_semisimple_iff_top_eq_sSup_simples
 
 namespace LinearMap
@@ -197,7 +197,7 @@ noncomputable instance Module.End.divisionRing [DecidableEq (Module.End R M)] [I
         have h := exists_pair_ne M
         contrapose! h
         intro x y
-        simp_rw [ext_iff, one_apply, zero_apply] at h
+        simp_rw [ext_iff, one_apply, zero_apply] at h 
         rw [← h x, h y]⟩
     mul_inv_cancel := by
       intro a a0

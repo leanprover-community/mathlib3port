@@ -86,7 +86,7 @@ variable [FloorRing K]
 protected theorem compExactValue_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) :
     ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a := by
-  field_simp [fract_a_ne_zero] ; rw [Int.fract]; ring
+  field_simp [fract_a_ne_zero]; rw [Int.fract]; ring
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some_aux_comp
 
 open
@@ -156,7 +156,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
       cases this
       have s_nth_eq : g.s.nth n = some ⟨1, ⌊ifp_n.fr⁻¹⌋⟩ :=
         nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero nth_stream_eq nth_fract_ne_zero
-      rw [← ifp_n_fract_inv_eq_floor] at s_nth_eq
+      rw [← ifp_n_fract_inv_eq_floor] at s_nth_eq 
       suffices v = comp_exact_value ppconts pconts ifp_n.fr by
         simpa [conts, continuants_aux, s_nth_eq, comp_exact_value, nth_fract_ne_zero] using this
       exact IH nth_stream_eq
@@ -197,7 +197,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
         comp_exact_value_correctness_of_stream_eq_some_aux_comp pA ppA ifp_succ_n_fr_ne_zero
       have tmp_calc' :=
         comp_exact_value_correctness_of_stream_eq_some_aux_comp pB ppB ifp_succ_n_fr_ne_zero
-      rw [inv_eq_one_div] at tmp_calc tmp_calc'
+      rw [inv_eq_one_div] at tmp_calc tmp_calc' 
       have : Int.fract (1 / ifp_n.fr) ≠ 0 := by simpa using ifp_succ_n_fr_ne_zero
       -- now unfold the recurrence one step and simplify both sides to arrive at the conclusion
       field_simp [conts, comp_exact_value, continuants_aux_recurrence s_nth_eq ppconts_eq pconts_eq,

@@ -172,7 +172,8 @@ of slope `m : ℤ`.
 -/
 @[nolint unused_arguments has_nonempty_instance]
 def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
-  K(p, k)deriving AddCommGroup,
+  K(p, k)
+deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
 #align witt_vector.standard_one_dim_isocrystal WittVector.StandardOneDimIsocrystal
 
@@ -205,7 +206,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   have : Φ(p, k) x ≠ 0 := by simpa only [map_zero] using Φ(p, k).Injective.Ne hx
   obtain ⟨a, ha, hax⟩ : ∃ a : K(p, k), a ≠ 0 ∧ Φ(p, k) x = a • x :=
     by
-    rw [finrank_eq_one_iff_of_nonzero' x hx] at h_dim
+    rw [finrank_eq_one_iff_of_nonzero' x hx] at h_dim 
     obtain ⟨a, ha⟩ := h_dim (Φ(p, k) x)
     refine' ⟨a, _, ha.symm⟩
     intro ha'

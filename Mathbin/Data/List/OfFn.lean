@@ -100,7 +100,7 @@ theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
   by
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l
     from this
-  intros ; induction' m with m IH generalizing l; · rfl
+  intros; induction' m with m IH generalizing l; · rfl
   simp only [DArray.revIterateAux, of_fn_aux, IH]
 #align list.array_eq_of_fn List.array'_eq_ofFn
 
@@ -126,7 +126,7 @@ theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => 
   suffices
     ∀ {m h l}, ofFnAux f (succ m) (succ_le_succ h) l = f 0 :: ofFnAux (fun i => f i.succ) m h l from
     this
-  intros ; induction' m with m IH generalizing l; · rfl
+  intros; induction' m with m IH generalizing l; · rfl
   rw [of_fn_aux, IH]; rfl
 #align list.of_fn_succ List.ofFn_succ
 
@@ -222,7 +222,7 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
 #print List.ofFn_nthLe /-
 theorem ofFn_nthLe : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
   | [] => rfl
-  | a :: l => by rw [of_fn_succ]; congr ; simp only [Fin.val_succ]; exact of_fn_nth_le l
+  | a :: l => by rw [of_fn_succ]; congr; simp only [Fin.val_succ]; exact of_fn_nth_le l
 #align list.of_fn_nth_le List.ofFn_nthLe
 -/
 
@@ -273,7 +273,7 @@ theorem pairwise_ofFn {R : α → α → Prop} {n} {f : Fin n → α} :
 #print List.equivSigmaTuple /-
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
 @[simps]
-def equivSigmaTuple : List α ≃ Σn, Fin n → α
+def equivSigmaTuple : List α ≃ Σ n, Fin n → α
     where
   toFun l := ⟨l.length, fun i => l.nthLe (↑i) i.2⟩
   invFun f := List.ofFn f.2
@@ -301,7 +301,7 @@ theorem ofFnRec_ofFn {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C
 
 #print List.exists_iff_exists_tuple /-
 theorem exists_iff_exists_tuple {P : List α → Prop} :
-    (∃ l : List α, P l) ↔ ∃ (n : _)(f : Fin n → α), P (List.ofFn f) :=
+    (∃ l : List α, P l) ↔ ∃ (n : _) (f : Fin n → α), P (List.ofFn f) :=
   equivSigmaTuple.symm.Surjective.exists.trans Sigma.exists
 #align list.exists_iff_exists_tuple List.exists_iff_exists_tuple
 -/
@@ -316,7 +316,7 @@ theorem forall_iff_forall_tuple {P : List α → Prop} :
 #print List.ofFn_inj' /-
 /-- `fin.sigma_eq_iff_eq_comp_cast` may be useful to work with the RHS of this expression. -/
 theorem ofFn_inj' {m n : ℕ} {f : Fin m → α} {g : Fin n → α} :
-    ofFn f = ofFn g ↔ (⟨m, f⟩ : Σn, Fin n → α) = ⟨n, g⟩ :=
+    ofFn f = ofFn g ↔ (⟨m, f⟩ : Σ n, Fin n → α) = ⟨n, g⟩ :=
   Iff.symm <| equivSigmaTuple.symm.Injective.eq_iff.symm
 #align list.of_fn_inj' List.ofFn_inj'
 -/

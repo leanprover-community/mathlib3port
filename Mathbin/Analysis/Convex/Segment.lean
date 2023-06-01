@@ -55,7 +55,7 @@ variable (𝕜) [SMul 𝕜 E] {s : Set E} {x y : E}
 #print segment /-
 /-- Segments in a vector space. -/
 def segment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 ≤ a)(hb : 0 ≤ b)(hab : a + b = 1), a • x + b • y = z }
+  { z : E | ∃ (a b : 𝕜) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1), a • x + b • y = z }
 #align segment segment
 -/
 
@@ -63,7 +63,7 @@ def segment (x y : E) : Set E :=
 /-- Open segment in a vector space. Note that `open_segment 𝕜 x x = {x}` instead of being `∅` when
 the base semiring has some element between `0` and `1`. -/
 def openSegment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 < a)(hb : 0 < b)(hab : a + b = 1), a • x + b • y = z }
+  { z : E | ∃ (a b : 𝕜) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1), a • x + b • y = z }
 #align open_segment openSegment
 -/
 
@@ -170,8 +170,9 @@ variable {𝕜}
 
 #print mem_openSegment_of_ne_left_right /-
 theorem mem_openSegment_of_ne_left_right (hx : x ≠ z) (hy : y ≠ z) (hz : z ∈ [x -[𝕜] y]) :
-    z ∈ openSegment 𝕜 x y := by
-  rw [← insert_endpoints_openSegment] at hz
+    z ∈ openSegment 𝕜 x y :=
+  by
+  rw [← insert_endpoints_openSegment] at hz 
   exact (hz.resolve_left hx.symm).resolve_left hy.symm
 #align mem_open_segment_of_ne_left_right mem_openSegment_of_ne_left_right
 -/
@@ -309,7 +310,7 @@ end OrderedRing
 theorem sameRay_of_mem_segment [StrictOrderedCommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y z : E}
     (h : x ∈ [y -[𝕜] z]) : SameRay 𝕜 (x - y) (z - x) :=
   by
-  rw [segment_eq_image'] at h
+  rw [segment_eq_image'] at h 
   rcases h with ⟨θ, ⟨hθ₀, hθ₁⟩, rfl⟩
   simpa only [add_sub_cancel', ← sub_sub, sub_smul, one_smul] using
     (SameRay.sameRay_nonneg_smul_left (z - y) hθ₀).nonneg_smul_right (sub_nonneg.2 hθ₁)
@@ -392,7 +393,7 @@ theorem mem_segment_iff_sameRay : x ∈ [y -[𝕜] z] ↔ SameRay 𝕜 (x - y) (
   by
   refine' ⟨sameRay_of_mem_segment, fun h => _⟩
   rcases h.exists_eq_smul_add with ⟨a, b, ha, hb, hab, hxy, hzx⟩
-  rw [add_comm, sub_add_sub_cancel] at hxy hzx
+  rw [add_comm, sub_add_sub_cancel] at hxy hzx 
   rw [← mem_segment_translate _ (-x), neg_add_self]
   refine' ⟨b, a, hb, ha, add_comm a b ▸ hab, _⟩
   rw [← sub_eq_neg_add, ← neg_sub, hxy, ← sub_eq_neg_add, hzx, smul_neg, smul_comm, neg_add_self]
@@ -515,8 +516,8 @@ theorem Icc_subset_segment : Icc x y ⊆ [x -[𝕜] y] :=
   obtain rfl | h := (hxz.trans hyz).eq_or_lt
   · rw [segment_same]
     exact hyz.antisymm hxz
-  rw [← sub_nonneg] at hxz hyz
-  rw [← sub_pos] at h
+  rw [← sub_nonneg] at hxz hyz 
+  rw [← sub_pos] at h 
   refine' ⟨(y - z) / (y - x), (z - x) / (y - x), div_nonneg hyz h.le, div_nonneg hxz h.le, _, _⟩
   · rw [← add_div, sub_add_sub_cancel, div_self h.ne']
   ·
@@ -577,13 +578,13 @@ theorem Convex.mem_Ioc (h : x < y) :
   refine' ⟨fun hz => _, _⟩
   · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ioc_subset_Icc_self hz)
     obtain rfl | hb' := hb.eq_or_lt
-    · rw [add_zero] at hab
-      rw [hab, one_mul, MulZeroClass.zero_mul, add_zero] at hz
+    · rw [add_zero] at hab 
+      rw [hab, one_mul, MulZeroClass.zero_mul, add_zero] at hz 
       exact (hz.1.Ne rfl).elim
     · exact ⟨a, b, ha, hb', hab, rfl⟩
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     obtain rfl | ha' := ha.eq_or_lt
-    · rw [zero_add] at hab
+    · rw [zero_add] at hab 
       rwa [hab, one_mul, MulZeroClass.zero_mul, zero_add, right_mem_Ioc]
     · exact Ioo_subset_Ioc_self ((Convex.mem_Ioo h).2 ⟨a, b, ha', hb, hab, rfl⟩)
 #align convex.mem_Ioc Convex.mem_Ioc
@@ -596,13 +597,13 @@ theorem Convex.mem_Ico (h : x < y) :
   refine' ⟨fun hz => _, _⟩
   · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ico_subset_Icc_self hz)
     obtain rfl | ha' := ha.eq_or_lt
-    · rw [zero_add] at hab
-      rw [hab, one_mul, MulZeroClass.zero_mul, zero_add] at hz
+    · rw [zero_add] at hab 
+      rw [hab, one_mul, MulZeroClass.zero_mul, zero_add] at hz 
       exact (hz.2.Ne rfl).elim
     · exact ⟨a, b, ha', hb, hab, rfl⟩
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     obtain rfl | hb' := hb.eq_or_lt
-    · rw [add_zero] at hab
+    · rw [add_zero] at hab 
       rwa [hab, one_mul, MulZeroClass.zero_mul, add_zero, left_mem_Ico]
     · exact Ioo_subset_Ico_self ((Convex.mem_Ioo h).2 ⟨a, b, ha, hb', hab, rfl⟩)
 #align convex.mem_Ico Convex.mem_Ico

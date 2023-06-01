@@ -146,7 +146,7 @@ variable (F)
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α)
     (h₀ : f ⊚ g = id) (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
   by
-  constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u;use g <$$> u]
+  constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u; use g <$$> u]
   · apply (h₁ u).mp h₂
   · apply (h₁ _).mpr _
     simp only [MvFunctor.map_map, h₀, LawfulMvFunctor.id_map, h₂]
@@ -219,7 +219,7 @@ theorem LiftP_PredLast_iff {β} (p : β → Prop) (x : F (α ::: β)) :
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · ext (i⟨x, _⟩); cases i <;> rfl
-  · intros ; rw [MvFunctor.map_map, (· ⊚ ·)]
+  · intros; rw [MvFunctor.map_map, (· ⊚ ·)]
     congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
 #align mvfunctor.liftp_last_pred_iff MvFunctor.LiftP_PredLast_iff
 
@@ -254,7 +254,7 @@ theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · ext (i⟨x, _⟩) : 2; cases i <;> rfl
-  · intros ; rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
+  · intros; rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
     congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
 #align mvfunctor.liftr_last_rel_iff MvFunctor.LiftR_RelLast_iff
 

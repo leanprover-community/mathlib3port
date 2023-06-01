@@ -157,7 +157,7 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk').card = s.c
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotient.eq'.1 h
   · rfl
-  · simp only [mem_coe, mem_diag] at hx
+  · simp only [mem_coe, mem_diag] at hx 
     rw [hx.2]
 #align sym2.card_image_diag Sym2.card_image_diag
 -/
@@ -171,7 +171,7 @@ theorem two_mul_card_image_offDiag (s : Finset α) :
         ∀ x ∈ s.off_diag, Quotient.mk' x ∈ s.off_diag.image Quotient.mk'),
     sum_const_nat (Quotient.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
-  simp_rw [mem_image, exists_prop, mem_off_diag, Quotient.eq'] at hxy
+  simp_rw [mem_image, exists_prop, mem_off_diag, Quotient.eq'] at hxy 
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
@@ -233,7 +233,7 @@ theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) /
     mul_comm]
   rw [disjoint_left]
   rintro m ha hb
-  rw [mem_image] at ha hb
+  rw [mem_image] at ha hb 
   obtain ⟨⟨a, ha, rfl⟩, ⟨b, hb, hab⟩⟩ := ha, hb
   refine' not_is_diag_mk_of_mem_off_diag hb _
   rw [hab]

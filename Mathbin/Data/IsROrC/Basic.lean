@@ -60,7 +60,7 @@ open scoped ComplexConjugate
 This typeclass captures properties shared by ℝ and ℂ, with an API that closely matches that of ℂ.
 -/
 class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebra ℝ K,
-  CompleteSpace K where
+    CompleteSpace K where
   re : K →+ ℝ
   im : K →+ ℝ
   i : K

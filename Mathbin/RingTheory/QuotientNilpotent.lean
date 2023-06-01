@@ -45,11 +45,11 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
   by_cases hI' : I = ⊥
   · subst hI'; apply h₁; rw [← Ideal.zero_eq_bot, zero_pow]; exact zero_lt_two
   cases n
-  · rw [pow_zero, Ideal.one_eq_top] at hI
+  · rw [pow_zero, Ideal.one_eq_top] at hI 
     haveI := subsingleton_of_bot_eq_top hI.symm
     exact (hI' (Subsingleton.elim _ _)).elim
   cases n
-  · rw [pow_one] at hI
+  · rw [pow_one] at hI 
     exact (hI' hI).elim
   apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
   · apply H n.succ _ (I ^ 2)
@@ -78,7 +78,7 @@ theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal 
     obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
     have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1 := by
       rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
-    rw [Ideal.Quotient.eq] at this
+    rw [Ideal.Quotient.eq] at this 
     have : (x * y - 1) ^ 2 = 0 := by rw [← Ideal.mem_bot, ← e]; exact Ideal.pow_mem_pow this _
     have : x * (y * (2 - x * y)) = 1 := by rw [eq_comm, ← sub_eq_zero, ← this]; ring
     exact isUnit_of_mul_eq_one _ _ this

@@ -74,14 +74,14 @@ theorem isInternal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsio
   have hM' := Module.isTorsionBySet_annihilator_top R M
   have hI := Submodule.annihilator_top_inter_nonZeroDivisors hM
   refine' is_internal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
-  rw [← Set.nonempty_iff_ne_empty] at hI; rw [Submodule.ne_bot_iff]
+  rw [← Set.nonempty_iff_ne_empty] at hI ; rw [Submodule.ne_bot_iff]
   obtain ⟨x, H, hx⟩ := hI; exact ⟨x, H, nonZeroDivisors.ne_zero hx⟩
 #align submodule.is_internal_prime_power_torsion Submodule.isInternal_prime_power_torsion
 
 /-- A finitely generated torsion module over a Dedekind domain is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some prime ideals `p i` and numbers `e i`.-/
 theorem exists_isInternal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
-    ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
+    ∃ (P : Finset <| Ideal R) (_ : DecidableEq P) (_ : ∀ p ∈ P, Prime p) (e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
   ⟨_, _, fun p hp => prime_of_factor p (Multiset.mem_toFinset.mp hp), _,
     isInternal_prime_power_torsion hM⟩

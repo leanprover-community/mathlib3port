@@ -48,7 +48,7 @@ theorem finRange_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map
 #print List.finRange_map_get /-
 @[simp]
 theorem finRange_map_get (l : List α) : ((finRange l.length).map fun n => l.nthLe n n.2) = l :=
-  ext_nthLe (by rw [length_map, length_fin_range]) fun n _ h => by rw [← nth_le_map_rev]; congr ;
+  ext_nthLe (by rw [length_map, length_fin_range]) fun n _ h => by rw [← nth_le_map_rev]; congr;
     · rw [nth_le_fin_range]; rfl; · rw [length_fin_range]; exact h
 #align list.map_nth_le List.finRange_map_get
 -/
@@ -58,7 +58,7 @@ theorem ofFn_eq_pmap {α n} {f : Fin n → α} :
     ofFn f = pmap (fun i hi => f ⟨i, hi⟩) (range n) fun _ => mem_range.1 := by
   rw [pmap_eq_map_attach] <;>
     exact
-      ext_le (by simp) fun i hi1 hi2 => by simp at hi1;
+      ext_le (by simp) fun i hi1 hi2 => by simp at hi1 ;
         simp [nth_le_of_fn f ⟨i, hi1⟩, -Subtype.val_eq_coe]
 #align list.of_fn_eq_pmap List.ofFn_eq_pmap
 -/
@@ -90,7 +90,7 @@ theorem nodup_ofFn {α n} {f : Fin n → α} : Nodup (ofFn f) ↔ Function.Injec
     exact Function.injective_of_subsingleton _
   · intro h
     rw [Fin.cons_injective_iff]
-    simp_rw [of_fn_succ, Fin.cons_succ, nodup_cons, Fin.cons_zero, mem_of_fn] at h
+    simp_rw [of_fn_succ, Fin.cons_succ, nodup_cons, Fin.cons_zero, mem_of_fn] at h 
     exact h.imp_right ih
 #align list.nodup_of_fn List.nodup_ofFn
 -/

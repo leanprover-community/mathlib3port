@@ -84,7 +84,7 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
   by
   dsimp only [mem_set_of_eq]
   rw [← Submodule.map_top, ← supr_range_std_basis, Submodule.map_iSup]
-  congr ; funext i
+  congr; funext i
   rw [← LinearMap.range_comp, diagonal_comp_std_basis, ← range_smul']
 #align matrix.range_diagonal Matrix.range_diagonal
 

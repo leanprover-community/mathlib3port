@@ -139,7 +139,7 @@ theorem increasing_cantorFunction (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g :
   have h3 : c < 1 := by apply h2.trans; norm_num
   induction' n with n ih generalizing f g
   · let f_max : ℕ → Bool := fun n => Nat.rec ff (fun _ _ => tt) n
-    have hf_max : ∀ n, f n → f_max n := by intro n hn; cases n; rw [fn] at hn; contradiction;
+    have hf_max : ∀ n, f n → f_max n := by intro n hn; cases n; rw [fn] at hn ; contradiction;
       apply rfl
     let g_min : ℕ → Bool := fun n => Nat.rec tt (fun _ _ => ff) n
     have hg_min : ∀ n, g_min n → g n := by intro n hn; cases n; rw [gn]; apply rfl; contradiction

@@ -36,12 +36,12 @@ variable {C : Type u} [Category.{v} C] [HasLimits C]
 variable {J : Type v} [Category.{v} J] (F : J ⥤ SheafedSpace C)
 
 theorem isColimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.pt) :
-    ∃ (i : J)(y : F.obj i), (c.ι.app i).base y = x :=
+    ∃ (i : J) (y : F.obj i), (c.ι.app i).base y = x :=
   Concrete.isColimit_exists_rep (F ⋙ SheafedSpace.forget _)
     (isColimitOfPreserves (SheafedSpace.forget _) hc) x
 #align algebraic_geometry.SheafedSpace.is_colimit_exists_rep AlgebraicGeometry.SheafedSpace.isColimit_exists_rep
 
-theorem colimit_exists_rep (x : colimit F) : ∃ (i : J)(y : F.obj i), (colimit.ι F i).base y = x :=
+theorem colimit_exists_rep (x : colimit F) : ∃ (i : J) (y : F.obj i), (colimit.ι F i).base y = x :=
   Concrete.isColimit_exists_rep (F ⋙ SheafedSpace.forget _)
     (isColimitOfPreserves (SheafedSpace.forget _) (colimit.isColimit F)) x
 #align algebraic_geometry.SheafedSpace.colimit_exists_rep AlgebraicGeometry.SheafedSpace.colimit_exists_rep
@@ -97,7 +97,7 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
       have :=
         PresheafedSpace.stalk_map.comp (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
           (colimit.desc (F ⋙ forget_to_SheafedSpace) (forget_to_SheafedSpace.map_cocone s)) y
-      rw [← is_iso.comp_inv_eq] at this
+      rw [← is_iso.comp_inv_eq] at this 
       erw [← this,
         PresheafedSpace.stalk_map.congr_hom _ _
           (colimit.ι_desc (forget_to_SheafedSpace.map_cocone s) i : _)]
@@ -134,7 +134,7 @@ instance coequalizer_π_app_isLocalRingHom
     IsLocalRingHom ((coequalizer.π f.val g.val : _).c.app (op U)) :=
   by
   have := ι_comp_coequalizer_comparison f.1 g.1 SheafedSpace.forget_to_PresheafedSpace
-  rw [← preserves_coequalizer.iso_hom] at this
+  rw [← preserves_coequalizer.iso_hom] at this 
   erw [SheafedSpace.congr_app this.symm (op U)]
   rw [PresheafedSpace.comp_c_app, ←
     PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π]
@@ -217,7 +217,7 @@ instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
   constructor
   rintro a ha
   rcases TopCat.Presheaf.germ_exist _ _ a with ⟨U, hU, s, rfl⟩
-  erw [PresheafedSpace.stalk_map_germ_apply (coequalizer.π f.1 g.1 : _) U ⟨_, hU⟩] at ha
+  erw [PresheafedSpace.stalk_map_germ_apply (coequalizer.π f.1 g.1 : _) U ⟨_, hU⟩] at ha 
   let V := image_basic_open f g U s
   have hV : (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' V.1) = V.1 :=
     image_basic_open_image_preimage f g U s

@@ -57,11 +57,9 @@ theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} :
 
 theorem length_product (l₁ : List α) (l₂ : List β) :
     length (product l₁ l₂) = length l₁ * length l₂ := by
-  induction' l₁ with x l₁ IH <;>
-    [exact
-      (MulZeroClass.zero_mul
-          _).symm;simp only [length, product_cons, length_append, IH, right_distrib, one_mul,
-      length_map, add_comm]]
+  induction' l₁ with x l₁ IH <;> [exact (MulZeroClass.zero_mul _).symm;
+    simp only [length, product_cons, length_append, IH, right_distrib, one_mul, length_map,
+      add_comm]]
 #align list.length_product List.length_product
 
 /-! ### sigma -/
@@ -97,8 +95,8 @@ theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ 
 
 theorem length_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
     length (l₁.Sigma l₂) = (l₁.map fun a => length (l₂ a)).Sum := by
-  induction' l₁ with x l₁ IH <;>
-    [rfl;simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
+  induction' l₁ with x l₁ IH <;> [rfl;
+    simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
 #align list.length_sigma List.length_sigma
 
 end List

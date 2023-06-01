@@ -223,7 +223,7 @@ protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s 
   by
   have C0 : C 0 := by
     have h₁ := @C1 0 0
-    rwa [zero_tprod_coeff] at h₁
+    rwa [zero_tprod_coeff] at h₁ 
   refine' AddCon.induction_on z fun x => FreeAddMonoid.recOn x C0 _
   simp_rw [AddCon.coe_add]
   refine' fun f y ih => Cp _ ih
@@ -344,7 +344,7 @@ theorem tprodCoeff_eq_smul_tprod (z : R) (f : ∀ i, s i) : tprodCoeff R z f = z
 protected theorem induction_on {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
     (C1 : ∀ {r : R} {f : ∀ i, s i}, C (r • tprod R f)) (Cp : ∀ {x y}, C x → C y → C (x + y)) :
     C z := by
-  simp_rw [← tprod_coeff_eq_smul_tprod] at C1
+  simp_rw [← tprod_coeff_eq_smul_tprod] at C1 
   exact PiTensorProduct.induction_on' z @C1 @Cp
 #align pi_tensor_product.induction_on PiTensorProduct.induction_on
 
@@ -600,7 +600,7 @@ private theorem tmul_apply (a : ι → M) (b : ι₂ → M) :
 private def tmul_symm : (⨂[R] i : Sum ι ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
   -- by using tactic mode, we avoid the need for a lot of `@`s and `_`s
     PiTensorProduct.lift <|
-    by apply MultilinearMap.domCoprod <;> [exact tprod R;exact tprod R]
+    by apply MultilinearMap.domCoprod <;> [exact tprod R; exact tprod R]
 
 private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :
     tmulSymm (⨂ₜ[R] i, a i) = (⨂ₜ[R] i, a (Sum.inl i)) ⊗ₜ[R] ⨂ₜ[R] i, a (Sum.inr i) :=

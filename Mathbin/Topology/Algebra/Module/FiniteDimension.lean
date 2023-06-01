@@ -113,7 +113,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
       by_contra' h
       suffices (ξ₀ * ξ⁻¹) • ξ ∈ balancedCore 𝕜 ({ξ₀}ᶜ)
         by
-        rw [smul_eq_mul 𝕜, mul_assoc, inv_mul_cancel hξ0, mul_one] at this
+        rw [smul_eq_mul 𝕜, mul_assoc, inv_mul_cancel hξ0, mul_one] at this 
         exact not_mem_compl_iff.mpr (mem_singleton ξ₀) ((balancedCore_subset _) this)
       -- For that, we use that `𝓑` is balanced : since `‖ξ₀‖ < ε < ‖ξ‖`, we have `‖ξ₀ / ξ‖ ≤ 1`,
       -- hence `ξ₀ = (ξ₀ / ξ) • ξ ∈ 𝓑` because `ξ ∈ 𝓑`.
@@ -146,7 +146,7 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
   by
   -- `l` is either constant or surjective. If it is constant, the result is trivial.
   by_cases H : finrank 𝕜 l.range = 0
-  · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
+  · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H 
     rw [H]
     exact continuous_zero
   · -- In the case where `l` is surjective, we factor it as `φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜`. Note that
@@ -205,7 +205,7 @@ theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : S
     by
     rw [mem_interior_iff_mem_nhds]
     exact mem_of_superset (hs₁.mem_nhds hx) hs₃
-  rwa [hl.interior_compl] at this
+  rwa [hl.interior_compl] at this 
 #align linear_map.continuous_of_nonzero_on_open LinearMap.continuous_of_nonzero_on_open
 
 variable [CompleteSpace 𝕜]
@@ -219,7 +219,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
   letI : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
   letI : SeparatedSpace E := separated_iff_t2.mpr ht2
   induction' hn : Fintype.card ι with n IH generalizing ι E
-  · rw [Fintype.card_eq_zero_iff] at hn
+  · rw [Fintype.card_eq_zero_iff] at hn 
     exact continuous_of_const fun x y => funext hn.elim
   · haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
     -- first step: thanks to the induction hypothesis, any n-dimensional subspace is equivalent
@@ -243,16 +243,16 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
       intro f
       by_cases H : finrank 𝕜 f.range = 0
-      · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
+      · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H 
         rw [H]
         exact continuous_zero
       · have : finrank 𝕜 f.ker = n :=
           by
           have Z := f.finrank_range_add_finrank_ker
-          rw [finrank_eq_card_basis ξ, hn] at Z
+          rw [finrank_eq_card_basis ξ, hn] at Z 
           have : finrank 𝕜 f.range = 1 :=
             le_antisymm (finrank_self 𝕜 ▸ f.range.finrank_le) (zero_lt_iff.mpr H)
-          rw [this, add_comm, Nat.add_one] at Z
+          rw [this, add_comm, Nat.add_one] at Z 
           exact Nat.succ.inj Z
         have : IsClosed (f.ker : Set E) := H₁ _ this
         exact LinearMap.continuous_of_isClosed_ker f this

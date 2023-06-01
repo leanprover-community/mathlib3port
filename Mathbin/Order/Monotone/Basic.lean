@@ -700,7 +700,7 @@ theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x 
   intro x y hxy
   contrapose hxy
   cases' Ne.lt_or_lt hxy with hxy hxy
-  exacts[h _ _ hxy, (h _ _ hxy).symm]
+  exacts [h _ _ hxy, (h _ _ hxy).symm]
 #align injective_of_lt_imp_ne injective_of_lt_imp_ne
 -/
 
@@ -1151,7 +1151,7 @@ theorem not_monotone_not_antitone_iff_exists_le_le :
   simp_rw [Monotone, Antitone, not_forall, not_le]
   refine' Iff.symm ⟨_, _⟩
   · rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
-    exacts[⟨⟨_, _, hbc, hfcb⟩, _, _, hab, hfab⟩, ⟨⟨_, _, hab, hfba⟩, _, _, hbc, hfbc⟩]
+    exacts [⟨⟨_, _, hbc, hfcb⟩, _, _, hab, hfab⟩, ⟨⟨_, _, hab, hfba⟩, _, _, hbc, hfbc⟩]
   rintro ⟨⟨a, b, hab, hfba⟩, c, d, hcd, hfcd⟩
   obtain hda | had := le_total d a
   · obtain hfad | hfda := le_total (f a) (f d)
@@ -1236,7 +1236,7 @@ theorem Nat.rel_of_forall_rel_succ_of_le_of_lt (r : β → β → Prop) [IsTrans
     (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) :=
   by
   induction' hbc with k b_lt_k r_b_k
-  exacts[h _ hab, trans r_b_k (h _ (hab.trans_lt b_lt_k).le)]
+  exacts [h _ hab, trans r_b_k (h _ (hab.trans_lt b_lt_k).le)]
 #align nat.rel_of_forall_rel_succ_of_le_of_lt Nat.rel_of_forall_rel_succ_of_le_of_lt
 -/
 

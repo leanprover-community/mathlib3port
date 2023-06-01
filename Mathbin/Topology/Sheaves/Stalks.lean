@@ -270,8 +270,8 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
   inv := stalkPullbackInv _ _ _ _
   hom_inv_id' :=
     by
-    delta
-      stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward germ_to_pullback_stalk germ
+    delta stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward
+      germ_to_pullback_stalk germ
     ext j
     induction j using Opposite.rec'
     cases j
@@ -400,7 +400,7 @@ For presheaves valued in a concrete category whose forgetful functor preserves f
 every element of the stalk is the germ of a section.
 -/
 theorem germ_exist (F : X.Presheaf C) (x : X) (t : stalk F x) :
-    ∃ (U : Opens X)(m : x ∈ U)(s : F.obj (op U)), F.germ ⟨x, m⟩ s = t :=
+    ∃ (U : Opens X) (m : x ∈ U) (s : F.obj (op U)), F.germ ⟨x, m⟩ s = t :=
   by
   obtain ⟨U, s, e⟩ :=
     Types.jointly_surjective.{v, v} _ (is_colimit_of_preserves (forget C) (colimit.is_colimit _)) t
@@ -414,7 +414,7 @@ theorem germ_exist (F : X.Presheaf C) (x : X) (t : stalk F x) :
 
 theorem germ_eq (F : X.Presheaf C) {U V : Opens X} (x : X) (mU : x ∈ U) (mV : x ∈ V)
     (s : F.obj (op U)) (t : F.obj (op V)) (h : germ F ⟨x, mU⟩ s = germ F ⟨x, mV⟩ t) :
-    ∃ (W : Opens X)(m : x ∈ W)(iU : W ⟶ U)(iV : W ⟶ V), F.map iU.op s = F.map iV.op t :=
+    ∃ (W : Opens X) (m : x ∈ W) (iU : W ⟶ U) (iV : W ⟶ V), F.map iU.op s = F.map iV.op t :=
   by
   obtain ⟨W, iU, iV, e⟩ :=
     (Types.FilteredColimit.isColimit_eq_iff.{v, v} _
@@ -429,12 +429,12 @@ theorem stalkFunctor_map_injective_of_app_injective {F G : Presheaf C X} (f : F 
   by
   rcases germ_exist F x s with ⟨U₁, hxU₁, s, rfl⟩
   rcases germ_exist F x t with ⟨U₂, hxU₂, t, rfl⟩
-  simp only [stalk_functor_map_germ_apply _ ⟨x, _⟩] at hst
+  simp only [stalk_functor_map_germ_apply _ ⟨x, _⟩] at hst 
   obtain ⟨W, hxW, iWU₁, iWU₂, heq⟩ := G.germ_eq x hxU₁ hxU₂ _ _ hst
-  rw [← comp_apply, ← comp_apply, ← f.naturality, ← f.naturality, comp_apply, comp_apply] at heq
+  rw [← comp_apply, ← comp_apply, ← f.naturality, ← f.naturality, comp_apply, comp_apply] at heq 
   replace heq := h W HEq
   convert congr_arg (F.germ ⟨x, hxW⟩) HEq
-  exacts[(F.germ_res_apply iWU₁ ⟨x, hxW⟩ s).symm, (F.germ_res_apply iWU₂ ⟨x, hxW⟩ t).symm]
+  exacts [(F.germ_res_apply iWU₁ ⟨x, hxW⟩ s).symm, (F.germ_res_apply iWU₂ ⟨x, hxW⟩ t).symm]
 #align Top.presheaf.stalk_functor_map_injective_of_app_injective TopCat.Presheaf.stalkFunctor_map_injective_of_app_injective
 
 variable [HasLimits C] [PreservesLimits (forget C)] [ReflectsIsomorphisms (forget C)]
@@ -518,7 +518,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
     (U : Opens X) (hinj : ∀ x : U, Function.Injective ((stalkFunctor C x.1).map f.1))
     (hsurj :
       ∀ (t) (x : U),
-        ∃ (V : Opens X)(m : x.1 ∈ V)(iVU : V ⟶ U)(s : F.1.obj (op V)),
+        ∃ (V : Opens X) (m : x.1 ∈ V) (iVU : V ⟶ U) (s : F.1.obj (op V)),
           f.1.app (op V) s = G.1.map iVU.op t) :
     Function.Surjective (f.1.app (op U)) := by
   intro t
@@ -560,7 +560,7 @@ theorem app_surjective_of_stalkFunctor_map_bijective {F G : Sheaf C X} (f : F �
   -- ... and this preimage must come from some section `s₁` defined on some open neighborhood `V₁`
   obtain ⟨V₁, hxV₁, s₁, hs₁⟩ := F.presheaf.germ_exist x.1 s₀
   subst hs₁; rename' hs₀ => hs₁
-  erw [stalk_functor_map_germ_apply V₁ ⟨x.1, hxV₁⟩ f.1 s₁] at hs₁
+  erw [stalk_functor_map_germ_apply V₁ ⟨x.1, hxV₁⟩ f.1 s₁] at hs₁ 
   -- Now, the germ of `f.app (op V₁) s₁` equals the germ of `t`, hence they must coincide on
   -- some open neighborhood `V₂`.
   obtain ⟨V₂, hxV₂, iV₂V₁, iV₂U, heq⟩ := G.presheaf.germ_eq x.1 hxV₁ x.2 _ _ hs₁

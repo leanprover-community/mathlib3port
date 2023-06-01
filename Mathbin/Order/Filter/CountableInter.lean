@@ -207,7 +207,7 @@ instance (l : Filter β) [CountableInterFilter l] (f : α → β) : CountableInt
 instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInterFilter (map f l) :=
   by
   constructor; intro S hSc hS
-  simp only [mem_map, sInter_eq_bInter, preimage_Inter₂] at hS⊢
+  simp only [mem_map, sInter_eq_bInter, preimage_Inter₂] at hS ⊢
   exact (countable_bInter_mem hSc).2 hS
 
 /-- Infimum of two `countable_Inter_filter`s is a `countable_Inter_filter`. This is useful, e.g.,
@@ -229,7 +229,7 @@ instance countableInterFilter_sup (l₁ l₂ : Filter α) [CountableInterFilter 
     [CountableInterFilter l₂] : CountableInterFilter (l₁ ⊔ l₂) :=
   by
   refine' ⟨fun S hSc hS => ⟨_, _⟩⟩ <;> refine' (countable_sInter_mem hSc).2 fun s hs => _
-  exacts[(hS s hs).1, (hS s hs).2]
+  exacts [(hS s hs).1, (hS s hs).2]
 #align countable_Inter_filter_sup countableInterFilter_sup
 
 namespace Filter
@@ -253,8 +253,8 @@ inductive CountableGenerateSets : Set α → Prop
 /-- `filter.countable_generate g` is the greatest `countable_Inter_filter` containing `g`.-/
 def countableGenerate : Filter α :=
   ofCountableInter (CountableGenerateSets g) (fun S => CountableGenerateSets.sInter) fun s t =>
-    CountableGenerateSets.superset deriving
-  CountableInterFilter
+    CountableGenerateSets.superset
+deriving CountableInterFilter
 #align filter.countable_generate Filter.countableGenerate
 -/
 

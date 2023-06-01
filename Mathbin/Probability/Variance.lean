@@ -64,17 +64,17 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [FiniteMeasure μ] (hX : Memℒp 
     evariance X μ < ∞ :=
   by
   have := ENNReal.pow_lt_top (hX.sub <| mem_ℒp_const <| μ[X]).2 2
-  rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, ← ENNReal.rpow_two] at this
-  simp only [Pi.sub_apply, ENNReal.toReal_bit0, ENNReal.one_toReal, one_div] at this
-  rw [← ENNReal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ENNReal.rpow_one] at this
-  simp_rw [ENNReal.rpow_two] at this
+  rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, ← ENNReal.rpow_two] at this 
+  simp only [Pi.sub_apply, ENNReal.toReal_bit0, ENNReal.one_toReal, one_div] at this 
+  rw [← ENNReal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ENNReal.rpow_one] at this 
+  simp_rw [ENNReal.rpow_two] at this 
   exact this
 #align measure_theory.mem_ℒp.evariance_lt_top MeasureTheory.Memℒp.evariance_lt_top
 
 theorem evariance_eq_top [FiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (hX : ¬Memℒp X 2 μ) :
     evariance X μ = ∞ := by
   by_contra h
-  rw [← Ne.def, ← lt_top_iff_ne_top] at h
+  rw [← Ne.def, ← lt_top_iff_ne_top] at h 
   have : mem_ℒp (fun ω => X ω - μ[X]) 2 μ :=
     by
     refine' ⟨hXm.sub ae_strongly_measurable_const, _⟩
@@ -152,7 +152,7 @@ theorem evariance_eq_zero_iff (hX : AEMeasurable X μ) : evariance X μ = 0 ↔ 
   rw [evariance, lintegral_eq_zero_iff']
   constructor <;> intro hX <;> filter_upwards [hX]with ω hω
   · simp only [Pi.zero_apply, pow_eq_zero_iff, Nat.succ_pos', ENNReal.coe_eq_zero, nnnorm_eq_zero,
-      sub_eq_zero] at hω
+      sub_eq_zero] at hω 
     exact hω
   · rw [hω]
     simp
@@ -269,12 +269,12 @@ theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
   · symm
     rw [evariance_eq_top hX hℒ, ENNReal.sub_eq_top_iff]
     refine' ⟨_, ENNReal.ofReal_ne_top⟩
-    rw [mem_ℒp, not_and] at hℒ
+    rw [mem_ℒp, not_and] at hℒ 
     specialize hℒ hX
     simp only [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, not_lt, top_le_iff,
       ENNReal.toReal_bit0, ENNReal.one_toReal, ENNReal.rpow_two, one_div, ENNReal.rpow_eq_top_iff,
       inv_lt_zero, inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left,
-      not_and_or] at hℒ
+      not_and_or] at hℒ 
     exact hℒ fun _ => zero_le_two
 #align probability_theory.evariance_def' ProbabilityTheory.evariance_def'
 

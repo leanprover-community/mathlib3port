@@ -398,7 +398,7 @@ theorem finSuccEquiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (
     obtain hij | rfl := ne_or_eq i (j 0)
     · simp only [hij, if_false, coeff_zero]
     simp only [eq_self_iff_true, if_true]
-    have hmj : m ≠ j.tail := by rintro rfl; rw [cons_tail] at hjmi; contradiction
+    have hmj : m ≠ j.tail := by rintro rfl; rw [cons_tail] at hjmi ; contradiction
     simpa only [monomial_eq, C_1, one_mul, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
       coeff_monomial m j.tail (1 : R)
 #align mv_polynomial.fin_succ_equiv_coeff_coeff MvPolynomial.finSuccEquiv_coeff_coeff
@@ -480,7 +480,7 @@ theorem support_finSuccEquiv_nonempty {f : MvPolynomial (Fin (n + 1)) R} (h : f 
     (finSuccEquiv R n f).support.Nonempty :=
   by
   by_contra c
-  simp only [Finset.not_nonempty_iff_eq_empty, Polynomial.support_eq_empty] at c
+  simp only [Finset.not_nonempty_iff_eq_empty, Polynomial.support_eq_empty] at c 
   have t'' : finSuccEquiv R n f ≠ 0 :=
     by
     let ii := (finSuccEquiv R n).symm
@@ -509,7 +509,7 @@ theorem natDegree_finSuccEquiv (f : MvPolynomial (Fin (n + 1)) R) :
   by
   by_cases c : f = 0
   · rw [c, (finSuccEquiv R n).map_zero, Polynomial.natDegree_zero, degree_of_zero]
-  · rw [Polynomial.natDegree, degree_fin_succ_equiv (by simpa only [Ne.def] )]
+  · rw [Polynomial.natDegree, degree_fin_succ_equiv (by simpa only [Ne.def])]
     simp
 #align mv_polynomial.nat_degree_fin_succ_equiv MvPolynomial.natDegree_finSuccEquiv
 

@@ -59,7 +59,7 @@ structure BotHom (α β : Type _) [Bot α] [Bot β] where
 #print BoundedOrderHom /-
 /-- The type of bounded order homomorphisms from `α` to `β`. -/
 structure BoundedOrderHom (α β : Type _) [Preorder α] [Preorder β] [BoundedOrder α]
-  [BoundedOrder β] extends OrderHom α β where
+    [BoundedOrder β] extends OrderHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_bot' : to_fun ⊥ = ⊥
 #align bounded_order_hom BoundedOrderHom
@@ -72,7 +72,7 @@ section
 
 You should extend this class when you extend `top_hom`. -/
 class TopHomClass (F : Type _) (α β : outParam <| Type _) [Top α] [Top β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_top (f : F) : f ⊤ = ⊤
 #align top_hom_class TopHomClass
 -/
@@ -82,7 +82,7 @@ class TopHomClass (F : Type _) (α β : outParam <| Type _) [Top α] [Top β] ex
 
 You should extend this class when you extend `bot_hom`. -/
 class BotHomClass (F : Type _) (α β : outParam <| Type _) [Bot α] [Bot β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_bot (f : F) : f ⊥ = ⊥
 #align bot_hom_class BotHomClass
 -/
@@ -92,7 +92,7 @@ class BotHomClass (F : Type _) (α β : outParam <| Type _) [Bot α] [Bot β] ex
 
 You should extend this class when you extend `bounded_order_hom`. -/
 class BoundedOrderHomClass (F : Type _) (α β : outParam <| Type _) [LE α] [LE β] [BoundedOrder α]
-  [BoundedOrder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
+    [BoundedOrder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
 #align bounded_order_hom_class BoundedOrderHomClass

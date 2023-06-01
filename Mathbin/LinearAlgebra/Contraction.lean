@@ -147,7 +147,7 @@ theorem toMatrix_dualTensorHom {m : Type _} {n : Type _} [Fintype m] [Fintype n]
   ext (i' j')
   by_cases hij : i = i' ∧ j = j' <;>
     simp [LinearMap.toMatrix_apply, Finsupp.single_eq_pi_single, hij]
-  rw [and_iff_not_or_not, Classical.not_not] at hij; cases hij <;> simp [hij]
+  rw [and_iff_not_or_not, Classical.not_not] at hij ; cases hij <;> simp [hij]
 #align to_matrix_dual_tensor_hom toMatrix_dualTensorHom
 
 end CommSemiring

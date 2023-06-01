@@ -51,7 +51,7 @@ theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1
 
 theorem Real.uniformContinuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
+    ⟨_, ε0, fun a b h => by rw [dist_comm] at h  <;> simpa [Real.dist_eq] using h⟩
 #align real.uniform_continuous_neg Real.uniformContinuous_neg
 
 instance : ContinuousStar ℝ :=
@@ -110,7 +110,7 @@ theorem Real.uniformContinuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
 #align real.uniform_continuous_abs Real.uniformContinuous_abs
 
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
-  rw [← abs_pos] at r0 <;>
+  rw [← abs_pos] at r0  <;>
     exact
       tendsto_of_uniformContinuous_subtype
         (Real.uniformContinuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
@@ -200,7 +200,7 @@ theorem Real.bounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelo
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
-    rw [Real.closedBall_eq_Icc] at hr
+    rw [Real.closedBall_eq_Icc] at hr 
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
     fun h => bounded_of_bddAbove_of_bddBelow h.2 h.1⟩
@@ -235,7 +235,7 @@ theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c
     (hc : c ≠ 0) (hf : Continuous f) : IsCompact (range f) :=
   by
   cases' lt_or_gt_of_ne hc with hneg hpos
-  exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
+  exacts [hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
 
 /-- A continuous, periodic function is bounded. -/
@@ -289,7 +289,7 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
     apply Set.toFinite
   intro K hK
   have H := Int.tendsto_zmultiplesHom_cofinite ha hK
-  simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
+  simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H ⊢
   rw [← (zmultiplesHom ℝ a).rangeRestrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ),
     ← preimage_comp, ← AddMonoidHom.coe_comp_rangeRestrict]
   exact finite.image _ H
@@ -302,7 +302,7 @@ theorem AddSubgroup.dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in 
     (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) :=
   by
   let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
-  push_neg  at H'
+  push_neg  at H' 
   intro x
   suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, |x - g| < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos

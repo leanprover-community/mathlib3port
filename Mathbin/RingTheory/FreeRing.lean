@@ -40,7 +40,8 @@ universe u v
 #print FreeRing /-
 /-- The free ring over a type `α`. -/
 def FreeRing (α : Type u) : Type u :=
-  FreeAbelianGroup <| FreeMonoid α deriving Ring, Inhabited
+  FreeAbelianGroup <| FreeMonoid α
+deriving Ring, Inhabited
 #align free_ring FreeRing
 -/
 

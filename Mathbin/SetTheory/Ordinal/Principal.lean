@@ -169,7 +169,7 @@ theorem principal_add_of_le_one {o : Ordinal} (ho : o ≤ 1) : Principal (· + �
 theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· + ·) o) : o.IsLimit :=
   by
   refine' ⟨fun ho₀ => _, fun a hao => _⟩
-  · rw [ho₀] at ho₁
+  · rw [ho₀] at ho₁ 
     exact not_lt_of_gt zero_lt_one ho₁
   · cases' eq_or_ne a 0 with ha ha
     · rw [ha, succ_zero]
@@ -187,7 +187,7 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
     · exact op_eq_self_of_principal hao (add_is_normal a) ho (principal_add_is_limit ho₁ ho)
     · rcases le_one_iff.1 ho₁ with (rfl | rfl)
       · exact (Ordinal.not_lt_zero a hao).elim
-      · rw [lt_one_iff_zero] at hao
+      · rw [lt_one_iff_zero] at hao 
         rw [hao, zero_add]
   · rw [← h a hao]
     exact (add_is_normal a).StrictMono hbo
@@ -196,14 +196,14 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
 
 #print Ordinal.exists_lt_add_of_not_principal_add /-
 theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
-    ∃ (b c : _)(hb : b < a)(hc : c < a), b + c = a :=
+    ∃ (b c : _) (hb : b < a) (hc : c < a), b + c = a :=
   by
-  unfold principal at ha
-  push_neg  at ha
+  unfold principal at ha 
+  push_neg  at ha 
   rcases ha with ⟨b, c, hb, hc, H⟩
   refine'
     ⟨b, _, hb, lt_of_le_of_ne (sub_le_self a b) fun hab => _, Ordinal.add_sub_cancel_of_le hb.le⟩
-  rw [← sub_le, hab] at H
+  rw [← sub_le, hab] at H 
   exact H.not_lt hc
 #align ordinal.exists_lt_add_of_not_principal_add Ordinal.exists_lt_add_of_not_principal_add
 -/
@@ -239,9 +239,9 @@ theorem add_omega_opow {a b : Ordinal} (h : a < (omega^b)) : a + (omega^b) = (om
   by
   refine' le_antisymm _ (le_add_left _ _)
   revert h; refine' limit_rec_on b (fun h => _) (fun b _ h => _) fun b l IH h => _
-  · rw [opow_zero, ← succ_zero, lt_succ_iff, Ordinal.le_zero] at h
+  · rw [opow_zero, ← succ_zero, lt_succ_iff, Ordinal.le_zero] at h 
     rw [h, zero_add]
-  · rw [opow_succ] at h
+  · rw [opow_succ] at h 
     rcases(lt_mul_of_limit omega_is_limit).1 h with ⟨x, xo, ax⟩
     refine' le_trans (add_le_add_right (le_of_lt ax) _) _
     rw [opow_succ, ← mul_add, add_omega xo]
@@ -271,7 +271,7 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} :
         fun ⟨b, e⟩ => e.symm ▸ fun a => add_omega_opow⟩
     have := H _ h
     have := lt_opow_succ_log_self one_lt_omega o
-    rw [opow_succ, lt_mul_of_limit omega_is_limit] at this
+    rw [opow_succ, lt_mul_of_limit omega_is_limit] at this 
     rcases this with ⟨a, ao, h'⟩
     rcases lt_omega.1 ao with ⟨n, rfl⟩; clear ao
     revert h'; apply not_lt_of_le
@@ -304,7 +304,7 @@ theorem mul_principal_add_is_principal_add (a : Ordinal.{u}) {b : Ordinal.{u}} (
   · rcases eq_zero_or_pos b with (rfl | hb₁')
     · rw [MulZeroClass.mul_zero]
       exact principal_zero
-    · rw [← succ_le_iff, succ_zero] at hb₁'
+    · rw [← succ_le_iff, succ_zero] at hb₁' 
       intro c d hc hd
       rw [lt_mul_of_limit (principal_add_is_limit (lt_of_le_of_ne hb₁' hb₁.symm) hb)] at *
       · rcases hc with ⟨x, hx, hx'⟩
@@ -334,7 +334,7 @@ theorem principal_mul_of_le_two {o : Ordinal} (ho : o ≤ 2) : Principal (· * �
   by
   rcases lt_or_eq_of_le ho with (ho | rfl)
   · have h₂ : succ (1 : Ordinal) = 2 := rfl
-    rw [← h₂, lt_succ_iff] at ho
+    rw [← h₂, lt_succ_iff] at ho 
     rcases lt_or_eq_of_le ho with (ho | rfl)
     · rw [lt_one_iff_zero.1 ho]
       exact principal_zero
@@ -345,8 +345,8 @@ theorem principal_mul_of_le_two {o : Ordinal} (ho : o ≤ 2) : Principal (· * �
 theorem principal_add_of_principal_mul {o : Ordinal} (ho : Principal (· * ·) o) (ho₂ : o ≠ 2) :
     Principal (· + ·) o := by
   cases' lt_or_gt_of_ne ho₂ with ho₁ ho₂
-  · change o < succ 1 at ho₁
-    rw [lt_succ_iff] at ho₁
+  · change o < succ 1 at ho₁ 
+    rw [lt_succ_iff] at ho₁ 
     exact principal_add_of_le_one ho₁
   · refine' fun a b hao hbo => lt_of_le_of_lt _ (ho (max_lt hao hbo) ho₂)
     rw [mul_two]
@@ -366,11 +366,11 @@ theorem principal_mul_iff_mul_left_eq {o : Ordinal} :
     · convert one_mul o
       apply le_antisymm
       · have : a < succ 1 := hao.trans_le ho
-        rwa [lt_succ_iff] at this
-      · rwa [← succ_le_iff, succ_zero] at ha₀
+        rwa [lt_succ_iff] at this 
+      · rwa [← succ_le_iff, succ_zero] at ha₀ 
     · exact op_eq_self_of_principal hao (mul_is_normal ha₀) h (principal_mul_is_limit ho h)
   · rcases eq_or_ne a 0 with (rfl | ha); · rwa [MulZeroClass.zero_mul]
-    rw [← Ordinal.pos_iff_ne_zero] at ha
+    rw [← Ordinal.pos_iff_ne_zero] at ha 
     rw [← h a ha hao]
     exact (mul_is_normal ha).StrictMono hbo
 #align ordinal.principal_mul_iff_mul_left_eq Ordinal.principal_mul_iff_mul_left_eq
@@ -389,7 +389,7 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
   by
   rcases zero_or_succ_or_limit c with (rfl | ⟨c, rfl⟩ | l)
   · exact (lt_irrefl _).elim c0
-  · rw [opow_succ] at ha
+  · rw [opow_succ] at ha 
     rcases((mul_is_normal <| opow_pos _ omega_pos).limit_lt omega_is_limit).1 ha with ⟨n, hn, an⟩
     apply (mul_le_mul_right' (le_of_lt an) _).trans_lt
     rw [opow_succ, mul_assoc, mul_lt_mul_iff_left (opow_pos _ omega_pos)]
@@ -403,7 +403,7 @@ theorem mul_lt_omega_opow {a b c : Ordinal} (c0 : 0 < c) (ha : a < (omega^c)) (h
 theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
     a * (omega^omega^b) = (omega^omega^b) :=
   by
-  by_cases b0 : b = 0; · rw [b0, opow_zero, opow_one] at h⊢; exact mul_omega a0 h
+  by_cases b0 : b = 0; · rw [b0, opow_zero, opow_one] at h ⊢; exact mul_omega a0 h
   refine'
     le_antisymm _
       (by simpa only [one_mul] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
@@ -420,7 +420,7 @@ theorem principal_add_of_principal_mul_opow {o b : Ordinal} (hb : 1 < b)
     (ho : Principal (· * ·) (b^o)) : Principal (· + ·) o := fun x y hx hy =>
   by
   have := ho ((opow_lt_opow_iff_right hb).2 hx) ((opow_lt_opow_iff_right hb).2 hy)
-  rwa [← opow_add, opow_lt_opow_iff_right hb] at this
+  rwa [← opow_add, opow_lt_opow_iff_right hb] at this 
 #align ordinal.principal_add_of_principal_mul_opow Ordinal.principal_add_of_principal_mul_opow
 
 /-- The main characterization theorem for multiplicative principal ordinals. -/
@@ -436,7 +436,7 @@ theorem principal_mul_iff_le_two_or_omega_opow_opow {o : Ordinal} :
     rcases principal_add_iff_zero_or_omega_opow.1
         (principal_add_of_principal_mul_opow one_lt_omega ho) with
       (rfl | ⟨b, rfl⟩)
-    · rw [opow_zero] at ho₂
+    · rw [opow_zero] at ho₂ 
       exact ((lt_succ 1).not_le ho₂.le).elim
     exact Or.inr ⟨b, rfl⟩
   · rintro (ho₂ | ⟨a, rfl⟩)

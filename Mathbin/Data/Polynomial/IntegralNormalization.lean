@@ -66,7 +66,7 @@ theorem integralNormalization_coeff {f : R[X]} {i : ℕ} :
 
 #print Polynomial.integralNormalization_support /-
 theorem integralNormalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support :=
-  by intro ;
+  by intro;
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, mem_support_iff]
 #align polynomial.integral_normalization_support Polynomial.integralNormalization_support
 -/

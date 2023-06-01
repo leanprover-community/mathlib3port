@@ -71,13 +71,13 @@ theorem smul_le_smul_of_nonpos (h : a ≤ b) (hc : c ≤ 0) : c • b ≤ c • 
 
 theorem eq_of_smul_eq_smul_of_neg_of_le (hab : c • a = c • b) (hc : c < 0) (h : a ≤ b) : a = b :=
   by
-  rw [← neg_neg c, neg_smul, neg_smul (-c), neg_inj] at hab
+  rw [← neg_neg c, neg_smul, neg_smul (-c), neg_inj] at hab 
   exact eq_of_smul_eq_smul_of_pos_of_le hab (neg_pos_of_neg hc) h
 #align eq_of_smul_eq_smul_of_neg_of_le eq_of_smul_eq_smul_of_neg_of_le
 
 theorem lt_of_smul_lt_smul_of_nonpos (h : c • a < c • b) (hc : c ≤ 0) : b < a :=
   by
-  rw [← neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff] at h
+  rw [← neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff] at h 
   exact lt_of_smul_lt_smul_of_nonneg h (neg_nonneg_of_nonpos hc)
 #align lt_of_smul_lt_smul_of_nonpos lt_of_smul_lt_smul_of_nonpos
 
@@ -134,7 +134,7 @@ theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤
   obtain ⟨b, rfl⟩ := exists_add_of_le hab
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
-  rw [le_add_iff_nonneg_right] at hab hcd
+  rw [le_add_iff_nonneg_right] at hab hcd 
   exact add_le_add_left (le_add_of_nonneg_right <| smul_nonneg hab hcd) _
 #align smul_add_smul_le_smul_add_smul smul_add_smul_le_smul_add_smul
 
@@ -152,7 +152,7 @@ theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)]
   obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
-  rw [lt_add_iff_pos_right] at hab hcd
+  rw [lt_add_iff_pos_right] at hab hcd 
   exact add_lt_add_left (lt_add_of_pos_right _ <| smul_pos hab hcd) _
 #align smul_add_smul_lt_smul_add_smul smul_add_smul_lt_smul_add_smul
 

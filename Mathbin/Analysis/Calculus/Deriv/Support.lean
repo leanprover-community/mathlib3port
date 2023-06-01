@@ -46,7 +46,7 @@ theorem support_deriv_subset : support (deriv f) ⊆ tsupport f :=
   intro x
   rw [← not_imp_not]
   intro h2x
-  rw [not_mem_tsupport_iff_eventuallyEq] at h2x
+  rw [not_mem_tsupport_iff_eventuallyEq] at h2x 
   exact nmem_support.mpr (h2x.deriv_eq.trans (deriv_const x 0))
 #align support_deriv_subset support_deriv_subset
 

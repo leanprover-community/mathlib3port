@@ -91,7 +91,7 @@ theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β)
 
 #print Matrix.IsHermitian.transpose /-
 theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
-  rw [is_hermitian, conj_transpose, transpose_map]; congr ; exact h
+  rw [is_hermitian, conj_transpose, transpose_map]; congr; exact h
 #align matrix.is_hermitian.transpose Matrix.IsHermitian.transpose
 -/
 

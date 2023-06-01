@@ -317,16 +317,16 @@ theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
 theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) :=
   by
   by_cases hx₁ : -1 ≤ x; swap
-  · rw [not_le] at hx₁
+  · rw [not_le] at hx₁ 
     rw [arcsin_of_le_neg_one hx₁.le, cos_neg, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
     nlinarith
   by_cases hx₂ : x ≤ 1; swap
-  · rw [not_le] at hx₂
+  · rw [not_le] at hx₂ 
     rw [arcsin_of_one_le hx₂.le, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
     nlinarith
   have : sin (arcsin x) ^ 2 + cos (arcsin x) ^ 2 = 1 := sin_sq_add_cos_sq (arcsin x)
   rw [← eq_sub_iff_add_eq', ← sqrt_inj (sq_nonneg _) (sub_nonneg.2 (sin_sq_le_one (arcsin x))), sq,
-    sqrt_mul_self (cos_arcsin_nonneg _)] at this
+    sqrt_mul_self (cos_arcsin_nonneg _)] at this 
   rw [this, sin_arcsin hx₁ hx₂]
 #align real.cos_arcsin Real.cos_arcsin
 
@@ -431,11 +431,11 @@ theorem arccos_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arccos x = π := by
 theorem sin_arccos (x : ℝ) : sin (arccos x) = sqrt (1 - x ^ 2) :=
   by
   by_cases hx₁ : -1 ≤ x; swap
-  · rw [not_le] at hx₁
+  · rw [not_le] at hx₁ 
     rw [arccos_of_le_neg_one hx₁.le, sin_pi, sqrt_eq_zero_of_nonpos]
     nlinarith
   by_cases hx₂ : x ≤ 1; swap
-  · rw [not_le] at hx₂
+  · rw [not_le] at hx₂ 
     rw [arccos_of_one_le hx₂.le, sin_zero, sqrt_eq_zero_of_nonpos]
     nlinarith
   rw [arccos_eq_pi_div_two_sub_arcsin, sin_pi_div_two_sub, cos_arcsin]
@@ -451,7 +451,7 @@ theorem arccos_lt_pi_div_two {x : ℝ} : arccos x < π / 2 ↔ 0 < x := by simp 
 
 @[simp]
 theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := by
-  rw [arccos, ← pi_div_four_le_arcsin]; constructor <;> · intro ; linarith
+  rw [arccos, ← pi_div_four_le_arcsin]; constructor <;> · intro; linarith
 #align real.arccos_le_pi_div_four Real.arccos_le_pi_div_four
 
 #print Real.continuous_arccos /-

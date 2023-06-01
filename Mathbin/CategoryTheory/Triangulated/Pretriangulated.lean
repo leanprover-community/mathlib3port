@@ -83,7 +83,7 @@ class Pretriangulated where
   contractible_distinguished : ∀ X : C, contractibleTriangle X ∈ distinguished_triangles
   distinguished_cocone_triangle :
     ∀ (X Y : C) (f : X ⟶ Y),
-      ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦(1 : ℤ)⟧), Triangle.mk f g h ∈ distinguished_triangles
+      ∃ (Z : C) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)⟧), Triangle.mk f g h ∈ distinguished_triangles
   rotate_distinguished_triangle :
     ∀ T : Triangle C, T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles
   complete_distinguished_triangle_morphism :

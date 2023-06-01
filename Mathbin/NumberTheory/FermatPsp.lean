@@ -239,11 +239,11 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   -- Used to prove that `2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1)`.
   have ha₁ : (b ^ 2 - 1) * (A * B - 1) = b * (b ^ (p - 1) - 1) * (b ^ p + b) :=
     by
-    apply_fun fun x => x * (b ^ 2 - 1)  at AB_id
-    rw [Nat.div_mul_cancel hd] at AB_id
-    apply_fun fun x => x - (b ^ 2 - 1)  at AB_id
-    nth_rw 2 [← one_mul (b ^ 2 - 1)] at AB_id
-    rw [← Nat.mul_sub_right_distrib, mul_comm] at AB_id
+    apply_fun fun x => x * (b ^ 2 - 1)  at AB_id 
+    rw [Nat.div_mul_cancel hd] at AB_id 
+    apply_fun fun x => x - (b ^ 2 - 1)  at AB_id 
+    nth_rw 2 [← one_mul (b ^ 2 - 1)] at AB_id 
+    rw [← Nat.mul_sub_right_distrib, mul_comm] at AB_id 
     rw [AB_id]
     exact bp_helper hi_b hi_p
   -- If `b` is even, then `b^p` is also even, so `2 ∣ b^p + b`
@@ -277,8 +277,8 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
     cases' this with c hc
     have : b ^ 2 - 1 ∣ (b ^ 2) ^ c - 1 := by
       simpa only [one_pow] using nat_sub_dvd_pow_sub_pow _ 1 c
-    have : b ^ 2 - 1 ∣ b ^ (2 * c) - 1 := by rwa [← pow_mul] at this
-    rwa [← hc] at this
+    have : b ^ 2 - 1 ∣ b ^ (2 * c) - 1 := by rwa [← pow_mul] at this 
+    rwa [← hc] at this 
   -- Used to prove that `2 * p` divides `A * B - 1`
   have ha₅ : 2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1) :=
     by
@@ -289,7 +289,7 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
     -- know that `2 * p ∣ b ^ p + b`
     have q₁ : Nat.coprime p (b ^ 2 - 1) :=
       haveI q₂ : ¬p ∣ b ^ 2 - 1 := by
-        rw [mul_comm] at not_dvd
+        rw [mul_comm] at not_dvd 
         exact mt (fun h : p ∣ b ^ 2 - 1 => dvd_mul_of_dvd_left h _) not_dvd
       (Nat.Prime.coprime_iff_not_dvd p_prime).mpr q₂
     have q₂ : p * (b ^ 2 - 1) ∣ b ^ (p - 1) - 1 := Nat.coprime.mul_dvd_of_dvd_of_dvd q₁ ha₃ ha₄
@@ -298,7 +298,7 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
       dvd_mul_of_dvd_right q₃ _
     rwa [mul_assoc, mul_comm, mul_assoc b]
   have ha₆ : 2 * p ∣ A * B - 1 := by
-    rw [mul_comm] at ha₅
+    rw [mul_comm] at ha₅ 
     exact Nat.dvd_of_mul_dvd_mul_left hi_bsquared ha₅
   -- `A * B` divides `b ^ (2 * p) - 1` because `A * B * (b ^ 2 - 1) = b ^ (2 * p) - 1`.
   -- This can be proven by multiplying both sides of `AB_id` by `b ^ 2 - 1`.
@@ -336,7 +336,7 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
       Nat.div_lt_div_of_lt_of_dvd AB_dvd h
     have h₂ : 0 < b ^ 2 - 1 := by
       linarith [show 3 ≤ b ^ 2 - 1 from le_tsub_of_add_le_left (show 4 ≤ b ^ 2 by nlinarith)]
-    rwa [Nat.mul_div_cancel _ h₂] at h₁
+    rwa [Nat.mul_div_cancel _ h₂] at h₁ 
   rw [Nat.mul_sub_left_distrib, mul_one, pow_mul]
   nth_rw_rhs 1 [← Nat.sub_add_cancel (show 1 ≤ p by linarith)]
   rw [pow_succ (b ^ 2)]

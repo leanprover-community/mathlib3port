@@ -96,7 +96,7 @@ variable (A : ι → Type _)
 
 /-- A graded version of `non_unital_non_assoc_semiring`. -/
 class GNonUnitalNonAssocSemiring [Add ι] [∀ i, AddCommMonoid (A i)] extends
-  GradedMonoid.GMul A where
+    GradedMonoid.GMul A where
   mul_zero : ∀ {i j} (a : A i), mul a (0 : A j) = 0
   zero_mul : ∀ {i j} (b : A j), mul (0 : A i) b = 0
   mul_add : ∀ {i j} (a : A i) (b c : A j), mul a (b + c) = mul a b + mul a c
@@ -111,7 +111,7 @@ variable (A : ι → Type _)
 
 /-- A graded version of `semiring`. -/
 class GSemiring [AddMonoid ι] [∀ i, AddCommMonoid (A i)] extends GNonUnitalNonAssocSemiring A,
-  GradedMonoid.GMonoid A where
+    GradedMonoid.GMonoid A where
   natCast : ℕ → A 0
   natCast_zero : nat_cast 0 = 0
   natCast_succ : ∀ n : ℕ, nat_cast (n + 1) = nat_cast n + GradedMonoid.GOne.one
@@ -119,7 +119,7 @@ class GSemiring [AddMonoid ι] [∀ i, AddCommMonoid (A i)] extends GNonUnitalNo
 
 /-- A graded version of `comm_semiring`. -/
 class GCommSemiring [AddCommMonoid ι] [∀ i, AddCommMonoid (A i)] extends GSemiring A,
-  GradedMonoid.GCommMonoid A
+    GradedMonoid.GCommMonoid A
 #align direct_sum.gcomm_semiring DirectSum.GCommSemiring
 
 /-- A graded version of `ring`. -/

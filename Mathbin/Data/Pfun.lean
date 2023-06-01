@@ -137,7 +137,7 @@ def asSubtype (f : α →. β) (s : f.Dom) : β :=
 #print PFun.equivSubtype /-
 /-- The type of partial functions `α →. β` is equivalent to
 the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
-def equivSubtype : (α →. β) ≃ Σp : α → Prop, Subtype p → β :=
+def equivSubtype : (α →. β) ≃ Σ p : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, asSubtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
     funext fun a => Part.eta _, fun ⟨p, f⟩ => by dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩
 #align pfun.equiv_subtype PFun.equivSubtype
@@ -294,7 +294,7 @@ def fix (f : α →. Sum β α) : α →. β := fun a =>
     @WellFounded.fixF _ (fun x y => Sum.inr x ∈ f y) _
       (fun a IH =>
         Part.assert (f a).Dom fun hf => by
-          cases' e : (f a).get hf with b a' <;> [exact Part.some b;exact IH _ ⟨hf, e⟩])
+          cases' e : (f a).get hf with b a' <;> [exact Part.some b; exact IH _ ⟨hf, e⟩])
       a h
 #align pfun.fix PFun.fix
 -/
@@ -302,17 +302,17 @@ def fix (f : α →. Sum β α) : α →. β := fun a =>
 theorem dom_of_mem_fix {f : α →. Sum β α} {a : α} {b : β} (h : b ∈ f.fix a) : (f a).Dom :=
   by
   let ⟨h₁, h₂⟩ := Part.mem_assert_iff.1 h
-  rw [WellFounded.fixF_eq] at h₂ <;> exact h₂.fst.fst
+  rw [WellFounded.fixF_eq] at h₂  <;> exact h₂.fst.fst
 #align pfun.dom_of_mem_fix PFun.dom_of_mem_fix
 
 theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     b ∈ f.fix a ↔ Sum.inl b ∈ f a ∨ ∃ a', Sum.inr a' ∈ f a ∧ b ∈ f.fix a' :=
   ⟨fun h => by
     let ⟨h₁, h₂⟩ := Part.mem_assert_iff.1 h
-    rw [WellFounded.fixF_eq] at h₂
-    simp at h₂
+    rw [WellFounded.fixF_eq] at h₂ 
+    simp at h₂ 
     cases' h₂ with h₂ h₃
-    cases' e : (f a).get h₂ with b' a' <;> simp [e] at h₃
+    cases' e : (f a).get h₂ with b' a' <;> simp [e] at h₃ 
     · subst b'; refine' Or.inl ⟨h₂, e⟩
     · exact Or.inr ⟨a', ⟨_, e⟩, Part.mem_assert _ h₃⟩, fun h =>
     by
@@ -321,7 +321,7 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
     · refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique ⟨h₁, h₂⟩ h'
       · rw [WellFounded.fixF_eq]; simp [h₁, h₂]
-    · simp [fix] at h₃; cases' h₃ with h₃ h₄
+    · simp [fix] at h₃ ; cases' h₃ with h₃ h₄
       refine' ⟨⟨_, fun y h' => _⟩, _⟩
       · injection Part.mem_unique h h' with e
         exact e ▸ h₃
@@ -352,7 +352,7 @@ theorem fix_fwd {f : α →. Sum β α} {b : β} {a a' : α} (hb : b ∈ f.fix a
 def fixInduction {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a :=
   by
-  have h₂ := (Part.mem_assert_iff.1 h).snd; generalize_proofs h₁  at h₂; clear h
+  have h₂ := (Part.mem_assert_iff.1 h).snd; generalize_proofs h₁  at h₂ ; clear h
   induction' h₁ with a ha IH
   have h : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨a, ha⟩, h₂⟩
   exact H a h fun a' fa' => IH a' fa' (Part.mem_assert_iff.1 (fix_fwd h fa')).snd

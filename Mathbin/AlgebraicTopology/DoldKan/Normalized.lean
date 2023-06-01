@@ -34,8 +34,8 @@ with a functor (definitionally) equal to `normalized_Moore_complex A`.
 -/
 
 
-open
-  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject CategoryTheory.Idempotents
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject
+  CategoryTheory.Idempotents
 
 open scoped DoldKan
 

@@ -92,7 +92,7 @@ protected theorem induction_on' [Fintype m] [Fintype n] {P : Matrix m n α → P
   by
   rw [matrix_eq_sum_std_basis M, ← Finset.sum_product']
   apply Finset.sum_induction _ _ h_add h_zero
-  · intros ; apply h_std_basis
+  · intros; apply h_std_basis
 #align matrix.induction_on' Matrix.induction_on'
 
 @[elab_as_elim]

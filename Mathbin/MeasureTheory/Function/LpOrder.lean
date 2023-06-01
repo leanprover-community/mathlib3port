@@ -59,7 +59,7 @@ theorem coeFn_nonneg (f : Lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
 instance : CovariantClass (Lp E p μ) (Lp E p μ) (· + ·) (· ≤ ·) :=
   by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
-  rw [← coe_fn_le] at hg₁₂⊢
+  rw [← coe_fn_le] at hg₁₂ ⊢
   filter_upwards [coe_fn_add f g₁, coe_fn_add f g₂, hg₁₂]with _ h1 h2 h3
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
   exact add_le_add le_rfl h3
@@ -110,11 +110,11 @@ noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (Lp E p μ) 
     Lp.instNormedAddCommGroup with
     add_le_add_left := fun f g => add_le_add_left
     solid := fun f g hfg => by
-      rw [← coe_fn_le] at hfg
+      rw [← coe_fn_le] at hfg 
       simp_rw [Lp.norm_def, ENNReal.toReal_le_toReal (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]
       refine' snorm_mono_ae _
       filter_upwards [hfg, Lp.coe_fn_abs f, Lp.coe_fn_abs g]with x hx hxf hxg
-      rw [hxf, hxg] at hx
+      rw [hxf, hxg] at hx 
       exact HasSolidNorm.solid hx }
 
 end Order

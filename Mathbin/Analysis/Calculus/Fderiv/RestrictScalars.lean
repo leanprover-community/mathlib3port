@@ -93,11 +93,11 @@ theorem Differentiable.restrictScalars (h : Differentiable 𝕜' f) : Differenti
 #align differentiable.restrict_scalars Differentiable.restrictScalars
 
 theorem hasFDerivWithinAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivWithinAt f g' s x)
-    (H : f'.restrictScalars 𝕜 = g') : HasFDerivWithinAt f f' s x := by rw [← H] at h; exact h
+    (H : f'.restrictScalars 𝕜 = g') : HasFDerivWithinAt f f' s x := by rw [← H] at h ; exact h
 #align has_fderiv_within_at_of_restrict_scalars hasFDerivWithinAt_of_restrictScalars
 
 theorem hasFDerivAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivAt f g' x)
-    (H : f'.restrictScalars 𝕜 = g') : HasFDerivAt f f' x := by rw [← H] at h; exact h
+    (H : f'.restrictScalars 𝕜 = g') : HasFDerivAt f f' x := by rw [← H] at h ; exact h
 #align has_fderiv_at_of_restrict_scalars hasFDerivAt_of_restrictScalars
 
 theorem DifferentiableAt.fderiv_restrictScalars (h : DifferentiableAt 𝕜' f x) :

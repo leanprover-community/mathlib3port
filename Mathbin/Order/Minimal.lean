@@ -135,7 +135,7 @@ theorem minimals_antichain : IsAntichain r (minimals r s) :=
 end IsAntisymm
 
 #print maximals_eq_minimals /-
-theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s := by congr ; ext (a b);
+theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s := by congr; ext (a b);
   exact comm
 #align maximals_eq_minimals maximals_eq_minimals
 -/

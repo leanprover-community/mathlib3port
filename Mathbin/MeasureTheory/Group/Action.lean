@@ -40,7 +40,7 @@ variable {G M α : Type _} {s : Set α}
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
 class VAddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} (μ : Measure α) :
-  Prop where
+    Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 #align measure_theory.vadd_invariant_measure MeasureTheory.VAddInvariantMeasure
 -/
@@ -52,7 +52,7 @@ measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x
 the measure of `s`. -/
 @[to_additive]
 class SMulInvariantMeasure (M α : Type _) [SMul M α] {_ : MeasurableSpace α} (μ : Measure α) :
-  Prop where
+    Prop where
   measure_preimage_smul : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 #align measure_theory.smul_invariant_measure MeasureTheory.SMulInvariantMeasure
 #align measure_theory.vadd_invariant_measure MeasureTheory.VAddInvariantMeasure

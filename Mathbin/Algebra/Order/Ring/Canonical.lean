@@ -42,7 +42,7 @@ iff there exists `c` with `b = a + c`. This is satisfied by the natural numbers,
 not the integers or other ordered groups. -/
 @[protect_proj]
 class CanonicallyOrderedCommSemiring (α : Type _) extends CanonicallyOrderedAddMonoid α,
-  CommSemiring α where
+    CommSemiring α where
   eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : α}, a * b = 0 → a = 0 ∨ b = 0
 #align canonically_ordered_comm_semiring CanonicallyOrderedCommSemiring
 -/

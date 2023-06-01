@@ -36,8 +36,8 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 
 /-- A continuous map of affine spaces. -/
 structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring R] [AddCommGroup V]
-  [Module R V] [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W]
-  [TopologicalSpace Q] [AddTorsor W Q] extends P →ᵃ[R] Q where
+    [Module R V] [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W]
+    [TopologicalSpace Q] [AddTorsor W Q] extends P →ᵃ[R] Q where
   cont : Continuous to_fun
 #align continuous_affine_map ContinuousAffineMap
 

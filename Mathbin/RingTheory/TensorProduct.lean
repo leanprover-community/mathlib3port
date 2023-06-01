@@ -415,14 +415,14 @@ theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
   · simp only [LinearMap.map_zero, forall_const, LinearMap.zero_apply]
   apply TensorProduct.induction_on z
   · simp only [LinearMap.map_zero, forall_const]
-  · intros ; simp only [h]
-  · intros ; simp only [LinearMap.map_add, *]
-  · intros ; simp only [LinearMap.map_add, *, LinearMap.add_apply]
-  · intros ; simp only [LinearMap.map_add, *, LinearMap.add_apply]
+  · intros; simp only [h]
+  · intros; simp only [LinearMap.map_add, *]
+  · intros; simp only [LinearMap.map_add, *, LinearMap.add_apply]
+  · intros; simp only [LinearMap.map_add, *, LinearMap.add_apply]
 #align algebra.tensor_product.mul_assoc' Algebra.TensorProduct.mul_assoc'
 
 theorem mul_assoc (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
-  mul_assoc' mul (by intros ; simp only [mul_apply, mul_assoc]) x y z
+  mul_assoc' mul (by intros; simp only [mul_apply, mul_assoc]) x y z
 #align algebra.tensor_product.mul_assoc Algebra.TensorProduct.mul_assoc
 
 theorem one_mul (x : A ⊗[R] B) : mul (1 ⊗ₜ 1) x = x := by
@@ -497,12 +497,12 @@ instance leftAlgebra : Algebra S (A ⊗[R] B) :=
       apply TensorProduct.induction_on x
       · simp
       · intro a b; dsimp; rw [Algebra.commutes, _root_.mul_one, _root_.one_mul]
-      · intro y y' h h'; dsimp at h h'⊢; simp only [mul_add, add_mul, h, h']
+      · intro y y' h h'; dsimp at h h' ⊢; simp only [mul_add, add_mul, h, h']
     smul_def' := fun r x => by
       apply TensorProduct.induction_on x
       · simp [smul_zero]
       · intro a b; dsimp; rw [TensorProduct.smul_tmul', Algebra.smul_def r a, _root_.one_mul]
-      · intros ; dsimp; simp [smul_add, mul_add, *] }
+      · intros; dsimp; simp [smul_add, mul_add, *] }
 #align algebra.tensor_product.left_algebra Algebra.TensorProduct.leftAlgebra
 
 -- This is for the `undergrad.yaml` list.
@@ -721,12 +721,12 @@ def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R
           · intro a₁ b₁
             apply TensorProduct.induction_on ab₂
             · simp only [zero_tmul, map_zero, MulZeroClass.mul_zero]
-            · intros ; simp only [tmul_mul_tmul, w₁]
+            · intros; simp only [tmul_mul_tmul, w₁]
             · intro x₁ x₂ h₁ h₂
-              simp only [tmul_mul_tmul] at h₁ h₂
+              simp only [tmul_mul_tmul] at h₁ h₂ 
               simp only [tmul_mul_tmul, mul_add, add_tmul, map_add, h₁, h₂]
           · intro x₁ x₂ h₁ h₂
-            simp only [tmul_mul_tmul] at h₁ h₂
+            simp only [tmul_mul_tmul] at h₁ h₂ 
             simp only [tmul_mul_tmul, add_mul, add_tmul, map_add, h₁, h₂]
         · intro x₁ x₂ h₁ h₂
           simp only [tmul_mul_tmul, map_add, mul_add, add_mul, h₁, h₂]
@@ -1157,14 +1157,14 @@ protected def module : Module (A ⊗[R] B) M
       simp only [module_aux_apply, mul_smul, smul_comm a₁ b₂, Algebra.TensorProduct.tmul_mul_tmul,
         LinearMap.mul_apply]
     · intro z w hz hw a b
-      simp only at hz hw
+      simp only at hz hw 
       simp only [mul_add, hz, hw, map_add, LinearMap.add_apply]
     · intro z w hz hw; simp only [MulZeroClass.mul_zero, map_zero, LinearMap.zero_apply]
     · intro a b z w hz hw
-      simp only at hz hw
+      simp only at hz hw 
       simp only [map_add, add_mul, LinearMap.add_apply, hz, hw]
     · intro u v hu hv z w hz hw
-      simp only at hz hw
+      simp only at hz hw 
       simp only [add_mul, hz, hw, map_add, LinearMap.add_apply]
 #align tensor_product.algebra.module TensorProduct.Algebra.module
 

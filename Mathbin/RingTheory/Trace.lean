@@ -340,9 +340,9 @@ theorem Algebra.isIntegral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegra
   rw [← isIntegral_algebraMap_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
   · refine' (IsIntegral.multiset_sum _).nsmul _
     intro y hy
-    rw [mem_roots_map (minpoly.ne_zero hx')] at hy
+    rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
     use minpoly R x, minpoly.monic hx
-    rw [← aeval_def] at hy⊢
+    rw [← aeval_def] at hy ⊢
     exact minpoly.aeval_of_isScalarTower R x y hy
   · apply IsAlgClosed.splits_codomain
   · infer_instance
@@ -461,9 +461,9 @@ theorem traceMatrix_of_matrix_vecMul [Fintype κ] (b : κ → B) (P : Matrix κ 
       @BilinForm.sum_right _ _ _ _ _ _ _ _ (b i * P.map (algebraMap A B) i α) fun y : κ =>
         b y * P.map (algebraMap A B) y β,
     sum_comm]
-  congr ; ext x
+  congr; ext x
   rw [Matrix.mul_apply, sum_mul]
-  congr ; ext y
+  congr; ext y
   rw [map_apply, trace_form_apply, mul_comm (b y), ← smul_def]
   simp only [id.smul_eq_mul, RingHom.id_apply, map_apply, transpose_apply, LinearMap.map_smulₛₗ,
     trace_form_apply, Algebra.smul_mul_assoc]

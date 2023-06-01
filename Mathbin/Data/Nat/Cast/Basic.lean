@@ -294,7 +294,7 @@ theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
 
 theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R S] {f : F}
     (hf : Function.Injective f) : NeZero (n : S) :=
-  ⟨fun h => NeZero.natCast_ne n R <| hf <| by simpa only [map_natCast, map_zero] ⟩
+  ⟨fun h => NeZero.natCast_ne n R <| hf <| by simpa only [map_natCast, map_zero]⟩
 #align ne_zero.nat_of_injective NeZero.nat_of_injective
 
 theorem NeZero.nat_of_neZero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F)

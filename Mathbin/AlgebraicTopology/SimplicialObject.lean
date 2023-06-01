@@ -45,7 +45,8 @@ variable (C : Type u) [Category.{v} C]
 This is the category of contravariant functors from `simplex_category` to `C`. -/
 @[nolint has_nonempty_instance]
 def SimplicialObject :=
-  SimplexCategoryᵒᵖ ⥤ C deriving Category
+  SimplexCategoryᵒᵖ ⥤ C
+deriving Category
 #align category_theory.simplicial_object CategoryTheory.SimplicialObject
 -/
 
@@ -209,7 +210,8 @@ def whiskering (D : Type _) [Category D] : (C ⥤ D) ⥤ SimplicialObject C ⥤ 
 /-- Truncated simplicial objects. -/
 @[nolint has_nonempty_instance]
 def Truncated (n : ℕ) :=
-  (SimplexCategory.Truncated n)ᵒᵖ ⥤ C deriving Category
+  (SimplexCategory.Truncated n)ᵒᵖ ⥤ C
+deriving Category
 #align category_theory.simplicial_object.truncated CategoryTheory.SimplicialObject.Truncated
 -/
 
@@ -267,7 +269,8 @@ abbrev const : C ⥤ SimplicialObject C :=
 /-- The category of augmented simplicial objects, defined as a comma category. -/
 @[nolint has_nonempty_instance]
 def Augmented :=
-  Comma (𝟭 (SimplicialObject C)) (const C)deriving Category
+  Comma (𝟭 (SimplicialObject C)) (const C)
+deriving Category
 #align category_theory.simplicial_object.augmented CategoryTheory.SimplicialObject.Augmented
 -/
 
@@ -392,7 +395,8 @@ end SimplicialObject
 /-- Cosimplicial objects. -/
 @[nolint has_nonempty_instance]
 def CosimplicialObject :=
-  SimplexCategory ⥤ C deriving Category
+  SimplexCategory ⥤ C
+deriving Category
 #align category_theory.cosimplicial_object CategoryTheory.CosimplicialObject
 -/
 
@@ -554,7 +558,8 @@ def whiskering (D : Type _) [Category D] : (C ⥤ D) ⥤ CosimplicialObject C �
 /-- Truncated cosimplicial objects. -/
 @[nolint has_nonempty_instance]
 def Truncated (n : ℕ) :=
-  SimplexCategory.Truncated n ⥤ C deriving Category
+  SimplexCategory.Truncated n ⥤ C
+deriving Category
 #align category_theory.cosimplicial_object.truncated CategoryTheory.CosimplicialObject.Truncated
 -/
 
@@ -612,7 +617,8 @@ abbrev const : C ⥤ CosimplicialObject C :=
 /-- Augmented cosimplicial objects. -/
 @[nolint has_nonempty_instance]
 def Augmented :=
-  Comma (const C) (𝟭 (CosimplicialObject C))deriving Category
+  Comma (const C) (𝟭 (CosimplicialObject C))
+deriving Category
 #align category_theory.cosimplicial_object.augmented CategoryTheory.CosimplicialObject.Augmented
 -/
 

@@ -158,13 +158,13 @@ def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z
 instance {X Y : C} (f : X ⟶ Y) [Epi f] (r : R) [Invertible r] : Epi (r • f) :=
   ⟨fun R g g' H =>
     by
-    rw [smul_comp, smul_comp, ← comp_smul, ← comp_smul, cancel_epi] at H
+    rw [smul_comp, smul_comp, ← comp_smul, ← comp_smul, cancel_epi] at H 
     simpa [smul_smul] using congr_arg (fun f => ⅟ r • f) H⟩
 
 instance {X Y : C} (f : X ⟶ Y) [Mono f] (r : R) [Invertible r] : Mono (r • f) :=
   ⟨fun R g g' H =>
     by
-    rw [comp_smul, comp_smul, ← smul_comp, ← smul_comp, cancel_mono] at H
+    rw [comp_smul, comp_smul, ← smul_comp, ← smul_comp, cancel_mono] at H 
     simpa [smul_smul] using congr_arg (fun f => ⅟ r • f) H⟩
 
 #print CategoryTheory.Linear.homCongr /-
@@ -212,8 +212,8 @@ variable {S : Type w} [CommSemiring S] [Linear S C]
 def comp (X Y Z : C) : (X ⟶ Y) →ₗ[S] (Y ⟶ Z) →ₗ[S] X ⟶ Z
     where
   toFun f := leftComp S Z f
-  map_add' := by intros ; ext; simp
-  map_smul' := by intros ; ext; simp
+  map_add' := by intros; ext; simp
+  map_smul' := by intros; ext; simp
 #align category_theory.linear.comp CategoryTheory.Linear.comp
 -/
 

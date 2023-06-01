@@ -1392,7 +1392,9 @@ instance : BiheytingAlgebra PUnit := by
           hnot := fun _ => star
           himp := fun _ _ => star } <;>
       intros <;>
-    first |trivial|exact Subsingleton.elim _ _
+    first
+    | trivial
+    | exact Subsingleton.elim _ _
 
 #print PUnit.top_eq /-
 @[simp]

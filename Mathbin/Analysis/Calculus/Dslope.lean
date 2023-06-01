@@ -134,7 +134,7 @@ theorem continuousOn_dslope (h : s ∈ 𝓝 a) :
   refine' ⟨fun hc => ⟨hc.of_dslope, continuousAt_dslope_same.1 <| hc.ContinuousAt h⟩, _⟩
   rintro ⟨hc, hd⟩ x hx
   rcases eq_or_ne x a with (rfl | hne)
-  exacts[(continuousAt_dslope_same.2 hd).ContinuousWithinAt,
+  exacts [(continuousAt_dslope_same.2 hd).ContinuousWithinAt,
     (continuousWithinAt_dslope_of_ne hne).2 (hc x hx)]
 #align continuous_on_dslope continuousOn_dslope
 

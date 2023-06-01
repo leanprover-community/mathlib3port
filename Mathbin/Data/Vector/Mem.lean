@@ -39,7 +39,7 @@ theorem get_mem (i : Fin n) (v : Vector α n) : v.get? i ∈ v.toList := by rw [
 theorem mem_iff_get (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.get? i = a := by
   simp only [List.mem_iff_nthLe, Fin.exists_iff, Vector.get_eq_get] <;>
     exact
-      ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ =>
+      ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi , h⟩, fun ⟨i, hi, h⟩ =>
         ⟨i, by rwa [to_list_length], h⟩⟩
 #align vector.mem_iff_nth Vector.mem_iff_get
 -/

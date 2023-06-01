@@ -77,7 +77,7 @@ theorem fg_iff_add_subgroup_fg {G : Type _} [AddCommGroup G] (P : Submodule ℤ 
 #align submodule.fg_iff_add_subgroup_fg Submodule.fg_iff_add_subgroup_fg
 
 theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
-    N.FG ↔ ∃ (n : ℕ)(s : Fin n → M), span R (range s) = N :=
+    N.FG ↔ ∃ (n : ℕ) (s : Fin n → M), span R (range s) = N :=
   by
   rw [fg_def]
   constructor
@@ -94,7 +94,7 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     [AddCommGroup M] [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.FG) (hin : N ≤ I • N) :
     ∃ r : R, r - 1 ∈ I ∧ ∀ n ∈ N, r • n = (0 : M) :=
   by
-  rw [fg_def] at hn; rcases hn with ⟨s, hfs, hs⟩
+  rw [fg_def] at hn ; rcases hn with ⟨s, hfs, hs⟩
   have : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N :=
     by
     refine' ⟨1, _, _, _⟩
@@ -104,23 +104,23 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
   clear hin hs; revert this
   refine' Set.Finite.dinduction_on hfs (fun H => _) fun i s his hfs ih H => _
   · rcases H with ⟨r, hr1, hrn, hs⟩; refine' ⟨r, hr1, fun n hn => _⟩; specialize hrn hn
-    rwa [mem_comap, span_empty, smul_bot, mem_bot] at hrn
+    rwa [mem_comap, span_empty, smul_bot, mem_bot] at hrn 
   apply ih; rcases H with ⟨r, hr1, hrn, hs⟩
-  rw [← Set.singleton_union, span_union, smul_sup] at hrn
-  rw [Set.insert_subset] at hs
+  rw [← Set.singleton_union, span_union, smul_sup] at hrn 
+  rw [Set.insert_subset] at hs 
   have : ∃ c : R, c - 1 ∈ I ∧ c • i ∈ I • span R s :=
     by
-    specialize hrn hs.1; rw [mem_comap, mem_sup] at hrn
-    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • i at hyz
-    rw [mem_smul_span_singleton] at hy; rcases hy with ⟨c, hci, rfl⟩
+    specialize hrn hs.1; rw [mem_comap, mem_sup] at hrn 
+    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • i at hyz 
+    rw [mem_smul_span_singleton] at hy ; rcases hy with ⟨c, hci, rfl⟩
     use r - c; constructor
     · rw [sub_right_comm]; exact I.sub_mem hr1 hci
     · rw [sub_smul, ← hyz, add_sub_cancel']; exact hz
   rcases this with ⟨c, hc1, hci⟩; refine' ⟨c * r, _, _, hs.2⟩
   · simpa only [mul_sub, mul_one, sub_add_sub_cancel] using I.add_mem (I.mul_mem_left c hr1) hc1
-  · intro n hn; specialize hrn hn; rw [mem_comap, mem_sup] at hrn
-    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • n at hyz
-    rw [mem_smul_span_singleton] at hy; rcases hy with ⟨d, hdi, rfl⟩
+  · intro n hn; specialize hrn hn; rw [mem_comap, mem_sup] at hrn 
+    rcases hrn with ⟨y, hy, z, hz, hyz⟩; change y + z = r • n at hyz 
+    rw [mem_smul_span_singleton] at hy ; rcases hy with ⟨d, hdi, rfl⟩
     change _ • _ ∈ I • span R s
     rw [mul_smul, ← hyz, smul_add, smul_smul, mul_comm, mul_smul]
     exact add_mem (smul_mem _ _ hci) (smul_mem _ _ hz)
@@ -238,7 +238,7 @@ theorem fg_pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoi
     [∀ i, Module R (M i)] {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).FG) :
     (Submodule.pi Set.univ p).FG := by
   classical
-    simp_rw [fg_def] at hsb⊢
+    simp_rw [fg_def] at hsb ⊢
     choose t htf hts using hsb
     refine'
       ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_iUnion fun i => (htf i).image _, _⟩
@@ -272,11 +272,11 @@ theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ring R] [AddCommGroup M] [M
   · refine' sup_le (span_le.2 <| image_subset_iff.2 _) (span_le.2 _)
     · intro y hy; exact (hg y hy).1
     · intro x hx; have := subset_span hx
-      rw [ht2] at this
+      rw [ht2] at this 
       exact this.1
   intro x hx
   have : f x ∈ map f s := by rw [mem_map]; exact ⟨x, hx, rfl⟩
-  rw [← ht1, ← Set.image_id ↑t1, Finsupp.mem_span_image_iff_total] at this
+  rw [← ht1, ← Set.image_id ↑t1, Finsupp.mem_span_image_iff_total] at this 
   rcases this with ⟨l, hl1, hl2⟩
   refine'
     mem_sup.2
@@ -374,7 +374,7 @@ theorem fg_iff_compact (s : Submodule R M) : s.FG ↔ CompleteLattice.IsCompactE
         rw [sSup, Finset.sup_id_eq_sSup]; exact sSup_le_sSup huspan
       obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
       rw [Finset.sup_image, Function.comp.left_id, Finset.sup_eq_iSup, supr_rw, ←
-        span_eq_supr_of_singleton_spans, eq_comm] at ssup
+        span_eq_supr_of_singleton_spans, eq_comm] at ssup 
       exact ⟨t, ssup⟩
 #align submodule.fg_iff_compact Submodule.fg_iff_compact
 
@@ -515,7 +515,7 @@ theorem iff_addGroup_fg {G : Type _} [AddCommGroup G] : Module.Finite ℤ G ↔ 
 
 variable {R M N}
 
-theorem exists_fin [Finite R M] : ∃ (n : ℕ)(s : Fin n → M), span R (range s) = ⊤ :=
+theorem exists_fin [Finite R M] : ∃ (n : ℕ) (s : Fin n → M), span R (range s) = ⊤ :=
   Submodule.fg_iff_exists_fin_generating_family.mp out
 #align module.finite.exists_fin Module.Finite.exists_fin
 
@@ -553,11 +553,11 @@ variable (M)
 theorem of_restrictScalars_finite (R A M : Type _) [CommSemiring R] [Semiring A] [AddCommMonoid M]
     [Module R M] [Module A M] [Algebra R A] [IsScalarTower R A M] [hM : Finite R M] : Finite A M :=
   by
-  rw [finite_def, fg_def] at hM⊢
+  rw [finite_def, fg_def] at hM ⊢
   obtain ⟨S, hSfin, hSgen⟩ := hM
   refine' ⟨S, hSfin, eq_top_iff.2 _⟩
   have := Submodule.span_le_restrictScalars R A S
-  rw [hSgen] at this
+  rw [hSgen] at this 
   exact this
 #align module.finite.of_restrict_scalars_finite Module.Finite.of_restrictScalars_finite
 

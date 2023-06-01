@@ -492,7 +492,7 @@ protected theorem le_sup_right (f g : α →ₘ[μ] β) : g ≤ f ⊔ g := by rw
 
 protected theorem sup_le (f g f' : α →ₘ[μ] β) (hf : f ≤ f') (hg : g ≤ f') : f ⊔ g ≤ f' :=
   by
-  rw [← coe_fn_le] at hf hg⊢
+  rw [← coe_fn_le] at hf hg ⊢
   filter_upwards [hf, hg, coe_fn_sup f g]with _ haf hag ha_sup
   rw [ha_sup]
   exact sup_le haf hag
@@ -520,7 +520,7 @@ protected theorem inf_le_right (f g : α →ₘ[μ] β) : f ⊓ g ≤ g := by rw
 
 protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' ≤ g) : f' ≤ f ⊓ g :=
   by
-  rw [← coe_fn_le] at hf hg⊢
+  rw [← coe_fn_le] at hf hg ⊢
   filter_upwards [hf, hg, coe_fn_inf f g]with _ haf hag ha_inf
   rw [ha_inf]
   exact le_inf haf hag

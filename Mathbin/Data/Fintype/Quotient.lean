@@ -72,7 +72,7 @@ def Quotient.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι → 
       Finset.univ.1 (fun l => Quotient.finChoiceAux l fun i _ => f i) fun a b h =>
       by
       have := fun a => Quotient.finChoiceAux_eq a fun i h => Quotient.out (f i)
-      simp [Quotient.out_eq] at this
+      simp [Quotient.out_eq] at this 
       simp [this]
       let g := fun a : Multiset ι => ⟦fun (i : ι) (h : i ∈ a) => Quotient.out (f i)⟧
       refine' eq_of_hEq ((eq_rec_hEq _ _).trans (_ : HEq (g a) (g b)))

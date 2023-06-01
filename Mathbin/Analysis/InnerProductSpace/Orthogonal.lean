@@ -87,7 +87,7 @@ theorem mem_orthogonal_singleton_iff_inner_right {u v : E} : v ∈ (𝕜 ∙ u)�
   by
   refine' ⟨inner_right_of_mem_orthogonal (mem_span_singleton_self u), _⟩
   intro hv w hw
-  rw [mem_span_singleton] at hw
+  rw [mem_span_singleton] at hw 
   obtain ⟨c, rfl⟩ := hw
   simp [inner_smul_left, hv]
 #align submodule.mem_orthogonal_singleton_iff_inner_right Submodule.mem_orthogonal_singleton_iff_inner_right
@@ -138,7 +138,7 @@ theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL 𝕜 (v :
     rintro ⟨v, hv⟩ w hw
     simpa using hw _ hv
   · intro v hv w hw
-    simp only [mem_infi] at hv
+    simp only [mem_infi] at hv 
     exact hv ⟨w, hw⟩
 #align submodule.orthogonal_eq_inter Submodule.orthogonal_eq_inter
 
@@ -228,7 +228,7 @@ theorem orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
   refine' ⟨_, by rintro rfl; exact bot_orthogonal_eq_top⟩
   intro h
   have : K ⊓ Kᗮ = ⊥ := K.orthogonal_disjoint.eq_bot
-  rwa [h, inf_comm, top_inf_eq] at this
+  rwa [h, inf_comm, top_inf_eq] at this 
 #align submodule.orthogonal_eq_top_iff Submodule.orthogonal_eq_top_iff
 
 theorem orthogonalFamily_self :

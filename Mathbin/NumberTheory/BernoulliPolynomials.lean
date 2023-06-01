@@ -65,7 +65,7 @@ theorem bernoulli_def (n : ℕ) :
   rw [← sum_range_reflect, add_succ_sub_one, add_zero, bernoulli]
   apply sum_congr rfl
   rintro x hx
-  rw [mem_range_succ_iff] at hx; rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
+  rw [mem_range_succ_iff] at hx ; rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
 #align polynomial.bernoulli_def Polynomial.bernoulli_def
 
 /-
@@ -150,7 +150,7 @@ theorem sum_bernoulli (n : ℕ) :
     LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
-    rintro x H; rw [mem_range] at H
+    rintro x H; rw [mem_range] at H 
     rw [eq_comm]
     exact ne_of_lt (Nat.lt_of_lt_of_le one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))
   rw [sum_bernoulli]

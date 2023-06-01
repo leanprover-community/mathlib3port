@@ -808,7 +808,7 @@ theorem isOrtho_smul_left {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G (a 
   by
   dsimp only [is_ortho]
   constructor <;> intro H
-  · rw [smul_left, mul_eq_zero] at H
+  · rw [smul_left, mul_eq_zero] at H 
     cases H
     · trivial
     · exact H
@@ -820,7 +820,7 @@ theorem isOrtho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x 
   by
   dsimp only [is_ortho]
   constructor <;> intro H
-  · rw [smul_right, mul_eq_zero] at H
+  · rw [smul_right, mul_eq_zero] at H 
     cases H
     · trivial
     · exact H
@@ -840,7 +840,7 @@ theorem linearIndependent_of_iIsOrtho {n : Type w} {B : BilinForm K V} {v : n �
       apply Finset.sum_eq_single_of_mem i hi
       intro j hj hij
       rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
-    simp_rw [sum_left, smul_left, hsum] at this
+    simp_rw [sum_left, smul_left, hsum] at this 
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align bilin_form.linear_independent_of_is_Ortho BilinForm.linearIndependent_of_iIsOrtho
 
@@ -993,7 +993,7 @@ theorem neg_eq (H : B₁.IsAlt) (x y : M₁) : -B₁ x y = B₁ y x :=
   by
   have H1 : B₁ (x + y) (x + y) = 0 := self_eq_zero H (x + y)
   rw [add_left, add_right, add_right, self_eq_zero H, self_eq_zero H, Ring.zero_add, Ring.add_zero,
-    add_eq_zero_iff_neg_eq] at H1
+    add_eq_zero_iff_neg_eq] at H1 
   exact H1
 #align bilin_form.is_alt.neg_eq BilinForm.IsAlt.neg_eq
 
@@ -1256,10 +1256,10 @@ theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : �
   refine' eq_bot_iff.2 fun y h => _
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
   have := h.2 x _
-  · rw [Finset.sum_singleton] at this⊢
+  · rw [Finset.sum_singleton] at this ⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
-    change B x (μ x • x) = 0 at this; rw [smul_right] at this
+    change B x (μ x • x) = 0 at this ; rw [smul_right] at this 
     exact Or.elim (zero_eq_mul.mp this.symm) id fun hfalse => False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
 #align bilin_form.span_singleton_inf_orthogonal_eq_bot BilinForm.span_singleton_inf_orthogonal_eq_bot
@@ -1387,7 +1387,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal (B : BilinForm R₁ M₁) (b :
   rw [Submodule.mk_eq_zero, ← Submodule.mem_bot R₁]
   refine' hW.le_bot ⟨hx, fun y hy => _⟩
   specialize b₁ ⟨y, hy⟩
-  rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk] at b₁
+  rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk] at b₁ 
   exact is_ortho_def.mpr (b x y b₁)
 #align bilin_form.nondegenerate_restrict_of_disjoint_orthogonal BilinForm.nondegenerateRestrictOfDisjointOrthogonal
 
@@ -1421,8 +1421,8 @@ theorem iIsOrtho.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontrivi
   ext i
   rw [Finsupp.zero_apply]
   specialize hB (v i)
-  simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_left, smul_left] at hB
-  rw [Finset.sum_eq_single i] at hB
+  simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_left, smul_left] at hB 
+  rw [Finset.sum_eq_single i] at hB 
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
   · intro j hj hij; convert MulZeroClass.mul_zero _ using 2; exact hO hij
   · intro hi; convert MulZeroClass.zero_mul _ using 2; exact finsupp.not_mem_support_iff.mp hi
@@ -1436,7 +1436,7 @@ theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K
   by
   ext x; constructor <;> intro hx
   · rcases hx with ⟨⟨x, hx⟩, hker, rfl⟩
-    erw [LinearMap.mem_ker] at hker
+    erw [LinearMap.mem_ker] at hker 
     constructor
     · simp [hx]
     · intro y _
@@ -1457,7 +1457,7 @@ theorem toLin_restrict_range_dualCoannihilator_eq_orthogonal (B : BilinForm K V)
   by
   ext x; constructor <;> rw [mem_orthogonal_iff] <;> intro hx
   · intro y hy
-    rw [Submodule.mem_dualCoannihilator] at hx
+    rw [Submodule.mem_dualCoannihilator] at hx 
     refine' hx (B.to_lin.dom_restrict W ⟨y, hy⟩) ⟨⟨y, hy⟩, rfl⟩
   · rw [Submodule.mem_dualCoannihilator]
     rintro _ ⟨⟨w, hw⟩, rfl⟩
@@ -1585,7 +1585,7 @@ theorem restrictOrthogonalSpanSingletonNondegenerate (B : BilinForm K V) (b₁ :
     (span_singleton_sup_orthogonal_eq_top hx).symm ▸ Submodule.mem_top
   rcases Submodule.mem_sup.1 this with ⟨y, hy, z, hz, rfl⟩
   specialize hm ⟨z, hz⟩
-  rw [restrict] at hm
+  rw [restrict] at hm 
   erw [add_right, show B m.1 y = 0 by rw [b₂] <;> exact m.2 y hy, hm, add_zero]
 #align bilin_form.restrict_orthogonal_span_singleton_nondegenerate BilinForm.restrictOrthogonalSpanSingletonNondegenerate
 -/

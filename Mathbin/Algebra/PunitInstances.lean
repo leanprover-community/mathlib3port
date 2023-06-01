@@ -39,7 +39,7 @@ instance : CommGroup PUnit := by
           inv := fun _ => star
           div := fun _ _ => star
           npow := fun _ _ => star
-          zpow := fun _ _ => star.. } <;>
+          zpow := fun _ _ => star .. } <;>
       intros <;>
     exact Subsingleton.elim _ _
 
@@ -70,7 +70,7 @@ theorem inv_eq : x⁻¹ = unit :=
 #align punit.neg_eq PUnit.neg_eq
 
 instance : CommRing PUnit := by
-  refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
+  refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit .. } <;>
       intros <;>
     exact Subsingleton.elim _ _
 
@@ -85,7 +85,7 @@ instance : NormalizedGCDMonoid PUnit := by
           gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
           gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
           dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩
-          gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩.. } <;>
+          gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩ .. } <;>
       intros <;>
     exact Subsingleton.elim _ _
 
@@ -107,7 +107,7 @@ theorem norm_unit_eq : normUnit x = 1 :=
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
         { PUnit.commRing, PUnit.completeBooleanAlgebra with
-          exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩.. } <;>
+          exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩ .. } <;>
       intros <;>
     trivial
 

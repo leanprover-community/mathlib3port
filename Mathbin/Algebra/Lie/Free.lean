@@ -119,7 +119,8 @@ end FreeLieAlgebra
 
 /-- The free Lie algebra on the type `X` with coefficients in the commutative ring `R`. -/
 def FreeLieAlgebra :=
-  Quot (FreeLieAlgebra.Rel R X)deriving Inhabited
+  Quot (FreeLieAlgebra.Rel R X)
+deriving Inhabited
 #align free_lie_algebra FreeLieAlgebra
 
 namespace FreeLieAlgebra

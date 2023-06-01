@@ -60,7 +60,7 @@ theorem isCauSeq_of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham 
     not_lt_of_ge (ham m le_rfl)
       (lt_of_lt_of_le (by have := hl m (le_refl m) <;> simpa [hl0] using this) (le_abs_self (f m)))
   cases' not_forall.1 (Nat.find_min h (Nat.pred_lt hl0)) with i hi
-  rw [not_imp, not_lt] at hi
+  rw [not_imp, not_lt] at hi 
   exists i
   intro j hj
   have hfij : f j ≤ f i := (Nat.rel_of_forall_rel_succ_of_le_of_le (· ≥ ·) hnm hi.1 hj).le
@@ -107,18 +107,18 @@ theorem isCauSeq_series_of_abv_le_of_isCauSeq {f : ℕ → β} {g : ℕ → α} 
   have sub_le :=
     abs_sub_le (∑ k in range j, g k) (∑ k in range i, g k) (∑ k in range (max n i), g k)
   have := add_lt_add hi₁ hi₂
-  rw [abs_sub_comm (∑ k in range (max n i), g k), add_halves ε] at this
+  rw [abs_sub_comm (∑ k in range (max n i), g k), add_halves ε] at this 
   refine' lt_of_le_of_lt (le_trans (le_trans _ (le_abs_self _)) sub_le) this
   generalize hk : j - max n i = k
   clear this hi₂ hi₁ hi ε0 ε hg sub_le
-  rw [tsub_eq_iff_eq_add_of_le ji] at hk
+  rw [tsub_eq_iff_eq_add_of_le ji] at hk 
   rw [hk]
   clear hk ji j
   induction' k with k' hi
   · simp [abv_zero abv]
   · simp only [Nat.succ_add, sum_range_succ_comm, sub_eq_add_neg, add_assoc]
     refine' le_trans (abv_add _ _ _) _
-    simp only [sub_eq_add_neg] at hi
+    simp only [sub_eq_add_neg] at hi 
     exact add_le_add (hm _ (le_add_of_nonneg_of_le (Nat.zero_le _) (le_max_left _ _))) hi
 #align is_cau_series_of_abv_le_cau isCauSeq_series_of_abv_le_of_isCauSeq
 
@@ -328,7 +328,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
             ∑ i in range (max N M + 1),
               abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) <
         ε / (2 * P) * P + ε / (4 * Q) * (2 * Q)
-      by rw [hε] at this; simpa [abv_mul abv]
+      by rw [hε] at this ; simpa [abv_mul abv]
     refine'
       add_lt_add
         (lt_of_le_of_lt hsumlesum
@@ -1020,8 +1020,8 @@ theorem sin_sub_sin : sin x - sin y = 2 * sin ((x - y) / 2) * cos ((x + y) / 2) 
   by
   have s1 := sin_add ((x + y) / 2) ((x - y) / 2)
   have s2 := sin_sub ((x + y) / 2) ((x - y) / 2)
-  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel, half_add_self] at s1
-  rw [div_sub_div_same, ← sub_add, add_sub_cancel', half_add_self] at s2
+  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel, half_add_self] at s1 
+  rw [div_sub_div_same, ← sub_add, add_sub_cancel', half_add_self] at s2 
   rw [s1, s2]
   ring
 #align complex.sin_sub_sin Complex.sin_sub_sin
@@ -1030,8 +1030,8 @@ theorem cos_sub_cos : cos x - cos y = -2 * sin ((x + y) / 2) * sin ((x - y) / 2)
   by
   have s1 := cos_add ((x + y) / 2) ((x - y) / 2)
   have s2 := cos_sub ((x + y) / 2) ((x - y) / 2)
-  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel, half_add_self] at s1
-  rw [div_sub_div_same, ← sub_add, add_sub_cancel', half_add_self] at s2
+  rw [div_add_div_same, add_sub, add_right_comm, add_sub_cancel, half_add_self] at s1 
+  rw [div_sub_div_same, ← sub_add, add_sub_cancel', half_add_self] at s2 
   rw [s1, s2]
   ring
 #align complex.cos_sub_cos Complex.cos_sub_cos
@@ -1323,7 +1323,7 @@ theorem exp_nat_mul (x : ℝ) : ∀ n : ℕ, exp (n * x) = exp x ^ n
 #align real.exp_nat_mul Real.exp_nat_mul
 
 theorem exp_ne_zero : exp x ≠ 0 := fun h =>
-  exp_ne_zero x <| by rw [exp, ← of_real_inj] at h <;> simp_all
+  exp_ne_zero x <| by rw [exp, ← of_real_inj] at h  <;> simp_all
 #align real.exp_ne_zero Real.exp_ne_zero
 
 theorem exp_neg : exp (-x) = (exp x)⁻¹ := by
@@ -1827,11 +1827,11 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       sum_bij (fun m _ => m - n)
         (fun m hm =>
           mem_range.2 <|
-            (tsub_lt_tsub_iff_right (by simp at hm <;> tauto)).2 (by simp at hm <;> tauto))
+            (tsub_lt_tsub_iff_right (by simp at hm  <;> tauto)).2 (by simp at hm  <;> tauto))
         (fun m hm => by rw [tsub_add_cancel_of_le] <;> simp at * <;> tauto)
         (fun a₁ a₂ ha₁ ha₂ h => by
           rwa [tsub_eq_iff_eq_add_of_le, tsub_add_eq_add_tsub, eq_comm, tsub_eq_iff_eq_add_of_le,
-                add_left_inj, eq_comm] at h <;>
+                add_left_inj, eq_comm] at h  <;>
               simp at * <;>
             tauto)
         fun b hb =>
@@ -1890,7 +1890,7 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
         abs (∑ m in (range j).filterₓ fun k => n ≤ k, (x ^ n * (x ^ (m - n) / m !) : ℂ)) :=
       by
       refine' congr_arg abs (sum_congr rfl fun m hm => _)
-      rw [mem_filter, mem_range] at hm
+      rw [mem_filter, mem_range] at hm 
       rw [← mul_div_assoc, ← pow_add, add_tsub_cancel_of_le hm.2]
     _ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) :=
       (abv_sum_le_sum_abv _ _)
@@ -1987,7 +1987,7 @@ theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n
   have h3 : |x| = x := by simpa
   have h4 : |x| ≤ 1 := by rwa [h3]
   have h' := Real.exp_bound h4 hn
-  rw [h3] at h'
+  rw [h3] at h' 
   have h'' := (abs_sub_le_iff.1 h').1
   have t := sub_le_iff_le_add'.1 h''
   simpa [mul_div_assoc] using t
@@ -2035,7 +2035,7 @@ theorem expNear_sub (n x r₁ r₂) : expNear n x r₁ - expNear n x r₂ = x ^ 
 
 theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : |x| ≤ 1) :
     |exp x - expNear m x 0| ≤ |x| ^ m / m ! * ((m + 1) / m) := by simp [exp_near];
-  convert exp_bound h _ using 1; field_simp [mul_comm] ; linarith
+  convert exp_bound h _ using 1; field_simp [mul_comm]; linarith
 #align real.exp_approx_end Real.exp_approx_end
 
 theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a₂ b₂ : ℝ)
@@ -2287,11 +2287,11 @@ theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x :=
 theorem one_sub_div_pow_le_exp_neg {n : ℕ} {t : ℝ} (ht' : t ≤ n) : (1 - t / n) ^ n ≤ exp (-t) :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp; rwa [Nat.cast_zero] at ht'
+  · simp; rwa [Nat.cast_zero] at ht' 
   convert pow_le_pow_of_le_left _ (add_one_le_exp (-(t / n))) n
   · abel
   · rw [← Real.exp_nat_mul]; congr 1
-    field_simp [nat.cast_ne_zero.mpr hn] ; ring
+    field_simp [nat.cast_ne_zero.mpr hn]; ring
   · rwa [add_comm, ← sub_eq_add_neg, sub_nonneg, div_le_one]
     positivity
 #align real.one_sub_div_pow_le_exp_neg Real.one_sub_div_pow_le_exp_neg

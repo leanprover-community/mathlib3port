@@ -491,7 +491,8 @@ def inseparableSetoid : Setoid X :=
 /-- The quotient of a topological space by its `inseparable_setoid`. This quotient is guaranteed to
 be a T₀ space. -/
 def SeparationQuotient :=
-  Quotient (inseparableSetoid X)deriving TopologicalSpace
+  Quotient (inseparableSetoid X)
+deriving TopologicalSpace
 #align separation_quotient SeparationQuotient
 -/
 

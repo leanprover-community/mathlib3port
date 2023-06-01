@@ -147,7 +147,8 @@ We also provide the notation `Ω[S⁄R]` for `kaehler_differential R S`.
 Note that the slash is `\textfractionsolidus`.
 -/
 def KaehlerDifferential : Type _ :=
-  (KaehlerDifferential.ideal R S).Cotangent deriving AddCommGroup,
+  (KaehlerDifferential.ideal R S).Cotangent
+deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] tensor_product(S, R, S)»
 #align kaehler_differential KaehlerDifferential
 
@@ -241,7 +242,7 @@ theorem KaehlerDifferential.span_range_derivation :
   rintro x -
   obtain ⟨⟨x, hx⟩, rfl⟩ := Ideal.toCotangent_surjective _ x
   have : x ∈ (KaehlerDifferential.ideal R S).restrictScalars S := hx
-  rw [← KaehlerDifferential.submodule_span_range_eq_ideal] at this
+  rw [← KaehlerDifferential.submodule_span_range_eq_ideal] at this 
   suffices
     ∃ hx,
       (KaehlerDifferential.ideal R S).toCotangent ⟨x, hx⟩ ∈

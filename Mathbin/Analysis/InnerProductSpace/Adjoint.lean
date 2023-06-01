@@ -68,6 +68,7 @@ namespace ContinuousLinearMap
 
 variable [CompleteSpace E] [CompleteSpace G]
 
+#print ContinuousLinearMap.adjointAux /-
 /-- The adjoint, as a continuous conjugate-linear map.  This is only meant as an auxiliary
 definition for the main definition `adjoint`, where this is bundled as a conjugate-linear isometric
 equivalence. -/
@@ -75,6 +76,7 @@ def adjointAux : (E →L[𝕜] F) →L⋆[𝕜] F →L[𝕜] E :=
   (ContinuousLinearMap.compSL _ _ _ _ _ ((toDual 𝕜 E).symm : NormedSpace.Dual 𝕜 E →L⋆[𝕜] E)).comp
     (toSesqForm : (E →L[𝕜] F) →L[𝕜] F →L⋆[𝕜] NormedSpace.Dual 𝕜 E)
 #align continuous_linear_map.adjoint_aux ContinuousLinearMap.adjointAux
+-/
 
 @[simp]
 theorem adjointAux_apply (A : E →L[𝕜] F) (x : F) :
@@ -113,11 +115,13 @@ theorem adjointAux_norm (A : E →L[𝕜] F) : ‖adjointAux A‖ = ‖A‖ :=
     exact to_sesq_form_apply_norm_le
 #align continuous_linear_map.adjoint_aux_norm ContinuousLinearMap.adjointAux_norm
 
+#print ContinuousLinearMap.adjoint /-
 /-- The adjoint of a bounded operator from Hilbert space E to Hilbert space F. -/
 def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
   LinearIsometryEquiv.ofSurjective { adjointAux with norm_map' := adjointAux_norm } fun A =>
     ⟨adjointAux A, adjointAux_adjointAux A⟩
 #align continuous_linear_map.adjoint ContinuousLinearMap.adjoint
+-/
 
 -- mathport name: adjoint
 scoped[InnerProduct] postfix:1000 "†" => ContinuousLinearMap.adjoint
@@ -297,7 +301,7 @@ theorem isSymmetric {A : E →L[𝕜] E} (hA : IsSelfAdjoint A) : (A : E →ₗ[
 theorem conj_adjoint {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : E →L[𝕜] F) :
     IsSelfAdjoint (S ∘L T ∘L S.adjoint) :=
   by
-  rw [is_self_adjoint_iff'] at hT⊢
+  rw [is_self_adjoint_iff'] at hT ⊢
   simp only [hT, adjoint_comp, adjoint_adjoint]
   exact ContinuousLinearMap.comp_assoc _ _ _
 #align is_self_adjoint.conj_adjoint IsSelfAdjoint.conj_adjoint
@@ -306,7 +310,7 @@ theorem conj_adjoint {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : E →L[�
 theorem adjoint_conj {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : F →L[𝕜] E) :
     IsSelfAdjoint (S.adjoint ∘L T ∘L S) :=
   by
-  rw [is_self_adjoint_iff'] at hT⊢
+  rw [is_self_adjoint_iff'] at hT ⊢
   simp only [hT, adjoint_comp, adjoint_adjoint]
   exact ContinuousLinearMap.comp_assoc _ _ _
 #align is_self_adjoint.adjoint_conj IsSelfAdjoint.adjoint_conj
@@ -318,7 +322,7 @@ theorem ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric {A : E →L[𝕜] E} :
 #align continuous_linear_map.is_self_adjoint_iff_is_symmetric ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric
 
 theorem LinearMap.IsSymmetric.isSelfAdjoint {A : E →L[𝕜] E} (hA : (A : E →ₗ[𝕜] E).IsSymmetric) :
-    IsSelfAdjoint A := by rwa [← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric] at hA
+    IsSelfAdjoint A := by rwa [← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric] at hA 
 #align linear_map.is_symmetric.is_self_adjoint LinearMap.IsSymmetric.isSelfAdjoint
 
 /-- The orthogonal projection is self-adjoint. -/
@@ -367,6 +371,7 @@ variable [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] [FiniteDimensiona
 
 attribute [local instance 20] FiniteDimensional.complete
 
+#print LinearMap.adjoint /-
 /-- The adjoint of an operator from the finite-dimensional inner product space E to the finite-
 dimensional inner product space F. -/
 def adjoint : (E →ₗ[𝕜] F) ≃ₗ⋆[𝕜] F →ₗ[𝕜] E :=
@@ -374,15 +379,16 @@ def adjoint : (E →ₗ[𝕜] F) ≃ₗ⋆[𝕜] F →ₗ[𝕜] E :=
         ContinuousLinearMap.adjoint.toLinearEquiv).trans
     LinearMap.toContinuousLinearMap.symm
 #align linear_map.adjoint LinearMap.adjoint
+-/
 
 theorem adjoint_toContinuousLinearMap (A : E →ₗ[𝕜] F) :
     A.adjoint.toContinuousLinearMap = A.toContinuousLinearMap.adjoint :=
   rfl
 #align linear_map.adjoint_to_continuous_linear_map LinearMap.adjoint_toContinuousLinearMap
 
-theorem adjoint_eq_to_clm_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.toContinuousLinearMap.adjoint :=
+theorem adjoint_eq_toClm_adjoint (A : E →ₗ[𝕜] F) : A.adjoint = A.toContinuousLinearMap.adjoint :=
   rfl
-#align linear_map.adjoint_eq_to_clm_adjoint LinearMap.adjoint_eq_to_clm_adjoint
+#align linear_map.adjoint_eq_to_clm_adjoint LinearMap.adjoint_eq_toClm_adjoint
 
 /-- The fundamental property of the adjoint. -/
 theorem adjoint_inner_left (A : E →ₗ[𝕜] F) (x : E) (y : F) : ⟪adjoint A y, x⟫ = ⟪y, A x⟫ :=

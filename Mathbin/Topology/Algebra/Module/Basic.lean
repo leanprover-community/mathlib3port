@@ -105,14 +105,14 @@ theorem Submodule.eq_top_of_nonempty_interior' [NeBot (𝓝[{ x : R | IsUnit x }
   by
   rcases hs with ⟨y, hy⟩
   refine' Submodule.eq_top_iff'.2 fun x => _
-  rw [mem_interior_iff_mem_nhds] at hy
+  rw [mem_interior_iff_mem_nhds] at hy 
   have : tendsto (fun c : R => y + c • x) (𝓝[{ x : R | IsUnit x }] 0) (𝓝 (y + (0 : R) • x)) :=
     tendsto_const_nhds.add ((tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).smul tendsto_const_nhds)
-  rw [zero_smul, add_zero] at this
+  rw [zero_smul, add_zero] at this 
   obtain ⟨_, hu : y + _ • _ ∈ s, u, rfl⟩ :=
     nonempty_of_mem (inter_mem (mem_map.1 (this hy)) self_mem_nhdsWithin)
   have hy' : y ∈ ↑s := mem_of_mem_nhds hy
-  rwa [s.add_mem_iff_right hy', ← Units.smul_def, s.smul_mem_iff' u] at hu
+  rwa [s.add_mem_iff_right hy', ← Units.smul_def, s.smul_mem_iff' u] at hu 
 #align submodule.eq_top_of_nonempty_interior' Submodule.eq_top_of_nonempty_interior'
 
 variable (R M)
@@ -292,8 +292,8 @@ end Pi
 definition, although in applications `M` and `M₂` will be topological modules over the topological
 ring `R`. -/
 structure ContinuousLinearMap {R : Type _} {S : Type _} [Semiring R] [Semiring S] (σ : R →+* S)
-  (M : Type _) [TopologicalSpace M] [AddCommMonoid M] (M₂ : Type _) [TopologicalSpace M₂]
-  [AddCommMonoid M₂] [Module R M] [Module S M₂] extends M →ₛₗ[σ] M₂ where
+    (M : Type _) [TopologicalSpace M] [AddCommMonoid M] (M₂ : Type _) [TopologicalSpace M₂]
+    [AddCommMonoid M₂] [Module R M] [Module S M₂] extends M →ₛₗ[σ] M₂ where
   cont : Continuous to_fun := by continuity
 #align continuous_linear_map ContinuousLinearMap
 -/
@@ -314,9 +314,9 @@ notation:25 M " →L⋆[" R "] " M₂ => ContinuousLinearMap (starRingEnd R) M M
 homomorphism `σ : R →+* S` is semilinear if it satisfies the two properties `f (x + y) = f x + f y`
 and `f (c • x) = (σ c) • f x`. -/
 class ContinuousSemilinearMapClass (F : Type _) {R S : outParam (Type _)} [Semiring R] [Semiring S]
-  (σ : outParam <| R →+* S) (M : outParam (Type _)) [TopologicalSpace M] [AddCommMonoid M]
-  (M₂ : outParam (Type _)) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
-  [Module S M₂] extends SemilinearMapClass F σ M M₂, ContinuousMapClass F M M₂
+    (σ : outParam <| R →+* S) (M : outParam (Type _)) [TopologicalSpace M] [AddCommMonoid M]
+    (M₂ : outParam (Type _)) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
+    [Module S M₂] extends SemilinearMapClass F σ M M₂, ContinuousMapClass F M M₂
 #align continuous_semilinear_map_class ContinuousSemilinearMapClass
 -/
 
@@ -340,9 +340,9 @@ for the definition, although in applications `M` and `M₂` will be topological 
 topological semiring `R`. -/
 @[nolint has_nonempty_instance]
 structure ContinuousLinearEquiv {R : Type _} {S : Type _} [Semiring R] [Semiring S] (σ : R →+* S)
-  {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) [TopologicalSpace M]
-  [AddCommMonoid M] (M₂ : Type _) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
-  [Module S M₂] extends M ≃ₛₗ[σ] M₂ where
+    {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) [TopologicalSpace M]
+    [AddCommMonoid M] (M₂ : Type _) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
+    [Module S M₂] extends M ≃ₛₗ[σ] M₂ where
   continuous_toFun : Continuous to_fun := by continuity
   continuous_invFun : Continuous inv_fun := by continuity
 #align continuous_linear_equiv ContinuousLinearEquiv
@@ -364,10 +364,10 @@ where `σ` is the identity map on `R`.  A map `f` between an `R`-module and an `
 homomorphism `σ : R →+* S` is semilinear if it satisfies the two properties `f (x + y) = f x + f y`
 and `f (c • x) = (σ c) • f x`. -/
 class ContinuousSemilinearEquivClass (F : Type _) {R : outParam (Type _)} {S : outParam (Type _)}
-  [Semiring R] [Semiring S] (σ : outParam <| R →+* S) {σ' : outParam <| S →+* R}
-  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : outParam (Type _)) [TopologicalSpace M]
-  [AddCommMonoid M] (M₂ : outParam (Type _)) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
-  [Module S M₂] extends SemilinearEquivClass F σ M M₂ where
+    [Semiring R] [Semiring S] (σ : outParam <| R →+* S) {σ' : outParam <| S →+* R}
+    [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : outParam (Type _)) [TopologicalSpace M]
+    [AddCommMonoid M] (M₂ : outParam (Type _)) [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R M]
+    [Module S M₂] extends SemilinearEquivClass F σ M M₂ where
   map_continuous : ∀ f : F, Continuous f := by continuity
   inv_continuous : ∀ f : F, Continuous (inv f) := by continuity
 #align continuous_semilinear_equiv_class ContinuousSemilinearEquivClass
@@ -648,8 +648,8 @@ theorem DenseRange.topologicalClosure_map_submodule [RingHomSurjective σ₁₂]
     [ContinuousAdd M₂] {f : M₁ →SL[σ₁₂] M₂} (hf' : DenseRange f) {s : Submodule R₁ M₁}
     (hs : s.topologicalClosure = ⊤) : (s.map (f : M₁ →ₛₗ[σ₁₂] M₂)).topologicalClosure = ⊤ :=
   by
-  rw [SetLike.ext'_iff] at hs⊢
-  simp only [Submodule.topologicalClosure_coe, Submodule.top_coe, ← dense_iff_closure_eq] at hs⊢
+  rw [SetLike.ext'_iff] at hs ⊢
+  simp only [Submodule.topologicalClosure_coe, Submodule.top_coe, ← dense_iff_closure_eq] at hs ⊢
   exact hf'.dense_image f.continuous hs
 #align dense_range.topological_closure_map_submodule DenseRange.topologicalClosure_map_submodule
 
@@ -1350,7 +1350,7 @@ def iInfKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjo
   continuous_invFun :=
     Continuous.subtype_mk
       (continuous_pi fun i => by dsimp;
-        split_ifs <;> [apply continuous_apply;exact continuous_zero])
+        split_ifs <;> [apply continuous_apply; exact continuous_zero])
       _
 #align continuous_linear_map.infi_ker_proj_equiv ContinuousLinearMap.iInfKerProjEquiv
 
@@ -1440,7 +1440,7 @@ instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
             zsmul := (· • ·)
             zsmul_zero' := fun f => by ext; simp
             zsmul_succ' := fun n f => by ext; simp [add_smul, add_comm]
-            zsmul_neg' := fun n f => by ext; simp [Nat.succ_eq_add_one, add_smul].. } <;>
+            zsmul_neg' := fun n f => by ext; simp [Nat.succ_eq_add_one, add_smul] .. } <;>
         intros <;>
       ext <;>
     apply_rules [zero_add, add_assoc, add_zero, add_left_neg, add_comm, sub_eq_add_neg]
@@ -1940,8 +1940,8 @@ theorem map_eq_zero_iff (e : M₁ ≃SL[σ₁₂] M₂) {x : M₁} : e x = 0 ↔
   e.toLinearEquiv.map_eq_zero_iff
 #align continuous_linear_equiv.map_eq_zero_iff ContinuousLinearEquiv.map_eq_zero_iff
 
-attribute [continuity]
-  ContinuousLinearEquiv.continuous_toFun ContinuousLinearEquiv.continuous_invFun
+attribute [continuity] ContinuousLinearEquiv.continuous_toFun
+  ContinuousLinearEquiv.continuous_invFun
 
 @[continuity]
 protected theorem continuous (e : M₁ ≃SL[σ₁₂] M₂) : Continuous (e : M₁ → M₂) :=
@@ -2671,7 +2671,7 @@ def ClosedComplemented (p : Submodule R M) : Prop :=
 -/
 
 theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
-    (h : ClosedComplemented p) : ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=
+    (h : ClosedComplemented p) : ∃ (q : Submodule R M) (hq : IsClosed (q : Set M)), IsCompl p q :=
   Exists.elim h fun f hf => ⟨ker f, f.isClosed_ker, LinearMap.isCompl_of_proj hf⟩
 #align submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
 

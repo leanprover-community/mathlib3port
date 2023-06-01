@@ -116,7 +116,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsP
     {l : Filter X} (ha : a ∈ s) [NeBot l] (hl : l ≤ 𝓟 s) {f g : X → α} (hf : ContinuousOn f s)
     (hg : ContinuousOn g s) (ha' : f a ≤ g a) (he : g ≤ᶠ[l] f) : ∃ x ∈ s, f x = g x :=
   by
-  rw [continuousOn_iff_continuous_restrict] at hf hg
+  rw [continuousOn_iff_continuous_restrict] at hf hg 
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₁ _ _ _ _ _ _ (Subtype.preconnectedSpace hs) ⟨a, ha⟩ _
       (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (he.comap _)
@@ -128,7 +128,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsP
     (hf : ContinuousOn f s) (hg : ContinuousOn g s) (he₁ : f ≤ᶠ[l₁] g) (he₂ : g ≤ᶠ[l₂] f) :
     ∃ x ∈ s, f x = g x :=
   by
-  rw [continuousOn_iff_continuous_restrict] at hf hg
+  rw [continuousOn_iff_continuous_restrict] at hf hg 
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₂ _ _ _ _ _ _ (Subtype.preconnectedSpace hs) _ _
       (comap_coe_ne_bot_of_le_principal hl₁) (comap_coe_ne_bot_of_le_principal hl₂) _ _ hf hg
@@ -470,7 +470,7 @@ theorem isPreconnected_Icc : IsPreconnected (Icc a b) :=
       cases le_total x y
       · exact isPreconnected_Icc_aux x y s t h hs ht hab hx hy
       · rw [inter_comm s t]
-        rw [union_comm s t] at hab
+        rw [union_comm s t] at hab 
         exact isPreconnected_Icc_aux y x t s h ht hs hab hy hx)
 #align is_preconnected_Icc isPreconnected_Icc
 -/

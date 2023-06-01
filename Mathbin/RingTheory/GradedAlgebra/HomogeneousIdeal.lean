@@ -187,8 +187,8 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
 theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
     (Ideal.span s).Homogeneous 𝒜 := by
   rintro i r hr
-  rw [Ideal.span, Finsupp.span_eq_range_total] at hr
-  rw [LinearMap.mem_range] at hr
+  rw [Ideal.span, Finsupp.span_eq_range_total] at hr 
+  rw [LinearMap.mem_range] at hr 
   obtain ⟨s, rfl⟩ := hr
   rw [Finsupp.total_apply, Finsupp.sum, decompose_sum, Dfinsupp.finset_sum_apply,
     AddSubmonoidClass.coe_finset_sum]
@@ -206,7 +206,7 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x)
 is the largest homogeneous ideal of `A` contained in `I`.-/
 def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
   ⟨Ideal.homogeneousCore' 𝒜 I,
-    Ideal.homogeneous_span _ _ fun x h => by rw [Subtype.image_preimage_coe] at h; exact h.2⟩
+    Ideal.homogeneous_span _ _ fun x h => by rw [Subtype.image_preimage_coe] at h ; exact h.2⟩
 #align ideal.homogeneous_core Ideal.homogeneousCore
 -/
 
@@ -276,7 +276,7 @@ namespace Ideal.IsHomogeneous
 
 theorem bot : Ideal.IsHomogeneous 𝒜 ⊥ := fun i r hr =>
   by
-  simp only [Ideal.mem_bot] at hr
+  simp only [Ideal.mem_bot] at hr 
   rw [hr, decompose_zero, zero_apply]
   apply Ideal.zero_mem
 #align ideal.is_homogeneous.bot Ideal.IsHomogeneous.bot
@@ -292,7 +292,7 @@ theorem inf {I J : Ideal A} (HI : I.Homogeneous 𝒜) (HJ : J.Homogeneous 𝒜) 
 
 theorem sup {I J : Ideal A} (HI : I.Homogeneous 𝒜) (HJ : J.Homogeneous 𝒜) : (I ⊔ J).Homogeneous 𝒜 :=
   by
-  rw [iff_exists] at HI HJ⊢
+  rw [iff_exists] at HI HJ ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   refine' ⟨s₁ ∪ s₂, _⟩
   rw [Set.image_union]
@@ -301,7 +301,7 @@ theorem sup {I J : Ideal A} (HI : I.Homogeneous 𝒜) (HJ : J.Homogeneous 𝒜) 
 
 protected theorem iSup {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homogeneous 𝒜) :
     (⨆ i, f i).Homogeneous 𝒜 := by
-  simp_rw [iff_exists] at h⊢
+  simp_rw [iff_exists] at h ⊢
   choose s hs using h
   refine' ⟨⋃ i, s i, _⟩
   simp_rw [Set.image_iUnion, Ideal.span_iUnion]
@@ -312,7 +312,7 @@ protected theorem iSup {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homo
 protected theorem iInf {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homogeneous 𝒜) :
     (⨅ i, f i).Homogeneous 𝒜 := by
   intro i x hx
-  simp only [Ideal.mem_iInf] at hx⊢
+  simp only [Ideal.mem_iInf] at hx ⊢
   exact fun j => h _ _ (hx j)
 #align ideal.is_homogeneous.infi Ideal.IsHomogeneous.iInf
 
@@ -480,7 +480,7 @@ include A
 theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.Homogeneous 𝒜) (HJ : J.Homogeneous 𝒜) :
     (I * J).Homogeneous 𝒜 :=
   by
-  rw [Ideal.IsHomogeneous.iff_exists] at HI HJ⊢
+  rw [Ideal.IsHomogeneous.iff_exists] at HI HJ ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   rw [Ideal.span_mul_span']
   exact ⟨s₁ * s₂, congr_arg _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
@@ -574,7 +574,7 @@ include A
 /-- For any `I : ideal A`, not necessarily homogeneous, `I.homogeneous_hull 𝒜` is
 the smallest homogeneous ideal containing `I`. -/
 def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
-  ⟨Ideal.span { r : A | ∃ (i : ι)(x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r },
+  ⟨Ideal.span { r : A | ∃ (i : ι) (x : I), (DirectSum.decompose 𝒜 (x : A) i : A) = r },
     by
     refine' Ideal.homogeneous_span _ _ fun x hx => _
     obtain ⟨i, x, rfl⟩ := hx

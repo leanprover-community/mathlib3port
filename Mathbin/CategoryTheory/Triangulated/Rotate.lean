@@ -121,8 +121,9 @@ variable {C}
 
 variable [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
-attribute [local simp]
-  shift_shift_neg' shift_neg_shift' shift_shift_functor_comp_iso_id_add_neg_self_inv_app shift_shift_functor_comp_iso_id_add_neg_self_hom_app
+attribute [local simp] shift_shift_neg' shift_neg_shift'
+  shift_shift_functor_comp_iso_id_add_neg_self_inv_app
+  shift_shift_functor_comp_iso_id_add_neg_self_hom_app
 
 /-- The unit isomorphism of the auto-equivalence of categories `triangle_rotation C` of
 `triangle C` given by the rotation of triangles. -/

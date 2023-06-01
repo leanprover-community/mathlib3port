@@ -160,7 +160,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
-  rw [← to_DFA_correct] at hx⊢
+  rw [← to_DFA_correct] at hx ⊢
   exact M.to_DFA.pumping_lemma hx hlen
 #align NFA.pumping_lemma NFA.pumping_lemma
 
@@ -188,7 +188,7 @@ theorem toNFA_evalFrom_match (M : DFA α σ) (start : σ) (s : List α) :
   induction' s with a s ih generalizing start
   · tauto
   · rw [List.foldl, List.foldl,
-      show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
+      show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet]]
     tauto
 #align DFA.to_NFA_eval_from_match DFA.toNFA_evalFrom_match
 -/
@@ -202,7 +202,7 @@ theorem toNFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
   rw [to_NFA_eval_from_match]
   constructor
   · rintro ⟨S, hS₁, hS₂⟩
-    rwa [set.mem_singleton_iff.mp hS₂] at hS₁
+    rwa [set.mem_singleton_iff.mp hS₂] at hS₁ 
   · exact fun h => ⟨M.eval x, h, rfl⟩
 #align DFA.to_NFA_correct DFA.toNFA_correct
 -/

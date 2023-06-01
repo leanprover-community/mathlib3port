@@ -265,7 +265,7 @@ theorem two_zsmul_oangle_of_vectorSpan_eq {p₁ p₂ p₃ p₄ p₅ p₆ : P}
     (h₃₂₆₅ : vectorSpan ℝ ({p₃, p₂} : Set P) = vectorSpan ℝ ({p₆, p₅} : Set P)) :
     (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₄ p₅ p₆ :=
   by
-  simp_rw [vectorSpan_pair] at h₁₂₄₅ h₃₂₆₅
+  simp_rw [vectorSpan_pair] at h₁₂₄₅ h₃₂₆₅ 
   exact o.two_zsmul_oangle_of_span_eq_of_span_eq h₁₂₄₅ h₃₂₆₅
 #align euclidean_geometry.two_zsmul_oangle_of_vector_span_eq EuclideanGeometry.two_zsmul_oangle_of_vectorSpan_eq
 
@@ -275,7 +275,7 @@ theorem two_zsmul_oangle_of_parallel {p₁ p₂ p₃ p₄ p₅ p₆ : P}
     (h₁₂₄₅ : line[ℝ, p₁, p₂] ∥ line[ℝ, p₄, p₅]) (h₃₂₆₅ : line[ℝ, p₃, p₂] ∥ line[ℝ, p₆, p₅]) :
     (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₄ p₅ p₆ :=
   by
-  rw [AffineSubspace.affineSpan_pair_parallel_iff_vectorSpan_eq] at h₁₂₄₅ h₃₂₆₅
+  rw [AffineSubspace.affineSpan_pair_parallel_iff_vectorSpan_eq] at h₁₂₄₅ h₃₂₆₅ 
   exact two_zsmul_oangle_of_vector_span_eq h₁₂₄₅ h₃₂₆₅
 #align euclidean_geometry.two_zsmul_oangle_of_parallel EuclideanGeometry.two_zsmul_oangle_of_parallel
 
@@ -322,7 +322,7 @@ theorem oangle_add_cyc3 {p p₁ p₂ p₃ : P} (hp₁ : p₁ ≠ p) (hp₂ : p�
 /-- Pons asinorum, oriented angle-at-point form. -/
 theorem oangle_eq_oangle_of_dist_eq {p₁ p₂ p₃ : P} (h : dist p₁ p₂ = dist p₁ p₃) :
     ∡ p₁ p₂ p₃ = ∡ p₂ p₃ p₁ := by
-  simp_rw [dist_eq_norm_vsub] at h
+  simp_rw [dist_eq_norm_vsub] at h 
   rw [oangle, oangle, ← vsub_sub_vsub_cancel_left p₃ p₂ p₁, ← vsub_sub_vsub_cancel_left p₂ p₃ p₁,
     o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]
 #align euclidean_geometry.oangle_eq_oangle_of_dist_eq EuclideanGeometry.oangle_eq_oangle_of_dist_eq
@@ -332,7 +332,7 @@ angle-at-point form. -/
 theorem oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq {p₁ p₂ p₃ : P} (hn : p₂ ≠ p₃)
     (h : dist p₁ p₂ = dist p₁ p₃) : ∡ p₃ p₁ p₂ = π - (2 : ℤ) • ∡ p₁ p₂ p₃ :=
   by
-  simp_rw [dist_eq_norm_vsub] at h
+  simp_rw [dist_eq_norm_vsub] at h 
   rw [oangle, oangle]
   convert o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq _ h using 1
   · rw [← neg_vsub_eq_vsub_rev p₁ p₃, ← neg_vsub_eq_vsub_rev p₁ p₂, o.oangle_neg_neg]
@@ -344,7 +344,7 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq {p₁ p₂ p₃ : P} (hn : 
 theorem abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq {p₁ p₂ p₃ : P}
     (h : dist p₁ p₂ = dist p₁ p₃) : |(∡ p₁ p₂ p₃).toReal| < π / 2 :=
   by
-  simp_rw [dist_eq_norm_vsub] at h
+  simp_rw [dist_eq_norm_vsub] at h 
   rw [oangle, ← vsub_sub_vsub_cancel_left p₃ p₂ p₁]
   exact o.abs_oangle_sub_right_toReal_lt_pi_div_two h
 #align euclidean_geometry.abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq EuclideanGeometry.abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq
@@ -570,7 +570,7 @@ same ray. -/
 theorem Wbtw.oangle_eq_left {p₁ p₁' p₂ p₃ : P} (h : Wbtw ℝ p₂ p₁ p₁') (hp₁p₂ : p₁ ≠ p₂) :
     ∡ p₁ p₂ p₃ = ∡ p₁' p₂ p₃ := by
   by_cases hp₃p₂ : p₃ = p₂; · simp [hp₃p₂]
-  by_cases hp₁'p₂ : p₁' = p₂; · rw [hp₁'p₂, wbtw_self_iff] at h; exact False.elim (hp₁p₂ h)
+  by_cases hp₁'p₂ : p₁' = p₂; · rw [hp₁'p₂, wbtw_self_iff] at h ; exact False.elim (hp₁p₂ h)
   rw [← oangle_add hp₁'p₂ hp₁p₂ hp₃p₂, h.oangle₃₁₂_eq_zero, zero_add]
 #align wbtw.oangle_eq_left Wbtw.oangle_eq_left
 
@@ -678,14 +678,14 @@ theorem dist_eq_iff_eq_smul_rotation_pi_div_two_vadd_midpoint {p₁ p₂ p : P} 
       by
       rw [@dist_eq_norm_vsub' V, @dist_eq_norm_vsub' V, ←
         mul_self_inj (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_mul_norm, ←
-        real_inner_self_eq_norm_mul_norm] at hd
+        real_inner_self_eq_norm_mul_norm] at hd 
       simp_rw [vsub_midpoint, ← vsub_sub_vsub_cancel_left p₂ p₁ p, inner_sub_left, inner_add_right,
         inner_smul_right, hd, real_inner_comm (p -ᵥ p₁)]
       abel
     rw [@Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two V _ _ _ o,
-      or_iff_right (vsub_ne_zero.2 h.symm)] at hi
+      or_iff_right (vsub_ne_zero.2 h.symm)] at hi 
     rcases hi with ⟨r, hr⟩
-    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
+    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr 
     exact ⟨r, hr.symm⟩
   · rcases hr with ⟨r, rfl⟩
     simp_rw [@dist_eq_norm_vsub V, vsub_vadd_eq_vsub_sub, left_vsub_midpoint, right_vsub_midpoint,
@@ -717,10 +717,10 @@ theorem Collinear.oangle_sign_of_sameRay_vsub {p₁ p₂ p₃ p₄ : P} (p₅ : 
               (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))))
             hp₃p₄).1
         hc₅₁₂₃₄
-    rw [Set.insert_comm] at hc₅₁₂ hc₅₃₄
+    rw [Set.insert_comm] at hc₅₁₂ hc₅₃₄ 
     have hs₁₅₂ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₁₂
     have hs₃₅₄ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₃₄
-    rw [← Real.Angle.sign_eq_zero_iff] at hs₁₅₂ hs₃₅₄
+    rw [← Real.Angle.sign_eq_zero_iff] at hs₁₅₂ hs₃₅₄ 
     rw [hs₁₅₂, hs₃₅₄]
   · let s : Set (P × P × P) :=
       (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ x.1)) ''
@@ -737,17 +737,17 @@ theorem Collinear.oangle_sign_of_sameRay_vsub {p₁ p₂ p₃ p₄ : P} (p₅ : 
       by
       refine' ContinuousAt.continuousOn fun p hp => continuous_at_oangle _ _
       all_goals
-        simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_univ, true_and_iff, Prod.ext_iff] at hp
+        simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_univ, true_and_iff, Prod.ext_iff] at hp 
         obtain ⟨q₁, q₅, q₂⟩ := p
-        dsimp only at hp⊢
+        dsimp only at hp ⊢
         obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
-        dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv⊢
+        dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv ⊢
         obtain ⟨hvr, -⟩ := hv
         rintro rfl
         refine' hc₅₁₂ ((collinear_insert_iff_of_mem_affineSpan _).2 (collinear_pair _ _ _))
       · exact hq
       · refine' vadd_mem_of_mem_direction _ hq
-        rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
+        rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr 
         obtain ⟨r, -, rfl⟩ := hvr
         rw [direction_affineSpan]
         exact smul_vsub_rev_mem_vectorSpan_pair _ _ _
@@ -755,15 +755,15 @@ theorem Collinear.oangle_sign_of_sameRay_vsub {p₁ p₂ p₃ p₄ : P} (p₅ : 
       by
       intro p hp
       simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
-        Prod.ext_iff] at hp
+        Prod.ext_iff] at hp 
       obtain ⟨q₁, q₅, q₂⟩ := p
-      dsimp only at hp⊢
+      dsimp only at hp ⊢
       obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
-      dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv⊢
+      dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv ⊢
       obtain ⟨hvr, hv0⟩ := hv
-      rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
+      rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr 
       obtain ⟨r, -, rfl⟩ := hvr
-      change q ∈ line[ℝ, p₁, p₂] at hq
+      change q ∈ line[ℝ, p₁, p₂] at hq 
       rw [oangle_ne_zero_and_ne_pi_iff_affine_independent]
       refine'
         affineIndependent_of_ne_of_mem_of_not_mem_of_mem _ hq
@@ -850,7 +850,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
     by
     refine' ContinuousAt.continuousOn fun p hp => continuous_at_oangle _ _
     all_goals
-      simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
+      simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp 
       obtain ⟨p', hp', rfl⟩ := hp
       dsimp only
       rintro rfl
@@ -859,7 +859,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
   have hsp : ∀ p : P × P × P, p ∈ sp → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π :=
     by
     intro p hp
-    simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp
+    simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp 
     obtain ⟨p', hp', rfl⟩ := hp
     dsimp only
     rw [oangle_ne_zero_and_ne_pi_iff_affine_independent]

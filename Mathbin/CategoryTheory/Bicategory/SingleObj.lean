@@ -46,7 +46,8 @@ and the morphisms of the monoidal category become the 2-morphisms.)
 -/
 @[nolint unused_arguments]
 def MonoidalSingleObj (C : Type _) [Category C] [MonoidalCategory C] :=
-  PUnit deriving Inhabited
+  PUnit
+deriving Inhabited
 #align category_theory.monoidal_single_obj CategoryTheory.MonoidalSingleObj
 -/
 
@@ -65,12 +66,12 @@ instance : Bicategory (MonoidalSingleObj C)
   associator _ _ _ _ X Y Z := α_ X Y Z
   leftUnitor _ _ X := λ_ X
   rightUnitor _ _ X := ρ_ X
-  comp_whiskerLeft := by intros ; rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id]
-  whisker_assoc := by intros ; rw [associator_inv_naturality, iso.hom_inv_id_assoc]
-  whiskerRight_comp := by intros ; rw [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
-  id_whiskerLeft := by intros ; rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc]
-  whiskerRight_id := by intros ; rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc]
-  pentagon := by intros ; rw [pentagon]
+  comp_whiskerLeft := by intros; rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id]
+  whisker_assoc := by intros; rw [associator_inv_naturality, iso.hom_inv_id_assoc]
+  whiskerRight_comp := by intros; rw [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
+  id_whiskerLeft := by intros; rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc]
+  whiskerRight_id := by intros; rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc]
+  pentagon := by intros; rw [pentagon]
 
 namespace MonoidalSingleObj
 

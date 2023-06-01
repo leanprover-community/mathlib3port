@@ -38,7 +38,7 @@ when the codomain is Hausdorff (see `cocompact_map.tendsto_of_forall_preimage` a
 Cocompact maps thus generalise proper maps, with which they correspond when the codomain is
 Hausdorff. -/
 structure CocompactMap (α : Type u) (β : Type v) [TopologicalSpace α] [TopologicalSpace β] extends
-  ContinuousMap α β : Type max u v where
+    ContinuousMap α β : Type max u v where
   cocompact_tendsto' : Tendsto to_fun (cocompact α) (cocompact β)
 #align cocompact_map CocompactMap
 -/
@@ -50,7 +50,7 @@ section
 
 You should also extend this typeclass when you extend `cocompact_map`. -/
 class CocompactMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends ContinuousMapClass F α β where
+    [TopologicalSpace β] extends ContinuousMapClass F α β where
   cocompact_tendsto (f : F) : Tendsto f (cocompact α) (cocompact β)
 #align cocompact_map_class CocompactMapClass
 -/

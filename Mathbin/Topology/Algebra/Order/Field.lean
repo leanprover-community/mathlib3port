@@ -62,7 +62,7 @@ theorem mul_tendsto_nhds_zero_left (x : α) :
   by
   intro s hs
   have := mul_tendsto_nhds_zero_right x hs
-  rw [Filter.mem_map, mem_prod_iff] at this⊢
+  rw [Filter.mem_map, mem_prod_iff] at this ⊢
   obtain ⟨U, hU, V, hV, h⟩ := this
   exact
     ⟨V, hV, U, hU, fun y hy =>
@@ -97,7 +97,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
       
     specialize hit (x / x₀) this
-    rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit
+    rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit 
 #align nhds_eq_map_mul_left_nhds_one nhds_eq_map_mul_left_nhds_one
 
 theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
@@ -286,7 +286,7 @@ theorem tendsto_pow_neg_atTop {n : ℕ} (hn : n ≠ 0) :
 theorem tendsto_zpow_atTop_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
   by
   lift -n to ℕ using le_of_lt (neg_pos.mpr hn) with N
-  rw [← neg_pos, ← h, Nat.cast_pos] at hn
+  rw [← neg_pos, ← h, Nat.cast_pos] at hn 
   simpa only [h, neg_neg] using tendsto_pow_neg_atTop hn.ne'
 #align tendsto_zpow_at_top_zero tendsto_zpow_atTop_zero
 
@@ -319,10 +319,10 @@ theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0
   refine' ⟨fun h => _, fun h => _⟩
   · by_cases hn : 0 ≤ n
     · lift n to ℕ using hn
-      simp only [zpow_ofNat] at h
-      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h
+      simp only [zpow_ofNat] at h 
+      rw [tendsto_const_mul_pow_nhds_iff hc, ← Int.coe_nat_eq_zero] at h 
       exact Or.inl h
-    · rw [not_le] at hn
+    · rw [not_le] at hn 
       refine' Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_atTop_zero hn)⟩
   · cases h
     · simp only [h.left, h.right, zpow_zero, mul_one]
@@ -352,11 +352,11 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by
-      rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h
+      rw [Set.mem_Ioo, sub_lt_comm, lt_min_iff] at h 
       nlinarith
     have hx' : 0 < x := (half_pos ht).trans hx
     have aux : 0 < 2 / t ^ 2 := by positivity
-    rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h⊢
+    rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h ⊢
     rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
     suffices (|t * x|)⁻¹ < 2 / t ^ 2 by
       rw [← abs_neg, neg_sub]

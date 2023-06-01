@@ -25,8 +25,9 @@ open scoped Omega.Int
 run_cmd
   mk_simp_attr `sugar
 
-attribute [sugar]
-  Ne not_le not_lt Int.lt_iff_add_one_le or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul one_mul mul_one mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
+attribute [sugar] Ne not_le not_lt Int.lt_iff_add_one_le or_false_iff false_or_iff and_true_iff
+  true_and_iff GE.ge GT.gt mul_add add_mul one_mul mul_one mul_comm sub_eq_add_neg imp_iff_not_or
+  iff_iff_not_or_and_or_not
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=

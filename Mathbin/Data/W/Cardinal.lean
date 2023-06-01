@@ -56,7 +56,7 @@ theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β 
 theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) :
     (#WType β) ≤ κ := by
   induction' κ using Cardinal.inductionOn with γ
-  simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
+  simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ 
   cases hκ
   exact Cardinal.mk_le_of_injective (elim_injective _ hκ.1 hκ.2)
 #align W_type.cardinal_mk_le_of_le WType.cardinal_mk_le_of_le

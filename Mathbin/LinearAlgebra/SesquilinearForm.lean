@@ -104,7 +104,7 @@ theorem isOrthoᵢ_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : 
   constructor <;> intro h i j hij
   · rw [flip_apply]
     exact h j i (Ne.symm hij)
-  simp_rw [flip_apply] at h
+  simp_rw [flip_apply] at h 
   exact h j i (Ne.symm hij)
 #align linear_map.is_Ortho_flip LinearMap.isOrthoᵢ_flip
 
@@ -122,9 +122,9 @@ theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y} 
   dsimp only [is_ortho]
   constructor <;> intro H
   · rw [map_smulₛₗ₂, H, smul_zero]
-  · rw [map_smulₛₗ₂, smul_eq_zero] at H
+  · rw [map_smulₛₗ₂, smul_eq_zero] at H 
     cases H
-    · rw [map_eq_zero I₁] at H; trivial
+    · rw [map_eq_zero I₁] at H ; trivial
     · exact H
 #align linear_map.ortho_smul_left LinearMap.ortho_smul_left
 
@@ -135,9 +135,9 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
   dsimp only [is_ortho]
   constructor <;> intro H
   · rw [map_smulₛₗ, H, smul_zero]
-  · rw [map_smulₛₗ, smul_eq_zero] at H
+  · rw [map_smulₛₗ, smul_eq_zero] at H 
     cases H
-    · simp at H
+    · simp at H 
       exfalso
       exact ha H
     · exact H
@@ -156,7 +156,7 @@ theorem linearIndependent_of_isOrthoᵢ {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ
       apply Finset.sum_eq_single_of_mem i hi
       intro j hj hij
       rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
-    simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
+    simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this 
     apply (map_eq_zero I₁).mp
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align linear_map.linear_independent_of_is_Ortho LinearMap.linearIndependent_of_isOrthoᵢ
@@ -288,8 +288,8 @@ theorem self_eq_zero (x) : B x x = 0 :=
 theorem neg (x y) : -B x y = B y x :=
   by
   have H1 : B (y + x) (y + x) = 0 := self_eq_zero H (y + x)
-  simp [map_add, self_eq_zero H] at H1
-  rw [add_eq_zero_iff_neg_eq] at H1
+  simp [map_add, self_eq_zero H] at H1 
+  rw [add_eq_zero_iff_neg_eq] at H1 
   exact H1
 #align linear_map.is_alt.neg LinearMap.IsAlt.neg
 
@@ -312,7 +312,7 @@ theorem isAlt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛ�
     exact (h.neg _ _).symm
   intro x
   let h' := congr_fun₂ h x x
-  simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h'
+  simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h' 
   exact add_self_eq_zero.mp h'
 #align linear_map.is_alt_iff_eq_neg_flip LinearMap.isAlt_iff_eq_neg_flip
 
@@ -384,12 +384,12 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
   refine' eq_bot_iff.2 fun y h => _
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
   have := h.2 x _
-  · rw [Finset.sum_singleton] at this⊢
+  · rw [Finset.sum_singleton] at this ⊢
     suffices hμzero : μ x = 0
     · rw [hμzero, zero_smul, Submodule.mem_bot]
-    change B x (μ x • x) = 0 at this; rw [map_smulₛₗ, smul_eq_mul] at this
+    change B x (μ x • x) = 0 at this ; rw [map_smulₛₗ, smul_eq_mul] at this 
     exact
-      Or.elim (zero_eq_mul.mp this.symm) (fun y => by simp at y; exact y) fun hfalse =>
+      Or.elim (zero_eq_mul.mp this.symm) (fun y => by simp at y ; exact y) fun hfalse =>
         False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
 #align linear_map.span_singleton_inf_orthogonal_eq_bot LinearMap.span_singleton_inf_orthogonal_eq_bot
@@ -692,7 +692,7 @@ theorem SeparatingLeft.congr (h : B.SeparatingLeft) :
   refine' h (e₁.symm x) fun y => _
   specialize hx (e₂ y)
   simp only [LinearEquiv.arrowCongr_apply, LinearEquiv.symm_apply_apply,
-    LinearEquiv.map_eq_zero_iff] at hx
+    LinearEquiv.map_eq_zero_iff] at hx 
   exact hx
 #align linear_map.separating_left.congr LinearMap.SeparatingLeft.congr
 
@@ -744,7 +744,7 @@ theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →�
   by
   constructor <;> intro h x hB
   · let h' := h x
-    simp only [hB, zero_apply, eq_self_iff_true, forall_const] at h'
+    simp only [hB, zero_apply, eq_self_iff_true, forall_const] at h' 
     exact h'
   have h' : B x = 0 := by ext; rw [zero_apply]; exact hB _
   exact h x h'
@@ -801,7 +801,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
   rw [Submodule.mk_eq_zero, ← Submodule.mem_bot R]
   refine' hW.le_bot ⟨hx, fun y hy => _⟩
   specialize b₁ ⟨y, hy⟩
-  simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁
+  simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁ 
   rw [hB.ortho_comm]
   exact b₁
 #align linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerateRestrictOfDisjointOrthogonal
@@ -829,7 +829,7 @@ elements. -/
 theorem IsOrthoᵢ.not_isOrtho_basis_self_of_separatingRight [Nontrivial R] {B : M →ₛₗ[I] M →ₛₗ[I'] R}
     {v : Basis n R M} (h : B.IsOrthoᵢ v) (hB : B.SeparatingRight) (i : n) :
     ¬B.IsOrtho (v i) (v i) := by
-  rw [is_Ortho_flip] at h
+  rw [is_Ortho_flip] at h 
   rw [is_ortho_flip]
   exact h.not_is_ortho_basis_self_of_separating_left (flip_separating_left.mpr hB) i
 #align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrthoᵢ.not_isOrtho_basis_self_of_separatingRight
@@ -846,8 +846,8 @@ theorem IsOrthoᵢ.separatingLeft_of_not_isOrtho_basis_self [NoZeroDivisors R] {
   rw [Finsupp.zero_apply]
   specialize hB (v i)
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum₂, map_smulₛₗ₂,
-    smul_eq_mul] at hB
-  rw [Finset.sum_eq_single i] at hB
+    smul_eq_mul] at hB 
+  rw [Finset.sum_eq_single i] at hB 
   · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (h i) hB
   · intro j hj hij; convert MulZeroClass.mul_zero _ using 2; exact hO hij
   · intro hi; convert MulZeroClass.zero_mul _ using 2; exact finsupp.not_mem_support_iff.mp hi
@@ -859,7 +859,7 @@ theorem IsOrthoᵢ.separatingRight_iff_not_isOrtho_basis_self [NoZeroDivisors R]
     {B : M →ₗ[R] M →ₗ[R] R} (v : Basis n R M) (hO : B.IsOrthoᵢ v)
     (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingRight :=
   by
-  rw [is_Ortho_flip] at hO
+  rw [is_Ortho_flip] at hO 
   rw [← flip_separating_left]
   refine' is_Ortho.separating_left_of_not_is_ortho_basis_self v hO fun i => _
   rw [is_ortho_flip]

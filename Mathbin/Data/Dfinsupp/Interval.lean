@@ -83,7 +83,7 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
     · exact h.2 hi
     · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (not_mem_mono ht hi)]
       exact zero_mem_zero
-  · rwa [H, mem_zero] at h
+  · rwa [H, mem_zero] at h 
 #align finset.mem_dfinsupp_iff_of_support_subset Finset.mem_dfinsupp_iff_of_support_subset
 
 end Finset

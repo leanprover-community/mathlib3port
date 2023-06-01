@@ -163,7 +163,7 @@ theorem f_invApp_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
                 apply pullback_base)) :=
   by
   have := PresheafedSpace.congr_app (@pullback.condition _ _ _ _ _ (D.f i j) (D.f i k) _)
-  dsimp only [comp_c_app] at this
+  dsimp only [comp_c_app] at this 
   rw [← cancel_epi (inv ((D.f_open i j).invApp U)), is_iso.inv_hom_id_assoc,
     is_open_immersion.inv_inv_app]
   simp_rw [category.assoc]
@@ -196,8 +196,8 @@ theorem snd_invApp_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
     eq_to_hom_trans]
   rintro x ⟨y, hy, eq⟩
   replace eq := concrete_category.congr_arg (𝖣.t i k).base Eq
-  change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq
-  rw [𝖣.t_inv, id_base, TopCat.id_app] at eq
+  change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq 
+  rw [𝖣.t_inv, id_base, TopCat.id_app] at eq 
   subst Eq
   use (inv (D.t' k i j)).base y
   change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
@@ -489,7 +489,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
         rw [← 𝖣.ι_gluedIso_hom (PresheafedSpace.forget _) _, ←
           𝖣.ι_gluedIso_hom (PresheafedSpace.forget _) _]
         have := congr_arg PresheafedSpace.hom.base s.condition
-        rw [comp_base, comp_base] at this
+        rw [comp_base, comp_base] at this 
         reassoc! this
         exact this _
       rw [← Set.image_subset_iff, ← Set.image_univ, ← Set.image_comp, Set.image_univ, ← coe_comp,
@@ -502,7 +502,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
     · intro m e₁ e₂; rw [← cancel_mono (D.f i j)]; erw [e₁]; rw [is_open_immersion.lift_fac]
 #align algebraic_geometry.PresheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.PresheafedSpace.GlueData.vPullbackConeIsLimit
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (PresheafedSpace.forget _ ⋙ CategoryTheory.forget TopCat) x
 #align algebraic_geometry.PresheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.PresheafedSpace.GlueData.ι_jointly_surjective
 
@@ -569,7 +569,7 @@ instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   rw [← D.ι_iso_PresheafedSpace_inv]; infer_instance
 #align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpace.GlueData.ι_isOpenImmersion
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (SheafedSpace.forget _ ⋙ CategoryTheory.forget TopCat) x
 #align algebraic_geometry.SheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.SheafedSpace.GlueData.ι_jointly_surjective
 
@@ -648,7 +648,7 @@ instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
 instance (i j k : D.J) : PreservesLimit (cospan (𝖣.f i j) (𝖣.f i k)) forgetToSheafedSpace :=
   inferInstance
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).1.base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective
     ((LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget _) ⋙ forget TopCat) x
 #align algebraic_geometry.LocallyRingedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.LocallyRingedSpace.GlueData.ι_jointly_surjective

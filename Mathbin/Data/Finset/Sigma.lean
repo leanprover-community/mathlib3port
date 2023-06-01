@@ -46,7 +46,7 @@ variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finset ι) (t t₁ t�
 
 #print Finset.sigma /-
 /-- `s.sigma t` is the finset of dependent pairs `⟨i, a⟩` such that `i ∈ s` and `a ∈ t i`. -/
-protected def sigma : Finset (Σi, α i) :=
+protected def sigma : Finset (Σ i, α i) :=
   ⟨_, s.Nodup.Sigma fun i => (t i).Nodup⟩
 #align finset.sigma Finset.sigma
 -/
@@ -54,13 +54,13 @@ protected def sigma : Finset (Σi, α i) :=
 variable {s s₁ s₂ t t₁ t₂}
 
 @[simp]
-theorem mem_sigma {a : Σi, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t a.1 :=
+theorem mem_sigma {a : Σ i, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t a.1 :=
   mem_sigma
 #align finset.mem_sigma Finset.mem_sigma
 
 @[simp, norm_cast]
 theorem coe_sigma (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    (s.Sigma t : Set (Σi, α i)) = (s : Set ι).Sigma fun i => t i :=
+    (s.Sigma t : Set (Σ i, α i)) = (s : Set ι).Sigma fun i => t i :=
   Set.ext fun _ => mem_sigma
 #align finset.coe_sigma Finset.coe_sigma
 
@@ -98,13 +98,13 @@ theorem disjiUnion_map_sigma_mk :
 #align finset.disj_Union_map_sigma_mk Finset.disjiUnion_map_sigma_mk
 
 #print Finset.sigma_eq_biUnion /-
-theorem sigma_eq_biUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
+theorem sigma_eq_biUnion [DecidableEq (Σ i, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
     s.Sigma t = s.biUnion fun i => (t i).map <| Embedding.sigmaMk i := by ext ⟨x, y⟩;
   simp [and_left_comm]
 #align finset.sigma_eq_bUnion Finset.sigma_eq_biUnion
 -/
 
-variable (s t) (f : (Σi, α i) → β)
+variable (s t) (f : (Σ i, α i) → β)
 
 theorem sup_sigma [SemilatticeSup β] [OrderBot β] :
     (s.Sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ :=
@@ -136,7 +136,7 @@ def sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) 
 
 theorem mem_sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β)
     (x : Sigma γ) :
-    x ∈ sigmaLift f a b ↔ ∃ (ha : a.1 = x.1)(hb : b.1 = x.1), x.2 ∈ f (ha.rec a.2) (hb.rec b.2) :=
+    x ∈ sigmaLift f a b ↔ ∃ (ha : a.1 = x.1) (hb : b.1 = x.1), x.2 ∈ f (ha.rec a.2) (hb.rec b.2) :=
   by
   obtain ⟨⟨i, a⟩, j, b⟩ := a, b
   obtain rfl | h := Decidable.eq_or_ne i j
@@ -172,7 +172,7 @@ theorem not_mem_sigmaLift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finset
   exact fun H => h H.snd.fst
 #align finset.not_mem_sigma_lift_of_ne_right Finset.not_mem_sigmaLift_of_ne_right
 
-variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σi, α i} {b : Σi, β i}
+variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σ i, α i} {b : Σ i, β i}
 
 theorem sigmaLift_nonempty :
     (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, (f (h.rec a.2) b.2).Nonempty :=
@@ -190,10 +190,11 @@ theorem sigmaLift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h.r
   exact forall_congr fun h => propext map_eq_empty.symm
 #align finset.sigma_lift_eq_empty Finset.sigmaLift_eq_empty
 
-theorem sigmaLift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σi, α i) (b : Σi, β i) :
-    sigmaLift f a b ⊆ sigmaLift g a b := by
+theorem sigmaLift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σ i, α i)
+    (b : Σ i, β i) : sigmaLift f a b ⊆ sigmaLift g a b :=
+  by
   rintro x hx
-  rw [mem_sigma_lift] at hx⊢
+  rw [mem_sigma_lift] at hx ⊢
   obtain ⟨ha, hb, hx⟩ := hx
   exact ⟨ha, hb, h hx⟩
 #align finset.sigma_lift_mono Finset.sigmaLift_mono

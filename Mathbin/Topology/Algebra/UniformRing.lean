@@ -285,10 +285,10 @@ noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ
   toFun := (ue.DenseInducing dr).extend f
   map_one' := by
     convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 1
-    exacts[i.map_one.symm, f.map_one.symm]
+    exacts [i.map_one.symm, f.map_one.symm]
   map_zero' := by
     convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 0
-    exacts[i.map_zero.symm, f.map_zero.symm]
+    exacts [i.map_zero.symm, f.map_zero.symm]
   map_add' := by
     have h := (uniformContinuous_uniformly_extend ue dr hf).Continuous
     refine' fun x y => DenseRange.induction_on₂ dr _ (fun a b => _) x y

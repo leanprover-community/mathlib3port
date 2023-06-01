@@ -58,9 +58,9 @@ theorem pow_eq_zero_of_le {x : M} {n m : ℕ} (hn : n ≤ m) (hx : x ^ n = 0) : 
 theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0 :=
   by
   induction' n with n ih
-  · rw [pow_zero] at H
+  · rw [pow_zero] at H 
     rw [← mul_one x, H, MulZeroClass.mul_zero]
-  · rw [pow_succ] at H
+  · rw [pow_succ] at H 
     exact Or.cases_on (mul_eq_zero.1 H) id ih
 #align pow_eq_zero pow_eq_zero
 
@@ -147,7 +147,7 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
   · intro h; rw [← not_lt]; intro hmn; apply h1
     have : x ^ m * x ∣ x ^ m * 1 := by rw [← pow_succ', mul_one];
       exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
-    rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this; apply pow_ne_zero m h0
+    rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this ; apply pow_ne_zero m h0
   · apply pow_dvd_pow
 #align pow_dvd_pow_iff pow_dvd_pow_iff
 

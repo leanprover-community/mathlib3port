@@ -240,7 +240,7 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
   ext (⟨g, rfl⟩i j) : 3
-  fin_cases i <;> [fin_cases j;skip]
+  fin_cases i <;> [fin_cases j; skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   ·
     simp only [mB, mul_vec, dot_product, Fin.sum_univ_two, _root_.coe_coe, coe_matrix_coe,
@@ -368,7 +368,7 @@ variable {z}
 theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ z : ℍ, g • z = T ^ n • z :=
   by
   have had := g.det_coe
-  replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1; · rw [det_fin_two, hc] at had; linarith
+  replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1; · rw [det_fin_two, hc] at had ; linarith
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
   · use ↑ₘg 0 1
     suffices g = T ^ ↑ₘg 0 1 by intro z; conv_lhs => rw [this]
@@ -383,7 +383,7 @@ theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
 theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 :=
   by
   have hg := g.det_coe.symm
-  replace hg : ↑ₘg 0 1 = ↑ₘg 0 0 * ↑ₘg 1 1 - 1; · rw [det_fin_two, hc] at hg; linarith
+  replace hg : ↑ₘg 0 1 = ↑ₘg 0 0 * ↑ₘg 1 1 - 1; · rw [det_fin_two, hc] at hg ; linarith
   refine' Subtype.ext _
   conv_lhs => rw [Matrix.eta_fin_two ↑ₘg]
   rw [hc, hg]
@@ -452,10 +452,10 @@ theorem one_lt_normSq_t_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (T
 theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : T ^ n • z ∈ 𝒟ᵒ) : n = 0 :=
   by
   suffices |(n : ℝ)| < 1 by
-    rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this
+    rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this 
   have h₁ := hz.2
   have h₂ := hg.2
-  rw [re_T_zpow_smul] at h₂
+  rw [re_T_zpow_smul] at h₂ 
   calc
     |(n : ℝ)| ≤ |z.re| + |z.re + (n : ℝ)| := abs_add' (n : ℝ) z.re
     _ < 1 / 2 + 1 / 2 := (add_lt_add h₁ h₂)
@@ -509,9 +509,9 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 
   let c : ℝ := (c' : ℝ)
   suffices 3 * c ^ 2 < 4
     by
-    rw [← Int.cast_pow, ← Int.cast_three, ← Int.cast_four, ← Int.cast_mul, Int.cast_lt] at this
+    rw [← Int.cast_pow, ← Int.cast_three, ← Int.cast_four, ← Int.cast_mul, Int.cast_lt] at this 
     replace this : c' ^ 2 ≤ 1 ^ 2; · linarith
-    rwa [sq_le_sq, abs_one] at this
+    rwa [sq_le_sq, abs_one] at this 
   suffices c ≠ 0 → 9 * c ^ 4 < 16
     by
     rcases eq_or_ne c 0 with (hc | hc)
@@ -570,7 +570,7 @@ where `z : ℍ` and `g : SL(2,ℤ)`, then `z = g • z`. -/
 theorem eq_smul_self_of_mem_fdo_mem_fdo (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : z = g • z :=
   by
   obtain ⟨n, hn⟩ := exists_eq_T_zpow_of_c_eq_zero (c_eq_zero hz hg)
-  rw [hn] at hg⊢
+  rw [hn] at hg ⊢
   simp [eq_zero_of_mem_fdo_of_T_zpow_mem_fdo hz hg, one_smul]
 #align modular_group.eq_smul_self_of_mem_fdo_mem_fdo ModularGroup.eq_smul_self_of_mem_fdo_mem_fdo
 

@@ -77,7 +77,7 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
       constructor
       · intro h w
         have j : is_iso (f ≫ i.hom); infer_instance
-        rw [simple.mono_is_iso_iff_nonzero] at j
+        rw [simple.mono_is_iso_iff_nonzero] at j 
         subst w
         simpa using j
       · intro h
@@ -233,7 +233,7 @@ theorem Biprod.isIso_inl_iff_isZero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ 
   constructor
   · intro h; replace h := h =≫ biprod.snd
     simpa [← is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
-  · intro h; rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
+  · intro h; rw [is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h 
     rw [h, zero_comp]
 #align category_theory.biprod.is_iso_inl_iff_is_zero CategoryTheory.Biprod.isIso_inl_iff_isZero
 -/
@@ -244,10 +244,10 @@ theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
   ⟨Simple.not_isZero X, fun Y Z i =>
     by
     refine' or_iff_not_imp_left.mpr fun h => _
-    rw [is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h
-    change biprod.inl ≠ 0 at h
-    rw [← simple.mono_is_iso_iff_nonzero biprod.inl] at h
-    · rwa [biprod.is_iso_inl_iff_is_zero] at h
+    rw [is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h 
+    change biprod.inl ≠ 0 at h 
+    rw [← simple.mono_is_iso_iff_nonzero biprod.inl] at h 
+    · rwa [biprod.is_iso_inl_iff_is_zero] at h 
     · exact simple.of_iso i.symm
     · infer_instance⟩
 #align category_theory.indecomposable_of_simple CategoryTheory.indecomposable_of_simple
@@ -279,15 +279,15 @@ instance {X : C} [Simple X] : IsSimpleOrder (Subobject X)
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X :=
   by
-  constructor; intros ; constructor
+  constructor; intros; constructor
   · intro i
-    rw [subobject.is_iso_iff_mk_eq_top] at i
+    rw [subobject.is_iso_iff_mk_eq_top] at i 
     intro w
-    rw [← subobject.mk_eq_bot_iff_zero] at w
+    rw [← subobject.mk_eq_bot_iff_zero] at w 
     exact IsSimpleOrder.bot_ne_top (w.symm.trans i)
   · intro i
     rcases IsSimpleOrder.eq_bot_or_eq_top (subobject.mk f) with (h | h)
-    · rw [subobject.mk_eq_bot_iff_zero] at h
+    · rw [subobject.mk_eq_bot_iff_zero] at h 
       exact False.elim (i h)
     · exact (subobject.is_iso_iff_mk_eq_top _).mpr h
 #align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_isSimpleOrder_subobject

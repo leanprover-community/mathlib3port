@@ -74,8 +74,8 @@ structure AbstractCompletion (α : Type u) [UniformSpace α] where
 #align abstract_completion AbstractCompletion
 -/
 
-attribute [local instance]
-  AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
+attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.complete
+  AbstractCompletion.separation
 
 namespace AbstractCompletion
 

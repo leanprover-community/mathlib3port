@@ -585,7 +585,7 @@ theorem SetLike.coe_gMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι →
 #print SetLike.GradedMonoid /-
 /-- A version of `graded_monoid.gmonoid` for internally graded objects. -/
 class SetLike.GradedMonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A : ι → S) extends
-  SetLike.GradedOne A, SetLike.GradedMul A : Prop
+    SetLike.GradedOne A, SetLike.GradedMul A : Prop
 #align set_like.graded_monoid SetLike.GradedMonoid
 -/
 

@@ -79,7 +79,7 @@ theorem mem_unitaryGroup_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n �
 theorem mem_unitaryGroup_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
   by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
-  rwa [mul_eq_mul, mul_eq_one_comm] at hA
+  rwa [mul_eq_mul, mul_eq_one_comm] at hA 
 #align matrix.mem_unitary_group_iff' Matrix.mem_unitaryGroup_iff'
 
 theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
@@ -232,7 +232,7 @@ theorem mem_orthogonalGroup_iff' {A : Matrix n n β} :
     A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 :=
   by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
-  rwa [mul_eq_mul, mul_eq_one_comm] at hA
+  rwa [mul_eq_mul, mul_eq_one_comm] at hA 
 #align matrix.mem_orthogonal_group_iff' Matrix.mem_orthogonalGroup_iff'
 
 end OrthogonalGroup

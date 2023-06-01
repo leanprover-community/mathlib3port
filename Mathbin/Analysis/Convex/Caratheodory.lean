@@ -61,7 +61,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
     {x : E} (m : x ∈ convexHull 𝕜 (↑t : Set E)) :
     ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.eraseₓ y) : Set E) :=
   by
-  simp only [Finset.convexHull_eq, mem_set_of_eq] at m⊢
+  simp only [Finset.convexHull_eq, mem_set_of_eq] at m ⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
   replace gpos := exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos
@@ -72,7 +72,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
     apply s.exists_min_image fun z => f z / g z
     obtain ⟨x, hx, hgx⟩ : ∃ x ∈ t, 0 < g x := gpos
     exact ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩
-  have hg : 0 < g i₀ := by rw [mem_filter] at mem; exact mem.2
+  have hg : 0 < g i₀ := by rw [mem_filter] at mem ; exact mem.2
   have hi₀ : i₀ ∈ t := filter_subset _ _ mem
   let k : E → 𝕜 := fun z => f z - f i₀ / g i₀ * g z
   have hk : k i₀ = 0 := by field_simp [k, ne_of_gt hg]
@@ -87,7 +87,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
     by_cases hes : e ∈ s
-    · have hge : 0 < g e := by rw [mem_filter] at hes; exact hes.2
+    · have hge : 0 < g e := by rw [mem_filter] at hes ; exact hes.2
       rw [← le_div_iff hge]
       exact w _ hes
     · calc
@@ -158,7 +158,7 @@ theorem affineIndependent_minCardFinsetOfMemConvexHull :
         (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
           (min_card_finset_of_mem_convex_hull_subseteq hx))
         hp
-    rw [← not_lt] at contra
+    rw [← not_lt] at contra 
     apply contra
     erw [card_erase_of_mem p.2, hk]
     exact lt_add_one _
@@ -187,14 +187,14 @@ theorem convexHull_eq_union :
 
 /-- A more explicit version of `convex_hull_eq_union`. -/
 theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜 s) :
-    ∃ (ι : Sort (u + 1))(_ : Fintype ι),
-      ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw :
+    ∃ (ι : Sort (u + 1)) (_ : Fintype ι),
+      ∃ (z : ι → E) (w : ι → 𝕜) (hss : Set.range z ⊆ s) (hai : AffineIndependent 𝕜 z) (hw :
         ∀ i, 0 < w i), (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by
-  rw [convexHull_eq_union] at hx
-  simp only [exists_prop, Set.mem_iUnion] at hx
+  rw [convexHull_eq_union] at hx 
+  simp only [exists_prop, Set.mem_iUnion] at hx 
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := hx
-  simp only [t.convex_hull_eq, exists_prop, Set.mem_setOf_eq] at ht₃
+  simp only [t.convex_hull_eq, exists_prop, Set.mem_setOf_eq] at ht₃ 
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃
   let t' := t.filter fun i => w i ≠ 0
   refine' ⟨t', t'.fintype_coe_sort, (coe : t' → E), w ∘ (coe : t' → E), _, _, _, _, _⟩
@@ -206,7 +206,7 @@ theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜
   · erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
   · change (∑ i : t' in t'.attach, (fun e => w e • e) ↑i) = x
     erw [Finset.sum_attach, Finset.sum_filter_of_ne]
-    · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃; exact hw₃
+    · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃ ; exact hw₃
     · intro e he hwe contra; apply hwe; rw [contra, zero_smul]
 #align eq_pos_convex_span_of_mem_convex_hull eq_pos_convex_span_of_mem_convexHull
 

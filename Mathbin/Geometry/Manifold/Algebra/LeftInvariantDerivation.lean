@@ -77,7 +77,7 @@ theorem toDerivation_eq_coe : X.toDerivation = X :=
 
 theorem coe_injective :
     @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h => by
-  cases X; cases Y; congr ; exact Derivation.coe_injective h
+  cases X; cases Y; congr; exact Derivation.coe_injective h
 #align left_invariant_derivation.coe_injective LeftInvariantDerivation.coe_injective
 
 @[ext]
@@ -95,7 +95,7 @@ theorem coe_derivation :
 theorem coe_derivation_injective :
     Function.Injective
       (coe : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
-  fun X Y h => by cases X; cases Y; congr ; exact h
+  fun X Y h => by cases X; cases Y; congr; exact h
 #align left_invariant_derivation.coe_derivation_injective LeftInvariantDerivation.coe_derivation_injective
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
@@ -261,10 +261,10 @@ instance : Bracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G)
       ext f
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
       have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
-      rw [apply_hfdifferential, apply_fdifferential, Derivation.evalAt_apply] at hX hY⊢
-      rw [comp_L] at hX hY
+      rw [apply_hfdifferential, apply_fdifferential, Derivation.evalAt_apply] at hX hY ⊢
+      rw [comp_L] at hX hY 
       rw [Derivation.commutator_apply, SmoothMap.coe_sub, Pi.sub_apply, coe_derivation]
-      rw [coe_derivation] at hX hY⊢
+      rw [coe_derivation] at hX hY ⊢
       rw [hX, hY]
       rfl⟩
 

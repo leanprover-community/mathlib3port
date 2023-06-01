@@ -40,7 +40,8 @@ variable {α β γ : Type _}
 #print Language /-
 /-- A language is a set of strings over an alphabet. -/
 def Language (α) :=
-  Set (List α)deriving
+  Set (List α)
+deriving
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α)»,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α)»,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α)»,
@@ -213,7 +214,7 @@ theorem kstar_def_nonempty (l : Language α) :
   constructor
   · rintro ⟨S, rfl, h⟩
     refine' ⟨S.filter fun l => ¬List.isEmpty l, by simp, fun y hy => _⟩
-    rw [mem_filter, empty_iff_eq_nil] at hy
+    rw [mem_filter, empty_iff_eq_nil] at hy 
     exact ⟨h y hy.1, hy.2⟩
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
@@ -228,7 +229,7 @@ theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
 theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ :=
   by
   intro h₁ h₂ x hx
-  simp only [mul_def, exists_and_left, mem_image2, image_prod] at hx⊢
+  simp only [mul_def, exists_and_left, mem_image2, image_prod] at hx ⊢
   tauto
 #align language.le_mul_congr Language.le_mul_congr
 -/
@@ -274,7 +275,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     · rintro ⟨a, b, ha, ⟨S, rfl, rfl, hS⟩, rfl⟩
       exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
     · rintro ⟨_ | ⟨a, S⟩, rfl, hn, hS⟩ <;> cases hn
-      rw [forall_mem_cons] at hS
+      rw [forall_mem_cons] at hS 
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 

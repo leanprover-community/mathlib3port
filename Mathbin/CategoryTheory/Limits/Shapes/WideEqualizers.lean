@@ -84,7 +84,7 @@ instance : Inhabited (WalkingParallelFamily J) :=
 #print CategoryTheory.Limits.WalkingParallelFamily.Hom /-
 /-- The type family of morphisms for the diagram indexing a wide (co)equalizer. -/
 inductive WalkingParallelFamily.Hom (J : Type w) :
-  WalkingParallelFamily J → WalkingParallelFamily J → Type w
+    WalkingParallelFamily J → WalkingParallelFamily J → Type w
   | id : ∀ X : WalkingParallelFamily.{w} J, walking_parallel_family.hom X X
   | line : ∀ j : J, walking_parallel_family.hom zero one
   deriving DecidableEq

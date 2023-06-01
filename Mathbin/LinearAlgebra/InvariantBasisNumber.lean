@@ -220,7 +220,10 @@ theorem nontrivial_of_invariantBasisNumber : Nontrivial R :=
   refine' zero_ne_one (eq_of_fin_equiv R _)
   haveI := not_nontrivial_iff_subsingleton.1 h
   haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
-  refine' { .. } <;> first |· intros ; exact 0|tidy
+  refine' { .. } <;>
+    first
+    | · intros; exact 0
+    | tidy
 #align nontrivial_of_invariant_basis_number nontrivial_of_invariantBasisNumber
 -/
 
@@ -244,7 +247,7 @@ instance (priority := 100) IsNoetherianRing.strongRankCondition : StrongRankCond
   fconstructor
   intro m n f i
   by_contra h
-  rw [not_le, ← Nat.add_one_le_iff, le_iff_exists_add] at h
+  rw [not_le, ← Nat.add_one_le_iff, le_iff_exists_add] at h 
   obtain ⟨m, rfl⟩ := h
   let e : Fin (n + 1 + m) ≃ Sum (Fin n) (Fin (1 + m)) :=
     (finCongr (add_assoc _ _ _)).trans fin_sum_fin_equiv.symm
@@ -286,7 +289,7 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
     (by
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
-      rw [Submodule.quotientRel_r_def] at hab
+      rw [Submodule.quotientRel_r_def] at hab 
       rw [← LinearMap.map_sub]
       exact Ideal.map_pi _ _ hab e h)
 
@@ -297,9 +300,11 @@ private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] 
   by
   refine'
     { toFun := induced_map I e
-      invFun := induced_map I e.symm.. }
+      invFun := induced_map I e.symm .. }
   all_goals
-    first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
+    first
+    | rintro ⟨a⟩ ⟨b⟩
+    | rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr
     simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply,

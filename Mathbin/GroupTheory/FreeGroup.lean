@@ -183,7 +183,7 @@ theorem not_step_nil : ¬Step [] L := by
   generalize h' : [] = L'
   intro h
   cases' h with L₁ L₂
-  simp [List.nil_eq_append] at h'
+  simp [List.nil_eq_append] at h' 
   contradiction
 #align free_group.red.not_step_nil FreeGroup.Red.not_step_nil
 #align free_add_group.red.not_step_nil FreeAddGroup.Red.not_step_nil
@@ -197,8 +197,8 @@ theorem Step.cons_left_iff {a : α} {b : Bool} :
   constructor
   · generalize hL : ((a, b) :: L₁ : List _) = L
     rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
-    · simp at hL; simp [*]
-    · simp at hL
+    · simp at hL ; simp [*]
+    · simp at hL 
       rcases hL with ⟨rfl, rfl⟩
       refine' Or.inl ⟨s' ++ e, step.bnot, _⟩
       simp
@@ -310,7 +310,7 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
       · subst_vars; cases eq₂; constructor
       · subst_vars
         cases' p with a b
-        rw [step.cons_left_iff] at h₁₂
+        rw [step.cons_left_iff] at h₁₂ 
         rcases h₁₂ with (⟨L, h₁₂, rfl⟩ | rfl)
         · exact (ih rfl rfl).headI h₁₂
         · exact (cons_cons h).tail step.cons_bnot_rev)
@@ -389,7 +389,7 @@ theorem cons_nil_iff_singleton {x b} : Red ((x, b) :: L) [] ↔ Red L [(x, not b
       have h₁ : Red ((x, not b) :: (x, b) :: L) [(x, not b)] := cons_cons h
       have h₂ : Red ((x, not b) :: (x, b) :: L) L := ReflTransGen.single Step.cons_not_rev
       let ⟨L', h₁, h₂⟩ := church_rosser h₁ h₂
-      rw [singleton_iff] at h₁ <;> subst L' <;> assumption)
+      rw [singleton_iff] at h₁  <;> subst L' <;> assumption)
     fun h => (cons_cons h).tail Step.cons_not
 #align free_group.red.cons_nil_iff_singleton FreeGroup.Red.cons_nil_iff_singleton
 #align free_add_group.red.cons_nil_iff_singleton FreeAddGroup.Red.cons_nil_iff_singleton
@@ -404,9 +404,9 @@ theorem red_iff_irreducible {x1 b1 x2 b2} (h : (x1, b1) ≠ (x2, b2)) :
   generalize eq : [(x1, not b1), (x2, b2)] = L'
   intro L h'
   cases h'
-  simp [List.cons_eq_append_iff, List.nil_eq_append] at eq
+  simp [List.cons_eq_append_iff, List.nil_eq_append] at eq 
   rcases Eq with ⟨rfl, ⟨rfl, rfl⟩, ⟨rfl, rfl⟩, rfl⟩; subst_vars
-  simp at h
+  simp at h 
   contradiction
 #align free_group.red.red_iff_irreducible FreeGroup.Red.red_iff_irreducible
 #align free_add_group.red.red_iff_irreducible FreeAddGroup.Red.red_iff_irreducible
@@ -422,15 +422,15 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2))
   by
   have : red ((x1, b1) :: L₁) ([(x2, b2)] ++ L₂) := H2
   rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
-  · simp [nil_iff] at h₁; contradiction
+  · simp [nil_iff] at h₁ ; contradiction
   · cases Eq
     show red (L₃ ++ L₄) ([(x1, not b1), (x2, b2)] ++ L₂)
     apply append_append _ h₂
     have h₁ : red ((x1, not b1) :: (x1, b1) :: L₃) [(x1, not b1), (x2, b2)] := cons_cons h₁
     have h₂ : red ((x1, not b1) :: (x1, b1) :: L₃) L₃ := step.cons_bnot_rev.to_red
     rcases church_rosser h₁ h₂ with ⟨L', h₁, h₂⟩
-    rw [red_iff_irreducible H1] at h₁
-    rwa [h₁] at h₂
+    rw [red_iff_irreducible H1] at h₁ 
+    rwa [h₁] at h₂ 
 #align free_group.red.inv_of_red_of_ne FreeGroup.Red.inv_of_red_of_ne
 #align free_add_group.red.neg_of_red_of_ne FreeAddGroup.Red.neg_of_red_of_ne
 -/
@@ -781,7 +781,7 @@ theorem Red.exact : mk L₁ = mk L₂ ↔ Join Red L₁ L₂ :=
 theorem of_injective : Function.Injective (@of α) := fun _ _ H =>
   by
   let ⟨L₁, hx, hy⟩ := Red.exact.1 H
-  simp [red.singleton_iff] at hx hy <;> cc
+  simp [red.singleton_iff] at hx hy  <;> cc
 #align free_group.of_injective FreeGroup.of_injective
 #align free_add_group.of_injective FreeAddGroup.of_injective
 -/
@@ -877,8 +877,8 @@ theorem lift.range_le {s : Subgroup β} (H : Set.range f ⊆ s) : (lift f).range
   rintro _ ⟨⟨L⟩, rfl⟩ <;>
     exact
       List.recOn L s.one_mem fun ⟨x, b⟩ tl ih =>
-        Bool.recOn b (by simp at ih⊢ <;> exact s.mul_mem (s.inv_mem <| H ⟨x, rfl⟩) ih)
-          (by simp at ih⊢ <;> exact s.mul_mem (H ⟨x, rfl⟩) ih)
+        Bool.recOn b (by simp at ih ⊢ <;> exact s.mul_mem (s.inv_mem <| H ⟨x, rfl⟩) ih)
+          (by simp at ih ⊢ <;> exact s.mul_mem (H ⟨x, rfl⟩) ih)
 #align free_group.lift.range_le FreeGroup.lift.range_le
 #align free_add_group.lift.range_le FreeAddGroup.lift.range_le
 
@@ -1123,10 +1123,10 @@ def freeGroupUnitEquivInt : FreeGroup Unit ≃ ℤ
   left_inv := by
     rintro ⟨L⟩
     refine' List.recOn L rfl _
-    exact fun ⟨⟨⟩, b⟩ tl ih => by cases b <;> simp [zpow_add] at ih⊢ <;> rw [ih] <;> rfl
+    exact fun ⟨⟨⟩, b⟩ tl ih => by cases b <;> simp [zpow_add] at ih ⊢ <;> rw [ih] <;> rfl
   right_inv x :=
-    Int.induction_on x (by simp) (fun i ih => by simp at ih <;> simp [zpow_add, ih]) fun i ih => by
-      simp at ih <;> simp [zpow_add, ih, sub_eq_add_neg, -Int.add_neg_one]
+    Int.induction_on x (by simp) (fun i ih => by simp at ih  <;> simp [zpow_add, ih]) fun i ih => by
+      simp at ih  <;> simp [zpow_add, ih, sub_eq_add_neg, -Int.add_neg_one]
 #align free_group.free_group_unit_equiv_int FreeGroup.freeGroupUnitEquivInt
 -/
 
@@ -1281,16 +1281,16 @@ theorem reduce.not {p : Prop} :
     cases r : reduce L1
     · dsimp; intro h
       have := congr_arg List.length h
-      simp [-add_comm] at this
+      simp [-add_comm] at this 
       exact absurd this (by decide)
     cases' hd with y c
     dsimp only
     split_ifs with h <;> intro H
-    · rw [H] at r
+    · rw [H] at r 
       exact @reduce.not L1 ((y, c) :: L2) L3 x' b' r
     rcases L2 with (_ | ⟨a, L2⟩)
     · injections; subst_vars
-      simp at h; cc
+      simp at h ; cc
     · refine' @reduce.not L1 L2 L3 x' b' _
       injection H with _ H
       rw [r, H]; rfl
@@ -1491,7 +1491,7 @@ theorem reduce_invRev {w : List (α × Bool)} : reduce (invRev w) = invRev (redu
   rw [← red_inv_rev_iff, inv_rev_inv_rev]
   apply red.reduce_left
   have : red (inv_rev (inv_rev w)) (inv_rev (reduce (inv_rev w))) := reduce.red.inv_rev
-  rwa [inv_rev_inv_rev] at this
+  rwa [inv_rev_inv_rev] at this 
 #align free_group.reduce_inv_rev FreeGroup.reduce_invRev
 #align free_add_group.reduce_neg_rev FreeAddGroup.reduce_negRev
 -/

@@ -285,7 +285,7 @@ protected theorem Convex.strictConvex' {s : Set E} (hs : Convex 𝕜 s)
   by_cases hy' : y ∈ interior s; · exact hs.open_segment_self_interior_subset_interior hx hy'
   rcases h ⟨hx, hx'⟩ ⟨hy, hy'⟩ hne with ⟨c, hc⟩
   refine' (openSegment_subset_union x y ⟨c, rfl⟩).trans (insert_subset.2 ⟨hc, union_subset _ _⟩)
-  exacts[hs.open_segment_self_interior_subset_interior hx hc,
+  exacts [hs.open_segment_self_interior_subset_interior hx hc,
     hs.open_segment_interior_self_subset_interior hc hy]
 #align convex.strict_convex' Convex.strictConvex'
 
@@ -375,7 +375,7 @@ protected theorem Convex.isPathConnected {s : Set E} (hconv : Convex ℝ s) (hne
   refine' is_path_connected_iff.mpr ⟨hne, _⟩
   intro x x_in y y_in
   have H := hconv.segment_subset x_in y_in
-  rw [segment_eq_image_lineMap] at H
+  rw [segment_eq_image_lineMap] at H 
   exact
     JoinedIn.ofLine affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _)
       (line_map_apply_one _ _) H

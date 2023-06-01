@@ -76,7 +76,7 @@ theorem tendsto_atTop_iff_leadingCoeff_nonneg :
   refine' ⟨fun h => _, fun h => tendsto_at_top_of_leading_coeff_nonneg P h.1 h.2⟩
   have : tendsto (fun x => P.leading_coeff * x ^ P.nat_degree) at_top at_top :=
     (is_equivalent_at_top_lead P).tendsto_atTop h
-  rw [tendsto_const_mul_pow_at_top_iff, ← pos_iff_ne_zero, nat_degree_pos_iff_degree_pos] at this
+  rw [tendsto_const_mul_pow_at_top_iff, ← pos_iff_ne_zero, nat_degree_pos_iff_degree_pos] at this 
   exact ⟨this.1, this.2.le⟩
 #align polynomial.tendsto_at_top_iff_leading_coeff_nonneg Polynomial.tendsto_atTop_iff_leadingCoeff_nonneg
 
@@ -124,9 +124,9 @@ theorem tendsto_nhds_iff {c : 𝕜} :
   refine' ⟨fun h => _, fun h => _⟩
   · have := P.is_equivalent_at_top_lead.tendsto_nhds h
     by_cases hP : P.leading_coeff = 0
-    · simp only [hP, MulZeroClass.zero_mul, tendsto_const_nhds_iff] at this
+    · simp only [hP, MulZeroClass.zero_mul, tendsto_const_nhds_iff] at this 
       refine' ⟨trans hP this, by simp [leading_coeff_eq_zero.1 hP]⟩
-    · rw [tendsto_const_mul_pow_nhds_iff hP, nat_degree_eq_zero_iff_degree_le_zero] at this
+    · rw [tendsto_const_mul_pow_nhds_iff hP, nat_degree_eq_zero_iff_degree_le_zero] at this 
       exact this.symm
   · refine' P.is_equivalent_at_top_lead.symm.tendsto_nhds _
     have : P.nat_degree = 0 := nat_degree_eq_zero_iff_degree_le_zero.2 h.2
@@ -158,7 +158,7 @@ theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
   by
   by_cases hP : P = 0
   · simp [hP, tendsto_const_nhds]
-  rw [← nat_degree_lt_nat_degree_iff hP] at hdeg
+  rw [← nat_degree_lt_nat_degree_iff hP] at hdeg 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_nhds _
   rw [← MulZeroClass.mul_zero]
   refine' (tendsto_zpow_atTop_zero _).const_mul _
@@ -170,16 +170,16 @@ theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
   by
   refine' ⟨fun h => _, div_tendsto_zero_of_degree_lt P Q⟩
   by_cases hPQ : P.leading_coeff / Q.leading_coeff = 0
-  · simp only [div_eq_mul_inv, inv_eq_zero, mul_eq_zero] at hPQ
+  · simp only [div_eq_mul_inv, inv_eq_zero, mul_eq_zero] at hPQ 
     cases' hPQ with hP0 hQ0
     · rw [leading_coeff_eq_zero.1 hP0, degree_zero]
       exact bot_lt_iff_ne_bot.2 fun hQ' => hQ (degree_eq_bot.1 hQ')
     · exact absurd (leading_coeff_eq_zero.1 hQ0) hQ
   · have := (is_equivalent_at_top_div P Q).tendsto_nhds h
-    rw [tendsto_const_mul_zpow_atTop_nhds_iff hPQ] at this
+    rw [tendsto_const_mul_zpow_atTop_nhds_iff hPQ] at this 
     cases' this with h h
     · exact absurd h.2 hPQ
-    · rw [sub_lt_iff_lt_add, zero_add, Int.ofNat_lt] at h
+    · rw [sub_lt_iff_lt_add, zero_add, Int.ofNat_lt] at h 
       exact degree_lt_degree h.1
 #align polynomial.div_tendsto_zero_iff_degree_lt Polynomial.div_tendsto_zero_iff_degree_lt
 
@@ -195,8 +195,8 @@ theorem div_tendsto_atTop_of_degree_gt' (hdeg : Q.degree < P.degree)
     (hpos : 0 < P.leadingCoeff / Q.leadingCoeff) :
     Tendsto (fun x => eval x P / eval x Q) atTop atTop :=
   by
-  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hpos; linarith
-  rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg
+  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hpos ; linarith
+  rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atTop _
   apply tendsto.const_mul_at_top hpos
   apply tendsto_zpow_atTop_atTop
@@ -217,8 +217,8 @@ theorem div_tendsto_atBot_of_degree_gt' (hdeg : Q.degree < P.degree)
     (hneg : P.leadingCoeff / Q.leadingCoeff < 0) :
     Tendsto (fun x => eval x P / eval x Q) atTop atBot :=
   by
-  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hneg; linarith
-  rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg
+  have hQ : Q ≠ 0 := fun h => by simp only [h, div_zero, leading_coeff_zero] at hneg ; linarith
+  rw [← nat_degree_lt_nat_degree_iff hQ] at hdeg 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_atBot _
   apply tendsto.neg_const_mul_at_top hneg
   apply tendsto_zpow_atTop_atTop
@@ -240,7 +240,7 @@ theorem abs_div_tendsto_atTop_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q 
   by
   by_cases h : 0 ≤ P.leading_coeff / Q.leading_coeff
   · exact tendsto_abs_at_top_at_top.comp (P.div_tendsto_at_top_of_degree_gt Q hdeg hQ h)
-  · push_neg  at h
+  · push_neg  at h 
     exact tendsto_abs_at_bot_at_top.comp (P.div_tendsto_at_bot_of_degree_gt Q hdeg hQ h.le)
 #align polynomial.abs_div_tendsto_at_top_of_degree_gt Polynomial.abs_div_tendsto_atTop_of_degree_gt
 

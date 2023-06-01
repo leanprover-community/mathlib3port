@@ -137,7 +137,7 @@ theorem Directed.convex_iUnion {ι : Sort _} {s : ι → Set E} (hdir : Directed
     (hc : ∀ ⦃i : ι⦄, Convex 𝕜 (s i)) : Convex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy a b ha hb hab
-  rw [mem_Union] at hx hy⊢
+  rw [mem_Union] at hx hy ⊢
   obtain ⟨i, hx⟩ := hx
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
@@ -249,7 +249,7 @@ theorem Convex.translate_preimage_right (hs : Convex 𝕜 s) (z : E) :
   by
   intro x hx y hy a b ha hb hab
   have h := hs hx hy ha hb hab
-  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h
+  rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h 
 #align convex.translate_preimage_right Convex.translate_preimage_right
 
 /-- The translation of a convex set is also convex. -/
@@ -302,9 +302,9 @@ theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) :=
   by
   intro x hx y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [zero_add] at hab
+  · rw [zero_add] at hab 
     rwa [zero_smul, zero_add, hab, one_smul]
-  rw [mem_Iio] at hx hy
+  rw [mem_Iio] at hx hy 
   calc
     a • x + b • y < a • r + b • r :=
       add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hx ha') (smul_le_smul_of_nonneg hy.le hb)
@@ -630,7 +630,7 @@ namespace Submodule
 
 variable [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
-protected theorem convex (K : Submodule 𝕜 E) : Convex 𝕜 (↑K : Set E) := by repeat' intro ;
+protected theorem convex (K : Submodule 𝕜 E) : Convex 𝕜 (↑K : Set E) := by repeat' intro;
   refine' add_mem (smul_mem _ _ _) (smul_mem _ _ _) <;> assumption
 #align submodule.convex Submodule.convex
 

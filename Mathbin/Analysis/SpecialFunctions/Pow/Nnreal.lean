@@ -385,7 +385,7 @@ theorem zero_rpow_def (y : ℝ) : (0 : ℝ≥0∞) ^ y = if 0 < y then 0 else if
 
 @[simp]
 theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y := by rw [zero_rpow_def];
-  split_ifs; exacts[MulZeroClass.zero_mul _, one_mul _, top_mul_top]
+  split_ifs; exacts [MulZeroClass.zero_mul _, one_mul _, top_mul_top]
 #align ennreal.zero_rpow_mul_self ENNReal.zero_rpow_mul_self
 
 @[norm_cast]
@@ -465,7 +465,7 @@ theorem rpow_eq_top_of_nonneg (x : ℝ≥0∞) {y : ℝ} (hy0 : 0 ≤ y) : x ^ y
   rw [ENNReal.rpow_eq_top_iff]
   intro h
   cases h
-  · exfalso; rw [lt_iff_not_ge] at h; exact h.right hy0
+  · exfalso; rw [lt_iff_not_ge] at h ; exact h.right hy0
   · exact h.left
 #align ennreal.rpow_eq_top_of_nonneg ENNReal.rpow_eq_top_of_nonneg
 
@@ -653,7 +653,7 @@ theorem rpow_one_div_le_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ (1 /
 theorem rpow_lt_rpow_of_exponent_lt {x : ℝ≥0∞} {y z : ℝ} (hx : 1 < x) (hx' : x ≠ ⊤) (hyz : y < z) :
     x ^ y < x ^ z := by
   lift x to ℝ≥0 using hx'
-  rw [one_lt_coe_iff] at hx
+  rw [one_lt_coe_iff] at hx 
   simp [coe_rpow_of_ne_zero (ne_of_gt (lt_trans zero_lt_one hx)),
     NNReal.rpow_lt_rpow_of_exponent_lt hx hyz]
 #align ennreal.rpow_lt_rpow_of_exponent_lt ENNReal.rpow_lt_rpow_of_exponent_lt
@@ -666,7 +666,7 @@ theorem rpow_le_rpow_of_exponent_le {x : ℝ≥0∞} {y z : ℝ} (hx : 1 ≤ x) 
           rcases lt_trichotomy z 0 with (Hz | Hz | Hz) <;>
         simp [Hy, Hz, top_rpow_of_neg, top_rpow_of_pos, le_refl] <;>
       linarith
-  · simp only [one_le_coe_iff, some_eq_coe] at hx
+  · simp only [one_le_coe_iff, some_eq_coe] at hx 
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one hx)),
       NNReal.rpow_le_rpow_of_exponent_le hx hyz]
 #align ennreal.rpow_le_rpow_of_exponent_le ENNReal.rpow_le_rpow_of_exponent_le
@@ -674,7 +674,7 @@ theorem rpow_le_rpow_of_exponent_le {x : ℝ≥0∞} {y z : ℝ} (hx : 1 ≤ x) 
 theorem rpow_lt_rpow_of_exponent_gt {x : ℝ≥0∞} {y z : ℝ} (hx0 : 0 < x) (hx1 : x < 1) (hyz : z < y) :
     x ^ y < x ^ z := by
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx1 le_top)
-  simp only [coe_lt_one_iff, coe_pos] at hx0 hx1
+  simp only [coe_lt_one_iff, coe_pos] at hx0 hx1 
   simp [coe_rpow_of_ne_zero (ne_of_gt hx0), NNReal.rpow_lt_rpow_of_exponent_gt hx0 hx1 hyz]
 #align ennreal.rpow_lt_rpow_of_exponent_gt ENNReal.rpow_lt_rpow_of_exponent_gt
 
@@ -688,7 +688,7 @@ theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0∞} {y z : ℝ} (hx1 : x ≤ 1)
           rcases lt_trichotomy z 0 with (Hz | Hz | Hz) <;>
         simp [Hy, Hz, h, zero_rpow_of_neg, zero_rpow_of_pos, le_refl] <;>
       linarith
-  · rw [coe_le_one_iff] at hx1
+  · rw [coe_le_one_iff] at hx1 
     simp [coe_rpow_of_ne_zero h,
       NNReal.rpow_le_rpow_of_exponent_ge (bot_lt_iff_ne_bot.mpr h) hx1 hyz]
 #align ennreal.rpow_le_rpow_of_exponent_ge ENNReal.rpow_le_rpow_of_exponent_ge
@@ -709,7 +709,7 @@ theorem rpow_pos_of_nonneg {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hp_nonne
   by
   by_cases hp_zero : p = 0
   · simp [hp_zero, zero_lt_one]
-  · rw [← Ne.def] at hp_zero
+  · rw [← Ne.def] at hp_zero 
     have hp_pos := lt_of_le_of_ne hp_nonneg hp_zero.symm
     rw [← zero_rpow_of_pos hp_pos]; exact rpow_lt_rpow hx_pos hp_pos
 #align ennreal.rpow_pos_of_nonneg ENNReal.rpow_pos_of_nonneg
@@ -725,14 +725,14 @@ theorem rpow_pos {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hx_ne_top : x ≠ 
 theorem rpow_lt_one {x : ℝ≥0∞} {z : ℝ} (hx : x < 1) (hz : 0 < z) : x ^ z < 1 :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx le_top)
-  simp only [coe_lt_one_iff] at hx
+  simp only [coe_lt_one_iff] at hx 
   simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.rpow_lt_one hx hz]
 #align ennreal.rpow_lt_one ENNReal.rpow_lt_one
 
 theorem rpow_le_one {x : ℝ≥0∞} {z : ℝ} (hx : x ≤ 1) (hz : 0 ≤ z) : x ^ z ≤ 1 :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_le_of_lt hx coe_lt_top)
-  simp only [coe_le_one_iff] at hx
+  simp only [coe_le_one_iff] at hx 
   simp [coe_rpow_of_nonneg _ hz, NNReal.rpow_le_one hx hz]
 #align ennreal.rpow_le_one ENNReal.rpow_le_one
 
@@ -740,7 +740,7 @@ theorem rpow_lt_one_of_one_lt_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz
   by
   cases x
   · simp [top_rpow_of_neg hz, zero_lt_one]
-  · simp only [some_eq_coe, one_lt_coe_iff] at hx
+  · simp only [some_eq_coe, one_lt_coe_iff] at hx 
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_trans zero_lt_one hx)),
       NNReal.rpow_lt_one_of_one_lt_of_neg hx hz]
 #align ennreal.rpow_lt_one_of_one_lt_of_neg ENNReal.rpow_lt_one_of_one_lt_of_neg
@@ -749,7 +749,7 @@ theorem rpow_le_one_of_one_le_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (
   by
   cases x
   · simp [top_rpow_of_neg hz, zero_lt_one]
-  · simp only [one_le_coe_iff, some_eq_coe] at hx
+  · simp only [one_le_coe_iff, some_eq_coe] at hx 
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one hx)),
       NNReal.rpow_le_one_of_one_le_of_nonpos hx (le_of_lt hz)]
 #align ennreal.rpow_le_one_of_one_le_of_neg ENNReal.rpow_le_one_of_one_le_of_neg
@@ -758,7 +758,7 @@ theorem one_lt_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz : 0 < z) : 1 < x
   by
   cases x
   · simp [top_rpow_of_pos hz]
-  · simp only [some_eq_coe, one_lt_coe_iff] at hx
+  · simp only [some_eq_coe, one_lt_coe_iff] at hx 
     simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.one_lt_rpow hx hz]
 #align ennreal.one_lt_rpow ENNReal.one_lt_rpow
 
@@ -766,7 +766,7 @@ theorem one_le_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (hz : 0 < z) : 1 �
   by
   cases x
   · simp [top_rpow_of_pos hz]
-  · simp only [one_le_coe_iff, some_eq_coe] at hx
+  · simp only [one_le_coe_iff, some_eq_coe] at hx 
     simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.one_le_rpow hx (le_of_lt hz)]
 #align ennreal.one_le_rpow ENNReal.one_le_rpow
 
@@ -774,7 +774,7 @@ theorem one_lt_rpow_of_pos_of_lt_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 
     (hz : z < 0) : 1 < x ^ z :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx2 le_top)
-  simp only [coe_lt_one_iff, coe_pos] at hx1 hx2⊢
+  simp only [coe_lt_one_iff, coe_pos] at hx1 hx2 ⊢
   simp [coe_rpow_of_ne_zero (ne_of_gt hx1), NNReal.one_lt_rpow_of_pos_of_lt_one_of_neg hx1 hx2 hz]
 #align ennreal.one_lt_rpow_of_pos_of_lt_one_of_neg ENNReal.one_lt_rpow_of_pos_of_lt_one_of_neg
 
@@ -782,7 +782,7 @@ theorem one_le_rpow_of_pos_of_le_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 
     (hz : z < 0) : 1 ≤ x ^ z :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_le_of_lt hx2 coe_lt_top)
-  simp only [coe_le_one_iff, coe_pos] at hx1 hx2⊢
+  simp only [coe_le_one_iff, coe_pos] at hx1 hx2 ⊢
   simp [coe_rpow_of_ne_zero (ne_of_gt hx1),
     NNReal.one_le_rpow_of_pos_of_le_one_of_nonpos hx1 hx2 (le_of_lt hz)]
 #align ennreal.one_le_rpow_of_pos_of_le_one_of_neg ENNReal.one_le_rpow_of_pos_of_le_one_of_neg
@@ -821,17 +821,17 @@ theorem ofReal_rpow_of_nonneg {x p : ℝ} (hx_nonneg : 0 ≤ x) (hp_nonneg : 0 �
   by_cases hp0 : p = 0
   · simp [hp0]
   by_cases hx0 : x = 0
-  · rw [← Ne.def] at hp0
+  · rw [← Ne.def] at hp0 
     have hp_pos : 0 < p := lt_of_le_of_ne hp_nonneg hp0.symm
     simp [hx0, hp_pos, hp_pos.ne.symm]
-  rw [← Ne.def] at hx0
+  rw [← Ne.def] at hx0 
   exact of_real_rpow_of_pos (hx_nonneg.lt_of_ne hx0.symm)
 #align ennreal.of_real_rpow_of_nonneg ENNReal.ofReal_rpow_of_nonneg
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0∞ => y ^ x :=
   by
   intro y z hyz
-  dsimp only at hyz
+  dsimp only at hyz 
   rw [← rpow_one y, ← rpow_one z, ← _root_.mul_inv_cancel hx, rpow_mul, rpow_mul, hyz]
 #align ennreal.rpow_left_injective ENNReal.rpow_left_injective
 

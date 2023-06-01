@@ -37,8 +37,8 @@ strategy of proof of the Dold-Kan equivalence.
 -/
 
 
-open
-  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive CategoryTheory.SimplicialObject Opposite CategoryTheory.Idempotents
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive
+  CategoryTheory.SimplicialObject Opposite CategoryTheory.Idempotents
 
 open scoped Simplicial DoldKan
 
@@ -130,7 +130,7 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
       have eq :=
         v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.val_mk, Nat.succ_eq_add_one, add_assoc])
-      simp only [Fin.succ_mk] at eq
+      simp only [Fin.succ_mk] at eq 
       simp only [Eq, zero_comp]
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self
 

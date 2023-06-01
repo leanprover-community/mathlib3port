@@ -133,9 +133,9 @@ theorem disjoint_inf_sdiff : Disjoint (x ⊓ y) (x \ y) :=
 theorem sdiff_unique (s : x ⊓ y ⊔ z = x) (i : x ⊓ y ⊓ z = ⊥) : x \ y = z :=
   by
   conv_rhs at s => rw [← sup_inf_sdiff x y, sup_comm]
-  rw [sup_comm] at s
+  rw [sup_comm] at s 
   conv_rhs at i => rw [← inf_inf_sdiff x y, inf_comm]
-  rw [inf_comm] at i
+  rw [inf_comm] at i 
   exact (eq_of_inf_eq_sup_eq i s).symm
 #align sdiff_unique sdiff_unique
 
@@ -253,7 +253,7 @@ protected theorem Disjoint.sdiff_unique (hd : Disjoint x z) (hz : z ≤ y) (hs :
     y \ x = z :=
   sdiff_unique
     (by
-      rw [← inf_eq_right] at hs
+      rw [← inf_eq_right] at hs 
       rwa [sup_inf_right, inf_sup_right, @sup_comm _ _ x, inf_sup_self, inf_comm, @sup_comm _ _ z,
         hs, sup_eq_left])
     (by rw [inf_assoc, hd.eq_bot, inf_bot_eq])
@@ -340,7 +340,7 @@ theorem sdiff_eq_self_iff_disjoint' : x \ y = x ↔ Disjoint x y := by
 theorem sdiff_lt (hx : y ≤ x) (hy : y ≠ ⊥) : x \ y < x :=
   by
   refine' sdiff_le.lt_of_ne fun h => hy _
-  rw [sdiff_eq_self_iff_disjoint', disjoint_iff] at h
+  rw [sdiff_eq_self_iff_disjoint', disjoint_iff] at h 
   rw [← h, inf_eq_right.mpr hx]
 #align sdiff_lt sdiff_lt
 
@@ -547,7 +547,7 @@ Instead, we extend using the underlying `has_bot` and `has_top` data typeclasses
 order axioms of those classes here. A "forgetful" instance back to `bounded_order` is provided.
 -/
 class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, SDiff α, HImp α, Top α,
-  Bot α where
+    Bot α where
   inf_compl_le_bot : ∀ x : α, x ⊓ xᶜ ≤ ⊥
   top_le_sup_compl : ∀ x : α, ⊤ ≤ x ⊔ xᶜ
   le_top : ∀ a : α, a ≤ ⊤
@@ -750,7 +750,7 @@ theorem compl_inf : (x ⊓ y)ᶜ = xᶜ ⊔ yᶜ :=
 #print compl_le_compl_iff_le /-
 @[simp]
 theorem compl_le_compl_iff_le : yᶜ ≤ xᶜ ↔ x ≤ y :=
-  ⟨fun h => by have h := compl_le_compl h <;> simp at h <;> assumption, compl_le_compl⟩
+  ⟨fun h => by have h := compl_le_compl h <;> simp at h  <;> assumption, compl_le_compl⟩
 #align compl_le_compl_iff_le compl_le_compl_iff_le
 -/
 
@@ -928,5 +928,7 @@ end lift
 
 instance : BooleanAlgebra PUnit := by
   refine_struct { PUnit.biheytingAlgebra with } <;> intros <;>
-    first |trivial|exact Subsingleton.elim _ _
+    first
+    | trivial
+    | exact Subsingleton.elim _ _
 

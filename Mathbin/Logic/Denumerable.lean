@@ -266,7 +266,7 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
       ⟨(((Multiset.range (succ x)).filterₓ (· ∈ s)).pmap
             (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
             (by simp [-Multiset.range_succ])).toFinset,
-        by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
+        by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ]⟩
 #align nat.subtype.exists_succ Nat.Subtype.exists_succ
 -/
 
@@ -353,8 +353,8 @@ theorem ofNat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = 
           rw [of_nat] <;>
             exact
               le_succ_of_forall_lt_le fun z hz => by
-                rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩decreasing_by
-  tauto
+                rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩
+decreasing_by tauto
 #align nat.subtype.of_nat_surjective_aux Nat.Subtype.ofNat_surjective_aux
 -/
 
@@ -389,7 +389,7 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | 0 => by
     rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
-    rw [mem_filter, of_nat, mem_range] at hn
+    rw [mem_filter, of_nat, mem_range] at hn 
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
@@ -406,7 +406,7 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
           fun h =>
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
             ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
-    simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
+    simp only [to_fun_aux_eq, of_nat, range_succ] at ih ⊢
     conv =>
       rhs
       rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]

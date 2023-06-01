@@ -666,7 +666,7 @@ theorem disjSups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) 
   refine' associative_of_commutative_of_le disj_sups_comm _
   simp only [le_eq_subset, disj_sups_subset_iff, mem_disj_sups]
   rintro s t u _ ⟨a, ha, b, hb, hab, rfl⟩ c hc habc
-  rw [disjoint_sup_left] at habc
+  rw [disjoint_sup_left] at habc 
   exact ⟨a, ha, _, ⟨b, hb, c, hc, habc.2, rfl⟩, hab.sup_right habc.1, sup_assoc.symm⟩
 #align finset.disj_sups_assoc Finset.disjSups_assoc
 -/

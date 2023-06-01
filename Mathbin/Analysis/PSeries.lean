@@ -60,7 +60,7 @@ theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
     by
     rw [sum_range_succ, ← sum_Ico_consecutive]
     exact add_le_add ihn this
-    exacts[n.one_le_two_pow, Nat.pow_le_pow_of_le_right zero_lt_two n.le_succ]
+    exacts [n.one_le_two_pow, Nat.pow_le_pow_of_le_right zero_lt_two n.le_succ]
   have : ∀ k ∈ Ico (2 ^ n) (2 ^ (n + 1)), f k ≤ f (2 ^ n) := fun k hk =>
     hf (pow_pos zero_lt_two _) (mem_Ico.mp hk).1
   convert sum_le_sum this
@@ -82,7 +82,7 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     by
     rw [sum_range_succ, ← sum_Ico_consecutive]
     exact add_le_add ihn this
-    exacts[add_le_add_right n.one_le_two_pow _,
+    exacts [add_le_add_right n.one_le_two_pow _,
       add_le_add_right (Nat.pow_le_pow_of_le_right zero_lt_two n.le_succ) _]
   have : ∀ k ∈ Ico (2 ^ n + 1) (2 ^ (n + 1) + 1), f (2 ^ (n + 1)) ≤ f k := fun k hk =>
     hf (n.one_le_two_pow.trans_lt <| (Nat.lt_succ_of_le le_rfl).trans_le (mem_Ico.mp hk).1)
@@ -200,7 +200,7 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
         ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).And
             (eventually_cofinite_ne 0)).exists
       apply hk₀
-      rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀
+      rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀ 
       simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp,
         hp.not_lt, hk₀] using hk₁
 #align real.summable_nat_rpow_inv Real.summable_nat_rpow_inv
@@ -319,7 +319,7 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) 
       by
       apply sum_le_sum_of_subset_of_nonneg
       · intro x hx
-        simp only [mem_Ioo] at hx
+        simp only [mem_Ioo] at hx 
         simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_true_iff, and_self_iff]
       · intro i hi hident
         exact inv_nonneg.2 (sq_nonneg _)

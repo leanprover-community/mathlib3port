@@ -57,7 +57,7 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
   by
   rcases exists_pair_ne α with ⟨y, y', h⟩
   by_cases hx : x = y
-  · rw [← hx] at h
+  · rw [← hx] at h 
     exact ⟨y', h.symm⟩
   · exact ⟨y, Ne.symm hx⟩
 #align decidable.exists_ne Decidable.exists_ne
@@ -104,7 +104,7 @@ theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
 
 #print Subtype.nontrivial_iff_exists_ne /-
 theorem Subtype.nontrivial_iff_exists_ne (p : α → Prop) (x : Subtype p) :
-    Nontrivial (Subtype p) ↔ ∃ (y : α)(hy : p y), y ≠ x := by
+    Nontrivial (Subtype p) ↔ ∃ (y : α) (hy : p y), y ≠ x := by
   simp only [nontrivial_iff_exists_ne x, Subtype.exists, Ne.def, Subtype.ext_iff, Subtype.coe_mk]
 #align subtype.nontrivial_iff_exists_ne Subtype.nontrivial_iff_exists_ne
 -/

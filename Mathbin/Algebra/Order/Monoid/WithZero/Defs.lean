@@ -27,7 +27,7 @@ variable {α : Type u}
 #print LinearOrderedCommMonoidWithZero /-
 /-- A linearly ordered commutative monoid with a zero element. -/
 class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α,
-  CommMonoidWithZero α where
+    CommMonoidWithZero α where
   zero_le_one : (0 : α) ≤ 1
 #align linear_ordered_comm_monoid_with_zero LinearOrderedCommMonoidWithZero
 -/
@@ -149,7 +149,7 @@ See note [reducible non-instances].
 protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) :
     OrderedAddCommMonoid (WithZero α) :=
   { WithZero.partialOrder, WithZero.addCommMonoid with
-    add_le_add_left := @add_le_add_left _ _ _ (WithZero.covariantClass_add_le zero_le).. }
+    add_le_add_left := @add_le_add_left _ _ _ (WithZero.covariantClass_add_le zero_le) .. }
 #align with_zero.ordered_add_comm_monoid WithZero.orderedAddCommMonoid
 
 end WithZero

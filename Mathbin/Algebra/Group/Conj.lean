@@ -70,7 +70,7 @@ theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
 theorem isConj_iff_eq {α : Type _} [CommMonoid α] {a b : α} : IsConj a b ↔ a = b :=
   ⟨fun ⟨c, hc⟩ =>
     by
-    rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_one] at hc
+    rw [SemiconjBy, mul_comm, ← Units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_one] at hc 
     exact hc, fun h => by rw [h]⟩
 #align is_conj_iff_eq isConj_iff_eq
 -/
@@ -353,7 +353,7 @@ theorem isConj_iff_conjugatesOf_eq {a b : α} : IsConj a b ↔ conjugatesOf a = 
   ⟨IsConj.conjugatesOf_eq, fun h =>
     by
     have ha := mem_conjugatesOf_self
-    rwa [← h] at ha⟩
+    rwa [← h] at ha ⟩
 #align is_conj_iff_conjugates_of_eq isConj_iff_conjugatesOf_eq
 -/
 

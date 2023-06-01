@@ -52,18 +52,17 @@ theorem countp_cons (a : α) (l) : countp p (a :: l) = countp p l + ite (p a) 1 
 #align list.countp_cons List.countp_cons
 
 theorem length_eq_countp_add_countp (l) : length l = countp p l + countp (fun a => ¬p a) l := by
-  induction' l with x h ih <;> [rfl;by_cases p x] <;>
+  induction' l with x h ih <;> [rfl; by_cases p x] <;>
       [simp only [countp_cons_of_pos _ _ h,
-        countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ih,
-        length];simp only [countp_cons_of_pos (fun a => ¬p a) _ h, countp_cons_of_neg _ _ h, ih,
-        length]] <;>
+        countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ih, length];
+      simp only [countp_cons_of_pos (fun a => ¬p a) _ h, countp_cons_of_neg _ _ h, ih, length]] <;>
     ac_rfl
 #align list.length_eq_countp_add_countp List.length_eq_countp_add_countp
 
 theorem countp_eq_length_filter (l) : countp p l = length (filter p l) := by
-  induction' l with x l ih <;> [rfl;by_cases p x] <;>
-      [simp only [filter_cons_of_pos _ h, countp, ih,
-        if_pos h];simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
+  induction' l with x l ih <;> [rfl; by_cases p x] <;>
+      [simp only [filter_cons_of_pos _ h, countp, ih, if_pos h];
+      simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
     rfl
 #align list.countp_eq_length_filter List.countp_eq_length_filter
 
@@ -133,7 +132,7 @@ variable {p q}
 theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp q l :=
   by
   induction' l with a l ihl; · rfl
-  rw [forall_mem_cons] at h; cases' h with ha hl
+  rw [forall_mem_cons] at h ; cases' h with ha hl
   rw [countp_cons, countp_cons]
   refine' add_le_add (ihl hl) _
   split_ifs <;> try simp only [le_rfl, zero_le]
@@ -291,7 +290,7 @@ theorem count_replicate_self (a : α) (n : ℕ) : count a (replicate n a) = n :=
 theorem count_replicate (a b : α) (n : ℕ) : count a (replicate n b) = if a = b then n else 0 :=
   by
   split_ifs with h
-  exacts[h ▸ count_replicate_self _ _, count_eq_zero_of_not_mem <| mt eq_of_mem_replicate h]
+  exacts [h ▸ count_replicate_self _ _, count_eq_zero_of_not_mem <| mt eq_of_mem_replicate h]
 #align list.count_replicate List.count_replicate
 -/
 
@@ -347,7 +346,7 @@ theorem count_erase (a b : α) : ∀ l : List α, count a (l.eraseₓ b) = count
     · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
     · rw [if_neg hc, count_cons', count_cons', count_erase]
       by_cases ha : a = b
-      · rw [← ha, eq_comm] at hc
+      · rw [← ha, eq_comm] at hc 
         rw [if_pos ha, if_neg hc, add_zero, add_zero]
       · rw [if_neg ha, tsub_zero, tsub_zero]
 #align list.count_erase List.count_erase

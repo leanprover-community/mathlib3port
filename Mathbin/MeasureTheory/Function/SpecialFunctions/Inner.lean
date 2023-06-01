@@ -42,6 +42,6 @@ theorem AEMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMe
   refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
   dsimp only
   congr
-  exacts[hxf, hxg]
+  exacts [hxf, hxg]
 #align ae_measurable.inner AEMeasurable.inner
 

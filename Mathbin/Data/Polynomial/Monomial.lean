@@ -47,7 +47,7 @@ theorem card_support_le_one_iff_monomial {f : R[X]} :
   by
   constructor
   · intro H
-    rw [Finset.card_le_one_iff_subset_singleton] at H
+    rw [Finset.card_le_one_iff_subset_singleton] at H 
     rcases H with ⟨n, hn⟩
     refine' ⟨n, f.coeff n, _⟩
     ext i

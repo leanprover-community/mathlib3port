@@ -53,7 +53,7 @@ variable {E : Type _} [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 /-- The set of all tangent directions to the set `s` at the point `x`. -/
 def tangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
-    ∃ (c : ℕ → 𝕜)(d : ℕ → E),
+    ∃ (c : ℕ → 𝕜) (d : ℕ → E),
       (∀ᶠ n in atTop, x + d n ∈ s) ∧
         Tendsto (fun n => ‖c n‖) atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align tangent_cone_at tangentConeAt
@@ -133,7 +133,7 @@ theorem tangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
   have A : tendsto (fun n => ‖c n‖⁻¹) l (𝓝 0) := tendsto_inv_at_top_zero.comp hc
   have B : tendsto (fun n => ‖c n • d n‖) l (𝓝 ‖y‖) := (continuous_norm.tendsto _).comp hd
   have C : tendsto (fun n => ‖c n‖⁻¹ * ‖c n • d n‖) l (𝓝 (0 * ‖y‖)) := A.mul B
-  rw [MulZeroClass.zero_mul] at C
+  rw [MulZeroClass.zero_mul] at C 
   have : ∀ᶠ n in l, ‖c n‖⁻¹ * ‖c n • d n‖ = ‖d n‖ :=
     by
     apply (eventually_ne_of_tendsto_norm_atTop hc 0).mono fun n hn => _
@@ -311,7 +311,7 @@ theorem UniqueDiffWithinAt.mono_nhds (h : UniqueDiffWithinAt 𝕜 s x) (st : �
     UniqueDiffWithinAt 𝕜 t x :=
   by
   simp only [uniqueDiffWithinAt_iff] at *
-  rw [mem_closure_iff_nhdsWithin_neBot] at h⊢
+  rw [mem_closure_iff_nhdsWithin_neBot] at h ⊢
   exact ⟨h.1.mono <| Submodule.span_mono <| tangentCone_mono_nhds st, h.2.mono st⟩
 #align unique_diff_within_at.mono_nhds UniqueDiffWithinAt.mono_nhds
 
@@ -376,13 +376,13 @@ differentiability at `(x, y)`. -/
 theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt 𝕜 s x)
     (ht : UniqueDiffWithinAt 𝕜 t y) : UniqueDiffWithinAt 𝕜 (s ×ˢ t) (x, y) :=
   by
-  rw [uniqueDiffWithinAt_iff] at hs ht⊢
+  rw [uniqueDiffWithinAt_iff] at hs ht ⊢
   rw [closure_prod_eq]
   refine' ⟨_, hs.2, ht.2⟩
   have : _ ≤ Submodule.span 𝕜 (tangentConeAt 𝕜 (s ×ˢ t) (x, y)) :=
     Submodule.span_mono
       (union_subset (subset_tangentCone_prod_left ht.2) (subset_tangentCone_prod_right hs.2))
-  rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
+  rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this 
   exact (hs.1.Prod ht.1).mono this
 #align unique_diff_within_at.prod UniqueDiffWithinAt.prod
 
@@ -390,7 +390,7 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.pi univ s) x := by
   classical
-    simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h⊢
+    simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h ⊢
     refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
     norm_cast
     simp only [← Submodule.iSup_map_single, iSup_le_iff, LinearMap.map_span, Submodule.span_le, ←

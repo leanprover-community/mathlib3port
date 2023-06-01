@@ -51,7 +51,7 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (clos
   rcases exists_Icc_mem_subset_of_mem_nhdsWithin_Ici hmem with ⟨b, hab, hmem', hsub⟩
   by_cases H : Disjoint (Icc a b) (ord_connected_section <| ord_separating_set s t)
   · exact mem_of_superset hmem' (disjoint_left.1 H)
-  · simp only [Set.disjoint_left, not_forall, Classical.not_not] at H
+  · simp only [Set.disjoint_left, not_forall, Classical.not_not] at H 
     rcases H with ⟨c, ⟨hac, hcb⟩, hc⟩
     have hsub' : Icc a b ⊆ ord_connected_component (tᶜ) a :=
       subset_ord_connected_component (left_mem_Icc.2 hab) hsub

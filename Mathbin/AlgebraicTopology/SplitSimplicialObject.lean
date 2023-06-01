@@ -57,7 +57,7 @@ namespace Splitting
 #print SimplicialObject.Splitting.IndexSet /-
 /-- The index set which appears in the definition of split simplicial objects. -/
 def IndexSet (Δ : SimplexCategoryᵒᵖ) :=
-  ΣΔ' : SimplexCategoryᵒᵖ, { α : Δ.unop ⟶ Δ'.unop // Epi α }
+  Σ Δ' : SimplexCategoryᵒᵖ, { α : Δ.unop ⟶ Δ'.unop // Epi α }
 #align simplicial_object.splitting.index_set SimplicialObject.Splitting.IndexSet
 -/
 
@@ -93,9 +93,9 @@ theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e �
     A₁ = A₂ := by
   rcases A₁ with ⟨Δ₁, ⟨α₁, hα₁⟩⟩
   rcases A₂ with ⟨Δ₂, ⟨α₂, hα₂⟩⟩
-  simp only at h₁
+  simp only at h₁ 
   subst h₁
-  simp only [eq_to_hom_refl, comp_id, index_set.e] at h₂
+  simp only [eq_to_hom_refl, comp_id, index_set.e] at h₂ 
   simp only [h₂]
 #align simplicial_object.splitting.index_set.ext SimplicialObject.Splitting.IndexSet.ext
 -/
@@ -110,7 +110,7 @@ instance : Fintype (IndexSet Δ) :=
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
       induction Δ₁ using Opposite.rec'
       induction Δ₂ using Opposite.rec'
-      simp only at h₁
+      simp only at h₁ 
       have h₂ : Δ₁ = Δ₂ := by ext1; simpa only [Fin.mk_eq_mk] using h₁.1
       subst h₂
       refine' ext _ _ rfl _
@@ -145,12 +145,12 @@ def EqId : Prop :=
 theorem eqId_iff_eq : A.EqId ↔ A.1 = Δ := by
   constructor
   · intro h
-    dsimp at h
+    dsimp at h 
     rw [h]
     rfl
   · intro h
     rcases A with ⟨Δ', ⟨f, hf⟩⟩
-    simp only at h
+    simp only at h 
     subst h
     refine' ext _ _ rfl _
     · haveI := hf
@@ -189,7 +189,7 @@ theorem eqId_iff_mono : A.EqId ↔ Mono A.e :=
   by
   constructor
   · intro h
-    dsimp at h
+    dsimp at h 
     subst h
     dsimp only [id, e]
     infer_instance

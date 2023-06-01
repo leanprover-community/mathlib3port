@@ -244,9 +244,9 @@ private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n
       calc_deriv_dist rfl (by simp [z1, hz.1]) hz
     have hfeq : ‖F.derivative.eval z'‖ = ‖F.derivative.eval a‖ :=
       by
-      rw [sub_eq_add_neg, ← hz.1, ← norm_neg (F.derivative.eval z)] at hdist
+      rw [sub_eq_add_neg, ← hz.1, ← norm_neg (F.derivative.eval z)] at hdist 
       have := PadicInt.norm_eq_of_norm_add_lt_right hdist
-      rwa [norm_neg, hz.1] at this
+      rwa [norm_neg, hz.1] at this 
     let ⟨q, HEq⟩ := calc_eval_z' rfl hz h1 rfl
     have hnle : ‖F.eval z'‖ ≤ ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ (n + 1) :=
       calc_eval_z'_norm hz HEq h1 rfl
@@ -373,7 +373,7 @@ private theorem bound :
     ∀ {ε}, ε > 0 → ∃ N : ℕ, ∀ {n}, n ≥ N → ‖F.derivative.eval a‖ * T ^ 2 ^ n < ε :=
   by
   have := bound' hnorm hnsol
-  simp [tendsto, nhds] at this
+  simp [tendsto, nhds] at this 
   intro ε hε
   cases' this (ball 0 ε) (mem_ball_self hε) is_open_ball with N hN
   exists N; intro n hn
@@ -429,7 +429,7 @@ private theorem soln_dist_to_a : ‖soln - a‖ = ‖F.eval a‖ / ‖F.derivati
 private theorem soln_dist_to_a_lt_deriv : ‖soln - a‖ < ‖F.derivative.eval a‖ :=
   by
   rw [soln_dist_to_a, div_lt_iff]
-  · rwa [sq] at hnorm
+  · rwa [sq] at hnorm 
   · apply deriv_norm_pos; assumption
 
 private theorem eval_soln : F.eval soln = 0 :=

@@ -68,7 +68,7 @@ theorem ore_eq (r : R) (s : S) : r * oreDenom r s = s * oreNum r s :=
 
 /-- The Ore condition bundled in a sigma type. This is useful in situations where we want to obtain
 both witnesses and the condition for a given fraction. -/
-def oreCondition (r : R) (s : S) : Σ'r' : R, Σ's' : S, r * s' = s * r' :=
+def oreCondition (r : R) (s : S) : Σ' r' : R, Σ' s' : S, r * s' = s * r' :=
   ⟨oreNum r s, oreDenom r s, ore_eq r s⟩
 #align ore_localization.ore_condition OreLocalization.oreCondition
 
@@ -78,13 +78,13 @@ instance oreSetBot : OreSet (⊥ : Submonoid R)
   ore_left_cancel _ _ s h :=
     ⟨s, by
       rcases s with ⟨s, hs⟩
-      rw [Submonoid.mem_bot] at hs
+      rw [Submonoid.mem_bot] at hs 
       subst hs
-      rw [SetLike.coe_mk, one_mul, one_mul] at h
+      rw [SetLike.coe_mk, one_mul, one_mul] at h 
       subst h⟩
   oreNum r _ := r
   oreDenom _ s := s
-  ore_eq _ s := by rcases s with ⟨s, hs⟩; rw [Submonoid.mem_bot] at hs; simp [hs]
+  ore_eq _ s := by rcases s with ⟨s, hs⟩; rw [Submonoid.mem_bot] at hs ; simp [hs]
 #align ore_localization.ore_set_bot OreLocalization.oreSetBot
 
 #print OreLocalization.oreSetComm /-

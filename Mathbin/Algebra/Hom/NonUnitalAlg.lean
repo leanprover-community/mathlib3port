@@ -58,7 +58,7 @@ variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 /-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
 structure NonUnitalAlgHom [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
-  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
+    [NonUnitalNonAssocSemiring B] [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
 #align non_unital_alg_hom NonUnitalAlgHom
 -/
 
@@ -76,9 +76,9 @@ attribute [nolint doc_blame] NonUnitalAlgHom.toMulHom
 /-- `non_unital_alg_hom_class F R A B` asserts `F` is a type of bundled algebra homomorphisms
 from `A` to `B`.  -/
 class NonUnitalAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [Monoid R] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B]
-  [DistribMulAction R A] [DistribMulAction R B] extends DistribMulActionHomClass F R A B,
-  MulHomClass F A B
+    (B : outParam (Type _)) [Monoid R] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B]
+    [DistribMulAction R A] [DistribMulAction R B] extends DistribMulActionHomClass F R A B,
+    MulHomClass F A B
 #align non_unital_alg_hom_class NonUnitalAlgHomClass
 -/
 

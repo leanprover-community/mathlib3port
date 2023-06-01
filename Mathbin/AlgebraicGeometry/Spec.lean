@@ -235,9 +235,9 @@ def Spec.locallyRingedSpaceMap {R S : CommRingCat} (f : R ⟶ S) :
       by
       -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of
       -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
-      rw [← local_ring_hom_comp_stalk_iso_apply] at ha
+      rw [← local_ring_hom_comp_stalk_iso_apply] at ha 
       replace ha := (stalk_iso S p).Hom.isUnit_map ha
-      rw [iso.inv_hom_id_apply] at ha
+      rw [iso.inv_hom_id_apply] at ha 
       replace ha := IsLocalRingHom.map_nonunit _ ha
       convert RingHom.isUnit_map (stalk_iso R (PrimeSpectrum.comap f p)).inv ha
       rw [iso.hom_inv_id_apply]
@@ -368,13 +368,13 @@ theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
   obtain ⟨U, hp, s, e⟩ := TopCat.Presheaf.germ_exist _ _ y
   obtain ⟨_, ⟨r, rfl⟩, hpr : p ∈ PrimeSpectrum.basicOpen r, hrU : PrimeSpectrum.basicOpen r ≤ U⟩ :=
     PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ ↑U from hp) U.2
-  change PrimeSpectrum.basicOpen r ≤ U at hrU
+  change PrimeSpectrum.basicOpen r ≤ U at hrU 
   replace e :=
     ((Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).germ_res_apply (hom_of_le hrU)
           ⟨p, hpr⟩ _).trans
       e
   set s' := (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op s with h
-  rw [← h] at e
+  rw [← h] at e 
   clear_value s'; clear! U
   obtain ⟨⟨s, ⟨_, n, rfl⟩⟩, hsn⟩ :=
     @IsLocalization.surj _ _ _ _ _ _
@@ -387,8 +387,8 @@ theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
       (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).germ_res_apply (hom_of_le le_top)
         ⟨p, hpr⟩]
   rw [← e, ← map_mul, mul_comm]
-  dsimp only [Subtype.coe_mk] at hsn
-  rw [← map_pow (algebraMap R S)] at hsn
+  dsimp only [Subtype.coe_mk] at hsn 
+  rw [← map_pow (algebraMap R S)] at hsn 
   congr 1
 #align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux AlgebraicGeometry.StructureSheaf.is_localized_module_toPushforwardStalkAlgHom_aux
 
@@ -402,15 +402,15 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
   · intro x hx
     rw [to_pushforward_stalk_alg_hom_apply, RingHom.toFun_eq_coe, ←
       (to_pushforward_stalk (algebraMap R S) p).map_zero, to_pushforward_stalk, comp_apply,
-      comp_apply, map_zero] at hx
+      comp_apply, map_zero] at hx 
     obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq _ _ _ _ _ _ hx
     obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
       PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hpU)
         U.2
-    change PrimeSpectrum.basicOpen r ≤ U at hrU
-    apply_fun (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op  at e
+    change PrimeSpectrum.basicOpen r ≤ U at hrU 
+    apply_fun (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op  at e 
     simp only [TopCat.Presheaf.pushforwardObj_map, functor.op_map, map_zero, ← comp_apply,
-      to_open_res] at e
+      to_open_res] at e 
     have : to_open S (PrimeSpectrum.basicOpen <| algebraMap R S r) x = 0 := by refine' Eq.trans _ e;
       rfl
     have :=

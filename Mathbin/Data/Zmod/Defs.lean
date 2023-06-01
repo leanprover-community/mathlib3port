@@ -155,7 +155,7 @@ instance commRing (n : ℕ) : CommRing (ZMod n)
     Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
   nsmul_succ :=
     Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
-  add_left_neg := by cases n; exacts[@add_left_neg Int _, @add_left_neg (Fin n.succ) _]
+  add_left_neg := by cases n; exacts [@add_left_neg Int _, @add_left_neg (Fin n.succ) _]
   add_comm := Nat.casesOn n (@add_comm Int _) fun n => @add_comm (Fin n.succ) _
   mul := Nat.casesOn n (@Mul.mul Int _) fun n => @Mul.mul (Fin n.succ) _
   mul_assoc := Nat.casesOn n (@mul_assoc Int _) fun n => @mul_assoc (Fin n.succ) _

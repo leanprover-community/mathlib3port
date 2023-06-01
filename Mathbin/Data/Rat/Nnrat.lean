@@ -39,7 +39,8 @@ open scoped BigOperators
 #print NNRat /-
 /-- Nonnegative rational numbers. -/
 def NNRat :=
-  { q : ℚ // 0 ≤ q }deriving CanonicallyOrderedCommSemiring, CanonicallyLinearOrderedSemifield,
+  { q : ℚ // 0 ≤ q }
+deriving CanonicallyOrderedCommSemiring, CanonicallyLinearOrderedSemifield,
   LinearOrderedCommGroupWithZero, Sub, OrderedSub, DenselyOrdered, Archimedean, Inhabited
 #align nnrat NNRat
 -/

@@ -136,7 +136,7 @@ theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Id
   by
   constructor
   · rcases h with ⟨h, -⟩; contrapose! h
-    rw [← prod_top_top, Prod.ext_iff] at h
+    rw [← prod_top_top, Prod.ext_iff] at h 
     exact h.1
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩
   cases' h.mem_or_mem h₁ with h h
@@ -171,10 +171,10 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     intro hI
     rcases ideal_prod_prime_aux hI with (h | h)
     · right
-      rw [h] at hI⊢
+      rw [h] at hI ⊢
       exact ⟨_, ⟨is_prime_of_is_prime_prod_top' hI, rfl⟩⟩
     · left
-      rw [h] at hI⊢
+      rw [h] at hI ⊢
       exact ⟨_, ⟨is_prime_of_is_prime_prod_top hI, rfl⟩⟩
   · rintro (⟨p, ⟨h, rfl⟩⟩ | ⟨p, ⟨h, rfl⟩⟩)
     · exact is_prime_ideal_prod_top

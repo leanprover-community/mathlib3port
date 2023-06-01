@@ -50,7 +50,7 @@ instance from inadverently applying to other sigma types. One should not use thi
 directly. -/
 @[nolint has_nonempty_instance]
 def Multiset.ToType (m : Multiset α) : Type _ :=
-  Σx : α, Fin (m.count x)
+  Σ x : α, Fin (m.count x)
 #align multiset.to_type Multiset.ToType
 -/
 
@@ -116,7 +116,7 @@ protected theorem Multiset.forall_coe (p : m → Prop) :
 #print Multiset.exists_coe /-
 @[simp]
 protected theorem Multiset.exists_coe (p : m → Prop) :
-    (∃ x : m, p x) ↔ ∃ (x : α)(i : Fin (m.count x)), p ⟨x, i⟩ :=
+    (∃ x : m, p x) ↔ ∃ (x : α) (i : Fin (m.count x)), p ⟨x, i⟩ :=
   Sigma.exists
 #align multiset.exists_coe Multiset.exists_coe
 -/
@@ -268,7 +268,7 @@ theorem Multiset.image_toEnumFinset_fst (m : Multiset α) :
 theorem Multiset.map_univ_coe (m : Multiset α) : (Finset.univ : Finset m).val.map coe = m :=
   by
   have := m.map_to_enum_finset_fst
-  rw [← m.map_univ_coe_embedding] at this
+  rw [← m.map_univ_coe_embedding] at this 
   simpa only [Finset.map_val, Multiset.coeEmbedding_apply, Multiset.map_map,
     Function.comp_apply] using this
 #align multiset.map_univ_coe Multiset.map_univ_coe
@@ -298,8 +298,8 @@ theorem Multiset.card_coe (m : Multiset α) : Fintype.card m = m.card := by
 
 #print Multiset.prod_eq_prod_coe /-
 @[to_additive]
-theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x : m, x := by
-  congr ; simp
+theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x : m, x := by congr;
+  simp
 #align multiset.prod_eq_prod_coe Multiset.prod_eq_prod_coe
 #align multiset.sum_eq_sum_coe Multiset.sum_eq_sum_coe
 -/
@@ -307,7 +307,7 @@ theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = �
 #print Multiset.prod_eq_prod_toEnumFinset /-
 @[to_additive]
 theorem Multiset.prod_eq_prod_toEnumFinset [CommMonoid α] (m : Multiset α) :
-    m.Prod = ∏ x in m.toEnumFinset, x.1 := by congr ; simp
+    m.Prod = ∏ x in m.toEnumFinset, x.1 := by congr; simp
 #align multiset.prod_eq_prod_to_enum_finset Multiset.prod_eq_prod_toEnumFinset
 #align multiset.sum_eq_sum_to_enum_finset Multiset.sum_eq_sum_toEnumFinset
 -/

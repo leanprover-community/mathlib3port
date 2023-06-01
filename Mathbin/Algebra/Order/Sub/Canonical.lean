@@ -443,7 +443,7 @@ protected theorem tsub_lt_tsub_iff_right (hc : AddLECancellable c) (h : c ≤ a)
 protected theorem tsub_lt_self (ha : AddLECancellable a) (h₁ : 0 < a) (h₂ : 0 < b) : a - b < a :=
   by
   refine' tsub_le_self.lt_of_ne fun h => _
-  rw [← h, tsub_pos_iff_lt] at h₁
+  rw [← h, tsub_pos_iff_lt] at h₁ 
   exact h₂.not_le (ha.add_le_iff_nonpos_left.1 <| add_le_of_le_tsub_left_of_le h₁.le h.ge)
 #align add_le_cancellable.tsub_lt_self AddLECancellable.tsub_lt_self
 
@@ -452,7 +452,7 @@ protected theorem tsub_lt_self_iff (ha : AddLECancellable a) : a - b < a ↔ 0 <
   refine'
     ⟨fun h => ⟨(zero_le _).trans_lt h, (zero_le b).lt_of_ne _⟩, fun h => ha.tsub_lt_self h.1 h.2⟩
   rintro rfl
-  rw [tsub_zero] at h
+  rw [tsub_zero] at h 
   exact h.false
 #align add_le_cancellable.tsub_lt_self_iff AddLECancellable.tsub_lt_self_iff
 

@@ -335,7 +335,7 @@ theorem map_aeval_eq_aeval_map {S T U : Type _} [CommSemiring S] [CommSemiring T
 theorem aeval_eq_zero_of_dvd_aeval_eq_zero [CommSemiring S] [CommSemiring T] [Algebra S T]
     {p q : S[X]} (h₁ : p ∣ q) {a : T} (h₂ : aeval a p = 0) : aeval a q = 0 :=
   by
-  rw [aeval_def, ← eval_map] at h₂⊢
+  rw [aeval_def, ← eval_map] at h₂ ⊢
   exact eval_eq_zero_of_dvd_of_eval_eq_zero (Polynomial.map_dvd (algebraMap S T) h₁) h₂
 #align polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero
 
@@ -454,14 +454,14 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i :=
   by
   by_cases hi : i ∈ f.support
-  · rw [eval, eval₂, Sum] at dvd_eval
-    rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
+  · rw [eval, eval₂, Sum] at dvd_eval 
+    rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval 
     refine' (dvd_add_left _).mp dvd_eval
     apply Finset.dvd_sum
     intro j hj
     exact dvd_terms j (Finset.ne_of_mem_erase hj)
   · convert dvd_zero p
-    rw [not_mem_support_iff] at hi
+    rw [not_mem_support_iff] at hi 
     simp [hi]
 #align polynomial.dvd_term_of_dvd_eval_of_dvd_terms Polynomial.dvd_term_of_dvd_eval_of_dvd_terms
 

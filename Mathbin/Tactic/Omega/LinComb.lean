@@ -63,8 +63,8 @@ theorem unsat_of_unsatLinComb (ns : List Nat) (ts : List Term) :
   have h3 := lin_comb_holds ns h2.right
   cases' h1 with hl hr
   cases' lin_comb ns ts with b as
-  unfold term.val at h3
-  rw [coeffs.val_eq_zero hr, add_zero, ← not_lt] at h3
+  unfold term.val at h3 
+  rw [coeffs.val_eq_zero hr, add_zero, ← not_lt] at h3 
   apply h3 hl
 #align omega.unsat_of_unsat_lin_comb Omega.unsat_of_unsatLinComb
 

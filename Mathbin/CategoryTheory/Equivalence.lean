@@ -262,11 +262,11 @@ theorem adjointify_η_ε (X : C) :
     F.map ((adjointifyη η ε).Hom.app X) ≫ ε.Hom.app (F.obj X) = 𝟙 (F.obj X) :=
   by
   dsimp [adjointify_η]; simp
-  have := ε.hom.naturality (F.map (η.inv.app X)); dsimp at this; rw [this]; clear this
+  have := ε.hom.naturality (F.map (η.inv.app X)); dsimp at this ; rw [this]; clear this
   rw [← assoc _ _ (F.map _)]
-  have := ε.hom.naturality (ε.inv.app <| F.obj X); dsimp at this; rw [this]; clear this
-  have := (ε.app <| F.obj X).hom_inv_id; dsimp at this; rw [this]; clear this
-  rw [id_comp]; have := (F.map_iso <| η.app X).hom_inv_id; dsimp at this; rw [this]
+  have := ε.hom.naturality (ε.inv.app <| F.obj X); dsimp at this ; rw [this]; clear this
+  have := (ε.app <| F.obj X).hom_inv_id; dsimp at this ; rw [this]; clear this
+  rw [id_comp]; have := (F.map_iso <| η.app X).hom_inv_id; dsimp at this ; rw [this]
 #align category_theory.equivalence.adjointify_η_ε CategoryTheory.Equivalence.adjointify_η_ε
 
 end

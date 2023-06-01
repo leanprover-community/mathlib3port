@@ -58,20 +58,20 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.FG) (h2 : (adjoin (adjoin R s) t
     have : y ∈ (adjoin (adjoin R s) t).toSubmodule := by rw [← hq']; exact subset_span hy
     change y ∈ adjoin R (s ∪ t); rwa [adjoin_union_eq_adjoin_adjoin]
   · intro r hr
-    change r ∈ adjoin R (s ∪ t) at hr
-    rw [adjoin_union_eq_adjoin_adjoin] at hr
-    change r ∈ (adjoin (adjoin R s) t).toSubmodule at hr
-    rw [← hq', ← Set.image_id q, Finsupp.mem_span_image_iff_total (adjoin R s)] at hr
+    change r ∈ adjoin R (s ∪ t) at hr 
+    rw [adjoin_union_eq_adjoin_adjoin] at hr 
+    change r ∈ (adjoin (adjoin R s) t).toSubmodule at hr 
+    rw [← hq', ← Set.image_id q, Finsupp.mem_span_image_iff_total (adjoin R s)] at hr 
     rcases hr with ⟨l, hlq, rfl⟩
     have := @Finsupp.total_apply A A (adjoin R s)
     rw [this, Finsupp.sum]
     refine' sum_mem _
     intro z hz; change (l z).1 * _ ∈ _
     have : (l z).1 ∈ (adjoin R s).toSubmodule := (l z).2
-    rw [← hp', ← Set.image_id p, Finsupp.mem_span_image_iff_total R] at this
+    rw [← hp', ← Set.image_id p, Finsupp.mem_span_image_iff_total R] at this 
     rcases this with ⟨l2, hlp, hl⟩
     have := @Finsupp.total_apply A A R
-    rw [this] at hl
+    rw [this] at hl 
     rw [← hl, Finsupp.sum_mul]
     refine' sum_mem _
     intro t ht; change _ * _ ∈ _; rw [smul_mul_assoc]; refine' smul_mem _ _ _

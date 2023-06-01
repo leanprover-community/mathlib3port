@@ -88,7 +88,7 @@ theorem List.periodic_prod [Add α] [Monoid β] (l : List (α → β)) (hl : ∀
     Periodic l.Prod c := by
   induction' l with g l ih hl
   · simp
-  · rw [List.forall_mem_cons] at hl
+  · rw [List.forall_mem_cons] at hl 
     simpa only [List.prod_cons] using hl.1.mul (ih hl.2)
 #align list.periodic_prod List.periodic_prod
 #align list.periodic_sum List.periodic_sum
@@ -103,7 +103,7 @@ theorem Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β
 @[to_additive]
 theorem Finset.periodic_prod [Add α] [CommMonoid β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
     (hs : ∀ i ∈ s, Periodic (f i) c) : Periodic (∏ i in s, f i) c :=
-  s.prod_toList f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
+  s.prod_toList f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic])
 #align finset.periodic_prod Finset.periodic_prod
 #align finset.periodic_sum Finset.periodic_sum
 
@@ -335,7 +335,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c)
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
   Quotient.liftOn' x f fun a b h' =>
     by
-    rw [QuotientAddGroup.leftRel_apply] at h'
+    rw [QuotientAddGroup.leftRel_apply] at h' 
     obtain ⟨k, hk⟩ := h'
     exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
 #align function.periodic.lift Function.Periodic.lift

@@ -73,7 +73,7 @@ theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) 
 def adj : free ⊣ forget AddCommGroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeAbelianGroup.lift.symm
-      homEquiv_naturality_left_symm := by intros ; ext; rfl }
+      homEquiv_naturality_left_symm := by intros; ext; rfl }
 #align AddCommGroup.adj AddCommGroupCat.adj
 
 instance : IsRightAdjoint (forget AddCommGroupCat.{u}) :=
@@ -96,8 +96,8 @@ namespace GroupCat
 def free : Type u ⥤ GroupCat where
   obj α := of (FreeGroup α)
   map X Y := FreeGroup.map
-  map_id' := by intros ; ext1; rfl
-  map_comp' := by intros ; ext1; rfl
+  map_id' := by intros; ext1; rfl
+  map_comp' := by intros; ext1; rfl
 #align Group.free GroupCat.free
 
 /-- The free-forgetful adjunction for groups.
@@ -127,8 +127,8 @@ def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
       { toFun := fun x => Abelianization.of (f x)
         map_one' := by simp
         map_mul' := by simp }
-  map_id' := by intros ; simp only [MonoidHom.mk_coe, coe_id]; ext1; rfl
-  map_comp' := by intros ; simp only [coe_comp]; ext1; rfl
+  map_id' := by intros; simp only [MonoidHom.mk_coe, coe_id]; ext1; rfl
+  map_comp' := by intros; simp only [coe_comp]; ext1; rfl
 #align abelianize abelianize
 
 /-- The abelianization-forgetful adjuction from `Group` to `CommGroup`.-/

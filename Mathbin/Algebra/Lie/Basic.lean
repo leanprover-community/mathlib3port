@@ -97,7 +97,7 @@ class LieRingModule (L : Type v) (M : Type w) [LieRing L] [AddCommGroup M] exten
 algebra on this module, such that the Lie bracket acts as the commutator of endomorphisms. -/
 @[protect_proj]
 class LieModule (R : Type u) (L : Type v) (M : Type w) [CommRing R] [LieRing L] [LieAlgebra R L]
-  [AddCommGroup M] [Module R M] [LieRingModule L M] where
+    [AddCommGroup M] [Module R M] [LieRingModule L M] where
   smul_lie : ∀ (t : R) (x : L) (m : M), ⁅t • x, m⁆ = t • ⁅x, m⁆
   lie_smul : ∀ (t : R) (x : L) (m : M), ⁅x, t • m⁆ = t • ⁅x, m⁆
 #align lie_module LieModule
@@ -268,7 +268,7 @@ end BasicProperties
 #print LieHom /-
 /-- A morphism of Lie algebras is a linear map respecting the bracket operations. -/
 structure LieHom (R : Type u) (L : Type v) (L' : Type w) [CommRing R] [LieRing L] [LieAlgebra R L]
-  [LieRing L'] [LieAlgebra R L'] extends L →ₗ[R] L' where
+    [LieRing L'] [LieAlgebra R L'] extends L →ₗ[R] L' where
   map_lie' : ∀ {x y : L}, to_fun ⁅x, y⁆ = ⁅to_fun x, to_fun y⁆
 #align lie_hom LieHom
 -/
@@ -519,7 +519,7 @@ end ModulePullBack
 instead define an equivalence to be a morphism which is also a (plain) equivalence. However it is
 more convenient to define via linear equivalence to get `.to_linear_equiv` for free. -/
 structure LieEquiv (R : Type u) (L : Type v) (L' : Type w) [CommRing R] [LieRing L] [LieAlgebra R L]
-  [LieRing L'] [LieAlgebra R L'] extends L →ₗ⁅R⁆ L' where
+    [LieRing L'] [LieAlgebra R L'] extends L →ₗ⁅R⁆ L' where
   invFun : L' → L
   left_inv : Function.LeftInverse inv_fun to_lie_hom.toFun
   right_inv : Function.RightInverse inv_fun to_lie_hom.toFun
@@ -585,8 +585,8 @@ theorem to_linearEquiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
 #print LieEquiv.coe_linearEquiv_injective /-
 theorem coe_linearEquiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
   by
-  intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h; simp only at h
-  congr ; exacts[LieHom.coe_injective h.1, h.2]
+  intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h ; simp only at h 
+  congr; exacts [LieHom.coe_injective h.1, h.2]
 #align lie_equiv.coe_linear_equiv_injective LieEquiv.coe_linearEquiv_injective
 -/
 
@@ -1033,7 +1033,7 @@ theorem toEquiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) 
   by
   rcases e₁ with ⟨⟨⟩⟩; rcases e₂ with ⟨⟨⟩⟩
   have inj := Equiv.mk.inj h
-  dsimp at inj
+  dsimp at inj 
   apply lie_module_equiv.mk.inj_eq.mpr
   constructor
   · congr

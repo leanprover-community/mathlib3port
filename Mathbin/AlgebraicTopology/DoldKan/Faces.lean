@@ -115,8 +115,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   · rintro ⟨k, hk⟩
     rw [assoc, X.δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
     · intro h
-      rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h
-      dsimp at h
+      rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h 
+      dsimp at h 
       linarith
     · dsimp
       simp only [Fin.coe_pred, Fin.val_mk, succ_add_sub_one]
@@ -178,8 +178,8 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
     · intro j
       rw [comp_zsmul, comp_zsmul, δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
       · intro h
-        rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h
-        dsimp at h
+        rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h 
+        dsimp at h 
         linarith
       · dsimp
         simp only [Fin.cast_natAdd, Fin.coe_pred, Fin.coe_addNat, add_succ_sub_one]
@@ -218,7 +218,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   have hj₃ := j.is_lt
   have ham : a ≤ m := by
     by_contra
-    rw [not_le, ← Nat.succ_le_iff] at h
+    rw [not_le, ← Nat.succ_le_iff] at h 
     linarith
   rw [X.δ_comp_σ_of_gt', j.pred_succ]; swap
   · rw [Fin.lt_iff_val_lt_val]

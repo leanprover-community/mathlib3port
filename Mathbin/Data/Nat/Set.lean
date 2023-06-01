@@ -48,7 +48,7 @@ theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
   ext n
   induction' n with n ihn
   · rfl
-  · dsimp at ihn⊢
+  · dsimp at ihn ⊢
     rw [ihn]
 #align nat.range_rec Nat.range_rec
 

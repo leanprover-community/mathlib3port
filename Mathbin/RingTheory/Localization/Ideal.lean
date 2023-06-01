@@ -79,7 +79,7 @@ theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algeb
   le_antisymm (Ideal.map_le_iff_le_comap.2 le_rfl) fun x hJ =>
     by
     obtain ⟨r, s, hx⟩ := mk'_surjective M x
-    rw [← hx] at hJ⊢
+    rw [← hx] at hJ ⊢
     exact
       Ideal.mul_mem_right _ _
         (Ideal.mem_map_of_mem _
@@ -130,17 +130,17 @@ theorem isPrime_iff_isPrime_disjoint (J : Ideal S) :
       rw [eq_top_iff, ← (OrderEmbedding M S).le_iff_le]
       exact le_of_eq hJ.symm
     · intro x y hxy
-      rw [Ideal.mem_comap, RingHom.map_mul] at hxy
+      rw [Ideal.mem_comap, RingHom.map_mul] at hxy 
       exact h.mem_or_mem hxy
   · refine' fun h => ⟨fun hJ => h.left.ne_top (eq_top_iff.2 _), _⟩
-    · rwa [eq_top_iff, ← (OrderEmbedding M S).le_iff_le] at hJ
+    · rwa [eq_top_iff, ← (OrderEmbedding M S).le_iff_le] at hJ 
     · intro x y hxy
       obtain ⟨a, s, ha⟩ := mk'_surjective M x
       obtain ⟨b, t, hb⟩ := mk'_surjective M y
       have : mk' S (a * b) (s * t) ∈ J := by rwa [mk'_mul, ha, hb]
-      rw [mk'_mem_iff, ← Ideal.mem_comap] at this
+      rw [mk'_mem_iff, ← Ideal.mem_comap] at this 
       replace this := h.left.mem_or_mem this
-      rw [Ideal.mem_comap, Ideal.mem_comap] at this
+      rw [Ideal.mem_comap, Ideal.mem_comap] at this 
       rwa [← ha, ← hb, mk'_mem_iff, mk'_mem_iff]
 #align is_localization.is_prime_iff_is_prime_disjoint IsLocalization.isPrime_iff_isPrime_disjoint
 
@@ -193,18 +193,18 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
   by_cases hM : (Ideal.Quotient.mk (I.comap (algebraMap R S))) m = 0
   · have : I = ⊤ := by
       rw [Ideal.eq_top_iff_one]
-      rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM
+      rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM 
       convert I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM
       rw [← mk'_eq_mul_mk'_one, mk'_self]
     exact ⟨0, eq_comm.1 (by simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
-  · rw [Ideal.Quotient.maximal_ideal_iff_isField_quotient] at hI
+  · rw [Ideal.Quotient.maximal_ideal_iff_isField_quotient] at hI 
     obtain ⟨n, hn⟩ := hI.3 hM
     obtain ⟨rn, rfl⟩ := Ideal.Quotient.mk_surjective n
     refine' ⟨(Ideal.Quotient.mk J) (r * rn), _⟩
     -- The rest of the proof is essentially just algebraic manipulations to prove the equality
-    rw [← RingHom.map_mul] at hn
+    rw [← RingHom.map_mul] at hn 
     replace hn := congr_arg (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
-    simp only [RingHom.map_one, Ideal.quotientMap_mk, RingHom.map_mul] at hn
+    simp only [RingHom.map_one, Ideal.quotientMap_mk, RingHom.map_mul] at hn 
     rw [Ideal.quotientMap_mk, ← sub_eq_zero, ← RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem, ←
       Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]
     simp only [mul_eq_mul_left_iff, RingHom.map_mul]

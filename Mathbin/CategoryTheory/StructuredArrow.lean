@@ -42,7 +42,8 @@ and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_nonempty_instance]
 def StructuredArrow (S : D) (T : C ⥤ D) :=
-  Comma (Functor.fromPUnit S) T deriving Category
+  Comma (Functor.fromPUnit S) T
+deriving Category
 #align category_theory.structured_arrow CategoryTheory.StructuredArrow
 -/
 
@@ -157,7 +158,7 @@ instance epi_homMk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h 
 #print CategoryTheory.StructuredArrow.eq_mk /-
 /-- Eta rule for structured arrows. Prefer `structured_arrow.eta`, since equality of objects tends
     to cause problems. -/
-theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by cases f; congr ; ext
+theorem eq_mk (f : StructuredArrow S T) : f = mk f.Hom := by cases f; congr; ext
 #align category_theory.structured_arrow.eq_mk CategoryTheory.StructuredArrow.eq_mk
 -/
 
@@ -240,7 +241,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ Structure
 instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2 by rw [this];
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : Σ G : 𝒢, S ⟶ T.obj G => mk f.2 by rw [this];
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 #align category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locallySmall
@@ -254,7 +255,8 @@ and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_nonempty_instance]
 def CostructuredArrow (S : C ⥤ D) (T : D) :=
-  Comma S (Functor.fromPUnit T)deriving Category
+  Comma S (Functor.fromPUnit T)
+deriving Category
 #align category_theory.costructured_arrow CategoryTheory.CostructuredArrow
 -/
 
@@ -359,7 +361,7 @@ instance epi_homMk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h 
 #print CategoryTheory.CostructuredArrow.eq_mk /-
 /-- Eta rule for costructured arrows. Prefer `costructured_arrow.eta`, as equality of objects tends
     to cause problems. -/
-theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by cases f; congr ; ext
+theorem eq_mk (f : CostructuredArrow S T) : f = mk f.Hom := by cases f; congr; ext
 #align category_theory.costructured_arrow.eq_mk CategoryTheory.CostructuredArrow.eq_mk
 -/
 
@@ -444,7 +446,7 @@ def post (F : B ⥤ C) (G : C ⥤ D) (S : C) :
 instance small_proj_preimage_of_locallySmall {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) :=
   by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2 by rw [this];
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : Σ G : 𝒢, S.obj G ⟶ T => mk f.2 by rw [this];
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
 #align category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locallySmall

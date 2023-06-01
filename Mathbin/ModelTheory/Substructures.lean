@@ -117,7 +117,7 @@ variable {L} {M}
 namespace Substructure
 
 instance : SetLike (L.Substructure M) M :=
-  ⟨Substructure.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨Substructure.carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 #print FirstOrder.Language.Substructure.Simps.coe /-
 /-- See Note [custom simps projection] -/
@@ -369,7 +369,7 @@ theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (#closure L s) 
 
 theorem lift_card_closure_le :
     Cardinal.lift.{u, w} (#closure L s) ≤
-      max ℵ₀ (Cardinal.lift.{u, w} (#s) + Cardinal.lift.{w, u} (#Σi, L.Functions i)) :=
+      max ℵ₀ (Cardinal.lift.{u, w} (#s) + Cardinal.lift.{w, u} (#Σ i, L.Functions i)) :=
   by
   rw [← lift_umax]
   refine' lift_card_closure_le_card_term.trans (term.card_le.trans _)
@@ -379,7 +379,7 @@ theorem lift_card_closure_le :
 variable (L)
 
 #print Set.Countable.substructure_closure /-
-theorem Set.Countable.substructure_closure [Countable (Σl, L.Functions l)] (h : s.Countable) :
+theorem Set.Countable.substructure_closure [Countable (Σ l, L.Functions l)] (h : s.Countable) :
     Countable.{w + 1} (closure L s) :=
   by
   haveI : Countable s := h.to_subtype
@@ -795,10 +795,10 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M
       fun_mem := fun n f x hx =>
         by
         have h := S.fun_mem (φ.on_function f) x hx
-        simp only [Lhom.map_on_function, substructure.mem_carrier] at h
+        simp only [Lhom.map_on_function, substructure.mem_carrier] at h 
         exact h }
   inj' S T h := by
-    simp only [SetLike.coe_set_eq] at h
+    simp only [SetLike.coe_set_eq] at h 
     exact h
   map_rel_iff' S T := Iff.rfl
 #align first_order.language.Lhom.substructure_reduct FirstOrder.Language.LHom.substructureReduct

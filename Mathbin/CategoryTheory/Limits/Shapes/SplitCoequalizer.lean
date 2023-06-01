@@ -143,7 +143,7 @@ The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` for
 in `C`.
 -/
 class HasSplitCoequalizer : Prop where
-  splittable : ∃ (Z : C)(h : Y ⟶ Z), Nonempty (IsSplitCoequalizer f g h)
+  splittable : ∃ (Z : C) (h : Y ⟶ Z), Nonempty (IsSplitCoequalizer f g h)
 #align category_theory.has_split_coequalizer CategoryTheory.HasSplitCoequalizer
 -/
 

@@ -64,7 +64,8 @@ end UniversalEnvelopingAlgebra
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R -/
 /-- The universal enveloping algebra of a Lie algebra. -/
 def UniversalEnvelopingAlgebra :=
-  RingQuot (UniversalEnvelopingAlgebra.Rel R L)deriving Inhabited, Ring,
+  RingQuot (UniversalEnvelopingAlgebra.Rel R L)
+deriving Inhabited, Ring,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
 #align universal_enveloping_algebra UniversalEnvelopingAlgebra
 
@@ -84,7 +85,7 @@ def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
     map_lie' := fun x y =>
       by
       suffices mk_alg_hom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y) by
-        rw [AlgHom.map_mul] at this; simp [LieRing.of_associative_ring_bracket, ← this]
+        rw [AlgHom.map_mul] at this ; simp [LieRing.of_associative_ring_bracket, ← this]
       exact RingQuot.mkAlgHom_rel _ (rel.lie_compat x y) }
 #align universal_enveloping_algebra.ι UniversalEnvelopingAlgebra.ι
 

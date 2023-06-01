@@ -126,12 +126,12 @@ theorem IsOpen.analyticSet_image {β : Type _} [TopologicalSpace β] [PolishSpac
 /-- A set is analytic if and only if it is the continuous image of some Polish space. -/
 theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
     AnalyticSet s ↔
-      ∃ (β : Type)(h : TopologicalSpace β)(h' : @PolishSpace β h)(f : β → α),
+      ∃ (β : Type) (h : TopologicalSpace β) (h' : @PolishSpace β h) (f : β → α),
         @Continuous _ _ h _ f ∧ range f = s :=
   by
   constructor
   · intro h
-    rw [analytic_set] at h
+    rw [analytic_set] at h 
     cases h
     · refine' ⟨Empty, by infer_instance, by infer_instance, Empty.elim, continuous_bot, _⟩
       rw [h]
@@ -225,7 +225,7 @@ theorem AnalyticSet.iUnion [Countable ι] {s : ι → Set α} (hs : ∀ n, Analy
   choose β hβ h'β f f_cont f_range using fun n =>
     analytic_set_iff_exists_polish_space_range.1 (hs n)
   skip
-  let γ := Σn, β n
+  let γ := Σ n, β n
   let F : γ → α := by rintro ⟨n, x⟩; exact f n x
   have F_cont : Continuous F := continuous_sigma f_cont
   have F_range : range F = ⋃ n, s n :=
@@ -432,11 +432,11 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
     apply t2_separation
     exact disjoint_iff_forall_ne.1 h _ (mem_range_self _) _ (mem_range_self _)
   letI : MetricSpace (ℕ → ℕ) := metric_space_nat_nat
-  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ)(H : εx > 0), Metric.ball x εx ⊆ f ⁻¹' u :=
+  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ) (H : εx > 0), Metric.ball x εx ⊆ f ⁻¹' u :=
     by
     apply Metric.mem_nhds_iff.1
     exact hf.continuous_at.preimage_mem_nhds (u_open.mem_nhds xu)
-  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ)(H : εy > 0), Metric.ball y εy ⊆ g ⁻¹' v :=
+  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ) (H : εy > 0), Metric.ball y εy ⊆ g ⁻¹' v :=
     by
     apply Metric.mem_nhds_iff.1
     exact hg.continuous_at.preimage_mem_nhds (v_open.mem_nhds yv)
@@ -449,14 +449,14 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
     · rw [image_subset_iff]
       apply subset.trans _ hεx
       intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz
+      rw [mem_cylinder_iff_dist_le] at hz 
       exact hz.trans_lt (hn.trans_le (min_le_left _ _))
     · refine' Disjoint.mono_left _ huv.symm
       change g '' cylinder y n ⊆ v
       rw [image_subset_iff]
       apply subset.trans _ hεy
       intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz
+      rw [mem_cylinder_iff_dist_le] at hz 
       exact hz.trans_lt (hn.trans_le (min_le_right _ _))
   -- this is a contradiction.
   exact M n B
@@ -467,7 +467,7 @@ disjoint Borel sets. -/
 theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [BorelSpace α] {s t : Set α}
     (hs : AnalyticSet s) (ht : AnalyticSet t) (h : Disjoint s t) : MeasurablySeparable s t :=
   by
-  rw [analytic_set] at hs ht
+  rw [analytic_set] at hs ht 
   rcases hs with (rfl | ⟨f, f_cont, rfl⟩)
   · refine' ⟨∅, subset.refl _, by simp, MeasurableSet.empty⟩
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
@@ -552,7 +552,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
   -- we start with the easy inclusion `range f ⊆ ⋂ F n`. One just needs to unfold the definitions.
   · rintro x ⟨y, rfl⟩
     apply mem_Inter.2 fun n => _
-    obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ)(H : s ∈ b), y ∈ s ∧ s ⊆ ball y (u n / 2) :=
+    obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ) (H : s ∈ b), y ∈ s ∧ s ⊆ ball y (u n / 2) :=
       by
       apply hb.mem_nhds_iff.1
       exact ball_mem_nhds _ (half_pos (u_pos n))
@@ -572,7 +572,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
   -- Now, let us prove the harder inclusion `⋂ F n ⊆ range f`.
   · intro x hx
     -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
-    have C1 : ∀ n, ∃ (s : b)(hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
+    have C1 : ∀ n, ∃ (s : b) (hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
       simpa only [mem_Union] using mem_Inter.1 hx n
     choose s hs hxs using C1
     have C2 : ∀ n, (s n).1.Nonempty := by
@@ -580,7 +580,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       rw [nonempty_iff_ne_empty]
       intro hn
       have := (s n).2
-      rw [hn] at this
+      rw [hn] at this 
       exact b_nonempty this
     -- choose a point `y n ∈ s n`.
     choose y hy using C2
@@ -654,8 +654,8 @@ theorem IsClosed.measurableSet_image_of_continuousOn_injOn {β : Type _} [Topolo
   rw [image_eq_range]
   haveI : PolishSpace s := IsClosed.polishSpace hs
   apply measurable_set_range_of_continuous_injective
-  · rwa [continuousOn_iff_continuous_restrict] at f_cont
-  · rwa [inj_on_iff_injective] at f_inj
+  · rwa [continuousOn_iff_continuous_restrict] at f_cont 
+  · rwa [inj_on_iff_injective] at f_inj 
 #align is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurableSet_image_of_continuousOn_injOn
 -/
 
@@ -721,7 +721,7 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
       have B : MeasurableSet (f '' ((coe : s → γ) '' u)) :=
         A.image_of_continuous_on_inj_on (f_cont.mono (Subtype.coe_image_subset s u))
           (f_inj.mono (Subtype.coe_image_subset s u))
-      rwa [← image_comp] at B }
+      rwa [← image_comp] at B  }
 #align continuous_on.measurable_embedding ContinuousOn.measurableEmbedding
 
 #print Measurable.measurableEmbedding /-
@@ -772,7 +772,7 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
     MeasurableSet { x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c) } :=
   by
   by_cases hl : l.ne_bot
-  swap; · rw [not_ne_bot] at hl; simp [hl]
+  swap; · rw [not_ne_bot] at hl ; simp [hl]
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]
@@ -868,7 +868,7 @@ noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
     letI := Countable.of_equiv α e
     use e <;> apply measurable_of_countable
   refine' measurable_equiv_of_not_countable h _
-  rwa [e.countable_iff] at h
+  rwa [e.countable_iff] at h 
 #align polish_space.equiv.measurable_equiv PolishSpace.Equiv.measurableEquiv
 -/
 

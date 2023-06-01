@@ -66,7 +66,8 @@ instance : Category FintypeCat :=
 /-- The fully faithful embedding of `Fintype` into the category of types. -/
 @[simps]
 def incl : FintypeCat ⥤ Type _ :=
-  inducedFunctor _ deriving Full, Faithful
+  inducedFunctor _
+deriving Full, Faithful
 #align Fintype.incl FintypeCat.incl
 -/
 

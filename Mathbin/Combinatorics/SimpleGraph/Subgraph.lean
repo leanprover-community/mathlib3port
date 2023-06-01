@@ -95,7 +95,7 @@ def subgraphOfAdj (G : SimpleGraph V) {v w : V} (hvw : G.Adj v w) : G.Subgraph
   verts := {v, w}
   Adj a b := ⟦(v, w)⟧ = ⟦(a, b)⟧
   adj_sub a b h := by rw [← G.mem_edge_set, ← h]; exact hvw
-  edge_vert a b h := by apply_fun fun e => a ∈ e  at h; simpa using h
+  edge_vert a b h := by apply_fun fun e => a ∈ e  at h ; simpa using h
 #align simple_graph.subgraph_of_adj SimpleGraph.subgraphOfAdj
 -/
 
@@ -319,7 +319,7 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
   by
   refine' Quotient.ind (fun e he hv => _) e he hv
   cases' e with v w
-  simp only [mem_edge_set] at he
+  simp only [mem_edge_set] at he 
   cases' sym2.mem_iff.mp hv with h h <;> subst h
   · exact G'.edge_vert he
   · exact G'.edge_vert (G'.symm he)
@@ -529,7 +529,7 @@ instance : DistribLattice G.Subgraph :=
   {
     show DistribLattice G.Subgraph from
       Function.Injective.distribLattice (fun G' => (G'.verts, G'.spanningCoe))
-        (fun G₁ G₂ h => by rw [Prod.ext_iff] at h; exact ext _ _ h.1 (spanning_coe_inj.1 h.2))
+        (fun G₁ G₂ h => by rw [Prod.ext_iff] at h ; exact ext _ _ h.1 (spanning_coe_inj.1 h.2))
         (fun _ _ => rfl) fun _ _ => rfl with
     le := fun x y => x.verts ⊆ y.verts ∧ ∀ ⦃v w : V⦄, x.Adj v w → y.Adj v w }
 
@@ -572,7 +572,7 @@ instance : CompleteDistribLattice G.Subgraph :=
       refine' ⟨_, fun a b hab => _⟩
       · simp only [Set.le_eq_subset, verts_infi, verts_sup, verts_Inf]
         exact (Set.union_iInter₂ _ _).Superset
-      simp only [spanning_coe_adj, sup_adj, Inf_adj, sup_adj, Inf_adj, infi_adj] at hab⊢
+      simp only [spanning_coe_adj, sup_adj, Inf_adj, sup_adj, Inf_adj, infi_adj] at hab ⊢
       have : (∀ G'' ∈ s, adj G' a b ∨ adj G'' a b) ∧ G.adj a b :=
         (and_congr_left fun h => forall_congr' fun H => _).1 hab
       simpa [forall_or_left, or_and_right, and_iff_left_of_imp G'.adj_sub] using this
@@ -831,7 +831,7 @@ theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph
   · simp only [Relation.Map, map_adj, forall_exists_index, and_imp]
     rintro u u' hu rfl rfl
     have := h.2 hu
-    simp only [comap_adj] at this
+    simp only [comap_adj] at this 
     exact this.2
 #align simple_graph.subgraph.map_le_iff_le_comap SimpleGraph.Subgraph.map_le_iff_le_comap
 
@@ -845,7 +845,8 @@ def inclusion {x y : Subgraph G} (h : x ≤ y) : x.coe →g y.coe
 #align simple_graph.subgraph.inclusion SimpleGraph.Subgraph.inclusion
 
 theorem inclusion.injective {x y : Subgraph G} (h : x ≤ y) : Function.Injective (inclusion h) :=
-  fun v w h => by simp only [inclusion, RelHom.coeFn_mk, Subtype.mk_eq_mk] at h; exact Subtype.ext h
+  fun v w h => by simp only [inclusion, RelHom.coeFn_mk, Subtype.mk_eq_mk] at h ;
+  exact Subtype.ext h
 #align simple_graph.subgraph.inclusion.injective SimpleGraph.Subgraph.inclusion.injective
 
 #print SimpleGraph.Subgraph.hom /-
@@ -919,7 +920,7 @@ instance coeFiniteAt {G' : Subgraph G} (v : G'.verts) [Fintype (G'.neighborSet v
 
 #print SimpleGraph.Subgraph.IsSpanning.card_verts /-
 theorem IsSpanning.card_verts [Fintype V] {G' : Subgraph G} [Fintype G'.verts] (h : G'.IsSpanning) :
-    G'.verts.toFinset.card = Fintype.card V := by rw [is_spanning_iff] at h; simpa [h]
+    G'.verts.toFinset.card = Fintype.card V := by rw [is_spanning_iff] at h ; simpa [h]
 #align simple_graph.subgraph.is_spanning.card_verts SimpleGraph.Subgraph.IsSpanning.card_verts
 -/
 
@@ -1039,7 +1040,7 @@ theorem eq_singletonSubgraph_iff_verts_eq (H : G.Subgraph) {v : V} :
     intro ha
     have ha1 := ha.fst_mem
     have ha2 := ha.snd_mem
-    rw [h, Set.mem_singleton_iff] at ha1 ha2
+    rw [h, Set.mem_singleton_iff] at ha1 ha2 
     subst_vars
     exact ha.ne rfl
 #align simple_graph.eq_singleton_subgraph_iff_verts_eq SimpleGraph.eq_singletonSubgraph_iff_verts_eq
@@ -1386,11 +1387,14 @@ theorem subgraphOfAdj_eq_induce {v w : V} (hvw : G.Adj v w) :
   · simp
   · constructor
     · intro h
-      simp only [subgraph_of_adj_adj, Quotient.eq', Sym2.rel_iff] at h
+      simp only [subgraph_of_adj_adj, Quotient.eq', Sym2.rel_iff] at h 
       obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
     · intro h
-      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj] at h
-      obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;> first |exact (ha.ne rfl).elim|simp
+      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj] at h 
+      obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;>
+        first
+        | exact (ha.ne rfl).elim
+        | simp
 #align simple_graph.subgraph.subgraph_of_adj_eq_induce SimpleGraph.Subgraph.subgraphOfAdj_eq_induce
 -/
 

@@ -72,7 +72,7 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
   · rintro _ ⟨r, rfl⟩
     simp only [mem_Inter, mem_Union]
     refine' fun n => ⟨r.num * 2, r.denom * 2, _, _⟩
-    · have := Int.ofNat_le.2 r.pos; rw [Int.ofNat_one] at this; linarith
+    · have := Int.ofNat_le.2 r.pos; rw [Int.ofNat_one] at this ; linarith
     · convert mem_ball_self _ using 2
       · push_cast ; norm_cast; norm_num
       · refine' one_div_pos.2 (pow_pos (Int.cast_pos.2 _) _)

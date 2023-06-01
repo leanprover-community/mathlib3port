@@ -109,11 +109,11 @@ theorem thickenedIndicatorAux_one_of_mem_closure (δ : ℝ) (E : Set α) {x : α
 theorem thickenedIndicatorAux_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α}
     (x_out : x ∉ thickening δ E) : thickenedIndicatorAux δ E x = 0 :=
   by
-  rw [thickening, mem_set_of_eq, not_lt] at x_out
+  rw [thickening, mem_set_of_eq, not_lt] at x_out 
   unfold thickenedIndicatorAux
   apply le_antisymm _ bot_le
   have key := tsub_le_tsub (@rfl _ (1 : ℝ≥0∞)).le (ENNReal.div_le_div x_out rfl.le)
-  rw [ENNReal.div_self (ne_of_gt (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key
+  rw [ENNReal.div_self (ne_of_gt (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key 
   simpa using key
 #align thickened_indicator_aux_zero thickenedIndicatorAux_zero
 
@@ -158,9 +158,9 @@ theorem thickenedIndicatorAux_tendsto_indicator_closure {δseq : ℕ → ℝ}
   · rw [show (closure E).indicator (fun _ => (1 : ℝ≥0∞)) x = 0 by
         simp only [x_mem_closure, indicator_of_not_mem, not_false_iff]]
     rcases exists_real_pos_lt_inf_edist_of_not_mem_closure x_mem_closure with ⟨ε, ⟨ε_pos, ε_lt⟩⟩
-    rw [Metric.tendsto_nhds] at δseq_lim
+    rw [Metric.tendsto_nhds] at δseq_lim 
     specialize δseq_lim ε ε_pos
-    simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_le] at δseq_lim
+    simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_le] at δseq_lim 
     rcases δseq_lim with ⟨N, hN⟩
     apply @tendsto_atTop_of_eventually_const _ _ _ _ _ _ _ N
     intro n n_large

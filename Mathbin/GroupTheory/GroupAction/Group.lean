@@ -365,8 +365,8 @@ section Arrow
 def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction G (A → B)
     where
   smul g F a := F (g⁻¹ • a)
-  one_smul := by intro ; simp only [inv_one, one_smul]
-  mul_smul := by intros ; simp only [mul_smul, mul_inv_rev]
+  one_smul := by intro; simp only [inv_one, one_smul]
+  mul_smul := by intros; simp only [mul_smul, mul_inv_rev]
 #align arrow_action arrowAction
 #align arrow_add_action arrowAddAction
 -/

@@ -50,7 +50,7 @@ protected def Nonneg (r : ℚ) : Prop :=
 @[simp]
 theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 ≤ a :=
   by
-  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
+  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha 
   simp [Rat.Nonneg]
   have d0 := Int.ofNat_lt.2 h₁
   have := (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha
@@ -70,7 +70,11 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
       intro n₁0 n₂0
-      apply add_nonneg <;> apply mul_nonneg <;> · first |assumption|apply Int.ofNat_zero_le
+      apply add_nonneg <;> apply mul_nonneg <;>
+        ·
+          first
+          | assumption
+          | apply Int.ofNat_zero_le
 #align rat.nonneg_add Rat.nonneg_add
 -/
 
@@ -134,13 +138,13 @@ protected theorem le_refl : a ≤ a :=
 #align rat.le_refl Rat.le_refl
 
 protected theorem le_total : a ≤ b ∨ b ≤ a := by
-  have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
+  have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this 
 #align rat.le_total Rat.le_total
 
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b :=
   by
   have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
-  rwa [neg_neg] at this
+  rwa [neg_neg] at this 
 #align rat.le_antisymm Rat.le_antisymm
 
 protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c :=
@@ -210,7 +214,7 @@ protected theorem add_le_add_left {a b c : ℚ} : c + a ≤ c + b ↔ a ≤ b :=
 #align rat.add_le_add_left Rat.add_le_add_left
 
 protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
-  rw [← nonneg_iff_zero_le] at ha hb⊢ <;> exact Rat.nonneg_mul ha hb
+  rw [← nonneg_iff_zero_le] at ha hb ⊢ <;> exact Rat.nonneg_mul ha hb
 #align rat.mul_nonneg Rat.mul_nonneg
 
 instance : LinearOrderedField ℚ :=
@@ -269,11 +273,11 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
-      MulZeroClass.zero_mul] at hq
+      MulZeroClass.zero_mul] at hq 
     rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
   · rw [abs_of_nonneg hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
-      MulZeroClass.zero_mul] at hq
+      MulZeroClass.zero_mul] at hq 
     rw [Int.natAbs_of_nonneg hq, num_denom]
 #align rat.abs_def Rat.abs_def
 

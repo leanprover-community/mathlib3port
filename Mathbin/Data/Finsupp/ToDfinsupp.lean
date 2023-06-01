@@ -279,7 +279,7 @@ open Finsupp
 
 #print sigmaFinsuppEquivDfinsupp /-
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
-def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η i →₀ N
+def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σ i, η i) →₀ N) ≃ Π₀ i, η i →₀ N
     where
   toFun f :=
     ⟨split f,
@@ -296,7 +296,7 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
     simp only [Ne.def, Dfinsupp.mem_support_toFun]
     intro h
-    rw [h] at hg
+    rw [h] at hg 
     simpa using hg
   left_inv f := by ext; simp [split]
   right_inv f := by ext; simp [split]
@@ -304,20 +304,20 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
 -/
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_apply [Zero N] (f : (Σi, η i) →₀ N) :
+theorem sigmaFinsuppEquivDfinsupp_apply [Zero N] (f : (Σ i, η i) →₀ N) :
     (sigmaFinsuppEquivDfinsupp f : ∀ i, η i →₀ N) = Finsupp.split f :=
   rfl
 #align sigma_finsupp_equiv_dfinsupp_apply sigmaFinsuppEquivDfinsupp_apply
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_symm_apply [Zero N] (f : Π₀ i, η i →₀ N) (s : Σi, η i) :
-    (sigmaFinsuppEquivDfinsupp.symm f : (Σi, η i) →₀ N) s = f s.1 s.2 :=
+theorem sigmaFinsuppEquivDfinsupp_symm_apply [Zero N] (f : Π₀ i, η i →₀ N) (s : Σ i, η i) :
+    (sigmaFinsuppEquivDfinsupp.symm f : (Σ i, η i) →₀ N) s = f s.1 s.2 :=
   rfl
 #align sigma_finsupp_equiv_dfinsupp_symm_apply sigmaFinsuppEquivDfinsupp_symm_apply
 
 @[simp]
 theorem sigmaFinsuppEquivDfinsupp_support [DecidableEq ι] [Zero N]
-    [∀ (i : ι) (x : η i →₀ N), Decidable (x ≠ 0)] (f : (Σi, η i) →₀ N) :
+    [∀ (i : ι) (x : η i →₀ N), Decidable (x ≠ 0)] (f : (Σ i, η i) →₀ N) :
     (sigmaFinsuppEquivDfinsupp f).support = Finsupp.splitSupport f :=
   by
   ext
@@ -326,7 +326,7 @@ theorem sigmaFinsuppEquivDfinsupp_support [DecidableEq ι] [Zero N]
 #align sigma_finsupp_equiv_dfinsupp_support sigmaFinsuppEquivDfinsupp_support
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η i) (n : N) :
+theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σ i, η i) (n : N) :
     sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
   by
@@ -335,8 +335,8 @@ theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η 
   by_cases h : i = j
   · subst h
     classical simp [split_apply, Finsupp.single_apply]
-  suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
-  have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
+  suffices Finsupp.single (⟨i, a⟩ : Σ i, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
+  have H : (⟨i, a⟩ : Σ i, η i) ≠ ⟨j, b⟩ := by simp [h]
   classical rw [Finsupp.single_apply, if_neg H]
 #align sigma_finsupp_equiv_dfinsupp_single sigmaFinsuppEquivDfinsupp_single
 
@@ -344,7 +344,7 @@ theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η 
 attribute [-instance] Finsupp.zero
 
 @[simp]
-theorem sigmaFinsuppEquivDfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
+theorem sigmaFinsuppEquivDfinsupp_add [AddZeroClass N] (f g : (Σ i, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (f + g) =
       (sigmaFinsuppEquivDfinsupp f + sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
   by ext; rfl
@@ -352,7 +352,7 @@ theorem sigmaFinsuppEquivDfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀
 
 /-- `finsupp.split` is an additive equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σi, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
+def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σ i, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
   { sigmaFinsuppEquivDfinsupp with
     toFun := sigmaFinsuppEquivDfinsupp
     invFun := sigmaFinsuppEquivDfinsupp.symm
@@ -364,7 +364,7 @@ attribute [-instance] Finsupp.addZeroClass
 --tofix: r • (sigma_finsupp_equiv_dfinsupp f) doesn't work.
 @[simp]
 theorem sigmaFinsuppEquivDfinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribMulAction R N] (r : R)
-    (f : (Σi, η i) →₀ N) :
+    (f : (Σ i, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (r • f) =
       @SMul.smul R (Π₀ i, η i →₀ N) MulAction.toHasSmul r (sigmaFinsuppEquivDfinsupp f) :=
   by ext; rfl
@@ -375,7 +375,7 @@ attribute [-instance] Finsupp.addMonoid
 /-- `finsupp.split` is a linear equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
 def sigmaFinsuppLequivDfinsupp [AddCommMonoid N] [Module R N] :
-    ((Σi, η i) →₀ N) ≃ₗ[R] Π₀ i, η i →₀ N :=
+    ((Σ i, η i) →₀ N) ≃ₗ[R] Π₀ i, η i →₀ N :=
   { sigmaFinsuppAddEquivDfinsupp with map_smul' := sigmaFinsuppEquivDfinsupp_smul }
 #align sigma_finsupp_lequiv_dfinsupp sigmaFinsuppLequivDfinsupp
 

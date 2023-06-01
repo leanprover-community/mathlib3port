@@ -73,7 +73,7 @@ include hT
 theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) :
     T v ∈ (eigenspace T μ)ᗮ := by
   intro w hw
-  have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw
+  have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw 
   simp [← hT w, this, inner_smul_left, hv w hw]
 #align linear_map.is_symmetric.invariant_orthogonal_eigenspace LinearMap.IsSymmetric.invariant_orthogonal_eigenspace
 
@@ -81,7 +81,7 @@ theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigensp
 theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ = μ :=
   by
   obtain ⟨v, hv₁, hv₂⟩ := hμ.exists_has_eigenvector
-  rw [mem_eigenspace_iff] at hv₁
+  rw [mem_eigenspace_iff] at hv₁ 
   simpa [hv₂, inner_smul_left, inner_smul_right, hv₁] using hT v v
 #align linear_map.is_symmetric.conj_eigenvalue_eq_self LinearMap.IsSymmetric.conj_eigenvalue_eq_self
 
@@ -93,7 +93,7 @@ theorem orthogonalFamily_eigenspaces :
   by_cases hv' : v = 0
   · simp [hv']
   have H := hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector ⟨hv, hv'⟩)
-  rw [mem_eigenspace_iff] at hv hw
+  rw [mem_eigenspace_iff] at hv hw 
   refine' Or.resolve_left _ hμν.symm
   simpa [inner_smul_left, inner_smul_right, hv, hw, H] using (hT v w).symm
 #align linear_map.is_symmetric.orthogonal_family_eigenspaces LinearMap.IsSymmetric.orthogonalFamily_eigenspaces
@@ -109,7 +109,7 @@ product space is an invariant subspace of the operator. -/
 theorem orthogonal_iSup_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆ μ, eigenspace T μ)ᗮ) :
     T v ∈ (⨆ μ, eigenspace T μ)ᗮ :=
   by
-  rw [← Submodule.iInf_orthogonal] at hv⊢
+  rw [← Submodule.iInf_orthogonal] at hv ⊢
   exact T.infi_invariant hT.invariant_orthogonal_eigenspace v hv
 #align linear_map.is_symmetric.orthogonal_supr_eigenspaces_invariant LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces_invariant
 

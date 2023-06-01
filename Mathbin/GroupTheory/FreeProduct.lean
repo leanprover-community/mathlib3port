@@ -80,7 +80,7 @@ variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoid (M i)]
 #print FreeProduct.Rel /-
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
-inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → Prop
+inductive FreeProduct.Rel : FreeMonoid (Σ i, M i) → FreeMonoid (Σ i, M i) → Prop
   | of_one (i : ι) : FreeProduct.Rel (FreeMonoid.of ⟨i, 1⟩) 1
   |
   of_mul {i : ι} (x y : M i) :
@@ -91,7 +91,8 @@ inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → 
 #print FreeProduct /-
 /-- The free product (categorical coproduct) of an indexed family of monoids. -/
 def FreeProduct : Type _ :=
-  (conGen (FreeProduct.Rel M)).Quotient deriving Monoid, Inhabited
+  (conGen (FreeProduct.Rel M)).Quotient
+deriving Monoid, Inhabited
 #align free_product FreeProduct
 -/
 
@@ -102,7 +103,7 @@ namespace FreeProduct
 letters can come from the same summand. -/
 @[ext]
 structure Word where
-  toList : List (Σi, M i)
+  toList : List (Σ i, M i)
   ne_one : ∀ l ∈ to_list, Sigma.snd l ≠ 1
   chain_ne : to_list.Chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 #align free_product.word FreeProduct.Word
@@ -139,7 +140,7 @@ universal property of the free product, charaterizing it as a categorical coprod
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N)
     where
   toFun fi :=
-    Con.lift _ (FreeMonoid.lift fun p : Σi, M i => fi p.fst p.snd) <|
+    Con.lift _ (FreeMonoid.lift fun p : Σ i, M i => fi p.fst p.snd) <|
       Con.conGen_le
         (by
           simp_rw [Con.rel_eq_coe, Con.ker_rel]
@@ -332,7 +333,7 @@ def rcons {i} (p : Pair M i) : Word M :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1)
+private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1)
     (h2 : (l::ls).Chain' _) : Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 
@@ -352,14 +353,14 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) :=
   by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
   by_cases hm : m = 1 <;> by_cases hm' : m' = 1
-  · simp only [rcons, dif_pos hm, dif_pos hm'] at he; cc
-  · exfalso; simp only [rcons, dif_pos hm, dif_neg hm'] at he; rw [he] at h; exact h rfl
-  · exfalso; simp only [rcons, dif_pos hm', dif_neg hm] at he; rw [← he] at h'; exact h' rfl
+  · simp only [rcons, dif_pos hm, dif_pos hm'] at he ; cc
+  · exfalso; simp only [rcons, dif_pos hm, dif_neg hm'] at he ; rw [he] at h ; exact h rfl
+  · exfalso; simp only [rcons, dif_pos hm', dif_neg hm] at he ; rw [← he] at h' ; exact h' rfl
   · have : m = m' ∧ w.to_list = w'.to_list := by
       simpa only [rcons, dif_neg hm, dif_neg hm', true_and_iff, eq_self_iff_true, Subtype.mk_eq_mk,
         heq_iff_eq, ← Subtype.ext_iff_val] using he
     rcases this with ⟨rfl, h⟩
-    congr ; exact word.ext _ _ h
+    congr; exact word.ext _ _ h
 #align free_product.word.rcons_inj FreeProduct.Word.rcons_inj
 
 variable [DecidableEq ι]
@@ -438,8 +439,8 @@ theorem smul_induction {C : Word M → Prop} (h_empty : C empty)
 theorem prod_smul (m) : ∀ w : Word M, prod (m • w) = m * prod w :=
   by
   apply m.induction_on
-  · intro ; rw [one_smul, one_mul]
-  · intros ;
+  · intro; rw [one_smul, one_mul]
+  · intros;
     rw [of_smul_def, prod_rcons, of.map_mul, mul_assoc, ← prod_rcons, ← equiv_pair_symm,
       Equiv.symm_apply_apply]
   · intro x y hx hy w; rw [mul_smul, hx, hy, mul_assoc]
@@ -488,7 +489,7 @@ open Word
 #print FreeProduct.NeWord.toList /-
 /-- The list represented by a given `neword` -/
 @[simp]
-def toList : ∀ {i j} (w : NeWord M i j), List (Σi, M i)
+def toList : ∀ {i j} (w : NeWord M i j), List (Σ i, M i)
   | i, _, singleton x hne1 => [⟨i, x⟩]
   | _, _, append w₁ hne w₂ => w₁.toList ++ w₂.toList
 #align free_product.neword.to_list FreeProduct.NeWord.toList
@@ -545,7 +546,7 @@ def toWord {i j} (w : NeWord M i j) : Word M
       exact w_hne1
       exfalso; apply H
     · intro l h
-      simp only [to_list, List.mem_append] at h
+      simp only [to_list, List.mem_append] at h 
       cases h
       · exact w_ih_w₁ _ h
       · exact w_ih_w₂ _ h
@@ -554,8 +555,8 @@ def toWord {i j} (w : NeWord M i j) : Word M
     · exact List.chain'_singleton _
     · apply List.Chain'.append w_ih_w₁ w_ih_w₂
       intro x hx y hy
-      rw [w_w₁.to_list_last', Option.mem_some_iff] at hx
-      rw [w_w₂.to_list_head', Option.mem_some_iff] at hy
+      rw [w_w₁.to_list_last', Option.mem_some_iff] at hx 
+      rw [w_w₂.to_list_head', Option.mem_some_iff] at hy 
       subst hx; subst hy
       exact w_hne
 #align free_product.neword.to_word FreeProduct.NeWord.toWord
@@ -563,18 +564,18 @@ def toWord {i j} (w : NeWord M i j) : Word M
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
-theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : NeWord M i j), w'.toWord = w :=
+theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _) (w' : NeWord M i j), w'.toWord = w :=
   by
-  rsuffices ⟨i, j, w, h⟩ : ∃ (i j : _)(w' : neword M i j), w'.to_word.to_list = w.to_list
+  rsuffices ⟨i, j, w, h⟩ : ∃ (i j : _) (w' : neword M i j), w'.to_word.to_list = w.to_list
   · refine' ⟨i, j, w, _⟩; ext; rw [h]
   cases' w with l hnot1 hchain
   induction' l with x l hi
   · contradiction
-  · rw [List.forall_mem_cons] at hnot1
+  · rw [List.forall_mem_cons] at hnot1 
     cases' l with y l
     · refine' ⟨x.1, x.1, singleton x.2 hnot1.1, _⟩
       simp [to_word]
-    · rw [List.chain'_cons] at hchain
+    · rw [List.chain'_cons] at hchain 
       specialize hi hnot1.2 hchain.2 (by rintro ⟨rfl⟩)
       obtain ⟨i, j, w', hw' : w'.to_list = y::l⟩ := hi
       obtain rfl : y = ⟨i, w'.head⟩ := by simpa [hw'] using w'.to_list_head'
@@ -774,15 +775,15 @@ theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f
       · subst hh; subst hl
         exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
       · subst hh
-        change j ≠ i at hl
+        change j ≠ i at hl 
         exact lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w hcard hl.symm
       · subst hl
-        change i ≠ j at hh
+        change i ≠ j at hh 
         have : lift f w.inv.prod ≠ 1 :=
           lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w.inv hcard hh.symm
         intro heq; apply this; simpa using HEq
-      · change i ≠ k at hh
-        change j ≠ k at hl
+      · change i ≠ k at hh 
+        change j ≠ k at hl 
         obtain ⟨h, hn1, -⟩ := Cardinal.three_le hcard 1 1
         let w' : neword H k k :=
           neword.append (neword.append (neword.singleton h hn1) hh.symm w) hl
@@ -829,15 +830,15 @@ end PingPongLemma
 instance {ι : Type _} (G : ι → Type _) [∀ i, Group (G i)] [hG : ∀ i, IsFreeGroup (G i)] :
     IsFreeGroup (FreeProduct G)
     where
-  Generators := Σi, IsFreeGroup.Generators (G i)
+  Generators := Σ i, IsFreeGroup.Generators (G i)
   MulEquiv :=
     MonoidHom.toMulEquiv
-      (FreeGroup.lift fun x : Σi, IsFreeGroup.Generators (G i) =>
+      (FreeGroup.lift fun x : Σ i, IsFreeGroup.Generators (G i) =>
         FreeProduct.of (IsFreeGroup.of x.2 : G x.1))
       (FreeProduct.lift fun i : ι =>
         (IsFreeGroup.lift fun x : IsFreeGroup.Generators (G i) =>
-            FreeGroup.of (⟨i, x⟩ : Σi, IsFreeGroup.Generators (G i)) :
-          G i →* FreeGroup (Σi, IsFreeGroup.Generators (G i))))
+            FreeGroup.of (⟨i, x⟩ : Σ i, IsFreeGroup.Generators (G i)) :
+          G i →* FreeGroup (Σ i, IsFreeGroup.Generators (G i))))
       (by ext; simp) (by ext; simp)
 
 -- NB: One might expect this theorem to be phrased with ℤ, but ℤ is an additive group,

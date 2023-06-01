@@ -50,7 +50,7 @@ variable {S : Type _} [CommRing S] {f : R →+* S} {I J : Ideal S}
 theorem coeff_zero_mem_comap_of_root_mem_of_eval_mem {r : S} (hr : r ∈ I) {p : R[X]}
     (hp : p.eval₂ f r ∈ I) : p.coeff 0 ∈ I.comap f :=
   by
-  rw [← p.div_X_mul_X_add, eval₂_add, eval₂_C, eval₂_mul, eval₂_X] at hp
+  rw [← p.div_X_mul_X_add, eval₂_add, eval₂_C, eval₂_mul, eval₂_X] at hp 
   refine' mem_comap.mpr ((I.add_mem_iff_right _).mp hp)
   exact I.mul_mem_left _ hr
 #align ideal.coeff_zero_mem_comap_of_root_mem_of_eval_mem Ideal.coeff_zero_mem_comap_of_root_mem_of_eval_mem
@@ -70,7 +70,7 @@ theorem exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem {r : S}
     refine' ⟨0, _, coeff_zero_mem_comap_of_root_mem hr hp⟩
     simp [coeff_eq_zero, a_ne_zero]
   · intro p p_nonzero ih mul_nonzero hp
-    rw [eval₂_mul, eval₂_X] at hp
+    rw [eval₂_mul, eval₂_X] at hp 
     obtain ⟨i, hi, mem⟩ := ih p_nonzero (r_non_zero_divisor hp)
     refine' ⟨i + 1, _, _⟩ <;> simp [hi, mem]
 #align ideal.exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem Ideal.exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem
@@ -235,7 +235,7 @@ theorem exists_coeff_mem_comap_sdiff_comap_of_root_mem_sdiff [IsPrime I] (hIJ : 
     exact trans (eval₂_map _ _ _) (hom_eval₂ p f (Quotient.mk' I) r).symm
   obtain ⟨i, ne_zero, mem⟩ :=
     exists_coeff_ne_zero_mem_comap_of_root_mem rbar_ne_zero rbar_mem_J p_ne_zero rbar_root
-  rw [coeff_map] at ne_zero mem
+  rw [coeff_map] at ne_zero mem 
   refine' ⟨i, (mem_quotient_iff_mem hIJ).mp _, mt _ NeZero⟩
   · simpa using mem
   simp [quotient.eq_zero_iff_mem]

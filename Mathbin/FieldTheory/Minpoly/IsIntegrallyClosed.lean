@@ -97,7 +97,7 @@ theorem isIntegrallyClosed_dvd [Nontrivial R] {s : S} (hs : IsIntegral R s) {p :
     rw [is_integrally_closed_eq_field_fractions K L hs]
     exact monic.map _ (minpoly.monic hs)
   rw [is_integrally_closed_eq_field_fractions _ _ hs,
-    map_dvd_map (algebraMap R K) (IsFractionRing.injective R K) (minpoly.monic hs)] at this
+    map_dvd_map (algebraMap R K) (IsFractionRing.injective R K) (minpoly.monic hs)] at this 
   rw [← dvd_iff_mod_by_monic_eq_zero (minpoly.monic hs)]
   refine' Polynomial.eq_zero_of_dvd_of_degree_lt this (degree_mod_by_monic_lt p <| minpoly.monic hs)
   all_goals infer_instance
@@ -155,8 +155,8 @@ theorem prime_of_isIntegrallyClosed {x : S} (hx : IsIntegral R x) : Prime (minpo
         by_contra h_contra <;>
           exact (ne_of_lt (minpoly.degree_pos hx)) (degree_eq_zero_of_is_unit h_contra).symm,
         fun a b h => or_iff_not_imp_left.mpr fun h' => _⟩⟩
-  rw [← minpoly.isIntegrallyClosed_dvd_iff hx] at h' h⊢
-  rw [aeval_mul] at h
+  rw [← minpoly.isIntegrallyClosed_dvd_iff hx] at h' h ⊢
+  rw [aeval_mul] at h 
   exact eq_zero_of_ne_zero_of_mul_left_eq_zero h' h
 #align minpoly.prime_of_is_integrally_closed minpoly.prime_of_isIntegrallyClosed
 
@@ -175,7 +175,7 @@ theorem ToAdjoin.injective (hx : IsIntegral R x) : Function.Injective (Minpoly.t
   by_cases hPzero : P = 0
   · simpa [hPzero] using hP.symm
   rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
-    SetLike.coe_mk, is_integrally_closed_dvd_iff hx] at hP₁
+    SetLike.coe_mk, is_integrally_closed_dvd_iff hx] at hP₁ 
   obtain ⟨Q, hQ⟩ := hP₁
   rw [← hP, hQ, RingHom.map_mul, mk_self, MulZeroClass.zero_mul]
 #align minpoly.to_adjoin.injective minpoly.ToAdjoin.injective

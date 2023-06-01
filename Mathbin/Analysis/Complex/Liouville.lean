@@ -123,7 +123,7 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
   set g : ℂ → F := f ∘ fun t : ℂ => t • (w - z) + z
   suffices g 0 = g 1 by simpa [g]
   apply liouville_theorem_aux
-  exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z),
+  exacts [hf.comp ((differentiable_id.smul_const (w - z)).AddConst z),
     hb.mono (range_comp_subset_range _ _)]
 #align differentiable.apply_eq_apply_of_bounded Differentiable.apply_eq_apply_of_bounded
 

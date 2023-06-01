@@ -56,8 +56,8 @@ It also contains data for the unique homomorphism `ℕ → R`.
 @[protect_proj]
 class AddMonoidWithOne (R : Type u) extends NatCast R, AddMonoid R, One R where
   natCast := Nat.unaryCast
-  natCast_zero : nat_cast 0 = (0 : R) := by intros ; rfl
-  natCast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by intros ; rfl
+  natCast_zero : nat_cast 0 = (0 : R) := by intros; rfl
+  natCast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by intros; rfl
 #align add_monoid_with_one AddMonoidWithOne
 -/
 

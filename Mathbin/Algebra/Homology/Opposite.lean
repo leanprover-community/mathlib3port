@@ -119,7 +119,7 @@ protected def op (X : HomologicalComplex V c) : HomologicalComplex Vᵒᵖ c.sym
   pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
-  d_comp_d' := by intros ; rw [← op_comp, X.d_comp_d, op_zero]
+  d_comp_d' := by intros; rw [← op_comp, X.d_comp_d, op_zero]
 #align homological_complex.op HomologicalComplex.op
 -/
 
@@ -131,7 +131,7 @@ protected def opSymm (X : HomologicalComplex V c.symm) : HomologicalComplex Vᵒ
   pt i := op (X.pt i)
   d i j := (X.d j i).op
   shape' i j hij := by rw [X.shape j i hij, op_zero]
-  d_comp_d' := by intros ; rw [← op_comp, X.d_comp_d, op_zero]
+  d_comp_d' := by intros; rw [← op_comp, X.d_comp_d, op_zero]
 #align homological_complex.op_symm HomologicalComplex.opSymm
 -/
 
@@ -143,7 +143,7 @@ protected def unop (X : HomologicalComplex Vᵒᵖ c) : HomologicalComplex V c.s
   pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
-  d_comp_d' := by intros ; rw [← unop_comp, X.d_comp_d, unop_zero]
+  d_comp_d' := by intros; rw [← unop_comp, X.d_comp_d, unop_zero]
 #align homological_complex.unop HomologicalComplex.unop
 -/
 
@@ -155,7 +155,7 @@ protected def unopSymm (X : HomologicalComplex Vᵒᵖ c.symm) : HomologicalComp
   pt i := unop (X.pt i)
   d i j := (X.d j i).unop
   shape' i j hij := by rw [X.shape j i hij, unop_zero]
-  d_comp_d' := by intros ; rw [← unop_comp, X.d_comp_d, unop_zero]
+  d_comp_d' := by intros; rw [← unop_comp, X.d_comp_d, unop_zero]
 #align homological_complex.unop_symm HomologicalComplex.unopSymm
 -/
 
@@ -211,12 +211,12 @@ def opCounitIso : opInverse V c ⋙ opFunctor V c ≅ 𝟭 (HomologicalComplex V
   NatIso.ofComponents
     (fun X =>
       HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-        simpa only [iso.refl_hom, category.id_comp, category.comp_id] )
+        simpa only [iso.refl_hom, category.id_comp, category.comp_id])
     (by
       intro X Y f
       ext
       simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, functor.comp_map, functor.id_map,
-        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f] )
+        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f])
 #align homological_complex.op_counit_iso HomologicalComplex.opCounitIso
 -/
 
@@ -287,12 +287,12 @@ def unopCounitIso : unopInverse V c ⋙ unopFunctor V c ≅ 𝟭 (HomologicalCom
   NatIso.ofComponents
     (fun X =>
       HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-        simpa only [iso.refl_hom, category.id_comp, category.comp_id] )
+        simpa only [iso.refl_hom, category.id_comp, category.comp_id])
     (by
       intro X Y f
       ext
       simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, functor.comp_map, functor.id_map,
-        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f] )
+        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f])
 #align homological_complex.unop_counit_iso HomologicalComplex.unopCounitIso
 -/
 

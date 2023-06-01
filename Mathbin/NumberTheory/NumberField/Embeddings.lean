@@ -95,7 +95,7 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
       (minpoly.natDegree_le hx) (fun z hz => _) i
   classical
-    rw [← Multiset.mem_toFinset] at hz
+    rw [← Multiset.mem_toFinset] at hz 
     obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
     exact h φ
 #align number_field.embeddings.coeff_bdd_of_norm_le NumberField.Embeddings.coeff_bdd_of_norm_le
@@ -120,7 +120,7 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
 
 /-- An algebraic integer whose conjugates are all of norm one is a root of unity. -/
 theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ : K →+* A, ‖φ x‖ = 1) :
-    ∃ (n : ℕ)(hn : 0 < n), x ^ n = 1 :=
+    ∃ (n : ℕ) (hn : 0 < n), x ^ n = 1 :=
   by
   obtain ⟨a, -, b, -, habne, h⟩ :=
     @Set.Infinite.exists_ne_map_eq_of_mapsTo _ _ _ _ ((· ^ ·) x : ℕ → K) Set.infinite_univ _
@@ -128,10 +128,10 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
   · wlog hlt : b < a
     · exact this hxi hx b a habne.symm h.symm (habne.lt_or_lt.resolve_right hlt)
     refine' ⟨a - b, tsub_pos_of_lt hlt, _⟩
-    rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
+    rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h 
     refine' h.resolve_right fun hp => _
     specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom
-    rw [pow_eq_zero hp, map_zero, norm_zero] at hx; norm_num at hx
+    rw [pow_eq_zero hp, map_zero, norm_zero] at hx ; norm_num at hx 
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
 #align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
@@ -205,7 +205,7 @@ theorem IsReal.coe_embedding_apply {φ : K →+* ℂ} (hφ : IsReal φ) (x : K) 
     (hφ.Embedding x : ℂ) = φ x := by
   ext; · rfl
   · rw [of_real_im, eq_comm, ← Complex.conj_eq_iff_im]
-    rw [is_real] at hφ
+    rw [is_real] at hφ 
     exact RingHom.congr_fun hφ x
 #align number_field.complex_embedding.is_real.coe_embedding_apply NumberField.ComplexEmbedding.IsReal.coe_embedding_apply
 
@@ -352,7 +352,7 @@ theorem NumberField.ComplexEmbeddings.IsReal.embedding_mk {φ : K →+* ℂ}
     (h : ComplexEmbedding.IsReal φ) : embedding (mk φ) = φ :=
   by
   have := mk_eq_iff.mp (mk_embedding (mk φ)).symm
-  rwa [complex_embedding.is_real_iff.mp h, or_self_iff, eq_comm] at this
+  rwa [complex_embedding.is_real_iff.mp h, or_self_iff, eq_comm] at this 
 #align number_field.complex_embeddings.is_real.embedding_mk NumberField.ComplexEmbeddings.IsReal.embedding_mk
 
 theorem isReal_iff {w : InfinitePlace K} : IsReal w ↔ ComplexEmbedding.IsReal (embedding w) :=
@@ -371,7 +371,7 @@ theorem isComplex_iff {w : InfinitePlace K} :
     contrapose! hφ
     cases mk_eq_iff.mp (mk_embedding (mk φ))
     · rwa [← h]
-    · rw [← complex_embedding.is_real_conjugate_iff] at hφ
+    · rw [← complex_embedding.is_real_conjugate_iff] at hφ 
       rwa [← h]
   · exact fun h => ⟨Embedding w, h, mk_embedding w⟩
 #align number_field.infinite_place.is_complex_iff NumberField.InfinitePlace.isComplex_iff
@@ -496,7 +496,7 @@ theorem prod_eq_abs_norm (x : K) :
   convert(congr_arg Complex.abs (@Algebra.norm_eq_prod_embeddings ℚ _ _ _ _ ℂ _ _ _ _ _ x)).symm
   · rw [map_prod, ←
       Equiv.prod_comp' RingHom.equivRatAlgHom (fun f => Complex.abs (f x))
-        (fun φ => Complex.abs (φ x)) fun _ => by simpa only [RingHom.equivRatAlgHom_apply] ]
+        (fun φ => Complex.abs (φ x)) fun _ => by simpa only [RingHom.equivRatAlgHom_apply]]
     dsimp only
     conv =>
       rhs

@@ -59,8 +59,8 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
   ⟨fun f => ⟨f, f.contMdiff_toFun.Continuous⟩⟩
 
-attribute [to_additive_ignore_args 21]
-  ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
+attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.hasCoeToFun
+  ContMdiffMap.ContinuousMap.hasCoe
 
 variable {f g : C^n⟮I, M; I', M'⟯}
 

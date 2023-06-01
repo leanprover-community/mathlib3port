@@ -395,7 +395,7 @@ instance Prod.sampleable : SampleableBifunctor.{u, v} Prod
   pRepr := @Prod.hasRepr
 #align slim_check.prod.sampleable SlimCheck.Prod.sampleable
 
-instance Sigma.sampleable {α β} [Sampleable α] [Sampleable β] : Sampleable (Σ_ : α, β) :=
+instance Sigma.sampleable {α β} [Sampleable α] [Sampleable β] : Sampleable (Σ _ : α, β) :=
   Sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => le_rfl
 #align slim_check.sigma.sampleable SlimCheck.Sigma.sampleable
 
@@ -528,9 +528,9 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
         match (motive := ∀ ys, ys = List.splitAt k xs → _) List.splitAt k xs, rfl with
         | ⟨xs₁, xs₂⟩, h =>
           have h₄ : xs₁ = xs.take k := by
-            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
+            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h  <;> tauto
           have h₃ : xs₂ = xs.drop k := by
-            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h <;> tauto
+            simp only [List.splitAt_eq_take_drop, Prod.mk.inj_iff] at h  <;> tauto
           have : SizeOf.sizeOf xs₂ < SizeOf.sizeOf xs := by
             rw [h₃] <;> solve_by_elim [list.sizeof_drop_lt_sizeof_of_lt_length]
           have h₁ : n - k = xs₂.length := by simp only [h₃, ← hn, List.length_drop]
@@ -678,7 +678,7 @@ theorem recShrinkWith_eq [SizeOf α]
           shrink_a x fun t' => recShrink _ (fun x h' => recShrinkWith shrink_a x) _) :=
   by
   conv_lhs => rw [rec_shrink_with, WellFounded.fix_eq]
-  congr ; ext ⟨y, h⟩; rfl
+  congr; ext ⟨y, h⟩; rfl
 #align slim_check.rec_shrink_with_eq SlimCheck.recShrinkWith_eq
 
 /-- `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
@@ -837,7 +837,7 @@ instance Ge.sampleable {x : α} [Sampleable α] [LinearOrderedAddCommGroup α] :
     where
   sample := do
     let y ← sample α
-    pure ⟨x + |y|, by norm_num [abs_nonneg] ⟩
+    pure ⟨x + |y|, by norm_num [abs_nonneg]⟩
   shrink _ := LazyList.nil
 #align slim_check.ge.sampleable SlimCheck.Ge.sampleable
 

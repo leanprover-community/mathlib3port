@@ -93,7 +93,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / ENNReal.ofReal T
     by
     replace hd := hd.congr' this
-    rwa [tendsto_const_nhds_iff, ENNReal.div_eq_one_iff hT₁ ENNReal.ofReal_ne_top] at hd
+    rwa [tendsto_const_nhds_iff, ENNReal.div_eq_one_iff hT₁ ENNReal.ofReal_ne_top] at hd 
   refine' (hu₂.eventually_gt_at_top 0).mono fun j hj => _
   have huj : IsOfFinAddOrder (u j) := add_order_of_pos_iff.mp hj
   have huj' : 1 ≤ (↑(n j) : ℝ) := by norm_cast; exact nat.succ_le_iff.mpr hj
@@ -115,7 +115,7 @@ theorem ergodic_zsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => 
     ae_empty_or_univ := fun s hs hs' =>
       by
       let u : ℕ → AddCircle T := fun j => ↑((↑1 : ℝ) / ↑(n.nat_abs ^ j) * T)
-      replace hn : 1 < n.nat_abs; · rwa [Int.abs_eq_natAbs, Nat.one_lt_cast] at hn
+      replace hn : 1 < n.nat_abs; · rwa [Int.abs_eq_natAbs, Nat.one_lt_cast] at hn 
       have hu₀ : ∀ j, addOrderOf (u j) = n.nat_abs ^ j := fun j =>
         add_order_of_div_of_gcd_eq_one (pow_pos (pos_of_gt hn) j) (gcd_one_left _)
       have hnu : ∀ j, n ^ j • u j = 0 := fun j => by
@@ -140,7 +140,7 @@ theorem ergodic_zsmul_add (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fu
   suffices e ∘ f ∘ e.symm = fun y => n • y by rw [← he.ergodic_conjugate_iff, this];
     exact ergodic_zsmul h
   replace h : n - 1 ≠ 0;
-  · rw [← abs_one] at h; rw [sub_ne_zero]; exact ne_of_apply_ne _ (ne_of_gt h)
+  · rw [← abs_one] at h ; rw [sub_ne_zero]; exact ne_of_apply_ne _ (ne_of_gt h)
   have hnx : n • DivisibleBy.div x (n - 1) = x + DivisibleBy.div x (n - 1) := by
     conv_rhs =>
       congr

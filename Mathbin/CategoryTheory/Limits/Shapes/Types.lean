@@ -350,7 +350,7 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
           dite_eq_right_iff]
         intro y e
         have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-        rw [disjoint_iff.mp h₃.1] at this
+        rw [disjoint_iff.mp h₃.1] at this 
         exact this.elim
       · rintro T _ _ m rfl rfl; ext x; dsimp
         split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
@@ -408,7 +408,7 @@ theorem productIso_inv_comp_π {J : Type u} (F : J → Type max u v) (j : J) :
 def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocone (Discrete.functor F)
     where
   Cocone :=
-    { pt := Σj, F j
+    { pt := Σ j, F j
       ι := { app := fun j x => ⟨j.as, x⟩ } }
   IsColimit :=
     { desc := fun s x => s.ι.app ⟨x.1⟩ x.2
@@ -421,7 +421,7 @@ def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocon
 
 #print CategoryTheory.Limits.Types.coproductIso /-
 /-- The categorical coproduct in `Type u` is the type theoretic coproduct `Σ j, F j`. -/
-noncomputable def coproductIso {J : Type u} (F : J → Type u) : ∐ F ≅ Σj, F j :=
+noncomputable def coproductIso {J : Type u} (F : J → Type u) : ∐ F ≅ Σ j, F j :=
   colimit.isoColimitCocone (coproductColimitCocone F)
 #align category_theory.limits.types.coproduct_iso CategoryTheory.Limits.Types.coproductIso
 -/
@@ -429,7 +429,7 @@ noncomputable def coproductIso {J : Type u} (F : J → Type u) : ∐ F ≅ Σj, 
 #print CategoryTheory.Limits.Types.coproductIso_ι_comp_hom /-
 @[simp, elementwise]
 theorem coproductIso_ι_comp_hom {J : Type u} (F : J → Type u) (j : J) :
-    Sigma.ι F j ≫ (coproductIso F).Hom = fun x : F j => (⟨j, x⟩ : Σj, F j) :=
+    Sigma.ι F j ≫ (coproductIso F).Hom = fun x : F j => (⟨j, x⟩ : Σ j, F j) :=
   colimit.isoColimitCocone_ι_hom (coproductColimitCocone F) ⟨j⟩
 #align category_theory.limits.types.coproduct_iso_ι_comp_hom CategoryTheory.Limits.Types.coproductIso_ι_comp_hom
 -/
@@ -437,7 +437,7 @@ theorem coproductIso_ι_comp_hom {J : Type u} (F : J → Type u) (j : J) :
 #print CategoryTheory.Limits.Types.coproductIso_mk_comp_inv /-
 @[simp, elementwise]
 theorem coproductIso_mk_comp_inv {J : Type u} (F : J → Type u) (j : J) :
-    (↾fun x : F j => (⟨j, x⟩ : Σj, F j)) ≫ (coproductIso F).inv = Sigma.ι F j :=
+    (↾fun x : F j => (⟨j, x⟩ : Σ j, F j)) ≫ (coproductIso F).inv = Sigma.ι F j :=
   rfl
 #align category_theory.limits.types.coproduct_iso_mk_comp_inv CategoryTheory.Limits.Types.coproductIso_mk_comp_inv
 -/
@@ -572,7 +572,7 @@ theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ �
         h.comp_cocone_point_unique_up_to_iso_inv (coequalizer_colimit f g).2
           walking_parallel_pair.one]
     rintro ⟨y, hy, e'⟩
-    dsimp at e'
+    dsimp at e' 
     replace e' :=
       (mono_iff_injective
             (h.cocone_point_unique_up_to_iso (coequalizer_colimit f g).IsColimit).inv).mp

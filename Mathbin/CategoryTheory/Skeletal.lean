@@ -89,7 +89,8 @@ variable (C D)
 its category structure.
 -/
 def Skeleton : Type u₁ :=
-  InducedCategory C Quotient.out deriving Category
+  InducedCategory C Quotient.out
+deriving Category
 #align category_theory.skeleton CategoryTheory.Skeleton
 -/
 
@@ -100,7 +101,8 @@ instance [Inhabited C] : Inhabited (Skeleton C) :=
 /-- The functor from the skeleton of `C` to `C`. -/
 @[simps]
 noncomputable def fromSkeleton : Skeleton C ⥤ C :=
-  inducedFunctor _ deriving Full, Faithful
+  inducedFunctor _
+deriving Full, Faithful
 #align category_theory.from_skeleton CategoryTheory.fromSkeleton
 -/
 

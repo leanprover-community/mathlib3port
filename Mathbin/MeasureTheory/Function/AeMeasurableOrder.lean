@@ -63,7 +63,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
     · refine'
         ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _,
           fun ps qs pq => _⟩
-      simp only [not_and] at H
+      simp only [not_and] at H 
       exact (H ps qs pq).elim
   choose! u v huv using h'
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
@@ -88,7 +88,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
         apply ENNReal.tsum_le_tsum fun p => _
         refine' ENNReal.tsum_le_tsum fun q => measure_mono _
         exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
-      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) := by congr ; ext1 p; congr ; ext1 q;
+      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) := by congr; ext1 p; congr; ext1 q;
         exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
       _ = 0 := by simp only [tsum_zero]
       

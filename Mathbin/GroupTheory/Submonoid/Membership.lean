@@ -274,7 +274,7 @@ then it holds for all elements of the supremum of `S`. -/
 theorem iSup_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
-  rw [supr_eq_closure] at hx
+  rw [supr_eq_closure] at hx 
   refine' closure_induction hx (fun x hx => _) h1 hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
   exact hp _ _ hi
@@ -373,14 +373,14 @@ theorem closure_eq_image_prod (s : Set M) :
 
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
-    ∃ (l : List M)(hl : ∀ y ∈ l, y ∈ s), l.Prod = x := by
-  rwa [← SetLike.mem_coe, closure_eq_image_prod, Set.mem_image_iff_bex] at hx
+    ∃ (l : List M) (hl : ∀ y ∈ l, y ∈ s), l.Prod = x := by
+  rwa [← SetLike.mem_coe, closure_eq_image_prod, Set.mem_image_iff_bex] at hx 
 #align submonoid.exists_list_of_mem_closure Submonoid.exists_list_of_mem_closure
 #align add_submonoid.exists_list_of_mem_closure AddSubmonoid.exists_list_of_mem_closure
 
 @[to_additive]
 theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoid M] {s : Set M} {x : M}
-    (hx : x ∈ closure s) : ∃ (l : Multiset M)(hl : ∀ y ∈ l, y ∈ s), l.Prod = x :=
+    (hx : x ∈ closure s) : ∃ (l : Multiset M) (hl : ∀ y ∈ l, y ∈ s), l.Prod = x :=
   by
   obtain ⟨l, h1, h2⟩ := exists_list_of_mem_closure hx
   exact ⟨l, h1, (Multiset.coe_prod l).trans h2⟩
@@ -391,7 +391,7 @@ theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoid M] {s : Set M} {
 theorem closure_induction_left {s : Set M} {p : M → Prop} {x : M} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) : p x :=
   by
-  rw [closure_eq_mrange] at h
+  rw [closure_eq_mrange] at h 
   obtain ⟨l, rfl⟩ := h
   induction' l using FreeMonoid.recOn with x y ih
   · exact H1

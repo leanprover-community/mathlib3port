@@ -40,7 +40,7 @@ theorem hasStrictDerivAt_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x
     (hasStrictDerivAt_exp <| log x).of_local_left_inverse (continuousAt_log hx.ne')
         (ne_of_gt <| exp_pos _) <|
       Eventually.mono (lt_mem_nhds hx) @exp_log
-  rwa [exp_log hx] at this
+  rwa [exp_log hx] at this 
 #align real.has_strict_deriv_at_log_of_pos Real.hasStrictDerivAt_log_of_pos
 
 theorem hasStrictDerivAt_log (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
@@ -328,7 +328,7 @@ theorem hasSum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     convert h₁.add (has_sum_pow_div_log_of_abs_lt_1 h)
     ring_nf
   · intro m hm
-    rw [range_two_mul, Set.mem_setOf_eq, ← Nat.even_add_one] at hm
+    rw [range_two_mul, Set.mem_setOf_eq, ← Nat.even_add_one] at hm 
     dsimp [term]
     rw [Even.neg_pow hm, neg_one_mul, neg_add_self]
 #align real.has_sum_log_sub_log_of_abs_lt_1 Real.hasSum_log_sub_log_of_abs_lt_1

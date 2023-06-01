@@ -264,7 +264,7 @@ theorem one_lt_mul_iff : 1 < a * b ↔ 1 < a ∨ 1 < b := by
 #align add_pos_iff add_pos_iff
 
 @[to_additive]
-theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b :=
+theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _) (hc : 1 < c), a * c = b :=
   by
   obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le
   refine' ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩
@@ -338,7 +338,7 @@ end NeZero
     whose ordering is a linear order. -/
 @[protect_proj]
 class CanonicallyLinearOrderedAddMonoid (α : Type _) extends CanonicallyOrderedAddMonoid α,
-  LinearOrder α
+    LinearOrder α
 #align canonically_linear_ordered_add_monoid CanonicallyLinearOrderedAddMonoid
 -/
 

@@ -125,7 +125,7 @@ variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ A), PreservesLimit (S.ind
 theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) :
     Presheaf.IsSheaf J (P ⋙ F) :=
   by
-  rw [presheaf.is_sheaf_iff_multifork] at hP⊢
+  rw [presheaf.is_sheaf_iff_multifork] at hP ⊢
   intro X S
   obtain ⟨h⟩ := hP X S
   replace h := is_limit_of_preserves F h

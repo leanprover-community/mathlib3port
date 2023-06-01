@@ -36,7 +36,7 @@ variable (R : Type _) [Semiring R]
 #print CategoryTheory.Functor.Linear /-
 /-- An additive functor `F` is `R`-linear provided `F.map` is an `R`-module morphism. -/
 class Functor.Linear {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
-  [Linear R C] [Linear R D] (F : C ⥤ D) [F.Additive] : Prop where
+    [Linear R C] [Linear R D] (F : C ⥤ D) [F.Additive] : Prop where
   map_smul' : ∀ {X Y : C} {f : X ⟶ Y} {r : R}, F.map (r • f) = r • F.map f := by obviously
 #align category_theory.functor.linear CategoryTheory.Functor.Linear
 -/

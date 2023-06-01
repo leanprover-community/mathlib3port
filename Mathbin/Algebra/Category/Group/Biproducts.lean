@@ -57,7 +57,7 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
     { lift := fun s => AddMonoidHom.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩)
       fac := by rintro s (⟨⟩ | ⟨⟩) <;> · ext x; simp
       uniq := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩];rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+        ext <;> [rw [← w ⟨walking_pair.left⟩]; rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
 -/
 

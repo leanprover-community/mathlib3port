@@ -218,7 +218,7 @@ theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A 
   · refine' fun h => ⟨h.1, fun x => _⟩
     have := h.2 (-(A⁻¹ ⬝ B).mulVec x ⊕ᵥ x)
     rw [dot_product_mul_vec, schur_complement_eq₁₁ B D _ _ hA.1, neg_add_self, dot_product_zero,
-      zero_add] at this
+      zero_add] at this 
     rw [dot_product_mul_vec]; exact this
   · refine' fun h => ⟨h.1, fun x => _⟩
     rw [dot_product_mul_vec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]
@@ -234,7 +234,10 @@ theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A 
   by
   rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
     from_blocks_submatrix_sum_swap_sum_swap]
-  convert pos_semidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp
+  convert pos_semidef.from_blocks₁₁ _ _ hD <;>
+    first
+    | infer_instance
+    | simp
 #align matrix.pos_semidef.from_blocks₂₂ Matrix.PosSemidef.from_blocks₂₂
 
 end IsROrC

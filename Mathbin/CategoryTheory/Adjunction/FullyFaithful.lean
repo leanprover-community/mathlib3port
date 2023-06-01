@@ -135,7 +135,7 @@ theorem L_faithful_of_unit_isIso [IsIso h.Unit] : Faithful L :=
   {
     map_injective' := fun X Y f g H =>
       by
-      rw [← (h.hom_equiv X (L.obj Y)).apply_eq_iff_eq] at H
+      rw [← (h.hom_equiv X (L.obj Y)).apply_eq_iff_eq] at H 
       simpa using H =≫ inv (h.unit.app Y) }
 #align category_theory.L_faithful_of_unit_is_iso CategoryTheory.L_faithful_of_unit_isIso
 -/
@@ -153,7 +153,7 @@ theorem R_faithful_of_counit_isIso [IsIso h.counit] : Faithful R :=
   {
     map_injective' := fun X Y f g H =>
       by
-      rw [← (h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H
+      rw [← (h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H 
       simpa using inv (h.counit.app X) ≫= H }
 #align category_theory.R_faithful_of_counit_is_iso CategoryTheory.R_faithful_of_counit_isIso
 -/
@@ -162,7 +162,7 @@ theorem R_faithful_of_counit_isIso [IsIso h.counit] : Faithful R :=
 instance whiskerLeft_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
     IsIso (whiskerLeft L h.counit) := by
   have := h.left_triangle
-  rw [← is_iso.eq_inv_comp] at this
+  rw [← is_iso.eq_inv_comp] at this 
   rw [this]
   infer_instance
 #align category_theory.whisker_left_counit_iso_of_L_fully_faithful CategoryTheory.whiskerLeft_counit_iso_of_L_fully_faithful
@@ -173,7 +173,7 @@ instance whiskerRight_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
     IsIso (whiskerRight h.counit R) :=
   by
   have := h.right_triangle
-  rw [← is_iso.eq_inv_comp] at this
+  rw [← is_iso.eq_inv_comp] at this 
   rw [this]
   infer_instance
 #align category_theory.whisker_right_counit_iso_of_L_fully_faithful CategoryTheory.whiskerRight_counit_iso_of_L_fully_faithful
@@ -183,7 +183,7 @@ instance whiskerRight_counit_iso_of_L_fully_faithful [Full L] [Faithful L] :
 instance whiskerLeft_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
     IsIso (whiskerLeft R h.Unit) := by
   have := h.right_triangle
-  rw [← is_iso.eq_comp_inv] at this
+  rw [← is_iso.eq_comp_inv] at this 
   rw [this]
   infer_instance
 #align category_theory.whisker_left_unit_iso_of_R_fully_faithful CategoryTheory.whiskerLeft_unit_iso_of_R_fully_faithful
@@ -193,7 +193,7 @@ instance whiskerLeft_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
 instance whiskerRight_unit_iso_of_R_fully_faithful [Full R] [Faithful R] :
     IsIso (whiskerRight h.Unit L) := by
   have := h.left_triangle
-  rw [← is_iso.eq_comp_inv] at this
+  rw [← is_iso.eq_comp_inv] at this 
   rw [this]
   infer_instance
 #align category_theory.whisker_right_unit_iso_of_R_fully_faithful CategoryTheory.whiskerRight_unit_iso_of_R_fully_faithful

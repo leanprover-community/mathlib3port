@@ -173,7 +173,7 @@ theorem mulSalemSpencer_insert :
         fun b c hb hc => hs (Or.inr hb) (Or.inr hc) (Or.inl rfl)⟩,
       _⟩
   rintro ⟨hs, ha, ha'⟩ b c d hb hc hd h
-  rw [mem_insert_iff] at hb hc hd
+  rw [mem_insert_iff] at hb hc hd 
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
   · rfl
   all_goals obtain rfl | hd := hd
@@ -204,7 +204,7 @@ theorem mulSalemSpencer_pair (a b : α) : MulSalemSpencer ({a, b} : Set α) :=
 theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((· * ·) a '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h
+  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h 
   rw [hs hb hc hd (mul_left_cancel h)]
 #align mul_salem_spencer.mul_left MulSalemSpencer.mul_left
 #align add_salem_spencer.add_left AddSalemSpencer.add_left
@@ -213,7 +213,7 @@ theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((·
 theorem MulSalemSpencer.mul_right (hs : MulSalemSpencer s) : MulSalemSpencer ((· * a) '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h
+  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h 
   rw [hs hb hc hd (mul_right_cancel h)]
 #align mul_salem_spencer.mul_right MulSalemSpencer.mul_right
 #align add_salem_spencer.add_right AddSalemSpencer.add_right
@@ -265,7 +265,7 @@ theorem MulSalemSpencer.mul_left₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * ·) a '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h
+  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h 
   rw [hs hb hc hd (mul_left_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_left₀ MulSalemSpencer.mul_left₀
 
@@ -273,7 +273,7 @@ theorem MulSalemSpencer.mul_right₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * a) '' s) :=
   by
   rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h
+  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h 
   rw [hs hb hc hd (mul_right_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_right₀ MulSalemSpencer.mul_right₀
 
@@ -305,7 +305,7 @@ theorem addSalemSpencer_iff_eq_right {s : Set ℕ} :
   by
   refine' forall₄_congr fun a b c _ => forall₃_congr fun _ _ habc => ⟨_, _⟩
   · rintro rfl
-    simp_rw [← two_mul] at habc
+    simp_rw [← two_mul] at habc 
     exact mul_left_cancel₀ two_ne_zero habc
   · rintro rfl
     exact (add_left_cancel habc).symm
@@ -360,7 +360,7 @@ Salem-Spencer subset. -/
       "The additive Roth number of a finset is the cardinality of its biggest additive\nSalem-Spencer subset. The usual Roth number corresponds to `add_roth_number (finset.range n)`, see\n`roth_number_nat`. "]
 def mulRothNumber : Finset α →o ℕ :=
   ⟨fun s =>
-    Nat.findGreatest (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α))
+    Nat.findGreatest (fun m => ∃ (t : _) (_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α))
       s.card,
     by
     rintro t u htu
@@ -383,9 +383,9 @@ theorem mulRothNumber_le : mulRothNumber s ≤ s.card := by convert Nat.findGrea
 #print mulRothNumber_spec /-
 @[to_additive]
 theorem mulRothNumber_spec :
-    ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
+    ∃ (t : _) (_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
   @Nat.findGreatest_spec _ _
-    (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ (Nat.zero_le _)
+    (fun m => ∃ (t : _) (_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) _ (Nat.zero_le _)
     ⟨∅, empty_subset _, card_empty, mulSalemSpencer_empty⟩
 #align mul_roth_number_spec mulRothNumber_spec
 #align add_roth_number_spec addRothNumber_spec
@@ -488,9 +488,9 @@ theorem mulRothNumber_map_mul_left :
   by
   refine' le_antisymm _ _
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec (s.map <| mulLeftEmbedding a)
-    rw [subset_map_iff] at hus
+    rw [subset_map_iff] at hus 
     obtain ⟨u, hus, rfl⟩ := hus
-    rw [coe_map] at hu
+    rw [coe_map] at hu 
     rw [← hcard, card_map]
     exact (mulSalemSpencer_mul_left_iff.1 hu).le_mulRothNumber hus
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s
@@ -549,7 +549,7 @@ theorem rothNumberNat_le (N : ℕ) : rothNumberNat N ≤ N :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
 #print rothNumberNat_spec /-
 theorem rothNumberNat_spec (n : ℕ) :
-    ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
+    ∃ (t : _) (_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   addRothNumber_spec _
 #align roth_number_nat_spec rothNumberNat_spec
 -/

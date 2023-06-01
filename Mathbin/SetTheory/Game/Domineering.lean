@@ -45,7 +45,8 @@ def shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
 
 /-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
 def Board :=
-  Finset (ℤ × ℤ)deriving Inhabited
+  Finset (ℤ × ℤ)
+deriving Inhabited
 #align pgame.domineering.board PGame.Domineering.Board
 
 attribute [local reducible] board
@@ -80,14 +81,14 @@ def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     (m.1 - 1, m.2) ∈ b.eraseₓ m := by
-  rw [mem_right] at h
+  rw [mem_right] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
 #align pgame.domineering.fst_pred_mem_erase_of_mem_right PGame.Domineering.fst_pred_mem_erase_of_mem_right
 
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     (m.1, m.2 - 1) ∈ b.eraseₓ m := by
-  rw [mem_left] at h
+  rw [mem_left] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
 #align pgame.domineering.snd_pred_mem_erase_of_mem_left PGame.Domineering.snd_pred_mem_erase_of_mem_left
@@ -142,11 +143,11 @@ instance state : State Board where
   l s := (left s).image (moveLeft s)
   r s := (right s).image (moveRight s)
   left_bound s t m := by
-    simp only [Finset.mem_image, Prod.exists] at m
+    simp only [Finset.mem_image, Prod.exists] at m 
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
   right_bound s t m := by
-    simp only [Finset.mem_image, Prod.exists] at m
+    simp only [Finset.mem_image, Prod.exists] at m 
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
 #align pgame.domineering.state PGame.Domineering.state

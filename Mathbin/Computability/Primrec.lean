@@ -638,7 +638,7 @@ theorem nat_iff {f : α → β → σ} :
       Option.map (fun p : α × β => f p.1 p.2)
           (Option.bind a fun a : α => Option.map (Prod.mk a) b) =
         Option.bind a fun a => Option.map (f a) b :=
-    by intros <;> cases a <;> [rfl;· cases b <;> rfl]
+    by intros <;> cases a <;> [rfl; · cases b <;> rfl]
   simp [Primrec₂, Primrec, this]
 #align primrec₂.nat_iff Primrec₂.nat_iff
 
@@ -987,12 +987,12 @@ theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
     by_cases h : (f (n, k)).2.succ = k <;> simp [h]
     · have := congr_arg Nat.succ IH.1
       refine' ⟨_, fun k0 => Nat.noConfusion (h.trans k0)⟩
-      rwa [← Nat.succ_add, h, add_comm, ← Nat.mul_succ] at this
+      rwa [← Nat.succ_add, h, add_comm, ← Nat.mul_succ] at this 
     · exact ⟨by rw [Nat.succ_add, IH.1], fun k0 => lt_of_le_of_ne (IH.2.1 k0) h, IH.2.2⟩
   revert this; cases' f (n, k) with D M
   simp; intro h₁ h₂ h₃
   cases Nat.eq_zero_or_pos k
-  · simp [h, h₃ h] at h₁⊢; simp [h₁]
+  · simp [h, h₃ h] at h₁ ⊢; simp [h₁]
   · exact (Nat.div_mod_unique h).2 ⟨h₁, h₂ h⟩
 #align primrec.nat_div_mod Primrec.nat_div_mod
 
@@ -1068,7 +1068,7 @@ private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ 
     have :
       ∀ n, F a n = ((List.take n (f a)).foldl (fun s b => h a (s, b)) (g a), List.drop n (f a)) :=
       by
-      intro ; simp [F]
+      intro; simp [F]
       generalize f a = l; generalize g a = x
       induction' n with n IH generalizing l x; · rfl
       simp; cases' l with b l <;> simp [IH]
@@ -1321,7 +1321,7 @@ theorem list_findIdx {f : α → List β} {p : α → β → Prop} [∀ a b, Dec
     (hp : PrimrecRel p) : Primrec fun a => (f a).findIndex (p a) :=
   (list_foldr hf (const 0) <|
         to₂ <| ite (hp.comp fst <| fst.comp snd) (const 0) (succ.comp <| snd.comp snd)).of_eq
-    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl;simp [*, List.findIndex]]
+    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl; simp [*, List.findIndex]]
 #align primrec.list_find_index Primrec.list_findIdx
 
 theorem list_indexOf [DecidableEq α] : Primrec₂ (@List.indexOf α _) :=
@@ -1782,11 +1782,11 @@ theorem sqrt : @Primrec' 1 fun v => v.headI.sqrt :=
           have x := v.head <;> have y := v.tail.head <;>
             exact if x.succ < y.succ * y.succ then y else y.succ)
         head (const 0) _
-    · convert this; funext; congr ; funext x y; congr <;> simp
+    · convert this; funext; congr; funext x y; congr <;> simp
     have x1 := succ.comp₁ _ head
     have y1 := succ.comp₁ _ (tail head)
     exact if_lt x1 (mul.comp₂ _ y1 y1) (tail head) y1
-  intro ; symm
+  intro; symm
   induction' n with n IH; · simp
   dsimp; rw [IH]; split_ifs
   · exact le_antisymm (Nat.sqrt_le_sqrt (Nat.le_succ _)) (Nat.lt_succ_iff.1 <| Nat.sqrt_lt.2 h)

@@ -55,22 +55,22 @@ variable {ι : Type _} {α : ι → Type _}
 
 #print Sigma.le /-
 /-- Disjoint sum of orders. `⟨i, a⟩ ≤ ⟨j, b⟩` iff `i = j` and `a ≤ b`. -/
-inductive le [∀ i, LE (α i)] : ∀ a b : Σi, α i, Prop
+inductive le [∀ i, LE (α i)] : ∀ a b : Σ i, α i, Prop
   | fiber (i : ι) (a b : α i) : a ≤ b → le ⟨i, a⟩ ⟨i, b⟩
 #align sigma.le Sigma.le
 -/
 
 #print Sigma.lt /-
 /-- Disjoint sum of orders. `⟨i, a⟩ < ⟨j, b⟩` iff `i = j` and `a < b`. -/
-inductive lt [∀ i, LT (α i)] : ∀ a b : Σi, α i, Prop
+inductive lt [∀ i, LT (α i)] : ∀ a b : Σ i, α i, Prop
   | fiber (i : ι) (a b : α i) : a < b → lt ⟨i, a⟩ ⟨i, b⟩
 #align sigma.lt Sigma.lt
 -/
 
-instance [∀ i, LE (α i)] : LE (Σi, α i) :=
+instance [∀ i, LE (α i)] : LE (Σ i, α i) :=
   ⟨le⟩
 
-instance [∀ i, LT (α i)] : LT (Σi, α i) :=
+instance [∀ i, LT (α i)] : LT (Σ i, α i) :=
   ⟨lt⟩
 
 #print Sigma.mk_le_mk_iff /-
@@ -88,7 +88,7 @@ theorem mk_lt_mk_iff [∀ i, LT (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Si
 -/
 
 #print Sigma.le_def /-
-theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
+theorem le_def [∀ i, LE (α i)] {a b : Σ i, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
   by
   constructor
   · rintro ⟨i, a, b, h⟩
@@ -101,7 +101,7 @@ theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = 
 -/
 
 #print Sigma.lt_def /-
-theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
+theorem lt_def [∀ i, LT (α i)] {a b : Σ i, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
   by
   constructor
   · rintro ⟨i, a, b, h⟩
@@ -113,7 +113,7 @@ theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.
 #align sigma.lt_def Sigma.lt_def
 -/
 
-instance [∀ i, Preorder (α i)] : Preorder (Σi, α i) :=
+instance [∀ i, Preorder (α i)] : Preorder (Σ i, α i) :=
   { Sigma.hasLe,
     Sigma.hasLt with
     le_refl := fun ⟨i, a⟩ => le.fiber i a a le_rfl
@@ -125,16 +125,16 @@ instance [∀ i, Preorder (α i)] : Preorder (Σi, α i) :=
       · rintro ⟨i, a, b, hab⟩
         rwa [mk_le_mk_iff, mk_le_mk_iff, ← lt_iff_le_not_le]
       · rintro ⟨⟨i, a, b, hab⟩, h⟩
-        rw [mk_le_mk_iff] at h
+        rw [mk_le_mk_iff] at h 
         exact mk_lt_mk_iff.2 (hab.lt_of_not_le h) }
 
-instance [∀ i, PartialOrder (α i)] : PartialOrder (Σi, α i) :=
+instance [∀ i, PartialOrder (α i)] : PartialOrder (Σ i, α i) :=
   { Sigma.preorder with
     le_antisymm := by
       rintro _ _ ⟨i, a, b, hab⟩ ⟨_, _, _, hba⟩
       exact ext rfl (hEq_of_eq <| hab.antisymm hba) }
 
-instance [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σi, α i) :=
+instance [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σ i, α i) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨_, _⟩ ⟨_, _, b, h⟩
     obtain ⟨c, ha, hb⟩ := exists_between h

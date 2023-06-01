@@ -459,7 +459,7 @@ theorem isCompl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).rang
   constructor
   · rw [disjoint_def]
     rintro ⟨_, _⟩ ⟨x, hx⟩ ⟨y, hy⟩
-    simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy⊢
+    simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy ⊢
     exact ⟨hy.1.symm, hx.2.symm⟩
   · rw [codisjoint_iff_le_sup]
     rintro ⟨x, y⟩ -
@@ -534,14 +534,14 @@ theorem ker_coprod_of_disjoint_range {M₂ : Type _} [AddCommGroup M₂] [Module
   by
   apply le_antisymm _ (ker_prod_ker_le_ker_coprod f g)
   rintro ⟨y, z⟩ h
-  simp only [mem_ker, mem_prod, coprod_apply] at h⊢
+  simp only [mem_ker, mem_prod, coprod_apply] at h ⊢
   have : f y ∈ f.range ⊓ g.range :=
     by
     simp only [true_and_iff, mem_range, mem_inf, exists_apply_eq_apply]
     use -z
     rwa [eq_comm, map_neg, ← sub_eq_zero, sub_neg_eq_add]
-  rw [hd.eq_bot, mem_bot] at this
-  rw [this] at h
+  rw [hd.eq_bot, mem_bot] at this 
+  rw [this] at h 
   simpa [this] using h
 #align linear_map.ker_coprod_of_disjoint_range LinearMap.ker_coprod_of_disjoint_range
 
@@ -871,12 +871,12 @@ open Function
 /-- An auxiliary construction for `tunnel`.
 The composition of `f`, followed by the isomorphism back to `K`,
 followed by the inclusion of this submodule back into `M`. -/
-def tunnelAux (f : M × N →ₗ[R] M) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
+def tunnelAux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 #align linear_map.tunnel_aux LinearMap.tunnelAux
 
 theorem tunnelAux_injective (f : M × N →ₗ[R] M) (i : Injective f)
-    (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : Injective (tunnelAux f Kφ) :=
+    (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : Injective (tunnelAux f Kφ) :=
   (Subtype.val_injective.comp Kφ.2.symm.Injective).comp i
 #align linear_map.tunnel_aux_injective LinearMap.tunnelAux_injective
 
@@ -885,7 +885,7 @@ noncomputable section
 -- Even though we have `noncomputable theory`,
 -- we get an error without another `noncomputable` here.
 /-- Auxiliary definition for `tunnel`. -/
-noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → ΣK : Submodule R M, K ≃ₗ[R] M
+noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>
     ⟨(Submodule.fst R M N).map (tunnelAux f (tunnel' n)),

@@ -223,7 +223,7 @@ theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : LocalHo
 #print StructureGroupoid.partialOrder /-
 /-- Partial order on the set of groupoids, given by inclusion of the members of the groupoid -/
 instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
-  PartialOrder.lift StructureGroupoid.members fun a b h => by cases a; cases b; dsimp at h;
+  PartialOrder.lift StructureGroupoid.members fun a b h => by cases a; cases b; dsimp at h ;
     induction h; rfl
 #align structure_groupoid.partial_order StructureGroupoid.partialOrder
 -/
@@ -241,10 +241,10 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
     where
   members := {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ }
   trans' e e' he he' := by
-    cases he <;> simp at he he'
+    cases he <;> simp at he he' 
     · simpa only [he, refl_trans]
     · have : (e ≫ₕ e').source ⊆ e.source := sep_subset _ _
-      rw [he] at this
+      rw [he] at this 
       have : e ≫ₕ e' ∈ { e : LocalHomeomorph H H | e.source = ∅ } := eq_bot_iff.2 this
       exact (mem_union _ _ _).2 (Or.inr this)
   symm' e he := by
@@ -267,13 +267,13 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
       · replace hs : LocalHomeomorph.restr e s = LocalHomeomorph.refl H
         · simpa only using hs
         have : (e.restr s).source = univ := by rw [hs]; simp
-        change e.to_local_equiv.source ∩ interior s = univ at this
+        change e.to_local_equiv.source ∩ interior s = univ at this 
         have : univ ⊆ interior s := by rw [← this]; exact inter_subset_right _ _
-        have : s = univ := by rwa [open_s.interior_eq, univ_subset_iff] at this
+        have : s = univ := by rwa [open_s.interior_eq, univ_subset_iff] at this 
         simpa only [this, restr_univ] using hs
       · exfalso
-        rw [mem_set_of_eq] at hs
-        rwa [hs] at x's
+        rw [mem_set_of_eq] at hs 
+        rwa [hs] at x's 
   eq_on_source' e e' he he'e := by
     cases he
     · left
@@ -283,7 +283,7 @@ def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
           rfl
       rwa [← this]
     · right
-      change e.to_local_equiv.source = ∅ at he
+      change e.to_local_equiv.source = ∅ at he 
       rwa [Set.mem_setOf_eq, he'e.source_eq]
 #align id_groupoid idGroupoid
 -/
@@ -294,14 +294,14 @@ instance : OrderBot (StructureGroupoid H)
   bot := idGroupoid H
   bot_le := by
     intro u f hf
-    change f ∈ {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ } at hf
-    simp only [singleton_union, mem_set_of_eq, mem_insert_iff] at hf
+    change f ∈ {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ } at hf 
+    simp only [singleton_union, mem_set_of_eq, mem_insert_iff] at hf 
     cases hf
     · rw [hf]
       apply u.id_mem
     · apply u.locality
       intro x hx
-      rw [hf, mem_empty_iff_false] at hx
+      rw [hf, mem_empty_iff_false] at hx 
       exact hx.elim
 
 instance (H : Type u) [TopologicalSpace H] : Inhabited (StructureGroupoid H) :=
@@ -377,7 +377,7 @@ theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
     (h : ∀ f s, PG₁.property f s → PG₂.property f s) : PG₁.groupoid ≤ PG₂.groupoid :=
   by
   refine' StructureGroupoid.le_iff.2 fun e he => _
-  rw [mem_groupoid_of_pregroupoid] at he⊢
+  rw [mem_groupoid_of_pregroupoid] at he ⊢
   exact ⟨h _ _ he.1, h _ _ he.2⟩
 #align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_le
 -/
@@ -439,12 +439,12 @@ theorem closedUnderRestriction' {G : StructureGroupoid H} [ClosedUnderRestrictio
 restriction of the identity to the various open subsets. -/
 def idRestrGroupoid : StructureGroupoid H
     where
-  members := { e | ∃ (s : Set H)(h : IsOpen s), e ≈ LocalHomeomorph.ofSet s h }
+  members := { e | ∃ (s : Set H) (h : IsOpen s), e ≈ LocalHomeomorph.ofSet s h }
   trans' := by
     rintro e e' ⟨s, hs, hse⟩ ⟨s', hs', hse'⟩
     refine' ⟨s ∩ s', IsOpen.inter hs hs', _⟩
     have := LocalHomeomorph.EqOnSource.trans' hse hse'
-    rwa [LocalHomeomorph.ofSet_trans_ofSet] at this
+    rwa [LocalHomeomorph.ofSet_trans_ofSet] at this 
   symm' := by
     rintro e ⟨s, hs, hse⟩
     refine' ⟨s, hs, _⟩
@@ -625,7 +625,7 @@ theorem ChartedSpace.secondCountable_of_countable_cover [SecondCountableTopology
   haveI : ∀ x : M, second_countable_topology (chart_at H x).source := fun x =>
     (chart_at H x).secondCountableTopology_source
   haveI := hsc.to_encodable
-  rw [bUnion_eq_Union] at hs
+  rw [bUnion_eq_Union] at hs 
   exact
     second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
 #align charted_space.second_countable_of_countable_cover ChartedSpace.secondCountable_of_countable_cover
@@ -885,7 +885,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
       letI : TopologicalSpace M := c.to_topological_space
       apply continuousOn_open_of_generateFrom (c.open_target he)
       intro t ht
-      simp only [exists_prop, mem_Union, mem_singleton_iff] at ht
+      simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
       rcases ht with ⟨e', e'_atlas, s, s_open, ts⟩
       rw [ts]
       let f := e.symm.trans e'
@@ -929,7 +929,7 @@ variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M]
-  [ChartedSpace H M] (G : StructureGroupoid H) : Prop where
+    [ChartedSpace H M] (G : StructureGroupoid H) : Prop where
   compatible : ∀ {e e' : LocalHomeomorph M H}, e ∈ atlas H M → e' ∈ atlas H M → e.symm ≫ₕ e' ∈ G
 #align has_groupoid HasGroupoid
 -/
@@ -964,7 +964,7 @@ instance hasGroupoid_model_space (H : Type _) [TopologicalSpace H] (G : Structur
     by
     replace he : e ∈ atlas H H := he
     replace he' : e' ∈ atlas H H := he'
-    rw [chartedSpaceSelf_atlas] at he he'
+    rw [chartedSpaceSelf_atlas] at he he' 
     simp [he, he', StructureGroupoid.id_mem]
 #align has_groupoid_model_space hasGroupoid_model_space
 -/
@@ -1021,7 +1021,7 @@ theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph
   let s := e.target ∩ e.symm ⁻¹' f.source
   have hs : IsOpen s := by
     apply e.symm.continuous_to_fun.preimage_open_of_open <;> apply open_source
-  have xs : x ∈ s := by dsimp at hx; simp [s, hx]
+  have xs : x ∈ s := by dsimp at hx ; simp [s, hx]
   refine' ⟨s, hs, xs, _⟩
   have A : e.symm ≫ₕ f ∈ G := (mem_maximalAtlas_iff.1 he f (chart_mem_atlas _ _)).1
   have B : f.symm ≫ₕ e' ∈ G := (mem_maximalAtlas_iff.1 he' f (chart_mem_atlas _ _)).2
@@ -1161,8 +1161,8 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     where compatible := by
     rintro e e' ⟨_, ⟨x, hc⟩, he⟩ ⟨_, ⟨x', hc'⟩, he'⟩
     haveI : Nonempty s := ⟨x⟩
-    simp only [hc.symm, mem_singleton_iff, Subtype.val_eq_coe] at he
-    simp only [hc'.symm, mem_singleton_iff, Subtype.val_eq_coe] at he'
+    simp only [hc.symm, mem_singleton_iff, Subtype.val_eq_coe] at he 
+    simp only [hc'.symm, mem_singleton_iff, Subtype.val_eq_coe] at he' 
     rw [he, he']
     convert G.eq_on_source _
         (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
@@ -1181,7 +1181,7 @@ charts, belongs to `G`. We avoid the word diffeomorph as it is too related to th
 and use structomorph instead. -/
 @[nolint has_nonempty_instance]
 structure Structomorph (G : StructureGroupoid H) (M : Type _) (M' : Type _) [TopologicalSpace M]
-  [TopologicalSpace M'] [ChartedSpace H M] [ChartedSpace H M'] extends Homeomorph M M' where
+    [TopologicalSpace M'] [ChartedSpace H M] [ChartedSpace H M'] extends Homeomorph M M' where
   mem_groupoid :
     ∀ c : LocalHomeomorph M H,
       ∀ c' : LocalHomeomorph M' H,
@@ -1214,7 +1214,7 @@ def Structomorph.symm (e : Structomorph G M M') : Structomorph G M' M :=
       have : (c'.symm ≫ₕ e.to_homeomorph.to_local_homeomorph ≫ₕ c).symm ∈ G :=
         G.symm (e.mem_groupoid c' c hc' hc)
       rwa [trans_symm_eq_symm_trans_symm, trans_symm_eq_symm_trans_symm, symm_symm, trans_assoc] at
-        this }
+        this  }
 #align structomorph.symm Structomorph.symm
 -/
 
@@ -1246,7 +1246,7 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
       have : x ∈ s := by
         constructor
         · simp only [trans_source, preimage_univ, inter_univ, Homeomorph.toLocalHomeomorph_source]
-          rw [trans_source] at hx
+          rw [trans_source] at hx 
           exact hx.1
         · exact hg₂
       refine' ⟨s, open_s, this, _⟩

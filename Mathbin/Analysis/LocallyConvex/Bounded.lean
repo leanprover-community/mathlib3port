@@ -136,7 +136,7 @@ theorem IsVonNBounded.image {σ : 𝕜₁ →+* 𝕜₂} [RingHomSurjective σ] 
   have σ_iso : Isometry σ := AddMonoidHomClass.isometry_of_norm σ fun x => RingHomIsometric.is_iso
   have σ'_symm_iso : Isometry σ'.symm := σ_iso.right_inv σ'.right_inv
   have f_tendsto_zero := f.continuous.tendsto 0
-  rw [map_zero] at f_tendsto_zero
+  rw [map_zero] at f_tendsto_zero 
   intro V hV
   rcases hs (f_tendsto_zero hV) with ⟨r, hrpos, hr⟩
   refine' ⟨r, hrpos, fun a ha => _⟩
@@ -165,7 +165,7 @@ theorem IsVonNBounded.smul_tendsto_zero {S : Set E} {ε : ι → 𝕜} {x : ι �
   filter_upwards [hxS, hε _ (Metric.ball_mem_nhds 0 <| inv_pos.mpr r_pos)]with n hnS hnr
   by_cases this : ε n = 0
   · simp [this, mem_of_mem_nhds hV]
-  · rw [mem_preimage, mem_ball_zero_iff, lt_inv (norm_pos_iff.mpr this) r_pos, ← norm_inv] at hnr
+  · rw [mem_preimage, mem_ball_zero_iff, lt_inv (norm_pos_iff.mpr this) r_pos, ← norm_inv] at hnr 
     rw [mem_preimage, Pi.smul_apply', ← Set.mem_inv_smul_set_iff₀ this]
     exact hrS _ hnr.le hnS
 #align bornology.is_vonN_bounded.smul_tendsto_zero Bornology.IsVonNBounded.smul_tendsto_zero
@@ -180,12 +180,12 @@ theorem isVonNBounded_of_smul_tendsto_zero {ε : ι → 𝕝} {l : Filter ι} [l
   have : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V :=
     by
     filter_upwards [hε]with n hn
-    rw [Absorbs] at hVS
-    push_neg  at hVS
+    rw [Absorbs] at hVS 
+    push_neg  at hVS 
     rcases hVS _ (norm_pos_iff.mpr <| inv_ne_zero hn) with ⟨a, haε, haS⟩
     rcases set.not_subset.mp haS with ⟨x, hxS, hx⟩
     refine' ⟨⟨x, hxS⟩, fun hnx => _⟩
-    rw [← Set.mem_inv_smul_set_iff₀ hn] at hnx
+    rw [← Set.mem_inv_smul_set_iff₀ hn] at hnx 
     exact hx (hVb.smul_mono haε hnx)
   rcases this.choice with ⟨x, hx⟩
   refine' Filter.frequently_false l (Filter.Eventually.frequently _)
@@ -260,13 +260,13 @@ variable [UniformSpace E] [UniformAddGroup E] [ContinuousSMul 𝕜 E]
 theorem TotallyBounded.isVonNBounded {s : Set E} (hs : TotallyBounded s) :
     Bornology.IsVonNBounded 𝕜 s :=
   by
-  rw [totallyBounded_iff_subset_finite_iUnion_nhds_zero] at hs
+  rw [totallyBounded_iff_subset_finite_iUnion_nhds_zero] at hs 
   intro U hU
   have h : Filter.Tendsto (fun x : E × E => x.fst + x.snd) (𝓝 (0, 0)) (𝓝 ((0 : E) + (0 : E))) :=
     tendsto_add
-  rw [add_zero] at h
+  rw [add_zero] at h 
   have h' := (nhds_basis_balanced 𝕜 E).Prod (nhds_basis_balanced 𝕜 E)
-  simp_rw [← nhds_prod_eq, id.def] at h'
+  simp_rw [← nhds_prod_eq, id.def] at h' 
   rcases h.basis_left h' U hU with ⟨x, hx, h''⟩
   rcases hs x.snd hx.2.1 with ⟨t, ht, hs⟩
   refine' Absorbs.mono_right _ hs
@@ -309,7 +309,7 @@ theorem isVonNBounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Borno
     rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
     specialize hρball a ha.le
     rw [← ball_normSeminorm 𝕜 E, Seminorm.smul_ball_zero (norm_pos_iff.1 <| hρ.trans ha),
-      ball_normSeminorm, mul_one] at hρball
+      ball_normSeminorm, mul_one] at hρball 
     exact ⟨‖a‖, hρball.trans Metric.ball_subset_closedBall⟩
   · exact fun ⟨C, hC⟩ => (is_vonN_bounded_closed_ball 𝕜 E C).Subset hC
 #align normed_space.is_vonN_bounded_iff NormedSpace.isVonNBounded_iff

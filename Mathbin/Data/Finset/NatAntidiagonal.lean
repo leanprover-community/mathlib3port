@@ -117,7 +117,7 @@ theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal
     (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst :=
   by
   refine' ⟨congr_arg Prod.fst, fun h => Prod.ext h ((add_right_inj q.fst).mp _)⟩
-  rw [mem_antidiagonal] at hp hq
+  rw [mem_antidiagonal] at hp hq 
   rw [hq, ← h, hp]
 #align finset.nat.antidiagonal_congr Finset.Nat.antidiagonal_congr
 -/
@@ -127,7 +127,7 @@ theorem antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
   by
   rw [le_iff_exists_add]
   use kl.2
-  rwa [mem_antidiagonal, eq_comm] at hlk
+  rwa [mem_antidiagonal, eq_comm] at hlk 
 #align finset.nat.antidiagonal.fst_le Finset.Nat.antidiagonal.fst_le
 -/
 
@@ -136,7 +136,7 @@ theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
   by
   rw [le_iff_exists_add]
   use kl.1
-  rwa [mem_antidiagonal, eq_comm, add_comm] at hlk
+  rwa [mem_antidiagonal, eq_comm, add_comm] at hlk 
 #align finset.nat.antidiagonal.snd_le Finset.Nat.antidiagonal.snd_le
 -/
 
@@ -147,7 +147,7 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
   simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
   · simp (config := { contextual := true }) [and_comm', eq_tsub_iff_add_eq_of_le h, add_comm]
-  · rw [not_le] at h
+  · rw [not_le] at h 
     simp only [not_mem_empty, iff_false_iff, not_and]
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)
 #align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
@@ -166,13 +166,13 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ
+def sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ
     where
   toFun x := x.2
   invFun x := ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
   left_inv := by
     rintro ⟨n, ⟨k, l⟩, h⟩
-    rw [mem_antidiagonal] at h
+    rw [mem_antidiagonal] at h 
     exact Sigma.subtype_ext h rfl
   right_inv x := rfl
 #align finset.nat.sigma_antidiagonal_equiv_prod Finset.Nat.sigmaAntidiagonalEquivProd

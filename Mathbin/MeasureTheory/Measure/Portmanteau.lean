@@ -328,7 +328,7 @@ theorem measure_of_cont_bdd_of_tendsto_indicator [TopologicalSpace Ω] [OpensMea
   by
   have fs_lim' :
     ∀ ω, tendsto (fun n : ℕ => (fs n ω : ℝ≥0)) at_top (𝓝 (indicator E (fun x => (1 : ℝ≥0)) ω)) := by
-    rw [tendsto_pi_nhds] at fs_lim; exact fun ω => fs_lim ω
+    rw [tendsto_pi_nhds] at fs_lim ; exact fun ω => fs_lim ω
   apply
     measure_of_cont_bdd_of_tendsto_filter_indicator μ E_mble fs
       (eventually_of_forall fun n => eventually_of_forall (fs_bdd n)) (eventually_of_forall fs_lim')
@@ -348,7 +348,7 @@ theorem tendsto_lintegral_thickenedIndicator_of_isClosed {Ω : Type _} [Measurab
     measure_of_cont_bdd_of_tendsto_indicator μ F_closed.measurable_set
       (fun n => thickenedIndicator (δs_pos n) F) fun n ω => thickenedIndicator_le_one (δs_pos n) F ω
   have key := thickenedIndicator_tendsto_indicator_closure δs_pos δs_lim F
-  rwa [F_closed.closure_eq] at key
+  rwa [F_closed.closure_eq] at key 
 #align measure_theory.tendsto_lintegral_thickened_indicator_of_is_closed MeasureTheory.tendsto_lintegral_thickenedIndicator_of_isClosed
 
 /-- One implication of the portmanteau theorem:
@@ -476,7 +476,7 @@ theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : 
   have key := @measure.countable_meas_pos_of_disjoint_Union Ω _ _ μ _ _ mbles disjs
   have aux := @measure_diff_null ℝ _ volume (Ioo a b) _ (Set.Countable.measure_zero key volume)
   have len_pos : 0 < ENNReal.ofReal (b - a) := by simp only [hab, ENNReal.ofReal_pos, sub_pos]
-  rw [← Real.volume_Ioo, ← aux] at len_pos
+  rw [← Real.volume_Ioo, ← aux] at len_pos 
   rcases nonempty_of_measure_ne_zero len_pos.ne.symm with ⟨r, ⟨r_in_Ioo, hr⟩⟩
   refine' ⟨r, r_in_Ioo, _⟩
   simpa only [mem_set_of_eq, not_lt, le_zero_iff] using hr

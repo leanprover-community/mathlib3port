@@ -480,14 +480,14 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
   by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.1 h]
-  have st : s.nonempty ∧ t.nonempty := by rwa [prod_nonempty_iff] at h
+  have st : s.nonempty ∧ t.nonempty := by rwa [prod_nonempty_iff] at h 
   refine' ⟨fun H => Or.inl ⟨_, _⟩, _⟩
   · have := image_subset (Prod.fst : α × β → α) H
-    rwa [fst_image_prod _ st.2, fst_image_prod _ (h.mono H).snd] at this
+    rwa [fst_image_prod _ st.2, fst_image_prod _ (h.mono H).snd] at this 
   · have := image_subset (Prod.snd : α × β → β) H
-    rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this
+    rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this 
   · intro H
-    simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H
+    simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H 
     exact prod_mono H.1 H.2
 #align set.prod_subset_prod_iff Set.prod_subset_prod_iff
 
@@ -500,7 +500,7 @@ theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) :
   constructor
   · intro heq
     have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty := by rwa [← HEq]
-    rw [prod_nonempty_iff] at h h₁
+    rw [prod_nonempty_iff] at h h₁ 
     rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, HEq, eq_self_iff_true, true_and_iff, ←
       snd_image_prod h.1 t, ← snd_image_prod h₁.1 t₁, HEq]
   · rintro ⟨rfl, rfl⟩; rfl
@@ -518,7 +518,7 @@ theorem prod_eq_prod_iff :
       or_iff_right_iff_imp]
     rintro ⟨rfl, rfl⟩; exact prod_eq_empty_iff.mp h
   rw [prod_eq_prod_iff_of_nonempty h]
-  rw [nonempty_iff_ne_empty, Ne.def, prod_eq_empty_iff] at h
+  rw [nonempty_iff_ne_empty, Ne.def, prod_eq_empty_iff] at h 
   simp_rw [h, false_and_iff, or_false_iff]
 #align set.prod_eq_prod_iff Set.prod_eq_prod_iff
 

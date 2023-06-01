@@ -72,7 +72,7 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
     𝒜.card * ℬ.card ≤ 2 ^ s.card * (𝒜 ∩ ℬ).card :=
   by
   induction' s using Finset.induction with a s hs ih generalizing 𝒜 ℬ
-  · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
+  · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs 
     obtain rfl | rfl := h𝒜s
     · simp only [card_empty, empty_inter, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     obtain rfl | rfl := hℬs
@@ -93,12 +93,12 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
     ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.nonMemberSubfamily a, t ⊆ s :=
     by
     rintro 𝒞 h𝒞 t ht
-    rw [mem_non_member_subfamily] at ht
+    rw [mem_non_member_subfamily] at ht 
     exact (subset_insert_iff_of_not_mem ht.2).1 (h𝒞 _ ht.1)
   have h₁ : ∀ 𝒞 : Finset (Finset α), (∀ t ∈ 𝒞, t ⊆ insert a s) → ∀ t ∈ 𝒞.memberSubfamily a, t ⊆ s :=
     by
     rintro 𝒞 h𝒞 t ht
-    rw [mem_member_subfamily] at ht
+    rw [mem_member_subfamily] at ht 
     exact (subset_insert_iff_of_not_mem ht.2).1 ((subset_insert _ _).trans <| h𝒞 _ ht.1)
   refine' mul_le_mul_left' _ _
   refine'
@@ -125,11 +125,11 @@ theorem IsLowerSet.le_card_inter_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 theorem IsUpperSet.card_inter_le_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsLowerSet (ℬ : Set (Finset α))) : 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card ≤ 𝒜.card * ℬ.card :=
   by
-  rw [← isLowerSet_compl, ← coe_compl] at h𝒜
+  rw [← isLowerSet_compl, ← coe_compl] at h𝒜 
   have := h𝒜.le_card_inter_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, tsub_le_iff_tsub_le, ← mul_tsub, ←
     card_sdiff (inter_subset_right _ _), sdiff_inter_self_right, sdiff_compl, _root_.inf_comm] at
-    this
+    this 
 #align is_upper_set.card_inter_le_finset IsUpperSet.card_inter_le_finset
 -/
 
@@ -146,11 +146,11 @@ theorem IsLowerSet.card_inter_le_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset 
 theorem IsUpperSet.le_card_inter_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset α)))
     (hℬ : IsUpperSet (ℬ : Set (Finset α))) : 𝒜.card * ℬ.card ≤ 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card :=
   by
-  rw [← isLowerSet_compl, ← coe_compl] at h𝒜
+  rw [← isLowerSet_compl, ← coe_compl] at h𝒜 
   have := h𝒜.card_inter_le_finset hℬ
   rwa [card_compl, Fintype.card_finset, tsub_mul, le_tsub_iff_le_tsub, ← mul_tsub, ←
     card_sdiff (inter_subset_right _ _), sdiff_inter_self_right, sdiff_compl, _root_.inf_comm] at
-    this
+    this 
   · exact mul_le_mul_left' (card_le_of_subset <| inter_subset_right _ _) _
   · rw [← Fintype.card_finset]
     exact mul_le_mul_right' (card_le_univ _) _

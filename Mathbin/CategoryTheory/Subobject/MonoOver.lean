@@ -59,7 +59,8 @@ This isn't skeletal, so it's not a partial order.
 Later we define `subobject X` as the quotient of this by isomorphisms.
 -/
 def MonoOver (X : C) :=
-  FullSubcategory fun f : Over X => Mono f.Hom deriving Category
+  FullSubcategory fun f : Over X => Mono f.Hom
+deriving Category
 #align category_theory.mono_over CategoryTheory.MonoOver
 -/
 

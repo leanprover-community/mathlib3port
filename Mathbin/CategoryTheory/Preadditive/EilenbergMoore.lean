@@ -58,19 +58,19 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
       zsmul := fun r α =>
         { f := r • α.f
           h' := by rw [functor.map_zsmul, zsmul_comp, monad.algebra.hom.h, comp_zsmul] }
-      add_assoc := by intros ; ext; apply add_assoc
-      zero_add := by intros ; ext; apply zero_add
-      add_zero := by intros ; ext; apply add_zero
-      nsmul_zero := by intros ; ext; apply zero_smul
-      nsmul_succ := by intros ; ext; apply succ_nsmul
-      sub_eq_add_neg := by intros ; ext; apply sub_eq_add_neg
-      zsmul_zero' := by intros ; ext; apply zero_smul
-      zsmul_succ' := by intros ; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
-      zsmul_neg' := by intros ; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
-      add_left_neg := by intros ; ext; apply add_left_neg
-      add_comm := by intros ; ext; apply add_comm }
-  add_comp := by intros ; ext; apply add_comp
-  comp_add := by intros ; ext; apply comp_add
+      add_assoc := by intros; ext; apply add_assoc
+      zero_add := by intros; ext; apply zero_add
+      add_zero := by intros; ext; apply add_zero
+      nsmul_zero := by intros; ext; apply zero_smul
+      nsmul_succ := by intros; ext; apply succ_nsmul
+      sub_eq_add_neg := by intros; ext; apply sub_eq_add_neg
+      zsmul_zero' := by intros; ext; apply zero_smul
+      zsmul_succ' := by intros; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
+      zsmul_neg' := by intros; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
+      add_left_neg := by intros; ext; apply add_left_neg
+      add_comm := by intros; ext; apply add_comm }
+  add_comp := by intros; ext; apply add_comp
+  comp_add := by intros; ext; apply comp_add
 #align category_theory.monad.algebra_preadditive CategoryTheory.Monad.algebraPreadditive
 -/
 
@@ -105,19 +105,19 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
       zsmul := fun r α =>
         { f := r • α.f
           h' := by rw [functor.map_zsmul, comp_zsmul, comonad.coalgebra.hom.h, zsmul_comp] }
-      add_assoc := by intros ; ext; apply add_assoc
-      zero_add := by intros ; ext; apply zero_add
-      add_zero := by intros ; ext; apply add_zero
-      nsmul_zero := by intros ; ext; apply zero_smul
-      nsmul_succ := by intros ; ext; apply succ_nsmul
-      sub_eq_add_neg := by intros ; ext; apply sub_eq_add_neg
-      zsmul_zero' := by intros ; ext; apply zero_smul
-      zsmul_succ' := by intros ; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
-      zsmul_neg' := by intros ; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
-      add_left_neg := by intros ; ext; apply add_left_neg
-      add_comm := by intros ; ext; apply add_comm }
-  add_comp := by intros ; ext; apply add_comp
-  comp_add := by intros ; ext; apply comp_add
+      add_assoc := by intros; ext; apply add_assoc
+      zero_add := by intros; ext; apply zero_add
+      add_zero := by intros; ext; apply add_zero
+      nsmul_zero := by intros; ext; apply zero_smul
+      nsmul_succ := by intros; ext; apply succ_nsmul
+      sub_eq_add_neg := by intros; ext; apply sub_eq_add_neg
+      zsmul_zero' := by intros; ext; apply zero_smul
+      zsmul_succ' := by intros; ext; dsimp; simp only [coe_nat_zsmul, succ_nsmul]; rfl
+      zsmul_neg' := by intros; ext; simp only [negSucc_zsmul, neg_inj, nsmul_eq_smul_cast ℤ]
+      add_left_neg := by intros; ext; apply add_left_neg
+      add_comm := by intros; ext; apply add_comm }
+  add_comp := by intros; ext; apply add_comp
+  comp_add := by intros; ext; apply comp_add
 #align category_theory.comonad.coalgebra_preadditive CategoryTheory.Comonad.coalgebraPreadditive
 -/
 

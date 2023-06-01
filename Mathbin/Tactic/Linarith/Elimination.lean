@@ -266,7 +266,8 @@ An exception produces a contradictory `pcomp`.
 -/
 @[reducible]
 unsafe def linarith_monad : Type → Type :=
-  StateT linarith_structure (ExceptT pcomp id)deriving Monad,
+  StateT linarith_structure (ExceptT pcomp id)
+deriving Monad,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler monad_except[monad_except] pcomp[linarith.pcomp]»
 #align linarith.linarith_monad linarith.linarith_monad
 

@@ -227,7 +227,7 @@ line, it is still real-differentiable, and the derivative is what one would form
 theorem hasDerivAt_of_real_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1) :
     HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x :=
   by
-  rw [Ne.def, ← add_eq_zero_iff_eq_neg, ← Ne.def] at hr
+  rw [Ne.def, ← add_eq_zero_iff_eq_neg, ← Ne.def] at hr 
   rcases lt_or_gt_of_ne hx.symm with (hx | hx)
   · -- easy case : `0 < x`
     convert(((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_of_real
@@ -310,7 +310,8 @@ theorem contDiffAt_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : ℕ∞} :
     ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
   by
   cases' hp.lt_or_lt with hneg hpos
-  exacts[(((cont_diff_at_fst.log hneg.ne).mul contDiffAt_snd).exp.mul
+  exacts
+    [(((cont_diff_at_fst.log hneg.ne).mul contDiffAt_snd).exp.mul
           (cont_diff_at_snd.mul contDiffAt_const).cos).congr_of_eventuallyEq
       ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono fun p hp => rpow_def_of_neg hp _),
     ((cont_diff_at_fst.log hpos.ne').mul contDiffAt_snd).exp.congr_of_eventuallyEq
@@ -374,7 +375,7 @@ theorem hasDerivAt_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) :
   apply
     hasDerivAt_of_hasDerivAt_of_ne fun x hx =>
       (has_strict_deriv_at_rpow_const_of_ne hx p).HasDerivAt
-  exacts[continuous_at_id.rpow_const (Or.inr (zero_le_one.trans h)),
+  exacts [continuous_at_id.rpow_const (Or.inr (zero_le_one.trans h)),
     continuous_at_const.mul (continuous_at_id.rpow_const (Or.inr (sub_nonneg.2 h)))]
 #align real.has_deriv_at_rpow_const Real.hasDerivAt_rpow_const
 
@@ -402,7 +403,7 @@ theorem contDiff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDif
   induction' n with n ihn generalizing p
   · exact contDiff_zero.2 (continuous_id.rpow_const fun x => by exact_mod_cast Or.inr h)
   · have h1 : 1 ≤ p := le_trans (by simp) h
-    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
+    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h 
     rw [contDiff_succ_iff_deriv, deriv_rpow_const' h1]
     refine' ⟨differentiable_rpow_const h1, cont_diff_const.mul (ihn h)⟩
 #align real.cont_diff_rpow_const_of_le Real.contDiff_rpow_const_of_le

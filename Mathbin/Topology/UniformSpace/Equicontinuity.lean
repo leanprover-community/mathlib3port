@@ -171,7 +171,7 @@ theorem UniformEquicontinuous.equicontinuous {F : ι → β → α} (h : Uniform
 theorem EquicontinuousAt.continuousAt {F : ι → X → α} {x₀ : X} (h : EquicontinuousAt F x₀) (i : ι) :
     ContinuousAt (F i) x₀ := by
   intro U hU
-  rw [UniformSpace.mem_nhds_iff] at hU
+  rw [UniformSpace.mem_nhds_iff] at hU 
   rcases hU with ⟨V, hV₁, hV₂⟩
   exact mem_map.mpr (mem_of_superset (h V hV₁) fun x hx => hV₂ (hx i))
 #align equicontinuous_at.continuous_at EquicontinuousAt.continuousAt
@@ -289,7 +289,7 @@ theorem uniformEquicontinuous_iff_uniformContinuous {F : ι → β → α} :
 
 theorem Filter.HasBasis.equicontinuousAt_iff_left {κ : Type _} {p : κ → Prop} {s : κ → Set X}
     {F : ι → X → α} {x₀ : X} (hX : (𝓝 x₀).HasBasis p s) :
-    EquicontinuousAt F x₀ ↔ ∀ U ∈ 𝓤 α, ∃ (k : _)(_ : p k), ∀ x ∈ s k, ∀ i, (F i x₀, F i x) ∈ U :=
+    EquicontinuousAt F x₀ ↔ ∀ U ∈ 𝓤 α, ∃ (k : _) (_ : p k), ∀ x ∈ s k, ∀ i, (F i x₀, F i x) ∈ U :=
   by
   rw [equicontinuousAt_iff_continuousAt, ContinuousAt,
     hX.tendsto_iff (UniformFun.hasBasis_nhds ι α _)]
@@ -309,7 +309,7 @@ theorem Filter.HasBasis.equicontinuousAt_iff {κ₁ κ₂ : Type _} {p₁ : κ�
     {p₂ : κ₂ → Prop} {s₂ : κ₂ → Set (α × α)} {F : ι → X → α} {x₀ : X} (hX : (𝓝 x₀).HasBasis p₁ s₁)
     (hα : (𝓤 α).HasBasis p₂ s₂) :
     EquicontinuousAt F x₀ ↔
-      ∀ k₂, p₂ k₂ → ∃ (k₁ : _)(_ : p₁ k₁), ∀ x ∈ s₁ k₁, ∀ i, (F i x₀, F i x) ∈ s₂ k₂ :=
+      ∀ k₂, p₂ k₂ → ∃ (k₁ : _) (_ : p₁ k₁), ∀ x ∈ s₁ k₁, ∀ i, (F i x₀, F i x) ∈ s₂ k₂ :=
   by
   rw [equicontinuousAt_iff_continuousAt, ContinuousAt,
     hX.tendsto_iff (UniformFun.hasBasis_nhds_of_basis ι α _ hα)]
@@ -319,7 +319,7 @@ theorem Filter.HasBasis.equicontinuousAt_iff {κ₁ κ₂ : Type _} {p₁ : κ�
 theorem Filter.HasBasis.uniformEquicontinuous_iff_left {κ : Type _} {p : κ → Prop}
     {s : κ → Set (β × β)} {F : ι → β → α} (hβ : (𝓤 β).HasBasis p s) :
     UniformEquicontinuous F ↔
-      ∀ U ∈ 𝓤 α, ∃ (k : _)(_ : p k), ∀ x y, (x, y) ∈ s k → ∀ i, (F i x, F i y) ∈ U :=
+      ∀ U ∈ 𝓤 α, ∃ (k : _) (_ : p k), ∀ x y, (x, y) ∈ s k → ∀ i, (F i x, F i y) ∈ U :=
   by
   rw [uniformEquicontinuous_iff_uniformContinuous, UniformContinuous,
     hβ.tendsto_iff (UniformFun.hasBasis_uniformity ι α)]
@@ -340,7 +340,7 @@ theorem Filter.HasBasis.uniformEquicontinuous_iff {κ₁ κ₂ : Type _} {p₁ :
     {s₁ : κ₁ → Set (β × β)} {p₂ : κ₂ → Prop} {s₂ : κ₂ → Set (α × α)} {F : ι → β → α}
     (hβ : (𝓤 β).HasBasis p₁ s₁) (hα : (𝓤 α).HasBasis p₂ s₂) :
     UniformEquicontinuous F ↔
-      ∀ k₂, p₂ k₂ → ∃ (k₁ : _)(_ : p₁ k₁), ∀ x y, (x, y) ∈ s₁ k₁ → ∀ i, (F i x, F i y) ∈ s₂ k₂ :=
+      ∀ k₂, p₂ k₂ → ∃ (k₁ : _) (_ : p₁ k₁), ∀ x y, (x, y) ∈ s₁ k₁ → ∀ i, (F i x, F i y) ∈ s₂ k₂ :=
   by
   rw [uniformEquicontinuous_iff_uniformContinuous, UniformContinuous,
     hβ.tendsto_iff (UniformFun.hasBasis_uniformity_of_basis ι α hα)]
@@ -394,7 +394,7 @@ theorem EquicontinuousAt.closure' {A : Set Y} {u : Y → X → α} {x₀ : X}
   rcases mem_uniformity_isClosed hU with ⟨V, hV, hVclosed, hVU⟩
   filter_upwards [hA V hV]with x hx
   rw [SetCoe.forall] at *
-  change A ⊆ (fun f => (u f x₀, u f x)) ⁻¹' V at hx
+  change A ⊆ (fun f => (u f x₀, u f x)) ⁻¹' V at hx 
   refine' (closure_minimal hx <| hVclosed.preimage <| _).trans (preimage_mono hVU)
   exact Continuous.prod_mk ((continuous_apply x₀).comp hu) ((continuous_apply x).comp hu)
 #align equicontinuous_at.closure' EquicontinuousAt.closure'
@@ -450,7 +450,7 @@ theorem UniformEquicontinuous.closure' {A : Set Y} {u : Y → β → α}
   filter_upwards [hA V hV]
   rintro ⟨x, y⟩ hxy
   rw [SetCoe.forall] at *
-  change A ⊆ (fun f => (u f x, u f y)) ⁻¹' V at hxy
+  change A ⊆ (fun f => (u f x, u f y)) ⁻¹' V at hxy 
   refine' (closure_minimal hxy <| hVclosed.preimage <| _).trans (preimage_mono hVU)
   exact Continuous.prod_mk ((continuous_apply x).comp hu) ((continuous_apply y).comp hu)
 #align uniform_equicontinuous.closure' UniformEquicontinuous.closure'

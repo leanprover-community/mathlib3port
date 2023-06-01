@@ -51,7 +51,8 @@ namespace TopCat
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
 @[nolint has_nonempty_instance]
 def Presheaf (X : TopCat.{w}) : Type max u v w :=
-  (Opens X)ᵒᵖ ⥤ C deriving Category
+  (Opens X)ᵒᵖ ⥤ C
+deriving Category
 #align Top.presheaf TopCat.Presheaf
 -/
 
@@ -389,7 +390,7 @@ theorem id_pushforward {X : TopCat.{w}} : pushforward C (𝟙 X) = 𝟭 (X.Presh
     ext U
     have h := f.congr; erw [h (opens.op_map_id_obj U)]
     simpa [eq_to_hom_map]
-  · intros ; apply pushforward.id_eq
+  · intros; apply pushforward.id_eq
 #align Top.presheaf.id_pushforward TopCat.Presheaf.id_pushforward
 
 section Iso

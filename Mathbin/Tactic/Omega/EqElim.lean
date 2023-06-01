@@ -86,7 +86,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
     · rw [get_map hk, symmod_eq, sub_mul]
       exists d + symdiv (get k as) m * v k
       ring
-    · rw [not_lt] at hk
+    · rw [not_lt] at hk 
       repeat' rw [get_eq_default_of_le]
       exists d
       rw [add_assoc]
@@ -128,8 +128,8 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         by
         rw [h2, ← coeffs.val_except_add_eq n]
         have hn : n < as.length := by
-          by_contra hc; rw [not_lt] at hc
-          rw [get_eq_default_of_le n hc] at h0
+          by_contra hc; rw [not_lt] at hc 
+          rw [get_eq_default_of_le n hc] at h0 
           cases h0
         rw [get_map hn]
         simp only [a_n, m]
@@ -139,7 +139,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         by
         unfold rhs; unfold term.val
         rw [← coeffs.val_except_add_eq n, get_set, update_eq]
-        have h2 : ∀ a b c : Int, a + b + c = b + (c + a) := by intros ; ring
+        have h2 : ∀ a b c : Int, a + b + c = b + (c + a) := by intros; ring
         rw [h2 (-_)]
         apply fun_mono_2 rfl
         apply fun_mono_2
@@ -363,7 +363,7 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
       have h3 : 0 = b + coeffs.val v as := h1.left _ (Or.inl rfl)
       have h4 : i ∣ coeffs.val v as := coeffs.dvd_val h2.right
       have h5 : i ∣ b + coeffs.val v as := by rw [← h3]; apply dvd_zero
-      rw [dvd_add_left h4] at h5; apply h2.left h5
+      rw [dvd_add_left h4] at h5 ; apply h2.left h5
     rw [if_neg h2]; apply sat_empty
   | ee.factor i :: es, ((b, as) :: eqs, les), h1 =>
     by
@@ -387,16 +387,16 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     cases' h1 with v h1
     exists v ⟨n ↦ sgm v b as n⟩
     cases' h1 with h1 h3
-    rw [List.forall_mem_cons] at h1
+    rw [List.forall_mem_cons] at h1 
     cases' h1 with h4 h5
     constructor
     · rw [List.forall_mem_cons]
       constructor
       · apply coeffs_reduce_correct h2 h4
-      · intro x h6; rw [List.mem_map] at h6
+      · intro x h6; rw [List.mem_map] at h6 
         cases' h6 with t h6; cases' h6 with h6 h7
         rw [← h7, ← subst_correct h2 h4]; apply h5 _ h6
-    · intro x h6; rw [List.mem_map] at h6
+    · intro x h6; rw [List.mem_map] at h6 
       cases' h6 with t h6; cases' h6 with h6 h7
       rw [← h7, ← subst_correct h2 h4]; apply h3 _ h6
   | ee.cancel m :: es, (Eq :: eqs, les), h1 =>
@@ -406,8 +406,8 @@ theorem sat_eqElim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sa
     cases' h1 with v h1
     exists v
     cases' h1 with h1 h2
-    rw [List.forall_mem_cons] at h1; cases' h1 with h1 h3
-    constructor <;> intro t h4 <;> rw [List.mem_map] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
+    rw [List.forall_mem_cons] at h1 ; cases' h1 with h1 h3
+    constructor <;> intro t h4 <;> rw [List.mem_map] at h4  <;> rcases h4 with ⟨s, h4, h5⟩ <;>
           rw [← h5] <;>
         simp only [term.val_add, term.val_mul, cancel] <;>
       rw [← h1, MulZeroClass.mul_zero, zero_add]

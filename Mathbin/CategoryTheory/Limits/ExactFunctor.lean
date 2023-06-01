@@ -40,7 +40,8 @@ variable (C) (D)
 /-- Bundled left-exact functors. -/
 @[nolint has_nonempty_instance]
 def LeftExactFunctor :=
-  FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteLimits F)deriving Category
+  FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteLimits F)
+deriving Category
 #align category_theory.LeftExactFunctor CategoryTheory.LeftExactFunctor
 -/
 
@@ -50,7 +51,8 @@ infixr:26 " ⥤ₗ " => LeftExactFunctor
 #print CategoryTheory.LeftExactFunctor.forget /-
 /-- A left exact functor is in particular a functor. -/
 def LeftExactFunctor.forget : (C ⥤ₗ D) ⥤ C ⥤ D :=
-  fullSubcategoryInclusion _ deriving Full, Faithful
+  fullSubcategoryInclusion _
+deriving Full, Faithful
 #align category_theory.LeftExactFunctor.forget CategoryTheory.LeftExactFunctor.forget
 -/
 
@@ -58,7 +60,8 @@ def LeftExactFunctor.forget : (C ⥤ₗ D) ⥤ C ⥤ D :=
 /-- Bundled right-exact functors. -/
 @[nolint has_nonempty_instance]
 def RightExactFunctor :=
-  FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteColimits F)deriving Category
+  FullSubcategory fun F : C ⥤ D => Nonempty (PreservesFiniteColimits F)
+deriving Category
 #align category_theory.RightExactFunctor CategoryTheory.RightExactFunctor
 -/
 
@@ -68,7 +71,8 @@ infixr:26 " ⥤ᵣ " => RightExactFunctor
 #print CategoryTheory.RightExactFunctor.forget /-
 /-- A right exact functor is in particular a functor. -/
 def RightExactFunctor.forget : (C ⥤ᵣ D) ⥤ C ⥤ D :=
-  fullSubcategoryInclusion _ deriving Full, Faithful
+  fullSubcategoryInclusion _
+deriving Full, Faithful
 #align category_theory.RightExactFunctor.forget CategoryTheory.RightExactFunctor.forget
 -/
 
@@ -77,8 +81,8 @@ def RightExactFunctor.forget : (C ⥤ᵣ D) ⥤ C ⥤ D :=
 @[nolint has_nonempty_instance]
 def ExactFunctor :=
   FullSubcategory fun F : C ⥤ D =>
-    Nonempty (PreservesFiniteLimits F) ∧ Nonempty (PreservesFiniteColimits F)deriving
-  Category
+    Nonempty (PreservesFiniteLimits F) ∧ Nonempty (PreservesFiniteColimits F)
+deriving Category
 #align category_theory.ExactFunctor CategoryTheory.ExactFunctor
 -/
 
@@ -88,21 +92,24 @@ infixr:26 " ⥤ₑ " => ExactFunctor
 #print CategoryTheory.ExactFunctor.forget /-
 /-- An exact functor is in particular a functor. -/
 def ExactFunctor.forget : (C ⥤ₑ D) ⥤ C ⥤ D :=
-  fullSubcategoryInclusion _ deriving Full, Faithful
+  fullSubcategoryInclusion _
+deriving Full, Faithful
 #align category_theory.ExactFunctor.forget CategoryTheory.ExactFunctor.forget
 -/
 
 #print CategoryTheory.LeftExactFunctor.ofExact /-
 /-- Turn an exact functor into a left exact functor. -/
 def LeftExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ₗ D :=
-  FullSubcategory.map fun X => And.left deriving Full, Faithful
+  FullSubcategory.map fun X => And.left
+deriving Full, Faithful
 #align category_theory.LeftExactFunctor.of_exact CategoryTheory.LeftExactFunctor.ofExact
 -/
 
 #print CategoryTheory.RightExactFunctor.ofExact /-
 /-- Turn an exact functor into a left exact functor. -/
 def RightExactFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤ᵣ D :=
-  FullSubcategory.map fun X => And.right deriving Full, Faithful
+  FullSubcategory.map fun X => And.right
+deriving Full, Faithful
 #align category_theory.RightExactFunctor.of_exact CategoryTheory.RightExactFunctor.ofExact
 -/
 

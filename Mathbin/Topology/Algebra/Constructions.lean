@@ -153,7 +153,7 @@ theorem embedding_val_mk {M : Type _} [DivisionMonoid M] [TopologicalSpace M]
   refine' ⟨⟨_⟩, ext⟩
   rw [topology_eq_inf, inf_eq_left, ← continuous_iff_le_induced, continuous_iff_continuousAt]
   intro u s hs
-  simp only [coe_inv, nhds_induced, Filter.mem_map] at hs⊢
+  simp only [coe_inv, nhds_induced, Filter.mem_map] at hs ⊢
   exact ⟨_, mem_inf_principal.1 (h u u.is_unit hs), fun u' hu' => hu' u'.IsUnit⟩
 #align units.embedding_coe_mk Units.embedding_val_mk
 #align add_units.embedding_coe_mk AddUnits.embedding_val_mk

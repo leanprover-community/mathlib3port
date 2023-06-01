@@ -65,7 +65,7 @@ theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.
   simp only [mul_vec_cramer M (Pi.single i 1), dot_product, Pi.smul_apply, smul_eq_mul]
   rw [Finset.sum_eq_single i, Pi.single_eq_same, mul_one]
   · intro j _ hj; simp [hj]
-  · intros ; have := Finset.mem_univ i; contradiction
+  · intros; have := Finset.mem_univ i; contradiction
 #align matrix.nondegenerate_of_det_ne_zero Matrix.nondegenerate_of_det_ne_zero
 
 theorem eq_zero_of_vecMul_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}

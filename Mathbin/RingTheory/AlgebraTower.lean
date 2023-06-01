@@ -125,15 +125,15 @@ theorem linearIndependent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁}
     (hb : LinearIndependent R b) (hc : LinearIndependent S c) :
     LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 :=
   by
-  rw [linearIndependent_iff'] at hb hc; rw [linearIndependent_iff'']; rintro s g hg hsg ⟨i, k⟩
+  rw [linearIndependent_iff'] at hb hc ; rw [linearIndependent_iff'']; rintro s g hg hsg ⟨i, k⟩
   by_cases hik : (i, k) ∈ s
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg];
       exact
         (Finset.sum_subset Finset.subset_product fun p _ hp =>
             show g p • b p.1 • c p.2 = 0 by rw [hg p hp, zero_smul]).symm
-    rw [Finset.sum_product_right] at h1
-    simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
+    rw [Finset.sum_product_right] at h1 
+    simp_rw [← smul_assoc, ← Finset.sum_smul] at h1 
     exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
   exact hg _ hik
 #align linear_independent_smul linearIndependent_smul
@@ -219,7 +219,7 @@ variable {B}
 
 #print algHomEquivSigma /-
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra
+def algHomEquivSigma : (C →ₐ[A] D) ≃ Σ f : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra
     where
   toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun fg :=

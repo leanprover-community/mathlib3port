@@ -70,7 +70,7 @@ attribute [nolint doc_blame] CentroidHom.toAddMonoidHom
 
 You should extend this class when you extend `centroid_hom`. -/
 class CentroidHomClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocSemiring α] extends
-  AddMonoidHomClass F α α where
+    AddMonoidHomClass F α α where
   map_mul_left (f : F) (a b : α) : f (a * b) = a * f b
   map_mul_right (f : F) (a b : α) : f (a * b) = f a * b
 #align centroid_hom_class CentroidHomClass

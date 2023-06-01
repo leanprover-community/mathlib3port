@@ -86,7 +86,7 @@ This is not a typeclass because the choice of root given `S` and `f` is not uniq
 -/
 @[nolint has_nonempty_instance]
 structure IsAdjoinRoot {R : Type u} (S : Type v) [CommSemiring R] [Semiring S] [Algebra R S]
-  (f : R[X]) : Type max u v where
+    (f : R[X]) : Type max u v where
   map : R[X] →+* S
   map_surjective : Function.Surjective map
   ker_map : RingHom.ker map = Ideal.span {f}
@@ -106,7 +106,7 @@ Bundling `monic` into this structure is very useful when working with explicit `
 -/
 @[nolint has_nonempty_instance]
 structure IsAdjoinRootMonic {R : Type u} (S : Type v) [CommSemiring R] [Semiring S] [Algebra R S]
-  (f : R[X]) extends IsAdjoinRoot S f where
+    (f : R[X]) extends IsAdjoinRoot S f where
   Monic : Monic f
 #align is_adjoin_root_monic IsAdjoinRootMonic
 
@@ -208,7 +208,7 @@ include hx
 theorem eval₂_repr_eq_eval₂_of_map_eq (h : IsAdjoinRoot S f) (z : S) (w : R[X])
     (hzw : h.map w = z) : (h.repr z).eval₂ i x = w.eval₂ i x :=
   by
-  rw [eq_comm, ← sub_eq_zero, ← h.map_repr z, ← map_sub, h.map_eq_zero_iff] at hzw
+  rw [eq_comm, ← sub_eq_zero, ← h.map_repr z, ← map_sub, h.map_eq_zero_iff] at hzw 
   obtain ⟨y, hy⟩ := hzw
   rw [← sub_eq_zero, ← eval₂_sub, hy, eval₂_mul, hx, MulZeroClass.zero_mul]
 #align is_adjoin_root.eval₂_repr_eq_eval₂_of_map_eq IsAdjoinRoot.eval₂_repr_eq_eval₂_of_map_eq

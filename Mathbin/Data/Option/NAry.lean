@@ -221,7 +221,7 @@ theorem map_map₂_right_anticomm {f : α → β' → γ} {g : β → β'} {f' :
 /-- If `a` is a left identity for a binary operation `f`, then `some a` is a left identity for
 `option.map₂ f`. -/
 theorem map₂_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b = b) (o : Option β) :
-    map₂ f (some a) o = o := by cases o; exacts[rfl, congr_arg some (h _)]
+    map₂ f (some a) o = o := by cases o; exacts [rfl, congr_arg some (h _)]
 #align option.map₂_left_identity Option.map₂_left_identity
 -/
 

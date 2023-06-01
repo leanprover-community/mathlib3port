@@ -206,14 +206,14 @@ theorem SetCoe.forall {s : Set α} {p : s → Prop} : (∀ x : s, p x) ↔ ∀ (
 #print SetCoe.exists /-
 @[simp]
 theorem SetCoe.exists {s : Set α} {p : s → Prop} :
-    (∃ x : s, p x) ↔ ∃ (x : _)(h : x ∈ s), p ⟨x, h⟩ :=
+    (∃ x : s, p x) ↔ ∃ (x : _) (h : x ∈ s), p ⟨x, h⟩ :=
   Subtype.exists
 #align set_coe.exists SetCoe.exists
 -/
 
 #print SetCoe.exists' /-
 theorem SetCoe.exists' {s : Set α} {p : ∀ x, x ∈ s → Prop} :
-    (∃ (x : _)(h : x ∈ s), p x h) ↔ ∃ x : s, p x x.2 :=
+    (∃ (x : _) (h : x ∈ s), p x h) ↔ ∃ x : s, p x x.2 :=
   (@SetCoe.exists _ _ fun x => p x.1 x.2).symm
 #align set_coe.exists' SetCoe.exists'
 -/
@@ -1343,7 +1343,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   by
   refine' ⟨fun h x hx => _, insert_subset_insert⟩
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
-  exacts[(ha hx).elim, hxt]
+  exacts [(ha hx).elim, hxt]
 #align set.insert_subset_insert_iff Set.insert_subset_insert_iff
 -/
 
@@ -1354,7 +1354,7 @@ theorem subset_insert_iff_of_not_mem (ha : a ∉ s) : s ⊆ insert a t ↔ s ⊆
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
-theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t :=
+theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _) (_ : a ∉ s), insert a s ⊆ t :=
   by
   simp only [insert_subset, exists_and_right, ssubset_def, not_subset]
   simp only [exists_prop, and_comm']
@@ -2268,7 +2268,7 @@ theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s 
     by_cases h' : x ∈ t
     · have : x ≠ a := by
         intro H
-        rw [H] at h'
+        rw [H] at h' 
         exact h h'
       simp [h, h', this]
     · simp [h, h']
@@ -2707,7 +2707,7 @@ theorem Subsingleton.eq_empty_or_singleton (hs : s.Subsingleton) : s = ∅ ∨ �
 #print Set.Subsingleton.induction_on /-
 theorem Subsingleton.induction_on {p : Set α → Prop} (hs : s.Subsingleton) (he : p ∅)
     (h₁ : ∀ x, p {x}) : p s := by rcases hs.eq_empty_or_singleton with (rfl | ⟨x, rfl⟩);
-  exacts[he, h₁ _]
+  exacts [he, h₁ _]
 #align set.subsingleton.induction_on Set.Subsingleton.induction_on
 -/
 
@@ -2792,7 +2792,7 @@ instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsi
 #print Set.Nontrivial /-
 /-- A set `s` is `nontrivial` if it has at least two distinct elements. -/
 protected def Nontrivial (s : Set α) : Prop :=
-  ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x ≠ y
+  ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s), x ≠ y
 #align set.nontrivial Set.Nontrivial
 -/
 
@@ -2849,14 +2849,14 @@ theorem nontrivial_of_pair_subset {x y} (hxy : x ≠ y) (h : {x, y} ⊆ s) : s.N
 -/
 
 #print Set.Nontrivial.pair_subset /-
-theorem Nontrivial.pair_subset (hs : s.Nontrivial) : ∃ (x y : _)(hab : x ≠ y), {x, y} ⊆ s :=
+theorem Nontrivial.pair_subset (hs : s.Nontrivial) : ∃ (x y : _) (hab : x ≠ y), {x, y} ⊆ s :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
   ⟨x, y, hxy, insert_subset.2 ⟨hx, singleton_subset_iff.2 hy⟩⟩
 #align set.nontrivial.pair_subset Set.Nontrivial.pair_subset
 -/
 
 #print Set.nontrivial_iff_pair_subset /-
-theorem nontrivial_iff_pair_subset : s.Nontrivial ↔ ∃ (x y : _)(hxy : x ≠ y), {x, y} ⊆ s :=
+theorem nontrivial_iff_pair_subset : s.Nontrivial ↔ ∃ (x y : _) (hxy : x ≠ y), {x, y} ⊆ s :=
   ⟨Nontrivial.pair_subset, fun H =>
     let ⟨x, y, hxy, h⟩ := H
     nontrivial_of_pair_subset hxy h⟩
@@ -2870,9 +2870,9 @@ theorem nontrivial_of_exists_ne {x} (hx : x ∈ s) (h : ∃ y ∈ s, y ≠ x) : 
 
 theorem Nontrivial.exists_ne (hs : s.Nontrivial) (z) : ∃ x ∈ s, x ≠ z :=
   by
-  by_contra H; push_neg  at H
+  by_contra H; push_neg  at H 
   rcases hs with ⟨x, hx, y, hy, hxy⟩
-  rw [H x hx, H y hy] at hxy
+  rw [H x hx, H y hy] at hxy 
   exact hxy rfl
 #align set.nontrivial.exists_ne Set.Nontrivial.exists_ne
 
@@ -2889,8 +2889,8 @@ theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_of_exists_lt /-
-theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y) :
-    s.Nontrivial :=
+theorem nontrivial_of_exists_lt [Preorder α]
+    (H : ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s), x < y) : s.Nontrivial :=
   let ⟨x, hx, y, hy, hxy⟩ := H
   nontrivial_of_lt hx hy hxy
 #align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_lt
@@ -2899,7 +2899,7 @@ theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.exists_lt /-
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
-    ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
+    ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s), x < y :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
   Or.elim (lt_or_gt_of_ne hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
 #align set.nontrivial.exists_lt Set.Nontrivial.exists_lt
@@ -2908,7 +2908,7 @@ theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_iff_exists_lt /-
 theorem nontrivial_iff_exists_lt [LinearOrder α] :
-    s.Nontrivial ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
+    s.Nontrivial ↔ ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s), x < y :=
   ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
 #align set.nontrivial_iff_exists_lt Set.nontrivial_iff_exists_lt
 -/
@@ -2942,7 +2942,7 @@ theorem not_nontrivial_empty : ¬(∅ : Set α).Nontrivial := fun h => h.ne_empt
 @[simp]
 theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H =>
   by
-  rw [nontrivial_iff_exists_ne (mem_singleton x)] at H
+  rw [nontrivial_iff_exists_ne (mem_singleton x)] at H 
   exact
     let ⟨y, hy, hya⟩ := H
     hya (mem_singleton_iff.1 hy)
@@ -2950,7 +2950,7 @@ theorem not_nontrivial_singleton {x} : ¬({x} : Set α).Nontrivial := fun H =>
 -/
 
 #print Set.Nontrivial.ne_singleton /-
-theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by rw [H] at hs;
+theorem Nontrivial.ne_singleton {x} (hs : s.Nontrivial) : s ≠ {x} := fun H => by rw [H] at hs ;
   exact not_nontrivial_singleton hs
 #align set.nontrivial.ne_singleton Set.Nontrivial.ne_singleton
 -/
@@ -3163,7 +3163,7 @@ variable [LinearOrder α] [LinearOrder β] {f : α → β}
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
     ¬MonotoneOn f s ∧ ¬AntitoneOn f s ↔
-      ∃ (a : _)(_ : a ∈ s)(b : _)(_ : b ∈ s)(c : _)(_ : c ∈ s),
+      ∃ (a : _) (_ : a ∈ s) (b : _) (_ : b ∈ s) (c : _) (_ : c ∈ s),
         a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
@@ -3177,7 +3177,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
     ¬MonotoneOn f s ∧ ¬AntitoneOn f s ↔
-      ∃ (a : _)(_ : a ∈ s)(b : _)(_ : b ∈ s)(c : _)(_ : c ∈ s),
+      ∃ (a : _) (_ : a ∈ s) (b : _) (_ : b ∈ s) (c : _) (_ : c ∈ s),
         a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,

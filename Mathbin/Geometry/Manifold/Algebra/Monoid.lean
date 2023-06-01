@@ -47,8 +47,9 @@ we formulate the definitions and lemmas for any model.
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
 class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
-  {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
-  [Add G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
+    {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
+    [Add G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G :
+    Prop where
   smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
 #align has_smooth_add HasSmoothAdd
 
@@ -58,8 +59,9 @@ A smooth monoid over `G`, for example, is obtained by requiring both the instanc
 and `has_smooth_mul I G`. -/
 @[to_additive]
 class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
-  {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
-  [Mul G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
+    {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
+    [Mul G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G :
+    Prop where
   smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
 #align has_smooth_mul HasSmoothMul
 #align has_smooth_add HasSmoothAdd
@@ -257,17 +259,18 @@ theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
 
 /-- Morphism of additive smooth monoids. -/
 structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H')
-  (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [AddMonoid G] [HasSmoothAdd I G]
-  (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [AddMonoid G']
-  [HasSmoothAdd I' G'] extends G →+ G' where
+    (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [AddMonoid G] [HasSmoothAdd I G]
+    (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [AddMonoid G']
+    [HasSmoothAdd I' G'] extends G →+ G' where
   smooth_toFun : Smooth I I' to_fun
 #align smooth_add_monoid_morphism SmoothAddMonoidMorphism
 
 /-- Morphism of smooth monoids. -/
 @[to_additive]
 structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H')
-  (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (G' : Type _)
-  [TopologicalSpace G'] [ChartedSpace H' G'] [Monoid G'] [HasSmoothMul I' G'] extends G →* G' where
+    (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (G' : Type _)
+    [TopologicalSpace G'] [ChartedSpace H' G'] [Monoid G'] [HasSmoothMul I' G'] extends
+    G →* G' where
   smooth_toFun : Smooth I I' to_fun
 #align smooth_monoid_morphism SmoothMonoidMorphism
 #align smooth_add_monoid_morphism SmoothAddMonoidMorphism

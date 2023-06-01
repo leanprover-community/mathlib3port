@@ -27,7 +27,8 @@ Most algebraic facts are deferred to `data.pnat.basic`, as they need more import
   and the VM representation of `ℕ+` is the same as `ℕ` because the proof
   is not stored. -/
 def PNat :=
-  { n : ℕ // 0 < n }deriving DecidableEq, LinearOrder
+  { n : ℕ // 0 < n }
+deriving DecidableEq, LinearOrder
 #align pnat PNat
 -/
 

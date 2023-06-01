@@ -156,7 +156,7 @@ theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
   have hB' : B ∈ B.powerset.erase ∅ := mem_erase_of_ne_of_mem hB.ne_empty (mem_powerset_self _)
   obtain ⟨U, hU, hUA⟩ :=
     exists_min_image (B.powerset.erase ∅) (fun U => (U * A).card / U.card : _ → ℚ≥0) ⟨B, hB'⟩
-  rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hU
+  rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hU 
   refine' cast_le.1 (_ : (_ : ℚ≥0) ≤ _)
   push_cast
   refine' (le_div_iff <| cast_pos.2 hB.card_pos).1 _
@@ -236,7 +236,7 @@ theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
   have hA' : A ∈ A.powerset.erase ∅ := mem_erase_of_ne_of_mem hA.ne_empty (mem_powerset_self _)
   obtain ⟨C, hC, hCA⟩ :=
     exists_min_image (A.powerset.erase ∅) (fun C => (C * B).card / C.card : _ → ℚ≥0) ⟨A, hA'⟩
-  rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hC
+  rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hC 
   refine' (mul_le_mul_right <| cast_pos.2 hC.1.card_pos).1 _
   norm_cast
   refine' (cast_le.2 <| card_div_mul_le_card_mul_mul_card_mul _ _ _).trans _

@@ -165,7 +165,7 @@ theorem rfindOpt_dom {α} {f : ℕ → Option α} : (rfindOpt f).Dom ↔ ∃ n a
       ⟨Nat.find h', by simpa using s.symm, fun _ _ => trivial⟩
     refine' ⟨fd, _⟩
     have := rfind_spec (get_mem fd)
-    simp at this⊢
+    simp at this ⊢
     cases' Option.isSome_iff_exists.1 this.symm with a e
     rw [e]; trivial⟩
 #align nat.rfind_opt_dom Nat.rfindOpt_dom
@@ -178,7 +178,7 @@ theorem rfindOpt_mono {α} {f : ℕ → Option α} (H : ∀ {a m n}, m ≤ n →
     have h' := rfind_opt_dom.2 ⟨_, _, h⟩
     cases' rfind_opt_spec ⟨h', rfl⟩ with k hk
     have := (H (le_max_left _ _) h).symm.trans (H (le_max_right _ _) hk)
-    simp at this; simp [this, get_mem]⟩
+    simp at this ; simp [this, get_mem]⟩
 #align nat.rfind_opt_mono Nat.rfindOpt_mono
 -/
 
@@ -602,7 +602,7 @@ theorem nat_rec {f : α → ℕ} {g : α →. σ} {h : α → ℕ × σ →. σ}
     cases' e : decode α n with a <;> simp [e]
     induction' f a with m IH <;> simp
     rw [IH, bind_map]
-    congr ; funext s
+    congr; funext s
     simp [encodek]
 #align partrec.nat_elim Partrec.nat_rec
 
@@ -702,7 +702,7 @@ theorem rfind {p : α → ℕ →. Bool} (hp : Partrec₂ p) : Partrec fun a => 
         hp.map ((Primrec.dom_bool fun b => cond b 0 1).comp Primrec.snd).to₂.to_comp).of_eq
     fun n => by
     cases' e : decode α n with a <;> simp [e, Nat.rfind_zero_none, map_id']
-    congr ; funext n
+    congr; funext n
     simp [Part.map_map, (· ∘ ·)]
     apply map_id' fun b => _
     cases b <;> rfl
@@ -725,7 +725,7 @@ theorem nat_casesOn_right {f : α → ℕ} {g : α → σ} {h : α → ℕ →. 
     refine' ext fun b => ⟨fun H => _, fun H => _⟩
     · rcases mem_bind_iff.1 H with ⟨c, h₁, h₂⟩; exact h₂
     · have : ∀ m, (Nat.rec (Part.some (g a)) (fun y IH => IH.bind fun _ => h a n) m).Dom := by
-        intro ; induction m <;> simp [*, H.fst]
+        intro; induction m <;> simp [*, H.fst]
       exact ⟨⟨this n, H.fst⟩, H.snd⟩
 #align partrec.nat_cases_right Partrec.nat_casesOn_right
 -/
@@ -944,16 +944,16 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
           Sum.inl b ∈ F a n) ↔
       b ∈ PFun.fix f a :=
   by
-  intro ; refine' ⟨fun h => _, fun h => _⟩
+  intro; refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨n, ⟨_x, h₁⟩, h₂⟩
     have : ∀ (m a') (_ : Sum.inr a' ∈ F a m) (_ : b ∈ PFun.fix f a'), b ∈ PFun.fix f a :=
       by
       intro m a' am ba
-      induction' m with m IH generalizing a' <;> simp [F] at am
+      induction' m with m IH generalizing a' <;> simp [F] at am 
       · rwa [← am]
       rcases am with ⟨a₂, am₂, fa₂⟩
       exact IH _ am₂ (PFun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
-    cases n <;> simp [F] at h₂; · cases h₂
+    cases n <;> simp [F] at h₂ ; · cases h₂
     rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
     · cases' h₁ (Nat.lt_succ_self _) with a' h
       injection mem_unique h h₂

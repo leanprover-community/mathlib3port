@@ -94,10 +94,10 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R)
     where
   toFun p := p.toContinuousMap
   map_zero' := by ext; simp
-  map_add' := by intros ; ext; simp
+  map_add' := by intros; ext; simp
   map_one' := by ext; simp
-  map_mul' := by intros ; ext; simp
-  commutes' := by intros ; ext; simp [Algebra.algebraMap_eq_smul_one]
+  map_mul' := by intros; ext; simp
+  commutes' := by intros; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_alg_hom Polynomial.toContinuousMapAlgHom
 
 /-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
@@ -107,10 +107,10 @@ def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R)
     where
   toFun p := p.toContinuousMapOn X
   map_zero' := by ext; simp
-  map_add' := by intros ; ext; simp
+  map_add' := by intros; ext; simp
   map_one' := by ext; simp
-  map_mul' := by intros ; ext; simp
-  commutes' := by intros ; ext; simp [Algebra.algebraMap_eq_smul_one]
+  map_mul' := by intros; ext; simp
+  commutes' := by intros; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_on_alg_hom Polynomial.toContinuousMapOnAlgHom
 
 end
@@ -163,8 +163,8 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
   ext f
   fconstructor
   · rintro ⟨p, ⟨-, w⟩⟩
-    rw [FunLike.ext_iff] at w
-    dsimp at w
+    rw [FunLike.ext_iff] at w 
+    dsimp at w 
     let q := p.comp ((b - a)⁻¹ • Polynomial.X + Polynomial.C (-a * (b - a)⁻¹))
     refine' ⟨q, ⟨_, _⟩⟩
     · simp

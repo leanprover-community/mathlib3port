@@ -528,7 +528,7 @@ theorem mk_fintype (α : Type u) [Fintype α] : (#α) = Fintype.card α :=
   by
   refine' Fintype.induction_empty_option _ _ _ α
   · intro α β h e hα; letI := Fintype.ofEquiv β e.symm
-    rwa [mk_congr e, Fintype.card_congr e] at hα
+    rwa [mk_congr e, Fintype.card_congr e] at hα 
   · rfl
   · intro α h hα; simp [hα]; rfl
 #align cardinal.mk_fintype Cardinal.mk_fintype
@@ -887,7 +887,7 @@ theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
   rcases b, c with ⟨⟨β⟩, ⟨γ⟩⟩
   cases' le_of_lt hlt with f
   have : ¬surjective f := fun hn => (not_le_of_lt hlt) (mk_le_of_surjective hn)
-  simp only [surjective, not_forall] at this
+  simp only [surjective, not_forall] at this 
   rcases this with ⟨b, hb⟩
   calc
     (#γ) + 1 = (#Option γ) := mk_option.symm
@@ -931,7 +931,7 @@ theorem isSuccLimit_zero : IsSuccLimit (0 : Cardinal) :=
 /-- The indexed sum of cardinals is the cardinality of the
   indexed disjoint union, i.e. sigma type. -/
 def sum {ι} (f : ι → Cardinal) : Cardinal :=
-  mk (Σi, (f i).out)
+  mk (Σ i, (f i).out)
 #align cardinal.sum Cardinal.sum
 -/
 
@@ -941,7 +941,7 @@ theorem le_sum {ι} (f : ι → Cardinal) (i) : f i ≤ sum f := by
 #align cardinal.le_sum Cardinal.le_sum
 
 @[simp]
-theorem mk_sigma {ι} (f : ι → Type _) : (#Σi, f i) = sum fun i => #f i :=
+theorem mk_sigma {ι} (f : ι → Type _) : (#Σ i, f i) = sum fun i => #f i :=
   mk_congr <| Equiv.sigmaCongrRight fun i => outMkEquiv.symm
 #align cardinal.mk_sigma Cardinal.mk_sigma
 
@@ -951,7 +951,7 @@ theorem sum_const (ι : Type u) (a : Cardinal.{v}) :
   inductionOn a fun α =>
     mk_congr <|
       calc
-        (Σi : ι, Quotient.out (#α)) ≃ ι × Quotient.out (#α) := Equiv.sigmaEquivProd _ _
+        (Σ i : ι, Quotient.out (#α)) ≃ ι × Quotient.out (#α) := Equiv.sigmaEquivProd _ _
         _ ≃ ULift ι × ULift α := Equiv.ulift.symm.prodCongr (outMkEquiv.trans Equiv.ulift.symm)
         
 #align cardinal.sum_const Cardinal.sum_const
@@ -984,7 +984,8 @@ theorem lift_sum {ι : Type u} (f : ι → Cardinal.{v}) :
 
 theorem sum_le_sum {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : sum f ≤ sum g :=
   ⟨(Embedding.refl _).sigma_map fun i =>
-      Classical.choice <| by have := H i <;> rwa [← Quot.out_eq (f i), ← Quot.out_eq (g i)] at this⟩
+      Classical.choice <| by
+        have := H i <;> rwa [← Quot.out_eq (f i), ← Quot.out_eq (g i)] at this ⟩
 #align cardinal.sum_le_sum Cardinal.sum_le_sum
 
 theorem mk_le_mk_mul_of_mk_preimage_le {c : Cardinal} (f : α → β) (hf : ∀ b : β, (#f ⁻¹' {b}) ≤ c) :
@@ -1048,7 +1049,7 @@ theorem bddAbove_of_small (s : Set Cardinal.{u}) [h : Small.{u} s] : BddAbove s 
 
 #print Cardinal.bddAbove_image /-
 theorem bddAbove_image (f : Cardinal.{u} → Cardinal.{max u v}) {s : Set Cardinal.{u}}
-    (hs : BddAbove s) : BddAbove (f '' s) := by rw [bdd_above_iff_small] at hs⊢; exact small_lift _
+    (hs : BddAbove s) : BddAbove (f '' s) := by rw [bdd_above_iff_small] at hs ⊢; exact small_lift _
 #align cardinal.bdd_above_image Cardinal.bddAbove_image
 -/
 
@@ -1142,7 +1143,7 @@ theorem prod_const' (ι : Type u) (a : Cardinal.{u}) : (prod fun _ : ι => a) = 
 
 theorem prod_le_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : prod f ≤ prod g :=
   ⟨Embedding.piCongrRight fun i =>
-      Classical.choice <| by have := H i <;> rwa [← mk_out (f i), ← mk_out (g i)] at this⟩
+      Classical.choice <| by have := H i <;> rwa [← mk_out (f i), ← mk_out (g i)] at this ⟩
 #align cardinal.prod_le_prod Cardinal.prod_le_prod
 
 @[simp]
@@ -1233,7 +1234,7 @@ theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
   le_antisymm
     (le_of_not_gt fun h => by
       rcases lt_lift_iff.1 h with ⟨b, e, h⟩
-      rw [lt_succ_iff, ← lift_le, e] at h
+      rw [lt_succ_iff, ← lift_le, e] at h 
       exact h.not_lt (lt_succ _))
     (succ_le_of_lt <| lift_lt.2 <| lt_succ a)
 #align cardinal.lift_succ Cardinal.lift_succ
@@ -1262,8 +1263,8 @@ theorem lift_sSup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (sSup s) = sSu
   apply ((le_csSup_iff' (bdd_above_image _ hs)).2 fun c hc => _).antisymm (csSup_le' _)
   · by_contra h
     obtain ⟨d, rfl⟩ := Cardinal.lift_down (not_le.1 h).le
-    simp_rw [lift_le] at h hc
-    rw [csSup_le_iff' hs] at h
+    simp_rw [lift_le] at h hc 
+    rw [csSup_le_iff' hs] at h 
     exact h fun a ha => lift_le.1 <| hc (mem_image_of_mem _ ha)
   · rintro i ⟨j, hj, rfl⟩
     exact lift_le.2 (le_csSup hs hj)
@@ -1477,7 +1478,7 @@ theorem succ_zero : succ (0 : Cardinal) = 1 := by norm_cast
 theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : (#α) ≤ n :=
   by
   refine' le_of_lt_succ (lt_of_not_ge fun hn => _)
-  rw [← Cardinal.nat_succ, ← lift_mk_fin n.succ] at hn
+  rw [← Cardinal.nat_succ, ← lift_mk_fin n.succ] at hn 
   cases' hn with f
   refine' (H <| finset.univ.map f).not_lt _
   rw [Finset.card_map, ← Fintype.card, Fintype.card_ulift, Fintype.card_fin]
@@ -1487,7 +1488,7 @@ theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n)
 #print Cardinal.cantor' /-
 theorem cantor' (a) {b : Cardinal} (hb : 1 < b) : a < (b^a) :=
   by
-  rw [← succ_le_iff, (by norm_cast : succ (1 : Cardinal) = 2)] at hb
+  rw [← succ_le_iff, (by norm_cast : succ (1 : Cardinal) = 2)] at hb 
   exact (cantor a).trans_le (power_le_power_right hb)
 #align cardinal.cantor' Cardinal.cantor'
 -/
@@ -1562,7 +1563,7 @@ theorem IsLimit.aleph0_le {c : Cardinal} (h : IsLimit c) : ℵ₀ ≤ c :=
   by_contra' h'
   rcases lt_aleph_0.1 h' with ⟨_ | n, rfl⟩
   · exact h.ne_zero.irrefl
-  · rw [nat_succ] at h
+  · rw [nat_succ] at h 
     exact not_is_succ_limit_succ _ h.is_succ_limit
 #align cardinal.is_limit.aleph_0_le Cardinal.IsLimit.aleph0_le
 -/
@@ -1692,7 +1693,7 @@ theorem mul_lt_aleph0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 
   refine' ⟨fun h => _, _⟩
   · by_cases ha : a = 0; · exact Or.inl ha
     right; by_cases hb : b = 0; · exact Or.inl hb
-    right; rw [← Ne, ← one_le_iff_ne_zero] at ha hb; constructor
+    right; rw [← Ne, ← one_le_iff_ne_zero] at ha hb ; constructor
     · rw [← mul_one a]
       refine' (mul_le_mul' le_rfl hb).trans_lt h
     · rw [← one_mul b]
@@ -1705,7 +1706,7 @@ theorem mul_lt_aleph0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 
 theorem aleph0_le_mul_iff {a b : Cardinal} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ b ≠ 0 ∧ (ℵ₀ ≤ a ∨ ℵ₀ ≤ b) :=
   by
   let h := (@mul_lt_aleph0_iff a b).Not
-  rwa [not_lt, not_or, not_or, not_and_or, not_lt, not_lt] at h
+  rwa [not_lt, not_or, not_or, not_and_or, not_lt, not_lt] at h 
 #align cardinal.aleph_0_le_mul_iff Cardinal.aleph0_le_mul_iff
 
 /-- See also `cardinal.aleph_0_le_mul_iff'`. -/
@@ -2146,7 +2147,7 @@ theorem mk_vector (α : Type u) (n : ℕ) : (#Vector α n) = (#α) ^ℕ n :=
 #print Cardinal.mk_list_eq_sum_pow /-
 theorem mk_list_eq_sum_pow (α : Type u) : (#List α) = sum fun n : ℕ => (#α) ^ℕ n :=
   calc
-    (#List α) = (#Σn, Vector α n) := mk_congr (Equiv.sigmaFiberEquiv List.length).symm
+    (#List α) = (#Σ n, Vector α n) := mk_congr (Equiv.sigmaFiberEquiv List.length).symm
     _ = sum fun n : ℕ => (#α) ^ℕ n := by simp
     
 #align cardinal.mk_list_eq_sum_pow Cardinal.mk_list_eq_sum_pow
@@ -2183,7 +2184,7 @@ theorem mk_emptyCollection_iff {α : Type u} {s : Set α} : (#s) = 0 ↔ s = ∅
   by
   constructor
   · intro h
-    rw [mk_eq_zero_iff] at h
+    rw [mk_eq_zero_iff] at h 
     exact eq_empty_iff_forall_not_mem.2 fun x hx => h.elim' ⟨x, hx⟩
   · rintro rfl; exact mk_emptyc _
 #align cardinal.mk_emptyc_iff Cardinal.mk_emptyCollection_iff
@@ -2251,7 +2252,7 @@ theorem mk_image_eq {α β : Type u} {f : α → β} {s : Set α} (hf : Injectiv
 #print Cardinal.mk_iUnion_le_sum_mk /-
 theorem mk_iUnion_le_sum_mk {α ι : Type u} {f : ι → Set α} : (#⋃ i, f i) ≤ sum fun i => #f i :=
   calc
-    (#⋃ i, f i) ≤ (#Σi, f i) := mk_le_of_surjective (Set.sigmaToiUnion_surjective f)
+    (#⋃ i, f i) ≤ (#Σ i, f i) := mk_le_of_surjective (Set.sigmaToiUnion_surjective f)
     _ = sum fun i => #f i := mk_sigma _
     
 #align cardinal.mk_Union_le_sum_mk Cardinal.mk_iUnion_le_sum_mk
@@ -2260,7 +2261,7 @@ theorem mk_iUnion_le_sum_mk {α ι : Type u} {f : ι → Set α} : (#⋃ i, f i)
 theorem mk_iUnion_eq_sum_mk {α ι : Type u} {f : ι → Set α}
     (h : ∀ i j, i ≠ j → Disjoint (f i) (f j)) : (#⋃ i, f i) = sum fun i => #f i :=
   calc
-    (#⋃ i, f i) = (#Σi, f i) := mk_congr (Set.unionEqSigmaOfDisjoint h)
+    (#⋃ i, f i) = (#Σ i, f i) := mk_congr (Set.unionEqSigmaOfDisjoint h)
     _ = sum fun i => #f i := mk_sigma _
     
 #align cardinal.mk_Union_eq_sum_mk Cardinal.mk_iUnion_eq_sum_mk
@@ -2444,7 +2445,7 @@ theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h
 theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α → β) {s : Set α}
     {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({ x ∈ s | f x ∈ t } : Set α)) :=
   by
-  rw [image_eq_range] at h; convert mk_preimage_of_subset_range_lift _ _ h using 1
+  rw [image_eq_range] at h ; convert mk_preimage_of_subset_range_lift _ _ h using 1
   rw [mk_sep]; rfl
 #align cardinal.mk_subset_ge_of_subset_image_lift Cardinal.mk_subset_ge_of_subset_image_lift
 -/
@@ -2453,7 +2454,7 @@ theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α �
 theorem mk_subset_ge_of_subset_image (f : α → β) {s : Set α} {t : Set β} (h : t ⊆ f '' s) :
     (#t) ≤ (#({ x ∈ s | f x ∈ t } : Set α)) :=
   by
-  rw [image_eq_range] at h; convert mk_preimage_of_subset_range _ _ h using 1
+  rw [image_eq_range] at h ; convert mk_preimage_of_subset_range _ _ h using 1
   rw [mk_sep]; rfl
 #align cardinal.mk_subset_ge_of_subset_image Cardinal.mk_subset_ge_of_subset_image
 -/
@@ -2489,9 +2490,9 @@ theorem mk_eq_two_iff' (x : α) : (#α) = 2 ↔ ∃! y, y ≠ x :=
   by
   rw [mk_eq_two_iff]; constructor
   · rintro ⟨a, b, hne, h⟩
-    simp only [eq_univ_iff_forall, mem_insert_iff, mem_singleton_iff] at h
+    simp only [eq_univ_iff_forall, mem_insert_iff, mem_singleton_iff] at h 
     rcases h x with (rfl | rfl)
-    exacts[⟨b, hne.symm, fun z => (h z).resolve_left⟩, ⟨a, hne, fun z => (h z).resolve_right⟩]
+    exacts [⟨b, hne.symm, fun z => (h z).resolve_left⟩, ⟨a, hne, fun z => (h z).resolve_right⟩]
   · rintro ⟨y, hne, hy⟩
     exact ⟨x, y, hne.symm, eq_univ_of_forall fun z => or_iff_not_imp_left.2 (hy z)⟩
 #align cardinal.mk_eq_two_iff' Cardinal.mk_eq_two_iff'

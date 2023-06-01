@@ -194,9 +194,9 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   specialize h (· ∉ s) x
   by_cases hx : x ∈ s; · exact subset_seqClosure hx
   simp_rw [(· ∘ ·), ContinuousAt, hx, not_false_iff, nhds_true, tendsto_pure, eq_true_iff, ←
-    mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h
-  rw [mem_compl_iff, imp_not_comm] at h
-  simp only [not_forall, not_eventually, mem_compl_iff, Classical.not_not] at h
+    mem_compl_iff, eventually_mem_set, ← mem_interior_iff_mem_nhds, interior_compl] at h 
+  rw [mem_compl_iff, imp_not_comm] at h 
+  simp only [not_forall, not_eventually, mem_compl_iff, Classical.not_not] at h 
   rcases h hcx with ⟨u, hux, hus⟩
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩
@@ -324,7 +324,7 @@ theorem IsSeqCompact.subseq_of_frequently_in {s : Set X} (hs : IsSeqCompact s) {
 
 #print SeqCompactSpace.tendsto_subseq /-
 theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace X] (x : ℕ → X) :
-    ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ (a : _) (φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   let ⟨a, _, φ, mono, h⟩ := seq_compact_univ fun n => mem_univ (x n)
   ⟨a, φ, mono, h⟩
 #align seq_compact_space.tendsto_subseq SeqCompactSpace.tendsto_subseq
@@ -365,7 +365,7 @@ instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [Compac
 
 #print CompactSpace.tendsto_subseq /-
 theorem CompactSpace.tendsto_subseq [CompactSpace X] (x : ℕ → X) :
-    ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ (a : _) (φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   SeqCompactSpace.tendsto_subseq x
 #align compact_space.tendsto_subseq CompactSpace.tendsto_subseq
 -/
@@ -398,11 +398,11 @@ theorem IsSeqCompact.exists_tendsto (hs : IsSeqCompact s) {u : ℕ → X} (hu : 
 protected theorem IsSeqCompact.totallyBounded (h : IsSeqCompact s) : TotallyBounded s :=
   by
   intro V V_in
-  unfold IsSeqCompact at h
+  unfold IsSeqCompact at h 
   contrapose! h
   obtain ⟨u, u_in, hu⟩ : ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ ∀ n m, m < n → u m ∉ ball (u n) V :=
     by
-    simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h
+    simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h 
     simpa only [forall_and, ball_image_iff, not_and] using seq_of_forall_finite_exists h
   refine' ⟨u, u_in, fun x x_in φ hφ huφ => _⟩
   obtain ⟨N, hN⟩ : ∃ N, ∀ p q, p ≥ N → q ≥ N → (u (φ p), u (φ q)) ∈ V
@@ -432,7 +432,7 @@ protected theorem IsSeqCompact.isComplete (hs : IsSeqCompact s) : IsComplete s :
     by
     have : ∀ n, ∃ t ∈ l, t ×ˢ t ⊆ W n ∧ t ⊆ s :=
       by
-      rw [le_principal_iff] at hls
+      rw [le_principal_iff] at hls 
       have : ∀ n, W n ∩ s ×ˢ s ∈ l ×ᶠ l := fun n => inter_mem (hl.2 (hW n)) (prod_mem_prod hls hls)
       simpa only [l.basis_sets.prod_self.mem_iff, true_imp_iff, subset_inter_iff,
         prod_self_subset_prod_self, and_assoc] using this
@@ -452,7 +452,7 @@ protected theorem IsSeqCompact.isComplete (hs : IsSeqCompact s) : IsComplete s :
   obtain ⟨n, hNn, hn⟩ : ∃ n, N ≤ n ∧ u n ∈ ball x (W N)
   exact ((eventually_ge_at_top N).And (hx <| ball_mem_nhds x (hW N))).exists
   refine' mem_of_superset (htl n) fun y hy => hWV N ⟨u n, _, htW N ⟨_, _⟩⟩
-  exacts[hn, ht_anti hNn (hu n), ht_anti hNn hy]
+  exacts [hn, ht_anti hNn (hu n), ht_anti hNn hy]
 #align is_seq_compact.is_complete IsSeqCompact.isComplete
 -/
 

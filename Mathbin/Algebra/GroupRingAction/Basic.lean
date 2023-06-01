@@ -42,7 +42,7 @@ universe u v
 
 This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
 class MulSemiringAction (M : Type u) (R : Type v) [Monoid M] [Semiring R] extends
-  DistribMulAction M R where
+    DistribMulAction M R where
   smul_one : ∀ g : M, (g • 1 : R) = 1
   smul_mul : ∀ (g : M) (x y : R), g • (x * y) = g • x * g • y
 #align mul_semiring_action MulSemiringAction

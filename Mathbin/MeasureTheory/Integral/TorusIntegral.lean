@@ -287,7 +287,7 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
     simp only [funext_iff, i.forall_iff_succ_above, circleMap, Fin.insertNth_apply_same,
       eq_self_iff_true, Fin.insertNth_apply_succAbove, imp_true_iff, and_self_iff]
   · have := hf.function_integrable
-    rwa [← hem.integrable_on_comp_preimage e.measurable_embedding, heπ] at this
+    rwa [← hem.integrable_on_comp_preimage e.measurable_embedding, heπ] at this 
 #align torus_integral_succ_above torusIntegral_succAbove
 
 /-- Recurrent formula for `torus_integral`, see also `torus_integral_succ_above`. -/

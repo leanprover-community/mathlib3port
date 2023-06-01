@@ -924,7 +924,7 @@ theorem Dense.exists_le' {s : Set α} (hs : Dense s) (hbot : ∀ x, IsBot x → 
     ∃ y ∈ s, y ≤ x := by
   by_cases hx : IsBot x
   · exact ⟨x, hbot x hx, le_rfl⟩
-  · simp only [IsBot, not_forall, not_le] at hx
+  · simp only [IsBot, not_forall, not_le] at hx 
     rcases hs.exists_mem_open isOpen_Iio hx with ⟨y, hys, hy : y < x⟩
     exact ⟨y, hys, hy.le⟩
 #align dense.exists_le' Dense.exists_le'
@@ -1131,7 +1131,7 @@ instance tendstoIccClassNhds (a : α) : TendstoIxxClass Icc (𝓝 a) (𝓝 a) :=
     ((has_basis_infi_principal_finite _).inf (has_basis_infi_principal_finite _)).TendstoIxxClass
       fun s hs => _
   refine' ((ord_connected_bInter _).inter (ord_connected_bInter _)).out <;> intro _ _
-  exacts[ord_connected_Ioi, ord_connected_Iio]
+  exacts [ord_connected_Ioi, ord_connected_Iio]
 #align tendsto_Icc_class_nhds tendstoIccClassNhds
 -/
 
@@ -1413,7 +1413,7 @@ theorem nhds_bot_basis_Iic [TopologicalSpace α] [LinearOrder α] [OrderBot α] 
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [Preorder β] [OrderTop β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : Tendsto g l (𝓝 ⊤) :=
   by
-  simp only [nhds_top_order, tendsto_infi, tendsto_principal] at hf⊢
+  simp only [nhds_top_order, tendsto_infi, tendsto_principal] at hf ⊢
   intro x hx
   filter_upwards [hf x hx, hg]with _ using lt_of_lt_of_le
 #align tendsto_nhds_top_mono tendsto_nhds_top_mono
@@ -1519,14 +1519,14 @@ theorem exists_Ico_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a)
 #align exists_Ico_subset_of_mem_nhds' exists_Ico_subset_of_mem_nhds'
 
 theorem exists_Ico_subset_of_mem_nhds {a : α} {s : Set α} (hs : s ∈ 𝓝 a) (h : ∃ u, a < u) :
-    ∃ (u : _)(_ : a < u), Ico a u ⊆ s :=
+    ∃ (u : _) (_ : a < u), Ico a u ⊆ s :=
   let ⟨l', hl'⟩ := h
   let ⟨l, hl⟩ := exists_Ico_subset_of_mem_nhds' hs hl'
   ⟨l, hl.fst.1, hl.snd⟩
 #align exists_Ico_subset_of_mem_nhds exists_Ico_subset_of_mem_nhds
 
 theorem exists_Icc_mem_subset_of_mem_nhdsWithin_Ici {a : α} {s : Set α} (hs : s ∈ 𝓝[≥] a) :
-    ∃ (b : _)(_ : a ≤ b), Icc a b ∈ 𝓝[≥] a ∧ Icc a b ⊆ s :=
+    ∃ (b : _) (_ : a ≤ b), Icc a b ∈ 𝓝[≥] a ∧ Icc a b ⊆ s :=
   by
   rcases(em (IsMax a)).imp_right not_is_max_iff.mp with (ha | ha)
   · use a; simpa [ha.Ici_eq] using hs
@@ -1565,11 +1565,11 @@ theorem IsOpen.exists_Ioo_subset [Nontrivial α] {s : Set α} (hs : IsOpen s) (h
   obtain ⟨x, hx⟩ : ∃ x, x ∈ s := h
   obtain ⟨y, hy⟩ : ∃ y, y ≠ x := exists_ne x
   rcases lt_trichotomy x y with (H | rfl | H)
-  · obtain ⟨u, xu, hu⟩ : ∃ (u : α)(hu : x < u), Ico x u ⊆ s :=
+  · obtain ⟨u, xu, hu⟩ : ∃ (u : α) (hu : x < u), Ico x u ⊆ s :=
       exists_Ico_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
     exact ⟨x, u, xu, Ioo_subset_Ico_self.trans hu⟩
   · exact (hy rfl).elim
-  · obtain ⟨l, lx, hl⟩ : ∃ (l : α)(hl : l < x), Ioc l x ⊆ s :=
+  · obtain ⟨l, lx, hl⟩ : ∃ (l : α) (hl : l < x), Ioc l x ⊆ s :=
       exists_Ioc_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
     exact ⟨l, x, lx, Ioo_subset_Ioc_self.trans hl⟩
 #align is_open.exists_Ioo_subset IsOpen.exists_Ioo_subset
@@ -1580,7 +1580,7 @@ theorem dense_of_exists_between [Nontrivial α] {s : Set α}
   by
   apply dense_iff_inter_open.2 fun U U_open U_nonempty => _
   obtain ⟨a, b, hab, H⟩ : ∃ a b : α, a < b ∧ Ioo a b ⊆ U := U_open.exists_Ioo_subset U_nonempty
-  obtain ⟨x, xs, hx⟩ : ∃ (x : α)(H : x ∈ s), a < x ∧ x < b := h hab
+  obtain ⟨x, xs, hx⟩ : ∃ (x : α) (H : x ∈ s), a < x ∧ x < b := h hab
   exact ⟨x, ⟨H hx, xs⟩⟩
 #align dense_of_exists_between dense_of_exists_between
 
@@ -2231,8 +2231,8 @@ theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
       refine' ⟨min (a - l) (u - a), by apply lt_min <;> rwa [sub_pos], _⟩
       rintro x ⟨hx, hx'⟩
       apply h'
-      rw [sub_lt_comm, lt_min_iff, sub_lt_sub_iff_left] at hx
-      rw [← sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx'
+      rw [sub_lt_comm, lt_min_iff, sub_lt_sub_iff_left] at hx 
+      rw [← sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx' 
       exact ⟨hx.1, hx'.2⟩
     · rintro ⟨ε, ε_pos, h⟩
       exact ⟨(a - ε, a + ε), by simp [ε_pos], h⟩⟩
@@ -2361,7 +2361,7 @@ theorem isLUB_of_mem_nhds {s : Set α} {a : α} {f : Filter α} (hsa : a ∈ upp
 #print isLUB_of_mem_closure /-
 theorem isLUB_of_mem_closure {s : Set α} {a : α} (hsa : a ∈ upperBounds s) (hsf : a ∈ closure s) :
     IsLUB s a := by
-  rw [mem_closure_iff_clusterPt, ClusterPt, inf_comm] at hsf
+  rw [mem_closure_iff_clusterPt, ClusterPt, inf_comm] at hsf 
   haveI : (𝓟 s ⊓ 𝓝 a).ne_bot := hsf
   exact isLUB_of_mem_nhds hsa (mem_principal_self s)
 #align is_lub_of_mem_closure isLUB_of_mem_closure
@@ -2493,7 +2493,7 @@ theorem IsLUB.exists_seq_strictMono_tendsto_of_not_mem {t : Set α} {x : α}
   have : ∀ n k, k < x → ∃ y, Icc y x ⊆ s n ∧ k < y ∧ y < x ∧ y ∈ t :=
     by
     intro n k hk
-    obtain ⟨L, hL, h⟩ : ∃ (L : α)(hL : L ∈ Ico k x), Ioc L x ⊆ s n :=
+    obtain ⟨L, hL, h⟩ : ∃ (L : α) (hL : L ∈ Ico k x), Ioc L x ⊆ s n :=
       exists_Ioc_subset_of_mem_nhds' (hs.mem_of_mem trivial) hk
     obtain ⟨y, hy⟩ : ∃ y : α, L < y ∧ y < x ∧ y ∈ t :=
       by
@@ -3146,7 +3146,7 @@ separable space (e.g., if `α` has a second countable topology), then there exis
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/
 theorem Dense.exists_countable_dense_subset_no_bot_top [Nontrivial α] {s : Set α} [SeparableSpace s]
     (hs : Dense s) :
-    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ Dense t ∧ (∀ x, IsBot x → x ∉ t) ∧ ∀ x, IsTop x → x ∉ t :=
+    ∃ (t : _) (_ : t ⊆ s), t.Countable ∧ Dense t ∧ (∀ x, IsBot x → x ∉ t) ∧ ∀ x, IsTop x → x ∉ t :=
   by
   rcases hs.exists_countable_dense_subset with ⟨t, hts, htc, htd⟩
   refine' ⟨t \ ({ x | IsBot x } ∪ { x | IsTop x }), _, _, _, _, _⟩

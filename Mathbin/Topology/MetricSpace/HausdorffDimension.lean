@@ -115,9 +115,9 @@ theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞),
 
 theorem hausdorffMeasure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s) : μH[d] s = ∞ :=
   by
-  simp only [dimH_def, lt_iSup_iff] at h
+  simp only [dimH_def, lt_iSup_iff] at h 
   rcases h with ⟨d', hsd', hdd'⟩
-  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hdd'
+  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hdd' 
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 #align hausdorff_measure_of_lt_dimH hausdorffMeasure_of_lt_dimH
 
@@ -135,9 +135,9 @@ theorem le_dimH_of_hausdorffMeasure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d]
 
 theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 :=
   by
-  rw [dimH_def] at h
+  rw [dimH_def] at h 
   rcases ENNReal.lt_iff_exists_nnreal_btwn.1 h with ⟨d', hsd', hd'd⟩
-  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hd'd
+  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hd'd 
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_iSup₂ d' h
 #align hausdorff_measure_of_dimH_lt hausdorffMeasure_of_dimH_lt
 
@@ -301,11 +301,11 @@ theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) :
   borelize X Y
   refine' dimH_le fun d hd => _
   have := h.hausdorff_measure_image_le hr d.coe_nonneg
-  rw [hd, ENNReal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
+  rw [hd, ENNReal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this 
   have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by contrapose this;
     exact ENNReal.mul_ne_top ENNReal.coe_ne_top this
   rw [ENNReal.le_div_iff_mul_le, mul_comm, ← ENNReal.coe_mul]
-  exacts[le_dimH_of_hausdorffMeasure_eq_top Hrd, Or.inl (mt ENNReal.coe_eq_zero.1 hr.ne'),
+  exacts [le_dimH_of_hausdorffMeasure_eq_top Hrd, Or.inl (mt ENNReal.coe_eq_zero.1 hr.ne'),
     Or.inl ENNReal.coe_ne_top]
 #align holder_on_with.dimH_image_le HolderOnWith.dimH_image_le
 
@@ -336,7 +336,7 @@ theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
     dimH (f '' s) ≤ dimH s / r := by
   choose! C t htn hC using hf
   rcases countable_cover_nhds_within htn with ⟨u, hus, huc, huU⟩
-  replace huU := inter_eq_self_of_subset_left huU; rw [inter_Union₂] at huU
+  replace huU := inter_eq_self_of_subset_left huU; rw [inter_Union₂] at huU 
   rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]; simp only [ENNReal.iSup_div]
   exact iSup₂_mono fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 #align dimH_image_le_of_locally_holder_on dimH_image_le_of_locally_holder_on
@@ -407,7 +407,7 @@ theorem dimH_preimage_le (hf : AntilipschitzWith K f) (s : Set Y) : dimH (f ⁻�
   borelize X Y
   refine' dimH_le fun d hd => le_dimH_of_hausdorffMeasure_eq_top _
   have := hf.hausdorff_measure_preimage_le d.coe_nonneg s
-  rw [hd, top_le_iff] at this
+  rw [hd, top_le_iff] at this 
   contrapose! this
   exact ENNReal.mul_ne_top (by simp) this
 #align antilipschitz_with.dimH_preimage_le AntilipschitzWith.dimH_preimage_le
@@ -540,7 +540,7 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimens
 theorem dense_compl_of_dimH_lt_finrank {s : Set E} (hs : dimH s < finrank ℝ E) : Dense (sᶜ) :=
   by
   refine' fun x => mem_closure_iff_nhds.2 fun t ht => nonempty_iff_ne_empty.2 fun he => hs.not_le _
-  rw [← diff_eq, diff_eq_empty] at he
+  rw [← diff_eq, diff_eq_empty] at he 
   rw [← Real.dimH_of_mem_nhds ht]
   exact dimH_mono he
 #align dense_compl_of_dimH_lt_finrank dense_compl_of_dimH_lt_finrank

@@ -76,7 +76,7 @@ theorem leftLim_eq_of_tendsto [hα : TopologicalSpace α] [h'α : OrderTopology 
     {f : α → β} {a : α} {y : β} (h : 𝓝[<] a ≠ ⊥) (h' : Tendsto f (𝓝[<] a) (𝓝 y)) :
     leftLim f a = y := by
   have h'' : ∃ y, tendsto f (𝓝[<] a) (𝓝 y) := ⟨y, h'⟩
-  rw [h'α.topology_eq_generate_intervals] at h h' h''
+  rw [h'α.topology_eq_generate_intervals] at h h' h'' 
   simp only [left_lim, h, h'', not_true, or_self_iff, if_false]
   haveI := ne_bot_iff.2 h
   exact h'.lim_eq
@@ -85,7 +85,7 @@ theorem leftLim_eq_of_tendsto [hα : TopologicalSpace α] [h'α : OrderTopology 
 theorem leftLim_eq_of_eq_bot [hα : TopologicalSpace α] [h'α : OrderTopology α] (f : α → β) {a : α}
     (h : 𝓝[<] a = ⊥) : leftLim f a = f a :=
   by
-  rw [h'α.topology_eq_generate_intervals] at h
+  rw [h'α.topology_eq_generate_intervals] at h 
   simp [left_lim, ite_eq_left_iff, h]
 #align left_lim_eq_of_eq_bot leftLim_eq_of_eq_bot
 
@@ -210,7 +210,7 @@ theorem continuousWithinAt_Iio_iff_leftLim_eq :
   haveI : (𝓝[Iio x] x).ne_bot := ne_bot_iff.2 h'
   refine' ⟨fun h => tendsto_nhds_unique (hf.tendsto_left_lim x) h.Tendsto, fun h => _⟩
   have := hf.tendsto_left_lim x
-  rwa [h] at this
+  rwa [h] at this 
 #align monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuousWithinAt_Iio_iff_leftLim_eq
 
 /-- A monotone function is continuous to the right at a point if and only if its right limit
@@ -237,7 +237,7 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
       exact le_right_lim hf (le_refl _)
     refine' continuousAt_iff_continuous_left'_right'.2 ⟨_, _⟩
     · exact hf.continuous_within_at_Iio_iff_left_lim_eq.2 h'
-    · rw [h] at h'
+    · rw [h] at h' 
       exact hf.continuous_within_at_Ioi_iff_right_lim_eq.2 h'
 #align monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuousAt_iff_leftLim_eq_rightLim
 
@@ -284,7 +284,7 @@ theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTo
       have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
       apply disjoint_iff_forall_ne.2
       rintro a ha b hb rfl
-      simp only [I.left_inv_on_inv_fun_on us, I.left_inv_on_inv_fun_on vs] at ha hb
+      simp only [I.left_inv_on_inv_fun_on us, I.left_inv_on_inv_fun_on vs] at ha hb 
       exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v hlt)).trans hb.1)
     apply Set.PairwiseDisjoint.countable_of_Ioo A
     rintro _ ⟨y, ys, rfl⟩
@@ -315,7 +315,7 @@ theorem countable_not_continuousAt [TopologicalSpace.SecondCountableTopology β]
   refine' compl_subset_compl.1 _
   simp only [compl_union]
   rintro x ⟨hx, h'x⟩
-  simp only [mem_set_of_eq, Classical.not_not, mem_compl_iff] at hx h'x⊢
+  simp only [mem_set_of_eq, Classical.not_not, mem_compl_iff] at hx h'x ⊢
   exact continuousAt_iff_continuous_left'_right'.2 ⟨h'x, hx⟩
 #align monotone.countable_not_continuous_at Monotone.countable_not_continuousAt
 -/

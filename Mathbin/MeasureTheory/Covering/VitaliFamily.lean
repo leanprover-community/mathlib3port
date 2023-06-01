@@ -222,8 +222,8 @@ can be convenient to get a nicer global behavior. -/
 def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ
     where
   setsAt x := v.setsAt x ∪ { a | MeasurableSet a ∧ (interior a).Nonempty ∧ ¬a ⊆ closedBall x δ }
-  MeasurableSet' x a ha := by cases ha; exacts[v.measurable_set' _ _ ha, ha.1]
-  nonempty_interior x a ha := by cases ha; exacts[v.nonempty_interior _ _ ha, ha.2.1]
+  MeasurableSet' x a ha := by cases ha; exacts [v.measurable_set' _ _ ha, ha.1]
+  nonempty_interior x a ha := by cases ha; exacts [v.nonempty_interior _ _ ha, ha.2.1]
   Nontrivial := by
     intro x ε εpos
     rcases v.nontrivial x ε εpos with ⟨a, ha, h'a⟩
@@ -231,7 +231,7 @@ def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ
   covering := by
     intro s f fset ffine
     let g : α → Set (Set α) := fun x => f x ∩ v.sets_at x
-    have : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (a : Set α)(H : a ∈ g x), a ⊆ closed_ball x ε :=
+    have : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (a : Set α) (H : a ∈ g x), a ⊆ closed_ball x ε :=
       by
       intro x hx ε εpos
       obtain ⟨a, af, ha⟩ : ∃ a ∈ f x, a ⊆ closed_ball x (min ε δ)
@@ -346,7 +346,7 @@ theorem fineSubfamilyOn_of_frequently (v : VitaliFamily μ) (f : α → Set (Set
     (h : ∀ x ∈ s, ∃ᶠ a in v.filterAt x, a ∈ f x) : v.FineSubfamilyOn f s :=
   by
   intro x hx ε εpos
-  obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α)(H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=
+  obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α) (H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=
     v.frequently_filter_at_iff.1 (h x hx) ε εpos
   exact ⟨a, ⟨av, af⟩, ha⟩
 #align vitali_family.fine_subfamily_on_of_frequently VitaliFamily.fineSubfamilyOn_of_frequently

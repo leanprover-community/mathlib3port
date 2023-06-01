@@ -153,7 +153,7 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
       -- red_node and black_node are identical
       intro lo hi h₁ h₂;
       cases h₁
-      simp only [mem] at h₂
+      simp only [mem] at h₂ 
       have val_hi : lift lt (some t_val) hi := by apply lo_lt_hi; assumption
       have lo_val : lift lt lo (some t_val) := by apply lo_lt_hi; assumption
       cases_type*or.1

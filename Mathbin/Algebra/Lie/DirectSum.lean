@@ -206,7 +206,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         by
         simp only [← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
-        congr ; clear y; ext (i y); exact this i y
+        congr; clear y; ext (i y); exact this i y
       suffices
         ∀ (i j) (y : L i) (x : L j),
           to_module R ι L' f' ⁅of L j x, of L i y⁆ =
@@ -216,7 +216,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         rw [← lie_skew x, ← lie_skew (to_module R ι L' f' x)]
         simp only [LinearMap.map_neg, neg_inj, ← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
-        congr ; clear x; ext (j x); exact this j i x y
+        congr; clear x; ext (j x); exact this j i x y
       intro i j y x
       simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_toLinearMap, to_add_monoid_of,
         coe_to_module_eq_coe_to_add_monoid, LinearMap.toAddMonoidHom_coe]

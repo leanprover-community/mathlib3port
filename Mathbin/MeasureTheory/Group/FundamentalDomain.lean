@@ -52,7 +52,7 @@ on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`
 a.e. disjoint and cover the whole space. -/
 @[protect_proj]
 structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [VAdd G α] [MeasurableSpace α]
-  (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
+    (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   NullMeasurableSet : NullMeasurableSet s μ
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AEDisjoint : Pairwise <| (AEDisjoint μ on fun g : G => g +ᵥ s)
@@ -63,7 +63,7 @@ space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pa
 cover the whole space. -/
 @[protect_proj, to_additive is_add_fundamental_domain]
 structure IsFundamentalDomain (G : Type _) {α : Type _} [One G] [SMul G α] [MeasurableSpace α]
-  (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
+    (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   NullMeasurableSet : NullMeasurableSet s μ
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g • x ∈ s
   AEDisjoint : Pairwise <| (AEDisjoint μ on fun g : G => g • s)
@@ -89,7 +89,7 @@ theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G
       Disjoint.aedisjoint <|
         disjoint_left.2 fun x hxa hxb =>
           by
-          rw [mem_smul_set_iff_inv_smul_mem] at hxa hxb
+          rw [mem_smul_set_iff_inv_smul_mem] at hxa hxb 
           exact hab (inv_injective <| (h_exists x).unique hxa hxb) }
 #align measure_theory.is_fundamental_domain.mk' MeasureTheory.IsFundamentalDomain.mk'
 #align measure_theory.is_add_fundamental_domain.mk' MeasureTheory.IsAddFundamentalDomain.mk'
@@ -491,7 +491,7 @@ protected theorem set_integral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFund
       _ = ∫ x in t, f x ∂μ := (hs.set_integral_eq_tsum' hft).symm
       
   · rw [integral_undef hfs, integral_undef]
-    rwa [hs.integrable_on_iff ht hf] at hfs
+    rwa [hs.integrable_on_iff ht hf] at hfs 
 #align measure_theory.is_fundamental_domain.set_integral_eq MeasureTheory.IsFundamentalDomain.set_integral_eq
 #align measure_theory.is_add_fundamental_domain.set_integral_eq MeasureTheory.IsAddFundamentalDomain.set_integral_eq
 
@@ -520,7 +520,8 @@ points `x y` such that `g • x = y` for some `g ≠ 1`. -/
 @[to_additive
       "If the additive action of a countable group `G` admits an invariant measure `μ` with\na fundamental domain `s`, then every null-measurable set `t` of measure strictly greater than `μ s`\ncontains two points `x y` such that `g +ᵥ x = y` for some `g ≠ 0`."]
 theorem exists_ne_one_smul_eq (hs : IsFundamentalDomain G s μ) (htm : NullMeasurableSet t μ)
-    (ht : μ s < μ t) : ∃ (x : _)(_ : x ∈ t)(y : _)(_ : y ∈ t)(g : _)(_ : g ≠ (1 : G)), g • x = y :=
+    (ht : μ s < μ t) :
+    ∃ (x : _) (_ : x ∈ t) (y : _) (_ : y ∈ t) (g : _) (_ : g ≠ (1 : G)), g • x = y :=
   by
   contrapose! ht
   refine' hs.measure_le_of_pairwise_disjoint htm (Pairwise.aedisjoint fun g₁ g₂ hne => _)
@@ -545,7 +546,7 @@ theorem essSup_measure_restrict (hs : IsFundamentalDomain G s μ) {f : α → �
   rw [essSup_eq_sInf (μ.restrict s) f, essSup_eq_sInf μ f]
   refine' sInf_le_sInf _
   rintro a (ha : (μ.restrict s) { x : α | a < f x } = 0)
-  rw [measure.restrict_apply₀' hs.null_measurable_set] at ha
+  rw [measure.restrict_apply₀' hs.null_measurable_set] at ha 
   refine' measure_zero_of_invariant hs _ _ ha
   intro γ
   ext x
@@ -584,7 +585,7 @@ variable {G s}
 
 @[simp, to_additive MeasureTheory.mem_add_fundamentalFrontier]
 theorem mem_fundamentalFrontier :
-    x ∈ fundamentalFrontier G s ↔ x ∈ s ∧ ∃ (g : G)(hg : g ≠ 1), x ∈ g • s := by
+    x ∈ fundamentalFrontier G s ↔ x ∈ s ∧ ∃ (g : G) (hg : g ≠ 1), x ∈ g • s := by
   simp [fundamental_frontier]
 #align measure_theory.mem_fundamental_frontier MeasureTheory.mem_fundamentalFrontier
 #align measure_theory.mem_add_fundamental_frontier MeasureTheory.mem_add_fundamentalFrontier
@@ -663,7 +664,7 @@ theorem pairwise_disjoint_fundamentalInterior :
   by
   refine' fun a b hab => disjoint_left.2 _
   rintro _ ⟨x, hx, rfl⟩ ⟨y, hy, hxy⟩
-  rw [mem_fundamental_interior] at hx hy
+  rw [mem_fundamental_interior] at hx hy 
   refine' hx.2 (a⁻¹ * b) _ _
   rwa [Ne.def, inv_mul_eq_iff_eq_mul, mul_one, eq_comm]
   simpa [mul_smul, ← hxy, mem_inv_smul_set_iff] using hy.1

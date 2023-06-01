@@ -123,11 +123,11 @@ theorem add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ bipro
 #align category_theory.semiadditive_of_binary_biproducts.add_eq_left_addition CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_left_addition
 
 theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h := by
-  simp only [add_eq_right_addition, category.assoc]; congr ; ext <;> simp
+  simp only [add_eq_right_addition, category.assoc]; congr; ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.add_comp CategoryTheory.SemiadditiveOfBinaryBiproducts.add_comp
 
 theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h := by
-  simp only [add_eq_left_addition, ← category.assoc]; congr ; ext <;> simp
+  simp only [add_eq_left_addition, ← category.assoc]; congr; ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.comp_add CategoryTheory.SemiadditiveOfBinaryBiproducts.comp_add
 
 end

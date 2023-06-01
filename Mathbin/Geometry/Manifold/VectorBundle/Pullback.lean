@@ -48,6 +48,6 @@ instance SmoothVectorBundle.pullback : SmoothVectorBundle F (f *ᵖ E) IB'
     rintro b (hb : f b ∈ e.base_set ∩ e'.base_set); ext v
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
     rw [e.coord_changeL_apply e' hb, (e.pullback f).coordChangeL_apply' _]
-    exacts[rfl, hb]
+    exacts [rfl, hb]
 #align smooth_vector_bundle.pullback SmoothVectorBundle.pullback
 

@@ -814,7 +814,7 @@ theorem toFinset_nonempty {s : Set α} [Fintype s] : s.toFinset.Nonempty ↔ s.N
 #print Set.toFinset_inj /-
 @[simp]
 theorem toFinset_inj {s t : Set α} [Fintype s] [Fintype t] : s.toFinset = t.toFinset ↔ s = t :=
-  ⟨fun h => by rw [← s.coe_to_finset, h, t.coe_to_finset], fun h => by simp [h] <;> congr ⟩
+  ⟨fun h => by rw [← s.coe_to_finset, h, t.coe_to_finset], fun h => by simp [h] <;> congr⟩
 #align set.to_finset_inj Set.toFinset_inj
 -/
 
@@ -1295,7 +1295,7 @@ instance Quotient.fintype [Fintype α] (s : Setoid α) [DecidableRel ((· ≈ ·
 
 #print PSigma.fintypePropLeft /-
 instance PSigma.fintypePropLeft {α : Prop} {β : α → Type _} [Decidable α] [∀ a, Fintype (β a)] :
-    Fintype (Σ'a, β a) :=
+    Fintype (Σ' a, β a) :=
   if h : α then Fintype.ofEquiv (β h) ⟨fun x => ⟨h, x⟩, PSigma.snd, fun _ => rfl, fun ⟨_, _⟩ => rfl⟩
   else ⟨∅, fun x => h x.1⟩
 #align psigma.fintype_prop_left PSigma.fintypePropLeft
@@ -1303,7 +1303,7 @@ instance PSigma.fintypePropLeft {α : Prop} {β : α → Type _} [Decidable α] 
 
 #print PSigma.fintypePropRight /-
 instance PSigma.fintypePropRight {α : Type _} {β : α → Prop} [∀ a, Decidable (β a)] [Fintype α] :
-    Fintype (Σ'a, β a) :=
+    Fintype (Σ' a, β a) :=
   Fintype.ofEquiv { a // β a }
     ⟨fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => ⟨x, y⟩, fun ⟨x, y⟩ => rfl, fun ⟨x, y⟩ => rfl⟩
 #align psigma.fintype_prop_right PSigma.fintypePropRight
@@ -1311,7 +1311,7 @@ instance PSigma.fintypePropRight {α : Type _} {β : α → Prop} [∀ a, Decida
 
 #print PSigma.fintypePropProp /-
 instance PSigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [∀ a, Decidable (β a)] :
-    Fintype (Σ'a, β a) :=
+    Fintype (Σ' a, β a) :=
   if h : ∃ a, β a then ⟨{⟨h.fst, h.snd⟩}, fun ⟨_, _⟩ => by simp⟩ else ⟨∅, fun ⟨x, y⟩ => h ⟨x, y⟩⟩
 #align psigma.fintype_prop_prop PSigma.fintypePropProp
 -/
@@ -1431,8 +1431,8 @@ def truncOfNonemptyFintype (α) [Nonempty α] [Fintype α] : Trunc α :=
 to `trunc (Σ' a, P a)`, containing data.
 -/
 def truncSigmaOfExists {α} [Fintype α] {P : α → Prop} [DecidablePred P] (h : ∃ a, P a) :
-    Trunc (Σ'a, P a) :=
-  @truncOfNonemptyFintype (Σ'a, P a) (Exists.elim h fun a ha => ⟨⟨a, ha⟩⟩) _
+    Trunc (Σ' a, P a) :=
+  @truncOfNonemptyFintype (Σ' a, P a) (Exists.elim h fun a ha => ⟨⟨a, ha⟩⟩) _
 #align trunc_sigma_of_exists truncSigmaOfExists
 -/
 
@@ -1459,8 +1459,8 @@ noncomputable def seqOfForallFinsetExistsAux {α : Type _} [DecidableEq α] (P :
     Classical.choose
       (h
         (Finset.image (fun i : Fin n => seqOfForallFinsetExistsAux i)
-          (Finset.univ : Finset (Fin n))))decreasing_by
-  exact i.2
+          (Finset.univ : Finset (Fin n))))
+decreasing_by exact i.2
 #align seq_of_forall_finset_exists_aux seqOfForallFinsetExistsAux
 -/
 

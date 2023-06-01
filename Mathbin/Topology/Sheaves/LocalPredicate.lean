@@ -111,7 +111,8 @@ a `P : local_predicate T` consists of:
 structure LocalPredicate extends PrelocalPredicate T where
   locality :
     ∀ {U : Opens X} (f : ∀ x : U, T x)
-      (w : ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U)), pred f
+      (w : ∀ x : U, ∃ (V : Opens X) (m : x.1 ∈ V) (i : V ⟶ U), pred fun x : V => f (i x : U)),
+      pred f
 #align Top.local_predicate TopCat.LocalPredicate
 -/
 
@@ -127,8 +128,8 @@ def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
       intro x
       specialize w x
       rcases w with ⟨V, m, i, w⟩
-      dsimp at w
-      rw [continuous_iff_continuousAt] at w
+      dsimp at w 
+      rw [continuous_iff_continuousAt] at w 
       specialize w ⟨x, m⟩
       simpa using (opens.open_embedding_of_le i.le).continuousAt_iff.1 w }
 #align Top.continuous_local TopCat.continuousLocal
@@ -149,7 +150,7 @@ by asking that the condition from `P` holds locally near every point.
 -/
 def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : LocalPredicate T
     where
-  pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
+  pred U f := ∀ x : U, ∃ (V : Opens X) (m : x.1 ∈ V) (i : V ⟶ U), P.pred fun x : V => f (i x : U)
   res V U i f w x := by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
@@ -275,7 +276,7 @@ theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
 every point in the fiber `T x` has an allowed section passing through it.
 -/
 theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
-    (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
+    (w : ∀ t : T x, ∃ (U : OpenNhds x) (f : ∀ y : U.1, T y) (h : P.pred f), f ⟨x, U.2⟩ = t) :
     Function.Surjective (stalkToFiber P x) := fun t =>
   by
   rcases w t with ⟨U, f, h, rfl⟩
@@ -293,12 +294,13 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
     (w :
       ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y)
         (hV : P.pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
-        ∃ (W : OpenNhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
+        ∃ (W : OpenNhds x) (iU : W ⟶ U) (iV : W ⟶ V),
+          ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
     Function.Injective (stalkToFiber P x) := fun tU tV h =>
   by
   -- We promise to provide all the ingredients of the proof later:
   let Q :
-    ∃ (W : (open_nhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
+    ∃ (W : (open_nhds x)ᵒᵖ) (s : ∀ w : (unop W).1, T w) (hW : P.pred s),
       tU = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
         tV = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _
@@ -309,7 +311,7 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
   · -- Decompose everything into its constituent parts:
     dsimp
-    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h
+    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h 
     specialize w (unop U) (unop V) fU hU fV hV h
     rcases w with ⟨W, iU, iV, w⟩
     -- and put it back together again in the correct order.

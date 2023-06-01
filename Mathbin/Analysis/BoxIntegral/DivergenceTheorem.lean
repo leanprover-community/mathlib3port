@@ -110,7 +110,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     by
     intro y hy
     set g := fun y => f y - a - f' (y - x) with hg
-    change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε
+    change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε 
     clear_value g; obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
     convert_to‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
@@ -181,7 +181,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
     by_cases hxs : x ∈ s
-    exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
+    exacts [Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
   set fI : ℝ → box (Fin n) → E := fun y J =>
     integral.{0, u, u} J GP (fun x => f (i.insert_nth y x)) box_additive_map.volume
   set fb : Icc (I.lower i) (I.upper i) → Fin n →ᵇᵃ[↑(I.face i)] E := fun x =>
@@ -313,7 +313,7 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
             BoxAdditiveMap.volume) :=
   by
   refine' has_integral_sum fun i hi => _; clear hi
-  simp only [hasFDerivWithinAt_pi', continuousWithinAt_pi] at Hd Hs
+  simp only [hasFDerivWithinAt_pi', continuousWithinAt_pi] at Hd Hs 
   convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 #align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegralGPDivergenceOfForallHasDerivWithinAt
 

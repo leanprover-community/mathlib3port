@@ -167,7 +167,7 @@ end CommSq
 is a pullback square. (Also known as a fibered product or cartesian square.)
 -/
 structure IsPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶ Y) (f : X ⟶ Z) (g : Y ⟶ Z) extends
-  CommSq fst snd f g : Prop where
+    CommSq fst snd f g : Prop where
   is_limit' : Nonempty (IsLimit (PullbackCone.mk _ _ w))
 #align category_theory.is_pullback CategoryTheory.IsPullback
 -/
@@ -186,7 +186,7 @@ structure IsPullback {P X Y Z : C} (fst : P ⟶ X) (snd : P ⟶ Y) (f : X ⟶ Z)
 is a pushout square. (Also known as a fiber coproduct or cocartesian square.)
 -/
 structure IsPushout {Z X Y P : C} (f : Z ⟶ X) (g : Z ⟶ Y) (inl : X ⟶ P) (inr : Y ⟶ P) extends
-  CommSq f g inl inr : Prop where
+    CommSq f g inl inr : Prop where
   is_colimit' : Nonempty (IsColimit (PushoutCocone.mk _ _ w))
 #align category_theory.is_pushout CategoryTheory.IsPushout
 -/
@@ -207,7 +207,7 @@ section
 that is both a pullback square and a pushout square.
 -/
 structure BicartesianSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y ⟶ Z) extends
-  IsPullback f g h i, IsPushout f g h i : Prop
+    IsPullback f g h i, IsPushout f g h i : Prop
 #align category_theory.bicartesian_sq CategoryTheory.BicartesianSq
 -/
 
@@ -811,7 +811,7 @@ theorem zero_right (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 :
             have c :=
               @pushout_cocone.coequalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _) (by simp)
                 (by simpa using pushout_cocone.condition s)
-            dsimp at c
+            dsimp at c 
             simpa using c }⟩ }
 #align category_theory.is_pushout.zero_right CategoryTheory.IsPushout.zero_right
 -/
@@ -1217,7 +1217,7 @@ theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
   refine'
     (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)).symm
       H.is_limit
-  exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _).symm,
+  exacts [iso.refl _, (category.comp_id _).trans (category.id_comp _).symm,
     (category.comp_id _).trans (category.id_comp _).symm]
 #align category_theory.is_pullback.of_map CategoryTheory.IsPullback.of_map
 
@@ -1239,7 +1239,7 @@ theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
   refine'
     (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)).symm
       H.is_colimit
-  exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _),
+  exacts [iso.refl _, (category.comp_id _).trans (category.id_comp _),
     (category.comp_id _).trans (category.id_comp _)]
 #align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_map
 

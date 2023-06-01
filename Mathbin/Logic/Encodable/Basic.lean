@@ -407,7 +407,7 @@ theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
   suffices decode_sum n = none by change (decode_sum n).map _ = none; rw [this]; rfl
   have : 1 ≤ div2 n := by
     rw [div2_val, Nat.le_div_iff_mul_le]
-    exacts[h, by decide]
+    exacts [h, by decide]
   cases' exists_eq_succ_of_ne_zero (ne_of_gt this) with m e
   simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
 #align encodable.decode_ge_two Encodable.decode_ge_two
@@ -599,7 +599,8 @@ attribute [local instance 100] Encodable.decidableRangeEncode
 #print ULower /-
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/
 def ULower (α : Type _) [Encodable α] : Type :=
-  Set.range (Encodable.encode : α → ℕ)deriving DecidableEq, Encodable
+  Set.range (Encodable.encode : α → ℕ)
+deriving DecidableEq, Encodable
 #align ulower ULower
 -/
 

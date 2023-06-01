@@ -182,7 +182,7 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : Differen
     ∃ R > 0, ∀ r ∈ Ioo (0 : ℝ) R, x ∈ A f (fderiv 𝕜 f x) r ε :=
   by
   have := hx.has_fderiv_at
-  simp only [HasFDerivAt, HasFDerivAtFilter, is_o_iff] at this
+  simp only [HasFDerivAt, HasFDerivAtFilter, is_o_iff] at this 
   rcases eventually_nhds_iff_ball.1 (this (half_pos hε)) with ⟨R, R_pos, hR⟩
   refine' ⟨R, R_pos, fun r hr => _⟩
   have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_rfl⟩
@@ -210,7 +210,7 @@ theorem norm_sub_le_of_mem_a {c : 𝕜} (hc : 1 < ‖c‖) {r ε : ℝ} (hε : 0
     mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 4) (norm_nonneg _)) hε.le
   refine' op_norm_le_of_shell (half_pos hr) this hc _
   intro y ley ylt
-  rw [div_div, div_le_iff' (mul_pos (by norm_num : (0 : ℝ) < 2) (zero_lt_one.trans hc))] at ley
+  rw [div_div, div_le_iff' (mul_pos (by norm_num : (0 : ℝ) < 2) (zero_lt_one.trans hc))] at ley 
   calc
     ‖(L₁ - L₂) y‖ = ‖f (x + y) - f x - L₂ (x + y - x) - (f (x + y) - f x - L₁ (x + y - x))‖ := by
       simp
@@ -266,7 +266,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     have := mem_Inter.1 hx e
     rcases mem_Union.1 this with ⟨n, hn⟩
     refine' ⟨n, fun p q hp hq => _⟩
-    simp only [mem_Inter, ge_iff_le] at hn
+    simp only [mem_Inter, ge_iff_le] at hn 
     rcases mem_Union.1 (hn p hp q hq) with ⟨L, hL⟩
     exact ⟨L, mem_Union.1 hL⟩
   /- Recast the assumptions: for each `e`, there exist `n e` and linear maps `L e p q` in `K`
@@ -329,7 +329,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
       ‖L0 e - L0 e'‖ ≤ 12 * ‖c‖ * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
       _ < 12 * ‖c‖ * (ε / (12 * ‖c‖)) :=
         (mul_lt_mul' le_rfl he (le_of_lt P) (mul_pos (by norm_num) cpos))
-      _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0), ne_of_gt cpos] ; ring
+      _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0), ne_of_gt cpos]; ring
       
   -- As it is Cauchy, the sequence `L0` converges, to a limit `f'` in `K`.
   obtain ⟨f', f'K, hf'⟩ : ∃ f' ∈ K, tendsto L0 at_top (𝓝 f') :=
@@ -370,12 +370,12 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     have k_gt : n e < k :=
       by
       have : ((1 : ℝ) / 2) ^ (k + 1) < (1 / 2) ^ (n e + 1) := lt_trans hk y_lt
-      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this
+      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
       linarith
     set m := k - 1 with hl
     have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt
     have km : k = m + 1 := (Nat.succ_pred_eq_of_pos (lt_of_le_of_lt (zero_le _) k_gt)).symm
-    rw [km] at hk h'k
+    rw [km] at hk h'k 
     -- `f` is well approximated by `L e (n e) k` at the relevant scale
     -- (in fact, we use `m = k - 1` instead of `k` because of the precise definition of `A`).
     have J1 : ‖f (x + y) - f x - L e (n e) m (x + y - x)‖ ≤ (1 / 2) ^ e * (1 / 2) ^ m :=
@@ -406,9 +406,9 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         (mul_le_mul_of_nonneg_left he.le
           (mul_nonneg (add_nonneg (by norm_num) (mul_nonneg (by norm_num) (norm_nonneg _)))
             (norm_nonneg _)))
-      _ = ε * ‖y‖ := by field_simp [ne_of_gt Pos] ; ring
+      _ = ε * ‖y‖ := by field_simp [ne_of_gt Pos]; ring
       
-  rw [← this.fderiv] at f'K
+  rw [← this.fderiv] at f'K 
   exact ⟨this.differentiable_at, f'K⟩
 #align fderiv_measurable_aux.D_subset_differentiable_set FDerivMeasurableAux.d_subset_differentiable_set
 -/
@@ -587,7 +587,7 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
     ∃ R > 0, ∀ r ∈ Ioo (0 : ℝ) R, x ∈ A f (derivWithin f (Ici x) x) r ε :=
   by
   have := hx.has_deriv_within_at
-  simp_rw [hasDerivWithinAt_iff_isLittleO, is_o_iff] at this
+  simp_rw [hasDerivWithinAt_iff_isLittleO, is_o_iff] at this 
   rcases mem_nhdsWithin_Ici_iff_exists_Ico_subset.1 (this (half_pos hε)) with ⟨m, xm, hm⟩
   refine' ⟨m - x, by linarith [show x < m from xm], fun r hr => _⟩
   have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_rfl⟩
@@ -618,7 +618,7 @@ theorem norm_sub_le_of_mem_a {r x : ℝ} (hr : 0 < r) (ε : ℝ) {L₁ L₂ : F}
     (h₂ : x ∈ A f L₂ r ε) : ‖L₁ - L₂‖ ≤ 4 * ε :=
   by
   suffices H : ‖(r / 2) • (L₁ - L₂)‖ ≤ r / 2 * (4 * ε)
-  · rwa [norm_smul, Real.norm_of_nonneg (half_pos hr).le, mul_le_mul_left (half_pos hr)] at H
+  · rwa [norm_smul, Real.norm_of_nonneg (half_pos hr).le, mul_le_mul_left (half_pos hr)] at H 
   calc
     ‖(r / 2) • (L₁ - L₂)‖ =
         ‖f (x + r / 2) - f x - (x + r / 2 - x) • L₂ -
@@ -674,7 +674,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     have := mem_Inter.1 hx e
     rcases mem_Union.1 this with ⟨n, hn⟩
     refine' ⟨n, fun p q hp hq => _⟩
-    simp only [mem_Inter, ge_iff_le] at hn
+    simp only [mem_Inter, ge_iff_le] at hn 
     rcases mem_Union.1 (hn p hp q hq) with ⟨L, hL⟩
     exact ⟨L, mem_Union.1 hL⟩
   /- Recast the assumptions: for each `e`, there exist `n e` and linear maps `L e p q` in `K`
@@ -734,7 +734,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     calc
       ‖L0 e - L0 e'‖ ≤ 12 * (1 / 2) ^ e := M _ _ _ _ _ _ le_rfl le_rfl le_rfl le_rfl he'
       _ < 12 * (ε / 12) := (mul_lt_mul' le_rfl he (le_of_lt P) (by norm_num))
-      _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0)] ; ring
+      _ = ε := by field_simp [(by norm_num : (12 : ℝ) ≠ 0)]; ring
       
   -- As it is Cauchy, the sequence `L0` converges, to a limit `f'` in `K`.
   obtain ⟨f', f'K, hf'⟩ : ∃ f' ∈ K, tendsto L0 at_top (𝓝 f') :=
@@ -775,12 +775,12 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     have k_gt : n e < k :=
       by
       have : ((1 : ℝ) / 2) ^ (k + 1) < (1 / 2) ^ (n e + 1) := lt_of_lt_of_le hk y_le
-      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this
+      rw [pow_lt_pow_iff_of_lt_one (by norm_num : (0 : ℝ) < 1 / 2) (by norm_num)] at this 
       linarith
     set m := k - 1 with hl
     have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt
     have km : k = m + 1 := (Nat.succ_pred_eq_of_pos (lt_of_le_of_lt (zero_le _) k_gt)).symm
-    rw [km] at hk h'k
+    rw [km] at hk h'k 
     -- `f` is well approximated by `L e (n e) k` at the relevant scale
     -- (in fact, we use `m = k - 1` instead of `k` because of the precise definition of `A`).
     have J : ‖f y - f x - (y - x) • L e (n e) m‖ ≤ 4 * (1 / 2) ^ e * ‖y - x‖ :=
@@ -790,7 +790,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
           apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
           · simp only [one_div, inv_pow, left_mem_Icc, le_add_iff_nonneg_right]
             exact div_nonneg (inv_nonneg.2 (pow_nonneg zero_le_two _)) zero_le_two
-          · simp only [pow_add, tsub_le_iff_left] at h'k
+          · simp only [pow_add, tsub_le_iff_left] at h'k 
             simpa only [hy.1, mem_Icc, true_and_iff, one_div, pow_one] using h'k
         _ = 4 * (1 / 2) ^ e * (1 / 2) ^ (m + 2) := by field_simp; ring
         _ ≤ 4 * (1 / 2) ^ e * (y - x) :=
@@ -809,7 +809,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         (mul_le_mul_of_nonneg_left he.le (mul_nonneg (by norm_num) (norm_nonneg _)))
       _ = ε * ‖y - x‖ := by ring
       
-  rw [← this.deriv_within (uniqueDiffOn_Ici x x le_rfl)] at f'K
+  rw [← this.deriv_within (uniqueDiffOn_Ici x x le_rfl)] at f'K 
   exact ⟨this.differentiable_within_at, f'K⟩
 #align right_deriv_measurable_aux.D_subset_differentiable_set RightDerivMeasurableAux.d_subset_differentiable_set
 -/

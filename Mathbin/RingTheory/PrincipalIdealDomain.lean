@@ -191,7 +191,7 @@ theorem to_maximal_ideal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S :
         exact (hxS <| hTS hxT).elim
       cases' (mem_iff_generator_dvd _).1 h with y hy
       have : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS
-      rw [← mul_one (generator S), hy, mul_left_comm, mul_right_inj' this] at hz
+      rw [← mul_one (generator S), hy, mul_left_comm, mul_right_inj' this] at hz 
       exact hz.symm ▸ T.mul_mem_right _ (generator_mem T)⟩
 #align is_prime.to_maximal_ideal IsPrime.to_maximal_ideal
 
@@ -233,7 +233,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
                       fun h₁ => WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 :=
                       by
-                      simp only [not_and_or, Set.mem_setOf_eq, not_ne_iff] at this
+                      simp only [not_and_or, Set.mem_setOf_eq, not_ne_iff] at this 
                       cases this; cases this ((mod_mem_iff hmin.1).2 hx); exact this
                     simp [*]),
               fun hx =>
@@ -389,7 +389,7 @@ variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [GCDMonoid R]
 theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
   by
   obtain ⟨d, hd⟩ := IsPrincipalIdealRing.principal (span ({x, y} : Set R))
-  rw [submodule_span_eq] at hd
+  rw [submodule_span_eq] at hd 
   rw [hd]
   suffices Associated d (gcd x y) by
     obtain ⟨D, HD⟩ := this
@@ -405,7 +405,7 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
   · obtain ⟨r, s, rfl⟩ : ∃ r s, r * x + s * y = d := by
       rw [← Ideal.mem_span_pair, hd, Ideal.mem_span_singleton]
     apply dvd_add <;> apply dvd_mul_of_dvd_right
-    exacts[gcd_dvd_left x y, gcd_dvd_right x y]
+    exacts [gcd_dvd_left x y, gcd_dvd_right x y]
 #align span_gcd span_gcd
 -/
 
@@ -541,7 +541,7 @@ theorem nonPrincipals_zorn (c : Set (Ideal R)) (hs : c ⊆ nonPrincipals R)
   obtain ⟨J, hJc, hxJ⟩ := (Submodule.mem_sSup_of_directed ⟨K, hKmem⟩ hchain.directed_on).1 hxmem
   have hSupJ : Sup c = J := le_antisymm (by simp [hx, Ideal.span_le, hxJ]) (le_sSup hJc)
   specialize hs hJc
-  rw [← hSupJ, hx, nonPrincipals_def] at hs
+  rw [← hSupJ, hx, nonPrincipals_def] at hs 
   exact hs ⟨⟨x, rfl⟩⟩
 #align non_principals_zorn nonPrincipals_zorn
 
@@ -582,14 +582,14 @@ theorem IsPrincipalIdealRing.of_prime (H : ∀ P : Ideal R, P.IsPrime → P.IsPr
       ⟨⟨a * b, (le_antisymm fun i hi => _) <| (span_singleton_mul_span_singleton a b).ge.trans _⟩⟩
   · have hisup : i ∈ I ⊔ span {y} := Ideal.mem_sup_left hi
     have : y ∈ I ⊔ span {y} := Ideal.mem_sup_right (Ideal.mem_span_singleton_self y)
-    erw [ha, mem_span_singleton'] at hisup this
+    erw [ha, mem_span_singleton'] at hisup this 
     obtain ⟨v, rfl⟩ := this
     obtain ⟨u, rfl⟩ := hisup
     have hucolon : u ∈ I.colon (span {v * a}) :=
       by
       rw [Ideal.mem_colon_singleton, mul_comm v, ← mul_assoc]
       exact mul_mem_right _ _ hi
-    erw [hb, mem_span_singleton'] at hucolon
+    erw [hb, mem_span_singleton'] at hucolon 
     obtain ⟨z, rfl⟩ := hucolon
     exact mem_span_singleton'.2 ⟨z, by ring⟩
   · rw [← Ideal.submodule_span_eq, ← ha, Ideal.sup_mul, sup_le_iff,

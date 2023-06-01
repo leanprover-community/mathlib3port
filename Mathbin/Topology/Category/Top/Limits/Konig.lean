@@ -54,10 +54,10 @@ variable {J : Type u} [SmallCategory J]
 variable (F : J ⥤ TopCat.{u})
 
 private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J) :=
-  Σ'(X Y : J)(mX : X ∈ G)(mY : Y ∈ G), X ⟶ Y
+  Σ' (X Y : J) (mX : X ∈ G) (mY : Y ∈ G), X ⟶ Y
 
 private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
-  ΣG : Finset J, Finset (FiniteDiagramArrow G)
+  Σ G : Finset J, Finset (FiniteDiagramArrow G)
 
 /-- Partial sections of a cofiltered limit are sections when restricted to
 a finite subset of objects and morphisms of `J`.

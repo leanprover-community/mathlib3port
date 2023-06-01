@@ -62,10 +62,10 @@ open Measure
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
 structure Conservative (f : α → α)
-  (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
-  QuasiMeasurePreserving f μ μ : Prop where
+    (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
+    QuasiMeasurePreserving f μ μ : Prop where
   exists_mem_image_mem :
-    ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s
+    ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _) (_ : m ≠ 0), (f^[m]) x ∈ s
 #align measure_theory.conservative MeasureTheory.Conservative
 -/
 
@@ -95,11 +95,11 @@ after `m` iterations of `f`. -/
 theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : MeasurableSet s)
     (h0 : μ s ≠ 0) : ∃ᶠ m in atTop, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 :=
   by
-  by_contra H; simp only [not_frequently, eventually_at_top, Ne.def, Classical.not_not] at H
+  by_contra H; simp only [not_frequently, eventually_at_top, Ne.def, Classical.not_not] at H 
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
   · apply h0; simpa using hN 0 le_rfl
-  rw [imp_false] at ihN; push_neg  at ihN
+  rw [imp_false] at ihN ; push_neg  at ihN 
   rcases ihN with ⟨n, hn, hμn⟩
   set T := s ∩ ⋃ n ≥ N + 1, f^[n] ⁻¹' s
   have hT : MeasurableSet T :=
@@ -113,7 +113,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
   refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩
   · exact add_le_add hn (Nat.one_le_of_lt <| pos_iff_ne_zero.2 hm0)
-  · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm
+  · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm 
 #align measure_theory.conservative.frequently_measure_inter_ne_zero MeasureTheory.Conservative.frequently_measure_inter_ne_zero
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
@@ -215,7 +215,7 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   /- We take a point `x ∈ s` such that `f^[k] x ∈ s` for infinitely many values of `k`,
     then we choose two of these values `k < l` such that `k ≡ l [MOD (n + 1)]`.
     Then `f^[k] x ∈ s` and `(f^[n + 1])^[(l - k) / (n + 1)] (f^[k] x) = f^[l] x ∈ s`. -/
-  rw [Nat.frequently_atTop_iff_infinite] at hx
+  rw [Nat.frequently_atTop_iff_infinite] at hx 
   rcases Nat.exists_lt_modEq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
   set m := (l - k) / (n + 1)
   have : (n + 1) * m = l - k := by
@@ -223,7 +223,7 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
     exact (Nat.modEq_iff_dvd' hkl.le).1 hn
   refine' ⟨(f^[k]) x, hk, m, _, _⟩
   · intro hm
-    rw [hm, MulZeroClass.mul_zero, eq_comm, tsub_eq_zero_iff_le] at this
+    rw [hm, MulZeroClass.mul_zero, eq_comm, tsub_eq_zero_iff_le] at this 
     exact this.not_lt hkl
   · rwa [← iterate_mul, this, ← iterate_add_apply, tsub_add_cancel_of_le]
     exact hkl.le

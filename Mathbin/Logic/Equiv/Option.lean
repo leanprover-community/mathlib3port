@@ -86,7 +86,7 @@ private def remove_none_aux (x : α) : β :=
       show (e none).isSome by
         rw [← Option.ne_none_iff_isSome]
         intro hn
-        rw [Option.not_isSome_iff_eq_none, ← hn] at h
+        rw [Option.not_isSome_iff_eq_none, ← hn] at h 
         simpa only using e.injective h
 
 private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') :
@@ -103,9 +103,9 @@ private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneA
       cases h1 : e.symm (some (remove_none_aux e x)) <;> cases h2 : e (some x)
       · rw [remove_none_aux_none _ h1]
         exact (e.eq_symm_apply.mpr h2).symm
-      · rw [remove_none_aux_some _ ⟨_, h2⟩] at h1
+      · rw [remove_none_aux_some _ ⟨_, h2⟩] at h1 
         simpa using h1
-      · rw [remove_none_aux_none _ h2] at h1
+      · rw [remove_none_aux_none _ h2] at h1 
         simpa using h1
       · rw [remove_none_aux_some _ ⟨_, h1⟩]
         rw [remove_none_aux_some _ ⟨_, h2⟩]
@@ -153,7 +153,7 @@ theorem some_removeNone_iff {x : α} : some (removeNone e x) = e none ↔ e.symm
     simpa using (congr_arg e.symm h).symm
   · rw [remove_none_some _ ⟨a, h⟩]
     have := congr_arg e.symm h
-    rw [symm_apply_apply] at this
+    rw [symm_apply_apply] at this 
     simp only [false_iff_iff, apply_eq_iff_eq]
     simp [this]
 #align equiv.some_remove_none_iff Equiv.some_removeNone_iff

@@ -172,7 +172,7 @@ theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fin
     rw [norm_eq_matrix_det b, ← Matrix.exists_mulVec_eq_zero_iff]
     rintro ⟨v, v_ne, hv⟩
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
-      left_mul_matrix_mul_vec_repr] at hv
+      left_mul_matrix_mul_vec_repr] at hv 
     refine'
       (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
     · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
@@ -349,9 +349,9 @@ theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSep
   have hx' : IsIntegral K x := isIntegral_of_isScalarTower hx
   rw [← isIntegral_algebraMap_iff (algebraMap K (AlgebraicClosure L)).Injective, norm_eq_prod_roots]
   · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
-    rw [mem_roots_map (minpoly.ne_zero hx')] at hy
+    rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
     use minpoly R x, minpoly.monic hx
-    rw [← aeval_def] at hy⊢
+    rw [← aeval_def] at hy ⊢
     exact minpoly.aeval_of_isScalarTower R x y hy
   · apply IsAlgClosed.splits_codomain
   · infer_instance
@@ -378,7 +378,7 @@ theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) 
       fun _ => inferInstance
     rw [norm_eq_prod_embeddings K A (_ : F),
       Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] A => σ x)
-        (fun π : Σf : L →ₐ[K] A, _ => (π.2 : F → A) x) fun _ => rfl]
+        (fun π : Σ f : L →ₐ[K] A, _ => (π.2 : F → A) x) fun _ => rfl]
     suffices
       ∀ σ : L →ₐ[K] A,
         haveI := σ.to_ring_hom.to_algebra

@@ -195,7 +195,7 @@ theorem mk' (l : sq.LiftStruct) : HasLift sq :=
 variable (sq)
 
 theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct := by constructor;
-  exacts[fun h => h.exists_lift, fun h => mk h]
+  exacts [fun h => h.exists_lift, fun h => mk h]
 #align category_theory.comm_sq.has_lift.iff CategoryTheory.CommSq.HasLift.iff
 
 theorem iff_op : HasLift sq ↔ HasLift sq.op :=

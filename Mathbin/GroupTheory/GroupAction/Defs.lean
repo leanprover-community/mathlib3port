@@ -1016,7 +1016,7 @@ end
 conjugation actions. -/
 @[ext]
 class MulDistribMulAction (M : Type _) (A : Type _) [Monoid M] [Monoid A] extends
-  MulAction M A where
+    MulAction M A where
   smul_mul : ∀ (r : M) (x y : A), r • (x * y) = r • x * r • y
   smul_one : ∀ r : M, r • (1 : A) = 1
 #align mul_distrib_mul_action MulDistribMulAction

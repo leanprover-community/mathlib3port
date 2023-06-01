@@ -41,7 +41,7 @@ variable {α : Type u} {β : Type _} {γ : Type _} {δ : Type _}
 /-- Uniform isomorphism between `α` and `β` -/
 @[nolint has_nonempty_instance]
 structure UniformEquiv (α : Type _) (β : Type _) [UniformSpace α] [UniformSpace β] extends
-  α ≃ β where
+    α ≃ β where
   uniformContinuous_toFun : UniformContinuous to_fun
   uniformContinuous_invFun : UniformContinuous inv_fun
 #align uniform_equiv UniformEquiv

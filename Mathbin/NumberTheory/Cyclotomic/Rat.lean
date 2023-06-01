@@ -70,7 +70,7 @@ theorem discr_prime_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiv
 enough and less cumbersome to use than `is_cyclotomic_extension.rat.discr_prime_pow'`. -/
 theorem discr_prime_pow_eq_unit_mul_pow' [IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    ∃ (u : ℤˣ)(n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).basis = u * p ^ n :=
+    ∃ (u : ℤˣ) (n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).basis = u * p ^ n :=
   by
   rw [hζ.discr_zeta_eq_discr_zeta_sub_one.symm]
   exact discr_prime_pow_eq_unit_mul_pow hζ (cyclotomic.irreducible_rat (p ^ k).Pos)
@@ -92,11 +92,11 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
   have hint : IsIntegral ℤ B.gen := isIntegral_sub (hζ.is_integral (p ^ k).Pos) isIntegral_one
   have H := discr_mul_is_integral_mem_adjoin ℚ hint h
   obtain ⟨u, n, hun⟩ := discr_prime_pow_eq_unit_mul_pow' hζ
-  rw [hun] at H
+  rw [hun] at H 
   replace H := Subalgebra.smul_mem _ H u.inv
   rw [← smul_assoc, ← smul_mul_assoc, Units.inv_eq_val_inv, coe_coe, zsmul_eq_mul, ← Int.cast_mul,
     Units.inv_mul, Int.cast_one, one_mul,
-    show (p : ℚ) ^ n • x = ((p : ℕ) : ℤ) ^ n • x by simp [smul_def]] at H
+    show (p : ℚ) ^ n • x = ((p : ℕ) : ℤ) ^ n • x by simp [smul_def]] at H 
   cases k
   · haveI : IsCyclotomicExtension {1} ℚ K := by simpa using hcycl
     have : x ∈ (⊥ : Subalgebra ℚ K) := by
@@ -111,9 +111,9 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
       by
       have h₁ := minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hint
       have h₂ := hζ.minpoly_sub_one_eq_cyclotomic_comp (cyclotomic.irreducible_rat (p ^ _).Pos)
-      rw [IsPrimitiveRoot.subOnePowerBasis_gen] at h₁
+      rw [IsPrimitiveRoot.subOnePowerBasis_gen] at h₁ 
       rw [h₁, ← map_cyclotomic_int, show Int.castRingHom ℚ = algebraMap ℤ ℚ by rfl,
-        show X + 1 = map (algebraMap ℤ ℚ) (X + 1) by simp, ← map_comp] at h₂
+        show X + 1 = map (algebraMap ℤ ℚ) (X + 1) by simp, ← map_comp] at h₂ 
       haveI : CharZero ℚ := StrictOrderedSemiring.to_charZero
       rw [IsPrimitiveRoot.subOnePowerBasis_gen,
         map_injective (algebraMap ℤ ℚ) (algebraMap ℤ ℚ).injective_int h₂]
@@ -129,7 +129,7 @@ theorem isIntegralClosure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExt
 theorem isIntegralClosure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtension {p} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K :=
   by
-  rw [← pow_one p] at hζ hcycl
+  rw [← pow_one p] at hζ hcycl 
   exact is_integral_closure_adjoin_singleton_of_prime_pow hζ
 #align is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime IsCyclotomicExtension.Rat.isIntegralClosure_adjoin_singleton_of_prime
 

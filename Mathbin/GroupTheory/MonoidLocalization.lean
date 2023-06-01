@@ -158,7 +158,7 @@ def r' : Con (M × S) :=
   -- note we multiply by `c` on the left so that we can later generalize to `•`
   refine'
     { R := fun a b : M × S => ∃ c : S, ↑c * (↑b.2 * a.1) = c * (a.2 * b.1)
-      iseqv := ⟨fun a => ⟨1, rfl⟩, fun a b ⟨c, hc⟩ => ⟨c, hc.symm⟩, _⟩.. }
+      iseqv := ⟨fun a => ⟨1, rfl⟩, fun a b ⟨c, hc⟩ => ⟨c, hc.symm⟩, _⟩ .. }
   · rintro a b c ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
     use t₂ * t₁ * b.2
     simp only [Submonoid.coe_mul]
@@ -188,7 +188,7 @@ theorem r_eq_r' : r S = r' S :=
       rw [← one_mul (p, q), ← one_mul (x, y)]
       refine' b.trans (b.mul (H (t * y)) (b.refl _)) _
       convert b.symm (b.mul (H (t * q)) (b.refl (x, y))) using 1
-      dsimp only [Prod.mk_mul_mk, Submonoid.coe_mul] at ht⊢
+      dsimp only [Prod.mk_mul_mk, Submonoid.coe_mul] at ht ⊢
       simp_rw [mul_assoc, ht, mul_comm y q]
 #align localization.r_eq_r' Localization.r_eq_r'
 #align add_localization.r_eq_r' AddLocalization.r_eq_r'
@@ -448,10 +448,10 @@ protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Loc
       (by
         cases' b with b hb
         cases' b' with b' hb'
-        rw [r_eq_r'] at h⊢
+        rw [r_eq_r'] at h ⊢
         cases' h with t ht
         use t
-        dsimp only [Subtype.coe_mk] at ht⊢
+        dsimp only [Subtype.coe_mk] at ht ⊢
         -- TODO: this definition should take `smul_comm_class R M M` instead of `is_scalar_tower R M M` if
         -- we ever want to generalize to the non-commutative case.
         haveI : SMulCommClass R M M :=
@@ -502,9 +502,9 @@ instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower R�
 
 instance [Monoid R] [MulAction R M] [IsScalarTower R M M] : MulAction R (Localization S)
     where
-  one_smul := Localization.ind <| Prod.rec <| by intros ; simp only [Localization.smul_mk, one_smul]
+  one_smul := Localization.ind <| Prod.rec <| by intros; simp only [Localization.smul_mk, one_smul]
   mul_smul s₁ s₂ :=
-    Localization.ind <| Prod.rec <| by intros ; simp only [Localization.smul_mk, mul_smul]
+    Localization.ind <| Prod.rec <| by intros; simp only [Localization.smul_mk, mul_smul]
 
 instance [Monoid R] [MulDistribMulAction R M] [IsScalarTower R M M] :
     MulDistribMulAction R (Localization S)
@@ -674,9 +674,9 @@ variable (f : LocalizationMap S N)
 theorem map_right_cancel {x y} {c : S} (h : f.toMap (c * x) = f.toMap (c * y)) :
     f.toMap x = f.toMap y :=
   by
-  rw [f.to_map.map_mul, f.to_map.map_mul] at h
+  rw [f.to_map.map_mul, f.to_map.map_mul] at h 
   cases' f.map_units c with u hu
-  rw [← hu] at h
+  rw [← hu] at h 
   exact (Units.mul_right_inj u).1 h
 #align submonoid.localization_map.map_right_cancel Submonoid.LocalizationMap.map_right_cancel
 #align add_submonoid.localization_map.map_right_cancel AddSubmonoid.LocalizationMap.map_right_cancel
@@ -727,7 +727,7 @@ theorem mk'_sec (z : N) : f.mk' (f.sec z).1 (f.sec z).2 = z :=
 -/
 
 @[to_additive]
-theorem mk'_surjective (z : N) : ∃ (x : _)(y : S), f.mk' x y = z :=
+theorem mk'_surjective (z : N) : ∃ (x : _) (y : S), f.mk' x y = z :=
   ⟨(f.sec z).1, (f.sec z).2, f.mk'_sec z⟩
 #align submonoid.localization_map.mk'_surjective Submonoid.LocalizationMap.mk'_surjective
 #align add_submonoid.localization_map.mk'_surjective AddSubmonoid.LocalizationMap.mk'_surjective
@@ -918,7 +918,14 @@ noncomputable def lift : N →* P
     rw [mul_inv_left hg, ← mul_assoc, ← mul_assoc, mul_inv_right hg, mul_comm _ (g (f.sec y).1), ←
       mul_assoc, ← mul_assoc, mul_inv_right hg]
     repeat' rw [← g.map_mul]
-    exact f.eq_of_eq hg (by repeat' first |rw [f.to_map.map_mul]|rw [sec_spec'] <;> ac_rfl)
+    exact
+      f.eq_of_eq hg
+        (by
+          repeat'
+              first
+              | rw [f.to_map.map_mul]
+              | rw [sec_spec'] <;>
+            ac_rfl)
 #align submonoid.localization_map.lift Submonoid.LocalizationMap.lift
 #align add_submonoid.localization_map.lift AddSubmonoid.LocalizationMap.lift
 
@@ -1091,7 +1098,7 @@ theorem lift_injective_iff :
     constructor
     · exact f.eq_of_eq hg
     · intro h
-      rw [← f.lift_eq hg, ← f.lift_eq hg] at h
+      rw [← f.lift_eq hg, ← f.lift_eq hg] at h 
       exact H h
   · intro H z w h
     obtain ⟨x, hx⟩ := f.surj z
@@ -1478,7 +1485,7 @@ def ofMulEquivOfDom {k : P ≃* M} (H : T.map k.toMonoidHom = S) : LocalizationM
           ⟨fun ⟨c, hc⟩ =>
             let ⟨d, hd⟩ := k.to_equiv.surjective c
             ⟨⟨d, H' ▸ show k d ∈ S from hd.symm ▸ c.2⟩, by
-              erw [← hd, ← k.map_mul, ← k.map_mul] at hc <;> exact k.to_equiv.injective hc⟩,
+              erw [← hd, ← k.map_mul, ← k.map_mul] at hc  <;> exact k.to_equiv.injective hc⟩,
             fun ⟨c, hc⟩ =>
             ⟨⟨k c, H ▸ Set.mem_image_of_mem k c.2⟩, by
               erw [← k.map_mul] <;> rw [hc, k.map_mul] <;> rfl⟩⟩
@@ -1923,7 +1930,7 @@ instance : LE (Localization s) :=
         (by
           obtain ⟨e, he⟩ := r_iff_exists.1 hab
           obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
-          simp only [mul_right_inj] at he hf
+          simp only [mul_right_inj] at he hf 
           dsimp
           rw [← mul_le_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
             mul_le_mul_iff_right, ← mul_le_mul_iff_left, mul_left_comm, he, mul_left_comm,
@@ -1938,7 +1945,7 @@ instance : LT (Localization s) :=
         (by
           obtain ⟨e, he⟩ := r_iff_exists.1 hab
           obtain ⟨f, hf⟩ := r_iff_exists.1 hcd
-          simp only [mul_right_inj] at he hf
+          simp only [mul_right_inj] at he hf 
           dsimp
           rw [← mul_lt_mul_iff_right, mul_right_comm, ← hf, mul_right_comm, mul_right_comm ↑a₂,
             mul_lt_mul_iff_right, ← mul_lt_mul_iff_left, mul_left_comm, he, mul_left_comm,
@@ -1966,7 +1973,7 @@ instance : PartialOrder (Localization s)
   le_trans a b c :=
     Localization.induction_on₃ a b c fun a b c hab hbc =>
       by
-      simp only [mk_le_mk] at hab hbc⊢
+      simp only [mk_le_mk] at hab hbc ⊢
       refine' le_of_mul_le_mul_left' _
       · exact b.2
       rw [mul_left_comm]
@@ -1977,7 +1984,7 @@ instance : PartialOrder (Localization s)
     induction' b with b₁ b₂
     simp_rw [mk_le_mk, mk_eq_mk_iff, r_iff_exists]
     exact fun hab hba => ⟨1, by rw [hab.antisymm hba]⟩
-    all_goals intros ; rfl
+    all_goals intros; rfl
   lt_iff_le_not_le a b := Localization.induction_on₂ a b fun a b => lt_iff_le_not_le
 
 @[to_additive]
@@ -1988,12 +1995,12 @@ instance : OrderedCancelCommMonoid (Localization s) :=
       Localization.induction_on₂ a b fun a b hab c =>
         Localization.induction_on c fun c =>
           by
-          simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ c.1] at hab⊢
+          simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ c.1] at hab ⊢
           exact mul_le_mul_left' hab _
     le_of_mul_le_mul_left := fun a b c =>
       Localization.induction_on₃ a b c fun a b c hab =>
         by
-        simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ a.1] at hab⊢
+        simp only [mk_mul, mk_le_mk, Submonoid.coe_mul, mul_mul_mul_comm _ _ a.1] at hab ⊢
         exact le_of_mul_le_mul_left' hab }
 
 @[to_additive]

@@ -90,7 +90,7 @@ structure LatticeHom (α β : Type _) [Lattice α] [Lattice β] extends SupHom �
 #print BoundedLatticeHom /-
 /-- The type of bounded lattice homomorphisms from `α` to `β`. -/
 structure BoundedLatticeHom (α β : Type _) [Lattice α] [Lattice β] [BoundedOrder α]
-  [BoundedOrder β] extends LatticeHom α β where
+    [BoundedOrder β] extends LatticeHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_bot' : to_fun ⊥ = ⊥
 #align bounded_lattice_hom BoundedLatticeHom
@@ -103,7 +103,7 @@ section
 
 You should extend this class when you extend `sup_hom`. -/
 class SupHomClass (F : Type _) (α β : outParam <| Type _) [Sup α] [Sup β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_sup (f : F) (a b : α) : f (a ⊔ b) = f a ⊔ f b
 #align sup_hom_class SupHomClass
 -/
@@ -113,7 +113,7 @@ class SupHomClass (F : Type _) (α β : outParam <| Type _) [Sup α] [Sup β] ex
 
 You should extend this class when you extend `inf_hom`. -/
 class InfHomClass (F : Type _) (α β : outParam <| Type _) [Inf α] [Inf β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_inf (f : F) (a b : α) : f (a ⊓ b) = f a ⊓ f b
 #align inf_hom_class InfHomClass
 -/
@@ -123,7 +123,7 @@ class InfHomClass (F : Type _) (α β : outParam <| Type _) [Inf α] [Inf β] ex
 
 You should extend this class when you extend `sup_bot_hom`. -/
 class SupBotHomClass (F : Type _) (α β : outParam <| Type _) [Sup α] [Sup β] [Bot α] [Bot β] extends
-  SupHomClass F α β where
+    SupHomClass F α β where
   map_bot (f : F) : f ⊥ = ⊥
 #align sup_bot_hom_class SupBotHomClass
 -/
@@ -133,7 +133,7 @@ class SupBotHomClass (F : Type _) (α β : outParam <| Type _) [Sup α] [Sup β]
 
 You should extend this class when you extend `sup_bot_hom`. -/
 class InfTopHomClass (F : Type _) (α β : outParam <| Type _) [Inf α] [Inf β] [Top α] [Top β] extends
-  InfHomClass F α β where
+    InfHomClass F α β where
   map_top (f : F) : f ⊤ = ⊤
 #align inf_top_hom_class InfTopHomClass
 -/
@@ -143,7 +143,7 @@ class InfTopHomClass (F : Type _) (α β : outParam <| Type _) [Inf α] [Inf β]
 
 You should extend this class when you extend `lattice_hom`. -/
 class LatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice α] [Lattice β] extends
-  SupHomClass F α β where
+    SupHomClass F α β where
   map_inf (f : F) (a b : α) : f (a ⊓ b) = f a ⊓ f b
 #align lattice_hom_class LatticeHomClass
 -/
@@ -153,7 +153,7 @@ class LatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice α] [La
 
 You should extend this class when you extend `bounded_lattice_hom`. -/
 class BoundedLatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice α] [Lattice β]
-  [BoundedOrder α] [BoundedOrder β] extends LatticeHomClass F α β where
+    [BoundedOrder α] [BoundedOrder β] extends LatticeHomClass F α β where
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
 #align bounded_lattice_hom_class BoundedLatticeHomClass

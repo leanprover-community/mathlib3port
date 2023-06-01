@@ -425,8 +425,8 @@ def idealQuotientToRingQuot (r : B → B → Prop) : B ⧸ Ideal.ofRel r →+* R
     (by
       refine' fun x h => Submodule.span_induction h _ _ _ _
       · rintro y ⟨a, b, h, su⟩
-        symm at su
-        rw [← sub_eq_iff_eq_add] at su
+        symm at su 
+        rw [← sub_eq_iff_eq_add] at su 
         rw [← su, RingHom.map_sub, mk_ring_hom_rel h, sub_self]
       · simp
       · intro a b ha hb; simp [ha, hb]

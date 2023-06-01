@@ -78,7 +78,7 @@ theorem gcd_dvd_right (x y : R) : gcd x y ∣ y :=
 
 theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y :=
   by
-  rw [← Ideal.span_singleton_le_span_singleton] at hx hy⊢
+  rw [← Ideal.span_singleton_le_span_singleton] at hx hy ⊢
   rw [span_gcd, Ideal.span_insert, sup_le_iff]
   exact ⟨hx, hy⟩
 #align is_bezout.dvd_gcd IsBezout.dvd_gcd
@@ -127,9 +127,9 @@ theorem tFAE [IsBezout R] [IsDomain R] :
     tfae_have 1 → 2
     · intro H; exact ⟨fun I => is_principal_of_fg _ (IsNoetherian.noetherian _)⟩
     tfae_have 2 → 3
-    · intro ; infer_instance
+    · intro; infer_instance
     tfae_have 3 → 4
-    · intro ; infer_instance
+    · intro; infer_instance
     tfae_have 4 → 1
     · rintro ⟨h⟩
       rw [isNoetherianRing_iff, isNoetherian_iff_fg_wellFounded]

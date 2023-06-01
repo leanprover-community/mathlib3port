@@ -84,7 +84,8 @@ section WeakTopology
 @[nolint has_nonempty_instance unused_arguments]
 def WeakBilin [CommSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [AddCommMonoid F] [Module 𝕜 F]
     (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :=
-  E deriving AddCommMonoid,
+  E
+deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜»
 #align weak_bilin WeakBilin
 -/
@@ -219,7 +220,8 @@ theorem topDualPairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing �
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
 def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
     [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
-  WeakBilin (topDualPairing 𝕜 E)deriving AddCommMonoid,
+  WeakBilin (topDualPairing 𝕜 E)
+deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_dual WeakDual
@@ -295,7 +297,8 @@ functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
 @[nolint has_nonempty_instance]
 def WeakSpace (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
     [ContinuousConstSMul 𝕜 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
-  WeakBilin (topDualPairing 𝕜 E).flip deriving AddCommMonoid,
+  WeakBilin (topDualPairing 𝕜 E).flip
+deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_space WeakSpace

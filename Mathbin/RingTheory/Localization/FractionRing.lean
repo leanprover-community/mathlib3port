@@ -57,7 +57,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
     where
   map_units := by
     rintro ⟨x, hx⟩
-    rw [mem_nonZeroDivisors_iff_ne_zero] at hx
+    rw [mem_nonZeroDivisors_iff_ne_zero] at hx 
     simpa only [eq_intCast, isUnit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
   surj := by
     rintro ⟨n, d, hd, h⟩
@@ -69,7 +69,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
     refine' ⟨by rintro rfl; use 1, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
     apply mul_left_cancel₀ _ h
-    rwa [mem_nonZeroDivisors_iff_ne_zero] at hc
+    rwa [mem_nonZeroDivisors_iff_ne_zero] at hc 
 #align rat.is_fraction_ring Rat.isFractionRing
 
 namespace IsFractionRing
@@ -180,9 +180,9 @@ theorem mk'_eq_div {r} (s : nonZeroDivisors A) : mk' K r s = algebraMap A K r / 
 #align is_fraction_ring.mk'_eq_div IsFractionRing.mk'_eq_div
 
 theorem div_surjective (z : K) :
-    ∃ (x y : A)(hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
+    ∃ (x y : A) (hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
   let ⟨x, ⟨y, hy⟩, h⟩ := mk'_surjective (nonZeroDivisors A) z
-  ⟨x, y, hy, by rwa [mk'_eq_div] at h⟩
+  ⟨x, y, hy, by rwa [mk'_eq_div] at h ⟩
 #align is_fraction_ring.div_surjective IsFractionRing.div_surjective
 
 theorem isUnit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) :
@@ -196,7 +196,7 @@ theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : 
     mk' K x y = 0 ↔ x = 0 :=
   by
   refine' ⟨fun hxy => _, fun h => by rw [h, mk'_zero]⟩
-  · simp_rw [mk'_eq_zero_iff, mul_left_coe_nonZeroDivisors_eq_zero_iff] at hxy
+  · simp_rw [mk'_eq_zero_iff, mul_left_coe_nonZeroDivisors_eq_zero_iff] at hxy 
     exact (exists_const _).mp hxy
 #align is_fraction_ring.mk'_eq_zero_iff_eq_zero IsFractionRing.mk'_eq_zero_iff_eq_zero
 
@@ -206,7 +206,7 @@ theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x 
   · intro hxy;
     have hy : (algebraMap A K) ↑y ≠ (0 : K) :=
       IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors y.property
-    rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy
+    rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy 
     exact IsFractionRing.injective A K hxy
 #align is_fraction_ring.mk'_eq_one_iff_eq IsFractionRing.mk'_eq_one_iff_eq
 

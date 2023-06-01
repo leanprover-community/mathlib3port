@@ -75,7 +75,8 @@ end CliffordAlgebra
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
-  RingQuot (CliffordAlgebra.Rel Q)deriving Inhabited, Ring,
+  RingQuot (CliffordAlgebra.Rel Q)
+deriving Inhabited, Ring,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
 #align clifford_algebra CliffordAlgebra
 

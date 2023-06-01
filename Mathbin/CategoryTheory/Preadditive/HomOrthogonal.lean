@@ -125,7 +125,7 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 :=
   by
   ext (⟨b, ⟨⟩⟩⟨a⟩)
-  simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
+  simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property 
   simp only [category.comp_id, category.id_comp, category.assoc, End.one_def, eq_to_hom_refl,
     Matrix.one_apply, hom_orthogonal.matrix_decomposition_apply, biproduct.components]
   split_ifs with h
@@ -140,16 +140,16 @@ theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintyp
     o.matrixDecomposition (z ≫ w) i = o.matrixDecomposition w i ⬝ o.matrixDecomposition z i :=
   by
   ext (⟨c, ⟨⟩⟩⟨a⟩)
-  simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
+  simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property 
   simp only [Matrix.mul_apply, limits.biproduct.components,
     hom_orthogonal.matrix_decomposition_apply, category.comp_id, category.id_comp, category.assoc,
     End.mul_def, eq_to_hom_refl, eq_to_hom_trans_assoc, Finset.sum_congr]
   conv_lhs => rw [← category.id_comp w, ← biproduct.total]
   simp only [preadditive.sum_comp, preadditive.comp_sum]
   apply Finset.sum_congr_set
-  · intros ; simp; rfl
+  · intros; simp; rfl
   · intro b nm
-    simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
+    simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm 
     simp only [category.assoc]
     convert comp_zero
     convert comp_zero

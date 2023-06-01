@@ -114,7 +114,7 @@ theorem ConvexOn.exists_ge_of_centerMass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i 
   by
   set y := t.center_mass w p
   rsuffices ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
-  · rw [mem_filter] at hi
+  · rw [mem_filter] at hi 
     exact ⟨i, hi.1, (smul_le_smul_iff_of_pos <| (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
   have hw' : (0 : 𝕜) < ∑ i in Filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
   refine' exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') _
@@ -136,7 +136,7 @@ then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConvexOn.exists_ge_of_mem_convexHull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x}
     (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f x ≤ f y :=
   by
-  rw [_root_.convex_hull_eq] at hx
+  rw [_root_.convex_hull_eq] at hx 
   obtain ⟨α, t, w, p, hw₀, hw₁, hp, rfl⟩ := hx
   rcases hf.exists_ge_of_center_mass hw₀ (hw₁.symm ▸ zero_lt_one) fun i hi =>
       subset_convexHull 𝕜 s (hp i hi) with

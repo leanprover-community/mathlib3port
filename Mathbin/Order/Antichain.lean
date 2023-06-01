@@ -158,7 +158,7 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r)
 theorem image_relEmbedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) :=
   by
   intro b hb b' hb' h₁ h₂
-  rw [Set.mem_image] at hb hb'
+  rw [Set.mem_image] at hb hb' 
   obtain ⟨⟨a, has, rfl⟩, ⟨a', has', rfl⟩⟩ := hb, hb'
   exact hs has has' (fun haa' => h₁ (haa'.subst (by rfl))) (φ.map_rel_iff.mp h₂)
 #align is_antichain.image_rel_embedding IsAntichain.image_relEmbedding

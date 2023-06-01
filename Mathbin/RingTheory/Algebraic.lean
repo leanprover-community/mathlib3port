@@ -235,7 +235,7 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 then A is algebraic over K. -/
 theorem isAlgebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A :=
   by
-  simp only [IsAlgebraic, isAlgebraic_iff_isIntegral] at L_alg A_alg⊢
+  simp only [IsAlgebraic, isAlgebraic_iff_isIntegral] at L_alg A_alg ⊢
   exact isIntegral_trans L_alg A_alg
 #align algebra.is_algebraic_trans Algebra.isAlgebraic_trans
 
@@ -324,7 +324,7 @@ variable {R S : Type _} [CommRing R] [IsDomain R] [CommRing S]
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
-    ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x :=
+    ∃ (x : integralClosure R S) (y : _) (_ : y ≠ (0 : R)), z * algebraMap R S y = x :=
   by
   rcases hz with ⟨p, p_ne_zero, px⟩
   set a := p.leading_coeff with a_def
@@ -342,7 +342,7 @@ if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L]
     [Algebra R L] [IsScalarTower R S L] [IsIntegralClosure S R L] (h : Algebra.IsAlgebraic R L)
     (inj : Function.Injective (algebraMap R L)) (a : S) {b : S} (hb : b ≠ 0) :
-    ∃ (c : S)(d : _)(_ : d ≠ (0 : R)), d • a = b * c :=
+    ∃ (c : S) (d : _) (_ : d ≠ (0 : R)), d • a = b * c :=
   by
   obtain ⟨c, d, d_ne, hx⟩ :=
     exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b))
@@ -392,7 +392,7 @@ theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A :=
   by
   obtain ⟨p, ne_zero, aeval_eq⟩ := hx
-  rw [Subalgebra.aeval_coe, Subalgebra.coe_eq_zero] at aeval_eq
+  rw [Subalgebra.aeval_coe, Subalgebra.coe_eq_zero] at aeval_eq 
   revert ne_zero aeval_eq
   refine' p.rec_on_horner _ _ _
   · intro h
@@ -401,7 +401,7 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
     refine' A.inv_mem_of_root_of_coeff_zero_ne_zero aeval_eq _
     rwa [coeff_add, hp, zero_add, coeff_C, if_pos rfl]
   · intro p hp ih ne_zero aeval_eq
-    rw [AlgHom.map_mul, aeval_X, mul_eq_zero] at aeval_eq
+    rw [AlgHom.map_mul, aeval_X, mul_eq_zero] at aeval_eq 
     cases' aeval_eq with aeval_eq x_eq
     · exact ih hp aeval_eq
     · rw [x_eq, Subalgebra.coe_zero, inv_zero]

@@ -86,8 +86,8 @@ variable {D : Type u₃} [Quiver.{v₃ + 1} D] [∀ a b : D, Quiver.{w₃ + 1} (
 1-morphisms, and 2-morphisms. This structure will be extended to define `oplax_functor`.
 -/
 structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)]
-  (C : Type u₂) [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends
-  Prefunctor B C where
+    (C : Type u₂) [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends
+    Prefunctor B C where
   zipWith {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 #align category_theory.prelax_functor CategoryTheory.PrelaxFunctor
 -/
@@ -178,7 +178,7 @@ associator, the left unitor, and the right unitor modulo some adjustments of dom
 of 2-morphisms.
 -/
 structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u₂)
-  [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
+    [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
   mapComp_naturality_left :
@@ -227,8 +227,8 @@ restate_axiom map₂_right_unitor'
 
 attribute [simp] map_comp_naturality_left map_comp_naturality_right map₂_id map₂_associator
 
-attribute [reassoc]
-  map_comp_naturality_left map_comp_naturality_right map₂_comp map₂_associator map₂_left_unitor map₂_right_unitor
+attribute [reassoc] map_comp_naturality_left map_comp_naturality_right map₂_comp map₂_associator
+  map₂_left_unitor map₂_right_unitor
 
 attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
 
@@ -378,7 +378,7 @@ associator, the left unitor, and the right unitor modulo some adjustments of dom
 of 2-morphisms.
 -/
 structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u₂)
-  [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
+    [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
   map_id (a : B) : map (𝟙 a) ≅ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ≅ map f ≫ map g
   map₂_id : ∀ {a b : B} (f : a ⟶ b), map₂ (𝟙 f) = 𝟙 (map f) := by obviously
@@ -425,11 +425,11 @@ restate_axiom map₂_left_unitor'
 
 restate_axiom map₂_right_unitor'
 
-attribute [reassoc]
-  map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor map₂_right_unitor
+attribute [reassoc] map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor
+  map₂_right_unitor
 
-attribute [simp]
-  map₂_id map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor map₂_right_unitor
+attribute [simp] map₂_id map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator
+  map₂_left_unitor map₂_right_unitor
 
 section
 

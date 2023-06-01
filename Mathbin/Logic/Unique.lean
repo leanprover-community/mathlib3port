@@ -76,7 +76,7 @@ theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a
 theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) :
     Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩,
-    fun ⟨a, ha, he⟩ => ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by congr ; exact he b hb⟩⟩⟩
+    fun ⟨a, ha, he⟩ => ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by congr; exact he b hb⟩⟩⟩
 #align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
 -/
 

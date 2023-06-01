@@ -91,14 +91,14 @@ theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r)
     trichotomous := fun a b => by
       cases' eq_or_ne a b with hab hab
       · exact Or.inr (Or.inl hab)
-      · rw [Function.ne_iff] at hab
+      · rw [Function.ne_iff] at hab 
         let i := wf.min _ hab
         have hri : ∀ j, r j i → a j = b j := by
           intro j; rw [← not_imp_not]
           exact fun h' => wf.not_lt_min _ _ h'
         have hne : a i ≠ b i := wf.min_mem _ hab
         cases' trichotomous_of s (a i) (b i) with hi hi
-        exacts[Or.inl ⟨i, hri, hi⟩,
+        exacts [Or.inl ⟨i, hri, hi⟩,
           Or.inr <| Or.inr <| ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩] }
 #align pi.is_trichotomous_lex Pi.isTrichotomous_lex
 -/
@@ -114,7 +114,7 @@ instance Lex.isStrictOrder [LinearOrder ι] [∀ a, PartialOrder (β a)] :
   trans := by
     rintro a b c ⟨N₁, lt_N₁, a_lt_b⟩ ⟨N₂, lt_N₂, b_lt_c⟩
     rcases lt_trichotomy N₁ N₂ with (H | rfl | H)
-    exacts[⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ <| hj.trans H), lt_N₂ _ H ▸ a_lt_b⟩,
+    exacts [⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ <| hj.trans H), lt_N₂ _ H ▸ a_lt_b⟩,
       ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
       ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩]
 #align pi.lex.is_strict_order Pi.Lex.isStrictOrder
@@ -152,12 +152,12 @@ theorem lt_toLex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :=
   by
   refine' ⟨_, fun h => to_lex_strict_mono <| lt_update_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
-  dsimp at h
+  dsimp at h 
   obtain rfl : j = i := by
     by_contra H
-    rw [update_noteq H] at h
+    rw [update_noteq H] at h 
     exact h.false
-  · rwa [update_same] at h
+  · rwa [update_same] at h 
 #align pi.lt_to_lex_update_self_iff Pi.lt_toLex_update_self_iff
 
 @[simp]
@@ -165,12 +165,12 @@ theorem toLex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i :=
   by
   refine' ⟨_, fun h => to_lex_strict_mono <| update_lt_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
-  dsimp at h
+  dsimp at h 
   obtain rfl : j = i := by
     by_contra H
-    rw [update_noteq H] at h
+    rw [update_noteq H] at h 
     exact h.false
-  · rwa [update_same] at h
+  · rwa [update_same] at h 
 #align pi.to_lex_update_lt_self_iff Pi.toLex_update_lt_self_iff
 
 @[simp]

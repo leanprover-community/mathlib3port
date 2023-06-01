@@ -36,7 +36,8 @@ namespace Quiver
 /-- Type tag on `unit` used to define single-object quivers. -/
 @[nolint unused_arguments]
 def SingleObj (α : Type _) : Type :=
-  Unit deriving Unique
+  Unit
+deriving Unique
 #align quiver.single_obj Quiver.SingleObj
 -/
 

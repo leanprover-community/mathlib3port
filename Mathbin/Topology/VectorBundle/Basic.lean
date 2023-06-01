@@ -77,7 +77,7 @@ variable {B F E} [Semiring R] [TopologicalSpace F] [TopologicalSpace B]
 /-- A mixin class for `pretrivialization`, stating that a pretrivialization is fiberwise linear with
 respect to given module structures on its fibers and the model fiber. -/
 protected class Pretrivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
-  [∀ x, Module R (E x)] (e : Pretrivialization F (π E)) : Prop where
+    [∀ x, Module R (E x)] (e : Pretrivialization F (π E)) : Prop where
   linear : ∀ b ∈ e.baseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
 #align pretrivialization.is_linear Pretrivialization.IsLinear
 -/
@@ -181,7 +181,7 @@ variable (R) [TopologicalSpace (TotalSpace E)]
 /-- A mixin class for `trivialization`, stating that a trivialization is fiberwise linear with
 respect to given module structures on its fibers and the model fiber. -/
 protected class Trivialization.IsLinear [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)]
-  [∀ x, Module R (E x)] (e : Trivialization F (π E)) : Prop where
+    [∀ x, Module R (E x)] (e : Trivialization F (π E)) : Prop where
   linear : ∀ b ∈ e.baseSet, IsLinearMap R fun x : E b => (e (totalSpaceMk b x)).2
 #align trivialization.is_linear Trivialization.IsLinear
 -/
@@ -804,7 +804,7 @@ theorem localTriv_coordChange_eq {b : B} (hb : b ∈ Z.baseSet i ∩ Z.baseSet j
     (Z.localTriv i).coordChangeL R (Z.localTriv j) b v = Z.coordChange i j b v :=
   by
   rw [Trivialization.coordChangeL_apply', local_triv_symm_fst, local_triv_apply, coord_change_comp]
-  exacts[⟨⟨hb.1, Z.mem_base_set_at b⟩, hb.2⟩, hb]
+  exacts [⟨⟨hb.1, Z.mem_base_set_at b⟩, hb.2⟩, hb]
 #align vector_bundle_core.local_triv_coord_change_eq VectorBundleCore.localTriv_coordChange_eq
 
 #print VectorBundleCore.localTrivAt /-
@@ -879,7 +879,7 @@ theorem localTriv_continuousLinearMapAt {b : B} (hb : b ∈ Z.baseSet i) :
   by
   ext1 v
   rw [(Z.local_triv i).continuousLinearMapAt_apply R, (Z.local_triv i).coe_linearMapAt_of_mem]
-  exacts[rfl, hb]
+  exacts [rfl, hb]
 #align vector_bundle_core.local_triv_continuous_linear_map_at VectorBundleCore.localTriv_continuousLinearMapAt
 
 @[simp, mfld_simps]
@@ -893,7 +893,7 @@ theorem trivializationAt_continuousLinearMapAt {b₀ b : B}
 @[simp, mfld_simps]
 theorem localTriv_symmL {b : B} (hb : b ∈ Z.baseSet i) :
     (Z.localTriv i).symmL R b = Z.coordChange i (Z.indexAt b) b := by ext1 v;
-  rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]; exacts[rfl, hb]
+  rw [(Z.local_triv i).symmL_apply R, (Z.local_triv i).symm_apply]; exacts [rfl, hb]
 #align vector_bundle_core.local_triv_symmL VectorBundleCore.localTriv_symmL
 
 @[simp, mfld_simps]
@@ -1090,7 +1090,7 @@ theorem to_vectorBundle :
       ext v
       rw [a.coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe,
         Trivialization.coordChangeL_apply]
-      exacts[rfl, hb] }
+      exacts [rfl, hb] }
 #align vector_prebundle.to_vector_bundle VectorPrebundle.to_vectorBundle
 
 end VectorPrebundle

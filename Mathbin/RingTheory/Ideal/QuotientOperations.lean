@@ -51,7 +51,7 @@ theorem lift_injective_of_ker_le_ideal (I : Ideal R) {f : R →+* S} (H : ∀ a 
   rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_bot_iff_eq_zero]
   intro u hu
   obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective u
-  rw [Ideal.Quotient.lift_mk] at hu
+  rw [Ideal.Quotient.lift_mk] at hu 
   rw [Ideal.Quotient.eq_zero_iff_mem]
   exact hI ((RingHom.mem_ker f).mpr hu)
 #align ring_hom.lift_injective_of_ker_le_ideal RingHom.lift_injective_of_ker_le_ideal
@@ -116,11 +116,11 @@ theorem ker_quotient_lift {S : Type v} [CommRing S] {I : Ideal R} (f : R →+* S
   constructor
   · intro hx
     obtain ⟨y, hy⟩ := quotient.mk_surjective x
-    rw [RingHom.mem_ker, ← hy, Ideal.Quotient.lift_mk, ← RingHom.mem_ker] at hx
+    rw [RingHom.mem_ker, ← hy, Ideal.Quotient.lift_mk, ← RingHom.mem_ker] at hx 
     rw [← hy, mem_map_iff_of_surjective I.Quotient.mk quotient.mk_surjective]
     exact ⟨y, hx, rfl⟩
   · intro hx
-    rw [mem_map_iff_of_surjective I.Quotient.mk quotient.mk_surjective] at hx
+    rw [mem_map_iff_of_surjective I.Quotient.mk quotient.mk_surjective] at hx 
     obtain ⟨y, hy⟩ := hx
     rw [RingHom.mem_ker, ← hy.right, Ideal.Quotient.lift_mk, ← RingHom.mem_ker f]
     exact hy.left
@@ -396,7 +396,7 @@ theorem quotientMap_injective' {J : Ideal R} {I : Ideal S} {f : R →+* S} {H : 
   by
   refine' (injective_iff_map_eq_zero (QuotientMap I f H)).2 fun a ha => _
   obtain ⟨r, rfl⟩ := quotient.mk_surjective a
-  rw [quotient_map_mk, quotient.eq_zero_iff_mem] at ha
+  rw [quotient_map_mk, quotient.eq_zero_iff_mem] at ha 
   exact quotient.eq_zero_iff_mem.mpr (h ha)
 #align ideal.quotient_map_injective' Ideal.quotientMap_injective'
 
@@ -463,7 +463,7 @@ theorem algebraMap_quotient_injective {I : Ideal A} [Algebra R A] :
   by
   rintro ⟨a⟩ ⟨b⟩ hab
   replace hab := quotient.eq.mp hab
-  rw [← RingHom.map_sub] at hab
+  rw [← RingHom.map_sub] at hab 
   exact quotient.eq.mpr hab
 #align ideal.algebra_map_quotient_injective Ideal.algebraMap_quotient_injective
 

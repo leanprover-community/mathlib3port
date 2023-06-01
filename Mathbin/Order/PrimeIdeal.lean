@@ -74,7 +74,7 @@ theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
 theorem I_isProper : IsProper IF.i := by
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
-  rwa [← IF.compl_I_eq_F] at h
+  rwa [← IF.compl_I_eq_F] at h 
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.I_isProper
 -/
 
@@ -170,7 +170,7 @@ instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I :=
   have hJuniv : (J : Set P) = Set.univ :=
     is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
   have hyJ : y ∈ ↑J := set.eq_univ_iff_forall.mp hJuniv y
-  rw [coe_sup_eq] at hyJ
+  rw [coe_sup_eq] at hyJ 
   rcases hyJ with ⟨a, ha, b, hb, hy⟩
   rw [hy]
   refine' sup_mem ha (I.lower (le_inf hb _) hxy)
@@ -207,7 +207,7 @@ theorem isPrime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ x
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
   have ass : x ⊓ y ⊔ y ⊓ xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
-  rwa [inf_comm, sup_inf_inf_compl] at ass
+  rwa [inf_comm, sup_inf_inf_compl] at ass 
 #align order.ideal.is_prime_of_mem_or_compl_mem Order.Ideal.isPrime_of_mem_or_compl_mem
 -/
 
@@ -224,7 +224,7 @@ instance (priority := 100) IsPrime.isMaximal [IsPrime I] : IsMaximal I :=
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
   suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
-  · rwa [sup_inf_inf_compl] at ass
+  · rwa [sup_inf_inf_compl] at ass 
   exact
     sup_mem (J.lower inf_le_right hyJ)
       (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)

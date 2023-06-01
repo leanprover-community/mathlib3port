@@ -74,11 +74,11 @@ theorem mem_rev_list_aux :
     ⟨fun ⟨j, ji1, e⟩ =>
       Or.elim (lt_or_eq_of_le <| Nat.le_of_succ_le_succ ji1)
         (fun ji => List.mem_cons_of_mem _ <| IH.1 ⟨j, ji, e⟩) fun je => by
-        simp [DArray.iterateAux] <;> apply Or.inl <;> unfold read at e <;>
+        simp [DArray.iterateAux] <;> apply Or.inl <;> unfold read at e  <;>
             have H : j = ⟨i, h⟩ := Fin.eq_of_veq je <;>
           rwa [← H, e],
       fun m => by
-      simp [DArray.iterateAux, List.Mem] at m
+      simp [DArray.iterateAux, List.Mem] at m 
       cases' m with e m'
       exact ⟨⟨i, h⟩, Nat.lt_succ_self _, Eq.symm e⟩
       exact

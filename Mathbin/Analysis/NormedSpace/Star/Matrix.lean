@@ -36,7 +36,7 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
     by
     apply Multiset.single_le_sum
     · intro x h_x
-      rw [Multiset.mem_map] at h_x
+      rw [Multiset.mem_map] at h_x 
       cases' h_x with a h_a
       rw [← h_a.2]
       apply sq_nonneg
@@ -50,7 +50,7 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ, real part
   have re_diag_eq_norm_sum : IsROrC.re ((U ⬝ Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 :=
     by
-    rw [IsROrC.ext_iff] at diag_eq_norm_sum
+    rw [IsROrC.ext_iff] at diag_eq_norm_sum 
     rw [diag_eq_norm_sum.1]
     norm_cast
   -- Since U is unitary, the diagonal entries of U ⬝ Uᴴ are all 1

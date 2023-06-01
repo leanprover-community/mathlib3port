@@ -66,7 +66,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.pt :=
     map_mul' := fun x y =>
       by
       have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
-      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h
+      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h 
     commutes' := fun r a => by
       dsimp
       have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
@@ -179,7 +179,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               map_one' := (algebraMap R A).map_one.symm
               map_mul' := fun x y => (@LinearMap.mul'_apply R _ _ _ _ _ _ x y).symm
               commutes' := fun r => rfl } })
-      (by intros ; rfl)
+      (by intros; rfl)
 #align Module.Mon_Module_equivalence_Algebra ModuleCat.monModuleEquivalenceAlgebra
 
 /-- The equivalence `Mon_ (Module R) ≌ Algebra R`

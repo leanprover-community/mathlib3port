@@ -223,13 +223,13 @@ theorem orderOf_xa [NeZero n] (i : ZMod (2 * n)) : orderOf (xa i) = 4 :=
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
   apply orderOf_eq_prime_pow
   · intro h
-    simp only [pow_one, xa_sq] at h
+    simp only [pow_one, xa_sq] at h 
     injection h with h'
-    apply_fun ZMod.val  at h'
-    apply_fun (· / n)  at h'
+    apply_fun ZMod.val  at h' 
+    apply_fun (· / n)  at h' 
     simp only [ZMod.val_nat_cast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
-      Nat.div_self (NeZero.pos n)] at h'
-    norm_num at h'
+      Nat.div_self (NeZero.pos n)] at h' 
+    norm_num at h' 
   · norm_num
 #align quaternion_group.order_of_xa QuaternionGroup.orderOf_xa
 
@@ -259,9 +259,9 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
           (orderOf_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_orderOf_eq_one _
-  rw [a_one_pow] at h1
+  rw [a_one_pow] at h1 
   injection h1 with h2
-  rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
+  rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2 
   exact absurd h2.symm (orderOf_pos _).Ne
 #align quaternion_group.order_of_a_one QuaternionGroup.orderOf_a_one
 

@@ -181,7 +181,7 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
   by
   constructor
   · rintro hsx hx
-    rw [hsx.convex_hull_eq] at hx
+    rw [hsx.convex_hull_eq] at hx 
     exact hx.2 (mem_singleton _)
   rintro hx
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convexHull 𝕜 _

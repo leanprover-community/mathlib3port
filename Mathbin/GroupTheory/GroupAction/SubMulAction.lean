@@ -137,7 +137,7 @@ namespace SubMulAction
 variable [SMul R M]
 
 instance : SetLike (SubMulAction R M) M :=
-  ⟨SubMulAction.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨SubMulAction.carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 instance : SMulMemClass (SubMulAction R M) R M where smul_mem := smul_mem'
 
@@ -223,7 +223,7 @@ variable (p)
 
 #print SubMulAction.subtype /-
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def subtype : p →[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
+protected def subtype : p →[R] M := by refine' { toFun := coe .. } <;> simp [coe_smul]
 #align sub_mul_action.subtype SubMulAction.subtype
 -/
 

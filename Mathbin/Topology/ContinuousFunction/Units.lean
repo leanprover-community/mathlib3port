@@ -66,7 +66,7 @@ theorem NormedRing.isUnit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)
       (Continuous.prod_mk f.continuous
         (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
   have := NormedRing.inverse_continuousAt (h x).Unit
-  simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this⊢
+  simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this ⊢
   exact this.comp (f.continuous_at x)
 #align normed_ring.is_unit_unit_continuous NormedRing.isUnit_unit_continuous
 

@@ -64,7 +64,7 @@ def traverse : Multiset α' → F (Multiset β') :=
             (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
           by
           rw [CommApplicative.commutative_map]
-          congr ; funext a b l; simpa [flip] using perm.swap b a l
+          congr; funext a b l; simpa [flip] using perm.swap b a l
         simp [(· ∘ ·), this, functor_norm]
       case trans => simp [*])
 #align multiset.traverse Multiset.traverse
@@ -108,7 +108,7 @@ theorem map_comp_coe {α β} (h : α → β) :
 #align multiset.map_comp_coe Multiset.map_comp_coe
 
 theorem id_traverse {α : Type _} (x : Multiset α) : traverse id.mk x = x :=
-  Quotient.inductionOn x (by intro ; simp [traverse]; rfl)
+  Quotient.inductionOn x (by intro; simp [traverse]; rfl)
 #align multiset.id_traverse Multiset.id_traverse
 
 theorem comp_traverse {G H : Type _ → Type _} [Applicative G] [Applicative H] [CommApplicative G]
@@ -133,7 +133,7 @@ theorem map_traverse {G : Type _ → Type _} [Applicative G] [CommApplicative G]
 theorem traverse_map {G : Type _ → Type _} [Applicative G] [CommApplicative G] {α β γ : Type _}
     (g : α → β) (h : β → G γ) (x : Multiset α) : traverse h (map g x) = traverse (h ∘ g) x :=
   Quotient.inductionOn x
-    (by intro <;> simp [traverse] <;> rw [← Traversable.traverse_map h g] <;> [rfl;infer_instance])
+    (by intro <;> simp [traverse] <;> rw [← Traversable.traverse_map h g] <;> [rfl; infer_instance])
 #align multiset.traverse_map Multiset.traverse_map
 -/
 

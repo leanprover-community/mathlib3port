@@ -191,7 +191,7 @@ theorem isSheaf_of_isSheafUniqueGluing_types (Fsh : F.IsSheafUniqueGluing) : F.I
 -/
 theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing :=
   by
-  rw [is_sheaf_iff_is_sheaf_equalizer_products] at Fsh
+  rw [is_sheaf_iff_is_sheaf_equalizer_products] at Fsh 
   intro ι U sf hsf
   let sf' := (pi_opens_iso_sections_family F U).inv sf
   have hsf' : left_res F U sf' = right_res F U sf' := by

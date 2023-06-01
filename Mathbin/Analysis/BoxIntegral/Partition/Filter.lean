@@ -311,7 +311,7 @@ It is also automatically satisfied for any `c > 1`, see TODO section of the modu
 details. -/
 @[protect_proj]
 structure MemBaseSet (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (r : (ι → ℝ) → Ioi (0 : ℝ))
-  (π : TaggedPrepartition I) : Prop where
+    (π : TaggedPrepartition I) : Prop where
   IsSubordinate : π.IsSubordinate r
   IsHenstock : l.bHenstock → π.IsHenstock
   distortion_le : l.bDistortion → π.distortion ≤ c
@@ -425,9 +425,9 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     have : (π.filter p).iUnion ⊆ π.Union := bUnion_subset_bUnion_left (Finset.filter_subset _ _)
     ext x; fconstructor
     · rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
-      exacts[⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
+      exacts [⟨hxI, mt (@this x) hxπ⟩, ⟨π.Union_subset hxπ, hxp⟩]
     · rintro ⟨hxI, hxp⟩; by_cases hxπ : x ∈ π.Union
-      exacts[Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
+      exacts [Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
   · have : (π.filter fun J => ¬p J).distortion ≤ c := (distortion_filter_le _ _).trans (hπ.3 hD)
     simpa [hc]
 #align box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filter
@@ -533,7 +533,7 @@ theorem tendsto_embedBox_toFilteriUnion_top (l : IntegrationParams) (h : I ≤ J
           (l.has_basis_to_filter_distortion_Union J _ _)).2
       fun r hr => _
   refine' ⟨r, hr, fun π hπ => _⟩
-  rw [mem_set_of_eq, prepartition.Union_top] at hπ
+  rw [mem_set_of_eq, prepartition.Union_top] at hπ 
   refine' ⟨⟨hπ.1.1, hπ.1.2, fun hD => le_trans (hπ.1.3 hD) (le_max_left _ _), fun hD => _⟩, _⟩
   · refine' ⟨_, π₀.Union_compl.trans _, le_max_right _ _⟩; congr 1
     exact (prepartition.Union_single h).trans hπ.2.symm
@@ -553,7 +553,7 @@ theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Preparti
 theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition :=
   by
-  rw [← prepartition.distortion_top] at hc
+  rw [← prepartition.distortion_top] at hc 
   have hc' : (⊤ : prepartition I).compl.distortion ≤ c := by simp
   simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 #align box_integral.integration_params.exists_mem_base_set_is_partition BoxIntegral.IntegrationParams.exists_memBaseSet_isPartition

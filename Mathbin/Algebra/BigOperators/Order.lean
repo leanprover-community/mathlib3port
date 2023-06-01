@@ -440,7 +440,7 @@ theorem prod_le_prod_of_ne_one' (h : ∀ x ∈ s, f x ≠ 1 → x ∈ t) : (∏ 
       _ ≤ ∏ x in t, f x :=
         mul_le_of_le_one_of_le
           (prod_le_one' <| by simp only [mem_filter, and_imp] <;> exact fun _ _ => le_of_eq)
-          (prod_le_prod_of_subset' <| by simpa only [subset_iff, mem_filter, and_imp] )
+          (prod_le_prod_of_subset' <| by simpa only [subset_iff, mem_filter, and_imp])
       
 #align finset.prod_le_prod_of_ne_one' Finset.prod_le_prod_of_ne_one'
 #align finset.sum_le_sum_of_ne_zero Finset.sum_le_sum_of_ne_zero
@@ -483,7 +483,7 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
         apply prod_le_prod_of_subset_of_one_le'
         · simp [Finset.insert_subset, h, ht]
         · intro x hx h'x
-          simp only [mem_insert, not_or] at h'x
+          simp only [mem_insert, not_or] at h'x 
           exact hle x hx h'x.2
       
 #align finset.prod_lt_prod_of_subset' Finset.prod_lt_prod_of_subset'

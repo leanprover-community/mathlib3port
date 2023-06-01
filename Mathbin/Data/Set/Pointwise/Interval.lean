@@ -475,7 +475,7 @@ equal to that of `a` and `b` -/
 theorem abs_sub_le_of_uIcc_subset_uIcc (h : [c, d] ⊆ [a, b]) : |d - c| ≤ |b - a| :=
   by
   rw [← max_sub_min_eq_abs, ← max_sub_min_eq_abs]
-  rw [uIcc_subset_uIcc_iff_le] at h
+  rw [uIcc_subset_uIcc_iff_le] at h 
   exact sub_le_sub h.2 h.1
 #align set.abs_sub_le_of_uIcc_subset_uIcc Set.abs_sub_le_of_uIcc_subset_uIcc
 
@@ -787,7 +787,7 @@ theorem image_affine_Icc' {a : α} (h : 0 < a) (b c d : α) :
     (fun x => a * x + b) '' Icc c d = Icc (a * c + b) (a * d + b) :=
   by
   suffices (fun x => x + b) '' ((fun x => a * x) '' Icc c d) = Icc (a * c + b) (a * d + b) by
-    rwa [Set.image_image] at this
+    rwa [Set.image_image] at this 
   rw [image_mul_left_Icc' h, image_add_const_Icc]
 #align set.image_affine_Icc' Set.image_affine_Icc'
 

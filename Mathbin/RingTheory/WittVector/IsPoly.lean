@@ -189,7 +189,7 @@ theorem poly_eq_of_wittPolynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × �
   by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  rw [← Function.funext_iff] at h
+  rw [← Function.funext_iff] at h 
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
@@ -201,7 +201,7 @@ theorem poly_eq_of_wittPolynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
-  rw [← Function.funext_iff] at h
+  rw [← Function.funext_iff] at h 
   replace h :=
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
@@ -231,7 +231,7 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance idIsPoly : IsPoly p fun _ _ => id :=
-  ⟨⟨X, by intros ; simp only [aeval_X, id]⟩⟩
+  ⟨⟨X, by intros; simp only [aeval_X, id]⟩⟩
 #align witt_vector.id_is_poly WittVector.idIsPoly
 
 instance idIsPolyI' : IsPoly p fun _ _ a => a :=
@@ -263,7 +263,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   intro x
   simp only [hom_bind₁]
   specialize h (ULift ℤ) (mk p fun i => ⟨x i⟩) k
-  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1
@@ -351,7 +351,7 @@ theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x
   by
   obtain ⟨φ, hf⟩ := hf
   refine' ⟨⟨fun n => bind₁ (uncurry ![X, X]) (φ n), _⟩⟩
-  intros ; funext n
+  intros; funext n
   simp only [hf, peval, uncurry, aeval_bind₁]
   apply eval₂_hom_congr rfl _ rfl
   ext ⟨i, k⟩;
@@ -481,7 +481,7 @@ Users are expected to use the non-instance versions manually.
 @[is_poly]
 theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
   ⟨⟨fun n => rename Prod.snd (wittNeg p n), by
-      intros ; funext n
+      intros; funext n
       rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
       apply eval₂_hom_congr rfl _ rfl
       ext ⟨i, k⟩; fin_cases i; rfl⟩⟩
@@ -493,7 +493,7 @@ section ZeroOne
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zeroIsPoly : IsPoly p fun _ _ _ => 0 :=
-  ⟨⟨0, by intros ; funext n; simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
+  ⟨⟨0, by intros; funext n; simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
 #align witt_vector.zero_is_poly WittVector.zeroIsPoly
 
 @[simp]
@@ -527,7 +527,7 @@ theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomi
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
   ⟨⟨onePoly, by
-      intros ; funext n; cases n
+      intros; funext n; cases n
       · simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
       ·
         simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero,
@@ -541,13 +541,13 @@ omit hp
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem add_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
-  ⟨⟨wittAdd p, by intros ; dsimp only [WittVector.hasAdd]; simp [eval]⟩⟩
+  ⟨⟨wittAdd p, by intros; dsimp only [WittVector.hasAdd]; simp [eval]⟩⟩
 #align witt_vector.add_is_poly₂ WittVector.add_isPoly₂
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem mul_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
-  ⟨⟨wittMul p, by intros ; dsimp only [WittVector.hasMul]; simp [eval]⟩⟩
+  ⟨⟨wittMul p, by intros; dsimp only [WittVector.hasMul]; simp [eval]⟩⟩
 #align witt_vector.mul_is_poly₂ WittVector.mul_isPoly₂
 
 include hp
@@ -607,7 +607,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   intro x
   simp only [hom_bind₁]
   specialize h (ULift ℤ) (mk p fun i => ⟨x (0, i)⟩) (mk p fun i => ⟨x (1, i)⟩) k
-  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h 
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1
@@ -637,8 +637,12 @@ theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
 
 end IsPoly₂
 
-attribute [ghost_simps]
-  AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub AlgHom.map_neg AlgHom.id_apply map_natCast RingHom.map_zero RingHom.map_one RingHom.map_mul RingHom.map_add RingHom.map_sub RingHom.map_neg RingHom.id_apply mul_add add_mul add_zero zero_add mul_one one_mul MulZeroClass.mul_zero MulZeroClass.zero_mul Nat.succ_ne_zero add_tsub_cancel_right Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff forall₂_true_iff forall₃_true_iff
+attribute [ghost_simps] AlgHom.map_zero AlgHom.map_one AlgHom.map_add AlgHom.map_mul AlgHom.map_sub
+  AlgHom.map_neg AlgHom.id_apply map_natCast RingHom.map_zero RingHom.map_one RingHom.map_mul
+  RingHom.map_add RingHom.map_sub RingHom.map_neg RingHom.id_apply mul_add add_mul add_zero zero_add
+  mul_one one_mul MulZeroClass.mul_zero MulZeroClass.zero_mul Nat.succ_ne_zero add_tsub_cancel_right
+  Nat.succ_eq_add_one if_true eq_self_iff_true if_false forall_true_iff forall₂_true_iff
+  forall₃_true_iff
 
 end WittVector
 

@@ -80,7 +80,7 @@ theorem IsPiSystem.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsPiSystem C
     (hD : IsPiSystem D) : IsPiSystem (image2 (· ×ˢ ·) C D) :=
   by
   rintro _ ⟨s₁, t₁, hs₁, ht₁, rfl⟩ _ ⟨s₂, t₂, hs₂, ht₂, rfl⟩ hst
-  rw [prod_inter_prod] at hst⊢; rw [prod_nonempty_iff] at hst
+  rw [prod_inter_prod] at hst ⊢; rw [prod_nonempty_iff] at hst 
   exact mem_image2_of_mem (hC _ hs₁ _ hs₂ hst.1) (hD _ ht₁ _ ht₂ hst.2)
 #align is_pi_system.prod IsPiSystem.prod
 
@@ -232,7 +232,7 @@ theorem MeasurableEmbedding.prod_mk {α β γ δ : Type _} {mα : MeasurableSpac
     by
     intro x y hxy
     rw [← @Prod.mk.eta _ _ x, ← @Prod.mk.eta _ _ y]
-    simp only [Prod.mk.inj_iff] at hxy⊢
+    simp only [Prod.mk.inj_iff] at hxy ⊢
     exact ⟨hg.injective hxy.1, hf.injective hxy.2⟩
   refine' ⟨h_inj, _, _⟩
   · exact (hg.measurable.comp measurable_fst).prod_mk (hf.measurable.comp measurable_snd)
@@ -419,7 +419,7 @@ instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : Mea
       (IsCompact.measure_lt_top (hK.image continuous_snd)).Ne
 
 theorem ae_measure_lt_top {s : Set (α × β)} (hs : MeasurableSet s) (h2s : (μ.Prod ν) s ≠ ∞) :
-    ∀ᵐ x ∂μ, ν (Prod.mk x ⁻¹' s) < ∞ := by simp_rw [prod_apply hs] at h2s;
+    ∀ᵐ x ∂μ, ν (Prod.mk x ⁻¹' s) < ∞ := by simp_rw [prod_apply hs] at h2s ;
   refine' ae_lt_top (measurable_measure_prod_mk_left hs) h2s
 #align measure_theory.measure.ae_measure_lt_top MeasureTheory.Measure.ae_measure_lt_top
 
@@ -436,7 +436,7 @@ theorem measure_ae_null_of_prod_null {s : Set (α × β)} (h : μ.Prod ν s = 0)
     (fun x => ν (Prod.mk x ⁻¹' s)) =ᵐ[μ] 0 :=
   by
   obtain ⟨t, hst, mt, ht⟩ := exists_measurable_superset_of_null h
-  simp_rw [measure_prod_null mt] at ht
+  simp_rw [measure_prod_null mt] at ht 
   rw [eventually_le_antisymm_iff]
   exact
     ⟨eventually_le.trans_eq (eventually_of_forall fun x => (measure_mono (preimage_mono hst) : _))
@@ -449,7 +449,7 @@ theorem AbsolutelyContinuous.prod [SigmaFinite ν'] (h1 : μ ≪ μ') (h2 : ν �
     μ.Prod ν ≪ μ'.Prod ν' :=
   by
   refine' absolutely_continuous.mk fun s hs h2s => _
-  simp_rw [measure_prod_null hs] at h2s⊢
+  simp_rw [measure_prod_null hs] at h2s ⊢
   exact (h2s.filter_mono h1.ae_le).mono fun _ h => h2 h
 #align measure_theory.measure.absolutely_continuous.prod MeasureTheory.Measure.AbsolutelyContinuous.prod
 -/
@@ -557,7 +557,7 @@ theorem prodAssoc_prod [SigmaFinite τ] :
     (prod_eq_generateFrom generate_from_measurable_set generateFrom_prod is_pi_system_measurable_set
         isPiSystem_prod μ.to_finite_spanning_sets_in
         (ν.to_finite_spanning_sets_in.prod τ.to_finite_spanning_sets_in) _).symm
-  rintro s hs _ ⟨t, u, ht, hu, rfl⟩; rw [mem_set_of_eq] at hs ht hu
+  rintro s hs _ ⟨t, u, ht, hu, rfl⟩; rw [mem_set_of_eq] at hs ht hu 
   simp_rw [map_apply (MeasurableEquiv.measurable _) (hs.prod (ht.prod hu)),
     MeasurableEquiv.prodAssoc, MeasurableEquiv.coe_mk, Equiv.prod_assoc_preimage, prod_prod,
     mul_assoc]
@@ -683,7 +683,7 @@ theorem skew_product [SigmaFinite μb] [SigmaFinite μd] {f : α → β} (hf : M
       refine' hg.mono fun x hx => _; subst hx
       simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
       split_ifs
-      exacts[(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
+      exacts [(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
     simp only [preimage_preimage]
     rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const,
       hf.measure_preimage hs, mul_comm]
@@ -736,7 +736,7 @@ section
 
 theorem AEMeasurable.prod_swap [SigmaFinite μ] [SigmaFinite ν] {f : β × α → γ}
     (hf : AEMeasurable f (ν.Prod μ)) : AEMeasurable (fun z : α × β => f z.symm) (μ.Prod ν) := by
-  rw [← prod_swap] at hf; exact hf.comp_measurable measurable_swap
+  rw [← prod_swap] at hf ; exact hf.comp_measurable measurable_swap
 #align ae_measurable.prod_swap AEMeasurable.prod_swap
 
 theorem AEMeasurable.fst [SigmaFinite ν] {f : α → γ} (hf : AEMeasurable f μ) :
@@ -759,7 +759,7 @@ namespace MeasureTheory
 variable [SigmaFinite ν]
 
 theorem lintegral_prod_swap [SigmaFinite μ] (f : α × β → ℝ≥0∞) (hf : AEMeasurable f (μ.Prod ν)) :
-    (∫⁻ z, f z.symm ∂ν.Prod μ) = ∫⁻ z, f z ∂μ.Prod ν := by rw [← prod_swap] at hf;
+    (∫⁻ z, f z.symm ∂ν.Prod μ) = ∫⁻ z, f z ∂μ.Prod ν := by rw [← prod_swap] at hf ;
   rw [← lintegral_map' hf measurable_swap.ae_measurable, prod_swap]
 #align measure_theory.lintegral_prod_swap MeasureTheory.lintegral_prod_swap
 

@@ -176,16 +176,16 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
   apply le_antisymm
   · intro r hr; rcases Subsemiring.mem_closure_iff_exists_list.1 hr with ⟨L, HL, rfl⟩; clear hr
     induction' L with hd tl ih; · exact zero_mem _
-    rw [List.forall_mem_cons] at HL
+    rw [List.forall_mem_cons] at HL 
     rw [List.map_cons, List.sum_cons]
     refine' Submodule.add_mem _ _ (ih HL.2)
     replace HL := HL.1; clear ih tl
-    suffices ∃ (z r : _)(hr : r ∈ Submonoid.closure s), SMul.smul z r = List.prod hd
+    suffices ∃ (z r : _) (hr : r ∈ Submonoid.closure s), SMul.smul z r = List.prod hd
       by
       rcases this with ⟨z, r, hr, hzr⟩; rw [← hzr]
       exact smul_mem _ _ (subset_span hr)
     induction' hd with hd tl ih; · exact ⟨1, 1, (Submonoid.closure s).one_mem', one_smul _ _⟩
-    rw [List.forall_mem_cons] at HL
+    rw [List.forall_mem_cons] at HL 
     rcases ih HL.2 with ⟨z, r, hr, hzr⟩; rw [List.prod_cons, ← hzr]
     rcases HL.1 with (⟨hd, rfl⟩ | hs)
     · refine' ⟨hd * z, r, hr, _⟩
@@ -356,8 +356,8 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiring B] [Algebra R B]
     [IsScalarTower R A B] (r : A) (s : Set B) (B' : Subalgebra R B) (hs : r • s ⊆ B') {x : B}
     (hx : x ∈ adjoin R s) (hr : algebraMap A B r ∈ B') : ∃ n₀ : ℕ, ∀ n ≥ n₀, r ^ n • x ∈ B' :=
   by
-  change x ∈ (adjoin R s).toSubmodule at hx
-  rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
+  change x ∈ (adjoin R s).toSubmodule at hx 
+  rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx 
   rcases hx with ⟨l, rfl : (l.sum fun (i : Submonoid.closure s) (c : R) => c • ↑i) = x⟩
   choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
   use l.support.sup n₁

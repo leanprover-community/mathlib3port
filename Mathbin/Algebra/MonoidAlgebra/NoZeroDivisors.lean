@@ -77,14 +77,14 @@ theorem Left.exists_add_of_mem_support_single_mul [AddLeftCancelSemigroup A]
     {g : AddMonoidAlgebra R A} (a x : A)
     (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).support) : ∃ b ∈ g.support, a + b = x := by
   rwa [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _),
-    Finset.mem_map] at hx
+    Finset.mem_map] at hx 
 #align add_monoid_algebra.left.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Left.exists_add_of_mem_support_single_mul
 
 theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A]
     {f : AddMonoidAlgebra R A} (b x : A)
     (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).support) : ∃ a ∈ f.support, a + b = x := by
   rwa [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _),
-    Finset.mem_map] at hx
+    Finset.mem_map] at hx 
 #align add_monoid_algebra.right.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Right.exists_add_of_mem_support_single_mul
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a left-ordered add right
@@ -103,7 +103,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
     refine' ⟨a + gmin, mem_support_iff.mpr _⟩
     rw [mul_apply_add_eq_mul_of_forall_ne _]
     · refine' mul_ne_zero _ _
-      exacts[mem_support_iff.mp ha, mem_support_iff.mp (Finset.min'_mem _ _)]
+      exacts [mem_support_iff.mp ha, mem_support_iff.mp (Finset.min'_mem _ _)]
     · rw [H]
       rintro b c bf cg (hb | hc) <;> refine' ne_of_gt _
       · refine' lt_of_lt_of_le (_ : _ < b + gmin) _
@@ -142,7 +142,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
     refine' ⟨fmin + a, mem_support_iff.mpr _⟩
     rw [mul_apply_add_eq_mul_of_forall_ne _]
     · refine' mul_ne_zero _ _
-      exacts[mem_support_iff.mp (Finset.min'_mem _ _), mem_support_iff.mp ha]
+      exacts [mem_support_iff.mp (Finset.min'_mem _ _), mem_support_iff.mp ha]
     · rw [H]
       rintro b c bf cg (hb | hc) <;> refine' ne_of_gt _
       · refine' lt_of_le_of_lt (_ : _ ≤ fmin + c) _

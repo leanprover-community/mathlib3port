@@ -47,7 +47,7 @@ include hC
 a clopen set in one of the terms in the limit.
 -/
 theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
-    ∃ (j : J)(V : Set (F.obj j))(hV : IsClopen V), U = C.π.app j ⁻¹' V :=
+    ∃ (j : J) (V : Set (F.obj j)) (hV : IsClopen V), U = C.π.app j ⁻¹' V :=
   by
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
@@ -105,20 +105,20 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
       simp_rw [Set.preimage_iUnion, Set.mem_iUnion]
       obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
       refine' ⟨s, hs, _⟩
-      dsimp only [W] at hh⊢
+      dsimp only [W] at hh ⊢
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w]
     · intro hx
-      simp_rw [Set.preimage_iUnion, Set.mem_iUnion] at hx
+      simp_rw [Set.preimage_iUnion, Set.mem_iUnion] at hx 
       obtain ⟨s, hs, hx⟩ := hx
       rw [h]
       refine' ⟨s.1, s.2, _⟩
       rw [(hV s).2]
-      dsimp only [W] at hx
-      rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx
+      dsimp only [W] at hx 
+      rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx 
 #align Profinite.exists_clopen_of_cofiltered Profinite.exists_clopen_of_cofiltered
 
 theorem exists_locallyConstant_fin_two (f : LocallyConstant C.pt (Fin 2)) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) :=
+    ∃ (j : J) (g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) :=
   by
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
@@ -131,7 +131,7 @@ theorem exists_locallyConstant_fin_two (f : LocallyConstant C.pt (Fin 2)) :
 #align Profinite.exists_locally_constant_fin_two Profinite.exists_locallyConstant_fin_two
 
 theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.pt α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Fin 2)),
+    ∃ (j : J) (g : LocallyConstant (F.obj j) (α → Fin 2)),
       (f.map fun a b => if a = b then (0 : Fin 2) else 1) = g.comap (C.π.app _) :=
   by
   cases nonempty_fintype α
@@ -172,7 +172,7 @@ theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : Locally
 
 theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonempty α]
     (f : LocallyConstant C.pt α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
+    ∃ (j : J) (g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
   by
   inhabit α
   obtain ⟨j, gg, h⟩ := exists_locally_constant_finite_aux _ hC f
@@ -192,10 +192,10 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
   · rw [h2.some_spec]
     exact h1
   · intro a b hh
-    apply_fun fun e => e a  at hh
-    dsimp [ι] at hh
-    rw [if_pos rfl] at hh
-    split_ifs  at hh with hh1 hh1
+    apply_fun fun e => e a  at hh 
+    dsimp [ι] at hh 
+    rw [if_pos rfl] at hh 
+    split_ifs  at hh  with hh1 hh1
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
 #align Profinite.exists_locally_constant_finite_nonempty Profinite.exists_locallyConstant_finite_nonempty
@@ -203,7 +203,7 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
 theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
+    ∃ (j : J) (g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
   by
   let S := f.discrete_quotient
   let ff : S → α := f.lift
@@ -232,9 +232,9 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
     obtain ⟨j, g', hj⟩ := exists_locally_constant_finite_nonempty _ hC f'
     refine' ⟨j, ⟨ff ∘ g', g'.is_locally_constant.comp _⟩, _⟩
     ext1 t
-    apply_fun fun e => e t  at hj
-    rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj⊢
-    dsimp at hj⊢
+    apply_fun fun e => e t  at hj 
+    rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj ⊢
+    dsimp at hj ⊢
     rw [← hj]
     rfl
 #align Profinite.exists_locally_constant Profinite.exists_locallyConstant

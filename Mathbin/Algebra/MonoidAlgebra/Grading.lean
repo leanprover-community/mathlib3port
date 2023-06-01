@@ -113,16 +113,16 @@ instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f :
     SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M))
     where
   one_mem m h := by
-    rw [one_def] at h
+    rw [one_def] at h 
     by_cases H : (1 : R) = (0 : R)
-    · rw [H, Finsupp.single_zero] at h
+    · rw [H, Finsupp.single_zero] at h 
       exfalso
       exact h
-    · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h
+    · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h 
       rw [h, AddMonoidHom.map_zero]
   mul_mem i j a b ha hb c hc := by
     set h := support_mul a b hc
-    simp only [Finset.mem_biUnion] at h
+    simp only [Finset.mem_biUnion] at h 
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
     rw [← ha ma hma, ← hb mb hmb, finset.mem_singleton.mp hmc]
     apply AddMonoidHom.map_add
@@ -185,15 +185,15 @@ theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
     have : Disjoint (Finsupp.single m b).support y.support := by
       simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
     rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at
-      hmby
+      hmby 
     cases' hmby with h1 h2
     have : f m = i := by
       rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff] at
-        h1
+        h1 
     subst this
     simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
     let ih' := ih h2
-    dsimp at ih'
+    dsimp at ih' 
     rw [ih', ← AddMonoidHom.map_add]
     apply DirectSum.of_eq_of_gradedMonoid_eq
     congr 2

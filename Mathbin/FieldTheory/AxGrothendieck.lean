@@ -67,7 +67,7 @@ theorem ax_grothendieck_of_locally_finite {ι K R : Type _} [Field K] [Finite K]
     have hres_inj : injective res := by
       intro x y hxy
       ext i
-      simp only [res, Subtype.ext_iff, funext_iff] at hxy
+      simp only [res, Subtype.ext_iff, funext_iff] at hxy 
       exact congr_fun (hinj (funext hxy)) i
     have hres_surj : surjective res := Finite.injective_iff_surjective.1 hres_inj
     cases' hres_surj fun i => ⟨v i, hv i⟩ with w hw

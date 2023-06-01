@@ -85,9 +85,9 @@ theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom :=
   by
   have eq₁ := D.t_fac i i j
   have eq₂ := (is_iso.eq_comp_inv (D.f i i)).mpr (@pullback.condition _ _ _ _ _ _ (D.f i j) _)
-  rw [D.t_id, category.comp_id, eq₂] at eq₁
+  rw [D.t_id, category.comp_id, eq₂] at eq₁ 
   have eq₃ := (is_iso.eq_comp_inv (D.f i i)).mp eq₁
-  rw [category.assoc, ← pullback.condition, ← category.assoc] at eq₃
+  rw [category.assoc, ← pullback.condition, ← category.assoc] at eq₃ 
   exact
     mono.right_cancellation _ _
       ((mono.right_cancellation _ _ eq₃).trans (pullback_symmetry_hom_comp_fst _ _).symm)
@@ -112,9 +112,9 @@ theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ :=
   by
   have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by simp
   have := D.cocycle i j i
-  rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this
-  simp only [category.assoc, is_iso.inv_hom_id_assoc] at this
-  rw [← is_iso.eq_inv_comp, ← category.assoc, is_iso.comp_inv_eq] at this
+  rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this 
+  simp only [category.assoc, is_iso.inv_hom_id_assoc] at this 
+  rw [← is_iso.eq_inv_comp, ← category.assoc, is_iso.comp_inv_eq] at this 
   simpa using this
 #align category_theory.glue_data.t_inv CategoryTheory.GlueData.t_inv
 -/
@@ -287,7 +287,7 @@ theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :
 
 #print CategoryTheory.GlueData.types_ι_jointly_surjective /-
 theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
-    ∃ (i : _)(y : D.U i), D.ι i y = x :=
+    ∃ (i : _) (y : D.U i), D.ι i y = x :=
   by
   delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
@@ -298,7 +298,7 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
       concrete_category.congr_hom
         (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).hom_inv_id x']
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
-  exact ⟨i, y, by simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
+  exact ⟨i, y, by simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π]⟩
 #align category_theory.glue_data.types_ι_jointly_surjective CategoryTheory.GlueData.types_ι_jointly_surjective
 -/
 
@@ -437,7 +437,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
     cospan (F.map (D.ι i)) (F.map (D.ι j)) ≅
       cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
   exact
-    nat_iso.of_components (fun x => by cases x; exacts[D.glued_iso F, iso.refl _])
+    nat_iso.of_components (fun x => by cases x; exacts [D.glued_iso F, iso.refl _])
       (by rintro (_ | _) (_ | _) (_ | _ | _) <;> simp)
   apply is_limit.postcompose_hom_equiv e _ _
   apply hc.of_iso_limit
@@ -454,13 +454,13 @@ omit H
 be jointly surjective. -/
 theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.multispan F]
     [∀ i j k : D.J, PreservesLimit (cospan (D.f i j) (D.f i k)) F] (x : F.obj D.glued) :
-    ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x :=
+    ∃ (i : _) (y : F.obj (D.U i)), F.map (D.ι i) y = x :=
   by
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)
   replace eq := congr_arg e.inv Eq
-  change ((D.map_glue_data F).ι i ≫ e.inv) y = (e.hom ≫ e.inv) x at eq
-  rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq
+  change ((D.map_glue_data F).ι i ≫ e.inv) y = (e.hom ≫ e.inv) x at eq 
+  rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq 
   exact ⟨i, y, Eq⟩
 #align category_theory.glue_data.ι_jointly_surjective CategoryTheory.GlueData.ι_jointly_surjective
 

@@ -103,9 +103,9 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
     (hp : p ∈ Ideal.comap (algebraMap R S) (conductor R x)) (hz' : z ∈ I.map (algebraMap R S)) :
     algebraMap R S p * z ∈ algebraMap R<x> S '' ↑(I.map (algebraMap R R<x>)) :=
   by
-  rw [Ideal.map, Ideal.span, Finsupp.mem_span_image_iff_total] at hz'
+  rw [Ideal.map, Ideal.span, Finsupp.mem_span_image_iff_total] at hz' 
   obtain ⟨l, H, H'⟩ := hz'
-  rw [Finsupp.total_apply] at H'
+  rw [Finsupp.total_apply] at H' 
   rw [← H', mul_comm, Finsupp.sum_mul]
   have lem :
     ∀ {a : R},
@@ -121,7 +121,7 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
         _
     · rw [mul_comm]
       exact mem_conductor_iff.mp (ideal.mem_comap.mp hp) _
-    refine' ⟨_, by simpa only [RingHom.map_mul, mul_comm (algebraMap R S p) (l a)] ⟩
+    refine' ⟨_, by simpa only [RingHom.map_mul, mul_comm (algebraMap R S p) (l a)]⟩
     rw [mul_comm]
     apply Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ ha)
   refine'
@@ -158,11 +158,11 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
       obtain ⟨a, ha⟩ :=
         (Set.mem_image _ _ _).mp
           (prod_mem_ideal_map_of_mem_conductor hp
-            (show z ∈ I.map (algebraMap R S) by rwa [Ideal.mem_comap] at hy))
+            (show z ∈ I.map (algebraMap R S) by rwa [Ideal.mem_comap] at hy ))
       use a + algebraMap R R<x> q * ⟨z, hz⟩
       refine'
         ⟨Ideal.add_mem (I.map (algebraMap R R<x>)) ha.left _, by
-          simpa only [ha.right, map_add, AlgHom.map_mul, add_right_inj] ⟩
+          simpa only [ha.right, map_add, AlgHom.map_mul, add_right_inj]⟩
       rw [mul_comm]
       exact Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ hq)
     refine'
@@ -196,7 +196,7 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
         --this is contained in `I * R<x>`, which is the content of the previous lemma.
         refine' RingHom.lift_injective_of_ker_le_ideal _ _ fun u hu => _
         rwa [RingHom.mem_ker, RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, ← Ideal.mem_comap,
-          comap_map_eq_map_adjoin_of_coprime_conductor hx h_alg] at hu
+          comap_map_eq_map_adjoin_of_coprime_conductor hx h_alg] at hu 
       · -- Surjectivity follows from the surjectivity of the canonical map `R<x> → S ⧸ (I * S)`,
         -- which in turn follows from the fact that `I * S + (conductor R x) = S`.
         refine' Ideal.Quotient.lift_surjective_of_surjective _ _ fun y => _
@@ -204,16 +204,16 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
         have : z ∈ conductor R x ⊔ I.map (algebraMap R S) :=
           by
           suffices conductor R x ⊔ I.map (algebraMap R S) = ⊤ by simp only [this]
-          rw [Ideal.eq_top_iff_one] at hx⊢
+          rw [Ideal.eq_top_iff_one] at hx ⊢
           replace hx := Ideal.mem_map_of_mem (algebraMap R S) hx
-          rw [Ideal.map_sup, RingHom.map_one] at hx
+          rw [Ideal.map_sup, RingHom.map_one] at hx 
           exact
             (sup_le_sup
                 (show ((conductor R x).comap (algebraMap R S)).map (algebraMap R S) ≤ conductor R x
                   from Ideal.map_comap_le)
                 (le_refl (I.map (algebraMap R S))))
               hx
-        rw [← Ideal.mem_quotient_iff_mem_sup, hz, Ideal.mem_map_iff_of_surjective] at this
+        rw [← Ideal.mem_quotient_iff_mem_sup, hz, Ideal.mem_map_iff_of_surjective] at this 
         obtain ⟨u, hu, hu'⟩ := this
         use ⟨u, conductor_subset_adjoin hu⟩
         simpa only [← hu']
@@ -310,7 +310,7 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
   have := multiplicity_factors_map_eq_multiplicity hI hI' hx hx' hJ
   rw [multiplicity_eq_count_normalized_factors, multiplicity_eq_count_normalized_factors,
     UniqueFactorizationMonoid.normalize_normalized_factor _ hJ,
-    UniqueFactorizationMonoid.normalize_normalized_factor, PartENat.natCast_inj] at this
+    UniqueFactorizationMonoid.normalize_normalized_factor, PartENat.natCast_inj] at this 
   refine' this.trans _
   -- Get rid of the `map` by applying the equiv to both sides.
   generalize hJ' :
@@ -355,7 +355,7 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
         (show I.map (algebraMap R S) ≠ 0 by
           rwa [← bot_eq_zero, Ne.def,
             map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)])
-    rw [associated_iff_eq, hy, Multiset.prod_singleton] at h
+    rw [associated_iff_eq, hy, Multiset.prod_singleton] at h 
     rw [← h]
     exact
       irreducible_of_normalized_factor y

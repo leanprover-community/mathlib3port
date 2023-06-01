@@ -213,7 +213,7 @@ theorem basis_toMatrix_mul [DecidableEq κ] (b₁ : Basis ι R M) (b₂ : Basis 
     (A : Matrix ι' κ R) : b₁.toMatrix b₂ ⬝ A = LinearMap.toMatrix b₃ b₁ (toLin b₃ b₂ A) :=
   by
   have := basis_toMatrix_mul_linearMap_toMatrix b₃ b₁ b₂ (Matrix.toLin b₃ b₂ A)
-  rwa [LinearMap.toMatrix_toLin] at this
+  rwa [LinearMap.toMatrix_toLin] at this 
 #align basis_to_matrix_mul basis_toMatrix_mul
 
 theorem mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι R M) (b₂ : Basis ι' R M)
@@ -221,7 +221,7 @@ theorem mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι R
     A ⬝ b₁.toMatrix b₂ = LinearMap.toMatrix b₂ b₃ (toLin b₁ b₃ A) :=
   by
   have := linearMap_toMatrix_mul_basis_toMatrix b₂ b₁ b₃ (Matrix.toLin b₁ b₃ A)
-  rwa [LinearMap.toMatrix_toLin] at this
+  rwa [LinearMap.toMatrix_toLin] at this 
 #align mul_basis_to_matrix mul_basis_toMatrix
 
 theorem basis_toMatrix_basisFun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :

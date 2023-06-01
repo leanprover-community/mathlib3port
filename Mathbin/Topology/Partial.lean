@@ -90,7 +90,7 @@ theorem pcontinuous_iff' {f : α →. β} :
   have h' : ∀ s ∈ 𝓝 y, f.preimage s ∈ 𝓝 x := by
     intro s hs
     have : ptendsto' f (𝓝 x) (𝓝 y) := hf fxy
-    rw [ptendsto'_def] at this
+    rw [ptendsto'_def] at this 
     exact this s hs
   show f.preimage s ∈ 𝓝 x
   apply h'; rw [mem_nhds_iff]; exact ⟨s, Set.Subset.refl _, os, ys⟩

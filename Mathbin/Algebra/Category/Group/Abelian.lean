@@ -56,8 +56,8 @@ instance : Abelian AddCommGroupCat.{u}
   HasFiniteProducts := ⟨by infer_instance⟩
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
-  add_comp := by intros ; simp only [preadditive.add_comp]
-  comp_add := by intros ; simp only [preadditive.comp_add]
+  add_comp := by intros; simp only [preadditive.add_comp]
+  comp_add := by intros; simp only [preadditive.comp_add]
 
 end AddCommGroupCat
 

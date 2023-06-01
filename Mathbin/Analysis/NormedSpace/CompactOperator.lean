@@ -267,7 +267,7 @@ theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : 
     (hf : IsCompactOperator f) (g : M₁ →SL[σ₁₂] M₂) : IsCompactOperator (f ∘ g) :=
   by
   have := g.continuous.tendsto 0
-  rw [map_zero] at this
+  rw [map_zero] at this 
   rcases hf with ⟨K, hK, hKf⟩
   exact ⟨K, hK, this hKf⟩
 #align is_compact_operator.comp_clm IsCompactOperator.comp_clm
@@ -357,7 +357,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   -- Since `f` is linear, we only need to show that it is continuous at zero.
   -- Let `U` be a neighborhood of `0` in `M₂`.
   refine' continuous_of_continuousAt_zero f fun U hU => _
-  rw [map_zero] at hU
+  rw [map_zero] at hU 
   -- The compactness of `f` gives us a compact set `K : set M₂` such that `f ⁻¹' K` is a
   -- neighborhood of `0` in `M₁`.
   rcases hf with ⟨K, hK, hKf⟩
@@ -420,7 +420,7 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
   by
   refine' isClosed_of_closure_subset _
   rintro u hu
-  rw [mem_closure_iff_nhds_zero] at hu
+  rw [mem_closure_iff_nhds_zero] at hu 
   suffices TotallyBounded (u '' Metric.closedBall 0 1)
     by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
@@ -439,13 +439,13 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
     ⟨T, hT, hTv⟩
   have hTv : v '' closed_ball 0 1 ⊆ _ := subset_closure.trans hTv
   refine' ⟨T, hT, _⟩
-  rw [image_subset_iff, preimage_Union₂] at hTv⊢
+  rw [image_subset_iff, preimage_Union₂] at hTv ⊢
   intro x hx
   specialize hTv hx
-  rw [mem_Union₂] at hTv⊢
+  rw [mem_Union₂] at hTv ⊢
   rcases hTv with ⟨t, ht, htx⟩
   refine' ⟨t, ht, _⟩
-  rw [mem_preimage, mem_vadd_set_iff_neg_vadd_mem, vadd_eq_add, neg_add_eq_sub] at htx⊢
+  rw [mem_preimage, mem_vadd_set_iff_neg_vadd_mem, vadd_eq_add, neg_add_eq_sub] at htx ⊢
   convert hVU _ htx _ (huv x hx) using 1
   rw [ContinuousLinearMap.sub_apply]
   abel

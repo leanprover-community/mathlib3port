@@ -64,7 +64,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} [TopologicalSpa
 /-- local homeomorphisms, defined on open subsets of the space -/
 @[nolint has_nonempty_instance]
 structure LocalHomeomorph (α : Type _) (β : Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends LocalEquiv α β where
+    [TopologicalSpace β] extends LocalEquiv α β where
   open_source : IsOpen source
   open_target : IsOpen target
   continuous_toFun : ContinuousOn to_fun source
@@ -1270,7 +1270,7 @@ theorem continuousWithinAt_iff_continuousWithinAt_comp_left {f : γ → α} {s :
     ContinuousWithinAt f s x ↔ ContinuousWithinAt (e ∘ f) s x :=
   by
   refine' ⟨(e.continuous_at hx).comp_continuousWithinAt, fun fe_cont => _⟩
-  rw [← continuousWithinAt_inter' h] at fe_cont⊢
+  rw [← continuousWithinAt_inter' h] at fe_cont ⊢
   have : ContinuousWithinAt (e.symm ∘ e ∘ f) (s ∩ f ⁻¹' e.source) x :=
     haveI : ContinuousWithinAt e.symm univ (e (f x)) :=
       (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt

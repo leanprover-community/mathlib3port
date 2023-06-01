@@ -124,7 +124,8 @@ attribute [instance] colimit_setoid
 /-- The underlying type of the colimit of a diagram in `Module R`.
 -/
 def ColimitType : Type max u v w :=
-  Quotient (colimitSetoid F)deriving Inhabited
+  Quotient (colimitSetoid F)
+deriving Inhabited
 #align Module.colimits.colimit_type ModuleCat.Colimits.ColimitType
 
 instance : AddCommGroup (ColimitType F)
@@ -268,7 +269,7 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
   toFun := coconeFun F j
-  map_smul' := by intros ; apply Quot.sound; apply relation.smul
+  map_smul' := by intros; apply Quot.sound; apply relation.smul
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 #align Module.colimits.cocone_morphism ModuleCat.Colimits.coconeMorphism
 

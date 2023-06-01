@@ -35,8 +35,8 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
   refine' nhds_mk_of_nhds _ _ _ _
   · intro l; induction l
     case nil => exact le_rfl
-    case
-      cons a l ih =>
+    case cons a l
+      ih =>
       suffices List.cons <$> pure a <*> pure l ≤ List.cons <$> 𝓝 a <*> traverse 𝓝 l by
         simpa only [functor_norm] using this
       exact Filter.seq_mono (Filter.map_mono <| pure_le_nhds a) ih
@@ -46,8 +46,8 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
       by
       induction hu generalizing s
       case nil hs this => exists ; simpa only [List.forall₂_nil_left_iff, exists_eq_left]
-      case
-        cons a s as ss ht h ih t hts =>
+      case cons a s as ss ht h ih t
+        hts =>
         rcases mem_nhds_iff.1 ht with ⟨u, hut, hu⟩
         rcases ih _ subset.rfl with ⟨v, hv, hvss⟩
         exact
@@ -62,7 +62,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
         by
         refine' List.Forall₂.flip _
         replace hv := hv.flip
-        simp only [List.forall₂_and_left, flip] at hv⊢
+        simp only [List.forall₂_and_left, flip] at hv ⊢
         exact ⟨hv.1, hu.flip⟩
       refine' mem_of_superset _ hvs
       exact mem_traverse _ _ (this.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
@@ -194,7 +194,7 @@ theorem tendsto_prod [Monoid α] [ContinuousMul α] {l : List α} :
   · simp (config := { contextual := true }) [nhds_nil, mem_of_mem_nhds, tendsto_pure_left]
   simp_rw [tendsto_cons_iff, prod_cons]
   have := continuous_iff_continuous_at.mp continuous_mul (x, l.prod)
-  rw [ContinuousAt, nhds_prod_eq] at this
+  rw [ContinuousAt, nhds_prod_eq] at this 
   exact this.comp (tendsto_id.prod_map ih)
 #align list.tendsto_prod List.tendsto_prod
 #align list.tendsto_sum List.tendsto_sum

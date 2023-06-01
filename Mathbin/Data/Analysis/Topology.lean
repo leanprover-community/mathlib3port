@@ -144,11 +144,11 @@ namespace Ctop.Realizer
 
 protected theorem is_basis [T : TopologicalSpace α] (F : Realizer α) :
     TopologicalSpace.IsTopologicalBasis (Set.range F.f.f) := by
-  have := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this
+  have := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this 
 #align ctop.realizer.is_basis Ctop.Realizer.is_basis
 
 protected theorem mem_nhds [T : TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
-    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
+    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this 
 #align ctop.realizer.mem_nhds Ctop.Realizer.mem_nhds
 
 theorem isOpen_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :

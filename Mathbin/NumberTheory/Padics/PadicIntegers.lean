@@ -219,7 +219,7 @@ def inv : ℤ_[p] → ℤ_[p]
 instance : CharZero ℤ_[p]
     where cast_injective m n h :=
     Nat.cast_injective <|
-      show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h; norm_cast  at h; exact h
+      show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h ; norm_cast  at h ; exact h
 
 @[simp, norm_cast]
 theorem coe_int_eq (z1 z2 : ℤ) : (z1 : ℤ_[p]) = z2 ↔ z1 = z2 :=
@@ -316,7 +316,7 @@ theorem norm_mul (z1 z2 : ℤ_[p]) : ‖z1 * z2‖ = ‖z1‖ * ‖z2‖ := by s
 @[simp]
 theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ‖z ^ n‖ = ‖z‖ ^ n
   | 0 => by simp
-  | k + 1 => by rw [pow_succ, pow_succ, norm_mul]; congr ; apply norm_pow
+  | k + 1 => by rw [pow_succ, pow_succ, norm_mul]; congr; apply norm_pow
 #align padic_int.norm_pow PadicInt.norm_pow
 
 theorem nonarchimedean (q r : ℤ_[p]) : ‖q + r‖ ≤ max ‖q‖ ‖r‖ :=
@@ -398,7 +398,7 @@ theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ (-
   by
   obtain ⟨k, hk⟩ := @exists_pow_neg_lt p _ ε (by exact_mod_cast hε)
   use k
-  rw [show (p : ℝ) = (p : ℚ) by simp] at hk
+  rw [show (p : ℝ) = (p : ℚ) by simp] at hk 
   exact_mod_cast hk
 #align padic_int.exists_pow_neg_lt_rat PadicInt.exists_pow_neg_lt_rat
 
@@ -464,12 +464,12 @@ theorem valuation_p_pow_mul (n : ℕ) (c : ℤ_[p]) (hc : c ≠ 0) :
   by
   have : ‖↑p ^ n * c‖ = ‖(p ^ n : ℤ_[p])‖ * ‖c‖ := norm_mul _ _
   have aux : ↑p ^ n * c ≠ 0 := by
-    contrapose! hc; rw [mul_eq_zero] at hc; cases hc
+    contrapose! hc; rw [mul_eq_zero] at hc ; cases hc
     · refine' (hp.1.NeZero _).elim
       exact_mod_cast pow_eq_zero hc
     · exact hc
   rwa [norm_eq_pow_val aux, norm_p_pow, norm_eq_pow_val hc, ← zpow_add₀, ← neg_add, zpow_inj,
-    neg_inj] at this
+    neg_inj] at this 
   · exact_mod_cast hp.1.Pos
   · exact_mod_cast hp.1.ne_one
   · exact_mod_cast hp.1.NeZero
@@ -487,7 +487,7 @@ theorem mul_inv : ∀ {z : ℤ_[p]}, ‖z‖ = 1 → z * z.inv = 1
     by
     have hk : k ≠ 0 := fun h' => zero_ne_one' ℚ_[p] (by simpa [h'] using h)
     unfold PadicInt.inv
-    rw [norm_eq_padic_norm] at h
+    rw [norm_eq_padic_norm] at h 
     rw [dif_pos h]
     apply Subtype.ext_iff_val.2
     simp [mul_inv_cancel hk]
@@ -501,7 +501,7 @@ theorem isUnit_iff {z : ℤ_[p]} : IsUnit z ↔ ‖z‖ = 1 :=
     rcases isUnit_iff_dvd_one.1 h with ⟨w, eq⟩
     refine' le_antisymm (norm_le_one _) _
     have := mul_le_mul_of_nonneg_left (norm_le_one w) (norm_nonneg z)
-    rwa [mul_one, ← norm_mul, ← Eq, norm_one] at this, fun h =>
+    rwa [mul_one, ← norm_mul, ← Eq, norm_one] at this , fun h =>
     ⟨⟨z, z.inv, mul_inv h, inv_mul h⟩, rfl⟩⟩
 #align padic_int.is_unit_iff PadicInt.isUnit_iff
 
@@ -625,7 +625,7 @@ theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℤ_[p]) (n : ℤ) : ‖x‖ < 
 theorem norm_lt_one_iff_dvd (x : ℤ_[p]) : ‖x‖ < 1 ↔ ↑p ∣ x :=
   by
   have := norm_le_pow_iff_mem_span_pow x 1
-  rw [Ideal.mem_span_singleton, pow_one] at this
+  rw [Ideal.mem_span_singleton, pow_one] at this 
   rw [← this, norm_le_pow_iff_norm_lt_pow_add_one]
   simp only [zpow_zero, Int.ofNat_zero, Int.ofNat_succ, add_left_neg, zero_add]
 #align padic_int.norm_lt_one_iff_dvd PadicInt.norm_lt_one_iff_dvd
@@ -655,7 +655,7 @@ theorem maximalIdeal_eq_span_p : maximalIdeal ℤ_[p] = Ideal.span {p} :=
   by
   apply le_antisymm
   · intro x hx
-    simp only [LocalRing.mem_maximalIdeal, mem_nonunits] at hx
+    simp only [LocalRing.mem_maximalIdeal, mem_nonunits] at hx 
     rwa [Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
   · rw [Ideal.span_le, Set.singleton_subset_iff]; exact p_nonnunit
 #align padic_int.maximal_ideal_eq_span_p PadicInt.maximalIdeal_eq_span_p
@@ -686,7 +686,7 @@ instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p]
     where prec' x hx :=
     by
     simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, SModEq.sub_mem, maximal_ideal_eq_span_p,
-      Ideal.span_singleton_pow, ← norm_le_pow_iff_mem_span_pow] at hx⊢
+      Ideal.span_singleton_pow, ← norm_le_pow_iff_mem_span_pow] at hx ⊢
     let x' : CauSeq ℤ_[p] norm := ⟨x, _⟩; swap
     · intro ε hε; obtain ⟨m, hm⟩ := exists_pow_neg_lt p hε
       refine' ⟨m, fun n hn => lt_of_le_of_lt _ hm⟩; rw [← neg_sub, norm_neg]; exact hx hn
@@ -695,9 +695,9 @@ instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p]
       obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this
       by_cases hin : i ≤ n
       · exact (hi i le_rfl n hin).le
-      · push_neg  at hin; specialize hi i le_rfl i le_rfl; specialize hx hin.le
+      · push_neg  at hin ; specialize hi i le_rfl i le_rfl; specialize hx hin.le
         have := nonarchimedean (x n - x i) (x i - x'.lim)
-        rw [sub_add_sub_cancel] at this
+        rw [sub_add_sub_cancel] at this 
         refine' this.trans (max_le_iff.mpr ⟨hx, hi.le⟩)
 
 end Dvr
@@ -727,14 +727,14 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p]
         by
         rw [hn, Int.toNat_of_nonneg]
         rw [Right.nonneg_neg_iff]
-        rw [Padic.norm_le_one_iff_val_nonneg, not_le] at hx
+        rw [Padic.norm_le_one_iff_val_nonneg, not_le] at hx 
         exact hx.le
       set a := x * p ^ n with ha
       have ha_norm : ‖a‖ = 1 :=
         by
         have hx : x ≠ 0 := by
           intro h0
-          rw [h0, norm_zero] at hx
+          rw [h0, norm_zero] at hx 
           exact hx zero_le_one
         rw [ha, padicNormE.mul, padicNormE.norm_p_pow, Padic.norm_eq_pow_val hx, ← zpow_add',
           hn_coe, neg_neg, add_left_neg, zpow_zero]

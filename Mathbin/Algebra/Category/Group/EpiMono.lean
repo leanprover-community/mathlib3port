@@ -58,7 +58,7 @@ theorem range_eq_top_of_cancel {f : A →* B}
       one_mul]
     exact ⟨x, rfl⟩
   replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
-  rwa [ker_one, QuotientGroup.ker_mk'] at h
+  rwa [ker_one, QuotientGroup.ker_mk'] at h 
 #align monoid_hom.range_eq_top_of_cancel MonoidHom.range_eq_top_of_cancel
 #align add_monoid_hom.range_eq_top_of_cancel AddMonoidHom.range_eq_top_of_cancel
 
@@ -164,10 +164,10 @@ theorem fromCoset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
       fromCoset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩ :=
   by
   intro r
-  simp only [Subtype.mk_eq_mk] at r
-  change b *l f.range = f.range at r
-  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_leftCoset _).symm] at r
-  rw [leftCoset_eq_iff, mul_one] at r
+  simp only [Subtype.mk_eq_mk] at r 
+  change b *l f.range = f.range at r 
+  nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_leftCoset _).symm] at r 
+  rw [leftCoset_eq_iff, mul_one] at r 
   exact hb (inv_inv b ▸ Subgroup.inv_mem _ r)
 #align Group.surjective_of_epi_auxs.from_coset_ne_of_nin_range GroupCat.SurjectiveOfEpiAuxs.fromCoset_ne_of_nin_range
 
@@ -348,10 +348,10 @@ theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h :=
   intro r
   replace r :=
     FunLike.congr_fun (FunLike.congr_fun r x) (from_coset ⟨f.range, ⟨1, one_leftCoset _⟩⟩)
-  rw [H, g_apply_from_coset, MonoidHom.coe_mk, tau] at r
+  rw [H, g_apply_from_coset, MonoidHom.coe_mk, tau] at r 
   simp only [MonoidHom.coe_range, Subtype.coe_mk, Equiv.symm_swap, Equiv.toFun_as_coe,
-    Equiv.coe_trans, Function.comp_apply] at r
-  erw [Equiv.swap_apply_left, g_apply_infinity, Equiv.swap_apply_right] at r
+    Equiv.coe_trans, Function.comp_apply] at r 
+  erw [Equiv.swap_apply_left, g_apply_infinity, Equiv.swap_apply_right] at r 
   exact from_coset_ne_of_nin_range _ hx r
 #align Group.surjective_of_epi_auxs.g_ne_h GroupCat.SurjectiveOfEpiAuxs.g_ne_h
 
@@ -360,7 +360,7 @@ end SurjectiveOfEpiAuxs
 theorem surjective_of_epi [Epi f] : Function.Surjective f :=
   by
   by_contra r
-  push_neg  at r
+  push_neg  at r 
   rcases r with ⟨b, hb⟩
   exact
     surjective_of_epi_auxs.g_ne_h f b (fun ⟨c, hc⟩ => hb _ hc)
@@ -388,7 +388,7 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f :=
     refine' ⟨_, Group_AddGroup_equivalence.inverse.epi_of_epi_map⟩
     intro e'
     apply Group_AddGroup_equivalence.inverse.map_epi
-  rwa [GroupCat.epi_iff_surjective] at i1
+  rwa [GroupCat.epi_iff_surjective] at i1 
 #align AddGroup.epi_iff_surjective AddGroupCat.epi_iff_surjective
 
 theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
@@ -404,7 +404,8 @@ variable {A B : GroupCat.{u}} (f : A ⟶ B)
 #print GroupCat.forget_groupCat_preserves_mono /-
 @[to_additive]
 instance forget_groupCat_preserves_mono : (forget GroupCat).PreservesMonomorphisms
-    where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+    where preserves X Y f e := by
+    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e 
 #align Group.forget_Group_preserves_mono GroupCat.forget_groupCat_preserves_mono
 #align AddGroup.forget_Group_preserves_mono AddGroupCat.forget_groupCat_preserves_mono
 -/
@@ -412,7 +413,8 @@ instance forget_groupCat_preserves_mono : (forget GroupCat).PreservesMonomorphis
 #print GroupCat.forget_groupCat_preserves_epi /-
 @[to_additive]
 instance forget_groupCat_preserves_epi : (forget GroupCat).PreservesEpimorphisms
-    where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
+    where preserves X Y f e := by
+    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e 
 #align Group.forget_Group_preserves_epi GroupCat.forget_groupCat_preserves_epi
 #align AddGroup.forget_Group_preserves_epi AddGroupCat.forget_groupCat_preserves_epi
 -/
@@ -466,7 +468,8 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
 #print CommGroupCat.forget_commGroupCat_preserves_mono /-
 @[to_additive]
 instance forget_commGroupCat_preserves_mono : (forget CommGroupCat).PreservesMonomorphisms
-    where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+    where preserves X Y f e := by
+    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e 
 #align CommGroup.forget_CommGroup_preserves_mono CommGroupCat.forget_commGroupCat_preserves_mono
 #align AddCommGroup.forget_CommGroup_preserves_mono AddCommGroupCat.forget_commGroupCat_preserves_mono
 -/
@@ -474,7 +477,8 @@ instance forget_commGroupCat_preserves_mono : (forget CommGroupCat).PreservesMon
 #print CommGroupCat.forget_commGroupCat_preserves_epi /-
 @[to_additive]
 instance forget_commGroupCat_preserves_epi : (forget CommGroupCat).PreservesEpimorphisms
-    where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
+    where preserves X Y f e := by
+    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e 
 #align CommGroup.forget_CommGroup_preserves_epi CommGroupCat.forget_commGroupCat_preserves_epi
 #align AddCommGroup.forget_CommGroup_preserves_epi AddCommGroupCat.forget_commGroupCat_preserves_epi
 -/

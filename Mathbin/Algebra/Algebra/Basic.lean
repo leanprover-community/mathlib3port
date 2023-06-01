@@ -121,7 +121,7 @@ See the implementation notes in this file for discussion of the details of this 
 -/
 @[nolint has_nonempty_instance]
 class Algebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends SMul R A,
-  R →+* A where
+    R →+* A where
   commutes' : ∀ r x, to_fun r * x = x * to_fun r
   smul_def' : ∀ r x, r • x = to_fun r * x
 #align algebra Algebra
@@ -372,7 +372,7 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
   congr
   · funext r a
     replace w := congr_arg (fun s => s * a) (w r)
-    simp only [← smul_def''] at w
+    simp only [← smul_def''] at w 
     apply w
   · ext r
     exact w r
@@ -979,7 +979,7 @@ theorem NoZeroSMulDivisors.trans (R A M : Type _) [CommRing R] [Ring A] [IsDomai
     [NoZeroSMulDivisors A M] : NoZeroSMulDivisors R M :=
   by
   refine' ⟨fun r m h => _⟩
-  rw [algebra_compatible_smul A r m] at h
+  rw [algebra_compatible_smul A r m] at h 
   cases' smul_eq_zero.1 h with H H
   · have : Function.Injective (algebraMap R A) :=
       NoZeroSMulDivisors.iff_algebraMap_injective.1 inferInstance

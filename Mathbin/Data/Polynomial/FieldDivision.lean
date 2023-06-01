@@ -127,7 +127,7 @@ variable [DivisionRing R] {p q : R[X]}
 
 theorem degree_pos_of_ne_zero_of_nonunit (hp0 : p ≠ 0) (hp : ¬IsUnit p) : 0 < degree p :=
   lt_of_not_ge fun h => by
-    rw [eq_C_of_degree_le_zero h] at hp0 hp
+    rw [eq_C_of_degree_le_zero h] at hp0 hp 
     exact hp (IsUnit.map C (IsUnit.mk0 (coeff p 0) (mt C_inj.2 (by simpa using hp0))))
 #align polynomial.degree_pos_of_ne_zero_of_nonunit Polynomial.degree_pos_of_ne_zero_of_nonunit
 
@@ -166,7 +166,7 @@ theorem isUnit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
   ⟨degree_eq_zero_of_isUnit, fun h =>
     have : degree p ≤ 0 := by simp [*, le_refl]
     have hc : coeff p 0 ≠ 0 := fun hc => by
-      rw [eq_C_of_degree_le_zero this, hc] at h <;> simpa using h
+      rw [eq_C_of_degree_le_zero this, hc] at h  <;> simpa using h
     isUnit_iff_dvd_one.2
       ⟨C (coeff p 0)⁻¹, by
         conv in p => rw [eq_C_of_degree_le_zero this]
@@ -263,7 +263,7 @@ theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
 theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
   ⟨fun h => by
     have := EuclideanDomain.div_add_mod p q <;>
-      rwa [h, MulZeroClass.mul_zero, zero_add, mod_eq_self_iff hq0] at this,
+      rwa [h, MulZeroClass.mul_zero, zero_add, mod_eq_self_iff hq0] at this ,
     fun h =>
     by
     have hlt : degree p < degree (q * C (leadingCoeff q)⁻¹) := by
@@ -462,7 +462,7 @@ theorem coeff_inv_units (u : R[X]ˣ) (n : ℕ) : ((↑u : R[X]).coeff n)⁻¹ = 
 
 theorem monic_normalize (hp0 : p ≠ 0) : Monic (normalize p) :=
   by
-  rw [Ne.def, ← leading_coeff_eq_zero, ← Ne.def, ← isUnit_iff_ne_zero] at hp0
+  rw [Ne.def, ← leading_coeff_eq_zero, ← Ne.def, ← isUnit_iff_ne_zero] at hp0 
   rw [monic, leading_coeff_normalize, normalize_eq_one]
   apply hp0
 #align polynomial.monic_normalize Polynomial.monic_normalize
@@ -566,9 +566,9 @@ theorem isCoprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] (
     exact monic_X_sub_C a
   replace key := congr_arg derivative key
   simp only [derivative_X, derivative_mul, one_mul, sub_zero, derivative_sub,
-    mod_by_monic_X_sub_C_eq_C_eval, derivative_C] at key
+    mod_by_monic_X_sub_C_eq_C_eval, derivative_C] at key 
   have : X - C a ∣ derivative f := key ▸ dvd_add h (dvd_mul_right _ _)
-  rw [← dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this
+  rw [← dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this 
   rw [← C_inj, this, C_0]
 #align polynomial.is_coprime_of_is_root_of_eval_derivative_ne_zero Polynomial.isCoprime_of_is_root_of_eval_derivative_ne_zero
 

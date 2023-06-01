@@ -104,7 +104,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   · -- φ(S) is contained in Sᶜ
     intro ij hij
     simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.val_succ,
-      Fin.coe_castLT] at hij⊢
+      Fin.coe_castLT] at hij ⊢
     linarith
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
@@ -122,7 +122,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
     simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
-      hij'
+      hij' 
     refine' ⟨(j'.pred _, Fin.castSucc i'), _, _⟩
     · intro H
       simpa only [H, Nat.not_lt_zero, Fin.val_zero] using hij'
@@ -307,8 +307,8 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     simp only [add_zero]
     -- finally, we study the remaining term which is induced by X.δ 0
     let eq := def_t 0
-    rw [show (-1 : ℤ) ^ ((0 : Fin (n + 2)) : ℕ) = 1 by ring] at eq
-    rw [one_smul] at eq
+    rw [show (-1 : ℤ) ^ ((0 : Fin (n + 2)) : ℕ) = 1 by ring] at eq 
+    rw [one_smul] at eq 
     rw [Eq]
     cases n <;> dsimp <;> simp
 #align algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap

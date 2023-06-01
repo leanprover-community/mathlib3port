@@ -67,7 +67,7 @@ theorem cauchySeq_finset_of_norm_bounded_eventually {f : ι → E} {g : ι → �
   have : ∀ i ∈ t, ‖f i‖ ≤ g i := by
     intro i hi
     simp only [disjoint_left, mem_union, not_or, h.mem_to_finset, Set.mem_compl_iff,
-      Classical.not_not] at ht
+      Classical.not_not] at ht 
     exact (ht hi).2
   calc
     ‖∑ i in t, f i‖ ≤ ∑ i in t, g i := norm_sum_le_of_le _ this
@@ -90,7 +90,7 @@ theorem cauchySeq_range_of_norm_bounded {f : ℕ → E} (g : ℕ → ℝ)
   refine' Metric.cauchySeq_iff'.2 fun ε hε => _
   refine' (Metric.cauchySeq_iff'.1 hg ε hε).imp fun N hg n hn => _
   specialize hg n hn
-  rw [dist_eq_norm, ← sum_Ico_eq_sub _ hn] at hg⊢
+  rw [dist_eq_norm, ← sum_Ico_eq_sub _ hn] at hg ⊢
   calc
     ‖∑ k in Ico N n, f k‖ ≤ ∑ k in _, ‖f k‖ := norm_sum_le _ _
     _ ≤ ∑ k in _, g k := (sum_le_sum fun x _ => hf x)

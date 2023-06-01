@@ -23,7 +23,7 @@ This file defines `set.sigma`, the indexed sum of sets.
 namespace Set
 
 variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)}
-  {u : Set (Σi, α i)} {x : Σi, α i} {i j : ι} {a : α i}
+  {u : Set (Σ i, α i)} {x : Σ i, α i} {i j : ι} {a : α i}
 
 @[simp]
 theorem range_sigmaMk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
@@ -50,15 +50,15 @@ theorem image_sigmaMk_preimage_sigmaMap {β : ι' → Type _} {f : ι → ι'} (
   by
   refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
   rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
-  simp only [hf.eq_iff, Sigma.map] at hxy
-  rcases hxy with ⟨rfl, hxy⟩; rw [heq_iff_eq] at hxy; subst y
+  simp only [hf.eq_iff, Sigma.map] at hxy 
+  rcases hxy with ⟨rfl, hxy⟩; rw [heq_iff_eq] at hxy ; subst y
   exact ⟨x, hys, rfl⟩
 #align set.image_sigma_mk_preimage_sigma_map Set.image_sigmaMk_preimage_sigmaMap
 
 #print Set.Sigma /-
 /-- Indexed sum of sets. `s.sigma t` is the set of dependent pairs `⟨i, a⟩` such that `i ∈ s` and
 `a ∈ t i`.-/
-protected def Sigma (s : Set ι) (t : ∀ i, Set (α i)) : Set (Σi, α i) :=
+protected def Sigma (s : Set ι) (t : ∀ i, Set (α i)) : Set (Σ i, α i) :=
   { x | x.1 ∈ s ∧ x.2 ∈ t x.1 }
 #align set.sigma Set.Sigma
 -/
@@ -69,11 +69,11 @@ theorem mem_sigma_iff : x ∈ s.Sigma t ↔ x.1 ∈ s ∧ x.2 ∈ t x.1 :=
 #align set.mem_sigma_iff Set.mem_sigma_iff
 
 @[simp]
-theorem mk_sigma_iff : (⟨i, a⟩ : Σi, α i) ∈ s.Sigma t ↔ i ∈ s ∧ a ∈ t i :=
+theorem mk_sigma_iff : (⟨i, a⟩ : Σ i, α i) ∈ s.Sigma t ↔ i ∈ s ∧ a ∈ t i :=
   Iff.rfl
 #align set.mk_sigma_iff Set.mk_sigma_iff
 
-theorem mk_mem_sigma (hi : i ∈ s) (ha : a ∈ t i) : (⟨i, a⟩ : Σi, α i) ∈ s.Sigma t :=
+theorem mk_mem_sigma (hi : i ∈ s) (ha : a ∈ t i) : (⟨i, a⟩ : Σ i, α i) ∈ s.Sigma t :=
   ⟨hi, ha⟩
 #align set.mk_mem_sigma Set.mk_mem_sigma
 
@@ -81,16 +81,17 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
   ⟨hs hx.1, ht _ hx.2⟩
 #align set.sigma_mono Set.sigma_mono
 
-theorem sigma_subset_iff : s.Sigma t ⊆ u ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → (⟨i, a⟩ : Σi, α i) ∈ u :=
+theorem sigma_subset_iff :
+    s.Sigma t ⊆ u ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → (⟨i, a⟩ : Σ i, α i) ∈ u :=
   ⟨fun h i hi a ha => h <| mk_mem_sigma hi ha, fun h ⟨i, a⟩ ha => h ha.1 ha.2⟩
 #align set.sigma_subset_iff Set.sigma_subset_iff
 
-theorem forall_sigma_iff {p : (Σi, α i) → Prop} :
+theorem forall_sigma_iff {p : (Σ i, α i) → Prop} :
     (∀ x ∈ s.Sigma t, p x) ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → p ⟨i, a⟩ :=
   sigma_subset_iff
 #align set.forall_sigma_iff Set.forall_sigma_iff
 
-theorem exists_sigma_iff {p : (Σi, α i) → Prop} :
+theorem exists_sigma_iff {p : (Σ i, α i) → Prop} :
     (∃ x ∈ s.Sigma t, p x) ↔ ∃ i ∈ s, ∃ a ∈ t i, p ⟨i, a⟩ :=
   ⟨fun ⟨⟨i, a⟩, ha, h⟩ => ⟨i, ha.1, a, ha.2, h⟩, fun ⟨i, hi, a, ha, h⟩ => ⟨⟨i, a⟩, ⟨hi, ha⟩, h⟩⟩
 #align set.exists_sigma_iff Set.exists_sigma_iff
@@ -161,17 +162,17 @@ theorem sigma_insert {a : ∀ i, α i} :
 
 theorem sigma_preimage_eq {f : ι' → ι} {g : ∀ i, β i → α i} :
     ((f ⁻¹' s).Sigma fun i => g (f i) ⁻¹' t (f i)) =
-      (fun p : Σi, β (f i) => Sigma.mk _ (g _ p.2)) ⁻¹' s.Sigma t :=
+      (fun p : Σ i, β (f i) => Sigma.mk _ (g _ p.2)) ⁻¹' s.Sigma t :=
   rfl
 #align set.sigma_preimage_eq Set.sigma_preimage_eq
 
 theorem sigma_preimage_left {f : ι' → ι} :
-    ((f ⁻¹' s).Sigma fun i => t (f i)) = (fun p : Σi, α (f i) => Sigma.mk _ p.2) ⁻¹' s.Sigma t :=
+    ((f ⁻¹' s).Sigma fun i => t (f i)) = (fun p : Σ i, α (f i) => Sigma.mk _ p.2) ⁻¹' s.Sigma t :=
   rfl
 #align set.sigma_preimage_left Set.sigma_preimage_left
 
 theorem sigma_preimage_right {g : ∀ i, β i → α i} :
-    (s.Sigma fun i => g i ⁻¹' t i) = (fun p : Σi, β i => Sigma.mk p.1 (g _ p.2)) ⁻¹' s.Sigma t :=
+    (s.Sigma fun i => g i ⁻¹' t i) = (fun p : Σ i, β i => Sigma.mk p.1 (g _ p.2)) ⁻¹' s.Sigma t :=
   rfl
 #align set.sigma_preimage_right Set.sigma_preimage_right
 
@@ -201,7 +202,7 @@ theorem mk_preimage_sigma_fn_eq_if {β : Type _} [DecidablePred (· ∈ s)] (g :
 #align set.mk_preimage_sigma_fn_eq_if Set.mk_preimage_sigma_fn_eq_if
 
 theorem sigma_univ_range_eq {f : ∀ i, α i → β i} :
-    ((univ : Set ι).Sigma fun i => range (f i)) = range fun x : Σi, α i => ⟨x.1, f _ x.2⟩ :=
+    ((univ : Set ι).Sigma fun i => range (f i)) = range fun x : Σ i, α i => ⟨x.1, f _ x.2⟩ :=
   ext <| by simp [range]
 #align set.sigma_univ_range_eq Set.sigma_univ_range_eq
 

@@ -237,10 +237,10 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
     (Gamma_integrand_deriv_integrable_A hs hX).add (Gamma_integrand_deriv_integrable_B hs hX)
   have int_eval := integral_eq_sub_of_has_deriv_at_of_le hX cont.continuous_on F_der_I der_ible
   -- We are basically done here but manipulating the output into the right form is fiddly.
-  apply_fun fun x : ℂ => -x  at int_eval
+  apply_fun fun x : ℂ => -x  at int_eval 
   rw [intervalIntegral.integral_add (Gamma_integrand_deriv_integrable_A hs hX)
       (Gamma_integrand_deriv_integrable_B hs hX),
-    intervalIntegral.integral_neg, neg_add, neg_neg] at int_eval
+    intervalIntegral.integral_neg, neg_add, neg_neg] at int_eval 
   rw [eq_sub_of_add_eq int_eval, sub_neg_eq_add, neg_sub, add_comm, add_sub]
   simp only [sub_left_inj, add_left_inj]
   have :
@@ -249,8 +249,8 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
     by ext1; ring
   rw [this]
   have t := @integral_const_mul 0 X volume _ _ s fun x : ℝ => (-x).exp * x ^ (s - 1)
-  dsimp at t; rw [← t, of_real_zero, zero_cpow]
-  · rw [MulZeroClass.mul_zero, add_zero]; congr ; ext1; ring
+  dsimp at t ; rw [← t, of_real_zero, zero_cpow]
+  · rw [MulZeroClass.mul_zero, add_zero]; congr; ext1; ring
   · contrapose! hs; rw [hs, zero_re]
 #align complex.partial_Gamma_add_one Complex.partialGamma_add_one
 
@@ -298,14 +298,14 @@ theorem gammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
     gammaAux n s = gammaAux n (s + 1) / s :=
   by
   induction' n with n hn generalizing s
-  · simp only [Nat.cast_zero, neg_lt_zero] at h1
+  · simp only [Nat.cast_zero, neg_lt_zero] at h1 
     dsimp only [Gamma_aux]; rw [Gamma_integral_add_one h1]
     rw [mul_comm, mul_div_cancel]; contrapose! h1; rw [h1]
     simp
   · dsimp only [Gamma_aux]
     have hh1 : -(s + 1).re < n :=
       by
-      rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one] at h1
+      rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one] at h1 
       rw [add_re, one_re]; linarith
     rw [← hn (s + 1) hh1]
 #align complex.Gamma_aux_recurrence1 Complex.gammaAux_recurrence1
@@ -313,18 +313,18 @@ theorem gammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
 theorem gammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
     gammaAux n s = gammaAux (n + 1) s := by
   cases n
-  · simp only [Nat.cast_zero, neg_lt_zero] at h1
+  · simp only [Nat.cast_zero, neg_lt_zero] at h1 
     dsimp only [Gamma_aux]
     rw [Gamma_integral_add_one h1, mul_div_cancel_left]
     rintro rfl
-    rw [zero_re] at h1
+    rw [zero_re] at h1 
     exact h1.false
   · dsimp only [Gamma_aux]
     have : Gamma_aux n (s + 1 + 1) / (s + 1) = Gamma_aux n (s + 1) :=
       by
       have hh1 : -(s + 1).re < n :=
         by
-        rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one] at h1
+        rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one] at h1 
         rw [add_re, one_re]; linarith
       rw [Gamma_aux_recurrence1 (s + 1) n hh1]
     rw [this]
@@ -346,7 +346,7 @@ theorem gamma_eq_gammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = ga
       refine' (Gamma_aux_recurrence2 s (⌊1 - s.re⌋₊ + k) _).symm
       rw [Nat.cast_add]
       have i0 := Nat.sub_one_lt_floor (1 - s.re)
-      simp only [sub_sub_cancel_left] at i0
+      simp only [sub_sub_cancel_left] at i0 
       refine' lt_add_of_lt_of_nonneg i0 _
       rw [← Nat.cast_zero, Nat.cast_le]; exact Nat.zero_le k
   convert(u <| n - ⌊1 - s.re⌋₊).symm; rw [Nat.add_sub_of_le]
@@ -378,7 +378,7 @@ theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! :=
   induction' n with n hn
   · simpa using Gamma_one
   · rw [Gamma_add_one n.succ <| nat.cast_ne_zero.mpr <| Nat.succ_ne_zero n]
-    simp only [Nat.cast_succ, Nat.factorial_succ, Nat.cast_mul]; congr ; exact hn
+    simp only [Nat.cast_succ, Nat.factorial_succ, Nat.cast_mul]; congr; exact hn
 #align complex.Gamma_nat_eq_factorial Complex.gamma_nat_eq_factorial
 
 /-- At `0` the Gamma function is undefined; by convention we assign it the value `0`. -/
@@ -395,7 +395,7 @@ theorem gamma_neg_nat_eq_zero (n : ℕ) : gamma (-n) = 0 :=
       rw [neg_ne_zero, Nat.cast_ne_zero]
       apply Nat.succ_ne_zero
     have : -(n : ℂ) = -↑n.succ + 1 := by simp
-    rw [this, Gamma_add_one _ A] at IH
+    rw [this, Gamma_add_one _ A] at IH 
     contrapose! IH
     exact mul_ne_zero A IH
 #align complex.Gamma_neg_nat_eq_zero Complex.gamma_neg_nat_eq_zero
@@ -449,15 +449,15 @@ theorem differentiableAt_gammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : 
   by
   induction' n with n hn generalizing s
   · refine' (has_deriv_at_Gamma_integral _).DifferentiableAt
-    rw [Nat.cast_zero] at h1; linarith
+    rw [Nat.cast_zero] at h1 ; linarith
   · dsimp only [Gamma_aux]
     specialize hn (s + 1)
-    have a : 1 - (s + 1).re < ↑n := by rw [Nat.cast_succ] at h1;
+    have a : 1 - (s + 1).re < ↑n := by rw [Nat.cast_succ] at h1 ;
       rw [Complex.add_re, Complex.one_re]; linarith
     have b : ∀ m : ℕ, s + 1 ≠ -m := by
       intro m; have := h2 (1 + m)
       contrapose! this
-      rw [← eq_sub_iff_add_eq] at this
+      rw [← eq_sub_iff_add_eq] at this 
       simpa using this
     refine' DifferentiableAt.div (DifferentiableAt.comp _ (hn a b) _) _ _
     simp; simp; simpa using h2 0
@@ -477,7 +477,7 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
     rw [this]
     refine' Continuous.isOpen_preimage continuous_re _ isOpen_Ioi
   apply eventually_eq_of_mem this
-  intro t ht; rw [mem_set_of_eq] at ht
+  intro t ht; rw [mem_set_of_eq] at ht 
   apply Gamma_eq_Gamma_aux; linarith
 #align complex.differentiable_at_Gamma Complex.differentiableAt_gamma
 
@@ -585,20 +585,20 @@ theorem gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : gamma s ≠ 0 :=
   induction n generalizing s
   · intro hs
     refine' (Gamma_pos_of_pos _).ne'
-    rwa [Nat.cast_zero, neg_zero] at hs
+    rwa [Nat.cast_zero, neg_zero] at hs 
   · intro hs'
     have : Gamma (s + 1) ≠ 0 := by
       apply n_ih
       · intro m
         specialize hs (1 + m)
         contrapose! hs
-        rw [← eq_sub_iff_add_eq] at hs
+        rw [← eq_sub_iff_add_eq] at hs 
         rw [hs]
         push_cast
         ring
-      · rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, neg_add] at hs'
+      · rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, neg_add] at hs' 
         linarith
-    rw [Gamma_add_one, mul_ne_zero_iff] at this
+    rw [Gamma_add_one, mul_ne_zero_iff] at this 
     · exact this.2
     · simpa using hs 0
 #align real.Gamma_ne_zero Real.gamma_ne_zero

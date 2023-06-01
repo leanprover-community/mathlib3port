@@ -67,7 +67,7 @@ theorem hasKernels [PreservesFiniteLimits G] : HasKernels C :=
   {
     HasLimit := fun X Y f => by
       have := nat_iso.naturality_1 i f
-      simp at this
+      simp at this 
       rw [← this]
       haveI : has_kernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_kernel_comp_mono _ _
       apply limits.has_kernel_iso_comp }
@@ -84,7 +84,7 @@ theorem hasCokernels : HasCokernels C :=
       by
       haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
       have := nat_iso.naturality_1 i f
-      simp at this
+      simp at this 
       rw [← this]
       haveI : has_cokernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_cokernel_comp_iso _ _
       apply limits.has_cokernel_epi_comp }

@@ -272,7 +272,7 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDomain R] [IsDedek
   -- then we can find a linear dependence with coefficients `I.quotient.mk g'` in `R/I`,
   -- where `I = ker (algebra_map R S)`.
   -- We make use of the same principle but stay in `R` everywhere.
-  simp only [linearIndependent_iff', not_forall] at hb⊢
+  simp only [linearIndependent_iff', not_forall] at hb ⊢
   obtain ⟨s, g, eq, j', hj's, hj'g⟩ := hb
   use s
   obtain ⟨a, hag, j, hjs, hgI⟩ := Ideal.exist_integer_multiples_not_mem hRS s g hj's hj'g
@@ -284,7 +284,7 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDomain R] [IsDedek
   -- Because `R/I` is nontrivial, we can lift `g` to a nontrivial linear dependence in `S`.
   have hgI : algebraMap R S (g' j) ≠ 0 :=
     by
-    simp only [FractionalIdeal.mem_coeIdeal, not_exists, not_and'] at hgI
+    simp only [FractionalIdeal.mem_coeIdeal, not_exists, not_and'] at hgI 
     exact hgI _ (hg' j hjs)
   refine' ⟨fun i => algebraMap R S (g' i), _, j, hjs, hgI⟩
   have eq : f (∑ i in s, g' i • b i) = 0 :=
@@ -373,9 +373,9 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
   have span_d : (Submodule.span S ({algebraMap R S A.det} : Set S)).restrictScalars R ≤ M :=
     by
     intro x hx
-    rw [Submodule.restrictScalars_mem] at hx
+    rw [Submodule.restrictScalars_mem] at hx 
     obtain ⟨x', rfl⟩ := submodule.mem_span_singleton.mp hx
-    rw [smul_eq_mul, mul_comm, ← Algebra.smul_def] at hx⊢
+    rw [smul_eq_mul, mul_comm, ← Algebra.smul_def] at hx ⊢
     rw [← Submodule.Quotient.mk_eq_zero, Submodule.Quotient.mk_smul]
     obtain ⟨a', _, quot_x_eq⟩ := exists_sum (Submodule.Quotient.mk x')
     simp_rw [← quot_x_eq, Finset.smul_sum, smul_comm A.det, d_smul, smul_zero,
@@ -414,7 +414,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
       rfl
   -- And we conclude `L = span L {det A} ≤ span K b`, so `span K b` spans everything.
   · intro x hx
-    rw [Submodule.restrictScalars_mem, IsScalarTower.algebraMap_apply R S L] at hx
+    rw [Submodule.restrictScalars_mem, IsScalarTower.algebraMap_apply R S L] at hx 
     refine' IsFractionRing.ideal_span_singleton_map_subset R _ hRL span_d hx
     haveI : NoZeroSMulDivisors R L := NoZeroSMulDivisors.of_algebraMap_injective hRL
     rw [← IsFractionRing.isAlgebraic_iff' R S]
@@ -464,13 +464,13 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
       b.mem_span _
     rw [← @Submodule.restrictScalars_mem R,
       Submodule.restrictScalars_span R (R ⧸ p) Ideal.Quotient.mk_surjective, b_eq_b',
-      Set.range_comp, ← Submodule.map_span] at mem_span_b
+      Set.range_comp, ← Submodule.map_span] at mem_span_b 
     obtain ⟨y, y_mem, y_eq⟩ := submodule.mem_map.mp mem_span_b
     suffices y + -(y - x) ∈ _ by simpa
     rw [LinearMap.restrictScalars_apply, Submodule.mkQ_apply, Submodule.mkQ_apply,
-      Submodule.Quotient.eq] at y_eq
+      Submodule.Quotient.eq] at y_eq 
     exact add_mem (Submodule.mem_sup_left y_mem) (neg_mem <| Submodule.mem_sup_right y_eq)
-  · have := b.linear_independent; rw [b_eq_b'] at this
+  · have := b.linear_independent; rw [b_eq_b'] at this 
     convert finrank_quotient_map.linear_independent_of_nontrivial K _
         ((Algebra.linearMap S L).restrictScalars R) _ ((Submodule.mkQ _).restrictScalars R) this
     · rw [quotient.algebra_map_eq, Ideal.mk_ker]
@@ -535,8 +535,8 @@ theorem powQuotSuccInclusion_injective (i : ℕ) :
   by
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   rintro ⟨x, hx⟩ hx0
-  rw [Subtype.ext_iff] at hx0⊢
-  rwa [pow_quot_succ_inclusion_apply_coe] at hx0
+  rw [Subtype.ext_iff] at hx0 ⊢
+  rwa [pow_quot_succ_inclusion_apply_coe] at hx0 
 #align ideal.pow_quot_succ_inclusion_injective Ideal.powQuotSuccInclusion_injective
 
 /-- `S ⧸ P` embeds into the quotient by `P^(i+1) ⧸ P^e` as a subspace of `P^i ⧸ P^e`.
@@ -547,7 +547,7 @@ noncomputable def quotientToQuotientRangePowQuotSuccAux {i : ℕ} {a : S} (a_mem
     S ⧸ P → (P ^ i).map (P ^ e).Quotient.mk ⧸ (powQuotSuccInclusion f p P i).range :=
   Quotient.map' (fun x : S => ⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_left _ x a_mem)⟩)
     fun x y h => by
-    rw [Submodule.quotientRel_r_def] at h⊢
+    rw [Submodule.quotientRel_r_def] at h ⊢
     simp only [_root_.map_mul, LinearMap.mem_range]
     refine' ⟨⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_mul h a_mem)⟩, _⟩
     ext
@@ -601,12 +601,12 @@ theorem quotientToQuotientRangePowQuotSucc_injective [IsDomain S] [IsDedekindDom
       have Pe_le_Pi1 : P ^ e ≤ P ^ (i + 1) := Ideal.pow_le_pow hi
       simp only [Submodule.Quotient.mk''_eq_mk, quotient_to_quotient_range_pow_quot_succ_mk,
         Submodule.Quotient.eq, LinearMap.mem_range, Subtype.ext_iff, Subtype.coe_mk,
-        Submodule.coe_sub] at h⊢
+        Submodule.coe_sub] at h ⊢
       rcases h with ⟨⟨⟨z⟩, hz⟩, h⟩
       rw [Submodule.Quotient.quot_mk_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.mem_quotient_iff_mem_sup,
-        sup_eq_left.mpr Pe_le_Pi1] at hz
+        sup_eq_left.mpr Pe_le_Pi1] at hz 
       rw [pow_quot_succ_inclusion_apply_coe, Subtype.coe_mk, Submodule.Quotient.quot_mk_eq_mk,
-        Ideal.Quotient.mk_eq_mk, ← map_sub, Ideal.Quotient.eq, ← sub_mul] at h
+        Ideal.Quotient.mk_eq_mk, ← map_sub, Ideal.Quotient.eq, ← sub_mul] at h 
       exact
         (Ideal.IsPrime.mul_mem_pow _
               ((Submodule.sub_mem_iff_right _ hz).mp (Pe_le_Pi1 h))).resolve_right
@@ -622,7 +622,7 @@ theorem quotientToQuotientRangePowQuotSucc_surjective [IsDomain S] [IsDedekindDo
   have Pe_le_Pi : P ^ e ≤ P ^ i := Ideal.pow_le_pow hi.le
   have Pe_le_Pi1 : P ^ e ≤ P ^ (i + 1) := Ideal.pow_le_pow hi
   rw [Submodule.Quotient.quot_mk_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.mem_quotient_iff_mem_sup,
-    sup_eq_left.mpr Pe_le_Pi] at hx
+    sup_eq_left.mpr Pe_le_Pi] at hx 
   suffices hx' : x ∈ Ideal.span {a} ⊔ P ^ (i + 1)
   · obtain ⟨y', hy', z, hz, rfl⟩ := submodule.mem_sup.mp hx'
     obtain ⟨y, rfl⟩ := ideal.mem_span_singleton.mp hy'
@@ -637,10 +637,10 @@ theorem quotientToQuotientRangePowQuotSucc_surjective [IsDomain S] [IsDedekindDo
   rw [sup_eq_prod_inf_factors _ (pow_ne_zero _ hP0), normalized_factors_pow,
     normalized_factors_irreducible ((Ideal.prime_iff_isPrime hP0).mpr hP).Irreducible, normalize_eq,
     Multiset.nsmul_singleton, Multiset.inter_replicate, Multiset.prod_replicate]
-  rw [← Submodule.span_singleton_le_iff_mem, Ideal.submodule_span_eq] at a_mem a_not_mem
+  rw [← Submodule.span_singleton_le_iff_mem, Ideal.submodule_span_eq] at a_mem a_not_mem 
   rwa [Ideal.count_normalizedFactors_eq a_mem a_not_mem, min_eq_left i.le_succ]
   · intro ha
-    rw [ideal.span_singleton_eq_bot.mp ha] at a_not_mem
+    rw [ideal.span_singleton_eq_bot.mp ha] at a_not_mem 
     have := (P ^ (i + 1)).zero_mem
     contradiction
 #align ideal.quotient_to_quotient_range_pow_quot_succ_surjective Ideal.quotientToQuotientRangePowQuotSucc_surjective
@@ -701,7 +701,7 @@ theorem rank_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] [p.IsMa
   by
   letI : NeZero e := ⟨he⟩
   have := rank_pow_quot f p P hP0 0 (Nat.zero_le e)
-  rw [pow_zero, Nat.sub_zero, Ideal.one_eq_top, Ideal.map_top] at this
+  rw [pow_zero, Nat.sub_zero, Ideal.one_eq_top, Ideal.map_top] at this 
   exact (rank_top (R ⧸ p) _).symm.trans this
 #align ideal.rank_prime_pow_ramification_idx Ideal.rank_prime_pow_ramificationIdx
 

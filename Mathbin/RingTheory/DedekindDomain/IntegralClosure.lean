@@ -142,7 +142,7 @@ include K
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) :
-    ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) :=
+    ∃ (y : _) (_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) :=
   by
   haveI := Classical.decEq L
   refine' s.induction _ _
@@ -169,7 +169,7 @@ variable (L)
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
 theorem FiniteDimensional.exists_is_basis_integral :
-    ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) :=
+    ∃ (s : Finset L) (b : Basis s K L), ∀ x, IsIntegral A (b x) :=
   by
   letI := Classical.decEq L
   letI : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
@@ -196,7 +196,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
   · intro x; simp only [mul_inv_cancel_left₀ hy']
   · rintro ⟨x', hx'⟩
     simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ, true_and_iff] at
-      his'
+      his' 
     simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
 #align finite_dimensional.exists_is_basis_integral FiniteDimensional.exists_is_basis_integral

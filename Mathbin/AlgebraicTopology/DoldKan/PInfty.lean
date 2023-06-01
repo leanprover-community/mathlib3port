@@ -255,16 +255,16 @@ theorem karoubi_PInfty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   let τ₂ := nat_trans_P_infty_f (karoubi C) n
   let τ := τ₁ ◫ τ₂
   have h₁₄ := idempotents.nat_trans_eq τ Y
-  dsimp [τ, τ₁, τ₂, nat_trans_P_infty_f] at h₁₄
-  rw [id_comp, id_comp, comp_id, comp_id] at h₁₄
+  dsimp [τ, τ₁, τ₂, nat_trans_P_infty_f] at h₁₄ 
+  rw [id_comp, id_comp, comp_id, comp_id] at h₁₄ 
   -- We use the three equalities h₃₂, h₄₃, h₁₄.
   rw [← h₃₂, ← h₄₃, h₁₄]
   simp only [karoubi_functor_category_embedding.map_app_f, karoubi.decomp_id_p_f,
     karoubi.decomp_id_i_f, karoubi.comp_f]
   let π : Y₄ ⟶ Y₄ := (to_karoubi _ ⋙ karoubi_functor_category_embedding _ _).map Y.p
   have eq := karoubi.hom_ext.mp (P_infty_f_naturality n π)
-  simp only [karoubi.comp_f] at eq
-  dsimp [π] at eq
+  simp only [karoubi.comp_f] at eq 
+  dsimp [π] at eq 
   rw [← Eq, reassoc_of (app_idem Y (op [n]))]
 #align algebraic_topology.dold_kan.karoubi_P_infty_f AlgebraicTopology.DoldKan.karoubi_PInfty_f
 

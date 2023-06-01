@@ -535,10 +535,10 @@ variable [OrderedCommGroup α] {s t : NonemptyInterval α}
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
   by
   refine' ⟨fun h => _, _⟩
-  · rw [ext_iff, Prod.ext_iff] at h
+  · rw [ext_iff, Prod.ext_iff] at h 
     have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
     refine' ⟨s.fst, t.fst, _, _, h.1⟩ <;> ext <;> try rfl
-    exacts[this.1.symm, this.2.symm]
+    exacts [this.1.symm, this.2.symm]
   · rintro ⟨b, c, rfl, rfl, h⟩
     rw [pure_mul_pure, h, pure_one]
 #align nonempty_interval.mul_eq_one_iff NonemptyInterval.mul_eq_one_iff
@@ -591,13 +591,25 @@ instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (Interva
     neg := Neg.neg
     sub := Sub.sub
     sub_eq_add_neg := by
-      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (sub_eq_add_neg _ _)
-    neg_neg := by rintro (_ | s) <;> first |rfl|exact congr_arg some (neg_neg _)
-    neg_add_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (neg_add_rev _ _)
+      rintro (_ | s) (_ | t) <;>
+        first
+        | rfl
+        | exact congr_arg some (sub_eq_add_neg _ _)
+    neg_neg := by
+      rintro (_ | s) <;>
+        first
+        | rfl
+        | exact congr_arg some (neg_neg _)
+    neg_add_rev := by
+      rintro (_ | s) (_ | t) <;>
+        first
+        | rfl
+        | exact congr_arg some (neg_add_rev _ _)
     neg_eq_of_add := by
       rintro (_ | s) (_ | t) h <;>
         first
-          |cases h|exact congr_arg some (neg_eq_of_add_eq_zero_right <| Option.some_injective _ h) }
+        | cases h
+        | exact congr_arg some (neg_eq_of_add_eq_zero_right <| Option.some_injective _ h) }
 
 @[to_additive Interval.subtractionCommMonoid]
 instance : DivisionCommMonoid (Interval α) :=
@@ -605,13 +617,25 @@ instance : DivisionCommMonoid (Interval α) :=
     inv := Inv.inv
     div := (· / ·)
     div_eq_mul_inv := by
-      rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (div_eq_mul_inv _ _)
-    inv_inv := by rintro (_ | s) <;> first |rfl|exact congr_arg some (inv_inv _)
-    mul_inv_rev := by rintro (_ | s) (_ | t) <;> first |rfl|exact congr_arg some (mul_inv_rev _ _)
+      rintro (_ | s) (_ | t) <;>
+        first
+        | rfl
+        | exact congr_arg some (div_eq_mul_inv _ _)
+    inv_inv := by
+      rintro (_ | s) <;>
+        first
+        | rfl
+        | exact congr_arg some (inv_inv _)
+    mul_inv_rev := by
+      rintro (_ | s) (_ | t) <;>
+        first
+        | rfl
+        | exact congr_arg some (mul_inv_rev _ _)
     inv_eq_of_mul := by
       rintro (_ | s) (_ | t) h <;>
         first
-          |cases h|exact congr_arg some (inv_eq_of_mul_eq_one_right <| Option.some_injective _ h) }
+        | cases h
+        | exact congr_arg some (inv_eq_of_mul_eq_one_right <| Option.some_injective _ h) }
 
 end Interval
 

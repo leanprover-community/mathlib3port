@@ -157,8 +157,8 @@ instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β
 
 #print small_sigma /-
 instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] :
-    Small.{w} (Σa, β a) :=
-  ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
+    Small.{w} (Σ a, β a) :=
+  ⟨⟨Σ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
       ⟨Equiv.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 #align small_sigma small_sigma
 -/
@@ -198,7 +198,7 @@ instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [S
 #print not_small_type /-
 theorem not_small_type : ¬Small.{u} (Type max u v)
   | ⟨⟨S, ⟨e⟩⟩⟩ =>
-    @Function.cantor_injective (Σα, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
+    @Function.cantor_injective (Σ α, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
       (cast_inj _).1 <| eq_of_hEq (Sigma.mk.inj e).2
 #align not_small_type not_small_type
 -/

@@ -86,7 +86,7 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
     (hg : ∀ i ∈ s, (g i).PairwiseDisjoint f) : (⋃ i ∈ s, g i).PairwiseDisjoint f :=
   by
   rintro a ha b hb hab
-  simp_rw [Set.mem_iUnion] at ha hb
+  simp_rw [Set.mem_iUnion] at ha hb 
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
@@ -108,7 +108,7 @@ theorem biUnion_diff_biUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t
 
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def biUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
-    (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
+    (⋃ i ∈ s, f i) ≃ Σ i : s, f i :=
   (Equiv.setCongr (biUnion_eq_iUnion _ _)).trans <|
     unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
 #align set.bUnion_eq_sigma_of_disjoint Set.biUnionEqSigmaOfDisjoint

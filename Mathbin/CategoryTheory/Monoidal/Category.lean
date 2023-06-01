@@ -703,8 +703,8 @@ def tensorUnitRight : C ⥤ C where
 /-- The associator as a natural isomorphism. -/
 @[simps]
 def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
-  NatIso.ofComponents (by intros ; apply monoidal_category.associator)
-    (by intros ; apply monoidal_category.associator_naturality)
+  NatIso.ofComponents (by intros; apply monoidal_category.associator)
+    (by intros; apply monoidal_category.associator_naturality)
 #align category_theory.monoidal_category.associator_nat_iso CategoryTheory.MonoidalCategory.associatorNatIso
 -/
 
@@ -712,8 +712,8 @@ def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
 /-- The left unitor as a natural isomorphism. -/
 @[simps]
 def leftUnitorNatIso : tensorUnitLeft C ≅ 𝟭 C :=
-  NatIso.ofComponents (by intros ; apply monoidal_category.left_unitor)
-    (by intros ; apply monoidal_category.left_unitor_naturality)
+  NatIso.ofComponents (by intros; apply monoidal_category.left_unitor)
+    (by intros; apply monoidal_category.left_unitor_naturality)
 #align category_theory.monoidal_category.left_unitor_nat_iso CategoryTheory.MonoidalCategory.leftUnitorNatIso
 -/
 
@@ -721,8 +721,8 @@ def leftUnitorNatIso : tensorUnitLeft C ≅ 𝟭 C :=
 /-- The right unitor as a natural isomorphism. -/
 @[simps]
 def rightUnitorNatIso : tensorUnitRight C ≅ 𝟭 C :=
-  NatIso.ofComponents (by intros ; apply monoidal_category.right_unitor)
-    (by intros ; apply monoidal_category.right_unitor_naturality)
+  NatIso.ofComponents (by intros; apply monoidal_category.right_unitor)
+    (by intros; apply monoidal_category.right_unitor_naturality)
 #align category_theory.monoidal_category.right_unitor_nat_iso CategoryTheory.MonoidalCategory.rightUnitorNatIso
 -/
 

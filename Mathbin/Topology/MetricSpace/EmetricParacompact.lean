@@ -53,7 +53,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
       simp [pow_succ, ← mul_assoc, ENNReal.mul_inv_cancel]
     -- Consider an open covering `S : set (set α)`
     refine' ⟨fun ι s ho hcov => _⟩
-    simp only [Union_eq_univ_iff] at hcov
+    simp only [Union_eq_univ_iff] at hcov 
     -- choose a well founded order on `S`
     letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
     have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _
@@ -84,7 +84,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
     have memD :
       ∀ {n i y},
         y ∈ D n i ↔
-          ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt :
+          ∃ (x : _) (hi : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt :
             ∀ m < n, ∀ (j : ι), x ∉ D m j), edist y x < 2⁻¹ ^ n :=
       by intro n i y; rw [Dn n i]; simp only [mem_Union, mem_ball]
     -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that

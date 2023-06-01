@@ -77,7 +77,7 @@ noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by ext i : 1;
     exact dif_neg (w i).NeZero
   have := isometry_sum_squares (coe ∘ w)
-  rw [hw1] at this
+  rw [hw1] at this 
   exact this
 #align quadratic_form.isometry_sum_squares_units QuadraticForm.isometrySumSquaresUnits
 

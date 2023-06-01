@@ -41,7 +41,7 @@ def MinFacHelper (n k : ℕ) : Prop :=
 #align tactic.norm_num.min_fac_helper Tactic.NormNum.MinFacHelper
 
 theorem MinFacHelper.n_pos {n k : ℕ} (h : MinFacHelper n k) : 0 < n :=
-  pos_iff_ne_zero.2 fun e => by rw [e] at h <;> exact not_le_of_lt (Nat.bit1_lt h.1) h.2
+  pos_iff_ne_zero.2 fun e => by rw [e] at h  <;> exact not_le_of_lt (Nat.bit1_lt h.1) h.2
 #align tactic.norm_num.min_fac_helper.n_pos Tactic.NormNum.MinFacHelper.n_pos
 
 theorem minFac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k :=
@@ -75,7 +75,7 @@ theorem minFacHelper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1 k
     (h : MinFacHelper n k) : MinFacHelper n k' :=
   by
   refine' min_fac_helper_1 e _ h
-  intro e₁; rw [← e₁] at np
+  intro e₁; rw [← e₁] at np 
   exact np (Nat.minFac_prime <| ne_of_gt <| Nat.bit1_lt h.n_pos)
 #align tactic.norm_num.min_fac_helper_2 Tactic.NormNum.minFacHelper_2
 
@@ -91,7 +91,7 @@ theorem minFacHelper_3 (n k k' c : ℕ) (e : k + 1 = k') (nc : bit1 n % bit1 k =
 theorem minFacHelper_4 (n k : ℕ) (hd : bit1 n % bit1 k = 0) (h : MinFacHelper n k) :
     Nat.minFac (bit1 n) = bit1 k :=
   by
-  rw [← Nat.dvd_iff_mod_eq_zero] at hd
+  rw [← Nat.dvd_iff_mod_eq_zero] at hd 
   exact le_antisymm (Nat.minFac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
 #align tactic.norm_num.min_fac_helper_4 Tactic.NormNum.minFacHelper_4
 
@@ -99,10 +99,10 @@ theorem minFacHelper_5 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 n < 
     (h : MinFacHelper n k) : Nat.minFac (bit1 n) = bit1 n :=
   by
   refine' (Nat.prime_def_minFac.1 (Nat.prime_def_le_sqrt.2 ⟨Nat.bit1_lt h.n_pos, _⟩)).2
-  rw [← e] at hd
+  rw [← e] at hd 
   intro m m2 hm md
   have := le_trans h.2 (le_trans (Nat.minFac_le_of_dvd m2 md) hm)
-  rw [Nat.le_sqrt] at this
+  rw [Nat.le_sqrt] at this 
   exact not_le_of_lt hd this
 #align tactic.norm_num.min_fac_helper_5 Tactic.NormNum.minFacHelper_5
 

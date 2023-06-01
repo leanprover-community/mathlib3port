@@ -128,8 +128,8 @@ def botEquivPUnit : (⊥ : Submodule R M) ≃ₗ[R] PUnit
     where
   toFun x := PUnit.unit
   invFun x := 0
-  map_add' := by intros ; ext
-  map_smul' := by intros ; ext
+  map_add' := by intros; ext
+  map_smul' := by intros; ext
   left_inv := by intro x; ext
   right_inv := by intro x; ext
 #align submodule.bot_equiv_punit Submodule.botEquivPUnit
@@ -194,8 +194,8 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M
     where
   toFun x := x
   invFun x := ⟨x, by simp⟩
-  map_add' := by intros ; rfl
-  map_smul' := by intros ; rfl
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
   left_inv := by intro x; ext; rfl
   right_inv := by intro x; rfl
 #align submodule.top_equiv Submodule.topEquiv

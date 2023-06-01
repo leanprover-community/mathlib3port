@@ -152,7 +152,7 @@ theorem lowerBounds_u_image (s : Set β) : lowerBounds (u '' s) = l ⁻¹' lower
 
 #print GaloisConnection.bddAbove_l_image /-
 theorem bddAbove_l_image {s : Set α} : BddAbove (l '' s) ↔ BddAbove s :=
-  ⟨fun ⟨x, hx⟩ => ⟨u x, by rwa [gc.upper_bounds_l_image] at hx⟩, gc.monotone_l.map_bddAbove⟩
+  ⟨fun ⟨x, hx⟩ => ⟨u x, by rwa [gc.upper_bounds_l_image] at hx ⟩, gc.monotone_l.map_bddAbove⟩
 #align galois_connection.bdd_above_l_image GaloisConnection.bddAbove_l_image
 -/
 
@@ -165,7 +165,7 @@ theorem bddBelow_u_image {s : Set β} : BddBelow (u '' s) ↔ BddBelow s :=
 #print GaloisConnection.isLUB_l_image /-
 theorem isLUB_l_image {s : Set α} {a : α} (h : IsLUB s a) : IsLUB (l '' s) (l a) :=
   ⟨gc.monotone_l.mem_upperBounds_image h.left, fun b hb =>
-    gc.l_le <| h.right <| by rwa [gc.upper_bounds_l_image] at hb⟩
+    gc.l_le <| h.right <| by rwa [gc.upper_bounds_l_image] at hb ⟩
 #align galois_connection.is_lub_l_image GaloisConnection.isLUB_l_image
 -/
 

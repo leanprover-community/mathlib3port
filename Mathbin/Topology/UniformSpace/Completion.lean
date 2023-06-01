@@ -305,7 +305,7 @@ theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [Complete
         ⟨_, f.2.le_nhds_lim (mem_nhds_right (lim f.1) du), _,
           g.2.le_nhds_lim (mem_nhds_left (lim g.1) du), fun x h => _⟩
     cases' x with a b; cases' h with h₁ h₂
-    rw [← e] at h₂
+    rw [← e] at h₂ 
     exact dt ⟨_, h₁, h₂⟩
   · intro H
     refine' separated_def.1 (by infer_instance) _ _ fun t tu => _
@@ -319,7 +319,7 @@ theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [Complete
       rw [closure_eq_cluster_pts]
       exact f.2.1.mono (le_inf f.2.le_nhds_lim (le_principal_iff.2 xf))
     have := dc.closure_subset_iff.2 h
-    rw [closure_prod_eq] at this
+    rw [closure_prod_eq] at this 
     refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
 #align Cauchy.Cauchy_eq CauchyFilter.cauchyFilter_eq
 
@@ -332,7 +332,7 @@ theorem separated_pureCauchy_injective {α : Type _} [UniformSpace α] [s : Sepa
   | a, b, h =>
     separated_def.1 s _ _ fun s hs =>
       let ⟨t, ht, hts⟩ := by
-        rw [← (@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs <;>
+        rw [← (@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs  <;>
           exact hs
       have : (pureCauchy a, pureCauchy b) ∈ t := Quotient.exact h t ht
       @hts (a, b) this
@@ -446,8 +446,8 @@ instance AbstractCompletion.inhabited : Inhabited (AbstractCompletion α) :=
 #align uniform_space.completion.abstract_completion.inhabited UniformSpace.Completion.AbstractCompletion.inhabited
 -/
 
-attribute [local instance]
-  AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
+attribute [local instance] AbstractCompletion.uniformStruct AbstractCompletion.complete
+  AbstractCompletion.separation
 
 #print UniformSpace.Completion.nonempty_completion_iff /-
 theorem nonempty_completion_iff : Nonempty (Completion α) ↔ Nonempty α :=

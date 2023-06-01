@@ -142,7 +142,7 @@ theorem succNthVal_spec' (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k)
   have := succ_nth_val_spec p n a₁ a₂ bs ha₁ ha₂
   simp only [Polynomial.map_add, Polynomial.eval_X, Polynomial.map_pow, Polynomial.eval_C,
     Polynomial.eval_pow, succ_nth_defining_poly, Polynomial.eval_mul, Polynomial.eval_add,
-    Polynomial.eval_sub, Polynomial.map_mul, Polynomial.map_sub, Polynomial.IsRoot.def] at this
+    Polynomial.eval_sub, Polynomial.map_mul, Polynomial.map_sub, Polynomial.IsRoot.def] at this 
   convert this using 1
   ring
 #align witt_vector.recursion_main.succ_nth_val_spec' WittVector.RecursionMain.succNthVal_spec'
@@ -174,7 +174,7 @@ theorem solution_nonzero {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha�
     solution p a₁ a₂ ≠ 0 := by
   intro h
   have := solution_spec p a₁ a₂
-  rw [h, zero_pow] at this
+  rw [h, zero_pow] at this 
   · simpa [ha₁, ha₂] using _root_.div_eq_zero_iff.mp this.symm
   · linarith [hp.out.one_lt, le_of_lt hp.out.one_lt]
 #align witt_vector.recursion_base.solution_nonzero WittVector.RecursionBase.solution_nonzero
@@ -211,8 +211,8 @@ variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 noncomputable def frobeniusRotationCoeff {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0)
     (ha₂ : a₂.coeff 0 ≠ 0) : ℕ → k
   | 0 => solution p a₁ a₂
-  | n + 1 => succNthVal p n a₁ a₂ (fun i => frobenius_rotation_coeff i.val) ha₁ ha₂ decreasing_by
-  apply Fin.is_lt
+  | n + 1 => succNthVal p n a₁ a₂ (fun i => frobenius_rotation_coeff i.val) ha₁ ha₂
+decreasing_by apply Fin.is_lt
 #align witt_vector.frobenius_rotation_coeff WittVector.frobeniusRotationCoeff
 
 /-- For nonzero `a₁` and `a₂`, `frobenius_rotation a₁ a₂` is a Witt vector that satisfies the
@@ -242,7 +242,7 @@ theorem frobenius_frobeniusRotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 �
     have :=
       succ_nth_val_spec' p n a₁ a₂ (fun i : Fin (n + 1) => frobenius_rotation_coeff p ha₁ ha₂ i.val)
         ha₁ ha₂
-    simp only [frobenius_rotation_coeff, Fin.val_eq_coe, Fin.val_zero] at this
+    simp only [frobenius_rotation_coeff, Fin.val_eq_coe, Fin.val_zero] at this 
     convert this using 4
     apply TruncatedWittVector.ext
     intro i
@@ -265,7 +265,7 @@ theorem exists_frobenius_solution_fractionRing_aux (m n : ℕ) (r' q' : 𝕎 k) 
   have key : WittVector.frobenius b * p ^ m * r' * p ^ n = p ^ m * b * (p ^ n * q') :=
     by
     have H := congr_arg (fun x : 𝕎 k => x * p ^ m * p ^ n) (frobenius_frobenius_rotation p hr' hq')
-    dsimp at H
+    dsimp at H 
     refine' (Eq.trans _ H).trans _ <;> ring
   have hq'' : algebraMap (𝕎 k) (FractionRing (𝕎 k)) q' ≠ 0 :=
     by
@@ -283,7 +283,7 @@ theorem exists_frobenius_solution_fractionRing_aux (m n : ℕ) (r' q' : 𝕎 k) 
 #align witt_vector.exists_frobenius_solution_fraction_ring_aux WittVector.exists_frobenius_solution_fractionRing_aux
 
 theorem exists_frobenius_solution_fractionRing {a : FractionRing (𝕎 k)} (ha : a ≠ 0) :
-    ∃ (b : FractionRing (𝕎 k))(hb : b ≠ 0)(m : ℤ), φ b * a = p ^ m * b :=
+    ∃ (b : FractionRing (𝕎 k)) (hb : b ≠ 0) (m : ℤ), φ b * a = p ^ m * b :=
   by
   revert ha
   refine' Localization.induction_on a _

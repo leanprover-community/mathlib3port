@@ -160,7 +160,7 @@ protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f 
 
 #print IsChain.exists3 /-
 theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s)
-    (mem3 : c ∈ s) : ∃ (z : _)(mem4 : z ∈ s), r a z ∧ r b z ∧ r c z :=
+    (mem3 : c ∈ s) : ∃ (z : _) (mem4 : z ∈ s), r a z ∧ r b z ∧ r c z :=
   by
   rcases directed_on_iff_directed.mpr (IsChain.directed hchain) a mem1 b mem2 with ⟨z, mem4, H1, H2⟩
   rcases directed_on_iff_directed.mpr (IsChain.directed hchain) z mem4 c mem3 with
@@ -222,7 +222,7 @@ theorem IsChain.succ (hs : IsChain r s) : IsChain r (SuccChain r s) :=
 theorem IsChain.superChain_succChain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain r s) :
     SuperChain r s (SuccChain r s) :=
   by
-  simp [IsMaxChain, not_and_or, not_forall_not] at hs₂
+  simp [IsMaxChain, not_and_or, not_forall_not] at hs₂ 
   obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁
   exact succChain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩
 #align is_chain.super_chain_succ_chain IsChain.superChain_succChain
@@ -273,8 +273,8 @@ private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc�
     cases' ih with ih ih
     · exact Or.inl (ih.trans subset_succChain)
     · exact (h hc₃ ih).imp_left fun h => h ▸ subset.rfl
-  case
-    union s hs ih =>
+  case union s hs
+    ih =>
     refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
     exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
 
@@ -282,8 +282,8 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
     (h : c₁ ⊆ c₂) : c₂ = c₁ ∨ SuccChain r c₁ ⊆ c₂ :=
   by
   induction hc₂ generalizing c₁ hc₁ h
-  case
-    succ c₂ hc₂ ih =>
+  case succ c₂ hc₂
+    ih =>
     refine' (chain_closure_succ_total_aux hc₁ hc₂ fun c₁ => ih).imp h.antisymm' fun h₁ => _
     obtain rfl | h₂ := ih hc₁ h₁
     · exact subset.rfl
@@ -331,7 +331,7 @@ theorem ChainClosure.isChain (hc : ChainClosure r c) : IsChain r c :=
   induction hc
   case succ c hc h => exact h.succ
   case union s hs h =>
-    change ∀ c ∈ s, IsChain r c at h
+    change ∀ c ∈ s, IsChain r c at h 
     exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
       ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
         h t₁ ht₁ hc₁ (ht hc₂) hneq

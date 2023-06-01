@@ -295,19 +295,19 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
         (mt irreducible_iff_prime.2 fun ⟨hu, h⟩ =>
           by
           have := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
-          rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this
+          rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this 
           exact absurd this (by decide)))
     fun hp1 =>
     by_contradiction fun hp3 : p % 4 ≠ 3 =>
       by
       have hp41 : p % 4 = 1 :=
         by
-        rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1
+        rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1 
         have := Nat.mod_lt p (show 0 < 4 by decide)
         revert this hp3 hp1
         generalize p % 4 = m; decide!
       let ⟨k, hk⟩ := ZMod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
-      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : ZMod p) = k := by
+      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ) (h : k' < p), (k' : ZMod p) = k := by
         refine' ⟨k.val, k.val_lt, ZMod.nat_cast_zmod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
         rw [pow_two, ← CharP.cast_eq_zero_iff (ZMod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one,

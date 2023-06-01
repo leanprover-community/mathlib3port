@@ -101,7 +101,7 @@ This is a simple corollary of `refinement_of_locally_compact_sigma_compact_of_nh
 and `exists_subset_Union_ball_radius_pos_lt`. -/
 theorem exists_locallyFinite_subset_iUnion_ball_radius_lt (hs : IsClosed s) {R : α → ℝ}
     (hR : ∀ x ∈ s, 0 < R x) :
-    ∃ (ι : Type u)(c : ι → α)(r r' : ι → ℝ),
+    ∃ (ι : Type u) (c : ι → α) (r r' : ι → ℝ),
       (∀ i, c i ∈ s ∧ 0 < r i ∧ r i < r' i ∧ r' i < R (c i)) ∧
         (LocallyFinite fun i => ball (c i) (r' i)) ∧ s ⊆ ⋃ i, ball (c i) (r i) :=
   by
@@ -126,7 +126,7 @@ such that
 This is a simple corollary of `refinement_of_locally_compact_sigma_compact_of_nhds_basis`
 and `exists_Union_ball_eq_radius_pos_lt` or `exists_locally_finite_subset_Union_ball_radius_lt`. -/
 theorem exists_locallyFinite_iUnion_eq_ball_radius_lt {R : α → ℝ} (hR : ∀ x, 0 < R x) :
-    ∃ (ι : Type u)(c : ι → α)(r r' : ι → ℝ),
+    ∃ (ι : Type u) (c : ι → α) (r r' : ι → ℝ),
       (∀ i, 0 < r i ∧ r i < r' i ∧ r' i < R (c i)) ∧
         (LocallyFinite fun i => ball (c i) (r' i)) ∧ (⋃ i, ball (c i) (r i)) = univ :=
   let ⟨ι, c, r, r', hlt, hfin, hsub⟩ :=

@@ -183,7 +183,7 @@ section Embedding
   and for all `s : set α`, `s` is open iff it is the preimage of an open set. -/
 @[mk_iff]
 structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) extends
-  Inducing f : Prop where
+    Inducing f : Prop where
   inj : Injective f
 #align embedding Embedding
 -/

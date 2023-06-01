@@ -88,7 +88,7 @@ theorem submartingale_of_expected_stoppedValue_mono [FiniteMeasure μ] (hadp : A
         ⟨j, fun x => le_rfl⟩
     rwa [stopped_value_const, stopped_value_piecewise_const,
       integral_piecewise (𝒢.le _ _ hs) (hint _).IntegrableOn (hint _).IntegrableOn, ←
-      integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf
+      integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf 
 #align measure_theory.submartingale_of_expected_stopped_value_mono MeasureTheory.submartingale_of_expected_stoppedValue_mono
 
 /-- **The optional stopping theorem** (fair game theorem): an adapted integrable process `f`
@@ -141,7 +141,7 @@ theorem smul_le_stoppedValue_hitting [FiniteMeasure μ] (hsub : Submartingale f 
         (ε : ℝ) ≤ stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω :=
     by
     intro x hx
-    simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iff] at hx
+    simp_rw [le_sup'_iff, mem_range, Nat.lt_succ_iff] at hx 
     refine' stopped_value_hitting_mem _
     simp only [Set.mem_setOf_eq, exists_prop, hn]
     exact
@@ -204,9 +204,9 @@ theorem maximal_ineq [FiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnonne
             (Finset.measurable_range_sup'' fun n _ =>
               (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
             measurable_const
-      exacts[(hsub.integrable _).IntegrableOn, (hsub.integrable _).IntegrableOn,
+      exacts [(hsub.integrable _).IntegrableOn, (hsub.integrable _).IntegrableOn,
         integral_nonneg (hnonneg _), integral_nonneg (hnonneg _)]
-    rwa [hadd, ENNReal.add_le_add_iff_right ENNReal.ofReal_ne_top] at this
+    rwa [hadd, ENNReal.add_le_add_iff_right ENNReal.ofReal_ne_top] at this 
   calc
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } +
           ENNReal.ofReal
@@ -232,7 +232,7 @@ theorem maximal_ineq [FiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnonne
                 measurable_const)
               _))
       intro ω hω
-      rw [Set.mem_setOf_eq] at hω
+      rw [Set.mem_setOf_eq] at hω 
       have : hitting f { y : ℝ | ↑ε ≤ y } 0 n ω = n :=
         by
         simp only [hitting, Set.mem_setOf_eq, exists_prop, Pi.coe_nat, Nat.cast_id,
@@ -269,7 +269,7 @@ theorem maximal_ineq [FiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnonne
           integrable.integrable_on
             (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
               hitting_le)
-      exacts[integral_nonneg fun x => hnonneg _ _, integral_nonneg fun x => hnonneg _ _]
+      exacts [integral_nonneg fun x => hnonneg _ _, integral_nonneg fun x => hnonneg _ _]
     _ ≤ ENNReal.ofReal (μ[f n]) :=
       by
       refine' ENNReal.ofReal_le_ofReal _

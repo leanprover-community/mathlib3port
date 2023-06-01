@@ -44,14 +44,16 @@ variable (J : Type w)
 #print CategoryTheory.Limits.WidePullbackShape /-
 /-- A wide pullback shape for any type `J` can be written simply as `option J`. -/
 def WidePullbackShape :=
-  Option J deriving Inhabited
+  Option J
+deriving Inhabited
 #align category_theory.limits.wide_pullback_shape CategoryTheory.Limits.WidePullbackShape
 -/
 
 #print CategoryTheory.Limits.WidePushoutShape /-
 /-- A wide pushout shape for any type `J` can be written simply as `option J`. -/
 def WidePushoutShape :=
-  Option J deriving Inhabited
+  Option J
+deriving Inhabited
 #align category_theory.limits.wide_pushout_shape CategoryTheory.Limits.WidePushoutShape
 -/
 
@@ -241,7 +243,11 @@ def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : WideP
     cases' f with _ j
     · apply 𝟙 _
     · exact arrows j
-  map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;> first |simpa|simp
+  map_comp' := by
+    rintro (_ | _) (_ | _) (_ | _) (_ | _) (_ | _) <;>
+      first
+      | simpa
+      | simp
 #align category_theory.limits.wide_pushout_shape.wide_span CategoryTheory.Limits.WidePushoutShape.wideSpan
 -/
 

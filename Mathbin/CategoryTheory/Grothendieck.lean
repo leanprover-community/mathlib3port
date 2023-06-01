@@ -82,10 +82,10 @@ theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
   by
   cases f <;> cases g
   congr
-  dsimp at w_base
+  dsimp at w_base 
   induction w_base
   rfl
-  dsimp at w_base
+  dsimp at w_base 
   induction w_base
   simpa using w_fiber
 #align category_theory.grothendieck.ext CategoryTheory.Grothendieck.ext

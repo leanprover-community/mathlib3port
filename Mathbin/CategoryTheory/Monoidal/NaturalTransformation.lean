@@ -50,7 +50,7 @@ additionally satisfying:
 -/
 @[ext]
 structure MonoidalNatTrans (F G : LaxMonoidalFunctor C D) extends
-  NatTrans F.toFunctor G.toFunctor where
+    NatTrans F.toFunctor G.toFunctor where
   unit' : F.ε ≫ app (𝟙_ C) = G.ε := by obviously
   tensor' : ∀ X Y, F.μ _ _ ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ _ _ := by obviously
 #align category_theory.monoidal_nat_trans CategoryTheory.MonoidalNatTrans
@@ -236,7 +236,7 @@ def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 -/
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalUnit F) :=
-  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) := by intros ; dsimp; infer_instance
+  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) := by intros; dsimp; infer_instance
   monoidal_nat_iso.is_iso_of_is_iso_app _
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -272,8 +272,7 @@ def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 -/
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalCounit F) :=
-  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) := by intros ; dsimp;
-    infer_instance
+  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) := by intros; dsimp; infer_instance
   monoidal_nat_iso.is_iso_of_is_iso_app _
 
 end CategoryTheory

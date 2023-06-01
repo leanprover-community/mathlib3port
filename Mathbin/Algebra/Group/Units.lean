@@ -127,7 +127,7 @@ theorem val_mk (a : α) (b h₁ h₂) : ↑(Units.mk a b h₁ h₂) = a :=
 @[ext, to_additive]
 theorem ext : Function.Injective (coe : αˣ → α)
   | ⟨v, i₁, vi₁, iv₁⟩, ⟨v', i₂, vi₂, iv₂⟩, e => by
-    change v = v' at e <;> subst v' <;> congr <;>
+    change v = v' at e  <;> subst v' <;> congr <;>
       simpa only [iv₂, vi₁, one_mul, mul_one] using mul_assoc i₂ v i₁
 #align units.ext Units.ext
 #align add_units.ext AddUnits.ext
@@ -666,7 +666,7 @@ theorem Units.isUnit_mul_units [Monoid M] (a : M) (u : Mˣ) : IsUnit (a * u) ↔
     (fun ⟨v, hv⟩ =>
       by
       have : IsUnit (a * ↑u * ↑u⁻¹) := by exists v * u⁻¹ <;> rw [← hv, Units.val_mul]
-      rwa [mul_assoc, Units.mul_inv, mul_one] at this)
+      rwa [mul_assoc, Units.mul_inv, mul_one] at this )
     fun v => v.mul u.IsUnit
 #align units.is_unit_mul_units Units.isUnit_mul_units
 #align add_units.is_add_unit_add_add_units AddUnits.isAddUnit_add_addUnits
@@ -679,7 +679,7 @@ theorem Units.isUnit_units_mul {M : Type _} [Monoid M] (u : Mˣ) (a : M) :
     (fun ⟨v, hv⟩ =>
       by
       have : IsUnit (↑u⁻¹ * (↑u * a)) := by exists u⁻¹ * v <;> rw [← hv, Units.val_mul]
-      rwa [← mul_assoc, Units.inv_mul, one_mul] at this)
+      rwa [← mul_assoc, Units.inv_mul, one_mul] at this )
     u.IsUnit.mul
 #align units.is_unit_units_mul Units.isUnit_units_mul
 #align add_units.is_add_unit_add_units_add AddUnits.isAddUnit_addUnits_add

@@ -47,9 +47,9 @@ One the other hand, not picking one means that the weak-* topology
 and we may be unhappy with the resulting opaqueness of the definition.
 -/
 class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M]
-  [NormedAlgebra ℂ M] [StarModule ℂ M] where
+    [NormedAlgebra ℂ M] [StarModule ℂ M] where
   exists_predual :
-    ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
+    ∃ (X : Type u) (_ : NormedAddCommGroup X) (_ : NormedSpace ℂ X) (_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
 #align wstar_algebra WstarAlgebra
 
@@ -70,7 +70,7 @@ and instead will use `⊤ : von_neumann_algebra H`.
 -/
 @[nolint has_nonempty_instance]
 structure VonNeumannAlgebra (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
-  [CompleteSpace H] extends StarSubalgebra ℂ (H →L[ℂ] H) where
+    [CompleteSpace H] extends StarSubalgebra ℂ (H →L[ℂ] H) where
   centralizer_centralizer' : Set.centralizer (Set.centralizer carrier) = carrier
 #align von_neumann_algebra VonNeumannAlgebra
 
@@ -85,7 +85,7 @@ namespace VonNeumannAlgebra
 variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
-  ⟨VonNeumannAlgebra.carrier, fun S T h => by cases S <;> cases T <;> congr ⟩
+  ⟨VonNeumannAlgebra.carrier, fun S T h => by cases S <;> cases T <;> congr⟩
 
 instance : StarMemClass (VonNeumannAlgebra H) (H →L[ℂ] H) where star_mem s a := s.star_mem'
 

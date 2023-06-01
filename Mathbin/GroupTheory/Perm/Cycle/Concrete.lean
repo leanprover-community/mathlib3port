@@ -69,7 +69,7 @@ theorem formPerm_disjoint_iff (hl : Nodup l) (hl' : Nodup l') (hn : 2 ≤ l.leng
   constructor
   · rintro h x hx hx'
     specialize h x
-    rw [form_perm_apply_mem_eq_self_iff _ hl _ hx, form_perm_apply_mem_eq_self_iff _ hl' _ hx'] at h
+    rw [form_perm_apply_mem_eq_self_iff _ hl _ hx, form_perm_apply_mem_eq_self_iff _ hl' _ hx'] at h 
     rcases h with (hl | hl') <;> linarith
   · intro h x
     by_cases hx : x ∈ l; by_cases hx' : x ∈ l'
@@ -84,9 +84,9 @@ theorem formPerm_disjoint_iff (hl : Nodup l) (hl' : Nodup l') (hn : 2 ≤ l.leng
 theorem isCycle_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) : IsCycle (formPerm l) :=
   by
   cases' l with x l
-  · norm_num at hn
+  · norm_num at hn 
   induction' l with y l IH generalizing x
-  · norm_num at hn
+  · norm_num at hn 
   · use x
     constructor
     · rwa [form_perm_apply_mem_ne_self_iff _ hl _ (mem_cons_self _ _)]
@@ -111,8 +111,8 @@ theorem pairwise_sameCycle_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) :
 #print List.cycleOf_formPerm /-
 theorem cycleOf_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) (x) :
     cycleOf l.attach.formPerm x = l.attach.formPerm :=
-  have hn : 2 ≤ l.attach.length := by rwa [← length_attach] at hn
-  have hl : l.attach.Nodup := by rwa [← nodup_attach] at hl
+  have hn : 2 ≤ l.attach.length := by rwa [← length_attach] at hn 
+  have hl : l.attach.Nodup := by rwa [← nodup_attach] at hl 
   (isCycle_formPerm hl hn).cycleOf_eq
     ((formPerm_apply_mem_ne_self_iff _ hl _ (mem_attach _ _)).mpr hn)
 #align list.cycle_of_form_perm List.cycleOf_formPerm
@@ -122,8 +122,8 @@ theorem cycleOf_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) (x) :
 theorem cycleType_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) :
     cycleType l.attach.formPerm = {l.length} :=
   by
-  rw [← length_attach] at hn
-  rw [← nodup_attach] at hl
+  rw [← length_attach] at hn 
+  rw [← nodup_attach] at hl 
   rw [cycle_type_eq [l.attach.form_perm]]
   · simp only [map, Function.comp_apply]
     rw [support_form_perm_of_nodup _ hl, card_to_finset, dedup_eq_self.mpr hl]
@@ -176,10 +176,10 @@ theorem formPerm_subsingleton (s : Cycle α) (h : Subsingleton s) : formPerm s h
   by
   induction s using Quot.inductionOn
   simp only [form_perm_coe, mk_eq_coe]
-  simp only [length_subsingleton_iff, length_coe, mk_eq_coe] at h
+  simp only [length_subsingleton_iff, length_coe, mk_eq_coe] at h 
   cases' s with hd tl
   · simp
-  · simp only [length_eq_zero, add_le_iff_nonpos_left, List.length, nonpos_iff_eq_zero] at h
+  · simp only [length_eq_zero, add_le_iff_nonpos_left, List.length, nonpos_iff_eq_zero] at h 
     simp [h]
 #align cycle.form_perm_subsingleton Cycle.formPerm_subsingleton
 
@@ -315,7 +315,7 @@ theorem mem_toList_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x ∈
   · rintro ⟨n, hx, rfl⟩
     refine' ⟨⟨n, rfl⟩, _⟩
     contrapose! hx
-    rw [← support_cycle_of_eq_nil_iff] at hx
+    rw [← support_cycle_of_eq_nil_iff] at hx 
     simp [hx]
   · rintro ⟨h, hx⟩
     simpa using h.exists_pow_eq_of_mem_support hx
@@ -326,27 +326,27 @@ theorem mem_toList_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x ∈
 theorem nodup_toList (p : Perm α) (x : α) : Nodup (toList p x) :=
   by
   by_cases hx : p x = x
-  · rw [← not_mem_support, ← to_list_eq_nil_iff] at hx
+  · rw [← not_mem_support, ← to_list_eq_nil_iff] at hx 
     simp [hx]
   have hc : is_cycle (cycle_of p x) := is_cycle_cycle_of p hx
   rw [nodup_iff_nth_le_inj]
   rintro n m hn hm
-  rw [length_to_list, ← hc.order_of] at hm hn
-  rw [← cycle_of_apply_self, ← Ne.def, ← mem_support] at hx
+  rw [length_to_list, ← hc.order_of] at hm hn 
+  rw [← cycle_of_apply_self, ← Ne.def, ← mem_support] at hx 
   rw [nth_le_to_list, nth_le_to_list, ← cycle_of_pow_apply_self p x n, ←
     cycle_of_pow_apply_self p x m]
   cases n <;> cases m
   · simp
   · rw [← hc.support_pow_of_pos_of_lt_order_of m.zero_lt_succ hm, mem_support,
-      cycle_of_pow_apply_self] at hx
+      cycle_of_pow_apply_self] at hx 
     simp [hx.symm]
   · rw [← hc.support_pow_of_pos_of_lt_order_of n.zero_lt_succ hn, mem_support,
-      cycle_of_pow_apply_self] at hx
+      cycle_of_pow_apply_self] at hx 
     simp [hx]
   intro h
   have hn' : ¬orderOf (p.cycle_of x) ∣ n.succ := Nat.not_dvd_of_pos_of_lt n.zero_lt_succ hn
   have hm' : ¬orderOf (p.cycle_of x) ∣ m.succ := Nat.not_dvd_of_pos_of_lt m.zero_lt_succ hm
-  rw [← hc.support_pow_eq_iff] at hn' hm'
+  rw [← hc.support_pow_eq_iff] at hn' hm' 
   rw [← Nat.mod_eq_of_lt hn, ← Nat.mod_eq_of_lt hm, ← pow_inj_mod]
   refine' support_congr _ _
   · rw [hm', hn']
@@ -362,9 +362,9 @@ theorem nodup_toList (p : Perm α) (x : α) : Nodup (toList p x) :=
 #print Equiv.Perm.next_toList_eq_apply /-
 theorem next_toList_eq_apply (p : Perm α) (x y : α) (hy : y ∈ toList p x) :
     next (toList p x) y hy = p y := by
-  rw [mem_to_list_iff] at hy
+  rw [mem_to_list_iff] at hy 
   obtain ⟨k, hk, hk'⟩ := hy.left.exists_pow_eq_of_mem_support hy.right
-  rw [← nth_le_to_list p x k (by simpa using hk)] at hk'
+  rw [← nth_le_to_list p x k (by simpa using hk)] at hk' 
   simp_rw [← hk']
   rw [next_nth_le _ (nodup_to_list _ _), nth_le_to_list, nth_le_to_list, ← mul_apply, ← pow_succ,
     length_to_list, pow_apply_eq_pow_mod_order_of_cycle_of_apply p (k + 1), is_cycle.order_of]
@@ -389,7 +389,7 @@ theorem SameCycle.toList_isRotated {f : Perm α} {x y : α} (h : SameCycle f x y
     toList f x ~r toList f y := by
   by_cases hx : x ∈ f.support
   · obtain ⟨_ | k, hk, hy⟩ := h.exists_pow_eq_of_mem_support hx
-    · simp only [coe_one, id.def, pow_zero] at hy
+    · simp only [coe_one, id.def, pow_zero] at hy 
       simp [hy]
     use k.succ
     rw [← to_list_pow_apply_eq_rotate, hy]
@@ -529,7 +529,7 @@ def isoCycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.
     obtain ⟨x, -, -, hx, -⟩ := id ht
     have hl : 2 ≤ s.length := by simpa using Cycle.length_nontrivial ht
     simp only [Cycle.mk_eq_coe, Cycle.nodup_coe_iff, Cycle.mem_coe_iff, Subtype.coe_mk,
-      Cycle.formPerm_coe] at hn hx⊢
+      Cycle.formPerm_coe] at hn hx ⊢
     rw [to_cycle_eq_to_list _ _ x]
     · refine' Quotient.sound' _
       exact to_list_form_perm_is_rotated_self _ hl hn _ hx

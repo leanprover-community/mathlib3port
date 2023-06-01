@@ -53,9 +53,9 @@ theorem val_nil : val v [] = 0 :=
 
 theorem valBetween_eq_of_le {as : List Int} {l : Nat} :
     ∀ m, as.length ≤ l + m → valBetween v as l m = valBetween v as l (as.length - l)
-  | 0, h1 => by rw [add_zero] at h1; rw [tsub_eq_zero_iff_le.mpr h1]
+  | 0, h1 => by rw [add_zero] at h1 ; rw [tsub_eq_zero_iff_le.mpr h1]
   | m + 1, h1 => by
-    rw [le_iff_eq_or_lt] at h1; cases h1
+    rw [le_iff_eq_or_lt] at h1 ; cases h1
     · rw [h1, add_comm l, add_tsub_cancel_right]
     have h2 : List.length as ≤ l + m := by rw [← Nat.lt_succ_iff]; apply h1
     simpa [get_eq_default_of_le _ h2, MulZeroClass.zero_mul, add_zero, val_between] using
@@ -90,13 +90,13 @@ theorem valBetween_set {a : Int} {l n : Nat} :
     ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
   | 0, h1, h2 => by exfalso; apply lt_irrefl l (lt_of_le_of_lt h1 h2)
   | m + 1, h1, h2 => by
-    rw [← add_assoc, Nat.lt_succ_iff, le_iff_eq_or_lt] at h2
+    rw [← add_assoc, Nat.lt_succ_iff, le_iff_eq_or_lt] at h2 
     cases h2 <;> unfold val_between
     · have h3 : val_between v ([] {l + m ↦ a}) l m = 0 :=
         by
         apply @Eq.trans _ _ (val_between v [] l m)
         · apply val_between_eq_val_between
-          · intros ; rfl
+          · intros; rfl
           · intro x h4 h5; rw [get_nil, get_set_eq_of_ne, get_nil]
             apply ne_of_lt h5
         apply val_between_nil
@@ -183,13 +183,13 @@ theorem valExcept_eq_valExcept {k : Nat} {is js : List Int} {v w : Nat → Int} 
   intro h1 h2; unfold val_except
   apply fun_mono_2
   ·
-    apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1;· apply h2] <;>
+    apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1; · apply h2] <;>
           apply ne_of_lt <;>
-        rw [zero_add] at h4 <;>
+        rw [zero_add] at h4  <;>
       apply h4
   · repeat' rw [← val_between_eq_of_le (max is.length js.length - (k + 1))]
     ·
-      apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1;· apply h2] <;>
+      apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1; · apply h2] <;>
               apply Ne.symm <;>
             apply ne_of_lt <;>
           rw [Nat.lt_iff_add_one_le] <;>
@@ -223,7 +223,7 @@ theorem valExcept_add_eq (n : Nat) {as : List Int} : valExcept n v as + get n as
   · have h4 := @val_between_add_val_between v as 0 (n + 1) (as.length - (n + 1))
     have h5 : n + 1 + (as.length - (n + 1)) = as.length := by
       rw [add_comm, tsub_add_cancel_of_le h1]
-    rw [h5] at h4; apply Eq.trans _ h4
+    rw [h5] at h4 ; apply Eq.trans _ h4
     simp only [val_between, zero_add]; ring
   have h2 : List.length as - (n + 1) = 0 := tsub_eq_zero_iff_le.mpr h1
   have h3 : val_between v as 0 (List.length as) = val_between v as 0 (n + 1) := by
@@ -241,7 +241,7 @@ theorem valBetween_map_mul {i : Int} {as : List Int} {l : Nat} :
     apply fun_mono_2 rfl
     by_cases h1 : l + m < as.length
     · rw [get_map h1, mul_assoc]
-    rw [not_lt] at h1
+    rw [not_lt] at h1 
     rw [get_eq_default_of_le, get_eq_default_of_le] <;> try simp <;> apply h1
 #align omega.coeffs.val_between_map_mul Omega.Coeffs.valBetween_map_mul
 

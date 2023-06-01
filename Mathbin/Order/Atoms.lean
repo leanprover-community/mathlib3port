@@ -510,7 +510,9 @@ theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : 
   by
   obtain ⟨a, b, h⟩ := exists_pair_ne α
   rcases eq_bot_or_eq_top a with (rfl | rfl) <;> rcases eq_bot_or_eq_top b with (rfl | rfl) <;>
-    first |simpa|simpa using h.symm
+    first
+    | simpa
+    | simpa using h.symm
 #align is_simple_order.bot_ne_top IsSimpleOrder.bot_ne_top
 
 section IsSimpleOrder
@@ -790,7 +792,7 @@ namespace OrderEmbedding
 variable [PartialOrder α] [PartialOrder β]
 
 theorem isAtom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) (hbot : f ⊥ = ⊥) {b : β}
-    (hb : IsAtom (f b)) : IsAtom b := by simp only [← bot_covby_iff] at hb⊢;
+    (hb : IsAtom (f b)) : IsAtom b := by simp only [← bot_covby_iff] at hb ⊢;
   exact Covby.of_image f (hbot.symm ▸ hb)
 #align order_embedding.is_atom_of_map_bot_of_image OrderEmbedding.isAtom_of_map_bot_of_image
 

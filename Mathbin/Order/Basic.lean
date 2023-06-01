@@ -786,7 +786,7 @@ theorem Preorder.toLE_injective {α : Type _} : Function.Injective (@Preorder.to
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
-    dsimp [(· ≤ ·)] at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
+    dsimp [(· ≤ ·)] at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le 
     simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
   congr
 #align preorder.to_has_le_injective Preorder.toLE_injective
@@ -1548,10 +1548,10 @@ theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
 theorem eq_or_eq_or_eq_of_forall_not_lt_lt {α : Type _} [LinearOrder α]
     (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) (x y z : α) : x = y ∨ y = z ∨ x = z :=
   by
-  by_contra hne; push_neg  at hne
+  by_contra hne; push_neg  at hne 
   cases' hne.1.lt_or_lt with h₁ h₁ <;> cases' hne.2.1.lt_or_lt with h₂ h₂ <;>
     cases' hne.2.2.lt_or_lt with h₃ h₃
-  exacts[h h₁ h₂, h h₂ h₃, h h₃ h₂, h h₃ h₁, h h₁ h₃, h h₂ h₃, h h₁ h₃, h h₂ h₁]
+  exacts [h h₁ h₂, h h₂ h₃, h h₃ h₂, h h₃ h₁, h h₁ h₃, h h₂ h₃, h h₁ h₃, h h₂ h₁]
 #align eq_or_eq_or_eq_of_forall_not_lt_lt eq_or_eq_or_eq_of_forall_not_lt_lt
 -/
 
@@ -1570,7 +1570,9 @@ instance : LinearOrder PUnit := by
           decidableLt := fun _ _ => decidableFalse } <;>
       intros <;>
     first
-      |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]|exact Or.inl trivial
+    | trivial
+    | simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
+    | exact Or.inl trivial
 
 theorem max_eq : max a b = unit :=
   rfl

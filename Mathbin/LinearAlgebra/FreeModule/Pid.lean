@@ -74,7 +74,7 @@ theorem eq_bot_of_generator_maximal_map_eq_zero (b : Basis ι R M) {N : Submodul
   rw [Submodule.eq_bot_iff]
   intro x hx
   refine' b.ext_elem fun i => _
-  rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ
+  rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ 
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   exact
     (Submodule.eq_bot_iff _).mp (not_bot_lt_iff.1 <| hϕ (Finsupp.lapply i ∘ₗ ↑b.repr)) _
@@ -88,7 +88,7 @@ theorem eq_bot_of_generator_maximal_submoduleImage_eq_zero {N O : Submodule R M}
   rw [Submodule.eq_bot_iff]
   intro x hx
   refine' congr_arg coe (show (⟨x, hNO hx⟩ : O) = 0 from b.ext_elem fun i => _)
-  rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ
+  rw [(eq_bot_iff_generator_eq_zero _).mpr hgen] at hϕ 
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   refine' (Submodule.eq_bot_iff _).mp (not_bot_lt_iff.1 <| hϕ (Finsupp.lapply i ∘ₗ ↑b.repr)) _ _
   exact (LinearMap.mem_submoduleImage_of_le hNO).mpr ⟨x, hx, rfl⟩
@@ -176,16 +176,15 @@ but must also feed in a basis for `M` using `basis_of_pid` to keep the induction
 theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Module R O]
     (M N : Submodule R O) (b'M : Basis ι R M) (N_bot : N ≠ ⊥) (N_le_M : N ≤ M) :
     ∃ y ∈ M,
-      ∃ (a : R)(hay : a • y ∈ N),
+      ∃ (a : R) (hay : a • y ∈ N),
         ∃ M' ≤ M,
           ∃ N' ≤ N,
-            ∃ (N'_le_M' : N' ≤ M')(y_ortho_M' :
-              ∀ (c : R) (z : O), z ∈ M' → c • y + z = 0 → c = 0)(ay_ortho_N' :
-              ∀ (c : R) (z : O), z ∈ N' → c • a • y + z = 0 → c = 0),
+            ∃ (N'_le_M' : N' ≤ M') (y_ortho_M' : ∀ (c : R) (z : O), z ∈ M' → c • y + z = 0 → c = 0)
+              (ay_ortho_N' : ∀ (c : R) (z : O), z ∈ N' → c • a • y + z = 0 → c = 0),
               ∀ (n') (bN' : Basis (Fin n') R N'),
                 ∃ bN : Basis (Fin (n' + 1)) R N,
                   ∀ (m') (hn'm' : n' ≤ m') (bM' : Basis (Fin m') R M'),
-                    ∃ (hnm : n' + 1 ≤ m' + 1)(bM : Basis (Fin (m' + 1)) R M),
+                    ∃ (hnm : n' + 1 ≤ m' + 1) (bM : Basis (Fin (m' + 1)) R M),
                       ∀ (as : Fin n' → R)
                         (h : ∀ i : Fin n', (bN' i : O) = as i • (bM' (Fin.castLE hn'm' i) : O)),
                         ∃ as' : Fin (n' + 1) → R,
@@ -246,7 +245,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   have M'_le_M : M' ≤ M := M.map_subtype_le ϕ.ker
   have N'_le_M' : N' ≤ M' := by
     intro x hx
-    simp only [mem_map, LinearMap.mem_ker] at hx⊢
+    simp only [mem_map, LinearMap.mem_ker] at hx ⊢
     obtain ⟨⟨x, xN⟩, hx, rfl⟩ := hx
     exact ⟨⟨x, N_le_M xN⟩, hx, rfl⟩
   have N'_le_N : N' ≤ N := N.map_subtype_le (ϕ.comp (of_le N_le_M)).ker
@@ -257,7 +256,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
     by
     intro c x xM' hc
     obtain ⟨⟨x, xM⟩, hx', rfl⟩ := submodule.mem_map.mp xM'
-    rw [LinearMap.mem_ker] at hx'
+    rw [LinearMap.mem_ker] at hx' 
     have hc' : (c • ⟨y', y'M⟩ + ⟨x, xM⟩ : M) = 0 := Subtype.coe_injective hc
     simpa only [LinearMap.map_add, LinearMap.map_zero, LinearMap.map_smul, smul_eq_mul, add_zero,
       mul_eq_zero, ϕy'_ne_zero, hx', or_false_iff] using congr_arg ϕ hc'
@@ -272,7 +271,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   · refine' Basis.mkFinConsOfLe y yN bN' N'_le_N _ _
     · intro c z zN' hc
       refine' ay'_ortho_N' c z zN' _
-      rwa [← a_smul_y'] at hc
+      rwa [← a_smul_y'] at hc 
     · intro z zN
       obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submodule_image_dvd_of_mem N_le_M ϕ zN
       refine' ⟨-b, submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩
@@ -330,7 +329,7 @@ if `R` is a principal ideal domain.
 See also the stronger version `submodule.smith_normal_form`.
 -/
 noncomputable def Submodule.basisOfPid {ι : Type _} [Finite ι] (b : Basis ι R M)
-    (N : Submodule R M) : Σn : ℕ, Basis (Fin n) R N :=
+    (N : Submodule R M) : Σ n : ℕ, Basis (Fin n) R N :=
   ⟨_, (N.nonempty_basis_of_pid b).choose_spec.some⟩
 #align submodule.basis_of_pid Submodule.basisOfPid
 -/
@@ -350,7 +349,7 @@ if `R` is a principal ideal domain.
 See also the stronger version `submodule.smith_normal_form_of_le`.
 -/
 noncomputable def Submodule.basisOfPidOfLE {ι : Type _} [Finite ι] {N O : Submodule R M}
-    (hNO : N ≤ O) (b : Basis ι R O) : Σn : ℕ, Basis (Fin n) R N :=
+    (hNO : N ≤ O) (b : Basis ι R O) : Σ n : ℕ, Basis (Fin n) R N :=
   let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.Subtype)
   ⟨n, bN'.map (Submodule.comapSubtypeEquivOfLe hNO)⟩
 #align submodule.basis_of_pid_of_le Submodule.basisOfPidOfLE
@@ -359,7 +358,7 @@ noncomputable def Submodule.basisOfPidOfLE {ι : Type _} [Finite ι] {N O : Subm
 if `R` is a principal ideal domain. -/
 noncomputable def Submodule.basisOfPidOfLESpan {ι : Type _} [Finite ι] {b : ι → M}
     (hb : LinearIndependent R b) {N : Submodule R M} (le : N ≤ Submodule.span R (Set.range b)) :
-    Σn : ℕ, Basis (Fin n) R N :=
+    Σ n : ℕ, Basis (Fin n) R N :=
   Submodule.basisOfPidOfLE le (Basis.span hb)
 #align submodule.basis_of_pid_of_le_span Submodule.basisOfPidOfLESpan
 
@@ -368,7 +367,7 @@ variable {M}
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID admits a basis. -/
 noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
-    (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
+    (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σ n : ℕ, Basis (Fin n) R M := by
   classical
     -- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
     have := exists_maximal_independent R s
@@ -425,20 +424,20 @@ theorem Module.free_of_finite_type_torsion_free [Finite ι] {s : ι → M} (hs :
     [NoZeroSMulDivisors R M] : Module.Free R M :=
   by
   cases nonempty_fintype ι
-  obtain ⟨n, b⟩ : Σn, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree hs
+  obtain ⟨n, b⟩ : Σ n, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree hs
   exact Module.Free.of_basis b
 #align module.free_of_finite_type_torsion_free Module.free_of_finite_type_torsion_free
 
 /-- A finite type torsion free module over a PID admits a basis. -/
 noncomputable def Module.basisOfFiniteTypeTorsionFree' [Module.Finite R M]
-    [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M :=
+    [NoZeroSMulDivisors R M] : Σ n : ℕ, Basis (Fin n) R M :=
   Module.basisOfFiniteTypeTorsionFree Module.Finite.exists_fin.choose_spec.choose_spec
 #align module.basis_of_finite_type_torsion_free' Module.basisOfFiniteTypeTorsionFree'
 
 theorem Module.free_of_finite_type_torsion_free' [Module.Finite R M] [NoZeroSMulDivisors R M] :
     Module.Free R M :=
   by
-  obtain ⟨n, b⟩ : Σn, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree'
+  obtain ⟨n, b⟩ : Σ n, Basis (Fin n) R M := Module.basisOfFiniteTypeTorsionFree'
   exact Module.Free.of_basis b
 #align module.free_of_finite_type_torsion_free' Module.free_of_finite_type_torsion_free'
 
@@ -467,7 +466,7 @@ This is a strengthening of `submodule.basis_of_pid_of_le`.
 -/
 theorem Submodule.exists_smith_normal_form_of_le [Finite ι] (b : Basis ι R M) (N O : Submodule R M)
     (N_le_O : N ≤ O) :
-    ∃ (n o : ℕ)(hno : n ≤ o)(bO : Basis (Fin o) R O)(bN : Basis (Fin n) R N)(a : Fin n → R),
+    ∃ (n o : ℕ) (hno : n ≤ o) (bO : Basis (Fin o) R O) (bN : Basis (Fin n) R N) (a : Fin n → R),
       ∀ i, (bN i : M) = a i • bO (Fin.castLE hno i) :=
   by
   cases nonempty_fintype ι
@@ -497,7 +496,7 @@ need to map `N` into a submodule of `O`.
 This is a strengthening of `submodule.basis_of_pid_of_le`.
 -/
 noncomputable def Submodule.smithNormalFormOfLE [Finite ι] (b : Basis ι R M) (N O : Submodule R M)
-    (N_le_O : N ≤ O) : Σo n : ℕ, Basis.SmithNormalForm (N.comap O.Subtype) (Fin o) n :=
+    (N_le_O : N ≤ O) : Σ o n : ℕ, Basis.SmithNormalForm (N.comap O.Subtype) (Fin o) n :=
   by
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine'
@@ -518,7 +517,7 @@ See also `ideal.smith_normal_form`, which moreover proves that the dimension of
 an ideal is the same as the dimension of the whole ring.
 -/
 noncomputable def Submodule.smithNormalForm [Finite ι] (b : Basis ι R M) (N : Submodule R M) :
-    Σn : ℕ, Basis.SmithNormalForm N ι n :=
+    Σ n : ℕ, Basis.SmithNormalForm N ι n :=
   let ⟨m, n, bM, bN, f, a, snf⟩ := N.smithNormalFormOfLE b ⊤ le_top
   let bM' := bM.map (LinearEquiv.ofTop _ rfl)
   let e := bM'.indexEquiv b
@@ -565,7 +564,7 @@ The definitions `ideal.ring_basis`, `ideal.self_basis`, `ideal.smith_coeffs` are
 choices of values for this existential quantifier.
 -/
 theorem Ideal.exists_smith_normal_form (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) :
-    ∃ (b' : Basis ι R S)(a : ι → R)(ab' : Basis ι R I), ∀ i, (ab' i : S) = a i • b' i := by
+    ∃ (b' : Basis ι R S) (a : ι → R) (ab' : Basis ι R I), ∀ i, (ab' i : S) = a i • b' i := by
   cases nonempty_fintype ι <;>
     exact
       let ⟨bS, bI, f, a, snf⟩ := I.smith_normal_form b hI
@@ -651,6 +650,6 @@ theorem LinearIndependent.restrict_scalars_algebras {R S M ι : Type _} [CommSem
     [AddCommMonoid M] [Algebra R S] [Module R M] [Module S M] [IsScalarTower R S M]
     (hinj : Function.Injective (algebraMap R S)) {v : ι → M} (li : LinearIndependent S v) :
     LinearIndependent R v :=
-  LinearIndependent.restrict_scalars (by rwa [Algebra.algebraMap_eq_smul_one'] at hinj) li
+  LinearIndependent.restrict_scalars (by rwa [Algebra.algebraMap_eq_smul_one'] at hinj ) li
 #align linear_independent.restrict_scalars_algebras LinearIndependent.restrict_scalars_algebras
 

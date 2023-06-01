@@ -33,7 +33,7 @@ variable (α : Type _)
 def Std.DList.listEquivDList : List α ≃ Dlist α := by
   refine'
       { toFun := Dlist.ofList
-        invFun := Dlist.toList.. } <;>
+        invFun := Dlist.toList .. } <;>
     simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 #align dlist.list_equiv_dlist Std.DList.listEquivDList
 

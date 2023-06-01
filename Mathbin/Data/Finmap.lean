@@ -60,7 +60,7 @@ theorem coe_nodupKeys {l : List (Sigma β)} : @NodupKeys α β l ↔ l.NodupKeys
 -/
 
 #print Multiset.nodup_keys /-
-theorem nodup_keys {m : Multiset (Σa, β a)} : m.keys.Nodup ↔ m.NodupKeys := by rcases m with ⟨l⟩;
+theorem nodup_keys {m : Multiset (Σ a, β a)} : m.keys.Nodup ↔ m.NodupKeys := by rcases m with ⟨l⟩;
   rfl
 #align multiset.nodup_keys Multiset.nodup_keys
 -/
@@ -69,7 +69,7 @@ alias nodup_keys ↔ _ nodupkeys.nodup_keys
 #align multiset.nodupkeys.nodup_keys Multiset.NodupKeys.nodup_keys
 
 #print Multiset.NodupKeys.nodup /-
-theorem NodupKeys.nodup {m : Multiset (Σa, β a)} (h : m.NodupKeys) : m.Nodup :=
+theorem NodupKeys.nodup {m : Multiset (Σ a, β a)} (h : m.NodupKeys) : m.Nodup :=
   h.nodup_keys.of_map _
 #align multiset.nodupkeys.nodup Multiset.NodupKeys.nodup
 -/
@@ -433,7 +433,7 @@ theorem mem_of_lookup_eq_some {a : α} {b : β a} {s : Finmap β} (h : s.dlookup
 theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.dlookup x = s₂.dlookup x) → s₁ = s₂ :=
   induction_on₂ s₁ s₂ fun s₁ s₂ h =>
     by
-    simp only [AList.lookup, lookup_to_finmap] at h
+    simp only [AList.lookup, lookup_to_finmap] at h 
     rw [AList.toFinmap_eq]
     apply lookup_ext s₁.nodupkeys s₂.nodupkeys
     intro x y
@@ -538,14 +538,14 @@ def foldl {δ : Type w} (f : δ → ∀ a, β a → δ)
 #print Finmap.any /-
 /-- `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
 def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x || f y z) (by intros ; simp_rw [Bool.or_assoc, Bool.or_comm]) false
+  s.foldl (fun x y z => x || f y z) (by intros; simp_rw [Bool.or_assoc, Bool.or_comm]) false
 #align finmap.any Finmap.any
 -/
 
 #print Finmap.all /-
 /-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
 def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
-  s.foldl (fun x y z => x && f y z) (by intros ; simp_rw [Bool.and_assoc, Bool.and_comm]) true
+  s.foldl (fun x y z => x && f y z) (by intros; simp_rw [Bool.and_assoc, Bool.and_comm]) true
 #align finmap.all Finmap.all
 -/
 
@@ -704,7 +704,7 @@ theorem toFinmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 theorem mem_list_toFinmap (a : α) (xs : List (Sigma β)) :
     a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs :=
   by
-  induction' xs with x xs <;> [skip;cases x] <;>
+  induction' xs with x xs <;> [skip; cases x] <;>
       simp only [to_finmap_cons, *, not_mem_empty, exists_or, not_mem_nil, to_finmap_nil,
         exists_false, mem_cons_iff, mem_insert, exists_and_left] <;>
     apply or_congr _ Iff.rfl
@@ -918,9 +918,9 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
     apply ext_lookup; intro x
     have : (s₁ ∪ s₃).dlookup x = (s₂ ∪ s₃).dlookup x := h'' ▸ rfl
     by_cases hs₁ : x ∈ s₁
-    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
+    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this 
     · by_cases hs₂ : x ∈ s₂
-      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
+      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this 
       · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂], fun h => h ▸ rfl⟩
 #align finmap.union_cancel Finmap.union_cancel
 -/

@@ -50,8 +50,8 @@ theorem chain_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : 
 #print List.Chain.imp' /-
 theorem Chain.imp' {S : α → α → Prop} (HRS : ∀ ⦃a b⦄, R a b → S a b) {a b : α}
     (Hab : ∀ ⦃c⦄, R a c → S b c) {l : List α} (p : Chain R a l) : Chain S b l := by
-  induction' p with _ a c l r p IH generalizing b <;> constructor <;>
-    [exact Hab r;exact IH (@HRS _)]
+  induction' p with _ a c l r p IH generalizing b <;> constructor <;> [exact Hab r;
+    exact IH (@HRS _)]
 #align list.chain.imp' List.Chain.imp'
 -/
 
@@ -74,9 +74,8 @@ theorem Chain.iff_mem {a : α} {l : List α} :
     Chain R a l ↔ Chain (fun x y => x ∈ a :: l ∧ y ∈ l ∧ R x y) a l :=
   ⟨fun p => by
     induction' p with _ a b l r p IH <;> constructor <;>
-      [exact
-        ⟨mem_cons_self _ _, mem_cons_self _ _,
-          r⟩;exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩],
+      [exact ⟨mem_cons_self _ _, mem_cons_self _ _, r⟩;
+      exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩],
     Chain.imp fun a b h => h.2.2⟩
 #align list.chain.iff_mem List.Chain.iff_mem
 -/
@@ -161,15 +160,13 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
 #align list.chain_of_chain_pmap List.chain_of_chain_pmap
 -/
 
-#print List.Pairwise.chain /-
 protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l :=
   by
   cases' pairwise_cons.1 p with r p'; clear p
   induction' p' with b l r' p IH generalizing a; · exact chain.nil
-  simp only [chain_cons, forall_mem_cons] at r
+  simp only [chain_cons, forall_mem_cons] at r 
   exact chain_cons.2 ⟨r.1, IH r'⟩
 #align list.pairwise.chain List.Pairwise.chain
--/
 
 #print List.Chain.pairwise /-
 protected theorem Chain.pairwise [IsTrans α R] :
@@ -191,13 +188,13 @@ theorem chain_iff_pairwise [IsTrans α R] {a : α} {l : List α} : Chain R a l �
 
 #print List.Chain.sublist /-
 protected theorem Chain.sublist [IsTrans α R] (hl : l₂.Chain R a) (h : l₁ <+ l₂) : l₁.Chain R a :=
-  by rw [chain_iff_pairwise] at hl⊢; exact hl.sublist (h.cons_cons a)
+  by rw [chain_iff_pairwise] at hl ⊢; exact hl.sublist (h.cons_cons a)
 #align list.chain.sublist List.Chain.sublist
 -/
 
 #print List.Chain.rel /-
 protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R a b := by
-  rw [chain_iff_pairwise] at hl; exact rel_of_pairwise_cons hl hb
+  rw [chain_iff_pairwise] at hl ; exact rel_of_pairwise_cons hl hb
 #align list.chain.rel List.Chain.rel
 -/
 
@@ -219,7 +216,7 @@ theorem chain_iff_nthLe {R} :
       cases i
       · apply h0
       convert h i _ using 1
-      simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w
+      simp only [succ_eq_add_one, add_succ_sub_one, add_zero, length, add_lt_add_iff_right] at w 
       exact lt_pred_iff.mpr w
     rintro ⟨h0, h⟩; constructor
     · apply h0; simp
@@ -232,7 +229,7 @@ theorem chain_iff_nthLe {R} :
 
 #print List.Chain'.imp /-
 theorem Chain'.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} (p : Chain' R l) :
-    Chain' S l := by cases l <;> [trivial;exact p.imp H]
+    Chain' S l := by cases l <;> [trivial; exact p.imp H]
 #align list.chain'.imp List.Chain'.imp
 -/
 
@@ -302,7 +299,7 @@ theorem chain'_append_cons_cons {b c : α} {l₁ l₂ : List α} :
 #print List.chain'_map /-
 theorem chain'_map (f : β → α) {l : List β} :
     Chain' R (map f l) ↔ Chain' (fun a b : β => R (f a) (f b)) l := by
-  cases l <;> [rfl;exact chain_map _]
+  cases l <;> [rfl; exact chain_map _]
 #align list.chain'_map List.chain'_map
 -/
 
@@ -336,7 +333,7 @@ theorem chain'_iff_pairwise [IsTrans α R] : ∀ {l : List α}, Chain' R l ↔ P
 
 #print List.Chain'.sublist /-
 protected theorem Chain'.sublist [IsTrans α R] (hl : l₂.Chain' R) (h : l₁ <+ l₂) : l₁.Chain' R := by
-  rw [chain'_iff_pairwise] at hl⊢; exact hl.sublist h
+  rw [chain'_iff_pairwise] at hl ⊢; exact hl.sublist h
 #align list.chain'.sublist List.Chain'.sublist
 -/
 
@@ -362,7 +359,7 @@ theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
 
 #print List.Chain'.rel_head? /-
 theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y := by
-  rw [← cons_head'_tail hy] at h; exact h.rel_head
+  rw [← cons_head'_tail hy] at h ; exact h.rel_head
 #align list.chain'.rel_head' List.Chain'.rel_head?
 -/
 
@@ -524,7 +521,7 @@ theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l)
   induction l generalizing a
   · cases hb
     simp [final]
-  · rw [chain_cons] at h
+  · rw [chain_cons] at h 
     rintro _ (rfl | _)
     apply carries h.1 (l_ih h.2 hb _ (Or.inl rfl))
     apply l_ih h.2 hb _ H

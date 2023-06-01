@@ -119,7 +119,7 @@ class LinearOrderedCommMonoid (α : Type _) extends LinearOrder α, OrderedCommM
   Instances should include number systems with an infinite element adjoined.` -/
 @[protect_proj]
 class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCommMonoid α,
-  Top α where
+    Top α where
   le_top : ∀ x : α, x ≤ ⊤
   top_add' : ∀ x : α, ⊤ + x = ⊤
 #align linear_ordered_add_comm_monoid_with_top LinearOrderedAddCommMonoidWithTop

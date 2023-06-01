@@ -91,7 +91,7 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
     ∃ η : ℝ≥0, 0 < η ∧ ∀ s : Set α, μ s ≤ η → snorm (s.indicator fun x => c) p μ ≤ ε
   exact exists_snorm_indicator_le hp c hε
   have ηpos : (0 : ℝ≥0∞) < η := ENNReal.coe_lt_coe.2 η_pos
-  obtain ⟨V, sV, V_open, h'V, hV⟩ : ∃ (V : Set α)(H : V ⊇ s), IsOpen V ∧ μ V < ∞ ∧ μ (V \ s) < η
+  obtain ⟨V, sV, V_open, h'V, hV⟩ : ∃ (V : Set α) (H : V ⊇ s), IsOpen V ∧ μ V < ∞ ∧ μ (V \ s) < η
   exact s_closed.measurable_set.exists_is_open_diff_lt hs ηpos.ne'
   let v := u ∩ V
   have hsv : s ⊆ v := subset_inter hsu sV
@@ -111,7 +111,7 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
     by
     intro x
     by_cases hv : x ∈ v
-    · rw [← Set.diff_union_of_subset hsv] at hv
+    · rw [← Set.diff_union_of_subset hsv] at hv 
       cases' hv with hsv hs
       ·
         simpa only [hsv.2, Set.indicator_of_not_mem, not_false_iff, sub_zero, hsv,
@@ -174,7 +174,7 @@ theorem Memℒp.exists_hasCompactSupport_snorm_sub_le [LocallyCompactSpace α] [
     ∃ η : ℝ≥0, 0 < η ∧ ∀ s : Set α, μ s ≤ η → snorm (s.indicator fun x => c) p μ ≤ δ
   exact exists_snorm_indicator_le hp c δpos.ne'
   have hη_pos' : (0 : ℝ≥0∞) < η := ENNReal.coe_pos.2 ηpos
-  obtain ⟨s, st, s_compact, μs⟩ : ∃ (s : _)(_ : s ⊆ t), IsCompact s ∧ μ (t \ s) < η
+  obtain ⟨s, st, s_compact, μs⟩ : ∃ (s : _) (_ : s ⊆ t), IsCompact s ∧ μ (t \ s) < η
   exact ht.exists_is_compact_diff_lt htμ.ne hη_pos'.ne'
   have hsμ : μ s < ∞ := (measure_mono st).trans_lt htμ
   have I1 : snorm ((s.indicator fun y => c) - t.indicator fun y => c) p μ ≤ δ :=
@@ -215,11 +215,11 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpa
   have B : ENNReal.ofReal p ≠ 0 := by simpa only [Ne.def, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_has_compact_support_snorm_sub_le ENNReal.coe_ne_top A with
     ⟨g, g_support, hg, g_cont, g_mem⟩
-  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg
+  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg 
   refine' ⟨g, g_support, _, g_cont, g_mem⟩
   rwa [(hf.sub g_mem).snorm_eq_integral_rpow_norm B ENNReal.coe_ne_top,
     ENNReal.ofReal_le_ofReal_iff I.le, one_div, ENNReal.toReal_ofReal hp.le,
-    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg
+    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
   exact integral_nonneg fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_has_compact_support_integral_rpow_sub_le MeasureTheory.Memℒp.exists_hasCompactSupport_integral_rpow_sub_le
 
@@ -230,7 +230,7 @@ theorem Integrable.exists_hasCompactSupport_lintegral_sub_le [LocallyCompactSpac
     ∃ g : α → E,
       HasCompactSupport g ∧ (∫⁻ x, ‖f x - g x‖₊ ∂μ) ≤ ε ∧ Continuous g ∧ Integrable g μ :=
   by
-  simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf⊢
+  simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_has_compact_support_snorm_sub_le ENNReal.one_ne_top hε
 #align measure_theory.integrable.exists_has_compact_support_lintegral_sub_le MeasureTheory.Integrable.exists_hasCompactSupport_lintegral_sub_le
 
@@ -241,7 +241,7 @@ theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace
     ∃ g : α → E, HasCompactSupport g ∧ (∫ x, ‖f x - g x‖ ∂μ) ≤ ε ∧ Continuous g ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm, ← ENNReal.ofReal_one] at
-    hf⊢
+    hf ⊢
   simpa using hf.exists_has_compact_support_integral_rpow_sub_le zero_lt_one hε
 #align measure_theory.integrable.exists_has_compact_support_integral_sub_le MeasureTheory.Integrable.exists_hasCompactSupport_integral_sub_le
 
@@ -277,7 +277,7 @@ theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : 
     ∃ η : ℝ≥0, 0 < η ∧ ∀ s : Set α, μ s ≤ η → snorm (s.indicator fun x => c) p μ ≤ δ
   exact exists_snorm_indicator_le hp c δpos.ne'
   have hη_pos' : (0 : ℝ≥0∞) < η := ENNReal.coe_pos.2 ηpos
-  obtain ⟨s, st, s_closed, μs⟩ : ∃ (s : _)(_ : s ⊆ t), IsClosed s ∧ μ (t \ s) < η
+  obtain ⟨s, st, s_closed, μs⟩ : ∃ (s : _) (_ : s ⊆ t), IsClosed s ∧ μ (t \ s) < η
   exact ht.exists_is_closed_diff_lt htμ.ne hη_pos'.ne'
   have hsμ : μ s < ∞ := (measure_mono st).trans_lt htμ
   have I1 : snorm ((s.indicator fun y => c) - t.indicator fun y => c) p μ ≤ δ :=
@@ -311,11 +311,11 @@ theorem Memℒp.exists_bounded_continuous_integral_rpow_sub_le [μ.WeaklyRegular
     simp only [Ne.def, ENNReal.ofReal_eq_zero, not_le, I]
   have B : ENNReal.ofReal p ≠ 0 := by simpa only [Ne.def, ENNReal.ofReal_eq_zero, not_le] using hp
   rcases hf.exists_bounded_continuous_snorm_sub_le ENNReal.coe_ne_top A with ⟨g, hg, g_mem⟩
-  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg
+  change snorm _ (ENNReal.ofReal p) _ ≤ _ at hg 
   refine' ⟨g, _, g_mem⟩
   rwa [(hf.sub g_mem).snorm_eq_integral_rpow_norm B ENNReal.coe_ne_top,
     ENNReal.ofReal_le_ofReal_iff I.le, one_div, ENNReal.toReal_ofReal hp.le,
-    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg
+    Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
   exact integral_nonneg fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_bounded_continuous_integral_rpow_sub_le MeasureTheory.Memℒp.exists_bounded_continuous_integral_rpow_sub_le
 
@@ -325,7 +325,7 @@ theorem Integrable.exists_bounded_continuous_lintegral_sub_le [μ.WeaklyRegular]
     (hf : Integrable f μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ g : α →ᵇ E, (∫⁻ x, ‖f x - g x‖₊ ∂μ) ≤ ε ∧ Integrable g μ :=
   by
-  simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf⊢
+  simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_bounded_continuous_snorm_sub_le ENNReal.one_ne_top hε
 #align measure_theory.integrable.exists_bounded_continuous_lintegral_sub_le MeasureTheory.Integrable.exists_bounded_continuous_lintegral_sub_le
 
@@ -336,7 +336,7 @@ theorem Integrable.exists_bounded_continuous_integral_sub_le [μ.WeaklyRegular] 
     ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ∂μ) ≤ ε ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm, ← ENNReal.ofReal_one] at
-    hf⊢
+    hf ⊢
   simpa using hf.exists_bounded_continuous_integral_rpow_sub_le zero_lt_one hε
 #align measure_theory.integrable.exists_bounded_continuous_integral_sub_le MeasureTheory.Integrable.exists_bounded_continuous_integral_sub_le
 

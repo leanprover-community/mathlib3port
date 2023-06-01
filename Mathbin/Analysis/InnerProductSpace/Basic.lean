@@ -113,7 +113,7 @@ spaces.
 To construct a norm from an inner product, see `inner_product_space.of_core`.
 -/
 class InnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] [NormedAddCommGroup E] extends
-  NormedSpace 𝕜 E, Inner 𝕜 E where
+    NormedSpace 𝕜 E, Inner 𝕜 E where
   norm_sq_eq_inner : ∀ x : E, ‖x‖ ^ 2 = re (inner x x)
   conj_symm : ∀ x y, conj (inner y x) = inner x y
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
@@ -145,7 +145,7 @@ instance defined on it, otherwise this will create a second non-defeq norm insta
 can construct an `inner_product_space` instance in `inner_product_space.of_core`. -/
 @[nolint has_nonempty_instance]
 structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [AddCommGroup F]
-  [Module 𝕜 F] extends Inner 𝕜 F where
+    [Module 𝕜 F] extends Inner 𝕜 F where
   conj_symm : ∀ x y, conj (inner y x) = inner x y
   nonneg_re : ∀ x, 0 ≤ re (inner x x)
   definite : ∀ x, inner x x = 0 → x = 0
@@ -801,7 +801,7 @@ theorem orthonormal_iff_ite {v : ι → E} :
       have h' : ‖v i‖ ^ 2 = 1 ^ 2 := by simp [@norm_sq_eq_inner 𝕜, h i i]
       have h₁ : 0 ≤ ‖v i‖ := norm_nonneg _
       have h₂ : (0 : ℝ) ≤ 1 := zero_le_one
-      rwa [sq_eq_sq h₁ h₂] at h'
+      rwa [sq_eq_sq h₁ h₂] at h' 
     · intro i j hij
       simpa [hij] using h i j
 #align orthonormal_iff_ite orthonormal_iff_ite
@@ -917,7 +917,7 @@ orthonormal family. -/
 theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) (f : ι' → ι)
     (hf : Function.Injective f) : Orthonormal 𝕜 (v ∘ f) := by
   classical
-    rw [orthonormal_iff_ite] at hv⊢
+    rw [orthonormal_iff_ite] at hv ⊢
     intro i j
     convert hv (f i) (f j) using 1
     simp [hf.eq_iff]
@@ -949,7 +949,7 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
     (hi : i ∉ s) {l : ι →₀ 𝕜} (hl : l ∈ Finsupp.supported 𝕜 𝕜 s) :
     ⟪Finsupp.total ι E 𝕜 v l, v i⟫ = 0 :=
   by
-  rw [Finsupp.mem_supported'] at hl
+  rw [Finsupp.mem_supported'] at hl 
   simp only [hv.inner_left_finsupp, hl i hi, map_zero]
 #align orthonormal.inner_finsupp_eq_zero Orthonormal.inner_finsupp_eq_zero
 
@@ -985,7 +985,7 @@ theorem orthonormal_iUnion_of_directed {η : Type _} {s : η → Set E} (hs : Di
     rintro x ⟨_, ⟨i, rfl⟩, hxi⟩ y ⟨_, ⟨j, rfl⟩, hyj⟩
     obtain ⟨k, hik, hjk⟩ := hs i j
     have h_orth : Orthonormal 𝕜 (fun x => x : s k → E) := h k
-    rw [orthonormal_subtype_iff_ite] at h_orth
+    rw [orthonormal_subtype_iff_ite] at h_orth 
     exact h_orth x (hik hxi) y (hjk hyj)
 #align orthonormal_Union_of_directed orthonormal_iUnion_of_directed
 -/
@@ -1005,7 +1005,7 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
-    ∃ (w : _)(_ : w ⊇ s),
+    ∃ (w : _) (_ : w ⊇ s),
       Orthonormal 𝕜 (coe : w → E) ∧ ∀ (u) (_ : u ⊇ w), Orthonormal 𝕜 (coe : u → E) → u = w :=
   by
   obtain ⟨b, bi, sb, h⟩ := zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs
@@ -1419,7 +1419,7 @@ isometric equivalence. -/
 def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     (hf : Orthonormal 𝕜 (f ∘ v)) : E ≃ₗᵢ[𝕜] E' :=
   f.isometryOfInner fun x y => by
-    rw [← LinearEquiv.coe_coe] at hf
+    rw [← LinearEquiv.coe_coe] at hf 
     rw [← v.total_repr x, ← v.total_repr y, ← LinearEquiv.coe_coe, Finsupp.apply_total,
       Finsupp.apply_total, hv.inner_finsupp_eq_sum_left, hf.inner_finsupp_eq_sum_left]
 #align linear_equiv.isometry_of_orthonormal LinearEquiv.isometryOfOrthonormal
@@ -1574,7 +1574,7 @@ theorem real_inner_add_sub_eq_zero_iff (x y : F) : ⟪x + y, x - y⟫_ℝ = 0 �
     sub_eq_zero, re_to_real]
   constructor
   · intro h
-    rw [add_comm] at h
+    rw [add_comm] at h 
     linarith
   · intro h
     linarith
@@ -1657,11 +1657,11 @@ theorem norm_inner_eq_norm_tfae (x y : E) :
   · refine' fun h => or_iff_not_imp_left.2 fun hx₀ => _
     have : ‖x‖ ^ 2 ≠ 0 := pow_ne_zero _ (norm_ne_zero_iff.2 hx₀)
     rw [← sq_eq_sq (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _)), mul_pow, ←
-      mul_right_inj' this, eq_comm, ← sub_eq_zero, ← mul_sub] at h
-    simp only [@norm_sq_eq_inner 𝕜] at h
+      mul_right_inj' this, eq_comm, ← sub_eq_zero, ← mul_sub] at h 
+    simp only [@norm_sq_eq_inner 𝕜] at h 
     letI : InnerProductSpace.Core 𝕜 E := InnerProductSpace.toCore
     erw [← InnerProductSpace.Core.cauchy_schwarz_aux, InnerProductSpace.Core.normSq_eq_zero,
-      sub_eq_zero] at h
+      sub_eq_zero] at h 
     rw [div_eq_inv_mul, mul_smul, h, inv_smul_smul₀]
     rwa [inner_self_ne_zero]
   tfae_have 2 → 3; exact fun h => h.imp_right fun h' => ⟨_, h'⟩
@@ -1718,7 +1718,7 @@ theorem inner_eq_norm_mul_iff_div {x y : E} (h₀ : x ≠ 0) :
     ⟪x, y⟫ = (‖x‖ : 𝕜) * ‖y‖ ↔ (‖y‖ / ‖x‖ : 𝕜) • x = y :=
   by
   have h₀' := h₀
-  rw [← norm_ne_zero_iff, Ne.def, ← @of_real_eq_zero 𝕜] at h₀'
+  rw [← norm_ne_zero_iff, Ne.def, ← @of_real_eq_zero 𝕜] at h₀' 
   constructor <;> intro h
   · have : x = 0 ∨ y = (⟪x, y⟫ / ⟪x, x⟫ : 𝕜) • x :=
       ((@norm_inner_eq_norm_tfae 𝕜 _ _ _ _ x y).out 0 1).1 (by simp [h])
@@ -2151,7 +2151,7 @@ theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injec
 
 theorem OrthogonalFamily.orthonormal_sigma_orthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
     (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
-    Orthonormal 𝕜 fun a : Σi, α i => V a.1 (v_family a.1 a.2) :=
+    Orthonormal 𝕜 fun a : Σ i, α i => V a.1 (v_family a.1 a.2) :=
   by
   constructor
   · rintro ⟨i, v⟩
@@ -2255,7 +2255,7 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
     rw [← @LinearMap.ker_eq_bot _ _ _ _ _ _ (DirectSum.addCommGroup fun i => V i),
       Submodule.eq_bot_iff]
     intro v hv
-    rw [LinearMap.mem_ker] at hv
+    rw [LinearMap.mem_ker] at hv 
     ext i
     suffices ⟪(v i : E), v i⟫ = 0 by simpa only [inner_self_eq_zero] using this
     calc

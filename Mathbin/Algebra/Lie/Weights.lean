@@ -143,7 +143,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
     rw [← LinearMap.comp_apply, LinearMap.commute_pow_left_of_commute h_comm_square,
       LinearMap.comp_apply, hk, LinearMap.map_zero]
   -- Unpack the information we have about `m₁`, `m₂`.
-  simp only [mem_pre_weight_space] at hm₁ hm₂
+  simp only [mem_pre_weight_space] at hm₁ hm₂ 
   obtain ⟨k₁, hk₁⟩ := hm₁ x
   obtain ⟨k₂, hk₂⟩ := hm₂ x
   have hf₁ : (f₁ ^ k₁) (m₁ ⊗ₜ m₂) = 0 := by
@@ -308,7 +308,7 @@ theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
       ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y ^ k) x = 0
     by
     simp only [LieHom.coe_toLinearMap, LieSubalgebra.coe_incl, Function.comp_apply,
-      LinearMap.coe_comp, Submodule.coe_eq_zero] at this
+      LinearMap.coe_comp, Submodule.coe_eq_zero] at this 
     simp only [mem_weight_space, mem_pre_weight_space, LieSubalgebra.coe_incl',
       LieSubmodule.mem_comap, this]
   have hfg : ∀ y : H, (f y).comp (H.incl : H →ₗ[R] L) = (H.incl : H →ₗ[R] L).comp (g y) :=
@@ -411,7 +411,7 @@ def zeroRootSubalgebra : LieSubalgebra R L :=
       by
       let xy : root_space H 0 ⊗[R] root_space H 0 := ⟨x, hx⟩ ⊗ₜ ⟨y, hy⟩
       suffices (root_space_product R L H 0 0 0 (add_zero 0) xy : L) ∈ root_space H 0 by
-        rwa [root_space_product_tmul, Subtype.coe_mk, Subtype.coe_mk] at this
+        rwa [root_space_product_tmul, Subtype.coe_mk, Subtype.coe_mk] at this 
       exact (root_space_product R L H 0 0 0 (add_zero 0) xy).property }
 #align lie_algebra.zero_root_subalgebra LieAlgebra.zeroRootSubalgebra
 
@@ -430,7 +430,7 @@ theorem mem_zeroRootSubalgebra (x : L) :
 theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
   by
   intro x hx
-  simp only [LieSubalgebra.mem_toLieSubmodule] at hx
+  simp only [LieSubalgebra.mem_toLieSubmodule] at hx 
   simp only [mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, zero_smul]
   intro y
   obtain ⟨k, hk⟩ := (inferInstance : IsNilpotent R H)
@@ -444,7 +444,7 @@ theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
   change (g ^ k).comp (H : Submodule R L).Subtype ⟨x, hx⟩ = 0
   rw [LinearMap.commute_pow_left_of_commute hfg k]
   have h := iterate_to_endomorphism_mem_lower_central_series R H H y ⟨x, hx⟩ k
-  rw [hk, LieSubmodule.mem_bot] at h
+  rw [hk, LieSubmodule.mem_bot] at h 
   simp only [Submodule.subtype_apply, Function.comp_apply, LinearMap.pow_apply, LinearMap.coe_comp,
     Submodule.coe_eq_zero]
   exact h
@@ -463,13 +463,13 @@ theorem zeroRootSubalgebra_normalizer_eq_self :
   by
   refine' le_antisymm _ (LieSubalgebra.le_normalizer _)
   intro x hx
-  rw [LieSubalgebra.mem_normalizer_iff] at hx
+  rw [LieSubalgebra.mem_normalizer_iff] at hx 
   rw [mem_zero_root_subalgebra]
   rintro ⟨y, hy⟩
   specialize hx y (le_zero_root_subalgebra R L H hy)
-  rw [mem_zero_root_subalgebra] at hx
+  rw [mem_zero_root_subalgebra] at hx 
   obtain ⟨k, hk⟩ := hx ⟨y, hy⟩
-  rw [← lie_skew, LinearMap.map_neg, neg_eq_zero] at hk
+  rw [← lie_skew, LinearMap.map_neg, neg_eq_zero] at hk 
   use k + 1
   rw [LinearMap.iterate_succ, LinearMap.coe_comp, Function.comp_apply, to_endomorphism_apply_apply,
     LieSubalgebra.coe_bracket_of_module, Submodule.coe_mk, hk]
@@ -498,7 +498,7 @@ theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSu
 
 theorem zeroRootSubalgebra_eq_iff_is_cartan [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H ↔ H.IsCartanSubalgebra :=
-  ⟨is_cartan_of_zeroRootSubalgebra_eq R L H, by intros ; simp⟩
+  ⟨is_cartan_of_zeroRootSubalgebra_eq R L H, by intros; simp⟩
 #align lie_algebra.zero_root_subalgebra_eq_iff_is_cartan LieAlgebra.zeroRootSubalgebra_eq_iff_is_cartan
 
 end LieAlgebra

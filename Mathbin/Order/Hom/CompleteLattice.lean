@@ -70,7 +70,7 @@ structure sInfHom (α β : Type _) [InfSet α] [InfSet β] where
 /-- The type of frame homomorphisms from `α` to `β`. They preserve finite meets and arbitrary joins.
 -/
 structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends
-  InfTopHom α β where
+    InfTopHom α β where
   map_Sup' (s : Set α) : to_fun (sSup s) = sSup (to_fun '' s)
 #align frame_hom FrameHom
 -/
@@ -78,7 +78,7 @@ structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] ex
 #print CompleteLatticeHom /-
 /-- The type of complete lattice homomorphisms from `α` to `β`. -/
 structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends
-  sInfHom α β where
+    sInfHom α β where
   map_Sup' (s : Set α) : to_fun (sSup s) = sSup (to_fun '' s)
 #align complete_lattice_hom CompleteLatticeHom
 -/
@@ -90,7 +90,7 @@ section
 
 You should extend this class when you extend `Sup_hom`. -/
 class sSupHomClass (F : Type _) (α β : outParam <| Type _) [SupSet α] [SupSet β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_sSup (f : F) (s : Set α) : f (sSup s) = sSup (f '' s)
 #align Sup_hom_class sSupHomClass
 -/
@@ -100,7 +100,7 @@ class sSupHomClass (F : Type _) (α β : outParam <| Type _) [SupSet α] [SupSet
 
 You should extend this class when you extend `Inf_hom`. -/
 class sInfHomClass (F : Type _) (α β : outParam <| Type _) [InfSet α] [InfSet β] extends
-  FunLike F α fun _ => β where
+    FunLike F α fun _ => β where
   map_sInf (f : F) (s : Set α) : f (sInf s) = sInf (f '' s)
 #align Inf_hom_class sInfHomClass
 -/
@@ -110,7 +110,7 @@ class sInfHomClass (F : Type _) (α β : outParam <| Type _) [InfSet α] [InfSet
 
 You should extend this class when you extend `frame_hom`. -/
 class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α]
-  [CompleteLattice β] extends InfTopHomClass F α β where
+    [CompleteLattice β] extends InfTopHomClass F α β where
   map_sSup (f : F) (s : Set α) : f (sSup s) = sSup (f '' s)
 #align frame_hom_class FrameHomClass
 -/
@@ -120,7 +120,7 @@ class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice �
 
 You should extend this class when you extend `complete_lattice_hom`. -/
 class CompleteLatticeHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α]
-  [CompleteLattice β] extends sInfHomClass F α β where
+    [CompleteLattice β] extends sInfHomClass F α β where
   map_sSup (f : F) (s : Set α) : f (sSup s) = sSup (f '' s)
 #align complete_lattice_hom_class CompleteLatticeHomClass
 -/

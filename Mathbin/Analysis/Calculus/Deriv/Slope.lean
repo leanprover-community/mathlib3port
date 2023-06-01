@@ -143,7 +143,7 @@ theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (
   have B : ∀ᶠ z in 𝓝[{x}] x, ‖(z - x)⁻¹ • (f z - f x)‖ ∈ Iio r :=
     mem_of_superset self_mem_nhdsWithin (singleton_subset_iff.2 <| by simp [hr₀])
   have C := mem_sup.2 ⟨A, B⟩
-  rw [← nhdsWithin_union, diff_union_self, nhdsWithin_union, mem_sup] at C
+  rw [← nhdsWithin_union, diff_union_self, nhdsWithin_union, mem_sup] at C 
   filter_upwards [C.1]
   simp only [norm_smul, mem_Iio, norm_inv]
   exact fun _ => id
@@ -192,7 +192,7 @@ theorem HasDerivWithinAt.liminf_right_slope_norm_le (hf : HasDerivWithinAt f f' 
   have := (hf.Ioi_of_Ici.limsup_slope_norm_le hr).Frequently
   refine' this.mp (eventually.mono self_mem_nhdsWithin _)
   intro z hxz hz
-  rwa [Real.norm_eq_abs, abs_of_pos (sub_pos_of_lt hxz)] at hz
+  rwa [Real.norm_eq_abs, abs_of_pos (sub_pos_of_lt hxz)] at hz 
 #align has_deriv_within_at.liminf_right_slope_norm_le HasDerivWithinAt.liminf_right_slope_norm_le
 
 end RealSpace

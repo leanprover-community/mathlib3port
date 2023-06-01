@@ -139,7 +139,7 @@ theorem prod_sup (f : Filter α) (g₁ g₂ : Filter β) : f ×ᶠ g₁ ⊔ g₂
 
 theorem eventually_prod_iff {p : α × β → Prop} {f : Filter α} {g : Filter β} :
     (∀ᶠ x in f ×ᶠ g, p x) ↔
-      ∃ (pa : α → Prop)(ha : ∀ᶠ x in f, pa x)(pb : β → Prop)(hb : ∀ᶠ y in g, pb y),
+      ∃ (pa : α → Prop) (ha : ∀ᶠ x in f, pa x) (pb : β → Prop) (hb : ∀ᶠ y in g, pb y),
         ∀ {x}, pa x → ∀ {y}, pb y → p (x, y) :=
   by simpa only [Set.prod_subset_iff] using @mem_prod_iff α β p f g
 #align filter.eventually_prod_iff Filter.eventually_prod_iff
@@ -280,10 +280,10 @@ theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f)
 theorem map_fst_prod (f : Filter α) (g : Filter β) [NeBot g] : map Prod.fst (f ×ᶠ g) = f :=
   by
   refine' le_antisymm tendsto_fst fun s hs => _
-  rw [mem_map, mem_prod_iff] at hs
+  rw [mem_map, mem_prod_iff] at hs 
   rcases hs with ⟨t₁, h₁, t₂, h₂, hs⟩
-  rw [← image_subset_iff, fst_image_prod] at hs
-  exacts[mem_of_superset h₁ hs, nonempty_of_mem h₂]
+  rw [← image_subset_iff, fst_image_prod] at hs 
+  exacts [mem_of_superset h₁ hs, nonempty_of_mem h₂]
 #align filter.map_fst_prod Filter.map_fst_prod
 
 @[simp]
@@ -399,7 +399,7 @@ protected theorem map_prod (m : α × β → γ) (f : Filter α) (g : Filter β)
 theorem prod_eq {f : Filter α} {g : Filter β} : f ×ᶠ g = (f.map Prod.mk).seq g :=
   by
   have h := f.map_prod id g
-  rwa [map_id] at h
+  rwa [map_id] at h 
 #align filter.prod_eq Filter.prod_eq
 
 theorem prod_inf_prod {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} :
@@ -447,7 +447,7 @@ theorem prod_eq_bot {f : Filter α} {g : Filter β} : f ×ᶠ g = ⊥ ↔ f = �
   constructor
   · intro h
     rcases mem_prod_iff.1 (empty_mem_iff_bot.2 h) with ⟨s, hs, t, ht, hst⟩
-    rw [subset_empty_iff, Set.prod_eq_empty_iff] at hst
+    rw [subset_empty_iff, Set.prod_eq_empty_iff] at hst 
     cases' hst with s_eq t_eq
     · left; exact empty_mem_iff_bot.1 (s_eq ▸ hs)
     · right; exact empty_mem_iff_bot.1 (t_eq ▸ ht)

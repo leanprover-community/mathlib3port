@@ -113,8 +113,8 @@ theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit
   by
   refine' jacobi_sym.eq_zero_iff.mpr ⟨Nat.bit0_ne_zero hb₀, fun hf => _⟩
   have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcd two_dvd_bit0 two_dvd_bit0
-  change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h
-  rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h
+  change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h 
+  rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h 
   exact Nat.not_even_one h
 #align norm_num.jacobi_sym_nat.even_even NormNum.jacobiSymNat.even_even
 

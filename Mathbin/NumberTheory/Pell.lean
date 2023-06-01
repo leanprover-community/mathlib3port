@@ -94,7 +94,8 @@ theorem is_pell_solution_iff_mem_unitary {d : ℤ} {a : ℤ√d} :
 We define this in terms of elements of `ℤ√d` of norm one.
 -/
 def Solution₁ (d : ℤ) : Type :=
-  ↥(unitary (ℤ√d))deriving CommGroup, HasDistribNeg, Inhabited
+  ↥(unitary (ℤ√d))
+deriving CommGroup, HasDistribNeg, Inhabited
 #align pell.solution₁ Pell.Solution₁
 
 namespace Solution₁
@@ -209,7 +210,7 @@ theorem x_ne_zero (h₀ : 0 ≤ d) (a : Solution₁ d) : a.x ≠ 0 :=
   by
   intro hx
   have h : 0 ≤ d * a.y ^ 2 := mul_nonneg h₀ (sq_nonneg _)
-  rw [a.prop_y, hx, sq, MulZeroClass.zero_mul, zero_sub] at h
+  rw [a.prop_y, hx, sq, MulZeroClass.zero_mul, zero_sub] at h 
   exact not_le.mpr (neg_one_lt_zero : (-1 : ℤ) < 0) h
 #align pell.solution₁.x_ne_zero Pell.Solution₁.x_ne_zero
 
@@ -218,7 +219,7 @@ theorem y_ne_zero_of_one_lt_x {a : Solution₁ d} (ha : 1 < a.x) : a.y ≠ 0 :=
   by
   intro hy
   have prop := a.prop
-  rw [hy, sq (0 : ℤ), MulZeroClass.zero_mul, MulZeroClass.mul_zero, sub_zero] at prop
+  rw [hy, sq (0 : ℤ), MulZeroClass.zero_mul, MulZeroClass.mul_zero, sub_zero] at prop 
   exact lt_irrefl _ (((one_lt_sq_iff <| zero_le_one.trans ha.le).mpr ha).trans_eq prop)
 #align pell.solution₁.y_ne_zero_of_one_lt_x Pell.Solution₁.y_ne_zero_of_one_lt_x
 
@@ -235,7 +236,7 @@ theorem d_nonsquare_of_one_lt_x {a : Solution₁ d} (ha : 1 < a.x) : ¬IsSquare 
   by
   have hp := a.prop
   rintro ⟨b, rfl⟩
-  simp_rw [← sq, ← mul_pow, sq_sub_sq, Int.mul_eq_one_iff_eq_one_or_neg_one] at hp
+  simp_rw [← sq, ← mul_pow, sq_sub_sq, Int.mul_eq_one_iff_eq_one_or_neg_one] at hp 
   rcases hp with (⟨hp₁, hp₂⟩ | ⟨hp₁, hp₂⟩) <;> linarith [ha, hp₁, hp₂]
 #align pell.solution₁.d_nonsquare_of_one_lt_x Pell.Solution₁.d_nonsquare_of_one_lt_x
 
@@ -243,7 +244,7 @@ theorem d_nonsquare_of_one_lt_x {a : Solution₁ d} (ha : 1 < a.x) : ¬IsSquare 
 theorem eq_one_of_x_eq_one (h₀ : d ≠ 0) {a : Solution₁ d} (ha : a.x = 1) : a = 1 :=
   by
   have prop := a.prop_y
-  rw [ha, one_pow, sub_self, mul_eq_zero, or_iff_right h₀, sq_eq_zero_iff] at prop
+  rw [ha, one_pow, sub_self, mul_eq_zero, or_iff_right h₀, sq_eq_zero_iff] at prop 
   exact ext ha prop
 #align pell.solution₁.eq_one_of_x_eq_one Pell.Solution₁.eq_one_of_x_eq_one
 
@@ -252,7 +253,7 @@ theorem eq_one_or_neg_one_iff_y_eq_zero {a : Solution₁ d} : a = 1 ∨ a = -1 �
   by
   refine' ⟨fun H => H.elim (fun h => by simp [h]) fun h => by simp [h], fun H => _⟩
   have prop := a.prop
-  rw [H, sq (0 : ℤ), MulZeroClass.mul_zero, MulZeroClass.mul_zero, sub_zero, sq_eq_one_iff] at prop
+  rw [H, sq (0 : ℤ), MulZeroClass.mul_zero, MulZeroClass.mul_zero, sub_zero, sq_eq_one_iff] at prop 
   exact prop.imp (fun h => ext h H) fun h => ext h H
 #align pell.solution₁.eq_one_or_neg_one_iff_y_eq_zero Pell.Solution₁.eq_one_or_neg_one_iff_y_eq_zero
 
@@ -303,7 +304,7 @@ exponents have positive `y`. -/
 theorem y_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) {n : ℤ} (hn : 0 < n) :
     0 < (a ^ n).y := by
   lift n to ℕ using hn.le
-  norm_cast  at hn⊢
+  norm_cast  at hn ⊢
   rw [← Nat.succ_pred_eq_of_pos hn]
   exact y_pow_succ_pos hax hay _
 #align pell.solution₁.y_zpow_pos Pell.Solution₁.y_zpow_pos
@@ -381,22 +382,22 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
       sq_sqrt (int.cast_pos.mpr h₀).le, sq_sub_sq, abs_mul, ← mul_one_div]
     refine' mul_lt_mul'' (((abs_add ξ q).trans _).trans_lt hM₁) h (abs_nonneg _) (abs_nonneg _)
     rw [two_mul, add_assoc, add_le_add_iff_left, ← sub_le_iff_le_add']
-    rw [mem_set_of, abs_sub_comm] at h
+    rw [mem_set_of, abs_sub_comm] at h 
     refine' (abs_sub_abs_le_abs_sub (q : ℝ) ξ).trans (h.le.trans _)
     rw [div_le_one h0, one_le_sq_iff_one_le_abs, Nat.abs_cast, Nat.one_le_cast]
     exact q.pos
   obtain ⟨m, hm⟩ : ∃ m : ℤ, { q : ℚ | q.1 ^ 2 - d * q.2 ^ 2 = m }.Infinite :=
     by
     contrapose! hM
-    simp only [not_infinite] at hM⊢
+    simp only [not_infinite] at hM ⊢
     refine' (congr_arg _ (ext fun x => _)).mp (finite.bUnion (finite_Ioo (-M) M) fun m _ => hM m)
     simp only [abs_lt, mem_set_of_eq, mem_Ioo, mem_Union, exists_prop, exists_eq_right']
   have hm₀ : m ≠ 0 := by
     rintro rfl
     obtain ⟨q, hq⟩ := hm.nonempty
-    rw [mem_set_of, sub_eq_zero, mul_comm] at hq
+    rw [mem_set_of, sub_eq_zero, mul_comm] at hq 
     obtain ⟨a, ha⟩ := (Int.pow_dvd_pow_iff two_pos).mp ⟨d, hq⟩
-    rw [ha, mul_pow, mul_right_inj' (pow_pos (int.coe_nat_pos.mpr q.pos) 2).ne'] at hq
+    rw [ha, mul_pow, mul_right_inj' (pow_pos (int.coe_nat_pos.mpr q.pos) 2).ne'] at hq 
     exact hd ⟨a, sq a ▸ hq.symm⟩
   haveI := ne_zero_iff.mpr (int.nat_abs_ne_zero.mpr hm₀)
   let f : ℚ → ZMod m.nat_abs × ZMod m.nat_abs := fun q => (q.1, q.2)
@@ -442,7 +443,7 @@ theorem exists_iff_not_isSquare (h₀ : 0 < d) :
   by
   refine' ⟨_, exists_of_not_is_square h₀⟩
   rintro ⟨x, y, hxy, hy⟩ ⟨a, rfl⟩
-  rw [← sq, ← mul_pow, sq_sub_sq] at hxy
+  rw [← sq, ← mul_pow, sq_sub_sq] at hxy 
   simpa [mul_self_pos.mp h₀, sub_eq_add_neg, eq_neg_self_iff] using Int.eq_of_mul_eq_one hxy
 #align pell.exists_iff_not_is_square Pell.exists_iff_not_isSquare
 
@@ -454,7 +455,7 @@ theorem exists_nontrivial_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ a : Solution₁ d, a ≠ 1 ∧ a ≠ -1 :=
   by
   obtain ⟨x, y, prop, hy⟩ := exists_of_not_is_square h₀ hd
-  refine' ⟨mk x y prop, fun H => _, fun H => _⟩ <;> apply_fun solution₁.y  at H <;>
+  refine' ⟨mk x y prop, fun H => _, fun H => _⟩ <;> apply_fun solution₁.y  at H  <;>
     simpa only [hy] using H
 #align pell.solution₁.exists_nontrivial_of_not_is_square Pell.Solution₁.exists_nontrivial_of_not_isSquare
 
@@ -527,7 +528,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     by
     have hax := a.prop
     lift a.x to ℕ using by positivity with ax
-    norm_cast  at ha₁
+    norm_cast  at ha₁ 
     exact ⟨ax, ha₁, a.y, ha₂, hax⟩
   classical
     -- to avoid having to show that the predicate is decidable
@@ -537,8 +538,8 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     rw [x_mk]
     have hb' := (Int.toNat_of_nonneg <| zero_le_one.trans hb.le).symm
     have hb'' := hb
-    rw [hb'] at hb⊢
-    norm_cast  at hb⊢
+    rw [hb'] at hb ⊢
+    norm_cast  at hb ⊢
     refine' Nat.find_min' P ⟨hb, |b.y|, abs_pos.mpr <| y_ne_zero_of_one_lt_x hb'', _⟩
     rw [← hb', sq_abs]
     exact b.prop
@@ -589,9 +590,9 @@ fundamental solution. -/
 theorem zpow_ne_neg_zpow {a : Solution₁ d} (h : IsFundamental a) {n n' : ℤ} : a ^ n ≠ -a ^ n' :=
   by
   intro hf
-  apply_fun solution₁.x  at hf
+  apply_fun solution₁.x  at hf 
   have H := x_zpow_pos h.x_pos n
-  rw [hf, x_neg, lt_neg, neg_zero] at H
+  rw [hf, x_neg, lt_neg, neg_zero] at H 
   exact lt_irrefl _ ((x_zpow_pos h.x_pos n').trans H)
 #align pell.is_fundamental.zpow_ne_neg_zpow Pell.IsFundamental.zpow_ne_neg_zpow
 
@@ -685,10 +686,10 @@ theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : So
     ext <;> simp only [x_one, y_one]
     · have prop := a.prop
       rw [← hy, sq (0 : ℤ), MulZeroClass.zero_mul, MulZeroClass.mul_zero, sub_zero,
-        sq_eq_one_iff] at prop
+        sq_eq_one_iff] at prop 
       refine' prop.resolve_right fun hf => _
       have := (hax.trans_eq hax').le.trans_eq hf
-      norm_num at this
+      norm_num at this 
     · exact hy.symm
   · -- case 2: `a ≥ a₁`
     have hx₁ : 1 < a.x := by nlinarith [a.prop, h.d_pos]
@@ -710,7 +711,7 @@ theorem eq_zpow_or_neg_zpow {a₁ : Solution₁ d} (h : IsFundamental a₁) (a :
   · exact ⟨n, Or.inl (by exact_mod_cast hn)⟩
   · exact ⟨-n, Or.inl (by simp [hn])⟩
   · exact ⟨n, Or.inr (by simp [hn])⟩
-  · rw [Set.mem_singleton_iff] at hb
+  · rw [Set.mem_singleton_iff] at hb 
     rw [hb]
     exact ⟨-n, Or.inr (by simp [hn])⟩
 #align pell.is_fundamental.eq_zpow_or_neg_zpow Pell.IsFundamental.eq_zpow_or_neg_zpow
@@ -732,20 +733,20 @@ theorem existsUnique_pos_generator (h₀ : 0 < d) (hd : ¬IsSquare d) :
   obtain ⟨n₂, hn₂⟩ := ha₁.eq_zpow_or_neg_zpow a
   rcases hn₂ with (rfl | rfl)
   · rw [← zpow_mul, eq_comm, @eq_comm _ a₁, ← mul_inv_eq_one, ← @mul_inv_eq_one _ _ _ a₁, ←
-      zpow_neg_one, neg_mul, ← zpow_add, ← sub_eq_add_neg] at hn₁
+      zpow_neg_one, neg_mul, ← zpow_add, ← sub_eq_add_neg] at hn₁ 
     cases hn₁
     · rcases int.is_unit_iff.mp
           (isUnit_of_mul_eq_one _ _ <|
             sub_eq_zero.mp <| (ha₁.zpow_eq_one_iff (n₂ * n₁ - 1)).mp hn₁) with
         (rfl | rfl)
       · rw [zpow_one]
-      · rw [zpow_neg_one, y_inv, lt_neg, neg_zero] at Hy
+      · rw [zpow_neg_one, y_inv, lt_neg, neg_zero] at Hy 
         exact False.elim (lt_irrefl _ <| ha₁.2.1.trans Hy)
-    · rw [← zpow_zero a₁, eq_comm] at hn₁
+    · rw [← zpow_zero a₁, eq_comm] at hn₁ 
       exact False.elim (ha₁.zpow_ne_neg_zpow hn₁)
-  · rw [x_neg, lt_neg] at Hx
+  · rw [x_neg, lt_neg] at Hx 
     have := (x_zpow_pos (zero_lt_one.trans ha₁.1) n₂).trans Hx
-    norm_num at this
+    norm_num at this 
 #align pell.exists_unique_pos_generator Pell.existsUnique_pos_generator
 
 /-- A positive solution is a generator (up to sign) of the group of all solutions to the

@@ -93,7 +93,7 @@ theorem gen_empty_right {s : Set α} (h : s.Nonempty) : CompactOpen.gen s (∅ :
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
-    { m | ∃ (s : Set α)(hs : IsCompact s)(u : Set β)(hu : IsOpen u), m = CompactOpen.gen s u }
+    { m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = CompactOpen.gen s u }
 #align continuous_map.compact_open ContinuousMap.compactOpen
 -/
 
@@ -307,7 +307,7 @@ theorem exists_tendsto_compactOpen_iff_forall [LocallyCompactSpace α] [T2Space 
       exact tendsto_nhds_unique h₁ h₂
     -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
     -- compact set `s`
-    have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x :=
+    have hs : ∀ x : α, ∃ (s : _) (hs : IsCompact s), s ∈ 𝓝 x :=
       by
       intro x
       obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x
@@ -343,8 +343,8 @@ theorem continuous_coev : Continuous (coev α β) :=
     rintro _ ⟨s, sc, u, uo, rfl⟩
     rw [isOpen_iff_forall_mem_open]
     intro y hy
-    change coev α β y '' s ⊆ u at hy
-    rw [image_coev s] at hy
+    change coev α β y '' s ⊆ u at hy 
+    rw [image_coev s] at hy 
     rcases generalized_tube_lemma isCompact_singleton sc uo hy with ⟨v, w, vo, wo, yv, sw, vwu⟩
     refine' ⟨v, _, vo, singleton_subset_iff.mp yv⟩
     intro y' hy'

@@ -179,7 +179,7 @@ theorem nonempty_of_probabilityMeasureCat (μ : ProbabilityMeasureCat Ω) : None
   by_contra maybe_empty
   have zero : (μ : Measure Ω) univ = 0 := by
     rw [univ_eq_empty_iff.mpr (not_nonempty_iff.mp maybe_empty), measure_empty]
-  rw [measure_univ] at zero
+  rw [measure_univ] at zero 
   exact zero_ne_one zero.symm
 #align measure_theory.probability_measure.nonempty_of_probability_measure MeasureTheory.ProbabilityMeasureCat.nonempty_of_probabilityMeasureCat
 
@@ -426,8 +426,8 @@ theorem tendsto_testAgainstNn_of_tendsto_normalize_testAgainstNn_of_tendsto_mass
       eq_self_iff_true] at *
     exact tendsto_zero_test_against_nn_of_tendsto_zero_mass mass_lim f
   simp_rw [fun i => (μs i).testAgainstNn_eq_mass_mul f, μ.test_against_nn_eq_mass_mul f]
-  rw [probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds] at μs_lim
-  rw [tendsto_iff_forall_test_against_nn_tendsto] at μs_lim
+  rw [probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds] at μs_lim 
+  rw [tendsto_iff_forall_test_against_nn_tendsto] at μs_lim 
   have lim_pair :
     tendsto (fun i => (⟨(μs i).mass, (μs i).normalize.toFiniteMeasure.testAgainstNn f⟩ : ℝ≥0 × ℝ≥0))
       F (𝓝 ⟨μ.mass, μ.normalize.to_finite_measure.test_against_nn f⟩) :=

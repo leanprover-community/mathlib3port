@@ -43,7 +43,7 @@ theorem deriv_arcsin_aux {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) :
         cont_diff_at_const.congr_of_eventually_eq this⟩
   cases' h₂.lt_or_lt with h₂ h₂
   · have : 0 < sqrt (1 - x ^ 2) := sqrt_pos.2 (by nlinarith [h₁, h₂])
-    simp only [← cos_arcsin, one_div] at this⊢
+    simp only [← cos_arcsin, one_div] at this ⊢
     exact
       ⟨sin_local_homeomorph.has_strict_deriv_at_symm ⟨h₁, h₂⟩ this.ne' (has_strict_deriv_at_sin _),
         sin_local_homeomorph.cont_diff_at_symm_deriv this.ne' ⟨h₁, h₂⟩ (has_deriv_at_sin _)
@@ -106,7 +106,7 @@ theorem differentiableWithinAt_arcsin_Iic {x : ℝ} :
     DifferentiableWithinAt ℝ arcsin (Iic x) x ↔ x ≠ 1 :=
   by
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
-  rw [← neg_neg x, ← image_neg_Ici] at h
+  rw [← neg_neg x, ← image_neg_Ici] at h 
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
   simpa [(· ∘ ·), differentiable_within_at_arcsin_Ici] using this
 #align real.differentiable_within_at_arcsin_Iic Real.differentiableWithinAt_arcsin_Iic
@@ -125,7 +125,7 @@ theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) :=
   by_cases h : x ≠ -1 ∧ x ≠ 1
   · exact (has_deriv_at_arcsin h.1 h.2).deriv
   · rw [deriv_zero_of_not_differentiableAt (mt differentiable_at_arcsin.1 h)]
-    simp only [not_and_or, Ne.def, Classical.not_not] at h
+    simp only [not_and_or, Ne.def, Classical.not_not] at h 
     rcases h with (rfl | rfl) <;> simp
 #align real.deriv_arcsin Real.deriv_arcsin
 

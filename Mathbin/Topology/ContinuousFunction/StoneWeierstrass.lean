@@ -202,7 +202,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     and finally using compactness to produce the desired function `h`
     as a maximum over finitely many `x` of a minimum over finitely many `y` of the `g x y`.
     -/
-  dsimp only [Set.SeparatesPointsStrongly] at sep
+  dsimp only [Set.SeparatesPointsStrongly] at sep 
   choose g hg w₁ w₂ using sep f
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
@@ -264,7 +264,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   intro z
   -- We rewrite into this particular form,
   -- so that simp lemmas about inequalities involving `finset.inf'` can fire.
-  rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by intros ;
+  rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by intros;
       simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm']]
   fconstructor
   · dsimp [k]
@@ -321,9 +321,9 @@ theorem exists_mem_subalgebra_near_continuousMap_of_separatesPoints (A : Subalge
   by
   have w :=
     mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)
-  rw [metric.nhds_basis_ball.frequently_iff] at w
+  rw [metric.nhds_basis_ball.frequently_iff] at w 
   obtain ⟨g, H, m⟩ := w ε Pos
-  rw [Metric.mem_ball, dist_eq_norm] at H
+  rw [Metric.mem_ball, dist_eq_norm] at H 
   exact ⟨⟨g, m⟩, H⟩
 #align continuous_map.exists_mem_subalgebra_near_continuous_map_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuousMap_of_separatesPoints
 
@@ -339,7 +339,7 @@ theorem exists_mem_subalgebra_near_continuous_of_separatesPoints (A : Subalgebra
   by
   obtain ⟨g, b⟩ := exists_mem_subalgebra_near_continuous_map_of_separates_points A w ⟨f, c⟩ ε Pos
   use g
-  rwa [norm_lt_iff _ Pos] at b
+  rwa [norm_lt_iff _ Pos] at b 
 #align continuous_map.exists_mem_subalgebra_near_continuous_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuous_of_separatesPoints
 
 end ContinuousMap
@@ -370,8 +370,8 @@ theorem subalgebraConjInvariant {S : Set C(X, 𝕜)}
   by
   rintro _ ⟨f, hf, rfl⟩
   change _ ∈ (Algebra.adjoin 𝕜 S).restrictScalars ℝ
-  change _ ∈ (Algebra.adjoin 𝕜 S).restrictScalars ℝ at hf
-  rw [Subalgebra.mem_restrictScalars] at hf⊢
+  change _ ∈ (Algebra.adjoin 𝕜 S).restrictScalars ℝ at hf 
+  rw [Subalgebra.mem_restrictScalars] at hf ⊢
   apply Algebra.adjoin_induction hf
   · exact fun g hg => Algebra.subset_adjoin (hS g hg)
   · exact fun c => Subalgebra.algebraMap_mem _ (starRingEnd 𝕜 c)

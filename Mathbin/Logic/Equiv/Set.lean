@@ -177,7 +177,7 @@ theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} 
 
 #print Equiv.setProdEquivSigma /-
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
-def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σx : α, { y | (x, y) ∈ s }
+def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s }
     where
   toFun x := ⟨x.1.1, x.1.2, by simp⟩
   invFun x := ⟨(x.1, x.2.1), x.2.2⟩
@@ -247,7 +247,7 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
     | Sum.inr x => ⟨x, Or.inr x.2⟩
   left_inv := fun ⟨x, h'⟩ => by by_cases p x <;> simp [union'._match_1, h] <;> congr
   right_inv o := by
-    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h];simp [ht _ h]]
+    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h]; simp [ht _ h]]
 #align equiv.set.union' Equiv.Set.union'
 
 /-- If sets `s` and `t` are disjoint, then `s ∪ t` is equivalent to `s ⊕ t`. -/
@@ -281,7 +281,7 @@ theorem union_symm_apply_right {α} {s t : Set α} [DecidablePred fun x => x ∈
 #print Equiv.Set.singleton /-
 /-- A singleton set is equivalent to a `punit` type. -/
 protected def singleton {α} (a : α) : ({a} : Set α) ≃ PUnit.{u} :=
-  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ => by simp at h; subst x,
+  ⟨fun _ => PUnit.unit, fun _ => ⟨a, mem_singleton _⟩, fun ⟨x, h⟩ => by simp at h ; subst x,
     fun ⟨⟩ => rfl⟩
 #align equiv.set.singleton Equiv.Set.singleton
 -/
@@ -446,7 +446,7 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
       (sumCongr (Equiv.refl _)
         (by
           refine' (set.union' (· ∉ s) _ _).symm
-          exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1]))
+          exacts [fun x hx => hx.2, fun x hx => not_not_intro hx.1]))
     _ ≃ Sum s t := by rw [(_ : t \ s ∪ s ∩ t = t)]; rw [union_comm, inter_comm, inter_union_diff]
     
 #align equiv.set.union_sum_inter Equiv.Set.unionSumInter
@@ -696,7 +696,7 @@ theorem preimage_piEquivPiSubtypeProd_symm_pi {α : Type _} {β : α → Type _}
 /-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
 the type of all preimages of points under `f` and the total space `α`. -/
 @[simps]
-def sigmaPreimageEquiv {α β} (f : α → β) : (Σb, f ⁻¹' {b}) ≃ α :=
+def sigmaPreimageEquiv {α β} (f : α → β) : (Σ b, f ⁻¹' {b}) ≃ α :=
   sigmaFiberEquiv f
 #align equiv.sigma_preimage_equiv Equiv.sigmaPreimageEquiv
 -/
@@ -740,7 +740,7 @@ theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Se
       Function.update_apply, Function.update_apply, dif_pos h]
     have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j := subtype.ext_iff.trans (by rw [Subtype.coe_mk])
     simp_rw [h_coe]
-  · have : i ≠ e j := by contrapose! h; have : (e j : α) ∈ s := (e j).2; rwa [← h] at this
+  · have : i ≠ e j := by contrapose! h; have : (e j : α) ∈ s := (e j).2; rwa [← h] at this 
     simp [h, this]
 #align dite_comp_equiv_update dite_comp_equiv_updateₓ
 

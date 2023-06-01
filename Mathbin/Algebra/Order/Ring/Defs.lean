@@ -175,7 +175,7 @@ class OrderedCommRing (α : Type u) extends OrderedRing α, CommRing α
 strictly monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class StrictOrderedSemiring (α : Type u) extends Semiring α, OrderedCancelAddCommMonoid α,
-  Nontrivial α where
+    Nontrivial α where
   zero_le_one : (0 : α) ≤ 1
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
@@ -216,7 +216,7 @@ search loops. -/
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α,
-  LinearOrderedAddCommMonoid α
+    LinearOrderedAddCommMonoid α
 #align linear_ordered_semiring LinearOrderedSemiring
 -/
 
@@ -225,7 +225,7 @@ class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α,
 that addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class LinearOrderedCommSemiring (α : Type _) extends StrictOrderedCommSemiring α,
-  LinearOrderedSemiring α
+    LinearOrderedSemiring α
 #align linear_ordered_comm_semiring LinearOrderedCommSemiring
 -/
 
@@ -845,7 +845,7 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
   refine' Decidable.or_iff_not_and_not.2 _
   simp only [not_and, not_le]; intro ab nab; apply not_lt_of_le hab _
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
-  exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
+  exacts [mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
 #align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
 
@@ -1074,7 +1074,7 @@ instance (priority := 100) LinearOrderedRing.noZeroDivisors : NoZeroDivisors α 
       intro a b hab
       refine' Decidable.or_iff_not_and_not.2 fun h => _; revert hab
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
-      exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
+      exacts [(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
         (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
 #align linear_ordered_ring.no_zero_divisors LinearOrderedRing.noZeroDivisors
 
@@ -1088,11 +1088,11 @@ instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
         α) with
     mul_left_cancel_of_ne_zero := fun a b c ha h =>
       by
-      rw [← sub_eq_zero, ← mul_sub] at h
+      rw [← sub_eq_zero, ← mul_sub] at h 
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
     mul_right_cancel_of_ne_zero := fun a b c hb h =>
       by
-      rw [← sub_eq_zero, ← sub_mul] at h
+      rw [← sub_eq_zero, ← sub_mul] at h 
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb) }
 #align linear_ordered_ring.is_domain LinearOrderedRing.isDomain
 -/
@@ -1202,10 +1202,10 @@ theorem sub_one_lt (a : α) : a - 1 < a :=
 theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 :=
   by
   constructor
-  · rintro h rfl; rw [MulZeroClass.mul_zero] at h; exact h.false
+  · rintro h rfl; rw [MulZeroClass.mul_zero] at h ; exact h.false
   · intro h
     cases' h.lt_or_lt with h h
-    exacts[mul_pos_of_neg_of_neg h h, mul_pos h h]
+    exacts [mul_pos_of_neg_of_neg h h, mul_pos h h]
 #align mul_self_pos mul_self_pos
 
 theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : x * x ≤ y * y :=

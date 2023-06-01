@@ -130,7 +130,7 @@ theorem invertible_unique {α : Type u} [Monoid α] (a b : α) [Invertible a] [I
 #align invertible_unique invertible_unique
 
 instance [Monoid α] (a : α) : Subsingleton (Invertible a) :=
-  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by congr ; exact left_inv_eq_right_inv hba hac⟩
+  ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by congr; exact left_inv_eq_right_inv hba hac⟩
 
 /-- If `r` is invertible and `s = r`, then `s` is invertible. -/
 def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) : Invertible s

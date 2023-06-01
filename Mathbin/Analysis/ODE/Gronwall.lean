@@ -172,13 +172,13 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
     (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
   by
-  simp only [dist_eq_norm] at ha⊢
+  simp only [dist_eq_norm] at ha ⊢
   have h_deriv : ∀ t ∈ Ico a b, HasDerivWithinAt (fun t => f t - g t) (f' t - g' t) (Ici t) t :=
     fun t ht => (hf' t ht).sub (hg' t ht)
   apply norm_le_gronwallBound_of_norm_deriv_right_le (hf.sub hg) h_deriv ha
   intro t ht
   have := dist_triangle4_right (f' t) (g' t) (v t (f t)) (v t (g t))
-  rw [dist_eq_norm] at this
+  rw [dist_eq_norm] at this 
   refine'
     this.trans
       ((add_le_add (add_le_add (f_bound t ht) (g_bound t ht))
@@ -219,12 +219,12 @@ theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ �
     (hgs : ∀ t ∈ Ico a b, g t ∈ s t) (ha : dist (f a) (g a) ≤ δ) :
     ∀ t ∈ Icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
   by
-  have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 := by intros ; rw [dist_self]
-  have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 := by intros ; rw [dist_self]
+  have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 := by intros; rw [dist_self]
+  have g_bound : ∀ t ∈ Ico a b, dist (v t (g t)) (v t (g t)) ≤ 0 := by intros; rw [dist_self]
   intro t ht
   have :=
     dist_le_of_approx_trajectories_ODE_of_mem_set hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
-  rwa [zero_add, gronwallBound_ε0] at this
+  rwa [zero_add, gronwallBound_ε0] at this 
 #align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem_set
 
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
@@ -255,7 +255,7 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
   by
   intro t ht
   have := dist_le_of_trajectories_ODE_of_mem_set hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
-  rwa [MulZeroClass.zero_mul, dist_le_zero] at this
+  rwa [MulZeroClass.zero_mul, dist_le_zero] at this 
 #align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_set
 
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with

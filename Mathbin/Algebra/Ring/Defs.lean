@@ -134,7 +134,7 @@ class NonUnitalSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, Semi
 /-- A unital but not-necessarily-associative semiring. -/
 @[protect_proj]
 class NonAssocSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, MulZeroOneClass α,
-  AddCommMonoidWithOne α
+    AddCommMonoidWithOne α
 #align non_assoc_semiring NonAssocSemiring
 -/
 
@@ -395,7 +395,7 @@ class NonUnitalRing (α : Type _) extends NonUnitalNonAssocRing α, NonUnitalSem
 /-- A unital but not-necessarily-associative ring. -/
 @[protect_proj]
 class NonAssocRing (α : Type _) extends NonUnitalNonAssocRing α, NonAssocSemiring α,
-  AddCommGroupWithOne α
+    AddCommGroupWithOne α
 #align non_assoc_ring NonAssocRing
 -/
 

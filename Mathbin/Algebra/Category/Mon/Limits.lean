@@ -55,7 +55,7 @@ def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j)
   mul_mem' a b ah bh j j' f :=
     by
     simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
-    dsimp [functor.sections] at ah bh
+    dsimp [functor.sections] at ah bh 
     rw [ah f, bh f]
 #align Mon.sections_submonoid MonCat.sectionsSubmonoid
 #align AddMon.sections_add_submonoid AddMonCat.sectionsAddSubmonoid

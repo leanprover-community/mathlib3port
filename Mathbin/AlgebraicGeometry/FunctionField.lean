@@ -62,16 +62,16 @@ noncomputable instance [IsIntegral X] : Field X.functionField :=
     rw [← SetLike.mem_coe, (genericPoint_spec X.carrier).mem_open_set_iff, Set.top_eq_univ,
       Set.univ_inter, Set.nonempty_iff_ne_empty, Ne.def, ← opens.coe_bot, ← SetLike.ext'_iff]
     erw [basic_open_eq_bot_iff]
-    exacts[ha, (RingedSpace.basic_open _ _).IsOpen]
+    exacts [ha, (RingedSpace.basic_open _ _).IsOpen]
   have := (X.presheaf.germ ⟨_, hs⟩).isUnit_map (RingedSpace.is_unit_res_basic_open _ s)
-  rwa [TopCat.Presheaf.germ_res_apply] at this
+  rwa [TopCat.Presheaf.germ_res_apply] at this 
 
 theorem germ_injective_of_isIntegral [IsIntegral X] {U : Opens X.carrier} (x : U) :
     Function.Injective (X.Presheaf.germ x) :=
   by
   rw [injective_iff_map_eq_zero]
   intro y hy
-  rw [← (X.presheaf.germ x).map_zero] at hy
+  rw [← (X.presheaf.germ x).map_zero] at hy 
   obtain ⟨W, hW, iU, iV, e⟩ := X.presheaf.germ_eq _ x.prop x.prop _ _ hy
   cases show iU = iV from Subsingleton.elim _ _
   haveI : Nonempty W := ⟨⟨_, hW⟩⟩

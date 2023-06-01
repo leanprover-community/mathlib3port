@@ -69,7 +69,7 @@ finite refinement `t : α → set X` indexed on the same type such that each `�
 class ParacompactSpace (X : Type v) [TopologicalSpace X] : Prop where
   locallyFinite_refinement :
     ∀ (α : Type v) (s : α → Set X) (ho : ∀ a, IsOpen (s a)) (hc : (⋃ a, s a) = univ),
-      ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃ b, t b) = univ),
+      ∃ (β : Type v) (t : β → Set X) (ho : ∀ b, IsOpen (t b)) (hc : (⋃ b, t b) = univ),
         LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
 #align paracompact_space ParacompactSpace
 -/
@@ -88,7 +88,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
     ParacompactSpace.locallyFinite_refinement (range u) coe
       (SetCoe.forall.2 <| forall_range_iff.2 uo) (by rwa [← sUnion_range, Subtype.range_coe])
   simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at
-    this
+    this 
   choose α t hto hXt htf ind hind; choose t_inv ht_inv using hXt; choose U hxU hU using htf
   -- Send each `i` to the union of `t a` over `a ∈ ind ⁻¹' {i}`
   refine' ⟨fun i => ⋃ (a : α) (ha : ind a = i), t a, _, _, _, _⟩
@@ -116,7 +116,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
       _ with
     ⟨v, vo, vc, vf, vu⟩
   refine' ⟨v ∘ some, fun i => vo _, _, vf.comp_injective (Option.some_injective _), fun i => vu _⟩
-  · simp only [Union_option, ← compl_subset_iff_union] at vc
+  · simp only [Union_option, ← compl_subset_iff_union] at vc 
     exact subset.trans (subset_compl_comm.1 <| vu Option.none) vc
   · simpa only [Union_option, Option.elim', ← compl_subset_iff_union, compl_compl]
 #align precise_refinement_set precise_refinement_set
@@ -130,7 +130,7 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
   rcases is_compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
-  have := hT; simp only [subset_def, mem_Union] at this
+  have := hT; simp only [subset_def, mem_Union] at this 
   choose i hiT hi using fun x => this x (mem_univ x)
   refine'
     ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locallyFinite_of_finite _, fun t =>
@@ -163,7 +163,7 @@ to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
 theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyCompactSpace X]
     [SigmaCompactSpace X] [T2Space X] {ι : X → Type u} {p : ∀ x, ι x → Prop} {B : ∀ x, ι x → Set X}
     {s : Set X} (hs : IsClosed s) (hB : ∀ x ∈ s, (𝓝 x).HasBasis (p x) (B x)) :
-    ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
+    ∃ (α : Type v) (c : α → X) (r : ∀ a, ι (c a)),
       (∀ a, c a ∈ s ∧ p (c a) (r a)) ∧
         (s ⊆ ⋃ a, B (c a) (r a)) ∧ LocallyFinite fun a => B (c a) (r a) :=
   by
@@ -192,7 +192,7 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyComp
     choose T hT using fun n => (Kdiffc (n + 1)).elim_nhds_subcover' _ (hxr n)
     set T' : ∀ n, Set ↥(Kdiff (n + 1) ∩ s) := fun n => T n
     -- Finally, we take the union of all these coverings
-    refine' ⟨Σn, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
+    refine' ⟨Σ n, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
     · rintro ⟨n, x, hx⟩; exact ⟨x.2.2, hrp _ _⟩
     · refine' fun x hx => mem_Union.2 _
       rcases mem_Union₂.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
@@ -201,7 +201,7 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyComp
       refine'
         ⟨interior (K (K'.find x + 3)),
           IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
-      have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
+      have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σ n, T' n)).Finite :=
         (finite_le_nat _).biUnion fun k hk => finite_range _
       apply this.subset; rintro ⟨k, c, hc⟩
       simp only [mem_Union, mem_set_of_eq, mem_image, Subtype.coe_mk]
@@ -236,7 +236,7 @@ to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
 theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis [LocallyCompactSpace X]
     [SigmaCompactSpace X] [T2Space X] {ι : X → Type u} {p : ∀ x, ι x → Prop} {B : ∀ x, ι x → Set X}
     (hB : ∀ x, (𝓝 x).HasBasis (p x) (B x)) :
-    ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
+    ∃ (α : Type v) (c : α → X) (r : ∀ a, ι (c a)),
       (∀ a, p (c a) (r a)) ∧ (⋃ a, B (c a) (r a)) = univ ∧ LocallyFinite fun a => B (c a) (r a) :=
   let ⟨α, c, r, hp, hU, hfin⟩ :=
     refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set isClosed_univ fun x _ => hB x

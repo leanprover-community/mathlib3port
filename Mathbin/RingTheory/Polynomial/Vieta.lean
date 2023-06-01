@@ -54,7 +54,7 @@ theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     intro _ _
     rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
     intro _ ht
-    rw [mem_powerset_len] at ht
+    rw [mem_powerset_len] at ht 
     simp [ht, map_const, prod_replicate, prod_hom', map_id', card_sub]
 #align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
 
@@ -70,7 +70,7 @@ theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
   · intro j hj1 hj2
     suffices k ≠ card s - j by rw [if_neg this]
     · intro hn
-      rw [hn, Nat.sub_sub_self (nat.lt_succ_iff.mp (finset.mem_range.mp hj1))] at hj2
+      rw [hn, Nat.sub_sub_self (nat.lt_succ_iff.mp (finset.mem_range.mp hj1))] at hj2 
       exact Ne.irrefl hj2
   · rw [Finset.mem_range]
     exact Nat.sub_lt_succ s.card k
@@ -181,7 +181,7 @@ theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
     (∏ i : σ, X + C (MvPolynomial.X i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by
   let s := finset.univ.val.map fun i => (MvPolynomial.X i : MvPolynomial σ R)
-  rw [(_ : card σ = s.card)] at h⊢
+  rw [(_ : card σ = s.card)] at h ⊢
   · rw [MvPolynomial.esymm_eq_multiset_esymm σ R, Finset.prod_eq_multiset_prod]
     convert Multiset.prod_X_add_C_coeff s h
     rwa [Multiset.map_map]

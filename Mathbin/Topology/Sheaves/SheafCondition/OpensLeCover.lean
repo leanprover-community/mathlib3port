@@ -59,7 +59,8 @@ namespace SheafCondition
 /-- The category of open sets contained in some element of the cover.
 -/
 def OpensLeCover : Type w :=
-  FullSubcategory fun V : Opens X => ∃ i, V ≤ U i deriving Category
+  FullSubcategory fun V : Opens X => ∃ i, V ≤ U i
+deriving Category
 #align Top.presheaf.sheaf_condition.opens_le_cover TopCat.Presheaf.SheafCondition.OpensLeCover
 -/
 
@@ -145,8 +146,8 @@ def generateEquivalenceOpensLe :
       map := fun _ _ g => Over.homMk g }
   unitIso :=
     eqToIso <|
-      CategoryTheory.Functor.ext (by rintro ⟨⟨_, _⟩, _⟩; dsimp; congr <;> ext) (by intros ; ext)
-  counitIso := eqToIso <| CategoryTheory.Functor.hext (by intro ; ext; rfl) (by intros ; rfl)
+      CategoryTheory.Functor.ext (by rintro ⟨⟨_, _⟩, _⟩; dsimp; congr <;> ext) (by intros; ext)
+  counitIso := eqToIso <| CategoryTheory.Functor.hext (by intro; ext; rfl) (by intros; rfl)
 #align Top.presheaf.generate_equivalence_opens_le TopCat.Presheaf.generateEquivalenceOpensLe
 
 /-- Given a family of opens `opens_le_cover_cocone U` is essentially the natural cocone

@@ -236,7 +236,7 @@ instance : Faithful (total β C)
     classical
       ext i
       replace w := sigma.ι (fun i : β => X i) i ≫= w
-      erw [colimit.ι_map, colimit.ι_map] at w
+      erw [colimit.ι_map, colimit.ι_map] at w 
       simp at *
       exact mono.right_cancellation _ _ w
 

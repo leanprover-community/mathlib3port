@@ -66,7 +66,7 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
   by
   intro H
   rcases exists_seq_tendsto (cocompact ℚ ⊓ 𝓝 0) with ⟨x, hx⟩
-  rw [tendsto_inf] at hx; rcases hx with ⟨hxc, hx0⟩
+  rw [tendsto_inf] at hx ; rcases hx with ⟨hxc, hx0⟩
   obtain ⟨n, hn⟩ : ∃ n : ℕ, x n ∉ insert (0 : ℚ) (range x)
   exact (hxc.eventually hx0.is_compact_insert_range.compl_mem_cocompact).exists
   exact hn (Or.inr ⟨n, rfl⟩)
@@ -77,15 +77,15 @@ theorem not_countably_generated_nhds_infty_opc : ¬IsCountablyGenerated (𝓝 (�
   by
   intro
   have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
-  rw [OnePoint.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
+  rw [OnePoint.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this 
   exact not_countably_generated_cocompact this
 #align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_opc
 
-theorem not_firstCountableTopology_opc : ¬FirstCountableTopology ℚ∞ := by intro ;
+theorem not_firstCountableTopology_opc : ¬FirstCountableTopology ℚ∞ := by intro;
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
 #align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_opc
 
-theorem not_secondCountableTopology_opc : ¬SecondCountableTopology ℚ∞ := by intro ;
+theorem not_secondCountableTopology_opc : ¬SecondCountableTopology ℚ∞ := by intro;
   exact not_first_countable_topology_alexandroff inferInstance
 #align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_opc
 
@@ -97,7 +97,7 @@ instance : TotallyDisconnectedSpace ℚ :=
   · exact this s hs y hy x hx H.symm (H.lt_or_lt.resolve_left hlt)
   rcases exists_irrational_btwn (Rat.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩
   have := hs.image coe continuous_coe_real.continuous_on
-  rw [isPreconnected_iff_ordConnected] at this
+  rw [isPreconnected_iff_ordConnected] at this 
   have : z ∈ coe '' s := this.out (mem_image_of_mem _ hx) (mem_image_of_mem _ hy) ⟨hxz.le, hzy.le⟩
   exact hz (image_subset_range _ _ this)
 

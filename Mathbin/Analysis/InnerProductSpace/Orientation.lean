@@ -60,7 +60,7 @@ theorem det_to_matrix_orthonormalBasis_of_same_orientation
   apply (e.det_to_matrix_orthonormal_basis_real f).resolve_right
   have : 0 < e.to_basis.det f :=
     by
-    rw [e.to_basis.orientation_eq_iff_det_pos] at h
+    rw [e.to_basis.orientation_eq_iff_det_pos] at h 
     simpa using h
   linarith
 #align orthonormal_basis.det_to_matrix_orthonormal_basis_of_same_orientation OrthonormalBasis.det_to_matrix_orthonormalBasis_of_same_orientation
@@ -243,7 +243,7 @@ theorem volumeForm_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBas
   cases n
   ·
     classical
-      have : positive_orientation ≠ o := by rwa [b.to_basis.orientation_is_empty] at hb
+      have : positive_orientation ≠ o := by rwa [b.to_basis.orientation_is_empty] at hb 
       simp [volume_form, Or.by_cases, dif_neg this.symm]
   let e : OrthonormalBasis (Fin n.succ) ℝ E := o.fin_orthonormal_basis n.succ_pos (Fact.out _)
   dsimp [volume_form]
@@ -316,7 +316,7 @@ theorem abs_volumeForm_apply_of_pairwise_orthogonal {v : Fin n → E}
   ·
     rw [Finset.prod_eq_zero (Finset.mem_univ i), Finset.prod_eq_zero (Finset.mem_univ i)] <;>
       simp [hi]
-  push_neg  at h
+  push_neg  at h 
   congr
   ext i
   have hb : b i = ‖v i‖⁻¹ • v i := gramSchmidtOrthonormalBasis_apply_of_orthogonal hdim hv (h i)
@@ -359,7 +359,7 @@ theorem volumeForm_comp_linearIsometryEquiv (φ : E ≃ₗᵢ[ℝ] E)
   by
   convert o.volume_form_map φ (φ ∘ x)
   · symm
-    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ
+    rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ 
     rw [_i.out, Fintype.card_fin]
   · ext
     simp

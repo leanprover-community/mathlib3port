@@ -98,8 +98,14 @@ then it should use `e.source ∩ s` or `e.target ∩ t`, not `s ∩ e.source` or
 
 -- register in the simpset `mfld_simps` several lemmas that are often useful when dealing
 -- with manifolds
-attribute [mfld_simps]
-  id.def Function.comp.left_id Set.mem_setOf_eq Set.image_eq_empty Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff or_true_iff Prod.map_mk Set.preimage_inter heq_iff_eq Equiv.sigmaEquivProd_apply Equiv.sigmaEquivProd_symm_apply Subtype.coe_mk Equiv.toFun_as_coe Equiv.invFun_as_coe
+attribute [mfld_simps] id.def Function.comp.left_id Set.mem_setOf_eq Set.image_eq_empty
+  Set.univ_inter Set.preimage_univ Set.prod_mk_mem_set_prod_eq and_true_iff Set.mem_univ
+  Set.mem_image_of_mem true_and_iff Set.mem_inter_iff Set.mem_preimage Function.comp_apply
+  Set.inter_subset_left Set.mem_prod Set.range_id Set.range_prod_map and_self_iff Set.mem_range_self
+  eq_self_iff_true forall_const forall_true_iff Set.inter_univ Set.preimage_id
+  Function.comp.right_id not_false_iff and_imp Set.prod_inter_prod Set.univ_prod_univ true_or_iff
+  or_true_iff Prod.map_mk Set.preimage_inter heq_iff_eq Equiv.sigmaEquivProd_apply
+  Equiv.sigmaEquivProd_symm_apply Subtype.coe_mk Equiv.toFun_as_coe Equiv.invFun_as_coe
 
 /-- Common `@[simps]` configuration options used for manifold-related declarations. -/
 def mfld_cfg : SimpsCfg where
@@ -485,7 +491,7 @@ theorem symm_eq_on_of_inter_eq_of_eqOn {e' : LocalEquiv α β} (h : e.IsImage s 
   by
   rw [← h.image_eq]
   rintro y ⟨x, hx, rfl⟩
-  have hx' := hx; rw [hs] at hx'
+  have hx' := hx; rw [hs] at hx' 
   rw [e.left_inv hx.1, Heq hx, e'.left_inv hx'.1]
 #align local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn
 
@@ -575,7 +581,7 @@ protected theorem ext {e e' : LocalEquiv α β} (h : ∀ x, e x = e' x)
   have B : (e.symm : β → α) = e'.symm := by ext x; exact hsymm x
   have I : e '' e.source = e.target := e.image_source_eq_target
   have I' : e' '' e'.source = e'.target := e'.image_source_eq_target
-  rw [A, hs, I'] at I
+  rw [A, hs, I'] at I 
   cases e <;> cases e'
   simp_all
 #align local_equiv.ext LocalEquiv.ext
@@ -910,7 +916,7 @@ theorem EqOnSource.trans' {e e' : LocalEquiv α β} {f f' : LocalEquiv β γ} (h
   · rw [trans_source'', trans_source'', ← he.target_eq, ← hf.1]
     exact (he.symm'.eq_on.mono <| inter_subset_left _ _).image_eq
   · intro x hx
-    rw [trans_source] at hx
+    rw [trans_source] at hx 
     simp [(he.2 hx.1).symm, hf.2 hx.2]
 #align local_equiv.eq_on_source.trans' LocalEquiv.EqOnSource.trans'
 
@@ -920,7 +926,7 @@ theorem EqOnSource.restr {e e' : LocalEquiv α β} (he : e ≈ e') (s : Set α) 
   constructor
   · simp [he.1]
   · intro x hx
-    simp only [mem_inter_iff, restr_source] at hx
+    simp only [mem_inter_iff, restr_source] at hx 
     exact he.2 hx.1
 #align local_equiv.eq_on_source.restr LocalEquiv.EqOnSource.restr
 
@@ -935,7 +941,7 @@ theorem trans_self_symm : e.trans e.symm ≈ LocalEquiv.ofSet e.source :=
   by
   have A : (e.trans e.symm).source = e.source := by mfld_set_tac
   refine' ⟨by simp [A], fun x hx => _⟩
-  rw [A] at hx
+  rw [A] at hx 
   simp only [hx, mfld_simps]
 #align local_equiv.trans_self_symm LocalEquiv.trans_self_symm
 
@@ -972,10 +978,10 @@ def prod (e : LocalEquiv α β) (e' : LocalEquiv γ δ) : LocalEquiv (α × γ) 
   target := e.target ×ˢ e'.target
   toFun p := (e p.1, e' p.2)
   invFun p := (e.symm p.1, e'.symm p.2)
-  map_source' p hp := by simp at hp; simp [hp]
-  map_target' p hp := by simp at hp; simp [map_target, hp]
-  left_inv' p hp := by simp at hp; simp [hp]
-  right_inv' p hp := by simp at hp; simp [hp]
+  map_source' p hp := by simp at hp ; simp [hp]
+  map_target' p hp := by simp at hp ; simp [map_target, hp]
+  left_inv' p hp := by simp at hp ; simp [hp]
+  right_inv' p hp := by simp at hp ; simp [hp]
 #align local_equiv.prod LocalEquiv.prod
 -/
 

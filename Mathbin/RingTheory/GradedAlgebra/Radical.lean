@@ -89,7 +89,7 @@ theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI 
         intro x hx
         rw [filter_nonempty_iff]
         contrapose! hx
-        simp_rw [proj_apply] at hx
+        simp_rw [proj_apply] at hx 
         rw [← sum_support_decompose 𝒜 x]
         exact Ideal.sum_mem _ hx
       set max₁ := set₁.max' (Nonempty x rid₁) with max₁_eq
@@ -119,7 +119,7 @@ theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI 
         rw [eq_sub_of_add_eq eq_add_sum.symm]
         refine' Ideal.sub_mem _ hxy (Ideal.sum_mem _ fun z H => _)
         rcases z with ⟨i, j⟩
-        simp only [mem_erase, Prod.mk.inj_iff, Ne.def, mem_filter, mem_product] at H
+        simp only [mem_erase, Prod.mk.inj_iff, Ne.def, mem_filter, mem_product] at H 
         rcases H with ⟨H₁, ⟨H₂, H₃⟩, H₄⟩
         have max_lt : max₁ < i ∨ max₂ < j :=
           by
@@ -128,26 +128,26 @@ theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI 
           · refine' False.elim (H₁ ⟨rfl, add_left_cancel H₄⟩)
           · apply Or.inr
             have := add_lt_add_right h j
-            rw [H₄] at this
+            rw [H₄] at this 
             exact lt_of_add_lt_add_left this
         cases max_lt
         · -- in this case `max₁ < i`, then `xᵢ ∈ I`; for otherwise `i ∈ set₁` then `i ≤ max₁`.
           have not_mem : i ∉ set₁ := fun h =>
             lt_irrefl _ ((max'_lt_iff set₁ (Nonempty x rid₁)).mp max_lt i h)
-          rw [set₁_eq] at not_mem
-          simp only [not_and, Classical.not_not, Ne.def, mem_filter] at not_mem
+          rw [set₁_eq] at not_mem 
+          simp only [not_and, Classical.not_not, Ne.def, mem_filter] at not_mem 
           exact Ideal.mul_mem_right _ I (not_mem H₂)
         · -- in this case  `max₂ < j`, then `yⱼ ∈ I`; for otherwise `j ∈ set₂`, then `j ≤ max₂`.
           have not_mem : j ∉ set₂ := fun h =>
             lt_irrefl _ ((max'_lt_iff set₂ (Nonempty y rid₂)).mp max_lt j h)
-          rw [set₂_eq] at not_mem
-          simp only [not_and, Classical.not_not, Ne.def, mem_filter] at not_mem
+          rw [set₂_eq] at not_mem 
+          simp only [not_and, Classical.not_not, Ne.def, mem_filter] at not_mem 
           exact Ideal.mul_mem_left I _ (not_mem H₃)
       have not_mem_I : proj 𝒜 max₁ x * proj 𝒜 max₂ y ∉ I :=
         by
         have neither_mem : proj 𝒜 max₁ x ∉ I ∧ proj 𝒜 max₂ y ∉ I :=
           by
-          rw [mem_filter] at mem_max₁ mem_max₂
+          rw [mem_filter] at mem_max₁ mem_max₂ 
           exact ⟨mem_max₁.2, mem_max₂.2⟩
         intro rid
         cases homogeneous_mem_or_mem ⟨max₁, SetLike.coe_mem _⟩ ⟨max₂, SetLike.coe_mem _⟩ mem_I

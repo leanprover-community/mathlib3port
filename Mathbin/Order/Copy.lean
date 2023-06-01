@@ -36,7 +36,7 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
   by
   refine'
     { top
-      bot.. }
+      bot .. }
   all_goals abstract subst_vars; cases c; simp_rw [le_eq]; assumption
 #align bounded_order.copy BoundedOrder.copy
 
@@ -49,7 +49,7 @@ def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Latti
   refine'
     { le
       sup
-      inf.. }
+      inf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align lattice.copy Lattice.copy
 
@@ -62,7 +62,7 @@ def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop)
   refine'
     { le
       sup
-      inf.. }
+      inf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align distrib_lattice.copy DistribLattice.copy
 
@@ -86,7 +86,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop)
       sup
       inf
       sSup
-      sInf.. }
+      sInf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align complete_lattice.copy CompleteLattice.copy
 
@@ -108,7 +108,7 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
       sup
       inf
       sSup
-      sInf.. }
+      sInf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align frame.copy Frame.copy
 
@@ -130,7 +130,7 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
       sup
       inf
       sSup
-      sInf.. }
+      sInf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align coframe.copy Coframe.copy
 
@@ -165,7 +165,7 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
       sup
       inf
       sSup
-      sInf.. }
+      sInf .. }
   all_goals abstract subst_vars; cases c; assumption
 #align conditionally_complete_lattice.copy ConditionallyCompleteLattice.copy
 

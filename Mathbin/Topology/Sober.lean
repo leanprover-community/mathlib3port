@@ -234,7 +234,7 @@ theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [Qua
   obtain ⟨x, hx⟩ := QuasiSober.sober hS'' (hf.is_closed_map _ hS')
   obtain ⟨y, hy, rfl⟩ := hx.mem
   use y
-  change _ = _ at hx
+  change _ = _ at hx 
   apply set.image_injective.mpr hf.inj
   rw [← hx, ← hf.closure_image_eq, Set.image_singleton]
 #align closed_embedding.quasi_sober ClosedEmbedding.quasiSober
@@ -246,7 +246,7 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
   have hS'' := hS.image f hf.continuous.continuous_on
   obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure isClosed_closure
   obtain ⟨T, hT, rfl⟩ := hf.to_inducing.is_closed_iff.mp hS'
-  rw [Set.image_preimage_eq_inter_range] at hx hS''
+  rw [Set.image_preimage_eq_inter_range] at hx hS'' 
   have hxT : x ∈ T := by rw [← hT.closure_eq]; exact closure_mono (Set.inter_subset_left _ _) hx.mem
   have hxU : x ∈ Set.range f :=
     by
@@ -279,7 +279,7 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
   replace H : IsIrreducible (coe ⁻¹' t : Set U) := ⟨⟨⟨x, hU'⟩, by simpa using hx⟩, H⟩
   use H.generic_point
   have := continuous_subtype_coe.closure_preimage_subset _ H.generic_point_spec.mem
-  rw [h'.closure_eq] at this
+  rw [h'.closure_eq] at this 
   apply le_antisymm
   · apply h'.closure_subset_iff.mpr; simpa using this
   rw [← Set.image_singleton, ← closure_closure]

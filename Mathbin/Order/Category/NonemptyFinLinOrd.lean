@@ -161,7 +161,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
   let g₂ : X ⟶ A := ⟨fun x => a₂, fun x₁ x₂ h => by rfl⟩
   change g₁ (ULift.up (0 : Fin 1)) = g₂ (ULift.up (0 : Fin 1))
   have eq : g₁ ≫ f = g₂ ≫ f := by ext x; exact h
-  rw [cancel_mono] at eq
+  rw [cancel_mono] at eq 
   rw [Eq]
 #align NonemptyFinLinOrd.mono_iff_injective NonemptyFinLinOrdCat.mono_iff_injective
 -/
@@ -213,7 +213,7 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
     by
     have H : ∀ y : Y, Nonempty (f ⁻¹' {y}) :=
       by
-      rw [epi_iff_surjective] at hf
+      rw [epi_iff_surjective] at hf 
       intro y
       exact Nonempty.intro ⟨(hf y).some, (hf y).choose_spec⟩
     let φ : Y → X := fun y => (H y).some.1
@@ -224,7 +224,7 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
     · intro a b
       contrapose
       intro h
-      simp only [not_le] at h⊢
+      simp only [not_le] at h ⊢
       suffices b ≤ a by
         apply lt_of_le_of_ne this
         intro h'

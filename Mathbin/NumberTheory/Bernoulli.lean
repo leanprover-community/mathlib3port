@@ -202,10 +202,10 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
   suffices (B - eval_neg_hom B) * (exp ℚ - 1) = X * (exp ℚ - 1)
     by
     cases mul_eq_mul_right_iff.mp this <;>
-      simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h
+      simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h 
     · apply eq_zero_of_neg_eq
       specialize h n
-      split_ifs  at h <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
+      split_ifs  at h  <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
     · simpa using h 1
   have h : B * (exp ℚ - 1) = X * exp ℚ := by
     simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
@@ -263,7 +263,7 @@ theorem sum_bernoulli (n : ℕ) :
       mul_one, choose_zero_right, cast_zero, if_false, zero_add, succ_succ_ne_one]
     ring
   have f := sum_bernoulli' n.succ.succ
-  simp_rw [sum_range_succ', bernoulli'_one, choose_one_right, cast_succ, ← eq_sub_iff_add_eq] at f
+  simp_rw [sum_range_succ', bernoulli'_one, choose_one_right, cast_succ, ← eq_sub_iff_add_eq] at f 
   convert f
   · funext x; rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
   · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
@@ -283,11 +283,11 @@ theorem bernoulli_spec' (n : ℕ) :
   -- key equation: the corresponding fact for `bernoulli'`
   have H := bernoulli'_spec' n.succ
   -- massage it to match the structure of the goal, then convert piece by piece
-  rw [sum_eq_add_sum_diff_singleton h₁] at H⊢
+  rw [sum_eq_add_sum_diff_singleton h₁] at H ⊢
   apply add_eq_of_eq_sub'
   convert eq_sub_of_add_eq' H using 1
   · refine' sum_congr rfl fun p h => _
-    obtain ⟨h', h''⟩ : p ∈ _ ∧ p ≠ _ := by rwa [mem_sdiff, mem_singleton] at h
+    obtain ⟨h', h''⟩ : p ∈ _ ∧ p ≠ _ := by rwa [mem_sdiff, mem_singleton] at h 
     simp [bernoulli_eq_bernoulli'_of_ne_one ((not_congr (antidiagonal_congr h' h₁)).mp h'')]
   · field_simp [h₃]
     norm_num
@@ -316,7 +316,7 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
   have hite2 : ite (n.succ = 0) 1 0 = (0 : ℚ) := if_neg n.succ_ne_zero
   rw [← map_zero (algebraMap ℚ A), ← zero_div (n.succ ! : ℚ), ← hite2, ← bernoulli_spec', sum_div]
   refine' congr_arg (algebraMap ℚ A) (sum_congr rfl fun x h => eq_div_of_mul_eq (hfact n.succ) _)
-  rw [mem_antidiagonal] at h
+  rw [mem_antidiagonal] at h 
   have hj : (x.2 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero _
   field_simp [← h, mul_ne_zero hj (hfact x.2), hfact x.1, mul_comm _ (bernoulli x.1), mul_assoc,
     add_choose, cast_div_char_zero (factorial_mul_factorial_dvd_factorial_add _ _),
@@ -368,7 +368,7 @@ theorem sum_range_pow (n p : ℕ) :
           ∑ i in range (p + 1), bernoulli i * (p + 1).choose i * n ^ (p + 1 - i) / (p + 1)!
       by
       rw [← div_eq_iff (hne p), div_eq_mul_inv, sum_mul]
-      rw [PowerSeries.ext_iff] at this
+      rw [PowerSeries.ext_iff] at this 
       simpa using this p
     -- the power series `exp ℚ - 1` is non-zero, a fact we need in order to use `mul_right_inj'`
     have hexp : exp ℚ - 1 ≠ 0 :=

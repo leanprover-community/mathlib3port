@@ -59,28 +59,28 @@ abbrev m : AddCommGroupCat :=
 #align Module.filtered_colimits.M ModuleCat.FilteredColimits.m
 
 /-- The canonical projection into the colimit, as a quotient type. -/
-abbrev m.mk : (Σj, F.obj j) → M :=
+abbrev m.mk : (Σ j, F.obj j) → M :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget (ModuleCat R)))
 #align Module.filtered_colimits.M.mk ModuleCat.FilteredColimits.m.mk
 
-theorem m.mk_eq (x y : Σj, F.obj j)
-    (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
+theorem m.mk_eq (x y : Σ j, F.obj j)
+    (h : ∃ (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget (ModuleCat R)) x y h)
 #align Module.filtered_colimits.M.mk_eq ModuleCat.FilteredColimits.m.mk_eq
 
 /-- The "unlifted" version of scalar multiplication in the colimit. -/
-def colimitSmulAux (r : R) (x : Σj, F.obj j) : M :=
+def colimitSmulAux (r : R) (x : Σ j, F.obj j) : M :=
   M.mk ⟨x.1, r • x.2⟩
 #align Module.filtered_colimits.colimit_smul_aux ModuleCat.FilteredColimits.colimitSmulAux
 
-theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σj, F.obj j)
+theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) :
     colimit_smul_aux r x = colimit_smul_aux r y :=
   by
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
-  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
+  simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg 
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
 #align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimitSmulAux_eq_of_rel
 
@@ -95,7 +95,7 @@ instance colimitHasSmul : SMul R M
 #align Module.filtered_colimits.colimit_has_smul ModuleCat.FilteredColimits.colimitHasSmul
 
 @[simp]
-theorem colimit_smul_mk_eq (r : R) (x : Σj, F.obj j) : r • M.mk x = M.mk ⟨x.1, r • x.2⟩ :=
+theorem colimit_smul_mk_eq (r : R) (x : Σ j, F.obj j) : r • M.mk x = M.mk ⟨x.1, r • x.2⟩ :=
   rfl
 #align Module.filtered_colimits.colimit_smul_mk_eq ModuleCat.FilteredColimits.colimit_smul_mk_eq
 

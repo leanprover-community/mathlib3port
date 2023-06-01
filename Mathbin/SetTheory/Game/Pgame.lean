@@ -637,14 +637,14 @@ instance : IsIrrefl _ (· ⧏ ·) :=
 #print PGame.lf_of_le_of_lf /-
 @[trans]
 theorem lf_of_le_of_lf {x y z : PGame} (h₁ : x ≤ y) (h₂ : y ⧏ z) : x ⧏ z := by
-  rw [← PGame.not_le] at h₂⊢; exact fun h₃ => h₂ (h₃.trans h₁)
+  rw [← PGame.not_le] at h₂ ⊢; exact fun h₃ => h₂ (h₃.trans h₁)
 #align pgame.lf_of_le_of_lf PGame.lf_of_le_of_lf
 -/
 
 #print PGame.lf_of_lf_of_le /-
 @[trans]
 theorem lf_of_lf_of_le {x y z : PGame} (h₁ : x ⧏ y) (h₂ : y ≤ z) : x ⧏ z := by
-  rw [← PGame.not_le] at h₁⊢; exact fun h₃ => h₁ (h₂.trans h₃)
+  rw [← PGame.not_le] at h₁ ⊢; exact fun h₃ => h₁ (h₂.trans h₃)
 #align pgame.lf_of_lf_of_le PGame.lf_of_lf_of_le
 -/
 
@@ -1302,7 +1302,8 @@ def moveRightSymm :
 /-- The identity relabelling. -/
 @[refl]
 def refl : ∀ x : PGame, x ≡r x
-  | x => ⟨Equiv.refl _, Equiv.refl _, fun i => refl _, fun j => refl _⟩decreasing_by pgame_wf_tac
+  | x => ⟨Equiv.refl _, Equiv.refl _, fun i => refl _, fun j => refl _⟩
+decreasing_by pgame_wf_tac
 #align pgame.relabelling.refl PGame.Relabelling.refl
 -/
 
@@ -1320,10 +1321,8 @@ def symm : ∀ {x y : PGame}, x ≡r y → y ≡r x
 #print PGame.Relabelling.le /-
 theorem le : ∀ {x y : PGame} (r : x ≡r y), x ≤ y
   | x, y, r =>
-    le_def.2
-      ⟨fun i => Or.inl ⟨_, (r.moveLeft i).le⟩, fun j =>
-        Or.inr ⟨_, (r.moveRightSymm j).le⟩⟩decreasing_by
-  pgame_wf_tac
+    le_def.2 ⟨fun i => Or.inl ⟨_, (r.moveLeft i).le⟩, fun j => Or.inr ⟨_, (r.moveRightSymm j).le⟩⟩
+decreasing_by pgame_wf_tac
 #align pgame.relabelling.le PGame.Relabelling.le
 -/
 
@@ -1469,7 +1468,7 @@ theorem neg_ofLists (L R : List PGame) :
 theorem isOption_neg {x y : PGame} : IsOption x (-y) ↔ IsOption (-x) y :=
   by
   rw [is_option_iff, is_option_iff, or_comm']
-  cases y; apply or_congr <;> · apply exists_congr; intro ; rw [neg_eq_iff_eq_neg]; rfl
+  cases y; apply or_congr <;> · apply exists_congr; intro; rw [neg_eq_iff_eq_neg]; rfl
 #align pgame.is_option_neg PGame.isOption_neg
 -/
 
@@ -1576,8 +1575,8 @@ private theorem neg_le_lf_neg_iff : ∀ {x y : PGame.{u}}, (-y ≤ -x ↔ x ≤ 
     simp_rw [neg_def, mk_le_mk, mk_lf_mk, ← neg_def]
     constructor
     · rw [and_comm']; apply and_congr <;> exact forall_congr' fun _ => neg_le_lf_neg_iff.2
-    · rw [or_comm']; apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1decreasing_by
-  pgame_wf_tac
+    · rw [or_comm']; apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
+decreasing_by pgame_wf_tac
 
 #print PGame.neg_le_neg_iff /-
 @[simp]
@@ -1923,7 +1922,8 @@ def Relabelling.addCongr : ∀ {w x y z : PGame.{u}}, w ≡r x → y ≡r z → 
     · exact (hL₁ i).addCongr Hyz
     · exact Hwx.add_congr (hL₂ j)
     · exact (hR₁ i).addCongr Hyz
-    · exact Hwx.add_congr (hR₂ j)decreasing_by pgame_wf_tac
+    · exact Hwx.add_congr (hR₂ j)
+decreasing_by pgame_wf_tac
 #align pgame.relabelling.add_congr PGame.Relabelling.addCongr
 -/
 
@@ -1954,8 +1954,8 @@ def negAddRelabelling : ∀ x y : PGame, -(x + y) ≡r -x + -y
     all_goals
       exact fun j =>
         Sum.casesOn j (fun j => neg_add_relabelling _ _) fun j =>
-          neg_add_relabelling ⟨xl, xr, xL, xR⟩ _ decreasing_by
-  pgame_wf_tac
+          neg_add_relabelling ⟨xl, xr, xL, xR⟩ _
+decreasing_by pgame_wf_tac
 #align pgame.neg_add_relabelling PGame.negAddRelabelling
 -/
 
@@ -1970,8 +1970,8 @@ theorem neg_add_le {x y : PGame} : -(x + y) ≤ -x + -y :=
 def addCommRelabelling : ∀ x y : PGame.{u}, x + y ≡r y + x
   | mk xl xr xL xR, mk yl yr yL yR => by
     refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;> rintro (_ | _) <;>
-      · dsimp [left_moves_add, right_moves_add]; apply add_comm_relabelling decreasing_by
-  pgame_wf_tac
+      · dsimp [left_moves_add, right_moves_add]; apply add_comm_relabelling
+decreasing_by pgame_wf_tac
 #align pgame.add_comm_relabelling PGame.addCommRelabelling
 -/
 
@@ -1994,11 +1994,13 @@ def addAssocRelabelling : ∀ x y z : PGame.{u}, x + y + z ≡r x + (y + z)
     by
     refine' ⟨Equiv.sumAssoc _ _ _, Equiv.sumAssoc _ _ _, _, _⟩
     all_goals
-      first |rintro (⟨i | i⟩ | i)|rintro (j | ⟨j | j⟩)
+      first
+      | rintro (⟨i | i⟩ | i)
+      | rintro (j | ⟨j | j⟩)
       · apply add_assoc_relabelling
       · apply add_assoc_relabelling ⟨xl, xr, xL, xR⟩
-      · apply add_assoc_relabelling ⟨xl, xr, xL, xR⟩ ⟨yl, yr, yL, yR⟩decreasing_by
-  pgame_wf_tac
+      · apply add_assoc_relabelling ⟨xl, xr, xL, xR⟩ ⟨yl, yr, yL, yR⟩
+decreasing_by pgame_wf_tac
 #align pgame.add_assoc_relabelling PGame.addAssocRelabelling
 -/
 
@@ -2067,7 +2069,7 @@ private theorem add_le_add_right' : ∀ {x y z : PGame} (h : x ≤ y), x + z ≤
   | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR => fun h =>
     by
     refine' le_def.2 ⟨fun i => _, fun i => _⟩ <;> cases i
-    · rw [le_def] at h
+    · rw [le_def] at h 
       cases h
       rcases h_left i with (⟨i', ih⟩ | ⟨j, jh⟩)
       · exact Or.inl ⟨to_left_moves_add (Sum.inl i'), add_le_add_right' ih⟩
@@ -2075,17 +2077,15 @@ private theorem add_le_add_right' : ∀ {x y z : PGame} (h : x ≤ y), x + z ≤
         convert add_le_add_right' jh
         apply add_move_right_inl
     · exact Or.inl ⟨@to_left_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩
-    · rw [le_def] at h
+    · rw [le_def] at h 
       cases h
       rcases h_right i with (⟨i, ih⟩ | ⟨j', jh⟩)
       · refine' Or.inl ⟨to_left_moves_add (Sum.inl i), _⟩
         convert add_le_add_right' ih
         apply add_move_left_inl
       · exact Or.inr ⟨to_right_moves_add (Sum.inl j'), add_le_add_right' jh⟩
-    ·
-      exact
-        Or.inr ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩decreasing_by
-  pgame_wf_tac
+    · exact Or.inr ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩
+decreasing_by pgame_wf_tac
 
 #print PGame.covariantClass_swap_add_le /-
 instance covariantClass_swap_add_le : CovariantClass PGame PGame (swap (· + ·)) (· ≤ ·) :=
@@ -2101,7 +2101,7 @@ instance covariantClass_add_le : CovariantClass PGame PGame (· + ·) (· ≤ ·
 
 #print PGame.add_lf_add_right /-
 theorem add_lf_add_right {y z : PGame} (h : y ⧏ z) (x) : y + x ⧏ z + x :=
-  suffices z + x ≤ y + x → z ≤ y by rw [← PGame.not_le] at h⊢; exact mt this h
+  suffices z + x ≤ y + x → z ≤ y by rw [← PGame.not_le] at h ⊢; exact mt this h
   fun w =>
   calc
     z ≤ z + 0 := (addZeroRelabelling _).symm.le

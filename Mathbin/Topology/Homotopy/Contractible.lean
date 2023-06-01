@@ -77,7 +77,7 @@ theorem id_nullhomotopic (X : Type _) [TopologicalSpace X] [ContractibleSpace X]
 theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
     ContractibleSpace Y ↔ (ContinuousMap.id Y).Nullhomotopic :=
   by
-  constructor; · intro ; apply id_nullhomotopic
+  constructor; · intro; apply id_nullhomotopic
   rintro ⟨p, h⟩
   refine_struct
     {

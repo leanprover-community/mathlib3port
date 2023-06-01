@@ -352,7 +352,7 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero {x y : V} (hx : x ≠ 0) (
   by
   constructor
   · intro h
-    rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy] at h
+    rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy] at h 
     exact ⟨‖y‖ / ‖x‖, div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx), h⟩
   · rintro ⟨r, hr, rfl⟩
     rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]

@@ -303,8 +303,8 @@ open Function hiding const
 def mapFold [Monoid α] [Monoid β] (f : α →* β) : ApplicativeTransformation (Const α) (Const β)
     where
   app x := f
-  preserves_seq' := by intros ; simp only [f.map_mul, (· <*> ·)]
-  preserves_pure' := by intros ; simp only [f.map_one, pure]
+  preserves_seq' := by intros; simp only [f.map_mul, (· <*> ·)]
+  preserves_pure' := by intros; simp only [f.map_one, pure]
 #align traversable.map_fold Traversable.mapFold
 -/
 

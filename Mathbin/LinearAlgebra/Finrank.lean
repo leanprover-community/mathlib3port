@@ -69,21 +69,21 @@ noncomputable def finrank (R V : Type _) [Semiring R] [AddCommGroup V] [Module R
 
 theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
-  apply_fun toNat  at h
-  rw [to_nat_cast] at h
+  apply_fun toNat  at h 
+  rw [to_nat_cast] at h 
   exact_mod_cast h
 #align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eq
 
 theorem finrank_le_of_rank_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n :=
   by
-  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h
+  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h 
   · exact h.trans_lt (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
 #align finite_dimensional.finrank_le_of_rank_le FiniteDimensional.finrank_le_of_rank_le
 
 theorem finrank_lt_of_rank_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n :=
   by
-  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h
+  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h 
   · exact h.trans (nat_lt_aleph_0 n)
   · exact nat_lt_aleph_0 n
 #align finite_dimensional.finrank_lt_of_rank_lt FiniteDimensional.finrank_lt_of_rank_lt
@@ -230,7 +230,7 @@ theorem finrank_eq_zero_of_not_exists_basis
 
 #print finrank_eq_zero_of_not_exists_basis_finite /-
 theorem finrank_eq_zero_of_not_exists_basis_finite
-    (h : ¬∃ (s : Set V)(b : Basis.{v} (s : Set V) K V), s.Finite) : finrank K V = 0 :=
+    (h : ¬∃ (s : Set V) (b : Basis.{v} (s : Set V) K V), s.Finite) : finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite fun s b hs => h ⟨s, b, hs⟩
 #align finrank_eq_zero_of_not_exists_basis_finite finrank_eq_zero_of_not_exists_basis_finite
 -/
@@ -317,7 +317,7 @@ theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
 
 theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ :=
   by
-  rw [← finrank_top K V] at lt
+  rw [← finrank_top K V] at lt 
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 #align submodule.lt_top_of_finrank_lt_finrank Submodule.lt_top_of_finrank_lt_finrank
 
@@ -370,7 +370,7 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
     (by
       have : Module.rank K (span K (Set.range b)) = (#Set.range b) := rank_span hb
       rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
-        lift_eq_nat_iff] at this)
+        lift_eq_nat_iff] at this )
 #align finrank_span_eq_card finrank_span_eq_card
 
 #print finrank_span_set_eq_card /-
@@ -379,7 +379,7 @@ theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent
   finrank_eq_of_rank_eq
     (by
       have : Module.rank K (span K s) = (#s) := rank_span_set hs
-      rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this)
+      rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this )
 #align finrank_span_set_eq_card finrank_span_set_eq_card
 -/
 
@@ -463,7 +463,7 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
       _ = 0 := smul_zero _
       
     -- And then it's just a bit of manipulation with finite sums.
-    rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent
+    rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent 
 #align linear_independent_of_top_le_span_of_card_eq_finrank linearIndependent_of_top_le_span_of_card_eq_finrank
 
 /-- A finite family of vectors is linearly independent if and only if
@@ -482,7 +482,7 @@ theorem linearIndependent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b
       intro x
       have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
       have hf : f '' Set.range b' = Set.range b := by ext x; simp [Set.mem_image, Set.mem_range]
-      rw [hf] at h
+      rw [hf] at h 
       have hx : (x : V) ∈ span K (Set.range b) := x.property
       conv at hx =>
         congr
@@ -613,7 +613,7 @@ theorem Subalgebra.rank_bot : Module.rank F (⊥ : Subalgebra F E) = 1 :=
     by
     letI := Module.nontrivial F E
     rw [rank_span_set]
-    exacts[mk_singleton _, linearIndependent_singleton one_ne_zero]
+    exacts [mk_singleton _, linearIndependent_singleton one_ne_zero]
 #align subalgebra.rank_bot Subalgebra.rank_bot
 
 @[simp]

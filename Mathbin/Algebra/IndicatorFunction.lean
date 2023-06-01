@@ -122,7 +122,7 @@ theorem mulIndicator_eq_self : s.mulIndicator f = f ↔ mulSupport f ⊆ s := by
 
 @[to_additive]
 theorem mulIndicator_eq_self_of_superset (h1 : s.mulIndicator f = f) (h2 : s ⊆ t) :
-    t.mulIndicator f = f := by rw [mul_indicator_eq_self] at h1⊢; exact subset.trans h1 h2
+    t.mulIndicator f = f := by rw [mul_indicator_eq_self] at h1 ⊢; exact subset.trans h1 h2
 #align set.mul_indicator_eq_self_of_superset Set.mulIndicator_eq_self_of_superset
 #align set.indicator_eq_self_of_superset Set.indicator_eq_self_of_superset
 
@@ -358,7 +358,7 @@ theorem mem_range_mulIndicator {r : M} {s : Set α} {f : α → M} :
 @[to_additive]
 theorem mulIndicator_rel_mulIndicator {r : M → M → Prop} (h1 : r 1 1) (ha : a ∈ s → r (f a) (g a)) :
     r (mulIndicator s f a) (mulIndicator s g a) := by simp only [mul_indicator];
-  split_ifs with has has; exacts[ha has, h1]
+  split_ifs with has has; exacts [ha has, h1]
 #align set.mul_indicator_rel_mul_indicator Set.mulIndicator_rel_mulIndicator
 #align set.indicator_rel_indicator Set.indicator_rel_indicator
 -/
@@ -494,7 +494,7 @@ variable {A : Type _} [AddMonoid A] [Monoid M] [DistribMulAction M A]
 
 theorem indicator_smul_apply (s : Set α) (r : α → M) (f : α → A) (x : α) :
     indicator s (fun x => r x • f x) x = r x • indicator s f x := by dsimp only [indicator];
-  split_ifs; exacts[rfl, (smul_zero (r x)).symm]
+  split_ifs; exacts [rfl, (smul_zero (r x)).symm]
 #align set.indicator_smul_apply Set.indicator_smul_apply
 
 theorem indicator_smul (s : Set α) (r : α → M) (f : α → A) :
@@ -827,12 +827,12 @@ theorem mulIndicator_iUnion_apply {ι M} [CompleteLattice M] [One M] (h1 : (⊥ 
   by
   by_cases hx : x ∈ ⋃ i, s i
   · rw [mul_indicator_of_mem hx]
-    rw [mem_Union] at hx
+    rw [mem_Union] at hx 
     refine' le_antisymm _ (iSup_le fun i => mul_indicator_le_self' (fun x hx => h1 ▸ bot_le) x)
     rcases hx with ⟨i, hi⟩
     exact le_iSup_of_le i (ge_of_eq <| mul_indicator_of_mem hi _)
   · rw [mul_indicator_of_not_mem hx]
-    simp only [mem_Union, not_exists] at hx
+    simp only [mem_Union, not_exists] at hx 
     simp [hx, ← h1]
 #align set.mul_indicator_Union_apply Set.mulIndicator_iUnion_apply
 #align set.indicator_Union_apply Set.indicator_iUnion_apply

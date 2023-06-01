@@ -55,7 +55,8 @@ for the full discussion.
 -/
 @[nolint unused_arguments]
 def PolynomialModule :=
-  ℕ →₀ M deriving AddCommGroup, Inhabited
+  ℕ →₀ M
+deriving AddCommGroup, Inhabited
 #align polynomial_module PolynomialModule
 -/
 
@@ -153,7 +154,7 @@ theorem monomial_smul_apply (i : ℕ) (r : R) (g : PolynomialModule R M) (n : �
   induction' g using PolynomialModule.induction_linear with p q hp hq
   · simp only [smul_zero, Finsupp.zero_apply, if_t_t]
   · simp only [smul_add, Finsupp.add_apply, hp, hq]
-    split_ifs; exacts[rfl, zero_add 0]
+    split_ifs; exacts [rfl, zero_add 0]
   · rw [monomial_smul_single, single_apply, single_apply, smul_ite, smul_zero, ← ite_and]
     congr
     rw [eq_iff_iff]
@@ -168,7 +169,7 @@ theorem smul_single_apply (i : ℕ) (f : R[X]) (m : M) (n : ℕ) :
   by
   induction' f using Polynomial.induction_on' with p q hp hq
   · rw [add_smul, Finsupp.add_apply, hp, hq, coeff_add, add_smul]
-    split_ifs; exacts[rfl, zero_add 0]
+    split_ifs; exacts [rfl, zero_add 0]
   · rw [monomial_smul_single, single_apply, coeff_monomial, ite_smul, zero_smul]
     by_cases h : i ≤ n
     · simp_rw [eq_tsub_iff_add_eq_of_le h, if_pos h]

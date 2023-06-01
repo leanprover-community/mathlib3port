@@ -38,7 +38,7 @@ variable (x y : ∀ i, f i) (i : I)
 instance distrib [∀ i, Distrib <| f i] : Distrib (∀ i : I, f i) := by
   refine_struct
       { add := (· + ·)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.distrib Pi.distrib
 -/
@@ -49,7 +49,7 @@ instance nonUnitalNonAssocSemiring [∀ i, NonUnitalNonAssocSemiring <| f i] :
   refine_struct
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.non_unital_non_assoc_semiring Pi.nonUnitalNonAssocSemiring
 -/
@@ -59,7 +59,7 @@ instance nonUnitalSemiring [∀ i, NonUnitalSemiring <| f i] : NonUnitalSemiring
   refine_struct
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.non_unital_semiring Pi.nonUnitalSemiring
 -/
@@ -70,7 +70,7 @@ instance nonAssocSemiring [∀ i, NonAssocSemiring <| f i] : NonAssocSemiring (�
       { zero := (0 : ∀ i, f i)
         one := 1
         add := (· + ·)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.non_assoc_semiring Pi.nonAssocSemiring
 -/

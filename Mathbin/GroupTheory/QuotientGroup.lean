@@ -63,7 +63,7 @@ include nN
 protected def con : Con G where
   toSetoid := leftRel N
   mul' a b c d hab hcd := by
-    rw [left_rel_eq] at hab hcd⊢
+    rw [left_rel_eq] at hab hcd ⊢
     calc
       (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
         simp only [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
@@ -170,32 +170,32 @@ include nN
 local notation " Q " => G ⧸ N
 
 @[simp, to_additive]
-theorem mk_one : ((1 : G) : Q ) = 1 :=
+theorem mk_one : ((1 : G) :  Q ) = 1 :=
   rfl
 #align quotient_group.coe_one QuotientGroup.mk_one
 #align quotient_add_group.coe_zero QuotientAddGroup.mk_zero
 
 @[simp, to_additive]
-theorem mk_mul (a b : G) : ((a * b : G) : Q ) = a * b :=
+theorem mk_mul (a b : G) : ((a * b : G) :  Q ) = a * b :=
   rfl
 #align quotient_group.coe_mul QuotientGroup.mk_mul
 #align quotient_add_group.coe_add QuotientAddGroup.mk_add
 
 @[simp, to_additive]
-theorem mk_inv (a : G) : ((a⁻¹ : G) : Q ) = a⁻¹ :=
+theorem mk_inv (a : G) : ((a⁻¹ : G) :  Q ) = a⁻¹ :=
   rfl
 #align quotient_group.coe_inv QuotientGroup.mk_inv
 #align quotient_add_group.coe_neg QuotientAddGroup.mk_neg
 
 @[simp, to_additive]
-theorem mk_div (a b : G) : ((a / b : G) : Q ) = a / b :=
+theorem mk_div (a b : G) : ((a / b : G) :  Q ) = a / b :=
   rfl
 #align quotient_group.coe_div QuotientGroup.mk_div
 #align quotient_add_group.coe_sub QuotientAddGroup.mk_sub
 
 #print QuotientGroup.mk_pow /-
 @[simp, to_additive]
-theorem mk_pow (a : G) (n : ℕ) : ((a ^ n : G) : Q ) = a ^ n :=
+theorem mk_pow (a : G) (n : ℕ) : ((a ^ n : G) :  Q ) = a ^ n :=
   rfl
 #align quotient_group.coe_pow QuotientGroup.mk_pow
 #align quotient_add_group.coe_nsmul QuotientAddGroup.mk_nsmul
@@ -203,7 +203,7 @@ theorem mk_pow (a : G) (n : ℕ) : ((a ^ n : G) : Q ) = a ^ n :=
 
 #print QuotientGroup.mk_zpow /-
 @[simp, to_additive]
-theorem mk_zpow (a : G) (n : ℤ) : ((a ^ n : G) : Q ) = a ^ n :=
+theorem mk_zpow (a : G) (n : ℤ) : ((a ^ n : G) :  Q ) = a ^ n :=
   rfl
 #align quotient_group.coe_zpow QuotientGroup.mk_zpow
 #align quotient_add_group.coe_zsmul QuotientAddGroup.mk_zsmul
@@ -216,7 +216,7 @@ group homomorphism `G/N →* H`. -/
 def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
   (QuotientGroup.con N).lift φ fun x y h =>
     by
-    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
+    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h 
     calc
       φ x = φ (y * (x⁻¹ * y)⁻¹) := by rw [mul_inv_rev, inv_inv, mul_inv_cancel_left]
       _ = φ y := by rw [φ.map_mul, HN _ (N.inv_mem h), mul_one]
@@ -225,20 +225,20 @@ def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
 #align quotient_add_group.lift QuotientAddGroup.lift
 
 @[simp, to_additive]
-theorem lift_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (g : Q ) = φ g :=
+theorem lift_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (g :  Q ) = φ g :=
   rfl
 #align quotient_group.lift_mk QuotientGroup.lift_mk
 #align quotient_add_group.lift_mk QuotientAddGroup.lift_mk
 
 @[simp, to_additive]
-theorem lift_mk' {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (mk g : Q ) = φ g :=
+theorem lift_mk' {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (mk g :  Q ) = φ g :=
   rfl
 #align quotient_group.lift_mk' QuotientGroup.lift_mk'
 #align quotient_add_group.lift_mk' QuotientAddGroup.lift_mk'
 
 @[simp, to_additive]
 theorem lift_quot_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) :
-    lift N φ HN (Quot.mk _ g : Q ) = φ g :=
+    lift N φ HN (Quot.mk _ g :  Q ) = φ g :=
   rfl
 #align quotient_group.lift_quot_mk QuotientGroup.lift_quot_mk
 #align quotient_add_group.lift_quot_mk QuotientAddGroup.lift_quot_mk
@@ -530,7 +530,7 @@ variable (f : A →* B) (g : B →* A) (e : A ≃* B) (d : B ≃* C) (n : ℤ)
 def homQuotientZPowOfHom :
     A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (zpowGroupHom n : B →* B).range :=
   lift _ ((mk' _).comp f) fun g ⟨h, (hg : h ^ n = g)⟩ =>
-    (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow] ⟩
+    (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow]⟩
 #align quotient_group.hom_quotient_zpow_of_hom QuotientGroup.homQuotientZPowOfHom
 #align quotient_add_group.hom_quotient_zsmul_of_hom QuotientAddGroup.homQuotientZSMulOfHom
 -/
@@ -612,7 +612,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
     (mk' <| N.subgroupOf (H ⊔ N)).comp (inclusion le_sup_left)
   have φ_surjective : Surjective φ := fun x =>
     x.inductionOn' <| by
-      rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy
+      rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy 
       rcases hy with ⟨h, n, hh, hn, rfl⟩
       use h, hh; apply quotient.eq.mpr
       change Setoid.r _ _
@@ -696,7 +696,7 @@ theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G �
   top_unique fun x _ =>
     by
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elim _ _)
-    rwa [inv_one, one_mul] at this
+    rwa [inv_one, one_mul] at this 
 #align quotient_group.subgroup_eq_top_of_subsingleton QuotientGroup.subgroup_eq_top_of_subsingleton
 #align quotient_add_group.add_subgroup_eq_top_of_subsingleton QuotientAddGroup.addSubgroup_eq_top_of_subsingleton
 

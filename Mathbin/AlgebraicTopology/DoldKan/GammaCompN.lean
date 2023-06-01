@@ -25,8 +25,8 @@ and `N₂Γ₂ : Γ₂ ⋙ N₂ ≅ 𝟭 (karoubi (chain_complex C ℕ))`.
 
 noncomputable section
 
-open
-  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents Opposite SimplicialObject
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents
+  Opposite SimplicialObject
 
 open scoped Simplicial
 
@@ -57,7 +57,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
           zsmul_zero]
         · intro h
           replace h := congr_arg SimplexCategory.len h
-          change n + 1 = n at h
+          change n + 1 = n at h 
           linarith
         · simpa only [is_δ₀.iff] using hi)
 #align algebraic_topology.dold_kan.Γ₀_nondeg_complex_iso AlgebraicTopology.DoldKan.Γ₀NondegComplexIso
@@ -129,7 +129,7 @@ theorem N₂Γ₂_toKaroubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ 
     functor.congr_obj
       (functor_extension₁_comp_whiskering_left_to_karoubi (simplicial_object C) (ChainComplex C ℕ))
       N₁
-  dsimp [N₂, Γ₂, functor_extension₁] at h h'⊢
+  dsimp [N₂, Γ₂, functor_extension₁] at h h' ⊢
   rw [← functor.assoc, h, functor.assoc, h']
 #align algebraic_topology.dold_kan.N₂Γ₂_to_karoubi AlgebraicTopology.DoldKan.N₂Γ₂_toKaroubi
 

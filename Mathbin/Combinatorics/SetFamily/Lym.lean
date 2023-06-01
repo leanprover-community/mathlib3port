@@ -81,11 +81,11 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
   rw [← h𝒜.shadow hs, ← card_compl, ← card_image_of_inj_on (insert_inj_on' _)]
   refine' card_le_of_subset fun t ht => _
   infer_instance
-  rw [mem_bipartite_above] at ht
+  rw [mem_bipartite_above] at ht 
   have : ∅ ∉ 𝒜 := by
     rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
     rintro rfl
-    rwa [shadow_singleton_empty] at hs
+    rwa [shadow_singleton_empty] at hs 
   obtain ⟨a, ha, rfl⟩ :=
     exists_eq_insert_iff.2 ⟨ht.2, by rw [(sized_shadow_iff this).1 h𝒜.shadow ht.1, h𝒜.shadow hs]⟩
   exact mem_image_of_mem _ (mem_compl.2 ha)
@@ -105,7 +105,7 @@ theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 
   · cases r
     · exact (hr rfl).elim
     rw [Nat.succ_eq_add_one] at *
-    rw [tsub_add_eq_add_tsub hr', add_tsub_add_eq_tsub_right] at h𝒜
+    rw [tsub_add_eq_add_tsub hr', add_tsub_add_eq_tsub_right] at h𝒜 
     apply le_of_mul_le_mul_right _ (pos_iff_ne_zero.2 hr)
     convert Nat.mul_le_mul_right ((Fintype.card α).choose r) h𝒜 using 1
     · simp [mul_assoc, Nat.choose_succ_right_eq]
@@ -187,7 +187,7 @@ theorem IsAntichain.disjoint_slice_shadow_falling {m n : ℕ}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) : Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
   disjoint_right.2 fun s h₁ h₂ =>
     by
-    simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁
+    simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁ 
     obtain ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩ := h₁
     refine' h𝒜 (slice_subset h₂) ht _ ((erase_subset _ _).trans hst)
     rintro rfl
@@ -252,12 +252,12 @@ theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
           ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
         1
       by
-      rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this
+      rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this 
       norm_cast
       exact choose_pos (Nat.div_le_self _ _)
     rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
     refine' (sum_le_sum fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
-    rw [mem_range] at hr
+    rw [mem_range] at hr 
     refine' div_le_div_of_le_left _ _ _ <;> norm_cast
     · exact Nat.zero_le _
     · exact choose_pos (lt_succ_iff.1 hr)

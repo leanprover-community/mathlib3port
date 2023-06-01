@@ -92,7 +92,7 @@ theorem one_div_ne_zero : 1 / p ≠ 0 :=
 theorem conj_eq : q = p / (p - 1) :=
   by
   have := h.inv_add_inv_conj
-  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_eq_inv] at this
+  rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_eq_inv] at this 
   field_simp [this, h.ne_zero]
 #align real.is_conjugate_exponent.conj_eq Real.IsConjugateExponent.conj_eq
 
@@ -146,7 +146,7 @@ theorem inv_add_inv_conj_ennreal : 1 / ENNReal.ofReal p + 1 / ENNReal.ofReal q =
 end IsConjugateExponent
 
 theorem isConjugateExponent_iff {p q : ℝ} (h : 1 < p) : p.IsConjugateExponent q ↔ q = p / (p - 1) :=
-  ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gt (lt_trans zero_lt_one h)] ⟩⟩
+  ⟨fun H => H.conj_eq, fun H => ⟨h, by field_simp [H, ne_of_gt (lt_trans zero_lt_one h)]⟩⟩
 #align real.is_conjugate_exponent_iff Real.isConjugateExponent_iff
 
 theorem isConjugateExponent_conjugateExponent {p : ℝ} (h : 1 < p) :

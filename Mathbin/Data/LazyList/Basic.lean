@@ -51,9 +51,9 @@ def listEquivLazyList (α : Type _) : List α ≃ LazyList α
   toFun := LazyList.ofList
   invFun := LazyList.toList
   right_inv := by
-    intro ; induction x; rfl; simp! [*]
+    intro; induction x; rfl; simp! [*]
     ext; cases x; rfl
-  left_inv := by intro ; induction x; rfl; simp! [*]
+  left_inv := by intro; induction x; rfl; simp! [*]
 #align lazy_list.list_equiv_lazy_list LazyList.listEquivLazyList
 -/
 
@@ -181,8 +181,8 @@ theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : �
 
 instance : LawfulMonad LazyList
     where
-  pure_bind := by intros ; apply append_nil
-  bind_assoc := by intros ; dsimp [(· >>= ·)]; induction x <;> simp [LazyList.bind, append_bind, *]
+  pure_bind := by intros; apply append_nil
+  bind_assoc := by intros; dsimp [(· >>= ·)]; induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros
     simp [(· <$> ·)]

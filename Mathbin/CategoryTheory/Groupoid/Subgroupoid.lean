@@ -195,12 +195,12 @@ def vertexSubgroup {c : C} (hc : c ∈ S.objs) : Subgroup (c ⟶ c)
   inv_mem' f hf := S.inv hf
 #align category_theory.subgroupoid.vertex_subgroup CategoryTheory.Subgroupoid.vertexSubgroup
 
-instance : SetLike (Subgroupoid C) (Σc d : C, c ⟶ d)
+instance : SetLike (Subgroupoid C) (Σ c d : C, c ⟶ d)
     where
   coe S := { F | F.2.2 ∈ S.arrows F.1 F.2.1 }
   coe_injective' := fun ⟨S, _, _⟩ ⟨T, _, _⟩ h => by ext (c d f); apply Set.ext_iff.1 h ⟨c, d, f⟩
 
-theorem mem_iff (S : Subgroupoid C) (F : Σc d, c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.arrows F.1 F.2.1 :=
+theorem mem_iff (S : Subgroupoid C) (F : Σ c d, c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.arrows F.1 F.2.1 :=
   Iff.rfl
 #align category_theory.subgroupoid.mem_iff CategoryTheory.Subgroupoid.mem_iff
 
@@ -238,8 +238,8 @@ instance : Inf (Subgroupoid C) :=
 instance : InfSet (Subgroupoid C) :=
   ⟨fun s =>
     { arrows := fun c d => ⋂ S ∈ s, Subgroupoid.arrows S c d
-      inv := by intros ; rw [mem_Inter₂] at hp⊢; exact fun S hS => S.inv (hp S hS)
-      mul := by intros ; rw [mem_Inter₂] at hp hq⊢; exact fun S hS => S.mul (hp S hS) (hq S hS) }⟩
+      inv := by intros; rw [mem_Inter₂] at hp ⊢; exact fun S hS => S.inv (hp S hS)
+      mul := by intros; rw [mem_Inter₂] at hp hq ⊢; exact fun S hS => S.mul (hp S hS) (hq S hS) }⟩
 
 instance : CompleteLattice (Subgroupoid C) :=
   {
@@ -247,7 +247,7 @@ instance : CompleteLattice (Subgroupoid C) :=
       (by
         refine' fun s => ⟨fun S Ss F => _, fun T Tl F fT => _⟩ <;>
           simp only [Inf, mem_iff, mem_Inter]
-        exacts[fun hp => hp S Ss, fun S Ss =>
+        exacts [fun hp => hp S Ss, fun S Ss =>
           Tl Ss fT]) with
     bot := ⊥
     bot_le := fun S => empty_subset _
@@ -419,7 +419,7 @@ theorem IsNormal.generatedNormal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
   constructor
   · rintro h c d
     let h' := generated_le_generated_normal X
-    rw [le_iff] at h h'
+    rw [le_iff] at h h' 
     exact ((subset_generated X c d).trans (@h' c d)).trans (@h c d)
   · rintro h
     apply @sInf_le (subgroupoid C) _
@@ -488,7 +488,7 @@ inductive Map.Arrows (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : ∀
 
 theorem Map.arrows_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d : D} (f : c ⟶ d) :
     Map.Arrows φ hφ S c d f ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d)(hg : g ∈ S.arrows a b),
+      ∃ (a b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d) (hg : g ∈ S.arrows a b),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   by
   constructor
@@ -513,7 +513,7 @@ def map (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : Subgroupoid D
 
 theorem mem_map_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d : D} (f : c ⟶ d) :
     f ∈ (map φ hφ S).arrows c d ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d)(hg : g ∈ S.arrows a b),
+      ∃ (a b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d) (hg : g ∈ S.arrows a b),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   Map.arrows_iff φ hφ S f
 #align category_theory.subgroupoid.mem_map_iff CategoryTheory.Subgroupoid.mem_map_iff
@@ -552,7 +552,7 @@ theorem mem_map_objs_iff (hφ : Function.Injective φ.obj) (d : D) :
   dsimp [objs, map]
   constructor
   · rintro ⟨f, hf⟩
-    change map.arrows φ hφ S d d f at hf; rw [map.arrows_iff] at hf
+    change map.arrows φ hφ S d d f at hf ; rw [map.arrows_iff] at hf 
     obtain ⟨c, d, g, ec, ed, eg, gS, eg⟩ := hf
     exact ⟨c, ⟨mem_objs_of_src S eg, ec⟩⟩
   · rintro ⟨c, ⟨γ, γS⟩, rfl⟩
@@ -571,7 +571,7 @@ def im (hφ : Function.Injective φ.obj) :=
 
 theorem mem_im_iff (hφ : Function.Injective φ.obj) {c d : D} (f : c ⟶ d) :
     f ∈ (im φ hφ).arrows c d ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d),
+      ∃ (a b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   by convert map.arrows_iff φ hφ ⊤ f; simp only [Top.top, mem_univ, exists_true_left]
 #align category_theory.subgroupoid.mem_im_iff CategoryTheory.Subgroupoid.mem_im_iff
@@ -595,18 +595,18 @@ theorem isNormal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤) 
       change map.arrows φ hφ S _ _ (𝟙 _); rw [← Functor.map_id]
       constructor; exact Sn.wide c
     conj := fun d d' g δ hδ => by
-      rw [mem_map_iff] at hδ
+      rw [mem_map_iff] at hδ 
       obtain ⟨c, c', γ, cd, cd', γS, hγ⟩ := hδ; subst_vars; cases hφ cd'
       have : d' ∈ (im φ hφ).objs := by rw [hφ']; apply mem_top_objs
-      rw [mem_im_objs_iff] at this
+      rw [mem_im_objs_iff] at this 
       obtain ⟨c', rfl⟩ := this
       have : g ∈ (im φ hφ).arrows (φ.obj c) (φ.obj c') := by rw [hφ']; trivial
-      rw [mem_im_iff] at this
+      rw [mem_im_iff] at this 
       obtain ⟨b, b', f, hb, hb', _, hf⟩ := this; subst_vars; cases hφ hb; cases hφ hb'
       change map.arrows φ hφ S (φ.obj c') (φ.obj c') _
       simp only [eq_to_hom_refl, category.comp_id, category.id_comp, inv_eq_inv]
       suffices map.arrows φ hφ S (φ.obj c') (φ.obj c') (φ.map <| inv f ≫ γ ≫ f) by
-        simp only [inv_eq_inv, functor.map_comp, functor.map_inv] at this; exact this
+        simp only [inv_eq_inv, functor.map_comp, functor.map_inv] at this ; exact this
       · constructor; apply Sn.conj f γS }
 #align category_theory.subgroupoid.is_normal_map CategoryTheory.Subgroupoid.isNormal_map
 

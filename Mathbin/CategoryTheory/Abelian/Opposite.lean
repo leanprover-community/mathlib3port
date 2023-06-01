@@ -28,8 +28,8 @@ open CategoryTheory.Limits
 
 variable (C : Type _) [Category C] [Abelian C]
 
-attribute [local instance]
-  has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts abelian.has_finite_biproducts
+attribute [local instance] has_finite_limits_of_has_equalizers_and_finite_products
+  has_finite_colimits_of_has_coequalizers_and_finite_coproducts abelian.has_finite_biproducts
 
 -- Porting note:
 -- This should have been a global instance,

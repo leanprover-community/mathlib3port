@@ -75,7 +75,8 @@ We intentionally add `F₁` and `F₂` as arguments to this type, so that instan
 (that depend on `F₁` and `F₂`) actually refer to `F₁` and `F₂`. -/
 @[nolint unused_arguments]
 protected def Bundle.ContinuousLinearMap (x : B) : Type _ :=
-  E₁ x →SL[σ] E₂ x deriving Inhabited
+  E₁ x →SL[σ] E₂ x
+deriving Inhabited
 #align bundle.continuous_linear_map Bundle.ContinuousLinearMap
 
 instance Bundle.ContinuousLinearMap.addMonoidHomClass (x : B) :
@@ -254,7 +255,7 @@ theorem continuousLinearMapCoordChange_apply (b : B)
   dsimp only [total_space_mk]
   rw [e₂.coord_changeL_apply e₂', e₁'.coord_changeL_apply e₁, e₁.coe_linear_map_at_of_mem hb.1.1,
     e₂'.coe_linear_map_at_of_mem hb.2.2]
-  exacts[⟨hb.2.1, hb.1.1⟩, ⟨hb.1.2, hb.2.2⟩]
+  exacts [⟨hb.2.1, hb.1.1⟩, ⟨hb.1.2, hb.2.2⟩]
 #align pretrivialization.continuous_linear_map_coord_change_apply Pretrivialization.continuousLinearMapCoordChange_apply
 
 end Pretrivialization
@@ -280,8 +281,8 @@ def Bundle.ContinuousLinearMap.vectorPrebundle :
     where
   pretrivializationAtlas :=
     { e |
-      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ :
-        MemTrivializationAtlas e₁)(_ : MemTrivializationAtlas e₂),
+      ∃ (e₁ : Trivialization F₁ (π E₁)) (e₂ : Trivialization F₂ (π E₂)) (_ :
+        MemTrivializationAtlas e₁) (_ : MemTrivializationAtlas e₂),
         e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
   pretrivialization_linear' := by
     rintro _ ⟨e₁, he₁, e₂, he₂, rfl⟩

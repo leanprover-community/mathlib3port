@@ -111,7 +111,7 @@ theorem integral_diff (ht : MeasurableSet t) (hfs : IntegrableOn f s μ) (hts : 
     (∫ x in s \ t, f x ∂μ) = (∫ x in s, f x ∂μ) - ∫ x in t, f x ∂μ :=
   by
   rw [eq_sub_iff_add_eq, ← integral_union, diff_union_of_subset hts]
-  exacts[disjoint_sdiff_self_left, ht, hfs.mono_set (diff_subset _ _), hfs.mono_set hts]
+  exacts [disjoint_sdiff_self_left, ht, hfs.mono_set (diff_subset _ _), hfs.mono_set hts]
 #align measure_theory.integral_diff MeasureTheory.integral_diff
 
 theorem integral_inter_add_diff₀ (ht : NullMeasurableSet t μ) (hfs : IntegrableOn f s μ) :
@@ -135,7 +135,7 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
   induction' t using Finset.induction_on with a t hat IH hs h's
   · simp
   · simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert,
-      Finset.set_biUnion_insert] at hs hf h's⊢
+      Finset.set_biUnion_insert] at hs hf h's ⊢
     rw [integral_union _ _ hf.1 (integrable_on_finset_Union.2 hf.2)]
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
     · simp only [disjoint_Union_right]
@@ -229,7 +229,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   set S := ⋃ i, s i
   have hSm : MeasurableSet S := MeasurableSet.iUnion hsm
   have hsub : ∀ {i}, s i ⊆ S := subset_Union s
-  rw [← with_density_apply _ hSm] at hfi'
+  rw [← with_density_apply _ hSm] at hfi' 
   set ν := μ.with_density fun x => ‖f x‖₊ with hν
   refine' metric.nhds_basis_closed_ball.tendsto_right_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
@@ -240,7 +240,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
     ENNReal.coe_le_coe]
   refine' (ennnorm_integral_le_lintegral_ennnorm _).trans _
   rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub (hsm _)]
-  exacts[tsub_le_iff_tsub_le.mp hi.1,
+  exacts [tsub_le_iff_tsub_le.mp hi.1,
     (hi.2.trans_lt <| ENNReal.add_lt_top.2 ⟨hfi', ENNReal.coe_lt_top⟩).Ne]
 #align measure_theory.tendsto_set_integral_of_monotone MeasureTheory.tendsto_set_integral_of_monotone
 
@@ -249,7 +249,7 @@ theorem hasSum_integral_iUnion_ae {ι : Type _} [Countable ι] {s : ι → Set �
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
   by
-  simp only [integrable_on, measure.restrict_Union_ae hd hm] at hfi⊢
+  simp only [integrable_on, measure.restrict_Union_ae hd hm] at hfi ⊢
   exact has_sum_integral_measure hfi
 #align measure_theory.has_sum_integral_Union_ae MeasureTheory.hasSum_integral_iUnion_ae
 
@@ -463,10 +463,10 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
       refine' set_integral_congr₀ h_meas.compl fun x hx => _
       dsimp only
       rw [Real.norm_eq_abs, abs_eq_neg_self.mpr _]
-      rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx
+      rw [Set.mem_compl_iff, Set.nmem_setOf_iff] at hx 
       linarith
     _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
-      rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]; congr ; ext1 x; simp
+      rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]; congr; ext1 x; simp
     
 #align measure_theory.integral_norm_eq_pos_sub_neg MeasureTheory.integral_norm_eq_pos_sub_neg
 
@@ -613,7 +613,7 @@ theorem set_integral_gt_gt {R : ℝ} {f : α → ℝ} (hR : 0 ≤ R) (hfm : Meas
       exact le_of_lt hx
   rw [← sub_pos, ← smul_eq_mul, ← set_integral_const, ← integral_sub hfint this,
     set_integral_pos_iff_support_of_nonneg_ae]
-  · rw [← zero_lt_iff] at hμ
+  · rw [← zero_lt_iff] at hμ 
     rwa [Set.inter_eq_self_of_subset_right]
     exact fun x hx => Ne.symm (ne_of_lt <| sub_pos.2 hx)
   · change ∀ᵐ x ∂μ.restrict _, _
@@ -838,7 +838,7 @@ theorem integrableOn_iUnion_of_summable_integral_norm {f : α → E} {s : β →
         NNReal) :=
     by rw [← NNReal.summable_coe]; exact h
   have S'' := ENNReal.tsum_coe_eq S'.has_sum
-  simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S''
+  simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S'' 
   convert ENNReal.ofReal_lt_top
 #align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOn_iUnion_of_summable_integral_norm
 
@@ -1273,7 +1273,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
     · rfl
     · exact integral_nonneg fun x => NNReal.coe_nonneg _
     · refine' ⟨f_meas.coe_nnreal_real.AEMeasurable.AEStronglyMeasurable, _⟩
-      rw [with_density_apply _ s_meas] at hs
+      rw [with_density_apply _ s_meas] at hs 
       rw [has_finite_integral]
       convert hs
       ext1 x

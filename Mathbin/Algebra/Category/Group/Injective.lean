@@ -43,9 +43,9 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
     Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨A⟩ :=
-        { g with map_smul' := by intros ; rw [RingHom.id_apply, g.to_fun_eq_coe, map_zsmul] }
+        { g with map_smul' := by intros; rw [RingHom.id_apply, g.to_fun_eq_coe, map_zsmul] }
       let F : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨Y⟩ :=
-        { f with map_smul' := by intros ; rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
+        { f with map_smul' := by intros; rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
       have : mono F := by
         refine' ⟨fun Z α β eq1 => _⟩
         let α' : AddCommGroupCat.of Z ⟶ X := α.to_add_monoid_hom
@@ -55,7 +55,7 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
           simp only [CategoryTheory.comp_apply, LinearMap.toAddMonoidHom_coe]
           simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using
             FunLike.congr_fun eq1 x
-        rw [cancel_mono] at eq2
+        rw [cancel_mono] at eq2 
         ext; simpa only using FunLike.congr_fun eq2 x
       refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
       ext; convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
@@ -100,7 +100,7 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
             simp only [map_zero, add_zero]
           · intro n1 n2
             simp only [map_zero, smul_zero]
-          · rw [submodule.span_singleton_eq_bot.mpr rfl, Submodule.mem_bot] at hn
+          · rw [submodule.span_singleton_eq_bot.mpr rfl, Submodule.mem_bot] at hn 
             simp only [hn, map_zero]
             symm
             convert map_zero _
@@ -114,7 +114,7 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
           · intro n1 n2; simp only [add_smul]
           · intro n1 n2
             rw [RingHom.id_apply, smul_eq_mul, mul_smul]
-          · rw [Submodule.mem_span_singleton] at hn
+          · rw [Submodule.mem_span_singleton] at hn 
             rcases hn with ⟨n, rfl⟩
             simp only [gm_eq, Algebra.id.smul_eq_mul, LinearMap.coe_mk]
             rw [mul_smul, DivisibleBy.div_cancel (g ⟨m, _⟩) m_eq_zero, ← LinearMap.map_smul]

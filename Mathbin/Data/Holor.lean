@@ -133,10 +133,10 @@ instance [Neg α] : Neg (Holor α ds) :=
   ⟨fun a t => -a t⟩
 
 instance [AddSemigroup α] : AddSemigroup (Holor α ds) := by
-  refine_struct { add := (· + ·).. } <;> pi_instance_derive_field
+  refine_struct { add := (· + ·) .. } <;> pi_instance_derive_field
 
 instance [AddCommSemigroup α] : AddCommSemigroup (Holor α ds) := by
-  refine_struct { add := (· + ·).. } <;> pi_instance_derive_field
+  refine_struct { add := (· + ·) .. } <;> pi_instance_derive_field
 
 instance [AddMonoid α] : AddMonoid (Holor α ds) := by
   refine_struct
@@ -330,7 +330,7 @@ theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
   simp only [slice_unit_vec_mul hid]
   rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
   · simp
-  · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)
+  · intro (b : { x // x ∈ Finset.range d }) (hb : b ∈ (Finset.range d).attach) (hbi : b ≠ ⟨i, _⟩)
     have hbi' : i ≠ b := by simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
     simp [hbi']
   · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
@@ -362,13 +362,13 @@ inductive CPRankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → 
 theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CPRankMax 1 x :=
   by
   have h := CPRankMax.succ 0 x 0 (CPRankMax1.nil x) CPRankMax.zero
-  rwa [add_zero x, zero_add] at h
+  rwa [add_zero x, zero_add] at h 
 #align holor.cprank_max_nil Holor.cprankMax_nil
 
 theorem cprankMax_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CPRankMax1 x) : CPRankMax 1 x :=
   by
   have h' := CPRankMax.succ 0 x 0 h CPRankMax.zero
-  rwa [zero_add, add_zero] at h'
+  rwa [zero_add, add_zero] at h' 
 #align holor.cprank_max_1 Holor.cprankMax_1
 
 theorem cprankMax_add [Monoid α] [AddMonoid α] :
@@ -400,14 +400,14 @@ theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor
   letI := Classical.decEq β
   Finset.induction_on s (by simp [cprank_max.zero])
     (by
-      intro x s(h_x_notin_s : x ∉ s)ih h_cprank
+      intro x s (h_x_notin_s : x ∉ s) ih h_cprank
       simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]
       simp only [Nat.one_mul, Nat.add_comm]
       have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) :=
         by
         apply ih
-        intro (x : β)(h_x_in_s : x ∈ s)
+        intro (x : β) (h_x_in_s : x ∈ s)
         simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
       exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 #align holor.cprank_max_sum Holor.cprankMax_sum
@@ -431,7 +431,7 @@ theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankM
       CPRankMax (Finset.card (Finset.range d) * Prod ds)
         (∑ i in Finset.attach (Finset.range d),
           unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
-      by rwa [Finset.card_attach] at this
+      by rwa [Finset.card_attach] at this 
     rw [← sum_unit_vec_mul_slice x]
     rw [h_dds_prod]
     exact h_cprank_max_sum

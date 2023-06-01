@@ -66,27 +66,27 @@ abbrev G : MonCat :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
-abbrev G.mk : (Σj, F.obj j) → G :=
+abbrev G.mk : (Σ j, F.obj j) → G :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget GroupCat))
 #align Group.filtered_colimits.G.mk GroupCat.FilteredColimits.G.mk
 #align AddGroup.filtered_colimits.G.mk AddGroupCat.FilteredColimits.G.mk
 
 @[to_additive]
-theorem G.mk_eq (x y : Σj, F.obj j)
-    (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : G.mk x = G.mk y :=
+theorem G.mk_eq (x y : Σ j, F.obj j)
+    (h : ∃ (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : G.mk x = G.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget GroupCat) x y h)
 #align Group.filtered_colimits.G.mk_eq GroupCat.FilteredColimits.G.mk_eq
 #align AddGroup.filtered_colimits.G.mk_eq AddGroupCat.FilteredColimits.G.mk_eq
 
 /-- The "unlifted" version of taking inverses in the colimit. -/
 @[to_additive "The \"unlifted\" version of negation in the colimit."]
-def colimitInvAux (x : Σj, F.obj j) : G :=
+def colimitInvAux (x : Σ j, F.obj j) : G :=
   G.mk ⟨x.1, x.2⁻¹⟩
 #align Group.filtered_colimits.colimit_inv_aux GroupCat.FilteredColimits.colimitInvAux
 #align AddGroup.filtered_colimits.colimit_neg_aux AddGroupCat.FilteredColimits.colimitNegAux
 
 @[to_additive]
-theorem colimitInvAux_eq_of_rel (x y : Σj, F.obj j)
+theorem colimitInvAux_eq_of_rel (x y : Σ j, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
     colimit_inv_aux x = colimit_inv_aux y :=
   by
@@ -113,7 +113,7 @@ instance colimitInv : Inv G
 -/
 
 @[simp, to_additive]
-theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
+theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl
 #align Group.filtered_colimits.colimit_inv_mk_eq GroupCat.FilteredColimits.colimit_inv_mk_eq
 #align AddGroup.filtered_colimits.colimit_neg_mk_eq AddGroupCat.FilteredColimits.colimit_neg_mk_eq

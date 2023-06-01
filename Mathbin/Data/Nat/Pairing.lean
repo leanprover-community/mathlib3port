@@ -117,7 +117,7 @@ theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n :=
   simp [unpair]; change sqrt n with s
   by_cases h : n - s * s < s <;> simp [h]
   · exact lt_of_lt_of_le h (sqrt_le_self _)
-  · simp at h
+  · simp at h 
     have s0 : 0 < s := sqrt_pos.2 n1
     exact lt_of_le_of_lt h (tsub_lt_self n1 (mul_pos s0 s0))
 #align nat.unpair_lt Nat.unpair_lt
@@ -160,11 +160,11 @@ theorem pair_lt_pair_left {a₁ a₂} (b) (h : a₁ < a₂) : pair a₁ b < pair
   by
   by_cases h₁ : a₁ < b <;> simp [mkpair, h₁, add_assoc]
   · by_cases h₂ : a₂ < b <;> simp [mkpair, h₂, h]
-    simp at h₂
+    simp at h₂ 
     apply add_lt_add_of_le_of_lt
     exact mul_self_le_mul_self h₂
     exact lt_add_right _ _ _ h
-  · simp at h₁
+  · simp at h₁ 
     simp [not_lt_of_gt (lt_of_le_of_lt h₁ h)]
     apply add_lt_add
     exact mul_self_lt_mul_self h
@@ -179,7 +179,7 @@ theorem pair_lt_pair_right (a) {b₁ b₂} (h : b₁ < b₂) : pair a b₁ < pai
   · simp [mkpair, lt_trans h₁ h, h]
     exact mul_self_lt_mul_self h
   · by_cases h₂ : a < b₂ <;> simp [mkpair, h₂, h]
-    simp at h₁
+    simp at h₁ 
     rw [add_comm, add_comm _ a, add_assoc, add_lt_add_iff_left]
     rwa [add_comm, ← sqrt_lt, sqrt_add_eq]
     exact le_trans h₁ (Nat.le_add_left _ _)

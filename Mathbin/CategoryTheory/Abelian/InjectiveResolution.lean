@@ -92,7 +92,7 @@ theorem descFOne_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
 def descFSucc {Y Z : C} (I : InjectiveResolution Y) (J : InjectiveResolution Z) (n : ℕ)
     (g : J.cocomplex.pt n ⟶ I.cocomplex.pt n) (g' : J.cocomplex.pt (n + 1) ⟶ I.cocomplex.pt (n + 1))
     (w : J.cocomplex.d n (n + 1) ≫ g' = g ≫ I.cocomplex.d n (n + 1)) :
-    Σ'g'' : J.cocomplex.pt (n + 2) ⟶ I.cocomplex.pt (n + 2),
+    Σ' g'' : J.cocomplex.pt (n + 2) ⟶ I.cocomplex.pt (n + 2),
       J.cocomplex.d (n + 1) (n + 2) ≫ g'' = g' ≫ I.cocomplex.d (n + 1) (n + 2) :=
   ⟨@Exact.desc C _ _ _ _ _ _ _ _ _ (g' ≫ I.cocomplex.d (n + 1) (n + 2)) (J.cocomplex.d n (n + 1))
       (J.cocomplex.d (n + 1) (n + 2)) (Abelian.Exact.op _ _ (J.exact _))

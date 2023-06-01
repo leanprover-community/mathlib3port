@@ -405,9 +405,9 @@ theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
   rcases(W.monic_polynomial.not_irreducible_iff_exists_add_mul_eq_coeff W.nat_degree_polynomial).mp
       h with
     ⟨f, g, h0, h1⟩
-  simp only [polynomial_eq, Cubic.coeff_eq_c, Cubic.coeff_eq_d] at h0 h1
-  apply_fun degree  at h0 h1
-  rw [Cubic.degree_of_a_ne_zero' <| neg_ne_zero.mpr <| one_ne_zero' R, degree_mul] at h0
+  simp only [polynomial_eq, Cubic.coeff_eq_c, Cubic.coeff_eq_d] at h0 h1 
+  apply_fun degree  at h0 h1 
+  rw [Cubic.degree_of_a_ne_zero' <| neg_ne_zero.mpr <| one_ne_zero' R, degree_mul] at h0 
   apply (h1.symm.le.trans Cubic.degree_of_b_eq_zero').not_lt
   rcases nat.with_bot.add_eq_three_iff.mp h0.symm with (h | h | h | h)
   any_goals rw [degree_add_eq_left_of_degree_lt] <;> simp only [h] <;> decide
@@ -620,7 +620,8 @@ TODO Lean 4: verify if the new def-eq cache (lean4#1102) fixed this issue.
 See Zulip thread:
 https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/.E2.9C.94.20class_group.2Emk -/
 def CoordinateRing : Type u :=
-  AdjoinRoot W.Polynomial deriving Inhabited, CommRing
+  AdjoinRoot W.Polynomial
+deriving Inhabited, CommRing
 #align weierstrass_curve.coordinate_ring WeierstrassCurve.CoordinateRing
 
 /-- The function field $R(W) := \mathrm{Frac}(R[W])$ of `W`. -/
@@ -717,7 +718,7 @@ theorem basis_one : W.CoordinateRing.Basis 1 = AdjoinRoot.mk W.Polynomial Y := b
 @[simp]
 theorem coe_basis :
     (W.CoordinateRing.Basis : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial Y] := by
-  ext n; fin_cases n; exacts[basis_zero W, basis_one W]
+  ext n; fin_cases n; exacts [basis_zero W, basis_one W]
 #align weierstrass_curve.coordinate_ring.coe_basis WeierstrassCurve.CoordinateRing.coe_basis
 
 variable {W}
@@ -730,7 +731,7 @@ theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.P
     p = 0 ∧ q = 0 :=
   by
   have h := fintype.linear_independent_iff.mp (coordinate_ring.basis W).LinearIndependent ![p, q]
-  erw [Fin.sum_univ_succ, basis_zero, Fin.sum_univ_one, basis_one] at h
+  erw [Fin.sum_univ_succ, basis_zero, Fin.sum_univ_one, basis_one] at h 
   exact ⟨h hpq 0, h hpq 1⟩
 #align weierstrass_curve.coordinate_ring.smul_basis_eq_zero WeierstrassCurve.CoordinateRing.smul_basis_eq_zero
 
@@ -738,7 +739,7 @@ theorem exists_smul_basis_eq (x : W.CoordinateRing) :
     ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial Y = x :=
   by
   have h := (coordinate_ring.basis W).sum_equivFun x
-  erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h
+  erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h 
   exact ⟨_, _, h⟩
 #align weierstrass_curve.coordinate_ring.exists_smul_basis_eq WeierstrassCurve.CoordinateRing.exists_smul_basis_eq
 
@@ -808,7 +809,7 @@ theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
   ·
     simpa only [hq, hdp, sub_zero, MulZeroClass.zero_mul, MulZeroClass.mul_zero,
       zero_pow zero_lt_two] using (max_bot_right _).symm
-  rw [← not_congr degree_eq_bot] at hp hq
+  rw [← not_congr degree_eq_bot] at hp hq 
   cases' p.degree with dp; · exact (hp rfl).elim
   cases' q.degree with dq; · exact (hq rfl).elim
   cases' le_or_lt dp (dq + 1) with hpq hpq

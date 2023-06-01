@@ -104,7 +104,7 @@ theorem gal_x_pow_sub_one_isSolvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).G
   apply isSolvable_of_comm
   intro σ τ
   ext (a ha)
-  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
+  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha 
   have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m :=
     by
     intro σ
@@ -139,10 +139,10 @@ theorem gal_x_pow_sub_c_isSolvable_aux (n : ℕ) (a : F)
   apply isSolvable_of_comm
   intro σ τ
   ext (b hb)
-  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb
+  simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb 
   have hb' : b ≠ 0 := by
     intro hb'
-    rw [hb', zero_pow hn'] at hb
+    rw [hb', zero_pow hn'] at hb 
     exact ha' hb.symm
   have key : ∀ σ : (X ^ n - C a).Gal, ∃ c, σ b = b * algebraMap F _ c :=
     by
@@ -169,14 +169,14 @@ theorem splits_x_pow_sub_one_of_x_pow_sub_c {F : Type _} [Field F] {E : Type _} 
   have hn'' : (X ^ n - C a).degree ≠ 0 :=
     ne_of_eq_of_ne (degree_X_pow_sub_C hn' a) (mt with_bot.coe_eq_coe.mp hn)
   obtain ⟨b, hb⟩ := exists_root_of_splits i h hn''
-  rw [eval₂_sub, eval₂_X_pow, eval₂_C, sub_eq_zero] at hb
+  rw [eval₂_sub, eval₂_X_pow, eval₂_C, sub_eq_zero] at hb 
   have hb' : b ≠ 0 := by
     intro hb'
-    rw [hb', zero_pow hn'] at hb
+    rw [hb', zero_pow hn'] at hb 
     exact ha' hb.symm
   let s := ((X ^ n - C a).map i).roots
   have hs : _ = _ * (s.map _).Prod := eq_prod_roots_of_splits h
-  rw [leading_coeff_X_pow_sub_C hn', RingHom.map_one, C_1, one_mul] at hs
+  rw [leading_coeff_X_pow_sub_C hn', RingHom.map_one, C_1, one_mul] at hs 
   have hs' : s.card = n := (nat_degree_eq_card_roots h).symm.trans nat_degree_X_pow_sub_C
   apply @splits_of_exists_multiset F E _ _ i (X ^ n - 1) (s.map fun c : E => c / b)
   rw [leading_coeff_X_pow_sub_one hn', RingHom.map_one, C_1, one_mul, Multiset.map_map]
@@ -210,7 +210,7 @@ theorem gal_x_pow_sub_c_isSolvable (n : ℕ) (x : F) : IsSolvable (X ^ n - C x).
     apply gal_x_pow_sub_c_isSolvable_aux
     have key := splitting_field.splits (X ^ n - 1 : F[X])
     rwa [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X,
-      Polynomial.map_one] at key
+      Polynomial.map_one] at key 
 #align gal_X_pow_sub_C_is_solvable gal_x_pow_sub_c_isSolvable
 
 end GalXPowSubC
@@ -301,7 +301,7 @@ theorem isIntegral (α : solvableByRad F E) : IsIntegral F α :=
       is_algebraic_iff_is_integral.mp
         ⟨p.comp (X ^ n),
           ⟨fun h => h1 (leading_coeff_eq_zero.mp _), by rw [aeval_comp, aeval_X_pow, h2]⟩⟩
-    rwa [← leading_coeff_eq_zero, leading_coeff_comp, leading_coeff_X_pow, one_pow, mul_one] at h
+    rwa [← leading_coeff_eq_zero, leading_coeff_comp, leading_coeff_X_pow, one_pow, mul_one] at h 
     rwa [nat_degree_X_pow]
 #align solvable_by_rad.is_integral solvableByRad.isIntegral
 
@@ -332,9 +332,9 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       rw [multiset_prod_comp]
       apply gal_prod_isSolvable
       intro q hq
-      rw [Multiset.mem_map] at hq
+      rw [Multiset.mem_map] at hq 
       obtain ⟨q, hq, rfl⟩ := hq
-      rw [Multiset.mem_map] at hq
+      rw [Multiset.mem_map] at hq 
       obtain ⟨q, hq, rfl⟩ := hq
       rw [sub_comp, X_comp, C_comp]
       exact gal_x_pow_sub_c_isSolvable n q

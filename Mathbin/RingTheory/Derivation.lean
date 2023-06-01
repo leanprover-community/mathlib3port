@@ -45,7 +45,7 @@ assumption from the Leibniz rule when `M` is cancellative.
 TODO: update this when bimodules are defined. -/
 @[protect_proj]
 structure Derivation (R : Type _) (A : Type _) [CommSemiring R] [CommSemiring A] [Algebra R A]
-  (M : Type _) [AddCommMonoid M] [Module A M] [Module R M] extends A →ₗ[R] M where
+    (M : Type _) [AddCommMonoid M] [Module A M] [Module R M] extends A →ₗ[R] M where
   map_one_eq_zero' : to_linear_map 1 = 0
   leibniz' (a b : A) : to_linear_map (a * b) = a • to_linear_map b + b • to_linear_map a
 #align derivation Derivation
@@ -68,7 +68,7 @@ variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 instance : AddMonoidHomClass (Derivation R A M) A M
     where
   coe D := D.toFun
-  coe_injective' D1 D2 h := by cases D1; cases D2; congr ; exact FunLike.coe_injective h
+  coe_injective' D1 D2 h := by cases D1; cases D2; congr; exact FunLike.coe_injective h
   map_add D := D.toLinearMap.map_add'
   map_zero D := D.toLinearMap.map_zero
 
@@ -568,8 +568,8 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
     dsimp only [Submodule.coe_add, Submodule.coe_mk, LinearMap.coe_mk,
       diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_toAlgHom',
       LinearMap.toFun_eq_coe]
-    simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this⊢
-    rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this
+    simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this ⊢
+    rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this 
     rw [this]
     ring
 #align derivation_to_square_zero_of_lift derivationToSquareZeroOfLift

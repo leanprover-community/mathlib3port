@@ -189,7 +189,7 @@ theorem isClosed [ContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :
   apply isOpen_compl_iff.1
   refine' isOpen_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · refine' fun u hux hu => hx _
-    simp only [Set.mem_preimage, SetLike.mem_coe] at hux hu⊢
+    simp only [Set.mem_preimage, SetLike.mem_coe] at hux hu ⊢
     convert U.mul_mem (U.inv_mem hux) hu
     simp
   · exact U.is_open.preimage (continuous_mul_right _)

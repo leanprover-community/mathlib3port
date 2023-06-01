@@ -157,9 +157,9 @@ theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 :=
   constructor
   · intro h
     cases' le_total m n with H H
-    · simp only [H, max_eq_right] at h
+    · simp only [H, max_eq_right] at h 
       exact ⟨le_antisymm (H.trans h.le) (zero_le _), h⟩
-    · simp only [H, max_eq_left] at h
+    · simp only [H, max_eq_left] at h 
       exact ⟨h, le_antisymm (H.trans h.le) (zero_le _)⟩
   · rintro ⟨rfl, rfl⟩
     simp
@@ -236,7 +236,7 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
     (by
       intro h
       cases' m with m
-      · simp [zero_add] at h; exact Or.inr h
+      · simp [zero_add] at h ; exact Or.inr h
       exact Or.inl (succ_pos _))
     (by
       intro h; cases' h with mpos npos
@@ -327,11 +327,11 @@ theorem lt_of_lt_pred (h : m < n - 1) : m < n :=
 #print Nat.le_or_le_of_add_eq_add_pred /-
 theorem le_or_le_of_add_eq_add_pred (h : k + l = m + n - 1) : m ≤ k ∨ n ≤ l :=
   by
-  cases' le_or_lt m k with h' h' <;> [left;right]
+  cases' le_or_lt m k with h' h' <;> [left; right]
   · exact h'
-  · replace h' := add_lt_add_right h' l; rw [h] at h'
+  · replace h' := add_lt_add_right h' l; rw [h] at h' 
     cases' n.eq_zero_or_pos with hn hn; · rw [hn]; exact zero_le l
-    rw [m.add_sub_assoc hn, add_lt_add_iff_left] at h'
+    rw [m.add_sub_assoc hn, add_lt_add_iff_left] at h' 
     exact Nat.le_of_pred_lt h'
 #align nat.le_or_le_of_add_eq_add_pred Nat.le_or_le_of_add_eq_add_pred
 -/
@@ -450,7 +450,8 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
       · exact ha _
       apply diag_induction (a + 1) b this
     apply diag_induction a (b + 1)
-    apply lt_of_le_of_lt (Nat.le_succ _) h termination_by' ⟨_, measure_wf fun p => p.1 + p.2.1⟩
+    apply lt_of_le_of_lt (Nat.le_succ _) h
+termination_by' ⟨_, measure_wf fun p => p.1 + p.2.1⟩
 #align nat.diag_induction Nat.diag_induction
 -/
 
@@ -552,7 +553,7 @@ theorem mul_div_mul_comm_of_dvd_dvd (hmk : k ∣ m) (hnl : l ∣ n) :
 theorem le_half_of_half_lt_sub {a b : ℕ} (h : a / 2 < a - b) : b ≤ a / 2 :=
   by
   rw [Nat.le_div_iff_mul_le two_pos]
-  rw [Nat.div_lt_iff_lt_mul two_pos, Nat.mul_sub_right_distrib, lt_tsub_iff_right, mul_two a] at h
+  rw [Nat.div_lt_iff_lt_mul two_pos, Nat.mul_sub_right_distrib, lt_tsub_iff_right, mul_two a] at h 
   exact le_of_lt (Nat.lt_of_add_lt_add_left h)
 #align nat.le_half_of_half_lt_sub Nat.le_half_of_half_lt_sub
 -/
@@ -561,7 +562,7 @@ theorem le_half_of_half_lt_sub {a b : ℕ} (h : a / 2 < a - b) : b ≤ a / 2 :=
 theorem half_le_of_sub_le_half {a b : ℕ} (h : a - b ≤ a / 2) : a / 2 ≤ b :=
   by
   rw [Nat.le_div_iff_mul_le two_pos, Nat.mul_sub_right_distrib, tsub_le_iff_right, mul_two,
-    add_le_add_iff_left] at h
+    add_le_add_iff_left] at h 
   rw [← Nat.mul_div_left b two_pos]
   exact Nat.div_le_div_right h
 #align nat.half_le_of_sub_le_half Nat.half_le_of_sub_le_half
@@ -588,7 +589,7 @@ theorem div_dvd_of_dvd (h : n ∣ m) : m / n ∣ m :=
 protected theorem div_div_self (h : n ∣ m) (hm : m ≠ 0) : m / (m / n) = n :=
   by
   rcases h with ⟨_, rfl⟩
-  rw [mul_ne_zero_iff] at hm
+  rw [mul_ne_zero_iff] at hm 
   rw [mul_div_right _ (Nat.pos_of_ne_zero hm.1), mul_div_left _ (Nat.pos_of_ne_zero hm.2)]
 #align nat.div_div_self Nat.div_div_self
 -/
@@ -764,13 +765,13 @@ theorem findGreatest_eq_iff :
         exact ⟨le_rfl, fun _ => hk, fun n hlt hle => (hlt.not_le hle).elim⟩
       · rintro ⟨hle, h0, hm⟩
         rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt)
-        exacts[rfl, (hm hlt le_rfl hk).elim]
+        exacts [rfl, (hm hlt le_rfl hk).elim]
     · rw [find_greatest_of_not hk, ihk]
       constructor
       · rintro ⟨hle, hP, hm⟩
         refine' ⟨hle.trans k.le_succ, hP, fun n hlt hle => _⟩
         rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt')
-        exacts[hk, hm hlt <| lt_succ_iff.1 hlt']
+        exacts [hk, hm hlt <| lt_succ_iff.1 hlt']
       · rintro ⟨hle, hP, hm⟩
         refine' ⟨lt_succ_iff.1 (hle.lt_of_ne _), hP, fun n hlt hle => hm hlt (hle.trans k.le_succ)⟩
         rintro rfl
@@ -906,7 +907,7 @@ theorem bit_lt_bit (a b) (h : m < n) : bit a m < bit b n :=
 theorem bit0_le_bit1_iff : bit0 m ≤ bit1 n ↔ m ≤ n :=
   ⟨fun h => by
     rwa [← Nat.lt_succ_iff, n.bit1_eq_succ_bit0, ← n.bit0_succ_eq, bit0_lt_bit0, Nat.lt_succ_iff] at
-      h,
+      h ,
     fun h => le_of_lt (Nat.bit0_lt_bit1 h)⟩
 #align nat.bit0_le_bit1_iff Nat.bit0_le_bit1_iff
 -/
@@ -921,7 +922,7 @@ theorem bit0_lt_bit1_iff : bit0 m < bit1 n ↔ m ≤ n :=
 #print Nat.bit1_le_bit0_iff /-
 @[simp]
 theorem bit1_le_bit0_iff : bit1 m ≤ bit0 n ↔ m < n :=
-  ⟨fun h => by rwa [m.bit1_eq_succ_bit0, succ_le_iff, bit0_lt_bit0] at h, fun h =>
+  ⟨fun h => by rwa [m.bit1_eq_succ_bit0, succ_le_iff, bit0_lt_bit0] at h , fun h =>
     le_of_lt (Nat.bit1_lt_bit0 h)⟩
 #align nat.bit1_le_bit0_iff Nat.bit1_le_bit0_iff
 -/
@@ -968,7 +969,7 @@ instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] :
   decidable_of_iff (∀ x < hi - lo, P (lo + x))
     ⟨fun al x hl hh => by
       have := al (x - lo) ((tsub_lt_tsub_iff_right hl).mpr hh)
-      rwa [add_tsub_cancel_of_le hl] at this, fun al x h =>
+      rwa [add_tsub_cancel_of_le hl] at this , fun al x h =>
       al _ (Nat.le_add_right _ _) (lt_tsub_iff_left.mp h)⟩
 #align nat.decidable_lo_hi Nat.decidableLoHi
 -/

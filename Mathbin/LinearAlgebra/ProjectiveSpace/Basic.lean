@@ -126,7 +126,7 @@ theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
   rw [mk_eq_mk_iff K v w hv hw]
   constructor
   · rintro ⟨a, ha⟩; exact ⟨a, ha⟩
-  · rintro ⟨a, ha⟩; refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩; rwa [c, zero_smul] at ha
+  · rintro ⟨a, ha⟩; refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩; rwa [c, zero_smul] at ha 
 #align projectivization.mk_eq_mk_iff' Projectivization.mk_eq_mk_iff'
 
 theorem exists_smul_eq_mk_rep (v : V) (hv : v ≠ 0) : ∃ a : Kˣ, a • v = (mk K v hv).rep :=
@@ -164,8 +164,8 @@ theorem submodule_injective :
     Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) :=
   by
   intro u v h; replace h := le_of_eq h
-  simp only [submodule_eq] at h
-  rw [Submodule.le_span_singleton_iff] at h
+  simp only [submodule_eq] at h 
+  rw [Submodule.le_span_singleton_iff] at h 
   rw [← mk_rep v, ← mk_rep u]
   apply Quotient.sound'
   obtain ⟨a, ha⟩ := h u.rep (Submodule.mem_span_singleton_self _)
@@ -183,10 +183,10 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
   Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
     (by
       constructor
-      · intro u v h; apply_fun fun e => e.val  at h
+      · intro u v h; apply_fun fun e => e.val  at h 
         apply submodule_injective h
       · rintro ⟨H, h⟩
-        rw [finrank_eq_one_iff'] at h
+        rw [finrank_eq_one_iff'] at h 
         obtain ⟨v, hv, h⟩ := h
         have : (v : V) ≠ 0 := fun c => hv (Subtype.coe_injective c)
         use mk K v this
@@ -234,7 +234,7 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
     (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
-      dsimp at ha⊢
+      dsimp at ha ⊢
       erw [← f.map_smulₛₗ, ha])
 #align projectivization.map Projectivization.map
 
@@ -246,14 +246,14 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotient.sound'
-  dsimp [map, mk] at h
-  simp only [Quotient.eq''] at h
+  dsimp [map, mk] at h 
+  simp only [Quotient.eq''] at h 
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
-  dsimp at ha⊢
+  dsimp at ha ⊢
   have : (a : L) = σ (τ a) := by rw [RingHomInvPair.comp_apply_eq₂]
-  change (a : L) • f v.rep = f u.rep at ha
-  rw [this, ← f.map_smulₛₗ] at ha
+  change (a : L) • f v.rep = f u.rep at ha 
+  rw [this, ← f.map_smulₛₗ] at ha 
   exact hf ha
 #align projectivization.map_injective Projectivization.map_injective
 

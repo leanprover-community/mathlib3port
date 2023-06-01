@@ -108,7 +108,7 @@ end IsMulHom
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) extends IsAddHom f :
-  Prop where
+    Prop where
   map_zero : f 0 = 0
 #align is_add_monoid_hom IsAddMonoidHom
 -/

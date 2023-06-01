@@ -37,7 +37,7 @@ universe u v w u₁ v₁
 /-- Defining the homomorphism in the category R-Alg. -/
 @[nolint has_nonempty_instance]
 structure AlgHom (R : Type u) (A : Type v) (B : Type w) [CommSemiring R] [Semiring A] [Semiring B]
-  [Algebra R A] [Algebra R B] extends RingHom A B where
+    [Algebra R A] [Algebra R B] extends RingHom A B where
   commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
 #align alg_hom AlgHom
 -/
@@ -55,8 +55,8 @@ notation:25 A " →ₐ[" R "] " B => AlgHom R A B
 /-- `alg_hom_class F R A B` asserts `F` is a type of bundled algebra homomorphisms
 from `A` to `B`.  -/
 class AlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A]
-  [Algebra R B] extends RingHomClass F A B where
+    (B : outParam (Type _)) [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A]
+    [Algebra R B] extends RingHomClass F A B where
   commutes : ∀ (f : F) (r : R), f (algebraMap R A r) = algebraMap R B r
 #align alg_hom_class AlgHomClass
 -/

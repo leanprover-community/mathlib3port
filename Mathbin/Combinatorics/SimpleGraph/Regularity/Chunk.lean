@@ -109,9 +109,9 @@ private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (
     by
     intro x hx
     rw [← bUnion_filter_atomise hX (G.nonuniform_witness_subset h₂), star, mem_sdiff, mem_bUnion] at
-      hx
+      hx 
     simp only [not_exists, mem_bUnion, and_imp, filter_congr_decidable, exists_prop, mem_filter,
-      not_and, mem_sdiff, id.def, mem_sdiff] at hx⊢
+      not_and, mem_sdiff, id.def, mem_sdiff] at hx ⊢
     obtain ⟨⟨B, hB₁, hB₂⟩, hx⟩ := hx
     exact ⟨B, hB₁, hB₂, fun A hA AB => hx A hA <| AB.trans hB₁.2.1⟩
   apply (card_le_of_subset q).trans (card_bUnion_le.trans _)
@@ -132,7 +132,7 @@ private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (
   rw [sum_const]
   refine' mul_le_mul_right' _ _
   have t := card_filter_atomise_le_two_pow hX
-  rw [filter_congr_decidable] at t
+  rw [filter_congr_decidable] at t 
   refine' t.trans (pow_le_pow (by norm_num) <| tsub_le_tsub_right _ _)
   exact card_image_le.trans (card_le_of_subset <| filter_subset _ _)
 
@@ -213,8 +213,8 @@ theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.
 #align szemeredi_regularity.card_chunk SzemerediRegularity.card_chunk
 
 theorem card_eq_of_mem_parts_chunk (hs : s ∈ (chunk hP G ε hU).parts) :
-    s.card = m ∨ s.card = m + 1 := by unfold chunk at hs;
-  split_ifs  at hs <;> exact card_eq_of_mem_parts_equitabilise hs
+    s.card = m ∨ s.card = m + 1 := by unfold chunk at hs ;
+  split_ifs  at hs  <;> exact card_eq_of_mem_parts_equitabilise hs
 #align szemeredi_regularity.card_eq_of_mem_parts_chunk SzemerediRegularity.card_eq_of_mem_parts_chunk
 
 theorem m_le_card_of_mem_chunk_parts (hs : s ∈ (chunk hP G ε hU).parts) : m ≤ s.card :=
@@ -321,7 +321,7 @@ private theorem density_sub_eps_le_sum_density_div_card [Nonempty α]
     apply le_sum_card_subset_chunk_parts hB hy
     positivity
   refine' mul_pos (mul_pos _ _) (mul_pos _ _) <;> rw [cast_pos, Finset.card_pos]
-  exacts[⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
+  exacts [⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
 
 private theorem sum_density_div_card_le_density_add_eps [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -359,7 +359,7 @@ private theorem sum_density_div_card_le_density_add_eps [Nonempty α]
     · exact ⟨_, hx, nonempty_of_mem_parts _ (hA hx)⟩
     · exact ⟨_, hy, nonempty_of_mem_parts _ (hB hy)⟩
   refine' mul_pos (mul_pos _ _) (mul_pos _ _) <;> rw [cast_pos, Finset.card_pos]
-  exacts[⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
+  exacts [⟨_, hx⟩, nonempty_of_mem_parts _ (hA hx), ⟨_, hy⟩, nonempty_of_mem_parts _ (hB hy)]
 
 private theorem average_density_near_total_density [Nonempty α]
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
@@ -396,7 +396,7 @@ private theorem edge_density_chunk_aux [Nonempty α]
     · exact_mod_cast G.edge_density_nonneg _ _
     · exact_mod_cast G.edge_density_le_one _ _
     · exact div_le_div_of_le_left (by positivity) (by norm_num) (by norm_num)
-  rw [← sub_nonneg] at hGε
+  rw [← sub_nonneg] at hGε 
   have :
     ↑(G.edge_density U V) - ε ^ 5 / 50 ≤
       (∑ ab in (chunk hP G ε hU).parts.product (chunk hP G ε hV).parts, G.edge_density ab.1 ab.2) /
@@ -511,15 +511,15 @@ private theorem edge_density_star_not_uniform [Nonempty α]
     have :=
       average_density_near_total_density hPα hPε hε₁ (subset.refl (chunk hP G ε hU).parts)
         (subset.refl (chunk hP G ε hV).parts)
-    simp_rw [← sup_eq_bUnion, sup_parts, card_chunk (m_pos hPα).ne', cast_pow] at this
-    norm_num at this
+    simp_rw [← sup_eq_bUnion, sup_parts, card_chunk (m_pos hPα).ne', cast_pow] at this 
+    norm_num at this 
     exact this
   have hε' : ε ^ 5 ≤ ε := by
     simpa using pow_le_pow_of_le_one (by positivity) hε₁ (show 1 ≤ 5 by norm_num)
   have hpr' : |p - r| ≤ ε / 49 := hpr.trans (div_le_div_of_le_of_nonneg hε' <| by norm_num)
   have hqt' : |q - t| ≤ ε / 49 := hqt.trans (div_le_div_of_le_of_nonneg hε' <| by norm_num)
-  rw [abs_sub_le_iff] at hrs hpr' hqt'
-  rw [le_abs] at hst⊢
+  rw [abs_sub_le_iff] at hrs hpr' hqt' 
+  rw [le_abs] at hst ⊢
   cases hst
   left; linarith
   right; linarith
@@ -570,8 +570,8 @@ theorem edgeDensity_chunk_not_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ 
         add_div_le_sum_sq_div_card t (fun x => (G.edge_density x.1 x.2 : ℝ))
           (G.edge_density U V ^ 2 - ε ^ 5 / 25) (show 0 ≤ 3 / 4 * ε by linarith) _ _
       · simp_rw [card_product, card_chunk (m_pos hPα).ne', ← mul_pow, cast_pow, mul_pow, div_pow, ←
-          mul_assoc] at this
-        norm_num at this
+          mul_assoc] at this 
+        norm_num at this 
         exact this
       · simp_rw [card_product, card_chunk (m_pos hPα).ne', ← mul_pow]
         norm_num

@@ -141,7 +141,7 @@ theorem not_isBoundedUnder_of_tendsto_atTop [Preorder β] [NoMaxOrder β] {f : �
     [l.ne_bot] (hf : Tendsto f l atTop) : ¬IsBoundedUnder (· ≤ ·) l f :=
   by
   rintro ⟨b, hb⟩
-  rw [eventually_map] at hb
+  rw [eventually_map] at hb 
   obtain ⟨b', h⟩ := exists_gt b
   have hb' := (tendsto_at_top.mp hf) b'
   have : { x : α | f x ≤ b } ∩ { x : α | b' ≤ f x } = ∅ :=
@@ -178,7 +178,7 @@ theorem IsBoundedUnder.bddBelow_range_of_cofinite [SemilatticeInf β] {f : α �
 #print Filter.IsBoundedUnder.bddAbove_range /-
 theorem IsBoundedUnder.bddAbove_range [SemilatticeSup β] {f : ℕ → β}
     (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) := by
-  rw [← Nat.cofinite_eq_atTop] at hf; exact hf.bdd_above_range_of_cofinite
+  rw [← Nat.cofinite_eq_atTop] at hf ; exact hf.bdd_above_range_of_cofinite
 #align filter.is_bounded_under.bdd_above_range Filter.IsBoundedUnder.bddAbove_range
 -/
 
@@ -906,8 +906,8 @@ theorem blimsup_eq_iInf_biSup {f : Filter β} {p : β → Prop} {u : β → α} 
       eventually_imp_distrib_left.mpr fun h => eventually_iff_exists_mem.2 ⟨s, h, fun x h₁ h₂ => _⟩
     exact @le_iSup₂ α β (fun b => p b ∧ b ∈ s) _ (fun b hb => u b) x ⟨h₂, h₁⟩
   · obtain ⟨s, hs, hs'⟩ := eventually_iff_exists_mem.mp ha'
-    simp_rw [Imp.swap] at hs'
-    exact (le_infi_iff.mp (ha s) hs).trans (by simpa only [iSup₂_le_iff, and_imp] )
+    simp_rw [Imp.swap] at hs' 
+    exact (le_infi_iff.mp (ha s) hs).trans (by simpa only [iSup₂_le_iff, and_imp])
 #align filter.blimsup_eq_infi_bsupr Filter.blimsup_eq_iInf_biSup
 
 theorem blimsup_eq_iInf_biSup_of_nat {p : ℕ → Prop} {u : ℕ → α} :
@@ -1131,7 +1131,7 @@ theorem bliminf_or_eq_inf : (bliminf u f fun x => p x ∨ q x) = bliminf u f p �
 theorem sup_limsup [NeBot f] (a : α) : a ⊔ limsup u f = limsup (fun x => a ⊔ u x) f :=
   by
   simp only [limsup_eq_infi_supr, iSup_sup_eq, sup_iInf₂_eq]
-  congr ; ext s; congr ; ext hs; congr
+  congr; ext s; congr; ext hs; congr
   exact (biSup_const (nonempty_of_mem hs)).symm
 #align filter.sup_limsup Filter.sup_limsup
 
@@ -1226,8 +1226,8 @@ theorem exists_forall_mem_of_hasBasis_mem_blimsup {l : Filter β} {b : ι → Se
     (hl : l.HasBasis q b) {u : β → Set α} {p : β → Prop} {x : α} (hx : x ∈ blimsup u l p) :
     ∃ f : { i | q i } → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i :=
   by
-  rw [blimsup_eq_infi_bsupr] at hx
-  simp only [supr_eq_Union, infi_eq_Inter, mem_Inter, mem_Union, exists_prop] at hx
+  rw [blimsup_eq_infi_bsupr] at hx 
+  simp only [supr_eq_Union, infi_eq_Inter, mem_Inter, mem_Union, exists_prop] at hx 
   choose g hg hg' using hx
   refine' ⟨fun i : { i | q i } => g (b i) (hl.mem_of_mem i.2), fun i => ⟨_, _⟩⟩
   · exact hg' (b i) (hl.mem_of_mem i.2)
@@ -1255,7 +1255,7 @@ theorem frequently_lt_of_lt_limsSup {f : Filter α} [ConditionallyCompleteLinear
     (h : a < limsSup f) : ∃ᶠ n in f, a < n :=
   by
   contrapose! h
-  simp only [not_frequently, not_lt] at h
+  simp only [not_frequently, not_lt] at h 
   exact Limsup_le_of_le hf h
 #align filter.frequently_lt_of_lt_Limsup Filter.frequently_lt_of_lt_limsSup
 -/
@@ -1279,7 +1279,7 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
         is_bounded_default) :
     ∀ᶠ a in f, b < u a :=
   by
-  obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c :=
+  obtain ⟨c, hc, hbc⟩ : ∃ (c : β) (hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c :=
     exists_lt_of_lt_csSup hu h
   exact hc.mono fun x hx => lt_of_lt_of_le hbc hx
 #align filter.eventually_lt_of_lt_liminf Filter.eventually_lt_of_lt_liminf
@@ -1353,7 +1353,7 @@ theorem Monotone.isBoundedUnder_le_comp [Nonempty β] [LinearOrder β] [Preorder
     IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f :=
   by
   refine' ⟨_, fun h => h.IsBoundedUnder hg⟩
-  rintro ⟨c, hc⟩; rw [eventually_map] at hc
+  rintro ⟨c, hc⟩; rw [eventually_map] at hc 
   obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
   exact ⟨b, hc.mono fun x hx => not_lt.1 fun h => (hb _ h.le).not_le hx⟩
 #align monotone.is_bounded_under_le_comp Monotone.isBoundedUnder_le_comp
@@ -1390,8 +1390,8 @@ theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β]
     l (limsup v f) ≤ limsup (fun x => l (v x)) f :=
   by
   refine' le_Limsup_of_le hlv fun c hc => _
-  rw [Filter.eventually_map] at hc
-  simp_rw [gc _ _] at hc⊢
+  rw [Filter.eventually_map] at hc 
+  simp_rw [gc _ _] at hc ⊢
   exact Limsup_le_of_le hv_co hc
 #align galois_connection.l_limsup_le GaloisConnection.l_limsup_le
 

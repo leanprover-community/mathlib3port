@@ -486,7 +486,7 @@ instance [T0Space X] : T0Space (OnePoint X) :=
   by
   refine' ⟨fun x y hxy => _⟩
   rcases inseparable_iff.1 hxy with (⟨rfl, rfl⟩ | ⟨x, rfl, y, rfl, h⟩)
-  exacts[rfl, congr_arg coe h.eq]
+  exacts [rfl, congr_arg coe h.eq]
 
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
 instance [T1Space X] : T1Space (OnePoint X)
@@ -546,7 +546,7 @@ Let `α = alexandroff ℕ` be the one-point compactification of `ℕ`, and let `
 `id : α → β` is a continuous equivalence that is not a homeomorphism.
 -/
 theorem Continuous.homeoOfEquivCompactToT2.t1_counterexample :
-    ∃ (α β : Type)(Iα : TopologicalSpace α)(Iβ : TopologicalSpace β),
+    ∃ (α β : Type) (Iα : TopologicalSpace α) (Iβ : TopologicalSpace β),
       CompactSpace α ∧ T1Space β ∧ ∃ f : α ≃ β, Continuous f ∧ ¬Continuous f.symm :=
   ⟨OnePoint ℕ, CofiniteTopology (OnePoint ℕ), inferInstance, inferInstance, inferInstance,
     inferInstance, CofiniteTopology.of, CofiniteTopology.continuous_of,

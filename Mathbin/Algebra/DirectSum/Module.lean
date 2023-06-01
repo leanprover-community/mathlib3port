@@ -273,12 +273,12 @@ variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry` as a linear map.-/
-noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
+noncomputable def sigmaLcurry : (⨁ i : Σ i, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with map_smul' := fun r => by convert@Dfinsupp.sigmaCurry_smul _ _ _ δ _ _ _ r }
 #align direct_sum.sigma_lcurry DirectSum.sigmaLcurry
 
 @[simp]
-theorem sigmaLcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
+theorem sigmaLcurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) :
     sigmaLcurry R f i j = f ⟨i, j⟩ :=
   sigmaCurry_apply f i j
 #align direct_sum.sigma_lcurry_apply DirectSum.sigmaLcurry_apply
@@ -286,7 +286,7 @@ theorem sigmaLcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `uncurry` as a linear map.-/
 def sigmaLuncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
-    (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
+    (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σ i, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigmaUncurry_smul }
 #align direct_sum.sigma_luncurry DirectSum.sigmaLuncurry
 
@@ -300,7 +300,7 @@ theorem sigmaLuncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (�
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
-    (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
+    (⨁ i : Σ i, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
 #align direct_sum.sigma_lcurry_equiv DirectSum.sigmaLcurryEquiv
 
@@ -366,7 +366,7 @@ theorem IsInternal.submodule_independent (h : IsInternal A) : CompleteLattice.In
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
 noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : Basis (Σi, α i) R M
+    (v : ∀ i, Basis (α i) R (A i)) : Basis (Σ i, α i) R M
     where repr :=
     ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h).symm ≪≫ₗ
         Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
@@ -376,7 +376,7 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
 
 @[simp]
 theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) :=
+    (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σ i, α i => ↑(v a.1 a.2) :=
   by
   funext a
   simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.toFun_eq_coe,
@@ -390,7 +390,7 @@ theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type _}
 #align direct_sum.is_internal.collected_basis_coe DirectSum.IsInternal.collectedBasis_coe
 
 theorem IsInternal.collectedBasis_mem (h : IsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by simp
+    (v : ∀ i, Basis (α i) R (A i)) (a : Σ i, α i) : h.collectedBasis v a ∈ A a.1 := by simp
 #align direct_sum.is_internal.collected_basis_mem DirectSum.IsInternal.collectedBasis_mem
 
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies

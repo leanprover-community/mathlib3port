@@ -112,7 +112,7 @@ theorem WeakDual.characterSpace.mem_spectrum_iff_exists {a : A} {z : ℂ} :
   refine' ⟨fun hz => _, _⟩
   · obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
     simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id,
-      RingHom.id_apply] at hf
+      RingHom.id_apply] at hf 
     exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
   · rintro ⟨f, rfl⟩
     exact AlgHom.apply_mem_spectrum f a
@@ -157,7 +157,7 @@ theorem gelfandTransform_isometry : Isometry (gelfandTransform ℂ A) :=
   have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) := by
     unfold spectralRadius; rw [spectrum.gelfandTransform_eq]
   simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectralRadius_eq_nnnorm,
-    gelfandTransform_map_star a, ENNReal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this
+    gelfandTransform_map_star a, ENNReal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this 
   simpa only [Function.comp_apply, NNReal.sqrt_sq] using
     congr_arg ((coe : ℝ≥0 → ℝ) ∘ ⇑NNReal.sqrt) this
 #align gelfand_transform_isometry gelfandTransform_isometry

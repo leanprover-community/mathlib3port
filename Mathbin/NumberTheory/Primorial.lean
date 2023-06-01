@@ -66,7 +66,7 @@ theorem primorial_add (m n : ℕ) :
     (m + n)# = m# * ∏ p in filter Nat.Prime (Ico (m + 1) (m + n + 1)), p :=
   by
   rw [primorial, primorial, ← Ico_zero_eq_range, ← prod_union, ← filter_union, Ico_union_Ico_eq_Ico]
-  exacts[zero_le _, add_le_add_right (Nat.le_add_right _ _) _,
+  exacts [zero_le _, add_le_add_right (Nat.le_add_right _ _) _,
     disjoint_filter_filter <| Ico_disjoint_Ico_consecutive _ _ _]
 #align primorial_add primorial_add
 
@@ -78,7 +78,7 @@ theorem primorial_add_dvd {m n : ℕ} (h : n ≤ m) : (m + n)# ∣ m# * choose (
       mul_dvd_mul_left _ <|
         prod_primes_dvd _ (fun k hk => (mem_filter.1 hk).2.Prime) fun p hp =>
           by
-          rw [mem_filter, mem_Ico] at hp
+          rw [mem_filter, mem_Ico] at hp 
           exact
             hp.2.dvd_choose_add hp.1.1 (h.trans_lt (m.lt_succ_self.trans_le hp.1.1))
               (Nat.lt_succ_iff.1 hp.1.2)

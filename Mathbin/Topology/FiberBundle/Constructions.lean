@@ -302,8 +302,8 @@ noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ
     exact (total_space_mk_inducing F₁ E₁ b).prod_mk (total_space_mk_inducing F₂ E₂ b)
   trivializationAtlas :=
     { e |
-      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ :
-        MemTrivializationAtlas e₁)(_ : MemTrivializationAtlas e₂), e = Trivialization.prod e₁ e₂ }
+      ∃ (e₁ : Trivialization F₁ (π E₁)) (e₂ : Trivialization F₂ (π E₂)) (_ :
+        MemTrivializationAtlas e₁) (_ : MemTrivializationAtlas e₂), e = Trivialization.prod e₁ e₂ }
   trivializationAt b := (trivializationAt F₁ E₁ b).Prod (trivializationAt F₂ E₂ b)
   mem_baseSet_trivializationAt b :=
     ⟨mem_baseSet_trivializationAt F₁ E₁ b, mem_baseSet_trivializationAt F₂ E₂ b⟩
@@ -401,16 +401,17 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π E)) (f : K) 
   target := (f ⁻¹' e.baseSet) ×ˢ univ
   map_source' x h :=
     by
-    simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h
+    simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h 
     simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff, mem_preimage, h]
   map_target' y h := by
-    rw [mem_prod, mem_preimage] at h
+    rw [mem_prod, mem_preimage] at h 
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift, h.1]
   left_inv' x h := by
-    simp_rw [mem_preimage, e.mem_source, pullback.proj_lift] at h
+    simp_rw [mem_preimage, e.mem_source, pullback.proj_lift] at h 
     simp_rw [pullback.lift, e.symm_apply_apply_mk h, total_space.eta]
-  right_inv' x h := by
-    simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h
+  right_inv' x h :=
+    by
+    simp_rw [mem_prod, mem_preimage, mem_univ, and_true_iff] at h 
     simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
   open_source := by simp_rw [e.source_eq, ← preimage_comp];
     exact
@@ -444,7 +445,7 @@ noncomputable instance FiberBundle.pullback [∀ x, TopologicalSpace (E x)] [Fib
     inducing_of_inducing_compose (Pullback.continuous_totalSpaceMk F E)
       (Pullback.continuous_lift E f) (totalSpaceMk_inducing F E (f x))
   trivializationAtlas :=
-    { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas e), ef = e.Pullback f }
+    { ef | ∃ (e : Trivialization F (π E)) (_ : MemTrivializationAtlas e), ef = e.Pullback f }
   trivializationAt x := (trivializationAt F E (f x)).Pullback f
   mem_baseSet_trivializationAt x := mem_baseSet_trivializationAt F E (f x)
   trivialization_mem_atlas x := ⟨trivializationAt F E (f x), by infer_instance, rfl⟩

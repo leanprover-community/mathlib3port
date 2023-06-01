@@ -57,7 +57,7 @@ universe u₁ u₂ u₃ u₄
 /-- An affine basis is a family of affine-independent points whose span is the top subspace. -/
 @[protect_proj]
 structure AffineBasis (ι : Type u₁) (k : Type u₂) {V : Type u₃} (P : Type u₄) [AddCommGroup V]
-  [affine_space V P] [Ring k] [Module k V] where
+    [affine_space V P] [Ring k] [Module k V] where
   toFun : ι → P
   ind' : AffineIndependent k to_fun
   tot' : affineSpan k (range to_fun) = ⊤
@@ -245,7 +245,7 @@ theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (
     (∑ i, b.Coord i v • b i) = v :=
   by
   have hb := b.affine_combination_coord_eq_self v
-  rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
+  rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb 
 #align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_self
 
 theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ :=
@@ -321,7 +321,7 @@ theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset �
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
-    ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), ⇑b = coe :=
+    ∃ (s : _) (_ : s ⊆ t) (b : AffineBasis (↥s) k P), ⇑b = coe :=
   by
   obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affineIndependent k V t
   refine' ⟨s, hst, ⟨coe, h_ind, _⟩, rfl⟩
@@ -330,7 +330,7 @@ theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
 
 variable (k V P)
 
-theorem exists_affineBasis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), ⇑b = coe :=
+theorem exists_affineBasis : ∃ (s : Set P) (b : AffineBasis (↥s) k P), ⇑b = coe :=
   let ⟨s, _, hs⟩ := exists_affine_subbasis (AffineSubspace.span_univ k V P)
   ⟨s, hs⟩
 #align affine_basis.exists_affine_basis AffineBasis.exists_affineBasis

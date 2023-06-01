@@ -100,7 +100,7 @@ theorem nearestPt_zero (e : ℕ → α) : nearestPt e 0 = const α (e 0) :=
 theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀ k ≤ N, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
-  by simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]; congr ; simp
+  by simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]; congr; simp
 #align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearestPtInd_succ
 
 #print MeasureTheory.SimpleFunc.nearestPtInd_le /-
@@ -109,7 +109,7 @@ theorem nearestPtInd_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x
   induction' N with N ihN; · simp
   simp only [nearest_pt_ind_succ]
   split_ifs
-  exacts[le_rfl, ihN.trans N.le_succ]
+  exacts [le_rfl, ihN.trans N.le_succ]
 #align measure_theory.simple_func.nearest_pt_ind_le MeasureTheory.SimpleFunc.nearestPtInd_le
 -/
 
@@ -121,11 +121,11 @@ theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) 
   · simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
-      exacts[le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
-    · push_neg  at h
+      exacts [le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
+    · push_neg  at h 
       rcases h with ⟨l, hlN, hxl⟩
       rcases hk.eq_or_lt with (rfl | hk)
-      exacts[(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
+      exacts [(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
 #align measure_theory.simple_func.edist_nearest_pt_le MeasureTheory.SimpleFunc.edist_nearestPt_le
 
 #print MeasureTheory.SimpleFunc.tendsto_nearestPt /-
@@ -134,7 +134,7 @@ theorem tendsto_nearestPt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e
   by
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
   rcases EMetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
-  rw [edist_comm] at hN
+  rw [edist_comm] at hN 
   exact ⟨N, trivial, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
 #align measure_theory.simple_func.tendsto_nearest_pt MeasureTheory.SimpleFunc.tendsto_nearestPt
 -/
@@ -166,7 +166,7 @@ theorem approxOn_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by apply this
   rintro (_ | n)
-  exacts[h₀, Subtype.mem _]
+  exacts [h₀, Subtype.mem _]
 #align measure_theory.simple_func.approx_on_mem MeasureTheory.SimpleFunc.approxOn_mem
 -/
 
@@ -185,7 +185,7 @@ theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ 
     Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) :=
   by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
+  rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx 
   simp only [approx_on, coe_comp]
   refine' tendsto_nearest_pt (closure_minimal _ isClosed_closure hx)
   simp only [Nat.range_casesOn, closure_union, range_comp coe]

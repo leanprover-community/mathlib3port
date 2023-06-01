@@ -175,7 +175,7 @@ theorem NoetherianSpace.iUnion {ι : Type _} (f : ι → Set α) [Finite ι]
     [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) :=
   by
   cases nonempty_fintype ι
-  simp_rw [noetherian_space_set_iff] at hf⊢
+  simp_rw [noetherian_space_set_iff] at hf ⊢
   intro t ht
   rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_iUnion]
   exact isCompact_iUnion fun i => hf i _ (Set.inter_subset_right _ _)
@@ -222,13 +222,13 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
       rintro ⟨k, hk⟩
       cases finset.mem_singleton.mp hk
       exact ⟨h, h₁⟩
-    · rw [isPreirreducible_iff_closed_union_closed] at h₁
-      push_neg  at h₁
+    · rw [isPreirreducible_iff_closed_union_closed] at h₁ 
+      push_neg  at h₁ 
       obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
       obtain ⟨S₁, hS₁, hS₁'⟩ := H (s ⊓ ⟨z₁, hz₁⟩) (inf_lt_left.2 hz₁')
       obtain ⟨S₂, hS₂, hS₂'⟩ := H (s ⊓ ⟨z₂, hz₂⟩) (inf_lt_left.2 hz₂')
       refine' ⟨S₁ ∪ S₂, fun k => _, _⟩
-      · cases' finset.mem_union.mp k.2 with h' h'; exacts[hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
+      · cases' finset.mem_union.mp k.2 with h' h'; exacts [hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
       · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
 #align topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
@@ -240,7 +240,7 @@ theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
     suffices irreducibleComponents α ⊆ coe '' (S : Set <| closeds α) by
       exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this
     intro K hK
-    obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finset.image coe S), K ⊆ z :=
+    obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α) (H : z ∈ Finset.image coe S), K ⊆ z :=
       by
       convert is_irreducible_iff_sUnion_closed.mp hK.1 (S.image coe) _ _
       · simp only [Finset.mem_image, exists_prop, forall_exists_index, and_imp]
@@ -248,7 +248,7 @@ theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
         exact z.2
       · exact (Set.subset_univ _).trans ((congr_arg coe hS₂).trans <| by simp).Subset
     obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz
-    rw [← e] at hz'
+    rw [← e] at hz' 
     refine' ⟨s, hs, _⟩
     symm
     suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)

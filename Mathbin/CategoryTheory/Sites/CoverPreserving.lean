@@ -183,7 +183,7 @@ theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
-    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F :=
+    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σ c', F.obj c' ≅ d) : CompatiblePreserving K F :=
   by
   constructor
   introv hx he
@@ -205,7 +205,7 @@ theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePre
     (hG₂ : CoverPreserving J K G) (ℱ : Sheaf K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) :=
   by
   intro X U S hS x hx
-  change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
+  change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x 
   let H := ℱ.2 X _ (hG₂.cover_preserve hS)
   let hx' := hx.functor_pushforward hG₁ (sheaf_over ℱ X)
   constructor; swap

@@ -117,7 +117,7 @@ def squashSeq (s : Seq <| Pair K) (n : ℕ) : Seq (Pair K) :=
 theorem squashSeq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (n + 1)) :
     squashSeq s n = s :=
   by
-  change s.nth (n + 1) = none at terminated_at_succ_n
+  change s.nth (n + 1) = none at terminated_at_succ_n 
   cases s_nth_eq : s.nth n <;> simp only [*, squash_seq]
 #align generalized_continued_fraction.squash_seq_eq_self_of_terminated GeneralizedContinuedFraction.squashSeq_eq_self_of_terminated
 -/
@@ -235,7 +235,7 @@ theorem squashGCF_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : s
   by
   cases n
   case zero =>
-    change g.s.nth 0 = none at terminated_at_n
+    change g.s.nth 0 = none at terminated_at_n 
     simp only [convergents', squash_gcf, convergents'_aux, terminated_at_n]
   case succ => cases g; simp [squash_seq_eq_self_of_terminated terminated_at_n, squash_gcf]
 #align generalized_continued_fraction.squash_gcf_eq_self_of_terminated GeneralizedContinuedFraction.squashGCF_eq_self_of_terminated

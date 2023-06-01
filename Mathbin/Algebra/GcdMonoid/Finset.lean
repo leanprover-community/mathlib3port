@@ -255,7 +255,7 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 :=
     use b
     simp [mem_def.1 bs]
   · intro a as
-    rw [Multiset.mem_map] at as
+    rw [Multiset.mem_map] at as 
     rcases as with ⟨b, ⟨bs, rfl⟩⟩
     apply h b (mem_def.1 bs)
 #align finset.gcd_eq_zero_iff Finset.gcd_eq_zero_iff
@@ -307,7 +307,7 @@ theorem extract_gcd (f : β → α) (hs : s.Nonempty) :
     · refine' ⟨fun b => 1, fun b hb => by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], _⟩
       rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
     · choose g' hg using @gcd_dvd _ _ _ _ s f
-      have := fun b hb => _; push_neg  at h
+      have := fun b hb => _; push_neg  at h 
       refine' ⟨fun b => if hb : b ∈ s then g' hb else 0, this, extract_gcd' f _ h this⟩
       rw [dif_pos hb, hg hb]
 #align finset.extract_gcd Finset.extract_gcd

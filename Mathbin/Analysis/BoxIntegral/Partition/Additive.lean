@@ -178,9 +178,9 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
   by
   rcases exists_split_many_inf_eq_filter_of_finite {π₁, π₂} ((finite_singleton _).insert _) with
     ⟨s, hs⟩
-  simp only [inf_split_many] at hs
+  simp only [inf_split_many] at hs 
   rcases hs _ (Or.inl rfl), hs _ (Or.inr rfl) with ⟨h₁, h₂⟩; clear hs
-  rw [h] at h₁
+  rw [h] at h₁ 
   calc
     (∑ J in π₁.boxes, f J) = ∑ J in π₁.boxes, ∑ J' in (split_many J s).boxes, f J' :=
       Finset.sum_congr rfl fun J hJ => (f.sum_partition_boxes _ (is_partition_split_many _ _)).symm
@@ -190,7 +190,7 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
     _ = ∑ J in π₂.boxes, f J :=
       Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
     
-  exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI,
+  exacts [(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI,
     (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
 #align box_integral.box_additive_map.sum_boxes_congr BoxIntegral.BoxAdditiveMap.sum_boxes_congr
 
@@ -227,7 +227,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
     I₀
     (by
       intro J hJ j
-      rw [WithTop.coe_le_coe] at hJ
+      rw [WithTop.coe_le_coe] at hJ 
       refine' i.succ_above_cases _ _ j
       · intro x hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ←
@@ -236,7 +236,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
       · clear j; intro j x hx
         have : (J.face i : WithTop (box (Fin n))) ≤ I₀.face i :=
           WithTop.coe_le_coe.2 (face_mono hJ i)
-        rw [le_iff_Icc, @box.Icc_eq_pi _ I₀] at hJ
+        rw [le_iff_Icc, @box.Icc_eq_pi _ I₀] at hJ 
         rw [hf _ (hJ J.upper_mem_Icc _ trivial), hf _ (hJ J.lower_mem_Icc _ trivial), ←
           (fb _).map_split_add this j x, ← (fb _).map_split_add this j x]
         have hx' : x ∈ Ioo ((J.face i).lower j) ((J.face i).upper j) := hx

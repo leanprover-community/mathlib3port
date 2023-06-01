@@ -59,7 +59,8 @@ instance homotopy_congruence : Congruence (homotopic V c)
 /-- `homotopy_category V c` is the category of chain complexes of shape `c` in `V`,
 with chain maps identified when they are homotopic. -/
 def HomotopyCategory :=
-  CategoryTheory.Quotient (homotopic V c)deriving Category
+  CategoryTheory.Quotient (homotopic V c)
+deriving Category
 #align homotopy_category HomotopyCategory
 -/
 

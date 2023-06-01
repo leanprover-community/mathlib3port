@@ -48,7 +48,7 @@ variable (P : PFunctor) {α β : Type u}
 #print PFunctor.Obj /-
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Type _) :=
-  Σx : P.A, P.B x → α
+  Σ x : P.A, P.B x → α
 #align pfunctor.obj PFunctor.Obj
 -/
 
@@ -150,7 +150,7 @@ variable (P)
 For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
 one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def IdxCat :=
-  Σx : P.A, P.B x
+  Σ x : P.A, P.B x
 #align pfunctor.Idx PFunctor.IdxCat
 -/
 
@@ -192,7 +192,7 @@ namespace PFunctor
 #print PFunctor.comp /-
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : PFunctor.{u}) : PFunctor.{u} :=
-  ⟨Σa₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σu : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
+  ⟨Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
 #align pfunctor.comp PFunctor.comp
 -/
 
@@ -241,7 +241,10 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
   by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm*Exists _, _ ∧ _; subst_vars; assumption
-  repeat' first |constructor|assumption
+  repeat'
+    first
+    | constructor
+    | assumption
 #align pfunctor.liftp_iff' PFunctor.liftp_iff'
 -/
 
@@ -272,7 +275,7 @@ theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
   ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun x => ∃ y : P.B a, f y = x
-    rw [liftp_iff']; intro ; refine' ⟨_, rfl⟩
+    rw [liftp_iff']; intro; refine' ⟨_, rfl⟩
   · simp only [liftp_iff']; cases h; subst x
     tauto
 #align pfunctor.supp_eq PFunctor.supp_eq

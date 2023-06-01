@@ -46,7 +46,7 @@ you should parametrize over `(F : Type*) [bounded_continuous_map_class F α β] 
 
 When you extend this structure, make sure to extend `bounded_continuous_map_class`. -/
 structure BoundedContinuousFunction (α : Type u) (β : Type v) [TopologicalSpace α]
-  [PseudoMetricSpace β] extends ContinuousMap α β : Type max u v where
+    [PseudoMetricSpace β] extends ContinuousMap α β : Type max u v where
   map_bounded' : ∃ C, ∀ x y, dist (to_fun x) (to_fun y) ≤ C
 #align bounded_continuous_function BoundedContinuousFunction
 -/
@@ -61,7 +61,7 @@ section
 
 You should also extend this typeclass when you extend `bounded_continuous_function`. -/
 class BoundedContinuousMapClass (F α β : Type _) [TopologicalSpace α] [PseudoMetricSpace β] extends
-  ContinuousMapClass F α β where
+    ContinuousMapClass F α β where
   map_bounded (f : F) : ∃ C, ∀ x y, dist (f x) (f y) ≤ C
 #align bounded_continuous_map_class BoundedContinuousMapClass
 -/
@@ -179,8 +179,8 @@ theorem dist_eq : dist f g = sInf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x)
 theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C :=
   by
   rcases f.bounded_range.union g.bounded_range with ⟨C, hC⟩
-  refine' ⟨max 0 C, le_max_left _ _, fun x => (hC _ _ _ _).trans (le_max_right _ _)⟩ <;>
-      [left;right] <;>
+  refine' ⟨max 0 C, le_max_left _ _, fun x => (hC _ _ _ _).trans (le_max_right _ _)⟩ <;> [left;
+      right] <;>
     apply mem_range_self
 #align bounded_continuous_function.dist_set_exists BoundedContinuousFunction.dist_set_exists
 
@@ -572,7 +572,7 @@ and several useful variations around it. -/
 theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (H : Equicontinuous (coeFn : A → α → β)) : IsCompact A :=
   by
-  simp_rw [Equicontinuous, Metric.equicontinuousAt_iff_pair] at H
+  simp_rw [Equicontinuous, Metric.equicontinuousAt_iff_pair] at H 
   refine' isCompact_of_totallyBounded_isClosed _ closed
   refine' totally_bounded_of_finite_discretization fun ε ε0 => _
   rcases exists_between ε0 with ⟨ε₁, ε₁0, εε₁⟩
@@ -652,7 +652,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     rw [uniform_embedding_subtype_coe.to_uniform_inducing.equicontinuous_iff]
     exact H.comp (A.restrict_preimage F)
   · let g := cod_restrict s f fun x => in_s f x hf
-    rw [show f = F g by ext <;> rfl] at hf⊢
+    rw [show f = F g by ext <;> rfl] at hf ⊢
     exact ⟨g, hf, rfl⟩
 #align bounded_continuous_function.arzela_ascoli₂ BoundedContinuousFunction.arzela_ascoli₂
 
@@ -824,7 +824,7 @@ def toContinuousMapAddHom : (α →ᵇ β) →+ C(α, β)
     where
   toFun := toContinuousMap
   map_zero' := by ext; simp
-  map_add' := by intros ; ext; simp
+  map_add' := by intros; ext; simp
 #align bounded_continuous_function.to_continuous_map_add_hom BoundedContinuousFunction.toContinuousMapAddHom
 
 end LipschitzAdd
@@ -1535,8 +1535,8 @@ theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ �
     f x ≤ nndist f 0 :=
   by
   have key : nndist (f x) ((0 : α →ᵇ ℝ≥0) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
-  simp only [coe_zero, Pi.zero_apply] at key
-  rwa [NNReal.nndist_zero_eq_val' (f x)] at key
+  simp only [coe_zero, Pi.zero_apply] at key 
+  rwa [NNReal.nndist_zero_eq_val' (f x)] at key 
 #align bounded_continuous_function.nnreal.upper_bound BoundedContinuousFunction.Nnreal.upper_bound
 
 /-!
@@ -1638,7 +1638,7 @@ instance : SemilatticeInf (α →ᵇ β) :=
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
-          simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
+          simp_rw [NormedAddCommGroup.dist_eq] at hf hg ⊢
           exact (norm_inf_sub_inf_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) }
     inf_le_left := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_left
     inf_le_right := fun f g => ContinuousMap.le_def.mpr fun _ => inf_le_right
@@ -1656,7 +1656,7 @@ instance : SemilatticeSup (α →ᵇ β) :=
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
-          simp_rw [NormedAddCommGroup.dist_eq] at hf hg⊢
+          simp_rw [NormedAddCommGroup.dist_eq] at hf hg ⊢
           exact (norm_sup_sub_sup_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) }
     le_sup_left := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_left
     le_sup_right := fun f g => ContinuousMap.le_def.mpr fun _ => le_sup_right

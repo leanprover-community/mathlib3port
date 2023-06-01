@@ -106,7 +106,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine' Submodule.iSup_induction' _ (fun i x hx => _) _ (fun x y hx hy ihx ihy => _) hx'
   · obtain ⟨i, rfl⟩ := i
-    dsimp only [Subtype.coe_mk] at hx
+    dsimp only [Subtype.coe_mk] at hx 
     refine'
       Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
         (fun m hm i x hx ih => _) hx
@@ -145,7 +145,7 @@ theorem iSup_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
   rw [← (DirectSum.Decomposition.isInternal (even_odd Q)).submodule_iSup_eq_top, eq_comm]
   calc
     (⨆ (i : ZMod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
-        ⨆ i : Σi : ZMod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
+        ⨆ i : Σ i : ZMod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
       by rw [iSup_sigma]
     _ = ⨆ i : ℕ, (ι Q).range ^ i :=
       Function.Surjective.iSup_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl

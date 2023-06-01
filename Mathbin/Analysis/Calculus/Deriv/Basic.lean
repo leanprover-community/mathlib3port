@@ -634,7 +634,7 @@ theorem derivWithin_Ioi_eq_Ici {E : Type _} [NormedAddCommGroup E] [NormedSpace 
     simpa using (uniqueDiffOn_Ici x).Eq le_rfl A B
   · rw [derivWithin_zero_of_not_differentiableWithinAt H,
       derivWithin_zero_of_not_differentiableWithinAt]
-    rwa [differentiableWithinAt_Ioi_iff_Ici] at H
+    rwa [differentiableWithinAt_Ioi_iff_Ici] at H 
 #align deriv_within_Ioi_eq_Ici derivWithin_Ioi_eq_Ici
 -/
 

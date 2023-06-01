@@ -365,7 +365,7 @@ theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : �
   by
   rcases exists_pair_ne β with ⟨a, b, hne⟩
   rcases isBot_or_exists_lt a with (ha | ⟨c, hc⟩)
-  exacts[⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
+  exacts [⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
 #align exists_lt_of_directed_ge exists_lt_of_directed_ge
 -/
 

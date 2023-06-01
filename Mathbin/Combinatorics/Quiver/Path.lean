@@ -138,7 +138,7 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
   · exact ⟨h, rfl⟩
   · cases hq
   · cases hq
-  simp only [comp_cons] at h
+  simp only [comp_cons] at h 
   obtain rfl := h.1
   obtain ⟨rfl, rfl⟩ := ih (Nat.succ.inj hq) h.2.1.Eq
   rw [h.2.2.Eq]
@@ -199,7 +199,7 @@ theorem toList_injective (a : V) : ∀ b, Injective (toList : Path a b → List 
   | b, @cons _ _ _ c _ p f, nil, h => by cases h
   | b, @cons _ _ _ c _ p f, @cons _ _ s t u C D, h =>
     by
-    simp only [to_list] at h
+    simp only [to_list] at h 
     obtain ⟨rfl, hAC⟩ := h
     simp [to_list_injective _ hAC]
 #align quiver.path.to_list_injective Quiver.Path.toList_injective

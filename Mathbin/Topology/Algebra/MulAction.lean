@@ -51,7 +51,7 @@ open Filter
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
 class ContinuousSMul (M X : Type _) [SMul M X] [TopologicalSpace M] [TopologicalSpace X] :
-  Prop where
+    Prop where
   continuous_smul : Continuous fun p : M × X => p.1 • p.2
 #align has_continuous_smul ContinuousSMul
 -/
@@ -63,7 +63,7 @@ export ContinuousSMul (continuous_smul)
 is continuous in both arguments. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras. -/
 class ContinuousVAdd (M X : Type _) [VAdd M X] [TopologicalSpace M] [TopologicalSpace X] :
-  Prop where
+    Prop where
   continuous_vadd : Continuous fun p : M × X => p.1 +ᵥ p.2
 #align has_continuous_vadd ContinuousVAdd
 -/

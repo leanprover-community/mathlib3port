@@ -50,7 +50,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
     IsTopologicalBasis
-      { U : Set C.pt | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } :=
+      { U : Set C.pt | ∃ (j : _) (V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } :=
   by
   classical
     -- The limit cone for `F` whose topology is defined as an infimum.
@@ -61,7 +61,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     -- Reduce to the assertion of the theorem with `D` instead of `C`.
     suffices
       is_topological_basis
-        { U : Set D.X | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = D.π.app j ⁻¹' V }
+        { U : Set D.X | ∃ (j : _) (V : Set (F.obj j)), V ∈ T j ∧ U = D.π.app j ⁻¹' V }
       by
       convert this.inducing hE
       ext U0
@@ -79,7 +79,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
       let U : ∀ i, Set (F.obj i) := fun i => if h : i = j then by rw [h]; exact V else Set.univ
       refine' ⟨U, {j}, _, _⟩
       · rintro i h
-        rw [Finset.mem_singleton] at h
+        rw [Finset.mem_singleton] at h 
         dsimp [U]
         rw [dif_pos h]
         subst h

@@ -57,8 +57,8 @@ non-unital, algebra, morphism, star
 non-unital `R`-algebras `A` and `B` equipped with a `star` operation, and this homomorphism is
 also `star`-preserving. -/
 structure NonUnitalStarAlgHom (R A B : Type _) [Monoid R] [NonUnitalNonAssocSemiring A]
-  [DistribMulAction R A] [Star A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
-  [Star B] extends A →ₙₐ[R] B where
+    [DistribMulAction R A] [Star A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
+    [Star B] extends A →ₙₐ[R] B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
 #align non_unital_star_alg_hom NonUnitalStarAlgHom
 -/
@@ -77,9 +77,9 @@ add_decl_doc NonUnitalStarAlgHom.toNonUnitalAlgHom
 /-- `non_unital_star_alg_hom_class F R A B` asserts `F` is a type of bundled non-unital ⋆-algebra
 homomorphisms from `A` to `B`. -/
 class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [Monoid R] [Star A] [Star B] [NonUnitalNonAssocSemiring A]
-  [NonUnitalNonAssocSemiring B] [DistribMulAction R A] [DistribMulAction R B] extends
-  NonUnitalAlgHomClass F R A B, StarHomClass F A B
+    (B : outParam (Type _)) [Monoid R] [Star A] [Star B] [NonUnitalNonAssocSemiring A]
+    [NonUnitalNonAssocSemiring B] [DistribMulAction R A] [DistribMulAction R B] extends
+    NonUnitalAlgHomClass F R A B, StarHomClass F A B
 #align non_unital_star_alg_hom_class NonUnitalStarAlgHomClass
 -/
 
@@ -296,7 +296,7 @@ section Unital
 /-- A *⋆-algebra homomorphism* is an algebra homomorphism between `R`-algebras `A` and `B`
 equipped with a `star` operation, and this homomorphism is also `star`-preserving. -/
 structure StarAlgHom (R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [Star A]
-  [Semiring B] [Algebra R B] [Star B] extends AlgHom R A B where
+    [Semiring B] [Algebra R B] [Star B] extends AlgHom R A B where
   map_star' : ∀ x : A, to_fun (star x) = star (to_fun x)
 #align star_alg_hom StarAlgHom
 -/
@@ -316,8 +316,8 @@ add_decl_doc StarAlgHom.toAlgHom
 
 You should also extend this typeclass when you extend `star_alg_hom`. -/
 class StarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [CommSemiring R] [Semiring A] [Algebra R A] [Star A] [Semiring B]
-  [Algebra R B] [Star B] extends AlgHomClass F R A B, StarHomClass F A B
+    (B : outParam (Type _)) [CommSemiring R] [Semiring A] [Algebra R A] [Star A] [Semiring B]
+    [Algebra R B] [Star B] extends AlgHomClass F R A B, StarHomClass F A B
 #align star_alg_hom_class StarAlgHomClass
 -/
 
@@ -671,7 +671,7 @@ multiplication and the star operation, which allows for considering both unital 
 equivalences with a single structure. Currently, `alg_equiv` requires unital algebras, which is
 why this structure does not extend it. -/
 structure StarAlgEquiv (R A B : Type _) [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B]
-  [SMul R B] [Star B] extends A ≃+* B where
+    [SMul R B] [Star B] extends A ≃+* B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
   map_smul' : ∀ (r : R) (a : A), to_fun (r • a) = r • to_fun a
 #align star_alg_equiv StarAlgEquiv
@@ -692,8 +692,8 @@ add_decl_doc StarAlgEquiv.toRingEquiv
 
 You should also extend this typeclass when you extend `star_alg_equiv`. -/
 class StarAlgEquivClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B] [SMul R B]
-  [Star B] extends RingEquivClass F A B where
+    (B : outParam (Type _)) [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B] [SMul R B]
+    [Star B] extends RingEquivClass F A B where
   map_star : ∀ (f : F) (a : A), f (star a) = star (f a)
   map_smul : ∀ (f : F) (r : R) (a : A), f (r • a) = r • f a
 #align star_alg_equiv_class StarAlgEquivClass

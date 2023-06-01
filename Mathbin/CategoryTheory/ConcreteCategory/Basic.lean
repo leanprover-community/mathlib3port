@@ -211,7 +211,7 @@ end
 `forget₂ C D : C ⥤ D` and a proof that `forget₂ ⋙ (forget D) = forget C`.
 -/
 class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u} C] [Category D]
-  [ConcreteCategory.{u} D] where
+    [ConcreteCategory.{u} D] where
   forget₂ : C ⥤ D
   forget_comp : forget₂ ⋙ forget D = forget C := by obviously
 #align category_theory.has_forget₂ CategoryTheory.HasForget₂

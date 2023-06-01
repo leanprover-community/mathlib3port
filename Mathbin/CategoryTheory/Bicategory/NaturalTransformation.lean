@@ -71,8 +71,8 @@ restate_axiom oplax_nat_trans.naturality_id'
 
 restate_axiom oplax_nat_trans.naturality_comp'
 
-attribute [simp, reassoc]
-  oplax_nat_trans.naturality_naturality oplax_nat_trans.naturality_id oplax_nat_trans.naturality_comp
+attribute [simp, reassoc] oplax_nat_trans.naturality_naturality oplax_nat_trans.naturality_id
+  oplax_nat_trans.naturality_comp
 
 namespace OplaxNatTrans
 

@@ -72,7 +72,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.pt = Q.pt) (h_p : P.p ≫ eqToHom h_X = e
     P = Q := by
   cases P
   cases Q
-  dsimp at h_X h_p
+  dsimp at h_X h_p 
   subst h_X
   simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using
     h_p
@@ -177,7 +177,7 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q)
     ⟨f.f + g.f, by
       rw [add_comp, comp_add]
       congr
-      exacts[f.comm, g.comm]⟩
+      exacts [f.comm, g.comm]⟩
   zero := ⟨0, by simp only [comp_zero, zero_comp]⟩
   zero_add f := by ext; simp only [zero_add]
   add_zero f := by ext; simp only [add_zero]
@@ -223,7 +223,7 @@ instance : IsIdempotentComplete (Karoubi C) :=
   refine' ⟨_⟩
   intro P p hp
   have hp' := hom_ext.mp hp
-  simp only [comp_f] at hp'
+  simp only [comp_f] at hp' 
   use ⟨P.X, p.f, hp'⟩
   use ⟨p.f, by rw [comp_p p, hp']⟩
   use ⟨p.f, by rw [hp', p_comp p]⟩

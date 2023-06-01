@@ -102,7 +102,7 @@ theorem exists_mem_adjoin_mul_eq_pow_natDegree {x : S} (hx : aeval x f = 0) (hmo
   by
   rw [aeval_def, Polynomial.eval₂_eq_eval_map, eval_eq_sum_range, range_add_one,
     sum_insert not_mem_range_self, sum_range, (hmo.map (algebraMap R S)).coeff_natDegree,
-    one_mul] at hx
+    one_mul] at hx 
   replace hx := eq_neg_of_add_eq_zero_left hx
   have : ∀ n < f.nat_degree, p ∣ f.coeff n :=
     by
@@ -153,7 +153,7 @@ theorem pow_natDegree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo 
   suffices x ^ f.nat_degree ∈ 𝓟 by exact mul_mem_right (x ^ k) 𝓟 this
   rw [is_root.def, eval_eq_sum_range, Finset.range_add_one,
     Finset.sum_insert Finset.not_mem_range_self, Finset.sum_range, hmo.coeff_nat_degree, one_mul] at
-    hroot
+    hroot 
   rw [eq_neg_of_add_eq_zero_left hroot, neg_mem_iff]
   refine' Submodule.sum_mem _ fun i hi => mul_mem_right _ _ (hf.mem (Fin.is_lt i))
 #align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_root_of_monic_mem Polynomial.IsWeaklyEisensteinAt.pow_natDegree_le_of_root_of_monic_mem
@@ -168,7 +168,7 @@ theorem pow_natDegree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f 
     obtain ⟨k, hk⟩ := exists_add_of_le hi
     rw [hk, pow_add]
     refine' mul_mem_right _ _ this
-  rw [aeval_def, eval₂_eq_eval_map, ← is_root.def] at hx
+  rw [aeval_def, eval₂_eq_eval_map, ← is_root.def] at hx 
   refine' pow_nat_degree_le_of_root_of_monic_mem (hf.map _) hx (hmo.map _) _ rfl.le
 #align polynomial.is_weakly_eisenstein_at.pow_nat_degree_le_of_aeval_zero_of_monic_mem_map Polynomial.IsWeaklyEisensteinAt.pow_natDegree_le_of_aeval_zero_of_monic_mem_map
 
@@ -186,7 +186,7 @@ theorem scaleRoots.isWeaklyEisensteinAt (p : R[X]) {x : R} {P : Ideal R} (hP : x
   by
   refine' ⟨fun i hi => _⟩
   rw [coeff_scale_roots]
-  rw [nat_degree_scale_roots, ← tsub_pos_iff_lt] at hi
+  rw [nat_degree_scale_roots, ← tsub_pos_iff_lt] at hi 
   exact Ideal.mul_mem_left _ _ (Ideal.pow_mem_of_mem P hP _ hi)
 #align polynomial.scale_roots.is_weakly_eisenstein_at Polynomial.scaleRoots.isWeaklyEisensteinAt
 -/
@@ -200,9 +200,9 @@ theorem dvd_pow_natDegree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inje
     (scale_roots.is_weakly_eisenstein_at _
           (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_natDegree_le_of_root_of_monic_mem
       _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
-  rw [injective_iff_map_eq_zero'] at hf
+  rw [injective_iff_map_eq_zero'] at hf 
   have := scale_roots_eval₂_eq_zero f h
-  rwa [hz, Polynomial.eval₂_at_apply, hf] at this
+  rwa [hz, Polynomial.eval₂_at_apply, hf] at this 
 #align polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero Polynomial.dvd_pow_natDegree_of_eval₂_eq_zero
 
 theorem dvd_pow_natDegree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSMulDivisors R A]

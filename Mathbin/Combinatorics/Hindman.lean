@@ -176,7 +176,7 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   so we can repeat the argument starting from `s₁`, obtaining `a₁`, `s₂`, etc. This gives the desired
   infinite sequence. -/
   have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty :=
-    fun s hs => Ultrafilter.nonempty_of_mem (inter_mem hs <| by rw [← U_idem] at hs; exact hs)
+    fun s hs => Ultrafilter.nonempty_of_mem (inter_mem hs <| by rw [← U_idem] at hs ; exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
@@ -252,7 +252,7 @@ theorem FP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
   apply FP.cons
   rcases le_iff_exists_add.mp (Nat.succ_le_of_lt ij) with ⟨d, hd⟩
   have := FP.singleton (a.drop i).tail d
-  rw [Stream'.tail_eq_drop, Stream'.nth_drop, Stream'.nth_drop] at this
+  rw [Stream'.tail_eq_drop, Stream'.nth_drop, Stream'.nth_drop] at this 
   convert this
   rw [hd, add_comm, Nat.succ_add, Nat.add_succ]
 #align hindman.FP.mul_two Hindman.FP.mul_two

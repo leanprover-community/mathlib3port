@@ -127,8 +127,8 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
           (q ≫ (f.to_path ≫ (Quiver.reverse f).toPath) ≫ q.reverse) :=
         by apply quotient.comp_closure.intro; apply red_step.step
       have that : q.cons f = q.comp f.to_path := by rfl; rw [that]
-      simp only [category.assoc, category.id_comp] at this⊢
-      simp only [category_struct.comp, Quiver.Path.comp_assoc] at this⊢
+      simp only [category.assoc, category.id_comp] at this ⊢
+      simp only [category_struct.comp, Quiver.Path.comp_assoc] at this ⊢
       exact this
     · exact ih
 #align category_theory.groupoid.free.congr_comp_reverse CategoryTheory.Groupoid.Free.congr_comp_reverse

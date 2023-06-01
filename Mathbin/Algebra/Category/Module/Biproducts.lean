@@ -64,7 +64,7 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
               Function.comp_apply, LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply,
               Pi.prod]
       uniq := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩];rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+        ext <;> [rw [← w ⟨walking_pair.left⟩]; rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
 -/
 

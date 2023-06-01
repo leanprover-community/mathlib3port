@@ -281,9 +281,9 @@ theorem of.injective_of_degree_ne_zero [IsDomain R] (hf : f.degree ≠ 0) :
   by
   rw [injective_iff_map_eq_zero]
   intro p hp
-  rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp
+  rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp 
   by_cases h : f = 0
-  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp))
+  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp ))
   · contrapose! hf with h_contra
     rw [← degree_C h_contra]
     apply le_antisymm (degree_le_of_dvd hp (by rwa [Ne.def, C_eq_zero])) _
@@ -567,7 +567,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g)
       rw [← monomial_zero_right _]
       convert congr_arg _ (Function.update_noteq hj _ _)
     -- Fix `decidable_eq` mismatch
-    · intros ; have := Finset.mem_univ i; contradiction
+    · intros; have := Finset.mem_univ i; contradiction
 #align adjoin_root.power_basis' AdjoinRoot.powerBasis'
 -/
 
@@ -919,7 +919,7 @@ noncomputable def quotEquivQuotMap (f : R[X]) (I : Ideal R) :
         algebraMap R (AdjoinRoot f ⧸ Ideal.map (of f) I) x =
           Ideal.Quotient.mk (Ideal.map (AdjoinRoot.of f) I) ((mk f) (C x)) :=
         rfl
-      simpa only [this, quot_adjoin_root_equiv_quot_polynomial_quot_mk_of, map_C] )
+      simpa only [this, quot_adjoin_root_equiv_quot_polynomial_quot_mk_of, map_C])
 #align adjoin_root.quot_equiv_quot_map AdjoinRoot.quotEquivQuotMap
 -/
 

@@ -987,8 +987,8 @@ protected def mulOneClass : MulOneClass (Finset α) :=
 -/
 
 scoped[Pointwise]
-  attribute [instance]
-    Finset.semigroup Finset.addSemigroup Finset.commSemigroup Finset.addCommSemigroup Finset.mulOneClass Finset.addZeroClass
+  attribute [instance] Finset.semigroup Finset.addSemigroup Finset.commSemigroup
+    Finset.addCommSemigroup Finset.mulOneClass Finset.addZeroClass
 
 @[to_additive]
 theorem subset_mul_left (s : Finset α) {t : Finset α} (ht : (1 : α) ∈ t) : s ⊆ s * t := fun a ha =>
@@ -1264,8 +1264,8 @@ protected def distribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Finset α)
 -/
 
 scoped[Pointwise]
-  attribute [instance]
-    Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid Finset.distribNeg
+  attribute [instance] Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid
+    Finset.subtractionCommMonoid Finset.distribNeg
 
 section Distrib
 
@@ -1664,7 +1664,7 @@ theorem union_smul_inter_subset_union [DecidableEq α] : (s₁ ∪ s₂) • (t�
 @[to_additive
       "If a finset `u` is contained in the scalar sum of two sets `s +ᵥ t`, we can find two\nfinsets `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' +ᵥ t'`."]
 theorem subset_smul {s : Set α} {t : Set β} :
-    ↑u ⊆ s • t → ∃ (s' : Finset α)(t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' • t' :=
+    ↑u ⊆ s • t → ∃ (s' : Finset α) (t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' • t' :=
   subset_image₂
 #align finset.subset_smul Finset.subset_smul
 #align finset.subset_vadd Finset.subset_vadd
@@ -2069,8 +2069,8 @@ protected def mulActionFinset [Monoid α] [MulAction α β] : MulAction α (Fins
 -/
 
 scoped[Pointwise]
-  attribute [instance]
-    Finset.mulActionFinset Finset.addActionFinset Finset.mulAction Finset.addAction
+  attribute [instance] Finset.mulActionFinset Finset.addActionFinset Finset.mulAction
+    Finset.addAction
 
 #print Finset.distribMulActionFinset /-
 /-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
@@ -2101,7 +2101,7 @@ instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     by_contra' H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset,
-      mem_zero] at H
+      mem_zero] at H 
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
     have := subset_of_eq h
     exact
@@ -2388,7 +2388,7 @@ theorem smul_finset_symm_diff₀ (ha : a ≠ 0) : a • s ∆ t = (a • s) ∆ 
 #align finset.smul_finset_symm_diff₀ Finset.smul_finset_symm_diff₀
 
 theorem smul_univ₀ [Fintype β] {s : Finset α} (hs : ¬s ⊆ 0) : s • (univ : Finset β) = univ :=
-  coe_injective <| by rw [← coe_subset] at hs; push_cast at hs⊢; exact Set.smul_univ₀ hs
+  coe_injective <| by rw [← coe_subset] at hs ; push_cast at hs ⊢; exact Set.smul_univ₀ hs
 #align finset.smul_univ₀ Finset.smul_univ₀
 
 theorem smul_finset_univ₀ [Fintype β] (ha : a ≠ 0) : a • (univ : Finset β) = univ :=

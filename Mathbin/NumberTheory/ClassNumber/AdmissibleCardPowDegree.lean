@@ -61,7 +61,7 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
     rw [coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj),
       coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj)]
   -- So we only need to look for the coefficients between `0` and `deg b`.
-  rw [not_le] at hbj
+  rw [not_le] at hbj 
   apply congr_fun i_eq.symm ⟨j, _⟩
   exact lt_of_lt_of_le (coe_lt_degree.mp hbj) hb
 #align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomial
@@ -78,7 +78,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   have hb : b ≠ 0 := by
     rintro rfl
     specialize hA 0
-    rw [degree_zero] at hA
+    rw [degree_zero] at hA 
     exact not_lt_of_le bot_le hA
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
@@ -97,14 +97,14 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
     exact lt_of_le_of_lt (degree_sub_le _ _) (max_lt (hA _) (hA _))
   -- So we only need to look for the coefficients between `deg b - d` and `deg b`.
   rw [coeff_sub, sub_eq_zero]
-  rw [not_le, degree_eq_nat_degree hb, WithBot.coe_lt_coe] at hbj
+  rw [not_le, degree_eq_nat_degree hb, WithBot.coe_lt_coe] at hbj 
   have hj : nat_degree b - j.succ < d :=
     by
     by_cases hd : nat_degree b < d
     · exact lt_of_le_of_lt tsub_le_self hd
-    · rw [not_lt] at hd
+    · rw [not_lt] at hd 
       have := lt_of_le_of_lt hj (Nat.lt_succ_self j)
-      rwa [tsub_lt_iff_tsub_lt hd hbj] at this
+      rwa [tsub_lt_iff_tsub_lt hd hbj] at this 
   have : j = b.nat_degree - (nat_degree b - j.succ).succ := by
     rw [← Nat.succ_sub hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
   convert congr_fun i_eq.symm ⟨nat_degree b - j.succ, hj⟩
@@ -133,14 +133,14 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   · obtain ⟨i₀, i₁, i_ne, mod_eq⟩ :=
       exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
-    simp only at mod_eq
+    simp only at mod_eq 
     rwa [mod_eq, sub_self, map_zero, Int.cast_zero]
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
-  rw [not_le] at le_b
+  rw [not_le] at le_b 
   obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
     exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i =>
       EuclideanDomain.mod_lt (A i) hb
-  simp only at deg_lt
+  simp only at deg_lt 
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
   by_cases h : A i₁ % b = A i₀ % b
@@ -176,7 +176,7 @@ theorem cardPowDegree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowD
   · rwa [← hyz']
   by_cases hxz' : x = z
   · rwa [hxz', sub_self, map_zero]
-  rw [← Ne.def, ← sub_ne_zero] at hxy' hyz' hxz'
+  rw [← Ne.def, ← sub_ne_zero] at hxy' hyz' hxz' 
   refine' lt_of_le_of_lt _ (max_lt hxy hyz)
   rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy',
     card_pow_degree_nonzero _ hyz']
@@ -235,7 +235,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       ∀ i : Fin n,
         t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε :=
     by
-    by_contra this; push_neg  at this
+    by_contra this; push_neg  at this 
     obtain ⟨j₀, j₁, j_ne, approx⟩ :=
       exists_approx_polynomial hb hε
         (Fin.cons (A 0) fun j => A (Fin.succ (Classical.choose (this j))))
@@ -243,14 +243,14 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
     refine' Fin.cases _ (fun j₀ => _) j₀ <;>
       refine' Fin.cases (fun j_ne approx => _) (fun j₁ j_ne approx => _) j₁
     · exact absurd rfl j_ne
-    · rw [Fin.cons_succ, Fin.cons_zero, ← not_le, AbsoluteValue.map_sub] at approx
+    · rw [Fin.cons_succ, Fin.cons_zero, ← not_le, AbsoluteValue.map_sub] at approx 
       have := (Classical.choose_spec (this j₁)).2
       contradiction
-    · rw [Fin.cons_succ, Fin.cons_zero, ← not_le] at approx
+    · rw [Fin.cons_succ, Fin.cons_zero, ← not_le] at approx 
       have := (Classical.choose_spec (this j₀)).2
       contradiction
-    · rw [Fin.cons_succ, Fin.cons_succ] at approx
-      rw [Ne.def, Fin.succ_inj] at j_ne
+    · rw [Fin.cons_succ, Fin.cons_succ] at approx 
+      rw [Ne.def, Fin.succ_inj] at j_ne 
       have : j₀ = j₁ :=
         (Classical.choose_spec (this j₀)).1.symm.trans
           (((ht' (Classical.choose (this j₀)) (Classical.choose (this j₁))).mpr approx).trans

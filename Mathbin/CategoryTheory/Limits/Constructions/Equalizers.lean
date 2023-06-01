@@ -85,7 +85,7 @@ def equalizerConeIsLimit (F : WalkingParallelPair ⥤ C) : IsLimit (equalizerCon
   fac := by rintro c (_ | _) <;> simp
   uniq := by
     intro c _ J
-    have J0 := J walking_parallel_pair.zero; simp at J0
+    have J0 := J walking_parallel_pair.zero; simp at J0 
     apply pullback.hom_ext
     · rwa [limit.lift_π]
     · erw [limit.lift_π, ← J0, pullback_fst_eq_pullback_snd]
@@ -144,7 +144,7 @@ def preservesEqualizersOfPreservesPullbacksAndBinaryProducts [HasBinaryProducts 
         uniq := fun s m h => by
           rw [iso.eq_comp_inv]
           have := h walking_parallel_pair.zero
-          dsimp [equalizer_cone] at this
+          dsimp [equalizer_cone] at this 
           ext <;>
             simp only [preserves_pullback.iso_hom_snd, category.assoc,
               preserves_pullback.iso_hom_fst, pullback.lift_fst, pullback.lift_snd,
@@ -259,7 +259,7 @@ def preservesCoequalizersOfPreservesPushoutsAndBinaryCoproducts [HasBinaryCoprod
         uniq := fun s m h => by
           rw [iso.eq_inv_comp]
           have := h walking_parallel_pair.one
-          dsimp [coequalizer_cocone] at this
+          dsimp [coequalizer_cocone] at this 
           ext <;>
             simp only [preserves_pushout.inl_iso_hom_assoc, category.id_comp, pushout.inl_desc,
               pushout.inr_desc, preserves_pushout.inr_iso_hom_assoc, ← pushout_inl_eq_pushout_inr, ←

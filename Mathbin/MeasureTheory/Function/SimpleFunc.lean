@@ -184,7 +184,7 @@ theorem range_const_subset (α) [MeasurableSpace α] (b : β) : (const α b).ran
 theorem simpleFunc_bot {α} (f : @SimpleFunc α ⊥ β) [Nonempty β] : ∃ c, ∀ x, f x = c :=
   by
   have hf_meas := @simple_func.measurable_set_fiber α _ ⊥ f
-  simp_rw [MeasurableSpace.measurableSet_bot_iff] at hf_meas
+  simp_rw [MeasurableSpace.measurableSet_bot_iff] at hf_meas 
   cases isEmpty_or_nonempty α
   · simp only [IsEmpty.forall_iff, exists_const]
   · specialize hf_meas (f h.some)
@@ -195,7 +195,7 @@ theorem simpleFunc_bot {α} (f : @SimpleFunc α ⊥ β) [Nonempty β] : ∃ c, �
       exact Set.mem_singleton _
     · refine' ⟨f h.some, fun x => _⟩
       have : x ∈ f ⁻¹' {f h.some} := by rw [hf_meas]; exact Set.mem_univ x
-      rwa [Set.mem_preimage, Set.mem_singleton_iff] at this
+      rwa [Set.mem_preimage, Set.mem_singleton_iff] at this 
 #align measure_theory.simple_func.simple_func_bot MeasureTheory.SimpleFunc.simpleFunc_bot
 
 theorem simpleFunc_bot' {α} [Nonempty β] (f : @SimpleFunc α ⊥ β) :
@@ -603,9 +603,9 @@ theorem range_eq_empty_of_isEmpty {β} [hα : IsEmpty α] (f : α →ₛ β) : f
   rw [← Finset.not_nonempty_iff_eq_empty]
   by_contra
   obtain ⟨y, hy_mem⟩ := h
-  rw [simple_func.mem_range, Set.mem_range] at hy_mem
+  rw [simple_func.mem_range, Set.mem_range] at hy_mem 
   obtain ⟨x, hxy⟩ := hy_mem
-  rw [isEmpty_iff] at hα
+  rw [isEmpty_iff] at hα 
   exact hα x
 #align measure_theory.simple_func.range_eq_empty_of_is_empty MeasureTheory.SimpleFunc.range_eq_empty_of_isEmpty
 -/
@@ -869,7 +869,7 @@ theorem mem_image_of_mem_range_restrict {r : β} {s : Set α} {f : α →ₛ β}
     (hr : r ∈ (restrict f s).range) (h0 : r ≠ 0) : r ∈ f '' s :=
   if hs : MeasurableSet s then by simpa [mem_restrict_range hs, h0] using hr
   else by
-    rw [restrict_of_not_measurable hs] at hr
+    rw [restrict_of_not_measurable hs] at hr 
     exact (h0 <| eq_zero_of_mem_range_zero hr).elim
 #align measure_theory.simple_func.mem_image_of_mem_range_restrict MeasureTheory.SimpleFunc.mem_image_of_mem_range_restrict
 
@@ -1063,12 +1063,12 @@ theorem lintegral_eq_of_subset (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞
   by
   refine' Finset.sum_bij_ne_zero (fun r _ _ => r) _ _ _ _
   · simpa only [forall_range_iff, mul_ne_zero_iff, and_imp]
-  · intros ; assumption
+  · intros; assumption
   · intro b _ hb
     refine' ⟨b, _, hb, rfl⟩
     rw [mem_range, ← preimage_singleton_nonempty]
     exact nonempty_of_measure_ne_zero (mul_ne_zero_iff.1 hb).2
-  · intros ; rfl
+  · intros; rfl
 #align measure_theory.simple_func.lintegral_eq_of_subset MeasureTheory.SimpleFunc.lintegral_eq_of_subset
 
 theorem lintegral_eq_of_subset' (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞} (hs : f.range \ {0} ⊆ s) :
@@ -1355,7 +1355,7 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
     f.lintegral μ < ∞ := by
   refine' sum_lt_top fun a ha => _
   rcases eq_or_ne a ∞ with (rfl | ha)
-  · simp only [ae_iff, Ne.def, Classical.not_not] at hf
+  · simp only [ae_iff, Ne.def, Classical.not_not] at hf 
     simp [Set.preimage, hf]
   · by_cases ha0 : a = 0
     · subst a; rwa [MulZeroClass.zero_mul]
@@ -1365,7 +1365,7 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
 theorem of_lintegral_ne_top {f : α →ₛ ℝ≥0∞} (h : f.lintegral μ ≠ ∞) : f.FinMeasSupp μ :=
   by
   refine' fin_meas_supp_iff.2 fun b hb => _
-  rw [f.lintegral_eq_of_subset' (Finset.subset_insert b _)] at h
+  rw [f.lintegral_eq_of_subset' (Finset.subset_insert b _)] at h 
   refine' ENNReal.lt_top_of_mul_ne_top_right _ hb
   exact (lt_top_of_sum_ne_top h (Finset.mem_insert_self _ _)).Ne
 #align measure_theory.simple_func.fin_meas_supp.of_lintegral_ne_top MeasureTheory.SimpleFunc.FinMeasSupp.of_lintegral_ne_top
@@ -1395,9 +1395,9 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoid γ] {P : Sim
     (f : SimpleFunc α γ) : P f :=
   by
   generalize h : f.range \ {0} = s
-  rw [← Finset.coe_inj, Finset.coe_sdiff, Finset.coe_singleton, simple_func.coe_range] at h
+  rw [← Finset.coe_inj, Finset.coe_sdiff, Finset.coe_singleton, simple_func.coe_range] at h 
   revert s f h; refine' Finset.induction _ _
-  · intro f hf; rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf
+  · intro f hf; rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf 
     convert h_ind 0 MeasurableSet.univ; ext x; simp [hf]
   · intro x s hxs ih f hf
     have mx := f.measurable_set_preimage {x}
@@ -1410,7 +1410,7 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoid γ] {P : Sim
         exact preimage_const_of_mem (mem_singleton _)
       · rwa [Finset.mem_coe]
     convert h_add _ Pg (h_ind x mx)
-    · ext1 y; by_cases hy : y ∈ f ⁻¹' {x} <;> [simpa [hy] ;simp [hy]]
+    · ext1 y; by_cases hy : y ∈ f ⁻¹' {x} <;> [simpa [hy]; simp [hy]]
     rw [disjoint_iff_inf_le]
     rintro y; by_cases hy : y ∈ f ⁻¹' {x} <;> simp [hy]
 #align measure_theory.simple_func.induction MeasureTheory.SimpleFunc.induction

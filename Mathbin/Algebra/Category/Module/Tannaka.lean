@@ -47,7 +47,7 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
         (1 : R)
     convert w.symm
     exact (one_smul _ _).symm
-  map_add' := by intros ; ext; simp [add_smul]
-  map_mul' := by intros ; ext; simpa using mul_smul _ _ _
+  map_add' := by intros; ext; simp [add_smul]
+  map_mul' := by intros; ext; simpa using mul_smul _ _ _
 #align ring_equiv_End_forget₂ ringEquivEndForget₂
 

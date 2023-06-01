@@ -561,7 +561,7 @@ theorem eq_num_div_den (f : HomogeneousLocalization 𝒜 x) :
     f.val = Localization.mk f.num ⟨f.den, f.denom_mem⟩ :=
   by
   have := Quotient.out_eq' f
-  apply_fun HomogeneousLocalization.val  at this
+  apply_fun HomogeneousLocalization.val  at this 
   rw [← this]
   unfold HomogeneousLocalization.val
   simp only [Quotient.liftOn'_mk'']
@@ -574,7 +574,7 @@ theorem ext_iff_val (f g : HomogeneousLocalization 𝒜 x) : f = g ↔ f.val = g
       induction f using Quotient.inductionOn
       induction g using Quotient.inductionOn
       rw [Quotient.eq']
-      unfold HomogeneousLocalization.val at h
+      unfold HomogeneousLocalization.val at h 
       simpa only [Quotient.liftOn'_mk] using h }
 #align homogeneous_localization.ext_iff_val HomogeneousLocalization.ext_iff_val
 
@@ -590,21 +590,21 @@ abbrev AtPrime :=
 theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : IsUnit f.val ↔ IsUnit f :=
   ⟨fun h1 => by
     rcases h1 with ⟨⟨a, b, eq0, eq1⟩, eq2 : a = f.val⟩
-    rw [eq2] at eq0 eq1
+    rw [eq2] at eq0 eq1 
     clear a eq2
     induction' b using Localization.induction_on with data
     rcases data with ⟨a, ⟨b, hb⟩⟩
-    dsimp only at eq0 eq1
+    dsimp only at eq0 eq1 
     have b_f_denom_not_mem : b * f.denom ∈ 𝔭.prime_compl := fun r =>
       Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (fun r2 => hb r2) fun r2 => f.denom_mem r2
     rw [f.eq_num_div_denom, Localization.mk_mul,
       show (⟨b, hb⟩ : 𝔭.prime_compl) * ⟨f.denom, _⟩ = ⟨b * f.denom, _⟩ from rfl,
       show (1 : Localization.AtPrime 𝔭) = Localization.mk 1 1 by erw [Localization.mk_self 1],
-      Localization.mk_eq_mk', IsLocalization.eq] at eq1
+      Localization.mk_eq_mk', IsLocalization.eq] at eq1 
     rcases eq1 with ⟨⟨c, hc⟩, eq1⟩
-    simp only [← Subtype.val_eq_coe] at eq1
-    change c * (1 * (a * f.num)) = _ at eq1
-    simp only [one_mul, mul_one] at eq1
+    simp only [← Subtype.val_eq_coe] at eq1 
+    change c * (1 * (a * f.num)) = _ at eq1 
+    simp only [one_mul, mul_one] at eq1 
     have mem1 : c * (a * f.num) ∈ 𝔭.prime_compl :=
       eq1.symm ▸ fun r => Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (by tauto) (by tauto)
     have mem2 : f.num ∉ 𝔭 := by
@@ -618,10 +618,10 @@ theorem isUnit_iff_isUnit_val (f : HomogeneousLocalization.AtPrime 𝒜 𝔭) : 
           simp only [ext_iff_val, mul_val, val_mk', ← Subtype.val_eq_coe, f.eq_num_div_denom,
             Localization.mk_mul, one_val] <;>
         convert Localization.mk_self _ <;>
-      simpa only [mul_comm] ,
+      simpa only [mul_comm],
     fun ⟨⟨_, b, eq1, eq2⟩, rfl⟩ =>
     by
-    simp only [ext_iff_val, mul_val, one_val] at eq1 eq2
+    simp only [ext_iff_val, mul_val, one_val] at eq1 eq2 
     exact ⟨⟨f.val, b.val, eq1, eq2⟩, rfl⟩⟩
 #align homogeneous_localization.is_unit_iff_is_unit_val HomogeneousLocalization.isUnit_iff_isUnit_val
 
@@ -645,7 +645,7 @@ instance : LocalRing (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
       simp only [← Subtype.val_eq_coe, Submonoid.coe_mul]
       ring
     · left
-      change _ ∈ 𝔭.prime_compl at mem1
+      change _ ∈ 𝔭.prime_compl at mem1 
       apply isUnit_of_mul_eq_one _ (Localization.mk a.denom.1 ⟨a.num.1, mem1⟩)
       rw [Localization.mk_mul]
       convert Localization.mk_self _

@@ -79,7 +79,7 @@ theorem Ring.DimensionLeOne.localization {R : Type _} (Rₘ : Type _) [CommRing 
   intro p hp0 hpp
   refine' ideal.is_maximal_def.mpr ⟨hpp.ne_top, Ideal.maximal_of_no_maximal fun P hpP hPm => _⟩
   have hpP' : (⟨p, hpp⟩ : { p : Ideal Rₘ // p.IsPrime }) < ⟨P, hPm.is_prime⟩ := hpP
-  rw [← (IsLocalization.orderIsoOfPrime M Rₘ).lt_iff_lt] at hpP'
+  rw [← (IsLocalization.orderIsoOfPrime M Rₘ).lt_iff_lt] at hpP' 
   haveI : Ideal.IsPrime (Ideal.comap (algebraMap R Rₘ) p) :=
     ((IsLocalization.orderIsoOfPrime M Rₘ) ⟨p, hpp⟩).2.1
   haveI : Ideal.IsPrime (Ideal.comap (algebraMap R Rₘ) P) :=

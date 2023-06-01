@@ -261,10 +261,10 @@ instance : LawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> case
 
 instance : LawfulMonad (Sum.{v, u} e)
     where
-  bind_assoc := by intros ; casesm Sum _ _ <;> rfl
-  pure_bind := by intros ; rfl
-  bind_pure_comp_eq_map := by intros ; casesm Sum _ _ <;> rfl
-  bind_map_eq_seq := by intros ; cases f <;> rfl
+  bind_assoc := by intros; casesm Sum _ _ <;> rfl
+  pure_bind := by intros; rfl
+  bind_pure_comp_eq_map := by intros; casesm Sum _ _ <;> rfl
+  bind_map_eq_seq := by intros; cases f <;> rfl
 
 end Sum
 

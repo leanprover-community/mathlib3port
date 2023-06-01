@@ -406,7 +406,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   by
   have h : IsIntegral K x :=
     isIntegral_of_isScalarTower (isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
-  have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx
+  have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx 
   have h2 : minpoly K x ∣ p.map (algebraMap F K) :=
     by
     apply minpoly.dvd
@@ -415,9 +415,9 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
   let key_equiv :
     (K⟮⟯.restrictScalars F →ₐ[F] E) ≃
-      Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) :=
+      Σ f : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) :=
     by
-    change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
+    change (K⟮⟯ →ₐ[F] E) ≃ Σ f : K →ₐ[F] E, _
     exact algHomEquivSigma
   haveI : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f =>
     by
@@ -448,7 +448,7 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   let P : IntermediateField F E → Prop := fun K => Fintype.card (K →ₐ[F] E) = finrank F K
   suffices P (IntermediateField.adjoin F ↑s)
     by
-    rw [AdjoinRoot] at this
+    rw [AdjoinRoot] at this 
     apply of_card_aut_eq_finrank
     rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]
     exact
@@ -459,9 +459,9 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   · have key :=
       IntermediateField.card_algHom_adjoin_integral F
         (show IsIntegral F (0 : E) from isIntegral_zero)
-    rw [minpoly.zero, Polynomial.natDegree_X] at key
+    rw [minpoly.zero, Polynomial.natDegree_X] at key 
     specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
-    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key
+    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key 
     refine' Eq.trans _ key
     apply Fintype.card_congr
     rw [IntermediateField.adjoin_zero]
@@ -482,9 +482,9 @@ theorem tFAE [FiniteDimensional F E] :
   tfae_have 1 → 2
   · exact fun h => OrderIso.map_bot (@intermediate_field_equiv_subgroup F _ E _ _ _ h).symm
   tfae_have 1 → 3
-  · intro ; exact card_aut_eq_finrank F E
+  · intro; exact card_aut_eq_finrank F E
   tfae_have 1 → 4
-  · intro ; exact is_separable_splitting_field F E
+  · intro; exact is_separable_splitting_field F E
   tfae_have 2 → 1
   · exact of_fixed_field_eq_bot F E
   tfae_have 3 → 1

@@ -273,7 +273,7 @@ theorem Ioo_cons_left (h : a < b) : a ::ₘ Ioo a b = Ico a b := by
 
 #print Multiset.Ico_disjoint_Ico /-
 theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (Ico a b).Disjoint (Ico c d) :=
-  fun x hab hbc => by rw [mem_Ico] at hab hbc; exact hab.2.not_le (h.trans hbc.1)
+  fun x hab hbc => by rw [mem_Ico] at hab hbc ; exact hab.2.not_le (h.trans hbc.1)
 #align multiset.Ico_disjoint_Ico Multiset.Ico_disjoint_Ico
 -/
 

@@ -148,7 +148,7 @@ theorem gradedMonoid_eq_of_cast {a b : GradedMonoid fun n => ⨂[R] i : Fin n, M
     (h2 : cast R M h a.snd = b.snd) : a = b :=
   by
   refine' graded_monoid_eq_of_reindex_cast h _
-  rw [cast] at h2
+  rw [cast] at h2 
   rw [← Fin.cast_to_equiv, ← h2]
 #align tensor_power.graded_monoid_eq_of_cast TensorPower.gradedMonoid_eq_of_cast
 
@@ -184,7 +184,7 @@ theorem one_mul {n} (a : (⨂[R]^n) M) : cast R M (zero_add n) (ₜ1 ₜ* a) = a
   by
   rw [ghas_mul_def, ghas_one_def]
   induction' a using PiTensorProduct.induction_on with r a x y hx hy
-  · dsimp only at a
+  · dsimp only at a 
     rw [TensorProduct.tmul_smul, LinearEquiv.map_smul, LinearEquiv.map_smul, ← ghas_mul_def,
       tprod_mul_tprod, cast_tprod]
     congr 2 with i
@@ -198,7 +198,7 @@ theorem mul_one {n} (a : (⨂[R]^n) M) : cast R M (add_zero _) (a ₜ* ₜ1) = a
   by
   rw [ghas_mul_def, ghas_one_def]
   induction' a using PiTensorProduct.induction_on with r a x y hx hy
-  · dsimp only at a
+  · dsimp only at a 
     rw [← TensorProduct.smul_tmul', LinearEquiv.map_smul, LinearEquiv.map_smul, ← ghas_mul_def,
       tprod_mul_tprod R a _, cast_tprod]
     congr 2 with i
@@ -306,7 +306,7 @@ instance galgebra : DirectSum.GAlgebra R fun i => (⨂[R]^i) M
       (by
         have := (algebra_map₀_mul r x.snd).trans (mul_algebra_map₀ r x.snd).symm
         rw [← LinearEquiv.eq_symm_apply, cast_symm]
-        rw [← LinearEquiv.eq_symm_apply, cast_symm, cast_cast] at this
+        rw [← LinearEquiv.eq_symm_apply, cast_symm, cast_cast] at this 
         exact this)
   smul_def r x :=
     gradedMonoid_eq_of_cast (zero_add x.fst).symm

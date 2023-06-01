@@ -121,7 +121,7 @@ theorem innerDualCone_iUnion {ι : Sort _} (f : ι → Set H) :
   by
   refine' le_antisymm (le_iInf fun i x hx y hy => hx _ <| mem_Union_of_mem _ hy) _
   intro x hx y hy
-  rw [ConvexCone.mem_iInf] at hx
+  rw [ConvexCone.mem_iInf] at hx 
   obtain ⟨j, hj⟩ := mem_Union.mp hy
   exact hx _ _ hj
 #align inner_dual_cone_Union innerDualCone_iUnion
@@ -203,11 +203,11 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
     rintro x hxK
     specialize hinner _ (K.add_mem hxK hzK)
     rwa [add_sub_cancel, real_inner_comm, ← neg_nonneg, neg_eq_neg_one_mul, ← real_inner_smul_right,
-      neg_smul, one_smul, neg_sub] at hinner
+      neg_smul, one_smul, neg_sub] at hinner 
   · -- as `K` is closed and non-empty, it is pointed
     have hinner₀ := hinner 0 (K.pointed_of_nonempty_of_is_closed Ne hc)
     -- the rest of the proof is a straightforward calculation
-    rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀
+    rw [zero_sub, inner_neg_right, Right.neg_nonpos_iff] at hinner₀ 
     have hbz : b - z ≠ 0 := by rw [sub_ne_zero]; contrapose! hzK; rwa [← hzK]
     rw [← neg_zero, lt_neg, ← neg_one_mul, ← real_inner_smul_left, smul_sub, neg_smul, one_smul,
       neg_smul, neg_sub_neg, one_smul]

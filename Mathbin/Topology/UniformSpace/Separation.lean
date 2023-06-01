@@ -272,7 +272,7 @@ theorem isClosed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀
   rcases comp_symm_mem_uniformity_sets V₀_in with ⟨V₁, V₁_in, V₁_symm, h_comp⟩
   apply isClosed_of_closure_subset
   intro x hx
-  rw [mem_closure_iff_ball] at hx
+  rw [mem_closure_iff_ball] at hx 
   rcases hx V₁_in with ⟨y, hy, hy'⟩
   suffices x = y by rwa [this]
   apply eq_of_forall_symmetric
@@ -326,8 +326,8 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
               compRel s (compRel s s)) :=
         (lift'_mono' fun s hs ⟨a, b⟩ ⟨c, ⟨⟨a₁, a₂⟩, ha, a_eq⟩, ⟨⟨b₁, b₂⟩, hb, b_eq⟩⟩ =>
           by
-          simp at a_eq
-          simp at b_eq
+          simp at a_eq 
+          simp at b_eq 
           have h : ⟦a₂⟧ = ⟦b₁⟧ := by rw [a_eq.right, b_eq.left]
           have h : (a₂, b₁) ∈ 𝓢 α := Quotient.exact h
           simp [Function.comp, Set.image, compRel, and_comm, and_left_comm, and_assoc]
@@ -393,7 +393,7 @@ theorem uniformContinuous_quotient_lift₂ {f : α → β → γ}
   by
   rw [UniformContinuous, uniformity_prod_eq_prod, uniformity_quotient, uniformity_quotient,
     Filter.prod_map_map_eq, Filter.tendsto_map'_iff, Filter.tendsto_map'_iff]
-  rwa [UniformContinuous, uniformity_prod_eq_prod, Filter.tendsto_map'_iff] at hf
+  rwa [UniformContinuous, uniformity_prod_eq_prod, Filter.tendsto_map'_iff] at hf 
 #align uniform_space.uniform_continuous_quotient_lift₂ UniformSpace.uniformContinuous_quotient_lift₂
 
 theorem comap_quotient_le_uniformity :
@@ -548,7 +548,7 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
       ⟨separated_of_uniform_continuous uniformContinuous_fst h,
         separated_of_uniform_continuous uniformContinuous_snd h⟩
   · rintro ⟨eqv_α, eqv_β⟩ r r_in
-    rw [uniformity_prod] at r_in
+    rw [uniformity_prod] at r_in 
     rcases r_in with ⟨t_α, ⟨r_α, r_α_in, h_α⟩, t_β, ⟨r_β, r_β_in, h_β⟩, rfl⟩
     let p_α := fun p : (α × β) × α × β => (p.1.1, p.2.1)
     let p_β := fun p : (α × β) × α × β => (p.1.2, p.2.2)

@@ -108,7 +108,7 @@ theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : 
   have : (n : ℤ) % d = n - d * ⌊(n : ℚ) / d⌋ := Int.mod_nat_eq_sub_mul_floor_rat_div
   rw [← this]
   have : d.coprime n := n_coprime_d.symm
-  rwa [Nat.coprime, Nat.gcd_rec] at this
+  rwa [Nat.coprime, Nat.gcd_rec] at this 
 #align nat.coprime_sub_mul_floor_rat_div_of_coprime Nat.coprime_sub_mul_floor_rat_div_of_coprime
 
 namespace Rat
@@ -162,22 +162,22 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.den < q⁻¹.den :=
     by
     have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.den := Rat.num_lt_succ_floor_mul_den q⁻¹
-    have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.den + q⁻¹.den := by rwa [right_distrib, one_mul] at this
-    rwa [← sub_lt_iff_lt_add'] at this
+    have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.den + q⁻¹.den := by rwa [right_distrib, one_mul] at this 
+    rwa [← sub_lt_iff_lt_add'] at this 
   -- use that `q.num` and `q.denom` are coprime to show that q_inv is the unreduced reciprocal
   -- of `q`
   have : q_inv.num = q.denom ∧ q_inv.denom = q.num.nat_abs :=
     by
     have coprime_q_denom_q_num : q.denom.coprime q.num.nat_abs := q.cop.symm
     have : Int.natAbs q.denom = q.denom := by simp
-    rw [← this] at coprime_q_denom_q_num
+    rw [← this] at coprime_q_denom_q_num 
     rw [q_inv_def]
     constructor
     · exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
     · suffices (((q.denom : ℚ) / q.num).den : ℤ) = q.num.nat_abs by exact_mod_cast this
       rw [q_num_abs_eq_q_num]
       exact_mod_cast Rat.den_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
-  rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
+  rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq 
 #align rat.fract_inv_num_lt_num_of_pos Rat.fract_inv_num_lt_num_of_pos
 
 end Rat

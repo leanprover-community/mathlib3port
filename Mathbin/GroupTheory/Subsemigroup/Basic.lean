@@ -109,7 +109,7 @@ namespace Subsemigroup
 
 @[to_additive]
 instance : SetLike (Subsemigroup M) M :=
-  ⟨Subsemigroup.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨Subsemigroup.carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 @[to_additive]
 instance : MulMemClass (Subsemigroup M) M where mul_mem := Subsemigroup.mul_mem'

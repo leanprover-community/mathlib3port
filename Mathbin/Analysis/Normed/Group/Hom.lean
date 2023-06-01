@@ -39,7 +39,7 @@ open scoped NNReal BigOperators
 #print NormedAddGroupHom /-
 /-- A morphism of seminormed abelian groups is a bounded group homomorphism. -/
 structure NormedAddGroupHom (V W : Type _) [SeminormedAddCommGroup V]
-  [SeminormedAddCommGroup W] where
+    [SeminormedAddCommGroup W] where
   toFun : V → W
   map_add' : ∀ v₁ v₂, to_fun (v₁ + v₂) = to_fun v₁ + to_fun v₂
   bound' : ∃ C, ∀ v, ‖to_fun v‖ ≤ C * ‖v‖
@@ -254,7 +254,7 @@ theorem le_opNorm (x : V₁) : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   obtain ⟨C, Cpos, hC⟩ := f.bound
   replace hC := hC x
   by_cases h : ‖x‖ = 0
-  · rwa [h, MulZeroClass.mul_zero] at hC⊢
+  · rwa [h, MulZeroClass.mul_zero] at hC ⊢
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
@@ -436,7 +436,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : V, ‖x‖ ≠ 0) : ‖id V�
   le_antisymm (norm_id_le V) <| by
     let ⟨x, hx⟩ := h
     have := (id V).ratio_le_opNorm x
-    rwa [id_apply, div_self hx] at this
+    rwa [id_apply, div_self hx] at this 
 #align normed_add_group_hom.norm_id_of_nontrivial_seminorm NormedAddGroupHom.norm_id_of_nontrivial_seminorm
 
 /-- If a normed space is non-trivial, then the norm of the identity equals `1`. -/
@@ -517,7 +517,7 @@ instance : SMul R (NormedAddGroupHom V₁ V₂)
         let ⟨b, hb⟩ := f.bound'
         ⟨dist r 0 * b, fun x => by
           have := dist_smul_pair r (f x) (f 0)
-          rw [map_zero, smul_zero, dist_zero_right, dist_zero_right] at this
+          rw [map_zero, smul_zero, dist_zero_right, dist_zero_right] at this 
           rw [mul_assoc]
           refine' this.trans _
           refine' mul_le_mul_of_nonneg_left _ dist_nonneg
@@ -692,8 +692,8 @@ theorem norm_comp_le_of_le' {g : NormedAddGroupHom V₂ V₃} (C₁ C₂ C₃ : 
 /-- Composition of normed groups hom as an additive group morphism. -/
 def compHom : NormedAddGroupHom V₂ V₃ →+ NormedAddGroupHom V₁ V₂ →+ NormedAddGroupHom V₁ V₃ :=
   AddMonoidHom.mk'
-    (fun g => AddMonoidHom.mk' (fun f => g.comp f) (by intros ; ext; exact map_add g _ _))
-    (by intros ; ext;
+    (fun g => AddMonoidHom.mk' (fun f => g.comp f) (by intros; ext; exact map_add g _ _))
+    (by intros; ext;
       simp only [comp_apply, Pi.add_apply, Function.comp_apply, AddMonoidHom.add_apply,
         AddMonoidHom.mk'_apply, coe_add])
 #align normed_add_group_hom.comp_hom NormedAddGroupHom.compHom

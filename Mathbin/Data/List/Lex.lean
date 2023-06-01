@@ -59,7 +59,7 @@ namespace Lex
 #print List.Lex.cons_iff /-
 theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} :
     Lex r (a :: l₁) (a :: l₂) ↔ Lex r l₁ l₂ :=
-  ⟨fun h => by cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h;exact (irrefl_of r a h).elim],
+  ⟨fun h => by cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h; exact (irrefl_of r a h).elim],
     Lex.cons⟩
 #align list.lex.cons_iff List.Lex.cons_iff
 -/

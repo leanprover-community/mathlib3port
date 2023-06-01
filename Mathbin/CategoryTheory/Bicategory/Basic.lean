@@ -250,8 +250,8 @@ restate_axiom triangle'
 
 attribute [simp] pentagon triangle
 
-attribute [reassoc]
-  whisker_left_comp id_whisker_left comp_whisker_left comp_whisker_right whisker_right_id whisker_right_comp whisker_assoc whisker_exchange pentagon triangle
+attribute [reassoc] whisker_left_comp id_whisker_left comp_whisker_left comp_whisker_right
+  whisker_right_id whisker_right_comp whisker_assoc whisker_exchange pentagon triangle
 
 /-
 The following simp attributes are put in order to rewrite any 2-morphisms into normal forms. There
@@ -259,8 +259,8 @@ are associators and unitors in the RHS in the several simp lemmas here (e.g. `id
 which at first glance look more complicated than the LHS, but they will be eventually reduced by the
 pentagon or the triangle identities, and more generally, (forthcoming) `coherence` tactic.
 -/
-attribute [simp]
-  whisker_left_id whisker_left_comp id_whisker_left comp_whisker_left id_whisker_right comp_whisker_right whisker_right_id whisker_right_comp whisker_assoc
+attribute [simp] whisker_left_id whisker_left_comp id_whisker_left comp_whisker_left
+  id_whisker_right comp_whisker_right whisker_right_id whisker_right_comp whisker_assoc
 
 attribute [instance] hom_category
 

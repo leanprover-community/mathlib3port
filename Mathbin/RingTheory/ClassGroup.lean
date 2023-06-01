@@ -98,8 +98,8 @@ variable (R) [IsDomain R]
 /-- The ideal class group of `R` is the group of invertible fractional ideals
 modulo the principal ideals. -/
 def ClassGroup :=
-  (FractionalIdeal R⁰ (FractionRing R))ˣ ⧸ (toPrincipalIdeal R (FractionRing R)).range deriving
-  CommGroup
+  (FractionalIdeal R⁰ (FractionRing R))ˣ ⧸ (toPrincipalIdeal R (FractionRing R)).range
+deriving CommGroup
 #align class_group ClassGroup
 
 noncomputable instance : Inhabited (ClassGroup R) :=
@@ -131,7 +131,7 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
   constructor
   · rintro ⟨x, rfl⟩
     rw [Units.val_mul, hI, coe_toPrincipalIdeal, mul_comm,
-      span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ
+      span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ 
     exact ⟨_, _, sec_fst_ne_zero le_rfl x.ne_zero, sec_snd_ne_zero le_rfl ↑x, hJ⟩
   · rintro ⟨x, y, hx, hy, h⟩
     constructor; rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
@@ -149,10 +149,10 @@ theorem ClassGroup.mk_eq_one_of_coe_ideal {I : (FractionalIdeal R⁰ <| Fraction
   any_goals rfl
   constructor
   · rintro ⟨x, y, hx, hy, h⟩
-    rw [Ideal.mul_top] at h
+    rw [Ideal.mul_top] at h 
     rcases ideal.mem_span_singleton_mul.mp ((Ideal.span_singleton_le_iff_mem _).mp h.ge) with
       ⟨i, hi, rfl⟩
-    rw [← Ideal.span_singleton_mul_span_singleton, Ideal.span_singleton_mul_right_inj hx] at h
+    rw [← Ideal.span_singleton_mul_span_singleton, Ideal.span_singleton_mul_right_inj hx] at h 
     exact ⟨i, right_ne_zero_of_mul hy, h⟩
   · rintro ⟨x, hx, rfl⟩
     exact ⟨1, x, one_ne_zero, hx, by rw [Ideal.span_singleton_one, Ideal.top_mul, Ideal.mul_top]⟩
@@ -275,7 +275,7 @@ theorem ClassGroup.equiv_mk0 [IsDedekindDomain R] (I : (Ideal R)⁰) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » (0 : K)) -/
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
-    ClassGroup.mk0 I = ClassGroup.mk0 J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J :=
+    ClassGroup.mk0 I = ClassGroup.mk0 J ↔ ∃ (x : _) (_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J :=
   by
   refine' (ClassGroup.equiv K).Injective.eq_iff.symm.trans _
   simp only [ClassGroup.equiv_mk0, QuotientGroup.mk'_eq_mk', mem_principal_ideals_iff, coe_coe,
@@ -294,7 +294,7 @@ variable {K}
 
 theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     ClassGroup.mk0 I = ClassGroup.mk0 J ↔
-      ∃ (x y : R)(hx : x ≠ 0)(hy : y ≠ 0), Ideal.span {x} * (I : Ideal R) = Ideal.span {y} * J :=
+      ∃ (x y : R) (hx : x ≠ 0) (hy : y ≠ 0), Ideal.span {x} * (I : Ideal R) = Ideal.span {y} * J :=
   by
   refine' (ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring (FractionRing R)).trans ⟨_, _⟩
   · rintro ⟨z, hz, h⟩
@@ -308,7 +308,7 @@ theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     refine' ⟨IsLocalization.mk' _ x ⟨y, hy'⟩, _, _⟩
     · contrapose! hx
       rwa [mk'_eq_iff_eq_mul, MulZeroClass.zero_mul, ← (algebraMap R (FractionRing R)).map_zero,
-        (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx
+        (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx 
     · exact (FractionalIdeal.mk'_mul_coeIdeal_eq_coeIdeal _ hy').mpr h
 #align class_group.mk0_eq_mk0_iff ClassGroup.mk0_eq_mk0_iff
 
@@ -320,7 +320,7 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
   have a_ne_zero := mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero'
   have fa_ne_zero : (algebraMap R (FractionRing R)) a ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors a_ne_zero'
-  refine' ⟨⟨{ carrier := { x | (algebraMap R _ a)⁻¹ * algebraMap R _ x ∈ I.1 }.. }, _⟩, _⟩
+  refine' ⟨⟨{ carrier := { x | (algebraMap R _ a)⁻¹ * algebraMap R _ x ∈ I.1 } .. }, _⟩, _⟩
   · simp only [RingHom.map_add, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul, mul_add]
     exact fun _ _ ha hb => Submodule.add_mem I ha hb
   · simp only [RingHom.map_zero, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul]
@@ -407,7 +407,7 @@ theorem card_classGroup_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGro
 theorem card_classGroup_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)] :
     Fintype.card (ClassGroup R) = 1 ↔ IsPrincipalIdealRing R :=
   by
-  constructor; swap; · intros ; convert card_classGroup_eq_one; assumption
+  constructor; swap; · intros; convert card_classGroup_eq_one; assumption
   rw [Fintype.card_eq_one_iff]
   rintro ⟨I, hI⟩
   have eq_one : ∀ J : ClassGroup R, J = 1 := fun J => trans (hI J) (hI 1).symm

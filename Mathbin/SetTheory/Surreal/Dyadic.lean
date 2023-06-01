@@ -212,7 +212,7 @@ theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHal
     simp only [add_zero, Surreal.nsmul_pow_two_powHalf, Nat.zero_eq, eq_self_iff_true,
       Surreal.powHalf_zero]
   · rw [← double_pow_half_succ_eq_pow_half (n + k), ← double_pow_half_succ_eq_pow_half k,
-      smul_algebra_smul_comm] at hk
+      smul_algebra_smul_comm] at hk 
     rwa [← zsmul_eq_zsmul_iff' two_ne_zero]
 #align surreal.nsmul_pow_two_pow_half' Surreal.nsmul_pow_two_pow_half'
 
@@ -231,11 +231,11 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
   · intro m₁ m₂ aux; exact (this (le_of_not_le h) aux.symm).symm
   intro m₁ m₂ h₂
   obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h
-  rw [add_comm, pow_add, ← mul_assoc, mul_eq_mul_right_iff] at h₂
+  rw [add_comm, pow_add, ← mul_assoc, mul_eq_mul_right_iff] at h₂ 
   cases h₂
   · rw [h₂, add_comm, zsmul_pow_two_pow_half m₂ c y₁]
   · have := Nat.one_le_pow y₁ 2 Nat.succ_pos'
-    norm_cast  at h₂; linarith
+    norm_cast  at h₂ ; linarith
 #align surreal.dyadic_aux Surreal.dyadic_aux
 
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
@@ -246,7 +246,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
       by
       intro m₁ m₂ n₁ n₂ h₁
       obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁
-      simp only [Subtype.coe_mk, mul_eq_mul_left_iff] at h₂
+      simp only [Subtype.coe_mk, mul_eq_mul_left_iff] at h₂ 
       cases h₂
       · simp only
         obtain ⟨a₁, ha₁⟩ := n₁.prop
@@ -266,7 +266,7 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
       rintro ⟨a, ⟨b, ⟨b', rfl⟩⟩⟩ ⟨c, ⟨d, ⟨d', rfl⟩⟩⟩
       have h₂ : 1 < (2 : ℤ).natAbs := one_lt_two
       have hpow₂ := Submonoid.log_pow_int_eq_self h₂
-      simp_rw [Submonoid.pow_apply] at hpow₂
+      simp_rw [Submonoid.pow_apply] at hpow₂ 
       simp_rw [Localization.add_mk, Localization.liftOn_mk, Subtype.coe_mk,
         Submonoid.log_mul (Int.pow_right_injective h₂), hpow₂]
       calc

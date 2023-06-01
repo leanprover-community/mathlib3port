@@ -167,7 +167,7 @@ theorem ack_strictMono_right : ∀ m, StrictMono (ack m)
   | m + 1, n₁ + 1, n₂ + 1, h => by
     rw [ack_succ_succ, ack_succ_succ]
     apply ack_strictMono_right _ (ack_strictMono_right _ _)
-    rwa [add_lt_add_iff_right] at h
+    rwa [add_lt_add_iff_right] at h 
 #align ack_strict_mono_right ack_strictMono_right
 -/
 

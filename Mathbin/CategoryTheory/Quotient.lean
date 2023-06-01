@@ -29,7 +29,8 @@ relation, `functor_map_eq_iff` says that no unnecessary identifications have bee
 #print HomRel /-
 /-- A `hom_rel` on `C` consists of a relation on every hom-set. -/
 def HomRel (C) [Quiver C] :=
-  ∀ ⦃X Y : C⦄, (X ⟶ Y) → (X ⟶ Y) → Prop deriving Inhabited
+  ∀ ⦃X Y : C⦄, (X ⟶ Y) → (X ⟶ Y) → Prop
+deriving Inhabited
 #align hom_rel HomRel
 -/
 
@@ -192,7 +193,7 @@ theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = 
   by
   subst_vars
   apply functor.hext
-  · rintro X; dsimp [lift, Functor]; congr ; ext; rfl
+  · rintro X; dsimp [lift, Functor]; congr; ext; rfl
   · rintro X Y f
     dsimp [lift, Functor]
     apply Quot.inductionOn f

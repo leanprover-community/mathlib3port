@@ -141,7 +141,7 @@ theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α l
   Iff.mpr (not_congr (find_correct a t)) <| by
     intro h
     cases' h with _ h; cases' h with h₁ h₂
-    rw [h] at h₁; contradiction
+    rw [h] at h₁ ; contradiction
 #align rbtree.not_mem_of_find_none Rbtree.not_mem_of_find_none
 
 theorem eqv_of_find_some [IsStrictWeakOrder α lt] {a b : α} {t : Rbtree α lt} :
@@ -171,7 +171,7 @@ theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
   simp [h, contains]; apply Iff.intro
   · intro h'; cases' h' with _ h'; cases h'; simp [*]; simp [Option.isSome]
   · intro h'
-    cases' heq : find t a with v; simp [HEq, Option.isSome] at h'; contradiction
+    cases' heq : find t a with v; simp [HEq, Option.isSome] at h' ; contradiction
     exists v; simp; apply eqv_of_find_some HEq
 #align rbtree.contains_correct Rbtree.contains_correct
 
@@ -179,7 +179,7 @@ theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b
   cases t; apply Rbnode.mem_insert_of_incomp
 #align rbtree.mem_insert_of_incomp Rbtree.mem_insert_of_incomp
 
-theorem mem_insert [IsIrrefl α lt] : ∀ (a : α) (t : Rbtree α lt), a ∈ t.insert a := by intros ;
+theorem mem_insert [IsIrrefl α lt] : ∀ (a : α) (t : Rbtree α lt), a ∈ t.insert a := by intros;
   apply mem_insert_of_incomp; constructor <;> apply irrefl_of lt
 #align rbtree.mem_insert Rbtree.mem_insert
 
@@ -202,7 +202,7 @@ theorem incomp_or_mem_of_mem_ins {a b : α} {t : Rbtree α lt} :
 
 theorem eq_or_mem_of_mem_ins [IsStrictTotalOrder α lt] {a b : α} {t : Rbtree α lt} :
     a ∈ t.insert b → a = b ∨ a ∈ t := fun h =>
-  suffices a ≈[lt]b ∨ a ∈ t by simp [eqv_lt_iff_eq] at this <;> assumption
+  suffices a ≈[lt]b ∨ a ∈ t by simp [eqv_lt_iff_eq] at this  <;> assumption
   incomp_or_mem_of_mem_ins h
 #align rbtree.eq_or_mem_of_mem_ins Rbtree.eq_or_mem_of_mem_ins
 
@@ -217,11 +217,11 @@ theorem mem_of_max_eq [IsIrrefl α lt] {a : α} {t : Rbtree α lt} : t.max = som
 #align rbtree.mem_of_max_eq Rbtree.mem_of_max_eq
 
 theorem eq_leaf_of_min_eq_none {t : Rbtree α lt} : t.min = none → t = mkRbtree α lt := by cases t;
-  intro h; congr ; apply Rbnode.eq_leaf_of_min_eq_none h
+  intro h; congr; apply Rbnode.eq_leaf_of_min_eq_none h
 #align rbtree.eq_leaf_of_min_eq_none Rbtree.eq_leaf_of_min_eq_none
 
 theorem eq_leaf_of_max_eq_none {t : Rbtree α lt} : t.max = none → t = mkRbtree α lt := by cases t;
-  intro h; congr ; apply Rbnode.eq_leaf_of_max_eq_none h
+  intro h; congr; apply Rbnode.eq_leaf_of_max_eq_none h
 #align rbtree.eq_leaf_of_max_eq_none Rbtree.eq_leaf_of_max_eq_none
 
 theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :

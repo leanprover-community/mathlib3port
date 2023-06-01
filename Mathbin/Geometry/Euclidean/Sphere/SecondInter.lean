@@ -89,7 +89,7 @@ theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
   · by_cases hv : v = 0; · simp [hv]
     rwa [sphere.second_inter, eq_comm, eq_vadd_iff_vsub_eq, vsub_self, eq_comm, smul_eq_zero,
       or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
-      or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
+      or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp 
   · rw [sphere.second_inter, hp, MulZeroClass.mul_zero, zero_div, zero_smul, zero_vadd]
 #align euclidean_geometry.sphere.second_inter_eq_self_iff EuclideanGeometry.Sphere.secondInter_eq_self_iff
 
@@ -103,14 +103,14 @@ theorem Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem {s : Spher
   · rcases h with (h | h)
     · rwa [h]
     · rwa [h, sphere.second_inter_mem]
-  · rw [AffineSubspace.mem_mk'_iff_vsub_mem, Submodule.mem_span_singleton] at hp'
+  · rw [AffineSubspace.mem_mk'_iff_vsub_mem, Submodule.mem_span_singleton] at hp' 
     rcases hp' with ⟨r, hr⟩
-    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
+    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr 
     subst hr
     by_cases hv : v = 0; · simp [hv]
     rw [sphere.second_inter]
-    rw [mem_sphere] at h hp
-    rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h
+    rw [mem_sphere] at h hp 
+    rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h 
     rcases h with (h | h) <;> simp [h]
 #align euclidean_geometry.sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem EuclideanGeometry.Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem
 -/
@@ -192,7 +192,7 @@ theorem Sphere.wbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
       ((sphere.second_inter_mem _).2 hp) _
   intro he
   rw [eq_comm, sphere.second_inter_eq_self_iff, ← neg_neg (p' -ᵥ p), inner_neg_left,
-    neg_vsub_eq_vsub_rev, neg_eq_zero, eq_comm] at he
+    neg_vsub_eq_vsub_rev, neg_eq_zero, eq_comm] at he 
   exact ((inner_pos_or_eq_of_dist_le_radius hp hp').resolve_right (Ne.symm h)).Ne he
 #align euclidean_geometry.sphere.wbtw_second_inter EuclideanGeometry.Sphere.wbtw_secondInter
 
@@ -203,9 +203,9 @@ theorem Sphere.sbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
   by
   refine' ⟨sphere.wbtw_second_inter hp hp'.le, _, _⟩
-  · rintro rfl; rw [mem_sphere] at hp; simpa [hp] using hp'
+  · rintro rfl; rw [mem_sphere] at hp ; simpa [hp] using hp'
   · rintro h
-    rw [h, mem_sphere.1 ((sphere.second_inter_mem _).2 hp)] at hp'
+    rw [h, mem_sphere.1 ((sphere.second_inter_mem _).2 hp)] at hp' 
     exact lt_irrefl _ hp'
 #align euclidean_geometry.sphere.sbtw_second_inter EuclideanGeometry.Sphere.sbtw_secondInter
 

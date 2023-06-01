@@ -295,9 +295,9 @@ theorem sumsq_eq_zero (x) : ∀ l, sumsq l x = 0 ↔ l.All₂ fun a : Poly α =>
               le_antisymm
                 (by
                   rw [← h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x * p x) <;>
-                    rwa [add_zero] at t)
+                    rwa [add_zero] at t )
                 (mul_self_nonneg _)
-          ⟨this, by simp [this] at h <;> exact h⟩,
+          ⟨this, by simp [this] at h  <;> exact h⟩,
           fun ⟨h1, h2⟩ => by rw [h1, h2] <;> rfl⟩
 #align poly.sumsq_eq_zero Poly.sumsq_eq_zero
 
@@ -326,7 +326,7 @@ end Polynomials
 /-- A set `S ⊆ ℕ^α` is Diophantine if there exists a polynomial on
   `α ⊕ β` such that `v ∈ S` iff there exists `t : ℕ^β` with `p (v, t) = 0`. -/
 def Dioph {α : Type u} (S : Set (α → ℕ)) : Prop :=
-  ∃ (β : Type u)(p : Poly (Sum α β)), ∀ v, S v ↔ ∃ t, p (v ⊗ t) = 0
+  ∃ (β : Type u) (p : Poly (Sum α β)), ∀ v, S v ↔ ∃ t, p (v ⊗ t) = 0
 #align dioph Dioph
 
 namespace Dioph
@@ -378,7 +378,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
     Dioph { v | l.All₂ fun S : Set (α → ℕ) => v ∈ S } :=
   by
   suffices
-    ∃ (β : _)(pl : List (Poly (Sum α β))),
+    ∃ (β : _) (pl : List (Poly (Sum α β))),
       ∀ v,
         List.All₂ (fun S : Set _ => S v) l ↔
           ∃ t, List.All₂ (fun p : Poly (Sum α β) => p (v ⊗ t) = 0) pl
@@ -387,7 +387,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
   exact ⟨ULift Empty, [], fun v => by simp <;> exact ⟨fun ⟨t⟩ => Empty.rec _ t, trivial⟩⟩
-  simp at d
+  simp at d 
   exact
     let ⟨⟨β, p, pe⟩, dl⟩ := d
     let ⟨γ, pl, ple⟩ := IH dl
@@ -410,14 +410,14 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
               ⟨⟨t ∘ inl, by
                   rwa [show (v ⊗ t) ∘ (inl ⊗ inr ∘ inl) = v ⊗ t ∘ inl from
                       funext fun s => by cases' s with a b <;> rfl] at
-                    hl⟩,
+                    hl ⟩,
                 ⟨t ∘ inr, by
-                  refine' List.All₂.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq
+                  refine' List.All₂.imp (fun q hq => _) hr; dsimp [(· ∘ ·)] at hq 
                   rwa [show
                       (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) =
                         v ⊗ t ∘ inr
                       from funext fun s => by cases' s with a b <;> rfl] at
-                    hq⟩⟩⟩⟩
+                    hq ⟩⟩⟩⟩
 #align dioph.dioph_list.all₂ Dioph.DiophList.all₂
 
 theorem inter (d : Dioph S) (d' : Dioph S') : Dioph (S ∩ S') :=
@@ -466,10 +466,10 @@ theorem ex_dioph {S : Set (Sum α β → ℕ)} : Dioph S → Dioph { v | ∃ x, 
         ⟨t ∘ inl,
           (pe _).2
             ⟨t ∘ inr, by
-              simp at ht <;>
+              simp at ht  <;>
                 rwa [show (v ⊗ t) ∘ ((inl ⊗ inr ∘ inl) ⊗ inr ∘ inr) = (v ⊗ t ∘ inl) ⊗ t ∘ inr from
                     funext fun s => by cases' s with a b <;> try cases a <;> rfl] at
-                  ht⟩⟩⟩⟩
+                  ht ⟩⟩⟩⟩
 #align dioph.ex_dioph Dioph.ex_dioph
 
 theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph { v | ∃ x, x ::ₒ v ∈ S }
@@ -486,10 +486,10 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph { v | ∃ x,
         ⟨t none,
           (pe _).2
             ⟨t ∘ some, by
-              simp at ht <;>
+              simp at ht  <;>
                 rwa [show (v ⊗ t) ∘ (inr none ::ₒ inl ⊗ inr ∘ some) = t none ::ₒ v ⊗ t ∘ some from
                     funext fun s => by cases' s with a b <;> try cases a <;> rfl] at
-                  ht⟩⟩⟩⟩
+                  ht ⟩⟩⟩⟩
 #align dioph.ex1_dioph Dioph.ex1_dioph
 
 theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPfun f) : Dioph f.Dom :=
@@ -513,7 +513,7 @@ theorem diophPfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : Di
     Dioph { v : α → ℕ | ∃ h : f.Dom v, f.fn v h ::ₒ v ∈ S } :=
   ext (ex1_dioph (d.inter df)) fun v =>
     ⟨fun ⟨x, hS, (h : Exists _)⟩ => by
-      rw [show (x ::ₒ v) ∘ some = v from funext fun s => rfl] at h <;> cases' h with hf h <;>
+      rw [show (x ::ₒ v) ∘ some = v from funext fun s => rfl] at h  <;> cases' h with hf h <;>
             refine' ⟨hf, _⟩ <;>
           rw [PFun.fn, h] <;>
         exact hS,
@@ -545,7 +545,7 @@ attribute [local reducible] Vector3
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem diophFn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : Vector3 ℕ n → ℕ}
     (df : DiophFn f) : Dioph { v : Vector3 ℕ n | (f v::v) ∈ S } :=
-  ext (diophFn_comp1 (reindex_dioph _ (none::some) d) df) fun v => by dsimp; congr ; ext x;
+  ext (diophFn_comp1 (reindex_dioph _ (none::some) d) df) fun v => by dsimp; congr; ext x;
     cases x <;> rfl
 #align dioph.dioph_fn_vec_comp1 Dioph.diophFn_vec_comp1
 
@@ -579,7 +579,7 @@ theorem diophFn_compn :
     ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} (d : Dioph S) {f : Vector3 ((α → ℕ) → ℕ) n}
       (df : VectorAllp DiophFn f), Dioph { v : α → ℕ | (v ⊗ fun i => f i v) ∈ S }
   | 0, S, d, f => fun df =>
-    ext (reindex_dioph _ (id ⊗ Fin2.elim0) d) fun v => by dsimp; congr ; ext x;
+    ext (reindex_dioph _ (id ⊗ Fin2.elim0) d) fun v => by dsimp; congr; ext x;
       obtain _ | _ | _ := x; rfl
   | succ n, S, d, f =>
     f.consElim fun f fl => by
@@ -589,10 +589,10 @@ theorem diophFn_compn :
             ext
               (dioph_fn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none::some ∘ inr) d) <|
                 reindex_dioph_fn inl df)
-              fun v => by dsimp; congr ; ext x; obtain _ | _ | _ := x <;> rfl
+              fun v => by dsimp; congr; ext x; obtain _ | _ | _ := x <;> rfl
           have : Dioph { v | (v ⊗ f v::fun i : Fin2 n => fl i v) ∈ S } :=
             @dioph_fn_compn n (fun v => S (v ∘ inl ⊗ f (v ∘ inl)::v ∘ inr)) this _ dfl
-          ext this fun v => by dsimp; congr ; ext x; obtain _ | _ | _ := x <;> rfl
+          ext this fun v => by dsimp; congr; ext x; obtain _ | _ | _ := x <;> rfl
 #align dioph.dioph_fn_compn Dioph.diophFn_compn
 
 theorem dioph_comp {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)

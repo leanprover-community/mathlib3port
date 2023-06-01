@@ -91,10 +91,10 @@ theorem trans (hxy : x ≡ y [SMOD U]) (hyz : y ≡ z [SMOD U]) : x ≡ z [SMOD 
 #align smodeq.trans SModEq.trans
 
 theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] := by
-  rw [SModEq.def] at hxy₁ hxy₂⊢; simp_rw [quotient.mk_add, hxy₁, hxy₂]
+  rw [SModEq.def] at hxy₁ hxy₂ ⊢; simp_rw [quotient.mk_add, hxy₁, hxy₂]
 #align smodeq.add SModEq.add
 
-theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by rw [SModEq.def] at hxy⊢;
+theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by rw [SModEq.def] at hxy ⊢;
   simp_rw [quotient.mk_smul, hxy]
 #align smodeq.smul SModEq.smul
 
@@ -113,9 +113,9 @@ theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V
 #print SModEq.eval /-
 theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
     f.eval x ≡ f.eval y [SMOD I] := by
-  rw [SModEq.def] at h⊢
+  rw [SModEq.def] at h ⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)
-  change Ideal.Quotient.mk I x = Ideal.Quotient.mk I y at h
+  change Ideal.Quotient.mk I x = Ideal.Quotient.mk I y at h 
   rw [← Polynomial.eval₂_at_apply, ← Polynomial.eval₂_at_apply, h]
 #align smodeq.eval SModEq.eval
 -/

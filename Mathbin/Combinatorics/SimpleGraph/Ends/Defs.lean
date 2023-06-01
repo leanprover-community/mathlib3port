@@ -61,7 +61,7 @@ theorem ComponentCompl.supp_injective :
   by
   refine' connected_component.ind₂ _
   rintro ⟨v, hv⟩ ⟨w, hw⟩ h
-  simp only [Set.ext_iff, connected_component.eq, Set.mem_setOf_eq, component_compl.supp] at h⊢
+  simp only [Set.ext_iff, connected_component.eq, Set.mem_setOf_eq, component_compl.supp] at h ⊢
   exact ((h v).mp ⟨hv, reachable.refl _⟩).choose_spec
 #align simple_graph.component_compl.supp_injective SimpleGraph.ComponentCompl.supp_injective
 -/
@@ -147,7 +147,7 @@ protected theorem nonempty (C : G.ComponentCompl K) : (C : Set V).Nonempty :=
 
 #print SimpleGraph.ComponentCompl.exists_eq_mk /-
 protected theorem exists_eq_mk (C : G.ComponentCompl K) :
-    ∃ (v : _)(h : v ∉ K), G.componentComplMk h = C :=
+    ∃ (v : _) (h : v ∉ K), G.componentComplMk h = C :=
   C.Nonempty
 #align simple_graph.component_compl.exists_eq_mk SimpleGraph.ComponentCompl.exists_eq_mk
 -/
@@ -288,7 +288,7 @@ theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
       obtain ⟨v, vD⟩ := D.nonempty
       let Ddis := D.disjoint_right
       simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
-        Set.disjoint_iff] at Ddis
+        Set.disjoint_iff] at Ddis 
       exact Ddis.right ⟨(component_compl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
 #align simple_graph.component_compl.infinite_iff_in_all_ranges SimpleGraph.ComponentCompl.infinite_iff_in_all_ranges
 -/

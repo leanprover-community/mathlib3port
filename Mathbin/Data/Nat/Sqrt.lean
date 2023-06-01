@@ -36,7 +36,7 @@ theorem sqrt_aux_dec {b} (h : b ≠ 0) : shiftr b 2 < b :=
   simp only [shiftr_eq_div_pow]
   apply (Nat.div_lt_iff_lt_mul' (by decide : 0 < 4)).2
   have := Nat.mul_lt_mul_of_pos_left (by decide : 1 < 4) (Nat.pos_of_ne_zero h)
-  rwa [mul_one] at this
+  rwa [mul_one] at this 
 #align nat.sqrt_aux_dec Nat.sqrt_aux_dec
 
 /-- Auxiliary function for `nat.sqrt`. See e.g.
@@ -120,8 +120,8 @@ private theorem sqrt_aux_is_sqrt (n) :
         n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) →
           IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
   | 0, r, h₁, h₂ => by
-    apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;>
-      [exact ⟨h₁, h⟩;exact ⟨h, h₂⟩]
+    apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;> [exact ⟨h₁, h⟩;
+      exact ⟨h, h₂⟩]
   | m + 1, r, h₁, h₂ =>
     by
     apply
@@ -132,7 +132,7 @@ private theorem sqrt_aux_is_sqrt (n) :
       intro h
     · have := sqrt_aux_is_sqrt m r h₁ h
       simpa [pow_succ, mul_comm, mul_assoc]
-    · rw [pow_succ', mul_two, ← add_assoc] at h₂
+    · rw [pow_succ', mul_two, ← add_assoc] at h₂ 
       have := sqrt_aux_is_sqrt m (r + 2 ^ (m + 1)) h h₂
       rwa [show (r + 2 ^ (m + 1)) * 2 ^ (m + 1) = 2 * (r + 2 ^ (m + 1)) * 2 ^ m by
           simp [pow_succ, mul_comm, mul_left_comm]]
@@ -147,7 +147,7 @@ private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
         generalize div2 s = x
         change bit0 x with x + x
         rw [one_shiftl, pow_add]] at
-      this
+      this 
     apply this
     rw [← pow_add, ← mul_two]; apply size_le.1
     rw [e]; apply (@div_lt_iff_lt_mul _ _ 2 (by decide)).1
@@ -254,7 +254,7 @@ theorem le_three_of_sqrt_eq_one {n : ℕ} (h : sqrt n = 1) : n ≤ 3 :=
 
 #print Nat.sqrt_lt_self /-
 theorem sqrt_lt_self {n : ℕ} (h : 1 < n) : sqrt n < n :=
-  sqrt_lt.2 <| by have := Nat.mul_lt_mul_of_pos_left h (lt_of_succ_lt h) <;> rwa [mul_one] at this
+  sqrt_lt.2 <| by have := Nat.mul_lt_mul_of_pos_left h (lt_of_succ_lt h) <;> rwa [mul_one] at this 
 #align nat.sqrt_lt_self Nat.sqrt_lt_self
 -/
 

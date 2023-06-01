@@ -102,7 +102,7 @@ theorem Asymptotics.IsBigO.trans_tendsto_norm_atTop {α : Type _} {u v : α → 
     (huv : u =O[l] v) (hu : Tendsto (fun x => ‖u x‖) l atTop) : Tendsto (fun x => ‖v x‖) l atTop :=
   by
   rcases huv.exists_pos with ⟨c, hc, hcuv⟩
-  rw [is_O_with] at hcuv
+  rw [is_O_with] at hcuv 
   convert tendsto.at_top_div_const hc (tendsto_at_top_mono' l hcuv hu)
   ext x
   rw [mul_div_cancel_left _ hc.ne.symm]
@@ -159,7 +159,7 @@ theorem Asymptotics.isLittleO_sum_range_of_tendsto_zero {α : Type _} [NormedAdd
     (fun n => ∑ i in range n, f i) =o[atTop] fun n => (n : ℝ) :=
   by
   have := ((is_o_one_iff ℝ).2 h).sum_range fun i => zero_le_one
-  simp only [sum_const, card_range, Nat.smul_one_eq_coe] at this
+  simp only [sum_const, card_range, Nat.smul_one_eq_coe] at this 
   exact this tendsto_nat_cast_atTop_atTop
 #align asymptotics.is_o_sum_range_of_tendsto_zero Asymptotics.isLittleO_sum_range_of_tendsto_zero
 

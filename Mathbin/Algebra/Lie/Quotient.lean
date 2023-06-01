@@ -123,7 +123,7 @@ instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
     apply Quotient.liftOn₂' x y fun x' y' => mk ⁅x', y'⁆
     intro x₁ x₂ y₁ y₂ h₁ h₂
     apply (Submodule.Quotient.eq I.to_submodule).2
-    rw [Submodule.quotientRel_r_def] at h₁ h₂
+    rw [Submodule.quotientRel_r_def] at h₁ h₂ 
     have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by
       simp [-lie_skew, sub_eq_add_neg, add_assoc]
     rw [h]
@@ -141,11 +141,19 @@ instance lieQuotientLieRing : LieRing (L ⧸ I)
     where
   add_lie := by
     intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
-    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
+    repeat'
+      first
+      | rw [is_quotient_mk]
+      | rw [← mk_bracket]
+      | rw [← Submodule.Quotient.mk_add]
     apply congr_arg; apply add_lie
   lie_add := by
     intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
-    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
+    repeat'
+      first
+      | rw [is_quotient_mk]
+      | rw [← mk_bracket]
+      | rw [← Submodule.Quotient.mk_add]
     apply congr_arg; apply lie_add
   lie_self := by
     intro x'; apply Quotient.inductionOn' x'; intro x
@@ -153,14 +161,22 @@ instance lieQuotientLieRing : LieRing (L ⧸ I)
     apply congr_arg; apply lie_self
   leibniz_lie := by
     intro x' y' z'; apply Quotient.inductionOn₃' x' y' z'; intro x y z
-    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
+    repeat'
+      first
+      | rw [is_quotient_mk]
+      | rw [← mk_bracket]
+      | rw [← Submodule.Quotient.mk_add]
     apply congr_arg; apply leibniz_lie
 #align lie_submodule.quotient.lie_quotient_lie_ring LieSubmodule.Quotient.lieQuotientLieRing
 
 instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I)
     where lie_smul := by
     intro t x' y'; apply Quotient.inductionOn₂' x' y'; intro x y
-    repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_smul]
+    repeat'
+      first
+      | rw [is_quotient_mk]
+      | rw [← mk_bracket]
+      | rw [← Submodule.Quotient.mk_smul]
     apply congr_arg; apply lie_smul
 #align lie_submodule.quotient.lie_quotient_lie_algebra LieSubmodule.Quotient.lieQuotientLieAlgebra
 

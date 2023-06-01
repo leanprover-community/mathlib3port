@@ -145,7 +145,7 @@ theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
 #print Bool.exists_bool /-
 @[simp]
 theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
-  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h;exact Or.inr h], fun h => by
+  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h; exact Or.inr h], fun h => by
     cases h <;> exact ⟨_, h⟩⟩
 #align bool.exists_bool Bool.exists_bool
 -/
@@ -572,7 +572,7 @@ theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
 
 #print Bool.toNat_le_toNat /-
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
-  cases h <;> subst h <;> [cases b₁;cases b₀] <;> simp [toNat, Nat.zero_le]
+  cases h <;> subst h <;> [cases b₁; cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
 -/
 
@@ -586,7 +586,7 @@ theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by
 @[simp]
 theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f false ≠ f true :=
   ⟨fun Hinj Heq => false_ne_true (Hinj Heq), fun H x y hxy => by cases x <;> cases y;
-    exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
+    exacts [rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
 #align bool.injective_iff Bool.injective_iff
 -/
 

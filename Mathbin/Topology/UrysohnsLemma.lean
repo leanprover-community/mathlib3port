@@ -164,7 +164,7 @@ theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
-    exacts[c.subset_right_C hx, hx]
+    exacts [c.subset_right_C hx, hx]
 #align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_C
 
 theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
@@ -173,7 +173,7 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
   · exact indicator_of_mem hx _
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
-    exacts[hx, fun hU => hx <| c.left_U_subset hU]
+    exacts [hx, fun hU => hx <| c.left_U_subset hU]
 #align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
 
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
@@ -227,7 +227,7 @@ theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
   · simp only [approx, mem_Icc]
     refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
       apply approx_le_approx_of_U_sub_C
-    exacts[subset_closure, subset_closure]
+    exacts [subset_closure, subset_closure]
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 -/
 
@@ -334,7 +334,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
               zero_le_two).trans_eq
           _
       generalize (3 / 4 : ℝ) ^ n = r
-      field_simp [two_ne_zero' ℝ] ; ring
+      field_simp [two_ne_zero' ℝ]; ring
 #align urysohns.CU.continuous_lim Urysohns.CU.continuous_lim
 -/
 

@@ -42,7 +42,7 @@ theorem analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt {f : ℂ 
   replace hc : ContinuousOn f (closed_ball c R)
   · refine' fun z hz => ContinuousAt.continuousWithinAt _
     rcases eq_or_ne z c with (rfl | hne)
-    exacts[hc, (hRs ⟨hz, hne⟩).ContinuousAt]
+    exacts [hc, (hRs ⟨hz, hne⟩).ContinuousAt]
   exact
     (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
         (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
@@ -84,7 +84,7 @@ theorem differentiableOn_update_limUnder_of_isLittleO {f : ℂ → E} {s : Set �
   suffices DifferentiableOn ℂ F (s \ {c}) ∧ ContinuousAt F c
     by
     rw [differentiable_on_compl_singleton_and_continuous_at_iff hc, ← differentiable_on_dslope hc,
-        dslope_sub_smul] at this <;>
+        dslope_sub_smul] at this  <;>
       try infer_instance
     have hc : tendsto f (𝓝[≠] c) (𝓝 (deriv F c)) :=
       continuous_at_update_same.mp (this.continuous_on.continuous_at hc)
@@ -130,7 +130,7 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO {f : �
     (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     Tendsto f (𝓝[≠] c) (𝓝 <| limUnder (𝓝[≠] c) f) :=
   by
-  rw [eventually_nhdsWithin_iff] at hd
+  rw [eventually_nhdsWithin_iff] at hd 
   have : DifferentiableOn ℂ f ({ z | z ≠ c → DifferentiableAt ℂ f z } \ {c}) := fun z hz =>
     (hz.1 hz.2).DifferentiableWithinAt
   have H := differentiable_on_update_lim_of_is_o hd this ho

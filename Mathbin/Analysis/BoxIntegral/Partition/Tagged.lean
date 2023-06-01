@@ -297,7 +297,7 @@ theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : �
         (π.boxes.filterₓ fun J : Box ι => x ∈ J.Icc).card :=
       by
       refine' Finset.card_le_of_subset fun J hJ => _
-      rw [Finset.mem_filter] at hJ⊢; rcases hJ with ⟨hJ, rfl⟩
+      rw [Finset.mem_filter] at hJ ⊢; rcases hJ with ⟨hJ, rfl⟩
       exact ⟨hJ, h J hJ⟩
     _ ≤ 2 ^ Fintype.card ι := π.toPrepartition.card_filter_mem_Icc_le x
     
@@ -405,7 +405,7 @@ def disjUnion (π₁ π₂ : TaggedPrepartition I) (h : Disjoint π₁.iUnion π
   Tag := π₁.boxes.piecewise π₁.Tag π₂.Tag
   tag_mem_Icc J := by
     dsimp only [Finset.piecewise]; split_ifs
-    exacts[π₁.tag_mem_Icc J, π₂.tag_mem_Icc J]
+    exacts [π₁.tag_mem_Icc J, π₂.tag_mem_Icc J]
 #align box_integral.tagged_prepartition.disj_union BoxIntegral.TaggedPrepartition.disjUnion
 
 @[simp]

@@ -319,8 +319,8 @@ theorem LinearMap.toMatrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) �
       rintro j' -
       simp only [smul_eq_mul, Pi.basisFun_repr, mul_assoc, mul_comm, mul_left_comm,
         Pi.basisFun_apply, of_apply]
-    · intros ; simp only [zero_smul, smul_zero]
-  · intros ; simp only [zero_smul, Finsupp.sum_zero]
+    · intros; simp only [zero_smul, smul_zero]
+  · intros; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂'_compl₁₂ LinearMap.toMatrix₂'_compl₁₂
 
 theorem LinearMap.toMatrix₂'_comp (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (n' → R) →ₗ[R] n → R) :
@@ -477,8 +477,8 @@ theorem LinearMap.toMatrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) 
       rintro j' -
       simp only [smul_eq_mul, LinearMap.toMatrix_apply, Basis.equivFun_apply, mul_assoc, mul_comm,
         mul_left_comm]
-    · intros ; simp only [zero_smul, smul_zero]
-  · intros ; simp only [zero_smul, Finsupp.sum_zero]
+    · intros; simp only [zero_smul, smul_zero]
+  · intros; simp only [zero_smul, Finsupp.sum_zero]
 #align linear_map.to_matrix₂_compl₁₂ LinearMap.toMatrix₂_compl₁₂
 
 theorem LinearMap.toMatrix₂_comp (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M₁' →ₗ[R] M₁) :
@@ -669,7 +669,7 @@ theorem mem_pairSelfAdjointMatricesSubmodule :
     Submodule.mem_map, mem_is_pair_self_adjoint_submodule]
   constructor
   · rintro ⟨f, hf, hA⟩
-    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']; rw [hf'] at hf
+    have hf' : f = A₁.to_lin' := by rw [← hA, Matrix.toLin'_toMatrix']; rw [hf'] at hf 
     rw [← isAdjointPair_toLinearMap₂']
     exact hf
   · intro h; refine' ⟨A₁.to_lin', _, LinearMap.toMatrix'_toLin' _⟩

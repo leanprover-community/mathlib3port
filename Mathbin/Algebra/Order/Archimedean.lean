@@ -50,7 +50,7 @@ class Archimedean (α) [OrderedAddCommMonoid α] : Prop where
 instance OrderDual.archimedean [OrderedAddCommGroup α] [Archimedean α] : Archimedean αᵒᵈ :=
   ⟨fun x y hy =>
     let ⟨n, hn⟩ := Archimedean.arch (-x : α) (neg_pos.2 hy)
-    ⟨n, by rwa [neg_nsmul, neg_le_neg_iff] at hn⟩⟩
+    ⟨n, by rwa [neg_nsmul, neg_le_neg_iff] at hn ⟩⟩
 #align order_dual.archimedean OrderDual.archimedean
 -/
 
@@ -70,7 +70,7 @@ theorem existsUnique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) :
   have h_bdd : ∀ n ∈ s, n ≤ (k : ℤ) := by
     intro n hn
     apply (zsmul_le_zsmul_iff ha).mp
-    rw [← coe_nat_zsmul] at hk
+    rw [← coe_nat_zsmul] at hk 
     exact le_trans hn hk
   obtain ⟨m, hm, hm'⟩ := Int.exists_greatest_of_bdd ⟨k, h_bdd⟩ h_ne
   have hm'' : g < (m + 1) • a := by contrapose! hm'; exact ⟨m + 1, hm', lt_add_one _⟩
@@ -194,7 +194,7 @@ theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) :
       let n := Nat.find h
       have hn : x < y ^ n := Nat.find_spec h
       have hnp : 0 < n :=
-        pos_iff_ne_zero.2 fun hn0 => by rw [hn0, pow_zero] at hn <;> exact not_le_of_gt hn hx
+        pos_iff_ne_zero.2 fun hn0 => by rw [hn0, pow_zero] at hn  <;> exact not_le_of_gt hn hx
       have hnsp : Nat.pred n + 1 = n := Nat.succ_pred_eq_of_pos hnp
       have hltn : Nat.pred n < n := Nat.pred_lt (ne_of_gt hnp)
       ⟨Nat.pred n, le_of_not_lt (Nat.find_min h hltn), by rwa [hnsp]⟩
@@ -223,7 +223,7 @@ theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ico (
         ⟨M, fun m hm =>
           le_of_not_lt fun hlt =>
             not_lt_of_ge (zpow_le_of_le hy.le hlt.le)
-              (lt_of_le_of_lt hm (by rwa [← zpow_ofNat] at hM))⟩
+              (lt_of_le_of_lt hm (by rwa [← zpow_ofNat] at hM ))⟩
       let ⟨n, hn₁, hn₂⟩ := Int.exists_greatest_of_bdd hb he
       ⟨n, hn₁, lt_of_not_ge fun hge => not_le_of_gt (Int.lt_succ _) (hn₂ _ hge)⟩
 #align exists_mem_Ico_zpow exists_mem_Ico_zpow
@@ -243,9 +243,9 @@ theorem exists_pow_lt_of_lt_one (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n <
   by
   by_cases y_pos : y ≤ 0
   · use 1; simp only [pow_one]; linarith
-  rw [not_le] at y_pos
+  rw [not_le] at y_pos 
   rcases pow_unbounded_of_one_lt x⁻¹ (one_lt_inv y_pos hy) with ⟨q, hq⟩
-  exact ⟨q, by rwa [inv_pow, inv_lt_inv hx (pow_pos y_pos _)] at hq⟩
+  exact ⟨q, by rwa [inv_pow, inv_lt_inv hx (pow_pos y_pos _)] at hq ⟩
 #align exists_pow_lt_of_lt_one exists_pow_lt_of_lt_one
 
 /-- Given `x` and `y` between `0` and `1`, `x` is between two successive powers of `y`.
@@ -256,8 +256,8 @@ theorem exists_nat_pow_near_of_lt_one (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < 
   rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with
     ⟨n, hn, h'n⟩
   refine' ⟨n, _, _⟩
-  · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
-  · rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn
+  · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n 
+  · rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn 
 #align exists_nat_pow_near_of_lt_one exists_nat_pow_near_of_lt_one
 
 theorem exists_rat_gt (x : α) : ∃ q : ℚ, x < q :=
@@ -283,7 +283,7 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   refine' lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
   · rw [Rat.coe_int_den, Nat.cast_one]; exact one_ne_zero
-  · intro H; rw [Rat.coe_nat_num, Int.cast_ofNat, Nat.cast_eq_zero] at H; subst H; cases n0
+  · intro H; rw [Rat.coe_nat_num, Int.cast_ofNat, Nat.cast_eq_zero] at H ; subst H; cases n0
   · rw [Rat.coe_nat_den, Nat.cast_one]; exact one_ne_zero
 #align exists_rat_btwn exists_rat_btwn
 
@@ -338,7 +338,7 @@ variable [LinearOrderedField α]
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _, fun H =>
     ⟨fun x y y0 =>
-      (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
+      (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h ⟩⟩
 #align archimedean_iff_nat_lt archimedean_iff_nat_lt
 
 theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=

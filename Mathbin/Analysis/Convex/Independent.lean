@@ -72,7 +72,7 @@ variable {𝕜}
 theorem Subsingleton.convexIndependent [Subsingleton ι] (p : ι → E) : ConvexIndependent 𝕜 p :=
   fun s x hx => by
   have : (convexHull 𝕜 (p '' s)).Nonempty := ⟨p x, hx⟩
-  rw [convexHull_nonempty_iff, Set.nonempty_image_iff] at this
+  rw [convexHull_nonempty_iff, Set.nonempty_image_iff] at this 
   rwa [Subsingleton.mem_iff_nonempty]
 #align subsingleton.convex_independent Subsingleton.convexIndependent
 
@@ -148,7 +148,7 @@ theorem convexIndependent_iff_not_mem_convexHull_diff {p : ι → E} :
     ConvexIndependent 𝕜 p ↔ ∀ i s, p i ∉ convexHull 𝕜 (p '' (s \ {i})) :=
   by
   refine' ⟨fun hc i s h => _, fun h s i hi => _⟩
-  · rw [hc.mem_convex_hull_iff] at h
+  · rw [hc.mem_convex_hull_iff] at h 
     exact h.2 (Set.mem_singleton _)
   · by_contra H
     refine' h i s _
@@ -195,19 +195,19 @@ theorem convexIndependent_iff_finset {p : ι → E} :
       ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s :=
   by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
-  · rwa [Finset.coe_image] at hx
+  · rwa [Finset.coe_image] at hx 
   have hp : injective p := by
     rintro a b hab
     rw [← mem_singleton]
     refine' h {b} a _
     rw [hab, image_singleton, coe_singleton, convexHull_singleton]
     exact Set.mem_singleton _
-  rw [convexHull_eq_union_convexHull_finite_subsets] at hx
-  simp_rw [Set.mem_iUnion] at hx
+  rw [convexHull_eq_union_convexHull_finite_subsets] at hx 
+  simp_rw [Set.mem_iUnion] at hx 
   obtain ⟨t, ht, hx⟩ := hx
   rw [← hp.mem_set_image]
   refine' ht _
-  suffices x ∈ t.preimage p (hp.inj_on _) by rwa [mem_preimage, ← mem_coe] at this
+  suffices x ∈ t.preimage p (hp.inj_on _) by rwa [mem_preimage, ← mem_coe] at this 
   refine' h _ x _
   rwa [t.image_preimage p (hp.inj_on _), filter_true_of_mem]
   · exact fun y hy => s.image_subset_range p (ht <| mem_coe.2 hy)

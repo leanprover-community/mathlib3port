@@ -72,7 +72,7 @@ end IsUnit
 
 @[simp]
 theorem isUnit_zero_iff : IsUnit (0 : M₀) ↔ (0 : M₀) = 1 :=
-  ⟨fun ⟨⟨_, a, (a0 : 0 * a = 1), _⟩, rfl⟩ => by rwa [MulZeroClass.zero_mul] at a0, fun h =>
+  ⟨fun ⟨⟨_, a, (a0 : 0 * a = 1), _⟩, rfl⟩ => by rwa [MulZeroClass.zero_mul] at a0 , fun h =>
     @isUnit_of_subsingleton _ _ (subsingleton_of_zero_eq_one h) 0⟩
 #align is_unit_zero_iff isUnit_zero_iff
 
@@ -224,7 +224,7 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
 #align units.mk0_inj Units.mk0_inj
 
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
-theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
+theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀) (hg : g ≠ 0), p (Units.mk0 g hg) :=
   ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_val g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
     ⟨Units.mk0 g hg, pg⟩⟩
 #align units.exists0 Units.exists0
@@ -232,7 +232,7 @@ theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)
 /-- An alternative version of `units.exists0`. This one is useful if Lean cannot
 figure out `p` when using `units.exists0` from right to left. -/
 theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} :
-    (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
+    (∃ (g : G₀) (hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
   Iff.trans (by simp_rw [coe_mk0]) exists0.symm
 #align units.exists0' Units.exists0'
 

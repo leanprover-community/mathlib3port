@@ -98,7 +98,7 @@ theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasur
         _⟩
     ext ⟨x, hx⟩
     simp only [mem_preimage, mem_Union, Subtype.coe_mk, Set.restrict, mem_inter_iff,
-      mem_compl_iff] at hx⊢
+      mem_compl_iff] at hx ⊢
     constructor
     · rintro ⟨i, hxt, hxs⟩; rwa [hs _ _ hxs]
     · rcases hx with ⟨i, hi⟩; rw [hs _ _ hi]; exact fun h => ⟨i, h, hi⟩
@@ -217,7 +217,7 @@ theorem exists_ae_eq_range_subset (H : AEMeasurable f μ) {t : Set β} (ht : ∀
       rw [measure_to_measurable, ← compl_mem_ae_iff, compl_compl]
       exact H.ae_eq_mk.and ht
     filter_upwards [compl_mem_ae_iff.2 A]with x hx
-    rw [mem_compl_iff] at hx
+    rw [mem_compl_iff] at hx 
     simp only [g, hx, piecewise_eq_of_not_mem, not_false_iff]
     contrapose! hx
     apply subset_to_measurable
@@ -285,7 +285,7 @@ theorem MeasurableEmbedding.aemeasurable_comp_iff {g : β → γ} (hg : Measurab
   by
   refine' ⟨fun H => _, hg.measurable.comp_ae_measurable⟩
   suffices AEMeasurable ((range_splitting g ∘ range_factorization g) ∘ f) μ by
-    rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this
+    rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this 
   exact hg.measurable_range_splitting.comp_ae_measurable H.subtype_mk
 #align measurable_embedding.ae_measurable_comp_iff MeasurableEmbedding.aemeasurable_comp_iff
 

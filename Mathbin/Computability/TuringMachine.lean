@@ -103,7 +103,7 @@ theorem BlankExtends.below_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
     BlankExtends l l₁ → BlankExtends l l₂ → l₁.length ≤ l₂.length → BlankExtends l₁ l₂ :=
   by
   rintro ⟨i, rfl⟩ ⟨j, rfl⟩ h; use j - i
-  simp only [List.length_append, add_le_add_iff_left, List.length_replicate] at h
+  simp only [List.length_append, add_le_add_iff_left, List.length_replicate] at h 
   simp only [← List.replicate_add, add_tsub_cancel_of_le h, List.append_assoc]
 #align turing.blank_extends.below_of_le Turing.BlankExtends.below_of_le
 -/
@@ -125,8 +125,8 @@ theorem BlankExtends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
   rintro ⟨i, rfl⟩ ⟨j, e⟩ h; use i - j
   refine' List.append_right_cancel (e.symm.trans _)
   rw [List.append_assoc, ← List.replicate_add, tsub_add_cancel_of_le]
-  apply_fun List.length  at e
-  simp only [List.length_append, List.length_replicate] at e
+  apply_fun List.length  at e 
+  simp only [List.length_append, List.length_replicate] at e 
   rwa [← add_le_add_iff_left, e, add_le_add_iff_right]
 #align turing.blank_extends.above_of_le Turing.BlankExtends.above_of_le
 -/
@@ -236,7 +236,7 @@ precondition `blank_extends` instead of `blank_rel`. -/
 @[elab_as_elim, reducible]
 protected def ListBlank.liftOn {Γ} [Inhabited Γ] {α} (l : ListBlank Γ) (f : List Γ → α)
     (H : ∀ a b, BlankExtends a b → f a = f b) : α :=
-  l.liftOn' f <| by rintro a b (h | h) <;> [exact H _ _ h;exact (H _ _ h).symm]
+  l.liftOn' f <| by rintro a b (h | h) <;> [exact H _ _ h; exact (H _ _ h).symm]
 #align turing.list_blank.lift_on Turing.ListBlank.liftOn
 -/
 
@@ -280,7 +280,7 @@ def ListBlank.tail {Γ} [Inhabited Γ] (l : ListBlank Γ) : ListBlank Γ :=
     (by
       rintro _ _ ⟨i, rfl⟩
       refine' Quotient.sound' (Or.inl _)
-      cases a <;> [· cases i <;> [exact ⟨0, rfl⟩;exact ⟨i, rfl⟩];exact ⟨i, rfl⟩])
+      cases a <;> [· cases i <;> [exact ⟨0, rfl⟩; exact ⟨i, rfl⟩]; exact ⟨i, rfl⟩])
 #align turing.list_blank.tail Turing.ListBlank.tail
 -/
 
@@ -398,12 +398,12 @@ theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} :
     ListBlank.induction_on L₂ fun l₂ H =>
       by
       wlog h : l₁.length ≤ l₂.length
-      · cases le_total l₁.length l₂.length <;> [skip;symm] <;> apply_assumption <;> try assumption
-        intro ; rw [H]
+      · cases le_total l₁.length l₂.length <;> [skip; symm] <;> apply_assumption <;> try assumption
+        intro; rw [H]
       refine' Quotient.sound' (Or.inl ⟨l₂.length - l₁.length, _⟩)
       refine' List.ext_nthLe _ fun i h h₂ => Eq.symm _
       · simp only [add_tsub_cancel_of_le h, List.length_append, List.length_replicate]
-      simp only [list_blank.nth_mk] at H
+      simp only [list_blank.nth_mk] at H 
       cases' lt_or_le i l₁.length with h' h'
       ·
         simp only [List.nthLe_append _ h', List.nthLe_get? h, List.nthLe_get? h', ←
@@ -440,7 +440,7 @@ theorem ListBlank.nth_modifyNth {Γ} [Inhabited Γ] (f : Γ → Γ) (n i) (L : L
 #print Turing.PointedMap /-
 /-- A pointed map of `inhabited` types is a map that sends one default value to the other. -/
 structure PointedMap.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabited Γ'] :
-  Type max u v where
+    Type max u v where
   f : Γ → Γ'
   map_pt' : f default = default
 #align turing.pointed_map Turing.PointedMap
@@ -467,7 +467,7 @@ theorem PointedMap.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMa
 @[simp]
 theorem PointedMap.headI_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : List Γ) : (l.map f).headI = f l.headI := by
-  cases l <;> [exact (pointed_map.map_pt f).symm;rfl]
+  cases l <;> [exact (pointed_map.map_pt f).symm; rfl]
 #align turing.pointed_map.head_map Turing.PointedMap.headI_map
 
 #print Turing.ListBlank.map /-
@@ -809,8 +809,8 @@ theorem Tape.move_right_nth {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℤ) :
 @[simp]
 theorem Tape.move_right_n_head {Γ} [Inhabited Γ] (T : Tape Γ) (i : ℕ) :
     ((Tape.move Dir.right^[i]) T).headI = T.get? i := by
-  induction i generalizing T <;>
-    [rfl;simp only [*, tape.move_right_nth, Int.ofNat_succ, iterate_succ]]
+  induction i generalizing T <;> [rfl;
+    simp only [*, tape.move_right_nth, Int.ofNat_succ, iterate_succ]]
 #align turing.tape.move_right_n_head Turing.Tape.move_right_n_head
 -/
 
@@ -1036,7 +1036,7 @@ theorem mem_eval {σ} {f : σ → Option σ} {a b} : b ∈ eval f a ↔ Reaches 
     · rw [Part.mem_unique h
           (PFun.mem_fix_iff.2 <| Or.inl <| Part.mem_some_iff.2 <| by rw [e] <;> rfl)]
       exact ⟨refl_trans_gen.refl, e⟩
-    · rcases PFun.mem_fix_iff.1 h with (h | ⟨_, h, _⟩) <;> rw [e] at h <;>
+    · rcases PFun.mem_fix_iff.1 h with (h | ⟨_, h, _⟩) <;> rw [e] at h  <;>
         cases Part.mem_some_iff.1 h
       cases' IH a' (by rwa [e]) with h₁ h₂
       exact ⟨refl_trans_gen.head e h₁, h₂⟩, fun ⟨h₁, h₂⟩ =>
@@ -1102,10 +1102,10 @@ theorem tr_reaches₁ {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H
   by
   induction' ab with c₁ ac c₁ d₁ ac cd IH
   · have := H aa
-    rwa [show f₁ a₁ = _ from ac] at this
+    rwa [show f₁ a₁ = _ from ac] at this 
   · rcases IH with ⟨c₂, cc, ac₂⟩
     have := H cc
-    rw [show f₁ c₁ = _ from cd] at this
+    rw [show f₁ c₁ = _ from cd] at this 
     rcases this with ⟨d₂, dd, cd₂⟩
     exact ⟨_, dd, ac₂.trans cd₂⟩
 #align turing.tr_reaches₁ Turing.tr_reaches₁
@@ -1146,7 +1146,7 @@ theorem tr_eval {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Res
   cases' mem_eval.1 ab with ab b0
   rcases tr_reaches H aa ab with ⟨b₂, bb, ab⟩
   refine' ⟨_, bb, mem_eval.2 ⟨ab, _⟩⟩
-  have := H bb; rwa [b0] at this
+  have := H bb; rwa [b0] at this 
 #align turing.tr_eval Turing.tr_eval
 
 theorem tr_eval_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ b₂ a₂}
@@ -1201,7 +1201,7 @@ theorem tr_eval' {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ →
       fun h => by
       rcases(Part.mem_map_iff _).1 h with ⟨b₁, ab, bb⟩
       rcases tr_eval H rfl ab with ⟨_, rfl, h⟩
-      rwa [bb] at h⟩
+      rwa [bb] at h ⟩
 #align turing.tr_eval' Turing.tr_eval'
 
 /-!
@@ -1551,15 +1551,15 @@ theorem stmts₁_self {q} : q ∈ stmts₁ q := by
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=
   by
   intro h₁₂ q₀ h₀₁
-  induction' q₂ with _ q IH _ q IH _ q IH <;> simp only [stmts₁] at h₁₂⊢ <;>
-    simp only [Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h₁₂
+  induction' q₂ with _ q IH _ q IH _ q IH <;> simp only [stmts₁] at h₁₂ ⊢ <;>
+    simp only [Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h₁₂ 
   iterate 3 
     rcases h₁₂ with (rfl | h₁₂)
-    · unfold stmts₁ at h₀₁; exact h₀₁
+    · unfold stmts₁ at h₀₁ ; exact h₀₁
     · exact Finset.mem_insert_of_mem (IH h₁₂)
   case branch p q₁ q₂ IH₁ IH₂ =>
     rcases h₁₂ with (rfl | h₁₂ | h₁₂)
-    · unfold stmts₁ at h₀₁; exact h₀₁
+    · unfold stmts₁ at h₀₁ ; exact h₀₁
     · exact Finset.mem_insert_of_mem (Finset.mem_union_left _ <| IH₁ h₁₂)
     · exact Finset.mem_insert_of_mem (Finset.mem_union_right _ <| IH₂ h₁₂)
   case goto l => subst h₁₂; exact h₀₁
@@ -1571,9 +1571,9 @@ theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (h
   by
   induction' q₂ with _ q IH _ q IH _ q IH <;>
     simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at
-      h hs
-  iterate 3 rcases h with (rfl | h) <;> [exact hs;exact IH h hs]
-  case branch p q₁ q₂ IH₁ IH₂ => rcases h with (rfl | h | h); exacts[hs, IH₁ h hs.1, IH₂ h hs.2]
+      h hs 
+  iterate 3 rcases h with (rfl | h) <;> [exact hs; exact IH h hs]
+  case branch p q₁ q₂ IH₁ IH₂ => rcases h with (rfl | h | h); exacts [hs, IH₁ h hs.1, IH₂ h hs.2]
   case goto l => subst h; exact hs
   case halt => subst h; trivial
 #align turing.TM1.stmts₁_supports_stmt_mono Turing.TM1.stmts₁_supportsStmt_mono
@@ -1612,7 +1612,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
   | ⟨some l₁, v, T⟩, c', h₁, h₂ =>
     by
     replace h₂ := ss.2 _ (Finset.some_mem_insertNone.1 h₂)
-    simp only [step, Option.mem_def] at h₁; subst c'
+    simp only [step, Option.mem_def] at h₁ ; subst c'
     revert h₂; induction' M l₁ with _ q IH _ q IH _ q IH generalizing v T <;> intro hs
     iterate 3 exact IH _ _ hs
     case branch p q₁' q₂' IH₁ IH₂ =>
@@ -1777,9 +1777,9 @@ theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr �
     fun q a q' s h₁ h₂ => by
     rcases q with ⟨_ | q, v⟩; · cases h₁
     cases' q' with q' v';
-    simp only [tr_stmts, Finset.mem_coe, Finset.mem_product, Finset.mem_univ, and_true_iff] at h₂⊢
+    simp only [tr_stmts, Finset.mem_coe, Finset.mem_product, Finset.mem_univ, and_true_iff] at h₂ ⊢
     cases q'; · exact Multiset.mem_cons_self _ _
-    simp only [tr, Option.mem_def] at h₁
+    simp only [tr, Option.mem_def] at h₁ 
     have := TM1.stmts_supports_stmt ss h₂
     revert this; induction q generalizing v <;> intro hs
     case move d q =>
@@ -1794,9 +1794,9 @@ theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr �
       refine' IH (TM1.stmts_trans _ h₂) _ h₁ hs
       unfold TM1.stmts₁
       exact Finset.mem_insert_of_mem TM1.stmts₁_self
-    case
-      branch p q₁ q₂ IH₁ IH₂ =>
-      change cond (p a v) _ _ = ((some q', v'), s) at h₁
+    case branch p q₁ q₂ IH₁
+      IH₂ =>
+      change cond (p a v) _ _ = ((some q', v'), s) at h₁ 
       cases p a v
       · refine' IH₂ (TM1.stmts_trans _ h₂) _ h₁ hs.2
         unfold TM1.stmts₁
@@ -1847,7 +1847,7 @@ parameter {Γ : Type _}[Inhabited Γ]
 
 #print Turing.TM1to1.exists_enc_dec /-
 theorem exists_enc_dec [Fintype Γ] :
-    ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
+    ∃ (n : _) (enc : Γ → Vector Bool n) (dec : Vector Bool n → Γ),
       enc default = Vector.replicate n false ∧ ∀ a, dec (enc a) = a :=
   by
   letI := Classical.decEq Γ
@@ -1931,7 +1931,7 @@ theorem stepAux_move (d q v T) : stepAux (move d q) v T = stepAux q v ((Tape.mov
   by
   suffices : ∀ i, step_aux ((stmt.move d^[i]) q) v T = step_aux q v ((tape.move d^[i]) T)
   exact this n
-  intro ; induction' i with i IH generalizing T; · rfl
+  intro; induction' i with i IH generalizing T; · rfl
   rw [iterate_succ', step_aux, IH, iterate_succ]
 #align turing.TM1to1.step_aux_move Turing.TM1to1.stepAux_move
 
@@ -2018,7 +2018,7 @@ theorem trTape'_move_left (L R) :
         tape.mk' L' (list_blank.append (Vector.toList (enc a)) R')
     by
     simpa only [List.length_reverse, Vector.toList_length] using this (List.reverse_reverse _).symm
-  intros ; induction' l₁ with b l₁ IH generalizing l₂
+  intros; induction' l₁ with b l₁ IH generalizing l₂
   · cases e; rfl
   simp only [List.length, List.cons_append, iterate_succ_apply]
   convert IH e
@@ -2035,7 +2035,7 @@ theorem trTape'_move_right (L R) :
     refine' (Eq.symm _).trans (this n _)
     simp only [tr_tape'_move_left, list_blank.cons_head_tail, list_blank.head_cons,
       list_blank.tail_cons]
-  intros ; induction' i with i IH; · rfl
+  intros; induction' i with i IH; · rfl
   rw [iterate_succ_apply, iterate_succ_apply', tape.move_left_right, IH]
 #align turing.TM1to1.tr_tape'_move_right Turing.TM1to1.trTape'_move_right
 -/
@@ -2082,7 +2082,7 @@ theorem stepAux_read (f v L R) :
       step_aux (read_aux i f) v (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂ R')) =
         step_aux (f ⟨l₂, h⟩) v (tape.mk' (list_blank.append (l₂.reverseAux l₁) L') R')
     by intro f; convert this n f _ _ _ _ (enc a).2 <;> simp
-  clear f L a R; intros ; subst i
+  clear f L a R; intros; subst i
   induction' l₂ with a l₂ IH generalizing l₁; · rfl
   trans
     step_aux (read_aux l₂.length fun v => f (a ::ᵥ v)) v
@@ -2109,8 +2109,8 @@ theorem tr_respects : Respects (step M) (step tr) fun c₁ c₂ => tr_cfg c₁ =
             tape.move_left_mk', list_blank.cons_head_tail, list_blank.tail_cons,
             tr_tape'_move_left enc0, tr_tape'_move_right enc0] <;>
         apply IH
-    case
-      write f q IH =>
+    case write f q
+      IH =>
       simp only [tr_normal, step_aux_read dec enc0 encdec, step_aux]
       refine' refl_trans_gen.head rfl _
       obtain ⟨a, R, rfl⟩ := R.exists_cons
@@ -2120,12 +2120,12 @@ theorem tr_respects : Respects (step M) (step tr) fun c₁ c₂ => tr_cfg c₁ =
     case load a q IH =>
       simp only [tr_normal, step_aux_read dec enc0 encdec]
       apply IH
-    case
-      branch p q₁ q₂ IH₁ IH₂ =>
+    case branch p q₁ q₂ IH₁
+      IH₂ =>
       simp only [tr_normal, step_aux_read dec enc0 encdec, step_aux]
-      cases p R.head v <;> [apply IH₂;apply IH₁]
-    case
-      goto l =>
+      cases p R.head v <;> [apply IH₂; apply IH₁]
+    case goto
+      l =>
       simp only [tr_normal, step_aux_read dec enc0 encdec, step_aux, tr_cfg, tr_tape_mk']
       apply refl_trans_gen.refl
     case
@@ -2171,28 +2171,28 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
       have :=
         this _ (ss.2 _ hl) fun q' hq => Finset.mem_biUnion.2 ⟨_, hl, Finset.mem_insert_of_mem hq⟩
       rcases Finset.mem_insert.1 h with (rfl | h)
-      exacts[this.1, this.2 _ h]
+      exacts [this.1, this.2 _ h]
     intro q hs hw; induction q
     case move d q IH =>
-      unfold writes at hw⊢
+      unfold writes at hw ⊢
       replace IH := IH hs hw; refine' ⟨_, IH.2⟩
       cases d <;> simp only [tr_normal, iterate, supports_stmt_move, IH]
     case write f q IH =>
-      unfold writes at hw⊢
+      unfold writes at hw ⊢
       simp only [Finset.mem_image, Finset.mem_union, Finset.mem_univ, exists_prop, true_and_iff] at
-        hw⊢
+        hw ⊢
       replace IH := IH hs fun q hq => hw q (Or.inr hq)
       refine' ⟨supports_stmt_read _ fun a _ s => hw _ (Or.inl ⟨_, rfl⟩), fun q' hq => _⟩
       rcases hq with (⟨a, q₂, rfl⟩ | hq)
       · simp only [tr, supports_stmt_write, supports_stmt_move, IH.1]
       · exact IH.2 _ hq
     case load a q IH =>
-      unfold writes at hw⊢
+      unfold writes at hw ⊢
       replace IH := IH hs hw
       refine' ⟨supports_stmt_read _ fun a => IH.1, IH.2⟩
     case branch p q₁ q₂ IH₁ IH₂ =>
-      unfold writes at hw⊢
-      simp only [Finset.mem_union] at hw⊢
+      unfold writes at hw ⊢
+      simp only [Finset.mem_union] at hw ⊢
       replace IH₁ := IH₁ hs.1 fun q hq => hw q (Or.inl hq)
       replace IH₂ := IH₂ hs.2 fun q hq => hw q (Or.inr hq)
       exact ⟨supports_stmt_read _ fun a => ⟨IH₁.1, IH₂.1⟩, fun q => Or.ndrec (IH₁.2 _) (IH₂.2 _)⟩
@@ -2446,15 +2446,15 @@ theorem stmts₁_self {q} : q ∈ stmts₁ q := by
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=
   by
   intro h₁₂ q₀ h₀₁
-  induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;> simp only [stmts₁] at h₁₂⊢ <;>
-    simp only [Finset.mem_insert, Finset.mem_singleton, Finset.mem_union] at h₁₂
+  induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;> simp only [stmts₁] at h₁₂ ⊢ <;>
+    simp only [Finset.mem_insert, Finset.mem_singleton, Finset.mem_union] at h₁₂ 
   iterate 4 
     rcases h₁₂ with (rfl | h₁₂)
-    · unfold stmts₁ at h₀₁; exact h₀₁
+    · unfold stmts₁ at h₀₁ ; exact h₀₁
     · exact Finset.mem_insert_of_mem (IH h₁₂)
   case branch f q₁ q₂ IH₁ IH₂ =>
     rcases h₁₂ with (rfl | h₁₂ | h₁₂)
-    · unfold stmts₁ at h₀₁; exact h₀₁
+    · unfold stmts₁ at h₀₁ ; exact h₀₁
     · exact Finset.mem_insert_of_mem (Finset.mem_union_left _ (IH₁ h₁₂))
     · exact Finset.mem_insert_of_mem (Finset.mem_union_right _ (IH₂ h₁₂))
   case goto l => subst h₁₂; exact h₀₁
@@ -2466,9 +2466,9 @@ theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (h
   by
   induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;>
     simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at
-      h hs
-  iterate 4 rcases h with (rfl | h) <;> [exact hs;exact IH h hs]
-  case branch f q₁ q₂ IH₁ IH₂ => rcases h with (rfl | h | h); exacts[hs, IH₁ h hs.1, IH₂ h hs.2]
+      h hs 
+  iterate 4 rcases h with (rfl | h) <;> [exact hs; exact IH h hs]
+  case branch f q₁ q₂ IH₁ IH₂ => rcases h with (rfl | h | h); exacts [hs, IH₁ h hs.1, IH₂ h hs.2]
   case goto l => subst h; exact hs
   case halt => subst h; trivial
 #align turing.TM2.stmts₁_supports_stmt_mono Turing.TM2.stmts₁_supportsStmt_mono
@@ -2505,7 +2505,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
   | ⟨some l₁, v, T⟩, c', h₁, h₂ =>
     by
     replace h₂ := ss.2 _ (Finset.some_mem_insertNone.1 h₂)
-    simp only [step, Option.mem_def] at h₁; subst c'
+    simp only [step, Option.mem_def] at h₁ ; subst c'
     revert h₂; induction' M l₁ with _ _ q IH _ _ q IH _ _ q IH _ q IH generalizing v T <;> intro hs
     iterate 4 exact IH _ _ hs
     case branch p q₁' q₂' IH₁ IH₂ =>
@@ -2640,7 +2640,7 @@ theorem addBottom_modifyNth (f : (∀ k, Option (Γ k)) → ∀ k, Option (Γ k)
   by
   cases n <;>
     simp only [add_bottom, list_blank.head_cons, list_blank.modify_nth, list_blank.tail_cons]
-  congr ; symm; apply list_blank.map_modify_nth; intro ; rfl
+  congr; symm; apply list_blank.map_modify_nth; intro; rfl
 #align turing.TM2to1.add_bottom_modify_nth Turing.TM2to1.addBottom_modifyNth
 
 theorem addBottom_nth_snd (L n) : ((add_bottom L).get? n).2 = L.get? n := by
@@ -2819,10 +2819,10 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
           TM1.stepAux q v' ((Tape.move Dir.right^[(S' k).length]) (Tape.mk' ∅ (add_bottom L'))) :=
   by
   dsimp only; simp; cases o <;> simp only [st_write, st_var, tr_st_act, TM1.step_aux]
-  case
-    push f =>
+  case push
+    f =>
     have := tape.write_move_right_n fun a : Γ' => (a.1, update a.2 k (some (f v)))
-    dsimp only at this
+    dsimp only at this 
     refine'
       ⟨_, fun k' => _, by
         rw [tape.move_right_n_head, List.length, tape.mk'_nth_nat, this,
@@ -2839,7 +2839,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
       rw [← proj_map_nth, hL, list_blank.nth_mk]
       cases' lt_or_gt_of_ne h with h h
       · rw [List.getI_append]; simpa only [List.length_map, List.length_reverse] using h
-      · rw [gt_iff_lt] at h
+      · rw [gt_iff_lt] at h 
         rw [List.getI_eq_default, List.getI_eq_default] <;>
           simp only [Nat.add_one_le_iff, h, List.length, le_of_lt, List.length_reverse,
             List.length_append, List.length_map]
@@ -2876,7 +2876,7 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
         rw [← proj_map_nth, hL, list_blank.nth_mk, e, List.map, List.reverse_cons]
         cases' lt_or_gt_of_ne h with h h
         · rw [List.getI_append]; simpa only [List.length_map, List.length_reverse] using h
-        · rw [gt_iff_lt] at h;
+        · rw [gt_iff_lt] at h ;
           rw [List.getI_eq_default, List.getI_eq_default] <;>
             simp only [Nat.add_one_le_iff, h, List.length, le_of_lt, List.length_reverse,
               List.length_append, List.length_map]
@@ -2953,7 +2953,7 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
   have := hgo.tail' rfl
   rw [tr, TM1.step_aux, tape.move_right_n_head, tape.mk'_nth_nat, add_bottom_nth_snd,
     stk_nth_val _ (hT k), List.get?_len_le (le_of_eq (List.length_reverse _)), Option.isNone, cond,
-    hrun, TM1.step_aux] at this
+    hrun, TM1.step_aux] at this 
   obtain ⟨c, gc, rc⟩ := IH hT'
   refine' ⟨c, gc, (this.to₀.trans hret c (trans_gen.head' rfl _)).to_reflTransGen⟩
   rw [tr, TM1.step_aux, tape.mk'_head, add_bottom_head_fst]
@@ -2974,7 +2974,7 @@ theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c�
   · exact tr_respects_aux M hT s @IH
   · exact IH _ hT
   · unfold TM2.step_aux tr_normal TM1.step_aux
-    cases p v <;> [exact IH₂ _ hT;exact IH₁ _ hT]
+    cases p v <;> [exact IH₂ _ hT; exact IH₁ _ hT]
   · exact ⟨_, ⟨_, hT⟩, refl_trans_gen.refl⟩
   · exact ⟨_, ⟨_, hT⟩, refl_trans_gen.refl⟩
 #align turing.TM2to1.tr_respects Turing.TM2to1.tr_respects
@@ -3002,7 +3002,7 @@ theorem tr_eval_dom (k) (L : List (Γ k)) : (TM1.eval tr (tr_init k L)).Dom ↔ 
 
 theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (tr_init k L))
     (H₂ : L₂ ∈ TM2.eval M k L) :
-    ∃ (S : ∀ k, List (Γ k))(L' : ListBlank (∀ k, Option (Γ k))),
+    ∃ (S : ∀ k, List (Γ k)) (L' : ListBlank (∀ k, Option (Γ k))),
       add_bottom L' = L₁ ∧
         (∀ k, L'.map (proj k) = ListBlank.mk ((S k).map some).reverse) ∧ S k = L₂ :=
   by
@@ -3029,20 +3029,20 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
       rcases Finset.mem_biUnion.1 h with ⟨l, lS, h⟩
       have :=
         this _ (ss.2 l lS) fun x hx => Finset.mem_biUnion.2 ⟨_, lS, Finset.mem_insert_of_mem hx⟩
-      rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1;exact this.2 _ h]
+      rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1; exact this.2 _ h]
     clear h l'; refine' stmt_st_rec _ _ _ _ _ <;> intros
     · -- stack op
-      rw [TM2to1.supports_run] at ss'
+      rw [TM2to1.supports_run] at ss' 
       simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at
-        sub
+        sub 
       have hgo := sub _ (Or.inl <| Or.inl rfl)
       have hret := sub _ (Or.inl <| Or.inr rfl)
       cases' IH ss' fun x hx => sub x <| Or.inr hx with IH₁ IH₂
       refine'
         ⟨by simp only [tr_normal_run, TM1.supports_stmt] <;> intros <;> exact hgo, fun l h => _⟩
-      rw [tr_stmts₁_run] at h
+      rw [tr_stmts₁_run] at h 
       simp only [TM2to1.tr_stmts₁_run, Finset.mem_union, Finset.mem_insert, Finset.mem_singleton] at
-        h
+        h 
       rcases h with (⟨rfl | rfl⟩ | h)
       · unfold TM1.supports_stmt TM2to1.tr
         rcases s with (_ | _ | _)
@@ -3053,18 +3053,18 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
         exact ⟨IH₁, fun _ _ => hret⟩
       · exact IH₂ _ h
     · -- load
-      unfold TM2to1.tr_stmts₁ at ss' sub⊢
+      unfold TM2to1.tr_stmts₁ at ss' sub ⊢
       exact IH ss' sub
     · -- branch
-      unfold TM2to1.tr_stmts₁ at sub
+      unfold TM2to1.tr_stmts₁ at sub 
       cases' IH₁ ss'.1 fun x hx => sub x <| Finset.mem_union_left _ hx with IH₁₁ IH₁₂
       cases' IH₂ ss'.2 fun x hx => sub x <| Finset.mem_union_right _ hx with IH₂₁ IH₂₂
       refine' ⟨⟨IH₁₁, IH₂₁⟩, fun l h => _⟩
-      rw [tr_stmts₁] at h
-      rcases Finset.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h;exact IH₂₂ _ h]
+      rw [tr_stmts₁] at h 
+      rcases Finset.mem_union.1 h with (h | h) <;> [exact IH₁₂ _ h; exact IH₂₂ _ h]
     · -- goto
       rw [tr_stmts₁]; unfold TM2to1.tr_normal TM1.supports_stmt
-      unfold TM2.supports_stmt at ss'
+      unfold TM2.supports_stmt at ss' 
       exact
         ⟨fun _ v => Finset.mem_biUnion.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ =>
           False.elim⟩

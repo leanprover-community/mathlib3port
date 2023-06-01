@@ -104,7 +104,7 @@ def Amalgamation : Prop :=
     M ∈ K →
       N ∈ K →
         P ∈ K →
-          ∃ (Q : Bundled.{w} L.Structure)(NQ : N ↪[L] Q)(PQ : P ↪[L] Q),
+          ∃ (Q : Bundled.{w} L.Structure) (NQ : N ↪[L] Q) (PQ : P ↪[L] Q),
             Q ∈ K ∧ NQ.comp MN = PQ.comp MP
 #align first_order.language.amalgamation FirstOrder.Language.Amalgamation
 
@@ -221,8 +221,8 @@ theorem exists_cG_is_age_of (hn : K.Nonempty)
     (jep : JointEmbedding K) : ∃ M : Bundled.{w} L.Structure, Structure.CG L M ∧ L.age M = K :=
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
-  simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq'] at hF
-  simp_rw [Quotient.eq_mk_iff_out] at hF
+  simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq'] at hF 
+  simp_rw [Quotient.eq_mk_iff_out] at hF 
   have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
@@ -241,7 +241,7 @@ theorem exists_cG_is_age_of (hn : K.Nonempty)
   · exact (hFP _ n).some
 #align first_order.language.exists_cg_is_age_of FirstOrder.Language.exists_cG_is_age_of
 
-theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
+theorem exists_countable_is_age_of_iff [Countable (Σ l, L.Functions l)] :
     (∃ M : Bundled.{w} L.Structure, Countable M ∧ L.age M = K) ↔
       K.Nonempty ∧
         (∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) ∧
@@ -274,7 +274,7 @@ variable {L} (K)
 /-- A structure `M` is a Fraïssé limit for a class `K` if it is countably generated,
 ultrahomogeneous, and has age `K`. -/
 @[protect_proj]
-structure IsFraisseLimit [Countable (Σl, L.Functions l)] [Countable M] : Prop where
+structure IsFraisseLimit [Countable (Σ l, L.Functions l)] [Countable M] : Prop where
   ultrahomogeneous : IsUltrahomogeneous L M
   age : L.age M = K
 #align first_order.language.is_fraisse_limit FirstOrder.Language.IsFraisseLimit
@@ -297,7 +297,7 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
   ext n
   have hgn := (embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
   simp only [embedding.comp_apply, Equiv.coe_toEmbedding, Equiv.symm_apply_apply,
-    substructure.coe_subtype, embedding.equiv_range_apply] at hgn
+    substructure.coe_subtype, embedding.equiv_range_apply] at hgn 
   simp only [embedding.comp_apply, Equiv.coe_toEmbedding, substructure.coe_inclusion,
     Set.coe_inclusion, embedding.equiv_range_apply, hgn]
 #align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
@@ -311,7 +311,7 @@ theorem IsUltrahomogeneous.age_isFraisse [Countable M] (h : L.IsUltrahomogeneous
 namespace IsFraisseLimit
 
 /-- If a class has a Fraïssé limit, it must be Fraïssé. -/
-theorem isFraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
+theorem isFraisse [Countable (Σ l, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
     IsFraisse K :=
   (congr rfl h.age).mp h.ultrahomogeneous.age_isFraisse
 #align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.isFraisse

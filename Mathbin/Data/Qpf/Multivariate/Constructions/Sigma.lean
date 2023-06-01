@@ -33,7 +33,7 @@ variable (F : A → TypeVec.{u} n → Type u)
 /-- Dependent sum of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
 def Sigma (v : TypeVec.{u} n) : Type u :=
-  Σα : A, F α v
+  Σ α : A, F α v
 #align mvqpf.sigma MvQPF.Sigma
 -/
 
@@ -68,7 +68,7 @@ variable [∀ α, MvQPF <| F α]
 #print MvQPF.Sigma.P /-
 /-- polynomial functor representation of a dependent sum -/
 protected def P : MvPFunctor n :=
-  ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
+  ⟨Σ a, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
 #align mvqpf.sigma.P MvQPF.Sigma.P
 -/
 
@@ -108,7 +108,7 @@ variable [∀ α, MvQPF <| F α]
 #print MvQPF.Pi.P /-
 /-- polynomial functor representation of a dependent product -/
 protected def P : MvPFunctor n :=
-  ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
+  ⟨∀ a, (p (F a)).A, fun x i => Σ a : A, (p (F a)).B (x a) i⟩
 #align mvqpf.pi.P MvQPF.Pi.P
 -/
 

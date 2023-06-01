@@ -117,7 +117,7 @@ theorem commute_cast [NonAssocRing α] (x : α) (m : ℤ) : Commute x m :=
 theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) :=
   by
   intro m n h
-  rw [← sub_nonneg] at h
+  rw [← sub_nonneg] at h 
   lift n - m to ℕ using h with k
   rw [← sub_nonneg, ← cast_sub, ← h_1, cast_coe_nat]
   exact k.cast_nonneg

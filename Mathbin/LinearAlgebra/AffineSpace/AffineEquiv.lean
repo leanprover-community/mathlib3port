@@ -53,7 +53,7 @@ We define it using an `equiv` for the map and a `linear_equiv` for the linear pa
 to allow affine equivalences with good definitional equalities. -/
 @[nolint has_nonempty_instance]
 structure AffineEquiv (k P₁ P₂ : Type _) {V₁ V₂ : Type _} [Ring k] [AddCommGroup V₁] [Module k V₁]
-  [AddTorsor V₁ P₁] [AddCommGroup V₂] [Module k V₂] [AddTorsor V₂ P₂] extends P₁ ≃ P₂ where
+    [AddTorsor V₁ P₁] [AddCommGroup V₂] [Module k V₂] [AddTorsor V₂ P₂] extends P₁ ≃ P₂ where
   linear : V₁ ≃ₗ[k] V₂
   map_vadd' : ∀ (p : P₁) (v : V₁), to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
 #align affine_equiv AffineEquiv
@@ -91,9 +91,9 @@ theorem linear_toAffineMap (e : P₁ ≃ᵃ[k] P₂) : e.toAffineMap.linear = e.
 theorem toAffineMap_injective : Injective (toAffineMap : (P₁ ≃ᵃ[k] P₂) → P₁ →ᵃ[k] P₂) :=
   by
   rintro ⟨e, el, h⟩ ⟨e', el', h'⟩ H
-  simp only [to_affine_map_mk, Equiv.coe_inj, LinearEquiv.toLinearMap_inj] at H
+  simp only [to_affine_map_mk, Equiv.coe_inj, LinearEquiv.toLinearMap_inj] at H 
   congr
-  exacts[H.1, H.2]
+  exacts [H.1, H.2]
 #align affine_equiv.to_affine_map_injective AffineEquiv.toAffineMap_injective
 
 @[simp]
@@ -651,7 +651,7 @@ theorem injective_pointReflection_left_of_module [Invertible (2 : k)] :
     ∀ y, Injective fun x : P₁ => pointReflection k x y :=
   injective_pointReflection_left_of_injective_bit0 k fun x y h => by
     rwa [bit0, bit0, ← two_smul k x, ← two_smul k y,
-      (isUnit_of_invertible (2 : k)).smul_left_cancel] at h
+      (isUnit_of_invertible (2 : k)).smul_left_cancel] at h 
 #align affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_pointReflection_left_of_module
 
 theorem pointReflection_fixed_iff_of_module [Invertible (2 : k)] {x y : P₁} :

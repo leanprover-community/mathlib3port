@@ -184,7 +184,7 @@ theorem quot_sub (a b : PGame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
 theorem quot_eq_of_mk'_quot_eq {x y : PGame} (L : x.LeftMoves ≃ y.LeftMoves)
     (R : x.RightMoves ≃ y.RightMoves) (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
     (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
-  simp_rw [Quotient.eq'] at hl hr; exact Quot.sound (equiv_of_mk_equiv L R hl hr)
+  simp_rw [Quotient.eq'] at hl hr ; exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 #align pgame.quot_eq_of_mk_quot_eq PGame.quot_eq_of_mk'_quot_eq
 
 /-! Multiplicative operations can be defined at the level of pre-games,
@@ -351,8 +351,8 @@ def mulCommRelabelling : ∀ x y : PGame.{u}, x * y ≡r y * x
       exact
         ((add_comm_relabelling _ _).trans <|
               (mul_comm_relabelling _ _).addCongr (mul_comm_relabelling _ _)).subCongr
-          (mul_comm_relabelling _ _)decreasing_by
-  pgame_wf_tac
+          (mul_comm_relabelling _ _)
+decreasing_by pgame_wf_tac
 #align pgame.mul_comm_relabelling PGame.mulCommRelabelling
 
 theorem quot_mul_comm (x y : PGame.{u}) : ⟦x * y⟧ = ⟦y * x⟧ :=
@@ -416,8 +416,8 @@ def negMulRelabelling : ∀ x y : PGame.{u}, -x * y ≡r -(x * y)
     refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;>
           apply ((neg_add_relabelling _ _).trans _).symm <;>
         apply ((neg_add_relabelling _ _).trans (relabelling.add_congr _ _)).subCongr <;>
-      exact (neg_mul_relabelling _ _).symm decreasing_by
-  pgame_wf_tac
+      exact (neg_mul_relabelling _ _).symm
+decreasing_by pgame_wf_tac
 #align pgame.neg_mul_relabelling PGame.negMulRelabelling
 
 @[simp]
@@ -494,7 +494,8 @@ theorem quot_left_distrib : ∀ x y z : PGame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
       · change
           ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ =
             ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
-        simp [quot_left_distrib]; abel decreasing_by pgame_wf_tac
+        simp [quot_left_distrib]; abel
+decreasing_by pgame_wf_tac
 #align pgame.quot_left_distrib PGame.quot_left_distrib
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
@@ -639,7 +640,8 @@ theorem quot_mul_assoc : ∀ x y z : PGame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
                 (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
             ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
                 xR i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp [quot_mul_assoc]; abel decreasing_by pgame_wf_tac
+        simp [quot_mul_assoc]; abel
+decreasing_by pgame_wf_tac
 #align pgame.quot_mul_assoc PGame.quot_mul_assoc
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/

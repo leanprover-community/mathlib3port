@@ -52,7 +52,7 @@ variable {R R' 𝕜 𝕜₂ 𝕜₃ 𝕝 E E₂ E₃ F G ι : Type _}
 /-- A seminorm on a module over a normed ring is a function to the reals that is positive
 semidefinite, positive homogeneous, and subadditive. -/
 structure Seminorm (𝕜 : Type _) (E : Type _) [SeminormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] extends
-  AddGroupSeminorm E where
+    AddGroupSeminorm E where
   smul' : ∀ (a : 𝕜) (x : E), to_fun (a • x) = ‖a‖ * to_fun x
 #align seminorm Seminorm
 -/
@@ -64,7 +64,7 @@ attribute [nolint doc_blame] Seminorm.toAddGroupSeminorm
 
 You should extend this class when you extend `seminorm`. -/
 class SeminormClass (F : Type _) (𝕜 E : outParam <| Type _) [SeminormedRing 𝕜] [AddGroup E]
-  [SMul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
+    [SMul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
   map_smul_eq_mul (f : F) (a : 𝕜) (x : E) : f (a • x) = ‖a‖ * f x
 #align seminorm_class SeminormClass
 -/
@@ -101,7 +101,7 @@ def Seminorm.ofSMulLE [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] (f : E
     rw [← mul_le_mul_left (inv_pos.mpr (norm_pos_iff.mpr h))]
     rw [inv_mul_cancel_left₀ (norm_ne_zero_iff.mpr h)]
     specialize smul_le r⁻¹ (r • x)
-    rw [norm_inv] at smul_le
+    rw [norm_inv] at smul_le 
     convert smul_le
     simp [h]
 #align seminorm.of_smul_le Seminorm.ofSMulLE
@@ -851,7 +851,7 @@ theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) :=
   rw [mem_ball_zero, ← hx, map_smul_eq_mul]
   calc
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
-    _ < r := by rwa [mem_ball_zero] at hy
+    _ < r := by rwa [mem_ball_zero] at hy 
     
 #align seminorm.balanced_ball_zero Seminorm.balanced_ball_zero
 
@@ -862,7 +862,7 @@ theorem balanced_closedBall_zero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
   rw [mem_closed_ball_zero, ← hx, map_smul_eq_mul]
   calc
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
-    _ ≤ r := by rwa [mem_closed_ball_zero] at hy
+    _ ≤ r := by rwa [mem_closed_ball_zero] at hy 
     
 #align seminorm.balanced_closed_ball_zero Seminorm.balanced_closedBall_zero
 
@@ -901,7 +901,7 @@ theorem ball_smul_ball (p : Seminorm 𝕜 E) (r₁ r₂ : ℝ) :
   by
   rw [Set.subset_def]
   intro x hx
-  rw [Set.mem_smul] at hx
+  rw [Set.mem_smul] at hx 
   rcases hx with ⟨a, y, ha, hy, hx⟩
   rw [← hx, mem_ball_zero, map_smul_eq_mul]
   exact
@@ -913,10 +913,10 @@ theorem closedBall_smul_closedBall (p : Seminorm 𝕜 E) (r₁ r₂ : ℝ) :
   by
   rw [Set.subset_def]
   intro x hx
-  rw [Set.mem_smul] at hx
+  rw [Set.mem_smul] at hx 
   rcases hx with ⟨a, y, ha, hy, hx⟩
   rw [← hx, mem_closed_ball_zero, map_smul_eq_mul]
-  rw [mem_closedBall_zero_iff] at ha
+  rw [mem_closedBall_zero_iff] at ha 
   exact mul_le_mul ha (p.mem_closed_ball_zero.mp hy) (map_nonneg _ y) ((norm_nonneg a).trans ha)
 #align seminorm.closed_ball_smul_closed_ball Seminorm.closedBall_smul_closedBall
 
@@ -975,7 +975,7 @@ theorem smul_closedBall_subset {p : Seminorm 𝕜 E} {k : 𝕜} {r : ℝ} :
   by
   rintro x ⟨y, hy, h⟩
   rw [Seminorm.mem_closedBall_zero, ← h, map_smul_eq_mul]
-  rw [Seminorm.mem_closedBall_zero] at hy
+  rw [Seminorm.mem_closedBall_zero] at hy 
   exact mul_le_mul_of_nonneg_left hy (norm_nonneg _)
 #align seminorm.smul_closed_ball_subset Seminorm.smul_closedBall_subset
 
@@ -998,7 +998,7 @@ theorem ball_zero_absorbs_ball_zero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr�
   rcases exists_pos_lt_mul hr₁ r₂ with ⟨r, hr₀, hr⟩
   refine' ⟨r, hr₀, fun a ha x hx => _⟩
   rw [smul_ball_zero (norm_pos_iff.1 <| hr₀.trans_le ha), p.mem_ball_zero]
-  rw [p.mem_ball_zero] at hx
+  rw [p.mem_ball_zero] at hx 
   exact hx.trans (hr.trans_le <| mul_le_mul_of_nonneg_right ha hr₁.le)
 #align seminorm.ball_zero_absorbs_ball_zero Seminorm.ball_zero_absorbs_ball_zero
 
@@ -1018,7 +1018,7 @@ protected theorem absorbent_closedBall_zero (hr : 0 < r) : Absorbent 𝕜 (close
 protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) :=
   by
   refine' (p.absorbent_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
-  rw [p.mem_ball_zero] at hy
+  rw [p.mem_ball_zero] at hy 
   exact p.mem_ball.2 ((map_sub_le_add p _ _).trans_lt <| add_lt_of_lt_sub_right hy)
 #align seminorm.absorbent_ball Seminorm.absorbent_ball
 
@@ -1026,7 +1026,7 @@ protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) :
 protected theorem absorbent_closedBall (hpr : p x < r) : Absorbent 𝕜 (closedBall p x r) :=
   by
   refine' (p.absorbent_closed_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
-  rw [p.mem_closed_ball_zero] at hy
+  rw [p.mem_closed_ball_zero] at hy 
   exact p.mem_closed_ball.2 ((map_sub_le_add p _ _).trans <| add_le_of_le_sub_right hy)
 #align seminorm.absorbent_closed_ball Seminorm.absorbent_closedBall
 
@@ -1147,7 +1147,7 @@ theorem continuousAt_zero' [TopologicalSpace E] [ContinuousConstSMul 𝕜 E] {p 
   intro ε hε
   rw [map_zero]
   suffices p.closed_ball 0 ε ∈ (𝓝 0 : Filter E) by
-    rwa [Seminorm.closedBall_zero_eq_preimage_closedBall] at this
+    rwa [Seminorm.closedBall_zero_eq_preimage_closedBall] at this 
   rcases exists_norm_lt 𝕜 (div_pos hε hr) with ⟨k, hk0, hkε⟩
   have hk0' := norm_pos_iff.mp hk0
   have := (set_smul_mem_nhds_zero_iff hk0').mpr hp

@@ -187,12 +187,12 @@ theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F :
   · refine'
       { app := fun X => (hF _).to _
         naturality' := _ }
-    intros ; exact (hF _).eq_of_src _ _
+    intros; exact (hF _).eq_of_src _ _
   · intro f; ext; apply (hF _).eq_of_src _ _
   · refine'
       { app := fun X => (hF _).from _
         naturality' := _ }
-    intros ; exact (hF _).eq_of_tgt _ _
+    intros; exact (hF _).eq_of_tgt _ _
   · intro f; ext; apply (hF _).eq_of_tgt _ _
 #align category_theory.functor.is_zero CategoryTheory.Functor.isZero
 

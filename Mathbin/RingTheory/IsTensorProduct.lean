@@ -301,7 +301,7 @@ theorem IsBaseChange.of_lift_unique
           TensorProduct.induction_on x _ (fun s' y => smul_assoc s s' _) fun x y hx hy => _ }
     · rw [map_zero, smul_zero, map_zero, smul_zero]
     · rw [smul_add, map_add, map_add, smul_add, hx, hy]
-  simp_rw [FunLike.ext_iff, LinearMap.comp_apply, LinearMap.restrictScalars_apply] at hg
+  simp_rw [FunLike.ext_iff, LinearMap.comp_apply, LinearMap.restrictScalars_apply] at hg 
   let fe : S ⊗[R] M ≃ₗ[S] N :=
     LinearEquiv.ofLinear f'' (ulift.module_equiv.to_linear_map.comp g) _ _
   · exact fe.bijective
@@ -458,9 +458,9 @@ noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Typ
     apply H.out.induction_on x
     · rw [MulZeroClass.zero_mul, map_zero, MulZeroClass.zero_mul]
     rotate_left
-    · intro s s' e; dsimp only [LinearMap.restrictScalars_apply] at e⊢
+    · intro s s' e; dsimp only [LinearMap.restrictScalars_apply] at e ⊢
       rw [LinearMap.map_smul, smul_mul_assoc, LinearMap.map_smul, e, smul_mul_assoc]
-    · intro s s' e₁ e₂; dsimp only [LinearMap.restrictScalars_apply] at e₁ e₂⊢
+    · intro s s' e₁ e₂; dsimp only [LinearMap.restrictScalars_apply] at e₁ e₂ ⊢
       rw [add_mul, map_add, map_add, add_mul, e₁, e₂]
     intro x; dsimp; rw [this]; apply H.out.induction_on y
     · rw [MulZeroClass.mul_zero, map_zero, MulZeroClass.mul_zero]

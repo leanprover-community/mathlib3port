@@ -77,9 +77,9 @@ instance stalk_isReduced_of_reduced [IsReduced X] (x : X.carrier) :
   constructor
   rintro g ⟨n, e⟩
   obtain ⟨U, hxU, s, rfl⟩ := X.presheaf.germ_exist x g
-  rw [← map_pow, ← map_zero (X.presheaf.germ ⟨x, hxU⟩)] at e
+  rw [← map_pow, ← map_zero (X.presheaf.germ ⟨x, hxU⟩)] at e 
   obtain ⟨V, hxV, iU, iV, e'⟩ := X.presheaf.germ_eq x hxU hxU _ 0 e
-  rw [map_pow, map_zero] at e'
+  rw [map_pow, map_zero] at e' 
   replace e' := (IsNilpotent.mk _ _ e').eq_zero
   erw [← concrete_category.congr_hom (X.presheaf.germ_res iU ⟨x, hxV⟩) s]
   rw [comp_apply, e', map_zero]
@@ -137,10 +137,10 @@ theorem isReducedOfIsAffineIsReduced [IsAffine X] [h : IsReduced (X.Presheaf.obj
 theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.carrier), Prop)
     (h₁ :
       ∀ (X : Scheme) (U : Opens X.carrier),
-        (∀ x : U, ∃ (V : _)(h : x.1 ∈ V)(i : V ⟶ U), P X V) → P X U)
+        (∀ x : U, ∃ (V : _) (h : x.1 ∈ V) (i : V ⟶ U), P X V) → P X U)
     (h₂ :
       ∀ {X Y} (f : X ⟶ Y) [hf : IsOpenImmersion f],
-        ∃ (U : Set X.carrier)(V : Set Y.carrier)(hU : U = ⊤)(hV : V = Set.range f.1.base),
+        ∃ (U : Set X.carrier) (V : Set Y.carrier) (hU : U = ⊤) (hV : V = Set.range f.1.base),
           P X ⟨U, hU.symm ▸ isOpen_univ⟩ → P Y ⟨V, hV.symm ▸ hf.base_open.open_range⟩)
     (h₃ : ∀ R : CommRingCat, P (Scheme.spec.obj <| op R) ⊤) :
     ∀ (X : Scheme) (U : Opens X.carrier), P X U :=
@@ -179,10 +179,10 @@ theorem eq_zero_of_basicOpen_eq_bot {X : Scheme} [hX : IsReduced X] {U : Opens X
   · intro X U hx hX s hs x
     obtain ⟨V, hx, i, H⟩ := hx x
     specialize H (X.presheaf.map i.op s)
-    erw [Scheme.basic_open_res] at H
-    rw [hs] at H
+    erw [Scheme.basic_open_res] at H 
+    rw [hs] at H 
     specialize H inf_bot_eq ⟨x, hx⟩
-    erw [TopCat.Presheaf.germ_res_apply] at H
+    erw [TopCat.Presheaf.germ_res_apply] at H 
     exact H
   · rintro X Y f hf
     have e : f.val.base ⁻¹' Set.range ⇑f.val.base = Set.univ := by
@@ -192,16 +192,16 @@ theorem eq_zero_of_basicOpen_eq_bot {X : Scheme} [hX : IsReduced X] {U : Opens X
     haveI := is_reduced_of_open_immersion f
     specialize H (f.1.c.app _ s) _ ⟨x, by rw [opens.mem_mk, e]; trivial⟩
     · rw [← Scheme.preimage_basic_open, hs]; ext1; simp [opens.map]
-    · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
-      apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H
-      erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
+    · erw [← PresheafedSpace.stalk_map_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H 
+      apply_fun inv <| PresheafedSpace.stalk_map f.val x  at H 
+      erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H 
       exact H
   · intro R hX s hs x
-    erw [basic_open_eq_of_affine', PrimeSpectrum.basicOpen_eq_bot_iff] at hs
+    erw [basic_open_eq_of_affine', PrimeSpectrum.basicOpen_eq_bot_iff] at hs 
     replace hs := hs.map (Spec_Γ_identity.app R).inv
     -- what the hell?!
     replace hs := @IsNilpotent.eq_zero _ _ _ _ (show _ from _) hs
-    rw [iso.hom_inv_id_apply] at hs
+    rw [iso.hom_inv_id_apply] at hs 
     rw [hs, map_zero]
     exact @is_reduced.component_reduced hX ⊤
 #align algebraic_geometry.eq_zero_of_basic_open_eq_bot AlgebraicGeometry.eq_zero_of_basicOpen_eq_bot
@@ -246,10 +246,10 @@ instance is_irreducible_of_isIntegral [IsIntegral X] : IrreducibleSpace X.carrie
   replace H : ¬IsPreirreducible (⊤ : Set X.carrier) := fun h =>
     H { to_preirreducibleSpace := ⟨h⟩
         to_nonempty := inferInstance }
-  simp_rw [isPreirreducible_iff_closed_union_closed, not_forall, not_or] at H
+  simp_rw [isPreirreducible_iff_closed_union_closed, not_forall, not_or] at H 
   rcases H with ⟨S, T, hS, hT, h₁, h₂, h₃⟩
-  erw [not_forall] at h₂ h₃
-  simp_rw [not_forall] at h₂ h₃
+  erw [not_forall] at h₂ h₃ 
+  simp_rw [not_forall] at h₂ h₃ 
   haveI : Nonempty (⟨Sᶜ, hS.1⟩ : opens X.carrier) := ⟨⟨_, h₂.some_spec.some_spec⟩⟩
   haveI : Nonempty (⟨Tᶜ, hT.1⟩ : opens X.carrier) := ⟨⟨_, h₃.some_spec.some_spec⟩⟩
   haveI : Nonempty (⟨Sᶜ, hS.1⟩ ⊔ ⟨Tᶜ, hT.1⟩ : opens X.carrier) :=
@@ -265,7 +265,7 @@ instance is_irreducible_of_isIntegral [IsIntegral X] : IrreducibleSpace X.carrie
     constructor
     · rintro ⟨hS, hT⟩
       cases h₁ (show x ∈ ⊤ by trivial)
-      exacts[hS h, hT h]
+      exacts [hS h, hT h]
     · intro x; exact x.rec _
 #align algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_isIntegral
 
@@ -285,7 +285,7 @@ theorem isIntegralOfIsIrreducibleIsReduced [IsReduced X] [H : IrreducibleSpace X
     replace e' := Subtype.eq e'
     subst e'
     replace e := congr_arg (X.presheaf.germ x) e
-    rw [RingHom.map_mul, RingHom.map_zero] at e
+    rw [RingHom.map_mul, RingHom.map_zero] at e 
     refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
     convert hx₁.mul hx₂
     exact e.symm
@@ -343,8 +343,8 @@ theorem map_injective_of_isIntegral [IsIntegral X] {U V : Opens X.carrier} (i : 
   by
   rw [injective_iff_map_eq_zero]
   intro x hx
-  rw [← basic_open_eq_bot_iff] at hx⊢
-  rw [Scheme.basic_open_res] at hx
+  rw [← basic_open_eq_bot_iff] at hx ⊢
+  rw [Scheme.basic_open_res] at hx 
   revert hx
   contrapose!
   simp_rw [← opens.not_nonempty_iff_eq_bot, Classical.not_not]

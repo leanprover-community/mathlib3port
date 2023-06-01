@@ -105,7 +105,7 @@ theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) :
 -/
 
 #print Vector.exists_eq_cons /-
-theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), v = a ::ᵥ as :=
+theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α) (as : Vector α n), v = a ::ᵥ as :=
   ⟨v.headI, v.tail, (eq_cons_iff v.headI v v.tail).2 ⟨rfl, rfl⟩⟩
 #align vector.exists_eq_cons Vector.exists_eq_cons
 -/
@@ -244,7 +244,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 #print Vector.tail_ofFn /-
 @[simp]
 theorem tail_ofFn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
-  (ofFn_get _).symm.trans <| by congr ; funext i; cases i; simp
+  (ofFn_get _).symm.trans <| by congr; funext i; cases i; simp
 #align vector.tail_of_fn Vector.tail_ofFn
 -/
 
@@ -799,7 +799,7 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
   by
   rintro ⟨x, rfl⟩ <;> dsimp [Vector.traverse, cast] <;> induction' x with x xs <;>
       simp! [cast, *, functor_norm] <;>
-    [rfl;simp [(· ∘ ·)]]
+    [rfl; simp [(· ∘ ·)]]
 #align vector.comp_traverse Vector.comp_traverse
 
 protected theorem traverse_eq_map_id {α β} (f : α → β) :

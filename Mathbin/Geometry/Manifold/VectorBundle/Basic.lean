@@ -119,7 +119,7 @@ theorem FiberBundle.chartedSpace_chartAt_symm_fst (x : TotalSpace E) (y : ModelP
     (hy : y ∈ (chartAt (ModelProd HB F) x).target) :
     ((chartAt (ModelProd HB F) x).symm y).proj = (chartAt HB x.proj).symm y.1 :=
   by
-  simp only [FiberBundle.chartedSpace_chartAt, mfld_simps] at hy⊢
+  simp only [FiberBundle.chartedSpace_chartAt, mfld_simps] at hy ⊢
   exact (trivialization_at F E x.proj).proj_symm_apply hy.2
 #align fiber_bundle.charted_space_chart_at_symm_fst FiberBundle.chartedSpace_chartAt_symm_fst
 
@@ -201,7 +201,7 @@ theorem contMdiff_proj : ContMdiff (IB.Prod 𝓘(𝕜, F)) IB n (π E) :=
   simp_rw [(· ∘ ·), FiberBundle.extChartAt]
   apply cont_diff_within_at_fst.congr
   · rintro ⟨a, b⟩ hab
-    simp only [mfld_simps] at hab
+    simp only [mfld_simps] at hab 
     have : ((chart_at HB x.1).symm (IB.symm a), b) ∈ (trivialization_at F E x.fst).target := by
       simp only [hab, mfld_simps]
     simp only [Trivialization.proj_symm_apply _ this, hab, mfld_simps]
@@ -319,7 +319,7 @@ instance : SmoothManifoldWithCorners (IB.Prod 𝓘(𝕜, F)) (TotalSpace E) :=
   by
   refine' { StructureGroupoid.HasGroupoid.comp (smoothFiberwiseLinear B F IB) _ with }
   intro e he
-  rw [mem_smoothFiberwiseLinear_iff] at he
+  rw [mem_smoothFiberwiseLinear_iff] at he 
   obtain ⟨φ, U, hU, hφ, h2φ, heφ⟩ := he
   rw [is_local_structomorph_on_contDiffGroupoid_iff]
   refine' ⟨ContMdiffOn.congr _ heφ.eq_on, ContMdiffOn.congr _ heφ.symm'.eq_on⟩
@@ -478,7 +478,7 @@ theorem smoothVectorBundle :
       ext v
       rw [a.smooth_coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe,
         Trivialization.coordChangeL_apply]
-      exacts[rfl, hb] }
+      exacts [rfl, hb] }
 #align vector_prebundle.smooth_vector_bundle VectorPrebundle.smoothVectorBundle
 
 end VectorPrebundle

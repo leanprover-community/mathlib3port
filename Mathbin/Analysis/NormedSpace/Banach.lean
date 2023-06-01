@@ -106,14 +106,14 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     refine' mem_Union.2 ⟨n, subset_closure _⟩
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
-  have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
+  have : ∃ (n : ℕ) (x : _), x ∈ interior (closure (f '' ball 0 n)) :=
     nonempty_interior_of_iUnion_of_closed (fun n => isClosed_closure) A
-  simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
+  simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this 
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   refine' ⟨(ε / 2)⁻¹ * ‖c‖ * 2 * n, _, fun y => _⟩
   · refine' mul_nonneg (mul_nonneg (mul_nonneg _ (norm_nonneg _)) (by norm_num)) _
-    exacts[inv_nonneg.2 (div_nonneg (le_of_lt εpos) (by norm_num)), n.cast_nonneg]
+    exacts [inv_nonneg.2 (div_nonneg (le_of_lt εpos) (by norm_num)), n.cast_nonneg]
   · by_cases hy : y = 0
     · use 0; simp [hy]
     · rcases rescale_to_shell hc (half_pos εpos) hy with ⟨d, hd, ydlt, leyd, dinv⟩
@@ -123,13 +123,13 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
         simp [dist_eq_norm, lt_of_le_of_lt ydlt.le (half_lt_self εpos)]
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
       rcases(mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
-      rw [← xz₁] at h₁
-      rw [mem_ball, dist_eq_norm, sub_zero] at hx₁
+      rw [← xz₁] at h₁ 
+      rw [mem_ball, dist_eq_norm, sub_zero] at hx₁ 
       have : a ∈ ball a ε := by simp; exact εpos
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₂, z₂im, h₂⟩
       rcases(mem_image _ _ _).1 z₂im with ⟨x₂, hx₂, xz₂⟩
-      rw [← xz₂] at h₂
-      rw [mem_ball, dist_eq_norm, sub_zero] at hx₂
+      rw [← xz₂] at h₂ 
+      rw [mem_ball, dist_eq_norm, sub_zero] at hx₂ 
       let x := x₁ - x₂
       have I : ‖f x - d • y‖ ≤ 2 * δ :=
         calc
@@ -156,7 +156,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           _ = ‖y‖ / 2 := by rw [inv_mul_cancel, one_mul]; simp [norm_eq_zero, hd]
           _ = 1 / 2 * ‖y‖ := by ring
           
-      rw [← dist_eq_norm] at J
+      rw [← dist_eq_norm] at J 
       have K : ‖d⁻¹ • x‖ ≤ (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ :=
         calc
           ‖d⁻¹ • x‖ = ‖d‖⁻¹ * ‖x₁ - x₂‖ := by rw [norm_smul, norm_inv]
@@ -236,7 +236,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
   have : tendsto (fun n => ∑ i in Finset.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
   have L₁ : tendsto (fun n => f (∑ i in Finset.range n, u i)) at_top (𝓝 (f x)) :=
     (f.continuous.tendsto _).comp this
-  simp only [fsumeq] at L₁
+  simp only [fsumeq] at L₁ 
   have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0)) :=
     by
     refine' tendsto_const_nhds.sub _
@@ -246,7 +246,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     rw [← MulZeroClass.zero_mul ‖y‖]
     refine' (tendsto_pow_atTop_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> norm_num
   have feq : f x = y - 0 := tendsto_nhds_unique L₁ L₂
-  rw [sub_zero] at feq
+  rw [sub_zero] at feq 
   exact ⟨x, feq, x_ineq⟩
 #align continuous_linear_map.exists_preimage_norm_le ContinuousLinearMap.exists_preimage_norm_le
 
@@ -269,7 +269,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
       _ ≤ C * ‖z - y‖ := wnorm
       _ < C * (ε / C) := by
         apply mul_lt_mul_of_pos_left _ Cpos
-        rwa [mem_ball, dist_eq_norm] at hz
+        rwa [mem_ball, dist_eq_norm] at hz 
       _ = ε := mul_div_cancel' _ (ne_of_gt Cpos)
       
   exact Set.mem_image_of_mem _ (hε this)
@@ -344,7 +344,7 @@ theorem continuous_symm (e : E ≃ₗ[𝕜] F) (h : Continuous e) : Continuous e
   rw [continuous_def]
   intro s hs
   rw [← e.image_eq_preimage]
-  rw [← e.coe_coe] at h⊢
+  rw [← e.coe_coe] at h ⊢
   exact ContinuousLinearMap.isOpenMap ⟨↑e, h⟩ e.surjective s hs
 #align linear_equiv.continuous_symm LinearEquiv.continuous_symm
 

@@ -557,7 +557,7 @@ instance seminormedAddCommGroup [∀ i, SeminormedAddCommGroup (β i)] :
     dist_eq := fun x y => by
       rcases p.dichotomy with (rfl | h)
       · simpa only [dist_eq_csupr, norm_eq_csupr, dist_eq_norm]
-      · have : p ≠ ∞ := by intro hp; rw [hp, ENNReal.top_toReal] at h; linarith
+      · have : p ≠ ∞ := by intro hp; rw [hp, ENNReal.top_toReal] at h ; linarith
         simpa only [dist_eq_sum (zero_lt_one.trans_le h), norm_eq_sum (zero_lt_one.trans_le h),
           dist_eq_norm] }
 #align pi_Lp.seminormed_add_comm_group PiLp.seminormedAddCommGroup
@@ -983,7 +983,7 @@ theorem basis_toMatrix_basisFun_mul (b : Basis ι 𝕜 (PiLp p fun i : ι => �
   have := basis_toMatrix_basisFun_mul (b.map (PiLp.linearEquiv _ 𝕜 _)) A
   simp_rw [← PiLp.basisFun_map p, Basis.map_repr, LinearEquiv.trans_apply,
     PiLp.linearEquiv_symm_apply, Basis.toMatrix_map, Function.comp, Basis.map_apply,
-    LinearEquiv.symm_apply_apply] at this
+    LinearEquiv.symm_apply_apply] at this 
   exact this
 #align pi_Lp.basis_to_matrix_basis_fun_mul PiLp.basis_toMatrix_basisFun_mul
 

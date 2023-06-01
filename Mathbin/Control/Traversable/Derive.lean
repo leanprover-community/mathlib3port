@@ -140,7 +140,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let env ← get_env
   let n := f.get_app_fn.const_name
   let d ← get_decl n
-  refine ``({ map := _.. })
+  refine ``({ map := _ .. })
   let tgt ← target
   extract_def (.str (with_prefix pre n) "map") d <| mk_map n
   when (d d.is_trusted) do

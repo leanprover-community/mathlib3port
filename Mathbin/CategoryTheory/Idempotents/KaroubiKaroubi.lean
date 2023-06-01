@@ -60,11 +60,11 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             { f := P.p.1
               comm := by
                 have h := P.idem
-                simp only [hom_ext, comp_f] at h
+                simp only [hom_ext, comp_f] at h 
                 erw [← assoc, h, comp_p] }
           comm := by
             have h := P.idem
-            simp only [hom_ext, comp_f] at h⊢
+            simp only [hom_ext, comp_f] at h ⊢
             erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
   inv :=
@@ -73,11 +73,11 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
             { f := P.p.1
               comm := by
                 have h := P.idem
-                simp only [hom_ext, comp_f] at h
+                simp only [hom_ext, comp_f] at h 
                 erw [h, p_comp] }
           comm := by
             have h := P.idem
-            simp only [hom_ext, comp_f] at h⊢
+            simp only [hom_ext, comp_f] at h ⊢
             erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
   hom_inv_id' := by ext P; simpa only [hom_ext, id_eq] using P.idem

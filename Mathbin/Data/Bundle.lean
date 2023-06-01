@@ -44,7 +44,7 @@ variable {B : Type _} (E : B → Type _)
 This type synonym is used to avoid conflicts with general sigma types.
 -/
 def TotalSpace :=
-  Σx, E x
+  Σ x, E x
 #align bundle.total_space Bundle.TotalSpace
 -/
 

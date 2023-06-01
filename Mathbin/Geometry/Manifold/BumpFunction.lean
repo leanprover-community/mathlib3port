@@ -138,7 +138,7 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
     extChartAt I c '' s =
       closedBall (extChartAt I c c) f.r ∩ range I ∩ (extChartAt I c).symm ⁻¹' s :=
   by
-  rw [support_eq_inter_preimage, subset_inter_iff, ← extChartAt_source I, ← image_subset_iff] at hs
+  rw [support_eq_inter_preimage, subset_inter_iff, ← extChartAt_source I, ← image_subset_iff] at hs 
   cases' hs with hse hsf
   apply subset.antisymm
   · refine' subset_inter (subset_inter (subset.trans hsf ball_subset_closed_ball) _) _
@@ -153,7 +153,7 @@ theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 :=
   by
   have : f x = 0 ∨ f x = _ := indicator_eq_zero_or_self _ _ _
   cases this <;> rw [this]
-  exacts[left_mem_Icc.2 zero_le_one, ⟨f.to_cont_diff_bump.nonneg, f.to_cont_diff_bump.le_one⟩]
+  exacts [left_mem_Icc.2 zero_le_one, ⟨f.to_cont_diff_bump.nonneg, f.to_cont_diff_bump.le_one⟩]
 #align smooth_bump_function.mem_Icc SmoothBumpFunction.mem_Icc
 
 theorem nonneg : 0 ≤ f x :=
@@ -235,12 +235,12 @@ theorem isClosed_image_of_isClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ su
 ball of radius `f.R`), then there exists `0 < r < f.R` such that `s` is a subset of the open ball of
 radius `r`. Formally, `s ⊆ e.source ∩ e ⁻¹' (ball (e c) r)`, where `e = ext_chart_at I c`. -/
 theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
-    ∃ (r : _)(hr : r ∈ Ioo 0 f.r),
+    ∃ (r : _) (hr : r ∈ Ioo 0 f.r),
       s ⊆ (chartAt H c).source ∩ extChartAt I c ⁻¹' ball (extChartAt I c c) r :=
   by
   set e := extChartAt I c
   have : IsClosed (e '' s) := f.is_closed_image_of_is_closed hsc hs
-  rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs
+  rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs 
   rcases exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
   exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
 #align smooth_bump_function.exists_r_pos_lt_subset_ball SmoothBumpFunction.exists_r_pos_lt_subset_ball

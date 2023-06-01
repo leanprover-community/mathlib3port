@@ -314,7 +314,7 @@ theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b �
 
 #print Part.get_eq_get_of_eq /-
 theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) :
-    a.get ha = b.get (h ▸ ha) := by congr ; exact h
+    a.get ha = b.get (h ▸ ha) := by congr; exact h
 #align part.get_eq_get_of_eq Part.get_eq_get_of_eq
 -/
 
@@ -452,7 +452,7 @@ theorem ofOption_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
 
 #print Part.ofOption_eq_get /-
 theorem ofOption_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.get _ o⟩ :=
-  Part.ext' (ofOption_dom o) fun h₁ h₂ => by cases o <;> [cases h₁;rfl]
+  Part.ext' (ofOption_dom o) fun h₁ h₂ => by cases o <;> [cases h₁; rfl]
 #align part.of_option_eq_get Part.ofOption_eq_get
 -/
 
@@ -514,7 +514,7 @@ theorem of_toOption (o : Part α) [Decidable o.Dom] : ofOption (toOption o) = o 
 noncomputable def equivOption : Part α ≃ Option α :=
   haveI := Classical.dec
   ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
-    Eq.trans (by dsimp <;> congr ) (to_of_option o)⟩
+    Eq.trans (by dsimp <;> congr) (to_of_option o)⟩
 #align part.equiv_option Part.equivOption
 -/
 
@@ -535,7 +535,7 @@ theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : 
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
   · rw [h]; left; apply OrderBot.bot_le _
   right; intro b' h₁
-  rw [Part.eq_some_iff] at h₀
+  rw [Part.eq_some_iff] at h₀ 
   replace hx := hx _ h₀; replace hy := hy _ h₁
   replace hx := Part.mem_unique hx hy; subst hx
   exact h₀
@@ -765,10 +765,10 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
   by
   constructor <;> intro h
   · intro a h' b; replace h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
+    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h 
     apply h _ h'
   · intro b h'
-    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
+    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h' 
     rcases h' with ⟨a, h₀, h₁⟩; apply h _ h₀ _ h₁
 #align part.bind_le Part.bind_le
 

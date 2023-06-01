@@ -51,7 +51,8 @@ theorem image_le_kernel (w : f ≫ g = 0) : imageSubobject f ≤ kernelSubobject
 /-- The canonical morphism `image_subobject f ⟶ kernel_subobject g` when `f ≫ g = 0`.
 -/
 def imageToKernel (w : f ≫ g = 0) : (imageSubobject f : V) ⟶ (kernelSubobject g : V) :=
-  Subobject.ofLE _ _ (image_le_kernel _ _ w)deriving Mono
+  Subobject.ofLE _ _ (image_le_kernel _ _ w)
+deriving Mono
 #align image_to_kernel imageToKernel
 
 /-- Prefer `image_to_kernel`. -/

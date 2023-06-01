@@ -111,7 +111,7 @@ add_decl_doc Submonoid.toSubsemigroup
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
 class SubmonoidClass (S M : Type _) [MulOneClass M] [SetLike S M] extends MulMemClass S M,
-  OneMemClass S M : Prop
+    OneMemClass S M : Prop
 #align submonoid_class SubmonoidClass
 -/
 
@@ -135,7 +135,7 @@ add_decl_doc AddSubmonoid.toAddSubsemigroup
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
 class AddSubmonoidClass (S M : Type _) [AddZeroClass M] [SetLike S M] extends AddMemClass S M,
-  ZeroMemClass S M : Prop
+    ZeroMemClass S M : Prop
 #align add_submonoid_class AddSubmonoidClass
 -/
 

@@ -34,7 +34,8 @@ namespace Int
 #print Int.ModEq /-
 /-- `a ≡ b [ZMOD n]` when `a % n = b % n`. -/
 def ModEq (n a b : ℤ) :=
-  a % n = b % n deriving Decidable
+  a % n = b % n
+deriving Decidable
 #align int.modeq Int.ModEq
 -/
 
@@ -197,7 +198,7 @@ protected theorem add_left_cancel' (c : ℤ) (h : c + a ≡ c + b [ZMOD n]) : a 
 
 #print Int.ModEq.add_right_cancel /-
 protected theorem add_right_cancel (h₁ : c ≡ d [ZMOD n]) (h₂ : a + c ≡ b + d [ZMOD n]) :
-    a ≡ b [ZMOD n] := by rw [add_comm a, add_comm b] at h₂; exact h₁.add_left_cancel h₂
+    a ≡ b [ZMOD n] := by rw [add_comm a, add_comm b] at h₂ ; exact h₁.add_left_cancel h₂
 #align int.modeq.add_right_cancel Int.ModEq.add_right_cancel
 -/
 
@@ -275,7 +276,7 @@ theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [ZMOD m]) : a ≡
   let d := gcd m c
   have hmd := gcd_dvd_left m c
   have hcd := gcd_dvd_right m c
-  rw [modeq_iff_dvd] at h⊢
+  rw [modeq_iff_dvd] at h ⊢
   refine' Int.dvd_of_dvd_mul_right_of_gcd_one _ _
   show m / d ∣ c / d * (b - a)
   · rw [mul_comm, ← Int.mul_ediv_assoc (b - a) hcd, sub_mul]
@@ -333,7 +334,7 @@ theorem add_modEq_right : a + n ≡ a [ZMOD n] :=
 theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℤ} (hmn : m.natAbs.coprime n.natAbs) :
     a ≡ b [ZMOD m] ∧ a ≡ b [ZMOD n] ↔ a ≡ b [ZMOD m * n] :=
   ⟨fun h => by
-    rw [modeq_iff_dvd, modeq_iff_dvd] at h
+    rw [modeq_iff_dvd, modeq_iff_dvd] at h 
     rw [modeq_iff_dvd, ← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd, nat_abs_mul]
     refine' hmn.mul_dvd_of_dvd_of_dvd _ _ <;> rw [← coe_nat_dvd, nat_abs_dvd, dvd_nat_abs] <;>
       tauto,
@@ -383,7 +384,7 @@ theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) :
   ⟨a % b, emod_nonneg _ (ne_of_gt hb),
     by
     have : a % b < |b| := emod_lt _ (ne_of_gt hb)
-    rwa [abs_of_pos hb] at this, by simp [modeq]⟩
+    rwa [abs_of_pos hb] at this , by simp [modeq]⟩
 #align int.exists_unique_equiv Int.exists_unique_equiv
 -/
 

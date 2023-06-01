@@ -380,7 +380,11 @@ instance : AddCommGroup ℂ := by
                   sub := Sub.sub
                   nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩
                   zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;> intros <;>
-            try rfl <;> apply ext_iff.2 <;> constructor <;> simp <;> · first |ring1|ring_nf
+            try rfl <;> apply ext_iff.2 <;> constructor <;> simp <;>
+    ·
+      first
+      | ring1
+      | ring_nf
 
 instance : AddGroupWithOne ℂ :=
   { Complex.addCommGroup with
@@ -405,7 +409,10 @@ instance : CommRing ℂ := by
           apply ext_iff.2 <;>
         constructor <;>
       simp <;>
-    · first |ring1|ring_nf
+    ·
+      first
+      | ring1
+      | ring_nf
 
 /-- This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
 instance. -/
@@ -798,7 +805,7 @@ theorem rat_cast_im (q : ℚ) : (q : ℂ).im = 0 := by rw [← of_real_rat_cast,
 
 instance charZero : CharZero ℂ :=
   charZero_of_inj_zero fun n h => by
-    rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
+    rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h 
 #align complex.char_zero_complex Complex.charZero
 
 /-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/
@@ -1107,8 +1114,8 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
     nonneg_iff := fun r =>
       by
       refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
-      · have h₁ : 0 ≤ r.re := by rw [le_def] at hr; exact hr.1
-        have h₂ : r.im = 0 := by rw [le_def] at hr; exact hr.2.symm
+      · have h₁ : 0 ≤ r.re := by rw [le_def] at hr ; exact hr.1
+        have h₂ : r.im = 0 := by rw [le_def] at hr ; exact hr.2.symm
         ext
         ·
           simp only [of_real_im, star_def, of_real_re, sub_zero, conj_re, mul_re,
@@ -1169,7 +1176,7 @@ theorem equiv_limAux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :=
     apply lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)
     dsimp [lim_aux] at *
     have := add_lt_add H₁ H₂
-    rwa [add_halves] at this
+    rwa [add_halves] at this 
 #align complex.equiv_lim_aux Complex.equiv_limAux
 
 instance : CauSeq.IsComplete ℂ abs :=

@@ -1180,7 +1180,7 @@ def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
         Matrix n n α) with
     toFun := fun a => a • 1
     map_one' := by simp
-    map_mul' := by intros ; ext; simp [mul_assoc] }
+    map_mul' := by intros; ext; simp [mul_assoc] }
 #align matrix.scalar Matrix.scalar
 -/
 

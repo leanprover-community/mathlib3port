@@ -148,9 +148,9 @@ theorem finset_iUnion_of_pairwise_separated (hm : IsMetric μ) {I : Finset ι} {
   classical
     induction' I using Finset.induction_on with i I hiI ihI hI
     · simp
-    simp only [Finset.mem_insert] at hI
+    simp only [Finset.mem_insert] at hI 
     rw [Finset.set_biUnion_insert, hm, ihI, Finset.sum_insert hiI]
-    exacts[fun i hi j hj hij => hI i (Or.inr hi) j (Or.inr hj) hij,
+    exacts [fun i hi j hj hij => hI i (Or.inr hi) j (Or.inr hj) hij,
       IsMetricSeparated.finset_iUnion_right fun j hj =>
         hI i (Or.inl rfl) j (Or.inr hj) (ne_of_mem_of_not_mem hj hiI).symm]
 #align measure_theory.outer_measure.is_metric.finset_Union_of_pairwise_separated MeasureTheory.OuterMeasure.IsMetric.finset_iUnion_of_pairwise_separated
@@ -180,7 +180,7 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     by
     refine' subset.antisymm (Union_subset S_sub) _
     rintro x ⟨hxs, hxt⟩
-    rw [mem_iff_inf_edist_zero_of_closed ht] at hxt
+    rw [mem_iff_inf_edist_zero_of_closed ht] at hxt 
     rcases ENNReal.exists_inv_nat_lt hxt with ⟨n, hn⟩
     exact mem_Union.2 ⟨n, hxs, hn.le⟩
   /- Now we have `∀ n, μ (s ∩ t) + μ (S n) ≤ μ s` and we need to prove
@@ -337,7 +337,7 @@ theorem mkMetric'_isMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :
   refine'
     tendsto_nhds_unique_of_eventuallyEq (mk_metric'.tendsto_pre _ _)
       ((mk_metric'.tendsto_pre _ _).add (mk_metric'.tendsto_pre _ _)) _
-  rw [← pos_iff_ne_zero] at r0
+  rw [← pos_iff_ne_zero] at r0 
   filter_upwards [Ioo_mem_nhdsWithin_Ioi ⟨le_rfl, r0⟩]
   rintro ε ⟨ε0, εr⟩
   refine' bounded_by_union_of_top_of_nonempty_inter _
@@ -391,7 +391,7 @@ theorem isometry_comap_mkMetric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (h
   · congr with s : 1
     apply extend_congr
     · simp [hf.ediam_image]
-    · intros ; simp [hf.injective.subsingleton_image_iff, hf.ediam_image]
+    · intros; simp [hf.injective.subsingleton_image_iff, hf.ediam_image]
   · intro s t hst
     simp only [extend, le_iInf_iff]
     intro ht
@@ -527,7 +527,7 @@ theorem mkMetric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
       congr 1 with n : 1
       simp only [iInf_eq_if, htr n, id, if_true, iSup_and']
     · rw [iInf_eq_if, if_neg htr]
-      push_neg  at htr; rcases htr with ⟨n, hn⟩
+      push_neg  at htr ; rcases htr with ⟨n, hn⟩
       refine' ENNReal.tsum_eq_top_of_eq_top ⟨n, _⟩
       rw [iSup_eq_if, if_pos, iInf_eq_if, if_neg]
       exact hn.not_le
@@ -857,7 +857,7 @@ theorem hausdorffMeasure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d)
   refine' iSup₂_le fun ε ε0 => _
   refine' le_iSup₂_of_le (ε / K) (by simp [ε0.ne']) _
   refine' le_iInf₂ fun t hst => le_iInf fun htε => _
-  replace hst : f ⁻¹' s ⊆ _ := preimage_mono hst; rw [preimage_Union] at hst
+  replace hst : f ⁻¹' s ⊆ _ := preimage_mono hst; rw [preimage_Union] at hst 
   refine' iInf₂_le_of_le _ hst (iInf_le_of_le (fun n => _) _)
   · exact (hf.ediam_preimage_le _).trans (ENNReal.mul_le_of_le_div' <| htε n)
   · refine' ENNReal.tsum_le_tsum fun n => iSup_le_iff.2 fun hft => _
@@ -985,7 +985,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
       apply eventually_at_top.2 ⟨1, fun n hn => _⟩
       have npos : (0 : ℝ) < n := Nat.cast_pos.2 hn
       intro x hx
-      simp only [mem_Ioo, mem_univ_pi] at hx
+      simp only [mem_Ioo, mem_univ_pi] at hx 
       simp only [mem_Union, mem_Ioo, mem_univ_pi, coe_coe]
       let f : γ n := fun i =>
         ⟨⌊(x i - a i) * n⌋₊, by

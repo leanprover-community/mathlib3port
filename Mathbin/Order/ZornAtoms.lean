@@ -31,7 +31,7 @@ bound not equal to `⊤`. -/
 theorem IsCoatomic.of_isChain_bounded {α : Type _} [PartialOrder α] [OrderTop α]
     (h :
       ∀ c : Set α,
-        IsChain (· ≤ ·) c → c.Nonempty → ⊤ ∉ c → ∃ (x : _)(_ : x ≠ ⊤), x ∈ upperBounds c) :
+        IsChain (· ≤ ·) c → c.Nonempty → ⊤ ∉ c → ∃ (x : _) (_ : x ≠ ⊤), x ∈ upperBounds c) :
     IsCoatomic α := by
   refine' ⟨fun x => le_top.eq_or_lt.imp_right fun hx => _⟩
   rcases zorn_nonempty_partialOrder₀ (Ico x ⊤) (fun c hxc hc y hy => _) x (left_mem_Ico.2 hx) with
@@ -48,7 +48,7 @@ bound not equal to `⊥`. -/
 theorem IsAtomic.of_isChain_bounded {α : Type _} [PartialOrder α] [OrderBot α]
     (h :
       ∀ c : Set α,
-        IsChain (· ≤ ·) c → c.Nonempty → ⊥ ∉ c → ∃ (x : _)(_ : x ≠ ⊥), x ∈ lowerBounds c) :
+        IsChain (· ≤ ·) c → c.Nonempty → ⊥ ∉ c → ∃ (x : _) (_ : x ≠ ⊥), x ∈ lowerBounds c) :
     IsAtomic α :=
   isCoatomic_dual_iff_isAtomic.mp <| IsCoatomic.of_isChain_bounded fun c hc => h c hc.symm
 #align is_atomic.of_is_chain_bounded IsAtomic.of_isChain_bounded

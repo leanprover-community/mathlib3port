@@ -92,7 +92,7 @@ instance Pi.infinite_of_left {ι : Sort _} {π : ι → Sort _} [∀ i, Nontrivi
   choose m n hm using fun i => exists_pair_ne (π i)
   refine'
     Infinite.of_injective (fun i => m.update i (n i)) fun x y h => Classical.not_not.1 fun hne => _
-  simp_rw [update_eq_iff, update_noteq hne] at h
+  simp_rw [update_eq_iff, update_noteq hne] at h 
   exact (hm x h.1.symm).elim
 #align pi.infinite_of_left Pi.infinite_of_left
 -/

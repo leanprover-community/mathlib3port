@@ -69,7 +69,7 @@ theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseInte
   convert h ((opens.map f).obj ∘ U) using 2
   rw [← map_diagram]; rfl
   change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
-  congr ; iterate 2 rw [map_diagram]; apply map_cocone
+  congr; iterate 2 rw [map_diagram]; apply map_cocone
 #align Top.presheaf.sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf TopCat.Presheaf.SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf
 -/
 
@@ -83,7 +83,7 @@ open Presheaf
 /-- The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/
 theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F).IsSheaf := by
-  rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
+  rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h ⊢ <;>
     exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
 #align Top.sheaf.pushforward_sheaf_of_sheaf TopCat.Sheaf.pushforward_sheaf_of_sheaf
 -/

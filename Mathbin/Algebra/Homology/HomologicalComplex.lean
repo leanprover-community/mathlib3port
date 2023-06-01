@@ -94,7 +94,7 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.pt = C₂.pt)
     C₁ = C₂ := by
   cases C₁
   cases C₂
-  dsimp at h_X
+  dsimp at h_X 
   subst h_X
   simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
   ext (i j)
@@ -397,7 +397,7 @@ def xPrevIsoSelf {j : ι} (h : ¬c.Rel (c.prev j) j) : C.xPrev j ≅ C.pt j :=
         dsimp [ComplexShape.prev]
         rw [dif_neg]; push_neg; intro i hi
         have : c.prev j = i := c.prev_eq' hi
-        rw [this] at h; contradiction)
+        rw [this] at h ; contradiction)
 #align homological_complex.X_prev_iso_self HomologicalComplex.xPrevIsoSelf
 -/
 
@@ -424,7 +424,7 @@ def xNextIsoSelf {i : ι} (h : ¬c.Rel i (c.next i)) : C.xNext i ≅ C.pt i :=
         dsimp [ComplexShape.next]
         rw [dif_neg]; rintro ⟨j, hj⟩
         have : c.next i = j := c.next_eq' hj
-        rw [this] at h; contradiction)
+        rw [this] at h ; contradiction)
 #align homological_complex.X_next_iso_self HomologicalComplex.xNextIsoSelf
 -/
 
@@ -662,7 +662,7 @@ def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ 
     d := fun i j => if h : i = j + 1 then eqToHom (by subst h) ≫ d j else 0
     shape' := fun i j w => by rw [dif_neg (Ne.symm w)]
     d_comp_d' := fun i j k hij hjk => by
-      dsimp at hij hjk; substs hij hjk
+      dsimp at hij hjk ; substs hij hjk
       simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
       exact sq k }
 #align chain_complex.of ChainComplex.of
@@ -727,15 +727,15 @@ variable {V}
 
 #print ChainComplex.MkStruct.flat /-
 /-- Flatten to a tuple. -/
-def MkStruct.flat (t : MkStruct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ' (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 #align chain_complex.mk_struct.flat ChainComplex.MkStruct.flat
 -/
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
   (succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
-      Σ'(X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
+    ∀ t : Σ' (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
+      Σ' (X₃ : V) (d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
 #print ChainComplex.mkAux /-
 /-- Auxiliary definition for `mk`. -/
@@ -806,14 +806,14 @@ then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
 def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀)
-    (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
+    (succ' : ∀ t : Σ X₀ X₁ : V, X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
     ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 #align chain_complex.mk' ChainComplex.mk'
 -/
 
-variable (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
+variable (succ' : ∀ t : Σ X₀ X₁ : V, X₁ ⟶ X₀, Σ' (X₂ : V) (d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 #print ChainComplex.mk'_X_0 /-
 @[simp]
@@ -846,9 +846,9 @@ variable {V} (P Q : ChainComplex V ℕ) (zero : P.pt 0 ⟶ Q.pt 0) (one : P.pt 1
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.pt n ⟶ Q.pt n)(f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
+        Σ' (f : P.pt n ⟶ Q.pt n) (f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
           f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f),
-      Σ'f'' : P.pt (n + 2) ⟶ Q.pt (n + 2), f'' ≫ Q.d (n + 2) (n + 1) = P.d (n + 2) (n + 1) ≫ p.2.1)
+      Σ' f'' : P.pt (n + 2) ⟶ Q.pt (n + 2), f'' ≫ Q.d (n + 2) (n + 1) = P.d (n + 2) (n + 1) ≫ p.2.1)
 
 #print ChainComplex.mkHomAux /-
 /-- An auxiliary construction for `mk_hom`.
@@ -860,7 +860,7 @@ in `mk_hom`.
 -/
 def mkHomAux :
     ∀ n,
-      Σ'(f : P.pt n ⟶ Q.pt n)(f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
+      Σ' (f : P.pt n ⟶ Q.pt n) (f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
         f' ≫ Q.d (n + 1) n = P.d (n + 1) n ≫ f
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩
@@ -996,15 +996,15 @@ variable {V}
 
 #print CochainComplex.MkStruct.flat /-
 /-- Flatten to a tuple. -/
-def MkStruct.flat (t : MkStruct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
+def MkStruct.flat (t : MkStruct V) : Σ' (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.x₀, t.x₁, t.x₂, t.d₀, t.d₁, t.s⟩
 #align cochain_complex.mk_struct.flat CochainComplex.MkStruct.flat
 -/
 
 variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
   (succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
-      Σ'(X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
+    ∀ t : Σ' (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
+      Σ' (X₃ : V) (d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
 #print CochainComplex.mkAux /-
 /-- Auxiliary definition for `mk`. -/
@@ -1075,14 +1075,14 @@ then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
 def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁)
-    (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
+    (succ' : ∀ t : Σ X₀ X₁ : V, X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
     CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2 fun t =>
     succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 #align cochain_complex.mk' CochainComplex.mk'
 -/
 
-variable (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
+variable (succ' : ∀ t : Σ X₀ X₁ : V, X₀ ⟶ X₁, Σ' (X₂ : V) (d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 #print CochainComplex.mk'_X_0 /-
 @[simp]
@@ -1115,9 +1115,9 @@ variable {V} (P Q : CochainComplex V ℕ) (zero : P.pt 0 ⟶ Q.pt 0) (one : P.pt
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.pt n ⟶ Q.pt n)(f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
+        Σ' (f : P.pt n ⟶ Q.pt n) (f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
           f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'),
-      Σ'f'' : P.pt (n + 2) ⟶ Q.pt (n + 2), p.2.1 ≫ Q.d (n + 1) (n + 2) = P.d (n + 1) (n + 2) ≫ f'')
+      Σ' f'' : P.pt (n + 2) ⟶ Q.pt (n + 2), p.2.1 ≫ Q.d (n + 1) (n + 2) = P.d (n + 1) (n + 2) ≫ f'')
 
 #print CochainComplex.mkHomAux /-
 /-- An auxiliary construction for `mk_hom`.
@@ -1129,7 +1129,7 @@ in `mk_hom`.
 -/
 def mkHomAux :
     ∀ n,
-      Σ'(f : P.pt n ⟶ Q.pt n)(f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
+      Σ' (f : P.pt n ⟶ Q.pt n) (f' : P.pt (n + 1) ⟶ Q.pt (n + 1)),
         f ≫ Q.d n (n + 1) = P.d n (n + 1) ≫ f'
   | 0 => ⟨zero, one, one_zero_comm⟩
   | n + 1 => ⟨(mk_hom_aux n).2.1, (succ n (mk_hom_aux n)).1, (succ n (mk_hom_aux n)).2⟩

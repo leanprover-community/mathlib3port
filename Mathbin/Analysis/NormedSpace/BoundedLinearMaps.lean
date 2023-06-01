@@ -73,8 +73,8 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 /-- A function `f` satisfies `is_bounded_linear_map 𝕜 f` if it is linear and satisfies the
 inequality `‖f x‖ ≤ M * ‖x‖` for some positive constant `M`. -/
 structure IsBoundedLinearMap (𝕜 : Type _) [NormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E → F) extends
-  IsLinearMap 𝕜 f : Prop where
+    [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E → F) extends
+    IsLinearMap 𝕜 f : Prop where
   bound : ∃ M, 0 < M ∧ ∀ x : E, ‖f x‖ ≤ M * ‖x‖
 #align is_bounded_linear_map IsBoundedLinearMap
 -/
@@ -428,7 +428,7 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     · simp
     infer_instance
   have := h₁.add h₂
-  rw [Asymptotics.isLittleO_const_iff one_ne] at this
+  rw [Asymptotics.isLittleO_const_iff one_ne] at this 
   change tendsto _ _ _
   convert this.add_const (f x)
   · ext e

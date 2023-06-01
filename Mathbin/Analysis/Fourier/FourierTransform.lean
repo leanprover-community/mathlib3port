@@ -180,7 +180,7 @@ theorem fourierIntegral_continuous [TopologicalSpace.FirstCountableTopology W] (
     · exact fun v => ‖f v‖
     · rw [norm_smul, Complex.norm_eq_abs, abs_coe_circle, one_mul]
   · exact hf.norm
-  · rw [continuous_induced_rng] at he
+  · rw [continuous_induced_rng] at he 
     refine' ae_of_all _ fun v => (he.comp (continuous_of_add.comp _)).smul continuous_const
     refine' (hL.comp (continuous_prod_mk.mpr ⟨continuous_const, continuous_id⟩)).neg
 #align vector_fourier.fourier_integral_continuous VectorFourier.fourierIntegral_continuous

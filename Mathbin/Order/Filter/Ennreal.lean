@@ -64,21 +64,21 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
   by
   by_cases ha_top : a ≠ ⊤
   · exact limsup_const_mul_of_ne_top ha_top
-  push_neg  at ha_top
+  push_neg  at ha_top 
   by_cases hu : u =ᶠ[f] 0
   · have hau : (fun x => a * u x) =ᶠ[f] 0 :=
       by
       refine' hu.mono fun x hx => _
-      rw [Pi.zero_apply] at hx
+      rw [Pi.zero_apply] at hx 
       simp [hx]
     simp only [limsup_congr hu, limsup_congr hau, Pi.zero_apply, ← bot_eq_zero, limsup_const_bot]
     simp
   · simp_rw [ha_top, top_mul]
     have hu_mul : ∃ᶠ x : α in f, ⊤ ≤ ite (u x = 0) (0 : ℝ≥0∞) ⊤ :=
       by
-      rw [eventually_eq, not_eventually] at hu
+      rw [eventually_eq, not_eventually] at hu 
       refine' hu.mono fun x hx => _
-      rw [Pi.zero_apply] at hx
+      rw [Pi.zero_apply] at hx 
       simp [hx]
     have h_top_le : (f.limsup fun x : α => ite (u x = 0) (0 : ℝ≥0∞) ⊤) = ⊤ :=
       eq_top_iff.mpr (le_limsup_of_frequently_le hu_mul)

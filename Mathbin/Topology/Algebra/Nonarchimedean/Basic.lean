@@ -40,7 +40,7 @@ open scoped Pointwise
 /-- An topological additive group is nonarchimedean if every neighborhood of 0
   contains an open subgroup. -/
 class NonarchimedeanAddGroup (G : Type _) [AddGroup G] [TopologicalSpace G] extends
-  TopologicalAddGroup G : Prop where
+    TopologicalAddGroup G : Prop where
   is_nonarchimedean : ∀ U ∈ nhds (0 : G), ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
 #align nonarchimedean_add_group NonarchimedeanAddGroup
 -/
@@ -49,7 +49,7 @@ class NonarchimedeanAddGroup (G : Type _) [AddGroup G] [TopologicalSpace G] exte
 /-- A topological group is nonarchimedean if every neighborhood of 1 contains an open subgroup. -/
 @[to_additive]
 class NonarchimedeanGroup (G : Type _) [Group G] [TopologicalSpace G] extends TopologicalGroup G :
-  Prop where
+    Prop where
   is_nonarchimedean : ∀ U ∈ nhds (1 : G), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
 #align nonarchimedean_group NonarchimedeanGroup
 #align nonarchimedean_add_group NonarchimedeanAddGroup
@@ -59,7 +59,7 @@ class NonarchimedeanGroup (G : Type _) [Group G] [TopologicalSpace G] extends To
 /-- An topological ring is nonarchimedean if its underlying topological additive
   group is nonarchimedean. -/
 class NonarchimedeanRing (R : Type _) [Ring R] [TopologicalSpace R] extends TopologicalRing R :
-  Prop where
+    Prop where
   is_nonarchimedean : ∀ U ∈ nhds (0 : R), ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
 #align nonarchimedean_ring NonarchimedeanRing
 -/
@@ -97,9 +97,9 @@ contains the cartesian product of an open neighborhood in each group. -/
 @[to_additive NonarchimedeanAddGroup.prod_subset
       "An open neighborhood of the identity in the\ncartesian product of two nonarchimedean groups contains the cartesian product of an open\nneighborhood in each group."]
 theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
-    ∃ (V : OpenSubgroup G)(W : OpenSubgroup K), (V : Set G) ×ˢ (W : Set K) ⊆ U :=
+    ∃ (V : OpenSubgroup G) (W : OpenSubgroup K), (V : Set G) ×ˢ (W : Set K) ⊆ U :=
   by
-  erw [nhds_prod_eq, Filter.mem_prod_iff] at hU
+  erw [nhds_prod_eq, Filter.mem_prod_iff] at hU 
   rcases hU with ⟨U₁, hU₁, U₂, hU₂, h⟩
   cases' is_nonarchimedean _ hU₁ with V hV
   cases' is_nonarchimedean _ hU₂ with W hW
@@ -166,8 +166,8 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
   use V
   rintro v ⟨a, b, ha, hb, hv⟩
   have hy := H (Set.mk_mem_prod ha hb)
-  simp only [Set.mem_preimage, SetLike.mem_coe] at hy
-  rwa [hv] at hy
+  simp only [Set.mem_preimage, SetLike.mem_coe] at hy 
+  rwa [hv] at hy 
 #align nonarchimedean_ring.mul_subset NonarchimedeanRing.mul_subset
 
 end NonarchimedeanRing

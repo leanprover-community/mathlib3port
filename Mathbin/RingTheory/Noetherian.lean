@@ -403,14 +403,14 @@ theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoe
     monotone_stabilizes_iff_noetherian.mpr I
       (f.iterate_ker.comp ⟨fun n => n + 1, fun n m w => by linarith⟩)
   specialize w (2 * n + 1) (by linarith only)
-  dsimp at w
+  dsimp at w 
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   rw [eq_bot_iff]
   rintro - ⟨h, ⟨y, rfl⟩⟩
   rw [mem_bot, ← LinearMap.mem_ker, w]
-  erw [LinearMap.mem_ker] at h⊢
-  change (f ^ (n + 1) * f ^ (n + 1)) y = 0 at h
-  rw [← pow_add] at h
+  erw [LinearMap.mem_ker] at h ⊢
+  change (f ^ (n + 1) * f ^ (n + 1)) y = 0 at h 
+  rw [← pow_add] at h 
   convert h using 3
   ring
 #align is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot
@@ -421,7 +421,7 @@ theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f 
   by
   obtain ⟨n, ne, w⟩ := IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot f
   rw [linear_map.range_eq_top.mpr (LinearMap.iterate_surjective s n), inf_top_eq,
-    LinearMap.ker_eq_bot] at w
+    LinearMap.ker_eq_bot] at w 
   exact LinearMap.injective_of_iterate_injective Ne w
 #align is_noetherian.injective_of_surjective_endomorphism IsNoetherian.injective_of_surjective_endomorphism
 
@@ -515,7 +515,7 @@ instance (priority := 100) isNoetherian_of_subsingleton (R M) [Subsingleton R] [
 theorem isNoetherian_of_submodule_of_noetherian (R M) [Semiring R] [AddCommMonoid M] [Module R M]
     (N : Submodule R M) (h : IsNoetherian R M) : IsNoetherian R N :=
   by
-  rw [isNoetherian_iff_wellFounded] at h⊢
+  rw [isNoetherian_iff_wellFounded] at h ⊢
   exact OrderEmbedding.wellFounded (Submodule.MapSubtype.orderEmbedding N).dual h
 #align is_noetherian_of_submodule_of_noetherian isNoetherian_of_submodule_of_noetherian
 
@@ -523,7 +523,7 @@ theorem isNoetherian_of_submodule_of_noetherian (R M) [Semiring R] [AddCommMonoi
 instance Submodule.Quotient.isNoetherian {R} [Ring R] {M} [AddCommGroup M] [Module R M]
     (N : Submodule R M) [h : IsNoetherian R M] : IsNoetherian R (M ⧸ N) :=
   by
-  rw [isNoetherian_iff_wellFounded] at h⊢
+  rw [isNoetherian_iff_wellFounded] at h ⊢
   exact OrderEmbedding.wellFounded (Submodule.comapMkQOrderEmbedding N).dual h
 #align submodule.quotient.is_noetherian Submodule.Quotient.isNoetherian
 -/
@@ -533,7 +533,7 @@ also noetherian. -/
 theorem isNoetherian_of_tower (R) {S M} [Semiring R] [Semiring S] [AddCommMonoid M] [SMul R S]
     [Module S M] [Module R M] [IsScalarTower R S M] (h : IsNoetherian R M) : IsNoetherian S M :=
   by
-  rw [isNoetherian_iff_wellFounded] at h⊢
+  rw [isNoetherian_iff_wellFounded] at h ⊢
   refine' (Submodule.restrictScalarsEmbedding R S M).dual.WellFounded h
 #align is_noetherian_of_tower isNoetherian_of_tower
 
@@ -557,8 +557,8 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
   rw [LinearMap.range_eq_top]
-  rintro ⟨n, hn⟩; change n ∈ N at hn
-  rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn
+  rintro ⟨n, hn⟩; change n ∈ N at hn 
+  rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn 
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change (∑ i in s.attach, l i • (i : M)) = n
@@ -583,7 +583,7 @@ theorem isNoetherian_span_of_finite (R) {M} [Ring R] [AddCommGroup M] [Module R 
 theorem isNoetherianRing_of_surjective (R) [Ring R] (S) [Ring S] (f : R →+* S)
     (hf : Function.Surjective f) [H : IsNoetherianRing R] : IsNoetherianRing S :=
   by
-  rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H⊢
+  rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H ⊢
   exact OrderEmbedding.wellFounded (Ideal.orderEmbeddingOfSurjective f hf).dual H
 #align is_noetherian_ring_of_surjective isNoetherianRing_of_surjective
 

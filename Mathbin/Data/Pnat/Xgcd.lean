@@ -173,8 +173,8 @@ theorem isSpecial_iff : u.IsSpecial ↔ u.IsSpecial' :=
     repeat' rw [Nat.succ_eq_add_one]; ring
   · apply Nat.succ.inj
     replace h := congr_arg (coe : ℕ+ → ℕ) h
-    rw [mul_coe, w, z] at h
-    repeat' rw [succ_pnat_coe, Nat.succ_eq_add_one] at h
+    rw [mul_coe, w, z] at h 
+    repeat' rw [succ_pnat_coe, Nat.succ_eq_add_one] at h 
     repeat' rw [Nat.succ_eq_add_one]; rw [← h]; ring
 #align pnat.xgcd_type.is_special_iff PNat.XgcdType.isSpecial_iff
 -/
@@ -282,7 +282,7 @@ theorem rq_eq : u.R + (u.bp + 1) * u.q = u.ap + 1 :=
 theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 :=
   by
   by_cases hq : u.q = 0
-  · let h := u.rq_eq; rw [hr, hq, MulZeroClass.mul_zero, add_zero] at h; cases h
+  · let h := u.rq_eq; rw [hr, hq, MulZeroClass.mul_zero, add_zero] at h ; cases h
   · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
 #align pnat.xgcd_type.qp_eq PNat.XgcdType.qp_eq
 -/
@@ -327,7 +327,7 @@ theorem finish_isReduced : u.finish.IsReduced := by dsimp [IsReduced]; rfl
 #print PNat.XgcdType.finish_isSpecial /-
 theorem finish_isSpecial (hs : u.IsSpecial) : u.finish.IsSpecial :=
   by
-  dsimp [is_special, finish] at hs⊢
+  dsimp [is_special, finish] at hs ⊢
   rw [add_mul _ _ u.y, add_comm _ (u.x * u.y), ← hs]
   ring
 #align pnat.xgcd_type.finish_is_special PNat.XgcdType.finish_isSpecial
@@ -337,7 +337,7 @@ theorem finish_isSpecial (hs : u.IsSpecial) : u.finish.IsSpecial :=
 theorem finish_v (hr : u.R = 0) : u.finish.V = u.V :=
   by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
-  rw [hr, zero_add] at ha
+  rw [hr, zero_add] at ha 
   ext
   · change (u.wp + 1) * u.b + ((u.wp + 1) * u.qp + u.x) * u.b = u.w * u.a + u.x * u.b
     have : u.wp + 1 = u.w := rfl; rw [this, ← ha, u.qp_eq hr]; ring
@@ -362,7 +362,7 @@ theorem step_wf (hr : u.R ≠ 0) : SizeOf.sizeOf u.step < SizeOf.sizeOf u :=
   change u.r - 1 < u.bp
   have h₀ : u.r - 1 + 1 = u.r := Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hr)
   have h₁ : u.r < u.bp + 1 := Nat.mod_lt (u.ap + 1) u.bp.succ_pos
-  rw [← h₀] at h₁
+  rw [← h₀] at h₁ 
   exact lt_of_succ_lt_succ h₁
 #align pnat.xgcd_type.step_wf PNat.XgcdType.step_wf
 -/
@@ -370,7 +370,7 @@ theorem step_wf (hr : u.R ≠ 0) : SizeOf.sizeOf u.step < SizeOf.sizeOf u :=
 #print PNat.XgcdType.step_isSpecial /-
 theorem step_isSpecial (hs : u.IsSpecial) : u.step.IsSpecial :=
   by
-  dsimp [is_special, step] at hs⊢
+  dsimp [is_special, step] at hs ⊢
   rw [mul_add, mul_comm u.y u.x, ← hs]
   ring
 #align pnat.xgcd_type.step_is_special PNat.XgcdType.step_isSpecial
@@ -559,7 +559,7 @@ theorem gcd_props :
   have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b
   let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ :=
     u.reduce_v.trans (xgcd_type.start_v a b)
-  rw [← hb, ← add_mul, ← add_mul, ← ha', ← hb'] at hv
+  rw [← hb, ← add_mul, ← add_mul, ← ha', ← hb'] at hv 
   have ha'' : (a : ℕ) = a' * d := (congr_arg Prod.fst hv).symm
   have hb'' : (b : ℕ) = b' * d := (congr_arg Prod.snd hv).symm
   constructor; exact Eq ha''; constructor; exact Eq hb''
@@ -584,7 +584,7 @@ theorem gcd_eq : gcdD a b = gcd a b :=
     exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm
   · have h₇ : (gcd a b : ℕ) ∣ gcd_z a b * a := (Nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)
     have h₈ : (gcd a b : ℕ) ∣ gcd_x a b * b := (Nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)
-    rw [h₅] at h₇; rw [dvd_iff]
+    rw [h₅] at h₇ ; rw [dvd_iff]
     exact (Nat.dvd_add_iff_right h₈).mpr h₇
 #align pnat.gcd_eq PNat.gcd_eq
 -/

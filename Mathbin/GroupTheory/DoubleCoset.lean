@@ -68,7 +68,7 @@ theorem doset_eq_of_mem {H K : Subgroup G} {a b : G} (hb : b ∈ Doset.doset a H
 theorem mem_doset_of_not_disjoint {H K : Subgroup G} {a b : G}
     (h : ¬Disjoint (Doset.doset a H K) (Doset.doset b H K)) : b ∈ Doset.doset a H K :=
   by
-  rw [Set.not_disjoint_iff] at h
+  rw [Set.not_disjoint_iff] at h 
   simp only [mem_doset] at *
   obtain ⟨x, ⟨l, hl, r, hr, hrx⟩, y, hy, ⟨r', hr', rfl⟩⟩ := h
   refine' ⟨y⁻¹ * l, H.mul_mem (H.inv_mem hy) hl, r * r'⁻¹, K.mul_mem hr (K.inv_mem hr'), _⟩
@@ -79,7 +79,7 @@ theorem eq_of_not_disjoint {H K : Subgroup G} {a b : G}
     (h : ¬Disjoint (Doset.doset a H K) (Doset.doset b H K)) :
     Doset.doset a H K = Doset.doset b H K :=
   by
-  rw [disjoint_comm] at h
+  rw [disjoint_comm] at h 
   have ha : a ∈ Doset.doset b H K := mem_doset_of_not_disjoint h
   apply doset_eq_of_mem ha
 #align doset.eq_of_not_disjoint Doset.eq_of_not_disjoint
@@ -156,7 +156,7 @@ theorem mk_out'_eq_mul (H K : Subgroup G) (g : G) :
     ∃ h k : G, h ∈ H ∧ k ∈ K ∧ (mk H K g : Quotient ↑H ↑K).out' = h * g * k :=
   by
   have := Eq H K (mk H K g : Quotient ↑H ↑K).out' g
-  rw [out_eq'] at this
+  rw [out_eq'] at this 
   obtain ⟨h, h_h, k, hk, T⟩ := this.1 rfl
   refine' ⟨h⁻¹, k⁻¹, H.inv_mem h_h, K.inv_mem hk, eq_mul_inv_of_mul_eq (eq_inv_mul_of_mul_eq _)⟩
   rw [← mul_assoc, ← T]

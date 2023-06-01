@@ -138,10 +138,10 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
     by
     intro t ht
     by_cases a ∈ s
-    · rw [ndinsert_of_mem h] at ht
+    · rw [ndinsert_of_mem h] at ht 
       subst ht
       rw [Eq, map_id, ndinsert_of_mem (mem_attach _ _)]
-    · rw [ndinsert_of_not_mem h] at ht
+    · rw [ndinsert_of_not_mem h] at ht 
       subst ht
       simp [attach_cons, h]
   this _ rfl

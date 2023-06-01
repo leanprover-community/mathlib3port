@@ -50,12 +50,12 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
     @Basis.mk (Fin (minpoly K x).natDegree) _ (adjoin K {x}) fun i =>
       ⟨x, subset_adjoin (Set.mem_singleton x)⟩ ^ (i : ℕ)
   · have := linearIndependent_pow _
-    rwa [minpoly_eq] at this
+    rwa [minpoly_eq] at this 
   · rintro ⟨y, hy⟩ _
     have := hx'.mem_span_pow
-    rw [minpoly_eq] at this
+    rw [minpoly_eq] at this 
     apply this
-    · rw [adjoin_singleton_eq_range_aeval] at hy
+    · rw [adjoin_singleton_eq_range_aeval] at hy 
       obtain ⟨f, rfl⟩ := (aeval x).mem_range.mp hy
       use f
       ext

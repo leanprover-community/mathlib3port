@@ -91,7 +91,7 @@ include hxI
 theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y = t • x + z :=
   by
   have hy : y ∈ (⊤ : Submodule R L) := Submodule.mem_top
-  simp only [← hxI, Submodule.mem_sup, Submodule.mem_span_singleton] at hy
+  simp only [← hxI, Submodule.mem_sup, Submodule.mem_span_singleton] at hy 
   obtain ⟨-, ⟨t, rfl⟩, z, hz, rfl⟩ := hy
   exact ⟨t, z, hz, rfl⟩
 #align lie_submodule.exists_smul_add_of_span_sup_eq_top LieSubmodule.exists_smul_add_of_span_sup_eq_top
@@ -110,7 +110,7 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
       ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
         Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by simp⟩
   · rcases hz with (⟨m, hm, rfl⟩ | ⟨y, hy, m, hm, rfl⟩)
-    exacts[⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
+    exacts [⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
 #align lie_submodule.lie_top_eq_of_span_sup_eq_top LieSubmodule.lie_top_eq_of_span_sup_eq_top
 
 theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
@@ -204,7 +204,7 @@ theorem LieEquiv.isEngelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
 
 theorem LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer {K : LieSubalgebra R L}
     (hK₁ : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K) (hK₂ : K < K.normalizer) :
-    ∃ (K' : LieSubalgebra R L)(hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' :=
+    ∃ (K' : LieSubalgebra R L) (hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' :=
   by
   obtain ⟨x, hx₁, hx₂⟩ := SetLike.exists_of_lt hK₂
   let K' : LieSubalgebra R L :=

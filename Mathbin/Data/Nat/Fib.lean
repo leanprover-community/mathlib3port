@@ -177,7 +177,7 @@ theorem fib_add (m n : ℕ) : fib (m + n + 1) = fib m * fib n + fib (m + 1) * fi
   · simp
   · intros
     specialize ih (m + 1)
-    rw [add_assoc m 1 n, add_comm 1 n] at ih
+    rw [add_assoc m 1 n, add_comm 1 n] at ih 
     simp only [fib_add_two, ih]
     ring
 #align nat.fib_add Nat.fib_add
@@ -325,7 +325,7 @@ theorem fib_gcd (m n : ℕ) : fib (gcd m n) = gcd (fib m) (fib n) :=
   apply gcd.induction m n
   · simp
   intro m n mpos h
-  rw [← gcd_rec m n] at h
+  rw [← gcd_rec m n] at h 
   conv_rhs => rw [← mod_add_div' n m]
   rwa [gcd_fib_add_mul_self m (n % m) (n / m), gcd_comm (fib m) _]
 #align nat.fib_gcd Nat.fib_gcd

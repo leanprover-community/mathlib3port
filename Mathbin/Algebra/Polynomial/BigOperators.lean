@@ -77,7 +77,7 @@ theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).
     rw [← List.foldr_max_of_ne_nil]
     · congr
     contrapose! h
-    rw [List.map_eq_nil] at h
+    rw [List.map_eq_nil] at h 
     simp [h]
 #align polynomial.degree_list_sum_le Polynomial.degree_list_sum_le
 
@@ -168,7 +168,7 @@ theorem leadingCoeff_multiset_prod' (h : (t.map leadingCoeff).Prod ≠ 0) :
     t.Prod.leadingCoeff = (t.map leadingCoeff).Prod :=
   by
   induction' t using Multiset.induction_on with a t ih; · simp
-  simp only [Multiset.map_cons, Multiset.prod_cons] at h⊢
+  simp only [Multiset.map_cons, Multiset.prod_cons] at h ⊢
   rw [Polynomial.leadingCoeff_mul'] <;> · rwa [ih]; apply right_ne_zero_of_mul h
 #align polynomial.leading_coeff_multiset_prod' Polynomial.leadingCoeff_multiset_prod'
 
@@ -194,7 +194,7 @@ theorem natDegree_multiset_prod' (h : (t.map fun f => leadingCoeff f).Prod ≠ 0
   by
   revert h
   refine' Multiset.induction_on t _ fun a t ih ht => _; · simp
-  rw [Multiset.map_cons, Multiset.prod_cons] at ht⊢
+  rw [Multiset.map_cons, Multiset.prod_cons] at ht ⊢
   rw [Multiset.sum_cons, Polynomial.natDegree_mul', ih]
   · apply right_ne_zero_of_mul ht
   · rwa [Polynomial.leadingCoeff_multiset_prod']; apply right_ne_zero_of_mul ht
@@ -283,7 +283,7 @@ theorem multiset_prod_X_sub_C_nextCoeff (t : Multiset R) :
   rw [next_coeff_multiset_prod]
   · simp only [next_coeff_X_sub_C]
     exact t.sum_hom (-AddMonoidHom.id R)
-  · intros ; apply monic_X_sub_C
+  · intros; apply monic_X_sub_C
 #align polynomial.multiset_prod_X_sub_C_next_coeff Polynomial.multiset_prod_X_sub_C_nextCoeff
 
 theorem prod_X_sub_C_nextCoeff {s : Finset ι} (f : ι → R) :
@@ -297,13 +297,13 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
   nontriviality R
   convert multiset_prod_X_sub_C_next_coeff (by assumption)
   rw [next_coeff]; split_ifs
-  · rw [nat_degree_multiset_prod_of_monic] at h <;> simp only [Multiset.mem_map] at *
+  · rw [nat_degree_multiset_prod_of_monic] at h  <;> simp only [Multiset.mem_map] at *
     swap; · rintro _ ⟨_, _, rfl⟩; apply monic_X_sub_C
-    simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h
+    simp_rw [Multiset.sum_eq_zero_iff, Multiset.mem_map] at h 
     contrapose! h
     obtain ⟨x, hx⟩ := card_pos_iff_exists_mem.mp ht
     exact ⟨_, ⟨_, ⟨x, hx, rfl⟩, nat_degree_X_sub_C _⟩, one_ne_zero⟩
-  congr ; rw [nat_degree_multiset_prod_of_monic] <;> · simp [nat_degree_X_sub_C, monic_X_sub_C]
+  congr; rw [nat_degree_multiset_prod_of_monic] <;> · simp [nat_degree_X_sub_C, monic_X_sub_C]
 #align polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_X_sub_C_coeff_card_pred
 
 theorem prod_X_sub_C_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :

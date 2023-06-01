@@ -71,10 +71,10 @@ theorem frobeniusNumber_pair (cop : coprime m n) (hm : 1 < m) (hn : 1 < n) :
   · push_neg
     intro a b h
     apply cop.mul_add_mul_ne_mul (add_one_ne_zero a) (add_one_ne_zero b)
-    simp only [Nat.sub_sub, smul_eq_mul] at h; zify  at h⊢
-    rw [← sub_eq_zero] at h⊢; rw [← h]
+    simp only [Nat.sub_sub, smul_eq_mul] at h ; zify  at h ⊢
+    rw [← sub_eq_zero] at h ⊢; rw [← h]
     ring
-  · intro k hk; dsimp at hk; contrapose! hk
+  · intro k hk; dsimp at hk ; contrapose! hk
     let x := chinese_remainder cop 0 k
     have hx : x.val < m * n := chinese_remainder_lt_mul cop 0 k (ne_bot_of_gt hm) (ne_bot_of_gt hn)
     suffices key : x.1 ≤ k

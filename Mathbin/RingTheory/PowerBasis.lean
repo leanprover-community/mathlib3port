@@ -125,8 +125,10 @@ theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
     · rintro ⟨f, h, hy⟩
       refine' ⟨f, _, hy⟩
       by_cases hf : f = 0
-      · simp only [hf, nat_degree_zero, degree_zero] at h⊢
-        first |exact lt_of_le_of_ne (Nat.zero_le d) hd.symm|exact WithBot.bot_lt_coe d
+      · simp only [hf, nat_degree_zero, degree_zero] at h ⊢
+        first
+        | exact lt_of_le_of_ne (Nat.zero_le d) hd.symm
+        | exact WithBot.bot_lt_coe d
       simpa only [degree_eq_nat_degree hf, WithBot.coe_lt_coe] using h
 #align power_basis.mem_span_pow PowerBasis.mem_span_pow
 
@@ -200,9 +202,9 @@ theorem dim_le_natDegree_of_root (pb : PowerBasis A S) {p : A[X]} (ne_zero : p �
   refine' le_of_not_lt fun hlt => NeZero _
   rw [p.as_sum_range' _ hlt, Finset.sum_range]
   refine' Fintype.sum_eq_zero _ fun i => _
-  simp_rw [aeval_eq_sum_range' hlt, Finset.sum_range, ← pb.basis_eq_pow] at root
+  simp_rw [aeval_eq_sum_range' hlt, Finset.sum_range, ← pb.basis_eq_pow] at root 
   have := Fintype.linearIndependent_iff.1 pb.basis.linear_independent _ root
-  dsimp only at this
+  dsimp only at this 
   rw [this, monomial_zero_right]
 #align power_basis.dim_le_nat_degree_of_root PowerBasis.dim_le_natDegree_of_root
 
@@ -302,7 +304,7 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     exact degree_mod_by_monic_lt _ (minpoly.monic pb.is_integral_gen)
   rw [aeval_eq_sum_range' this, aeval_eq_sum_range' this, LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun i (hi : i ∈ Finset.range pb.dim) => _
-  rw [Finset.mem_range] at hi
+  rw [Finset.mem_range] at hi 
   rw [LinearMap.map_smul]
   congr
   rw [← Fin.val_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
@@ -482,13 +484,13 @@ theorem linearIndependent_pow [Algebra K S] (x : S) :
   by_cases IsIntegral K x; swap
   · rw [minpoly.eq_zero h, nat_degree_zero]; exact linearIndependent_empty_type
   refine' Fintype.linearIndependent_iff.2 fun g hg i => _
-  simp only at hg
-  simp_rw [Algebra.smul_def, ← aeval_monomial, ← map_sum] at hg
+  simp only at hg 
+  simp_rw [Algebra.smul_def, ← aeval_monomial, ← map_sum] at hg 
   apply (fun hn0 => (minpoly.degree_le_of_ne_zero K x (mt (fun h0 => _) hn0) hg).not_lt).mtr
   · simp_rw [← C_mul_X_pow_eq_monomial]
     exact (degree_eq_nat_degree <| minpoly.ne_zero h).symm ▸ degree_sum_fin_lt _
-  · apply_fun lcoeff K i  at h0
-    simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0
+  · apply_fun lcoeff K i  at h0 
+    simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0 
     exact (if_pos <| Finset.mem_univ _).symm.trans h0
 #align linear_independent_pow linearIndependent_pow
 

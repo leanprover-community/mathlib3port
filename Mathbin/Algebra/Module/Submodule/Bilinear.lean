@@ -76,8 +76,8 @@ theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N)
   · rw [map₂_le]; intro a ha b hb
     apply span_induction ha
     on_goal 1 =>
-      intros ; apply span_induction hb
-      on_goal 1 => intros ; exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
+      intros; apply span_induction hb
+      on_goal 1 => intros; exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
       intros
       simp only [LinearMap.map_zero, LinearMap.zero_apply, zero_mem, LinearMap.map_add,
@@ -96,13 +96,13 @@ variable {R}
 @[simp]
 theorem map₂_bot_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) : map₂ f p ⊥ = ⊥ :=
   eq_bot_iff.2 <|
-    map₂_le.2 fun m hm n hn => by rw [Submodule.mem_bot] at hn⊢; rw [hn, LinearMap.map_zero]
+    map₂_le.2 fun m hm n hn => by rw [Submodule.mem_bot] at hn ⊢; rw [hn, LinearMap.map_zero]
 #align submodule.map₂_bot_right Submodule.map₂_bot_right
 
 @[simp]
 theorem map₂_bot_left (f : M →ₗ[R] N →ₗ[R] P) (q : Submodule R N) : map₂ f ⊥ q = ⊥ :=
   eq_bot_iff.2 <|
-    map₂_le.2 fun m hm n hn => by rw [Submodule.mem_bot] at hm⊢; rw [hm, LinearMap.map_zero₂]
+    map₂_le.2 fun m hm n hn => by rw [Submodule.mem_bot] at hm ⊢; rw [hm, LinearMap.map_zero₂]
 #align submodule.map₂_bot_left Submodule.map₂_bot_left
 
 @[mono]

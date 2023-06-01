@@ -318,18 +318,19 @@ theorem empty_vecAppend (v : Fin n → α) : vecAppend (zero_add _).symm ![] v =
 theorem cons_vecAppend (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fin n → α) :
     vecAppend ho (vecCons x u) v =
       vecCons x
-        (vecAppend (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho) u v) :=
+        (vecAppend (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho ) u
+          v) :=
   by
   ext i
   simp_rw [vec_append_eq_ite]
   split_ifs with h
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp
-    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Fin.val_mk] at h
+    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Fin.val_mk] at h 
       simp [h]
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simpa using h
-    · rw [not_lt, Fin.val_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
+    · rw [not_lt, Fin.val_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h 
       simp [h]
 #align matrix.cons_vec_append Matrix.cons_vecAppend
 -/
@@ -356,10 +357,10 @@ theorem vecAlt0_vecAppend (v : Fin n → α) : vecAlt0 rfl (vecAppend rfl v v) =
   ext i
   simp_rw [Function.comp, bit0, vec_alt0, vec_append_eq_ite]
   split_ifs with h <;> congr
-  · rw [Fin.val_mk] at h
+  · rw [Fin.val_mk] at h 
     simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk]
     exact (Nat.mod_eq_of_lt h).symm
-  · rw [Fin.val_mk, not_lt] at h
+  · rw [Fin.val_mk, not_lt] at h 
     simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_eq_sub_mod h]
     refine' (Nat.mod_eq_of_lt _).symm
     rw [tsub_lt_iff_left h]
@@ -376,11 +377,11 @@ theorem vecAlt1_vecAppend (v : Fin (n + 1) → α) : vecAlt1 rfl (vecAppend rfl 
   · simp; congr
   · split_ifs with h <;> simp_rw [bit1, bit0] <;> congr
     · simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk]
-      rw [Fin.val_mk] at h
+      rw [Fin.val_mk] at h 
       rw [Fin.val_one]
       rw [Nat.mod_eq_of_lt (Nat.lt_of_succ_lt h)]
       rw [Nat.mod_eq_of_lt h]
-    · rw [Fin.val_mk, not_lt] at h
+    · rw [Fin.val_mk, not_lt] at h 
       simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_add_mod, Fin.val_one,
         Nat.mod_eq_sub_mod h]
       refine' (Nat.mod_eq_of_lt _).symm
@@ -426,7 +427,7 @@ theorem cons_vecAlt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m →
         (vecAlt0
           (by
             rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff,
-              add_right_cancel_iff] at h)
+              add_right_cancel_iff] at h )
           u) :=
   by
   ext i
@@ -453,7 +454,7 @@ theorem cons_vecAlt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m →
         (vecAlt1
           (by
             rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff,
-              add_right_cancel_iff] at h)
+              add_right_cancel_iff] at h )
           u) :=
   by
   ext i

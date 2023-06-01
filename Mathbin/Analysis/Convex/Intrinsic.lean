@@ -257,8 +257,8 @@ variable [NormedField 𝕜] [SeminormedAddCommGroup V] [SeminormedAddCommGroup W
 
 include V W
 
-attribute [local instance, local nolint fails_quickly]
-  AffineSubspace.toNormedAddTorsor AffineSubspace.nonempty_map
+attribute [local instance, local nolint fails_quickly] AffineSubspace.toNormedAddTorsor
+  AffineSubspace.nonempty_map
 
 @[simp]
 theorem image_intrinsicInterior (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :

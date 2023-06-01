@@ -134,7 +134,7 @@ instance (r : α → α → Prop) : Inhabited (r ≼i r) :=
 @[trans]
 protected def trans (f : r ≼i s) (g : s ≼i t) : r ≼i t :=
   ⟨f.1.trans g.1, fun a c h => by
-    simp at h⊢
+    simp at h ⊢
     rcases g.2 _ _ h with ⟨b, rfl⟩; have h := g.map_rel_iff.1 h
     rcases f.2 _ _ h with ⟨a', rfl⟩; exact ⟨a', rfl⟩⟩
 #align initial_seg.trans InitialSeg.trans
@@ -230,7 +230,7 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 /-- Initial segment embedding of an order `r` into the disjoint union of `r` and `s`. -/
 def leAdd (r : α → α → Prop) (s : β → β → Prop) : r ≼i Sum.Lex r s :=
   ⟨⟨⟨Sum.inl, fun _ _ => Sum.inl.inj⟩, fun a b => Sum.lex_inl_inl⟩, fun a b => by
-    cases b <;> [exact fun _ => ⟨_, rfl⟩;exact False.elim ∘ Sum.lex_inr_inl]⟩
+    cases b <;> [exact fun _ => ⟨_, rfl⟩; exact False.elim ∘ Sum.lex_inr_inl]⟩
 #align initial_seg.le_add InitialSeg.leAdd
 -/
 
@@ -326,7 +326,7 @@ theorem init_iff [IsTrans β s] (f : r ≺i s) {a : α} {b : β} : s b (f a) ↔
 theorem irrefl {r : α → α → Prop} [IsWellOrder α r] (f : r ≺i r) : False :=
   by
   have := f.lt_top f.top
-  rw [show f f.top = f.top from InitialSeg.eq (↑f) (InitialSeg.refl r) f.top] at this
+  rw [show f f.top = f.top from InitialSeg.eq (↑f) (InitialSeg.refl r) f.top] at this 
   exact irrefl _ this
 #align principal_seg.irrefl PrincipalSeg.irrefl
 -/
@@ -416,7 +416,7 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
       simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
     cases f; cases g
-    have := RelEmbedding.coe_fn_injective ef <;> congr ⟩
+    have := RelEmbedding.coe_fn_injective ef <;> congr⟩
 
 theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) : f.top = g.top := by
   rw [Subsingleton.elim f (PrincipalSeg.equivLT e g)] <;> rfl

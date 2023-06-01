@@ -61,7 +61,7 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
     smul_mem' := fun r s sh j j' f =>
       by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
-      dsimp [functor.sections] at sh
+      dsimp [functor.sections] at sh 
       rw [sh f] }
 #align Module.sections_submodule ModuleCat.sectionsSubmodule
 

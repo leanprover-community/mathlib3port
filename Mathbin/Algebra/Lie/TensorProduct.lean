@@ -235,7 +235,7 @@ theorem lieIdeal_oper_eq_tensor_map_range :
   rw [← coe_to_submodule_eq_iff, lie_ideal_oper_eq_linear_span, LieModuleHom.coeSubmodule_range,
     LieModuleHom.coe_linearMap_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]
-  congr ; ext m; constructor
+  congr; ext m; constructor
   · rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩; use x ⊗ₜ n; constructor
     · use ⟨x, hx⟩, ⟨n, hn⟩; simp
     · simp

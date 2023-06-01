@@ -95,7 +95,7 @@ end Invariant
 /-- A flow on a topological space `α` by an a additive topological
     monoid `τ` is a continuous monoid action of `τ` on `α`.-/
 structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [ContinuousAdd τ] (α : Type _)
-  [TopologicalSpace α] where
+    [TopologicalSpace α] where
   toFun : τ → α → α
   cont' : Continuous (uncurry to_fun)
   map_add' : ∀ t₁ t₂ x, to_fun (t₁ + t₂) x = to_fun t₁ (to_fun t₂ x)
@@ -118,7 +118,7 @@ instance : CoeFun (Flow τ α) fun _ => τ → α → α :=
 
 @[ext]
 theorem ext : ∀ {ϕ₁ ϕ₂ : Flow τ α}, (∀ t x, ϕ₁ t x = ϕ₂ t x) → ϕ₁ = ϕ₂
-  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by congr ; funext; exact h _ _
+  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by congr; funext; exact h _ _
 #align flow.ext Flow.ext
 
 @[continuity]

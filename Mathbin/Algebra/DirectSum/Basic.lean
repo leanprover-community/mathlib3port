@@ -41,7 +41,8 @@ variable (ι : Type v) [dec_ι : DecidableEq ι] (β : ι → Type w)
 
 Note: `open_locale direct_sum` will enable the notation `⨁ i, β i` for `direct_sum β`. -/
 def DirectSum [∀ i, AddCommMonoid (β i)] : Type _ :=
-  Π₀ i, β i deriving AddCommMonoid, Inhabited
+  Π₀ i, β i
+deriving AddCommMonoid, Inhabited
 #align direct_sum DirectSum
 -/
 
@@ -187,7 +188,7 @@ theorem toAddMonoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
 #align direct_sum.to_add_monoid_of DirectSum.toAddMonoid_of
 
 theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
-  congr ; ext; simp [to_add_monoid, of]
+  congr; ext; simp [to_add_monoid, of]
 #align direct_sum.to_add_monoid.unique DirectSum.toAddMonoid.unique
 
 end ToAddMonoid
@@ -294,7 +295,7 @@ variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMon
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
-noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j
+noncomputable def sigmaCurry : (⨁ i : Σ i, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j
     where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
   map_zero' := Dfinsupp.sigmaCurry_zero
@@ -302,7 +303,7 @@ noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ
 #align direct_sum.sigma_curry DirectSum.sigmaCurry
 
 @[simp]
-theorem sigmaCurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
+theorem sigmaCurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) :
     sigmaCurry f i j = f ⟨i, j⟩ :=
   @Dfinsupp.sigmaCurry_apply _ _ δ _ f i j
 #align direct_sum.sigma_curry_apply DirectSum.sigmaCurry_apply
@@ -311,7 +312,7 @@ theorem sigmaCurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
 def sigmaUncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
-    (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2
+    (⨁ (i) (j), δ i j) →+ ⨁ i : Σ i, _, δ i.1 i.2
     where
   toFun := Dfinsupp.sigmaUncurry
   map_zero' := Dfinsupp.sigmaUncurry_zero
@@ -328,7 +329,7 @@ theorem sigmaUncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurryEquiv [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
-    (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
+    (⨁ i : Σ i, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
   { sigmaCurry, Dfinsupp.sigmaCurryEquiv with }
 #align direct_sum.sigma_curry_equiv DirectSum.sigmaCurryEquiv
 

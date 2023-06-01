@@ -43,10 +43,10 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-  "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure" where
+    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
-      ∃ (U : OpenNhds x)(R : CommRingCat),
+      ∃ (U : OpenNhds x) (R : CommRingCat),
         Nonempty
           (to_LocallyRingedSpace.restrict U.OpenEmbedding ≅ Spec.toLocallyRingedSpace.obj (op R))
 #align algebraic_geometry.Scheme AlgebraicGeometry.Scheme
@@ -73,7 +73,8 @@ protected abbrev sheaf (X : Scheme) :=
 /-- The forgetful functor from `Scheme` to `LocallyRingedSpace`. -/
 @[simps]
 def forgetToLocallyRingedSpace : Scheme ⥤ LocallyRingedSpace :=
-  inducedFunctor _ deriving Full, Faithful
+  inducedFunctor _
+deriving Full, Faithful
 #align algebraic_geometry.Scheme.forget_to_LocallyRingedSpace AlgebraicGeometry.Scheme.forgetToLocallyRingedSpace
 
 @[simp]

@@ -305,7 +305,7 @@ A symmetric monoidal category is a braided monoidal category for which the braid
 See <https://stacks.math.columbia.edu/tag/0FFW>.
 -/
 class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends
-  BraidedCategory.{v} C where
+    BraidedCategory.{v} C where
   -- braiding symmetric:
   symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) := by obviously
 #align category_theory.symmetric_category CategoryTheory.SymmetricCategory

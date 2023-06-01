@@ -255,8 +255,8 @@ theorem map_rightUnitor (X : C) :
 /-- The tensorator as a natural isomorphism. -/
 noncomputable def μNatIso :
     Functor.prod F.toFunctor F.toFunctor ⋙ tensor D ≅ tensor C ⋙ F.toFunctor :=
-  NatIso.ofComponents (by intros ; apply F.μ_iso)
-    (by intros ; apply F.to_lax_monoidal_functor.μ_natural)
+  NatIso.ofComponents (by intros; apply F.μ_iso)
+    (by intros; apply F.to_lax_monoidal_functor.μ_natural)
 #align category_theory.monoidal_functor.μ_nat_iso CategoryTheory.MonoidalFunctor.μNatIso
 -/
 

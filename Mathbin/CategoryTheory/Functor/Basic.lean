@@ -43,7 +43,7 @@ The axiom `map_id` expresses preservation of identities, and
 See <https://stacks.math.columbia.edu/tag/001B>.
 -/
 structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] extends
-  Prefunctor C D : Type max v₁ v₂ u₁ u₂ where
+    Prefunctor C D : Type max v₁ v₂ u₁ u₂ where
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by obviously
   map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by obviously
 #align category_theory.functor CategoryTheory.Functor

@@ -178,7 +178,7 @@ theorem constants_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
 /-- The type of symbols in a given language. -/
 @[nolint has_nonempty_instance]
 def Symbols :=
-  Sum (Σl, L.Functions l) (Σl, L.Relations l)
+  Sum (Σ l, L.Functions l) (Σ l, L.Relations l)
 #align first_order.language.symbols FirstOrder.Language.Symbols
 -/
 
@@ -304,7 +304,7 @@ instance isEmpty_empty : IsEmpty Language.empty.Symbols :=
 -/
 
 #print FirstOrder.Language.Countable.countable_functions /-
-instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
+instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σ l, L.Functions l) :=
   @Function.Injective.countable _ _ h _ Sum.inl_injective
 #align first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
 -/
@@ -510,7 +510,7 @@ end Structure
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
 class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
-  [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
+    [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 #align first_order.language.hom_class FirstOrder.Language.HomClass
@@ -518,7 +518,7 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
-  [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
+    [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 #align first_order.language.strong_hom_class FirstOrder.Language.StrongHomClass

@@ -105,9 +105,8 @@ theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
 
 @[to_additive add_nsmul]
 theorem pow_add (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
-  induction' n with n ih <;>
-    [rw [Nat.add_zero, pow_zero,
-      mul_one];rw [pow_succ', ← mul_assoc, ← ih, ← pow_succ', Nat.add_assoc]]
+  induction' n with n ih <;> [rw [Nat.add_zero, pow_zero, mul_one];
+    rw [pow_succ', ← mul_assoc, ← ih, ← pow_succ', Nat.add_assoc]]
 #align pow_add pow_add
 #align add_nsmul add_nsmul
 
@@ -119,7 +118,7 @@ theorem pow_boole (P : Prop) [Decidable P] (a : M) :
 -- the attributes are intentionally out of order. `smul_zero` proves `nsmul_zero`.
 @[to_additive nsmul_zero, simp]
 theorem one_pow (n : ℕ) : (1 : M) ^ n = 1 := by
-  induction' n with n ih <;> [exact pow_zero _;rw [pow_succ, ih, one_mul]]
+  induction' n with n ih <;> [exact pow_zero _; rw [pow_succ, ih, one_mul]]
 #align one_pow one_pow
 #align nsmul_zero nsmul_zero
 
@@ -167,7 +166,7 @@ theorem pow_eq_pow_mod {M : Type _} [Monoid M] {x : M} (m : ℕ) {n : ℕ} (h : 
     x ^ m = x ^ (m % n) :=
   by
   have t := congr_arg (fun a => x ^ a) ((Nat.add_comm _ _).trans (Nat.mod_add_div _ _)).symm
-  dsimp at t
+  dsimp at t 
   rw [t, pow_add, pow_mul, h, one_pow, one_mul]
 #align pow_eq_pow_mod pow_eq_pow_mod
 #align nsmul_eq_mod_nsmul nsmul_eq_mod_nsmul

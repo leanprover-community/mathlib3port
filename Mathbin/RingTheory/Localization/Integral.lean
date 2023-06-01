@@ -153,7 +153,7 @@ theorem integerNormalization_eq_zero_iff {p : K[X]} :
     apply smul_zero
     assumption
   · have hi := h i
-    rw [Polynomial.coeff_zero, ← @to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi
+    rw [Polynomial.coeff_zero, ← @to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi 
     apply Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)
     intro h
     apply mem_non_zero_divisors_iff_ne_zero.mp nonzero
@@ -253,8 +253,8 @@ theorem isIntegral_localization (H : Algebra.IsIntegral R S) :
     @isIntegral_of_isIntegral_mul_unit Rₘ _ _ _ (localizationAlgebra M S) x (algebraMap S Sₘ u) v' _
       _
   · replace hv' := congr_arg (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv'
-    rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv'
-    erw [IsLocalization.map_comp] at hv'
+    rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv' 
+    erw [IsLocalization.map_comp] at hv' 
     exact hv.2 ▸ hv'
   · obtain ⟨p, hp⟩ := H s
     exact hx.symm ▸ is_integral_localization_at_leadingCoeff p hp.2 (hp.1.symm ▸ M.one_mem)
@@ -289,7 +289,7 @@ theorem IsLocalization.scaleRoots_commonDenom_mem_lifts (p : Rₘ[X])
     · exact RingHom.mem_range_self _ _
     · rw [← Algebra.smul_def]
       exact ⟨_, IsLocalization.map_integerMultiple M p.support p.coeff ⟨n, h₁⟩⟩
-  · rw [Polynomial.not_mem_support_iff] at h₁
+  · rw [Polynomial.not_mem_support_iff] at h₁ 
     rw [h₁, MulZeroClass.zero_mul]
     exact zero_mem (algebraMap R Rₘ).range
 #align is_localization.scale_roots_common_denom_mem_lifts IsLocalization.scaleRoots_commonDenom_mem_lifts
@@ -426,7 +426,7 @@ theorem isAlgebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alge
   · intro h x
     obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
     use f, hf₁
-    rw [Polynomial.aeval_algebraMap_apply] at hf₂
+    rw [Polynomial.aeval_algebraMap_apply] at hf₂ 
     exact
       (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSMulDivisors.algebraMap_injective _ _) _
         hf₂
@@ -460,7 +460,7 @@ theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [
   have mk_yz_eq : IsLocalization.mk' L y' z' = IsLocalization.mk' L y ⟨_, hz0'⟩ :=
     by
     rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← SetLike.coe_mk (algebraMap R S z) hz0'] at
-      yz_eq
+      yz_eq 
     exact IsLocalization.mk'_eq_of_eq (by rw [mul_comm _ y, mul_comm _ y', yz_eq])
   suffices hy : algebraMap S L (a * y) ∈ Submodule.span K (⇑(algebraMap S L) '' b)
   · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, SetLike.coe_mk, ← IsScalarTower.algebraMap_apply,

@@ -205,7 +205,7 @@ theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
     by_contra H
     rwa [← coe_inter,
       Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
-      convexHull_empty] at h
+      convexHull_empty] at h 
 #align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convexHull_iff
 -/
 
@@ -246,12 +246,12 @@ theorem facets_subset : K.facets ⊆ K.faces := fun s hs => hs.1
 theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t :=
   by
   refine' ⟨fun hs' : ¬(_ ∧ _) => _, _⟩
-  · push_neg  at hs'
+  · push_neg  at hs' 
     obtain ⟨t, ht⟩ := hs' hs
     exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (subset.antisymm ht.2.1 hts)⟩⟩
   · rintro ⟨t, ht⟩ ⟨hs, hs'⟩
     have := hs' ht.1 ht.2.1
-    rw [this] at ht
+    rw [this] at ht 
     exact ht.2.2 (subset.refl t)
 #align geometry.simplicial_complex.not_facet_iff_subface Geometry.SimplicialComplex.not_facet_iff_subface
 -/

@@ -462,11 +462,11 @@ instance : PseudoMetricSpace (Hamming β) :=
         push_cast
         constructor
         · refine' fun hs => ⟨1, zero_lt_one, fun _ _ hab => _⟩
-          rw_mod_cast [hammingDist_lt_one]  at hab
-          rw [of_hamming_inj, ← mem_idRel] at hab
+          rw_mod_cast [hammingDist_lt_one]  at hab 
+          rw [of_hamming_inj, ← mem_idRel] at hab 
           exact hs hab
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab
-          rw [mem_idRel] at hab
+          rw [mem_idRel] at hab 
           rw [hab]
           refine' hs (lt_of_eq_of_lt _ hε)
           exact_mod_cast hammingDist_self _

@@ -35,7 +35,7 @@ namespace ULift
 instance mulZeroClass [MulZeroClass α] : MulZeroClass (ULift α) := by
   refine_struct
       { zero := (0 : ULift α)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align ulift.mul_zero_class ULift.mulZeroClass
 -/
@@ -44,7 +44,7 @@ instance mulZeroClass [MulZeroClass α] : MulZeroClass (ULift α) := by
 instance distrib [Distrib α] : Distrib (ULift α) := by
   refine_struct
       { add := (· + ·)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align ulift.distrib ULift.distrib
 -/

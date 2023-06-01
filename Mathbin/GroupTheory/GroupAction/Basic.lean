@@ -351,7 +351,7 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [Set.mem_iUnion]
     exact ⟨a⁻¹, a • x, hy, inv_smul_smul a x⟩
   · intro hx
-    rw [Set.mem_iUnion] at hx
+    rw [Set.mem_iUnion] at hx 
     obtain ⟨a, u, hu₁, hu₂⟩ := hx
     rw [Set.mem_preimage, Set.mem_image_iff_bex]
     refine' ⟨a⁻¹ • x, _, by simp only [Quotient.eq'] <;> use a⁻¹⟩
@@ -453,10 +453,10 @@ This version is expressed in terms of `mul_action.orbit_rel.quotient.orbit` inst
 `mul_action.orbit`, to avoid mentioning `quotient.out'`. -/
 @[to_additive
       "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction.\n\nThis version is expressed in terms of `add_action.orbit_rel.quotient.orbit` instead of\n`add_action.orbit`, to avoid mentioning `quotient.out'`. "]
-def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
+def selfEquivSigmaOrbits' : β ≃ Σ ω : Ω, ω.orbit :=
   calc
-    β ≃ Σω : Ω, { b // Quotient.mk'' b = ω } := (Equiv.sigmaFiberEquiv Quotient.mk'').symm
-    _ ≃ Σω : Ω, ω.orbit :=
+    β ≃ Σ ω : Ω, { b // Quotient.mk'' b = ω } := (Equiv.sigmaFiberEquiv Quotient.mk'').symm
+    _ ≃ Σ ω : Ω, ω.orbit :=
       Equiv.sigmaCongrRight fun ω =>
         Equiv.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit.symm
     
@@ -468,7 +468,7 @@ def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/
 @[to_additive
       "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."]
-def selfEquivSigmaOrbits : β ≃ Σω : Ω, orbit α ω.out' :=
+def selfEquivSigmaOrbits : β ≃ Σ ω : Ω, orbit α ω.out' :=
   (selfEquivSigmaOrbits' α β).trans <|
     Equiv.sigmaCongrRight fun i =>
       Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotient.out_eq'

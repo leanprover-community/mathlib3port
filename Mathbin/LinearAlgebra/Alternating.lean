@@ -232,8 +232,8 @@ theorem map_zero [Nonempty ι] : f 0 = 0 :=
 
 theorem map_eq_zero_of_not_injective (v : ι → M) (hv : ¬Function.Injective v) : f v = 0 :=
   by
-  rw [Function.Injective] at hv
-  push_neg  at hv
+  rw [Function.Injective] at hv 
+  push_neg  at hv 
   rcases hv with ⟨i₁, i₂, heq, hne⟩
   exact f.map_eq_zero_of_eq v HEq hne
 #align alternating_map.map_eq_zero_of_not_injective AlternatingMap.map_eq_zero_of_not_injective
@@ -808,11 +808,11 @@ theorem map_linearDependent {K : Type _} [Ring K] {M : Type _} [AddCommGroup M] 
   letI := Classical.decEq ι
   suffices f (update v i (g i • v i)) = 0
     by
-    rw [f.map_smul, Function.update_eq_self, smul_eq_zero] at this
+    rw [f.map_smul, Function.update_eq_self, smul_eq_zero] at this 
     exact Or.resolve_left this hz
   conv at h in g _ • v _ => rw [← if_t_t (i = x) (g _ • v _)]
   rw [Finset.sum_ite, Finset.filter_eq, Finset.filter_ne, if_pos hi, Finset.sum_singleton,
-    add_eq_zero_iff_eq_neg] at h
+    add_eq_zero_iff_eq_neg] at h 
   rw [h, f.map_neg, f.map_update_sum, neg_eq_zero, Finset.sum_eq_zero]
   intro j hj
   obtain ⟨hij, _⟩ := finset.mem_erase.mp hj
@@ -969,7 +969,7 @@ def domCoprod.summand (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap 
       σ.sign •
         (MultilinearMap.domCoprod ↑a ↑b : MultilinearMap R' (fun _ => Mᵢ) (N₁ ⊗ N₂)).domDomCongr σ)
     fun σ₁ σ₂ H => by
-    rw [QuotientGroup.leftRel_apply] at H
+    rw [QuotientGroup.leftRel_apply] at H 
     obtain ⟨⟨sl, sr⟩, h⟩ := H
     ext v
     simp only [MultilinearMap.domDomCongr_apply, MultilinearMap.domCoprod_apply,
@@ -1019,7 +1019,7 @@ theorem domCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
   dsimp only [Quotient.liftOn'_mk'', Quotient.map'_mk'', MultilinearMap.smul_apply,
     MultilinearMap.domDomCongr_apply, MultilinearMap.domCoprod_apply, dom_coprod.summand]
   intro hσ
-  cases hi : σ⁻¹ i <;> cases hj : σ⁻¹ j <;> rw [perm.inv_eq_iff_eq] at hi hj <;> substs hi hj <;>
+  cases hi : σ⁻¹ i <;> cases hj : σ⁻¹ j <;> rw [perm.inv_eq_iff_eq] at hi hj  <;> substs hi hj <;>
     revert val val_1
   case inl.inr |
     inr.inl =>
@@ -1030,7 +1030,7 @@ theorem domCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     on_goal 1 => replace hσ := Equiv.congr_fun hσ (Sum.inl i')
     on_goal 2 => replace hσ := Equiv.congr_fun hσ (Sum.inr i')
     all_goals
-      rw [smul_eq_mul, ← mul_swap_eq_swap_mul, mul_inv_rev, swap_inv, inv_mul_cancel_right] at hσ
+      rw [smul_eq_mul, ← mul_swap_eq_swap_mul, mul_inv_rev, swap_inv, inv_mul_cancel_right] at hσ 
       simpa using hσ
   case inr.inr |
     inl.inl =>
@@ -1108,7 +1108,9 @@ def domCoprod' :
           MultilinearMap.domCoprod'_apply]
         simp only [TensorProduct.add_tmul, ← TensorProduct.smul_tmul', TensorProduct.tmul_add,
           TensorProduct.tmul_smul, LinearMap.map_add, LinearMap.map_smul]
-        first |rw [← smul_add]|rw [smul_comm]
+        first
+        | rw [← smul_add]
+        | rw [smul_comm]
         congr
 #align alternating_map.dom_coprod' AlternatingMap.domCoprod'
 -/

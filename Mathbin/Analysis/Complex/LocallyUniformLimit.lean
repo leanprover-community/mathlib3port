@@ -58,7 +58,7 @@ theorem norm_cderiv_le (hr : 0 < r) (hf : ∀ w ∈ sphere z r, ‖f w‖ ≤ M)
   have h1 : ∀ w ∈ sphere z r, ‖((w - z) ^ 2)⁻¹ • f w‖ ≤ M / r ^ 2 :=
     by
     intro w hw
-    simp only [mem_sphere_iff_norm, norm_eq_abs] at hw
+    simp only [mem_sphere_iff_norm, norm_eq_abs] at hw 
     simp only [norm_smul, inv_mul_eq_div, hw, norm_eq_abs, map_inv₀, Complex.abs_pow]
     exact div_le_div hM (hf w hw) (sq_pos_of_pos hr) le_rfl
   have h2 := circleIntegral.norm_integral_le_of_norm_le_const hr.le h1
@@ -74,7 +74,7 @@ theorem cderiv_sub (hr : 0 < r) (hf : ContinuousOn f (sphere z r))
   have h1 : ContinuousOn (fun w : ℂ => ((w - z) ^ 2)⁻¹) (sphere z r) :=
     by
     refine' ((continuous_id'.sub continuous_const).pow 2).ContinuousOn.inv₀ fun w hw h => hr.ne _
-    rwa [mem_sphere_iff_norm, sq_eq_zero_iff.mp h, norm_zero] at hw
+    rwa [mem_sphere_iff_norm, sq_eq_zero_iff.mp h, norm_zero] at hw 
   simp_rw [cderiv, ← smul_sub]
   congr 1
   simpa only [Pi.sub_apply, smul_sub] using
@@ -108,10 +108,10 @@ theorem TendstoUniformlyOn.cderiv (hF : TendstoUniformlyOn F f φ (cthickening �
   · simp only [h, TendstoUniformlyOn, eventually_bot, imp_true_iff]
   haveI : φ.ne_bot := ne_bot_iff.2 h
   have e1 : ContinuousOn f (cthickening δ K) := TendstoUniformlyOn.continuousOn hF hFn
-  rw [tendsto_uniformly_on_iff] at hF⊢
+  rw [tendsto_uniformly_on_iff] at hF ⊢
   rintro ε hε
   filter_upwards [hF (ε * δ) (mul_pos hε hδ), hFn]with n h h' z hz
-  simp_rw [dist_eq_norm] at h⊢
+  simp_rw [dist_eq_norm] at h ⊢
   have e2 : ∀ w ∈ sphere z δ, ‖f w - F n w‖ < ε * δ := fun w hw1 =>
     h w (closed_ball_subset_cthickening hz δ (sphere_subset_closed_ball hw1))
   have e3 := sphere_subset_closed_ball.trans (closed_ball_subset_cthickening hz δ)

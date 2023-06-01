@@ -223,7 +223,7 @@ theorem eq_or_eq_neg_of_isEmpty [Nontrivial R] [IsEmpty ι] (o : Orientation R M
     convert h.map' (↑alternating_map.const_linear_equiv_of_is_empty.symm) (LinearEquiv.ker _)
     ext i
     fin_cases i <;> simp [a]
-  rw [linearIndependent_iff'] at H
+  rw [linearIndependent_iff'] at H 
   simpa using H Finset.univ ![1, -a] (by simp [Fin.sum_univ_succ]) 0 (by simp)
 #align orientation.eq_or_eq_neg_of_is_empty Orientation.eq_or_eq_neg_of_isEmpty
 
@@ -249,7 +249,7 @@ theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) :
     x = e.Orientation ∨ x = -e.Orientation :=
   by
   induction' x using Module.Ray.ind with x hx
-  rw [← x.map_basis_ne_zero_iff e] at hx
+  rw [← x.map_basis_ne_zero_iff e] at hx 
   rwa [Basis.orientation, ray_eq_iff, neg_rayOfNeZero, ray_eq_iff, x.eq_smul_basis_det e,
     sameRay_neg_smul_left_iff_of_ne e.det_ne_zero hx, sameRay_smul_left_iff_of_ne e.det_ne_zero hx,
     lt_or_lt_iff_ne, ne_comm]

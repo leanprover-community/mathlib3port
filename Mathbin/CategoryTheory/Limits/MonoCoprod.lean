@@ -95,7 +95,8 @@ theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit 
     mono_comp c₁.inl (hc₁.cocone_point_unique_up_to_iso hc₂).Hom
 #align category_theory.limits.mono_coprod.mono_inl_iff CategoryTheory.Limits.MonoCoprod.mono_inl_iff
 
-theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono c.inl) : MonoCoprod C :=
+theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B) (hc : IsColimit c), Mono c.inl) :
+    MonoCoprod C :=
   ⟨fun A B c' hc' => by
     obtain ⟨c, hc₁, hc₂⟩ := h A B
     simpa only [mono_inl_iff hc' hc₁] using hc₂⟩
@@ -107,7 +108,7 @@ instance monoCoprodType : MonoCoprod (Type u) :=
     by
     refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
-        binary_cofan.is_colimit.mk _ (fun Y f₁ f₂ x => by cases x; exacts[f₁ x, f₂ x])
+        binary_cofan.is_colimit.mk _ (fun Y f₁ f₂ x => by cases x; exacts [f₁ x, f₂ x])
           (fun Y f₁ f₂ => rfl) (fun Y f₁ f₂ => rfl) _
       intro Y f₁ f₂ m h₁ h₂
       ext x
@@ -116,8 +117,8 @@ instance monoCoprodType : MonoCoprod (Type u) :=
       · dsimp; exact congr_fun h₂ x
     · rw [mono_iff_injective]
       intro a₁ a₂ h
-      simp only [binary_cofan.mk_inl] at h
-      dsimp at h
+      simp only [binary_cofan.mk_inl] at h 
+      dsimp at h 
       simpa only using h
 #align category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType
 -/

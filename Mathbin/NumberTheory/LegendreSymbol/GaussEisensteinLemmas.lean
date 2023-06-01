@@ -54,9 +54,9 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   · intro a ha; simp only [cast_id, nat_cast_val]
   · intro _ _ _ _ h; rw [Units.ext_iff]; exact val_injective p h
   · intro b hb
-    rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb
+    rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb 
     refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
-    · intro h; apply hb.1; apply_fun val  at h
+    · intro h; apply hb.1; apply_fun val  at h 
       simpa only [val_cast_of_lt hb.right, val_zero] using h
     · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
@@ -330,8 +330,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
         (Nat.div_lt_self hp.1.Pos (by decide))
     have : (x.1 : ZMod p) = 0 := by
       simpa [hq0] using congr_arg (coe : ℕ → ZMod p) (le_antisymm hpq hqp)
-    apply_fun ZMod.val  at this
-    rw [val_cast_of_lt hxp, val_zero] at this
+    apply_fun ZMod.val  at this 
+    rw [val_cast_of_lt hxp, val_zero] at this 
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
   have hunion :
     (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪

@@ -312,7 +312,7 @@ protected theorem exists_not_mem_row (μ : YoungDiagram) (i : ℕ) : ∃ j, (i, 
   by
   obtain ⟨j, hj⟩ :=
     Infinite.exists_not_mem_finset (μ.cells.Preimage (Prod.mk i) fun _ _ _ _ h => by cases h; rfl)
-  rw [Finset.mem_preimage] at hj
+  rw [Finset.mem_preimage] at hj 
   exact ⟨j, hj⟩
 #align young_diagram.exists_not_mem_row YoungDiagram.exists_not_mem_row
 -/
@@ -354,7 +354,7 @@ theorem rowLen_eq_card (μ : YoungDiagram) {i : ℕ} : μ.rowLen i = (μ.row i).
 theorem rowLen_anti (μ : YoungDiagram) (i1 i2 : ℕ) (hi : i1 ≤ i2) : μ.rowLen i2 ≤ μ.rowLen i1 :=
   by
   by_contra' h_lt; rw [← lt_self_iff_false (μ.row_len i1)]
-  rw [← mem_iff_lt_row_len] at h_lt⊢
+  rw [← mem_iff_lt_row_len] at h_lt ⊢
   exact μ.up_left_mem hi (by rfl) h_lt
 #align young_diagram.row_len_anti YoungDiagram.rowLen_anti
 -/
@@ -484,9 +484,9 @@ theorem rowLens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
 #print YoungDiagram.pos_of_mem_rowLens /-
 theorem pos_of_mem_rowLens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x :=
   by
-  rw [row_lens, List.mem_map] at hx
+  rw [row_lens, List.mem_map] at hx 
   obtain ⟨i, hi, rfl : μ.row_len i = x⟩ := hx
-  rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi
+  rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi 
 #align young_diagram.pos_of_mem_row_lens YoungDiagram.pos_of_mem_rowLens
 -/
 
@@ -537,7 +537,7 @@ def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram
   cells := YoungDiagram.cellsOfRowLens w
   IsLowerSet := by
     rintro ⟨i2, j2⟩ ⟨i1, j1⟩ ⟨hi : i1 ≤ i2, hj : j1 ≤ j2⟩ hcell
-    rw [Finset.mem_coe, YoungDiagram.mem_cellsOfRowLens] at hcell⊢
+    rw [Finset.mem_coe, YoungDiagram.mem_cellsOfRowLens] at hcell ⊢
     obtain ⟨h1, h2⟩ := hcell
     refine' ⟨hi.trans_lt h1, _⟩
     calc

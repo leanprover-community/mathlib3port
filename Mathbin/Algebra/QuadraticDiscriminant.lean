@@ -74,7 +74,7 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq [NeZero (2 : R)] [NoZeroDivisors R] 
     {x : R} : a * x * x + b * x + c = 0 ↔ discrim a b c = (2 * a * x + b) ^ 2 :=
   by
   refine' ⟨discrim_eq_sq_of_quadratic_eq_zero, fun h => _⟩
-  rw [discrim] at h
+  rw [discrim] at h 
   have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero (NeZero.ne _) (NeZero.ne _)) ha
   apply mul_left_cancel₀ ha
   linear_combination -h
@@ -141,7 +141,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   -- if a = 0
   · rcases eq_or_ne b 0 with (rfl | hb)
     · simp
-    · have := h ((-c - 1) / b); rw [mul_div_cancel' _ hb] at this; linarith
+    · have := h ((-c - 1) / b); rw [mul_div_cancel' _ hb] at this ; linarith
   -- if a > 0
   · have ha' : 0 ≤ 4 * a := mul_nonneg zero_le_four ha.le
     have := h (-b / (2 * a))
@@ -151,7 +151,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
 #align discrim_le_zero discrim_le_zero
 
 theorem discrim_le_zero_of_nonpos (h : ∀ x : K, a * x * x + b * x + c ≤ 0) : discrim a b c ≤ 0 :=
-  discrim_neg a b c ▸ discrim_le_zero (by simpa only [neg_mul, ← neg_add, neg_nonneg] )
+  discrim_neg a b c ▸ discrim_le_zero (by simpa only [neg_mul, ← neg_add, neg_nonneg])
 #align discrim_le_zero_of_nonpos discrim_le_zero_of_nonpos
 
 /-- If a polynomial of degree 2 is always positive, then its discriminant is negative,
@@ -171,7 +171,7 @@ theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c
 theorem discrim_lt_zero_of_neg (ha : a ≠ 0) (h : ∀ x : K, a * x * x + b * x + c < 0) :
     discrim a b c < 0 :=
   discrim_neg a b c ▸
-    discrim_lt_zero (neg_ne_zero.2 ha) (by simpa only [neg_mul, ← neg_add, neg_pos] )
+    discrim_lt_zero (neg_ne_zero.2 ha) (by simpa only [neg_mul, ← neg_add, neg_pos])
 #align discrim_lt_zero_of_neg discrim_lt_zero_of_neg
 
 end LinearOrderedField

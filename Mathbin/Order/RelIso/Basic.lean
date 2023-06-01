@@ -70,7 +70,7 @@ The relations `r` and `s` are `out_param`s since figuring them out from a goal i
 matching problem that Lean usually can't do unaided.
 -/
 class RelHomClass (F : Type _) {α β : outParam <| Type _} (r : outParam <| α → α → Prop)
-  (s : outParam <| β → β → Prop) extends FunLike F α fun _ => β where
+    (s : outParam <| β → β → Prop) extends FunLike F α fun _ => β where
   map_rel : ∀ (f : F) {a b}, r a b → s (f a) (f b)
 #align rel_hom_class RelHomClass
 -/
@@ -186,9 +186,9 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
   by
   intro x y hxy
   rcases trichotomous_of r x y with (h | h | h)
-  have := hf h; rw [hxy] at this; exfalso; exact irrefl_of s (f y) this
+  have := hf h; rw [hxy] at this ; exfalso; exact irrefl_of s (f y) this
   exact h
-  have := hf h; rw [hxy] at this; exfalso; exact irrefl_of s (f y) this
+  have := hf h; rw [hxy] at this ; exfalso; exact irrefl_of s (f y) this
 #align injective_of_increasing injective_of_increasing
 
 /-- An increasing function is injective -/
@@ -487,7 +487,7 @@ theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop} {H} {a} :
   constructor
   · exact RelHomClass.acc (Quotient.mkRelHom H) a
   · intro ac
-    induction' ac with _ H IH; dsimp at IH
+    induction' ac with _ H IH; dsimp at IH 
     refine' ⟨_, fun q h => _⟩
     obtain ⟨a', rfl⟩ := q.exists_rep
     exact IH a' h
@@ -704,7 +704,7 @@ def toRelEmbedding (f : r ≃r s) : r ↪r s :=
 -/
 
 theorem toEquiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
-  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by congr ; exact h
+  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by congr; exact h
 #align rel_iso.to_equiv_injective RelIso.toEquiv_injective
 
 instance : Coe (r ≃r s) (r ↪r s) :=

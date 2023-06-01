@@ -349,7 +349,7 @@ end
 on a family of submodules of a `R`-module `M`. This compatibility condition allows to get
 a topological module structure. -/
 structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) :
-  Prop where
+    Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j
   smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
 #align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis

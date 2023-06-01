@@ -111,7 +111,8 @@ attribute [instance] colimit_setoid
 /-- The underlying type of the colimit of a diagram in `Mon`.
 -/
 def ColimitType : Type v :=
-  Quotient (colimitSetoid F)deriving Inhabited
+  Quotient (colimitSetoid F)
+deriving Inhabited
 #align Mon.colimits.colimit_type MonCat.Colimits.ColimitType
 
 instance monoidColimitType : Monoid (ColimitType F)

@@ -106,9 +106,9 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ha
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
   ratCast := Rat.castRec
-  ratCast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by intros ; rfl
+  ratCast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by intros; rfl
   qsmul : ℚ → K → K := qsmulRec rat_cast
-  qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by intros ; rfl
+  qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by intros; rfl
 #align division_ring DivisionRing
 -/
 

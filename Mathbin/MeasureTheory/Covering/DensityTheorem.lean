@@ -144,7 +144,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
     rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
     replace hjε : (K + 1) * δ j < ε := by
       simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
-    simp only [mem_closed_ball] at hx hy⊢
+    simp only [mem_closed_ball] at hx hy ⊢
     linarith [dist_triangle_right y x (w j)]
 #align is_unif_loc_doubling_measure.tendsto_closed_ball_filter_at IsUnifLocDoublingMeasure.tendsto_closedBall_filterAt
 

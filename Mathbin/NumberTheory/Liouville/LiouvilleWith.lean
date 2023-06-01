@@ -75,7 +75,7 @@ variable {p q x y : ℝ} {r : ℚ} {m : ℤ} {n : ℕ}
 We also add `1 ≤ n` to the list of assumptions about the denominator. While it is equivalent to
 the original statement, the case `n = 0` breaks many arguments. -/
 theorem exists_pos (h : LiouvilleWith p x) :
-    ∃ (C : ℝ)(h₀ : 0 < C),
+    ∃ (C : ℝ) (h₀ : 0 < C),
       ∃ᶠ n : ℕ in atTop, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p :=
   by
   rcases h with ⟨C, hC⟩
@@ -92,7 +92,7 @@ theorem mono (h : LiouvilleWith p x) (hle : q ≤ p) : LiouvilleWith q x :=
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   refine' ⟨C, hC.mono _⟩; rintro n ⟨hn, m, hne, hlt⟩
   refine' ⟨m, hne, hlt.trans_le <| div_le_div_of_le_left hC₀.le _ _⟩
-  exacts[rpow_pos_of_pos (Nat.cast_pos.2 hn) _,
+  exacts [rpow_pos_of_pos (Nat.cast_pos.2 hn) _,
     rpow_le_rpow_of_exponent_le (Nat.one_le_cast.2 hn) hle]
 #align liouville_with.mono LiouvilleWith.mono
 
@@ -127,7 +127,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
     refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
-    exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
+    exacts [(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
 #align liouville_with.mul_rat LiouvilleWith.mul_rat
 
 /-- The product `x * r`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
@@ -317,7 +317,7 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m :=
   rw [rpow_neg_one, ← one_div, sub_div' _ _ _ hn'.ne', abs_div, Nat.abs_cast, div_le_div_right hn']
   norm_cast
   rw [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
-  rw [Ne.def, eq_div_iff hn'.ne'] at hne
+  rw [Ne.def, eq_div_iff hn'.ne'] at hne 
   exact_mod_cast hne
 #align liouville_with.ne_cast_int LiouvilleWith.ne_cast_int
 
@@ -344,7 +344,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   by
   refine' Classical.not_not.1 fun H => _
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,
-    eventually_at_top] at H
+    eventually_at_top] at H 
   rcases H with ⟨N, hN⟩
   have : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
     by
@@ -360,7 +360,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
   rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
-  lift b to ℕ using zero_le_one.trans hb.le; norm_cast  at hb; push_cast at hne hlt
+  lift b to ℕ using zero_le_one.trans hb.le; norm_cast  at hb ; push_cast at hne hlt 
   cases le_or_lt N b
   · refine' (hN b h a hne).not_lt (hlt.trans_le _)
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb

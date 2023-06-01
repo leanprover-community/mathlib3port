@@ -130,10 +130,10 @@ theorem centralBinom_factorization_small (n : ℕ) (n_large : 2 < n)
   apply Finset.prod_subset
   · exact Finset.range_subset.2 (add_le_add_right (Nat.div_le_self _ _) _)
   intro x hx h2x
-  rw [Finset.mem_range, lt_succ_iff] at hx h2x
-  rw [not_le, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x
+  rw [Finset.mem_range, lt_succ_iff] at hx h2x 
+  rw [not_le, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x 
   replace no_prime := not_exists.mp no_prime x
-  rw [← and_assoc', not_and', not_and_or, not_lt] at no_prime
+  rw [← and_assoc', not_and', not_and_or, not_lt] at no_prime 
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
   · rw [factorization_central_binom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
@@ -196,7 +196,7 @@ theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) 
     Nat.four_pow_lt_mul_centralBinom n (le_trans (by norm_num1) n_big)
   have H3 : n.central_binom ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) :=
     centralBinom_le_of_no_bertrand_prime n (lt_of_lt_of_le (by norm_num1) n_big) no_prime
-  rw [mul_assoc] at H1; exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
+  rw [mul_assoc] at H1 ; exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
 #align nat.exists_prime_lt_and_le_two_mul_eventually Nat.exists_prime_lt_and_le_two_mul_eventually
 
 /-- Proves that Bertrand's postulate holds over all positive naturals less than n by identifying a

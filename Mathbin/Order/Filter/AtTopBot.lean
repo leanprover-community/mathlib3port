@@ -355,7 +355,7 @@ theorem Subsingleton.atTop_eq (α) [Subsingleton α] [Preorder α] : (atTop : Fi
   by
   refine' top_unique fun s hs x => _
   letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elim y x⟩
-  rw [at_top, ciInf_unique, Unique.default_eq x, mem_principal] at hs
+  rw [at_top, ciInf_unique, Unique.default_eq x, mem_principal] at hs 
   exact hs left_mem_Ici
 #align filter.subsingleton.at_top_eq Filter.Subsingleton.atTop_eq
 
@@ -548,7 +548,7 @@ theorem extraction_of_frequently_atTop' {P : ℕ → Prop} (h : ∀ N, ∃ n > N
 theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in atTop, P n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) :=
   by
-  rw [frequently_at_top'] at h
+  rw [frequently_at_top'] at h 
   exact extraction_of_frequently_at_top' h
 #align filter.extraction_of_frequently_at_top Filter.extraction_of_frequently_atTop
 -/
@@ -564,7 +564,7 @@ theorem extraction_of_eventually_atTop {P : ℕ → Prop} (h : ∀ᶠ n in atTop
 theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, ∃ᶠ k in atTop, P n k) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
   by
-  simp only [frequently_at_top'] at h
+  simp only [frequently_at_top'] at h 
   choose u hu hu' using h
   use (fun n => Nat.recOn n (u 0 0) fun n v => u (n + 1) v : ℕ → ℕ)
   constructor
@@ -635,7 +635,7 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
     ∃ n ≥ N, u k < u n ∧ ∀ m, m < n → N ≤ m → u m ≤ u k :=
     by
     rcases Nat.findX ex with ⟨n, ⟨hnN, hnk⟩, hn_min⟩
-    push_neg  at hn_min
+    push_neg  at hn_min 
     exact ⟨n, hnN, hnk, hn_min⟩
   use n, hnN
   rintro (l : ℕ) (hl : l < n)
@@ -1041,7 +1041,7 @@ theorem comap_abs_atTop : comap (abs : α → α) atTop = atBot ⊔ atTop :=
       (sup_le tendsto_abs_at_bot_at_top.le_comap tendsto_abs_at_top_at_top.le_comap)
   rintro ⟨a, b⟩ -
   refine' ⟨max (-a) b, trivial, fun x hx => _⟩
-  rw [mem_preimage, mem_Ici, le_abs', max_le_iff, ← min_neg_neg, le_min_iff, neg_neg] at hx
+  rw [mem_preimage, mem_Ici, le_abs', max_le_iff, ← min_neg_neg, le_min_iff, neg_neg] at hx 
   exact hx.imp And.left And.right
 #align filter.comap_abs_at_top Filter.comap_abs_atTop
 
@@ -1097,7 +1097,7 @@ if `f` tends to infinity along the same filter. -/
 theorem tendsto_const_mul_atTop_of_pos (hr : 0 < r) :
     Tendsto (fun x => r * f x) l atTop ↔ Tendsto f l atTop :=
   ⟨fun h => h.atTop_of_const_mul hr, fun h =>
-    Tendsto.atTop_of_const_mul (inv_pos.2 hr) <| by simpa only [inv_mul_cancel_left₀ hr.ne'] ⟩
+    Tendsto.atTop_of_const_mul (inv_pos.2 hr) <| by simpa only [inv_mul_cancel_left₀ hr.ne']⟩
 #align filter.tendsto_const_mul_at_top_of_pos Filter.tendsto_const_mul_atTop_of_pos
 
 /-- If `r` is a positive constant, then `λ x, f x * r` tends to infinity along a filter if and only
@@ -1600,7 +1600,7 @@ theorem eventually_atTop_prod_self' [SemilatticeSup α] [Nonempty α] {p : α ×
 theorem eventually_atTop_curry [SemilatticeSup α] [SemilatticeSup β] {p : α × β → Prop}
     (hp : ∀ᶠ x : α × β in Filter.atTop, p x) : ∀ᶠ k in atTop, ∀ᶠ l in atTop, p (k, l) :=
   by
-  rw [← prod_at_top_at_top_eq] at hp
+  rw [← prod_at_top_at_top_eq] at hp 
   exact hp.curry
 #align filter.eventually_at_top_curry Filter.eventually_atTop_curry
 
@@ -1621,7 +1621,7 @@ theorem map_atTop_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → �
       (hf.tendsto_at_top_at_top fun b => ⟨g (b ⊔ b'), le_sup_left.trans <| hgi _ le_sup_right⟩) _
   rw [@map_at_top_eq _ _ ⟨g b'⟩]
   refine' le_iInf fun a => iInf_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
-  rw [mem_Ici, sup_le_iff] at hb
+  rw [mem_Ici, sup_le_iff] at hb 
   exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymm ((gc _ _ hb.2).2 le_rfl) (hgi _ hb.2)⟩
 #align filter.map_at_top_eq_of_gc Filter.map_atTop_eq_of_gc
 
@@ -1957,7 +1957,7 @@ theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α}
   have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in at_top, ∀ m ∈ t, m < n ∧ r m n := fun t ht =>
     (eventually_all_finite ht).2 fun m hm => (eventually_gt_at_top m).And (hr _)
   rcases seq_of_forall_finite_exists fun t ht => (this t ht).exists with ⟨φ, hφ⟩
-  simp only [ball_image_iff, forall_and, mem_Iio] at hφ
+  simp only [ball_image_iff, forall_and, mem_Iio] at hφ 
   exact ⟨φ, forall_swap.2 hφ.1, forall_swap.2 hφ.2⟩
 #align filter.has_antitone_basis.subbasis_with_rel Filter.HasAntitoneBasis.subbasis_with_rel
 -/
@@ -1984,7 +1984,7 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
   contrapose! H
   have : ne_bot (k ⊓ 𝓟 (f ⁻¹' sᶜ)) := by simpa [ne_bot_iff, inf_principal_eq_bot]
   rcases(k ⊓ 𝓟 (f ⁻¹' sᶜ)).exists_seq_tendsto with ⟨x, hx⟩
-  rw [tendsto_inf, tendsto_principal] at hx
+  rw [tendsto_inf, tendsto_principal] at hx 
   refine' ⟨x, hx.1, fun h => _⟩
   rcases(hx.2.And (h hs)).exists with ⟨N, hnmem, hmem⟩
   exact hnmem hmem
@@ -2017,15 +2017,15 @@ theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → 
   refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
   · have : ne_bot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [ne_bot_iff, inf_principal_eq_bot]
     obtain ⟨x, hx⟩ := exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
-    rw [tendsto_inf] at hx
+    rw [tendsto_inf] at hx 
     cases' hx with hx_l hx_p
     refine' ⟨x, hx_l, _⟩
-    rw [tendsto_principal] at hx_p
+    rw [tendsto_principal] at hx_p 
     exact hx_p.frequently
   · obtain ⟨x, hx_tendsto, hx_freq⟩ := h_exists_freq
-    simp_rw [Filter.Frequently, Filter.Eventually] at hx_freq⊢
+    simp_rw [Filter.Frequently, Filter.Eventually] at hx_freq ⊢
     have : { n : ℕ | ¬p (x n) } = { n | x n ∈ { y | ¬p y } } := rfl
-    rw [this, ← mem_map'] at hx_freq
+    rw [this, ← mem_map'] at hx_freq 
     contrapose! hx_freq
     exact hx_tendsto hx_freq
 #align filter.frequently_iff_seq_frequently Filter.frequently_iff_seq_frequently
@@ -2048,7 +2048,7 @@ theorem subseq_forall_of_frequently {ι : Type _} {x : ℕ → ι} {p : ι → P
     (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in atTop, p (x n)) :
     ∃ ns : ℕ → ℕ, Tendsto (fun n => x (ns n)) atTop l ∧ ∀ n, p (x (ns n)) :=
   by
-  rw [tendsto_iff_seq_tendsto] at h_tendsto
+  rw [tendsto_iff_seq_tendsto] at h_tendsto 
   choose ns hge hns using frequently_at_top.1 h
   exact ⟨ns, h_tendsto ns (tendsto_at_top_mono hge tendsto_id), hns⟩
 #align filter.subseq_forall_of_frequently Filter.subseq_forall_of_frequently
@@ -2059,7 +2059,7 @@ theorem exists_seq_forall_of_frequently {ι : Type _} {l : Filter ι} {p : ι �
     [hl : l.IsCountablyGenerated] (h : ∃ᶠ n in l, p n) :
     ∃ ns : ℕ → ι, Tendsto ns atTop l ∧ ∀ n, p (ns n) :=
   by
-  rw [frequently_iff_seq_frequently] at h
+  rw [frequently_iff_seq_frequently] at h 
   obtain ⟨x, hx_tendsto, hx_freq⟩ := h
   obtain ⟨n_to_n, h_tendsto, h_freq⟩ := subseq_forall_of_frequently hx_tendsto hx_freq
   exact ⟨x ∘ n_to_n, h_tendsto, h_freq⟩
@@ -2074,19 +2074,19 @@ theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter �
     Tendsto x l f := by
   by_contra h
   obtain ⟨s, hs, hfreq⟩ : ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
-    rwa [not_tendsto_iff_exists_frequently_nmem] at h
+    rwa [not_tendsto_iff_exists_frequently_nmem] at h 
   obtain ⟨y, hy_tendsto, hy_freq⟩ := exists_seq_forall_of_frequently hfreq
   specialize hxy y hy_tendsto
   obtain ⟨ms, hms_tendsto⟩ := hxy
   specialize hms_tendsto hs
-  rw [mem_map] at hms_tendsto
+  rw [mem_map] at hms_tendsto 
   have hms_freq : ∀ n : ℕ, x (y (ms n)) ∉ s := fun n => hy_freq (ms n)
   have h_empty : (fun n : ℕ => x (y (ms n))) ⁻¹' s = ∅ :=
     by
     ext1 n
     simp only [Set.mem_preimage, Set.mem_empty_iff_false, iff_false_iff]
     exact hms_freq n
-  rw [h_empty] at hms_tendsto
+  rw [h_empty] at hms_tendsto 
   exact empty_not_mem at_top hms_tendsto
 #align filter.tendsto_of_subseq_tendsto Filter.tendsto_of_subseq_tendsto
 

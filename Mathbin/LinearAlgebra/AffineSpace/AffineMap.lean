@@ -57,8 +57,8 @@ open scoped Affine
 /-- An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that
 induces a corresponding linear map from `V1` to `V2`. -/
 structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ring k]
-  [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
-  [affine_space V2 P2] where
+    [AddCommGroup V1] [Module k V1] [affine_space V1 P1] [AddCommGroup V2] [Module k V2]
+    [affine_space V2 P2] where
   toFun : P1 → P2
   linear : V1 →ₗ[k] V2
   map_vadd' : ∀ (p : P1) (v : V1), to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
@@ -654,7 +654,7 @@ theorem lineMap_symm (p₀ p₁ : P1) :
 #align affine_map.line_map_symm AffineMap.lineMap_symm
 
 theorem lineMap_apply_one_sub (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ (1 - c) = lineMap p₁ p₀ c := by
-  rw [line_map_symm p₀, comp_apply]; congr ; simp [line_map_apply]
+  rw [line_map_symm p₀, comp_apply]; congr; simp [line_map_apply]
 #align affine_map.line_map_apply_one_sub AffineMap.lineMap_apply_one_sub
 
 @[simp]

@@ -169,7 +169,7 @@ theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α]
   by_cases hx : x = 0
   · left; exact hx
   · right
-    rw [← sub_zero (x * y), ← MulZeroClass.mul_zero x, ← mul_sub] at h
+    rw [← sub_zero (x * y), ← MulZeroClass.mul_zero x, ← mul_sub] at h 
     convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
     rw [sub_zero]
 #align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisors
@@ -180,7 +180,7 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
   by_cases hy : y = 0
   · right; exact hy
   · left
-    rw [← sub_zero (x * y), ← MulZeroClass.zero_mul y, ← sub_mul] at h
+    rw [← sub_zero (x * y), ← MulZeroClass.zero_mul y, ← sub_mul] at h 
     convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
     rw [sub_zero]
 #align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisors
@@ -190,11 +190,11 @@ instance (priority := 100) NoZeroDivisors.to_isCancelMulZero [Ring α] [NoZeroDi
     where
   mul_left_cancel_of_ne_zero a b c ha h :=
     by
-    rw [← sub_eq_zero, ← mul_sub] at h
+    rw [← sub_eq_zero, ← mul_sub] at h 
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
   mul_right_cancel_of_ne_zero a b c hb h :=
     by
-    rw [← sub_eq_zero, ← sub_mul] at h
+    rw [← sub_eq_zero, ← sub_mul] at h 
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
 #align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.to_isCancelMulZero
 

@@ -75,8 +75,8 @@ universe u v
 If `x : 𝓜(𝕜, A)`, then `x.fst` and `x.snd` are what is usually referred to as $L$ and $R$. -/
 @[ext]
 structure DoubleCentralizer (𝕜 : Type u) (A : Type v) [NontriviallyNormedField 𝕜]
-  [NonUnitalNormedRing A] [NormedSpace 𝕜 A] [SMulCommClass 𝕜 A A] [IsScalarTower 𝕜 A A] extends
-  (A →L[𝕜] A) × (A →L[𝕜] A) where
+    [NonUnitalNormedRing A] [NormedSpace 𝕜 A] [SMulCommClass 𝕜 A A] [IsScalarTower 𝕜 A A] extends
+    (A →L[𝕜] A) × (A →L[𝕜] A) where
   central : ∀ x y : A, snd x * y = x * fst y
 #align double_centralizer DoubleCentralizer
 
@@ -198,7 +198,7 @@ instance : Pow 𝓜(𝕜, A) ℕ
     ⟨a.toProd ^ n, fun x y => by
       induction' n with k hk generalizing x y
       · rfl
-      · rw [Prod.pow_snd, Prod.pow_fst] at hk⊢
+      · rw [Prod.pow_snd, Prod.pow_fst] at hk ⊢
         rw [pow_succ a.snd, mul_apply, a.central, hk, pow_succ' a.fst, mul_apply]⟩
 
 instance : Inhabited 𝓜(𝕜, A) :=
@@ -692,7 +692,7 @@ instance : CstarRing 𝓜(𝕜, A)
           exact key x y (mem_closedBall_zero_iff.1 hx) (mem_closedBall_zero_iff.1 hy)
         · simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop, exists_exists_and_eq_and]
           have hr' : r.sqrt < ‖a‖₊ := ‖a‖₊.sqrt_mul_self ▸ NNReal.sqrt_lt_sqrt_iff.2 hr
-          simp_rw [← nnnorm_fst, ← Sup_closed_unit_ball_eq_nnnorm] at hr'
+          simp_rw [← nnnorm_fst, ← Sup_closed_unit_ball_eq_nnnorm] at hr' 
           obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csSup (hball.image _) hr'
           have hx' : ‖x‖₊ ≤ 1 := mem_closedBall_zero_iff.1 hx
           refine' ⟨star x, mem_closedBall_zero_iff.2 ((nnnorm_star x).trans_le hx'), _⟩

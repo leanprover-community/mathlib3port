@@ -317,9 +317,9 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
     · have : n₁ = n₂ := by
         have := congr_arg (coe : ZNum → ℤ) e
-        simp at this
+        simp at this 
         have := sub_eq_zero.1 this
-        rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this
+        rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this 
         exact Num.to_nat_inj.1 (Int.ofNat.inj this)
       subst n₂
       rcases cseval_horner' _ _ _ _ _ _ _ with ⟨csh, h⟩

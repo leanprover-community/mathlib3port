@@ -215,7 +215,7 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       let δ := ⨅ w : K, ‖u - w‖; let p := ⟪u - v, w - v⟫_ℝ; let q := ‖w - v‖ ^ 2
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       have zero_le_δ : 0 ≤ δ
-      apply le_ciInf; intro ; exact norm_nonneg _
+      apply le_ciInf; intro; exact norm_nonneg _
       have δ_le : ∀ w : K, δ ≤ ‖u - w‖
       intro w; apply ciInf_le; use (0 : ℝ); rintro _ ⟨_, rfl⟩; exact norm_nonneg _
       have δ_le' : ∀ w ∈ K, δ ≤ ‖u - w‖ := fun w hw => δ_le ⟨w, hw⟩
@@ -228,7 +228,7 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
             simp only [sq]; apply mul_self_le_mul_self (norm_nonneg _)
             rw [Eq]; apply δ_le'
             apply h hw hv
-            exacts[le_of_lt hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel'_right _ _]
+            exacts [le_of_lt hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel'_right _ _]
           _ = ‖u - v - θ • (w - v)‖ ^ 2 :=
             by
             have : u - (θ • w + (1 - θ) • v) = u - v - θ • (w - v) :=
@@ -250,23 +250,23 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
         ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 =
           ‖u - v‖ ^ 2 + (θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v)) :=
         by abel
-      rw [eq₁, le_add_iff_nonneg_right] at this
+      rw [eq₁, le_add_iff_nonneg_right] at this 
       have eq₂ :
         θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) =
           θ * (θ * ‖w - v‖ ^ 2 - 2 * inner (u - v) (w - v));
       ring
-      rw [eq₂] at this
+      rw [eq₂] at this 
       have := le_of_sub_nonneg (nonneg_of_mul_nonneg_right this hθ₁)
       exact this
       by_cases hq : q = 0
-      · rw [hq] at this
+      · rw [hq] at this 
         have : p ≤ 0
         have := this (1 : ℝ) (by norm_num) (by norm_num)
         linarith
         exact this
       · have q_pos : 0 < q
         apply lt_of_le_of_ne; exact sq_nonneg _; intro h; exact hq h.symm
-        by_contra hp; rw [not_le] at hp
+        by_contra hp; rw [not_le] at hp 
         let θ := min (1 : ℝ) (p / q)
         have eq₁ : θ * q ≤ p :=
           calc
@@ -326,21 +326,21 @@ theorem norm_eq_iInf_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F
   Iff.intro
     (by
       intro h
-      have h : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 := by rwa [norm_eq_iInf_iff_real_inner_le_zero] at h;
-        exacts[K.convex, hv]
+      have h : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 := by rwa [norm_eq_iInf_iff_real_inner_le_zero] at h ;
+        exacts [K.convex, hv]
       intro w hw
       have le : ⟪u - v, w⟫_ℝ ≤ 0
       let w' := w + v
       have : w' ∈ K := Submodule.add_mem _ hw hv
       have h₁ := h w' this
       have h₂ : w' - v = w; simp only [add_neg_cancel_right, sub_eq_add_neg]
-      rw [h₂] at h₁; exact h₁
+      rw [h₂] at h₁ ; exact h₁
       have ge : ⟪u - v, w⟫_ℝ ≥ 0
       let w'' := -w + v
       have : w'' ∈ K := Submodule.add_mem _ (Submodule.neg_mem _ hw) hv
       have h₁ := h w'' this
       have h₂ : w'' - v = -w; simp only [neg_inj, add_neg_cancel_right, sub_eq_add_neg]
-      rw [h₂, inner_neg_right] at h₁
+      rw [h₂, inner_neg_right] at h₁ 
       linarith
       exact le_antisymm le GE.ge)
     (by
@@ -352,7 +352,7 @@ theorem norm_eq_iInf_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F
       have h₁ := h w' this
       exact le_of_eq h₁
       rwa [norm_eq_iInf_iff_real_inner_le_zero]
-      exacts[Submodule.convex _, hv])
+      exacts [Submodule.convex _, hv])
 #align norm_eq_infi_iff_real_inner_eq_zero norm_eq_iInf_iff_real_inner_eq_zero
 
 /-- Characterization of minimizers in the projection on a subspace.
@@ -440,7 +440,7 @@ theorem eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈
   have huv : ⟪u - v, orthogonalProjectionFn K u - v⟫ = 0 := hvo _ hvs
   have houv : ⟪u - v - (u - orthogonalProjectionFn K u), orthogonalProjectionFn K u - v⟫ = 0 := by
     rw [inner_sub_left, huo, huv, sub_zero]
-  rwa [sub_sub_sub_cancel_left] at houv
+  rwa [sub_sub_sub_cancel_left] at houv 
 #align eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero eq_orthogonalProjectionFn_of_mem_of_inner_eq_zero
 
 variable (K)
@@ -845,7 +845,7 @@ theorem Submodule.orthogonal_eq_bot_iff [CompleteSpace (K : Set E)] : Kᗮ = ⊥
   refine' ⟨_, fun h => by rw [h, Submodule.top_orthogonal_eq_bot]⟩
   intro h
   have : K ⊔ Kᗮ = ⊤ := Submodule.sup_orthogonal_of_completeSpace
-  rwa [h, sup_comm, bot_sup_eq] at this
+  rwa [h, sup_comm, bot_sup_eq] at this 
 #align submodule.orthogonal_eq_bot_iff Submodule.orthogonal_eq_bot_iff
 
 /-- A point in `K` with the orthogonality property (here characterized in terms of `Kᗮ`) must be the
@@ -859,7 +859,7 @@ theorem eq_orthogonalProjection_of_mem_orthogonal [CompleteSpace K] {u v : E} (h
 orthogonal projection. -/
 theorem eq_orthogonalProjection_of_mem_orthogonal' [CompleteSpace K] {u v z : E} (hv : v ∈ K)
     (hz : z ∈ Kᗮ) (hu : u = v + z) : (orthogonalProjection K u : E) = v :=
-  eq_orthogonalProjection_of_mem_orthogonal hv (by simpa [hu] )
+  eq_orthogonalProjection_of_mem_orthogonal hv (by simpa [hu])
 #align eq_orthogonal_projection_of_mem_orthogonal' eq_orthogonalProjection_of_mem_orthogonal'
 
 /-- The orthogonal projection onto `K` of an element of `Kᗮ` is zero. -/
@@ -945,10 +945,10 @@ theorem orthogonalProjection_tendsto_closure_iSup [CompleteSpace E] {ι : Type _
   obtain ⟨a, ha, hay⟩ : ∃ a ∈ ⨆ i, U i, dist y a < ε :=
     by
     have y_mem : y ∈ (⨆ i, U i).topologicalClosure := Submodule.coe_mem _
-    rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe, Metric.mem_closure_iff] at y_mem
+    rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe, Metric.mem_closure_iff] at y_mem 
     exact y_mem ε hε
-  rw [dist_eq_norm] at hay
-  obtain ⟨I, hI⟩ : ∃ I, a ∈ U I := by rwa [Submodule.mem_iSup_of_directed _ hU.directed_le] at ha
+  rw [dist_eq_norm] at hay 
+  obtain ⟨I, hI⟩ : ∃ I, a ∈ U I := by rwa [Submodule.mem_iSup_of_directed _ hU.directed_le] at ha 
   refine' ⟨I, fun i (hi : I ≤ i) => _⟩
   rw [norm_sub_rev, orthogonalProjection_minimal]
   refine' lt_of_le_of_lt _ hay
@@ -963,7 +963,7 @@ theorem orthogonalProjection_tendsto_self [CompleteSpace E] {ι : Type _} [Semil
     (hU' : ⊤ ≤ (⨆ t, U t).topologicalClosure) :
     Filter.Tendsto (fun t => (orthogonalProjection (U t) x : E)) atTop (𝓝 x) :=
   by
-  rw [← eq_top_iff] at hU'
+  rw [← eq_top_iff] at hU' 
   convert orthogonalProjection_tendsto_closure_iSup U hU x
   rw [orthogonal_projection_eq_self_iff.mpr _]
   rw [hU']
@@ -1000,8 +1000,8 @@ variable {x y : E} [CompleteSpace E]
 /-- If `S` is dense and `x - y ∈ Kᗮ`, then `x = y`. -/
 theorem eq_of_sub_mem_orthogonal (hK : Dense (K : Set E)) (h : x - y ∈ Kᗮ) : x = y :=
   by
-  rw [dense_iff_topological_closure_eq_top, topological_closure_eq_top_iff] at hK
-  rwa [hK, Submodule.mem_bot, sub_eq_zero] at h
+  rw [dense_iff_topological_closure_eq_top, topological_closure_eq_top_iff] at hK 
+  rwa [hK, Submodule.mem_bot, sub_eq_zero] at h 
 #align dense.eq_of_sub_mem_orthogonal Dense.eq_of_sub_mem_orthogonal
 
 theorem eq_zero_of_mem_orthogonal (hK : Dense (K : Set E)) (h : x ∈ Kᗮ) : x = 0 :=
@@ -1080,7 +1080,7 @@ theorem eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace E] 
   obtain ⟨y, hy, z, hz, hwyz⟩ := K.exists_sum_mem_mem_orthogonal w
   convert hwyz
   · exact eq_orthogonalProjection_of_mem_orthogonal' hy hz hwyz
-  · rw [add_comm] at hwyz
+  · rw [add_comm] at hwyz 
     refine' eq_orthogonalProjection_of_mem_orthogonal' hz _ hwyz
     simp [hy]
 #align eq_sum_orthogonal_projection_self_orthogonal_complement eq_sum_orthogonalProjection_self_orthogonalComplement
@@ -1156,8 +1156,8 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜
   haveI := proper_is_R_or_C 𝕜 K₁
   have hd := Submodule.finrank_sup_add_finrank_inf_eq K₁ (K₁ᗮ ⊓ K₂)
   rw [← inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
-    Submodule.sup_orthogonal_inf_of_completeSpace h] at hd
-  rw [add_zero] at hd
+    Submodule.sup_orthogonal_inf_of_completeSpace h] at hd 
+  rw [add_zero] at hd 
   exact hd.symm
 #align submodule.finrank_add_inf_finrank_orthogonal Submodule.finrank_add_inf_finrank_orthogonal
 
@@ -1213,7 +1213,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
   · -- Base case: `n = 0`, the fixed subspace is the whole space, so `φ = id`
     refine' ⟨[], rfl.le, show φ = 1 from _⟩
     have : ker (ContinuousLinearMap.id ℝ F - φ) = ⊤ := by
-      rwa [le_zero_iff, finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn
+      rwa [le_zero_iff, finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn 
     symm
     ext x
     have := LinearMap.congr_fun (linear_map.ker_eq_top.mp this) x
@@ -1262,7 +1262,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     -- By dimension-counting, the complement of the fixed subspace of `φ.trans ρ` has dimension at
     -- most `n`
     have : finrank ℝ Vᗮ ≤ n := by
-      change finrank ℝ Wᗮ ≤ n + 1 at hn
+      change finrank ℝ Wᗮ ≤ n + 1 at hn 
       have : finrank ℝ W + 1 ≤ finrank ℝ V :=
         Submodule.finrank_lt_finrank_of_lt (SetLike.lt_iff_le_and_exists.2 ⟨H₂V, v, H₁V, hv'⟩)
       have : finrank ℝ V + finrank ℝ Vᗮ = finrank ℝ F := V.finrank_add_finrank_orthogonal
@@ -1275,7 +1275,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     refine' ⟨x::l, Nat.succ_le_succ hl, _⟩
     rw [List.map_cons, List.prod_cons]
     have := congr_arg ((· * ·) ρ) hφl
-    rwa [← mul_assoc, reflection_mul_reflection, one_mul] at this
+    rwa [← mul_assoc, reflection_mul_reflection, one_mul] at this 
 #align linear_isometry_equiv.reflections_generate_dim_aux LinearIsometryEquiv.reflections_generate_dim_aux
 
 /-- The orthogonal group of `F` is generated by reflections; specifically each element `φ` of the

@@ -196,7 +196,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory
       (by
         intro X Y f; dsimp; rw [is_iso.comp_inv_eq, assoc]
         have h := ((of_right_adjoint i).Unit.naturality f).symm
-        rw [functor.id_map] at h; erw [← h, is_iso.inv_hom_id_assoc, functor.comp_map])
+        rw [functor.id_map] at h ; erw [← h, is_iso.inv_hom_id_assoc, functor.comp_map])
 #align category_theory.equiv_ess_image_of_reflective CategoryTheory.equivEssImageOfReflective
 
 end CategoryTheory

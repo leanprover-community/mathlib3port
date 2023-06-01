@@ -274,7 +274,7 @@ theorem disjoint_range_addLeftEmbedding (a b : ℕ) :
   by
   refine' disjoint_iff_inf_le.mpr _
   intro k hk
-  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, addLeftEmbedding_apply, mem_inter] at hk
+  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, addLeftEmbedding_apply, mem_inter] at hk 
   obtain ⟨a, haQ, ha⟩ := hk.2
   simpa [← ha] using hk.1
 #align finset.disjoint_range_add_left_embedding Finset.disjoint_range_addLeftEmbedding
@@ -284,7 +284,7 @@ theorem disjoint_range_addRightEmbedding (a b : ℕ) :
   by
   refine' disjoint_iff_inf_le.mpr _
   intro k hk
-  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, addLeftEmbedding_apply, mem_inter] at hk
+  simp only [exists_prop, mem_range, inf_eq_inter, mem_map, addLeftEmbedding_apply, mem_inter] at hk 
   obtain ⟨a, haQ, ha⟩ := hk.2
   simpa [← ha] using hk.1
 #align finset.disjoint_range_add_right_embedding Finset.disjoint_range_addRightEmbedding
@@ -786,7 +786,7 @@ subtype. -/
 theorem map_subtype_subset {t : Set α} (s : Finset t) : ↑(s.map (Embedding.subtype _)) ⊆ t :=
   by
   intro a ha
-  rw [mem_coe] at ha
+  rw [mem_coe] at ha 
   convert property_of_mem_map_subtype s ha
 #align finset.map_subtype_subset Finset.map_subtype_subset
 -/

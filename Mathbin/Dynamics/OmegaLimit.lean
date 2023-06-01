@@ -194,10 +194,10 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
     simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
     refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
-    exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
+    exacts [subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
       subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
   · rintro (hy | hy)
-    exacts[omegaLimit_mono_right _ _ (subset_union_left _ _) hy,
+    exacts [omegaLimit_mono_right _ _ (subset_union_left _ _) hy,
       omegaLimit_mono_right _ _ (subset_union_right _ _) hy]
 #align omega_limit_union omegaLimit_union
 
@@ -234,7 +234,7 @@ theorem omegaLimit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) :
   by
   rw [omegaLimit_eq_iInter]
   intro _ hx
-  rw [mem_Inter] at hx
+  rw [mem_Inter] at hx 
   exact hx ⟨u, hu⟩
 #align omega_limit_subset_closure_fw_image omegaLimit_subset_closure_fw_image
 
@@ -261,7 +261,7 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     by
     have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
     rw [this, diff_subset_comm, diff_Union]
-    rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂
+    rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂ 
     simp_rw [diff_compl]
     rw [← inter_Inter]
     exact subset.trans (inter_subset_right _ _) hn₂

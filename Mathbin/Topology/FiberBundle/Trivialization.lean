@@ -131,7 +131,7 @@ theorem mem_target {x : B × F} : x ∈ e.target ↔ x.1 ∈ e.baseSet := by
 theorem proj_symm_apply {x : B × F} (hx : x ∈ e.target) : proj (e.toLocalEquiv.symm x) = x.1 :=
   by
   have := (e.coe_fst (e.to_local_equiv.map_target hx)).symm
-  rwa [← e.coe_coe, e.to_local_equiv.right_inv hx] at this
+  rwa [← e.coe_coe, e.to_local_equiv.right_inv hx] at this 
 #align pretrivialization.proj_symm_apply Pretrivialization.proj_symm_apply
 
 theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) :
@@ -844,7 +844,7 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.b
       rw [piecewise_eq_of_mem, e.coe_fst] <;> exact hp
     · show (e.source.piecewise e e' p).1 = proj p
       rw [piecewise_eq_of_not_mem, e'.coe_fst hp']
-      simp only [e.source_eq, e'.source_eq] at hp'⊢
+      simp only [e.source_eq, e'.source_eq] at hp' ⊢
       exact fun h => H.le_bot ⟨h, hp'⟩
 #align trivialization.disjoint_union Trivialization.disjointUnion
 

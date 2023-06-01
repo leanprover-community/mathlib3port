@@ -632,7 +632,7 @@ theorem mem_nhds_prod_iff {a : α} {b : β} {s : Set (α × β)} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mem_nhds_prod_iff' {a : α} {b : β} {s : Set (α × β)} :
-    s ∈ 𝓝 (a, b) ↔ ∃ (u : Set α)(v : Set β), IsOpen u ∧ a ∈ u ∧ IsOpen v ∧ b ∈ v ∧ u ×ˢ v ⊆ s :=
+    s ∈ 𝓝 (a, b) ↔ ∃ (u : Set α) (v : Set β), IsOpen u ∧ a ∈ u ∧ IsOpen v ∧ b ∈ v ∧ u ×ˢ v ⊆ s :=
   by
   rw [mem_nhds_prod_iff]
   constructor
@@ -698,7 +698,7 @@ theorem Filter.Tendsto.prod_mk_nhds {γ} {a : α} {b : β} {f : Filter γ} {ma :
 
 theorem Filter.Eventually.curry_nhds {p : α × β → Prop} {x : α} {y : β}
     (h : ∀ᶠ x in 𝓝 (x, y), p x) : ∀ᶠ x' in 𝓝 x, ∀ᶠ y' in 𝓝 y, p (x', y') := by
-  rw [nhds_prod_eq] at h; exact h.curry
+  rw [nhds_prod_eq] at h ; exact h.curry
 #align filter.eventually.curry_nhds Filter.Eventually.curry_nhds
 
 theorem ContinuousAt.prod {f : α → β} {g : α → γ} {x : α} (hf : ContinuousAt f x)
@@ -752,7 +752,7 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_generateFrom :
     Prod.topologicalSpace =
-      generateFrom { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
+      generateFrom { g | ∃ (s : Set α) (t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
   le_antisymm (le_generateFrom fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.Prod ht)
     (le_inf
       (ball_image_of_ball fun t ht =>
@@ -765,7 +765,7 @@ theorem prod_eq_generateFrom :
 theorem isOpen_prod_iff {s : Set (α × β)} :
     IsOpen s ↔
       ∀ a b,
-        (a, b) ∈ s → ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s :=
+        (a, b) ∈ s → ∃ (u : Set α) (v : Set β), IsOpen u ∧ IsOpen v ∧ a ∈ u ∧ b ∈ v ∧ u ×ˢ v ⊆ s :=
   by
   rw [isOpen_iff_nhds]
   simp_rw [le_principal_iff, Prod.forall,
@@ -801,9 +801,9 @@ theorem map_fst_nhdsWithin (x : α × β) : map Prod.fst (𝓝[Prod.snd ⁻¹' {
   by
   refine' le_antisymm (continuous_at_fst.mono_left inf_le_left) fun s hs => _
   rcases x with ⟨x, y⟩
-  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
+  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs 
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
+  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H 
   exact mem_of_superset hu fun z hz => H _ hz _ (mem_of_mem_nhds hv) rfl
 #align map_fst_nhds_within map_fst_nhdsWithin
 
@@ -823,9 +823,9 @@ theorem map_snd_nhdsWithin (x : α × β) : map Prod.snd (𝓝[Prod.fst ⁻¹' {
   by
   refine' le_antisymm (continuous_at_snd.mono_left inf_le_left) fun s hs => _
   rcases x with ⟨x, y⟩
-  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
+  rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs 
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
+  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H 
   exact mem_of_superset hv fun z hz => H _ (mem_of_mem_nhds hu) _ hz rfl
 #align map_snd_nhds_within map_snd_nhdsWithin
 
@@ -860,7 +860,7 @@ theorem isOpen_prod_iff' {s : Set α} {t : Set β} :
       · rw [← snd_image_prod st.1 t]
         exact isOpenMap_snd _ H
     · intro H
-      simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H
+      simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H 
       exact H.1.Prod H.2
 #align is_open_prod_iff' isOpen_prod_iff'
 
@@ -1477,7 +1477,7 @@ theorem isOpen_pi_iff {s : Set (∀ a, π a)} :
     IsOpen s ↔
       ∀ f,
         f ∈ s →
-          ∃ (I : Finset ι)(u : ∀ a, Set (π a)),
+          ∃ (I : Finset ι) (u : ∀ a, Set (π a)),
             (∀ a, a ∈ I → IsOpen (u a) ∧ f a ∈ u a) ∧ (I : Set ι).pi u ⊆ s :=
   by
   rw [isOpen_iff_nhds]
@@ -1532,7 +1532,7 @@ theorem isClosed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, 
 #align is_closed_set_pi isClosed_set_pi
 
 theorem mem_nhds_of_pi_mem_nhds {I : Set ι} {s : ∀ i, Set (π i)} (a : ∀ i, π i) (hs : I.pi s ∈ 𝓝 a)
-    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by rw [nhds_pi] at hs; exact mem_of_pi_mem_pi hs hi
+    {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) := by rw [nhds_pi] at hs ; exact mem_of_pi_mem_pi hs hi
 #align mem_nhds_of_pi_mem_nhds mem_nhds_of_pi_mem_nhds
 
 theorem set_pi_mem_nhds {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : i.Finite)
@@ -1553,7 +1553,7 @@ theorem interior_pi_set {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)} :
 theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] {s : Set (∀ a, π a)} {x : ∀ a, π a}
     (hs : s ∈ 𝓝 x) (y : ∀ a, π a) : ∃ I : Finset ι, I.piecewise x y ∈ s :=
   by
-  simp only [nhds_pi, Filter.mem_pi'] at hs
+  simp only [nhds_pi, Filter.mem_pi'] at hs 
   rcases hs with ⟨I, t, htx, hts⟩
   refine' ⟨I, hts fun i hi => _⟩
   simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
@@ -1563,7 +1563,7 @@ theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] {s : Set (∀ a
 theorem pi_eq_generateFrom :
     Pi.topologicalSpace =
       generateFrom
-        { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
+        { g | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
     (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
     (le_iInf fun a s ⟨t, ht, s_eq⟩ =>
@@ -1576,9 +1576,9 @@ theorem pi_eq_generateFrom :
 theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
     (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom
-        { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s } :=
+        { t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s } :=
   by
-  let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
+  let G := { t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
   rw [pi_eq_generateFrom]
   refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
@@ -1719,7 +1719,7 @@ theorem comap_sigmaMk_nhds (i : ι) (x : σ i) : comap (Sigma.mk i) (𝓝 ⟨i, 
   (embedding_sigmaMk.to_inducing.nhds_eq_comap _).symm
 #align comap_sigma_mk_nhds comap_sigmaMk_nhds
 
-theorem isOpen_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σa, σ a)) :=
+theorem isOpen_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σ a, σ a)) :=
   by
   rw [← bUnion_of_singleton s, preimage_Union₂]
   simp only [← range_sigma_mk]

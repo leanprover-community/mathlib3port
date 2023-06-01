@@ -38,7 +38,7 @@ variable {F α β γ δ : Type _}
 #print ContinuousOpenMap /-
 /-- The type of continuous open maps from `α` to `β`, aka Priestley homomorphisms. -/
 structure ContinuousOpenMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  ContinuousMap α β where
+    ContinuousMap α β where
   map_open' : IsOpenMap to_fun
 #align continuous_open_map ContinuousOpenMap
 -/
@@ -53,7 +53,7 @@ section
 
 You should extend this class when you extend `continuous_open_map`. -/
 class ContinuousOpenMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends ContinuousMapClass F α β where
+    [TopologicalSpace β] extends ContinuousMapClass F α β where
   map_open (f : F) : IsOpenMap f
 #align continuous_open_map_class ContinuousOpenMapClass
 -/

@@ -114,10 +114,10 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
       ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
     by
     intro x hx y hy
-    rw [Finset.mem_image] at hx hy
+    rw [Finset.mem_image] at hx hy 
     rcases hx with ⟨p, hp1, rfl⟩
     rcases hy with ⟨q, hq1, rfl⟩
-    rw [Finset.mem_filter] at hp1 hq1
+    rw [Finset.mem_filter] at hp1 hq1 
     rw [← lt_iff_lt_of_cmp_eq_cmp (f.prop _ hp1.1 _ hq1.1)]
     exact lt_trans hp1.right hq1.right
   cases' exists_between_finsets _ _ this with b hb
@@ -127,10 +127,10 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
   cases' lt_or_gt_of_ne this with hl hr
   · have : p1 < a ∧ p2 < b :=
       ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
-    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this; cc
+    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this ; cc
   · have : a < p1 ∧ b < p2 :=
       ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
-    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this; cc
+    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this ; cc
 #align order.partial_iso.exists_across Order.PartialIso.exists_across
 -/
 
@@ -140,10 +140,10 @@ protected def comm : PartialIso α β → PartialIso β α :=
   Subtype.map (Finset.image (Equiv.prodComm _ _)) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equiv.prodComm α β).symm p)
-        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp;
+        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp ;
           rwa [← Finset.mem_coe])
         ((Equiv.prodComm α β).symm q)
-        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq;
+        (by rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq ;
           rwa [← Finset.mem_coe])
 #align order.partial_iso.comm Order.PartialIso.comm
 -/
@@ -161,7 +161,7 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     refine'
       ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩,
         Finset.subset_insert _ _⟩
-    rw [Finset.mem_insert] at hp hq
+    rw [Finset.mem_insert] at hp hq 
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
     · simp only [cmp_self_eq_eq]
     · rw [cmp_eq_cmp_symm]; exact a_b _ qf
@@ -183,8 +183,8 @@ def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty
       rwa [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage]
     · change _ ⊆ f'.val.image _
       rw [← Finset.coe_subset, Finset.coe_image, ← Equiv.subset_image]
-      change f.val.image _ ⊆ _ at hl
-      rwa [← Finset.coe_subset, Finset.coe_image] at hl
+      change f.val.image _ ⊆ _ at hl 
+      rwa [← Finset.coe_subset, Finset.coe_image] at hl 
 #align order.partial_iso.defined_at_right Order.PartialIso.definedAtRight
 
 variable {α}

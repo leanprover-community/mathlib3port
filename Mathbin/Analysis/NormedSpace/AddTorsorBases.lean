@@ -120,7 +120,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
       by_cases hps : p ∈ s <;>
           simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
             Units.val_one, Subtype.coe_mk] <;>
-        [exact hsu hps;exact hf p]
+        [exact hsu hps; exact hf p]
     · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
     · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top
@@ -128,7 +128,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :
-    ∃ (s : _)(_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ :=
+    ∃ (s : _) (_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ :=
   by
   rcases hne with ⟨x, hx⟩
   rcases hu.exists_between_affine_independent_span_eq_top (singleton_subset_iff.mpr hx)
@@ -166,7 +166,7 @@ theorem interior_convexHull_nonempty_iff_affineSpan_eq_top [FiniteDimensional �
   obtain ⟨t, hts, b, hb⟩ := AffineBasis.exists_affine_subbasis h
   suffices (interior (convexHull ℝ (range b))).Nonempty
     by
-    rw [hb, Subtype.range_coe_subtype, set_of_mem_eq] at this
+    rw [hb, Subtype.range_coe_subtype, set_of_mem_eq] at this 
     refine' this.mono _
     mono*
   lift t to Finset V using b.finite_set

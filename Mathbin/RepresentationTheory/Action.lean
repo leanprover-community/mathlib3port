@@ -162,7 +162,7 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
       comm' := comm }
   inv :=
     { Hom := f.inv
-      comm' := fun g => by have w := comm g =≫ f.inv; simp at w; simp [w] }
+      comm' := fun g => by have w := comm g =≫ f.inv; simp at w ; simp [w] }
 #align Action.mk_iso Action.mkIso
 
 instance (priority := 100) isIso_of_hom_isIso {M N : Action V G} (f : M ⟶ N) [IsIso f.Hom] :
@@ -340,13 +340,13 @@ instance : Preadditive (Action V G)
     { zero := ⟨0, by simp⟩
       add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩
       neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩
-      zero_add := by intros ; ext; exact zero_add _
-      add_zero := by intros ; ext; exact add_zero _
-      add_assoc := by intros ; ext; exact add_assoc _ _ _
-      add_left_neg := by intros ; ext; exact add_left_neg _
-      add_comm := by intros ; ext; exact add_comm _ _ }
-  add_comp := by intros ; ext; exact preadditive.add_comp _ _ _ _ _ _
-  comp_add := by intros ; ext; exact preadditive.comp_add _ _ _ _ _ _
+      zero_add := by intros; ext; exact zero_add _
+      add_zero := by intros; ext; exact add_zero _
+      add_assoc := by intros; ext; exact add_assoc _ _ _
+      add_left_neg := by intros; ext; exact add_left_neg _
+      add_comm := by intros; ext; exact add_comm _ _ }
+  add_comp := by intros; ext; exact preadditive.add_comp _ _ _ _ _ _
+  comp_add := by intros; ext; exact preadditive.comp_add _ _ _ _ _ _
 
 instance forget_additive : Functor.Additive (forget V G) where
 #align Action.forget_additive Action.forget_additive
@@ -389,14 +389,14 @@ instance : Linear R (Action V G)
     where
   homModule X Y :=
     { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩
-      one_smul := by intros ; ext; exact one_smul _ _
-      smul_zero := by intros ; ext; exact smul_zero _
-      zero_smul := by intros ; ext; exact zero_smul _ _
-      add_smul := by intros ; ext; exact add_smul _ _ _
-      smul_add := by intros ; ext; exact smul_add _ _ _
-      mul_smul := by intros ; ext; exact mul_smul _ _ _ }
-  smul_comp' := by intros ; ext; exact linear.smul_comp _ _ _ _ _ _
-  comp_smul' := by intros ; ext; exact linear.comp_smul _ _ _ _ _ _
+      one_smul := by intros; ext; exact one_smul _ _
+      smul_zero := by intros; ext; exact smul_zero _
+      zero_smul := by intros; ext; exact zero_smul _ _
+      add_smul := by intros; ext; exact add_smul _ _ _
+      smul_add := by intros; ext; exact smul_add _ _ _
+      mul_smul := by intros; ext; exact mul_smul _ _ _ }
+  smul_comp' := by intros; ext; exact linear.smul_comp _ _ _ _ _ _
+  comp_smul' := by intros; ext; exact linear.comp_smul _ _ _ _ _ _
 
 instance forget_linear : Functor.Linear R (forget V G) where
 #align Action.forget_linear Action.forget_linear
@@ -857,13 +857,13 @@ def leftRegularTensorIso (G : Type u) [Group G] (X : Action (Type u) (MonCat.of 
       (funext fun x =>
         Prod.ext rfl <|
           show (X.ρ x.1 * X.ρ (x.1⁻¹ : G)) x.2 = _ by
-            simpa only [← X.ρ.map_mul, mul_inv_self, X.ρ.map_one] )
+            simpa only [← X.ρ.map_mul, mul_inv_self, X.ρ.map_one])
   inv_hom_id' :=
     Hom.ext _ _
       (funext fun x =>
         Prod.ext rfl <|
           show (X.ρ (x.1⁻¹ : G) * X.ρ x.1) _ = _ by
-            simpa only [← X.ρ.map_mul, inv_mul_self, X.ρ.map_one] )
+            simpa only [← X.ρ.map_mul, inv_mul_self, X.ρ.map_one])
 #align Action.left_regular_tensor_iso Action.leftRegularTensorIso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -934,10 +934,10 @@ def mapAction : MonoidalFunctor (Action V G) (Action W G) :=
         comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) }
     ε_isIso := by infer_instance
     μ_isIso := by infer_instance
-    μ_natural' := by intros ; ext; dsimp; simp
-    associativity' := by intros ; ext; dsimp; simp; dsimp; simp
-    left_unitality' := by intros ; ext; dsimp; simp; dsimp; simp
-    right_unitality' := by intros ; ext; dsimp; simp; dsimp; simp }
+    μ_natural' := by intros; ext; dsimp; simp
+    associativity' := by intros; ext; dsimp; simp; dsimp; simp
+    left_unitality' := by intros; ext; dsimp; simp; dsimp; simp
+    right_unitality' := by intros; ext; dsimp; simp; dsimp; simp }
 #align category_theory.monoidal_functor.map_Action CategoryTheory.MonoidalFunctor.mapAction
 
 @[simp]

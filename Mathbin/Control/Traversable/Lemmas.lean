@@ -87,7 +87,7 @@ theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g
   by
   rw [@map_eq_traverse_id t _ _ _ _ f]
   refine' (comp_traverse (id.mk ∘ f) g x).symm.trans _
-  congr ; apply comp.applicative_comp_id
+  congr; apply comp.applicative_comp_id
 #align traversable.map_traverse Traversable.map_traverse
 -/
 
@@ -97,7 +97,7 @@ theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) :
   by
   rw [@map_eq_traverse_id t _ _ _ _ g]
   refine' (comp_traverse f (id.mk ∘ g) x).symm.trans _
-  congr ; apply comp.applicative_id_comp
+  congr; apply comp.applicative_id_comp
 #align traversable.traverse_map Traversable.traverse_map
 -/
 
@@ -105,7 +105,7 @@ theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) :
 theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) := by
   have : traverse pure x = pure (traverse id.mk x) :=
       (naturality (pure_transformation F) id.mk x).symm <;>
-    rwa [id_traverse] at this
+    rwa [id_traverse] at this 
 #align traversable.pure_traverse Traversable.pure_traverse
 -/
 

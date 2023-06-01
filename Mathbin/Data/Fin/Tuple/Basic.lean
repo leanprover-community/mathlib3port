@@ -184,15 +184,15 @@ theorem cons_injective_of_injective {α} {x₀ : α} {x : Fin n → α} (hx₀ :
     · intro
       rfl
     · intro j h
-      rw [cons_zero, cons_succ] at h
+      rw [cons_zero, cons_succ] at h 
       exact hx₀.elim ⟨_, h.symm⟩
   · intro i
     refine' Fin.cases _ _
     · intro h
-      rw [cons_zero, cons_succ] at h
+      rw [cons_zero, cons_succ] at h 
       exact hx₀.elim ⟨_, h⟩
     · intro j h
-      rw [cons_succ, cons_succ] at h
+      rw [cons_succ, cons_succ] at h 
       exact congr_arg _ (hx h)
 #align fin.cons_injective_of_injective Fin.cons_injective_of_injective
 -/
@@ -872,15 +872,15 @@ theorem find_spec :
     ∀ {n : ℕ} (p : Fin n → Prop) [DecidablePred p] {i : Fin n} (hi : i ∈ Fin.find p), p i
   | 0, p, I, i, hi => Option.noConfusion hi
   | n + 1, p, I, i, hi => by
-    dsimp [find] at hi
+    dsimp [find] at hi 
     skip
     cases' h : find fun i : Fin n => p (i.castLT (Nat.lt_succ_of_lt i.2)) with j
-    · rw [h] at hi
-      dsimp at hi
-      split_ifs  at hi with hl hl
+    · rw [h] at hi 
+      dsimp at hi 
+      split_ifs  at hi  with hl hl
       · exact hi ▸ hl
       · exact hi.elim
-    · rw [h] at hi
+    · rw [h] at hi 
       rw [← Option.some_inj.1 hi]
       exact find_spec _ h
 #align fin.find_spec Fin.find_spec
@@ -892,7 +892,7 @@ theorem isSome_find_iff : ∀ {n : ℕ} {p : Fin n → Prop} [DecidablePred p], 
   | 0, p, _ => iff_of_false (fun h => Bool.noConfusion h) fun ⟨i, _⟩ => finZeroElim i
   | n + 1, p, _ =>
     ⟨fun h => by
-      rw [Option.isSome_iff_exists] at h
+      rw [Option.isSome_iff_exists] at h 
       cases' h with i hi
       exact ⟨i, find_spec _ hi⟩, fun ⟨⟨i, hin⟩, hi⟩ =>
       by
@@ -907,7 +907,7 @@ theorem isSome_find_iff : ∀ {n : ℕ} {p : Fin n → Prop} [DecidablePred p], 
                   lt_of_le_of_ne (Nat.le_of_lt_succ hin) fun h => by
                     clear_aux_decl <;> cases h <;> exact hl hi⟩,
                 hi⟩
-          rw [h] at this
+          rw [h] at this 
           exact this
       · simp⟩
 #align fin.is_some_find_iff Fin.isSome_find_iff
@@ -929,16 +929,16 @@ theorem find_min :
   | 0, p, _, i, hi, j, hj, hpj => Option.noConfusion hi
   | n + 1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj => by
     skip
-    dsimp [find] at hi
+    dsimp [find] at hi 
     cases' h : find fun i : Fin n => p (i.castLT (Nat.lt_succ_of_lt i.2)) with k
-    · rw [h] at hi
-      split_ifs  at hi with hl hl
+    · rw [h] at hi 
+      split_ifs  at hi  with hl hl
       · subst hi
-        rw [find_eq_none_iff] at h
+        rw [find_eq_none_iff] at h 
         exact h ⟨j, hj⟩ hpj
       · exact hi.elim
-    · rw [h] at hi
-      dsimp at hi
+    · rw [h] at hi 
+      dsimp at hi 
       obtain rfl := Option.some_inj.1 hi
       exact find_min h (show (⟨j, lt_trans hj k.2⟩ : Fin n) < k from hj) hpj
 #align fin.find_min Fin.find_min
@@ -956,7 +956,7 @@ theorem nat_find_mem_find {p : Fin n → Prop} [DecidablePred p]
   by
   let ⟨i, hin, hi⟩ := h
   cases' hf : find p with f
-  · rw [find_eq_none_iff] at hf
+  · rw [find_eq_none_iff] at hf 
     exact (hf ⟨i, hin⟩ hi).elim
   · refine' Option.some_inj.2 (le_antisymm _ _)
     · exact find_min' hf (Nat.find_spec h).snd
@@ -970,7 +970,7 @@ theorem mem_find_iff {p : Fin n → Prop} [DecidablePred p] {i : Fin n} :
     by
     rintro ⟨hpi, hj⟩
     cases hfp : Fin.find p
-    · rw [find_eq_none_iff] at hfp
+    · rw [find_eq_none_iff] at hfp 
       exact (hfp _ hpi).elim
     · exact Option.some_inj.2 (le_antisymm (find_min' hfp hpi) (hj _ (find_spec _ hfp)))⟩
 #align fin.mem_find_iff Fin.mem_find_iff
@@ -1039,15 +1039,15 @@ end ContractNth
 /-- To show two sigma pairs of tuples agree, it to show the second elements are related via
 `fin.cast`. -/
 theorem sigma_eq_of_eq_comp_cast {α : Type _} :
-    ∀ {a b : Σii, Fin ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Fin.cast h → a = b
+    ∀ {a b : Σ ii, Fin ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Fin.cast h → a = b
   | ⟨ai, a⟩, ⟨bi, b⟩, hi, h => by
-    dsimp only at hi
+    dsimp only at hi 
     subst hi
     simpa using h
 #align fin.sigma_eq_of_eq_comp_cast Fin.sigma_eq_of_eq_comp_cast
 
 /-- `fin.sigma_eq_of_eq_comp_cast` as an `iff`. -/
-theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σii, Fin ii → α} :
+theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σ ii, Fin ii → α} :
     a = b ↔ ∃ h : a.fst = b.fst, a.snd = b.snd ∘ Fin.cast h :=
   ⟨fun h => h ▸ ⟨rfl, funext <| Fin.rec fun i hi => rfl⟩, fun ⟨h, h'⟩ =>
     sigma_eq_of_eq_comp_cast _ h'⟩

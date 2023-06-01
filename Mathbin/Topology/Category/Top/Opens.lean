@@ -248,7 +248,7 @@ def mapId : map (𝟙 X) ≅ 𝟭 (Opens X)
   inv := { app := fun U => eqToHom (map_id_obj U).symm }
 #align topological_space.opens.map_id TopologicalSpace.Opens.mapId
 
-theorem map_id_eq : map (𝟙 X) = 𝟭 (Opens X) := by unfold map; congr ; ext; rfl; ext
+theorem map_id_eq : map (𝟙 X) = 𝟭 (Opens X) := by unfold map; congr; ext; rfl; ext
 #align topological_space.opens.map_id_eq TopologicalSpace.Opens.map_id_eq
 
 end
@@ -277,7 +277,7 @@ def mapIso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
     (by obviously)
 #align topological_space.opens.map_iso TopologicalSpace.Opens.mapIso
 
-theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g := by unfold map; congr ; ext; rw [h];
+theorem map_eq (f g : X ⟶ Y) (h : f = g) : map f = map g := by unfold map; congr; ext; rw [h];
   rw [h]; assumption'
 #align topological_space.opens.map_eq TopologicalSpace.Opens.map_eq
 
@@ -370,11 +370,11 @@ theorem adjunction_counit_app_self {X : TopCat} (U : Opens X) :
 theorem inclusion_top_functor (X : TopCat) :
     (@Opens.openEmbedding X ⊤).IsOpenMap.Functor = map (inclusionTopIso X).inv :=
   by
-  apply functor.hext; intro ;
+  apply functor.hext; intro;
   abstract obj_eq 
     ext
     exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨x, trivial⟩, h, rfl⟩⟩
-  intros ; apply Subsingleton.helim; congr 1
+  intros; apply Subsingleton.helim; congr 1
   iterate 2 apply inclusion_top_functor.obj_eq
 #align topological_space.opens.inclusion_top_functor TopologicalSpace.Opens.inclusion_top_functor
 

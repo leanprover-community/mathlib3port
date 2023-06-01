@@ -90,7 +90,7 @@ theorem card_comm_eq_card_conjClasses_mul_card :
   haveI := Fintype.ofFinite G
   simp only [Nat.card_eq_fintype_card]
   convert calc
-      card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
+      card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σ g, { h // g * h = h * g }) :=
         card_congr (Equiv.subtypeProdEquivSigmaSubtype fun g h : G => g * h = h * g)
       _ = ∑ g, card { h // g * h = h * g } := (card_sigma _)
       _ = ∑ g, card (MulAction.fixedBy (ConjAct G) G g) :=

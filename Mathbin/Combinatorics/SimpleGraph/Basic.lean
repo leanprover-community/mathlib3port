@@ -369,7 +369,7 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
         exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
     iInf_sup_le_sup_inf := fun G s a b hab =>
       by
-      simp only [sup_adj, Inf_adj, infi_adj] at hab⊢
+      simp only [sup_adj, Inf_adj, infi_adj] at hab ⊢
       have : (∀ G' ∈ s, adj G a b ∨ adj G' a b) ∧ a ≠ b :=
         (and_congr_left fun h => forall_congr' fun H => _).1 hab
       simpa [forall_or_left, or_and_right, and_iff_left_of_imp adj.ne] using this
@@ -561,9 +561,9 @@ theorem adj_iff_exists_edge {v w : V} :
   refine' ⟨fun _ => ⟨G.ne_of_adj ‹_›, ⟦(v, w)⟧, _⟩, _⟩
   · simpa
   · rintro ⟨hne, e, he, hv⟩
-    rw [Sym2.mem_and_mem_iff hne] at hv
+    rw [Sym2.mem_and_mem_iff hne] at hv 
     subst e
-    rwa [mem_edge_set] at he
+    rwa [mem_edge_set] at he 
 #align simple_graph.adj_iff_exists_edge SimpleGraph.adj_iff_exists_edge
 
 theorem adj_iff_exists_edge_coe : G.Adj a b ↔ ∃ e : G.edgeSetEmbedding, ↑e = ⟦(a, b)⟧ := by
@@ -572,7 +572,7 @@ theorem adj_iff_exists_edge_coe : G.Adj a b ↔ ∃ e : G.edgeSetEmbedding, ↑e
 
 theorem edge_other_ne {e : Sym2 V} (he : e ∈ G.edgeSetEmbedding) {v : V} (h : v ∈ e) :
     h.other ≠ v := by
-  erw [← Sym2.other_spec h, Sym2.eq_swap] at he
+  erw [← Sym2.other_spec h, Sym2.eq_swap] at he 
   exact G.ne_of_adj he
 #align simple_graph.edge_other_ne SimpleGraph.edge_other_ne
 
@@ -718,7 +718,7 @@ theorem Dart.toProd_injective : Function.Injective (Dart.toProd : G.Dart → V �
 
 #print SimpleGraph.Dart.fintype /-
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
-  Fintype.ofEquiv (Σv, G.neighborSet v)
+  Fintype.ofEquiv (Σ v, G.neighborSet v)
     { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩
       invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩
       left_inv := fun s => by ext <;> simp
@@ -1034,7 +1034,7 @@ theorem compl_neighborSet_disjoint (G : SimpleGraph V) (v : V) :
   by
   rw [Set.disjoint_iff]
   rintro w ⟨h, h'⟩
-  rw [mem_neighbor_set, compl_adj] at h'
+  rw [mem_neighbor_set, compl_adj] at h' 
   exact h'.2 h
 #align simple_graph.compl_neighbor_set_disjoint SimpleGraph.compl_neighborSet_disjoint
 
@@ -1143,7 +1143,7 @@ theorem edge_other_incident_set {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v
 #print SimpleGraph.incidence_other_prop /-
 theorem incidence_other_prop {v : V} {e : Sym2 V} (h : e ∈ G.incidenceSet v) :
     G.otherVertexOfIncident h ∈ G.neighborSet v := by cases' h with he hv;
-  rwa [← Sym2.other_spec' hv, mem_edge_set] at he
+  rwa [← Sym2.other_spec' hv, mem_edge_set] at he 
 #align simple_graph.incidence_other_prop SimpleGraph.incidence_other_prop
 -/
 
@@ -1222,7 +1222,7 @@ theorem deleteEdges_univ_eq : G.deleteEdges Set.univ = ⊥ := by ext; simp
 #align simple_graph.delete_edges_univ_eq SimpleGraph.deleteEdges_univ_eq
 
 #print SimpleGraph.deleteEdges_le /-
-theorem deleteEdges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by intro ;
+theorem deleteEdges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by intro;
   simp (config := { contextual := true })
 #align simple_graph.delete_edges_le SimpleGraph.deleteEdges_le
 -/
@@ -1277,7 +1277,7 @@ theorem deleteFar_iff :
   refine' ⟨fun h H hHG hH => _, fun h s hs hG => _⟩
   · have := h (sdiff_subset G.edge_finset H.edge_finset)
     simp only [delete_edges_sdiff_eq_of_le _ hHG, edge_finset_mono hHG, card_sdiff,
-      card_le_of_subset, coe_sdiff, coe_edge_finset, Nat.cast_sub] at this
+      card_le_of_subset, coe_sdiff, coe_edge_finset, Nat.cast_sub] at this 
     exact this hH
   ·
     simpa [card_sdiff hs, edge_finset_delete_edges, -Set.toFinset_card, Nat.cast_sub,
@@ -1685,7 +1685,7 @@ theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] :
   by
   obtain ⟨t, ht⟩ := max_of_nonempty (univ_nonempty.image fun v => G.degree v)
   have ht₂ := mem_of_max ht
-  simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂
+  simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂ 
   rcases ht₂ with ⟨v, rfl⟩
   refine' ⟨v, _⟩
   rw [max_degree, ht]
@@ -1714,7 +1714,7 @@ theorem maxDegree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀
     obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
     rw [hv]
     apply h
-  · rw [not_nonempty_iff_eq_empty] at hV
+  · rw [not_nonempty_iff_eq_empty] at hV 
     rw [max_degree, hV, image_empty]
     exact zero_le k
 #align simple_graph.max_degree_le_of_forall_degree_le SimpleGraph.maxDegree_le_of_forall_degree_le
@@ -1997,7 +1997,7 @@ def mapNeighborSet (v : V) : G.neighborSet v ↪ G'.neighborSet (f v)
   toFun w := ⟨f w, f.apply_mem_neighborSet_iff.mpr w.2⟩
   inj' := by
     rintro ⟨w₁, h₁⟩ ⟨w₂, h₂⟩ h
-    rw [Subtype.mk_eq_mk] at h⊢
+    rw [Subtype.mk_eq_mk] at h ⊢
     exact f.inj' h
 #align simple_graph.embedding.map_neighbor_set SimpleGraph.Embedding.mapNeighborSet
 

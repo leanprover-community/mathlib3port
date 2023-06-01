@@ -178,7 +178,7 @@ theorem CNF_sorted (b o : Ordinal) : ((CNF b o).map Prod.fst).Sorted (· > ·) :
       · simp [CNF_of_lt ho hob]
       · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩
-        rw [List.mem_map] at H
+        rw [List.mem_map] at H 
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩
         exact (CNF_fst_le_log H).trans_lt (log_mod_opow_log_lt_log_self hb ho hbo)
 #align ordinal.CNF_sorted Ordinal.CNF_sorted

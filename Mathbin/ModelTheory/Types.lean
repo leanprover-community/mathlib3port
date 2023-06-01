@@ -73,7 +73,7 @@ instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
   ⟨fun p => p.toTheory, fun p q h => by
     cases p
     cases q
-    congr ⟩
+    congr⟩
 
 #print FirstOrder.Language.Theory.CompleteType.isMaximal /-
 theorem isMaximal (p : T.CompleteType α) : IsMaximal (p : L[[α]].Theory) :=
@@ -110,7 +110,7 @@ theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈
     have h : ¬is_satisfiable ({φ, φ.not} : L[[α]].Theory) :=
       by
       rintro ⟨@⟨_, _, h, _⟩⟩
-      simp only [model_iff, mem_insert_iff, mem_singleton_iff, forall_eq_or_imp, forall_eq] at h
+      simp only [model_iff, mem_insert_iff, mem_singleton_iff, forall_eq_or_imp, forall_eq] at h 
       exact h.2 h.1
     refine' h (p.is_maximal.1.mono _)
     rw [insert_subset, singleton_subset_iff]

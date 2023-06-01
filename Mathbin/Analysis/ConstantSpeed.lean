@@ -97,7 +97,7 @@ theorem hasConstantSpeedOnWith_iff_variationOnFromTo_eq :
   by
   constructor
   · rintro h; refine' ⟨h.has_locally_bounded_variation_on, fun x xs y ys => _⟩
-    rw [hasConstantSpeedOnWith_iff_ordered] at h
+    rw [hasConstantSpeedOnWith_iff_ordered] at h 
     rcases le_total x y with (xy | yx)
     ·
       rw [variationOnFromTo.eq_of_le f s xy, h xs ys xy,
@@ -115,7 +115,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
     (hft : HasConstantSpeedOnWith f t l) {x : ℝ} (hs : IsGreatest s x) (ht : IsLeast t x) :
     HasConstantSpeedOnWith f (s ∪ t) l :=
   by
-  rw [hasConstantSpeedOnWith_iff_ordered] at hfs hft⊢
+  rw [hasConstantSpeedOnWith_iff_ordered] at hfs hft ⊢
   rintro z (zs | zt) y (ys | yt) zy
   · have : (s ∪ t) ∩ Icc z y = s ∩ Icc z y := by
       ext w; constructor
@@ -128,14 +128,14 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
       by
       ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
-        exacts[Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
+        exacts [Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
       · rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
-        exacts[⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
+        exacts [⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
     rw [this, @evariationOn.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt), ←
       ENNReal.ofReal_add (mul_nonneg l.prop (sub_nonneg.mpr (hs.2 zs)))
         (mul_nonneg l.prop (sub_nonneg.mpr (ht.2 yt)))]
     ring_nf
-    exacts[⟨⟨hs.1, hs.2 zs, le_rfl⟩, fun w ⟨ws, zw, wx⟩ => wx⟩,
+    exacts [⟨⟨hs.1, hs.2 zs, le_rfl⟩, fun w ⟨ws, zw, wx⟩ => wx⟩,
       ⟨⟨ht.1, le_rfl, ht.2 yt⟩, fun w ⟨wt, xw, wy⟩ => xw⟩]
   · cases le_antisymm zy ((hs.2 ys).trans (ht.2 zt))
     simp only [Icc_self, sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
@@ -175,12 +175,12 @@ theorem hasConstantSpeedOnWith_zero_iff :
   constructor
   · by_contra'
     obtain ⟨h, hfs⟩ := this
-    simp_rw [evariationOn.eq_zero_iff] at hfs h
-    push_neg  at hfs
+    simp_rw [evariationOn.eq_zero_iff] at hfs h 
+    push_neg  at hfs 
     obtain ⟨x, xs, y, ys, hxy⟩ := hfs
     rcases le_total x y with (xy | yx)
     · exact hxy (h xs ys x ⟨xs, le_rfl, xy⟩ y ⟨ys, xy, le_rfl⟩)
-    · rw [edist_comm] at hxy
+    · rw [edist_comm] at hxy 
       exact hxy (h ys xs y ⟨ys, le_rfl, yx⟩ x ⟨xs, yx, le_rfl⟩)
   · rintro h x xs y ys
     refine' le_antisymm _ zero_le'
@@ -194,8 +194,8 @@ theorem HasConstantSpeedOnWith.ratio {l' : ℝ≥0} (hl' : l' ≠ 0) {φ : ℝ �
   by
   rintro y ys
   rw [← sub_eq_iff_eq_add, mul_comm, ← mul_div_assoc, eq_div_iff (nnreal.coe_ne_zero.mpr hl')]
-  rw [hasConstantSpeedOnWith_iff_variationOnFromTo_eq] at hf
-  rw [hasConstantSpeedOnWith_iff_variationOnFromTo_eq] at hfφ
+  rw [hasConstantSpeedOnWith_iff_variationOnFromTo_eq] at hf 
+  rw [hasConstantSpeedOnWith_iff_variationOnFromTo_eq] at hfφ 
   symm
   calc
     (y - x) * l = l * (y - x) := by rw [mul_comm]
@@ -229,7 +229,7 @@ monotonically maps `s` onto `t`, then `φ` is just a translation (on `s`).
 theorem unique_unit_speed {φ : ℝ → ℝ} (φm : MonotoneOn φ s) (hfφ : HasUnitSpeedOn (f ∘ φ) s)
     (hf : HasUnitSpeedOn f (φ '' s)) ⦃x : ℝ⦄ (xs : x ∈ s) : EqOn φ (fun y => y - x + φ x) s :=
   by
-  dsimp only [HasUnitSpeedOn] at hf hfφ
+  dsimp only [HasUnitSpeedOn] at hf hfφ 
   convert HasConstantSpeedOnWith.ratio one_ne_zero φm hfφ hf xs
   simp only [Nonneg.coe_one, div_self, Ne.def, one_ne_zero, not_false_iff, one_mul]
 #align unique_unit_speed unique_unit_speed
@@ -241,7 +241,7 @@ theorem unique_unit_speed_on_Icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) 
     (φm : MonotoneOn φ <| Icc 0 s) (φst : φ '' Icc 0 s = Icc 0 t)
     (hfφ : HasUnitSpeedOn (f ∘ φ) (Icc 0 s)) (hf : HasUnitSpeedOn f (Icc 0 t)) :
     EqOn φ id (Icc 0 s) := by
-  rw [← φst] at hf
+  rw [← φst] at hf 
   convert unique_unit_speed φm hfφ hf ⟨le_rfl, hs⟩
   have : φ 0 = 0 :=
     by
@@ -273,7 +273,7 @@ theorem edist_naturalParameterization_eq_zero {f : α → E} {s : Set α}
   obtain ⟨cs, hc⟩ :=
     @Function.invFunOn_pos _ _ _ s (variationOnFromTo f s a) (variationOnFromTo f s a b)
       ⟨b, bs, rfl⟩
-  rw [variationOnFromTo.eq_left_iff hf as cs bs] at hc
+  rw [variationOnFromTo.eq_left_iff hf as cs bs] at hc 
   apply variationOnFromTo.edist_zero_of_eq_zero hf cs bs hc
 #align edist_natural_parameterization_eq_zero edist_naturalParameterization_eq_zero
 

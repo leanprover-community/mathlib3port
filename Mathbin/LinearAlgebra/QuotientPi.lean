@@ -65,7 +65,7 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
   rw [Finset.sum_eq_single i]
   · rw [Pi.single_eq_same]
   · rintro j - hj; rw [Pi.single_eq_of_ne hj, _root_.map_zero]
-  · intros ; have := Finset.mem_univ i; contradiction
+  · intros; have := Finset.mem_univ i; contradiction
 #align submodule.pi_quotient_lift_single Submodule.piQuotientLift_single
 
 /-- Lift a family of maps to a quotient of direct sums. -/

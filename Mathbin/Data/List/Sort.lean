@@ -151,7 +151,7 @@ theorem Sorted.rel_of_mem_take_of_mem_drop {l : List α} (h : List.Sorted r l) {
   obtain ⟨iy, hiy, rfl⟩ := nth_le_of_mem hy
   obtain ⟨ix, hix, rfl⟩ := nth_le_of_mem hx
   rw [nth_le_take', nth_le_drop']
-  rw [length_take] at hix
+  rw [length_take] at hix 
   exact h.rel_nth_le_of_lt _ _ (ix.lt_add_right _ _ (lt_min_iff.mp hix).left)
 #align list.sorted.rel_of_mem_take_of_mem_drop List.Sorted.rel_of_mem_take_of_mem_drop
 -/
@@ -248,9 +248,8 @@ open Perm
 theorem perm_orderedInsert (a) : ∀ l : List α, orderedInsert r a l ~ a :: l
   | [] => Perm.refl _
   | b :: l => by
-    by_cases a ≼ b <;>
-      [simp [ordered_insert,
-        h];simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
+    by_cases a ≼ b <;> [simp [ordered_insert, h];
+      simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
 #align list.perm_ordered_insert List.perm_orderedInsert
 -/
 
@@ -282,7 +281,7 @@ theorem Sorted.insertionSort_eq : ∀ {l : List α} (h : Sorted r l), insertionS
   | a :: b :: l, h =>
     by
     rw [insertion_sort, sorted.insertion_sort_eq, ordered_insert, if_pos]
-    exacts[rel_of_sorted_cons h _ (Or.inl rfl), h.tail]
+    exacts [rel_of_sorted_cons h _ (Or.inl rfl), h.tail]
 #align list.sorted.insertion_sort_eq List.Sorted.insertionSort_eq
 -/
 
@@ -401,8 +400,8 @@ def mergeSort : List α → List α
   | a :: b :: l => by
     cases' e : split (a :: b :: l) with l₁ l₂
     cases' length_split_lt e with h₁ h₂
-    exact merge r (merge_sort l₁) (merge_sort l₂)termination_by'
-  ⟨_, InvImage.wf length Nat.lt_wfRel⟩
+    exact merge r (merge_sort l₁) (merge_sort l₂)
+termination_by' ⟨_, InvImage.wf length Nat.lt_wfRel⟩
 #align list.merge_sort List.mergeSort
 -/
 
@@ -416,7 +415,7 @@ theorem mergeSort_cons_cons {a b} {l l₁ l₂ : List α} (h : split (a :: b :: 
           h1 =
         L
     by simp [merge_sort, h]; apply this
-  intros ; cases h1; rfl
+  intros; cases h1; rfl
 #align list.merge_sort_cons_cons List.mergeSort_cons_cons
 -/
 
@@ -444,9 +443,8 @@ theorem perm_mergeSort : ∀ l : List α, mergeSort r l ~ l
     cases' length_split_lt e with h₁ h₂
     rw [merge_sort_cons_cons r e]
     apply (perm_merge r _ _).trans
-    exact
-      ((perm_merge_sort l₁).append (perm_merge_sort l₂)).trans (perm_split e).symm termination_by'
-  ⟨_, InvImage.wf length Nat.lt_wfRel⟩
+    exact ((perm_merge_sort l₁).append (perm_merge_sort l₂)).trans (perm_split e).symm
+termination_by' ⟨_, InvImage.wf length Nat.lt_wfRel⟩
 #align list.perm_merge_sort List.perm_mergeSort
 -/
 
@@ -499,8 +497,8 @@ theorem sorted_mergeSort : ∀ l : List α, Sorted r (mergeSort r l)
     cases' e : split (a :: b :: l) with l₁ l₂
     cases' length_split_lt e with h₁ h₂
     rw [merge_sort_cons_cons r e]
-    exact (sorted_merge_sort l₁).merge (sorted_merge_sort l₂)termination_by'
-  ⟨_, InvImage.wf length Nat.lt_wfRel⟩
+    exact (sorted_merge_sort l₁).merge (sorted_merge_sort l₂)
+termination_by' ⟨_, InvImage.wf length Nat.lt_wfRel⟩
 #align list.sorted_merge_sort List.sorted_mergeSort
 -/
 

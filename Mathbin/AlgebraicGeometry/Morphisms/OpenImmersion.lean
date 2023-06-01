@@ -57,7 +57,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
   by
   constructor
   · exact is_open_immersion_respects_iso
-  · intros ; infer_instance
+  · intros; infer_instance
   · intro X Y f 𝒰 H
     rw [is_open_immersion_iff_stalk]
     constructor
@@ -67,12 +67,12 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
         ((is_open_immersion_respects_iso.arrow_iso_iff
                 (morphism_restrict_opens_range f (𝒰.map i))).mpr
             (H i)).1
-      rwa [arrow.mk_hom, morphism_restrict_val_base] at this
+      rwa [arrow.mk_hom, morphism_restrict_val_base] at this 
     · intro x
       have :=
         arrow.iso_w
           (morphism_restrict_stalk_map f (𝒰.map <| 𝒰.f <| f.1 x).opensRange ⟨x, 𝒰.covers _⟩)
-      dsimp only [arrow.mk_hom] at this
+      dsimp only [arrow.mk_hom] at this 
       rw [this]
       haveI : is_open_immersion (f ∣_ (𝒰.map <| 𝒰.f <| f.1 x).opensRange) :=
         (is_open_immersion_respects_iso.arrow_iso_iff
@@ -91,7 +91,7 @@ theorem IsOpenImmersion.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, IsOpenImmersion (f ∣_ U),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           IsOpenImmersion (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤),
+        ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
   isOpenImmersionIsLocalAtTarget.openCover_tFAE f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_tFAE

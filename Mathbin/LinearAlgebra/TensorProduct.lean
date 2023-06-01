@@ -743,7 +743,15 @@ protected def assoc : (M ⊗[R] N) ⊗[R] P ≃ₗ[R] M ⊗[R] N ⊗[R] P := by
         (ext <| flip_inj <| LinearMap.ext fun p => ext' fun m n => _) <;>
     repeat'
       first
-        |rw [lift.tmul]|rw [compr₂_apply]|rw [comp_apply]|rw [mk_apply]|rw [flip_apply]|rw [lcurry_apply]|rw [uncurry_apply]|rw [curry_apply]|rw [id_apply]
+      | rw [lift.tmul]
+      | rw [compr₂_apply]
+      | rw [comp_apply]
+      | rw [mk_apply]
+      | rw [flip_apply]
+      | rw [lcurry_apply]
+      | rw [uncurry_apply]
+      | rw [curry_apply]
+      | rw [id_apply]
 #align tensor_product.assoc TensorProduct.assoc
 
 end
@@ -775,7 +783,7 @@ theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
   by
   simp only [← Submodule.map_top, ← span_tmul_eq_top, Submodule.map_span, Set.mem_image,
     Set.mem_setOf_eq]
-  congr ; ext t
+  congr; ext t
   constructor
   · rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩; use m, n; simp only [map_tmul]
   · rintro ⟨m, n, rfl⟩; use m ⊗ₜ n, m, n; simp only [map_tmul]
@@ -1188,12 +1196,12 @@ variable {M}
 
 @[simp]
 theorem rTensor_pow (f : M →ₗ[R] M) (n : ℕ) : f.rTensor N ^ n = (f ^ n).rTensor N := by
-  have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n; rwa [id_pow] at h
+  have h := TensorProduct.map_pow f (id : N →ₗ[R] N) n; rwa [id_pow] at h 
 #align linear_map.rtensor_pow LinearMap.rTensor_pow
 
 @[simp]
 theorem lTensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.lTensor M ^ n = (f ^ n).lTensor M := by
-  have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n; rwa [id_pow] at h
+  have h := TensorProduct.map_pow (id : M →ₗ[R] M) f n; rwa [id_pow] at h 
 #align linear_map.ltensor_pow LinearMap.lTensor_pow
 
 end LinearMap

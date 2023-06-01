@@ -32,7 +32,7 @@ open scoped BigOperators
 #print Subalgebra /-
 /-- A subalgebra is a sub(semi)ring that includes the range of `algebra_map`. -/
 structure Subalgebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] [Algebra R A] extends
-  Subsemiring A : Type v where
+    Subsemiring A : Type v where
   algebraMap_mem' : ∀ r, algebraMap R A r ∈ carrier
   zero_mem' := (algebraMap R A).map_zero ▸ algebra_map_mem' 0
   one_mem' := (algebraMap R A).map_one ▸ algebra_map_mem' 1

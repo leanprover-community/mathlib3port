@@ -63,7 +63,7 @@ theorem isCompl_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : IsCompl 
   constructor
   · rw [disjoint_iff_inf_le]
     rintro x ⟨hpx, hfx⟩
-    erw [SetLike.mem_coe, mem_ker, hf ⟨x, hpx⟩, mk_eq_zero] at hfx
+    erw [SetLike.mem_coe, mem_ker, hf ⟨x, hpx⟩, mk_eq_zero] at hfx 
     simp only [hfx, SetLike.mem_coe, zero_mem]
   · rw [codisjoint_iff_le_sup]
     intro x hx
@@ -218,7 +218,7 @@ theorem existsUnique_add_of_isCompl_prod (hc : IsCompl p q) (x : E) :
 #align submodule.exists_unique_add_of_is_compl_prod Submodule.existsUnique_add_of_isCompl_prod
 
 theorem existsUnique_add_of_isCompl (hc : IsCompl p q) (x : E) :
-    ∃ (u : p)(v : q), (u : E) + v = x ∧ ∀ (r : p) (s : q), (r : E) + s = x → r = u ∧ s = v :=
+    ∃ (u : p) (v : q), (u : E) + v = x ∧ ∀ (r : p) (s : q), (r : E) + s = x → r = u ∧ s = v :=
   let ⟨u, hu₁, hu₂⟩ := existsUnique_add_of_isCompl_prod hc x
   ⟨u.1, u.2, hu₁, fun r s hrs => Prod.eq_iff_fst_eq_snd_eq.1 (hu₂ ⟨r, s⟩ hrs)⟩
 #align submodule.exists_unique_add_of_is_compl Submodule.existsUnique_add_of_isCompl

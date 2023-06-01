@@ -143,12 +143,12 @@ def M.corecContents {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
     (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α) (g₂ : ∀ b : β, P.getLast.B (g₀ b) → β) :
     ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
-    have : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
+    have : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h' ; cases h'; rfl
     g₁ b i (P.castDropB this i c)
   | _, b, h, _, M.path.child x a f h' j i c =>
-    have h₀ : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
+    have h₀ : a = g₀ b := by rw [h, M.corec_shape, PFunctor.M.dest_corec] at h' ; cases h'; rfl
     have h₁ : f j = M.corecShape P g₀ g₂ (g₂ b (castLastB P h₀ j)) := by
-      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h'; cases h'; rfl
+      rw [h, M.corec_shape, PFunctor.M.dest_corec] at h' ; cases h'; rfl
     M.corec_contents (f j) (g₂ b (P.castLastB h₀ j)) h₁ i c
 #align mvpfunctor.M.corec_contents MvPFunctor.M.corecContents
 -/
@@ -249,13 +249,13 @@ theorem M.dest_corec {α : TypeVec n} {β : Type u} (g : β → P.Obj (α.append
 theorem M.bisim_lemma {α : TypeVec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A}
     {f' : (P.B a').drop ⟹ α} {f₁' : (P.B a').getLast → M P α}
     (e₁ : M.dest P ⟨a₁, f₁⟩ = ⟨a', splitFun f' f₁'⟩) :
-    ∃ (g₁' : _)(e₁' : PFunctor.M.dest a₁ = ⟨a', g₁'⟩),
+    ∃ (g₁' : _) (e₁' : PFunctor.M.dest a₁ = ⟨a', g₁'⟩),
       f' = M.pathDestLeft P e₁' f₁ ∧
         f₁' = fun x : (last P).B a' => ⟨g₁' x, M.pathDestRight P e₁' f₁ x⟩ :=
   by
-  generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁
+  generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁ 
   cases' e₁' : PFunctor.M.dest a₁ with a₁' g₁'
-  rw [M.dest_eq_dest' _ e₁'] at e₁
+  rw [M.dest_eq_dest' _ e₁'] at e₁ 
   cases e₁; exact ⟨_, e₁', split_fun_inj ef⟩
 #align mvpfunctor.M.bisim_lemma MvPFunctor.M.bisim_lemma
 -/
@@ -305,8 +305,8 @@ theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   apply M.bisim P R _ _ _ r; clear r x y
   introv Hr; specialize h _ _ Hr; clear Hr
   rcases M.dest P x with ⟨ax, fx⟩; rcases M.dest P y with ⟨ay, fy⟩
-  intro h; rw [map_eq, map_eq] at h; injection h with h₀ h₁; subst ay
-  simp at h₁; clear h
+  intro h; rw [map_eq, map_eq] at h ; injection h with h₀ h₁; subst ay
+  simp at h₁ ; clear h
   have Hdrop : drop_fun fx = drop_fun fy :=
     by
     replace h₁ := congr_arg drop_fun h₁
@@ -315,9 +315,9 @@ theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   rw [split_drop_fun_last_fun, Hdrop, split_drop_fun_last_fun]
   simp; intro i
   replace h₁ := congr_fun (congr_fun h₁ Fin2.fz) i
-  simp [(· ⊚ ·), append_fun, split_fun] at h₁
+  simp [(· ⊚ ·), append_fun, split_fun] at h₁ 
   replace h₁ := Quot.exact _ h₁
-  rw [h₀.eqv_gen_iff] at h₁
+  rw [h₀.eqv_gen_iff] at h₁ 
   exact h₁
 #align mvpfunctor.M.bisim₀ MvPFunctor.M.bisim₀
 -/

@@ -223,7 +223,8 @@ variable [HasZeroMorphisms C] {X Y : C} (f : X ⟶ Y) [HasKernel f]
 an arbitrarily chosen projective object over `kernel f`.
 -/
 def syzygies : C :=
-  over (kernel f)deriving Projective
+  over (kernel f)
+deriving Projective
 #align category_theory.projective.syzygies CategoryTheory.Projective.syzygies
 -/
 

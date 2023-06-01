@@ -79,7 +79,7 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
       refine'
         NNReal.tendsto_coe.2 <|
           (ENNReal.tendsto_toNNReal <| _).comp <| tendsto_measure_Inter hs hm _
-    exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
+    exacts [hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
     use (μ univ).toNNReal
     rintro r ⟨s, hs, rfl⟩
@@ -95,7 +95,7 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
     rcases exists_lt_of_lt_csSup c_nonempty this with ⟨r, ⟨s, hs, rfl⟩, hlt⟩
     exact ⟨s, hs, hlt⟩
   rcases Classical.axiom_of_choice this with ⟨e, he⟩
-  change ℕ → Set α at e
+  change ℕ → Set α at e 
   have he₁ : ∀ n, MeasurableSet (e n) := fun n => (he n).1
   have he₂ : ∀ n, γ - (1 / 2) ^ n < d (e n) := fun n => (he n).2
   let f : ℕ → ℕ → Set α := fun n m => (Finset.Ico n (m + 1)).inf e
@@ -124,7 +124,7 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
       simp only [f]
       rw [Nat.Ico_succ_singleton, Finset.inf_singleton]
       linarith
-    · intro n(hmn : m ≤ n)ih
+    · intro n (hmn : m ≤ n) ih
       have : γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤ γ + d (f m (n + 1)) := by
         calc
           γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤

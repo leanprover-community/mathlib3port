@@ -116,7 +116,7 @@ variable [Field K]
 
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 :=
   by
-  obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h
+  obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h 
   simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
     Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
@@ -176,7 +176,8 @@ variable (σ : Type u) (K : Type u) [Fintype K]
 /-- The submodule of multivariate polynomials whose degree of each variable is strictly less
 than the cardinality of K. -/
 def R [CommRing K] : Type u :=
-  restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroup,
+  restrictDegree σ K (Fintype.card K - 1)
+deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] K»,
   Inhabited
 #align mv_polynomial.R MvPolynomial.R
@@ -249,7 +250,7 @@ theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v :
     (hp : p ∈ restrictDegree σ K (Fintype.card K - 1)) : p = 0 :=
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h
-  show p'.1 = (0 : R σ K).1 from congr_arg _ <| by rwa [ker_evalₗ, mem_bot] at this
+  show p'.1 = (0 : R σ K).1 from congr_arg _ <| by rwa [ker_evalₗ, mem_bot] at this 
 #align mv_polynomial.eq_zero_of_eval_eq_zero MvPolynomial.eq_zero_of_eval_eq_zero
 
 end MvPolynomial

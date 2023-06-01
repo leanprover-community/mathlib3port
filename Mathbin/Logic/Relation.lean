@@ -530,7 +530,7 @@ theorem Acc.TransGen (h : Acc r a) : Acc (TransGen r) a :=
   induction' h with x _ H
   refine' Acc.intro x fun y hy => _
   cases' hy with _ hyx z _ hyz hzx
-  exacts[H y hyx, (H z hzx).inv hyz]
+  exacts [H y hyx, (H z hzx).inv hyz]
 #align acc.trans_gen Acc.TransGen
 -/
 

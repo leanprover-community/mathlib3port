@@ -105,8 +105,8 @@ theorem not_isOfFinOrder_of_injective_pow {x : G} (h : Injective fun n : ℕ => 
   by
   simp_rw [isOfFinOrder_iff_pow_eq_one, not_exists, not_and]
   intro n hn_pos hnx
-  rw [← pow_zero x] at hnx
-  rw [h hnx] at hn_pos
+  rw [← pow_zero x] at hnx 
+  rw [h hnx] at hn_pos 
   exact irrefl 0 hn_pos
 #align not_is_of_fin_order_of_injective_pow not_isOfFinOrder_of_injective_pow
 #align not_is_of_fin_add_order_of_injective_nsmul not_isOfFinAddOrder_of_injective_nsmul
@@ -301,7 +301,7 @@ theorem orderOf_map_dvd {H : Type _} [Monoid H] (ψ : G →* H) (x : G) : orderO
 theorem exists_pow_eq_self_of_coprime (h : n.coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x :=
   by
   by_cases h0 : orderOf x = 0
-  · rw [h0, coprime_zero_right] at h
+  · rw [h0, coprime_zero_right] at h 
     exact ⟨1, by rw [h, pow_one, pow_one]⟩
   by_cases h1 : orderOf x = 1
   · exact ⟨0, by rw [order_of_eq_one_iff.mp h1, one_pow, one_pow]⟩
@@ -326,7 +326,7 @@ theorem orderOf_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
   have a_min_fac_dvd_p_sub_one : a.min_fac ∣ n :=
     by
     obtain ⟨b, hb⟩ : ∃ b : ℕ, a = b * a.min_fac := exists_eq_mul_left_of_dvd a.min_fac_dvd
-    rw [hb, ← mul_assoc] at ha
+    rw [hb, ← mul_assoc] at ha 
     exact Dvd.intro_left (orderOf x * b) ha.symm
   -- Use the minimum prime factor of `a` as `p`.
   refine' hd a.min_fac (Nat.minFac_prime h) a_min_fac_dvd_p_sub_one _
@@ -465,7 +465,7 @@ theorem orderOf_mul_eq_right_of_forall_prime_mul_dvd (hy : IsOfFinOrder y)
   rw [← Nat.dvd_one, ← mul_dvd_mul_iff_right hoy.ne', one_mul, ← dvd_div_iff hpy]
   refine' trans (order_of_dvd_lcm_mul h) (lcm_dvd ((dvd_div_iff hpy).2 _) hd)
   by_cases p ∣ orderOf x
-  exacts[hdvd p hp h, (hp.coprime_iff_not_dvd.2 h).mul_dvd_of_dvd_of_dvd hpy hxy]
+  exacts [hdvd p hp h, (hp.coprime_iff_not_dvd.2 h).mul_dvd_of_dvd_of_dvd hpy hxy]
 #align commute.order_of_mul_eq_right_of_forall_prime_mul_dvd Commute.orderOf_mul_eq_right_of_forall_prime_mul_dvd
 #align add_commute.add_order_of_add_eq_right_of_forall_prime_mul_dvd AddCommute.addOrderOf_add_eq_right_of_forall_prime_mul_dvd
 
@@ -512,7 +512,7 @@ variable [LeftCancelMonoid G] (x y)
 @[to_additive nsmul_injective_of_lt_addOrderOf]
 theorem pow_injective_of_lt_orderOf (hn : n < orderOf x) (hm : m < orderOf x) (eq : x ^ n = x ^ m) :
     n = m :=
-  eq_of_lt_minimalPeriod_of_iterate_eq hn hm (by simpa only [mul_left_iterate, mul_one] )
+  eq_of_lt_minimalPeriod_of_iterate_eq hn hm (by simpa only [mul_left_iterate, mul_one])
 #align pow_injective_of_lt_order_of pow_injective_of_lt_orderOf
 #align nsmul_injective_of_lt_add_order_of nsmul_injective_of_lt_addOrderOf
 
@@ -548,7 +548,7 @@ theorem injective_pow_iff_not_isOfFinOrder {x : G} :
     (Injective fun n : ℕ => x ^ n) ↔ ¬IsOfFinOrder x :=
   by
   refine' ⟨fun h => not_isOfFinOrder_of_injective_pow h, fun h n m hnm => _⟩
-  rwa [pow_eq_pow_iff_modEq, order_of_eq_zero_iff.mpr h, modeq_zero_iff] at hnm
+  rwa [pow_eq_pow_iff_modEq, order_of_eq_zero_iff.mpr h, modeq_zero_iff] at hnm 
 #align injective_pow_iff_not_is_of_fin_order injective_pow_iff_not_isOfFinOrder
 #align injective_nsmul_iff_not_is_of_fin_add_order injective_nsmul_iff_not_isOfFinAddOrder
 -/
@@ -563,7 +563,7 @@ theorem infinite_not_isOfFinOrder {x : G} (h : ¬IsOfFinOrder x) :
     by
     rintro - ⟨n, hn : 0 < n, rfl⟩ (contra : IsOfFinOrder (x ^ n))
     apply h
-    rw [isOfFinOrder_iff_pow_eq_one] at contra⊢
+    rw [isOfFinOrder_iff_pow_eq_one] at contra ⊢
     obtain ⟨m, hm, hm'⟩ := contra
     exact ⟨n * m, mul_pos hn hm, by rwa [pow_mul]⟩
   suffices s.infinite by exact this.mono hs
@@ -573,7 +573,7 @@ theorem infinite_not_isOfFinOrder {x : G} (h : ¬IsOfFinOrder x) :
     have := Set.not_injOn_infinite_finite_image (Set.Ioi_infinite 0) (set.not_infinite.mp h)
     contrapose! this
     exact Set.injOn_of_injective this _
-  rwa [injective_pow_iff_not_isOfFinOrder, Classical.not_not] at this
+  rwa [injective_pow_iff_not_isOfFinOrder, Classical.not_not] at this 
 #align infinite_not_is_of_fin_order infinite_not_isOfFinOrder
 #align infinite_not_is_of_fin_add_order infinite_not_isOfFinAddOrder
 -/
@@ -635,8 +635,8 @@ theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=
 @[to_additive nsmul_inj_iff_of_addOrderOf_eq_zero]
 theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n = x ^ m ↔ n = m :=
   by
-  rw [orderOf_eq_zero_iff, isOfFinOrder_iff_pow_eq_one] at h
-  push_neg  at h
+  rw [orderOf_eq_zero_iff, isOfFinOrder_iff_pow_eq_one] at h 
+  push_neg  at h 
   induction' n with n IH generalizing m
   · cases m
     · simp
@@ -735,7 +735,7 @@ theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n 
     (∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
           (Finset.univ.filterₓ fun x : G => orderOf x = m).card) =
         _ :=
-      (Finset.card_biUnion (by intros ; apply Finset.disjoint_filter.2; cc)).symm
+      (Finset.card_biUnion (by intros; apply Finset.disjoint_filter.2; cc)).symm
     _ = _ :=
       congr_arg Finset.card
         (Finset.ext
@@ -876,7 +876,7 @@ section FiniteGroup
 variable [Group G] [AddGroup A]
 
 @[to_additive]
-theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ)(H : i ≠ 0), x ^ (i : ℤ) = 1 :=
+theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ) (H : i ≠ 0), x ^ (i : ℤ) = 1 :=
   by
   rcases exists_pow_eq_one x with ⟨w, hw1, hw2⟩
   refine' ⟨w, int.coe_nat_ne_zero.mpr (ne_of_gt hw1), _⟩
@@ -1058,11 +1058,11 @@ noncomputable def powCoprime {G : Type _} [Group G] (h : (Nat.card G).coprime n)
   left_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
     rwa [zpow_add, zpow_mul, zpow_mul, zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
-      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
   right_inv g := by
     have key := congr_arg ((· ^ ·) g) ((Nat.card G).gcd_eq_gcd_ab n)
     rwa [zpow_add, zpow_mul, zpow_mul', zpow_ofNat, zpow_ofNat, zpow_ofNat, h.gcd_eq_one, pow_one,
-      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key
+      pow_card_eq_one', one_zpow, one_mul, eq_comm] at key 
 #align pow_coprime powCoprime
 #align nsmul_coprime nsmulCoprime
 -/

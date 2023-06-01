@@ -213,7 +213,7 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
     cases ht
     · rw [ht]
       simp
-    · rw [Set.mem_singleton_iff] at ht
+    · rw [Set.mem_singleton_iff] at ht 
       rw [ht]
       norm_num
 #align path.homotopy.hcomp Path.Homotopy.hcomp
@@ -253,7 +253,7 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
   prop' t x hx := by
     cases hx
     · rw [hx]; norm_num [hf₀]
-    · rw [Set.mem_singleton_iff] at hx
+    · rw [Set.mem_singleton_iff] at hx 
       rw [hx]
       norm_num [hf₁]
 #align path.homotopy.reparam Path.Homotopy.reparam
@@ -272,7 +272,7 @@ def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm
   prop' t x hx := by
     cases hx
     · rw [hx]; simp
-    · rw [Set.mem_singleton_iff] at hx
+    · rw [Set.mem_singleton_iff] at hx 
       rw [hx]
       simp
 #align path.homotopy.symm₂ Path.Homotopy.symm₂
@@ -292,7 +292,7 @@ def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) :
   prop' t x hx := by
     cases hx
     · simp [hx]
-    · rw [Set.mem_singleton_iff] at hx
+    · rw [Set.mem_singleton_iff] at hx 
       simp [hx]
 #align path.homotopy.map Path.Homotopy.map
 
@@ -402,7 +402,7 @@ theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, 
   by
   obtain rfl : x₀ = x₂ := by convert hp 0 <;> simp
   obtain rfl : x₁ = x₃ := by convert hp 1 <;> simp
-  rw [heq_iff_eq]; congr ; ext t; exact hp t
+  rw [heq_iff_eq]; congr; ext t; exact hp t
 #align path.homotopic.hpath_hext Path.Homotopic.hpath_hext
 -/
 

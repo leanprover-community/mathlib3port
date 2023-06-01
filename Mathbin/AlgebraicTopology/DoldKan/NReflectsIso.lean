@@ -60,7 +60,7 @@ instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainCom
     have h₃ := fun n =>
       karoubi.homological_complex.p_comm_f_assoc (inv (N₁.map f)) n (f.app (op [n]))
     simp only [N₁_map_f, karoubi.comp_f, HomologicalComplex.comp_f,
-      alternating_face_map_complex.map_f, N₁_obj_p, karoubi.id_eq, assoc] at h₁ h₂ h₃
+      alternating_face_map_complex.map_f, N₁_obj_p, karoubi.id_eq, assoc] at h₁ h₂ h₃ 
     -- we have to construct an inverse to f in degree n, by induction on n
     intro n
     induction' n with n hn
@@ -68,8 +68,8 @@ instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainCom
     · use (inv (N₁.map f)).f.f 0
       have h₁₀ := h₁ 0
       have h₂₀ := h₂ 0
-      dsimp at h₁₀ h₂₀
-      simp only [id_comp, comp_id] at h₁₀ h₂₀
+      dsimp at h₁₀ h₂₀ 
+      simp only [id_comp, comp_id] at h₁₀ h₂₀ 
       tauto
     -- induction step
     · haveI := hn
@@ -98,7 +98,7 @@ theorem compatibility_N₂_N₁_karoubi :
       ext
       have h := (alternating_face_map_complex.map P.p).comm (n + 1) n
       dsimp [N₂, karoubi_chain_complex_equivalence, karoubi_karoubi.inverse,
-        karoubi_homological_complex_equivalence.functor.obj] at h⊢
+        karoubi_homological_complex_equivalence.functor.obj] at h ⊢
       simp only [karoubi.comp_f, assoc, karoubi.eq_to_hom_f, eq_to_hom_refl, id_comp, comp_id,
         karoubi_alternating_face_map_complex_d, karoubi_P_infty_f, ←
         HomologicalComplex.Hom.comm_assoc, ← h, app_idem_assoc]

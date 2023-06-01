@@ -91,24 +91,24 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V}
   by_cases hxy : x = y
   · rw [hxy]
   · rw [← norm_neg (y - x), neg_sub, mul_comm, mul_comm ‖y‖, div_eq_mul_inv, div_eq_mul_inv,
-      mul_inv_rev, mul_inv_rev, ← mul_assoc, ← mul_assoc] at h
+      mul_inv_rev, mul_inv_rev, ← mul_assoc, ← mul_assoc] at h 
     replace h :=
       mul_right_cancel₀ (inv_ne_zero fun hz => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz))) h
     rw [inner_sub_right, inner_sub_right, real_inner_comm x y, real_inner_self_eq_norm_mul_norm,
       real_inner_self_eq_norm_mul_norm, mul_sub_right_distrib, mul_sub_right_distrib,
-      mul_self_mul_inv, mul_self_mul_inv, sub_eq_sub_iff_sub_eq_sub, ← mul_sub_left_distrib] at h
+      mul_self_mul_inv, mul_self_mul_inv, sub_eq_sub_iff_sub_eq_sub, ← mul_sub_left_distrib] at h 
     by_cases hx0 : x = 0
-    · rw [hx0, norm_zero, inner_zero_left, MulZeroClass.zero_mul, zero_sub, neg_eq_zero] at h
+    · rw [hx0, norm_zero, inner_zero_left, MulZeroClass.zero_mul, zero_sub, neg_eq_zero] at h 
       rw [hx0, norm_zero, h]
     · by_cases hy0 : y = 0
-      · rw [hy0, norm_zero, inner_zero_right, MulZeroClass.zero_mul, sub_zero] at h
+      · rw [hy0, norm_zero, inner_zero_right, MulZeroClass.zero_mul, sub_zero] at h 
         rw [hy0, norm_zero, h]
       · rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ←
-          neg_sub, ← mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h
+          neg_sub, ← mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h 
         symm
         by_contra hyx
         replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm
-        rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ← angle_eq_pi_iff] at h
+        rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ← angle_eq_pi_iff] at h 
         exact hpi h
 #align inner_product_geometry.norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi InnerProductGeometry.norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi
 
@@ -220,9 +220,9 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
   by
   have hcos := cos_angle_add_angle_sub_add_angle_sub_eq_neg_one hx hy
   have hsin := sin_angle_add_angle_sub_add_angle_sub_eq_zero hx hy
-  rw [Real.sin_eq_zero_iff] at hsin
+  rw [Real.sin_eq_zero_iff] at hsin 
   cases' hsin with n hn
-  symm at hn
+  symm at hn 
   have h0 : 0 ≤ angle x y + angle x (x - y) + angle y (y - x) :=
     add_nonneg (add_nonneg (angle_nonneg _ _) (angle_nonneg _ _)) (angle_nonneg _ _)
   have h3 : angle x y + angle x (x - y) + angle y (y - x) ≤ π + π + π :=
@@ -237,34 +237,34 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
           (add_lt_add_of_lt_of_le
             (add_lt_add_of_lt_of_le (lt_of_le_of_ne (angle_le_pi _ _) hxy) (angle_le_pi _ _))
             (angle_le_pi _ _))
-    rw [hxy] at hnlt
-    rw [angle_eq_pi_iff] at hxy
+    rw [hxy] at hnlt 
+    rw [angle_eq_pi_iff] at hxy 
     rcases hxy with ⟨hx, ⟨r, ⟨hr, hxr⟩⟩⟩
     rw [hxr, ← one_smul ℝ x, ← mul_smul, mul_one, ← sub_smul, one_smul, sub_eq_add_neg,
       angle_smul_right_of_pos _ _ (add_pos zero_lt_one (neg_pos_of_neg hr)), angle_self hx,
-      add_zero] at hnlt
+      add_zero] at hnlt 
     apply hnlt
     rw [add_assoc]
     exact add_lt_add_left (lt_of_le_of_lt (angle_le_pi _ _) (lt_add_of_pos_right π Real.pi_pos)) _
   have hn0 : 0 ≤ n :=
     by
-    rw [hn, mul_nonneg_iff_left_nonneg_of_pos Real.pi_pos] at h0
-    norm_cast  at h0
+    rw [hn, mul_nonneg_iff_left_nonneg_of_pos Real.pi_pos] at h0 
+    norm_cast  at h0 
     exact h0
   have hn3 : n < 3 := by
-    rw [hn, show π + π + π = 3 * π by ring] at h3lt
+    rw [hn, show π + π + π = 3 * π by ring] at h3lt 
     replace h3lt := lt_of_mul_lt_mul_right h3lt (le_of_lt Real.pi_pos)
-    norm_cast  at h3lt
+    norm_cast  at h3lt 
     exact h3lt
   interval_cases
-  · rw [hn] at hcos
-    simp at hcos
-    norm_num at hcos
+  · rw [hn] at hcos 
+    simp at hcos 
+    norm_num at hcos 
   · rw [hn]
     norm_num
-  · rw [hn] at hcos
-    simp at hcos
-    norm_num at hcos
+  · rw [hn] at hcos 
+    simp at hcos 
+    norm_num at hcos 
 #align inner_product_geometry.angle_add_angle_sub_add_angle_sub_eq_pi InnerProductGeometry.angle_add_angle_sub_add_angle_sub_eq_pi
 
 end InnerProductGeometry
@@ -309,7 +309,7 @@ alias dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle ←
 theorem angle_eq_angle_of_dist_eq {p1 p2 p3 : P} (h : dist p1 p2 = dist p1 p3) :
     ∠ p1 p2 p3 = ∠ p1 p3 p2 :=
   by
-  rw [dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p1 p3] at h
+  rw [dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p1 p3] at h 
   unfold angle
   convert angle_sub_eq_angle_sub_rev_of_norm_eq h
   · exact (vsub_sub_vsub_cancel_left p3 p2 p1).symm
@@ -320,10 +320,10 @@ theorem angle_eq_angle_of_dist_eq {p1 p2 p3 : P} (h : dist p1 p2 = dist p1 p3) :
 theorem dist_eq_of_angle_eq_angle_of_angle_ne_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = ∠ p1 p3 p2)
     (hpi : ∠ p2 p1 p3 ≠ π) : dist p1 p2 = dist p1 p3 :=
   by
-  unfold angle at h hpi
+  unfold angle at h hpi 
   rw [dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p1 p3]
-  rw [← angle_neg_neg, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev] at hpi
-  rw [← vsub_sub_vsub_cancel_left p3 p2 p1, ← vsub_sub_vsub_cancel_left p2 p3 p1] at h
+  rw [← angle_neg_neg, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev] at hpi 
+  rw [← vsub_sub_vsub_cancel_left p3 p2 p1, ← vsub_sub_vsub_cancel_left p2 p3 p1] at h 
   exact norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi h hpi
 #align euclidean_geometry.dist_eq_of_angle_eq_angle_of_angle_ne_pi EuclideanGeometry.dist_eq_of_angle_eq_angle_of_angle_ne_pi
 
@@ -372,7 +372,7 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
   · let m := midpoint ℝ b c
     have : dist b c ≠ 0 := (dist_pos.mpr hbc).ne'
     have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
-    simp only [dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm
+    simp only [dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm 
     calc
       dist a b ^ 2 + dist a c ^ 2 =
           2 / dist b c * (dist a b ^ 2 * (2⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) :=

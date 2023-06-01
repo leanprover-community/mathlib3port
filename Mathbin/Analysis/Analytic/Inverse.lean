@@ -223,7 +223,7 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
     · simp [h]
     · have : c.length = 1 := by refine' (eq_iff_le_not_lt.2 ⟨_, h⟩).symm;
         exact c.length_pos_of_pos hn
-      rw [← Composition.eq_single_iff_length hn] at this
+      rw [← Composition.eq_single_iff_length hn] at this 
       simp [this]
   have B :
     Disjoint ({ c | 1 < Composition.length c } : Set (Composition n)).toFinset
@@ -249,7 +249,7 @@ theorem comp_rightInv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
   refine' sum_congr rfl fun c hc => p.congr rfl fun j hj1 hj2 => _
   have : ∀ k, c.blocks_fun k < n + 2 :=
     by
-    simp only [Set.mem_toFinset, Set.mem_setOf_eq] at hc
+    simp only [Set.mem_toFinset, Set.mem_setOf_eq] at hc 
     simp [← Composition.ne_single_iff N, Composition.eq_single_iff_length, ne_of_gt hc]
   simp [apply_composition, this]
 #align formal_multilinear_series.comp_right_inv_aux2 FormalMultilinearSeries.comp_rightInv_aux2
@@ -419,12 +419,12 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
         sum_le_sum_of_subset_of_nonneg _ fun x hx1 hx2 =>
           prod_nonneg fun j hj => mul_nonneg hr (mul_nonneg (pow_nonneg ha _) (hp _))
       rintro ⟨k, c⟩ hd
-      simp only [Set.mem_toFinset, mem_Ico, mem_sigma, Set.mem_setOf_eq] at hd
+      simp only [Set.mem_toFinset, mem_Ico, mem_sigma, Set.mem_setOf_eq] at hd 
       simp only [mem_comp_partial_sum_target_iff]
       refine' ⟨hd.2, c.length_le.trans_lt hd.1.2, fun j => _⟩
       have : c ≠ Composition.single k (zero_lt_two.trans_le hd.1.1) := by
         simp [Composition.eq_single_iff_length, ne_of_gt hd.2]
-      rw [Composition.ne_single_iff] at this
+      rw [Composition.ne_single_iff] at this 
       exact (this j).trans_le (nat.lt_succ_iff.mp hd.1.2)
     _ = ∑ e in compPartialSumSource 2 (n + 1) n, ∏ j : Fin e.1, r * (a ^ e.2 j * p (e.2 j)) :=
       by
@@ -526,12 +526,13 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
     (hp : 0 < p.radius) : 0 < (p.right_inv i).radius :=
   by
   obtain ⟨C, r, Cpos, rpos, ple⟩ :
-    ∃ (C r : _)(hC : 0 < C)(hr : 0 < r), ∀ n : ℕ, ‖p n‖ ≤ C * r ^ n := le_mul_pow_of_radius_pos p hp
+    ∃ (C r : _) (hC : 0 < C) (hr : 0 < r), ∀ n : ℕ, ‖p n‖ ≤ C * r ^ n :=
+    le_mul_pow_of_radius_pos p hp
   let I := ‖(i.symm : F →L[𝕜] E)‖
   -- choose `a` small enough to make sure that `∑_{k ≤ n} aᵏ Qₖ` will be controllable by
   -- induction
   obtain ⟨a, apos, ha1, ha2⟩ :
-    ∃ (a : _)(apos : 0 < a), 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a ≤ 1 ∧ r * (I + 1) * a ≤ 1 / 2 :=
+    ∃ (a : _) (apos : 0 < a), 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a ≤ 1 ∧ r * (I + 1) * a ≤ 1 / 2 :=
     by
     have :
       tendsto (fun a => 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) (𝓝 0)

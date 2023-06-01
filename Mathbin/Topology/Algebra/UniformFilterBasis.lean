@@ -58,7 +58,7 @@ theorem cauchy_iff {F : Filter G} :
   letI := B.uniform_space
   haveI := B.uniform_add_group
   suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀ U ∈ B, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), y - x ∈ U by
-    constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this];rwa [this]]
+    constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this]; rwa [this]]
   rw [uniformity_eq_comap_nhds_zero G, ← map_le_iff_le_comap]
   change tendsto _ _ _ ↔ _
   simp [(basis_sets F).prod_self.tendsto_iffₓ B.nhds_zero_has_basis, @forall_swap (_ ∈ _) G]

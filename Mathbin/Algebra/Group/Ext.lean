@@ -154,7 +154,7 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
     ext (a b)
     exact @map_div' M M _ m₁ m₂ _ f (congr_fun h_inv) a b
   cases m₁; cases m₂
-  congr ; exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
+  congr; exacts [h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 #align div_inv_monoid.ext DivInvMonoid.ext
 #align sub_neg_monoid.ext SubNegMonoid.ext
 

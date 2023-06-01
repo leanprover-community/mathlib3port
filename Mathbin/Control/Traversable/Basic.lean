@@ -117,7 +117,7 @@ protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {
 #align applicative_transformation.congr_arg ApplicativeTransformation.congr_arg
 
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
-  by cases η; cases η'; congr ; exact h
+  by cases η; cases η'; congr; exact h
 #align applicative_transformation.coe_inj ApplicativeTransformation.coe_inj
 
 @[ext]
@@ -252,7 +252,7 @@ send the composition of applicative functors to the composition of the
 satisfy a naturality condition with respect to applicative
 transformations. -/
 class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends LawfulFunctor t :
-  Type (u + 1) where
+    Type (u + 1) where
   id_traverse : ∀ {α} (x : t α), traverse id.mk x = x
   comp_traverse :
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G] {α β γ}

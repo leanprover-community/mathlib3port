@@ -239,7 +239,7 @@ theorem factorization_eq_zero_iff_remainder {p r : ℕ} (i : ℕ) (pp : p.Prime)
     ¬p ∣ r ↔ (p * i + r).factorization p = 0 :=
   by
   refine' ⟨factorization_eq_zero_of_remainder i, fun h => _⟩
-  rw [factorization_eq_zero_iff] at h
+  rw [factorization_eq_zero_iff] at h 
   contrapose! h
   refine' ⟨pp, _, _⟩
   · rwa [← Nat.dvd_add_iff_right (Dvd.intro i rfl)]
@@ -565,7 +565,7 @@ theorem factorization_prime_le_iff_dvd {d n : ℕ} (hd : d ≠ 0) (hn : n ≠ 0)
 theorem pow_succ_factorization_not_dvd {n p : ℕ} (hn : n ≠ 0) (hp : p.Prime) :
     ¬p ^ (n.factorization p + 1) ∣ n := by
   intro h
-  rw [← factorization_le_iff_dvd (pow_pos hp.pos _).ne' hn] at h
+  rw [← factorization_le_iff_dvd (pow_pos hp.pos _).ne' hn] at h 
   simpa [hp.factorization] using h p
 #align nat.pow_succ_factorization_not_dvd Nat.pow_succ_factorization_not_dvd
 -/
@@ -614,7 +614,7 @@ theorem exists_factorization_lt_of_lt {a b : ℕ} (ha : a ≠ 0) (hab : a < b) :
   by
   have hb : b ≠ 0 := (ha.bot_lt.trans hab).ne'
   contrapose! hab
-  rw [← Finsupp.le_def, factorization_le_iff_dvd hb ha] at hab
+  rw [← Finsupp.le_def, factorization_le_iff_dvd hb ha] at hab 
   exact le_of_dvd ha.bot_lt hab
 #align nat.exists_factorization_lt_of_lt Nat.exists_factorization_lt_of_lt
 -/
@@ -675,7 +675,7 @@ theorem factorization_ord_compl (n p : ℕ) :
 theorem dvd_ord_compl_of_dvd_not_dvd {p d n : ℕ} (hdn : d ∣ n) (hpd : ¬p ∣ d) :
     d ∣ ord_compl[p] n := by
   rcases eq_or_ne n 0 with (rfl | hn0); · simp
-  rcases eq_or_ne d 0 with (rfl | hd0); · simp at hpd; cases hpd
+  rcases eq_or_ne d 0 with (rfl | hd0); · simp at hpd ; cases hpd
   rw [← factorization_le_iff_dvd hd0 (ord_compl_pos p hn0).ne', factorization_ord_compl]
   intro q
   rcases eq_or_ne q p with (rfl | hqp)
@@ -708,7 +708,7 @@ theorem dvd_iff_div_factorization_eq_tsub {d n : ℕ} (hd : d ≠ 0) (hdn : d �
   by_contra h2
   cases' exists_factorization_lt_of_lt (mul_ne_zero h1 hd) (not_le.mp h2) with p hp
   rwa [factorization_mul h1 hd, add_apply, ← lt_tsub_iff_right, h, tsub_apply, lt_self_iff_false] at
-    hp
+    hp 
 #align nat.dvd_iff_div_factorization_eq_tsub Nat.dvd_iff_div_factorization_eq_tsub
 -/
 
@@ -807,7 +807,7 @@ theorem factorization_gcd {a b : ℕ} (ha_pos : a ≠ 0) (hb_pos : b ≠ 0) :
   · rw [← factorization_le_iff_dvd hd_pos hb_pos, h1]; exact inf_le_right
   · intro e hea heb
     rcases Decidable.eq_or_ne e 0 with (rfl | he_pos)
-    · simp only [zero_dvd_iff] at hea; contradiction
+    · simp only [zero_dvd_iff] at hea ; contradiction
     have hea' := (factorization_le_iff_dvd he_pos ha_pos).mpr hea
     have heb' := (factorization_le_iff_dvd he_pos hb_pos).mpr heb
     simp [← factorization_le_iff_dvd he_pos hd_pos, h1, hea', heb']

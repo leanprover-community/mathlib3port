@@ -28,7 +28,7 @@ variable {α : Type _}
 `c` with `b = a + c`. -/
 @[protect_proj]
 class CanonicallyLinearOrderedSemifield (α : Type _) extends CanonicallyOrderedCommSemiring α,
-  LinearOrderedSemifield α
+    LinearOrderedSemifield α
 #align canonically_linear_ordered_semifield CanonicallyLinearOrderedSemifield
 -/
 

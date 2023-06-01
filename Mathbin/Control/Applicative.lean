@@ -138,10 +138,10 @@ instance {f : Type u → Type w} {g : Type v → Type u} [Applicative f] [Applic
     [CommApplicative f] [CommApplicative g] : CommApplicative (Comp f g) :=
   by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
-  intros ; casesm*comp _ _ _; simp! [map, Seq.seq, functor_norm]
+  intros; casesm*comp _ _ _; simp! [map, Seq.seq, functor_norm]
   rw [commutative_map]
   simp [comp.mk, flip, (· ∘ ·), functor_norm]
-  congr ; funext; rw [commutative_map]; congr
+  congr; funext; rw [commutative_map]; congr
 
 end Comp
 

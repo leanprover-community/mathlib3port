@@ -77,7 +77,7 @@ you should parametrize over `(F : Type*) [order_add_monoid_hom_class F α β] (f
 
 When you extend this structure, make sure to extend `order_add_monoid_hom_class`. -/
 structure OrderAddMonoidHom (α β : Type _) [Preorder α] [Preorder β] [AddZeroClass α]
-  [AddZeroClass β] extends α →+ β where
+    [AddZeroClass β] extends α →+ β where
   monotone' : Monotone to_fun
 #align order_add_monoid_hom OrderAddMonoidHom
 -/
@@ -92,7 +92,7 @@ section
 
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
 class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
-  [AddZeroClass α] [AddZeroClass β] extends AddMonoidHomClass F α β where
+    [AddZeroClass α] [AddZeroClass β] extends AddMonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_add_monoid_hom_class OrderAddMonoidHomClass
 -/
@@ -117,7 +117,7 @@ you should parametrize over `(F : Type*) [order_monoid_hom_class F α β] (f : F
 When you extend this structure, make sure to extend `order_monoid_hom_class`. -/
 @[to_additive]
 structure OrderMonoidHom (α β : Type _) [Preorder α] [Preorder β] [MulOneClass α]
-  [MulOneClass β] extends α →* β where
+    [MulOneClass β] extends α →* β where
   monotone' : Monotone to_fun
 #align order_monoid_hom OrderMonoidHom
 #align order_add_monoid_hom OrderAddMonoidHom
@@ -134,7 +134,7 @@ section
 You should also extend this typeclass when you extend `order_monoid_hom`. -/
 @[to_additive]
 class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
-  [MulOneClass α] [MulOneClass β] extends MonoidHomClass F α β where
+    [MulOneClass α] [MulOneClass β] extends MonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_monoid_hom_class OrderMonoidHomClass
 #align order_add_monoid_hom_class OrderAddMonoidHomClass
@@ -177,7 +177,7 @@ you should parametrize over `(F : Type*) [order_monoid_with_zero_hom_class F α 
 
 When you extend this structure, make sure to extend `order_monoid_with_zero_hom_class`. -/
 structure OrderMonoidWithZeroHom (α β : Type _) [Preorder α] [Preorder β] [MulZeroOneClass α]
-  [MulZeroOneClass β] extends α →*₀ β where
+    [MulZeroOneClass β] extends α →*₀ β where
   monotone' : Monotone to_fun
 #align order_monoid_with_zero_hom OrderMonoidWithZeroHom
 -/
@@ -193,7 +193,7 @@ ordered monoid with zero homomorphisms.
 
 You should also extend this typeclass when you extend `order_monoid_with_zero_hom`. -/
 class OrderMonoidWithZeroHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
-  [MulZeroOneClass α] [MulZeroOneClass β] extends MonoidWithZeroHomClass F α β where
+    [MulZeroOneClass α] [MulZeroOneClass β] extends MonoidWithZeroHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_monoid_with_zero_hom_class OrderMonoidWithZeroHomClass
 -/

@@ -204,7 +204,7 @@ theorem HasCompactMulSupport.isCompact_range [TopologicalSpace β] (h : HasCompa
     (hf : Continuous f) : IsCompact (range f) :=
   by
   cases' range_eq_image_mulTSupport_or f with h2 h2 <;> rw [h2]
-  exacts[h.image hf, (h.image hf).insert 1]
+  exacts [h.image hf, (h.image hf).insert 1]
 #align has_compact_mul_support.is_compact_range HasCompactMulSupport.isCompact_range
 #align has_compact_support.is_compact_range HasCompactSupport.isCompact_range
 -/
@@ -255,7 +255,7 @@ theorem HasCompactMulSupport.comp₂_left (hf : HasCompactMulSupport f)
     (hf₂ : HasCompactMulSupport f₂) (hm : m 1 1 = 1) :
     HasCompactMulSupport fun x => m (f x) (f₂ x) :=
   by
-  rw [hasCompactMulSupport_iff_eventuallyEq] at hf hf₂⊢
+  rw [hasCompactMulSupport_iff_eventuallyEq] at hf hf₂ ⊢
   filter_upwards [hf, hf₂]using fun x hx hx₂ => by simp_rw [hx, hx₂, Pi.one_apply, hm]
 #align has_compact_mul_support.comp₂_left HasCompactMulSupport.comp₂_left
 #align has_compact_support.comp₂_left HasCompactSupport.comp₂_left
@@ -285,7 +285,7 @@ variable {f : α → R} {f' : α → M} {x : α}
 
 theorem HasCompactSupport.smul_left (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
   by
-  rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
+  rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 #align has_compact_support.smul_left HasCompactSupport.smul_left
 
@@ -299,13 +299,13 @@ variable {f : α → R} {f' : α → M} {x : α}
 
 theorem HasCompactSupport.smul_right (hf : HasCompactSupport f) : HasCompactSupport (f • f') :=
   by
-  rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
+  rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, zero_smul]
 #align has_compact_support.smul_right HasCompactSupport.smul_right
 
 theorem HasCompactSupport.smul_left' (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
   by
-  rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
+  rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 #align has_compact_support.smul_left' HasCompactSupport.smul_left'
 
@@ -319,13 +319,13 @@ variable {f f' : α → β} {x : α}
 
 theorem HasCompactSupport.mul_right (hf : HasCompactSupport f) : HasCompactSupport (f * f') :=
   by
-  rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
+  rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, MulZeroClass.zero_mul]
 #align has_compact_support.mul_right HasCompactSupport.mul_right
 
 theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSupport (f * f') :=
   by
-  rw [hasCompactSupport_iff_eventuallyEq] at hf⊢
+  rw [hasCompactSupport_iff_eventuallyEq] at hf ⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, MulZeroClass.mul_zero]
 #align has_compact_support.mul_left HasCompactSupport.mul_left
 
@@ -343,7 +343,7 @@ of open sets, then for any point we can find a neighbourhood on which only finit
 theorem exists_finset_nhd_mulSupport_subset {f : ι → X → R}
     (hlf : LocallyFinite fun i => mulSupport (f i)) (hso : ∀ i, mulTSupport (f i) ⊆ U i)
     (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
+    ∃ (is : Finset ι) (n : Set X) (hn₁ : n ∈ 𝓝 x) (hn₂ : n ⊆ ⋂ i ∈ is, U i),
       ∀ z ∈ n, (mulSupport fun i => f i z) ⊆ is :=
   by
   obtain ⟨n, hn, hnf⟩ := hlf x
@@ -360,10 +360,10 @@ theorem exists_finset_nhd_mulSupport_subset {f : ι → X → R}
             (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
     · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
     · have hzn : z ∈ n := by
-        rw [inter_assoc] at hz
+        rw [inter_assoc] at hz 
         exact mem_of_mem_inter_left hz
       replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-      simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
+      simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz 
       suffices (mul_support fun i => f i z) ⊆ hnf.to_finset
         by
         refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _

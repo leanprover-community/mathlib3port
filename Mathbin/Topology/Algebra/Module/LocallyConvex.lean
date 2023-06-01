@@ -47,7 +47,7 @@ section Semimodule
 /-- A `locally_convex_space` is a topological semimodule over an ordered semiring in which convex
 neighborhoods of a point form a neighborhood basis at that point. -/
 class LocallyConvexSpace (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
-  [TopologicalSpace E] : Prop where
+    [TopologicalSpace E] : Prop where
   convex_basis : ∀ x : E, (𝓝 x).HasBasis (fun s : Set E => s ∈ 𝓝 x ∧ Convex 𝕜 s) id
 #align locally_convex_space LocallyConvexSpace
 -/
@@ -146,13 +146,13 @@ theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} 
   letI : UniformSpace E := TopologicalAddGroup.toUniformSpace E
   haveI : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
   have := (LocallyConvexSpace.convex_open_basis_zero 𝕜 E).comap fun x : E × E => x.2 - x.1
-  rw [← uniformity_eq_comap_nhds_zero] at this
+  rw [← uniformity_eq_comap_nhds_zero] at this 
   rcases disj.exists_uniform_thickening_of_basis this hs₂ ht₂ with ⟨V, ⟨hV0, hVopen, hVconvex⟩, hV⟩
   refine'
     ⟨s + V, t + V, hVopen.add_left, hVopen.add_left, hs₁.add hVconvex, ht₁.add hVconvex,
       subset_add_left _ hV0, subset_add_left _ hV0, _⟩
   simp_rw [← Union_add_left_image, image_add_left]
-  simp_rw [UniformSpace.ball, ← preimage_comp, sub_eq_neg_add] at hV
+  simp_rw [UniformSpace.ball, ← preimage_comp, sub_eq_neg_add] at hV 
   exact hV
 #align disjoint.exists_open_convexes Disjoint.exists_open_convexes
 

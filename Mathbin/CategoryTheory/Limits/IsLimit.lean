@@ -529,7 +529,7 @@ def homOfCone (s : Cone F) : s.pt ⟶ X :=
 @[simp]
 theorem coneOfHom_homOfCone (s : Cone F) : coneOfHom h (homOfCone h s) = s :=
   by
-  dsimp [cone_of_hom, hom_of_cone]; cases s; congr ; dsimp
+  dsimp [cone_of_hom, hom_of_cone]; cases s; congr; dsimp
   convert congr_fun (congr_fun (congr_arg nat_trans.app h.inv_hom_id) (op s_X)) s_π
   exact ULift.up_down _
 #align category_theory.limits.is_limit.of_nat_iso.cone_of_hom_of_cone CategoryTheory.Limits.IsLimit.OfNatIso.coneOfHom_homOfCone
@@ -552,8 +552,8 @@ theorem coneOfHom_fac {Y : C} (f : Y ⟶ X) : coneOfHom h f = (limitCone h).exte
   dsimp [cone_of_hom, limit_cone, cone.extend]
   congr with j
   have t := congr_fun (h.hom.naturality f.op) ⟨𝟙 X⟩
-  dsimp at t
-  simp only [comp_id] at t
+  dsimp at t 
+  simp only [comp_id] at t 
   rw [congr_fun (congr_arg nat_trans.app t) j]
   rfl
 #align category_theory.limits.is_limit.of_nat_iso.cone_of_hom_fac CategoryTheory.Limits.IsLimit.OfNatIso.coneOfHom_fac
@@ -583,7 +583,7 @@ def ofNatIso {X : C} (h : yoneda.obj X ⋙ uliftFunctor.{u₁} ≅ F.cones) : Is
     have h := cone_fac h s
     cases s
     injection h with h₁ h₂
-    simp only [heq_iff_eq] at h₂
+    simp only [heq_iff_eq] at h₂ 
     conv_rhs => rw [← h₂]; rfl
   uniq s m w := by
     rw [← hom_of_cone_of_hom h m]
@@ -1083,7 +1083,7 @@ def homOfCocone (s : Cocone F) : X ⟶ s.pt :=
 @[simp]
 theorem coconeOfHom_homOfCocone (s : Cocone F) : coconeOfHom h (homOfCocone h s) = s :=
   by
-  dsimp [cocone_of_hom, hom_of_cocone]; cases s; congr ; dsimp
+  dsimp [cocone_of_hom, hom_of_cocone]; cases s; congr; dsimp
   convert congr_fun (congr_fun (congr_arg nat_trans.app h.inv_hom_id) s_X) s_ι
   exact ULift.up_down _
 #align category_theory.limits.is_colimit.of_nat_iso.cocone_of_hom_of_cocone CategoryTheory.Limits.IsColimit.OfNatIso.coconeOfHom_homOfCocone
@@ -1106,8 +1106,8 @@ theorem coconeOfHom_fac {Y : C} (f : X ⟶ Y) : coconeOfHom h f = (colimitCocone
   dsimp [cocone_of_hom, colimit_cocone, cocone.extend]
   congr with j
   have t := congr_fun (h.hom.naturality f) ⟨𝟙 X⟩
-  dsimp at t
-  simp only [id_comp] at t
+  dsimp at t 
+  simp only [id_comp] at t 
   rw [congr_fun (congr_arg nat_trans.app t) j]
   rfl
 #align category_theory.limits.is_colimit.of_nat_iso.cocone_of_hom_fac CategoryTheory.Limits.IsColimit.OfNatIso.coconeOfHom_fac
@@ -1137,7 +1137,7 @@ def ofNatIso {X : C} (h : coyoneda.obj (op X) ⋙ uliftFunctor.{u₁} ≅ F.coco
     have h := cocone_fac h s
     cases s
     injection h with h₁ h₂
-    simp only [heq_iff_eq] at h₂
+    simp only [heq_iff_eq] at h₂ 
     conv_rhs => rw [← h₂]; rfl
   uniq s m w := by
     rw [← hom_of_cocone_of_hom h m]

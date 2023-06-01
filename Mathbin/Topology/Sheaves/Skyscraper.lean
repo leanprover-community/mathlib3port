@@ -78,7 +78,9 @@ theorem skyscraperPresheaf_eq_pushforward
   convert_to@skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U)
           C _ _ A =
         _ <;>
-    first |congr |rfl
+    first
+    | congr
+    | rfl
 #align skyscraper_presheaf_eq_pushforward skyscraperPresheaf_eq_pushforward
 
 /-- Taking skyscraper presheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by

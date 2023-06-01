@@ -129,7 +129,7 @@ theorem isExtreme_iInter {ι : Sort _} [Nonempty ι] {F : ι → Set E}
   by
   obtain i := Classical.arbitrary ι
   refine' ⟨Inter_subset_of_subset i (hAF i).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_Inter] at hxF⊢
+  simp_rw [mem_Inter] at hxF ⊢
   have h := fun i => (hAF i).2 hx₁A hx₂A (hxF i) hx
   exact ⟨fun i => (h i).1, fun i => (h i).2⟩
 #align is_extreme_Inter isExtreme_iInter
@@ -147,7 +147,7 @@ theorem isExtreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F,
     IsExtreme 𝕜 A (⋂₀ F) := by
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_sInter] at hxF⊢
+  simp_rw [mem_sInter] at hxF ⊢
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 #align is_extreme_sInter isExtreme_sInter
@@ -297,10 +297,10 @@ theorem mem_extremePoints_iff_forall_segment :
   constructor
   · rw [← insert_endpoints_openSegment]
     rintro H (rfl | rfl | hx)
-    exacts[Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
+    exacts [Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
   · intro H hx
     rcases H (openSegment_subset_segment _ _ _ hx) with (rfl | rfl)
-    exacts[⟨rfl, (left_mem_openSegment_iff.1 hx).symm⟩, ⟨right_mem_openSegment_iff.1 hx, rfl⟩]
+    exacts [⟨rfl, (left_mem_openSegment_iff.1 hx).symm⟩, ⟨right_mem_openSegment_iff.1 hx, rfl⟩]
 #align mem_extreme_points_iff_forall_segment mem_extremePoints_iff_forall_segment
 
 theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
@@ -309,7 +309,7 @@ theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
   use fun hx => ⟨hx.1, (mem_extremePoints_iff_extreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extremePoints_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
-  rw [convex_iff_segment_subset] at hAx
+  rw [convex_iff_segment_subset] at hAx 
   by_contra' h
   exact
     (hAx ⟨hx₁, fun hx₁ => h.1 (mem_singleton_iff.2 hx₁)⟩
@@ -326,7 +326,7 @@ theorem Convex.mem_extremePoints_iff_mem_diff_convexHull_diff (hA : Convex 𝕜 
 theorem extremePoints_convexHull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A :=
   by
   rintro x hx
-  rw [(convex_convexHull 𝕜 _).mem_extremePoints_iff_convex_diff] at hx
+  rw [(convex_convexHull 𝕜 _).mem_extremePoints_iff_convex_diff] at hx 
   by_contra
   exact
     (convexHull_min (subset_diff.2 ⟨subset_convexHull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2

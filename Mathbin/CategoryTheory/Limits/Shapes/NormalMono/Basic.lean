@@ -119,7 +119,7 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     have q := (has_zero_morphisms.comp_zero k hn.Z).symm
     convert gr.is_limit
     dsimp only [kernel_fork.of_ι, fork.of_ι]
-    congr ; exact q; exact q; exact q; apply proof_irrel_heq
+    congr; exact q; exact q; exact q; apply proof_irrel_heq
 #align category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
 -/
 
@@ -239,7 +239,7 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     have q := (@zero_comp _ _ _ gn.W _ _ f).symm
     convert hn.is_colimit
     dsimp only [cokernel_cofork.of_π, cofork.of_π]
-    congr ; exact q; exact q; exact q; apply proof_irrel_heq
+    congr; exact q; exact q; exact q; apply proof_irrel_heq
 #align category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
 -/
 

@@ -507,10 +507,10 @@ theorem abs_add_eq_add_abs_le (hle : a ≤ b) : |a + b| = |a| + |b| ↔ 0 ≤ a 
   refine' this.mp ⟨fun h => _, fun h => by simp only [le_antisymm h b0, abs_of_neg a0, add_zero]⟩
   obtain ab | ab := le_or_lt (a + b) 0
   · refine' le_of_eq (eq_zero_of_neg_eq _)
-    rwa [abs_of_nonpos ab, neg_add_rev, add_comm, add_right_inj] at h
+    rwa [abs_of_nonpos ab, neg_add_rev, add_comm, add_right_inj] at h 
   · refine' (lt_irrefl (0 : α) _).elim
-    rw [abs_of_pos ab, add_left_inj] at h
-    rwa [eq_zero_of_neg_eq h.symm] at a0
+    rw [abs_of_pos ab, add_left_inj] at h 
+    rwa [eq_zero_of_neg_eq h.symm] at a0 
 #align abs_add_eq_add_abs_le abs_add_eq_add_abs_le
 
 theorem abs_add_eq_add_abs_iff (a b : α) : |a + b| = |a| + |b| ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
@@ -530,9 +530,8 @@ theorem WithBot.coe_nsmul [AddMonoid A] (a : A) (n : ℕ) : ((n • a : A) : Wit
 -/
 
 theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n := by
-  induction' n with n ih <;>
-    [rw [zero_nsmul, Nat.cast_zero,
-      MulZeroClass.mul_zero];rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
+  induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, MulZeroClass.mul_zero];
+    rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
 #align nsmul_eq_mul' nsmul_eq_mul'ₓ
 
 @[simp]
@@ -570,11 +569,11 @@ theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m :=
 
 @[simp, norm_cast]
 theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
-  induction' m with m ih <;> [exact Int.ofNat_one;rw [pow_succ', pow_succ', Int.ofNat_mul, ih]]
+  induction' m with m ih <;> [exact Int.ofNat_one; rw [pow_succ', pow_succ', Int.ofNat_mul, ih]]
 #align int.coe_nat_pow Int.coe_nat_pow
 
 theorem Int.natAbs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^ k := by
-  induction' k with k ih <;> [rfl;rw [pow_succ', Int.natAbs_mul, pow_succ', ih]]
+  induction' k with k ih <;> [rfl; rw [pow_succ', Int.natAbs_mul, pow_succ', ih]]
 #align int.nat_abs_pow Int.natAbs_pow
 
 -- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.

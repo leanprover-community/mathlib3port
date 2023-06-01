@@ -191,8 +191,8 @@ theorem eq_jacobson_iff_not_mem :
   by
   constructor
   · intro h x hx
-    erw [← h, mem_Inf] at hx
-    push_neg  at hx
+    erw [← h, mem_Inf] at hx 
+    push_neg  at hx 
     exact hx
   · refine' fun h => le_antisymm (fun x hx => _) le_jacobson
     contrapose hx
@@ -259,7 +259,7 @@ theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f
 theorem jacobson_mono {I J : Ideal R} : I ≤ J → I.jacobson ≤ J.jacobson :=
   by
   intro h x hx
-  erw [mem_Inf] at hx⊢
+  erw [mem_Inf] at hx ⊢
   exact fun K ⟨hK, hK_max⟩ => hx ⟨trans h hK, hK_max⟩
 #align ideal.jacobson_mono Ideal.jacobson_mono
 
@@ -282,7 +282,7 @@ theorem isRadical_of_eq_jacobson (h : jacobson I = I) : I.IsRadical :=
 theorem isUnit_of_sub_one_mem_jacobson_bot (r : R) (h : r - 1 ∈ jacobson (⊥ : Ideal R)) :
     IsUnit r := by
   cases' exists_mul_sub_mem_of_sub_one_mem_jacobson r h with s hs
-  rw [mem_bot, sub_eq_zero, mul_comm] at hs
+  rw [mem_bot, sub_eq_zero, mul_comm] at hs 
   exact isUnit_of_mul_eq_one _ _ hs
 #align ideal.is_unit_of_sub_one_mem_jacobson_bot Ideal.isUnit_of_sub_one_mem_jacobson_bot
 
@@ -306,11 +306,11 @@ theorem jacobson_eq_iff_jacobson_quotient_eq_bot :
   constructor
   · intro h
     replace h := congr_arg (map (Quotient.mk' I)) h
-    rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h
+    rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h 
     simpa using h
   · intro h
     replace h := congr_arg (comap (Quotient.mk' I)) h
-    rw [comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at h
+    rw [comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at h 
     simpa using h
 #align ideal.jacobson_eq_iff_jacobson_quotient_eq_bot Ideal.jacobson_eq_iff_jacobson_quotient_eq_bot
 
@@ -324,11 +324,11 @@ theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
   · intro h
     have := congr_arg (map (Quotient.mk' I)) h
     rw [map_radical_of_surjective hf (le_of_eq mk_ker),
-      map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this
+      map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this 
     simpa using this
   · intro h
     have := congr_arg (comap (Quotient.mk' I)) h
-    rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at this
+    rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotient.mk' I).ker_eq_comap_bot] at this 
     simpa using this
 #align ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot Ideal.radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot
 
@@ -361,7 +361,7 @@ theorem jacobson_bot_polynomial_le_sInf_map_maximal :
     by
     rw [← hj.2, jacobson_eq_iff_jacobson_quotient_eq_bot]
     replace this := congr_arg (map (polynomial_quotient_equiv_quotient_polynomial j).toRingHom) this
-    rwa [map_jacobson_of_bijective _, map_bot] at this
+    rwa [map_jacobson_of_bijective _, map_bot] at this 
     exact RingEquiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)
   refine' eq_bot_iff.2 fun f hf => _
   simpa [(fun hX => by simpa using congr_arg (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
@@ -373,7 +373,7 @@ theorem jacobson_bot_polynomial_of_jacobson_bot (h : jacobson (⊥ : Ideal R) = 
   by
   refine' eq_bot_iff.2 (le_trans jacobson_bot_polynomial_le_Inf_map_maximal _)
   refine' fun f hf => (Submodule.mem_bot _).2 (Polynomial.ext fun n => trans _ (coeff_zero n).symm)
-  suffices f.coeff n ∈ Ideal.jacobson ⊥ by rwa [h, Submodule.mem_bot] at this
+  suffices f.coeff n ∈ Ideal.jacobson ⊥ by rwa [h, Submodule.mem_bot] at this 
   exact mem_Inf.2 fun j hj => (mem_map_C_iff.1 ((mem_Inf.1 hf) ⟨j, ⟨hj.2, rfl⟩⟩)) n
 #align ideal.jacobson_bot_polynomial_of_jacobson_bot Ideal.jacobson_bot_polynomial_of_jacobson_bot
 

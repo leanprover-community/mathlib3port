@@ -45,7 +45,8 @@ triangles.
 See <https://stacks.math.columbia.edu/tag/001G>.
 -/
 def Over (X : T) :=
-  CostructuredArrow (𝟭 T) X deriving Category
+  CostructuredArrow (𝟭 T) X
+deriving Category
 #align category_theory.over CategoryTheory.Over
 -/
 
@@ -345,7 +346,8 @@ end Over
 /-- The under category has as objects arrows with domain `X` and as morphisms commutative
     triangles. -/
 def Under (X : T) :=
-  StructuredArrow X (𝟭 T)deriving Category
+  StructuredArrow X (𝟭 T)
+deriving Category
 #align category_theory.under CategoryTheory.Under
 -/
 

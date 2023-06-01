@@ -98,7 +98,7 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' :
       simp only [norm_sub_rev (F x₀ _)]
       refine' h_lipsch.mono fun a ha => (ha x x_in).trans _
       rw [mul_comm ε]
-      rw [mem_ball, dist_eq_norm] at x_in
+      rw [mem_ball, dist_eq_norm] at x_in 
       exact mul_le_mul_of_nonneg_left x_in.le (b_nonneg _)
     exact
       integrable_of_norm_sub_le (hF_meas x x_in) hF_int
@@ -121,7 +121,7 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' :
     intro x x_in
     rw [Set.mem_setOf_eq, ← norm_smul_of_nonneg (nneg _), integral_smul, integral_sub, integral_sub,
       ← ContinuousLinearMap.integral_apply hF'_int]
-    exacts[hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int,
+    exacts [hF_int' x x_in, hF_int, (hF_int' x x_in).sub hF_int,
       hF'_int.apply_continuous_linear_map _]
   rw [hasFDerivAt_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←
     show (∫ a : α, ‖x₀ - x₀‖⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by simp]
@@ -161,7 +161,7 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' :
       by
       ext x
       rw [norm_smul_of_nonneg (nneg _)]
-    rwa [hasFDerivAt_iff_tendsto, this] at ha
+    rwa [hasFDerivAt_iff_tendsto, this] at ha 
 #align has_fderiv_at_integral_of_dominated_loc_of_lip' hasFDerivAt_integral_of_dominated_loc_of_lip'
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
@@ -237,14 +237,14 @@ theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' 
       h_diff with
     hF'_int key
   replace hF'_int : integrable F' μ
-  · rw [← integrable_norm_iff hm] at hF'_int
+  · rw [← integrable_norm_iff hm] at hF'_int 
     simpa only [L, (· ∘ ·), integrable_norm_iff, hF'_meas, one_mul, norm_one,
       ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_restrict_scalarsL',
       ContinuousLinearMap.norm_restrictScalars, ContinuousLinearMap.norm_smulRightL_apply] using
       hF'_int
   refine' ⟨hF'_int, _⟩
-  simp_rw [hasDerivAt_iff_hasFDerivAt] at h_diff⊢
-  rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key
+  simp_rw [hasDerivAt_iff_hasFDerivAt] at h_diff ⊢
+  rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key 
   all_goals infer_instance
 #align has_deriv_at_integral_of_dominated_loc_of_lip hasDerivAt_integral_of_dominated_loc_of_lip
 

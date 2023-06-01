@@ -124,7 +124,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     have : (x, y) ∉ interior V :=
       by
       have : (x, y) ∈ closure (Vᶜ) := by rwa [mem_closure_iff_clusterPt]
-      rwa [closure_compl] at this
+      rwa [closure_compl] at this 
     have diag_subset : diagonal γ ⊆ interior V := subset_interior_iff_mem_nhdsSet.2 V_in
     have x_ne_y : x ≠ y := mt (@diag_subset (x, y)) this
     -- Since γ is compact and Hausdorff, it is normal, hence T₃.
@@ -203,8 +203,8 @@ theorem IsCompact.uniformContinuousOn_of_continuous {s : Set α} {f : α → β}
     (hf : ContinuousOn f s) : UniformContinuousOn f s :=
   by
   rw [uniformContinuousOn_iff_restrict]
-  rw [isCompact_iff_compactSpace] at hs
-  rw [continuousOn_iff_continuous_restrict] at hf
+  rw [isCompact_iff_compactSpace] at hs 
+  rw [continuousOn_iff_continuous_restrict] at hf 
   skip
   exact CompactSpace.uniformContinuous_of_continuous hf
 #align is_compact.uniform_continuous_on_of_continuous IsCompact.uniformContinuousOn_of_continuous
@@ -227,7 +227,7 @@ theorem IsCompact.uniformContinuousAt_of_continuousAt {r : Set (β × β)} {s : 
   obtain ⟨a, ha, haU⟩ := Set.mem_iUnion₂.1 (hsU h₁)
   apply htr
   refine' ⟨f a, htsymm.mk_mem_comm.1 (hb _ _ _ haU _), hb _ _ _ haU _⟩
-  exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
+  exacts [mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
 #align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniformContinuousAt_of_continuousAt
 -/
 
@@ -306,7 +306,7 @@ uniformly equicontinuous. -/
 theorem CompactSpace.uniformEquicontinuous_of_equicontinuous {ι : Type _} {F : ι → β → α}
     [CompactSpace β] (h : Equicontinuous F) : UniformEquicontinuous F :=
   by
-  rw [equicontinuous_iff_continuous] at h
+  rw [equicontinuous_iff_continuous] at h 
   rw [uniformEquicontinuous_iff_uniformContinuous]
   exact CompactSpace.uniformContinuous_of_continuous h
 #align compact_space.uniform_equicontinuous_of_equicontinuous CompactSpace.uniformEquicontinuous_of_equicontinuous

@@ -55,7 +55,8 @@ def actionAsFunctor : SingleObj M ⥤ Type u
  from x to y is a scalar taking x to y. Due to implementation details, the object type
  of this category is not equal to X, but is in bijection with X. -/
 def ActionCategory :=
-  (actionAsFunctor M X).Elements deriving Category
+  (actionAsFunctor M X).Elements
+deriving Category
 #align category_theory.action_category CategoryTheory.ActionCategory
 -/
 
@@ -206,10 +207,10 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
   have F_map_eq : ∀ {a b} {f : a ⟶ b}, F.map f = (F.map (homOfPair b.back f.val) : H) :=
     ActionCategory.cases fun _ _ => rfl
   { toFun := fun g => ⟨fun b => F.map (homOfPair b g), g⟩
-    map_one' := by congr ; funext; exact F_map_eq.symm.trans (F.map_id b)
+    map_one' := by congr; funext; exact F_map_eq.symm.trans (F.map_id b)
     map_mul' := by
       intro g h
-      congr ; funext
+      congr; funext
       exact F_map_eq.symm.trans (F.map_comp (hom_of_pair (g⁻¹ • b) h) (hom_of_pair b g)) }
 #align category_theory.action_category.curry CategoryTheory.ActionCategory.curry
 -/

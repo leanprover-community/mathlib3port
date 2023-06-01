@@ -125,11 +125,11 @@ theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) : x ∈ (alge
   by
   have h : IsIntegral A x := by
     by_contra h
-    rw [eq_zero h, degree_zero, ← WithBot.coe_one] at hx
+    rw [eq_zero h, degree_zero, ← WithBot.coe_one] at hx 
     exact ne_of_lt (show ⊥ < ↑1 from WithBot.bot_lt_coe 1) hx
   have key := minpoly.aeval A x
   rw [eq_X_add_C_of_degree_eq_one hx, (minpoly.monic h).leadingCoeff, C_1, one_mul, aeval_add,
-    aeval_C, aeval_X, ← eq_neg_iff_add_eq_zero, ← RingHom.map_neg] at key
+    aeval_C, aeval_X, ← eq_neg_iff_add_eq_zero, ← RingHom.map_neg] at key 
   exact ⟨-(minpoly A x).coeff 0, key.symm⟩
 #align minpoly.mem_range_of_degree_eq_one minpoly.mem_range_of_degree_eq_one
 
@@ -151,12 +151,12 @@ theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
   · exact (h <| (aeval_mod_by_monic_eq_self_of_root hm hp).trans <| aeval A x).elim
   obtain ⟨r, hr⟩ := (dvd_iff_mod_by_monic_eq_zero hm).1 h
   rw [hr]; have hlead := congr_arg leading_coeff hr
-  rw [mul_comm, leading_coeff_mul_monic hm, (monic hx).leadingCoeff] at hlead
+  rw [mul_comm, leading_coeff_mul_monic hm, (monic hx).leadingCoeff] at hlead 
   have : nat_degree r ≤ 0 :=
     by
     have hr0 : r ≠ 0 := by rintro rfl; exact NeZero hx (MulZeroClass.mul_zero p ▸ hr)
-    apply_fun nat_degree  at hr
-    rw [hm.nat_degree_mul' hr0] at hr
+    apply_fun nat_degree  at hr 
+    rw [hm.nat_degree_mul' hr0] at hr 
     apply Nat.le_of_add_le_add_left
     rw [add_zero]
     exact hr.symm.trans_le (nat_degree_le_nat_degree <| min A x hm hp)
@@ -170,9 +170,9 @@ theorem subsingleton [Subsingleton B] : minpoly A x = 1 :=
   by
   nontriviality A
   have := minpoly.min A x monic_one (Subsingleton.elim _ _)
-  rw [degree_one] at this
+  rw [degree_one] at this 
   cases' le_or_lt (minpoly A x).degree 0 with h h
-  · rwa [(monic ⟨1, monic_one, by simp⟩ : (minpoly A x).Monic).degree_le_zero_iff_eq_one] at h
+  · rwa [(monic ⟨1, monic_one, by simp⟩ : (minpoly A x).Monic).degree_le_zero_iff_eq_one] at h 
   · exact (this.not_lt h).elim
 #align minpoly.subsingleton minpoly.subsingleton
 -/
@@ -220,8 +220,8 @@ theorem eq_X_sub_C_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMa
   · rw [map_sub, aeval_C, aeval_X, sub_self]
   simp_rw [or_iff_not_imp_left]
   intro q hl h0
-  rw [← nat_degree_lt_nat_degree_iff h0, nat_degree_X_sub_C, Nat.lt_one_iff] at hl
-  rw [eq_C_of_nat_degree_eq_zero hl] at h0⊢
+  rw [← nat_degree_lt_nat_degree_iff h0, nat_degree_X_sub_C, Nat.lt_one_iff] at hl 
+  rw [eq_C_of_nat_degree_eq_zero hl] at h0 ⊢
   rwa [aeval_C, map_ne_zero_iff _ hf, ← C_ne_zero]
 #align minpoly.eq_X_sub_C_of_algebra_map_inj minpoly.eq_X_sub_C_of_algebraMap_inj
 
@@ -256,7 +256,7 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) :=
   rw [← hf.is_unit_iff, ← hg.is_unit_iff]
   by_contra' h
   have heval := congr_arg (Polynomial.aeval x) he
-  rw [aeval A x, aeval_mul, mul_eq_zero] at heval
+  rw [aeval A x, aeval_mul, mul_eq_zero] at heval 
   cases heval
   · exact aeval_ne_zero_of_dvd_not_unit_minpoly hx hf ⟨hf.ne_zero, g, h.2, he.symm⟩ heval
   · refine' aeval_ne_zero_of_dvd_not_unit_minpoly hx hg ⟨hg.ne_zero, f, h.1, _⟩ heval

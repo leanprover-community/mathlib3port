@@ -313,7 +313,7 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     apply sheaf_eq_amalgamation
     apply H.is_cover
     intro Y' f' hf'
-    change unop X ⟶ ℱ.obj (op (unop _)) at x
+    change unop X ⟶ ℱ.obj (op (unop _)) at x 
     dsimp
     simp only [pushforward_family, functor.comp_map, coyoneda_obj_map, hom_over_app, category.assoc]
     congr 1
@@ -504,8 +504,8 @@ instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
     where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
-    apply_fun fun e => e.val  at e
-    dsimp at e
+    apply_fun fun e => e.val  at e 
+    dsimp at e 
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
 #align category_theory.cover_dense.sites.pullback.faithful CategoryTheory.CoverDense.Sites.Pullback.faithful
 -/

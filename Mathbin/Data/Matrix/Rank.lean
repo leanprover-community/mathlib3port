@@ -107,7 +107,7 @@ theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ)
   by
   refine' le_antisymm (rank_le_card_width A) _
   have := rank_mul_le_left (A : Matrix n n R) (↑A⁻¹ : Matrix n n R)
-  rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
+  rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this 
 #align matrix.rank_unit Matrix.rank_unit
 
 theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R) (h : IsUnit A) :
@@ -152,8 +152,8 @@ theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCom
   apply LinearMap.pi_ext'; rintro i; apply LinearMap.ext_ring
   have aux₁ := to_lin_self (Pi.basisFun R n) (Pi.basisFun R m) A i
   have aux₂ := Basis.equiv_apply (Pi.basisFun R n) i v₂
-  rw [to_lin_eq_to_lin', to_lin'_apply'] at aux₁
-  rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂
+  rw [to_lin_eq_to_lin', to_lin'_apply'] at aux₁ 
+  rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂ 
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
     LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
@@ -209,7 +209,7 @@ theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
   · intro h
     replace h := congr_arg (dot_product (star x)) h
     rwa [dot_product_mul_vec, dot_product_zero, vec_mul_conj_transpose, star_star,
-      dot_product_star_self_eq_zero] at h
+      dot_product_star_self_eq_zero] at h 
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_self
 
@@ -253,7 +253,7 @@ theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
   constructor
   · intro h
     replace h := congr_arg (dot_product x) h
-    rwa [dot_product_mul_vec, dot_product_zero, vec_mul_transpose, dot_product_self_eq_zero] at h
+    rwa [dot_product_mul_vec, dot_product_zero, vec_mul_transpose, dot_product_self_eq_zero] at h 
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_self
 

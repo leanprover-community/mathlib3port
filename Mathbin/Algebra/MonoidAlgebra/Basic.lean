@@ -76,7 +76,8 @@ It is the type of finite formal `k`-linear combinations of terms of `G`,
 endowed with the convolution product.
 -/
 def MonoidAlgebra : Type max u₁ u₂ :=
-  G →₀ k deriving Inhabited, AddCommMonoid
+  G →₀ k
+deriving Inhabited, AddCommMonoid
 #align monoid_algebra MonoidAlgebra
 -/
 
@@ -366,7 +367,7 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
         _ = ∑ p in s, f p.1 * g p.2 :=
           sum_subset (filter_subset _ _) fun p hps hp =>
             by
-            simp only [mem_filter, mem_support_iff, not_and, Classical.not_not] at hp⊢
+            simp only [mem_filter, mem_support_iff, not_and, Classical.not_not] at hp ⊢
             by_cases h1 : f p.1 = 0
             · rw [h1, MulZeroClass.zero_mul]
             · rw [hp hps h1, MulZeroClass.mul_zero]
@@ -471,7 +472,7 @@ theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
         (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
           simp only [mul_apply, A, H]
         _ = if y ∈ f.support then f y * r else 0 := (f.support.sum_ite_eq' _ _)
-        _ = f y * r := by split_ifs with h <;> simp at h <;> simp [h]
+        _ = f y * r := by split_ifs with h <;> simp at h  <;> simp [h]
         
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
 
@@ -502,7 +503,7 @@ theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
           (mul_apply _ _ _).trans <| sum_single_index this
         _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
         _ = if z ∈ f.support then r * f z else 0 := (f.support.sum_ite_eq' _ _)
-        _ = _ := by split_ifs with h <;> simp at h <;> simp [h]
+        _ = _ := by split_ifs with h <;> simp at h  <;> simp [h]
         
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux
 
@@ -605,8 +606,8 @@ def liftMagma [Module k A] [IsScalarTower k A A] [SMulCommClass k A A] :
         · intro m; exact zero_smul k (f m)
       map_mul' := fun a₁ a₂ => by
         let g : G → k → A := fun m t => t • f m
-        have h₁ : ∀ m, g m 0 = 0 := by intros ; exact zero_smul k (f m)
-        have h₂ : ∀ (m) (t₁ t₂ : k), g m (t₁ + t₂) = g m t₁ + g m t₂ := by intros ; rw [← add_smul]
+        have h₁ : ∀ m, g m 0 = 0 := by intros; exact zero_smul k (f m)
+        have h₂ : ∀ (m) (t₁ t₂ : k), g m (t₁ + t₂) = g m t₁ + g m t₂ := by intros; rw [← add_smul]
         simp_rw [Finsupp.mul_sum, Finsupp.sum_mul, smul_mul_smul, ← f.map_mul, mul_def,
           sum_comm a₂ a₁, sum_sum_index h₁ h₂, sum_single_index (h₁ _)] }
   invFun F := F.toMulHom.comp (ofMagma k G)
@@ -1052,7 +1053,8 @@ It is the type of finite formal `k`-linear combinations of terms of `G`,
 endowed with the convolution product.
 -/
 def AddMonoidAlgebra :=
-  G →₀ k deriving Inhabited, AddCommMonoid
+  G →₀ k
+deriving Inhabited, AddCommMonoid
 #align add_monoid_algebra AddMonoidAlgebra
 -/
 
@@ -1120,8 +1122,8 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero]
     nsmul := fun n f => n • f
-    nsmul_zero := by intros ; ext; simp [-nsmul_eq_mul, add_smul]
-    nsmul_succ := by intros ; ext; simp [-nsmul_eq_mul, Nat.succ_eq_one_add, add_smul] }
+    nsmul_zero := by intros; ext; simp [-nsmul_eq_mul, add_smul]
+    nsmul_succ := by intros; ext; simp [-nsmul_eq_mul, Nat.succ_eq_one_add, add_smul] }
 
 variable [Semiring R]
 

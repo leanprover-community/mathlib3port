@@ -271,7 +271,7 @@ def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrder α
     | _, h₁, Or.inl rfl => rfl
     | _, Or.inr h₁, Or.inr h₂ => (asymm h₁ h₂).elim
   lt_iff_le_not_le x y :=
-    ⟨fun h => ⟨Or.inr h, not_or_of_not (fun e => by rw [e] at h <;> exact irrefl _ h) (asymm h)⟩,
+    ⟨fun h => ⟨Or.inr h, not_or_of_not (fun e => by rw [e] at h  <;> exact irrefl _ h) (asymm h)⟩,
       fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ <| e ▸ Or.inl rfl⟩
 #align partial_order_of_SO partialOrderOfSO
 -/
@@ -412,7 +412,8 @@ end IsWellFounded
 #print WellFounded.asymmetric /-
 theorem WellFounded.asymmetric {α : Sort _} {r : α → α → Prop} (h : WellFounded r) :
     ∀ ⦃a b⦄, r a b → ¬r b a
-  | a => fun b hab hba => WellFounded.asymmetric hba hab termination_by' ⟨_, h⟩
+  | a => fun b hab hba => WellFounded.asymmetric hba hab
+termination_by' ⟨_, h⟩
 #align well_founded.asymmetric WellFounded.asymmetric
 -/
 
@@ -470,7 +471,7 @@ theorem wellFoundedLT_dual_iff (α : Type _) [LT α] : WellFoundedLT αᵒᵈ �
 #print IsWellOrder /-
 /-- A well order is a well-founded linear order. -/
 class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsTrichotomous α r, IsTrans α r,
-  IsWellFounded α r : Prop
+    IsWellFounded α r : Prop
 #align is_well_order IsWellOrder
 -/
 

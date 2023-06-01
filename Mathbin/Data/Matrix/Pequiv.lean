@@ -151,7 +151,10 @@ theorem toMatrix_swap [DecidableEq n] [Ring α] (i j : n) :
   by
   ext
   dsimp [to_matrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, one_apply]
-  split_ifs <;> first |· simp_all|· exfalso; assumption
+  split_ifs <;>
+    first
+    | · simp_all
+    | · exfalso; assumption
 #align pequiv.to_matrix_swap PEquiv.toMatrix_swap
 
 @[simp]

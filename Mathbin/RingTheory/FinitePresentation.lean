@@ -44,7 +44,7 @@ variable (R A B M N : Type _)
 /-- An algebra over a commutative semiring is `finite_presentation` if it is the quotient of a
 polynomial ring in `n` variables by a finitely generated ideal. -/
 def Algebra.FinitePresentation [CommSemiring R] [Semiring A] [Algebra R A] : Prop :=
-  ∃ (n : ℕ)(f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.FG
+  ∃ (n : ℕ) (f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.FG
 #align algebra.finite_presentation Algebra.FinitePresentation
 -/
 
@@ -159,7 +159,7 @@ theorem of_surjective {f : A →ₐ[R] B} (hf : Function.Surjective f) (hker : f
 #print Algebra.FinitePresentation.iff /-
 theorem iff :
     FinitePresentation R A ↔
-      ∃ (n : _)(I : Ideal (MvPolynomial (Fin n) R))(e : (_ ⧸ I) ≃ₐ[R] A), I.FG :=
+      ∃ (n : _) (I : Ideal (MvPolynomial (Fin n) R)) (e : (_ ⧸ I) ≃ₐ[R] A), I.FG :=
   by
   constructor
   · rintro ⟨n, f, hf⟩
@@ -173,7 +173,7 @@ theorem iff :
 variables are indexed by a fintype by a finitely generated ideal. -/
 theorem iff_quotient_mvPolynomial' :
     FinitePresentation R A ↔
-      ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A),
+      ∃ (ι : Type u_2) (_ : Fintype ι) (f : MvPolynomial ι R →ₐ[R] A),
         Surjective f ∧ f.toRingHom.ker.FG :=
   by
   constructor
@@ -200,7 +200,7 @@ as `R`-algebra. -/
 theorem mvPolynomial_of_finitePresentation (hfp : FinitePresentation R A) (ι : Type _) [Finite ι] :
     FinitePresentation R (MvPolynomial ι A) :=
   by
-  rw [iff_quotient_mv_polynomial'] at hfp⊢
+  rw [iff_quotient_mv_polynomial'] at hfp ⊢
   classical
     obtain ⟨ι', _, f, hf_surj, hf_ker⟩ := hfp
     skip
@@ -266,13 +266,13 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
         all_goals dsimp [g]; rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
         · rw [MvPolynomial.aeval_map_algebraMap, ← aeval_unique]
           have := Ideal.subset_span hx
-          rwa [hs] at this
+          rwa [hs] at this 
         ·
           rw [map_sub, MvPolynomial.aeval_map_algebraMap, ← aeval_unique, aeval_C, ht',
             Subtype.coe_mk, sub_self]
       apply leI.antisymm
       intro x hx
-      rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom] at hx
+      rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom] at hx 
       let s₀ := _; change x ∈ Ideal.span s₀
       have :
         x ∈
@@ -280,7 +280,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
             (Ideal.span s₀).toAddSubmonoid :=
         by
         have : x ∈ (⊤ : Subalgebra R AX) := trivial
-        rw [← ht''] at this
+        rw [← ht''] at this 
         apply adjoin_induction this
         · rintro _ (⟨x, hx, rfl⟩ | ⟨i, rfl⟩)
           · rw [algebra_map_eq, ← sub_add_cancel (C x) (map (algebraMap R A) (t' ⟨x, hx⟩)),
@@ -303,9 +303,9 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
           · refine' add_mem (Ideal.mul_mem_left _ _ hq₂) (Ideal.mul_mem_right _ _ hq₁)
       obtain ⟨_, ⟨p, rfl⟩, q, hq, rfl⟩ := add_submonoid.mem_sup.mp this
       rw [map_add, aeval_map_algebra_map, ← aeval_unique, show aeval (f ∘ X) q = 0 from leI hq,
-        add_zero] at hx
+        add_zero] at hx 
       suffices Ideal.span (s : Set RX) ≤ (Ideal.span s₀).comap (map <| algebraMap R A) by
-        refine' add_mem _ hq; rw [hs] at this; exact this hx
+        refine' add_mem _ hq; rw [hs] at this ; exact this hx
       rw [Ideal.span_le]
       intro x hx
       apply Ideal.subset_span
@@ -368,7 +368,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     obtain ⟨_, ⟨x, rfl⟩, y, hy, rfl⟩ := add_submonoid.mem_sup.mp this
     refine' add_mem _ hy
     simp only [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, map_add,
-      show f y = 0 from leI hy, add_zero, hh'] at hx
+      show f y = 0 from leI hy, add_zero, hh'] at hx 
     suffices Ideal.span (s : Set RXm) ≤ (Ideal.span s').comap aeval_h by apply this; rwa [hs]
     rw [Ideal.span_le]
     intro x hx

@@ -189,7 +189,7 @@ theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf 
   refine'
     Finset.induction_on s (fun _ => trans_rel_right (· ≤ ·) v.map_zero zero_le')
       (fun a s has ih hf => _) hf
-  rw [Finset.forall_mem_insert] at hf; rw [Finset.sum_insert has]
+  rw [Finset.forall_mem_insert] at hf ; rw [Finset.sum_insert has]
   exact v.map_add_le hf.1 (ih hf.2)
 #align valuation.map_sum_le Valuation.map_sum_le
 
@@ -199,7 +199,7 @@ theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg 
   refine'
     Finset.induction_on s (fun _ => trans_rel_right (· < ·) v.map_zero (zero_lt_iff.2 hg))
       (fun a s has ih hf => _) hf
-  rw [Finset.forall_mem_insert] at hf; rw [Finset.sum_insert has]
+  rw [Finset.forall_mem_insert] at hf ; rw [Finset.sum_insert has]
   exact v.map_add_lt hf.1 (ih hf.2)
 #align valuation.map_sum_lt Valuation.map_sum_lt
 
@@ -324,7 +324,7 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
   intro h'
   wlog vyx : v y < v x
   · refine' this v h.symm _ (h.lt_or_lt.resolve_right vyx); rwa [add_comm, max_comm]
-  rw [max_eq_left_of_lt vyx] at h'
+  rw [max_eq_left_of_lt vyx] at h' 
   apply lt_irrefl (v x)
   calc
     v x = v (x + y - y) := by simp
@@ -347,19 +347,19 @@ theorem map_add_eq_of_lt_left (h : v y < v x) : v (x + y) = v x := by rw [add_co
 theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x :=
   by
   have := Valuation.map_add_of_distinct_val v (ne_of_gt h).symm
-  rw [max_eq_right (le_of_lt h)] at this
+  rw [max_eq_right (le_of_lt h)] at this 
   simpa using this
 #align valuation.map_eq_of_sub_lt Valuation.map_eq_of_sub_lt
 
 theorem map_one_add_of_lt (h : v x < 1) : v (1 + x) = 1 :=
   by
-  rw [← v.map_one] at h
+  rw [← v.map_one] at h 
   simpa only [v.map_one] using v.map_add_eq_of_lt_left h
 #align valuation.map_one_add_of_lt Valuation.map_one_add_of_lt
 
 theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 :=
   by
-  rw [← v.map_one, ← v.map_neg] at h
+  rw [← v.map_one, ← v.map_neg] at h 
   rw [sub_eq_add_neg 1 x]
   simpa only [v.map_one, v.map_neg] using v.map_add_eq_of_lt_left h
 #align valuation.map_one_sub_of_lt Valuation.map_one_sub_of_lt
@@ -431,7 +431,7 @@ theorem val_eq (h : v₁.IsEquiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r = 
 theorem ne_zero (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 :=
   by
   have : v₁ r ≠ v₁ 0 ↔ v₂ r ≠ v₂ 0 := not_congr h.val_eq
-  rwa [v₁.map_zero, v₂.map_zero] at this
+  rwa [v₁.map_zero, v₂.map_zero] at this 
 #align valuation.is_equiv.ne_zero Valuation.IsEquiv.ne_zero
 
 end IsEquiv
@@ -459,7 +459,7 @@ theorem isEquiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
   · apply mul_le_mul_right'
     replace hy := v.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
-    rwa [h] at H
+    rwa [h] at H 
   · apply mul_le_mul_right'
     replace hy := v'.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
@@ -484,19 +484,19 @@ theorem isEquiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
       · have : v (1 + x) = 1 := by rw [← v.map_one]; apply map_add_eq_of_lt_left; simpa
-        rw [h] at this
+        rw [h] at this 
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v'.map_add _ _) _
         simp [this]
-      · rw [h] at hx'; exact le_of_eq hx'
+      · rw [h] at hx' ; exact le_of_eq hx'
     · intro hx
       cases' lt_or_eq_of_le hx with hx' hx'
       · have : v' (1 + x) = 1 := by rw [← v'.map_one]; apply map_add_eq_of_lt_left; simpa
-        rw [← h] at this
+        rw [← h] at this 
         rw [show x = -1 + (1 + x) by simp]
         refine' le_trans (v.map_add _ _) _
         simp [this]
-      · rw [← h] at hx'; exact le_of_eq hx'
+      · rw [← h] at hx' ; exact le_of_eq hx'
 #align valuation.is_equiv_iff_val_eq_one Valuation.isEquiv_iff_val_eq_one
 
 theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -515,13 +515,13 @@ theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.2 h_2
-      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh
+      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh 
         exact hh.not_lt (h.2 ((one_lt_val_iff v' hx).1 h_2))
     · intro hh
       by_contra h_1
       cases ne_iff_lt_or_gt.1 h_1
       · simpa [hh, lt_self_iff_false] using h.1 h_2
-      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh
+      · rw [← inv_one, ← inv_eq_iff_eq_inv, ← map_inv₀] at hh 
         exact hh.not_lt (h.1 ((one_lt_val_iff v hx).1 h_2))
 #align valuation.is_equiv_iff_val_lt_one Valuation.isEquiv_iff_val_lt_one
 
@@ -592,8 +592,8 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
           ,
     fun x y hxy => by
     show v x = 0 ∨ v y = 0
-    change v (x * y) = 0 at hxy
-    rw [v.map_mul x y] at hxy
+    change v (x * y) = 0 at hxy 
+    rw [v.map_mul x y] at hxy 
     exact eq_zero_or_eq_zero_of_mul_eq_zero hxy⟩
 
 theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
@@ -603,7 +603,7 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
   apply le_antisymm (aux a s h)
   calc
     v a = v (a + s + -s) := by simp
-    _ ≤ v (a + s) := aux (a + s) (-s) (by rwa [← Ideal.neg_mem_iff] at h)
+    _ ≤ v (a + s) := aux (a + s) (-s) (by rwa [← Ideal.neg_mem_iff] at h )
     
 #align valuation.map_add_supp Valuation.map_add_supp
 

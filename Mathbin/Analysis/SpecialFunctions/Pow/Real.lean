@@ -121,12 +121,12 @@ theorem zero_rpow_eq_iff {x : ℝ} {a : ℝ} : 0 ^ x = a ↔ x ≠ 0 ∧ a = 0 �
   by
   constructor
   · intro hyp
-    simp only [rpow_def, Complex.ofReal_zero] at hyp
+    simp only [rpow_def, Complex.ofReal_zero] at hyp 
     by_cases x = 0
     · subst h
-      simp only [Complex.one_re, Complex.ofReal_zero, Complex.cpow_zero] at hyp
+      simp only [Complex.one_re, Complex.ofReal_zero, Complex.cpow_zero] at hyp 
       exact Or.inr ⟨rfl, hyp.symm⟩
-    · rw [Complex.zero_cpow (complex.of_real_ne_zero.mpr h)] at hyp
+    · rw [Complex.zero_cpow (complex.of_real_ne_zero.mpr h)] at hyp 
       exact Or.inl ⟨h, hyp.symm⟩
   · rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
     · exact zero_rpow h
@@ -240,7 +240,7 @@ theorem rpow_sum_of_nonneg {ι : Type _} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι
   by
   induction' s using Finset.cons_induction with i s hi ihs
   · rw [sum_empty, Finset.prod_empty, rpow_zero]
-  · rw [forall_mem_cons] at h
+  · rw [forall_mem_cons] at h 
     rw [sum_cons, prod_cons, ← ihs h.2, rpow_add_of_nonneg ha h.1 (sum_nonneg h.2)]
 #align real.rpow_sum_of_nonneg Real.rpow_sum_of_nonneg
 
@@ -253,7 +253,7 @@ theorem rpow_sub {x : ℝ} (hx : 0 < x) (y z : ℝ) : x ^ (y - z) = x ^ y / x ^ 
 #align real.rpow_sub Real.rpow_sub
 
 theorem rpow_sub' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y - z ≠ 0) : x ^ (y - z) = x ^ y / x ^ z := by
-  simp only [sub_eq_add_neg] at h⊢; simp only [rpow_add' hx h, rpow_neg hx, div_eq_mul_inv]
+  simp only [sub_eq_add_neg] at h ⊢; simp only [rpow_add' hx h, rpow_neg hx, div_eq_mul_inv]
 #align real.rpow_sub' Real.rpow_sub'
 
 end Real
@@ -290,7 +290,7 @@ theorem abs_cpow_of_ne_zero {z : ℂ} (hz : z ≠ 0) (w : ℂ) :
 theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
     abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) :=
   by
-  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w;rw [map_zero]]
+  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w; rw [map_zero]]
   cases' eq_or_ne w.re 0 with hw hw
   · simp [hw, h rfl hw]
   · rw [Real.zero_rpow hw, zero_div, zero_cpow, map_zero]
@@ -299,7 +299,7 @@ theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
 
 theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z * im w) :=
   by
-  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le;rw [map_zero]]
+  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le; rw [map_zero]]
   rcases eq_or_ne w 0 with (rfl | hw); · simp
   rw [zero_cpow hw, map_zero]
   exact div_nonneg (Real.rpow_nonneg_of_nonneg le_rfl _) (Real.exp_pos _).le
@@ -307,7 +307,7 @@ theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z
 
 @[simp]
 theorem abs_cpow_real (x : ℂ) (y : ℝ) : abs (x ^ (y : ℂ)) = x.abs ^ y := by
-  rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy);skip] <;>
+  rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy); skip] <;>
     simp [*, abs_cpow_of_ne_zero]
 #align complex.abs_cpow_real Complex.abs_cpow_real
 
@@ -390,7 +390,7 @@ theorem rpow_two (x : ℝ) : x ^ (2 : ℝ) = x ^ 2 := by rw [← rpow_nat_cast];
 
 theorem rpow_neg_one (x : ℝ) : x ^ (-1 : ℝ) = x⁻¹ :=
   by
-  suffices H : x ^ ((-1 : ℤ) : ℝ) = x⁻¹; · rwa [Int.cast_neg, Int.cast_one] at H
+  suffices H : x ^ ((-1 : ℤ) : ℝ) = x⁻¹; · rwa [Int.cast_neg, Int.cast_one] at H 
   simp only [rpow_int_cast, zpow_one, zpow_neg]
 #align real.rpow_neg_one Real.rpow_neg_one
 
@@ -430,8 +430,8 @@ theorem log_rpow {x : ℝ} (hx : 0 < x) (y : ℝ) : log (x ^ y) = y * log x :=
 
 theorem rpow_lt_rpow (hx : 0 ≤ x) (hxy : x < y) (hz : 0 < z) : x ^ z < y ^ z :=
   by
-  rw [le_iff_eq_or_lt] at hx; cases hx
-  · rw [← hx, zero_rpow (ne_of_gt hz)]; exact rpow_pos_of_pos (by rwa [← hx] at hxy) _
+  rw [le_iff_eq_or_lt] at hx ; cases hx
+  · rw [← hx, zero_rpow (ne_of_gt hz)]; exact rpow_pos_of_pos (by rwa [← hx] at hxy ) _
   rw [rpow_def_of_pos hx, rpow_def_of_pos (lt_trans hx hxy), exp_lt_exp]
   exact mul_lt_mul_of_pos_right (log_lt_log hx hxy) hz
 #align real.rpow_lt_rpow Real.rpow_lt_rpow
@@ -634,7 +634,7 @@ theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0
     |log x * x ^ t| < 1 / t := by
   rw [lt_div_iff ht]
   have := abs_log_mul_self_lt (x ^ t) (rpow_pos_of_pos h1 t) (rpow_le_one h1.le h2 ht.le)
-  rwa [log_rpow h1, mul_assoc, abs_mul, abs_of_pos ht, mul_comm] at this
+  rwa [log_rpow h1, mul_assoc, abs_mul, abs_of_pos ht, mul_comm] at this 
 #align real.abs_log_mul_self_rpow_lt Real.abs_log_mul_self_rpow_lt
 
 theorem pow_nat_rpow_nat_inv {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : n ≠ 0) : (x ^ n) ^ (n⁻¹ : ℝ) = x :=
@@ -693,7 +693,7 @@ theorem exists_rat_pow_btwn_rat_aux (hn : n ≠ 0) (x y : ℝ) (h : x < y) (hy :
   have hq := this.trans_lt hxq
   replace hxq := rpow_lt_rpow this hxq hn'
   replace hqy := rpow_lt_rpow hq.le hqy hn'
-  rw [rpow_nat_cast, rpow_nat_cast, rpow_nat_inv_pow_nat _ hn] at hxq hqy
+  rw [rpow_nat_cast, rpow_nat_cast, rpow_nat_inv_pow_nat _ hn] at hxq hqy 
   exact ⟨q, by exact_mod_cast hq, (le_max_right _ _).trans_lt hxq, hqy⟩
   · exact le_max_left _ _
   · exact hy.le
@@ -713,7 +713,7 @@ theorem exists_rat_pow_btwn {α : Type _} [LinearOrderedField α] [Archimedean �
   obtain ⟨q₂, hx₂, hy₂⟩ := exists_rat_btwn (max_lt h hy)
   obtain ⟨q₁, hx₁, hq₁₂⟩ := exists_rat_btwn hx₂
   have : (0 : α) < q₂ := (le_max_right _ _).trans_lt hx₂
-  norm_cast  at hq₁₂ this
+  norm_cast  at hq₁₂ this 
   obtain ⟨q, hq, hq₁, hq₂⟩ := exists_rat_pow_btwn_rat hn hq₁₂ this
   refine' ⟨q, hq, (le_max_left _ _).trans_lt <| hx₁.trans _, hy₂.trans' _⟩ <;> assumption_mod_cast
 #align real.exists_rat_pow_btwn Real.exists_rat_pow_btwn

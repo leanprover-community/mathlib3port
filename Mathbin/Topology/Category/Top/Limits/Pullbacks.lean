@@ -129,7 +129,7 @@ theorem pullbackIsoProdSubtype_hom_apply {f : X ⟶ Z} {g : Y ⟶ Z} (x : pullba
         simpa using concrete_category.congr_hom pullback.condition x⟩ :=
   by
   ext
-  exacts[concrete_category.congr_hom (pullback_iso_prod_subtype_hom_fst f g) x,
+  exacts [concrete_category.congr_hom (pullback_iso_prod_subtype_hom_fst f g) x,
     concrete_category.congr_hom (pullback_iso_prod_subtype_hom_snd f g) x]
 #align Top.pullback_iso_prod_subtype_hom_apply TopCat.pullbackIsoProdSubtype_hom_apply
 
@@ -271,7 +271,7 @@ theorem pullback_map_openEmbedding_of_open_embeddings {W X Y Z S T : TopCat} (f�
   · rw [range_pullback_map]
     apply IsOpen.inter <;> apply Continuous.isOpen_preimage
     continuity
-    exacts[H₁.open_range, H₂.open_range]
+    exacts [H₁.open_range, H₂.open_range]
 #align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_openEmbedding_of_open_embeddings
 
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :

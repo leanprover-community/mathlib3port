@@ -823,7 +823,7 @@ def monoidalClosedOfLeftRigidCategory (C : Type u) [Category.{v} C] [MonoidalCat
 
 /-- A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
 class RigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends
-  RightRigidCategory C, LeftRigidCategory C
+    RightRigidCategory C, LeftRigidCategory C
 #align category_theory.rigid_category CategoryTheory.RigidCategory
 
 end CategoryTheory

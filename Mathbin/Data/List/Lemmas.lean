@@ -32,17 +32,17 @@ theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
   by
   induction' l with hd tl IH
   · intro n hn m hm h
-    simp only [Set.mem_singleton_iff, Set.setOf_eq_eq_singleton, length, nonpos_iff_eq_zero] at
-      hn hm
+    simp only [Set.mem_singleton_iff, Set.setOf_eq_eq_singleton, length, nonpos_iff_eq_zero] at hn
+      hm 
     simp [hn, hm]
   · intro n hn m hm h
-    simp only [length, Set.mem_setOf_eq] at hn hm
-    simp only [mem_cons_iff, not_or] at hx
+    simp only [length, Set.mem_setOf_eq] at hn hm 
+    simp only [mem_cons_iff, not_or] at hx 
     cases n <;> cases m
     · rfl
     · simpa [hx.left] using h
     · simpa [Ne.symm hx.left] using h
-    · simp only [true_and_iff, eq_self_iff_true, insert_nth_succ_cons] at h
+    · simp only [true_and_iff, eq_self_iff_true, insert_nth_succ_cons] at h 
       rw [Nat.succ_inj']
       refine' IH hx.right _ _ h
       · simpa [Nat.succ_le_succ_iff] using hn
@@ -67,7 +67,7 @@ theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ
     Set.range (foldl f a) ⊆ Set.range (foldl g a) :=
   by
   change (Set.range fun l => _) ⊆ Set.range fun l => _
-  simp_rw [← foldr_reverse] at hfg⊢
+  simp_rw [← foldr_reverse] at hfg ⊢
   simp_rw [Set.range_comp _ List.reverse, reverse_involutive.bijective.surjective.range_eq,
     Set.image_univ]
   exact foldr_range_subset_of_range_subset hfg a

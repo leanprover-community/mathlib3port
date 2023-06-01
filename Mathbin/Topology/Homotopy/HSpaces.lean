@@ -94,7 +94,7 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
           (continuous_fst.prod_mk (continuous_snd.comp continuous_snd)))
     use ⟨G, hG⟩
     · rintro ⟨x, y⟩
-      exacts[prod.mk.inj_iff.mpr ⟨HSpace.eHmul.1.2 x, HSpace.eHmul.1.2 y⟩]
+      exacts [prod.mk.inj_iff.mpr ⟨HSpace.eHmul.1.2 x, HSpace.eHmul.1.2 y⟩]
     · rintro ⟨x, y⟩
       exact prod.mk.inj_iff.mpr ⟨HSpace.eHmul.1.3 x, HSpace.eHmul.1.3 y⟩
     · rintro t ⟨x, y⟩ h
@@ -114,7 +114,7 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
           (continuous_fst.prod_mk (continuous_snd.comp continuous_snd)))
     use ⟨G, hG⟩
     · rintro ⟨x, y⟩
-      exacts[prod.mk.inj_iff.mpr ⟨HSpace.hmulE.1.2 x, HSpace.hmulE.1.2 y⟩]
+      exacts [prod.mk.inj_iff.mpr ⟨HSpace.hmulE.1.2 x, HSpace.hmulE.1.2 y⟩]
     · rintro ⟨x, y⟩
       exact prod.mk.inj_iff.mpr ⟨HSpace.hmulE.1.3 x, HSpace.hmulE.1.3 y⟩
     · rintro t ⟨x, y⟩ h
@@ -191,12 +191,12 @@ theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 /
   by
   simp only [Q_right, coe_zero, add_zero, div_one]
   split_ifs
-  · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]; exacts[rfl, ⟨t.2.1, h⟩]
+  · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]; exacts [rfl, ⟨t.2.1, h⟩]
   · rw [(Set.projIcc_eq_right _).2]; · rfl; · linarith; · exact zero_lt_one
 #align unit_interval.Q_right_zero_right unitInterval.qRight_zero_right
 
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
-  Eq.trans (by rw [Q_right]; congr ; apply mul_div_cancel_left; exact two_ne_zero) <|
+  Eq.trans (by rw [Q_right]; congr; apply mul_div_cancel_left; exact two_ne_zero) <|
     Set.projIcc_val zero_le_one _
 #align unit_interval.Q_right_one_right unitInterval.qRight_one_right
 
@@ -231,7 +231,7 @@ theorem delayReflRight_zero (γ : Path x y) : delayReflRight 0 γ = γ.trans (Pa
     refl_apply]
   split_ifs; swap; conv_rhs => rw [← γ.target]
   all_goals apply congr_arg γ; ext1; rw [Q_right_zero_right]
-  exacts[if_neg h, if_pos h]
+  exacts [if_neg h, if_pos h]
 #align path.delay_refl_right_zero Path.delayReflRight_zero
 
 theorem delayReflRight_one (γ : Path x y) : delayReflRight 1 γ = γ := by ext t;

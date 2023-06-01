@@ -155,7 +155,8 @@ attribute [instance] colimit_setoid
 /-- The underlying type of the colimit of a diagram in `CommRing`.
 -/
 def ColimitType : Type v :=
-  Quotient (colimitSetoid F)deriving Inhabited
+  Quotient (colimitSetoid F)
+deriving Inhabited
 #align CommRing.colimits.colimit_type CommRingCat.Colimits.ColimitType
 -/
 

@@ -139,12 +139,12 @@ theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors
     (hS : IsPreconnected S) (hf : ContinuousOn f S) (hsq : EqOn (f ^ 2) 1 S) :
     EqOn f 1 S ∨ EqOn f (-1) S :=
   by
-  simp_rw [eq_on, Pi.one_apply, Pi.pow_apply, sq_eq_one_iff] at hsq
+  simp_rw [eq_on, Pi.one_apply, Pi.pow_apply, sq_eq_one_iff] at hsq 
   -- First deal with crazy case where `S` is empty.
   by_cases hSe : ∀ x : α, x ∉ S
   · left; intro x hx
     exfalso; exact hSe x hx
-  push_neg  at hSe
+  push_neg  at hSe 
   choose y hy using hSe
   suffices ∀ x : α, x ∈ S → f x = f y by
     rcases hsq hy with ⟨⟩
@@ -171,7 +171,7 @@ theorem IsPreconnected.eq_or_eq_neg_of_sq_eq [Field 𝕜] [HasContinuousInv₀ �
     exact h hx
   · refine' Or.inr fun x hx => _
     specialize h hx
-    rwa [Pi.div_apply, Pi.neg_apply, Pi.one_apply, div_eq_iff (hg_ne hx), neg_one_mul] at h
+    rwa [Pi.div_apply, Pi.neg_apply, Pi.one_apply, div_eq_iff (hg_ne hx), neg_one_mul] at h 
   · rw [Pi.one_apply, div_pow, Pi.div_apply, hsq hx, div_self]
     exact pow_ne_zero _ (hg_ne hx)
 #align is_preconnected.eq_or_eq_neg_of_sq_eq IsPreconnected.eq_or_eq_neg_of_sq_eq
@@ -187,7 +187,7 @@ theorem IsPreconnected.eq_of_sq_eq [Field 𝕜] [HasContinuousInv₀ 𝕜] [Cont
   rcases hS.eq_or_eq_neg_of_sq_eq hf hg @hsq @hg_ne with (h | h)
   · exact h hx
   · rw [h hy, eq_comm, ← sub_eq_zero, sub_eq_add_neg, Pi.neg_apply, neg_neg, ← mul_two,
-      mul_eq_zero] at hy'
+      mul_eq_zero] at hy' 
     cases hy'
     -- need to handle case of `char 𝕜 = 2` separately
     · exfalso; exact hg_ne hy hy'

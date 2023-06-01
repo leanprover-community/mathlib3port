@@ -100,7 +100,7 @@ structure ZeroHom (M : Type _) (N : Type _) [Zero M] [Zero N] where
 You should extend this typeclass when you extend `zero_hom`.
 -/
 class ZeroHomClass (F : Type _) (M N : outParam <| Type _) [Zero M] [Zero N] extends
-  FunLike F M fun _ => N where
+    FunLike F M fun _ => N where
   map_zero : ∀ f : F, f 0 = 0
 #align zero_hom_class ZeroHomClass
 -/
@@ -143,7 +143,7 @@ structure AddHom (M : Type _) (N : Type _) [Add M] [Add N] where
 You should declare an instance of this typeclass when you extend `add_hom`.
 -/
 class AddHomClass (F : Type _) (M N : outParam <| Type _) [Add M] [Add N] extends
-  FunLike F M fun _ => N where
+    FunLike F M fun _ => N where
   map_add : ∀ (f : F) (x y : M), f (x + y) = f x + f y
 #align add_hom_class AddHomClass
 -/
@@ -164,7 +164,7 @@ you should parametrize over `(F : Type*) [add_monoid_hom_class F M N] (f : F)`.
 When you extend this structure, make sure to extend `add_monoid_hom_class`.
 -/
 structure AddMonoidHom (M : Type _) (N : Type _) [AddZeroClass M] [AddZeroClass N] extends
-  ZeroHom M N, AddHom M N
+    ZeroHom M N, AddHom M N
 #align add_monoid_hom AddMonoidHom
 -/
 
@@ -182,7 +182,7 @@ homomorphisms.
 You should also extend this typeclass when you extend `add_monoid_hom`.
 -/
 class AddMonoidHomClass (F : Type _) (M N : outParam <| Type _) [AddZeroClass M]
-  [AddZeroClass N] extends AddHomClass F M N, ZeroHomClass F M N
+    [AddZeroClass N] extends AddHomClass F M N, ZeroHomClass F M N
 #align add_monoid_hom_class AddMonoidHomClass
 -/
 
@@ -215,7 +215,7 @@ You should extend this typeclass when you extend `one_hom`.
 -/
 @[to_additive]
 class OneHomClass (F : Type _) (M N : outParam <| Type _) [One M] [One N] extends
-  FunLike F M fun _ => N where
+    FunLike F M fun _ => N where
   map_one : ∀ f : F, f 1 = 1
 #align one_hom_class OneHomClass
 #align zero_hom_class ZeroHomClass
@@ -304,7 +304,7 @@ You should declare an instance of this typeclass when you extend `mul_hom`.
 -/
 @[to_additive]
 class MulHomClass (F : Type _) (M N : outParam <| Type _) [Mul M] [Mul N] extends
-  FunLike F M fun _ => N where
+    FunLike F M fun _ => N where
   map_mul : ∀ (f : F) (x y : M), f (x * y) = f x * f y
 #align mul_hom_class MulHomClass
 #align add_hom_class AddHomClass
@@ -356,7 +356,7 @@ When you extend this structure, make sure to extend `monoid_hom_class`.
 -/
 @[to_additive]
 structure MonoidHom (M : Type _) (N : Type _) [MulOneClass M] [MulOneClass N] extends OneHom M N,
-  M →ₙ* N
+    M →ₙ* N
 #align monoid_hom MonoidHom
 #align add_monoid_hom AddMonoidHom
 -/
@@ -374,7 +374,7 @@ You should also extend this typeclass when you extend `monoid_hom`. -/
 @[to_additive
       "`add_monoid_hom_class F M N` states that `F` is a type of `add_monoid`-preserving homomorphisms.\nYou should also extend this typeclass when you extend `add_monoid_hom`."]
 class MonoidHomClass (F : Type _) (M N : outParam <| Type _) [MulOneClass M] [MulOneClass N] extends
-  MulHomClass F M N, OneHomClass F M N
+    MulHomClass F M N, OneHomClass F M N
 #align monoid_hom_class MonoidHomClass
 #align add_monoid_hom_class AddMonoidHomClass
 -/
@@ -502,7 +502,7 @@ you should parametrize over `(F : Type*) [monoid_with_zero_hom_class F M N] (f :
 When you extend this structure, make sure to extend `monoid_with_zero_hom_class`.
 -/
 structure MonoidWithZeroHom (M : Type _) (N : Type _) [MulZeroOneClass M]
-  [MulZeroOneClass N] extends ZeroHom M N, MonoidHom M N
+    [MulZeroOneClass N] extends ZeroHom M N, MonoidHom M N
 #align monoid_with_zero_hom MonoidWithZeroHom
 -/
 
@@ -520,7 +520,7 @@ infixr:25 " →*₀ " => MonoidWithZeroHom
 You should also extend this typeclass when you extend `monoid_with_zero_hom`.
 -/
 class MonoidWithZeroHomClass (F : Type _) (M N : outParam <| Type _) [MulZeroOneClass M]
-  [MulZeroOneClass N] extends MonoidHomClass F M N, ZeroHomClass F M N
+    [MulZeroOneClass N] extends MonoidHomClass F M N, ZeroHomClass F M N
 #align monoid_with_zero_hom_class MonoidWithZeroHomClass
 -/
 
@@ -1580,7 +1580,7 @@ instance [Mul M] [CommSemigroup N] : Mul (M →ₙ* N) :=
   ⟨fun f g =>
     { toFun := fun m => f m * g m
       map_mul' := by
-        intros ; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
+        intros; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_comm (f x)] }⟩
 
 /-- Given two additive morphisms `f`, `g` to an additive commutative semigroup, `f + g` is the
@@ -1624,7 +1624,7 @@ instance {M N} {mM : MulOneClass M} [CommMonoid N] : Mul (M →* N) :=
     { toFun := fun m => f m * g m
       map_one' := show f 1 * g 1 = 1 by simp
       map_mul' := by
-        intros ; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
+        intros; show f (x * y) * g (x * y) = f x * g x * (f y * g y)
         rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_comm (f x)] }⟩
 
 /-- Given two additive monoid morphisms `f`, `g` to an additive commutative monoid, `f + g` is the

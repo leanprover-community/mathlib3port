@@ -173,7 +173,7 @@ open Ordering
 
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
 def AndKind.cmp (p q : AndKind) : Ordering := by cases p <;> cases q;
-  exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
+  exacts [Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
 #align tactic.itauto.and_kind.cmp Tactic.Itauto.AndKind.cmp
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
@@ -186,7 +186,7 @@ def Prop.cmp (p q : Prop) : Ordering :=
   case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
   case or.or q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
-  exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt,
+  exacts [lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt,
     lt, lt, GT.gt, GT.gt, GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
 #align tactic.itauto.prop.cmp Tactic.Itauto.Prop.cmp
 

@@ -67,7 +67,7 @@ inductive Lists'.{u} (α : Type u) : Bool → Type u
 to an element of `α`, or a "proper" ZFA list, inductively defined from the empty ZFA list and from
 appending a ZFA list to a proper ZFA list. -/
 def Lists (α : Type _) :=
-  Σb, Lists' α b
+  Σ b, Lists' α b
 #align lists Lists
 -/
 
@@ -127,7 +127,7 @@ theorem of_toList : ∀ l : Lists' α true, ofList (toList l) = l :=
   fun b h l => by
   induction l; · cases h; · exact rfl
   case cons' b a l IH₁ IH₂ =>
-    intro ; change l' with cons' a l
+    intro; change l' with cons' a l
     simpa [cons] using IH₂ rfl
 #align lists'.of_to_list Lists'.of_toList
 -/
@@ -183,7 +183,7 @@ theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ :=
   by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
-  generalize h' : Lists'.cons a l₁ = l₁' at h
+  generalize h' : Lists'.cons a l₁ = l₁' at h 
   cases' h with l a' a'' l l' e m s; · cases a; cases h'
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
@@ -193,7 +193,7 @@ theorem ofList_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
     Lists'.ofList l₁ ⊆ Lists'.ofList l₂ := by
   induction l₁; · exact subset.nil
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subset h))
-  simp at h; simp [h]
+  simp at h ; simp [h]
 #align lists'.of_list_subset Lists'.ofList_subset
 -/
 
@@ -216,8 +216,8 @@ theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil :=
 theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ :=
   by
   induction' s with _ a a' l l' e m s IH; · cases h
-  simp at h; rcases h with (rfl | h)
-  exacts[⟨_, m, e⟩, IH h]
+  simp at h ; rcases h with (rfl | h)
+  exacts [⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
 
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
@@ -226,7 +226,7 @@ theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l�
     rw [← of_to_list l₁]
     revert H; induction to_list l₁ <;> intro
     · exact subset.nil
-    · simp at H; exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
+    · simp at H ; exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
 #align lists'.subset_def Lists'.subset_def
 
 end Lists'
@@ -308,7 +308,7 @@ def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 :
         | tt, l => D l
         | ff, l => PUnit)
     by exact ⟨fun ⟨b, l⟩ => (this _).1, fun l => (this l).2⟩
-  intros ; induction' l with a b a l IH₁ IH₂
+  intros; induction' l with a b a l IH₁ IH₂
   · exact ⟨C0 _, ⟨⟩⟩
   · exact ⟨C1 _ D0, D0⟩
   · suffices; · exact ⟨C1 _ this, this⟩
@@ -354,7 +354,7 @@ theorem equiv_atom {a} {l : Lists α} : atom a ~ l ↔ atom a = l :=
 
 #print Lists.Equiv.symm /-
 theorem Equiv.symm {l₁ l₂ : Lists α} (h : l₁ ~ l₂) : l₂ ~ l₁ := by
-  cases' h with _ _ _ h₁ h₂ <;> [rfl;exact equiv.antisymm h₂ h₁]
+  cases' h with _ _ _ h₁ h₂ <;> [rfl; exact equiv.antisymm h₂ h₁]
 #align lists.equiv.symm Lists.Equiv.symm
 -/
 
@@ -365,7 +365,7 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α tt), ∀ l' ∈ l.toList, trans l') by exact this.1
   apply induction_mut
   · intro a l₂ l₃ h₁ h₂
-    rwa [← equiv_atom.1 h₁] at h₂
+    rwa [← equiv_atom.1 h₁] at h₂ 
   · intro l₁ IH l₂ l₃ h₁ h₂
     cases' h₁ with _ _ l₂; · exact h₂
     cases' h₂ with _ _ l₃; · exact h₁
@@ -393,8 +393,8 @@ section Decidable
 #print Lists.Equiv.decidableMeas /-
 @[simp]
 def Equiv.decidableMeas :
-    (PSum (Σ'l₁ : Lists α, Lists α) <|
-        PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) →
+    (PSum (Σ' l₁ : Lists α, Lists α) <|
+        PSum (Σ' l₁ : Lists' α true, Lists' α true) (Σ' a : Lists α, Lists' α true)) →
       ℕ
   | PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
   | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
@@ -490,7 +490,8 @@ mutual
         mem.decidable a l₂
       refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
       rw [← Lists'.mem_cons]; rfl
-end termination_by' ⟨_, measure_wf equiv.decidable_meas⟩
+end
+termination_by' ⟨_, measure_wf equiv.decidable_meas⟩
 #align lists.equiv.decidable Lists.Equiv.decidable
 #align lists.subset.decidable Lists.Subset.decidable
 #align lists.mem.decidable Lists.mem.decidable

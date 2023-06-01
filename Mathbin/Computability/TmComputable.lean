@@ -85,7 +85,8 @@ instance : Inhabited tm.σ :=
 #print Turing.FinTM2.Stmt /-
 /-- The type of statements (functions) corresponding to this TM. -/
 def Stmt : Type :=
-  Turing.TM2.Stmt tm.Γ tm.Λ tm.σ deriving Inhabited
+  Turing.TM2.Stmt tm.Γ tm.Λ tm.σ
+deriving Inhabited
 #align turing.fin_tm2.stmt Turing.FinTM2.Stmt
 -/
 
@@ -154,7 +155,7 @@ structure EvalsTo {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) 
 /-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
 evaluated on `a`, remembering the number of steps it takes. -/
 structure EvalsToInTime {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends
-  EvalsTo f a b where
+    EvalsTo f a b where
   steps_le_m : steps ≤ m
 #align turing.evals_to_in_time Turing.EvalsToInTime
 -/
@@ -230,7 +231,7 @@ structure TM2ComputableAux (Γ₀ Γ₁ : Type) where
 #print Turing.TM2Computable /-
 /-- A Turing machine + a proof it outputs f. -/
 structure TM2Computable {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β) (f : α → β) extends
-  TM2ComputableAux ea.Γ eb.Γ where
+    TM2ComputableAux ea.Γ eb.Γ where
   outputsFun :
     ∀ a,
       TM2Outputs tm (List.map input_alphabet.invFun (ea.encode a))
@@ -241,7 +242,7 @@ structure TM2Computable {α β : Type} (ea : FinEncoding α) (eb : FinEncoding �
 #print Turing.TM2ComputableInTime /-
 /-- A Turing machine + a time function + a proof it outputs f in at most time(len(input)) steps. -/
 structure TM2ComputableInTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β)
-  (f : α → β) extends TM2ComputableAux ea.Γ eb.Γ where
+    (f : α → β) extends TM2ComputableAux ea.Γ eb.Γ where
   time : ℕ → ℕ
   outputsFun :
     ∀ a,
@@ -255,7 +256,7 @@ structure TM2ComputableInTime {α β : Type} (ea : FinEncoding α) (eb : FinEnco
 /-- A Turing machine + a polynomial time function + a proof it outputs f in at most time(len(input))
 steps. -/
 structure TM2ComputableInPolyTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β)
-  (f : α → β) extends TM2ComputableAux ea.Γ eb.Γ where
+    (f : α → β) extends TM2ComputableAux ea.Γ eb.Γ where
   time : Polynomial ℕ
   outputsFun :
     ∀ a,

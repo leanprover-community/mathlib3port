@@ -46,7 +46,7 @@ variable {n m : ℕ} (P : MvPFunctor.{u} n)
 #print MvPFunctor.Obj /-
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : TypeVec.{u} n) : Type u :=
-  Σa : P.A, P.B a ⟹ α
+  Σ a : P.A, P.B a ⟹ α
 #align mvpfunctor.obj MvPFunctor.Obj
 -/
 
@@ -147,8 +147,8 @@ end Const
 /-- Functor composition on polynomial functors -/
 def comp (P : MvPFunctor.{u} n) (Q : Fin2 n → MvPFunctor.{u} m) : MvPFunctor m
     where
-  A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
-  B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
+  A := Σ a₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
+  B a i := Σ (j : _) (b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 #align mvpfunctor.comp MvPFunctor.comp
 -/
 
@@ -189,9 +189,9 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x :=
   by
   cases x
   dsimp [comp.get, comp.mk]
-  ext : 2 <;> intros ; rfl; rfl
-  congr ; ext1 <;> intros <;> rfl
-  ext : 2; congr ; rcases x_1 with ⟨a, b, c⟩ <;> rfl
+  ext : 2 <;> intros; rfl; rfl
+  congr; ext1 <;> intros <;> rfl
+  ext : 2; congr; rcases x_1 with ⟨a, b, c⟩ <;> rfl
 #align mvpfunctor.comp.mk_get MvPFunctor.comp.mk_get
 -/
 
@@ -218,7 +218,10 @@ theorem liftP_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
   by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm*Exists _, _ ∧ _; subst_vars; assumption
-  repeat' first |constructor|assumption
+  repeat'
+    first
+    | constructor
+    | assumption
 #align mvpfunctor.liftp_iff' MvPFunctor.liftP_iff'
 -/
 
@@ -249,7 +252,7 @@ theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.B a ⟹ α) (i) :
   ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun i x => ∃ y : P.B a i, f i y = x
-    rw [liftp_iff']; intros ; refine' ⟨_, rfl⟩
+    rw [liftp_iff']; intros; refine' ⟨_, rfl⟩
   · simp only [liftp_iff']; cases h; subst x
     tauto
 #align mvpfunctor.supp_eq MvPFunctor.supp_eq

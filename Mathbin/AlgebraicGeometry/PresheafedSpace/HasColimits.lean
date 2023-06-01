@@ -252,7 +252,7 @@ def descCApp (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F) (U : (Opens ↥s.p
       functor.congr_obj
         (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
         (unop U)
-    simp only [opens.map_comp_obj_unop] at w
+    simp only [opens.map_comp_obj_unop] at w 
     replace w := congr_arg op w
     have w' := nat_trans.congr (F.map f.unop).c w
     rw [w']
@@ -277,7 +277,7 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace.{v} C) (s : Cocone F)
     functor.congr_hom
       (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
       i.unop
-  simp only [opens.map_comp_map] at w
+  simp only [opens.map_comp_map] at w 
   replace w := congr_arg Quiver.Hom.op w
   rw [w]
   dsimp; simp

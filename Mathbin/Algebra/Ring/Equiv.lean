@@ -68,7 +68,7 @@ add_decl_doc RingEquiv.toMulEquiv
 /-- `ring_equiv_class F R S` states that `F` is a type of ring structure preserving equivalences.
 You should extend this class when you extend `ring_equiv`. -/
 class RingEquivClass (F : Type _) (R S : outParam (Type _)) [Mul R] [Add R] [Mul S] [Add S] extends
-  MulEquivClass F R S where
+    MulEquivClass F R S where
   map_add : ∀ (f : F) (a b), f (a + b) = f a + f b
 #align ring_equiv_class RingEquivClass
 -/

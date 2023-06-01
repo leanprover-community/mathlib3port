@@ -118,7 +118,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem even.algHom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) :
     f = g := by
-  rw [even_hom.ext_iff] at h
+  rw [even_hom.ext_iff] at h 
   ext ⟨x, hx⟩
   refine' even_induction _ _ _ _ _ hx
   · intro r

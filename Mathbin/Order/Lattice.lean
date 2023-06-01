@@ -910,16 +910,16 @@ theorem sup_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a ⊔ b)
 @[simp]
 theorem le_sup_iff : a ≤ b ⊔ c ↔ a ≤ b ∨ a ≤ c :=
   ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h) fun bc => by
-      rwa [sup_eq_right.2 bc] at h,
+    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h ) fun bc => by
+      rwa [sup_eq_right.2 bc] at h ,
     fun h => h.elim le_sup_of_le_left le_sup_of_le_right⟩
 #align le_sup_iff le_sup_iff
 
 @[simp]
 theorem lt_sup_iff : a < b ⊔ c ↔ a < b ∨ a < c :=
   ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h) fun bc => by
-      rwa [sup_eq_right.2 bc] at h,
+    (total_of (· ≤ ·) c b).imp (fun bc => by rwa [sup_eq_left.2 bc] at h ) fun bc => by
+      rwa [sup_eq_right.2 bc] at h ,
     fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
 #align lt_sup_iff lt_sup_iff
 
@@ -965,7 +965,7 @@ theorem sup_eq_maxDefault [SemilatticeSup α] [DecidableRel ((· ≤ ·) : α �
   ext (x y)
   dsimp only [maxDefault]
   split_ifs with h'
-  exacts[sup_of_le_right h', sup_of_le_left <| (total_of (· ≤ ·) x y).resolve_left h']
+  exacts [sup_of_le_right h', sup_of_le_left <| (total_of (· ≤ ·) x y).resolve_left h']
 #align sup_eq_max_default sup_eq_maxDefault
 
 theorem inf_eq_minDefault [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
@@ -974,7 +974,7 @@ theorem inf_eq_minDefault [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α �
   ext (x y)
   dsimp only [minDefault]
   split_ifs with h'
-  exacts[inf_of_le_left h', inf_of_le_right <| (total_of (· ≤ ·) x y).resolve_left h']
+  exacts [inf_of_le_left h', inf_of_le_right <| (total_of (· ≤ ·) x y).resolve_left h']
 #align inf_eq_min_default inf_eq_minDefault
 
 #print Lattice.toLinearOrder /-

@@ -119,7 +119,7 @@ theorem IsSuccLimit.isMin_of_noMax [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a
   by
   rcases hb.exists_succ_iterate with ⟨_ | n, rfl⟩
   · exact le_rfl
-  · rw [iterate_succ_apply'] at h
+  · rw [iterate_succ_apply'] at h 
     exact (not_is_succ_limit_succ _ h).elim
 #align order.is_succ_limit.is_min_of_no_max Order.IsSuccLimit.isMin_of_noMax
 -/
@@ -262,7 +262,7 @@ protected theorem IsSuccLimit.isMin (h : IsSuccLimit a) : IsMin a := fun b hb =>
   revert h
   refine' Succ.rec (fun _ => le_rfl) (fun c hbc H hc => _) hb
   have := hc.is_max.succ_eq
-  rw [this] at hc⊢
+  rw [this] at hc ⊢
   exact H hc
 #align order.is_succ_limit.is_min Order.IsSuccLimit.isMin
 -/

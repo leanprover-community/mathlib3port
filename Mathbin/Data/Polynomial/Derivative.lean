@@ -68,12 +68,12 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
   rw [Sum, Finset.sum_eq_single (n + 1)]
   simp only [Nat.add_succ_sub_one, add_zero, mul_one, if_true, eq_self_iff_true]; norm_cast
   · intro b; cases b
-    · intros ; rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
+    · intros; rw [Nat.cast_zero, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
     · intro _ H;
       rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), MulZeroClass.mul_zero]
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_one, Nat.cast_add, Nat.cast_one,
       mem_support_iff]
-    intro h; push_neg  at h; simp [h]
+    intro h; push_neg  at h ; simp [h]
 #align polynomial.coeff_derivative Polynomial.coeff_derivative
 
 @[simp]
@@ -263,14 +263,14 @@ theorem natDegree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : 
   · exact nat_degree_zero
   rw [nat_degree_eq_zero_iff_degree_le_zero]
   by_contra' f_nat_degree_pos
-  rw [← nat_degree_pos_iff_degree_pos] at f_nat_degree_pos
+  rw [← nat_degree_pos_iff_degree_pos] at f_nat_degree_pos 
   let m := f.nat_degree - 1
   have hm : m + 1 = f.nat_degree := tsub_add_cancel_of_le f_nat_degree_pos
   have h2 := coeff_derivative f m
-  rw [Polynomial.ext_iff] at h
-  rw [h m, coeff_zero, ← Nat.cast_add_one, ← nsmul_eq_mul', eq_comm, smul_eq_zero] at h2
+  rw [Polynomial.ext_iff] at h 
+  rw [h m, coeff_zero, ← Nat.cast_add_one, ← nsmul_eq_mul', eq_comm, smul_eq_zero] at h2 
   replace h2 := h2.resolve_left m.succ_ne_zero
-  rw [hm, ← leading_coeff, leading_coeff_eq_zero] at h2
+  rw [hm, ← leading_coeff, leading_coeff_eq_zero] at h2 
   exact hf h2
 #align polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.natDegree_eq_zero_of_derivative_eq_zero
 
@@ -375,7 +375,7 @@ theorem degree_derivative_eq [NoZeroSMulDivisors ℕ R] (p : R[X]) (hp : 0 < nat
     rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
     · show ¬leading_coeff p = 0
       rw [leading_coeff_eq_zero]
-      intro h; rw [h, nat_degree_zero] at hp
+      intro h; rw [h, nat_degree_zero] at hp 
       exact lt_irrefl 0 (lt_of_le_of_lt (zero_le _) hp)
     exact hp
 #align polynomial.degree_derivative_eq Polynomial.degree_derivative_eq
@@ -462,7 +462,7 @@ theorem iterate_derivative_mul {n} (p q : R[X]) :
   refine' (sum_range_succ' _ _).trans (congr_arg₂ (· + ·) _ _)
   · rw [sum_range_succ, Nat.choose_succ_self, zero_smul, add_zero]
     refine' sum_congr rfl fun k hk => _
-    rw [mem_range] at hk
+    rw [mem_range] at hk 
     congr
     rw [tsub_add_eq_add_tsub (Nat.succ_le_of_lt hk), Nat.succ_sub_succ]
   · rw [Nat.choose_zero_right, tsub_zero]

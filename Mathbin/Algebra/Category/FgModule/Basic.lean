@@ -48,8 +48,8 @@ variable (R : Type u) [Ring R]
 
 /-- Define `fgModule` as the subtype of `Module.{u} R` of finitely generated modules. -/
 def FgModule :=
-  FullSubcategory fun V : ModuleCat.{u} R => Module.Finite R V deriving LargeCategory,
-  ConcreteCategory, Preadditive
+  FullSubcategory fun V : ModuleCat.{u} R => Module.Finite R V
+deriving LargeCategory, ConcreteCategory, Preadditive
 #align fgModule FgModule
 
 end Ring

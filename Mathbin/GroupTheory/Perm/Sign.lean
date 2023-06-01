@@ -63,7 +63,7 @@ instance {α : Type _} [Fintype α] [DecidableEq α] (i j : α) : DecidableRel (
 theorem perm_inv_on_of_perm_on_finset {s : Finset α} {f : Perm α} (h : ∀ x ∈ s, f x ∈ s) {y : α}
     (hy : y ∈ s) : f⁻¹ y ∈ s :=
   by
-  have h0 : ∀ y ∈ s, ∃ (x : _)(hx : x ∈ s), y = (fun i (hi : i ∈ s) => f i) x hx :=
+  have h0 : ∀ y ∈ s, ∃ (x : _) (hx : x ∈ s), y = (fun i (hi : i ∈ s) => f i) x hx :=
     Finset.surj_on_of_inj_on_of_card_le (fun x hx => (fun i hi => f i) x hx) (fun a ha => h a ha)
       (fun a₁ a₂ ha₁ ha₂ heq => (Equiv.apply_eq_iff_eq f).mp HEq) rfl.ge
   obtain ⟨y2, hy2, heq⟩ := h0 y hy
@@ -135,18 +135,18 @@ theorem perm_mapsTo_inl_iff_mapsTo_inr {m n : Type _} [Finite m] [Finite n] (σ 
   constructor <;>
     ( intro h
       classical
-        rw [← perm_inv_maps_to_iff_maps_to] at h
+        rw [← perm_inv_maps_to_iff_maps_to] at h 
         intro x
         cases' hx : σ x with l r)
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨l, rfl⟩
-    rw [← hx, σ.inv_apply_self] at hy
+    rw [← hx, σ.inv_apply_self] at hy 
     exact absurd hy Sum.inl_ne_inr
   · rintro ⟨a, ha⟩; exact ⟨r, rfl⟩
   · rintro ⟨a, ha⟩; exact ⟨l, rfl⟩
   · rintro ⟨a, rfl⟩
     obtain ⟨y, hy⟩ := h ⟨r, rfl⟩
-    rw [← hx, σ.inv_apply_self] at hy
+    rw [← hx, σ.inv_apply_self] at hy 
     exact absurd hy Sum.inr_ne_inl
 #align equiv.perm.perm_maps_to_inl_iff_maps_to_inr Equiv.Perm.perm_mapsTo_inl_iff_mapsTo_inr
 
@@ -326,13 +326,13 @@ theorem isConj_swap {w x y z : α} (hwx : w ≠ x) (hyz : y ≠ z) : IsConj (swa
 
 #print Equiv.Perm.finPairsLT /-
 /-- set of all pairs (⟨a, b⟩ : Σ a : fin n, fin n) such that b < a -/
-def finPairsLT (n : ℕ) : Finset (Σa : Fin n, Fin n) :=
+def finPairsLT (n : ℕ) : Finset (Σ a : Fin n, Fin n) :=
   (univ : Finset (Fin n)).Sigma fun a => (range a).attachFin fun m hm => (mem_range.1 hm).trans a.2
 #align equiv.perm.fin_pairs_lt Equiv.Perm.finPairsLT
 -/
 
 #print Equiv.Perm.mem_finPairsLT /-
-theorem mem_finPairsLT {n : ℕ} {a : Σa : Fin n, Fin n} : a ∈ finPairsLT n ↔ a.2 < a.1 := by
+theorem mem_finPairsLT {n : ℕ} {a : Σ a : Fin n, Fin n} : a ∈ finPairsLT n ↔ a.2 < a.1 := by
   simp only [fin_pairs_lt, Fin.lt_iff_val_lt_val, true_and_iff, mem_attach_fin, mem_range, mem_univ,
     mem_sigma]
 #align equiv.perm.mem_fin_pairs_lt Equiv.Perm.mem_finPairsLT
@@ -356,20 +356,20 @@ theorem signAux_one (n : ℕ) : signAux (1 : Perm (Fin n)) = 1 :=
 
 #print Equiv.Perm.signBijAux /-
 /-- `sign_bij_aux f ⟨a, b⟩` returns the pair consisting of `f a` and `f b` in decreasing order. -/
-def signBijAux {n : ℕ} (f : Perm (Fin n)) (a : Σa : Fin n, Fin n) : Σa : Fin n, Fin n :=
+def signBijAux {n : ℕ} (f : Perm (Fin n)) (a : Σ a : Fin n, Fin n) : Σ a : Fin n, Fin n :=
   if hxa : f a.2 < f a.1 then ⟨f a.1, f a.2⟩ else ⟨f a.2, f a.1⟩
 #align equiv.perm.sign_bij_aux Equiv.Perm.signBijAux
 -/
 
 #print Equiv.Perm.signBijAux_inj /-
 theorem signBijAux_inj {n : ℕ} {f : Perm (Fin n)} :
-    ∀ a b : Σa : Fin n, Fin n,
+    ∀ a b : Σ a : Fin n, Fin n,
       a ∈ finPairsLT n → b ∈ finPairsLT n → signBijAux f a = signBijAux f b → a = b :=
   fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ha hb h => by
-  unfold sign_bij_aux at h
+  unfold sign_bij_aux at h 
   rw [mem_fin_pairs_lt] at *
   have : ¬b₁ < b₂ := hb.le.not_lt
-  split_ifs  at h <;>
+  split_ifs  at h  <;>
     simp_all only [(Equiv.injective f).eq_iff, eq_self_iff_true, and_self_iff, heq_iff_eq]
 #align equiv.perm.sign_bij_aux_inj Equiv.Perm.signBijAux_inj
 -/
@@ -395,7 +395,7 @@ theorem signBijAux_surj {n : ℕ} {f : Perm (Fin n)} :
 
 #print Equiv.Perm.signBijAux_mem /-
 theorem signBijAux_mem {n : ℕ} {f : Perm (Fin n)} :
-    ∀ a : Σa : Fin n, Fin n, a ∈ finPairsLT n → signBijAux f a ∈ finPairsLT n := fun ⟨a₁, a₂⟩ ha =>
+    ∀ a : Σ a : Fin n, Fin n, a ∈ finPairsLT n → signBijAux f a ∈ finPairsLT n := fun ⟨a₁, a₂⟩ ha =>
   by
   unfold sign_bij_aux
   split_ifs with h
@@ -429,7 +429,7 @@ theorem signAux_mul {n : ℕ} (f g : Perm (Fin n)) : signAux (f * g) = signAux f
     prod_bij (fun a ha => sign_bij_aux g a) sign_bij_aux_mem _ sign_bij_aux_inj sign_bij_aux_surj
   rintro ⟨a, b⟩ hab
   rw [sign_bij_aux, mul_apply, mul_apply]
-  rw [mem_fin_pairs_lt] at hab
+  rw [mem_fin_pairs_lt] at hab 
   by_cases h : g b < g a
   · rw [dif_pos h]
     simp only [not_le_of_gt hab, mul_one, perm.inv_apply_self, if_false]
@@ -448,7 +448,7 @@ theorem signAux_mul {n : ℕ} (f g : Perm (Fin n)) : signAux (f * g) = signAux f
 private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Fin (n + 2)) 1) = -1 :=
   show
     _ =
-      ∏ x : Σa : Fin (n + 2), Fin (n + 2) in {(⟨1, 0⟩ : Σa : Fin (n + 2), Fin (n + 2))},
+      ∏ x : Σ a : Fin (n + 2), Fin (n + 2) in {(⟨1, 0⟩ : Σ a : Fin (n + 2), Fin (n + 2))},
         if (Equiv.swap 0 1) x.1 ≤ swap 0 1 x.2 then (-1 : ℤˣ) else 1
     by
     refine'
@@ -463,7 +463,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Fin (n + 
     rcases a₁.zero_le.eq_or_lt with (rfl | H)
     · exact absurd a₂.zero_le ha₁.not_le
     rcases a₂.zero_le.eq_or_lt with (rfl | H')
-    · simp only [and_true_iff, eq_self_iff_true, heq_iff_eq, mem_singleton] at ha₂
+    · simp only [and_true_iff, eq_self_iff_true, heq_iff_eq, mem_singleton] at ha₂ 
       have : 1 < a₁ := lt_of_le_of_ne (Nat.succ_le_of_lt ha₁) (Ne.symm ha₂)
       have h01 : Equiv.swap (0 : Fin (n + 2)) 1 0 = 1 := by simp
       -- TODO : fix properly
@@ -483,8 +483,8 @@ private theorem sign_aux_swap_zero_one {n : ℕ} (hn : 2 ≤ n) :
       -1 :=
   by
   rcases n with (_ | _ | n)
-  · norm_num at hn
-  · norm_num at hn
+  · norm_num at hn 
+  · norm_num at hn 
   · exact sign_aux_swap_zero_one' n
 
 theorem signAux_swap : ∀ {n : ℕ} {x y : Fin n} (hxy : x ≠ y), signAux (swap x y) = -1
@@ -684,7 +684,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
           hg.2 ▸ this _ (hl.2 _ hg.1)
         have : s l.Prod = 1 := by
           rw [← l.prod_hom s, List.eq_replicate_length.2 this, List.prod_replicate, one_pow]
-        rw [hl.1, hg] at this
+        rw [hl.1, hg] at this 
         exact absurd this (by decide)
   MonoidHom.ext fun f => by
     let ⟨l, hl₁, hl₂⟩ := (truncSwapFactors f).out

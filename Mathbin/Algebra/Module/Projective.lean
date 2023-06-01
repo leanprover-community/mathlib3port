@@ -79,7 +79,7 @@ open LinearMap Finsupp
   if maps from the module lift along surjections. There are several other equivalent
   definitions. -/
 class Module.Projective (R : Type _) [Semiring R] (P : Type _) [AddCommMonoid P] [Module R P] :
-  Prop where
+    Prop where
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s
 #align module.projective Module.Projective
 -/
@@ -145,7 +145,7 @@ variable {ι : Type _} (A : ι → Type _) [∀ i : ι, AddCommMonoid (A i)] [�
 instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := by
   classical
     rw [Module.projective_def']
-    simp_rw [projective_def] at h
+    simp_rw [projective_def] at h 
     choose s hs using h
     letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
     letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
@@ -215,7 +215,7 @@ theorem Module.Projective.of_lifting_property' {R : Type u} [Semiring R] {P : Ty
     huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
   -- This `s` works.
   · use s
-    rwa [LinearMap.ext_iff] at hs
+    rwa [LinearMap.ext_iff] at hs 
   · intro p
     use Finsupp.single p 1
     simp
@@ -242,7 +242,7 @@ theorem Module.Projective.of_lifting_property {R : Type u} [Ring R] {P : Type ma
     huniv (Finsupp.total P P R (id : P → P)) (LinearMap.id : P →ₗ[R] P) _
   -- This `s` works.
   · use s
-    rwa [LinearMap.ext_iff] at hs
+    rwa [LinearMap.ext_iff] at hs 
   · intro p
     use Finsupp.single p 1
     simp

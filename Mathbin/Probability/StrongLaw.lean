@@ -253,13 +253,13 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         by
         simp_rw [sum_sigma']
         refine'
-          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
-          simp only [mem_sigma, mem_range, mem_Ico] at hij
+          simp only [mem_sigma, mem_range, mem_Ico] at hij 
           simp only [hij, Nat.lt_succ_iff.2 hij.2.1, mem_sigma, mem_range, lt_min_iff, and_self_iff]
         · rintro ⟨i, j⟩ hij
-          simp only [mem_sigma, mem_range, lt_min_iff] at hij
+          simp only [mem_sigma, mem_range, lt_min_iff] at hij 
           simp only [hij, Nat.lt_succ_iff.1 hij.2.1, mem_sigma, mem_range, mem_Ico, and_self_iff]
         · rintro ⟨i, j⟩ hij; rfl
         · rintro ⟨i, j⟩ hij; rfl
@@ -282,7 +282,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         · exact (continuous_id.add continuous_const).integrableOn_Ioc
         · exact measurableSet_Ioc
         · intro x hx
-          simp only [Nat.cast_add, Nat.cast_one, Set.mem_Ioc] at hx
+          simp only [Nat.cast_add, Nat.cast_one, Set.mem_Ioc] at hx 
           simp [hx.1.le]
       _ = ∫ x in 0 ..N, x + 1 ∂ρ :=
         by
@@ -388,13 +388,13 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
       by
       simp_rw [mul_sum, sum_mul, sum_sigma']
       refine'
-        sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-          (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+        sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+          (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
       · rintro ⟨i, j⟩ hij
-        simp only [mem_sigma, mem_range, mem_filter] at hij
+        simp only [mem_sigma, mem_range, mem_filter] at hij 
         simp [hij, mem_sigma, mem_range, and_self_iff, hij.2.trans hij.1]
       · rintro ⟨i, j⟩ hij
-        simp only [mem_sigma, mem_range, mem_Ioo] at hij
+        simp only [mem_sigma, mem_range, mem_Ioo] at hij 
         simp only [hij, mem_sigma, mem_range, and_self_iff]
       · rintro ⟨i, j⟩ hij; rfl
       · rintro ⟨i, j⟩ hij; rfl
@@ -517,14 +517,14 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         by
         simp_rw [mul_sum, sum_mul, sum_sigma']
         refine'
-          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
-          simp only [mem_sigma, mem_range] at hij
+          simp only [mem_sigma, mem_range] at hij 
           simp only [hij.1, hij.2, mem_sigma, mem_range, mem_filter, and_true_iff]
           exact hij.2.trans_le (u_mono (Nat.le_pred_of_lt hij.1))
         · rintro ⟨i, j⟩ hij
-          simp only [mem_sigma, mem_range, mem_filter] at hij
+          simp only [mem_sigma, mem_range, mem_filter] at hij 
           simp only [hij.2.1, hij.2.2, mem_sigma, mem_range, and_self_iff]
         · rintro ⟨i, j⟩ hij; rfl
         · rintro ⟨i, j⟩ hij; rfl
@@ -583,7 +583,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
     (le_of_tendsto_of_tendsto' (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt
       ENNReal.ofReal_lt_top
   filter_upwards [ae_eventually_not_mem I4.ne]with ω hω
-  simp_rw [not_le, mul_comm, S, sum_apply] at hω
+  simp_rw [not_le, mul_comm, S, sum_apply] at hω 
   exact hω
 #align probability_theory.strong_law_aux1 ProbabilityTheory.strong_law_aux1
 
@@ -673,7 +673,7 @@ theorem strong_law_aux5 :
     · have : -(n : ℝ) < X n ω := by
         apply lt_of_lt_of_le _ (hnonneg n ω)
         simpa only [Right.neg_neg_iff, Nat.cast_pos] using npos
-      simp only [this, true_and_iff, not_le] at h
+      simp only [this, true_and_iff, not_le] at h 
       exact (hn h).elim
   filter_upwards [B]with ω hω
   convert is_o_sum_range_of_tendsto_zero hω

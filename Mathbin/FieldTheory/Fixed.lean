@@ -131,15 +131,15 @@ theorem linearIndependent_smul_of_linearIndependent {s : Finset F} :
   by
   haveI : IsEmpty ((∅ : Finset F) : Set F) := ⟨Subtype.prop⟩
   refine' Finset.induction_on s (fun _ => linearIndependent_empty_type) fun a s has ih hs => _
-  rw [coe_insert] at hs⊢
-  rw [linearIndependent_insert (mt mem_coe.1 has)] at hs
+  rw [coe_insert] at hs ⊢
+  rw [linearIndependent_insert (mt mem_coe.1 has)] at hs 
   rw [linearIndependent_insert' (mt mem_coe.1 has)]; refine' ⟨ih hs.1, fun ha => _⟩
-  rw [Finsupp.mem_span_image_iff_total] at ha; rcases ha with ⟨l, hl, hla⟩
-  rw [Finsupp.total_apply_of_mem_supported F hl] at hla
+  rw [Finsupp.mem_span_image_iff_total] at ha ; rcases ha with ⟨l, hl, hla⟩
+  rw [Finsupp.total_apply_of_mem_supported F hl] at hla 
   suffices ∀ i ∈ s, l i ∈ FixedPoints.subfield G F
     by
     replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_fun hla 1)
-    simp_rw [Pi.smul_apply, to_fun_apply, one_smul] at hla
+    simp_rw [Pi.smul_apply, to_fun_apply, one_smul] at hla 
     refine' hs.2 (hla ▸ Submodule.sum_mem _ fun c hcs => _)
     change (⟨l c, this c hcs⟩ : FixedPoints.subfield G F) • c ∈ _
     exact Submodule.smul_mem _ _ (Submodule.subset_span <| mem_coe.2 hcs)
@@ -204,7 +204,7 @@ theorem eval₂' :
 
 theorem ne_one : minpoly G F x ≠ (1 : Polynomial (FixedPoints.subfield G F)) := fun H =>
   have := eval₂ G F x
-  (one_ne_zero : (1 : F) ≠ 0) <| by rwa [H, Polynomial.eval₂_one] at this
+  (one_ne_zero : (1 : F) ≠ 0) <| by rwa [H, Polynomial.eval₂_one] at this 
 #align fixed_points.minpoly.ne_one FixedPoints.minpoly.ne_one
 
 theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
@@ -232,18 +232,18 @@ theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Mo
   have hf2 : f ∣ minpoly G F x := by rw [← hfg]; exact dvd_mul_right _ _
   have hg2 : g ∣ minpoly G F x := by rw [← hfg]; exact dvd_mul_left _ _
   have := eval₂ G F x
-  rw [← hfg, Polynomial.eval₂_mul, mul_eq_zero] at this
+  rw [← hfg, Polynomial.eval₂_mul, mul_eq_zero] at this 
   cases this
   · right
     have hf3 : f = minpoly G F x :=
       Polynomial.eq_of_monic_of_associated hf (monic G F x)
         (associated_of_dvd_dvd hf2 <| @of_eval₂ G _ F _ _ _ x f this)
-    rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).NeZero] at hfg
+    rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).NeZero] at hfg 
   · left
     have hg3 : g = minpoly G F x :=
       Polynomial.eq_of_monic_of_associated hg (monic G F x)
         (associated_of_dvd_dvd hg2 <| @of_eval₂ G _ F _ _ _ x g this)
-    rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).NeZero] at hfg
+    rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).NeZero] at hfg 
 #align fixed_points.minpoly.irreducible_aux FixedPoints.minpoly.irreducible_aux
 
 theorem irreducible : Irreducible (minpoly G F x) :=

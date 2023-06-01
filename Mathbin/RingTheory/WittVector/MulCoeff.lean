@@ -89,7 +89,7 @@ theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars 
   · apply subset.trans (vars_pow _ _)
     apply subset.trans (witt_mul_vars _ _)
     apply product_subset_product (subset.refl _)
-    simp only [mem_range, range_subset] at hx⊢
+    simp only [mem_range, range_subset] at hx ⊢
     exact hx
 #align witt_vector.witt_poly_prod_remainder_vars WittVector.wittPolyProdRemainder_vars
 
@@ -255,7 +255,7 @@ theorem peval_polyOfInterest (n : ℕ) (x y : 𝕎 k) :
     map_sub]
   rw [sub_sub, add_comm (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.C ↑p := by rw [eq_intCast, Int.cast_ofNat]
-  have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by intros ;
+  have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by intros;
     rw [mvpz, MvPolynomial.eval₂_C]
   simp [wittPolynomial_eq_sum_c_mul_x_pow, aeval, eval₂_rename, this, mul_coeff, peval, map_natCast,
     map_add, map_pow, map_mul]
@@ -305,7 +305,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     rintro ⟨a, ha⟩
     apply Function.uncurry ![x, y]
     simp only [true_and_iff, Multiset.mem_cons, range_val, product_val, Multiset.mem_range,
-      Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
+      Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha 
     refine' ⟨a.fst, ⟨a.snd, _⟩⟩
     cases' ha with ha ha <;> linarith only [ha]
   use f
@@ -318,7 +318,7 @@ theorem nth_mul_coeff' (n : ℕ) :
   cases' a with a ha
   cases' a with i m
   simp only [true_and_iff, Multiset.mem_cons, range_val, product_val, Multiset.mem_range,
-    Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
+    Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha 
   have ha' : m < n + 1 := by cases' ha with ha ha <;> linarith only [ha]
   fin_cases i <;>-- surely this case split is not necessary
     · simpa only using x.coeff_truncate_fun ⟨m, ha'⟩

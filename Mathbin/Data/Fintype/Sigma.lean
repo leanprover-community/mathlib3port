@@ -40,7 +40,7 @@ theorem Finset.univ_sigma_univ {α : Type _} {β : α → Type _} [Fintype α] [
 
 #print PSigma.fintype /-
 instance PSigma.fintype {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] :
-    Fintype (Σ'a, β a) :=
+    Fintype (Σ' a, β a) :=
   Fintype.ofEquiv _ (Equiv.psigmaEquivSigma _).symm
 #align psigma.fintype PSigma.fintype
 -/

@@ -67,7 +67,8 @@ variable (α : Type u)
 #print FreeCommRing /-
 /-- `free_comm_ring α` is the free commutative ring on the type `α`. -/
 def FreeCommRing (α : Type u) : Type u :=
-  FreeAbelianGroup <| Multiplicative <| Multiset α deriving CommRing, Inhabited
+  FreeAbelianGroup <| Multiplicative <| Multiset α
+deriving CommRing, Inhabited
 #align free_comm_ring FreeCommRing
 -/
 
@@ -257,11 +258,11 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
       rw [RingHom.map_mul, lift_of, if_pos hzs, MulZeroClass.zero_mul]
       norm_cast
     · rintro x y ⟨q, hq⟩ ⟨r, hr⟩; refine' ⟨q + r, _⟩; rw [RingHom.map_add, hq, hr]; norm_cast
-  specialize this (of p) hps; rw [lift_of] at this; split_ifs  at this; · exact h
+  specialize this (of p) hps; rw [lift_of] at this ; split_ifs  at this ; · exact h
   exfalso; apply Ne.symm Int.zero_ne_one
-  rcases this with ⟨w, H⟩; rw [← Polynomial.C_eq_int_cast] at H
+  rcases this with ⟨w, H⟩; rw [← Polynomial.C_eq_int_cast] at H 
   have : polynomial.X.coeff 1 = (Polynomial.C ↑w).coeff 1 := by rw [H]
-  rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
+  rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this 
 #align free_comm_ring.is_supported_of FreeCommRing.isSupported_of
 -/
 

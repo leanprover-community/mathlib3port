@@ -126,21 +126,21 @@ def ofIso {X Y : SimplicialObject.Augmented C} (e : X ≅ Y) (ed : ExtraDegenera
     simpa only [functor.map_iso, assoc, w₀, ed.s'_comp_ε_assoc] using (point.map_iso e).inv_hom_id
   s₀_comp_δ₁' := by
     have h := w₀ e.inv
-    dsimp at h⊢
+    dsimp at h ⊢
     simp only [assoc, ← simplicial_object.δ_naturality, ed.s₀_comp_δ₁_assoc, reassoc_of h]
   s_comp_δ₀' n := by
     have h := ed.s_comp_δ₀'
-    dsimp at h⊢
+    dsimp at h ⊢
     simpa only [assoc, ← simplicial_object.δ_naturality, reassoc_of h] using
       congr_app (drop.map_iso e).inv_hom_id (op [n])
   s_comp_δ' n i := by
     have h := ed.s_comp_δ' n i
-    dsimp at h⊢
+    dsimp at h ⊢
     simp only [assoc, ← simplicial_object.δ_naturality, reassoc_of h, ←
       simplicial_object.δ_naturality_assoc]
   s_comp_σ' n i := by
     have h := ed.s_comp_σ' n i
-    dsimp at h⊢
+    dsimp at h ⊢
     simp only [assoc, ← simplicial_object.σ_naturality, reassoc_of h, ←
       simplicial_object.σ_naturality_assoc]
 #align simplicial_object.augmented.extra_degeneracy.of_iso SimplicialObject.Augmented.ExtraDegeneracy.ofIso
@@ -388,7 +388,7 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
   homotopyHomInvId :=
     { Hom := fun i j => by
         by_cases i + 1 = j
-        · exact (-ed.s i) ≫ eq_to_hom (by congr )
+        · exact (-ed.s i) ≫ eq_to_hom (by congr)
         · exact 0
       zero' := fun i j hij => by
         split_ifs

@@ -129,7 +129,7 @@ variable {R : Type _}
 #print SetLike.GradedSmul /-
 /-- A version of `graded_monoid.ghas_smul` for internally graded objects. -/
 class SetLike.GradedSmul {S R N M : Type _} [SetLike S R] [SetLike N M] [SMul R M] [Add ι]
-  (A : ι → S) (B : ι → N) : Prop where
+    (A : ι → S) (B : ι → N) : Prop where
   smul_mem : ∀ ⦃i j : ι⦄ {ai bj}, ai ∈ A i → bj ∈ B j → ai • bj ∈ B (i + j)
 #align set_like.has_graded_smul SetLike.GradedSmul
 -/

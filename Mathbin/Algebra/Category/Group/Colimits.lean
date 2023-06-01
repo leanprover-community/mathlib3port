@@ -126,7 +126,8 @@ attribute [instance] colimit_setoid
 /-- The underlying type of the colimit of a diagram in `AddCommGroup`.
 -/
 def ColimitType : Type v :=
-  Quotient (colimitSetoid F)deriving Inhabited
+  Quotient (colimitSetoid F)
+deriving Inhabited
 #align AddCommGroup.colimits.colimit_type AddCommGroupCat.Colimits.ColimitType
 -/
 

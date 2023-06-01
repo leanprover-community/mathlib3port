@@ -126,20 +126,20 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
     comp x (hff' (-x) hx) (hasDerivAt_neg x)
   have hdng : ∀ x ∈ -Ioo a b, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>
     comp x (hgg' (-x) hx) (hasDerivAt_neg x)
-  rw [preimage_neg_Ioo] at hdnf
-  rw [preimage_neg_Ioo] at hdng
+  rw [preimage_neg_Ioo] at hdnf 
+  rw [preimage_neg_Ioo] at hdng 
   have :=
     lhopital_zero_right_on_Ioo (neg_lt_neg hab) hdnf hdng
       (by
         intro x hx h
-        apply hg' _ (by rw [← preimage_neg_Ioo] at hx; exact hx)
-        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
+        apply hg' _ (by rw [← preimage_neg_Ioo] at hx ; exact hx)
+        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h )
       (hfb.comp tendsto_neg_nhdsWithin_Ioi_neg) (hgb.comp tendsto_neg_nhdsWithin_Ioi_neg)
       (by
         simp only [neg_div_neg_eq, mul_one, mul_neg]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_nhdsWithin_Ioi_neg))
   have := this.comp tendsto_neg_nhdsWithin_Iio
-  unfold Function.comp at this
+  unfold Function.comp at this 
   simpa only [neg_neg]
 #align has_deriv_at.lhopital_zero_left_on_Ioo HasDerivAt.lhopital_zero_left_on_Ioo
 
@@ -188,7 +188,7 @@ theorem lhopital_zero_atTop_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x) 
         erw [mul_div_mul_right]
         refine' neg_ne_zero.mpr (inv_ne_zero <| pow_ne_zero _ <| ne_of_gt hx))
   have := this.comp tendsto_inv_atTop_zero'
-  unfold Function.comp at this
+  unfold Function.comp at this 
   simpa only [inv_inv]
 #align has_deriv_at.lhopital_zero_at_top_on_Ioi HasDerivAt.lhopital_zero_atTop_on_Ioi
 
@@ -202,20 +202,20 @@ theorem lhopital_zero_atBot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x) 
     comp x (hff' (-x) hx) (hasDerivAt_neg x)
   have hdng : ∀ x ∈ -Iio a, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>
     comp x (hgg' (-x) hx) (hasDerivAt_neg x)
-  rw [preimage_neg_Iio] at hdnf
-  rw [preimage_neg_Iio] at hdng
+  rw [preimage_neg_Iio] at hdnf 
+  rw [preimage_neg_Iio] at hdng 
   have :=
     lhopital_zero_at_top_on_Ioi hdnf hdng
       (by
         intro x hx h
-        apply hg' _ (by rw [← preimage_neg_Iio] at hx; exact hx)
-        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h)
+        apply hg' _ (by rw [← preimage_neg_Iio] at hx ; exact hx)
+        rwa [mul_comm, ← neg_eq_neg_one_mul, neg_eq_zero] at h )
       (hfbot.comp tendsto_neg_at_top_at_bot) (hgbot.comp tendsto_neg_at_top_at_bot)
       (by
         simp only [mul_one, mul_neg, neg_div_neg_eq]
         exact (tendsto_congr fun x => rfl).mp (hdiv.comp tendsto_neg_at_top_at_bot))
   have := this.comp tendsto_neg_at_bot_at_top
-  unfold Function.comp at this
+  unfold Function.comp at this 
   simpa only [neg_neg]
 #align has_deriv_at.lhopital_zero_at_bot_on_Iio HasDerivAt.lhopital_zero_atBot_on_Iio
 
@@ -322,10 +322,13 @@ theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f'
   rcases hg' with ⟨s₃, hs₃, hg'⟩
   let s := s₁ ∩ s₂ ∩ s₃
   have hs : s ∈ 𝓝[>] a := inter_mem (inter_mem hs₁ hs₂) hs₃
-  rw [mem_nhdsWithin_Ioi_iff_exists_Ioo_subset] at hs
+  rw [mem_nhdsWithin_Ioi_iff_exists_Ioo_subset] at hs 
   rcases hs with ⟨u, hau, hu⟩
   refine' lhopital_zero_right_on_Ioo hau _ _ _ hfa hga hdiv <;> intro x hx <;> apply_assumption <;>
-    first |exact (hu hx).1.1|exact (hu hx).1.2|exact (hu hx).2
+    first
+    | exact (hu hx).1.1
+    | exact (hu hx).1.2
+    | exact (hu hx).2
 #align has_deriv_at.lhopital_zero_nhds_right HasDerivAt.lhopital_zero_nhds_right
 
 /-- L'Hôpital's rule for approaching a real from the left, `has_deriv_at` version -/
@@ -340,10 +343,13 @@ theorem lhopital_zero_nhds_left (hff' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (f' 
   rcases hg' with ⟨s₃, hs₃, hg'⟩
   let s := s₁ ∩ s₂ ∩ s₃
   have hs : s ∈ 𝓝[<] a := inter_mem (inter_mem hs₁ hs₂) hs₃
-  rw [mem_nhdsWithin_Iio_iff_exists_Ioo_subset] at hs
+  rw [mem_nhdsWithin_Iio_iff_exists_Ioo_subset] at hs 
   rcases hs with ⟨l, hal, hl⟩
   refine' lhopital_zero_left_on_Ioo hal _ _ _ hfa hga hdiv <;> intro x hx <;> apply_assumption <;>
-    first |exact (hl hx).1.1|exact (hl hx).1.2|exact (hl hx).2
+    first
+    | exact (hl hx).1.1
+    | exact (hl hx).1.2
+    | exact (hl hx).2
 #align has_deriv_at.lhopital_zero_nhds_left HasDerivAt.lhopital_zero_nhds_left
 
 /-- L'Hôpital's rule for approaching a real, `has_deriv_at` version. This
@@ -366,7 +372,8 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x)
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝 a) l) : Tendsto (fun x => f x / g x) (𝓝[≠] a) l := by
   apply @lhopital_zero_nhds' _ _ _ f' _ g' <;>
       first
-        |apply eventually_nhdsWithin_of_eventually_nhds|apply tendsto_nhdsWithin_of_tendsto_nhds <;>
+      | apply eventually_nhdsWithin_of_eventually_nhds
+      | apply tendsto_nhdsWithin_of_tendsto_nhds <;>
     assumption
 #align has_deriv_at.lhopital_zero_nhds HasDerivAt.lhopital_zero_nhds
 
@@ -382,13 +389,15 @@ theorem lhopital_zero_atTop (hff' : ∀ᶠ x in atTop, HasDerivAt f (f' x) x)
   rcases hg' with ⟨s₃, hs₃, hg'⟩
   let s := s₁ ∩ s₂ ∩ s₃
   have hs : s ∈ at_top := inter_mem (inter_mem hs₁ hs₂) hs₃
-  rw [mem_at_top_sets] at hs
+  rw [mem_at_top_sets] at hs 
   rcases hs with ⟨l, hl⟩
   have hl' : Ioi l ⊆ s := fun x hx => hl x (le_of_lt hx)
   refine' lhopital_zero_at_top_on_Ioi _ _ (fun x hx => hg' x <| (hl' hx).2) hftop hgtop hdiv <;>
         intro x hx <;>
       apply_assumption <;>
-    first |exact (hl' hx).1.1|exact (hl' hx).1.2
+    first
+    | exact (hl' hx).1.1
+    | exact (hl' hx).1.2
 #align has_deriv_at.lhopital_zero_at_top HasDerivAt.lhopital_zero_atTop
 
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
@@ -403,13 +412,15 @@ theorem lhopital_zero_atBot (hff' : ∀ᶠ x in atBot, HasDerivAt f (f' x) x)
   rcases hg' with ⟨s₃, hs₃, hg'⟩
   let s := s₁ ∩ s₂ ∩ s₃
   have hs : s ∈ at_bot := inter_mem (inter_mem hs₁ hs₂) hs₃
-  rw [mem_at_bot_sets] at hs
+  rw [mem_at_bot_sets] at hs 
   rcases hs with ⟨l, hl⟩
   have hl' : Iio l ⊆ s := fun x hx => hl x (le_of_lt hx)
   refine' lhopital_zero_at_bot_on_Iio _ _ (fun x hx => hg' x <| (hl' hx).2) hfbot hgbot hdiv <;>
         intro x hx <;>
       apply_assumption <;>
-    first |exact (hl' hx).1.1|exact (hl' hx).1.2
+    first
+    | exact (hl' hx).1.1
+    | exact (hl' hx).1.2
 #align has_deriv_at.lhopital_zero_at_bot HasDerivAt.lhopital_zero_atBot
 
 end HasDerivAt
@@ -473,7 +484,8 @@ theorem lhopital_zero_nhds (hdf : ∀ᶠ x in 𝓝 a, DifferentiableAt ℝ f x)
     Tendsto (fun x => f x / g x) (𝓝[≠] a) l := by
   apply lhopital_zero_nhds' <;>
       first
-        |apply eventually_nhdsWithin_of_eventually_nhds|apply tendsto_nhdsWithin_of_tendsto_nhds <;>
+      | apply eventually_nhdsWithin_of_eventually_nhds
+      | apply tendsto_nhdsWithin_of_tendsto_nhds <;>
     assumption
 #align deriv.lhopital_zero_nhds deriv.lhopital_zero_nhds
 

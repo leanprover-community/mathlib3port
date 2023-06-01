@@ -41,7 +41,7 @@ variable {F α β γ δ : Type _}
 #print ContinuousOrderHom /-
 /-- The type of continuous monotone maps from `α` to `β`, aka Priestley homomorphisms. -/
 structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
-  [TopologicalSpace β] extends OrderHom α β where
+    [TopologicalSpace β] extends OrderHom α β where
   continuous_toFun : Continuous to_fun
 #align continuous_order_hom ContinuousOrderHom
 -/
@@ -56,8 +56,8 @@ section
 
 You should extend this class when you extend `continuous_order_hom`. -/
 class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
-  [TopologicalSpace α] [TopologicalSpace β] extends
-  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
+    [TopologicalSpace α] [TopologicalSpace β] extends
+    RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_continuous (f : F) : Continuous f
 #align continuous_order_hom_class ContinuousOrderHomClass
 -/

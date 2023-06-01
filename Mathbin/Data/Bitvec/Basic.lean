@@ -57,8 +57,8 @@ theorem toNat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n :=
   rw [to_nat_eq_foldr_reverse]
   cases' v with xs h
   dsimp [Bitvec.toNat, bits_to_nat]
-  rw [← List.length_reverse] at h
-  generalize xs.reverse = ys at h⊢; clear xs
+  rw [← List.length_reverse] at h 
+  generalize xs.reverse = ys at h ⊢; clear xs
   induction ys generalizing n
   · simp [← h]
   · simp only [← h, pow_add, flip, List.length, List.foldr, pow_one]
@@ -93,16 +93,16 @@ theorem ofNat_toNat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
   ext1
   change Vector.toList _ = xs
   dsimp [Bitvec.toNat, bits_to_nat]
-  rw [← List.length_reverse] at h
+  rw [← List.length_reverse] at h 
   rw [← List.reverse_reverse xs, List.foldl_reverse]
-  generalize xs.reverse = ys at h⊢; clear xs
+  generalize xs.reverse = ys at h ⊢; clear xs
   induction ys generalizing n
   · cases h; simp [Bitvec.ofNat]
-  · simp only [← Nat.succ_eq_add_one, List.length] at h; subst n
+  · simp only [← Nat.succ_eq_add_one, List.length] at h ; subst n
     simp only [Bitvec.ofNat, Vector.toList_cons, Vector.toList_nil, List.reverse_cons,
       Vector.toList_append, List.foldr]
     erw [add_lsb_div_two, to_bool_add_lsb_mod_two]
-    congr ; apply ys_ih; rfl
+    congr; apply ys_ih; rfl
 #align bitvec.of_nat_to_nat Bitvec.ofNat_toNat
 -/
 

@@ -96,7 +96,7 @@ theorem charpoly_leftMulMatrix {S : Type _} [Ring S] [Algebra R S] (h : PowerBas
   · apply (injective_iff_map_eq_zero (left_mul_matrix _)).mp (left_mul_matrix_injective h.basis)
     rw [← Polynomial.aeval_algHom_apply, aeval_self_charpoly]
   refine' fun q hq => or_iff_not_imp_left.2 fun h0 => _
-  rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin] at hq
+  rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin] at hq 
   contrapose! hq; exact h.dim_le_degree_of_root h0 hq
 #align charpoly_left_mul_matrix charpoly_leftMulMatrix
 

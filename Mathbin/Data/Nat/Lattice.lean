@@ -93,7 +93,7 @@ theorem not_mem_of_lt_sInf {s : Set ℕ} {m : ℕ} (hm : m < sInf s) : m ∉ s :
   by
   cases eq_empty_or_nonempty s
   · subst h; apply not_mem_empty
-  · rw [Nat.sInf_def h] at hm; exact Nat.find_min h hm
+  · rw [Nat.sInf_def h] at hm ; exact Nat.find_min h hm
 #align nat.not_mem_of_lt_Inf Nat.not_mem_of_lt_sInf
 -/
 
@@ -106,7 +106,7 @@ protected theorem sInf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : sInf s ≤ m 
 #print Nat.nonempty_of_pos_sInf /-
 theorem nonempty_of_pos_sInf {s : Set ℕ} (h : 0 < sInf s) : s.Nonempty :=
   by
-  by_contra contra; rw [Set.not_nonempty_iff_eq_empty] at contra
+  by_contra contra; rw [Set.not_nonempty_iff_eq_empty] at contra 
   have h' : Inf s ≠ 0 := ne_of_gt h; apply h'
   rw [Nat.sInf_eq_zero]; right; assumption
 #align nat.nonempty_of_pos_Inf Nat.nonempty_of_pos_sInf
@@ -182,7 +182,7 @@ theorem sInf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ sInf { m | p m }) :
     exact csInf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.sInf_def ⟨m, hm⟩, Nat.sInf_def hp]
-    rw [Nat.sInf_def hp] at hn
+    rw [Nat.sInf_def hp] at hn 
     exact find_add hn
 #align nat.Inf_add Nat.sInf_add
 -/

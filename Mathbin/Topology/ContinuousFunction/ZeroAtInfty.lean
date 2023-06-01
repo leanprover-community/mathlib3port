@@ -43,7 +43,7 @@ you should parametrize over `(F : Type*) [zero_at_infty_continuous_map_class F �
 
 When you extend this structure, make sure to extend `zero_at_infty_continuous_map_class`. -/
 structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace α] [Zero β]
-  [TopologicalSpace β] extends ContinuousMap α β : Type max u v where
+    [TopologicalSpace β] extends ContinuousMap α β : Type max u v where
   zero_at_infty' : Tendsto to_fun (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map ZeroAtInftyContinuousMap
 
@@ -60,7 +60,7 @@ vanish at infinity.
 
 You should also extend this typeclass when you extend `zero_at_infty_continuous_map`. -/
 class ZeroAtInftyContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [Zero β] [TopologicalSpace β] extends ContinuousMapClass F α β where
+    [Zero β] [TopologicalSpace β] extends ContinuousMapClass F α β where
   zero_at_infty (f : F) : Tendsto f (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map_class ZeroAtInftyContinuousMapClass
 
@@ -450,7 +450,7 @@ theorem isometry_toBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by 
 theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) :=
   by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
-  rw [clusterPt_principal_iff] at hf
+  rw [clusterPt_principal_iff] at hf 
   have : tendsto f (cocompact α) (𝓝 0) :=
     by
     refine' metric.tendsto_nhds.mpr fun ε hε => _

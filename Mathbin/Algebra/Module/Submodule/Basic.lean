@@ -46,7 +46,7 @@ variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
   This is a sufficient condition for the subset of vectors in the submodule
   to themselves form a module. -/
 structure Submodule (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Module R M] extends
-  AddSubmonoid M, SubMulAction R M : Type v
+    AddSubmonoid M, SubMulAction R M : Type v
 #align submodule Submodule
 -/
 
@@ -382,8 +382,8 @@ instance : AddCommMonoid p :=
 
 #print Submodule.module' /-
 instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
-  refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
-    · intros ; apply SetCoe.ext; simp [smul_add, add_smul, mul_smul]
+  refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·) .. } <;>
+    · intros; apply SetCoe.ext; simp [smul_add, add_smul, mul_smul]
 #align submodule.module' Submodule.module'
 -/
 
@@ -398,7 +398,7 @@ instance noZeroSMulDivisors [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R p :=
 
 #print Submodule.subtype /-
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def subtype : p →ₗ[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
+protected def subtype : p →ₗ[R] M := by refine' { toFun := coe .. } <;> simp [coe_smul]
 #align submodule.subtype Submodule.subtype
 -/
 

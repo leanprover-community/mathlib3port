@@ -238,8 +238,8 @@ theorem BilinForm.toMatrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o →
       rintro j' -
       simp only [smul_eq_mul, Pi.basisFun_repr, mul_assoc, mul_comm, mul_left_comm,
         Pi.basisFun_apply, of_apply]
-    · intros ; simp only [zero_smul, smul_zero]
-  · intros ; simp only [zero_smul, Finsupp.sum_zero]
+    · intros; simp only [zero_smul, smul_zero]
+  · intros; simp only [zero_smul, Finsupp.sum_zero]
 #align bilin_form.to_matrix'_comp BilinForm.toMatrix'_comp
 
 theorem BilinForm.toMatrix'_compLeft (B : BilinForm R₂ (n → R₂)) (f : (n → R₂) →ₗ[R₂] n → R₂) :
@@ -377,8 +377,8 @@ theorem BilinForm.toMatrix_comp (B : BilinForm R₂ M₂) (l r : M₂' →ₗ[R�
       rintro j' -
       simp only [smul_eq_mul, LinearMap.toMatrix_apply, Basis.equivFun_apply, mul_assoc, mul_comm,
         mul_left_comm]
-    · intros ; simp only [zero_smul, smul_zero]
-  · intros ; simp only [zero_smul, Finsupp.sum_zero]
+    · intros; simp only [zero_smul, smul_zero]
+  · intros; simp only [zero_smul, Finsupp.sum_zero]
 #align bilin_form.to_matrix_comp BilinForm.toMatrix_comp
 
 theorem BilinForm.toMatrix_compLeft (B : BilinForm R₂ M₂) (f : M₂ →ₗ[R₂] M₂) :

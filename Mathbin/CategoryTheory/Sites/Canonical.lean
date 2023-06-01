@@ -92,12 +92,12 @@ theorem isSheafFor_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y⦄ 
       simpa using this
     trans s (m ≫ l ≫ h ≫ f) this
     · have := ht (U.downward_closed hf h) _ ((B _).downward_closed hl m)
-      rw [op_comp, functor_to_types.map_comp_apply] at this
+      rw [op_comp, functor_to_types.map_comp_apply] at this 
       rw [this]
       change s _ _ = s _ _
       simp
     · have : s _ _ = _ := (ht hf _ hm).symm
-      simp only [assoc] at this
+      simp only [assoc] at this 
       rw [this]
       simp
   refine' ⟨hU.amalgamate t hT, _, _⟩
@@ -176,7 +176,7 @@ def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C
       apply (hS _ _).IsSeparatedFor
     · intro Y f hf
       have := hR hf _ (𝟙 _)
-      rw [pullback_id, pullback_comp] at this
+      rw [pullback_id, pullback_comp] at this 
       apply this
 #align category_theory.sheaf.finest_topology_single CategoryTheory.Sheaf.finestTopologySingle
 

@@ -128,7 +128,7 @@ protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : �
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } :=
   by
   have := h.comap fun p : G × G => p.2 / p.1
-  rw [← uniformity_eq_comap_nhds_one] at this
+  rw [← uniformity_eq_comap_nhds_one] at this 
   convert UniformFun.hasBasis_nhds_of_basis α _ 1 this
   ext (i f)
   simp [UniformFun.gen]
@@ -165,7 +165,7 @@ protected theorem UniformOnFun.hasBasis_nhds_one_of_basis (𝔖 : Set <| Set α)
       { f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   by
   have := h.comap fun p : G × G => p.1 / p.2
-  rw [← uniformity_eq_comap_nhds_one_swapped] at this
+  rw [← uniformity_eq_comap_nhds_one_swapped] at this 
   convert UniformOnFun.hasBasis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
   ext (i f)
   simp [UniformOnFun.gen]
@@ -214,9 +214,9 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
       continuous_smul.tendsto (0 : 𝕜 × E)
-    rw [zero_smul, nhds_prod_eq] at this
+    rw [zero_smul, nhds_prod_eq] at this 
     have := this hV
-    rw [mem_map, mem_prod_iff] at this
+    rw [mem_map, mem_prod_iff] at this 
     rcases this with ⟨U, hU, W, hW, hUW⟩
     refine' ⟨U, hU, ⟨S, W⟩, ⟨hS, hW⟩, _⟩
     rw [Set.smul_subset_iff]
@@ -225,7 +225,7 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
-    rw [smul_zero] at this
+    rw [smul_zero] at this 
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
     rw [SMulHomClass.map_smul]
     exact hf x hx
@@ -236,7 +236,7 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
     by_cases ha0 : a = 0
     · rw [ha0]
       simp [mem_of_mem_nhds hV]
-    · rw [mem_ball_zero_iff] at ha
+    · rw [mem_ball_zero_iff] at ha 
       rw [SMulHomClass.map_smul, Pi.smul_apply]
       have : φ u x ∈ a⁻¹ • V :=
         by
@@ -244,7 +244,7 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
         refine' (hr a⁻¹ _) (Set.mem_image_of_mem (φ u) hx)
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le
-      rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
+      rwa [Set.mem_inv_smul_set_iff₀ ha0] at this 
 #align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.continuousSMul_induced_of_image_bounded
 
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any

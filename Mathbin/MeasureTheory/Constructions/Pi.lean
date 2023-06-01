@@ -77,7 +77,7 @@ theorem IsPiSystem.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsPiSystem (C i
     IsPiSystem (pi univ '' pi univ C) :=
   by
   rintro _ ⟨s₁, hs₁, rfl⟩ _ ⟨s₂, hs₂, rfl⟩ hst
-  rw [← pi_inter_distrib] at hst⊢; rw [univ_pi_nonempty_iff] at hst
+  rw [← pi_inter_distrib] at hst ⊢; rw [univ_pi_nonempty_iff] at hst 
   exact mem_image_of_mem _ fun i _ => hC i _ (hs₁ i (mem_univ i)) _ (hs₂ i (mem_univ i)) (hst i)
 #align is_pi_system.pi IsPiSystem.pi
 -/
@@ -126,7 +126,7 @@ theorem generateFrom_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountabl
         pi univ fun k => ⋃ j : ℕ, @update ι (fun i' => Set (α i')) _ (fun i' => t i' j) i s k :=
       by
       ext; simp_rw [mem_univ_pi]; apply forall_congr'; intro i'
-      by_cases i' = i; · subst h; simp; · rw [← Ne.def] at h; simp [h]
+      by_cases i' = i; · subst h; simp; · rw [← Ne.def] at h ; simp [h]
     rw [this, ← Union_univ_pi]
     apply MeasurableSet.iUnion
     intro n; apply measurable_set_generate_from
@@ -305,7 +305,7 @@ theorem pi_caratheodory :
   by
   refine' iSup_le _
   intro i s hs
-  rw [MeasurableSpace.comap] at hs
+  rw [MeasurableSpace.comap] at hs 
   rcases hs with ⟨s, hs, rfl⟩
   apply bounded_by_caratheodory
   intro t
@@ -392,7 +392,7 @@ theorem pi_eq_generateFrom {C : ∀ i, Set (Set (α i))}
     (finite_spanning_sets_in.pi h3C).ext
       (generateFrom_eq_pi hC fun i => (h3C i).IsCountablySpanning).symm (IsPiSystem.pi h2C) _
   rintro _ ⟨s, hs, rfl⟩
-  rw [mem_univ_pi] at hs
+  rw [mem_univ_pi] at hs 
   haveI := fun i => (h3C i).SigmaFinite
   simp_rw [h₁ s hs, pi_pi_aux μ s fun i => h4C i _ (hs i)]
 #align measure_theory.measure.pi_eq_generate_from MeasureTheory.Measure.pi_eq_generateFrom

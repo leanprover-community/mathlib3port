@@ -174,8 +174,8 @@ def cartesianClosedOfReflective : CartesianClosed D
 #align category_theory.cartesian_closed_of_reflective CategoryTheory.cartesianClosedOfReflective
 
 -- It's annoying that I need to do this.
-attribute [-instance]
-  CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit CategoryTheory.preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
+attribute [-instance] CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit
+  CategoryTheory.preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
 
 /-- We construct a bijection between morphisms `L(A ⨯ B) ⟶ X` and morphisms `LA ⨯ LB ⟶ X`.
 This bijection has two key properties:

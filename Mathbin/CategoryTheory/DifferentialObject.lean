@@ -199,8 +199,8 @@ def mapDifferentialObject (F : C ⥤ D)
         slice_lhs 2 3 => rw [← functor.comp_map F (shift_functor D (1 : ℤ)), ← η.naturality f.f]
         slice_lhs 1 2 => rw [functor.comp_map, ← F.map_comp, f.comm, F.map_comp]
         rw [category.assoc] }
-  map_id' := by intros ; ext; simp
-  map_comp' := by intros ; ext; simp
+  map_id' := by intros; ext; simp
+  map_comp' := by intros; ext; simp
 #align category_theory.functor.map_differential_object CategoryTheory.Functor.mapDifferentialObject
 
 end Functor

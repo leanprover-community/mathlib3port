@@ -176,7 +176,7 @@ theorem iInf_toSubfield {ι : Sort _} (S : ι → IntermediateField F E) :
 def equivOfEq {S T : IntermediateField F E} (h : S = T) : S ≃ₐ[F] T := by
   refine'
       { toFun := fun x => ⟨x, _⟩
-        invFun := fun x => ⟨x, _⟩.. } <;>
+        invFun := fun x => ⟨x, _⟩ .. } <;>
     tidy
 #align intermediate_field.equiv_of_eq IntermediateField.equivOfEq
 
@@ -506,7 +506,7 @@ variable {F} {α}
 theorem adjoin_algebraic_toSubalgebra {S : Set E} (hS : ∀ x ∈ S, IsAlgebraic F x) :
     (IntermediateField.adjoin F S).toSubalgebra = Algebra.adjoin F S :=
   by
-  simp only [isAlgebraic_iff_isIntegral] at hS
+  simp only [isAlgebraic_iff_isIntegral] at hS 
   have : Algebra.IsIntegral F (Algebra.adjoin F S) := by
     rwa [← le_integralClosure_iff_isIntegral, Algebra.adjoin_le_iff]
   have := isField_of_isIntegral_of_isField' this (Field.toIsField F)
@@ -546,7 +546,7 @@ theorem isSplittingField_iSup {ι : Type _} {t : ι → IntermediateField F E} {
   by
   let K : IntermediateField F E := ⨆ i ∈ s, t i
   have hK : ∀ i ∈ s, t i ≤ K := fun i hi => le_iSup_of_le i (le_iSup (fun _ => t i) hi)
-  simp only [is_splitting_field_iff] at h⊢
+  simp only [is_splitting_field_iff] at h ⊢
   refine'
     ⟨splits_prod (algebraMap F K) fun i hi =>
         Polynomial.splits_comp_of_splits (algebraMap F (t i)) (inclusion (hK i hi)).toRingHom
@@ -570,7 +570,7 @@ theorem adjoin_simple_isCompactElement (x : E) : IsCompactElement F⟮⟯ :=
   by
   rw [is_compact_element_iff_le_of_directed_Sup_le]
   rintro s ⟨F₀, hF₀⟩ hs hx
-  simp only [adjoin_simple_le_iff] at hx⊢
+  simp only [adjoin_simple_le_iff] at hx ⊢
   let F : IntermediateField F E :=
     { carrier := ⋃ E ∈ s, ↑E
       add_mem' :=
@@ -629,13 +629,13 @@ theorem exists_finset_of_mem_iSup {ι : Type _} {f : ι → IntermediateField F 
     (hx : x ∈ ⨆ i, f i) : ∃ s : Finset ι, x ∈ ⨆ i ∈ s, f i :=
   by
   have := (adjoin_simple_is_compact_element x).exists_finset_of_le_iSup (IntermediateField F E) f
-  simp only [adjoin_simple_le_iff] at this
+  simp only [adjoin_simple_le_iff] at this 
   exact this hx
 #align intermediate_field.exists_finset_of_mem_supr IntermediateField.exists_finset_of_mem_iSup
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem exists_finset_of_mem_supr' {ι : Type _} {f : ι → IntermediateField F E} {x : E}
-    (hx : x ∈ ⨆ i, f i) : ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, F⟮⟯ :=
+    (hx : x ∈ ⨆ i, f i) : ∃ s : Finset (Σ i, f i), x ∈ ⨆ i ∈ s, F⟮⟯ :=
   exists_finset_of_mem_iSup
     (SetLike.le_def.mp
       (iSup_le fun i x h =>
@@ -645,7 +645,7 @@ theorem exists_finset_of_mem_supr' {ι : Type _} {f : ι → IntermediateField F
 
 theorem exists_finset_of_mem_supr'' {ι : Type _} {f : ι → IntermediateField F E}
     (h : ∀ i, Algebra.IsAlgebraic F (f i)) {x : E} (hx : x ∈ ⨆ i, f i) :
-    ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet E) :=
+    ∃ s : Finset (Σ i, f i), x ∈ ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet E) :=
   by
   refine'
     exists_finset_of_mem_supr
@@ -802,7 +802,7 @@ variable {K : Type _} [Field K] [Algebra F K]
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem minpoly_gen {α : E} (h : IsIntegral F α) : minpoly F (AdjoinSimple.gen F α) = minpoly F α :=
   by
-  rw [← adjoin_simple.algebra_map_gen F α] at h
+  rw [← adjoin_simple.algebra_map_gen F α] at h 
   have inj := (algebraMap F⟮⟯ E).Injective
   exact
     minpoly.eq_of_algebraMap_eq inj ((isIntegral_algebraMap_iff inj).mp h)
@@ -995,7 +995,7 @@ variable (F E K : Type _) [Field F] [Field E] [Field K] [Algebra F E] [Algebra F
 
 /-- Lifts `L → K` of `F → K` -/
 def Lifts :=
-  ΣL : IntermediateField F E, L →ₐ[F] K
+  Σ L : IntermediateField F E, L →ₐ[F] K
 #align intermediate_field.lifts IntermediateField.Lifts
 
 variable {F E K}
@@ -1166,14 +1166,14 @@ theorem algHom_mk_adjoin_splits
         (fun s t => x.2.map_mul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩)
         x.2.commutes⟩
   rcases x.exists_lift_of_splits (hK s hs).1 (hK s hs).2 with ⟨y, h1, h2⟩
-  rwa [hx y h1] at h2
+  rwa [hx y h1] at h2 
 #align intermediate_field.alg_hom_mk_adjoin_splits IntermediateField.algHom_mk_adjoin_splits
 
 theorem algHom_mk_adjoin_splits' (hS : adjoin F S = ⊤)
     (hK : ∀ x ∈ S, IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) :
     Nonempty (E →ₐ[F] K) := by
   cases' alg_hom_mk_adjoin_splits hK with ϕ
-  rw [hS] at ϕ
+  rw [hS] at ϕ 
   exact ⟨ϕ.comp top_equiv.symm.to_alg_hom⟩
 #align intermediate_field.alg_hom_mk_adjoin_splits' IntermediateField.algHom_mk_adjoin_splits'
 
@@ -1217,7 +1217,7 @@ instance finiteDimensional_sup [h1 : FiniteDimensional K E1] [h2 : FiniteDimensi
   suffices g.range = (E1 ⊔ E2).toSubalgebra
     by
     have h : FiniteDimensional K g.range.to_submodule := g.to_linear_map.finite_dimensional_range
-    rwa [this] at h
+    rwa [this] at h 
   rw [Algebra.TensorProduct.productMap_range, E1.range_val, E2.range_val, sup_to_subalgebra]
 #align intermediate_field.finite_dimensional_sup IntermediateField.finiteDimensional_sup
 
@@ -1258,7 +1258,7 @@ theorem isAlgebraic_iSup {ι : Type _} {f : ι → IntermediateField K L}
   rintro ⟨x, hx⟩
   obtain ⟨s, hx⟩ := exists_finset_of_mem_supr' hx
   rw [is_algebraic_iff, Subtype.coe_mk, ← Subtype.coe_mk x hx, ← is_algebraic_iff]
-  haveI : ∀ i : Σi, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
+  haveI : ∀ i : Σ i, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
     adjoin.finite_dimensional (is_integral_iff.1 (isAlgebraic_iff_isIntegral.1 (h i x)))
   apply Algebra.isAlgebraic_of_finite
 #align intermediate_field.is_algebraic_supr IntermediateField.isAlgebraic_iSup

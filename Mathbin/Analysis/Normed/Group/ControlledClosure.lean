@@ -88,7 +88,7 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
     /- In the above equality, the left-hand-side converges to `f g` by continuity of `f` and
            definition of `g` while the right-hand-side converges to `h` by construction of `v` so
            `g` is indeed a preimage of `h`. -/
-    rw [← this] at lim_v
+    rw [← this] at lim_v 
     exact tendsto_nhds_unique ((f.continuous.tendsto g).comp hg) lim_v
   · -- Then we need to estimate the norm of `g`, using our careful choice of `b`.
     suffices : ∀ n, ‖s n‖ ≤ (C + ε) * ‖h‖

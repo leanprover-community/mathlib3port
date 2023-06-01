@@ -56,7 +56,7 @@ class QuotientAction : Prop where
 #print AddAction.QuotientAction /-
 /-- A typeclass for when an `add_action β α` descends to the quotient `α ⧸ H`. -/
 class AddAction.QuotientAction {α : Type _} (β : Type _) [AddGroup α] [AddMonoid β] [AddAction β α]
-  (H : AddSubgroup α) : Prop where
+    (H : AddSubgroup α) : Prop where
   inv_mul_mem : ∀ (b : β) {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
 #align add_action.quotient_action AddAction.QuotientAction
 -/
@@ -272,10 +272,10 @@ provide `mul_action.self_equiv_sigma_orbits_quotient_stabilizer` as a special ca
 @[to_additive
       "**Class formula** : given `G` an additive group acting on `X` and `φ` a function\nmapping each orbit of `X` under this action (that is, each element of the quotient of `X` by the\nrelation `orbit_rel G X`) to an element in this orbit, this gives a (noncomputable) bijection\nbetween `X` and the disjoint union of `G/Stab(φ(ω))` over all orbits `ω`. In most cases you'll want\n`φ` to be `quotient.out'`, so we provide `add_action.self_equiv_sigma_orbits_quotient_stabilizer`\nas a special case. "]
 noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
-    (hφ : LeftInverse Quotient.mk'' φ) : β ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
+    (hφ : LeftInverse Quotient.mk'' φ) : β ≃ Σ ω : Ω, α ⧸ stabilizer α (φ ω) :=
   calc
-    β ≃ Σω : Ω, orbitRel.Quotient.orbit ω := selfEquivSigmaOrbits' α β
-    _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
+    β ≃ Σ ω : Ω, orbitRel.Quotient.orbit ω := selfEquivSigmaOrbits' α β
+    _ ≃ Σ ω : Ω, α ⧸ stabilizer α (φ ω) :=
       Equiv.sigmaCongrRight fun ω =>
         (Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <|
           orbitEquivQuotientStabilizer α (φ ω)
@@ -312,7 +312,7 @@ theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [F
 `mul_action.self_equiv_sigma_orbits_quotient_stabilizer'` with `φ = quotient.out'`. -/
 @[to_additive
       "**Class formula**. This is a special case of\n`add_action.self_equiv_sigma_orbits_quotient_stabilizer'` with `φ = quotient.out'`. "]
-noncomputable def selfEquivSigmaOrbitsQuotientStabilizer : β ≃ Σω : Ω, α ⧸ stabilizer α ω.out' :=
+noncomputable def selfEquivSigmaOrbitsQuotientStabilizer : β ≃ Σ ω : Ω, α ⧸ stabilizer α ω.out' :=
   selfEquivSigmaOrbitsQuotientStabilizer' α β Quotient.out_eq'
 #align mul_action.self_equiv_sigma_orbits_quotient_stabilizer MulAction.selfEquivSigmaOrbitsQuotientStabilizer
 #align add_action.self_equiv_sigma_orbits_quotient_stabilizer AddAction.selfEquivSigmaOrbitsQuotientStabilizer
@@ -333,24 +333,24 @@ theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fi
 `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. -/
 @[to_additive
       "**Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all\n`{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is an additive group acting\non `X` and `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. "]
-noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, fixedBy α β a) ≃ Ω × α :=
+noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σ a : α, fixedBy α β a) ≃ Ω × α :=
   calc
-    (Σa : α, fixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } :=
+    (Σ a : α, fixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } :=
       (Equiv.subtypeProdEquivSigmaSubtype _).symm
     _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } :=
       ((Equiv.prodComm α β).subtypeEquiv fun ab => Iff.rfl)
-    _ ≃ Σb : β, stabilizer α b :=
+    _ ≃ Σ b : β, stabilizer α b :=
       (Equiv.subtypeProdEquivSigmaSubtype fun (b : β) a => a ∈ stabilizer α b)
-    _ ≃ Σωb : Σω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) :=
+    _ ≃ Σ ωb : Σ ω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) :=
       (selfEquivSigmaOrbits α β).sigmaCongrLeft'
-    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α (b : β) :=
+    _ ≃ Σ ω : Ω, Σ b : orbit α ω.out', stabilizer α (b : β) :=
       (Equiv.sigmaAssoc fun (ω : Ω) (b : orbit α ω.out') => stabilizer α (b : β))
-    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α ω.out' :=
+    _ ≃ Σ ω : Ω, Σ b : orbit α ω.out', stabilizer α ω.out' :=
       (Equiv.sigmaCongrRight fun ω =>
         Equiv.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv)
-    _ ≃ Σω : Ω, orbit α ω.out' × stabilizer α ω.out' :=
+    _ ≃ Σ ω : Ω, orbit α ω.out' × stabilizer α ω.out' :=
       (Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _)
-    _ ≃ Σω : Ω, α := (Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out')
+    _ ≃ Σ ω : Ω, α := (Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out')
     _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
     
 #align mul_action.sigma_fixed_by_equiv_orbits_prod_group MulAction.sigmaFixedByEquivOrbitsProdGroup

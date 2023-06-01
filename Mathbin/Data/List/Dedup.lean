@@ -123,8 +123,8 @@ theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ ded
   by
   induction' l₁ with a l₁ IH; · rfl; rw [cons_union, ← IH]
   show dedup (a :: (l₁ ++ l₂)) = insert a (dedup (l₁ ++ l₂))
-  by_cases a ∈ dedup (l₁ ++ l₂) <;>
-    [rw [dedup_cons_of_mem' h, insert_of_mem h];rw [dedup_cons_of_not_mem' h, insert_of_not_mem h]]
+  by_cases a ∈ dedup (l₁ ++ l₂) <;> [rw [dedup_cons_of_mem' h, insert_of_mem h];
+    rw [dedup_cons_of_not_mem' h, insert_of_not_mem h]]
 #align list.dedup_append List.dedup_append
 -/
 
@@ -162,7 +162,7 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
         simp [hp, count_dedup]
       · refine' trans (List.sum_eq_zero fun n hn => _) (by simp [hp])
         obtain ⟨a', ha'⟩ := List.mem_map.1 hn
-        simp only [(fun h => hp (h ▸ (List.mem_filter.1 ha'.1).2) : a' ≠ a), if_false] at ha'
+        simp only [(fun h => hp (h ▸ (List.mem_filter.1 ha'.1).2) : a' ≠ a), if_false] at ha' 
         exact ha'.2.symm
 #align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countp
 

@@ -98,7 +98,7 @@ class GradeMaxOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends Gra
 /-- A `𝕆`-graded order where minimal elements have minimal grades and maximal elements have maximal
 grades. -/
 class GradeBoundedOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeMinOrder 𝕆 α,
-  GradeMaxOrder 𝕆 α
+    GradeMaxOrder 𝕆 α
 #align grade_bounded_order GradeBoundedOrder
 -/
 

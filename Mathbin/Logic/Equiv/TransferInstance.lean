@@ -168,7 +168,7 @@ theorem mulEquiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a 
 theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equiv.Mul e
     (MulEquiv e).symm b = e.symm b :=
-  by intros ; rfl
+  by intros; rfl
 #align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_apply
 #align equiv.add_equiv_symm_apply Equiv.addEquiv_symm_apply
 
@@ -194,7 +194,7 @@ theorem ringEquiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv 
 
 #print Equiv.ringEquiv_symm_apply /-
 theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by letI := Equiv.Add e;
-    letI := Equiv.Mul e; exact (RingEquiv e).symm b = e.symm b := by intros ; rfl
+    letI := Equiv.Mul e; exact (RingEquiv e).symm b = e.symm b := by intros; rfl
 #align equiv.ring_equiv_symm_apply Equiv.ringEquiv_symm_apply
 -/
 
@@ -656,7 +656,7 @@ protected def algebra (e : α ≃ β) [Semiring β] :
   · intro r x
     simp only [Function.comp_apply, RingHom.coe_comp]
     have p := ring_equiv_symm_apply e
-    dsimp at p
+    dsimp at p 
     erw [p]; clear p
     apply (RingEquiv e).Injective
     simp only [(RingEquiv e).map_mul]

@@ -64,7 +64,7 @@ universe u v w
 /-- `bucket_array α β` is the underlying data type for `hash_map α β`,
   an array of linked lists of key-value pairs. -/
 def BucketArray (α : Type u) (β : α → Type v) (n : ℕ+) :=
-  Array' n (List (Σa, β a))
+  Array' n (List (Σ a, β a))
 #align bucket_array BucketArray
 
 /-- Make a hash_map index from a `nat` hash value and a (positive) buffer size -/
@@ -84,32 +84,32 @@ instance : Inhabited (BucketArray α β n) :=
   ⟨mkArray' _ []⟩
 
 /-- Read the bucket corresponding to an element -/
-def read (a : α) : List (Σa, β a) :=
+def read (a : α) : List (Σ a, β a) :=
   let bidx := HashMap.mkIdx n (hash_fn a)
   data.read bidx
 #align bucket_array.read BucketArray.read
 
 /-- Write the bucket corresponding to an element -/
-def write (a : α) (l : List (Σa, β a)) : BucketArray α β n :=
+def write (a : α) (l : List (Σ a, β a)) : BucketArray α β n :=
   let bidx := HashMap.mkIdx n (hash_fn a)
   data.write bidx l
 #align bucket_array.write BucketArray.write
 
 /-- Modify (read, apply `f`, and write) the bucket corresponding to an element -/
-def modify (a : α) (f : List (Σa, β a) → List (Σa, β a)) : BucketArray α β n :=
+def modify (a : α) (f : List (Σ a, β a) → List (Σ a, β a)) : BucketArray α β n :=
   let bidx := HashMap.mkIdx n (hash_fn a)
   Array'.write data bidx (f (Array'.read data bidx))
 #align bucket_array.modify BucketArray.modify
 
 /-- The list of all key-value pairs in the bucket list -/
-def asList : List (Σa, β a) :=
+def asList : List (Σ a, β a) :=
   data.toList.join
 #align bucket_array.as_list BucketArray.asList
 
-theorem mem_asList {a : Σa, β a} : a ∈ data.asList ↔ ∃ i, a ∈ Array'.read data i :=
+theorem mem_asList {a : Σ a, β a} : a ∈ data.asList ↔ ∃ i, a ∈ Array'.read data i :=
   by
   have :
-    (∃ (l : List (Σa : α, β a))(i : Fin n.val), a ∈ l ∧ Array'.read data i = l) ↔
+    (∃ (l : List (Σ a : α, β a)) (i : Fin n.val), a ∈ l ∧ Array'.read data i = l) ↔
       ∃ i : Fin n.val, a ∈ Array'.read data i :=
     by rw [exists_swap] <;> exact exists_congr fun i => by simp
   simp [as_list] <;> simpa [Array'.Mem.def, and_comm']
@@ -150,13 +150,13 @@ theorem mk_asList (n : ℕ+) : BucketArray.asList (mkArray' n [] : BucketArray �
 parameter [DecidableEq α]
 
 /-- Search a bucket for a key `a` and return the value -/
-def findAux (a : α) : List (Σa, β a) → Option (β a)
+def findAux (a : α) : List (Σ a, β a) → Option (β a)
   | [] => none
   | ⟨a', b⟩ :: t => if h : a' = a then some (Eq.recOn h b) else find_aux t
 #align hash_map.find_aux HashMap.findAux
 
 theorem findAux_iff {a : α} {b : β a} :
-    ∀ {l : List (Σa, β a)}, (l.map Sigma.fst).Nodup → (find_aux a l = some b ↔ Sigma.mk a b ∈ l)
+    ∀ {l : List (Σ a, β a)}, (l.map Sigma.fst).Nodup → (find_aux a l = some b ↔ Sigma.mk a b ∈ l)
   | [], nd => ⟨fun n => by injection n, False.elim⟩
   | ⟨a', b'⟩ :: t, nd => by
     by_cases a' = a
@@ -166,21 +166,21 @@ theorem findAux_iff {a : α} {b : β a} :
       have : a' ∉ t.map Sigma.fst := nd.not_mem
       exact this.elim (List.mem_map_of_mem Sigma.fst m)
     · have : Sigma.mk a b ≠ ⟨a', b'⟩ := by intro e; injection e with e; exact h e.symm
-      simp at nd; simp [find_aux, h, Ne.symm h, find_aux_iff, nd]
+      simp at nd ; simp [find_aux, h, Ne.symm h, find_aux_iff, nd]
 #align hash_map.find_aux_iff HashMap.findAux_iff
 
 /-- Returns `tt` if the bucket `l` contains the key `a` -/
-def containsAux (a : α) (l : List (Σa, β a)) : Bool :=
+def containsAux (a : α) (l : List (Σ a, β a)) : Bool :=
   (find_aux a l).isSome
 #align hash_map.contains_aux HashMap.containsAux
 
-theorem containsAux_iff {a : α} {l : List (Σa, β a)} (nd : (l.map Sigma.fst).Nodup) :
+theorem containsAux_iff {a : α} {l : List (Σ a, β a)} (nd : (l.map Sigma.fst).Nodup) :
     contains_aux a l ↔ a ∈ l.map Sigma.fst :=
   by
   unfold contains_aux
   cases' h : find_aux a l with b <;> simp
-  · intro (b : β a)(m : Sigma.mk a b ∈ l)
-    rw [(find_aux_iff nd).2 m] at h
+  · intro (b : β a) (m : Sigma.mk a b ∈ l)
+    rw [(find_aux_iff nd).2 m] at h 
     contradiction
   · show ∃ b : β a, Sigma.mk a b ∈ l
     exact ⟨_, (find_aux_iff nd).1 h⟩
@@ -188,13 +188,13 @@ theorem containsAux_iff {a : α} {l : List (Σa, β a)} (nd : (l.map Sigma.fst).
 
 /-- Modify a bucket to replace a value in the list. Leaves the list
  unchanged if the key is not found. -/
-def replaceAux (a : α) (b : β a) : List (Σa, β a) → List (Σa, β a)
+def replaceAux (a : α) (b : β a) : List (Σ a, β a) → List (Σ a, β a)
   | [] => []
   | ⟨a', b'⟩ :: t => if a' = a then ⟨a, b⟩ :: t else ⟨a', b'⟩ :: replace_aux t
 #align hash_map.replace_aux HashMap.replaceAux
 
 /-- Modify a bucket to remove a key, if it exists. -/
-def eraseAux (a : α) : List (Σa, β a) → List (Σa, β a)
+def eraseAux (a : α) : List (Σ a, β a) → List (Σ a, β a)
   | [] => []
   | ⟨a', b'⟩ :: t => if a' = a then t else ⟨a', b'⟩ :: erase_aux t
 #align hash_map.erase_aux HashMap.eraseAux
@@ -205,7 +205,7 @@ def eraseAux (a : α) : List (Σa, β a) → List (Σa, β a)
   multiple times in the list. -/
 structure Valid {n} (bkts : BucketArray α β n) (sz : Nat) : Prop where
   len : bkts.asList.length = sz
-  idx : ∀ {i} {a : Σa, β a}, a ∈ Array'.read bkts i → mkIdx n (hash_fn a.1) = i
+  idx : ∀ {i} {a : Σ a, β a}, a ∈ Array'.read bkts i → mkIdx n (hash_fn a.1) = i
   Nodup : ∀ i, ((Array'.read bkts i).map Sigma.fst).Nodup
 #align hash_map.valid HashMap.Valid
 
@@ -262,7 +262,7 @@ parameter
   {n :
     ℕ+}{bkts :
     BucketArray α β
-      n}{bidx : Fin n}{f : List (Σa, β a) → List (Σa, β a)}(u v1 v2 w : List (Σa, β a))
+      n}{bidx : Fin n}{f : List (Σ a, β a) → List (Σ a, β a)}(u v1 v2 w : List (Σ a, β a))
 
 -- mathport name: exprL
 local notation "L" => Array'.read bkts bidx
@@ -292,7 +292,7 @@ theorem append_of_modify : ∃ u' w', bkts.asList = u' ++ v1 ++ w' ∧ bkts'.asL
 #align hash_map.append_of_modify HashMap.append_of_modify
 
 variable (hvnd : (v2.map Sigma.fst).Nodup)
-  (hal : ∀ a : Σa, β a, a ∈ v2 → mkIdx n (hash_fn a.1) = bidx)
+  (hal : ∀ a : Σ a, β a, a ∈ v2 → mkIdx n (hash_fn a.1) = bidx)
   (djuv : (u.map Sigma.fst).Disjoint (v2.map Sigma.fst))
   (djwv : (w.map Sigma.fst).Disjoint (v2.map Sigma.fst))
 
@@ -309,13 +309,13 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
   · by_cases bidx = i
     · subst i; rw [bkts', Array'.read_write, hfl]
       have := @valid.idx _ _ _ v bidx a
-      simp only [hl, List.mem_append, or_imp] at this⊢
+      simp only [hl, List.mem_append, or_imp] at this ⊢
       exact ⟨⟨this.1.1, hal _⟩, this.2⟩
     · rw [bkts', Array'.read_write_of_ne _ _ h]; apply v.idx
   · by_cases bidx = i
     · subst i; rw [bkts', Array'.read_write, hfl]
       have := @valid.nodup _ _ _ v bidx
-      simp [hl, List.nodup_append] at this
+      simp [hl, List.nodup_append] at this 
       simp [List.nodup_append, this, hvnd, djuv, djwv.symm]
     · rw [bkts', Array'.read_write_of_ne _ _ h]; apply v.nodup
 #align hash_map.valid.modify HashMap.Valid.modify
@@ -323,30 +323,30 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
 end
 
 theorem Valid.replaceAux (a : α) (b : β a) :
-    ∀ l : List (Σa, β a),
+    ∀ l : List (Σ a, β a),
       a ∈ l.map Sigma.fst →
-        ∃ (u w : List (Σa, β a))(b' : _),
+        ∃ (u w : List (Σ a, β a)) (b' : _),
           l = u ++ [⟨a, b'⟩] ++ w ∧ replace_aux a b l = u ++ [⟨a, b⟩] ++ w
   | [] => False.elim
   | ⟨a', b'⟩ :: t => by
     by_cases e : a' = a
     · subst a'
       suffices
-        ∃ (u w : List (Σa, β a))(b'' : β a),
+        ∃ (u w : List (Σ a, β a)) (b'' : β a),
           Sigma.mk a b' :: t = u ++ ⟨a, b''⟩ :: w ∧
             replace_aux a b (⟨a, b'⟩ :: t) = u ++ ⟨a, b⟩ :: w
         by simpa
       refine' ⟨[], t, b', _⟩; simp [replace_aux]
     · suffices
         ∀ (x : β a) (_ : Sigma.mk a x ∈ t),
-          ∃ (u w : _)(b'' : β a),
+          ∃ (u w : _) (b'' : β a),
             Sigma.mk a' b' :: t = u ++ ⟨a, b''⟩ :: w ∧
               Sigma.mk a' b' :: replace_aux a b t = u ++ ⟨a, b⟩ :: w
         by simpa [replace_aux, Ne.symm e, e]
       intro x m
       have IH :
         ∀ (x : β a) (_ : Sigma.mk a x ∈ t),
-          ∃ (u w : _)(b'' : β a), t = u ++ ⟨a, b''⟩ :: w ∧ replace_aux a b t = u ++ ⟨a, b⟩ :: w :=
+          ∃ (u w : _) (b'' : β a), t = u ++ ⟨a, b''⟩ :: w ∧ replace_aux a b t = u ++ ⟨a, b⟩ :: w :=
         by simpa using valid.replace_aux t
       rcases IH x m with ⟨u, w, b'', hl, hfl⟩
       exact ⟨⟨a', b'⟩ :: u, w, b'', by simp [hl, hfl.symm, Ne.symm e]⟩
@@ -360,11 +360,11 @@ theorem Valid.replace {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α
   rcases HashMap.Valid.replaceAux a b (Array'.read bkts (mk_idx n (hash_fn a)))
       ((contains_aux_iff nd).1 Hc) with
     ⟨u, w, b', hl, hfl⟩
-  simp [hl, List.nodup_append] at nd
+  simp [hl, List.nodup_append] at nd 
   refine'
       (v.modify hash_fn u [⟨a, b'⟩] [⟨a, b⟩] w hl hfl (List.nodup_singleton _)
-          (fun a' e => by simp at e <;> rw [e]) (fun a' e1 e2 => _) fun a' e1 e2 => _).2 <;>
-    · revert e1; simp [-Sigma.exists] at e2; subst a'; simp [nd]
+          (fun a' e => by simp at e  <;> rw [e]) (fun a' e1 e2 => _) fun a' e1 e2 => _).2 <;>
+    · revert e1; simp [-Sigma.exists] at e2 ; subst a'; simp [nd]
 #align hash_map.valid.replace HashMap.Valid.replace
 
 theorem Valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α) (b : β a)
@@ -374,32 +374,32 @@ theorem Valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α)
   have nd := v.nodup (mk_idx n (hash_fn a))
   refine'
     (v.modify hash_fn [] [] [⟨a, b⟩] (bkts.read hash_fn a) rfl rfl (List.nodup_singleton _)
-        (fun a' e => by simp at e <;> rw [e]) (fun a' => False.elim) fun a' e1 e2 => _).2
-  simp [-Sigma.exists] at e2; subst a'
+        (fun a' e => by simp at e  <;> rw [e]) (fun a' => False.elim) fun a' e1 e2 => _).2
+  simp [-Sigma.exists] at e2 ; subst a'
   exact Hnc ((contains_aux_iff nd).2 e1)
 #align hash_map.valid.insert HashMap.Valid.insert
 
 theorem Valid.eraseAux (a : α) :
-    ∀ l : List (Σa, β a),
+    ∀ l : List (Σ a, β a),
       a ∈ l.map Sigma.fst →
-        ∃ (u w : List (Σa, β a))(b : _), l = u ++ [⟨a, b⟩] ++ w ∧ erase_aux a l = u ++ [] ++ w
+        ∃ (u w : List (Σ a, β a)) (b : _), l = u ++ [⟨a, b⟩] ++ w ∧ erase_aux a l = u ++ [] ++ w
   | [] => False.elim
   | ⟨a', b'⟩ :: t => by
     by_cases e : a' = a
     · subst a'
       simpa [erase_aux, and_comm'] using
-        show ∃ (u w : _)(x : β a), t = u ++ w ∧ Sigma.mk a b' :: t = u ++ ⟨a, x⟩ :: w from
+        show ∃ (u w : _) (x : β a), t = u ++ w ∧ Sigma.mk a b' :: t = u ++ ⟨a, x⟩ :: w from
           ⟨[], t, b', by simp⟩
     · simp [erase_aux, e, Ne.symm e]
       suffices
         ∀ (b : β a) (_ : Sigma.mk a b ∈ t),
-          ∃ (u w : _)(x : β a),
+          ∃ (u w : _) (x : β a),
             Sigma.mk a' b' :: t = u ++ ⟨a, x⟩ :: w ∧ Sigma.mk a' b' :: erase_aux a t = u ++ w
         by simpa [replace_aux, Ne.symm e, e]
       intro b m
       have IH :
         ∀ (x : β a) (_ : Sigma.mk a x ∈ t),
-          ∃ (u w : _)(x : β a), t = u ++ ⟨a, x⟩ :: w ∧ erase_aux a t = u ++ w :=
+          ∃ (u w : _) (x : β a), t = u ++ ⟨a, x⟩ :: w ∧ erase_aux a t = u ++ w :=
         by simpa using valid.erase_aux t
       rcases IH b m with ⟨u, w, b'', hl, hfl⟩
       exact ⟨⟨a', b'⟩ :: u, w, b'', by simp [hl, hfl.symm]⟩
@@ -465,7 +465,7 @@ def fold {δ : Type w} (m : HashMap α β) (d : δ) (f : δ → ∀ a, β a → 
 #align hash_map.fold HashMap.fold
 
 /-- The list of key-value pairs in the map -/
-def entries (m : HashMap α β) : List (Σa, β a) :=
+def entries (m : HashMap α β) : List (Σ a, β a) :=
   m.buckets.asList
 #align hash_map.entries HashMap.entries
 
@@ -492,8 +492,8 @@ theorem keys_empty (hash_fn : α → Nat) (n) : (@mkHashMap α _ β hash_fn n).k
 #align hash_map.keys_empty HashMap.keys_empty
 
 theorem find_empty (hash_fn : α → Nat) (n a) : (@mkHashMap α _ β hash_fn n).find a = none := by
-  induction' h : (@mkHashMap α _ β hash_fn n).find a with <;>
-    [rfl;· have := (find_iff _ _ _).1 h; rw [entries_empty] at this; contradiction]
+  induction' h : (@mkHashMap α _ β hash_fn n).find a with <;> [rfl;
+    · have := (find_iff _ _ _).1 h; rw [entries_empty] at this ; contradiction]
 #align hash_map.find_empty HashMap.find_empty
 
 theorem not_contains_empty (hash_fn : α → Nat) (n a) : ¬(@mkHashMap α _ β hash_fn n).contains a :=
@@ -505,14 +505,14 @@ theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} 
     Valid hash_fn (bkts.foldl (mkArray' _ [] : BucketArray α β n') (reinsertAux hash_fn)) sz :=
   by
   suffices
-    ∀ (l : List (Σa, β a)) (t : BucketArray α β n') (sz),
+    ∀ (l : List (Σ a, β a)) (t : BucketArray α β n') (sz),
       valid hash_fn t sz →
         ((l ++ t.asList).map Sigma.fst).Nodup →
-          valid hash_fn (l.foldl (fun r (a : Σa, β a) => reinsert_aux hash_fn r a.1 a.2) t)
+          valid hash_fn (l.foldl (fun r (a : Σ a, β a) => reinsert_aux hash_fn r a.1 a.2) t)
             (sz + l.length)
     by
     have p := this bkts.as_list _ _ (mk_valid _ _)
-    rw [mk_as_list, List.append_nil, zero_add, v.len] at p
+    rw [mk_as_list, List.append_nil, zero_add, v.len] at p 
     rw [BucketArray.foldl_eq]
     exact p (v.as_list_nodup _)
   intro l; induction' l with c l IH <;> intro t sz v nd; · exact v
@@ -602,9 +602,9 @@ theorem mem_insert :
         refine' or_iff_left_of_imp (Not.elim <| not_or.2 _)
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩)
         · have na := (not_congr <| v.contains_aux_iff _ _).1 Hnc
-          simp [hl, not_or] at na; simp [na]
+          simp [hl, not_or] at na ; simp [na]
         · have nd' := v.as_list_nodup _
-          simp [hl, List.nodup_append] at nd'; simp [nd']
+          simp [hl, List.nodup_append] at nd' ; simp [nd']
       · suffices Sigma.mk a' b' ∉ v1 by simp [h, Ne.symm h, this]
         rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩) <;> simp [Ne.symm h]
     by_cases Hc : (contains_aux a bkt : Prop)
@@ -647,7 +647,7 @@ theorem find_insert_ne (m : HashMap α β) (a a' : α) (b : β a) (h : a ≠ a')
     (m.insert a b).find a' = m.find a' :=
   Option.eq_of_eq_some fun b' =>
     let t := mem_insert m a b a' b'
-    (find_iff _ _ _).trans <| Iff.trans (by rwa [if_neg h] at t) (find_iff _ _ _).symm
+    (find_iff _ _ _).trans <| Iff.trans (by rwa [if_neg h] at t ) (find_iff _ _ _).symm
 #align hash_map.find_insert_ne HashMap.find_insert_ne
 
 theorem find_insert (m : HashMap α β) (a' a : α) (b : β a) :
@@ -661,12 +661,12 @@ theorem find_insert (m : HashMap α β) (a' a : α) (b : β a) :
 #align hash_map.find_insert HashMap.find_insert
 
 /-- Insert a list of key-value pairs into the map. (Modifies `m` in-place when applicable) -/
-def insertAll (l : List (Σa, β a)) (m : HashMap α β) : HashMap α β :=
+def insertAll (l : List (Σ a, β a)) (m : HashMap α β) : HashMap α β :=
   l.foldl (fun m ⟨a, b⟩ => insert m a b) m
 #align hash_map.insert_all HashMap.insertAll
 
 /-- Construct a hash map from a list of key-value pairs. -/
-def ofList (l : List (Σa, β a)) (hash_fn) : HashMap α β :=
+def ofList (l : List (Σ a, β a)) (hash_fn) : HashMap α β :=
   insertAll l (mkHashMap hash_fn (2 * l.length))
 #align hash_map.of_list HashMap.ofList
 
@@ -706,7 +706,7 @@ theorem mem_erase :
           or_left_comm]
       rintro m rfl; revert m; apply not_or.2
       have nd' := v.as_list_nodup _
-      simp [hl, List.nodup_append] at nd'; simp [nd']
+      simp [hl, List.nodup_append] at nd' ; simp [nd']
     · suffices ∀ _ : Sigma.mk a' b' ∈ BucketArray.asList bkts, a ≠ a' by
         simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_imp this]
       rintro m rfl

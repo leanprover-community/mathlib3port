@@ -113,7 +113,7 @@ is an additive commutative monoid with a decidable linear order
 in which addition is cancellative and monotone. -/
 @[protect_proj]
 class LinearOrderedCancelAddCommMonoid (α : Type u) extends OrderedCancelAddCommMonoid α,
-  LinearOrderedAddCommMonoid α
+    LinearOrderedAddCommMonoid α
 #align linear_ordered_cancel_add_comm_monoid LinearOrderedCancelAddCommMonoid
 -/
 
@@ -123,7 +123,7 @@ is a commutative monoid with a linear order
 in which multiplication is cancellative and monotone. -/
 @[protect_proj, to_additive]
 class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α,
-  LinearOrderedCommMonoid α
+    LinearOrderedCommMonoid α
 #align linear_ordered_cancel_comm_monoid LinearOrderedCancelCommMonoid
 #align linear_ordered_cancel_add_comm_monoid LinearOrderedCancelAddCommMonoid
 -/

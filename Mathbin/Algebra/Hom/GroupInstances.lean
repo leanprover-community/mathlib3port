@@ -57,7 +57,7 @@ instance {M G} [MulOneClass M] [CommGroup G] : CommGroup (M →* G) :=
   { MonoidHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by intros ; ext; apply div_eq_mul_inv
+    div_eq_mul_inv := by intros; ext; apply div_eq_mul_inv
     mul_left_inv := by intros <;> ext <;> apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n

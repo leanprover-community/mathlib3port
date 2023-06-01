@@ -161,11 +161,11 @@ theorem integral_cos_mul_cos_pow (hn : 2 ≤ n) (hz : z ≠ 0) :
     ((1 - 4 * z ^ 2 / n ^ 2) * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n) =
       (n - 1 : ℂ) / n * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ (n - 2) :=
   by
-  have nne : (n : ℂ) ≠ 0 := by contrapose! hn; rw [Nat.cast_eq_zero] at hn; rw [hn];
+  have nne : (n : ℂ) ≠ 0 := by contrapose! hn; rw [Nat.cast_eq_zero] at hn ; rw [hn];
     exact zero_lt_two
   have := integral_cos_mul_cos_pow_aux hn hz
   rw [integral_sin_mul_sin_mul_cos_pow_eq hn hz, sub_eq_neg_add, mul_add, ← sub_eq_iff_eq_add] at
-    this
+    this 
   convert congr_arg (fun u : ℂ => -u * (2 * z) ^ 2 / n ^ 2) this using 1 <;> · field_simp; ring
 #align euler_sine.integral_cos_mul_cos_pow EulerSine.integral_cos_mul_cos_pow
 
@@ -328,7 +328,7 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
       at_top (𝓝 <| _) :=
     tendsto.congr (fun n => sin_pi_mul_eq z n) tendsto_const_nhds
   have : 𝓝 (Complex.sin (π * z)) = 𝓝 (Complex.sin (π * z) * 1) := by rw [mul_one]
-  simp_rw [this, mul_div_assoc] at A
+  simp_rw [this, mul_div_assoc] at A 
   convert(tendsto_mul_iff_of_ne_zero _ one_ne_zero).mp A
   suffices :
     tendsto

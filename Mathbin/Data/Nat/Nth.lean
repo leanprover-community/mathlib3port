@@ -72,7 +72,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
   have hp'' : { i : ℕ | p i ∧ ∀ t, t < k → nth p t < i }.Finite :=
     by
     refine' hp.subset fun x hx => _
-    rw [Set.mem_setOf_eq] at hx
+    rw [Set.mem_setOf_eq] at hx 
     exact hx.left
   have hle' := Nat.sub_pos_of_lt hle
   specialize hk hp'' (k.le_succ.trans hle)
@@ -86,7 +86,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
         ⟨(hlt _ (lt_add_one k)).ne', ⟨hp, fun n hn => hlt n (hn.trans_le k.le_succ)⟩⟩, _⟩
     rintro ⟨hak : _ ≠ _, hp, hlt⟩
     refine' ⟨hp, fun n hn => _⟩
-    rw [lt_succ_iff] at hn
+    rw [lt_succ_iff] at hn 
     obtain hnk | rfl := hn.lt_or_eq
     · exact hlt _ hnk
     · refine' lt_of_le_of_ne _ (Ne.symm hak)
@@ -167,7 +167,7 @@ theorem nth_injective_of_infinite (hp : (setOf p).Infinite) : Function.Injective
   intro m n h
   wlog h' : m ≤ n
   · exact (this p hp h.symm (le_of_not_le h')).symm
-  rw [le_iff_lt_or_eq] at h'
+  rw [le_iff_lt_or_eq] at h' 
   obtain h' | rfl := h'
   · simpa [h] using nth_strict_mono p hp h'
   · rfl
@@ -256,7 +256,7 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : �
   simp_rw [mem_insert, mem_filter, mem_range]
   constructor
   · rintro ⟨ha, hpa⟩
-    rw [nth] at ha
+    rw [nth] at ha 
     refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_lt fun h => _).lt_of_ne hne, hpa⟩
     exact
       ha.not_le (Nat.sInf_le ⟨hpa, fun b hb => (nth_monotone p hp (le_of_lt_succ hb)).trans_lt h⟩)
@@ -295,9 +295,9 @@ theorem nth_count_eq_sInf {n : ℕ} : nth p (count p n) = sInf { i : ℕ | p i �
   intro hpa
   refine' ⟨fun h => _, fun hn k hk => lt_of_lt_of_le _ hn⟩
   · by_contra ha
-    simp only [not_le] at ha
+    simp only [not_le] at ha 
     have hn : nth p (count p a) < a := h _ (count_strict_mono hpa ha)
-    rwa [nth_count p hpa, lt_self_iff_false] at hn
+    rwa [nth_count p hpa, lt_self_iff_false] at hn 
   · apply (count_monotone p).reflect_lt
     convert hk
     obtain hp | hp : (setOf p).Finite ∨ (setOf p).Infinite := em (setOf p).Finite
@@ -327,7 +327,7 @@ theorem count_nth_gc (hp : (setOf p).Infinite) : GaloisConnection (count p) (nth
     · exact (nth_count_le p hp x).trans (h (count p x) hy').le
     · specialize h (count p n)
       replace hn : nth p (count p n) = n := nth_count _ hn
-      replace h : count p x ≤ count p n := by rwa [hn, lt_self_iff_false, imp_false, not_lt] at h
+      replace h : count p x ≤ count p n := by rwa [hn, lt_self_iff_false, imp_false, not_lt] at h 
       refine' (nth_count_le p hp x).trans _
       rw [← hn]
       exact nth_monotone p hp h
@@ -368,7 +368,7 @@ end Count
 
 theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nth p a = 0) : nth p b = 0 :=
   by
-  rw [nth, Inf_eq_zero] at ha⊢
+  rw [nth, Inf_eq_zero] at ha ⊢
   cases ha
   · exact (h₀ ha.1).elim
   · refine' Or.inr (Set.eq_empty_of_subset_empty fun x hx => _)
@@ -385,7 +385,7 @@ theorem nth_eq_orderIsoOfNat (i : Infinite (setOf p)) (n : ℕ) :
       simp only [subtype.order_iso_of_nat_apply, subtype.of_nat, nat_zero_eq_zero]
     · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
     · simp only [Nat.Subtype.succ, Set.mem_setOf_eq, Subtype.coe_mk, Subtype.val_eq_coe]
-      rw [subtype.order_iso_of_nat_apply] at hk
+      rw [subtype.order_iso_of_nat_apply] at hk 
       set b := nth p k.succ - nth p k - 1 with hb
       replace hb : p (↑(subtype.of_nat (setOf p) k) + b + 1)
       · rw [hb, ← hk, tsub_right_comm]
@@ -402,10 +402,10 @@ theorem nth_eq_orderIsoOfNat (i : Infinite (setOf p)) (n : ℕ) :
       have H : ∃ n : ℕ, p (↑(subtype.of_nat (setOf p) k) + n + 1) := ⟨b, hb⟩
       set t := Nat.find H with ht
       obtain ⟨hp, hmin⟩ := (Nat.find_eq_iff _).mp ht
-      rw [← ht, ← hk] at hp hmin⊢
+      rw [← ht, ← hk] at hp hmin ⊢
       rw [nth, Inf_def ⟨_, nth_mem_of_infinite_aux p hi k.succ⟩, Nat.find_eq_iff]
       refine' ⟨⟨by convert hp, fun r hr => _⟩, fun n hn => _⟩
-      · rw [lt_succ_iff] at hr⊢
+      · rw [lt_succ_iff] at hr ⊢
         exact (nth_monotone p hi hr).trans (by simp)
       simp only [exists_prop, not_and, not_lt, Set.mem_setOf_eq, not_forall]
       refine' fun hpn => ⟨k, lt_add_one k, _⟩
@@ -420,7 +420,7 @@ theorem nth_eq_orderIsoOfNat (i : Infinite (setOf p)) (n : ℕ) :
       convert hpn
       have hn11 : n - 1 + 1 = n := Nat.sub_add_cancel (pos_of_gt hlt)
       rwa [tsub_right_comm, add_tsub_cancel_of_le]
-      rwa [← hn11, lt_succ_iff] at hlt
+      rwa [← hn11, lt_succ_iff] at hlt 
 #align nat.nth_eq_order_iso_of_nat Nat.nth_eq_orderIsoOfNat
 
 end Nat

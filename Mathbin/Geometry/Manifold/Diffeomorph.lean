@@ -316,7 +316,7 @@ theorem contMdiffWithinAt_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) 
   by
   constructor
   · intro Hfh
-    rw [← h.symm_apply_apply x] at Hfh
+    rw [← h.symm_apply_apply x] at Hfh 
     simpa only [(· ∘ ·), h.apply_symm_apply] using
       Hfh.comp (h x) (h.symm.cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
   · rw [← h.image_eq_preimage]
@@ -581,7 +581,7 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph
     by
     refine' contMdiffWithinAt_iff'.2 ⟨continuousWithinAt_id, _⟩
     refine' e.symm.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
-    · simp only [mem_inter_iff, I.ext_chart_at_trans_diffeomorph_target] at hy
+    · simp only [mem_inter_iff, I.ext_chart_at_trans_diffeomorph_target] at hy 
       simp only [Equiv.coe_refl, Equiv.refl_symm, id, (· ∘ ·),
         I.coe_ext_chart_at_trans_diffeomorph_symm, (extChartAt I x).right_inv hy.1]
     exact

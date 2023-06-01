@@ -303,7 +303,7 @@ theorem closure_smul (c : G) (s : Set α) : closure (c • s) = c • closure s 
 
 @[to_additive]
 theorem Dense.smul (c : G) {s : Set α} (hs : Dense s) : Dense (c • s) := by
-  rw [dense_iff_closure_eq] at hs⊢ <;> rw [closure_smul, hs, smul_set_univ]
+  rw [dense_iff_closure_eq] at hs ⊢ <;> rw [closure_smul, hs, smul_set_univ]
 #align dense.smul Dense.smul
 #align dense.vadd Dense.vadd
 
@@ -474,7 +474,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 `γ:Γ` move `K` to have nontrivial intersection with `L`.
 -/
 class ProperlyDiscontinuousSMul (Γ : Type _) (T : Type _) [TopologicalSpace T] [SMul Γ T] :
-  Prop where
+    Prop where
   finite_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· • ·) γ '' K ∩ L ≠ ∅ }
 #align properly_discontinuous_smul ProperlyDiscontinuousSMul
@@ -486,7 +486,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 `γ:Γ` move `K` to have nontrivial intersection with `L`.
 -/
 class ProperlyDiscontinuousVAdd (Γ : Type _) (T : Type _) [TopologicalSpace T] [VAdd Γ T] :
-  Prop where
+    Prop where
   finite_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· +ᵥ ·) γ '' K ∩ L ≠ ∅ }
 #align properly_discontinuous_vadd ProperlyDiscontinuousVAdd
@@ -556,7 +556,7 @@ instance (priority := 100) t2Space_of_properlyDiscontinuousSMul_of_t2Space [T2Sp
   by_cases H : γ ∈ bad_Γ_set
   · exact fun h => (u_v_disjoint γ).le_bot ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
   · rintro ⟨-, h'⟩
-    simp only [image_smul, Classical.not_not, mem_set_of_eq, Ne.def] at H
+    simp only [image_smul, Classical.not_not, mem_set_of_eq, Ne.def] at H 
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
 #align t2_space_of_properly_discontinuous_smul_of_t2_space t2Space_of_properlyDiscontinuousSMul_of_t2Space
 #align t2_space_of_properly_discontinuous_vadd_of_t2_space t2Space_of_properlyDiscontinuousVAdd_of_t2Space
@@ -583,7 +583,7 @@ variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ α] [TopologicalSp
 /-- Scalar multiplication preserves neighborhoods. -/
 theorem set_smul_mem_nhds_smul {c : G₀} {s : Set α} {x : α} (hs : s ∈ 𝓝 x) (hc : c ≠ 0) :
     c • s ∈ 𝓝 (c • x : α) := by
-  rw [mem_nhds_iff] at hs⊢
+  rw [mem_nhds_iff] at hs ⊢
   obtain ⟨U, hs', hU, hU'⟩ := hs
   exact ⟨c • U, Set.smul_set_mono hs', hU.smul₀ hc, Set.smul_mem_smul_set hU'⟩
 #align set_smul_mem_nhds_smul set_smul_mem_nhds_smul

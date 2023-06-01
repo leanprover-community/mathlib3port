@@ -90,7 +90,7 @@ and `b` is a half-braiding on `X`.
 -/
 @[nolint has_nonempty_instance]
 def Center :=
-  ΣX : C, HalfBraiding X
+  Σ X : C, HalfBraiding X
 #align category_theory.center CategoryTheory.Center
 
 namespace Center
@@ -126,7 +126,7 @@ theorem comp_f {X Y Z : Center C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.
 #align category_theory.center.comp_f CategoryTheory.Center.comp_f
 
 @[ext]
-theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by cases f; cases g; congr ;
+theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by cases f; cases g; congr;
   exact w
 #align category_theory.center.ext CategoryTheory.Center.ext
 
@@ -336,7 +336,7 @@ def forget : MonoidalFunctor (Center C) C
 #align category_theory.center.forget CategoryTheory.Center.forget
 
 instance : ReflectsIsomorphisms (forget C).toFunctor
-    where reflects A B f i := by dsimp at i; skip; change is_iso (iso_mk f).Hom; infer_instance
+    where reflects A B f i := by dsimp at i ; skip; change is_iso (iso_mk f).Hom; infer_instance
 
 end
 

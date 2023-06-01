@@ -66,7 +66,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
 #align sigma.mk.inj_iff Sigma.mk.inj_iff
 
 @[simp]
-theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
+theorem eta : ∀ x : Σ a, β a, Sigma.mk x.1 x.2 = x
   | ⟨i, x⟩ => rfl
 #align sigma.eta Sigma.eta
 
@@ -83,25 +83,25 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σ a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 #align sigma.subtype_ext Sigma.subtype_ext
 -/
 
 #print Sigma.subtype_ext_iff /-
-theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σa, Subtype (p a)} :
+theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σ a, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 #align sigma.subtype_ext_iff Sigma.subtype_ext_iff
 -/
 
 @[simp]
-theorem forall {p : (Σa, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σ a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align sigma.forall Sigma.forall
 
 @[simp]
-theorem exists {p : (Σa, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
+theorem exists {p : (Σ a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align sigma.exists Sigma.exists
 
@@ -180,7 +180,7 @@ theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x
 
 #print Prod.toSigma /-
 /-- Convert a product type to a Σ-type. -/
-def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=
+def Prod.toSigma {α β} (p : α × β) : Σ _ : α, β :=
   ⟨p.1, p.2⟩
 #align prod.to_sigma Prod.toSigma
 -/
@@ -210,7 +210,7 @@ theorem Prod.toSigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ 
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [Lean.ToLevel.{u}] [Lean.ToLevel.{v}] {α : Type u}
     (β : α → Type v) [reflected _ α] [reflected _ β] [hα : has_reflect α]
-    [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) := fun ⟨a, b⟩ =>
+    [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σ a, β a) := fun ⟨a, b⟩ =>
   (by
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[]" :
@@ -267,12 +267,12 @@ theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HE
 #align psigma.ext_iff PSigma.ext_iff
 
 @[simp]
-theorem forall {p : (Σ'a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σ' a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align psigma.forall PSigma.forall
 
 @[simp]
-theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
+theorem exists {p : (Σ' a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align psigma.exists PSigma.exists
 
@@ -280,13 +280,13 @@ theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σ' a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 #align psigma.subtype_ext PSigma.subtype_ext
 -/
 
 #print PSigma.subtype_ext_iff /-
-theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ' a, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 #align psigma.subtype_ext_iff PSigma.subtype_ext_iff

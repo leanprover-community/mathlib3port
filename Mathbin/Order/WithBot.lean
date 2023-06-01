@@ -359,7 +359,7 @@ instance [Preorder α] : Preorder (WithBot α)
     where
   le := (· ≤ ·)
   lt := (· < ·)
-  lt_iff_le_not_le := by intros ;
+  lt_iff_le_not_le := by intros;
     cases a <;> cases b <;> simp [lt_iff_le_not_le] <;> simp [(· < ·), (· ≤ ·)]
   le_refl o a ha := ⟨a, ha, le_rfl⟩
   le_trans o₁ o₂ o₃ h₁ h₂ a ha :=
@@ -457,7 +457,7 @@ instance [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
       · exact h₂ a rfl
       · exact h₁ a rfl
       · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
-        simp at h₂
+        simp at h₂ 
         exact ⟨d, rfl, sup_le h₁' h₂⟩ }
 
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) = a ⊔ b :=
@@ -999,7 +999,7 @@ protected theorem IsMin.withTop (h : IsMin a) : IsMin (a : WithTop α) :=
   by
   -- defeq to is_max_to_dual_iff.mp (is_max.with_bot _), but that breaks API boundary
   intro _ hb
-  rw [← to_dual_le_to_dual_iff] at hb
+  rw [← to_dual_le_to_dual_iff] at hb 
   simpa [to_dual_le_iff] using (IsMax.withBot h : IsMax (to_dual a : WithBot αᵒᵈ)) hb
 #align is_min.with_top IsMin.withTop
 
@@ -1325,7 +1325,7 @@ instance [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
       · exact h₂ a rfl
       · exact h₁ a rfl
       · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
-        simp at h₂
+        simp at h₂ 
         exact ⟨d, rfl, le_inf h₁' h₂⟩ }
 
 theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithTop α) = a ⊓ b :=

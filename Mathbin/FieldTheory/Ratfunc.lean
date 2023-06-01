@@ -762,7 +762,7 @@ theorem liftMonoidWithZeroHom_injective [Nontrivial R] (φ : R[X] →*₀ G₀) 
     intro h
     refine' Localization.r_of_eq _
     have := mul_eq_mul_of_div_eq_div _ _ _ _ h
-    rwa [← map_mul, ← map_mul, hφ.eq_iff, mul_comm, mul_comm y_a] at this
+    rwa [← map_mul, ← map_mul, hφ.eq_iff, mul_comm, mul_comm y_a] at this 
     all_goals exact map_ne_zero_of_mem_nonZeroDivisors _ hφ (SetLike.coe_mem _)
   · exact fun _ => rfl
   · exact fun _ => rfl
@@ -1315,7 +1315,7 @@ theorem num_denom_mul (x y : RatFunc K) :
 -/
 
 theorem num_dvd {x : RatFunc K} {p : K[X]} (hp : p ≠ 0) :
-    num x ∣ p ↔ ∃ (q : K[X])(hq : q ≠ 0), x = algebraMap _ _ p / algebraMap _ _ q :=
+    num x ∣ p ↔ ∃ (q : K[X]) (hq : q ≠ 0), x = algebraMap _ _ p / algebraMap _ _ q :=
   by
   constructor
   · rintro ⟨q, rfl⟩
@@ -1409,7 +1409,7 @@ theorem num_mul_denom_add_denom_mul_num_ne_zero {x y : RatFunc K} (hxy : x + y �
     x.num * y.den + x.den * y.num ≠ 0 := by
   intro h_zero
   have h := num_denom_add x y
-  rw [h_zero, MulZeroClass.zero_mul] at h
+  rw [h_zero, MulZeroClass.zero_mul] at h 
   exact (mul_ne_zero (num_ne_zero hxy) (mul_ne_zero x.denom_ne_zero y.denom_ne_zero)) h
 #align ratfunc.num_mul_denom_add_denom_mul_num_ne_zero RatFunc.num_mul_denom_add_denom_mul_num_ne_zero
 -/
@@ -1555,7 +1555,7 @@ theorem eval_add {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
   unfold eval
   by_cases hxy : Polynomial.eval₂ f a (denom (x + y)) = 0
   · have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_add_dvd x y) hxy
-    rw [Polynomial.eval₂_mul] at this
+    rw [Polynomial.eval₂_mul] at this 
     cases mul_eq_zero.mp this <;> contradiction
   rw [div_add_div _ _ hx hy, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_comm, ←
     div_eq_mul_inv, div_eq_iff hxy]
@@ -1576,7 +1576,7 @@ theorem eval_mul {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
   unfold eval
   by_cases hxy : Polynomial.eval₂ f a (denom (x * y)) = 0
   · have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_mul_dvd x y) hxy
-    rw [Polynomial.eval₂_mul] at this
+    rw [Polynomial.eval₂_mul] at this 
     cases mul_eq_zero.mp this <;> contradiction
   rw [div_mul_div_comm, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_comm, ←
     div_eq_mul_inv, div_eq_iff hxy]

@@ -188,12 +188,12 @@ theorem mul_right_inj' (ha : a ≠ 0) : a * b = a * c ↔ b = c :=
 
 @[simp]
 theorem mul_eq_mul_right_iff : a * c = b * c ↔ a = b ∨ c = 0 := by
-  by_cases hc : c = 0 <;> [simp [hc];simp [mul_left_inj', hc]]
+  by_cases hc : c = 0 <;> [simp [hc]; simp [mul_left_inj', hc]]
 #align mul_eq_mul_right_iff mul_eq_mul_right_iff
 
 @[simp]
 theorem mul_eq_mul_left_iff : a * b = a * c ↔ b = c ∨ a = 0 := by
-  by_cases ha : a = 0 <;> [simp [ha];simp [mul_right_inj', ha]]
+  by_cases ha : a = 0 <;> [simp [ha]; simp [mul_right_inj', ha]]
 #align mul_eq_mul_left_iff mul_eq_mul_left_iff
 
 theorem mul_right_eq_self₀ : a * b = a ↔ b = 1 ∨ a = 0 :=
@@ -423,7 +423,7 @@ theorem div_div_self (a : G₀) : a / (a / a) = a :=
 #align div_div_self div_div_self
 
 theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : 1 / a ≠ 0) : a ≠ 0 := fun ha : a = 0 => by
-  rw [ha, div_zero] at h; contradiction
+  rw [ha, div_zero] at h ; contradiction
 #align ne_zero_of_one_div_ne_zero ne_zero_of_one_div_ne_zero
 
 theorem eq_zero_of_one_div_eq_zero {a : G₀} (h : 1 / a = 0) : a = 0 :=

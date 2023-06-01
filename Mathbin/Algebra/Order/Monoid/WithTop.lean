@@ -249,7 +249,7 @@ protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + 
   lift a to α using ha
   induction c using WithTop.recTopCoe; · exact le_top
   induction b using WithTop.recTopCoe; · exact (not_top_le_coe _ h).elim
-  simp only [← coe_add, coe_le_coe] at h⊢
+  simp only [← coe_add, coe_le_coe] at h ⊢
   exact le_of_add_le_add_left h
 #align with_top.le_of_add_le_add_left WithTop.le_of_add_le_add_left
 
@@ -367,7 +367,7 @@ instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
       rintro a b h (_ | c); · simp [none_eq_top]
       rcases b with (_ | b); · simp [none_eq_top]
       rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
-      simp only [some_eq_coe, ← coe_add, coe_le_coe] at h⊢
+      simp only [some_eq_coe, ← coe_add, coe_le_coe] at h ⊢
       exact add_le_add_left h c }
 
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (WithTop α) :=

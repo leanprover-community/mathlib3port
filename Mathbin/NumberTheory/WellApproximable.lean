@@ -105,7 +105,8 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
   by
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb, hab⟩ := mem_approx_order_of_iff.mp ha
-  replace hb : b ^ m ∈ { u : A | orderOf u = n }; · rw [← hb] at hmn⊢; exact orderOf_pow_coprime hmn
+  replace hb : b ^ m ∈ { u : A | orderOf u = n };
+  · rw [← hb] at hmn ⊢; exact orderOf_pow_coprime hmn
   apply ball_subset_thickening hb ((m : ℝ) • δ)
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
@@ -135,7 +136,7 @@ theorem smul_subset_of_coprime (han : (orderOf a).coprime n) :
   refine' Union₂_subset_iff.mpr fun b hb c hc => _
   simp only [mem_Union, exists_prop]
   refine' ⟨a * b, _, hc⟩
-  rw [← hb] at han⊢
+  rw [← hb] at han ⊢
   exact (Commute.all a b).orderOf_mul_eq_mul_orderOf_of_coprime han
 #align approx_order_of.smul_subset_of_coprime approxOrderOf.smul_subset_of_coprime
 #align approx_add_order_of.vadd_subset_of_coprime approxAddOrderOf.vadd_subset_of_coprime
@@ -148,8 +149,8 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     smul_ball'', smul_eq_mul, mem_set_of_eq]
   replace han : ∀ {b : A}, orderOf b = n → orderOf (a * b) = n
   · intro b hb
-    rw [← hb] at han hn
-    rw [sq] at han
+    rw [← hb] at han hn 
+    rw [sq] at han 
     rwa [(Commute.all a b).orderOf_mul_eq_right_of_forall_prime_mul_dvd (order_of_pos_iff.mp hn)
         fun p hp hp' => dvd_trans (mul_dvd_mul_right hp' <| orderOf a) han]
   let f : { b : A | orderOf b = n } → { b : A | orderOf b = n } := fun b => ⟨a * b, han b.property⟩
@@ -315,7 +316,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
     rw [le_eq_subset, sSupHom.setImage_to_fun, hf, image_comp]
     have := @monotone_image 𝕊 𝕊 fun y => x + y
     specialize this (approxAddOrderOf.image_nsmul_subset (δ n) (n / p) hp.pos)
-    simp only [h_div] at this⊢
+    simp only [h_div] at this ⊢
     refine' this.trans _
     convert approxAddOrderOf.vadd_subset_of_coprime (p * δ n) h_cop
     simp only [hu₀, Subtype.coe_mk, h_div, mul_comm p]
@@ -340,7 +341,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       rw [hC]
     exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hE₀ h hu
   · right
-    simp only [not_forall, not_and_or] at h
+    simp only [not_forall, not_and_or] at h 
     obtain ⟨p, hp⟩ := h
     rw [hE₁ p]
     cases hp

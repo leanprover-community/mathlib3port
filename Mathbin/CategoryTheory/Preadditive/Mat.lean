@@ -173,16 +173,16 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
     {
       HasBiproduct := fun f =>
         hasBiproduct_of_total
-          { pt := ⟨Σj, (f j).ι, fun p => (f p.1).pt p.2⟩
+          { pt := ⟨Σ j, (f j).ι, fun p => (f p.1).pt p.2⟩
             π := fun j x y => by
-              dsimp at x⊢
+              dsimp at x ⊢
               refine' if h : x.1 = j then _ else 0
               refine' if h' : @Eq.ndrec (Fin n) x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
               apply eq_to_hom
               substs h h'
             -- Notice we were careful not to use `subst` until we had a goal in `Prop`.
             ι := fun j x y => by
-              dsimp at y⊢
+              dsimp at y ⊢
               refine' if h : y.1 = j then _ else 0
               refine' if h' : @Eq.ndrec _ y.1 (fun j => (f j).ι) y.2 _ h = x then _ else 0
               apply eq_to_hom
@@ -206,7 +206,7 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
           (by
             dsimp
             funext i₁
-            dsimp at i₁⊢
+            dsimp at i₁ ⊢
             rcases i₁ with ⟨j₁, i₁⟩
             -- I'm not sure why we can't just `simp` by `finset.sum_apply`: something doesn't quite match
             convert Finset.sum_apply _ _ _ using 1
@@ -489,7 +489,8 @@ universe u
 where the morphisms are matrices with components in `R`. -/
 @[nolint unused_arguments]
 def Mat (R : Type u) :=
-  FintypeCat.{u}deriving Inhabited
+  FintypeCat.{u}
+deriving Inhabited
 #align category_theory.Mat CategoryTheory.Mat
 
 instance (R : Type u) : CoeSort (Mat R) (Type u) :=
@@ -502,7 +503,7 @@ instance (R : Type u) [Semiring R] : Category (Mat R)
   hom X Y := Matrix X Y R
   id X := 1
   comp X Y Z f g := f ⬝ g
-  assoc' := by intros ; simp [Matrix.mul_assoc]
+  assoc' := by intros; simp [Matrix.mul_assoc]
 
 namespace Mat
 
@@ -567,7 +568,7 @@ instance : Full (equivalenceSingleObjInverse R) where Preimage X Y f i j := MulO
 instance : EssSurj (equivalenceSingleObjInverse R)
     where mem_essImage X :=
     ⟨{  ι := X
-        pt := fun _ => PUnit.unit }, ⟨eqToIso (by dsimp; cases X; congr )⟩⟩
+        pt := fun _ => PUnit.unit }, ⟨eqToIso (by dsimp; cases X; congr)⟩⟩
 
 /-- The categorical equivalence between the category of matrices over a ring,
 and the category of matrices over that ring considered as a single-object category. -/
@@ -578,8 +579,8 @@ def equivalenceSingleObj : Mat R ≌ Mat_ (SingleObj Rᵐᵒᵖ) :=
 
 instance : Preadditive (Mat R)
     where
-  add_comp := by intros ; ext; simp [add_mul, Finset.sum_add_distrib]
-  comp_add := by intros ; ext; simp [mul_add, Finset.sum_add_distrib]
+  add_comp := by intros; ext; simp [add_mul, Finset.sum_add_distrib]
+  comp_add := by intros; ext; simp [mul_add, Finset.sum_add_distrib]
 
 -- TODO show `Mat R` has biproducts, and that `biprod.map` "is" forming a block diagonal matrix.
 end Mat

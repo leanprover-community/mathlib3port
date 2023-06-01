@@ -446,7 +446,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
 instance [CompactSpace X] : Finite S :=
   by
   have : CompactSpace S := Quotient.compactSpace
-  rwa [← isCompact_univ_iff, isCompact_iff_finite, finite_univ_iff] at this
+  rwa [← isCompact_univ_iff, isCompact_iff_finite, finite_univ_iff] at this 
 
 end DiscreteQuotient
 

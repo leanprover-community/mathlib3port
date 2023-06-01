@@ -281,7 +281,7 @@ theorem support_bindOnSupport :
 
 #print Pmf.mem_support_bindOnSupport_iff /-
 theorem mem_support_bindOnSupport_iff (b : β) :
-    b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support := by
+    b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α) (h : a ∈ p.support), b ∈ (f a h).support := by
   simp only [support_bind_on_support, Set.mem_setOf_eq, Set.mem_iUnion]
 #align pmf.mem_support_bind_on_support_iff Pmf.mem_support_bindOnSupport_iff
 -/
@@ -337,7 +337,7 @@ theorem bindOnSupport_bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf �
   refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
   split_ifs
   any_goals ring1
-  · have := h_1 a'; simp [h] at this; contradiction
+  · have := h_1 a'; simp [h] at this ; contradiction
   · simp [h_2]
 #align pmf.bind_on_support_bind_on_support Pmf.bindOnSupport_bindOnSupport
 

@@ -37,7 +37,7 @@ variable {R : Type u} {S : Type v} {T : Type w} [NonUnitalNonAssocSemiring R] (M
 /-- `non_unital_subsemiring_class S R` states that `S` is a type of subsets `s ⊆ R` that
 are both an additive submonoid and also a multiplicative subsemigroup. -/
 class NonUnitalSubsemiringClass (S : Type _) (R : Type u) [NonUnitalNonAssocSemiring R]
-  [SetLike S R] extends AddSubmonoidClass S R where
+    [SetLike S R] extends AddSubmonoidClass S R where
   mul_mem : ∀ {s : S} {a b : R}, a ∈ s → b ∈ s → a * b ∈ s
 #align non_unital_subsemiring_class NonUnitalSubsemiringClass
 -/
@@ -113,7 +113,7 @@ variable [NonUnitalNonAssocSemiring S] [NonUnitalNonAssocSemiring T]
 /-- A non-unital subsemiring of a non-unital semiring `R` is a subset `s` that is both an additive
 submonoid and a semigroup. -/
 structure NonUnitalSubsemiring (R : Type u) [NonUnitalNonAssocSemiring R] extends AddSubmonoid R,
-  Subsemigroup R
+    Subsemigroup R
 #align non_unital_subsemiring NonUnitalSubsemiring
 -/
 

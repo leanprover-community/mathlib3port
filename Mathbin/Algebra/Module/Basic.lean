@@ -57,7 +57,7 @@ variable {α R k S M M₂ M₃ ι : Type _}
   distributivity axioms similar to those on a ring. -/
 @[ext, protect_proj]
 class Module (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] extends
-  DistribMulAction R M where
+    DistribMulAction R M where
   add_smul : ∀ (r s : R) (x : M), (r + s) • x = r • x + s • x
   zero_smul : ∀ x : M, (0 : R) • x = 0
 #align module Module

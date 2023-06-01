@@ -53,7 +53,7 @@ class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, Norm α, Met
 and a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both
 classes carrying their own group structure. -/
 class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, Norm α,
-  MetricSpace α where
+    MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
 -/
@@ -64,7 +64,7 @@ class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGrou
 carrying their own group structure. -/
 @[to_additive]
 class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, Norm α,
-  MetricSpace α where
+    MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_linear_ordered_group NormedLinearOrderedGroup
 #align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
@@ -74,7 +74,7 @@ class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a
     `linear_ordered_field`. This class is necessary to avoid diamonds. -/
 class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, Norm α,
-  MetricSpace α where
+    MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
   norm_mul' : ∀ x y : α, ‖x * y‖ = ‖x‖ * ‖y‖
 #align normed_linear_ordered_field NormedLinearOrderedField

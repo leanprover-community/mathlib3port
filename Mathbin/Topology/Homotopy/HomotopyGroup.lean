@@ -48,7 +48,8 @@ variable {n : ℕ} {x : X}
 /-- The `n`-dimensional cube.
 -/
 def Cube (n : ℕ) : Type :=
-  Fin n → I deriving Zero, One, TopologicalSpace
+  Fin n → I
+deriving Zero, One, TopologicalSpace
 #align cube Cube
 -/
 
@@ -117,7 +118,7 @@ namespace GenLoop
 instance funLike : FunLike (GenLoop n x) (I^ n) fun _ => X
     where
   coe f := f.1
-  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by congr ; exact h
+  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by congr; exact h
 #align gen_loop.fun_like GenLoop.funLike
 -/
 
@@ -204,7 +205,8 @@ end GenLoop
 `homotopic` relation.
 -/
 def HomotopyGroup (n : ℕ) (x : X) : Type _ :=
-  Quotient (GenLoop.Homotopic.setoid n x)deriving Inhabited
+  Quotient (GenLoop.Homotopic.setoid n x)
+deriving Inhabited
 #align homotopy_group HomotopyGroup
 -/
 
@@ -228,10 +230,10 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
   Quotient.congr genLoopZeroEquiv
     (by
       -- joined iff homotopic
-      intros ;
+      intros;
       constructor <;> rintro ⟨H⟩
-      exacts[⟨{
-            toFun := fun t => H ⟨t, Fin.elim0⟩
+      exacts
+        [⟨{ toFun := fun t => H ⟨t, Fin.elim0⟩
             source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm)
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
         ⟨{  toFun := fun t0 => H t0.fst
@@ -255,7 +257,7 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x
       boundary :=
         by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
-        exacts[p.source, p.target] }
+        exacts [p.source, p.target] }
   left_inv p := by ext1; exact congr_arg p y.one_char.symm
   right_inv p := by ext; rfl
 #align gen_loop_one_equiv_path_self genLoopOneEquivPathSelf
@@ -270,10 +272,10 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x :=
   refine' Equiv.trans _ (CategoryTheory.Groupoid.isoEquivHom _ _).symm
   refine' Quotient.congr genLoopOneEquivPathSelf _
   -- homotopic iff homotopic
-  intros ;
+  intros;
   constructor <;> rintro ⟨H⟩
-  exacts[⟨{
-        toFun := fun tx => H (tx.fst, fun _ => tx.snd)
+  exacts
+    [⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd)
         map_zero_left' := fun _ => by convert H.apply_zero _
         map_one_left' := fun _ => by convert H.apply_one _
         prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
@@ -282,8 +284,8 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x :=
         map_one_left' := fun y => by convert H.apply_one _; exact y.one_char
         prop' := fun t y ⟨i, iH⟩ => by
           cases Unique.eq_default i; constructor
-          · convert H.eq_fst _ _; exacts[y.one_char, iH]
-          · convert H.eq_snd _ _; exacts[y.one_char, iH] }⟩]
+          · convert H.eq_fst _ _; exacts [y.one_char, iH]
+          · convert H.eq_snd _ _; exacts [y.one_char, iH] }⟩]
 #align pi1_equiv_fundamental_group pi1EquivFundamentalGroup
 -/
 

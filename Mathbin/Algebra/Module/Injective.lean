@@ -167,8 +167,8 @@ instance : Inf (ExtensionOf i f)
 instance : SemilatticeInf (ExtensionOf i f) :=
   Function.Injective.semilatticeInf ExtensionOf.toLinearPmap
     (fun X Y h =>
-      ExtensionOf.ext (by rw [h]) fun x y h' => by induction h; congr ; exact_mod_cast h')
-    fun X Y => LinearPMap.ext rfl fun x y h => by congr ; exact_mod_cast h
+      ExtensionOf.ext (by rw [h]) fun x y h' => by induction h; congr; exact_mod_cast h')
+    fun X Y => LinearPMap.ext rfl fun x y h => by congr; exact_mod_cast h
 
 variable {R i f}
 
@@ -219,12 +219,12 @@ instance ExtensionOf.inhabited : Inhabited (ExtensionOf i f)
           map_add' := fun x y =>
             by
             have eq1 : _ + _ = (x + y).1 := congr_arg₂ (· + ·) x.2.choose_spec y.2.choose_spec
-            rw [← map_add, ← (x + y).2.choose_spec] at eq1
+            rw [← map_add, ← (x + y).2.choose_spec] at eq1 
             rw [← Fact.out (Function.Injective i) eq1, map_add]
           map_smul' := fun r x =>
             by
             have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.choose_spec
-            rw [← LinearMap.map_smul, ← (r • x).2.choose_spec] at eq1
+            rw [← LinearMap.map_smul, ← (r • x).2.choose_spec] at eq1 
             rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] }
       le := le_refl _
       is_extension := fun m =>
@@ -251,12 +251,12 @@ variable {f}
 
 private theorem extensionOfMax_adjoin.aux1 {y : N}
     (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
-    ∃ (a : (extensionOfMax i f).domain)(b : R), x.1 = a.1 + b • y :=
+    ∃ (a : (extensionOfMax i f).domain) (b : R), x.1 = a.1 + b • y :=
   by
   have mem1 : x.1 ∈ (_ : Set _) := x.2
-  rw [Submodule.coe_sup] at mem1
+  rw [Submodule.coe_sup] at mem1 
   rcases mem1 with ⟨a, b, a_mem, b_mem : b ∈ (Submodule.span R _ : Submodule R N), eq1⟩
-  rw [Submodule.mem_span_singleton] at b_mem
+  rw [Submodule.mem_span_singleton] at b_mem 
   rcases b_mem with ⟨z, eq2⟩
   exact ⟨⟨a, a_mem⟩, z, by rw [← eq1, ← eq2]⟩
 
@@ -344,15 +344,15 @@ theorem ExtensionOfMaxAdjoin.extensionToFun_wd (h : Module.Baer R Q) {y : N}
       (extensionOfMax i f).toLinearPMap a + ExtensionOfMaxAdjoin.extendIdealTo i f h y r :=
   by
   cases' a with a ha
-  rw [Subtype.coe_mk] at eq1
+  rw [Subtype.coe_mk] at eq1 
   have eq2 :
     (extension_of_max_adjoin.fst i x - a : N) = (r - extension_of_max_adjoin.snd i x) • y := by
     rwa [extension_of_max_adjoin.eqn, ← sub_eq_zero, ← sub_sub_sub_eq, sub_eq_zero, ← sub_smul] at
-      eq1
+      eq1 
   have eq3 :=
     extension_of_max_adjoin.extend_ideal_to_eq i f h (r - extension_of_max_adjoin.snd i x)
       (by rw [← eq2] <;> exact Submodule.sub_mem _ (extension_of_max_adjoin.fst i x).2 ha)
-  simp only [map_sub, sub_smul, sub_eq_iff_eq_add] at eq3
+  simp only [map_sub, sub_smul, sub_eq_iff_eq_add] at eq3 
   unfold extension_of_max_adjoin.extension_to_fun
   rw [eq3, ← add_assoc, ← (extension_of_max i f).toLinearPMap.map_add, AddMemClass.mk_add_mk]
   congr

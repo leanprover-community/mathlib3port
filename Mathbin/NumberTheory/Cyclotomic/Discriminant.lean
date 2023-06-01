@@ -103,10 +103,10 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
   · have H := congr_arg derivative (cyclotomic_prime_pow_mul_X_pow_sub_one K p k)
     rw [derivative_mul, derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast,
       derivative_sub, derivative_one, sub_zero, derivative_X_pow, C_eq_nat_cast, ← PNat.pow_coe,
-      hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H
+      hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H 
     replace H := congr_arg (fun P => aeval ζ P) H
     simp only [aeval_add, aeval_mul, minpoly.aeval, MulZeroClass.zero_mul, add_zero, aeval_nat_cast,
-      _root_.map_sub, aeval_one, aeval_X_pow] at H
+      _root_.map_sub, aeval_one, aeval_X_pow] at H 
     replace H := congr_arg (Algebra.norm K) H
     have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k :=
       by
@@ -117,13 +117,13 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
       Algebra.norm_algebraMap, finrank L hirr, PNat.pow_coe, totient_prime_pow hp.out (succ_pos k),
       Nat.sub_one, Nat.pred_succ, ← hζ.minpoly_eq_cyclotomic_of_irreducible hirr, map_pow,
       hζ.norm_eq_one hk hirr, one_pow, mul_one, cast_pow, ← coe_coe, ← pow_mul, ← mul_assoc,
-      mul_comm (k + 1), mul_assoc] at H
+      mul_comm (k + 1), mul_assoc] at H 
     · have := mul_pos (succ_pos k) (tsub_pos_of_lt hp.out.one_lt)
-      rw [← succ_pred_eq_of_pos this, mul_succ, pow_add _ _ ((p : ℕ) ^ k)] at H
+      rw [← succ_pred_eq_of_pos this, mul_succ, pow_add _ _ ((p : ℕ) ^ k)] at H 
       replace H := (mul_left_inj' fun h => _).1 H
       · simpa only [← PNat.pow_coe, H, mul_comm _ (k + 1)]
       · replace h := pow_eq_zero h
-        rw [coe_coe] at h
+        rw [coe_coe] at h 
         simpa using hne.1
 #align is_cyclotomic_extension.discr_prime_pow_ne_two IsCyclotomicExtension.discr_prime_pow_ne_two
 
@@ -162,15 +162,15 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
   · by_cases hk : p ^ (k + 1) = 2
     · have hp : p = 2 :=
         by
-        rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at hk
+        rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at hk 
         replace hk :=
           eq_of_prime_pow_eq (prime_iff.1 hp.out) (prime_iff.1 Nat.prime_two) (succ_pos _) hk
-        rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at hk
-      rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at hk
-      nth_rw 2 [← pow_one 2] at hk
+        rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at hk 
+      rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at hk 
+      nth_rw 2 [← pow_one 2] at hk 
       replace hk := Nat.pow_right_injective rfl.le hk
-      rw [add_left_eq_self] at hk
-      simp only [hp, hk, pow_one, PNat.coe_bit0, PNat.one_coe] at hζ
+      rw [add_left_eq_self] at hk 
+      simp only [hp, hk, pow_one, PNat.coe_bit0, PNat.one_coe] at hζ 
       simp only [hp, hk, show 1 / 2 = 0 by rfl, coe_basis, pow_one, power_basis_gen, PNat.coe_bit0,
         PNat.one_coe, totient_two, pow_zero, mul_one, MulZeroClass.mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
@@ -190,7 +190,7 @@ less cumbersome to use than `is_cyclotomic_extension.discr_prime_pow`. -/
 theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L]
     [hp : Fact (p : ℕ).Prime] (hζ : IsPrimitiveRoot ζ ↑(p ^ k))
     (hirr : Irreducible (cyclotomic (↑(p ^ k) : ℕ) K)) :
-    ∃ (u : ℤˣ)(n : ℕ), discr K (hζ.PowerBasis K).basis = u * p ^ n :=
+    ∃ (u : ℤˣ) (n : ℕ), discr K (hζ.PowerBasis K).basis = u * p ^ n :=
   by
   rw [discr_prime_pow hζ hirr]
   by_cases heven : Even ((p ^ k : ℕ).totient / 2)
@@ -212,7 +212,7 @@ theorem discr_odd_prime [IsCyclotomicExtension {p} K L] [hp : Fact (p : ℕ).Pri
     rw [zero_add, pow_one]
     infer_instance
   have hζ' : IsPrimitiveRoot ζ ↑(p ^ (0 + 1)) := by simpa using hζ
-  convert discr_prime_pow_ne_two hζ' (by simpa [hirr] ) (by simp [hodd])
+  convert discr_prime_pow_ne_two hζ' (by simpa [hirr]) (by simp [hodd])
   · rw [zero_add, pow_one, totient_prime hp.out]
   · rw [pow_zero, one_mul, zero_add, mul_one, Nat.sub_sub]
 #align is_cyclotomic_extension.discr_odd_prime IsCyclotomicExtension.discr_odd_prime

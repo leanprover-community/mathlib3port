@@ -96,7 +96,7 @@ theorem Rat.comap_cast_atBot [LinearOrderedField R] [Archimedean R] :
     comap (coe : ℚ → R) atBot = atBot :=
   comap_embedding_atBot (fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
-    ⟨-n, by simpa [neg_le] ⟩
+    ⟨-n, by simpa [neg_le]⟩
 #align rat.comap_coe_at_bot Rat.comap_cast_atBot
 
 theorem tendsto_rat_cast_atTop_iff [LinearOrderedField R] [Archimedean R] {f : α → ℚ}
@@ -160,7 +160,7 @@ theorem Tendsto.const_mul_atTop' (hr : 0 < r) (hf : Tendsto f l atTop) :
   by
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
-  rw [nsmul_eq_mul'] at hn
+  rw [nsmul_eq_mul'] at hn 
   filter_upwards [tendsto_at_top.1 hf (n * max b 0)]with x hx
   calc
     b ≤ 1 * max b 0 := by rw [one_mul]; exact le_max_left _ _
@@ -179,7 +179,7 @@ theorem Tendsto.atTop_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
   by
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
-  have hn' : 1 ≤ (n : R) * r := by rwa [nsmul_eq_mul] at hn
+  have hn' : 1 ≤ (n : R) * r := by rwa [nsmul_eq_mul] at hn 
   filter_upwards [tendsto_at_top.1 hf (max b 0 * n)]with x hx
   calc
     b ≤ max b 0 * 1 := by rw [mul_one]; exact le_max_left _ _
@@ -207,7 +207,7 @@ theorem Tendsto.atTop_mul_neg_const' (hr : r < 0) (hf : Tendsto f l atTop) :
 theorem Tendsto.atBot_mul_const' (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atBot :=
   by
-  simp only [← tendsto_neg_at_top_iff, ← neg_mul] at hf⊢
+  simp only [← tendsto_neg_at_top_iff, ← neg_mul] at hf ⊢
   exact hf.at_top_mul_const' hr
 #align filter.tendsto.at_bot_mul_const' Filter.Tendsto.atBot_mul_const'
 
@@ -258,7 +258,7 @@ theorem Tendsto.atTop_zsmul_neg_const {f : α → ℤ} (hr : r < 0) (hf : Tendst
 theorem Tendsto.atBot_zsmul_const {f : α → ℤ} (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x • r) l atBot :=
   by
-  simp only [← tendsto_neg_at_top_iff, ← neg_zsmul] at hf⊢
+  simp only [← tendsto_neg_at_top_iff, ← neg_zsmul] at hf ⊢
   exact hf.at_top_zsmul_const hr
 #align filter.tendsto.at_bot_zsmul_const Filter.Tendsto.atBot_zsmul_const
 

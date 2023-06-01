@@ -64,11 +64,11 @@ theorem dvd_or_dvd (hp : Prime p) {a b : α} (h : p ∣ a * b) : p ∣ a ∨ p �
 theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p ∣ a :=
   by
   induction' n with n ih
-  · rw [pow_zero] at h
+  · rw [pow_zero] at h 
     have := isUnit_of_dvd_one _ h
     have := not_unit hp
     contradiction
-  rw [pow_succ] at h
+  rw [pow_succ] at h 
   cases' dvd_or_dvd hp h with dvd_a dvd_pow
   · assumption
   exact ih dvd_pow
@@ -111,7 +111,7 @@ theorem Prime.left_dvd_or_dvd_right_of_dvd_mul [CancelCommMonoidWithZero α] {p 
   rintro ⟨c, hc⟩
   rcases hp.2.2 a c (hc ▸ dvd_mul_right _ _) with (h | ⟨x, rfl⟩)
   · exact Or.inl h
-  · rw [mul_left_comm, mul_right_inj' hp.ne_zero] at hc
+  · rw [mul_left_comm, mul_right_inj' hp.ne_zero] at hc 
     exact Or.inr (hc.symm ▸ dvd_mul_right _ _)
 #align prime.left_dvd_or_dvd_right_of_dvd_mul Prime.left_dvd_or_dvd_right_of_dvd_mul
 
@@ -127,7 +127,7 @@ theorem Prime.pow_dvd_of_dvd_mul_left [CancelCommMonoidWithZero α] {p a b : α}
 #align prime.pow_dvd_of_dvd_mul_left Prime.pow_dvd_of_dvd_mul_left
 
 theorem Prime.pow_dvd_of_dvd_mul_right [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p)
-    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a := by rw [mul_comm] at h';
+    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a := by rw [mul_comm] at h' ;
   exact hp.pow_dvd_of_dvd_mul_left n h h'
 #align prime.pow_dvd_of_dvd_mul_right Prime.pow_dvd_of_dvd_mul_right
 
@@ -160,9 +160,9 @@ theorem prime_pow_succ_dvd_mul {α : Type _} [CancelCommMonoidWithZero α] {p x 
   induction' i with i ih generalizing x
   · simp only [zero_add, pow_one] at *
     exact (h.dvd_or_dvd hxy).resolve_right hy
-  rw [pow_succ] at hxy⊢
+  rw [pow_succ] at hxy ⊢
   obtain ⟨x', rfl⟩ := (h.dvd_or_dvd (dvd_of_mul_right_dvd hxy)).resolve_right hy
-  rw [mul_assoc] at hxy
+  rw [mul_assoc] at hxy 
   exact mul_dvd_mul_left p (ih ((mul_dvd_mul_iff_left h.ne_zero).mp hxy))
 #align prime_pow_succ_dvd_mul prime_pow_succ_dvd_mul
 
@@ -227,7 +227,7 @@ theorem of_irreducible_pow {α} [Monoid α] {x : α} {n : ℕ} (hn : n ≠ 1) :
   · simp only [nat.lt_one_iff.mp hn, IsEmpty.forall_iff, not_irreducible_one, pow_zero]
   intro h
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hn
-  rw [pow_succ, add_comm] at h
+  rw [pow_succ, add_comm] at h 
   exact (or_iff_left_of_imp is_unit_pow_succ_iff.mp).mp (of_irreducible_mul h)
 #align of_irreducible_pow of_irreducible_pow
 -/
@@ -237,9 +237,9 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
   by
   haveI := Classical.dec
   refine' or_iff_not_imp_right.2 fun H => _
-  simp [h, irreducible_iff] at H⊢
+  simp [h, irreducible_iff] at H ⊢
   refine' fun a b h => by_contradiction fun o => _
-  simp [not_or] at o
+  simp [not_or] at o 
   exact H _ o.1 _ o.2 h.symm
 #align irreducible_or_factor irreducible_or_factor
 
@@ -302,8 +302,8 @@ theorem irreducible_mul_iff {a b : α} :
   by
   constructor
   · refine' fun h => Or.imp (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.isUnit_or_isUnit rfl).symm
-    · rwa [irreducible_mul_isUnit h'] at h
-    · rwa [irreducible_isUnit_mul h'] at h
+    · rwa [irreducible_mul_isUnit h'] at h 
+    · rwa [irreducible_isUnit_mul h'] at h 
   · rintro (⟨ha, hb⟩ | ⟨hb, ha⟩)
     · rwa [irreducible_mul_isUnit hb]
     · rwa [irreducible_isUnit_mul ha]
@@ -316,7 +316,7 @@ section CommMonoid
 variable [CommMonoid α] {a : α}
 
 theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by rintro ⟨b, rfl⟩;
-  simp only [irreducible_mul_iff, or_self_iff] at ha; exact ha.1.not_unit ha.2
+  simp only [irreducible_mul_iff, or_self_iff] at ha ; exact ha.1.not_unit ha.2
 #align irreducible.not_square Irreducible.not_square
 
 theorem IsSquare.not_irreducible (ha : IsSquare a) : ¬Irreducible a := fun h => h.not_square ha
@@ -359,7 +359,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul (hp : Prime p) {a b : α} {k l 
   have h : p ^ (k + l) * (x * y) = p ^ (k + l) * (p * z) := by
     simpa [mul_comm, pow_add, hx, hy, mul_assoc, mul_left_comm] using hz
   have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.NeZero
-  have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h⟩
+  have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h ⟩
   (hp.dvd_or_dvd hpd).elim
     (fun ⟨d, hd⟩ => Or.inl ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩)
     fun ⟨d, hd⟩ => Or.inr ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩
@@ -578,7 +578,7 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   rcases hba with ⟨d, a_eq⟩
   by_cases ha0 : a = 0
   · simp_all
-  have hac0 : a * c ≠ 0 := by intro con; rw [Con, MulZeroClass.zero_mul] at a_eq; apply ha0 a_eq
+  have hac0 : a * c ≠ 0 := by intro con; rw [Con, MulZeroClass.zero_mul] at a_eq ; apply ha0 a_eq
   have : a * (c * d) = a * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
   have : a * c * (d * c) = a * c * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
@@ -773,14 +773,14 @@ variable {R : Type _} [CancelCommMonoidWithZero R] [Unique Rˣ] {p₁ p₂ : R} 
 
 #print eq_of_prime_pow_eq /-
 theorem eq_of_prime_pow_eq (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h⊢;
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h ⊢;
   apply h.of_pow_associated_of_prime hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq eq_of_prime_pow_eq
 -/
 
 #print eq_of_prime_pow_eq' /-
 theorem eq_of_prime_pow_eq' (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₂)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h⊢;
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by rw [← associated_iff_eq] at h ⊢;
   apply h.of_pow_associated_of_prime' hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq' eq_of_prime_pow_eq'
 -/
@@ -932,7 +932,7 @@ theorem mul_eq_one_iff {x y : Associates α} : x * y = 1 ↔ x = 1 ∧ y = 1 :=
     (Quotient.induction_on₂ x y fun a b h =>
       have : a * b ~ᵤ 1 := Quotient.exact h
       ⟨Quotient.sound <| associated_one_of_associated_mul_one this,
-        Quotient.sound <| associated_one_of_associated_mul_one <| by rwa [mul_comm] at this⟩)
+        Quotient.sound <| associated_one_of_associated_mul_one <| by rwa [mul_comm] at this ⟩)
     (by simp (config := { contextual := true }))
 #align associates.mul_eq_one_iff Associates.mul_eq_one_iff
 
@@ -1100,7 +1100,7 @@ theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible 
   · intro h x y
     refine' Quotient.induction_on₂ x y fun x y a_eq => _
     rcases Quotient.exact a_eq.symm with ⟨u, a_eq⟩
-    rw [mul_assoc] at a_eq
+    rw [mul_assoc] at a_eq 
     show IsUnit (Associates.mk x) ∨ IsUnit (Associates.mk y)
     simpa [is_unit_mk] using h _ _ a_eq.symm
 #align associates.irreducible_mk Associates.irreducible_mk
@@ -1113,10 +1113,10 @@ theorem mk_dvdNotUnit_mk_iff {a b : α} :
   constructor
   · contrapose!; rw [forall_associated]
     intro h x hx hbax
-    rw [mk_mul_mk, mk_eq_mk_iff_associated] at hbax
+    rw [mk_mul_mk, mk_eq_mk_iff_associated] at hbax 
     cases' hbax with u hu
     apply h (x * ↑u⁻¹)
-    · rw [is_unit_mk] at hx
+    · rw [is_unit_mk] at hx 
       rw [Associated.isUnit_iff]
       apply hx
       use u
@@ -1170,7 +1170,7 @@ instance : CancelCommMonoidWithZero (Associates α) :=
     mul_left_cancel_of_ne_zero := by
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ ha h
       rcases Quotient.exact' h with ⟨u, hu⟩
-      rw [mul_assoc] at hu
+      rw [mul_assoc] at hu 
       exact Quotient.sound' ⟨u, mul_left_cancel₀ (mk_ne_zero.1 ha) hu⟩ }
 
 theorem le_of_mul_le_mul_left (a b c : Associates α) (ha : a ≠ 0) : a * b ≤ a * c → b ≤ c
@@ -1188,7 +1188,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
         have : d = 1 := bot_unique this
         simp [this]
     | Or.inr h =>
-      by_cases (fun this : d = 0 => by simp [this] at hp0 <;> contradiction) fun this : d ≠ 0 =>
+      by_cases (fun this : d = 0 => by simp [this] at hp0  <;> contradiction) fun this : d ≠ 0 =>
         have : d * m ≤ d * 1 := by simpa [mul_comm] using h
         Or.inl <| bot_unique <| Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
@@ -1274,7 +1274,7 @@ theorem DvdNotUnit.ne [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p
   by_contra hcontra
   obtain ⟨hp, x, hx', hx''⟩ := h
   conv_lhs at hx'' => rw [← hcontra, ← mul_one p]
-  rw [(mul_left_cancel₀ hp hx'').symm] at hx'
+  rw [(mul_left_cancel₀ hp hx'').symm] at hx' 
   exact hx' isUnit_one
 #align dvd_not_unit.ne DvdNotUnit.ne
 -/
@@ -1293,9 +1293,9 @@ theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n
   induction' n with n ih generalizing q
   · simp [← isUnit_iff_dvd_one, associated_one_iff_isUnit]
   refine' ⟨fun h => _, fun ⟨i, hi, hq⟩ => hq.dvd.trans (pow_dvd_pow p hi)⟩
-  rw [pow_succ] at h
+  rw [pow_succ] at h 
   rcases hp.left_dvd_or_dvd_right_of_dvd_mul h with (⟨q, rfl⟩ | hno)
-  · rw [mul_dvd_mul_iff_left hp.ne_zero, ih] at h
+  · rw [mul_dvd_mul_iff_left hp.ne_zero, ih] at h 
     rcases h with ⟨i, hi, hq⟩
     refine' ⟨i + 1, Nat.succ_le_succ hi, (hq.mul_left p).trans _⟩
     rw [pow_succ]

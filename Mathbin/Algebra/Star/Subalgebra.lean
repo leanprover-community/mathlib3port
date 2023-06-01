@@ -31,7 +31,7 @@ universe u v
 #print StarSubalgebra /-
 /-- A *-subalgebra is a subalgebra of a *-algebra which is closed under *. -/
 structure StarSubalgebra (R : Type u) (A : Type v) [CommSemiring R] [StarRing R] [Semiring A]
-  [StarRing A] [Algebra R A] [StarModule R A] extends Subalgebra R A : Type v where
+    [StarRing A] [Algebra R A] [StarModule R A] extends Subalgebra R A : Type v where
   star_mem' {a} : a ∈ carrier → star a ∈ carrier
 #align star_subalgebra StarSubalgebra
 -/
@@ -51,7 +51,7 @@ variable [Semiring B] [StarRing B] [Algebra R B] [StarModule R B]
 variable [Semiring C] [StarRing C] [Algebra R C] [StarModule R C]
 
 instance : SetLike (StarSubalgebra R A) A :=
-  ⟨StarSubalgebra.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨StarSubalgebra.carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 instance : StarMemClass (StarSubalgebra R A) A where star_mem s a := s.star_mem'
 
@@ -559,11 +559,11 @@ theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a
     Algebra.adjoin_induction₂ ha hb (fun x hx y hy => _) Halg (fun r x hx => _) (fun r x hx => _)
       Hadd_left Hadd_right Hmul_left Hmul_right
   · cases hx <;> cases hy
-    exacts[Hs x hx y hy, star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy),
+    exacts [Hs x hx y hy, star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy),
       star_star x ▸ Hstar_left _ _ (Hs _ hx _ hy),
       star_star x ▸ star_star y ▸ Hstar _ _ (Hs _ hx _ hy)]
-  · cases hx; exacts[Halg_left _ _ hx, star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)]
-  · cases hx; exacts[Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
+  · cases hx; exacts [Halg_left _ _ hx, star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)]
+  · cases hx; exacts [Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
 #align star_subalgebra.adjoin_induction₂ StarSubalgebra.adjoin_induction₂
 
 /-- The difference with `star_subalgebra.adjoin_induction` is that this acts on the subtype. -/
@@ -575,7 +575,7 @@ theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
     by
     refine' Exists.elim _ fun (hb : b ∈ adjoin R s) (hc : p ⟨b, hb⟩) => hc
     apply adjoin_induction hb
-    exacts[fun x hx => ⟨subset_adjoin R s hx, Hs x hx⟩, fun r =>
+    exacts [fun x hx => ⟨subset_adjoin R s hx, Hs x hx⟩, fun r =>
       ⟨StarSubalgebra.algebraMap_mem _ r, Halg r⟩, fun x y hx hy =>
       Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy => ⟨add_mem hx' hy', Hadd _ _ hx hy⟩,
       fun x y hx hy =>
@@ -596,13 +596,13 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
       simp only [SetLike.coe_mk, MulMemClass.mk_mul_mk]
-      rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
+      rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy 
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R
           (by
             intro a ha b hb
             cases ha <;> cases hb
-            exacts[hcomm _ ha _ hb, star_star b ▸ hcomm_star _ ha _ hb,
+            exacts [hcomm _ ha _ hb, star_star b ▸ hcomm_star _ ha _ hb,
               star_star a ▸ (hcomm_star _ hb _ ha).symm, by
               simpa only [star_mul, star_star] using congr_arg star (hcomm _ hb _ ha)])
       exact congr_arg coe (mul_comm (⟨x, hx⟩ : Algebra.adjoin R (s ∪ star s)) ⟨y, hy⟩) }
@@ -624,8 +624,8 @@ def adjoinCommRingOfComm (R : Type u) {A : Type v} [CommRing R] [StarRing R] [Ri
 if `x` is normal. -/
 instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
     CommSemiring (adjoin R ({x} : Set A)) :=
-  adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb; rw [ha, hb])
-    fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb;
+  adjoinCommSemiringOfComm R (fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb ; rw [ha, hb])
+    fun a ha b hb => by rw [Set.mem_singleton_iff] at ha hb ;
     simpa only [ha, hb] using (star_comm_self' x).symm
 #align star_subalgebra.adjoin_comm_semiring_of_is_star_normal StarSubalgebra.adjoinCommSemiringOfIsStarNormal
 

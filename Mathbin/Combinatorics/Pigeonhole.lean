@@ -243,7 +243,7 @@ at least as many pigeons as the ceiling of the average number of pigeons across 
 theorem exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t)
     (ht : t.card • b < s.card) : ∃ y ∈ t, b < (s.filterₓ fun x => f x = y).card :=
   by
-  simp_rw [cast_card] at ht⊢
+  simp_rw [cast_card] at ht ⊢
   exact exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum hf ht
 #align finset.exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to Finset.exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to
 
@@ -264,7 +264,7 @@ at most as many pigeons as the floor of the average number of pigeons across all
 theorem exists_card_fiber_lt_of_card_lt_nsmul (ht : ↑s.card < t.card • b) :
     ∃ y ∈ t, ↑(s.filterₓ fun x => f x = y).card < b :=
   by
-  simp_rw [cast_card] at ht⊢
+  simp_rw [cast_card] at ht ⊢
   exact
     exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul
       (fun _ _ => sum_nonneg fun _ _ => zero_le_one) ht
@@ -289,7 +289,7 @@ See also `finset.exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to` for a stronge
 theorem exists_le_card_fiber_of_nsmul_le_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
     (hb : t.card • b ≤ s.card) : ∃ y ∈ t, b ≤ (s.filterₓ fun x => f x = y).card :=
   by
-  simp_rw [cast_card] at hb⊢
+  simp_rw [cast_card] at hb ⊢
   exact exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum hf ht hb
 #align finset.exists_le_card_fiber_of_nsmul_le_card_of_maps_to Finset.exists_le_card_fiber_of_nsmul_le_card_of_maps_to
 
@@ -309,7 +309,7 @@ See also `finset.exists_card_fiber_lt_of_card_lt_nsmul` for a stronger statement
 theorem exists_card_fiber_le_of_card_le_nsmul (ht : t.Nonempty) (hb : ↑s.card ≤ t.card • b) :
     ∃ y ∈ t, ↑(s.filterₓ fun x => f x = y).card ≤ b :=
   by
-  simp_rw [cast_card] at hb⊢
+  simp_rw [cast_card] at hb ⊢
   refine'
     exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
       (fun _ _ => sum_nonneg fun _ _ => zero_le_one) ht hb

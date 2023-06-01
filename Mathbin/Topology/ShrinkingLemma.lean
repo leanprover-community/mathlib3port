@@ -118,7 +118,7 @@ theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· �
     (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c) {i} (hi₁ : i ∈ v₁.carrier) (hi₂ : i ∈ v₂.carrier) : v₁ i = v₂ i :=
   by
   wlog hle : v₁ ≤ v₂
-  · cases hc.total h₁ h₂ <;> [skip;symm] <;> apply_assumption <;> assumption'
+  · cases hc.total h₁ h₂ <;> [skip; symm] <;> apply_assumption <;> assumption'
   exact hle.2 _ hi₁
 #align shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
 
@@ -135,7 +135,7 @@ def find (c : Set (PartialRefinement u s)) (ne : c.Nonempty) (i : ι) : PartialR
 #align shrinking_lemma.partial_refinement.find ShrinkingLemma.PartialRefinement.find
 
 theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c Ne i ∈ c := by
-  rw [find]; split_ifs; exacts[h.some_spec.fst, ne.some_spec]
+  rw [find]; split_ifs; exacts [h.some_spec.fst, ne.some_spec]
 #align shrinking_lemma.partial_refinement.find_mem ShrinkingLemma.PartialRefinement.find_mem
 
 theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.Nonempty) :
@@ -165,10 +165,10 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
     ⟨fun i => find c Ne i i, chain_Sup_carrier c, fun i => (find _ _ _).IsOpen i, fun x hxs =>
       mem_Union.2 _, fun i hi => (find c Ne i).closure_subset ((mem_find_carrier_iff _).2 hi),
       fun i hi => (find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)⟩
-  rcases em (∃ (i : _)(_ : i ∉ chain_Sup_carrier c), x ∈ u i) with (⟨i, hi, hxi⟩ | hx)
+  rcases em (∃ (i : _) (_ : i ∉ chain_Sup_carrier c), x ∈ u i) with (⟨i, hi, hxi⟩ | hx)
   · use i
     rwa [(find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
-  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx
+  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx 
     haveI : Nonempty (partial_refinement u s) := ⟨ne.some⟩
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
@@ -207,14 +207,14 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j; by_cases h : j = i <;> simp [h, ovi, v.is_open]
   · refine' fun x hx => mem_Union.2 _
-    rcases em (∃ (j : _)(_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
+    rcases em (∃ (j : _) (_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
     · use j; rwa [update_noteq hji]
-    · push_neg  at h; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
+    · push_neg  at h ; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
     · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact v.closure_subset hj
   · intro j hj
-    rw [mem_insert_iff, not_or] at hj
+    rw [mem_insert_iff, not_or] at hj 
     rw [update_noteq hj.1, v.apply_eq hj.2]
   · refine' ⟨subset_insert _ _, fun j hj => _⟩
     exact (update_noteq (ne_of_mem_of_not_mem hj hi) _ _).symm

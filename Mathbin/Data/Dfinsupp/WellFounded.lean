@@ -76,8 +76,8 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
       fun x => piecewise x.2.1 x.2.2 x.1 :=
   by
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
-  simp_rw [piecewise_apply] at hs hr
-  split_ifs  at hs
+  simp_rw [piecewise_apply] at hs hr 
+  split_ifs  at hs 
   classical
     on_goal 1 =>
       refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
@@ -89,11 +89,13 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
       refine' ⟨fun j h => if_pos h, _⟩
       convert hs
       refine' ite_eq_right_iff.2 fun h' => (hr i h').symm ▸ _
-      first |rw [if_neg h]|rw [if_pos h]
+      first
+      | rw [if_neg h]
+      | rw [if_pos h]
     all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
     · rw [hr j h₂, if_pos (h₁ h₂)]
     · rfl
-    · rw [Set.mem_setOf, not_imp] at h₁; rw [hr j h₁.1, if_neg h₁.2]
+    · rw [Set.mem_setOf, not_imp] at h₁ ; rw [hr j h₁.1, if_neg h₁.2]
     · rw [hr j h₁.1, if_pos h₁.2]
     · rw [hr j h₂, if_neg fun h' => h₁ ⟨h₂, h'⟩]
     · rfl
@@ -146,8 +148,8 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
   refine' Acc.intro _ fun x => _
   rintro ⟨k, hr, hs⟩
   classical
-    rw [single_apply] at hs
-    split_ifs  at hs with hik
+    rw [single_apply] at hs 
+    split_ifs  at hs  with hik
     swap
     · exact (hbot hs).elim
     subst hik
@@ -197,7 +199,7 @@ theorem Pi.Lex.wellFounded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, We
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
   haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
   refine' InvImage.wf equiv_fun_on_fintype.symm (lex.well_founded' (fun i a => _) hs _)
-  exacts[(hs i).not_lt_min ⊤ _ trivial, Finite.wellFounded_of_trans_of_irrefl r.swap]
+  exacts [(hs i).not_lt_min ⊤ _ trivial, Finite.wellFounded_of_trans_of_irrefl r.swap]
 #align pi.lex.well_founded Pi.Lex.wellFounded
 
 #print Pi.Lex.wellFoundedLT /-
@@ -236,7 +238,7 @@ protected theorem Dfinsupp.wellFoundedLT [∀ i, Zero (α i)] [∀ i, Preorder (
       obtain ⟨i, he, hl⟩ := lex_lt_of_lt_of_preorder well_ordering_rel.swap h
       exact ⟨i, fun j hj => Quot.sound (he j hj), hl⟩
     · rintro i ⟨a⟩; apply hbot
-    exacts[IsWellFounded.wf, IsTrichotomous.swap _, IsWellFounded.wf]⟩
+    exacts [IsWellFounded.wf, IsTrichotomous.swap _, IsWellFounded.wf]⟩
 #align dfinsupp.well_founded_lt Dfinsupp.wellFoundedLT
 
 instance Dfinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)]

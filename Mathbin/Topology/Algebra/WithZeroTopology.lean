@@ -162,7 +162,7 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
-theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), Iio γ ⊆ s :=
+theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _) (_ : γ ≠ 0), Iio γ ⊆ s :=
   by
   rw [isOpen_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or,
@@ -170,7 +170,7 @@ theorem isOpen_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ 
 #align with_zero_topology.is_open_iff WithZeroTopology.isOpen_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
-theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _)(_ : γ ≠ 0), s ⊆ Ici γ :=
+theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ (γ : _) (_ : γ ≠ 0), s ⊆ Ici γ :=
   by
   simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, Classical.not_not, ← compl_Ici,
     compl_subset_compl]
@@ -232,7 +232,7 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
     wlog hle : x ≤ y generalizing x y
     · have := tendsto.comp (this y x (le_of_not_le hle)) (continuous_swap.tendsto (x, y))
       simpa only [mul_comm, Function.comp, Prod.swap]
-    rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy);skip]
+    rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy); skip]
     · rw [ContinuousAt, MulZeroClass.zero_mul]
       refine'
         ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iffₓ has_basis_nhds_zero).2

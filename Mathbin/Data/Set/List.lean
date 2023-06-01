@@ -62,7 +62,7 @@ theorem range_list_get? : range l.get? = insert none (some '' { x | x ∈ l }) :
   by
   rw [← range_list_nth_le, ← range_comp]
   refine' (range_subset_iff.2 fun n => _).antisymm (insert_subset.2 ⟨_, _⟩)
-  exacts[(le_or_lt l.length n).imp nth_eq_none_iff.2 fun hlt => ⟨⟨_, _⟩, (nth_le_nth hlt).symm⟩,
+  exacts [(le_or_lt l.length n).imp nth_eq_none_iff.2 fun hlt => ⟨⟨_, _⟩, (nth_le_nth hlt).symm⟩,
     ⟨_, nth_eq_none_iff.2 le_rfl⟩, range_subset_iff.2 fun k => ⟨_, nth_le_nth _⟩]
 #align set.range_list_nth Set.range_list_get?
 -/

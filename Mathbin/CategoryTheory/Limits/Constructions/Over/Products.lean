@@ -217,8 +217,8 @@ theorem over_hasTerminal (B : C) : HasTerminal (Over B) :=
                 ext
                 rw [over.hom_mk_left]
                 have := m.w
-                dsimp at this
-                rwa [category.comp_id, category.comp_id] at this } } }
+                dsimp at this 
+                rwa [category.comp_id, category.comp_id] at this  } } }
 #align category_theory.over.over_has_terminal CategoryTheory.Over.over_hasTerminal
 -/
 

@@ -135,7 +135,7 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
       (fun n : Fin (Fintype.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
   wlog hle : (n : ℕ) ≤ m; · exact this hlen hx _ _ hneq.symm HEq.symm (le_of_not_le hle)
   have hm : (m : ℕ) ≤ Fintype.card σ := Fin.is_le m
-  dsimp at heq
+  dsimp at heq 
   refine'
     ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by
       rfl, _⟩
@@ -145,8 +145,8 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
     exact hm
   · intro h
     have hlen' := congr_arg List.length h
-    simp only [List.length_drop, List.length, List.length_take] at hlen'
-    rw [min_eq_left, tsub_eq_zero_iff_le] at hlen'
+    simp only [List.length_drop, List.length, List.length_take] at hlen' 
+    rw [min_eq_left, tsub_eq_zero_iff_le] at hlen' 
     · apply hneq
       apply le_antisymm
       assumption'
@@ -167,12 +167,12 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
 theorem evalFrom_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
     (hy : y ∈ ({x} : Language α)∗) : M.evalFrom s y = s :=
   by
-  rw [Language.mem_kstar] at hy
+  rw [Language.mem_kstar] at hy 
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
   · rfl
   · have ha := hS a (List.mem_cons_self _ _)
-    rw [Set.mem_singleton_iff] at ha
+    rw [Set.mem_singleton_iff] at ha 
     rw [List.join, eval_from_of_append, ha, hx]
     apply ih
     intro z hz
@@ -189,11 +189,11 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil
   intro y hy
-  rw [Language.mem_mul] at hy
+  rw [Language.mem_mul] at hy 
   rcases hy with ⟨ab, c', hab, hc', rfl⟩
-  rw [Language.mem_mul] at hab
+  rw [Language.mem_mul] at hab 
   rcases hab with ⟨a', b', ha', hb', rfl⟩
-  rw [Set.mem_singleton_iff] at ha' hc'
+  rw [Set.mem_singleton_iff] at ha' hc' 
   substs ha' hc'
   have h := M.eval_from_of_pow hb hb'
   rwa [mem_accepts, eval_from_of_append, eval_from_of_append, h, hc]

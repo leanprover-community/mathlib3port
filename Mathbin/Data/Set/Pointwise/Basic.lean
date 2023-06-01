@@ -1026,8 +1026,8 @@ protected def mulOneClass : MulOneClass (Set α) :=
 -/
 
 scoped[Pointwise]
-  attribute [instance]
-    Set.mulOneClass Set.addZeroClass Set.semigroup Set.addSemigroup Set.commSemigroup Set.addCommSemigroup
+  attribute [instance] Set.mulOneClass Set.addZeroClass Set.semigroup Set.addSemigroup
+    Set.commSemigroup Set.addCommSemigroup
 
 @[to_additive]
 theorem subset_mul_left (s : Set α) {t : Set α} (ht : (1 : α) ∈ t) : s ⊆ s * t := fun x hx =>
@@ -1243,8 +1243,8 @@ protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α)
 -/
 
 scoped[Pointwise]
-  attribute [instance]
-    Set.divisionMonoid Set.subtractionMonoid Set.divisionCommMonoid Set.subtractionCommMonoid Set.hasDistribNeg
+  attribute [instance] Set.divisionMonoid Set.subtractionMonoid Set.divisionCommMonoid
+    Set.subtractionCommMonoid Set.hasDistribNeg
 
 section Distrib
 

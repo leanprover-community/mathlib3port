@@ -26,7 +26,8 @@ variable {C : Type _} [Bicategory C]
 #print CategoryTheory.EndMonoidal /-
 /-- The endomorphisms of an object in a bicategory can be considered as a monoidal category. -/
 def EndMonoidal (X : C) :=
-  X ⟶ X deriving Category
+  X ⟶ X
+deriving Category
 #align category_theory.End_monoidal CategoryTheory.EndMonoidal
 -/
 

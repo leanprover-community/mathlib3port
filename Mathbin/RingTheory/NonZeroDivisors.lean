@@ -35,7 +35,7 @@ section nonZeroDivisors
 def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R
     where
   carrier := { x | ∀ z, z * x = 0 → z = 0 }
-  one_mem' z hz := by rwa [mul_one] at hz
+  one_mem' z hz := by rwa [mul_one] at hz 
   mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
     hx₁ z <| hx₂ (z * x₁) this
@@ -176,7 +176,7 @@ theorem nonZeroDivisors_le_comap_nonZeroDivisors_of_injective [NoZeroDivisors M'
 #align non_zero_divisors_le_comap_non_zero_divisors_of_injective nonZeroDivisors_le_comap_nonZeroDivisors_of_injective
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
-    s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=
+    s.Prod = 0 ↔ ∃ (r : M₁) (hr : r ∈ s), r = 0 :=
   by
   constructor; swap
   · rintro ⟨r, hrs, rfl⟩

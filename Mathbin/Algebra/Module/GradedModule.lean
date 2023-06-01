@@ -42,7 +42,7 @@ open GradedMonoid
 #print DirectSum.GdistribMulAction /-
 /-- A graded version of `distrib_mul_action`. -/
 class GdistribMulAction [AddMonoid ι] [GMonoid A] [∀ i, AddMonoid (M i)] extends
-  GMulAction A M where
+    GMulAction A M where
   smul_add {i j} (a : A i) (b c : M j) : smul a (b + c) = smul a b + smul a c
   smul_zero {i j} (a : A i) : smul a (0 : M j) = 0
 #align direct_sum.gdistrib_mul_action DirectSum.GdistribMulAction
@@ -51,7 +51,7 @@ class GdistribMulAction [AddMonoid ι] [GMonoid A] [∀ i, AddMonoid (M i)] exte
 #print DirectSum.Gmodule /-
 /-- A graded version of `module`. -/
 class Gmodule [AddMonoid ι] [∀ i, AddMonoid (A i)] [∀ i, AddMonoid (M i)] [GMonoid A] extends
-  GdistribMulAction A M where
+    GdistribMulAction A M where
   add_smul {i j} (a a' : A i) (b : M j) : smul (a + a') b = smul a b + smul a' b
   zero_smul {i j} (b : M j) : smul (0 : A i) b = 0
 #align direct_sum.gmodule DirectSum.Gmodule

@@ -53,7 +53,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 The similarly named `picard_lindelof` structure is part of the internal API for convenience, so as
 not to constantly invoke choice, but is not intended for public use. -/
 structure IsPicardLindelof {E : Type _} [NormedAddCommGroup E] (v : ℝ → E → E) (t_min t₀ t_max : ℝ)
-  (x₀ : E) (L : ℝ≥0) (R C : ℝ) : Prop where
+    (x₀ : E) (L : ℝ≥0) (R C : ℝ) : Prop where
   ht₀ : t₀ ∈ Icc t_min t_max
   hR : 0 ≤ R
   lipschitz : ∀ t ∈ Icc t_min t_max, LipschitzOnWith L (v t) (closedBall x₀ R)
@@ -305,7 +305,7 @@ theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
     integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
       (f.continuous_v_comp.strongly_measurable_at_filter _ _)
       f.continuous_v_comp.continuous_within_at
-  rw [v_comp_apply_coe] at this
+  rw [v_comp_apply_coe] at this 
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
   filter_upwards [self_mem_nhdsWithin]with _ ht'
   rw [v.proj_of_mem ht']
@@ -364,7 +364,7 @@ variable [CompleteSpace E]
 section
 
 theorem exists_contracting_iterate :
-    ∃ (N : ℕ)(K : _), ContractingWith K ((FunSpace.next : v.FunSpace → v.FunSpace)^[N]) :=
+    ∃ (N : ℕ) (K : _), ContractingWith K ((FunSpace.next : v.FunSpace → v.FunSpace)^[N]) :=
   by
   rcases((Real.tendsto_pow_div_factorial_atTop (v.L * v.t_dist)).Eventually
         (gt_mem_nhds zero_lt_one)).exists with
@@ -460,7 +460,7 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
       C_mul_le_R := by
         rw [add_sub_cancel', sub_sub_cancel, max_self, mul_ite, mul_one]
         split_ifs
-        · rwa [← h] at hr'
+        · rwa [← h] at hr' 
         · exact (mul_div_cancel' (r / 2) h).le }
 #align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_isPicardLindelof_const_of_contDiffOn_nhds
 
@@ -481,7 +481,7 @@ theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
     apply ContinuousAt.preimage_mem_nhds this.continuous_at
     rw [hf1]
     exact hs
-  rw [Metric.mem_nhds_iff] at h
+  rw [Metric.mem_nhds_iff] at h 
   obtain ⟨r, hr1, hr2⟩ := h
   refine'
     ⟨min r ε, lt_min hr1 hε, f, hf1, fun t ht =>

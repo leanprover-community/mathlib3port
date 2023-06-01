@@ -43,7 +43,8 @@ variable {α β γ : Type _}
 #print Rel /-
 /-- A relation on `α` and `β`, aka a set-valued function, aka a partial multifunction -/
 def Rel (α β : Type _) :=
-  α → β → Prop deriving CompleteLattice, Inhabited
+  α → β → Prop
+deriving CompleteLattice, Inhabited
 #align rel Rel
 -/
 

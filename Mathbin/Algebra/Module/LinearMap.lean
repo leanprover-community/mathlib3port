@@ -83,7 +83,7 @@ variable {N₁ : Type _} {N₂ : Type _} {N₃ : Type _} {ι : Type _}
 property. A bundled version is available with `linear_map`, and should be favored over
 `is_linear_map` most of the time. -/
 structure IsLinearMap (R : Type u) {M : Type v} {M₂ : Type w} [Semiring R] [AddCommMonoid M]
-  [AddCommMonoid M₂] [Module R M] [Module R M₂] (f : M → M₂) : Prop where
+    [AddCommMonoid M₂] [Module R M] [Module R M₂] (f : M → M₂) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
   map_smul : ∀ (c : R) (x), f (c • x) = c • f x
 #align is_linear_map IsLinearMap
@@ -99,8 +99,8 @@ is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `σ = ring_hom.id R`), the notation `M →ₗ[R] M₂` is available. An unbundled version of plain linear
 maps is available with the predicate `is_linear_map`, but it should be avoided most of the time. -/
 structure LinearMap {R : Type _} {S : Type _} [Semiring R] [Semiring S] (σ : R →+* S) (M : Type _)
-  (M₂ : Type _) [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module S M₂] extends
-  AddHom M M₂ where
+    (M₂ : Type _) [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module S M₂] extends
+    AddHom M M₂ where
   map_smul' : ∀ (r : R) (x : M), to_fun (r • x) = σ r • to_fun x
 #align linear_map LinearMap
 -/
@@ -126,8 +126,8 @@ A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ :
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
 class SemilinearMapClass (F : Type _) {R S : outParam (Type _)} [Semiring R] [Semiring S]
-  (σ : outParam <| R →+* S) (M M₂ : outParam (Type _)) [AddCommMonoid M] [AddCommMonoid M₂]
-  [Module R M] [Module S M₂] extends AddHomClass F M M₂ where
+    (σ : outParam <| R →+* S) (M M₂ : outParam (Type _)) [AddCommMonoid M] [AddCommMonoid M₂]
+    [Module R M] [Module S M₂] extends AddHomClass F M M₂ where
   map_smulₛₗ : ∀ (f : F) (r : R) (x : M), f (r • x) = σ r • f x
 #align semilinear_map_class SemilinearMapClass
 -/
@@ -411,7 +411,7 @@ we can also add an instance for `add_comm_group.int_module`, allowing `z •` to
 `R` does not support negation.
 -/
 class CompatibleSMul (R S : Type _) [Semiring S] [SMul R M] [Module S M] [SMul R M₂]
-  [Module S M₂] where
+    [Module S M₂] where
   map_smul : ∀ (fₗ : M →ₗ[S] M₂) (c : R) (x : M), fₗ (c • x) = c • fₗ x
 #align linear_map.compatible_smul LinearMap.CompatibleSMul
 -/
@@ -601,7 +601,7 @@ variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMon
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ']
     (f : M →ₛₗ[σ] M₂) (g : M₂ → M) (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M :=
   by
-  dsimp [left_inverse, Function.RightInverse] at h₁ h₂ <;>
+  dsimp [left_inverse, Function.RightInverse] at h₁ h₂  <;>
     exact
       { toFun := g
         map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂]

@@ -281,7 +281,7 @@ variable [NormedField 𝕜] [NormedRing 𝕝] [NormedSpace 𝕜 𝕝] [AddCommGr
 theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ‖a‖ ≤ ‖b‖) : a • s ⊆ b • s :=
   by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [norm_zero] at h
+  · rw [norm_zero] at h 
     rw [norm_eq_zero.1 (h.antisymm <| norm_nonneg _)]
     obtain rfl | h := s.eq_empty_or_nonempty
     · simp_rw [smul_set_empty]
@@ -308,7 +308,7 @@ theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ‖a‖) : A ⊆
   by
   refine' (subset_set_smul_iff₀ _).2 (hA a⁻¹ _)
   · rintro rfl
-    rw [norm_zero] at ha
+    rw [norm_zero] at ha 
     exact zero_lt_one.not_le ha
   · rw [norm_inv]
     exact inv_le_one ha
@@ -321,11 +321,11 @@ theorem Balanced.smul_eq (hA : Balanced 𝕜 A) (ha : ‖a‖ = 1) : a • A = A
 theorem Balanced.mem_smul_iff (hs : Balanced 𝕜 s) (h : ‖a‖ = ‖b‖) : a • x ∈ s ↔ b • x ∈ s :=
   by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [norm_zero, norm_eq_zero] at h
+  · rw [norm_zero, norm_eq_zero] at h 
     rw [h]
   have ha : a ≠ 0 := norm_ne_zero_iff.1 (ne_of_eq_of_ne h <| norm_ne_zero_iff.2 hb)
-  constructor <;> intro h' <;>
-      [rw [← inv_mul_cancel_right₀ ha b];rw [← inv_mul_cancel_right₀ hb a]] <;>
+  constructor <;> intro h' <;> [rw [← inv_mul_cancel_right₀ ha b];
+      rw [← inv_mul_cancel_right₀ hb a]] <;>
     · rw [← smul_eq_mul, smul_assoc]
       refine' hs.smul_mem _ h'
       simp [← h, ha]
@@ -385,7 +385,7 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 
   intro a ha
   obtain rfl | h := eq_or_ne a 0
   · rw [zero_smul_set]
-    exacts[subset_union_left _ _, ⟨0, Or.inl rfl⟩]
+    exacts [subset_union_left _ _, ⟨0, Or.inl rfl⟩]
   · rw [← image_smul, image_union]
     apply union_subset_union
     · rw [image_zero, smul_zero]
@@ -422,7 +422,7 @@ theorem absorbs_zero_iff : Absorbs 𝕜 s 0 ↔ (0 : E) ∈ s :=
   rintro ⟨r, hr, h⟩
   obtain ⟨a, ha⟩ := NormedSpace.exists_lt_norm 𝕜 𝕜 r
   have := h _ ha.le
-  rwa [zero_subset, zero_mem_smul_set_iff] at this
+  rwa [zero_subset, zero_mem_smul_set_iff] at this 
   exact norm_ne_zero_iff.1 (hr.trans ha).ne'
 #align absorbs_zero_iff absorbs_zero_iff
 
@@ -436,7 +436,7 @@ theorem balanced_convexHull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (
   by
   suffices Convex ℝ { x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s }
     by
-    rw [balanced_iff_smul_mem] at hs⊢
+    rw [balanced_iff_smul_mem] at hs ⊢
     refine' fun a ha x hx => convexHull_min _ this hx a ha
     exact fun y hy a ha => subset_convexHull ℝ s (hs ha hy)
   intro x hx y hy u v hu hv huv a ha
@@ -453,7 +453,7 @@ variable [AddCommGroup E] [Module ℝ E] {s : Set E}
 theorem balanced_iff_neg_mem (hs : Convex ℝ s) : Balanced ℝ s ↔ ∀ ⦃x⦄, x ∈ s → -x ∈ s :=
   by
   refine' ⟨fun h x => h.neg_mem_iff.2, fun h a ha => smul_set_subset_iff.2 fun x hx => _⟩
-  rw [Real.norm_eq_abs, abs_le] at ha
+  rw [Real.norm_eq_abs, abs_le] at ha 
   rw [show a = -((1 - a) / 2) + (a - -1) / 2 by ring, add_smul, neg_smul, ← smul_neg]
   exact
     hs (h hx) hx (div_nonneg (sub_nonneg_of_le ha.2) zero_le_two)

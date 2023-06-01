@@ -137,7 +137,7 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   induction' l with hd tl IH generalizing l' f
   · simp
   have : some hd = _ := hf 0
-  rw [eq_comm, List.get?_eq_some'] at this
+  rw [eq_comm, List.get?_eq_some'] at this 
   obtain ⟨w, h⟩ := this
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLEIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
@@ -193,7 +193,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
       by
       intro i hi
       specialize hf i
-      rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf
+      rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf 
       obtain ⟨h, -⟩ := hf
       exact h
     refine' ⟨OrderEmbedding.ofMapLEIff (fun ix => ⟨f ix, h ix.is_lt⟩) _, _⟩
@@ -230,7 +230,7 @@ at two distinct indices `n m : ℕ` inside the list `l`.
 -/
 theorem duplicate_iff_exists_distinct_nthLe {l : List α} {x : α} :
     l.Duplicate x ↔
-      ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m),
+      ∃ (n : ℕ) (hn : n < l.length) (m : ℕ) (hm : m < l.length) (h : n < m),
         x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by
   classical
@@ -248,7 +248,7 @@ theorem duplicate_iff_exists_distinct_nthLe {l : List α} {x : α} :
         · simp [hnm]
         · simp
         · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, replicate, length,
-            nonpos_iff_eq_zero] at hi hj
+            nonpos_iff_eq_zero] at hi hj 
           simp [hi, hj]
       · rintro ⟨⟨_ | i⟩, hi⟩
         · simpa using h

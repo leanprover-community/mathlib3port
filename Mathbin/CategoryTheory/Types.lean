@@ -269,7 +269,7 @@ theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.In
   constructor
   · intro H x x' h
     skip
-    rw [← hom_of_element_eq_iff] at h⊢
+    rw [← hom_of_element_eq_iff] at h ⊢
     exact (cancel_mono f).mp h
   · exact fun H => ⟨fun Z => H.compLeft⟩
 #align category_theory.mono_iff_injective CategoryTheory.mono_iff_injective

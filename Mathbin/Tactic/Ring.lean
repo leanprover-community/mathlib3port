@@ -47,7 +47,8 @@ unsafe structure cache where
 for mutability), as well as the list of atoms-up-to-defeq encountered thus far, used for atom
 sorting. -/
 unsafe def ring_m (α : Type) : Type :=
-  ReaderT cache tactic α deriving Monad, Alternative
+  ReaderT cache tactic α
+deriving Monad, Alternative
 #align tactic.ring.ring_m tactic.ring.ring_m
 
 /-- Get the `ring` data from the monad. -/

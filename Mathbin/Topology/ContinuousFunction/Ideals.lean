@@ -294,7 +294,7 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
         simpa only [zero_add] using add_lt_add_of_le_of_lt zero_le' (hgt₂ x hx)
     · intro x hx
       replace hx := htI.subset_compl_right hx
-      rw [compl_compl, mem_set_of_ideal] at hx
+      rw [compl_compl, mem_set_of_ideal] at hx 
       obtain ⟨g, hI, hgx⟩ := hx
       have := (map_continuous g).ContinuousAt.eventually_ne hgx
       refine'
@@ -311,9 +311,9 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
     compactness of `t`, there is some `0 < c` such that `c ≤ g' x` for all `x ∈ t`. Then by
     `main_lemma_aux` there is some `g` for which `g * g'` is the desired function. -/
   obtain ⟨g', hI', hgt'⟩ := this
-  obtain ⟨c, hc, hgc'⟩ : ∃ (c : _)(hc : 0 < c), ∀ y : X, y ∈ t → c ≤ g' y :=
+  obtain ⟨c, hc, hgc'⟩ : ∃ (c : _) (hc : 0 < c), ∀ y : X, y ∈ t → c ≤ g' y :=
     t.eq_empty_or_nonempty.elim
-      (fun ht' => ⟨1, zero_lt_one, fun y hy => False.elim (by rwa [ht'] at hy)⟩) fun ht' =>
+      (fun ht' => ⟨1, zero_lt_one, fun y hy => False.elim (by rwa [ht'] at hy )⟩) fun ht' =>
       let ⟨x, hx, hx'⟩ := ht.is_compact.exists_forall_le ht' (map_continuous g').ContinuousOn
       ⟨g' x, hgt' x hx, hx'⟩
   obtain ⟨g, hg, hgc⟩ := exists_mul_le_one_eq_on_ge g' hc
@@ -340,7 +340,7 @@ theorem setOfIdeal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 
         set.not_mem_compl_iff.mp (mt (@hf x) hfx))
       fun x hx => _
   -- If `x ∉ closure sᶜ`, we must produce `f : C(X, 𝕜)` which is zero on `sᶜ` and `f x ≠ 0`.
-  rw [← compl_compl (interior s), ← closure_compl] at hx
+  rw [← compl_compl (interior s), ← closure_compl] at hx 
   simp_rw [mem_set_of_ideal, mem_ideal_of_set]
   haveI : NormalSpace X := normalOfCompactT2
   /- Apply Urysohn's lemma to get `g : C(X, ℝ)` which is zero on `sᶜ` and `g x ≠ 0`, then compose
@@ -384,7 +384,7 @@ theorem idealOfSet_isMaximal_iff (s : Opens X) :
   by
   rw [Ideal.isMaximal_def]
   refine' (ideal_opens_gi X 𝕜).isCoatom_iff (fun I hI => _) s
-  rw [← Ideal.isMaximal_def] at hI
+  rw [← Ideal.isMaximal_def] at hI 
   skip
   exact ideal_of_set_of_ideal_is_closed inferInstance
 #align continuous_map.ideal_of_set_is_maximal_iff ContinuousMap.idealOfSet_isMaximal_iff

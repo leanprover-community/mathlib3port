@@ -50,7 +50,8 @@ open scoped Simplicial
 This is the category of contravariant functors from
 `simplex_category` to `Type u`. -/
 def SSet : Type (u + 1) :=
-  SimplicialObject (Type u)deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
+  SimplicialObject (Type u)
+deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
 #align sSet SSet
 -/
 
@@ -110,7 +111,7 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet
   map m₁ m₂ f α :=
     ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h; apply α.property
-      rw [Set.eq_univ_iff_forall] at h⊢; intro j
+      rw [Set.eq_univ_iff_forall] at h ⊢; intro j
       apply Or.imp _ id (h j)
       intro hj
       exact Set.range_comp_subset_range _ _ hj⟩
@@ -143,7 +144,8 @@ end Examples
 #print SSet.Truncated /-
 /-- Truncated simplicial sets. -/
 def Truncated (n : ℕ) :=
-  SimplicialObject.Truncated (Type u) n deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
+  SimplicialObject.Truncated (Type u) n
+deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
 #align sSet.truncated SSet.Truncated
 -/
 

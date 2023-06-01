@@ -76,19 +76,19 @@ theorem piIsoPi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) 
     (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
   by
   have := pi_iso_pi_inv_π α i
-  rw [iso.inv_comp_eq] at this
+  rw [iso.inv_comp_eq] at this 
   exact concrete_category.congr_hom this x
 #align Top.pi_iso_pi_hom_apply TopCat.piIsoPi_hom_apply
 
 /-- The inclusion to the coproduct as a bundled continous map. -/
-abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σi, α i) :=
+abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σ i, α i) :=
   ⟨Sigma.mk i⟩
 #align Top.sigma_ι TopCat.sigmaι
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps pt ι_app]
 def sigmaCofan {ι : Type v} (α : ι → TopCat.{max v u}) : Cofan α :=
-  Cofan.mk (TopCat.of (Σi, α i)) (sigmaι α)
+  Cofan.mk (TopCat.of (Σ i, α i)) (sigmaι α)
 #align Top.sigma_cofan TopCat.sigmaCofan
 
 /-- The constructed cofan is indeed a colimit -/
@@ -103,7 +103,7 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
 
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
-def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopCat.of (Σi, α i) :=
+def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopCat.of (Σ i, α i) :=
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 #align Top.sigma_iso_sigma TopCat.sigmaIsoSigma
 
@@ -169,10 +169,10 @@ def prodBinaryFanIsLimit (X Y : TopCat.{u}) : IsLimit (prodBinaryFan X Y)
     intro S m h
     ext x
     · specialize h ⟨walking_pair.left⟩
-      apply_fun fun e => e x  at h
+      apply_fun fun e => e x  at h 
       exact h
     · specialize h ⟨walking_pair.right⟩
-      apply_fun fun e => e x  at h
+      apply_fun fun e => e x  at h 
       exact h
 #align Top.prod_binary_fan_is_limit TopCat.prodBinaryFanIsLimit
 -/
@@ -283,7 +283,7 @@ def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y)
   · intro s; ext; rfl
   · intro s; ext; rfl
   · intro s m h₁ h₂; ext (x | x)
-    exacts[(concrete_category.congr_hom h₁ x : _), (concrete_category.congr_hom h₂ x : _)]
+    exacts [(concrete_category.congr_hom h₁ x : _), (concrete_category.congr_hom h₂ x : _)]
 #align Top.binary_cofan_is_colimit TopCat.binaryCofanIsColimit
 -/
 
@@ -356,7 +356,7 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         · rw [Equiv.ofInjective_symm_apply]
       · intro T f g; ext x; refine' (dif_neg _).trans _
         · rintro ⟨y, e⟩; have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-          rwa [disjoint_iff.mp h₃.1] at this
+          rwa [disjoint_iff.mp h₃.1] at this 
         · exact congr_arg g (Equiv.ofInjective_symm_apply _ _)
       · rintro T _ _ m rfl rfl; ext x; change m x = dite _ _ _
         split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm

@@ -197,7 +197,7 @@ theorem nontrivial_iff_card [Fintype G] : Nontrivial G ↔ ∃ n > 0, card G = p
     let ⟨k, hk⟩ := iff_card.1 hG
     ⟨k,
       Nat.pos_of_ne_zero fun hk0 => by
-        rw [hk0, pow_zero] at hk <;> exact fintype.one_lt_card.ne' hk,
+        rw [hk0, pow_zero] at hk  <;> exact fintype.one_lt_card.ne' hk,
       hk⟩,
     fun ⟨k, hk0, hk⟩ =>
     one_lt_card_iff_nontrivial.1 <| hk.symm ▸ one_lt_pow (Fact.out p.Prime).one_lt (ne_of_gt hk0)⟩
@@ -225,7 +225,7 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
     card α ≡ card (fixedPoints G α) [MOD p] := by
   classical
     calc
-      card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk'' x = y }) :=
+      card α = card (Σ y : Quotient (orbit_rel G α), { x // Quotient.mk'' x = y }) :=
         card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbit_rel G α))).symm
       _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk'' x = a } := (card_sigma _)
       _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
@@ -295,7 +295,7 @@ theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.cente
   classical
     cases nonempty_fintype G
     have := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G
-    rw [ConjAct.fixedPoints_eq_center] at this
+    rw [ConjAct.fixedPoints_eq_center] at this 
     obtain ⟨g, hg⟩ := this _ (Subgroup.center G).one_mem
     · exact ⟨⟨1, ⟨g, hg.1⟩, mt subtype.ext_iff.mp hg.2⟩⟩
     · obtain ⟨n, hn0, hn⟩ := hG.nontrivial_iff_card.mp inferInstance
@@ -336,9 +336,9 @@ theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} 
   by
   intro g
   obtain ⟨j, hj⟩ := hH ⟨ϕ g.1, g.2⟩
-  rw [Subtype.ext_iff, H.coe_pow, Subtype.coe_mk, ← ϕ.map_pow] at hj
+  rw [Subtype.ext_iff, H.coe_pow, Subtype.coe_mk, ← ϕ.map_pow] at hj 
   obtain ⟨k, hk⟩ := hϕ ⟨g.1 ^ p ^ j, hj⟩
-  rwa [Subtype.ext_iff, ϕ.ker.coe_pow, Subtype.coe_mk, ← pow_mul, ← pow_add] at hk
+  rwa [Subtype.ext_iff, ϕ.ker.coe_pow, Subtype.coe_mk, ← pow_mul, ← pow_add] at hk 
   exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).coe_pow]⟩
 #align is_p_group.comap_of_ker_is_p_group IsPGroup.comap_of_ker_isPGroup
 
@@ -405,7 +405,7 @@ theorem disjoint_of_ne (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact
   intro x hx₁ hx₂
   obtain ⟨n₁, hn₁⟩ := iff_order_of.mp hH₁ ⟨x, hx₁⟩
   obtain ⟨n₂, hn₂⟩ := iff_order_of.mp hH₂ ⟨x, hx₂⟩
-  rw [← orderOf_subgroup, Subgroup.coe_mk] at hn₁ hn₂
+  rw [← orderOf_subgroup, Subgroup.coe_mk] at hn₁ hn₂ 
   have : p₁ ^ n₁ = p₂ ^ n₂ := by rw [← hn₁, ← hn₂]
   rcases n₁.eq_zero_or_pos with (rfl | hn₁)
   · simpa using hn₁
@@ -438,10 +438,10 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
     IsCyclic (G ⧸ center G) := by
   classical
     rcases card_center_eq_prime_pow hG zero_lt_two with ⟨k, hk0, hk⟩
-    rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG
+    rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG 
     have hk2 := (Nat.pow_dvd_pow_iff_le_right (Fact.out p.prime).one_lt).1 ⟨_, hG.symm⟩
     interval_cases
-    · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG
+    · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG 
       exact isCyclic_of_prime_card hG
     ·
       exact

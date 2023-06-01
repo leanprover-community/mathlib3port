@@ -237,7 +237,7 @@ encoding is not unique, we wrap it in `trunc` to preserve computability. -/
 def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
   (Fintype.truncEncodable α).bind fun a =>
-    (@fintypeArrow α (Σa, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
+    (@fintypeArrow α (Σ a, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
       Trunc.mk <|
         @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equiv.piEquivSubtypeSigma α π)
 #align encodable.fintype_pi Encodable.fintypePi
@@ -313,11 +313,11 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
   | succ v => by
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
-    rw [e] at h
+    rw [e] at h 
     rcases have : v₂ < succ v := lt_succ_of_le h
       denumerable_list_aux v₂ with
       ⟨a, h₁, h₂⟩
-    rw [Option.mem_def] at h₁
+    rw [Option.mem_def] at h₁ 
     use of_nat α v₁ :: a
     simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
 #align denumerable.denumerable_list_aux Denumerable.denumerable_list_aux

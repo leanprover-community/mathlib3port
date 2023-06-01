@@ -117,7 +117,7 @@ theorem iInf_ker_proj : (⨅ i, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) : Su
   bot_unique <|
     SetLike.le_def.2 fun a h =>
       by
-      simp only [mem_infi, mem_ker, proj_apply] at h
+      simp only [mem_infi, mem_ker, proj_apply] at h 
       exact (mem_bot _).2 (funext fun i => h i)
 #align linear_map.infi_ker_proj LinearMap.iInf_ker_proj
 

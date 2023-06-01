@@ -158,11 +158,11 @@ theorem mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) {g : K[X]} (hg :
       ((splits_id_iff_splits _).2 <| splitting_field.splits g) (hg.map _) fun a ha =>
       (set_like.ext_iff.mp (integralClosure R g.splitting_field).range_algebraMap _).mpr <|
         roots_mem_integralClosure hf _
-  · rw [lifts_iff_coeff_lifts, ← RingHom.coe_range, Subalgebra.range_algebraMap] at this
+  · rw [lifts_iff_coeff_lifts, ← RingHom.coe_range, Subalgebra.range_algebraMap] at this 
     refine' (lifts_iff_coeff_lifts _).2 fun n => _
     rw [← RingHom.coe_range, Subalgebra.range_algebraMap]
     obtain ⟨p, hp, he⟩ := set_like.mem_coe.mp (this n); use p, hp
-    rw [IsScalarTower.algebraMap_eq R K, coeff_map, ← eval₂_map, eval₂_at_apply] at he
+    rw [IsScalarTower.algebraMap_eq R K, coeff_map, ← eval₂_map, eval₂_at_apply] at he 
     rw [eval₂_eq_eval_map]; apply (injective_iff_map_eq_zero _).1 _ _ he
     · apply RingHom.injective
   rw [IsScalarTower.algebraMap_eq R K _, ← map_map]

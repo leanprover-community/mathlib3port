@@ -425,7 +425,9 @@ instance : CompleteBooleanAlgebra PUnit := by
           sSup := fun _ => star
           sInf := fun _ => star } <;>
       intros <;>
-    first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
+    first
+    | trivial
+    | simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
 
 #print PUnit.sSup_eq /-
 @[simp]

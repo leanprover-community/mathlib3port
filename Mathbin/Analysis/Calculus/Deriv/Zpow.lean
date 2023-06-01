@@ -54,17 +54,17 @@ theorem hasStrictDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     simp only [zpow_ofNat, Int.cast_ofNat]
     convert hasStrictDerivAt_pow _ _ using 2
     rw [← Int.ofNat_one, ← Int.ofNat_sub, zpow_ofNat]
-    norm_cast  at hm
+    norm_cast  at hm 
     exact Nat.succ_le_of_lt hm
   rcases lt_trichotomy m 0 with (hm | hm | hm)
   · have hx : x ≠ 0 := h.resolve_right hm.not_le
-    have := (hasStrictDerivAt_inv _).scomp _ (this (-m) (neg_pos.2 hm)) <;>
-      [skip;exact zpow_ne_zero_of_ne_zero hx _]
-    simp only [(· ∘ ·), zpow_neg, one_div, inv_inv, smul_eq_mul] at this
+    have := (hasStrictDerivAt_inv _).scomp _ (this (-m) (neg_pos.2 hm)) <;> [skip;
+      exact zpow_ne_zero_of_ne_zero hx _]
+    simp only [(· ∘ ·), zpow_neg, one_div, inv_inv, smul_eq_mul] at this 
     convert this using 1
     rw [sq, mul_inv, inv_inv, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ←
       zpow_add₀ hx]
-    congr ; abel
+    congr; abel
   · simp only [hm, zpow_zero, Int.cast_zero, MulZeroClass.zero_mul, hasStrictDerivAt_const]
   · exact this m hm
 #align has_strict_deriv_at_zpow hasStrictDerivAt_zpow
@@ -99,7 +99,7 @@ theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m 
   by_cases H : x ≠ 0 ∨ 0 ≤ m
   · exact (hasDerivAt_zpow m x H).deriv
   · rw [deriv_zero_of_not_differentiableAt (mt differentiableAt_zpow.1 H)]
-    push_neg  at H; rcases H with ⟨rfl, hm⟩
+    push_neg  at H ; rcases H with ⟨rfl, hm⟩
     rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, MulZeroClass.mul_zero]
 #align deriv_zpow deriv_zpow
 

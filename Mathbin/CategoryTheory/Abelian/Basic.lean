@@ -220,7 +220,7 @@ def normalMonoCategory : NormalMonoCategory C
         have aux : _ := _
         refine' is_limit_aux _ (fun A => limit.lift _ _ ≫ inv (image_mono_factorisation f).e) aux _
         · intro A g hg
-          rw [kernel_fork.ι_of_ι] at hg
+          rw [kernel_fork.ι_of_ι] at hg 
           rw [← cancel_mono f, hg, ← aux, kernel_fork.ι_of_ι]
         · intro A
           simp only [kernel_fork.ι_of_ι, category.assoc]
@@ -251,7 +251,7 @@ def normalEpiCategory : NormalEpiCategory C
                 inv (abelian.coimage_image_comparison f) ≫ colimit.desc _ _)
             aux _
         · intro A g hg
-          rw [cokernel_cofork.π_of_π] at hg
+          rw [cokernel_cofork.π_of_π] at hg 
           rw [← cancel_epi f, hg, ← aux, cokernel_cofork.π_of_π]
         · intro A
           simp only [cokernel_cofork.π_of_π, ← category.assoc]
@@ -719,8 +719,8 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
         (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
     -- We use this fact to obtain a factorization of u through (f, -g) via some d : Z ⟶ R.
     obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu
-    change Z ⟶ R at d
-    change biprod.desc f (-g) ≫ d = u at hd
+    change Z ⟶ R at d 
+    change biprod.desc f (-g) ≫ d = u at hd 
     -- But then f ≫ d = 0:
     have : f ≫ d = 0;
     calc
@@ -760,8 +760,8 @@ instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X)
         (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
     -- We use this fact to obtain a factorization of u through (f, -g) via some d : Z ⟶ R.
     obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu
-    change Z ⟶ R at d
-    change biprod.desc f (-g) ≫ d = u at hd
+    change Z ⟶ R at d 
+    change biprod.desc f (-g) ≫ d = u at hd 
     -- But then (-g) ≫ d = 0:
     have : (-g) ≫ d = 0;
     calc
@@ -827,8 +827,8 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
       mono_is_kernel_of_cokernel _
         (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)
     obtain ⟨d, hd⟩ := kernel_fork.is_limit.lift' this u hu
-    change R ⟶ X at d
-    change d ≫ biprod.lift f (-g) = u at hd
+    change R ⟶ X at d 
+    change d ≫ biprod.lift f (-g) = u at hd 
     have : d ≫ f = 0;
     calc
       d ≫ f = d ≫ biprod.lift f (-g) ≫ biprod.fst := by rw [biprod.lift_fst]
@@ -856,8 +856,8 @@ instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g
       mono_is_kernel_of_cokernel _
         (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)
     obtain ⟨d, hd⟩ := kernel_fork.is_limit.lift' this u hu
-    change R ⟶ X at d
-    change d ≫ biprod.lift f (-g) = u at hd
+    change R ⟶ X at d 
+    change d ≫ biprod.lift f (-g) = u at hd 
     have : d ≫ (-g) = 0;
     calc
       d ≫ (-g) = d ≫ biprod.lift f (-g) ≫ biprod.snd := by rw [biprod.lift_snd]
@@ -929,8 +929,8 @@ def abelian : Abelian C :=
     HasFiniteProducts := by infer_instance
     HasKernels := by convert(by infer_instance : limits.has_kernels C)
     HasCokernels := by convert(by infer_instance : limits.has_cokernels C)
-    normalMonoOfMono := by intros ; convert normal_mono_of_mono f
-    normalEpiOfEpi := by intros ; convert normal_epi_of_epi f }
+    normalMonoOfMono := by intros; convert normal_mono_of_mono f
+    normalEpiOfEpi := by intros; convert normal_epi_of_epi f }
 #align category_theory.non_preadditive_abelian.abelian CategoryTheory.NonPreadditiveAbelian.abelian
 -/
 

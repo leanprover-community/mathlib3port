@@ -252,7 +252,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)]
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq /-
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
-    ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
+    ∃ (t : _) (_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   by
   rcases h with ⟨t, htm, hst⟩
   refine' ⟨t ∪ to_measurable μ (s \ t), _, htm.union (measurable_set_to_measurable _ _), _⟩
@@ -277,7 +277,7 @@ theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurab
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq /-
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
-    ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
+    ∃ (t : _) (_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_toMeasurable _ _,
     (measurableSet_toMeasurable _ _).compl, h.compl_toMeasurable_compl_ae_eq⟩
 #align measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
@@ -328,7 +328,7 @@ theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableS
     (hd : AEDisjoint μ s t) : μ (s ∪ t) = μ s + μ t :=
   by
   rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintype.sum_bool, cond, cond]
-  exacts[(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
+  exacts [(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
 #align measure_theory.measure_union₀_aux MeasureTheory.measure_union₀_aux
 
 /-- A null measurable set `t` is Carathéodory measurable: for any `s`, we have

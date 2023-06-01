@@ -54,7 +54,7 @@ then `topological_ring` should be used. Note: in the presence of `non_assoc_ring
 mathematically equivalent (see `topological_semiring.has_continuous_neg_of_mul` or
 `topological_semiring.to_topological_ring`).  -/
 class TopologicalSemiring [TopologicalSpace α] [NonUnitalNonAssocSemiring α] extends
-  ContinuousAdd α, ContinuousMul α : Prop
+    ContinuousAdd α, ContinuousMul α : Prop
 #align topological_semiring TopologicalSemiring
 -/
 
@@ -66,7 +66,7 @@ multiplication as it is multiplication with `-1`. (See
 `topological_semiring.has_continuous_neg_of_mul` and
 `topological_semiring.to_topological_add_group`) -/
 class TopologicalRing [TopologicalSpace α] [NonUnitalNonAssocRing α] extends TopologicalSemiring α,
-  ContinuousNeg α : Prop
+    ContinuousNeg α : Prop
 #align topological_ring TopologicalRing
 -/
 

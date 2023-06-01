@@ -50,8 +50,8 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
     by_cases hx : x ∉ closure s
-    · rw [← closure_closure] at hx; exact hasFDerivWithinAt_of_not_mem_closure hx
-    push_neg  at hx
+    · rw [← closure_closure] at hx ; exact hasFDerivWithinAt_of_not_mem_closure hx
+    push_neg  at hx 
     rw [HasFDerivWithinAt, HasFDerivAtFilter, Asymptotics.isLittleO_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
       s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
@@ -67,7 +67,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
       ∀ p : E × E,
         p ∈ closure ((B ∩ s) ×ˢ (B ∩ s)) → ‖f p.2 - f p.1 - (f' p.2 - f' p.1)‖ ≤ ε * ‖p.2 - p.1‖
       by
-      rw [closure_prod_eq] at this
+      rw [closure_prod_eq] at this 
       intro y y_in
       apply this ⟨x, y⟩
       have : B ∩ closure s ⊆ closure (B ∩ s) := is_open_ball.inter_closure
@@ -100,7 +100,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
       apply ContinuousWithinAt.mono _ this
       simp only [ContinuousWithinAt]
     rw [nhdsWithin_prod_eq]
-    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by intros ; abel
+    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by intros; abel
       simp only [this]
       exact
         tendsto.comp continuous_norm.continuous_at

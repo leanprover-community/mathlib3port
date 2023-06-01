@@ -644,7 +644,7 @@ def permutationsAux2 (t : α) (ts : List α) (r : List β) : List α → (List �
 #align list.permutations_aux2 List.permutationsAux2
 -/
 
-private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
+private def meas : (Σ' _ : List α, List α) → ℕ × ℕ
   | ⟨l, i⟩ => (length l + length i, length l)
 
 -- mathport name: «expr ≺ »
@@ -664,8 +664,8 @@ def permutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
           (succ (length ts) + length is, length (t :: ts))
         by rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
-    H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])termination_by'
-  ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (WellFounded.prod_lex lt_wf lt_wf)⟩
+    H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])
+termination_by' ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (WellFounded.prod_lex lt_wf lt_wf)⟩
 #align list.permutations_aux.rec List.permutationsAux.rec
 -/
 
@@ -773,7 +773,7 @@ infixr:82
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
-protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
+protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σ a, σ a) :=
   l₁.bind fun a => (l₂ a).map <| Sigma.mk a
 #align list.sigma List.sigma
 -/
@@ -841,8 +841,8 @@ attribute [simp] pairwise.nil
 
 #print List.instDecidablePairwise /-
 instance instDecidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise R l) := by
-  induction' l with hd tl ih <;>
-    [exact is_true pairwise.nil;exact decidable_of_iff' _ pairwise_cons]
+  induction' l with hd tl ih <;> [exact is_true pairwise.nil;
+    exact decidable_of_iff' _ pairwise_cons]
 #align list.decidable_pairwise List.instDecidablePairwise
 -/
 

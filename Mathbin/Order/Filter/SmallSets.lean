@@ -85,7 +85,7 @@ theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_smallSets {p : Set α → Prop} :
-    (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
+    (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _) (_ : s ⊆ t), p s :=
   l.hasBasis_smallSets.frequently_iff
 #align filter.frequently_small_sets Filter.frequently_smallSets
 
@@ -156,7 +156,7 @@ instance smallSets_neBot (l : Filter α) : NeBot l.smallSets :=
 theorem Tendsto.smallSets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets)
     (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la lb.smallSets :=
   by
-  rw [tendsto_small_sets_iff] at ht⊢
+  rw [tendsto_small_sets_iff] at ht ⊢
   exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
 #align filter.tendsto.small_sets_mono Filter.Tendsto.smallSets_mono
 -/

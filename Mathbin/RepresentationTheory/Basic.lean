@@ -116,7 +116,8 @@ You should use `as_module_equiv : ρ.as_module ≃+ V` to translate terms.
 -/
 @[nolint unused_arguments]
 def asModule (ρ : Representation k G V) :=
-  V deriving AddCommMonoid,
+  V
+deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] (module.End[module.End] k V)»
 #align representation.as_module Representation.asModule
 -/

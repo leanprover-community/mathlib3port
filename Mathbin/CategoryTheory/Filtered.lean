@@ -73,8 +73,8 @@ variable (C : Type u) [Category.{v} C]
    are equal.
 -/
 class IsFilteredOrEmpty : Prop where
-  cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True
-  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
+  cocone_objs : ∀ X Y : C, ∃ (Z : _) (f : X ⟶ Z) (g : Y ⟶ Z), True
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _) (h : Y ⟶ Z), f ≫ h = g ≫ h
 #align category_theory.is_filtered_or_empty CategoryTheory.IsFilteredOrEmpty
 -/
 
@@ -141,11 +141,11 @@ section AllowEmpty
 
 variable {C} [IsFilteredOrEmpty C]
 
-theorem cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True :=
+theorem cocone_objs : ∀ X Y : C, ∃ (Z : _) (f : X ⟶ Z) (g : Y ⟶ Z), True :=
   IsFilteredOrEmpty.cocone_objs
 #align category_theory.is_filtered.cocone_objs CategoryTheory.IsFiltered.cocone_objs
 
-theorem cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h :=
+theorem cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _) (h : Y ⟶ Z), f ≫ h = g ≫ h :=
   IsFilteredOrEmpty.cocone_maps
 #align category_theory.is_filtered.cocone_maps CategoryTheory.IsFiltered.cocone_maps
 
@@ -232,7 +232,7 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 #align category_theory.is_filtered.sup_objs_exists CategoryTheory.IsFiltered.sup_objs_exists
 -/
 
-variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
 #print CategoryTheory.IsFiltered.sup_exists /-
 /-- Given any `finset` of objects `{X, ...}` and
@@ -241,9 +241,9 @@ there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
 such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `finset`.
 -/
 theorem sup_exists :
-    ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
+    ∃ (S : C) (T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
+        (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by
   classical
     apply Finset.induction_on H
@@ -264,7 +264,7 @@ theorem sup_exists :
         apply Finset.mem_of_mem_insert_of_ne mf'
         contrapose! h
         obtain ⟨rfl, h⟩ := h
-        rw [heq_iff_eq, PSigma.mk.inj_iff] at h
+        rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
         exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_filtered.sup_exists CategoryTheory.IsFiltered.sup_exists
 -/
@@ -291,7 +291,7 @@ noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem toSup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) :
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
     f ≫ toSup O H mY = toSup O H mX :=
   (sup_exists O H).choose_spec.choose_spec mX mY mf
 #align category_theory.is_filtered.to_sup_commutes CategoryTheory.IsFiltered.toSup_commutes
@@ -306,7 +306,7 @@ there exists a cocone over `F`.
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   classical
     let O := finset.univ.image F.obj
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion fun X : J =>
         finset.univ.bUnion fun Y : J =>
           finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
@@ -451,10 +451,10 @@ theorem coeq₃_condition₃ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coe
 /-- For every span `j ⟵ i ⟶ j'`, there
    exists a cocone `j ⟶ k ⟵ j'` such that the square commutes. -/
 theorem span {i j j' : C} (f : i ⟶ j) (f' : i ⟶ j') :
-    ∃ (k : C)(g : j ⟶ k)(g' : j' ⟶ k), f ≫ g = f' ≫ g' :=
+    ∃ (k : C) (g : j ⟶ k) (g' : j' ⟶ k), f ≫ g = f' ≫ g' :=
   let ⟨K, G, G', _⟩ := cocone_objs j j'
   let ⟨k, e, he⟩ := cocone_maps (f ≫ G) (f' ≫ G')
-  ⟨k, G ≫ e, G' ≫ e, by simpa only [← category.assoc] ⟩
+  ⟨k, G ≫ e, G' ≫ e, by simpa only [← category.assoc]⟩
 #align category_theory.is_filtered.span CategoryTheory.IsFiltered.span
 -/
 
@@ -473,11 +473,11 @@ in a filtered category, we can construct an object `s` and two morphisms from `k
 making the resulting squares commute.
 -/
 theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶ k₂) (f₂ : j₂ ⟶ k₁) (g₂ : j₂ ⟶ k₂) :
-    ∃ (s : C)(α : k₁ ⟶ s)(β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β :=
+    ∃ (s : C) (α : k₁ ⟶ s) (β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β :=
   by
   obtain ⟨t, k₁t, k₂t, ht⟩ := span f₁ g₁
   obtain ⟨s, ts, hs⟩ := cocone_maps (f₂ ≫ k₁t) (g₂ ≫ k₂t)
-  simp_rw [category.assoc] at hs
+  simp_rw [category.assoc] at hs 
   exact ⟨s, k₁t ≫ ts, k₂t ≫ ts, by rw [reassoc_of ht], hs⟩
 #align category_theory.is_filtered.bowtie CategoryTheory.IsFiltered.bowtie
 -/
@@ -502,7 +502,7 @@ to `s`, making the resulting squares commute.
 -/
 theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j₂ ⟶ k₁) (f₃ : j₂ ⟶ k₂) (f₄ : j₃ ⟶ k₂)
     (g₁ : j₁ ⟶ l) (g₂ : j₃ ⟶ l) :
-    ∃ (s : C)(α : k₁ ⟶ s)(β : l ⟶ s)(γ : k₂ ⟶ s),
+    ∃ (s : C) (α : k₁ ⟶ s) (β : l ⟶ s) (γ : k₂ ⟶ s),
       f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = f₃ ≫ γ ∧ f₄ ≫ γ = g₂ ≫ β :=
   by
   obtain ⟨l', k₁l, k₂l, hl⟩ := span f₂ f₃
@@ -523,8 +523,8 @@ end IsFiltered
    are equal.
 -/
 class IsCofilteredOrEmpty : Prop where
-  cone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True
-  cone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
+  cone_objs : ∀ X Y : C, ∃ (W : _) (f : W ⟶ X) (g : W ⟶ Y), True
+  cone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _) (h : W ⟶ X), h ≫ f = h ≫ g
 #align category_theory.is_cofiltered_or_empty CategoryTheory.IsCofilteredOrEmpty
 -/
 
@@ -591,11 +591,11 @@ section AllowEmpty
 
 variable {C} [IsCofilteredOrEmpty C]
 
-theorem cone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True :=
+theorem cone_objs : ∀ X Y : C, ∃ (W : _) (f : W ⟶ X) (g : W ⟶ Y), True :=
   IsCofilteredOrEmpty.cone_objs
 #align category_theory.is_cofiltered.cone_objs CategoryTheory.IsCofiltered.cone_objs
 
-theorem cone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g :=
+theorem cone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _) (h : W ⟶ X), h ≫ f = h ≫ g :=
   IsCofilteredOrEmpty.cone_maps
 #align category_theory.is_cofiltered.cone_maps CategoryTheory.IsCofiltered.cone_maps
 
@@ -662,7 +662,7 @@ theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f
 /-- For every cospan `j ⟶ i ⟵ j'`,
  there exists a cone `j ⟵ k ⟶ j'` such that the square commutes. -/
 theorem cospan {i j j' : C} (f : j ⟶ i) (f' : j' ⟶ i) :
-    ∃ (k : C)(g : k ⟶ j)(g' : k ⟶ j'), g ≫ f = g' ≫ f' :=
+    ∃ (k : C) (g : k ⟶ j) (g' : k ⟶ j'), g ≫ f = g' ≫ f' :=
   let ⟨K, G, G', _⟩ := cone_objs j j'
   let ⟨k, e, he⟩ := cone_maps (G ≫ f) (G' ≫ f')
   ⟨k, e ≫ G, e ≫ G', by simpa only [category.assoc] using he⟩
@@ -670,7 +670,7 @@ theorem cospan {i j j' : C} (f : j ⟶ i) (f' : j' ⟶ i) :
 -/
 
 theorem CategoryTheory.Functor.ranges_directed (F : C ⥤ Type _) (j : C) :
-    Directed (· ⊇ ·) fun f : Σ'i, i ⟶ j => Set.range (F.map f.2) := fun ⟨i, ij⟩ ⟨k, kj⟩ =>
+    Directed (· ⊇ ·) fun f : Σ' i, i ⟶ j => Set.range (F.map f.2) := fun ⟨i, ij⟩ ⟨k, kj⟩ =>
   by
   let ⟨l, li, lk, e⟩ := cospan ij kj
   refine' ⟨⟨l, lk ≫ kj⟩, e ▸ _, _⟩ <;> simp_rw [F.map_comp] <;> apply Set.range_comp_subset_range
@@ -700,7 +700,7 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
 #align category_theory.is_cofiltered.inf_objs_exists CategoryTheory.IsCofiltered.inf_objs_exists
 -/
 
-variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
 
 #print CategoryTheory.IsCofiltered.inf_exists /-
 /-- Given any `finset` of objects `{X, ...}` and
@@ -709,9 +709,9 @@ there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
 such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `finset`.
 -/
 theorem inf_exists :
-    ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
+    ∃ (S : C) (T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
+        (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by
   classical
     apply Finset.induction_on H
@@ -732,7 +732,7 @@ theorem inf_exists :
         apply Finset.mem_of_mem_insert_of_ne mf'
         contrapose! h
         obtain ⟨rfl, h⟩ := h
-        rw [heq_iff_eq, PSigma.mk.inj_iff] at h
+        rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
         exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_cofiltered.inf_exists CategoryTheory.IsCofiltered.inf_exists
 -/
@@ -759,7 +759,7 @@ noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem infTo_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) :
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
     infTo O H mX ≫ f = infTo O H mY :=
   (inf_exists O H).choose_spec.choose_spec mX mY mf
 #align category_theory.is_cofiltered.inf_to_commutes CategoryTheory.IsCofiltered.infTo_commutes
@@ -774,7 +774,7 @@ there exists a cone over `F`.
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   classical
     let O := finset.univ.image F.obj
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
+    let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion fun X : J =>
         finset.univ.bUnion fun Y : J =>
           finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩

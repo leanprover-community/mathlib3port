@@ -104,7 +104,7 @@ theorem AlgebraicGeometry.PresheafedSpace.Hom.ext {X Y : PresheafedSpace C} (α 
 
 -- TODO including `injections` would make tidy work earlier.
 theorem hext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) :
-    α = β := by cases α; cases β; congr ; exacts[w, h]
+    α = β := by cases α; cases β; congr; exacts [w, h]
 #align algebraic_geometry.PresheafedSpace.hext AlgebraicGeometry.PresheafedSpace.hext
 
 /-- The identity morphism of a `PresheafedSpace`. -/
@@ -260,7 +260,7 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y
     erw [← α.hom.naturality]
     have := nat_trans.congr_app α.inv_hom_id (op x)
     cases x
-    rw [nat_trans.comp_app] at this
+    rw [nat_trans.comp_app] at this 
     convert this
     · dsimp; simp
     · simp
@@ -276,15 +276,15 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2
   hom_inv_id' := by
     ext U
     have := congr_app H.inv_hom_id U
-    simp only [comp_c_app, id_c_app, eq_to_hom_map, eq_to_hom_trans] at this
-    generalize_proofs h  at this
+    simp only [comp_c_app, id_c_app, eq_to_hom_map, eq_to_hom_trans] at this 
+    generalize_proofs h  at this 
     simpa using congr_arg (fun f => f ≫ eq_to_hom h.symm) this
   inv_hom_id' := by
     ext U
     simp only [presheaf.pushforward_to_of_iso_app, nat_trans.comp_app, category.assoc,
       nat_trans.id_app, H.hom.c.naturality]
     have := congr_app H.hom_inv_id ((opens.map H.hom.base).op.obj U)
-    generalize_proofs h  at this
+    generalize_proofs h  at this 
     simpa using congr_arg (fun f => f ≫ X.presheaf.map (eq_to_hom h.symm)) this
 #align algebraic_geometry.PresheafedSpace.sheaf_iso_of_iso AlgebraicGeometry.PresheafedSpace.sheafIsoOfIso
 
@@ -347,17 +347,17 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
         _)
     have := PresheafedSpace.congr_app Eq (op (hf.is_open_map.functor.obj V))
     simp only [PresheafedSpace.comp_c_app, PresheafedSpace.of_restrict_c_app, category.assoc,
-      cancel_epi] at this
+      cancel_epi] at this 
     have h : _ ≫ _ = _ ≫ _ ≫ _ :=
       congr_arg (fun f => (X.restrict hf).Presheaf.map (eq_to_hom hV).op ≫ f) this
-    erw [g₁.c.naturality, g₂.c.naturality_assoc] at h
+    erw [g₁.c.naturality, g₂.c.naturality_assoc] at h 
     simp only [presheaf.pushforward_obj_map, eq_to_hom_op, category.assoc, eq_to_hom_map,
-      eq_to_hom_trans] at h
-    rw [← is_iso.comp_inv_eq] at h
+      eq_to_hom_trans] at h 
+    rw [← is_iso.comp_inv_eq] at h 
     simpa using h
   · have := congr_arg PresheafedSpace.hom.base Eq
-    simp only [PresheafedSpace.comp_base, PresheafedSpace.of_restrict_base] at this
-    rw [cancel_mono] at this
+    simp only [PresheafedSpace.comp_base, PresheafedSpace.of_restrict_base] at this 
+    rw [cancel_mono] at this 
     exact this
 #align algebraic_geometry.PresheafedSpace.of_restrict_mono AlgebraicGeometry.PresheafedSpace.ofRestrict_mono
 
@@ -379,8 +379,8 @@ theorem ofRestrict_top_c (X : PresheafedSpace C) :
        issue when `apply nat_iso.is_iso_of_is_iso_app`. -/
   ext U;
   change X.presheaf.map _ = _; convert eq_to_hom_map _ _ using 1
-  congr ; simpa
-  · induction U using Opposite.rec'; dsimp; congr ; ext
+  congr; simpa
+  · induction U using Opposite.rec'; dsimp; congr; ext
     exact ⟨fun h => ⟨⟨x, trivial⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
 #align algebraic_geometry.PresheafedSpace.of_restrict_top_c AlgebraicGeometry.PresheafedSpace.ofRestrict_top_c
 

@@ -73,8 +73,8 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
               PartENat.natCast_get, ← pow_dvd_iff_le_multiplicity, and_right_comm]
             refine' (and_iff_left_of_imp fun h => lt_of_le_of_lt _ hb).symm
             cases m
-            · rw [zero_pow, zero_dvd_iff] at h
-              exacts[(hn.ne' h.2).elim, h.1]
+            · rw [zero_pow, zero_dvd_iff] at h 
+              exacts [(hn.ne' h.2).elim, h.1]
             exact
               le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
                 (le_of_dvd hn h.2)
@@ -148,7 +148,7 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
     by
     intro m hm
     rw [multiplicity_eq_zero, ← not_dvd_iff_between_consec_multiples _ hp.pos]
-    rw [mem_Ico] at hm
+    rw [mem_Ico] at hm 
     exact ⟨n, lt_of_succ_le hm.1, hm.2⟩
   simp_rw [← prod_Ico_id_eq_factorial, multiplicity.Finset.prod hp', ← sum_Ico_consecutive _ h1 h3,
     add_assoc]
@@ -252,7 +252,7 @@ theorem multiplicity_choose_prime_pow_add_multiplicity (hp : p.Prime) (hkn : k �
         ← Nat.cast_add, PartENat.coe_le_coe, log_pow hp.one_lt, ← card_disjoint_union hdisj,
         filter_union_right]
       have filter_le_Ico := (Ico 1 n.succ).card_filter_le _
-      rwa [card_Ico 1 n.succ] at filter_le_Ico)
+      rwa [card_Ico 1 n.succ] at filter_le_Ico )
     (by rw [← hp.multiplicity_pow_self] <;> exact multiplicity_le_multiplicity_choose_add hp _ _)
 #align nat.prime.multiplicity_choose_prime_pow_add_multiplicity Nat.Prime.multiplicity_choose_prime_pow_add_multiplicity
 
@@ -270,7 +270,7 @@ theorem dvd_choose_pow (hp : Prime p) (hk : k ≠ 0) (hkp : k ≠ p ^ n) : p ∣
   · simp [choose_eq_zero_of_lt hkp]
   refine' multiplicity_ne_zero.1 fun h => hkp.not_le <| Nat.le_of_dvd hk.bot_lt _
   have H := hp.multiplicity_choose_prime_pow_add_multiplicity hkp.le hk
-  rw [h, zero_add, eq_coe_iff] at H
+  rw [h, zero_add, eq_coe_iff] at H 
   exact H.1
 #align nat.prime.dvd_choose_pow Nat.Prime.dvd_choose_pow
 -/
@@ -291,7 +291,7 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
   · contradiction
   · intro b n ih h
     by_cases hn : n = 0
-    · subst hn; simp at h; simp [h, one_right h2.not_unit]
+    · subst hn; simp at h ; simp [h, one_right h2.not_unit]
     have : multiplicity 2 (2 * n)! < (2 * n : ℕ) :=
       by
       rw [prime_two.multiplicity_factorial_mul]

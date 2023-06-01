@@ -190,7 +190,7 @@ theorem zetaKernel₂_one_div {t : ℝ} (ht : 0 < t) : zetaKernel₂ (1 / t) = s
   · exact aux h
   · simp only [div_self, Ne.def, one_ne_zero, not_false_iff, sqrt_one, of_real_one, one_mul]
   · have := aux (show 1 < 1 / t by rwa [lt_one_div (zero_lt_one' ℝ) ht, div_one])
-    rw [one_div_one_div] at this
+    rw [one_div_one_div] at this 
     rw [this, ← mul_assoc, ← of_real_mul, ← sqrt_mul ht.le, mul_one_div_cancel ht.ne', sqrt_one,
       of_real_one, one_mul]
 #align zeta_kernel₂_one_div zetaKernel₂_one_div
@@ -207,7 +207,7 @@ show holomorphy of their Mellin transforms (for `1 / 2 < re s` for `zeta_kernel�
 theorem isBigO_atTop_zetaKernel₁ : IsBigO atTop zetaKernel₁ fun t => exp (-π * t) :=
   by
   have h := isBigO_at_im_infty_jacobiTheta_sub_one.const_mul_left (1 / 2)
-  simp_rw [mul_comm (1 / 2 : ℂ) _, mul_one_div] at h
+  simp_rw [mul_comm (1 / 2 : ℂ) _, mul_one_div] at h 
   have h' : tendsto (fun t : ℝ => ↑t * I) at_top (comap im at_top) :=
     by
     rw [tendsto_comap_iff]
@@ -233,7 +233,7 @@ theorem isBigO_atTop_zetaKernel₂ : IsBigO atTop zetaKernel₂ fun t => exp (-�
 theorem isBigO_zero_zetaKernel₂ : IsBigO (𝓝[>] 0) zetaKernel₂ fun t => exp (-π / t) / sqrt t :=
   by
   have h1 := isBigO_atTop_zetaKernel₂.comp_tendsto tendsto_inv_zero_atTop
-  simp_rw [← one_div] at h1
+  simp_rw [← one_div] at h1 
   have h2 : zetaKernel₂ ∘ Div.div 1 =ᶠ[𝓝[>] 0] fun t => sqrt t * zetaKernel₂ t :=
     eventually_of_mem self_mem_nhdsWithin fun t ht => by simp_rw [← zetaKernel₂_one_div ht]
   have h3 := h1.congr' h2 (eventually_eq.refl _ _)
@@ -371,7 +371,7 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
     suffices tendsto (fun z => riemannCompletedZeta z * z / 2) (𝓝[≠] 0) (𝓝 (-1 / 2 : ℂ))
       by
       have := this.div h4 one_ne_zero
-      simp_rw [div_one, mul_div_assoc] at this
+      simp_rw [div_one, mul_div_assoc] at this 
       exact this
     refine' tendsto.div _ tendsto_const_nhds two_ne_zero
     simp_rw [riemannCompletedZeta, add_mul, sub_mul]

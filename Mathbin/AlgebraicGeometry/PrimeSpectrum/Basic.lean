@@ -107,7 +107,7 @@ noncomputable def primeSpectrumProd :
       (by
         constructor
         · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;>
-            simp only [Ideal.prod.ext_iff, prime_spectrum_prod_of_sum] at h
+            simp only [Ideal.prod.ext_iff, prime_spectrum_prod_of_sum] at h 
           · simp only [h]
           · exact False.elim (hI.ne_top h.left)
           · exact False.elim (hJ.ne_top h.right)
@@ -325,7 +325,7 @@ theorem zeroLocus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : zeroLocus s
   by
   rw [Set.eq_empty_iff_forall_not_mem]
   intro x hx
-  rw [mem_zero_locus] at hx
+  rw [mem_zero_locus] at hx 
   have x_prime : x.as_ideal.is_prime := by infer_instance
   have eq_top : x.as_ideal = ⊤ := by rw [Ideal.eq_top_iff_one]; exact hx h
   apply x_prime.ne_top eq_top
@@ -435,7 +435,7 @@ theorem sup_vanishingIdeal_le (t t' : Set (PrimeSpectrum R)) :
   intro r
   rw [Submodule.mem_sup, mem_vanishing_ideal]
   rintro ⟨f, hf, g, hg, rfl⟩ x ⟨hxt, hxt'⟩
-  rw [mem_vanishing_ideal] at hf hg
+  rw [mem_vanishing_ideal] at hf hg 
   apply Submodule.add_mem <;> solve_by_elim
 #align prime_spectrum.sup_vanishing_ideal_le PrimeSpectrum.sup_vanishingIdeal_le
 
@@ -498,7 +498,7 @@ theorem isClosed_singleton_iff_isMaximal (x : PrimeSpectrum R) :
   by
   refine' (is_closed_iff_zero_locus _).trans ⟨fun h => _, fun h => _⟩
   · obtain ⟨s, hs⟩ := h
-    rw [eq_comm, Set.eq_singleton_iff_unique_mem] at hs
+    rw [eq_comm, Set.eq_singleton_iff_unique_mem] at hs 
     refine'
       ⟨⟨x.2.1, fun I hI =>
           Classical.not_not.1
@@ -520,8 +520,8 @@ theorem zeroLocus_vanishingIdeal_eq_closure (t : Set (PrimeSpectrum R)) :
   by
   apply Set.Subset.antisymm
   · rintro x hx t' ⟨ht', ht⟩
-    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus s := by rwa [is_closed_iff_zero_locus] at ht'
-    rw [subset_zero_locus_iff_subset_vanishing_ideal] at ht
+    obtain ⟨fs, rfl⟩ : ∃ s, t' = zero_locus s := by rwa [is_closed_iff_zero_locus] at ht' 
+    rw [subset_zero_locus_iff_subset_vanishing_ideal] at ht 
     exact Set.Subset.trans ht hx
   · rw [(is_closed_zero_locus _).closure_subset_iff]
     exact subset_zero_locus_vanishing_ideal t
@@ -611,7 +611,7 @@ theorem isIrreducible_zeroLocus_iff_of_radical (I : Ideal R) (hI : I.IsRadical) 
       · simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le, ←
           Ideal.span_singleton_mul_span_singleton]
         refine' fun h x y h' => h _ _ _
-        rw [← hI.radical_le_iff] at h'⊢
+        rw [← hI.radical_le_iff] at h' ⊢
         simpa only [Ideal.radical_inf, Ideal.radical_mul] using h'
       · simp_rw [or_iff_not_imp_left, SetLike.not_le_iff_exists]
         rintro h s t h' ⟨x, hx, hx'⟩ y hy
@@ -746,8 +746,8 @@ theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocaliza
   by
   intro p q h
   replace h := congr_arg (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
-  dsimp only at h
-  erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h
+  dsimp only at h 
+  erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h 
   ext1
   exact h
 #align prime_spectrum.localization_comap_injective PrimeSpectrum.localization_comap_injective
@@ -909,7 +909,7 @@ theorem isTopologicalBasis_basic_opens :
   · rintro _ ⟨r, rfl⟩
     exact is_open_basic_open
   · rintro p U hp ⟨s, hs⟩
-    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zero_locus, Set.not_subset] at hp
+    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zero_locus, Set.not_subset] at hp 
     obtain ⟨f, hfs, hfp⟩ := hp
     refine' ⟨basic_open f, ⟨f, rfl⟩, hfp, _⟩
     rw [← Set.compl_subset_compl, ← hs, basic_open_eq_zero_locus_compl, compl_compl]
@@ -934,7 +934,7 @@ theorem isCompact_basicOpen (f : R) : IsCompact (basicOpen f : Set (PrimeSpectru
     have hI : ∀ i, Z i = zero_locus (I i) := fun i => by
       simpa only [zero_locus_vanishing_ideal_eq_closure] using (hZc i).closure_eq.symm
     rw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ← Set.diff_eq, Set.diff_eq_empty,
-      funext hI, ← zero_locus_supr] at hZ
+      funext hI, ← zero_locus_supr] at hZ 
     obtain ⟨n, hn⟩ : f ∈ (⨆ i : ι, I i).radical :=
       by
       rw [← vanishing_ideal_zero_locus_eq_radical]
@@ -1050,7 +1050,7 @@ def localizationMapOfSpecializes {x y : PrimeSpectrum R} (h : x ⤳ y) :
     (by
       rintro ⟨a, ha⟩
       rw [← PrimeSpectrum.le_iff_specializes, ← as_ideal_le_as_ideal, ← SetLike.coe_subset_coe, ←
-        Set.compl_subset_compl] at h
+        Set.compl_subset_compl] at h 
       exact (IsLocalization.map_units _ ⟨a, show a ∈ x.as_ideal.prime_compl from h ha⟩ : _))
 #align prime_spectrum.localization_map_of_specializes PrimeSpectrum.localizationMapOfSpecializes
 

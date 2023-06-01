@@ -150,7 +150,7 @@ theorem rightInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alge
     `clifford_algebra.induction`, but going via the grading seems easier. -/
   intro x
   have : x ∈ ⊤ := Submodule.mem_top
-  rw [← supr_ι_range_eq_top] at this
+  rw [← supr_ι_range_eq_top] at this 
   apply Submodule.iSup_induction _ this (fun i x hx => _) _ h_add
   · refine' Submodule.pow_induction_on_right _ hr h_add (fun x px m => _) hx
     rintro ⟨m, rfl⟩

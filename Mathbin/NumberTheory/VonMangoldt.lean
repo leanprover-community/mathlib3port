@@ -126,7 +126,7 @@ theorem vonMangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
       von_mangoldt_apply_one]
     simp [von_mangoldt_apply_pow (Nat.succ_ne_zero _), von_mangoldt_apply_prime hp]
   intro a b ha' hb' hab ha hb
-  simp only [von_mangoldt_apply, ← sum_filter] at ha hb⊢
+  simp only [von_mangoldt_apply, ← sum_filter] at ha hb ⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union,
     sum_union (disjoint_divisors_filter_prime_pow hab), ha, hb, Nat.cast_mul,
     Real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')]

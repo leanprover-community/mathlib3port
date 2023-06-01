@@ -178,21 +178,21 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
   by
   rcases η with ⟨⟩; induction η
   case id => simp
-  case
-    vcomp _ _ _ _ _ _ _ ihf ihg =>
+  case vcomp _ _ _ _ _ _ _ ihf
+    ihg =>
     rw [mk_vcomp, bicategory.whisker_left_comp]
     slice_lhs 2 3 => rw [ihg]
     slice_lhs 1 2 => rw [ihf]
     simp
-  case
-    whisker_left _ _ _ _ _ _ _ ih =>-- p ≠ nil required! See the docstring of `normalize_aux`.
+  case whisker_left _ _ _ _ _ _ _
+    ih =>-- p ≠ nil required! See the docstring of `normalize_aux`.
     dsimp;
     simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
   case whisker_right _ _ _ _ _ h η ih =>
     dsimp
     rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
     have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
-    dsimp at this; simp [this]
+    dsimp at this ; simp [this]
   all_goals dsimp; dsimp [id_def, comp_def]; simp
 #align category_theory.free_bicategory.normalize_naturality CategoryTheory.FreeBicategory.normalize_naturality
 

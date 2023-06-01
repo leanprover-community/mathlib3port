@@ -74,8 +74,8 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
   have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I
-  rw [rotation_apply, RingHom.map_one, mul_one] at h1
-  rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI
+  rw [rotation_apply, RingHom.map_one, mul_one] at h1 
+  rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI 
   exact one_ne_zero hI
 #align rotation_ne_conj_lie rotation_ne_conjLie
 
@@ -105,24 +105,24 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
     (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) : (f z).im = z.im ∨ (f z).im = -z.im :=
   by
   have h₁ := f.norm_map z
-  simp only [Complex.abs_def, norm_eq_abs] at h₁
+  simp only [Complex.abs_def, norm_eq_abs] at h₁ 
   rwa [Real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), norm_sq_apply (f z), norm_sq_apply z,
-    h₂, add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁
+    h₂, add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁ 
 #align linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re
 
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) :
     z + conj z = f z + conj (f z) :=
   by
   have : ‖f z - 1‖ = ‖z - 1‖ := by rw [← f.norm_map (z - 1), f.map_sub, h]
-  apply_fun fun x => x ^ 2  at this
-  simp only [norm_eq_abs, ← norm_sq_eq_abs] at this
-  rw [← of_real_inj, ← mul_conj, ← mul_conj] at this
-  rw [RingHom.map_sub, RingHom.map_sub] at this
-  simp only [sub_mul, mul_sub, one_mul, mul_one] at this
-  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this
-  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs] at this
-  simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, RingHom.map_one, norm_eq_abs] at this
-  simp only [add_sub, sub_left_inj] at this
+  apply_fun fun x => x ^ 2  at this 
+  simp only [norm_eq_abs, ← norm_sq_eq_abs] at this 
+  rw [← of_real_inj, ← mul_conj, ← mul_conj] at this 
+  rw [RingHom.map_sub, RingHom.map_sub] at this 
+  simp only [sub_mul, mul_sub, one_mul, mul_one] at this 
+  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this 
+  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs] at this 
+  simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, RingHom.map_one, norm_eq_abs] at this 
+  simp only [add_sub, sub_left_inj] at this 
   rw [add_comm, ← this, add_comm]
 #align linear_isometry.im_apply_eq_im LinearIsometry.im_apply_eq_im
 

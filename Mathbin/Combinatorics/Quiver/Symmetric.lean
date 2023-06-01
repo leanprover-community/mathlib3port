@@ -87,7 +87,7 @@ theorem reverse_inj [HasInvolutiveReverse V] {a b : V} (f g : a ⟶ b) :
     reverse f = reverse g ↔ f = g := by
   constructor
   · rintro h; simpa using congr_arg Quiver.reverse h
-  · rintro h; congr ; assumption
+  · rintro h; congr; assumption
 #align quiver.reverse_inj Quiver.reverse_inj
 
 theorem eq_reverse_iff [HasInvolutiveReverse V] {a b : V} (f : a ⟶ b) (g : b ⟶ a) :
@@ -256,7 +256,7 @@ instance [HasReverse V] : HasReverse (Push σ)
 instance [HasInvolutiveReverse V] : HasInvolutiveReverse (Push σ)
     where
   reverse' a b F := by cases F; constructor; apply reverse; exact F_f
-  inv' a b F := by cases F; dsimp [reverse]; congr ; apply reverse_reverse
+  inv' a b F := by cases F; dsimp [reverse]; congr; apply reverse_reverse
 
 theorem of_reverse [h : HasInvolutiveReverse V] (X Y : V) (f : X ⟶ Y) :
     (reverse <| (Push.of σ).map f) = (Push.of σ).map (reverse f) :=

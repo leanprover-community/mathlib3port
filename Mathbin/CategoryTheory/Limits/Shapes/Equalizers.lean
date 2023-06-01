@@ -121,9 +121,9 @@ right.
 -/
 def walkingParallelPairOp : WalkingParallelPair ⥤ WalkingParallelPairᵒᵖ
     where
-  obj x := op <| by cases x; exacts[one, zero]
+  obj x := op <| by cases x; exacts [one, zero]
   map i j f := by cases f <;> apply Quiver.Hom.op;
-    exacts[left, right, walking_parallel_pair_hom.id _]
+    exacts [left, right, walking_parallel_pair_hom.id _]
   map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) <;> rfl
 #align category_theory.limits.walking_parallel_pair_op CategoryTheory.Limits.walkingParallelPairOp
 -/
@@ -283,7 +283,7 @@ its components. -/
 def parallelPair.ext {F G : WalkingParallelPair ⥤ C} (zero : F.obj zero ≅ G.obj zero)
     (one : F.obj one ≅ G.obj one) (left : F.map left ≫ one.Hom = zero.Hom ≫ G.map left)
     (right : F.map right ≫ one.Hom = zero.Hom ≫ G.map right) : F ≅ G :=
-  NatIso.ofComponents (by rintro ⟨j⟩; exacts[zero, one])
+  NatIso.ofComponents (by rintro ⟨j⟩; exacts [zero, one])
     (by rintro ⟨j₁⟩ ⟨j₂⟩ ⟨f⟩ <;> simp [left, right])
 #align category_theory.limits.parallel_pair.ext CategoryTheory.Limits.parallelPair.ext
 
@@ -1311,7 +1311,7 @@ def isEqualizerCompMono {c : Fork f g} (i : IsLimit c) {Z : C} (h : Y ⟶ Z) [hm
     let s' : Fork f g := Fork.ofι s.ι (by apply hm.right_cancellation <;> simp [s.condition])
     let l := Fork.IsLimit.lift' i s'.ι s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm  <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_equalizer_comp_mono CategoryTheory.Limits.isEqualizerCompMono
 -/
 
@@ -1405,7 +1405,8 @@ def isCoequalizerEpiComp {c : Cofork f g} (i : IsColimit c) {W : C} (h : W ⟶ X
       Cofork.ofπ s.π (by apply hm.left_cancellation <;> simp_rw [← category.assoc, s.condition])
     let l := Cofork.IsColimit.desc' i s'.π s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm  <;> rw [hm] <;>
+        exact l.2.symm⟩
 #align category_theory.limits.is_coequalizer_epi_comp CategoryTheory.Limits.isCoequalizerEpiComp
 -/
 

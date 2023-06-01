@@ -83,7 +83,7 @@ theorem eventually_nhdsWithin_nhdsWithin {a : α} {s : Set α} {p : α → Prop}
     (∀ᶠ y in 𝓝[s] a, ∀ᶠ x in 𝓝[s] y, p x) ↔ ∀ᶠ x in 𝓝[s] a, p x :=
   by
   refine' ⟨fun h => _, fun h => (eventually_nhds_nhdsWithin.2 h).filter_mono inf_le_left⟩
-  simp only [eventually_nhdsWithin_iff] at h⊢
+  simp only [eventually_nhdsWithin_iff] at h ⊢
   exact h.mono fun x hx hxs => (hx hxs).self_of_nhds hxs
 #align eventually_nhds_within_nhds_within eventually_nhdsWithin_nhdsWithin
 -/
@@ -175,7 +175,7 @@ theorem preimage_nhdsWithin_coinduced' {π : α → β} {s : Set β} {t : Set α
       ⟨π ⁻¹' V, mem_nhds_iff.mpr ⟨t ∩ π ⁻¹' V, inter_subset_right t (π ⁻¹' V), _, mem_sep h mem_V⟩,
         subset.trans (inter_subset_left _ _) (preimage_mono hVs)⟩
   obtain ⟨u, hu1, hu2⟩ := is_open_induced_iff.mp (isOpen_coinduced.1 V_op)
-  rw [preimage_comp] at hu2
+  rw [preimage_comp] at hu2 
   rw [Set.inter_comm, ← subtype.preimage_coe_eq_preimage_coe_iff.mp hu2]
   exact hu1.inter ht
 #align preimage_nhds_within_coinduced' preimage_nhdsWithin_coinduced'ₓ
@@ -443,7 +443,7 @@ theorem eventually_mem_of_tendsto_nhdsWithin {f : β → α} {a : α} {s : Set �
     (h : Tendsto f l (𝓝[s] a)) : ∀ᶠ i in l, f i ∈ s :=
   by
   simp_rw [nhdsWithin_eq, tendsto_infi, mem_set_of_eq, tendsto_principal, mem_inter_iff,
-    eventually_and] at h
+    eventually_and] at h 
   exact (h univ ⟨mem_univ a, isOpen_univ⟩).2
 #align eventually_mem_of_tendsto_nhds_within eventually_mem_of_tendsto_nhdsWithin
 
@@ -722,8 +722,9 @@ theorem continuousOn_iff' {f : α → β} {s : Set α} :
 continuous on the same set with respect to any finer topology on the source space. -/
 theorem ContinuousOn.mono_dom {α β : Type _} {t₁ t₂ : TopologicalSpace α} {t₃ : TopologicalSpace β}
     (h₁ : t₂ ≤ t₁) {s : Set α} {f : α → β} (h₂ : @ContinuousOn α β t₁ t₃ f s) :
-    @ContinuousOn α β t₂ t₃ f s := by
-  rw [continuousOn_iff'] at h₂⊢
+    @ContinuousOn α β t₂ t₃ f s :=
+  by
+  rw [continuousOn_iff'] at h₂ ⊢
   intro t ht
   rcases h₂ t ht with ⟨u, hu, h'u⟩
   exact ⟨u, h₁ u hu, h'u⟩
@@ -733,8 +734,9 @@ theorem ContinuousOn.mono_dom {α β : Type _} {t₁ t₂ : TopologicalSpace α}
 continuous on the same set with respect to any coarser topology on the target space. -/
 theorem ContinuousOn.mono_rng {α β : Type _} {t₁ : TopologicalSpace α} {t₂ t₃ : TopologicalSpace β}
     (h₁ : t₂ ≤ t₃) {s : Set α} {f : α → β} (h₂ : @ContinuousOn α β t₁ t₂ f s) :
-    @ContinuousOn α β t₁ t₃ f s := by
-  rw [continuousOn_iff'] at h₂⊢
+    @ContinuousOn α β t₁ t₃ f s :=
+  by
+  rw [continuousOn_iff'] at h₂ ⊢
   intro t ht
   exact h₂ t (h₁ t ht)
 #align continuous_on.mono_rng ContinuousOn.mono_rng
@@ -929,8 +931,8 @@ theorem ContinuousOn.congr_mono {f g : α → β} {s s₁ : Set α} (h : Continu
   intro x hx
   unfold ContinuousWithinAt
   have A := (h x (h₁ hx)).mono h₁
-  unfold ContinuousWithinAt at A
-  rw [← h' hx] at A
+  unfold ContinuousWithinAt at A 
+  rw [← h' hx] at A 
   exact A.congr' h'.eventually_eq_nhds_within.symm
 #align continuous_on.congr_mono ContinuousOn.congr_mono
 
@@ -1010,7 +1012,7 @@ theorem ContinuousOn.comp' {g : β → γ} {f : α → β} {s : Set α} {t : Set
 
 theorem Continuous.continuousOn {f : α → β} {s : Set α} (h : Continuous f) : ContinuousOn f s :=
   by
-  rw [continuous_iff_continuousOn_univ] at h
+  rw [continuous_iff_continuousOn_univ] at h 
   exact h.mono (subset_univ _)
 #align continuous.continuous_on Continuous.continuousOn
 
@@ -1157,7 +1159,7 @@ theorem continuousOn_of_locally_continuousOn {f : α → β} {s : Set α}
   intro x xs
   rcases h x xs with ⟨t, open_t, xt, ct⟩
   have := ct x ⟨xs, xt⟩
-  rwa [ContinuousWithinAt, ← nhdsWithin_restrict _ xt open_t] at this
+  rwa [ContinuousWithinAt, ← nhdsWithin_restrict _ xt open_t] at this 
 #align continuous_on_of_locally_continuous_on continuousOn_of_locally_continuousOn
 
 theorem continuousOn_open_of_generateFrom {β : Type _} {s : Set α} {T : Set (Set β)} {f : α → β}
@@ -1222,7 +1224,7 @@ theorem continuousWithinAt_of_not_mem_closure {f : α → β} {s : Set α} {x : 
     x ∉ closure s → ContinuousWithinAt f s x :=
   by
   intro hx
-  rw [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Classical.not_not] at hx
+  rw [mem_closure_iff_nhdsWithin_neBot, ne_bot_iff, Classical.not_not] at hx 
   rw [ContinuousWithinAt, hx]
   exact tendsto_bot
 #align continuous_within_at_of_not_mem_closure continuousWithinAt_of_not_mem_closure
@@ -1235,14 +1237,14 @@ theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidab
   intro x hx
   by_cases hx' : x ∈ frontier t
   · exact (hpf x ⟨hx, hx'⟩).piecewise_nhdsWithin (hpg x ⟨hx, hx'⟩)
-  · rw [← inter_univ s, ← union_compl_self t, inter_union_distrib_left] at hx⊢
+  · rw [← inter_univ s, ← union_compl_self t, inter_union_distrib_left] at hx ⊢
     cases hx
     · apply ContinuousWithinAt.union
       ·
         exact
           (hf x hx).congr (fun y hy => piecewise_eq_of_mem _ _ _ hy.2)
             (piecewise_eq_of_mem _ _ _ hx.2)
-      · have : x ∉ closure (tᶜ) := fun h => hx' ⟨subset_closure hx.2, by rwa [closure_compl] at h⟩
+      · have : x ∉ closure (tᶜ) := fun h => hx' ⟨subset_closure hx.2, by rwa [closure_compl] at h ⟩
         exact
           continuousWithinAt_of_not_mem_closure fun h =>
             this (closure_inter_subset_inter_closure _ _ h).2
@@ -1286,7 +1288,7 @@ theorem ContinuousOn.if {α β : Type _} [TopologicalSpace α] [TopologicalSpace
     simp only [hp a ha, if_t_t]
     apply tendsto_nhdsWithin_mono_left (inter_subset_inter_right s subset_closure)
     rcases ha with ⟨has, ⟨_, ha⟩⟩
-    rw [← mem_compl_iff, ← closure_compl] at ha
+    rw [← mem_compl_iff, ← closure_compl] at ha 
     apply hg a ⟨has, ha⟩
   · exact hf.mono (inter_subset_inter_right s subset_closure)
   · exact hg.mono (inter_subset_inter_right s subset_closure)

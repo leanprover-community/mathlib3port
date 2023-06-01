@@ -67,10 +67,10 @@ theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
   rintro a ha b hb hab
   have h : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v :=
     by
-    dsimp at hab
+    dsimp at hab 
     rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm,
-    hb.1.symm.sup_sdiff_cancel_right, sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h
+    hb.1.symm.sup_sdiff_cancel_right, sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h 
 #align sup_sdiff_inj_on sup_sdiff_injOn
 
 -- The namespace is here to distinguish from other compressions.
@@ -156,7 +156,7 @@ theorem compression_self (u : α) (s : Finset α) : 𝓒 u u s = s :=
   · ext a
     rw [mem_filter, compress_self, and_self_iff]
   · refine' eq_empty_of_forall_not_mem fun a ha => _
-    simp_rw [mem_filter, mem_image, compress_self] at ha
+    simp_rw [mem_filter, mem_image, compress_self] at ha 
     obtain ⟨⟨b, hb, rfl⟩, hb'⟩ := ha
     exact hb' hb
 #align uv.compression_self UV.compression_self
@@ -212,7 +212,7 @@ theorem compress_mem_compression (ha : a ∈ s) : compress u v a ∈ 𝓒 u v s 
 -- This is a special case of `compress_mem_compression` once we have `compression_idem`.
 theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : compress u v a ∈ 𝓒 u v s :=
   by
-  rw [mem_compression] at ha⊢
+  rw [mem_compression] at ha ⊢
   simp only [compress_idem, exists_prop]
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact Or.inl ⟨ha, ha⟩
@@ -242,12 +242,12 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
   · rw [disjoint_iff_inter_eq_empty]
     exact filter_inter_filter_neg_eq _ _ _
   intro a ha b hb hab
-  dsimp at hab
-  rw [mem_coe, mem_filter, Function.comp_apply] at ha hb
-  rw [compress] at ha hab
-  split_ifs  at ha hab with has
-  · rw [compress] at hb hab
-    split_ifs  at hb hab with hbs
+  dsimp at hab 
+  rw [mem_coe, mem_filter, Function.comp_apply] at ha hb 
+  rw [compress] at ha hab 
+  split_ifs  at ha hab  with has
+  · rw [compress] at hb hab 
+    split_ifs  at hb hab  with hbs
     · exact sup_sdiff_injOn u v has hbs hab
     · exact (hb.2 hb.1).elim
   · exact (ha.2 ha.1).elim
@@ -256,11 +256,11 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
 
 theorem le_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) : u ≤ a :=
   by
-  rw [mem_compression] at h
+  rw [mem_compression] at h 
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
-  unfold compress at hba
-  split_ifs  at hba
+  unfold compress at hba 
+  split_ifs  at hba 
   · rw [← hba, le_sdiff]
     exact ⟨le_sup_right, h.1.mono_right h.2⟩
   · cases ne_of_mem_of_not_mem hb ha hba
@@ -268,11 +268,11 @@ theorem le_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
 
 theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) : Disjoint v a :=
   by
-  rw [mem_compression] at h
+  rw [mem_compression] at h 
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
-  unfold compress at hba
-  split_ifs  at hba
+  unfold compress at hba 
+  split_ifs  at hba 
   · rw [← hba]
     exact disjoint_sdiff_self_right
   · cases ne_of_mem_of_not_mem hb ha hba
@@ -280,11 +280,11 @@ theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a �
 
 theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
     (a ⊔ v) \ u ∈ s := by
-  rw [mem_compression] at h
+  rw [mem_compression] at h 
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
-  unfold compress at hba
-  split_ifs  at hba
+  unfold compress at hba 
+  split_ifs  at hba 
   ·
     rwa [← hba, sdiff_sup_cancel (le_sup_of_le_left h.2), sup_sdiff_right_self,
       h.1.symm.sdiff_eq_left]
@@ -296,12 +296,12 @@ original family. -/
 theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hua : Disjoint u a) :
     (a ⊔ u) \ v ∈ s :=
   by
-  rw [mem_compression, compress_of_disjoint_of_le hua hva] at ha
+  rw [mem_compression, compress_of_disjoint_of_le hua hva] at ha 
   obtain ⟨_, ha⟩ | ⟨_, b, hb, rfl⟩ := ha
   · exact ha
   have hu : u = ⊥ :=
     by
-    suffices Disjoint u (u \ v) by rwa [(hua.mono_right hva).sdiff_eq_left, disjoint_self] at this
+    suffices Disjoint u (u \ v) by rwa [(hua.mono_right hva).sdiff_eq_left, disjoint_self] at this 
     refine' hua.mono_right _
     rw [← compress_idem, compress_of_disjoint_of_le hua hva]
     exact sdiff_le_sdiff_right le_sup_right
@@ -317,12 +317,12 @@ theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a)
 family. -/
 theorem mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hvu : v = ⊥ → u = ⊥) : a ∈ s :=
   by
-  rw [mem_compression] at ha
+  rw [mem_compression] at ha 
   obtain ha | ⟨_, b, hb, h⟩ := ha
   · exact ha.1
-  unfold compress at h
-  split_ifs  at h
-  · rw [← h, le_sdiff_iff] at hva
+  unfold compress at h 
+  split_ifs  at h 
+  · rw [← h, le_sdiff_iff] at hva 
     rwa [← h, hvu hva, hva, sup_bot_eq, sdiff_bot]
   · rwa [← h]
 #align uv.mem_of_mem_compression UV.mem_of_mem_compression
@@ -371,7 +371,7 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
     rw [compress]
     split_ifs with huvs; swap
     · exact hs
-    rw [mem_shadow_iff] at hs'
+    rw [mem_shadow_iff] at hs' 
     obtain ⟨t, Ht, a, hat, rfl⟩ := hs'
     have hav : a ∉ v := not_mem_mono huvs.2 (not_mem_erase a t)
     have hvt : v ≤ t := huvs.2.trans (erase_subset _ t)
@@ -379,12 +379,12 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
     by_cases hau : a ∈ u
     · obtain ⟨b, hbv, Hcomp⟩ := huv a hau
       refine' mem_shadow_iff_insert_mem.2 ⟨b, not_mem_sdiff_of_mem_right hbv, _⟩
-      rw [← Hcomp.eq] at ht
+      rw [← Hcomp.eq] at ht 
       have hsb :=
         sup_sdiff_mem_of_mem_compression ht ((erase_subset _ _).trans hvt)
           (disjoint_erase_comm.2 huvs.1)
       rwa [sup_eq_union, sdiff_erase (mem_union_left _ <| hvt hbv), union_erase_of_mem hat, ←
-        erase_union_of_mem hau] at hsb
+        erase_union_of_mem hau] at hsb 
     · refine'
         mem_shadow_iff.2
           ⟨(t ⊔ u) \ v,
@@ -452,7 +452,7 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
       sdiff_union_of_subset (hus.trans <| subset_union_left _ _),
       sdiff_erase (mem_union_right _ ‹z ∈ v›), union_sdiff_cancel_right hsv]
   -- If `w ∉ u`, we contradict `m` again
-  rw [mem_sdiff, ← not_imp, Classical.not_not] at hwB
+  rw [mem_sdiff, ← not_imp, Classical.not_not] at hwB 
   apply m w (hwu ∘ hwB ∘ mem_union_left _)
   have : (insert w ((s ∪ v) \ u) ∪ u) \ v ∈ 𝒜 :=
     sup_sdiff_mem_of_mem_compression ‹insert w ((s ∪ v) \ u) ∈ 𝒜'› ‹_›

@@ -57,7 +57,7 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
         _ = 0 := zero_comp
         
   HasLimit.mk
-    { Cone := PullbackCone.mk a' b' <| by simp at ha' hb'; rw [ha', hb']
+    { Cone := PullbackCone.mk a' b' <| by simp at ha' hb' ; rw [ha', hb']
       IsLimit :=
         PullbackCone.IsLimit.mk _
           (fun s =>
@@ -79,13 +79,13 @@ irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a
                   _ = 0 ≫ Limits.prod.snd := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_mono a).1 <| by rw [kernel_fork.ι_of_ι] at ha';
+            (cancel_mono a).1 <| by rw [kernel_fork.ι_of_ι] at ha' ;
               simp [ha', pullback_cone.condition s])
-          (fun s => (cancel_mono b).1 <| by rw [kernel_fork.ι_of_ι] at hb'; simp [hb'])
+          (fun s => (cancel_mono b).1 <| by rw [kernel_fork.ι_of_ι] at hb' ; simp [hb'])
           fun s m h₁ h₂ =>
           (cancel_mono (kernel.ι (prod.lift f g))).1 <|
             calc
-              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a := by congr ; exact ha'.symm
+              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a := by congr; exact ha'.symm
               _ = PullbackCone.fst s ≫ a := by rw [← category.assoc, h₁]
               _ = PullbackCone.snd s ≫ b := (PullbackCone.condition s)
               _ =
@@ -163,7 +163,7 @@ theorem epi_of_zero_cokernel {X Y : C} (f : X ⟶ Y) (Z : C)
     obtain ⟨m, hm⟩ := equalizer.lift' f huv
     have hwf : f ≫ w = 0 := by rw [← hm, category.assoc, hw, comp_zero]
     obtain ⟨n, hn⟩ := cokernel_cofork.is_colimit.desc' l _ hwf
-    rw [cofork.π_of_π, zero_comp] at hn
+    rw [cofork.π_of_π, zero_comp] at hn 
     have : is_iso (equalizer.ι u v) := by apply is_iso_limit_cone_parallel_pair_of_eq hn.symm hl
     apply (cancel_epi (equalizer.ι u v)).1
     exact equalizer.condition _ _⟩
@@ -218,7 +218,7 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
         _ = 0 := HasZeroMorphisms.comp_zero _ _
         
   HasColimit.mk
-    { Cocone := PushoutCocone.mk a' b' <| by simp only [cofork.π_of_π] at ha' hb'; rw [ha', hb']
+    { Cocone := PushoutCocone.mk a' b' <| by simp only [cofork.π_of_π] at ha' hb' ; rw [ha', hb']
       IsColimit :=
         PushoutCocone.IsColimit.mk _
           (fun s =>
@@ -240,14 +240,14 @@ irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [
                   _ = coprod.inr ≫ 0 := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_epi a).1 <| by rw [cokernel_cofork.π_of_π] at ha';
+            (cancel_epi a).1 <| by rw [cokernel_cofork.π_of_π] at ha' ;
               simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
-            (cancel_epi b).1 <| by rw [cokernel_cofork.π_of_π] at hb'; simp [reassoc_of hb'])
+            (cancel_epi b).1 <| by rw [cokernel_cofork.π_of_π] at hb' ; simp [reassoc_of hb'])
           fun s m h₁ h₂ =>
           (cancel_epi (cokernel.π (coprod.desc f g))).1 <|
             calc
-              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m := by congr ; exact ha'.symm
+              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m := by congr; exact ha'.symm
               _ = a ≫ PushoutCocone.inl s := by rw [category.assoc, h₁]
               _ = b ≫ PushoutCocone.inr s := (PushoutCocone.condition s)
               _ =
@@ -327,7 +327,7 @@ theorem mono_of_zero_kernel {X Y : C} (f : X ⟶ Y) (Z : C)
     obtain ⟨m, hm⟩ := coequalizer.desc' f huv
     have hwf : w ≫ f = 0 := by rw [← hm, reassoc_of hw, zero_comp]
     obtain ⟨n, hn⟩ := kernel_fork.is_limit.lift' l _ hwf
-    rw [fork.ι_of_ι, has_zero_morphisms.comp_zero] at hn
+    rw [fork.ι_of_ι, has_zero_morphisms.comp_zero] at hn 
     have : is_iso (coequalizer.π u v) := by
       apply is_iso_colimit_cocone_parallel_pair_of_eq hn.symm hl
     apply (cancel_mono (coequalizer.π u v)).1

@@ -155,25 +155,25 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     suffices s.bUnion tᶜ.card ≤ sᶜ.card
       by
       -- Rephrase in terms of complements (uses `h`)
-      rw [Finset.card_compl, Finset.card_compl, tsub_le_iff_left] at this
+      rw [Finset.card_compl, Finset.card_compl, tsub_le_iff_left] at this 
       replace := h.trans this
       rwa [← add_tsub_assoc_of_le s.card_le_univ, le_tsub_iff_left (le_add_left s.card_le_univ),
-        add_le_add_iff_right] at this
+        add_le_add_iff_right] at this 
     have hs₂ : s.bUnion tᶜ.card ≤ 1 :=
       by
       -- At most one line through two points of `s`
       refine' finset.card_le_one_iff.mpr fun p₁ p₂ hp₁ hp₂ => _
       simp_rw [Finset.mem_compl, Finset.mem_biUnion, exists_prop, not_exists, not_and,
-        Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂
+        Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂ 
       obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
         finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
       exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
     by_cases hs₃ : sᶜ.card = 0
     · rw [hs₃, le_zero_iff]
       rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
-        Finset.card_eq_iff_eq_univ] at hs₃⊢
+        Finset.card_eq_iff_eq_univ] at hs₃ ⊢
       rw [hs₃]
-      rw [Finset.eq_univ_iff_forall] at hs₃⊢
+      rw [Finset.eq_univ_iff_forall] at hs₃ ⊢
       exact fun p =>
         Exists.elim (exists_line p)-- If `s = univ`, then show `s.bUnion t = univ`
         fun l hl => finset.mem_bUnion.mpr ⟨l, Finset.mem_univ l, set.mem_to_finset.mpr hl⟩
@@ -207,10 +207,10 @@ theorem sum_lineCount_eq_sum_pointCount [Fintype P] [Fintype L] :
     simp only [line_count, point_count, Nat.card_eq_fintype_card, ← Fintype.card_sigma]
     apply Fintype.card_congr
     calc
-      (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
+      (Σ p, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } :=
         (Equiv.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
       _ ≃ { x : L × P // x.2 ∈ x.1 } := ((Equiv.prodComm P L).subtypeEquiv fun x => Iff.rfl)
-      _ ≃ Σl, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
+      _ ≃ Σ l, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
       
 #align configuration.sum_line_count_eq_sum_point_count Configuration.sum_lineCount_eq_sum_pointCount
 
@@ -321,8 +321,8 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
         exact ⟨l, Finset.mem_univ l, hl.symm⟩
       all_goals simp_rw [Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
     have step3 : (∑ i in sᶜ, line_count L i.1) = ∑ i in sᶜ, point_count P i.2 := by
-      rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1
-    rw [← Set.toFinset_compl] at step3
+      rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1 
+    rw [← Set.toFinset_compl] at step3 
     exact
       ((Finset.sum_eq_sum_iff_of_le fun i hi =>
               has_lines.point_count_le_line_count (set.mem_to_finset.mp hi)).mp
@@ -393,7 +393,7 @@ variable (P L)
   and which has three points in general position. -/
 class ProjectivePlane extends HasPoints P L, HasLines P L where
   exists_config :
-    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L),
+    ∃ (p₁ p₂ p₃ : P) (l₁ l₂ l₃ : L),
       p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
 #align configuration.projective_plane Configuration.ProjectivePlane
 -/
@@ -517,7 +517,7 @@ theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + or
   by
   cases nonempty_fintype L
   obtain ⟨p, -⟩ := @exists_config P L _ _
-  let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
+  let ϕ : { q // q ≠ p } ≃ Σ l : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
     { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩
       invFun := fun lq => ⟨lq.2, lq.2.2.2⟩
       left_inv := fun q => Subtype.ext rfl

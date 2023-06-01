@@ -74,7 +74,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
     intro n x δ δpos
     have : x ∈ closure (f n) := hd n x
     rcases EMetric.mem_closure_iff.1 this (δ / 2) (ENNReal.half_pos δpos) with ⟨y, ys, xy⟩
-    rw [edist_comm] at xy
+    rw [edist_comm] at xy 
     obtain ⟨r, rpos, hr⟩ : ∃ r > 0, closed_ball y r ⊆ f n :=
       nhds_basis_closed_eball.mem_iff.1 (isOpen_iff_mem_nhds.1 (ho n) y ys)
     refine' ⟨y, min (min (δ / 2) r) (B (n + 1)), _, _, fun z hz => ⟨_, _⟩⟩
@@ -190,7 +190,7 @@ instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSp
   have hK_subset : (⋂ n, K n : Set α) ⊆ U ∩ ⋂ n, f n :=
     by
     intro x hx
-    simp only [mem_inter_iff, mem_Inter] at hx⊢
+    simp only [mem_inter_iff, mem_Inter] at hx ⊢
     exact ⟨hK₀ <| hx 0, fun n => (hK_decreasing n (hx (n + 1))).1⟩
   /- Prove that `⋂ n : ℕ, K n` is not empty, as an intersection of a decreasing sequence
     of nonempty compact subsets.-/
@@ -257,7 +257,7 @@ theorem dense_iInter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsO
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print mem_residual /-
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
-theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
+theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _) (_ : t ⊆ s), IsGδ t ∧ Dense t :=
   by
   constructor
   · rw [mem_residual_iff]
@@ -342,7 +342,7 @@ theorem IsGδ.dense_iUnion_interior_of_closed [Encodable ι] {s : Set α} (hs : 
     exact id
   refine' (hd.inter_of_Gδ hs (isGδ_iInter_of_open fun i => hgo i) hgd).mono _
   rintro x ⟨hxs, hxg⟩
-  rw [mem_Inter] at hxg
+  rw [mem_Inter] at hxg 
   rcases mem_Union.1 (hU hxs) with ⟨i, hi⟩
   exact mem_Union.2 ⟨i, self_diff_frontier (f i) ▸ ⟨hi, hxg _⟩⟩
 #align is_Gδ.dense_Union_interior_of_closed IsGδ.dense_iUnion_interior_of_closed

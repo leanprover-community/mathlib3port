@@ -33,7 +33,7 @@ noncomputable section
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EMetricSpace X] (s t : Set X) :=
-  ∃ (r : _)(_ : r ≠ 0), ∀ x ∈ s, ∀ y ∈ t, r ≤ edist x y
+  ∃ (r : _) (_ : r ≠ 0), ∀ x ∈ s, ∀ y ∈ t, r ≤ edist x y
 #align is_metric_separated IsMetricSeparated
 -/
 
@@ -103,7 +103,7 @@ theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t
   by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
   refine' ⟨min r r', _, fun x hx y hy => hx.elim _ _⟩
-  · rw [← pos_iff_ne_zero] at r0 r0'⊢
+  · rw [← pos_iff_ne_zero] at r0 r0' ⊢
     exact lt_min r0 r0'
   · exact fun hx => (min_le_left _ _).trans (hr _ hx _ hy)
   · exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)

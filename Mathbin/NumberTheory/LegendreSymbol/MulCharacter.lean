@@ -82,7 +82,7 @@ structure MulChar extends MonoidHom R R' where
 #print MulCharClass /-
 /-- This is the corresponding extension of `monoid_hom_class`. -/
 class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoid R]
-  [CommMonoidWithZero R'] extends MonoidHomClass F R R' where
+    [CommMonoidWithZero R'] extends MonoidHomClass F R R' where
   map_nonunit : ∀ (χ : F) {a : R} (ha : ¬IsUnit a), χ a = 0
 #align mul_char_class MulCharClass
 -/

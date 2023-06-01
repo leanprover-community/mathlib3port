@@ -186,7 +186,7 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
     ((r * r') n : R) = r.Sum fun i ri => r'.Sum fun j rj => if i + j = n then ri * rj else 0 :=
   by
   simp only [mul_eq_dfinsupp_sum, Dfinsupp.sum_apply]
-  iterate 2 rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr ; ext
+  iterate 2 rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr; ext
   dsimp only; split_ifs
   · subst h; rw [of_eq_same]; rfl
   · rw [of_eq_of_ne _ _ _ _ h]; rfl
@@ -275,12 +275,12 @@ theorem coe_of_mul_apply_of_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h 
 
 theorem coe_mul_of_apply (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) [Decidable (i ≤ n)] :
     ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 := by split_ifs;
-  exacts[coe_mul_of_apply_of_le _ _ _ n h, coe_mul_of_apply_of_not_le _ _ _ n h]
+  exacts [coe_mul_of_apply_of_le _ _ _ n h, coe_mul_of_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_mul_of_apply DirectSum.coe_mul_of_apply
 
 theorem coe_of_mul_apply {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) [Decidable (i ≤ n)] :
     ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 := by split_ifs;
-  exacts[coe_of_mul_apply_of_le _ _ _ n h, coe_of_mul_apply_of_not_le _ _ _ n h]
+  exacts [coe_of_mul_apply_of_le _ _ _ n h, coe_of_mul_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_of_mul_apply DirectSum.coe_of_mul_apply
 
 end CanonicallyOrderedAddMonoid

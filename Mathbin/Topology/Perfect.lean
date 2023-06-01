@@ -117,7 +117,7 @@ theorem Preperfect.perfect_closure (hC : Preperfect C) : Perfect (closure C) :=
   · exact hC _ h
   have : {x}ᶜ ∩ C = C := by simp [h]
   rw [AccPt, nhdsWithin, inf_assoc, inf_principal, this]
-  rw [closure_eq_cluster_pts] at hx
+  rw [closure_eq_cluster_pts] at hx 
   exact hx
 #align preperfect.perfect_closure Preperfect.perfect_closure
 -/
@@ -161,7 +161,7 @@ theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty
   obtain ⟨x, xC, hxy⟩ : ∃ x ∈ C, x ≠ y :=
     by
     have := hC.acc _ yC
-    rw [accPt_iff_nhds] at this
+    rw [accPt_iff_nhds] at this 
     rcases this univ univ_mem with ⟨x, xC, hxy⟩
     exact ⟨x, xC.2, hxy⟩
   obtain ⟨U, xU, Uop, V, yV, Vop, hUV⟩ := exists_open_nhds_disjoint_closure hxy
@@ -215,7 +215,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
       apply xD.2
       exact mem_bUnion this xU
     by_contra h
-    push_neg  at h
+    push_neg  at h 
     exact absurd (countable.mono h (Set.countable_singleton _)) this
   · rw [inter_comm, inter_union_diff]
 #align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosed
@@ -230,8 +230,8 @@ theorem exists_perfect_nonempty_of_isClosed_of_not_countable [SecondCountableTop
   constructor
   · rw [nonempty_iff_ne_empty]
     by_contra
-    rw [h, union_empty] at VD
-    rw [VD] at hunc
+    rw [h, union_empty] at VD 
+    rw [VD] at hunc 
     contradiction
   rw [VD]
   exact subset_union_right _ _
@@ -326,7 +326,7 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
     · simp
     rw [eventually_at_top]
     refine' ⟨1, fun m (hm : 1 ≤ m) => _⟩
-    rw [Nat.one_le_iff_ne_zero] at hm
+    rw [Nat.one_le_iff_ne_zero] at hm 
     rcases Nat.exists_eq_succ_of_ne_zero hm with ⟨n, rfl⟩
     dsimp
     cases x n

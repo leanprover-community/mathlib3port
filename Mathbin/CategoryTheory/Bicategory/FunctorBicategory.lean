@@ -83,7 +83,7 @@ instance OplaxFunctor.bicategory : Bicategory (OplaxFunctor B C)
   associator F G H I := OplaxNatTrans.associator
   leftUnitor F G := OplaxNatTrans.leftUnitor
   rightUnitor F G := OplaxNatTrans.rightUnitor
-  whisker_exchange := by intros ; ext; apply whisker_exchange
+  whisker_exchange := by intros; ext; apply whisker_exchange
 #align category_theory.oplax_functor.bicategory CategoryTheory.OplaxFunctor.bicategory
 
 end CategoryTheory

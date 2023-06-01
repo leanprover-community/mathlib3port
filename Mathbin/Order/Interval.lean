@@ -359,7 +359,8 @@ We represent intervals either as `⊥` or a nonempty interval given by its endpo
 To convert intervals to the set of elements between these endpoints, use the coercion
 `interval α → set α`. -/
 def Interval (α : Type _) [LE α] :=
-  WithBot (NonemptyInterval α)deriving Inhabited, LE, OrderBot
+  WithBot (NonemptyInterval α)
+deriving Inhabited, LE, OrderBot
 #align interval Interval
 -/
 
@@ -632,7 +633,7 @@ instance : Lattice (Interval α) :=
         lift t to NonemptyInterval α using ne_bot_of_le_ne_bot WithBot.coe_ne_bot hb
         lift c to NonemptyInterval α using ne_bot_of_le_ne_bot WithBot.coe_ne_bot hc
         change _ ≤ dite _ _ _
-        simp only [WithBot.some_eq_coe, WithBot.coe_le_coe] at hb hc⊢
+        simp only [WithBot.some_eq_coe, WithBot.coe_le_coe] at hb hc ⊢
         rw [dif_pos, WithBot.coe_le_coe]
         exact ⟨sup_le hb.1 hc.1, le_inf hb.2 hc.2⟩
         exact ⟨hb.1.trans <| s.fst_le_snd.trans hc.2, hc.1.trans <| s.fst_le_snd.trans hb.2⟩ }
@@ -771,7 +772,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
               WithBot.some_le_some.2
                 ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
                   le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
-          rw [not_and_or, Classical.not_not] at h
+          rw [not_and_or, Classical.not_not] at h 
           cases h
           · exact ha _ h
           cases
@@ -787,13 +788,13 @@ theorem coe_sInf [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
   split_ifs
   · ext
     simp [WithBot.some_eq_coe, Interval.forall, h.1, ← forall_and, ← NonemptyInterval.mem_def]
-  simp_rw [not_and_or, Classical.not_not] at h
+  simp_rw [not_and_or, Classical.not_not] at h 
   cases h
   · refine' (eq_empty_of_subset_empty _).symm
     exact Inter₂_subset_of_subset _ h subset.rfl
   · refine' (not_nonempty_iff_eq_empty.1 _).symm
     rintro ⟨x, hx⟩
-    rw [mem_Inter₂] at hx
+    rw [mem_Inter₂] at hx 
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
 #align interval.coe_Inf Interval.coe_sInf
 

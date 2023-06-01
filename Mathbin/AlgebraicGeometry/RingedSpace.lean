@@ -56,7 +56,7 @@ neighborhood around `x`.
 -/
 theorem isUnit_res_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x : U)
     (h : IsUnit (X.Presheaf.germ x f)) :
-    ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) :=
+    ∃ (V : Opens X) (i : V ⟶ U) (hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) :=
   by
   obtain ⟨g', heq⟩ := h.exists_right_inv
   obtain ⟨V, hxV, g, rfl⟩ := X.presheaf.germ_exist x.1 g'
@@ -64,10 +64,10 @@ theorem isUnit_res_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x :
   have hxW : x.1 ∈ W := ⟨x.2, hxV⟩
   erw [← X.presheaf.germ_res_apply (opens.inf_le_left U V) ⟨x.1, hxW⟩ f, ←
     X.presheaf.germ_res_apply (opens.inf_le_right U V) ⟨x.1, hxW⟩ g, ← RingHom.map_mul, ←
-    RingHom.map_one (X.presheaf.germ (⟨x.1, hxW⟩ : W))] at heq
+    RingHom.map_one (X.presheaf.germ (⟨x.1, hxW⟩ : W))] at heq 
   obtain ⟨W', hxW', i₁, i₂, heq'⟩ := X.presheaf.germ_eq x.1 hxW hxW _ _ HEq
   use W', i₁ ≫ opens.inf_le_left U V, hxW'
-  rw [RingHom.map_one, RingHom.map_mul, ← comp_apply, ← X.presheaf.map_comp, ← op_comp] at heq'
+  rw [RingHom.map_one, RingHom.map_mul, ← comp_apply, ← X.presheaf.map_comp, ← op_comp] at heq' 
   exact isUnit_of_mul_eq_one _ _ heq'
 #align algebraic_geometry.RingedSpace.is_unit_res_of_is_unit_germ AlgebraicGeometry.RingedSpace.isUnit_res_of_isUnit_germ
 
@@ -162,7 +162,7 @@ theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj 
   let g := i.unop; have : i = g.op := rfl; clear_value g; subst this
   ext; constructor
   · rintro ⟨x, hx : IsUnit _, rfl⟩
-    rw [germ_res_apply] at hx
+    rw [germ_res_apply] at hx 
     exact ⟨x.2, g x, hx, rfl⟩
   · rintro ⟨hxV, x, hx, rfl⟩
     refine' ⟨⟨x, hxV⟩, (_ : IsUnit _), rfl⟩
@@ -177,7 +177,7 @@ theorem basicOpen_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.
   apply le_antisymm
   · rw [X.basic_open_res i f]; exact inf_le_right
   · have := X.basic_open_res (inv i) (X.presheaf.map i f)
-    rw [← comp_apply, ← X.presheaf.map_comp, is_iso.hom_inv_id, X.presheaf.map_id] at this
+    rw [← comp_apply, ← X.presheaf.map_comp, is_iso.hom_inv_id, X.presheaf.map_id] at this 
     erw [this]
     exact inf_le_right
 #align algebraic_geometry.RingedSpace.basic_open_res_eq AlgebraicGeometry.RingedSpace.basicOpen_res_eq

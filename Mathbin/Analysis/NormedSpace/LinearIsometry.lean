@@ -50,7 +50,7 @@ variable {R R₂ R₃ R₄ E E₂ E₃ E₄ F 𝓕 : Type _} [Semiring R] [Semir
 #print LinearIsometry /-
 /-- A `σ₁₂`-semilinear isometric embedding of a normed `R`-module into an `R₂`-module. -/
 structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SeminormedAddCommGroup E]
-  [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
+    [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ‖to_linear_map x‖ = ‖x‖
 #align linear_isometry LinearIsometry
 -/
@@ -74,9 +74,9 @@ A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ :
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
 class SemilinearIsometryClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiring R] [Semiring R₂]
-  (σ₁₂ : outParam <| R →+* R₂) (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E]
-  [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
-  SemilinearMapClass 𝓕 σ₁₂ E E₂ where
+    (σ₁₂ : outParam <| R →+* R₂) (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E]
+    [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
+    SemilinearMapClass 𝓕 σ₁₂ E E₂ where
   norm_map : ∀ (f : 𝓕) (x : E), ‖f x‖ = ‖x‖
 #align semilinear_isometry_class SemilinearIsometryClass
 -/
@@ -515,8 +515,8 @@ end Submodule
 #print LinearIsometryEquiv /-
 /-- A semilinear isometric equivalence between two normed vector spaces. -/
 structure LinearIsometryEquiv (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
-  [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
-  [Module R E] [Module R₂ E₂] extends E ≃ₛₗ[σ₁₂] E₂ where
+    [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
+    [Module R E] [Module R₂ E₂] extends E ≃ₛₗ[σ₁₂] E₂ where
   norm_map' : ∀ x, ‖to_linear_equiv x‖ = ‖x‖
 #align linear_isometry_equiv LinearIsometryEquiv
 -/
@@ -540,10 +540,10 @@ A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ :
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
 class SemilinearIsometryEquivClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiring R]
-  [Semiring R₂] (σ₁₂ : outParam <| R →+* R₂) {σ₂₁ : outParam <| R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
-  [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E]
-  [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
-  SemilinearEquivClass 𝓕 σ₁₂ E E₂ where
+    [Semiring R₂] (σ₁₂ : outParam <| R →+* R₂) {σ₂₁ : outParam <| R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
+    [RingHomInvPair σ₂₁ σ₁₂] (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E]
+    [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
+    SemilinearEquivClass 𝓕 σ₁₂ E E₂ where
   norm_map : ∀ (f : 𝓕) (x : E), ‖f x‖ = ‖x‖
 #align semilinear_isometry_equiv_class SemilinearIsometryEquivClass
 -/

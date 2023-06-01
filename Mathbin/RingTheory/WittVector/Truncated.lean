@@ -124,7 +124,7 @@ theorem out_injective : Injective (@out p n R _) :=
   by
   intro x y h
   ext i
-  rw [WittVector.ext_iff] at h
+  rw [WittVector.ext_iff] at h 
   simpa only [coeff_out] using h ↑i
 #align truncated_witt_vector.out_injective TruncatedWittVector.out_injective
 
@@ -447,7 +447,7 @@ theorem iInf_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) 
   rw [Submodule.eq_bot_iff]
   intro x hx
   ext
-  simp only [WittVector.mem_ker_truncate, Ideal.mem_iInf, WittVector.zero_coeff] at hx⊢
+  simp only [WittVector.mem_ker_truncate, Ideal.mem_iInf, WittVector.zero_coeff] at hx ⊢
   exact hx _ _ (Nat.lt_succ_self _)
 #align truncated_witt_vector.infi_ker_truncate TruncatedWittVector.iInf_ker_truncate
 

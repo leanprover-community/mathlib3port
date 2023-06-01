@@ -64,7 +64,7 @@ theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.mi
       OrderDual.toDual J ≤ m ∧ ∀ z ∈ { p : (Ideal R)ᵒᵈ | Ideal.IsPrime p ∧ I ≤ p }, m ≤ z → z = m
     by
     obtain ⟨p, h₁, h₂, h₃⟩ := this
-    simp_rw [← @eq_comm _ p] at h₃
+    simp_rw [← @eq_comm _ p] at h₃ 
     exact ⟨p, ⟨h₁, fun a b c => (h₃ a b c).le⟩, h₂⟩
   apply zorn_nonempty_partialOrder₀
   swap; · refine' ⟨show J.is_prime by infer_instance, e⟩
@@ -95,7 +95,7 @@ theorem Ideal.sInf_minimalPrimes : sInf I.minimalPrimes = I.radical :=
   rw [I.radical_eq_Inf]
   apply le_antisymm
   · intro x hx
-    rw [Ideal.mem_sInf] at hx⊢
+    rw [Ideal.mem_sInf] at hx ⊢
     rintro J ⟨e, hJ⟩
     skip
     obtain ⟨p, hp, hp'⟩ := Ideal.exists_minimalPrimes_le e
@@ -164,7 +164,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     apply H.2
     · refine' ⟨inferInstance, (ideal.mk_ker.trans e).symm.trans_le (Ideal.comap_mono bot_le)⟩
     · refine' (Ideal.comap_mono hq').trans _; rw [Ideal.comap_map_of_surjective]
-      exacts[sup_le rfl.le this, Ideal.Quotient.mk_surjective]
+      exacts [sup_le rfl.le this, Ideal.Quotient.mk_surjective]
 #align ideal.exists_comap_eq_of_mem_minimal_primes Ideal.exists_comap_eq_of_mem_minimalPrimes
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/

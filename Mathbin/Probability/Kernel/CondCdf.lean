@@ -287,16 +287,16 @@ theorem tendsto_iicSnd_atBot [FiniteMeasure ρ] {s : Set α} (hs : MeasurableSet
       ext1 x
       simp only [Rat.cast_eq_id, id.def, mem_Inter, mem_prod, mem_Iic]
       refine' ⟨fun h i => ⟨(h i).1, _⟩, fun h i => ⟨(h i).1, _⟩⟩ <;> have h' := h (-i)
-      · rw [neg_neg] at h'; exact h'.2
+      · rw [neg_neg] at h' ; exact h'.2
       · exact h'.2
-    rw [h_inter_eq] at h_neg
+    rw [h_inter_eq] at h_neg 
     have h_fun_eq : (fun r : ℚ => ρ (s ×ˢ Iic (r : ℝ))) = fun r => ρ (s ×ˢ Iic ↑(- -r)) := by
       simp_rw [neg_neg]
     rw [h_fun_eq]
     exact h_neg.comp tendsto_neg_at_bot_at_top
   refine' tendsto_measure_Inter (fun q => hs.prod measurableSet_Iic) _ ⟨0, measure_ne_top ρ _⟩
   refine' fun q r hqr => prod_subset_prod_iff.mpr (Or.inl ⟨subset_rfl, fun x hx => _⟩)
-  simp only [Rat.cast_neg, mem_Iic] at hx⊢
+  simp only [Rat.cast_neg, mem_Iic] at hx ⊢
   refine' hx.trans (neg_le_neg _)
   exact_mod_cast hqr
 #align measure_theory.measure.tendsto_Iic_snd_at_bot MeasureTheory.Measure.tendsto_iicSnd_atBot
@@ -351,7 +351,7 @@ theorem set_lintegral_preCdf_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set �
     simp only [with_density_pre_cdf ρ r, Pi.one_apply, lintegral_one, measure.restrict_apply,
       MeasurableSet.univ, univ_inter]
   · rw [(_ : (1 : α → ℝ≥0∞) = fun _ => 1)]
-    exacts[measurable_const, rfl]
+    exacts [measurable_const, rfl]
 #align probability_theory.set_lintegral_pre_cdf_fst ProbabilityTheory.set_lintegral_preCdf_fst
 
 theorem monotone_preCdf (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] :
@@ -435,7 +435,7 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] :
         ∃ l, tendsto (fun r => pre_cdf ρ r a) at_top (𝓝 l) :=
       tendsto_of_monotone ha_mono
     cases' h_tendsto with h_absurd h_tendsto
-    · rw [Monotone.tendsto_atTop_atTop_iff ha_mono] at h_absurd
+    · rw [Monotone.tendsto_atTop_atTop_iff ha_mono] at h_absurd 
       obtain ⟨r, hr⟩ := h_absurd 2
       exact absurd (hr.trans (ha_le_one r)) ennreal.one_lt_two.not_le
     · exact h_tendsto
@@ -460,7 +460,7 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] :
     suffices ∀ᵐ a ∂ρ.fst, F a = 1
       by
       filter_upwards [h_tendsto_ℚ, this]with a ha_tendsto ha_eq
-      rwa [ha_eq] at ha_tendsto
+      rwa [ha_eq] at ha_tendsto 
     -- since `F` is at most 1, proving that its integral is the same as the integral of 1 will tell
     -- us that `F` is 1 a.e.
     have h_lintegral_eq : (∫⁻ a, F a ∂ρ.fst) = ∫⁻ a, 1 ∂ρ.fst :=
@@ -491,9 +491,9 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] :
         _ = ρ univ := measure.fst_univ
         _ ≠ ∞ := measure_ne_top ρ _
         
-    rw [lintegral_eq_zero_iff' (ae_measurable_const.sub hF_ae_meas)] at this
+    rw [lintegral_eq_zero_iff' (ae_measurable_const.sub hF_ae_meas)] at this 
     filter_upwards [this, hF_le_one]with ha h_one_sub_eq_zero h_le_one
-    rw [Pi.zero_apply, tsub_eq_zero_iff_le] at h_one_sub_eq_zero
+    rw [Pi.zero_apply, tsub_eq_zero_iff_le] at h_one_sub_eq_zero 
     exact le_antisymm h_le_one h_one_sub_eq_zero
 #align probability_theory.tendsto_pre_cdf_at_top_one ProbabilityTheory.tendsto_preCdf_atTop_one
 
@@ -536,9 +536,9 @@ theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] 
         by
         refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto
         exact measurable_pre_cdf.ae_measurable
-      rw [lintegral_eq_zero_iff' hF_ae_meas] at h_lintegral_eq
+      rw [lintegral_eq_zero_iff' hF_ae_meas] at h_lintegral_eq 
       filter_upwards [h_tendsto, h_lintegral_eq]with a ha_tendsto ha_eq
-      rwa [ha_eq] at ha_tendsto
+      rwa [ha_eq] at ha_tendsto 
     have h_lintegral :
       tendsto (fun r => ∫⁻ a, pre_cdf ρ (-r) a ∂ρ.fst) at_top (𝓝 (∫⁻ a, F a ∂ρ.fst)) :=
       by
@@ -619,7 +619,7 @@ theorem measurableSet_condCdfSet (ρ : Measure (α × ℝ)) : MeasurableSet (con
 
 theorem hasCondCdf_of_mem_condCdfSet {ρ : Measure (α × ℝ)} {a : α} (h : a ∈ condCdfSet ρ) :
     HasCondCdf ρ a := by
-  rw [cond_cdf_set, mem_compl_iff] at h
+  rw [cond_cdf_set, mem_compl_iff] at h 
   have h_ss := subset_to_measurable ρ.fst { b | ¬has_cond_cdf ρ b }
   by_contra ha
   exact h (h_ss ha)
@@ -664,7 +664,7 @@ theorem monotone_condCdfRat (ρ : Measure (α × ℝ)) (a : α) : Monotone (cond
     intro x y hxy
     dsimp only
     split_ifs
-    exacts[le_rfl, zero_le_one, absurd (hxy.trans_lt h_2) h_1, le_rfl]
+    exacts [le_rfl, zero_le_one, absurd (hxy.trans_lt h_2) h_1, le_rfl]
 #align probability_theory.monotone_cond_cdf_rat ProbabilityTheory.monotone_condCdfRat
 
 theorem measurable_condCdfRat (ρ : Measure (α × ℝ)) (q : ℚ) :
@@ -677,7 +677,7 @@ theorem measurable_condCdfRat (ρ : Measure (α × ℝ)) (q : ℚ) :
 #align probability_theory.measurable_cond_cdf_rat ProbabilityTheory.measurable_condCdfRat
 
 theorem condCdfRat_nonneg (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : 0 ≤ condCdfRat ρ a r := by
-  unfold cond_cdf_rat; split_ifs; exacts[ENNReal.toReal_nonneg, le_rfl, zero_le_one]
+  unfold cond_cdf_rat; split_ifs; exacts [ENNReal.toReal_nonneg, le_rfl, zero_le_one]
 #align probability_theory.cond_cdf_rat_nonneg ProbabilityTheory.condCdfRat_nonneg
 
 theorem condCdfRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCdfRat ρ a r ≤ 1 :=
@@ -687,7 +687,7 @@ theorem condCdfRat_le_one (ρ : Measure (α × ℝ)) (a : α) (r : ℚ) : condCd
   · refine' ENNReal.toReal_le_of_le_ofReal zero_le_one _
     rw [ENNReal.ofReal_one]
     exact (has_cond_cdf_of_mem_cond_cdf_set h).le_one r
-  exacts[zero_le_one, le_rfl]
+  exacts [zero_le_one, le_rfl]
 #align probability_theory.cond_cdf_rat_le_one ProbabilityTheory.condCdfRat_le_one
 
 theorem tendsto_condCdfRat_atBot (ρ : Measure (α × ℝ)) (a : α) :
@@ -751,7 +751,7 @@ theorem inf_gt_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (t : ℚ) :
       obtain ⟨y, rfl⟩ := mem_range.mpr hx
       dsimp only
       split_ifs
-      exacts[le_rfl, zero_le_one]
+      exacts [le_rfl, zero_le_one]
     split_ifs with h h
     · refine' le_antisymm _ (le_ciInf fun x => _)
       · obtain ⟨q, htq, hq_neg⟩ : ∃ q, t < q ∧ q < 0 :=
@@ -763,14 +763,14 @@ theorem inf_gt_condCdfRat (ρ : Measure (α × ℝ)) (a : α) (t : ℚ) :
         rw [if_pos]
         rwa [Subtype.coe_mk]
       · split_ifs
-        exacts[le_rfl, zero_le_one]
+        exacts [le_rfl, zero_le_one]
     · refine' le_antisymm _ _
       · refine' (ciInf_le h_bdd ⟨t + 1, lt_add_one t⟩).trans _
         split_ifs
-        exacts[zero_le_one, le_rfl]
+        exacts [zero_le_one, le_rfl]
       · refine' le_ciInf fun x => _
         rw [if_neg]
-        rw [not_lt] at h⊢
+        rw [not_lt] at h ⊢
         exact h.trans (mem_Ioi.mp x.prop).le
 #align probability_theory.inf_gt_cond_cdf_rat ProbabilityTheory.inf_gt_condCdfRat
 
@@ -893,7 +893,7 @@ theorem tendsto_condCdf_atBot (ρ : Measure (α × ℝ)) (a : α) : Tendsto (con
     refine' fun q => ⟨q - 1, fun y hy => _⟩
     have h_le : ↑(qs y) ≤ (q : ℝ) - 1 + 1 :=
       (h_exists y).choose_spec.2.le.trans (add_le_add hy le_rfl)
-    rw [sub_add_cancel] at h_le
+    rw [sub_add_cancel] at h_le 
     exact_mod_cast h_le
   refine'
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
@@ -912,7 +912,7 @@ theorem tendsto_condCdf_atTop (ρ : Measure (α × ℝ)) (a : α) : Tendsto (con
     rw [tendsto_at_top_at_top]
     refine' fun q => ⟨q + 1, fun y hy => _⟩
     have h_le : y - 1 ≤ qs y := (h_exists y).choose_spec.1.le
-    rw [sub_le_iff_le_add] at h_le
+    rw [sub_le_iff_le_add] at h_le 
     exact_mod_cast le_of_add_le_add_right (hy.trans h_le)
   refine'
     tendsto_of_tendsto_of_tendsto_of_le_of_le ((tendsto_cond_cdf_rat_at_top ρ a).comp hqs_tendsto)
@@ -1049,7 +1049,7 @@ theorem set_integral_condCdf (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] (x : 
     (hs : MeasurableSet s) : (∫ a in s, condCdf ρ a x ∂ρ.fst) = (ρ (s ×ˢ Iic x)).toReal :=
   by
   have h := set_lintegral_cond_cdf ρ x hs
-  rw [← of_real_integral_eq_lintegral_of_real] at h
+  rw [← of_real_integral_eq_lintegral_of_real] at h 
   · rw [← h, ENNReal.toReal_ofReal]
     exact integral_nonneg fun _ => cond_cdf_nonneg _ _ _
   · exact (integrable_cond_cdf _ _).IntegrableOn

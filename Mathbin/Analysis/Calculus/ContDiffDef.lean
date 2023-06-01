@@ -168,8 +168,8 @@ open scoped Classical BigOperators NNReal Topology Filter
 -- mathport name: «expr∞»
 local notation "∞" => (⊤ : ℕ∞)
 
-attribute [local instance 1001]
-  NormedAddCommGroup.toAddCommGroup NormedSpace.toModule' AddCommGroup.toAddCommMonoid
+attribute [local instance 1001] NormedAddCommGroup.toAddCommGroup NormedSpace.toModule'
+  AddCommGroup.toAddCommMonoid
 
 open Set Fin Filter Function
 
@@ -187,7 +187,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a predicate analogous to
 `has_fderiv_within_at` but for higher order derivatives. -/
 structure HasFTaylorSeriesUpToOn (n : ℕ∞) (f : E → F) (p : E → FormalMultilinearSeries 𝕜 E F)
-  (s : Set E) : Prop where
+    (s : Set E) : Prop where
   zero_eq : ∀ x ∈ s, (p x 0).uncurry0 = f x
   fderivWithin :
     ∀ (m : ℕ) (hm : (m : ℕ∞) < n),
@@ -232,7 +232,7 @@ theorem HasFTaylorSeriesUpToOn.continuousOn (h : HasFTaylorSeriesUpToOn n f p s)
     ContinuousOn f s :=
   by
   have := (h.cont 0 bot_le).congr fun x hx => (h.zero_eq' hx).symm
-  rwa [LinearIsometryEquiv.comp_continuousOn_iff] at this
+  rwa [LinearIsometryEquiv.comp_continuousOn_iff] at this 
 #align has_ftaylor_series_up_to_on.continuous_on HasFTaylorSeriesUpToOn.continuousOn
 -/
 
@@ -376,8 +376,8 @@ theorem hasFTaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
     refine' ⟨H.zero_eq, H.fderiv_within 0 (WithTop.coe_lt_coe.2 (Nat.succ_pos n)), _⟩
     constructor
     · intro x hx; rfl
-    · intro m(hm : (m : ℕ∞) < n)x(hx : x ∈ s)
-      have A : (m.succ : ℕ∞) < n.succ := by rw [WithTop.coe_lt_coe] at hm⊢;
+    · intro m (hm : (m : ℕ∞) < n) x (hx : x ∈ s)
+      have A : (m.succ : ℕ∞) < n.succ := by rw [WithTop.coe_lt_coe] at hm ⊢;
         exact nat.lt_succ_iff.mpr hm
       change
         HasFDerivWithinAt
@@ -390,8 +390,8 @@ theorem hasFTaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
         (p x m.succ.succ) (snoc (cons y (init v)) (v (last _))) =
           (p x (Nat.succ (Nat.succ m))) (cons y v)
       rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
-    · intro m(hm : (m : ℕ∞) ≤ n)
-      have A : (m.succ : ℕ∞) ≤ n.succ := by rw [WithTop.coe_le_coe] at hm⊢;
+    · intro m (hm : (m : ℕ∞) ≤ n)
+      have A : (m.succ : ℕ∞) ≤ n.succ := by rw [WithTop.coe_le_coe] at hm ⊢;
         exact nat.pred_le_iff.mp hm
       change
         ContinuousOn
@@ -401,33 +401,33 @@ theorem hasFTaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
   · rintro ⟨Hzero_eq, Hfderiv_zero, Htaylor⟩
     constructor
     · exact Hzero_eq
-    · intro m(hm : (m : ℕ∞) < n.succ)x(hx : x ∈ s)
+    · intro m (hm : (m : ℕ∞) < n.succ) x (hx : x ∈ s)
       cases m
       · exact Hfderiv_zero x hx
-      · have A : (m : ℕ∞) < n := by rw [WithTop.coe_lt_coe] at hm⊢; exact Nat.lt_of_succ_lt_succ hm
+      · have A : (m : ℕ∞) < n := by rw [WithTop.coe_lt_coe] at hm ⊢; exact Nat.lt_of_succ_lt_succ hm
         have :
           HasFDerivWithinAt
             ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ)
             ((p x).shift m.succ).curryLeft s x :=
           Htaylor.fderiv_within _ A x hx
-        rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff'] at this
+        rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff'] at this 
         convert this
         ext (y v)
         change
           (p x (Nat.succ (Nat.succ m))) (cons y v) =
             (p x m.succ.succ) (snoc (cons y (init v)) (v (last _)))
         rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
-    · intro m(hm : (m : ℕ∞) ≤ n.succ)
+    · intro m (hm : (m : ℕ∞) ≤ n.succ)
       cases m
       · have : DifferentiableOn 𝕜 (fun x => p x 0) s := fun x hx =>
           (Hfderiv_zero x hx).DifferentiableWithinAt
         exact this.continuous_on
-      · have A : (m : ℕ∞) ≤ n := by rw [WithTop.coe_le_coe] at hm⊢; exact nat.lt_succ_iff.mp hm
+      · have A : (m : ℕ∞) ≤ n := by rw [WithTop.coe_le_coe] at hm ⊢; exact nat.lt_succ_iff.mp hm
         have :
           ContinuousOn
             ((continuousMultilinearCurryRightEquiv' 𝕜 m E F).symm ∘ fun y : E => p y m.succ) s :=
           Htaylor.cont _ A
-        rwa [LinearIsometryEquiv.comp_continuousOn_iff] at this
+        rwa [LinearIsometryEquiv.comp_continuousOn_iff] at this 
 #align has_ftaylor_series_up_to_on_succ_iff_right hasFTaylorSeriesUpToOn_succ_iff_right
 
 /-! ### Smooth functions within a set around a point -/
@@ -480,7 +480,7 @@ theorem ContDiffWithinAt.continuousWithinAt (h : ContDiffWithinAt 𝕜 n f s x) 
     ContinuousWithinAt f s x :=
   by
   rcases h 0 bot_le with ⟨u, hu, p, H⟩
-  rw [mem_nhdsWithin_insert] at hu
+  rw [mem_nhdsWithin_insert] at hu 
   exact (H.continuous_on.continuous_within_at hu.1).mono_of_mem hu.2
 #align cont_diff_within_at.continuous_within_at ContDiffWithinAt.continuousWithinAt
 -/
@@ -601,7 +601,7 @@ theorem ContDiffWithinAt.differentiable_within_at' (h : ContDiffWithinAt 𝕜 n 
   by
   rcases h 1 hn with ⟨u, hu, p, H⟩
   rcases mem_nhdsWithin.1 hu with ⟨t, t_open, xt, tu⟩
-  rw [inter_comm] at tu
+  rw [inter_comm] at tu 
   have := ((H.mono tu).DifferentiableOn le_rfl) x ⟨mem_insert x s, xt⟩
   exact (differentiableWithinAt_inter (IsOpen.mem_nhds t_open xt)).1 this
 #align cont_diff_within_at.differentiable_within_at' ContDiffWithinAt.differentiable_within_at'
@@ -629,7 +629,7 @@ theorem contDiffWithinAt_succ_iff_hasFDerivWithinAt {n : ℕ} :
     · convert self_mem_nhdsWithin
       have : x ∈ insert x s := by simp
       exact insert_eq_of_mem (mem_of_mem_nhdsWithin this hu)
-    · rw [hasFTaylorSeriesUpToOn_succ_iff_right] at Hp
+    · rw [hasFTaylorSeriesUpToOn_succ_iff_right] at Hp 
       exact Hp.2.2.of_le hm
   · rintro ⟨u, hu, f', f'_eq_deriv, Hf'⟩
     rw [contDiffWithinAt_nat]
@@ -677,7 +677,7 @@ theorem contDiffWithinAt_succ_iff_hasFDerivWithinAt' {n : ℕ} :
   refine' ⟨fun hf => _, _⟩
   · obtain ⟨u, hu, f', huf', hf'⟩ := cont_diff_within_at_succ_iff_has_fderiv_within_at.mp hf
     obtain ⟨w, hw, hxw, hwu⟩ := mem_nhds_within.mp hu
-    rw [inter_comm] at hwu
+    rw [inter_comm] at hwu 
     refine'
       ⟨insert x s ∩ w, inter_mem_nhdsWithin _ (hw.mem_nhds hxw), inter_subset_left _ _, f',
         fun y hy => _, _⟩
@@ -733,7 +733,7 @@ theorem ContDiffWithinAt.contDiffOn' {m : ℕ} (hm : (m : ℕ∞) ≤ n) (h : Co
   by
   rcases h m hm with ⟨t, ht, p, hp⟩
   rcases mem_nhdsWithin.1 ht with ⟨u, huo, hxu, hut⟩
-  rw [inter_comm] at hut
+  rw [inter_comm] at hut 
   exact ⟨u, huo, hxu, (hp.mono hut).ContDiffOn⟩
 #align cont_diff_within_at.cont_diff_on' ContDiffWithinAt.contDiffOn'
 
@@ -782,7 +782,7 @@ theorem contDiffOn_all_iff_nat : (∀ n, ContDiffOn 𝕜 n f s) ↔ ∀ n : ℕ,
   by
   refine' ⟨fun H n => H n, _⟩
   rintro H (_ | n)
-  exacts[contDiffOn_top.2 H, H n]
+  exacts [contDiffOn_top.2 H, H n]
 #align cont_diff_on_all_iff_nat contDiffOn_all_iff_nat
 -/
 
@@ -845,7 +845,7 @@ theorem contDiffOn_succ_iff_hasFDerivWithinAt {n : ℕ} :
     refine'
       ⟨u, hu, fun y => (continuousMultilinearCurryFin1 𝕜 E F) (p y 1), fun y hy =>
         Hp.has_fderiv_within_at (WithTop.coe_le_coe.2 (Nat.le_add_left 1 n)) hy, _⟩
-    rw [hasFTaylorSeriesUpToOn_succ_iff_right] at Hp
+    rw [hasFTaylorSeriesUpToOn_succ_iff_right] at Hp 
     intro z hz m hm
     refine' ⟨u, _, fun x : E => (p x).shift, Hp.2.2.of_le hm⟩
     convert self_mem_nhdsWithin
@@ -1118,7 +1118,7 @@ theorem contDiffWithinAt_zero (hx : x ∈ s) :
     obtain ⟨u, H, p, hp⟩ := h 0 (by norm_num)
     refine' ⟨u, _, _⟩
     · simpa [hx] using H
-    · simp only [WithTop.coe_zero, hasFTaylorSeriesUpToOn_zero_iff] at hp
+    · simp only [WithTop.coe_zero, hasFTaylorSeriesUpToOn_zero_iff] at hp 
       exact hp.1.mono (inter_subset_right s u)
   · rintro ⟨u, H, hu⟩
     rw [← contDiffWithinAt_inter' H]
@@ -1156,9 +1156,9 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
       iteratedFDerivWithin_zero_apply]
   · intro m hm x hx
     rcases(h x hx) m.succ (ENat.add_one_le_of_lt hm) with ⟨u, hu, p, Hp⟩
-    rw [insert_eq_of_mem hx] at hu
+    rw [insert_eq_of_mem hx] at hu 
     rcases mem_nhdsWithin.1 hu with ⟨o, o_open, xo, ho⟩
-    rw [inter_comm] at ho
+    rw [inter_comm] at ho 
     have : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ :=
       by
       change p x m.succ = iteratedFDerivWithin 𝕜 m.succ f s x
@@ -1181,8 +1181,8 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
     intro x hx
     rcases h x hx m hm with ⟨u, hu, p, Hp⟩
     rcases mem_nhdsWithin.1 hu with ⟨o, o_open, xo, ho⟩
-    rw [insert_eq_of_mem hx] at ho
-    rw [inter_comm] at ho
+    rw [insert_eq_of_mem hx] at ho 
+    rw [inter_comm] at ho 
     refine' ⟨o, o_open, xo, _⟩
     have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m :=
       by
@@ -1244,13 +1244,13 @@ theorem ContDiffWithinAt.differentiableWithinAt_iteratedFDerivWithin {m : ℕ}
     simp only [set_eventually_eq_iff_inf_principal, ← nhdsWithin_inter']
     rw [← inter_assoc, nhdsWithin_inter_of_mem', ← diff_eq_compl_inter, insert_diff_of_mem,
       diff_eq_compl_inter]
-    exacts[rfl, mem_nhdsWithin_of_mem_nhds (uo.mem_nhds xu)]
+    exacts [rfl, mem_nhdsWithin_of_mem_nhds (uo.mem_nhds xu)]
   have B : iteratedFDerivWithin 𝕜 m f s =ᶠ[𝓝 x] iteratedFDerivWithin 𝕜 m f t :=
     iteratedFDerivWithin_eventually_congr_set' _ A.symm _
   have C : DifferentiableWithinAt 𝕜 (iteratedFDerivWithin 𝕜 m f t) t x :=
     hu.differentiable_on_iterated_fderiv_within (Nat.cast_lt.2 m.lt_succ_self) (hs.inter uo) x
       ⟨mem_insert _ _, xu⟩
-  rw [differentiableWithinAt_congr_set' _ A] at C
+  rw [differentiableWithinAt_congr_set' _ A] at C 
   exact C.congr_of_eventually_eq (B.filter_mono inf_le_left) B.self_of_nhds
 #align cont_diff_within_at.differentiable_within_at_iterated_fderiv_within ContDiffWithinAt.differentiableWithinAt_iteratedFDerivWithin
 
@@ -1286,16 +1286,16 @@ theorem contDiffOn_succ_iff_fderivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
   refine' ⟨H.differentiable_on (WithTop.coe_le_coe.2 (Nat.le_add_left 1 n)), fun x hx => _⟩
   rcases contDiffWithinAt_succ_iff_hasFDerivWithinAt.1 (H x hx) with ⟨u, hu, f', hff', hf'⟩
   rcases mem_nhdsWithin.1 hu with ⟨o, o_open, xo, ho⟩
-  rw [inter_comm, insert_eq_of_mem hx] at ho
+  rw [inter_comm, insert_eq_of_mem hx] at ho 
   have := hf'.mono ho
-  rw [contDiffWithinAt_inter' (mem_nhdsWithin_of_mem_nhds (IsOpen.mem_nhds o_open xo))] at this
+  rw [contDiffWithinAt_inter' (mem_nhdsWithin_of_mem_nhds (IsOpen.mem_nhds o_open xo))] at this 
   apply this.congr_of_eventually_eq' _ hx
   have : o ∩ s ∈ 𝓝[s] x := mem_nhdsWithin.2 ⟨o, o_open, xo, subset.refl _⟩
-  rw [inter_comm] at this
+  rw [inter_comm] at this 
   apply Filter.eventuallyEq_of_mem this fun y hy => _
   have A : fderivWithin 𝕜 f (s ∩ o) y = f' y :=
     ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
-  rwa [fderivWithin_inter (o_open.mem_nhds hy.2)] at A
+  rwa [fderivWithin_inter (o_open.mem_nhds hy.2)] at A 
 #align cont_diff_on_succ_iff_fderiv_within contDiffOn_succ_iff_fderivWithin
 -/
 
@@ -1369,11 +1369,11 @@ theorem ContDiffOn.fderivWithin (hf : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 
     (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (fun y => fderivWithin 𝕜 f s y) s :=
   by
   cases m
-  · change ∞ + 1 ≤ n at hmn
+  · change ∞ + 1 ≤ n at hmn 
     have : n = ∞ := by simpa using hmn
-    rw [this] at hf
+    rw [this] at hf 
     exact ((contDiffOn_top_iff_fderivWithin hs).1 hf).2
-  · change (m.succ : ℕ∞) ≤ n at hmn
+  · change (m.succ : ℕ∞) ≤ n at hmn 
     exact ((contDiffOn_succ_iff_fderivWithin hs).1 (hf.of_le hmn)).2
 #align cont_diff_on.fderiv_within ContDiffOn.fderivWithin
 
@@ -1400,7 +1400,7 @@ theorem ContDiffOn.continuousOn_fderiv_of_open (h : ContDiffOn 𝕜 n f s) (hs :
 derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a predicate analogous to
 `has_fderiv_at` but for higher order derivatives. -/
 structure HasFTaylorSeriesUpTo (n : ℕ∞) (f : E → F) (p : E → FormalMultilinearSeries 𝕜 E F) :
-  Prop where
+    Prop where
   zero_eq : ∀ x, (p x 0).uncurry0 = f x
   fderiv : ∀ (m : ℕ) (hm : (m : ℕ∞) < n), ∀ x, HasFDerivAt (fun y => p y m) (p x m.succ).curryLeft x
   cont : ∀ (m : ℕ) (hm : (m : ℕ∞) ≤ n), Continuous fun x => p x m
@@ -1446,13 +1446,14 @@ theorem HasFTaylorSeriesUpTo.hasFTaylorSeriesUpToOn (h : HasFTaylorSeriesUpTo n 
 -/
 
 theorem HasFTaylorSeriesUpTo.ofLe (h : HasFTaylorSeriesUpTo n f p) (hmn : m ≤ n) :
-    HasFTaylorSeriesUpTo m f p := by rw [← hasFTaylorSeriesUpToOn_univ_iff] at h⊢; exact h.of_le hmn
+    HasFTaylorSeriesUpTo m f p := by rw [← hasFTaylorSeriesUpToOn_univ_iff] at h ⊢;
+  exact h.of_le hmn
 #align has_ftaylor_series_up_to.of_le HasFTaylorSeriesUpTo.ofLe
 
 #print HasFTaylorSeriesUpTo.continuous /-
 theorem HasFTaylorSeriesUpTo.continuous (h : HasFTaylorSeriesUpTo n f p) : Continuous f :=
   by
-  rw [← hasFTaylorSeriesUpToOn_univ_iff] at h
+  rw [← hasFTaylorSeriesUpToOn_univ_iff] at h 
   rw [continuous_iff_continuousOn_univ]
   exact h.continuous_on
 #align has_ftaylor_series_up_to.continuous HasFTaylorSeriesUpTo.continuous

@@ -620,8 +620,8 @@ to `0 : ℕ`).
 /-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
 class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
   nsmul : ℕ → M → M := nsmulRec
-  nsmul_zero : ∀ x, nsmul 0 x = 0 := by intros ; rfl
-  nsmul_succ : ∀ (n : ℕ) (x), nsmul n.succ x = x + nsmul n x := by intros ; rfl
+  nsmul_zero : ∀ x, nsmul 0 x = 0 := by intros; rfl
+  nsmul_succ : ∀ (n : ℕ) (x), nsmul n.succ x = x + nsmul n x := by intros; rfl
 #align add_monoid AddMonoid
 -/
 
@@ -630,8 +630,8 @@ class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
 @[to_additive]
 class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
   npow : ℕ → M → M := npowRec
-  npow_zero : ∀ x, npow 0 x = 1 := by intros ; rfl
-  npow_succ : ∀ (n : ℕ) (x), npow n.succ x = x * npow n x := by intros ; rfl
+  npow_zero : ∀ x, npow 0 x = 1 := by intros; rfl
+  npow_succ : ∀ (n : ℕ) (x), npow n.succ x = x * npow n x := by intros; rfl
 #align monoid Monoid
 #align add_monoid AddMonoid
 -/
@@ -908,12 +908,12 @@ explanations on this.
 @[protect_proj]
 class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   div := fun a b => a * b⁻¹
-  div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by intros ; rfl
+  div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by intros; rfl
   zpow : ℤ → G → G := zpowRec
-  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by intros ; rfl
-  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
-    intros ; rfl
-  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[n+1] a = (zpow n.succ a)⁻¹ := by intros ; rfl
+  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by intros; rfl
+  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by intros;
+    rfl
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[n+1] a = (zpow n.succ a)⁻¹ := by intros; rfl
 #align div_inv_monoid DivInvMonoid
 -/
 
@@ -938,12 +938,12 @@ explanations on this.
 @[protect_proj]
 class SubNegMonoid (G : Type u) extends AddMonoid G, Neg G, Sub G where
   sub := fun a b => a + -b
-  sub_eq_add_neg : ∀ a b : G, a - b = a + -b := by intros ; rfl
+  sub_eq_add_neg : ∀ a b : G, a - b = a + -b := by intros; rfl
   zsmul : ℤ → G → G := zsmulRec
-  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by intros ; rfl
+  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by intros; rfl
   zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
-    intros ; rfl
-  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[n+1] a = -zsmul n.succ a := by intros ; rfl
+    intros; rfl
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[n+1] a = -zsmul n.succ a := by intros; rfl
 #align sub_neg_monoid SubNegMonoid
 -/
 

@@ -220,10 +220,14 @@ instance : CommRing ℝ := by
       simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul,
         fun n => show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl, NatCast.natCast, IntCast.intCast] <;>
     first
-      |apply
-        add_assoc|apply
-        add_comm|apply
-        mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
+    | apply add_assoc
+    | apply add_comm
+    | apply mul_assoc
+    | apply mul_comm
+    | apply left_distrib
+    | apply right_distrib
+    | apply sub_eq_add_neg
+    | skip
 
 /-- `real.equiv_Cauchy` as a ring equivalence. -/
 @[simps]
@@ -600,7 +604,7 @@ theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j
   rw [mk_lt]
   refine' ⟨_, half_pos K0, i, fun j ij => _⟩
   have := add_le_add (H _ ij).2.1 (le_of_lt (abs_lt.1 <| (H _ le_rfl).2.2 _ ij).1)
-  rwa [← sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this
+  rwa [← sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this 
 #align real.le_mk_of_forall_le Real.le_mk_of_forall_le
 
 theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j ≥ i, (f j : ℝ) ≤ x) :
@@ -864,7 +868,7 @@ is bounded by this number.
 protected theorem sSup_le {S : Set ℝ} {a : ℝ} (hS : ∀ x ∈ S, x ≤ a) (ha : 0 ≤ a) : sSup S ≤ a :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Sup_empty.trans_le ha, csSup_le hS₂ hS]
+  exacts [Sup_empty.trans_le ha, csSup_le hS₂ hS]
 #align real.Sup_le Real.sSup_le
 
 protected theorem iSup_le {ι : Sort _} {f : ι → ℝ} {a : ℝ} (hS : ∀ i, f i ≤ a) (ha : 0 ≤ a) :
@@ -885,7 +889,7 @@ bounded below by `0` to show that `0 ≤ Inf S`.
 theorem sInf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sInf S :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Inf_empty.ge, le_csInf hS₂ hS]
+  exacts [Inf_empty.ge, le_csInf hS₂ hS]
 #align real.Inf_nonneg Real.sInf_nonneg
 
 /--

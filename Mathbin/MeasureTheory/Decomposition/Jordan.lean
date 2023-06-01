@@ -247,7 +247,7 @@ def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
 -/
 
 theorem toJordanDecomposition_spec (s : SignedMeasure α) :
-    ∃ (i : Set α)(hi₁ : MeasurableSet i)(hi₂ : 0 ≤[i] s)(hi₃ : s ≤[iᶜ] 0),
+    ∃ (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : 0 ≤[i] s) (hi₃ : s ≤[iᶜ] 0),
       s.toJordanDecomposition.posPart = s.toMeasureOfZeroLE i hi₁ hi₂ ∧
         s.toJordanDecomposition.negPart = s.toMeasureOfLEZero (iᶜ) hi₁.compl hi₃ :=
   by
@@ -306,9 +306,9 @@ theorem subset_positive_null_set (hu : MeasurableSet u) (hv : MeasurableSet v)
 theorem subset_negative_null_set (hu : MeasurableSet u) (hv : MeasurableSet v)
     (hw : MeasurableSet w) (hsu : s ≤[u] 0) (hw₁ : s w = 0) (hw₂ : w ⊆ u) (hwt : v ⊆ w) : s v = 0 :=
   by
-  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
+  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu 
   have := subset_positive_null_set hu hv hw hsu
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this 
   exact this hw₁ hw₂ hwt
 #align measure_theory.signed_measure.subset_negative_null_set MeasureTheory.SignedMeasure.subset_negative_null_set
 
@@ -317,15 +317,19 @@ between the two sets. -/
 theorem of_diff_eq_zero_of_symmDiff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v)
     (hsu : 0 ≤[u] s) (hsv : 0 ≤[v] s) (hs : s (u ∆ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 :=
   by
-  rw [restrict_le_restrict_iff] at hsu hsv
+  rw [restrict_le_restrict_iff] at hsu hsv 
   have a := hsu (hu.diff hv) (u.diff_subset v)
   have b := hsv (hv.diff hu) (v.diff_subset u)
   erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) disjoint_sdiff_self_right)
       (hu.diff hv) (hv.diff hu)] at
-    hs
-  rw [zero_apply] at a b
+    hs 
+  rw [zero_apply] at a b 
   constructor
-  all_goals first |linarith|infer_instance|assumption
+  all_goals
+    first
+    | linarith
+    | infer_instance
+    | assumption
 #align measure_theory.signed_measure.of_diff_eq_zero_of_symm_diff_eq_zero_positive MeasureTheory.SignedMeasure.of_diff_eq_zero_of_symmDiff_eq_zero_positive
 
 /-- If the symmetric difference of two negative sets is a null-set, then so are the differences
@@ -333,10 +337,10 @@ between the two sets. -/
 theorem of_diff_eq_zero_of_symmDiff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v)
     (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u ∆ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 :=
   by
-  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
-  rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
+  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu 
+  rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv 
   have := of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv
-  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_eq_zero, coe_neg] at this 
   exact this hs
 #align measure_theory.signed_measure.of_diff_eq_zero_of_symm_diff_eq_zero_negative MeasureTheory.SignedMeasure.of_diff_eq_zero_of_symmDiff_eq_zero_negative
 
@@ -362,10 +366,10 @@ theorem of_inter_eq_of_symmDiff_eq_zero_negative (hu : MeasurableSet u) (hv : Me
     (hw : MeasurableSet w) (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u ∆ v) = 0) :
     s (w ∩ u) = s (w ∩ v) :=
   by
-  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
-  rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
+  rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu 
+  rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv 
   have := of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv
-  simp only [Pi.neg_apply, neg_inj, neg_eq_zero, coe_neg] at this
+  simp only [Pi.neg_apply, neg_inj, neg_eq_zero, coe_neg] at this 
   exact this hs
 #align measure_theory.signed_measure.of_inter_eq_of_symm_diff_eq_zero_negative MeasureTheory.SignedMeasure.of_inter_eq_of_symmDiff_eq_zero_negative
 
@@ -401,7 +405,7 @@ theorem toSignedMeasure_injective : Injective <| @JordanDecomposition.toSignedMe
   -- obtain the two Hahn decompositions from the Jordan decompositions
   obtain ⟨S, hS₁, hS₂, hS₃, hS₄, hS₅⟩ := j₁.exists_compl_positive_negative
   obtain ⟨T, hT₁, hT₂, hT₃, hT₄, hT₅⟩ := j₂.exists_compl_positive_negative
-  rw [← hj] at hT₂ hT₃
+  rw [← hj] at hT₂ hT₃ 
   -- the symmetric differences of the two Hahn decompositions have measure zero
   obtain ⟨hST₁, -⟩ :=
     of_symm_diff_compl_positive_negative hS₁.compl hT₁.compl ⟨hS₃, (compl_compl S).symm ▸ hS₂⟩
@@ -557,7 +561,7 @@ theorem totalVariation_neg (s : SignedMeasure α) : (-s).totalVariation = s.tota
 theorem null_of_totalVariation_zero (s : SignedMeasure α) {i : Set α}
     (hs : s.totalVariation i = 0) : s i = 0 :=
   by
-  rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs
+  rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs 
   rw [← to_signed_measure_to_jordan_decomposition s, to_signed_measure, vector_measure.coe_sub,
     Pi.sub_apply, measure.to_signed_measure_apply, measure.to_signed_measure_apply]
   by_cases hi : MeasurableSet i
@@ -573,11 +577,11 @@ theorem absolutelyContinuous_ennreal_iff (s : SignedMeasure α) (μ : VectorMeas
     obtain ⟨i, hi₁, hi₂, hi₃, hpos, hneg⟩ := s.to_jordan_decomposition_spec
     rw [total_variation, measure.add_apply, hpos, hneg, to_measure_of_zero_le_apply _ _ _ hS₁,
       to_measure_of_le_zero_apply _ _ _ hS₁]
-    rw [← vector_measure.absolutely_continuous.ennreal_to_measure] at h
+    rw [← vector_measure.absolutely_continuous.ennreal_to_measure] at h 
     simp [h (measure_mono_null (i.inter_subset_right S) hS₂),
       h (measure_mono_null (iᶜ.inter_subset_right S) hS₂)]
   · refine' vector_measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
-    rw [← vector_measure.ennreal_to_measure_apply hS₁] at hS₂
+    rw [← vector_measure.ennreal_to_measure_apply hS₁] at hS₂ 
     exact null_of_total_variation_zero s (h hS₂)
 #align measure_theory.signed_measure.absolutely_continuous_ennreal_iff MeasureTheory.SignedMeasure.absolutelyContinuous_ennreal_iff
 
@@ -591,8 +595,8 @@ theorem totalVariation_absolutelyContinuous_iff (s : SignedMeasure α) (μ : Mea
     all_goals
       refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
       have := h hS₂
-      rw [total_variation, measure.add_apply, add_eq_zero_iff] at this
-    exacts[this.1, this.2]
+      rw [total_variation, measure.add_apply, add_eq_zero_iff] at this 
+    exacts [this.1, this.2]
   · refine' measure.absolutely_continuous.mk fun S hS₁ hS₂ => _
     rw [total_variation, measure.add_apply, h.1 hS₂, h.2 hS₂, add_zero]
 #align measure_theory.signed_measure.total_variation_absolutely_continuous_iff MeasureTheory.SignedMeasure.totalVariation_absolutelyContinuous_iff

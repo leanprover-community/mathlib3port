@@ -156,7 +156,7 @@ theorem map_eq_iff {x₁ x₂ : Fin n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) 
   refine' ⟨fun h => _, fun h => by rw [map_succ', map_succ', h.1, h.2]⟩
   have : x₁ 0 = x₂ 0 := by
     rw [← mod_eq_of_lt (hx₁ _), ← map_mod, ← mod_eq_of_lt (hx₂ _), ← map_mod, h]
-  rw [map_succ, map_succ, this, add_right_inj, mul_eq_mul_right_iff] at h
+  rw [map_succ, map_succ, this, add_right_inj, mul_eq_mul_right_iff] at h 
   exact ⟨this, h.resolve_right (pos_of_gt (hx₁ 0)).ne'⟩
 #align behrend.map_eq_iff Behrend.map_eq_iff
 
@@ -207,7 +207,7 @@ theorem addSalemSpencer_image_sphere :
 
 theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤ n * (d - 1) ^ 2 :=
   by
-  rw [mem_box] at hx
+  rw [mem_box] at hx 
   have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i =>
     Nat.pow_le_pow_of_le_left (Nat.le_pred_of_lt (hx i)) _
   exact (sum_le_card_nsmul univ _ _ fun i _ => this i).trans (by rw [card_fin, smul_eq_mul])

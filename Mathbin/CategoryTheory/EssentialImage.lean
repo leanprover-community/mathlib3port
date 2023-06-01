@@ -94,7 +94,8 @@ theorem obj_mem_essImage (F : D ⥤ C) (Y : D) : F.obj Y ∈ essImage F :=
 /-- The essential image of a functor, interpreted of a full subcategory of the target category. -/
 @[nolint has_nonempty_instance]
 def EssImageSubcategory (F : C ⥤ D) :=
-  FullSubcategory F.essImage deriving Category
+  FullSubcategory F.essImage
+deriving Category
 #align category_theory.functor.ess_image_subcategory CategoryTheory.Functor.EssImageSubcategory
 -/
 
@@ -102,7 +103,8 @@ def EssImageSubcategory (F : C ⥤ D) :=
 /-- The essential image as a subcategory has a fully faithful inclusion into the target category. -/
 @[simps]
 def essImageInclusion (F : C ⥤ D) : F.EssImageSubcategory ⥤ D :=
-  fullSubcategoryInclusion _ deriving Full, Faithful
+  fullSubcategoryInclusion _
+deriving Full, Faithful
 #align category_theory.functor.ess_image_inclusion CategoryTheory.Functor.essImageInclusion
 -/
 

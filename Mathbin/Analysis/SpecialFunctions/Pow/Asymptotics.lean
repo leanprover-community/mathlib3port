@@ -73,7 +73,7 @@ theorem tendsto_rpow_div_mul_add (a b c : ℝ) (hb : 0 ≠ b) :
         tendsto_log_at_top)
   apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
   intro x hx
-  simp only [Set.mem_Ioi, Function.comp_apply] at hx⊢
+  simp only [Set.mem_Ioi, Function.comp_apply] at hx ⊢
   rw [exp_log hx, ← exp_log (rpow_pos_of_pos hx (a / (b * x + c))), log_rpow hx (a / (b * x + c))]
   field_simp
 #align tendsto_rpow_div_mul_add tendsto_rpow_div_mul_add
@@ -144,7 +144,7 @@ theorem ENNReal.tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) :
   by_cases ha' : a = ⊤
   · simp [ha', hy]
   lift a to ℝ≥0 using ha'
-  change ↑c < ↑a at ha
+  change ↑c < ↑a at ha 
   rw [ENNReal.coe_rpow_of_nonneg _ hy.le]
   exact_mod_cast hc a (by exact_mod_cast ha)
 #align ennreal.tendsto_rpow_at_top ENNReal.tendsto_rpow_at_top
@@ -169,7 +169,7 @@ theorem isTheta_exp_arg_mul_im (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x
   by
   rcases hl with ⟨b, hb⟩
   refine' Real.isTheta_exp_comp_one.2 ⟨π * b, _⟩
-  rw [eventually_map] at hb⊢
+  rw [eventually_map] at hb ⊢
   refine' hb.mono fun x hx => _
   erw [abs_mul]
   exact mul_le_mul (abs_arg_le_pi _) hx (abs_nonneg _) real.pi_pos.le
@@ -276,7 +276,7 @@ theorem isLittleO_exp_neg_mul_rpow_atTop {a : ℝ} (ha : 0 < a) (b : ℝ) :
   by
   apply is_o_of_tendsto'
   · refine' (eventually_gt_at_top 0).mp (eventually_of_forall fun t ht h => _)
-    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h
+    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h 
     exact (ht.ne' h.1).elim
   · refine' (tendsto_exp_mul_div_rpow_atTop (-b) a ha).inv_tendsto_atTop.congr' _
     refine' (eventually_ge_at_top 0).mp (eventually_of_forall fun t ht => _)

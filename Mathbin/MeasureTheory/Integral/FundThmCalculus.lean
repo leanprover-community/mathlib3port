@@ -192,7 +192,7 @@ of the integral w.r.t. Lebesgue measure. -/
 /-- An auxiliary typeclass for the Fundamental theorem of calculus, part 1. It is used to formulate
 theorems that work simultaneously for left and right one-sided derivatives of `∫ x in u..v, f x`. -/
 class FTCFilter (a : outParam ℝ) (outer : Filter ℝ) (inner : outParam <| Filter ℝ) extends
-  TendstoIxxClass Ioc outer inner : Prop where
+    TendstoIxxClass Ioc outer inner : Prop where
   pure_le : pure a ≤ outer
   le_nhds : inner ≤ 𝓝 a
   [meas_gen : IsMeasurablyGenerated inner]
@@ -435,7 +435,7 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
   filter_upwards [A, A', B, B']with _ ua_va a_ua ub_vb b_ub
   rw [← integral_interval_sub_interval_comm']
   · dsimp only; abel
-  exacts[ub_vb, ua_va, b_ub.symm.trans <| hab.symm.trans a_ua]
+  exacts [ub_vb, ua_va, b_ub.symm.trans <| hab.symm.trans a_ua]
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
 
 /-- Fundamental theorem of calculus-1, strict derivative in right endpoint for a locally finite
@@ -1028,7 +1028,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
     by
     have : ContinuousOn (fun t => (g t - g a, ∫ u in a..t, (G' u).toReal)) (Icc a b) :=
       by
-      rw [← uIcc_of_le hab] at G'int hcont⊢
+      rw [← uIcc_of_le hab] at G'int hcont ⊢
       exact (hcont.sub continuousOn_const).Prod (continuous_on_primitive_interval G'int)
     simp only [s, inter_comm]
     exact this.preimage_closed_of_closed isClosed_Icc OrderClosedTopology.isClosed_le'
@@ -1084,7 +1084,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
       filter_upwards [(hderiv t ⟨ht.2.1, ht.2.2⟩).limsup_slope_le' (not_mem_Ioi.2 le_rfl) g'_lt_y,
         self_mem_nhdsWithin]with u hu t_lt_u
       have := mul_le_mul_of_nonneg_left hu.le (sub_pos.2 t_lt_u).le
-      rwa [← smul_eq_mul, sub_smul_slope] at this
+      rwa [← smul_eq_mul, sub_smul_slope] at this 
     -- combine the previous two bounds to show that `g u - g a` increases less quickly than
     -- `∫ x in a..u, G' x`.
     have I3 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ ∫ w in t..u, (G' w).toReal := by
@@ -1141,7 +1141,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
     by
     have : ContinuousOn (fun t => (g b - g t, ∫ u in t..b, φ u)) (Icc a b) :=
       by
-      rw [← uIcc_of_le hab] at hcont φint⊢
+      rw [← uIcc_of_le hab] at hcont φint ⊢
       exact (continuous_on_const.sub hcont).Prod (continuous_on_primitive_interval_left φint)
     simp only [s, inter_comm]
     exact this.preimage_closed_of_closed isClosed_Icc isClosed_le_prod
@@ -1154,7 +1154,7 @@ theorem sub_le_integral_of_has_deriv_right_of_le (hab : a ≤ b) (hcont : Contin
       sub_le_integral_of_has_deriv_right_of_le_Ico ht.2 (hcont.mono (Icc_subset_Icc ht.1.le le_rfl))
         (fun x hx => hderiv x ⟨ht.1.trans_le hx.1, hx.2⟩)
         (φint.mono_set (Icc_subset_Icc ht.1.le le_rfl)) fun x hx => hφg x ⟨ht.1.trans_le hx.1, hx.2⟩
-  rw [closure_Ioc a_lt_b.ne] at A
+  rw [closure_Ioc a_lt_b.ne] at A 
   exact (A (left_mem_Icc.2 hab)).1
 #align interval_integral.sub_le_integral_of_has_deriv_right_of_le intervalIntegral.sub_le_integral_of_has_deriv_right_of_le
 
@@ -1203,9 +1203,9 @@ theorem integral_eq_sub_of_has_deriv_right (hcont : ContinuousOn f (uIcc a b))
     (hint : IntervalIntegrable f' volume a b) : (∫ y in a..b, f' y) = f b - f a :=
   by
   cases' le_total a b with hab hab
-  · simp only [uIcc_of_le, min_eq_left, max_eq_right, hab] at hcont hderiv hint
+  · simp only [uIcc_of_le, min_eq_left, max_eq_right, hab] at hcont hderiv hint 
     apply integral_eq_sub_of_has_deriv_right_of_le hab hcont hderiv hint
-  · simp only [uIcc_of_ge, min_eq_right, max_eq_left, hab] at hcont hderiv
+  · simp only [uIcc_of_ge, min_eq_right, max_eq_left, hab] at hcont hderiv 
     rw [integral_symm, integral_eq_sub_of_has_deriv_right_of_le hab hcont hderiv hint.symm, neg_sub]
 #align interval_integral.integral_eq_sub_of_has_deriv_right intervalIntegral.integral_eq_sub_of_has_deriv_right
 
@@ -1299,7 +1299,7 @@ theorem integrableOn_deriv_right_of_nonneg (hcont : ContinuousOn g (Icc a b))
     simpa only [has_finite_integral, NNReal.nnnorm_eq] using fint
   have A : (∫⁻ x : ℝ in Ioo a b, f x) = ENNReal.ofReal (∫ x in Ioo a b, F x) :=
     lintegral_coe_eq_integral _ intF
-  rw [A] at hf
+  rw [A] at hf 
   have B : (∫ x : ℝ in Ioo a b, F x) ≤ g b - g a :=
     by
     rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab.le]
@@ -1326,10 +1326,10 @@ theorem intervalIntegrable_deriv_of_nonneg (hcont : ContinuousOn g (uIcc a b))
   by
   cases' le_total a b with hab hab
   · simp only [uIcc_of_le, min_eq_left, max_eq_right, hab, IntervalIntegrable, hab,
-      Ioc_eq_empty_of_le, integrable_on_empty, and_true_iff] at hcont hderiv hpos⊢
+      Ioc_eq_empty_of_le, integrable_on_empty, and_true_iff] at hcont hderiv hpos ⊢
     exact integrable_on_deriv_of_nonneg hcont hderiv hpos
   · simp only [uIcc_of_ge, min_eq_right, max_eq_left, hab, IntervalIntegrable, Ioc_eq_empty_of_le,
-      integrable_on_empty, true_and_iff] at hcont hderiv hpos⊢
+      integrable_on_empty, true_and_iff] at hcont hderiv hpos ⊢
     exact integrable_on_deriv_of_nonneg hcont hderiv hpos
 #align interval_integral.interval_integrable_deriv_of_nonneg intervalIntegral.intervalIntegrable_deriv_of_nonneg
 
@@ -1385,7 +1385,7 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
     (hg2 : IntegrableOn (fun x => f' x • (g ∘ f) x) [a, b]) :
     (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u :=
   by
-  rw [hf.image_uIcc, ← intervalIntegrable_iff'] at hg1
+  rw [hf.image_uIcc, ← intervalIntegrable_iff'] at hg1 
   have h_cont : ContinuousOn (fun u => ∫ t in f a..f u, g t) [a, b] :=
     by
     refine' (continuous_on_primitive_interval' hg1 _).comp hf _
@@ -1403,7 +1403,7 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
     replace hg_cont := hg_cont.mono (image_subset f cdsub)
     let J := [Inf (f '' [c, d]), Sup (f '' [c, d])]
     have hJ : f '' [c, d] = J := (hf.mono (cdsub.trans Ioo_subset_Icc_self)).image_uIcc
-    rw [hJ] at hg_cont
+    rw [hJ] at hg_cont 
     have h2x : f x ∈ J := by rw [← hJ]; exact mem_image_of_mem _ (mem_uIcc_of_le hc.2.le hd.1.le)
     have h2g : IntervalIntegrable g volume (f a) (f x) :=
       by
@@ -1418,7 +1418,7 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
     rw [← hJ]
     refine' (maps_to_image _ _).mono _ subset.rfl
     exact Ioo_subset_Icc_self.trans ((Icc_subset_Icc_left hc.2.le).trans Icc_subset_uIcc)
-  rw [← intervalIntegrable_iff'] at hg2
+  rw [← intervalIntegrable_iff'] at hg2 
   simp_rw [integral_eq_sub_of_has_deriv_right h_cont h_der hg2, integral_same, sub_zero]
 #align interval_integral.integral_comp_smul_deriv''' intervalIntegral.integral_comp_smul_deriv'''
 
@@ -1434,7 +1434,7 @@ theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : Co
   refine'
     integral_comp_smul_deriv''' hf hff' (hg.mono <| image_subset _ Ioo_subset_Icc_self) _
       (hf'.smul (hg.comp hf <| subset_preimage_image f _)).integrableOn_Icc
-  rw [hf.image_uIcc] at hg⊢
+  rw [hf.image_uIcc] at hg ⊢
   exact hg.integrable_on_Icc
 #align interval_integral.integral_comp_smul_deriv'' intervalIntegral.integral_comp_smul_deriv''
 

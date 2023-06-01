@@ -59,8 +59,8 @@ theorem MeasureTheory.AEStronglyMeasurable.comp_snd_map_prod_id [TopologicalSpac
     AEStronglyMeasurable (fun x : Ω × Ω => f x.2)
       (@Measure.map Ω (Ω × Ω) (m.Prod mΩ) mΩ (fun ω => (id ω, id ω)) μ) :=
   by
-  rw [← ae_strongly_measurable_comp_snd_map_prod_mk_iff (measurable_id'' hm)] at hf
-  simp_rw [id.def] at hf⊢
+  rw [← ae_strongly_measurable_comp_snd_map_prod_mk_iff (measurable_id'' hm)] at hf 
+  simp_rw [id.def] at hf ⊢
   exact hf
 #align measure_theory.ae_strongly_measurable.comp_snd_map_prod_id MeasureTheory.AEStronglyMeasurable.comp_snd_map_prod_id
 
@@ -69,8 +69,8 @@ theorem MeasureTheory.Integrable.comp_snd_map_prod_id [NormedAddCommGroup F] (hm
     Integrable (fun x : Ω × Ω => f x.2)
       (@Measure.map Ω (Ω × Ω) (m.Prod mΩ) mΩ (fun ω => (id ω, id ω)) μ) :=
   by
-  rw [← integrable_comp_snd_map_prod_mk_iff (measurable_id'' hm)] at hf
-  simp_rw [id.def] at hf⊢
+  rw [← integrable_comp_snd_map_prod_mk_iff (measurable_id'' hm)] at hf 
+  simp_rw [id.def] at hf ⊢
   exact hf
 #align measure_theory.integrable.comp_snd_map_prod_id MeasureTheory.Integrable.comp_snd_map_prod_id
 
@@ -114,7 +114,7 @@ theorem aeStronglyMeasurable'_integral_condexpKernel [NormedSpace ℝ F] [Comple
   have h :=
     ae_strongly_measurable'_integral_cond_distrib (ae_measurable_id'' μ hm) aemeasurable_id
       (hf.comp_snd_map_prod_id hm)
-  rwa [MeasurableSpace.comap_id] at h
+  rwa [MeasurableSpace.comap_id] at h 
 #align probability_theory.ae_strongly_measurable'_integral_condexp_kernel ProbabilityTheory.aeStronglyMeasurable'_integral_condexpKernel
 
 end Measurability

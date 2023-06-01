@@ -139,7 +139,7 @@ def piLimitFan ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.Fan F :=
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
 def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Grpd.{u, u}) : Limits.IsLimit (piLimitFan F) :=
   Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
-    (by intros ; dsimp only [pi_limit_fan]; simp [hom_to_functor])
+    (by intros; dsimp only [pi_limit_fan]; simp [hom_to_functor])
     (by
       intro s m w
       apply functor.pi_ext

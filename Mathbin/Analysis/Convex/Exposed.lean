@@ -148,7 +148,7 @@ theorem eq_inter_halfspace [Nontrivial 𝕜] {A B : Set E} (hAB : IsExposed 𝕜
   · refine' ⟨0, 1, _⟩
     rw [eq_comm, eq_empty_iff_forall_not_mem]
     rintro x ⟨-, h⟩
-    rw [ContinuousLinearMap.zero_apply] at h
+    rw [ContinuousLinearMap.zero_apply] at h 
     have : ¬(1 : 𝕜) ≤ 0 := not_le_of_lt zero_lt_one
     contradiction
   exact hAB.eq_inter_halfspace' hB
@@ -263,7 +263,7 @@ theorem mem_exposedPoints_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 ↔
           ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
   rintro h
   obtain ⟨l, hl⟩ := h ⟨x, mem_singleton _⟩
-  rw [eq_comm, eq_singleton_iff_unique_mem] at hl
+  rw [eq_comm, eq_singleton_iff_unique_mem] at hl 
   exact
     ⟨hl.1.1, l, fun y hy =>
       ⟨hl.1.2 y hy, fun hxy => hl.2 y ⟨hy, fun z hz => (hl.1.2 z hz).trans hxy⟩⟩⟩

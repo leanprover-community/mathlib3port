@@ -131,7 +131,7 @@ theorem Subpresheaf.eq_top_iff_isIso : G = ⊤ ↔ IsIso G.ι :=
 def Subpresheaf.lift (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U) : F' ⟶ G.toPresheaf
     where
   app U x := ⟨f.app U x, hf U x⟩
-  naturality' := by have := elementwise_of f.naturality; intros ; ext; simp [this]
+  naturality' := by have := elementwise_of f.naturality; intros; ext; simp [this]
 #align category_theory.grothendieck_topology.subpresheaf.lift CategoryTheory.GrothendieckTopology.Subpresheaf.lift
 
 @[simp, reassoc]
@@ -180,7 +180,7 @@ def Subpresheaf.sheafify : Subpresheaf F
     rintro U V i s hs
     refine' J.superset_covering _ (J.pullback_stable i.unop hs)
     intro _ _ h
-    dsimp at h⊢
+    dsimp at h ⊢
     rwa [← functor_to_types.map_comp_apply]
 #align category_theory.grothendieck_topology.subpresheaf.sheafify CategoryTheory.GrothendieckTopology.Subpresheaf.sheafify
 -/
@@ -235,7 +235,7 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
       intro V' i' hi'
       have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
       have := H _ hi''
-      rw [op_comp, F.map_comp] at this
+      rw [op_comp, F.map_comp] at this 
       refine' this.trans (congr_arg Subtype.val (hx _ _ (hi₂ hi'') hi (h₂ hi'')))
   have : x''.compatible := by
     intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
@@ -293,7 +293,7 @@ noncomputable def Subpresheaf.sheafifyLift (f : G.toPresheaf ⟶ F') (h : Presie
     conv_rhs => rw [← functor_to_types.map_comp_apply]
     change _ = F'.map (j ≫ i.unop).op _
     refine' Eq.trans _ (presieve.is_sheaf_for.valid_glue _ _ _ _).symm
-    · dsimp at hj⊢; rwa [functor_to_types.map_comp_apply]
+    · dsimp at hj ⊢; rwa [functor_to_types.map_comp_apply]
     · dsimp [presieve.family_of_elements.comp_presheaf_map]
       congr 1
       ext1
@@ -321,7 +321,7 @@ theorem Subpresheaf.to_sheafify_lift_unique (h : Presieve.IsSheaf J F')
   ext (U⟨s, hs⟩)
   apply (h _ hs).IsSeparatedFor.ext
   rintro V i hi
-  dsimp at hi
+  dsimp at hi 
   erw [← functor_to_types.naturality, ← functor_to_types.naturality]
   exact (congr_fun (congr_app e <| op V) ⟨_, hi⟩ : _)
 #align category_theory.grothendieck_topology.subpresheaf.to_sheafify_lift_unique CategoryTheory.GrothendieckTopology.Subpresheaf.to_sheafify_lift_unique
@@ -404,7 +404,7 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
   constructor
   · intro x y e
     have := (nat_trans.mono_iff_mono_app _ _).mp hf X
-    rw [mono_iff_injective] at this
+    rw [mono_iff_injective] at this 
     exact this (congr_arg Subtype.val e : _)
   · rintro ⟨_, ⟨x, rfl⟩⟩; exact ⟨x, rfl⟩
 
@@ -457,7 +457,7 @@ instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) :=
   have E : (to_image_sheaf f).val.app (op V) y = (image_sheaf f).val.map i.op ⟨s, hx⟩ :=
     Subtype.ext e'
   have := congr_arg (fun f : F ⟶ G' => (Sheaf.hom.val f).app _ y) e
-  dsimp at this⊢
+  dsimp at this ⊢
   convert this <;> exact E.symm
 
 #print CategoryTheory.GrothendieckTopology.imageMonoFactorization /-

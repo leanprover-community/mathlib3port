@@ -216,7 +216,7 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
       naturality' := fun X Y f =>
         by
         have h := congr_arg (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
-        simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h
+        simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h 
         exact h }
 #align category_theory.nat_iso.of_components CategoryTheory.NatIso.ofComponents
 

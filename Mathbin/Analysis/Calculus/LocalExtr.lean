@@ -85,7 +85,7 @@ is that we require `c n → ∞` instead of `‖c n‖ → ∞`. One can think a
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def posTangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
-    ∃ (c : ℕ → ℝ)(d : ℕ → E),
+    ∃ (c : ℕ → ℝ) (d : ℕ → E),
       (∀ᶠ n in atTop, x + d n ∈ s) ∧
         Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align pos_tangent_cone_at posTangentConeAt
@@ -106,7 +106,7 @@ theorem mem_posTangentConeAt_of_segment_subset {s : Set E} {x y : E} (h : segmen
   show x + d n ∈ segment ℝ x y
   · rw [segment_eq_image']
     refine' ⟨(c n)⁻¹, ⟨_, _⟩, rfl⟩
-    exacts[inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
+    exacts [inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
   show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
   · convert tendsto_const_nhds; ext n
     simp only [d, smul_smul]
@@ -138,7 +138,7 @@ theorem IsLocalMaxOn.hasFDerivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s 
   exact
     tendsto_inf.2
       ⟨tendsto_const_nhds.add (tangentConeAt.lim_zero _ hc' hcd), by rwa [tendsto_principal]⟩
-  rw [add_zero] at hd
+  rw [add_zero] at hd 
   replace h : ∀ᶠ n in at_top, f (a + d n) ≤ f a; exact mem_map.1 (hd h)
   replace hc : ∀ᶠ n in at_top, 0 ≤ c n; exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
   filter_upwards [h, hc]
@@ -321,9 +321,9 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
       rw [mem_set_of_eq, this x hx, ← hC]
       exact Cge c' ⟨le_of_lt hc'.1, le_of_lt hc'.2⟩
     · refine' ⟨C, ⟨lt_of_le_of_ne Cmem.1 <| mt _ hC, lt_of_le_of_ne Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
-      exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
+      exacts [fun h => by rw [h], fun h => by rw [h, hfI]]
   · refine' ⟨c, ⟨lt_of_le_of_ne cmem.1 <| mt _ hc, lt_of_le_of_ne cmem.2 <| mt _ hc⟩, Or.inl cle⟩
-    exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
+    exacts [fun h => by rw [h], fun h => by rw [h, hfI]]
 #align exists_Ioo_extr_on_Icc exists_Ioo_extr_on_Icc
 
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
@@ -381,7 +381,7 @@ theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l
       show ∃ c ∈ Ioo a b, deriv f c = 0 from
         exists_hasDerivAt_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
     fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by push_neg  at h; exact h
+    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by push_neg  at h ; exact h
     let ⟨c, hc, hcdiff⟩ := h
     ⟨c, hc, deriv_zero_of_not_differentiableAt hcdiff⟩
 #align exists_deriv_eq_zero' exists_deriv_eq_zero'
@@ -402,7 +402,7 @@ theorem card_roots_toFinset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X]
     exact zero_le _
   have hp : p ≠ 0 := ne_of_apply_ne derivative (by rwa [derivative_zero])
   refine' Finset.card_le_diff_of_interleaved fun x hx y hy hxy hxy' => _
-  rw [Multiset.mem_toFinset, mem_roots hp] at hx hy
+  rw [Multiset.mem_toFinset, mem_roots hp] at hx hy 
   obtain ⟨z, hz1, hz2⟩ :=
     exists_deriv_eq_zero (fun x : ℝ => eval x p) hxy p.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩

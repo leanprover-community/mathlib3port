@@ -203,7 +203,7 @@ theorem evalAt_eq (x : X) :
   refine' (@functor.conj_eq_to_hom_iff_heq (πₓ Y) _ _ _ _ _ _ _ _ _).mpr _
   simp only [id_eq_path_refl, prod_to_prod_Top_map, Path.Homotopic.prod_lift, map_eq, ←
     Path.Homotopic.map_lift]
-  apply Path.Homotopic.hpath_hext; intro ; rfl
+  apply Path.Homotopic.hpath_hext; intro; rfl
 #align continuous_map.homotopy.eval_at_eq ContinuousMap.Homotopy.evalAt_eq
 
 -- Finally, we show `d = f(p) ≫ H₁ = H₀ ≫ g(p)`
@@ -246,9 +246,9 @@ def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y :=
   apply equivalence.mk (πₘ hequiv.to_fun : πₓ X ⥤ πₓ Y) (πₘ hequiv.inv_fun : πₓ Y ⥤ πₓ X) <;>
     simp only [Groupoid.hom_to_functor, Groupoid.id_to_functor]
   · convert(as_iso (homotopic_maps_nat_iso hequiv.left_inv.some)).symm
-    exacts[(π.map_id X).symm, (π.map_comp _ _).symm]
+    exacts [(π.map_id X).symm, (π.map_comp _ _).symm]
   · convert as_iso (homotopic_maps_nat_iso hequiv.right_inv.some)
-    exacts[(π.map_comp _ _).symm, (π.map_id Y).symm]
+    exacts [(π.map_comp _ _).symm, (π.map_id Y).symm]
 #align fundamental_groupoid_functor.equiv_of_homotopy_equiv FundamentalGroupoidFunctor.equivOfHomotopyEquiv
 
 end FundamentalGroupoidFunctor

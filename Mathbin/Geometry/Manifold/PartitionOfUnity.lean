@@ -325,7 +325,7 @@ in `M` and `U : M → set M` be a collection of sets such that `U x ∈ 𝓝 x` 
 Then there exists a smooth bump covering of `s` that is subordinate to `U`. -/
 theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
     (hU : ∀ x ∈ s, U x ∈ 𝓝 x) :
-    ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.IsSubordinate U :=
+    ∃ (ι : Type uM) (f : SmoothBumpCovering ι I M s), f.IsSubordinate U :=
   by
   -- First we deduce some missing instances
   haveI : LocallyCompactSpace H := I.locally_compact

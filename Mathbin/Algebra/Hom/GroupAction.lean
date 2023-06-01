@@ -93,7 +93,7 @@ scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_action_hom`. -/
 class SMulHomClass (F : Type _) (M X Y : outParam <| Type _) [SMul M X] [SMul M Y] extends
-  FunLike F X fun _ => Y where
+    FunLike F X fun _ => Y where
   map_smul : ∀ (f : F) (c : M) (x : X), f (c • x) = c • f x
 #align smul_hom_class SMulHomClass
 -/
@@ -218,8 +218,8 @@ the additive monoid structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `distrib_mul_action_hom`. -/
 class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoid M] [AddMonoid A]
-  [AddMonoid B] [DistribMulAction M A] [DistribMulAction M B] extends SMulHomClass F M A B,
-  AddMonoidHomClass F A B
+    [AddMonoid B] [DistribMulAction M A] [DistribMulAction M B] extends SMulHomClass F M A B,
+    AddMonoidHomClass F A B
 #align distrib_mul_action_hom_class DistribMulActionHomClass
 -/
 
@@ -417,8 +417,8 @@ the ring structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_semiring_action_hom`. -/
 class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoid M] [Semiring R]
-  [Semiring S] [DistribMulAction M R] [DistribMulAction M S] extends
-  DistribMulActionHomClass F M R S, RingHomClass F R S
+    [Semiring S] [DistribMulAction M R] [DistribMulAction M S] extends
+    DistribMulActionHomClass F M R S, RingHomClass F R S
 #align mul_semiring_action_hom_class MulSemiringActionHomClass
 -/
 

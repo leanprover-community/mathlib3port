@@ -213,7 +213,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
-  rw [← to_NFA_correct] at hx⊢
+  rw [← to_NFA_correct] at hx ⊢
   exact M.to_NFA.pumping_lemma hx hlen
 #align ε_NFA.pumping_lemma εNFA.pumping_lemma
 

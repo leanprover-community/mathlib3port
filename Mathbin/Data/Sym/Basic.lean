@@ -317,7 +317,7 @@ theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
 #align sym.exists_mem Sym.exists_mem
 
 #print Sym.exists_eq_cons_of_succ /-
-theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n), s = a ::ₛ s' :=
+theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α) (s' : Sym α n), s = a ::ₛ s' :=
   by
   obtain ⟨a, ha⟩ := exists_mem s
   classical exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
@@ -593,7 +593,7 @@ open Multiset
 #print Sym.filterNe /-
 /-- Remove every `a` from a given `sym α n`.
 Yields the number of copies `i` and a term of `sym α (n - i)`. -/
-def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym α (n - i) :=
+def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σ i : Fin (n + 1), Sym α (n - i) :=
   ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩,
     m.1.filterₓ ((· ≠ ·) a),
     eq_tsub_of_add_eq <|
@@ -606,7 +606,7 @@ def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym �
 -/
 
 #print Sym.sigma_sub_ext /-
-theorem sigma_sub_ext {m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)} (h : (m₁.2 : Multiset α) = m₂.2) :
+theorem sigma_sub_ext {m₁ m₂ : Σ i : Fin (n + 1), Sym α (n - i)} (h : (m₁.2 : Multiset α) = m₂.2) :
     m₁ = m₂ :=
   Sigma.subtype_ext
     (Fin.ext <| by
@@ -629,13 +629,13 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
 #align sym.fill_filter_ne Sym.fill_filterNe
 -/
 
-theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
-    (m.2.fill a m.1).filterNe a = m :=
+theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σ i : Fin (n + 1), Sym α (n - i))
+    (h : a ∉ m.2) : (m.2.fill a m.1).filterNe a = m :=
   sigma_sub_ext
     (by
       dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
-      · intro b hb; rw [mem_filter, Sym.mem_coe, mem_replicate] at hb; exact hb.2 hb.1.2.symm
+      · intro b hb; rw [mem_filter, Sym.mem_coe, mem_replicate] at hb ; exact hb.2 hb.1.2.symm
       · exact fun b hb => (hb.ne_of_not_mem h).symm)
 #align sym.filter_ne_fill Sym.filter_ne_fill
 

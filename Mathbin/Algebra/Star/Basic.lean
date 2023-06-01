@@ -440,7 +440,7 @@ instance RingHom.involutiveStar {S : Type _} [NonAssocSemiring S] [CommSemiring 
     InvolutiveStar (S →+* R)
     where
   toHasStar := { unit := fun f => RingHom.comp (starRingEnd R) f }
-  star_involutive := by intro ; ext;
+  star_involutive := by intro; ext;
     simp only [RingHom.coe_comp, Function.comp_apply, starRingEnd_self_apply]
 #align ring_hom.has_involutive_star RingHom.involutiveStar
 -/
@@ -553,7 +553,7 @@ variable [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R]
 
 theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c :=
   by
-  rw [← sub_nonneg] at hab⊢
+  rw [← sub_nonneg] at hab ⊢
   convert conjugate_nonneg hab c
   simp only [mul_sub, sub_mul]
 #align conjugate_le_conjugate conjugate_le_conjugate
@@ -604,7 +604,7 @@ section
 #print StarHomClass /-
 /-- `star_hom_class F R S` states that `F` is a type of `star`-preserving maps from `R` to `S`. -/
 class StarHomClass (F : Type _) (R S : outParam (Type _)) [Star R] [Star S] extends
-  FunLike F R fun _ => S where
+    FunLike F R fun _ => S where
   map_star : ∀ (f : F) (r : R), f (star r) = star (f r)
 #align star_hom_class StarHomClass
 -/

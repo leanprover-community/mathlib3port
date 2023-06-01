@@ -232,7 +232,7 @@ theorem floor_pos : 0 < ⌊a⌋₊ ↔ 1 ≤ a := by convert le_floor_iff' Nat.o
 -/
 
 theorem pos_of_floor_pos (h : 0 < ⌊a⌋₊) : 0 < a :=
-  (le_or_lt a 0).resolve_left fun ha => lt_irrefl 0 <| by rwa [floor_of_nonpos ha] at h
+  (le_or_lt a 0).resolve_left fun ha => lt_irrefl 0 <| by rwa [floor_of_nonpos ha] at h 
 #align nat.pos_of_floor_pos Nat.pos_of_floor_pos
 
 #print Nat.lt_of_lt_floor /-
@@ -962,11 +962,11 @@ theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : 
     show a - ⌊a⌋ = b; apply Eq.symm
     rw [eq_sub_iff_add_eq, add_comm, ← eq_sub_iff_add_eq]
     rw [hz, Int.cast_inj, floor_eq_iff, ← hz]
-    clear hz; constructor <;> simpa [sub_eq_add_neg, add_assoc] ⟩
+    clear hz; constructor <;> simpa [sub_eq_add_neg, add_assoc]⟩
 #align int.fract_eq_iff Int.fract_eq_iff
 
 theorem fract_eq_fract {a b : α} : fract a = fract b ↔ ∃ z : ℤ, a - b = z :=
-  ⟨fun h => ⟨⌊a⌋ - ⌊b⌋, by unfold fract at h; rw [Int.cast_sub, sub_eq_sub_iff_sub_eq_sub.1 h]⟩,
+  ⟨fun h => ⟨⌊a⌋ - ⌊b⌋, by unfold fract at h ; rw [Int.cast_sub, sub_eq_sub_iff_sub_eq_sub.1 h]⟩,
     by
     rintro ⟨z, hz⟩
     refine' fract_eq_iff.2 ⟨fract_nonneg _, fract_lt_one _, z + ⌊b⌋, _⟩
@@ -1087,7 +1087,7 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k
     intros
     obtain ⟨l₀, rfl | rfl⟩ := l.eq_coe_or_neg
     · rw [cast_coe_nat, ← coe_nat_mod, cast_coe_nat, fract_div_nat_cast_eq_div_nat_cast_mod]
-    · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl; simp [hl, zero_mod]
+    · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl ; simp [hl, zero_mod]
   obtain ⟨m₀, rfl | rfl⟩ := m.eq_coe_or_neg; · exact this (of_nat_nonneg m₀)
   let q := ⌈↑m₀ / (n : k)⌉
   let m₁ := q * ↑n - (↑m₀ : ℤ)
@@ -1412,7 +1412,7 @@ theorem abs_sub_round_eq_min (x : α) : |x - round x| = min (fract x) (1 - fract
 theorem round_le (x : α) (z : ℤ) : |x - round x| ≤ |x - z| :=
   by
   rw [abs_sub_round_eq_min, min_le_iff]
-  rcases le_or_lt (z : α) x with (hx | hx) <;> [left;right]
+  rcases le_or_lt (z : α) x with (hx | hx) <;> [left; right]
   · conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
     simpa only [le_add_iff_nonneg_right, sub_nonneg, cast_le] using le_floor.mpr hx
   · rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]

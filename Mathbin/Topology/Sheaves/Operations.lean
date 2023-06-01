@@ -42,7 +42,7 @@ attribute [local instance] concrete_category.has_coe_to_sort
 
 /-- A subpresheaf with a submonoid structure on each of the components. -/
 structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomClass (X ⟶ Y) X Y]
-  (F : X.Presheaf C) where
+    (F : X.Presheaf C) where
   obj : ∀ U, Submonoid (F.obj U)
   map : ∀ {U V : (Opens X)ᵒᵖ} (i : U ⟶ V), obj U ≤ (obj V).comap (F.map i)
 #align Top.presheaf.submonoid_presheaf TopCat.Presheaf.SubmonoidPresheaf
@@ -63,7 +63,7 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
   map_comp' U V W i j :=
     by
     refine' Eq.trans _ (IsLocalization.map_comp_map _ _).symm
-    ext; dsimp; congr ; rw [F.map_comp]; rfl
+    ext; dsimp; congr; rw [F.map_comp]; rfl
 #align Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
@@ -87,7 +87,7 @@ noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
   map U V i := by
     intro s hs
-    simp only [Submonoid.mem_comap, Submonoid.mem_iInf] at hs⊢
+    simp only [Submonoid.mem_comap, Submonoid.mem_iInf] at hs ⊢
     intro x
     change (F.map i.unop.op ≫ F.germ x) s ∈ _
     rw [F.germ_res]
@@ -104,7 +104,8 @@ noncomputable def totalQuotientPresheaf : X.Presheaf CommRingCat.{w} :=
 
 /-- The map into the presheaf of total quotient rings -/
 noncomputable def toTotalQuotientPresheaf : F ⟶ F.totalQuotientPresheaf :=
-  SubmonoidPresheaf.toLocalizationPresheaf _ deriving Epi
+  SubmonoidPresheaf.toLocalizationPresheaf _
+deriving Epi
 #align Top.presheaf.to_total_quotient_presheaf TopCat.Presheaf.toTotalQuotientPresheaf
 
 instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf :=

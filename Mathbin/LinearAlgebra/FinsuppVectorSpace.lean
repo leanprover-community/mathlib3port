@@ -42,7 +42,7 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 
 theorem linearIndependent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
-    LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) :=
+    LinearIndependent R fun ix : Σ i, φ i => single ix.1 (f ix.1 ix.2) :=
   by
   apply @linearIndependent_iUnion_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
@@ -73,7 +73,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 open LinearMap Submodule
 
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
-protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σi, φ i) R (ι →₀ M) :=
+protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σ i, φ i) R (ι →₀ M) :=
   Basis.ofRepr
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
@@ -112,7 +112,7 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
 
 @[simp]
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
-    ⇑(Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
+    ⇑(Finsupp.basis b) = fun ix : Σ i, φ i => single ix.1 (b ix.1 ix.2) :=
   funext fun ⟨i, x⟩ =>
     Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩
@@ -157,12 +157,12 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
       Finsupp.single i a]
   · simp
   · intro x hx
-    rw [Set.mem_singleton_iff] at hx
+    rw [Set.mem_singleton_iff] at hx 
     simp [hx]
   intro x hx
   have hx' : ¬i = x := by
     refine' ne_comm.mp _
-    rwa [mem_singleton_iff] at hx
+    rwa [mem_singleton_iff] at hx 
   simp [hx']
 #align finset.sum_single_ite Finset.sum_single_ite
 

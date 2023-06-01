@@ -85,7 +85,7 @@ theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : Co
   refine' dense_inducing_coe.continuous_at_extend _
   apply mem_of_superset (compl_singleton_mem_nhds h)
   intro y y_ne
-  rw [mem_compl_singleton_iff] at y_ne
+  rw [mem_compl_singleton_iff] at y_ne 
   apply CompleteSpace.complete
   rw [← Filter.map_map]
   apply Cauchy.map _ (completion.uniform_continuous_coe K)
@@ -148,7 +148,7 @@ theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
     by
     have := dense_inducing_coe.dense x
     rw [← image_univ, show (univ : Set K) = {0} ∪ {0}ᶜ from (union_compl_self _).symm,
-      image_union] at this
+      image_union] at this 
     apply mem_closure_of_mem_closure_union this
     rw [image_singleton]
     exact compl_singleton_mem_nhds x_ne
@@ -157,13 +157,13 @@ theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
     rw [image_image]
     rintro _ ⟨z, z_ne, rfl⟩
     rw [mem_singleton_iff]
-    rw [mem_compl_singleton_iff] at z_ne
+    rw [mem_compl_singleton_iff] at z_ne 
     dsimp [c, f]
     rw [hat_inv_extends z_ne]
     norm_cast
     rw [mul_inv_cancel z_ne]
   replace fxclo := closure_mono this fxclo
-  rwa [closure_singleton, mem_singleton_iff] at fxclo
+  rwa [closure_singleton, mem_singleton_iff] at fxclo 
 #align uniform_space.completion.mul_hat_inv_cancel UniformSpace.Completion.mul_hatInv_cancel
 
 instance : Field (hat K) :=
@@ -186,7 +186,7 @@ instance : TopologicalDivisionRing (hat K) :=
         haveI : {(0 : hat K)}ᶜ ⊆ { y : hat K | hat_inv y = y⁻¹ } :=
           by
           intro y y_ne
-          rw [mem_compl_singleton_iff] at y_ne
+          rw [mem_compl_singleton_iff] at y_ne 
           dsimp [Inv.inv]
           rw [if_neg y_ne]
         mem_of_superset (compl_singleton_mem_nhds x_ne) this
@@ -204,7 +204,7 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
       intro F F_cau inf_F
       let i : K →+* L := K.subtype
       have hi : UniformInducing i := uniform_embedding_subtype_coe.to_uniform_inducing
-      rw [← hi.cauchy_map_iff] at F_cau⊢
+      rw [← hi.cauchy_map_iff] at F_cau ⊢
       rw [map_comm (show (i ∘ fun x => x⁻¹) = (fun x => x⁻¹) ∘ i by ext; rfl)]
       apply CompletableTopField.nice _ F_cau
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
@@ -219,7 +219,7 @@ instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L
       rcases CompleteSpace.complete cau_F with ⟨x, hx⟩
       have hx' : x ≠ 0 := by
         rintro rfl
-        rw [inf_eq_right.mpr hx] at hF
+        rw [inf_eq_right.mpr hx] at hF 
         exact cau_F.1.Ne hF
       exact
         Filter.Tendsto.cauchy_map

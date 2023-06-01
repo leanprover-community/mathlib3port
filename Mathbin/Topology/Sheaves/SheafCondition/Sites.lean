@@ -43,12 +43,12 @@ variable {X : TopCat.{w}}
 /-- Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
-def coveringOfPresieve (U : Opens X) (R : Presieve U) : (ΣV, { f : V ⟶ U // R f }) → Opens X :=
+def coveringOfPresieve (U : Opens X) (R : Presieve U) : (Σ V, { f : V ⟶ U // R f }) → Opens X :=
   fun f => f.1
 #align Top.presheaf.covering_of_presieve TopCat.Presheaf.coveringOfPresieve
 
 @[simp]
-theorem coveringOfPresieve_apply (U : Opens X) (R : Presieve U) (f : ΣV, { f : V ⟶ U // R f }) :
+theorem coveringOfPresieve_apply (U : Opens X) (R : Presieve U) (f : Σ V, { f : V ⟶ U // R f }) :
     coveringOfPresieve U R f = f.1 :=
   rfl
 #align Top.presheaf.covering_of_presieve_apply TopCat.Presheaf.coveringOfPresieve_apply
@@ -115,18 +115,18 @@ theorem mem_grothendieckTopology :
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
-def homOfIndex (i : ι) : ΣV, { f : V ⟶ iSup U // presieveOfCovering U f } :=
+def homOfIndex (i : ι) : Σ V, { f : V ⟶ iSup U // presieveOfCovering U f } :=
   ⟨U i, Opens.leSupr U i, i, rfl⟩
 #align Top.presheaf.presieve_of_covering.hom_of_index TopCat.Presheaf.presieveOfCovering.homOfIndex
 
 /-- By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
-def indexOfHom (f : ΣV, { f : V ⟶ iSup U // presieveOfCovering U f }) : ι :=
+def indexOfHom (f : Σ V, { f : V ⟶ iSup U // presieveOfCovering U f }) : ι :=
   f.2.2.some
 #align Top.presheaf.presieve_of_covering.index_of_hom TopCat.Presheaf.presieveOfCovering.indexOfHom
 
-theorem indexOfHom_spec (f : ΣV, { f : V ⟶ iSup U // presieveOfCovering U f }) :
+theorem indexOfHom_spec (f : Σ V, { f : V ⟶ iSup U // presieveOfCovering U f }) :
     f.1 = U (indexOfHom U f) :=
   f.2.2.choose_spec
 #align Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.presieveOfCovering.indexOfHom_spec

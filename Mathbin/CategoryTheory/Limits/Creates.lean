@@ -148,8 +148,9 @@ abbrev CreatesColimits (F : C ⥤ D) :=
 #align category_theory.creates_colimits CategoryTheory.CreatesColimits
 -/
 
-attribute [instance 100]
-  creates_limits_of_shape.creates_limit creates_limits_of_size.creates_limits_of_shape creates_colimits_of_shape.creates_colimit creates_colimits_of_size.creates_colimits_of_shape
+attribute [instance 100] creates_limits_of_shape.creates_limit
+  creates_limits_of_size.creates_limits_of_shape creates_colimits_of_shape.creates_colimit
+  creates_colimits_of_size.creates_colimits_of_shape
 
 #print CategoryTheory.liftLimit /-
 -- see Note [lower instance priority]
@@ -286,7 +287,7 @@ Usually, `F` creating limits says that _any_ lift of `c` is a limit, but
 here we only need to show that our particular lift of `c` is a limit.
 -/
 structure LiftsToLimit (K : J ⥤ C) (F : C ⥤ D) (c : Cone (K ⋙ F)) (t : IsLimit c) extends
-  LiftableCone K F c where
+    LiftableCone K F c where
   makesLimit : IsLimit lifted_cone
 #align category_theory.lifts_to_limit CategoryTheory.LiftsToLimit
 -/
@@ -299,7 +300,7 @@ Usually, `F` creating colimits says that _any_ lift of `c` is a colimit, but
 here we only need to show that our particular lift of `c` is a colimit.
 -/
 structure LiftsToColimit (K : J ⥤ C) (F : C ⥤ D) (c : Cocone (K ⋙ F)) (t : IsColimit c) extends
-  LiftableCocone K F c where
+    LiftableCocone K F c where
   makesColimit : IsColimit lifted_cocone
 #align category_theory.lifts_to_colimit CategoryTheory.LiftsToColimit
 -/

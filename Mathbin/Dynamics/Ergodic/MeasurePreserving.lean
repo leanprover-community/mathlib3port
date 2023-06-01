@@ -48,8 +48,8 @@ variable {μa : Measure α} {μb : Measure β} {μc : Measure γ} {μd : Measure
 and `map f μa = μb`. -/
 @[protect_proj]
 structure MeasurePreserving (f : α → β)
-  (μa : Measure α := by exact MeasureTheory.MeasureSpace.volume)
-  (μb : Measure β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
+    (μa : Measure α := by exact MeasureTheory.MeasureSpace.volume)
+    (μb : Measure β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   Measurable : Measurable f
   map_eq : map f μa = μb
 #align measure_theory.measure_preserving MeasureTheory.MeasurePreserving
@@ -163,7 +163,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
   wlog hlt : i < j generalizing i j
   · exact this j hj i hi hij.symm hxj hxi (hij.lt_or_lt.resolve_left hlt)
-  simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
+  simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj 
   refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
   rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
 #align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
@@ -174,7 +174,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
 `measure_theory.conservative`. -/
 theorem exists_mem_image_mem [FiniteMeasure μ] (hf : MeasurePreserving f μ μ) (hs : MeasurableSet s)
-    (hs' : μ s ≠ 0) : ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s :=
+    (hs' : μ s ≠ 0) : ∃ x ∈ s, ∃ (m : _) (_ : m ≠ 0), (f^[m]) x ∈ s :=
   by
   rcases ENNReal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
   rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩

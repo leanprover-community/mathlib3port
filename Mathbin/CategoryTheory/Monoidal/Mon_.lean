@@ -556,17 +556,17 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
         slice_rhs 1 2 => rw [tensor_μ_natural]
         slice_lhs 2 3 => rw [← tensor_comp, hom.mul_hom f, hom.mul_hom g, tensor_comp]
         simp only [category.assoc] }
-  tensor_id' := by intros ; ext; apply tensor_id
-  tensor_comp' := by intros ; ext; apply tensor_comp
+  tensor_id' := by intros; ext; apply tensor_id
+  tensor_comp' := by intros; ext; apply tensor_comp
   tensorUnit := trivial C
   associator M N P := isoOfIso (α_ M.pt N.pt P.pt) one_associator mul_associator
-  associator_naturality' := by intros ; ext; dsimp; apply associator_naturality
+  associator_naturality' := by intros; ext; dsimp; apply associator_naturality
   leftUnitor M := isoOfIso (λ_ M.pt) one_leftUnitor mul_leftUnitor
-  leftUnitor_naturality' := by intros ; ext; dsimp; apply left_unitor_naturality
+  leftUnitor_naturality' := by intros; ext; dsimp; apply left_unitor_naturality
   rightUnitor M := isoOfIso (ρ_ M.pt) one_rightUnitor mul_rightUnitor
-  rightUnitor_naturality' := by intros ; ext; dsimp; apply right_unitor_naturality
-  pentagon' := by intros ; ext; dsimp; apply pentagon
-  triangle' := by intros ; ext; dsimp; apply triangle
+  rightUnitor_naturality' := by intros; ext; dsimp; apply right_unitor_naturality
+  pentagon' := by intros; ext; dsimp; apply pentagon
+  triangle' := by intros; ext; dsimp; apply triangle
 #align Mon_.Mon_monoidal Mon_.monMonoidal
 
 end Mon_

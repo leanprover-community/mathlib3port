@@ -57,7 +57,7 @@ instance (priority := 100) : Quiver.IsThin C := fun X Y =>
         by
         rw [Cardinal.two_le_iff]
         exact ⟨_, _, r_ne_s⟩
-      let md := ΣZ W : C, Z ⟶ W
+      let md := Σ Z W : C, Z ⟶ W
       let α := #md
       apply not_le_of_lt (Cardinal.cantor α)
       let yp : C := ∏ fun f : md => Y

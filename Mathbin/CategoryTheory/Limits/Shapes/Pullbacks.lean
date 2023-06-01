@@ -193,9 +193,9 @@ def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.pt ≅ t.p
   apply cones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.π.naturality walking_cospan.hom.inl
-    dsimp at h₁; simp only [category.id_comp] at h₁
+    dsimp at h₁ ; simp only [category.id_comp] at h₁ 
     have h₂ := t.π.naturality walking_cospan.hom.inl
-    dsimp at h₂; simp only [category.id_comp] at h₂
+    dsimp at h₂ ; simp only [category.id_comp] at h₂ 
     simp_rw [h₂, ← category.assoc, ← w₁, ← h₁]
   · exact w₁
   · exact w₂
@@ -211,9 +211,9 @@ def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.pt ≅ t.pt)
   apply cocones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.ι.naturality walking_span.hom.fst
-    dsimp at h₁; simp only [category.comp_id] at h₁
+    dsimp at h₁ ; simp only [category.comp_id] at h₁ 
     have h₂ := t.ι.naturality walking_span.hom.fst
-    dsimp at h₂; simp only [category.comp_id] at h₂
+    dsimp at h₂ ; simp only [category.comp_id] at h₂ 
     simp_rw [← h₁, category.assoc, w₁, h₂]
   · exact w₁
   · exact w₂
@@ -440,7 +440,7 @@ variable {f : X ⟶ Z} {g : Y ⟶ Z} {f' : X' ⟶ Z'} {g' : Y' ⟶ Z'}
 /-- Construct an isomorphism of cospans from components. -/
 def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom) :
     cospan f g ≅ cospan f' g' :=
-  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts[iZ, iX, iY])
+  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts [iZ, iX, iY])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
 #align category_theory.limits.cospan_ext CategoryTheory.Limits.cospanExt
 -/
@@ -502,7 +502,7 @@ variable {f : X ⟶ Y} {g : X ⟶ Z} {f' : X' ⟶ Y'} {g' : X' ⟶ Z'}
 /-- Construct an isomorphism of spans from components. -/
 def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom) :
     span f g ≅ span f' g' :=
-  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts[iX, iY, iZ])
+  NatIso.ofComponents (by rintro (⟨⟩ | ⟨⟨⟩⟩); exacts [iX, iY, iZ])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
 #align category_theory.limits.span_ext CategoryTheory.Limits.spanExt
 -/
@@ -600,7 +600,7 @@ theorem π_app_right (c : PullbackCone f g) : c.π.app WalkingCospan.right = c.s
 theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fst ≫ f :=
   by
   have w := t.π.naturality walking_cospan.hom.inl
-  dsimp at w; simpa using w
+  dsimp at w ; simpa using w
 #align category_theory.limits.pullback_cone.condition_one CategoryTheory.Limits.PullbackCone.condition_one
 
 /-- This is a slightly more convenient method to verify that a pullback cone is a limit cone. It
@@ -614,7 +614,7 @@ def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.pt ⟶
     IsLimit t :=
   { lift
     fac := fun s j =>
-      Option.casesOn j (by rw [← s.w inl, ← t.w inl, ← category.assoc]; congr ; exact fac_left s)
+      Option.casesOn j (by rw [← s.w inl, ← t.w inl, ← category.assoc]; congr; exact fac_left s)
         fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s)
     uniq := uniq }
 #align category_theory.limits.pullback_cone.is_limit_aux CategoryTheory.Limits.PullbackCone.isLimitAux
@@ -808,10 +808,10 @@ def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X �
       ⟨hs.fac _ WalkingCospan.left, hs.fac _ WalkingCospan.right, fun r hr hr' =>
         by
         apply pullback_cone.is_limit.hom_ext hs <;>
-              simp only [pullback_cone.mk_fst, pullback_cone.mk_snd] at hr hr'⊢ <;>
+              simp only [pullback_cone.mk_fst, pullback_cone.mk_snd] at hr hr' ⊢ <;>
             simp only [hr, hr'] <;>
           symm
-        exacts[hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right]⟩⟩
+        exacts [hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right]⟩⟩
 #align category_theory.limits.pullback_cone.is_limit_of_factors CategoryTheory.Limits.PullbackCone.isLimitOfFactors
 -/
 
@@ -878,7 +878,7 @@ theorem ι_app_right (c : PushoutCocone f g) : c.ι.app WalkingSpan.right = c.in
 theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f ≫ t.inl :=
   by
   have w := t.ι.naturality walking_span.hom.fst
-  dsimp at w; simpa using w.symm
+  dsimp at w ; simpa using w.symm
 #align category_theory.limits.pushout_cocone.condition_zero CategoryTheory.Limits.PushoutCocone.condition_zero
 
 /-- This is a slightly more convenient method to verify that a pushout cocone is a colimit cocone.
@@ -1087,10 +1087,10 @@ def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W 
       ⟨hs.fac _ WalkingSpan.left, hs.fac _ WalkingSpan.right, fun r hr hr' =>
         by
         apply pushout_cocone.is_colimit.hom_ext hs <;>
-              simp only [pushout_cocone.mk_inl, pushout_cocone.mk_inr] at hr hr'⊢ <;>
+              simp only [pushout_cocone.mk_inl, pushout_cocone.mk_inr] at hr hr' ⊢ <;>
             simp only [hr, hr'] <;>
           symm
-        exacts[hs.fac _ walking_span.left, hs.fac _ walking_span.right]⟩⟩
+        exacts [hs.fac _ walking_span.left, hs.fac _ walking_span.right]⟩⟩
 #align category_theory.limits.pushout_cocone.is_colimit_of_factors CategoryTheory.Limits.PushoutCocone.isColimitOfFactors
 -/
 

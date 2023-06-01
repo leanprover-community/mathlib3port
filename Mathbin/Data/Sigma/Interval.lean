@@ -39,7 +39,7 @@ section Disjoint
 
 variable [DecidableEq ι] [∀ i, Preorder (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
-instance : LocallyFiniteOrder (Σi, α i)
+instance : LocallyFiniteOrder (Σ i, α i)
     where
   finsetIcc := sigmaLift fun _ => Icc
   finsetIco := sigmaLift fun _ => Ico
@@ -66,7 +66,7 @@ instance : LocallyFiniteOrder (Σi, α i)
 
 section
 
-variable (a b : Σi, α i)
+variable (a b : Σ i, α i)
 
 theorem card_Icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _

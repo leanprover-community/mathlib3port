@@ -23,8 +23,8 @@ of categories `karoubi (simplicial_object C) ≌ karoubi (chain_complex C ℕ)`.
 
 noncomputable section
 
-open
-  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents AlgebraicTopology.DoldKan
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents
+  AlgebraicTopology.DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 

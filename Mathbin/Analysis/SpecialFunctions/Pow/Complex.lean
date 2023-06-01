@@ -71,10 +71,10 @@ theorem zero_cpow_eq_iff {x : ℂ} {a : ℂ} : 0 ^ x = a ↔ x ≠ 0 ∧ a = 0 �
   by
   constructor
   · intro hyp
-    simp only [cpow_def, eq_self_iff_true, if_true] at hyp
+    simp only [cpow_def, eq_self_iff_true, if_true] at hyp 
     by_cases x = 0
-    · subst h; simp only [if_true, eq_self_iff_true] at hyp; right; exact ⟨rfl, hyp.symm⟩
-    · rw [if_neg h] at hyp; left; exact ⟨h, hyp.symm⟩
+    · subst h; simp only [if_true, eq_self_iff_true] at hyp ; right; exact ⟨rfl, hyp.symm⟩
+    · rw [if_neg h] at hyp ; left; exact ⟨h, hyp.symm⟩
   · rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
     · exact zero_cpow h
     · exact cpow_zero _
@@ -152,7 +152,7 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ
     rw [← cpow_nat_cast, ← cpow_mul _ this.1 this.2, inv_mul_cancel, cpow_one]
     exact_mod_cast hn
   rw [mul_comm, ← of_real_nat_cast, ← of_real_inv, of_real_mul_im, ← div_eq_inv_mul]
-  rw [← pos_iff_ne_zero] at hn
+  rw [← pos_iff_ne_zero] at hn 
   have hn' : 0 < (n : ℝ) := by assumption_mod_cast
   have hn1 : 1 ≤ (n : ℝ) := by exact_mod_cast Nat.succ_le_iff.2 hn
   constructor

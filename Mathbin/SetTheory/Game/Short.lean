@@ -46,8 +46,8 @@ instance subsingleton_short : ∀ x : PGame, Subsingleton (Short x)
       · funext
         apply @Subsingleton.elim _ (subsingleton_short (xL x))
       · funext
-        apply @Subsingleton.elim _ (subsingleton_short (xR x))⟩decreasing_by
-  pgame_wf_tac
+        apply @Subsingleton.elim _ (subsingleton_short (xR x))⟩
+decreasing_by pgame_wf_tac
 #align pgame.subsingleton_short PGame.subsingleton_short
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
@@ -167,8 +167,8 @@ instance listShortNthLe :
 instance shortOfLists : ∀ (L R : List PGame) [ListShort L] [ListShort R], Short (PGame.ofLists L R)
   | L, R, _, _ => by
     skip; apply short.mk
-    · intros ; infer_instance
-    · intros ; apply PGame.listShortNthLe
+    · intros; infer_instance
+    · intros; apply PGame.listShortNthLe
 #align pgame.short_of_lists PGame.shortOfLists
 
 -- where does the subtype.val come from?
@@ -185,8 +185,8 @@ def shortOfRelabelling : ∀ {x y : PGame.{u}} (R : Relabelling x y) (S : Short 
 #align pgame.short_of_relabelling PGame.shortOfRelabelling
 
 instance shortNeg : ∀ (x : PGame.{u}) [Short x], Short (-x)
-  | mk xl xr xL xR, _ => by skip;
-    exact short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
+  | mk xl xr xL xR, _ => by skip; exact short.mk (fun i => short_neg _) fun i => short_neg _
+decreasing_by pgame_wf_tac
 #align pgame.short_neg PGame.shortNeg
 
 instance shortAdd : ∀ (x y : PGame.{u}) [Short x] [Short y], Short (x + y)
@@ -196,8 +196,8 @@ instance shortAdd : ∀ (x y : PGame.{u}) [Short x] [Short y], Short (x + y)
     all_goals
       rintro ⟨i⟩
       · apply short_add
-      · change short (mk xl xr xL xR + _); apply short_add decreasing_by
-  pgame_wf_tac
+      · change short (mk xl xr xL xR + _); apply short_add
+decreasing_by pgame_wf_tac
 #align pgame.short_add PGame.shortAdd
 
 instance shortNat : ∀ n : ℕ, Short n
@@ -235,7 +235,8 @@ def leLfDecidable : ∀ (x y : PGame.{u}) [Short x] [Short y], Decidable (x ≤ 
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
       · apply @Fintype.decidableExistsFintype xr _ _ (by infer_instance)
         intro i
-        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance decreasing_by pgame_wf_tac
+        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
+decreasing_by pgame_wf_tac
 #align pgame.le_lf_decidable PGame.leLfDecidable
 
 instance leDecidable (x y : PGame.{u}) [Short x] [Short y] : Decidable (x ≤ y) :=

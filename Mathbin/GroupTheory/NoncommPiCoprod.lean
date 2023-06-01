@@ -68,7 +68,7 @@ theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type _} (s : Finset ι
     induction' s using Finset.induction_on with i s hnmem ih
     · simp
     · have hcomm := comm.mono (Finset.coe_subset.2 <| Finset.subset_insert _ _)
-      simp only [Finset.forall_mem_insert] at hmem
+      simp only [Finset.forall_mem_insert] at hmem 
       have hmem_bsupr : s.noncomm_prod f hcomm ∈ ⨆ i ∈ (s : Set ι), K i :=
         by
         refine' Subgroup.noncommProd_mem _ _ _
@@ -76,12 +76,12 @@ theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type _} (s : Finset ι
         have : K x ≤ ⨆ i ∈ (s : Set ι), K i := le_iSup₂ x hx
         exact this (hmem.2 x hx)
       intro heq1
-      rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1
+      rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1 
       have hnmem' : i ∉ (s : Set ι) := by simpa
       obtain ⟨heq1i : f i = 1, heq1S : s.noncomm_prod f _ = 1⟩ :=
         subgroup.disjoint_iff_mul_eq_one.mp (hind.disjoint_bsupr hnmem') hmem.1 hmem_bsupr heq1
       intro i h
-      simp only [Finset.mem_insert] at h
+      simp only [Finset.mem_insert] at h 
       rcases h with ⟨rfl | _⟩
       · exact heq1i
       · exact ih hcomm hmem.2 heq1S _ h
@@ -142,7 +142,7 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
   rw [Pi.mulSingle_eq_same]
   rw [Finset.noncommProd_eq_pow_card]
   · rw [one_pow]; exact mul_one _
-  · intro j hj; simp only [Finset.mem_erase] at hj; simp [hj]
+  · intro j hj; simp only [Finset.mem_erase] at hj ; simp [hj]
 #align monoid_hom.noncomm_pi_coprod_mul_single MonoidHom.noncommPiCoprod_mulSingle
 #align add_monoid_hom.noncomm_pi_coprod_single AddMonoidHom.noncommPiCoprod_single
 
@@ -230,7 +230,7 @@ theorem injective_noncommPiCoprod_of_independent
     apply (MonoidHom.ker_eq_bot_iff _).mp
     apply eq_bot_iff.mpr
     intro f heq1
-    change finset.univ.noncomm_prod (fun i => ϕ i (f i)) _ = 1 at heq1
+    change finset.univ.noncomm_prod (fun i => ϕ i (f i)) _ = 1 at heq1 
     change f = 1
     have : ∀ i, i ∈ Finset.univ → ϕ i (f i) = 1 :=
       Subgroup.eq_one_of_noncommProd_eq_one_of_independent _ _ _ _ hind (by simp) heq1
@@ -254,8 +254,8 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     rintro i
     rw [disjoint_iff_inf_le]
     rintro f ⟨hxi, hxp⟩
-    dsimp at hxi hxp
-    rw [iSup_subtype', ← noncomm_pi_coprod_range] at hxp
+    dsimp at hxi hxp 
+    rw [iSup_subtype', ← noncomm_pi_coprod_range] at hxp 
     rotate_left
     · intro _ _ hj; apply hcomm; exact hj ∘ Subtype.ext
     cases' hxp with g hgf

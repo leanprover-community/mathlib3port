@@ -1387,12 +1387,12 @@ theorem range_sigma_eq_iUnion_range {γ : α → Type _} (f : Sigma γ → β) :
 #align set.range_sigma_eq_Union_range Set.range_sigma_eq_iUnion_range
 
 #print Set.iUnion_eq_range_sigma /-
-theorem iUnion_eq_range_sigma (s : α → Set β) : (⋃ i, s i) = range fun a : Σi, s i => a.2 := by
+theorem iUnion_eq_range_sigma (s : α → Set β) : (⋃ i, s i) = range fun a : Σ i, s i => a.2 := by
   simp [Set.ext_iff]
 #align set.Union_eq_range_sigma Set.iUnion_eq_range_sigma
 -/
 
-theorem iUnion_eq_range_psigma (s : ι → Set β) : (⋃ i, s i) = range fun a : Σ'i, s i => a.2 := by
+theorem iUnion_eq_range_psigma (s : ι → Set β) : (⋃ i, s i) = range fun a : Σ' i, s i => a.2 := by
   simp [Set.ext_iff]
 #align set.Union_eq_range_psigma Set.iUnion_eq_range_psigma
 
@@ -1407,7 +1407,7 @@ theorem iUnion_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _
 #align set.Union_image_preimage_sigma_mk_eq_self Set.iUnion_image_preimage_sigma_mk_eq_self
 
 #print Set.Sigma.univ /-
-theorem Sigma.univ (X : α → Type _) : (Set.univ : Set (Σa, X a)) = ⋃ a, range (Sigma.mk a) :=
+theorem Sigma.univ (X : α → Type _) : (Set.univ : Set (Σ a, X a)) = ⋃ a, range (Sigma.mk a) :=
   Set.ext fun x =>
     iff_of_true trivial ⟨range (Sigma.mk x.1), Set.mem_range_self _, x.2, Sigma.eta x⟩
 #align set.sigma.univ Set.Sigma.univ
@@ -1665,7 +1665,7 @@ theorem InjOn.image_iInter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} 
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   inhabit ι
   refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
-  simp only [mem_Inter, mem_image_iff_bex] at hy
+  simp only [mem_Inter, mem_image_iff_bex] at hy 
   choose x hx hy using hy
   refine' ⟨x default, mem_Inter.2 fun i => _, hy _⟩
   suffices x default = x i by rw [this]; apply hx
@@ -1974,7 +1974,7 @@ theorem sInter_prod_sInter {S : Set (Set α)} {T : Set (Set β)} (hS : S.Nonempt
   obtain ⟨s₁, h₁⟩ := hS
   obtain ⟨s₂, h₂⟩ := hT
   refine' Set.Subset.antisymm (sInter_prod_sInter_subset S T) fun x hx => _
-  rw [mem_Inter₂] at hx
+  rw [mem_Inter₂] at hx 
   exact ⟨fun s₀ h₀ => (hx (s₀, s₂) ⟨h₀, h₂⟩).1, fun s₀ h₀ => (hx (s₁, s₀) ⟨h₁, h₀⟩).2⟩
 #align set.sInter_prod_sInter Set.sInter_prod_sInter
 
@@ -2168,7 +2168,7 @@ theorem pi_diff_pi_subset (i : Set α) (s t : ∀ a, Set (π a)) :
   by
   refine' diff_subset_comm.2 fun x hx a ha => _
   simp only [mem_diff, mem_pi, mem_Union, not_exists, mem_preimage, not_and, Classical.not_not,
-    eval_apply] at hx
+    eval_apply] at hx 
   exact hx.2 _ ha (hx.1 _ ha)
 #align set.pi_diff_pi_subset Set.pi_diff_pi_subset
 
@@ -2303,7 +2303,7 @@ theorem biUnion_diff_biUnion_subset (s₁ s₂ : Set α) :
 #print Set.sigmaToiUnion /-
 /-- If `t` is an indexed family of sets, then there is a natural map from `Σ i, t i` to `⋃ i, t i`
 sending `⟨i, x⟩` to `x`. -/
-def sigmaToiUnion (x : Σi, t i) : ⋃ i, t i :=
+def sigmaToiUnion (x : Σ i, t i) : ⋃ i, t i :=
   ⟨x.2, mem_iUnion.2 ⟨x.1, x.2.2⟩⟩
 #align set.sigma_to_Union Set.sigmaToiUnion
 -/
@@ -2333,7 +2333,7 @@ theorem sigmaToiUnion_bijective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) 
 
 /-- Equivalence between a disjoint union and a dependent sum. -/
 noncomputable def unionEqSigmaOfDisjoint {t : α → Set β} (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) :
-    (⋃ i, t i) ≃ Σi, t i :=
+    (⋃ i, t i) ≃ Σ i, t i :=
   (Equiv.ofBijective _ <| sigmaToiUnion_bijective t h).symm
 #align set.Union_eq_sigma_of_disjoint Set.unionEqSigmaOfDisjoint
 

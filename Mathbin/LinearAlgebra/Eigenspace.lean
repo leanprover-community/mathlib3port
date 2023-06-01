@@ -117,7 +117,7 @@ theorem mem_spectrum_of_hasEigenvalue {f : End R M} {μ : R} (hμ : HasEigenvalu
 theorem hasEigenvalue_iff_mem_spectrum [FiniteDimensional K V] {f : End K V} {μ : K} :
     f.HasEigenvalue μ ↔ μ ∈ spectrum K f :=
   Iff.intro mem_spectrum_of_hasEigenvalue fun h => by
-    rwa [spectrum.mem_iff, IsUnit.sub_iff, LinearMap.isUnit_iff_ker_eq_bot] at h
+    rwa [spectrum.mem_iff, IsUnit.sub_iff, LinearMap.isUnit_iff_ker_eq_bot] at h 
 #align module.End.has_eigenvalue_iff_mem_spectrum Module.End.hasEigenvalue_iff_mem_spectrum
 
 theorem eigenspace_div (f : End K V) (a b : K) (hb : b ≠ 0) :
@@ -137,7 +137,8 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
   calc
     eigenspace f (-q.coeff 0 / q.leadingCoeff) =
         (q.leadingCoeff • f - algebraMap K (End K V) (-q.coeff 0)).ker :=
-      by rw [eigenspace_div]; intro h; rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq; cases hq
+      by rw [eigenspace_div]; intro h; rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq ;
+      cases hq
     _ = (aeval f (C q.leadingCoeff * X + C (q.coeff 0))).ker := by rw [C_mul', aeval_def];
       simp [algebraMap, Algebra.toRingHom]
     _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
@@ -190,8 +191,8 @@ theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue 
     apply minpoly.ne_zero f.is_integral
     rw [hp, Con, MulZeroClass.mul_zero]
   have h_deg := minpoly.degree_le_of_ne_zero K f p_ne_0 _
-  · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg
-    norm_cast  at h_deg
+  · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg 
+    norm_cast  at h_deg 
     linarith
   · have h_aeval := minpoly.aeval K f
     revert h_aeval
@@ -336,7 +337,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
         by
         simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sumAddHom_apply,
           LinearMap.toAddMonoidHom_coe, Dfinsupp.sum, h_l_support, Submodule.subtype_apply,
-          Submodule.coe_eq_zero, Finset.sum_insert hμ₀, h_sum_l_support'_eq_0, add_zero] at hl
+          Submodule.coe_eq_zero, Finset.sum_insert hμ₀, h_sum_l_support'_eq_0, add_zero] at hl 
         exact hl
       -- Thus, all coefficients in `l` are `0`.
       show l = 0
@@ -438,7 +439,7 @@ theorem maximalGeneralizedEigenspace_eq [h : IsNoetherian R M] (f : End R M) (μ
     maximalGeneralizedEigenspace f μ =
       f.generalizedEigenspace μ (maximalGeneralizedEigenspaceIndex f μ) :=
   by
-  rw [isNoetherian_iff_wellFounded] at h
+  rw [isNoetherian_iff_wellFounded] at h 
   exact (WellFounded.iSup_eq_monotonicSequenceLimit h (f.generalized_eigenspace μ) : _)
 #align module.End.maximal_generalized_eigenspace_eq Module.End.maximalGeneralizedEigenspace_eq
 
@@ -473,7 +474,7 @@ theorem hasEigenvalue_of_hasGeneralizedEigenvalue {f : End R M} {μ : R} {k : �
     (hμ : f.HasGeneralizedEigenvalue μ k) : f.HasEigenvalue μ :=
   by
   intro contra; apply hμ
-  erw [LinearMap.ker_eq_bot] at contra⊢; rw [LinearMap.coe_pow]
+  erw [LinearMap.ker_eq_bot] at contra ⊢; rw [LinearMap.coe_pow]
   exact Function.Injective.iterate contra k
 #align module.End.has_eigenvalue_of_has_generalized_eigenvalue Module.End.hasEigenvalue_of_hasGeneralizedEigenvalue
 
@@ -520,7 +521,7 @@ theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp
     (μ : R) : (eigenspace (f.restrict hfp) μ).map p.Subtype ≤ f.eigenspace μ :=
   by
   rintro a ⟨x, hx, rfl⟩
-  simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx⊢
+  simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx ⊢
   exact congr_arg coe hx
 #align module.End.eigenspace_restrict_le_eigenspace Module.End.eigenspace_restrict_le_eigenspace
 

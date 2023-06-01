@@ -467,7 +467,7 @@ protected theorem splits (n : ℕ) :
     fun n ih K _ f hf => by
     skip;
     rw [← splits_id_iff_splits, algebra_map_succ, ← map_map, splits_id_iff_splits, ←
-      X_sub_C_mul_remove_factor f fun h => by rw [h] at hf; cases hf]
+      X_sub_C_mul_remove_factor f fun h => by rw [h] at hf ; cases hf]
     exact splits_mul _ (splits_X_sub_C _) (ih _ (nat_degree_remove_factor' hf))
 #align polynomial.splitting_field_aux.splits Polynomial.SplittingFieldAux.splits
 
@@ -477,8 +477,8 @@ theorem exists_lift (n : ℕ) :
         ∀ (j : K →+* L) (hf : splits j f),
           ∃ k : splitting_field_aux n f →+* L, k.comp (algebraMap _ _) = j :=
   Nat.recOn n (fun K _ _ _ L _ j _ => ⟨j, j.comp_id⟩) fun n ih K _ f hf L _ j hj =>
-    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hf; cases hf
-    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf; exact hndf rfl
+    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hf ; cases hf
+    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf ; exact hndf rfl
     let ⟨r, hr⟩ :=
       exists_root_of_splits _
         (splits_of_splits_of_dvd j hfn0 hj (factor_dvd_of_nat_degree_ne_zero hndf))
@@ -486,7 +486,7 @@ theorem exists_lift (n : ℕ) :
     have hmf0 : map (AdjoinRoot.of f.factor) f ≠ 0 := map_ne_zero hfn0
     have hsf : splits (AdjoinRoot.lift j r hr) f.remove_factor :=
       by
-      rw [← X_sub_C_mul_remove_factor _ hndf] at hmf0; refine' (splits_of_splits_mul _ hmf0 _).2
+      rw [← X_sub_C_mul_remove_factor _ hndf] at hmf0 ; refine' (splits_of_splits_mul _ hmf0 _).2
       rwa [X_sub_C_mul_remove_factor _ hndf, ← splits_id_iff_splits, map_map,
         AdjoinRoot.lift_comp_of, splits_id_iff_splits]
     let ⟨k, hk⟩ := ih f.remove_factor (nat_degree_remove_factor' hf) (AdjoinRoot.lift j r hr) hsf
@@ -503,11 +503,11 @@ theorem adjoin_roots (n : ℕ) :
   Nat.recOn n (fun K _ f hf => Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)
     fun n ih K _ f hfn =>
     by
-    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hfn; cases hfn
-    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf; exact hndf rfl
+    have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hfn ; cases hfn
+    have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf ; exact hndf rfl
     have hmf0 : map (algebraMap K (splitting_field_aux n.succ f)) f ≠ 0 := map_ne_zero hfn0
-    rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at
-      hmf0⊢
+    rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at hmf0
+      ⊢
     rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.toFinset_add,
       Finset.coe_union, Multiset.toFinset_singleton, Finset.coe_singleton,
       Algebra.adjoin_union_eq_adjoin_adjoin, ← Set.image_singleton,
@@ -636,7 +636,7 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
       adjoin_roots L f ▸
         (roots_map (algebraMap K L) h).symm ▸
           Algebra.adjoin_le_iff.2 fun y hy =>
-            let ⟨x, hxs, hxy⟩ := Finset.mem_image.1 (by rwa [Multiset.toFinset_map] at hy)
+            let ⟨x, hxs, hxy⟩ := Finset.mem_image.1 (by rwa [Multiset.toFinset_map] at hy )
             hxy ▸ SetLike.mem_coe.2 <| Subalgebra.algebraMap_mem _ _,
     fun h =>
     @RingEquiv.toRingHom_refl K _ ▸
@@ -689,7 +689,7 @@ theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensiona
   ⟨@Algebra.top_toSubmodule K L _ _ _ ▸
       adjoin_roots L f ▸
         FG_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
-          if hf : f = 0 then by rw [hf, Polynomial.map_zero, roots_zero] at hy; cases hy
+          if hf : f = 0 then by rw [hf, Polynomial.map_zero, roots_zero] at hy ; cases hy
           else
             isAlgebraic_iff_isIntegral.1
               ⟨f, hf,
@@ -746,7 +746,7 @@ variable [Field K] [Field L] [Algebra K L] {p : K[X]}
 theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
     (hF : ∀ x ∈ p.rootSet L, x ∈ F) : p.Splits (algebraMap K F) :=
   by
-  simp_rw [root_set, Finset.mem_coe, Multiset.mem_toFinset] at hF
+  simp_rw [root_set, Finset.mem_coe, Multiset.mem_toFinset] at hF 
   rw [splits_iff_exists_multiset]
   refine' ⟨Multiset.pmap Subtype.mk _ hF, map_injective _ (algebraMap F L).Injective _⟩
   conv_lhs =>

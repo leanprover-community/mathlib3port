@@ -264,14 +264,14 @@ theorem sum (s : Finset ι) {f : ι → ℝ → E} (h : ∀ i ∈ s, IntervalInt
 theorem mul_continuousOn {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => f x * g x) μ a b :=
   by
-  rw [intervalIntegrable_iff] at hf⊢
+  rw [intervalIntegrable_iff] at hf ⊢
   exact hf.mul_continuous_on_of_subset hg measurableSet_Ioc isCompact_uIcc Ioc_subset_Icc_self
 #align interval_integrable.mul_continuous_on IntervalIntegrable.mul_continuousOn
 
 theorem continuousOn_mul {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g [a, b]) : IntervalIntegrable (fun x => g x * f x) μ a b :=
   by
-  rw [intervalIntegrable_iff] at hf⊢
+  rw [intervalIntegrable_iff] at hf ⊢
   exact hf.continuous_on_mul_of_subset hg isCompact_uIcc measurableSet_Ioc Ioc_subset_Icc_self
 #align interval_integrable.continuous_on_mul IntervalIntegrable.continuousOn_mul
 
@@ -297,7 +297,7 @@ theorem comp_mul_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c * x)) volume (a / c) (b / c) :=
   by
   rcases eq_or_ne c 0 with (hc | hc); · rw [hc]; simp
-  rw [intervalIntegrable_iff'] at hf⊢
+  rw [intervalIntegrable_iff'] at hf ⊢
   have A : MeasurableEmbedding fun x => x * c⁻¹ :=
     (Homeomorph.mulRight₀ _ (inv_ne_zero hc)).ClosedEmbedding.MeasurableEmbedding
   rw [← Real.smul_map_volume_mul_right (inv_ne_zero hc), integrable_on, measure.restrict_smul,
@@ -318,12 +318,12 @@ theorem comp_add_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   by
   wlog h : a ≤ b
   · exact IntervalIntegrable.symm (this hf.symm _ (le_of_not_le h))
-  rw [intervalIntegrable_iff'] at hf⊢
+  rw [intervalIntegrable_iff'] at hf ⊢
   have A : MeasurableEmbedding fun x => x + c :=
     (Homeomorph.addRight c).ClosedEmbedding.MeasurableEmbedding
   have Am : measure.map (fun x => x + c) volume = volume :=
     is_add_left_invariant.is_add_right_invariant.map_add_right_eq_self _
-  rw [← Am] at hf
+  rw [← Am] at hf 
   convert(MeasurableEmbedding.integrableOn_map_iff A).mp hf
   rw [preimage_add_const_uIcc]
 #align interval_integrable.comp_add_right IntervalIntegrable.comp_add_right
@@ -969,7 +969,7 @@ theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn
   · rw [integral_symm, ← this hb ha (le_of_not_le hab), neg_sub]
   rw [sub_eq_iff_eq_add', integral_of_le hab, ← integral_union (Iic_disjoint_Ioc le_rfl),
     Iic_union_Ioc_eq_Iic hab]
-  exacts[measurableSet_Ioc, ha, hb.mono_set fun _ => And.right]
+  exacts [measurableSet_Ioc, ha, hb.mono_set fun _ => And.right]
 #align interval_integral.integral_Iic_sub_Iic intervalIntegral.integral_Iic_sub_Iic
 
 /-- If `μ` is a finite measure then `∫ x in a..b, c ∂μ = (μ (Iic b) - μ (Iic a)) • c`. -/
@@ -988,7 +988,7 @@ theorem integral_eq_integral_of_support_subset {a b} (h : support f ⊆ Ioc a b)
   ·
     rw [integral_of_le hab, ← integral_indicator measurableSet_Ioc, indicator_eq_self.2 h] <;>
       infer_instance
-  · rw [Ioc_eq_empty hab.not_lt, subset_empty_iff, support_eq_empty_iff] at h
+  · rw [Ioc_eq_empty hab.not_lt, subset_empty_iff, support_eq_empty_iff] at h 
     simp [h]
 #align interval_integral.integral_eq_integral_of_support_subset intervalIntegral.integral_eq_integral_of_support_subset
 
@@ -1188,7 +1188,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
       · rw [min₁₂]
         exact (h_int' hx).1.AEStronglyMeasurable
       · exact le_max_of_le_right hx.2
-      exacts[measurableSet_Iic, measurableSet_Iic]
+      exacts [measurableSet_Iic, measurableSet_Iic]
     · refine' eventually_of_forall fun x => eventually_of_forall fun t => _
       dsimp [indicator]
       split_ifs <;> simp
@@ -1262,7 +1262,7 @@ theorem continuousOn_primitive_interval [NoAtoms μ] (h_int : IntegrableOn f (uI
 theorem continuousOn_primitive_interval_left [NoAtoms μ] (h_int : IntegrableOn f (uIcc a b) μ) :
     ContinuousOn (fun x => ∫ t in x..b, f t ∂μ) (uIcc a b) :=
   by
-  rw [uIcc_comm a b] at h_int⊢
+  rw [uIcc_comm a b] at h_int ⊢
   simp only [integral_symm b]
   exact (continuous_on_primitive_interval h_int).neg
 #align interval_integral.continuous_on_primitive_interval_left intervalIntegral.continuousOn_primitive_interval_left
@@ -1301,7 +1301,7 @@ theorem integral_eq_zero_iff_of_nonneg_ae (hf : 0 ≤ᵐ[μ.restrict (Ioc a b �
     (∫ x in a..b, f x ∂μ) = 0 ↔ f =ᵐ[μ.restrict (Ioc a b ∪ Ioc b a)] 0 :=
   by
   cases' le_total a b with hab hab <;>
-    simp only [Ioc_eq_empty hab.not_lt, empty_union, union_empty] at hf⊢
+    simp only [Ioc_eq_empty hab.not_lt, empty_union, union_empty] at hf ⊢
   · exact integral_eq_zero_iff_of_le_of_nonneg_ae hab hf hfi
   · rw [integral_symm, neg_eq_zero, integral_eq_zero_iff_of_le_of_nonneg_ae hab hf hfi.symm]
 #align interval_integral.integral_eq_zero_iff_of_nonneg_ae intervalIntegral.integral_eq_zero_iff_of_nonneg_ae
@@ -1314,12 +1314,12 @@ theorem integral_pos_iff_support_of_nonneg_ae' (hf : 0 ≤ᵐ[μ.restrict (Ι a 
     (0 < ∫ x in a..b, f x ∂μ) ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
   by
   cases' lt_or_le a b with hab hba
-  · rw [uIoc_of_le hab.le] at hf
+  · rw [uIoc_of_le hab.le] at hf 
     simp only [hab, true_and_iff, integral_of_le hab.le,
       set_integral_pos_iff_support_of_nonneg_ae hf hfi.1]
   · suffices (∫ x in a..b, f x ∂μ) ≤ 0 by simp only [this.not_lt, hba.not_lt, false_and_iff]
     rw [integral_of_ge hba, neg_nonpos]
-    rw [uIoc_swap, uIoc_of_le hba] at hf
+    rw [uIoc_swap, uIoc_of_le hba] at hf 
     exact integral_nonneg_of_ae hf
 #align interval_integral.integral_pos_iff_support_of_nonneg_ae' intervalIntegral.integral_pos_iff_support_of_nonneg_ae'
 
@@ -1368,7 +1368,7 @@ theorem integral_lt_integral_of_ae_le_of_measure_setOf_lt_ne_zero (hab : a ≤ b
     MeasureTheory.integral_pos_iff_support_of_nonneg_ae]
   · refine' pos_iff_ne_zero.2 (mt (measure_mono_null _) hlt)
     exact fun x hx => (sub_pos.2 hx).ne'
-  exacts[hle.mono fun x => sub_nonneg.2, hgi.1.sub hfi.1]
+  exacts [hle.mono fun x => sub_nonneg.2, hgi.1.sub hfi.1]
 #align interval_integral.integral_lt_integral_of_ae_le_of_measure_set_of_lt_ne_zero intervalIntegral.integral_lt_integral_of_ae_le_of_measure_setOf_lt_ne_zero
 
 /-- If `f` and `g` are continuous on `[a, b]`, `a < b`, `f x ≤ g x` on this interval, and
@@ -1385,11 +1385,11 @@ theorem integral_lt_integral_of_continuousOn_of_le_of_exists_lt {f g : ℝ → �
   contrapose! hlt
   have h_eq : f =ᵐ[volume.restrict (Ioc a b)] g :=
     by
-    simp only [← not_le, ← ae_iff] at hlt
+    simp only [← not_le, ← ae_iff] at hlt 
     exact
       eventually_le.antisymm ((ae_restrict_iff' measurableSet_Ioc).2 <| eventually_of_forall hle)
         hlt
-  simp only [measure.restrict_congr_set Ioc_ae_eq_Icc] at h_eq
+  simp only [measure.restrict_congr_set Ioc_ae_eq_Icc] at h_eq 
   exact fun c hc => (measure.eq_on_Icc_of_ae_eq volume hab.ne h_eq hfc hgc hc).ge
 #align interval_integral.integral_lt_integral_of_continuous_on_of_le_of_exists_lt intervalIntegral.integral_lt_integral_of_continuousOn_of_le_of_exists_lt
 

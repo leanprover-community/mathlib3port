@@ -82,7 +82,7 @@ section SubringClass
 /-- `subring_class S R` states that `S` is a type of subsets `s ⊆ R` that
 are both a multiplicative submonoid and an additive subgroup. -/
 class SubringClass (S : Type _) (R : Type u) [Ring R] [SetLike S R] extends SubsemiringClass S R,
-  NegMemClass S R : Prop
+    NegMemClass S R : Prop
 #align subring_class SubringClass
 -/
 
@@ -1388,7 +1388,7 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩; clear hx
   induction' L with hd tl ih; · exact h0
-  rw [List.forall_mem_cons] at HL
+  rw [List.forall_mem_cons] at HL 
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
@@ -1396,16 +1396,16 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   rsuffices ⟨L, HL', HP | HP⟩ :
     ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
   · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact h1
-    rw [List.forall_mem_cons] at HL'
+    rw [List.forall_mem_cons] at HL' 
     rw [List.prod_cons]
     exact hs _ HL'.1 _ (ih HL'.2)
   · rw [HP]; clear HP HL hd; induction' L with hd tl ih; · exact hneg1
     rw [List.prod_cons, neg_mul_eq_mul_neg]
-    rw [List.forall_mem_cons] at HL'
+    rw [List.forall_mem_cons] at HL' 
     exact hs _ HL'.1 _ (ih HL'.2)
   induction' hd with hd tl ih
   · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
-  rw [List.forall_mem_cons] at HL
+  rw [List.forall_mem_cons] at HL 
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
   ·
     exact

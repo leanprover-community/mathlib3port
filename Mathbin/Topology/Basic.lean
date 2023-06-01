@@ -118,7 +118,7 @@ theorem isOpen_mk {p h₁ h₂ h₃} {s : Set α} : is_open[⟨p, h₁, h₂, h�
 #print topologicalSpace_eq /-
 @[ext]
 theorem topologicalSpace_eq {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g := by
-  cases f; cases g; congr ; exact h
+  cases f; cases g; congr; exact h
 #align topological_space_eq topologicalSpace_eq
 -/
 
@@ -348,7 +348,7 @@ def interior (s : Set α) : Set α :=
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem mem_interior {s : Set α} {x : α} :
-    x ∈ interior s ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
+    x ∈ interior s ↔ ∃ (t : _) (_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
   simp only [interior, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc', and_left_comm]
 #align mem_interior mem_interiorₓ
 
@@ -467,13 +467,13 @@ theorem interior_union_isClosed_of_interior_empty {s t : Set α} (h₁ : IsClose
     by_contradiction fun hx₂ : x ∉ s =>
       have : u \ s ⊆ t := fun x ⟨h₁, h₂⟩ => Or.resolve_left (hu₂ h₁) h₂
       have : u \ s ⊆ interior t := by rwa [(IsOpen.sdiff hu₁ h₁).subset_interior_iff]
-      have : u \ s ⊆ ∅ := by rwa [h₂] at this
+      have : u \ s ⊆ ∅ := by rwa [h₂] at this 
       this ⟨hx₁, hx₂⟩
   Subset.antisymm (interior_maximal this isOpen_interior) (interior_mono <| subset_union_left _ _)
 #align interior_union_is_closed_of_interior_empty interior_union_isClosed_of_interior_empty
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-theorem isOpen_iff_forall_mem_open : IsOpen s ↔ ∀ x ∈ s, ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t :=
+theorem isOpen_iff_forall_mem_open : IsOpen s ↔ ∀ x ∈ s, ∃ (t : _) (_ : t ⊆ s), IsOpen t ∧ x ∈ t :=
   by rw [← subset_interior_iff_isOpen] <;> simp only [subset_def, mem_interior]
 #align is_open_iff_forall_mem_open isOpen_iff_forall_mem_open
 
@@ -952,7 +952,7 @@ theorem interior_frontier {s : Set α} (h : IsClosed s) : interior (frontier s) 
   have C : interior (frontier s) ⊆ frontier s := interior_subset
   have : interior (frontier s) ⊆ interior s ∩ (s \ interior s) :=
     subset_inter B (by simpa [A] using C)
-  rwa [inter_diff_self, subset_empty_iff] at this
+  rwa [inter_diff_self, subset_empty_iff] at this 
 #align interior_frontier interior_frontier
 -/
 
@@ -1064,7 +1064,7 @@ theorem nhds_le_of_le {f a} {s : Set α} (h : a ∈ s) (o : IsOpen s) (sf : 𝓟
 #align nhds_le_of_le nhds_le_of_le
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-theorem mem_nhds_iff {a : α} {s : Set α} : s ∈ 𝓝 a ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ a ∈ t :=
+theorem mem_nhds_iff {a : α} {s : Set α} : s ∈ 𝓝 a ↔ ∃ (t : _) (_ : t ⊆ s), IsOpen t ∧ a ∈ t :=
   (nhds_basis_opens a).mem_iff.trans
     ⟨fun ⟨t, ⟨hat, ht⟩, hts⟩ => ⟨t, hts, ht, hat⟩, fun ⟨t, hts, ht, hat⟩ => ⟨t, ⟨hat, ht⟩, hts⟩⟩
 #align mem_nhds_iff mem_nhds_iffₓ
@@ -1557,7 +1557,7 @@ theorem isClosed_setOf_clusterPt {f : Filter α} : IsClosed { x | ClusterPt x f 
   by
   simp only [ClusterPt, inf_ne_bot_iff_frequently_left, set_of_forall, imp_iff_not_or]
   refine' isClosed_iInter fun p => IsClosed.union _ _ <;> apply isClosed_compl_iff.2
-  exacts[isOpen_setOf_eventually_nhds, isOpen_const]
+  exacts [isOpen_setOf_eventually_nhds, isOpen_const]
 #align is_closed_set_of_cluster_pt isClosed_setOf_clusterPt
 -/
 
@@ -1779,7 +1779,7 @@ theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter 
   refine' ⟨fun h' => _, le_trans inf_le_left⟩
   have := sup_le h' h
   rw [sup_inf_right, sup_principal, union_compl_self, principal_univ, inf_top_eq, sup_le_iff] at
-    this
+    this 
   exact this.1
 #align tendsto_inf_principal_nhds_iff_of_forall_eq tendsto_inf_principal_nhds_iff_of_forall_eq
 

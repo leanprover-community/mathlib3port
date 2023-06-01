@@ -147,7 +147,7 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     · exfalso
       have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
         Int.dvd_gcd (Int.dvd_of_emod_eq_zero hap) (Int.dvd_of_emod_eq_zero hbp)
-      rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1; revert h1; norm_num
+      rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1 ; revert h1; norm_num
     · exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 #align fermat_42.exists_odd_minimal Fermat42.exists_odd_minimal
@@ -253,17 +253,17 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   have hi' : ¬m = -i ^ 2 := by
     by_contra h1
     have hit : -i ^ 2 ≤ 0; apply neg_nonpos.mpr (sq_nonneg i)
-    rw [← h1] at hit
+    rw [← h1] at hit 
     apply absurd h4 (not_lt.mpr hit)
   replace hi : m = i ^ 2; · apply Or.resolve_right hi hi'
-  rw [mul_comm] at hs
-  rw [Int.gcd_comm] at hcp
+  rw [mul_comm] at hs 
+  rw [Int.gcd_comm] at hcp 
   -- obtain d such that r * s = d ^ 2
   obtain ⟨d, hd⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
   -- (b / 2) ^ 2 and m are positive so r * s is positive
   have hd' : ¬r * s = -d ^ 2 := by
     by_contra h1
-    rw [h1] at hs
+    rw [h1] at hs 
     have h2 : b' ^ 2 ≤ 0 := by
       rw [hs, (by ring : -d ^ 2 * m = -(d ^ 2 * m))]
       exact neg_nonpos.mpr ((zero_le_mul_right h4).mpr (sq_nonneg d))
@@ -273,20 +273,20 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- r = +/- j ^ 2
   obtain ⟨j, hj⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hj0 : j ≠ 0 := by
-    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hj
+    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hj 
     apply left_ne_zero_of_mul hrsz hj
-  rw [mul_comm] at hd
-  rw [Int.gcd_comm] at htt4
+  rw [mul_comm] at hd 
+  rw [Int.gcd_comm] at htt4 
   -- s = +/- k ^ 2
   obtain ⟨k, hk⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hk0 : k ≠ 0 := by
-    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hk
+    intro h0; rw [h0, zero_pow zero_lt_two, neg_zero, or_self_iff] at hk 
     apply right_ne_zero_of_mul hrsz hk
   have hj2 : r ^ 2 = j ^ 4 := by cases' hj with hjp hjp <;> · rw [hjp]; ring
   have hk2 : s ^ 2 = k ^ 4 := by cases' hk with hkp hkp <;> · rw [hkp]; ring
   -- from m = r ^ 2 + s ^ 2 we now get a new solution to a ^ 4 + b ^ 4 = c ^ 2:
   have hh : i ^ 2 = j ^ 4 + k ^ 4 := by rw [← hi, htt3, hj2, hk2]
-  have hn : n ≠ 0 := by rw [ht2] at hb20; apply right_ne_zero_of_mul hb20
+  have hn : n ≠ 0 := by rw [ht2] at hb20 ; apply right_ne_zero_of_mul hb20
   -- and it has a smaller c: from c = m ^ 2 + n ^ 2 we see that m is smaller than c, and i ^ 2 = m.
   have hic : Int.natAbs i < Int.natAbs c :=
     by

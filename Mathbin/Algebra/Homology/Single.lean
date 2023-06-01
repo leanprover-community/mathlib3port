@@ -95,11 +95,11 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
 instance (j : ι) : Faithful (single V c j)
     where map_injective' X Y f g w := by
     have := congr_hom w j
-    dsimp at this
-    simp only [dif_pos] at this
+    dsimp at this 
+    simp only [dif_pos] at this 
     rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl,
       category.id_comp, ← is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans,
-      eq_to_hom_refl, category.comp_id] at this
+      eq_to_hom_refl, category.comp_id] at this 
     exact this
 
 instance (j : ι) : Full (single V c j)

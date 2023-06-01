@@ -115,7 +115,7 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
     ⁅⁅H₁, H₂⁆, H₃⁆ = ⊥ :=
   by
   simp_rw [commutator_eq_bot_iff_le_centralizer, commutator_le,
-    mem_centralizer_iff_commutator_eq_one, ← commutatorElement_def] at h1 h2⊢
+    mem_centralizer_iff_commutator_eq_one, ← commutatorElement_def] at h1 h2 ⊢
   intro x hx y hy z hz
   trans x * z * ⁅y, ⁅z⁻¹, x⁻¹⁆⁆⁻¹ * z⁻¹ * y * ⁅x⁻¹, ⁅y⁻¹, z⁆⁆⁻¹ * y⁻¹ * x⁻¹
   · group
@@ -147,7 +147,7 @@ instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal �
   · rw [h_base]
     exact Subgroup.normalClosure_normal
   refine' Set.Subset.antisymm Group.subset_conjugatesOfSet fun a h => _
-  simp_rw [Group.mem_conjugatesOfSet_iff, isConj_iff] at h
+  simp_rw [Group.mem_conjugatesOfSet_iff, isConj_iff] at h 
   rcases h with ⟨b, ⟨c, hc, e, he, rfl⟩, d, rfl⟩
   exact ⟨_, h₁.conj_mem c hc d, _, h₂.conj_mem e he d, (conjugate_commutatorElement c e d).symm⟩
 #align subgroup.commutator_normal Subgroup.commutator_normal

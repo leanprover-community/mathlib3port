@@ -75,7 +75,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
     · apply
         mem_ℒp_top_of_bound (hmg.mono_set (inter_subset_left _ _)).AEStronglyMeasurable (‖g x₀‖ + 1)
       filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurable_set)]with x hx
-      rw [inter_comm] at hx
+      rw [inter_comm] at hx 
       exact (norm_lt_of_mem_ball (hu x hx)).le
   convert A.union B
   simp only [diff_union_inter]
@@ -100,7 +100,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
       by
       apply tendsto.mono_left _ nhdsWithin_le_nhds
       exact (tendsto_id.mul tendsto_const_nhds).add tendsto_id
-    rw [MulZeroClass.zero_mul, zero_add] at A
+    rw [MulZeroClass.zero_mul, zero_add] at A 
     exact (((tendsto_order.1 A).2 ε εpos).And self_mem_nhdsWithin).exists
   suffices ∀ᶠ i in l, ‖∫ x in s, φ i x • g x ∂μ‖ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ
     by
@@ -126,7 +126,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
               (inter_subset_left _ _)
         rw [norm_smul]
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        rw [inter_comm, h'g] at hu
+        rw [inter_comm, h'g] at hu 
         exact (mem_ball_zero_iff.1 (hu x hx)).le
       _ ≤ ∫ x in s, ‖φ i x‖ * δ ∂μ := by
         apply set_integral_mono_set
@@ -189,7 +189,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs
       simp only [h's.lt_top, or_true_iff]
     · simp only [h, Pi.sub_apply, sub_self]
     · exact hcg.sub continuousWithinAt_const
-  simp only [one_smul, zero_add] at A
+  simp only [one_smul, zero_add] at A 
   refine' tendsto.congr' _ A
   filter_upwards [integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg hcg,
     hiφ]with i hi h'i
@@ -293,7 +293,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       apply tendsto.mul tendsto_const_nhds _; · infer_instance
       apply tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg t_pos t'_pos.le)
       exact (div_lt_one t'_pos).2 tt'
-    rw [MulZeroClass.mul_zero] at N
+    rw [MulZeroClass.mul_zero] at N 
     refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
     filter_upwards [(tendsto_order.1 N).2 ε εpos]with n hn x hx
     simp only [Pi.zero_apply, dist_zero_left, Real.norm_of_nonneg (hnφ n x hx.1)]

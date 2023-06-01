@@ -64,7 +64,7 @@ theorem Functor.ext {F} :
   | ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H =>
     by
     cases show @m = @m' by funext α β f x <;> apply H
-    congr ; funext α β
+    congr; funext α β
     have E1 := @map_const_eq _ ⟨@m, @mc⟩ H1
     have E2 := @map_const_eq _ ⟨@m, @mc'⟩ H2
     exact E1.trans E2.symm

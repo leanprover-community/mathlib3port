@@ -402,7 +402,7 @@ def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : 
         m = lift s) :
     IsLimit (BinaryFan.mk fst snd) :=
   { lift
-    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts[fac_left s, fac_right s]
+    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts [fac_left s, fac_right s]
     uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_fan.is_limit_mk CategoryTheory.Limits.BinaryFan.isLimitMk
 -/
@@ -420,7 +420,7 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
         m = desc s) :
     IsColimit (BinaryCofan.mk inl inr) :=
   { desc
-    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts[fac_left s, fac_right s]
+    fac := fun s j => by rcases j with ⟨⟨⟩⟩; exacts [fac_left s, fac_right s]
     uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_cofan.is_colimit_mk CategoryTheory.Limits.BinaryCofan.isColimitMk
 -/

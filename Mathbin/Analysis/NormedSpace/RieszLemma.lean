@@ -62,7 +62,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     have x_ne_y₀ : x - y₀ ∉ F := by
       by_contra h
       have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F
-      simp only [neg_add_cancel_right, sub_eq_add_neg] at this
+      simp only [neg_add_cancel_right, sub_eq_add_neg] at this 
       exact hx this
     refine' ⟨x - y₀, x_ne_y₀, fun y hy => le_of_lt _⟩
     have hy₀y : y₀ + y ∈ F := F.add_mem hy₀F hy

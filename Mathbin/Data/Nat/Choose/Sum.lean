@@ -160,7 +160,7 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
   by
   cases n; · simp
   have h := add_pow (-1 : ℤ) 1 n.succ
-  simp only [one_pow, mul_one, add_left_neg] at h
+  simp only [one_pow, mul_one, add_left_neg] at h 
   rw [← h, zero_pow (Nat.succ_pos n), if_neg (Nat.succ_ne_zero n)]
 #align int.alternating_sum_range_choose Int.alternating_sum_range_choose
 
@@ -178,7 +178,7 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
     rw [mem_range, Nat.lt_succ_iff]
-    rw [mem_powerset] at hy
+    rw [mem_powerset] at hy 
     exact card_le_of_subset hy
   · refine' sum_congr rfl fun y hy => _
     rw [← card_powerset_len, ← sum_const]

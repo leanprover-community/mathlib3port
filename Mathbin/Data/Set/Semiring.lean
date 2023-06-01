@@ -33,7 +33,8 @@ variable {α β : Type _}
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
   multiplication `*` as "multiplication". -/
 def SetSemiring (α : Type _) : Type _ :=
-  Set α deriving Inhabited, PartialOrder, OrderBot
+  Set α
+deriving Inhabited, PartialOrder, OrderBot
 #align set_semiring SetSemiring
 -/
 

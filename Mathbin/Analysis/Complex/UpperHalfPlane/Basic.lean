@@ -55,8 +55,8 @@ local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 has_coe[has_coe] α exprℂ() -/
 /-- The open upper half plane -/
 def UpperHalfPlane :=
-  { point : ℂ // 0 < point.im }deriving
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+  { point : ℂ // 0 < point.im }
+deriving «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
   has_coe[has_coe] α exprℂ()»
 #align upper_half_plane UpperHalfPlane
 
@@ -164,11 +164,11 @@ theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : �
   have : cd 0 = 0 :=
     by
     -- we will need this twice
-    apply_fun Complex.im  at h
+    apply_fun Complex.im  at h 
     simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, MulZeroClass.zero_mul, or_false_iff,
       Complex.ofReal_im, Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
   simp only [this, MulZeroClass.zero_mul, Complex.ofReal_zero, zero_add, Complex.ofReal_eq_zero] at
-    h
+    h 
   ext i
   fin_cases i <;> assumption
 #align upper_half_plane.linear_ne_zero UpperHalfPlane.linear_ne_zero
@@ -178,15 +178,15 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 :=
   intro H
   have DET := (mem_GL_pos _).1 g.prop
   have hz := z.prop
-  simp only [general_linear_group.coe_det_apply] at DET
+  simp only [general_linear_group.coe_det_apply] at DET 
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
   · simp only [H1, Complex.ofReal_zero, denom, coe_fn_eq_coe, MulZeroClass.zero_mul, zero_add,
-      Complex.ofReal_eq_zero] at H
-    rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET
-    simp only [coe_coe, H, H1, MulZeroClass.mul_zero, sub_zero, lt_self_iff_false] at DET
+      Complex.ofReal_eq_zero] at H 
+    rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET 
+    simp only [coe_coe, H, H1, MulZeroClass.mul_zero, sub_zero, lt_self_iff_false] at DET 
     exact DET
-  · change z.im > 0 at hz
+  · change z.im > 0 at hz 
     linarith
 #align upper_half_plane.denom_ne_zero UpperHalfPlane.denom_ne_zero
 
@@ -470,7 +470,7 @@ theorem modular_t_smul (z : ℍ) : ModularGroup.T • z = (1 : ℝ) +ᵥ z := by
 #align upper_half_plane.modular_T_smul UpperHalfPlane.modular_t_smul
 
 theorem exists_SL2_smul_eq_of_apply_zero_one_eq_zero (g : SL(2, ℝ)) (hc : ↑ₘ[ℝ] g 1 0 = 0) :
-    ∃ (u : { x : ℝ // 0 < x })(v : ℝ), ((· • ·) g : ℍ → ℍ) = (fun z => v +ᵥ z) ∘ fun z => u • z :=
+    ∃ (u : { x : ℝ // 0 < x }) (v : ℝ), ((· • ·) g : ℍ → ℍ) = (fun z => v +ᵥ z) ∘ fun z => u • z :=
   by
   obtain ⟨a, b, ha, rfl⟩ := g.fin_two_exists_eq_mk_of_apply_zero_one_eq_zero hc
   refine' ⟨⟨_, mul_self_pos.mpr ha⟩, b * a, _⟩
@@ -481,7 +481,7 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_eq_zero (g : SL(2, ℝ)) (hc : ↑�
 #align upper_half_plane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero UpperHalfPlane.exists_SL2_smul_eq_of_apply_zero_one_eq_zero
 
 theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑ₘ[ℝ] g 1 0 ≠ 0) :
-    ∃ (u : { x : ℝ // 0 < x })(v w : ℝ),
+    ∃ (u : { x : ℝ // 0 < x }) (v w : ℝ),
       ((· • ·) g : ℍ → ℍ) =
         ((· +ᵥ ·) w : ℍ → ℍ) ∘
           ((· • ·) ModularGroup.S : ℍ → ℍ) ∘ ((· +ᵥ ·) v : ℍ → ℍ) ∘ ((· • ·) u : ℍ → ℍ) :=

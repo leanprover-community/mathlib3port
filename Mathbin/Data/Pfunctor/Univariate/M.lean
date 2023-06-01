@@ -30,7 +30,13 @@ open List hiding head?
 variable (F : PFunctor.{u})
 
 -- mathport name: «expr♯ »
-local prefix:0 "♯" => cast (by first |simp [*]|cc|solve_by_elim)
+local prefix:0 "♯" =>
+  cast
+    (by
+      first
+      | simp [*]
+      | cc
+      | solve_by_elim)
 
 namespace PFunctor
 
@@ -182,7 +188,7 @@ instance Path.inhabited : Inhabited (Path F) :=
 open List Nat
 
 instance : Subsingleton (CofixA F 0) :=
-  ⟨by intros ; casesm*cofix_a F 0; rfl⟩
+  ⟨by intros; casesm*cofix_a F 0; rfl⟩
 
 #print PFunctor.Approx.head_succ' /-
 theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x) :
@@ -194,14 +200,14 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x
   cases' h₁ : x 1 with _ i₁ f₁
   dsimp only [head']
   induction' n with n
-  · rw [h₁] at h₀; cases h₀; trivial
+  · rw [h₁] at h₀ ; cases h₀; trivial
   · have H := Hconsistent (succ n)
     cases' h₂ : x (succ n) with _ i₂ f₂
-    rw [h₀, h₂] at H
+    rw [h₀, h₂] at H 
     apply n_ih (truncate ∘ f₀)
     rw [h₂]
     cases' H with _ _ _ _ _ _ hagree
-    congr ; funext j; dsimp only [comp_app]
+    congr; funext j; dsimp only [comp_app]
     rw [truncate_eq_of_agree]
     apply hagree
 #align pfunctor.approx.head_succ' PFunctor.Approx.head_succ'
@@ -387,7 +393,7 @@ theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x :=
   cases h : ch i
   simp only [children, M.approx.s_mk, children', cast_eq]
   dsimp only [M.approx.s_mk, children']
-  congr ; rw [h]
+  congr; rw [h]
 #align pfunctor.M.dest_mk PFunctor.M.dest_mk
 -/
 
@@ -402,12 +408,12 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x :=
   dsimp only [approx.s_mk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
   have h' : hd = head' (x.approx 1) := by rw [← head_succ' n, h, head']; apply x.consistent
-  revert ch; rw [h']; intros ; congr
+  revert ch; rw [h']; intros; congr
   · ext a; dsimp only [children]
     generalize hh : cast _ a = a''
-    rw [cast_eq_iff_heq] at hh
+    rw [cast_eq_iff_heq] at hh 
     revert a''
-    rw [h]; intros ; cases hh; rfl
+    rw [h]; intros; cases hh; rfl
 #align pfunctor.M.mk_dest PFunctor.M.mk_dest
 -/
 
@@ -454,7 +460,7 @@ theorem approx_mk (a : F.A) (f : F.B a → M F) (i : ℕ) :
 theorem agree'_refl {n : ℕ} (x : M F) : Agree' n x x :=
   by
   induction n generalizing x <;> induction x using PFunctor.M.casesOn' <;> constructor <;> try rfl
-  intros ; apply n_ih
+  intros; apply n_ih
 #align pfunctor.M.agree'_refl PFunctor.M.agree'_refl
 -/
 
@@ -466,7 +472,7 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) :
   · induction n generalizing x y; constructor
     · induction x using PFunctor.M.casesOn'
       induction y using PFunctor.M.casesOn'
-      simp only [approx_mk] at h; cases' h with _ _ _ _ _ _ hagree
+      simp only [approx_mk] at h ; cases' h with _ _ _ _ _ _ hagree
       constructor <;> try rfl
       intro i; apply n_ih; apply hagree
   · induction n generalizing x y; constructor
@@ -566,7 +572,7 @@ theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) (x 
   · exfalso; apply h; constructor
   · cases' ps_hd with a i
     induction x using PFunctor.M.casesOn'
-    simp only [iselect, isubtree] at ps_ih⊢
+    simp only [iselect, isubtree] at ps_ih ⊢
     by_cases h'' : a = x_a; subst x_a
     · simp only [dif_pos, eq_self_iff_true, cases_on_mk']
       rw [ps_ih]; intro h'; apply h
@@ -600,7 +606,7 @@ theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : 
   dsimp only [ichildren, PFunctor.Obj.iget]
   congr with h; apply ext'
   dsimp only [children', M.mk, approx.s_mk]
-  intros ; rfl
+  intros; rfl
 #align pfunctor.M.ichildren_mk PFunctor.M.ichildren_mk
 -/
 
@@ -647,7 +653,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
   induction' n with n generalizing x y z
   · specialize hrec [] rfl
     induction x using PFunctor.M.casesOn'; induction y using PFunctor.M.casesOn'
-    simp only [iselect_nil] at hrec; subst hrec
+    simp only [iselect_nil] at hrec ; subst hrec
     simp only [approx_mk, true_and_iff, eq_self_iff_true, heq_iff_eq]
     apply Subsingleton.elim
   · cases hx; cases hy
@@ -659,7 +665,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     · solve_by_elim
     · solve_by_elim
     introv h; specialize hrec (⟨_, i⟩ :: ps) (congr_arg _ h)
-    simp only [iselect_cons] at hrec; exact hrec
+    simp only [iselect_cons] at hrec ; exact hrec
 #align pfunctor.M.ext_aux PFunctor.M.ext_aux
 -/
 
@@ -679,7 +685,7 @@ theorem ext [Inhabited (M F)] (x y : M F) (H : ∀ ps : Path F, iselect ps x = i
     · rw [← agree_iff_agree']; apply x.consistent
     · rw [← agree_iff_agree', i_ih]; apply y.consistent
     introv H'
-    dsimp only [iselect] at H
+    dsimp only [iselect] at H 
     cases H'
     apply H ps
 #align pfunctor.M.ext PFunctor.M.ext
@@ -706,7 +712,7 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
     s₁ ~ s₂ →
       IsPath ps s₁ ∨ IsPath ps s₂ →
         iselect ps s₁ = iselect ps s₂ ∧
-          ∃ (a : _)(f f' : F.B a → M F),
+          ∃ (a : _) (f f' : F.B a → M F),
             isubtree ps s₁ = M.mk ⟨a, f⟩ ∧
               isubtree ps s₂ = M.mk ⟨a, f'⟩ ∧ ∀ i : F.B a, f i ~ f' i :=
   by
@@ -719,12 +725,12 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
     apply bisim.tail h₀
   cases' i with a' i
   obtain rfl : a = a' := by cases hh <;> cases is_path_cons hh <;> rfl
-  dsimp only [iselect] at ps_ih⊢
+  dsimp only [iselect] at ps_ih ⊢
   have h₁ := bisim.tail h₀ i
   induction' h : f i using PFunctor.M.casesOn' with a₀ f₀
   induction' h' : f' i using PFunctor.M.casesOn' with a₁ f₁
-  simp only [h, h', isubtree_cons] at ps_ih⊢
-  rw [h, h'] at h₁
+  simp only [h, h', isubtree_cons] at ps_ih ⊢
+  rw [h, h'] at h₁ 
   obtain rfl : a₀ = a₁ := bisim.head h₁
   apply ps_ih _ _ _ h₁
   rw [← h, ← h']; apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'
@@ -740,7 +746,7 @@ theorem eq_of_bisim [Nonempty (M F)] (bisim : IsBisimulation R) : ∀ s₁ s₂,
   by_cases h : is_path ps s₁ ∨ is_path ps s₂
   · have H := nth_of_bisim R bisim _ _ ps Hr h
     exact H.left
-  · rw [not_or] at h; cases' h with h₀ h₁
+  · rw [not_or] at h ; cases' h with h₀ h₁
     simp only [iselect_eq_default, *, not_false_iff]
 #align pfunctor.M.eq_of_bisim PFunctor.M.eq_of_bisim
 -/
@@ -774,9 +780,9 @@ theorem bisim (R : M P → M P → Prop)
   constructor <;> introv ih <;> rcases h _ _ ih with ⟨a'', g, g', h₀, h₁, h₂⟩ <;> clear h
   · replace h₀ := congr_arg Sigma.fst h₀
     replace h₁ := congr_arg Sigma.fst h₁
-    simp only [dest_mk] at h₀ h₁
+    simp only [dest_mk] at h₀ h₁ 
     rw [h₀, h₁]
-  · simp only [dest_mk] at h₀ h₁
+  · simp only [dest_mk] at h₀ h₁ 
     cases h₀; cases h₁
     apply h₂
 #align pfunctor.M.bisim PFunctor.M.bisim

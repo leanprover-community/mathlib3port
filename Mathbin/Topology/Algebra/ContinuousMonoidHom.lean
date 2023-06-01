@@ -43,7 +43,7 @@ you should parametrize over `(F : Type*) [continuous_add_monoid_hom_class F A B]
 
 When you extend this structure, make sure to extend `continuous_add_monoid_hom_class`. -/
 structure ContinuousAddMonoidHom (A B : Type _) [AddMonoid A] [AddMonoid B] [TopologicalSpace A]
-  [TopologicalSpace B] extends A →+ B where
+    [TopologicalSpace B] extends A →+ B where
   continuous_toFun : Continuous to_fun
 #align continuous_add_monoid_hom ContinuousAddMonoidHom
 -/
@@ -70,7 +70,7 @@ homomorphisms.
 
 You should also extend this typeclass when you extend `continuous_add_monoid_hom`. -/
 class ContinuousAddMonoidHomClass (A B : Type _) [AddMonoid A] [AddMonoid B] [TopologicalSpace A]
-  [TopologicalSpace B] extends AddMonoidHomClass F A B where
+    [TopologicalSpace B] extends AddMonoidHomClass F A B where
   map_continuous (f : F) : Continuous f
 #align continuous_add_monoid_hom_class ContinuousAddMonoidHomClass
 -/
@@ -432,8 +432,8 @@ end ContinuousMonoidHom
 #print PontryaginDual /-
 /-- The Pontryagin dual of `A` is the group of continuous homomorphism `A → circle`. -/
 def PontryaginDual :=
-  ContinuousMonoidHom A circle deriving TopologicalSpace, T2Space, CommGroup, TopologicalGroup,
-  Inhabited
+  ContinuousMonoidHom A circle
+deriving TopologicalSpace, T2Space, CommGroup, TopologicalGroup, Inhabited
 #align pontryagin_dual PontryaginDual
 -/
 

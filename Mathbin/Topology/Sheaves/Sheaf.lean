@@ -128,7 +128,8 @@ variable (C X)
 satisfying the sheaf condition.
 -/
 def Sheaf : Type max u v w :=
-  Sheaf (Opens.grothendieckTopology X) C deriving Category
+  Sheaf (Opens.grothendieckTopology X) C
+deriving Category
 #align Top.sheaf TopCat.Sheaf
 -/
 
@@ -155,7 +156,8 @@ namespace Sheaf
 /-- The forgetful functor from sheaves to presheaves.
 -/
 def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
-  sheafToPresheaf _ _ deriving Full, Faithful
+  sheafToPresheaf _ _
+deriving Full, Faithful
 #align Top.sheaf.forget TopCat.Sheaf.forget
 
 -- Note: These can be proved by simp.

@@ -177,8 +177,8 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
     rw [Pi.zero_apply, abs_zero]
     exact (abs_nonneg _).trans hx
   by_contra h
-  change μ _ ≠ 0 at h
-  simp only [← zero_lt_iff, Set.compl_def, Set.mem_setOf_eq, not_le] at h
+  change μ _ ≠ 0 at h 
+  simp only [← zero_lt_iff, Set.compl_def, Set.mem_setOf_eq, not_le] at h 
   suffices (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R < (μ { x | ↑R < |(μ[f|m]) x| }).toReal * ↑R by
     exact this.ne rfl
   refine' lt_of_lt_of_le (set_integral_gt_gt R.coe_nonneg _ _ h.ne.symm) _
@@ -219,7 +219,7 @@ theorem Integrable.uniformIntegrable_condexp {ι : Type _} [FiniteMeasure μ] {g
     uniform_integrable_of le_rfl ENNReal.one_ne_top
       (fun n => (strongly_measurable_condexp.mono (hℱ n)).AEStronglyMeasurable) fun ε hε => _
   by_cases hne : snorm g 1 μ = 0
-  · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
+  · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne 
     refine'
       ⟨0, fun n =>
         (le_of_eq <|
@@ -243,8 +243,8 @@ theorem Integrable.uniformIntegrable_condexp {ι : Type _} [FiniteMeasure μ] {g
     rw [ENNReal.one_toReal, ENNReal.rpow_one, ENNReal.rpow_one, mul_comm, ←
       ENNReal.le_div_iff_mul_le (Or.inl (ENNReal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne)] at
-      this
-    simp_rw [ENNReal.coe_le_coe] at this
+      this 
+    simp_rw [ENNReal.coe_le_coe] at this 
     refine' this.trans _
     rw [ENNReal.div_le_iff_le_mul (Or.inl (ENNReal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne),
@@ -373,11 +373,11 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
   swap; · simp_rw [condexp_of_not_sigma_finite hm hμm]; rw [MulZeroClass.mul_zero]
   haveI : sigma_finite (μ.trim hm) := hμm
   obtain ⟨sets, sets_prop, h_univ⟩ := hf.exists_spanning_measurable_set_norm_le hm μ
-  simp_rw [forall_and] at sets_prop
+  simp_rw [forall_and] at sets_prop 
   obtain ⟨h_meas, h_finite, h_norm⟩ := sets_prop
   suffices ∀ n, ∀ᵐ x ∂μ, x ∈ sets n → (μ[f * g|m]) x = f x * (μ[g|m]) x
     by
-    rw [← ae_all_iff] at this
+    rw [← ae_all_iff] at this 
     filter_upwards [this]with x hx
     rw [Pi.mul_apply]
     obtain ⟨i, hi⟩ : ∃ i, x ∈ sets i :=

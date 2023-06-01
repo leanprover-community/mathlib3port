@@ -108,9 +108,9 @@ theorem torsionOf_eq_bot_iff_of_noZeroSMulDivisors [Nontrivial R] [NoZeroSMulDiv
     torsionOf R M m = ⊥ ↔ m ≠ 0 :=
   by
   refine' ⟨fun h contra => _, fun h => (Submodule.eq_bot_iff _).mpr fun r hr => _⟩
-  · rw [contra, torsion_of_zero] at h
+  · rw [contra, torsion_of_zero] at h 
     exact bot_ne_top.symm h
-  · rw [mem_torsion_of_iff, smul_eq_zero] at hr
+  · rw [mem_torsion_of_iff, smul_eq_zero] at hr 
     tauto
 #align ideal.torsion_of_eq_bot_iff_of_no_zero_smul_divisors Ideal.torsionOf_eq_bot_iff_of_noZeroSMulDivisors
 
@@ -122,7 +122,7 @@ theorem CompleteLattice.Independent.linear_independent' {ι R M : Type _} {v : �
   by
   refine' linear_independent_iff_not_smul_mem_span.mpr fun i r hi => _
   replace hv := complete_lattice.independent_def.mp hv i
-  simp only [iSup_subtype', ← Submodule.span_range_eq_iSup, disjoint_iff] at hv
+  simp only [iSup_subtype', ← Submodule.span_range_eq_iSup, disjoint_iff] at hv 
   have : r • v i ∈ ⊥ := by
     rw [← hv, Submodule.mem_inf]
     refine' ⟨submodule.mem_span_singleton.mpr ⟨r, rfl⟩, _⟩
@@ -299,7 +299,7 @@ theorem torsionBySet_le_torsionBySet_of_subset {s t : Set R} (st : s ⊆ t) :
 theorem torsionBySet_eq_torsionBySet_span : torsionBySet R M s = torsionBySet R M (Ideal.span s) :=
   by
   refine' le_antisymm (fun x hx => _) (torsion_by_set_le_torsion_by_set_of_subset subset_span)
-  rw [mem_torsion_by_set_iff] at hx⊢
+  rw [mem_torsion_by_set_iff] at hx ⊢
   suffices Ideal.span s ≤ Ideal.torsionOf R M x by rintro ⟨a, ha⟩; exact this ha
   rw [Ideal.span_le]; exact fun a ha => hx ⟨a, ha⟩
 #align submodule.torsion_by_set_eq_torsion_by_span Submodule.torsionBySet_eq_torsionBySet_span
@@ -320,7 +320,7 @@ theorem torsionBy_le_torsionBy_of_dvd (a b : R) (dvd : a ∣ b) : torsionBy R M 
 
 @[simp]
 theorem torsionBy_one : torsionBy R M 1 = ⊥ :=
-  eq_bot_iff.mpr fun _ h => by rw [mem_torsion_by_iff, one_smul] at h; exact h
+  eq_bot_iff.mpr fun _ h => by rw [mem_torsion_by_iff, one_smul] at h ; exact h
 #align submodule.torsion_by_one Submodule.torsionBy_one
 
 @[simp]
@@ -428,13 +428,13 @@ theorem iSup_torsionBySet_ideal_eq_torsionBySet_iInf :
       (mem_supr_finset_iff_exists_sum _ _).mp
         ((Ideal.eq_top_iff_one _).mp <| (Ideal.iSup_iInf_eq_top_iff_pairwise h _).mpr hp)
     refine' ⟨fun i => ⟨(μ i : R) • x, _⟩, _⟩
-    · rw [mem_torsion_by_set_iff] at hx⊢
+    · rw [mem_torsion_by_set_iff] at hx ⊢
       rintro ⟨a, ha⟩; rw [smul_smul]
       suffices : a * μ i ∈ ⨅ i ∈ S, p i; exact hx ⟨_, this⟩
       rw [mem_infi]; intro j; rw [mem_infi]; intro hj
       by_cases ij : j = i
       · rw [ij]; exact Ideal.mul_mem_right _ _ ha
-      · have := coe_mem (μ i); simp only [mem_infi] at this
+      · have := coe_mem (μ i); simp only [mem_infi] at this 
         exact Ideal.mul_mem_left _ _ (this j hj ij)
     · simp_rw [coe_mk]; rw [← Finset.sum_smul, hμ, one_smul]
 #align submodule.supr_torsion_by_ideal_eq_torsion_by_infi Submodule.iSup_torsionBySet_ideal_eq_torsionBySet_iInf
@@ -446,7 +446,7 @@ theorem supIndep_torsionBySet_ideal : S.SupIndep fun i => torsionBySet R M <| p 
     supr_torsion_by_ideal_eq_torsion_by_infi fun i hi j hj ij => hp (hT hi) (hT hj) ij]
   have :=
     @GaloisConnection.u_inf _ _ (OrderDual.toDual _) (OrderDual.toDual _) _ _ _ _ (torsion_gc R M)
-  dsimp at this⊢
+  dsimp at this ⊢
   rw [← this, Ideal.sup_iInf_eq_top, top_coe, torsion_by_univ]
   intro j hj; apply hp hi (hT hj); rintro rfl; exact hiT hj
 #align submodule.sup_indep_torsion_by_ideal Submodule.supIndep_torsionBySet_ideal
@@ -463,7 +463,7 @@ theorem iSup_torsionBy_eq_torsionBy_prod :
   rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ←
     Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf, ←
     supr_torsion_by_ideal_eq_torsion_by_infi]
-  · congr ; ext : 1; congr ; ext : 1; exact (torsion_by_span_singleton_eq _).symm
+  · congr; ext : 1; congr; ext : 1; exact (torsion_by_span_singleton_eq _).symm
   · exact fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime _ _).mpr (hq hi hj ij)
 #align submodule.supr_torsion_by_eq_torsion_by_prod Submodule.iSup_torsionBy_eq_torsionBy_prod
 
@@ -510,7 +510,7 @@ theorem torsionBy_isInternal {q : ι → R} (hq : (S : Set ι).Pairwise <| (IsCo
     DirectSum.IsInternal fun i : S => torsionBy R M <| q i :=
   by
   rw [← Module.isTorsionBySet_span_singleton_iff, Ideal.submodule_span_eq, ←
-    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf] at hM
+    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf] at hM 
   convert torsion_by_set_is_internal
       (fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime (q i) _).mpr <| hq hi hj ij) hM
   ext : 1; exact (torsion_by_span_singleton_eq _).symm
@@ -532,7 +532,7 @@ def IsTorsionBySet.hasSMul : SMul (R ⧸ I) M
       by
       show b₁ • x = b₂ • x
       have : (-b₁ + b₂) • x = 0 := @hM x ⟨_, quotient_add_group.left_rel_apply.mp h⟩
-      rw [add_smul, neg_smul, neg_add_eq_zero] at this
+      rw [add_smul, neg_smul, neg_add_eq_zero] at this 
       exact this
 #align module.is_torsion_by_set.has_smul Module.IsTorsionBySet.hasSMul
 -/
@@ -707,7 +707,7 @@ theorem noZeroSMulDivisors_iff_torsion_eq_bot : NoZeroSMulDivisors R M ↔ torsi
   constructor <;> intro h
   · haveI : NoZeroSMulDivisors R M := h
     rw [eq_bot_iff]; rintro x ⟨a, hax⟩
-    change (a : R) • x = 0 at hax
+    change (a : R) • x = 0 at hax 
     cases' eq_zero_or_eq_zero_of_smul_eq_zero hax with h0 h0
     · exfalso; exact nonZeroDivisors.coe_ne_zero a h0; · exact h0
   ·
@@ -733,7 +733,7 @@ theorem torsion_eq_bot : torsion R (M ⧸ torsion R M) = ⊥ :=
   eq_bot_iff.mpr fun z =>
     Quotient.inductionOn' z fun x ⟨a, hax⟩ =>
       by
-      rw [Quotient.mk''_eq_mk', ← quotient.mk_smul, quotient.mk_eq_zero] at hax
+      rw [Quotient.mk''_eq_mk', ← quotient.mk_smul, quotient.mk_eq_zero] at hax 
       rw [mem_bot, Quotient.mk''_eq_mk', quotient.mk_eq_zero]
       cases' hax with b h
       exact ⟨b * a, (mul_smul _ _ _).trans h⟩
@@ -810,10 +810,10 @@ theorem torsionBy_eq_span_singleton {R : Type _} [CommRing R] (a b : R) (ha : a 
   by
   ext x; rw [mem_torsion_by_iff, mem_span_singleton]
   obtain ⟨x, rfl⟩ := mk_surjective x; constructor <;> intro h
-  · rw [← mk_eq_mk, ← quotient.mk_smul, quotient.mk_eq_zero, mem_span_singleton] at h
+  · rw [← mk_eq_mk, ← quotient.mk_smul, quotient.mk_eq_zero, mem_span_singleton] at h 
     obtain ⟨c, h⟩ := h;
     rw [smul_eq_mul, smul_eq_mul, mul_comm, mul_assoc, mul_cancel_left_mem_nonZeroDivisors ha,
-      mul_comm] at h
+      mul_comm] at h 
     use c; rw [← h, ← mk_eq_mk, ← quotient.mk_smul, smul_eq_mul, mk_eq_mk]
   · obtain ⟨c, h⟩ := h
     rw [← h, smul_comm, ← mk_eq_mk, ← quotient.mk_smul,

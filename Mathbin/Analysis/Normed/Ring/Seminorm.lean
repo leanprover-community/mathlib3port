@@ -68,7 +68,7 @@ structure RingNorm (R : Type _) [NonUnitalNonAssocRing R] extends RingSeminorm R
 multiplication, takes nonnegative values, is subadditive and such that `f (-x) = f x` for all `x`.
 -/
 structure MulRingSeminorm (R : Type _) [NonAssocRing R] extends AddGroupSeminorm R,
-  MonoidWithZeroHom R ℝ
+    MonoidWithZeroHom R ℝ
 #align mul_ring_seminorm MulRingSeminorm
 -/
 
@@ -79,8 +79,9 @@ structure MulRingNorm (R : Type _) [NonAssocRing R] extends MulRingSeminorm R, A
 #align mul_ring_norm MulRingNorm
 -/
 
-attribute [nolint doc_blame]
-  RingSeminorm.toAddGroupSeminorm RingNorm.toAddGroupNorm RingNorm.toRingSeminorm MulRingSeminorm.toAddGroupSeminorm MulRingSeminorm.toMonoidWithZeroHom MulRingNorm.toAddGroupNorm MulRingNorm.toMulRingSeminorm
+attribute [nolint doc_blame] RingSeminorm.toAddGroupSeminorm RingNorm.toAddGroupNorm
+  RingNorm.toRingSeminorm MulRingSeminorm.toAddGroupSeminorm MulRingSeminorm.toMonoidWithZeroHom
+  MulRingNorm.toAddGroupNorm MulRingNorm.toMulRingSeminorm
 
 namespace RingSeminorm
 
@@ -137,7 +138,7 @@ instance [DecidableEq R] : One (RingSeminorm R) :=
           refine' (if_pos h).trans_le (mul_nonneg _ _) <;>
             · change _ ≤ ite _ _ _
               split_ifs
-              exacts[le_rfl, zero_le_one]
+              exacts [le_rfl, zero_le_one]
         · change ite _ _ _ ≤ ite _ _ _ * ite _ _ _
           simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one] }⟩
 

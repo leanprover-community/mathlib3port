@@ -410,7 +410,7 @@ theorem inv_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [C
     have hAB : ¬IsUnit (A ⊗ₖ B).det :=
       by
       refine' mt (fun hAB => _) hA
-      rw [det_kronecker] at hAB
+      rw [det_kronecker] at hAB 
       exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_left hAB)
     rw [nonsing_inv_apply_not_is_unit _ hA, zero_kronecker, nonsing_inv_apply_not_is_unit _ hAB]
   by_cases hB : IsUnit B.det; swap
@@ -419,7 +419,7 @@ theorem inv_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [C
     have hAB : ¬IsUnit (A ⊗ₖ B).det :=
       by
       refine' mt (fun hAB => _) hB
-      rw [det_kronecker] at hAB
+      rw [det_kronecker] at hAB 
       exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_right hAB)
     rw [nonsing_inv_apply_not_is_unit _ hB, kronecker_zero, nonsing_inv_apply_not_is_unit _ hAB]
   -- otherwise follows trivially from `mul_kronecker_mul`

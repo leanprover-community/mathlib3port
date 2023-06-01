@@ -86,9 +86,9 @@ instance : Monad (ContT r m) where
 
 instance : LawfulMonad (ContT r m)
     where
-  id_map := by intros ; rfl
-  pure_bind := by intros ; ext; rfl
-  bind_assoc := by intros ; ext; rfl
+  id_map := by intros; rfl
+  pure_bind := by intros; ext; rfl
+  bind_assoc := by intros; ext; rfl
 
 def monadLift [Monad m] {α} : m α → ContT r m α := fun x f => x >>= f
 #align cont_t.monad_lift ContT.monadLift
@@ -141,14 +141,14 @@ instance {ε} [MonadCont m] : MonadCont (ExceptT ε m) where callCc α β := Exc
 instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT ε m)
     where
   callCc_bind_right := by
-    intros ; simp [call_cc, ExceptT.callCc, call_cc_bind_right]; ext; dsimp
+    intros; simp [call_cc, ExceptT.callCc, call_cc_bind_right]; ext; dsimp
     congr with ⟨⟩ <;> simp [ExceptT.bindCont, @call_cc_dummy m _]
   callCc_bind_left := by
     intros
     simp [call_cc, ExceptT.callCc, call_cc_bind_right, ExceptT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext; rfl
-  callCc_dummy := by intros ; simp [call_cc, ExceptT.callCc, @call_cc_dummy m _]; ext; rfl
+  callCc_dummy := by intros; simp [call_cc, ExceptT.callCc, @call_cc_dummy m _]; ext; rfl
 
 def OptionT.mkLabel {α β} : Label (Option.{u} α) m β → Label α (OptionT m) β
   | ⟨f⟩ => ⟨fun a => monadLift <| f (some a)⟩
@@ -168,14 +168,14 @@ instance [MonadCont m] : MonadCont (OptionT m) where callCc α β := OptionT.cal
 instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionT m)
     where
   callCc_bind_right := by
-    intros ; simp [call_cc, OptionT.callCc, call_cc_bind_right]; ext; dsimp
+    intros; simp [call_cc, OptionT.callCc, call_cc_bind_right]; ext; dsimp
     congr with ⟨⟩ <;> simp [OptionT.bindCont, @call_cc_dummy m _]
   callCc_bind_left := by
-    intros ;
+    intros;
     simp [call_cc, OptionT.callCc, call_cc_bind_right, OptionT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext; rfl
-  callCc_dummy := by intros ; simp [call_cc, OptionT.callCc, @call_cc_dummy m _]; ext; rfl
+  callCc_dummy := by intros; simp [call_cc, OptionT.callCc, @call_cc_dummy m _]; ext; rfl
 
 def WriterT.mkLabel {α β ω} [One ω] : Label (α × ω) m β → Label α (WriterT ω m) β
   | ⟨f⟩ => ⟨fun a => monadLift <| f (a, 1)⟩
@@ -215,11 +215,11 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateT σ
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind]; ext; dsimp
     congr with ⟨x₀, x₁⟩; rfl
   callCc_bind_left := by
-    intros ;
+    intros;
     simp [call_cc, StateT.callCc, call_cc_bind_left, (· >>= ·), StateT.bind, StateT.goto_mkLabel]
     ext; rfl
   callCc_dummy := by
-    intros ;
+    intros;
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
     ext; rfl
 
@@ -240,11 +240,11 @@ instance {ρ} [MonadCont m] : MonadCont (ReaderT ρ m) where callCc α β := Rea
 
 instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT ρ m)
     where
-  callCc_bind_right := by intros ; simp [call_cc, ReaderT.callCc, call_cc_bind_right]; ext; rfl
+  callCc_bind_right := by intros; simp [call_cc, ReaderT.callCc, call_cc_bind_right]; ext; rfl
   callCc_bind_left := by
-    intros ; simp [call_cc, ReaderT.callCc, call_cc_bind_left, ReaderT.goto_mkLabel]
+    intros; simp [call_cc, ReaderT.callCc, call_cc_bind_left, ReaderT.goto_mkLabel]
     ext; rfl
-  callCc_dummy := by intros ; simp [call_cc, ReaderT.callCc, @call_cc_dummy m _]; ext; rfl
+  callCc_dummy := by intros; simp [call_cc, ReaderT.callCc, @call_cc_dummy m _]; ext; rfl
 
 /-- reduce the equivalence between two continuation passing monads to the equivalence between
 their underlying monad -/

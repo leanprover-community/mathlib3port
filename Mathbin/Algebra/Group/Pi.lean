@@ -48,7 +48,7 @@ namespace Pi
 #print Pi.semigroup /-
 @[to_additive]
 instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) := by
-  refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
+  refine_struct { mul := (· * ·) .. } <;> pi_instance_derive_field
 #align pi.semigroup Pi.semigroup
 #align pi.add_semigroup Pi.addSemigroup
 -/
@@ -57,7 +57,7 @@ instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) := by
 instance semigroupWithZero [∀ i, SemigroupWithZero <| f i] : SemigroupWithZero (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.semigroup_with_zero Pi.semigroupWithZero
 -/
@@ -65,7 +65,7 @@ instance semigroupWithZero [∀ i, SemigroupWithZero <| f i] : SemigroupWithZero
 #print Pi.commSemigroup /-
 @[to_additive]
 instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I, f i) := by
-  refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
+  refine_struct { mul := (· * ·) .. } <;> pi_instance_derive_field
 #align pi.comm_semigroup Pi.commSemigroup
 #align pi.add_comm_semigroup Pi.addCommSemigroup
 -/
@@ -75,7 +75,7 @@ instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I,
 instance mulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.mul_one_class Pi.mulOneClass
 #align pi.add_zero_class Pi.addZeroClass
@@ -201,7 +201,7 @@ instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow.. } <;>
+        npow := Monoid.npow .. } <;>
     pi_instance_derive_field
 #align pi.right_cancel_monoid Pi.rightCancelMonoid
 #align pi.add_right_cancel_monoid Pi.addRightCancelMonoid
@@ -235,7 +235,7 @@ instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (�
 instance mulZeroClass [∀ i, MulZeroClass <| f i] : MulZeroClass (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.mul_zero_class Pi.mulZeroClass
 -/
@@ -245,7 +245,7 @@ instance mulZeroOneClass [∀ i, MulZeroOneClass <| f i] : MulZeroOneClass (∀ 
   refine_struct
       { zero := (0 : ∀ i, f i)
         one := (1 : ∀ i, f i)
-        mul := (· * ·).. } <;>
+        mul := (· * ·) .. } <;>
     pi_instance_derive_field
 #align pi.mul_zero_one_class Pi.mulZeroOneClass
 -/
@@ -629,20 +629,20 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
     have hl := congr_fun h l
     have hm := (congr_fun h m).symm
     have hn := (congr_fun h n).symm
-    simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn
+    simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn 
     rcases eq_or_ne k m with (rfl | hkm)
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
       rcases eq_or_ne k l with (rfl | hkl)
-      · rwa [if_neg hln.symm, if_neg hln.symm, one_mul, one_mul] at hn
-      · rwa [if_neg hkl.symm, if_neg hln, one_mul, one_mul] at hl
+      · rwa [if_neg hln.symm, if_neg hln.symm, one_mul, one_mul] at hn 
+      · rwa [if_neg hkl.symm, if_neg hln, one_mul, one_mul] at hl 
     · rcases eq_or_ne m n with (rfl | hmn)
       · rcases eq_or_ne k l with (rfl | hkl)
-        · rw [if_neg hkm.symm, if_neg hkm.symm, one_mul, if_pos rfl] at hm
+        · rw [if_neg hkm.symm, if_neg hkm.symm, one_mul, if_pos rfl] at hm 
           exact Or.inr (Or.inr ⟨hm, rfl, rfl⟩)
         · simpa only [if_neg hkm, if_neg hkl, mul_one] using hk
-      · rw [if_neg hkm.symm, if_neg hmn, one_mul, mul_one] at hm
+      · rw [if_neg hkm.symm, if_neg hmn, one_mul, mul_one] at hm 
         obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hm.symm hu)).1
-        rw [if_neg hkm, if_neg hkm, one_mul, mul_one] at hk
+        rw [if_neg hkm, if_neg hkm, one_mul, mul_one] at hk 
         obtain rfl := (ite_ne_right_iff.mp (ne_of_eq_of_ne hk.symm hu)).1
         exact Or.inr (Or.inl ⟨hk.trans (if_pos rfl), rfl, rfl⟩)
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨h, rfl, rfl⟩)

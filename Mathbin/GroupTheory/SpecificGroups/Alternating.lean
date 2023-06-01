@@ -55,7 +55,8 @@ variable (α : Type _) [Fintype α] [DecidableEq α]
 /-- The alternating group on a finite type, realized as a subgroup of `equiv.perm`.
   For $A_n$, use `alternating_group (fin n)`. -/
 def alternatingGroup : Subgroup (Perm α) :=
-  sign.ker deriving Fintype
+  sign.ker
+deriving Fintype
 #align alternating_group alternatingGroup
 -/
 
@@ -119,7 +120,7 @@ theorem isConj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ 
   obtain ⟨σ, hσ⟩ := σ
   obtain ⟨τ, hτ⟩ := τ
   obtain ⟨π, hπ⟩ := isConj_iff.1 hc
-  rw [Subtype.coe_mk, Subtype.coe_mk] at hπ
+  rw [Subtype.coe_mk, Subtype.coe_mk] at hπ 
   cases' Int.units_eq_one_or (SignType.sign π) with h h
   · rw [isConj_iff]
     refine' ⟨⟨π, mem_alternating_group.mp h⟩, Subtype.val_injective _⟩
@@ -164,17 +165,17 @@ theorem closure_three_cycles_eq_alternating :
         l.Prod ∈ closure { σ : perm α | is_three_cycle σ }
     · obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ
       obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ
-      rw [← two_mul] at hn
+      rw [← two_mul] at hn 
       exact hind n l hl hn
     intro n
     induction' n with n ih <;> intro l hl hn
     · simp [List.length_eq_zero.1 hn, one_mem]
-    rw [Nat.mul_succ] at hn
+    rw [Nat.mul_succ] at hn 
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
-    rw [List.length_cons, Nat.succ_inj'] at hn
+    rw [List.length_cons, Nat.succ_inj'] at hn 
     obtain ⟨b, l, rfl⟩ := l.exists_of_length_succ hn
     rw [List.prod_cons, List.prod_cons, ← mul_assoc]
-    rw [List.length_cons, Nat.succ_inj'] at hn
+    rw [List.length_cons, Nat.succ_inj'] at hn 
     exact
       mul_mem
         (is_swap.mul_mem_closure_three_cycles (hl a (List.mem_cons_self a _))
@@ -298,13 +299,13 @@ theorem isConj_swap_mul_swap_of_cycleType_two {g : Perm (Fin 5)} (ha : g ∈ alt
     IsConj (swap 0 4 * swap 1 3) g :=
   by
   have h := g.support.card_le_univ
-  rw [← Multiset.eq_replicate_card] at h2
-  rw [← sum_cycle_type, h2, Multiset.sum_replicate, smul_eq_mul] at h
+  rw [← Multiset.eq_replicate_card] at h2 
+  rw [← sum_cycle_type, h2, Multiset.sum_replicate, smul_eq_mul] at h 
   have h : g.cycle_type.card ≤ 3 := le_of_mul_le_mul_right (le_trans h (by decide)) (by decide)
-  rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
-  norm_num at ha
+  rw [mem_alternating_group, sign_of_cycle_type, h2] at ha 
+  norm_num at ha 
   rw [pow_add, pow_mul, Int.units_pow_two, one_mul, Units.ext_iff, Units.val_one,
-    Units.val_pow_eq_pow_val, Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha
+    Units.val_pow_eq_pow_val, Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha 
   swap; · decide
   rw [is_conj_iff_cycle_type_eq, h2]
   interval_cases
@@ -328,21 +329,21 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
   ⟨exists_pair_ne _, fun H => by
     intro Hn
     refine' or_not.imp id fun Hb => _
-    rw [eq_bot_iff_forall] at Hb
-    push_neg  at Hb
+    rw [eq_bot_iff_forall] at Hb 
+    push_neg  at Hb 
     obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥(alternatingGroup (Fin 5)), x ∈ H ∧ x ≠ 1 := Hb
     -- `g` is a non-identity alternating permutation in a normal subgroup `H` of $A_5$.
-    rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH
+    rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH 
     refine' eq_top_iff.2 (le_trans (ge_of_eq _) (normal_closure_le_normal gH))
     -- It suffices to show that the normal closure of `g` in $A_5$ is $A_5$.
     by_cases h2 : ∀ n ∈ g.cycle_type, n = 2
     · -- If the cycle decomposition of `g` consists entirely of swaps, then the cycle type is $(2,2)$.
       -- This means that it is conjugate to $(04)(13)$, whose normal closure is $A_5$.
-      rw [Ne.def, Subtype.ext_iff] at g1
+      rw [Ne.def, Subtype.ext_iff] at g1 
       exact
         (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normalClosure_eq_top_of
           normal_closure_swap_mul_swap_five
-    push_neg  at h2
+    push_neg  at h2 
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2
     -- `n` is the size of a non-swap cycle in the decomposition of `g`.
     have n2' : 2 < n := lt_of_le_of_ne (two_le_of_mem_cycle_type ng) n2.symm

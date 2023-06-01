@@ -186,7 +186,7 @@ variable {l k f}
 theorem SuperpolynomialDecay.trans_eventually_abs_le (hf : SuperpolynomialDecay l k f)
     (hfg : abs ∘ g ≤ᶠ[l] abs ∘ f) : SuperpolynomialDecay l k g :=
   by
-  rw [superpolynomial_decay_iff_abs_tendsto_zero] at hf⊢
+  rw [superpolynomial_decay_iff_abs_tendsto_zero] at hf ⊢
   refine' fun z =>
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hf z)
       (eventually_of_forall fun x => abs_nonneg _) (hfg.mono fun x hx => _)
@@ -267,7 +267,7 @@ variable {f}
 theorem SuperpolynomialDecay.param_zpow_mul (hk : Tendsto k l atTop)
     (hf : SuperpolynomialDecay l k f) (z : ℤ) : SuperpolynomialDecay l k fun a => k a ^ z * f a :=
   by
-  rw [superpolynomial_decay_iff_zpow_tendsto_zero _ hk] at hf⊢
+  rw [superpolynomial_decay_iff_zpow_tendsto_zero _ hk] at hf ⊢
   refine' fun z' => (hf <| z' + z).congr' ((hk.eventually_ne_at_top 0).mono fun x hx => _)
   simp [zpow_add₀ hx, mul_assoc, Pi.mul_apply]
 #align asymptotics.superpolynomial_decay.param_zpow_mul Asymptotics.SuperpolynomialDecay.param_zpow_mul

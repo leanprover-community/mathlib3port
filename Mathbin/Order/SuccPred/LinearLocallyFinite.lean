@@ -90,7 +90,7 @@ theorem le_succFn (i : ι) : i ≤ succFn i := by rw [le_isGLB_iff (succ_fn_spec
 theorem isGLB_Ioc_of_isGLB_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi i) k) :
     IsGLB (Set.Ioc i j) k :=
   by
-  simp_rw [IsGLB, IsGreatest, mem_upperBounds, mem_lowerBounds] at h⊢
+  simp_rw [IsGLB, IsGreatest, mem_upperBounds, mem_lowerBounds] at h ⊢
   refine' ⟨fun x hx => h.1 x hx.1, fun x hx => h.2 x _⟩
   intro y hy
   cases' le_or_lt y j with h_le h_lt
@@ -108,29 +108,29 @@ theorem isMax_of_succFn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i
     by
     rw [Finset.coe_Ioc]
     have h := succ_fn_spec i
-    rw [h_succ_fn_eq] at h
+    rw [h_succ_fn_eq] at h 
     exact is_glb_Ioc_of_is_glb_Ioi hij_lt h
   have hi_mem : i ∈ Finset.Ioc i j :=
     by
     refine' Finset.is_glb_mem _ h_glb _
     exact ⟨_, finset.mem_Ioc.mpr ⟨hij_lt, le_rfl⟩⟩
-  rw [Finset.mem_Ioc] at hi_mem
+  rw [Finset.mem_Ioc] at hi_mem 
   exact lt_irrefl i hi_mem.1
 #align linear_locally_finite_order.is_max_of_succ_fn_le LinearLocallyFiniteOrder.isMax_of_succFn_le
 -/
 
 #print LinearLocallyFiniteOrder.succFn_le_of_lt /-
 theorem succFn_le_of_lt (i j : ι) (hij : i < j) : succFn i ≤ j := by have h := succ_fn_spec i;
-  rw [IsGLB, IsGreatest, mem_lowerBounds] at h; exact h.1 j hij
+  rw [IsGLB, IsGreatest, mem_lowerBounds] at h ; exact h.1 j hij
 #align linear_locally_finite_order.succ_fn_le_of_lt LinearLocallyFiniteOrder.succFn_le_of_lt
 -/
 
 #print LinearLocallyFiniteOrder.le_of_lt_succFn /-
 theorem le_of_lt_succFn (j i : ι) (hij : j < succFn i) : j ≤ i :=
   by
-  rw [lt_isGLB_iff (succ_fn_spec i)] at hij
+  rw [lt_isGLB_iff (succ_fn_spec i)] at hij 
   obtain ⟨k, hk_lb, hk⟩ := hij
-  rw [mem_lowerBounds] at hk_lb
+  rw [mem_lowerBounds] at hk_lb 
   exact not_lt.mp fun hi_lt_j => not_le.mpr hk (hk_lb j hi_lt_j)
 #align linear_locally_finite_order.le_of_lt_succ_fn LinearLocallyFiniteOrder.le_of_lt_succFn
 -/
@@ -153,11 +153,11 @@ instance (priority := 100) LinearLocallyFiniteOrder.isSuccArchimedean [LocallyFi
     IsSuccArchimedean ι
     where exists_succ_iterate_of_le i j hij :=
     by
-    rw [le_iff_lt_or_eq] at hij
+    rw [le_iff_lt_or_eq] at hij 
     cases hij
     swap; · refine' ⟨0, _⟩; simpa only [Function.iterate_zero, id.def] using hij
     by_contra h
-    push_neg  at h
+    push_neg  at h 
     have h_lt : ∀ n, (succ^[n]) i < j := by
       intro n
       induction' n with n hn
@@ -266,7 +266,7 @@ theorem toZ_neg (hi : i < i0) : toZ i0 i < 0 :=
   · rw [toZ_of_lt hi, neg_nonpos]; exact Nat.cast_nonneg _
   · by_contra
     have h_eq := iterate_pred_toZ i hi
-    rw [← h_eq, h] at hi
+    rw [← h_eq, h] at hi 
     simpa only [neg_zero, Int.toNat_zero, Function.iterate_zero, id.def, lt_self_iff_false] using hi
 #align to_Z_neg toZ_neg
 -/
@@ -363,10 +363,10 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
       nth_rw 1 [← iterate_succ_toZ i hi]
       rw [Function.iterate_add]
     by_contra h
-    push_neg  at h
+    push_neg  at h 
     by_cases hm0 : m = 0
-    · rw [hm0, Function.iterate_zero, id.def] at hm
-      rw [hm] at h
+    · rw [hm0, Function.iterate_zero, id.def] at hm 
+      rw [hm] at h 
       exact lt_irrefl _ h
     refine' hi_max (max_of_succ_le (le_trans _ (@le_of_toZ_le _ _ _ _ _ i0 _ _ _)))
     · exact j
@@ -375,7 +375,7 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
         rw [hj_eq]
         refine' Monotone.monotone_iterate_of_le_map succ_mono (le_succ i0) (add_le_add_left _ _)
         exact nat.one_le_iff_ne_zero.mpr hm0
-      rwa [Function.iterate_succ', Function.comp_apply, iterate_succ_toZ i hi] at h_succ_le
+      rwa [Function.iterate_succ', Function.comp_apply, iterate_succ_toZ i hi] at h_succ_le 
     · exact h.le
   · exact absurd h_le (not_le.mpr (hj.trans_le hi))
   · exact (toZ_neg hi).le.trans (toZ_nonneg hj)
@@ -387,10 +387,10 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
       nth_rw 1 [← iterate_pred_toZ j hj]
       rw [Function.iterate_add]
     by_contra h
-    push_neg  at h
+    push_neg  at h 
     by_cases hm0 : m = 0
-    · rw [hm0, Function.iterate_zero, id.def] at hm
-      rw [hm] at h
+    · rw [hm0, Function.iterate_zero, id.def] at hm 
+      rw [hm] at h 
       exact lt_irrefl _ h
     refine' hj_min (min_of_le_pred _)
     refine' (@le_of_toZ_le _ _ _ _ _ i0 _ _ _).trans _
@@ -401,7 +401,7 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
         rw [hj_eq]
         refine' Monotone.antitone_iterate_of_map_le pred_mono (pred_le i0) (add_le_add_left _ _)
         exact nat.one_le_iff_ne_zero.mpr hm0
-      rwa [Function.iterate_succ', Function.comp_apply, iterate_pred_toZ j hj] at h_le_pred
+      rwa [Function.iterate_succ', Function.comp_apply, iterate_pred_toZ j hj] at h_le_pred 
 #align to_Z_mono toZ_mono
 -/
 
@@ -514,7 +514,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
     · rw [Int.toNat_le]
       exact toZ_iterate_succ_le _
     by_cases hn_max : IsMax ((succ^[↑n]) (⊥ : ι))
-    · rw [← isTop_iff_isMax, isTop_iff_eq_top] at hn_max
+    · rw [← isTop_iff_isMax, isTop_iff_eq_top] at hn_max 
       rw [hn_max]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)
     · rw [toZ_iterate_succ_of_not_isMax _ hn_max]

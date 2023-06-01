@@ -26,7 +26,7 @@ namespace PNat
 variable {p q : ℕ+ → Prop} [DecidablePred p] [DecidablePred q] (h : ∃ n, p n)
 
 #print PNat.decidablePredExistsNat /-
-instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(hn : n' = n), p n :=
+instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+) (hn : n' = n), p n :=
   fun n' =>
   decidable_of_iff' (∃ h : 0 < n', p ⟨n', h⟩) <|
     Subtype.exists.trans <| by
@@ -40,7 +40,7 @@ include h
 /-- The `pnat` version of `nat.find_x` -/
 protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } :=
   by
-  have : ∃ (n' : ℕ)(n : ℕ+)(hn' : n' = n), p n := Exists.elim h fun n hn => ⟨n, n, rfl, hn⟩
+  have : ∃ (n' : ℕ) (n : ℕ+) (hn' : n' = n), p n := Exists.elim h fun n hn => ⟨n, n, rfl, hn⟩
   have n := Nat.findX this
   refine' ⟨⟨n, _⟩, _, fun m hm pm => _⟩
   · obtain ⟨n', hn', -⟩ := n.prop.1
@@ -156,7 +156,7 @@ theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
   refine' (find_eq_iff _).2 ⟨PNat.find_spec h₂, fun n => PNat.recOn n _ _⟩
   · simp [h1]
   intro m IH hm
-  simp only [add_lt_add_iff_right, lt_find_iff] at hm
+  simp only [add_lt_add_iff_right, lt_find_iff] at hm 
   exact hm _ le_rfl
 #align pnat.find_comp_succ PNat.find_comp_succ
 

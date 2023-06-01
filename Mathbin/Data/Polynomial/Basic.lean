@@ -782,7 +782,7 @@ theorem C_ne_zero : C a ≠ 0 ↔ a ≠ 0 :=
 
 #print Polynomial.subsingleton_iff_subsingleton /-
 theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
-  ⟨@Injective.subsingleton _ _ _ C_injective, by intro ; infer_instance⟩
+  ⟨@Injective.subsingleton _ _ _ C_injective, by intro; infer_instance⟩
 #align polynomial.subsingleton_iff_subsingleton Polynomial.subsingleton_iff_subsingleton
 -/
 
@@ -962,7 +962,7 @@ theorem sum_eq_of_subset {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → 
     p.Sum f = ∑ n in s, f n (p.coeff n) :=
   by
   apply Finset.sum_subset hs fun n hn h'n => _
-  rw [not_mem_support_iff] at h'n
+  rw [not_mem_support_iff] at h'n 
   simp [h'n, hf]
 #align polynomial.sum_eq_of_subset Polynomial.sum_eq_of_subset
 

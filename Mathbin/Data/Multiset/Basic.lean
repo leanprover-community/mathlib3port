@@ -185,7 +185,7 @@ theorem cons_inj_right (a : α) : ∀ {s t : Multiset α}, a ::ₘ s = a ::ₘ t
 @[recursor 5]
 protected theorem induction {p : Multiset α → Prop} (h₁ : p 0)
     (h₂ : ∀ ⦃a : α⦄ {s : Multiset α}, p s → p (a ::ₘ s)) : ∀ s, p s := by
-  rintro ⟨l⟩ <;> induction' l with _ _ ih <;> [exact h₁;exact h₂ ih]
+  rintro ⟨l⟩ <;> induction' l with _ _ ih <;> [exact h₁; exact h₂ ih]
 #align multiset.induction Multiset.induction
 -/
 
@@ -835,9 +835,9 @@ theorem mem_add {a : α} {s t : Multiset α} : a ∈ s + t ↔ a ∈ s ∨ a ∈
 theorem mem_of_mem_nsmul {a : α} {s : Multiset α} {n : ℕ} (h : a ∈ n • s) : a ∈ s :=
   by
   induction' n with n ih
-  · rw [zero_nsmul] at h
+  · rw [zero_nsmul] at h 
     exact absurd h (not_mem_zero _)
-  · rw [succ_nsmul, mem_add] at h
+  · rw [succ_nsmul, mem_add] at h 
     exact h.elim id ih
 #align multiset.mem_of_mem_nsmul Multiset.mem_of_mem_nsmul
 
@@ -968,8 +968,8 @@ def strongInductionOn {p : Multiset α → Sort _} :
   | s => fun ih =>
     ih s fun t h =>
       have : card t < card s := card_lt_of_lt h
-      strong_induction_on t ih termination_by'
-  ⟨_, measure_wf card⟩
+      strong_induction_on t ih
+termination_by' ⟨_, measure_wf card⟩
 #align multiset.strong_induction_on Multiset.strongInductionOnₓ
 
 theorem strongInductionOn_eq {p : Multiset α → Sort _} (s : Multiset α) (H) :
@@ -995,8 +995,8 @@ def strongDownwardInduction {p : Multiset α → Sort _} {n : ℕ}
   | s =>
     H s fun t ht h =>
       have : n - card t < n - card s := (tsub_lt_tsub_iff_left_of_le ht).2 (card_lt_of_lt h)
-      strong_downward_induction t ht termination_by'
-  ⟨_, measure_wf fun t : Multiset α => n - t.card⟩
+      strong_downward_induction t ht
+termination_by' ⟨_, measure_wf fun t : Multiset α => n - t.card⟩
 #align multiset.strong_downward_induction Multiset.strongDownwardInductionₓ
 
 theorem strongDownwardInduction_eq {p : Multiset α → Sort _} {n : ℕ}
@@ -1170,7 +1170,7 @@ theorem lt_replicate_succ {m : Multiset α} {x : α} {n : ℕ} :
   constructor
   · rintro ⟨x', hx'⟩
     have := eq_of_mem_replicate (mem_of_le hx' (mem_cons_self _ _))
-    rwa [this, replicate_succ, cons_le_cons_iff] at hx'
+    rwa [this, replicate_succ, cons_le_cons_iff] at hx' 
   · intro h
     rw [replicate_succ]
     exact ⟨x, cons_le_cons _ h⟩
@@ -1319,7 +1319,7 @@ theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.eraseₓ a
 
 theorem erase_le_iff_le_cons {s t : Multiset α} {a : α} : s.eraseₓ a ≤ t ↔ s ≤ a ::ₘ t :=
   ⟨fun h => le_trans (le_cons_erase _ _) (cons_le_cons _ h), fun h =>
-    if m : a ∈ s then by rw [← cons_erase m] at h <;> exact (cons_le_cons_iff _).1 h
+    if m : a ∈ s then by rw [← cons_erase m] at h  <;> exact (cons_le_cons_iff _).1 h
     else le_trans (erase_le _ _) ((le_cons_of_not_mem m).1 h)⟩
 #align multiset.erase_le_iff_le_cons Multiset.erase_le_iff_le_cons
 
@@ -1381,7 +1381,7 @@ theorem map_congr {f g : α → β} {s t : Multiset α} :
 
 #print Multiset.map_hcongr /-
 theorem map_hcongr {β' : Type _} {m : Multiset α} {f : α → β} {f' : α → β'} (h : β = β')
-    (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by subst h; simp at hf;
+    (hf : ∀ a ∈ m, HEq (f a) (f' a)) : HEq (map f m) (map f' m) := by subst h; simp at hf ;
   simp [map_congr rfl hf]
 #align multiset.map_hcongr Multiset.map_hcongr
 -/
@@ -1495,7 +1495,7 @@ theorem map_eq_cons [DecidableEq α] (f : α → β) (s : Multiset α) (t : Mult
     have : b ∈ s.map f := by rw [h]; exact mem_cons_self _ _
     obtain ⟨a, h1, rfl⟩ := mem_map.mp this
     obtain ⟨u, rfl⟩ := exists_cons_of_mem h1
-    rw [map_cons, cons_inj_right] at h
+    rw [map_cons, cons_inj_right] at h 
     refine' ⟨a, mem_cons_self _ _, rfl, _⟩
     rw [Multiset.erase_cons_head, h]
 #align multiset.map_eq_cons Multiset.map_eq_cons
@@ -1535,7 +1535,7 @@ theorem map_const' (s : Multiset α) (b : β) : map (fun _ => b) s = replicate s
 
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) :
     b₁ = b₂ :=
-  eq_of_mem_replicate <| by rwa [map_const] at h
+  eq_of_mem_replicate <| by rwa [map_const] at h 
 #align multiset.eq_of_mem_map_const Multiset.eq_of_mem_map_const
 
 @[simp]
@@ -1819,7 +1819,7 @@ theorem mem_attach (s : Multiset α) : ∀ x, x ∈ s.attach :=
 
 @[simp]
 theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {s H b} :
-    b ∈ pmap f s H ↔ ∃ (a : _)(h : a ∈ s), f a (H a h) = b :=
+    b ∈ pmap f s H ↔ ∃ (a : _) (h : a ∈ s), f a (H a h) = b :=
   Quot.inductionOn s (fun l H => mem_pmap) H
 #align multiset.mem_pmap Multiset.mem_pmap
 
@@ -1889,7 +1889,7 @@ protected def decidableExistsMultiset {p : α → Prop} [DecidablePred p] : Deci
 
 #print Multiset.decidableDexistsMultiset /-
 instance decidableDexistsMultiset {p : ∀ a ∈ m, Prop} [hp : ∀ (a) (h : a ∈ m), Decidable (p a h)] :
-    Decidable (∃ (a : _)(h : a ∈ m), p a h) :=
+    Decidable (∃ (a : _) (h : a ∈ m), p a h) :=
   decidable_of_decidable_of_iff
     (@Multiset.decidableExistsMultiset { a // a ∈ m } m.attach (fun a => p a.1 a.2) _)
     (Iff.intro (fun ⟨⟨a, ha₁⟩, _, ha₂⟩ => ⟨a, ha₁, ha₂⟩) fun ⟨a, ha₁, ha₂⟩ =>
@@ -2181,7 +2181,7 @@ theorem inter_add_distrib (s t u : Multiset α) : s ∩ t + u = (s + u) ∩ (t +
           (add_le_add_right (inter_le_right s t) u))
         h) with
     a hl
-  rw [← cons_add] at hl
+  rw [← cons_add] at hl 
   exact
     not_le_of_lt (lt_cons_self (s ∩ t) a)
       (le_inter (le_of_add_le_add_right (le_trans hl (inter_le_left _ _)))
@@ -2733,7 +2733,7 @@ theorem countp_congr {s s' : Multiset α} (hs : s = s') {p p' : α → Prop} [De
     [DecidablePred p'] (hp : ∀ x ∈ s, p x = p' x) : s.countp p = s'.countp p' :=
   Quot.induction_on₂ s s'
     (fun l l' hs hp => by
-      simp only [quot_mk_to_coe'', coe_eq_coe] at hs
+      simp only [quot_mk_to_coe'', coe_eq_coe] at hs 
       exact hs.countp_congr hp)
     hs hp
 #align multiset.countp_congr Multiset.countp_congr
@@ -3140,7 +3140,7 @@ theorem rel_flip {s t} : Rel (flip r) s t ↔ Rel r t s :=
 theorem rel_refl_of_refl_on {m : Multiset α} {r : α → α → Prop} : (∀ x ∈ m, r x x) → Rel r m m :=
   by
   apply m.induction_on
-  · intros ; apply rel.zero
+  · intros; apply rel.zero
   · intro a m ih h
     exact rel.cons (h _ (mem_cons_self _ _)) (ih fun _ ha => h _ (mem_cons_of_mem ha))
 #align multiset.rel_refl_of_refl_on Multiset.rel_refl_of_refl_on
@@ -3166,8 +3166,8 @@ theorem Rel.mono {r p : α → β → Prop} {s t} (hst : Rel r s t)
   by
   induction hst
   case zero => exact rel.zero
-  case
-    cons a b s t hab hst ih =>
+  case cons a b s t hab hst
+    ih =>
     apply rel.cons (h a (mem_cons_self _ _) b (mem_cons_self _ _) hab)
     exact ih fun a' ha' b' hb' h' => h a' (mem_cons_of_mem ha') b' (mem_cons_of_mem hb') h'
 #align multiset.rel.mono Multiset.Rel.mono
@@ -3202,9 +3202,9 @@ theorem rel_cons_left {a as bs} :
   · generalize hm : a ::ₘ as = m
     intro h
     induction h generalizing as
-    case zero => simp at hm; contradiction
-    case
-      cons a' b as' bs ha'b h ih =>
+    case zero => simp at hm ; contradiction
+    case cons a' b as' bs ha'b h
+      ih =>
       rcases cons_eq_cons.1 hm with (⟨eq₁, eq₂⟩ | ⟨h, cs, eq₁, eq₂⟩)
       · subst eq₁; subst eq₂; exact ⟨b, bs, ha'b, h, rfl⟩
       · rcases ih eq₂.symm with ⟨b', bs', h₁, h₂, eq⟩
@@ -3283,7 +3283,7 @@ theorem rel_of_forall {m1 m2 : Multiset α} {r : α → α → Prop} (h : ∀ a 
   · intro m h hc
     rw [rel_zero_right, ← card_eq_zero, hc, card_zero]
   · intro a t ih m h hc
-    rw [card_cons] at hc
+    rw [card_cons] at hc 
     obtain ⟨b, hb⟩ := card_pos_iff_exists_mem.1 (show 0 < card m from hc.symm ▸ Nat.succ_pos _)
     obtain ⟨m', rfl⟩ := exists_cons_of_mem hb
     refine' rel_cons_right.mpr ⟨b, m', h _ _ hb (mem_cons_self _ _), ih _ _, rfl⟩
@@ -3297,7 +3297,7 @@ theorem rel_replicate_left {m : Multiset α} {a : α} {r : α → α → Prop} {
     ⟨(card_eq_card_of_rel h).symm.trans (card_replicate _ _), fun x hx =>
       by
       obtain ⟨b, hb1, hb2⟩ := exists_mem_of_rel_of_mem (rel_flip.2 h) hx
-      rwa [eq_of_mem_replicate hb1] at hb2⟩,
+      rwa [eq_of_mem_replicate hb1] at hb2 ⟩,
     fun h =>
     rel_of_forall (fun x y hx hy => (eq_of_mem_replicate hx).symm ▸ h.2 _ hy)
       (Eq.trans (card_replicate _ _) h.1.symm)⟩

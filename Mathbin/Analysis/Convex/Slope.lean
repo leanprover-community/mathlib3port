@@ -33,19 +33,19 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
     (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) ≤ (f z - f y) / (z - y) :=
   by
   have hxz := hxy.trans hyz
-  rw [← sub_pos] at hxy hxz hyz
-  suffices f y / (y - x) + f y / (z - y) ≤ f x / (y - x) + f z / (z - y) by ring_nf  at this⊢;
+  rw [← sub_pos] at hxy hxz hyz 
+  suffices f y / (y - x) + f y / (z - y) ≤ f x / (y - x) + f z / (z - y) by ring_nf  at this ⊢;
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy : a • x + b • z = y := by field_simp; rw [div_eq_iff] <;> [ring;linarith]
+  have hy : a • x + b • z = y := by field_simp; rw [div_eq_iff] <;> [ring; linarith]
   have key :=
     hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith)
       (show 0 ≤ b by apply div_nonneg <;> linarith)
-      (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring;linarith])
-  rw [hy] at key
+      (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring; linarith])
+  rw [hy] at key 
   replace key := mul_le_mul_of_nonneg_left key hxz.le
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key ⊢
   rw [div_le_div_right]
   · linarith
   · nlinarith
@@ -70,18 +70,18 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
   by
   have hxz := hxy.trans hyz
   have hxz' := hxz.ne
-  rw [← sub_pos] at hxy hxz hyz
-  suffices f y / (y - x) + f y / (z - y) < f x / (y - x) + f z / (z - y) by ring_nf  at this⊢;
+  rw [← sub_pos] at hxy hxz hyz 
+  suffices f y / (y - x) + f y / (z - y) < f x / (y - x) + f z / (z - y) by ring_nf  at this ⊢;
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
-  have hy : a • x + b • z = y := by field_simp; rw [div_eq_iff] <;> [ring;linarith]
+  have hy : a • x + b • z = y := by field_simp; rw [div_eq_iff] <;> [ring; linarith]
   have key :=
     hf.2 hx hz hxz' (div_pos hyz hxz) (div_pos hxy hxz)
-      (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring;linarith])
-  rw [hy] at key
+      (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring; linarith])
+  rw [hy] at key 
   replace key := mul_lt_mul_of_pos_left key hxz
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key ⊢
   rw [div_lt_div_right]
   · linarith
   · nlinarith
@@ -119,15 +119,15 @@ theorem convexOn_of_slope_mono_adjacent (hs : Convex 𝕜 s)
     have hxz : 0 < z - x := sub_pos.2 (hxy.trans hyz)
     have ha : (z - y) / (z - x) = a :=
       by
-      rw [eq_comm, ← sub_eq_iff_eq_add'] at hab
+      rw [eq_comm, ← sub_eq_iff_eq_add'] at hab 
       simp_rw [div_eq_iff hxz.ne', y, ← hab]; ring
     have hb : (y - x) / (z - x) = b :=
       by
-      rw [eq_comm, ← sub_eq_iff_eq_add] at hab
+      rw [eq_comm, ← sub_eq_iff_eq_add] at hab 
       simp_rw [div_eq_iff hxz.ne', y, ← hab]; ring
     rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_add,
       sub_add_sub_cancel, ← le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x),
-      mul_comm (f z), ha, hb] at this
+      mul_comm (f z), ha, hb] at this 
 #align convex_on_of_slope_mono_adjacent convexOn_of_slope_mono_adjacent
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
@@ -165,15 +165,15 @@ theorem strictConvexOn_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
     have hxz : 0 < z - x := sub_pos.2 (hxy.trans hyz)
     have ha : (z - y) / (z - x) = a :=
       by
-      rw [eq_comm, ← sub_eq_iff_eq_add'] at hab
+      rw [eq_comm, ← sub_eq_iff_eq_add'] at hab 
       simp_rw [div_eq_iff hxz.ne', y, ← hab]; ring
     have hb : (y - x) / (z - x) = b :=
       by
-      rw [eq_comm, ← sub_eq_iff_eq_add] at hab
+      rw [eq_comm, ← sub_eq_iff_eq_add] at hab 
       simp_rw [div_eq_iff hxz.ne', y, ← hab]; ring
     rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_add,
       sub_add_sub_cancel, ← lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x),
-      mul_comm (f z), ha, hb] at this
+      mul_comm (f z), ha, hb] at this 
 #align strict_convex_on_of_slope_strict_mono_adjacent strictConvexOn_of_slope_strict_mono_adjacent
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
@@ -348,7 +348,7 @@ theorem StrictConcaveOn.secant_strict_mono (hf : StrictConcaveOn 𝕜 s f) {a x 
     (f y - f a) / (y - a) < (f x - f a) / (x - a) :=
   by
   have key := hf.neg.secant_strict_mono ha hx hy hxa hya hxy
-  simp only [Pi.neg_apply] at key
+  simp only [Pi.neg_apply] at key 
   rw [← neg_lt_neg_iff]
   convert key using 1 <;> field_simp
 #align strict_concave_on.secant_strict_mono StrictConcaveOn.secant_strict_mono

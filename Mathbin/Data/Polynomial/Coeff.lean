@@ -63,7 +63,7 @@ theorem coeff_smul [SMulZeroClass S R] (r : S) (p : R[X]) (n : ℕ) :
 theorem support_smul [Monoid S] [DistribMulAction S R] (r : S) (p : R[X]) :
     support (r • p) ⊆ support p := by
   intro i hi
-  simp [mem_support_iff] at hi⊢
+  simp [mem_support_iff] at hi ⊢
   contrapose! hi
   simp [hi]
 #align polynomial.support_smul Polynomial.support_smul
@@ -235,7 +235,7 @@ theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.X ^ n) (d
   by
   rw [coeff_mul, sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
   · rintro ⟨i, j⟩ h1 h2; rw [coeff_X_pow, if_neg, MulZeroClass.mul_zero]; rintro rfl; apply h2
-    rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1; subst h1
+    rw [nat.mem_antidiagonal, add_right_cancel_iff] at h1 ; subst h1
   · exact fun h1 => (h1 (nat.mem_antidiagonal.2 rfl)).elim
 #align polynomial.coeff_mul_X_pow Polynomial.coeff_mul_X_pow
 -/
@@ -308,7 +308,7 @@ theorem mul_X_pow_eq_zero {p : R[X]} {n : ℕ} (H : p * X ^ n = 0) : p = 0 :=
 theorem mul_X_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n * P :=
   by
   intro P Q hPQ
-  simp only at hPQ
+  simp only at hPQ 
   ext i
   rw [← coeff_X_pow_mul P n i, hPQ, coeff_X_pow_mul Q n i]
 #align polynomial.mul_X_pow_injective Polynomial.mul_X_pow_injective
@@ -359,7 +359,7 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ
         Finset.sum_ite_eq']
       split_ifs with hi hi
       · rw [hc]
-      · rw [Classical.not_not] at hi; rwa [MulZeroClass.mul_zero]
+      · rw [Classical.not_not] at hi ; rwa [MulZeroClass.mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 
 theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
@@ -402,7 +402,7 @@ theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m 
   by
   fconstructor
   · intro h
-    apply_fun fun p => p.coeff 0  at h
+    apply_fun fun p => p.coeff 0  at h 
     simpa using h
   · rintro rfl; rfl
 #align polynomial.nat_cast_inj Polynomial.nat_cast_inj
@@ -418,7 +418,7 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[
   by
   fconstructor
   · intro h
-    apply_fun fun p => p.coeff 0  at h
+    apply_fun fun p => p.coeff 0  at h 
     simpa using h
   · rintro rfl; rfl
 #align polynomial.int_cast_inj Polynomial.int_cast_inj

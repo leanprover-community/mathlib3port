@@ -107,7 +107,7 @@ theorem eraseLead_ne_zero (f0 : 2 ≤ f.support.card) : eraseLead f ≠ 0 :=
 #print Polynomial.lt_natDegree_of_mem_eraseLead_support /-
 theorem lt_natDegree_of_mem_eraseLead_support {a : ℕ} (h : a ∈ (eraseLead f).support) :
     a < f.natDegree := by
-  rw [erase_lead_support, mem_erase] at h
+  rw [erase_lead_support, mem_erase] at h 
   exact (le_nat_degree_of_mem_supp a h.2).lt_of_ne h.1
 #align polynomial.lt_nat_degree_of_mem_erase_lead_support Polynomial.lt_natDegree_of_mem_eraseLead_support
 -/
@@ -347,7 +347,7 @@ theorem card_support_eq' {n : ℕ} (k : Fin n → ℕ) (x : Fin n → R) (hk : F
 
 theorem card_support_eq {n : ℕ} :
     f.support.card = n ↔
-      ∃ (k : Fin n → ℕ)(x : Fin n → R)(hk : StrictMono k)(hx : ∀ i, x i ≠ 0),
+      ∃ (k : Fin n → ℕ) (x : Fin n → R) (hk : StrictMono k) (hx : ∀ i, x i ≠ 0),
         f = ∑ i, C (x i) * X ^ k i :=
   by
   refine' ⟨_, fun ⟨k, x, hk, hx, hf⟩ => hf.symm ▸ card_support_eq' k x hk.Injective hx⟩
@@ -393,7 +393,8 @@ theorem card_support_eq {n : ℕ} :
       all_goals exact H
 #align polynomial.card_support_eq Polynomial.card_support_eq
 
-theorem card_support_eq_one : f.support.card = 1 ↔ ∃ (k : ℕ)(x : R)(hx : x ≠ 0), f = C x * X ^ k :=
+theorem card_support_eq_one :
+    f.support.card = 1 ↔ ∃ (k : ℕ) (x : R) (hx : x ≠ 0), f = C x * X ^ k :=
   by
   refine' ⟨fun h => _, _⟩
   · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
@@ -404,7 +405,8 @@ theorem card_support_eq_one : f.support.card = 1 ↔ ∃ (k : ℕ)(x : R)(hx : x
 
 theorem card_support_eq_two :
     f.support.card = 2 ↔
-      ∃ (k m : ℕ)(hkm : k < m)(x y : R)(hx : x ≠ 0)(hy : y ≠ 0), f = C x * X ^ k + C y * X ^ m :=
+      ∃ (k m : ℕ) (hkm : k < m) (x y : R) (hx : x ≠ 0) (hy : y ≠ 0),
+        f = C x * X ^ k + C y * X ^ m :=
   by
   refine' ⟨fun h => _, _⟩
   · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
@@ -417,7 +419,7 @@ theorem card_support_eq_two :
 
 theorem card_support_eq_three :
     f.support.card = 3 ↔
-      ∃ (k m n : ℕ)(hkm : k < m)(hmn : m < n)(x y z : R)(hx : x ≠ 0)(hy : y ≠ 0)(hz : z ≠ 0),
+      ∃ (k m n : ℕ) (hkm : k < m) (hmn : m < n) (x y z : R) (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0),
         f = C x * X ^ k + C y * X ^ m + C z * X ^ n :=
   by
   refine' ⟨fun h => _, _⟩

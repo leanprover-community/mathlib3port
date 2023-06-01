@@ -220,7 +220,7 @@ instance nim_impartial (o : Ordinal) : Impartial (nim o) :=
 theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ‖ 0 :=
   by
   rw [impartial.fuzzy_zero_iff_lf, nim_def, lf_zero_le]
-  rw [← Ordinal.pos_iff_ne_zero] at ho
+  rw [← Ordinal.pos_iff_ne_zero] at ho 
   exact ⟨(Ordinal.principalSegOut ho).top, by simp⟩
 #align pgame.nim_fuzzy_zero_of_ne_zero PGame.nim_fuzzy_zero_of_ne_zero
 
@@ -252,7 +252,8 @@ theorem nim_equiv_iff_eq {o₁ o₂ : Ordinal} : (nim o₁ ≈ nim o₂) ↔ o�
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
 noncomputable def grundyValue : ∀ G : PGame.{u}, Ordinal.{u}
-  | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)decreasing_by pgame_wf_tac
+  | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)
+decreasing_by pgame_wf_tac
 #align pgame.grundy_value PGame.grundyValue
 
 theorem grundyValue_eq_mex_left (G : PGame) :
@@ -272,9 +273,9 @@ theorem equiv_nim_grundyValue : ∀ (G : PGame.{u}) [G.Impartial], G ≈ nim (gr
       apply (fuzzy_congr_left (add_congr_left (equiv_nim_grundy_value (G.move_left i₁)).symm)).1
       rw [nim_add_fuzzy_zero_iff]
       intro heq
-      rw [eq_comm, grundy_value_eq_mex_left G] at heq
+      rw [eq_comm, grundy_value_eq_mex_left G] at heq 
       have h := Ordinal.ne_mex _
-      rw [HEq] at h
+      rw [HEq] at h 
       exact (h i₁).irrefl
     · intro i₂
       rw [add_move_left_inr, ← impartial.exists_left_move_equiv_iff_fuzzy_zero]
@@ -295,8 +296,8 @@ theorem equiv_nim_grundyValue : ∀ (G : PGame.{u}) [G.Impartial], G ≈ nim (gr
       use to_left_moves_add (Sum.inl i)
       rw [add_move_left_inl, move_left_mk]
       apply (add_congr_left (equiv_nim_grundy_value (G.move_left i))).trans
-      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))decreasing_by
-  pgame_wf_tac
+      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
+decreasing_by pgame_wf_tac
 #align pgame.equiv_nim_grundy_value PGame.equiv_nim_grundyValue
 
 theorem grundyValue_eq_iff_equiv_nim {G : PGame} [G.Impartial] {o : Ordinal} :
@@ -367,11 +368,15 @@ theorem grundyValue_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m
         obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (hk.trans (Ordinal.nat_lt_omega _))
         simp only [add_move_left_inl, add_move_left_inr, move_left_nim', Equiv.symm_apply_apply]
         -- The inequality follows from injectivity.
-        rw [nat_cast_lt] at hk
-        first |rw [hn _ hk]|rw [hm _ hk]
+        rw [nat_cast_lt] at hk 
+        first
+        | rw [hn _ hk]
+        | rw [hm _ hk]
         refine' fun h => hk.ne _
-        rw [Ordinal.nat_cast_inj] at h
-        first |rwa [Nat.lxor'_left_inj] at h|rwa [Nat.lxor'_right_inj] at h
+        rw [Ordinal.nat_cast_inj] at h 
+        first
+        | rwa [Nat.lxor'_left_inj] at h 
+        | rwa [Nat.lxor'_right_inj] at h 
   -- Every other smaller Grundy value can be reached by left moves.
   · -- If `u < nat.lxor m n`, then either `nat.lxor u n < m` or `nat.lxor u m < n`.
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))

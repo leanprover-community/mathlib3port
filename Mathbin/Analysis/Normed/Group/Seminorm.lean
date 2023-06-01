@@ -124,8 +124,9 @@ structure NonarchAddGroupNorm (G : Type _) [AddGroup G] extends NonarchAddGroupS
 #align nonarch_add_group_norm NonarchAddGroupNorm
 -/
 
-attribute [nolint doc_blame]
-  AddGroupSeminorm.toZeroHom AddGroupNorm.toAddGroupSeminorm GroupNorm.toGroupSeminorm NonarchAddGroupSeminorm.toZeroHom NonarchAddGroupNorm.toNonarchAddGroupSeminorm
+attribute [nolint doc_blame] AddGroupSeminorm.toZeroHom AddGroupNorm.toAddGroupSeminorm
+  GroupNorm.toGroupSeminorm NonarchAddGroupSeminorm.toZeroHom
+  NonarchAddGroupNorm.toNonarchAddGroupSeminorm
 
 attribute [to_additive] GroupNorm.toGroupSeminorm
 
@@ -136,7 +137,7 @@ the additive group `α`.
 You should extend this class when you extend `nonarch_add_group_seminorm`. -/
 @[protect_proj]
 class NonarchAddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends
-  NonarchimedeanHomClass F α ℝ where
+    NonarchimedeanHomClass F α ℝ where
   map_zero (f : F) : f 0 = 0
   map_neg_eq_map' (f : F) (a : α) : f (-a) = f a
 #align nonarch_add_group_seminorm_class NonarchAddGroupSeminormClass
@@ -149,7 +150,7 @@ additive group `α`.
 You should extend this class when you extend `nonarch_add_group_norm`. -/
 @[protect_proj]
 class NonarchAddGroupNormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends
-  NonarchAddGroupSeminormClass F α where
+    NonarchAddGroupSeminormClass F α where
   eq_zero_of_map_eq_zero (f : F) {a : α} : f a = 0 → a = 0
 #align nonarch_add_group_norm_class NonarchAddGroupNormClass
 -/

@@ -43,7 +43,7 @@ theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
     eq_of_sub_eq_zero <|
       by_contradiction fun h => by
         have := mul_left_not_lt a h
-        rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this
+        rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this 
         exact this (mod_lt _ a0)
 #align euclidean_domain.mul_div_cancel_left EuclideanDomain.mul_div_cancel_left
 
@@ -120,7 +120,7 @@ theorem div_one (p : R) : p / 1 = p :=
 theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p :=
   by
   by_cases hq : q = 0
-  · rw [hq, zero_dvd_iff] at hpq
+  · rw [hq, zero_dvd_iff] at hpq 
     rw [hpq]
     exact dvd_zero _
   use q
@@ -149,7 +149,7 @@ theorem gcd_zero_right (a : R) : gcd a 0 = a := by rw [gcd];
 
 #print EuclideanDomain.gcd_val /-
 theorem gcd_val (a b : R) : gcd a b = gcd (b % a) a := by rw [gcd];
-  split_ifs <;> [simp only [h, mod_zero, gcd_zero_right];rfl]
+  split_ifs <;> [simp only [h, mod_zero, gcd_zero_right]; rfl]
 #align euclidean_domain.gcd_val EuclideanDomain.gcd_val
 -/
 
@@ -209,7 +209,7 @@ theorem gcd_self (a : R) : gcd a a = a :=
 #print EuclideanDomain.xgcdAux_fst /-
 @[simp]
 theorem xgcdAux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x y :=
-  GCD.induction x y (by intros ; rw [xgcd_zero_left, gcd_zero_left]) fun x y h IH s t s' t' => by
+  GCD.induction x y (by intros; rw [xgcd_zero_left, gcd_zero_left]) fun x y h IH s t s' t' => by
     simp only [xgcd_aux_rec h, if_neg h, IH]; rw [← gcd_val]
 #align euclidean_domain.xgcd_aux_fst EuclideanDomain.xgcdAux_fst
 -/
@@ -224,9 +224,9 @@ private def P (a b : R) : R × R × R → Prop
 #print EuclideanDomain.xgcdAux_P /-
 theorem xgcdAux_P (a b : R) {r r' : R} :
     ∀ {s t s' t'}, P a b (r, s, t) → P a b (r', s', t') → P a b (xgcdAux r s t r' s' t') :=
-  GCD.induction r r' (by intros ; simpa only [xgcd_zero_left] ) fun x y h IH s t s' t' p p' =>
+  GCD.induction r r' (by intros; simpa only [xgcd_zero_left]) fun x y h IH s t s' t' p p' =>
     by
-    rw [xgcd_aux_rec h]; refine' IH _ p; unfold P at p p'⊢
+    rw [xgcd_aux_rec h]; refine' IH _ p; unfold P at p p' ⊢
     rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc,
       mul_comm _ t, ← mul_assoc, ← add_mul, ← p, mod_eq_sub_mul_div]
 #align euclidean_domain.xgcd_aux_P EuclideanDomain.xgcdAux_P
@@ -238,7 +238,7 @@ theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
   have :=
     @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, MulZeroClass.mul_zero, add_zero])
       (by rw [P, mul_one, MulZeroClass.mul_zero, zero_add])
-  rwa [xgcd_aux_val, xgcd_val] at this
+  rwa [xgcd_aux_val, xgcd_val] at this 
 #align euclidean_domain.gcd_eq_gcd_ab EuclideanDomain.gcd_eq_gcd_ab
 
 -- see Note [lower instance priority]
@@ -278,11 +278,11 @@ theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z :=
   by
   rw [lcm]; by_cases hxy : gcd x y = 0
-  · rw [hxy, div_zero]; rw [EuclideanDomain.gcd_eq_zero_iff] at hxy; rwa [hxy.1] at hxz
+  · rw [hxy, div_zero]; rw [EuclideanDomain.gcd_eq_zero_iff] at hxy ; rwa [hxy.1] at hxz 
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
   suffices x * y ∣ z * gcd x y by
     cases' this with p hp; use p
-    generalize gcd x y = g at hxy hs hp⊢; subst hs
+    generalize gcd x y = g at hxy hs hp ⊢; subst hs
     rw [mul_left_comm, mul_div_cancel_left _ hxy, ← mul_left_inj' hxy, hp]
     rw [← mul_assoc]; simp only [mul_right_comm]
   rw [gcd_eq_gcd_ab, mul_add]; apply dvd_add
@@ -311,13 +311,13 @@ theorem lcm_zero_right (x : R) : lcm x 0 = 0 := by rw [lcm, MulZeroClass.mul_zer
 theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 :=
   by
   constructor
-  · intro hxy; rw [lcm, mul_div_assoc _ (gcd_dvd_right _ _), mul_eq_zero] at hxy
+  · intro hxy; rw [lcm, mul_div_assoc _ (gcd_dvd_right _ _), mul_eq_zero] at hxy 
     apply or_of_or_of_imp_right hxy; intro hy
     by_cases hgxy : gcd x y = 0
-    · rw [EuclideanDomain.gcd_eq_zero_iff] at hgxy; exact hgxy.2
+    · rw [EuclideanDomain.gcd_eq_zero_iff] at hgxy ; exact hgxy.2
     · rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
-      generalize gcd x y = g at hr hs hy hgxy⊢; subst hs
-      rw [mul_div_cancel_left _ hgxy] at hy; rw [hy, MulZeroClass.mul_zero]
+      generalize gcd x y = g at hr hs hy hgxy ⊢; subst hs
+      rw [mul_div_cancel_left _ hgxy] at hy ; rw [hy, MulZeroClass.mul_zero]
   rintro (hx | hy)
   · rw [hx, lcm_zero_left]
   · rw [hy, lcm_zero_right]
@@ -327,10 +327,10 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 :=
 theorem gcd_mul_lcm (x y : R) : gcd x y * lcm x y = x * y :=
   by
   rw [lcm]; by_cases h : gcd x y = 0
-  · rw [h, MulZeroClass.zero_mul]; rw [EuclideanDomain.gcd_eq_zero_iff] at h;
+  · rw [h, MulZeroClass.zero_mul]; rw [EuclideanDomain.gcd_eq_zero_iff] at h ;
     rw [h.1, MulZeroClass.zero_mul]
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
-  generalize gcd x y = g at h hr⊢; subst hr
+  generalize gcd x y = g at h hr ⊢; subst hr
   rw [mul_assoc, mul_div_cancel_left _ h]
 #align euclidean_domain.gcd_mul_lcm EuclideanDomain.gcd_mul_lcm
 

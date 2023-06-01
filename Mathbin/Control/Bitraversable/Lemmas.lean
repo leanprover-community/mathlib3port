@@ -122,8 +122,8 @@ theorem tsnd_eq_snd_id {α β β'} (f : β → β') (x : t α β) : tsnd (id.mk 
   by simp [tsnd, snd, pure_eq_id_mk_comp_id, -comp.right_id, bitraverse_eq_bimap_id]
 #align bitraversable.tsnd_eq_snd_id Bitraversable.tsnd_eq_snd_id
 
-attribute [functor_norm]
-  comp_bitraverse comp_tsnd comp_tfst tsnd_comp_tsnd tsnd_comp_tfst tfst_comp_tsnd tfst_comp_tfst bitraverse_comp bitraverse_id_id tfst_id tsnd_id
+attribute [functor_norm] comp_bitraverse comp_tsnd comp_tfst tsnd_comp_tsnd tsnd_comp_tfst
+  tfst_comp_tsnd tfst_comp_tfst bitraverse_comp bitraverse_id_id tfst_id tsnd_id
 
 end Bitraversable
 

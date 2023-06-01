@@ -90,7 +90,7 @@ theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.
   by
   refine' ⟨hM, fun x hx => _⟩
   simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
-    Matrix.toBilin'_apply'] at hMq
+    Matrix.toBilin'_apply'] at hMq 
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDef_of_toQuadraticForm'
 
@@ -139,7 +139,7 @@ theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ
     Q.toMatrix'.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ←
-    bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ
+    bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ 
   apply Matrix.posDef_of_toQuadraticForm' (is_symm_to_matrix' Q) hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDef_toMatrix'
 

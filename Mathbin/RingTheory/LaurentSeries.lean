@@ -110,7 +110,7 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
     · contrapose! h
       exact order_le_of_coeff_ne_zero h.symm
     · contrapose! h
-      simp only [Set.mem_range, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at h
+      simp only [Set.mem_range, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at h 
       obtain ⟨m, hm⟩ := h
       rw [← sub_nonneg, ← hm]
       exact Int.zero_le_ofNat _
@@ -168,13 +168,13 @@ instance of_powerSeries_localization [CommRing R] :
     · rintro rfl
       exact ⟨1, rfl⟩
     · rintro ⟨⟨_, n, rfl⟩, hc⟩
-      rw [← sub_eq_zero, ← mul_sub, PowerSeries.ext_iff] at hc
+      rw [← sub_eq_zero, ← mul_sub, PowerSeries.ext_iff] at hc 
       rw [← sub_eq_zero, PowerSeries.ext_iff]
       intro m
       have h := hc (m + n)
       rwa [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.X_pow_eq, PowerSeries.monomial,
         add_comm m, PowerSeries.coeff, Finsupp.single_add, MvPowerSeries.coeff_add_monomial_mul,
-        one_mul] at h
+        one_mul] at h 
 #align laurent_series.of_power_series_localization LaurentSeries.of_powerSeries_localization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=

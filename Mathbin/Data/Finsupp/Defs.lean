@@ -210,7 +210,7 @@ theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x
           if h : a ∈ f.support then h₂ a h
           else by
             have hf : f a = 0 := not_mem_support_iff.1 h
-            have hg : g a = 0 := by rwa [h₁, not_mem_support_iff] at h
+            have hg : g a = 0 := by rwa [h₁, not_mem_support_iff] at h 
             rw [hf, hg]⟩
 #align finsupp.ext_iff' Finsupp.ext_iff'
 
@@ -372,12 +372,12 @@ theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).support = 
 theorem support_single_subset : (single a b).support ⊆ {a} := by
   classical
     show ite _ _ _ ⊆ _
-    split_ifs <;> [exact empty_subset _;exact subset.refl _]
+    split_ifs <;> [exact empty_subset _; exact subset.refl _]
 #align finsupp.support_single_subset Finsupp.support_single_subset
 
 #print Finsupp.single_apply_mem /-
 theorem single_apply_mem (x) : single a b x ∈ ({0, b} : Set M) := by
-  rcases em (a = x) with (rfl | hx) <;> [simp;simp [single_eq_of_ne hx]]
+  rcases em (a = x) with (rfl | hx) <;> [simp; simp [single_eq_of_ne hx]]
 #align finsupp.single_apply_mem Finsupp.single_apply_mem
 -/
 
@@ -393,7 +393,7 @@ theorem range_single_subset : Set.range (single a b) ⊆ {0, b} :=
 theorem single_injective (a : α) : Function.Injective (single a : M → α →₀ M) := fun b₁ b₂ eq =>
   by
   have : (single a b₁ : α →₀ M) a = (single a b₂ : α →₀ M) a := by rw [Eq]
-  rwa [single_eq_same, single_eq_same] at this
+  rwa [single_eq_same, single_eq_same] at this 
 #align finsupp.single_injective Finsupp.single_injective
 -/
 
@@ -429,11 +429,11 @@ theorem single_eq_single_iff (a₁ a₂ : α) (b₁ b₂ : M) :
   · intro eq
     by_cases a₁ = a₂
     · refine' Or.inl ⟨h, _⟩
-      rwa [h, (single_injective a₂).eq_iff] at eq
-    · rw [ext_iff] at eq
+      rwa [h, (single_injective a₂).eq_iff] at eq 
+    · rw [ext_iff] at eq 
       have h₁ := Eq a₁
       have h₂ := Eq a₂
-      simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂
+      simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂ 
       exact Or.inr ⟨h₁, h₂.symm⟩
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
     · rfl
@@ -500,7 +500,7 @@ theorem support_eq_singleton {f : α →₀ M} {a : α} :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem support_eq_singleton' {f : α →₀ M} {a : α} :
-    f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
+    f.support = {a} ↔ ∃ (b : _) (_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
     let h := support_eq_singleton.1 h
     ⟨_, h.1, h.2⟩,
@@ -513,7 +513,7 @@ theorem card_support_eq_one {f : α →₀ M} : card f.support = 1 ↔ ∃ a, f 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem card_support_eq_one' {f : α →₀ M} :
-    card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
+    card f.support = 1 ↔ ∃ (a : _) (b : _) (_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']
 #align finsupp.card_support_eq_one' Finsupp.card_support_eq_one'
 
@@ -637,7 +637,7 @@ def erase (a : α) (f : α →₀ M) : α →₀ M
     if a' = a then 0 else f a'
   mem_support_toFun a' := by
     rw [mem_erase, mem_support_iff] <;> split_ifs <;>
-      [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩;exact and_iff_right h]
+      [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩; exact and_iff_right h]
 #align finsupp.erase Finsupp.erase
 -/
 
@@ -886,7 +886,7 @@ theorem embDomain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
 theorem embDomain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a := by
   classical
     change dite _ _ _ = _
-    split_ifs <;> rw [Finset.mem_map' f] at h
+    split_ifs <;> rw [Finset.mem_map' f] at h 
     · refine' congr_arg (v : α → M) (f.inj' _)
       exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
     · exact (not_mem_support_iff.1 h).symm
@@ -977,7 +977,7 @@ def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α
     (fun a => f (g₁ a) (g₂ a)) fun a H =>
     by
     simp only [mem_union, mem_support_iff, Ne]; rw [← not_and_or]
-    rintro ⟨h₁, h₂⟩; rw [h₁, h₂] at H; exact H hf
+    rintro ⟨h₁, h₂⟩; rw [h₁, h₂] at H ; exact H hf
 #align finsupp.zip_with Finsupp.zipWith
 -/
 
@@ -1025,7 +1025,7 @@ theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint 
       (fun ha => by
         have : a ∉ g₂.support := disjoint_left.1 h ha
         simp only [mem_support_iff, Classical.not_not] at * <;>
-          simpa only [add_apply, this, add_zero] )
+          simpa only [add_apply, this, add_zero])
       fun ha => by
       have : a ∉ g₁.support := disjoint_right.1 h ha
       simp only [mem_support_iff, Classical.not_not] at * <;> simpa only [add_apply, this, zero_add]
@@ -1117,7 +1117,7 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
-    suffices p (single a (f a) + f.eraseₓ a) by rwa [single_add_erase] at this
+    suffices p (single a (f a) + f.eraseₓ a) by rwa [single_add_erase] at this 
     classical
       apply ha
       · rw [support_erase, mem_erase]; exact fun H => H.1 rfl
@@ -1132,7 +1132,7 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
-    suffices p (f.eraseₓ a + single a (f a)) by rwa [erase_add_single] at this
+    suffices p (f.eraseₓ a + single a (f a)) by rwa [erase_add_single] at this 
     classical
       apply ha
       · rw [support_erase, mem_erase]; exact fun H => H.1 rfl

@@ -205,7 +205,7 @@ theorem ext (h : c.fst = d.fst) : c = d :=
   by
   obtain ⟨⟨s₁, t₁⟩, h₁, _⟩ := c
   obtain ⟨⟨s₂, t₂⟩, h₂, _⟩ := d
-  dsimp at h₁ h₂ h
+  dsimp at h₁ h₂ h 
   subst h
   subst h₁
   subst h₂
@@ -216,7 +216,7 @@ theorem ext' (h : c.snd = d.snd) : c = d :=
   by
   obtain ⟨⟨s₁, t₁⟩, _, h₁⟩ := c
   obtain ⟨⟨s₂, t₂⟩, _, h₂⟩ := d
-  dsimp at h₁ h₂ h
+  dsimp at h₁ h₂ h 
   subst h
   subst h₁
   subst h₂

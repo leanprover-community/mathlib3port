@@ -71,8 +71,8 @@ def free : Type u ⥤ MonCat.{u}
     where
   obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
-  map_id' := by intros ; ext1; rfl
-  map_comp' := by intros ; ext1; rfl
+  map_id' := by intros; ext1; rfl
+  map_comp' := by intros; ext1; rfl
 #align free free
 
 /-- The free-forgetful adjunction for monoids. -/

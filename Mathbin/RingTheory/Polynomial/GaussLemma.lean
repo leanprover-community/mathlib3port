@@ -55,8 +55,8 @@ theorem IsPrimitive.isUnit_iff_isUnit_map_of_injective : IsUnit f ↔ IsUnit (ma
   refine' ⟨(map_ring_hom φ).isUnit_map, fun h => _⟩
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   have hdeg := degree_C u.ne_zero
-  rw [hu, degree_map_eq_of_injective hinj] at hdeg
-  rw [eq_C_of_degree_eq_zero hdeg] at hf⊢
+  rw [hu, degree_map_eq_of_injective hinj] at hdeg 
+  rw [eq_C_of_degree_eq_zero hdeg] at hf ⊢
   exact is_unit_C.mpr (is_primitive_iff_is_unit_of_C_dvd.mp hf (f.coeff 0) dvd_rfl)
 #align polynomial.is_primitive.is_unit_iff_is_unit_map_of_injective Polynomial.IsPrimitive.isUnit_iff_isUnit_map_of_injective
 
@@ -67,7 +67,7 @@ theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreduc
     ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), fun a b h =>
       (h_irr.is_unit_or_is_unit <| by rw [h, Polynomial.map_mul]).imp _ _⟩
   all_goals apply ((is_primitive_of_dvd hf _).isUnit_iff_isUnit_map_of_injective hinj).mpr
-  exacts[Dvd.intro _ h.symm, Dvd.intro_left _ h.symm]
+  exacts [Dvd.intro _ h.symm, Dvd.intro_left _ h.symm]
 #align polynomial.is_primitive.irreducible_of_irreducible_map_of_injective Polynomial.IsPrimitive.irreducible_of_irreducible_map_of_injective
 
 end
@@ -107,7 +107,7 @@ theorem Monic.irreducible_iff_irreducible_map_fraction_map [IsIntegrallyClosed R
   have : a.leading_coeff * b.leading_coeff = 1 := by
     rw [← leading_coeff_mul, ← H, monic.leading_coeff (h.map <| algebraMap R K)]
   rw [← ha, ← hb, mul_comm _ (C b.leading_coeff), mul_assoc, ← mul_assoc (C a.leading_coeff), ←
-    C_mul, this, C_1, one_mul, ← Polynomial.map_mul] at H
+    C_mul, this, C_1, one_mul, ← Polynomial.map_mul] at H 
   rw [← hb, ← Polynomial.coe_mapRingHom]
   refine'
     IsUnit.mul (IsUnit.map _ (Or.resolve_left (hp.is_unit_or_is_unit _) (show ¬IsUnit a' from _)))
@@ -146,8 +146,8 @@ theorem Monic.dvd_of_fraction_map_dvd_fraction_map [IsIntegrallyClosed R] {p q :
   by
   obtain ⟨r, hr⟩ := h
   obtain ⟨d', hr'⟩ := IsIntegrallyClosed.eq_map_mul_c_of_dvd K hp (dvd_of_mul_left_eq _ hr.symm)
-  rw [monic.leading_coeff, C_1, mul_one] at hr'
-  rw [← hr', ← Polynomial.map_mul] at hr
+  rw [monic.leading_coeff, C_1, mul_one] at hr' 
+  rw [← hr', ← Polynomial.map_mul] at hr 
   exact dvd_of_mul_right_eq _ (Polynomial.map_injective _ (IsFractionRing.injective R K) hr.symm)
   · exact monic.of_mul_monic_left (hq.map (algebraMap R K)) (by simpa [← hr] using hp.map _)
 #align polynomial.monic.dvd_of_fraction_map_dvd_fraction_map Polynomial.Monic.dvd_of_fraction_map_dvd_fraction_map
@@ -171,7 +171,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
   by
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ p
-  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hc
+  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hc 
   apply isUnit_of_mul_isUnit_right
   rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_primPart, ← hu, ← RingHom.map_mul,
     is_unit_iff]
@@ -179,7 +179,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
     ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), isUnit_iff_ne_zero.2 fun con => _,
       by simp⟩
   replace con := (injective_iff_map_eq_zero (algebraMap R K)).1 (IsFractionRing.injective _ _) _ Con
-  rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integerNormalization_eq_zero_iff] at con
+  rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integerNormalization_eq_zero_iff] at con 
   rcases Con with (con | con)
   · apply h0 Con
   · apply Units.ne_zero _ Con
@@ -195,10 +195,10 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
       hp.irreducible_of_irreducible_map_of_injective (IsFractionRing.injective _ _)⟩
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ a
   obtain ⟨⟨d, d0⟩, hd⟩ := integer_normalization_map_to_map R⁰ b
-  rw [Algebra.smul_def, algebraMap_apply, Subtype.coe_mk] at hc hd
-  rw [mem_nonZeroDivisors_iff_ne_zero] at c0 d0
+  rw [Algebra.smul_def, algebraMap_apply, Subtype.coe_mk] at hc hd 
+  rw [mem_nonZeroDivisors_iff_ne_zero] at c0 d0 
   have hcd0 : c * d ≠ 0 := mul_ne_zero c0 d0
-  rw [Ne.def, ← C_eq_zero] at hcd0
+  rw [Ne.def, ← C_eq_zero] at hcd0 
   have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b :=
     by
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _) _
@@ -215,7 +215,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_primPart,
     (integer_normalization R⁰ b).eq_C_content_mul_primPart, mul_assoc, mul_comm _ (C _ * _), ←
     mul_assoc, ← mul_assoc, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ←
-    mul_assoc (C ↑u)] at h1
+    mul_assoc (C ↑u)] at h1 
   have h0 : a ≠ 0 ∧ b ≠ 0 := by
     classical
       rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
@@ -236,13 +236,13 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
   by
   rcases h_dvd with ⟨r, hr⟩
   obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r
-  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hs
+  rw [Subtype.coe_mk, Algebra.smul_def, algebraMap_apply] at hs 
   have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
     rw [Polynomial.map_mul, Polynomial.map_mul, hs, hr, mul_assoc, mul_comm r]
     simp
-  rw [← hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h
+  rw [← hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h 
   · exact h
   · symm
     rcases is_unit_prim_part_C s with ⟨u, hu⟩

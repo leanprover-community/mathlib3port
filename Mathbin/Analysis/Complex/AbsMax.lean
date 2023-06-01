@@ -127,7 +127,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ}
       hd.circle_integral_sub_inv_smul (mem_ball_self hr)
     simp [A, norm_smul, real.pi_pos.le]
   suffices ‖∮ ζ in C(z, r), (ζ - z)⁻¹ • f ζ‖ < 2 * π * r * (‖f z‖ / r) by
-    rwa [mul_assoc, mul_div_cancel' _ hr.ne'] at this
+    rwa [mul_assoc, mul_div_cancel' _ hr.ne'] at this 
   /- This inequality is true because `‖(ζ - z)⁻¹ • f ζ‖ ≤ ‖f z‖ / r` for all `ζ` on the circle and
     this inequality is strict at `ζ = w`. -/
   have hsub : sphere z r ⊆ closed_ball z r := sphere_subset_closed_ball
@@ -171,7 +171,7 @@ theorem norm_max_aux₃ {f : ℂ → F} {z w : ℂ} {r : ℝ} (hr : dist w z = r
   by
   subst r
   rcases eq_or_ne w z with (rfl | hne); · rfl
-  rw [← dist_ne_zero] at hne
+  rw [← dist_ne_zero] at hne 
   exact norm_max_aux₂ hd (closure_ball z hne ▸ hz.closure hd.continuous_on.norm)
 #align complex.norm_max_aux₃ Complex.norm_max_aux₃
 
@@ -196,7 +196,7 @@ theorem norm_eqOn_closedBall_of_isMaxOn {f : E → F} {z : E} {r : ℝ}
     EqOn (norm ∘ f) (const E ‖f z‖) (closedBall z r) :=
   by
   intro w hw
-  rw [mem_closed_ball, dist_comm] at hw
+  rw [mem_closed_ball, dist_comm] at hw 
   rcases eq_or_ne z w with (rfl | hne); · rfl
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
@@ -402,7 +402,7 @@ theorem exists_mem_frontier_isMaxOn_norm [FiniteDimensional ℂ E] {f : E → F}
   have hc : IsCompact (closure U) := hb.is_compact_closure
   obtain ⟨w, hwU, hle⟩ : ∃ w ∈ closure U, IsMaxOn (norm ∘ f) (closure U) w
   exact hc.exists_forall_ge hne.closure hd.continuous_on.norm
-  rw [closure_eq_interior_union_frontier, mem_union] at hwU
+  rw [closure_eq_interior_union_frontier, mem_union] at hwU 
   cases hwU; rotate_left; · exact ⟨w, hwU, hle⟩
   have : interior U ≠ univ := ne_top_of_le_ne_top hc.ne_univ interior_subset_closure
   rcases exists_mem_frontier_infDist_compl_eq_dist hwU this with ⟨z, hzU, hzw⟩
@@ -418,7 +418,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
     (hd : DiffContOnCl ℂ f U) {C : ℝ} (hC : ∀ z ∈ frontier U, ‖f z‖ ≤ C) {z : E}
     (hz : z ∈ closure U) : ‖f z‖ ≤ C :=
   by
-  rw [closure_eq_self_union_frontier, union_comm, mem_union] at hz
+  rw [closure_eq_self_union_frontier, union_comm, mem_union] at hz 
   cases hz; · exact hC z hz
   /- In case of a finite dimensional domain, one can just apply
     `complex.exists_mem_frontier_is_max_on_norm`. To make it work in any Banach space, we restrict

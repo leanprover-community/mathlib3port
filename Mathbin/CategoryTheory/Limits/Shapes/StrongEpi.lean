@@ -114,7 +114,7 @@ variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
 theorem strongEpi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
   { Epi := epi_comp _ _
-    llp := by intros ; infer_instance }
+    llp := by intros; infer_instance }
 #align category_theory.strong_epi_comp CategoryTheory.strongEpi_comp
 -/
 
@@ -122,7 +122,7 @@ theorem strongEpi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
 /-- The composition of two strong monomorphisms is a strong monomorphism. -/
 theorem strongMono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
   { Mono := mono_comp _ _
-    rlp := by intros ; infer_instance }
+    rlp := by intros; infer_instance }
 #align category_theory.strong_mono_comp CategoryTheory.strongMono_comp
 -/
 
@@ -180,7 +180,7 @@ theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
       rw [arrow.iso_w' e]
       haveI := epi_comp f e.hom.right
       apply epi_comp
-    llp := fun X Y z => by intro ; apply has_lifting_property.of_arrow_iso_left e z }
+    llp := fun X Y z => by intro; apply has_lifting_property.of_arrow_iso_left e z }
 #align category_theory.strong_epi.of_arrow_iso CategoryTheory.StrongEpi.of_arrow_iso
 -/
 
@@ -191,21 +191,21 @@ theorem StrongMono.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
       rw [arrow.iso_w' e]
       haveI := mono_comp f e.hom.right
       apply mono_comp
-    rlp := fun X Y z => by intro ; apply has_lifting_property.of_arrow_iso_right z e }
+    rlp := fun X Y z => by intro; apply has_lifting_property.of_arrow_iso_right z e }
 #align category_theory.strong_mono.of_arrow_iso CategoryTheory.StrongMono.of_arrow_iso
 -/
 
 #print CategoryTheory.StrongEpi.iff_of_arrow_iso /-
 theorem StrongEpi.iff_of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
-    (e : Arrow.mk f ≅ Arrow.mk g) : StrongEpi f ↔ StrongEpi g := by constructor <;> intro ;
-  exacts[strong_epi.of_arrow_iso e, strong_epi.of_arrow_iso e.symm]
+    (e : Arrow.mk f ≅ Arrow.mk g) : StrongEpi f ↔ StrongEpi g := by constructor <;> intro;
+  exacts [strong_epi.of_arrow_iso e, strong_epi.of_arrow_iso e.symm]
 #align category_theory.strong_epi.iff_of_arrow_iso CategoryTheory.StrongEpi.iff_of_arrow_iso
 -/
 
 #print CategoryTheory.StrongMono.iff_of_arrow_iso /-
 theorem StrongMono.iff_of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
-    (e : Arrow.mk f ≅ Arrow.mk g) : StrongMono f ↔ StrongMono g := by constructor <;> intro ;
-  exacts[strong_mono.of_arrow_iso e, strong_mono.of_arrow_iso e.symm]
+    (e : Arrow.mk f ≅ Arrow.mk g) : StrongMono f ↔ StrongMono g := by constructor <;> intro;
+  exacts [strong_mono.of_arrow_iso e, strong_mono.of_arrow_iso e.symm]
 #align category_theory.strong_mono.iff_of_arrow_iso CategoryTheory.StrongMono.iff_of_arrow_iso
 -/
 

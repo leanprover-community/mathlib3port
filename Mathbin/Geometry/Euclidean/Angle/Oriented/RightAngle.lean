@@ -53,7 +53,7 @@ theorem oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x + y) y = Real.arccos (‖y‖ / ‖x + y‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two h
 #align orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two
@@ -74,7 +74,7 @@ theorem oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x + y) y = Real.arcsin (‖x‖ / ‖x + y‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two h
 #align orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two
@@ -94,7 +94,7 @@ theorem oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x + y) y = Real.arctan (‖x‖ / ‖y‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two h
 #align orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two
@@ -113,7 +113,7 @@ theorem cos_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
 theorem cos_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.cos (o.oangle (x + y) y) = ‖y‖ / ‖x + y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).cos_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two
@@ -133,7 +133,7 @@ theorem sin_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
 theorem sin_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.sin (o.oangle (x + y) y) = ‖x‖ / ‖x + y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).sin_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two
@@ -152,7 +152,7 @@ theorem tan_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
 theorem tan_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.tan (o.oangle (x + y) y) = ‖x‖ / ‖y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).tan_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two
@@ -174,7 +174,7 @@ adjacent side. -/
 theorem cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.cos (o.oangle (x + y) y) * ‖x + y‖ = ‖y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
@@ -196,7 +196,7 @@ opposite side. -/
 theorem sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.sin (o.oangle (x + y) y) * ‖x + y‖ = ‖x‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
@@ -219,7 +219,7 @@ the opposite side. -/
 theorem tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.tan (o.oangle (x + y) y) * ‖y‖ = ‖x‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
@@ -242,7 +242,7 @@ hypotenuse. -/
 theorem norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖y‖ / Real.Angle.cos (o.oangle (x + y) y) = ‖x + y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two
@@ -265,7 +265,7 @@ hypotenuse. -/
 theorem norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖x‖ / Real.Angle.sin (o.oangle (x + y) y) = ‖x + y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two
@@ -288,7 +288,7 @@ adjacent side. -/
 theorem norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖x‖ / Real.Angle.tan (o.oangle (x + y) y) = ‖y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   rw [add_comm]
   exact (-o).norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two
@@ -308,7 +308,7 @@ theorem oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x - y) x = Real.arccos (‖x‖ / ‖x - y‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two h
 #align orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two
 
@@ -328,7 +328,7 @@ theorem oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x - y) x = Real.arcsin (‖y‖ / ‖x - y‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two h
 #align orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two
 
@@ -347,7 +347,7 @@ theorem oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
 theorem oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle (x - y) x = Real.arctan (‖y‖ / ‖x‖) :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two h
 #align orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two
 
@@ -368,7 +368,7 @@ vectors. -/
 theorem cos_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.cos (o.oangle (x - y) x) = ‖x‖ / ‖x - y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).cos_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -390,7 +390,7 @@ vectors. -/
 theorem sin_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.sin (o.oangle (x - y) x) = ‖y‖ / ‖x - y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).sin_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -411,7 +411,7 @@ vectors. -/
 theorem tan_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     Real.Angle.tan (o.oangle (x - y) x) = ‖y‖ / ‖x‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).tan_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -432,7 +432,7 @@ adjacent side, version subtracting vectors. -/
 theorem cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.cos (o.oangle (x - y) x) * ‖x - y‖ = ‖x‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
@@ -453,7 +453,7 @@ opposite side, version subtracting vectors. -/
 theorem sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.sin (o.oangle (x - y) x) * ‖x - y‖ = ‖y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
@@ -475,7 +475,7 @@ the opposite side, version subtracting vectors. -/
 theorem tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : Real.Angle.tan (o.oangle (x - y) x) * ‖x‖ = ‖y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
 #align orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
@@ -497,7 +497,7 @@ hypotenuse, version subtracting vectors. -/
 theorem norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖x‖ / Real.Angle.cos (o.oangle (x - y) x) = ‖x - y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -519,7 +519,7 @@ hypotenuse, version subtracting vectors. -/
 theorem norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖y‖ / Real.Angle.sin (o.oangle (x - y) x) = ‖x - y‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -541,7 +541,7 @@ adjacent side, version subtracting vectors. -/
 theorem norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
     (h : o.oangle x y = ↑(π / 2)) : ‖y‖ / Real.Angle.tan (o.oangle (x - y) x) = ‖x‖ :=
   by
-  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h ⊢
   exact (-o).norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two h
 #align orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two
 
@@ -557,7 +557,7 @@ theorem oangle_add_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ
         sub_eq_zero, add_comm, sub_neg_eq_add, ← Real.Angle.coe_add, ← Real.Angle.coe_add,
         add_assoc, add_halves, ← two_mul, Real.Angle.coe_two_pi]
       simpa using h
-    rw [← neg_inj, ← oangle_neg_orientation_eq_neg, neg_neg] at ha
+    rw [← neg_inj, ← oangle_neg_orientation_eq_neg, neg_neg] at ha 
     rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, oangle_rev,
       (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
       LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,

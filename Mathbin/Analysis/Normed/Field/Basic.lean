@@ -33,7 +33,7 @@ open scoped Topology BigOperators NNReal ENNReal uniformity Pointwise
 /-- A non-unital seminormed ring is a not-necessarily-unital ring
 endowed with a seminorm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
 class NonUnitalSeminormedRing (α : Type _) extends Norm α, NonUnitalRing α,
-  PseudoMetricSpace α where
+    PseudoMetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 #align non_unital_semi_normed_ring NonUnitalSeminormedRing
@@ -707,7 +707,7 @@ theorem norm_map_one_of_pow_eq_one [Monoid β] (φ : β →* α) {x : β} {k : �
     ‖φ x‖ = 1 :=
   by
   rw [← pow_left_inj, ← norm_pow, ← map_pow, h, map_one, norm_one, one_pow]
-  exacts[norm_nonneg _, zero_le_one, k.pos]
+  exacts [norm_nonneg _, zero_le_one, k.pos]
 #align norm_map_one_of_pow_eq_one norm_map_one_of_pow_eq_one
 
 theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖x‖ = 1 :=

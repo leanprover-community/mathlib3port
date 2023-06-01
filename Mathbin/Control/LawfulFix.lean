@@ -67,7 +67,7 @@ variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) :=
   by
   induction i; dsimp [approx]; apply @bot_le _ _ _ (f ⊥)
-  intro ; apply f.monotone; apply i_ih
+  intro; apply f.monotone; apply i_ih
 #align part.fix.approx_mono' Part.Fix.approx_mono'
 
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j :=
@@ -83,19 +83,19 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
   · simp only [Part.fix_def f h₀]
     constructor <;> intro hh; exact ⟨_, hh⟩
     have h₁ := Nat.find_spec h₀
-    rw [dom_iff_mem] at h₁
+    rw [dom_iff_mem] at h₁ 
     cases' h₁ with y h₁
     replace h₁ := approx_mono' f _ _ h₁
     suffices : y = b; subst this; exact h₁
     cases' hh with i hh
     revert h₁; generalize succ (Nat.find h₀) = j; intro
     wlog case : i ≤ j
-    · cases' le_total i j with H H <;> [skip;symm] <;> apply_assumption <;> assumption
+    · cases' le_total i j with H H <;> [skip; symm] <;> apply_assumption <;> assumption
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
   · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]
-    simp only [dom_iff_mem, not_exists] at h₀
-    intro ; apply h₀
+    simp only [dom_iff_mem, not_exists] at h₀ 
+    intro; apply h₀
 #align part.fix.mem_iff Part.Fix.mem_iff
 
 theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh => by rw [mem_iff f];
@@ -110,9 +110,9 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x :=
     have hb' := approx_le_fix f i _ _ hb
     obtain rfl := Part.mem_unique h' hb'
     exact hb
-  · simp only [not_exists] at hh; exists 0
+  · simp only [not_exists] at hh ; exists 0
     intro b' h'
-    simp only [mem_iff f] at h'
+    simp only [mem_iff f] at h' 
     cases' h' with i h'
     cases hh _ _ h'
 #align part.fix.exists_fix_le_approx Part.Fix.exists_fix_le_approx
@@ -231,7 +231,7 @@ variable (α β γ)
 #print Pi.monotoneCurry /-
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b
+def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σ a, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b
     where
   toFun := curry
   monotone' x y h a b := h ⟨a, b⟩
@@ -242,7 +242,7 @@ def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
 def monotoneUncurry [∀ x y, Preorder <| γ x y] :
-    (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2
+    (∀ (a) (b : β a), γ a b) →o ∀ x : Σ a, β a, γ x.1 x.2
     where
   toFun := uncurry
   monotone' x y h a := h a.1 a.2

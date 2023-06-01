@@ -40,7 +40,7 @@ variable {z y x : ℝ}
 theorem exp_bound_sq (x z : ℂ) (hz : ‖z‖ ≤ 1) :
     ‖exp (x + z) - exp x - z • exp x‖ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=
   calc
-    ‖exp (x + z) - exp x - z * exp x‖ = ‖exp x * (exp z - 1 - z)‖ := by congr ; rw [exp_add]; ring
+    ‖exp (x + z) - exp x - z * exp x‖ = ‖exp x * (exp z - 1 - z)‖ := by congr; rw [exp_add]; ring
     _ = ‖exp x‖ * ‖exp z - 1 - z‖ := (norm_mul _ _)
     _ ≤ ‖exp x‖ * ‖z‖ ^ 2 :=
       mul_le_mul_of_nonneg_left (abs_exp_sub_one_sub_id_le hz) (norm_nonneg _)
@@ -235,8 +235,8 @@ theorem tendsto_exp_div_pow_atTop (n : ℕ) : Tendsto (fun x => exp x / x ^ n) a
     eventually_at_top.1
       ((tendsto_pow_const_div_const_pow_of_one_lt n (one_lt_exp_iff.2 zero_lt_one)).Eventually
         (gt_mem_nhds this))
-  simp only [← exp_nat_mul, mul_one, div_lt_iff, exp_pos, ← div_eq_inv_mul] at hN
-  refine' ⟨N, trivial, fun x hx => _⟩; rw [Set.mem_Ioi] at hx
+  simp only [← exp_nat_mul, mul_one, div_lt_iff, exp_pos, ← div_eq_inv_mul] at hN 
+  refine' ⟨N, trivial, fun x hx => _⟩; rw [Set.mem_Ioi] at hx 
   have hx₀ : 0 < x := N.cast_nonneg.trans_lt hx
   rw [Set.mem_Ici, le_div_iff (pow_pos hx₀ _), ← le_div_iff' hC₀]
   calc

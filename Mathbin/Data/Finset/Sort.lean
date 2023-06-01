@@ -123,7 +123,7 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
   let l := s.sort (· ≤ ·)
   apply le_antisymm
   · have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
-    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.min' H :=
+    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _) (hi : i < l.length), l.nth_le i hi = s.min' H :=
       List.mem_iff_nthLe.1 this
     rw [← hi]
     exact (s.sort_sorted (· ≤ ·)).rel_nthLe_of_le _ _ (Nat.zero_le i)
@@ -134,7 +134,7 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
 
 #print Finset.sorted_zero_eq_min' /-
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
-    (s.sort (· ≤ ·)).nthLe 0 h = s.min' (card_pos.1 <| by rwa [length_sort] at h) :=
+    (s.sort (· ≤ ·)).nthLe 0 h = s.min' (card_pos.1 <| by rwa [length_sort] at h ) :=
   sorted_zero_eq_min'_aux _ _ _
 #align finset.sorted_zero_eq_min' Finset.sorted_zero_eq_min'
 -/
@@ -157,7 +157,7 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
       (Finset.mem_sort (· ≤ ·)).1 (List.nthLe_mem l _ h)
     exact s.le_max' _ this
   · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
-    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H :=
+    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _) (hi : i < l.length), l.nth_le i hi = s.max' H :=
       List.mem_iff_nthLe.1 this
     rw [← hi]
     have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
@@ -169,7 +169,7 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
 theorem sorted_last_eq_max' {s : Finset α}
     {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
-      s.max' (by rw [length_sort] at h; exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
+      s.max' (by rw [length_sort] at h ; exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
   sorted_last_eq_max'_aux _ _ _
 #align finset.sorted_last_eq_max' Finset.sorted_last_eq_max'
 -/

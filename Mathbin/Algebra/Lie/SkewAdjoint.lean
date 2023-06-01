@@ -105,7 +105,8 @@ theorem Matrix.is_skew_adjoint_bracket (A B : Matrix n n R)
     ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J :=
   by
   simp only [mem_skewAdjointMatricesSubmodule] at *
-  change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA; change Bᵀ ⬝ J = J ⬝ (-B) at hB
+  change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA ;
+  change Bᵀ ⬝ J = J ⬝ (-B) at hB 
   simp only [← Matrix.mul_eq_mul] at *
   rw [Matrix.lie_transpose, LieRing.of_associative_ring_bracket,
     LieRing.of_associative_ring_bracket, sub_mul, mul_assoc, mul_assoc, hA, hB, ← mul_assoc, ←

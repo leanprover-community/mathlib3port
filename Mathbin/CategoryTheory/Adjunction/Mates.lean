@@ -170,7 +170,7 @@ theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
   dsimp [transfer_nat_trans_self]
   rw [id_comp, comp_id]
   have := transfer_nat_trans_counit adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
-  dsimp at this
+  dsimp at this 
   rw [this]
   simp
 #align category_theory.transfer_nat_trans_self_counit CategoryTheory.transferNatTransSelf_counit
@@ -182,7 +182,7 @@ theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
   dsimp [transfer_nat_trans_self]
   rw [id_comp, comp_id]
   have := unit_transfer_nat_trans adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
-  dsimp at this
+  dsimp at this 
   rw [this]
   simp
 #align category_theory.unit_transfer_nat_trans_self CategoryTheory.unit_transferNatTransSelf

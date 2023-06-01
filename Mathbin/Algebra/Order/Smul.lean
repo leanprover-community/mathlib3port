@@ -53,7 +53,7 @@ with a partial order has a scalar multiplication which is compatible with the or
 -/
 @[protect_proj]
 class OrderedSMul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] :
-  Prop where
+    Prop where
   smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, a < b → 0 < c → c • a < c • b
   lt_of_smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, c • a < c • b → 0 < c → a < b
 #align ordered_smul OrderedSMul
@@ -123,7 +123,7 @@ theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) 
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
   hc.eq_or_lt.elim
-    (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
+    (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h )
     (OrderedSMul.lt_of_smul_lt_smul_of_pos h)
 #align lt_of_smul_lt_smul_of_nonneg lt_of_smul_lt_smul_of_nonneg
 
@@ -192,7 +192,7 @@ instance Nat.orderedSMul [LinearOrderedCancelAddCommMonoid M] : OrderedSMul ℕ 
 instance Int.orderedSMul [LinearOrderedAddCommGroup M] : OrderedSMul ℤ M :=
   OrderedSMul.mk'' fun n hn => by
     cases n
-    · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn⊢
+    · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn ⊢
       exact strictMono_smul_left hn
     · cases (Int.negSucc_not_pos _).1 hn
 #align int.ordered_smul Int.orderedSMul
@@ -221,7 +221,7 @@ theorem OrderedSMul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c �
     refine' fun a b c hab hc => (h hab hc).lt_of_ne _
     rw [Ne.def, hc.ne'.is_unit.smul_left_cancel]
     exact hab.ne
-  refine' { smul_lt_smul_of_pos := hlt'.. }
+  refine' { smul_lt_smul_of_pos := hlt' .. }
   intro a b c hab hc
   obtain ⟨c, rfl⟩ := hc.ne'.is_unit
   rw [← inv_smul_smul c a, ← inv_smul_smul c b]

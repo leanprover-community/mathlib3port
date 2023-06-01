@@ -58,7 +58,7 @@ theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') :=
 #print Nat.xgcd_aux_rec /-
 theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  cases r <;> [exact absurd h (lt_irrefl _);· simp only [xgcd_aux]; rfl]
+  cases r <;> [exact absurd h (lt_irrefl _); · simp only [xgcd_aux]; rfl]
 #align nat.xgcd_aux_rec Nat.xgcd_aux_rec
 -/
 
@@ -163,7 +163,7 @@ theorem xgcd_aux_P {r r'} :
 -/
 theorem gcd_eq_gcd_ab : (gcd x y : ℤ) = x * gcdA x y + y * gcdB x y := by
   have := @xgcd_aux_P x y x y 1 0 0 1 (by simp [P]) (by simp [P]) <;>
-    rwa [xgcd_aux_val, xgcd_val] at this
+    rwa [xgcd_aux_val, xgcd_val] at this 
 #align nat.gcd_eq_gcd_ab Nat.gcd_eq_gcd_ab
 -/
 
@@ -174,8 +174,8 @@ theorem exists_mul_emod_eq_gcd {k n : ℕ} (hk : gcd n k < k) : ∃ m, n * m % k
   by
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gt (lt_of_le_of_lt (zero_le (gcd n k)) hk))
   have key := congr_arg (fun m => Int.natMod m k) (gcd_eq_gcd_ab n k)
-  simp_rw [Int.natMod] at key
-  rw [Int.add_mul_emod_self_left, ← Int.coe_nat_mod, Int.toNat_coe_nat, mod_eq_of_lt hk] at key
+  simp_rw [Int.natMod] at key 
+  rw [Int.add_mul_emod_self_left, ← Int.coe_nat_mod, Int.toNat_coe_nat, mod_eq_of_lt hk] at key 
   refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.ofNat.inj _) key.symm⟩
   rw [Int.coe_nat_mod, Int.ofNat_mul, Int.toNat_of_nonneg (Int.emod_nonneg _ hk'),
     Int.toNat_of_nonneg (Int.emod_nonneg _ hk'), Int.mul_emod, Int.emod_emod, ← Int.mul_emod]
@@ -247,11 +247,11 @@ theorem natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
 #align int.nat_abs_div Int.natAbs_ediv
 
 theorem dvd_of_mul_dvd_mul_left {i j k : ℤ} (k_non_zero : k ≠ 0) (H : k * i ∣ k * j) : i ∣ j :=
-  Dvd.elim H fun l H1 => by rw [mul_assoc] at H1 <;> exact ⟨_, mul_left_cancel₀ k_non_zero H1⟩
+  Dvd.elim H fun l H1 => by rw [mul_assoc] at H1  <;> exact ⟨_, mul_left_cancel₀ k_non_zero H1⟩
 #align int.dvd_of_mul_dvd_mul_left Int.dvd_of_mul_dvd_mul_left
 
 theorem dvd_of_mul_dvd_mul_right {i j k : ℤ} (k_non_zero : k ≠ 0) (H : i * k ∣ j * k) : i ∣ j := by
-  rw [mul_comm i k, mul_comm j k] at H <;> exact dvd_of_mul_dvd_mul_left k_non_zero H
+  rw [mul_comm i k, mul_comm j k] at H  <;> exact dvd_of_mul_dvd_mul_left k_non_zero H
 #align int.dvd_of_mul_dvd_mul_right Int.dvd_of_mul_dvd_mul_right
 
 #print Int.lcm /-
@@ -463,7 +463,7 @@ theorem exists_gcd_one {m n : ℤ} (H : 0 < gcd m n) :
 
 #print Int.exists_gcd_one' /-
 theorem exists_gcd_one' {m n : ℤ} (H : 0 < gcd m n) :
-    ∃ (g : ℕ)(m' n' : ℤ), 0 < g ∧ gcd m' n' = 1 ∧ m = m' * g ∧ n = n' * g :=
+    ∃ (g : ℕ) (m' n' : ℤ), 0 < g ∧ gcd m' n' = 1 ∧ m = m' * g ∧ n = n' * g :=
   let ⟨m', n', h⟩ := exists_gcd_one H
   ⟨_, m', n', H, h⟩
 #align int.exists_gcd_one' Int.exists_gcd_one'
@@ -504,7 +504,7 @@ Compare with `is_coprime.dvd_of_dvd_mul_left` and
 theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a c = 1) : a ∣ b :=
   by
   have := gcd_eq_gcd_ab a c
-  simp only [hab, Int.ofNat_zero, Int.ofNat_succ, zero_add] at this
+  simp only [hab, Int.ofNat_zero, Int.ofNat_succ, zero_add] at this 
   have : b * a * gcd_a a c + b * c * gcd_b a c = b := by simp [mul_assoc, ← mul_add, ← this]
   rw [← this]
   exact dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)
@@ -514,7 +514,7 @@ theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab :
 Compare with `is_coprime.dvd_of_dvd_mul_right` and
 `unique_factorization_monoid.dvd_of_dvd_mul_right_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_right_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a b = 1) :
-    a ∣ c := by rw [mul_comm] at habc; exact dvd_of_dvd_mul_left_of_gcd_one habc hab
+    a ∣ c := by rw [mul_comm] at habc ; exact dvd_of_dvd_mul_left_of_gcd_one habc hab
 #align int.dvd_of_dvd_mul_right_of_gcd_one Int.dvd_of_dvd_mul_right_of_gcd_one
 
 #print Int.gcd_least_linear /-
@@ -686,11 +686,11 @@ theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (
 #align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helper
 
 theorem int_gcd_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : Int.gcd (-x) y = d := by
-  rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
+  rw [Int.gcd] at h ⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_left Tactic.NormNum.int_gcd_helper_neg_left
 
 theorem int_gcd_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : Int.gcd x (-y) = d := by
-  rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
+  rw [Int.gcd] at h ⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_right Tactic.NormNum.int_gcd_helper_neg_right
 
 theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
@@ -698,11 +698,11 @@ theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (
 #align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helper
 
 theorem int_lcm_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.lcm x y = d) : Int.lcm (-x) y = d := by
-  rw [Int.lcm] at h⊢ <;> rwa [Int.natAbs_neg]
+  rw [Int.lcm] at h ⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_lcm_helper_neg_left Tactic.NormNum.int_lcm_helper_neg_left
 
 theorem int_lcm_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.lcm x y = d) : Int.lcm x (-y) = d := by
-  rw [Int.lcm] at h⊢ <;> rwa [Int.natAbs_neg]
+  rw [Int.lcm] at h ⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_lcm_helper_neg_right Tactic.NormNum.int_lcm_helper_neg_right
 
 /-- Evaluates the `nat.gcd` function. -/

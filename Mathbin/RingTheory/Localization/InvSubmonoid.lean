@@ -92,7 +92,7 @@ theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 := by
 
 variable {S}
 
-theorem surj'' (z : S) : ∃ (r : R)(m : M), z = r • toInvSubmonoid M S m :=
+theorem surj'' (z : S) : ∃ (r : R) (m : M), z = r • toInvSubmonoid M S m :=
   by
   rcases IsLocalization.surj M z with ⟨⟨r, m⟩, e : z * _ = algebraMap R S r⟩
   refine' ⟨r, m, _⟩
@@ -125,7 +125,7 @@ theorem span_invSubmonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :=
 theorem finiteType_of_monoid_fg [Monoid.FG M] : Algebra.FiniteType R S :=
   by
   have := Monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S)
-  rw [Monoid.fg_iff_submonoid_fg] at this
+  rw [Monoid.fg_iff_submonoid_fg] at this 
   rcases this with ⟨s, hs⟩
   refine' ⟨⟨s, _⟩⟩
   rw [eq_top_iff]

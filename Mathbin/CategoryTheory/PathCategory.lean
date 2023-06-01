@@ -124,7 +124,7 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
     dsimp [lift]
     induction' f with _ _ p f' ih
     · simp only [category.comp_id]; apply Functor.map_id
-    · simp only [category.comp_id, category.id_comp] at ih⊢
+    · simp only [category.comp_id, category.id_comp] at ih ⊢
       have : Φ.map (p.cons f') = Φ.map p ≫ Φ.map f'.to_path := by
         convert functor.map_comp Φ p f'.to_path
       rw [this, ih]
@@ -272,7 +272,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
         apply quotient.comp_closure.of
         simp [paths_hom_rel])
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
-  functor_unitIso_comp' := by intros ; cases X; dsimp; simp; rfl
+  functor_unitIso_comp' := by intros; cases X; dsimp; simp; rfl
 #align category_theory.quotient_paths_equiv CategoryTheory.quotientPathsEquiv
 
 end

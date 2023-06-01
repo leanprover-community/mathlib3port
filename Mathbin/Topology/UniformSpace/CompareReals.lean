@@ -98,7 +98,8 @@ instead of the metric space one. We proved in rat.uniform_space_eq that they are
 but they are not definitionaly equal, so it would confuse the type class system (and probably
 also human readers). -/
 def Q :=
-  ℚ deriving CommRing, Inhabited
+  ℚ
+deriving CommRing, Inhabited
 #align compare_reals.Q CompareReals.Q
 -/
 
@@ -108,7 +109,8 @@ instance : UniformSpace Q :=
 #print CompareReals.Bourbakiℝ /-
 /-- Real numbers constructed as in Bourbaki. -/
 def Bourbakiℝ : Type :=
-  Completion Q deriving Inhabited
+  Completion Q
+deriving Inhabited
 #align compare_reals.Bourbakiℝ CompareReals.Bourbakiℝ
 -/
 

@@ -45,7 +45,7 @@ variable {F α β γ δ : Type _}
 Heyting implication. -/
 @[protect_proj]
 structure HeytingHom (α β : Type _) [HeytingAlgebra α] [HeytingAlgebra β] extends
-  LatticeHom α β where
+    LatticeHom α β where
   map_bot' : to_fun ⊥ = ⊥
   map_himp' : ∀ a b, to_fun (a ⇨ b) = to_fun a ⇨ to_fun b
 #align heyting_hom HeytingHom
@@ -56,7 +56,7 @@ structure HeytingHom (α β : Type _) [HeytingAlgebra α] [HeytingAlgebra β] ex
 preserve difference. -/
 @[protect_proj]
 structure CoheytingHom (α β : Type _) [CoheytingAlgebra α] [CoheytingAlgebra β] extends
-  LatticeHom α β where
+    LatticeHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_sdiff' : ∀ a b, to_fun (a \ b) = to_fun a \ to_fun b
 #align coheyting_hom CoheytingHom
@@ -67,7 +67,7 @@ structure CoheytingHom (α β : Type _) [CoheytingAlgebra α] [CoheytingAlgebra 
 preserve Heyting implication and difference. -/
 @[protect_proj]
 structure BiheytingHom (α β : Type _) [BiheytingAlgebra α] [BiheytingAlgebra β] extends
-  LatticeHom α β where
+    LatticeHom α β where
   map_himp' : ∀ a b, to_fun (a ⇨ b) = to_fun a ⇨ to_fun b
   map_sdiff' : ∀ a b, to_fun (a \ b) = to_fun a \ to_fun b
 #align biheyting_hom BiheytingHom
@@ -78,7 +78,7 @@ structure BiheytingHom (α β : Type _) [BiheytingAlgebra α] [BiheytingAlgebra 
 
 You should extend this class when you extend `heyting_hom`. -/
 class HeytingHomClass (F : Type _) (α β : outParam <| Type _) [HeytingAlgebra α]
-  [HeytingAlgebra β] extends LatticeHomClass F α β where
+    [HeytingAlgebra β] extends LatticeHomClass F α β where
   map_bot (f : F) : f ⊥ = ⊥
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
 #align heyting_hom_class HeytingHomClass
@@ -89,7 +89,7 @@ class HeytingHomClass (F : Type _) (α β : outParam <| Type _) [HeytingAlgebra 
 
 You should extend this class when you extend `coheyting_hom`. -/
 class CoheytingHomClass (F : Type _) (α β : outParam <| Type _) [CoheytingAlgebra α]
-  [CoheytingAlgebra β] extends LatticeHomClass F α β where
+    [CoheytingAlgebra β] extends LatticeHomClass F α β where
   map_top (f : F) : f ⊤ = ⊤
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
 #align coheyting_hom_class CoheytingHomClass
@@ -100,7 +100,7 @@ class CoheytingHomClass (F : Type _) (α β : outParam <| Type _) [CoheytingAlge
 
 You should extend this class when you extend `biheyting_hom`. -/
 class BiheytingHomClass (F : Type _) (α β : outParam <| Type _) [BiheytingAlgebra α]
-  [BiheytingAlgebra β] extends LatticeHomClass F α β where
+    [BiheytingAlgebra β] extends LatticeHomClass F α β where
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
 #align biheyting_hom_class BiheytingHomClass

@@ -380,8 +380,8 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=
     · apply succ_le_succ
       rw [← succ.inj e, ← add_assoc, add_comm]
       apply Nat.le_add_right
-  cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;>
-      [skip;rw [add_comm a b]] <;>
+  cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;> [skip;
+      rw [add_comm a b]] <;>
     apply this
 #align int.nat_abs_add_le Int.natAbs_add_le
 -/
@@ -682,7 +682,7 @@ theorem mul_emod_mul_of_pos {a : ℤ} (H : 0 < a) (b c : ℤ) : a * b % (a * c) 
 #align int.mul_mod_mul_of_pos Int.mul_emod_mul_of_pos
 
 theorem mul_div_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : b * (a / b) = a := by
-  have := mod_add_div a b <;> rwa [H, zero_add] at this
+  have := mod_add_div a b <;> rwa [H, zero_add] at this 
 #align int.mul_div_cancel_of_mod_eq_zero Int.mul_div_cancel_of_mod_eq_zeroₓ
 
 theorem div_mul_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : a / b * b = a := by

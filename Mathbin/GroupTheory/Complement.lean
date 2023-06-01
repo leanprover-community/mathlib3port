@@ -484,7 +484,7 @@ instance : MulAction F (leftTransversals (H : Set G))
       · exact (congr_arg _ (smul_inv_smul f g)).mp (quotient_action.inv_mul_mem f ht1)
       · rintro ⟨-, t', ht', rfl⟩ h
         replace h := quotient_action.inv_mul_mem f⁻¹ h
-        simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h⊢
+        simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h ⊢
         exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)⟩
   one_smul T := Subtype.ext (one_smul F T)
   mul_smul f₁ f₂ T := Subtype.ext (mul_smul f₁ f₂ T)
@@ -598,7 +598,7 @@ theorem IsComplement'_stabilizer {α : Type _} [MulAction G α] (a : α)
   rintro ⟨h', g, hg : g • a = a⟩ rfl
   specialize h1 (h * h') (by rwa [mul_smul, smul_def h', ← hg, ← mul_smul, hg])
   refine' Prod.ext (eq_inv_of_mul_eq_one_right h1) (Subtype.ext _)
-  rwa [Subtype.ext_iff, coe_one, coe_mul, ← self_eq_mul_left, mul_assoc (↑h) (↑h') g] at h1
+  rwa [Subtype.ext_iff, coe_one, coe_mul, ← self_eq_mul_left, mul_assoc (↑h) (↑h') g] at h1 
 #align subgroup.is_complement'_stabilizer Subgroup.IsComplement'_stabilizer
 
 end Subgroup
@@ -613,7 +613,7 @@ variable {G : Type u} [Group G] (H : Subgroup G) (g : G)
 
 /-- Partition `G ⧸ H` into orbits of the action of `g : G`. -/
 noncomputable def quotientEquivSigmaZmod :
-    G ⧸ H ≃ Σq : orbitRel.Quotient (zpowers g) (G ⧸ H), ZMod (minimalPeriod ((· • ·) g) q.out') :=
+    G ⧸ H ≃ Σ q : orbitRel.Quotient (zpowers g) (G ⧸ H), ZMod (minimalPeriod ((· • ·) g) q.out') :=
   (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)).trans
     (sigmaCongrRight fun q => orbitZpowersEquiv g q.out')
 #align subgroup.quotient_equiv_sigma_zmod Subgroup.quotientEquivSigmaZmod

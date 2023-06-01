@@ -204,7 +204,7 @@ variable {α : Type _} [Group α] (a : α)
 theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) :=
   by
   have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
-  rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this
+  rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this 
 #align order_eq_card_zpowers' order_eq_card_zpowers'
 #align add_order_eq_card_zmultiples' add_order_eq_card_zmultiples'
 
@@ -213,7 +213,7 @@ variable {a}
 @[to_additive IsOfFinAddOrder.finite_zmultiples]
 theorem IsOfFinOrder.finite_zpowers (h : IsOfFinOrder a) : Finite <| zpowers a :=
   by
-  rw [← orderOf_pos_iff, order_eq_card_zpowers'] at h
+  rw [← orderOf_pos_iff, order_eq_card_zpowers'] at h 
   exact Nat.finite_of_card_ne_zero h.ne.symm
 #align is_of_fin_order.finite_zpowers IsOfFinOrder.finite_zpowers
 #align is_of_fin_add_order.finite_zmultiples IsOfFinAddOrder.finite_zmultiples

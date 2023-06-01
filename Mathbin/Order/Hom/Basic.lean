@@ -128,7 +128,7 @@ abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] :=
 
 You should extend this class when you extend `order_iso`. -/
 class OrderIsoClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] extends
-  EquivLike F α β where
+    EquivLike F α β where
   map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
 #align order_iso_class OrderIsoClass
 -/
@@ -603,7 +603,7 @@ end OrderHom
 /-- Embeddings of partial orders that preserve `<` also preserve `≤`. -/
 def RelEmbedding.orderEmbeddingOfLTEmbedding [PartialOrder α] [PartialOrder β]
     (f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)) : α ↪o β :=
-  { f with map_rel_iff' := by intros ; simp [le_iff_lt_or_eq, f.map_rel_iff, f.injective.eq_iff] }
+  { f with map_rel_iff' := by intros; simp [le_iff_lt_or_eq, f.map_rel_iff, f.injective.eq_iff] }
 #align rel_embedding.order_embedding_of_lt_embedding RelEmbedding.orderEmbeddingOfLTEmbedding
 -/
 
@@ -1071,12 +1071,12 @@ theorem toRelIsoLT_ofRelIsoLT {α β} [PartialOrder α] [PartialOrder β]
     it suffices to prove `cmp a (g b) = cmp (f a) b`. -/
 def ofCmpEqCmp {α β} [LinearOrder α] [LinearOrder β] (f : α → β) (g : β → α)
     (h : ∀ (a : α) (b : β), cmp a (g b) = cmp (f a) b) : α ≃o β :=
-  have gf : ∀ a : α, a = g (f a) := by intro ; rw [← cmp_eq_eq_iff, h, cmp_self_eq_eq]
+  have gf : ∀ a : α, a = g (f a) := by intro; rw [← cmp_eq_eq_iff, h, cmp_self_eq_eq]
   { toFun := f
     invFun := g
     left_inv := fun a => (gf a).symm
-    right_inv := by intro ; rw [← cmp_eq_eq_iff, ← h, cmp_self_eq_eq]
-    map_rel_iff' := by intros ; apply le_iff_le_of_cmp_eq_cmp; convert(h _ _).symm; apply gf }
+    right_inv := by intro; rw [← cmp_eq_eq_iff, ← h, cmp_self_eq_eq]
+    map_rel_iff' := by intros; apply le_iff_le_of_cmp_eq_cmp; convert(h _ _).symm; apply gf }
 #align order_iso.of_cmp_eq_cmp OrderIso.ofCmpEqCmp
 -/
 
@@ -1093,7 +1093,7 @@ def ofHomInv {F G : Type _} [OrderHomClass F α β] [OrderHomClass G β α] (f :
   map_rel_iff' a b :=
     ⟨fun h => by replace h := map_rel g h;
       rwa [Equiv.coe_fn_mk, show g (f a) = (g : β →o α).comp (f : α →o β) a from rfl,
-        show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h,
+        show g (f b) = (g : β →o α).comp (f : α →o β) b from rfl, h₂] at h ,
       fun h => (f : α →o β).Monotone h⟩
 #align order_iso.of_hom_inv OrderIso.ofHomInv
 
@@ -1387,12 +1387,12 @@ theorem OrderIso.isCompl_iff {x y : α} : IsCompl x y ↔ IsCompl (f x) (f y) :=
 theorem OrderIso.complementedLattice [ComplementedLattice α] : ComplementedLattice β :=
   ⟨fun x => by
     obtain ⟨y, hy⟩ := exists_is_compl (f.symm x)
-    rw [← f.symm_apply_apply y] at hy
+    rw [← f.symm_apply_apply y] at hy 
     refine' ⟨f y, f.symm.is_compl_iff.2 hy⟩⟩
 #align order_iso.complemented_lattice OrderIso.complementedLattice
 
 theorem OrderIso.complementedLattice_iff : ComplementedLattice α ↔ ComplementedLattice β :=
-  ⟨by intro ; exact f.complemented_lattice, by intro ; exact f.symm.complemented_lattice⟩
+  ⟨by intro; exact f.complemented_lattice, by intro; exact f.symm.complemented_lattice⟩
 #align order_iso.complemented_lattice_iff OrderIso.complementedLattice_iff
 
 end BoundedOrder

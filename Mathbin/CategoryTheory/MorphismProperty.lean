@@ -46,7 +46,8 @@ variable (C : Type u) [Category.{v} C] {D : Type _} [Category D]
 #print CategoryTheory.MorphismProperty /-
 /-- A `morphism_property C` is a class of morphisms between objects in `C`. -/
 def MorphismProperty :=
-  ∀ ⦃X Y : C⦄ (f : X ⟶ Y), Prop deriving CompleteLattice
+  ∀ ⦃X Y : C⦄ (f : X ⟶ Y), Prop
+deriving CompleteLattice
 #align category_theory.morphism_property CategoryTheory.MorphismProperty
 -/
 
@@ -295,7 +296,7 @@ theorem StableUnderBaseChange.pullback_map [HasPullbacks C] {P : MorphismPropert
     by apply pullback.hom_ext <;> dsimp <;> simp
   rw [this]
   apply hP' <;> rw [hP.respects_iso.cancel_left_is_iso]
-  exacts[hP.base_change_map _ (over.hom_mk _ e₂.symm : over.mk g ⟶ over.mk g') h₂,
+  exacts [hP.base_change_map _ (over.hom_mk _ e₂.symm : over.mk g ⟶ over.mk g') h₂,
     hP.base_change_map _ (over.hom_mk _ e₁.symm : over.mk f ⟶ over.mk f') h₁]
 #align category_theory.morphism_property.stable_under_base_change.pullback_map CategoryTheory.MorphismProperty.StableUnderBaseChange.pullback_map
 -/
@@ -405,7 +406,7 @@ namespace NaturalityProperty
 theorem stableUnderComposition {F₁ F₂ : C ⥤ D} (app : ∀ X, F₁.obj X ⟶ F₂.obj X) :
     (naturalityProperty app).StableUnderComposition := fun X Y Z f g hf hg =>
   by
-  simp only [naturality_property] at hf hg⊢
+  simp only [naturality_property] at hf hg ⊢
   simp only [functor.map_comp, category.assoc, hg]
   slice_lhs 1 2 => rw [hf]
   rw [category.assoc]
@@ -414,7 +415,7 @@ theorem stableUnderComposition {F₁ F₂ : C ⥤ D} (app : ∀ X, F₁.obj X �
 theorem stableUnderInverse {F₁ F₂ : C ⥤ D} (app : ∀ X, F₁.obj X ⟶ F₂.obj X) :
     (naturalityProperty app).StableUnderInverse := fun X Y e he =>
   by
-  simp only [naturality_property] at he⊢
+  simp only [naturality_property] at he ⊢
   rw [← cancel_epi (F₁.map e.hom)]
   slice_rhs 1 2 => rw [he]
   simp only [category.assoc, ← F₁.map_comp_assoc, ← F₂.map_comp, e.hom_inv_id, Functor.map_id,
@@ -430,7 +431,7 @@ theorem RespectsIso.inverseImage {P : MorphismProperty D} (h : RespectsIso P) (F
     intro X Y Z e f hf
     dsimp [inverse_image]
     rw [F.map_comp]
-  exacts[h.1 (F.map_iso e) (F.map f) hf, h.2 (F.map_iso e) (F.map f) hf]
+  exacts [h.1 (F.map_iso e) (F.map f) hf, h.2 (F.map_iso e) (F.map f) hf]
 #align category_theory.morphism_property.respects_iso.inverse_image CategoryTheory.MorphismProperty.RespectsIso.inverseImage
 
 theorem StableUnderComposition.inverseImage {P : MorphismProperty D} (h : StableUnderComposition P)
@@ -502,26 +503,26 @@ end
 
 #print CategoryTheory.MorphismProperty.RespectsIso.monomorphisms /-
 theorem RespectsIso.monomorphisms : RespectsIso (monomorphisms C) := by
-  constructor <;> · intro X Y Z e f; simp only [monomorphisms.iff]; intro ; apply mono_comp
+  constructor <;> · intro X Y Z e f; simp only [monomorphisms.iff]; intro; apply mono_comp
 #align category_theory.morphism_property.respects_iso.monomorphisms CategoryTheory.MorphismProperty.RespectsIso.monomorphisms
 -/
 
 #print CategoryTheory.MorphismProperty.RespectsIso.epimorphisms /-
 theorem RespectsIso.epimorphisms : RespectsIso (epimorphisms C) := by
-  constructor <;> · intro X Y Z e f; simp only [epimorphisms.iff]; intro ; apply epi_comp
+  constructor <;> · intro X Y Z e f; simp only [epimorphisms.iff]; intro; apply epi_comp
 #align category_theory.morphism_property.respects_iso.epimorphisms CategoryTheory.MorphismProperty.RespectsIso.epimorphisms
 -/
 
 #print CategoryTheory.MorphismProperty.RespectsIso.isomorphisms /-
 theorem RespectsIso.isomorphisms : RespectsIso (isomorphisms C) := by
-  constructor <;> · intro X Y Z e f; simp only [isomorphisms.iff]; intro ; infer_instance
+  constructor <;> · intro X Y Z e f; simp only [isomorphisms.iff]; intro; infer_instance
 #align category_theory.morphism_property.respects_iso.isomorphisms CategoryTheory.MorphismProperty.RespectsIso.isomorphisms
 -/
 
 #print CategoryTheory.MorphismProperty.StableUnderComposition.isomorphisms /-
 theorem StableUnderComposition.isomorphisms : StableUnderComposition (isomorphisms C) :=
   fun X Y Z f g hf hg => by
-  rw [isomorphisms.iff] at hf hg⊢
+  rw [isomorphisms.iff] at hf hg ⊢
   haveI := hf
   haveI := hg
   infer_instance
@@ -531,7 +532,7 @@ theorem StableUnderComposition.isomorphisms : StableUnderComposition (isomorphis
 #print CategoryTheory.MorphismProperty.StableUnderComposition.monomorphisms /-
 theorem StableUnderComposition.monomorphisms : StableUnderComposition (monomorphisms C) :=
   fun X Y Z f g hf hg => by
-  rw [monomorphisms.iff] at hf hg⊢
+  rw [monomorphisms.iff] at hf hg ⊢
   haveI := hf
   haveI := hg
   apply mono_comp
@@ -541,7 +542,7 @@ theorem StableUnderComposition.monomorphisms : StableUnderComposition (monomorph
 #print CategoryTheory.MorphismProperty.StableUnderComposition.epimorphisms /-
 theorem StableUnderComposition.epimorphisms : StableUnderComposition (epimorphisms C) :=
   fun X Y Z f g hf hg => by
-  rw [epimorphisms.iff] at hf hg⊢
+  rw [epimorphisms.iff] at hf hg ⊢
   haveI := hf
   haveI := hg
   apply epi_comp
@@ -554,7 +555,8 @@ variable {C}
 /-- The full subcategory of `C ⥤ D` consisting of functors inverting morphisms in `W` -/
 @[nolint has_nonempty_instance]
 def FunctorsInverting (W : MorphismProperty C) (D : Type _) [Category D] :=
-  FullSubcategory fun F : C ⥤ D => W.IsInvertedBy F deriving Category
+  FullSubcategory fun F : C ⥤ D => W.IsInvertedBy F
+deriving Category
 #align category_theory.morphism_property.functors_inverting CategoryTheory.MorphismProperty.FunctorsInverting
 -/
 
@@ -653,13 +655,13 @@ theorem universally_respectsIso (P : MorphismProperty C) : P.universally.Respect
       is_pullback.of_horiz_is_iso
         ⟨by rw [category.id_comp, category.assoc, e.hom_inv_id, category.comp_id]⟩
     replace this := this.paste_horiz H
-    rw [iso.inv_hom_id_assoc, category.id_comp] at this
+    rw [iso.inv_hom_id_assoc, category.id_comp] at this 
     exact hf _ _ _ this
   · intro X Y Z e f hf X' Z' i₁ i₂ f' H
     have : is_pullback (𝟙 _) i₂ (i₂ ≫ e.inv) e.inv :=
       is_pullback.of_horiz_is_iso ⟨category.id_comp _⟩
     replace this := H.paste_horiz this
-    rw [category.assoc, iso.hom_inv_id, category.comp_id, category.comp_id] at this
+    rw [category.assoc, iso.hom_inv_id, category.comp_id, category.comp_id] at this 
     exact hf _ _ _ this
 #align category_theory.morphism_property.universally_respects_iso CategoryTheory.MorphismProperty.universally_respectsIso
 -/
@@ -677,7 +679,7 @@ theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismPropert
   by
   intro X Y Z f g hf hg X' Z' i₁ i₂ f' H
   have := pullback.lift_fst _ _ (H.w.trans (category.assoc _ _ _).symm)
-  rw [← this] at H⊢
+  rw [← this] at H ⊢
   apply hP _ _ _ (hg _ _ _ <| is_pullback.of_has_pullback _ _)
   exact hf _ _ _ (H.of_right (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback i₂ g))
 #align category_theory.morphism_property.stable_under_composition.universally CategoryTheory.MorphismProperty.StableUnderComposition.universally

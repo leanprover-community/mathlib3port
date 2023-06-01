@@ -284,7 +284,7 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
   have : g₁.right = g₂.right
   calc
     g₁.right = hc.lift (c.extend g₁.right) := by apply hc.uniq (c.extend _); tidy
-    _ = hc.lift (c.extend g₂.right) := by congr ; exact this
+    _ = hc.lift (c.extend g₂.right) := by congr; exact this
     _ = g₂.right := by symm; apply hc.uniq (c.extend _); tidy
     
   -- Finally, since `fᵢ` factors through `F(gᵢ)`, the result follows.
@@ -410,7 +410,7 @@ theorem flat_iff_lan_flat (F : C ⥤ D) :
     haveI : preserves_finite_limits F :=
       by
       apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
-      intros ; skip; apply preserves_limit_of_Lan_preserves_limit
+      intros; skip; apply preserves_limit_of_Lan_preserves_limit
     apply flat_of_preserves_finite_limits⟩
 #align category_theory.flat_iff_Lan_flat CategoryTheory.flat_iff_lan_flat
 -/
@@ -425,7 +425,7 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
   toFun _ := inferInstance
   invFun _ := by
     apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
-    intros ; skip; apply preserves_limit_of_Lan_preserves_limit
+    intros; skip; apply preserves_limit_of_Lan_preserves_limit
   left_inv x := by
     cases x; unfold preserves_finite_limits_of_flat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr
@@ -433,8 +433,8 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
     cases x
     unfold preserves_finite_limits_of_flat
     congr
-    unfold
-      CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits CategoryTheory.lanPreservesFiniteLimitsOfFlat
+    unfold CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits
+      CategoryTheory.lanPreservesFiniteLimitsOfFlat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr
 #align category_theory.preserves_finite_limits_iff_Lan_preserves_finite_limits CategoryTheory.preservesFiniteLimitsIffLanPreservesFiniteLimits
 -/

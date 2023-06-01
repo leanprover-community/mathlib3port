@@ -128,7 +128,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
   · intro x y hxy
     obtain ⟨c, eq⟩ := (IsLocalization.eq_iff_exists M S).mp hxy
     obtain ⟨u, hu⟩ := H c
-    rwa [← hu, Units.mul_right_inj] at eq
+    rwa [← hu, Units.mul_right_inj] at eq 
   · intro y
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
@@ -308,18 +308,18 @@ theorem selfZpow_pow_sub (a : R) (b : B) (m d : ℤ) :
   constructor
   · intro h
     have := congr_arg (fun s : B => s * selfZpow x B d) h
-    simp only at this
-    rwa [mul_assoc, mul_assoc, selfZpow_neg_mul, mul_one, mul_comm b _] at this
+    simp only at this 
+    rwa [mul_assoc, mul_assoc, selfZpow_neg_mul, mul_one, mul_comm b _] at this 
   · intro h
     have := congr_arg (fun s : B => s * selfZpow x B (-d)) h
-    simp only at this
-    rwa [mul_comm _ b, mul_assoc b _ _, selfZpow_mul_neg, mul_one] at this
+    simp only at this 
+    rwa [mul_comm _ b, mul_assoc b _ _, selfZpow_mul_neg, mul_one] at this 
 #align self_zpow_pow_sub selfZpow_pow_sub
 
 variable [IsDomain R] [NormalizationMonoid R] [UniqueFactorizationMonoid R]
 
 theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
-    ∃ (a : R)(n : ℤ), ¬x ∣ a ∧ selfZpow x B n * algebraMap R B a = b := by
+    ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZpow x B n * algebraMap R B a = b := by
   classical
     obtain ⟨⟨a₀, y⟩, H⟩ := surj (Submonoid.powers x) b
     obtain ⟨d, hy⟩ := (Submonoid.mem_powers_iff y.1 x).mp y.2
@@ -328,7 +328,7 @@ theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
       haveI :=
         @is_domain_of_le_non_zero_divisors B _ R _ _ _ (Submonoid.powers x) _
           (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-      simp only [map_zero, ← Subtype.val_eq_coe, ← hy, map_pow] at H
+      simp only [map_zero, ← Subtype.val_eq_coe, ← hy, map_pow] at H 
       apply ((injective_iff_map_eq_zero' (algebraMap R B)).mp _ a₀).mpr.mt
       rw [← H]
       apply mul_ne_zero hb (pow_ne_zero _ _)
@@ -337,7 +337,7 @@ theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
           (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
           (mem_non_zero_divisors_iff_ne_zero.mpr hx.ne_zero)
       exact IsLocalization.injective B (powers_le_nonZeroDivisors_of_noZeroDivisors hx.ne_zero)
-    simp only [← Subtype.val_eq_coe, ← hy] at H
+    simp only [← Subtype.val_eq_coe, ← hy] at H 
     obtain ⟨m, a, hyp1, hyp2⟩ := max_power_factor ha₀ hx
     refine' ⟨a, m - d, _⟩
     rw [← mk'_one B, selfZpow_pow_sub, selfZpow_coe_nat, selfZpow_coe_nat, ← map_pow _ _ d,

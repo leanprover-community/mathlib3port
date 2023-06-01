@@ -170,7 +170,7 @@ def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V]
           Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
         (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
             simp [C.d_from_eq_zero fun h : _ = _ =>
-                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
+                one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h ] :
           Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
         rfl).trans <|
     homologyOfZeroRight _
@@ -327,11 +327,11 @@ def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V
   obj C := C.homology i
   map C₁ C₂ f := homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
   map_id' := by
-    intros ; ext1
+    intros; ext1
     simp only [homology.π_map, kernel_subobject_map_id, hom.sq_from_id, category.id_comp,
       category.comp_id]
   map_comp' := by
-    intros ; ext1
+    intros; ext1
     simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map,
       category.assoc]
 #align homology_functor homologyFunctor
@@ -345,11 +345,11 @@ def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedOb
   obj C i := C.homology i
   map C C' f i := (homologyFunctor V c i).map f
   map_id' := by
-    intros ; ext
+    intros; ext
     simp only [pi.id_apply, homology.π_map, homologyFunctor_map, kernel_subobject_map_id,
       hom.sq_from_id, category.id_comp, category.comp_id]
   map_comp' := by
-    intros ; ext
+    intros; ext
     simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply,
       homology.π_map, homologyFunctor_map, category.assoc]
 #align graded_homology_functor gradedHomologyFunctor

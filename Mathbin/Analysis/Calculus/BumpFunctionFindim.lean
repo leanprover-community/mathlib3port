@@ -28,8 +28,8 @@ the indicator function of `closed_ball 0 1` with a function as above with `s = b
 
 noncomputable section
 
-open
-  Set Metric TopologicalSpace Function Asymptotics MeasureTheory FiniteDimensional ContinuousLinearMap Filter MeasureTheory.Measure
+open Set Metric TopologicalSpace Function Asymptotics MeasureTheory FiniteDimensional
+  ContinuousLinearMap Filter MeasureTheory.Measure
 
 open scoped Pointwise Topology NNReal BigOperators convolution
 
@@ -45,7 +45,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ,
       tsupport f ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 ∧ f x = 1 :=
   by
-  obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ)(hr : 0 < d), Euclidean.closedBall x d ⊆ s
+  obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ) (hr : 0 < d), Euclidean.closedBall x d ⊆ s
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
   let c : ContDiffBump (toEuclidean x) :=
     { R := d / 2
@@ -58,7 +58,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     intro y hy
     have : toEuclidean y ∈ Function.support c := by
       simpa only [f, Function.mem_support, Function.comp_apply, Ne.def] using hy
-    rwa [c.support_eq] at this
+    rwa [c.support_eq] at this 
   have f_tsupp : tsupport f ⊆ Euclidean.closedBall x d :=
     by
     rw [tsupport, ← Euclidean.closure_ball _ d_pos.ne']
@@ -115,8 +115,8 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     by
     apply countable.exists_eq_range T_count
     rcases eq_empty_or_nonempty T with (rfl | hT)
-    · simp only [Union_false, Union_empty] at hT
-      simp only [← hT, not_nonempty_empty] at h's
+    · simp only [Union_false, Union_empty] at hT 
+      simp only [← hT, not_nonempty_empty] at h's 
       exact h's.elim
     · exact hT
   let g : ℕ → E → ℝ := fun n => (g0 n).1
@@ -124,12 +124,12 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   have s_g : ∀ x ∈ s, ∃ n, x ∈ support (g n) :=
     by
     intro x hx
-    rw [← hT] at hx
-    obtain ⟨i, iT, hi⟩ : ∃ (i : ι)(hi : i ∈ T), x ∈ support (i : E → ℝ) := by
+    rw [← hT] at hx 
+    obtain ⟨i, iT, hi⟩ : ∃ (i : ι) (hi : i ∈ T), x ∈ support (i : E → ℝ) := by
       simpa only [mem_Union] using hx
-    rw [hg, mem_range] at iT
+    rw [hg, mem_range] at iT 
     rcases iT with ⟨n, hn⟩
-    rw [← hn] at hi
+    rw [← hn] at hi 
     exact ⟨n, hi⟩
   have g_smooth : ∀ n, ContDiff ℝ ⊤ (g n) := fun n => (g0 n).2.2.2.1
   have g_comp_supp : ∀ n, HasCompactSupport (g n) := fun n => (g0 n).2.2.1
@@ -181,7 +181,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   refine' ⟨fun x => ∑' n, (r n • g n) x, _, _, _⟩
   · apply subset.antisymm
     · intro x hx
-      simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, mem_support, Ne.def] at hx
+      simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, mem_support, Ne.def] at hx 
       contrapose! hx
       have : ∀ n, g n x = 0 := by
         intro n
@@ -246,14 +246,14 @@ theorem u_exists :
     · apply ne_of_gt
       have : 0 < f x := by
         apply lt_of_le_of_ne (B x).1 (Ne.symm _)
-        rwa [← f_support] at hx
+        rwa [← f_support] at hx 
       linarith [(B (-x)).1]
     · have I1 : x ∉ support f := by rwa [f_support]
       have I2 : -x ∉ support f := by
         rw [f_support]
-        simp only at hx
+        simp only at hx 
         simpa using hx
-      simp only [mem_support, Classical.not_not] at I1 I2
+      simp only [mem_support, Classical.not_not] at I1 I2 
       simp only [I1, I2, add_zero, zero_div]
   · intro x; simp only [add_comm, neg_neg]
 #align exists_cont_diff_bump_base.u_exists ExistsContDiffBumpBase.u_exists
@@ -392,7 +392,7 @@ theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
     by
     have C : ball x D ⊆ ball 0 1 := by
       apply ball_subset_ball'
-      simp only [mem_closed_ball] at hx
+      simp only [mem_closed_ball] at hx 
       linarith only [hx]
     intro y hy
     simp only [φ, indicator, mem_closed_ball, ite_eq_left_iff, not_le, zero_ne_one]
@@ -415,7 +415,7 @@ theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ b
     have C : ball y D ⊆ ball 0 (1 + D) :=
       by
       apply ball_subset_ball'
-      rw [← dist_zero_right] at h'y
+      rw [← dist_zero_right] at h'y 
       linarith only [h'y]
     exact hx (C (mem_ball_comm.1 hy))
   have Bx : φ x = 0 := B _ (mem_ball_self Dpos)
@@ -448,7 +448,7 @@ theorem y_le_one {D : ℝ} (x : E) (Dpos : 0 < D) : y D x ≤ 1 :=
 theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
     (hx : x ∈ ball (0 : E) (1 + D)) : 0 < y D x :=
   by
-  simp only [mem_ball_zero_iff] at hx
+  simp only [mem_ball_zero_iff] at hx 
   refine' (integral_pos_iff_support_of_nonneg (W_mul_φ_nonneg D x) _).2 _
   · have F_comp : HasCompactSupport (W D) := W_compact_support E Dpos
     have B : locally_integrable (φ : E → ℝ) μ :=
@@ -485,7 +485,7 @@ theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
         apply closed_ball_subset_closed_ball' _ (ball_subset_closed_ball hy)
         rw [← one_smul ℝ x, dist_eq_norm, hz, ← sub_smul, one_smul, norm_smul, ID]
         simp only [-one_div, -mul_eq_zero, B.ne', div_le_iff B, field_simps]
-        simp only [mem_ball_zero_iff] at hx
+        simp only [mem_ball_zero_iff] at hx 
         nlinarith only [hx, D_lt_one]
     apply lt_of_lt_of_le _ (measure_mono C)
     apply measure_ball_pos
@@ -506,7 +506,7 @@ theorem y_smooth : ContDiffOn ℝ ⊤ (uncurry y) (Ioo (0 : ℝ) 1 ×ˢ (univ : 
     contrapose! hx
     have : p⁻¹ • x ∈ support u := mem_support.2 hx
     simp only [u_support, norm_smul, mem_ball_zero_iff, Real.norm_eq_abs, abs_inv,
-      abs_of_nonneg hp.1.le, ← div_eq_inv_mul, div_lt_one hp.1] at this
+      abs_of_nonneg hp.1.le, ← div_eq_inv_mul, div_lt_one hp.1] at this 
     rw [mem_closedBall_zero_iff]
     exact this.le.trans hp.2.le
   · exact (locally_integrable_const _).indicator measurableSet_closedBall
@@ -588,7 +588,7 @@ instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
         calc
           2 / (R + 1) * ‖x‖ ≤ 2 / (R + 1) * 1 :=
             mul_le_mul_of_nonneg_left hx (div_nonneg zero_le_two A.le)
-          _ = 1 - (R - 1) / (R + 1) := by field_simp [A.ne'] ; ring
+          _ = 1 - (R - 1) / (R + 1) := by field_simp [A.ne']; ring
           
       support := fun R hR => by
         have A : 0 < (R + 1) / 2 := by linarith

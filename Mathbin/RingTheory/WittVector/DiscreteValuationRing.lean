@@ -59,7 +59,8 @@ is a unit.
 -/
 noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
-  | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val decreasing_by apply Fin.is_lt
+  | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
+decreasing_by apply Fin.is_lt
 #align witt_vector.inverse_coeff WittVector.inverseCoeff
 
 /--
@@ -110,16 +111,16 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
     simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
       (constant_coeff : WittVector p k →+* _).isUnit_map hp
   refine' ⟨hp, fun a b hab => _⟩
-  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by rw [← mul_ne_zero_iff]; intro h; rw [h] at hab;
+  obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by rw [← mul_ne_zero_iff]; intro h; rw [h] at hab ;
     exact p_nonzero p k hab
   obtain ⟨m, a, ha, rfl⟩ := verschiebung_nonzero ha0
   obtain ⟨n, b, hb, rfl⟩ := verschiebung_nonzero hb0
   cases m; · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
   cases n; · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
-  rw [iterate_verschiebung_mul] at hab
-  apply_fun fun x => coeff x 1  at hab
+  rw [iterate_verschiebung_mul] at hab 
+  apply_fun fun x => coeff x 1  at hab 
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
-    verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
+    verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab 
   exact (one_ne_zero hab).elim
 #align witt_vector.irreducible WittVector.irreducible
 
@@ -130,14 +131,14 @@ section PerfectRing
 variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
 theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
-    ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b :=
+    ∃ (m : ℕ) (b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b :=
   by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
-  rw [WittVector.iterate_frobenius_coeff] at hc
+  rw [WittVector.iterate_frobenius_coeff] at hc 
   have := congr_fun (witt_vector.verschiebung_frobenius_comm.comp_iterate m) b
-  simp only [Function.comp_apply] at this
-  rw [← this] at hcm
+  simp only [Function.comp_apply] at this 
+  rw [← this] at hcm 
   refine' ⟨m, b, _, _⟩
   · contrapose! hc
     have : 0 < p ^ m := pow_pos (Nat.Prime.pos (Fact.out _)) _
@@ -154,7 +155,7 @@ section PerfectField
 
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b :=
+theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ) (b : Units (𝕎 k)), a = p ^ m * b :=
   by
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁

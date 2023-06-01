@@ -279,7 +279,7 @@ theorem ContinuousOn.exists_forall_le' {s : Set β} {f : β → α} (hf : Contin
     ((hK.inter_right hsc).insert x₀).exists_forall_le (insert_nonempty _ _) (hf.mono hsub)
   refine' ⟨x, hsub hx, fun y hy => _⟩
   by_cases hyK : y ∈ K
-  exacts[hxf _ (Or.inr ⟨hyK, hy⟩), (hxf _ (Or.inl rfl)).trans (hKf ⟨hyK, hy⟩)]
+  exacts [hxf _ (Or.inr ⟨hyK, hy⟩), (hxf _ (Or.inl rfl)).trans (hKf ⟨hyK, hy⟩)]
 #align continuous_on.exists_forall_le' ContinuousOn.exists_forall_le'
 
 /-- The **extreme value theorem**: if a function `f` is continuous on a closed set `s` and it is
@@ -354,7 +354,7 @@ theorem Continuous.exists_forall_le_of_hasCompactMulSupport [Nonempty β] [One �
     (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y :=
   by
   obtain ⟨_, ⟨x, rfl⟩, hx⟩ := (h.is_compact_range hf).exists_isLeast (range_nonempty _)
-  rw [mem_lowerBounds, forall_range_iff] at hx
+  rw [mem_lowerBounds, forall_range_iff] at hx 
   exact ⟨x, hx⟩
 #align continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_hasCompactMulSupport
 #align continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_hasCompactSupport
@@ -428,8 +428,8 @@ theorem image_uIcc_eq_Icc (h : ContinuousOn f <| [a, b]) :
     f '' [a, b] = Icc (sInf (f '' [a, b])) (sSup (f '' [a, b])) :=
   by
   cases' le_total a b with h2 h2
-  · simp_rw [uIcc_of_le h2] at h⊢; exact h.image_Icc h2
-  · simp_rw [uIcc_of_ge h2] at h⊢; exact h.image_Icc h2
+  · simp_rw [uIcc_of_le h2] at h ⊢; exact h.image_Icc h2
+  · simp_rw [uIcc_of_ge h2] at h ⊢; exact h.image_Icc h2
 #align continuous_on.image_uIcc_eq_Icc ContinuousOn.image_uIcc_eq_Icc
 
 theorem image_uIcc (h : ContinuousOn f <| [a, b]) :
@@ -437,7 +437,7 @@ theorem image_uIcc (h : ContinuousOn f <| [a, b]) :
   by
   refine' h.image_uIcc_eq_Icc.trans (uIcc_of_le _).symm
   refine' csInf_le_csSup _ _ (nonempty_uIcc.image _) <;> rw [h.image_uIcc_eq_Icc]
-  exacts[bddBelow_Icc, bddAbove_Icc]
+  exacts [bddBelow_Icc, bddAbove_Icc]
 #align continuous_on.image_uIcc ContinuousOn.image_uIcc
 
 theorem sInf_image_Icc_le (h : ContinuousOn f <| Icc a b) (hc : c ∈ Icc a b) :

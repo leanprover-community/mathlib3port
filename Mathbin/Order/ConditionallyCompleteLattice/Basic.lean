@@ -206,7 +206,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
 #align conditionally_complete_linear_order ConditionallyCompleteLinearOrder
 -/
 
@@ -220,7 +220,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
-  Bot α where
+    Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   csSup_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
@@ -1269,7 +1269,7 @@ theorem l_ciSup (gc : GaloisConnection l u) {f : ι → α} (hf : BddAbove (rang
 
 theorem l_ciSup_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
     (hne : s.Nonempty) : l (⨆ i : s, f i) = ⨆ i : s, l (f i) := by haveI := hne.to_subtype;
-  rw [image_eq_range] at hf; exact gc.l_csupr hf
+  rw [image_eq_range] at hf ; exact gc.l_csupr hf
 #align galois_connection.l_csupr_set GaloisConnection.l_ciSup_set
 
 theorem u_csInf (gc : GaloisConnection l u) {s : Set β} (hne : s.Nonempty) (hbdd : BddBelow s) :
@@ -1468,7 +1468,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
         split_ifs
-        · rw [h] at h_1; cases h_1
+        · rw [h] at h_1 ; cases h_1
         · convert bot_le; convert WithBot.csSup_empty; rw [h]; rfl
         · exfalso; apply h_2; use ⊥; rw [h]; rintro b ⟨⟩
       · refine' (WithTop.isLUB_sSup' h).2 ha

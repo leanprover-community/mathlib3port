@@ -64,7 +64,7 @@ a complete space, then there exist `Λ : dual ℝ F` and `Λ₀ : ℝ` such that
 theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFDerivAt f f' x₀)
     (hφ' : HasStrictFDerivAt φ φ' x₀) :
-    ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 :=
+    ∃ (Λ : Module.Dual ℝ F) (Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 :=
   by
   rcases Submodule.exists_le_ker_of_lt_top _
       (lt_top_iff_ne_top.2 <| hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
@@ -93,7 +93,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d {f : E → ℝ}
   obtain ⟨Λ, Λ₀, hΛ, hfΛ⟩ := hextr.exists_linear_map_of_has_strict_fderiv_at hf' hφ'
   refine' ⟨Λ 1, Λ₀, _, _⟩
   · contrapose! hΛ
-    simp only [Prod.mk_eq_zero] at hΛ⊢
+    simp only [Prod.mk_eq_zero] at hΛ ⊢
     refine' ⟨LinearMap.ext fun x => _, hΛ.2⟩
     simpa [hΛ.1] using Λ.map_smul x 1
   · ext x
@@ -114,7 +114,7 @@ states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
 theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt {ι : Type _} [Fintype ι]
     {f : ι → E → ℝ} {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFDerivAt (f i) (f' i) x₀) (hφ' : HasStrictFDerivAt φ φ' x₀) :
-    ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 :=
+    ∃ (Λ : ι → ℝ) (Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 :=
   by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀

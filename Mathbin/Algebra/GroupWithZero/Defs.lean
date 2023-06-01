@@ -116,7 +116,7 @@ end IsRightCancelMulZero
 /-- A mixin for cancellative multiplication by nonzero elements. -/
 @[protect_proj]
 class IsCancelMulZero (M₀ : Type u) [Mul M₀] [Zero M₀] extends IsLeftCancelMulZero M₀,
-  IsRightCancelMulZero M₀ : Prop
+    IsRightCancelMulZero M₀ : Prop
 #align is_cancel_mul_zero IsCancelMulZero
 -/
 

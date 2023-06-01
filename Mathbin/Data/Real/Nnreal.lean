@@ -64,8 +64,9 @@ open scoped Classical BigOperators
 -- to ensure these instances are computable
 /-- Nonnegative real numbers. -/
 def NNReal :=
-  { r : ℝ // 0 ≤ r }deriving StrictOrderedSemiring, CommMonoidWithZero, FloorSemiring, CommSemiring,
-  Semiring, SemilatticeInf, SemilatticeSup, DistribLattice, DenselyOrdered, OrderBot,
+  { r : ℝ // 0 ≤ r }
+deriving StrictOrderedSemiring, CommMonoidWithZero, FloorSemiring, CommSemiring, Semiring,
+  SemilatticeInf, SemilatticeSup, DistribLattice, DenselyOrdered, OrderBot,
   CanonicallyLinearOrderedSemifield, LinearOrderedCommGroupWithZero, Archimedean,
   LinearOrderedSemiring, OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, OrderedSub, Div,
   Inhabited
@@ -106,7 +107,7 @@ protected theorem forall {p : ℝ≥0 → Prop} : (∀ x : ℝ≥0, p x) ↔ ∀
   Subtype.forall
 #align nnreal.forall NNReal.forall
 
-protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0, p x) ↔ ∃ (x : ℝ)(hx : 0 ≤ x), p ⟨x, hx⟩ :=
+protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0, p x) ↔ ∃ (x : ℝ) (hx : 0 ≤ x), p ⟨x, hx⟩ :=
   Subtype.exists
 #align nnreal.exists NNReal.exists
 
@@ -679,7 +680,7 @@ theorem lt_toNNReal_iff_coe_lt {r : ℝ≥0} {p : ℝ} : r < Real.toNNReal p ↔
   cases le_total 0 p
   · rw [← NNReal.coe_lt_coe, Real.coe_toNNReal p h]
   · rw [to_nnreal_eq_zero.2 h]; constructor
-    · intro ; have := not_lt_of_le (zero_le r); contradiction
+    · intro; have := not_lt_of_le (zero_le r); contradiction
     · intro rp; have : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_lt (NNReal.coe_nonneg _) rp)
       contradiction
 #align real.lt_to_nnreal_iff_coe_lt Real.lt_toNNReal_iff_coe_lt
@@ -747,7 +748,7 @@ theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 <
   by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n ≤ x ∧ (x : ℝ) < y ^ (n + 1) :=
     exists_mem_Ico_zpow (bot_lt_iff_ne_bot.mpr hx) hy
-  rw [← NNReal.coe_zpow] at hn h'n
+  rw [← NNReal.coe_zpow] at hn h'n 
   exact ⟨n, hn, h'n⟩
 #align nnreal.exists_mem_Ico_zpow NNReal.exists_mem_Ico_zpow
 
@@ -756,7 +757,7 @@ theorem exists_mem_Ioc_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 <
   by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n < x ∧ (x : ℝ) ≤ y ^ (n + 1) :=
     exists_mem_Ioc_zpow (bot_lt_iff_ne_bot.mpr hx) hy
-  rw [← NNReal.coe_zpow] at hn h'n
+  rw [← NNReal.coe_zpow] at hn h'n 
   exact ⟨n, hn, h'n⟩
 #align nnreal.exists_mem_Ioc_zpow NNReal.exists_mem_Ioc_zpow
 
@@ -892,7 +893,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0} (h : ∀ a < 1, a * x ≤ y) 
     have hx' : x⁻¹ ≠ 0 := by rwa [(· ≠ ·), inv_eq_zero]
     have : a * x⁻¹ < 1 := by rwa [← lt_inv_iff_mul_lt hx', inv_inv]
     have : a * x⁻¹ * x ≤ y := h _ this
-    rwa [mul_assoc, inv_mul_cancel hx, mul_one] at this
+    rwa [mul_assoc, inv_mul_cancel hx, mul_one] at this 
 #align nnreal.le_of_forall_lt_one_mul_le NNReal.le_of_forall_lt_one_mul_le
 
 theorem half_le_self (a : ℝ≥0) : a / 2 ≤ a :=
@@ -962,7 +963,7 @@ theorem le_toNNReal_of_coe_le {x : ℝ≥0} {y : ℝ} (h : ↑x ≤ y) : x ≤ y
 
 theorem sSup_of_not_bddAbove {s : Set ℝ≥0} (hs : ¬BddAbove s) : SupSet.sSup s = 0 :=
   by
-  rw [← bdd_above_coe] at hs
+  rw [← bdd_above_coe] at hs 
   rw [← NNReal.coe_eq, coe_Sup]
   exact Sup_of_not_bdd_above hs
 #align nnreal.Sup_of_not_bdd_above NNReal.sSup_of_not_bddAbove
@@ -1056,10 +1057,10 @@ theorem image_real_toNNReal (h : s.OrdConnected) : (Real.toNNReal '' s).OrdConne
   by
   refine' ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => _⟩
   cases' le_total y 0 with hy₀ hy₀
-  · rw [mem_Icc, Real.toNNReal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
+  · rw [mem_Icc, Real.toNNReal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz 
     exact ⟨y, hy, (to_nnreal_of_nonpos hy₀).trans hz.2.symm⟩
   · lift y to ℝ≥0 using hy₀
-    rw [to_nnreal_coe] at hz
+    rw [to_nnreal_coe] at hz 
     exact ⟨z, h.out hx hy ⟨to_nnreal_le_iff_le_coe.1 hz.1, hz.2⟩, to_nnreal_coe⟩
 #align set.ord_connected.image_real_to_nnreal Set.OrdConnected.image_real_toNNReal
 -/

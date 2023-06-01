@@ -156,7 +156,7 @@ theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
   · rw [← le_bot_iff, ← ideal_oper_max_triv_submodule_eq_bot R L M ⊤]
     exact LieSubmodule.mono_lie_right _ _ ⊤ h
   · rw [mem_max_triv_submodule]
-    rw [LieSubmodule.lie_eq_bot_iff] at h
+    rw [LieSubmodule.lie_eq_bot_iff] at h 
     exact fun x => h x (LieSubmodule.mem_top x) m hm
 #align lie_module.le_max_triv_iff_bracket_eq_bot LieModule.le_max_triv_iff_bracket_eq_bot
 
@@ -233,7 +233,7 @@ def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃
       map_lie' := fun x m =>
         by
         have hf : ⁅x, f.val⁆ m = 0 := by rw [f.property x, LinearMap.zero_apply]
-        rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.toFun_eq_coe] at hf; exact hf.symm }
+        rw [LieHom.lie_apply, sub_eq_zero, ← LinearMap.toFun_eq_coe] at hf ; exact hf.symm }
   map_add' f g := by ext; simp
   map_smul' F G := by ext; simp
   invFun F := ⟨F, fun x => by ext; simp⟩
@@ -319,7 +319,7 @@ theorem LieSubmodule.trivial_lie_oper_zero [LieModule.IsTrivial L M] : ⁅I, N�
   by
   suffices : ⁅I, N⁆ ≤ ⊥; exact le_bot_iff.mp this
   rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le]
-  rintro m ⟨x, n, h⟩; rw [trivial_lie_zero] at h; simp [← h]
+  rintro m ⟨x, n, h⟩; rw [trivial_lie_zero] at h ; simp [← h]
 #align lie_submodule.trivial_lie_oper_zero LieSubmodule.trivial_lie_oper_zero
 
 theorem LieSubmodule.lie_abelian_iff_lie_self_eq_bot : IsLieAbelian I ↔ ⁅I, I⁆ = ⊥ :=

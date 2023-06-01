@@ -1363,7 +1363,7 @@ variable [LinearOrderedCommRing R] {a : ℍ[R]}
 theorem normSq_eq_zero : normSq a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
-  rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
+  rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h 
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
   all_goals apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_eq_zero Quaternion.normSq_eq_zero

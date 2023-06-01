@@ -38,7 +38,7 @@ theorem Set.restrictPreimage_inducing (s : Set β) (h : Inducing f) :
     Inducing (s.restrictPreimage f) :=
   by
   simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrict_preimage, maps_to.coe_restrict,
-    restrict_eq, ← @Filter.comap_comap _ _ _ _ coe f] at h⊢
+    restrict_eq, ← @Filter.comap_comap _ _ _ _ coe f] at h ⊢
   intro a
   rw [← h, ← inducing_coe.nhds_eq_comap]
 #align set.restrict_preimage_inducing Set.restrictPreimage_inducing

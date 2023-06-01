@@ -71,7 +71,7 @@ def Compares [LT α] : Ordering → α → α → Prop
 
 #print Ordering.compares_swap /-
 theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b ↔ o.Compares b a := by
-  cases o; exacts[Iff.rfl, eq_comm, Iff.rfl]
+  cases o; exacts [Iff.rfl, eq_comm, Iff.rfl]
 #align ordering.compares_swap Ordering.compares_swap
 -/
 
@@ -159,12 +159,12 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder �
   by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomy a b with hab hab
-  · change compares Ordering.lt a b at hab
+  · change compares Ordering.lt a b at hab 
     rwa [ho.inj (h hab)]
   · cases' hab with hab hab
-    · change compares Ordering.eq a b at hab
+    · change compares Ordering.eq a b at hab 
       rwa [ho.inj (h hab)]
-    · change compares Ordering.gt a b at hab
+    · change compares Ordering.gt a b at hab 
       rwa [ho.inj (h hab)]
 #align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_impl
 
@@ -188,7 +188,7 @@ open Ordering OrderDual
 @[simp]
 theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
     Compares o (toDual a) (toDual b) ↔ Compares o b a := by cases o;
-  exacts[Iff.rfl, eq_comm, Iff.rfl]
+  exacts [Iff.rfl, eq_comm, Iff.rfl]
 #align to_dual_compares_to_dual toDual_compares_toDual
 -/
 
@@ -196,7 +196,7 @@ theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
 @[simp]
 theorem ofDual_compares_ofDual [LT α] {a b : αᵒᵈ} {o : Ordering} :
     Compares o (ofDual a) (ofDual b) ↔ Compares o b a := by cases o;
-  exacts[Iff.rfl, eq_comm, Iff.rfl]
+  exacts [Iff.rfl, eq_comm, Iff.rfl]
 #align of_dual_compares_of_dual ofDual_compares_ofDual
 -/
 

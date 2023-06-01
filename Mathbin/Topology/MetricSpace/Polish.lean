@@ -84,7 +84,7 @@ class PolishSpace (α : Type _) [h : TopologicalSpace α] : Prop where
 class should be registered: It should be used as `letI := upgrade_polish_space α` to endow a Polish
 space with a complete metric. -/
 class UpgradedPolishSpace (α : Type _) extends MetricSpace α, SecondCountableTopology α,
-  CompleteSpace α
+    CompleteSpace α
 #align upgraded_polish_space UpgradedPolishSpace
 -/
 
@@ -151,11 +151,11 @@ instance nat_fun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → �
 
 /-- A countable disjoint union of Polish spaces is Polish. -/
 instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)]
-    [∀ n, PolishSpace (E n)] : PolishSpace (Σn, E n) :=
+    [∀ n, PolishSpace (E n)] : PolishSpace (Σ n, E n) :=
   by
   letI := fun n => upgradePolishSpace (E n)
-  letI : MetricSpace (Σn, E n) := sigma.metric_space
-  haveI : CompleteSpace (Σn, E n) := sigma.complete_space
+  letI : MetricSpace (Σ n, E n) := sigma.metric_space
+  haveI : CompleteSpace (Σ n, E n) := sigma.complete_space
   infer_instance
 #align polish_space.sigma PolishSpace.sigma
 
@@ -450,7 +450,7 @@ theorem IsOpen.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] 
     (hs : IsOpen s) : PolishSpace s :=
   by
   rcases eq_empty_or_nonempty (sᶜ) with (h's | h's)
-  · simp at h's
+  · simp at h's 
     apply IsClosed.polishSpace
     rw [h's]
     exact isClosed_univ

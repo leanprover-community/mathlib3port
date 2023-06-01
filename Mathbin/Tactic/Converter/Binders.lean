@@ -174,7 +174,7 @@ unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
 #align binder_eq_elim.old_conv binder_eq_elim.old_conv
 
 theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
-    (∃ (a' : α)(h : a' = a), p a' h) ↔ p a rfl :=
+    (∃ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,
@@ -182,7 +182,7 @@ theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' =
 #align exists_elim_eq_left exists_elim_eq_left
 
 theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
-    (∃ (a' : α)(h : a = a'), p a' h) ↔ p a rfl :=
+    (∃ (a' : α) (h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,

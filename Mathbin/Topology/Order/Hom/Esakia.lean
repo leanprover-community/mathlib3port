@@ -47,7 +47,7 @@ structure PseudoEpimorphism (α β : Type _) [Preorder α] [Preorder β] extends
 
 /-- The type of Esakia morphisms, aka continuous pseudo-epimorphisms, from `α` to `β`. -/
 structure EsakiaHom (α β : Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
-  [Preorder β] extends α →Co β where
+    [Preorder β] extends α →Co β where
   exists_map_eq_of_map_le' ⦃a : α⦄ ⦃b : β⦄ : to_fun a ≤ b → ∃ c, a ≤ c ∧ to_fun c = b
 #align esakia_hom EsakiaHom
 
@@ -57,7 +57,7 @@ section
 
 You should extend this class when you extend `pseudo_epimorphism`. -/
 class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder α]
-  [Preorder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
+    [Preorder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align pseudo_epimorphism_class PseudoEpimorphismClass
 
@@ -65,7 +65,7 @@ class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder
 
 You should extend this class when you extend `esakia_hom`. -/
 class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorder α]
-  [TopologicalSpace β] [Preorder β] extends ContinuousOrderHomClass F α β where
+    [TopologicalSpace β] [Preorder β] extends ContinuousOrderHomClass F α β where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align esakia_hom_class EsakiaHomClass
 

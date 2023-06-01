@@ -119,7 +119,7 @@ theorem pi_upper_bound_start (n : ℕ) {a}
   by
   refine' lt_of_lt_of_le (pi_lt_sqrt_two_add_series n) _
   rw [← le_sub_iff_add_le, ← le_div_iff', sqrt_le_left, sub_le_comm]
-  · rwa [Nat.cast_zero, zero_div] at h
+  · rwa [Nat.cast_zero, zero_div] at h 
   · exact div_nonneg (sub_nonneg.2 h₂) (pow_nonneg (le_of_lt zero_lt_two) _)
   · exact pow_pos zero_lt_two _
 #align real.pi_upper_bound_start Real.pi_upper_bound_start

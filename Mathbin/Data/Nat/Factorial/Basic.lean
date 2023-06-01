@@ -167,11 +167,11 @@ theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m :=
   by
   refine' ⟨fun h => _, congr_arg _⟩
   obtain hnm | rfl | hnm := lt_trichotomy n m
-  · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm
+  · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm 
     cases lt_irrefl _ hnm
   · rfl
-  rw [h, one_lt_factorial] at hn
-  rw [← factorial_lt (lt_trans one_pos hn), h] at hnm
+  rw [h, one_lt_factorial] at hn 
+  rw [← factorial_lt (lt_trans one_pos hn), h] at hnm 
   cases lt_irrefl _ hnm
 #align nat.factorial_inj Nat.factorial_inj
 -/

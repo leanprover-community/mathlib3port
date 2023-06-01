@@ -369,7 +369,7 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
   constructor
   · rintro ⟨⟨hd, tl⟩, hl₃⟩
     · exact Or.inl hl₃
-    · simp only [cons_append] at hl₃
+    · simp only [cons_append] at hl₃ 
       exact Or.inr ⟨_, hl₃.2⟩
   · rintro (rfl | hl₁)
     · exact (a :: l₂).suffix_refl
@@ -381,7 +381,7 @@ theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+
   constructor
   · rintro ⟨⟨hd, tl⟩, t, hl₃⟩
     · exact Or.inl ⟨t, hl₃⟩
-    · simp only [cons_append] at hl₃
+    · simp only [cons_append] at hl₃ 
       exact Or.inr ⟨_, t, hl₃.2⟩
   · rintro (h | hl₁)
     · exact h.is_infix
@@ -580,7 +580,7 @@ instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
 #print List.decidableInfix /-
 instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
   | [], l₂ => isTrue ⟨[], l₂, rfl⟩
-  | a :: l₁, [] => isFalse fun ⟨s, t, te⟩ => by simp at te <;> exact te
+  | a :: l₁, [] => isFalse fun ⟨s, t, te⟩ => by simp at te  <;> exact te
   | l₁, b :: l₂ =>
     decidable_of_decidable_of_iff
       (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂)) infix_cons_iff.symm
@@ -602,9 +602,9 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
     rw [take_zero, take_nil]
     simp only [take]
     exact not_false
-  · simp only [length] at hm
+  · simp only [length] at hm 
     specialize IH ls n (Nat.lt_of_succ_lt_succ hm)
-    simp only [le_of_lt (Nat.lt_of_succ_lt_succ hm), min_eq_left] at IH
+    simp only [le_of_lt (Nat.lt_of_succ_lt_succ hm), min_eq_left] at IH 
     simp only [le_of_lt hm, IH, true_and_iff, min_eq_left, eq_self_iff_true, length, take]
     exact ⟨Nat.succ_le_succ, Nat.le_of_succ_le_succ⟩
 #align list.prefix_take_le_iff List.prefix_take_le_iff
@@ -615,7 +615,7 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
   by
   constructor
   · rintro ⟨L, hL⟩
-    simp only [cons_append] at hL
+    simp only [cons_append] at hL 
     exact ⟨hL.left, ⟨L, hL.right⟩⟩
   · rintro ⟨rfl, h⟩
     rwa [prefix_cons_inj]
@@ -628,7 +628,7 @@ theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.m
   · simp only [nil_prefix, map_nil]
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
-    · rw [cons_prefix_iff] at h
+    · rw [cons_prefix_iff] at h 
       simp only [h, prefix_cons_inj, hl, map]
 #align list.is_prefix.map List.isPrefix.map
 
@@ -639,7 +639,7 @@ theorem isPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
   · simp only [nil_prefix, filter_map_nil]
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
-    · rw [cons_prefix_iff] at h
+    · rw [cons_prefix_iff] at h 
       rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filter_map_append,
         filter_map_append, h.left, prefix_append_right_inj]
       exact hl h.right
@@ -893,7 +893,7 @@ theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
 #print List.suffix_insert /-
 @[simp]
 theorem suffix_insert (a : α) (l : List α) : l <:+ insert a l := by
-  by_cases a ∈ l <;> [simp only [insert_of_mem h];simp only [insert_of_not_mem h, suffix_cons]]
+  by_cases a ∈ l <;> [simp only [insert_of_mem h]; simp only [insert_of_not_mem h, suffix_cons]]
 #align list.suffix_insert List.suffix_insert
 -/
 

@@ -81,7 +81,7 @@ theorem continuousOn_Ioc_extendFrom_Ioo [TopologicalSpace α] [LinearOrder α] [
     ContinuousOn (extendFrom (Ioo a b) f) (Ioc a b) :=
   by
   have := @continuousOn_Ico_extendFrom_Ioo αᵒᵈ _ _ _ _ _ _ _ f _ _ _ hab
-  erw [dual_Ico, dual_Ioi, dual_Ioo] at this
+  erw [dual_Ico, dual_Ioi, dual_Ioo] at this 
   exact this hf hb
 #align continuous_on_Ioc_extend_from_Ioo continuousOn_Ioc_extendFrom_Ioo
 

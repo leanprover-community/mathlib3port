@@ -241,14 +241,14 @@ theorem MeasurableSet.ite {t s₁ s₂ : Set α} (ht : MeasurableSet t) (h₁ : 
 
 #print MeasurableSet.ite' /-
 theorem MeasurableSet.ite' {s t : Set α} {p : Prop} (hs : p → MeasurableSet s)
-    (ht : ¬p → MeasurableSet t) : MeasurableSet (ite p s t) := by split_ifs; exacts[hs h, ht h]
+    (ht : ¬p → MeasurableSet t) : MeasurableSet (ite p s t) := by split_ifs; exacts [hs h, ht h]
 #align measurable_set.ite' MeasurableSet.ite'
 -/
 
 #print MeasurableSet.cond /-
 @[simp]
 theorem MeasurableSet.cond {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂)
-    {i : Bool} : MeasurableSet (cond i s₁ s₂) := by cases i; exacts[h₂, h₁]
+    {i : Bool} : MeasurableSet (cond i s₁ s₂) := by cases i; exacts [h₂, h₁]
 #align measurable_set.cond MeasurableSet.cond
 -/
 
@@ -412,7 +412,7 @@ theorem generateFrom_induction (p : Set α → Prop) (C : Set (Set α)) (hC : �
     (h_empty : p ∅) (h_compl : ∀ t, p t → p (tᶜ))
     (h_Union : ∀ f : ℕ → Set α, (∀ n, p (f n)) → p (⋃ i, f i)) {s : Set α}
     (hs : measurable_set[generateFrom C] s) : p s := by induction hs;
-  exacts[hC _ hs_H, h_empty, h_compl _ hs_ih, h_Union hs_f hs_ih]
+  exacts [hC _ hs_H, h_empty, h_compl _ hs_ih, h_Union hs_f hs_ih]
 #align measurable_space.generate_from_induction MeasurableSpace.generateFrom_induction
 
 #print MeasurableSpace.generateFrom_le /-

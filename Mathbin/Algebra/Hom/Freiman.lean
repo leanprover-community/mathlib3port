@@ -92,7 +92,7 @@ notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.
 You should extend this class when you extend `add_freiman_hom`. -/
 class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _)
-  [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
+    [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) :
     (s.map f).Sum = (t.map f).Sum
@@ -105,7 +105,7 @@ You should extend this class when you extend `freiman_hom`. -/
 @[to_additive AddFreimanHomClass
       "`add_freiman_hom_class F A β n` states that `F` is a type of `n`-ary sums-preserving morphisms.\nYou should extend this class when you extend `add_freiman_hom`."]
 class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoid α]
-  [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
+    [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
     (s.map f).Prod = (t.map f).Prod
@@ -132,7 +132,7 @@ theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset 
 theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a ∈ A) (hb : b ∈ A)
     (hc : c ∈ A) (hd : d ∈ A) (h : a * b = c * d) : f a * f b = f c * f d :=
   by
-  simp_rw [← prod_pair] at h⊢
+  simp_rw [← prod_pair] at h ⊢
   refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [ha, hb, hc, hd]
 #align map_mul_map_eq_map_mul_map map_mul_map_eq_map_mul_map
 #align map_add_map_eq_map_add_map map_add_map_eq_map_add_map
@@ -418,8 +418,8 @@ instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
   { FreimanHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by intros ; ext; apply div_eq_mul_inv
-    mul_left_inv := by intros ; ext; apply mul_left_inv
+    div_eq_mul_inv := by intros; ext; apply div_eq_mul_inv
+    mul_left_inv := by intros; ext; apply mul_left_inv
     zpow := fun n f =>
       { toFun := fun x => f x ^ n
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
@@ -486,22 +486,22 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
     (hst : s.Prod = t.Prod) (h : m ≤ n) : (s.map f).Prod = (t.map f).Prod :=
   by
   obtain rfl | hm := m.eq_zero_or_pos
-  · rw [card_eq_zero] at hs ht
+  · rw [card_eq_zero] at hs ht 
     rw [hs, ht]
-  rw [← hs, card_pos_iff_exists_mem] at hm
+  rw [← hs, card_pos_iff_exists_mem] at hm 
   obtain ⟨a, ha⟩ := hm
   suffices ((s + replicate (n - m) a).map f).Prod = ((t + replicate (n - m) a).map f).Prod
     by
-    simp_rw [Multiset.map_add, prod_add] at this
+    simp_rw [Multiset.map_add, prod_add] at this 
     exact mul_right_cancel this
   replace ha := hsA _ ha
   refine' map_prod_eq_map_prod f (fun x hx => _) (fun x hx => _) _ _ _
   rotate_left 2; assumption
   -- Can't infer `A` and `n` from the context, so do it manually.
-  · rw [mem_add] at hx
+  · rw [mem_add] at hx 
     refine' hx.elim (hsA _) fun h => _
     rwa [eq_of_mem_replicate h]
-  · rw [mem_add] at hx
+  · rw [mem_add] at hx 
     refine' hx.elim (htA _) fun h => _
     rwa [eq_of_mem_replicate h]
   · rw [card_add, hs, card_replicate, add_tsub_cancel_of_le h]

@@ -76,7 +76,7 @@ variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
 #print SubfieldClass /-
 /-- `subfield_class S K` states `S` is a type of subsets `s ⊆ K` closed under field operations. -/
 class SubfieldClass (S K : Type _) [Field K] [SetLike S K] extends SubringClass S K,
-  InvMemClass S K : Prop
+    InvMemClass S K : Prop
 #align subfield_class SubfieldClass
 -/
 
@@ -177,7 +177,7 @@ def toSubmonoid (s : Subfield K) : Submonoid K :=
 #align subfield.to_submonoid Subfield.toSubmonoid
 
 instance : SetLike (Subfield K) K :=
-  ⟨Subfield.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨Subfield.carrier, fun p q h => by cases p <;> cases q <;> congr⟩
 
 instance : SubfieldClass (Subfield K) K
     where

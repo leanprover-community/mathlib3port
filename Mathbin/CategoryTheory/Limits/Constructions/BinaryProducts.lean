@@ -56,7 +56,7 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
     rw [← J, ← J]
     apply hc.hom_ext
     rintro (_ | (_ | _)) <;> simp only [pullback_cone.mk_π_app_one, pullback_cone.mk_π_app]
-    exacts[(category.assoc _ _ _).symm.trans (hc.fac_assoc c' walking_cospan.left f).symm,
+    exacts [(category.assoc _ _ _).symm.trans (hc.fac_assoc c' walking_cospan.left f).symm,
       (hc.fac c' walking_cospan.left).symm, (hc.fac c' walking_cospan.right).symm]
 #align is_binary_product_of_is_terminal_is_pullback isBinaryProductOfIsTerminalIsPullback
 
@@ -169,7 +169,7 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
     rintro (_ | (_ | _)) <;>
       simp only [pushout_cocone.mk_ι_app_zero, pushout_cocone.mk_ι_app, category.assoc]
     congr 1
-    exacts[(hc.fac c' walking_span.left).symm, (hc.fac c' walking_span.left).symm,
+    exacts [(hc.fac c' walking_span.left).symm, (hc.fac c' walking_span.left).symm,
       (hc.fac c' walking_span.right).symm]
 #align is_binary_coproduct_of_is_initial_is_pushout isBinaryCoproductOfIsInitialIsPushout
 

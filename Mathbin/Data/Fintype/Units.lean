@@ -51,7 +51,7 @@ theorem Fintype.card_units [GroupWithZero α] [Fintype α] [Fintype αˣ] :
     rw [eq_comm, Nat.sub_eq_iff_eq_add (Fintype.card_pos_iff.2 ⟨(0 : α)⟩),
       Fintype.card_congr (unitsEquivNeZero α)]
     have := Fintype.card_congr (Equiv.sumCompl (· = (0 : α))).symm
-    rwa [Fintype.card_sum, add_comm, Fintype.card_subtype_eq] at this
+    rwa [Fintype.card_sum, add_comm, Fintype.card_subtype_eq] at this 
 #align fintype.card_units Fintype.card_units
 -/
 

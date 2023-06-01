@@ -321,8 +321,8 @@ theorem bool_ofNat_mem_Icc_of_mem_Icc_toNat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) :=
   by
   simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
-  constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀;have h₂ := Bool.ofNat_le_ofNat h₁] <;>
-      rw [Bool.ofNat_toNat] at h₂ <;>
+  constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀; have h₂ := Bool.ofNat_le_ofNat h₁] <;>
+      rw [Bool.ofNat_toNat] at h₂  <;>
     exact h₂
 #align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_Icc_of_mem_Icc_toNat
 
@@ -347,7 +347,7 @@ def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :
     simp only [and_imp, Set.mem_Icc]; intro z h₀ h₁
     replace h₀ := Bitvec.ofFin_le_ofFin_of_le h₀
     replace h₁ := Bitvec.ofFin_le_ofFin_of_le h₁
-    rw [Bitvec.ofFin_toFin] at h₀ h₁; constructor <;> assumption
+    rw [Bitvec.ofFin_toFin] at h₀ h₁ ; constructor <;> assumption
   Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.toFin_le_toFin_of_le h)
 #align bitvec.random_r Bitvec.randomR
 

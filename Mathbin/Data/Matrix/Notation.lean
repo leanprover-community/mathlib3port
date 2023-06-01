@@ -90,7 +90,7 @@ open Interactive.Types
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Parse the entries of a matrix -/
-unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → Fin n → α) := do
+unsafe def entry_parser {α : Type} (p : parser α) : parser (Σ m n, Fin m → Fin n → α) := do
   let-- a list of lists if the matrix has at least one row, or the number of columns if the matrix has
   -- zero rows.
   p :
@@ -118,8 +118,8 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
 -- a massive amount of effort to make it universe-polymorphic.
 @[instance]
 unsafe def sigma_sigma_fin_matrix_has_reflect {α : Type} [has_reflect α] [reflected _ α] :
-    has_reflect (Σm n : ℕ, Fin m → Fin n → α) :=
-  @sigma.reflect.{0, 0} _ _ ℕ (fun m => Σn, Fin m → Fin n → α) _ _ _ fun i =>
+    has_reflect (Σ m n : ℕ, Fin m → Fin n → α) :=
+  @sigma.reflect.{0, 0} _ _ ℕ (fun m => Σ n, Fin m → Fin n → α) _ _ _ fun i =>
     @sigma.reflect.{0, 0} _ _ ℕ _ _ _ _ fun j => inferInstance
 #align matrix.sigma_sigma_fin_matrix_has_reflect matrix.sigma_sigma_fin_matrix_has_reflect
 

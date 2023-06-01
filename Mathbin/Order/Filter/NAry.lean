@@ -215,7 +215,7 @@ theorem map₂_left (h : g.ne_bot) : map₂ (fun x y => x) f g = f :=
   ext u
   refine' ⟨_, fun hu => ⟨_, _, hu, univ_mem, (image2_left <| h.nonempty_of_mem univ_mem).Subset⟩⟩
   rintro ⟨s, t, hs, ht, hu⟩
-  rw [image2_left (h.nonempty_of_mem ht)] at hu
+  rw [image2_left (h.nonempty_of_mem ht)] at hu 
   exact mem_of_superset hs hu
 #align filter.map₂_left Filter.map₂_left
 -/

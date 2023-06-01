@@ -256,7 +256,7 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z
+              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z 
               rw [z]
             · rw [← functor.map_comp_assoc] } }
   map X Y f := { Hom := f.Hom }
@@ -270,8 +270,8 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h; rw [← w]; rw [← s.w f] at h; simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h; rw [← w] at h; rw [← s.w f]; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← w]; rw [← s.w f] at h ; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← w] at h ; rw [← s.w f]; simpa using h
   · exact s.w (𝟙 _)
 #align category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
 
@@ -417,7 +417,7 @@ def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)]
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ Coyoneda.colimitCoyonedaIso (op d)
 #align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
-theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
+theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : Σ X, d ⟶ F.obj X}
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) :=
   by
@@ -534,7 +534,7 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G
                   c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
-                c.w] at z
+                c.w] at z 
               rw [z, category.assoc]
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
@@ -551,8 +551,8 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `hom_to_lift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f]; rw [← w] at h; simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f] at h; rw [← w]; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f]; rw [← w] at h ; simpa using h
+  · intro j₁ j₂ k₁ k₂ f w h; rw [← s.w f] at h ; rw [← w]; simpa using h
   · exact s.w (𝟙 _)
 #align category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
 

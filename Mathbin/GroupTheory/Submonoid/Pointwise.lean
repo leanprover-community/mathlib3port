@@ -595,9 +595,9 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
   · rw [mul_le]; intro a ha b hb
     apply closure_induction ha
     on_goal 1 =>
-      intros ; apply closure_induction hb
-      on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
-    all_goals intros ;
+      intros; apply closure_induction hb
+      on_goal 1 => intros; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
+    all_goals intros;
       simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul, zero_mem, left_distrib,
           right_distrib, mul_smul_comm, smul_mul_assoc] <;>
         solve_by_elim (config :=
@@ -614,13 +614,15 @@ theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
   eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, MulZeroClass.mul_zero]
+    mul_le.2 fun m hm n hn => by
+      rw [AddSubmonoid.mem_bot] at hn ⊢ <;> rw [hn, MulZeroClass.mul_zero]
 #align add_submonoid.mul_bot AddSubmonoid.mul_bot
 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
   eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, MulZeroClass.zero_mul]
+    mul_le.2 fun m hm n hn => by
+      rw [AddSubmonoid.mem_bot] at hm ⊢ <;> rw [hm, MulZeroClass.zero_mul]
 #align add_submonoid.bot_mul AddSubmonoid.bot_mul
 
 @[mono]

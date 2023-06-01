@@ -98,26 +98,27 @@ theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
     constructor
     · rintro ⟨h₁, h₂⟩ (_ | _ | _)
       · rw [← c'.w walking_span.hom.fst]; exact (hα walking_span.hom.fst).paste_horiz h₁
-      exacts[h₁, h₂]
+      exacts [h₁, h₂]
     · intro h; exact ⟨h _, h _⟩
   · introv H W' hf hg hh hi w
-    refine' Iff.trans _ ((H w.cocone ⟨by rintro (_ | _ | _); exacts[αW, αX, αY], _⟩ αZ _ _).trans _)
+    refine'
+      Iff.trans _ ((H w.cocone ⟨by rintro (_ | _ | _); exacts [αW, αX, αY], _⟩ αZ _ _).trans _)
     rotate_left
     · rintro i _ (_ | _ | _)
       · dsimp; simp only [Functor.map_id, category.comp_id, category.id_comp]
-      exacts[hf.w, hg.w]
+      exacts [hf.w, hg.w]
     · ext (_ | _ | _)
       · dsimp; rw [pushout_cocone.condition_zero]; erw [category.assoc, hh.w, hf.w_assoc]
-      exacts[hh.w.symm, hi.w.symm]
+      exacts [hh.w.symm, hi.w.symm]
     · rintro i _ (_ | _ | _)
       · dsimp; simp_rw [Functor.map_id]
         exact is_pullback.of_horiz_is_iso ⟨by rw [category.comp_id, category.id_comp]⟩
-      exacts[hf, hg]
+      exacts [hf, hg]
     · constructor
       · intro h; exact ⟨h walking_cospan.left, h walking_cospan.right⟩
       · rintro ⟨h₁, h₂⟩ (_ | _ | _)
         · dsimp; rw [pushout_cocone.condition_zero]; exact hf.paste_horiz h₁
-        exacts[h₁, h₂]
+        exacts [h₁, h₂]
     · exact ⟨fun h => h.2, fun h => ⟨_, h⟩⟩
 #align category_theory.is_pushout.is_van_kampen_iff CategoryTheory.IsPushout.isVanKampen_iff
 
@@ -191,7 +192,7 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
       have : cmp = (hc₂.cocone_point_unique_up_to_iso hc₄).Hom :=
         by
         apply binary_cofan.is_colimit.hom_ext hc₂
-        exacts[(hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.left⟩).symm,
+        exacts [(hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.left⟩).symm,
           (hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.right⟩).symm]
       rw [this]
       exact is_pullback.of_vert_is_iso ⟨by rw [← this, category.comp_id, pullback.lift_fst]⟩

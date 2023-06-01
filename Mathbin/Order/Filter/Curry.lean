@@ -64,11 +64,11 @@ def curry (f : Filter α) (g : Filter β) : Filter (α × β)
   univ_sets := by simp only [Set.mem_setOf_eq, Set.mem_univ, eventually_true]
   sets_of_superset := by
     intro x y hx hxy
-    simp only [Set.mem_setOf_eq] at hx⊢
+    simp only [Set.mem_setOf_eq] at hx ⊢
     exact hx.mono fun a ha => ha.mono fun b hb => Set.mem_of_subset_of_mem hxy hb
   inter_sets := by
     intro x y hx hy
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff] at hx hy⊢
+    simp only [Set.mem_setOf_eq, Set.mem_inter_iff] at hx hy ⊢
     exact (hx.and hy).mono fun a ha => (ha.1.And ha.2).mono fun b hb => hb
 #align filter.curry Filter.curry
 -/
@@ -81,7 +81,7 @@ theorem eventually_curry_iff {f : Filter α} {g : Filter β} {p : α × β → P
 theorem curry_le_prod {f : Filter α} {g : Filter β} : f.curry g ≤ f.Prod g :=
   by
   intro u hu
-  rw [← eventually_mem_set] at hu⊢
+  rw [← eventually_mem_set] at hu ⊢
   rw [eventually_curry_iff]
   exact hu.curry
 #align filter.curry_le_prod Filter.curry_le_prod
@@ -92,7 +92,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
   intro h
   rw [tendsto_def]
   simp only [curry, Filter.mem_mk, Set.mem_setOf_eq, Set.mem_preimage]
-  simp_rw [tendsto_def] at h
+  simp_rw [tendsto_def] at h 
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
   simpa [Function.HasUncurry.uncurry, Set.preimage] using ha s hs
 #align filter.tendsto.curry Filter.Tendsto.curry

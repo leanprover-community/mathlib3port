@@ -141,7 +141,7 @@ noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
         simp only [CategoryTheory.eqToIso.hom, TopCat.Presheaf.pushforwardObj_map, category.assoc,
           functor.op_map, iso.trans_hom, as_iso_hom, functor.map_iso_hom, ← X.presheaf.map_comp]
         erw [f.c.naturality_assoc, ← X.presheaf.map_comp]
-        congr )
+        congr)
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.iso_restrict AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.isoRestrict
 
 @[simp]
@@ -433,8 +433,8 @@ theorem pullbackConeOfLeftLift_fst :
     erw [← s.X.presheaf.map_comp]
     erw [s.snd.c.naturality_assoc]
     have := congr_app s.condition (op (hf.open_functor.obj x))
-    dsimp only [comp_c_app, unop_op] at this
-    rw [← is_iso.comp_inv_eq] at this
+    dsimp only [comp_c_app, unop_op] at this 
+    rw [← is_iso.comp_inv_eq] at this 
     reassoc! this
     erw [← this, hf.inv_app_app_assoc, s.fst.c.naturality_assoc]
     simpa [eq_to_hom_map]
@@ -750,7 +750,7 @@ instance forgetCreatesPullbackOfLeft : CreatesLimit (cospan f g) forget :=
   createsLimitOfFullyFaithfulOfIso
     (PresheafedSpace.IsOpenImmersion.toSheafedSpace Y
       (@pullback.snd (PresheafedSpace C) _ _ _ _ f g _))
-    (eqToIso (show pullback _ _ = pullback _ _ by congr ) ≪≫
+    (eqToIso (show pullback _ _ = pullback _ _ by congr) ≪≫
       HasLimit.isoOfNatIso (diagramIsoCospan _).symm)
 #align algebraic_geometry.SheafedSpace.is_open_immersion.forget_creates_pullback_of_left AlgebraicGeometry.SheafedSpace.IsOpenImmersion.forgetCreatesPullbackOfLeft
 
@@ -758,7 +758,7 @@ instance forgetCreatesPullbackOfRight : CreatesLimit (cospan g f) forget :=
   createsLimitOfFullyFaithfulOfIso
     (PresheafedSpace.IsOpenImmersion.toSheafedSpace Y
       (@pullback.fst (PresheafedSpace C) _ _ _ _ g f _))
-    (eqToIso (show pullback _ _ = pullback _ _ by congr ) ≪≫
+    (eqToIso (show pullback _ _ = pullback _ _ by congr) ≪≫
       HasLimit.isoOfNatIso (diagramIsoCospan _).symm)
 #align algebraic_geometry.SheafedSpace.is_open_immersion.forget_creates_pullback_of_right AlgebraicGeometry.SheafedSpace.IsOpenImmersion.forgetCreatesPullbackOfRight
 
@@ -791,7 +791,7 @@ instance sheafedSpace_pullback_snd_of_left :
   have : _ = limit.π (cospan f g) right := preserves_limits_iso_hom_π forget (cospan f g) right
   rw [← this]
   have := has_limit.iso_of_nat_iso_hom_π (diagramIsoCospan.{v} (cospan f g ⋙ forget)) right
-  erw [category.comp_id] at this
+  erw [category.comp_id] at this 
   rw [← this]
   dsimp
   infer_instance
@@ -804,7 +804,7 @@ instance sheafedSpace_pullback_fst_of_right :
   have : _ = limit.π (cospan g f) left := preserves_limits_iso_hom_π forget (cospan g f) left
   rw [← this]
   have := has_limit.iso_of_nat_iso_hom_π (diagramIsoCospan.{v} (cospan g f ⋙ forget)) left
-  erw [category.comp_id] at this
+  erw [category.comp_id] at this 
   rw [← this]
   dsimp
   infer_instance
@@ -842,11 +842,11 @@ theorem of_stalk_iso {X Y : SheafedSpace C} (f : X ⟶ Y) (hf : OpenEmbedding f.
           (show Y.sheaf ⟶ (TopCat.Sheaf.pushforward f.base).obj X.sheaf from ⟨f.c⟩)
       rintro ⟨_, y, hy, rfl⟩
       specialize H y
-      delta PresheafedSpace.stalk_map at H
+      delta PresheafedSpace.stalk_map at H 
       haveI H' :=
         TopCat.Presheaf.stalkPushforward.stalkPushforward_iso_of_openEmbedding C hf X.presheaf y
       have := @is_iso.comp_is_iso _ H (@is_iso.inv_is_iso _ H')
-      rw [category.assoc, is_iso.hom_inv_id, category.comp_id] at this
+      rw [category.assoc, is_iso.hom_inv_id, category.comp_id] at this 
       exact this }
 #align algebraic_geometry.SheafedSpace.is_open_immersion.of_stalk_iso AlgebraicGeometry.SheafedSpace.IsOpenImmersion.of_stalk_iso
 
@@ -862,11 +862,11 @@ theorem sigma_ι_openEmbedding : OpenEmbedding (colimit.ι F i).base :=
   rw [← show _ = (colimit.ι F i).base from ι_preserves_colimits_iso_inv (SheafedSpace.forget C) F i]
   have : _ = _ ≫ colimit.ι (discrete.functor ((F ⋙ SheafedSpace.forget C).obj ∘ discrete.mk)) i :=
     has_colimit.iso_of_nat_iso_ι_hom discrete.nat_iso_functor i
-  rw [← iso.eq_comp_inv] at this
+  rw [← iso.eq_comp_inv] at this 
   rw [this]
   have : colimit.ι _ _ ≫ _ = _ :=
     TopCat.sigmaIsoSigma_hom_ι.{v, v} ((F ⋙ SheafedSpace.forget C).obj ∘ discrete.mk) i.as
-  rw [← iso.eq_comp_inv] at this
+  rw [← iso.eq_comp_inv] at this 
   cases i
   rw [this]
   simp_rw [← category.assoc, TopCat.openEmbedding_iff_comp_isIso,
@@ -889,16 +889,16 @@ theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.ob
       (preserves_colimit_iso (SheafedSpace.forget C) F ≪≫
           has_colimit.iso_of_nat_iso discrete.nat_iso_functor ≪≫ TopCat.sigmaIsoSigma.{v} _).Hom
       Eq
-  simp_rw [CategoryTheory.Iso.trans_hom, ← TopCat.comp_app, ← PresheafedSpace.comp_base] at eq
-  rw [ι_preserves_colimits_iso_inv] at eq
+  simp_rw [CategoryTheory.Iso.trans_hom, ← TopCat.comp_app, ← PresheafedSpace.comp_base] at eq 
+  rw [ι_preserves_colimits_iso_inv] at eq 
   change
     ((SheafedSpace.forget C).map (colimit.ι F i) ≫ _) y =
       ((SheafedSpace.forget C).map (colimit.ι F j) ≫ _) x at
-    eq
+    eq 
   cases i; cases j
   rw [ι_preserves_colimits_iso_hom_assoc, ι_preserves_colimits_iso_hom_assoc,
     has_colimit.iso_of_nat_iso_ι_hom_assoc, has_colimit.iso_of_nat_iso_ι_hom_assoc,
-    TopCat.sigmaIsoSigma_hom_ι.{v}, TopCat.sigmaIsoSigma_hom_ι.{v}] at eq
+    TopCat.sigmaIsoSigma_hom_ι.{v}, TopCat.sigmaIsoSigma_hom_ι.{v}] at eq 
   exact h (congr_arg discrete.mk (congr_arg Sigma.fst Eq))
 #align algebraic_geometry.SheafedSpace.is_open_immersion.image_preimage_is_empty AlgebraicGeometry.SheafedSpace.IsOpenImmersion.image_preimage_is_empty
 
@@ -985,8 +985,8 @@ def pullbackConeOfLeft : PullbackCone f g :=
     have :=
       PresheafedSpace.stalk_map.congr_hom _ _
         (PresheafedSpace.is_open_immersion.pullback_cone_of_left_condition f.1 g.1) x
-    rw [PresheafedSpace.stalk_map.comp, PresheafedSpace.stalk_map.comp] at this
-    rw [← is_iso.eq_inv_comp] at this
+    rw [PresheafedSpace.stalk_map.comp, PresheafedSpace.stalk_map.comp] at this 
+    rw [← is_iso.eq_inv_comp] at this 
     rw [this]
     infer_instance
   ·
@@ -1011,8 +1011,8 @@ def pullbackConeOfLeftIsLimit : IsLimit (pullbackConeOfLeft f g) :=
           (PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift_snd f.1 g.1
             (pullback_cone.mk s.fst.1 s.snd.1 (congr_arg LocallyRingedSpace.hom.val s.condition)))
           x
-      change _ = _ ≫ PresheafedSpace.stalk_map s.snd.1 x at this
-      rw [PresheafedSpace.stalk_map.comp, ← is_iso.eq_inv_comp] at this
+      change _ = _ ≫ PresheafedSpace.stalk_map s.snd.1 x at this 
+      rw [PresheafedSpace.stalk_map.comp, ← is_iso.eq_inv_comp] at this 
       rw [this]
       infer_instance
     constructor
@@ -1208,7 +1208,7 @@ surjective family of open immersions from affine schemes. -/
 protected def scheme (X : LocallyRingedSpace)
     (h :
       ∀ x : X,
-        ∃ (R : CommRingCat)(f : Spec.toLocallyRingedSpace.obj (op R) ⟶ X),
+        ∃ (R : CommRingCat) (f : Spec.toLocallyRingedSpace.obj (op R) ⟶ X),
           (x ∈ Set.range f.1.base : _) ∧ LocallyRingedSpace.IsOpenImmersion f) :
     Scheme where
   toLocallyRingedSpace := X
@@ -1292,7 +1292,7 @@ open covers to form an open cover of `X`.  -/
 @[simps J obj map]
 def OpenCover.bind (f : ∀ x : 𝒰.J, OpenCover (𝒰.obj x)) : OpenCover X
     where
-  J := Σi : 𝒰.J, (f i).J
+  J := Σ i : 𝒰.J, (f i).J
   obj x := (f x.1).obj x.2
   map x := (f x.1).map x.2 ≫ 𝒰.map x.1
   f x := ⟨_, (f _).f (𝒰.Covers x).some⟩
@@ -1430,7 +1430,7 @@ theorem affineBasisCover_is_basis (X : Scheme) :
   · rintro a U haU hU
     rcases X.affine_cover.covers a with ⟨x, e⟩
     let U' := (X.affine_cover.map (X.affine_cover.f a)).1.base ⁻¹' U
-    have hxU' : x ∈ U' := by rw [← e] at haU; exact haU
+    have hxU' : x ∈ U' := by rw [← e] at haU ; exact haU
     rcases prime_spectrum.is_basis_basic_opens.exists_subset_of_mem_open hxU'
         ((X.affine_cover.map (X.affine_cover.f a)).1.base.continuous_toFun.isOpen_preimage _
           hU) with
@@ -1454,7 +1454,7 @@ def OpenCover.finiteSubcover {X : Scheme} (𝒰 : OpenCover X) [H : CompactSpace
     by
     intro x
     have h' : x ∈ (⊤ : Set X.carrier) := trivial
-    rw [← Classical.choose_spec this, Set.mem_iUnion] at h'
+    rw [← Classical.choose_spec this, Set.mem_iUnion] at h' 
     rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
     exact ⟨⟨y, hy⟩, hy'⟩
   exact
@@ -1522,7 +1522,7 @@ instance toSchemeHom_isOpenImmersion : IsOpenImmersion (toSchemeHom Y f) :=
 omit H
 
 theorem scheme_eq_of_locallyRingedSpace_eq {X Y : Scheme}
-    (H : X.toLocallyRingedSpace = Y.toLocallyRingedSpace) : X = Y := by cases X; cases Y; congr ;
+    (H : X.toLocallyRingedSpace = Y.toLocallyRingedSpace) : X = Y := by cases X; cases Y; congr;
   exact H
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.Scheme_eq_of_LocallyRingedSpace_eq AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.scheme_eq_of_locallyRingedSpace_eq
 
@@ -1681,7 +1681,7 @@ instance hasPullback_of_right : HasPullback g f :=
 instance pullback_snd_of_left : IsOpenImmersion (pullback.snd : pullback f g ⟶ _) :=
   by
   have := preserves_pullback.iso_hom_snd forget f g
-  dsimp only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map] at this
+  dsimp only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map] at this 
   rw [← this]
   change LocallyRingedSpace.is_open_immersion _
   infer_instance
@@ -1851,7 +1851,7 @@ theorem image_basicOpen {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f] {U 
   by
   have e := Scheme.preimage_basic_open f (f.inv_app U r)
   rw [Scheme.hom.inv_app, PresheafedSpace.is_open_immersion.inv_app_app_apply,
-    Scheme.basic_open_res, inf_eq_right.mpr _] at e
+    Scheme.basic_open_res, inf_eq_right.mpr _] at e 
   rw [← e]
   ext1
   refine' set.image_preimage_eq_inter_range.trans _
@@ -1929,14 +1929,14 @@ theorem Scheme.restrictFunctor_map_app {U V : Opens X.carrier} (i : U ⟶ V) (W 
   have e₁ :=
     Scheme.congr_app (X.restrict_functor_map_of_restrict i)
       (op <| V.open_embedding.is_open_map.functor.obj W)
-  rw [Scheme.comp_val_c_app] at e₁
+  rw [Scheme.comp_val_c_app] at e₁ 
   have e₂ := (X.restrict_functor.map i).1.val.c.naturality (eq_to_hom W.map_functor_eq).op
-  rw [← is_iso.eq_inv_comp] at e₂
-  dsimp at e₁ e₂⊢
+  rw [← is_iso.eq_inv_comp] at e₂ 
+  dsimp at e₁ e₂ ⊢
   rw [e₂, W.adjunction_counit_map_functor, ← is_iso.eq_inv_comp, is_iso.inv_comp_eq, ←
-    is_iso.eq_comp_inv] at e₁
+    is_iso.eq_comp_inv] at e₁ 
   simp_rw [eq_to_hom_map (opens.map _), eq_to_hom_map (IsOpenMap.functor _), ← functor.map_inv, ←
-    functor.map_comp] at e₁
+    functor.map_comp] at e₁ 
   rw [e₁]
   congr 1
 #align algebraic_geometry.Scheme.restrict_functor_map_app AlgebraicGeometry.Scheme.restrictFunctor_map_app
@@ -2170,13 +2170,13 @@ theorem morphismRestrict_c_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier
   by
   have :=
     Scheme.congr_app (morphism_restrict_ι f U) (op (U.open_embedding.is_open_map.functor.obj V))
-  rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app_assoc] at this
+  rw [Scheme.comp_val_c_app, Scheme.comp_val_c_app_assoc] at this 
   have e : (opens.map U.inclusion).obj (U.open_embedding.is_open_map.functor.obj V) = V := by ext1;
     exact Set.preimage_image_eq _ Subtype.coe_injective
   have : _ ≫ X.presheaf.map _ = _ :=
     (((f ∣_ U).1.c.naturality (eq_to_hom e).op).symm.trans _).trans this
   swap; · change Y.presheaf.map _ ≫ _ = Y.presheaf.map _ ≫ _; congr
-  rw [← is_iso.eq_comp_inv, ← functor.map_inv, category.assoc] at this
+  rw [← is_iso.eq_comp_inv, ← functor.map_inv, category.assoc] at this 
   rw [this]
   congr 1
   erw [← X.presheaf.map_comp, ← X.presheaf.map_comp]
@@ -2258,7 +2258,7 @@ def morphismRestrictRestrictBasicOpen {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.
   by
   refine' morphism_restrict_restrict _ _ _ ≪≫ morphism_restrict_eq _ _
   have e := Scheme.preimage_basic_open (Y.of_restrict U.open_embedding) r
-  erw [Scheme.of_restrict_val_c_app, opens.adjunction_counit_app_self, eq_to_hom_op] at e
+  erw [Scheme.of_restrict_val_c_app, opens.adjunction_counit_app_self, eq_to_hom_op] at e 
   rw [← (Y.restrict U.open_embedding).basicOpen_res_eq _ (eq_to_hom U.inclusion_map_eq_top).op, ←
     comp_apply]
   erw [← Y.presheaf.map_comp]

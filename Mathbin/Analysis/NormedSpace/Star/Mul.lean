@@ -41,7 +41,7 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
       ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans
         (op_norm_mul_apply_le 𝕜 E a)
   · have ha : 0 < ‖a‖₊ := zero_le'.trans_lt hr
-    rw [← inv_inv ‖a‖₊, NNReal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
+    rw [← inv_inv ‖a‖₊, NNReal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr 
     obtain ⟨k, hk₁, hk₂⟩ :=
       NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩

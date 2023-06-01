@@ -61,7 +61,7 @@ theorem trivialization.coordChangeL (b : B) :
   by
   ext v
   rw [Trivialization.coordChangeL_apply']
-  exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
+  exacts [rfl, ⟨mem_univ _, mem_univ _⟩]
 #align bundle.trivial.trivialization.coord_changeL Bundle.Trivial.trivialization.coordChangeL
 
 variable (𝕜)
@@ -117,7 +117,7 @@ theorem coordChangeL_prod [e₁.isLinear 𝕜] [e₁'.isLinear 𝕜] [e₂.isLin
     (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
       (e₁.coord_changeL 𝕜 e₁' b v₁, e₂.coord_changeL 𝕜 e₂' b v₂)
   rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
-  exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
+  exacts [rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
 #align trivialization.coord_changeL_prod Trivialization.coordChangeL_prod
 
 variable {e₁ e₂} [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
@@ -162,7 +162,7 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
         (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
           (e₁.coord_changeL 𝕜 e₁' b v₁, e₂.coord_changeL 𝕜 e₂' b v₂)
       rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
-      exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
+      exacts [rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
 #align vector_bundle.prod VectorBundle.prod
 
 variable {𝕜 F₁ E₁ F₂ E₂}
@@ -220,7 +220,7 @@ instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
     rintro b (hb : f b ∈ e.base_set ∩ e'.base_set); ext v
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
     rw [e.coord_changeL_apply e' hb, (e.pullback f).coordChangeL_apply' _]
-    exacts[rfl, hb]
+    exacts [rfl, hb]
 #align vector_bundle.pullback VectorBundle.pullback
 
 end

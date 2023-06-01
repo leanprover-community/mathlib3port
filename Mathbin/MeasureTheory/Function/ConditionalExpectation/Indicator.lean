@@ -136,7 +136,7 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
       Set.indicator_indicator]
     suffices h_int_restrict : integrable (t.indicator (μ.restrict s[f|m])) (μ.restrict s)
     · rw [integrable_indicator_iff (hm _ hs_m), integrable_on]
-      rw [integrable_indicator_iff (hm _ ht), integrable_on] at h_int_restrict⊢
+      rw [integrable_indicator_iff (hm _ ht), integrable_on] at h_int_restrict ⊢
       exact h_int_restrict
     exact integrable_condexp.indicator (hm _ ht)
   · intro t ht hμt

@@ -75,7 +75,7 @@ variable (C : Type u) [Category.{v} C]
 /-- We call a category `non_preadditive_abelian` if it has a zero object, kernels, cokernels, binary
     products and coproducts, and every monomorphism and every epimorphism is normal. -/
 class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C,
-  NormalEpiCategory C where
+    NormalEpiCategory C where
   [HasZeroObject : HasZeroObject C]
   [HasKernels : HasKernels C]
   [HasCokernels : HasCokernels C]
@@ -267,7 +267,7 @@ instance mono_r {A : C} : Mono (r A) :=
   have hxx : (x ≫ prod.lift (𝟙 A) (0 : A ⟶ A)) ≫ cokernel.π (diag A) = 0 := by
     rw [category.assoc, hx]
   obtain ⟨y, hy⟩ := kernel_fork.is_limit.lift' hl _ hxx
-  rw [kernel_fork.ι_of_ι] at hy
+  rw [kernel_fork.ι_of_ι] at hy 
   have hyy : y = 0 := by
     erw [← category.comp_id y, ← limits.prod.lift_snd (𝟙 A) (𝟙 A), ← category.assoc, hy,
       category.assoc, prod.lift_snd, has_zero_morphisms.comp_zero]
@@ -297,7 +297,7 @@ instance epi_r {A : C} : Epi (r A) :=
   intro Z z hz
   have h : prod.lift (𝟙 A) (0 : A ⟶ A) ≫ cokernel.π (diag A) ≫ z = 0 := by rw [← category.assoc, hz]
   obtain ⟨t, ht⟩ := cokernel_cofork.is_colimit.desc' hp2 _ h
-  rw [cokernel_cofork.π_of_π] at ht
+  rw [cokernel_cofork.π_of_π] at ht 
   have htt : t = 0 := by
     rw [← category.id_comp t]
     change 𝟙 A ≫ t = 0

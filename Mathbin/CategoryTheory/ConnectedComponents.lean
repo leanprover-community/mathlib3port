@@ -56,14 +56,16 @@ instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
 #print CategoryTheory.Component /-
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def Component (j : ConnectedComponents J) : Type u₁ :=
-  FullSubcategory fun k => Quotient.mk'' k = j deriving Category
+  FullSubcategory fun k => Quotient.mk'' k = j
+deriving Category
 #align category_theory.component CategoryTheory.Component
 -/
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
 def Component.ι (j) : Component j ⥤ J :=
-  fullSubcategoryInclusion _ deriving Full, Faithful
+  fullSubcategoryInclusion _
+deriving Full, Faithful
 #align category_theory.component.ι CategoryTheory.Component.ι
 
 /-- Each connected component of the category is nonempty. -/
@@ -108,7 +110,7 @@ category structure.
 This category is equivalent to `J`.
 -/
 abbrev Decomposed (J : Type u₁) [Category.{v₁} J] :=
-  Σj : ConnectedComponents J, Component j
+  Σ j : ConnectedComponents J, Component j
 #align category_theory.decomposed CategoryTheory.Decomposed
 -/
 
@@ -143,7 +145,7 @@ instance : Full (decomposedTo J)
     where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
-    dsimp at f
+    dsimp at f 
     have : j' = k'
     rw [← hX, ← hY, Quotient.eq'']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
@@ -160,7 +162,7 @@ instance : Full (decomposedTo J)
 instance : Faithful (decomposedTo J)
     where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
-    change f = g at e
+    change f = g at e 
     subst e
 
 instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩

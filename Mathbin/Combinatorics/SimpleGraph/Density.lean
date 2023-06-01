@@ -96,18 +96,18 @@ theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β
 theorem interedges_disjoint_left {s s' : Finset α} (hs : Disjoint s s') (t : Finset β) :
     Disjoint (interedges r s t) (interedges r s' t) :=
   by
-  rw [Finset.disjoint_left] at hs⊢
+  rw [Finset.disjoint_left] at hs ⊢
   rintro x hx hy
-  rw [mem_interedges_iff] at hx hy
+  rw [mem_interedges_iff] at hx hy 
   exact hs hx.1 hy.1
 #align rel.interedges_disjoint_left Rel.interedges_disjoint_left
 
 theorem interedges_disjoint_right (s : Finset α) {t t' : Finset β} (ht : Disjoint t t') :
     Disjoint (interedges r s t) (interedges r s t') :=
   by
-  rw [Finset.disjoint_left] at ht⊢
+  rw [Finset.disjoint_left] at ht ⊢
   rintro x hx hy
-  rw [mem_interedges_iff] at hx hy
+  rw [mem_interedges_iff] at hx hy 
   exact ht hx.2.1 hy.2.1
 #align rel.interedges_disjoint_right Rel.interedges_disjoint_right
 
@@ -237,13 +237,13 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (
   have hδ' : 0 ≤ 2 * δ - δ ^ 2 := by
     rw [sub_nonneg, sq]
     exact mul_le_mul_of_nonneg_right (hδ₁.le.trans (by norm_num)) hδ₀
-  rw [← sub_pos] at hδ₁
+  rw [← sub_pos] at hδ₁ 
   obtain rfl | hs₂' := s₂.eq_empty_or_nonempty
-  · rw [Finset.card_empty, Nat.cast_zero] at hs₂
+  · rw [Finset.card_empty, Nat.cast_zero] at hs₂ 
     simpa [edge_density, (nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using
       hδ'
   obtain rfl | ht₂' := t₂.eq_empty_or_nonempty
-  · rw [Finset.card_empty, Nat.cast_zero] at ht₂
+  · rw [Finset.card_empty, Nat.cast_zero] at ht₂ 
     simpa [edge_density, (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using
       hδ'
   rw [show 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ) by ring]
@@ -425,7 +425,7 @@ theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
   have : ((s ×ˢ t).filterₓ fun e => Gᶜ.Adj e.1 e.2) = (s ×ˢ t).filterₓ fun e => ¬G.adj e.1 e.2 :=
     by
     refine' filter_congr fun x hx => _
-    rw [mem_product] at hx
+    rw [mem_product] at hx 
     rw [compl_adj, and_iff_right (h.forall_ne_finset hx.1 hx.2)]
   rw [this, ← card_union_eq, filter_union_filter_neg_eq]
   exact disjoint_filter.2 fun x _ => Classical.not_not.2

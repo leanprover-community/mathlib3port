@@ -50,7 +50,7 @@ add_decl_doc RingInvo.toRingEquiv
 /-- `ring_invo_class F R S` states that `F` is a type of ring involutions.
 You should extend this class when you extend `ring_invo`. -/
 class RingInvoClass (F : Type _) (R : outParam (Type _)) [Semiring R] extends
-  RingEquivClass F R Rᵐᵒᵖ where
+    RingEquivClass F R Rᵐᵒᵖ where
   involution : ∀ (f : F) (x), (f (f x).unop).unop = x
 #align ring_invo_class RingInvoClass
 -/

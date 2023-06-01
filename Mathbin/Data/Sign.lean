@@ -90,7 +90,10 @@ instance : LE SignType :=
   ⟨Le⟩
 
 instance : DecidableRel Le := fun a b => by
-  cases a <;> cases b <;> first |exact is_false (by rintro ⟨⟩)|exact is_true (by constructor)
+  cases a <;> cases b <;>
+    first
+    | exact is_false (by rintro ⟨⟩)
+    | exact is_true (by constructor)
 
 /- We can define a `field` instance on `sign_type`, but it's not mathematically sensible,
 so we only define the `comm_group_with_zero`. -/
@@ -357,8 +360,8 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
   by
   refine' ⟨fun h => _, fun h => sign_pos h⟩
   by_contra hn
-  rw [sign_apply, if_neg hn] at h
-  split_ifs  at h <;> simpa using h
+  rw [sign_apply, if_neg hn] at h 
+  split_ifs  at h  <;> simpa using h
 #align sign_eq_one_iff sign_eq_one_iff
 -/
 
@@ -366,8 +369,8 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
 theorem sign_eq_neg_one_iff : SignType.sign a = -1 ↔ a < 0 :=
   by
   refine' ⟨fun h => _, fun h => sign_neg h⟩
-  rw [sign_apply] at h
-  split_ifs  at h
+  rw [sign_apply] at h 
+  split_ifs  at h 
   · simpa using h
   · exact h_2
   · simpa using h
@@ -385,8 +388,8 @@ variable [Zero α] [LinearOrder α] {a : α}
 theorem sign_eq_zero_iff : SignType.sign a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
-  rw [sign_apply] at h
-  split_ifs  at h <;> cases h
+  rw [sign_apply] at h 
+  split_ifs  at h  <;> cases h
   exact (le_of_not_lt h_1).eq_of_not_lt h_2
 #align sign_eq_zero_iff sign_eq_zero_iff
 -/
@@ -508,11 +511,11 @@ theorem sign_sum {ι : Type _} {s : Finset ι} {f : ι → α} (hs : s.Nonempty)
     (h : ∀ i ∈ s, SignType.sign (f i) = t) : SignType.sign (∑ i in s, f i) = t :=
   by
   cases t
-  · simp_rw [zero_eq_zero, sign_eq_zero_iff] at h⊢
+  · simp_rw [zero_eq_zero, sign_eq_zero_iff] at h ⊢
     exact Finset.sum_eq_zero h
-  · simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h⊢
+  · simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h ⊢
     exact Finset.sum_neg h hs
-  · simp_rw [pos_eq_one, sign_eq_one_iff] at h⊢
+  · simp_rw [pos_eq_one, sign_eq_one_iff] at h ⊢
     exact Finset.sum_pos h hs
 #align sign_sum sign_sum
 
@@ -537,13 +540,13 @@ open Finset Nat
 open scoped BigOperators
 
 private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
+    ∃ (β : Type u_1) (t : Finset β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∈ s) ∧
         (t.card = ∑ a in s, (f a).natAbs) ∧
           ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
   refine'
-    ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a =>
+    ⟨Σ a : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a =>
       SignType.sign (f a.1), fun a => a.1, fun a => a.1.Prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
   · intro x hx
@@ -552,7 +555,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
 theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+    ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∈ s) ∧
         (Fintype.card β = ∑ a in s, (f a).natAbs) ∧
           ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
@@ -564,7 +567,7 @@ theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
 theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
     (h : (∑ i in s, (f i).natAbs) ≤ n) :
-    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
+    ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∉ s → sgn b = 0) ∧
         Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
   by

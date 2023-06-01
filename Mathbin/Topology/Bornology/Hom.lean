@@ -50,7 +50,7 @@ section
 
 You should extend this class when you extend `locally_bounded_map`. -/
 class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornology α]
-  [Bornology β] extends FunLike F α fun _ => β where
+    [Bornology β] extends FunLike F α fun _ => β where
   comap_cobounded_le (f : F) : (cobounded β).comap f ≤ cobounded α
 #align locally_bounded_map_class LocallyBoundedMapClass
 -/

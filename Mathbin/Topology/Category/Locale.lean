@@ -27,7 +27,8 @@ open CategoryTheory Opposite Order TopologicalSpace
 #print Locale /-
 /-- The category of locales. -/
 def Locale :=
-  FrmCatᵒᵖderiving LargeCategory
+  FrmCatᵒᵖ
+deriving LargeCategory
 #align Locale Locale
 -/
 
@@ -70,7 +71,7 @@ def topToLocale : TopCat ⥤ Locale :=
 #print CompHausToLocale.faithful /-
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHausToLocale.faithful : Faithful (compHausToTop ⋙ topToLocale.{u}) :=
-  ⟨fun X Y f g h => by dsimp at h; exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
+  ⟨fun X Y f g h => by dsimp at h ; exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
 #align CompHaus_to_Locale.faithful CompHausToLocale.faithful
 -/
 

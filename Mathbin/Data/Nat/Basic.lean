@@ -116,8 +116,9 @@ instance Nat.cancelCommMonoidWithZero : CancelCommMonoidWithZero ℕ :=
 #align nat.cancel_comm_monoid_with_zero Nat.cancelCommMonoidWithZero
 -/
 
-attribute [simp]
-  Nat.not_lt_zero Nat.succ_ne_zero Nat.succ_ne_self Nat.zero_ne_one Nat.one_ne_zero Nat.zero_ne_bit1 Nat.bit1_ne_zero Nat.bit0_ne_one Nat.one_ne_bit0 Nat.bit0_ne_bit1 Nat.bit1_ne_bit0
+attribute [simp] Nat.not_lt_zero Nat.succ_ne_zero Nat.succ_ne_self Nat.zero_ne_one Nat.one_ne_zero
+  Nat.zero_ne_bit1 Nat.bit1_ne_zero Nat.bit0_ne_one Nat.one_ne_bit0 Nat.bit0_ne_bit1
+  Nat.bit1_ne_bit0
 
 variable {m n k : ℕ}
 
@@ -139,7 +140,7 @@ theorem and_forall_succ {p : ℕ → Prop} : (p 0 ∧ ∀ n, p (n + 1)) ↔ ∀ 
 @[simp]
 theorem or_exists_succ {p : ℕ → Prop} : (p 0 ∨ ∃ n, p (n + 1)) ↔ ∃ n, p n :=
   ⟨fun h => h.elim (fun h0 => ⟨0, h0⟩) fun ⟨n, hn⟩ => ⟨n + 1, hn⟩, by rintro ⟨_ | n, hn⟩;
-    exacts[Or.inl hn, Or.inr ⟨n, hn⟩]⟩
+    exacts [Or.inl hn, Or.inr ⟨n, hn⟩]⟩
 #align nat.or_exists_succ Nat.or_exists_succ
 -/
 
@@ -223,7 +224,7 @@ theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   by
   by_cases h1 : m ≤ n
   rw [max_eq_right h1, max_eq_right (succ_le_succ h1)]
-  · rw [not_le] at h1; have h2 := le_of_lt h1
+  · rw [not_le] at h1 ; have h2 := le_of_lt h1
     rw [max_eq_left h2, max_eq_left (succ_le_succ h2)]
 #align nat.max_succ_succ Nat.max_succ_succ
 
@@ -436,7 +437,7 @@ theorem mul_ne_mul_right {a b c : ℕ} (ha : 0 < a) : a * b ≠ a * c ↔ b ≠ 
 
 #print Nat.mul_right_eq_self_iff /-
 theorem mul_right_eq_self_iff {a b : ℕ} (ha : 0 < a) : a * b = a ↔ b = 1 :=
-  suffices a * b = a * 1 ↔ b = 1 by rwa [mul_one] at this
+  suffices a * b = a * 1 ↔ b = 1 by rwa [mul_one] at this 
   mul_right_inj' ha.ne'
 #align nat.mul_right_eq_self_iff Nat.mul_right_eq_self_iff
 -/
@@ -534,8 +535,8 @@ theorem leRecOn_succ_left {C : ℕ → Sort u} {n m} (h1 : n ≤ m) (h2 : n + 1 
 theorem leRecOn_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
     (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) :=
   by
-  induction' hnm with m hnm ih; · intro x y H; rwa [le_rec_on_self, le_rec_on_self] at H
-  intro x y H; rw [le_rec_on_succ hnm, le_rec_on_succ hnm] at H; exact ih (Hnext _ H)
+  induction' hnm with m hnm ih; · intro x y H; rwa [le_rec_on_self, le_rec_on_self] at H 
+  intro x y H; rw [le_rec_on_succ hnm, le_rec_on_succ hnm] at H ; exact ih (Hnext _ H)
 #align nat.le_rec_on_injective Nat.leRecOn_injective
 -/
 
@@ -914,7 +915,7 @@ theorem mod_mod (a n : ℕ) : a % n % n = a % n :=
 @[simp]
 theorem mod_add_mod (m n k : ℕ) : (m % n + k) % n = (m + k) % n := by
   have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;>
-    rwa [add_right_comm, mod_add_div] at this
+    rwa [add_right_comm, mod_add_div] at this 
 #align nat.mod_add_mod Nat.mod_add_mod
 -/
 
@@ -1086,7 +1087,7 @@ theorem find_comp_succ (h₁ : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h0 : ¬p 0
   by
   refine' (find_eq_iff _).2 ⟨Nat.find_spec h₂, fun n hn => _⟩
   cases' n with n
-  exacts[h0, @Nat.find_min (fun n => p (n + 1)) _ h₂ _ (succ_lt_succ_iff.1 hn)]
+  exacts [h0, @Nat.find_min (fun n => p (n + 1)) _ h₂ _ (succ_lt_succ_iff.1 hn)]
 #align nat.find_comp_succ Nat.find_comp_succ
 -/
 

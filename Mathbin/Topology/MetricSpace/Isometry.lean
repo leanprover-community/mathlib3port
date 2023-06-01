@@ -366,7 +366,7 @@ theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f 
 /-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 @[nolint has_nonempty_instance]
 structure IsometryEquiv (α β : Type _) [PseudoEMetricSpace α] [PseudoEMetricSpace β] extends
-  α ≃ β where
+    α ≃ β where
   isometry_toFun : Isometry to_fun
 #align isometry_equiv IsometryEquiv
 -/
@@ -437,7 +437,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : EMetric.diam (h '' s) = EM
 
 #print IsometryEquiv.toEquiv_injective /-
 theorem toEquiv_injective : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
-  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by dsimp at H; subst e₁
+  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by dsimp at H ; subst e₁
 #align isometry_equiv.to_equiv_inj IsometryEquiv.toEquiv_injective
 -/
 
@@ -677,7 +677,7 @@ protected theorem completeSpace [CompleteSpace β] (e : α ≃ᵢ β) : Complete
 
 #print IsometryEquiv.completeSpace_iff /-
 theorem completeSpace_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β := by
-  constructor <;> intro H; exacts[e.symm.complete_space, e.complete_space]
+  constructor <;> intro H; exacts [e.symm.complete_space, e.complete_space]
 #align isometry_equiv.complete_space_iff IsometryEquiv.completeSpace_iff
 -/
 

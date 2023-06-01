@@ -217,8 +217,8 @@ def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = 
   ⟨fun a' => if a' = a then b else if f a' = b then f a else f a',
     by
     intro x y h
-    dsimp at h
-    split_ifs  at h <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
+    dsimp at h 
+    split_ifs  at h  <;> try subst b <;> try simp only [f.injective.eq_iff] at * <;> cc⟩
 #align function.embedding.set_value Function.Embedding.setValue
 -/
 
@@ -367,7 +367,7 @@ variable {α α' : Type _} {β : α → Type _} {β' : α' → Type _}
 #print Function.Embedding.sigmaMk /-
 /-- `sigma.mk` as an `function.embedding`. -/
 @[simps apply]
-def sigmaMk (a : α) : β a ↪ Σx, β x :=
+def sigmaMk (a : α) : β a ↪ Σ x, β x :=
   ⟨Sigma.mk a, sigma_mk_injective⟩
 #align function.embedding.sigma_mk Function.Embedding.sigmaMk
 -/
@@ -376,7 +376,7 @@ def sigmaMk (a : α) : β a ↪ Σx, β x :=
 /-- If `f : α ↪ α'` is an embedding and `g : Π a, β α ↪ β' (f α)` is a family
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
-def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σa, β a) ↪ Σa', β' a' :=
+def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
   ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
 #align function.embedding.sigma_map Function.Embedding.sigmaMap
 -/

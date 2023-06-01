@@ -70,7 +70,8 @@ variable (R : Type _)
   often instead defined as functions from `ℕ+`. Multiplication on `arithmetic_functions` is by
   Dirichlet convolution. -/
 def ArithmeticFunction [Zero R] :=
-  ZeroHom ℕ R deriving Zero, Inhabited
+  ZeroHom ℕ R
+deriving Zero, Inhabited
 #align nat.arithmetic_function Nat.ArithmeticFunction
 -/
 
@@ -294,7 +295,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) :
   pick_goal 5
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H; exact ⟨(k, l * j), (l, j)⟩
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
-    simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
+    simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H ⊢
     rcases H with ⟨⟨rfl, n0⟩, rfl, i0⟩
     refine' ⟨⟨(mul_assoc _ _ _).symm, n0⟩, rfl, _⟩
     rw [mul_ne_zero_iff] at *
@@ -302,17 +303,17 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) :
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H; simp only [mul_assoc]
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩ H₁ H₂
     simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iff, add_comm,
-      heq_iff_eq] at H₁ H₂⊢
+      heq_iff_eq] at H₁ H₂ ⊢
     rintro rfl h2 rfl rfl
     exact ⟨⟨Eq.trans H₁.2.1.symm H₂.2.1, rfl⟩, rfl, rfl⟩
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H; refine' ⟨⟨(i * k, l), (i, k)⟩, _, _⟩
-    · simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H⊢
+    · simp only [Finset.mem_sigma, mem_divisors_antidiagonal] at H ⊢
       rcases H with ⟨⟨rfl, n0⟩, rfl, j0⟩
       refine' ⟨⟨mul_assoc _ _ _, n0⟩, rfl, _⟩
       rw [mul_ne_zero_iff] at *
       exact ⟨n0.1, j0.1⟩
     · simp only [true_and_iff, mem_divisors_antidiagonal, and_true_iff, Prod.mk.inj_iff,
-        eq_self_iff_true, Ne.def, mem_sigma, heq_iff_eq] at H⊢
+        eq_self_iff_true, Ne.def, mem_sigma, heq_iff_eq] at H ⊢
       rw [H.2.1]
 #align nat.arithmetic_function.mul_smul' Nat.ArithmeticFunction.mul_smul'
 
@@ -326,8 +327,8 @@ theorem one_smul' (b : ArithmeticFunction M) : (1 : ArithmeticFunction R) • b 
   intro y ymem ynmem
   have y1ne : y.fst ≠ 1 := by
     intro con
-    simp only [Con, mem_divisors_antidiagonal, one_mul, Ne.def] at ymem
-    simp only [mem_singleton, Prod.ext_iff] at ynmem
+    simp only [Con, mem_divisors_antidiagonal, one_mul, Ne.def] at ymem 
+    simp only [mem_singleton, Prod.ext_iff] at ynmem 
     tauto
   simp [y1ne]
 #align nat.arithmetic_function.one_smul' Nat.ArithmeticFunction.one_smul'
@@ -351,8 +352,8 @@ instance : Monoid (ArithmeticFunction R) :=
       intro y ymem ynmem
       have y2ne : y.snd ≠ 1 := by
         intro con
-        simp only [Con, mem_divisors_antidiagonal, mul_one, Ne.def] at ymem
-        simp only [mem_singleton, Prod.ext_iff] at ynmem
+        simp only [Con, mem_divisors_antidiagonal, mul_one, Ne.def] at ymem 
+        simp only [mem_singleton, Prod.ext_iff] at ynmem 
         tauto
       simp [y2ne]
     mul_assoc := mul_smul' }
@@ -556,7 +557,7 @@ theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.
   classical
     induction' s using Finset.induction_on with a s has ih hs
     · simp [hf]
-    rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
+    rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs 
     rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
     exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
 #align nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
@@ -582,58 +583,58 @@ theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicati
     symm
     apply sum_bij fun (x : (ℕ × ℕ) × ℕ × ℕ) h => (x.1.1 * x.2.1, x.1.2 * x.2.2)
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
-      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
+      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
       rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
       simp only [mem_divisors_antidiagonal, Nat.mul_eq_zero, Ne.def]
       constructor; · ring
       rw [Nat.mul_eq_zero] at *
       apply not_or_of_not ha hb
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
-      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
+      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
       rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
       dsimp only
       rw [hf.map_mul_of_coprime cop.coprime_mul_right.coprime_mul_right_right,
         hg.map_mul_of_coprime cop.coprime_mul_left.coprime_mul_left_right]
       ring
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ ⟨⟨c1, c2⟩, ⟨d1, d2⟩⟩ hab hcd h
-      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hab
+      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hab 
       rcases hab with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
-      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd
-      simp only [Prod.mk.inj_iff] at h
+      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd 
+      simp only [Prod.mk.inj_iff] at h 
       ext <;> dsimp only
       · trans Nat.gcd (a1 * a2) (a1 * b1)
         · rw [Nat.gcd_mul_left, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_one]
-        · rw [← hcd.1.1, ← hcd.2.1] at cop
+        · rw [← hcd.1.1, ← hcd.2.1] at cop 
           rw [← hcd.1.1, h.1, Nat.gcd_mul_left,
             cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_one]
       · trans Nat.gcd (a1 * a2) (a2 * b2)
         ·
           rw [mul_comm, Nat.gcd_mul_left, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
             mul_one]
-        · rw [← hcd.1.1, ← hcd.2.1] at cop
+        · rw [← hcd.1.1, ← hcd.2.1] at cop 
           rw [← hcd.1.1, h.2, mul_comm, Nat.gcd_mul_left,
             cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_one]
       · trans Nat.gcd (b1 * b2) (a1 * b1)
         ·
           rw [mul_comm, Nat.gcd_mul_right,
             cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mul]
-        · rw [← hcd.1.1, ← hcd.2.1] at cop
+        · rw [← hcd.1.1, ← hcd.2.1] at cop 
           rw [← hcd.2.1, h.1, mul_comm c1 d1, Nat.gcd_mul_left,
             cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, mul_one]
       · trans Nat.gcd (b1 * b2) (a2 * b2)
         ·
           rw [Nat.gcd_mul_right, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one,
             one_mul]
-        · rw [← hcd.1.1, ← hcd.2.1] at cop
+        · rw [← hcd.1.1, ← hcd.2.1] at cop 
           rw [← hcd.2.1, h.2, Nat.gcd_mul_right,
             cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mul]
     · rintro ⟨b1, b2⟩ h
-      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
+      simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
       use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
       simp only [exists_prop, Prod.mk.inj_iff, Ne.def, mem_product, mem_divisors_antidiagonal]
       rw [← cop.gcd_mul _, ← cop.gcd_mul _, ← h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop h.1,
         Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop.symm _]
-      · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h; simp [h.2.1, h.2.2]
+      · rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h ; simp [h.2.1, h.2.2]
       rw [mul_comm n m, h.1]⟩
 #align nat.arithmetic_function.is_multiplicative.mul Nat.ArithmeticFunction.IsMultiplicative.mul
 
@@ -862,7 +863,7 @@ theorem cardFactors_multiset_prod {s : Multiset ℕ} (h0 : s.Prod ≠ 0) :
   revert h0
   apply s.induction_on; · simp
   intro a t h h0
-  rw [Multiset.prod_cons, mul_ne_zero_iff] at h0
+  rw [Multiset.prod_cons, mul_ne_zero_iff] at h0 
   simp [h0, card_factors_mul, h]
 #align nat.arithmetic_function.card_factors_multiset_prod Nat.ArithmeticFunction.cardFactors_multiset_prod
 -/
@@ -977,7 +978,7 @@ theorem moebius_ne_zero_iff_squarefree {n : ℕ} : μ n ≠ 0 ↔ Squarefree n :
 theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n = -1 :=
   by
   constructor <;> intro h
-  · rw [moebius_ne_zero_iff_squarefree] at h
+  · rw [moebius_ne_zero_iff_squarefree] at h 
     rw [moebius_apply_of_squarefree h]
     apply neg_one_pow_eq_or
   · rcases h with (h | h) <;> simp [h]

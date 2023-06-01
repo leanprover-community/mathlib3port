@@ -113,21 +113,21 @@ theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i 
   · intro h j; cases j; exact h j
 #align Top.glue_data.is_open_iff TopCat.GlueData.isOpen_iff
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _) (y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget TopCat) x
 #align Top.glue_data.ι_jointly_surjective TopCat.GlueData.ι_jointly_surjective
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Top.glue_data.ι_eq_iff_rel`.
 -/
-def Rel (a b : Σi, ((D.U i : TopCat) : Type _)) : Prop :=
+def Rel (a b : Σ i, ((D.U i : TopCat) : Type _)) : Prop :=
   a = b ∨ ∃ x : D.V (a.1, b.1), D.f _ _ x = a.2 ∧ D.f _ _ (D.t _ _ x) = b.2
 #align Top.glue_data.rel TopCat.GlueData.Rel
 
 theorem rel_equiv : Equivalence D.Rel :=
   ⟨fun x => Or.inl (refl x), by
     rintro a b (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
-    exacts[Or.inl rfl, Or.inr ⟨D.t _ _ x, by simp [e₁, e₂]⟩],
+    exacts [Or.inl rfl, Or.inr ⟨D.t _ _ x, by simp [e₁, e₂]⟩],
     by
     rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩); exact id
     rintro (⟨⟨⟩⟩ | ⟨y, e₃, e₄⟩); exact Or.inr ⟨x, e₁, e₂⟩
@@ -155,8 +155,8 @@ open CategoryTheory.Limits.WalkingParallelPair
 theorem eqvGen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     EqvGen (Types.CoequalizerRel 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap) x y :=
   by
-  delta glue_data.π multicoequalizer.sigma_π at h
-  simp_rw [comp_app] at h
+  delta glue_data.π multicoequalizer.sigma_π at h 
+  simp_rw [comp_app] at h 
   replace h := (TopCat.mono_iff_injective (multicoequalizer.iso_coequalizer 𝖣.diagram).inv).mp _ h
   let diagram := parallel_pair 𝖣.diagram.fstSigmaMap 𝖣.diagram.sndSigmaMap ⋙ forget _
   have : colimit.ι diagram one x = colimit.ι diagram one y :=
@@ -172,7 +172,7 @@ theorem eqvGen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
         this :
       _)
   simp only [eq_to_hom_refl, types_comp_apply, colimit.ι_map_assoc,
-    diagram_iso_parallel_pair_hom_app, colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this
+    diagram_iso_parallel_pair_hom_app, colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this 
   exact Quot.eq.1 this
   infer_instance
 #align Top.glue_data.eqv_gen_of_π_eq TopCat.GlueData.eqvGen_of_π_eq
@@ -313,14 +313,14 @@ structure MkCore where
 theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x :=
   by
   have := h.cocycle j i j x _
-  rw [h.t_id] at this
+  rw [h.t_id] at this 
   convert Subtype.eq this
   · ext; rfl
   all_goals rw [h.V_id]; trivial
 #align Top.glue_data.mk_core.t_inv TopCat.GlueData.MkCore.t_inv
 
 instance (h : MkCore.{u}) (i j : h.J) : IsIso (h.t i j) := by use h.t j i; constructor <;> ext1;
-  exacts[h.t_inv _ _ _, h.t_inv _ _ _]
+  exacts [h.t_inv _ _ _, h.t_inv _ _ _]
 
 /-- (Implementation) the restricted transition map to be fed into `glue_data`. -/
 def MkCore.t' (h : MkCore.{u}) (i j k : h.J) :
@@ -407,8 +407,8 @@ theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue 
   intro x y e
   obtain ⟨i, ⟨x, hx⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
   obtain ⟨j, ⟨y, hy⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective y
-  rw [ι_from_open_subsets_glue_apply, ι_from_open_subsets_glue_apply] at e
-  change x = y at e
+  rw [ι_from_open_subsets_glue_apply, ι_from_open_subsets_glue_apply] at e 
+  change x = y at e 
   subst e
   rw [(of_open_subsets U).ι_eq_iff_rel]
   right
@@ -418,7 +418,7 @@ theorem fromOpenSubsetsGlue_injective : Function.Injective (fromOpenSubsetsGlue 
 theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) :=
   by
   intro s hs
-  rw [(of_open_subsets U).isOpen_iff] at hs
+  rw [(of_open_subsets U).isOpen_iff] at hs 
   rw [isOpen_iff_forall_mem_open]
   rintro _ ⟨x, hx, rfl⟩
   obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x

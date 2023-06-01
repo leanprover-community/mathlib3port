@@ -375,7 +375,7 @@ private theorem mem_wf_aux : ∀ {x y : PSet.{u}}, Equiv x y → Acc (· ∈ ·)
       rintro ⟨γ, C⟩ ⟨b, hc⟩
       cases' H.exists_right b with a ha
       have H := ha.trans hc.symm
-      rw [mk_func] at H
+      rw [mk_func] at H 
       exact mem_wf_aux H⟩
 
 #print PSet.mem_wf /-
@@ -575,7 +575,7 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 #print PSet.sUnion /-
 /-- The pre-set union operator -/
 def sUnion (a : PSet) : PSet :=
-  ⟨Σx, (a.Func x).type, fun ⟨x, y⟩ => (a.Func x).Func y⟩
+  ⟨Σ x, (a.Func x).type, fun ⟨x, y⟩ => (a.Func x).Func y⟩
 #align pSet.sUnion PSet.sUnion
 -/
 
@@ -588,8 +588,8 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
   | ⟨α, A⟩, y =>
     ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).Func c))⟩ =>
       have : Func (A a) c ∈ mk (A a).type (A a).Func := Mem.mk (A a).Func c
-      ⟨_, Mem.mk _ _, (Mem.congr_left e).2 (by rwa [eta] at this)⟩,
-      fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ => by rw [← eta (A a)] at e;
+      ⟨_, Mem.mk _ _, (Mem.congr_left e).2 (by rwa [eta] at this )⟩,
+      fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ => by rw [← eta (A a)] at e ;
       exact
         let ⟨βt, tβ⟩ := e
         let ⟨c, bc⟩ := βt b
@@ -1220,7 +1220,7 @@ instance : Sep ZFSet ZFSet :=
 theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@Quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
-      ⟨⟨a, by rw [mk_func] at h; rwa [mk_func, ← ZFSet.sound h]⟩, h⟩⟩
+      ⟨⟨a, by rw [mk_func] at h ; rwa [mk_func, ← ZFSet.sound h]⟩, h⟩⟩
 #align Set.mem_sep ZFSet.mem_sep
 -/
 
@@ -1263,11 +1263,11 @@ theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : 
     let ⟨b, hb⟩ := αβ a
     induction' ea : A a with γ Γ
     induction' eb : B b with δ Δ
-    rw [ea, eb] at hb
+    rw [ea, eb] at hb 
     cases' hb with γδ δγ
     exact
       let c : type (A a) := c
-      let ⟨d, hd⟩ := γδ (by rwa [ea] at c)
+      let ⟨d, hd⟩ := γδ (by rwa [ea] at c )
       have : PSet.Equiv ((A a).Func c) ((B b).Func (Eq.ndrec d (Eq.symm eb))) :=
         match A a, B b, ea, eb, c, d, hd with
         | _, _, rfl, rfl, x, y, hd => hd
@@ -1394,7 +1394,7 @@ theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂�
 theorem singleton_injective : Function.Injective (@singleton ZFSet ZFSet _) := fun x y H =>
   by
   let this := congr_arg sUnion H
-  rwa [sUnion_singleton, sUnion_singleton] at this
+  rwa [sUnion_singleton, sUnion_singleton] at this 
 #align Set.singleton_injective ZFSet.singleton_injective
 -/
 
@@ -1630,14 +1630,14 @@ theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
   simp only [mem_powerset, subset_def, mem_union, pair, mem_pair]
   rintro u (rfl | rfl) v <;> simp only [mem_singleton, mem_pair]
   · rintro rfl; exact Or.inl ax
-  · rintro (rfl | rfl) <;> [left;right] <;> assumption
+  · rintro (rfl | rfl) <;> [left; right] <;> assumption
 #align Set.mem_pair_sep ZFSet.mem_pairSep
 
 #print ZFSet.pair_injective /-
 theorem pair_injective : Function.Injective2 pair := fun x x' y y' H =>
   by
   have ae := ext_iff.1 H
-  simp only [pair, mem_pair] at ae
+  simp only [pair, mem_pair] at ae 
   obtain rfl : x = x' := by
     cases' (ae {x}).1 (by simp) with h h
     · exact singleton_injective h
@@ -1813,7 +1813,8 @@ We define `Class` as `set Set`, as this allows us to get many instances automati
 practice, we treat it as (the definitionally equal) `Set → Prop`. This means, the preferred way to
 state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
-  Set ZFSet deriving HasSubset,
+  Set ZFSet
+deriving HasSubset,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
   EmptyCollection, Inhabited,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
@@ -2021,7 +2022,7 @@ theorem ofSet.inj {x y : ZFSet.{u}} (h : (x : Class.{u}) = y) : x = y :=
 #print Class.toSet_of_ZFSet /-
 @[simp]
 theorem toSet_of_ZFSet (A : Class.{u}) (x : ZFSet.{u}) : ToSet A x ↔ A x :=
-  ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
+  ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py , fun px => ⟨x, rfl, px⟩⟩
 #align Class.to_Set_of_Set Class.toSet_of_ZFSet
 -/
 

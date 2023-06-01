@@ -415,14 +415,14 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
   rw [coe_int_dvd_iff]
   constructor
   · rintro ⟨hre, -⟩
-    rwa [coe_int_re] at hre
+    rwa [coe_int_re] at hre 
   · rw [coe_int_re, coe_int_im]
     exact fun hc => ⟨hc, dvd_zero a⟩
 #align zsqrtd.coe_int_dvd_coe_int Zsqrtd.coe_int_dvd_coe_int
 
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) :
     b = c := by
-  rw [ext] at h⊢
+  rw [ext] at h ⊢
   apply And.imp _ _ h <;> · simpa only [smul_re, smul_im] using mul_left_cancel₀ ha
 #align zsqrtd.eq_of_smul_eq_smul_left Zsqrtd.eq_of_smul_eq_smul_left
 
@@ -446,7 +446,7 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
   · rintro ⟨hre, him⟩
     obtain rfl : b = 0 := by
       simp only [ext, hre, eq_self_iff_true, zero_im, him, and_self_iff, zero_re]
-    rw [zero_dvd_iff] at hdvd
+    rw [zero_dvd_iff] at hdvd 
     simpa only [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] using hcoprime
   · intro z hz hznezero hzdvdu hzdvdv
     apply hz
@@ -463,7 +463,7 @@ theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcd a.re a.im) :
     ∃ b : ℤ√d, a = ((Int.gcd a.re a.im : ℤ) : ℤ√d) * b ∧ IsCoprime b.re b.im :=
   by
   obtain ⟨re, im, H1, Hre, Him⟩ := Int.exists_gcd_one hgcd
-  rw [mul_comm] at Hre Him
+  rw [mul_comm] at Hre Him 
   refine' ⟨⟨re, im⟩, _, _⟩
   · rw [smul_val, ext, ← Hre, ← Him]; constructor <;> rfl
   · rw [← Int.gcd_eq_one_iff_coprime, H1]
@@ -497,7 +497,7 @@ theorem sqLe_add_mixed {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w 
 theorem sqLe_add {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
     SqLe (x + z) c (y + w) d := by
   have xz := sq_le_add_mixed xy zw
-  simp [sq_le, mul_assoc] at xy zw
+  simp [sq_le, mul_assoc] at xy zw 
   simp [sq_le, mul_add, mul_comm, mul_left_comm, add_le_add, *]
 #align zsqrtd.sq_le_add Zsqrtd.sqLe_add
 -/
@@ -510,7 +510,7 @@ theorem sqLe_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c 
   refine' not_le_of_gt _ h
   simp [sq_le, mul_add, mul_comm, mul_left_comm, add_assoc]
   have hm := sq_le_add_mixed zw (le_of_lt l)
-  simp [sq_le, mul_assoc] at l zw
+  simp [sq_le, mul_assoc] at l zw 
   exact
     lt_of_le_of_lt (add_le_add_right zw _)
       (add_lt_add_left (add_lt_add_of_le_of_lt hm (add_lt_add_of_le_of_lt hm l)) _)
@@ -673,17 +673,17 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
           show x ∣ 1 from
             ⟨star x, by
               rwa [← Int.coe_nat_inj', Int.natAbs_of_nonneg hx, ← @Int.cast_inj (ℤ√d) _ _,
-                norm_eq_mul_conj, eq_comm] at h⟩)
+                norm_eq_mul_conj, eq_comm] at h ⟩)
         fun hx =>
         show x ∣ 1 from
           ⟨-star x, by
             rwa [← Int.coe_nat_inj', Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
-              Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
+              Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h ⟩,
     fun h => by
     let ⟨y, hy⟩ := isUnit_iff_dvd_one.1 h
     have := congr_arg (Int.natAbs ∘ norm) hy
     rw [Function.comp_apply, Function.comp_apply, norm_mul, Int.natAbs_mul, norm_one,
-      Int.natAbs_one, eq_comm, mul_eq_one] at this
+      Int.natAbs_one, eq_comm, mul_eq_one] at this 
     exact this.1⟩
 #align zsqrtd.norm_eq_one_iff Zsqrtd.norm_eq_one_iff
 
@@ -701,13 +701,13 @@ theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z
   constructor
   · intro h
     rw [ext, zero_re, zero_im]
-    rw [norm_def, sub_eq_add_neg, mul_assoc] at h
+    rw [norm_def, sub_eq_add_neg, mul_assoc] at h 
     have left := mul_self_nonneg z.re
     have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))
     obtain ⟨ha, hb⟩ := (add_eq_zero_iff' left right).mp h
     constructor <;> apply eq_zero_of_mul_self_eq_zero
     · exact ha
-    · rw [neg_eq_zero, mul_eq_zero] at hb
+    · rw [neg_eq_zero, mul_eq_zero] at hb 
       exact hb.resolve_left hd.ne
   · rintro rfl; exact norm_zero
 #align zsqrtd.norm_eq_zero_iff Zsqrtd.norm_eq_zero_iff
@@ -780,11 +780,11 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg �
           (fun m n xy zw => sqLe_cancel xy zw) fun m n xy zw =>
           let t := Nat.le_trans zw (sqLe_of_le (Nat.le_add_right n (m + 1)) le_rfl xy)
           have : k + j + 1 ≤ k :=
-            Nat.mul_self_le_mul_self_iff.2 (by repeat' rw [one_mul] at t <;> exact t)
+            Nat.mul_self_le_mul_self_iff.2 (by repeat' rw [one_mul] at t  <;> exact t)
           absurd this (not_le_of_gt <| Nat.succ_le_succ <| Nat.le_add_right _ _))
       (nonnegg_pos_neg.1 xy) (nonnegg_neg_pos.1 zw)
   show nonneg ⟨_, _⟩ by
-    rw [neg_add_eq_sub] <;> rwa [Int.subNatNat_eq_coe, Int.subNatNat_eq_coe] at this
+    rw [neg_add_eq_sub] <;> rwa [Int.subNatNat_eq_coe, Int.subNatNat_eq_coe] at this 
 #align zsqrtd.nonneg_add_lem Zsqrtd.nonneg_add_lem
 -/
 
@@ -841,7 +841,7 @@ protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
 protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a :=
   by
   have t := (b - a).nonneg_total
-  rwa [neg_sub] at t
+  rwa [neg_sub] at t 
 #align zsqrtd.le_total Zsqrtd.le_total
 
 instance : Preorder (ℤ√d) where
@@ -996,7 +996,7 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
     False.elim <|
       by
       let ⟨m, n, co, (hx : x = m * g), (hy : y = n * g)⟩ := Nat.exists_coprime gpos
-      rw [hx, hy] at h
+      rw [hx, hy] at h 
       have : m * m = d * (n * n) :=
         mul_left_cancel₀ (mul_pos gpos gpos).ne' (by simpa [mul_comm, mul_left_comm] using h)
       have co2 :=
@@ -1011,8 +1011,8 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
 
 #print Zsqrtd.divides_sq_eq_zero_z /-
 theorem divides_sq_eq_zero_z {x y : ℤ} (h : x * x = d * y * y) : x = 0 ∧ y = 0 := by
-  rw [mul_assoc, ← Int.natAbs_mul_self, ← Int.natAbs_mul_self, ← Int.ofNat_mul, ← mul_assoc] at
-      h <;>
+  rw [mul_assoc, ← Int.natAbs_mul_self, ← Int.natAbs_mul_self, ← Int.ofNat_mul, ← mul_assoc] at h
+       <;>
     exact
       let ⟨h1, h2⟩ := divides_sq_eq_zero (Int.ofNat.inj h)
       ⟨Int.eq_zero_of_natAbs_eq_zero h1, Int.eq_zero_of_natAbs_eq_zero h2⟩
@@ -1037,11 +1037,11 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
   | ⟨(x + 1 : Nat), -[y+1]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) =>
     by
     let t := le_antisymm yx xy
-    rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
+    rw [one_mul] at t  <;> exact absurd t (not_divides_sq _ _)
   | ⟨-[x+1], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) =>
     by
     let t := le_antisymm xy yx
-    rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
+    rw [one_mul] at t  <;> exact absurd t (not_divides_sq _ _)
 #align zsqrtd.nonneg_antisymm Zsqrtd.nonneg_antisymm
 -/
 
@@ -1119,15 +1119,15 @@ end
 theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ√d) : norm a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun ha => ext.mpr _, fun h => by rw [h, norm_zero]⟩
-  delta norm at ha
-  rw [sub_eq_zero] at ha
+  delta norm at ha 
+  rw [sub_eq_zero] at ha 
   by_cases h : 0 ≤ d
   · obtain ⟨d', rfl⟩ := Int.eq_ofNat_of_zero_le h
     haveI : nonsquare d' := ⟨fun n h => h_nonsquare n <| by exact_mod_cast h⟩
     exact divides_sq_eq_zero_z ha
-  · push_neg  at h
+  · push_neg  at h 
     suffices a.re * a.re = 0 by
-      rw [eq_zero_of_mul_self_eq_zero this] at ha⊢
+      rw [eq_zero_of_mul_self_eq_zero this] at ha ⊢
       simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,
         MulZeroClass.mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
     apply _root_.le_antisymm _ (mul_self_nonneg _)
@@ -1180,8 +1180,8 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
     suffices lift r a.norm = 0
       by
       simp only [coe_int_re, add_zero, lift_apply_apply, coe_int_im, Int.cast_zero,
-        MulZeroClass.zero_mul] at this
-      rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this
+        MulZeroClass.zero_mul] at this 
+      rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this 
     rw [norm_eq_mul_conj, RingHom.map_mul, ha, MulZeroClass.zero_mul]
 #align zsqrtd.lift_injective Zsqrtd.lift_injective
 

@@ -115,7 +115,7 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C
       comm := by
         simp only [nat_trans.naturality, assoc]
         have h := congr_app P.idem j
-        rw [nat_trans.comp_app] at h
+        rw [nat_trans.comp_app] at h 
         slice_rhs 1 3 => erw [h, h] }
 #align category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
 
@@ -145,8 +145,8 @@ instance : Full (karoubiFunctorCategoryEmbedding J C)
           naturality' := fun j j' φ => by
             rw [← karoubi.comp_p_assoc]
             have h := hom_ext.mp (f.naturality φ)
-            simp only [comp_f] at h
-            dsimp [karoubi_functor_category_embedding] at h
+            simp only [comp_f] at h 
+            dsimp [karoubi_functor_category_embedding] at h 
             erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] }
       comm := by ext j; exact (f.app j).comm }
   witness' P Q f := by ext j; rfl

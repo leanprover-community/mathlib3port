@@ -51,13 +51,13 @@ theorem isUnit_iff : IsUnit a ↔ a = 1 :=
   refine' ⟨fun h => _, by rintro rfl; exact isUnit_one⟩
   rcases eq_or_ne a 0 with (rfl | ha)
   · exact (not_isUnit_zero h).elim
-  rw [isUnit_iff_forall_dvd] at h
+  rw [isUnit_iff_forall_dvd] at h 
   cases' h 1 with t ht
-  rw [eq_comm, mul_eq_one_iff'] at ht
+  rw [eq_comm, mul_eq_one_iff'] at ht 
   · exact ht.1
   all_goals rwa [one_le_iff_ne_zero]
   · rintro rfl
-    rw [MulZeroClass.mul_zero] at ht
+    rw [MulZeroClass.mul_zero] at ht 
     exact zero_ne_one ht
 #align cardinal.is_unit_iff Cardinal.isUnit_iff
 -/
@@ -90,11 +90,11 @@ theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a :=
   cases' eq_or_ne (b * c) 0 with hz hz
   · rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
   wlog h : c ≤ b
-  · cases le_total c b <;> [skip;rw [or_comm']] <;> apply_assumption; assumption'
+  · cases le_total c b <;> [skip; rw [or_comm']] <;> apply_assumption; assumption'
     all_goals rwa [mul_comm]
   left
   have habc := le_of_dvd hz hbc
-  rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
+  rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc 
 #align cardinal.prime_of_aleph_0_le Cardinal.prime_of_aleph0_le
 
 #print Cardinal.not_irreducible_of_aleph0_le /-
@@ -113,9 +113,9 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
   refine' ⟨_, fun ⟨h, ht⟩ => ⟨h, by exact_mod_cast ht⟩⟩
   rintro ⟨k, hk⟩
   have : ↑m < ℵ₀ := nat_lt_aleph_0 m
-  rw [hk, mul_lt_aleph_0_iff] at this
+  rw [hk, mul_lt_aleph_0_iff] at this 
   rcases this with (h | h | ⟨-, hk'⟩)
-  iterate 2 simp only [h, MulZeroClass.mul_zero, MulZeroClass.zero_mul, Nat.cast_eq_zero] at hk;
+  iterate 2 simp only [h, MulZeroClass.mul_zero, MulZeroClass.zero_mul, Nat.cast_eq_zero] at hk ;
     simp [hk]
   lift k to ℕ using hk'
   exact ⟨k, by exact_mod_cast hk⟩
@@ -139,7 +139,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
   rcases aleph_0_le_mul_iff.mp h' with ⟨hb, hc, hℵ₀⟩
   have hn : (n : Cardinal) ≠ 0 := by
     intro h
-    rw [h, zero_dvd_iff, mul_eq_zero] at hbc
+    rw [h, zero_dvd_iff, mul_eq_zero] at hbc 
     cases hbc <;> contradiction
   wlog hℵ₀b : ℵ₀ ≤ b
   · refine' (this h c b _ _ hc hb hℵ₀.symm hn (hℵ₀.resolve_left hℵ₀b)).symm <;> rwa [mul_comm]
@@ -166,7 +166,7 @@ theorem isPrimePow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n 
   rintro ⟨p, k, hp, hk, hpk⟩
   have key : _ ≤ p ^ k :=
     power_le_power_left hp.ne_zero (show (1 : Cardinal) ≤ k by exact_mod_cast hk)
-  rw [power_one, hpk] at key
+  rw [power_one, hpk] at key 
   lift p to ℕ using key.trans_lt (nat_lt_aleph_0 a)
   exact ⟨p, k, nat_is_prime_iff.mp hp, hk, by exact_mod_cast hpk⟩
 #align cardinal.is_prime_pow_iff Cardinal.isPrimePow_iff

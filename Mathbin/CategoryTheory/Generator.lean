@@ -325,11 +325,11 @@ end Empty
 
 #print CategoryTheory.isSeparating_iff_epi /-
 theorem isSeparating_iff_epi (𝒢 : Set C)
-    [∀ A : C, HasCoproduct fun f : ΣG : 𝒢, (G : C) ⟶ A => (f.1 : C)] :
+    [∀ A : C, HasCoproduct fun f : Σ G : 𝒢, (G : C) ⟶ A => (f.1 : C)] :
     IsSeparating 𝒢 ↔ ∀ A : C, Epi (Sigma.desc (@Sigma.snd 𝒢 fun G => (G : C) ⟶ A)) :=
   by
   refine' ⟨fun h A => ⟨fun Z u v huv => h _ _ fun G hG f => _⟩, fun h X Y f g hh => _⟩
-  · simpa using sigma.ι (fun f : ΣG : 𝒢, (G : C) ⟶ A => (f.1 : C)) ⟨⟨G, hG⟩, f⟩ ≫= huv
+  · simpa using sigma.ι (fun f : Σ G : 𝒢, (G : C) ⟶ A => (f.1 : C)) ⟨⟨G, hG⟩, f⟩ ≫= huv
   · haveI := h X
     refine'
       (cancel_epi (sigma.desc (@Sigma.snd 𝒢 fun G => (G : C) ⟶ X))).1 (colimit.hom_ext fun j => _)
@@ -339,11 +339,11 @@ theorem isSeparating_iff_epi (𝒢 : Set C)
 
 #print CategoryTheory.isCoseparating_iff_mono /-
 theorem isCoseparating_iff_mono (𝒢 : Set C)
-    [∀ A : C, HasProduct fun f : ΣG : 𝒢, A ⟶ (G : C) => (f.1 : C)] :
+    [∀ A : C, HasProduct fun f : Σ G : 𝒢, A ⟶ (G : C) => (f.1 : C)] :
     IsCoseparating 𝒢 ↔ ∀ A : C, Mono (Pi.lift (@Sigma.snd 𝒢 fun G => A ⟶ (G : C))) :=
   by
   refine' ⟨fun h A => ⟨fun Z u v huv => h _ _ fun G hG f => _⟩, fun h X Y f g hh => _⟩
-  · simpa using huv =≫ pi.π (fun f : ΣG : 𝒢, A ⟶ (G : C) => (f.1 : C)) ⟨⟨G, hG⟩, f⟩
+  · simpa using huv =≫ pi.π (fun f : Σ G : 𝒢, A ⟶ (G : C) => (f.1 : C)) ⟨⟨G, hG⟩, f⟩
   · haveI := h Y
     refine' (cancel_mono (pi.lift (@Sigma.snd 𝒢 fun G => Y ⟶ (G : C)))).1 (limit.hom_ext fun j => _)
     simpa using hh j.as.1.1 j.as.1.2 j.as.2
@@ -360,12 +360,12 @@ theorem hasInitial_of_isCoseparating [WellPowered C] [HasLimits C] {𝒢 : Set C
     (h𝒢 : IsCoseparating 𝒢) : HasInitial C :=
   by
   haveI := has_products_of_shape_of_small C 𝒢
-  haveI := fun A => hasProductsOfShape_of_small.{v₁} C (ΣG : 𝒢, A ⟶ (G : C))
+  haveI := fun A => hasProductsOfShape_of_small.{v₁} C (Σ G : 𝒢, A ⟶ (G : C))
   letI := completeLatticeOfCompleteSemilatticeInf (subobject (pi_obj (coe : 𝒢 → C)))
   suffices ∀ A : C, Unique (((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C) ⟶ A) by
     exact has_initial_of_unique ((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C)
   refine' fun A => ⟨⟨_⟩, fun f => _⟩
-  · let s := pi.lift fun f : ΣG : 𝒢, A ⟶ (G : C) => id (pi.π (coe : 𝒢 → C)) f.1
+  · let s := pi.lift fun f : Σ G : 𝒢, A ⟶ (G : C) => id (pi.π (coe : 𝒢 → C)) f.1
     let t := pi.lift (@Sigma.snd 𝒢 fun G => A ⟶ (G : C))
     haveI : mono t := (is_coseparating_iff_mono 𝒢).1 h𝒢 A
     exact subobject.of_le_mk _ (pullback.fst : pullback s t ⟶ _) bot_le ≫ pullback.snd
@@ -434,7 +434,7 @@ end Subobject
 theorem wellPowered_of_isDetecting [HasPullbacks C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsDetecting 𝒢) : WellPowered C :=
   ⟨fun X =>
-    @small_of_injective _ _ _ (fun P : Subobject X => { f : ΣG : 𝒢, G.1 ⟶ X | P.Factors f.2 })
+    @small_of_injective _ _ _ (fun P : Subobject X => { f : Σ G : 𝒢, G.1 ⟶ X | P.Factors f.2 })
       fun P Q h => Subobject.eq_of_isDetecting h𝒢 _ _ (by simpa [Set.ext_iff] using h)⟩
 #align category_theory.well_powered_of_is_detecting CategoryTheory.wellPowered_of_isDetecting
 -/
@@ -685,7 +685,7 @@ theorem isSeparator_coprod (G H : C) [HasBinaryCoproduct G H] :
   · refine' h.def _ _ fun g => coprod.hom_ext _ _
     · simpa using huv G (by simp) (coprod.inl ≫ g)
     · simpa using huv H (by simp) (coprod.inr ≫ g)
-  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ
+  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ 
     rcases hZ with (rfl | rfl)
     · simpa using coprod.inl ≫= huv (coprod.desc g 0)
     · simpa using coprod.inr ≫= huv (coprod.desc 0 g)
@@ -737,7 +737,7 @@ theorem isCoseparator_prod (G H : C) [HasBinaryProduct G H] :
   · refine' h.def _ _ fun g => prod.hom_ext _ _
     · simpa using huv G (by simp) (g ≫ limits.prod.fst)
     · simpa using huv H (by simp) (g ≫ limits.prod.snd)
-  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ
+  · simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hZ 
     rcases hZ with (rfl | rfl)
     · simpa using huv (prod.lift g 0) =≫ limits.prod.fst
     · simpa using huv (prod.lift 0 g) =≫ limits.prod.snd
@@ -787,7 +787,7 @@ theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
   refine'
     ⟨fun hG => ⟨fun X Y f hf => hG.def _ fun h => _⟩, fun h =>
       (is_detector_def _).2 fun X Y f hf => _⟩
-  · rw [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf
+  · rw [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf 
     exact hf h
   · suffices is_iso ((coyoneda.obj (op G)).map f) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (coyoneda.obj (op G)) _ h
@@ -799,7 +799,7 @@ theorem isCodetector_iff_reflectsIsomorphisms_yoneda_obj (G : C) :
   by
   refine' ⟨fun hG => ⟨fun X Y f hf => _⟩, fun h => (is_codetector_def _).2 fun X Y f hf => _⟩
   · refine' (is_iso_unop_iff _).1 (hG.def _ _)
-    rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf
+    rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique] at hf 
   · rw [← is_iso_op_iff]
     suffices is_iso ((yoneda.obj G).map f.op) by
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (yoneda.obj G) _ h

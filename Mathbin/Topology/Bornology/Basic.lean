@@ -73,7 +73,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     where
   cobounded :=
     { sets := { s : Set α | sᶜ ∈ B }
-      univ_sets := by rwa [← compl_univ] at empty_mem
+      univ_sets := by rwa [← compl_univ] at empty_mem 
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy)
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
   le_cofinite := by
@@ -94,7 +94,7 @@ def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B
     Bornology α :=
   Bornology.ofBounded B empty_mem subset_mem union_mem fun x =>
     by
-    rw [sUnion_eq_univ_iff] at sUnion_univ
+    rw [sUnion_eq_univ_iff] at sUnion_univ 
     rcases sUnion_univ x with ⟨s, hs, hxs⟩
     exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
 #align bornology.of_bounded' Bornology.ofBounded'
@@ -213,7 +213,7 @@ theorem comap_cobounded_le_iff [Bornology β] {f : α → β} :
     ⟨fun h s hs => _, fun h t ht =>
       ⟨(f '' tᶜ)ᶜ, h <| is_cobounded.compl ht, compl_subset_comm.1 <| subset_preimage_image _ _⟩⟩
   obtain ⟨t, ht, hts⟩ := h hs.compl
-  rw [subset_compl_comm, ← preimage_compl] at hts
+  rw [subset_compl_comm, ← preimage_compl] at hts 
   exact (is_cobounded.compl ht).Subset ((image_subset f hts).trans <| image_preimage_subset _ _)
 #align bornology.comap_cobounded_le_iff Bornology.comap_cobounded_le_iff
 

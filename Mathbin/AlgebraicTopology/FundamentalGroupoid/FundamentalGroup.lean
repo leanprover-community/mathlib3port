@@ -39,7 +39,8 @@ open CategoryTheory
 /-- The fundamental group is the automorphism group (vertex group) of the basepoint
 in the fundamental groupoid. -/
 def FundamentalGroup (X : Type u) [TopologicalSpace X] (x : X) :=
-  @Aut (FundamentalGroupoid X) _ x deriving Group, Inhabited
+  @Aut (FundamentalGroupoid X) _ x
+deriving Group, Inhabited
 #align fundamental_group FundamentalGroup
 -/
 

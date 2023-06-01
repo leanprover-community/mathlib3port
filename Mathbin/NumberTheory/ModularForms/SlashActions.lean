@@ -75,8 +75,8 @@ theorem SlashAction.smul_slash_of_tower {R β G α : Type _} (γ : Type _) [Grou
   rw [← smul_one_smul γ r a, SlashAction.smul_slash, smul_one_smul]
 #align slash_action.smul_slash_of_tower SlashAction.smul_slash_of_tower
 
-attribute [simp]
-  SlashAction.zero_slash SlashAction.slash_one SlashAction.smul_slash SlashAction.add_slash
+attribute [simp] SlashAction.zero_slash SlashAction.slash_one SlashAction.smul_slash
+  SlashAction.add_slash
 
 /-- Slash_action induced by a monoid homomorphism.-/
 def monoidHomSlashAction {β G H α γ : Type _} [Group G] [AddMonoid α] [SMul γ α] [Group H]

@@ -95,10 +95,10 @@ instance : Preadditive SemiNormedGroup.{u}
     where
   homGroup P Q := inferInstance
   add_comp := by
-    intros ; ext
+    intros; ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
   comp_add := by
-    intros ; ext
+    intros; ext
     simp only [NormedAddGroupHom.add_apply, CategoryTheory.comp_apply, map_add]
 
 instance : Functor.Additive completion where map_add' X Y := (completion.mapHom _ _).map_add

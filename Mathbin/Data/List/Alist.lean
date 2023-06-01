@@ -412,7 +412,7 @@ theorem insert_insert {a} {b b' : β a} (s : AList β) : (s.insert a b).insert a
 theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : AList β) (h : a ≠ a') :
     ((s.insert a b).insert a' b').entries ~ ((s.insert a' b').insert a b).entries := by
   simp only [insert_entries] <;> rw [kerase_cons_ne, kerase_cons_ne, kerase_comm] <;>
-    [apply perm.swap;exact h;exact h.symm]
+    [apply perm.swap; exact h; exact h.symm]
 #align alist.insert_insert_of_ne AList.insert_insert_of_ne
 -/
 
@@ -631,7 +631,7 @@ theorem union_comm_of_disjoint {s₁ s₂ : AList β} (h : Disjoint s₁ s₂) :
     (s₁ ∪ s₂).entries ~ (s₂ ∪ s₁).entries :=
   lookup_ext (AList.nodupKeys _) (AList.nodupKeys _)
     (by
-      intros ; simp
+      intros; simp
       constructor <;> intro h'
       cases h'
       · right; refine' ⟨_, h'⟩

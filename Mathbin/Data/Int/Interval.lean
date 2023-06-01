@@ -40,11 +40,11 @@ instance : LocallyFiniteOrder ℤ
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
-      rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h
+      rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use (x - a).toNat
-      rw [← lt_add_one_iff] at hb
+      rw [← lt_add_one_iff] at hb 
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ico a b x :=
@@ -64,7 +64,7 @@ instance : LocallyFiniteOrder ℤ
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
-      rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h
+      rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use (x - (a + 1)).toNat
@@ -76,7 +76,7 @@ instance : LocallyFiniteOrder ℤ
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
-      rw [sub_sub, lt_sub_iff_add_lt'] at h
+      rw [sub_sub, lt_sub_iff_add_lt'] at h 
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use (x - (a + 1)).toNat

@@ -37,7 +37,7 @@ open scoped Pointwise
 /-- An action of an additive monoid `M` on a topological space is called *minimal* if the `M`-orbit
 of every point `x : α` is dense. -/
 class AddAction.IsMinimal (M α : Type _) [AddMonoid M] [TopologicalSpace α] [AddAction M α] :
-  Prop where
+    Prop where
   dense_orbit : ∀ x : α, Dense (AddAction.orbit M x)
 #align add_action.is_minimal AddAction.IsMinimal
 -/
@@ -47,7 +47,7 @@ class AddAction.IsMinimal (M α : Type _) [AddMonoid M] [TopologicalSpace α] [A
 point `x : α` is dense. -/
 @[to_additive]
 class MulAction.IsMinimal (M α : Type _) [Monoid M] [TopologicalSpace α] [MulAction M α] :
-  Prop where
+    Prop where
   dense_orbit : ∀ x : α, Dense (MulAction.orbit M x)
 #align mul_action.is_minimal MulAction.IsMinimal
 #align add_action.is_minimal AddAction.IsMinimal
@@ -135,7 +135,7 @@ theorem isMinimal_iff_closed_smul_invariant [ContinuousConstSMul M α] :
   by
   constructor; · intro h s; exact eq_empty_or_univ_of_smul_invariant_closed M
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩
-  exacts[isClosed_closure, fun c => smul_closure_orbit_subset _ _,
+  exacts [isClosed_closure, fun c => smul_closure_orbit_subset _ _,
     (orbit_nonempty _).closure.ne_empty]
 #align is_minimal_iff_closed_smul_invariant isMinimal_iff_closed_smul_invariant
 #align is_minimal_iff_closed_vadd_invariant isMinimal_iff_closed_vadd_invariant

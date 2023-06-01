@@ -118,8 +118,8 @@ def hasSmul : SMul R (Pre R X) :=
 
 end Pre
 
-attribute [local instance]
-  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_smul
+attribute [local instance] pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add
+  pre.has_zero pre.has_one pre.has_smul
 
 #print FreeAlgebra.liftFun /-
 /-- Given a function from `X` to an `R`-algebra `A`, `lift_fun` provides a lift of `f` to a function
@@ -175,8 +175,8 @@ def FreeAlgebra :=
 
 namespace FreeAlgebra
 
-attribute [local instance]
-  pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one pre.has_smul
+attribute [local instance] pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add
+  pre.has_zero pre.has_one pre.has_smul
 
 instance : Semiring (FreeAlgebra R X)
     where
@@ -295,12 +295,12 @@ irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
       case of_scalar =>
         change algebraMap _ _ x = F (algebraMap _ _ x)
         rw [AlgHom.commutes F x]
-      case
-        add a b ha hb =>
+      case add a b ha
+        hb =>
         change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
         rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
-      case
-        mul a b ha hb =>
+      case mul a b ha
+        hb =>
         change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
         rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb] }
 #align free_algebra.lift FreeAlgebra.lift
@@ -350,7 +350,7 @@ theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebr
 theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
     (w : (f : FreeAlgebra R X → A) ∘ ι R = (g : FreeAlgebra R X → A) ∘ ι R) : f = g :=
   by
-  rw [← lift_symm_apply, ← lift_symm_apply] at w
+  rw [← lift_symm_apply, ← lift_symm_apply] at w 
   exact (lift R).symm.Injective w
 #align free_algebra.hom_ext FreeAlgebra.hom_ext
 
@@ -367,7 +367,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid :
       apply MonoidAlgebra.algHom_ext; intro x
       apply FreeMonoid.recOn x
       · simp; rfl
-      · intro x y ih; simp at ih; simp [ih])
+      · intro x y ih; simp at ih ; simp [ih])
     (by ext; simp)
 #align free_algebra.equiv_monoid_algebra_free_monoid FreeAlgebra.equivMonoidAlgebraFreeMonoid
 
@@ -426,8 +426,8 @@ theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap 
   let f1 : FreeAlgebra R X →ₐ[R] R := lift R 1
   have hf0 : f0 (ι R x) = 0 := lift_ι_apply _ _
   have hf1 : f1 (ι R x) = 1 := lift_ι_apply _ _
-  rw [h, f0.commutes, Algebra.id.map_eq_self] at hf0
-  rw [h, f1.commutes, Algebra.id.map_eq_self] at hf1
+  rw [h, f0.commutes, Algebra.id.map_eq_self] at hf0 
+  rw [h, f1.commutes, Algebra.id.map_eq_self] at hf1 
   exact zero_ne_one (hf0.symm.trans hf1)
 #align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebraMap
 
@@ -474,7 +474,7 @@ theorem induction {C : FreeAlgebra R X → Prop}
     simp [of, Subtype.coind]
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
-  simp [AlgHom.ext_iff] at of_id
+  simp [AlgHom.ext_iff] at of_id 
   exact of_id a
 #align free_algebra.induction FreeAlgebra.induction
 

@@ -77,7 +77,7 @@ theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K}
     IntFractPair.stream v (n + 1) = none :=
   by
   cases' ifp_n with _ fr
-  change fr = 0 at nth_fr_eq_zero
+  change fr = 0 at nth_fr_eq_zero 
   simp [int_fract_pair.stream, stream_nth_eq, nth_fr_eq_zero]
 #align generalized_continued_fraction.int_fract_pair.stream_eq_none_of_fr_eq_zero GeneralizedContinuedFraction.IntFractPair.stream_eq_none_of_fr_eq_zero
 
@@ -145,11 +145,11 @@ theorem stream_succ (h : Int.fract v ≠ 0) (n : ℕ) :
   · have H : (int_fract_pair.of v).fr = Int.fract v := rfl
     rw [stream_zero, stream_succ_of_some (stream_zero v) (ne_of_eq_of_ne H h), H]
   · cases' eq_or_ne (int_fract_pair.stream (Int.fract v)⁻¹ n) none with hnone hsome
-    · rw [hnone] at ih
+    · rw [hnone] at ih 
       rw [succ_nth_stream_eq_none_iff.mpr (Or.inl hnone),
         succ_nth_stream_eq_none_iff.mpr (Or.inl ih)]
     · obtain ⟨p, hp⟩ := option.ne_none_iff_exists'.mp hsome
-      rw [hp] at ih
+      rw [hp] at ih 
       cases' eq_or_ne p.fr 0 with hz hnz
       · rw [stream_eq_none_of_fr_eq_zero hp hz, stream_eq_none_of_fr_eq_zero ih hz]
       · rw [stream_succ_of_some hp hnz, stream_succ_of_some ih hnz]
@@ -251,8 +251,8 @@ theorem IntFractPair.exists_succ_get?_stream_of_gcf_of_get?_eq_some {gp_n : Pair
   obtain ⟨ifp, stream_succ_nth_eq, gp_n_eq⟩ :
     ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ pair.mk 1 (ifp.b : K) = gp_n :=
     by
-    unfold of int_fract_pair.seq1 at s_nth_eq
-    rwa [seq.map_tail, seq.nth_tail, seq.map_nth, Option.map_eq_some'] at s_nth_eq
+    unfold of int_fract_pair.seq1 at s_nth_eq 
+    rwa [seq.map_tail, seq.nth_tail, seq.map_nth, Option.map_eq_some'] at s_nth_eq 
   cases gp_n_eq
   injection gp_n_eq with _ ifp_b_eq_gp_n_b
   exists ifp
@@ -337,7 +337,7 @@ theorem of_s_succ (n : ℕ) : (of v).s.get? (n + 1) = (of (fract v)⁻¹).s.get?
   · obtain ⟨p, hp⟩ := option.ne_none_iff_exists'.mp h₁
     obtain ⟨p', hp'₁, _⟩ := exists_succ_nth_stream_of_gcf_of_nth_eq_some hp
     have Hp := nth_of_eq_some_of_succ_nth_int_fract_pair_stream hp'₁
-    rw [← stream_succ h] at hp'₁
+    rw [← stream_succ h] at hp'₁ 
     rw [Hp, nth_of_eq_some_of_succ_nth_int_fract_pair_stream hp'₁]
 #align generalized_continued_fraction.of_s_succ GeneralizedContinuedFraction.of_s_succ
 

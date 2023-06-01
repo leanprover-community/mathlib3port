@@ -107,8 +107,8 @@ local postfix:90 "/ₙ" => z
 theorem probability (n : ℕ) (x : I) : (∑ k : Fin (n + 1), bernstein n k x) = 1 :=
   by
   have := bernsteinPolynomial.sum ℝ n
-  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
-  simp [AlgHom.map_sum, Finset.sum_range] at this
+  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this 
+  simp [AlgHom.map_sum, Finset.sum_range] at this 
   exact this
 #align bernstein.probability bernstein.probability
 
@@ -122,8 +122,8 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   conv_lhs => simp only [Finset.sum_mul, z]
   conv_rhs => rw [div_mul_cancel _ h']
   have := bernsteinPolynomial.variance ℝ n
-  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
-  simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this
+  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this 
+  simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this 
   convert this using 1
   · congr 1; funext k
     rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
@@ -201,10 +201,10 @@ This particular formulation will be helpful later.
 theorem le_of_mem_s_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
     (m : k ∈ s f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 :=
   by
-  simp only [Finset.mem_compl, not_lt, Set.mem_toFinset, Set.mem_setOf_eq, S] at m
+  simp only [Finset.mem_compl, not_lt, Set.mem_toFinset, Set.mem_setOf_eq, S] at m 
   rw [zpow_neg, ← div_eq_inv_mul, zpow_two, ← pow_two, one_le_div (pow_pos δ_pos 2), sq_le_sq,
     abs_of_pos δ_pos]
-  rwa [dist_comm] at m
+  rwa [dist_comm] at m 
 #align bernstein_approximation.le_of_mem_S_compl bernsteinApproximation.le_of_mem_s_compl
 
 end bernsteinApproximation

@@ -174,12 +174,12 @@ theorem angle_eq_of_ne {p1 p2 : P} (h : p1 ≠ p2) : ∠ p1 p2 p1 = 0 :=
 /-- If the angle ∠ABC at a point is π, the angle ∠BAC is 0. -/
 theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p1 p3 = 0 :=
   by
-  unfold angle at h
-  rw [angle_eq_pi_iff] at h
+  unfold angle at h 
+  rw [angle_eq_pi_iff] at h 
   rcases h with ⟨hp1p2, ⟨r, ⟨hr, hpr⟩⟩⟩
   unfold angle
   rw [angle_eq_zero_iff]
-  rw [← neg_vsub_eq_vsub_rev, neg_ne_zero] at hp1p2
+  rw [← neg_vsub_eq_vsub_rev, neg_ne_zero] at hp1p2 
   use hp1p2, -r + 1, add_pos (neg_pos_of_neg hr) zero_lt_one
   rw [add_smul, ← neg_vsub_eq_vsub_rev p1 p2, smul_neg]
   simp [← hpr]
@@ -188,7 +188,7 @@ theorem angle_eq_zero_of_angle_eq_pi_left {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π)
 /-- If the angle ∠ABC at a point is π, the angle ∠BCA is 0. -/
 theorem angle_eq_zero_of_angle_eq_pi_right {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : ∠ p2 p3 p1 = 0 :=
   by
-  rw [angle_comm] at h
+  rw [angle_comm] at h 
   exact angle_eq_zero_of_angle_eq_pi_left h
 #align euclidean_geometry.angle_eq_zero_of_angle_eq_pi_right EuclideanGeometry.angle_eq_zero_of_angle_eq_pi_right
 
@@ -206,7 +206,7 @@ theorem angle_eq_angle_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 
 /-- If ∠BCD = π, then ∠ACB + ∠ACD = π. -/
 theorem angle_add_angle_eq_pi_of_angle_eq_pi (p1 : P) {p2 p3 p4 : P} (h : ∠ p2 p3 p4 = π) :
     ∠ p1 p3 p2 + ∠ p1 p3 p4 = π := by
-  unfold angle at h
+  unfold angle at h 
   rw [angle_comm p1 p3 p2, angle_comm p1 p3 p4]
   unfold angle
   exact angle_add_angle_eq_pi_of_angle_eq_pi _ h
@@ -224,8 +224,8 @@ theorem angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi {p1 p2 p3 p4 p5 : P} (hapc 
 theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p1 p2 ≠ 0 :=
   by
   by_contra heq
-  rw [dist_eq_zero] at heq
-  rw [HEq, angle_eq_left] at h
+  rw [dist_eq_zero] at heq 
+  rw [HEq, angle_eq_left] at h 
   exact Real.pi_ne_zero (by linarith)
 #align euclidean_geometry.left_dist_ne_zero_of_angle_eq_pi EuclideanGeometry.left_dist_ne_zero_of_angle_eq_pi
 
@@ -288,7 +288,7 @@ theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3
   have h1 : p3 -ᵥ p1 = p3 -ᵥ m - (p1 -ᵥ m) := (vsub_sub_vsub_cancel_right p3 p1 m).symm
   have h2 : p3 -ᵥ p2 = p3 -ᵥ m + (p1 -ᵥ m) := by
     rw [left_vsub_midpoint, ← midpoint_vsub_right, vsub_add_vsub_cancel]
-  rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h
+  rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h 
   exact (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (p3 -ᵥ m) (p1 -ᵥ m)).mp h.symm
 #align euclidean_geometry.angle_left_midpoint_eq_pi_div_two_of_dist_eq EuclideanGeometry.angle_left_midpoint_eq_pi_div_two_of_dist_eq
 
@@ -308,11 +308,11 @@ theorem Sbtw.angle₁₂₃_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p
   refine' ⟨vsub_ne_zero.2 hp₂p₁.symm, -(1 - r) / r, _⟩
   have hr0' : r ≠ 0 := by
     rintro rfl
-    rw [← hp₂] at hp₂p₁
+    rw [← hp₂] at hp₂p₁ 
     simpa using hp₂p₁
   have hr1' : r ≠ 1 := by
     rintro rfl
-    rw [← hp₂] at hp₂p₃
+    rw [← hp₂] at hp₂p₃ 
     simpa using hp₂p₃
   replace hr0 := hr0.lt_of_ne hr0'.symm
   replace hr1 := hr1.lt_of_ne hr1'
@@ -341,7 +341,7 @@ theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ 
           (div_le_one (sub_pos.2 (hr.trans zero_lt_one))).2 ((le_sub_self_iff 1).2 hr.le)⟩,
         _⟩,
       (vsub_ne_zero.1 hp₁p₂).symm, _⟩
-  · rw [← eq_vadd_iff_vsub_eq] at hp₃p₂
+  · rw [← eq_vadd_iff_vsub_eq] at hp₃p₂ 
     rw [AffineMap.lineMap_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
       neg_smul, smul_add, smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
     convert(one_smul ℝ (p₂ -ᵥ p₁)).symm
@@ -458,11 +458,11 @@ theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ :
   · rcases h with (rfl | rfl | h | h)
     · simpa using collinear_pair ℝ p₁ p₃
     · simpa using collinear_pair ℝ p₁ p₃
-    · rw [angle_eq_zero_iff_ne_and_wbtw] at h
+    · rw [angle_eq_zero_iff_ne_and_wbtw] at h 
       rcases h with (⟨-, h⟩ | ⟨-, h⟩)
       · rw [Set.insert_comm]; exact h.collinear
       · rw [Set.insert_comm, Set.pair_comm]; exact h.collinear
-    · rw [angle_eq_pi_iff_sbtw] at h
+    · rw [angle_eq_pi_iff_sbtw] at h 
       exact h.wbtw.collinear
 #align euclidean_geometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi EuclideanGeometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi
 

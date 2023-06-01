@@ -252,7 +252,7 @@ theorem classifier_isSheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) :
       rw [MSNS]
       apply J₁.arrow_intersect f N S hf (J₁.pullback_stable _ hS)
   · intro x hx
-    rw [presieve.compatible_iff_sieve_compatible] at hx
+    rw [presieve.compatible_iff_sieve_compatible] at hx 
     let M := sieve.bind S fun Y f hf => (x f hf).1
     have : ∀ ⦃Y⦄ (f : Y ⟶ X) (hf : S f), M.pullback f = (x f hf).1 :=
       by
@@ -287,7 +287,7 @@ theorem le_topology_of_closedSieves_isSheaf {J₁ J₂ : GrothendieckTopology C}
     trivial
   suffices (⟨J₂.close S, J₂.close_is_closed S⟩ : Subtype _) = ⟨⊤, this⟩
     by
-    rw [Subtype.ext_iff] at this
+    rw [Subtype.ext_iff] at this 
     exact this
   apply (h S hS).IsSeparatedFor.ext
   · intro Y f hf
@@ -331,10 +331,10 @@ def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
   sieves X := { S | c X S = ⊤ }
   top_mem' X := top_unique ((c X).le_closure _)
   pullback_stable' X Y S f hS := by
-    rw [Set.mem_setOf_eq] at hS
+    rw [Set.mem_setOf_eq] at hS 
     rw [Set.mem_setOf_eq, hc, hS, sieve.pullback_top]
   transitive' X S hS R hR := by
-    rw [Set.mem_setOf_eq] at hS
+    rw [Set.mem_setOf_eq] at hS 
     rw [Set.mem_setOf_eq, ← (c X).idempotent, eq_top_iff, ← hS]
     apply (c X).Monotone fun Y f hf => _
     rw [sieve.pullback_eq_top_iff_mem, ← hc]

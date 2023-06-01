@@ -53,7 +53,7 @@ by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
 class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P,
-  VSub G P where
+    VSub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
@@ -223,7 +223,7 @@ theorem vadd_vsub_vadd_cancel_right (v₁ v₂ : G) (p : P) : v₁ +ᵥ p -ᵥ (
 /-- If the same point subtracted from two points produces equal
 results, those points are equal. -/
 theorem vsub_left_cancel {p1 p2 p : P} (h : p1 -ᵥ p = p2 -ᵥ p) : p1 = p2 := by
-  rwa [← sub_eq_zero, vsub_sub_vsub_cancel_right, vsub_eq_zero_iff_eq] at h
+  rwa [← sub_eq_zero, vsub_sub_vsub_cancel_right, vsub_eq_zero_iff_eq] at h 
 #align vsub_left_cancel vsub_left_cancel
 
 /-- The same point subtracted from two points produces equal results
@@ -512,7 +512,7 @@ theorem injective_pointReflection_left_of_injective_bit0 {G P : Type _} [AddComm
   fun x₁ x₂ (hy : pointReflection x₁ y = pointReflection x₂ y) => by
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
     vsub_sub_vsub_cancel_right, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero,
-    h.eq_iff, vsub_eq_zero_iff_eq] at hy
+    h.eq_iff, vsub_eq_zero_iff_eq] at hy 
 #align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_pointReflection_left_of_injective_bit0
 
 end Equiv

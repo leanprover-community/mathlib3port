@@ -63,7 +63,7 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
     {s : Multiset α} : (∀ r ∈ s, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
   Multiset.induction_on s (by simp [mt isUnit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps =>
     by
-    rw [Multiset.prod_cons] at hps
+    rw [Multiset.prod_cons] at hps 
     cases' hp.dvd_or_dvd hps with h h
     · have hap := hs a (Multiset.mem_cons.2 (Or.inl rfl))
       exact ⟨a, Multiset.mem_cons_self a _, hp.associated_of_dvd hap h⟩
@@ -92,7 +92,7 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
       have assoc := b_prime.associated_of_dvd a_prime b_div_a
       have := uniq a
       rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iff, ← not_lt,
-        Multiset.countp_pos] at this
+        Multiset.countp_pos] at this 
       exact this ⟨b, b_in_s, assoc.symm⟩
 #align multiset.prod_primes_dvd Multiset.prod_primes_dvd
 -/
@@ -141,7 +141,7 @@ theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤
   by
   haveI := Classical.decEq (Associates α)
   haveI := Classical.decEq α
-  suffices p.prod ≤ (p + (q - p)).Prod by rwa [add_tsub_cancel_of_le h] at this
+  suffices p.prod ≤ (p + (q - p)).Prod by rwa [add_tsub_cancel_of_le h] at this 
   suffices p.prod * 1 ≤ p.prod * (q - p).Prod by simpa
   exact mul_mono (le_refl p.prod) one_le
 #align associates.prod_le_prod Associates.prod_le_prod

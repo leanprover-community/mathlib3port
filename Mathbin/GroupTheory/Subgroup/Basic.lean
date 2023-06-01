@@ -121,7 +121,7 @@ export NegMemClass (neg_mem)
 #print SubgroupClass /-
 /-- `subgroup_class S G` states `S` is a type of subsets `s ⊆ G` that are subgroups of `G`. -/
 class SubgroupClass (S G : Type _) [DivInvMonoid G] [SetLike S G] extends SubmonoidClass S G,
-  InvMemClass S G : Prop
+    InvMemClass S G : Prop
 #align subgroup_class SubgroupClass
 -/
 
@@ -129,7 +129,7 @@ class SubgroupClass (S G : Type _) [DivInvMonoid G] [SetLike S G] extends Submon
 /-- `add_subgroup_class S G` states `S` is a type of subsets `s ⊆ G` that are
 additive subgroups of `G`. -/
 class AddSubgroupClass (S G : Type _) [SubNegMonoid G] [SetLike S G] extends AddSubmonoidClass S G,
-  NegMemClass S G : Prop
+    NegMemClass S G : Prop
 #align add_subgroup_class AddSubgroupClass
 -/
 
@@ -963,7 +963,7 @@ theorem bot_or_nontrivial (H : Subgroup G) : H = ⊥ ∨ Nontrivial H := by
     · left
       exact H.eq_bot_iff_forall.mpr h
     · right
-      simp only [not_forall] at h
+      simp only [not_forall] at h 
       simpa only [nontrivial_iff_exists_ne_one]
 #align subgroup.bot_or_nontrivial Subgroup.bot_or_nontrivial
 #align add_subgroup.bot_or_nontrivial AddSubgroup.bot_or_nontrivial
@@ -2137,7 +2137,7 @@ theorem CommGroup.center_eq_top {G : Type _} [CommGroup G] : center G = ⊤ := b
 
 /-- A group is commutative if the center is the whole group -/
 def Group.commGroupOfCenterEqTop (h : center G = ⊤) : CommGroup G :=
-  { (_ : Group G) with mul_comm := by rw [eq_top_iff'] at h; intro x y; exact h y x }
+  { (_ : Group G) with mul_comm := by rw [eq_top_iff'] at h ; intro x y; exact h y x }
 #align group.comm_group_of_center_eq_top Group.commGroupOfCenterEqTop
 
 variable {G} (H)
@@ -2212,7 +2212,7 @@ instance (priority := 100) normal_in_normalizer : (H.subgroupOf H.normalizer).No
 theorem normalizer_eq_top : H.normalizer = ⊤ ↔ H.Normal :=
   eq_top_iff.trans
     ⟨fun h => ⟨fun a ha b => (h (mem_top b) a).mp ha⟩, fun h a ha b =>
-      ⟨fun hb => h.conj_mem b hb a, fun hb => by rwa [h.mem_comm_iff, inv_mul_cancel_left] at hb⟩⟩
+      ⟨fun hb => h.conj_mem b hb a, fun hb => by rwa [h.mem_comm_iff, inv_mul_cancel_left] at hb ⟩⟩
 #align subgroup.normalizer_eq_top Subgroup.normalizer_eq_top
 #align add_subgroup.normalizer_eq_top AddSubgroup.normalizer_eq_top
 
@@ -2406,7 +2406,7 @@ theorem comap_injective_isCommutative {f : G' →* G} (hf : Injective f) [H.IsCo
         (by
           have := mul_comm (⟨f a, a.2⟩ : H) (⟨f b, b.2⟩ : H)
           rwa [Subtype.ext_iff, coe_mul, coe_mul, coe_mk, coe_mk, ← map_mul, ← map_mul,
-            hf.eq_iff] at this)⟩⟩
+            hf.eq_iff] at this )⟩⟩
 #align subgroup.comap_injective_is_commutative Subgroup.comap_injective_isCommutative
 #align add_subgroup.comap_injective_is_commutative AddSubgroup.comap_injective_isCommutative
 
@@ -2895,7 +2895,7 @@ theorem ker_id : (MonoidHom.id G).ker = ⊥ :=
 
 @[to_additive]
 theorem ker_eq_bot_iff (f : G →* M) : f.ker = ⊥ ↔ Function.Injective f :=
-  ⟨fun h x y hxy => by rwa [eq_iff, h, mem_bot, inv_mul_eq_one, eq_comm] at hxy, fun h =>
+  ⟨fun h x y hxy => by rwa [eq_iff, h, mem_bot, inv_mul_eq_one, eq_comm] at hxy , fun h =>
     bot_unique fun x hx => h (hx.trans f.map_one.symm)⟩
 #align monoid_hom.ker_eq_bot_iff MonoidHom.ker_eq_bot_iff
 #align add_monoid_hom.ker_eq_bot_iff AddMonoidHom.ker_eq_bot_iff
@@ -3072,7 +3072,7 @@ theorem map_comap_eq (H : Subgroup N) : map f (comap f H) = f.range ⊓ H :=
 theorem comap_map_eq (H : Subgroup G) : comap f (map f H) = H ⊔ f.ker :=
   by
   refine' le_antisymm _ (sup_le (le_comap_map _ _) (ker_le_comap _ _))
-  intro x hx; simp only [exists_prop, mem_map, mem_comap] at hx
+  intro x hx; simp only [exists_prop, mem_map, mem_comap] at hx 
   rcases hx with ⟨y, hy, hy'⟩
   rw [← mul_inv_cancel_left y x]
   exact mul_mem_sup hy (by simp [mem_ker, hy'])
@@ -3187,8 +3187,8 @@ theorem map_eq_comap_of_inverse {f : G →* N} {g : N →* G} (hl : Function.Lef
 theorem map_injective_of_ker_le {H K : Subgroup G} (hH : f.ker ≤ H) (hK : f.ker ≤ K)
     (hf : map f H = map f K) : H = K :=
   by
-  apply_fun comap f  at hf
-  rwa [comap_map_eq, comap_map_eq, sup_of_le_left hH, sup_of_le_left hK] at hf
+  apply_fun comap f  at hf 
+  rwa [comap_map_eq, comap_map_eq, sup_of_le_left hH, sup_of_le_left hK] at hf 
 #align subgroup.map_injective_of_ker_le Subgroup.map_injective_of_ker_le
 #align add_subgroup.map_injective_of_ker_le AddSubgroup.map_injective_of_ker_le
 
@@ -3231,7 +3231,7 @@ theorem sup_subgroupOf_eq {H K L : Subgroup G} (hH : H ≤ L) (hK : K ≤ L) :
 @[to_additive]
 theorem codisjoint_subgroupOf_sup (H K : Subgroup G) :
     Codisjoint (H.subgroupOf (H ⊔ K)) (K.subgroupOf (H ⊔ K)) := by
-  rw [codisjoint_iff, sup_subgroup_of_eq, subgroup_of_self]; exacts[le_sup_left, le_sup_right]
+  rw [codisjoint_iff, sup_subgroup_of_eq, subgroup_of_self]; exacts [le_sup_left, le_sup_right]
 #align subgroup.codisjoint_subgroup_of_sup Subgroup.codisjoint_subgroupOf_sup
 #align add_subgroup.codisjoint_add_subgroup_of_sup AddSubgroup.codisjoint_addSubgroupOf_sup
 
@@ -3534,7 +3534,7 @@ variable {C : Type _} [CommGroup C] {s t : Subgroup C} {x : C}
 @[to_additive]
 theorem mem_sup : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x :=
   ⟨fun h => by
-    rw [← closure_eq s, ← closure_eq t, ← closure_union] at h
+    rw [← closure_eq s, ← closure_eq t, ← closure_union] at h 
     apply closure_induction h
     · rintro y (h | h)
       · exact ⟨y, h, 1, t.one_mem, by simp⟩
@@ -3549,7 +3549,7 @@ theorem mem_sup : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x :=
 #align add_subgroup.mem_sup AddSubgroup.mem_sup
 
 @[to_additive]
-theorem mem_sup' : x ∈ s ⊔ t ↔ ∃ (y : s)(z : t), (y : C) * z = x :=
+theorem mem_sup' : x ∈ s ⊔ t ↔ ∃ (y : s) (z : t), (y : C) * z = x :=
   mem_sup.trans <| by simp only [SetLike.exists, coe_mk]
 #align subgroup.mem_sup' Subgroup.mem_sup'
 #align add_subgroup.mem_sup' AddSubgroup.mem_sup'
@@ -3566,7 +3566,7 @@ theorem mem_closure_pair {x y z : C} :
 @[to_additive]
 instance : IsModularLattice (Subgroup C) :=
   ⟨fun x y z xz a ha => by
-    rw [mem_inf, mem_sup] at ha
+    rw [mem_inf, mem_sup] at ha 
     rcases ha with ⟨⟨b, hb, c, hc, rfl⟩, haz⟩
     rw [mem_sup]
     exact ⟨b, hb, c, mem_inf.2 ⟨hc, (mul_mem_cancel_left (xz hb)).1 haz⟩, rfl⟩⟩
@@ -3649,7 +3649,7 @@ theorem SubgroupNormal.mem_comm {H K : Subgroup G} (hK : H ≤ K) [hN : (H.subgr
     {a b : G} (hb : b ∈ K) (h : a * b ∈ H) : b * a ∈ H :=
   by
   have := (normal_subgroup_of_iff hK).mp hN (a * b) b h hb
-  rwa [mul_assoc, mul_assoc, mul_right_inv, mul_one] at this
+  rwa [mul_assoc, mul_assoc, mul_right_inv, mul_one] at this 
 #align subgroup.subgroup_normal.mem_comm Subgroup.SubgroupNormal.mem_comm
 #align add_subgroup.subgroup_normal.mem_comm AddSubgroup.SubgroupNormal.mem_comm
 
@@ -3659,7 +3659,7 @@ theorem commute_of_normal_of_disjoint (H₁ H₂ : Subgroup G) (hH₁ : H₁.Nor
     (hdis : Disjoint H₁ H₂) (x y : G) (hx : x ∈ H₁) (hy : y ∈ H₂) : Commute x y :=
   by
   suffices x * y * x⁻¹ * y⁻¹ = 1 by show x * y = y * x;
-    · rw [mul_assoc, mul_eq_one_iff_eq_inv] at this; simpa
+    · rw [mul_assoc, mul_eq_one_iff_eq_inv] at this ; simpa
   apply hdis.le_bot; constructor
   · suffices x * (y * x⁻¹ * y⁻¹) ∈ H₁ by simpa [mul_assoc]
     exact H₁.mul_mem hx (hH₁.conj_mem _ (H₁.inv_mem hx) _)
@@ -3700,10 +3700,10 @@ theorem mul_injective_of_disjoint {H₁ H₂ : Subgroup G} (h : Disjoint H₁ H�
     Function.Injective (fun g => g.1 * g.2 : H₁ × H₂ → G) :=
   by
   intro x y hxy
-  rw [← inv_mul_eq_iff_eq_mul, ← mul_assoc, ← mul_inv_eq_one, mul_assoc] at hxy
+  rw [← inv_mul_eq_iff_eq_mul, ← mul_assoc, ← mul_inv_eq_one, mul_assoc] at hxy 
   replace hxy := disjoint_iff_mul_eq_one.mp h (y.1⁻¹ * x.1).Prop (x.2 * y.2⁻¹).Prop hxy
   rwa [coe_mul, coe_mul, coe_inv, coe_inv, inv_mul_eq_one, mul_inv_eq_one, ← Subtype.ext_iff, ←
-    Subtype.ext_iff, eq_comm, ← Prod.ext_iff] at hxy
+    Subtype.ext_iff, eq_comm, ← Prod.ext_iff] at hxy 
 #align subgroup.mul_injective_of_disjoint Subgroup.mul_injective_of_disjoint
 #align add_subgroup.add_injective_of_disjoint AddSubgroup.add_injective_of_disjoint
 
@@ -3727,12 +3727,12 @@ theorem normalClosure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg 
     rintro ⟨x, hx⟩
     refine' ⟨⟨c⁻¹ * x * c, _⟩, _⟩
     · have h := hn.conj_mem _ hx c⁻¹
-      rwa [inv_inv] at h
+      rwa [inv_inv] at h 
     simp only [MonoidHom.codRestrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
       MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_self, one_mul]
     rw [mul_assoc, mul_inv_self, mul_one]
   have ht' := map_mono (eq_top_iff.1 ht)
-  rw [← MonoidHom.range_eq_map, MonoidHom.range_top_of_surjective _ hs] at ht'
+  rw [← MonoidHom.range_eq_map, MonoidHom.range_top_of_surjective _ hs] at ht' 
   refine' eq_top_iff.2 (le_trans ht' (map_le_iff_le_comap.2 (normal_closure_le_normal _)))
   rw [Set.singleton_subset_iff, SetLike.mem_coe]
   simp only [MonoidHom.codRestrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,

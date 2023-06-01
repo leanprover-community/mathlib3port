@@ -177,7 +177,7 @@ theorem convexJoin_assoc_aux (s t u : Set E) :
   rintro _ ⟨z, ⟨x, hx, y, hy, a₁, b₁, ha₁, hb₁, hab₁, rfl⟩, z, hz, a₂, b₂, ha₂, hb₂, hab₂, rfl⟩
   obtain rfl | hb₂ := hb₂.eq_or_lt
   · refine' ⟨x, hx, y, ⟨y, hy, z, hz, left_mem_segment _ _ _⟩, a₁, b₁, ha₁, hb₁, hab₁, _⟩
-    rw [add_zero] at hab₂
+    rw [add_zero] at hab₂ 
     rw [hab₂, one_smul, zero_smul, add_zero]
   have ha₂b₁ : 0 ≤ a₂ * b₁ := mul_nonneg ha₂ hb₁
   have hab : 0 < a₂ * b₁ + b₂ := add_pos_of_nonneg_of_pos ha₂b₁ hb₂
@@ -233,7 +233,7 @@ theorem convexHull_insert (hs : s.Nonempty) :
               (convexHull_mono <| subset_insert _ _) <|
             convex_convexHull _ _).antisymm'
         fun x hx => _
-    rw [convexHull_eq] at hx
+    rw [convexHull_eq] at hx 
     obtain ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩ := hx
     have :
       ((∑ i in t.filter fun i => z i = x, w i) • x + ∑ i in t.filter fun i => z i ≠ x, w i • z i) =
@@ -247,10 +247,10 @@ theorem convexHull_insert (hs : s.Nonempty) :
     have hw₀' : ∀ i ∈ t.filter fun i => z i ≠ x, 0 ≤ w i := fun i hi =>
       hw₀ _ <| Finset.filter_subset _ _ hi
     obtain hw | hw := (Finset.sum_nonneg hw₀').eq_or_gt
-    · rw [← Finset.sum_filter_add_sum_filter_not _ fun i => z i = x, hw, add_zero] at hw₁
+    · rw [← Finset.sum_filter_add_sum_filter_not _ fun i => z i = x, hw, add_zero] at hw₁ 
       rw [hw₁, one_smul, Finset.sum_eq_zero, add_zero]
       · exact subset_convexJoin_left hs.convex_hull (mem_singleton _)
-      simp_rw [Finset.sum_eq_zero_iff_of_nonneg hw₀'] at hw
+      simp_rw [Finset.sum_eq_zero_iff_of_nonneg hw₀'] at hw 
       rintro i hi
       rw [hw _ hi, zero_smul]
     refine'
@@ -260,7 +260,7 @@ theorem convexHull_insert (hs : s.Nonempty) :
           ∑ i in t.filter fun i => z i = x, w i, ∑ i in t.filter fun i => z i ≠ x, w i,
           Finset.sum_nonneg fun i hi => hw₀ _ <| Finset.filter_subset _ _ hi,
           Finset.sum_nonneg hw₀', _, _⟩
-    · rw [Finset.mem_filter] at hi
+    · rw [Finset.mem_filter] at hi 
       exact mem_of_mem_insert_of_ne (hz _ hi.1) hi.2
     · rw [Finset.sum_filter_add_sum_filter_not, hw₁]
     · rw [Finset.centerMass, smul_inv_smul₀ hw.ne', Finset.sum_smul]
@@ -292,7 +292,7 @@ theorem convexJoin_singleton_segment (a b c : E) :
 protected theorem Convex.convexJoin (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
     Convex 𝕜 (convexJoin 𝕜 s t) :=
   by
-  rw [convex_iff_segment_subset] at ht hs⊢
+  rw [convex_iff_segment_subset] at ht hs ⊢
   simp_rw [mem_convexJoin]
   rintro x ⟨xa, hxa, xb, hxb, hx⟩ y ⟨ya, hya, yb, hyb, hy⟩
   refine' (segment_subset_convexJoin hx hy).trans _

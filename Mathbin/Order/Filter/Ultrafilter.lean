@@ -363,7 +363,7 @@ instance [Nonempty α] : Nonempty (Ultrafilter α) :=
 
 theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, f = pure x :=
   by
-  rw [← bUnion_of_singleton s] at h'
+  rw [← bUnion_of_singleton s] at h' 
   rcases(Ultrafilter.finite_biUnion_mem_iff h).mp h' with ⟨a, has, haf⟩
   exact ⟨a, has, eq_of_le (Filter.le_pure_iff.2 haf)⟩
 #align ultrafilter.eq_pure_of_finite_mem Ultrafilter.eq_pure_of_finite_mem
@@ -493,7 +493,7 @@ theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f →
   by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f
-  haveI : ne_bot g := comap_ne_bot_iff_compl_range.2 (by simpa [compl_set_of] )
+  haveI : ne_bot g := comap_ne_bot_iff_compl_range.2 (by simpa [compl_set_of])
   simpa using H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))
 #align filter.mem_iff_ultrafilter Filter.mem_iff_ultrafilter
 

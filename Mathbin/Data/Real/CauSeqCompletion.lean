@@ -82,7 +82,7 @@ theorem ofRat_one : (ofRat 1 : Cauchy abv) = 1 :=
 
 @[simp]
 theorem mk_eq_zero {f : CauSeq _ abv} : mk f = 0 ↔ LimZero f := by
-  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq' <;> rwa [sub_zero] at this
+  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq' <;> rwa [sub_zero] at this 
 #align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zero
 
 instance : Add (Cauchy abv) :=
@@ -233,12 +233,12 @@ noncomputable instance : Inv (Cauchy abv) :=
         have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
         have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
         have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg)
-        rw [mk_eq.2 fg, ← Ig] at If
+        rw [mk_eq.2 fg, ← Ig] at If 
         rw [← mul_one (mk (inv f hf)), ← Ig', ← mul_assoc, If, mul_assoc, Ig', mul_one]⟩
 
 @[simp]
 theorem inv_zero : (0 : Cauchy abv)⁻¹ = 0 :=
-  congr_arg mk <| by rw [dif_pos] <;> [rfl;exact zero_lim_zero]
+  congr_arg mk <| by rw [dif_pos] <;> [rfl; exact zero_lim_zero]
 #align cau_seq.completion.inv_zero CauSeq.Completion.inv_zero
 
 @[simp]
@@ -257,18 +257,18 @@ theorem zero_ne_one : (0 : Cauchy abv) ≠ 1 := fun h => cau_seq_zero_ne_one <| 
 
 protected theorem inv_mul_cancel {x : Cauchy abv} : x ≠ 0 → x⁻¹ * x = 1 :=
   Quotient.inductionOn x fun f hf => by
-    simp at hf; simp [hf]
+    simp at hf ; simp [hf]
     exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 #align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancel
 
 protected theorem mul_inv_cancel {x : Cauchy abv} : x ≠ 0 → x * x⁻¹ = 1 :=
   Quotient.inductionOn x fun f hf => by
-    simp at hf; simp [hf]
+    simp at hf ; simp [hf]
     exact Quotient.sound (CauSeq.mul_inv_cancel hf)
 #align cau_seq.completion.mul_inv_cancel CauSeq.Completion.mul_inv_cancel
 
 theorem ofRat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy abv) :=
-  congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h];rfl]
+  congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h]; rfl]
 #align cau_seq.completion.of_rat_inv CauSeq.Completion.ofRat_inv
 
 /-- The Cauchy completion forms a division ring. -/
@@ -405,12 +405,12 @@ theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
 
 theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
   ⟨fun h => by
-    have hf := equiv_lim f <;> rw [h] at hf <;>
+    have hf := equiv_lim f <;> rw [h] at hf  <;>
       exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
     fun h =>
     by
     have h₁ : f = f - const abv 0 := ext fun n => by simp [sub_apply, const_apply]
-    rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
+    rw [h₁] at h  <;> exact lim_eq_of_equiv_const h⟩
 #align cau_seq.lim_eq_zero_iff CauSeq.lim_eq_zero_iff
 
 end
@@ -420,7 +420,7 @@ section
 variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv] [IsComplete β abv]
 
 theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f)⁻¹ :=
-  have hl : lim f ≠ 0 := by rwa [← lim_eq_zero_iff] at hf
+  have hl : lim f ≠ 0 := by rwa [← lim_eq_zero_iff] at hf 
   lim_eq_of_equiv_const <|
     show LimZero (inv f hf - const abv (lim f)⁻¹) from
       have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) :=

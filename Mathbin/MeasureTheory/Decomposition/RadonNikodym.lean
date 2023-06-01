@@ -61,9 +61,9 @@ theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition �
       exact measure_mono (Set.subset_univ _)
     rw [← measure_add_measure_compl hE₁, hE₂, zero_add]
     have : (singular_part μ ν + ν.with_density (rn_deriv μ ν)) (Eᶜ) = μ (Eᶜ) := by rw [← hadd]
-    rw [measure.coe_add, Pi.add_apply, h hE₃] at this
+    rw [measure.coe_add, Pi.add_apply, h hE₃] at this 
     exact (add_eq_zero_iff.1 this).1
-  rw [this, zero_add] at hadd
+  rw [this, zero_add] at hadd 
   exact hadd.symm
 #align measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.withDensity_rnDeriv_eq
 
@@ -99,7 +99,7 @@ theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [Sigm
     (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s :=
   by
   rw [absolutely_continuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
-    total_variation_absolutely_continuous_iff] at h
+    total_variation_absolutely_continuous_iff] at h 
   · ext1 i hi
     rw [with_densityᵥ_apply (integrable_rn_deriv _ _) hi, rn_deriv, integral_sub,
       with_density_rn_deriv_to_real_eq h.1 hi, with_density_rn_deriv_to_real_eq h.2 hi]

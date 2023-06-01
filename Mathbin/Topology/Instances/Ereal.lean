@@ -65,9 +65,9 @@ instance : SecondCountableTopology EReal :=
     apply le_generateFrom fun s h => _
     rcases h with ⟨a, hs | hs⟩ <;>
         [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : EReal) < b } by ext x;
-            simpa only [hs, exists_prop, mem_Union] using
-              lt_iff_exists_rat_btwn];rw [show
-            s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : EReal) < a }, { b | b < ((q : ℝ) : EReal) } by ext x;
+            simpa only [hs, exists_prop, mem_Union] using lt_iff_exists_rat_btwn];
+        rw [show s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : EReal) < a }, { b | b < ((q : ℝ) : EReal) } by
+            ext x;
             simpa only [hs, and_comm', exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
       · apply isOpen_iUnion; intro q
         apply isOpen_iUnion; intro hq
@@ -144,7 +144,7 @@ theorem tendsto_toReal {a : EReal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) :
 
 theorem continuousOn_toReal : ContinuousOn EReal.toReal ({⊥, ⊤}ᶜ : Set EReal) := fun a ha =>
   ContinuousAt.continuousWithinAt
-    (tendsto_toReal (by simp [not_or] at ha; exact ha.2) (by simp [not_or] at ha; exact ha.1))
+    (tendsto_toReal (by simp [not_or] at ha ; exact ha.2) (by simp [not_or] at ha ; exact ha.1))
 #align ereal.continuous_on_to_real EReal.continuousOn_toReal
 
 /-- The set of finite `ereal` numbers is homeomorphic to `ℝ`. -/

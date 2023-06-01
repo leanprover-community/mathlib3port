@@ -180,7 +180,7 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
   IsConnected.of_constant_of_preserves_morphisms fun α F a =>
     by
     have w := h { j | F j = F j₀ } rfl fun _ _ f => by simp [a f]
-    dsimp at w
+    dsimp at w 
     intro j j'
     rw [w j, w j']
 #align category_theory.is_connected.of_induct CategoryTheory.IsConnected.of_induct
@@ -337,7 +337,7 @@ theorem equiv_relation [IsConnected J] (r : J → J → Prop) (hr : Equivalence 
   have z : ∀ j : J, r (Classical.arbitrary J) j :=
     induct_on_objects (fun k => r (Classical.arbitrary J) k) (hr.1 (Classical.arbitrary J))
       fun _ _ f => ⟨fun t => hr.2.2 t (h f), fun t => hr.2.2 t (hr.2.1 (h f))⟩
-  intros ; apply hr.2.2 (hr.2.1 (z _)) (z _)
+  intros; apply hr.2.2 (hr.2.1 (z _)) (z _)
 #align category_theory.equiv_relation CategoryTheory.equiv_relation
 -/
 
@@ -414,7 +414,7 @@ theorem nat_trans_from_is_connected [IsPreconnected J] {X Y : C}
     (α : (Functor.const J).obj X ⟶ (Functor.const J).obj Y) :
     ∀ j j' : J, α.app j = (α.app j' : X ⟶ Y) :=
   @constant_of_preserves_morphisms _ _ _ (X ⟶ Y) (fun j => α.app j) fun _ _ f => by
-    have := α.naturality f; erw [id_comp, comp_id] at this; exact this.symm
+    have := α.naturality f; erw [id_comp, comp_id] at this ; exact this.symm
 #align category_theory.nat_trans_from_is_connected CategoryTheory.nat_trans_from_is_connected
 
 instance [IsConnected J] : Full (Functor.const J : C ⥤ J ⥤ C)

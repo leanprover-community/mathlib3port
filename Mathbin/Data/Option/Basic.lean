@@ -133,7 +133,7 @@ theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
 
 #print Option.getD_of_ne_none /-
 theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getD y) = x := by
-  cases x <;> [contradiction;rw [get_or_else_some]]
+  cases x <;> [contradiction; rw [get_or_else_some]]
 #align option.get_or_else_of_ne_none Option.getD_of_ne_none
 -/
 
@@ -189,7 +189,7 @@ theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) �
 
 #print Option.eq_none_iff_forall_not_mem /-
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
-  ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext <| by simpa⟩
+  ⟨fun e a h => by rw [e] at h  <;> cases h, fun h => ext <| by simpa⟩
 #align option.eq_none_iff_forall_not_mem Option.eq_none_iff_forall_not_mem
 -/
 
@@ -462,7 +462,7 @@ theorem pmap_some (f : ∀ a : α, p a → β) {x : α} (h : p x) :
 -/
 
 theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
-  rw [mem_def] at ha⊢; subst ha; rfl
+  rw [mem_def] at ha ⊢; subst ha; rfl
 #align option.mem_pmem Option.mem_pmem
 
 theorem pmap_map (g : γ → α) (x : Option γ) (H) :
@@ -514,7 +514,7 @@ theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
       use x
       simpa only [mem_def, exists_prop_of_true] using h
     · rintro ⟨z, H, hz⟩
-      simp only [mem_def] at H
+      simp only [mem_def] at H 
       simpa only [H] using hz
 #align option.pbind_eq_some Option.pbind_eq_some
 
@@ -524,16 +524,16 @@ theorem pmap_eq_none_iff {h} : pmap f x h = none ↔ x = none := by cases x <;> 
 
 @[simp]
 theorem pmap_eq_some_iff {hf} {y : β} :
-    pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y :=
+    pmap f x hf = some y ↔ ∃ (a : α) (H : x = some a), f a (hf a H) = y :=
   by
   cases x
   · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
   · constructor
     · intro h
-      simp only [pmap] at h
+      simp only [pmap] at h 
       exact ⟨x, rfl, h⟩
     · rintro ⟨a, H, rfl⟩
-      simp only [mem_def] at H
+      simp only [mem_def] at H 
       simp only [H, pmap]
 #align option.pmap_eq_some_iff Option.pmap_eq_some_iff
 
@@ -651,7 +651,7 @@ theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = som
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
-theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
+theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _) (_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_isSome.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ =>
     ⟨some x, some_ne_none x, hx⟩⟩
 #align option.bex_ne_none Option.bex_ne_none
@@ -693,7 +693,10 @@ theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} :
 theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p :=
   by
   cases u
-  by_cases p <;> simp [_root_.guard, h] <;> first |rfl|contradiction
+  by_cases p <;> simp [_root_.guard, h] <;>
+    first
+    | rfl
+    | contradiction
 #align option.guard_eq_some' Option.guard_eq_some'
 
 #print Option.liftOrGet_choice /-

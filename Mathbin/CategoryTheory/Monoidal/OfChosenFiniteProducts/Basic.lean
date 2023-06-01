@@ -172,10 +172,10 @@ def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bin
     rintro ⟨⟨⟩⟩ <;> simp
     · exact w ⟨walking_pair.left⟩
     · specialize w ⟨walking_pair.right⟩
-      simp at w
+      simp at w 
       rw [← w]; simp
     · specialize w ⟨walking_pair.right⟩
-      simp at w
+      simp at w 
       rw [← w]; simp
 #align category_theory.limits.is_limit.assoc CategoryTheory.Limits.IsLimit.assoc
 -/
@@ -391,7 +391,8 @@ This is an implementation detail for `symmetric_of_chosen_finite_products`.
 @[nolint unused_arguments has_nonempty_instance]
 def MonoidalOfChosenFiniteProductsSynonym (𝒯 : LimitCone (Functor.empty.{v} C))
     (ℬ : ∀ X Y : C, LimitCone (pair X Y)) :=
-  C deriving Category
+  C
+deriving Category
 #align category_theory.monoidal_of_chosen_finite_products.monoidal_of_chosen_finite_products_synonym CategoryTheory.MonoidalOfChosenFiniteProducts.MonoidalOfChosenFiniteProductsSynonym
 -/
 

@@ -90,7 +90,7 @@ variable [TopologicalSpace E] [AddCommGroup E] [TopologicalAddGroup E] [Module �
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is open,
 there is a continuous linear functional which separates them. -/
 theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht : Convex ℝ t)
-    (disj : Disjoint s t) : ∃ (f : E →L[ℝ] ℝ)(u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u ≤ f b :=
+    (disj : Disjoint s t) : ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u ≤ f b :=
   by
   obtain rfl | ⟨a₀, ha₀⟩ := s.eq_empty_or_nonempty
   · exact ⟨0, 0, by simp, fun b hb => le_rfl⟩
@@ -103,7 +103,7 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
   have : Convex ℝ C := (hs₁.sub ht).vadd _
   have : x₀ ∉ C := by
     intro hx₀
-    rw [← add_zero x₀] at hx₀
+    rw [← add_zero x₀] at hx₀ 
     exact disj.zero_not_mem_sub_set (vadd_mem_vadd_set_iff.1 hx₀)
   obtain ⟨f, hf₁, hf₂⟩ := separate_convex_open_set ‹0 ∈ C› ‹_› (hs₂.sub_right.vadd _) ‹x₀ ∉ C›
   have : f b₀ = f a₀ + 1 := by simp [← hf₁]
@@ -111,7 +111,7 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     by
     intro a ha b hb
     have := hf₂ (x₀ + (a - b)) (vadd_mem_vadd_set <| sub_mem_sub ha hb)
-    simp only [f.map_add, f.map_sub, hf₁] at this
+    simp only [f.map_add, f.map_sub, hf₁] at this 
     linarith
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
   · rw [← interior_Iic]
@@ -137,7 +137,7 @@ theorem geometric_hahn_banach_point_open (ht₁ : Convex ℝ t) (ht₂ : IsOpen 
 
 theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht₁ : Convex ℝ t)
     (ht₃ : IsOpen t) (disj : Disjoint s t) :
-    ∃ (f : E →L[ℝ] ℝ)(u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u < f b :=
+    ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u < f b :=
   by
   obtain rfl | ⟨a₀, ha₀⟩ := s.eq_empty_or_nonempty
   · exact ⟨0, -1, by simp, fun b hb => by norm_num⟩
@@ -161,7 +161,7 @@ variable [LocallyConvexSpace ℝ E]
 compact and `t` is closed, there is a continuous linear functional which strongly separates them. -/
 theorem geometric_hahn_banach_compact_closed (hs₁ : Convex ℝ s) (hs₂ : IsCompact s)
     (ht₁ : Convex ℝ t) (ht₂ : IsClosed t) (disj : Disjoint s t) :
-    ∃ (f : E →L[ℝ] ℝ)(u v : ℝ), (∀ a ∈ s, f a < u) ∧ u < v ∧ ∀ b ∈ t, v < f b :=
+    ∃ (f : E →L[ℝ] ℝ) (u v : ℝ), (∀ a ∈ s, f a < u) ∧ u < v ∧ ∀ b ∈ t, v < f b :=
   by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · exact ⟨0, -2, -1, by simp, by norm_num, fun b hb => by norm_num⟩
@@ -181,13 +181,13 @@ closed, and `t` is compact, there is a continuous linear functional which strong
 -/
 theorem geometric_hahn_banach_closed_compact (hs₁ : Convex ℝ s) (hs₂ : IsClosed s)
     (ht₁ : Convex ℝ t) (ht₂ : IsCompact t) (disj : Disjoint s t) :
-    ∃ (f : E →L[ℝ] ℝ)(u v : ℝ), (∀ a ∈ s, f a < u) ∧ u < v ∧ ∀ b ∈ t, v < f b :=
+    ∃ (f : E →L[ℝ] ℝ) (u v : ℝ), (∀ a ∈ s, f a < u) ∧ u < v ∧ ∀ b ∈ t, v < f b :=
   let ⟨f, s, t, hs, st, ht⟩ := geometric_hahn_banach_compact_closed ht₁ ht₂ hs₁ hs₂ disj.symm
   ⟨-f, -t, -s, by simpa using ht, by simpa using st, by simpa using hs⟩
 #align geometric_hahn_banach_closed_compact geometric_hahn_banach_closed_compact
 
 theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClosed t) (disj : x ∉ t) :
-    ∃ (f : E →L[ℝ] ℝ)(u : ℝ), f x < u ∧ ∀ b ∈ t, u < f b :=
+    ∃ (f : E →L[ℝ] ℝ) (u : ℝ), f x < u ∧ ∀ b ∈ t, u < f b :=
   let ⟨f, u, v, ha, hst, hb⟩ :=
     geometric_hahn_banach_compact_closed (convex_singleton x) isCompact_singleton ht₁ ht₂
       (disjoint_singleton_left.2 disj)
@@ -195,7 +195,7 @@ theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClo
 #align geometric_hahn_banach_point_closed geometric_hahn_banach_point_closed
 
 theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) (disj : x ∉ s) :
-    ∃ (f : E →L[ℝ] ℝ)(u : ℝ), (∀ a ∈ s, f a < u) ∧ u < f x :=
+    ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ u < f x :=
   let ⟨f, s, t, ha, hst, hb⟩ :=
     geometric_hahn_banach_closed_compact hs₁ hs₂ (convex_singleton x) isCompact_singleton
       (disjoint_singleton_right.2 disj)

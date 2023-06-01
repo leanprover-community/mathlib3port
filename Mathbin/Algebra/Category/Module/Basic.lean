@@ -364,8 +364,8 @@ variable {S : Type u} [CommRing S]
 instance : Linear S (ModuleCat.{v} S)
     where
   homModule X Y := LinearMap.module
-  smul_comp' := by intros ; ext; simp
-  comp_smul' := by intros ; ext; simp
+  smul_comp' := by intros; ext; simp
+  comp_smul' := by intros; ext; simp
 
 variable {X Y X' Y' : ModuleCat.{v} S}
 

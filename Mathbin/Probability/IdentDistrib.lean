@@ -69,8 +69,8 @@ namespace ProbabilityTheory
 their image measures coincide. This only makes sense when the functions are ae measurable
 (as otherwise the image measures are not defined), so we require this as well in the definition. -/
 structure IdentDistrib (f : α → γ) (g : β → γ)
-  (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume)
-  (ν : Measure β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
+    (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume)
+    (ν : Measure β := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   aEMeasurable_fst : AEMeasurable f μ
   aEMeasurable_snd : AEMeasurable g ν
   map_eq : Measure.map f μ = Measure.map g ν
@@ -104,7 +104,7 @@ protected theorem trans {ρ : Measure δ} {h : δ → γ} (h₁ : IdentDistrib f
 protected theorem comp_of_aEMeasurable {u : γ → δ} (h : IdentDistrib f g μ ν)
     (hu : AEMeasurable u (Measure.map f μ)) : IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
   { aEMeasurable_fst := hu.comp_aemeasurable h.aEMeasurable_fst
-    aEMeasurable_snd := by rw [h.map_eq] at hu; exact hu.comp_ae_measurable h.ae_measurable_snd
+    aEMeasurable_snd := by rw [h.map_eq] at hu ; exact hu.comp_ae_measurable h.ae_measurable_snd
     map_eq :=
       by
       rw [← AEMeasurable.map_map_of_aemeasurable hu h.ae_measurable_fst, ←
@@ -200,10 +200,10 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
       · exact is_closed_closure.measurable_set
     change (∫ x, id (f x) ∂μ) = ∫ x, id (g x) ∂ν
     rw [← integral_map h.ae_measurable_fst A]
-    rw [h.map_eq] at A
+    rw [h.map_eq] at A 
     rw [← integral_map h.ae_measurable_snd A, h.map_eq]
   · rw [integral_non_ae_strongly_measurable hf]
-    rw [h.ae_strongly_measurable_iff] at hf
+    rw [h.ae_strongly_measurable_iff] at hf 
     rw [integral_non_ae_strongly_measurable hf]
 #align probability_theory.ident_distrib.integral_eq ProbabilityTheory.IdentDistrib.integral_eq
 
@@ -240,7 +240,7 @@ theorem memℒp_iff [NormedAddCommGroup γ] [BorelSpace γ] {p : ℝ≥0∞} (h 
 theorem integrable_snd [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν)
     (hf : Integrable f μ) : Integrable g ν :=
   by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
+  rw [← mem_ℒp_one_iff_integrable] at hf ⊢
   exact h.mem_ℒp_snd hf
 #align probability_theory.ident_distrib.integrable_snd ProbabilityTheory.IdentDistrib.integrable_snd
 

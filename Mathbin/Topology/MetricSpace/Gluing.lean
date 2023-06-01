@@ -313,7 +313,10 @@ theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q =
       glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q :=
   by
-  cases p <;> cases q <;> first |rfl|simp [sum.dist, glue_dist, dist_comm, add_comm, add_left_comm]
+  cases p <;> cases q <;>
+    first
+    | rfl
+    | simp [sum.dist, glue_dist, dist_comm, add_comm, add_left_comm]
 #align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glueDist
 
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
@@ -374,10 +377,10 @@ def metricSpaceSum : MetricSpace (Sum X Y)
     cases p <;> cases q
     · simp only [sum.dist, dist_eq_zero, imp_self]
     · intro h
-      simp only [dist, sum.dist_eq_glue_dist p q] at h
+      simp only [dist, sum.dist_eq_glue_dist p q] at h 
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
     · intro h
-      simp only [dist, sum.dist_eq_glue_dist q p] at h
+      simp only [dist, sum.dist_eq_glue_dist q p] at h 
       exact glue_eq_of_dist_eq_zero _ _ _ zero_lt_one _ _ h
     · simp only [sum.dist, dist_eq_zero, imp_self]
   toUniformSpace := Sum.uniformSpace
@@ -426,7 +429,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-protected def dist : (Σi, E i) → (Σi, E i) → ℝ
+protected def dist : (Σ i, E i) → (Σ i, E i) → ℝ
   | ⟨i, x⟩, ⟨j, y⟩ =>
     if h : i = j then
       haveI : E j = E i := by rw [h]
@@ -441,7 +444,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-def instDist : Dist (Σi, E i) :=
+def instDist : Dist (Σ i, E i) :=
   ⟨Sigma.dist⟩
 #align metric.sigma.has_dist Metric.Sigma.instDist
 -/
@@ -450,32 +453,32 @@ attribute [local instance] sigma.has_dist
 
 #print Metric.Sigma.dist_same /-
 @[simp]
-theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σj, E j) ⟨i, y⟩ = dist x y := by
+theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σ j, E j) ⟨i, y⟩ = dist x y := by
   simp [Dist.dist, sigma.dist]
 #align metric.sigma.dist_same Metric.Sigma.dist_same
 -/
 
 @[simp]
 theorem dist_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
-    dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
+    dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
   by simp [Dist.dist, sigma.dist, h]
 #align metric.sigma.dist_ne Metric.Sigma.dist_ne
 
 theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
-    1 ≤ dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ :=
+    1 ≤ dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ :=
   by
   rw [sigma.dist_ne h x y]
   linarith [@dist_nonneg _ _ x (Nonempty.some ⟨x⟩), @dist_nonneg _ _ (Nonempty.some ⟨y⟩) y]
 #align metric.sigma.one_le_dist_of_ne Metric.Sigma.one_le_dist_of_ne
 
-theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
+theorem fst_eq_of_dist_lt_one (x y : Σ i, E i) (h : dist x y < 1) : x.1 = y.1 :=
   by
   cases x; cases y
   contrapose! h
   apply one_le_dist_of_ne h
 #align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_one
 
-protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z :=
+protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + dist y z :=
   by
   rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
   rcases eq_or_ne i k with (rfl | hik)
@@ -512,17 +515,17 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
-protected theorem isOpen_iff (s : Set (Σi, E i)) :
+protected theorem isOpen_iff (s : Set (Σ i, E i)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s :=
   by
   constructor
   · rintro hs ⟨i, x⟩ hx
-    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ball x ε ⊆ Sigma.mk i ⁻¹' s :=
+    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ) (H : ε > 0), ball x ε ⊆ Sigma.mk i ⁻¹' s :=
       Metric.isOpen_iff.1 (isOpen_sigma_iff.1 hs i) x hx
     refine' ⟨min ε 1, lt_min εpos zero_lt_one, _⟩
     rintro ⟨j, y⟩ hy
     rcases eq_or_ne i j with (rfl | hij)
-    · simp only [sigma.dist_same, lt_min_iff] at hy
+    · simp only [sigma.dist_same, lt_min_iff] at hy 
       exact hε (mem_ball'.2 hy.1)
     · apply (lt_irrefl (1 : ℝ) _).elim
       calc
@@ -532,7 +535,7 @@ protected theorem isOpen_iff (s : Set (Σi, E i)) :
   · intro H
     apply isOpen_sigma_iff.2 fun i => _
     apply Metric.isOpen_iff.2 fun x hx => _
-    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s :=
+    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ) (H : ε > 0), ∀ y, dist (⟨i, x⟩ : Σ j, E j) y < ε → y ∈ s :=
       H ⟨i, x⟩ hx
     refine' ⟨ε, εpos, fun y hy => _⟩
     apply hε ⟨i, y⟩
@@ -546,7 +549,7 @@ We embed isometrically each factor, set the basepoints at distance 1, arbitraril
 and say that the distance from `a` to `b` is the sum of the distances of `a` and `b` to
 their respective basepoints, plus the distance 1 between the basepoints.
 Since there is an arbitrary choice in this construction, it is not an instance by default. -/
-protected def metricSpace : MetricSpace (Σi, E i) :=
+protected def metricSpace : MetricSpace (Σ i, E i) :=
   by
   refine' MetricSpace.ofDistTopology sigma.dist _ _ sigma.dist_triangle sigma.is_open_iff _
   · rintro ⟨i, x⟩; simp [sigma.dist]
@@ -560,7 +563,7 @@ protected def metricSpace : MetricSpace (Σi, E i) :=
     · intro h
       apply (lt_irrefl (1 : ℝ) _).elim
       calc
-        1 ≤ sigma.dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
+        1 ≤ sigma.dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
         _ < 1 := by rw [h]; exact zero_lt_one
         
 #align metric.sigma.metric_space Metric.Sigma.metricSpace
@@ -574,17 +577,17 @@ open Filter
 
 #print Metric.Sigma.isometry_mk /-
 /-- The injection of a space in a disjoint union is an isometry -/
-theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
+theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σ k, E k) :=
   Isometry.of_dist_eq fun x y => by simp
 #align metric.sigma.isometry_mk Metric.Sigma.isometry_mk
 -/
 
 #print Metric.Sigma.completeSpace /-
 /-- A disjoint union of complete metric spaces is complete. -/
-protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) :=
+protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ i, E i) :=
   by
-  set s : ι → Set (Σi, E i) := fun i => Sigma.fst ⁻¹' {i}
-  set U := { p : (Σk, E k) × Σk, E k | dist p.1 p.2 < 1 }
+  set s : ι → Set (Σ i, E i) := fun i => Sigma.fst ⁻¹' {i}
+  set U := { p : (Σ k, E k) × Σ k, E k | dist p.1 p.2 < 1 }
   have hc : ∀ i, IsComplete (s i) := by
     intro i
     simp only [s, ← range_sigma_mk]
@@ -627,7 +630,8 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a
 space  `glue_space hΦ hΨ` by identifying in `X ⊕ Y` the points `Φ x` and `Ψ x`. -/
 def GlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Type _ :=
-  @UniformSpace.SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace deriving MetricSpace
+  @UniformSpace.SeparationQuotient _ (gluePremetric hΦ hΨ).toUniformSpace
+deriving MetricSpace
 #align metric.glue_space Metric.GlueSpace
 -/
 
@@ -699,7 +703,7 @@ variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (
 
 #print Metric.inductiveLimitDist /-
 /-- Predistance on the disjoint union `Σ n, X n`. -/
-def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σn, X n) : ℝ :=
+def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σ n, X n) : ℝ :=
   dist (leRecOn (le_max_left x.1 y.1) f x.2 : X (max x.1 y.1))
     (leRecOn (le_max_right x.1 y.1) f y.2 : X (max x.1 y.1))
 #align metric.inductive_limit_dist Metric.inductiveLimitDist
@@ -708,7 +712,7 @@ def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σn, X n) : ℝ :=
 #print Metric.inductiveLimitDist_eq_dist /-
 /-- The predistance on the disjoint union `Σ n, X n` can be computed in any `X k` for large
 enough `k`. -/
-theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) (m : ℕ) :
+theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σ n, X n) (m : ℕ) :
     ∀ hx : x.1 ≤ m,
       ∀ hy : y.1 ≤ m,
         inductiveLimitDist f x y = dist (leRecOn hx f x.2 : X m) (leRecOn hy f y.2 : X m) :=
@@ -733,7 +737,7 @@ theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) 
 
 #print Metric.inductivePremetric /-
 /-- Premetric space structure on `Σ n, X n`.-/
-def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n)
+def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X n)
     where
   dist := inductiveLimitDist f
   dist_self x := by simp [dist, inductive_limit_dist]
@@ -767,7 +771,8 @@ attribute [local instance] inductive_premetric UniformSpace.separationSetoid
 #print Metric.InductiveLimit /-
 /-- The type giving the inductive limit in a metric space context. -/
 def InductiveLimit (I : ∀ n, Isometry (f n)) : Type _ :=
-  @UniformSpace.SeparationQuotient _ (inductivePremetric I).toUniformSpace deriving MetricSpace
+  @UniformSpace.SeparationQuotient _ (inductivePremetric I).toUniformSpace
+deriving MetricSpace
 #align metric.inductive_limit Metric.InductiveLimit
 -/
 

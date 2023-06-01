@@ -86,11 +86,11 @@ theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemir
     (hprod : (∏ i in s, f i) = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by
   classical
     intro i hi
-    rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod
+    rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod 
     refine'
       exists_eq_pow_of_mul_eq_pow_of_coprime
         (IsCoprime.prod_right fun j hj => h i hi j (erase_subset i s hj) fun hij => _) hprod
-    rw [hij] at hj
+    rw [hij] at hj 
     exact (s.not_mem_erase _) hj
 #align finset.exists_eq_pow_of_mul_eq_pow_of_coprime Finset.exists_eq_pow_of_mul_eq_pow_of_coprime
 
@@ -143,9 +143,9 @@ theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective 
   refine' le_trans _ (nth_roots n (f g₀)).toFinset_card_le
   apply card_le_card_of_inj_on f
   · intro g hg
-    rw [sep_def, mem_filter] at hg
+    rw [sep_def, mem_filter] at hg 
     rw [Multiset.mem_toFinset, mem_nth_roots hn, ← f.map_pow, hg.2]
-  · intros ; apply hf; assumption
+  · intros; apply hf; assumption
 #align card_nth_roots_subgroup_units card_nthRoots_subgroup_units
 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
@@ -173,7 +173,7 @@ instance subgroup_units_cyclic : IsCyclic S :=
   by
   refine' isCyclic_of_subgroup_isDomain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
   · simp
-  · intros ; simp
+  · intros; simp
 #align subgroup_units_cyclic subgroup_units_cyclic
 
 end
@@ -214,7 +214,7 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
     simp (config := { contextual := true }) only [mem_filter, one_mul, MonoidHom.map_mul, mem_univ,
       mul_right_inv, eq_self_iff_true, MonoidHom.map_mul_inv, and_self_iff, forall_true_iff]
   · simp only [mul_left_inj, imp_self, forall₂_true_iff]
-  · simp only [true_and_iff, mem_filter, mem_univ] at hg
+  · simp only [true_and_iff, mem_filter, mem_univ] at hg 
     simp only [hg, mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv,
       eq_self_iff_true, exists_prop_of_true, MonoidHom.map_mul_inv, and_self_iff,
       mul_inv_cancel_right, inv_mul_cancel_right]
@@ -235,7 +235,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
       rw [MonoidHom.one_apply]
       cases' hx ⟨f.to_hom_units g, g, rfl⟩ with n hn
       rwa [Subtype.ext_iff, Units.ext_iff, Subtype.coe_mk, MonoidHom.coe_toHomUnits, one_pow,
-        eq_comm] at hn
+        eq_comm] at hn 
     replace hx1 : (x : R) - 1 ≠ 0
     exact fun h => hx1 (Subtype.eq (Units.ext (sub_eq_zero.1 h)))
     let c := (univ.filter fun g => f.to_hom_units g = 1).card

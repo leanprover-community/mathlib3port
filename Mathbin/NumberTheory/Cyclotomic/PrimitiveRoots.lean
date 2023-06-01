@@ -220,7 +220,7 @@ theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2)
   by
   haveI := IsCyclotomicExtension.ne_zero' n K L
   by_cases h1 : n = 1
-  · rw [h1, one_coe, one_right_iff] at hζ
+  · rw [h1, one_coe, one_right_iff] at hζ 
     rw [hζ, show 1 = algebraMap K L 1 by simp, Algebra.norm_algebraMap, one_pow]
   · replace h1 : 2 ≤ n
     · by_contra' h
@@ -236,7 +236,7 @@ theorem norm_eq_one_of_linearly_ordered {K : Type _} [LinearOrderedField K] [Alg
     (hodd : Odd (n : ℕ)) : norm K ζ = 1 :=
   by
   have hz := congr_arg (norm K) ((IsPrimitiveRoot.iff_def _ n).1 hζ).1
-  rw [← (algebraMap K L).map_one, Algebra.norm_algebraMap, one_pow, map_pow, ← one_pow ↑n] at hz
+  rw [← (algebraMap K L).map_one, Algebra.norm_algebraMap, one_pow, map_pow, ← one_pow ↑n] at hz 
   exact StrictMono.injective hodd.strict_mono_pow hz
 #align is_primitive_root.norm_eq_one_of_linearly_ordered IsPrimitiveRoot.norm_eq_one_of_linearly_ordered
 
@@ -346,7 +346,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
   by
   have hirr₁ : Irreducible (cyclotomic (p ^ (k - s + 1)) K) :=
     cyclotomic_irreducible_pow_of_irreducible_pow hpri.1 (by linarith) hirr
-  rw [← PNat.pow_coe] at hirr₁
+  rw [← PNat.pow_coe] at hirr₁ 
   let η := ζ ^ (p : ℕ) ^ s - 1
   let η₁ : K⟮⟯ := IntermediateField.AdjoinSimple.gen K η
   have hη : IsPrimitiveRoot (η + 1) (p ^ (k + 1 - s)) :=
@@ -368,7 +368,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
         · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
           nth_rw 1 [← add_sub_cancel η 1]
           refine' Subalgebra.sub_mem _ (subset_adjoin (mem_singleton _)) (Subalgebra.one_mem _)
-      rw [H] at this
+      rw [H] at this 
       exact this
     rw [IntermediateField.adjoin_simple_toSubalgebra_of_integral
         (IsCyclotomicExtension.integral {p ^ (k + 1)} K L _)]
@@ -382,7 +382,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
   rw [norm_eq_norm_adjoin K]
   · have H := hη.sub_one_norm_is_prime_pow _ hirr₁ htwo
     swap; · rw [PNat.pow_coe]; exact hpri.1.IsPrimePow.pow (Nat.succ_ne_zero _)
-    rw [add_sub_cancel] at H
+    rw [add_sub_cancel] at H 
     rw [H, coe_coe]
     congr
     · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]; exact Nat.succ_ne_zero _
@@ -390,13 +390,13 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
     rw [IsCyclotomicExtension.finrank L hirr, IsCyclotomicExtension.finrank K⟮⟯ hirr₁, PNat.pow_coe,
       PNat.pow_coe, Nat.totient_prime_pow hpri.out (k - s).succ_pos,
       Nat.totient_prime_pow hpri.out k.succ_pos, mul_comm _ (↑p - 1), mul_assoc,
-      mul_comm (↑p ^ (k.succ - 1))] at this
+      mul_comm (↑p ^ (k.succ - 1))] at this 
     replace this := mul_left_cancel₀ (tsub_pos_iff_lt.2 hpri.out.one_lt).ne' this
     have Hex : k.succ - 1 = (k - s).succ - 1 + s :=
       by
       simp only [Nat.succ_sub_succ_eq_sub, tsub_zero]
       exact (Nat.sub_add_cancel hs).symm
-    rw [Hex, pow_add] at this
+    rw [Hex, pow_add] at this 
     exact mul_left_cancel₀ (pow_ne_zero _ hpri.out.ne_zero) this
   all_goals infer_instance
 #align is_primitive_root.pow_sub_one_norm_prime_pow_ne_two IsPrimitiveRoot.pow_sub_one_norm_prime_pow_ne_two
@@ -409,10 +409,10 @@ theorem pow_sub_one_norm_prime_ne_two {k : ℕ} (hζ : IsPrimitiveRoot ζ ↑(p 
     norm K (ζ ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s :=
   by
   refine' hζ.pow_sub_one_norm_prime_pow_ne_two hirr hs fun h => _
-  rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at h
+  rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at h 
   replace h :=
     eq_of_prime_pow_eq (prime_iff.1 hpri.out) (prime_iff.1 Nat.prime_two) (k - s).succ_pos h
-  rw [← PNat.one_coe, ← PNat.coe_bit0, PNat.coe_inj] at h
+  rw [← PNat.one_coe, ← PNat.coe_bit0, PNat.coe_inj] at h 
   exact hodd h
 #align is_primitive_root.pow_sub_one_norm_prime_ne_two IsPrimitiveRoot.pow_sub_one_norm_prime_ne_two
 
@@ -443,7 +443,7 @@ theorem pow_sub_one_norm_two {k : ℕ} (hζ : IsPrimitiveRoot ζ (2 ^ (k + 1)))
     norm K (ζ ^ 2 ^ k - 1) = (-2) ^ 2 ^ k :=
   by
   have := hζ.pow_of_dvd (fun h => two_ne_zero (pow_eq_zero h)) (pow_dvd_pow 2 (le_succ k))
-  rw [Nat.pow_div (le_succ k) zero_lt_two, Nat.succ_sub (le_refl k), Nat.sub_self, pow_one] at this
+  rw [Nat.pow_div (le_succ k) zero_lt_two, Nat.succ_sub (le_refl k), Nat.sub_self, pow_one] at this 
   have H : (-1 : L) - (1 : L) = algebraMap K L (-2) :=
     by
     simp only [_root_.map_neg, map_bit0, _root_.map_one]
@@ -481,18 +481,18 @@ theorem pow_sub_one_norm_prime_pow_of_ne_zero {k s : ℕ} (hζ : IsPrimitiveRoot
   by_cases htwo : p ^ (k - s + 1) = 2
   · have hp : p = 2 :=
       by
-      rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at htwo
+      rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at htwo 
       replace htwo :=
         eq_of_prime_pow_eq (prime_iff.1 hpri.out) (prime_iff.1 Nat.prime_two) (succ_pos _) htwo
-      rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at htwo
+      rwa [show 2 = ((2 : ℕ+) : ℕ) by simp, PNat.coe_inj] at htwo 
     replace hs : s = k
-    · rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at htwo
-      nth_rw 2 [← pow_one 2] at htwo
+    · rw [hp, ← PNat.coe_inj, PNat.pow_coe, PNat.coe_bit0, PNat.one_coe] at htwo 
+      nth_rw 2 [← pow_one 2] at htwo 
       replace htwo := Nat.pow_right_injective rfl.le htwo
-      rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo
+      rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo 
       refine' le_antisymm hs htwo
-    simp only [hs, hp, PNat.coe_bit0, one_coe, coe_coe, cast_bit0, cast_one, pow_coe] at
-      hζ hirr hcycl⊢
+    simp only [hs, hp, PNat.coe_bit0, one_coe, coe_coe, cast_bit0, cast_one, pow_coe] at hζ hirr
+      hcycl ⊢
     haveI := hcycl
     obtain ⟨k₁, hk₁⟩ := Nat.exists_eq_succ_of_ne_zero hk
     rw [hζ.pow_sub_one_norm_two hirr]

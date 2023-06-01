@@ -191,7 +191,7 @@ See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : Pretopology C
     where
-  coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.singleton f
+  coverings X S := ∃ (Y : _) (f : Y ⟶ X) (h : IsIso f), S = Presieve.singleton f
   has_isos X Y f i := ⟨_, _, i, rfl⟩
   pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩
@@ -210,7 +210,7 @@ def trivial : Pretopology C
     ext (W k)
     constructor
     · rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩
-      rw [hTi] at hh
+      rw [hTi] at hh 
       cases hh
       apply singleton.mk
     · rintro ⟨_⟩

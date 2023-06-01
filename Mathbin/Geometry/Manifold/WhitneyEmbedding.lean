@@ -75,10 +75,10 @@ theorem embeddingPiTangent_coe :
 theorem embeddingPiTangent_injOn : InjOn f.embeddingPiTangent s :=
   by
   intro x hx y hy h
-  simp only [embedding_pi_tangent_coe, funext_iff] at h
+  simp only [embedding_pi_tangent_coe, funext_iff] at h 
   obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iff.1 (h (f.ind x hx))
-  rw [f.apply_ind x hx] at h₂
-  rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
+  rw [f.apply_ind x hx] at h₂ 
+  rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁ 
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm
   exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
 #align smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embeddingPiTangent_injOn
@@ -129,7 +129,7 @@ omit hi
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
 theorem exists_immersion_euclidean [Finite ι] (f : SmoothBumpCovering ι I M) :
-    ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
+    ∃ (n : ℕ) (e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   cases nonempty_fintype ι
@@ -153,7 +153,7 @@ end SmoothBumpCovering
 supports of bump functions, then for some `n` it can be embedded into the `n`-dimensional
 Euclidean space. -/
 theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
-    ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
+    ∃ (n : ℕ) (e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   rcases SmoothBumpCovering.exists_isSubordinate I isClosed_univ fun (x : M) _ => univ_mem with

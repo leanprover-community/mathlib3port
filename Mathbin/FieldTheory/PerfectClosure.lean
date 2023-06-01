@@ -324,15 +324,15 @@ theorem mk_zero_zero : mk K p (0, 0) = 0 :=
 #align perfect_closure.mk_zero_zero PerfectClosure.mk_zero_zero
 
 theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
-  induction' n with n ih <;> [rfl;rw [← ih]] <;> symm <;> apply Quot.sound <;>
+  induction' n with n ih <;> [rfl; rw [← ih]] <;> symm <;> apply Quot.sound <;>
       have := r.intro n (0 : K) <;>
-    rwa [frobenius_zero K p] at this
+    rwa [frobenius_zero K p] at this 
 #align perfect_closure.mk_zero PerfectClosure.mk_zero
 
 theorem R.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) :
     mk K p (n, x) = mk K p (m + n, y) := by
-  subst H <;> induction' m with m ih <;>
-        [simp only [zero_add, iterate_zero_apply];rw [ih, Nat.succ_add, iterate_succ']] <;>
+  subst H <;> induction' m with m ih <;> [simp only [zero_add, iterate_zero_apply];
+        rw [ih, Nat.succ_add, iterate_succ']] <;>
       apply Quot.sound <;>
     apply r.intro
 #align perfect_closure.r.sound PerfectClosure.R.sound
@@ -410,7 +410,7 @@ theorem eq_iff' (x y : ℕ × K) :
   intro H
   cases' x with m x
   cases' y with n y
-  cases' H with z H; dsimp only at H
+  cases' H with z H; dsimp only at H 
   rw [r.sound K p (n + z) m x _ rfl, r.sound K p (m + z) n y _ rfl, H]
   rw [add_assoc, add_comm, add_comm z]
 #align perfect_closure.eq_iff' PerfectClosure.eq_iff'
@@ -436,7 +436,7 @@ theorem int_cast (x : ℤ) : (x : PerfectClosure K p) = mk K p (0, x) := by
 theorem nat_cast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y :=
   by
   constructor <;> intro H
-  · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H
+  · rw [nat_cast K p 0, nat_cast K p 0, eq_iff'] at H 
     cases' H with z H
     simpa only [zero_add, iterate_fixed (frobenius_nat_cast K p _)] using H
   rw [nat_cast K p 0, nat_cast K p 0, H]
@@ -506,7 +506,7 @@ instance : Field (PerfectClosure K p) :=
         (eq_iff _ _ _ _).2
           (by
             simp only [(frobenius _ _).iterate_map_one, (frobenius K p).iterate_map_zero,
-                iterate_zero_apply, ← (frobenius _ p).iterate_map_mul] at this⊢ <;>
+                iterate_zero_apply, ← (frobenius _ p).iterate_map_mul] at this ⊢ <;>
               rw [mul_inv_cancel this, (frobenius _ _).iterate_map_one])
     inv_zero := congr_arg (Quot.mk (R K p)) (by rw [inv_zero]) }
 

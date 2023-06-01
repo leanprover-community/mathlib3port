@@ -118,7 +118,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
         simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
           mul_one]
       · have h_copy := h
-        simp only [mem_Ioc, not_and, not_le] at h
+        simp only [mem_Ioc, not_and, not_le] at h 
         by_cases h' : 0 < s
         ·
           simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le,
@@ -160,7 +160,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       rw [Set.indicator_of_not_mem h', Set.indicator_of_not_mem h]
   rw [aux₂]
   have mble := measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
-  simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble
+  simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble 
   exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AEMeasurable.indicator mble
 #align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
 
@@ -231,7 +231,7 @@ theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn 
   have key :=
     lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble cst_intble
       (eventually_of_forall fun t => zero_le_one)
-  simp_rw [def_cst, ENNReal.ofReal_one, mul_one] at key
+  simp_rw [def_cst, ENNReal.ofReal_one, mul_one] at key 
   rw [← key]
   congr with ω
   simp only [intervalIntegral.integral_const, sub_zero, Algebra.id.smul_eq_mul, mul_one]
@@ -265,7 +265,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   have g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t := fun _ _ =>
     intervalIntegral.intervalIntegrable_rpow' one_lt_p
   have key := lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble g_intble g_nn
-  simp_rw [g_def] at key
+  simp_rw [g_def] at key 
   rw [← key, ← lintegral_const_mul (ENNReal.ofReal p)] <;> simp_rw [obs]
   · congr with ω
     rw [← ENNReal.ofReal_mul p_pos.le, mul_div_cancel' (f ω ^ p) p_pos.ne.symm]
@@ -295,7 +295,7 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
     ext a
     simp only [mem_set_of_eq, mem_union]
     apply le_iff_lt_or_eq
-  rw [show { a : α | t = g a } = { a : α | g a = t } by simp_rw [eq_comm]] at uni
+  rw [show { a : α | t = g a } = { a : α | g a = t } by simp_rw [eq_comm]] at uni 
   have disj : { a : α | t < g a } ∩ { a : α | g a = t } = ∅ :=
     by
     ext a
@@ -306,8 +306,8 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
       measure_union (disjoint_iff_inter_eq_empty.mpr disj)
         (g_mble (finite.measurable_set (finite_singleton t)))]
   by_contra con
-  rw [not_lt, nonpos_iff_eq_zero] at con
-  rw [Con, add_zero] at μ_add
+  rw [not_lt, nonpos_iff_eq_zero] at con 
+  rw [Con, add_zero] at μ_add 
   exact ht μ_add
 #align measure.meas_le_ne_meas_lt_subset_meas_pos Measure.meas_le_ne_meas_lt_subset_meas_pos
 

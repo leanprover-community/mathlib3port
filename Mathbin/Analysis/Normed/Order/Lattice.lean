@@ -73,7 +73,7 @@ instance : HasSolidNorm ℝ :=
   ⟨fun _ _ => id⟩
 
 instance : HasSolidNorm ℚ :=
-  ⟨fun _ _ _ => by simpa only [norm, ← Rat.cast_abs, Rat.cast_le] ⟩
+  ⟨fun _ _ _ => by simpa only [norm, ← Rat.cast_abs, Rat.cast_le]⟩
 
 end SolidNorm
 
@@ -85,7 +85,7 @@ respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say
 said to be a normed lattice ordered group.
 -/
 class NormedLatticeAddCommGroup (α : Type _) extends NormedAddCommGroup α, Lattice α,
-  HasSolidNorm α where
+    HasSolidNorm α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
 #align normed_lattice_add_comm_group NormedLatticeAddCommGroup
 -/

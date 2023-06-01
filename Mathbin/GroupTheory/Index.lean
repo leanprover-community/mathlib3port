@@ -78,7 +78,7 @@ theorem index_comap_of_surjective {G' : Type _} [Group G'] {f : G' →* G}
     simp only [QuotientGroup.leftRel_apply]
     exact fun x y => iff_of_eq (congr_arg (· ∈ H) (by rw [f.map_mul, f.map_inv]))
   refine' Cardinal.toNat_congr (Equiv.ofBijective (Quotient.map' f fun x y => (key x y).mp) ⟨_, _⟩)
-  · simp_rw [← Quotient.eq''] at key
+  · simp_rw [← Quotient.eq''] at key 
     refine' Quotient.ind' fun x => _
     refine' Quotient.ind' fun y => _
     exact (key x y).mpr
@@ -447,7 +447,7 @@ theorem relindex_inf_ne_zero (hH : H.relindex L ≠ 0) (hK : K.relindex L ≠ 0)
     (H ⊓ K).relindex L ≠ 0 :=
   by
   replace hH : H.relindex (K ⊓ L) ≠ 0 := mt (relindex_eq_zero_of_le_right inf_le_right) hH
-  rw [← inf_relindex_right] at hH hK⊢
+  rw [← inf_relindex_right] at hH hK ⊢
   rw [inf_assoc]
   exact relindex_ne_zero_trans hH hK
 #align subgroup.relindex_inf_ne_zero Subgroup.relindex_inf_ne_zero
@@ -456,7 +456,7 @@ theorem relindex_inf_ne_zero (hH : H.relindex L ≠ 0) (hK : K.relindex L ≠ 0)
 @[to_additive]
 theorem index_inf_ne_zero (hH : H.index ≠ 0) (hK : K.index ≠ 0) : (H ⊓ K).index ≠ 0 :=
   by
-  rw [← relindex_top_right] at hH hK⊢
+  rw [← relindex_top_right] at hH hK ⊢
   exact relindex_inf_ne_zero hH hK
 #align subgroup.index_inf_ne_zero Subgroup.index_inf_ne_zero
 #align add_subgroup.index_inf_ne_zero AddSubgroup.index_inf_ne_zero
@@ -508,7 +508,7 @@ theorem relindex_iInf_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
 theorem index_iInf_ne_zero {ι : Type _} [Finite ι] {f : ι → Subgroup G}
     (hf : ∀ i, (f i).index ≠ 0) : (⨅ i, f i).index ≠ 0 :=
   by
-  simp_rw [← relindex_top_right] at hf⊢
+  simp_rw [← relindex_top_right] at hf ⊢
   exact relindex_infi_ne_zero hf
 #align subgroup.index_infi_ne_zero Subgroup.index_iInf_ne_zero
 #align add_subgroup.index_infi_ne_zero AddSubgroup.index_iInf_ne_zero

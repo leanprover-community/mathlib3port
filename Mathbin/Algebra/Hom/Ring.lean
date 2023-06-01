@@ -69,7 +69,7 @@ you should parametrize over `(F : Type*) [non_unital_ring_hom_class F α β] (f 
 
 When you extend this structure, make sure to extend `non_unital_ring_hom_class`. -/
 structure NonUnitalRingHom (α β : Type _) [NonUnitalNonAssocSemiring α]
-  [NonUnitalNonAssocSemiring β] extends α →ₙ* β, α →+ β
+    [NonUnitalNonAssocSemiring β] extends α →ₙ* β, α →+ β
 #align non_unital_ring_hom NonUnitalRingHom
 -/
 
@@ -90,7 +90,7 @@ section NonUnitalRingHomClass
 /-- `non_unital_ring_hom_class F α β` states that `F` is a type of non-unital (semi)ring
 homomorphisms. You should extend this class when you extend `non_unital_ring_hom`. -/
 class NonUnitalRingHomClass (F : Type _) (α β : outParam (Type _)) [NonUnitalNonAssocSemiring α]
-  [NonUnitalNonAssocSemiring β] extends MulHomClass F α β, AddMonoidHomClass F α β
+    [NonUnitalNonAssocSemiring β] extends MulHomClass F α β, AddMonoidHomClass F α β
 #align non_unital_ring_hom_class NonUnitalRingHomClass
 -/
 
@@ -220,7 +220,7 @@ end
 #print NonUnitalRingHom.id /-
 /-- The identity non-unital ring homomorphism from a non-unital semiring to itself. -/
 protected def id (α : Type _) [NonUnitalNonAssocSemiring α] : α →ₙ+* α := by
-  refine' { toFun := id.. } <;> intros <;> rfl
+  refine' { toFun := id .. } <;> intros <;> rfl
 #align non_unital_ring_hom.id NonUnitalRingHom.id
 -/
 
@@ -374,7 +374,7 @@ end NonUnitalRingHom
 This extends from both `monoid_hom` and `monoid_with_zero_hom` in order to put the fields in a
 sensible order, even though `monoid_with_zero_hom` already extends `monoid_hom`. -/
 structure RingHom (α : Type _) (β : Type _) [NonAssocSemiring α] [NonAssocSemiring β] extends
-  α →* β, α →+ β, α →ₙ+* β, α →*₀ β
+    α →* β, α →+ β, α →ₙ+* β, α →*₀ β
 #align ring_hom RingHom
 -/
 
@@ -407,8 +407,8 @@ This extends from both `monoid_hom_class` and `monoid_with_zero_hom_class` in
 order to put the fields in a sensible order, even though
 `monoid_with_zero_hom_class` already extends `monoid_hom_class`. -/
 class RingHomClass (F : Type _) (α β : outParam (Type _)) [NonAssocSemiring α]
-  [NonAssocSemiring β] extends MonoidHomClass F α β, AddMonoidHomClass F α β,
-  MonoidWithZeroHomClass F α β
+    [NonAssocSemiring β] extends MonoidHomClass F α β, AddMonoidHomClass F α β,
+    MonoidWithZeroHomClass F α β
 #align ring_hom_class RingHomClass
 -/
 
@@ -694,7 +694,7 @@ end Semiring
 #print RingHom.id /-
 /-- The identity ring homomorphism from a semiring to itself. -/
 def id (α : Type _) [NonAssocSemiring α] : α →+* α := by
-  refine' { toFun := id.. } <;> intros <;> rfl
+  refine' { toFun := id .. } <;> intros <;> rfl
 #align ring_hom.id RingHom.id
 -/
 
@@ -826,10 +826,10 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
       have hxy := h (x + y)
       rw [mul_add, add_mul, add_mul, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mul,
         mul_add, mul_add, ← sub_eq_zero, add_comm, ← sub_sub, ← sub_sub, ← sub_sub, mul_comm y x,
-        mul_comm (f y) (f x)] at hxy
-      simp only [add_assoc, add_sub_assoc, add_sub_cancel'_right] at hxy
+        mul_comm (f y) (f x)] at hxy 
+      simp only [add_assoc, add_sub_assoc, add_sub_cancel'_right] at hxy 
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero,
-        or_iff_not_imp_left] at hxy
+        or_iff_not_imp_left] at hxy 
       exact hxy h_two }
 #align add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero
 

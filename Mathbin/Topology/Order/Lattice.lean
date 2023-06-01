@@ -76,7 +76,7 @@ instance (priority := 100) OrderDual.continuousInf (L : Type _) [TopologicalSpac
 Then `L` is said to be a *topological lattice*.
 -/
 class TopologicalLattice (L : Type _) [TopologicalSpace L] [Lattice L] extends ContinuousInf L,
-  ContinuousSup L
+    ContinuousSup L
 #align topological_lattice TopologicalLattice
 -/
 

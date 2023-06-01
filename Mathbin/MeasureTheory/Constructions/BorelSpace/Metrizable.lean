@@ -36,7 +36,7 @@ theorem measurable_of_tendsto_ennreal' {ι} {f : ι → α → ℝ≥0∞} {g : 
     [NeBot u] [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) :
     Measurable g := by
   rcases u.exists_seq_tendsto with ⟨x, hx⟩
-  rw [tendsto_pi_nhds] at lim
+  rw [tendsto_pi_nhds] at lim 
   have : (fun y => liminf (fun n => (f (x n) y : ℝ≥0∞)) at_top) = g := by ext1 y;
     exact ((limUnder y).comp hx).liminf_eq
   rw [← this]
@@ -54,9 +54,9 @@ theorem measurable_of_tendsto_ennreal {f : ℕ → α → ℝ≥0∞} {g : α �
 theorem measurable_of_tendsto_nnreal' {ι} {f : ι → α → ℝ≥0} {g : α → ℝ≥0} (u : Filter ι) [NeBot u]
     [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) :
     Measurable g := by
-  simp_rw [← measurable_coe_nnreal_ennreal_iff] at hf⊢
+  simp_rw [← measurable_coe_nnreal_ennreal_iff] at hf ⊢
   refine' measurable_of_tendsto_ennreal' u hf _
-  rw [tendsto_pi_nhds] at lim⊢
+  rw [tendsto_pi_nhds] at lim ⊢
   exact fun x => (ennreal.continuous_coe.tendsto (g x)).comp (limUnder x)
 #align measurable_of_tendsto_nnreal' measurable_of_tendsto_nnreal'
 
@@ -78,7 +78,7 @@ theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α �
     by
     suffices : tendsto (fun i x => inf_nndist (f i x) s) u (𝓝 fun x => inf_nndist (g x) s)
     exact measurable_of_tendsto_nnreal' u (fun i => (hf i).infNndist) this
-    rw [tendsto_pi_nhds] at lim⊢; intro x
+    rw [tendsto_pi_nhds] at lim ⊢; intro x
     exact ((continuous_inf_nndist_pt s).Tendsto (g x)).comp (limUnder x)
   have h4s : g ⁻¹' s = (fun x => inf_nndist (g x) s) ⁻¹' {0} := by ext x;
     simp [h1s, ← h1s.mem_iff_inf_dist_zero h2s, ← NNReal.coe_eq_zero]
@@ -153,7 +153,7 @@ theorem measurable_of_tendsto_metrizable_ae {μ : Measure α} [μ.IsComplete] {f
 theorem measurable_limit_of_tendsto_metrizable_ae {ι} [Countable ι] [Nonempty ι] {μ : Measure α}
     {f : ι → α → β} {L : Filter ι} [L.IsCountablyGenerated] (hf : ∀ n, AEMeasurable (f n) μ)
     (h_ae_tendsto : ∀ᵐ x ∂μ, ∃ l : β, Tendsto (fun n => f n x) L (𝓝 l)) :
-    ∃ (f_lim : α → β)(hf_lim_meas : Measurable f_lim),
+    ∃ (f_lim : α → β) (hf_lim_meas : Measurable f_lim),
       ∀ᵐ x ∂μ, Tendsto (fun n => f n x) L (𝓝 (f_lim x)) :=
   by
   inhabit ι

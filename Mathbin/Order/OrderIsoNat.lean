@@ -176,7 +176,7 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
       simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
         Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
     cases this
-    exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
+    exacts [⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
       ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 #align nat.exists_subseq_of_forall_mem_union Nat.exists_subseq_of_forall_mem_union
 
@@ -192,9 +192,9 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
     · haveI := hbad
       refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
       have h := Set.mem_range_self m
-      rw [Nat.orderEmbeddingOfSet_range bad] at h
+      rw [Nat.orderEmbeddingOfSet_range bad] at h 
       exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
-    · rw [Set.infinite_coe_iff, Set.Infinite, Classical.not_not] at hbad
+    · rw [Set.infinite_coe_iff, Set.Infinite, Classical.not_not] at hbad 
       obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad :=
         by
         by_cases he : hbad.to_finset.nonempty
@@ -208,7 +208,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
         by
         intro n
         have h := hm _ (le_add_of_nonneg_left n.zero_le)
-        simp only [exists_prop, Classical.not_not, Set.mem_setOf_eq, not_forall] at h
+        simp only [exists_prop, Classical.not_not, Set.mem_setOf_eq, not_forall] at h 
         obtain ⟨n', hn1, hn2⟩ := h
         obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
         refine' ⟨n + x, add_lt_add_left hpos n, _⟩

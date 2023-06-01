@@ -175,7 +175,7 @@ theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx :
   change edist_lt_top_setoid.rel _ _
   trans x; · symm; exact hf.edist_efixed_point_lt_top hx
   trans y
-  exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
+  exacts [lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 #align contracting_with.efixed_point_eq_of_edist_lt_top ContractingWith.efixedPoint_eq_of_edist_lt_top
 
 omit cs
@@ -391,7 +391,7 @@ theorem isFixedPt_fixedPoint_iterate {n : ℕ} (hf : ContractingWith K (f^[n])) 
   set x := hf.fixed_point (f^[n])
   have hx : (f^[n]) x = x := hf.fixed_point_is_fixed_pt
   have := hf.to_lipschitz_with.dist_le_mul x (f x)
-  rw [← iterate_succ_apply, iterate_succ_apply', hx] at this
+  rw [← iterate_succ_apply, iterate_succ_apply', hx] at this 
   contrapose! this
   have := dist_pos.2 (Ne.symm this)
   simpa only [NNReal.coe_one, one_mul, NNReal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left

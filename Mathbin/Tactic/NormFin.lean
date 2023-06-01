@@ -145,7 +145,7 @@ theorem NormalizeFinLt.natAdd {n m n'} (hn : n = n') {a : Fin m} {a' b : ℕ}
 
 theorem NormalizeFin.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
     (h : NormalizeFin n a a') (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by
-  rwa [← e2, ← e1, ← hn, normalize_fin, add_comm, Nat.add_mul_mod_self_left] at h
+  rwa [← e2, ← e1, ← hn, normalize_fin, add_comm, Nat.add_mul_mod_self_left] at h 
 #align tactic.norm_fin.normalize_fin.reduce Tactic.NormFin.NormalizeFin.reduce
 
 theorem NormalizeFinLt.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
@@ -161,12 +161,12 @@ theorem NormalizeFin.eq {n} {a b : Fin n} {c : ℕ} (ha : NormalizeFin n a c)
 
 theorem NormalizeFin.lt {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFinLt n b b') (h : a' < b') : a < b := by
-  have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
+  have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h 
 #align tactic.norm_fin.normalize_fin.lt Tactic.NormFin.NormalizeFin.lt
 
 theorem NormalizeFin.le {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFinLt n b b') (h : a' ≤ b') : a ≤ b := by
-  have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
+  have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h 
 #align tactic.norm_fin.normalize_fin.le Tactic.NormFin.NormalizeFin.le
 
 /-- The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
@@ -175,7 +175,8 @@ number. (`n` itself is implicit.)  It is in an `option` because it is lazily ini
 `n` we will never need this information, and indeed eagerly computing it would make some reductions
 fail spuriously if `n` is not a numeral. -/
 unsafe def eval_fin_m (α : Type) : Type :=
-  StateT (instance_cache × Option (ℕ × expr × expr)) tactic α deriving Monad, Alternative
+  StateT (instance_cache × Option (ℕ × expr × expr)) tactic α
+deriving Monad, Alternative
 #align tactic.norm_fin.eval_fin_m tactic.norm_fin.eval_fin_m
 
 /-- Lifts a tactic into the `eval_fin_m` monad. -/

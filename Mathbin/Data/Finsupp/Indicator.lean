@@ -79,7 +79,7 @@ theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f
 theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
   by
   intro i hi
-  rw [mem_coe, mem_support_iff] at hi
+  rw [mem_coe, mem_support_iff] at hi 
   by_contra
   exact hi (indicator_of_not_mem h _)
 #align finsupp.support_indicator_subset Finsupp.support_indicator_subset

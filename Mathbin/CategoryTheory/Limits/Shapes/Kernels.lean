@@ -189,7 +189,7 @@ def isKernelCompMono {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : 
     let s' : KernelFork f := Fork.ofι s.ι (by rw [← cancel_mono g] <;> simp [← hh, s.condition])
     let l := KernelFork.IsLimit.lift' i s'.ι s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm  <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_kernel_comp_mono CategoryTheory.Limits.isKernelCompMono
 
 theorem isKernelCompMono_lift {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : Mono g]
@@ -273,7 +273,7 @@ theorem kernel.lift_zero {W : C} {h} : kernel.lift f (0 : W ⟶ X) h = 0 := by e
 instance kernel.lift_mono {W : C} (k : W ⟶ X) (h : k ≫ f = 0) [Mono k] : Mono (kernel.lift f k h) :=
   ⟨fun Z g g' w => by
     replace w := w =≫ kernel.ι f
-    simp only [category.assoc, kernel.lift_ι] at w
+    simp only [category.assoc, kernel.lift_ι] at w 
     exact (cancel_mono k).1 w⟩
 #align category_theory.limits.kernel.lift_mono CategoryTheory.Limits.kernel.lift_mono
 -/
@@ -671,7 +671,8 @@ def isCokernelEpiComp {c : CokernelCofork f} (i : IsColimit c) {W} (g : W ⟶ X)
       Cofork.ofπ s.π (by apply hg.left_cancellation; rw [← category.assoc, ← hh, s.condition]; simp)
     let l := CokernelCofork.IsColimit.desc' i s'.π s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm  <;> rw [hm] <;>
+        exact l.2.symm⟩
 #align category_theory.limits.is_cokernel_epi_comp CategoryTheory.Limits.isCokernelEpiComp
 
 @[simp]
@@ -759,7 +760,7 @@ instance cokernel.desc_epi {W : C} (k : Y ⟶ W) (h : f ≫ k = 0) [Epi k] :
     Epi (cokernel.desc f k h) :=
   ⟨fun Z g g' w => by
     replace w := cokernel.π f ≫= w
-    simp only [cokernel.π_desc_assoc] at w
+    simp only [cokernel.π_desc_assoc] at w 
     exact (cancel_epi k).1 w⟩
 #align category_theory.limits.cokernel.desc_epi CategoryTheory.Limits.cokernel.desc_epi
 -/
@@ -1048,7 +1049,7 @@ def cokernelImageι {X Y : C} (f : X ⟶ Y) [HasImage f] [HasCokernel (image.ι 
           congr
           rw [← image.fac f]
         rw [← has_zero_morphisms.comp_zero (limits.factor_thru_image f), category.assoc,
-          cancel_epi] at w
+          cancel_epi] at w 
         exact w)
   inv :=
     cokernel.desc _ (cokernel.π _)

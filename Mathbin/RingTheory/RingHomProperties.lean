@@ -105,8 +105,8 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
     (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) :
     RingHom.RespectsIso @P := by
   constructor
-  · introv H; skip; apply hP; exacts[H, hP' e]
-  · introv H; skip; apply hP; exacts[hP' e, H]
+  · introv H; skip; apply hP; exacts [H, hP' e]
+  · introv H; skip; apply hP; exacts [hP' e, H]
 #align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respectsIso
 
 end StableUnderComposition

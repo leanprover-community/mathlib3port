@@ -157,7 +157,7 @@ section CommSemigroup
 variable [CommSemigroup α] {a b c : α}
 
 theorem Dvd.intro_left (c : α) (h : c * a = b) : a ∣ b :=
-  Dvd.intro _ (by rw [mul_comm] at h; apply h)
+  Dvd.intro _ (by rw [mul_comm] at h ; apply h)
 #align dvd.intro_left Dvd.intro_left
 
 alias Dvd.intro_left ← dvd_of_mul_left_eq

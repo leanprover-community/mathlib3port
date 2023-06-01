@@ -65,7 +65,7 @@ theorem tendsto_norm_zpow_nhdsWithin_0_atTop {𝕜 : Type _} [NormedField 𝕜] 
     Tendsto (fun x : 𝕜 => ‖x ^ m‖) (𝓝[≠] 0) atTop :=
   by
   rcases neg_surjective m with ⟨m, rfl⟩
-  rw [neg_lt_zero] at hm; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm
+  rw [neg_lt_zero] at hm ; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm 
   simp only [norm_pow, zpow_neg, zpow_ofNat, ← inv_pow]
   exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhdsWithin_0_atTop
 #align normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhdsWithin_0_atTop
@@ -75,7 +75,7 @@ theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [No
     [NormedAddCommGroup 𝔸] [NormedSpace 𝕜 𝔸] {l : Filter ι} {ε : ι → 𝕜} {f : ι → 𝔸}
     (hε : Tendsto ε l (𝓝 0)) (hf : Filter.IsBoundedUnder (· ≤ ·) l (norm ∘ f)) :
     Tendsto (ε • f) l (𝓝 0) := by
-  rw [← is_o_one_iff 𝕜] at hε⊢
+  rw [← is_o_one_iff 𝕜] at hε ⊢
   simpa using is_o.smul_is_O hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
 #align normed_field.tendsto_zero_smul_of_tendsto_zero_of_bounded NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded
 
@@ -137,7 +137,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
     TFAE
       [∃ a ∈ Ioo (-R) R, f =o[atTop] pow a, ∃ a ∈ Ioo 0 R, f =o[atTop] pow a,
         ∃ a ∈ Ioo (-R) R, f =O[atTop] pow a, ∃ a ∈ Ioo 0 R, f =O[atTop] pow a,
-        ∃ a < R, ∃ (C : _)(h₀ : 0 < C ∨ 0 < R), ∀ n, |f n| ≤ C * a ^ n,
+        ∃ a < R, ∃ (C : _) (h₀ : 0 < C ∨ 0 < R), ∀ n, |f n| ≤ C * a ^ n,
         ∃ a ∈ Ioo 0 R, ∃ C > 0, ∀ n, |f n| ≤ C * a ^ n, ∃ a < R, ∀ᶠ n in atTop, |f n| ≤ a ^ n,
         ∃ a ∈ Ioo 0 R, ∀ᶠ n in atTop, |f n| ≤ a ^ n] :=
   by
@@ -168,7 +168,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
     rcases sign_cases_of_C_mul_pow_nonneg fun n => (abs_nonneg _).trans (H n) with
       (rfl | ⟨hC₀, ha₀⟩)
     · obtain rfl : f = 0 := by ext n; simpa using H n
-      simp only [lt_irrefl, false_or_iff] at h₀
+      simp only [lt_irrefl, false_or_iff] at h₀ 
       exact ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, is_O_zero _ _⟩
     exact
       ⟨a, A ⟨ha₀, ha⟩,
@@ -177,7 +177,7 @@ theorem TFAE_exists_lt_isLittleO_pow (f : ℕ → ℝ) (R : ℝ) :
   tfae_have 2 → 8
   · rintro ⟨a, ha, H⟩
     refine' ⟨a, ha, (H.def zero_lt_one).mono fun n hn => _⟩
-    rwa [Real.norm_eq_abs, Real.norm_eq_abs, one_mul, abs_pow, abs_of_pos ha.1] at hn
+    rwa [Real.norm_eq_abs, Real.norm_eq_abs, one_mul, abs_pow, abs_of_pos ha.1] at hn 
   tfae_have 8 → 7; exact fun ⟨a, ha, H⟩ => ⟨a, ha.2, H⟩
   tfae_have 7 → 3
   · rintro ⟨a, ha, H⟩
@@ -220,7 +220,7 @@ theorem isLittleO_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [Nor
   by_cases h0 : r₁ = 0
   · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
-  rw [← Ne.def, ← norm_pos_iff] at h0
+  rw [← Ne.def, ← norm_pos_iff] at h0 
   have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
     isLittleO_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
   suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
@@ -327,8 +327,8 @@ theorem summable_geometric_iff_norm_lt_1 : (Summable fun n : ℕ => ξ ^ n) ↔ 
   refine' ⟨fun h => _, summable_geometric_of_norm_lt_1⟩
   obtain ⟨k : ℕ, hk : dist (ξ ^ k) 0 < 1⟩ :=
     (h.tendsto_cofinite_zero.eventually (ball_mem_nhds _ zero_lt_one)).exists
-  simp only [norm_pow, dist_zero_right] at hk
-  rw [← one_pow k] at hk
+  simp only [norm_pow, dist_zero_right] at hk 
+  rw [← one_pow k] at hk 
   exact lt_of_pow_lt_pow _ zero_le_one hk
 #align summable_geometric_iff_norm_lt_1 summable_geometric_iff_norm_lt_1
 
@@ -459,7 +459,7 @@ theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ �
   split_ifs with H H
   · rw [norm_zero]
     exact mul_nonneg hC (pow_nonneg hr₀.le _)
-  · push_neg  at H
+  · push_neg  at H 
     exact h _ H
 #align normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchy_series_of_le_geometric''
 
@@ -530,7 +530,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     (h : ∀ᶠ n in atTop, ‖f (n + 1)‖ ≤ r * ‖f n‖) : Summable f :=
   by
   by_cases hr₀ : 0 ≤ r
-  · rw [eventually_at_top] at h
+  · rw [eventually_at_top] at h 
     rcases h with ⟨N, hN⟩
     rw [← @summable_nat_add_iff α _ _ _ _ N]
     refine'
@@ -540,7 +540,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     refine' le_geom hr₀ n fun i _ => _
     convert hN (i + N) (N.le_add_left i) using 3
     ac_rfl
-  · push_neg  at hr₀
+  · push_neg  at hr₀ 
     refine' summable_of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_atTop]
     filter_upwards [h]with _ hn
@@ -562,9 +562,9 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
     {r : ℝ} (hr : 1 < r) (hf : ∃ᶠ n in atTop, ‖f n‖ ≠ 0)
     (h : ∀ᶠ n in atTop, r * ‖f n‖ ≤ ‖f (n + 1)‖) : ¬Summable f :=
   by
-  rw [eventually_at_top] at h
+  rw [eventually_at_top] at h 
   rcases h with ⟨N₀, hN₀⟩
-  rw [frequently_at_top] at hf
+  rw [frequently_at_top] at hf 
   rcases hf N₀ with ⟨N, hNN₀ : N₀ ≤ N, hN⟩
   rw [← @summable_nat_add_iff α _ _ _ _ N]
   refine'
@@ -574,7 +574,7 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
   · refine' lt_of_le_of_ne (norm_nonneg _) _
     intro h''
     specialize hN₀ N hNN₀
-    simp only [comp_app, zero_add] at h''
+    simp only [comp_app, zero_add] at h'' 
     exact hN h''.symm
   · intro i
     dsimp only [comp_app]
@@ -589,7 +589,7 @@ theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SeminormedAddCo
   have key : ∀ᶠ n in at_top, ‖f n‖ ≠ 0 :=
     by
     filter_upwards [eventually_ge_of_tendsto_gt hl h]with _ hn hc
-    rw [hc, div_zero] at hn
+    rw [hc, div_zero] at hn 
     linarith
   rcases exists_between hl with ⟨r, hr₀, hr₁⟩
   refine' not_summable_of_ratio_norm_eventually_ge hr₀ key.frequently _

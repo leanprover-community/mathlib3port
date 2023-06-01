@@ -144,7 +144,7 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
         · convert hE _ _ _; rfl
         · rfl
       apply functor.hext
-      · intro ; apply Unit.ext
+      · intro; apply Unit.ext
       · refine' action_category.cases _; intros
         simp only [← this, uncurry_map, curry_apply_left, coe_back, hom_of_pair.val]
 #align is_free_groupoid.action_groupoid_is_free IsFreeGroupoid.actionGroupoidIsFree
@@ -298,7 +298,7 @@ theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
   let f : G → X := fun g => FreeGroup.of (weakly_connected_component.mk g)
   let F : G ⥤ CategoryTheory.SingleObj X := single_obj.difference_functor f
   change F.map p = ((CategoryTheory.Functor.const G).obj ()).map p
-  congr ; ext
+  congr; ext
   rw [functor.const_obj_map, id_as_one, difference_functor_map, mul_inv_eq_one]
   apply congr_arg FreeGroup.of
   apply (weakly_connected_component.eq _ _).mpr

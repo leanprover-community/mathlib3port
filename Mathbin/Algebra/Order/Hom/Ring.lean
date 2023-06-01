@@ -51,7 +51,7 @@ you should parametrize over `(F : Type*) [order_ring_hom_class F α β] (f : F)`
 
 When you extend this structure, make sure to extend `order_ring_hom_class`. -/
 structure OrderRingHom (α β : Type _) [NonAssocSemiring α] [Preorder α] [NonAssocSemiring β]
-  [Preorder β] extends α →+* β where
+    [Preorder β] extends α →+* β where
   monotone' : Monotone to_fun
 #align order_ring_hom OrderRingHom
 -/
@@ -69,7 +69,7 @@ you should parametrize over `(F : Type*) [order_ring_iso_class F α β] (f : F)`
 
 When you extend this structure, make sure to extend `order_ring_iso_class`. -/
 structure OrderRingIso (α β : Type _) [Mul α] [Add α] [LE α] [Mul β] [Add β] [LE β] extends
-  α ≃+* β where
+    α ≃+* β where
   map_le_map_iff' {a b : α} : to_fun a ≤ to_fun b ↔ a ≤ b
 #align order_ring_iso OrderRingIso
 
@@ -80,7 +80,7 @@ infixl:25 " ≃+*o " => OrderRingIso
 /-- `order_ring_hom_class F α β` states that `F` is a type of ordered semiring homomorphisms.
 You should extend this typeclass when you extend `order_ring_hom`. -/
 class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemiring α] [Preorder α]
-  [NonAssocSemiring β] [Preorder β] extends RingHomClass F α β where
+    [NonAssocSemiring β] [Preorder β] extends RingHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_ring_hom_class OrderRingHomClass
 -/
@@ -89,7 +89,7 @@ class OrderRingHomClass (F : Type _) (α β : outParam <| Type _) [NonAssocSemir
 /-- `order_ring_iso_class F α β` states that `F` is a type of ordered semiring isomorphisms.
 You should extend this class when you extend `order_ring_iso`. -/
 class OrderRingIsoClass (F : Type _) (α β : outParam (Type _)) [Mul α] [Add α] [LE α] [Mul β]
-  [Add β] [LE β] extends RingEquivClass F α β where
+    [Add β] [LE β] extends RingEquivClass F α β where
   map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
 #align order_ring_iso_class OrderRingIsoClass
 -/
@@ -537,8 +537,8 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     wlog h : f x < g x
     · exact this g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
-    rw [← map_ratCast f] at hf
-    rw [← map_ratCast g] at hg
+    rw [← map_ratCast f] at hf 
+    rw [← map_ratCast g] at hg 
     exact
       (lt_asymm ((OrderHomClass.mono g).reflect_lt hg) <|
           (OrderHomClass.mono f).reflect_lt hf).elim⟩

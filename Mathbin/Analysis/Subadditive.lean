@@ -86,7 +86,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       Finset.bddAbove _
     refine' ⟨x, fun i hi => _⟩
     simp only [upperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq,
-      forall_apply_eq_imp_iff₂, Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
+      forall_apply_eq_imp_iff₂, Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx 
     exact hx _ hi
   have A : ∀ p : ℕ, u p ≤ p * w + x := by
     intro p
@@ -96,7 +96,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     calc
       u p = u (s * n + r) := by rw [hp]
       _ ≤ s * u n + u r := (h.apply_mul_add_le _ _ _)
-      _ = s * n * (u n / n) + u r := by field_simp [I _ hn.bot_lt] ; ring
+      _ = s * n * (u n / n) + u r := by field_simp [I _ hn.bot_lt]; ring
       _ ≤ s * n * w + u r :=
         (add_le_add_right
           (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))) _)
@@ -115,7 +115,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     by
     have : tendsto (fun p : ℕ => w + x / p) at_top (𝓝 (w + 0)) :=
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_nat_cast_atTop_atTop)
-    rw [add_zero] at this
+    rw [add_zero] at this 
     exact (tendsto_order.1 this).2 _ wL
   filter_upwards [B, C]with _ hp h'p using hp.trans_lt h'p
 #align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_lt
@@ -131,7 +131,7 @@ theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
         ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
   · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L :=
       by
-      rw [Subadditive.lim] at hL
+      rw [Subadditive.lim] at hL 
       rcases exists_lt_of_csInf_lt (by simp) hL with ⟨x, hx, xL⟩
       rcases(mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩

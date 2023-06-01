@@ -197,14 +197,14 @@ def prodIso : CategoryTheory.Grpd.of (πₓ A × πₓ B) ≅ πₓ (TopCat.of (
   hom_inv_id' :=
     by
     change prod_to_prod_Top A B ⋙ (proj_left A B).prod' (proj_right A B) = 𝟭 _
-    apply CategoryTheory.Functor.hext; · intros ; ext <;> simp <;> rfl
+    apply CategoryTheory.Functor.hext; · intros; ext <;> simp <;> rfl
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ ⟨f₀, f₁⟩
     have := And.intro (Path.Homotopic.projLeft_prod f₀ f₁) (Path.Homotopic.projRight_prod f₀ f₁)
     simpa
   inv_hom_id' :=
     by
     change (proj_left A B).prod' (proj_right A B) ⋙ prod_to_prod_Top A B = 𝟭 _
-    apply CategoryTheory.Functor.hext; · intros ; ext <;> simp <;> rfl
+    apply CategoryTheory.Functor.hext; · intros; ext <;> simp <;> rfl
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ f
     have := Path.Homotopic.prod_projLeft_projRight f
     simpa

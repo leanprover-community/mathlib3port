@@ -140,8 +140,8 @@ restate_axiom Bimod.right_assoc'
 
 restate_axiom Bimod.middle_assoc'
 
-attribute [simp, reassoc]
-  Bimod.one_actLeft Bimod.actRight_one Bimod.left_assoc Bimod.right_assoc Bimod.middle_assoc
+attribute [simp, reassoc] Bimod.one_actLeft Bimod.actRight_one Bimod.left_assoc Bimod.right_assoc
+  Bimod.middle_assoc
 
 namespace Bimod
 

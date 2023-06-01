@@ -259,8 +259,8 @@ theorem add : ∀ {x y : PGame} (ox : Numeric x) (oy : Numeric y), Numeric (x + 
         · exact ox.add (oy.move_left iy)
       · rintro (jx | jy)
         · apply (ox.move_right jx).add oy
-        · apply ox.add (oy.move_right jy)⟩decreasing_by
-  pgame_wf_tac
+        · apply ox.add (oy.move_right jy)⟩
+decreasing_by pgame_wf_tac
 #align pgame.numeric.add PGame.Numeric.add
 
 theorem sub {x y : PGame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=

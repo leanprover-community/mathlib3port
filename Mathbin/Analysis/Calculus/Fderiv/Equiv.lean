@@ -104,7 +104,7 @@ theorem comp_differentiableWithinAt_iff {f : G → E} {s : Set G} {x : G} :
     ⟨fun H => _, fun H => iso.differentiable.differentiable_at.comp_differentiable_within_at x H⟩
   have : DifferentiableWithinAt 𝕜 (iso.symm ∘ iso ∘ f) s x :=
     iso.symm.differentiable.differentiable_at.comp_differentiable_within_at x H
-  rwa [← Function.comp.assoc iso.symm iso f, iso.symm_comp_self] at this
+  rwa [← Function.comp.assoc iso.symm iso f, iso.symm_comp_self] at this 
 #align continuous_linear_equiv.comp_differentiable_within_at_iff ContinuousLinearEquiv.comp_differentiableWithinAt_iff
 
 theorem comp_differentiableAt_iff {f : G → E} {x : G} :
@@ -184,11 +184,11 @@ theorem comp_right_differentiableWithinAt_iff {f : F → G} {s : Set F} {x : E} 
   refine' ⟨fun H => _, fun H => H.comp x iso.differentiable_within_at (maps_to_preimage _ s)⟩
   have : DifferentiableWithinAt 𝕜 ((f ∘ iso) ∘ iso.symm) s (iso x) :=
     by
-    rw [← iso.symm_apply_apply x] at H
+    rw [← iso.symm_apply_apply x] at H 
     apply H.comp (iso x) iso.symm.differentiable_within_at
     intro y hy
     simpa only [mem_preimage, apply_symm_apply] using hy
-  rwa [Function.comp.assoc, iso.self_comp_symm] at this
+  rwa [Function.comp.assoc, iso.self_comp_symm] at this 
 #align continuous_linear_equiv.comp_right_differentiable_within_at_iff ContinuousLinearEquiv.comp_right_differentiableWithinAt_iff
 
 theorem comp_right_differentiableAt_iff {f : F → G} {x : E} :
@@ -216,7 +216,7 @@ theorem comp_right_hasFDerivWithinAt_iff {f : F → G} {s : Set F} {x : E} {f' :
       HasFDerivWithinAt f f' s (iso x) :=
   by
   refine' ⟨fun H => _, fun H => H.comp x iso.has_fderiv_within_at (maps_to_preimage _ s)⟩
-  rw [← iso.symm_apply_apply x] at H
+  rw [← iso.symm_apply_apply x] at H 
   have A : f = (f ∘ iso) ∘ iso.symm := by rw [Function.comp.assoc, iso.self_comp_symm]; rfl
   have B : f' = (f'.comp (iso : E →L[𝕜] F)).comp (iso.symm : F →L[𝕜] E) := by
     rw [ContinuousLinearMap.comp_assoc, iso.coe_comp_coe_symm, ContinuousLinearMap.comp_id]

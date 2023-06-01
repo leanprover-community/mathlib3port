@@ -121,12 +121,12 @@ def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι
   next_eq i j j' w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
-    rw [c₁.next_eq w₁ w₁'] at w₂
+    rw [c₁.next_eq w₁ w₁'] at w₂ 
     exact c₂.next_eq w₂ w₂'
   prev_eq i i' j w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
-    rw [c₂.prev_eq w₂ w₂'] at w₁
+    rw [c₂.prev_eq w₂ w₂'] at w₁ 
     exact c₁.prev_eq w₁ w₁'
 #align complex_shape.trans ComplexShape.trans
 -/

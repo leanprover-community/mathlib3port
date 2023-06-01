@@ -412,7 +412,7 @@ theorem liftr_map_last' [LawfulMvFunctor F] {α : TypeVec n} {ι} (R : ι → ι
     (f : ι → ι) (hh : ∀ x : ι, R (f x) x) : LiftR' (RelLast' _ R) ((id ::: f) <$$> x) x :=
   by
   have := liftr_map_last R x f id hh
-  rwa [append_fun_id_id, MvFunctor.id_map] at this
+  rwa [append_fun_id_id, MvFunctor.id_map] at this 
 #align mvqpf.liftr_map_last' MvQPF.liftr_map_last'
 
 end LiftrMap
@@ -422,7 +422,7 @@ theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x :=
   by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
-  clear x; rintro x y h; dsimp [R] at h; subst h
+  clear x; rintro x y h; dsimp [R] at h ; subst h
   dsimp [cofix.dest, cofix.abs]
   induction y using Quot.ind
   simp only [cofix.repr, M.dest_corec, abs_map, abs_repr]
@@ -508,7 +508,7 @@ theorem Cofix.dest_corec' {α : TypeVec n} {β : Type u} (g : β → F (α.appen
   · mv_bisim i
     rw [Ha, Hb, cofix.dest_corec]; dsimp [(· ∘ ·)]
     repeat' rw [MvFunctor.map_map, ← append_fun_comp_id]
-    apply liftr_map_last'; dsimp [(· ∘ ·), R]; intros ; exact ⟨_, rfl, rfl⟩
+    apply liftr_map_last'; dsimp [(· ∘ ·), R]; intros; exact ⟨_, rfl, rfl⟩
   · congr with y; erw [append_fun_id_id]; simp [MvFunctor.id_map]
 #align mvqpf.cofix.dest_corec' MvQPF.Cofix.dest_corec'
 

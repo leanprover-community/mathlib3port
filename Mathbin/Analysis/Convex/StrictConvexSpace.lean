@@ -75,7 +75,7 @@ then prove that any closed ball is strictly convex in `strict_convex_closed_ball
 
 See also `strict_convex_space.of_strict_convex_closed_unit_ball`. -/
 class StrictConvexSpace (𝕜 E : Type _) [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] : Prop where
+    [NormedSpace 𝕜 E] : Prop where
   strictConvex_closedBall : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (closedBall (0 : E) r)
 #align strict_convex_space StrictConvexSpace
 -/
@@ -112,7 +112,7 @@ theorem StrictConvexSpace.ofNormComboLtOne
     StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ
       ((convex_closedBall _ _).strictConvex' fun x hx y hy hne => _)
   rw [interior_closedBall (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
-    hx hy
+    hx hy 
   rcases h x y hx hy hne with ⟨a, b, hab, hlt⟩
   use b
   rwa [AffineMap.lineMap_apply_module, interior_closedBall (0 : E) one_ne_zero, mem_ball_zero_iff,
@@ -156,7 +156,7 @@ theorem StrictConvexSpace.ofNormAdd
     (h : ∀ x y : E, ‖x‖ = 1 → ‖y‖ = 1 → ‖x + y‖ = 2 → SameRay ℝ x y) : StrictConvexSpace ℝ E :=
   by
   refine' StrictConvexSpace.ofPairwiseSphereNormNeTwo fun x hx y hy => mt fun h₂ => _
-  rw [mem_sphere_zero_iff_norm] at hx hy
+  rw [mem_sphere_zero_iff_norm] at hx hy 
   exact (sameRay_iff_of_norm_eq (hx.trans hy.symm)).1 (h x y hx hy h₂)
 #align strict_convex_space.of_norm_add StrictConvexSpace.ofNormAdd
 
@@ -168,9 +168,9 @@ theorem combo_mem_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall 
     (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) : a • x + b • y ∈ ball z r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · rw [closed_ball_zero, mem_singleton_iff] at hx hy
+  · rw [closed_ball_zero, mem_singleton_iff] at hx hy 
     exact (hne (hx.trans hy.symm)).elim
-  · simp only [← interior_closedBall _ hr] at hx hy⊢
+  · simp only [← interior_closedBall _ hr] at hx hy ⊢
     exact strictConvex_closedBall ℝ z r hx hy hne ha hb hab
 #align combo_mem_ball_of_ne combo_mem_ball_of_ne
 
@@ -188,7 +188,7 @@ and `y` with positive coefficients has norm strictly less than `r`. -/
 theorem norm_combo_lt_of_ne (hx : ‖x‖ ≤ r) (hy : ‖y‖ ≤ r) (hne : x ≠ y) (ha : 0 < a) (hb : 0 < b)
     (hab : a + b = 1) : ‖a • x + b • y‖ < r :=
   by
-  simp only [← mem_ball_zero_iff, ← mem_closedBall_zero_iff] at hx hy⊢
+  simp only [← mem_ball_zero_iff, ← mem_closedBall_zero_iff] at hx hy ⊢
   exact combo_mem_ball_of_ne hx hy hne ha hb hab
 #align norm_combo_lt_of_ne norm_combo_lt_of_ne
 
@@ -196,9 +196,9 @@ theorem norm_combo_lt_of_ne (hx : ‖x‖ ≤ r) (hy : ‖y‖ ≤ r) (hne : x �
 ‖y‖`. -/
 theorem norm_add_lt_of_not_sameRay (h : ¬SameRay ℝ x y) : ‖x + y‖ < ‖x‖ + ‖y‖ :=
   by
-  simp only [sameRay_iff_inv_norm_smul_eq, not_or, ← Ne.def] at h
+  simp only [sameRay_iff_inv_norm_smul_eq, not_or, ← Ne.def] at h 
   rcases h with ⟨hx, hy, hne⟩
-  rw [← norm_pos_iff] at hx hy
+  rw [← norm_pos_iff] at hx hy 
   have hxy : 0 < ‖x‖ + ‖y‖ := add_pos hx hy
   have :=
     combo_mem_ball_of_ne (inv_norm_smul_mem_closed_unit_ball x)
@@ -206,12 +206,12 @@ theorem norm_add_lt_of_not_sameRay (h : ¬SameRay ℝ x y) : ‖x + y‖ < ‖x�
       (by rw [← add_div, div_self hxy.ne'])
   rwa [mem_ball_zero_iff, div_eq_inv_mul, div_eq_inv_mul, mul_smul, mul_smul, smul_inv_smul₀ hx.ne',
     smul_inv_smul₀ hy.ne', ← smul_add, norm_smul, Real.norm_of_nonneg (inv_pos.2 hxy).le, ←
-    div_eq_inv_mul, div_lt_one hxy] at this
+    div_eq_inv_mul, div_lt_one hxy] at this 
 #align norm_add_lt_of_not_same_ray norm_add_lt_of_not_sameRay
 
 theorem lt_norm_sub_of_not_sameRay (h : ¬SameRay ℝ x y) : ‖x‖ - ‖y‖ < ‖x - y‖ :=
   by
-  nth_rw 1 [← sub_add_cancel x y] at h⊢
+  nth_rw 1 [← sub_add_cancel x y] at h ⊢
   exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_sameRay fun H' => h <| H'.add_left SameRay.rfl)
 #align lt_norm_sub_of_not_same_ray lt_norm_sub_of_not_sameRay
 
@@ -279,12 +279,12 @@ theorem eq_lineMap_of_dist_eq_mul_of_dist_eq_mul {x y z : PE} (hxy : dist x y = 
   rcases eq_or_ne x z with (rfl | hne)
   · obtain rfl : y = x := by simpa
     simp
-  · rw [← dist_ne_zero] at hne
+  · rw [← dist_ne_zero] at hne 
     rcases this with ⟨a, b, ha, hb, hab, H⟩
-    rw [smul_zero, zero_add] at H
+    rw [smul_zero, zero_add] at H 
     have H' := congr_arg norm H
     rw [norm_smul, Real.norm_of_nonneg hb, ← dist_eq_norm_vsub', ← dist_eq_norm_vsub', hxy,
-      mul_left_inj' hne] at H'
+      mul_left_inj' hne] at H' 
     rw [AffineMap.lineMap_apply, ← H', H, vsub_vadd]
 #align eq_line_map_of_dist_eq_mul_of_dist_eq_mul eq_lineMap_of_dist_eq_mul_of_dist_eq_mul
 

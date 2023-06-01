@@ -114,7 +114,8 @@ open Localization.Construction
 in `W : morphism_property C` -/
 @[nolint has_nonempty_instance]
 def Localization :=
-  CategoryTheory.Quotient (Localization.Construction.relations W)deriving Category
+  CategoryTheory.Quotient (Localization.Construction.relations W)
+deriving Category
 #align category_theory.morphism_property.localization CategoryTheory.MorphismProperty.Localization
 -/
 
@@ -217,7 +218,7 @@ theorem uniq (G₁ G₂ : W.Localization ⥤ D) (h : W.Q ⋙ G₁ = W.Q ⋙ G₂
       · simpa only using functor.congr_hom h f
       · have hw : W.Q.map w = (Wiso w hw).Hom := rfl
         have hw' := functor.congr_hom h w
-        simp only [functor.comp_map, hw] at hw'
+        simp only [functor.comp_map, hw] at hw' 
         refine' functor.congr_inv_of_congr_hom _ _ _ _ _ hw'
         all_goals apply functor.congr_obj h
 #align category_theory.localization.construction.uniq CategoryTheory.Localization.Construction.uniq
@@ -339,7 +340,7 @@ theorem natTrans_hcomp_injective {F G : W.Localization ⥤ D} {τ₁ τ₂ : F �
     (h : 𝟙 W.Q ◫ τ₁ = 𝟙 W.Q ◫ τ₂) : τ₁ = τ₂ := by
   ext X
   have eq := (obj_equiv W).right_inv X
-  simp only [obj_equiv] at eq
+  simp only [obj_equiv] at eq 
   rw [← Eq, ← nat_trans.id_hcomp_app, ← nat_trans.id_hcomp_app, h]
 #align category_theory.localization.construction.nat_trans_hcomp_injective CategoryTheory.Localization.Construction.natTrans_hcomp_injective
 
@@ -371,14 +372,14 @@ def inverse : W.FunctorsInverting D ⥤ W.Localization ⥤ D
         rw [nat_trans_extension_hcomp]
         ext X
         simpa only [nat_trans.comp_app, eq_to_hom_app, eq_to_hom_refl, comp_id, id_comp,
-          nat_trans.hcomp_id_app, nat_trans.id_app, Functor.map_id] )
+          nat_trans.hcomp_id_app, nat_trans.id_app, Functor.map_id])
   map_comp' G₁ G₂ G₃ τ₁ τ₂ :=
     natTrans_hcomp_injective
       (by
         ext X
         simpa only [nat_trans_extension_hcomp, nat_trans.comp_app, eq_to_hom_app, eq_to_hom_refl,
           id_comp, comp_id, nat_trans.hcomp_app, nat_trans.id_app, Functor.map_id,
-          nat_trans_extension_app, nat_trans_extension.app_eq] )
+          nat_trans_extension_app, nat_trans_extension.app_eq])
 #align category_theory.localization.construction.whiskering_left_equivalence.inverse CategoryTheory.Localization.Construction.WhiskeringLeftEquivalence.inverse
 -/
 

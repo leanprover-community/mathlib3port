@@ -624,7 +624,7 @@ theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by rw [← pow_abs, ab
 theorem abs_pow_eq_one (a : R) {n : ℕ} (h : 0 < n) : |a ^ n| = 1 ↔ |a| = 1 :=
   by
   convert pow_left_inj (abs_nonneg a) zero_le_one h
-  exacts[(pow_abs _ _).symm, (one_pow _).symm]
+  exacts [(pow_abs _ _).symm, (one_pow _).symm]
 #align abs_pow_eq_one abs_pow_eq_one
 
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by rw [pow_bit0];
@@ -653,7 +653,7 @@ theorem pow_bit0_pos_iff (a : R) {n : ℕ} (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a
   by
   refine' ⟨fun h => _, fun h => pow_bit0_pos h n⟩
   rintro rfl
-  rw [zero_pow (Nat.zero_lt_bit0 hn)] at h
+  rw [zero_pow (Nat.zero_lt_bit0 hn)] at h 
   exact lt_irrefl _ h
 #align pow_bit0_pos_iff pow_bit0_pos_iff
 
@@ -767,7 +767,7 @@ theorem pow_lt_pow_succ (ha : 1 < a) : a ^ n < a ^ n.succ :=
 #align pow_lt_pow_succ pow_lt_pow_succ
 
 theorem pow_lt_pow₀ (ha : 1 < a) (hmn : m < n) : a ^ m < a ^ n := by induction' hmn with n hmn ih;
-  exacts[pow_lt_pow_succ ha, lt_trans ih (pow_lt_pow_succ ha)]
+  exacts [pow_lt_pow_succ ha, lt_trans ih (pow_lt_pow_succ ha)]
 #align pow_lt_pow₀ pow_lt_pow₀
 
 end LinearOrderedCommGroupWithZero

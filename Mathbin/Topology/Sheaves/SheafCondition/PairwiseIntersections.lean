@@ -326,7 +326,7 @@ def interUnionPullbackCone :
     PullbackCone (F.1.map (homOfLE inf_le_left : U ⊓ V ⟶ _).op)
       (F.1.map (homOfLE inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLE le_sup_left).op) (F.1.map (homOfLE le_sup_right).op)
-    (by rw [← F.1.map_comp, ← F.1.map_comp]; congr )
+    (by rw [← F.1.map_comp, ← F.1.map_comp]; congr)
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
 
 @[simp]
@@ -361,9 +361,9 @@ def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
     rw [opens.coe_supr, Set.mem_iUnion]
     constructor
     · rintro (h | h)
-      exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
+      exacts [⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
     · rintro ⟨⟨_ | _⟩, h⟩
-      exacts[Or.inl h, Or.inr h]
+      exacts [Or.inl h, Or.inr h]
   refine'
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift
         ⟨s.X,
@@ -372,7 +372,7 @@ def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
       F.1.map (eq_to_hom hι).op
   · apply Opposite.rec'
     rintro ((_ | _) | (_ | _))
-    exacts[s.fst, s.snd, s.fst ≫ F.1.map (hom_of_le inf_le_left).op,
+    exacts [s.fst, s.snd, s.fst ≫ F.1.map (hom_of_le inf_le_left).op,
       s.snd ≫ F.1.map (hom_of_le inf_le_left).op]
   rintro i j f
   induction i using Opposite.rec'
@@ -415,9 +415,9 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
     rw [opens.coe_supr, Set.mem_iUnion]
     constructor
     · rintro (h | h)
-      exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
+      exacts [⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
     · rintro ⟨⟨_ | _⟩, h⟩
-      exacts[Or.inl h, Or.inr h]
+      exacts [Or.inl h, Or.inr h]
   apply pullback_cone.is_limit_aux'
   intro s
   use inter_union_pullback_cone_lift F U V s

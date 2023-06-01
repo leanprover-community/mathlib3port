@@ -84,10 +84,10 @@ instance : AddSubgroupClass (LieSubalgebra R L) L
 instance (L' : LieSubalgebra R L) : LieRing L'
     where
   bracket x y := ⟨⁅x.val, y.val⁆, L'.lie_mem' x.property y.property⟩
-  lie_add := by intros ; apply SetCoe.ext; apply lie_add
-  add_lie := by intros ; apply SetCoe.ext; apply add_lie
-  lie_self := by intros ; apply SetCoe.ext; apply lie_self
-  leibniz_lie := by intros ; apply SetCoe.ext; apply leibniz_lie
+  lie_add := by intros; apply SetCoe.ext; apply lie_add
+  add_lie := by intros; apply SetCoe.ext; apply add_lie
+  lie_self := by intros; apply SetCoe.ext; apply lie_self
+  leibniz_lie := by intros; apply SetCoe.ext; apply leibniz_lie
 
 section
 
@@ -113,7 +113,7 @@ end
 
 /-- A Lie subalgebra forms a new Lie algebra. -/
 instance (L' : LieSubalgebra R L) : LieAlgebra R L'
-    where lie_smul := by intros ; apply SetCoe.ext; apply lie_smul
+    where lie_smul := by intros; apply SetCoe.ext; apply lie_smul
 
 variable {R L} (L' : LieSubalgebra R L)
 
@@ -220,7 +220,7 @@ theorem coe_set_eq (L₁' L₂' : LieSubalgebra R L) : (L₁' : Set L) = L₂' �
 
 #print LieSubalgebra.to_submodule_injective /-
 theorem to_submodule_injective : Function.Injective (coe : LieSubalgebra R L → Submodule R L) :=
-  fun L₁' L₂' h => by rw [SetLike.ext'_iff] at h; rw [← coe_set_eq]; exact h
+  fun L₁' L₂' h => by rw [SetLike.ext'_iff] at h ; rw [← coe_set_eq]; exact h
 #align lie_subalgebra.to_submodule_injective LieSubalgebra.to_submodule_injective
 -/
 
@@ -356,7 +356,7 @@ theorem rangeRestrict_apply (x : L) : f.range_restrict x = ⟨f x, f.mem_range_s
 theorem surjective_rangeRestrict : Function.Surjective f.range_restrict :=
   by
   rintro ⟨y, hy⟩
-  erw [mem_range] at hy; obtain ⟨x, rfl⟩ := hy
+  erw [mem_range] at hy ; obtain ⟨x, rfl⟩ := hy
   use x
   simp only [Subtype.mk_eq_mk, range_restrict_apply]
 #align lie_hom.surjective_range_restrict LieHom.surjective_rangeRestrict
@@ -365,7 +365,7 @@ theorem surjective_rangeRestrict : Function.Surjective f.range_restrict :=
 noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅R⁆ f.range :=
   LieEquiv.ofBijective f.range_restrict
     ⟨fun x y hxy => by
-      simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy
+      simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy 
       exact h hxy, f.surjective_rangeRestrict⟩
 #align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjective
 
@@ -404,8 +404,8 @@ codomain. -/
 def map : LieSubalgebra R L₂ :=
   { (K : Submodule R L).map (f : L →ₗ[R] L₂) with
     lie_mem' := fun x y hx hy => by
-      erw [Submodule.mem_map] at hx; rcases hx with ⟨x', hx', hx⟩; rw [← hx]
-      erw [Submodule.mem_map] at hy; rcases hy with ⟨y', hy', hy⟩; rw [← hy]
+      erw [Submodule.mem_map] at hx ; rcases hx with ⟨x', hx', hx⟩; rw [← hx]
+      erw [Submodule.mem_map] at hy ; rcases hy with ⟨y', hy', hy⟩; rw [← hy]
       erw [Submodule.mem_map]
       exact ⟨⁅x', y'⁆, K.lie_mem hx' hy', f.map_lie x' y'⟩ }
 #align lie_subalgebra.map LieSubalgebra.map
@@ -535,7 +535,7 @@ theorem sInf_coe (S : Set (LieSubalgebra R L)) : (↑(sInf S) : Set L) = ⋂ s �
 #print LieSubalgebra.sInf_glb /-
 theorem sInf_glb (S : Set (LieSubalgebra R L)) : IsGLB S (sInf S) :=
   by
-  have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by intros ; exact Iff.rfl
+  have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K' := by intros; exact Iff.rfl
   apply IsGLB.of_image h
   simp only [Inf_coe]
   exact isGLB_biInf
@@ -549,7 +549,7 @@ than we would otherwise obtain from `complete_lattice_of_Inf`. -/
 instance : CompleteLattice (LieSubalgebra R L) :=
   { completeLatticeOfInf _ sInf_glb with
     bot := ⊥
-    bot_le := fun N _ h => by rw [mem_bot] at h; rw [h]; exact N.zero_mem'
+    bot_le := fun N _ h => by rw [mem_bot] at h ; rw [h]; exact N.zero_mem'
     top := ⊤
     le_top := fun _ _ _ => trivial
     inf := (· ⊓ ·)
@@ -596,7 +596,7 @@ theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 := by rw [eq_bot_i
 instance subsingleton_of_bot : Subsingleton (LieSubalgebra R ↥(⊥ : LieSubalgebra R L)) :=
   by
   apply subsingleton_of_bot_eq_top
-  ext ⟨x, hx⟩; change x ∈ ⊥ at hx; rw [LieSubalgebra.mem_bot] at hx; subst hx
+  ext ⟨x, hx⟩; change x ∈ ⊥ at hx ; rw [LieSubalgebra.mem_bot] at hx ; subst hx
   simp only [true_iff_iff, eq_self_iff_true, Submodule.mk_eq_zero, mem_bot]
 #align lie_subalgebra.subsingleton_of_bot LieSubalgebra.subsingleton_of_bot
 
@@ -722,7 +722,7 @@ theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
   by
   constructor
   · exact Set.Subset.trans subset_lie_span
-  · intro hs m hm; rw [mem_lie_span] at hm; exact hm _ hs
+  · intro hs m hm; rw [mem_lie_span] at hm ; exact hm _ hs
 #align lie_subalgebra.lie_span_le LieSubalgebra.lieSpan_le
 
 theorem lieSpan_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t := by rw [lie_span_le];

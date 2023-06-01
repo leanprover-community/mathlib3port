@@ -55,7 +55,7 @@ variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 /-- Class that expresses the fact that three ring homomorphisms form a composition triple. This is
 used to handle composition of semilinear maps. -/
 class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) :
-  Prop where
+    Prop where
   comp_eq : σ₂₃.comp σ₁₂ = σ₁₃
 #align ring_hom_comp_triple RingHomCompTriple
 -/
@@ -198,7 +198,7 @@ theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective �
   {
     is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
-      rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
+      rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this  }
 #align ring_hom_surjective.comp RingHomSurjective.comp
 
 end RingHomSurjective

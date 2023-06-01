@@ -76,7 +76,7 @@ variable {𝒜}
 `r / s` of *same grading* in each of the stalks (which are localizations at various prime ideals).
 -/
 def IsFraction {U : Opens (ProjectiveSpectrum.top 𝒜)} (f : ∀ x : U, at x.1) : Prop :=
-  ∃ (i : ℕ)(r s : 𝒜 i),
+  ∃ (i : ℕ) (r s : 𝒜 i),
     ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk'' ⟨i, r, s, s_nin⟩
 #align algebraic_geometry.projective_spectrum.structure_sheaf.is_fraction AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.IsFraction
 
@@ -133,7 +133,7 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · simp only [add_mul, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
-    dsimp only at hy1 hy2
+    dsimp only at hy1 hy2 
     erw [hy1, hy2]
     simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_comm, mul_comm sa sb]
 #align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.add_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.add_mem'
@@ -144,7 +144,7 @@ theorem neg_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a : ∀ x : 
   rcases ha x with ⟨V, m, i, j, ⟨r, r_mem⟩, ⟨s, s_mem⟩, w⟩
   choose nin hy using w
   refine' ⟨V, m, i, j, ⟨-r, Submodule.neg_mem _ r_mem⟩, ⟨s, s_mem⟩, fun y => ⟨nin y, _⟩⟩
-  simp only [ext_iff_val, val_mk', ← Subtype.val_eq_coe] at hy
+  simp only [ext_iff_val, val_mk', ← Subtype.val_eq_coe] at hy 
   simp only [Pi.neg_apply, ext_iff_val, neg_val, hy, val_mk', ← Subtype.val_eq_coe, neg_mk]
 #align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.neg_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.neg_mem'
 
@@ -164,7 +164,7 @@ theorem mul_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · simp only [Pi.mul_apply, RingHom.map_mul]
     choose nin1 hy1 using wa (opens.inf_le_left Va Vb y)
     choose nin2 hy2 using wb (opens.inf_le_right Va Vb y)
-    rw [ext_iff_val] at hy1 hy2⊢
+    rw [ext_iff_val] at hy1 hy2 ⊢
     erw [mul_val, hy1, hy2]
     simpa only [val_mk', mk_mul, ← Subtype.val_eq_coe]
 #align algebraic_geometry.projective_spectrum.structure_sheaf.section_subring.mul_mem' AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.SectionSubring.mul_mem'
@@ -347,15 +347,15 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
       obtain ⟨v2, memv2, i2, ⟨j2, ⟨a2, a2_mem⟩, ⟨b2, b2_mem⟩, hs2⟩⟩ := s2.2 ⟨x, memu2⟩
       obtain ⟨b1_nin_x, eq2⟩ := hs1 ⟨x, memv1⟩
       obtain ⟨b2_nin_x, eq3⟩ := hs2 ⟨x, memv2⟩
-      dsimp only at eq1 eq2 eq3
+      dsimp only at eq1 eq2 eq3 
       erw [stalk_to_fiber_ring_hom_germ 𝒜 u1 ⟨x, memu1⟩ s1,
-        stalk_to_fiber_ring_hom_germ 𝒜 u2 ⟨x, memu2⟩ s2] at eq1
-      erw [eq1] at eq2
-      erw [eq2, Quotient.eq'] at eq3
-      change Localization.mk _ _ = Localization.mk _ _ at eq3
-      rw [Localization.mk_eq_mk', IsLocalization.eq] at eq3
+        stalk_to_fiber_ring_hom_germ 𝒜 u2 ⟨x, memu2⟩ s2] at eq1 
+      erw [eq1] at eq2 
+      erw [eq2, Quotient.eq'] at eq3 
+      change Localization.mk _ _ = Localization.mk _ _ at eq3 
+      rw [Localization.mk_eq_mk', IsLocalization.eq] at eq3 
       obtain ⟨⟨c, hc⟩, eq3⟩ := eq3
-      simp only [← Subtype.val_eq_coe] at eq3
+      simp only [← Subtype.val_eq_coe] at eq3 
       have eq3' :
         ∀ (y : ProjectiveSpectrum.top 𝒜)
           (hy :
@@ -396,7 +396,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
       obtain ⟨b1_nin_y, eq6⟩ :=
         hs1 ⟨_, le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) y.2⟩
       obtain ⟨b2_nin_y, eq7⟩ := hs2 ⟨_, le_of_hom (opens.inf_le_right _ _) y.2⟩
-      simp only at eq6 eq7
+      simp only at eq6 eq7 
       erw [eq6, eq7, Quotient.eq']
       change Localization.mk _ _ = Localization.mk _ _
       exact

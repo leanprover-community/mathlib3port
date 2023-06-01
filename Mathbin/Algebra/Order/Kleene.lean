@@ -68,7 +68,7 @@ variable {α β ι : Type _} {π : ι → Type _}
 @[protect_proj]
 class IdemSemiring (α : Type u) extends Semiring α, SemilatticeSup α where
   sup := (· + ·)
-  add_eq_sup : ∀ a b : α, a + b = a ⊔ b := by intros ; rfl
+  add_eq_sup : ∀ a b : α, a + b = a ⊔ b := by intros; rfl
   bot : α := 0
   bot_le : ∀ a, bot ≤ a
 #align idem_semiring IdemSemiring
@@ -405,9 +405,9 @@ protected def kleeneAlgebra [KleeneAlgebra α] [Zero β] [One β] [Add β] [Mul 
     mul_kstar_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact mul_kstar_le_kstar
     kstar_mul_le_kstar := fun a => by change f _ ≤ _; erw [mul, kstar]; exact kstar_mul_le_kstar
     mul_kstar_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
-      erw [mul] at h; exact mul_kstar_le_self h
+      erw [mul] at h ; exact mul_kstar_le_self h
     kstar_mul_le_self := fun a b (h : f _ ≤ _) => by change f _ ≤ _; erw [mul, kstar];
-      erw [mul] at h; exact kstar_mul_le_self h }
+      erw [mul] at h ; exact kstar_mul_le_self h }
 #align function.injective.kleene_algebra Function.Injective.kleeneAlgebra
 
 end Function.Injective

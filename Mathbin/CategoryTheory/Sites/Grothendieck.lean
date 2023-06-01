@@ -103,7 +103,7 @@ the projection `.sieves`.
 -/
 @[ext]
 theorem ext {J₁ J₂ : GrothendieckTopology C} (h : (J₁ : ∀ X : C, Set (Sieve X)) = J₂) : J₁ = J₂ :=
-  by cases J₁; cases J₂; congr ; apply h
+  by cases J₁; cases J₂; congr; apply h
 #align category_theory.grothendieck_topology.ext CategoryTheory.GrothendieckTopology.ext
 -/
 
@@ -207,7 +207,7 @@ theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f :=
 /-- The stability axiom in 'arrow' form: If `S` covers `f` then `S` covers `g ≫ f` for any `g`. -/
 theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g : Z ⟶ Y) :
     J.Covers S (g ≫ f) := by
-  rw [covers_iff] at h⊢
+  rw [covers_iff] at h ⊢
   simp [h, sieve.pullback_comp]
 #align category_theory.grothendieck_topology.arrow_stable CategoryTheory.GrothendieckTopology.arrow_stable
 -/
@@ -244,11 +244,11 @@ def trivial : GrothendieckTopology C where
   sieves X := {⊤}
   top_mem' X := rfl
   pullback_stable' X Y S f hf := by
-    rw [Set.mem_singleton_iff] at hf⊢
+    rw [Set.mem_singleton_iff] at hf ⊢
     simp [hf]
   transitive' X S hS R hR :=
     by
-    rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS
+    rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS 
     simpa using hR hS
 #align category_theory.grothendieck_topology.trivial CategoryTheory.GrothendieckTopology.trivial
 -/
@@ -310,7 +310,7 @@ instance : InfSet (GrothendieckTopology C)
 theorem isGLB_sInf (s : Set (GrothendieckTopology C)) : IsGLB s (sInf s) :=
   by
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
-  · intros ; rfl
+  · intros; rfl
   · exact isGLB_sInf _
 #align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_sInf
 
@@ -328,7 +328,7 @@ instance : CompleteLattice (GrothendieckTopology C) :=
     (by
       apply le_antisymm
       · intro X S hS
-        rw [trivial_covering] at hS
+        rw [trivial_covering] at hS 
         apply covering_of_eq_top _ hS
       · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_sInf) (trivial C))
     _ rfl _ rfl _ rfl sInf rfl
@@ -372,7 +372,7 @@ See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section
 -/
 def dense : GrothendieckTopology C
     where
-  sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
+  sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _) (g : Z ⟶ Y), S (g ≫ f)
   top_mem' X Y f := ⟨Y, 𝟙 Y, ⟨⟩⟩
   pullback_stable' := by
     intro X Y S h H Z f
@@ -387,7 +387,7 @@ def dense : GrothendieckTopology C
 -/
 
 #print CategoryTheory.GrothendieckTopology.dense_covering /-
-theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
+theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _) (g : Z ⟶ Y), S (g ≫ f) :=
   Iff.rfl
 #align category_theory.grothendieck_topology.dense_covering CategoryTheory.GrothendieckTopology.dense_covering
 -/
@@ -399,7 +399,7 @@ NB. Any category with pullbacks obviously satisfies the right Ore condition, see
 `right_ore_of_pullbacks`.
 -/
 def RightOreCondition (C : Type u) [Category.{v} C] : Prop :=
-  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
+  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W : _) (wy : W ⟶ Y) (wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
 #align category_theory.grothendieck_topology.right_ore_condition CategoryTheory.GrothendieckTopology.RightOreCondition
 -/
 
@@ -417,7 +417,7 @@ See https://ncatlab.org/nlab/show/atomic+site, or [MM92] Chapter III, Section 2,
 -/
 def atomic (hro : RightOreCondition C) : GrothendieckTopology C
     where
-  sieves X S := ∃ (Y : _)(f : Y ⟶ X), S f
+  sieves X S := ∃ (Y : _) (f : Y ⟶ X), S f
   top_mem' X := ⟨_, 𝟙 _, ⟨⟩⟩
   pullback_stable' := by
     rintro X Y S h ⟨Z, f, hf⟩
@@ -435,7 +435,8 @@ def atomic (hro : RightOreCondition C) : GrothendieckTopology C
 /-- `J.cover X` denotes the poset of covers of `X` with respect to the
 Grothendieck topology `J`. -/
 def Cover (X : C) :=
-  { S : Sieve X // S ∈ J X }deriving Preorder
+  { S : Sieve X // S ∈ J X }
+deriving Preorder
 #align category_theory.grothendieck_topology.cover CategoryTheory.GrothendieckTopology.Cover
 -/
 

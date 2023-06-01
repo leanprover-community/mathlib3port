@@ -184,7 +184,7 @@ theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts)
     by
     rw [step_bound, ← Nat.div_div_eq_div_mul]
     exact Nat.div_mul_le_self _ _
-  rw [Nat.add_sub_of_le this] at hucard
+  rw [Nat.add_sub_of_le this] at hucard 
   rw [(hP.card_parts_eq_average hu).resolve_left hucard, mul_add, mul_one, ← add_assoc, ← add_mul,
     Nat.sub_add_cancel a_add_one_le_four_pow_parts_card, ← add_assoc, mul_comm,
     Nat.add_sub_of_le this, card_univ]

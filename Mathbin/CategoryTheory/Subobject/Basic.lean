@@ -103,7 +103,8 @@ with morphisms becoming inequalities, and isomorphisms becoming equations.
 /-- The category of subobjects of `X : C`, defined as isomorphism classes of monomorphisms into `X`.
 -/
 def Subobject (X : C) :=
-  ThinSkeleton (MonoOver X)deriving PartialOrder, Category
+  ThinSkeleton (MonoOver X)
+deriving PartialOrder, Category
 #align category_theory.subobject CategoryTheory.Subobject
 -/
 
@@ -355,7 +356,8 @@ theorem ofLE_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofLEMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X ≤ mk f) : (X : C) ⟶ A :=
-  ofLE X (mk f) h ≫ (underlyingIso f).Hom deriving Mono
+  ofLE X (mk f) h ≫ (underlyingIso f).Hom
+deriving Mono
 #align category_theory.subobject.of_le_mk CategoryTheory.Subobject.ofLEMk
 
 @[simp]
@@ -365,7 +367,8 @@ theorem ofLEMk_comp {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (h : X �
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLE {B A : C} (f : A ⟶ B) [Mono f] (X : Subobject B) (h : mk f ≤ X) : A ⟶ (X : C) :=
-  (underlyingIso f).inv ≫ ofLE (mk f) X h deriving Mono
+  (underlyingIso f).inv ≫ ofLE (mk f) X h
+deriving Mono
 #align category_theory.subobject.of_mk_le CategoryTheory.Subobject.ofMkLE
 
 @[simp]
@@ -377,7 +380,8 @@ theorem ofMkLE_arrow {B A : C} {f : A ⟶ B} [Mono f] {X : Subobject B} (h : mk 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLEMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f ≤ mk g) :
     A₁ ⟶ A₂ :=
-  (underlyingIso f).inv ≫ ofLE (mk f) (mk g) h ≫ (underlyingIso g).Hom deriving Mono
+  (underlyingIso f).inv ≫ ofLE (mk f) (mk g) h ≫ (underlyingIso g).Hom
+deriving Mono
 #align category_theory.subobject.of_mk_le_mk CategoryTheory.Subobject.ofMkLEMk
 -/
 
@@ -636,11 +640,11 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y
   map_rel_iff' A B := by
     dsimp; fconstructor
     · intro h
-      apply_fun (map e.inv).obj  at h
-      simp_rw [← map_comp, e.hom_inv_id, map_id] at h
+      apply_fun (map e.inv).obj  at h 
+      simp_rw [← map_comp, e.hom_inv_id, map_id] at h 
       exact h
     · intro h
-      apply_fun (map e.hom).obj  at h
+      apply_fun (map e.hom).obj  at h 
       exact h
 #align category_theory.subobject.map_iso_to_order_iso CategoryTheory.Subobject.mapIsoToOrderIso
 -/

@@ -401,7 +401,7 @@ theorem contDiffOn_homeomorphUnitBall_symm {f : E → E}
   refine' ContDiffAt.congr_of_eventuallyEq _ hf
   suffices ContDiffAt ℝ n (fun y => (1 - ‖(y : E)‖ ^ 2).sqrt⁻¹) y by exact this.smul contDiffAt_id
   have h : 0 < 1 - ‖(y : E)‖ ^ 2 := by
-    rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy
+    rwa [mem_ball_zero_iff, ← _root_.abs_one, ← abs_norm, ← sq_lt_sq, one_pow, ← sub_pos] at hy 
   refine' ContDiffAt.inv _ (real.sqrt_ne_zero'.mpr h)
   refine' ContDiffAt.comp _ (cont_diff_at_sqrt h.ne.symm) _
   exact cont_diff_at_const.sub (contDiff_norm_sq ℝ).ContDiffAt

@@ -51,7 +51,7 @@ Note that since this requires `seminormed_add_comm_group` and not `normed_add_co
 typeclass can be used for "semi normed spaces" too, just as `module` can be used for
 "semi modules". -/
 class NormedSpace (α : Type _) (β : Type _) [NormedField α] [SeminormedAddCommGroup β] extends
-  Module α β where
+    Module α β where
   norm_smul_le : ∀ (a : α) (b : β), ‖a • b‖ ≤ ‖a‖ * ‖b‖
 #align normed_space NormedSpace
 -/
@@ -134,7 +134,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]
-    rw [mem_closed_ball, dist_eq_norm] at hy
+    rw [mem_closed_ball, dist_eq_norm] at hy 
     replace hr : 0 < r; exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
 #align closure_ball closure_ball
@@ -371,7 +371,7 @@ variable (E) [NormedSpace ℝ E] [Nontrivial E]
 theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c :=
   by
   rcases exists_ne (0 : E) with ⟨x, hx⟩
-  rw [← norm_ne_zero_iff] at hx
+  rw [← norm_ne_zero_iff] at hx 
   use c • ‖x‖⁻¹ • x
   simp [norm_smul, Real.norm_of_nonneg hc, hx]
 #align exists_norm_eq exists_norm_eq
@@ -512,7 +512,7 @@ variables [normed_module 𝕜 𝕜'] [smul_comm_class 𝕜 𝕜' 𝕜'] [is_scal
 ```
 -/
 class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SeminormedRing 𝕜'] extends
-  Algebra 𝕜 𝕜' where
+    Algebra 𝕜 𝕜' where
   norm_smul_le : ∀ (r : 𝕜) (x : 𝕜'), ‖r • x‖ ≤ ‖r‖ * ‖x‖
 #align normed_algebra NormedAlgebra
 -/

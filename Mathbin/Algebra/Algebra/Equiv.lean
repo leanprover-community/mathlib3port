@@ -35,7 +35,7 @@ universe u v w u₁ v₁
 #print AlgEquiv /-
 /-- An equivalence of algebras is an equivalence of rings commuting with the actions of scalars. -/
 structure AlgEquiv (R : Type u) (A : Type v) (B : Type w) [CommSemiring R] [Semiring A] [Semiring B]
-  [Algebra R A] [Algebra R B] extends A ≃ B, A ≃* B, A ≃+ B, A ≃+* B where
+    [Algebra R A] [Algebra R B] extends A ≃ B, A ≃* B, A ≃+ B, A ≃+* B where
   commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
 #align alg_equiv AlgEquiv
 -/
@@ -55,7 +55,7 @@ notation:50 A " ≃ₐ[" R "] " A' => AlgEquiv R A A'
 /-- `alg_equiv_class F R A B` states that `F` is a type of algebra structure preserving
   equivalences. You should extend this class when you extend `alg_equiv`. -/
 class AlgEquivClass (F : Type _) (R A B : outParam (Type _)) [CommSemiring R] [Semiring A]
-  [Semiring B] [Algebra R A] [Algebra R B] extends RingEquivClass F A B where
+    [Semiring B] [Algebra R A] [Algebra R B] extends RingEquivClass F A B where
   commutes : ∀ (f : F) (r : R), f (algebraMap R A r) = algebraMap R B r
 #align alg_equiv_class AlgEquivClass
 -/
@@ -464,7 +464,7 @@ theorem arrowCongr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring 
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
   ext; simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
-  congr ; exact (e₂.symm_apply_apply _).symm
+  congr; exact (e₂.symm_apply_apply _).symm
 #align alg_equiv.arrow_congr_comp AlgEquiv.arrowCongr_comp
 
 #print AlgEquiv.arrowCongr_refl /-

@@ -92,14 +92,14 @@ def conesEquivSieveCompatibleFamily :
   toFun π :=
     ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ =>
       by
-      intros ; apply (id_comp _).symm.trans; dsimp
+      intros; apply (id_comp _).symm.trans; dsimp
       convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
   invFun x :=
     { app := fun f => x.1 f.unop.1.Hom f.unop.2
       naturality' := fun f f' g =>
         by
         refine' Eq.trans _ (x.2 f.unop.1.Hom g.unop.left f.unop.2)
-        erw [id_comp]; congr ; rw [over.w g.unop] }
+        erw [id_comp]; congr; rw [over.w g.unop] }
   left_inv π := by
     ext; dsimp; congr
     rw [op_eq_iff_eq_unop]; ext; symm; apply costructured_arrow.eq_mk
@@ -139,7 +139,7 @@ theorem isLimit_iff_isSheafFor :
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]; constructor
   · intro hu E x hx; specialize hu hx.cone
-    erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu
+    erw [(hom_equiv_amalgamation hx).uniqueCongr.nonempty_congr] at hu 
     exact (unique_subtype_iff_exists_unique _).1 hu
   · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E)
     rw [← eqv.left_inv π]; erw [(hom_equiv_amalgamation (eqv π).2).uniqueCongr.nonempty_congr]
@@ -155,7 +155,7 @@ theorem subsingleton_iff_isSeparatedFor :
   by
   constructor
   · intro hs E x t₁ t₂ h₁ h₂; have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
-    rw [compatible_iff_sieve_compatible] at hx; specialize hs hx.cone; cases hs
+    rw [compatible_iff_sieve_compatible] at hx ; specialize hs hx.cone; cases hs
     have := (hom_equiv_amalgamation hx).symm.Injective
     exact Subtype.ext_iff.1 (@this ⟨t₁, h₁⟩ ⟨t₂, h₂⟩ (hs _ _))
   · rintro h ⟨E, π⟩; let eqv := cones_equiv_sieve_compatible_family P S (op E); constructor
@@ -441,7 +441,7 @@ theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.
 
 instance : AddCommGroup (P ⟶ Q) :=
   Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1) (fun _ _ h => Sheaf.Hom.ext _ _ h)
-    rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => by ext; simpa [*] ) fun _ _ =>
+    rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => by ext; simpa [*]) fun _ _ =>
     by ext; simpa [*]
 
 instance : Preadditive (Sheaf J A)
@@ -552,7 +552,7 @@ The middle object of the fork diagram given in Equation (3) of [MM92], as well a
 of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def firstObj : A :=
-  ∏ fun f : ΣV, { f : V ⟶ U // R f } => P.obj (op f.1)
+  ∏ fun f : Σ V, { f : V ⟶ U // R f } => P.obj (op f.1)
 #align category_theory.presheaf.first_obj CategoryTheory.Presheaf.firstObj
 -/
 
@@ -571,7 +571,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def secondObj : A :=
-  ∏ fun fg : (ΣV, { f : V ⟶ U // R f }) × ΣW, { g : W ⟶ U // R g } =>
+  ∏ fun fg : (Σ V, { f : V ⟶ U // R f }) × Σ W, { g : W ⟶ U // R g } =>
     P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 #align category_theory.presheaf.second_obj CategoryTheory.Presheaf.secondObj
 -/
@@ -649,8 +649,8 @@ theorem isSheaf_iff_isSheaf' : IsSheaf J P ↔ IsSheaf' J P :=
     apply coyoneda_jointly_reflects_limits
     intro X
     have q : presieve.is_sheaf_for (P ⋙ coyoneda.obj X) _ := h X.unop _ hR
-    rw [← presieve.is_sheaf_for_iff_generate] at q
-    rw [equalizer.presieve.sheaf_condition] at q
+    rw [← presieve.is_sheaf_for_iff_generate] at q 
+    rw [equalizer.presieve.sheaf_condition] at q 
     replace q := Classical.choice q
     apply (is_sheaf_for_is_sheaf_for' _ _ _ _).symm q
   · intro h U X S hS

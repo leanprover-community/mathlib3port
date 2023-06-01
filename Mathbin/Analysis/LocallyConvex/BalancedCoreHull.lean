@@ -106,7 +106,7 @@ theorem smul_balancedCore_subset (s : Set E) {a : 𝕜} (ha : ‖a‖ ≤ 1) :
     a • balancedCore 𝕜 s ⊆ balancedCore 𝕜 s :=
   by
   rintro x ⟨y, hy, rfl⟩
-  rw [mem_balancedCore_iff] at hy
+  rw [mem_balancedCore_iff] at hy 
   rcases hy with ⟨t, ht1, ht2, hy⟩
   exact ⟨t, ⟨ht1, ht2⟩, ht1 a ha (smul_mem_smul_set hy)⟩
 #align smul_balanced_core_subset smul_balancedCore_subset
@@ -128,7 +128,7 @@ theorem mem_balancedCoreAux_iff : x ∈ balancedCoreAux 𝕜 s ↔ ∀ r : 𝕜,
   mem_iInter₂
 #align mem_balanced_core_aux_iff mem_balancedCoreAux_iff
 
-theorem mem_balancedHull_iff : x ∈ balancedHull 𝕜 s ↔ ∃ (r : 𝕜)(hr : ‖r‖ ≤ 1), x ∈ r • s :=
+theorem mem_balancedHull_iff : x ∈ balancedHull 𝕜 s ↔ ∃ (r : 𝕜) (hr : ‖r‖ ≤ 1), x ∈ r • s :=
   mem_iUnion₂
 #align mem_balanced_hull_iff mem_balancedHull_iff
 
@@ -172,7 +172,7 @@ theorem balancedHull.balanced (s : Set E) : Balanced 𝕜 (balancedHull 𝕜 s) 
   intro a ha
   simp_rw [balancedHull, smul_set_Union₂, subset_def, mem_Union₂]
   rintro x ⟨r, hr, hx⟩
-  rw [← smul_assoc] at hx
+  rw [← smul_assoc] at hx 
   exact ⟨a • r, (SeminormedRing.norm_mul _ _).trans (mul_le_one ha (norm_nonneg r) hr), hx⟩
 #align balanced_hull.balanced balancedHull.balanced
 -/
@@ -206,13 +206,13 @@ theorem balancedCoreAux_balanced (h0 : (0 : E) ∈ balancedCoreAux 𝕜 s) :
   rintro a ha x ⟨y, hy, rfl⟩
   obtain rfl | h := eq_or_ne a 0
   · rwa [zero_smul]
-  rw [mem_balancedCoreAux_iff] at hy⊢
+  rw [mem_balancedCoreAux_iff] at hy ⊢
   intro r hr
   have h'' : 1 ≤ ‖a⁻¹ • r‖ := by
     rw [norm_smul, norm_inv]
     exact one_le_mul_of_one_le_of_one_le (one_le_inv (norm_pos_iff.mpr h) ha) hr
   have h' := hy (a⁻¹ • r) h''
-  rwa [smul_assoc, mem_inv_smul_set_iff₀ h] at h'
+  rwa [smul_assoc, mem_inv_smul_set_iff₀ h] at h' 
 #align balanced_core_aux_balanced balancedCoreAux_balanced
 
 #print balancedCoreAux_maximal /-
@@ -270,7 +270,7 @@ protected theorem IsClosed.balancedCore (hU : IsClosed U) : IsClosed (balancedCo
     refine' isClosed_iInter fun a => _
     refine' isClosed_iInter fun ha => _
     have ha' := lt_of_lt_of_le zero_lt_one ha
-    rw [norm_pos_iff] at ha'
+    rw [norm_pos_iff] at ha' 
     refine' isClosedMap_smul_of_ne_zero ha' U hU
   convert isClosed_empty
   contrapose! h
@@ -282,14 +282,14 @@ theorem balancedCore_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜
   by
   -- Getting neighborhoods of the origin for `0 : 𝕜` and `0 : E`
   obtain ⟨r, V, hr, hV, hrVU⟩ :
-    ∃ (r : ℝ)(V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ‖c‖ < r → y ∈ V → c • y ∈ U :=
+    ∃ (r : ℝ) (V : Set E), 0 < r ∧ V ∈ 𝓝 (0 : E) ∧ ∀ (c : 𝕜) (y : E), ‖c‖ < r → y ∈ V → c • y ∈ U :=
     by
     have h : Filter.Tendsto (fun x : 𝕜 × E => x.fst • x.snd) (𝓝 (0, 0)) (𝓝 0) :=
       continuous_smul.tendsto' (0, 0) _ (smul_zero _)
     simpa only [← Prod.exists', ← Prod.forall', ← and_imp, ← and_assoc, exists_prop] using
       h.basis_left (normed_add_comm_group.nhds_zero_basis_norm_lt.prod_nhds (𝓝 _).basis_sets) U hU
   rcases NormedField.exists_norm_lt 𝕜 hr with ⟨y, hy₀, hyr⟩
-  rw [norm_pos_iff] at hy₀
+  rw [norm_pos_iff] at hy₀ 
   have : y • V ∈ 𝓝 (0 : E) := (set_smul_mem_nhds_zero_iff hy₀).mpr hV
   -- It remains to show that `y • V ⊆ balanced_core 𝕜 U`
   refine' Filter.mem_of_superset this (subset_balancedCore (mem_of_mem_nhds hU) fun a ha => _)

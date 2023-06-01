@@ -231,7 +231,7 @@ theorem eq_of_mem_uIcc_of_mem_uIcc' : b ∈ [a, c] → c ∈ [a, b] → b = c :=
 #print Set.uIcc_injective_right /-
 theorem uIcc_injective_right (a : α) : Injective fun b => uIcc b a := fun b c h =>
   by
-  rw [ext_iff] at h
+  rw [ext_iff] at h 
   exact eq_of_mem_uIcc_of_mem_uIcc ((h _).1 left_mem_uIcc) ((h _).2 left_mem_uIcc)
 #align set.uIcc_injective_right Set.uIcc_injective_right
 -/
@@ -299,7 +299,7 @@ theorem monotone_or_antitone_iff_uIcc :
   by
   constructor
   · rintro (hf | hf) a b c <;> simp_rw [← Icc_min_max, ← hf.map_min, ← hf.map_max]
-    exacts[fun hc => ⟨hf hc.1, hf hc.2⟩, fun hc => ⟨hf hc.2, hf hc.1⟩]
+    exacts [fun hc => ⟨hf hc.1, hf hc.2⟩, fun hc => ⟨hf hc.2, hf hc.1⟩]
   contrapose!
   rw [not_monotone_not_antitone_iff_exists_le_le]
   rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
@@ -395,7 +395,10 @@ theorem Ioc_subset_uIoc' : Ioc a b ⊆ Ι b a :=
 #print Set.eq_of_mem_uIoc_of_mem_uIoc /-
 theorem eq_of_mem_uIoc_of_mem_uIoc : a ∈ Ι b c → b ∈ Ι a c → a = b := by
   simp_rw [mem_uIoc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
-    first |assumption|exact le_of_lt ‹_›|exact le_trans ‹_› (le_of_lt ‹_›)
+    first
+    | assumption
+    | exact le_of_lt ‹_›
+    | exact le_trans ‹_› (le_of_lt ‹_›)
 #align set.eq_of_mem_uIoc_of_mem_uIoc Set.eq_of_mem_uIoc_of_mem_uIoc
 -/
 
@@ -409,7 +412,10 @@ theorem eq_of_mem_uIoc_of_mem_uIoc' : b ∈ Ι a c → c ∈ Ι a b → b = c :=
 theorem eq_of_not_mem_uIoc_of_not_mem_uIoc (ha : a ≤ c) (hb : b ≤ c) :
     a ∉ Ι b c → b ∉ Ι a c → a = b := by
   simp_rw [not_mem_uIoc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
-    first |assumption|exact le_of_lt ‹_›|cases not_le_of_lt ‹_› ‹_›
+    first
+    | assumption
+    | exact le_of_lt ‹_›
+    | cases not_le_of_lt ‹_› ‹_›
 #align set.eq_of_not_mem_uIoc_of_not_mem_uIoc Set.eq_of_not_mem_uIoc_of_not_mem_uIoc
 -/
 
@@ -417,11 +423,11 @@ theorem eq_of_not_mem_uIoc_of_not_mem_uIoc (ha : a ≤ c) (hb : b ≤ c) :
 theorem uIoc_injective_right (a : α) : Injective fun b => Ι b a :=
   by
   rintro b c h
-  rw [ext_iff] at h
+  rw [ext_iff] at h 
   obtain ha | ha := le_or_lt b a
   · have hb := (h b).Not
     simp only [ha, left_mem_uIoc, not_lt, true_iff_iff, not_mem_uIoc, ← not_le, and_true_iff,
-      not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
+      not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb 
     refine' hb.eq_of_not_lt fun hc => _
     simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, -not_le] using h c
   · refine'

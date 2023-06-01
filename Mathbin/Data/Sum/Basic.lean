@@ -506,7 +506,7 @@ instance [∀ a c, Decidable (r a c)] [∀ b d, Decidable (s b d)] :
 
 theorem LiftRel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b)
     (h : LiftRel r₁ s₁ x y) : LiftRel r₂ s₂ x y := by cases h;
-  exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
+  exacts [lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
 #align sum.lift_rel.mono Sum.LiftRel.mono
 
 theorem LiftRel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : LiftRel r₁ s x y) : LiftRel r₂ s x y :=
@@ -519,7 +519,7 @@ theorem LiftRel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : LiftRel r 
 #align sum.lift_rel.mono_right Sum.LiftRel.mono_right
 
 protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.symm y.symm := by cases h;
-  exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
+  exacts [lift_rel.inr ‹_›, lift_rel.inl ‹_›]
 #align sum.lift_rel.swap Sum.LiftRel.swap
 
 @[simp]
@@ -577,7 +577,7 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
 
 #print Sum.LiftRel.lex /-
 protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b := by cases h;
-  exacts[lex.inl ‹_›, lex.inr ‹_›]
+  exacts [lex.inl ‹_›, lex.inr ‹_›]
 #align sum.lift_rel.lex Sum.LiftRel.lex
 -/
 
@@ -588,7 +588,7 @@ theorem liftRel_subrelation_lex : Subrelation (LiftRel r s) (Lex r s) := fun a b
 
 #print Sum.Lex.mono /-
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) :
-    Lex r₂ s₂ x y := by cases h; exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
+    Lex r₂ s₂ x y := by cases h; exacts [lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
 #align sum.lex.mono Sum.Lex.mono
 -/
 

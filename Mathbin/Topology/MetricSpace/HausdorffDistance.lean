@@ -193,7 +193,7 @@ theorem infEdist_closure_pos_iff_not_mem_closure {x : α} {E : Set α} :
 theorem exists_real_pos_lt_infEdist_of_not_mem_closure {x : α} {E : Set α} (h : x ∉ closure E) :
     ∃ ε : ℝ, 0 < ε ∧ ENNReal.ofReal ε < infEdist x E :=
   by
-  rw [← inf_edist_pos_iff_not_mem_closure, ENNReal.lt_iff_exists_real_btwn] at h
+  rw [← inf_edist_pos_iff_not_mem_closure, ENNReal.lt_iff_exists_real_btwn] at h 
   rcases h with ⟨ε, ⟨_, ⟨ε_pos, ε_lt⟩⟩⟩
   exact ⟨ε, ⟨ennreal.of_real_pos.mp ε_pos, ε_lt⟩⟩
 #align emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure EMetric.exists_real_pos_lt_infEdist_of_not_mem_closure
@@ -205,7 +205,7 @@ theorem disjoint_closedBall_of_lt_infEdist {r : ℝ≥0∞} (h : r < infEdist x 
   apply lt_irrefl (inf_edist x s)
   calc
     inf_edist x s ≤ edist x y := inf_edist_le_edist_of_mem h'y
-    _ ≤ r := by rwa [mem_closed_ball, edist_comm] at hy
+    _ ≤ r := by rwa [mem_closed_ball, edist_comm] at hy 
     _ < inf_edist x s := h
     
 #align emetric.disjoint_closed_ball_of_lt_inf_edist EMetric.disjoint_closedBall_of_lt_infEdist
@@ -237,12 +237,12 @@ theorem IsOpen.exists_iUnion_isClosed {U : Set α} (hU : IsOpen U) :
   refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist isClosed_Ici, F_subset, _, _⟩
   show Monotone F
   · intro m n hmn x hx
-    simp only [mem_Ici, mem_preimage] at hx⊢
+    simp only [mem_Ici, mem_preimage] at hx ⊢
     apply le_trans (pow_le_pow_of_le_one' a_lt_one.le hmn) hx
   show (⋃ n, F n) = U
   · refine' subset.antisymm (by simp only [Union_subset_iff, F_subset, forall_const]) fun x hx => _
     have : ¬x ∈ Uᶜ := by simpa using hx
-    rw [mem_iff_inf_edist_zero_of_closed hU.is_closed_compl] at this
+    rw [mem_iff_inf_edist_zero_of_closed hU.is_closed_compl] at this 
     have B : 0 < inf_edist x (Uᶜ) := by simpa [pos_iff_ne_zero] using this
     have : Filter.Tendsto (fun n => a ^ n) at_top (𝓝 0) :=
       ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1 a_lt_one
@@ -503,7 +503,7 @@ theorem empty_or_nonempty_of_hausdorffEdist_ne_top (fin : hausdorffEdist s t ≠
   cases' s.eq_empty_or_nonempty with hs hs
   · cases' t.eq_empty_or_nonempty with ht ht
     · exact Or.inl ⟨hs, ht⟩
-    · rw [Hausdorff_edist_comm] at fin
+    · rw [Hausdorff_edist_comm] at fin 
       exact Or.inr ⟨nonempty_of_Hausdorff_edist_ne_top ht Fin, ht⟩
   · exact Or.inr ⟨hs, nonempty_of_Hausdorff_edist_ne_top hs Fin⟩
 #align emetric.empty_or_nonempty_of_Hausdorff_edist_ne_top EMetric.empty_or_nonempty_of_hausdorffEdist_ne_top
@@ -727,7 +727,7 @@ theorem infDist_inter_closedBall_of_mem (h : y ∈ s) :
   rcases(inf_dist_lt_iff ⟨y, h.1⟩).mp hlt with ⟨z, hzs, hz⟩
   cases' le_or_lt (dist z x) (dist y x) with hle hlt
   · exact hz.not_le (inf_dist_le_dist_of_mem ⟨hzs, hle⟩)
-  · rw [dist_comm z, dist_comm y] at hlt
+  · rw [dist_comm z, dist_comm y] at hlt 
     exact (hlt.trans hz).not_le (inf_dist_le_dist_of_mem h)
 #align metric.inf_dist_inter_closed_ball_of_mem Metric.infDist_inter_closedBall_of_mem
 -/
@@ -872,11 +872,11 @@ theorem hausdorffDist_le_of_infDist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x ∈ s, 
     · intro x hx
       have I := H1 x hx
       rwa [inf_dist, ← ENNReal.toReal_ofReal hr,
-        ENNReal.toReal_le_toReal (inf_edist_ne_top ht) ENNReal.ofReal_ne_top] at I
+        ENNReal.toReal_le_toReal (inf_edist_ne_top ht) ENNReal.ofReal_ne_top] at I 
     · intro x hx
       have I := H2 x hx
       rwa [inf_dist, ← ENNReal.toReal_ofReal hr,
-        ENNReal.toReal_le_toReal (inf_edist_ne_top hs) ENNReal.ofReal_ne_top] at I
+        ENNReal.toReal_le_toReal (inf_edist_ne_top hs) ENNReal.ofReal_ne_top] at I 
   rwa [Hausdorff_dist, ← ENNReal.toReal_ofReal hr,
     ENNReal.toReal_le_toReal h1 ENNReal.ofReal_ne_top]
 #align metric.Hausdorff_dist_le_of_inf_dist Metric.hausdorffDist_le_of_infDist
@@ -931,9 +931,9 @@ theorem exists_dist_lt_of_hausdorffDist_lt {r : ℝ} (h : x ∈ s) (H : hausdorf
   have r0 : 0 < r := lt_of_le_of_lt Hausdorff_dist_nonneg H
   have : Hausdorff_edist s t < ENNReal.ofReal r := by
     rwa [Hausdorff_dist, ← ENNReal.toReal_ofReal (le_of_lt r0),
-      ENNReal.toReal_lt_toReal Fin ENNReal.ofReal_ne_top] at H
+      ENNReal.toReal_lt_toReal Fin ENNReal.ofReal_ne_top] at H 
   rcases exists_edist_lt_of_Hausdorff_edist_lt h this with ⟨y, hy, yr⟩
-  rw [edist_dist, ENNReal.ofReal_lt_ofReal_iff r0] at yr
+  rw [edist_dist, ENNReal.ofReal_lt_ofReal_iff r0] at yr 
   exact ⟨y, hy, yr⟩
 #align metric.exists_dist_lt_of_Hausdorff_dist_lt Metric.exists_dist_lt_of_hausdorffDist_lt
 
@@ -942,8 +942,8 @@ theorem exists_dist_lt_of_hausdorffDist_lt {r : ℝ} (h : x ∈ s) (H : hausdorf
 theorem exists_dist_lt_of_hausdorffDist_lt' {r : ℝ} (h : y ∈ t) (H : hausdorffDist s t < r)
     (fin : hausdorffEdist s t ≠ ⊤) : ∃ x ∈ s, dist x y < r :=
   by
-  rw [Hausdorff_dist_comm] at H
-  rw [Hausdorff_edist_comm] at fin
+  rw [Hausdorff_dist_comm] at H 
+  rw [Hausdorff_edist_comm] at fin 
   simpa [dist_comm] using exists_dist_lt_of_Hausdorff_dist_lt h H Fin
 #align metric.exists_dist_lt_of_Hausdorff_dist_lt' Metric.exists_dist_lt_of_hausdorffDist_lt'
 
@@ -995,7 +995,7 @@ theorem hausdorffDist_triangle (fin : hausdorffEdist s t ≠ ⊤) :
 theorem hausdorffDist_triangle' (fin : hausdorffEdist t u ≠ ⊤) :
     hausdorffDist s u ≤ hausdorffDist s t + hausdorffDist t u :=
   by
-  rw [Hausdorff_edist_comm] at fin
+  rw [Hausdorff_edist_comm] at fin 
   have I : Hausdorff_dist u s ≤ Hausdorff_dist u t + Hausdorff_dist t s :=
     Hausdorff_dist_triangle Fin
   simpa [add_comm, Hausdorff_dist_comm] using I
@@ -1127,8 +1127,8 @@ theorem frontier_thickening_disjoint (A : Set α) :
   refine'
     ((disjoint_singleton.2 fun h => hr.ne _).Preimage _).mono (frontier_thickening_subset _)
       (frontier_thickening_subset _)
-  apply_fun ENNReal.toReal  at h
-  rwa [ENNReal.toReal_ofReal h₁, ENNReal.toReal_ofReal (h₁.trans hr.le)] at h
+  apply_fun ENNReal.toReal  at h 
+  rwa [ENNReal.toReal_ofReal h₁, ENNReal.toReal_ofReal (h₁.trans hr.le)] at h 
 #align metric.frontier_thickening_disjoint Metric.frontier_thickening_disjoint
 
 variable {X : Type u} [PseudoMetricSpace X]
@@ -1143,7 +1143,7 @@ theorem mem_thickening_iff {E : Set X} {x : X} : x ∈ thickening δ E ↔ ∃ z
     rw [dist_edist]
     have d_lt_top : edist x z < ∞ := by simp only [edist_dist, ENNReal.ofReal_lt_top]
     have key := @ENNReal.ofReal_lt_ofReal_iff_of_nonneg (edist x z).toReal δ ENNReal.toReal_nonneg
-    rwa [ENNReal.ofReal_toReal d_lt_top.ne] at key
+    rwa [ENNReal.ofReal_toReal d_lt_top.ne] at key 
   simp_rw [mem_thickening_iff_exists_edist_lt, key_iff]
 #align metric.mem_thickening_iff Metric.mem_thickening_iff
 
@@ -1300,7 +1300,7 @@ theorem cthickening_subset_thickening' {δ₁ δ₂ : ℝ} (δ₂_pos : 0 < δ�
 /-- The open thickening `thickening δ E` is contained in the closed thickening `cthickening δ E`
 with the same radius. -/
 theorem thickening_subset_cthickening (δ : ℝ) (E : Set α) : thickening δ E ⊆ cthickening δ E := by
-  intro x hx; rw [thickening, mem_set_of_eq] at hx; exact hx.le
+  intro x hx; rw [thickening, mem_set_of_eq] at hx ; exact hx.le
 #align metric.thickening_subset_cthickening Metric.thickening_subset_cthickening
 -/
 
@@ -1394,12 +1394,12 @@ theorem thickening_iUnion (δ : ℝ) (f : ι → Set α) :
 theorem ediam_cthickening_le (ε : ℝ≥0) : EMetric.diam (cthickening ε s) ≤ EMetric.diam s + 2 * ε :=
   by
   refine' diam_le fun x hx y hy => ENNReal.le_of_forall_pos_le_add fun δ hδ _ => _
-  rw [mem_cthickening_iff, ENNReal.ofReal_coe_nnreal] at hx hy
+  rw [mem_cthickening_iff, ENNReal.ofReal_coe_nnreal] at hx hy 
   have hε : (ε : ℝ≥0∞) < ε + ↑(δ / 2) := ENNReal.coe_lt_coe.2 (lt_add_of_pos_right _ <| half_pos hδ)
-  rw [ENNReal.coe_div two_ne_zero, ENNReal.coe_two] at hε
+  rw [ENNReal.coe_div two_ne_zero, ENNReal.coe_two] at hε 
   replace hx := hx.trans_lt hε
   replace hy := hy.trans_lt hε
-  rw [inf_edist_lt_iff] at hx hy
+  rw [inf_edist_lt_iff] at hx hy 
   obtain ⟨x', hx', hxx'⟩ := hx
   obtain ⟨y', hy', hyy'⟩ := hy
   refine'
@@ -1470,8 +1470,8 @@ theorem Disjoint.exists_thickenings (hst : Disjoint s t) (hs : IsCompact s) (ht 
   refine' ⟨r / 2, half_pos (NNReal.coe_pos.2 hr), _⟩
   rw [disjoint_iff_inf_le]
   rintro z ⟨hzs, hzt⟩
-  rw [mem_thickening_iff_exists_edist_lt] at hzs hzt
-  rw [← NNReal.coe_two, ← NNReal.coe_div, ENNReal.ofReal_coe_nnreal] at hzs hzt
+  rw [mem_thickening_iff_exists_edist_lt] at hzs hzt 
+  rw [← NNReal.coe_two, ← NNReal.coe_div, ENNReal.ofReal_coe_nnreal] at hzs hzt 
   obtain ⟨x, hx, hzx⟩ := hzs
   obtain ⟨y, hy, hzy⟩ := hzt
   refine' (h x hx y hy).not_le _
@@ -1572,7 +1572,7 @@ theorem closure_eq_iInter_cthickening' (E : Set α) (s : Set ℝ)
   by_cases hs₀ : s ⊆ Ioi 0
   · rw [← cthickening_zero]; apply cthickening_eq_Inter_cthickening' _ hs₀ hs
   obtain ⟨δ, hδs, δ_nonpos⟩ := not_subset.mp hs₀
-  rw [Set.mem_Ioi, not_lt] at δ_nonpos
+  rw [Set.mem_Ioi, not_lt] at δ_nonpos 
   apply subset.antisymm
   · exact subset_Inter₂ fun ε _ => closure_subset_cthickening ε E
   · rw [← cthickening_of_nonpos δ_nonpos E]
@@ -1639,7 +1639,7 @@ theorem IsCompact.cthickening_eq_biUnion_closedBall {α : Type _} [PseudoMetricS
   obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, inf_edist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
   have D1 : edist x y ≤ ENNReal.ofReal δ := (le_of_eq hy.symm).trans hx
   have D2 : dist x y ≤ δ := by
-    rw [edist_dist] at D1
+    rw [edist_dist] at D1 
     exact (ENNReal.ofReal_le_ofReal_iff hδ).1 D1
   exact mem_bUnion yE D2
 #align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_biUnion_closedBall
@@ -1671,7 +1671,7 @@ theorem infEdist_le_infEdist_cthickening_add :
     infEdist x s ≤ infEdist x (cthickening δ s) + ENNReal.ofReal δ :=
   by
   refine' le_of_forall_lt' fun r h => _
-  simp_rw [← lt_tsub_iff_right, inf_edist_lt_iff, mem_cthickening_iff] at h
+  simp_rw [← lt_tsub_iff_right, inf_edist_lt_iff, mem_cthickening_iff] at h 
   obtain ⟨y, hy, hxy⟩ := h
   exact
     inf_edist_le_edist_add_inf_edist.trans_lt

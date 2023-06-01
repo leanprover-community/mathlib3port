@@ -150,7 +150,7 @@ theorem nhds_mkOfNhds_single [DecidableEq α] {a₀ : α} {l : Filter α} (h : p
     · exact hs
     · rwa [update_noteq hb]
   · have hs' := hs
-    rw [update_noteq ha] at hs⊢
+    rw [update_noteq ha] at hs ⊢
     exact ⟨{a}, rfl, singleton_subset_iff.mpr hs, forall_eq.2 hs'⟩
 #align topological_space.nhds_mk_of_nhds_single TopologicalSpace.nhds_mkOfNhds_single
 
@@ -300,10 +300,10 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
     · rw [sUnion_eq_empty, or_iff_not_imp_left]
-      intro h; push_neg  at h; obtain ⟨U, hU, hne⟩ := h
+      intro h; push_neg  at h ; obtain ⟨U, hU, hne⟩ := h
       have := (ih U hU).resolve_left hne; subst this
       refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩, by rintro (rfl | rfl);
-    exacts[@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
+    exacts [@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
 #align topological_space.is_open_top_iff TopologicalSpace.isOpen_top_iff
 
 #print DiscreteTopology /-
@@ -426,7 +426,7 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
     rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;>
       exact ⟨s'₁ ∩ s'₂, hs₁.inter hs₂, preimage_inter⟩
   isOpen_sUnion s h := by
-    simp only [Classical.skolem] at h
+    simp only [Classical.skolem] at h 
     cases' h with f hf
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
     simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
@@ -763,11 +763,11 @@ theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : Topologi
   · intro h
     constructor
     · specialize h a
-      rwa [nhdsAdjoint_nhds] at h
+      rwa [nhdsAdjoint_nhds] at h 
     · intro b hb
       apply le_antisymm _ (pure_le_nhds b)
       specialize h b
-      rwa [nhdsAdjoint_nhds_of_ne a f hb] at h
+      rwa [nhdsAdjoint_nhds_of_ne a f hb] at h 
   · rintro ⟨h, h'⟩ b
     by_cases hb : b = a
     · rwa [hb, nhdsAdjoint_nhds]
@@ -859,14 +859,14 @@ theorem continuous_coinduced_dom {g : β → γ} {t₁ : tspace α} {t₂ : tspa
 
 theorem continuous_le_dom {t₁ t₂ : tspace α} {t₃ : tspace β} (h₁ : t₂ ≤ t₁) (h₂ : cont t₁ t₃ f) :
     cont t₂ t₃ f := by
-  rw [continuous_def] at h₂⊢
+  rw [continuous_def] at h₂ ⊢
   intro s h
   exact h₁ _ (h₂ s h)
 #align continuous_le_dom continuous_le_dom
 
 theorem continuous_le_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : t₂ ≤ t₃) (h₂ : cont t₁ t₂ f) :
     cont t₁ t₃ f := by
-  rw [continuous_def] at h₂⊢
+  rw [continuous_def] at h₂ ⊢
   intro s h
   exact h₂ s (h₁ s h)
 #align continuous_le_rng continuous_le_rng
@@ -966,7 +966,7 @@ theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s :
   simp only [mem_nhds_iff, isOpen_induced_iff, exists_prop, Set.mem_setOf_eq]
   constructor
   · rintro ⟨u, usub, ⟨v, openv, ueq⟩, au⟩
-    exact ⟨v, ⟨v, Set.Subset.refl v, openv, by rwa [← ueq] at au⟩, by rw [ueq] <;> exact usub⟩
+    exact ⟨v, ⟨v, Set.Subset.refl v, openv, by rwa [← ueq] at au ⟩, by rw [ueq] <;> exact usub⟩
   rintro ⟨u, ⟨v, vsubu, openv, amem⟩, finvsub⟩
   exact ⟨f ⁻¹' v, Set.Subset.trans (Set.preimage_mono vsubu) finvsub, ⟨⟨v, openv, rfl⟩, amem⟩⟩
 #align mem_nhds_induced mem_nhds_induced

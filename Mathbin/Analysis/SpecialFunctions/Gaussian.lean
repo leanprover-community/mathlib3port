@@ -169,7 +169,7 @@ theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   refine' ⟨(continuous_of_real.mul (complex.continuous_exp.comp _)).AEStronglyMeasurable, _⟩
   · exact continuous_const.mul (continuous_of_real.pow 2)
   have := (integrable_mul_exp_neg_mul_sq hb).HasFiniteIntegral
-  rw [← has_finite_integral_norm_iff] at this⊢
+  rw [← has_finite_integral_norm_iff] at this ⊢
   convert this
   ext1 x
   rw [norm_mul, norm_mul, norm_cexp_neg_mul_sq b, Complex.norm_eq_abs, abs_of_real,
@@ -210,7 +210,7 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
     (∫ x : ℝ, cexp (-b * (x : ℂ) ^ 2)) ^ 2 =
         ∫ p : ℝ × ℝ, cexp (-b * (p.1 : ℂ) ^ 2) * cexp (-b * (p.2 : ℂ) ^ 2) :=
       by rw [pow_two, ← integral_prod_mul]; rfl
-    _ = ∫ p : ℝ × ℝ, cexp (-b * (p.1 ^ 2 + p.2 ^ 2)) := by congr ; ext1 p;
+    _ = ∫ p : ℝ × ℝ, cexp (-b * (p.1 ^ 2 + p.2 ^ 2)) := by congr; ext1 p;
       rw [← Complex.exp_add, mul_add]
     _ = ∫ p in polar_coord.target, p.1 • cexp (-b * ((p.1 * cos p.2) ^ 2 + (p.1 * sin p.2) ^ 2)) :=
       by
@@ -324,10 +324,10 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
   by
   have full_integral := integral_gaussian_complex hb
   have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_Ioi
-  rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral
+  rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral 
   suffices (∫ x : ℝ in Iic 0, cexp (-b * x ^ 2)) = ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)
     by
-    rw [this, ← mul_two] at full_integral
+    rw [this, ← mul_two] at full_integral 
     rwa [eq_div_iff]; exact two_ne_zero
   have : ∀ c : ℝ, (∫ x in 0 ..c, cexp (-b * x ^ 2)) = ∫ x in -c..0, cexp (-b * x ^ 2) :=
     by
@@ -462,15 +462,15 @@ theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤
   · intro y hy
     have absy : |y| ≤ |c| := by
       rcases le_or_lt 0 c with ⟨⟩
-      · rw [uIoc_of_le h] at hy
+      · rw [uIoc_of_le h] at hy 
         rw [abs_of_nonneg h, abs_of_pos hy.1]
         exact hy.2
-      · rw [uIoc_of_lt h] at hy
+      · rw [uIoc_of_lt h] at hy 
         rw [abs_of_neg h, abs_of_nonpos hy.2, neg_le_neg_iff]
         exact hy.1.le
     rw [norm_mul, Complex.norm_eq_abs, abs_I, one_mul, two_mul]
     refine' (norm_sub_le _ _).trans (add_le_add (vert_norm_bound hT absy) _)
-    rw [← abs_neg y] at absy
+    rw [← abs_neg y] at absy 
     simpa only [neg_mul, of_real_neg] using vert_norm_bound hT absy
 #align gaussian_fourier.vertical_integral_norm_le GaussianFourier.verticalIntegral_norm_le
 
@@ -538,7 +538,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
     by
     ext1 T
     specialize C T
-    rw [sub_eq_zero] at C
+    rw [sub_eq_zero] at C 
     unfold vertical_integral
     rw [integral_const_mul, intervalIntegral.integral_sub]
     · simp_rw [(fun a b => by rw [sq]; ring_nf : ∀ a b : ℂ, (a - b * I) ^ 2 = (-a + b * I) ^ 2)]
@@ -592,7 +592,7 @@ theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
     all_goals push_cast ; ring
   · conv_lhs => rw [mul_comm]
     congr 2
-    · field_simp [of_real_ne_zero.mpr pi_ne_zero] ; ring
+    · field_simp [of_real_ne_zero.mpr pi_ne_zero]; ring
     · rw [← div_div, div_self (of_real_ne_zero.mpr pi_ne_zero), one_div, one_div b, inv_cpow]
       rw [Ne.def, arg_eq_pi_iff, not_and_or, not_lt]
       exact Or.inl hb.le

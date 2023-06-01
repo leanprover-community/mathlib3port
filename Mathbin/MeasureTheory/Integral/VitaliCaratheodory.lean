@@ -125,7 +125,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
         or_false_iff, lintegral_indicator, ENNReal.coe_eq_zero, Ne.def, not_false_iff,
         simple_func.coe_zero, Set.piecewise_eq_indicator, simple_func.coe_piecewise, false_and_iff,
         restrict_apply] using h
-    obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ε / c :=
+    obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _) (_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ε / c :=
       s.exists_is_open_lt_of_lt _ this
     refine'
       ⟨Set.indicator u fun x => c, fun x => _, u_open.lower_semicontinuous_indicator (zero_le _), _⟩
@@ -250,9 +250,9 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable [SigmaFinite 
   refine' ⟨fun x => g0 x + g1 x, fun x => _, g0_cont.add g1_cont, _⟩
   · by_cases h : x ∈ s
     · have := le_g1 x
-      simp only [h, Set.indicator_of_mem, top_le_iff] at this
+      simp only [h, Set.indicator_of_mem, top_le_iff] at this 
       simp [this]
-    · have : f x = fmeas.mk f x := by rw [Set.compl_subset_comm] at hs; exact hs h
+    · have : f x = fmeas.mk f x := by rw [Set.compl_subset_comm] at hs ; exact hs h
       rw [this]
       exact (f_lt_g0 x).trans_le le_self_add
   ·
@@ -360,7 +360,7 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
         simple_func.coe_zero, Set.piecewise_eq_indicator, simple_func.coe_piecewise,
         false_and_iff] using int_f
     have : (0 : ℝ≥0∞) < ε / c := ENNReal.div_pos_iff.2 ⟨ε0, ENNReal.coe_ne_top⟩
-    obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ε / c :=
+    obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _) (_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ε / c :=
       hs.exists_is_closed_lt_add μs_lt_top.ne this.ne'
     refine'
       ⟨Set.indicator F fun x => c, fun x => _, F_closed.upper_semicontinuous_indicator (zero_le _),
@@ -410,8 +410,8 @@ theorem exists_upperSemicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f :
     by
     have := ENNReal.lt_add_right int_f (ENNReal.half_pos ε0).ne'
     conv_rhs at this => rw [lintegral_eq_nnreal (fun x => (f x : ℝ≥0∞)) μ]
-    erw [ENNReal.biSup_add] at this <;> [skip;exact ⟨0, fun x => by simp⟩]
-    simp only [lt_iSup_iff] at this
+    erw [ENNReal.biSup_add] at this  <;> [skip; exact ⟨0, fun x => by simp⟩]
+    simp only [lt_iSup_iff] at this 
     rcases this with ⟨fs, fs_le_f, int_fs⟩
     refine' ⟨fs, fun x => by simpa only [ENNReal.coe_le_coe] using fs_le_f x, _⟩
     convert int_fs.le
@@ -445,7 +445,7 @@ theorem exists_upperSemicontinuous_le_integral_le (f : α → ℝ≥0)
           Integrable (fun x => (g x : ℝ)) μ ∧ (∫ x, (f x : ℝ) ∂μ) - ε ≤ ∫ x, g x ∂μ :=
   by
   lift ε to ℝ≥0 using εpos.le
-  rw [NNReal.coe_pos, ← ENNReal.coe_pos] at εpos
+  rw [NNReal.coe_pos, ← ENNReal.coe_pos] at εpos 
   have If : (∫⁻ x, f x ∂μ) < ∞ := has_finite_integral_iff_of_nnreal.1 fint.has_finite_integral
   rcases exists_upper_semicontinuous_le_lintegral_le f If.ne εpos.ne' with ⟨g, gf, gcont, gint⟩
   have Ig : (∫⁻ x, g x ∂μ) < ∞ :=
@@ -579,8 +579,8 @@ theorem exists_upperSemicontinuous_lt_integral_gt [SigmaFinite μ] (f : α → �
     ext x
     simp
   · simpa [bot_lt_iff_ne_bot, lt_top_iff_ne_top] using g_lt_top
-  · simp_rw [integral_neg, lt_neg_add_iff_add_lt] at gint
-    rw [add_comm] at gint
+  · simp_rw [integral_neg, lt_neg_add_iff_add_lt] at gint 
+    rw [add_comm] at gint 
     simpa [integral_neg] using gint
 #align measure_theory.exists_upper_semicontinuous_lt_integral_gt MeasureTheory.exists_upperSemicontinuous_lt_integral_gt
 

@@ -110,7 +110,7 @@ def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S)
       intro t x hx
       have hF := F.prop' t x hx
       have hG := G.prop' t x hx
-      simp only [coe_mk, prod_eval, Prod.mk.inj_iff, homotopy.prod] at hF hG⊢
+      simp only [coe_mk, prod_eval, Prod.mk.inj_iff, homotopy.prod] at hF hG ⊢
       exact ⟨⟨hF.1, hG.1⟩, ⟨hF.2, hG.2⟩⟩ }
 #align continuous_map.homotopy_rel.prod ContinuousMap.HomotopyRel.prod
 
@@ -171,19 +171,19 @@ theorem proj_pi (i : ι) (paths : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) 
     proj i (pi paths) = paths i :=
   by
   apply Quotient.induction_on_pi paths
-  intro ; unfold proj
+  intro; unfold proj
   rw [pi_lift, ← Path.Homotopic.map_lift]
-  congr ; ext; rfl
+  congr; ext; rfl
 #align path.homotopic.proj_pi Path.Homotopic.proj_pi
 
 @[simp]
 theorem pi_proj (p : Path.Homotopic.Quotient as bs) : (pi fun i => proj i p) = p :=
   by
   apply Quotient.inductionOn p
-  intro ; unfold proj
+  intro; unfold proj
   simp_rw [← Path.Homotopic.map_lift]
   rw [pi_lift]
-  congr ; ext; rfl
+  congr; ext; rfl
 #align path.homotopic.pi_proj Path.Homotopic.pi_proj
 
 end Pi
@@ -247,7 +247,7 @@ theorem projLeft_prod : projLeft (prod q₁ q₂) = q₁ :=
   intro p₁ p₂
   unfold proj_left
   rw [prod_lift, ← Path.Homotopic.map_lift]
-  congr ; ext; rfl
+  congr; ext; rfl
 #align path.homotopic.proj_left_prod Path.Homotopic.projLeft_prod
 
 @[simp]
@@ -257,7 +257,7 @@ theorem projRight_prod : projRight (prod q₁ q₂) = q₂ :=
   intro p₁ p₂
   unfold proj_right
   rw [prod_lift, ← Path.Homotopic.map_lift]
-  congr ; ext; rfl
+  congr; ext; rfl
 #align path.homotopic.proj_right_prod Path.Homotopic.projRight_prod
 
 @[simp]
@@ -268,7 +268,7 @@ theorem prod_projLeft_projRight (p : Path.Homotopic.Quotient (a₁, b₁) (a₂,
   intro p'
   unfold proj_left; unfold proj_right
   simp only [← Path.Homotopic.map_lift, prod_lift]
-  congr ; ext <;> rfl
+  congr; ext <;> rfl
 #align path.homotopic.prod_proj_left_proj_right Path.Homotopic.prod_projLeft_projRight
 
 end Prod

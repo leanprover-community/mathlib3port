@@ -500,7 +500,7 @@ theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 :=
   cases' subsingleton_or_nontrivial α with ht ht
   · simp
   cases' (Fintype.card n).zero_le.eq_or_lt with hc hc
-  · rw [eq_comm, Fintype.card_eq_zero_iff] at hc
+  · rw [eq_comm, Fintype.card_eq_zero_iff] at hc 
     haveI := hc
     ext i
     exact (IsEmpty.false i).elim

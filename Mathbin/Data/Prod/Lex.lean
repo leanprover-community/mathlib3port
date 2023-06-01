@@ -98,10 +98,10 @@ instance preorder (α β : Type _) [Preorder α] [Preorder β] : Preorder (α ×
               · apply lt_asymm hlt; assumption
               · apply lt_irrefl _ hlt
           · constructor
-            · right; rw [lt_iff_le_not_le] at hlt; exact hlt.1
+            · right; rw [lt_iff_le_not_le] at hlt ; exact hlt.1
             · rintro ⟨⟩
               · apply lt_irrefl a₁; assumption
-              · rw [lt_iff_le_not_le] at hlt; apply hlt.2; assumption
+              · rw [lt_iff_le_not_le] at hlt ; apply hlt.2; assumption
         · rintro ⟨⟨⟩, h₂r⟩
           · left; assumption
           · right; rw [lt_iff_le_not_le]; constructor

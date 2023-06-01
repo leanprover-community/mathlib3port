@@ -485,7 +485,7 @@ def Preorder.toCircularPreorder (α : Type _) [Preorder α] : CircularPreorder �
   Sbtw a b c := a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
   btw_refl a := Or.inl ⟨le_rfl, le_rfl⟩
   btw_cyclic_left a b c h := by
-    unfold btw at h⊢
+    unfold btw at h ⊢
     rwa [← or_assoc, or_comm']
   sbtw_trans_left a b c d :=
     by

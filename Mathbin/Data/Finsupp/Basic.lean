@@ -489,8 +489,8 @@ theorem mapDomain_comp {f : α → β} {g : β → γ} :
     mapDomain (g ∘ f) v = mapDomain g (mapDomain f v) :=
   by
   refine' ((sum_sum_index _ _).trans _).symm
-  · intro ; exact single_zero _
-  · intro ; exact single_add _
+  · intro; exact single_zero _
+  · intro; exact single_add _
   refine' sum_congr fun _ _ => sum_single_index _
   · exact single_zero _
 #align finsupp.map_domain_comp Finsupp.mapDomain_comp
@@ -578,7 +578,7 @@ theorem mapDomain_support_of_injOn [DecidableEq β] {f : α → β} (s : α →�
   Finset.Subset.antisymm mapDomain_support <|
     by
     intro x hx
-    simp only [mem_image, exists_prop, mem_support_iff, Ne.def] at hx
+    simp only [mem_image, exists_prop, mem_support_iff, Ne.def] at hx 
     rcases hx with ⟨hx_w, hx_h_left, rfl⟩
     simp only [mem_support_iff, Ne.def]
     rw [map_domain_apply' (↑s.support : Set _) _ _ hf]
@@ -634,7 +634,7 @@ theorem mapDomain_injective {f : α → β} (hf : Function.Injective f) :
   by
   intro v₁ v₂ eq; ext a
   have : map_domain f v₁ (f a) = map_domain f v₂ (f a) := by rw [Eq]
-  rwa [map_domain_apply hf, map_domain_apply hf] at this
+  rwa [map_domain_apply hf, map_domain_apply hf] at this 
 #align finsupp.map_domain_injective Finsupp.mapDomain_injective
 
 #print Finsupp.mapDomainEmbedding /-
@@ -685,7 +685,7 @@ theorem mapDomain_injOn (S : Set α) {f : α → β} (hf : Set.InjOn f S) :
       rw [← map_domain_apply' S _ hv₁ hf _, ← map_domain_apply' S _ hv₂ hf _, Eq] <;>
         · apply Set.union_subset hv₁ hv₂
           exact_mod_cast h
-    · simp only [Decidable.not_or_iff_and_not, mem_union, Classical.not_not, mem_support_iff] at h
+    · simp only [Decidable.not_or_iff_and_not, mem_union, Classical.not_not, mem_support_iff] at h 
       simp [h]
 #align finsupp.map_domain_inj_on Finsupp.mapDomain_injOn
 
@@ -764,7 +764,7 @@ theorem comapDomain_single (f : α → β) (a : α) (m : M)
   · simp only [single_zero, comap_domain_zero]
   · rw [eq_single_iff, comap_domain_apply, comap_domain_support, ← Finset.coe_subset, coe_preimage,
       support_single_ne_zero _ hm, coe_singleton, coe_singleton, single_eq_same]
-    rw [support_single_ne_zero _ hm, coe_singleton] at hif
+    rw [support_single_ne_zero _ hm, coe_singleton] at hif 
     exact ⟨fun x hx => hif hx rfl hx, rfl⟩
 #align finsupp.comap_domain_single Finsupp.comapDomain_single
 
@@ -968,7 +968,7 @@ theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
     (f.filterₓ p).Prod g = ∏ x in (f.filterₓ p).support, g x (f x) := by
   classical
     refine' Finset.prod_congr rfl fun x hx => _
-    rw [support_filter, Finset.mem_filter] at hx
+    rw [support_filter, Finset.mem_filter] at hx 
     rw [filter_apply_pos _ _ hx.2]
 #align finsupp.prod_filter_index Finsupp.prod_filter_index
 #align finsupp.sum_filter_index Finsupp.sum_filter_index
@@ -1027,8 +1027,8 @@ theorem frange_single {x : α} {y : M} : frange (single x y) ⊆ {y} := fun r hr
   let ⟨t, ht1, ht2⟩ := mem_frange.1 hr
   ht2 ▸ by
     classical
-      rw [single_apply] at ht2⊢
-      split_ifs  at ht2⊢
+      rw [single_apply] at ht2 ⊢
+      split_ifs  at ht2 ⊢
       · exact Finset.mem_singleton_self _
       · exact (t ht2.symm).elim
 #align finsupp.frange_single Finsupp.frange_single
@@ -1215,7 +1215,7 @@ theorem mem_support_multiset_sum [AddCommMonoid M] {s : Multiset (α →₀ M)} 
       by_cases a ∈ f.support
       · exact ⟨f, Multiset.mem_cons_self _ _, h⟩
       · simp only [Multiset.sum_cons, mem_support_iff, add_apply, not_mem_support_iff.1 h,
-          zero_add] at ha
+          zero_add] at ha 
         rcases ih (mem_support_iff.2 ha) with ⟨f', h₀, h₁⟩
         exact ⟨f', Multiset.mem_cons_of_mem h₀, h₁⟩)
 #align finsupp.mem_support_multiset_sum Finsupp.mem_support_multiset_sum
@@ -1264,7 +1264,7 @@ theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg�
     exact
       sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ =>
         sum_add_index' (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
-  congr ; funext p c
+  congr; funext p c
   trans
   · exact sum_single_index sum_zero_index
   exact sum_single_index (hg₀ _ _)
@@ -1286,8 +1286,8 @@ def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M)
   left_inv f := by
     rw [Finsupp.uncurry, sum_curry_index]
     · simp_rw [Prod.mk.eta, sum_single]
-    · intros ; apply single_zero
-    · intros ; apply single_add
+    · intros; apply single_zero
+    · intros; apply single_add
   right_inv f := by
     simp only [Finsupp.curry, Finsupp.uncurry, sum_sum_index, sum_zero_index, sum_add_index,
       sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
@@ -1330,7 +1330,7 @@ def sumElim {α β γ : Type _} [Zero γ] (f : α →₀ γ) (g : β →₀ γ) 
       haveI := Classical.decEq α <;> haveI := Classical.decEq β <;>
         exact f.support.map ⟨_, Sum.inl_injective⟩ ∪ g.support.map ⟨_, Sum.inr_injective⟩)
     (Sum.elim f g) fun ab h => by
-    cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h <;> simpa
+    cases' ab with a b <;> simp only [Sum.elim_inl, Sum.elim_inr] at h  <;> simpa
 #align finsupp.sum_elim Finsupp.sumElim
 -/
 
@@ -1399,7 +1399,7 @@ This is the `finsupp` version of `equiv.sum_arrow_equiv_prod_arrow`. -/
 @[simps apply symm_apply]
 def sumFinsuppAddEquivProdFinsupp {α β : Type _} : (Sum α β →₀ M) ≃+ (α →₀ M) × (β →₀ M) :=
   { sumFinsuppEquivProdFinsupp with
-    map_add' := by intros ;
+    map_add' := by intros;
       ext <;>
         simp only [Equiv.toFun_as_coe, Prod.fst_add, Prod.snd_add, add_apply,
           snd_sum_finsupp_equiv_prod_finsupp, fst_sum_finsupp_equiv_prod_finsupp] }
@@ -1783,7 +1783,7 @@ namespace Finsupp
 
 section Sigma
 
-variable {αs : ι → Type _} [Zero M] (l : (Σi, αs i) →₀ M)
+variable {αs : ι → Type _} [Zero M] (l : (Σ i, αs i) →₀ M)
 
 #print Finsupp.split /-
 /-- Given `l`, a finitely supported function from the sigma type `Σ (i : ι), αs i` to `M` and
@@ -1806,7 +1806,7 @@ theorem split_apply (i : ι) (x : αs i) : split l i x = l ⟨i, x⟩ :=
 #print Finsupp.splitSupport /-
 /-- Given `l`, a finitely supported function from the sigma type `Σ (i : ι), αs i` to `β`,
 `split_support l` is the finset of indices in `ι` that appear in the support of `l`. -/
-def splitSupport (l : (Σi, αs i) →₀ M) : Finset ι :=
+def splitSupport (l : (Σ i, αs i) →₀ M) : Finset ι :=
   haveI := Classical.decEq ι
   l.support.image Sigma.fst
 #align finsupp.split_support Finsupp.splitSupport
@@ -1841,7 +1841,7 @@ theorem sigma_support : l.support = l.splitSupport.Sigma fun i => (l.split i).su
     tauto
 #align finsupp.sigma_support Finsupp.sigma_support
 
-theorem sigma_sum [AddCommMonoid N] (f : (Σi : ι, αs i) → M → N) :
+theorem sigma_sum [AddCommMonoid N] (f : (Σ i : ι, αs i) → M → N) :
     l.Sum f = ∑ i in splitSupport l, (split l i).Sum fun (a : αs i) b => f ⟨i, a⟩ b := by
   simp only [Sum, sigma_support, sum_sigma, split_apply]
 #align finsupp.sigma_sum Finsupp.sigma_sum
@@ -1853,7 +1853,7 @@ variable {η : Type _} [Fintype η] {ιs : η → Type _} [Zero α]
 and `Π j, (ιs j →₀ α)`.
 
 This is the `finsupp` version of `equiv.Pi_curry`. -/
-noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σj, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α
+noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σ j, ιs j) →₀ α) ≃ ∀ j, ιs j →₀ α
     where
   toFun := split
   invFun f :=
@@ -1866,7 +1866,7 @@ noncomputable def sigmaFinsuppEquivPiFinsupp : ((Σj, ιs j) →₀ α) ≃ ∀ 
 
 #print Finsupp.sigmaFinsuppEquivPiFinsupp_apply /-
 @[simp]
-theorem sigmaFinsuppEquivPiFinsupp_apply (f : (Σj, ιs j) →₀ α) (j i) :
+theorem sigmaFinsuppEquivPiFinsupp_apply (f : (Σ j, ιs j) →₀ α) (j i) :
     sigmaFinsuppEquivPiFinsupp f j i = f ⟨j, i⟩ :=
   rfl
 #align finsupp.sigma_finsupp_equiv_pi_finsupp_apply Finsupp.sigmaFinsuppEquivPiFinsupp_apply
@@ -1878,13 +1878,13 @@ theorem sigmaFinsuppEquivPiFinsupp_apply (f : (Σj, ιs j) →₀ α) (j i) :
 This is the `add_equiv` version of `finsupp.sigma_finsupp_equiv_pi_finsupp`.
 -/
 noncomputable def sigmaFinsuppAddEquivPiFinsupp {α : Type _} {ιs : η → Type _} [AddMonoid α] :
-    ((Σj, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
+    ((Σ j, ιs j) →₀ α) ≃+ ∀ j, ιs j →₀ α :=
   { sigmaFinsuppEquivPiFinsupp with map_add' := fun f g => by ext; simp }
 #align finsupp.sigma_finsupp_add_equiv_pi_finsupp Finsupp.sigmaFinsuppAddEquivPiFinsupp
 
 @[simp]
 theorem sigmaFinsuppAddEquivPiFinsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoid α]
-    (f : (Σj, ιs j) →₀ α) (j i) : sigmaFinsuppAddEquivPiFinsupp f j i = f ⟨j, i⟩ :=
+    (f : (Σ j, ιs j) →₀ α) (j i) : sigmaFinsuppAddEquivPiFinsupp f j i = f ⟨j, i⟩ :=
   rfl
 #align finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply Finsupp.sigmaFinsuppAddEquivPiFinsupp_apply
 

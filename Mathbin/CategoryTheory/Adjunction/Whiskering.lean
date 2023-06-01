@@ -39,11 +39,11 @@ protected def whiskerRight (adj : F ⊣ G) :
     { Unit :=
         { app := fun X =>
             (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv
-          naturality' := by intros ; ext; dsimp; simp }
+          naturality' := by intros; ext; dsimp; simp }
       counit :=
         { app := fun X =>
             (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom
-          naturality' := by intros ; ext; dsimp; simp }
+          naturality' := by intros; ext; dsimp; simp }
       left_triangle := by ext; dsimp; simp
       right_triangle := by ext; dsimp; simp }
 #align category_theory.adjunction.whisker_right CategoryTheory.Adjunction.whiskerRight
@@ -58,11 +58,11 @@ protected def whiskerLeft (adj : F ⊣ G) :
     { Unit :=
         { app := fun X =>
             (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom
-          naturality' := by intros ; ext; dsimp; simp }
+          naturality' := by intros; ext; dsimp; simp }
       counit :=
         { app := fun X =>
             (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom
-          naturality' := by intros ; ext; dsimp; simp }
+          naturality' := by intros; ext; dsimp; simp }
       left_triangle := by
         ext x; dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]; simp

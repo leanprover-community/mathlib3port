@@ -258,7 +258,7 @@ end
 /-- A complete lattice is a bounded lattice which has suprema and infima for every subset. -/
 @[protect_proj]
 class CompleteLattice (α : Type _) extends Lattice α, CompleteSemilatticeSup α,
-  CompleteSemilatticeInf α, Top α, Bot α where
+    CompleteSemilatticeInf α, Top α, Bot α where
   le_top : ∀ x : α, x ≤ ⊤
   bot_le : ∀ x : α, ⊥ ≤ x
 #align complete_lattice CompleteLattice
@@ -378,7 +378,7 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
 /- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 -/
 
@@ -544,7 +544,7 @@ theorem sInf_eq_top : sInf s = ⊤ ↔ ∀ a ∈ s, a = ⊤ :=
 
 theorem eq_singleton_bot_of_sSup_eq_bot_of_nonempty {s : Set α} (h_sup : sSup s = ⊥)
     (hne : s.Nonempty) : s = {⊥} := by rw [Set.eq_singleton_iff_nonempty_unique_mem];
-  rw [sSup_eq_bot] at h_sup; exact ⟨hne, h_sup⟩
+  rw [sSup_eq_bot] at h_sup ; exact ⟨hne, h_sup⟩
 #align eq_singleton_bot_of_Sup_eq_bot_of_nonempty eq_singleton_bot_of_sSup_eq_bot_of_nonempty
 
 theorem eq_singleton_top_of_sInf_eq_top_of_nonempty : sInf s = ⊤ → s.Nonempty → s = {⊤} :=

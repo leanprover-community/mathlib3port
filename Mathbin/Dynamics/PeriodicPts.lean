@@ -120,13 +120,13 @@ protected theorem add (hn : IsPeriodicPt f n x) (hm : IsPeriodicPt f m x) :
 
 #print Function.IsPeriodicPt.left_of_add /-
 theorem left_of_add (hn : IsPeriodicPt f (n + m) x) (hm : IsPeriodicPt f m x) :
-    IsPeriodicPt f n x := by rw [is_periodic_pt, iterate_add] at hn; exact hn.left_of_comp hm
+    IsPeriodicPt f n x := by rw [is_periodic_pt, iterate_add] at hn ; exact hn.left_of_comp hm
 #align function.is_periodic_pt.left_of_add Function.IsPeriodicPt.left_of_add
 -/
 
 #print Function.IsPeriodicPt.right_of_add /-
 theorem right_of_add (hn : IsPeriodicPt f (n + m) x) (hm : IsPeriodicPt f n x) :
-    IsPeriodicPt f m x := by rw [add_comm] at hn; exact hn.left_of_add hm
+    IsPeriodicPt f m x := by rw [add_comm] at hn ; exact hn.left_of_add hm
 #align function.is_periodic_pt.right_of_add Function.IsPeriodicPt.right_of_add
 -/
 
@@ -185,7 +185,7 @@ theorem comp_lcm {g : α → α} (hco : Commute f g) (hf : IsPeriodicPt f m x)
 theorem left_of_comp {g : α → α} (hco : Commute f g) (hfg : IsPeriodicPt (f ∘ g) n x)
     (hg : IsPeriodicPt g n x) : IsPeriodicPt f n x :=
   by
-  rw [is_periodic_pt, hco.comp_iterate] at hfg
+  rw [is_periodic_pt, hco.comp_iterate] at hfg 
   exact hfg.left_of_comp hg
 #align function.is_periodic_pt.left_of_comp Function.IsPeriodicPt.left_of_comp
 -/
@@ -358,7 +358,7 @@ theorem iterate_minimalPeriod : (f^[minimalPeriod f x]) x = x :=
 #print Function.iterate_add_minimalPeriod_eq /-
 @[simp]
 theorem iterate_add_minimalPeriod_eq : (f^[n + minimalPeriod f x]) x = (f^[n]) x := by
-  rw [iterate_add_apply]; congr ; exact is_periodic_pt_minimal_period f x
+  rw [iterate_add_apply]; congr; exact is_periodic_pt_minimal_period f x
 #align function.iterate_add_minimal_period_eq Function.iterate_add_minimalPeriod_eq
 -/
 
@@ -436,7 +436,7 @@ theorem le_of_lt_minimalPeriod_of_iterate_eq {m n : ℕ} (hm : m < minimalPeriod
     (hmn : (f^[m]) x = (f^[n]) x) : m ≤ n :=
   by
   by_contra' hmn'
-  rw [← Nat.add_sub_of_le hmn'.le, add_comm, iterate_add_apply] at hmn
+  rw [← Nat.add_sub_of_le hmn'.le, add_comm, iterate_add_apply] at hmn 
   exact
     ((is_periodic_pt.minimal_period_le (tsub_pos_of_lt hmn')
               (is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate
@@ -685,8 +685,8 @@ theorem nodup_periodicOrbit : (periodicOrbit f x).Nodup :=
   by
   rw [periodic_orbit, Cycle.nodup_coe_iff, List.nodup_map_iff_inj_on (List.nodup_range _)]
   intro m hm n hn hmn
-  rw [List.mem_range] at hm hn
-  rwa [eq_iff_lt_minimal_period_of_iterate_eq hm hn] at hmn
+  rw [List.mem_range] at hm hn 
+  rwa [eq_iff_lt_minimal_period_of_iterate_eq hm hn] at hmn 
 #align function.nodup_periodic_orbit Function.nodup_periodicOrbit
 -/
 

@@ -111,7 +111,7 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 #print Finset.mem_shadow_iff_insert_mem /-
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
-theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 :=
+theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _) (_ : a ∉ s), insert a s ∈ 𝒜 :=
   by
   refine' mem_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩
@@ -182,7 +182,7 @@ theorem mem_shadow_iff_exists_mem_card_add :
   · rintro ⟨t, ht, hst, hcard⟩
     obtain ⟨u, hsu, hut, hu⟩ :=
       Finset.exists_intermediate_set k (by rw [add_comm, hcard]; exact le_succ _) hst
-    rw [add_comm] at hu
+    rw [add_comm] at hu 
     refine' ⟨u, mem_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, hut, _⟩, hsu, hu⟩
     rw [hcard, hu]
     rfl
@@ -227,7 +227,7 @@ theorem upShadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
-theorem mem_upShadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
+theorem mem_upShadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _) (_ : a ∉ t), insert a t = s := by
   simp_rw [up_shadow, mem_sup, mem_image, exists_prop, mem_compl]
 #align finset.mem_up_shadow_iff Finset.mem_upShadow_iff
 
@@ -299,7 +299,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
     obtain ⟨u, htu, hus, hu⟩ :=
       Finset.exists_intermediate_set 1
         (by rw [add_comm, ← hcard]; exact add_le_add_left (zero_lt_succ _) _) hts
-    rw [add_comm] at hu
+    rw [add_comm] at hu 
     refine' ⟨u, mem_up_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, htu, hu.symm⟩, hus, _⟩
     rw [hu, ← hcard, add_right_comm]
     rfl

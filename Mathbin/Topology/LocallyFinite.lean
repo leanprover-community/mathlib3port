@@ -83,7 +83,7 @@ protected theorem eventually_smallSets (hf : LocallyFinite f) (x : X) :
 #align locally_finite.eventually_small_sets LocallyFinite.eventually_smallSets
 
 theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop} {s : ι' → Set X}
-    {x : X} (hb : (𝓝 x).HasBasis p s) : ∃ (i : _)(hi : p i), { j | (f j ∩ s i).Nonempty }.Finite :=
+    {x : X} (hb : (𝓝 x).HasBasis p s) : ∃ (i : _) (hi : p i), { j | (f j ∩ s i).Nonempty }.Finite :=
   let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_smallSets x)
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
@@ -112,7 +112,7 @@ theorem continuousOn_iUnion' {g : X → Y} (hf : LocallyFinite f)
   intro i
   by_cases hx : x ∈ closure (f i)
   · exact hc i _ hx
-  · rw [mem_closure_iff_nhdsWithin_neBot, not_ne_bot] at hx
+  · rw [mem_closure_iff_nhdsWithin_neBot, not_ne_bot] at hx 
     rw [hx]
     exact tendsto_bot
 #align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_iUnion'
@@ -159,7 +159,7 @@ theorem iInter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)
   by
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
-    rwa [← isOpen_compl_iff, compl_Union, Inter_subtype] at this
+    rwa [← isOpen_compl_iff, compl_Union, Inter_subtype] at this 
   exact (hf.comp_injective Subtype.coe_injective).isClosed_iUnion fun i => hc _
 #align locally_finite.Inter_compl_mem_nhds LocallyFinite.iInter_compl_mem_nhds
 

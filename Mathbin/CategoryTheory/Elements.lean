@@ -52,7 +52,7 @@ is a pair `(X : C, x : F.obj X)`.
 -/
 @[nolint has_nonempty_instance]
 def Functor.Elements (F : C ⥤ Type w) :=
-  Σc : C, F.obj c
+  Σ c : C, F.obj c
 #align category_theory.functor.elements CategoryTheory.Functor.Elements
 -/
 

@@ -356,7 +356,7 @@ theorem finiteDimensional_of_det_ne_one {𝕜 : Type _} [Field 𝕜] [Module �
   · rcases H with ⟨s, ⟨hs⟩⟩; exact FiniteDimensional.of_fintype_basis hs
   ·
     classical
-      simp [LinearMap.coe_det, H] at hf
+      simp [LinearMap.coe_det, H] at hf 
       exact hf.elim
 #align linear_map.finite_dimensional_of_det_ne_one LinearMap.finiteDimensional_of_det_ne_one
 
@@ -366,7 +366,7 @@ theorem range_lt_top_of_det_eq_zero {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M]
   by
   have : FiniteDimensional 𝕜 M := by simp [f.finite_dimensional_of_det_ne_one, hf]
   contrapose hf
-  simp only [lt_top_iff_ne_top, Classical.not_not, ← is_unit_iff_range_eq_top] at hf
+  simp only [lt_top_iff_ne_top, Classical.not_not, ← is_unit_iff_range_eq_top] at hf 
   exact isUnit_iff_ne_zero.1 (f.is_unit_det hf)
 #align linear_map.range_lt_top_of_det_eq_zero LinearMap.range_lt_top_of_det_eq_zero
 
@@ -376,7 +376,7 @@ theorem bot_lt_ker_of_det_eq_zero {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M] {
   by
   have : FiniteDimensional 𝕜 M := by simp [f.finite_dimensional_of_det_ne_one, hf]
   contrapose hf
-  simp only [bot_lt_iff_ne_bot, Classical.not_not, ← is_unit_iff_ker_eq_bot] at hf
+  simp only [bot_lt_iff_ne_bot, Classical.not_not, ← is_unit_iff_ker_eq_bot] at hf 
   exact isUnit_iff_ne_zero.1 (f.is_unit_det hf)
 #align linear_map.bot_lt_ker_of_det_eq_zero LinearMap.bot_lt_ker_of_det_eq_zero
 
@@ -569,7 +569,7 @@ theorem is_basis_iff_det {v : ι → M} :
     ext (i j)
     simp
   · intro h
-    rw [Basis.det_apply, Basis.toMatrix_eq_toMatrix_constr] at h
+    rw [Basis.det_apply, Basis.toMatrix_eq_toMatrix_constr] at h 
     set v' := Basis.map e (LinearEquiv.ofIsUnitDet h) with v'_def
     have : ⇑v' = v := by ext i;
       rw [v'_def, Basis.map_apply, LinearEquiv.ofIsUnitDet_apply, e.constr_basis]

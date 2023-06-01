@@ -307,7 +307,7 @@ has a `V`-morphism from `X ⟶[V] Y` to `F.obj X ⟶[V] F.obj Y`,
 satisfying the usual axioms.
 -/
 structure EnrichedFunctor (C : Type u₁) [EnrichedCategory V C] (D : Type u₂)
-  [EnrichedCategory V D] where
+    [EnrichedCategory V D] where
   obj : C → D
   map : ∀ X Y : C, (X ⟶[V] Y) ⟶ obj X ⟶[V] obj Y
   map_id' : ∀ X : C, eId V X ≫ map X X = eId V (obj X) := by obviously
@@ -366,7 +366,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp,
         forget_enrichment.hom_to_hom_of, enriched_functor.map_comp, forget_enrichment_comp]
       rfl
-    · intro f g w; apply_fun forget_enrichment.hom_of W  at w; simpa using w
+    · intro f g w; apply_fun forget_enrichment.hom_of W  at w ; simpa using w
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
 
 end
@@ -451,7 +451,7 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max 
     { app := fun X => f.unop ≫ σ.app X
       naturality := fun X Y => by
         have p := σ.naturality X Y
-        dsimp at p⊢
+        dsimp at p ⊢
         rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc,
           category.assoc, ← braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←
           tensor_comp_assoc, category.id_comp] }

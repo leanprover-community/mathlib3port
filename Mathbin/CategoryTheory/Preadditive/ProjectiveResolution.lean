@@ -195,7 +195,7 @@ theorem liftOne_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y)
 def liftSucc {Y Z : C} (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) (n : ℕ)
     (g : P.complex.pt n ⟶ Q.complex.pt n) (g' : P.complex.pt (n + 1) ⟶ Q.complex.pt (n + 1))
     (w : g' ≫ Q.complex.d (n + 1) n = P.complex.d (n + 1) n ≫ g) :
-    Σ'g'' : P.complex.pt (n + 2) ⟶ Q.complex.pt (n + 2),
+    Σ' g'' : P.complex.pt (n + 2) ⟶ Q.complex.pt (n + 2),
       g'' ≫ Q.complex.d (n + 2) (n + 1) = P.complex.d (n + 2) (n + 1) ≫ g' :=
   ⟨Exact.lift (P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 2) (n + 1))
       (Q.complex.d (n + 1) n) (Q.exact _) (by simp [w]),

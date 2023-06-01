@@ -28,8 +28,9 @@ about this type.
 #print ENat /-
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 def ENat : Type :=
-  WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial,
-  LinearOrder, OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub,
+  WithTop ℕ
+deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder,
+  OrderBot, OrderTop, Bot, Top, CanonicallyLinearOrderedAddMonoid, Sub, OrderedSub,
   LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLT, WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat ENat
@@ -163,7 +164,7 @@ theorem nat_induction {P : ℕ∞ → Prop} (a : ℕ∞) (h0 : P 0) (hsuc : ∀ 
   by
   have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc
   cases a
-  exacts[htop A, A a]
+  exacts [htop A, A a]
 #align enat.nat_induction ENat.nat_induction
 -/
 

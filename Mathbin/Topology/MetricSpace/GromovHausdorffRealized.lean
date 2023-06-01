@@ -248,8 +248,10 @@ private theorem dist_mem_candidates :
     and_self_iff, Sum.forall, Set.mem_setOf_eq, dist_self]
   repeat'
     first
-      |constructor|exact fun a y z =>
-        dist_triangle_left _ _ _|exact fun x y => by rfl|exact fun x y => max_var_bound
+    | constructor
+    | exact fun a y z => dist_triangle_left _ _ _
+    | exact fun x y => by rfl
+    | exact fun x y => max_var_bound
 
 /-- The distance on `X ⊕ Y` as a candidate -/
 def candidatesBDist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X]
@@ -297,11 +299,15 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
   rw [this]
   repeat'
     first
-      |apply
-        IsClosed.inter _
-          _|apply
-        isClosed_iInter
-          _|apply I1 _ _|apply I2 _ _|apply I3 _ _|apply I4 _ _ _|apply I5 _|apply I6 _ _|intro x
+    | apply IsClosed.inter _ _
+    | apply isClosed_iInter _
+    | apply I1 _ _
+    | apply I2 _ _
+    | apply I3 _ _
+    | apply I4 _ _ _
+    | apply I5 _
+    | apply I6 _ _
+    | intro x
 
 /-- Compactness of candidates (in bounded_continuous_functions) follows. -/
 private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
@@ -512,8 +518,8 @@ attribute [local instance] premetric_optimal_GH_dist
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[nolint has_nonempty_instance]
 def OptimalGHCoupling : Type _ :=
-  @UniformSpace.SeparationQuotient (Sum X Y) (premetricOptimalGHDist X Y).toUniformSpace deriving
-  MetricSpace
+  @UniformSpace.SeparationQuotient (Sum X Y) (premetricOptimalGHDist X Y).toUniformSpace
+deriving MetricSpace
 #align Gromov_Hausdorff.optimal_GH_coupling GromovHausdorff.OptimalGHCoupling
 -/
 

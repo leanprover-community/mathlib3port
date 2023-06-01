@@ -53,7 +53,7 @@ This lemma states the corresponding `mem_iff` statement without using a sigma ty
 theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α}
     (hf : f.HasBasis p s) {β : ι → Type _} {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ}
     {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g)
-    {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι)(hi : p i)(x : β i)(hx : pg i x), sg i x ⊆ s :=
+    {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι) (hi : p i) (x : β i) (hx : pg i x), sg i x ⊆ s :=
   by
   refine' (mem_binfi_of_directed _ ⟨univ, univ_sets _⟩).trans _
   · intro t₁ ht₁ t₂ ht₂
@@ -73,7 +73,7 @@ for the corresponding `mem_iff` statement formulated without using a sigma type.
 theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s)
     {β : ι → Type _} {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ}
     (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g) :
-    (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 :=
+    (f.lift g).HasBasis (fun i : Σ i, β i => p i.1 ∧ pg i.1 i.2) fun i : Σ i, β i => sg i.1 i.2 :=
   by
   refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
   simp [Sigma.exists, and_assoc', exists_and_left]

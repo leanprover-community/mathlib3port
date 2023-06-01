@@ -601,7 +601,7 @@ theorem Submartingale.sum_mul_sub [FiniteMeasure μ] {R : ℝ} {ξ f : ℕ → �
     by
     intro m
     refine' Finset.stronglyMeasurable_sum' _ fun i hi => _
-    rw [Finset.mem_range] at hi
+    rw [Finset.mem_range] at hi 
     exact
       (hξ.strongly_measurable_le hi.le).mul
         ((hf.adapted.strongly_measurable_le (Nat.succ_le_of_lt hi)).sub

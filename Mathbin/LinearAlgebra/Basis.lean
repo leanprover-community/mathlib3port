@@ -139,7 +139,7 @@ instance funLike : FunLike (Basis ι R M) ι fun _ => M
           rw [← Finsupp.sum_single x, map_finsupp_sum, map_finsupp_sum]
           congr with (i r)
           have := congr_fun h i
-          dsimp at this
+          dsimp at this 
           rw [← mul_one r, ← Finsupp.smul_single', LinearEquiv.map_smul, LinearEquiv.map_smul,
             this])
 #align basis.fun_like Basis.funLike
@@ -805,9 +805,9 @@ protected theorem noZeroSMulDivisors [NoZeroDivisors R] (b : Basis ι R M) :
   ⟨fun c x hcx =>
     or_iff_not_imp_right.mpr fun hx =>
       by
-      rw [← b.total_repr x, ← LinearMap.map_smul] at hcx
+      rw [← b.total_repr x, ← LinearMap.map_smul] at hcx 
       have := linear_independent_iff.mp b.linear_independent (c • b.repr x) hcx
-      rw [smul_eq_zero] at this
+      rw [smul_eq_zero] at this 
       exact this.resolve_right fun hr => hx (b.repr.map_eq_zero_iff.mp hr)⟩
 #align basis.no_zero_smul_divisors Basis.noZeroSMulDivisors
 
@@ -827,7 +827,7 @@ theorem Basis.eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : 
   rintro g sum_eq i
   cases i
   simp only [Function.const_apply, Fin.default_eq_zero, Submodule.coe_mk, Finset.univ_unique,
-    Function.comp_const, Finset.sum_singleton] at sum_eq
+    Function.comp_const, Finset.sum_singleton] at sum_eq 
   convert(b.smul_eq_zero.mp sum_eq).resolve_right x_ne
 #align eq_bot_of_rank_eq_zero Basis.eq_bot_of_rank_eq_zero
 
@@ -861,7 +861,7 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiring R] (x i) :
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M]
     [NoZeroSMulDivisors R M] (ι : Type _) [Unique ι] :
-    Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y :=
+    Nonempty (Basis ι R M) ↔ ∃ (x : _) (_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y :=
   by
   fconstructor
   · rintro ⟨b⟩
@@ -988,7 +988,7 @@ theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = 
     Finset.sum_apply']
   rw [Finset.sum_eq_single j, Finsupp.single_eq_same]
   · rintro i - hi; exact Finsupp.single_eq_of_ne hi
-  · intros ; have := Finset.mem_univ j; contradiction
+  · intros; have := Finset.mem_univ j; contradiction
 #align basis.repr_sum_self Basis.repr_sum_self
 
 #print Basis.ofEquivFun /-
@@ -1151,17 +1151,17 @@ theorem maximal [Nontrivial R] (b : Basis ι R M) : b.LinearIndependent.Maximal 
     ⟨fun i => ⟨b i, h ⟨i, rfl⟩⟩, fun i i' r =>
       b.injective (by simpa only [Subtype.mk_eq_mk] using r)⟩
   have r : ∀ i, b i = u i := fun i => rfl
-  simp_rw [Finsupp.total_apply, r] at e
+  simp_rw [Finsupp.total_apply, r] at e 
   change
     ((b.repr x).Sum fun (i : ι) (a : R) => (fun (x : w) (r : R) => r • (x : M)) (u i) a) =
       ((⟨x, p⟩ : w) : M) at
-    e
-  rw [← Finsupp.sum_embDomain, ← Finsupp.total_apply] at e
+    e 
+  rw [← Finsupp.sum_embDomain, ← Finsupp.total_apply] at e 
   -- Now we can contradict the linear independence of `hi`
   refine' hi.total_ne_of_not_mem_support _ _ e
   simp only [Finset.mem_map, Finsupp.support_embDomain]
   rintro ⟨j, -, W⟩
-  simp only [embedding.coe_fn_mk, Subtype.mk_eq_mk, ← r] at W
+  simp only [embedding.coe_fn_mk, Subtype.mk_eq_mk, ← r] at W 
   apply q ⟨j, W⟩
 #align basis.maximal Basis.maximal
 
@@ -1264,12 +1264,12 @@ theorem groupSmul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [Dis
   by
   rw [eq_top_iff]
   intro j hj
-  rw [← hv] at hj
-  rw [Submodule.mem_span] at hj⊢
+  rw [← hv] at hj 
+  rw [Submodule.mem_span] at hj ⊢
   refine' fun p hp => hj p fun u hu => _
   obtain ⟨i, rfl⟩ := hu
   have : ((w i)⁻¹ • 1 : R) • w i • v i ∈ p := p.smul_mem ((w i)⁻¹ • 1 : R) (hp ⟨i, rfl⟩)
-  rwa [smul_one_smul, inv_smul_smul] at this
+  rwa [smul_one_smul, inv_smul_smul] at this 
 #align basis.group_smul_span_eq_top Basis.groupSmul_span_eq_top
 
 /-- Given a basis `v` and a map `w` such that for all `i`, `w i` are elements of a group,
@@ -1346,7 +1346,7 @@ noncomputable def mkFinCons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Fi
     rw [Set.range_comp, Submodule.span_image, b.span_eq, Submodule.map_subtype_top]
   @Basis.mk _ _ _ (Fin.cons y (N.Subtype ∘ b) : Fin (n + 1) → M) _ _ _
     ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <| by
-      rintro c ⟨x, hx⟩ hc; rw [span_b] at hx; exact hli c x hx hc)
+      rintro c ⟨x, hx⟩ hc; rw [span_b] at hx ; exact hli c x hx hc)
     fun x _ => by rw [Fin.range_cons, Submodule.mem_span_insert', span_b]; exact hsp x
 #align basis.mk_fin_cons Basis.mkFinCons
 
@@ -1570,15 +1570,15 @@ theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodul
     simp_rw [span_singleton_le_iff_mem, ← Ne.def, Submodule.ne_bot_iff] at *
     rcases h with ⟨s, ⟨hs, hz⟩⟩
     cases' mem_span_singleton.1 (hT.1 hs) with a ha
-    have h : a ≠ 0 := by intro h; rw [h, zero_smul] at ha; exact hz ha.symm
-    apply_fun fun x => a⁻¹ • x  at ha
+    have h : a ≠ 0 := by intro h; rw [h, zero_smul] at ha ; exact hz ha.symm
+    apply_fun fun x => a⁻¹ • x  at ha 
     simp_rw [← mul_smul, inv_mul_cancel h, one_smul, ha] at *; exact smul_mem T _ hs
 #align nonzero_span_atom nonzero_span_atom
 
 /-- The atoms of the lattice of submodules of a module over a division ring are the
 submodules equal to the span of a nonzero element of the module. -/
 theorem atom_iff_nonzero_span (W : Submodule K V) :
-    IsAtom W ↔ ∃ (v : V)(hv : v ≠ 0), W = span K {v} :=
+    IsAtom W ↔ ∃ (v : V) (hv : v ≠ 0), W = span K {v} :=
   by
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with hbot h
@@ -1586,7 +1586,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
     refine' ⟨v, ⟨hv, _⟩⟩
     by_contra heq
     specialize h (span K {v})
-    rw [span_singleton_eq_bot, lt_iff_le_and_ne] at h
+    rw [span_singleton_eq_bot, lt_iff_le_and_ne] at h 
     exact hv (h ⟨(span_singleton_le_iff_mem v W).2 hW, Ne.symm HEq⟩)
   · rcases h with ⟨v, ⟨hv, rfl⟩⟩; exact nonzero_span_atom v hv
 #align atom_iff_nonzero_span atom_iff_nonzero_span
@@ -1595,7 +1595,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
 instance : IsAtomistic (Submodule K V)
     where eq_sSup_atoms := by
     intro W
-    use { T : Submodule K V | ∃ (v : V)(hv : v ∈ W)(hz : v ≠ 0), T = span K {v} }
+    use { T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v} }
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
     rintro _ ⟨w, ⟨_, ⟨hw, rfl⟩⟩⟩; exact nonzero_span_atom w hw
 
@@ -1613,13 +1613,13 @@ theorem LinearMap.exists_leftInverse_of_injective (f : V →ₗ[K] V') (hf_inj :
     by
     have h₁ : LinearIndependent K fun x : ↥(⇑f '' range (Basis.ofVectorSpace _ _)) => ↑x :=
       @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ f hB₀ (show Disjoint _ _ by simp [hf_inj])
-    rwa [Basis.range_ofVectorSpace K V] at h₁
+    rwa [Basis.range_ofVectorSpace K V] at h₁ 
   let C := this.extend (subset_univ _)
   have BC := this.subset_extend (subset_univ _)
   let hC := Basis.extend this
   haveI : Inhabited V := ⟨0⟩
   refine' ⟨hC.constr ℕ (C.restrict (inv_fun f)), hB.ext fun b => _⟩
-  rw [image_subset_iff] at BC
+  rw [image_subset_iff] at BC 
   have fb_eq : f b = hC ⟨f b, BC b.2⟩ :=
     by
     change f b = Basis.extend this _
@@ -1666,12 +1666,12 @@ open Submodule LinearMap
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
-    ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f :=
+    ∃ (f : _) (_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f :=
   by
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩; clear hp
   rcases(LinearPMap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
   refine' ⟨f, _, _⟩
-  · rintro rfl; rw [LinearMap.zero_comp] at hf
+  · rintro rfl; rw [LinearMap.zero_comp] at hf 
     have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
     simpa using (LinearMap.congr_fun hf _).trans this
   · refine' fun x hx => mem_ker.2 _

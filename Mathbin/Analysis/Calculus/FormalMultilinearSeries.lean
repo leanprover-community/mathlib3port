@@ -54,7 +54,8 @@ def FormalMultilinearSeries (𝕜 : Type _) (E : Type _) (F : Type _) [Ring 𝕜
     [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
     [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
     [ContinuousConstSMul 𝕜 F] :=
-  ∀ n : ℕ, E[×n]→L[𝕜] F deriving AddCommGroup
+  ∀ n : ℕ, E[×n]→L[𝕜] F
+deriving AddCommGroup
 #align formal_multilinear_series FormalMultilinearSeries
 -/
 
@@ -273,7 +274,7 @@ theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 :=
   · simp [h]
   ·
     classical
-      rw [order_eq_find' h] at hp
+      rw [order_eq_find' h] at hp 
       simpa using Nat.find_min _ hp
 #align formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
 
@@ -351,7 +352,10 @@ theorem coeff_fslope : p.fslope.coeff n = p.coeff (n + 1) :=
 #print FormalMultilinearSeries.coeff_iterate_fslope /-
 @[simp]
 theorem coeff_iterate_fslope (k n : ℕ) : ((fslope^[k]) p).coeff n = p.coeff (n + k) := by
-  induction' k with k ih generalizing p <;> first |rfl|simpa [ih]
+  induction' k with k ih generalizing p <;>
+    first
+    | rfl
+    | simpa [ih]
 #align formal_multilinear_series.coeff_iterate_fslope FormalMultilinearSeries.coeff_iterate_fslope
 -/
 

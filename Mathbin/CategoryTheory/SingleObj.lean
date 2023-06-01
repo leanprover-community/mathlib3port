@@ -169,8 +169,8 @@ def differenceFunctor {C G} [Category C] [Group G] (f : C → G) : C ⥤ SingleO
     where
   obj _ := ()
   map x y _ := f y * (f x)⁻¹
-  map_id' := by intro ; rw [single_obj.id_as_one, mul_right_inv]
-  map_comp' := by intros ;
+  map_id' := by intro; rw [single_obj.id_as_one, mul_right_inv]
+  map_comp' := by intros;
     rw [single_obj.comp_as_mul, ← mul_assoc, mul_left_inj, mul_assoc, inv_mul_self, mul_one]
 #align category_theory.single_obj.difference_functor CategoryTheory.SingleObj.differenceFunctor
 -/

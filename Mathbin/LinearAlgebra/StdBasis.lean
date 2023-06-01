@@ -120,7 +120,7 @@ theorem iInf_ker_proj_le_iSup_range_stdBasis {I : Finset ι} {J : Set ι} (hu : 
   SetLike.le_def.2
     (by
       intro b hb
-      simp only [mem_infi, mem_ker, proj_apply] at hb
+      simp only [mem_infi, mem_ker, proj_apply] at hb 
       rw [←
         show (∑ i in I, std_basis R φ i (b i)) = b by
           ext i
@@ -192,7 +192,7 @@ variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 theorem linearIndependent_stdBasis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i)]
     [DecidableEq η] (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
-    LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) :=
+    LinearIndependent R fun ji : Σ j, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) :=
   by
   have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) :=
     by
@@ -237,7 +237,7 @@ given by `s j` on each component.
 For the standard basis over `R` on the finite-dimensional space `η → R` see `pi.basis_fun`.
 -/
 protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) :
-    Basis (Σj, ιs j) R (∀ j, Ms j) :=
+    Basis (Σ j, ιs j) R (∀ j, Ms j) :=
   by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
@@ -258,7 +258,7 @@ theorem basis_repr_stdBasis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j))
     symm
     exact
       Finsupp.single_apply_left
-        (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_hEq (Sigma.mk.inj h).2) _ _ _
+        (fun i i' (h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩) => eq_of_hEq (Sigma.mk.inj h).2) _ _ _
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigmaFinsuppLEquivPiFinsupp_symm_apply,
     LinearEquiv.piCongrRight]
   dsimp

@@ -141,8 +141,8 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ →
   by
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
-            Finset.sum_bij' (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
-              (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (by rintro ⟨⟩ _ <;> rfl)
+            Finset.sum_bij' (fun (x : Σ i : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _ (fun _ _ => rfl)
+              (fun (x : Σ i : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σ i : ℕ, ℕ)) _ (by rintro ⟨⟩ _ <;> rfl)
               (by rintro ⟨⟩ _ <;> rfl) <;>
           simp only [Finset.mem_Ico, Sigma.forall, Finset.mem_sigma] <;>
         rintro a b ⟨⟨h₁, h₂⟩, ⟨h₃, h₄⟩⟩ <;>

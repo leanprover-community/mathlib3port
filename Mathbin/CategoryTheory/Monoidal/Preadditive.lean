@@ -93,8 +93,8 @@ ensures that the domain is monoidal preadditive. -/
 theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
     (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] :
     MonoidalPreadditive D :=
-  { tensor_zero' := by intros ; apply F.to_functor.map_injective; simp [F.map_tensor]
-    zero_tensor' := by intros ; apply F.to_functor.map_injective; simp [F.map_tensor]
+  { tensor_zero' := by intros; apply F.to_functor.map_injective; simp [F.map_tensor]
+    zero_tensor' := by intros; apply F.to_functor.map_injective; simp [F.map_tensor]
     tensor_add' := by
       intros
       apply F.to_functor.map_injective

@@ -49,8 +49,8 @@ def free : Type u ⥤ ModuleCat R
     where
   obj X := ModuleCat.of R (X →₀ R)
   map X Y f := Finsupp.lmapDomain _ _ f
-  map_id' := by intros ; exact Finsupp.lmapDomain_id _ _
-  map_comp' := by intros ; exact Finsupp.lmapDomain_comp _ _ _ _
+  map_id' := by intros; exact Finsupp.lmapDomain_id _ _
+  map_comp' := by intros; exact Finsupp.lmapDomain_comp _ _ _ _
 #align Module.free ModuleCat.free
 -/
 
@@ -250,7 +250,7 @@ instance : Preadditive (Free R C)
   comp_add X Y Z f g g' := by
     dsimp
     rw [← Finsupp.sum_add]
-    congr ; ext (r h)
+    congr; ext (r h)
     rw [Finsupp.sum_add_index'] <;> · simp [mul_add]
 
 instance : Linear R (Free R C)
@@ -262,7 +262,7 @@ instance : Linear R (Free R C)
   comp_smul' X Y Z f r g := by
     dsimp
     simp_rw [Finsupp.smul_sum]
-    congr ; ext (h s)
+    congr; ext (h s)
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_left_comm]
 
 theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
@@ -304,10 +304,10 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
       rw [add_comp]
       rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
       · simp only [w₁, w₂, add_comp]
-      · intros ; rw [zero_smul]
-      · intros ; simp only [add_smul]
-      · intros ; rw [zero_smul]
-      · intros ; simp only [add_smul]
+      · intros; rw [zero_smul]
+      · intros; simp only [add_smul]
+      · intros; rw [zero_smul]
+      · intros; simp only [add_smul]
     · intro f' r
       apply Finsupp.induction_linear g
       · simp only [limits.comp_zero, sum_zero_index]
@@ -315,10 +315,10 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
         rw [comp_add]
         rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
         · simp only [w₁, w₂, comp_add]
-        · intros ; rw [zero_smul]
-        · intros ; simp only [add_smul]
-        · intros ; rw [zero_smul]
-        · intros ; simp only [add_smul]
+        · intros; rw [zero_smul]
+        · intros; simp only [add_smul]
+        · intros; rw [zero_smul]
+        · intros; simp only [add_smul]
       · intro g' s
         erw [single_comp_single]
         simp [mul_comm r s, mul_smul]

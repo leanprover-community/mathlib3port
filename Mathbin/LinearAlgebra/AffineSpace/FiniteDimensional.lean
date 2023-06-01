@@ -98,7 +98,7 @@ theorem finite_of_fin_dim_affineIndependent [FiniteDimensional k V] {p : ι → 
     (hi : AffineIndependent k p) : Finite ι :=
   by
   nontriviality ι; inhabit ι
-  rw [affineIndependent_iff_linearIndependent_vsub k p default] at hi
+  rw [affineIndependent_iff_linearIndependent_vsub k p default] at hi 
   letI : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
   exact
     (Set.finite_singleton default).finite_of_compl (Set.finite_coe_iff.1 hi.finite_of_is_noetherian)
@@ -127,7 +127,7 @@ theorem AffineIndependent.finrank_vectorSpan_image_finset {p : ι → P} (hi : A
   have hp₁' : p₁ ∈ p '' s := by simpa using hp₁
   rw [affineIndependent_set_iff_linearIndependent_vsub k hp₁', ← Finset.coe_singleton, ←
     Finset.coe_image, ← Finset.coe_sdiff, Finset.sdiff_singleton_eq_erase, ← Finset.coe_image] at
-    hi'
+    hi' 
   have hc : (Finset.image (fun p : P => p -ᵥ p₁) ((Finset.image p s).eraseₓ p₁)).card = n :=
     by
     rw [Finset.card_image_of_injective _ (vsub_left_injective _), Finset.card_erase_of_mem hp₁]
@@ -140,7 +140,7 @@ dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vectorSpan [Fintype ι] {p : ι → P} (hi : AffineIndependent k p)
     {n : ℕ} (hc : Fintype.card ι = n + 1) : finrank k (vectorSpan k (Set.range p)) = n :=
   by
-  rw [← Finset.card_univ] at hc
+  rw [← Finset.card_univ] at hc 
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
   exact hi.finrank_vector_span_image_finset hc
 #align affine_independent.finrank_vector_span AffineIndependent.finrank_vectorSpan
@@ -177,7 +177,7 @@ theorem finrank_vectorSpan_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc : 
     finrank k (vectorSpan k (Set.range p)) ≤ n :=
   by
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
-  rw [← Finset.card_univ] at hc
+  rw [← Finset.card_univ] at hc 
   exact finrank_vectorSpan_image_finset_le _ _ _ hc
 #align finrank_vector_span_range_le finrank_vectorSpan_range_le
 
@@ -193,7 +193,7 @@ theorem affineIndependent_iff_finrank_vectorSpan_eq [Fintype ι] (p : ι → P) 
     linearIndependent_iff_card_eq_finrank_span, eq_comm,
     vectorSpan_range_eq_span_range_vsub_right_ne k p i₁]
   congr
-  rw [← Finset.card_univ] at hc
+  rw [← Finset.card_univ] at hc 
   rw [Fintype.subtype_card]
   simp [Finset.filter_ne', Finset.card_erase_of_mem, hc]
 #align affine_independent_iff_finrank_vector_span_eq affineIndependent_iff_finrank_vectorSpan_eq
@@ -260,7 +260,7 @@ theorem AffineIndependent.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_ad
   have hn : s.nonempty := by rw [← Finset.card_pos, hc]; apply Nat.succ_pos
   refine' eq_of_direction_eq_of_nonempty_of_le _ ((hn.image _).to_set.affineSpan _) hle
   have hd := direction_le hle
-  rw [direction_affineSpan] at hd⊢
+  rw [direction_affineSpan] at hd ⊢
   exact hi.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc
 #align affine_independent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_add_one
 
@@ -272,8 +272,8 @@ theorem AffineIndependent.affineSpan_eq_of_le_of_card_eq_finrank_add_one [Fintyp
     (hle : affineSpan k (Set.range p) ≤ sp) (hc : Fintype.card ι = finrank k sp.direction + 1) :
     affineSpan k (Set.range p) = sp :=
   by
-  rw [← Finset.card_univ] at hc
-  rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle⊢
+  rw [← Finset.card_univ] at hc 
+  rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle ⊢
   exact hi.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hle hc
 #align affine_independent.affine_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affineSpan_eq_of_le_of_card_eq_finrank_add_one
 
@@ -291,7 +291,7 @@ theorem AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one [FiniteD
     rw [hn, ← finrank_top, ← (vector_span_eq_top_of_affine_span_eq_top k V P) h_tot, ←
       hi.finrank_vector_span hn]
   · intro hc
-    rw [← finrank_top, ← direction_top k V P] at hc
+    rw [← finrank_top, ← direction_top k V P] at hc 
     exact hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc
 #align affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one
 
@@ -309,7 +309,7 @@ instance finiteDimensional_vectorSpan_insert (s : AffineSubspace k P)
   by
   rw [← direction_affineSpan, ← affineSpan_insert_affineSpan]
   rcases(s : Set P).eq_empty_or_nonempty with (hs | ⟨p₀, hp₀⟩)
-  · rw [coe_eq_bot_iff] at hs
+  · rw [coe_eq_bot_iff] at hs 
     rw [hs, bot_coe, span_empty, bot_coe, direction_affineSpan]
     convert finiteDimensional_bot _ _ <;> simp
   · rw [affine_span_coe, direction_affine_span_insert hp₀]
@@ -365,7 +365,7 @@ theorem collinear_iff_finrank_le_one {s : Set P} [FiniteDimensional k (vectorSpa
     Collinear k s ↔ finrank k (vectorSpan k s) ≤ 1 :=
   by
   have h := collinear_iff_rank_le_one k s
-  rw [← finrank_eq_rank] at h
+  rw [← finrank_eq_rank] at h 
   exact_mod_cast h
 #align collinear_iff_finrank_le_one collinear_iff_finrank_le_one
 
@@ -433,20 +433,20 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
       rw [vectorSpan_eq_span_vsub_set_right k h, Submodule.span_le, Set.subset_def]
       intro x hx
       rw [SetLike.mem_coe, Submodule.mem_span_singleton]
-      rw [Set.mem_image] at hx
+      rw [Set.mem_image] at hx 
       rcases hx with ⟨p, hp, rfl⟩
       rcases hp₀v p hp with ⟨r, rfl⟩
       use r
       simp
     have hw' := SetLike.le_def.1 hs hw
-    rwa [Submodule.mem_span_singleton] at hw'
+    rwa [Submodule.mem_span_singleton] at hw' 
 #align collinear_iff_of_mem collinear_iff_of_mem
 
 /-- A set of points is collinear if and only if they can all be
 expressed as multiples of the same vector, added to the same base
 point. -/
 theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
-    Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ :=
+    Collinear k s ↔ ∃ (p₀ : P) (v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ :=
   by
   rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
   · simp [collinear_empty]
@@ -470,7 +470,7 @@ theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) :=
   rw [collinear_iff_exists_forall_eq_smul_vadd]
   use p₁, p₂ -ᵥ p₁
   intro p hp
-  rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp
+  rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hp 
   cases hp
   · use 0
     simp [hp]
@@ -545,7 +545,7 @@ that set. -/
 theorem Collinear.mem_affineSpan_of_mem_of_ne {s : Set P} (h : Collinear k s) {p₁ p₂ p₃ : P}
     (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) (hp₃ : p₃ ∈ s) (hp₁p₂ : p₁ ≠ p₂) : p₃ ∈ line[k, p₁, p₂] :=
   by
-  rw [collinear_iff_of_mem hp₁] at h
+  rw [collinear_iff_of_mem hp₁] at h 
   rcases h with ⟨v, h⟩
   rcases h p₂ hp₂ with ⟨r₂, rfl⟩
   rcases h p₃ hp₃ with ⟨r₃, rfl⟩
@@ -665,7 +665,7 @@ theorem coplanar_iff_finrank_le_two {s : Set P} [FiniteDimensional k (vectorSpan
     Coplanar k s ↔ finrank k (vectorSpan k s) ≤ 2 :=
   by
   have h : Coplanar k s ↔ Module.rank k (vectorSpan k s) ≤ 2 := Iff.rfl
-  rw [← finrank_eq_rank] at h
+  rw [← finrank_eq_rank] at h 
   exact_mod_cast h
 #align coplanar_iff_finrank_le_two coplanar_iff_finrank_le_two
 
@@ -739,7 +739,7 @@ theorem finrank_vectorSpan_insert_le (s : AffineSubspace k P) (p : P) :
   haveI := hf
   rw [← direction_affineSpan, ← affineSpan_insert_affineSpan]
   rcases(s : Set P).eq_empty_or_nonempty with (hs | ⟨p₀, hp₀⟩)
-  · rw [coe_eq_bot_iff] at hs
+  · rw [coe_eq_bot_iff] at hs 
     rw [hs, bot_coe, span_empty, bot_coe, direction_affineSpan, direction_bot, finrank_bot,
       zero_add]
     convert zero_le_one' ℕ
@@ -749,7 +749,7 @@ theorem finrank_vectorSpan_insert_le (s : AffineSubspace k P) (p : P) :
     refine' (Submodule.finrank_add_le_finrank_add_finrank _ _).trans (add_le_add_right _ _)
     refine' finrank_le_one ⟨p -ᵥ p₀, Submodule.mem_span_singleton_self _⟩ fun v => _
     have h := v.property
-    rw [Submodule.mem_span_singleton] at h
+    rw [Submodule.mem_span_singleton] at h 
     rcases h with ⟨c, hc⟩
     refine' ⟨c, _⟩
     ext
