@@ -38,6 +38,7 @@ open scoped Classical BigOperators NNReal ENNReal
 
 section UniformOfFinset
 
+#print Pmf.uniformOfFinset /-
 /-- Uniform distribution taking the same non-zero probability on the nonempty finset `s` -/
 def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
   ofFinset (fun a => if a ∈ s then s.card⁻¹ else 0) s
@@ -55,6 +56,7 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
         )
     fun x hx => by simp only [hx, if_false]
 #align pmf.uniform_of_finset Pmf.uniformOfFinset
+-/
 
 variable {s : Finset α} (hs : s.Nonempty) {a : α}
 
@@ -70,6 +72,7 @@ theorem uniformOfFinset_apply_of_mem (ha : a ∈ s) : uniformOfFinset s hs a = s
 theorem uniformOfFinset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs a = 0 := by simp [ha]
 #align pmf.uniform_of_finset_apply_of_not_mem Pmf.uniformOfFinset_apply_of_not_mem
 
+#print Pmf.support_uniformOfFinset /-
 @[simp]
 theorem support_uniformOfFinset : (uniformOfFinset s hs).support = s :=
   Set.ext
@@ -77,10 +80,13 @@ theorem support_uniformOfFinset : (uniformOfFinset s hs).support = s :=
       let ⟨a, ha⟩ := hs
       simp [mem_support_iff, Finset.ne_empty_of_mem ha])
 #align pmf.support_uniform_of_finset Pmf.support_uniformOfFinset
+-/
 
+#print Pmf.mem_support_uniformOfFinset_iff /-
 theorem mem_support_uniformOfFinset_iff (a : α) : a ∈ (uniformOfFinset s hs).support ↔ a ∈ s := by
   simp
 #align pmf.mem_support_uniform_of_finset_iff Pmf.mem_support_uniformOfFinset_iff
+-/
 
 section Measure
 
@@ -122,10 +128,12 @@ end UniformOfFinset
 
 section UniformOfFintype
 
+#print Pmf.uniformOfFintype /-
 /-- The uniform pmf taking the same uniform value on all of the fintype `α` -/
 def uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] : Pmf α :=
   uniformOfFinset Finset.univ Finset.univ_nonempty
 #align pmf.uniform_of_fintype Pmf.uniformOfFintype
+-/
 
 variable [Fintype α] [Nonempty α]
 
@@ -140,8 +148,10 @@ theorem support_uniformOfFintype (α : Type _) [Fintype α] [Nonempty α] :
   Set.ext fun x => by simp [mem_support_iff]
 #align pmf.support_uniform_of_fintype Pmf.support_uniformOfFintype
 
+#print Pmf.mem_support_uniformOfFintype /-
 theorem mem_support_uniformOfFintype (a : α) : a ∈ (uniformOfFintype α).support := by simp
 #align pmf.mem_support_uniform_of_fintype Pmf.mem_support_uniformOfFintype
+-/
 
 section Measure
 
@@ -163,6 +173,7 @@ end UniformOfFintype
 
 section OfMultiset
 
+#print Pmf.ofMultiset /-
 /-- Given a non-empty multiset `s` we construct the `pmf` which sends `a` to the fraction of
   elements in `s` that are `a`. -/
 def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
@@ -181,6 +192,7 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
               (ENNReal.nat_ne_top _)]
         )⟩
 #align pmf.of_multiset Pmf.ofMultiset
+-/
 
 variable {s : Multiset α} (hs : s ≠ 0)
 
@@ -189,14 +201,18 @@ theorem ofMultiset_apply (a : α) : ofMultiset s hs a = s.count a / s.card :=
   rfl
 #align pmf.of_multiset_apply Pmf.ofMultiset_apply
 
+#print Pmf.support_ofMultiset /-
 @[simp]
 theorem support_ofMultiset : (ofMultiset s hs).support = s.toFinset :=
   Set.ext (by simp [mem_support_iff, hs])
 #align pmf.support_of_multiset Pmf.support_ofMultiset
+-/
 
+#print Pmf.mem_support_ofMultiset_iff /-
 theorem mem_support_ofMultiset_iff (a : α) : a ∈ (ofMultiset s hs).support ↔ a ∈ s.toFinset := by
   simp
 #align pmf.mem_support_of_multiset_iff Pmf.mem_support_ofMultiset_iff
+-/
 
 theorem ofMultiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 := by
   simpa only [of_multiset_apply, ENNReal.div_eq_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,

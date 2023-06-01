@@ -663,9 +663,9 @@ theorem sum_cauchyPowerSeries_eq_integral {f : ℂ → E} {c : ℂ} {R : ℝ} {w
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R`, `R > 0`,
 converges to the Cauchy integral `(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z` on the open
 disc `metric.ball c R`. -/
-theorem hasFpowerSeriesOnCauchyIntegral {f : ℂ → E} {c : ℂ} {R : ℝ≥0} (hf : CircleIntegrable f c R)
-    (hR : 0 < R) :
-    HasFpowerSeriesOnBall (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z)
+theorem has_fpower_series_on_cauchy_integral {f : ℂ → E} {c : ℂ} {R : ℝ≥0}
+    (hf : CircleIntegrable f c R) (hR : 0 < R) :
+    HasFPowerSeriesOnBall (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z)
       (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchyPowerSeries _ _ _
     r_pos := ENNReal.coe_pos.2 hR
@@ -673,7 +673,7 @@ theorem hasFpowerSeriesOnCauchyIntegral {f : ℂ → E} {c : ℂ} {R : ℝ≥0} 
       refine' hasSum_cauchyPowerSeries_integral hf _
       rw [← norm_eq_abs, ← coe_nnnorm, NNReal.coe_lt_coe, ← ENNReal.coe_lt_coe]
       exact mem_emetric_ball_zero_iff.1 hy }
-#align has_fpower_series_on_cauchy_integral hasFpowerSeriesOnCauchyIntegral
+#align has_fpower_series_on_cauchy_integral has_fpower_series_on_cauchy_integral
 
 namespace circleIntegral
 

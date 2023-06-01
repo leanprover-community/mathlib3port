@@ -292,8 +292,8 @@ variable (𝕜)
 /-- In a Banach algebra `A` over a nontrivially normed field `𝕜`, for any `a : A` the
 power series with coefficients `a ^ n` represents the function `(1 - z • a)⁻¹` in a disk of
 radius `‖a‖₊⁻¹`. -/
-theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
-    HasFpowerSeriesOnBall (fun z : 𝕜 => Ring.inverse (1 - z • a))
+theorem hasFPowerSeriesOnBall_inverse_one_sub_smul [CompleteSpace A] (a : A) :
+    HasFPowerSeriesOnBall (fun z : 𝕜 => Ring.inverse (1 - z • a))
       (fun n => ContinuousMultilinearMap.mkPiField 𝕜 (Fin n) (a ^ n)) 0 ‖a‖₊⁻¹ :=
   { r_le :=
       by
@@ -321,7 +321,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
             NNReal.lt_inv_iff_mul_lt h]
       simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_1 _ norm_lt).hasSum_iff] using
         (NormedRing.inverse_one_sub _ norm_lt).symm }
-#align spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFpowerSeriesOnBallInverseOneSubSmul
+#align spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFPowerSeriesOnBall_inverse_one_sub_smul
 
 variable {𝕜}
 
@@ -380,8 +380,8 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectralRadius (a : A) :
     ext n
     rw [norm_toNNReal, ENNReal.coe_rpow_def ‖a ^ n‖₊ (1 / n : ℝ), if_neg]
     exact fun ha => by linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
-  · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFpowerSeriesOnBall r_pos
-    exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchangeRadius H₁).r_le
+  · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFPowerSeriesOnBall r_pos
+    exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchange_radius H₁).r_le
 #align spectrum.limsup_pow_nnnorm_pow_one_div_le_spectral_radius spectrum.limsup_pow_nnnorm_pow_one_div_le_spectralRadius
 
 /-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the

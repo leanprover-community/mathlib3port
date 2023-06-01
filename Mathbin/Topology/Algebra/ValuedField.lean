@@ -81,6 +81,7 @@ end InversionEstimate
 
 open Valued
 
+#print Valued.topologicalDivisionRing /-
 /-- The topology coming from a valuation on a division ring makes it a topological division ring
     [BouAC, VI.5.1 middle of Proposition 1] -/
 instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
@@ -100,7 +101,9 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
       rw [Units.min_val, Units.val_mul, Units.val_mul] at y_in 
       exact Valuation.inversion_estimate _ x_ne y_in }
 #align valued.topological_division_ring Valued.topologicalDivisionRing
+-/
 
+#print ValuedRing.separated /-
 /-- A valued division ring is separated. -/
 instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpace K :=
   by
@@ -113,6 +116,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
   let γ' := Units.mk0 _ vx_ne
   exact ⟨γ', fun y hy => by simpa using hy⟩
 #align valued_ring.separated ValuedRing.separated
+-/
 
 section
 
@@ -151,6 +155,7 @@ include hv
 -- mathport name: exprhat
 local notation "hat " => Completion
 
+#print Valued.completable /-
 /-- A valued field is completable. -/
 instance (priority := 100) completable : CompletableTopField K :=
   { ValuedRing.separated with
@@ -197,13 +202,16 @@ instance (priority := 100) completable : CompletableTopField K :=
           rw [Units.val_mul]
           exact mul_le_mul_left' this γ }
 #align valued.completable Valued.completable
+-/
 
 open scoped WithZeroTopology
 
+#print Valued.extension /-
 /-- The extension of the valuation of a valued field to the completion of the field. -/
 noncomputable def extension : hat K → Γ₀ :=
   Completion.denseInducing_coe.extend (v : K → Γ₀)
 #align valued.extension Valued.extension
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » V') -/
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :=
@@ -295,6 +303,7 @@ theorem extension_extends (x : K) : extension (x : hat K) = v x :=
   exact valued.continuous_valuation.continuous_at
 #align valued.extension_extends Valued.extension_extends
 
+#print Valued.extensionValuation /-
 /-- the extension of a valuation on a division ring to its completion. -/
 noncomputable def extensionValuation : Valuation (hat K) Γ₀
     where
@@ -327,6 +336,7 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀
       rw [← le_max_iff]
       exact v.map_add x y
 #align valued.extension_valuation Valued.extensionValuation
+-/
 
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
@@ -357,6 +367,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
 #align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt
 
+#print Valued.valuedCompletion /-
 noncomputable instance valuedCompletion : Valued (hat K) Γ₀
     where
   V := extensionValuation
@@ -370,6 +381,7 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀
     simp_rw [← closure_coe_completion_v_lt]
     exact (has_basis_nhds_zero K Γ₀).hasBasis_of_denseInducing completion.dense_inducing_coe
 #align valued.valued_completion Valued.valuedCompletion
+-/
 
 @[simp, norm_cast]
 theorem valuedCompletion_apply (x : K) : Valued.v (x : hat K) = v x :=

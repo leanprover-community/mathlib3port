@@ -508,7 +508,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
     have A : ContinuousAt (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) w :=
       by
       have :=
-        hasFpowerSeriesOnCauchyIntegral
+        has_fpower_series_on_cauchy_integral
           ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.coe_nonneg) hR
       refine' this.continuous_on.continuous_at (emetric.is_open_ball.mem_nhds _)
       rwa [Metric.emetric_ball_nnreal]
@@ -598,10 +598,10 @@ theorem circleIntegral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c w
 /-- If `f : ℂ → E` is continuous on a closed ball of positive radius and is differentiable at all
 but countably many points of the corresponding open ball, then it is analytic on the open ball with
 coefficients of the power series given by Cauchy integral formulas. -/
-theorem hasFpowerSeriesOnBallOfDifferentiableOffCountable {R : ℝ≥0} {c : ℂ} {f : ℂ → E} {s : Set ℂ}
-    (hs : s.Countable) (hc : ContinuousOn f (closedBall c R))
+theorem hasFPowerSeriesOnBall_of_differentiable_off_countable {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
+    {s : Set ℂ} (hs : s.Countable) (hc : ContinuousOn f (closedBall c R))
     (hd : ∀ z ∈ ball c R \ s, DifferentiableAt ℂ f z) (hR : 0 < R) :
-    HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
+    HasFPowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchyPowerSeries _ _ _
     r_pos := ENNReal.coe_pos.2 hR
     HasSum := fun w hw =>
@@ -613,31 +613,31 @@ theorem hasFpowerSeriesOnBallOfDifferentiableOffCountable {R : ℝ≥0} {c : ℂ
         two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw' hc
           hd]
       exact
-        (hasFpowerSeriesOnCauchyIntegral ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.2)
-              hR).HasSum
+        (has_fpower_series_on_cauchy_integral
+              ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.2) hR).HasSum
           hw }
-#align complex.has_fpower_series_on_ball_of_differentiable_off_countable Complex.hasFpowerSeriesOnBallOfDifferentiableOffCountable
+#align complex.has_fpower_series_on_ball_of_differentiable_off_countable Complex.hasFPowerSeriesOnBall_of_differentiable_off_countable
 
 /-- If `f : ℂ → E` is complex differentiable on an open disc of positive radius and is continuous
 on its closure, then it is analytic on the open disc with coefficients of the power series given by
 Cauchy integral formulas. -/
-theorem DiffContOnCl.hasFpowerSeriesOnBall {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
+theorem DiffContOnCl.hasFPowerSeriesOnBall {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
     (hf : DiffContOnCl ℂ f (ball c R)) (hR : 0 < R) :
-    HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
-  hasFpowerSeriesOnBallOfDifferentiableOffCountable countable_empty hf.continuousOn_ball
+    HasFPowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
+  hasFPowerSeriesOnBall_of_differentiable_off_countable countable_empty hf.continuousOn_ball
     (fun z hz => hf.DifferentiableAt isOpen_ball hz.1) hR
-#align diff_cont_on_cl.has_fpower_series_on_ball DiffContOnCl.hasFpowerSeriesOnBall
+#align diff_cont_on_cl.has_fpower_series_on_ball DiffContOnCl.hasFPowerSeriesOnBall
 
 /-- If `f : ℂ → E` is complex differentiable on a closed disc of positive radius, then it is
 analytic on the corresponding open disc, and the coefficients of the power series are given by
 Cauchy integral formulas. See also
 `complex.has_fpower_series_on_ball_of_differentiable_off_countable` for a version of this lemma with
 weaker assumptions. -/
-protected theorem DifferentiableOn.hasFpowerSeriesOnBall {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
+protected theorem DifferentiableOn.hasFPowerSeriesOnBall {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
     (hd : DifferentiableOn ℂ f (closedBall c R)) (hR : 0 < R) :
-    HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
-  (hd.mono closure_ball_subset_closedBall).DiffContOnCl.HasFpowerSeriesOnBall hR
-#align differentiable_on.has_fpower_series_on_ball DifferentiableOn.hasFpowerSeriesOnBall
+    HasFPowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
+  (hd.mono closure_ball_subset_closedBall).DiffContOnCl.HasFPowerSeriesOnBall hR
+#align differentiable_on.has_fpower_series_on_ball DifferentiableOn.hasFPowerSeriesOnBall
 
 /-- If `f : ℂ → E` is complex differentiable on some set `s`, then it is analytic at any point `z`
 such that `s ∈ 𝓝 z` (equivalently, `z ∈ interior s`). -/
@@ -646,7 +646,7 @@ protected theorem DifferentiableOn.analyticAt {s : Set ℂ} {f : ℂ → E} {z :
   by
   rcases nhds_basis_closed_ball.mem_iff.1 hz with ⟨R, hR0, hRs⟩
   lift R to ℝ≥0 using hR0.le
-  exact ((hd.mono hRs).HasFpowerSeriesOnBall hR0).AnalyticAt
+  exact ((hd.mono hRs).HasFPowerSeriesOnBall hR0).AnalyticAt
 #align differentiable_on.analytic_at DifferentiableOn.analyticAt
 
 theorem DifferentiableOn.analyticOn {s : Set ℂ} {f : ℂ → E} (hd : DifferentiableOn ℂ f s)
@@ -661,11 +661,11 @@ protected theorem Differentiable.analyticAt {f : ℂ → E} (hf : Differentiable
 
 /-- When `f : ℂ → E` is differentiable, the `cauchy_power_series f z R` represents `f` as a power
 series centered at `z` in the entirety of `ℂ`, regardless of `R : ℝ≥0`, with  `0 < R`. -/
-protected theorem Differentiable.hasFpowerSeriesOnBall {f : ℂ → E} (h : Differentiable ℂ f) (z : ℂ)
-    {R : ℝ≥0} (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
-  (h.DifferentiableOn.HasFpowerSeriesOnBall hR).rEqTopOfExists fun r hr =>
-    ⟨_, h.DifferentiableOn.HasFpowerSeriesOnBall hr⟩
-#align differentiable.has_fpower_series_on_ball Differentiable.hasFpowerSeriesOnBall
+protected theorem Differentiable.hasFPowerSeriesOnBall {f : ℂ → E} (h : Differentiable ℂ f) (z : ℂ)
+    {R : ℝ≥0} (hR : 0 < R) : HasFPowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
+  (h.DifferentiableOn.HasFPowerSeriesOnBall hR).r_eq_top_of_exists fun r hr =>
+    ⟨_, h.DifferentiableOn.HasFPowerSeriesOnBall hr⟩
+#align differentiable.has_fpower_series_on_ball Differentiable.hasFPowerSeriesOnBall
 
 end Complex
 

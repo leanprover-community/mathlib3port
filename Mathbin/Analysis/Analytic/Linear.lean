@@ -49,21 +49,21 @@ theorem fpowerSeries_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).ra
   (f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2 fun n => rfl
 #align continuous_linear_map.fpower_series_radius ContinuousLinearMap.fpowerSeries_radius
 
-protected theorem hasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) :
-    HasFpowerSeriesOnBall f (f.fpowerSeries x) x ∞ :=
+protected theorem hasFPowerSeriesOnBall (f : E →L[𝕜] F) (x : E) :
+    HasFPowerSeriesOnBall f (f.fpowerSeries x) x ∞ :=
   { r_le := by simp
     r_pos := ENNReal.coe_lt_top
     HasSum := fun y _ =>
       (hasSum_nat_add_iff' 2).1 <| by simp [Finset.sum_range_succ, ← sub_sub, hasSum_zero] }
-#align continuous_linear_map.has_fpower_series_on_ball ContinuousLinearMap.hasFpowerSeriesOnBall
+#align continuous_linear_map.has_fpower_series_on_ball ContinuousLinearMap.hasFPowerSeriesOnBall
 
-protected theorem hasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) :
-    HasFpowerSeriesAt f (f.fpowerSeries x) x :=
-  ⟨∞, f.HasFpowerSeriesOnBall x⟩
-#align continuous_linear_map.has_fpower_series_at ContinuousLinearMap.hasFpowerSeriesAt
+protected theorem hasFPowerSeriesAt (f : E →L[𝕜] F) (x : E) :
+    HasFPowerSeriesAt f (f.fpowerSeries x) x :=
+  ⟨∞, f.HasFPowerSeriesOnBall x⟩
+#align continuous_linear_map.has_fpower_series_at ContinuousLinearMap.hasFPowerSeriesAt
 
 protected theorem analyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x :=
-  (f.HasFpowerSeriesAt x).AnalyticAt
+  (f.HasFPowerSeriesAt x).AnalyticAt
 #align continuous_linear_map.analytic_at ContinuousLinearMap.analyticAt
 
 /-- Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
@@ -97,8 +97,8 @@ theorem fpowerSeriesBilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × 
   (f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3 fun n => rfl
 #align continuous_linear_map.fpower_series_bilinear_radius ContinuousLinearMap.fpowerSeriesBilinear_radius
 
-protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
-    HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
+protected theorem hasFPowerSeriesOnBall_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
+    HasFPowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
   { r_le := by simp
     r_pos := ENNReal.coe_lt_top
     HasSum := fun y _ =>
@@ -107,16 +107,16 @@ protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G
         simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add,
           f.map_add_add]
         dsimp; simp only [add_comm, sub_self, hasSum_zero] }
-#align continuous_linear_map.has_fpower_series_on_ball_bilinear ContinuousLinearMap.hasFpowerSeriesOnBallBilinear
+#align continuous_linear_map.has_fpower_series_on_ball_bilinear ContinuousLinearMap.hasFPowerSeriesOnBall_bilinear
 
-protected theorem hasFpowerSeriesAtBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
-    HasFpowerSeriesAt (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x :=
-  ⟨∞, f.hasFpowerSeriesOnBallBilinear x⟩
-#align continuous_linear_map.has_fpower_series_at_bilinear ContinuousLinearMap.hasFpowerSeriesAtBilinear
+protected theorem hasFPowerSeriesAt_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
+    HasFPowerSeriesAt (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x :=
+  ⟨∞, f.hasFPowerSeriesOnBall_bilinear x⟩
+#align continuous_linear_map.has_fpower_series_at_bilinear ContinuousLinearMap.hasFPowerSeriesAt_bilinear
 
 protected theorem analyticAt_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     AnalyticAt 𝕜 (fun x : E × F => f x.1 x.2) x :=
-  (f.hasFpowerSeriesAtBilinear x).AnalyticAt
+  (f.hasFPowerSeriesAt_bilinear x).AnalyticAt
 #align continuous_linear_map.analytic_at_bilinear ContinuousLinearMap.analyticAt_bilinear
 
 end ContinuousLinearMap

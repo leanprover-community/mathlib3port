@@ -55,7 +55,7 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
   obtain ⟨y, yu, hxy⟩ : ∃ y ∈ u, edist x y < r / 2
   exact EMetric.mem_closure_iff.1 xu (r / 2) (ENNReal.half_pos hp.r_pos.ne')
   let q := p.change_origin (y - x)
-  have has_series : HasFpowerSeriesOnBall f q y (r / 2) :=
+  have has_series : HasFPowerSeriesOnBall f q y (r / 2) :=
     by
     have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy 
     have := hp.change_origin (A.trans_le ENNReal.half_le_self)
@@ -69,7 +69,7 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
   have A : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) (f z) := has_series.has_sum_sub hz
   have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 :=
     by
-    have : HasFpowerSeriesAt 0 q y := has_series.has_fpower_series_at.congr yu
+    have : HasFPowerSeriesAt 0 q y := has_series.has_fpower_series_at.congr yu
     convert hasSum_zero
     ext n
     exact this.apply_eq_zero n _

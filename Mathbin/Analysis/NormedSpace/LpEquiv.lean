@@ -107,7 +107,7 @@ noncomputable def lpPiLpₗᵢ [Fact (1 ≤ p)] : lp E p ≃ₗᵢ[𝕜] PiLp p 
   { AddEquiv.lpPiLp with
     map_smul' := fun k f => rfl
     norm_map' := equiv_lpPiLp_norm }
-#align lp_pi_Lpₗᵢ lpPiLpₗᵢ
+#align lp_pi_Lpₗᵢ lpPiLpₗᵢₓ
 
 variable {𝕜}
 
@@ -161,7 +161,7 @@ noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →�
   { AddEquiv.lpBcf with
     map_smul' := fun k f => rfl
     norm_map' := fun f => by simp only [norm_eq_supr_norm, lp.norm_eq_ciSup]; rfl }
-#align lp_bcfₗᵢ lpBcfₗᵢ
+#align lp_bcfₗᵢ lpBcfₗᵢₓ
 
 variable {𝕜}
 

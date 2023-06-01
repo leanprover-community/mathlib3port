@@ -241,15 +241,15 @@ theorem expSeries_hasSum_exp_of_mem_ball' (x : 𝔸)
   exact expSeries_hasSum_exp_of_mem_ball x hx
 #align exp_series_has_sum_exp_of_mem_ball' expSeries_hasSum_exp_of_mem_ball'
 
-theorem hasFpowerSeriesOnBallExpOfRadiusPos (h : 0 < (expSeries 𝕂 𝔸).radius) :
-    HasFpowerSeriesOnBall (exp 𝕂) (expSeries 𝕂 𝔸) 0 (expSeries 𝕂 𝔸).radius :=
-  (expSeries 𝕂 𝔸).HasFpowerSeriesOnBall h
-#align has_fpower_series_on_ball_exp_of_radius_pos hasFpowerSeriesOnBallExpOfRadiusPos
+theorem hasFPowerSeriesOnBall_exp_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
+    HasFPowerSeriesOnBall (exp 𝕂) (expSeries 𝕂 𝔸) 0 (expSeries 𝕂 𝔸).radius :=
+  (expSeries 𝕂 𝔸).HasFPowerSeriesOnBall h
+#align has_fpower_series_on_ball_exp_of_radius_pos hasFPowerSeriesOnBall_exp_of_radius_pos
 
-theorem hasFpowerSeriesAtExpZeroOfRadiusPos (h : 0 < (expSeries 𝕂 𝔸).radius) :
-    HasFpowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
-  (hasFpowerSeriesOnBallExpOfRadiusPos h).HasFpowerSeriesAt
-#align has_fpower_series_at_exp_zero_of_radius_pos hasFpowerSeriesAtExpZeroOfRadiusPos
+theorem hasFPowerSeriesAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
+    HasFPowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
+  (hasFPowerSeriesOnBall_exp_of_radius_pos h).HasFPowerSeriesAt
+#align has_fpower_series_at_exp_zero_of_radius_pos hasFPowerSeriesAt_exp_zero_of_radius_pos
 
 theorem continuousOn_exp : ContinuousOn (exp 𝕂 : 𝔸 → 𝔸) (EMetric.ball 0 (expSeries 𝕂 𝔸).radius) :=
   FormalMultilinearSeries.continuousOn
@@ -260,7 +260,7 @@ theorem analyticAt_exp_of_mem_ball (x : 𝔸) (hx : x ∈ EMetric.ball (0 : 𝔸
   by_cases h : (expSeries 𝕂 𝔸).radius = 0
   · rw [h] at hx ; exact (ENNReal.not_lt_zero hx).elim
   · have h := pos_iff_ne_zero.mpr h
-    exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analyticAt_of_mem hx
+    exact (hasFPowerSeriesOnBall_exp_of_radius_pos h).analyticAt_of_mem hx
 #align analytic_at_exp_of_mem_ball analyticAt_exp_of_mem_ball
 
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
@@ -448,13 +448,13 @@ theorem exp_series_hasSum_exp' (x : 𝔸) : HasSum (fun n => (n !⁻¹ : 𝕂) �
   expSeries_hasSum_exp_of_mem_ball' x ((expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _)
 #align exp_series_has_sum_exp' exp_series_hasSum_exp'
 
-theorem expHasFpowerSeriesOnBall : HasFpowerSeriesOnBall (exp 𝕂) (expSeries 𝕂 𝔸) 0 ∞ :=
-  expSeries_radius_eq_top 𝕂 𝔸 ▸ hasFpowerSeriesOnBallExpOfRadiusPos (expSeries_radius_pos _ _)
-#align exp_has_fpower_series_on_ball expHasFpowerSeriesOnBall
+theorem exp_hasFPowerSeriesOnBall : HasFPowerSeriesOnBall (exp 𝕂) (expSeries 𝕂 𝔸) 0 ∞ :=
+  expSeries_radius_eq_top 𝕂 𝔸 ▸ hasFPowerSeriesOnBall_exp_of_radius_pos (expSeries_radius_pos _ _)
+#align exp_has_fpower_series_on_ball exp_hasFPowerSeriesOnBall
 
-theorem expHasFpowerSeriesAtZero : HasFpowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
-  expHasFpowerSeriesOnBall.HasFpowerSeriesAt
-#align exp_has_fpower_series_at_zero expHasFpowerSeriesAtZero
+theorem exp_hasFPowerSeriesAt_zero : HasFPowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
+  exp_hasFPowerSeriesOnBall.HasFPowerSeriesAt
+#align exp_has_fpower_series_at_zero exp_hasFPowerSeriesAt_zero
 
 @[continuity]
 theorem exp_continuous : Continuous (exp 𝕂 : 𝔸 → 𝔸) :=

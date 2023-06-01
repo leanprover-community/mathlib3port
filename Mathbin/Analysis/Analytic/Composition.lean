@@ -770,9 +770,9 @@ open FormalMultilinearSeries
 
 /-- If two functions `g` and `f` have power series `q` and `p` respectively at `f x` and `x`, then
 `g ∘ f` admits the power series `q.comp p` at `x`. -/
-theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinearSeries 𝕜 F G}
-    {p : FormalMultilinearSeries 𝕜 E F} {x : E} (hg : HasFpowerSeriesAt g q (f x))
-    (hf : HasFpowerSeriesAt f p x) : HasFpowerSeriesAt (g ∘ f) (q.comp p) x :=
+theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinearSeries 𝕜 F G}
+    {p : FormalMultilinearSeries 𝕜 E F} {x : E} (hg : HasFPowerSeriesAt g q (f x))
+    (hf : HasFPowerSeriesAt f p x) : HasFPowerSeriesAt (g ∘ f) (q.comp p) x :=
   by
   /- Consider `rf` and `rg` such that `f` and `g` have power series expansion on the disks
     of radius `rf` and `rg`. -/
@@ -899,7 +899,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     simp only [ContinuousMultilinearMap.sum_apply]
     rfl
   exact E
-#align has_fpower_series_at.comp HasFpowerSeriesAt.comp
+#align has_fpower_series_at.comp HasFPowerSeriesAt.comp
 
 /-- If two functions `g` and `f` are analytic respectively at `f x` and `x`, then `g ∘ f` is
 analytic at `x`. -/
