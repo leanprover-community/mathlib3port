@@ -137,18 +137,18 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   obtain ⟨δ, δpos, c, δc, c_lt⟩ :
     ∃ δ : ℕ → ℝ≥0, (∀ i : ℕ, 0 < δ i) ∧ ∃ c : NNReal, HasSum δ c ∧ c < 1
   exact NNReal.exists_pos_sum_of_countable one_ne_zero ℕ
-  have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFderiv ℝ i (r • g n) x‖ ≤ δ n :=
+  have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFDeriv ℝ i (r • g n) x‖ ≤ δ n :=
     by
     intro n
-    have : ∀ i, ∃ R, ∀ x, ‖iteratedFderiv ℝ i (fun x => g n x) x‖ ≤ R :=
+    have : ∀ i, ∃ R, ∀ x, ‖iteratedFDeriv ℝ i (fun x => g n x) x‖ ≤ R :=
       by
       intro i
-      have : BddAbove (range fun x => ‖iteratedFderiv ℝ i (fun x : E => g n x) x‖) :=
+      have : BddAbove (range fun x => ‖iteratedFDeriv ℝ i (fun x : E => g n x) x‖) :=
         by
         apply
-          ((g_smooth n).continuous_iteratedFderiv le_top).norm.bddAbove_range_of_hasCompactSupport
+          ((g_smooth n).continuous_iteratedFDeriv le_top).norm.bddAbove_range_of_hasCompactSupport
         apply HasCompactSupport.comp_left _ norm_zero
-        apply (g_comp_supp n).iteratedFderiv
+        apply (g_comp_supp n).iteratedFDeriv
       rcases this with ⟨R, hR⟩
       exact ⟨R, fun x => hR (mem_range_self _)⟩
     choose R hR using this
@@ -164,9 +164,9 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       linarith
     refine' ⟨M⁻¹ * δ n, by positivity, fun i hi x => _⟩
     calc
-      ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ := by
-        rw [iteratedFderiv_const_smul_apply]; exact (g_smooth n).of_le le_top
-      _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ := by rw [norm_smul, Real.norm_of_nonneg];
+      ‖iteratedFDeriv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFDeriv ℝ i (g n) x‖ := by
+        rw [iteratedFDeriv_const_smul_apply]; exact (g_smooth n).of_le le_top
+      _ = M⁻¹ * δ n * ‖iteratedFDeriv ℝ i (g n) x‖ := by rw [norm_smul, Real.norm_of_nonneg];
         positivity
       _ ≤ M⁻¹ * δ n * M := (mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity))
       _ = δ n := by field_simp [M_pos.ne']
@@ -177,7 +177,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     intro x
     refine' summable_of_nnnorm_bounded _ δc.summable fun n => _
     rw [← NNReal.coe_le_coe, coe_nnnorm]
-    simpa only [norm_iteratedFderiv_zero] using hr n 0 (zero_le n) x
+    simpa only [norm_iteratedFDeriv_zero] using hr n 0 (zero_le n) x
   refine' ⟨fun x => ∑' n, (r n • g n) x, _, _, _⟩
   · apply subset.antisymm
     · intro x hx
@@ -206,7 +206,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     apply tsum_le_tsum _ (S y) A.summable
     intro n
     apply (le_abs_self _).trans
-    simpa only [norm_iteratedFderiv_zero] using hr n 0 (zero_le n) y
+    simpa only [norm_iteratedFDeriv_zero] using hr n 0 (zero_le n) y
 #align is_open.exists_smooth_support_eq IsOpen.exists_smooth_support_eq
 
 end

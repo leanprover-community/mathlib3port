@@ -202,65 +202,65 @@ theorem fderiv_tsum (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
 
 /-- Consider a series of smooth functions, with summable uniform bounds on the successive
 derivatives. Then the iterated derivative of the sum is the sum of the iterated derivative. -/
-theorem iteratedFderiv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
+theorem iteratedFDeriv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
     (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
-    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) {k : ℕ}
+    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) {k : ℕ}
     (hk : (k : ℕ∞) ≤ N) :
-    (iteratedFderiv 𝕜 k fun y => ∑' n, f n y) = fun x => ∑' n, iteratedFderiv 𝕜 k (f n) x :=
+    (iteratedFDeriv 𝕜 k fun y => ∑' n, f n y) = fun x => ∑' n, iteratedFDeriv 𝕜 k (f n) x :=
   by
   induction' k with k IH
   · ext1 x
-    simp_rw [iteratedFderiv_zero_eq_comp]
+    simp_rw [iteratedFDeriv_zero_eq_comp]
     exact (continuousMultilinearCurryFin0 𝕜 E F).symm.toContinuousLinearEquiv.map_tsum
   · have h'k : (k : ℕ∞) < N := lt_of_lt_of_le (WithTop.coe_lt_coe.2 (Nat.lt_succ_self _)) hk
-    have A : Summable fun n => iteratedFderiv 𝕜 k (f n) 0 :=
+    have A : Summable fun n => iteratedFDeriv 𝕜 k (f n) 0 :=
       summable_of_norm_bounded (v k) (hv k h'k.le) fun n => h'f k n 0 h'k.le
-    simp_rw [iteratedFderiv_succ_eq_comp_left, IH h'k.le]
-    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iteratedFderiv h'k) _ A]
+    simp_rw [iteratedFDeriv_succ_eq_comp_left, IH h'k.le]
+    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iteratedFDeriv h'k) _ A]
     · ext1 x
       exact
         (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (k + 1) => E)
               F).toContinuousLinearEquiv.map_tsum
     · intro n x
-      simpa only [iteratedFderiv_succ_eq_comp_left, LinearIsometryEquiv.norm_map] using
+      simpa only [iteratedFDeriv_succ_eq_comp_left, LinearIsometryEquiv.norm_map] using
         h'f k.succ n x hk
-#align iterated_fderiv_tsum iteratedFderiv_tsum
+#align iterated_fderiv_tsum iteratedFDeriv_tsum
 
 /-- Consider a series of smooth functions, with summable uniform bounds on the successive
 derivatives. Then the iterated derivative of the sum is the sum of the iterated derivative. -/
-theorem iteratedFderiv_tsum_apply (hf : ∀ i, ContDiff 𝕜 N (f i))
+theorem iteratedFDeriv_tsum_apply (hf : ∀ i, ContDiff 𝕜 N (f i))
     (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
-    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) {k : ℕ}
+    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) {k : ℕ}
     (hk : (k : ℕ∞) ≤ N) (x : E) :
-    iteratedFderiv 𝕜 k (fun y => ∑' n, f n y) x = ∑' n, iteratedFderiv 𝕜 k (f n) x := by
-  rw [iteratedFderiv_tsum hf hv h'f hk]
-#align iterated_fderiv_tsum_apply iteratedFderiv_tsum_apply
+    iteratedFDeriv 𝕜 k (fun y => ∑' n, f n y) x = ∑' n, iteratedFDeriv 𝕜 k (f n) x := by
+  rw [iteratedFDeriv_tsum hf hv h'f hk]
+#align iterated_fderiv_tsum_apply iteratedFDeriv_tsum_apply
 
 /-- Consider a series of functions `∑' i, f i x`. Assume that each individual function `f i` is of
 class `C^N`, and moreover there is a uniform summable upper bound on the `k`-th derivative
 for each `k ≤ N`. Then the series is also `C^N`. -/
 theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
-    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) :
+    (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x :=
   by
   rw [contDiff_iff_continuous_differentiable]
   constructor
   · intro m hm
-    rw [iteratedFderiv_tsum hf hv h'f hm]
+    rw [iteratedFDeriv_tsum hf hv h'f hm]
     refine' continuous_tsum _ (hv m hm) _
     · intro i
-      exact ContDiff.continuous_iteratedFderiv hm (hf i)
+      exact ContDiff.continuous_iteratedFDeriv hm (hf i)
     · intro n x
       exact h'f _ _ _ hm
   · intro m hm
     have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N := by
       simpa only [ENat.coe_add, Nat.cast_withBot, ENat.coe_one] using ENat.add_one_le_of_lt hm
-    rw [iteratedFderiv_tsum hf hv h'f hm.le]
+    rw [iteratedFDeriv_tsum hf hv h'f hm.le]
     have A :
-      ∀ n x, HasFDerivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=
-      fun n x => (ContDiff.differentiable_iteratedFderiv hm (hf n)).DifferentiableAt.HasFDerivAt
+      ∀ n x, HasFDerivAt (iteratedFDeriv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFDeriv 𝕜 m (f n)) x) x :=
+      fun n x => (ContDiff.differentiable_iteratedFDeriv hm (hf n)).DifferentiableAt.HasFDerivAt
     apply differentiable_tsum (hv _ h'm) A fun n x => _
-    rw [fderiv_iteratedFderiv, LinearIsometryEquiv.norm_map]
+    rw [fderiv_iteratedFDeriv, LinearIsometryEquiv.norm_map]
     exact h'f _ _ _ h'm
 #align cont_diff_tsum contDiff_tsum
 
@@ -272,16 +272,16 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
     (h'f :
       ∀ k : ℕ,
         (k : ℕ∞) ≤ N →
-          ∀ᶠ i in (Filter.cofinite : Filter α), ∀ x : E, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) :
+          ∀ᶠ i in (Filter.cofinite : Filter α), ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x := by
   classical
     apply contDiff_iff_forall_nat_le.2 fun m hm => _
     let t : Set α :=
-      { i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i }
+      { i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i }
     have ht : Set.Finite t :=
       haveI A :
         ∀ᶠ i in (Filter.cofinite : Filter α),
-          ∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x : E, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i :=
+          ∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i :=
         by
         rw [eventually_all_finset]
         intro i hi
@@ -297,7 +297,7 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
       refine' (sum_add_tsum_subtype_compl _ T).symm
       refine' summable_of_norm_bounded_eventually _ (hv 0 (zero_le _)) _
       filter_upwards [h'f 0 (zero_le _)]with i hi
-      simpa only [norm_iteratedFderiv_zero] using hi x
+      simpa only [norm_iteratedFDeriv_zero] using hi x
     rw [this]
     apply (ContDiff.sum fun i hi => (hf i).of_le hm).add
     have h'u : ∀ k : ℕ, (k : ℕ∞) ≤ m → Summable (v k ∘ (coe : { i // i ∉ T } → α)) := fun k hk =>

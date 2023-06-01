@@ -72,6 +72,7 @@ variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddC
 -/
 
 
+#print Memℓp /-
 /-- The property that `f : Π i : α, E i`
 * is finitely supported, if `p = 0`, or
 * admits an upper bound for `set.range (λ i, ‖f i‖)`, if `p = ∞`, or
@@ -80,6 +81,7 @@ def Memℓp (f : ∀ i, E i) (p : ℝ≥0∞) : Prop :=
   if p = 0 then Set.Finite { i | f i ≠ 0 }
   else if p = ∞ then BddAbove (Set.range fun i => ‖f i‖) else Summable fun i => ‖f i‖ ^ p.toReal
 #align mem_ℓp Memℓp
+-/
 
 theorem memℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite { i | f i ≠ 0 } := by
   dsimp [Memℓp] <;> rw [if_pos rfl]
@@ -307,6 +309,7 @@ The space of elements of `Π i, E i` satisfying the predicate `mem_ℓp`.
 -/
 
 
+#print PreLp /-
 /-- We define `pre_lp E` to be a type synonym for `Π i, E i` which, importantly, does not inherit
 the `pi` topology on `Π i, E i` (otherwise this topology would descend to `lp E p` and conflict
 with the normed group topology we will later equip it with.)
@@ -318,11 +321,15 @@ the same ambient group, which permits lemma statements like `lp.monotone` (below
 def PreLp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] : Type _ :=
   ∀ i, E i deriving AddCommGroup
 #align pre_lp PreLp
+-/
 
+#print PreLp.unique /-
 instance PreLp.unique [IsEmpty α] : Unique (PreLp E) :=
   Pi.uniqueOfIsEmpty E
 #align pre_lp.unique PreLp.unique
+-/
 
+#print lp /-
 /-- lp space -/
 def lp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] (p : ℝ≥0∞) : AddSubgroup (PreLp E)
     where
@@ -331,6 +338,7 @@ def lp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] (p : ℝ≥0∞) : 
   add_mem' f g := Memℓp.add
   neg_mem' f := Memℓp.neg
 #align lp lp
+-/
 
 namespace lp
 
@@ -404,15 +412,15 @@ theorem norm_eq_card_dsupport (f : lp E 0) : ‖f‖ = (lp.memℓp f).finite_dsu
   dif_pos rfl
 #align lp.norm_eq_card_dsupport lp.norm_eq_card_dsupport
 
-theorem norm_eq_csupr (f : lp E ∞) : ‖f‖ = ⨆ i, ‖f i‖ :=
+theorem norm_eq_ciSup (f : lp E ∞) : ‖f‖ = ⨆ i, ‖f i‖ :=
   by
   dsimp [norm]
   rw [dif_neg ENNReal.top_ne_zero, if_pos rfl]
-#align lp.norm_eq_csupr lp.norm_eq_csupr
+#align lp.norm_eq_csupr lp.norm_eq_ciSup
 
 theorem isLUB_norm [Nonempty α] (f : lp E ∞) : IsLUB (Set.range fun i => ‖f i‖) ‖f‖ :=
   by
-  rw [lp.norm_eq_csupr]
+  rw [lp.norm_eq_ciSup]
   exact isLUB_ciSup (lp.memℓp f)
 #align lp.is_lub_norm lp.isLUB_norm
 
@@ -449,7 +457,7 @@ theorem norm_nonneg' (f : lp E p) : 0 ≤ ‖f‖ :=
   rcases p.trichotomy with (rfl | rfl | hp)
   · simp [lp.norm_eq_card_dsupport f]
   · cases' isEmpty_or_nonempty α with _i _i <;> skip
-    · rw [lp.norm_eq_csupr]
+    · rw [lp.norm_eq_ciSup]
       simp [Real.ciSup_empty]
     inhabit α
     exact (norm_nonneg (f default)).trans ((lp.isLUB_norm f).1 ⟨default, rfl⟩)
@@ -463,7 +471,7 @@ theorem norm_zero : ‖(0 : lp E p)‖ = 0 :=
   by
   rcases p.trichotomy with (rfl | rfl | hp)
   · simp [lp.norm_eq_card_dsupport]
-  · simp [lp.norm_eq_csupr]
+  · simp [lp.norm_eq_ciSup]
   · rw [lp.norm_eq_tsum_rpow hp]
     have hp' : 1 / p.to_real ≠ 0 := one_div_ne_zero hp.ne'
     simpa [Real.zero_rpow hp.ne'] using Real.zero_rpow hp'
@@ -781,7 +789,7 @@ instance [hp : Fact (1 ≤ p)] : NormedStarGroup (lp E p)
     · exfalso
       have := ENNReal.toReal_mono ENNReal.zero_ne_top hp.elim
       norm_num at this
-    · simp only [lp.norm_eq_csupr, lp.star_apply, norm_star]
+    · simp only [lp.norm_eq_ciSup, lp.star_apply, norm_star]
     · simp only [lp.norm_eq_tsum_rpow h, lp.star_apply, norm_star]
 
 variable {𝕜 : Type _} [Star 𝕜] [NormedRing 𝕜]
@@ -854,7 +862,7 @@ instance inftyStarRing : StarRing (lp B ∞) :=
     star_mul := fun f g => ext <| star_mul (_ : ∀ i, B i) _ }
 #align lp.infty_star_ring lp.inftyStarRing
 
-instance infty_cstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
+instance inftyCstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
     where norm_star_mul_self f := by
     apply le_antisymm
     · rw [← sq]
@@ -866,7 +874,7 @@ instance infty_cstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
       refine' lp.norm_le_of_forall_le ‖star f * f‖.sqrt_nonneg fun i => _
       rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
       exact lp.norm_apply_le_norm ENNReal.top_ne_zero (star f * f) i
-#align lp.infty_cstar_ring lp.infty_cstarRing
+#align lp.infty_cstar_ring lp.inftyCstarRing
 
 end StarRing
 
@@ -876,9 +884,11 @@ section NormedRing
 
 variable {I : Type _} {B : I → Type _} [∀ i, NormedRing (B i)]
 
+#print PreLp.ring /-
 instance PreLp.ring : Ring (PreLp B) :=
   Pi.ring
 #align pre_lp.ring PreLp.ring
+-/
 
 variable [∀ i, NormOneClass (B i)]
 
@@ -937,7 +947,7 @@ theorem infty_coeFn_int_cast (z : ℤ) : ⇑(z : lp B ∞) = z :=
 
 instance [Nonempty I] : NormOneClass (lp B ∞)
     where norm_one := by
-    simp_rw [lp.norm_eq_csupr, infty_coe_fn_one, Pi.one_apply, norm_one, ciSup_const]
+    simp_rw [lp.norm_eq_ciSup, infty_coe_fn_one, Pi.one_apply, norm_one, ciSup_const]
 
 instance inftyNormedRing : NormedRing (lp B ∞) :=
   { lp.inftyRing, lp.nonUnitalNormedRing with }
@@ -966,14 +976,18 @@ variable {I : Type _} {𝕜 : Type _} {B : I → Type _}
 
 variable [NormedField 𝕜] [∀ i, NormedRing (B i)] [∀ i, NormedAlgebra 𝕜 (B i)]
 
+#print Pi.algebraOfNormedAlgebra /-
 /-- A variant of `pi.algebra` that lean can't find otherwise. -/
 instance Pi.algebraOfNormedAlgebra : Algebra 𝕜 (∀ i, B i) :=
   @Pi.algebra I 𝕜 B _ _ fun i => NormedAlgebra.toAlgebra
 #align pi.algebra_of_normed_algebra Pi.algebraOfNormedAlgebra
+-/
 
+#print PreLp.algebra /-
 instance PreLp.algebra : Algebra 𝕜 (PreLp B) :=
   Pi.algebraOfNormedAlgebra
 #align pre_lp.algebra PreLp.algebra
+-/
 
 variable [∀ i, NormOneClass (B i)]
 
@@ -1025,9 +1039,11 @@ protected theorem single_apply (p) (i : α) (a : E i) (j : α) :
   rfl
 #align lp.single_apply lp.single_apply
 
+#print lp.single_apply_self /-
 protected theorem single_apply_self (p) (i : α) (a : E i) : lp.single p i a i = a := by
   rw [lp.single_apply, dif_pos rfl]
 #align lp.single_apply_self lp.single_apply_self
+-/
 
 protected theorem single_apply_ne (p) (i : α) (a : E i) {j : α} (hij : j ≠ i) :
     lp.single p i a j = 0 := by rw [lp.single_apply, dif_neg hij]

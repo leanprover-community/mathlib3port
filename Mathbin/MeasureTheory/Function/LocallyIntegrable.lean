@@ -42,6 +42,7 @@ namespace MeasureTheory
 
 section LocallyIntegrableOn
 
+#print MeasureTheory.LocallyIntegrableOn /-
 /-- A function `f : X → E` is *locally integrable on s*, for `s ⊆ X`, if for every `x ∈ s` there is
 a neighbourhood of `x` within `s` on which `f` is integrable. (Note this is, in general, strictly
 weaker than local integrability with respect to `μ.restrict s`.) -/
@@ -49,6 +50,7 @@ def LocallyIntegrableOn (f : X → E) (s : Set X)
     (μ : Measure X := by exact MeasureTheory.MeasureSpace.volume) : Prop :=
   ∀ x : X, x ∈ s → IntegrableAtFilter f (𝓝[s] x) μ
 #align measure_theory.locally_integrable_on MeasureTheory.LocallyIntegrableOn
+-/
 
 theorem LocallyIntegrableOn.mono (hf : MeasureTheory.LocallyIntegrableOn f s μ) {t : Set X}
     (hst : t ⊆ s) : LocallyIntegrableOn f t μ := fun x hx =>
@@ -77,7 +79,7 @@ theorem LocallyIntegrableOn.integrableOn_compact_subset (hf : LocallyIntegrableO
   (hf.mono hst).integrableOn_isCompact ht
 #align measure_theory.locally_integrable_on.integrable_on_compact_subset MeasureTheory.LocallyIntegrableOn.integrableOn_compact_subset
 
-theorem LocallyIntegrableOn.aEStronglyMeasurable [SecondCountableTopology X]
+theorem LocallyIntegrableOn.aestronglyMeasurable [SecondCountableTopology X]
     (hf : LocallyIntegrableOn f s μ) : AEStronglyMeasurable f (μ.restrict s) :=
   by
   have : ∀ x : s, ∃ u, IsOpen u ∧ x.1 ∈ u ∧ integrable_on f (u ∩ s) μ :=
@@ -98,7 +100,7 @@ theorem LocallyIntegrableOn.aEStronglyMeasurable [SecondCountableTopology X]
   have : Countable T := countable_coe_iff.mpr T_count
   rw [hT, aestronglyMeasurable_iUnion_iff]
   exact fun i : T => (hu i).AEStronglyMeasurable
-#align measure_theory.locally_integrable_on.ae_strongly_measurable MeasureTheory.LocallyIntegrableOn.aEStronglyMeasurable
+#align measure_theory.locally_integrable_on.ae_strongly_measurable MeasureTheory.LocallyIntegrableOn.aestronglyMeasurable
 
 /-- If `s` is either open, or closed, then `f` is locally integrable on `s` iff it is integrable on
 every compact subset contained in `s`. -/
@@ -122,6 +124,7 @@ theorem locallyIntegrableOn_iff [LocallyCompactSpace X] [T2Space X] (hs : IsClos
 
 end LocallyIntegrableOn
 
+#print MeasureTheory.LocallyIntegrable /-
 /-- A function `f : X → E` is *locally integrable* if it is integrable on a neighborhood of every
 point. In particular, it is integrable on all compact sets,
 see `locally_integrable.integrable_on_is_compact`. -/
@@ -129,6 +132,7 @@ def LocallyIntegrable (f : X → E) (μ : Measure X := by exact MeasureTheory.Me
     Prop :=
   ∀ x : X, IntegrableAtFilter f (𝓝 x) μ
 #align measure_theory.locally_integrable MeasureTheory.LocallyIntegrable
+-/
 
 theorem locallyIntegrableOn_univ : LocallyIntegrableOn f univ μ ↔ LocallyIntegrable f μ := by
   simpa only [locally_integrable_on, nhdsWithin_univ, mem_univ, true_imp_iff]
@@ -138,9 +142,11 @@ theorem LocallyIntegrable.locallyIntegrableOn (hf : LocallyIntegrable f μ) (s :
     LocallyIntegrableOn f s μ := fun x hx => (hf x).filter_mono nhdsWithin_le_nhds
 #align measure_theory.locally_integrable.locally_integrable_on MeasureTheory.LocallyIntegrable.locallyIntegrableOn
 
+#print MeasureTheory.Integrable.locallyIntegrable /-
 theorem Integrable.locallyIntegrable (hf : Integrable f μ) : LocallyIntegrable f μ := fun x =>
   hf.IntegrableAtFilter _
 #align measure_theory.integrable.locally_integrable MeasureTheory.Integrable.locallyIntegrable
+-/
 
 /-- If `f` is locally integrable with respect to `μ.restrict s`, it is locally integrable on `s`.
 (See `locally_integrable_on_iff_locally_integrable_restrict` for an iff statement when `s` is
@@ -205,10 +211,10 @@ theorem locallyIntegrable_iff [LocallyCompactSpace X] :
     ⟨K, h2K, hf K hK⟩⟩
 #align measure_theory.locally_integrable_iff MeasureTheory.locallyIntegrable_iff
 
-theorem LocallyIntegrable.aEStronglyMeasurable [SecondCountableTopology X]
+theorem LocallyIntegrable.aestronglyMeasurable [SecondCountableTopology X]
     (hf : LocallyIntegrable f μ) : AEStronglyMeasurable f μ := by
   simpa only [restrict_univ] using (locally_integrable_on_univ.mpr hf).AEStronglyMeasurable
-#align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aEStronglyMeasurable
+#align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aestronglyMeasurable
 
 theorem locallyIntegrable_const [LocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrable (fun x => c) μ := by

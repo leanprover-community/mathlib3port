@@ -78,7 +78,7 @@ theorem equiv_lpPiLp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
   · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]; rfl
-  · rw [PiLp.norm_eq_ciSup, lp.norm_eq_csupr]; rfl
+  · rw [PiLp.norm_eq_ciSup, lp.norm_eq_ciSup]; rfl
   · rw [PiLp.norm_eq_sum h, lp.norm_eq_tsum_rpow h, tsum_fintype]; rfl
 #align equiv_lp_pi_Lp_norm equiv_lpPiLp_norm
 
@@ -160,7 +160,7 @@ theorem coe_addEquiv_lpBcf_symm (f : α →ᵇ E) : (AddEquiv.lpBcf.symm f : α 
 noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →ᵇ E :=
   { AddEquiv.lpBcf with
     map_smul' := fun k f => rfl
-    norm_map' := fun f => by simp only [norm_eq_supr_norm, lp.norm_eq_csupr]; rfl }
+    norm_map' := fun f => by simp only [norm_eq_supr_norm, lp.norm_eq_ciSup]; rfl }
 #align lp_bcfₗᵢ lpBcfₗᵢ
 
 variable {𝕜}

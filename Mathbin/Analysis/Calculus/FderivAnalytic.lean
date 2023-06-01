@@ -129,18 +129,18 @@ theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : Analytic
 #align analytic_on.fderiv AnalyticOn.fderiv
 
 /-- If a function is analytic on a set `s`, so are its successive Fréchet derivative. -/
-theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) :
-    AnalyticOn 𝕜 (iteratedFderiv 𝕜 n f) s :=
+theorem AnalyticOn.iteratedFDeriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) :
+    AnalyticOn 𝕜 (iteratedFDeriv 𝕜 n f) s :=
   by
   induction' n with n IH
-  · rw [iteratedFderiv_zero_eq_comp]
+  · rw [iteratedFDeriv_zero_eq_comp]
     exact ((continuousMultilinearCurryFin0 𝕜 E F).symm : F →L[𝕜] E[×0]→L[𝕜] F).comp_analyticOn h
-  · rw [iteratedFderiv_succ_eq_comp_left]
+  · rw [iteratedFDeriv_succ_eq_comp_left]
     apply
       (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E)
               F).toContinuousLinearEquiv.toContinuousLinearMap.comp_analyticOn
     exact IH.fderiv
-#align analytic_on.iterated_fderiv AnalyticOn.iteratedFderiv
+#align analytic_on.iterated_fderiv AnalyticOn.iteratedFDeriv
 
 /-- An analytic function is infinitely differentiable. -/
 theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} :
@@ -153,11 +153,11 @@ theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : �
   · intro m hm
     apply (H.iterated_fderiv m).ContinuousOn.congr
     intro x hx
-    exact iteratedFderivWithin_of_isOpen _ t_open hx
+    exact iteratedFDerivWithin_of_isOpen _ t_open hx
   · intro m hm
     apply (H.iterated_fderiv m).DifferentiableOn.congr
     intro x hx
-    exact iteratedFderivWithin_of_isOpen _ t_open hx
+    exact iteratedFDerivWithin_of_isOpen _ t_open hx
 #align analytic_on.cont_diff_on AnalyticOn.contDiffOn
 
 end fderiv
