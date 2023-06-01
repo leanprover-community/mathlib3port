@@ -155,7 +155,7 @@ theorem uniformCauchySeqOnFilter_of_fderiv (hf' : UniformCauchySeqOnFilter f' l 
     simp only [Pi.zero_apply, dist_zero_left] at e ⊢
     refine' lt_of_le_of_lt _ (hxyε y hy)
     exact
-      Convex.norm_image_sub_le_of_norm_has_fderiv_within_le
+      Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
         (fun y hy => ((e hn (hr' hy)).2.1.sub (e hn (hr' hy)).2.2).HasFDerivWithinAt)
         (fun y hy => (e hn (hr' hy)).1.le) (convex_ball x r) (Metric.mem_ball_self hr) hy
   · -- This is just `hfg` run through `eventually_prod_iff`
@@ -212,7 +212,7 @@ theorem uniformCauchySeqOn_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f'
     intro n hn y hy
     simp_rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg] at hn ⊢
     have mvt :=
-      Convex.norm_image_sub_le_of_norm_has_fderiv_within_le
+      Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
         (fun z hz => ((hf n.1 z hz).sub (hf n.2 z hz)).HasFDerivWithinAt) (fun z hz => (hn z hz).le)
         (convex_ball x r) (Metric.mem_ball_self hr) hy
     refine' lt_of_le_of_lt mvt _
@@ -303,7 +303,7 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
   rw [inv_mul_le_iff hyz, mul_comm, sub_sub_sub_comm]
   simp only [Pi.zero_apply, dist_zero_left] at e 
   refine'
-    Convex.norm_image_sub_le_of_norm_has_fderiv_within_le
+    Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
       (fun y hy => ((e hn (hr' hy)).2.1.sub (e hn (hr' hy)).2.2).HasFDerivWithinAt)
       (fun y hy => (e hn (hr' hy)).1.le) (convex_ball x r) (Metric.mem_ball_self hr) hy
 #align difference_quotients_converge_uniformly difference_quotients_converge_uniformly
