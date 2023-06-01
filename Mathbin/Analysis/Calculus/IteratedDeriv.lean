@@ -58,16 +58,20 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
+#print iteratedDeriv /-
 /-- The `n`-th iterated derivative of a function from `𝕜` to `F`, as a function from `𝕜` to `F`. -/
 def iteratedDeriv (n : ℕ) (f : 𝕜 → F) (x : 𝕜) : F :=
   (iteratedFDeriv 𝕜 n f x : (Fin n → 𝕜) → F) fun i : Fin n => 1
 #align iterated_deriv iteratedDeriv
+-/
 
+#print iteratedDerivWithin /-
 /-- The `n`-th iterated derivative of a function from `𝕜` to `F` within a set `s`, as a function
 from `𝕜` to `F`. -/
 def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F :=
   (iteratedFDerivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) fun i : Fin n => 1
 #align iterated_deriv_within iteratedDerivWithin
+-/
 
 variable {n : ℕ} {f : 𝕜 → F} {s : Set 𝕜} {x : 𝕜}
 
@@ -102,6 +106,7 @@ theorem iteratedFDerivWithin_eq_equiv_comp :
     Function.left_id]
 #align iterated_fderiv_within_eq_equiv_comp iteratedFDerivWithin_eq_equiv_comp
 
+#print iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod /-
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod {m : Fin n → 𝕜} :
@@ -111,11 +116,14 @@ theorem iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod {m : Fin n �
   rw [iteratedDerivWithin_eq_iteratedFDerivWithin, ← ContinuousMultilinearMap.map_smul_univ]
   simp
 #align iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod iteratedFDerivWithin_apply_eq_iteratedDerivWithin_mul_prod
+-/
 
+#print norm_iteratedFDerivWithin_eq_norm_iteratedDerivWithin /-
 theorem norm_iteratedFDerivWithin_eq_norm_iteratedDerivWithin :
     ‖iteratedFDerivWithin 𝕜 n f s x‖ = ‖iteratedDerivWithin n f s x‖ := by
   rw [iteratedDerivWithin_eq_equiv_comp, LinearIsometryEquiv.norm_map]
 #align norm_iterated_fderiv_within_eq_norm_iterated_deriv_within norm_iteratedFDerivWithin_eq_norm_iteratedDerivWithin
+-/
 
 @[simp]
 theorem iteratedDerivWithin_zero : iteratedDerivWithin 0 f s = f := by ext x;
@@ -248,17 +256,21 @@ theorem iteratedFDeriv_eq_equiv_comp :
     Function.left_id]
 #align iterated_fderiv_eq_equiv_comp iteratedFDeriv_eq_equiv_comp
 
+#print iteratedFDeriv_apply_eq_iteratedDeriv_mul_prod /-
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iteratedFDeriv_apply_eq_iteratedDeriv_mul_prod {m : Fin n → 𝕜} :
     (iteratedFDeriv 𝕜 n f x : (Fin n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x := by
   rw [iteratedDeriv_eq_iteratedFDeriv, ← ContinuousMultilinearMap.map_smul_univ]; simp
 #align iterated_fderiv_apply_eq_iterated_deriv_mul_prod iteratedFDeriv_apply_eq_iteratedDeriv_mul_prod
+-/
 
+#print norm_iteratedFDeriv_eq_norm_iteratedDeriv /-
 theorem norm_iteratedFDeriv_eq_norm_iteratedDeriv :
     ‖iteratedFDeriv 𝕜 n f x‖ = ‖iteratedDeriv n f x‖ := by
   rw [iteratedDeriv_eq_equiv_comp, LinearIsometryEquiv.norm_map]
 #align norm_iterated_fderiv_eq_norm_iterated_deriv norm_iteratedFDeriv_eq_norm_iteratedDeriv
+-/
 
 @[simp]
 theorem iteratedDeriv_zero : iteratedDeriv 0 f = f := by ext x; simp [iteratedDeriv]

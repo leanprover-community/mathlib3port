@@ -43,10 +43,12 @@ section AddCommGroup
 
 variable [AddCommGroup E] [Module ℝ E] [AddCommGroup F] [Module ℝ F]
 
+#print parallelepiped /-
 /-- The closed parallelepiped spanned by a finite family of vectors. -/
 def parallelepiped (v : ι → E) : Set E :=
   (fun t : ι → ℝ => ∑ i, t i • v i) '' Icc 0 1
 #align parallelepiped parallelepiped
+-/
 
 theorem mem_parallelepiped_iff (v : ι → E) (x : E) :
     x ∈ parallelepiped v ↔ ∃ (t : ι → ℝ)(ht : t ∈ Icc (0 : ι → ℝ) 1), x = ∑ i, t i • v i := by
@@ -135,6 +137,7 @@ theorem parallelepiped_eq_sum_segment (v : ι → E) : parallelepiped v = ∑ i,
   simp_rw [hg]
 #align parallelepiped_eq_sum_segment parallelepiped_eq_sum_segment
 
+#print convex_parallelepiped /-
 theorem convex_parallelepiped (v : ι → E) : Convex ℝ (parallelepiped v) :=
   by
   rw [parallelepiped_eq_sum_segment]
@@ -145,6 +148,7 @@ theorem convex_parallelepiped (v : ι → E) : Convex ℝ (parallelepiped v) :=
       add_mem' := fun x y => Convex.add }
   exact this.sum_mem fun i hi => convex_segment _ _
 #align convex_parallelepiped convex_parallelepiped
+-/
 
 /-- A `parallelepiped` is the convex hull of its vertices -/
 theorem parallelepiped_eq_convexHull (v : ι → E) :
@@ -198,6 +202,7 @@ section NormedSpace
 
 variable [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedSpace ℝ E] [NormedSpace ℝ F]
 
+#print Basis.parallelepiped /-
 /-- The parallelepiped spanned by a basis, as a compact set with nonempty interior. -/
 def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
     where
@@ -220,6 +225,7 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
         zero_lt_one, imp_true_iff]
     rwa [← Homeomorph.image_interior, nonempty_image_iff]
 #align basis.parallelepiped Basis.parallelepiped
+-/
 
 @[simp]
 theorem Basis.coe_parallelepiped (b : Basis ι ℝ E) :
@@ -246,15 +252,19 @@ theorem Basis.parallelepiped_map (b : Basis ι ℝ E) (e : E ≃ₗ[ℝ] F) :
 
 variable [MeasurableSpace E] [BorelSpace E]
 
+#print Basis.addHaar /-
 /-- The Lebesgue measure associated to a basis, giving measure `1` to the parallelepiped spanned
 by the basis. -/
 irreducible_def Basis.addHaar (b : Basis ι ℝ E) : Measure E :=
   Measure.addHaarMeasure b.parallelepiped
 #align basis.add_haar Basis.addHaar
+-/
 
-instance addHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : AddHaarMeasure b.addHaar := by
+#print AddHaarMeasure_basis_addHaar /-
+instance AddHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : AddHaarMeasure b.addHaar := by
   rw [Basis.addHaar]; exact measure.is_add_haar_measure_add_haar_measure _
-#align is_add_haar_measure_basis_add_haar addHaarMeasure_basis_addHaar
+#align is_add_haar_measure_basis_add_haar AddHaarMeasure_basis_addHaar
+-/
 
 theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 := by
   rw [Basis.addHaar]; exact add_haar_measure_self
@@ -262,6 +272,7 @@ theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) =
 
 end NormedSpace
 
+#print measureSpaceOfInnerProductSpace /-
 /-- A finite dimensional inner product space has a canonical measure, the Lebesgue measure giving
 volume `1` to the parallelepiped spanned by any orthonormal basis. We define the measure using
 some arbitrary choice of orthonormal basis. The fact that it works with any orthonormal basis
@@ -270,11 +281,14 @@ instance (priority := 100) measureSpaceOfInnerProductSpace [NormedAddCommGroup E
     [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] :
     MeasureSpace E where volume := (stdOrthonormalBasis ℝ E).toBasis.addHaar
 #align measure_space_of_inner_product_space measureSpaceOfInnerProductSpace
+-/
 
+#print Real.measureSpace /-
 /- This instance should not be necessary, but Lean has difficulties to find it in product
 situations if we do not declare it explicitly. -/
 instance Real.measureSpace : MeasureSpace ℝ := by infer_instance
 #align real.measure_space Real.measureSpace
+-/
 
 /-! # Miscellaneous instances for `euclidean_space`
 
@@ -293,6 +307,7 @@ instance : MeasurableSpace (EuclideanSpace ℝ ι) :=
 instance : BorelSpace (EuclideanSpace ℝ ι) :=
   Pi.borelSpace
 
+#print EuclideanSpace.measurableEquiv /-
 /-- `pi_Lp.equiv` as a `measurable_equiv`. -/
 @[simps toEquiv]
 protected def measurableEquiv : EuclideanSpace ℝ ι ≃ᵐ (ι → ℝ)
@@ -301,10 +316,13 @@ protected def measurableEquiv : EuclideanSpace ℝ ι ≃ᵐ (ι → ℝ)
   measurable_to_fun := measurable_id
   measurable_inv_fun := measurable_id
 #align euclidean_space.measurable_equiv EuclideanSpace.measurableEquiv
+-/
 
+#print EuclideanSpace.coe_measurableEquiv /-
 theorem coe_measurableEquiv : ⇑(EuclideanSpace.measurableEquiv ι) = PiLp.equiv 2 _ :=
   rfl
 #align euclidean_space.coe_measurable_equiv EuclideanSpace.coe_measurableEquiv
+-/
 
 end EuclideanSpace
 
