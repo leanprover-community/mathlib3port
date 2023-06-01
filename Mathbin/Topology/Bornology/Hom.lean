@@ -83,12 +83,10 @@ directly. -/
 instance : CoeFun (LocallyBoundedMap α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: locally_bounded_map.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align locally_bounded_map.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : LocallyBoundedMap α β} : f.toFun = (f : α → β) :=
   rfl
-#align locally_bounded_map.to_fun_eq_coe [anonymous]
+#align locally_bounded_map.to_fun_eq_coe LocallyBoundedMap.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : LocallyBoundedMap α β} (h : ∀ a, f a = g a) : f = g :=

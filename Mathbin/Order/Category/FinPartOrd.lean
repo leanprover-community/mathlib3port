@@ -50,12 +50,10 @@ instance (X : FinPartOrd) : PartialOrder X :=
 
 attribute [instance] FinPartOrd.isFintype
 
-/- warning: FinPartOrd.coe_to_PartOrd clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align FinPartOrd.coe_to_PartOrd [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (X : FinPartOrd) : ↥X.toPartOrd = ↥X :=
+theorem coe_toPartOrd (X : FinPartOrd) : ↥X.toPartOrd = ↥X :=
   rfl
-#align FinPartOrd.coe_to_PartOrd [anonymous]
+#align FinPartOrd.coe_to_PartOrd FinPartOrd.coe_toPartOrd
 
 #print FinPartOrd.of /-
 /-- Construct a bundled `FinPartOrd` from `fintype` + `partial_order`. -/

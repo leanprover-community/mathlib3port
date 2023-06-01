@@ -101,19 +101,15 @@ theorem toENNReal_one : ((1 : ℕ∞) : ℝ≥0∞) = 1 :=
 #align enat.coe_ennreal_one ENat.toENNReal_one
 -/
 
-/- warning: enat.coe_ennreal_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align enat.coe_ennreal_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (n : ℕ∞) : ↑(bit0 n) = bit0 (n : ℝ≥0∞) :=
+theorem coe_eNNReal_bit0 (n : ℕ∞) : ↑(bit0 n) = bit0 (n : ℝ≥0∞) :=
   toENNReal_add n n
-#align enat.coe_ennreal_bit0 [anonymous]
+#align enat.coe_ennreal_bit0 ENat.coe_eNNReal_bit0
 
-/- warning: enat.coe_ennreal_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align enat.coe_ennreal_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (n : ℕ∞) : ↑(bit1 n) = bit1 (n : ℝ≥0∞) :=
+theorem coe_eNNReal_bit1 (n : ℕ∞) : ↑(bit1 n) = bit1 (n : ℝ≥0∞) :=
   map_bit1 toENNRealRingHom n
-#align enat.coe_ennreal_bit1 [anonymous]
+#align enat.coe_ennreal_bit1 ENat.coe_eNNReal_bit1
 
 @[simp]
 theorem toENNReal_mul (m n : ℕ∞) : ↑(m * n) = (m * n : ℝ≥0∞) :=

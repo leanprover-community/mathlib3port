@@ -923,6 +923,7 @@ theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v)
     simp [hf.eq_iff]
 #align orthonormal.comp Orthonormal.comp
 
+#print orthonormal_subtype_range /-
 /-- An injective family `v : ι → E` is orthonormal if and only if `coe : (range v) → E` is
 orthonormal. -/
 theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
@@ -933,6 +934,7 @@ theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
   rw [← Equiv.self_comp_ofInjective_symm hv]
   exact h.comp f.symm f.symm.injective
 #align orthonormal_subtype_range orthonormal_subtype_range
+-/
 
 /-- If `v : ι → E` is an orthonormal family, then `coe : (range v) → E` is an orthonormal
 family. -/
@@ -974,6 +976,7 @@ theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) 
 
 variable {𝕜 E}
 
+#print orthonormal_iUnion_of_directed /-
 theorem orthonormal_iUnion_of_directed {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
     (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) : Orthonormal 𝕜 (fun x => x : (⋃ i, s i) → E) :=
   by
@@ -985,16 +988,20 @@ theorem orthonormal_iUnion_of_directed {η : Type _} {s : η → Set E} (hs : Di
     rw [orthonormal_subtype_iff_ite] at h_orth
     exact h_orth x (hik hxi) y (hjk hyj)
 #align orthonormal_Union_of_directed orthonormal_iUnion_of_directed
+-/
 
+#print orthonormal_sUnion_of_directed /-
 theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) :
     Orthonormal 𝕜 (fun x => x : ⋃₀ s → E) := by
   rw [Set.sUnion_eq_iUnion] <;>
     exact orthonormal_iUnion_of_directed hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormal_sUnion_of_directed
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (u «expr ⊇ » w) -/
+#print exists_maximal_orthonormal /-
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
@@ -1008,6 +1015,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s �
     · exact orthonormal_sUnion_of_directed cc.directed_on fun x xc => hc xc
     · exact fun _ => Set.subset_sUnion_of_mem
 #align exists_maximal_orthonormal exists_maximal_orthonormal
+-/
 
 theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : v i ≠ 0 :=
   by
@@ -1019,11 +1027,13 @@ theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : 
 
 open FiniteDimensional
 
+#print basisOfOrthonormalOfCardEqFinrank /-
 /-- A family of orthonormal vectors with the correct cardinality forms a basis. -/
 def basisOfOrthonormalOfCardEqFinrank [Fintype ι] [Nonempty ι] {v : ι → E} (hv : Orthonormal 𝕜 v)
     (card_eq : Fintype.card ι = finrank 𝕜 E) : Basis ι 𝕜 E :=
   basisOfLinearIndependentOfCardEqFinrank hv.LinearIndependent card_eq
 #align basis_of_orthonormal_of_card_eq_finrank basisOfOrthonormalOfCardEqFinrank
+-/
 
 @[simp]
 theorem coe_basisOfOrthonormalOfCardEqFinrank [Fintype ι] [Nonempty ι] {v : ι → E}

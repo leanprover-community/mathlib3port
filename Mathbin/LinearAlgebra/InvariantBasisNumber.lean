@@ -280,11 +280,8 @@ section
 
 variable {R : Type u} [CommRing R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι' : Type w}
 
-/- warning: induced_map clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align induced_map [anonymous]ₓ'. -/
-#print [anonymous] /-
 /-- An `R`-linear map `R^n → R^m` induces a function `R^n/I^n → R^m/I^m`. -/
-private def [anonymous] (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
+private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
     (ι → R) ⧸ I.pi ι → (ι' → R) ⧸ I.pi ι' := fun x =>
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
     (by
@@ -292,26 +289,21 @@ private def [anonymous] (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
       rw [Submodule.quotientRel_r_def] at hab
       rw [← LinearMap.map_sub]
       exact Ideal.map_pi _ _ hab e h)
--/
 
-/- warning: induced_equiv clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align induced_equiv [anonymous]ₓ'. -/
-#print [anonymous] /-
 /-- An isomorphism of `R`-modules `R^n ≃ R^m` induces an isomorphism of `R/I`-modules
     `R^n/I^n ≃ R^m/I^m`. -/
-private def [anonymous] [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
+private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
     ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' :=
   by
   refine'
-    { toFun := [anonymous] I e
-      invFun := [anonymous] I e.symm.. }
+    { toFun := induced_map I e
+      invFun := induced_map I e.symm.. }
   all_goals
     first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr
     simp only [map_add, LinearEquiv.coe_coe, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
       LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
--/
 
 end
 
@@ -330,7 +322,7 @@ instance (priority := 100) invariantBasisNumber_of_nontrivial_of_commRing {R : T
   ⟨fun n m e =>
     let ⟨I, hI⟩ := Ideal.exists_maximal R
     eq_of_fin_equiv (R ⧸ I)
-      ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ ([anonymous] _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
+      ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
 #align invariant_basis_number_of_nontrivial_of_comm_ring invariantBasisNumber_of_nontrivial_of_commRing
 -/
 

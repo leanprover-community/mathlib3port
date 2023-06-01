@@ -595,7 +595,7 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
     mul_comm := by
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
-      simp only [[anonymous], MulMemClass.mk_mul_mk]
+      simp only [SetLike.coe_mk, MulMemClass.mk_mul_mk]
       rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R

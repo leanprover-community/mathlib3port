@@ -846,7 +846,7 @@ noncomputable def Factors.piQuotientLinearEquiv (p : Ideal R) (hp : map (algebra
       rintro ⟨c⟩ ⟨x⟩; ext P
       simp only [Ideal.Quotient.mk_algebraMap, factors.pi_quotient_equiv_mk,
         factors.pi_quotient_equiv_map, Submodule.Quotient.quot_mk_eq_mk, Pi.algebraMap_apply,
-        [anonymous], Pi.mul_apply, Ideal.Quotient.algebraMap_quotient_map_quotient,
+        RingEquiv.toFun_eq_coe, Pi.mul_apply, Ideal.Quotient.algebraMap_quotient_map_quotient,
         Ideal.Quotient.mk_eq_mk, Algebra.smul_def, _root_.map_mul, RingHomCompTriple.comp_apply]
       congr }
 #align ideal.factors.pi_quotient_linear_equiv Ideal.Factors.piQuotientLinearEquiv

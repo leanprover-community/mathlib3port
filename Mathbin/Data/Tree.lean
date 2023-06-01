@@ -47,16 +47,14 @@ universe u
 
 variable {α : Type u}
 
-/- warning: tree.repr clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align tree.repr [anonymous]ₓ'. -/
 /-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
-def [anonymous] [Repr α] : Tree α → String
+def repr [Repr α] : Tree α → String
   | nil => "nil"
   | node a t1 t2 => "tree.node " ++ Repr.repr a ++ " (" ++ repr t1 ++ ") (" ++ repr t2 ++ ")"
-#align tree.repr [anonymous]
+#align tree.repr Tree.repr
 
 instance [Repr α] : Repr (Tree α) :=
-  ⟨[anonymous]⟩
+  ⟨Tree.repr⟩
 
 instance : Inhabited (Tree α) :=
   ⟨nil⟩

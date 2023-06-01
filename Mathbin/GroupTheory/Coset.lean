@@ -570,7 +570,7 @@ variable (s)
   stated in terms of an arbitrary `h : s`, rathern that the specific `h = g⁻¹ * (mk g).out'`. -/
 @[to_additive QuotientAddGroup.mk_out'_eq_mul]
 theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : α ⧸ s).out' = g * h :=
-  ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by rw [[anonymous], mul_inv_cancel_left]⟩
+  ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by rw [SetLike.coe_mk, mul_inv_cancel_left]⟩
 #align quotient_group.mk_out'_eq_mul QuotientGroup.mk_out'_eq_mul
 #align quotient_add_group.mk_out'_eq_mul QuotientAddGroup.mk_out'_eq_mul
 
@@ -596,7 +596,7 @@ theorem preimage_image_mk (N : Subgroup α) (s : Set α) :
   by
   ext x
   simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_iUnion,
-    Set.mem_image, [anonymous], ← eq_inv_mul_iff_mul_eq]
+    Set.mem_image, SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
   exact
     ⟨fun ⟨y, hs, hN⟩ => ⟨_, N.inv_mem hN, by simpa using hs⟩, fun ⟨z, hz, hxz⟩ =>
       ⟨x * z, hxz, by simpa using hz⟩⟩
@@ -692,7 +692,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
   left_inv := by
     refine' Quotient.ind' fun a => _
-    simp_rw [Quotient.map'_mk'', id.def, [anonymous], mul_inv_cancel_left]
+    simp_rw [Quotient.map'_mk'', id.def, SetLike.coe_mk, mul_inv_cancel_left]
   right_inv := by
     refine' Prod.rec _
     refine' Quotient.ind' fun a => _

@@ -582,7 +582,7 @@ theorem localTrivAsLocalEquiv_trans (i j : ι) :
   · rintro ⟨x, v⟩ hx
     simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_and_iff,
       Prod.mk.inj_iff, prod_mk_mem_set_prod_eq, LocalEquiv.trans_source, mem_inter_iff,
-      and_true_iff, mem_preimage, proj, mem_univ, [anonymous], eq_self_iff_true,
+      and_true_iff, mem_preimage, proj, mem_univ, LocalEquiv.coe_mk, eq_self_iff_true,
       LocalEquiv.coe_trans, total_space.proj] at hx⊢
     simp only [Z.coord_change_comp, hx, mem_inter_iff, and_self_iff, mem_base_set_at]
 #align fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.localTrivAsLocalEquiv_trans
@@ -853,6 +853,7 @@ end FiberBundleCore
 variable (F) (E : B → Type _) [TopologicalSpace B] [TopologicalSpace F]
   [∀ x, TopologicalSpace (E x)]
 
+#print FiberPrebundle /-
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
@@ -869,16 +870,19 @@ structure FiberPrebundle where
       ContinuousOn (e ∘ e'.toLocalEquiv.symm) (e'.target ∩ e'.toLocalEquiv.symm ⁻¹' e.source)
   totalSpaceMk_inducing : ∀ b : B, Inducing (pretrivialization_at b ∘ totalSpaceMk b)
 #align fiber_prebundle FiberPrebundle
+-/
 
 namespace FiberPrebundle
 
 variable {F E} (a : FiberPrebundle F E) {e : Pretrivialization F (π E)}
 
+#print FiberPrebundle.totalSpaceTopology /-
 /-- Topology on the total space that will make the prebundle into a bundle. -/
 def totalSpaceTopology (a : FiberPrebundle F E) : TopologicalSpace (TotalSpace E) :=
   ⨆ (e : Pretrivialization F (π E)) (he : e ∈ a.pretrivializationAtlas),
     coinduced e.setSymm Subtype.topologicalSpace
 #align fiber_prebundle.total_space_topology FiberPrebundle.totalSpaceTopology
+-/
 
 theorem continuous_symm_of_mem_pretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
     @ContinuousOn _ _ _ a.totalSpaceTopology e.toLocalEquiv.symm e.target :=
@@ -912,6 +916,7 @@ theorem isOpen_target_of_mem_pretrivializationAtlas_inter (e e' : Pretrivializat
   exact hu1.inter e'.open_target
 #align fiber_prebundle.is_open_target_of_mem_pretrivialization_atlas_inter FiberPrebundle.isOpen_target_of_mem_pretrivializationAtlas_inter
 
+#print FiberPrebundle.trivializationOfMemPretrivializationAtlas /-
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
 def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization B F _ _ _ a.totalSpaceTopology (π E) :=
@@ -935,6 +940,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
       exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he')
     continuous_invFun := a.continuous_symm_of_mem_pretrivializationAtlas he }
 #align fiber_prebundle.trivialization_of_mem_pretrivialization_atlas FiberPrebundle.trivializationOfMemPretrivializationAtlas
+-/
 
 theorem mem_pretrivializationAt_source (b : B) (x : E b) :
     totalSpaceMk b x ∈ (a.pretrivializationAt b).source :=
@@ -980,6 +986,7 @@ theorem inducing_totalSpaceMk_of_inducing_comp (b : B)
   exact (a.continuous_total_space_mk b).codRestrict (a.mem_trivialization_at_source b)
 #align fiber_prebundle.inducing_total_space_mk_of_inducing_comp FiberPrebundle.inducing_totalSpaceMk_of_inducing_comp
 
+#print FiberPrebundle.toFiberBundle /-
 /-- Make a `fiber_bundle` from a `fiber_prebundle`.  Concretely this means
 that, given a `fiber_prebundle` structure for a sigma-type `E` -- which consists of a
 number of "pretrivializations" identifying parts of `E` with product spaces `U × F` -- one
@@ -998,6 +1005,7 @@ def toFiberBundle : @FiberBundle B F _ _ E a.totalSpaceTopology _
   mem_baseSet_trivializationAt := a.mem_base_pretrivializationAt
   trivialization_mem_atlas x := ⟨_, a.pretrivialization_mem_atlas x, rfl⟩
 #align fiber_prebundle.to_fiber_bundle FiberPrebundle.toFiberBundle
+-/
 
 theorem continuous_proj : @Continuous _ _ a.totalSpaceTopology _ (π E) :=
   by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.basic
-! leanprover-community/mathlib commit 917c3c072e487b3cccdbfeff17e75b40e45f66cb
+! leanprover-community/mathlib commit cca40788df1b8755d5baf17ab2f27dacc2e17acb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) :=
   by
   constructor
-  · refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_Ioi
+  · refine' ContinuousOn.aestronglyMeasurable _ measurableSet_Ioi
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
     apply ContinuousAt.continuousOn
     intro x hx
@@ -482,6 +482,19 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
 #align complex.differentiable_at_Gamma Complex.differentiableAt_gamma
 
 end GammaHasDeriv
+
+/-- At `s = 0`, the Gamma function has a simple pole with residue 1. -/
+theorem tendsto_self_mul_gamma_nhds_zero : Tendsto (fun z : ℂ => z * gamma z) (𝓝[≠] 0) (𝓝 1) :=
+  by
+  rw [show 𝓝 (1 : ℂ) = 𝓝 (Gamma (0 + 1)) by simp only [zero_add, Complex.gamma_one]]
+  convert(tendsto.mono_left _ nhdsWithin_le_nhds).congr'
+      (eventually_eq_of_mem self_mem_nhdsWithin Complex.gamma_add_one)
+  refine' ContinuousAt.comp _ (continuous_id.add continuous_const).ContinuousAt
+  refine' (Complex.differentiableAt_gamma _ fun m => _).ContinuousAt
+  rw [zero_add, ← of_real_nat_cast, ← of_real_neg, ← of_real_one, Ne.def, of_real_inj]
+  refine' (lt_of_le_of_lt _ zero_lt_one).ne'
+  exact neg_nonpos.mpr (Nat.cast_nonneg _)
+#align complex.tendsto_self_mul_Gamma_nhds_zero Complex.tendsto_self_mul_gamma_nhds_zero
 
 end Complex
 

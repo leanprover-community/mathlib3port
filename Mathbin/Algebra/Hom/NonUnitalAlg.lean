@@ -195,12 +195,10 @@ theorem toMulHom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
   rfl
 #align non_unital_alg_hom.to_mul_hom_eq_coe NonUnitalAlgHom.toMulHom_eq_coe
 
-#print NonUnitalAlgHom.coe_to_distribMulActionHom /-
 @[simp, norm_cast]
 theorem coe_to_distribMulActionHom (f : A →ₙₐ[R] B) : ((f : A →+[R] B) : A → B) = f :=
   rfl
 #align non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distribMulActionHom
--/
 
 @[simp, norm_cast]
 theorem coe_to_mulHom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f :=

@@ -29,7 +29,7 @@ a restricted measure.
 
 noncomputable section
 
-open TopologicalSpace MeasureTheory.lp Filter ContinuousLinearMap
+open TopologicalSpace MeasureTheory.Lp Filter ContinuousLinearMap
 
 open scoped NNReal ENNReal Topology BigOperators MeasureTheory
 

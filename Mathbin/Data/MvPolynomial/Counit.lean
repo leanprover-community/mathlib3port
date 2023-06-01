@@ -50,21 +50,17 @@ noncomputable def ACounit : MvPolynomial B A →ₐ[A] B :=
 
 variable {B}
 
-#print MvPolynomial.ACounit_X /-
 @[simp]
 theorem ACounit_X (b : B) : ACounit A B (X b) = b :=
   aeval_X _ b
 #align mv_polynomial.acounit_X MvPolynomial.ACounit_X
--/
 
 variable {A} (B)
 
-#print MvPolynomial.ACounit_C /-
 @[simp]
 theorem ACounit_C (a : A) : ACounit A B (C a) = algebraMap A B a :=
   aeval_C _ a
 #align mv_polynomial.acounit_C MvPolynomial.ACounit_C
--/
 
 variable (A)
 

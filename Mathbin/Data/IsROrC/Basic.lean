@@ -1008,12 +1008,10 @@ noncomputable def ofRealAm : ℝ →ₐ[ℝ] K :=
 #align is_R_or_C.of_real_am IsROrC.ofRealAm
 -/
 
-#print IsROrC.ofRealAm_coe /-
 @[simp, is_R_or_C_simps]
 theorem ofRealAm_coe : (ofRealAm : ℝ → K) = coe :=
   rfl
 #align is_R_or_C.of_real_am_coe IsROrC.ofRealAm_coe
--/
 
 #print IsROrC.ofRealLi /-
 /-- The ℝ → K coercion, as a linear isometry -/

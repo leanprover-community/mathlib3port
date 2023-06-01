@@ -86,7 +86,6 @@ theorem minpoly_algEquiv (f : B ≃ₐ[A] B') (x : B) : minpoly A (f x) = minpol
 
 variable (A x)
 
-#print minpoly.aeval /-
 /-- An element is a root of its minimal polynomial. -/
 @[simp]
 theorem aeval : aeval x (minpoly A x) = 0 :=
@@ -95,7 +94,6 @@ theorem aeval : aeval x (minpoly A x) = 0 :=
   · exact (degree_lt_wf.min_mem _ hx).2
   · exact aeval_zero _
 #align minpoly.aeval minpoly.aeval
--/
 
 #print minpoly.ne_one /-
 /-- A minimal polynomial is not `1`. -/

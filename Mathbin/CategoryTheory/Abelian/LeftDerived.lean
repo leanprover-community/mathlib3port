@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.abelian.left_derived
-! leanprover-community/mathlib commit 8001ea54ece3bd5c0d0932f1e4f6d0f142ea20d9
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 
 /-!
 # Zeroth left derived functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `F : C ⥤ D` is an additive right exact functor between abelian categories, where `C` has enough
 projectives, we provide the natural isomorphism `F.left_derived 0 ≅ F`.
@@ -49,20 +52,19 @@ variable [Abelian C] [Abelian D] [Additive F]
 
 /-- If `preserves_finite_colimits F` and `epi g`, then `exact (F.map f) (F.map g)` if
 `exact f g`. -/
-theorem preserves_exact_of_preservesFiniteColimits_of_epi [PreservesFiniteColimits F] [Epi g]
+theorem preserves_exact_of_PreservesFiniteColimits_of_epi [PreservesFiniteColimits F] [Epi g]
     (ex : Exact f g) : Exact (F.map f) (F.map g) :=
   Abelian.exact_of_is_cokernel _ _ (by simp [← functor.map_comp, ex.w]) <|
     Limits.isColimitCoforkMapOfIsColimit' _ ex.w (Abelian.isColimitOfExactOfEpi _ _ ex)
-#align category_theory.abelian.functor.preserves_exact_of_preserves_finite_colimits_of_epi CategoryTheory.Abelian.Functor.preserves_exact_of_preservesFiniteColimits_of_epi
+#align category_theory.abelian.functor.preserves_exact_of_preserves_finite_colimits_of_epi CategoryTheory.Abelian.Functor.preserves_exact_of_PreservesFiniteColimits_of_epi
 
-theorem exact_of_map_projective_resolution (P : ProjectiveResolution X)
-    [PreservesFiniteColimits F] :
+theorem exact_of_map_ProjectiveResolution (P : ProjectiveResolution X) [PreservesFiniteColimits F] :
     Exact (((F.mapHomologicalComplex (ComplexShape.down ℕ)).obj P.complex).dTo 0)
       (F.map (P.π.f 0)) :=
   Preadditive.exact_of_iso_of_exact' (F.map (P.complex.d 1 0)) (F.map (P.π.f 0)) _ _
     (HomologicalComplex.xPrevIso ((F.mapHomologicalComplex _).obj P.complex) rfl).symm (Iso.refl _)
-    (Iso.refl _) (by simp) (by simp) (preserves_exact_of_preservesFiniteColimits_of_epi _ P.exact₀)
-#align category_theory.abelian.functor.exact_of_map_projective_resolution CategoryTheory.Abelian.Functor.exact_of_map_projective_resolution
+    (Iso.refl _) (by simp) (by simp) (preserves_exact_of_PreservesFiniteColimits_of_epi _ P.exact₀)
+#align category_theory.abelian.functor.exact_of_map_projective_resolution CategoryTheory.Abelian.Functor.exact_of_map_ProjectiveResolution
 
 /-- Given `P : ProjectiveResolution X`, a morphism `(F.left_derived 0).obj X ⟶ F.obj X`. -/
 @[nolint unused_arguments]
@@ -152,12 +154,14 @@ theorem leftDerived_zero_to_self_natural [EnoughProjectives C] {X : C} {Y : C} (
       HomologicalComplex.congr_hom (ProjectiveResolution.lift_commutes f P Q) 0]
 #align category_theory.abelian.functor.left_derived_zero_to_self_natural CategoryTheory.Abelian.Functor.leftDerived_zero_to_self_natural
 
+#print CategoryTheory.Abelian.Functor.leftDerivedZeroIsoSelf /-
 /-- Given `preserves_finite_colimits F`, the natural isomorphism `(F.left_derived 0) ≅ F`. -/
 def leftDerivedZeroIsoSelf [EnoughProjectives C] [PreservesFiniteColimits F] :
     F.leftDerived 0 ≅ F :=
   NatIso.ofComponents (fun X => leftDerivedZeroToSelfAppIso _ (ProjectiveResolution.of X))
     fun X Y f => leftDerived_zero_to_self_natural _ _ _ _
 #align category_theory.abelian.functor.left_derived_zero_iso_self CategoryTheory.Abelian.Functor.leftDerivedZeroIsoSelf
+-/
 
 end CategoryTheory.Abelian.Functor
 

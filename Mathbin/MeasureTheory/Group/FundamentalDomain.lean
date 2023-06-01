@@ -184,7 +184,7 @@ theorem pairwise_aEDisjoint_of_ac {ν} (h : IsFundamentalDomain G s μ) (hν : �
 
 @[to_additive]
 theorem smul_of_comm {G' : Type _} [Group G'] [MulAction G' α] [MeasurableSpace G']
-    [MeasurableSMul G' α] [SmulInvariantMeasure G' α μ] [SMulCommClass G' G α]
+    [MeasurableSMul G' α] [SMulInvariantMeasure G' α μ] [SMulCommClass G' G α]
     (h : IsFundamentalDomain G s μ) (g : G') : IsFundamentalDomain G (g • s) μ :=
   h.image_of_equiv (MulAction.toPerm g) (measurePreserving_smul _ _).QuasiMeasurePreserving
       (Equiv.refl _) <|
@@ -192,7 +192,7 @@ theorem smul_of_comm {G' : Type _} [Group G'] [MulAction G' α] [MeasurableSpace
 #align measure_theory.is_fundamental_domain.smul_of_comm MeasureTheory.IsFundamentalDomain.smul_of_comm
 #align measure_theory.is_add_fundamental_domain.vadd_of_comm MeasureTheory.IsAddFundamentalDomain.vadd_of_comm
 
-variable [MeasurableSpace G] [MeasurableSMul G α] [SmulInvariantMeasure G α μ]
+variable [MeasurableSpace G] [MeasurableSMul G α] [SMulInvariantMeasure G α μ]
 
 @[to_additive]
 theorem nullMeasurableSet_smul (h : IsFundamentalDomain G s μ) (g : G) :
@@ -671,7 +671,7 @@ theorem pairwise_disjoint_fundamentalInterior :
 #align measure_theory.pairwise_disjoint_add_fundamental_interior MeasureTheory.pairwise_disjoint_add_fundamental_interior
 
 variable [Countable G] [MeasurableSpace G] [MeasurableSpace α] [MeasurableSMul G α] {μ : Measure α}
-  [SmulInvariantMeasure G α μ]
+  [SMulInvariantMeasure G α μ]
 
 @[to_additive MeasureTheory.NullMeasurableSet.add_fundamentalFrontier]
 protected theorem NullMeasurableSet.fundamentalFrontier (hs : NullMeasurableSet s μ) :
@@ -716,7 +716,7 @@ end Group
 
 variable [Countable G] [Group G] [MulAction G α] [MeasurableSpace α] {μ : Measure α} {s : Set α}
   (hs : IsFundamentalDomain G s μ) [MeasurableSpace G] [MeasurableSMul G α]
-  [SmulInvariantMeasure G α μ]
+  [SMulInvariantMeasure G α μ]
 
 include hs
 

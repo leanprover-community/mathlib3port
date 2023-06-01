@@ -132,26 +132,20 @@ directly. -/
 instance : CoeFun (α →ₙ+* β) fun _ => α → β :=
   ⟨NonUnitalRingHom.toFun⟩
 
-/- warning: non_unital_ring_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : α →ₙ+* β) : f.toFun = f :=
+theorem toFun_eq_coe (f : α →ₙ+* β) : f.toFun = f :=
   rfl
-#align non_unital_ring_hom.to_fun_eq_coe [anonymous]
+#align non_unital_ring_hom.to_fun_eq_coe NonUnitalRingHom.toFun_eq_coe
 
-/- warning: non_unital_ring_hom.coe_mk clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.coe_mk [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : α → β) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) = f :=
+theorem coe_mk (f : α → β) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) = f :=
   rfl
-#align non_unital_ring_hom.coe_mk [anonymous]
+#align non_unital_ring_hom.coe_mk NonUnitalRingHom.coe_mk
 
-/- warning: non_unital_ring_hom.coe_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.coe_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] [NonUnitalRingHomClass F α β] (f : F) : ((f : α →ₙ+* β) : α → β) = f :=
+theorem coe_coe [NonUnitalRingHomClass F α β] (f : F) : ((f : α →ₙ+* β) : α → β) = f :=
   rfl
-#align non_unital_ring_hom.coe_coe [anonymous]
+#align non_unital_ring_hom.coe_coe NonUnitalRingHom.coe_coe
 
 @[simp]
 theorem coe_toMulHom (f : α →ₙ+* β) : ⇑f.toMulHom = f :=
@@ -493,12 +487,10 @@ instance coeToMonoidHom : Coe (α →+* β) (α →* β) :=
 #align ring_hom.has_coe_monoid_hom RingHom.coeToMonoidHom
 -/
 
-/- warning: ring_hom.coe_monoid_hom clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ring_hom.coe_monoid_hom [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (f : α →+* β) : ⇑(f : α →* β) = f :=
+theorem coe_monoidHom (f : α →+* β) : ⇑(f : α →* β) = f :=
   rfl
-#align ring_hom.coe_monoid_hom [anonymous]
+#align ring_hom.coe_monoid_hom RingHom.coe_monoidHom
 
 @[simp]
 theorem toMonoidHom_eq_coe (f : α →+* β) : f.toMonoidHom = f :=
@@ -516,12 +508,10 @@ theorem coe_monoidHom_mk (f : α → β) (h₁ h₂ h₃ h₄) :
   rfl
 #align ring_hom.coe_monoid_hom_mk RingHom.coe_monoidHom_mk
 
-/- warning: ring_hom.coe_add_monoid_hom clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ring_hom.coe_add_monoid_hom [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (f : α →+* β) : ⇑(f : α →+ β) = f :=
+theorem coe_addMonoidHom (f : α →+* β) : ⇑(f : α →+ β) = f :=
   rfl
-#align ring_hom.coe_add_monoid_hom [anonymous]
+#align ring_hom.coe_add_monoid_hom RingHom.coe_addMonoidHom
 
 @[simp]
 theorem toAddMonoidHom_eq_coe (f : α →+* β) : f.toAddMonoidHom = f :=

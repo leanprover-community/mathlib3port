@@ -438,12 +438,10 @@ theorem map_adjoin (φ : A →ₐ[R] B) (s : Set A) : (adjoin R s).map φ = adjo
 #align alg_hom.map_adjoin AlgHom.map_adjoin
 -/
 
-#print AlgHom.adjoin_le_equalizer /-
 theorem adjoin_le_equalizer (φ₁ φ₂ : A →ₐ[R] B) {s : Set A} (h : s.EqOn φ₁ φ₂) :
     adjoin R s ≤ φ₁.equalizer φ₂ :=
   adjoin_le h
 #align alg_hom.adjoin_le_equalizer AlgHom.adjoin_le_equalizer
--/
 
 theorem ext_of_adjoin_eq_top {s : Set A} (h : adjoin R s = ⊤) ⦃φ₁ φ₂ : A →ₐ[R] B⦄
     (hs : s.EqOn φ₁ φ₂) : φ₁ = φ₂ :=

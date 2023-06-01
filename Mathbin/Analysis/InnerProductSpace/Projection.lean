@@ -667,8 +667,8 @@ def reflection : E ≃ₗᵢ[𝕜] E :=
       convert norm_sub_eq_norm_add this using 2
       · rw [LinearEquiv.coe_mk, reflectionLinearEquiv, LinearEquiv.toFun_eq_coe,
           LinearEquiv.coe_ofInvolutive, LinearMap.sub_apply, LinearMap.id_apply, bit0,
-          LinearMap.add_apply, LinearMap.comp_apply, Submodule.subtype_apply, [anonymous],
-          ContinuousLinearMap.coe_coe]
+          LinearMap.add_apply, LinearMap.comp_apply, Submodule.subtype_apply,
+          ContinuousLinearMap.toLinearMap_eq_coe, ContinuousLinearMap.coe_coe]
         dsimp [w, v]
         abel
       · simp only [add_sub_cancel'_right, eq_self_iff_true] }
@@ -1217,8 +1217,8 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     symm
     ext x
     have := LinearMap.congr_fun (linear_map.ker_eq_top.mp this) x
-    simpa only [sub_eq_zero, [anonymous], ContinuousLinearMap.coe_sub, LinearMap.sub_apply,
-      LinearMap.zero_apply] using this
+    simpa only [sub_eq_zero, ContinuousLinearMap.toLinearMap_eq_coe, ContinuousLinearMap.coe_sub,
+      LinearMap.sub_apply, LinearMap.zero_apply] using this
   · -- Inductive step.  Let `W` be the fixed subspace of `φ`.  We suppose its complement to have
     -- dimension at most n + 1.
     let W := ker (ContinuousLinearMap.id ℝ F - φ)

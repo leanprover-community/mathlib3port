@@ -354,11 +354,10 @@ def TopologicalSpace.Opens.CompleteCopy.instMetricSpace (s : Set α) :
 
 attribute [local instance] complete_copy_metric_space
 
-/- warning: polish_space.complete_copy_id_homeo clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align polish_space.complete_copy_id_homeo [anonymous]ₓ'. -/
 /-- The identity between the type synonym `complete_copy s` (with its modified metric) and the
 original subtype `s` is a homeomorphism. -/
-def [anonymous] (hs : IsOpen s) (h's : sᶜ.Nonempty) : TopologicalSpace.Opens.CompleteCopy s ≃ₜ s
+def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) :
+    TopologicalSpace.Opens.CompleteCopy s ≃ₜ s
     where
   toFun := id
   invFun := id
@@ -386,7 +385,7 @@ def [anonymous] (hs : IsOpen s) (h's : sᶜ.Nonempty) : TopologicalSpace.Opens.C
     · refine' (tendsto.sub_const _ _).abs
       refine' tendsto.div tendsto_const_nhds _ I.ne'
       exact ((continuous_inf_dist_pt _).comp continuous_subtype_val).Tendsto _
-#align polish_space.complete_copy_id_homeo [anonymous]
+#align polish_space.complete_copy_id_homeo PolishSpace.completeCopyIdHomeo
 
 theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α] (hs : IsOpen s)
     (h's : sᶜ.Nonempty) : CompleteSpace (TopologicalSpace.Opens.CompleteCopy s) :=

@@ -122,12 +122,10 @@ def Polynomial.toLaurentAlg [CommSemiring R] : R[X] →ₐ[R] R[T;T⁻¹] :=
 #align polynomial.to_laurent_alg Polynomial.toLaurentAlg
 -/
 
-#print Polynomial.toLaurentAlg_apply /-
 @[simp]
 theorem Polynomial.toLaurentAlg_apply [CommSemiring R] (f : R[X]) : f.toLaurentAlg = f.toLaurent :=
   rfl
 #align polynomial.to_laurent_alg_apply Polynomial.toLaurentAlg_apply
--/
 
 namespace LaurentPolynomial
 
@@ -600,13 +598,13 @@ theorem isLocalization : IsLocalization (Submonoid.closure ({X} : Set R[X])) R[T
   { map_units := fun t => by
       cases' t with t ht
       rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
-      simp only [is_unit_T n, [anonymous], algebra_map_eq_to_laurent, Polynomial.toLaurent_X_pow]
+      simp only [is_unit_T n, SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.toLaurent_X_pow]
     surj := fun f =>
       by
       induction' f using LaurentPolynomial.induction_on_mul_T with f n
       have := (Submonoid.closure ({X} : Set R[X])).pow_mem Submonoid.mem_closure_singleton_self n
       refine' ⟨(f, ⟨_, this⟩), _⟩
-      simp only [[anonymous], algebra_map_eq_to_laurent, Polynomial.toLaurent_X_pow, mul_T_assoc,
+      simp only [SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.toLaurent_X_pow, mul_T_assoc,
         add_left_neg, T_zero, mul_one]
     eq_iff_exists := fun f g =>
       by

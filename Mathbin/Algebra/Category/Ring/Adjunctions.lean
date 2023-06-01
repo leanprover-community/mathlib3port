@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.adjunctions
-! leanprover-community/mathlib commit 79ffb5563b56fefdea3d60b5736dad168a9494ab
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Data.MvPolynomial.CommRing
 
 /-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 Multivariable polynomials on a type is the left adjoint of the
 forgetful functor from commutative rings to types.
 -/

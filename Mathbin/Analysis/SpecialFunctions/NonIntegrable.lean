@@ -90,7 +90,7 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_filter {f :
     (ae_restrict_mem measurableSet_uIoc).mono hg
   have hsub' : Ι c d ⊆ Ι a b := uIoc_subset_uIoc_of_uIcc_subset_uIcc hsub
   have hfi : IntervalIntegrable (deriv f) volume c d :=
-    (hgi.mono_set hsub).mono_fun' (aEStronglyMeasurable_deriv _ _) hg_ae
+    (hgi.mono_set hsub).mono_fun' (aestronglyMeasurable_deriv _ _) hg_ae
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
   calc
     ‖f d‖ - ‖f c‖ ≤ ‖f d - f c‖ := norm_sub_norm_le _ _

@@ -190,11 +190,9 @@ section
 
 variable (f : R →+* S) (k : σ → τ) (g : τ → S) (p : MvPolynomial σ R)
 
-#print MvPolynomial.eval₂_rename /-
 theorem eval₂_rename : (rename k p).eval₂ f g = p.eval₂ f (g ∘ k) := by
   apply MvPolynomial.induction_on p <;> · intros ; simp [*]
 #align mv_polynomial.eval₂_rename MvPolynomial.eval₂_rename
--/
 
 theorem eval₂Hom_rename : eval₂Hom f g (rename k p) = eval₂Hom f (g ∘ k) p :=
   eval₂_rename _ _ _ _

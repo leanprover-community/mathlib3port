@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.unique_gluing
-! leanprover-community/mathlib commit 618ea3d5c99240cd7000d8376924906a148bf9ff
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Types
 
 /-!
 # The sheaf condition in terms of unique gluings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We provide an alternative formulation of the sheaf condition in terms of unique gluings.
 

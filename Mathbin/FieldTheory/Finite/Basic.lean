@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 12a85fac627bea918960da036049d611b1a3ee43
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.Tactic.ApplyFun
 
@@ -246,8 +245,6 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
       
 #align finite_field.sum_pow_lt_card_sub_one FiniteField.sum_pow_lt_card_sub_one
 
-section IsSplittingField
-
 open Polynomial
 
 section
@@ -301,22 +298,6 @@ theorem roots_x_pow_card_sub_x : roots (X ^ q - X : K[X]) = Finset.univ.val := b
       rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0,
         MulZeroClass.zero_mul, zero_sub]
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_x_pow_card_sub_x
-
-instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X)
-    where
-  Splits :=
-    by
-    have h : (X ^ q - X : K[X]).natDegree = q :=
-      X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
-    rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
-      map_X, h, roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
-  adjoin_roots := by
-    classical
-      trans Algebra.adjoin F ((roots (X ^ q - X : K[X])).toFinset : Set K)
-      · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
-      · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
-
-end IsSplittingField
 
 variable {K}
 

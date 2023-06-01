@@ -63,17 +63,13 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     exact Rat.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
 #align rat.num_denom_mk Rat.num_den_mk
 
-/- warning: rat.mk_pnat_num clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_num [anonymous]ₓ'. -/
-theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).num = n / Nat.gcd n.natAbs d := by
+theorem mkPnat_num (n : ℤ) (d : ℕ+) : (mkPnat n d).num = n / Nat.gcd n.natAbs d := by
   cases d <;> rfl
-#align rat.mk_pnat_num [anonymous]
+#align rat.mk_pnat_num Rat.mkPnat_num
 
-/- warning: rat.mk_pnat_denom clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom [anonymous]ₓ'. -/
-theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).den = d / Nat.gcd n.natAbs d := by
+theorem mkPnat_den (n : ℤ) (d : ℕ+) : (mkPnat n d).den = d / Nat.gcd n.natAbs d := by
   cases d <;> rfl
-#align rat.mk_pnat_denom [anonymous]
+#align rat.mk_pnat_denom Rat.mkPnat_den
 
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
@@ -86,14 +82,12 @@ theorem den_mk (n d : ℤ) : (n /. d).den = if d = 0 then 1 else d.natAbs / n.gc
     simp [Rat.mk, mk_nat, mk_pnat, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ]
 #align rat.denom_mk Rat.den_mk
 
-/- warning: rat.mk_pnat_denom_dvd clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom_dvd [anonymous]ₓ'. -/
-theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).den ∣ d.1 :=
+theorem mkPnat_den_dvd (n : ℤ) (d : ℕ+) : (mkPnat n d).den ∣ d.1 :=
   by
   rw [mk_pnat_denom]
   apply Nat.div_dvd_of_dvd
   apply Nat.gcd_dvd_right
-#align rat.mk_pnat_denom_dvd [anonymous]
+#align rat.mk_pnat_denom_dvd Rat.mkPnat_den_dvd
 
 #print Rat.add_den_dvd /-
 theorem add_den_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).den ∣ q₁.den * q₂.den := by cases q₁; cases q₂;
@@ -135,6 +129,7 @@ theorem mul_self_den (q : ℚ) : (q * q).den = q.den * q.den := by
 #align rat.mul_self_denom Rat.mul_self_den
 -/
 
+#print Rat.add_num_den /-
 theorem add_num_den (q r : ℚ) :
     q + r = (q.num * r.den + q.den * r.num : ℤ) /. (↑q.den * ↑r.den : ℤ) :=
   by
@@ -142,6 +137,7 @@ theorem add_num_den (q r : ℚ) :
   have hrd : (r.den : ℤ) ≠ 0 := Int.coe_nat_ne_zero_iff_pos.2 r.3
   conv_lhs => rw [← @num_denom q, ← @num_denom r, Rat.add_def'' hqd hrd] <;> simp [mul_comm]
 #align rat.add_num_denom Rat.add_num_den
+-/
 
 section Casts
 
@@ -245,7 +241,7 @@ theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.coprime a.natAb
     (a / b : ℚ).num = a := by
   lift b to ℕ using le_of_lt hb0
   norm_cast  at hb0 h
-  rw [← Rat.divInt_eq_div, ← [anonymous] a b hb0, [anonymous], PNat.mk_coe, h.gcd_eq_one,
+  rw [← Rat.divInt_eq_div, ← Rat.mkPnat_eq a b hb0, Rat.mkPnat_num, PNat.mk_coe, h.gcd_eq_one,
     Int.ofNat_one, Int.div_one]
 #align rat.num_div_eq_of_coprime Rat.num_div_eq_of_coprime
 -/
@@ -255,7 +251,7 @@ theorem den_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.coprime a.natAb
     ((a / b : ℚ).den : ℤ) = b := by
   lift b to ℕ using le_of_lt hb0
   norm_cast  at hb0 h
-  rw [← Rat.divInt_eq_div, ← [anonymous] a b hb0, [anonymous], PNat.mk_coe, h.gcd_eq_one,
+  rw [← Rat.divInt_eq_div, ← Rat.mkPnat_eq a b hb0, Rat.mkPnat_den, PNat.mk_coe, h.gcd_eq_one,
     Nat.div_one]
 #align rat.denom_div_eq_of_coprime Rat.den_div_eq_of_coprime
 -/
@@ -390,12 +386,10 @@ theorem coe_pnatDen (x : ℚ) : (x.pnatDen : ℕ) = x.den :=
 #align rat.coe_pnat_denom Rat.coe_pnatDen
 -/
 
-/- warning: rat.mk_pnat_pnat_denom_eq clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_pnat_denom_eq [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : ℚ) : [anonymous] x.num x.pnatDen = x := by
+theorem mkPnat_pnatDen_eq (x : ℚ) : mkPnat x.num x.pnatDen = x := by
   rw [pnat_denom, mk_pnat_eq, num_denom]
-#align rat.mk_pnat_pnat_denom_eq [anonymous]
+#align rat.mk_pnat_pnat_denom_eq Rat.mkPnat_pnatDen_eq
 
 #print Rat.pnatDen_eq_iff_den_eq /-
 theorem pnatDen_eq_iff_den_eq {x : ℚ} {n : ℕ+} : x.pnatDen = n ↔ x.den = ↑n :=

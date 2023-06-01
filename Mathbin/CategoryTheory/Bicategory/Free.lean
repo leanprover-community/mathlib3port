@@ -270,11 +270,9 @@ theorem mk_whisker_right {f g : a ⟶ b} (η : Hom₂ f g) (h : b ⟶ c) :
 
 variable (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d)
 
-/- warning: category_theory.free_bicategory.id_def clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.free_bicategory.id_def [anonymous]ₓ'. -/
-theorem [anonymous] : Hom.id a = 𝟙 a :=
+theorem id_def : Hom.id a = 𝟙 a :=
   rfl
-#align category_theory.free_bicategory.id_def [anonymous]
+#align category_theory.free_bicategory.id_def CategoryTheory.FreeBicategory.id_def
 
 #print CategoryTheory.FreeBicategory.comp_def /-
 theorem comp_def : Hom.comp f g = f ≫ g :=

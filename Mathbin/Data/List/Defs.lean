@@ -97,11 +97,9 @@ def head? : List α → Option α
 #align list.head' List.head?
 -/
 
-/- warning: list.to_array clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.to_array [anonymous]ₓ'. -/
 /-- Convert a list into an array (whose length is the length of `l`). -/
-def [anonymous] (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
-#align list.to_array [anonymous]
+def toArray (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
+#align list.to_array List.toArray
 
 #print List.getD /-
 /-- "default" `nth` function: returns `d` instead of `none` in the case

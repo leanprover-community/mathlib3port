@@ -206,7 +206,7 @@ theorem mk_coe_def (p : K[X]) (q : K[X]⁰) :
 
 theorem mk_def_of_mem (p : K[X]) {q} (hq : q ∈ K[X]⁰) :
     RatFunc.mk p q = ofFractionRing (IsLocalization.mk' _ p ⟨q, hq⟩) := by
-  simp only [← mk_coe_def, [anonymous]]
+  simp only [← mk_coe_def, SetLike.coe_mk]
 #align ratfunc.mk_def_of_mem RatFunc.mk_def_of_mem
 
 theorem mk_def_of_ne (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
@@ -229,7 +229,7 @@ theorem mk_one' (p : K[X]) : RatFunc.mk p 1 = ofFractionRing (algebraMap _ _ p) 
 theorem mk_eq_mk {p q p' q' : K[X]} (hq : q ≠ 0) (hq' : q' ≠ 0) :
     RatFunc.mk p q = RatFunc.mk p' q' ↔ p * q' = p' * q := by
   rw [mk_def_of_ne _ hq, mk_def_of_ne _ hq', of_fraction_ring_injective.eq_iff,
-    IsLocalization.mk'_eq_iff_eq', [anonymous], [anonymous],
+    IsLocalization.mk'_eq_iff_eq', SetLike.coe_mk, SetLike.coe_mk,
     (IsFractionRing.injective K[X] (FractionRing K[X])).eq_iff]
 #align ratfunc.mk_eq_mk RatFunc.mk_eq_mk
 -/
@@ -246,7 +246,7 @@ theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p,
       lift_on_of_fraction_ring_mk, Submonoid.coe_one]
   ·
     simp only [mk_eq_localization_mk _ hq, Localization.liftOn_mk, lift_on_of_fraction_ring_mk,
-      [anonymous]]
+      SetLike.coe_mk]
 #align ratfunc.lift_on_mk RatFunc.liftOn_mk
 
 omit hdomain
@@ -685,7 +685,7 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
   ·
     simpa only [map_apply_of_fraction_ring_mk, of_fraction_ring_injective.eq_iff,
       Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_left_coe_nonZeroDivisors,
-      exists_const, [anonymous], ← map_mul, hf.eq_iff] using h
+      exists_const, SetLike.coe_mk, ← map_mul, hf.eq_iff] using h
   · rfl
   · rfl
 #align ratfunc.map_injective RatFunc.map_injective
@@ -706,7 +706,7 @@ def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.co
     map_add' := by
       rintro ⟨x⟩ ⟨y⟩; induction x; induction y
       ·
-        simp only [← of_fraction_ring_add, Localization.add_mk, map_add, [anonymous], map_mul,
+        simp only [← of_fraction_ring_add, Localization.add_mk, map_add, SetLike.coe_mk, map_mul,
           MonoidHom.toFun_eq_coe, map_apply_of_fraction_ring_mk, Submonoid.mk_mul_mk,
           Submonoid.coe_mul]
       · rfl
@@ -881,7 +881,7 @@ theorem map_apply_div_ne_zero {R F : Type _} [CommRing R] [IsDomain R] [MonoidHo
   by
   have hq' : φ q ≠ 0 := nonZeroDivisors.ne_zero (hφ (mem_non_zero_divisors_iff_ne_zero.mpr hq))
   simp only [← mk_eq_div, mk_eq_localization_mk _ hq, map_apply_of_fraction_ring_mk,
-    mk_eq_localization_mk _ hq', [anonymous]]
+    mk_eq_localization_mk _ hq', SetLike.coe_mk]
 #align ratfunc.map_apply_div_ne_zero RatFunc.map_apply_div_ne_zero
 
 @[simp]
@@ -1049,8 +1049,8 @@ theorem ofFractionRing_eq :
   funext fun x =>
     Localization.induction_on x fun x => by
       simp only [IsLocalization.algEquiv_apply, IsLocalization.ringEquivOfRingEquiv_apply,
-        [anonymous], Localization.mk_eq_mk'_apply, IsLocalization.map_mk', of_fraction_ring_mk',
-        RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
+        RingEquiv.toFun_eq_coe, Localization.mk_eq_mk'_apply, IsLocalization.map_mk',
+        of_fraction_ring_mk', RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.of_fraction_ring_eq RatFunc.ofFractionRing_eq
 
 @[simp]
@@ -1059,7 +1059,7 @@ theorem toFractionRing_eq :
   funext fun ⟨x⟩ =>
     Localization.induction_on x fun x => by
       simp only [Localization.mk_eq_mk'_apply, of_fraction_ring_mk', IsLocalization.algEquiv_apply,
-        [anonymous], IsLocalization.ringEquivOfRingEquiv_apply, IsLocalization.map_mk',
+        RingEquiv.toFun_eq_coe, IsLocalization.ringEquivOfRingEquiv_apply, IsLocalization.map_mk',
         RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.to_fraction_ring_eq RatFunc.toFractionRing_eq
 

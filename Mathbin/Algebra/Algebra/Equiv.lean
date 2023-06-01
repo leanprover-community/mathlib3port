@@ -165,12 +165,10 @@ theorem mk_coe (e : A₁ ≃ₐ[R] A₂) (e' h₁ h₂ h₃ h₄ h₅) :
   ext fun _ => rfl
 #align alg_equiv.mk_coe AlgEquiv.mk_coe
 
-/- warning: alg_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align alg_equiv.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (e : A₁ ≃ₐ[R] A₂) : e.toFun = e :=
+theorem toFun_eq_coe (e : A₁ ≃ₐ[R] A₂) : e.toFun = e :=
   rfl
-#align alg_equiv.to_fun_eq_coe [anonymous]
+#align alg_equiv.to_fun_eq_coe AlgEquiv.toFun_eq_coe
 
 #print AlgEquiv.toEquiv_eq_coe /-
 @[simp]
@@ -255,12 +253,10 @@ theorem toAlgHom_eq_coe : e.toAlgHom = e :=
   rfl
 #align alg_equiv.to_alg_hom_eq_coe AlgEquiv.toAlgHom_eq_coe
 
-#print AlgEquiv.coe_algHom /-
 @[simp, norm_cast]
 theorem coe_algHom : ((e : A₁ →ₐ[R] A₂) : A₁ → A₂) = e :=
   rfl
 #align alg_equiv.coe_alg_hom AlgEquiv.coe_algHom
--/
 
 theorem coe_algHom_injective : Function.Injective (coe : (A₁ ≃ₐ[R] A₂) → A₁ →ₐ[R] A₂) :=
   fun e₁ e₂ h => ext <| AlgHom.congr_fun h
@@ -522,27 +518,21 @@ theorem ofAlgHom_symm (f : A₁ →ₐ[R] A₂) (g : A₂ →ₐ[R] A₁) (h₁ 
 #align alg_equiv.of_alg_hom_symm AlgEquiv.ofAlgHom_symm
 -/
 
-#print AlgEquiv.ofBijective /-
 /-- Promotes a bijective algebra homomorphism to an algebra equivalence. -/
 noncomputable def ofBijective (f : A₁ →ₐ[R] A₂) (hf : Function.Bijective f) : A₁ ≃ₐ[R] A₂ :=
   { RingEquiv.ofBijective (f : A₁ →+* A₂) hf, f with }
 #align alg_equiv.of_bijective AlgEquiv.ofBijective
--/
 
-#print AlgEquiv.coe_ofBijective /-
 @[simp]
 theorem coe_ofBijective {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} :
     (AlgEquiv.ofBijective f hf : A₁ → A₂) = f :=
   rfl
 #align alg_equiv.coe_of_bijective AlgEquiv.coe_ofBijective
--/
 
-#print AlgEquiv.ofBijective_apply /-
 theorem ofBijective_apply {f : A₁ →ₐ[R] A₂} {hf : Function.Bijective f} (a : A₁) :
     (AlgEquiv.ofBijective f hf) a = f a :=
   rfl
 #align alg_equiv.of_bijective_apply AlgEquiv.ofBijective_apply
--/
 
 #print AlgEquiv.toLinearEquiv /-
 /-- Forgetting the multiplicative structures, an equivalence of algebras is a linear equivalence. -/

@@ -37,16 +37,14 @@ theorem mapIdx_nil {α β} (f : ℕ → α → β) : mapIdx f [] = [] :=
   rfl
 #align list.map_with_index_nil List.mapIdx_nil
 
-/- warning: list.map_with_index_core_eq clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.map_with_index_core_eq [anonymous]ₓ'. -/
-theorem [anonymous] (l : List α) (f : ℕ → α → β) (n : ℕ) :
-    l.map_with_index_core f n = l.mapIdx fun i a => f (i + n) a :=
+theorem mapWithIndexCore_eq (l : List α) (f : ℕ → α → β) (n : ℕ) :
+    l.mapWithIndexCore f n = l.mapIdx fun i a => f (i + n) a :=
   by
   induction' l with hd tl hl generalizing f n
   · simpa
   · rw [map_with_index]
     simp [map_with_index_core, hl, add_left_comm, add_assoc, add_comm]
-#align list.map_with_index_core_eq [anonymous]
+#align list.map_with_index_core_eq List.mapWithIndexCore_eq
 
 #print List.mapIdx_eq_enum_map /-
 theorem mapIdx_eq_enum_map (l : List α) (f : ℕ → α → β) :

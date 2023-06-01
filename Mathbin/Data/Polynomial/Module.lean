@@ -198,7 +198,7 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
     map_smul' := fun r x =>
       by
       induction' r using Polynomial.induction_on' with _ _ _ _ n p
-      · simp_all only [add_smul, map_add, [anonymous]]
+      · simp_all only [add_smul, map_add, RingEquiv.toFun_eq_coe]
       · ext i
         dsimp
         rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc,

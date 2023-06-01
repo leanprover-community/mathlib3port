@@ -60,7 +60,7 @@ theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   by
   intro f g hfg
   apply_fun Units.val  at hfg
-  simp only [IsPrimitiveRoot.coe_autToPow_apply, [anonymous]] at hfg
+  simp only [IsPrimitiveRoot.coe_autToPow_apply, Units.val_eq_coe] at hfg
   generalize_proofs hf' hg'  at hfg
   have hf := hf'.some_spec
   have hg := hg'.some_spec

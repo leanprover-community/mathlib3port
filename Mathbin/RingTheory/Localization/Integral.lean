@@ -339,7 +339,7 @@ theorem isFractionRing_of_algebraic (alg : IsAlgebraic A L)
       ⟨⟨mk' C (x : L) x.2, algebraMap _ _ y,
           mem_nonZeroDivisors_iff_ne_zero.mpr fun h =>
             hy (inj _ (by rw [IsScalarTower.algebraMap_apply A C L, h, RingHom.map_zero]))⟩,
-        by rw [[anonymous], algebra_map_mk', ← IsScalarTower.algebraMap_apply A C L, hxy]⟩
+        by rw [SetLike.coe_mk, algebra_map_mk', ← IsScalarTower.algebraMap_apply A C L, hxy]⟩
     eq_iff_exists := fun x y =>
       ⟨fun h => ⟨1, by simpa using algebra_map_injective C A L h⟩, fun ⟨c, hc⟩ =>
         congr_arg (algebraMap _ L) (mul_left_cancel₀ (mem_nonZeroDivisors_iff_ne_zero.mp c.2) hc)⟩ }
@@ -459,11 +459,11 @@ theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [
     map_mem_nonZeroDivisors (algebraMap R S) injRS (mem_nonZeroDivisors_of_ne_zero hz0)
   have mk_yz_eq : IsLocalization.mk' L y' z' = IsLocalization.mk' L y ⟨_, hz0'⟩ :=
     by
-    rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← [anonymous] (algebraMap R S z) hz0'] at
+    rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← SetLike.coe_mk (algebraMap R S z) hz0'] at
       yz_eq
     exact IsLocalization.mk'_eq_of_eq (by rw [mul_comm _ y, mul_comm _ y', yz_eq])
   suffices hy : algebraMap S L (a * y) ∈ Submodule.span K (⇑(algebraMap S L) '' b)
-  · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, [anonymous], ← IsScalarTower.algebraMap_apply,
+  · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, SetLike.coe_mk, ← IsScalarTower.algebraMap_apply,
       IsScalarTower.algebraMap_apply R K L, div_eq_mul_inv, ← mul_assoc, mul_comm, ← map_inv₀, ←
       Algebra.smul_def, ← _root_.map_mul]
     exact (Submodule.span K _).smul_mem _ hy

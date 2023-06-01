@@ -160,12 +160,11 @@ def center : Subsemigroup M where
 #align subsemigroup.center Subsemigroup.center
 #align add_subsemigroup.center AddSubsemigroup.center
 
-/- warning: subsemigroup.coe_center clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_center [anonymous]ₓ'. -/
 @[to_additive]
-theorem [anonymous] : ↑(center M) = Set.center M :=
+theorem coe_center : ↑(center M) = Set.center M :=
   rfl
-#align subsemigroup.coe_center [anonymous]
+#align subsemigroup.coe_center Subsemigroup.coe_center
+#align add_subsemigroup.coe_center AddSubsemigroup.coe_center
 
 variable {M}
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.l_series
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Algebra.InfiniteSum.Basic
 
 /-!
 # L-series
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given an arithmetic function, we define the corresponding L-series.
 
@@ -42,26 +45,26 @@ namespace Nat
 namespace ArithmeticFunction
 
 /-- The L-series of an `arithmetic_function`. -/
-def lSeries (f : ArithmeticFunction ℂ) (z : ℂ) : ℂ :=
+def LSeries (f : ArithmeticFunction ℂ) (z : ℂ) : ℂ :=
   ∑' n, f n / n ^ z
-#align nat.arithmetic_function.l_series Nat.ArithmeticFunction.lSeries
+#align nat.arithmetic_function.l_series Nat.ArithmeticFunction.LSeries
 
 /-- `f.l_series_summable z` indicates that the L-series of `f` converges at `z`. -/
 def LSeriesSummable (f : ArithmeticFunction ℂ) (z : ℂ) : Prop :=
   Summable fun n => f n / n ^ z
 #align nat.arithmetic_function.l_series_summable Nat.ArithmeticFunction.LSeriesSummable
 
-theorem lSeries_eq_zero_of_not_lSeriesSummable (f : ArithmeticFunction ℂ) (z : ℂ) :
-    ¬f.LSeriesSummable z → f.lSeries z = 0 :=
+theorem LSeries_eq_zero_of_not_LSeriesSummable (f : ArithmeticFunction ℂ) (z : ℂ) :
+    ¬f.LSeriesSummable z → f.LSeries z = 0 :=
   tsum_eq_zero_of_not_summable
-#align nat.arithmetic_function.l_series_eq_zero_of_not_l_series_summable Nat.ArithmeticFunction.lSeries_eq_zero_of_not_lSeriesSummable
+#align nat.arithmetic_function.l_series_eq_zero_of_not_l_series_summable Nat.ArithmeticFunction.LSeries_eq_zero_of_not_LSeriesSummable
 
 @[simp]
-theorem lSeriesSummable_zero {z : ℂ} : LSeriesSummable 0 z := by
+theorem LSeriesSummable_zero {z : ℂ} : LSeriesSummable 0 z := by
   simp [l_series_summable, summable_zero]
-#align nat.arithmetic_function.l_series_summable_zero Nat.ArithmeticFunction.lSeriesSummable_zero
+#align nat.arithmetic_function.l_series_summable_zero Nat.ArithmeticFunction.LSeriesSummable_zero
 
-theorem lSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {m : ℝ}
+theorem LSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.LSeriesSummable z :=
   by
   by_cases h0 : m = 0
@@ -80,9 +83,9 @@ theorem lSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {
     simp only [map_div₀, Complex.norm_eq_abs]
     apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eq _)
     rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
-#align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_real Nat.ArithmeticFunction.lSeriesSummable_of_bounded_of_one_lt_real
+#align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_real Nat.ArithmeticFunction.LSeriesSummable_of_bounded_of_one_lt_real
 
-theorem lSeriesSummable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ} (h : w.re = z.re) :
+theorem LSeriesSummable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ} (h : w.re = z.re) :
     f.LSeriesSummable w ↔ f.LSeriesSummable z :=
   by
   suffices h :
@@ -99,19 +102,19 @@ theorem lSeriesSummable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ}
   right
   rw [Complex.log_im, ← Complex.ofReal_nat_cast]
   exact Complex.arg_of_real_of_nonneg (le_of_lt (cast_pos.2 n.succ_pos))
-#align nat.arithmetic_function.l_series_summable_iff_of_re_eq_re Nat.ArithmeticFunction.lSeriesSummable_iff_of_re_eq_re
+#align nat.arithmetic_function.l_series_summable_iff_of_re_eq_re Nat.ArithmeticFunction.LSeriesSummable_iff_of_re_eq_re
 
-theorem lSeriesSummable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {m : ℝ}
+theorem LSeriesSummable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.LSeriesSummable z :=
   by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.ofReal_re z.re)]
   apply l_series_summable_of_bounded_of_one_lt_real h
   exact hz
-#align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_re Nat.ArithmeticFunction.lSeriesSummable_of_bounded_of_one_lt_re
+#align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_re Nat.ArithmeticFunction.LSeriesSummable_of_bounded_of_one_lt_re
 
 open scoped ArithmeticFunction
 
-theorem zeta_lSeriesSummable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re :=
+theorem zeta_LSeriesSummable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re :=
   by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.ofReal_re z.re), l_series_summable, ←
     summable_norm_iff, ← Real.summable_one_div_nat_rpow, iff_iff_eq]
@@ -127,17 +130,17 @@ theorem zeta_lSeriesSummable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 
     simp only [cast_zero, nat_coe_apply, zeta_apply, succ_ne_zero, if_false, cast_succ, one_div,
       Complex.norm_eq_abs, map_inv₀, Complex.abs_cpow_real, inv_inj, zero_add]
     rw [← cast_one, ← cast_add, Complex.abs_of_nat, cast_add, cast_one]
-#align nat.arithmetic_function.zeta_l_series_summable_iff_one_lt_re Nat.ArithmeticFunction.zeta_lSeriesSummable_iff_one_lt_re
+#align nat.arithmetic_function.zeta_l_series_summable_iff_one_lt_re Nat.ArithmeticFunction.zeta_LSeriesSummable_iff_one_lt_re
 
 @[simp]
-theorem lSeries_add {f g : ArithmeticFunction ℂ} {z : ℂ} (hf : f.LSeriesSummable z)
-    (hg : g.LSeriesSummable z) : (f + g).lSeries z = f.lSeries z + g.lSeries z :=
+theorem LSeries_add {f g : ArithmeticFunction ℂ} {z : ℂ} (hf : f.LSeriesSummable z)
+    (hg : g.LSeriesSummable z) : (f + g).LSeries z = f.LSeries z + g.LSeries z :=
   by
   simp only [l_series, add_apply]
   rw [← tsum_add hf hg]
   apply congr rfl (funext fun n => _)
   apply _root_.add_div
-#align nat.arithmetic_function.l_series_add Nat.ArithmeticFunction.lSeries_add
+#align nat.arithmetic_function.l_series_add Nat.ArithmeticFunction.LSeries_add
 
 end ArithmeticFunction
 

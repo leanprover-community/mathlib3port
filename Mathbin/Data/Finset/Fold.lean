@@ -158,7 +158,7 @@ theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [Decidable
   classical
     induction' s using Finset.induction_on with x s hx IH
     · simp [hb]
-    · simp only [[anonymous], Finset.fold_insert hx]
+    · simp only [Finset.filter_congr_decidable, Finset.fold_insert hx]
       split_ifs with h h
       · have : x ∉ Finset.filter p s := by simp [hx]
         simp [Finset.filter_insert, h, Finset.fold_insert this, ha.assoc, IH]

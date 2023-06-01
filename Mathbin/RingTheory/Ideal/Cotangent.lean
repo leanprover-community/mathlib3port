@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.cotangent
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.RingTheory.Ideal.LocalRing
 
 /-!
 # The module `I ⧸ I ^ 2`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we provide special API support for the module `I ⧸ I ^ 2`. The official
 definition is a quotient module of `I`, but the alternative definition as an ideal of `R ⧸ I ^ 2` is
@@ -33,11 +36,13 @@ variable {R S S' : Type _} [CommRing R] [CommSemiring S] [Algebra S R]
 variable [CommSemiring S'] [Algebra S' R] [Algebra S S'] [IsScalarTower S S' R] (I : Ideal R)
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I) -/
+#print Ideal.Cotangent /-
 /-- `I ⧸ I ^ 2` as a quotient of `I`. -/
 def Cotangent : Type _ :=
   I ⧸ (I • ⊤ : Submodule R I)deriving AddCommGroup,
   ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] «expr ⧸ »(R, I)
 #align ideal.cotangent Ideal.Cotangent
+-/
 
 instance : Inhabited I.Cotangent :=
   ⟨0⟩
@@ -91,6 +96,7 @@ theorem toCotangent_range : I.toCotangent.range = ⊤ :=
   Submodule.range_mkQ _
 #align ideal.to_cotangent_range Ideal.toCotangent_range
 
+#print Ideal.cotangent_subsingleton_iff /-
 theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentElem I :=
   by
   constructor
@@ -103,6 +109,7 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
         Quotient.inductionOn₂' x y fun x y =>
           I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
 #align ideal.cotangent_subsingleton_iff Ideal.cotangent_subsingleton_iff
+-/
 
 /-- The inclusion map `I ⧸ I ^ 2` to `R ⧸ I ^ 2`. -/
 def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
@@ -113,10 +120,12 @@ def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
       exact rfl.le)
 #align ideal.cotangent_to_quotient_square Ideal.cotangentToQuotientSquare
 
+#print Ideal.to_quotient_square_comp_toCotangent /-
 theorem to_quotient_square_comp_toCotangent :
     I.cotangentToQuotientSquare.comp I.toCotangent = (I ^ 2).mkQ.comp (Submodule.subtype I) :=
   LinearMap.ext fun _ => rfl
 #align ideal.to_quotient_square_comp_to_cotangent Ideal.to_quotient_square_comp_toCotangent
+-/
 
 @[simp]
 theorem toCotangent_to_quotient_square (x : I) :
@@ -124,6 +133,7 @@ theorem toCotangent_to_quotient_square (x : I) :
   rfl
 #align ideal.to_cotangent_to_quotient_square Ideal.toCotangent_to_quotient_square
 
+#print Ideal.cotangentIdeal /-
 /-- `I ⧸ I ^ 2` as an ideal of `R ⧸ I ^ 2`. -/
 def cotangentIdeal (I : Ideal R) : Ideal (R ⧸ I ^ 2) :=
   by
@@ -131,6 +141,7 @@ def cotangentIdeal (I : Ideal R) : Ideal (R ⧸ I ^ 2) :=
   let rq := (I ^ 2).Quotient.mk
   exact Submodule.map rq.to_semilinear_map I
 #align ideal.cotangent_ideal Ideal.cotangentIdeal
+-/
 
 theorem cotangentIdeal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ :=
   by
@@ -142,6 +153,7 @@ theorem cotangentIdeal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ :=
   · intro x y hx hy; exact add_mem hx hy
 #align ideal.cotangent_ideal_square Ideal.cotangentIdeal_square
 
+#print Ideal.to_quotient_square_range /-
 theorem to_quotient_square_range :
     I.cotangentToQuotientSquare.range = I.cotangentIdeal.restrictScalars R :=
   by
@@ -149,6 +161,7 @@ theorem to_quotient_square_range :
   · rw [LinearMap.range_comp, I.to_cotangent_range, Submodule.map_top]
   · rw [to_quotient_square_comp_to_cotangent, LinearMap.range_comp, I.range_subtype]; ext; rfl
 #align ideal.to_quotient_square_range Ideal.to_quotient_square_range
+-/
 
 /-- The equivalence of the two definitions of `I / I ^ 2`, either as the quotient of `I` or the
 ideal of `R / I ^ 2`. -/
@@ -188,6 +201,7 @@ theorem cotangentEquivIdeal_symm_apply (x : R) (hx : x ∈ I) :
 
 variable {A B : Type _} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
+#print AlgHom.kerSquareLift /-
 /-- The lift of `f : A →ₐ[R] B` to `A ⧸ J ^ 2 →ₐ[R] B` with `J` being the kernel of `f`. -/
 def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[R] B :=
   by
@@ -198,6 +212,7 @@ def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[
       Ideal.Quotient.lift_mk]
     exact f.map_algebra_map r
 #align alg_hom.ker_square_lift AlgHom.kerSquareLift
+-/
 
 theorem AlgHom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
     f.kerSquareLift.toRingHom.ker = f.toRingHom.ker.cotangentIdeal :=
@@ -221,11 +236,13 @@ namespace LocalRing
 
 variable (R : Type _) [CommRing R] [LocalRing R]
 
+#print LocalRing.CotangentSpace /-
 /-- The `A ⧸ I`-vector space `I ⧸ I ^ 2`. -/
 @[reducible]
 def CotangentSpace : Type _ :=
   (maximalIdeal R).Cotangent
 #align local_ring.cotangent_space LocalRing.CotangentSpace
+-/
 
 instance : Module (ResidueField R) (CotangentSpace R) :=
   Ideal.Cotangent.module _

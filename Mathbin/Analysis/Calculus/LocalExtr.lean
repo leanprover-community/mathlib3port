@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.local_extr
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.Polynomial
 
 /-!
 # Local extrema of smooth functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
 
@@ -76,6 +79,7 @@ section Module
 
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E} {f' : E →L[ℝ] ℝ}
 
+#print posTangentConeAt /-
 /-- "Positive" tangent cone to `s` at `x`; the only difference from `tangent_cone_at`
 is that we require `c n → ∞` instead of `‖c n‖ → ∞`. One can think about `pos_tangent_cone_at`
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
@@ -85,6 +89,7 @@ def posTangentConeAt (s : Set E) (x : E) : Set E :=
       (∀ᶠ n in atTop, x + d n ∈ s) ∧
         Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align pos_tangent_cone_at posTangentConeAt
+-/
 
 theorem posTangentConeAt_mono : Monotone fun s => posTangentConeAt s a :=
   by
@@ -114,9 +119,11 @@ theorem mem_posTangentConeAt_of_segment_subset' {s : Set E} {x y : E}
   simpa only [add_sub_cancel'] using mem_posTangentConeAt_of_segment_subset h
 #align mem_pos_tangent_cone_at_of_segment_subset' mem_posTangentConeAt_of_segment_subset'
 
+#print posTangentConeAt_univ /-
 theorem posTangentConeAt_univ : posTangentConeAt univ a = univ :=
   eq_univ_of_forall fun x => mem_posTangentConeAt_of_segment_subset' (subset_univ _)
 #align pos_tangent_cone_at_univ posTangentConeAt_univ
+-/
 
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
@@ -200,6 +207,7 @@ theorem IsLocalMinOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMinOn f s a) {
   else by rw [fderivWithin_zero_of_not_differentiableWithinAt hf]; rfl
 #align is_local_min_on.fderiv_within_eq_zero IsLocalMinOn.fderivWithin_eq_zero
 
+#print IsLocalMin.hasFDerivAt_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.hasFDerivAt_eq_zero (h : IsLocalMin f a) (hf : HasFDerivAt f f' a) : f' = 0 :=
   by
@@ -208,33 +216,44 @@ theorem IsLocalMin.hasFDerivAt_eq_zero (h : IsLocalMin f a) (hf : HasFDerivAt f 
       rw [posTangentConeAt_univ] <;>
     apply mem_univ
 #align is_local_min.has_fderiv_at_eq_zero IsLocalMin.hasFDerivAt_eq_zero
+-/
 
+#print IsLocalMin.fderiv_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.fderiv_eq_zero (h : IsLocalMin f a) : fderiv ℝ f a = 0 :=
   if hf : DifferentiableAt ℝ f a then h.hasFDerivAt_eq_zero hf.HasFDerivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_min.fderiv_eq_zero IsLocalMin.fderiv_eq_zero
+-/
 
+#print IsLocalMax.hasFDerivAt_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.hasFDerivAt_eq_zero (h : IsLocalMax f a) (hf : HasFDerivAt f f' a) : f' = 0 :=
   neg_eq_zero.1 <| h.neg.hasFDerivAt_eq_zero hf.neg
 #align is_local_max.has_fderiv_at_eq_zero IsLocalMax.hasFDerivAt_eq_zero
+-/
 
+#print IsLocalMax.fderiv_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.fderiv_eq_zero (h : IsLocalMax f a) : fderiv ℝ f a = 0 :=
   if hf : DifferentiableAt ℝ f a then h.hasFDerivAt_eq_zero hf.HasFDerivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_max.fderiv_eq_zero IsLocalMax.fderiv_eq_zero
+-/
 
+#print IsLocalExtr.hasFDerivAt_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local extremum equals zero. -/
 theorem IsLocalExtr.hasFDerivAt_eq_zero (h : IsLocalExtr f a) : HasFDerivAt f f' a → f' = 0 :=
   h.elim IsLocalMin.hasFDerivAt_eq_zero IsLocalMax.hasFDerivAt_eq_zero
 #align is_local_extr.has_fderiv_at_eq_zero IsLocalExtr.hasFDerivAt_eq_zero
+-/
 
+#print IsLocalExtr.fderiv_eq_zero /-
 /-- **Fermat's Theorem**: the derivative of a function at a local extremum equals zero. -/
 theorem IsLocalExtr.fderiv_eq_zero (h : IsLocalExtr f a) : fderiv ℝ f a = 0 :=
   h.elim IsLocalMin.fderiv_eq_zero IsLocalMax.fderiv_eq_zero
 #align is_local_extr.fderiv_eq_zero IsLocalExtr.fderiv_eq_zero
+-/
 
 end Module
 

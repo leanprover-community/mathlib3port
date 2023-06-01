@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.ring_homs
-! leanprover-community/mathlib commit 565eb991e264d0db702722b4bde52ee5173c9950
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.NumberTheory.Padics.PadicIntegers
 /-!
 
 # Relating `ℤ_[p]` to `zmod (p ^ n)`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we establish connections between the `p`-adic integers $\mathbb{Z}_p$
 and the integers modulo powers of `p`, $\mathbb{Z}/p^n\mathbb{Z}$.
@@ -119,7 +122,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : �
   rwa [← r.cop.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.coe_nat_dvd_left, ← Int.coe_nat_dvd]
 #align padic_int.is_unit_denom PadicInt.isUnit_den
 
-theorem norm_sub_mod_part_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
+theorem norm_sub_modPart_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
     ↑p ∣ r.num - r.num * r.den.gcdA p % p * ↑r.den :=
   by
   rw [← ZMod.int_cast_zmod_eq_zero_iff_dvd]
@@ -137,7 +140,7 @@ theorem norm_sub_mod_part_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
   apply ge_of_eq
   rw [← is_unit_iff]
   exact is_unit_denom r h
-#align padic_int.norm_sub_mod_part_aux PadicInt.norm_sub_mod_part_aux
+#align padic_int.norm_sub_mod_part_aux PadicInt.norm_sub_modPart_aux
 
 theorem norm_sub_modPart (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - modPart p r : ℤ_[p])‖ < 1 :=
   by

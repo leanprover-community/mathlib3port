@@ -54,13 +54,11 @@ variable {α : Type _} {p q : ℚ≥0}
 instance : Coe ℚ≥0 ℚ :=
   ⟨Subtype.val⟩
 
-/- warning: nnrat.val_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nnrat.val_eq_coe [anonymous]ₓ'. -/
 -- Simp lemma to put back `n.val` into the normal form given by the coercion.
 @[simp]
-theorem [anonymous] (q : ℚ≥0) : q.val = q :=
+theorem val_eq_coe (q : ℚ≥0) : q.val = q :=
   rfl
-#align nnrat.val_eq_coe [anonymous]
+#align nnrat.val_eq_coe NNRat.val_eq_coe
 
 instance canLift : CanLift ℚ ℚ≥0 coe fun q => 0 ≤ q where prf q hq := ⟨⟨q, hq⟩, rfl⟩
 #align nnrat.can_lift NNRat.canLift
@@ -144,19 +142,15 @@ theorem coe_div (p q : ℚ≥0) : ((p / q : ℚ≥0) : ℚ) = p / q :=
   rfl
 #align nnrat.coe_div NNRat.coe_div
 
-/- warning: nnrat.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nnrat.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (q : ℚ≥0) : ((bit0 q : ℚ≥0) : ℚ) = bit0 q :=
+theorem coe_bit0 (q : ℚ≥0) : ((bit0 q : ℚ≥0) : ℚ) = bit0 q :=
   rfl
-#align nnrat.coe_bit0 [anonymous]
+#align nnrat.coe_bit0 NNRat.coe_bit0
 
-/- warning: nnrat.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nnrat.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
+theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :=
   rfl
-#align nnrat.coe_bit1 [anonymous]
+#align nnrat.coe_bit1 NNRat.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
@@ -409,19 +403,15 @@ theorem lt_toNNRat_iff_coe_lt {q : ℚ≥0} : q < toNNRat p ↔ ↑q < p :=
   NNRat.gi.gc.lt_iff_lt
 #align rat.lt_to_nnrat_iff_coe_lt Rat.lt_toNNRat_iff_coe_lt
 
-/- warning: rat.to_nnrat_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.to_nnrat_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (hq : 0 ≤ q) : toNNRat (bit0 q) = bit0 (toNNRat q) :=
+theorem toNNRat_bit0 (hq : 0 ≤ q) : toNNRat (bit0 q) = bit0 (toNNRat q) :=
   toNNRat_add hq hq
-#align rat.to_nnrat_bit0 [anonymous]
+#align rat.to_nnrat_bit0 Rat.toNNRat_bit0
 
-/- warning: rat.to_nnrat_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.to_nnrat_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (hq : 0 ≤ q) : toNNRat (bit1 q) = bit1 (toNNRat q) :=
+theorem toNNRat_bit1 (hq : 0 ≤ q) : toNNRat (bit1 q) = bit1 (toNNRat q) :=
   (toNNRat_add (by simp [hq]) zero_le_one).trans <| by simp [to_nnrat_one, bit1, hq]
-#align rat.to_nnrat_bit1 [anonymous]
+#align rat.to_nnrat_bit1 Rat.toNNRat_bit1
 
 theorem toNNRat_mul (hp : 0 ≤ p) : toNNRat (p * q) = toNNRat p * toNNRat q :=
   by

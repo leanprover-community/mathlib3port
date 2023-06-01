@@ -111,7 +111,7 @@ theorem lowerCentralSeries_eq_lcs_comap : lowerCentralSeries R L N k = (N.lcs k)
   by
   induction' k with k ih
   · simp
-  · simp only [lcs_succ, lower_central_series_succ] at ih⊢
+  · simp only [lcs_succ, lowerCentralSeries_succ] at ih⊢
     have : N.lcs k ≤ N.incl.range := by
       rw [N.range_incl]
       apply lcs_le_self
@@ -136,7 +136,7 @@ theorem antitone_lowerCentralSeries : Antitone <| lowerCentralSeries R L M :=
   induction' k with k ih generalizing l <;> intro h
   · exact (le_zero_iff.mp h).symm ▸ le_rfl
   · rcases Nat.of_le_succ h with (hk | hk)
-    · rw [lower_central_series_succ]
+    · rw [lowerCentralSeries_succ]
       exact (LieSubmodule.mono_lie_right _ _ ⊤ (ih hk)).trans (LieSubmodule.lie_le_right _ _)
     · exact hk.symm ▸ le_rfl
 #align lie_module.antitone_lower_central_series LieModule.antitone_lowerCentralSeries
@@ -154,7 +154,7 @@ theorem iterate_toEndomorphism_mem_lowerCentralSeries (x : L) (m : M) (k : ℕ) 
   by
   induction' k with k ih
   · simp only [Function.iterate_zero]
-  · simp only [lower_central_series_succ, Function.comp_apply, Function.iterate_succ',
+  · simp only [lowerCentralSeries_succ, Function.comp_apply, Function.iterate_succ',
       to_endomorphism_apply_apply]
     exact LieSubmodule.lie_mem_lie _ _ (LieSubmodule.mem_top x) ih
 #align lie_module.iterate_to_endomorphism_mem_lower_central_series LieModule.iterate_toEndomorphism_mem_lowerCentralSeries
@@ -179,10 +179,10 @@ theorem derivedSeries_le_lowerCentralSeries (k : ℕ) :
     derivedSeries R L k ≤ lowerCentralSeries R L L k :=
   by
   induction' k with k h
-  · rw [derived_series_def, derived_series_of_ideal_zero, lower_central_series_zero]
+  · rw [derived_series_def, derived_series_of_ideal_zero, lowerCentralSeries_zero]
     exact le_rfl
   · have h' : derivedSeries R L k ≤ ⊤ := by simp only [le_top]
-    rw [derived_series_def, derived_series_of_ideal_succ, lower_central_series_succ]
+    rw [derived_series_def, derived_series_of_ideal_succ, lowerCentralSeries_succ]
     exact LieSubmodule.mono_lie _ _ _ _ h' h
 #align lie_module.derived_series_le_lower_central_series LieModule.derivedSeries_le_lowerCentralSeries
 
@@ -251,8 +251,8 @@ theorem nilpotentOfNilpotentQuotient {N : LieSubmodule R L M} (h₁ : N ≤ maxT
   by
   obtain ⟨k, hk⟩ := h₂
   use k + 1
-  simp only [lower_central_series_succ]
-  suffices lower_central_series R L M k ≤ N
+  simp only [lowerCentralSeries_succ]
+  suffices lowerCentralSeries R L M k ≤ N
     by
     replace this := LieSubmodule.mono_lie_right _ _ ⊤ (le_trans this h₁)
     rwa [ideal_oper_max_triv_submodule_eq_bot, le_bot_iff] at this
@@ -271,14 +271,14 @@ noncomputable def nilpotencyLength : ℕ :=
 theorem nilpotencyLength_eq_zero_iff [IsNilpotent R L M] :
     nilpotencyLength R L M = 0 ↔ Subsingleton M :=
   by
-  let s := { k | lower_central_series R L M k = ⊥ }
+  let s := { k | lowerCentralSeries R L M k = ⊥ }
   have hs : s.nonempty :=
     by
     obtain ⟨k, hk⟩ := (by infer_instance : IsNilpotent R L M)
     exact ⟨k, hk⟩
   change Inf s = 0 ↔ _
   rw [← LieSubmodule.subsingleton_iff R L M, ← subsingleton_iff_bot_eq_top, ←
-    lower_central_series_zero, @eq_comm (LieSubmodule R L M)]
+    lowerCentralSeries_zero, @eq_comm (LieSubmodule R L M)]
   refine' ⟨fun h => h ▸ Nat.sInf_mem hs, fun h => _⟩
   rw [Nat.sInf_eq_zero]
   exact Or.inl h
@@ -288,11 +288,11 @@ theorem nilpotencyLength_eq_succ_iff (k : ℕ) :
     nilpotencyLength R L M = k + 1 ↔
       lowerCentralSeries R L M (k + 1) = ⊥ ∧ lowerCentralSeries R L M k ≠ ⊥ :=
   by
-  let s := { k | lower_central_series R L M k = ⊥ }
+  let s := { k | lowerCentralSeries R L M k = ⊥ }
   change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s :=
     by
-    rintro k₁ k₂ h₁₂ (h₁ : lower_central_series R L M k₁ = ⊥)
+    rintro k₁ k₂ h₁₂ (h₁ : lowerCentralSeries R L M k₁ = ⊥)
     exact eq_bot_iff.mpr (h₁ ▸ antitone_lower_central_series R L M h₁₂)
   exact Nat.sInf_upward_closed_eq_succ_iff hs k
 #align lie_module.nilpotency_length_eq_succ_iff LieModule.nilpotencyLength_eq_succ_iff
@@ -315,7 +315,7 @@ theorem lowerCentralSeriesLast_le_max_triv :
   cases' h : nilpotency_length R L M with k
   · exact bot_le
   · rw [le_max_triv_iff_bracket_eq_bot]
-    rw [nilpotency_length_eq_succ_iff, lower_central_series_succ] at h
+    rw [nilpotency_length_eq_succ_iff, lowerCentralSeries_succ] at h
     exact h.1
 #align lie_module.lower_central_series_last_le_max_triv LieModule.lowerCentralSeriesLast_le_max_triv
 
@@ -343,8 +343,8 @@ theorem coe_lcs_range_toEndomorphism_eq (k : ℕ) :
   by
   induction' k with k ih
   · simp
-  · simp only [lower_central_series_succ, LieSubmodule.lieIdeal_oper_eq_linear_span', ←
-      (lower_central_series R (to_endomorphism R L M).range M k).mem_coe_submodule, ih]
+  · simp only [lowerCentralSeries_succ, LieSubmodule.lieIdeal_oper_eq_linear_span', ←
+      (lowerCentralSeries R (to_endomorphism R L M).range M k).mem_coe_submodule, ih]
     congr
     ext m
     constructor
@@ -471,8 +471,8 @@ theorem Function.Surjective.lieModule_lcs_map_eq (k : ℕ) :
   induction' k with k ih
   · simp [LinearMap.range_eq_top, hg]
   · suffices
-      g '' { m | ∃ (x : L)(n : _), n ∈ lower_central_series R L M k ∧ ⁅x, n⁆ = m } =
-        { m | ∃ (x : L₂)(n : _), n ∈ lower_central_series R L M k ∧ ⁅x, g n⁆ = m }
+      g '' { m | ∃ (x : L)(n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, n⁆ = m } =
+        { m | ∃ (x : L₂)(n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, g n⁆ = m }
       by
       simp only [← LieSubmodule.mem_coeSubmodule] at this
       simp [← LieSubmodule.mem_coeSubmodule, ← ih, LieSubmodule.lieIdeal_oper_eq_linear_span',
@@ -722,7 +722,7 @@ theorem coe_lcs_eq : (I.lcs M k : Submodule R M) = lowerCentralSeries R I M k :=
   by
   induction' k with k ih
   · simp
-  · simp_rw [lower_central_series_succ, lcs_succ, LieSubmodule.lieIdeal_oper_eq_linear_span', ←
+  · simp_rw [lowerCentralSeries_succ, lcs_succ, LieSubmodule.lieIdeal_oper_eq_linear_span', ←
       (I.lcs M k).mem_coe_submodule, ih, LieSubmodule.mem_coeSubmodule, LieSubmodule.mem_top,
       exists_true_left, (I : LieSubalgebra R L).coe_bracket_of_module]
     congr

@@ -77,12 +77,10 @@ instance : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => Box ι → M :=
 
 initialize_simps_projections box_integral.box_additive_map (toFun → apply)
 
-/- warning: box_integral.box_additive_map.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align box_integral.box_additive_map.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
+theorem toFun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
   rfl
-#align box_integral.box_additive_map.to_fun_eq_coe [anonymous]
+#align box_integral.box_additive_map.to_fun_eq_coe BoxIntegral.BoxAdditiveMap.toFun_eq_coe
 
 @[simp]
 theorem coe_mk (f h) : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=

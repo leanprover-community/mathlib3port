@@ -679,12 +679,10 @@ def toLinearMap (fₗ : M →+[R] M₂) : M →ₗ[R] M₂ :=
 instance : Coe (M →+[R] M₂) (M →ₗ[R] M₂) :=
   ⟨toLinearMap⟩
 
-/- warning: distrib_mul_action_hom.to_linear_map_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.to_linear_map_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : M →+[R] M₂) : f.toLinearMap = ↑f :=
+theorem toLinearMap_eq_coe (f : M →+[R] M₂) : f.toLinearMap = ↑f :=
   rfl
-#align distrib_mul_action_hom.to_linear_map_eq_coe [anonymous]
+#align distrib_mul_action_hom.to_linear_map_eq_coe DistribMulActionHom.toLinearMap_eq_coe
 
 @[simp, norm_cast]
 theorem coe_toLinearMap (f : M →+[R] M₂) : ((f : M →ₗ[R] M₂) : M → M₂) = f :=

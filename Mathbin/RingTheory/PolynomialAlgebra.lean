@@ -180,7 +180,6 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x :=
     simp only [AlgHom.map_add, inv_fun_add, hp, hq]
 #align poly_equiv_tensor.left_inv PolyEquivTensor.left_inv
 
-#print PolyEquivTensor.right_inv /-
 theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x :=
   by
   apply Polynomial.induction_on' x
@@ -191,7 +190,6 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x :=
         X_pow_eq_monomial, sum_monomial_index] <;>
       simp
 #align poly_equiv_tensor.right_inv PolyEquivTensor.right_inv
--/
 
 #print PolyEquivTensor.equiv /-
 /-- (Implementation detail)

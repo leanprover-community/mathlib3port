@@ -71,11 +71,11 @@ theorem Integrable.aEFinStronglyMeasurable (hf : Integrable f μ) : AEFinStrongl
   (memℒp_one_iff_integrable.mpr hf).AEFinStronglyMeasurable one_ne_zero ENNReal.coe_ne_top
 #align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aEFinStronglyMeasurable
 
-theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+theorem Lp.finStronglyMeasurable (f : Lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=
-  (lp.memℒp f).finStronglyMeasurable_of_stronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero
+  (Lp.memℒp f).finStronglyMeasurable_of_stronglyMeasurable (Lp.stronglyMeasurable f) hp_ne_zero
     hp_ne_top
-#align measure_theory.Lp.fin_strongly_measurable MeasureTheory.lp.finStronglyMeasurable
+#align measure_theory.Lp.fin_strongly_measurable MeasureTheory.Lp.finStronglyMeasurable
 
 end MeasureTheory
 

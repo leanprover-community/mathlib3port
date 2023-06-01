@@ -172,7 +172,7 @@ theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
         dsimp only
         rw [Complex.norm_eq_abs, Complex.abs_cpow_eq_rpow_re_of_pos hx.1]
       · exact measurableSet_uIoc
-    · refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_uIoc
+    · refine' ContinuousOn.aestronglyMeasurable _ measurableSet_uIoc
       refine' ContinuousAt.continuousOn fun x hx => _
       rw [uIoc_of_le hc] at hx
       refine' (continuousAt_cpow_const (Or.inl _)).comp complex.continuous_of_real.continuous_at

@@ -464,11 +464,9 @@ def toContinuousMap (e : α ≃ₜ β) : C(α, β) :=
 instance : Coe (α ≃ₜ β) C(α, β) :=
   ⟨Homeomorph.toContinuousMap⟩
 
-/- warning: homeomorph.to_continuous_map_as_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align homeomorph.to_continuous_map_as_coe [anonymous]ₓ'. -/
-theorem [anonymous] : f.toContinuousMap = f :=
+theorem toContinuousMap_as_coe : f.toContinuousMap = f :=
   rfl
-#align homeomorph.to_continuous_map_as_coe [anonymous]
+#align homeomorph.to_continuous_map_as_coe Homeomorph.toContinuousMap_as_coe
 
 #print Homeomorph.coe_refl /-
 @[simp]

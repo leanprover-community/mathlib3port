@@ -380,7 +380,7 @@ theorem mellin_has_deriv_of_isBigO_rpow [CompleteSpace E] [NormedSpace ℂ E] {a
   have h1 : ∀ᶠ z : ℂ in 𝓝 s, ae_strongly_measurable (F z) (volume.restrict <| Ioi 0) :=
     by
     refine' eventually_of_forall fun z => ae_strongly_measurable.smul _ hfc.ae_strongly_measurable
-    refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_Ioi
+    refine' ContinuousOn.aestronglyMeasurable _ measurableSet_Ioi
     refine' ContinuousAt.continuousOn fun t ht => _
     exact continuous_at_of_real_cpow_const _ _ (Or.inr <| ne_of_gt ht)
   have h2 : integrable_on (F s) (Ioi 0) :=

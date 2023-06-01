@@ -508,12 +508,10 @@ theorem map_mono {S₁ S₂ : Subalgebra R A} {f : A →ₐ[R] B} : S₁ ≤ S�
   Set.image_subset f
 #align subalgebra.map_mono Subalgebra.map_mono
 
-#print Subalgebra.map_injective /-
 theorem map_injective {f : A →ₐ[R] B} (hf : Function.Injective f) : Function.Injective (map f) :=
   fun S₁ S₂ ih =>
   ext <| Set.ext_iff.1 <| Set.image_injective.2 hf <| Set.ext <| SetLike.ext_iff.mp ih
 #align subalgebra.map_injective Subalgebra.map_injective
--/
 
 #print Subalgebra.map_id /-
 @[simp]
@@ -743,7 +741,6 @@ variable {R : Type u} {A : Type v} {B : Type w}
 
 variable [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
 
-#print AlgEquiv.ofLeftInverse /-
 /-- Restrict an algebra homomorphism with a left inverse to an algebra isomorphism to its range.
 
 This is a computable alternative to `alg_equiv.of_injective`. -/
@@ -757,38 +754,29 @@ def ofLeftInverse {g : B → A} {f : A →ₐ[R] B} (h : Function.LeftInverse g 
         let ⟨x', hx'⟩ := f.mem_range.mp x.Prop
         show f (g x) = x by rw [← hx', h x'] }
 #align alg_equiv.of_left_inverse AlgEquiv.ofLeftInverse
--/
 
-#print AlgEquiv.ofLeftInverse_apply /-
 @[simp]
 theorem ofLeftInverse_apply {g : B → A} {f : A →ₐ[R] B} (h : Function.LeftInverse g f) (x : A) :
     ↑(ofLeftInverse h x) = f x :=
   rfl
 #align alg_equiv.of_left_inverse_apply AlgEquiv.ofLeftInverse_apply
--/
 
-#print AlgEquiv.ofLeftInverse_symm_apply /-
 @[simp]
 theorem ofLeftInverse_symm_apply {g : B → A} {f : A →ₐ[R] B} (h : Function.LeftInverse g f)
     (x : f.range) : (ofLeftInverse h).symm x = g x :=
   rfl
 #align alg_equiv.of_left_inverse_symm_apply AlgEquiv.ofLeftInverse_symm_apply
--/
 
-#print AlgEquiv.ofInjective /-
 /-- Restrict an injective algebra homomorphism to an algebra isomorphism -/
 noncomputable def ofInjective (f : A →ₐ[R] B) (hf : Function.Injective f) : A ≃ₐ[R] f.range :=
   ofLeftInverse (Classical.choose_spec hf.HasLeftInverse)
 #align alg_equiv.of_injective AlgEquiv.ofInjective
--/
 
-#print AlgEquiv.ofInjective_apply /-
 @[simp]
 theorem ofInjective_apply (f : A →ₐ[R] B) (hf : Function.Injective f) (x : A) :
     ↑(ofInjective f hf x) = f x :=
   rfl
 #align alg_equiv.of_injective_apply AlgEquiv.ofInjective_apply
--/
 
 /-- Restrict an algebra homomorphism between fields to an algebra isomorphism -/
 noncomputable def ofInjectiveField {E F : Type _} [DivisionRing E] [Semiring F] [Nontrivial F]

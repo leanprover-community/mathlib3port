@@ -317,9 +317,9 @@ def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F'
 -/
 
 @[simp]
-theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
+theorem coe_toContinuousLinearMap' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
   rfl
-#align linear_map.coe_to_continuous_linear_map' LinearMap.coe_to_continuous_linear_map'
+#align linear_map.coe_to_continuous_linear_map' LinearMap.coe_toContinuousLinearMap'
 
 @[simp]
 theorem coe_toContinuousLinearMap (f : E →ₗ[𝕜] F') : (f.toContinuousLinearMap : E →ₗ[𝕜] F') = f :=
@@ -394,9 +394,9 @@ theorem coe_toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLine
 -/
 
 @[simp]
-theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
+theorem coe_toContinuousLinearEquiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
   rfl
-#align linear_equiv.coe_to_continuous_linear_equiv' LinearEquiv.coe_to_continuous_linear_equiv'
+#align linear_equiv.coe_to_continuous_linear_equiv' LinearEquiv.coe_toContinuousLinearEquiv'
 
 #print LinearEquiv.coe_toContinuousLinearEquiv_symm /-
 @[simp]

@@ -188,12 +188,10 @@ directly. -/
 instance : CoeFun (TopHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: top_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align top_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {f : TopHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : TopHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align top_hom.to_fun_eq_coe [anonymous]
+#align top_hom.to_fun_eq_coe TopHom.toFun_eq_coe
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections TopHom (toFun → apply)
@@ -391,12 +389,10 @@ directly. -/
 instance : CoeFun (BotHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: bot_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align bot_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {f : BotHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : BotHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align bot_hom.to_fun_eq_coe [anonymous]
+#align bot_hom.to_fun_eq_coe BotHom.toFun_eq_coe
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections BotHom (toFun → apply)
@@ -603,12 +599,10 @@ directly. -/
 instance : CoeFun (BoundedOrderHom α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
-/- warning: bounded_order_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align bounded_order_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
+theorem toFun_eq_coe {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align bounded_order_hom.to_fun_eq_coe [anonymous]
+#align bounded_order_hom.to_fun_eq_coe BoundedOrderHom.toFun_eq_coe
 
 @[ext]
 theorem ext {f g : BoundedOrderHom α β} (h : ∀ a, f a = g a) : f = g :=

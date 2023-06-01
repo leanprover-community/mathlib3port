@@ -227,7 +227,7 @@ variable {G}
 theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
   ⟨n, npos,
     Subtype.ext <| by
-      rw [mul_left_iterate, _root_.mul_one, [anonymous], Subtype.coe_mk, Submonoid.coe_one,
+      rw [mul_left_iterate, _root_.mul_one, Submonoid.coe_pow, Subtype.coe_mk, Submonoid.coe_one,
         (isPeriodicPt_mul_iff_pow_eq_one _).mp hn]⟩
 #align comm_monoid.torsion.is_torsion CommMonoid.torsion.isTorsion
 #align add_comm_monoid.add_torsion.is_torsion AddCommMonoid.addTorsion.isTorsion

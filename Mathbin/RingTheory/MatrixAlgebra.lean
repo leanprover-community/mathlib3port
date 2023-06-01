@@ -85,13 +85,11 @@ def toFunAlgHom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
         Algebra.algebraMap_eq_smul_one])
 #align matrix_equiv_tensor.to_fun_alg_hom MatrixEquivTensor.toFunAlgHom
 
-#print MatrixEquivTensor.toFunAlgHom_apply /-
 @[simp]
 theorem toFunAlgHom_apply (a : A) (m : Matrix n n R) :
     toFunAlgHom R A n (a ⊗ₜ m) = a • m.map (algebraMap R A) := by
   simp [to_fun_alg_hom, alg_hom_of_linear_map_tensor_product, to_fun_linear]
 #align matrix_equiv_tensor.to_fun_alg_hom_apply MatrixEquivTensor.toFunAlgHom_apply
--/
 
 #print MatrixEquivTensor.invFun /-
 /-- (Implementation detail.)
@@ -128,7 +126,6 @@ theorem invFun_algebraMap (M : Matrix n n R) : invFun R A n (M.map (algebraMap R
   convert Finset.sum_product; simp
 #align matrix_equiv_tensor.inv_fun_algebra_map MatrixEquivTensor.invFun_algebraMap
 
-#print MatrixEquivTensor.right_inv /-
 theorem right_inv (M : Matrix n n A) : (toFunAlgHom R A n) (invFun R A n M) = M :=
   by
   simp only [inv_fun, AlgHom.map_sum, std_basis_matrix, apply_ite ⇑(algebraMap R A), smul_eq_mul,
@@ -136,9 +133,7 @@ theorem right_inv (M : Matrix n n A) : (toFunAlgHom R A n) (invFun R A n M) = M 
     Pi.smul_def]
   convert Finset.sum_product; apply matrix_eq_sum_std_basis
 #align matrix_equiv_tensor.right_inv MatrixEquivTensor.right_inv
--/
 
-#print MatrixEquivTensor.left_inv /-
 theorem left_inv (M : A ⊗[R] Matrix n n R) : invFun R A n (toFunAlgHom R A n M) = M :=
   by
   induction' M using TensorProduct.induction_on with a m x y hx hy
@@ -146,7 +141,6 @@ theorem left_inv (M : A ⊗[R] Matrix n n R) : invFun R A n (toFunAlgHom R A n M
   · simp
   · simp [AlgHom.map_sum, hx, hy]
 #align matrix_equiv_tensor.left_inv MatrixEquivTensor.left_inv
--/
 
 #print MatrixEquivTensor.equiv /-
 /-- (Implementation detail)

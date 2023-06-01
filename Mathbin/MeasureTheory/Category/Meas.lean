@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.category.Meas
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Category.Top.Basic
 
 /-!
 # The category of measurable spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Measurable spaces and measurable functions form a (concrete) category `Meas`.
 
@@ -40,38 +43,47 @@ open scoped ENNReal
 
 universe u v
 
+#print MeasCat /-
 /-- The category of measurable spaces and measurable functions. -/
-def Meas : Type (u + 1) :=
+def MeasCat : Type (u + 1) :=
   Bundled MeasurableSpace
-#align Meas Meas
+#align Meas MeasCat
+-/
 
-namespace Meas
+namespace MeasCat
 
-instance : CoeSort Meas (Type _) :=
+instance : CoeSort MeasCat (Type _) :=
   Bundled.hasCoeToSort
 
-instance (X : Meas) : MeasurableSpace X :=
+instance (X : MeasCat) : MeasurableSpace X :=
   X.str
 
+#print MeasCat.of /-
 /-- Construct a bundled `Meas` from the underlying type and the typeclass. -/
-def of (α : Type u) [MeasurableSpace α] : Meas :=
+def of (α : Type u) [MeasurableSpace α] : MeasCat :=
   ⟨α⟩
-#align Meas.of Meas.of
+#align Meas.of MeasCat.of
+-/
 
+#print MeasCat.coe_of /-
 @[simp]
 theorem coe_of (X : Type u) [MeasurableSpace X] : (of X : Type u) = X :=
   rfl
-#align Meas.coe_of Meas.coe_of
+#align Meas.coe_of MeasCat.coe_of
+-/
 
+#print MeasCat.unbundledHom /-
 instance unbundledHom : UnbundledHom @Measurable :=
   ⟨@measurable_id, @Measurable.comp⟩
-#align Meas.unbundled_hom Meas.unbundledHom
+#align Meas.unbundled_hom MeasCat.unbundledHom
+-/
 
-deriving instance LargeCategory, ConcreteCategory for Meas
+deriving instance LargeCategory, ConcreteCategory for MeasCat
 
-instance : Inhabited Meas :=
-  ⟨Meas.of Empty⟩
+instance : Inhabited MeasCat :=
+  ⟨MeasCat.of Empty⟩
 
+#print MeasCat.Measure /-
 /-- `Measure X` is the measurable space of measures over the measurable space `X`. It is the
 weakest measurable space, s.t. λμ, μ s is measurable for all measurable sets `s` in `X`. An
 important purpose is to assign a monadic structure on it, the Giry monad. In the Giry monad,
@@ -81,18 +93,21 @@ the pure values are the Dirac measure, and the bind operation maps to the integr
 In probability theory, the `Meas`-morphisms `X → Prob X` are (sub-)Markov kernels (here `Prob` is
 the restriction of `Measure` to (sub-)probability space.)
 -/
-def measure : Meas ⥤ Meas where
+def Measure : MeasCat ⥤ MeasCat
+    where
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurable_map f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
   map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ =>
     Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
-#align Meas.Measure Meas.measure
+#align Meas.Measure MeasCat.Measure
+-/
 
+#print MeasCat.Giry /-
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
-def giry : CategoryTheory.Monad Meas
+def Giry : CategoryTheory.Monad MeasCat
     where
-  toFunctor := measure
+  toFunctor := Measure
   η' :=
     { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurable_dirac⟩
       naturality' := fun X Y ⟨f, hf⟩ =>
@@ -103,12 +118,14 @@ def giry : CategoryTheory.Monad Meas
   assoc' α := Subtype.eq <| funext fun μ => @Measure.join_map_join _ _ _
   left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
   right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
-#align Meas.Giry Meas.giry
+#align Meas.Giry MeasCat.Giry
+-/
 
+#print MeasCat.Integral /-
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
-def integral : giry.Algebra where
-  A := Meas.of ℝ≥0∞
+def Integral : Giry.Algebra where
+  A := MeasCat.of ℝ≥0∞
   a := ⟨fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurable_lintegral measurable_id⟩
   unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurable_id
   assoc' :=
@@ -117,19 +134,22 @@ def integral : giry.Algebra where
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             apply_rules [measurable_id, measure.measurable_lintegral]
-#align Meas.Integral Meas.integral
+#align Meas.Integral MeasCat.Integral
+-/
 
-end Meas
+end MeasCat
 
-instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} Meas.{u} :=
+#print TopCat.hasForgetToMeasCat /-
+instance TopCat.hasForgetToMeasCat : HasForget₂ TopCat.{u} MeasCat.{u} :=
   BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borel_measurable⟩) (by intros <;> rfl)
-#align Top.has_forget_to_Meas TopCat.hasForgetToMeas
+#align Top.has_forget_to_Meas TopCat.hasForgetToMeasCat
+-/
 
-/- warning: Borel clashes with borel -> borel
-Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/
+#print Borel /-
 /-- The Borel functor, the canonical embedding of topological spaces into measurable spaces. -/
 @[reducible]
-def borel : TopCat.{u} ⥤ Meas.{u} :=
-  forget₂ TopCat.{u} Meas.{u}
-#align Borel borel
+def Borel : TopCat.{u} ⥤ MeasCat.{u} :=
+  forget₂ TopCat.{u} MeasCat.{u}
+#align Borel Borel
+-/
 

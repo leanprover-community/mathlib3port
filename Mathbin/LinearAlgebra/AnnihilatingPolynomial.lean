@@ -143,11 +143,9 @@ theorem of the minimal polynomial.
 This is the first condition: it must annihilate the original element `a : A`. -/
 
 
-#print Polynomial.annIdealGenerator_aeval_eq_zero /-
 theorem annIdealGenerator_aeval_eq_zero (a : A) : aeval a (annIdealGenerator 𝕜 a) = 0 :=
   mem_annIdeal_iff_aeval_eq_zero.mp (annIdealGenerator_mem 𝕜 a)
 #align polynomial.ann_ideal_generator_aeval_eq_zero Polynomial.annIdealGenerator_aeval_eq_zero
--/
 
 variable {𝕜}
 

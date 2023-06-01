@@ -264,9 +264,9 @@ theorem coe_equivToUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(equiv_to_unit_hom
 #align mul_char.coe_equiv_to_unit_hom MulChar.coe_equivToUnitHom
 
 @[simp]
-theorem equiv_unit_hom_symm_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : equiv_to_unit_hom.symm f ↑a = f a :=
+theorem equivToUnitHom_symm_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : equiv_to_unit_hom.symm f ↑a = f a :=
   of_unit_hom_coe f a
-#align mul_char.equiv_unit_hom_symm_coe MulChar.equiv_unit_hom_symm_coe
+#align mul_char.equiv_unit_hom_symm_coe MulChar.equivToUnitHom_symm_coe
 
 /-!
 ### Commutative group structure on multiplicative characters

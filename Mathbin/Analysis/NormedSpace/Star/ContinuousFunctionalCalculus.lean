@@ -149,9 +149,9 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
   set u : Units (elementalStarAlgebra ℂ a) :=
     Units.map (algebraMap ℂ (elementalStarAlgebra ℂ a)).toMonoidHom (Units.mk0 _ h₁)
   refine' ⟨u.unit_of_nearby _ _, rfl⟩
-  simp only [Complex.abs_ofReal, map_inv₀, Units.coe_map, Units.val_inv_eq_inv_val, [anonymous],
-    RingHom.toMonoidHom_eq_coe, Units.val_mk0, Units.coe_map_inv, norm_algebraMap', inv_inv,
-    Complex.norm_eq_abs, abs_norm, Subtype.val_eq_coe, coe_coe]
+  simp only [Complex.abs_ofReal, map_inv₀, Units.coe_map, Units.val_inv_eq_inv_val,
+    RingHom.coe_monoidHom, RingHom.toMonoidHom_eq_coe, Units.val_mk0, Units.coe_map_inv,
+    norm_algebraMap', inv_inv, Complex.norm_eq_abs, abs_norm, Subtype.val_eq_coe, coe_coe]
   /- Since `a` is invertible, by `spectrum_star_mul_self_of_is_star_normal`, the spectrum (in `A`)
     of `star a * a` is contained in the half-open interval `(0, ‖star a * a‖]`. Therefore, by basic
     spectral mapping properties, the spectrum of `‖star a * a‖ • 1 - star a * a` is contained in

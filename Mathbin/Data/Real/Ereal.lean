@@ -373,19 +373,15 @@ theorem coe_nsmul (n : ℕ) (x : ℝ) : (↑(n • x) : EReal) = n • x :=
   map_nsmul (⟨coe, coe_zero, coe_add⟩ : ℝ →+ EReal) _ _
 #align ereal.coe_nsmul EReal.coe_nsmul
 
-/- warning: ereal.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ereal.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ) : (↑(bit0 x) : EReal) = bit0 x :=
+theorem coe_bit0 (x : ℝ) : (↑(bit0 x) : EReal) = bit0 x :=
   rfl
-#align ereal.coe_bit0 [anonymous]
+#align ereal.coe_bit0 EReal.coe_bit0
 
-/- warning: ereal.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ereal.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ) : (↑(bit1 x) : EReal) = bit1 x :=
+theorem coe_bit1 (x : ℝ) : (↑(bit1 x) : EReal) = bit1 x :=
   rfl
-#align ereal.coe_bit1 [anonymous]
+#align ereal.coe_bit1 EReal.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_eq_zero {x : ℝ} : (x : EReal) = 0 ↔ x = 0 :=
@@ -634,19 +630,15 @@ theorem coe_ennreal_nsmul (n : ℕ) (x : ℝ≥0∞) : (↑(n • x) : EReal) = 
   map_nsmul (⟨coe, coe_ennreal_zero, coe_ennreal_add⟩ : ℝ≥0∞ →+ EReal) _ _
 #align ereal.coe_ennreal_nsmul EReal.coe_ennreal_nsmul
 
-/- warning: ereal.coe_ennreal_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ≥0∞) : (↑(bit0 x) : EReal) = bit0 x :=
+theorem coe_eNNReal_bit0 (x : ℝ≥0∞) : (↑(bit0 x) : EReal) = bit0 x :=
   coe_ennreal_add _ _
-#align ereal.coe_ennreal_bit0 [anonymous]
+#align ereal.coe_ennreal_bit0 EReal.coe_eNNReal_bit0
 
-/- warning: ereal.coe_ennreal_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ereal.coe_ennreal_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ≥0∞) : (↑(bit1 x) : EReal) = bit1 x := by
+theorem coe_eNNReal_bit1 (x : ℝ≥0∞) : (↑(bit1 x) : EReal) = bit1 x := by
   simp_rw [bit1, coe_ennreal_add, coe_ennreal_bit0, coe_ennreal_one]
-#align ereal.coe_ennreal_bit1 [anonymous]
+#align ereal.coe_ennreal_bit1 EReal.coe_eNNReal_bit1
 
 /-! ### Order -/
 

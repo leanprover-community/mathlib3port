@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module number_theory.von_mangoldt
-! leanprover-community/mathlib commit c946d6097a6925ad16d7ec55677bbc977f9846de
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # The von Mangoldt Function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the von Mangoldt function: the function on natural numbers that returns
 `log p` if the input can be expressed as `p^k` for a prime `p`.
@@ -88,9 +91,11 @@ theorem vonMangoldt_nonneg {n : ℕ} : 0 ≤ Λ n :=
   rfl
 #align nat.arithmetic_function.von_mangoldt_nonneg Nat.ArithmeticFunction.vonMangoldt_nonneg
 
+#print Nat.ArithmeticFunction.vonMangoldt_apply_pow /-
 theorem vonMangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n := by
   simp only [von_mangoldt_apply, isPrimePow_pow_iff hk, pow_min_fac hk]
 #align nat.arithmetic_function.von_mangoldt_apply_pow Nat.ArithmeticFunction.vonMangoldt_apply_pow
+-/
 
 theorem vonMangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p := by
   rw [von_mangoldt_apply, prime.min_fac_eq hp, if_pos hp.prime.is_prime_pow]

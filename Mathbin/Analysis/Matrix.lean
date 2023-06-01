@@ -525,7 +525,7 @@ theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α
   by
   refine' (frobenius_nnnorm_diagonal _).trans _
   simp_rw [PiLp.nnnorm_equiv_symm_const ENNReal.two_ne_top, NNReal.sqrt_eq_rpow]
-  simp only [ENNReal.toReal_div, ENNReal.one_toReal, [anonymous]]
+  simp only [ENNReal.toReal_div, ENNReal.one_toReal, ENNReal.toReal_bit0]
 #align matrix.frobenius_nnnorm_one Matrix.frobenius_nnnorm_one
 
 section IsROrC

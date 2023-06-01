@@ -260,14 +260,14 @@ variable {K : Set X} {a b : X}
 /-- A continuous function `f` is locally integrable with respect to any locally finite measure. -/
 theorem Continuous.locallyIntegrable [SecondCountableTopologyEither X E] (hf : Continuous f) :
     LocallyIntegrable f μ :=
-  hf.integrable_at_nhds
+  hf.integrableAt_nhds
 #align continuous.locally_integrable Continuous.locallyIntegrable
 
 /-- A function `f` continuous on a set `K` is locally integrable on this set with respect
 to any locally finite measure. -/
 theorem ContinuousOn.locallyIntegrableOn [SecondCountableTopologyEither X E] (hf : ContinuousOn f K)
     (hK : MeasurableSet K) : LocallyIntegrableOn f K μ := fun x hx =>
-  hf.integrable_at_nhdsWithin hK hx
+  hf.integrableAt_nhdsWithin hK hx
 #align continuous_on.locally_integrable_on ContinuousOn.locallyIntegrableOn
 
 variable [MetrizableSpace X]

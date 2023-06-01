@@ -3657,13 +3657,11 @@ theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t�
     · intro x; simp; intro hx hx₂; refine' ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
 #align finset.subset_union_elim Finset.subset_union_elim
 
-/- warning: finset.filter_congr_decidable clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align finset.filter_congr_decidable [anonymous]ₓ'. -/
 -- We can simplify an application of filter where the decidability is inferred in "the wrong way"
 @[simp]
-theorem [anonymous] {α} (s : Finset α) (p : α → Prop) (h : DecidablePred p) [DecidablePred p] :
-    @filter α p h s = s.filterₓ p := by congr
-#align finset.filter_congr_decidable [anonymous]
+theorem filter_congr_decidable {α} (s : Finset α) (p : α → Prop) (h : DecidablePred p)
+    [DecidablePred p] : @filter α p h s = s.filterₓ p := by congr
+#align finset.filter_congr_decidable Finset.filter_congr_decidable
 
 section Classical
 

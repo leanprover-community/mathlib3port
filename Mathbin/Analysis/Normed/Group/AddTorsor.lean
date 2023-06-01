@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
+! leanprover-community/mathlib commit 837f72de63ad6cd96519cde5f1ffd5ed8d280ad0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,6 +93,10 @@ theorem dist_eq_norm_vsub (x y : P) : dist x y = ‖x -ᵥ y‖ :=
 #align dist_eq_norm_vsub dist_eq_norm_vsub
 -/
 
+theorem nndist_eq_nnnorm_vsub (x y : P) : nndist x y = ‖x -ᵥ y‖₊ :=
+  NNReal.eq <| dist_eq_norm_vsub V x y
+#align nndist_eq_nnnorm_vsub nndist_eq_nnnorm_vsub
+
 #print dist_eq_norm_vsub' /-
 /-- The distance equals the norm of subtracting two points. In this
 lemma, it is necessary to have `V` as an explicit argument; otherwise
@@ -101,6 +105,10 @@ theorem dist_eq_norm_vsub' (x y : P) : dist x y = ‖y -ᵥ x‖ :=
   (dist_comm _ _).trans (dist_eq_norm_vsub _ _ _)
 #align dist_eq_norm_vsub' dist_eq_norm_vsub'
 -/
+
+theorem nndist_eq_nnnorm_vsub' (x y : P) : nndist x y = ‖y -ᵥ x‖₊ :=
+  NNReal.eq <| dist_eq_norm_vsub' V x y
+#align nndist_eq_nnnorm_vsub' nndist_eq_nnnorm_vsub'
 
 end
 
@@ -117,17 +125,32 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
 #align dist_vadd_cancel_right dist_vadd_cancel_right
 -/
 
+@[simp]
+theorem nndist_vadd_cancel_right (v₁ v₂ : V) (x : P) : nndist (v₁ +ᵥ x) (v₂ +ᵥ x) = nndist v₁ v₂ :=
+  NNReal.eq <| dist_vadd_cancel_right _ _ _
+#align nndist_vadd_cancel_right nndist_vadd_cancel_right
+
 #print dist_vadd_left /-
 @[simp]
 theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ‖v‖ := by simp [dist_eq_norm_vsub V _ x]
 #align dist_vadd_left dist_vadd_left
 -/
 
+@[simp]
+theorem nndist_vadd_left (v : V) (x : P) : nndist (v +ᵥ x) x = ‖v‖₊ :=
+  NNReal.eq <| dist_vadd_left _ _
+#align nndist_vadd_left nndist_vadd_left
+
 #print dist_vadd_right /-
 @[simp]
 theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [dist_comm, dist_vadd_left]
 #align dist_vadd_right dist_vadd_right
 -/
+
+@[simp]
+theorem nndist_vadd_right (v : V) (x : P) : nndist x (v +ᵥ x) = ‖v‖₊ :=
+  NNReal.eq <| dist_vadd_right _ _
+#align nndist_vadd_right nndist_vadd_right
 
 #print IsometryEquiv.vaddConst /-
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
@@ -161,10 +184,20 @@ theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x
   (IsometryEquiv.vaddConst z).symm.dist_eq x y
 #align dist_vsub_cancel_right dist_vsub_cancel_right
 
+@[simp]
+theorem nndist_vsub_cancel_right (x y z : P) : nndist (x -ᵥ z) (y -ᵥ z) = nndist x y :=
+  NNReal.eq <| dist_vsub_cancel_right _ _ _
+#align nndist_vsub_cancel_right nndist_vsub_cancel_right
+
 theorem dist_vadd_vadd_le (v v' : V) (p p' : P) :
     dist (v +ᵥ p) (v' +ᵥ p') ≤ dist v v' + dist p p' := by
   simpa using dist_triangle (v +ᵥ p) (v' +ᵥ p) (v' +ᵥ p')
 #align dist_vadd_vadd_le dist_vadd_vadd_le
+
+theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) :
+    nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' :=
+  dist_vadd_vadd_le _ _ _ _
+#align nndist_vadd_vadd_le nndist_vadd_vadd_le
 
 theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
     dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ :=
@@ -172,11 +205,6 @@ theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
   rw [dist_eq_norm, vsub_sub_vsub_comm, dist_eq_norm_vsub V, dist_eq_norm_vsub V]
   exact norm_sub_le _ _
 #align dist_vsub_vsub_le dist_vsub_vsub_le
-
-theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) :
-    nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
-  simp only [← NNReal.coe_le_coe, NNReal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
-#align nndist_vadd_vadd_le nndist_vadd_vadd_le
 
 theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
     nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by

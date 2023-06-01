@@ -1633,12 +1633,14 @@ instance [Countable ι] [∀ i, TopologicalSpace (π i)] [∀ i, SigmaCompactSpa
       refine' ⟨max k n, k, le_max_left _ _, mem_image_of_mem _ _⟩
       exact compactCovering_subset _ (le_max_right _ _) hn
 
+#print ClosedEmbedding.sigmaCompactSpace /-
 protected theorem ClosedEmbedding.sigmaCompactSpace {e : β → α} (he : ClosedEmbedding e) :
     SigmaCompactSpace β :=
   ⟨⟨fun n => e ⁻¹' compactCovering α n, fun n =>
       he.isCompact_preimage (isCompact_compactCovering _ _), by
       rw [← preimage_Union, iUnion_compactCovering, preimage_univ]⟩⟩
 #align closed_embedding.sigma_compact_space ClosedEmbedding.sigmaCompactSpace
+-/
 
 instance [SigmaCompactSpace β] : SigmaCompactSpace (ULift.{u} β) :=
   ULift.closedEmbedding_down.SigmaCompactSpace

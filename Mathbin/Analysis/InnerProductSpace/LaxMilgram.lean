@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Topology.MetricSpace.Antilipschitz
 
 /-!
 # The Lax-Milgram Theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We consider an Hilbert space `V` over `ℝ`
 equipped with a bounded bilinear form `B : V →L[ℝ] V →L[ℝ] ℝ`.

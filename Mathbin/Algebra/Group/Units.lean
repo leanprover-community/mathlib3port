@@ -99,25 +99,23 @@ instance : Coe αˣ α :=
 instance : Inv αˣ :=
   ⟨fun u => ⟨u.2, u.1, u.4, u.3⟩⟩
 
-/- warning: units.simps.coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align units.simps.coe [anonymous]ₓ'. -/
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
-def [anonymous] (u : αˣ) : α :=
+def Simps.coe (u : αˣ) : α :=
   u
-#align units.simps.coe [anonymous]
+#align units.simps.coe Units.Simps.coe
+#align add_units.simps.coe AddUnits.Simps.coe
 
-/- warning: units.simps.coe_inv clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align units.simps.coe_inv [anonymous]ₓ'. -/
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
-def [anonymous] (u : αˣ) : α :=
+def Simps.coeInv (u : αˣ) : α :=
   ↑u⁻¹
-#align units.simps.coe_inv [anonymous]
+#align units.simps.coe_inv Units.Simps.coeInv
+#align add_units.simps.coe_neg AddUnits.Simps.coeNeg
 
-initialize_simps_projections Units (val → coe, as_prefix coe, inv → coe_inv, as_prefix coe_inv)
+initialize_simps_projections Units (val → coe, as_prefix coe, inv → coeInv, as_prefix coeInv)
 
-initialize_simps_projections AddUnits (val → coe, as_prefix coe, neg → coe_neg, as_prefix coe_neg)
+initialize_simps_projections AddUnits (val → coe, as_prefix coe, neg → coeNeg, as_prefix coeNeg)
 
 @[simp, to_additive]
 theorem val_mk (a : α) (b h₁ h₂) : ↑(Units.mk a b h₁ h₂) = a :=
@@ -238,12 +236,11 @@ theorem inv_mk (x y : α) (h₁ h₂) : (mk x y h₁ h₂)⁻¹ = mk y x h₂ h�
 #align units.inv_mk Units.inv_mk
 #align add_units.neg_mk AddUnits.neg_mk
 
-/- warning: units.val_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align units.val_eq_coe [anonymous]ₓ'. -/
 @[simp, to_additive]
-theorem [anonymous] : a.val = (↑a : α) :=
+theorem val_eq_coe : a.val = (↑a : α) :=
   rfl
-#align units.val_eq_coe [anonymous]
+#align units.val_eq_coe Units.val_eq_coe
+#align add_units.val_eq_coe AddUnits.val_eq_coe
 
 #print Units.inv_eq_val_inv /-
 @[simp, to_additive]

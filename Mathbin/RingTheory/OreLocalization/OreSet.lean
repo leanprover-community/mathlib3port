@@ -80,7 +80,7 @@ instance oreSetBot : OreSet (⊥ : Submonoid R)
       rcases s with ⟨s, hs⟩
       rw [Submonoid.mem_bot] at hs
       subst hs
-      rw [[anonymous], one_mul, one_mul] at h
+      rw [SetLike.coe_mk, one_mul, one_mul] at h
       subst h⟩
   oreNum r _ := r
   oreDenom _ s := s

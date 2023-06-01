@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.forget
-! leanprover-community/mathlib commit 85d6221d32c37e68f05b2e42cde6cee658dae5e9
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts
 
 /-!
 # Checking the sheaf condition on the underlying presheaf of types.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),

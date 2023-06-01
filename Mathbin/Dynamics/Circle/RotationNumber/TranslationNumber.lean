@@ -180,15 +180,13 @@ theorem map_add_one : ∀ x, f (x + 1) = f x + 1 :=
 theorem map_one_add (x : ℝ) : f (1 + x) = 1 + f x := by rw [add_comm, map_add_one, add_comm]
 #align circle_deg1_lift.map_one_add CircleDeg1Lift.map_one_add
 
-/- warning: circle_deg1_lift.coe_inj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.coe_inj [anonymous]ₓ'. -/
-theorem [anonymous] : ∀ ⦃f g : CircleDeg1Lift⦄, (f : ℝ → ℝ) = g → f = g :=
+theorem coe_inj : ∀ ⦃f g : CircleDeg1Lift⦄, (f : ℝ → ℝ) = g → f = g :=
   fun ⟨f, fm, fd⟩ ⟨g, gm, gd⟩ h => by congr <;> exact h
-#align circle_deg1_lift.coe_inj [anonymous]
+#align circle_deg1_lift.coe_inj CircleDeg1Lift.coe_inj
 
 @[ext]
 theorem ext ⦃f g : CircleDeg1Lift⦄ (h : ∀ x, f x = g x) : f = g :=
-  [anonymous] <| funext h
+  coe_inj <| funext h
 #align circle_deg1_lift.ext CircleDeg1Lift.ext
 
 theorem ext_iff {f g : CircleDeg1Lift} : f = g ↔ ∀ x, f x = g x :=
@@ -202,9 +200,9 @@ instance : Monoid CircleDeg1Lift
       monotone' := f.Monotone.comp g.Monotone
       map_add_one' := fun x => by simp [map_add_one] }
   one := ⟨id, monotone_id, fun _ => rfl⟩
-  mul_one f := [anonymous] <| Function.comp.right_id f
-  one_mul f := [anonymous] <| Function.comp.left_id f
-  mul_assoc f₁ f₂ f₃ := [anonymous] rfl
+  mul_one f := coe_inj <| Function.comp.right_id f
+  one_mul f := coe_inj <| Function.comp.left_id f
+  mul_assoc f₁ f₂ f₃ := coe_inj rfl
 
 instance : Inhabited CircleDeg1Lift :=
   ⟨1⟩
@@ -227,12 +225,10 @@ instance unitsHasCoeToFun : CoeFun CircleDeg1Liftˣ fun _ => ℝ → ℝ :=
   ⟨fun f => ⇑(f : CircleDeg1Lift)⟩
 #align circle_deg1_lift.units_has_coe_to_fun CircleDeg1Lift.unitsHasCoeToFun
 
-/- warning: circle_deg1_lift.units_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align circle_deg1_lift.units_coe [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (f : CircleDeg1Liftˣ) : ⇑(f : CircleDeg1Lift) = f :=
+theorem units_coe (f : CircleDeg1Liftˣ) : ⇑(f : CircleDeg1Lift) = f :=
   rfl
-#align circle_deg1_lift.units_coe [anonymous]
+#align circle_deg1_lift.units_coe CircleDeg1Lift.units_coe
 
 @[simp]
 theorem units_inv_apply_apply (f : CircleDeg1Liftˣ) (x : ℝ) : (f⁻¹ : CircleDeg1Liftˣ) (f x) = x :=

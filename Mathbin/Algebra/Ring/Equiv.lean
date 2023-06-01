@@ -136,12 +136,10 @@ theorem toEquiv_eq_coe (f : R ≃+* S) : f.toEquiv = f :=
   rfl
 #align ring_equiv.to_equiv_eq_coe RingEquiv.toEquiv_eq_coe
 
-/- warning: ring_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ring_equiv.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : R ≃+* S) : f.toFun = f :=
+theorem toFun_eq_coe (f : R ≃+* S) : f.toFun = f :=
   rfl
-#align ring_equiv.to_fun_eq_coe [anonymous]
+#align ring_equiv.to_fun_eq_coe RingEquiv.toFun_eq_coe
 
 @[simp]
 theorem coe_toEquiv (f : R ≃+* S) : ⇑(f : R ≃ S) = f :=

@@ -39,12 +39,12 @@ section
 
 variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
-#print TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_Group /-
+#print TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_group /-
 /-- Every separated topological group in which there exists a compact set with nonempty interior
 is locally compact. -/
 @[to_additive
       "Every separated topological group in which there exists a compact set with nonempty\ninterior is locally compact."]
-theorem TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_Group [T2Space G]
+theorem TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_group [T2Space G]
     (K : PositiveCompacts G) : LocallyCompactSpace G :=
   by
   refine' locally_compact_of_compact_nhds fun x => _
@@ -56,8 +56,8 @@ theorem TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_Group [T2Space 
   have : F.symm x = y := by simp [F, Homeomorph.mulLeft_symm]
   rw [this]
   exact mem_interior_iff_mem_nhds.1 hy
-#align topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_Group
-#align topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_AddGroup
+#align topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_group
+#align topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_addGroup
 -/
 
 end

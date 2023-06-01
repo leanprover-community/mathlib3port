@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit 195fcd60ff2bfe392543bceb0ec2adcdb472db4c
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.MetricSpace.Metrizable
 
 /-!
 # Metrizable uniform spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that a uniform space with countably generated uniformity filter is
 pseudometrizable: there exists a `pseudo_metric_space` structure that generates the same uniformity.
@@ -64,7 +67,7 @@ namespace PseudoMetricSpace
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
-noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x) : PseudoMetricSpace X
     where
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
@@ -90,24 +93,24 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc,
       append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
-#align pseudo_metric_space.of_prenndist PseudoMetricSpace.ofPrenndist
+#align pseudo_metric_space.of_prenndist PseudoMetricSpace.ofPreNNDist
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+theorem dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
-    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPreNNDist d dist_self dist_comm)) x
         y =
       ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0) :=
   rfl
-#align pseudo_metric_space.dist_of_prenndist PseudoMetricSpace.dist_ofPrenndist
+#align pseudo_metric_space.dist_of_prenndist PseudoMetricSpace.dist_ofPreNNDist
 
-theorem dist_ofPrenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+theorem dist_ofPreNNDist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
-    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPreNNDist d dist_self dist_comm)) x
         y ≤
       d x y :=
   NNReal.coe_le_coe.2 <| (ciInf_le (OrderBot.bddBelow _) []).trans_eq <| by simp
-#align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_ofPrenndist_le
+#align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_ofPreNNDist_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -117,13 +120,13 @@ theorem dist_ofPrenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x 
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
 inequality: `d x₁ x₄ ≤ 2 * max (d x₁ x₂, d x₂ x₃, d x₃ x₄)`. Then `d x y ≤ 2 * dist x y` for all
 `x`, `y`. -/
-theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x)
     (hd : ∀ x₁ x₂ x₃ x₄, d x₁ x₄ ≤ 2 * max (d x₁ x₂) (max (d x₂ x₃) (d x₃ x₄))) (x y : X) :
     ↑(d x y) ≤
       2 *
         @dist X
-          (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+          (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPreNNDist d dist_self dist_comm)) x
           y :=
   by
   /- We need to show that `d x y` is at most twice the sum `L` of `d xᵢ xᵢ₊₁` over a path
@@ -190,10 +193,11 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
       sum_take_add_sum_drop, ← two_mul] at hMs'
     convert hMs'
     rwa [zip_with_distrib_drop, drop, drop_append_of_le_length]
-#align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_ofPrenndist
+#align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_ofPreNNDist
 
 end PseudoMetricSpace
 
+#print UniformSpace.metrizable_uniformity /-
 /-- If `X` is a uniform space with countably generated uniformity filter, there exists a
 `pseudo_metric_space` structure compatible with the `uniform_space` structure. Use
 `uniform_space.pseudo_metric_space` or `uniform_space.metric_space` instead. -/
@@ -232,8 +236,8 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       intro x y; dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
     have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨half_pos one_pos, NNReal.half_lt_self one_ne_zero⟩
-    letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
-    have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_ofPrenndist_le _ _ _
+    letI I := PseudoMetricSpace.ofPreNNDist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
+    have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_ofPreNNDist_le _ _ _
     have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=
       by
       intro x y n
@@ -244,7 +248,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
         simp only [h, not_true, (pow_pos hr.1 _).not_le]
     have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y :=
       by
-      refine' PseudoMetricSpace.le_two_mul_dist_ofPrenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
+      refine' PseudoMetricSpace.le_two_mul_dist_ofPreNNDist _ _ _ fun x₁ x₂ x₃ x₄ => _
       by_cases H : ∃ n, (x₁, x₄) ∉ U n
       · refine' (dif_pos H).trans_le _
         rw [← NNReal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
@@ -264,29 +268,38 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
         mul_one_div, NNReal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
         Prod.mk.eta]
 #align uniform_space.metrizable_uniformity UniformSpace.metrizable_uniformity
+-/
 
+#print UniformSpace.pseudoMetricSpace /-
 /-- A `pseudo_metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] : PseudoMetricSpace X :=
   (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
     congr_arg _ (UniformSpace.metrizable_uniformity X).choose_spec.symm
 #align uniform_space.pseudo_metric_space UniformSpace.pseudoMetricSpace
+-/
 
+#print UniformSpace.metricSpace /-
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] [T0Space X] : MetricSpace X :=
   @MetricSpace.ofT0PseudoMetricSpace X (UniformSpace.pseudoMetricSpace X) _
 #align uniform_space.metric_space UniformSpace.metricSpace
+-/
 
+#print UniformSpace.pseudoMetrizableSpace /-
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
 instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X := by
   letI := UniformSpace.pseudoMetricSpace X; infer_instance
 #align uniform_space.pseudo_metrizable_space UniformSpace.pseudoMetrizableSpace
+-/
 
+#print UniformSpace.metrizableSpace /-
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
 theorem UniformSpace.metrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
     TopologicalSpace.MetrizableSpace X := by letI := UniformSpace.metricSpace X; infer_instance
 #align uniform_space.metrizable_space UniformSpace.metrizableSpace
+-/
 

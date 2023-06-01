@@ -928,7 +928,7 @@ variable (A : Type v) [CommRing A] [Algebra R A]
 @[simps]
 def baseChange : EllipticCurve A :=
   ⟨E.base_change A, Units.map (↑(algebraMap R A)) E.Δ', by
-    rw [Units.coe_map, [anonymous], coe_Δ', E.base_change_Δ]⟩
+    rw [Units.coe_map, RingHom.coe_monoidHom, coe_Δ', E.base_change_Δ]⟩
 #align elliptic_curve.base_change EllipticCurve.baseChange
 
 theorem coeBase_change_Δ' : ↑(E.base_change A).Δ' = algebraMap R A E.Δ' :=

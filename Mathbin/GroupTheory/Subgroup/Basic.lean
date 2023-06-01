@@ -365,7 +365,7 @@ theorem inclusion_inclusion {L : S} (hHK : H ≤ K) (hKL : K ≤ L) (x : H) :
 
 @[simp, to_additive]
 theorem coe_inclusion {H K : S} {h : H ≤ K} (a : H) : (inclusion h a : G) = a := by cases a;
-  simp only [inclusion, [anonymous], MonoidHom.mk'_apply]
+  simp only [inclusion, SetLike.coe_mk, MonoidHom.mk'_apply]
 #align subgroup_class.coe_inclusion SubgroupClass.coe_inclusion
 #align add_subgroup_class.coe_inclusion AddSubgroupClass.coe_inclusion
 

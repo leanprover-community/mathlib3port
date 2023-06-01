@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.tietze_extension
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.UrysohnsBounded
 
 /-!
 # Tietze extension theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove a few version of the Tietze extension theorem. The theorem says that a
 continuous function `s → ℝ` defined on a closed set in a normal topological space `Y` can be
@@ -107,7 +110,7 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
 embedding and bundled composition. If `e : C(X, Y)` is a closed embedding of a topological space
 into a normal topological space and `f : X →ᵇ ℝ` is a bounded continuous function, then there exists
 a bounded continuous function `g : Y →ᵇ ℝ` of the same norm such that `g ∘ e = f`. -/
-theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(X, Y))
+theorem exists_extension_norm_eq_of_closedEmbedding' (f : X →ᵇ ℝ) (e : C(X, Y))
     (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, ‖g‖ = ‖f‖ ∧ g.comp_continuous e = f :=
   by
   /- For the proof, we iterate `tietze_extension_step`. Each time we apply it to the difference
@@ -152,7 +155,7 @@ theorem exists_extension_norm_eq_of_closed_embedding' (f : X →ᵇ ℝ) (e : C(
       (dist_le_of_le_geometric_of_tendsto₀ _ _ (by norm_num1) hg_dist hg_cau.tendsto_lim).trans_eq _
     field_simp [show (3 - 2 : ℝ) = 1 by norm_num1]
   · rw [← hge]; exact norm_comp_continuous_le _ _
-#align bounded_continuous_function.exists_extension_norm_eq_of_closed_embedding' BoundedContinuousFunction.exists_extension_norm_eq_of_closed_embedding'
+#align bounded_continuous_function.exists_extension_norm_eq_of_closed_embedding' BoundedContinuousFunction.exists_extension_norm_eq_of_closedEmbedding'
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version with a closed
 embedding and unbundled composition. If `e : C(X, Y)` is a closed embedding of a topological space
@@ -171,7 +174,7 @@ topological space, then it can be extended to a bounded continuous function of t
 on the whole space. -/
 theorem exists_norm_eq_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) :
     ∃ g : Y →ᵇ ℝ, ‖g‖ = ‖f‖ ∧ g.restrict s = f :=
-  exists_extension_norm_eq_of_closed_embedding' f ((ContinuousMap.id _).restrict s)
+  exists_extension_norm_eq_of_closedEmbedding' f ((ContinuousMap.id _).restrict s)
     (closedEmbedding_subtype_val hs)
 #align bounded_continuous_function.exists_norm_eq_restrict_eq_of_closed BoundedContinuousFunction.exists_norm_eq_restrict_eq_of_closed
 
@@ -423,6 +426,7 @@ theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t :
   ⟨g, hgt, coe_injective hgf⟩
 #align continuous_map.exists_restrict_eq_forall_mem_of_closed ContinuousMap.exists_restrict_eq_forall_mem_of_closed
 
+#print ContinuousMap.exists_restrict_eq_of_closed /-
 /-- **Tietze extension theorem** for real-valued continuous maps, a version for a closed set. Let
 `s` be a closed set in a normal topological space `Y`. Let `f` be a continuous real-valued function
 on `s`. Then there exists a continuous real-valued function `g : C(Y, ℝ)` such that
@@ -433,6 +437,7 @@ theorem exists_restrict_eq_of_closed {s : Set Y} (f : C(s, ℝ)) (hs : IsClosed 
     exists_restrict_eq_forall_mem_of_closed f (fun _ => mem_univ _) univ_nonempty hs
   ⟨g, hgf⟩
 #align continuous_map.exists_restrict_eq_of_closed ContinuousMap.exists_restrict_eq_of_closed
+-/
 
 end ContinuousMap
 

@@ -169,7 +169,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
           (j.cast_lt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
-                (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                (by simpa only [Fin.val_eq_coe, ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) :=
   by dsimp [δ, σ]; simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]
 #align category_theory.simplicial_object.δ_comp_σ_of_gt' CategoryTheory.SimplicialObject.δ_comp_σ_of_gt'
@@ -515,7 +515,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
           (j.cast_lt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
-                (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                (by simpa only [Fin.val_eq_coe, ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) ≫
         X.δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) :=
   by dsimp [δ, σ]; simpa only [← X.map_comp, ← op_comp, SimplexCategory.δ_comp_σ_of_gt' H]

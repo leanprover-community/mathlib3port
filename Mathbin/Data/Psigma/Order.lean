@@ -197,16 +197,14 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
 #align psigma.lex.no_max_order_of_nonempty PSigma.Lex.noMaxOrder_of_nonempty
 -/
 
-/- warning: psigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
-instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
-    NoMaxOrder (Σₗ' i, α i) :=
+instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
+    [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
-#align psigma.lex.no_min_order_of_nonempty [anonymous]
+#align psigma.lex.no_min_order_of_nonempty PSigma.Lex.no_min_order_of_nonempty
 
 #print PSigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :

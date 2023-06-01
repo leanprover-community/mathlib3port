@@ -30,7 +30,7 @@ is also an inner product space, with inner product defined as `inner f g = ∫ a
 
 noncomputable section
 
-open TopologicalSpace MeasureTheory MeasureTheory.lp Filter
+open TopologicalSpace MeasureTheory MeasureTheory.Lp Filter
 
 open scoped NNReal ENNReal MeasureTheory
 
@@ -120,7 +120,7 @@ variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ‖f x‖ ^ (2 : ℝ)) 1 μ < ∞ :=
+theorem snorm_rpow_two_norm_lt_top (f : Lp F 2 μ) : snorm (fun x => ‖f x‖ ^ (2 : ℝ)) 1 μ < ∞ :=
   by
   have h_two : ENNReal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mul, h_two]
@@ -191,15 +191,15 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.r
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
     AEEqFun.mk (fun x => ⟪f x, g x⟫)
-        ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)) ∈
-      lp 𝕜 1 μ :=
+        ((Lp.aestronglyMeasurable f).inner (Lp.aestronglyMeasurable g)) ∈
+      Lp 𝕜 1 μ :=
   by simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]; exact snorm_inner_lt_top f g
 #align measure_theory.L2.mem_L1_inner MeasureTheory.L2.mem_L1_inner
 
 theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
         (AEEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
-          ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)))).mp
+          ((Lp.aestronglyMeasurable f).inner (Lp.aestronglyMeasurable g)))).mp
     (AEEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 #align measure_theory.L2.integrable_inner MeasureTheory.L2.integrable_inner
 
@@ -235,7 +235,7 @@ variable (𝕜) {s : Set α}
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the integral of the inner product over `s`: `∫ x in s, ⟪c, f x⟫ ∂μ`. -/
-theorem inner_indicatorConstLp_eq_set_integral_inner (f : lp E 2 μ) (hs : MeasurableSet s) (c : E)
+theorem inner_indicatorConstLp_eq_set_integral_inner (f : Lp E 2 μ) (hs : MeasurableSet s) (c : E)
     (hμs : μ s ≠ ∞) : (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ∫ x in s, ⟪c, f x⟫ ∂μ :=
   by
   rw [inner_def, ← integral_add_compl hs (L2.integrable_inner _ f)]
@@ -268,7 +268,7 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : lp E 2 μ) (hs : Measu
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
 theorem inner_indicatorConstLp_eq_inner_set_integral [CompleteSpace E] [NormedSpace ℝ E]
-    (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) (f : lp E 2 μ) :
+    (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) (f : Lp E 2 μ) :
     (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ⟪c, ∫ x in s, f x ∂μ⟫ := by
   rw [← integral_inner (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs),
     L2.inner_indicator_const_Lp_eq_set_integral_inner]
@@ -278,7 +278,7 @@ variable {𝕜}
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs (1 : 𝕜)` and
 a real or complex function `f` is equal to the integral of `f` over `s`. -/
-theorem inner_indicatorConstLp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (f : lp 𝕜 2 μ) :
+theorem inner_indicatorConstLp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (f : Lp 𝕜 2 μ) :
     ⟪indicatorConstLp 2 hs hμs (1 : 𝕜), f⟫ = ∫ x in s, f x ∂μ := by
   rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]; simp
 #align measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2.inner_indicatorConstLp_one

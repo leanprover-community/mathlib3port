@@ -264,7 +264,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
   simp only [hq, subset_closure hnz, hp, mem_inter_iff, and_self_iff]
 #align exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt
 
-variable [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ]
+variable [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [AddHaarMeasure μ]
 
 /-- Assume that a function `f` has a derivative at every point of a set `s`. Then one may
 partition `s` into countably many disjoint relatively measurable sets (i.e., intersections

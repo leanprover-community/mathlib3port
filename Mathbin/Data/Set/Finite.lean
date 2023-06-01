@@ -621,9 +621,11 @@ end FintypeInstances
 
 end Set
 
+#print Equiv.set_finite_iff /-
 theorem Equiv.set_finite_iff {s : Set α} {t : Set β} (hst : s ≃ t) : s.Finite ↔ t.Finite := by
   simp_rw [← Set.finite_coe_iff, hst.finite_iff]
 #align equiv.set_finite_iff Equiv.set_finite_iff
+-/
 
 /-! ### Finset -/
 

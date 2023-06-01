@@ -54,11 +54,10 @@ variable [Semiring R]
 instance : Coe (PowerSeries R) (LaurentSeries R) :=
   ⟨HahnSeries.ofPowerSeries ℤ R⟩
 
-/- warning: laurent_series.coe_power_series clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align laurent_series.coe_power_series [anonymous]ₓ'. -/
-theorem [anonymous] (x : PowerSeries R) : (x : LaurentSeries R) = HahnSeries.ofPowerSeries ℤ R x :=
+theorem coe_powerSeries (x : PowerSeries R) :
+    (x : LaurentSeries R) = HahnSeries.ofPowerSeries ℤ R x :=
   rfl
-#align laurent_series.coe_power_series [anonymous]
+#align laurent_series.coe_power_series LaurentSeries.coe_powerSeries
 
 @[simp]
 theorem coeff_coe_powerSeries (x : PowerSeries R) (n : ℕ) :
@@ -252,19 +251,15 @@ theorem coe_smul {S : Type _} [Semiring S] [Module R S] (r : R) (x : PowerSeries
   simp [coeff_coe, coeff_smul, smul_ite]
 #align power_series.coe_smul PowerSeries.coe_smul
 
-/- warning: power_series.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align power_series.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] : ((bit0 f : PowerSeries R) : LaurentSeries R) = bit0 f :=
+theorem coe_bit0 : ((bit0 f : PowerSeries R) : LaurentSeries R) = bit0 f :=
   (ofPowerSeries ℤ R).map_bit0 _
-#align power_series.coe_bit0 [anonymous]
+#align power_series.coe_bit0 PowerSeries.coe_bit0
 
-/- warning: power_series.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align power_series.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] : ((bit1 f : PowerSeries R) : LaurentSeries R) = bit1 f :=
+theorem coe_bit1 : ((bit1 f : PowerSeries R) : LaurentSeries R) = bit1 f :=
   (ofPowerSeries ℤ R).map_bit1 _
-#align power_series.coe_bit1 [anonymous]
+#align power_series.coe_bit1 PowerSeries.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_pow (n : ℕ) : ((f ^ n : PowerSeries R) : LaurentSeries R) = f ^ n :=

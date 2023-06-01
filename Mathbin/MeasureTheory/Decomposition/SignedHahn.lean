@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit bc7d81beddb3d6c66f71449c5bc76c38cb77cf9e
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.SymmDiff
 
 /-!
 # Hahn decomposition
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the Hahn decomposition theorem (signed version). The Hahn decomposition theorem
 states that, given a signed measure `s`, there exist complementary, measurable sets `i` and `j`,
@@ -358,15 +361,18 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
 
 end ExistsSubsetRestrictNonpos
 
+#print MeasureTheory.SignedMeasure.measureOfNegatives /-
 /-- The set of measures of the set of measurable negative sets. -/
 def measureOfNegatives (s : SignedMeasure α) : Set ℝ :=
   s '' { B | MeasurableSet B ∧ s ≤[B] 0 }
 #align measure_theory.signed_measure.measure_of_negatives MeasureTheory.SignedMeasure.measureOfNegatives
+-/
 
 theorem zero_mem_measureOfNegatives : (0 : ℝ) ∈ s.measureOfNegatives :=
   ⟨∅, ⟨MeasurableSet.empty, le_restrict_empty _ _⟩, s.Empty⟩
 #align measure_theory.signed_measure.zero_mem_measure_of_negatives MeasureTheory.SignedMeasure.zero_mem_measureOfNegatives
 
+#print MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives /-
 theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
   by
   simp_rw [BddBelow, Set.Nonempty, mem_lowerBounds]
@@ -394,6 +400,7 @@ theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
   rcases exists_nat_gt (-s A) with ⟨n, hn⟩
   exact lt_irrefl _ ((neg_lt.1 hn).trans_le (hfalse n))
 #align measure_theory.signed_measure.bdd_below_measure_of_negatives MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives
+-/
 
 /-- Alternative formulation of `measure_theory.signed_measure.exists_is_compl_positive_negative`
 (the Hahn decomposition theorem) using set complements. -/

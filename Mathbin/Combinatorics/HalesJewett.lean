@@ -222,12 +222,9 @@ theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : Line.diagonal α ι x = 
   simp_rw [line.apply, line.diagonal, Option.getD_none]
 #align combinatorics.line.diagonal_apply Combinatorics.Line.diagonal_apply
 
-/- warning: combinatorics.line.exists_mono_in_high_dimension' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align combinatorics.line.exists_mono_in_high_dimension' [anonymous]ₓ'. -/
-#print [anonymous] /-
 /-- The Hales-Jewett theorem. This version has a restriction on universe levels which is necessary
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
-private theorem [anonymous] :
+private theorem exists_mono_in_high_dimension' :
     ∀ (α : Type u) [Finite α] (κ : Type max v u) [Finite κ],
       ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   -- The proof proceeds by induction on `α`.
@@ -332,7 +329,6 @@ private theorem [anonymous] :
         exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
       -- Finally, we really do have `r+1` lines!
       · rw [Multiset.card_cons, Multiset.card_map, sr])
--/
 
 #print Combinatorics.Line.exists_mono_in_high_dimension /-
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such

@@ -925,9 +925,7 @@ theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
     rw [List.get?_map, List.nthLe_get? (List.indexOf_lt_length.2 (m _)), List.indexOf_nthLe] <;> rfl
 #align primrec.dom_fintype Primrec.dom_fintype
 
-/- warning: primrec.nat_bodd_div2 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align primrec.nat_bodd_div2 [anonymous]ₓ'. -/
-theorem [anonymous] : Primrec Nat.boddDiv2 :=
+theorem nat_boddDiv2 : Primrec Nat.boddDiv2 :=
   (nat_rec' Primrec.id (const (false, 0))
         (((cond fst (pair (const false) (succ.comp snd)) (pair (const true) snd)).comp snd).comp
             snd).to₂).of_eq
@@ -936,17 +934,17 @@ theorem [anonymous] : Primrec Nat.boddDiv2 :=
     induction' n with n IH; · rfl
     simp [-Nat.boddDiv2_eq, Nat.boddDiv2, *]
     rcases Nat.boddDiv2 n with ⟨_ | _, m⟩ <;> simp [Nat.boddDiv2]
-#align primrec.nat_bodd_div2 [anonymous]
+#align primrec.nat_bodd_div2 Primrec.nat_boddDiv2
 
 #print Primrec.nat_bodd /-
 theorem nat_bodd : Primrec Nat.bodd :=
-  fst.comp [anonymous]
+  fst.comp nat_boddDiv2
 #align primrec.nat_bodd Primrec.nat_bodd
 -/
 
 #print Primrec.nat_div2 /-
 theorem nat_div2 : Primrec Nat.div2 :=
-  snd.comp [anonymous]
+  snd.comp nat_boddDiv2
 #align primrec.nat_div2 Primrec.nat_div2
 -/
 
@@ -963,9 +961,7 @@ theorem nat_bit : Primrec₂ Nat.bit :=
     by cases n.1 <;> rfl
 #align primrec.nat_bit Primrec.nat_bit
 
-/- warning: primrec.nat_div_mod clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align primrec.nat_div_mod [anonymous]ₓ'. -/
-theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
+theorem nat_div_mod : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
   let f (a : ℕ × ℕ) : ℕ × ℕ :=
     a.1.elim (0, 0) fun _ IH =>
       if Nat.succ IH.2 = a.2 then (Nat.succ IH.1, 0) else (IH.1, Nat.succ IH.2)
@@ -998,17 +994,17 @@ theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
   cases Nat.eq_zero_or_pos k
   · simp [h, h₃ h] at h₁⊢; simp [h₁]
   · exact (Nat.div_mod_unique h).2 ⟨h₁, h₂ h⟩
-#align primrec.nat_div_mod [anonymous]
+#align primrec.nat_div_mod Primrec.nat_div_mod
 
 #print Primrec.nat_div /-
 theorem nat_div : Primrec₂ ((· / ·) : ℕ → ℕ → ℕ) :=
-  fst.comp₂ [anonymous]
+  fst.comp₂ nat_div_mod
 #align primrec.nat_div Primrec.nat_div
 -/
 
 #print Primrec.nat_mod /-
 theorem nat_mod : Primrec₂ ((· % ·) : ℕ → ℕ → ℕ) :=
-  snd.comp₂ [anonymous]
+  snd.comp₂ nat_div_mod
 #align primrec.nat_mod Primrec.nat_mod
 -/
 

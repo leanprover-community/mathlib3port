@@ -339,9 +339,9 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
     rintro l (a | a) (b | b) hab <;> try contradiction
     · exact hdisj _ _ _
     exact (hdisj _ _ _).symm
-  have hdom : ∀ {x : ℕ → Bool}, x ∈ ([anonymous] D).1 := fun x => by
+  have hdom : ∀ {x : ℕ → Bool}, x ∈ (induced_map D).1 := fun x => by
     simp [hanti.map_of_vanishing_diam hdiam fun l => (DP l).property.2]
-  refine' ⟨fun x => ([anonymous] D).2 ⟨x, hdom⟩, _, _, _⟩
+  refine' ⟨fun x => (induced_map D).2 ⟨x, hdom⟩, _, _, _⟩
   · rintro y ⟨x, rfl⟩
     exact map_mem ⟨_, hdom⟩ 0
   · continuity

@@ -283,12 +283,10 @@ def mapAlg (R : Type u) [CommSemiring R] (S : Type v) [Semiring S] [Algebra R S]
 #align polynomial.map_alg Polynomial.mapAlg
 -/
 
-#print Polynomial.mapAlg_eq_map /-
 /-- `map_alg` is the morphism induced by `R → S`. -/
 theorem mapAlg_eq_map (p : R[X]) : mapAlg R S p = map (algebraMap R S) p := by
   simp only [map_alg, aeval_def, eval₂, map, algebraMap_apply, RingHom.coe_comp]
 #align polynomial.map_alg_eq_map Polynomial.mapAlg_eq_map
--/
 
 /-- A polynomial `p` lifts if and only if it is in the image of `map_alg`. -/
 theorem mem_lifts_iff_mem_alg (R : Type u) [CommSemiring R] {S : Type v} [Semiring S] [Algebra R S]

@@ -157,7 +157,6 @@ theorem FG.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.FG) : (S.map f).
 
 end
 
-#print Subalgebra.fg_of_fg_map /-
 theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f)
     (hs : (S.map f).FG) : S.FG :=
   let ⟨s, hs⟩ := hs
@@ -168,7 +167,6 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top];
       exact map_mono le_top⟩
 #align subalgebra.fg_of_fg_map Subalgebra.fg_of_fg_map
--/
 
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).FG ↔ S.FG :=
   ⟨fun h => by rw [← S.range_val, ← Algebra.map_top]; exact fg.map _ h, fun h =>

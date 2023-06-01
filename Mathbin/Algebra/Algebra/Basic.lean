@@ -458,53 +458,37 @@ section
 
 variable {r : R} {a : A}
 
-/- warning: algebra.bit0_smul_one clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit0_smul_one [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 r • (1 : A) = bit0 (r • (1 : A)) := by simp [bit0, add_smul]
-#align algebra.bit0_smul_one [anonymous]
+theorem bit0_smul_one : bit0 r • (1 : A) = bit0 (r • (1 : A)) := by simp [bit0, add_smul]
+#align algebra.bit0_smul_one Algebra.bit0_smul_one
 
-/- warning: algebra.bit0_smul_one' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit0_smul_one' [anonymous]ₓ'. -/
-theorem [anonymous] : bit0 r • (1 : A) = r • 2 := by simp [bit0, add_smul, smul_add]
-#align algebra.bit0_smul_one' [anonymous]
+theorem bit0_smul_one' : bit0 r • (1 : A) = r • 2 := by simp [bit0, add_smul, smul_add]
+#align algebra.bit0_smul_one' Algebra.bit0_smul_one'
 
-/- warning: algebra.bit0_smul_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit0_smul_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 r • bit0 a = r • bit0 (bit0 a) := by simp [bit0, add_smul, smul_add]
-#align algebra.bit0_smul_bit0 [anonymous]
+theorem bit0_smul_bit0 : bit0 r • bit0 a = r • bit0 (bit0 a) := by simp [bit0, add_smul, smul_add]
+#align algebra.bit0_smul_bit0 Algebra.bit0_smul_bit0
 
-/- warning: algebra.bit0_smul_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit0_smul_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 r • bit1 a = r • bit0 (bit1 a) := by simp [bit0, add_smul, smul_add]
-#align algebra.bit0_smul_bit1 [anonymous]
+theorem bit0_smul_bit1 : bit0 r • bit1 a = r • bit0 (bit1 a) := by simp [bit0, add_smul, smul_add]
+#align algebra.bit0_smul_bit1 Algebra.bit0_smul_bit1
 
-/- warning: algebra.bit1_smul_one clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit1_smul_one [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 r • (1 : A) = bit1 (r • (1 : A)) := by simp [bit1, add_smul]
-#align algebra.bit1_smul_one [anonymous]
+theorem bit1_smul_one : bit1 r • (1 : A) = bit1 (r • (1 : A)) := by simp [bit1, add_smul]
+#align algebra.bit1_smul_one Algebra.bit1_smul_one
 
-/- warning: algebra.bit1_smul_one' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit1_smul_one' [anonymous]ₓ'. -/
-theorem [anonymous] : bit1 r • (1 : A) = r • 2 + 1 := by simp [bit1, bit0, add_smul, smul_add]
-#align algebra.bit1_smul_one' [anonymous]
+theorem bit1_smul_one' : bit1 r • (1 : A) = r • 2 + 1 := by simp [bit1, bit0, add_smul, smul_add]
+#align algebra.bit1_smul_one' Algebra.bit1_smul_one'
 
-/- warning: algebra.bit1_smul_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit1_smul_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 r • bit0 a = r • bit0 (bit0 a) + bit0 a := by
+theorem bit1_smul_bit0 : bit1 r • bit0 a = r • bit0 (bit0 a) + bit0 a := by
   simp [bit1, add_smul, smul_add]
-#align algebra.bit1_smul_bit0 [anonymous]
+#align algebra.bit1_smul_bit0 Algebra.bit1_smul_bit0
 
-/- warning: algebra.bit1_smul_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebra.bit1_smul_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a := by
+theorem bit1_smul_bit1 : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a := by
   simp only [bit0, bit1, add_smul, smul_add, one_smul]; abel
-#align algebra.bit1_smul_bit1 [anonymous]
+#align algebra.bit1_smul_bit1 Algebra.bit1_smul_bit1
 
 end
 

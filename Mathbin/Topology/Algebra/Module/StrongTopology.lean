@@ -254,6 +254,7 @@ variable {𝕜 : Type _} {𝕜₂ : Type _} {𝕜₃ : Type _} {𝕜₄ : Type _
 
 include σ₁₄ σ₂₄ σ₁₃ σ₃₄ σ₂₁ σ₂₃
 
+#print ContinuousLinearEquiv.arrowCongrₛₗ /-
 /-- A pair of continuous (semi)linear equivalences generates a (semi)linear equivalence between the
 spaces of continuous (semi)linear maps. -/
 @[simps]
@@ -267,6 +268,7 @@ def arrowCongrₛₗ (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃
     map_add' := fun f g => by rw [add_comp, comp_add]
     map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ] }
 #align continuous_linear_equiv.arrow_congrₛₗ ContinuousLinearEquiv.arrowCongrₛₗ
+-/
 
 variable [RingHomIsometric σ₂₁]
 
@@ -288,6 +290,7 @@ theorem arrowCongrₛₗ_continuous (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H
 
 variable [RingHomIsometric σ₁₂]
 
+#print ContinuousLinearEquiv.arrowCongrSL /-
 /-- A pair of continuous (semi)linear equivalences generates an continuous (semi)linear equivalence
 between the spaces of continuous (semi)linear maps. -/
 @[simps]
@@ -298,6 +301,7 @@ def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G)
     continuous_toFun := e₁₂.arrowCongrₛₗ_continuous e₄₃
     continuous_invFun := e₁₂.symm.arrowCongrₛₗ_continuous e₄₃.symm }
 #align continuous_linear_equiv.arrow_congrSL ContinuousLinearEquiv.arrowCongrSL
+-/
 
 end Semilinear
 
@@ -309,11 +313,13 @@ variable {𝕜 : Type _} {E : Type _} {F : Type _} {G : Type _} {H : Type _} [Ad
   [TopologicalSpace G] [TopologicalSpace H] [TopologicalAddGroup G] [TopologicalAddGroup H]
   [ContinuousConstSMul 𝕜 G] [ContinuousConstSMul 𝕜 H]
 
+#print ContinuousLinearEquiv.arrowCongr /-
 /-- A pair of continuous linear equivalences generates an continuous linear equivalence between
 the spaces of continuous linear maps. -/
 def arrowCongr (e₁ : E ≃L[𝕜] F) (e₂ : H ≃L[𝕜] G) : (E →L[𝕜] H) ≃L[𝕜] F →L[𝕜] G :=
   e₁.arrowCongrSL e₂
 #align continuous_linear_equiv.arrow_congr ContinuousLinearEquiv.arrowCongr
+-/
 
 end Linear
 

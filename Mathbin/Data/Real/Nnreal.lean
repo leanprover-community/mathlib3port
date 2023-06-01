@@ -193,19 +193,15 @@ protected theorem coe_div (r₁ r₂ : ℝ≥0) : ((r₁ / r₂ : ℝ≥0) : ℝ
   rfl
 #align nnreal.coe_div NNReal.coe_div
 
-/- warning: nnreal.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nnreal.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-protected theorem [anonymous] (r : ℝ≥0) : ((bit0 r : ℝ≥0) : ℝ) = bit0 r :=
+protected theorem coe_bit0 (r : ℝ≥0) : ((bit0 r : ℝ≥0) : ℝ) = bit0 r :=
   rfl
-#align nnreal.coe_bit0 [anonymous]
+#align nnreal.coe_bit0 NNReal.coe_bit0
 
-/- warning: nnreal.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nnreal.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-protected theorem [anonymous] (r : ℝ≥0) : ((bit1 r : ℝ≥0) : ℝ) = bit1 r :=
+protected theorem coe_bit1 (r : ℝ≥0) : ((bit1 r : ℝ≥0) : ℝ) = bit1 r :=
   rfl
-#align nnreal.coe_bit1 [anonymous]
+#align nnreal.coe_bit1 NNReal.coe_bit1
 
 protected theorem coe_two : ((2 : ℝ≥0) : ℝ) = 2 :=
   rfl
@@ -688,23 +684,19 @@ theorem lt_toNNReal_iff_coe_lt {r : ℝ≥0} {p : ℝ} : r < Real.toNNReal p ↔
       contradiction
 #align real.lt_to_nnreal_iff_coe_lt Real.lt_toNNReal_iff_coe_lt
 
-/- warning: real.to_nnreal_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align real.to_nnreal_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (r : ℝ) : Real.toNNReal (bit0 r) = bit0 (Real.toNNReal r) :=
+theorem toNNReal_bit0 (r : ℝ) : Real.toNNReal (bit0 r) = bit0 (Real.toNNReal r) :=
   by
   cases' le_total r 0 with hr hr
   · rw [to_nnreal_of_nonpos hr, to_nnreal_of_nonpos, bit0_zero]
     exact add_nonpos hr hr
   · exact to_nnreal_add hr hr
-#align real.to_nnreal_bit0 [anonymous]
+#align real.to_nnreal_bit0 Real.toNNReal_bit0
 
-/- warning: real.to_nnreal_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align real.to_nnreal_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {r : ℝ} (hr : 0 ≤ r) : Real.toNNReal (bit1 r) = bit1 (Real.toNNReal r) :=
+theorem toNNReal_bit1 {r : ℝ} (hr : 0 ≤ r) : Real.toNNReal (bit1 r) = bit1 (Real.toNNReal r) :=
   (Real.toNNReal_add (by simp [hr]) zero_le_one).trans (by simp [bit1])
-#align real.to_nnreal_bit1 [anonymous]
+#align real.to_nnreal_bit1 Real.toNNReal_bit1
 
 theorem toNNReal_pow {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : (x ^ n).toNNReal = x.toNNReal ^ n := by
   rw [← NNReal.coe_eq, NNReal.coe_pow, Real.coe_toNNReal _ (pow_nonneg hx _),

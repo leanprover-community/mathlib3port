@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.complex
-! leanprover-community/mathlib commit 17b3357baa47f48697ca9c243e300eb8cdd16a15
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Measure.VectorMeasure
 
 /-!
 # Complex measure
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves some elementary results about complex measures. In particular, we prove that
 a complex measure is always in the form `s + it` where `s` and `t` are signed measures.
@@ -62,6 +65,7 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
   mapRangeₗ Complex.imClm Complex.continuous_im
 #align measure_theory.complex_measure.im MeasureTheory.ComplexMeasure.im
 
+#print MeasureTheory.SignedMeasure.toComplexMeasure /-
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
 @[simps]
 def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : ComplexMeasure α
@@ -69,13 +73,16 @@ def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : Comp
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
-  m_Union' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_iUnion hf hfdisj, t.m_iUnion hf hfdisj⟩
+  m_iUnion' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_iUnion hf hfdisj, t.m_iUnion hf hfdisj⟩
 #align measure_theory.signed_measure.to_complex_measure MeasureTheory.SignedMeasure.toComplexMeasure
+-/
 
+#print MeasureTheory.SignedMeasure.toComplexMeasure_apply /-
 theorem MeasureTheory.SignedMeasure.toComplexMeasure_apply {s t : SignedMeasure α} {i : Set α} :
     s.toComplexMeasure t i = ⟨s i, t i⟩ :=
   rfl
 #align measure_theory.signed_measure.to_complex_measure_apply MeasureTheory.SignedMeasure.toComplexMeasure_apply
+-/
 
 theorem toComplexMeasure_to_signedMeasure (c : ComplexMeasure α) : c.re.toComplexMeasure c.im = c :=
   by ext (i hi) <;> rfl
@@ -89,6 +96,7 @@ theorem MeasureTheory.SignedMeasure.im_toComplexMeasure (s t : SignedMeasure α)
     (s.toComplexMeasure t).im = t := by ext (i hi); rfl
 #align measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_toComplexMeasure
 
+#print MeasureTheory.ComplexMeasure.equivSignedMeasure /-
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α
@@ -98,6 +106,7 @@ def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure
   left_inv c := c.toComplexMeasure_to_signedMeasure
   right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iff.2 ⟨s.re_toComplexMeasure t, s.im_toComplexMeasure t⟩
 #align measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
+-/
 
 section
 

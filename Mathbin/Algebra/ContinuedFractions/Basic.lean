@@ -261,12 +261,10 @@ instance hasCoeToGeneralizedContinuedFraction :
   unfold SimpleContinuedFraction; infer_instance
 #align simple_continued_fraction.has_coe_to_generalized_continued_fraction SimpleContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
-/- warning: simple_continued_fraction.coe_to_generalized_continued_fraction clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align simple_continued_fraction.coe_to_generalized_continued_fraction [anonymous]ₓ'. -/
-theorem [anonymous] {s : SimpleContinuedFraction α} :
+theorem coe_to_generalizedContinuedFraction {s : SimpleContinuedFraction α} :
     (↑s : GeneralizedContinuedFraction α) = s.val :=
   rfl
-#align simple_continued_fraction.coe_to_generalized_continued_fraction [anonymous]
+#align simple_continued_fraction.coe_to_generalized_continued_fraction SimpleContinuedFraction.coe_to_generalizedContinuedFraction
 
 end SimpleContinuedFraction
 
@@ -318,11 +316,10 @@ instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleCon
   by unfold ContinuedFraction; infer_instance
 #align continued_fraction.has_coe_to_simple_continued_fraction ContinuedFraction.hasCoeToSimpleContinuedFraction
 
-/- warning: continued_fraction.coe_to_simple_continued_fraction clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align continued_fraction.coe_to_simple_continued_fraction [anonymous]ₓ'. -/
-theorem [anonymous] {c : ContinuedFraction α} : (↑c : SimpleContinuedFraction α) = c.val :=
+theorem coe_to_simpleContinuedFraction {c : ContinuedFraction α} :
+    (↑c : SimpleContinuedFraction α) = c.val :=
   rfl
-#align continued_fraction.coe_to_simple_continued_fraction [anonymous]
+#align continued_fraction.coe_to_simple_continued_fraction ContinuedFraction.coe_to_simpleContinuedFraction
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance hasCoeToGeneralizedContinuedFraction :
@@ -330,11 +327,10 @@ instance hasCoeToGeneralizedContinuedFraction :
   ⟨fun c => ↑(↑c : SimpleContinuedFraction α)⟩
 #align continued_fraction.has_coe_to_generalized_continued_fraction ContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
-/- warning: continued_fraction.coe_to_generalized_continued_fraction clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align continued_fraction.coe_to_generalized_continued_fraction [anonymous]ₓ'. -/
-theorem [anonymous] {c : ContinuedFraction α} : (↑c : GeneralizedContinuedFraction α) = c.val :=
+theorem coe_to_generalizedContinuedFraction {c : ContinuedFraction α} :
+    (↑c : GeneralizedContinuedFraction α) = c.val :=
   rfl
-#align continued_fraction.coe_to_generalized_continued_fraction [anonymous]
+#align continued_fraction.coe_to_generalized_continued_fraction ContinuedFraction.coe_to_generalizedContinuedFraction
 
 end ContinuedFraction
 

@@ -200,7 +200,6 @@ instance hasCoeT : CoeTC R (AdjoinRoot f) :=
   ⟨of f⟩
 #align adjoin_root.has_coe_t AdjoinRoot.hasCoeT
 
-#print AdjoinRoot.algHom_ext /-
 /-- Two `R`-`alg_hom` from `adjoin_root f` to the same `R`-algebra are the same iff
     they agree on `root f`. -/
 @[ext]
@@ -208,7 +207,6 @@ theorem algHom_ext [Semiring S] [Algebra R S] {g₁ g₂ : AdjoinRoot f →ₐ[R
     (h : g₁ (root f) = g₂ (root f)) : g₁ = g₂ :=
   Ideal.Quotient.algHom_ext R <| Polynomial.algHom_ext h
 #align adjoin_root.alg_hom_ext AdjoinRoot.algHom_ext
--/
 
 @[simp]
 theorem mk_eq_mk {g h : R[X]} : mk f g = mk f h ↔ f ∣ g - h :=
@@ -245,7 +243,6 @@ theorem mk_ne_zero_of_natDegree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0)
   mk_eq_zero.Not.2 <| hf.not_dvd_of_natDegree_lt h0 hd
 #align adjoin_root.mk_ne_zero_of_nat_degree_lt AdjoinRoot.mk_ne_zero_of_natDegree_lt
 
-#print AdjoinRoot.aeval_eq /-
 @[simp]
 theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
   Polynomial.induction_on p (fun x => by rw [aeval_C]; rfl)
@@ -255,7 +252,6 @@ theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
       mk_X]
     rfl
 #align adjoin_root.aeval_eq AdjoinRoot.aeval_eq
--/
 
 theorem adjoinRoot_eq_top : Algebra.adjoin R ({root f} : Set (AdjoinRoot f)) = ⊤ :=
   Algebra.eq_top_iff.2 fun x =>
@@ -327,24 +323,19 @@ theorem lift_comp_of : (lift i a h).comp (of f) = i :=
 
 variable (f) [Algebra R S]
 
-#print AdjoinRoot.liftHom /-
 /-- Produce an algebra homomorphism `adjoin_root f →ₐ[R] S` sending `root f` to
 a root of `f` in `S`. -/
 def liftHom (x : S) (hfx : aeval x f = 0) : AdjoinRoot f →ₐ[R] S :=
   { lift (algebraMap R S) x hfx with
     commutes' := fun r => show lift _ _ hfx r = _ from lift_of hfx }
 #align adjoin_root.lift_hom AdjoinRoot.liftHom
--/
 
-#print AdjoinRoot.coe_liftHom /-
 @[simp]
 theorem coe_liftHom (x : S) (hfx : aeval x f = 0) :
     (liftHom f x hfx : AdjoinRoot f →+* S) = lift (algebraMap R S) x hfx :=
   rfl
 #align adjoin_root.coe_lift_hom AdjoinRoot.coe_liftHom
--/
 
-#print AdjoinRoot.aeval_algHom_eq_zero /-
 @[simp]
 theorem aeval_algHom_eq_zero (ϕ : AdjoinRoot f →ₐ[R] S) : aeval (ϕ (root f)) f = 0 :=
   by
@@ -352,9 +343,7 @@ theorem aeval_algHom_eq_zero (ϕ : AdjoinRoot f →ₐ[R] S) : aeval (ϕ (root f
   rw [aeval_def, ← h, ← RingHom.map_zero ϕ.to_ring_hom, ← eval₂_root f, hom_eval₂]
   rfl
 #align adjoin_root.aeval_alg_hom_eq_zero AdjoinRoot.aeval_algHom_eq_zero
--/
 
-#print AdjoinRoot.liftHom_eq_algHom /-
 @[simp]
 theorem liftHom_eq_algHom (f : R[X]) (ϕ : AdjoinRoot f →ₐ[R] S) :
     liftHom f (ϕ (root f)) (aeval_algHom_eq_zero f ϕ) = ϕ :=
@@ -364,30 +353,23 @@ theorem liftHom_eq_algHom (f : R[X]) (ϕ : AdjoinRoot f →ₐ[R] S) :
   rw [eq_top_iff, ← adjoin_root_eq_top, Algebra.adjoin_le_iff, Set.singleton_subset_iff]
   exact (@lift_root _ _ _ _ _ _ _ (aeval_alg_hom_eq_zero f ϕ)).symm
 #align adjoin_root.lift_hom_eq_alg_hom AdjoinRoot.liftHom_eq_algHom
--/
 
 variable (hfx : aeval a f = 0)
 
-#print AdjoinRoot.liftHom_mk /-
 @[simp]
 theorem liftHom_mk {g : R[X]} : liftHom f a hfx (mk f g) = aeval a g :=
   lift_mk hfx g
 #align adjoin_root.lift_hom_mk AdjoinRoot.liftHom_mk
--/
 
-#print AdjoinRoot.liftHom_root /-
 @[simp]
 theorem liftHom_root : liftHom f a hfx (root f) = a :=
   lift_root hfx
 #align adjoin_root.lift_hom_root AdjoinRoot.liftHom_root
--/
 
-#print AdjoinRoot.liftHom_of /-
 @[simp]
 theorem liftHom_of {x : R} : liftHom f a hfx (of f x) = algebraMap _ _ x :=
   lift_of hfx
 #align adjoin_root.lift_hom_of AdjoinRoot.liftHom_of
--/
 
 section AdjoinInv
 
@@ -700,7 +682,6 @@ theorem Minpoly.toAdjoin.apply_X :
 
 variable (R x)
 
-#print AdjoinRoot.Minpoly.toAdjoin.surjective /-
 theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x) :=
   by
   rw [← range_top_iff_surjective, _root_.eq_top_iff, ← adjoin_adjoin_coe_preimage]
@@ -709,7 +690,6 @@ theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x)
   rintro ⟨y₁, y₂⟩ h
   refine' ⟨mk (minpoly R x) X, by simpa using h.symm⟩
 #align adjoin_root.minpoly.to_adjoin.surjective AdjoinRoot.Minpoly.toAdjoin.surjective
--/
 
 end minpoly
 
@@ -719,7 +699,6 @@ variable [CommRing R] [CommRing S] [Algebra R S]
 
 variable (g : R[X]) (pb : PowerBasis R S)
 
-#print AdjoinRoot.equiv' /-
 /-- If `S` is an extension of `R` with power basis `pb` and `g` is a monic polynomial over `R`
 such that `pb.gen` has a minimal polynomial `g`, then `S` is isomorphic to `adjoin_root g`.
 
@@ -740,23 +719,18 @@ def equiv' (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval x
       rw [pb.lift_aeval, aeval_eq, lift_hom_mk] }
 #align adjoin_root.equiv' AdjoinRoot.equiv'
--/
 
-#print AdjoinRoot.equiv'_toAlgHom /-
 @[simp]
 theorem equiv'_toAlgHom (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g = 0) :
     (equiv' g pb h₁ h₂).toAlgHom = AdjoinRoot.liftHom g pb.gen h₂ :=
   rfl
 #align adjoin_root.equiv'_to_alg_hom AdjoinRoot.equiv'_toAlgHom
--/
 
-#print AdjoinRoot.equiv'_symm_toAlgHom /-
 @[simp]
 theorem equiv'_symm_toAlgHom (h₁ : aeval (root g) (minpoly R pb.gen) = 0)
     (h₂ : aeval pb.gen g = 0) : (equiv' g pb h₁ h₂).symm.toAlgHom = pb.lift (root g) h₁ :=
   rfl
 #align adjoin_root.equiv'_symm_to_alg_hom AdjoinRoot.equiv'_symm_toAlgHom
--/
 
 end Equiv'
 

@@ -192,12 +192,10 @@ theorem coe_eq_coe {x y : p} : (x : B) = y ↔ x = y :=
 #align set_like.coe_eq_coe SetLike.coe_eq_coe
 -/
 
-/- warning: set_like.coe_mk clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align set_like.coe_mk [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : B) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : B) = x :=
+theorem coe_mk (x : B) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : B) = x :=
   rfl
-#align set_like.coe_mk [anonymous]
+#align set_like.coe_mk SetLike.coe_mk
 
 #print SetLike.coe_mem /-
 @[simp]

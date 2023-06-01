@@ -102,12 +102,10 @@ attribute [local instance] concrete_category.has_coe_to_sort
 
 variable {C : Type v} [Category C] [ConcreteCategory C]
 
-/- warning: category_theory.forget_obj_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.forget_obj_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {X : C} : (forget C).obj X = X :=
+theorem forget_obj_eq_coe {X : C} : (forget C).obj X = X :=
   rfl
-#align category_theory.forget_obj_eq_coe [anonymous]
+#align category_theory.forget_obj_eq_coe CategoryTheory.forget_obj_eq_coe
 
 /-- Usually a bundled hom structure already has a coercion to function
 that works with different universes. So we don't use this as a global instance. -/
@@ -125,12 +123,10 @@ theorem ConcreteCategory.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x =
   exact w x
 #align category_theory.concrete_category.hom_ext CategoryTheory.ConcreteCategory.hom_ext
 
-/- warning: category_theory.forget_map_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.forget_map_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {X Y : C} (f : X ⟶ Y) : (forget C).map f = f :=
+theorem forget_map_eq_coe {X Y : C} (f : X ⟶ Y) : (forget C).map f = f :=
   rfl
-#align category_theory.forget_map_eq_coe [anonymous]
+#align category_theory.forget_map_eq_coe CategoryTheory.forget_map_eq_coe
 
 /-- Analogue of `congr_fun h x`,
 when `h : f = g` is an equality between morphisms in a concrete category.

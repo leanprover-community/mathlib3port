@@ -244,11 +244,9 @@ def toGLPos : SpecialLinearGroup n R →* GLPos n R
 instance : Coe (SpecialLinearGroup n R) (GLPos n R) :=
   ⟨toGLPos⟩
 
-/- warning: matrix.special_linear_group.coe_eq_to_GL_pos clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align matrix.special_linear_group.coe_eq_to_GL_pos [anonymous]ₓ'. -/
-theorem [anonymous] : (coe : SpecialLinearGroup n R → GLPos n R) = toGLPos :=
+theorem coe_eq_toGLPos : (coe : SpecialLinearGroup n R → GLPos n R) = toGLPos :=
   rfl
-#align matrix.special_linear_group.coe_eq_to_GL_pos [anonymous]
+#align matrix.special_linear_group.coe_eq_to_GL_pos Matrix.SpecialLinearGroup.coe_eq_toGLPos
 
 theorem toGLPos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → GLPos n R) :=
   (show Function.Injective ((coe : GLPos n R → Matrix n n R) ∘ toGLPos) from

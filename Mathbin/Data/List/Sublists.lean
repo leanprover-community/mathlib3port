@@ -47,25 +47,19 @@ theorem sublists'_singleton (a : α) : sublists' [a] = [[], [a]] :=
 #align list.sublists'_singleton List.sublists'_singleton
 -/
 
-/- warning: list.map_sublists'_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.map_sublists'_aux [anonymous]ₓ'. -/
-theorem [anonymous] (g : List β → List γ) (l : List α) (f r) :
+theorem map_sublists'Aux (g : List β → List γ) (l : List α) (f r) :
     map g (sublists'Aux l f r) = sublists'Aux l (g ∘ f) (map g r) := by
   induction l generalizing f r <;> [rfl;simp only [*, sublists'_aux]]
-#align list.map_sublists'_aux [anonymous]
+#align list.map_sublists'_aux List.map_sublists'Aux
 
-/- warning: list.sublists'_aux_append clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists'_aux_append [anonymous]ₓ'. -/
-theorem [anonymous] (r' : List (List β)) (l : List α) (f r) :
+theorem sublists'Aux_append (r' : List (List β)) (l : List α) (f r) :
     sublists'Aux l f (r ++ r') = sublists'Aux l f r ++ r' := by
   induction l generalizing f r <;> [rfl;simp only [*, sublists'_aux]]
-#align list.sublists'_aux_append [anonymous]
+#align list.sublists'_aux_append List.sublists'Aux_append
 
-/- warning: list.sublists'_aux_eq_sublists' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists'_aux_eq_sublists' [anonymous]ₓ'. -/
-theorem [anonymous] (l f r) : @sublists'Aux α β l f r = map f (sublists' l) ++ r := by
+theorem sublists'Aux_eq_sublists' (l f r) : @sublists'Aux α β l f r = map f (sublists' l) ++ r := by
   rw [sublists', map_sublists'_aux, ← sublists'_aux_append] <;> rfl
-#align list.sublists'_aux_eq_sublists' [anonymous]
+#align list.sublists'_aux_eq_sublists' List.sublists'Aux_eq_sublists'
 
 #print List.sublists'_cons /-
 @[simp]
@@ -117,23 +111,18 @@ theorem sublists_singleton (a : α) : sublists [a] = [[], [a]] :=
 #align list.sublists_singleton List.sublists_singleton
 -/
 
-/- warning: list.sublists_aux₁_eq_sublists_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_eq_sublists_aux [anonymous]ₓ'. -/
-theorem [anonymous] :
+theorem sublistsAux₁_eq_sublistsAux :
     ∀ (l) (f : List α → List β), sublistsAux₁ l f = sublistsAux l fun ys r => f ys ++ r
   | [], f => rfl
   | a :: l, f => by rw [sublists_aux₁, sublists_aux] <;> simp only [*, append_assoc]
-#align list.sublists_aux₁_eq_sublists_aux [anonymous]
+#align list.sublists_aux₁_eq_sublists_aux List.sublistsAux₁_eq_sublistsAux
 
-/- warning: list.sublists_aux_cons_eq_sublists_aux₁ clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_eq_sublists_aux₁ [anonymous]ₓ'. -/
-theorem [anonymous] (l : List α) : sublistsAux l cons = sublistsAux₁ l fun x => [x] := by
+theorem sublistsAux_cons_eq_sublistsAux₁ (l : List α) :
+    sublistsAux l cons = sublistsAux₁ l fun x => [x] := by
   rw [sublists_aux₁_eq_sublists_aux] <;> rfl
-#align list.sublists_aux_cons_eq_sublists_aux₁ [anonymous]
+#align list.sublists_aux_cons_eq_sublists_aux₁ List.sublistsAux_cons_eq_sublistsAux₁
 
-/- warning: list.sublists_aux_eq_foldr.aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_eq_foldr.aux [anonymous]ₓ'. -/
-theorem [anonymous] {a : α} {l : List α}
+theorem SublistsAuxEqFoldr.aux {a : α} {l : List α}
     (IH₁ : ∀ f : List α → List β → List β, sublistsAux l f = foldr f [] (sublistsAux l cons))
     (IH₂ :
       ∀ f : List α → List (List α) → List (List α),
@@ -144,11 +133,9 @@ theorem [anonymous] {a : α} {l : List α}
   simp only [sublists_aux, foldr_cons]; rw [IH₂, IH₁]; congr 1
   induction' sublists_aux l cons with _ _ ih; · rfl
   simp only [ih, foldr_cons]
-#align list.sublists_aux_eq_foldr.aux [anonymous]
+#align list.sublists_aux_eq_foldr.aux List.SublistsAuxEqFoldr.aux
 
-/- warning: list.sublists_aux_eq_foldr clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_eq_foldr [anonymous]ₓ'. -/
-theorem [anonymous] (l : List α) :
+theorem sublistsAux_eq_foldr (l : List α) :
     ∀ f : List α → List β → List β, sublistsAux l f = foldr f [] (sublistsAux l cons) :=
   by
   suffices
@@ -158,46 +145,36 @@ theorem [anonymous] (l : List α) :
     from this.1
   induction' l with a l IH; · constructor <;> intro <;> rfl
   exact ⟨sublists_aux_eq_foldr.aux IH.1 IH.2, sublists_aux_eq_foldr.aux IH.2 IH.2⟩
-#align list.sublists_aux_eq_foldr [anonymous]
+#align list.sublists_aux_eq_foldr List.sublistsAux_eq_foldr
 
-/- warning: list.sublists_aux_cons_cons clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_cons [anonymous]ₓ'. -/
-theorem [anonymous] (l : List α) (a : α) :
+theorem sublistsAux_cons_cons (l : List α) (a : α) :
     sublistsAux (a :: l) cons =
       [a] :: foldr (fun ys r => ys :: (a :: ys) :: r) [] (sublistsAux l cons) :=
   by rw [← sublists_aux_eq_foldr] <;> rfl
-#align list.sublists_aux_cons_cons [anonymous]
+#align list.sublists_aux_cons_cons List.sublistsAux_cons_cons
 
-/- warning: list.sublists_aux₁_append clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_append [anonymous]ₓ'. -/
-theorem [anonymous] :
+theorem sublistsAux₁_append :
     ∀ (l₁ l₂ : List α) (f : List α → List β),
       sublistsAux₁ (l₁ ++ l₂) f =
         sublistsAux₁ l₁ f ++ sublistsAux₁ l₂ fun x => f x ++ sublistsAux₁ l₁ (f ∘ (· ++ x))
   | [], l₂, f => by simp only [sublists_aux₁, nil_append, append_nil]
   | a :: l₁, l₂, f => by
     simp only [sublists_aux₁, cons_append, sublists_aux₁_append l₁, append_assoc] <;> rfl
-#align list.sublists_aux₁_append [anonymous]
+#align list.sublists_aux₁_append List.sublistsAux₁_append
 
-/- warning: list.sublists_aux₁_concat clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_concat [anonymous]ₓ'. -/
-theorem [anonymous] (l : List α) (a : α) (f : List α → List β) :
+theorem sublistsAux₁_concat (l : List α) (a : α) (f : List α → List β) :
     sublistsAux₁ (l ++ [a]) f = sublistsAux₁ l f ++ f [a] ++ sublistsAux₁ l fun x => f (x ++ [a]) :=
   by simp only [sublists_aux₁_append, sublists_aux₁, append_assoc, append_nil]
-#align list.sublists_aux₁_concat [anonymous]
+#align list.sublists_aux₁_concat List.sublistsAux₁_concat
 
-/- warning: list.sublists_aux₁_bind clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux₁_bind [anonymous]ₓ'. -/
-theorem [anonymous] :
+theorem sublistsAux₁_bind :
     ∀ (l : List α) (f : List α → List β) (g : β → List γ),
       (sublistsAux₁ l f).bind g = sublistsAux₁ l fun x => (f x).bind g
   | [], f, g => rfl
   | a :: l, f, g => by simp only [sublists_aux₁, bind_append, sublists_aux₁_bind l]
-#align list.sublists_aux₁_bind [anonymous]
+#align list.sublists_aux₁_bind List.sublistsAux₁_bind
 
-/- warning: list.sublists_aux_cons_append clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_cons_append [anonymous]ₓ'. -/
-theorem [anonymous] (l₁ l₂ : List α) :
+theorem sublistsAux_cons_append (l₁ l₂ : List α) :
     sublistsAux (l₁ ++ l₂) cons =
       sublistsAux l₁ cons ++ do
         let x ← sublistsAux l₂ cons
@@ -207,7 +184,7 @@ theorem [anonymous] (l₁ l₂ : List α) :
     sublists_aux₁_bind]
   congr ; funext x; apply congr_arg _
   rw [← bind_ret_eq_map, sublists_aux₁_bind]; exact (append_nil _).symm
-#align list.sublists_aux_cons_append [anonymous]
+#align list.sublists_aux_cons_append List.sublistsAux_cons_append
 
 theorem sublists_append (l₁ l₂ : List α) :
     sublists (l₁ ++ l₂) = do
@@ -256,9 +233,7 @@ theorem sublists'_eq_sublists (l : List α) : sublists' l = map reverse (sublist
 #align list.sublists'_eq_sublists List.sublists'_eq_sublists
 -/
 
-/- warning: list.sublists_aux_ne_nil clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.sublists_aux_ne_nil [anonymous]ₓ'. -/
-theorem [anonymous] : ∀ l : List α, [] ∉ sublistsAux l cons
+theorem sublistsAux_ne_nil : ∀ l : List α, [] ∉ sublistsAux l cons
   | [] => id
   | a :: l => by
     rw [sublists_aux_cons_cons]
@@ -267,7 +242,7 @@ theorem [anonymous] : ∀ l : List α, [] ∉ sublistsAux l cons
     induction sublists_aux l cons <;> intro ; · rwa [foldr]
     simp only [foldr, mem_cons_iff, false_or_iff, not_or]
     exact ⟨ne_of_not_mem_cons this, ih (not_mem_of_not_mem_cons this)⟩
-#align list.sublists_aux_ne_nil [anonymous]
+#align list.sublists_aux_ne_nil List.sublistsAux_ne_nil
 
 #print List.mem_sublists /-
 @[simp]

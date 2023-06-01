@@ -1728,6 +1728,7 @@ import Mathbin.Data.Set.Lattice
 import Mathbin.Data.Set.List
 import Mathbin.Data.Set.MulAntidiagonal
 import Mathbin.Data.Set.NAry
+import Mathbin.Data.Set.Ncard
 import Mathbin.Data.Set.Opposite
 import Mathbin.Data.Set.Pairwise.Basic
 import Mathbin.Data.Set.Pairwise.Lattice
@@ -2032,6 +2033,7 @@ import Mathbin.LinearAlgebra.Matrix.BilinearForm
 import Mathbin.LinearAlgebra.Matrix.Block
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
+import Mathbin.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathbin.LinearAlgebra.Matrix.Charpoly.FiniteField
 import Mathbin.LinearAlgebra.Matrix.Charpoly.LinearMap
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
@@ -2348,6 +2350,7 @@ import Mathbin.NumberTheory.SumTwoSquares
 import Mathbin.NumberTheory.VonMangoldt
 import Mathbin.NumberTheory.WellApproximable
 import Mathbin.NumberTheory.Wilson
+import Mathbin.NumberTheory.ZetaFunction
 import Mathbin.NumberTheory.ZetaValues
 import Mathbin.NumberTheory.Zsqrtd.Basic
 import Mathbin.NumberTheory.Zsqrtd.GaussianInt
@@ -2498,6 +2501,8 @@ import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
 import Mathbin.Probability.Kernel.CondCdf
+import Mathbin.Probability.Kernel.CondDistrib
+import Mathbin.Probability.Kernel.Condexp
 import Mathbin.Probability.Kernel.Disintegration
 import Mathbin.Probability.Kernel.IntegralCompProd
 import Mathbin.Probability.Kernel.Invariance

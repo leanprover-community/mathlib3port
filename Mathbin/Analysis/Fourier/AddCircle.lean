@@ -130,11 +130,11 @@ include hT
 
 /-- Haar measure on the additive circle, normalised to have total measure 1. -/
 def haarAddCircle : Measure (AddCircle T) :=
-  addHaarMeasure ⊤deriving IsAddHaarMeasure
+  addHaarMeasure ⊤deriving AddHaarMeasure
 #align add_circle.haar_add_circle AddCircle.haarAddCircle
 
 instance : ProbabilityMeasure (@haarAddCircle T _) :=
-  ProbabilityMeasure.mk add_haarMeasure_self
+  ProbabilityMeasure.mk addHaarMeasure_self
 
 theorem volume_eq_smul_haarAddCircle :
     (volume : Measure (AddCircle T)) = ENNReal.ofReal T • haarAddCircle :=
@@ -285,7 +285,7 @@ theorem span_fourier_closure_eq_top : (span ℂ (range <| @fourier T)).topologic
 
 /-- The family of monomials `fourier n`, parametrized by `n : ℤ` and considered as
 elements of the `Lp` space of functions `add_circle T → ℂ`. -/
-abbrev fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : lp ℂ p (@haarAddCircle T hT) :=
+abbrev fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : Lp ℂ p (@haarAddCircle T hT) :=
   toLp p haarAddCircle ℂ (fourier n)
 #align fourier_Lp fourierLp
 
@@ -322,7 +322,7 @@ theorem orthonormal_fourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
     rw [add_comm]
     exact sub_ne_zero.mpr (Ne.symm h)
   convert integral_eq_zero_of_add_right_eq_neg (fourier_add_half_inv_index hij hT.elim)
-  exact IsAddLeftInvariant.is_add_right_invariant
+  exact MeasureTheory.AddLeftInvariant.addRightInvariant
 #align orthonormal_fourier orthonormal_fourier
 
 end Monomials
@@ -430,7 +430,7 @@ section FourierL2
 
 /-- We define `fourier_basis` to be a `ℤ`-indexed Hilbert basis for `Lp ℂ 2 haar_add_circle`,
 which by definition is an isometric isomorphism from `Lp ℂ 2 haar_add_circle` to `ℓ²(ℤ, ℂ)`. -/
-def fourierBasis : HilbertBasis ℤ ℂ (lp ℂ 2 <| @haarAddCircle T hT) :=
+def fourierBasis : HilbertBasis ℤ ℂ (Lp ℂ 2 <| @haarAddCircle T hT) :=
   HilbertBasis.mk orthonormal_fourier (span_fourierLp_closure_eq_top (by norm_num)).ge
 #align fourier_basis fourierBasis
 
@@ -444,7 +444,7 @@ theorem coe_fourierBasis : ⇑(@fourierBasis _ hT) = fourierLp 2 :=
 /-- Under the isometric isomorphism `fourier_basis` from `Lp ℂ 2 haar_circle` to `ℓ²(ℤ, ℂ)`, the
 `i`-th coefficient is `fourier_coeff f i`, i.e., the integral over `add_circle T` of
 `λ t, fourier (-i) t * f t` with respect to the Haar measure of total mass 1. -/
-theorem fourierBasis_repr (f : lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
+theorem fourierBasis_repr (f : Lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
     fourierBasis.repr f i = fourierCoeff f i :=
   by
   trans ∫ t : AddCircle T, conj ((@fourierLp T hT 2 _ i : AddCircle T → ℂ) t) * f t ∂haar_add_circle
@@ -455,14 +455,14 @@ theorem fourierBasis_repr (f : lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
 #align fourier_basis_repr fourierBasis_repr
 
 /-- The Fourier series of an `L2` function `f` sums to `f`, in the `L²` space of `add_circle T`. -/
-theorem hasSum_fourier_series_L2 (f : lp ℂ 2 <| @haarAddCircle T hT) :
+theorem hasSum_fourier_series_L2 (f : Lp ℂ 2 <| @haarAddCircle T hT) :
     HasSum (fun i => fourierCoeff f i • fourierLp 2 i) f := by simp_rw [← fourierBasis_repr];
   simpa using HilbertBasis.hasSum_repr fourierBasis f
 #align has_sum_fourier_series_L2 hasSum_fourier_series_L2
 
 /-- **Parseval's identity**: for an `L²` function `f` on `add_circle T`, the sum of the squared
 norms of the Fourier coefficients equals the `L²` norm of `f`. -/
-theorem tsum_sq_fourierCoeff (f : lp ℂ 2 <| @haarAddCircle T hT) :
+theorem tsum_sq_fourierCoeff (f : Lp ℂ 2 <| @haarAddCircle T hT) :
     (∑' i : ℤ, ‖fourierCoeff f i‖ ^ 2) = ∫ t : AddCircle T, ‖f t‖ ^ 2 ∂haarAddCircle :=
   by
   simp_rw [← fourierBasis_repr]
@@ -499,7 +499,7 @@ theorem hasSum_fourier_series_of_summable (h : Summable (fourierCoeff f)) :
   by
   have sum_L2 := hasSum_fourier_series_L2 (to_Lp 2 haar_add_circle ℂ f)
   simp_rw [fourierCoeff_toLp] at sum_L2
-  refine' ContinuousMap.hasSum_of_hasSum_lp (summable_of_summable_norm _) sum_L2
+  refine' ContinuousMap.hasSum_of_hasSum_Lp (summable_of_summable_norm _) sum_L2
   simp_rw [norm_smul, fourier_norm, mul_one, summable_norm_iff]
   exact h
 #align has_sum_fourier_series_of_summable hasSum_fourier_series_of_summable

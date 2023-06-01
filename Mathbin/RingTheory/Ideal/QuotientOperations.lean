@@ -213,12 +213,10 @@ theorem Quotient.mkₐ_toRingHom (I : Ideal A) :
 #align ideal.quotient.mkₐ_to_ring_hom Ideal.Quotient.mkₐ_toRingHom
 -/
 
-#print Ideal.Quotient.mkₐ_eq_mk /-
 @[simp]
 theorem Quotient.mkₐ_eq_mk (I : Ideal A) : ⇑(Quotient.mkₐ R₁ I) = Ideal.Quotient.mk I :=
   rfl
 #align ideal.quotient.mkₐ_eq_mk Ideal.Quotient.mkₐ_eq_mk
--/
 
 #print Ideal.Quotient.algebraMap_eq /-
 @[simp]
@@ -241,12 +239,10 @@ theorem Quotient.mk_algebraMap (I : Ideal A) (x : R₁) :
   rfl
 #align ideal.quotient.mk_algebra_map Ideal.Quotient.mk_algebraMap
 
-#print Ideal.Quotient.mkₐ_surjective /-
 /-- The canonical morphism `A →ₐ[R₁] I.quotient` is surjective. -/
 theorem Quotient.mkₐ_surjective (I : Ideal A) : Function.Surjective (Quotient.mkₐ R₁ I) :=
   surjective_quot_mk _
 #align ideal.quotient.mkₐ_surjective Ideal.Quotient.mkₐ_surjective
--/
 
 /-- The kernel of `A →ₐ[R₁] I.quotient` is `I`. -/
 @[simp]
@@ -256,7 +252,6 @@ theorem Quotient.mkₐ_ker (I : Ideal A) : (Quotient.mkₐ R₁ I : A →+* A �
 
 variable {R₁}
 
-#print Ideal.Quotient.liftₐ /-
 /-- `ideal.quotient.lift` as an `alg_hom`. -/
 def Quotient.liftₐ (I : Ideal A) (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈ I → f a = 0) :
     A ⧸ I →ₐ[R₁] B :=
@@ -272,7 +267,6 @@ def Quotient.liftₐ (I : Ideal A) (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈
         AlgHom.coe_toRingHom, Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
         map_smul, map_one] }
 #align ideal.quotient.liftₐ Ideal.Quotient.liftₐ
--/
 
 @[simp]
 theorem Quotient.liftₐ_apply (I : Ideal A) (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈ I → f a = 0) (x) :
@@ -318,14 +312,12 @@ theorem kerLiftAlg_injective (f : A →ₐ[R₁] B) : Function.Injective (kerLif
   RingHom.kerLift_injective f
 #align ideal.ker_lift_alg_injective Ideal.kerLiftAlg_injective
 
-#print Ideal.quotientKerAlgEquivOfRightInverse /-
 /-- The **first isomorphism** theorem for algebras, computable version. -/
 def quotientKerAlgEquivOfRightInverse {f : A →ₐ[R₁] B} {g : B → A}
     (hf : Function.RightInverse g f) : (A ⧸ f.toRingHom.ker) ≃ₐ[R₁] B :=
   { RingHom.quotientKerEquivOfRightInverse fun x => show f.toRingHom (g x) = x from hf x,
     kerLiftAlg f with }
 #align ideal.quotient_ker_alg_equiv_of_right_inverse Ideal.quotientKerAlgEquivOfRightInverse
--/
 
 @[simp]
 theorem quotientKerAlgEquivOfRightInverse.apply {f : A →ₐ[R₁] B} {g : B → A}
@@ -341,13 +333,11 @@ theorem QuotientKerAlgEquivOfRightInverseSymm.apply {f : A →ₐ[R₁] B} {g : 
   rfl
 #align ideal.quotient_ker_alg_equiv_of_right_inverse_symm.apply Ideal.QuotientKerAlgEquivOfRightInverseSymm.apply
 
-#print Ideal.quotientKerAlgEquivOfSurjective /-
 /-- The **first isomorphism theorem** for algebras. -/
 noncomputable def quotientKerAlgEquivOfSurjective {f : A →ₐ[R₁] B} (hf : Function.Surjective f) :
     (A ⧸ f.toRingHom.ker) ≃ₐ[R₁] B :=
   quotientKerAlgEquivOfRightInverse (Classical.choose_spec hf.HasRightInverse)
 #align ideal.quotient_ker_alg_equiv_of_surjective Ideal.quotientKerAlgEquivOfSurjective
--/
 
 /-- The ring hom `R/I →+* S/J` induced by a ring hom `f : R →+* S` with `I ≤ f⁻¹(J)` -/
 def quotientMap {I : Ideal R} (J : Ideal S) (f : R →+* S) (hIJ : I ≤ J.comap f) : R ⧸ I →+* S ⧸ J :=

@@ -421,11 +421,11 @@ instance Sum.sampleable : SampleableBifunctor.{u, v} Sum
 #align slim_check.sum.sampleable SlimCheck.Sum.sampleable
 
 instance Rat.sampleable : Sampleable ℚ :=
-  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x [anonymous]) fun r =>
+  (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r =>
       (r.Num, ⟨r.den, r.Pos⟩)) <|
     by
     intro i
-    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [[anonymous]]
+    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
     mono*
     · rw [← Int.ofNat_le, Int.coe_natAbs, Int.coe_natAbs]
       apply Int.abs_ediv_le_abs

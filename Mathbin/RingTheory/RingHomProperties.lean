@@ -84,7 +84,7 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   revert e₁ e₂
   dsimp [RingEquiv.toRingHom, IsLocalization.Away.map]
   simp only [CategoryTheory.comp_apply, RingEquiv.refl_apply, IsLocalization.algEquiv_apply,
-    IsLocalization.ringEquivOfRingEquiv_apply, RingHom.coe_mk, [anonymous],
+    IsLocalization.ringEquivOfRingEquiv_apply, RingHom.coe_mk, RingEquiv.toFun_eq_coe,
     IsLocalization.ringEquivOfRingEquiv_eq, IsLocalization.map_eq]
 #align ring_hom.respects_iso.is_localization_away_iff RingHom.RespectsIso.is_localization_away_iff
 

@@ -447,7 +447,7 @@ theorem IsPrimitiveRoot.adjoin_isCyclotomicExtension {ζ : B} {n : ℕ+} (h : Is
       · rw [Set.mem_singleton_iff] at hb
         refine' subset_adjoin _
         simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq, hb]
-        rw [← Subalgebra.coe_eq_one, Subalgebra.coe_pow, [anonymous]]
+        rw [← Subalgebra.coe_eq_one, Subalgebra.coe_pow, SetLike.coe_mk]
         exact ((IsPrimitiveRoot.iff_def ζ n).1 h).1
       · exact Subalgebra.algebraMap_mem _ _
       · exact Subalgebra.add_mem _ hb₁ hb₂
@@ -686,18 +686,18 @@ instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (Cyclo
           _⟩
       letI : IsScalarTower A K (CyclotomicField n K) :=
         IsScalarTower.of_algebraMap_eq (congr_fun rfl)
-      rw [[anonymous], ← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply,
+      rw [SetLike.coe_mk, ← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply,
         @IsScalarTower.algebraMap_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w, ←
         RingHom.map_mul, hw, ← IsScalarTower.algebraMap_apply]
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.2 + b.1 * a.2, a.2 * b.2, mul_mem_nonZeroDivisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [[anonymous], RingHom.map_mul, add_mul, ← mul_assoc, ha, mul_comm ((algebraMap _ _) ↑a.2),
-        ← mul_assoc, hb]
+      rw [SetLike.coe_mk, RingHom.map_mul, add_mul, ← mul_assoc, ha,
+        mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, hb]
       simp only [map_add, map_mul]
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.1, a.2 * b.2, mul_mem_nonZeroDivisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [[anonymous], RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ← mul_assoc z,
-        hb, ← mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
+      rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ←
+        mul_assoc z, hb, ← mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
       simp only [map_mul]
   eq_iff_exists x y :=
     ⟨fun h => ⟨1, by rw [adjoin_algebra_injective n A K h]⟩, fun ⟨c, hc⟩ => by

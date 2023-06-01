@@ -407,7 +407,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
           (j.cast_lt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
-                (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                (by simpa only [Fin.val_eq_coe, ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) ≫
         δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) :=
   by

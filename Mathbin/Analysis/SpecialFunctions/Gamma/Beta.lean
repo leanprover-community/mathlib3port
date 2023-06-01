@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.beta
-! leanprover-community/mathlib commit b76e9f654df09f8a832aeee712511fe5f3e57869
+! leanprover-community/mathlib commit cca40788df1b8755d5baf17ab2f27dacc2e17acb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -511,6 +511,14 @@ theorem gamma_eq_zero_iff (s : ℂ) : gamma s = 0 ↔ ∃ m : ℕ, s = -m :=
   · contrapose!; exact Gamma_ne_zero
   · rintro ⟨m, rfl⟩; exact Gamma_neg_nat_eq_zero m
 #align complex.Gamma_eq_zero_iff Complex.gamma_eq_zero_iff
+
+/-- A weaker, but easier-to-apply, version of `complex.Gamma_ne_zero`. -/
+theorem gamma_ne_zero_of_re_pos {s : ℂ} (hs : 0 < re s) : gamma s ≠ 0 :=
+  by
+  refine' Gamma_ne_zero fun m => _
+  contrapose! hs
+  simpa only [hs, neg_re, ← of_real_nat_cast, of_real_re, neg_nonpos] using Nat.cast_nonneg _
+#align complex.Gamma_ne_zero_of_re_pos Complex.gamma_ne_zero_of_re_pos
 
 end Complex
 

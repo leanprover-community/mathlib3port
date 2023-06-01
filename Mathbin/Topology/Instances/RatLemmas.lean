@@ -37,10 +37,10 @@ compactification.
 
 open Set Metric Filter TopologicalSpace
 
-open scoped Topology Alexandroff
+open scoped Topology OnePoint
 
 -- mathport name: «exprℚ∞»
-local notation "ℚ∞" => Alexandroff ℚ
+local notation "ℚ∞" => OnePoint ℚ
 
 namespace Rat
 
@@ -73,21 +73,21 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
 #align rat.not_countably_generated_cocompact Rat.not_countably_generated_cocompact
 -/
 
-theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
+theorem not_countably_generated_nhds_infty_opc : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
   by
   intro
   have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
-  rw [Alexandroff.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
+  rw [OnePoint.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
   exact not_countably_generated_cocompact this
-#align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
+#align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_opc
 
-theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞ := by intro ;
+theorem not_firstCountableTopology_opc : ¬FirstCountableTopology ℚ∞ := by intro ;
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
-#align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroff
+#align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_opc
 
-theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ := by intro ;
+theorem not_secondCountableTopology_opc : ¬SecondCountableTopology ℚ∞ := by intro ;
   exact not_first_countable_topology_alexandroff inferInstance
-#align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroff
+#align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_opc
 
 instance : TotallyDisconnectedSpace ℚ :=
   by

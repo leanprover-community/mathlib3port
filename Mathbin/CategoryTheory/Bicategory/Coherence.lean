@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.coherence
-! leanprover-community/mathlib commit f187f1074fa1857c94589cc653c786cadc4c35ff
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Bicategory.LocallyDiscrete
 
 /-!
 # The coherence theorem for bicategories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we prove the coherence theorem for bicategories, stated in the following form: the
 free bicategory over any quiver is locally thin.

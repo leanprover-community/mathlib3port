@@ -490,7 +490,7 @@ section PosPart
 
 /-- Positive part of a simple function in L1 space.  -/
 def posPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
-  ⟨lp.posPart (f : α →₁[μ] ℝ), by
+  ⟨Lp.posPart (f : α →₁[μ] ℝ), by
     rcases f with ⟨f, s, hsf⟩
     use s.pos_part
     simp only [Subtype.coe_mk, Lp.coe_pos_part, ← hsf, ae_eq_fun.pos_part_mk, simple_func.pos_part,
@@ -503,12 +503,12 @@ def negPart (f : α →₁ₛ[μ] ℝ) : α →₁ₛ[μ] ℝ :=
 #align measure_theory.L1.simple_func.neg_part MeasureTheory.L1.SimpleFunc.negPart
 
 @[norm_cast]
-theorem coe_posPart (f : α →₁ₛ[μ] ℝ) : (posPart f : α →₁[μ] ℝ) = lp.posPart (f : α →₁[μ] ℝ) :=
+theorem coe_posPart (f : α →₁ₛ[μ] ℝ) : (posPart f : α →₁[μ] ℝ) = Lp.posPart (f : α →₁[μ] ℝ) :=
   rfl
 #align measure_theory.L1.simple_func.coe_pos_part MeasureTheory.L1.SimpleFunc.coe_posPart
 
 @[norm_cast]
-theorem coe_negPart (f : α →₁ₛ[μ] ℝ) : (negPart f : α →₁[μ] ℝ) = lp.negPart (f : α →₁[μ] ℝ) :=
+theorem coe_negPart (f : α →₁ₛ[μ] ℝ) : (negPart f : α →₁[μ] ℝ) = Lp.negPart (f : α →₁[μ] ℝ) :=
   rfl
 #align measure_theory.L1.simple_func.coe_neg_part MeasureTheory.L1.SimpleFunc.coe_negPart
 
@@ -774,7 +774,7 @@ theorem continuous_integral : Continuous fun f : α →₁[μ] E => integral f :
 section PosPart
 
 theorem integral_eq_norm_posPart_sub (f : α →₁[μ] ℝ) :
-    integral f = ‖lp.posPart f‖ - ‖lp.negPart f‖ :=
+    integral f = ‖Lp.posPart f‖ - ‖Lp.negPart f‖ :=
   by
   -- Use `is_closed_property` and `is_closed_eq`
   refine'
@@ -1143,7 +1143,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
   by
   let f₁ := hf.toL1 f
   -- Go to the `L¹` space
-  have eq₁ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal <| f a ∂μ) = ‖lp.posPart f₁‖ :=
+  have eq₁ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal <| f a ∂μ) = ‖Lp.posPart f₁‖ :=
     by
     rw [L1.norm_def]
     congr 1
@@ -1155,7 +1155,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [Real.nnnorm_of_nonneg (le_max_right _ _)]
     simp only [Real.coe_toNNReal', Subtype.coe_mk]
   -- Go to the `L¹` space
-  have eq₂ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal <| -f a ∂μ) = ‖lp.negPart f₁‖ :=
+  have eq₂ : ENNReal.toReal (∫⁻ a, ENNReal.ofReal <| -f a ∂μ) = ‖Lp.negPart f₁‖ :=
     by
     rw [L1.norm_def]
     congr 1
@@ -1994,7 +1994,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
   simp_rw [ENNReal.one_toReal, _root_.inv_one, Real.rpow_one, Real.norm_eq_abs, ←
     max_zero_add_max_neg_zero_eq_abs_self, ← Real.coe_toNNReal']
   rw [integral_add hfint.real_to_nnreal]
-  · simp only [Real.coe_toNNReal', ENNReal.toReal_mul, [anonymous], ENNReal.one_toReal,
+  · simp only [Real.coe_toNNReal', ENNReal.toReal_mul, ENNReal.toReal_bit0, ENNReal.one_toReal,
       ENNReal.coe_toReal] at hfint'⊢
     refine' (add_le_add_left hfint' _).trans _
     rwa [← two_mul, mul_assoc, mul_le_mul_left (two_pos : (0 : ℝ) < 2)]

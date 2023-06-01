@@ -4356,8 +4356,8 @@ instance locallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α)
   rcases μ.exists_is_open_measure_lt_top x with ⟨o, xo, o_open, μo⟩
   refine' ⟨o, o_open.mem_nhds xo, _⟩
   apply ENNReal.mul_lt_top _ μo.ne
-  simp only [RingHom.toMonoidHom_eq_coe, [anonymous], ENNReal.coe_ne_top, ENNReal.coe_ofNNRealHom,
-    Ne.def, not_false_iff]
+  simp only [RingHom.toMonoidHom_eq_coe, RingHom.coe_monoidHom, ENNReal.coe_ne_top,
+    ENNReal.coe_ofNNRealHom, Ne.def, not_false_iff]
 #align measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.locallyFiniteMeasureSmulNnreal
 
 protected theorem Measure.isTopologicalBasis_isOpen_lt_top [TopologicalSpace α] (μ : Measure α)

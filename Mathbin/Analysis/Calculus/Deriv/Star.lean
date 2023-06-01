@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv.star
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Calculus.Fderiv.Star
 
 /-!
 # Star operations on derivatives
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the usual formulas (and existence assertions) for the derivative of the star
 operation. Note that these only apply when the field that the derivative is respect to has a trivial
@@ -83,10 +86,12 @@ protected theorem deriv.star : deriv (fun y => star (f y)) x = star (deriv f x) 
   FunLike.congr_fun fderiv_star _
 #align deriv.star deriv.star
 
+#print deriv.star' /-
 @[simp]
 protected theorem deriv.star' : (deriv fun y => star (f y)) = fun x => star (deriv f x) :=
   funext fun x => deriv.star
 #align deriv.star' deriv.star'
+-/
 
 end Star
 

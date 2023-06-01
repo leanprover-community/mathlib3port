@@ -143,7 +143,7 @@ theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEndomorphis
   obtain ⟨k, hk⟩ := hIM
   have hk' : I.lcs M k = ⊥ := by
     simp only [← coe_to_submodule_eq_iff, I.coe_lcs_eq, hk, bot_coe_submodule]
-  suffices ∀ l, lower_central_series R L M (l * n) ≤ I.lcs M l
+  suffices ∀ l, lowerCentralSeries R L M (l * n) ≤ I.lcs M l
     by
     use k * n
     simpa [hk'] using this k

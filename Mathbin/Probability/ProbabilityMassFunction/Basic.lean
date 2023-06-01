@@ -276,7 +276,7 @@ theorem toOuterMeasure_apply_eq_of_inter_support_eq {s t : Set α}
 
 @[simp]
 theorem toOuterMeasure_apply_fintype [Fintype α] : p.toOuterMeasure s = ∑ x, s.indicator p x :=
-  (p.to_outer_measure_apply s).trans (tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
+  (p.toOuterMeasure_apply s).trans (tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
 #align pmf.to_outer_measure_apply_fintype Pmf.toOuterMeasure_apply_fintype
 
 end OuterMeasure
@@ -307,7 +307,7 @@ theorem toMeasure_apply_eq_toOuterMeasure_apply (hs : MeasurableSet s) :
 -/
 
 theorem toMeasure_apply (hs : MeasurableSet s) : p.toMeasure s = ∑' x, s.indicator p x :=
-  (p.toMeasure_apply_eq_toOuterMeasure_apply s hs).trans (p.to_outer_measure_apply s)
+  (p.toMeasure_apply_eq_toOuterMeasure_apply s hs).trans (p.toOuterMeasure_apply s)
 #align pmf.to_measure_apply Pmf.toMeasure_apply
 
 #print Pmf.toMeasure_apply_singleton /-
@@ -374,7 +374,7 @@ theorem toMeasure_apply_finset (s : Finset α) : p.toMeasure s = ∑ x in s, p x
 #align pmf.to_measure_apply_finset Pmf.toMeasure_apply_finset
 
 theorem toMeasure_apply_of_finite (hs : s.Finite) : p.toMeasure s = ∑' x, s.indicator p x :=
-  (p.toMeasure_apply_eq_toOuterMeasure_apply s hs.MeasurableSet).trans (p.to_outer_measure_apply s)
+  (p.toMeasure_apply_eq_toOuterMeasure_apply s hs.MeasurableSet).trans (p.toOuterMeasure_apply s)
 #align pmf.to_measure_apply_of_finite Pmf.toMeasure_apply_of_finite
 
 @[simp]

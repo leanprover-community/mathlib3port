@@ -432,18 +432,14 @@ theorem coe_mul : ↑(r * p) = (r * p : ℝ≥0∞) :=
   WithTop.coe_mul
 #align ennreal.coe_mul ENNReal.coe_mul
 
-/- warning: ennreal.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] : (↑(bit0 r) : ℝ≥0∞) = bit0 r :=
+theorem coe_bit0 : (↑(bit0 r) : ℝ≥0∞) = bit0 r :=
   coe_add
-#align ennreal.coe_bit0 [anonymous]
+#align ennreal.coe_bit0 ENNReal.coe_bit0
 
-/- warning: ennreal.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] : (↑(bit1 r) : ℝ≥0∞) = bit1 r := by simp [bit1]
-#align ennreal.coe_bit1 [anonymous]
+theorem coe_bit1 : (↑(bit1 r) : ℝ≥0∞) = bit1 r := by simp [bit1]
+#align ennreal.coe_bit1 ENNReal.coe_bit1
 
 theorem coe_two : ((2 : ℝ≥0) : ℝ≥0∞) = 2 := by norm_cast
 #align ennreal.coe_two ENNReal.coe_two
@@ -1420,119 +1416,85 @@ end Interval
 
 section Bit
 
-/- warning: ennreal.bit0_strict_mono clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_strict_mono [anonymous]ₓ'. -/
 @[mono]
-theorem [anonymous] : StrictMono (bit0 : ℝ≥0∞ → ℝ≥0∞) := fun a b h => add_lt_add h h
-#align ennreal.bit0_strict_mono [anonymous]
+theorem bit0_strictMono : StrictMono (bit0 : ℝ≥0∞ → ℝ≥0∞) := fun a b h => add_lt_add h h
+#align ennreal.bit0_strict_mono ENNReal.bit0_strictMono
 
-/- warning: ennreal.bit0_injective clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_injective [anonymous]ₓ'. -/
-theorem [anonymous] : Function.Injective (bit0 : ℝ≥0∞ → ℝ≥0∞) :=
-  [anonymous].Injective
-#align ennreal.bit0_injective [anonymous]
+theorem bit0_injective : Function.Injective (bit0 : ℝ≥0∞ → ℝ≥0∞) :=
+  bit0_strictMono.Injective
+#align ennreal.bit0_injective ENNReal.bit0_injective
 
-/- warning: ennreal.bit0_lt_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_lt_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 a < bit0 b ↔ a < b :=
-  [anonymous].lt_iff_lt
-#align ennreal.bit0_lt_bit0 [anonymous]
+theorem bit0_lt_bit0 : bit0 a < bit0 b ↔ a < b :=
+  bit0_strictMono.lt_iff_lt
+#align ennreal.bit0_lt_bit0 ENNReal.bit0_lt_bit0
 
-/- warning: ennreal.bit0_le_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_le_bit0 [anonymous]ₓ'. -/
 @[simp, mono]
-theorem [anonymous] : bit0 a ≤ bit0 b ↔ a ≤ b :=
-  [anonymous].le_iff_le
-#align ennreal.bit0_le_bit0 [anonymous]
+theorem bit0_le_bit0 : bit0 a ≤ bit0 b ↔ a ≤ b :=
+  bit0_strictMono.le_iff_le
+#align ennreal.bit0_le_bit0 ENNReal.bit0_le_bit0
 
-/- warning: ennreal.bit0_inj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_inj [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 a = bit0 b ↔ a = b :=
-  [anonymous].eq_iff
-#align ennreal.bit0_inj [anonymous]
+theorem bit0_inj : bit0 a = bit0 b ↔ a = b :=
+  bit0_injective.eq_iff
+#align ennreal.bit0_inj ENNReal.bit0_inj
 
-/- warning: ennreal.bit0_eq_zero_iff clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_eq_zero_iff [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 a = 0 ↔ a = 0 :=
-  [anonymous].eq_iff' bit0_zero
-#align ennreal.bit0_eq_zero_iff [anonymous]
+theorem bit0_eq_zero_iff : bit0 a = 0 ↔ a = 0 :=
+  bit0_injective.eq_iff' bit0_zero
+#align ennreal.bit0_eq_zero_iff ENNReal.bit0_eq_zero_iff
 
-/- warning: ennreal.bit0_top clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_top [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 ∞ = ∞ :=
+theorem bit0_top : bit0 ∞ = ∞ :=
   add_top _
-#align ennreal.bit0_top [anonymous]
+#align ennreal.bit0_top ENNReal.bit0_top
 
-/- warning: ennreal.bit0_eq_top_iff clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit0_eq_top_iff [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit0 a = ∞ ↔ a = ∞ :=
-  [anonymous].eq_iff' [anonymous]
-#align ennreal.bit0_eq_top_iff [anonymous]
+theorem bit0_eq_top_iff : bit0 a = ∞ ↔ a = ∞ :=
+  bit0_injective.eq_iff' bit0_top
+#align ennreal.bit0_eq_top_iff ENNReal.bit0_eq_top_iff
 
-/- warning: ennreal.bit1_strict_mono clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_strict_mono [anonymous]ₓ'. -/
 @[mono]
-theorem [anonymous] : StrictMono (bit1 : ℝ≥0∞ → ℝ≥0∞) := fun a b h =>
-  ENNReal.add_lt_add_right one_ne_top ([anonymous] h)
-#align ennreal.bit1_strict_mono [anonymous]
+theorem bit1_strictMono : StrictMono (bit1 : ℝ≥0∞ → ℝ≥0∞) := fun a b h =>
+  ENNReal.add_lt_add_right one_ne_top (bit0_strictMono h)
+#align ennreal.bit1_strict_mono ENNReal.bit1_strictMono
 
-/- warning: ennreal.bit1_injective clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_injective [anonymous]ₓ'. -/
-theorem [anonymous] : Function.Injective (bit1 : ℝ≥0∞ → ℝ≥0∞) :=
-  [anonymous].Injective
-#align ennreal.bit1_injective [anonymous]
+theorem bit1_injective : Function.Injective (bit1 : ℝ≥0∞ → ℝ≥0∞) :=
+  bit1_strictMono.Injective
+#align ennreal.bit1_injective ENNReal.bit1_injective
 
-/- warning: ennreal.bit1_lt_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_lt_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 a < bit1 b ↔ a < b :=
-  [anonymous].lt_iff_lt
-#align ennreal.bit1_lt_bit1 [anonymous]
+theorem bit1_lt_bit1 : bit1 a < bit1 b ↔ a < b :=
+  bit1_strictMono.lt_iff_lt
+#align ennreal.bit1_lt_bit1 ENNReal.bit1_lt_bit1
 
-/- warning: ennreal.bit1_le_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_le_bit1 [anonymous]ₓ'. -/
 @[simp, mono]
-theorem [anonymous] : bit1 a ≤ bit1 b ↔ a ≤ b :=
-  [anonymous].le_iff_le
-#align ennreal.bit1_le_bit1 [anonymous]
+theorem bit1_le_bit1 : bit1 a ≤ bit1 b ↔ a ≤ b :=
+  bit1_strictMono.le_iff_le
+#align ennreal.bit1_le_bit1 ENNReal.bit1_le_bit1
 
-/- warning: ennreal.bit1_inj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_inj [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 a = bit1 b ↔ a = b :=
-  [anonymous].eq_iff
-#align ennreal.bit1_inj [anonymous]
+theorem bit1_inj : bit1 a = bit1 b ↔ a = b :=
+  bit1_injective.eq_iff
+#align ennreal.bit1_inj ENNReal.bit1_inj
 
-/- warning: ennreal.bit1_ne_zero clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_ne_zero [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 a ≠ 0 := by simp [bit1]
-#align ennreal.bit1_ne_zero [anonymous]
+theorem bit1_ne_zero : bit1 a ≠ 0 := by simp [bit1]
+#align ennreal.bit1_ne_zero ENNReal.bit1_ne_zero
 
-/- warning: ennreal.bit1_top clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_top [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 ∞ = ∞ := by rw [bit1, bit0_top, top_add]
-#align ennreal.bit1_top [anonymous]
+theorem bit1_top : bit1 ∞ = ∞ := by rw [bit1, bit0_top, top_add]
+#align ennreal.bit1_top ENNReal.bit1_top
 
-/- warning: ennreal.bit1_eq_top_iff clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_eq_top_iff [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 a = ∞ ↔ a = ∞ :=
-  [anonymous].eq_iff' [anonymous]
-#align ennreal.bit1_eq_top_iff [anonymous]
+theorem bit1_eq_top_iff : bit1 a = ∞ ↔ a = ∞ :=
+  bit1_injective.eq_iff' bit1_top
+#align ennreal.bit1_eq_top_iff ENNReal.bit1_eq_top_iff
 
-/- warning: ennreal.bit1_eq_one_iff clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.bit1_eq_one_iff [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : bit1 a = 1 ↔ a = 0 :=
-  [anonymous].eq_iff' bit1_zero
-#align ennreal.bit1_eq_one_iff [anonymous]
+theorem bit1_eq_one_iff : bit1 a = 1 ↔ a = 0 :=
+  bit1_injective.eq_iff' bit1_zero
+#align ennreal.bit1_eq_one_iff ENNReal.bit1_eq_one_iff
 
 end Bit
 
@@ -2559,49 +2521,37 @@ theorem ofReal_prod_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i �
   exact Real.toNNReal_prod_of_nonneg hf
 #align ennreal.of_real_prod_of_nonneg ENNReal.ofReal_prod_of_nonneg
 
-/- warning: ennreal.to_nnreal_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.to_nnreal_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {x : ℝ≥0∞} : (bit0 x).toNNReal = bit0 x.toNNReal :=
+theorem toNNReal_bit0 {x : ℝ≥0∞} : (bit0 x).toNNReal = bit0 x.toNNReal :=
   by
   induction x using WithTop.recTopCoe
   · simp
   · exact to_nnreal_add coe_ne_top coe_ne_top
-#align ennreal.to_nnreal_bit0 [anonymous]
+#align ennreal.to_nnreal_bit0 ENNReal.toNNReal_bit0
 
-/- warning: ennreal.to_nnreal_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.to_nnreal_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {x : ℝ≥0∞} (hx_top : x ≠ ∞) : (bit1 x).toNNReal = bit1 x.toNNReal := by
+theorem toNNReal_bit1 {x : ℝ≥0∞} (hx_top : x ≠ ∞) : (bit1 x).toNNReal = bit1 x.toNNReal := by
   simp [bit1, bit1, to_nnreal_add (by rwa [Ne.def, bit0_eq_top_iff]) ENNReal.one_ne_top]
-#align ennreal.to_nnreal_bit1 [anonymous]
+#align ennreal.to_nnreal_bit1 ENNReal.toNNReal_bit1
 
-/- warning: ennreal.to_real_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.to_real_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {x : ℝ≥0∞} : (bit0 x).toReal = bit0 x.toReal := by simp [ENNReal.toReal]
-#align ennreal.to_real_bit0 [anonymous]
+theorem toReal_bit0 {x : ℝ≥0∞} : (bit0 x).toReal = bit0 x.toReal := by simp [ENNReal.toReal]
+#align ennreal.to_real_bit0 ENNReal.toReal_bit0
 
-/- warning: ennreal.to_real_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.to_real_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {x : ℝ≥0∞} (hx_top : x ≠ ∞) : (bit1 x).toReal = bit1 x.toReal := by
+theorem toReal_bit1 {x : ℝ≥0∞} (hx_top : x ≠ ∞) : (bit1 x).toReal = bit1 x.toReal := by
   simp [ENNReal.toReal, hx_top]
-#align ennreal.to_real_bit1 [anonymous]
+#align ennreal.to_real_bit1 ENNReal.toReal_bit1
 
-/- warning: ennreal.of_real_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.of_real_bit0 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (r : ℝ) : ENNReal.ofReal (bit0 r) = bit0 (ENNReal.ofReal r) := by
+theorem ofReal_bit0 (r : ℝ) : ENNReal.ofReal (bit0 r) = bit0 (ENNReal.ofReal r) := by
   simp [ENNReal.ofReal]
-#align ennreal.of_real_bit0 [anonymous]
+#align ennreal.of_real_bit0 ENNReal.ofReal_bit0
 
-/- warning: ennreal.of_real_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ennreal.of_real_bit1 [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {r : ℝ} (hr : 0 ≤ r) : ENNReal.ofReal (bit1 r) = bit1 (ENNReal.ofReal r) :=
+theorem ofReal_bit1 {r : ℝ} (hr : 0 ≤ r) : ENNReal.ofReal (bit1 r) = bit1 (ENNReal.ofReal r) :=
   (ofReal_add (by simp [hr]) zero_le_one).trans (by simp [Real.toNNReal_one, bit1])
-#align ennreal.of_real_bit1 [anonymous]
+#align ennreal.of_real_bit1 ENNReal.ofReal_bit1
 
 end Real
 

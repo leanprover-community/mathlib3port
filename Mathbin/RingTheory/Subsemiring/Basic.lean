@@ -566,7 +566,7 @@ def topEquiv : (⊤ : Subsemiring R) ≃+* R
   toFun r := r
   invFun r := ⟨r, Subsemiring.mem_top r⟩
   left_inv r := SetLike.eta r _
-  right_inv r := [anonymous] r _
+  right_inv r := SetLike.coe_mk r _
   map_mul' := (⊤ : Subsemiring R).coe_mul
   map_add' := (⊤ : Subsemiring R).val_add
 #align subsemiring.top_equiv Subsemiring.topEquiv

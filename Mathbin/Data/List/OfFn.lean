@@ -41,24 +41,20 @@ open Nat
 
 namespace List
 
-/- warning: list.length_of_fn_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.length_of_fn_aux [anonymous]ₓ'. -/
-theorem [anonymous] {n} (f : Fin n → α) : ∀ m h l, length (ofFnAux f m h l) = length l + m
+theorem length_ofFnAux {n} (f : Fin n → α) : ∀ m h l, length (ofFnAux f m h l) = length l + m
   | 0, h, l => rfl
   | succ m, h, l => (length_of_fn_aux m _ _).trans (succ_add _ _)
-#align list.length_of_fn_aux [anonymous]
+#align list.length_of_fn_aux List.length_ofFnAux
 
 #print List.length_ofFn /-
 /-- The length of a list converted from a function is the size of the domain. -/
 @[simp]
 theorem length_ofFn {n} (f : Fin n → α) : length (ofFn f) = n :=
-  ([anonymous] f _ _ _).trans (zero_add _)
+  (length_ofFnAux f _ _ _).trans (zero_add _)
 #align list.length_of_fn List.length_ofFn
 -/
 
-/- warning: list.nth_of_fn_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.nth_of_fn_aux [anonymous]ₓ'. -/
-theorem [anonymous] {n} (f : Fin n → α) (i) :
+theorem get?_ofFnAux {n} (f : Fin n → α) (i) :
     ∀ m h l, (∀ i, get? l i = ofFnNthVal f (i + m)) → get? (ofFnAux f m h l) i = ofFnNthVal f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
@@ -67,13 +63,13 @@ theorem [anonymous] {n} (f : Fin n → α) (i) :
         intro j; cases' j with j
         · simp only [nth, of_fn_nth_val, zero_add, dif_pos (show m < n from h)]
         · simp only [nth, H, add_succ, succ_add])
-#align list.nth_of_fn_aux [anonymous]
+#align list.nth_of_fn_aux List.get?_ofFnAux
 
 #print List.get?_ofFn /-
 /-- The `n`th element of a list -/
 @[simp]
 theorem get?_ofFn {n} (f : Fin n → α) (i) : get? (ofFn f) i = ofFnNthVal f i :=
-  [anonymous] f _ _ _ _ fun i => by
+  get?_ofFnAux f _ _ _ _ fun i => by
     simp only [of_fn_nth_val, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
 #align list.nth_of_fn List.get?_ofFn
 -/

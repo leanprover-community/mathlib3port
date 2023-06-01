@@ -282,7 +282,7 @@ def sumAlgEquiv : MvPolynomial (Sum S₁ S₂) R ≃ₐ[R] MvPolynomial S₁ (Mv
       have A : algebraMap R (MvPolynomial S₁ (MvPolynomial S₂ R)) r = (C (C r) : _) := by rfl
       have B : algebraMap R (MvPolynomial (Sum S₁ S₂) R) r = C r := by rfl
       simp only [sum_ring_equiv, sum_to_iter_C, mv_polynomial_equiv_mv_polynomial_apply,
-        [anonymous], A, B] }
+        RingEquiv.toFun_eq_coe, A, B] }
 #align mv_polynomial.sum_alg_equiv MvPolynomial.sumAlgEquiv
 -/
 

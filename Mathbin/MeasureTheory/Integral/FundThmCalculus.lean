@@ -454,7 +454,7 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_right
       fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
-    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab strongly_measurable_at_bot hmeas
+    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab stronglyMeasurableAt_bot hmeas
       ((tendsto_bot : tendsto _ ⊥ (𝓝 0)).mono_left inf_le_left) hf
       (tendsto_const_pure : tendsto _ _ (pure a)) tendsto_const_pure hu hv
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_right intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_right
@@ -475,7 +475,7 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_left
       fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
-    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab hmeas strongly_measurable_at_bot
+    measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab hmeas stronglyMeasurableAt_bot
       hf ((tendsto_bot : tendsto _ ⊥ (𝓝 0)).mono_left inf_le_left) hu hv
       (tendsto_const_pure : tendsto _ _ (pure b)) tendsto_const_pure
 #align interval_integral.measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left intervalIntegral.measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_left
@@ -1281,7 +1281,7 @@ theorem integrableOn_deriv_right_of_nonneg (hcont : ContinuousOn g (Icc a b))
   rw [integrableOn_Ioc_iff_integrableOn_Ioo]
   have meas_g' : AEMeasurable g' (volume.restrict (Ioo a b)) :=
     by
-    apply (aEMeasurable_derivWithin_Ioi g _).congr
+    apply (aemeasurable_derivWithin_Ioi g _).congr
     refine' (ae_restrict_mem measurableSet_Ioo).mono fun x hx => _
     exact (hderiv x hx).derivWithin (uniqueDiffWithinAt_Ioi _)
   suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ ENNReal.ofReal (g b - g a)

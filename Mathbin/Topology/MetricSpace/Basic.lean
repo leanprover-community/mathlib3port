@@ -130,16 +130,12 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       
   nonneg_of_mul_nonneg_right this zero_lt_two
 
-/- warning: pseudo_metric_space.edist_dist_tac clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align pseudo_metric_space.edist_dist_tac [anonymous]ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
-#print [anonymous] /-
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
-protected unsafe def [anonymous] : tactic Unit :=
+protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
   tactic.intros >> sorry
-#align pseudo_metric_space.edist_dist_tac [anonymous]
--/
+#align pseudo_metric_space.edist_dist_tac pseudo_metric_space.edist_dist_tac
 
 #print PseudoMetricSpace /-
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic pseudo_metric_space.edist_dist_tac -/
@@ -161,7 +157,7 @@ class PseudoMetricSpace (α : Type u) extends Dist α : Type u where
     @coe ℝ≥0 _ _ ⟨dist x y, PseudoMetricSpace.dist_nonneg' _ ‹_› ‹_› ‹_›⟩
   edist_dist : ∀ x y : α, edist x y = ENNReal.ofReal (dist x y) := by
     run_tac
-      [anonymous]
+      pseudo_metric_space.edist_dist_tac
   toUniformSpace : UniformSpace α := UniformSpace.ofDist dist dist_self dist_comm dist_triangle
   uniformity_dist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | dist p.1 p.2 < ε } := by intros ; rfl
   toBornology : Bornology α := Bornology.ofDist dist dist_self dist_comm dist_triangle

@@ -342,7 +342,7 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
     refine' ⟨Units.mk0 (algebraMap R _ a) fa_ne_zero, _⟩
     rw [_root_.eq_inv_mul_iff_mul_eq, eq_comm, mul_comm I]
     apply Units.ext
-    simp only [FractionalIdeal.coe_mk0, FractionalIdeal.map_canonicalEquiv_mk0, [anonymous],
+    simp only [FractionalIdeal.coe_mk0, FractionalIdeal.map_canonicalEquiv_mk0, SetLike.coe_mk,
       Units.val_mk0, coe_toPrincipalIdeal, coe_coe, Units.val_mul,
       FractionalIdeal.eq_spanSingleton_mul]
     constructor

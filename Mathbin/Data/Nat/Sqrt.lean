@@ -31,30 +31,26 @@ See [Wikipedia, *Methods of computing square roots*]
 
 namespace Nat
 
-/- warning: nat.sqrt_aux_dec clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_dec [anonymous]ₓ'. -/
-theorem [anonymous] {b} (h : b ≠ 0) : shiftr b 2 < b :=
+theorem sqrt_aux_dec {b} (h : b ≠ 0) : shiftr b 2 < b :=
   by
   simp only [shiftr_eq_div_pow]
   apply (Nat.div_lt_iff_lt_mul' (by decide : 0 < 4)).2
   have := Nat.mul_lt_mul_of_pos_left (by decide : 1 < 4) (Nat.pos_of_ne_zero h)
   rwa [mul_one] at this
-#align nat.sqrt_aux_dec [anonymous]
+#align nat.sqrt_aux_dec Nat.sqrt_aux_dec
 
-/- warning: nat.sqrt_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux [anonymous]ₓ'. -/
 /-- Auxiliary function for `nat.sqrt`. See e.g.
 <https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Binary_numeral_system_(base_2)> -/
-def [anonymous] : ℕ → ℕ → ℕ → ℕ
+def sqrtAux : ℕ → ℕ → ℕ → ℕ
   | b, r, n =>
     if b0 : b = 0 then r
     else
       let b' := shiftr b 2
-      have : b' < b := [anonymous] b0
+      have : b' < b := sqrt_aux_dec b0
       match (n - (r + b : ℕ) : ℤ) with
       | (n' : ℕ) => sqrt_aux b' (div2 r + b) n'
       | _ => sqrt_aux b' (div2 r) n
-#align nat.sqrt_aux [anonymous]
+#align nat.sqrt_aux Nat.sqrtAux
 
 #print Nat.sqrt /-
 /-- `sqrt n` is the square root of a natural number `n`. If `n` is not a
@@ -63,34 +59,28 @@ def [anonymous] : ℕ → ℕ → ℕ → ℕ
 def sqrt (n : ℕ) : ℕ :=
   match size n with
   | 0 => 0
-  | succ s => [anonymous] (shiftl 1 (bit0 (div2 s))) 0 n
+  | succ s => sqrtAux (shiftl 1 (bit0 (div2 s))) 0 n
 #align nat.sqrt Nat.sqrt
 -/
 
-/- warning: nat.sqrt_aux_0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_0 [anonymous]ₓ'. -/
-theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
-#align nat.sqrt_aux_0 [anonymous]
+theorem sqrtAux_0 (r n) : sqrtAux 0 r n = r := by rw [sqrt_aux] <;> simp
+#align nat.sqrt_aux_0 Nat.sqrtAux_0
 
 attribute [local simp] sqrt_aux_0
 
-/- warning: nat.sqrt_aux_1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_1 [anonymous]ₓ'. -/
-theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
-    [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r + b) n' := by
+theorem sqrtAux_1 {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
+    sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r + b) n' := by
   rw [sqrt_aux] <;> simp only [h, h₂.symm, Int.ofNat_add, if_false] <;>
     rw [add_comm _ (n' : ℤ), add_sub_cancel, sqrt_aux._match_1]
-#align nat.sqrt_aux_1 [anonymous]
+#align nat.sqrt_aux_1 Nat.sqrtAux_1
 
-/- warning: nat.sqrt_aux_2 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_2 [anonymous]ₓ'. -/
-theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
-    [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r) n :=
+theorem sqrtAux_2 {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
+    sqrtAux b r n = sqrtAux (shiftr b 2) (div2 r) n :=
   by
   rw [sqrt_aux] <;> simp only [h, h₂, if_false]
   cases' Int.eq_negSucc_of_lt_zero (sub_lt_zero.2 (Int.ofNat_lt_ofNat_of_lt h₂)) with k e
   rw [e, sqrt_aux._match_1]
-#align nat.sqrt_aux_2 [anonymous]
+#align nat.sqrt_aux_2 Nat.sqrtAux_2
 
 private def is_sqrt (n q : ℕ) : Prop :=
   q * q ≤ n ∧ n < (q + 1) * (q + 1)
@@ -99,11 +89,11 @@ attribute [-simp] mul_eq_mul_left_iff mul_eq_mul_right_iff
 
 private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
     (hm : shiftr (2 ^ m * 2 ^ m) 2 = m')
-    (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → IsSqrt n ([anonymous] m' (r * 2 ^ m) (n - r * r)))
+    (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → IsSqrt n (sqrtAux m' (r * 2 ^ m) (n - r * r)))
     (H2 :
       (r + 2 ^ m) * (r + 2 ^ m) ≤ n →
-        IsSqrt n ([anonymous] m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
-    IsSqrt n ([anonymous] (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) :=
+        IsSqrt n (sqrtAux m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
+    IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) :=
   by
   have b0 : 2 ^ m * 2 ^ m ≠ 0 := mul_self_ne_zero.2 (pow_ne_zero m two_ne_zero)
   have lb : n - r * r < 2 * r * 2 ^ m + 2 ^ m * 2 ^ m ↔ n < (r + 2 ^ m) * (r + 2 ^ m) :=
@@ -128,7 +118,7 @@ private theorem sqrt_aux_is_sqrt (n) :
     ∀ m r,
       r * r ≤ n →
         n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) →
-          IsSqrt n ([anonymous] (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
+          IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
   | 0, r, h₁, h₂ => by
     apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;>
       [exact ⟨h₁, h⟩;exact ⟨h, h₂⟩]

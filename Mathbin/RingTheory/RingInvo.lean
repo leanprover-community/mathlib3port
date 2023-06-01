@@ -84,12 +84,10 @@ def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) :
 instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=
   ⟨fun f => f.toRingEquiv.toFun⟩
 
-/- warning: ring_invo.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ring_invo.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : RingInvo R) : f.toFun = f :=
+theorem toFun_eq_coe (f : RingInvo R) : f.toFun = f :=
   rfl
-#align ring_invo.to_fun_eq_coe [anonymous]
+#align ring_invo.to_fun_eq_coe RingInvo.toFun_eq_coe
 
 @[simp]
 theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=

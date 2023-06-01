@@ -2456,13 +2456,11 @@ def coeToPowerSeries.algHom : R[X] →ₐ[R] PowerSeries A :=
     commutes' := fun r => by simp [algebraMap_apply, PowerSeries.algebraMap_apply] }
 #align polynomial.coe_to_power_series.alg_hom Polynomial.coeToPowerSeries.algHom
 
-#print Polynomial.coeToPowerSeries.algHom_apply /-
 @[simp]
 theorem coeToPowerSeries.algHom_apply :
     coeToPowerSeries.algHom A φ = PowerSeries.map (algebraMap R A) ↑φ :=
   rfl
 #align polynomial.coe_to_power_series.alg_hom_apply Polynomial.coeToPowerSeries.algHom_apply
--/
 
 end Polynomial
 

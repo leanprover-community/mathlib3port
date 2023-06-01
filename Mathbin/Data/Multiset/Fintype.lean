@@ -60,12 +60,10 @@ This way repeated elements of a multiset appear multiple times with different va
 instance : CoeSort (Multiset α) (Type _) :=
   ⟨Multiset.ToType⟩
 
-/- warning: multiset.coe_sort_eq clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align multiset.coe_sort_eq [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : m.to_type = m :=
+theorem Multiset.coeSort_eq : m.to_type = m :=
   rfl
-#align multiset.coe_sort_eq [anonymous]
+#align multiset.coe_sort_eq Multiset.coeSort_eq
 
 #print Multiset.mkToType /-
 /-- Constructor for terms of the coercion of `m` to a type.
@@ -82,12 +80,10 @@ instance instCoeSortMultisetType.instCoeOutToType : Coe m α :=
   ⟨fun x => x.1⟩
 #align multiset.has_coe_to_sort.has_coe instCoeSortMultisetType.instCoeOutToTypeₓ
 
-/- warning: multiset.fst_coe_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align multiset.fst_coe_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {x : m} : x.1 = x :=
+theorem Multiset.fst_coe_eq_coe {x : m} : x.1 = x :=
   rfl
-#align multiset.fst_coe_eq_coe [anonymous]
+#align multiset.fst_coe_eq_coe Multiset.fst_coe_eq_coe
 
 #print Multiset.coe_eq /-
 @[simp]

@@ -199,14 +199,12 @@ theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix
 
 namespace Matrix
 
-#print Matrix.aeval_eq_aeval_mod_charpoly /-
 /-- Any matrix polynomial `p` is equivalent under evaluation to `p %ₘ M.charpoly`; that is, `p`
 is equivalent to a polynomial with degree less than the dimension of the matrix. -/
 theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) :
     aeval M p = aeval M (p %ₘ M.charpoly) :=
   (aeval_modByMonic_eq_self_of_root M.charpoly_monic M.aeval_self_charpoly).symm
 #align matrix.aeval_eq_aeval_mod_charpoly Matrix.aeval_eq_aeval_mod_charpoly
--/
 
 /-- Any matrix power can be computed as the sum of matrix powers less than `fintype.card n`.
 

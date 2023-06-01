@@ -1272,7 +1272,7 @@ def toPowerSeriesAlg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
   { toPowerSeries with
     commutes' := fun r => by
       ext n
-      simp only [algebraMap_apply, PowerSeries.algebraMap_apply, [anonymous], C_apply,
+      simp only [algebraMap_apply, PowerSeries.algebraMap_apply, RingEquiv.toFun_eq_coe, C_apply,
         coeff_to_power_series]
       cases n
       · simp only [PowerSeries.coeff_zero_eq_constantCoeff, single_coeff_same]

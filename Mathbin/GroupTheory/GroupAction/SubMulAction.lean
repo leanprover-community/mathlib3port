@@ -214,12 +214,10 @@ theorem val_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
 #align sub_mul_action.coe_smul SubMulAction.val_smul
 -/
 
-/- warning: sub_mul_action.coe_mk clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align sub_mul_action.coe_mk [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
+theorem coe_mk (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
   rfl
-#align sub_mul_action.coe_mk [anonymous]
+#align sub_mul_action.coe_mk SubMulAction.coe_mk
 
 variable (p)
 

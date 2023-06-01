@@ -412,12 +412,10 @@ variable {S₁ : Type _} {S₂ : Type _} {S₃ : Type _} [Shelf S₁] [Shelf S�
 instance : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
   ⟨ShelfHom.toFun⟩
 
-/- warning: shelf_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align shelf_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f : S₁ →◃ S₂) : f.toFun = f :=
+theorem toFun_eq_coe (f : S₁ →◃ S₂) : f.toFun = f :=
   rfl
-#align shelf_hom.to_fun_eq_coe [anonymous]
+#align shelf_hom.to_fun_eq_coe ShelfHom.toFun_eq_coe
 
 @[simp]
 theorem map_act (f : S₁ →◃ S₂) {x y : S₁} : f (x ◃ y) = f x ◃ f y :=

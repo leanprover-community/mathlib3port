@@ -375,11 +375,11 @@ theorem tendstoInMeasure_of_tendsto_snorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
 #align measure_theory.tendsto_in_measure_of_tendsto_snorm MeasureTheory.tendstoInMeasure_of_tendsto_snorm
 
 /-- Convergence in Lp implies convergence in measure. -/
-theorem tendstoInMeasure_of_tendsto_lp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ} {g : lp E p μ}
+theorem tendstoInMeasure_of_tendsto_lp [hp : Fact (1 ≤ p)] {f : ι → Lp E p μ} {g : Lp E p μ}
     {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
   tendstoInMeasure_of_tendsto_snorm (zero_lt_one.trans_le hp.elim).Ne.symm
-    (fun n => lp.aEStronglyMeasurable _) (lp.aEStronglyMeasurable _)
-    ((lp.tendsto_lp_iff_tendsto_ℒp' _ _).mp hfg)
+    (fun n => Lp.aestronglyMeasurable _) (Lp.aestronglyMeasurable _)
+    ((Lp.tendsto_Lp_iff_tendsto_ℒp' _ _).mp hfg)
 #align measure_theory.tendsto_in_measure_of_tendsto_Lp MeasureTheory.tendstoInMeasure_of_tendsto_lp
 
 end TendstoInMeasureOf

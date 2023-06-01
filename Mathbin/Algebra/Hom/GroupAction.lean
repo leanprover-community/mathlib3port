@@ -228,17 +228,13 @@ attribute [nolint dangerous_instance] DistribMulActionHomClass.toAddMonoidHomCla
 
 namespace DistribMulActionHom
 
-/- warning: distrib_mul_action_hom.has_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.has_coe [anonymous]ₓ'. -/
-instance [anonymous] : Coe (A →+[M] B) (A →+ B) :=
+instance hasCoe : Coe (A →+[M] B) (A →+ B) :=
   ⟨toAddMonoidHom⟩
-#align distrib_mul_action_hom.has_coe [anonymous]
+#align distrib_mul_action_hom.has_coe DistribMulActionHom.hasCoe
 
-/- warning: distrib_mul_action_hom.has_coe' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.has_coe' [anonymous]ₓ'. -/
-instance [anonymous] : Coe (A →+[M] B) (A →[M] B) :=
+instance hasCoe' : Coe (A →+[M] B) (A →[M] B) :=
   ⟨toMulActionHom⟩
-#align distrib_mul_action_hom.has_coe' [anonymous]
+#align distrib_mul_action_hom.has_coe' DistribMulActionHom.hasCoe'
 
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨toFun⟩
@@ -318,12 +314,10 @@ protected def id : A →+[M] A :=
 #align distrib_mul_action_hom.id DistribMulActionHom.id
 -/
 
-#print DistribMulActionHom.id_apply /-
 @[simp]
 theorem id_apply (x : A) : DistribMulActionHom.id M x = x :=
   rfl
 #align distrib_mul_action_hom.id_apply DistribMulActionHom.id_apply
--/
 
 variable {M A B C}
 
@@ -338,24 +332,18 @@ theorem coe_zero : ((0 : A →+[M] B) : A → B) = 0 :=
   rfl
 #align distrib_mul_action_hom.coe_zero DistribMulActionHom.coe_zero
 
-#print DistribMulActionHom.coe_one /-
 @[simp]
 theorem coe_one : ((1 : A →+[M] A) : A → A) = id :=
   rfl
 #align distrib_mul_action_hom.coe_one DistribMulActionHom.coe_one
--/
 
-#print DistribMulActionHom.zero_apply /-
 theorem zero_apply (a : A) : (0 : A →+[M] B) a = 0 :=
   rfl
 #align distrib_mul_action_hom.zero_apply DistribMulActionHom.zero_apply
--/
 
-#print DistribMulActionHom.one_apply /-
 theorem one_apply (a : A) : (1 : A →+[M] A) a = a :=
   rfl
 #align distrib_mul_action_hom.one_apply DistribMulActionHom.one_apply
--/
 
 instance : Inhabited (A →+[M] B) :=
   ⟨0⟩
@@ -383,31 +371,25 @@ theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align distrib_mul_action_hom.comp_id DistribMulActionHom.comp_id
 
-#print DistribMulActionHom.inverse /-
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
 @[simps]
 def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
     (h₂ : Function.RightInverse g f) : B →+[M] A :=
   { (f : A →+ B).inverse g h₁ h₂, (f : A →[M] B).inverse g h₁ h₂ with toFun := g }
 #align distrib_mul_action_hom.inverse DistribMulActionHom.inverse
--/
 
 section Semiring
 
 variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
-#print DistribMulActionHom.ext_ring /-
 @[ext]
 theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by ext x;
   rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
 #align distrib_mul_action_hom.ext_ring DistribMulActionHom.ext_ring
--/
 
-#print DistribMulActionHom.ext_ring_iff /-
 theorem ext_ring_iff {f g : R →+[R] M'} : f = g ↔ f 1 = g 1 :=
   ⟨fun h => h ▸ rfl, ext_ring⟩
 #align distrib_mul_action_hom.ext_ring_iff DistribMulActionHom.ext_ring_iff
--/
 
 end Semiring
 
@@ -445,17 +427,13 @@ attribute [nolint dangerous_instance] MulSemiringActionHomClass.toRingHomClass
 
 namespace MulSemiringActionHom
 
-/- warning: mul_semiring_action_hom.has_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align mul_semiring_action_hom.has_coe [anonymous]ₓ'. -/
-instance [anonymous] : Coe (R →+*[M] S) (R →+* S) :=
+instance hasCoe : Coe (R →+*[M] S) (R →+* S) :=
   ⟨toRingHom⟩
-#align mul_semiring_action_hom.has_coe [anonymous]
+#align mul_semiring_action_hom.has_coe MulSemiringActionHom.hasCoe
 
-/- warning: mul_semiring_action_hom.has_coe' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align mul_semiring_action_hom.has_coe' [anonymous]ₓ'. -/
-instance [anonymous] : Coe (R →+*[M] S) (R →+[M] S) :=
+instance hasCoe' : Coe (R →+*[M] S) (R →+[M] S) :=
   ⟨toDistribMulActionHom⟩
-#align mul_semiring_action_hom.has_coe' [anonymous]
+#align mul_semiring_action_hom.has_coe' MulSemiringActionHom.hasCoe'
 
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.toFun⟩
@@ -528,12 +506,10 @@ protected def id : R →+*[M] R :=
 #align mul_semiring_action_hom.id MulSemiringActionHom.id
 -/
 
-#print MulSemiringActionHom.id_apply /-
 @[simp]
 theorem id_apply (x : R) : MulSemiringActionHom.id M x = x :=
   rfl
 #align mul_semiring_action_hom.id_apply MulSemiringActionHom.id_apply
--/
 
 variable {M R S T}
 

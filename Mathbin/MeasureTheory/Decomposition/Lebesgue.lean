@@ -932,14 +932,14 @@ theorem singularPart_totalVariation (s : SignedMeasure α) (μ : Measure α) :
   · rw [total_variation, this]
 #align measure_theory.signed_measure.singular_part_total_variation MeasureTheory.SignedMeasure.singularPart_totalVariation
 
-theorem mutuallySingularSingularPart (s : SignedMeasure α) (μ : Measure α) :
+theorem mutuallySingular_singularPart (s : SignedMeasure α) (μ : Measure α) :
     singularPart s μ ⟂ᵥ μ.toEnnrealVectorMeasure :=
   by
   rw [mutually_singular_ennreal_iff, singular_part_total_variation]
   change _ ⟂ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)
   rw [vector_measure.equiv_measure.right_inv μ]
   exact (mutually_singular_singular_part _ _).add_left (mutually_singular_singular_part _ _)
-#align measure_theory.signed_measure.mutually_singular_singular_part MeasureTheory.SignedMeasure.mutuallySingularSingularPart
+#align measure_theory.signed_measure.mutually_singular_singular_part MeasureTheory.SignedMeasure.mutuallySingular_singularPart
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.notation
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 00abe0695d8767201e6d008afa22393978bb324d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,6 +20,7 @@ measurable space `m0`, and another measurable space structure `m` with `hm : m �
 - `𝔼[X|m]`: conditional expectation of `X` with respect to the measure `volume` and the
   measurable space `m`. The similar `P[X|m]` for a measure `P` is defined in
   measure_theory.function.conditional_expectation.
+- `P⟦s|m⟧ = P[s.indicator (λ ω, (1 : ℝ)) | m]`, conditional probability of a set.
 - `X =ₐₛ Y`: `X =ᵐ[volume] Y`
 - `X ≤ₐₛ Y`: `X ≤ᵐ[volume] Y`
 - `∂P/∂Q = P.rn_deriv Q`
@@ -33,6 +34,8 @@ We note that the notation `∂P/∂Q` applies to three different cases, namely,
 
 open MeasureTheory
 
+open scoped MeasureTheory
+
 -- mathport name: condexp.volume
 -- We define notations `𝔼[f|m]` for the conditional expectation of `f` with respect to `m`.
 scoped[ProbabilityTheory]
@@ -43,6 +46,10 @@ scoped[ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P
 
 -- mathport name: expected_value
 scoped[ProbabilityTheory] notation "𝔼[" X "]" => ∫ a, X a
+
+-- mathport name: condexp_indicator
+scoped[ProbabilityTheory]
+  notation P "⟦" s "|" m "⟧" => MeasureTheory.condexp m P (s.indicator fun ω => (1 : ℝ))
 
 -- mathport name: eq_ae_volume
 scoped[ProbabilityTheory] notation:50 X " =ₐₛ " Y:50 => X =ᵐ[MeasureTheory.MeasureSpace.volume] Y

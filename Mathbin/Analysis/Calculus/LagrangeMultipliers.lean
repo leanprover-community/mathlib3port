@@ -78,8 +78,9 @@ theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
   -- squeezed `simp [mul_comm]` to speed up elaboration
   simp only [mul_comm, Algebra.id.smul_eq_mul, LinearEquiv.trans_apply, LinearEquiv.prod_apply,
     LinearEquiv.refl_apply, LinearMap.ringLmapEquivSelf_symm_apply, LinearMap.coprodEquiv_apply,
-    [anonymous], ContinuousLinearMap.coe_prod, LinearMap.coprod_comp_prod, LinearMap.add_apply,
-    LinearMap.coe_comp, ContinuousLinearMap.coe_coe, LinearMap.coe_smulRight, LinearMap.one_apply]
+    ContinuousLinearMap.toLinearMap_eq_coe, ContinuousLinearMap.coe_prod,
+    LinearMap.coprod_comp_prod, LinearMap.add_apply, LinearMap.coe_comp,
+    ContinuousLinearMap.coe_coe, LinearMap.coe_smulRight, LinearMap.one_apply]
 #align is_local_extr_on.exists_linear_map_of_has_strict_fderiv_at IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`

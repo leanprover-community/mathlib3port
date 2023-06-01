@@ -927,6 +927,7 @@ open TopologicalSpace
 
 open VectorBundle
 
+#print VectorPrebundle /-
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
@@ -954,17 +955,20 @@ structure VectorPrebundle where
             f b v = (e' (totalSpaceMk b (e.symm b v))).2
   totalSpaceMk_inducing : ∀ b : B, Inducing (pretrivialization_at b ∘ totalSpaceMk b)
 #align vector_prebundle VectorPrebundle
+-/
 
 namespace VectorPrebundle
 
 variable {R E F}
 
+#print VectorPrebundle.coordChange /-
 /-- A randomly chosen coordinate change on a `vector_prebundle`, given by
   the field `exists_coord_change`. -/
 def coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.pretrivializationAtlas) (he' : e' ∈ a.pretrivializationAtlas) (b : B) : F →L[R] F :=
   Classical.choose (a.exists_coord_change e he e' he') b
 #align vector_prebundle.coord_change VectorPrebundle.coordChange
+-/
 
 theorem continuousOn_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (π E)}
     (he : e ∈ a.pretrivializationAtlas) (he' : e' ∈ a.pretrivializationAtlas) :
@@ -991,6 +995,7 @@ theorem mk_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (
 #align vector_prebundle.mk_coord_change VectorPrebundle.mk_coordChange
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print VectorPrebundle.toFiberPrebundle /-
 /-- Natural identification of `vector_prebundle` as a `fiber_prebundle`. -/
 def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
   { a with
@@ -1014,12 +1019,16 @@ def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
       rw [a.mk_coord_change _ _ hb, e'.mk_symm hb.1]
       rfl }
 #align vector_prebundle.to_fiber_prebundle VectorPrebundle.toFiberPrebundle
+-/
 
+#print VectorPrebundle.totalSpaceTopology /-
 /-- Topology on the total space that will make the prebundle into a bundle. -/
 def totalSpaceTopology (a : VectorPrebundle R F E) : TopologicalSpace (TotalSpace E) :=
   a.toFiberPrebundle.totalSpaceTopology
 #align vector_prebundle.total_space_topology VectorPrebundle.totalSpaceTopology
+-/
 
+#print VectorPrebundle.trivializationOfMemPretrivializationAtlas /-
 /-- Promotion from a `trivialization` in the `pretrivialization_atlas` of a
 `vector_prebundle` to a `trivialization`. -/
 def trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
@@ -1027,6 +1036,7 @@ def trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
     @Trivialization B F _ _ _ a.totalSpaceTopology (π E) :=
   a.toFiberPrebundle.trivializationOfMemPretrivializationAtlas he
 #align vector_prebundle.trivialization_of_mem_pretrivialization_atlas VectorPrebundle.trivializationOfMemPretrivializationAtlas
+-/
 
 theorem linear_trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
     {e : Pretrivialization F (π E)} (he : e ∈ a.pretrivializationAtlas) :
@@ -1053,11 +1063,13 @@ theorem continuous_totalSpaceMk (b : B) : @Continuous _ _ _ a.totalSpaceTopology
   a.toFiberPrebundle.continuous_totalSpaceMk b
 #align vector_prebundle.continuous_total_space_mk VectorPrebundle.continuous_totalSpaceMk
 
+#print VectorPrebundle.toFiberBundle /-
 /-- Make a `fiber_bundle` from a `vector_prebundle`; auxiliary construction for
 `vector_prebundle.vector_bundle`. -/
 def toFiberBundle : @FiberBundle B F _ _ _ a.totalSpaceTopology _ :=
   a.toFiberPrebundle.toFiberBundle
 #align vector_prebundle.to_fiber_bundle VectorPrebundle.toFiberBundle
+-/
 
 /-- Make a `vector_bundle` from a `vector_prebundle`.  Concretely this means
 that, given a `vector_prebundle` structure for a sigma-type `E` -- which consists of a
@@ -1102,6 +1114,7 @@ variable [∀ x, TopologicalSpace (E' x)] [FiberBundle F' E'] [VectorBundle 𝕜
 
 variable (F E F' E')
 
+#print ContinuousLinearMap.inCoordinates /-
 /-- When `ϕ` is a continuous (semi)linear map between the fibers `E x` and `E' y` of two vector
 bundles `E` and `E'`, `continuous_linear_map.in_coordinates F E F' E' x₀ x y₀ y ϕ` is a coordinate
 change of this continuous linear map w.r.t. the chart around `x₀` and the chart around `y₀`.
@@ -1122,6 +1135,7 @@ def inCoordinates (x₀ x : B) (y₀ y : B') (ϕ : E x →SL[σ] E' y) : F →SL
   ((trivializationAt F' E' y₀).continuousLinearMapAt 𝕜₂ y).comp <|
     ϕ.comp <| (trivializationAt F E x₀).symmL 𝕜₁ x
 #align continuous_linear_map.in_coordinates ContinuousLinearMap.inCoordinates
+-/
 
 variable {F F'}
 

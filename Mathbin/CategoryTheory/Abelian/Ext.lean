@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.abelian.ext
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Abelian.Projective
 
 /-!
 # Ext
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `Ext R C n : Cᵒᵖ ⥤ C ⥤ Module R` for any `R`-linear abelian category `C`
 by (left) deriving in the first argument of the bifunctor `(X, Y) ↦ Module.of R (unop X ⟶ Y)`.
@@ -38,11 +41,12 @@ open CategoryTheory
 variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C]
   [EnoughProjectives C]
 
+#print Ext /-
 /-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
 @[simps obj map]
-def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
+def Ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   Functor.flip
     { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp
       map := fun Y Y' f => (NatTrans.leftDerived ((linearYoneda R C).map f).rightOp n).leftOp
@@ -57,13 +61,14 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
         intro X Y Z f g
         rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
         rfl }
-#align Ext ext
+#align Ext Ext
+-/
 
 open scoped ZeroObject
 
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
-    ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
+    ((Ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
   let E := (((linearYoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
     { hom := 0

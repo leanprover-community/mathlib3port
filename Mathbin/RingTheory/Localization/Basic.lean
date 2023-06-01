@@ -135,7 +135,7 @@ theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (al
         rintro ⟨c, hc⟩
         exact ⟨⟨c, h₁ c.2⟩, hc⟩
       · rintro ⟨c, h⟩
-        simpa only [[anonymous], map_mul, (h₂ c c.2).mul_right_inj] using
+        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_right_inj] using
           congr_arg (algebraMap R S) h }
 #align is_localization.of_le IsLocalization.of_le
 
@@ -466,7 +466,7 @@ theorem mul_add_inv_left {g : R →+* P} (h : ∀ y : M, IsUnit (g y)) (y : M) (
   rw [mul_comm, ← one_mul z₁, ← Units.inv_mul (IsUnit.liftRight (g.to_monoid_hom.restrict M) h y),
     mul_assoc, ← mul_add, Units.inv_mul_eq_iff_eq_mul, Units.inv_mul_cancel_left,
     IsUnit.coe_liftRight]
-  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.restrict_apply, [anonymous]]
+  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.restrict_apply, RingHom.coe_monoidHom]
 #align is_localization.mul_add_inv_left IsLocalization.mul_add_inv_left
 
 theorem lift_spec_mul_add {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) (z w w' v) :

@@ -749,14 +749,12 @@ def liftNCAlgHom (f : A →ₐ[k] B) (g : G →* B) (h_comm : ∀ x y, Commute (
     commutes' := by simp [lift_nc_ring_hom] }
 #align monoid_algebra.lift_nc_alg_hom MonoidAlgebra.liftNCAlgHom
 
-#print MonoidAlgebra.algHom_ext /-
 /-- A `k`-algebra homomorphism from `monoid_algebra k G` is uniquely defined by its
 values on the functions `single a 1`. -/
 theorem algHom_ext ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
     (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
   AlgHom.toLinearMap_injective <| Finsupp.lhom_ext' fun a => LinearMap.ext_ring (h a)
 #align monoid_algebra.alg_hom_ext MonoidAlgebra.algHom_ext
--/
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
@@ -783,24 +781,18 @@ def lift : (G →* A) ≃ (MonoidAlgebra k G →ₐ[k] A)
 
 variable {k G A}
 
-#print MonoidAlgebra.lift_apply' /-
 theorem lift_apply' (F : G →* A) (f : MonoidAlgebra k G) :
     lift k G A F f = f.Sum fun a b => algebraMap k A b * F a :=
   rfl
 #align monoid_algebra.lift_apply' MonoidAlgebra.lift_apply'
--/
 
-#print MonoidAlgebra.lift_apply /-
 theorem lift_apply (F : G →* A) (f : MonoidAlgebra k G) :
     lift k G A F f = f.Sum fun a b => b • F a := by simp only [lift_apply', Algebra.smul_def]
 #align monoid_algebra.lift_apply MonoidAlgebra.lift_apply
--/
 
-#print MonoidAlgebra.lift_def /-
 theorem lift_def (F : G →* A) : ⇑(lift k G A F) = liftNC ((algebraMap k A : k →+* A) : k →+ A) F :=
   rfl
 #align monoid_algebra.lift_def MonoidAlgebra.lift_def
--/
 
 @[simp]
 theorem lift_symm_apply (F : MonoidAlgebra k G →ₐ[k] A) (x : G) :
@@ -808,18 +800,14 @@ theorem lift_symm_apply (F : MonoidAlgebra k G →ₐ[k] A) (x : G) :
   rfl
 #align monoid_algebra.lift_symm_apply MonoidAlgebra.lift_symm_apply
 
-#print MonoidAlgebra.lift_of /-
 theorem lift_of (F : G →* A) (x) : lift k G A F (of k G x) = F x := by
   rw [of_apply, ← lift_symm_apply, Equiv.symm_apply_apply]
 #align monoid_algebra.lift_of MonoidAlgebra.lift_of
--/
 
-#print MonoidAlgebra.lift_single /-
 @[simp]
 theorem lift_single (F : G →* A) (a b) : lift k G A F (single a b) = b • F a := by
-  rw [lift_def, lift_nc_single, Algebra.smul_def, [anonymous]]
+  rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_addMonoidHom]
 #align monoid_algebra.lift_single MonoidAlgebra.lift_single
--/
 
 #print MonoidAlgebra.lift_unique' /-
 theorem lift_unique' (F : MonoidAlgebra k G →ₐ[k] A) :
@@ -828,7 +816,6 @@ theorem lift_unique' (F : MonoidAlgebra k G →ₐ[k] A) :
 #align monoid_algebra.lift_unique' MonoidAlgebra.lift_unique'
 -/
 
-#print MonoidAlgebra.lift_unique /-
 /-- Decomposition of a `k`-algebra homomorphism from `monoid_algebra k G` by
 its values on `F (single a 1)`. -/
 theorem lift_unique (F : MonoidAlgebra k G →ₐ[k] A) (f : MonoidAlgebra k G) :
@@ -837,7 +824,6 @@ theorem lift_unique (F : MonoidAlgebra k G →ₐ[k] A) (f : MonoidAlgebra k G) 
     rw [lift_unique' F]
     simp [lift_apply]
 #align monoid_algebra.lift_unique MonoidAlgebra.lift_unique
--/
 
 #print MonoidAlgebra.mapDomainNonUnitalAlgHom /-
 /-- If `f : G → H` is a homomorphism between two magmas, then
@@ -1005,7 +991,7 @@ protected noncomputable def opRingEquiv [Monoid G] :
     opAddEquiv.symm.trans <|
       (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
     map_mul' := by
-      dsimp only [[anonymous], ← AddEquiv.coe_toAddMonoidHom]
+      dsimp only [AddEquiv.toFun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
       rw [AddMonoidHom.map_mul_iff]
       ext (i₁ r₁ i₂ r₂) : 6
       simp }
@@ -1672,7 +1658,7 @@ protected noncomputable def opRingEquiv [AddCommMonoid G] :
     MulOpposite.opAddEquiv.symm.trans
       (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
     map_mul' := by
-      dsimp only [[anonymous], ← AddEquiv.coe_toAddMonoidHom]
+      dsimp only [AddEquiv.toFun_eq_coe, ← AddEquiv.coe_toAddMonoidHom]
       rw [AddMonoidHom.map_mul_iff]
       ext (i r i' r') : 6
       dsimp
@@ -1742,14 +1728,12 @@ def liftNCAlgHom (f : A →ₐ[k] B) (g : Multiplicative G →* B) (h_comm : ∀
     commutes' := by simp [lift_nc_ring_hom] }
 #align add_monoid_algebra.lift_nc_alg_hom AddMonoidAlgebra.liftNCAlgHom
 
-#print AddMonoidAlgebra.algHom_ext /-
 /-- A `k`-algebra homomorphism from `monoid_algebra k G` is uniquely defined by its
 values on the functions `single a 1`. -/
 theorem algHom_ext ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
     (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
   @MonoidAlgebra.algHom_ext k (Multiplicative G) _ _ _ _ _ _ _ h
 #align add_monoid_algebra.alg_hom_ext AddMonoidAlgebra.algHom_ext
--/
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
@@ -1779,26 +1763,20 @@ def lift : (Multiplicative G →* A) ≃ (AddMonoidAlgebra k G →ₐ[k] A) :=
 
 variable {k G A}
 
-#print AddMonoidAlgebra.lift_apply' /-
 theorem lift_apply' (F : Multiplicative G →* A) (f : MonoidAlgebra k G) :
     lift k G A F f = f.Sum fun a b => algebraMap k A b * F (Multiplicative.ofAdd a) :=
   rfl
 #align add_monoid_algebra.lift_apply' AddMonoidAlgebra.lift_apply'
--/
 
-#print AddMonoidAlgebra.lift_apply /-
 theorem lift_apply (F : Multiplicative G →* A) (f : MonoidAlgebra k G) :
     lift k G A F f = f.Sum fun a b => b • F (Multiplicative.ofAdd a) := by
   simp only [lift_apply', Algebra.smul_def]
 #align add_monoid_algebra.lift_apply AddMonoidAlgebra.lift_apply
--/
 
-#print AddMonoidAlgebra.lift_def /-
 theorem lift_def (F : Multiplicative G →* A) :
     ⇑(lift k G A F) = liftNC ((algebraMap k A : k →+* A) : k →+ A) F :=
   rfl
 #align add_monoid_algebra.lift_def AddMonoidAlgebra.lift_def
--/
 
 @[simp]
 theorem lift_symm_apply (F : AddMonoidAlgebra k G →ₐ[k] A) (x : Multiplicative G) :
@@ -1806,19 +1784,15 @@ theorem lift_symm_apply (F : AddMonoidAlgebra k G →ₐ[k] A) (x : Multiplicati
   rfl
 #align add_monoid_algebra.lift_symm_apply AddMonoidAlgebra.lift_symm_apply
 
-#print AddMonoidAlgebra.lift_of /-
 theorem lift_of (F : Multiplicative G →* A) (x : Multiplicative G) :
     lift k G A F (of k G x) = F x := by rw [of_apply, ← lift_symm_apply, Equiv.symm_apply_apply]
 #align add_monoid_algebra.lift_of AddMonoidAlgebra.lift_of
--/
 
-#print AddMonoidAlgebra.lift_single /-
 @[simp]
 theorem lift_single (F : Multiplicative G →* A) (a b) :
     lift k G A F (single a b) = b • F (Multiplicative.ofAdd a) := by
-  rw [lift_def, lift_nc_single, Algebra.smul_def, [anonymous]]
+  rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_addMonoidHom]
 #align add_monoid_algebra.lift_single AddMonoidAlgebra.lift_single
--/
 
 #print AddMonoidAlgebra.lift_unique' /-
 theorem lift_unique' (F : AddMonoidAlgebra k G →ₐ[k] A) :
@@ -1827,7 +1801,6 @@ theorem lift_unique' (F : AddMonoidAlgebra k G →ₐ[k] A) :
 #align add_monoid_algebra.lift_unique' AddMonoidAlgebra.lift_unique'
 -/
 
-#print AddMonoidAlgebra.lift_unique /-
 /-- Decomposition of a `k`-algebra homomorphism from `monoid_algebra k G` by
 its values on `F (single a 1)`. -/
 theorem lift_unique (F : AddMonoidAlgebra k G →ₐ[k] A) (f : MonoidAlgebra k G) :
@@ -1836,14 +1809,11 @@ theorem lift_unique (F : AddMonoidAlgebra k G →ₐ[k] A) (f : MonoidAlgebra k 
     rw [lift_unique' F]
     simp [lift_apply]
 #align add_monoid_algebra.lift_unique AddMonoidAlgebra.lift_unique
--/
 
-#print AddMonoidAlgebra.algHom_ext_iff /-
 theorem algHom_ext_iff {φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A} :
     (∀ x, φ₁ (Finsupp.single x 1) = φ₂ (Finsupp.single x 1)) ↔ φ₁ = φ₂ :=
   ⟨fun h => algHom_ext h, by rintro rfl _ <;> rfl⟩
 #align add_monoid_algebra.alg_hom_ext_iff AddMonoidAlgebra.algHom_ext_iff
--/
 
 end lift
 

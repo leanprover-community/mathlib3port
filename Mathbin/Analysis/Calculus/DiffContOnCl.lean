@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Functions differentiable on a domain and continuous on its closure
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Many theorems in complex analysis assume that a function is complex differentiable on a domain and
 is continuous on its closure. In this file we define a predicate `diff_cont_on_cl` that expresses
@@ -27,6 +30,7 @@ variable (𝕜 : Type _) {E F G : Type _} [NontriviallyNormedField 𝕜] [Normed
   [NormedAddCommGroup F] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [NormedAddCommGroup G]
   [NormedSpace 𝕜 G] {f g : E → F} {s t : Set E} {x : E}
 
+#print DiffContOnCl /-
 /-- A predicate saying that a function is differentiable on a set and is continuous on its
 closure. This is a common assumption in complex analysis. -/
 @[protect_proj]
@@ -34,6 +38,7 @@ structure DiffContOnCl (f : E → F) (s : Set E) : Prop where
   DifferentiableOn : DifferentiableOn 𝕜 f s
   ContinuousOn : ContinuousOn f (closure s)
 #align diff_cont_on_cl DiffContOnCl
+-/
 
 variable {𝕜}
 

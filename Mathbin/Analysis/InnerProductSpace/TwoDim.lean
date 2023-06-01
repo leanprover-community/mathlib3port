@@ -198,7 +198,7 @@ irreducible_def rightAngleRotationAux₁ : E →ₗ[ℝ] E :=
 theorem inner_rightAngleRotationAux₁_left (x y : E) : ⟪o.rightAngleRotationAux₁ x, y⟫ = ω x y := by
   simp only [right_angle_rotation_aux₁, LinearEquiv.trans_symm, LinearEquiv.coe_trans,
     LinearEquiv.coe_coe, InnerProductSpace.toDual_symm_apply, eq_self_iff_true,
-    LinearMap.coe_to_continuous_linear_map', LinearIsometryEquiv.coe_toLinearEquiv,
+    LinearMap.coe_toContinuousLinearMap', LinearIsometryEquiv.coe_toLinearEquiv,
     LinearMap.comp_apply, LinearEquiv.symm_symm, LinearIsometryEquiv.toLinearEquiv_symm]
 #align orientation.inner_right_angle_rotation_aux₁_left Orientation.inner_rightAngleRotationAux₁_left
 

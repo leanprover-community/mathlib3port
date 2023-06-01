@@ -95,12 +95,10 @@ theorem Algebra.isAlgebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra 
   simp only [Algebra.mem_top, forall_prop_of_true, iff_self_iff]
 #align algebra.is_algebraic_iff Algebra.isAlgebraic_iff
 
-#print isAlgebraic_iff_not_injective /-
 theorem isAlgebraic_iff_not_injective {x : A} :
     IsAlgebraic R x ↔ ¬Function.Injective (Polynomial.aeval x : R[X] →ₐ[R] A) := by
   simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, and_comm, exists_prop]
 #align is_algebraic_iff_not_injective isAlgebraic_iff_not_injective
--/
 
 end
 
@@ -455,13 +453,11 @@ theorem polynomial_smul_apply [Semiring R'] [SMul R' S'] (p : R'[X]) (f : R' →
 #align polynomial_smul_apply polynomial_smul_apply
 -/
 
-#print polynomial_smul_apply' /-
 @[simp]
 theorem polynomial_smul_apply' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [SMul S' T']
     (p : R'[X]) (f : S' → T') (x : S') : (p • f) x = aeval x p • f x :=
   rfl
 #align polynomial_smul_apply' polynomial_smul_apply'
--/
 
 variable [CommSemiring R'] [CommSemiring S'] [CommSemiring T'] [Algebra R' S'] [Algebra S' T']
 

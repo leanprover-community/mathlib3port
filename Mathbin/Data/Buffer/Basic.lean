@@ -67,7 +67,7 @@ theorem toList_appendList {b : Buffer α} : toList (appendList b xs) = toList b 
 #align buffer.to_list_append_list Buffer.toList_appendList
 
 @[simp]
-theorem appendList_mkBuffer : appendList mkBuffer xs = Array'.toBuffer ([anonymous] xs) := by
+theorem appendList_mkBuffer : appendList mkBuffer xs = Array'.toBuffer (List.toArray xs) := by
   ext x : 1 <;> simp [Array'.toBuffer, to_list, to_list_append_list] <;> induction xs <;>
         [rfl;skip] <;>
       simp [to_array] <;>
@@ -81,7 +81,7 @@ theorem toBuffer_toList (b : Buffer α) : b.toList.toBuffer = b :=
   rw [to_list, to_array, List.toBuffer, append_list_mk_buffer]
   congr
   · simpa
-  · apply Array'.toList_to_array'
+  · apply Array'.toList_toArray
 #align buffer.to_buffer_to_list Buffer.toBuffer_toList
 
 @[simp]
@@ -94,7 +94,7 @@ theorem toList_toBuffer (l : List α) : l.toBuffer.toList = l :=
 #align buffer.to_list_to_buffer Buffer.toList_toBuffer
 
 @[simp]
-theorem toList_toArray (b : Buffer α) : b.to_array.toList = b.toList := by cases b; simp [to_list]
+theorem toList_toArray (b : Buffer α) : b.toArray.toList = b.toList := by cases b; simp [to_list]
 #align buffer.to_list_to_array Buffer.toList_toArray
 
 @[simp]

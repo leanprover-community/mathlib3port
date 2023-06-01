@@ -1802,10 +1802,12 @@ theorem embedding_uLift_down [TopologicalSpace α] : Embedding (ULift.down : ULi
 #align embedding_ulift_down embedding_uLift_down
 -/
 
+#print ULift.closedEmbedding_down /-
 theorem ULift.closedEmbedding_down [TopologicalSpace α] :
     ClosedEmbedding (ULift.down : ULift.{v, u} α → α) :=
   ⟨embedding_uLift_down, by simp only [ulift.down_surjective.range_eq, isClosed_univ]⟩
 #align ulift.closed_embedding_down ULift.closedEmbedding_down
+-/
 
 instance [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (ULift α) :=
   embedding_uLift_down.DiscreteTopology

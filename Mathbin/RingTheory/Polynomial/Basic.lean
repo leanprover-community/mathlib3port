@@ -832,7 +832,6 @@ theorem prime_C_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
 
 variable {σ}
 
-#print MvPolynomial.prime_rename_iff /-
 theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} :
     Prime (rename (coe : s → σ) p) ↔ Prime p := by
   classical
@@ -848,7 +847,6 @@ theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} :
       · intro ; dsimp [eqv]; erw [iter_to_sum_C_C, rename_C, rename_C]
       · intro ; dsimp [eqv]; erw [iter_to_sum_C_X, rename_X, rename_X]; rfl
 #align mv_polynomial.prime_rename_iff MvPolynomial.prime_rename_iff
--/
 
 end MvPolynomial
 
@@ -993,7 +991,6 @@ theorem linearIndependent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
   exact Iff.rfl
 #align polynomial.linear_independent_powers_iff_aeval Polynomial.linearIndependent_powers_iff_aeval
 
-#print Polynomial.disjoint_ker_aeval_of_coprime /-
 theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
     Disjoint (aeval f p).ker (aeval f q).ker :=
   by
@@ -1004,7 +1001,6 @@ theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : Is
     LinearMap.mem_ker.1 (Submodule.mem_inf.1 hv).2] using
     congr_arg (fun p : R[X] => aeval f p v) hpq'.symm
 #align polynomial.disjoint_ker_aeval_of_coprime Polynomial.disjoint_ker_aeval_of_coprime
--/
 
 theorem sup_aeval_range_eq_top_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
     (aeval f p).range ⊔ (aeval f q).range = ⊤ :=

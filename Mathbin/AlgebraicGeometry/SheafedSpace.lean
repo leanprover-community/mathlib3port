@@ -66,12 +66,10 @@ def sheaf (X : SheafedSpace C) : Sheaf C (X : TopCat.{v}) :=
 #align algebraic_geometry.SheafedSpace.sheaf AlgebraicGeometry.SheafedSpace.sheaf
 -/
 
-/- warning: algebraic_geometry.SheafedSpace.as_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align algebraic_geometry.SheafedSpace.as_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (X : SheafedSpace.{v} C) : X.carrier = (X : TopCat.{v}) :=
+theorem as_coe (X : SheafedSpace.{v} C) : X.carrier = (X : TopCat.{v}) :=
   rfl
-#align algebraic_geometry.SheafedSpace.as_coe [anonymous]
+#align algebraic_geometry.SheafedSpace.as_coe AlgebraicGeometry.SheafedSpace.as_coe
 
 #print AlgebraicGeometry.SheafedSpace.mk_coe /-
 @[simp]

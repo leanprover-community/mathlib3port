@@ -563,36 +563,36 @@ instance [∀ i, TopologicalSpace (α i)] [∀ i, LocallyFiniteMeasure (μ i)] :
 variable (μ)
 
 @[to_additive]
-instance pi.isMulLeftInvariant [∀ i, Group (α i)] [∀ i, MeasurableMul (α i)]
-    [∀ i, IsMulLeftInvariant (μ i)] : IsMulLeftInvariant (Measure.pi μ) :=
+instance pi.mulLeftInvariant [∀ i, Group (α i)] [∀ i, MeasurableMul (α i)]
+    [∀ i, MulLeftInvariant (μ i)] : MulLeftInvariant (Measure.pi μ) :=
   by
   refine' ⟨fun v => (pi_eq fun s hs => _).symm⟩
   rw [map_apply (measurable_const_mul _) (MeasurableSet.univ_pi hs),
     show (· * ·) v ⁻¹' univ.pi s = univ.pi fun i => (· * ·) (v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul]
-#align measure_theory.measure.pi.is_mul_left_invariant MeasureTheory.Measure.pi.isMulLeftInvariant
+#align measure_theory.measure.pi.is_mul_left_invariant MeasureTheory.Measure.pi.mulLeftInvariant
 #align measure_theory.measure.pi.is_add_left_invariant MeasureTheory.Measure.pi.is_add_left_invariant
 
 @[to_additive]
-instance pi.isMulRightInvariant [∀ i, Group (α i)] [∀ i, MeasurableMul (α i)]
-    [∀ i, IsMulRightInvariant (μ i)] : IsMulRightInvariant (Measure.pi μ) :=
+instance pi.mulRightInvariant [∀ i, Group (α i)] [∀ i, MeasurableMul (α i)]
+    [∀ i, MulRightInvariant (μ i)] : MulRightInvariant (Measure.pi μ) :=
   by
   refine' ⟨fun v => (pi_eq fun s hs => _).symm⟩
   rw [map_apply (measurable_mul_const _) (MeasurableSet.univ_pi hs),
     show (· * v) ⁻¹' univ.pi s = univ.pi fun i => (· * v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul_right]
-#align measure_theory.measure.pi.is_mul_right_invariant MeasureTheory.Measure.pi.isMulRightInvariant
+#align measure_theory.measure.pi.is_mul_right_invariant MeasureTheory.Measure.pi.mulRightInvariant
 #align measure_theory.measure.pi.is_add_right_invariant MeasureTheory.Measure.pi.is_add_right_invariant
 
 @[to_additive]
-instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, MeasurableInv (α i)]
-    [∀ i, IsInvInvariant (μ i)] : IsInvInvariant (Measure.pi μ) :=
+instance pi.invInvariant [∀ i, Group (α i)] [∀ i, MeasurableInv (α i)] [∀ i, InvInvariant (μ i)] :
+    InvInvariant (Measure.pi μ) :=
   by
   refine' ⟨(measure.pi_eq fun s hs => _).symm⟩
   have A : Inv.inv ⁻¹' pi univ s = Set.pi univ fun i => Inv.inv ⁻¹' s i := by ext; simp
   simp_rw [measure.inv, measure.map_apply measurable_inv (MeasurableSet.univ_pi hs), A, pi_pi,
     measure_preimage_inv]
-#align measure_theory.measure.pi.is_inv_invariant MeasureTheory.Measure.pi.isInvInvariant
+#align measure_theory.measure.pi.is_inv_invariant MeasureTheory.Measure.pi.invInvariant
 #align measure_theory.measure.pi.is_neg_invariant MeasureTheory.Measure.pi.is_neg_invariant
 
 instance pi.openPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, OpenPosMeasure (μ i)] :
@@ -621,9 +621,9 @@ instance pi.finiteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
 #align measure_theory.measure.pi.is_finite_measure_on_compacts MeasureTheory.Measure.pi.finiteMeasureOnCompacts
 
 @[to_additive]
-instance pi.isHaarMeasure [∀ i, Group (α i)] [∀ i, TopologicalSpace (α i)]
-    [∀ i, IsHaarMeasure (μ i)] [∀ i, MeasurableMul (α i)] : IsHaarMeasure (Measure.pi μ) where
-#align measure_theory.measure.pi.is_haar_measure MeasureTheory.Measure.pi.isHaarMeasure
+instance pi.haarMeasure [∀ i, Group (α i)] [∀ i, TopologicalSpace (α i)] [∀ i, HaarMeasure (μ i)]
+    [∀ i, MeasurableMul (α i)] : HaarMeasure (Measure.pi μ) where
+#align measure_theory.measure.pi.is_haar_measure MeasureTheory.Measure.pi.haarMeasure
 #align measure_theory.measure.pi.is_add_haar_measure MeasureTheory.Measure.pi.is_add_haar_measure
 
 end Measure
@@ -660,22 +660,22 @@ open Measure
 inference cannot find an instance for `ι → ℝ` when this is stated for dependent function spaces. -/
 @[to_additive
       "We intentionally restrict this only to the nondependent function space, since\ntype-class inference cannot find an instance for `ι → ℝ` when this is stated for dependent function\nspaces."]
-instance Pi.isMulLeftInvariant_volume {α} [Group α] [MeasureSpace α]
-    [SigmaFinite (volume : Measure α)] [MeasurableMul α] [IsMulLeftInvariant (volume : Measure α)] :
-    IsMulLeftInvariant (volume : Measure (ι → α)) :=
-  pi.isMulLeftInvariant _
-#align measure_theory.pi.is_mul_left_invariant_volume MeasureTheory.Pi.isMulLeftInvariant_volume
+instance Pi.mulLeftInvariant_volume {α} [Group α] [MeasureSpace α]
+    [SigmaFinite (volume : Measure α)] [MeasurableMul α] [MulLeftInvariant (volume : Measure α)] :
+    MulLeftInvariant (volume : Measure (ι → α)) :=
+  pi.mulLeftInvariant _
+#align measure_theory.pi.is_mul_left_invariant_volume MeasureTheory.Pi.mulLeftInvariant_volume
 #align measure_theory.pi.is_add_left_invariant_volume MeasureTheory.Pi.is_add_left_invariant_volume
 
 /-- We intentionally restrict this only to the nondependent function space, since type-class
 inference cannot find an instance for `ι → ℝ` when this is stated for dependent function spaces. -/
 @[to_additive
       "We intentionally restrict this only to the nondependent function space, since\ntype-class inference cannot find an instance for `ι → ℝ` when this is stated for dependent function\nspaces."]
-instance Pi.isInvInvariant_volume {α} [Group α] [MeasureSpace α] [SigmaFinite (volume : Measure α)]
-    [MeasurableInv α] [IsInvInvariant (volume : Measure α)] :
-    IsInvInvariant (volume : Measure (ι → α)) :=
-  pi.isInvInvariant _
-#align measure_theory.pi.is_inv_invariant_volume MeasureTheory.Pi.isInvInvariant_volume
+instance Pi.invInvariant_volume {α} [Group α] [MeasureSpace α] [SigmaFinite (volume : Measure α)]
+    [MeasurableInv α] [InvInvariant (volume : Measure α)] :
+    InvInvariant (volume : Measure (ι → α)) :=
+  pi.invInvariant _
+#align measure_theory.pi.is_inv_invariant_volume MeasureTheory.Pi.invInvariant_volume
 #align measure_theory.pi.is_neg_invariant_volume MeasureTheory.Pi.is_neg_invariant_volume
 
 /-!

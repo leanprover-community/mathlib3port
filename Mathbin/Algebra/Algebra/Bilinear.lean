@@ -169,12 +169,10 @@ def Algebra.lmul : A →ₐ[R] End R A :=
 
 variable {R A}
 
-#print Algebra.coe_lmul_eq_mul /-
 @[simp]
 theorem Algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
   rfl
 #align algebra.coe_lmul_eq_mul Algebra.coe_lmul_eq_mul
--/
 
 @[simp]
 theorem mulLeft_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 :=

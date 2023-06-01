@@ -474,13 +474,11 @@ variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _} [Semiring R₁] [Semiri
 instance : Coe (M₁ →SL[σ₁₂] M₂) (M₁ →ₛₗ[σ₁₂] M₂) :=
   ⟨toLinearMap⟩
 
-/- warning: continuous_linear_map.to_linear_map_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align continuous_linear_map.to_linear_map_eq_coe [anonymous]ₓ'. -/
 -- make the coercion the preferred form
 @[simp]
-theorem [anonymous] (f : M₁ →SL[σ₁₂] M₂) : f.toLinearMap = f :=
+theorem toLinearMap_eq_coe (f : M₁ →SL[σ₁₂] M₂) : f.toLinearMap = f :=
   rfl
-#align continuous_linear_map.to_linear_map_eq_coe [anonymous]
+#align continuous_linear_map.to_linear_map_eq_coe ContinuousLinearMap.toLinearMap_eq_coe
 
 theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) := by
   intro f g H; cases f; cases g; congr
@@ -1845,12 +1843,10 @@ instance : ContinuousSemilinearEquivClass (M₁ ≃SL[σ₁₂] M₂) σ₁₂ M
 instance : CoeFun (M₁ ≃SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
   ⟨fun f => f⟩
 
-/- warning: continuous_linear_equiv.coe_def_rev clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align continuous_linear_equiv.coe_def_rev [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (e : M₁ ≃SL[σ₁₂] M₂) : e.toContinuousLinearMap = e :=
+theorem coe_def_rev (e : M₁ ≃SL[σ₁₂] M₂) : e.toContinuousLinearMap = e :=
   rfl
-#align continuous_linear_equiv.coe_def_rev [anonymous]
+#align continuous_linear_equiv.coe_def_rev ContinuousLinearEquiv.coe_def_rev
 
 theorem coe_apply (e : M₁ ≃SL[σ₁₂] M₂) (b : M₁) : (e : M₁ →SL[σ₁₂] M₂) b = e b :=
   rfl

@@ -334,12 +334,10 @@ def toContinuousMap : C(X, Y) :=
 instance : Coe (LocallyConstant X Y) C(X, Y) :=
   ⟨toContinuousMap⟩
 
-/- warning: locally_constant.to_continuous_map_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align locally_constant.to_continuous_map_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : f.toContinuousMap = f :=
+theorem toContinuousMap_eq_coe : f.toContinuousMap = f :=
   rfl
-#align locally_constant.to_continuous_map_eq_coe [anonymous]
+#align locally_constant.to_continuous_map_eq_coe LocallyConstant.toContinuousMap_eq_coe
 
 @[simp]
 theorem coe_continuousMap : ((f : C(X, Y)) : X → Y) = (f : X → Y) :=

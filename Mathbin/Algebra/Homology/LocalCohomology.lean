@@ -82,7 +82,7 @@ instance moduleCat_enough_projectives' : EnoughProjectives (ModuleCat.{u} R) :=
 /-- The diagram we will take the colimit of to define local cohomology, corresponding to the
 directed system determined by the functor `I` -/
 def diagram (I : D ⥤ Ideal R) (i : ℕ) : Dᵒᵖ ⥤ ModuleCat.{u} R ⥤ ModuleCat.{u} R :=
-  (ringModIdeals I).op ⋙ ext R (ModuleCat.{u} R) i
+  (ringModIdeals I).op ⋙ Ext R (ModuleCat.{u} R) i
 #align local_cohomology.diagram LocalCohomology.diagram
 
 end

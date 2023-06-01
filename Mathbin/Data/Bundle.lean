@@ -105,11 +105,9 @@ theorem coe_snd {x : B} {y : E x} : (y : TotalSpace E).snd = y :=
 #align bundle.coe_snd Bundle.coe_snd
 -/
 
-/- warning: bundle.to_total_space_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align bundle.to_total_space_coe [anonymous]ₓ'. -/
-theorem [anonymous] {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk x v :=
+theorem to_totalSpace_coe {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk x v :=
   rfl
-#align bundle.to_total_space_coe [anonymous]
+#align bundle.to_total_space_coe Bundle.to_totalSpace_coe
 
 -- mathport name: «expr ×ᵇ »
 notation:100 -- notation for the direct sum of two bundles over the same base

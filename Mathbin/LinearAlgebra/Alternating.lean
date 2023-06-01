@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 78fdf68dcd2fdb3fe64c0dd6f88926a49418a6ea
+! leanprover-community/mathlib commit bd65478311e4dfd41f48bf38c7e3b02fb75d0163
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,12 +165,10 @@ theorem coe_multilinearMap_injective :
   fun x y h => ext <| MultilinearMap.congr_fun h
 #align alternating_map.coe_multilinear_map_injective AlternatingMap.coe_multilinearMap_injective
 
-/- warning: alternating_map.to_multilinear_map_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align alternating_map.to_multilinear_map_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : f.toMultilinearMap = f :=
+theorem toMultilinearMap_eq_coe : f.toMultilinearMap = f :=
   rfl
-#align alternating_map.to_multilinear_map_eq_coe [anonymous]
+#align alternating_map.to_multilinear_map_eq_coe AlternatingMap.toMultilinearMap_eq_coe
 
 @[simp]
 theorem coe_multilinearMap_mk (f : (ι → M) → N) (h₁ h₂ h₃) :
@@ -292,6 +290,7 @@ theorem coe_prod (f : AlternatingMap R M N ι) (g : AlternatingMap R M P ι) :
   rfl
 #align alternating_map.coe_prod AlternatingMap.coe_prod
 
+#print AlternatingMap.pi /-
 /-- Combine a family of alternating maps with the same domain and codomains `N i` into an
 alternating map taking values in the space of functions `Π i, N i`. -/
 @[simps (config := { simpRhs := true })]
@@ -300,6 +299,7 @@ def pi {ι' : Type _} {N : ι' → Type _} [∀ i, AddCommMonoid (N i)] [∀ i, 
   { MultilinearMap.pi fun a => (f a).toMultilinearMap with
     map_eq_zero_of_eq' := fun v i j h hne => funext fun a => (f a).map_eq_zero_of_eq _ h hne }
 #align alternating_map.pi AlternatingMap.pi
+-/
 
 @[simp]
 theorem coe_pi {ι' : Type _} {N : ι' → Type _} [∀ i, AddCommMonoid (N i)] [∀ i, Module R (N i)]
@@ -308,6 +308,7 @@ theorem coe_pi {ι' : Type _} {N : ι' → Type _} [∀ i, AddCommMonoid (N i)] 
   rfl
 #align alternating_map.coe_pi AlternatingMap.coe_pi
 
+#print AlternatingMap.smulRight /-
 /-- Given an alternating `R`-multilinear map `f` taking values in `R`, `f.smul_right z` is the map
 sending `m` to `f m • z`. -/
 @[simps (config := { simpRhs := true })]
@@ -316,6 +317,7 @@ def smulRight {R M₁ M₂ ι : Type _} [CommSemiring R] [AddCommMonoid M₁] [A
   { f.toMultilinearMap.smul_right z with
     map_eq_zero_of_eq' := fun v i j h hne => by simp [f.map_eq_zero_of_eq v h hne] }
 #align alternating_map.smul_right AlternatingMap.smulRight
+-/
 
 @[simp]
 theorem coe_smulRight {R M₁ M₂ ι : Type _} [CommSemiring R] [AddCommMonoid M₁] [AddCommMonoid M₂]
@@ -440,6 +442,8 @@ def ofSubsingleton [Subsingleton ι] (i : ι) : AlternatingMap R M M ι :=
     map_eq_zero_of_eq' := fun v i j hv hij => (hij <| Subsingleton.elim _ _).elim }
 #align alternating_map.of_subsingleton AlternatingMap.ofSubsingleton
 -/
+
+variable (ι)
 
 #print AlternatingMap.constOfIsEmpty /-
 /-- The constant map is alternating when `ι` is empty. -/
@@ -1314,7 +1318,7 @@ to an empty family. -/
 @[simps]
 def constLinearEquivOfIsEmpty [IsEmpty ι] : N'' ≃ₗ[R'] AlternatingMap R' M'' N'' ι
     where
-  toFun := AlternatingMap.constOfIsEmpty R' M''
+  toFun := AlternatingMap.constOfIsEmpty R' M'' ι
   map_add' x y := rfl
   map_smul' t x := rfl
   invFun f := f 0

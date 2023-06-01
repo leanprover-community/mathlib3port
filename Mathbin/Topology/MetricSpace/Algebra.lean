@@ -123,7 +123,7 @@ instance Real.hasLipschitzAdd : LipschitzAdd ℝ
       rw [lipschitzWith_iff_dist_le_mul]
       intro p q
       simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, NNReal.coe_one,
-        [anonymous]]
+        NNReal.coe_bit0]
       convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
       have := le_max_left (|p.1 - q.1|) (|p.2 - q.2|)

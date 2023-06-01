@@ -629,7 +629,8 @@ theorem IsLocalization.exists_smul_mem_of_mem_adjoin [Algebra R S] [Algebra R S'
   obtain ⟨a, ha₂⟩ := (IsLocalization.eq_iff_exists M S').mp hx''
   use a * y ^ n
   convert A.mul_mem hx' (hA₂ a.prop)
-  rw [Submonoid.smul_def, smul_eq_mul, Submonoid.coe_mul, [anonymous], mul_assoc, ← ha₂, mul_comm]
+  rw [Submonoid.smul_def, smul_eq_mul, Submonoid.coe_mul, Submonoid.coe_pow, mul_assoc, ← ha₂,
+    mul_comm]
 #align is_localization.exists_smul_mem_of_mem_adjoin IsLocalization.exists_smul_mem_of_mem_adjoin
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.

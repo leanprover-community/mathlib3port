@@ -616,7 +616,7 @@ instance : EnoughProjectives (Rep k G) :=
 `G`-representation) is isomorphic to the `n`th cohomology group of `Hom(P, V)`, where `P` is the
 standard resolution of `k` called `group_cohomology.resolution k G`. -/
 def GroupCohomology.extIso (V : Rep k G) (n : ℕ) :
-    ((ext k (Rep k G) n).obj (Opposite.op <| Rep.trivial k G k)).obj V ≅
+    ((Ext k (Rep k G) n).obj (Opposite.op <| Rep.trivial k G k)).obj V ≅
       (((((linearYoneda k (Rep k G)).obj V).rightOp.mapHomologicalComplex _).obj
               (GroupCohomology.resolution k G)).homology
           n).unop :=

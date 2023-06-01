@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.dslope
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Calculus.Deriv.Inv
 
 /-!
 # Slope of a differentiable function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a function `f : 𝕜 → E` from a nontrivially normed field to a normed space over this field,
 `dslope f a b` is defined as `slope f a b = (b - a)⁻¹ • (f b - f a)` for `a ≠ b` and as `deriv f a`
@@ -29,16 +32,20 @@ open Function Set Filter
 
 variable {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
+#print dslope /-
 /-- `dslope f a b` is defined as `slope f a b = (b - a)⁻¹ • (f b - f a)` for `a ≠ b` and
 `deriv f a` for `a = b`. -/
 noncomputable def dslope (f : 𝕜 → E) (a : 𝕜) : 𝕜 → E :=
   update (slope f a) a (deriv f a)
 #align dslope dslope
+-/
 
+#print dslope_same /-
 @[simp]
 theorem dslope_same (f : 𝕜 → E) (a : 𝕜) : dslope f a a = deriv f a :=
   update_same _ _ _
 #align dslope_same dslope_same
+-/
 
 variable {f : 𝕜 → E} {a b : 𝕜} {s : Set 𝕜}
 

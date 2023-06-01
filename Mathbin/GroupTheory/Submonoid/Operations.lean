@@ -773,13 +773,12 @@ protected theorem pow_mem {M : Type _} [Monoid M] (S : Submonoid M) {x : M} (hx 
 #align submonoid.pow_mem Submonoid.pow_mem
 #align add_submonoid.nsmul_mem AddSubmonoid.nsmul_mem
 
-/- warning: submonoid.coe_pow clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align submonoid.coe_pow [anonymous]ₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem [anonymous] {M : Type _} [Monoid M] {S : Submonoid M} (x : S) (n : ℕ) :
+theorem coe_pow {M : Type _} [Monoid M] {S : Submonoid M} (x : S) (n : ℕ) :
     ↑(x ^ n) = (x ^ n : M) :=
   rfl
-#align submonoid.coe_pow [anonymous]
+#align submonoid.coe_pow Submonoid.coe_pow
+#align add_submonoid.coe_nsmul AddSubmonoid.coe_nsmul
 
 /-- A submonoid of a monoid inherits a monoid structure. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]

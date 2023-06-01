@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Junyan Xu
 
 ! This file was ported from Lean 3 source module topology.homotopy.H_spaces
-! leanprover-community/mathlib commit 8d33f09cd7089ecf074b4791907588245aec5d1b
+! leanprover-community/mathlib commit 729d23f9e1640e1687141be89b106d3c8f9d10c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,9 +15,34 @@ import Mathbin.Topology.Homotopy.Path
 # H-spaces
 
 This file defines H-spaces mainly following the approach proposed by Serre in his paper
-*Homologie singulière des espaces fibrés*. The main results are the H-space `instance` on every
-topological group, and the H-space structure on the loop space (based at `x : X` of any topological
-space `X`, for which we introduce the notation `Ω_[x]`.
+*Homologie singulière des espaces fibrés*. The idea beaneath `H-spaces` is that they are topological
+spaces with a binary operation `⋀ : X → X → X` that is a homotopic-theoretic weakening of an
+operation what would make `X` into a topological monoid. In particular, there exists a "neutral
+element" `e : X` such that `λ x, e ⋀ x` and `λ x, x ⋀ e` are homotopic to the identity on `X`, see
+[the Wikipedia page of H-spaces](https://en.wikipedia.org/wiki/H-space).
+
+Some notable properties of `H-spaces` are
+* Their fundamental group is always abelian (by the same argument for topological groups);
+* Their cohomology ring comes equipped with a structure of a Hopf-algebra;
+* The loop space based at every `x : X` carries a structure of an `H-spaces`.
+
+## Main Results
+
+* Every topological group `G` is an `H-space` using its operation `* : G → G → G` (this is already
+true if `G` has an instance of a `mul_one_class` and `continuous_mul`);
+* Given two `H-spaces` `X` and `Y`, their product is again an `H`-space. We show in an example that
+starting with two topological groups `G, G'`, the `H`-space structure on `G × G'` is definitionally
+equal to the product of `H-space` structures on `G` and `G'`.
+* The loop space based at every `x : X` carries a structure of an `H-spaces`.
+
+## To Do
+* Prove that for every `normed_add_torsor Z` and every `z : Z`, the operation
+`λ x y, midpoint x y` defines a `H-space` structure with `z` as a "neutral element".
+* Prove that `S^0`, `S^1`, `S^3` and `S^7` are the unique spheres that are `H-spaces`, where the
+first three inherit the structure because they are topological groups (they are Lie groups,
+actually), isomorphic to the invertible elements in `ℤ`, in `ℂ` and in the quaternion; and the
+fourth from the fact that `S^7` coincides with the octonions of norm 1 (it is not a group, in
+particular, only has an instance of `mul_one_class`).
 
 ## References
 
@@ -103,14 +128,26 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
 
 namespace TopologicalGroup
 
-@[to_additive]
-instance (priority := 600) hSpace (G : Type u) [TopologicalSpace G] [Group G] [TopologicalGroup G] :
-    HSpace G where
+/-- The definition `to_H_space` is not an instance because its `@additive` version would
+lead to a diamond since a topological field would inherit two `H_space` structures, one from the
+`mul_one_class` and one from the `add_zero_class`. In the case of a group, we make
+`topological_group.H_space` an instance."-/
+@[to_additive
+      "The definition `to_H_space` is not an instance because it comes together with a\nmultiplicative version which would lead to a diamond since a topological field would inherit two\n`H_space` structures, one from the `mul_one_class` and one from the `add_zero_class`. In the case\nof an additive group, we make `topological_group.H_space` an instance."]
+def toHSpace (M : Type u) [MulOneClass M] [TopologicalSpace M] [ContinuousMul M] : HSpace M
+    where
   hmul := ⟨Function.uncurry Mul.mul, continuous_mul⟩
   e := 1
   hmul_e_e := one_mul 1
   eHmul := (HomotopyRel.refl _ _).cast rfl (by ext1; apply one_mul)
   hmulE := (HomotopyRel.refl _ _).cast rfl (by ext1; apply mul_one)
+#align topological_group.to_H_space TopologicalGroup.toHSpace
+#align topological_add_group.to_H_space TopologicalAddGroup.to_H_space
+
+@[to_additive]
+instance (priority := 600) hSpace (G : Type u) [TopologicalSpace G] [Group G] [TopologicalGroup G] :
+    HSpace G :=
+  toHSpace G
 #align topological_group.H_space TopologicalGroup.hSpace
 #align topological_add_group.H_space TopologicalAddGroup.H_space
 
@@ -119,12 +156,10 @@ theorem one_eq_hSpace_e {G : Type u} [TopologicalSpace G] [Group G] [Topological
   rfl
 #align topological_group.one_eq_H_space_e TopologicalGroup.one_eq_hSpace_e
 
-/-
-In the following example we see that the `H-space` structure on the product of two topological
-groups is definitionally equally to the product `H-space`-structure of the two groups.
--/
+/- In the following example we see that the `H-space` structure on the product of two topological
+groups is definitionally equally to the product `H-space`-structure of the two groups.-/
 example {G G' : Type u} [TopologicalSpace G] [Group G] [TopologicalGroup G] [TopologicalSpace G']
-    [Group G'] [TopologicalGroup G'] : TopologicalGroup.hSpace (G × G') = HSpace.prod G G' :=
+    [Group G'] [TopologicalGroup G'] : toHSpace (G × G') = HSpace.prod G G' :=
   rfl
 
 end TopologicalGroup

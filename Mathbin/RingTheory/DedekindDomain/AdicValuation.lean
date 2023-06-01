@@ -212,7 +212,7 @@ theorem IntValuation.map_add_le_max' (x y : R) :
     · by_cases hxy : x + y = 0
       · rw [int_valuation_def, if_pos hxy]; exact zero_le'
       · rw [v.int_valuation_def_if_neg hxy, v.int_valuation_def_if_neg hx,
-          v.int_valuation_def_if_neg hy, [anonymous], int_valuation.le_max_iff_min_le]
+          v.int_valuation_def_if_neg hy, WithZero.le_max_iff, int_valuation.le_max_iff_min_le]
         set nmin :=
           min ((Associates.mk v.as_ideal).count (Associates.mk (Ideal.span {x})).factors)
             ((Associates.mk v.as_ideal).count (Associates.mk (Ideal.span {y})).factors)
@@ -463,7 +463,7 @@ instance : Algebra R (v.adicCompletionIntegers K)
   commutes' r x := by rw [mul_comm]
   smul_def' r x := by
     ext
-    simp only [Subring.coe_mul, [anonymous], Algebra.smul_def]
+    simp only [Subring.coe_mul, SetLike.coe_mk, Algebra.smul_def]
     rfl
 
 @[simp]

@@ -149,16 +149,14 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 #align list.func.get_set List.Func.get_set
 -/
 
-/- warning: list.func.eq_get_of_mem clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align list.func.eq_get_of_mem [anonymous]ₓ'. -/
-theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
+theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
   | b :: as, h => by
     rw [mem_cons_iff] at h; cases h
     · exists 0; intro d; apply h
     · cases' eq_get_of_mem h with n h2
       exists n + 1; apply h2
-#align list.func.eq_get_of_mem [anonymous]
+#align list.func.eq_get_of_mem List.Func.eq_get_of_mem
 
 #print List.Func.mem_get_of_le /-
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as

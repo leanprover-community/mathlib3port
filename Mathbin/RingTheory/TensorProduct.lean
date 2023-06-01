@@ -533,12 +533,10 @@ def includeLeft : A →ₐ[R] A ⊗[R] B :=
   { includeLeftRingHom with commutes' := by simp }
 #align algebra.tensor_product.include_left Algebra.TensorProduct.includeLeft
 
-#print Algebra.TensorProduct.includeLeft_apply /-
 @[simp]
 theorem includeLeft_apply (a : A) : (includeLeft : A →ₐ[R] A ⊗[R] B) a = a ⊗ₜ 1 :=
   rfl
 #align algebra.tensor_product.include_left_apply Algebra.TensorProduct.includeLeft_apply
--/
 
 /-- The algebra morphism `B →ₐ[R] A ⊗[R] B` sending `b` to `1 ⊗ₜ b`. -/
 def includeRight : B →ₐ[R] A ⊗[R] B where
@@ -554,12 +552,10 @@ def includeRight : B →ₐ[R] A ⊗[R] B where
     · simp [Algebra.smul_def]
 #align algebra.tensor_product.include_right Algebra.TensorProduct.includeRight
 
-#print Algebra.TensorProduct.includeRight_apply /-
 @[simp]
 theorem includeRight_apply (b : B) : (includeRight : B →ₐ[R] A ⊗[R] B) b = 1 ⊗ₜ b :=
   rfl
 #align algebra.tensor_product.include_right_apply Algebra.TensorProduct.includeRight_apply
--/
 
 theorem includeLeft_comp_algebraMap {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Algebra R T] :
@@ -857,12 +853,10 @@ def map (f : A →ₐ[R] B) (g : C →ₐ[R] D) : A ⊗[R] C →ₐ[R] B ⊗[R] 
     (by simp [AlgHom.commutes])
 #align algebra.tensor_product.map Algebra.TensorProduct.map
 
-#print Algebra.TensorProduct.map_tmul /-
 @[simp]
 theorem map_tmul (f : A →ₐ[R] B) (g : C →ₐ[R] D) (a : A) (c : C) : map f g (a ⊗ₜ c) = f a ⊗ₜ g c :=
   rfl
 #align algebra.tensor_product.map_tmul Algebra.TensorProduct.map_tmul
--/
 
 @[simp]
 theorem map_comp_includeLeft (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
@@ -934,12 +928,10 @@ theorem lmul'_toLinearMap : (lmul' R : _ →ₐ[R] S).toLinearMap = LinearMap.mu
   rfl
 #align algebra.tensor_product.lmul'_to_linear_map Algebra.TensorProduct.lmul'_toLinearMap
 
-#print Algebra.TensorProduct.lmul'_apply_tmul /-
 @[simp]
 theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a * b :=
   rfl
 #align algebra.tensor_product.lmul'_apply_tmul Algebra.TensorProduct.lmul'_apply_tmul
--/
 
 #print Algebra.TensorProduct.lmul'_comp_includeLeft /-
 @[simp]

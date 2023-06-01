@@ -221,12 +221,10 @@ add_decl_doc Subring.toAddSubgroup
 
 namespace Subring
 
-/- warning: subring.to_submonoid clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align subring.to_submonoid [anonymous]ₓ'. -/
 /-- The underlying submonoid of a subring. -/
-def [anonymous] (s : Subring R) : Submonoid R :=
+def toSubmonoid (s : Subring R) : Submonoid R :=
   { s.toSubsemiring.toSubmonoid with carrier := s.carrier }
-#align subring.to_submonoid [anonymous]
+#align subring.to_submonoid Subring.toSubmonoid
 
 instance : SetLike (Subring R) R where
   coe := Subring.carrier
@@ -316,24 +314,18 @@ theorem toAddSubgroup_mono : Monotone (toAddSubgroup : Subring R → AddSubgroup
   toAddSubgroup_strictMono.Monotone
 #align subring.to_add_subgroup_mono Subring.toAddSubgroup_mono
 
-#print Subring.toSubmonoid_injective /-
-theorem toSubmonoid_injective : Function.Injective ([anonymous] : Subring R → Submonoid R)
+theorem toSubmonoid_injective : Function.Injective (toSubmonoid : Subring R → Submonoid R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
 #align subring.to_submonoid_injective Subring.toSubmonoid_injective
--/
 
-#print Subring.toSubmonoid_strictMono /-
 @[mono]
-theorem toSubmonoid_strictMono : StrictMono ([anonymous] : Subring R → Submonoid R) := fun _ _ => id
+theorem toSubmonoid_strictMono : StrictMono (toSubmonoid : Subring R → Submonoid R) := fun _ _ => id
 #align subring.to_submonoid_strict_mono Subring.toSubmonoid_strictMono
--/
 
-#print Subring.toSubmonoid_mono /-
 @[mono]
-theorem toSubmonoid_mono : Monotone ([anonymous] : Subring R → Submonoid R) :=
+theorem toSubmonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :=
   toSubmonoid_strictMono.Monotone
 #align subring.to_submonoid_mono Subring.toSubmonoid_mono
--/
 
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
@@ -784,8 +776,8 @@ theorem mem_inf {p p' : Subring R} {x : R} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x �
 
 instance : InfSet (Subring R) :=
   ⟨fun s =>
-    Subring.mk' (⋂ t ∈ s, ↑t) (⨅ t ∈ s, [anonymous] t) (⨅ t ∈ s, Subring.toAddSubgroup t) (by simp)
-      (by simp)⟩
+    Subring.mk' (⋂ t ∈ s, ↑t) (⨅ t ∈ s, Subring.toSubmonoid t) (⨅ t ∈ s, Subring.toAddSubgroup t)
+      (by simp) (by simp)⟩
 
 @[simp, norm_cast]
 theorem coe_sInf (S : Set (Subring R)) : ((sInf S : Subring R) : Set R) = ⋂ s ∈ S, ↑s :=
@@ -805,12 +797,11 @@ theorem mem_iInf {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S 
   simp only [iInf, mem_Inf, Set.forall_range_iff]
 #align subring.mem_infi Subring.mem_iInf
 
-#print Subring.sInf_toSubmonoid /-
 @[simp]
-theorem sInf_toSubmonoid (s : Set (Subring R)) : (sInf s).toSubmonoid = ⨅ t ∈ s, [anonymous] t :=
+theorem sInf_toSubmonoid (s : Set (Subring R)) :
+    (sInf s).toSubmonoid = ⨅ t ∈ s, Subring.toSubmonoid t :=
   mk'_toSubmonoid _ _
 #align subring.Inf_to_submonoid Subring.sInf_toSubmonoid
--/
 
 @[simp]
 theorem sInf_toAddSubgroup (s : Set (Subring R)) :

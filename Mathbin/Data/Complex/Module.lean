@@ -290,12 +290,10 @@ def ofRealAm : ℝ →ₐ[ℝ] ℂ :=
   Algebra.ofId ℝ ℂ
 #align complex.of_real_am Complex.ofRealAm
 
-#print Complex.ofRealAm_coe /-
 @[simp]
 theorem ofRealAm_coe : ⇑ofRealAm = coe :=
   rfl
 #align complex.of_real_am_coe Complex.ofRealAm_coe
--/
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
 def conjAe : ℂ ≃ₐ[ℝ] ℂ :=

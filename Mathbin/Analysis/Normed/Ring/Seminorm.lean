@@ -196,12 +196,10 @@ instance ringNormClass : RingNormClass (RingNorm R) R ℝ
 instance : CoeFun (RingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
-/- warning: ring_norm.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align ring_norm.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (p : RingNorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
-#align ring_norm.to_fun_eq_coe [anonymous]
+#align ring_norm.to_fun_eq_coe RingNorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
@@ -302,12 +300,10 @@ instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R ℝ
 instance : CoeFun (MulRingNorm R) fun _ => R → ℝ :=
   ⟨fun p => p.toFun⟩
 
-/- warning: mul_ring_norm.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align mul_ring_norm.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (p : MulRingNorm R) : p.toFun = p :=
+theorem toFun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
-#align mul_ring_norm.to_fun_eq_coe [anonymous]
+#align mul_ring_norm.to_fun_eq_coe MulRingNorm.toFun_eq_coe
 
 @[ext]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=

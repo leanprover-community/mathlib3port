@@ -442,7 +442,8 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] :
     let i ← LazyList.ofList <| List.finRange <| k / n
     have : ↑i * ↑n < xs.1.length :=
         Nat.lt_of_div_lt_div
-          (lt_of_le_of_lt (by simp only [Nat.mul_div_cancel, gt_iff_lt, [anonymous], PNat.pos]) i.2)
+          (lt_of_le_of_lt (by simp only [Nat.mul_div_cancel, gt_iff_lt, Fin.val_eq_coe, PNat.pos])
+            i.2)
       pure
         ⟨perm.slice (i * n) n xs, by
           rcases xs with ⟨a, b, c, d⟩ <;> dsimp [sizeof_lt] <;> unfold_wf <;>

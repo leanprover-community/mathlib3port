@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module geometry.euclidean.sphere.power
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Geometry.Euclidean.Sphere.Basic
 
 /-!
 # Power of a point (intersecting chords and secants)
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves basic geometrical results about power of a point (intersecting chords and
 secants) in spheres in real inner product spaces and Euclidean affine spaces.

@@ -189,94 +189,68 @@ theorem adjoin_X : Algebra.adjoin R ({X} : Set R[X]) = ⊤ :=
   exact S.sum_mem fun n hn => S.smul_mem (S.pow_mem (Algebra.subset_adjoin rfl) _) _
 #align polynomial.adjoin_X Polynomial.adjoin_X
 
-#print Polynomial.algHom_ext /-
 @[ext]
 theorem algHom_ext {f g : R[X] →ₐ[R] A} (h : f X = g X) : f = g :=
   AlgHom.ext_of_adjoin_eq_top adjoin_X fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 #align polynomial.alg_hom_ext Polynomial.algHom_ext
--/
 
-#print Polynomial.aeval_def /-
 theorem aeval_def (p : R[X]) : aeval x p = eval₂ (algebraMap R A) x p :=
   rfl
 #align polynomial.aeval_def Polynomial.aeval_def
--/
 
-#print Polynomial.aeval_zero /-
 @[simp]
 theorem aeval_zero : aeval x (0 : R[X]) = 0 :=
   AlgHom.map_zero (aeval x)
 #align polynomial.aeval_zero Polynomial.aeval_zero
--/
 
-#print Polynomial.aeval_X /-
 @[simp]
 theorem aeval_X : aeval x (X : R[X]) = x :=
   eval₂_X _ x
 #align polynomial.aeval_X Polynomial.aeval_X
--/
 
-#print Polynomial.aeval_C /-
 @[simp]
 theorem aeval_C (r : R) : aeval x (C r) = algebraMap R A r :=
   eval₂_C _ x
 #align polynomial.aeval_C Polynomial.aeval_C
--/
 
-#print Polynomial.aeval_monomial /-
 @[simp]
 theorem aeval_monomial {n : ℕ} {r : R} : aeval x (monomial n r) = algebraMap _ _ r * x ^ n :=
   eval₂_monomial _ _
 #align polynomial.aeval_monomial Polynomial.aeval_monomial
--/
 
-#print Polynomial.aeval_X_pow /-
 @[simp]
 theorem aeval_X_pow {n : ℕ} : aeval x ((X : R[X]) ^ n) = x ^ n :=
   eval₂_X_pow _ _
 #align polynomial.aeval_X_pow Polynomial.aeval_X_pow
--/
 
-#print Polynomial.aeval_add /-
 @[simp]
 theorem aeval_add : aeval x (p + q) = aeval x p + aeval x q :=
   AlgHom.map_add _ _ _
 #align polynomial.aeval_add Polynomial.aeval_add
--/
 
-#print Polynomial.aeval_one /-
 @[simp]
 theorem aeval_one : aeval x (1 : R[X]) = 1 :=
   AlgHom.map_one _
 #align polynomial.aeval_one Polynomial.aeval_one
--/
 
-#print Polynomial.aeval_bit0 /-
 @[simp]
 theorem aeval_bit0 : aeval x (bit0 p) = bit0 (aeval x p) :=
   AlgHom.map_bit0 _ _
 #align polynomial.aeval_bit0 Polynomial.aeval_bit0
--/
 
-#print Polynomial.aeval_bit1 /-
 @[simp]
 theorem aeval_bit1 : aeval x (bit1 p) = bit1 (aeval x p) :=
   AlgHom.map_bit1 _ _
 #align polynomial.aeval_bit1 Polynomial.aeval_bit1
--/
 
-#print Polynomial.aeval_nat_cast /-
 @[simp]
 theorem aeval_nat_cast (n : ℕ) : aeval x (n : R[X]) = n :=
   map_natCast _ _
 #align polynomial.aeval_nat_cast Polynomial.aeval_nat_cast
--/
 
-#print Polynomial.aeval_mul /-
 theorem aeval_mul : aeval x (p * q) = aeval x p * aeval x q :=
   AlgHom.map_mul _ _ _
 #align polynomial.aeval_mul Polynomial.aeval_mul
--/
 
 theorem aeval_comp {A : Type _} [CommSemiring A] [Algebra R A] (x : A) :
     aeval x (p.comp q) = aeval (aeval x q) p :=
@@ -294,17 +268,13 @@ theorem aeval_X_left : aeval (X : R[X]) = AlgHom.id R R[X] :=
 #align polynomial.aeval_X_left Polynomial.aeval_X_left
 -/
 
-#print Polynomial.aeval_X_left_apply /-
 theorem aeval_X_left_apply (p : R[X]) : aeval X p = p :=
   AlgHom.congr_fun (@aeval_X_left R _) p
 #align polynomial.aeval_X_left_apply Polynomial.aeval_X_left_apply
--/
 
-#print Polynomial.eval_unique /-
 theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A) (φ X) p := by
   rw [← aeval_def, aeval_alg_hom, aeval_X_left, AlgHom.comp_id]
 #align polynomial.eval_unique Polynomial.eval_unique
--/
 
 theorem aeval_algHom_apply {F : Type _} [AlgHomClass F R A B] (f : F) (x : A) (p : R[X]) :
     aeval (f x) p = f (aeval x p) :=
@@ -317,19 +287,15 @@ theorem aeval_algEquiv (f : A ≃ₐ[R] B) (x : A) : aeval (f x) = (f : A →ₐ
   aeval_algHom (f : A →ₐ[R] B) x
 #align polynomial.aeval_alg_equiv Polynomial.aeval_algEquiv
 
-#print Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval /-
 theorem aeval_algebraMap_apply_eq_algebraMap_eval (x : R) (p : R[X]) :
     aeval (algebraMap R A x) p = algebraMap R A (p.eval x) :=
   aeval_algHom_apply (Algebra.ofId R A) x p
 #align polynomial.aeval_algebra_map_apply_eq_algebra_map_eval Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval
--/
 
-#print Polynomial.coe_aeval_eq_eval /-
 @[simp]
 theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
   rfl
 #align polynomial.coe_aeval_eq_eval Polynomial.coe_aeval_eq_eval
--/
 
 @[simp]
 theorem coe_aeval_eq_evalRingHom (x : R) :
@@ -349,11 +315,9 @@ theorem aeval_subalgebra_coe (g : R[X]) {A : Type _} [Semiring A] [Algebra R A] 
   (aeval_algHom_apply s.val f g).symm
 #align polynomial.aeval_subalgebra_coe Polynomial.aeval_subalgebra_coe
 
-#print Polynomial.coeff_zero_eq_aeval_zero /-
 theorem coeff_zero_eq_aeval_zero (p : R[X]) : p.coeff 0 = aeval 0 p := by
   simp [coeff_zero_eq_eval_zero]
 #align polynomial.coeff_zero_eq_aeval_zero Polynomial.coeff_zero_eq_aeval_zero
--/
 
 theorem coeff_zero_eq_aeval_zero' (p : R[X]) : algebraMap R A (p.coeff 0) = aeval (0 : A) p := by
   simp [aeval_def]
@@ -368,14 +332,12 @@ theorem map_aeval_eq_aeval_map {S T U : Type _} [CommSemiring S] [CommSemiring T
   rw [map_map, h, ← map_map, eval_map, eval₂_at_apply, aeval_def, eval_map]
 #align polynomial.map_aeval_eq_aeval_map Polynomial.map_aeval_eq_aeval_map
 
-#print Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero /-
 theorem aeval_eq_zero_of_dvd_aeval_eq_zero [CommSemiring S] [CommSemiring T] [Algebra S T]
     {p q : S[X]} (h₁ : p ∣ q) {a : T} (h₂ : aeval a p = 0) : aeval a q = 0 :=
   by
   rw [aeval_def, ← eval_map] at h₂⊢
   exact eval_eq_zero_of_dvd_of_eval_eq_zero (Polynomial.map_dvd (algebraMap S T) h₁) h₂
 #align polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero
--/
 
 variable (R)
 
@@ -392,19 +354,15 @@ section Semiring
 
 variable [Semiring S] {f : R →+* S}
 
-#print Polynomial.aeval_eq_sum_range /-
 theorem aeval_eq_sum_range [Algebra R S] {p : R[X]} (x : S) :
     aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i := by
   simp_rw [Algebra.smul_def]; exact eval₂_eq_sum_range (algebraMap R S) x
 #align polynomial.aeval_eq_sum_range Polynomial.aeval_eq_sum_range
--/
 
-#print Polynomial.aeval_eq_sum_range' /-
 theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree < n) (x : S) :
     aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i := by simp_rw [Algebra.smul_def];
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
 #align polynomial.aeval_eq_sum_range' Polynomial.aeval_eq_sum_range'
--/
 
 theorem isRoot_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} :
     eval₂ f (f r) p = 0 → p.IsRoot r := by

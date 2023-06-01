@@ -389,7 +389,7 @@ variable [CommRing R] [StarRing R]
 
 instance : CommRing (selfAdjoint R) :=
   Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).val_zero val_one
-    (selfAdjoint R).val_add val_mul (selfAdjoint R).coe_neg (selfAdjoint R).val_neg_eq_neg_val
+    (selfAdjoint R).val_add val_mul (selfAdjoint R).coeNeg (selfAdjoint R).val_neg_eq_neg_val
     (selfAdjoint R).val_nsmul_eq_nsmul_val (selfAdjoint R).val_zsmul_eq_zsmul_val val_pow
     (fun _ => rfl) fun _ => rfl
 
@@ -440,7 +440,7 @@ theorem val_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R
 
 instance : Field (selfAdjoint R) :=
   Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).val_zero val_one
-    (selfAdjoint R).val_add val_mul (selfAdjoint R).coe_neg (selfAdjoint R).val_neg_eq_neg_val
+    (selfAdjoint R).val_add val_mul (selfAdjoint R).coeNeg (selfAdjoint R).val_neg_eq_neg_val
     val_inv val_div (selfAdjoint R).val_nsmul_eq_nsmul_val (selfAdjoint R).val_zsmul_eq_zsmul_val
     val_rat_smul val_pow val_zpow (fun _ => rfl) (fun _ => rfl) val_ratCast
 

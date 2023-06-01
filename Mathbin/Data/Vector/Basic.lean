@@ -125,13 +125,11 @@ theorem mk_toList : ∀ (v : Vector α n) (h), (⟨toList v, h⟩ : Vector α n)
 #align vector.mk_to_list Vector.mk_toList
 -/
 
-/- warning: vector.length_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align vector.length_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (v : Vector α n) :
+theorem length_coe (v : Vector α n) :
     ((coe : { l : List α // l.length = n } → List α) v).length = n :=
   v.2
-#align vector.length_coe [anonymous]
+#align vector.length_coe Vector.length_coe
 
 #print Vector.toList_map /-
 @[simp]
@@ -382,7 +380,7 @@ theorem reverse_get_zero {v : Vector α (n + 1)} : v.reverse.headI = v.getLast :
   have : 0 = v.to_list.length - 1 - n := by
     simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
   rw [← nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
-  simp_rw [to_list_reverse, [anonymous], Fin.val_last, Fin.val_zero, this]
+  simp_rw [to_list_reverse, Fin.val_eq_coe, Fin.val_last, Fin.val_zero, this]
   rw [List.nthLe_reverse]
 #align vector.reverse_nth_zero Vector.reverse_get_zero
 -/
@@ -611,7 +609,7 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
 
 /-- Cast a vector to an array. -/
 def toArray : Vector α n → Array' n α
-  | ⟨xs, h⟩ => cast (by rw [h]) xs.to_array
+  | ⟨xs, h⟩ => cast (by rw [h]) xs.toArray
 #align vector.to_array Vector.toArray
 
 section InsertNth
@@ -674,7 +672,7 @@ theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
   | ⟨l, hl⟩ => by
     refine' Subtype.eq _
-    simp only [insert_nth_val, Fin.val_succ, Fin.castSucc, [anonymous], Fin.coe_castAdd]
+    simp only [insert_nth_val, Fin.val_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_castAdd]
     apply List.insertNth_comm
     · assumption
     · rw [hl]; exact Nat.le_of_succ_le_succ j.2

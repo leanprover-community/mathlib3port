@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.hermitian
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-! # Hermitian matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines hermitian matrices and some basic results about them.
 
@@ -40,33 +43,45 @@ section Star
 
 variable [Star α] [Star β]
 
+#print Matrix.IsHermitian /-
 /-- A matrix is hermitian if it is equal to its conjugate transpose. On the reals, this definition
 captures symmetric matrices. -/
 def IsHermitian (A : Matrix n n α) : Prop :=
   Aᴴ = A
 #align matrix.is_hermitian Matrix.IsHermitian
+-/
 
+#print Matrix.IsHermitian.eq /-
 theorem IsHermitian.eq {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ = A :=
   h
 #align matrix.is_hermitian.eq Matrix.IsHermitian.eq
+-/
 
+#print Matrix.IsHermitian.isSelfAdjoint /-
 protected theorem IsHermitian.isSelfAdjoint {A : Matrix n n α} (h : A.IsHermitian) :
     IsSelfAdjoint A :=
   h
 #align matrix.is_hermitian.is_self_adjoint Matrix.IsHermitian.isSelfAdjoint
+-/
 
+#print Matrix.IsHermitian.ext /-
 @[ext]
 theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian := by
   intro h; ext (i j); exact h i j
 #align matrix.is_hermitian.ext Matrix.IsHermitian.ext
+-/
 
+#print Matrix.IsHermitian.apply /-
 theorem IsHermitian.apply {A : Matrix n n α} (h : A.IsHermitian) (i j : n) : star (A j i) = A i j :=
   congr_fun (congr_fun h _) _
 #align matrix.is_hermitian.apply Matrix.IsHermitian.apply
+-/
 
+#print Matrix.IsHermitian.ext_iff /-
 theorem IsHermitian.ext_iff {A : Matrix n n α} : A.IsHermitian ↔ ∀ i j, star (A j i) = A i j :=
   ⟨IsHermitian.apply, IsHermitian.ext⟩
 #align matrix.is_hermitian.ext_iff Matrix.IsHermitian.ext_iff
+-/
 
 @[simp]
 theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β)
@@ -74,18 +89,24 @@ theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β)
   (conjTranspose_map f hf).symm.trans <| h.Eq.symm ▸ rfl
 #align matrix.is_hermitian.map Matrix.IsHermitian.map
 
+#print Matrix.IsHermitian.transpose /-
 theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
   rw [is_hermitian, conj_transpose, transpose_map]; congr ; exact h
 #align matrix.is_hermitian.transpose Matrix.IsHermitian.transpose
+-/
 
+#print Matrix.isHermitian_transpose_iff /-
 @[simp]
 theorem isHermitian_transpose_iff (A : Matrix n n α) : Aᵀ.IsHermitian ↔ A.IsHermitian :=
   ⟨by intro h; rw [← transpose_transpose A]; exact is_hermitian.transpose h, IsHermitian.transpose⟩
 #align matrix.is_hermitian_transpose_iff Matrix.isHermitian_transpose_iff
+-/
 
+#print Matrix.IsHermitian.conjTranspose /-
 theorem IsHermitian.conjTranspose {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ.IsHermitian :=
   h.transpose.map _ fun _ => rfl
 #align matrix.is_hermitian.conj_transpose Matrix.IsHermitian.conjTranspose
+-/
 
 @[simp]
 theorem IsHermitian.submatrix {A : Matrix n n α} (h : A.IsHermitian) (f : m → n) :
@@ -105,10 +126,12 @@ section InvolutiveStar
 
 variable [InvolutiveStar α]
 
+#print Matrix.isHermitian_conjTranspose_iff /-
 @[simp]
 theorem isHermitian_conjTranspose_iff (A : Matrix n n α) : Aᴴ.IsHermitian ↔ A.IsHermitian :=
   IsSelfAdjoint.star_iff
 #align matrix.is_hermitian_conj_transpose_iff Matrix.isHermitian_conjTranspose_iff
+-/
 
 /-- A block matrix `A.from_blocks B C D` is hermitian,
     if `A` and `D` are hermitian and `Bᴴ = C`. -/
@@ -256,9 +279,11 @@ theorem isHermitian_inv [Fintype m] [DecidableEq m] (A : Matrix m m α) [Inverti
   ⟨fun h => by rw [← inv_inv_of_invertible A]; exact is_hermitian.inv h, IsHermitian.inv⟩
 #align matrix.is_hermitian_inv Matrix.isHermitian_inv
 
+#print Matrix.IsHermitian.adjugate /-
 theorem IsHermitian.adjugate [Fintype m] [DecidableEq m] {A : Matrix m m α} (hA : A.IsHermitian) :
     A.adjugate.IsHermitian := by simp [is_hermitian, adjugate_conj_transpose, hA.eq]
 #align matrix.is_hermitian.adjugate Matrix.IsHermitian.adjugate
+-/
 
 end CommRing
 

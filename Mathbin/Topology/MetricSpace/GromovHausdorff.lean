@@ -780,7 +780,7 @@ instance : SecondCountableTopology GHSpace :=
       have hjp : j < N p := ((E p) y).2
       have hjq : j < N q := by rwa [Npq] at hjp
       have j' : j = ((E q) (Ψ y)).1 := by
-        simp only [Equiv.apply_symm_apply, [anonymous], Fin.coe_cast]
+        simp only [Equiv.apply_symm_apply, Fin.val_eq_coe, Fin.coe_cast]
       -- Express `dist x y` in terms of `F p`
       have : (F p).2 ((E p) x) ((E p) y) = floor (ε⁻¹ * dist x y) := by
         simp only [F, (E p).symm_apply_apply]

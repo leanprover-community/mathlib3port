@@ -96,19 +96,15 @@ theorem coe_add (x y : ℝ) : ↑(x + y) = (x + y : ℝ*) :=
   rfl
 #align hyperreal.coe_add Hyperreal.coe_add
 
-/- warning: hyperreal.coe_bit0 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align hyperreal.coe_bit0 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ) : ↑(bit0 x) = (bit0 x : ℝ*) :=
+theorem coe_bit0 (x : ℝ) : ↑(bit0 x) = (bit0 x : ℝ*) :=
   rfl
-#align hyperreal.coe_bit0 [anonymous]
+#align hyperreal.coe_bit0 Hyperreal.coe_bit0
 
-/- warning: hyperreal.coe_bit1 clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align hyperreal.coe_bit1 [anonymous]ₓ'. -/
 @[simp, norm_cast]
-theorem [anonymous] (x : ℝ) : ↑(bit1 x) = (bit1 x : ℝ*) :=
+theorem coe_bit1 (x : ℝ) : ↑(bit1 x) = (bit1 x : ℝ*) :=
   rfl
-#align hyperreal.coe_bit1 [anonymous]
+#align hyperreal.coe_bit1 Hyperreal.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_mul (x y : ℝ) : ↑(x * y) = (x * y : ℝ*) :=

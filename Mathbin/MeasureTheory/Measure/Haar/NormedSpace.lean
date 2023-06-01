@@ -32,7 +32,7 @@ namespace Measure
 /- The instance `is_add_haar_measure.has_no_atoms` applies in particular to show that an additive
 Haar measure on a nontrivial finite-dimensional real vector space has no atom. -/
 example {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E]
-    [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] : NoAtoms μ := by
+    [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [AddHaarMeasure μ] : NoAtoms μ := by
   infer_instance
 
 section ContinuousLinearEquiv
@@ -40,23 +40,23 @@ section ContinuousLinearEquiv
 variable {𝕜 G H : Type _} [MeasurableSpace G] [MeasurableSpace H] [NontriviallyNormedField 𝕜]
   [TopologicalSpace G] [TopologicalSpace H] [AddCommGroup G] [AddCommGroup H]
   [TopologicalAddGroup G] [TopologicalAddGroup H] [Module 𝕜 G] [Module 𝕜 H] (μ : Measure G)
-  [IsAddHaarMeasure μ] [BorelSpace G] [BorelSpace H] [T2Space H]
+  [AddHaarMeasure μ] [BorelSpace G] [BorelSpace H] [T2Space H]
 
-instance MapContinuousLinearEquiv.isAddHaarMeasure (e : G ≃L[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
-  e.toAddEquiv.is_add_haar_measure_map _ e.Continuous e.symm.Continuous
-#align measure_theory.measure.map_continuous_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapContinuousLinearEquiv.isAddHaarMeasure
+instance MapContinuousLinearEquiv.addHaarMeasure (e : G ≃L[𝕜] H) : AddHaarMeasure (μ.map e) :=
+  e.toAddEquiv.addHaarMeasure_map _ e.Continuous e.symm.Continuous
+#align measure_theory.measure.map_continuous_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapContinuousLinearEquiv.addHaarMeasure
 
 variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [ContinuousSMul 𝕜 G]
   [ContinuousSMul 𝕜 H]
 
-instance MapLinearEquiv.isAddHaarMeasure (e : G ≃ₗ[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
-  MapContinuousLinearEquiv.isAddHaarMeasure _ e.toContinuousLinearEquiv
-#align measure_theory.measure.map_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapLinearEquiv.isAddHaarMeasure
+instance MapLinearEquiv.addHaarMeasure (e : G ≃ₗ[𝕜] H) : AddHaarMeasure (μ.map e) :=
+  MapContinuousLinearEquiv.addHaarMeasure _ e.toContinuousLinearEquiv
+#align measure_theory.measure.map_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapLinearEquiv.addHaarMeasure
 
 end ContinuousLinearEquiv
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
-  [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {F : Type _} [NormedAddCommGroup F]
+  [FiniteDimensional ℝ E] (μ : Measure E) [AddHaarMeasure μ] {F : Type _} [NormedAddCommGroup F]
   [NormedSpace ℝ F] [CompleteSpace F]
 
 variable (μ) {s : Set E}
@@ -138,7 +138,7 @@ end Measure
 variable {F : Type _} [NormedAddCommGroup F]
 
 theorem integrable_comp_smul_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
+    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [AddHaarMeasure μ]
     (f : E → F) {R : ℝ} (hR : R ≠ 0) : Integrable (fun x => f (R • x)) μ ↔ Integrable f μ :=
   by
   -- reduce to one-way implication
@@ -158,7 +158,7 @@ theorem integrable_comp_smul_iff {E : Type _} [NormedAddCommGroup E] [NormedSpac
 #align measure_theory.integrable_comp_smul_iff MeasureTheory.integrable_comp_smul_iff
 
 theorem Integrable.comp_smul {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] {μ : Measure E} [IsAddHaarMeasure μ]
+    [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] {μ : Measure E} [AddHaarMeasure μ]
     {f : E → F} (hf : Integrable f μ) {R : ℝ} (hR : R ≠ 0) : Integrable (fun x => f (R • x)) μ :=
   (integrable_comp_smul_iff μ f hR).2 hf
 #align measure_theory.integrable.comp_smul MeasureTheory.Integrable.comp_smul

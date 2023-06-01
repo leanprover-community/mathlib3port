@@ -159,18 +159,14 @@ theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s
 
 end Measure
 
-/- warning: measure_theory.coe_to_outer_measure clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align measure_theory.coe_to_outer_measure [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : ⇑μ.toOuterMeasure = μ :=
+theorem coe_toOuterMeasure : ⇑μ.toOuterMeasure = μ :=
   rfl
-#align measure_theory.coe_to_outer_measure [anonymous]
+#align measure_theory.coe_to_outer_measure MeasureTheory.coe_toOuterMeasure
 
-/- warning: measure_theory.to_outer_measure_apply clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align measure_theory.to_outer_measure_apply [anonymous]ₓ'. -/
-theorem [anonymous] (s : Set α) : μ.toOuterMeasure s = μ s :=
+theorem toOuterMeasure_apply (s : Set α) : μ.toOuterMeasure s = μ s :=
   rfl
-#align measure_theory.to_outer_measure_apply [anonymous]
+#align measure_theory.to_outer_measure_apply MeasureTheory.toOuterMeasure_apply
 
 #print MeasureTheory.measure_eq_trim /-
 theorem measure_eq_trim (s : Set α) : μ s = μ.toOuterMeasure.trim s := by rw [μ.trimmed] <;> rfl

@@ -2047,7 +2047,7 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
         LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
     right_inv := fun y => by apply SetCoe.ext;
       simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
-        LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
+        LinearEquiv.coe_coe, SetLike.coe_mk, LinearEquiv.apply_symm_apply] }
 #align linear_equiv.submodule_map LinearEquiv.submoduleMap
 -/
 

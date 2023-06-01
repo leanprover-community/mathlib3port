@@ -142,12 +142,10 @@ theorem dim_pos [Nontrivial S] (pb : PowerBasis R S) : 0 < pb.dim :=
 #align power_basis.dim_pos PowerBasis.dim_pos
 -/
 
-#print PowerBasis.exists_eq_aeval /-
 theorem exists_eq_aeval [Nontrivial S] (pb : PowerBasis R S) (y : S) :
     ∃ f : R[X], f.natDegree < pb.dim ∧ y = aeval pb.gen f :=
   (mem_span_pow pb.dim_ne_zero).mp (by simpa using pb.basis.mem_span y)
 #align power_basis.exists_eq_aeval PowerBasis.exists_eq_aeval
--/
 
 theorem exists_eq_aeval' (pb : PowerBasis R S) (y : S) : ∃ f : R[X], y = aeval pb.gen f :=
   by
@@ -177,7 +175,6 @@ noncomputable def minpolyGen (pb : PowerBasis A S) : A[X] :=
 #align power_basis.minpoly_gen PowerBasis.minpolyGen
 -/
 
-#print PowerBasis.aeval_minpolyGen /-
 theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 0 :=
   by
   simp_rw [minpoly_gen, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_mul, AlgHom.map_pow, aeval_C, ←
@@ -186,7 +183,6 @@ theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 
   rw [Finsupp.total_apply, Finsupp.sum_fintype] <;>
     simp only [pb.coe_basis, zero_smul, eq_self_iff_true, imp_true_iff]
 #align power_basis.aeval_minpoly_gen PowerBasis.aeval_minpolyGen
--/
 
 #print PowerBasis.minpolyGen_monic /-
 theorem minpolyGen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) :=
@@ -198,7 +194,6 @@ theorem minpolyGen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) :=
 #align power_basis.minpoly_gen_monic PowerBasis.minpolyGen_monic
 -/
 
-#print PowerBasis.dim_le_natDegree_of_root /-
 theorem dim_le_natDegree_of_root (pb : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0)
     (root : aeval pb.gen p = 0) : pb.dim ≤ p.natDegree :=
   by
@@ -210,16 +205,13 @@ theorem dim_le_natDegree_of_root (pb : PowerBasis A S) {p : A[X]} (ne_zero : p �
   dsimp only at this
   rw [this, monomial_zero_right]
 #align power_basis.dim_le_nat_degree_of_root PowerBasis.dim_le_natDegree_of_root
--/
 
-#print PowerBasis.dim_le_degree_of_root /-
 theorem dim_le_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0)
     (root : aeval h.gen p = 0) : ↑h.dim ≤ p.degree :=
   by
   rw [degree_eq_nat_degree NeZero, WithBot.coe_le_coe]
   exact h.dim_le_nat_degree_of_root NeZero root
 #align power_basis.dim_le_degree_of_root PowerBasis.dim_le_degree_of_root
--/
 
 #print PowerBasis.degree_minpolyGen /-
 theorem degree_minpolyGen [Nontrivial A] (pb : PowerBasis A S) : degree (minpolyGen pb) = pb.dim :=
@@ -269,7 +261,6 @@ theorem natDegree_minpoly [Nontrivial A] (pb : PowerBasis A S) :
 #align power_basis.nat_degree_minpoly PowerBasis.natDegree_minpoly
 -/
 
-#print PowerBasis.leftMulMatrix /-
 protected theorem leftMulMatrix (pb : PowerBasis A S) :
     Algebra.leftMulMatrix pb.Basis pb.gen =
       Matrix.of fun i j =>
@@ -288,7 +279,6 @@ protected theorem leftMulMatrix (pb : PowerBasis A S) :
   · rw [Fintype.sum_eq_single (⟨↑k + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
     · rfl; · rfl; intro x hx; rw [if_neg, zero_smul]; apply mt Fin.ext hx
 #align power_basis.left_mul_matrix PowerBasis.leftMulMatrix
--/
 
 end minpoly
 
@@ -338,7 +328,6 @@ theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A p
   simp only [← aeval_mul, pb.constr_pow_aeval hy]
 #align power_basis.constr_pow_mul PowerBasis.constr_pow_mul
 
-#print PowerBasis.lift /-
 /-- `pb.lift y hy` is the algebra map sending `pb.gen` to `y`,
 where `hy` states the higher powers of `y` are the same as the higher powers of `pb.gen`.
 
@@ -356,7 +345,6 @@ noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A p
     map_mul' := pb.constr_pow_mul hy
     commutes' := pb.constr_pow_algebraMap hy }
 #align power_basis.lift PowerBasis.lift
--/
 
 @[simp]
 theorem lift_gen (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) :
@@ -370,7 +358,6 @@ theorem lift_aeval (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.ge
   pb.constr_pow_aeval hy f
 #align power_basis.lift_aeval PowerBasis.lift_aeval
 
-#print PowerBasis.liftEquiv /-
 /-- `pb.lift_equiv` states that roots of the minimal polynomial of `pb.gen` correspond to
 maps sending `pb.gen` to that root.
 
@@ -387,7 +374,6 @@ noncomputable def liftEquiv (pb : PowerBasis A S) :
   left_inv f := pb.algHom_ext <| lift_gen _ _ _
   right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
 #align power_basis.lift_equiv PowerBasis.liftEquiv
--/
 
 #print PowerBasis.liftEquiv' /-
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal
@@ -412,7 +398,6 @@ noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B)
 #align power_basis.alg_hom.fintype PowerBasis.AlgHom.fintype
 -/
 
-#print PowerBasis.equivOfRoot /-
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.
 
@@ -427,7 +412,6 @@ noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (by ext x; obtain ⟨f, hf, rfl⟩ := pb'.exists_eq_aeval' x; simp)
     (by ext x; obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval' x; simp)
 #align power_basis.equiv_of_root PowerBasis.equivOfRoot
--/
 
 @[simp]
 theorem equivOfRoot_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')

@@ -65,7 +65,7 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [FiniteMeasure μ] (hX : Memℒp 
   by
   have := ENNReal.pow_lt_top (hX.sub <| mem_ℒp_const <| μ[X]).2 2
   rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, ← ENNReal.rpow_two] at this
-  simp only [Pi.sub_apply, [anonymous], ENNReal.one_toReal, one_div] at this
+  simp only [Pi.sub_apply, ENNReal.toReal_bit0, ENNReal.one_toReal, one_div] at this
   rw [← ENNReal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ENNReal.rpow_one] at this
   simp_rw [ENNReal.rpow_two] at this
   exact this
@@ -79,7 +79,7 @@ theorem evariance_eq_top [FiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (h
     by
     refine' ⟨hXm.sub ae_strongly_measurable_const, _⟩
     rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top]
-    simp only [[anonymous], ENNReal.one_toReal, ENNReal.rpow_two, Ne.def]
+    simp only [ENNReal.toReal_bit0, ENNReal.one_toReal, ENNReal.rpow_two, Ne.def]
     exact ENNReal.rpow_lt_top_of_nonneg (by simp) h.ne
   refine' hX _
   convert this.add (mem_ℒp_const <| μ[X])
@@ -124,8 +124,8 @@ theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 
   · exact integral_nonneg fun ω => pow_two_nonneg _
   · convert hX.integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
     ext ω
-    simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
-      pow_bit0_abs]
+    simp only [Pi.sub_apply, Real.norm_eq_abs, ENNReal.toReal_bit0, ENNReal.one_toReal,
+      Real.rpow_two, pow_bit0_abs]
   · exact ae_of_all _ fun ω => pow_two_nonneg _
 #align measure_theory.mem_ℒp.variance_eq_of_integral_eq_zero MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero
 
@@ -138,8 +138,8 @@ theorem MeasureTheory.Memℒp.variance_eq [FiniteMeasure μ] (hX : Memℒp X 2 �
   · exact integral_nonneg fun ω => pow_two_nonneg _
   · convert(hX.sub <| mem_ℒp_const (μ[X])).integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
     ext ω
-    simp only [Pi.sub_apply, Real.norm_eq_abs, [anonymous], ENNReal.one_toReal, Real.rpow_two,
-      pow_bit0_abs]
+    simp only [Pi.sub_apply, Real.norm_eq_abs, ENNReal.toReal_bit0, ENNReal.one_toReal,
+      Real.rpow_two, pow_bit0_abs]
   · exact ae_of_all _ fun ω => pow_two_nonneg _
 #align measure_theory.mem_ℒp.variance_eq MeasureTheory.Memℒp.variance_eq
 
@@ -272,7 +272,7 @@ theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
     rw [mem_ℒp, not_and] at hℒ
     specialize hℒ hX
     simp only [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top, not_lt, top_le_iff,
-      [anonymous], ENNReal.one_toReal, ENNReal.rpow_two, one_div, ENNReal.rpow_eq_top_iff,
+      ENNReal.toReal_bit0, ENNReal.one_toReal, ENNReal.rpow_two, one_div, ENNReal.rpow_eq_top_iff,
       inv_lt_zero, inv_pos, zero_lt_bit0, zero_lt_one, and_true_iff, or_iff_not_imp_left,
       not_and_or] at hℒ
     exact hℒ fun _ => zero_le_two
@@ -289,7 +289,7 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AEStronglyMeasurable 
     simp only [Pi.sub_apply, ENNReal.coe_le_coe, ← Real.norm_eq_abs, ← coe_nnnorm,
       NNReal.coe_le_coe, ENNReal.ofReal_coe_nnreal]
   · rw [snorm_eq_lintegral_rpow_nnnorm two_ne_zero ENNReal.two_ne_top]
-    simp only [[anonymous], ENNReal.one_toReal, Pi.sub_apply, one_div]
+    simp only [ENNReal.toReal_bit0, ENNReal.one_toReal, Pi.sub_apply, one_div]
     rw [div_eq_mul_inv, ENNReal.inv_pow, mul_comm, ENNReal.rpow_two]
     congr
     simp_rw [← ENNReal.rpow_mul, inv_mul_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ENNReal.rpow_two,

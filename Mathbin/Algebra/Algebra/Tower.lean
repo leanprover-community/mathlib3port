@@ -140,32 +140,26 @@ def toAlgHom : S →ₐ[R] A :=
 #align is_scalar_tower.to_alg_hom IsScalarTower.toAlgHom
 -/
 
-#print IsScalarTower.toAlgHom_apply /-
 theorem toAlgHom_apply (y : S) : toAlgHom R S A y = algebraMap S A y :=
   rfl
 #align is_scalar_tower.to_alg_hom_apply IsScalarTower.toAlgHom_apply
--/
 
 @[simp]
 theorem coe_toAlgHom : ↑(toAlgHom R S A) = algebraMap S A :=
   RingHom.ext fun _ => rfl
 #align is_scalar_tower.coe_to_alg_hom IsScalarTower.coe_toAlgHom
 
-#print IsScalarTower.coe_toAlgHom' /-
 @[simp]
 theorem coe_toAlgHom' : (toAlgHom R S A : S → A) = algebraMap S A :=
   rfl
 #align is_scalar_tower.coe_to_alg_hom' IsScalarTower.coe_toAlgHom'
--/
 
 variable {R S A B}
 
-#print AlgHom.map_algebraMap /-
 @[simp]
 theorem AlgHom.map_algebraMap (f : A →ₐ[S] B) (r : R) : f (algebraMap R A r) = algebraMap R B r :=
   by rw [algebraMap_apply R S A r, f.commutes, ← algebraMap_apply R S B]
 #align alg_hom.map_algebra_map AlgHom.map_algebraMap
--/
 
 variable (R)
 
@@ -222,23 +216,19 @@ def restrictScalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
 #align alg_hom.restrict_scalars AlgHom.restrictScalars
 -/
 
-#print AlgHom.restrictScalars_apply /-
 theorem restrictScalars_apply (f : A →ₐ[S] B) (x : A) : f.restrictScalars R x = f x :=
   rfl
 #align alg_hom.restrict_scalars_apply AlgHom.restrictScalars_apply
--/
 
 @[simp]
 theorem coe_restrictScalars (f : A →ₐ[S] B) : (f.restrictScalars R : A →+* B) = f :=
   rfl
 #align alg_hom.coe_restrict_scalars AlgHom.coe_restrictScalars
 
-#print AlgHom.coe_restrictScalars' /-
 @[simp]
 theorem coe_restrictScalars' (f : A →ₐ[S] B) : (restrictScalars R f : A → B) = f :=
   rfl
 #align alg_hom.coe_restrict_scalars' AlgHom.coe_restrictScalars'
--/
 
 #print AlgHom.restrictScalars_injective /-
 theorem restrictScalars_injective :

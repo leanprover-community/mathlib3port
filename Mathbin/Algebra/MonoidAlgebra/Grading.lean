@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit feb99064803fd3108e37c18b0f77d0a8344677a3
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.GradedAlgebra.Basic
 
 /-!
 # Internal grading of an `add_monoid_algebra`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we show that an `add_monoid_algebra` has an internal direct sum structure.
 

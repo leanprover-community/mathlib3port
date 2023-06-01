@@ -419,7 +419,7 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
         this
     obtain ⟨⟨_, n, rfl⟩, e⟩ := (IsLocalization.mk'_eq_zero_iff _ _).mp this
     refine' ⟨⟨r, hpr⟩ ^ n, _⟩
-    rw [Submonoid.smul_def, Algebra.smul_def, [anonymous], Subtype.coe_mk, map_pow]
+    rw [Submonoid.smul_def, Algebra.smul_def, Submonoid.coe_pow, Subtype.coe_mk, map_pow]
     exact e
 #align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.isLocalizedModule_toPushforwardStalkAlgHom
 

@@ -101,12 +101,10 @@ namespace Model
 instance : CoeSort T.ModelType (Type w) :=
   ⟨ModelType.Carrier⟩
 
-/- warning: first_order.language.Theory.Model.carrier_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.Model.carrier_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (M : T.ModelType) : M.carrier = M :=
+theorem carrier_eq_coe (M : T.ModelType) : M.carrier = M :=
   rfl
-#align first_order.language.Theory.Model.carrier_eq_coe [anonymous]
+#align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.Theory.ModelType.carrier_eq_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.ModelType.of /-

@@ -80,10 +80,8 @@ instance : One ℚ :=
 instance : Inhabited ℚ :=
   ⟨0⟩
 
-/- warning: rat.mk_pnat clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat [anonymous]ₓ'. -/
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ+` (not necessarily coprime) -/
-def [anonymous] (n : ℤ) : ℕ+ → ℚ
+def mkPnat (n : ℤ) : ℕ+ → ℚ
   | ⟨d, dpos⟩ =>
     let n' := n.natAbs
     let g := n'.gcd d
@@ -98,49 +96,49 @@ def [anonymous] (n : ℤ) : ℕ+ → ℚ
         exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
       rw [this]
       exact Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_right _ dpos)⟩
-#align rat.mk_pnat [anonymous]
+#align rat.mk_pnat Rat.mkPnat
 
 #print mkRat /-
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ`. In the case `d = 0`, we
   define `n / 0 = 0` by convention. -/
 def mkRat (n : ℤ) (d : ℕ) : ℚ :=
-  if d0 : d = 0 then 0 else [anonymous] n ⟨d, Nat.pos_of_ne_zero d0⟩
+  if d0 : d = 0 then 0 else mkPnat n ⟨d, Nat.pos_of_ne_zero d0⟩
 #align rat.mk_nat mkRat
 -/
 
 /-- Form the quotient `n / d` where `n d : ℤ`. -/
 def mk : ℤ → ℤ → ℚ
   | n, (d : ℕ) => mkRat n d
-  | n, -[d+1] => [anonymous] (-n) d.succPNat
+  | n, -[d+1] => mkPnat (-n) d.succPNat
 #align rat.mk Rat.mk
 
 -- mathport name: rat.mk
 scoped infixl:70 " /. " => Rat.mk
 
-/- warning: rat.mk_pnat_eq clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_eq [anonymous]ₓ'. -/
-theorem [anonymous] (n d h) : [anonymous] n ⟨d, h⟩ = n /. d := by
+theorem mkPnat_eq (n d h) : mkPnat n ⟨d, h⟩ = n /. d := by
   change n /. d with dite _ _ _ <;> simp [ne_of_gt h]
-#align rat.mk_pnat_eq [anonymous]
+#align rat.mk_pnat_eq Rat.mkPnat_eq
 
+#print Rat.mkRat_eq /-
 theorem mkRat_eq (n d) : mkRat n d = n /. d :=
   rfl
 #align rat.mk_nat_eq Rat.mkRat_eq
+-/
 
+#print Rat.divInt_zero /-
 @[simp]
 theorem divInt_zero (n) : n /. 0 = 0 :=
   rfl
 #align rat.mk_zero Rat.divInt_zero
+-/
 
-/- warning: rat.zero_mk_pnat clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align rat.zero_mk_pnat [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (n) : [anonymous] 0 n = 0 :=
+theorem zero_mkPnat (n) : mkPnat 0 n = 0 :=
   by
   cases' n with n npos
   simp only [mk_pnat, Int.natAbs_zero, Nat.div_self npos, Nat.gcd_zero_left, Int.zero_div]
   rfl
-#align rat.zero_mk_pnat [anonymous]
+#align rat.zero_mk_pnat Rat.zero_mkPnat
 
 #print Rat.zero_mkRat /-
 @[simp]
@@ -177,7 +175,7 @@ theorem divInt_ne_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b ≠ 0 ↔ a ≠ 0 :=
 theorem divInt_eq_iff :
     ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /. d ↔ a * d = c * b :=
   by
-  suffices ∀ a b c d hb hd, [anonymous] a ⟨b, hb⟩ = [anonymous] c ⟨d, hd⟩ ↔ a * d = c * b
+  suffices ∀ a b c d hb hd, mkPnat a ⟨b, hb⟩ = mkPnat c ⟨d, hd⟩ ↔ a * d = c * b
     by
     intros ; cases' b with b b <;> simp [mk, mk_nat, Nat.succPNat]
     simp [mt (congr_arg Int.ofNat) hb]
@@ -253,19 +251,24 @@ theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. 
   apply (mk_eq (mul_ne_zero b0 c0) b0).2; simp [mul_comm, mul_assoc]
 #align rat.div_mk_div_cancel_left Rat.divInt_mul_right
 
+#print Rat.num_den /-
 @[simp]
 theorem num_den : ∀ {a : ℚ}, a.num /. a.den = a
   | ⟨n, d, h, (c : _ = 1)⟩ => show mkRat n d = _ by simp [mk_nat, ne_of_gt h, mk_pnat, c]
 #align rat.num_denom Rat.num_den
+-/
 
 theorem num_den' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
   num_den.symm
 #align rat.num_denom' Rat.num_den'
 
+#print Rat.coe_int_eq_divInt /-
 theorem coe_int_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
   num_den'
 #align rat.coe_int_eq_mk Rat.coe_int_eq_divInt
+-/
 
+#print Rat.numDenCasesOn /-
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
 @[elab_as_elim]
@@ -273,18 +276,21 @@ def numDenCasesOn.{u} {C : ℚ → Sort u} :
     ∀ (a : ℚ) (H : ∀ n d, 0 < d → (Int.natAbs n).coprime d → C (n /. d)), C a
   | ⟨n, d, h, c⟩, H => by rw [num_denom'] <;> exact H n d h c
 #align rat.num_denom_cases_on Rat.numDenCasesOn
+-/
 
+#print Rat.numDenCasesOn' /-
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_elim]
 def numDenCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
   numDenCasesOn a fun n d h c => H n d h.ne'
 #align rat.num_denom_cases_on' Rat.numDenCasesOn'
+-/
 
 #print Rat.add /-
 /-- Addition of rational numbers. Use `(+)` instead. -/
 protected def add : ℚ → ℚ → ℚ
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => [anonymous] (n₁ * d₂ + n₂ * d₁) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mkPnat (n₁ * d₂ + n₂ * d₁) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
 #align rat.add Rat.add
 -/
 
@@ -354,7 +360,7 @@ theorem divInt_neg_den (n d : ℤ) : n /. -d = -n /. d := by
 #print Rat.mul /-
 /-- Multiplication of rational numbers. Use `(*)` instead. -/
 protected def mul : ℚ → ℚ → ℚ
-  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => [anonymous] (n₁ * n₂) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
+  | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mkPnat (n₁ * n₂) ⟨d₁ * d₂, mul_pos h₁ h₂⟩
 #align rat.mul Rat.mul
 -/
 
@@ -442,20 +448,26 @@ protected theorem add_left_neg : -a + a = 0 :=
 #align rat.add_left_neg Rat.add_left_neg
 -/
 
+#print Rat.divInt_zero_one /-
 @[simp]
 theorem divInt_zero_one : 0 /. 1 = 0 :=
-  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
+  show mkPnat _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_zero_one Rat.divInt_zero_one
+-/
 
+#print Rat.divInt_one_one /-
 @[simp]
 theorem divInt_one_one : 1 /. 1 = 1 :=
-  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
+  show mkPnat _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_one_one Rat.divInt_one_one
+-/
 
+#print Rat.divInt_neg_one_one /-
 @[simp]
 theorem divInt_neg_one_one : -1 /. 1 = -1 :=
-  show [anonymous] _ _ = _ by rw [mk_pnat]; simp; rfl
+  show mkPnat _ _ = _ by rw [mk_pnat]; simp; rfl
 #align rat.mk_neg_one_one Rat.divInt_neg_one_one
+-/
 
 #print Rat.mul_one /-
 protected theorem mul_one : a * 1 = a :=
@@ -703,6 +715,7 @@ theorem divInt_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /
   (divInt_ne_zero hd).mpr h
 #align rat.mk_ne_zero_of_ne_zero Rat.divInt_ne_zero_of_ne_zero
 
+#print Rat.mul_num_den /-
 theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
   by
   have hq' : (↑q.den : ℤ) ≠ 0 := by have := denom_ne_zero q <;> simpa
@@ -711,6 +724,7 @@ theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.den * r.den) :=
     simpa using this
   simp [mul_def hq' hr', -num_denom]
 #align rat.mul_num_denom Rat.mul_num_den
+-/
 
 theorem div_num_den (q r : ℚ) : q / r = q.num * r.den /. (q.den * r.num) :=
   if hr : r.num = 0 then by

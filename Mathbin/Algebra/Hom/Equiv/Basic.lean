@@ -207,12 +207,11 @@ theorem toEquiv_eq_coe (f : M ≃* N) : f.toEquiv = f :=
 #align mul_equiv.to_equiv_eq_coe MulEquiv.toEquiv_eq_coe
 #align add_equiv.to_equiv_eq_coe AddEquiv.toEquiv_eq_coe
 
-/- warning: mul_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align mul_equiv.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp, to_additive]
-theorem [anonymous] {f : M ≃* N} : f.toFun = f :=
+theorem toFun_eq_coe {f : M ≃* N} : f.toFun = f :=
   rfl
-#align mul_equiv.to_fun_eq_coe [anonymous]
+#align mul_equiv.to_fun_eq_coe MulEquiv.toFun_eq_coe
+#align add_equiv.to_fun_eq_coe AddEquiv.toFun_eq_coe
 
 @[simp, to_additive]
 theorem coe_toEquiv {f : M ≃* N} : ⇑(f : M ≃ N) = f :=
@@ -316,13 +315,12 @@ theorem coe_mk (f : M → N) (g h₁ h₂ h₃) : ⇑(MulEquiv.mk f g h₁ h₂ 
 #align mul_equiv.coe_mk MulEquiv.coe_mkₓ
 #align add_equiv.coe_mk AddEquiv.coe_mkₓ
 
-/- warning: mul_equiv.to_equiv_mk clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_mk [anonymous]ₓ'. -/
 @[simp, to_additive]
-theorem [anonymous] (f : M → N) (g : N → M) (h₁ h₂ h₃) :
+theorem toEquiv_mk (f : M → N) (g : N → M) (h₁ h₂ h₃) :
     (mk f g h₁ h₂ h₃).toEquiv = ⟨f, g, h₁, h₂⟩ :=
   rfl
-#align mul_equiv.to_equiv_mk [anonymous]
+#align mul_equiv.to_equiv_mk MulEquiv.toEquiv_mk
+#align add_equiv.to_equiv_mk AddEquiv.to_equiv_mk
 
 @[simp, to_additive]
 theorem symm_symm : ∀ f : M ≃* N, f.symm.symm = f

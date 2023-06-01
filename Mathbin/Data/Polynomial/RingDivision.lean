@@ -58,19 +58,15 @@ section
 
 variable [Semiring S]
 
-#print Polynomial.natDegree_pos_of_aeval_root /-
 theorem natDegree_pos_of_aeval_root [Algebra R S] {p : R[X]} (hp : p ≠ 0) {z : S}
     (hz : aeval z p = 0) (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) : 0 < p.natDegree :=
   natDegree_pos_of_eval₂_root hp (algebraMap R S) hz inj
 #align polynomial.nat_degree_pos_of_aeval_root Polynomial.natDegree_pos_of_aeval_root
--/
 
-#print Polynomial.degree_pos_of_aeval_root /-
 theorem degree_pos_of_aeval_root [Algebra R S] {p : R[X]} (hp : p ≠ 0) {z : S} (hz : aeval z p = 0)
     (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) : 0 < p.degree :=
   natDegree_pos_iff_degree_pos.mp (natDegree_pos_of_aeval_root hp hz inj)
 #align polynomial.degree_pos_of_aeval_root Polynomial.degree_pos_of_aeval_root
--/
 
 #print Polynomial.modByMonic_eq_of_dvd_sub /-
 theorem modByMonic_eq_of_dvd_sub (hq : q.Monic) {p₁ p₂ : R[X]} (h : q ∣ p₁ - p₂) :
@@ -128,14 +124,12 @@ section
 
 variable [Ring S]
 
-#print Polynomial.aeval_modByMonic_eq_self_of_root /-
 theorem aeval_modByMonic_eq_self_of_root [Algebra R S] {p q : R[X]} (hq : q.Monic) {x : S}
     (hx : aeval x q = 0) : aeval x (p %ₘ q) = aeval x p :=
   by-- `eval₂_mod_by_monic_eq_self_of_root` doesn't work here as it needs commutativity
   rw [mod_by_monic_eq_sub_mul_div p hq, _root_.map_sub, _root_.map_mul, hx, MulZeroClass.zero_mul,
     sub_zero]
 #align polynomial.aeval_mod_by_monic_eq_self_of_root Polynomial.aeval_modByMonic_eq_self_of_root
--/
 
 end
 
@@ -1009,12 +1003,10 @@ theorem ne_zero_of_mem_rootSet {p : T[X]} [CommRing S] [IsDomain S] [Algebra T S
 #align polynomial.ne_zero_of_mem_root_set Polynomial.ne_zero_of_mem_rootSet
 -/
 
-#print Polynomial.aeval_eq_zero_of_mem_rootSet /-
 theorem aeval_eq_zero_of_mem_rootSet {p : T[X]} [CommRing S] [IsDomain S] [Algebra T S] {a : S}
     (hx : a ∈ p.rootSet S) : aeval a p = 0 :=
   (mem_rootSet'.1 hx).2
 #align polynomial.aeval_eq_zero_of_mem_root_set Polynomial.aeval_eq_zero_of_mem_rootSet
--/
 
 theorem rootSet_mapsTo {p : T[X]} {S S'} [CommRing S] [IsDomain S] [Algebra T S] [CommRing S']
     [IsDomain S'] [Algebra T S'] [NoZeroSMulDivisors T S'] (f : S →ₐ[T] S') :

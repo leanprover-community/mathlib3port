@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.hermite.basic
-! leanprover-community/mathlib commit 066ecdb4834c7a4693e0f0e5154935a6f3d3f90c
+! leanprover-community/mathlib commit 938d3db9c278f8a52c0f964a405806f0f2b09b74
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Nat.Parity
+import Mathbin.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Hermite polynomials
@@ -24,9 +25,14 @@ This file defines `polynomial.hermite n`, the nth probabilist's Hermite polynomi
 ## Results
 
 * `polynomial.hermite_succ`: the recursion `hermite (n+1) = (x - d/dx) (hermite n)`
+* `polynomial.coeff_hermite_explicit`: a closed formula for (nonvanishing) coefficients in terms
+  of binomial coefficients and double factorials.
 * `polynomial.coeff_hermite_of_odd_add`: for `n`,`k` where `n+k` is odd, `(hermite n).coeff k` is
   zero.
+* `polynomial.coeff_hermite_of_even_add`: a closed formula for `(hermite n).coeff k` when `n+k` is
+  even, equivalent to `polynomial.coeff_hermite_explicit`.
 * `polynomial.monic_hermite`: for all `n`, `hermite n` is monic.
+* `polynomial.degree_hermite`: for all `n`, `hermite n` has degree `n`.
 
 ## References
 
@@ -147,6 +153,77 @@ theorem coeff_hermite_of_odd_add {n k : ℕ} (hnk : Odd (n + k)) : coeff (hermit
 #align polynomial.coeff_hermite_of_odd_add Polynomial.coeff_hermite_of_odd_add
 
 end Coeff
+
+section CoeffExplicit
+
+open scoped Nat
+
+/-- Because of `coeff_hermite_of_odd_add`, every nonzero coefficient is described as follows. -/
+theorem coeff_hermite_explicit :
+    ∀ n k : ℕ, coeff (hermite (2 * n + k)) k = (-1) ^ n * (2 * n - 1)‼ * Nat.choose (2 * n + k) k
+  | 0, _ => by simp
+  | n + 1, 0 => by
+    convert coeff_hermite_succ_zero (2 * n + 1) using 1
+    rw [coeff_hermite_explicit n 1, (by ring_nf : 2 * (n + 1) - 1 = 2 * n + 1),
+      Nat.doubleFactorial_add_one, Nat.choose_zero_right, Nat.choose_one_right, pow_succ]
+    push_cast
+    ring
+  | n + 1, k + 1 =>
+    by
+    let hermite_explicit : ℕ → ℕ → ℤ := fun n k =>
+      (-1) ^ n * (2 * n - 1)‼ * Nat.choose (2 * n + k) k
+    have hermite_explicit_recur :
+      ∀ n k : ℕ,
+        hermite_explicit (n + 1) (k + 1) =
+          hermite_explicit (n + 1) k - (k + 2) * hermite_explicit n (k + 2) :=
+      by
+      intro n k
+      simp only [hermite_explicit]
+      -- Factor out (-1)'s.
+      rw [mul_comm (↑k + _), sub_eq_add_neg]
+      nth_rw 3 [neg_eq_neg_one_mul]
+      simp only [mul_assoc, ← mul_add, pow_succ]
+      congr 2
+      -- Factor out double factorials.
+      norm_cast
+      rw [(by ring_nf : 2 * (n + 1) - 1 = 2 * n + 1), Nat.doubleFactorial_add_one,
+        mul_comm (2 * n + 1)]
+      simp only [mul_assoc, ← mul_add]
+      congr 1
+      -- Match up binomial coefficients using `nat.choose_succ_right_eq`.
+      rw [(by ring : 2 * (n + 1) + (k + 1) = 2 * n + 1 + (k + 1) + 1),
+        (by ring : 2 * (n + 1) + k = 2 * n + 1 + (k + 1)),
+        (by ring : 2 * n + (k + 2) = 2 * n + 1 + (k + 1))]
+      rw [Nat.choose, Nat.choose_succ_right_eq (2 * n + 1 + (k + 1)) (k + 1), Nat.add_sub_cancel]
+      ring
+    change _ = hermite_explicit _ _
+    rw [← add_assoc, coeff_hermite_succ_succ, hermite_explicit_recur]
+    congr
+    · rw [coeff_hermite_explicit (n + 1) k]
+    · rw [(by ring : 2 * (n + 1) + k = 2 * n + (k + 2)), coeff_hermite_explicit n (k + 2)]
+#align polynomial.coeff_hermite_explicit Polynomial.coeff_hermite_explicit
+
+theorem coeff_hermite_of_even_add {n k : ℕ} (hnk : Even (n + k)) :
+    coeff (hermite n) k = (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k :=
+  by
+  cases' le_or_lt k n with h_le h_lt
+  · rw [Nat.even_add, ← Nat.even_sub h_le] at hnk
+    obtain ⟨m, hm⟩ := hnk
+    rw [(by linarith : n = 2 * m + k), Nat.add_sub_cancel,
+      Nat.mul_div_cancel_left _ (Nat.succ_pos 1), coeff_hermite_explicit]
+  · simp [Nat.choose_eq_zero_of_lt h_lt, coeff_hermite_of_lt h_lt]
+#align polynomial.coeff_hermite_of_even_add Polynomial.coeff_hermite_of_even_add
+
+theorem coeff_hermite (n k : ℕ) :
+    coeff (hermite n) k =
+      if Even (n + k) then (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k else 0 :=
+  by
+  split_ifs with h
+  exact coeff_hermite_of_even_add h
+  exact coeff_hermite_of_odd_add (nat.odd_iff_not_even.mpr h)
+#align polynomial.coeff_hermite Polynomial.coeff_hermite
+
+end CoeffExplicit
 
 end Polynomial
 

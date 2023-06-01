@@ -272,32 +272,24 @@ theorem one_snd : (1 : X q).2 = 0 :=
   rfl
 #align lucas_lehmer.X.one_snd LucasLehmer.X.one_snd
 
-/- warning: lucas_lehmer.X.bit0_fst clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.bit0_fst [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : X q) : (bit0 x).1 = bit0 x.1 :=
+theorem bit0_fst (x : X q) : (bit0 x).1 = bit0 x.1 :=
   rfl
-#align lucas_lehmer.X.bit0_fst [anonymous]
+#align lucas_lehmer.X.bit0_fst LucasLehmer.X.bit0_fst
 
-/- warning: lucas_lehmer.X.bit0_snd clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.bit0_snd [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : X q) : (bit0 x).2 = bit0 x.2 :=
+theorem bit0_snd (x : X q) : (bit0 x).2 = bit0 x.2 :=
   rfl
-#align lucas_lehmer.X.bit0_snd [anonymous]
+#align lucas_lehmer.X.bit0_snd LucasLehmer.X.bit0_snd
 
-/- warning: lucas_lehmer.X.bit1_fst clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.bit1_fst [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : X q) : (bit1 x).1 = bit1 x.1 :=
+theorem bit1_fst (x : X q) : (bit1 x).1 = bit1 x.1 :=
   rfl
-#align lucas_lehmer.X.bit1_fst [anonymous]
+#align lucas_lehmer.X.bit1_fst LucasLehmer.X.bit1_fst
 
-/- warning: lucas_lehmer.X.bit1_snd clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align lucas_lehmer.X.bit1_snd [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (x : X q) : (bit1 x).2 = bit0 x.2 := by dsimp [bit1]; simp
-#align lucas_lehmer.X.bit1_snd [anonymous]
+theorem bit1_snd (x : X q) : (bit1 x).2 = bit0 x.2 := by dsimp [bit1]; simp
+#align lucas_lehmer.X.bit1_snd LucasLehmer.X.bit1_snd
 
 instance : Monoid (X q) :=
   {

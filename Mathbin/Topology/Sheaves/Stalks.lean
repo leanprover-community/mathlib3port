@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit e2e38c005fc6f715502490da6cb0ec84df9ed228
+! leanprover-community/mathlib commit 61b5e2755ccb464b68d05a9acf891ae04992d09d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,6 +21,9 @@ import Mathbin.CategoryTheory.Sites.Pushforward
 
 /-!
 # Stalks
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For a presheaf `F` on a topological space `X`, valued in some category `C`, the *stalk* of `F`
 at the point `x : X` is defined as the colimit of the composition of the inclusion of categories
@@ -83,12 +86,14 @@ def stalkFunctor (x : X) : X.Presheaf C ⥤ C :=
 
 variable {C}
 
+#print TopCat.Presheaf.stalk /-
 /-- The stalk of a presheaf `F` at a point `x` is calculated as the colimit of the functor
 nbhds x ⥤ opens F.X ⥤ C
 -/
 def stalk (ℱ : X.Presheaf C) (x : X) : C :=
   (stalkFunctor C x).obj ℱ
 #align Top.presheaf.stalk TopCat.Presheaf.stalk
+-/
 
 -- -- colimit ((open_nhds.inclusion x).op ⋙ ℱ)
 @[simp]
@@ -305,6 +310,7 @@ section StalkSpecializes
 
 variable {C}
 
+#print TopCat.Presheaf.stalkSpecializes /-
 /-- If `x` specializes to `y`, then there is a natural map `F.stalk y ⟶ F.stalk x`. -/
 noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     F.stalk y ⟶ F.stalk x := by
@@ -320,6 +326,7 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     let V' : open_nhds x := ⟨_, (specializes_iff_forall_open.mp h _ (unop V).1.2 (unop V).2 : _)⟩
     exact colimit.w ((open_nhds.inclusion x).op ⋙ F) (show V' ⟶ U' from i.unop).op
 #align Top.presheaf.stalk_specializes TopCat.Presheaf.stalkSpecializes
+-/
 
 @[simp, reassoc, elementwise]
 theorem germ_stalkSpecializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (h : x ⤳ y) :
@@ -360,12 +367,14 @@ theorem stalkSpecializes_stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y 
   by ext; delta stalk_pushforward; simpa [stalk_specializes]
 #align Top.presheaf.stalk_specializes_stalk_pushforward TopCat.Presheaf.stalkSpecializes_stalkPushforward
 
+#print TopCat.Presheaf.stalkCongr /-
 /-- The stalks are isomorphic on inseparable points -/
 @[simps]
 def stalkCongr {X : TopCat} {C : Type _} [Category C] [HasColimits C] (F : X.Presheaf C) {x y : X}
     (e : Inseparable x y) : F.stalk x ≅ F.stalk y :=
   ⟨F.stalkSpecializes e.ge, F.stalkSpecializes e.le, by simp, by simp⟩
 #align Top.presheaf.stalk_congr TopCat.Presheaf.stalkCongr
+-/
 
 end StalkSpecializes
 

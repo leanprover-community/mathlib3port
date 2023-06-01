@@ -51,7 +51,7 @@ theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ�
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filterₓ fun k => f k = i, g j,
     by
-    simp only [[anonymous], Finset.sum_congr, to_Top_obj, Set.mem_setOf]
+    simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_setOf]
     rw [← Finset.sum_biUnion]
     convert g.2
     · rw [Finset.eq_univ_iff_forall]

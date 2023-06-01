@@ -374,14 +374,12 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
       convert(nat_degree_eq_card_roots hf).symm; rw [map_id]).symm
 #align polynomial.roots_map Polynomial.roots_map
 
-#print Polynomial.image_rootSet /-
 theorem image_rootSet [Algebra F K] [Algebra F L] {p : F[X]} (h : p.Splits (algebraMap F K))
     (f : K →ₐ[F] L) : f '' p.rootSet K = p.rootSet L := by
   classical rw [root_set, ← Finset.coe_image, ← Multiset.toFinset_map, ← f.coe_to_ring_hom, ←
       roots_map (↑f) ((splits_id_iff_splits (algebraMap F K)).mpr h), map_map, f.comp_algebra_map, ←
       root_set]
 #align polynomial.image_root_set Polynomial.image_rootSet
--/
 
 theorem adjoin_rootSet_eq_range [Algebra F K] [Algebra F L] {p : F[X]}
     (h : p.Splits (algebraMap F K)) (f : K →ₐ[F] L) :
@@ -498,7 +496,6 @@ theorem splits_iff_card_roots {p : K[X]} : Splits (RingHom.id K) p ↔ p.roots.c
     exact (C_leading_coeff_mul_prod_multiset_X_sub_C hroots).symm
 #align polynomial.splits_iff_card_roots Polynomial.splits_iff_card_roots
 
-#print Polynomial.aeval_root_derivative_of_splits /-
 theorem aeval_root_derivative_of_splits [Algebra K L] {P : K[X]} (hmo : P.Monic)
     (hP : P.Splits (algebraMap K L)) {r : L} (hr : r ∈ (P.map (algebraMap K L)).roots) :
     aeval r P.derivative = (((P.map <| algebraMap K L).roots.eraseₓ r).map fun a => r - a).Prod :=
@@ -509,7 +506,6 @@ theorem aeval_root_derivative_of_splits [Algebra K L] {P : K[X]} (hmo : P.Monic)
   nth_rw 1 [eq_prod_roots_of_monic_of_splits_id hmo hP]
   rw [eval_multiset_prod_X_sub_C_derivative hr]
 #align polynomial.aeval_root_derivative_of_splits Polynomial.aeval_root_derivative_of_splits
--/
 
 /-- If `P` is a monic polynomial that splits, then `coeff P 0` equals the product of the roots. -/
 theorem prod_roots_eq_coeff_zero_of_monic_of_split {P : K[X]} (hmo : P.Monic)

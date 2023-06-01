@@ -211,13 +211,11 @@ def ofHom {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) : of 
 #align CommSemiRing.of_hom CommSemiRing.ofHom
 -/
 
-/- warning: CommSemiRing.of_hom_apply clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align CommSemiRing.of_hom_apply [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) :
+theorem ofHom_apply {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) :
     ofHom f x = f x :=
   rfl
-#align CommSemiRing.of_hom_apply [anonymous]
+#align CommSemiRing.of_hom_apply CommSemiRingCat.ofHom_apply
 
 instance : Inhabited CommSemiRingCat :=
   ⟨of PUnit⟩
@@ -279,13 +277,11 @@ def ofHom {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) : of R ⟶ of
 #align CommRing.of_hom CommRingCat.ofHom
 -/
 
-/- warning: CommRing.of_hom_apply clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align CommRing.of_hom_apply [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) :
+theorem ofHom_apply {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) :
     ofHom f x = f x :=
   rfl
-#align CommRing.of_hom_apply [anonymous]
+#align CommRing.of_hom_apply CommRingCat.ofHom_apply
 
 instance : Inhabited CommRingCat :=
   ⟨of PUnit⟩

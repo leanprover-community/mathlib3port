@@ -1016,12 +1016,10 @@ theorem coe_coe : ⇑(e : E ≃SL[σ₁₂] E₂) = e :=
   rfl
 #align linear_isometry_equiv.coe_coe LinearIsometryEquiv.coe_coe
 
-/- warning: linear_isometry_equiv.coe_coe' clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align linear_isometry_equiv.coe_coe' [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : ((e : E ≃SL[σ₁₂] E₂) : E →SL[σ₁₂] E₂) = e :=
+theorem coe_coe' : ((e : E ≃SL[σ₁₂] E₂) : E →SL[σ₁₂] E₂) = e :=
   rfl
-#align linear_isometry_equiv.coe_coe' [anonymous]
+#align linear_isometry_equiv.coe_coe' LinearIsometryEquiv.coe_coe'
 
 @[simp]
 theorem coe_coe'' : ⇑(e : E →SL[σ₁₂] E₂) = e :=

@@ -115,7 +115,6 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
 #align matrix.charpoly_reindex Matrix.charpoly_reindex
 -/
 
-#print Matrix.aeval_self_charpoly /-
 -- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 /-- The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
 applied to the matrix itself, is zero.
@@ -147,5 +146,4 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   -- Thus we have $χ_M(M) = 0$, which is the desired result.
   exact h
 #align matrix.aeval_self_charpoly Matrix.aeval_self_charpoly
--/
 

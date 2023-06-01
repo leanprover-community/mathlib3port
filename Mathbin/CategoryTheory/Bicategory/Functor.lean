@@ -105,26 +105,20 @@ instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
 
 variable (F : PrelaxFunctor B C)
 
-/- warning: category_theory.prelax_functor.to_prefunctor_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.prelax_functor.to_prefunctor_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : F.toPrefunctor = F :=
+theorem toPrefunctor_eq_coe : F.toPrefunctor = F :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_eq_coe [anonymous]
+#align category_theory.prelax_functor.to_prefunctor_eq_coe CategoryTheory.PrelaxFunctor.toPrefunctor_eq_coe
 
-/- warning: category_theory.prelax_functor.to_prefunctor_obj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.prelax_functor.to_prefunctor_obj [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : (F : Prefunctor B C).obj = F.obj :=
+theorem to_prefunctor_obj : (F : Prefunctor B C).obj = F.obj :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_obj [anonymous]
+#align category_theory.prelax_functor.to_prefunctor_obj CategoryTheory.PrelaxFunctor.to_prefunctor_obj
 
-/- warning: category_theory.prelax_functor.to_prefunctor_map clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.prelax_functor.to_prefunctor_map [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
+theorem to_prefunctor_map : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
   rfl
-#align category_theory.prelax_functor.to_prefunctor_map [anonymous]
+#align category_theory.prelax_functor.to_prefunctor_map CategoryTheory.PrelaxFunctor.to_prefunctor_map
 
 #print CategoryTheory.PrelaxFunctor.id /-
 /-- The identity prelax functor. -/
@@ -155,8 +149,6 @@ variable {B : Type u₁} [Bicategory.{w₁, v₁} B] {C : Type u₂} [Bicategory
 
 variable {D : Type u₃} [Bicategory.{w₃, v₃} D]
 
-/- warning: category_theory.oplax_functor.map₂_associator_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.oplax_functor.map₂_associator_aux [anonymous]ₓ'. -/
 /-
 We use this auxiliary definition instead of writing it directly in the definition
 of oplax functors because doing so will cause a timeout.
@@ -165,13 +157,13 @@ of oplax functors because doing so will cause a timeout.
 modulo some adjustments of domains and codomains of 2-morphisms.
 -/
 @[simp]
-def [anonymous] (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
+def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
     (map_comp : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), map (f ≫ g) ⟶ map f ≫ map g) {a b c d : B}
     (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) : Prop :=
   map₂ (α_ f g h).Hom ≫ map_comp f (g ≫ h) ≫ map f ◁ map_comp g h =
     map_comp (f ≫ g) h ≫ map_comp f g ▷ map h ≫ (α_ (map f) (map g) (map h)).Hom
-#align category_theory.oplax_functor.map₂_associator_aux [anonymous]
+#align category_theory.oplax_functor.map₂_associator_aux CategoryTheory.OplaxFunctor.Map₂AssociatorAux
 
 #print CategoryTheory.OplaxFunctor /-
 /-- An oplax functor `F` between bicategories `B` and `C` consists of a function between objects
@@ -203,7 +195,8 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
     obviously
   map₂_associator :
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
-      [anonymous] obj (fun _ _ => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
+      OplaxFunctor.Map₂AssociatorAux obj (fun _ _ => map) (fun a b f g => map₂)
+        (fun a b c => map_comp) f g h := by
     obviously
   map₂_leftUnitor :
     ∀ {a b : B} (f : a ⟶ b),
@@ -252,31 +245,25 @@ instance hasCoeToPrelax : Coe (OplaxFunctor B C) (PrelaxFunctor B C) :=
 
 variable (F : OplaxFunctor B C)
 
-/- warning: category_theory.oplax_functor.to_prelax_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.oplax_functor.to_prelax_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : F.toPrelaxFunctor = F :=
+theorem to_prelax_eq_coe : F.toPrelaxFunctor = F :=
   rfl
-#align category_theory.oplax_functor.to_prelax_eq_coe [anonymous]
+#align category_theory.oplax_functor.to_prelax_eq_coe CategoryTheory.OplaxFunctor.to_prelax_eq_coe
 
-/- warning: category_theory.oplax_functor.to_prelax_functor_obj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.oplax_functor.to_prelax_functor_obj [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : (F : PrelaxFunctor B C).obj = F.obj :=
+theorem to_prelaxFunctor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
-#align category_theory.oplax_functor.to_prelax_functor_obj [anonymous]
+#align category_theory.oplax_functor.to_prelax_functor_obj CategoryTheory.OplaxFunctor.to_prelaxFunctor_obj
 
 @[simp]
 theorem to_prelaxFunctor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
 #align category_theory.oplax_functor.to_prelax_functor_map CategoryTheory.OplaxFunctor.to_prelaxFunctor_map
 
-/- warning: category_theory.oplax_functor.to_prelax_functor_map₂ clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.oplax_functor.to_prelax_functor_map₂ [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
+theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align category_theory.oplax_functor.to_prelax_functor_map₂ [anonymous]
+#align category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelaxFunctor_map₂
 
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
@@ -360,8 +347,6 @@ end
 
 end OplaxFunctor
 
-/- warning: category_theory.pseudofunctor.map₂_associator_aux clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.map₂_associator_aux [anonymous]ₓ'. -/
 /-
 We use this auxiliary definition instead of writing it directly in the definition
 of pseudofunctors because doing so will cause a timeout.
@@ -370,7 +355,7 @@ of pseudofunctors because doing so will cause a timeout.
 modulo some adjustments of domains and codomains of 2-morphisms.
 -/
 @[simp]
-def [anonymous] (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
+def Pseudofunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ obj Y))
     (map₂ : ∀ {a b : B} {f g : a ⟶ b}, (f ⟶ g) → (map f ⟶ map g))
     (map_comp : ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), map (f ≫ g) ≅ map f ≫ map g) {a b c d : B}
     (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) : Prop :=
@@ -378,7 +363,7 @@ def [anonymous] (obj : B → C) (map : ∀ {X Y : B}, (X ⟶ Y) → (obj X ⟶ o
     (map_comp (f ≫ g) h).Hom ≫
       (map_comp f g).Hom ▷ map h ≫
         (α_ (map f) (map g) (map h)).Hom ≫ map f ◁ (map_comp g h).inv ≫ (map_comp f (g ≫ h)).inv
-#align category_theory.pseudofunctor.map₂_associator_aux [anonymous]
+#align category_theory.pseudofunctor.map₂_associator_aux CategoryTheory.Pseudofunctor.Map₂AssociatorAux
 
 #print CategoryTheory.Pseudofunctor /-
 /-- A pseudofunctor `F` between bicategories `B` and `C` consists of a function between objects
@@ -410,7 +395,8 @@ structure Pseudofunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
     obviously
   map₂_associator :
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d),
-      [anonymous] obj (fun a b => map) (fun a b f g => map₂) (fun a b c => map_comp) f g h := by
+      Pseudofunctor.Map₂AssociatorAux obj (fun a b => map) (fun a b f g => map₂)
+        (fun a b c => map_comp) f g h := by
     obviously
   map₂_leftUnitor :
     ∀ {a b : B} (f : a ⟶ b),
@@ -460,33 +446,25 @@ instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
 
 variable (F : Pseudofunctor B C)
 
-/- warning: category_theory.pseudofunctor.to_prelax_functor_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_prelax_functor_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : F.toPrelaxFunctor = F :=
+theorem toPrelaxFunctor_eq_coe : F.toPrelaxFunctor = F :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_eq_coe [anonymous]
+#align category_theory.pseudofunctor.to_prelax_functor_eq_coe CategoryTheory.Pseudofunctor.toPrelaxFunctor_eq_coe
 
-/- warning: category_theory.pseudofunctor.to_prelax_functor_obj clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_prelax_functor_obj [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : (F : PrelaxFunctor B C).obj = F.obj :=
+theorem to_prelaxFunctor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_obj [anonymous]
+#align category_theory.pseudofunctor.to_prelax_functor_obj CategoryTheory.Pseudofunctor.to_prelaxFunctor_obj
 
-/- warning: category_theory.pseudofunctor.to_prelax_functor_map clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_prelax_functor_map [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
+theorem to_prelaxFunctor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_map [anonymous]
+#align category_theory.pseudofunctor.to_prelax_functor_map CategoryTheory.Pseudofunctor.to_prelaxFunctor_map
 
-/- warning: category_theory.pseudofunctor.to_prelax_functor_map₂ clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_prelax_functor_map₂ [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
+theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_prelax_functor_map₂ [anonymous]
+#align category_theory.pseudofunctor.to_prelax_functor_map₂ CategoryTheory.Pseudofunctor.to_prelaxFunctor_map₂
 
 #print CategoryTheory.Pseudofunctor.toOplax /-
 /-- The oplax functor associated with a pseudofunctor. -/
@@ -503,31 +481,25 @@ instance hasCoeToOplax : Coe (Pseudofunctor B C) (OplaxFunctor B C) :=
 #align category_theory.pseudofunctor.has_coe_to_oplax CategoryTheory.Pseudofunctor.hasCoeToOplax
 -/
 
-/- warning: category_theory.pseudofunctor.to_oplax_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_oplax_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : F.toOplax = F :=
+theorem toOplax_eq_coe : F.toOplax = F :=
   rfl
-#align category_theory.pseudofunctor.to_oplax_eq_coe [anonymous]
+#align category_theory.pseudofunctor.to_oplax_eq_coe CategoryTheory.Pseudofunctor.toOplax_eq_coe
 
 @[simp]
 theorem to_oplax_obj : (F : OplaxFunctor B C).obj = F.obj :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_obj CategoryTheory.Pseudofunctor.to_oplax_obj
 
-/- warning: category_theory.pseudofunctor.to_oplax_map clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_oplax_map [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @OplaxFunctor.map B _ C _ F = @map _ _ _ _ F :=
+theorem to_oplax_map : @OplaxFunctor.map B _ C _ F = @map _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_oplax_map [anonymous]
+#align category_theory.pseudofunctor.to_oplax_map CategoryTheory.Pseudofunctor.to_oplax_map
 
-/- warning: category_theory.pseudofunctor.to_oplax_map₂ clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align category_theory.pseudofunctor.to_oplax_map₂ [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : @OplaxFunctor.map₂ B _ C _ F = @map₂ _ _ _ _ F :=
+theorem to_oplax_map₂ : @OplaxFunctor.map₂ B _ C _ F = @map₂ _ _ _ _ F :=
   rfl
-#align category_theory.pseudofunctor.to_oplax_map₂ [anonymous]
+#align category_theory.pseudofunctor.to_oplax_map₂ CategoryTheory.Pseudofunctor.to_oplax_map₂
 
 @[simp]
 theorem to_oplax_mapId (a : B) : (F : OplaxFunctor B C).map_id a = (F.map_id a).Hom :=

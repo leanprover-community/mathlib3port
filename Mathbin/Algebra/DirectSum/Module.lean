@@ -379,10 +379,11 @@ theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type _}
     (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) :=
   by
   funext a
-  simp only [is_internal.collected_basis, to_module, coe_linear_map, [anonymous], Basis.coe_ofRepr,
-    Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linearEquiv_apply,
-    Dfinsupp.mapRange.linearEquiv_symm, Dfinsupp.mapRange_single, Finsupp.total_single,
-    LinearEquiv.ofBijective_apply, LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
+  simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.toFun_eq_coe,
+    Basis.coe_ofRepr, Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply,
+    Dfinsupp.mapRange.linearEquiv_apply, Dfinsupp.mapRange.linearEquiv_symm,
+    Dfinsupp.mapRange_single, Finsupp.total_single, LinearEquiv.ofBijective_apply,
+    LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
     sigmaFinsuppAddEquivDfinsupp_apply, sigmaFinsuppEquivDfinsupp_single,
     sigmaFinsuppLequivDfinsupp_apply]
   convert Dfinsupp.sumAddHom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)

@@ -283,16 +283,14 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
 #align sigma.lex.no_max_order_of_nonempty Sigma.Lex.noMaxOrder_of_nonempty
 -/
 
-/- warning: sigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align sigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
-instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
-    NoMaxOrder (Σₗ i, α i) :=
+instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
+    [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
-#align sigma.lex.no_min_order_of_nonempty [anonymous]
+#align sigma.lex.no_min_order_of_nonempty Sigma.Lex.no_min_order_of_nonempty
 
 #print Sigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :

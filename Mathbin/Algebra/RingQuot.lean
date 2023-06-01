@@ -511,17 +511,13 @@ theorem mkAlgHom_coe (s : A → A → Prop) : (mkAlgHom S s : A →+* RingQuot s
   simp_rw [mk_alg_hom, mk_ring_hom]; rfl
 #align ring_quot.mk_alg_hom_coe RingQuot.mkAlgHom_coe
 
-#print RingQuot.mkAlgHom_rel /-
 theorem mkAlgHom_rel {s : A → A → Prop} {x y : A} (w : s x y) : mkAlgHom S s x = mkAlgHom S s y :=
   by simp [mk_alg_hom, mk_ring_hom, Quot.sound (rel.of w)]
 #align ring_quot.mk_alg_hom_rel RingQuot.mkAlgHom_rel
--/
 
-#print RingQuot.mkAlgHom_surjective /-
 theorem mkAlgHom_surjective (s : A → A → Prop) : Function.Surjective (mkAlgHom S s) := by
   dsimp [mk_alg_hom, mk_ring_hom]; rintro ⟨⟨a⟩⟩; use a; rfl
 #align ring_quot.mk_alg_hom_surjective RingQuot.mkAlgHom_surjective
--/
 
 variable {B : Type u₄} [Semiring B] [Algebra S B]
 
@@ -534,7 +530,6 @@ theorem ringQuot_ext' {s : A → A → Prop} (f g : RingQuot s →ₐ[S] B)
   exact (AlgHom.congr_fun w x : _)
 #align ring_quot.ring_quot_ext' RingQuot.ringQuot_ext'
 
-#print RingQuot.liftAlgHom /-
 /-- Any `S`-algebra homomorphism `f : A →ₐ[S] B` which respects a relation `s : A → A → Prop`
 factors uniquely through a morphism `ring_quot s →ₐ[S]  B`.
 -/
@@ -561,23 +556,18 @@ irreducible_def liftAlgHom {s : A → A → Prop} :
     left_inv := fun f => by ext; simp [mk_alg_hom, mk_ring_hom]
     right_inv := fun F => by ext; simp [mk_alg_hom, mk_ring_hom] }
 #align ring_quot.lift_alg_hom RingQuot.liftAlgHom
--/
 
-#print RingQuot.liftAlgHom_mkAlgHom_apply /-
 @[simp]
 theorem liftAlgHom_mkAlgHom_apply (f : A →ₐ[S] B) {s : A → A → Prop}
     (w : ∀ ⦃x y⦄, s x y → f x = f y) (x) : (liftAlgHom S ⟨f, w⟩) ((mkAlgHom S s) x) = f x := by
   simp_rw [lift_alg_hom, mk_alg_hom, mk_ring_hom]; rfl
 #align ring_quot.lift_alg_hom_mk_alg_hom_apply RingQuot.liftAlgHom_mkAlgHom_apply
--/
 
-#print RingQuot.liftAlgHom_unique /-
 -- note this is essentially `(lift_alg_hom S).symm_apply_eq.mp h`
 theorem liftAlgHom_unique (f : A →ₐ[S] B) {s : A → A → Prop} (w : ∀ ⦃x y⦄, s x y → f x = f y)
     (g : RingQuot s →ₐ[S] B) (h : g.comp (mkAlgHom S s) = f) : g = liftAlgHom S ⟨f, w⟩ := by ext;
   simp [h]
 #align ring_quot.lift_alg_hom_unique RingQuot.liftAlgHom_unique
--/
 
 theorem eq_liftAlgHom_comp_mkAlgHom {s : A → A → Prop} (f : RingQuot s →ₐ[S] B) :
     f = liftAlgHom S ⟨f.comp (mkAlgHom S s), fun x y h => by dsimp; erw [mk_alg_hom_rel S h]⟩ :=

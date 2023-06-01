@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit e137999b2c6f2be388f4cd3bbf8523de1910cd2b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,6 +63,8 @@ Schwartz space, tempered distributions
 
 
 noncomputable section
+
+open scoped BigOperators Nat
 
 variable {𝕜 𝕜' D E F G : Type _}
 
@@ -600,6 +602,39 @@ instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
 
 end Topology
 
+section TemperateGrowth
+
+/-! ### Functions of temperate growth -/
+
+
+/-- A function is called of temperate growth if it is smooth and all iterated derivatives are
+polynomially bounded. -/
+def Function.HasTemperateGrowth (f : E → F) : Prop :=
+  ContDiff ℝ ⊤ f ∧ ∀ n : ℕ, ∃ (k : ℕ)(C : ℝ), ∀ x, ‖iteratedFderiv ℝ n f x‖ ≤ C * (1 + ‖x‖) ^ k
+#align function.has_temperate_growth Function.HasTemperateGrowth
+
+theorem Function.HasTemperateGrowth.norm_iteratedFderiv_le_uniform_aux {f : E → F}
+    (hf_temperate : f.HasTemperateGrowth) (n : ℕ) :
+    ∃ (k : ℕ)(C : ℝ)(hC : 0 ≤ C),
+      ∀ (N : ℕ) (hN : N ≤ n) (x : E), ‖iteratedFderiv ℝ N f x‖ ≤ C * (1 + ‖x‖) ^ k :=
+  by
+  choose k C f using hf_temperate.2
+  use (Finset.range (n + 1)).sup k
+  let C' := max (0 : ℝ) ((Finset.range (n + 1)).sup' (by simp) C)
+  have hC' : 0 ≤ C' := by simp only [le_refl, Finset.le_sup'_iff, true_or_iff, le_max_iff]
+  use C', hC'
+  intro N hN x
+  rw [← Finset.mem_range_succ_iff] at hN
+  refine' le_trans (f N x) (mul_le_mul _ _ (by positivity) hC')
+  · simp only [Finset.le_sup'_iff, le_max_iff]
+    right
+    exact ⟨N, hN, rfl.le⟩
+  refine' pow_le_pow (by simp only [le_add_iff_nonneg_right, norm_nonneg]) _
+  exact Finset.le_sup hN
+#align function.has_temperate_growth.norm_iterated_fderiv_le_uniform_aux Function.HasTemperateGrowth.norm_iteratedFderiv_le_uniform_aux
+
+end TemperateGrowth
+
 section Clm
 
 /-! ### Construction of continuous linear maps between Schwartz spaces -/
@@ -670,6 +705,180 @@ def mkClm [RingHomIsometric σ] (A : (D → E) → F → G)
 
 end Clm
 
+section EvalClm
+
+variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
+
+/-- The map applying a vector to Hom-valued Schwartz function as a continuous linear map. -/
+@[protected]
+def evalClm (m : E) : 𝓢(E, E →L[ℝ] F) →L[𝕜] 𝓢(E, F) :=
+  mkClm (fun f x => f x m) (fun _ _ _ => rfl) (fun _ _ _ => rfl)
+    (fun f => ContDiff.clm_apply f.2 contDiff_const)
+    (by
+      rintro ⟨k, n⟩
+      use {(k, n)}, ‖m‖, norm_nonneg _
+      intro f x
+      refine'
+        le_trans
+          (mul_le_mul_of_nonneg_left (norm_iteratedFderiv_clm_apply_const f.2 le_top)
+            (by positivity))
+          _
+      rw [← mul_assoc, ← mul_comm ‖m‖, mul_assoc]
+      refine' mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+      simp only [Finset.sup_singleton, schwartz_seminorm_family_apply, le_seminorm])
+#align schwartz_map.eval_clm SchwartzMap.evalClm
+
+end EvalClm
+
+section Multiplication
+
+variable [NormedAddCommGroup D] [NormedSpace ℝ D]
+
+variable [NormedAddCommGroup G] [NormedSpace ℝ G]
+
+/-- The map `f ↦ (x ↦ B (f x) (g x))` as a continuous `𝕜`-linear map on Schwartz space,
+where `B` is a continuous `𝕜`-linear map and `g` is a function of temperate growth. -/
+def bilinLeftClm (B : E →L[ℝ] F →L[ℝ] G) {g : D → F} (hg : g.HasTemperateGrowth) :
+    𝓢(D, E) →L[ℝ] 𝓢(D, G) :=
+  -- Todo (after port): generalize to `B : E →L[𝕜] F →L[𝕜] G` and `𝕜`-linear
+    mkClm
+    (fun f x => B (f x) (g x))
+    (fun _ _ _ => by
+      simp only [map_add, add_left_inj, Pi.add_apply, eq_self_iff_true,
+        ContinuousLinearMap.add_apply])
+    (fun _ _ _ => by
+      simp only [Pi.smul_apply, ContinuousLinearMap.coe_smul', ContinuousLinearMap.map_smul,
+        RingHom.id_apply])
+    (fun f => (B.IsBoundedBilinearMap.ContDiff.restrictScalars ℝ).comp (f.smooth'.Prod hg.1))
+    (by
+      -- Porting note: rewrite this proof with `rel_congr`
+      rintro ⟨k, n⟩
+      rcases hg.norm_iterated_fderiv_le_uniform_aux n with ⟨l, C, hC, hgrowth⟩
+      use Finset.Iic (l + k, n), ‖B‖ * (n + 1) * n.choose (n / 2) * (C * 2 ^ (l + k)), by positivity
+      intro f x
+      have hxk : 0 ≤ ‖x‖ ^ k := by positivity
+      have hnorm_mul :=
+        ContinuousLinearMap.norm_iteratedFderiv_le_of_bilinear B f.smooth' hg.1 x le_top
+      refine' le_trans (mul_le_mul_of_nonneg_left hnorm_mul hxk) _
+      rw [← mul_assoc (‖x‖ ^ k), mul_comm (‖x‖ ^ k)]
+      simp_rw [mul_assoc ‖B‖]
+      refine' mul_le_mul_of_nonneg_left _ (by positivity)
+      rw [Finset.mul_sum]
+      have : (∑ x_1 : ℕ in Finset.range (n + 1), (1 : ℝ)) = n + 1 := by simp
+      repeat' rw [mul_assoc ((n : ℝ) + 1)]
+      rw [← this, Finset.sum_mul]
+      refine' Finset.sum_le_sum fun i hi => _
+      simp only [one_mul]
+      rw [← mul_assoc, mul_comm (‖x‖ ^ k), mul_assoc, mul_assoc, mul_assoc]
+      refine' mul_le_mul _ _ (by positivity) (by positivity)
+      · norm_cast
+        exact i.choose_le_middle n
+      specialize hgrowth (n - i) (by simp only [tsub_le_self]) x
+      rw [← mul_assoc]
+      refine' le_trans (mul_le_mul_of_nonneg_left hgrowth (by positivity)) _
+      rw [mul_comm _ (C * _), mul_assoc, mul_assoc C]
+      refine' mul_le_mul_of_nonneg_left _ hC
+      nth_rw 2 [mul_comm]
+      rw [← mul_assoc]
+      rw [Finset.mem_range_succ_iff] at hi
+      change i ≤ (l + k, n).snd at hi
+      refine' le_trans _ (one_add_le_sup_seminorm_apply le_rfl hi f x)
+      refine' mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+      rw [pow_add]
+      refine' mul_le_mul_of_nonneg_left _ (by positivity)
+      refine' pow_le_pow_of_le_left (norm_nonneg _) _ _
+      simp only [zero_le_one, le_add_iff_nonneg_left])
+#align schwartz_map.bilin_left_clm SchwartzMap.bilinLeftClm
+
+end Multiplication
+
+section Comp
+
+variable (𝕜)
+
+variable [IsROrC 𝕜]
+
+variable [NormedAddCommGroup D] [NormedSpace ℝ D]
+
+variable [NormedAddCommGroup G] [NormedSpace ℝ G]
+
+variable [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
+
+variable [NormedSpace 𝕜 G] [SMulCommClass ℝ 𝕜 G]
+
+/-- Composition with a function on the right is a continuous linear map on Schwartz space
+provided that the function is temperate and growths polynomially near infinity. -/
+def compClm {g : D → E} (hg : g.HasTemperateGrowth)
+    (hg_upper : ∃ (k : ℕ)(C : ℝ), ∀ x, ‖x‖ ≤ C * (1 + ‖g x‖) ^ k) : 𝓢(E, F) →L[𝕜] 𝓢(D, F) :=
+  mkClm (fun f x => f (g x))
+    (fun _ _ _ => by simp only [add_left_inj, Pi.add_apply, eq_self_iff_true]) (fun _ _ _ => rfl)
+    (fun f => f.smooth'.comp hg.1)
+    (by
+      rintro ⟨k, n⟩
+      rcases hg.norm_iterated_fderiv_le_uniform_aux n with ⟨l, C, hC, hgrowth⟩
+      rcases hg_upper with ⟨kg, Cg, hg_upper'⟩
+      have hCg : 1 ≤ 1 + Cg := by
+        refine' le_add_of_nonneg_right _
+        specialize hg_upper' 0
+        rw [norm_zero] at hg_upper'
+        refine' nonneg_of_mul_nonneg_left hg_upper' (by positivity)
+      let k' := kg * (k + l * n)
+      use Finset.Iic (k', n), (1 + Cg) ^ (k + l * n) * ((C + 1) ^ n * n ! * 2 ^ k'), by positivity
+      intro f x
+      let seminorm_f := ((Finset.Iic (k', n)).sup (schwartzSeminormFamily 𝕜 _ _)) f
+      have hg_upper'' : (1 + ‖x‖) ^ (k + l * n) ≤ (1 + Cg) ^ (k + l * n) * (1 + ‖g x‖) ^ k' :=
+        by
+        rw [pow_mul, ← mul_pow]
+        refine' pow_le_pow_of_le_left (by positivity) _ _
+        rw [add_mul]
+        refine' add_le_add _ (hg_upper' x)
+        nth_rw 1 [← one_mul (1 : ℝ)]
+        refine' mul_le_mul (le_refl _) (one_le_pow_of_one_le _ _) zero_le_one zero_le_one
+        simp only [le_add_iff_nonneg_right, norm_nonneg]
+      have hbound :
+        ∀ i, i ≤ n → ‖iteratedFderiv ℝ i f (g x)‖ ≤ 2 ^ k' * seminorm_f / (1 + ‖g x‖) ^ k' :=
+        by
+        intro i hi
+        have hpos : 0 < (1 + ‖g x‖) ^ k' := by positivity
+        rw [le_div_iff' hpos]
+        change i ≤ (k', n).snd at hi
+        exact one_add_le_sup_seminorm_apply le_rfl hi _ _
+      have hgrowth' :
+        ∀ (N : ℕ) (hN₁ : 1 ≤ N) (hN₂ : N ≤ n),
+          ‖iteratedFderiv ℝ N g x‖ ≤ ((C + 1) * (1 + ‖x‖) ^ l) ^ N :=
+        by
+        intro N hN₁ hN₂
+        refine' (hgrowth N hN₂ x).trans _
+        rw [mul_pow]
+        have hN₁' := (lt_of_lt_of_le zero_lt_one hN₁).Ne.symm
+        refine' mul_le_mul _ _ (by positivity) (by positivity)
+        · exact le_trans (by simp [hC]) (le_self_pow (by simp [hC]) hN₁')
+        · refine' le_self_pow (one_le_pow_of_one_le _ l) hN₁'
+          simp only [le_add_iff_nonneg_right, norm_nonneg]
+      have := norm_iteratedFderiv_comp_le f.smooth' hg.1 le_top x hbound hgrowth'
+      have hxk : ‖x‖ ^ k ≤ (1 + ‖x‖) ^ k :=
+        pow_le_pow_of_le_left (norm_nonneg _) (by simp only [zero_le_one, le_add_iff_nonneg_left]) _
+      refine' le_trans (mul_le_mul hxk this (by positivity) (by positivity)) _
+      have rearrange :
+        (1 + ‖x‖) ^ k *
+            (n ! * (2 ^ k' * seminorm_f / (1 + ‖g x‖) ^ k') * ((C + 1) * (1 + ‖x‖) ^ l) ^ n) =
+          (1 + ‖x‖) ^ (k + l * n) / (1 + ‖g x‖) ^ k' * ((C + 1) ^ n * n ! * 2 ^ k' * seminorm_f) :=
+        by
+        rw [mul_pow, pow_add, ← pow_mul]
+        ring
+      rw [rearrange]
+      have hgxk' : 0 < (1 + ‖g x‖) ^ k' := by positivity
+      rw [← div_le_iff hgxk'] at hg_upper''
+      have hpos : 0 ≤ (C + 1) ^ n * n ! * 2 ^ k' * seminorm_f :=
+        by
+        have : 0 ≤ seminorm_f := map_nonneg _ _
+        positivity
+      refine' le_trans (mul_le_mul_of_nonneg_right hg_upper'' hpos) _
+      rw [← mul_assoc])
+#align schwartz_map.comp_clm SchwartzMap.compClm
+
+end Comp
+
 section Derivatives
 
 /-! ### Derivatives of Schwartz functions -/
@@ -710,6 +919,54 @@ theorem derivClm_apply (f : 𝓢(ℝ, F)) (x : ℝ) : derivClm 𝕜 f x = deriv 
   rfl
 #align schwartz_map.deriv_clm_apply SchwartzMap.derivClm_apply
 
+/-- The partial derivative (or directional derivative) in the direction `m : E` as a
+continuous linear map on Schwartz space. -/
+def pderivClm (m : E) : 𝓢(E, F) →L[𝕜] 𝓢(E, F) :=
+  (evalClm m).comp (fderivClm 𝕜)
+#align schwartz_map.pderiv_clm SchwartzMap.pderivClm
+
+@[simp]
+theorem pderivClm_apply (m : E) (f : 𝓢(E, F)) (x : E) : pderivClm 𝕜 m f x = fderiv ℝ f x m :=
+  rfl
+#align schwartz_map.pderiv_clm_apply SchwartzMap.pderivClm_apply
+
+/-- The iterated partial derivative (or directional derivative) as a continuous linear map on
+Schwartz space. -/
+def iteratedPderiv {n : ℕ} : (Fin n → E) → 𝓢(E, F) →L[𝕜] 𝓢(E, F) :=
+  Nat.recOn n (fun x => ContinuousLinearMap.id 𝕜 _) fun n rec x =>
+    (pderivClm 𝕜 (x 0)).comp (rec (Fin.tail x))
+#align schwartz_map.iterated_pderiv SchwartzMap.iteratedPderiv
+
+@[simp]
+theorem iteratedPderiv_zero (m : Fin 0 → E) (f : 𝓢(E, F)) : iteratedPderiv 𝕜 m f = f :=
+  rfl
+#align schwartz_map.iterated_pderiv_zero SchwartzMap.iteratedPderiv_zero
+
+@[simp]
+theorem iteratedPderiv_one (m : Fin 1 → E) (f : 𝓢(E, F)) :
+    iteratedPderiv 𝕜 m f = pderivClm 𝕜 (m 0) f :=
+  rfl
+#align schwartz_map.iterated_pderiv_one SchwartzMap.iteratedPderiv_one
+
+theorem iteratedPderiv_succ_left {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E, F)) :
+    iteratedPderiv 𝕜 m f = pderivClm 𝕜 (m 0) (iteratedPderiv 𝕜 (Fin.tail m) f) :=
+  rfl
+#align schwartz_map.iterated_pderiv_succ_left SchwartzMap.iteratedPderiv_succ_left
+
+theorem iteratedPderiv_succ_right {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E, F)) :
+    iteratedPderiv 𝕜 m f = iteratedPderiv 𝕜 (Fin.init m) (pderivClm 𝕜 (m (Fin.last n)) f) :=
+  by
+  induction' n with n IH
+  · rw [iterated_pderiv_zero, iterated_pderiv_one]
+    rfl
+  -- The proof is `∂^{n + 2} = ∂ ∂^{n + 1} = ∂ ∂^n ∂ = ∂^{n+1} ∂`
+  have hmzero : Fin.init m 0 = m 0 := by simp only [Fin.init_def, Fin.castSucc_zero]
+  have hmtail : Fin.tail m (Fin.last n) = m (Fin.last n.succ) := by
+    simp only [Fin.tail_def, Fin.succ_last]
+  simp only [iterated_pderiv_succ_left, IH (Fin.tail m), hmzero, hmtail, Fin.tail_init_eq_init_tail]
+#align schwartz_map.iterated_pderiv_succ_right SchwartzMap.iteratedPderiv_succ_right
+
+-- Todo: `iterated_pderiv 𝕜 m f x = iterated_fderiv ℝ f x m`
 end Derivatives
 
 section BoundedContinuousFunction

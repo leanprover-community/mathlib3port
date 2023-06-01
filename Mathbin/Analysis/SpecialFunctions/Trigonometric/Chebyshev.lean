@@ -30,19 +30,15 @@ open Polynomial
 
 variable {R A : Type _} [CommRing R] [CommRing A] [Algebra R A]
 
-#print Polynomial.Chebyshev.aeval_T /-
 @[simp]
 theorem aeval_T (x : A) (n : ℕ) : aeval x (T R n) = (T A n).eval x := by
   rw [aeval_def, eval₂_eq_eval_map, map_T]
 #align polynomial.chebyshev.aeval_T Polynomial.Chebyshev.aeval_T
--/
 
-#print Polynomial.Chebyshev.aeval_U /-
 @[simp]
 theorem aeval_U (x : A) (n : ℕ) : aeval x (U R n) = (U A n).eval x := by
   rw [aeval_def, eval₂_eq_eval_map, map_U]
 #align polynomial.chebyshev.aeval_U Polynomial.Chebyshev.aeval_U
--/
 
 @[simp]
 theorem algebraMap_eval_T (x : R) (n : ℕ) :

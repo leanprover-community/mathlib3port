@@ -762,7 +762,6 @@ instance ContinuousMap.algebra : Algebra R C(α, A)
 
 variable (R)
 
-#print AlgHom.compLeftContinuous /-
 /-- Composition on the left by a (continuous) homomorphism of topological `R`-algebras, as an
 `alg_hom`. Similar to `alg_hom.comp_left`. -/
 @[simps]
@@ -771,7 +770,6 @@ protected def AlgHom.compLeftContinuous {α : Type _} [TopologicalSpace α] (g :
   { g.toRingHom.compLeftContinuous α hg with
     commutes' := fun c => ContinuousMap.ext fun _ => g.commutes' _ }
 #align alg_hom.comp_left_continuous AlgHom.compLeftContinuous
--/
 
 variable (A)
 

@@ -134,12 +134,11 @@ theorem coe_unone {x : WithOne α} (hx : x ≠ 1) : ↑(unone hx) = x :=
 #align with_zero.coe_unzero WithZero.coe_unzero
 -/
 
-/- warning: with_one.some_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align with_one.some_eq_coe [anonymous]ₓ'. -/
 @[to_additive]
-theorem [anonymous] {a : α} : (some a : WithOne α) = ↑a :=
+theorem some_eq_coe {a : α} : (some a : WithOne α) = ↑a :=
   rfl
-#align with_one.some_eq_coe [anonymous]
+#align with_one.some_eq_coe WithOne.some_eq_coe
+#align with_zero.some_eq_coe WithZero.some_eq_coe
 
 #print WithOne.coe_ne_one /-
 @[simp, to_additive]

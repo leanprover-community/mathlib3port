@@ -914,9 +914,9 @@ variable [NormedAddCommGroup E] {𝕜 : Type _} [NormedField 𝕜] [NormedAddCom
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
-theorem lp_toLp_restrict_add (f g : lp E p μ) (s : Set α) :
-    ((lp.memℒp (f + g)).restrict s).toLp ⇑(f + g) =
-      ((lp.memℒp f).restrict s).toLp f + ((lp.memℒp g).restrict s).toLp g :=
+theorem lp_toLp_restrict_add (f g : Lp E p μ) (s : Set α) :
+    ((Lp.memℒp (f + g)).restrict s).toLp ⇑(f + g) =
+      ((Lp.memℒp f).restrict s).toLp f + ((Lp.memℒp g).restrict s).toLp g :=
   by
   ext1
   refine' (ae_restrict_of_ae (Lp.coe_fn_add f g)).mp _
@@ -932,8 +932,8 @@ theorem lp_toLp_restrict_add (f g : lp E p μ) (s : Set α) :
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map commutes with scalar multiplication. -/
-theorem lp_toLp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
-    ((lp.memℒp (c • f)).restrict s).toLp ⇑(c • f) = c • ((lp.memℒp f).restrict s).toLp f :=
+theorem lp_toLp_restrict_smul (c : 𝕜) (f : Lp F p μ) (s : Set α) :
+    ((Lp.memℒp (c • f)).restrict s).toLp ⇑(c • f) = c • ((Lp.memℒp f).restrict s).toLp f :=
   by
   ext1
   refine' (ae_restrict_of_ae (Lp.coe_fn_smul c f)).mp _
@@ -946,8 +946,8 @@ theorem lp_toLp_restrict_smul (c : 𝕜) (f : lp F p μ) (s : Set α) :
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is non-expansive. -/
-theorem norm_lp_toLp_restrict_le (s : Set α) (f : lp E p μ) :
-    ‖((lp.memℒp f).restrict s).toLp f‖ ≤ ‖f‖ :=
+theorem norm_lp_toLp_restrict_le (s : Set α) (f : Lp E p μ) :
+    ‖((Lp.memℒp f).restrict s).toLp f‖ ≤ ‖f‖ :=
   by
   rw [Lp.norm_def, Lp.norm_def, ENNReal.toReal_le_toReal (Lp.snorm_ne_top _) (Lp.snorm_ne_top _)]
   refine' (le_of_eq _).trans (snorm_mono_measure _ measure.restrict_le_self)
@@ -960,9 +960,9 @@ variable (α F 𝕜)
 /-- Continuous linear map sending a function of `Lp F p μ` to the same function in
 `Lp F p (μ.restrict s)`. -/
 def lpToLpRestrictClm (μ : Measure α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
-    lp F p μ →L[𝕜] lp F p (μ.restrict s) :=
-  @LinearMap.mkContinuous 𝕜 𝕜 (lp F p μ) (lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
-    ⟨fun f => Memℒp.toLp f ((lp.memℒp f).restrict s), fun f g => lp_toLp_restrict_add f g s,
+    Lp F p μ →L[𝕜] Lp F p (μ.restrict s) :=
+  @LinearMap.mkContinuous 𝕜 𝕜 (Lp F p μ) (Lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
+    ⟨fun f => Memℒp.toLp f ((Lp.memℒp f).restrict s), fun f g => lp_toLp_restrict_add f g s,
       fun c f => lp_toLp_restrict_smul c f s⟩
     1 (by intro f; rw [one_mul]; exact norm_Lp_to_Lp_restrict_le s f)
 #align measure_theory.Lp_to_Lp_restrict_clm MeasureTheory.lpToLpRestrictClm
@@ -971,9 +971,9 @@ variable {α F 𝕜}
 
 variable (𝕜)
 
-theorem lpToLpRestrictClm_coeFn [hp : Fact (1 ≤ p)] (s : Set α) (f : lp F p μ) :
+theorem lpToLpRestrictClm_coeFn [hp : Fact (1 ≤ p)] (s : Set α) (f : Lp F p μ) :
     lpToLpRestrictClm α F 𝕜 μ p s f =ᵐ[μ.restrict s] f :=
-  Memℒp.coeFn_toLp ((lp.memℒp f).restrict s)
+  Memℒp.coeFn_toLp ((Lp.memℒp f).restrict s)
 #align measure_theory.Lp_to_Lp_restrict_clm_coe_fn MeasureTheory.lpToLpRestrictClm_coeFn
 
 variable {𝕜}
@@ -1110,12 +1110,12 @@ namespace ContinuousLinearMap
 
 variable [CompleteSpace F] [NormedSpace ℝ F]
 
-theorem integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) :
+theorem integral_compLp (L : E →L[𝕜] F) (φ : Lp E p μ) :
     (∫ a, (L.compLp φ) a ∂μ) = ∫ a, L (φ a) ∂μ :=
   integral_congr_ae <| coeFn_compLp _ _
 #align continuous_linear_map.integral_comp_Lp ContinuousLinearMap.integral_compLp
 
-theorem set_integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) {s : Set α} (hs : MeasurableSet s) :
+theorem set_integral_compLp (L : E →L[𝕜] F) (φ : Lp E p μ) {s : Set α} (hs : MeasurableSet s) :
     (∫ a in s, (L.compLp φ) a ∂μ) = ∫ a in s, L (φ a) ∂μ :=
   set_integral_congr_ae hs ((L.coeFn_compLp φ).mono fun x hx hx2 => hx)
 #align continuous_linear_map.set_integral_comp_Lp ContinuousLinearMap.set_integral_compLp

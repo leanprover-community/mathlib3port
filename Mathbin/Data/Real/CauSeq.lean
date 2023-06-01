@@ -159,12 +159,10 @@ variable [Ring β] {abv : β → α}
 instance : CoeFun (CauSeq β abv) fun _ => ℕ → β :=
   ⟨Subtype.val⟩
 
-/- warning: cau_seq.mk_to_fun clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align cau_seq.mk_to_fun [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (f) (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, hf⟩ = f :=
+theorem mk_to_fun (f) (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, hf⟩ = f :=
   rfl
-#align cau_seq.mk_to_fun [anonymous]
+#align cau_seq.mk_to_fun CauSeq.mk_to_fun
 
 theorem ext {f g : CauSeq β abv} (h : ∀ i, f i = g i) : f = g :=
   Subtype.eq (funext h)

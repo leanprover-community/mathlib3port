@@ -973,7 +973,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
     Set.exists_isOpen_le_add _ _
       (by
         simpa only [or_false_iff, Ne.def, ENNReal.div_eq_zero_iff, ENNReal.one_ne_top,
-          [anonymous]] using hε)
+          ENNReal.bit0_eq_top_iff] using hε)
   have : ∀ x ∈ s, ∃ R > 0, ball x R ⊆ u := fun x hx =>
     Metric.mem_nhds_iff.1 (u_open.mem_nhds (su hx))
   choose! R hR using this
@@ -996,7 +996,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       (by
         simp only [hε, ENNReal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, ENNReal.div_eq_zero_iff,
           ENNReal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
-          [anonymous]])
+          ENNReal.bit0_eq_top_iff])
   have : ∀ x ∈ s', ∃ r1 ∈ f x ∩ Ioo (0 : ℝ) 1, closed_ball x r1 ⊆ v :=
     by
     intro x hx

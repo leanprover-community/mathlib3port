@@ -215,34 +215,23 @@ variable [∀ i, AddCommMonoid (A i)] [AddMonoid ι] [GSemiring A]
 
 open AddMonoidHom (flipHom coe_comp compHom_apply_apply flip_apply flipHom_apply)
 
-/- warning: direct_sum.one_mul clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align direct_sum.one_mul [anonymous]ₓ'. -/
-#print [anonymous] /-
-private theorem [anonymous] (x : ⨁ i, A i) : 1 * x = x :=
+private theorem one_mul (x : ⨁ i, A i) : 1 * x = x :=
   by
   suffices mulHom A 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
   apply add_hom_ext; intro i xi
   unfold One.one
   rw [mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (one_mul <| GradedMonoid.mk i xi)
--/
 
-/- warning: direct_sum.mul_one clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align direct_sum.mul_one [anonymous]ₓ'. -/
-#print [anonymous] /-
-private theorem [anonymous] (x : ⨁ i, A i) : x * 1 = x :=
+private theorem mul_one (x : ⨁ i, A i) : x * 1 = x :=
   by
   suffices (mulHom A).flip 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x
   apply add_hom_ext; intro i xi
   unfold One.one
   rw [flip_apply, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_one <| GradedMonoid.mk i xi)
--/
 
-/- warning: direct_sum.mul_assoc clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align direct_sum.mul_assoc [anonymous]ₓ'. -/
-#print [anonymous] /-
-private theorem [anonymous] (a b c : ⨁ i, A i) : a * b * c = a * (b * c) :=
+private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) :=
   by
   suffices
     (-- `λ a b c, a * b * c` as a bundled hom
@@ -259,7 +248,6 @@ private theorem [anonymous] (a b c : ⨁ i, A i) : a * b * c = a * (b * c) :=
   dsimp only [coe_comp, Function.comp_apply, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [mul_hom_of_of, mul_hom_of_of, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_assoc (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
--/
 
 #print DirectSum.semiring /-
 /-- The `semiring` structure derived from `gsemiring A`. -/
@@ -331,16 +319,12 @@ section CommSemiring
 
 variable [∀ i, AddCommMonoid (A i)] [AddCommMonoid ι] [GCommSemiring A]
 
-/- warning: direct_sum.mul_comm clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align direct_sum.mul_comm [anonymous]ₓ'. -/
-#print [anonymous] /-
-private theorem [anonymous] (a b : ⨁ i, A i) : a * b = b * a :=
+private theorem mul_comm (a b : ⨁ i, A i) : a * b = b * a :=
   by
   suffices mulHom A = (mulHom A).flip from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b
   apply add_hom_ext; intro ai ax; apply add_hom_ext; intro bi bx
   rw [AddMonoidHom.flip_apply, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (gcomm_semiring.mul_comm ⟨ai, ax⟩ ⟨bi, bx⟩)
--/
 
 #print DirectSum.commSemiring /-
 /-- The `comm_semiring` structure derived from `gcomm_semiring A`. -/
@@ -678,11 +662,11 @@ def liftRingHom :
   invFun F :=
     ⟨fun i => (F : (⨁ i, A i) →+ R).comp (of _ i),
       by
-      simp only [AddMonoidHom.comp_apply, [anonymous]]
+      simp only [AddMonoidHom.comp_apply, RingHom.coe_addMonoidHom]
       rw [← F.map_one]
       rfl, fun i j ai aj =>
       by
-      simp only [AddMonoidHom.comp_apply, [anonymous]]
+      simp only [AddMonoidHom.comp_apply, RingHom.coe_addMonoidHom]
       rw [← F.map_mul, of_mul_of]⟩
   left_inv f := by
     ext (xi xv)

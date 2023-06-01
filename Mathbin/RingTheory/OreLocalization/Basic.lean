@@ -232,7 +232,7 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
       exact S.mul_mem hr (SetLike.coe_mem s_flat)
     have : (⟨↑s₁ * r, hr⟩ : S) * s_flat = ⟨s₁ * s₂' * s_star * p_flat, hsssp⟩ :=
       by
-      ext; simp only [[anonymous], Submonoid.coe_mul]
+      ext; simp only [SetLike.coe_mk, Submonoid.coe_mul]
       rw [mul_assoc, h₃, ← mul_assoc, ← mul_assoc]
     rw [this]; clear this
     rcases ore_left_cancel (p * p') (r₁' * ↑s_star) s₂ (by simp [← mul_assoc, h₂]) with ⟨s₂'', h₂''⟩
@@ -388,7 +388,7 @@ def universalMulHom : R[S⁻¹] →* T
     x.liftExpand (fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht =>
       by
       have : (fS ⟨s * t, ht⟩ : T) = fS s * f t := by
-        simp only [← hf, [anonymous], MonoidHom.map_mul]
+        simp only [← hf, SetLike.coe_mk, MonoidHom.map_mul]
       conv_rhs =>
         rw [MonoidHom.map_mul, ← mul_one (f r), ← Units.val_one, ← mul_left_inv (fS s)]
         rw [Units.val_mul, ← mul_assoc, mul_assoc _ ↑(fS s), ← this, mul_assoc]
@@ -746,7 +746,7 @@ def universalHom : R[S⁻¹] →+* T :=
       induction' x using OreLocalization.ind with r₁ s₁
       induction' y using OreLocalization.ind with r₂ s₂
       rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩; rw [h₃']; clear h₃'
-      simp only [universal_mul_hom_apply, [anonymous], RingHom.toMonoidHom_eq_coe,
+      simp only [universal_mul_hom_apply, RingHom.coe_monoidHom, RingHom.toMonoidHom_eq_coe,
         MonoidHom.toFun_eq_coe]
       simp only [mul_inv_rev, MonoidHom.map_mul, RingHom.map_add, RingHom.map_mul, Units.val_mul]
       rw [add_mul, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.val_mul]
@@ -863,7 +863,7 @@ protected def inv : R[R⁰⁻¹] → R[R⁰⁻¹] :=
       · simp [hr]
       · by_cases ht : t = 0
         · exfalso; apply nonZeroDivisors.coe_ne_zero ⟨_, hst⟩; simp [ht, MulZeroClass.mul_zero]
-        · simp only [hr, ht, [anonymous], dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
+        · simp only [hr, ht, SetLike.coe_mk, dif_neg, not_false_iff, or_self_iff, mul_eq_zero]
           apply OreLocalization.expand)
 #align ore_localization.inv OreLocalization.inv
 

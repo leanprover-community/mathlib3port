@@ -248,18 +248,14 @@ theorem mk_val (i : Fin n) : (⟨i, i.property⟩ : Fin n) = i :=
 #align fin.mk_coe Fin.mk_val
 -/
 
-/- warning: fin.coe_eq_val clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align fin.coe_eq_val [anonymous]ₓ'. -/
-theorem [anonymous] (a : Fin n) : (a : ℕ) = a.val :=
+theorem coe_eq_val (a : Fin n) : (a : ℕ) = a.val :=
   rfl
-#align fin.coe_eq_val [anonymous]
+#align fin.coe_eq_val Fin.coe_eq_val
 
-/- warning: fin.val_eq_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align fin.val_eq_coe [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (a : Fin n) : a.val = a :=
+theorem val_eq_coe (a : Fin n) : a.val = a :=
   rfl
-#align fin.val_eq_coe [anonymous]
+#align fin.val_eq_coe Fin.val_eq_coe
 
 #print Fin.heq_fun_iff /-
 /-- Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,

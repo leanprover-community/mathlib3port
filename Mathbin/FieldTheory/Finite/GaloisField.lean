@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit bbeb185db4ccee8ed07dc48449414ebfa39cb821
+! leanprover-community/mathlib commit 12a85fac627bea918960da036049d611b1a3ee43
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.FieldTheory.Galois
+import Mathbin.FieldTheory.SplittingField
 
 /-!
 # Galois fields
@@ -35,9 +36,25 @@ It is a finite field with `p ^ n` elements.
 
 noncomputable section
 
-open Polynomial
+open Polynomial Finset
 
 open scoped Polynomial
+
+instance FiniteField.HasSub.Sub.Polynomial.isSplittingField (K F : Type _) [Field K] [Fintype K]
+    [Field F] [Algebra F K] : IsSplittingField F K (X ^ Fintype.card K - X)
+    where
+  Splits :=
+    by
+    have h : (X ^ Fintype.card K - X : K[X]).natDegree = Fintype.card K :=
+      FiniteField.x_pow_card_sub_x_natDegree_eq K Fintype.one_lt_card
+    rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
+      map_X, h, FiniteField.roots_x_pow_card_sub_x K, ← Finset.card_def, Finset.card_univ]
+  adjoin_roots := by
+    classical
+      trans Algebra.adjoin F ((roots (X ^ Fintype.card K - X : K[X])).toFinset : Set K)
+      · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
+      · rw [FiniteField.roots_x_pow_card_sub_x, val_to_finset, coe_univ, Algebra.adjoin_univ]
+#align finite_field.has_sub.sub.polynomial.is_splitting_field FiniteField.HasSub.Sub.Polynomial.isSplittingField
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
     Separable (X ^ q - X : K[X]) := by

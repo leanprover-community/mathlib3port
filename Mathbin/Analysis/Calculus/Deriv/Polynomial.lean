@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv.polynomial
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Polynomial.Derivative
 
 /-!
 # Derivatives of polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that derivatives of polynomials in the analysis sense agree with their
 derivatives in the algebraic sense.
@@ -101,33 +104,41 @@ protected theorem hasDerivWithinAt_aeval (x : 𝕜) (s : Set 𝕜) :
   (q.hasDerivAt_aeval x).HasDerivWithinAt
 #align polynomial.has_deriv_within_at_aeval Polynomial.hasDerivWithinAt_aeval
 
+#print Polynomial.differentiableAt /-
 protected theorem differentiableAt : DifferentiableAt 𝕜 (fun x => p.eval x) x :=
   (p.HasDerivAt x).DifferentiableAt
 #align polynomial.differentiable_at Polynomial.differentiableAt
+-/
 
 protected theorem differentiableAt_aeval : DifferentiableAt 𝕜 (fun x => aeval x q) x :=
   (q.hasDerivAt_aeval x).DifferentiableAt
 #align polynomial.differentiable_at_aeval Polynomial.differentiableAt_aeval
 
+#print Polynomial.differentiableWithinAt /-
 protected theorem differentiableWithinAt : DifferentiableWithinAt 𝕜 (fun x => p.eval x) s x :=
   p.DifferentiableAt.DifferentiableWithinAt
 #align polynomial.differentiable_within_at Polynomial.differentiableWithinAt
+-/
 
 protected theorem differentiableWithinAt_aeval :
     DifferentiableWithinAt 𝕜 (fun x => aeval x q) s x :=
   q.differentiableAt_aeval.DifferentiableWithinAt
 #align polynomial.differentiable_within_at_aeval Polynomial.differentiableWithinAt_aeval
 
+#print Polynomial.differentiable /-
 protected theorem differentiable : Differentiable 𝕜 fun x => p.eval x := fun x => p.DifferentiableAt
 #align polynomial.differentiable Polynomial.differentiable
+-/
 
 protected theorem differentiable_aeval : Differentiable 𝕜 fun x : 𝕜 => aeval x q := fun x =>
   q.differentiableAt_aeval
 #align polynomial.differentiable_aeval Polynomial.differentiable_aeval
 
+#print Polynomial.differentiableOn /-
 protected theorem differentiableOn : DifferentiableOn 𝕜 (fun x => p.eval x) s :=
   p.Differentiable.DifferentiableOn
 #align polynomial.differentiable_on Polynomial.differentiableOn
+-/
 
 protected theorem differentiableOn_aeval : DifferentiableOn 𝕜 (fun x => aeval x q) s :=
   q.differentiable_aeval.DifferentiableOn

@@ -187,13 +187,10 @@ def Simps.symm_apply (e : LocalEquiv α β) : β → α :=
 
 initialize_simps_projections LocalEquiv (toFun → apply, invFun → symm_apply)
 
-/- warning: local_equiv.coe_mk clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align local_equiv.coe_mk [anonymous]ₓ'. -/
 @[simp, mfld_simps]
-theorem [anonymous] (f : α → β) (g s t ml mr il ir) :
-    (LocalEquiv.mk f g s t ml mr il ir : α → β) = f :=
+theorem coe_mk (f : α → β) (g s t ml mr il ir) : (LocalEquiv.mk f g s t ml mr il ir : α → β) = f :=
   rfl
-#align local_equiv.coe_mk [anonymous]
+#align local_equiv.coe_mk LocalEquiv.coe_mk
 
 @[simp, mfld_simps]
 theorem coe_symm_mk (f : α → β) (g s t ml mr il ir) :
@@ -201,12 +198,10 @@ theorem coe_symm_mk (f : α → β) (g s t ml mr il ir) :
   rfl
 #align local_equiv.coe_symm_mk LocalEquiv.coe_symm_mk
 
-/- warning: local_equiv.to_fun_as_coe clashes with [anonymous] -> [anonymous]
-Case conversion may be inaccurate. Consider using '#align local_equiv.to_fun_as_coe [anonymous]ₓ'. -/
 @[simp, mfld_simps]
-theorem [anonymous] : e.toFun = e :=
+theorem toFun_as_coe : e.toFun = e :=
   rfl
-#align local_equiv.to_fun_as_coe [anonymous]
+#align local_equiv.to_fun_as_coe LocalEquiv.toFun_as_coe
 
 @[simp, mfld_simps]
 theorem invFun_as_coe : e.invFun = e.symm :=

@@ -110,7 +110,7 @@ theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (
     obtain ⟨⟨y, y_mem⟩, hy⟩ := hx.exists_multiple_integral_of_is_localization M _
     obtain ⟨z, hz⟩ := (isIntegrallyClosed_iff _).mp IsDedekindDomain.isIntegrallyClosed hy
     refine' ⟨IsLocalization.mk' Aₘ z ⟨y, y_mem⟩, (IsLocalization.lift_mk'_spec _ _ _ _).mpr _⟩
-    rw [hz, [anonymous], ← Algebra.smul_def]
+    rw [hz, SetLike.coe_mk, ← Algebra.smul_def]
     rfl
 #align is_localization.is_dedekind_domain IsLocalization.isDedekindDomain
 

@@ -156,14 +156,11 @@ theorem wittPolynomial_one : wittPolynomial p R 1 = C ↑p * X 1 + X 0 ^ p := by
     one_mul, pow_one, C_1, pow_zero]
 #align witt_polynomial_one wittPolynomial_one
 
-#print aeval_wittPolynomial /-
 theorem aeval_wittPolynomial {A : Type _} [CommRing A] [Algebra R A] (f : ℕ → A) (n : ℕ) :
     aeval f (W_ R n) = ∑ i in range (n + 1), p ^ i * f i ^ p ^ (n - i) := by
   simp [wittPolynomial, AlgHom.map_sum, aeval_monomial, Finsupp.prod_single_index]
 #align aeval_witt_polynomial aeval_wittPolynomial
--/
 
-#print wittPolynomial_zMod_self /-
 /-- Over the ring `zmod (p^(n+1))`, we produce the `n+1`st Witt polynomial
 by expanding the `n`th Witt polynomial by `p`.
 -/
@@ -180,7 +177,6 @@ theorem wittPolynomial_zMod_self (n : ℕ) :
   rw [mem_range] at hk
   rw [add_comm, add_tsub_assoc_of_le (nat.lt_succ_iff.mp hk), ← add_comm]
 #align witt_polynomial_zmod_self wittPolynomial_zMod_self
--/
 
 section PPrime
 

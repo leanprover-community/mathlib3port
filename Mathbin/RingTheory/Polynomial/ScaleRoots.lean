@@ -143,12 +143,10 @@ theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (h
     eval₂ f (f s * r) (scaleRoots p s) = 0 := by rw [scale_roots_eval₂_mul, hr, _root_.mul_zero]
 #align polynomial.scale_roots_eval₂_eq_zero Polynomial.scaleRoots_eval₂_eq_zero
 
-#print Polynomial.scaleRoots_aeval_eq_zero /-
 theorem scaleRoots_aeval_eq_zero [Algebra S R] {p : S[X]} {r : R} {s : S} (hr : aeval r p = 0) :
     aeval (algebraMap S R s * r) (scaleRoots p s) = 0 :=
   scaleRoots_eval₂_eq_zero (algebraMap S R) hr
 #align polynomial.scale_roots_aeval_eq_zero Polynomial.scaleRoots_aeval_eq_zero
--/
 
 theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+* K}
     (hf : Function.Injective f) {r s : A} (hr : eval₂ f (f r / f s) p = 0)

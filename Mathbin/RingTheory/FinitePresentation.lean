@@ -149,14 +149,12 @@ protected theorem quotient {I : Ideal A} (h : I.FG) (hfp : FinitePresentation R 
 #align algebra.finite_presentation.quotient Algebra.FinitePresentation.quotient
 -/
 
-#print Algebra.FinitePresentation.of_surjective /-
 /-- If `f : A →ₐ[R] B` is surjective with finitely generated kernel and `A` is finitely presented,
 then so is `B`. -/
 theorem of_surjective {f : A →ₐ[R] B} (hf : Function.Surjective f) (hker : f.toRingHom.ker.FG)
     (hfp : FinitePresentation R A) : FinitePresentation R B :=
   equiv (hfp.Quotient hker) (Ideal.quotientKerAlgEquivOfSurjective hf)
 #align algebra.finite_presentation.of_surjective Algebra.FinitePresentation.of_surjective
--/
 
 #print Algebra.FinitePresentation.iff /-
 theorem iff :
@@ -315,7 +313,6 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
       exact Set.mem_image_of_mem _ hx
 #align algebra.finite_presentation.of_restrict_scalars_finite_presentation Algebra.FinitePresentation.of_restrict_scalars_finitePresentation
 
-#print Algebra.FinitePresentation.ker_fg_of_mvPolynomial /-
 -- TODO: extract out helper lemmas and tidy proof.
 /-- This is used to prove the strictly stronger `ker_fg_of_surjective`. Use it instead. -/
 theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A)
@@ -379,9 +376,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     apply Set.mem_union_right
     exact Set.mem_image_of_mem _ hx
 #align algebra.finite_presentation.ker_fg_of_mv_polynomial Algebra.FinitePresentation.ker_fg_of_mvPolynomial
--/
 
-#print Algebra.FinitePresentation.ker_fG_of_surjective /-
 /-- If `f : A →ₐ[R] B` is a sujection between finitely-presented `R`-algebras, then the kernel of
 `f` is finitely generated. -/
 theorem ker_fG_of_surjective (f : A →ₐ[R] B) (hf : Function.Surjective f)
@@ -392,7 +387,6 @@ theorem ker_fG_of_surjective (f : A →ₐ[R] B) (hf : Function.Surjective f)
   simp_rw [RingHom.ker_eq_comap_bot, AlgHom.toRingHom_eq_coe, AlgHom.comp_toRingHom]
   rw [← Ideal.comap_comap, Ideal.map_comap_of_surjective (g : MvPolynomial (Fin n) R →+* A) hg]
 #align algebra.finite_presentation.ker_fg_of_surjective Algebra.FinitePresentation.ker_fG_of_surjective
--/
 
 end FinitePresentation
 

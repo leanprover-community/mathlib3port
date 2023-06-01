@@ -90,8 +90,8 @@ protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = ENNReal
   simp [add_haar_measure_self, -positive_compacts.coe_top]
 #align add_circle.measure_univ AddCircle.measure_univ
 
-instance : IsAddHaarMeasure (volume : Measure (AddCircle T)) :=
-  IsAddHaarMeasure.smul _ (by simp [hT.out]) ENNReal.ofReal_ne_top
+instance : AddHaarMeasure (volume : Measure (AddCircle T)) :=
+  AddHaarMeasure.smul _ (by simp [hT.out]) ENNReal.ofReal_ne_top
 
 instance finiteMeasure : FiniteMeasure (volume : Measure (AddCircle T))
     where measure_univ_lt_top := by simp

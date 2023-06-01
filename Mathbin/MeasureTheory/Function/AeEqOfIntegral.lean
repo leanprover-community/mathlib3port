@@ -506,22 +506,22 @@ theorem AEFinStronglyMeasurable.ae_eq_of_forall_set_integral_eq {f g : α → E}
   exact (hf.sub hg).ae_eq_zero_of_forall_set_integral_eq_zero hfg_int hfg
 #align measure_theory.ae_fin_strongly_measurable.ae_eq_of_forall_set_integral_eq MeasureTheory.AEFinStronglyMeasurable.ae_eq_of_forall_set_integral_eq
 
-theorem lp.ae_eq_zero_of_forall_set_integral_eq_zero (f : lp E p μ) (hp_ne_zero : p ≠ 0)
+theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero (f : Lp E p μ) (hp_ne_zero : p ≠ 0)
     (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → IntegrableOn f s μ)
     (hf_zero : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫ x in s, f x ∂μ) = 0) : f =ᵐ[μ] 0 :=
   AEFinStronglyMeasurable.ae_eq_zero_of_forall_set_integral_eq_zero hf_int_finite hf_zero
-    (lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
-#align measure_theory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero MeasureTheory.lp.ae_eq_zero_of_forall_set_integral_eq_zero
+    (Lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
+#align measure_theory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero MeasureTheory.Lp.ae_eq_zero_of_forall_set_integral_eq_zero
 
-theorem lp.ae_eq_of_forall_set_integral_eq (f g : lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
+theorem Lp.ae_eq_of_forall_set_integral_eq (f g : Lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → IntegrableOn g s μ)
     (hfg : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫ x in s, f x ∂μ) = ∫ x in s, g x ∂μ) :
     f =ᵐ[μ] g :=
   AEFinStronglyMeasurable.ae_eq_of_forall_set_integral_eq hf_int_finite hg_int_finite hfg
-    (lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
-    (lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
-#align measure_theory.Lp.ae_eq_of_forall_set_integral_eq MeasureTheory.lp.ae_eq_of_forall_set_integral_eq
+    (Lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
+    (Lp.finStronglyMeasurable _ hp_ne_zero hp_ne_top).AEFinStronglyMeasurable
+#align measure_theory.Lp.ae_eq_of_forall_set_integral_eq MeasureTheory.Lp.ae_eq_of_forall_set_integral_eq
 
 theorem ae_eq_zero_of_forall_set_integral_eq_of_finStronglyMeasurable_trim (hm : m ≤ m0) {f : α → E}
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)

@@ -93,31 +93,23 @@ section TopologicalAlgebra
 variable {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [TopologicalSpace A]
   [TopologicalSemiring A] (p : R[X])
 
-#print Polynomial.continuous_aeval /-
 @[continuity]
 protected theorem continuous_aeval : Continuous fun x : A => aeval x p :=
   p.continuous_eval₂ _
 #align polynomial.continuous_aeval Polynomial.continuous_aeval
--/
 
-#print Polynomial.continuousAt_aeval /-
 protected theorem continuousAt_aeval {a : A} : ContinuousAt (fun x : A => aeval x p) a :=
   p.continuous_aeval.ContinuousAt
 #align polynomial.continuous_at_aeval Polynomial.continuousAt_aeval
--/
 
-#print Polynomial.continuousWithinAt_aeval /-
 protected theorem continuousWithinAt_aeval {s a} :
     ContinuousWithinAt (fun x : A => aeval x p) s a :=
   p.continuous_aeval.ContinuousWithinAt
 #align polynomial.continuous_within_at_aeval Polynomial.continuousWithinAt_aeval
--/
 
-#print Polynomial.continuousOn_aeval /-
 protected theorem continuousOn_aeval {s} : ContinuousOn (fun x : A => aeval x p) s :=
   p.continuous_aeval.ContinuousOn
 #align polynomial.continuous_on_aeval Polynomial.continuousOn_aeval
--/
 
 end TopologicalAlgebra
 

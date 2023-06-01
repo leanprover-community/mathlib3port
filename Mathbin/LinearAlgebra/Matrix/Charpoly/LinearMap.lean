@@ -261,11 +261,9 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
     · infer_instance
 #align linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
 
-#print LinearMap.exists_monic_and_aeval_eq_zero /-
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.End R M) :
     ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=
   (LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul R f ⊤ (by simp)).imp
     fun p h => h.imp_right And.right
 #align linear_map.exists_monic_and_aeval_eq_zero LinearMap.exists_monic_and_aeval_eq_zero
--/
 

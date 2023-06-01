@@ -491,7 +491,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) :=
   use r
   rw [smul_eq_mul, smul_eq_mul, pow_succ', mul_assoc] at hr
   apply_fun algebraMap R L  at hr
-  simp only [map_mul, ← [anonymous]] at hr
+  simp only [map_mul, ← Submonoid.coe_pow] at hr
   rw [← IsLocalization.mk'_one L, IsLocalization.mk'_eq_iff_eq, mul_one, Submonoid.coe_one, ←
     (IsLocalization.map_units L (s ^ n)).mul_left_cancel hr, map_mul]
 #align is_artinian_ring.localization_surjective IsArtinianRing.localization_surjective
