@@ -263,6 +263,7 @@ protected theorem linearIsometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι,
   simp (config := { contextual := true }) [Dfinsupp.sum, this]
 #align orthogonal_family.linear_isometry_apply_dfinsupp_sum_single OrthogonalFamily.linearIsometry_apply_dfinsupp_sum_single
 
+#print OrthogonalFamily.range_linearIsometry /-
 /-- The canonical linear isometry from the `lp 2` of a mutually orthogonal family of subspaces of
 `E` into E, has range the closure of the span of the subspaces. -/
 protected theorem range_linearIsometry [∀ i, CompleteSpace (G i)] :
@@ -284,6 +285,7 @@ protected theorem range_linearIsometry [∀ i, CompleteSpace (G i)] :
       exact hV.linear_isometry_apply_single x
     exact hV.linear_isometry.isometry.uniform_inducing.is_complete_range.is_closed
 #align orthogonal_family.range_linear_isometry OrthogonalFamily.range_linearIsometry
+-/
 
 end OrthogonalFamily
 
@@ -293,6 +295,7 @@ variable (𝕜 G) (V : ∀ i, G i →ₗᵢ[𝕜] E) (F : ι → Submodule 𝕜 
 
 include cplt
 
+#print IsHilbertSum /-
 /-- Given a family of Hilbert spaces `G : ι → Type*`, a Hilbert sum of `G` consists of a Hilbert
 space `E` and an orthogonal family `V : Π i, G i →ₗᵢ[𝕜] E` such that the induced isometry
 `Φ : lp G 2 → E` is surjective.
@@ -304,6 +307,7 @@ structure IsHilbertSum : Prop where ofSurjective ::
   OrthogonalFamily : OrthogonalFamily 𝕜 G V
   surjective_isometry : Function.Surjective OrthogonalFamily.LinearIsometry
 #align is_hilbert_sum IsHilbertSum
+-/
 
 variable {𝕜 G V}
 
@@ -420,18 +424,20 @@ section
 
 variable (ι) (𝕜) (E)
 
+#print HilbertBasis /-
 /-- A Hilbert basis on `ι` for an inner product space `E` is an identification of `E` with the `lp`
 space `ℓ²(ι, 𝕜)`. -/
 structure HilbertBasis where ofRepr ::
   repr : E ≃ₗᵢ[𝕜] ℓ²(ι, 𝕜)
 #align hilbert_basis HilbertBasis
+-/
 
 end
 
 namespace HilbertBasis
 
 instance {ι : Type _} : Inhabited (HilbertBasis ι 𝕜 ℓ²(ι, 𝕜)) :=
-  ⟨of_repr (LinearIsometryEquiv.refl 𝕜 _)⟩
+  ⟨ofRepr (LinearIsometryEquiv.refl 𝕜 _)⟩
 
 /-- `b i` is the `i`th basis vector. -/
 instance : CoeFun (HilbertBasis ι 𝕜 E) fun _ => ι → E
@@ -522,6 +528,7 @@ protected theorem tsum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
   (b.hasSum_inner_mul_inner x y).tsum_eq
 #align hilbert_basis.tsum_inner_mul_inner HilbertBasis.tsum_inner_mul_inner
 
+#print HilbertBasis.toOrthonormalBasis /-
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
 /-- A finite Hilbert basis is an orthonormal basis. -/
@@ -533,6 +540,7 @@ protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : Ort
       simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
         this.submodule_topological_closure_eq.symm)
 #align hilbert_basis.to_orthonormal_basis HilbertBasis.toOrthonormalBasis
+-/
 
 @[simp]
 theorem coe_toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) :
@@ -567,7 +575,7 @@ include hv cplt
 
 /-- An orthonormal family of vectors whose span is dense in the whole module is a Hilbert basis. -/
 protected def mk (hsp : ⊤ ≤ (span 𝕜 (Set.range v)).topologicalClosure) : HilbertBasis ι 𝕜 E :=
-  HilbertBasis.of_repr <| (hv.IsHilbertSum hsp).LinearIsometryEquiv
+  HilbertBasis.ofRepr <| (hv.IsHilbertSum hsp).LinearIsometryEquiv
 #align hilbert_basis.mk HilbertBasis.mk
 
 theorem Orthonormal.linearIsometryEquiv_symm_apply_single_one (h i) :
@@ -590,13 +598,14 @@ protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) : H
 #align hilbert_basis.mk_of_orthogonal_eq_bot HilbertBasis.mkOfOrthogonalEqBot
 
 @[simp]
-protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) :
+protected theorem coe_mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) :
     ⇑(HilbertBasis.mkOfOrthogonalEqBot hv hsp) = v :=
   HilbertBasis.coe_mk hv _
-#align hilbert_basis.coe_of_orthogonal_eq_bot_mk HilbertBasis.coe_of_orthogonal_eq_bot_mk
+#align hilbert_basis.coe_of_orthogonal_eq_bot_mk HilbertBasis.coe_mkOfOrthogonalEqBot
 
 omit hv
 
+#print OrthonormalBasis.toHilbertBasis /-
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
 -- `pi_Lp p (λ i : ι, 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
 /-- An orthonormal basis is an Hilbert basis. -/
@@ -606,6 +615,7 @@ protected def OrthonormalBasis.toHilbertBasis [Fintype ι] (b : OrthonormalBasis
     simpa only [← OrthonormalBasis.coe_toBasis, b.to_basis.span_eq, eq_top_iff] using
       @subset_closure E _ _
 #align orthonormal_basis.to_hilbert_basis OrthonormalBasis.toHilbertBasis
+-/
 
 @[simp]
 theorem OrthonormalBasis.coe_toHilbertBasis [Fintype ι] (b : OrthonormalBasis ι 𝕜 E) :
@@ -620,7 +630,7 @@ theorem Orthonormal.exists_hilbertBasis_extension {s : Set E} (hs : Orthonormal 
   ⟨w,
     HilbertBasis.mkOfOrthogonalEqBot hw_ortho
       (by simpa [maximal_orthonormal_iff_orthogonalComplement_eq_bot hw_ortho] using hw_max),
-    hws, HilbertBasis.coe_of_orthogonal_eq_bot_mk _ _⟩
+    hws, HilbertBasis.coe_mkOfOrthogonalEqBot _ _⟩
 #align orthonormal.exists_hilbert_basis_extension Orthonormal.exists_hilbertBasis_extension
 
 variable (𝕜 E)

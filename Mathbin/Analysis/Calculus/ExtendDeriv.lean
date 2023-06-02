@@ -113,6 +113,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
           (tendsto.comp continuous_norm.continuous_at <| tendsto_snd.sub tendsto_fst)
 #align has_fderiv_at_boundary_of_tendsto_fderiv has_fderiv_at_boundary_of_tendsto_fderiv
 
+#print has_deriv_at_interval_left_endpoint_of_tendsto_deriv /-
 /-- If a function is differentiable on the right of a point `a : ℝ`, continuous at `a`, and
 its derivative also converges at `a`, then `f` is differentiable on the right at `a`. -/
 theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
@@ -151,7 +152,9 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhdsWithin_Ici <| left_mem_Ico.2 ab)
 #align has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
+-/
 
+#print has_deriv_at_interval_right_endpoint_of_tendsto_deriv /-
 /-- If a function is differentiable on the left of a point `a : ℝ`, continuous at `a`, and
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
 theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ}
@@ -191,8 +194,10 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhdsWithin_Iic <| right_mem_Ioc.2 ba)
 #align has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » x) -/
+#print hasDerivAt_of_hasDerivAt_of_ne /-
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
 theorem hasDerivAt_of_hasDerivAt_of_ne {f g : ℝ → E} {x : ℝ}
@@ -227,8 +232,10 @@ theorem hasDerivAt_of_hasDerivAt_of_ne {f g : ℝ → E} {x : ℝ}
     exact (f_diff y (ne_of_lt hy)).deriv.symm
   simpa using B.union A
 #align has_deriv_at_of_has_deriv_at_of_ne hasDerivAt_of_hasDerivAt_of_ne
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (y «expr ≠ » x) -/
+#print hasDerivAt_of_hasDerivAt_of_ne' /-
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
 theorem hasDerivAt_of_hasDerivAt_of_ne' {f g : ℝ → E} {x : ℝ}
@@ -239,4 +246,5 @@ theorem hasDerivAt_of_hasDerivAt_of_ne' {f g : ℝ → E} {x : ℝ}
   · exact hasDerivAt_of_hasDerivAt_of_ne f_diff hf hg
   · exact f_diff y hne
 #align has_deriv_at_of_has_deriv_at_of_ne' hasDerivAt_of_hasDerivAt_of_ne'
+-/
 
