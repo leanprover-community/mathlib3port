@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 8b8ba04e2f326f3f7cf24ad129beda58531ada61
+! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Function.L1Space
 import Mathbin.Analysis.NormedSpace.IndicatorFunction
 
 /-! # Functions integrable on a set and at a filter
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `integrable_on f s μ := integrable f (μ.restrict s)` and prove theorems like
 `integrable_on_union : integrable_on f (s ∪ t) μ ↔ integrable_on f s μ ∧ integrable_on f t μ`.

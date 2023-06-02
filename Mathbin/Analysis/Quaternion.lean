@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
+! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Algebra.Algebra
 
 /-!
 # Quaternions as a normed algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the following structures on the space `ℍ := ℍ[ℝ]` of quaternions:
 

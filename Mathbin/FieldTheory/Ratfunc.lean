@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 0b7c740e25651db0ba63648fbae9f9d6f941e31b
+! leanprover-community/mathlib commit 67237461d7cbf410706a6a06f4d40cbb594c32dc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,9 +105,7 @@ open scoped nonZeroDivisors Polynomial
 
 universe u v
 
-variable (K : Type u) [hring : CommRing K] [hdomain : IsDomain K]
-
-include hring
+variable (K : Type u)
 
 #print RatFunc /-
 /-- `ratfunc K` is `K(x)`, the field of rational functions over `K`.
@@ -116,14 +114,18 @@ The inclusion of polynomials into `ratfunc` is `algebra_map K[X] (ratfunc K)`,
 the maps between `ratfunc K` and another field of fractions of `K[X]`,
 especially `fraction_ring K[X]`, are given by `is_localization.algebra_equiv`.
 -/
-structure RatFunc : Type u where ofFractionRing ::
+structure RatFunc [CommRing K] : Type u where ofFractionRing ::
   toFractionRing : FractionRing K[X]
 #align ratfunc RatFunc
 -/
 
 namespace RatFunc
 
+section CommRing
+
 variable {K}
+
+variable [CommRing K]
 
 section Rec
 
@@ -174,7 +176,21 @@ theorem liftOn_ofFractionRing_mk {P : Sort v} (n : K[X]) (d : K[X]⁰) (f : ∀ 
   exact Localization.liftOn_mk _ _ _ _
 #align ratfunc.lift_on_of_fraction_ring_mk RatFunc.liftOn_ofFractionRing_mk
 
-include hdomain
+#print RatFunc.lift_on_condition_of_lift_on'_condition /-
+theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X], P}
+    (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) ⦃p q p' q' : K[X]⦄
+    (hq : q ≠ 0) (hq' : q' ≠ 0) (h : q' * p = q * p') : f p q = f p' q' :=
+  calc
+    f p q = f (q' * p) (q' * q) := (H hq hq').symm
+    _ = f (q * p') (q * q') := by rw [h, mul_comm q']
+    _ = f p' q' := H hq' hq
+    
+#align ratfunc.lift_on_condition_of_lift_on'_condition RatFunc.lift_on_condition_of_lift_on'_condition
+-/
+
+section IsDomain
+
+variable [IsDomain K]
 
 #print RatFunc.mk /-
 /-- `ratfunc.mk (p q : K[X])` is `p / q` as a rational function.
@@ -249,22 +265,6 @@ theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p,
       SetLike.coe_mk]
 #align ratfunc.lift_on_mk RatFunc.liftOn_mk
 
-omit hdomain
-
-#print RatFunc.lift_on_condition_of_lift_on'_condition /-
-theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X], P}
-    (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) ⦃p q p' q' : K[X]⦄
-    (hq : q ≠ 0) (hq' : q' ≠ 0) (h : q' * p = q * p') : f p q = f p' q' :=
-  calc
-    f p q = f (q' * p) (q' * q) := (H hq hq').symm
-    _ = f (q * p') (q * q') := by rw [h, mul_comm q']
-    _ = f p' q' := H hq' hq
-    
-#align ratfunc.lift_on_condition_of_lift_on'_condition RatFunc.lift_on_condition_of_lift_on'_condition
--/
-
-include hdomain
-
 #print RatFunc.liftOn' /-
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`
@@ -306,6 +306,8 @@ protected irreducible_def induction_on' {P : RatFunc K → Prop} :
         f p q (mem_non_zero_divisors_iff_ne_zero.mp q.2)
 #align ratfunc.induction_on' RatFunc.induction_on'
 -/
+
+end IsDomain
 
 end Rec
 
@@ -406,7 +408,9 @@ theorem ofFractionRing_mul (p q : FractionRing K[X]) :
 #align ratfunc.of_fraction_ring_mul RatFunc.ofFractionRing_mul
 -/
 
-include hdomain
+section IsDomain
+
+variable [IsDomain K]
 
 #print RatFunc.div /-
 /-- Division of rational functions. -/
@@ -446,9 +450,9 @@ theorem mul_inv_cancel : ∀ {p : RatFunc K} (hp : p ≠ 0), p * p⁻¹ = 1
 #align ratfunc.mul_inv_cancel RatFunc.mul_inv_cancel
 -/
 
-section SMul
+end IsDomain
 
-omit hdomain
+section SMul
 
 variable {R : Type _}
 
@@ -482,13 +486,13 @@ theorem smul_eq_C_smul (x : RatFunc K) (r : K) : r • x = Polynomial.C r • x 
   · simp only
 #align ratfunc.smul_eq_C_smul RatFunc.smul_eq_C_smul
 
-include hdomain
+section IsDomain
+
+variable [IsDomain K]
 
 variable [Monoid R] [DistribMulAction R K[X]]
 
-variable [htower : IsScalarTower R K[X] K[X]]
-
-include htower
+variable [IsScalarTower R K[X] K[X]]
 
 theorem mk_smul (c : R) (p q : K[X]) : RatFunc.mk (c • p) q = c • RatFunc.mk p q :=
   by
@@ -502,11 +506,11 @@ theorem mk_smul (c : R) (p q : K[X]) : RatFunc.mk (c • p) q = c • RatFunc.mk
 instance : IsScalarTower R K[X] (RatFunc K) :=
   ⟨fun c p q => q.inductionOn' fun q r _ => by rw [← mk_smul, smul_assoc, mk_smul, mk_smul]⟩
 
+end IsDomain
+
 end SMul
 
 variable (K)
-
-omit hdomain
 
 instance [Subsingleton K] : Subsingleton (RatFunc K) :=
   toFractionRing_injective.Subsingleton
@@ -532,9 +536,12 @@ def toFractionRingRingEquiv : RatFunc K ≃+* FractionRing K[X]
   map_mul' := fun ⟨_⟩ ⟨_⟩ => by simp [← of_fraction_ring_mul]
 #align ratfunc.to_fraction_ring_ring_equiv RatFunc.toFractionRingRingEquiv
 
-omit hring
+end Field
+
+section TacticInterlude
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- pre-porting note: should comm_ring be disabled here?
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
@@ -546,7 +553,9 @@ unsafe def smul_tac : tactic Unit :=
   sorry
 #align ratfunc.smul_tac ratfunc.smul_tac
 
-include hring
+end TacticInterlude
+
+variable (K)
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic ratfunc.frac_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic ratfunc.frac_tac -/
@@ -632,8 +641,6 @@ variable {K}
 section LiftHom
 
 variable {G₀ L R S F : Type _} [CommGroupWithZero G₀] [Field L] [CommRing R] [CommRing S]
-
-omit hring
 
 /-- Lift a monoid homomorphism that maps polynomials `φ : R[X] →* S[X]`
 to a `ratfunc R →* ratfunc S`,
@@ -805,11 +812,9 @@ end LiftHom
 
 variable (K)
 
-include hdomain
-
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic ratfunc.frac_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic ratfunc.frac_tac -/
-instance : Field (RatFunc K) :=
+instance [IsDomain K] : Field (RatFunc K) :=
   { RatFunc.instCommRing K,
     RatFunc.instNontrivial K with
     inv := Inv.inv
@@ -823,14 +828,14 @@ instance : Field (RatFunc K) :=
     mul_inv_cancel := fun _ => mul_inv_cancel
     zpow := zpowRec }
 
-end Field
-
 section IsFractionRing
 
 /-! ### `ratfunc` as field of fractions of `polynomial` -/
 
 
-include hdomain
+section IsDomain
+
+variable [IsDomain K]
 
 instance (R : Type _) [CommSemiring R] [Algebra R K[X]] : Algebra R (RatFunc K)
     where
@@ -990,10 +995,6 @@ end LiftAlgHom
 
 variable (K)
 
-omit hdomain
-
-include hdomain
-
 /-- `ratfunc K` is the field of fractions of the polynomials over `K`. -/
 instance : IsFractionRing K[X] (RatFunc K)
     where
@@ -1071,7 +1072,13 @@ theorem toFractionRingRingEquiv_symm_eq :
   simp [to_fraction_ring_ring_equiv, of_fraction_ring_eq, AlgEquiv.coe_ringEquiv']
 #align ratfunc.to_fraction_ring_ring_equiv_symm_eq RatFunc.toFractionRingRingEquiv_symm_eq
 
+end IsDomain
+
 end IsFractionRing
+
+end CommRing
+
+variable {K}
 
 section NumDenom
 
@@ -1080,11 +1087,7 @@ section NumDenom
 
 open GCDMonoid Polynomial
 
-omit hring
-
-variable [hfield : Field K]
-
-include hfield
+variable [Field K]
 
 #print RatFunc.numDenom /-
 /-- `ratfunc.num_denom` are numerator and denominator of a rational function over a field,
@@ -1421,7 +1424,9 @@ section Eval
 /-! ### Polynomial structure: `C`, `X`, `eval` -/
 
 
-include hdomain
+section Domain
+
+variable [CommRing K] [IsDomain K]
 
 /-- `ratfunc.C a` is the constant rational function `a`. -/
 def C : K →+* RatFunc K :=
@@ -1457,11 +1462,11 @@ theorem algebraMap_X : algebraMap K[X] (RatFunc K) Polynomial.X = X :=
   rfl
 #align ratfunc.algebra_map_X RatFunc.algebraMap_X
 
-omit hring hdomain
+end Domain
 
-variable [hfield : Field K]
+section Field
 
-include hfield
+variable [Field K]
 
 @[simp]
 theorem num_C (c : K) : num (C c) = Polynomial.C c :=
@@ -1585,13 +1590,13 @@ theorem eval_mul {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
   apply num_denom_mul
 #align ratfunc.eval_mul RatFunc.eval_mul
 
+end Field
+
 end Eval
 
 section IntDegree
 
 open Polynomial
-
-omit hring
 
 variable [Field K]
 
@@ -1707,8 +1712,6 @@ end IntDegree
 section LaurentSeries
 
 open PowerSeries LaurentSeries HahnSeries
-
-omit hring
 
 variable {F : Type u} [Field F] (p q : F[X]) (f g : RatFunc F)
 

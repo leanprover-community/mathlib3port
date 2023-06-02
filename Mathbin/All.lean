@@ -2313,7 +2313,7 @@ import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
 import Mathbin.NumberTheory.Liouville.Basic
-import Mathbin.NumberTheory.Liouville.LiouvilleConstant
+import Mathbin.NumberTheory.Liouville.LiouvilleNumber
 import Mathbin.NumberTheory.Liouville.LiouvilleWith
 import Mathbin.NumberTheory.Liouville.Measure
 import Mathbin.NumberTheory.Liouville.Residual
@@ -2563,7 +2563,9 @@ import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.DedekindDomain.Pid
 import Mathbin.RingTheory.DedekindDomain.SelmerGroup
-import Mathbin.RingTheory.Derivation
+import Mathbin.RingTheory.Derivation.Basic
+import Mathbin.RingTheory.Derivation.Lie
+import Mathbin.RingTheory.Derivation.ToSquareZero
 import Mathbin.RingTheory.DiscreteValuationRing.Basic
 import Mathbin.RingTheory.DiscreteValuationRing.Tfae
 import Mathbin.RingTheory.Discriminant
