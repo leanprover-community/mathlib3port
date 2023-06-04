@@ -238,11 +238,13 @@ theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (
 -/
 
 
+#print Real.volume_Icc_pi /-
 theorem volume_Icc_pi {a b : ι → ℝ} : volume (Icc a b) = ∏ i, ENNReal.ofReal (b i - a i) :=
   by
   rw [← pi_univ_Icc, volume_pi_pi]
   simp only [Real.volume_Icc]
 #align real.volume_Icc_pi Real.volume_Icc_pi
+-/
 
 @[simp]
 theorem volume_Icc_pi_toReal {a b : ι → ℝ} (h : a ≤ b) :
@@ -250,10 +252,12 @@ theorem volume_Icc_pi_toReal {a b : ι → ℝ} (h : a ≤ b) :
   simp only [volume_Icc_pi, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_Icc_pi_to_real Real.volume_Icc_pi_toReal
 
+#print Real.volume_pi_Ioo /-
 theorem volume_pi_Ioo {a b : ι → ℝ} :
     volume (pi univ fun i => Ioo (a i) (b i)) = ∏ i, ENNReal.ofReal (b i - a i) :=
   (measure_congr Measure.univ_pi_Ioo_ae_eq_Icc).trans volume_Icc_pi
 #align real.volume_pi_Ioo Real.volume_pi_Ioo
+-/
 
 @[simp]
 theorem volume_pi_Ioo_toReal {a b : ι → ℝ} (h : a ≤ b) :
@@ -261,10 +265,12 @@ theorem volume_pi_Ioo_toReal {a b : ι → ℝ} (h : a ≤ b) :
   simp only [volume_pi_Ioo, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_pi_Ioo_to_real Real.volume_pi_Ioo_toReal
 
+#print Real.volume_pi_Ioc /-
 theorem volume_pi_Ioc {a b : ι → ℝ} :
     volume (pi univ fun i => Ioc (a i) (b i)) = ∏ i, ENNReal.ofReal (b i - a i) :=
   (measure_congr Measure.univ_pi_Ioc_ae_eq_Icc).trans volume_Icc_pi
 #align real.volume_pi_Ioc Real.volume_pi_Ioc
+-/
 
 @[simp]
 theorem volume_pi_Ioc_toReal {a b : ι → ℝ} (h : a ≤ b) :
@@ -272,10 +278,12 @@ theorem volume_pi_Ioc_toReal {a b : ι → ℝ} (h : a ≤ b) :
   simp only [volume_pi_Ioc, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_pi_Ioc_to_real Real.volume_pi_Ioc_toReal
 
+#print Real.volume_pi_Ico /-
 theorem volume_pi_Ico {a b : ι → ℝ} :
     volume (pi univ fun i => Ico (a i) (b i)) = ∏ i, ENNReal.ofReal (b i - a i) :=
   (measure_congr Measure.univ_pi_Ico_ae_eq_Icc).trans volume_Icc_pi
 #align real.volume_pi_Ico Real.volume_pi_Ico
+-/
 
 @[simp]
 theorem volume_pi_Ico_toReal {a b : ι → ℝ} (h : a ≤ b) :

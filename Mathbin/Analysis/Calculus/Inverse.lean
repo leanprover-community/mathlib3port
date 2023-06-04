@@ -109,6 +109,7 @@ lemmas. This approach makes it possible
 -/
 
 
+#print ApproximatesLinearOn /-
 /-- We say that `f` approximates a continuous linear map `f'` on `s` with constant `c`,
 if `‖f x - f y - f' (x - y)‖ ≤ c * ‖x - y‖` whenever `x, y ∈ s`.
 
@@ -118,6 +119,7 @@ on a specific set. -/
 def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c : ℝ≥0) : Prop :=
   ∀ x ∈ s, ∀ y ∈ s, ‖f x - f y - f' (x - y)‖ ≤ c * ‖x - y‖
 #align approximates_linear_on ApproximatesLinearOn
+-/
 
 @[simp]
 theorem approximatesLinearOn_empty (f : E → F) (f' : E →L[𝕜] F) (c : ℝ≥0) :
@@ -641,6 +643,7 @@ include cs
 
 variable (f)
 
+#print HasStrictFDerivAt.toLocalHomeomorph /-
 /-- Given a function with an invertible strict derivative at `a`, returns a `local_homeomorph`
 with `to_fun = f` and `a ∈ source`. This is a part of the inverse function theorem.
 The other part `has_strict_fderiv_at.to_local_inverse` states that the inverse function
@@ -652,6 +655,7 @@ def toLocalHomeomorph (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) : Local
       NNReal.half_lt_self <| ne_of_gt <| inv_pos.2 hf')
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.2
 #align has_strict_fderiv_at.to_local_homeomorph HasStrictFDerivAt.toLocalHomeomorph
+-/
 
 variable {f}
 
@@ -678,11 +682,13 @@ theorem map_nhds_eq_of_equiv (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) 
 
 variable (f f' a)
 
+#print HasStrictFDerivAt.localInverse /-
 /-- Given a function `f` with an invertible derivative, returns a function that is locally inverse
 to `f`. -/
 def localInverse (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) : F → E :=
   (hf.toLocalHomeomorph f).symm
 #align has_strict_fderiv_at.local_inverse HasStrictFDerivAt.localInverse
+-/
 
 variable {f f' a}
 

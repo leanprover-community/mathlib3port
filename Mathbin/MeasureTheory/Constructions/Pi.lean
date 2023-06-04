@@ -676,11 +676,9 @@ instance pi.isHaarMeasure [∀ i, Group (α i)] [∀ i, TopologicalSpace (α i)]
 
 end Measure
 
-#print MeasureTheory.MeasureSpace.pi /-
 instance MeasureSpace.pi [∀ i, MeasureSpace (α i)] : MeasureSpace (∀ i, α i) :=
   ⟨Measure.pi fun i => volume⟩
 #align measure_theory.measure_space.pi MeasureTheory.MeasureSpace.pi
--/
 
 #print MeasureTheory.volume_pi /-
 theorem volume_pi [∀ i, MeasureSpace (α i)] :
@@ -689,10 +687,12 @@ theorem volume_pi [∀ i, MeasureSpace (α i)] :
 #align measure_theory.volume_pi MeasureTheory.volume_pi
 -/
 
+#print MeasureTheory.volume_pi_pi /-
 theorem volume_pi_pi [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (volume : Measure (α i))]
     (s : ∀ i, Set (α i)) : volume (pi univ s) = ∏ i, volume (s i) :=
   Measure.pi_pi (fun i => volume) s
 #align measure_theory.volume_pi_pi MeasureTheory.volume_pi_pi
+-/
 
 theorem volume_pi_ball [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (volume : Measure (α i))]
     [∀ i, MetricSpace (α i)] (x : ∀ i, α i) {r : ℝ} (hr : 0 < r) :
