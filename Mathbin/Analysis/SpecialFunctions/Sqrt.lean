@@ -28,6 +28,7 @@ open scoped Topology
 
 namespace Real
 
+#print Real.sqLocalHomeomorph /-
 /-- Local homeomorph between `(0, +∞)` and `(0, +∞)` with `to_fun = λ x, x ^ 2` and
 `inv_fun = sqrt`. -/
 noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
@@ -45,6 +46,7 @@ noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
   continuous_toFun := (continuous_pow 2).ContinuousOn
   continuous_invFun := continuousOn_id.sqrt
 #align real.sq_local_homeomorph Real.sqLocalHomeomorph
+-/
 
 theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
     HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x ∧ ∀ n, ContDiffAt ℝ n sqrt x :=
